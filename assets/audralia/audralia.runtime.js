@@ -1,5 +1,5 @@
 // /assets/audralia/audralia.runtime.js
-// AUDRALIA_RUNTIME_CONSUME_HYDRATION_AFTER_TERRAIN_TNT_v1
+// AUDRALIA_RUNTIME_LOW_LAG_COMPOSITE_HYDRATION_CACHE_TNT_v1
 //
 // Role:
 // - Audralia runtime authority.
@@ -7,9 +7,8 @@
 // - Consumes tectonics second.
 // - Consumes terrain third.
 // - Consumes hydration fourth.
-// - Provides cached, low-lag runtime sampling for the route compositor.
-// - Prevents route-level per-pixel calls from recalculating topology, tectonics, terrain,
-//   and hydration repeatedly.
+// - Builds one composed runtime field so the route does not recompute the full chain per visible pixel.
+// - Provides low-lag sampling for the route compositor.
 //
 // Hard locks:
 // - No DOM mutation.
@@ -23,6 +22,9 @@
 // - No foliage.
 // - No trees.
 // - No vegetation.
+// - No animals.
+// - No marine life.
+// - No construct civilization.
 // - No graphic box.
 // - No image generation.
 // - No visual pass claim.
@@ -56,14 +58,15 @@ import {
   getHydrationStatus
 } from "./audralia.hydration.render.js?v=AUDRALIA_G1_HYDRATION_CONSUME_TOPOLOGY_TECTONICS_TERRAIN_WATERDOWN_TNT_v1";
 
-const RECEIPT = "AUDRALIA_RUNTIME_CONSUME_HYDRATION_AFTER_TERRAIN_TNT_v1";
+const RECEIPT = "AUDRALIA_RUNTIME_LOW_LAG_COMPOSITE_HYDRATION_CACHE_TNT_v1";
 
 const PREVIOUS_RECEIPTS = Object.freeze([
+  "AUDRALIA_RUNTIME_CONSUME_HYDRATION_AFTER_TERRAIN_TNT_v1",
   "AUDRALIA_RUNTIME_CACHED_TOPOLOGY_TECTONICS_TERRAIN_CHAIN_TNT_v2"
 ]);
 
 const PLANETARY_OBJECT = "Audralia";
-const GENERATION = "G1_RUNTIME_CACHED_TOPOLOGY_TECTONICS_TERRAIN_HYDRATION_CHAIN";
+const GENERATION = "G1_RUNTIME_LOW_LAG_COMPOSITE_HYDRATION_CHAIN";
 const FILE = "/assets/audralia/audralia.runtime.js";
 
 const TOPOLOGY_AUTHORITY = "/assets/audralia/audralia.topology.render.js";
@@ -73,14 +76,13 @@ const HYDRATION_AUTHORITY = "/assets/audralia/audralia.hydration.render.js";
 
 const CONTRACTS = Object.freeze({
   runtime: RECEIPT,
-  previousRuntime: "AUDRALIA_RUNTIME_CACHED_TOPOLOGY_TECTONICS_TERRAIN_CHAIN_TNT_v2",
+  previousRuntime: "AUDRALIA_RUNTIME_CONSUME_HYDRATION_AFTER_TERRAIN_TNT_v1",
   topology: "AUDRALIA_G1_TOPOLOGY_LANDMASS_100_PERCENT_EXPANSION_SMALL_CONTINENTS_TNT_v1",
   topologyCompatibleReceipt: "AUDRALIA_G1_TOPOLOGY_PLANET_BLUEPRINT_AND_SUBTERRANEAN_DEPTH_TNT_v1",
   tectonics: "AUDRALIA_G1_TECTONIC_PLATE_LAYER_EARTH_LAND_AREA_ANCIENT_MOUNTAIN_MEMORY_TNT_v1",
   terrainCurrent: "AUDRALIA_G1_TERRAIN_STRONG_RELIEF_TOPOLOGY_TECTONICS_LOCK_TNT_v2",
   hydrationCurrent: "AUDRALIA_G1_HYDRATION_CONSUME_TOPOLOGY_TECTONICS_TERRAIN_WATERDOWN_TNT_v1",
-  routeExpected: "AUDRALIA_ROUTE_TRUE_ORTHOGRAPHIC_GLOBE_RENDER_TNT_v2",
-  routeWaterRenderingLater: "ROUTE_WATER_RENDERING_AFTER_RUNTIME_HYDRATION"
+  routeExpected: "AUDRALIA_ROUTE_RUNTIME_HYDRATION_WATER_RENDER_TNT_v1"
 });
 
 const RUNTIME_LAW = Object.freeze({
@@ -93,6 +95,10 @@ const RUNTIME_LAW = Object.freeze({
   hydrationConsumedAfterTerrain: true,
   hydrationHeld: false,
   hydrationActiveInRuntime: true,
+
+  runtimeCompositeFieldActive: true,
+  perPixelChainRecalculation: false,
+  routeSamplesCompositeField: true,
 
   ownsRuntimeSampling: true,
   ownsChainComposition: true,
@@ -113,6 +119,9 @@ const RUNTIME_LAW = Object.freeze({
   ownsFoliage: false,
   ownsTrees: false,
   ownsVegetation: false,
+  ownsAnimals: false,
+  ownsMarineLife: false,
+  ownsConstructCivilization: false,
   ownsRouteRendering: false,
   ownsFinalRender: false,
   visualPassClaimed: false,
@@ -120,17 +129,17 @@ const RUNTIME_LAW = Object.freeze({
   terrainMustRespectTopologyLandArea: true,
   hydrationMustRespectTopologyTerrainChain: true,
   routeMustNotGenerateLand: true,
-  routeMustConsumeRuntime: true,
-  routeWaterRenderingStillLater: true
+  routeMustNotGenerateWater: true,
+  routeMustConsumeRuntime: true
 });
 
 const DEFAULTS = Object.freeze({
-  fieldWidth: 192,
-  fieldHeight: 96,
-  maxFieldWidth: 320,
-  maxFieldHeight: 160,
-  minFieldWidth: 48,
-  minFieldHeight: 24,
+  fieldWidth: 224,
+  fieldHeight: 112,
+  maxFieldWidth: 256,
+  maxFieldHeight: 128,
+  minFieldWidth: 96,
+  minFieldHeight: 48,
 
   topologyContext: Object.freeze({
     blueprintResolution: 0.88,
@@ -191,17 +200,12 @@ function normalizeUV(uInput, vInput) {
   });
 }
 
-function safeCall(label, fallback, fn) {
+function safeCall(fallback, fn) {
   try {
-    return fn();
+    const value = fn();
+    return value == null ? fallback : value;
   } catch (error) {
-    return Object.freeze({
-      ok: false,
-      runtimeFallback: true,
-      label,
-      error: error && error.message ? error.message : String(error),
-      fallback
-    });
+    return fallback;
   }
 }
 
@@ -248,7 +252,14 @@ function getRuntimeOptions(options = {}) {
     }),
     hydrationEnabled: true,
     hydrationConsumedAfterTerrain: true,
+    lowLagSampling: true,
+    runtimeCompositeFieldActive: true,
     foliageEnabled: false,
+    climateEnabled: false,
+    ecologyEnabled: false,
+    animalsEnabled: false,
+    marineLifeEnabled: false,
+    constructCivilizationEnabled: false,
     visualPassClaimed: false
   });
 }
@@ -375,6 +386,7 @@ function fallbackHydrationSample(u, v, topology, terrain) {
   const glacier = ice ? 0.8 : land ? clamp(Number(terrain && terrain.glacierSeatPressure) || 0, 0, 1) : 0;
 
   let waterClass = "dry_land";
+
   if (ocean) waterClass = oceanDepth > 0.72 ? "deep_ocean_water" : "ocean_water";
   else if (glacier > 0.62) waterClass = "glacier_mass";
   else if (lake > 0.58) waterClass = "lake_fill";
@@ -421,125 +433,63 @@ function fallbackHydrationSample(u, v, topology, terrain) {
   });
 }
 
-function buildRuntimeCache(options) {
-  const topologyField = safeCall("buildTopologyField", null, () =>
-    buildTopologyField(options.fieldWidth, options.fieldHeight, options.topologyContext)
-  );
-
-  const tectonicsField = safeCall("buildTectonicsField", null, () =>
-    buildTectonicsField(options.fieldWidth, options.fieldHeight, {
-      ...options.tectonicsContext,
-      topologyContext: options.topologyContext
-    })
-  );
-
-  const terrainField = safeCall("buildTerrainField", null, () =>
-    buildTerrainField(options.fieldWidth, options.fieldHeight, {
-      ...options.terrainContext,
-      topologyContext: options.topologyContext,
-      tectonicsContext: options.tectonicsContext
-    })
-  );
-
-  const hydrationField = safeCall("buildHydrationField", null, () =>
-    buildHydrationField(options.fieldWidth, options.fieldHeight, {
-      ...options.hydrationContext,
-      topologyContext: options.topologyContext,
-      tectonicsContext: options.tectonicsContext,
-      terrainContext: options.terrainContext
-    })
-  );
-
-  const topologyStatus = safeCall("getTopologyStatus", null, () => getTopologyStatus());
-  const tectonicsStatus = safeCall("getTectonicsStatus", null, () => getTectonicsStatus());
-  const terrainStatus = safeCall("getTerrainStatus", null, () => getTerrainStatus());
-  const hydrationStatus = safeCall("getHydrationStatus", null, () => getHydrationStatus());
-
-  const seaLevelEstimate = safeCall("estimateEarthEquivalentSeaLevel", null, () =>
-    estimateEarthEquivalentSeaLevel(96, 48, options.topologyContext)
-  );
-
-  return Object.freeze({
-    receipt: RECEIPT,
-    previousReceipts: PREVIOUS_RECEIPTS,
-    planetaryObject: PLANETARY_OBJECT,
-    generation: GENERATION,
-    fieldWidth: options.fieldWidth,
-    fieldHeight: options.fieldHeight,
-    topologyField,
-    tectonicsField,
-    terrainField,
-    hydrationField,
-    topologyStatus,
-    tectonicsStatus,
-    terrainStatus,
-    hydrationStatus,
-    seaLevelEstimate,
-    createdAt: Date.now(),
-    runtimeCacheActive: true,
-    lowLagSampling: true,
-    hydrationCacheActive: true,
-    hydrationConsumedAfterTerrain: true
-  });
-}
-
-function fieldSample(field, getter, fallback, u, v, extra) {
+function getSampleFromField(field, getter, fallback, u, v, directSample) {
   if (field && field.samples && field.width && field.height && typeof getter === "function") {
-    return safeCall("fieldSample", fallback, () => getter(field, u, v));
+    return safeCall(fallback, () => getter(field, u, v));
   }
 
-  return safeCall("directSample", fallback, () => extra());
+  return safeCall(fallback, directSample);
 }
 
-function getTopologyFromCache(cache, u, v) {
+function getTopologyFromLayerCache(cache, u, v) {
   const fallback = fallbackTopologySample(u, v);
 
-  return fieldSample(
+  return getSampleFromField(
     cache.topologyField,
     getTopologySampleFromField,
     fallback,
     u,
     v,
-    () => sampleTopology(u, v, DEFAULTS.topologyContext)
+    () => sampleTopology(u, v, cache.runtimeOptions.topologyContext)
   );
 }
 
-function getTectonicsFromCache(cache, u, v, topologySample) {
+function getTectonicsFromLayerCache(cache, u, v, topologySample) {
   const fallback = fallbackTectonicsSample(u, v, topologySample);
 
-  return fieldSample(
+  return getSampleFromField(
     cache.tectonicsField,
     getTectonicsSampleFromField,
     fallback,
     u,
     v,
-    () => sampleTectonics(u, v, topologySample, DEFAULTS.tectonicsContext)
+    () => sampleTectonics(u, v, topologySample, cache.runtimeOptions.tectonicsContext)
   );
 }
 
-function getTerrainFromCache(cache, u, v, topologySample) {
+function getTerrainFromLayerCache(cache, u, v, topologySample) {
   const fallback = fallbackTerrainSample(u, v, topologySample);
 
-  return fieldSample(
+  return getSampleFromField(
     cache.terrainField,
     getTerrainSampleFromField,
     fallback,
     u,
     v,
-    () => sampleTerrain(u, v, DEFAULTS.terrainContext)
+    () => sampleTerrain(u, v, cache.runtimeOptions.terrainContext)
   );
 }
 
-function getHydrationFromCache(cache, u, v, topologySample, terrainSample) {
+function getHydrationFromLayerCache(cache, u, v, topologySample, terrainSample) {
   const fallback = fallbackHydrationSample(u, v, topologySample, terrainSample);
 
-  return fieldSample(
+  return getSampleFromField(
     cache.hydrationField,
     getHydrationSampleFromField,
     fallback,
     u,
     v,
-    () => sampleHydration(u, v, DEFAULTS.hydrationContext)
+    () => sampleHydration(u, v, cache.runtimeOptions.hydrationContext)
   );
 }
 
@@ -588,13 +538,13 @@ function topologyAllowsRock(topology) {
   );
 }
 
-function composeRuntimeSample(cache, uInput, vInput, context = {}) {
+function composeRuntimeSampleFromLayers(cache, uInput, vInput) {
   const point = normalizeUV(uInput, vInput);
 
-  const topology = getTopologyFromCache(cache, point.u, point.v);
-  const tectonics = getTectonicsFromCache(cache, point.u, point.v, topology);
-  const terrain = getTerrainFromCache(cache, point.u, point.v, topology);
-  const hydration = getHydrationFromCache(cache, point.u, point.v, topology, terrain);
+  const topology = getTopologyFromLayerCache(cache, point.u, point.v);
+  const tectonics = getTectonicsFromLayerCache(cache, point.u, point.v, topology);
+  const terrain = getTerrainFromLayerCache(cache, point.u, point.v, topology);
+  const hydration = getHydrationFromLayerCache(cache, point.u, point.v, topology, terrain);
 
   const landAllowed = topologyAllowsLand(topology);
   const iceAllowed = topologyAllowsIce(topology);
@@ -696,6 +646,8 @@ function composeRuntimeSample(cache, uInput, vInput, context = {}) {
     runtimeChain: "topology→tectonics→terrain→hydration",
     runtimeCacheActive: true,
     lowLagSampling: true,
+    runtimeCompositeFieldActive: true,
+    perPixelChainRecalculation: false,
     hydrationCacheActive: true,
     hydrationConsumedAfterTerrain: true,
 
@@ -860,6 +812,9 @@ function composeRuntimeSample(cache, uInput, vInput, context = {}) {
     foliageEnabled: false,
     climateEnabled: false,
     ecologyEnabled: false,
+    animalsEnabled: false,
+    marineLifeEnabled: false,
+    constructCivilizationEnabled: false,
 
     foliage: false,
     trees: false,
@@ -870,10 +825,225 @@ function composeRuntimeSample(cache, uInput, vInput, context = {}) {
     ownsFoliage: false,
     ownsTrees: false,
     ownsVegetation: false,
+    ownsAnimals: false,
+    ownsMarineLife: false,
+    ownsConstructCivilization: false,
     ownsRouteRendering: false,
     ownsFinalRender: false,
     visualPassClaimed: false
   });
+}
+
+function buildRuntimeCompositeField(cache) {
+  const width = cache.fieldWidth;
+  const height = cache.fieldHeight;
+  const samples = new Array(width * height);
+
+  let landSamples = 0;
+  let waterSamples = 0;
+  let iceSamples = 0;
+  let beachSamples = 0;
+  let hydratedSamples = 0;
+  let oceanHydrationSamples = 0;
+  let riverSamples = 0;
+  let streamSamples = 0;
+  let lakeSamples = 0;
+  let glacierSamples = 0;
+  let floodplainSamples = 0;
+  let deltaSamples = 0;
+  let springSamples = 0;
+  let subterraneanSamples = 0;
+  let foliageSamples = 0;
+
+  let maxHydration = 0;
+  let maxSurfaceWater = 0;
+  let maxRiver = 0;
+  let maxLake = 0;
+  let maxGlacier = 0;
+
+  for (let y = 0; y < height; y += 1) {
+    const v = height === 1 ? 0.5 : y / (height - 1);
+
+    for (let x = 0; x < width; x += 1) {
+      const u = width === 1 ? 0.5 : x / (width - 1);
+      const sample = composeRuntimeSampleFromLayers(cache, u, v);
+      samples[y * width + x] = sample;
+
+      if (sample.isIce) iceSamples += 1;
+      else if (sample.isLandFootprint) landSamples += 1;
+      else waterSamples += 1;
+
+      if (sample.isBeach) beachSamples += 1;
+      if (sample.isHydrated) hydratedSamples += 1;
+      if (sample.isOceanWater) oceanHydrationSamples += 1;
+      if (sample.isRiver) riverSamples += 1;
+      if (sample.isStream) streamSamples += 1;
+      if (sample.isLake) lakeSamples += 1;
+      if (sample.isGlacier) glacierSamples += 1;
+      if (sample.isFloodplain) floodplainSamples += 1;
+      if (sample.isDelta) deltaSamples += 1;
+      if (sample.isSpring) springSamples += 1;
+      if (sample.isSubterraneanWater) subterraneanSamples += 1;
+      if (sample.foliage || sample.trees || sample.vegetation) foliageSamples += 1;
+
+      maxHydration = Math.max(maxHydration, sample.hydrationActivationIndex);
+      maxSurfaceWater = Math.max(maxSurfaceWater, sample.surfaceWaterIndex);
+      maxRiver = Math.max(maxRiver, sample.riverFlowPressure);
+      maxLake = Math.max(maxLake, sample.lakeFillPressure);
+      maxGlacier = Math.max(maxGlacier, sample.glacierMassPressure);
+    }
+  }
+
+  return Object.freeze({
+    receipt: RECEIPT,
+    planetaryObject: PLANETARY_OBJECT,
+    generation: GENERATION,
+    width,
+    height,
+    samples,
+    runtimeCompositeFieldActive: true,
+    perPixelChainRecalculation: false,
+    stats: Object.freeze({
+      totalSamples: samples.length,
+      landSamples,
+      waterSamples,
+      iceSamples,
+      beachSamples,
+      hydratedSamples,
+      oceanHydrationSamples,
+      riverSamples,
+      streamSamples,
+      lakeSamples,
+      glacierSamples,
+      floodplainSamples,
+      deltaSamples,
+      springSamples,
+      subterraneanSamples,
+      foliageSamples,
+      landRatio: landSamples / samples.length,
+      waterRatio: waterSamples / samples.length,
+      iceRatio: iceSamples / samples.length,
+      beachRatio: beachSamples / samples.length,
+      hydrationRatio: hydratedSamples / samples.length,
+      maxHydration,
+      maxSurfaceWater,
+      maxRiver,
+      maxLake,
+      maxGlacier
+    })
+  });
+}
+
+function getRuntimeSampleFromCompositeField(field, uInput, vInput) {
+  if (!field || !field.samples || !field.width || !field.height) return null;
+
+  const point = normalizeUV(uInput, vInput);
+  const x = clamp(Math.round(point.u * (field.width - 1)), 0, field.width - 1);
+  const y = clamp(Math.round(point.v * (field.height - 1)), 0, field.height - 1);
+
+  return field.samples[y * field.width + x] || null;
+}
+
+function buildRuntimeCache(options) {
+  const layerCache = {
+    receipt: RECEIPT,
+    previousReceipts: PREVIOUS_RECEIPTS,
+    planetaryObject: PLANETARY_OBJECT,
+    generation: GENERATION,
+    fieldWidth: options.fieldWidth,
+    fieldHeight: options.fieldHeight,
+    runtimeOptions: options,
+
+    topologyField: null,
+    tectonicsField: null,
+    terrainField: null,
+    hydrationField: null,
+
+    topologyStatus: null,
+    tectonicsStatus: null,
+    terrainStatus: null,
+    hydrationStatus: null,
+    seaLevelEstimate: null
+  };
+
+  layerCache.topologyField = safeCall(null, () =>
+    buildTopologyField(options.fieldWidth, options.fieldHeight, options.topologyContext)
+  );
+
+  layerCache.tectonicsField = safeCall(null, () =>
+    buildTectonicsField(options.fieldWidth, options.fieldHeight, {
+      ...options.tectonicsContext,
+      topologyContext: options.topologyContext
+    })
+  );
+
+  layerCache.terrainField = safeCall(null, () =>
+    buildTerrainField(options.fieldWidth, options.fieldHeight, {
+      ...options.terrainContext,
+      topologyContext: options.topologyContext,
+      tectonicsContext: options.tectonicsContext
+    })
+  );
+
+  layerCache.hydrationField = safeCall(null, () =>
+    buildHydrationField(options.fieldWidth, options.fieldHeight, {
+      ...options.hydrationContext,
+      topologyContext: options.topologyContext,
+      tectonicsContext: options.tectonicsContext,
+      terrainContext: options.terrainContext
+    })
+  );
+
+  layerCache.topologyStatus = safeCall(null, () => getTopologyStatus());
+  layerCache.tectonicsStatus = safeCall(null, () => getTectonicsStatus());
+  layerCache.terrainStatus = safeCall(null, () => getTerrainStatus());
+  layerCache.hydrationStatus = safeCall(null, () => getHydrationStatus());
+
+  layerCache.seaLevelEstimate = safeCall(null, () =>
+    estimateEarthEquivalentSeaLevel(96, 48, options.topologyContext)
+  );
+
+  const runtimeField = buildRuntimeCompositeField(layerCache);
+
+  return Object.freeze({
+    receipt: RECEIPT,
+    previousReceipts: PREVIOUS_RECEIPTS,
+    planetaryObject: PLANETARY_OBJECT,
+    generation: GENERATION,
+    fieldWidth: options.fieldWidth,
+    fieldHeight: options.fieldHeight,
+    runtimeOptions: options,
+
+    topologyField: layerCache.topologyField,
+    tectonicsField: layerCache.tectonicsField,
+    terrainField: layerCache.terrainField,
+    hydrationField: layerCache.hydrationField,
+    runtimeField,
+
+    topologyStatus: layerCache.topologyStatus,
+    tectonicsStatus: layerCache.tectonicsStatus,
+    terrainStatus: layerCache.terrainStatus,
+    hydrationStatus: layerCache.hydrationStatus,
+    seaLevelEstimate: layerCache.seaLevelEstimate,
+
+    createdAt: Date.now(),
+    runtimeCacheActive: true,
+    lowLagSampling: true,
+    hydrationCacheActive: true,
+    runtimeCompositeFieldActive: true,
+    perPixelChainRecalculation: false,
+    hydrationConsumedAfterTerrain: true
+  });
+}
+
+function sampleFromRuntimeCache(cache, u, v) {
+  const cached = getRuntimeSampleFromCompositeField(cache.runtimeField, u, v);
+
+  if (cached) {
+    return cached;
+  }
+
+  return composeRuntimeSampleFromLayers(cache, u, v);
 }
 
 export function createAudraliaRuntime(options = {}) {
@@ -890,12 +1060,12 @@ export function createAudraliaRuntime(options = {}) {
     runtimeOptions,
     cache,
 
-    sampleRuntimeState(u, v, context = {}) {
-      return composeRuntimeSample(cache, u, v, context);
+    sampleRuntimeState(u, v) {
+      return sampleFromRuntimeCache(cache, u, v);
     },
 
-    sampleAudraliaPlanetState(u, v, context = {}) {
-      return composeRuntimeSample(cache, u, v, context);
+    sampleAudraliaPlanetState(u, v) {
+      return sampleFromRuntimeCache(cache, u, v);
     },
 
     getStatus() {
@@ -907,21 +1077,30 @@ export function createAudraliaRuntime(options = {}) {
         planetaryObject: PLANETARY_OBJECT,
         generation: GENERATION,
         file: FILE,
+
         fieldWidth: cache.fieldWidth,
         fieldHeight: cache.fieldHeight,
         runtimeCacheActive: true,
         lowLagSampling: true,
         hydrationCacheActive: true,
+        runtimeCompositeFieldActive: true,
+        perPixelChainRecalculation: false,
+        routeSamplesCompositeField: true,
         hydrationConsumedAfterTerrain: true,
+
         topologyLoaded: Boolean(cache.topologyField && cache.topologyField.samples),
         tectonicsLoaded: Boolean(cache.tectonicsField && cache.tectonicsField.samples),
         terrainLoaded: Boolean(cache.terrainField && cache.terrainField.samples),
         hydrationLoaded: Boolean(cache.hydrationField && cache.hydrationField.samples),
+        runtimeFieldLoaded: Boolean(cache.runtimeField && cache.runtimeField.samples),
+
         topologyStatus: cache.topologyStatus,
         tectonicsStatus: cache.tectonicsStatus,
         terrainStatus: cache.terrainStatus,
         hydrationStatus: cache.hydrationStatus,
         seaLevelEstimate: cache.seaLevelEstimate,
+        runtimeFieldStats: cache.runtimeField.stats,
+
         layerOrder: RUNTIME_LAW.layerOrder,
         chain: RUNTIME_LAW.chain,
         topologyFirst: true,
@@ -931,6 +1110,11 @@ export function createAudraliaRuntime(options = {}) {
         hydrationHeld: false,
         hydrationActiveInRuntime: true,
         foliageClosed: true,
+        climateClosed: true,
+        ecologyClosed: true,
+        animalsClosed: true,
+        marineLifeClosed: true,
+        constructCivilizationClosed: true,
         visualPassClaimed: false
       });
     }
@@ -1001,7 +1185,6 @@ export function buildAudraliaRuntimeField(width = 128, height = 64, options = {}
 
       if (sample.isBeach) beachSamples += 1;
       if (sample.isSmallContinentFootprint) smallContinentSamples += 1;
-
       if (sample.isHydrated) hydratedSamples += 1;
       if (sample.isOceanWater) oceanHydrationSamples += 1;
       if (sample.isRiver) riverSamples += 1;
@@ -1012,14 +1195,13 @@ export function buildAudraliaRuntimeField(width = 128, height = 64, options = {}
       if (sample.isDelta) deltaSamples += 1;
       if (sample.isSpring) springSamples += 1;
       if (sample.isSubterraneanWater) subterraneanSamples += 1;
+      if (sample.foliage || sample.trees || sample.vegetation) foliageSamples += 1;
 
       maxHydration = Math.max(maxHydration, sample.hydrationActivationIndex);
       maxSurfaceWater = Math.max(maxSurfaceWater, sample.surfaceWaterIndex);
       maxRiver = Math.max(maxRiver, sample.riverFlowPressure);
       maxLake = Math.max(maxLake, sample.lakeFillPressure);
       maxGlacier = Math.max(maxGlacier, sample.glacierMassPressure);
-
-      if (sample.foliage || sample.trees || sample.vegetation) foliageSamples += 1;
     }
   }
 
@@ -1033,6 +1215,8 @@ export function buildAudraliaRuntimeField(width = 128, height = 64, options = {}
     height: h,
     samples,
     runtimeStatus: runtime.getStatus(),
+    runtimeCompositeFieldActive: true,
+    perPixelChainRecalculation: false,
     stats: Object.freeze({
       totalSamples: samples.length,
       landSamples,
@@ -1077,6 +1261,8 @@ export function buildAudraliaRuntimeField(width = 128, height = 64, options = {}
       runtimeCacheActive: true,
       lowLagSampling: true,
       hydrationCacheActive: true,
+      runtimeCompositeFieldActive: true,
+      perPixelChainRecalculation: false,
       topologyFirst: true,
       tectonicsSecond: true,
       terrainThird: true,
@@ -1097,7 +1283,7 @@ export function getRuntimeStatus() {
     receipt: RECEIPT,
     previousReceipts: PREVIOUS_RECEIPTS,
     status: "active",
-    id: "audralia-runtime-consume-hydration-after-terrain",
+    id: "audralia-runtime-low-lag-composite-hydration-cache",
     planetaryObject: PLANETARY_OBJECT,
     publicName: PLANETARY_OBJECT,
     generation: GENERATION,
@@ -1129,7 +1315,11 @@ export function getRuntimeStatus() {
     runtimeCacheActive: true,
     lowLagSampling: true,
     hydrationCacheActive: true,
+    runtimeCompositeFieldActive: true,
+    perPixelChainRecalculation: false,
+    routeSamplesCompositeField: true,
     hydrationConsumedAfterTerrain: true,
+
     fieldWidth: runtime.cache.fieldWidth,
     fieldHeight: runtime.cache.fieldHeight,
 
@@ -1137,12 +1327,14 @@ export function getRuntimeStatus() {
     tectonicsLoaded: Boolean(runtime.cache.tectonicsField && runtime.cache.tectonicsField.samples),
     terrainLoaded: Boolean(runtime.cache.terrainField && runtime.cache.terrainField.samples),
     hydrationLoaded: Boolean(runtime.cache.hydrationField && runtime.cache.hydrationField.samples),
+    runtimeFieldLoaded: Boolean(runtime.cache.runtimeField && runtime.cache.runtimeField.samples),
 
     topologyStatus: runtime.cache.topologyStatus,
     tectonicsStatus: runtime.cache.tectonicsStatus,
     terrainStatus: runtime.cache.terrainStatus,
     hydrationStatus: runtime.cache.hydrationStatus,
     seaLevelEstimate: runtime.cache.seaLevelEstimate,
+    runtimeFieldStats: runtime.cache.runtimeField.stats,
 
     ownsRuntimeSampling: true,
     ownsChainComposition: true,
@@ -1163,12 +1355,20 @@ export function getRuntimeStatus() {
     ownsFoliage: false,
     ownsTrees: false,
     ownsVegetation: false,
+    ownsAnimals: false,
+    ownsMarineLife: false,
+    ownsConstructCivilization: false,
     ownsRouteRendering: false,
     ownsFinalRender: false,
 
     hydrationHeld: false,
     hydrationActiveInRuntime: true,
     foliageClosed: true,
+    climateClosed: true,
+    ecologyClosed: true,
+    animalsClosed: true,
+    marineLifeClosed: true,
+    constructCivilizationClosed: true,
     imageGeneration: false,
     graphicBox: false,
     visualPassClaimed: false

@@ -1,21 +1,21 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_ROUTE_RUNTIME_HYDRATION_WATER_RENDER_TNT_v1
+// AUDRALIA_ROUTE_CONSUME_CURRENT_RUNTIME_GENEALOGY_SURFACE_TNT_v1
 //
 // Role:
-// - Existing Audralia route compositor.
+// - Audralia route compositor.
 // - Consumes Audralia runtime only.
 // - Renders Audralia as a true orthographic globe.
 // - Shows only the front-facing hemisphere.
-// - Reads hydration from runtime and visually displays water.
+// - Reads current runtime surface output.
+// - Displays land, beach, relief, hydration, water depth, glaciers, rivers, lakes, and ocean classes from runtime.
 // - Does not generate land, terrain, or water in the route.
 //
-// Fix:
-// - Keeps true orthographic globe behavior.
-// - Keeps runtime-only route authority.
-// - Adds runtime hydration visual readout:
-//   ocean, coastal water, shelf water, deep ocean, trench water,
-//   rivers, streams, lakes, glaciers, snowpack, floodplains, deltas,
-//   springs, and subterranean wetness influence.
+// Correction:
+// - Previous route script still imported runtime with stale RUNTIME_VERSION.
+// - This route forces the current runtime contract:
+//   AUDRALIA_RUNTIME_ALLOW_TECTONICS_TOPOLOGY_TERRAIN_HYDRATION_SURFACE_TNT_v1
+// - This route rejects stale window runtime APIs if their status receipt does not match.
+// - Route remains downstream display only.
 //
 // Hard locks:
 // - No route-owned land generation.
@@ -39,15 +39,20 @@
 (function () {
   "use strict";
 
-  const RECEIPT = "AUDRALIA_ROUTE_RUNTIME_HYDRATION_WATER_RENDER_TNT_v1";
-  const PREVIOUS_RECEIPT = "AUDRALIA_ROUTE_TRUE_ORTHOGRAPHIC_GLOBE_RENDER_TNT_v2";
+  const RECEIPT = "AUDRALIA_ROUTE_CONSUME_CURRENT_RUNTIME_GENEALOGY_SURFACE_TNT_v1";
+
+  const PREVIOUS_RECEIPTS = Object.freeze([
+    "AUDRALIA_ROUTE_RUNTIME_HYDRATION_WATER_RENDER_TNT_v1",
+    "AUDRALIA_ROUTE_TRUE_ORTHOGRAPHIC_GLOBE_RENDER_TNT_v2",
+    "AUDRALIA_ROUTE_TRUE_GLOBE_VISIBLE_HEMISPHERE_RENDER_TNT_v1"
+  ]);
 
   const ROUTE = "/showroom/globe/audralia/";
   const BODY = "audralia";
   const LABEL = "Audralia";
 
   const RUNTIME_AUTHORITY = "/assets/audralia/audralia.runtime.js";
-  const RUNTIME_VERSION = "AUDRALIA_RUNTIME_CONSUME_HYDRATION_AFTER_TERRAIN_TNT_v1";
+  const RUNTIME_VERSION = "AUDRALIA_RUNTIME_ALLOW_TECTONICS_TOPOLOGY_TERRAIN_HYDRATION_SURFACE_TNT_v1";
 
   const CONTROL = Object.freeze({
     axisDegrees: 21.5,
@@ -66,7 +71,7 @@
     visibleLongitudeSpanDegrees: 180,
     hiddenLongitudeSpanDegrees: 180,
     phaseWindow: "front_hemisphere_only",
-    compositorModel: "runtime-consumer-orthographic-globe-with-hydration-readout",
+    compositorModel: "runtime-consumer-current-genealogy-surface-globe",
 
     diskRotation: "forbidden",
     fullTextureOnVisibleFace: "forbidden",
@@ -90,11 +95,22 @@
   });
 
   const RUNTIME_CONTEXT = Object.freeze({
-    topologyFirst: true,
-    tectonicsEnabled: true,
-    terrainEnabled: true,
+    consumesTectonicGenealogy: true,
+    consumesHydrationParent: true,
     hydrationEnabled: true,
-    hydrationConsumedAfterTerrain: true,
+    hydrationAllowedToRender: true,
+    allowsTectonics: true,
+    allowsTopology: true,
+    allowsTerrain: true,
+    allowsHydration: true,
+    allowsWater: true,
+    allowsLand: true,
+    allowsBeachOutline: true,
+    allowsRelief: true,
+    topologyLandControlsLandPreservation: true,
+    hydrationCannotEraseTopologyLand: true,
+    oceansMayFillOnlyTopologyVoid: true,
+    runtimeImportsOceansDirectly: false,
     foliageEnabled: false,
     climateEnabled: false,
     ecologyEnabled: false,
@@ -185,7 +201,7 @@
     document.documentElement.dataset.activeBody = BODY;
     document.documentElement.dataset.activeRoute = ROUTE;
     document.documentElement.dataset.audraliaRouteCompositor = RECEIPT;
-    document.documentElement.dataset.audraliaPreviousRouteCompositor = PREVIOUS_RECEIPT;
+    document.documentElement.dataset.audraliaPreviousRouteCompositors = PREVIOUS_RECEIPTS.join("|");
     document.documentElement.dataset.audraliaRouteCompositorStatus = status || "booting";
     document.documentElement.dataset.audraliaRuntimeAuthority = RUNTIME_AUTHORITY;
     document.documentElement.dataset.audraliaRuntimeVersion = RUNTIME_VERSION;
@@ -227,10 +243,10 @@
   }
 
   function ensureStyle() {
-    if (document.getElementById("audralia-runtime-hydration-water-globe-style")) return;
+    if (document.getElementById("audralia-current-runtime-genealogy-globe-style")) return;
 
     const style = document.createElement("style");
-    style.id = "audralia-runtime-hydration-water-globe-style";
+    style.id = "audralia-current-runtime-genealogy-globe-style";
     style.textContent = `
       #audraliaRenderMount,
       [data-audralia-render-mount],
@@ -360,6 +376,34 @@
     return null;
   }
 
+  function runtimeReceipt(api) {
+    if (!api) return "";
+
+    try {
+      if (typeof api.getRuntimeStatus === "function") {
+        const status = api.getRuntimeStatus();
+        return String(status && status.receipt ? status.receipt : "");
+      }
+    } catch (error) {}
+
+    try {
+      if (typeof api.createAudraliaRuntime === "function") {
+        const instance = api.createAudraliaRuntime(RUNTIME_CONTEXT);
+        if (instance && typeof instance.getStatus === "function") {
+          const status = instance.getStatus();
+          return String(status && status.receipt ? status.receipt : "");
+        }
+        return String(instance && instance.receipt ? instance.receipt : "");
+      }
+    } catch (error) {}
+
+    return String(api.receipt || "");
+  }
+
+  function runtimeMatchesCurrent(api) {
+    return runtimeReceipt(api) === RUNTIME_VERSION;
+  }
+
   function getWindowRuntimeApi() {
     return (
       window.DGBAudraliaRuntime ||
@@ -369,19 +413,45 @@
     );
   }
 
-  async function loadRuntimeAuthority() {
-    const existing = resolveRuntimeApi(getWindowRuntimeApi());
-
-    if (existing) {
-      return existing;
-    }
-
+  async function importCurrentRuntime() {
     try {
       const module = await import(cacheUrl(RUNTIME_AUTHORITY, RUNTIME_VERSION));
       return resolveRuntimeApi(module);
     } catch (error) {
+      document.documentElement.dataset.audraliaRuntimeImportError = error && error.message ? error.message : String(error);
       return null;
     }
+  }
+
+  async function loadRuntimeAuthority() {
+    const imported = await importCurrentRuntime();
+
+    if (imported && runtimeMatchesCurrent(imported)) {
+      document.documentElement.dataset.audraliaRuntimeSource = "fresh-import-current";
+      return imported;
+    }
+
+    if (imported) {
+      document.documentElement.dataset.audraliaRuntimeSource = "fresh-import-receipt-mismatch";
+      document.documentElement.dataset.audraliaRuntimeImportedReceipt = runtimeReceipt(imported);
+      return imported;
+    }
+
+    const existing = resolveRuntimeApi(getWindowRuntimeApi());
+
+    if (existing && runtimeMatchesCurrent(existing)) {
+      document.documentElement.dataset.audraliaRuntimeSource = "window-current";
+      return existing;
+    }
+
+    if (existing) {
+      document.documentElement.dataset.audraliaRuntimeSource = "window-stale-rejected";
+      document.documentElement.dataset.audraliaRuntimeWindowReceipt = runtimeReceipt(existing);
+    } else {
+      document.documentElement.dataset.audraliaRuntimeSource = "runtime-unavailable";
+    }
+
+    return null;
   }
 
   function createRuntimeInstance(runtimeApi) {
@@ -391,6 +461,7 @@
       try {
         return runtimeApi.createAudraliaRuntime(RUNTIME_CONTEXT);
       } catch (error) {
+        document.documentElement.dataset.audraliaRuntimeInstanceError = error && error.message ? error.message : String(error);
         return null;
       }
     }
@@ -428,11 +499,15 @@
     return Boolean(
       sample &&
         (
+          sample.landVisibleToRoute ||
           sample.isLandFootprint ||
           sample.isAboveWaterLandFootprint ||
-          sample.topologyLandFootprint ||
           sample.isLand ||
-          sample.land === true
+          sample.visualSurfaceClass === "beach_outline_land_surface" ||
+          sample.visualSurfaceClass === "mountain_relief_land_surface" ||
+          sample.visualSurfaceClass === "canyon_cut_land_surface" ||
+          sample.visualSurfaceClass === "cliff_rock_land_surface" ||
+          sample.visualSurfaceClass === "inland_terrain_land_surface"
         )
     );
   }
@@ -441,11 +516,15 @@
     return Boolean(
       sample &&
         (
-          sample.isSouthPolarIceFootprint ||
           sample.isIce ||
+          sample.isGlacier ||
+          sample.isPolarIceFootprint ||
+          sample.isSouthPolarIceFootprint ||
+          sample.isNorthPolarIceFootprint ||
           sample.southIce ||
           sample.surfaceClass === "polar_ice_footprint" ||
-          sample.topologySurfaceClass === "polar_ice_footprint"
+          sample.topologySurfaceClass === "polar_ice_footprint" ||
+          sample.visualSurfaceClass === "glacier_ice_snowpack_surface"
         )
     );
   }
@@ -456,6 +535,7 @@
         (
           sample.isBeach ||
           sample.isSand ||
+          sample.visualSurfaceClass === "beach_outline_land_surface" ||
           String(sample.beachType || "").includes("beach") ||
           String(sample.surfaceClass || "").includes("beach") ||
           String(sample.topologySurfaceClass || "").includes("beach")
@@ -468,6 +548,7 @@
       sample &&
         (
           sample.isRock ||
+          sample.visualSurfaceClass === "cliff_rock_land_surface" ||
           String(sample.surfaceClass || "").includes("rock") ||
           String(sample.topologySurfaceClass || "").includes("rock") ||
           Number(sample.rockPressure) > 0.44
@@ -490,39 +571,52 @@
     if (!sample) return baseColor;
 
     const waterClass = String(sample.waterClass || "");
-    const hydrationColorInfluence = sample.hydrationColorInfluence || null;
+    const visualSurfaceClass = String(sample.visualSurfaceClass || "");
 
     const surfaceWaterIndex = clamp(Number(sample.surfaceWaterIndex) || 0, 0, 1);
     const hydrationActivationIndex = clamp(Number(sample.hydrationActivationIndex) || 0, 0, 1);
-    const shelfPressure = clamp(Number(sample.shelfPressure) || Number(sample.shelfDepthIndex) || 0, 0, 1);
-    const bathymetry = clamp(Number(sample.bathymetryHydrationIndex) || Number(sample.oceanDepthIndex) || 0, 0, 1);
-    const trench = clamp(Number(sample.trenchHydrationIndex) || Number(sample.trenchDepthIndex) || 0, 0, 1);
+    const shelfPressure = clamp(Number(sample.shelfPressure) || Number(sample.shelfWaterIndex) || Number(sample.shelfDepthIndex) || 0, 0, 1);
+    const bathymetry = clamp(Number(sample.bathymetryHydrationIndex) || Number(sample.visibleWaterDepthIndex) || Number(sample.oceanDepthIndex) || 0, 0, 1);
+    const trench = clamp(Number(sample.trenchHydrationIndex) || Number(sample.trenchWaterIndex) || Number(sample.trenchDepthIndex) || 0, 0, 1);
 
-    if (sample.isOceanWater || waterClass === "ocean_water" || waterClass === "coastal_water" || waterClass === "shelf_water" || waterClass === "deep_ocean_water" || waterClass === "trench_water") {
+    if (
+      sample.isOceanWater ||
+      sample.isCoastalWater ||
+      sample.isShelfWater ||
+      sample.isDeepOcean ||
+      sample.isTrenchWater ||
+      waterClass === "ocean_water" ||
+      waterClass === "coastal_water" ||
+      waterClass === "shelf_water" ||
+      waterClass === "deep_ocean_water" ||
+      waterClass === "trench_water" ||
+      visualSurfaceClass.includes("ocean_water") ||
+      visualSurfaceClass.includes("water_surface")
+    ) {
       let water = [8, 62, 132, 255];
 
-      if (sample.isCoastalWater || waterClass === "coastal_water") {
+      if (sample.isCoastalWater || waterClass === "coastal_water" || visualSurfaceClass === "coastal_turquoise_water_surface") {
         water = [
           Math.round(mix(18, 42, shelfPressure)),
           Math.round(mix(104, 154, shelfPressure)),
           Math.round(mix(154, 214, shelfPressure)),
           255
         ];
-      } else if (sample.isShelfWater || waterClass === "shelf_water") {
+      } else if (sample.isShelfWater || waterClass === "shelf_water" || visualSurfaceClass === "shelf_water_surface") {
         water = [
           Math.round(mix(10, 38, shelfPressure)),
           Math.round(mix(86, 140, shelfPressure)),
           Math.round(mix(138, 198, shelfPressure)),
           255
         ];
-      } else if (sample.isTrenchWater || waterClass === "trench_water") {
+      } else if (sample.isTrenchWater || waterClass === "trench_water" || visualSurfaceClass === "trench_ocean_water_surface") {
         water = [
           Math.round(mix(0, 8, 1 - trench)),
           Math.round(mix(12, 40, 1 - trench)),
           Math.round(mix(58, 106, 1 - trench)),
           255
         ];
-      } else if (sample.isDeepOcean || waterClass === "deep_ocean_water") {
+      } else if (sample.isDeepOcean || waterClass === "deep_ocean_water" || visualSurfaceClass === "deep_ocean_water_surface") {
         water = [
           Math.round(mix(2, 12, 1 - bathymetry)),
           Math.round(mix(30, 72, 1 - bathymetry)),
@@ -541,8 +635,8 @@
       return blendRgb(baseColor, water, clamp(0.72 + surfaceWaterIndex * 0.28, 0, 1));
     }
 
-    if (sample.isGlacier || waterClass === "glacier_mass") {
-      const pressure = clamp(Number(sample.glacierMassPressure) || hydrationActivationIndex, 0, 1);
+    if (sample.isGlacier || waterClass === "glacier_mass" || visualSurfaceClass === "glacier_ice_snowpack_surface") {
+      const pressure = clamp(Number(sample.glacierMassPressure) || Number(sample.glacierSeatPressure) || hydrationActivationIndex, 0, 1);
       return blendRgb(baseColor, [226, 242, 250, 255], clamp(0.34 + pressure * 0.50, 0, 0.92));
     }
 
@@ -551,27 +645,27 @@
       return blendRgb(baseColor, [234, 246, 252, 255], clamp(0.22 + pressure * 0.36, 0, 0.72));
     }
 
-    if (sample.isLake || waterClass === "lake_fill") {
-      const pressure = clamp(Number(sample.lakeFillPressure) || hydrationActivationIndex, 0, 1);
+    if (sample.isLake || waterClass === "lake_fill" || visualSurfaceClass === "lake_water_on_land_surface") {
+      const pressure = clamp(Number(sample.lakeFillPressure) || Number(sample.lakeBasinPressure) || hydrationActivationIndex, 0, 1);
       return blendRgb(baseColor, [42, 126, 184, 255], clamp(0.22 + pressure * 0.56, 0, 0.82));
     }
 
-    if (sample.isRiver || waterClass === "river_flow") {
-      const pressure = clamp(Number(sample.riverFlowPressure) || hydrationActivationIndex, 0, 1);
+    if (sample.isRiver || waterClass === "river_flow" || visualSurfaceClass === "river_water_on_land_surface") {
+      const pressure = clamp(Number(sample.riverFlowPressure) || Number(sample.riverbedPressure) || hydrationActivationIndex, 0, 1);
       return blendRgb(baseColor, [54, 152, 214, 255], clamp(0.18 + pressure * 0.48, 0, 0.72));
     }
 
-    if (sample.isStream || waterClass === "stream_flow") {
-      const pressure = clamp(Number(sample.streamFlowPressure) || hydrationActivationIndex, 0, 1);
+    if (sample.isStream || waterClass === "stream_flow" || visualSurfaceClass === "stream_water_on_land_surface") {
+      const pressure = clamp(Number(sample.streamFlowPressure) || Number(sample.streamPressure) || hydrationActivationIndex, 0, 1);
       return blendRgb(baseColor, [70, 174, 224, 255], clamp(0.14 + pressure * 0.34, 0, 0.58));
     }
 
-    if (sample.isDelta || waterClass === "delta_wetness") {
+    if (sample.isDelta || waterClass === "delta_wetland" || visualSurfaceClass === "delta_wetland_surface") {
       const pressure = clamp(Number(sample.deltaWetness) || hydrationActivationIndex, 0, 1);
       return blendRgb(baseColor, [54, 146, 168, 255], clamp(0.12 + pressure * 0.34, 0, 0.58));
     }
 
-    if (sample.isFloodplain || waterClass === "floodplain_wetness") {
+    if (sample.isFloodplain || waterClass === "floodplain_wetland" || visualSurfaceClass === "floodplain_wetland_surface") {
       const pressure = clamp(Number(sample.floodplainWetness) || hydrationActivationIndex, 0, 1);
       return blendRgb(baseColor, [62, 136, 148, 255], clamp(0.10 + pressure * 0.30, 0, 0.48));
     }
@@ -584,17 +678,6 @@
     if (sample.isSubterraneanWater || waterClass === "subterranean_water") {
       const pressure = clamp(Number(sample.subterraneanWaterPressure) || hydrationActivationIndex, 0, 1);
       return blendRgb(baseColor, [48, 96, 118, 255], clamp(0.05 + pressure * 0.18, 0, 0.30));
-    }
-
-    if (hydrationColorInfluence && Number(hydrationColorInfluence.a) > 0) {
-      const influence = [
-        Number(hydrationColorInfluence.r) || baseColor[0],
-        Number(hydrationColorInfluence.g) || baseColor[1],
-        Number(hydrationColorInfluence.b) || baseColor[2],
-        255
-      ];
-
-      return blendRgb(baseColor, influence, clamp(Number(hydrationColorInfluence.a) || 0, 0, 0.55));
     }
 
     return baseColor;
@@ -691,6 +774,7 @@
       Number(sample.cliffBaseCut) ||
         Number(sample.coastalCliffPressure) ||
         Number(sample.cliffPermission) ||
+        Number(sample.cliffPressure) ||
         0,
       0,
       1
@@ -804,6 +888,7 @@
     let springSamples = 0;
     let subterraneanSamples = 0;
     let foliageSamples = 0;
+    let fallbackSamples = 0;
 
     let maxSurfaceWaterIndex = 0;
     let maxHydrationActivationIndex = 0;
@@ -837,6 +922,19 @@
         if (sample && sample.isDelta) deltaSamples += 1;
         if (sample && sample.isSpring) springSamples += 1;
         if (sample && sample.isSubterraneanWater) subterraneanSamples += 1;
+
+        if (
+          sample &&
+          sample.fallbackFlags &&
+          (
+            sample.fallbackFlags.tectonicsFallbackUsed ||
+            sample.fallbackFlags.topologyFallbackUsed ||
+            sample.fallbackFlags.terrainFallbackUsed ||
+            sample.fallbackFlags.hydrationFallbackUsed
+          )
+        ) {
+          fallbackSamples += 1;
+        }
 
         if (sample) {
           maxSurfaceWaterIndex = Math.max(maxSurfaceWaterIndex, Number(sample.surfaceWaterIndex) || 0);
@@ -882,9 +980,10 @@
         springSamples,
         subterraneanSamples,
         foliageSamples,
+        fallbackSamples,
         maxSurfaceWaterIndex,
         maxHydrationActivationIndex,
-        compositorStatus: runtimeApi ? "runtime-hydration-water-texture-active" : "runtime-unavailable-ocean-safe-fallback"
+        compositorStatus: runtimeApi ? "current-runtime-genealogy-surface-texture-active" : "runtime-unavailable-ocean-safe-fallback"
       })
     });
   }
@@ -895,7 +994,7 @@
     stage.dataset.body = BODY;
     stage.dataset.route = ROUTE;
     stage.dataset.contract = RECEIPT;
-    stage.dataset.previousContract = PREVIOUS_RECEIPT;
+    stage.dataset.previousContracts = PREVIOUS_RECEIPTS.join("|");
     stage.dataset.axisDegrees = String(CONTROL.axisDegrees);
     stage.dataset.compositorModel = CONTROL.compositorModel;
     stage.dataset.rotationModel = CONTROL.rotationModel;
@@ -907,6 +1006,7 @@
     stage.dataset.routeOwnedLandGeneration = CONTROL.routeOwnedLandGeneration;
     stage.dataset.routeOwnedWaterGeneration = CONTROL.routeOwnedWaterGeneration;
     stage.dataset.hydrationReadout = "runtime-only";
+    stage.dataset.runtimeVersion = RUNTIME_VERSION;
     stage.dataset.noTrees = "true";
     stage.dataset.noFoliage = "true";
     stage.dataset.noVegetation = "true";
@@ -920,7 +1020,7 @@
     canvas.className = "audralia-orthographic-canvas";
     canvas.dataset.body = BODY;
     canvas.dataset.contract = RECEIPT;
-    canvas.dataset.previousContract = PREVIOUS_RECEIPT;
+    canvas.dataset.previousContracts = PREVIOUS_RECEIPTS.join("|");
     canvas.dataset.rotationModel = CONTROL.rotationModel;
     canvas.dataset.projectionModel = CONTROL.projectionModel;
     canvas.dataset.compositorModel = CONTROL.compositorModel;
@@ -931,6 +1031,7 @@
     canvas.dataset.hiddenLongitudeSpanDegrees = String(CONTROL.hiddenLongitudeSpanDegrees);
     canvas.dataset.routeOwnedLandGeneration = CONTROL.routeOwnedLandGeneration;
     canvas.dataset.routeOwnedWaterGeneration = CONTROL.routeOwnedWaterGeneration;
+    canvas.dataset.runtimeVersion = RUNTIME_VERSION;
     canvas.dataset.noTrees = "true";
     canvas.dataset.noFoliage = "true";
     canvas.dataset.noVegetation = "true";
@@ -938,18 +1039,18 @@
     canvas.dataset.hydrationReadout = "runtime-only";
     canvas.dataset.visualPass = CONTROL.visualPass;
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Audralia true orthographic globe render with runtime hydration water readout");
+    canvas.setAttribute("aria-label", "Audralia true orthographic globe render using current runtime genealogy surface");
 
     const label = document.createElement("div");
     label.className = "audralia-orthographic-label";
-    label.textContent = "AUDRALIA · WATER RUNTIME";
+    label.textContent = "AUDRALIA · CURRENT RUNTIME";
 
     const receipt = document.createElement("div");
     receipt.hidden = true;
     receipt.setAttribute("aria-hidden", "true");
     receipt.className = "audralia-orthographic-hidden-receipt";
     receipt.dataset.contract = RECEIPT;
-    receipt.dataset.previousContract = PREVIOUS_RECEIPT;
+    receipt.dataset.previousContracts = PREVIOUS_RECEIPTS.join("|");
     receipt.dataset.route = ROUTE;
     receipt.dataset.runtimeAuthority = RUNTIME_AUTHORITY;
     receipt.dataset.runtimeVersion = RUNTIME_VERSION;
@@ -966,13 +1067,11 @@
     receipt.dataset.hydrationReadout = "runtime-only";
     receipt.dataset.visualPass = CONTROL.visualPass;
     receipt.textContent =
-      "AUDRALIA_ROUTE_RUNTIME_HYDRATION_WATER_RENDER_TNT_v1 " +
+      "AUDRALIA_ROUTE_CONSUME_CURRENT_RUNTIME_GENEALOGY_SURFACE_TNT_v1 " +
+      "runtime=" + RUNTIME_VERSION + " " +
       "projection=orthographic visible_hemisphere=180deg hidden_hemisphere=180deg " +
-      "full_texture_on_visible_face=false flat_map_on_sphere=false " +
       "route_owned_land_generation=false route_owned_water_generation=false " +
-      "runtime_hydration_readout=true waterClass=true hydrationColorInfluence=true " +
-      "surfaceWaterIndex=true isOceanWater=true isRiver=true isLake=true " +
-      "climate=false ecology=false foliage=false animals=false marine_life=false visual_pass=held";
+      "runtime_only=true stale_window_runtime_rejected=true visual_pass=held";
 
     stage.appendChild(axis);
     stage.appendChild(canvas);
@@ -984,7 +1083,7 @@
     mount.dataset.body = BODY;
     mount.dataset.route = ROUTE;
     mount.dataset.contract = RECEIPT;
-    mount.dataset.previousContract = PREVIOUS_RECEIPT;
+    mount.dataset.previousContracts = PREVIOUS_RECEIPTS.join("|");
     mount.dataset.runtimeAuthority = RUNTIME_AUTHORITY;
     mount.dataset.runtimeVersion = RUNTIME_VERSION;
     mount.dataset.compositorModel = CONTROL.compositorModel;
@@ -1333,6 +1432,7 @@
 
     document.documentElement.dataset.audraliaRuntimeAuthorityLoaded = String(Boolean(runtimeApi));
     document.documentElement.dataset.audraliaRuntimeInstanceLoaded = String(Boolean(runtimeInstance));
+    document.documentElement.dataset.audraliaRuntimeLoadedReceipt = runtimeReceipt(runtimeApi);
     document.documentElement.dataset.audraliaComposedTexture = texture.stats.compositorStatus;
     document.documentElement.dataset.audraliaProjectionModel = CONTROL.projectionModel;
     document.documentElement.dataset.audraliaVisibleLongitudeSpanDegrees = String(CONTROL.visibleLongitudeSpanDegrees);
@@ -1347,9 +1447,11 @@
     document.documentElement.dataset.audraliaLakeSamples = String(texture.stats.lakeSamples);
     document.documentElement.dataset.audraliaGlacierSamples = String(texture.stats.glacierSamples);
     document.documentElement.dataset.audraliaFoliageSamples = String(texture.stats.foliageSamples);
+    document.documentElement.dataset.audraliaFallbackSamples = String(texture.stats.fallbackSamples);
 
     mount.dataset.runtimeAuthorityLoaded = String(Boolean(runtimeApi));
     mount.dataset.runtimeInstanceLoaded = String(Boolean(runtimeInstance));
+    mount.dataset.runtimeLoadedReceipt = runtimeReceipt(runtimeApi);
     mount.dataset.composedTexture = texture.stats.compositorStatus;
     mount.dataset.runtimeSamples = String(texture.stats.runtimeSamples);
     mount.dataset.landSamples = String(texture.stats.landSamples);
@@ -1368,6 +1470,7 @@
     mount.dataset.springSamples = String(texture.stats.springSamples);
     mount.dataset.subterraneanSamples = String(texture.stats.subterraneanSamples);
     mount.dataset.foliageSamples = String(texture.stats.foliageSamples);
+    mount.dataset.fallbackSamples = String(texture.stats.fallbackSamples);
     mount.dataset.maxSurfaceWaterIndex = String(texture.stats.maxSurfaceWaterIndex.toFixed(4));
     mount.dataset.maxHydrationActivationIndex = String(texture.stats.maxHydrationActivationIndex.toFixed(4));
     mount.dataset.projectionModel = CONTROL.projectionModel;
@@ -1379,15 +1482,16 @@
     mount.dataset.hydrationReadout = "runtime-only";
 
     window.dispatchEvent(
-      new CustomEvent("dgb:audralia-runtime-hydration-water-globe-ready", {
+      new CustomEvent("dgb:audralia-current-runtime-genealogy-globe-ready", {
         detail: {
           body: BODY,
           label: LABEL,
           route: ROUTE,
           contract: RECEIPT,
-          previousContract: PREVIOUS_RECEIPT,
+          previousReceipts: PREVIOUS_RECEIPTS,
           runtimeAuthority: RUNTIME_AUTHORITY,
           runtimeVersion: RUNTIME_VERSION,
+          runtimeLoadedReceipt: runtimeReceipt(runtimeApi),
           runtimeLoaded: Boolean(runtimeApi),
           runtimeInstanceLoaded: Boolean(runtimeInstance),
           composedTexture: texture.stats.compositorStatus,
@@ -1408,6 +1512,7 @@
           springSamples: texture.stats.springSamples,
           subterraneanSamples: texture.stats.subterraneanSamples,
           foliageSamples: texture.stats.foliageSamples,
+          fallbackSamples: texture.stats.fallbackSamples,
           maxSurfaceWaterIndex: texture.stats.maxSurfaceWaterIndex,
           maxHydrationActivationIndex: texture.stats.maxHydrationActivationIndex,
           projectionModel: CONTROL.projectionModel,
@@ -1418,12 +1523,6 @@
           routeOwnedLandGeneration: false,
           routeOwnedWaterGeneration: false,
           runtimeHydrationReadout: true,
-          waterClass: true,
-          hydrationColorInfluence: true,
-          surfaceWaterIndex: true,
-          isOceanWater: true,
-          isRiver: true,
-          isLake: true,
           noTrees: true,
           noFoliage: true,
           noVegetation: true,
@@ -1440,7 +1539,7 @@
 
   window.DGBAudraliaRouteControl = Object.freeze({
     receipt: RECEIPT,
-    previousReceipt: PREVIOUS_RECEIPT,
+    previousReceipts: PREVIOUS_RECEIPTS,
     body: BODY,
     label: LABEL,
     route: ROUTE,
@@ -1452,11 +1551,12 @@
       return Object.freeze({
         ok: Boolean(activeState),
         receipt: RECEIPT,
-        previousReceipt: PREVIOUS_RECEIPT,
+        previousReceipts: PREVIOUS_RECEIPTS,
         body: BODY,
         route: ROUTE,
         runtimeAuthority: RUNTIME_AUTHORITY,
         runtimeVersion: RUNTIME_VERSION,
+        runtimeLoadedReceipt: activeState ? runtimeReceipt(activeState.runtimeApi) : "",
         runtimeLoaded: Boolean(activeState && activeState.runtimeApi),
         runtimeInstanceLoaded: Boolean(activeState && activeState.runtimeInstance),
         compositorModel: CONTROL.compositorModel,
@@ -1496,6 +1596,7 @@
   window.DGBAudraliaTrueGlobeRenderer = window.DGBAudraliaRouteControl;
   window.DGBAudraliaTrueOrthographicRenderer = window.DGBAudraliaRouteControl;
   window.DGBAudraliaRuntimeHydrationWaterRenderer = window.DGBAudraliaRouteControl;
+  window.DGBAudraliaCurrentRuntimeGenealogyRenderer = window.DGBAudraliaRouteControl;
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot, { once: true });

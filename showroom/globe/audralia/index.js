@@ -1,86 +1,83 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_ROUTE_RUNTIME_TOPOLOGY_FIRST_CONSUMER_TNT_v1
+// AUDRALIA_ROUTE_TRUE_ORTHOGRAPHIC_GLOBE_RENDER_TNT_v2
 //
 // Role:
-// - Audralia route compositor.
-// - Consumes /assets/audralia/audralia.runtime.js first.
-// - Draws visible Audralia from runtime-approved topology + terrain state.
-// - Uses topology for land / void / beaches / sand / rock / coastline / shelves / sub-sea / subterranean blueprint.
-// - Uses terrain only as elevation and relief overlay beyond topology.
-// - Owns route boot, visible texture composition, axis rotation, and touch spin.
+// - Existing Audralia route compositor.
+// - Consumes Audralia runtime only.
+// - Renders Audralia as a true orthographic globe.
+// - Shows only the front-facing hemisphere.
+// - Suppresses the rear hemisphere until rotation carries it forward.
+//
+// Fix:
+// - Removes flat strip illusion.
+// - Removes full-map-on-disk behavior.
+// - Uses sphere coordinate projection per visible pixel:
+//   x/y disk position → visible 3D sphere point → longitude/latitude sample.
 //
 // Hard locks:
-// - No procedural land fallback.
-// - No route-owned landmass generation.
-// - No route-owned island generation.
-// - No terrain-first rendering.
-// - No direct terrain import.
-// - No direct topology import.
-// - No trees.
-// - No foliage.
-// - No vegetation.
-// - No active hydration.
-// - No ecology.
-// - No climate.
-// - No parent rewrite.
-// - No terrain rewrite.
+// - No route-owned land generation.
 // - No topology rewrite.
-// - No runtime rewrite.
+// - No tectonics rewrite.
+// - No terrain rewrite.
+// - No active hydration.
+// - No foliage.
+// - No trees.
+// - No vegetation.
+// - No graphic box.
+// - No image generation.
 // - No visual pass claim.
 
 (function () {
   "use strict";
 
-  const RECEIPT = "AUDRALIA_ROUTE_RUNTIME_TOPOLOGY_FIRST_CONSUMER_TNT_v1";
+  const RECEIPT = "AUDRALIA_ROUTE_TRUE_ORTHOGRAPHIC_GLOBE_RENDER_TNT_v2";
 
   const ROUTE = "/showroom/globe/audralia/";
   const BODY = "audralia";
   const LABEL = "Audralia";
 
   const RUNTIME_AUTHORITY = "/assets/audralia/audralia.runtime.js";
-  const TOPOLOGY_AUTHORITY = "/assets/audralia/audralia.topology.render.js";
-  const TERRAIN_AUTHORITY = "/assets/audralia/audralia.terrain.render.js";
-  const PARENT_AUTHORITY = "/assets/audralia/audralia.planet.render.js";
-
-  const RUNTIME_VERSION = "AUDRALIA_G1_PLANET_RUNTIME_ORCHESTRATOR_TNT_v1";
-  const TOPOLOGY_VERSION = "AUDRALIA_G1_TOPOLOGY_CONNECTED_LANDFOOTPRINT_AND_IRREGULAR_COAST_TNT_v1";
-  const TERRAIN_VERSION = "AUDRALIA_G1_FULL_PLANET_TERRAIN_PURIFICATION_MAP_TNT_v1";
+  const RUNTIME_VERSION = "AUDRALIA_RUNTIME_TOPOLOGY_TECTONICS_TERRAIN_CHAIN_TNT_v1";
 
   const CONTROL = Object.freeze({
     axisDegrees: 21.5,
-    textureWidth: 960,
-    textureHeight: 480,
+    textureWidth: 1024,
+    textureHeight: 512,
     minSize: 320,
-    maxSize: 720,
+    maxSize: 660,
     initialPhase: 0.18,
-    autoStep: 0.00046,
-    dragFactor: 0.00174,
+    autoStep: 0.00042,
+    dragFactor: 0.00172,
     releaseFriction: 0.952,
     minVelocity: 0.000014,
-    rotationModel: "audralia-runtime-topology-first-surface-phase",
-    compositorModel: "runtime-topology-first-terrain-relief-second",
-    touchModel: "horizontal-spin-only",
+
+    rotationModel: "true-orthographic-front-hemisphere",
+    projectionModel: "orthographic-sphere-coordinate-sampling",
+    visibleLongitudeSpanDegrees: 180,
+    hiddenLongitudeSpanDegrees: 180,
+    phaseWindow: "front_hemisphere_only",
+    compositorModel: "runtime-consumer-orthographic-globe",
+
     diskRotation: "forbidden",
-    wholeCanvasRotation: "forbidden",
-    textureStretch: "forbidden",
+    fullTextureOnVisibleFace: "forbidden",
+    flatMapOnSphere: "forbidden",
+    routeOwnedLandGeneration: "forbidden",
+    topologyRewriteHere: "forbidden",
+    tectonicsRewriteHere: "forbidden",
+    terrainRewriteHere: "forbidden",
     hydration: "held",
-    foliage: "closed",
-    ecology: "closed",
-    climate: "closed",
-    visualPass: "HELD_UNTIL_SCREENSHOT_OR_OWNER_CONFIRMATION"
+    foliage: "forbidden",
+    ecology: "forbidden",
+    visualPass: "HELD_UNTIL_OWNER_SCREENSHOT_CONFIRMATION"
   });
 
   const RUNTIME_CONTEXT = Object.freeze({
-    topologyContext: Object.freeze({
-      blueprintResolution: 0.92,
-      coastlineComplexity: 0.9,
-      connectionStrength: 0.9,
-      subterraneanPressure: 0.74
-    }),
-    terrainContext: Object.freeze({
-      coherenceIndex: 0.94,
-      collaborativeExpression: 0.9
-    })
+    topologyFirst: true,
+    tectonicsEnabled: true,
+    terrainEnabled: true,
+    hydrationEnabled: false,
+    foliageEnabled: false,
+    visualPassClaimed: false
   });
 
   let activeState = null;
@@ -155,11 +152,8 @@
   function getMount() {
     return (
       document.getElementById("audraliaRenderMount") ||
-      document.getElementById("audreliaRenderMount") ||
       document.querySelector("[data-audralia-render-mount]") ||
-      document.querySelector("[data-audrelia-render-mount]") ||
-      document.querySelector("[data-body='audralia'][data-render-mount]") ||
-      document.querySelector("[data-body='audrelia'][data-render-mount]")
+      document.querySelector("[data-body='audralia'][data-render-mount]")
     );
   }
 
@@ -169,21 +163,20 @@
     document.documentElement.dataset.audraliaRouteCompositor = RECEIPT;
     document.documentElement.dataset.audraliaRouteCompositorStatus = status || "booting";
     document.documentElement.dataset.audraliaRuntimeAuthority = RUNTIME_AUTHORITY;
-    document.documentElement.dataset.audraliaTopologyAuthority = TOPOLOGY_AUTHORITY;
-    document.documentElement.dataset.audraliaTerrainAuthority = TERRAIN_AUTHORITY;
-    document.documentElement.dataset.audraliaParentAuthority = PARENT_AUTHORITY;
     document.documentElement.dataset.audraliaRuntimeVersion = RUNTIME_VERSION;
-    document.documentElement.dataset.audraliaTopologyVersion = TOPOLOGY_VERSION;
-    document.documentElement.dataset.audraliaTerrainVersion = TERRAIN_VERSION;
     document.documentElement.dataset.audraliaCompositorModel = CONTROL.compositorModel;
+    document.documentElement.dataset.audraliaRotationModel = CONTROL.rotationModel;
+    document.documentElement.dataset.audraliaProjectionModel = CONTROL.projectionModel;
+    document.documentElement.dataset.audraliaVisibleLongitudeSpanDegrees = String(CONTROL.visibleLongitudeSpanDegrees);
+    document.documentElement.dataset.audraliaHiddenLongitudeSpanDegrees = String(CONTROL.hiddenLongitudeSpanDegrees);
+    document.documentElement.dataset.audraliaFullTextureOnVisibleFace = CONTROL.fullTextureOnVisibleFace;
+    document.documentElement.dataset.audraliaFlatMapOnSphere = CONTROL.flatMapOnSphere;
+    document.documentElement.dataset.audraliaRouteOwnedLandGeneration = CONTROL.routeOwnedLandGeneration;
     document.documentElement.dataset.audraliaHydration = CONTROL.hydration;
     document.documentElement.dataset.audraliaFoliage = CONTROL.foliage;
-    document.documentElement.dataset.audraliaEcology = CONTROL.ecology;
-    document.documentElement.dataset.audraliaClimate = CONTROL.climate;
     document.documentElement.dataset.noTrees = "true";
     document.documentElement.dataset.noFoliage = "true";
     document.documentElement.dataset.noVegetation = "true";
-    document.documentElement.dataset.noGreenYellowDots = "true";
     document.documentElement.dataset.earthAdoption = "blocked";
     document.documentElement.dataset.graphicBox = "false";
     document.documentElement.dataset.imageGeneration = "false";
@@ -193,29 +186,24 @@
       document.body.dataset.activeBody = BODY;
       document.body.dataset.activeRoute = ROUTE;
       document.body.dataset.audraliaRouteCompositor = RECEIPT;
-      document.body.dataset.runtimeAuthority = RUNTIME_AUTHORITY;
-      document.body.dataset.topologyAuthority = TOPOLOGY_AUTHORITY;
-      document.body.dataset.terrainAuthority = TERRAIN_AUTHORITY;
       document.body.dataset.publicReceipts = "hidden";
       document.body.dataset.earthAdoption = "blocked";
       document.body.dataset.noTrees = "true";
       document.body.dataset.noFoliage = "true";
       document.body.dataset.noVegetation = "true";
+      document.body.dataset.visualPassClaimed = "false";
     }
   }
 
   function ensureStyle() {
-    if (document.getElementById("audralia-runtime-topology-compositor-style")) return;
+    if (document.getElementById("audralia-true-orthographic-globe-style")) return;
 
     const style = document.createElement("style");
-    style.id = "audralia-runtime-topology-compositor-style";
+    style.id = "audralia-true-orthographic-globe-style";
     style.textContent = `
       #audraliaRenderMount,
-      #audreliaRenderMount,
       [data-audralia-render-mount],
-      [data-audrelia-render-mount],
-      [data-body="audralia"][data-render-mount],
-      [data-body="audrelia"][data-render-mount] {
+      [data-body="audralia"][data-render-mount] {
         position: relative;
         display: grid;
         place-items: center;
@@ -227,7 +215,7 @@
         -webkit-user-select: none;
       }
 
-      .audralia-runtime-stage {
+      .audralia-orthographic-stage {
         position: relative;
         display: grid;
         place-items: center;
@@ -237,7 +225,7 @@
         isolation: isolate;
       }
 
-      .audralia-runtime-stage::before {
+      .audralia-orthographic-stage::before {
         content: "";
         position: absolute;
         left: 50%;
@@ -254,7 +242,7 @@
         z-index: 0;
       }
 
-      .audralia-runtime-axis {
+      .audralia-orthographic-axis {
         position: absolute;
         left: 50%;
         top: 50%;
@@ -274,12 +262,12 @@
         z-index: 1;
       }
 
-      .audralia-runtime-canvas {
+      .audralia-orthographic-canvas {
         position: relative;
         z-index: 2;
         display: block;
-        width: min(100%, 690px);
-        max-width: min(100%, 690px);
+        width: min(100%, 660px);
+        max-width: min(100%, 660px);
         aspect-ratio: 1 / 1;
         border: 0;
         outline: 0;
@@ -300,7 +288,7 @@
         -webkit-user-select: none;
       }
 
-      .audralia-runtime-label {
+      .audralia-orthographic-label {
         position: absolute;
         left: 50%;
         bottom: clamp(18px, 5vw, 44px);
@@ -317,7 +305,7 @@
         pointer-events: none;
       }
 
-      .audralia-runtime-hidden-receipt {
+      .audralia-orthographic-hidden-receipt {
         display: none !important;
       }
     `;
@@ -325,336 +313,312 @@
     document.head.appendChild(style);
   }
 
+  function resolveRuntimeApi(module) {
+    if (!module) return null;
+
+    if (typeof module.sampleAudraliaPlanetState === "function") return module;
+    if (typeof module.sampleRuntimeState === "function") return module;
+    if (typeof module.createAudraliaRuntime === "function") return module;
+
+    if (module.default) {
+      if (typeof module.default.sampleAudraliaPlanetState === "function") return module.default;
+      if (typeof module.default.sampleRuntimeState === "function") return module.default;
+      if (typeof module.default.createAudraliaRuntime === "function") return module.default;
+    }
+
+    return null;
+  }
+
+  function getWindowRuntimeApi() {
+    return (
+      window.DGBAudraliaRuntime ||
+      window.AudraliaRuntime ||
+      window.audraliaRuntime ||
+      null
+    );
+  }
+
   async function loadRuntimeAuthority() {
+    const existing = resolveRuntimeApi(getWindowRuntimeApi());
+
+    if (existing) {
+      return existing;
+    }
+
     try {
       const module = await import(cacheUrl(RUNTIME_AUTHORITY, RUNTIME_VERSION));
-      const api = module && module.default ? module.default : module;
-
-      if (!api || typeof api.sampleAudraliaPlanetState !== "function") {
-        return {
-          api: null,
-          runtime: null,
-          loaded: false,
-          error: "runtime API missing sampleAudraliaPlanetState"
-        };
-      }
-
-      let runtime = null;
-
-      if (typeof api.createAudraliaRuntime === "function") {
-        try {
-          runtime = await api.createAudraliaRuntime({
-            consumer: RECEIPT,
-            route: ROUTE,
-            topologyFirst: true,
-            visualPassClaimed: false
-          });
-        } catch (error) {
-          runtime = null;
-        }
-      }
-
-      return {
-        api,
-        runtime,
-        loaded: true,
-        error: null
-      };
+      return resolveRuntimeApi(module);
     } catch (error) {
-      return {
-        api: null,
-        runtime: null,
-        loaded: false,
-        error: error && error.message ? error.message : String(error)
-      };
+      return null;
     }
   }
 
-  function fallbackRuntimeHoldState(u, v) {
-    const lon = u * 2 - 1;
-    const lat = 1 - v * 2;
-    const depthNoise = fbm(lon * 4.0 + 2.1, lat * 4.0 - 1.7, 800, 4);
+  function createRuntimeInstance(runtimeApi) {
+    if (!runtimeApi) return null;
 
-    return Object.freeze({
-      receipt: RECEIPT,
-      planetaryObject: LABEL,
-      generation: "ROUTE_SAFE_RUNTIME_HOLD",
-      u,
-      v,
-      lon,
-      lat,
-
-      topology: Object.freeze({
-        isLandFootprint: false,
-        isVoidFootprint: true,
-        isAboveWaterLandFootprint: false,
-        isCoastline: false,
-        isBeach: false,
-        isSand: false,
-        isRock: false,
-        isShelf: false,
-        isIslandFootprint: false,
-        isConnectedLandSystem: false,
-        isSouthPolarIceFootprint: false,
-        surfaceClass: "runtime_hold_void_ocean",
-        surfaceClassId: 3,
-        oceanDepthIndex: clamp(0.46 + depthNoise * 0.36, 0, 1),
-        shelfDepthIndex: 0,
-        trenchDepthIndex: clamp(depthNoise * 0.22, 0, 1),
-        bathymetryBlueprintIndex: clamp(0.28 + depthNoise * 0.42, 0, 1),
-        subterraneanDepthIndex: clamp(0.18 + depthNoise * 0.18, 0, 1),
-        terrainRisePermission: 0,
-        terrainBlockPermission: 1,
-        beachPressure: 0,
-        sandPressure: 0,
-        rockPressure: 0,
-        coastlineIrregularityIndex: 0,
-        foliage: false,
-        trees: false,
-        vegetation: false,
-        visualPassClaimed: false
-      }),
-
-      terrain: Object.freeze({
-        isLand: false,
-        isWater: true,
-        isIce: false,
-        normalizedElevation: -0.48,
-        ridge: 0,
-        basin: 0,
-        slope: 0,
-        mountainPressure: 0,
-        canyonPressure: 0,
-        riverIncisionPressure: 0,
-        streamBranchPressure: 0,
-        hydrologyReadinessIndex: 0,
-        foliage: false,
-        trees: false,
-        vegetation: false,
-        visualPassClaimed: false
-      }),
-
-      topologySurfaceClass: "runtime_hold_void_ocean",
-      topologySurfaceClassId: 3,
-      topologyLandFootprint: false,
-      topologyVoidFootprint: true,
-      topologySeaLevelBoundary: -1,
-      topologyOceanDepthIndex: clamp(0.46 + depthNoise * 0.36, 0, 1),
-      topologySubterraneanDepthIndex: clamp(0.18 + depthNoise * 0.18, 0, 1),
-      topologyTerrainRisePermission: 0,
-      topologyTerrainBlockPermission: 1,
-
-      terrainIsLand: false,
-      terrainIsWater: true,
-      terrainIsIce: false,
-      terrainElevation: -0.48,
-      terrainRidge: 0,
-      terrainBasin: 0,
-      terrainMountainPressure: 0,
-      terrainCanyonPressure: 0,
-      terrainHydrologyReadinessIndex: 0,
-
-      terrainAllowedByTopology: true,
-      runtimeIntegrityAtSample: false,
-      lifeLeakDetected: false,
-      renderHint: "runtime_hold_no_land_generation",
-
-      hydrationGate: CONTROL.hydration,
-      foliageGate: CONTROL.foliage,
-      ecologyGate: CONTROL.ecology,
-      climateGate: CONTROL.climate,
-
-      foliage: false,
-      trees: false,
-      vegetation: false,
-      activeHydrationOwnedHere: false,
-      visualPassClaimed: false
-    });
-  }
-
-  function sampleRuntimeState(runtimeApi, u, v) {
-    if (runtimeApi && typeof runtimeApi.sampleAudraliaPlanetState === "function") {
+    if (typeof runtimeApi.createAudraliaRuntime === "function") {
       try {
-        const sample = runtimeApi.sampleAudraliaPlanetState(u, v, RUNTIME_CONTEXT);
-        if (sample) return sample;
+        return runtimeApi.createAudraliaRuntime(RUNTIME_CONTEXT);
       } catch (error) {
-        return fallbackRuntimeHoldState(u, v);
+        return null;
       }
     }
 
-    return fallbackRuntimeHoldState(u, v);
+    return null;
   }
 
-  function topologyFirstColor(state, u, v) {
-    const topology = state && state.topology ? state.topology : {};
-    const terrain = state && state.terrain ? state.terrain : {};
+  function sampleRuntimeState(runtimeApi, runtimeInstance, u, v) {
+    const context = RUNTIME_CONTEXT;
 
+    try {
+      if (runtimeInstance && typeof runtimeInstance.sampleRuntimeState === "function") {
+        return runtimeInstance.sampleRuntimeState(u, v, context);
+      }
+
+      if (runtimeInstance && typeof runtimeInstance.sampleAudraliaPlanetState === "function") {
+        return runtimeInstance.sampleAudraliaPlanetState(u, v, context);
+      }
+
+      if (runtimeApi && typeof runtimeApi.sampleAudraliaPlanetState === "function") {
+        return runtimeApi.sampleAudraliaPlanetState(u, v, context);
+      }
+
+      if (runtimeApi && typeof runtimeApi.sampleRuntimeState === "function") {
+        return runtimeApi.sampleRuntimeState(u, v, context);
+      }
+    } catch (error) {
+      return null;
+    }
+
+    return null;
+  }
+
+  function isLandSample(sample) {
+    return Boolean(
+      sample &&
+        (
+          sample.isLandFootprint ||
+          sample.isAboveWaterLandFootprint ||
+          sample.topologyLandFootprint ||
+          sample.isLand ||
+          sample.land === true
+        )
+    );
+  }
+
+  function isIceSample(sample) {
+    return Boolean(
+      sample &&
+        (
+          sample.isSouthPolarIceFootprint ||
+          sample.isIce ||
+          sample.southIce ||
+          sample.surfaceClass === "polar_ice_footprint" ||
+          sample.topologySurfaceClass === "polar_ice_footprint"
+        )
+    );
+  }
+
+  function isBeachSample(sample) {
+    return Boolean(
+      sample &&
+        (
+          sample.isBeach ||
+          sample.isSand ||
+          String(sample.beachType || "").includes("beach") ||
+          String(sample.surfaceClass || "").includes("beach") ||
+          String(sample.topologySurfaceClass || "").includes("beach")
+        )
+    );
+  }
+
+  function isRockSample(sample) {
+    return Boolean(
+      sample &&
+        (
+          sample.isRock ||
+          String(sample.surfaceClass || "").includes("rock") ||
+          String(sample.topologySurfaceClass || "").includes("rock") ||
+          Number(sample.rockPressure) > 0.44
+        )
+    );
+  }
+
+  function topologyFirstColor(sample, u, v) {
     const lon = u * 2 - 1;
     const lat = 1 - v * 2;
 
-    const reliefNoise = fbm(lon * 15.0 + 0.7, lat * 15.0 - 1.2, 741, 4);
-    const microRelief = fbm(lon * 35.0 - 3.1, lat * 35.0 + 2.6, 951, 3);
+    const detail = fbm(lon * 18.0 + 1.4, lat * 18.0 - 2.1, 911, 4);
+    const broad = fbm(lon * 6.0 - 3.2, lat * 6.0 + 4.4, 707, 4);
 
-    const topologyLand = Boolean(
-      state.topologyLandFootprint ||
-        topology.isLandFootprint ||
-        topology.isAboveWaterLandFootprint
-    );
+    if (!sample) {
+      const water = 0.32 + broad * 0.18 + detail * 0.08;
+      return [
+        clamp(Math.round(6 + water * 18), 0, 50),
+        clamp(Math.round(34 + water * 70), 22, 130),
+        clamp(Math.round(84 + water * 92), 62, 190),
+        255
+      ];
+    }
 
-    const topologyVoid = Boolean(
-      state.topologyVoidFootprint ||
-        topology.isVoidFootprint ||
-        !topologyLand
-    );
+    if (isIceSample(sample)) {
+      const ice = clamp(
+        Number(sample.glacierSeatPressure) ||
+          Number(sample.polarSeat) ||
+          Number(sample.snowpackSourcePressure) ||
+          0.72,
+        0,
+        1
+      );
 
-    const southIce = Boolean(
-      topology.isSouthPolarIceFootprint ||
-        terrain.isIce ||
-        state.terrainIsIce
-    );
+      const shade = mix(0.88, 1.08, broad * 0.42 + detail * 0.24 + ice * 0.28);
 
-    const aboveWaterLand = topologyLand && !southIce;
+      return [
+        clamp(Math.round(224 * shade), 188, 250),
+        clamp(Math.round(236 * shade), 202, 252),
+        clamp(Math.round(244 * shade), 210, 255),
+        255
+      ];
+    }
 
-    if (southIce) {
-      const iceRelief = clamp(
-        Number(terrain.glacierSeatPressure) ||
-          Number(terrain.polarSeat) ||
-          Number(topology.polarRisePermission) ||
+    if (!isLandSample(sample)) {
+      const depth = clamp(
+        Number(sample.oceanDepthIndex) ||
+          Number(sample.bathymetryBlueprintIndex) ||
+          Number(sample.basinDepthIndex) ||
+          Math.abs(Number(sample.normalizedElevation) || 0.42),
+        0,
+        1
+      );
+
+      const shelf = clamp(
+        Number(sample.shelfDepthIndex) ||
+          Number(sample.reefShelfPermission) ||
+          Number(sample.shelfPermission) ||
+          Number(sample.coastalExposureIndex) ||
           0,
         0,
         1
       );
 
-      const shade = mix(0.88, 1.08, reliefNoise * 0.55 + iceRelief * 0.35);
-
-      return {
-        r: clamp(Math.round(224 * shade), 190, 248),
-        g: clamp(Math.round(236 * shade), 202, 252),
-        b: clamp(Math.round(242 * shade), 210, 255),
-        a: 255
-      };
-    }
-
-    if (topologyVoid) {
-      const shelf = clamp(Number(topology.shelfDepthIndex) || Number(topology.reefShelfPermission) || 0, 0, 1);
-      const depth = clamp(
-        Number(state.topologyOceanDepthIndex) ||
-          Number(topology.oceanDepthIndex) ||
-          Number(topology.bathymetryBlueprintIndex) ||
-          0.48,
+      const trench = clamp(
+        Number(sample.trenchDepthIndex) ||
+          Number(sample.trenchReinforcementPermission) ||
+          0,
         0,
         1
       );
 
-      const trench = clamp(Number(topology.trenchDepthIndex) || 0, 0, 1);
-      const bathymetry = clamp(Number(topology.bathymetryBlueprintIndex) || depth, 0, 1);
-      const band = reliefNoise * 0.08 + microRelief * 0.04;
-
-      const r = mix(5, 48, shelf) - trench * 5 - depth * 4 + band * 8;
-      const g = mix(24, 130, shelf) - trench * 14 - depth * 8 + band * 12;
-      const b = mix(72, 176, shelf) - trench * 22 - bathymetry * 10 + band * 10;
-
-      return {
-        r: clamp(Math.round(r), 0, 80),
-        g: clamp(Math.round(g), 12, 150),
-        b: clamp(Math.round(b), 52, 190),
-        a: 255
-      };
+      return [
+        clamp(Math.round(mix(4, 36, shelf) - trench * 8 + broad * 8), 0, 70),
+        clamp(Math.round(mix(24, 132, shelf) - depth * 10 - trench * 12 + detail * 12), 14, 150),
+        clamp(Math.round(mix(76, 182, shelf) - depth * 18 - trench * 20 + broad * 18), 54, 194),
+        255
+      ];
     }
 
-    const elevation = clamp(Number(terrain.normalizedElevation) || Number(state.terrainElevation) || 0.12, 0, 1);
-    const terrainAllowed = state.terrainAllowedByTopology !== false;
-    const terrainWeight = terrainAllowed ? 1 : 0;
+    const beach = isBeachSample(sample);
+    const rock = isRockSample(sample);
 
-    const ridge = clamp((Number(terrain.ridge) || Number(state.terrainRidge) || 0) * terrainWeight, 0, 1);
-    const mountain = clamp((Number(terrain.mountainPressure) || Number(state.terrainMountainPressure) || 0) * terrainWeight, 0, 1);
-    const hard = clamp((Number(terrain.mountainHardness) || Number(terrain.reliefHardness) || 0) * terrainWeight, 0, 1);
-    const canyon = clamp((Number(terrain.canyonPressure) || Number(state.terrainCanyonPressure) || 0) * terrainWeight, 0, 1);
-    const incision = clamp((Number(terrain.riverIncisionPressure) || 0) * terrainWeight, 0, 1);
-    const stream = clamp((Number(terrain.streamBranchPressure) || Number(terrain.streamPressure) || 0) * terrainWeight, 0, 1);
-    const basin = clamp((Number(terrain.basin) || Number(terrain.basinCutPressure) || 0) * terrainWeight, 0, 1);
-    const lakeBasin = clamp((Number(terrain.lakeBasinPressure) || 0) * terrainWeight, 0, 1);
-    const glacier = clamp((Number(terrain.glacierSeatPressure) || Number(terrain.snowpackSourcePressure) || 0) * terrainWeight, 0, 1);
-    const slope = clamp((Number(terrain.slope) || 0) * terrainWeight, 0, 1);
-
-    const beach = clamp(Number(topology.beachPressure) || 0, 0, 1);
-    const sand = clamp(Number(topology.sandPressure) || 0, 0, 1);
-    const rock = clamp(Number(topology.rockPressure) || 0, 0, 1);
-    const cliff = clamp(Number(topology.coastalCliffPressure) || 0, 0, 1);
-    const coast = clamp(Number(topology.shorelinePressure) || Number(topology.coastlineIrregularityIndex) || 0, 0, 1);
-    const connection = clamp(Number(topology.connectedFootprintPressure) || 0, 0, 1);
-    const subterranean = clamp(Number(topology.subterraneanDepthIndex) || 0, 0, 1);
-
-    const terrainRise = clamp(Number(topology.terrainRisePermission) || Number(state.topologyTerrainRisePermission) || 0, 0, 1);
-    const landform = clamp(
-      terrainRise * 0.22 +
-        elevation * 0.18 +
-        ridge * 0.18 +
-        mountain * 0.15 +
-        hard * 0.12 +
-        slope * 0.08 +
-        connection * 0.07,
+    const elevation = clamp(
+      Number(sample.normalizedElevation) ||
+        Number(sample.terrainPressureHandoff) ||
+        Number(sample.terrainRisePermission) ||
+        Number(sample.topologyTerrainRisePermission) ||
+        0.38,
       0,
       1
     );
 
-    const fracture = clamp(
-      canyon * 0.42 +
-        incision * 0.32 +
-        stream * 0.16 +
-        cliff * 0.20 +
-        (microRelief > 0.62 ? (microRelief - 0.62) * 0.8 : 0),
+    const cliff = clamp(
+      Number(sample.cliffBaseCut) ||
+        Number(sample.coastalCliffPressure) ||
+        Number(sample.cliffPermission) ||
+        0,
       0,
       1
     );
 
-    const basinShadow = clamp(basin * 0.32 + lakeBasin * 0.28 + subterranean * 0.08, 0, 1);
-    const coastalShelf = clamp(coast * 0.30 + beach * 0.18, 0, 1);
+    const mountain = clamp(
+      Number(sample.mountainChainPermission) ||
+        Number(sample.mountainPressure) ||
+        Number(sample.ridge) ||
+        0,
+      0,
+      1
+    );
 
-    let r = mix(92, 176, landform);
-    let g = mix(78, 142, landform * 0.52);
-    let b = mix(58, 122, landform * 0.48);
+    const canyon = clamp(
+      Number(sample.canyonPermission) ||
+        Number(sample.canyonPressure) ||
+        Number(sample.riverIncisionPressure) ||
+        0,
+      0,
+      1
+    );
 
-    r = mix(r, 198, mountain * 0.26 + hard * 0.18);
-    g = mix(g, 184, mountain * 0.20 + hard * 0.16);
-    b = mix(b, 164, mountain * 0.20 + hard * 0.16);
+    const whiteSand = clamp(
+      Number(sample.whiteSandPressure) ||
+        Number(sample.opalSoftnessIndex) ||
+        0,
+      0,
+      1
+    );
 
-    r = mix(r, 104, fracture * 0.46);
-    g = mix(g, 82, fracture * 0.42);
-    b = mix(b, 68, fracture * 0.38);
+    const blackSand = clamp(
+      Number(sample.blackSandPressure) ||
+        Number(sample.diamondDarkSandIndex) ||
+        0,
+      0,
+      1
+    );
 
-    r = mix(r, 112, basinShadow * 0.30);
-    g = mix(g, 96, basinShadow * 0.26);
-    b = mix(b, 82, basinShadow * 0.24);
+    const mineralHardness = clamp(
+      Number(sample.exposedMineralHardnessIndex) ||
+        Number(sample.diamondPressureIndex) ||
+        Number(sample.graniteCratonIndex) ||
+        Number(sample.slateFoldBeltIndex) ||
+        (rock ? 0.46 : 0),
+      0,
+      1
+    );
 
-    r = mix(r, 194, sand * 0.42 + beach * 0.22);
-    g = mix(g, 164, sand * 0.34 + beach * 0.18);
-    b = mix(b, 112, sand * 0.26 + beach * 0.14);
+    let r = mix(92, 176, elevation * 0.58 + mineralHardness * 0.20);
+    let g = mix(74, 144, elevation * 0.44 + mineralHardness * 0.10);
+    let b = mix(58, 116, elevation * 0.34 + mineralHardness * 0.12);
 
-    r = mix(r, 168, rock * 0.30 + cliff * 0.18);
-    g = mix(g, 150, rock * 0.24 + cliff * 0.16);
-    b = mix(b, 126, rock * 0.20 + cliff * 0.14);
+    if (beach) {
+      const sandLight = clamp(whiteSand * 0.72 + (1 - blackSand) * 0.20, 0, 1);
+      const sandDark = clamp(blackSand * 0.70, 0, 1);
 
-    r = mix(r, 188, coastalShelf * 0.24);
-    g = mix(g, 164, coastalShelf * 0.20);
-    b = mix(b, 122, coastalShelf * 0.16);
+      r = mix(r, mix(86, 220, sandLight), 0.56);
+      g = mix(g, mix(78, 210, sandLight), 0.50);
+      b = mix(b, mix(74, 198, sandLight), 0.42);
 
-    r = mix(r, 226, glacier * 0.42);
-    g = mix(g, 236, glacier * 0.44);
-    b = mix(b, 240, glacier * 0.46);
+      r = mix(r, 48, sandDark * 0.32);
+      g = mix(g, 42, sandDark * 0.30);
+      b = mix(b, 46, sandDark * 0.26);
+    }
 
-    const reliefShade = mix(0.88, 1.10, reliefNoise * 0.48 + ridge * 0.16 + mountain * 0.14 + connection * 0.06);
-    const incisionShade = mix(1, 0.72, fracture * 0.58);
+    if (rock || cliff > 0.35) {
+      r = mix(r, 136, mineralHardness * 0.22 + cliff * 0.18);
+      g = mix(g, 118, mineralHardness * 0.18 + cliff * 0.14);
+      b = mix(b, 100, mineralHardness * 0.16 + cliff * 0.12);
+    }
 
-    return {
-      r: clamp(Math.round(r * reliefShade * incisionShade), 55, 238),
-      g: clamp(Math.round(g * reliefShade * incisionShade), 48, 240),
-      b: clamp(Math.round(b * reliefShade * incisionShade), 42, 246),
-      a: 255
-    };
+    const fracture = clamp(canyon * 0.34 + mountain * 0.18 + Math.max(0, detail - 0.55) * 0.62, 0, 1);
+    const shade = mix(0.84, 1.12, broad * 0.46 + elevation * 0.20 + mountain * 0.10);
+    const cut = mix(1, 0.76, fracture);
+
+    return [
+      clamp(Math.round(r * shade * cut), 42, 238),
+      clamp(Math.round(g * shade * cut), 38, 236),
+      clamp(Math.round(b * shade * cut), 34, 234),
+      255
+    ];
   }
 
-  function composeRuntimeTexture(runtimeApi) {
+  function composeRuntimeTexture(runtimeApi, runtimeInstance) {
     const width = CONTROL.textureWidth;
     const height = CONTROL.textureHeight;
 
@@ -667,21 +631,11 @@
     const data = image.data;
 
     let runtimeSamples = 0;
-    let topologyLandSamples = 0;
-    let topologyVoidSamples = 0;
-    let topologyCoastSamples = 0;
-    let topologyBeachSamples = 0;
-    let topologyRockSamples = 0;
-    let topologyConnectedSamples = 0;
-    let terrainReliefSamples = 0;
-    let mismatchSamples = 0;
-    let lifeLeakSamples = 0;
-
-    let maxTerrainRise = 0;
-    let maxOceanDepth = 0;
-    let maxSubterraneanDepth = 0;
-    let maxMountain = 0;
-    let maxCanyon = 0;
+    let landSamples = 0;
+    let waterSamples = 0;
+    let iceSamples = 0;
+    let beachSamples = 0;
+    let foliageSamples = 0;
 
     for (let py = 0; py < height; py += 1) {
       const v = height <= 1 ? 0.5 : py / (height - 1);
@@ -690,139 +644,122 @@
         const u = width <= 1 ? 0.5 : px / (width - 1);
         const index = (py * width + px) * 4;
 
-        const state = sampleRuntimeState(runtimeApi, u, v);
-        const topology = state.topology || {};
-        const terrain = state.terrain || {};
-        const color = topologyFirstColor(state, u, v);
+        const sample = sampleRuntimeState(runtimeApi, runtimeInstance, u, v);
+        const color = topologyFirstColor(sample, u, v);
 
         runtimeSamples += 1;
 
-        if (state.topologyLandFootprint || topology.isLandFootprint) topologyLandSamples += 1;
-        if (state.topologyVoidFootprint || topology.isVoidFootprint) topologyVoidSamples += 1;
-        if (topology.isCoastline) topologyCoastSamples += 1;
-        if (topology.isBeach || topology.isSand) topologyBeachSamples += 1;
-        if (topology.isRock) topologyRockSamples += 1;
-        if (topology.isConnectedLandSystem) topologyConnectedSamples += 1;
-        if ((terrain.ridge || terrain.mountainPressure || terrain.canyonPressure) && (state.topologyLandFootprint || topology.isLandFootprint)) terrainReliefSamples += 1;
-        if (state.terrainAllowedByTopology === false) mismatchSamples += 1;
-        if (state.lifeLeakDetected || state.foliage || state.trees || state.vegetation || topology.foliage || terrain.foliage) lifeLeakSamples += 1;
+        if (isIceSample(sample)) iceSamples += 1;
+        else if (isLandSample(sample)) landSamples += 1;
+        else waterSamples += 1;
 
-        maxTerrainRise = Math.max(maxTerrainRise, Number(state.topologyTerrainRisePermission) || Number(topology.terrainRisePermission) || 0);
-        maxOceanDepth = Math.max(maxOceanDepth, Number(state.topologyOceanDepthIndex) || Number(topology.oceanDepthIndex) || 0);
-        maxSubterraneanDepth = Math.max(maxSubterraneanDepth, Number(state.topologySubterraneanDepthIndex) || Number(topology.subterraneanDepthIndex) || 0);
-        maxMountain = Math.max(maxMountain, Number(state.terrainMountainPressure) || Number(terrain.mountainPressure) || 0);
-        maxCanyon = Math.max(maxCanyon, Number(state.terrainCanyonPressure) || Number(terrain.canyonPressure) || 0);
+        if (isBeachSample(sample)) beachSamples += 1;
 
-        data[index] = color.r;
-        data[index + 1] = color.g;
-        data[index + 2] = color.b;
-        data[index + 3] = color.a;
+        if (sample && (sample.foliage || sample.trees || sample.vegetation)) {
+          foliageSamples += 1;
+        }
+
+        data[index] = color[0];
+        data[index + 1] = color[1];
+        data[index + 2] = color[2];
+        data[index + 3] = color[3];
       }
     }
 
     ctx.putImageData(image, 0, 0);
 
-    canvas.dataset.body = BODY;
-    canvas.dataset.contract = RECEIPT;
-    canvas.dataset.runtimeAuthority = RUNTIME_AUTHORITY;
-    canvas.dataset.topologyAuthority = TOPOLOGY_AUTHORITY;
-    canvas.dataset.terrainAuthority = TERRAIN_AUTHORITY;
-    canvas.dataset.parentAuthority = PARENT_AUTHORITY;
-    canvas.dataset.runtimeVersion = RUNTIME_VERSION;
-    canvas.dataset.topologyVersion = TOPOLOGY_VERSION;
-    canvas.dataset.terrainVersion = TERRAIN_VERSION;
-    canvas.dataset.compositorStatus = runtimeApi ? "runtime-topology-first" : "runtime-hold-no-land-generation";
+    const textureImage = ctx.getImageData(0, 0, width, height);
 
-    canvas.dataset.runtimeSamples = String(runtimeSamples);
-    canvas.dataset.topologyLandSamples = String(topologyLandSamples);
-    canvas.dataset.topologyVoidSamples = String(topologyVoidSamples);
-    canvas.dataset.topologyCoastSamples = String(topologyCoastSamples);
-    canvas.dataset.topologyBeachSamples = String(topologyBeachSamples);
-    canvas.dataset.topologyRockSamples = String(topologyRockSamples);
-    canvas.dataset.topologyConnectedSamples = String(topologyConnectedSamples);
-    canvas.dataset.terrainReliefSamples = String(terrainReliefSamples);
-    canvas.dataset.mismatchSamples = String(mismatchSamples);
-    canvas.dataset.lifeLeakSamples = String(lifeLeakSamples);
-
-    canvas.dataset.maxTerrainRise = maxTerrainRise.toFixed(4);
-    canvas.dataset.maxOceanDepth = maxOceanDepth.toFixed(4);
-    canvas.dataset.maxSubterraneanDepth = maxSubterraneanDepth.toFixed(4);
-    canvas.dataset.maxMountain = maxMountain.toFixed(4);
-    canvas.dataset.maxCanyon = maxCanyon.toFixed(4);
-
-    canvas.dataset.noTrees = "true";
-    canvas.dataset.noFoliage = "true";
-    canvas.dataset.noVegetation = "true";
-    canvas.dataset.hydration = CONTROL.hydration;
-    canvas.dataset.visualPass = CONTROL.visualPass;
-
-    return canvas;
+    return Object.freeze({
+      canvas,
+      image: textureImage,
+      data: textureImage.data,
+      width,
+      height,
+      stats: Object.freeze({
+        runtimeSamples,
+        landSamples,
+        waterSamples,
+        iceSamples,
+        beachSamples,
+        foliageSamples,
+        compositorStatus: runtimeApi ? "runtime-texture-active" : "runtime-unavailable-ocean-safe-fallback"
+      })
+    });
   }
 
   function createStage(mount) {
     const stage = document.createElement("div");
-    stage.className = "audralia-runtime-stage";
+    stage.className = "audralia-orthographic-stage";
     stage.dataset.body = BODY;
     stage.dataset.route = ROUTE;
     stage.dataset.contract = RECEIPT;
     stage.dataset.axisDegrees = String(CONTROL.axisDegrees);
     stage.dataset.compositorModel = CONTROL.compositorModel;
-    stage.dataset.runtimeAuthority = RUNTIME_AUTHORITY;
-    stage.dataset.topologyAuthority = TOPOLOGY_AUTHORITY;
-    stage.dataset.terrainAuthority = TERRAIN_AUTHORITY;
+    stage.dataset.rotationModel = CONTROL.rotationModel;
+    stage.dataset.projectionModel = CONTROL.projectionModel;
+    stage.dataset.visibleLongitudeSpanDegrees = String(CONTROL.visibleLongitudeSpanDegrees);
+    stage.dataset.hiddenLongitudeSpanDegrees = String(CONTROL.hiddenLongitudeSpanDegrees);
+    stage.dataset.fullTextureOnVisibleFace = CONTROL.fullTextureOnVisibleFace;
+    stage.dataset.flatMapOnSphere = CONTROL.flatMapOnSphere;
+    stage.dataset.routeOwnedLandGeneration = CONTROL.routeOwnedLandGeneration;
     stage.dataset.noTrees = "true";
     stage.dataset.noFoliage = "true";
     stage.dataset.noVegetation = "true";
     stage.style.setProperty("--audralia-axis-deg", CONTROL.axisDegrees + "deg");
 
     const axis = document.createElement("div");
-    axis.className = "audralia-runtime-axis";
+    axis.className = "audralia-orthographic-axis";
     axis.dataset.axis = "audralia-fixed-axis";
 
     const canvas = document.createElement("canvas");
-    canvas.className = "audralia-runtime-canvas";
+    canvas.className = "audralia-orthographic-canvas";
     canvas.dataset.body = BODY;
     canvas.dataset.contract = RECEIPT;
     canvas.dataset.rotationModel = CONTROL.rotationModel;
-    canvas.dataset.touchModel = CONTROL.touchModel;
+    canvas.dataset.projectionModel = CONTROL.projectionModel;
     canvas.dataset.compositorModel = CONTROL.compositorModel;
-    canvas.dataset.runtimeAuthority = RUNTIME_AUTHORITY;
-    canvas.dataset.topologyAuthority = TOPOLOGY_AUTHORITY;
-    canvas.dataset.terrainAuthority = TERRAIN_AUTHORITY;
     canvas.dataset.diskRotation = CONTROL.diskRotation;
-    canvas.dataset.textureStretch = CONTROL.textureStretch;
+    canvas.dataset.fullTextureOnVisibleFace = CONTROL.fullTextureOnVisibleFace;
+    canvas.dataset.flatMapOnSphere = CONTROL.flatMapOnSphere;
+    canvas.dataset.visibleLongitudeSpanDegrees = String(CONTROL.visibleLongitudeSpanDegrees);
+    canvas.dataset.hiddenLongitudeSpanDegrees = String(CONTROL.hiddenLongitudeSpanDegrees);
+    canvas.dataset.routeOwnedLandGeneration = CONTROL.routeOwnedLandGeneration;
     canvas.dataset.noTrees = "true";
     canvas.dataset.noFoliage = "true";
     canvas.dataset.noVegetation = "true";
     canvas.dataset.hydration = CONTROL.hydration;
     canvas.dataset.visualPass = CONTROL.visualPass;
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Audralia runtime topology-first globe with terrain relief overlay");
+    canvas.setAttribute("aria-label", "Audralia true orthographic globe render");
 
     const label = document.createElement("div");
-    label.className = "audralia-runtime-label";
-    label.textContent = "AUDRALIA · TOPOLOGY FIRST";
+    label.className = "audralia-orthographic-label";
+    label.textContent = "AUDRALIA · TRUE GLOBE";
 
     const receipt = document.createElement("div");
     receipt.hidden = true;
     receipt.setAttribute("aria-hidden", "true");
-    receipt.className = "audralia-runtime-hidden-receipt";
+    receipt.className = "audralia-orthographic-hidden-receipt";
     receipt.dataset.contract = RECEIPT;
     receipt.dataset.route = ROUTE;
     receipt.dataset.runtimeAuthority = RUNTIME_AUTHORITY;
-    receipt.dataset.topologyAuthority = TOPOLOGY_AUTHORITY;
-    receipt.dataset.terrainAuthority = TERRAIN_AUTHORITY;
-    receipt.dataset.parentAuthority = PARENT_AUTHORITY;
     receipt.dataset.runtimeVersion = RUNTIME_VERSION;
-    receipt.dataset.topologyVersion = TOPOLOGY_VERSION;
-    receipt.dataset.terrainVersion = TERRAIN_VERSION;
+    receipt.dataset.visibleLongitudeSpanDegrees = String(CONTROL.visibleLongitudeSpanDegrees);
+    receipt.dataset.hiddenLongitudeSpanDegrees = String(CONTROL.hiddenLongitudeSpanDegrees);
+    receipt.dataset.fullTextureOnVisibleFace = CONTROL.fullTextureOnVisibleFace;
+    receipt.dataset.flatMapOnSphere = CONTROL.flatMapOnSphere;
+    receipt.dataset.routeOwnedLandGeneration = CONTROL.routeOwnedLandGeneration;
     receipt.dataset.noTrees = "true";
     receipt.dataset.noFoliage = "true";
     receipt.dataset.noVegetation = "true";
     receipt.dataset.hydration = CONTROL.hydration;
     receipt.dataset.visualPass = CONTROL.visualPass;
     receipt.textContent =
-      "AUDRALIA_ROUTE_RUNTIME_TOPOLOGY_FIRST_CONSUMER_TNT_v1 runtime=true topology_first=true terrain_relief_second=true no_route_land_generation=true no_trees=true no_foliage=true hydration=held visual_pass=held";
+      "AUDRALIA_ROUTE_TRUE_ORTHOGRAPHIC_GLOBE_RENDER_TNT_v2 " +
+      "projection=orthographic visible_hemisphere=180deg hidden_hemisphere=180deg " +
+      "full_texture_on_visible_face=false flat_map_on_sphere=false " +
+      "route_owned_land_generation=false hydration=held foliage=false visual_pass=held";
 
     stage.appendChild(axis);
     stage.appendChild(canvas);
@@ -835,15 +772,15 @@
     mount.dataset.route = ROUTE;
     mount.dataset.contract = RECEIPT;
     mount.dataset.runtimeAuthority = RUNTIME_AUTHORITY;
-    mount.dataset.topologyAuthority = TOPOLOGY_AUTHORITY;
-    mount.dataset.terrainAuthority = TERRAIN_AUTHORITY;
-    mount.dataset.parentAuthority = PARENT_AUTHORITY;
     mount.dataset.runtimeVersion = RUNTIME_VERSION;
-    mount.dataset.topologyVersion = TOPOLOGY_VERSION;
-    mount.dataset.terrainVersion = TERRAIN_VERSION;
     mount.dataset.compositorModel = CONTROL.compositorModel;
     mount.dataset.rotationModel = CONTROL.rotationModel;
-    mount.dataset.noRouteLandGeneration = "true";
+    mount.dataset.projectionModel = CONTROL.projectionModel;
+    mount.dataset.visibleLongitudeSpanDegrees = String(CONTROL.visibleLongitudeSpanDegrees);
+    mount.dataset.hiddenLongitudeSpanDegrees = String(CONTROL.hiddenLongitudeSpanDegrees);
+    mount.dataset.fullTextureOnVisibleFace = CONTROL.fullTextureOnVisibleFace;
+    mount.dataset.flatMapOnSphere = CONTROL.flatMapOnSphere;
+    mount.dataset.routeOwnedLandGeneration = CONTROL.routeOwnedLandGeneration;
     mount.dataset.newFileRequired = "false";
     mount.dataset.noTrees = "true";
     mount.dataset.noFoliage = "true";
@@ -859,7 +796,7 @@
     const rect = mount.getBoundingClientRect ? mount.getBoundingClientRect() : null;
     const available = rect && rect.width ? rect.width : window.innerWidth - 32;
     const cssSize = clamp(Math.floor(available * 0.88), CONTROL.minSize, CONTROL.maxSize);
-    const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
+    const dpr = Math.min(1.25, Math.max(1, window.devicePixelRatio || 1));
     const px = Math.max(CONTROL.minSize, Math.floor(cssSize * dpr));
 
     if (canvas.width !== px || canvas.height !== px) {
@@ -873,102 +810,164 @@
     return px;
   }
 
-  function drawWrappedStrip(ctx, texture, phase, sy, sh, dx, dy, dw, dh) {
-    if (!texture || !texture.width || !texture.height || dw <= 0 || dh <= 0) return;
-
-    const sourceWidth = texture.width;
-    const sourceHeight = texture.height;
-    const start = wrap01(phase) * sourceWidth;
-    const safeSy = clamp(sy, 0, sourceHeight - 1);
-    const safeSh = clamp(sh, 1, sourceHeight - safeSy);
-
-    const firstSourceWidth = sourceWidth - start;
-    const firstDestWidth = dw * (firstSourceWidth / sourceWidth);
-    const secondDestWidth = dw - firstDestWidth;
-
-    ctx.drawImage(texture, start, safeSy, firstSourceWidth, safeSh, dx, dy, firstDestWidth, dh);
-
-    if (secondDestWidth > 0.5) {
-      ctx.drawImage(texture, 0, safeSy, start, safeSh, dx + firstDestWidth, dy, secondDestWidth, dh);
-    }
-  }
-
-  function drawSphere(ctx, texture, phase, size) {
+  function buildGeometry(size) {
     const cx = size / 2;
     const cy = size / 2;
     const radius = size * 0.405;
-    const stripHeight = Math.max(2, Math.floor(size / 280));
-    const sourceHeight = texture.height || CONTROL.textureHeight;
 
-    ctx.clearRect(0, 0, size, size);
+    let count = 0;
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.clip();
+    for (let py = 0; py < size; py += 1) {
+      const y = (py + 0.5 - cy) / radius;
 
-    for (let y = -radius; y <= radius; y += stripHeight) {
-      const yMid = y + stripHeight / 2;
-      const normalizedY = yMid / radius;
-      const chord = Math.sqrt(Math.max(0, 1 - normalizedY * normalizedY));
-      const destWidth = radius * 2 * chord;
-      const destX = cx - destWidth / 2;
-      const destY = cy + y;
-      const v = clamp(0.5 + normalizedY * 0.5, 0, 1);
-      const sy = Math.floor(v * (sourceHeight - 1));
-      const sh = Math.max(1, Math.ceil((stripHeight / (radius * 2)) * sourceHeight * 1.72));
-
-      drawWrappedStrip(ctx, texture, phase, sy, sh, destX, destY, destWidth, stripHeight + 1);
+      for (let px = 0; px < size; px += 1) {
+        const x = (px + 0.5 - cx) / radius;
+        if (x * x + y * y <= 1) count += 1;
+      }
     }
 
-    ctx.restore();
+    const indices = new Uint32Array(count);
+    const lonOffsets = new Float32Array(count);
+    const vCoords = new Float32Array(count);
+    const shades = new Float32Array(count);
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.clip();
+    const lightX = -0.42;
+    const lightY = 0.36;
+    const lightZ = 0.83;
 
-    const light = ctx.createRadialGradient(
+    let i = 0;
+
+    for (let py = 0; py < size; py += 1) {
+      const y = (py + 0.5 - cy) / radius;
+
+      for (let px = 0; px < size; px += 1) {
+        const x = (px + 0.5 - cx) / radius;
+        const r2 = x * x + y * y;
+
+        if (r2 > 1) continue;
+
+        const z = Math.sqrt(Math.max(0, 1 - r2));
+
+        const lonOffset = Math.atan2(x, z) / (Math.PI * 2);
+        const latitude = Math.asin(clamp(-y, -1, 1));
+        const v = clamp(0.5 - latitude / Math.PI, 0, 1);
+
+        const dot = clamp(x * lightX + (-y) * lightY + z * lightZ, -1, 1);
+        const edgeShadow = clamp(1 - Math.pow(r2, 1.7) * 0.34, 0.52, 1);
+        const hemisphereShade = clamp(0.68 + dot * 0.34, 0.44, 1.10);
+        const shade = clamp(edgeShadow * hemisphereShade, 0.42, 1.12);
+
+        indices[i] = (py * size + px) * 4;
+        lonOffsets[i] = lonOffset;
+        vCoords[i] = v;
+        shades[i] = shade;
+        i += 1;
+      }
+    }
+
+    return Object.freeze({
+      size,
+      radius,
+      count,
+      indices,
+      lonOffsets,
+      vCoords,
+      shades
+    });
+  }
+
+  function sampleTexture(texture, u, v) {
+    const tx = Math.floor(wrap01(u) * (texture.width - 1));
+    const ty = Math.floor(clamp(v, 0, 1) * (texture.height - 1));
+    const index = (ty * texture.width + tx) * 4;
+
+    return [
+      texture.data[index],
+      texture.data[index + 1],
+      texture.data[index + 2],
+      texture.data[index + 3]
+    ];
+  }
+
+  function drawOrthographicSphere(state) {
+    const size = sizeCanvas(state.canvas, state.mount);
+
+    if (!state.geometry || state.geometry.size !== size) {
+      state.geometry = buildGeometry(size);
+    }
+
+    const output = state.ctx.createImageData(size, size);
+    const data = output.data;
+    const geometry = state.geometry;
+    const texture = state.texture;
+
+    for (let i = 0; i < geometry.count; i += 1) {
+      const out = geometry.indices[i];
+      const u = wrap01(state.phase + geometry.lonOffsets[i]);
+      const v = geometry.vCoords[i];
+      const color = sampleTexture(texture, u, v);
+      const shade = geometry.shades[i];
+
+      data[out] = clamp(Math.round(color[0] * shade), 0, 255);
+      data[out + 1] = clamp(Math.round(color[1] * shade), 0, 255);
+      data[out + 2] = clamp(Math.round(color[2] * shade), 0, 255);
+      data[out + 3] = color[3];
+    }
+
+    state.ctx.putImageData(output, 0, 0);
+
+    state.ctx.save();
+
+    const cx = size / 2;
+    const cy = size / 2;
+    const radius = size * 0.405;
+
+    state.ctx.beginPath();
+    state.ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    state.ctx.clip();
+
+    const highlight = state.ctx.createRadialGradient(
       cx - radius * 0.34,
       cy - radius * 0.36,
-      radius * 0.03,
+      radius * 0.02,
       cx,
       cy,
       radius * 1.16
     );
 
-    light.addColorStop(0, "rgba(255,255,255,0.20)");
-    light.addColorStop(0.35, "rgba(255,255,255,0.06)");
-    light.addColorStop(0.74, "rgba(0,0,0,0.12)");
-    light.addColorStop(1, "rgba(0,0,0,0.46)");
+    highlight.addColorStop(0, "rgba(255,255,255,0.16)");
+    highlight.addColorStop(0.32, "rgba(255,255,255,0.045)");
+    highlight.addColorStop(0.74, "rgba(0,0,0,0.10)");
+    highlight.addColorStop(1, "rgba(0,0,0,0.42)");
 
-    ctx.fillStyle = light;
-    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+    state.ctx.fillStyle = highlight;
+    state.ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-    const edge = ctx.createRadialGradient(cx, cy, radius * 0.72, cx, cy, radius);
+    const edge = state.ctx.createRadialGradient(cx, cy, radius * 0.68, cx, cy, radius);
     edge.addColorStop(0, "rgba(0,0,0,0)");
-    edge.addColorStop(0.82, "rgba(8,23,44,0.12)");
-    edge.addColorStop(1, "rgba(10,24,42,0.40)");
+    edge.addColorStop(0.78, "rgba(8,23,44,0.16)");
+    edge.addColorStop(1, "rgba(4,10,20,0.56)");
 
-    ctx.fillStyle = edge;
-    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
-    ctx.restore();
+    state.ctx.fillStyle = edge;
+    state.ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius + Math.max(1, size * 0.004), 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(190,226,255,0.28)";
-    ctx.lineWidth = Math.max(1, size * 0.003);
-    ctx.stroke();
-    ctx.restore();
-  }
+    state.ctx.restore();
 
-  function draw(state) {
-    const size = sizeCanvas(state.canvas, state.mount);
-    drawSphere(state.ctx, state.texture, state.phase, size);
+    state.ctx.save();
+    state.ctx.beginPath();
+    state.ctx.arc(cx, cy, radius + Math.max(1, size * 0.004), 0, Math.PI * 2);
+    state.ctx.strokeStyle = "rgba(190,226,255,0.28)";
+    state.ctx.lineWidth = Math.max(1, size * 0.003);
+    state.ctx.stroke();
+    state.ctx.restore();
 
     state.canvas.dataset.phase = state.phase.toFixed(5);
     state.canvas.dataset.velocity = state.velocity.toFixed(6);
+    state.canvas.dataset.visibleLongitudeSpanDegrees = String(CONTROL.visibleLongitudeSpanDegrees);
+    state.canvas.dataset.hiddenLongitudeSpanDegrees = String(CONTROL.hiddenLongitudeSpanDegrees);
+    state.canvas.dataset.fullTextureOnVisibleFace = CONTROL.fullTextureOnVisibleFace;
+    state.canvas.dataset.projectionModel = CONTROL.projectionModel;
+
     state.mount.dataset.phase = state.phase.toFixed(5);
     state.mount.dataset.velocity = state.velocity.toFixed(6);
   }
@@ -1008,7 +1007,7 @@
       state.phase = wrap01(state.phase + delta);
       state.velocity = delta * 0.58;
 
-      draw(state);
+      drawOrthographicSphere(state);
 
       if (event.cancelable) event.preventDefault();
     }
@@ -1041,7 +1040,7 @@
       state.velocity = 0;
     }
 
-    draw(state);
+    drawOrthographicSphere(state);
 
     state.raf = window.requestAnimationFrame(function () {
       tick(state);
@@ -1064,36 +1063,6 @@
     activeState = null;
   }
 
-  function applyTextureReceipts(mount, texture) {
-    document.documentElement.dataset.audraliaRuntimeLoaded = texture.dataset.runtimeLoaded || "false";
-    document.documentElement.dataset.audraliaRuntimeStatus = texture.dataset.runtimeStatus || "unknown";
-    document.documentElement.dataset.audraliaComposedTexture = texture.dataset.compositorStatus || "unknown";
-    document.documentElement.dataset.audraliaTopologyLandSamples = texture.dataset.topologyLandSamples || "0";
-    document.documentElement.dataset.audraliaTopologyVoidSamples = texture.dataset.topologyVoidSamples || "0";
-    document.documentElement.dataset.audraliaTopologyConnectedSamples = texture.dataset.topologyConnectedSamples || "0";
-    document.documentElement.dataset.audraliaMismatchSamples = texture.dataset.mismatchSamples || "0";
-    document.documentElement.dataset.audraliaLifeLeakSamples = texture.dataset.lifeLeakSamples || "0";
-
-    mount.dataset.runtimeLoaded = texture.dataset.runtimeLoaded || "false";
-    mount.dataset.runtimeStatus = texture.dataset.runtimeStatus || "unknown";
-    mount.dataset.composedTexture = texture.dataset.compositorStatus || "unknown";
-    mount.dataset.runtimeSamples = texture.dataset.runtimeSamples || "0";
-    mount.dataset.topologyLandSamples = texture.dataset.topologyLandSamples || "0";
-    mount.dataset.topologyVoidSamples = texture.dataset.topologyVoidSamples || "0";
-    mount.dataset.topologyCoastSamples = texture.dataset.topologyCoastSamples || "0";
-    mount.dataset.topologyBeachSamples = texture.dataset.topologyBeachSamples || "0";
-    mount.dataset.topologyRockSamples = texture.dataset.topologyRockSamples || "0";
-    mount.dataset.topologyConnectedSamples = texture.dataset.topologyConnectedSamples || "0";
-    mount.dataset.terrainReliefSamples = texture.dataset.terrainReliefSamples || "0";
-    mount.dataset.mismatchSamples = texture.dataset.mismatchSamples || "0";
-    mount.dataset.lifeLeakSamples = texture.dataset.lifeLeakSamples || "0";
-    mount.dataset.maxTerrainRise = texture.dataset.maxTerrainRise || "0";
-    mount.dataset.maxOceanDepth = texture.dataset.maxOceanDepth || "0";
-    mount.dataset.maxSubterraneanDepth = texture.dataset.maxSubterraneanDepth || "0";
-    mount.dataset.maxMountain = texture.dataset.maxMountain || "0";
-    mount.dataset.maxCanyon = texture.dataset.maxCanyon || "0";
-  }
-
   async function boot() {
     markRoute("booting");
     ensureStyle();
@@ -1107,31 +1076,21 @@
 
     destroyActiveState();
 
-    const runtimeLoad = await loadRuntimeAuthority();
-    const runtimeApi = runtimeLoad.api;
-    const runtime = runtimeLoad.runtime;
-
-    const runtimeTexture = composeRuntimeTexture(runtimeApi);
-    runtimeTexture.dataset.runtimeLoaded = String(Boolean(runtimeLoad.loaded));
-    runtimeTexture.dataset.runtimeStatus =
-      runtime && runtime.status
-        ? runtime.status
-        : runtimeLoad.loaded
-          ? "loaded"
-          : "hold";
-    runtimeTexture.dataset.runtimeError = runtimeLoad.error || "";
-
+    const runtimeApi = await loadRuntimeAuthority();
+    const runtimeInstance = createRuntimeInstance(runtimeApi);
+    const texture = composeRuntimeTexture(runtimeApi, runtimeInstance);
     const parts = createStage(mount);
-    const ctx = parts.canvas.getContext("2d", { alpha: true });
+    const ctx = parts.canvas.getContext("2d", { alpha: true, willReadFrequently: true });
 
     const state = {
       mount,
       stage: parts.stage,
       canvas: parts.canvas,
       ctx,
-      texture: runtimeTexture,
+      texture,
       runtimeApi,
-      runtime,
+      runtimeInstance,
+      geometry: null,
       phase: CONTROL.initialPhase,
       velocity: 0,
       dragging: false,
@@ -1144,7 +1103,7 @@
     activeState = state;
 
     attachControls(state);
-    draw(state);
+    drawOrthographicSphere(state);
 
     state.running = true;
     state.raf = window.requestAnimationFrame(function () {
@@ -1152,33 +1111,56 @@
     });
 
     markRoute("active");
-    applyTextureReceipts(mount, runtimeTexture);
+
+    document.documentElement.dataset.audraliaRuntimeAuthorityLoaded = String(Boolean(runtimeApi));
+    document.documentElement.dataset.audraliaRuntimeInstanceLoaded = String(Boolean(runtimeInstance));
+    document.documentElement.dataset.audraliaComposedTexture = texture.stats.compositorStatus;
+    document.documentElement.dataset.audraliaProjectionModel = CONTROL.projectionModel;
+    document.documentElement.dataset.audraliaVisibleLongitudeSpanDegrees = String(CONTROL.visibleLongitudeSpanDegrees);
+    document.documentElement.dataset.audraliaHiddenLongitudeSpanDegrees = String(CONTROL.hiddenLongitudeSpanDegrees);
+    document.documentElement.dataset.audraliaFullTextureOnVisibleFace = CONTROL.fullTextureOnVisibleFace;
+    document.documentElement.dataset.audraliaFlatMapOnSphere = CONTROL.flatMapOnSphere;
+    document.documentElement.dataset.audraliaFoliageSamples = String(texture.stats.foliageSamples);
+
+    mount.dataset.runtimeAuthorityLoaded = String(Boolean(runtimeApi));
+    mount.dataset.runtimeInstanceLoaded = String(Boolean(runtimeInstance));
+    mount.dataset.composedTexture = texture.stats.compositorStatus;
+    mount.dataset.runtimeSamples = String(texture.stats.runtimeSamples);
+    mount.dataset.landSamples = String(texture.stats.landSamples);
+    mount.dataset.waterSamples = String(texture.stats.waterSamples);
+    mount.dataset.iceSamples = String(texture.stats.iceSamples);
+    mount.dataset.beachSamples = String(texture.stats.beachSamples);
+    mount.dataset.foliageSamples = String(texture.stats.foliageSamples);
+    mount.dataset.projectionModel = CONTROL.projectionModel;
+    mount.dataset.visibleLongitudeSpanDegrees = String(CONTROL.visibleLongitudeSpanDegrees);
+    mount.dataset.hiddenLongitudeSpanDegrees = String(CONTROL.hiddenLongitudeSpanDegrees);
+    mount.dataset.fullTextureOnVisibleFace = CONTROL.fullTextureOnVisibleFace;
+    mount.dataset.flatMapOnSphere = CONTROL.flatMapOnSphere;
 
     window.dispatchEvent(
-      new CustomEvent("dgb:audralia-runtime-topology-first-compositor-ready", {
+      new CustomEvent("dgb:audralia-true-orthographic-globe-ready", {
         detail: {
           body: BODY,
           label: LABEL,
           route: ROUTE,
           contract: RECEIPT,
           runtimeAuthority: RUNTIME_AUTHORITY,
-          topologyAuthority: TOPOLOGY_AUTHORITY,
-          terrainAuthority: TERRAIN_AUTHORITY,
-          parentAuthority: PARENT_AUTHORITY,
           runtimeVersion: RUNTIME_VERSION,
-          topologyVersion: TOPOLOGY_VERSION,
-          terrainVersion: TERRAIN_VERSION,
-          runtimeLoaded: Boolean(runtimeLoad.loaded),
-          runtimeStatus: runtimeTexture.dataset.runtimeStatus || "unknown",
-          composedTexture: runtimeTexture.dataset.compositorStatus || "unknown",
-          runtimeSamples: runtimeTexture.dataset.runtimeSamples || "0",
-          topologyLandSamples: runtimeTexture.dataset.topologyLandSamples || "0",
-          topologyVoidSamples: runtimeTexture.dataset.topologyVoidSamples || "0",
-          topologyConnectedSamples: runtimeTexture.dataset.topologyConnectedSamples || "0",
-          terrainReliefSamples: runtimeTexture.dataset.terrainReliefSamples || "0",
-          mismatchSamples: runtimeTexture.dataset.mismatchSamples || "0",
-          lifeLeakSamples: runtimeTexture.dataset.lifeLeakSamples || "0",
-          noRouteLandGeneration: true,
+          runtimeLoaded: Boolean(runtimeApi),
+          runtimeInstanceLoaded: Boolean(runtimeInstance),
+          composedTexture: texture.stats.compositorStatus,
+          runtimeSamples: texture.stats.runtimeSamples,
+          landSamples: texture.stats.landSamples,
+          waterSamples: texture.stats.waterSamples,
+          iceSamples: texture.stats.iceSamples,
+          beachSamples: texture.stats.beachSamples,
+          foliageSamples: texture.stats.foliageSamples,
+          projectionModel: CONTROL.projectionModel,
+          visibleLongitudeSpanDegrees: CONTROL.visibleLongitudeSpanDegrees,
+          hiddenLongitudeSpanDegrees: CONTROL.hiddenLongitudeSpanDegrees,
+          fullTextureOnVisibleFace: false,
+          flatMapOnSphere: false,
+          routeOwnedLandGeneration: false,
           noTrees: true,
           noFoliage: true,
           noVegetation: true,
@@ -1195,12 +1177,7 @@
     label: LABEL,
     route: ROUTE,
     runtimeAuthority: RUNTIME_AUTHORITY,
-    topologyAuthority: TOPOLOGY_AUTHORITY,
-    terrainAuthority: TERRAIN_AUTHORITY,
-    parentAuthority: PARENT_AUTHORITY,
     runtimeVersion: RUNTIME_VERSION,
-    topologyVersion: TOPOLOGY_VERSION,
-    terrainVersion: TERRAIN_VERSION,
     control: CONTROL,
     boot,
     getStatus: function () {
@@ -1210,33 +1187,35 @@
         body: BODY,
         route: ROUTE,
         runtimeAuthority: RUNTIME_AUTHORITY,
-        topologyAuthority: TOPOLOGY_AUTHORITY,
-        terrainAuthority: TERRAIN_AUTHORITY,
-        parentAuthority: PARENT_AUTHORITY,
+        runtimeVersion: RUNTIME_VERSION,
         runtimeLoaded: Boolean(activeState && activeState.runtimeApi),
-        runtimeStatus: activeState && activeState.runtime && activeState.runtime.status ? activeState.runtime.status : null,
+        runtimeInstanceLoaded: Boolean(activeState && activeState.runtimeInstance),
         compositorModel: CONTROL.compositorModel,
         rotationModel: CONTROL.rotationModel,
+        projectionModel: CONTROL.projectionModel,
         phase: activeState ? activeState.phase : null,
         velocity: activeState ? activeState.velocity : null,
-        noRouteLandGeneration: true,
-        topologyFirst: true,
-        terrainReliefSecond: true,
+        visibleLongitudeSpanDegrees: CONTROL.visibleLongitudeSpanDegrees,
+        hiddenLongitudeSpanDegrees: CONTROL.hiddenLongitudeSpanDegrees,
+        fullTextureOnVisibleFace: false,
+        flatMapOnSphere: false,
+        routeOwnedLandGeneration: false,
+        topologyRewrittenHere: false,
+        tectonicsRewrittenHere: false,
+        terrainRewrittenHere: false,
         noTrees: true,
         noFoliage: true,
         noVegetation: true,
         noGreenYellowDots: true,
         hydrationHeld: true,
-        runtimeRewrittenHere: false,
-        topologyRewrittenHere: false,
-        terrainRewrittenHere: false,
-        parentReopened: false,
         visualPassClaimed: false
       });
     }
   });
 
-  window.DGBAudraliaRuntimeTopologyFirstCompositor = window.DGBAudraliaRouteControl;
+  window.DGBAudraliaExistingRouteCompositor = window.DGBAudraliaRouteControl;
+  window.DGBAudraliaTrueGlobeRenderer = window.DGBAudraliaRouteControl;
+  window.DGBAudraliaTrueOrthographicRenderer = window.DGBAudraliaRouteControl;
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot, { once: true });

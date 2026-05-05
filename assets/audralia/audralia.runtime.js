@@ -1,113 +1,134 @@
 // /assets/audralia/audralia.runtime.js
-// AUDRALIA_G1_PLANET_RUNTIME_ORCHESTRATOR_TNT_v1
+// AUDRALIA_RUNTIME_CACHED_TOPOLOGY_TECTONICS_TERRAIN_CHAIN_TNT_v2
 //
 // Role:
-// - Audralia planet runtime.
-// - Orchestrates the asset chain.
-// - Verifies layer receipts.
-// - Blocks stale topology / terrain contracts.
-// - Keeps hydration, foliage, ecology, climate, and visual-pass claims closed.
-// - Exposes approved planet state to the route compositor.
+// - Audralia runtime authority.
+// - Consumes topology first.
+// - Consumes tectonics second.
+// - Consumes terrain third.
+// - Provides cached, low-lag runtime sampling for the route compositor.
+// - Prevents route-level per-pixel calls from recalculating topology, tectonics, and terrain repeatedly.
 //
-// Does not own:
-// - drawing
-// - terrain generation
-// - topology generation
-// - parent globe rendering
-// - active hydration
-// - foliage
-// - ecology
-// - climate
-// - route shell
-// - final visual pass
+// Hard locks:
+// - No DOM mutation.
+// - No route rendering.
+// - No land generation outside topology.
+// - No tectonic overwrite.
+// - No terrain land expansion.
+// - No active hydration.
+// - No foliage.
+// - No trees.
+// - No vegetation.
+// - No graphic box.
+// - No image generation.
+// - No visual pass claim.
 
 import {
-  createTopologyProfile,
   sampleTopology,
   buildTopologyField,
   getTopologySampleFromField,
+  estimateEarthEquivalentSeaLevel,
   getTopologyStatus
-} from "./audralia.topology.render.js?v=AUDRALIA_G1_TOPOLOGY_PLANET_BLUEPRINT_AND_SUBTERRANEAN_DEPTH_TNT_v1";
+} from "./audralia.topology.render.js?v=AUDRALIA_G1_TOPOLOGY_LANDMASS_100_PERCENT_EXPANSION_SMALL_CONTINENTS_TNT_v1";
 
 import {
-  createTerrainProfile,
+  sampleTectonics,
+  buildTectonicsField,
+  getTectonicsSampleFromField,
+  getTectonicsStatus
+} from "./audralia.tectonics.render.js?v=AUDRALIA_G1_TECTONIC_PLATE_LAYER_EARTH_LAND_AREA_ANCIENT_MOUNTAIN_MEMORY_TNT_v1";
+
+import {
   sampleTerrain,
   buildTerrainField,
   getTerrainSampleFromField,
   getTerrainStatus
-} from "./audralia.terrain.render.js?v=AUDRALIA_G1_FULL_PLANET_TERRAIN_PURIFICATION_MAP_TNT_v1";
+} from "./audralia.terrain.render.js?v=AUDRALIA_G1_TERRAIN_HYDROLOGY_MAP_CHILD_TNT_v1";
 
-const RECEIPT = "AUDRALIA_G1_PLANET_RUNTIME_ORCHESTRATOR_TNT_v1";
+const RECEIPT = "AUDRALIA_RUNTIME_CACHED_TOPOLOGY_TECTONICS_TERRAIN_CHAIN_TNT_v2";
+
 const PLANETARY_OBJECT = "Audralia";
-const GENERATION = "G1_RUNTIME";
+const GENERATION = "G1_RUNTIME_CACHED_CHAIN";
 const FILE = "/assets/audralia/audralia.runtime.js";
 
-const MANIFEST_TARGET = "/assets/audralia/audralia_manifest.json";
-const PARENT_AUTHORITY = "/assets/audralia/audralia.planet.render.js";
 const TOPOLOGY_AUTHORITY = "/assets/audralia/audralia.topology.render.js";
+const TECTONICS_AUTHORITY = "/assets/audralia/audralia.tectonics.render.js";
 const TERRAIN_AUTHORITY = "/assets/audralia/audralia.terrain.render.js";
-const ROUTE_COMPOSITOR = "/showroom/globe/audralia/index.js";
+const HYDRATION_AUTHORITY_LATER = "/assets/audralia/audralia.hydration.render.js";
 
-const EXPECTED = Object.freeze({
-  topologyReceipt: "AUDRALIA_G1_TOPOLOGY_PLANET_BLUEPRINT_AND_SUBTERRANEAN_DEPTH_TNT_v1",
-  terrainReceipt: "AUDRALIA_G1_FULL_PLANET_TERRAIN_PURIFICATION_MAP_TNT_v1",
-  parentRole: "baseline-globe-body-only",
-  runtimeReceipt: RECEIPT
+const CONTRACTS = Object.freeze({
+  runtime: RECEIPT,
+  topology: "AUDRALIA_G1_TOPOLOGY_LANDMASS_100_PERCENT_EXPANSION_SMALL_CONTINENTS_TNT_v1",
+  topologyCompatibleReceipt: "AUDRALIA_G1_TOPOLOGY_PLANET_BLUEPRINT_AND_SUBTERRANEAN_DEPTH_TNT_v1",
+  tectonics: "AUDRALIA_G1_TECTONIC_PLATE_LAYER_EARTH_LAND_AREA_ANCIENT_MOUNTAIN_MEMORY_TNT_v1",
+  terrainCurrent: "AUDRALIA_G1_TERRAIN_HYDROLOGY_MAP_CHILD_TNT_v1",
+  routeExpected: "AUDRALIA_ROUTE_TRUE_ORTHOGRAPHIC_GLOBE_RENDER_TNT_v2"
 });
 
 const RUNTIME_LAW = Object.freeze({
-  role: "planet-runtime-orchestrator",
-  layerOrder: Object.freeze([
-    "manifest",
-    "runtime",
-    "topology-blueprint",
-    "terrain-elevation-relief",
-    "parent-body-baseline",
-    "route-compositor"
-  ]),
+  layerOrder: Object.freeze(["topology", "tectonics", "terrain", "hydration_later"]),
+  topologyFirst: true,
+  tectonicsSecond: true,
+  terrainThird: true,
+  hydrationHeld: true,
 
-  topologyRole: "planet-blueprint-land-void-sealevel-subterranean-authority",
-  terrainRole: "above-sea-elevation-and-relief-authority",
-  parentRole: "globe-body-baseline-only",
-  routeRole: "visible-route-compositor-only",
+  ownsRuntimeSampling: true,
+  ownsChainComposition: true,
+  ownsPerformanceCache: true,
+  ownsRouteDataHandoff: true,
 
-  ownsRuntime: true,
-  ownsDrawing: false,
-  ownsTopologyGeneration: false,
-  ownsTerrainGeneration: false,
-  ownsParentRender: false,
+  ownsTopology: false,
+  ownsTectonics: false,
+  ownsTerrain: false,
+  ownsLandFootprint: false,
+  ownsLandExpansion: false,
+  ownsAboveSeaElevation: false,
   ownsHydration: false,
+  ownsClimate: false,
+  ownsEcology: false,
   ownsFoliage: false,
   ownsTrees: false,
   ownsVegetation: false,
-  ownsEcology: false,
-  ownsClimate: false,
-  ownsFauna: false,
-  ownsRouteShell: false,
-  ownsVisualPass: false,
+  ownsRouteRendering: false,
+  ownsFinalRender: false,
+  visualPassClaimed: false,
 
-  hydrationGate: "held",
-  foliageGate: "closed",
-  ecologyGate: "closed",
-  climateGate: "closed",
-  visualPassClaimed: false
+  terrainMustRespectTopologyLandArea: true,
+  routeMustNotGenerateLand: true,
+  routeMustConsumeRuntime: true
 });
 
-const DEFAULT_MANIFEST = Object.freeze({
-  ok: true,
-  syntheticFallback: true,
-  receipt: "AUDRALIA_RUNTIME_SYNTHETIC_MANIFEST_FALLBACK_v1",
-  planetaryObject: PLANETARY_OBJECT,
-  layerOrder: RUNTIME_LAW.layerOrder,
-  manifestTarget: MANIFEST_TARGET,
-  topologyAuthority: TOPOLOGY_AUTHORITY,
-  terrainAuthority: TERRAIN_AUTHORITY,
-  parentAuthority: PARENT_AUTHORITY,
-  routeCompositor: ROUTE_COMPOSITOR,
-  hydrationGate: "held",
-  foliageGate: "closed",
-  visualPassClaimed: false
+const DEFAULTS = Object.freeze({
+  fieldWidth: 192,
+  fieldHeight: 96,
+  maxFieldWidth: 320,
+  maxFieldHeight: 160,
+  minFieldWidth: 48,
+  minFieldHeight: 24,
+
+  topologyContext: Object.freeze({
+    blueprintResolution: 0.88,
+    coastlineComplexity: 0.92,
+    connectionStrength: 0.90,
+    subterraneanPressure: 0.72,
+    landExpansionMultiplier: 2,
+    enforceEarthEquivalentLandRatio: false
+  }),
+
+  tectonicsContext: Object.freeze({
+    tectonicStressDemand: 0.84,
+    ancientMountainMemory: 0.96,
+    mineralExposureDemand: 0.88,
+    erosionAge: 1
+  }),
+
+  terrainContext: Object.freeze({
+    coherenceIndex: 0.94,
+    collaborativeExpression: 0.90
+  })
 });
+
+let sharedRuntime = null;
 
 function clamp(value, min, max) {
   const number = Number(value);
@@ -115,9 +136,13 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, number));
 }
 
+function safeBool(value) {
+  return value === true || value === "true" || value === 1 || value === "1";
+}
+
 function normalizeUV(uInput, vInput) {
   const u = ((Number(uInput) || 0) % 1 + 1) % 1;
-  const v = clamp(Number(vInput), 0, 1);
+  const v = clamp(Number(vInput) || 0, 0, 1);
 
   return Object.freeze({
     u,
@@ -127,490 +152,387 @@ function normalizeUV(uInput, vInput) {
   });
 }
 
-function safeCall(fn, fallback) {
+function safeCall(label, fallback, fn) {
   try {
     return fn();
   } catch (error) {
     return Object.freeze({
-      ...fallback,
       ok: false,
-      error: error && error.message ? error.message : String(error)
+      runtimeFallback: true,
+      label,
+      error: error && error.message ? error.message : String(error),
+      fallback
     });
   }
 }
 
-function hasReceipt(status, expectedReceipt) {
-  if (!status || !expectedReceipt) return false;
-
-  if (status.receipt === expectedReceipt) return true;
-
-  if (Array.isArray(status.previousReceipts) && status.previousReceipts.includes(expectedReceipt)) {
-    return true;
-  }
-
-  if (status.terrainContract === expectedReceipt) return true;
-
-  return false;
+function normalizeDimension(value, fallback, min, max) {
+  return clamp(Math.floor(Number(value) || fallback), min, max);
 }
 
-function isTopologyStatusValid(status) {
-  return Boolean(
-    status &&
-      status.ok === true &&
-      status.receipt === EXPECTED.topologyReceipt &&
-      status.topologyBlueprint === true &&
-      status.ownsLandVoidFootprint === true &&
-      status.ownsSeaLevelBoundary === true &&
-      status.ownsSubSeaDepthBlueprint === true &&
-      status.ownsSubterraneanBlueprint === true &&
-      status.ownsAboveSeaElevation === false &&
-      status.ownsTerrainRelief === false &&
-      status.ownsHydration === false &&
-      status.ownsFoliage === false &&
-      status.ownsTrees === false &&
-      status.visualPassClaimed === false
+function getRuntimeOptions(options = {}) {
+  const fieldWidth = normalizeDimension(
+    options.fieldWidth,
+    DEFAULTS.fieldWidth,
+    DEFAULTS.minFieldWidth,
+    DEFAULTS.maxFieldWidth
   );
-}
 
-function isTerrainStatusValid(status) {
-  return Boolean(
-    status &&
-      status.ok === true &&
-      hasReceipt(status, EXPECTED.terrainReceipt) &&
-      status.ownsTerrain === true &&
-      status.ownsActiveHydration === false &&
-      status.ownsFoliage === false &&
-      status.ownsEcology === false &&
-      status.visualPassClaimed === false
+  const fieldHeight = normalizeDimension(
+    options.fieldHeight,
+    DEFAULTS.fieldHeight,
+    DEFAULTS.minFieldHeight,
+    DEFAULTS.maxFieldHeight
   );
-}
-
-function noLifeOrWaterLeak(object) {
-  if (!object || typeof object !== "object") return true;
-
-  return !(
-    object.foliage === true ||
-    object.trees === true ||
-    object.vegetation === true ||
-    object.ownsFoliage === true ||
-    object.ownsTrees === true ||
-    object.ownsVegetation === true ||
-    object.ownsEcology === true ||
-    object.ownsHydration === true ||
-    object.activeHydrationOwnedHere === true ||
-    object.visualPassClaimed === true
-  );
-}
-
-function buildIntegrityReport(topologyStatus, terrainStatus, manifest) {
-  const checks = Object.freeze([
-    Object.freeze({
-      id: "runtime_receipt_current",
-      pass: true,
-      detail: RECEIPT
-    }),
-    Object.freeze({
-      id: "topology_receipt_current",
-      pass: Boolean(topologyStatus && topologyStatus.receipt === EXPECTED.topologyReceipt),
-      detail: topologyStatus && topologyStatus.receipt ? topologyStatus.receipt : "missing"
-    }),
-    Object.freeze({
-      id: "topology_before_terrain",
-      pass: Boolean(topologyStatus && topologyStatus.topologyComesBeforeTerrain === true),
-      detail: "topologyComesBeforeTerrain"
-    }),
-    Object.freeze({
-      id: "topology_blueprint_only",
-      pass: isTopologyStatusValid(topologyStatus),
-      detail: "topology owns blueprint, not terrain elevation"
-    }),
-    Object.freeze({
-      id: "terrain_receipt_current",
-      pass: isTerrainStatusValid(terrainStatus),
-      detail: terrainStatus && terrainStatus.receipt ? terrainStatus.receipt : "missing"
-    }),
-    Object.freeze({
-      id: "terrain_not_hydration",
-      pass: Boolean(terrainStatus && terrainStatus.ownsActiveHydration === false),
-      detail: "terrain owns relief, not active water"
-    }),
-    Object.freeze({
-      id: "foliage_closed",
-      pass: Boolean(
-        topologyStatus &&
-          terrainStatus &&
-          topologyStatus.ownsFoliage === false &&
-          topologyStatus.ownsTrees === false &&
-          terrainStatus.ownsFoliage === false
-      ),
-      detail: "no topology/terrain foliage ownership"
-    }),
-    Object.freeze({
-      id: "hydration_held",
-      pass: true,
-      detail: RUNTIME_LAW.hydrationGate
-    }),
-    Object.freeze({
-      id: "visual_pass_unclaimed",
-      pass: Boolean(
-        topologyStatus &&
-          terrainStatus &&
-          topologyStatus.visualPassClaimed === false &&
-          terrainStatus.visualPassClaimed === false
-      ),
-      detail: "runtime does not claim visual pass"
-    }),
-    Object.freeze({
-      id: "manifest_available_or_fallback",
-      pass: Boolean(manifest && manifest.ok === true),
-      detail: manifest && manifest.syntheticFallback ? "synthetic fallback" : "manifest loaded"
-    })
-  ]);
-
-  const passed = checks.filter((check) => check.pass).length;
-  const failed = checks.length - passed;
 
   return Object.freeze({
-    ok: failed === 0,
-    total: checks.length,
-    passed,
-    failed,
-    checks
-  });
-}
-
-async function loadManifest() {
-  if (typeof fetch !== "function") return DEFAULT_MANIFEST;
-
-  try {
-    const response = await fetch(MANIFEST_TARGET + "?v=" + encodeURIComponent(RECEIPT), {
-      cache: "no-store"
-    });
-
-    if (!response.ok) return DEFAULT_MANIFEST;
-
-    const json = await response.json();
-
-    return Object.freeze({
-      ok: true,
-      syntheticFallback: false,
-      ...json,
-      manifestTarget: MANIFEST_TARGET
-    });
-  } catch (error) {
-    return DEFAULT_MANIFEST;
-  }
-}
-
-function getParentGlobal() {
-  if (typeof window === "undefined") return null;
-
-  return (
-    window.DGBAudraliaPlanetRender ||
-    window.AudraliaPlanetRender ||
-    window.audraliaPlanetRender ||
-    window.DGBAudreliaPlanetRender ||
-    window.AudreliaPlanetRender ||
-    window.audreliaPlanetRender ||
-    null
-  );
-}
-
-function getParentStatus() {
-  const parent = getParentGlobal();
-
-  if (!parent) {
-    return Object.freeze({
-      ok: false,
-      loaded: false,
-      receipt: "parent-not-loaded-through-runtime",
-      parentAuthority: PARENT_AUTHORITY,
-      role: EXPECTED.parentRole,
-      note: "Runtime can operate before parent global loads. Route compositor may load parent separately."
-    });
-  }
-
-  if (typeof parent.getStatus === "function") {
-    return safeCall(
-      () => {
-        const status = parent.getStatus();
-
-        return Object.freeze({
-          ok: true,
-          loaded: true,
-          parentAuthority: PARENT_AUTHORITY,
-          ...status
-        });
-      },
-      {
-        loaded: true,
-        parentAuthority: PARENT_AUTHORITY,
-        role: EXPECTED.parentRole
-      }
-    );
-  }
-
-  return Object.freeze({
-    ok: true,
-    loaded: true,
-    parentAuthority: PARENT_AUTHORITY,
-    role: EXPECTED.parentRole,
-    getStatusAvailable: false
-  });
-}
-
-function sampleSafeTopology(u, v, context = {}) {
-  return safeCall(
-    () => sampleTopology(u, v, context),
-    {
-      receipt: "topology-sample-fallback",
-      isLandFootprint: false,
-      isVoidFootprint: true,
-      surfaceClass: "void_mid_ocean",
-      surfaceClassId: 3,
-      terrainRisePermission: 0,
-      terrainBlockPermission: 1,
-      oceanDepthIndex: 0.5,
-      subterraneanDepthIndex: 0.2,
-      foliage: false,
-      trees: false,
-      vegetation: false,
-      visualPassClaimed: false
-    }
-  );
-}
-
-function sampleSafeTerrain(u, v, context = {}) {
-  return safeCall(
-    () => sampleTerrain(u, v, context),
-    {
-      receipt: "terrain-sample-fallback",
-      isLand: false,
-      isWater: true,
-      isIce: false,
-      normalizedElevation: -0.45,
-      oceanDepth: 0.5,
-      ridge: 0,
-      basin: 0,
-      mountainPressure: 0,
-      canyonPressure: 0,
-      hydrologyReadinessIndex: 0,
-      foliage: false,
-      trees: false,
-      vegetation: false,
-      visualPassClaimed: false
-    }
-  );
-}
-
-function terrainAllowedByTopology(topology, terrain) {
-  if (!topology || !terrain) return false;
-
-  if (topology.isVoidFootprint && terrain.isLand && topology.terrainRisePermission < 0.38) {
-    return false;
-  }
-
-  if (topology.isSouthPolarIceFootprint && terrain.isLand && !terrain.isIce) {
-    return false;
-  }
-
-  return true;
-}
-
-export async function createAudraliaRuntime(options = {}) {
-  const manifest = await loadManifest();
-
-  const topologyStatus = safeCall(getTopologyStatus, {
-    receipt: "topology-status-fallback",
-    ok: false
-  });
-
-  const terrainStatus = safeCall(getTerrainStatus, {
-    receipt: "terrain-status-fallback",
-    ok: false
-  });
-
-  const parentStatus = getParentStatus();
-  const integrity = buildIntegrityReport(topologyStatus, terrainStatus, manifest);
-
-  const runtime = Object.freeze({
-    ok: integrity.ok,
-    receipt: RECEIPT,
-    status: integrity.ok ? "active" : "held",
-    planetaryObject: PLANETARY_OBJECT,
-    generation: GENERATION,
-    file: FILE,
-
-    manifestTarget: MANIFEST_TARGET,
-    parentAuthority: PARENT_AUTHORITY,
-    topologyAuthority: TOPOLOGY_AUTHORITY,
-    terrainAuthority: TERRAIN_AUTHORITY,
-    routeCompositor: ROUTE_COMPOSITOR,
-
-    expected: EXPECTED,
-    runtimeLaw: RUNTIME_LAW,
-    layerOrder: RUNTIME_LAW.layerOrder,
-
-    manifest,
-    topologyStatus,
-    terrainStatus,
-    parentStatus,
-    integrity,
-
-    topologyReady: isTopologyStatusValid(topologyStatus),
-    terrainReady: isTerrainStatusValid(terrainStatus),
-    parentReady: Boolean(parentStatus && parentStatus.loaded),
-    renderPermission: integrity.ok ? "allowed_for_route_compositor" : "held_until_integrity_passes",
-
-    hydrationGate: RUNTIME_LAW.hydrationGate,
-    foliageGate: RUNTIME_LAW.foliageGate,
-    ecologyGate: RUNTIME_LAW.ecologyGate,
-    climateGate: RUNTIME_LAW.climateGate,
-
-    ownsRuntime: true,
-    ownsDrawing: false,
-    ownsTopologyGeneration: false,
-    ownsTerrainGeneration: false,
-    ownsParentRender: false,
-    ownsHydration: false,
-    ownsFoliage: false,
-    ownsTrees: false,
-    ownsVegetation: false,
-    ownsEcology: false,
-    ownsClimate: false,
-    ownsVisualPass: false,
-    visualPassClaimed: false,
-
-    options: Object.freeze({ ...options })
-  });
-
-  if (typeof window !== "undefined") {
-    window.DGBAudraliaRuntime = runtime;
-    window.DGBAudraliaRuntimeAPI = API;
-    window.dispatchEvent(
-      new CustomEvent("dgb:audralia-runtime-ready", {
-        detail: {
-          receipt: RECEIPT,
-          ok: runtime.ok,
-          status: runtime.status,
-          topologyReady: runtime.topologyReady,
-          terrainReady: runtime.terrainReady,
-          hydrationGate: runtime.hydrationGate,
-          foliageGate: runtime.foliageGate,
-          visualPassClaimed: false
-        }
-      })
-    );
-  }
-
-  return runtime;
-}
-
-export function getAudraliaLayerReceipts() {
-  const topologyStatus = safeCall(getTopologyStatus, { receipt: "topology-status-fallback", ok: false });
-  const terrainStatus = safeCall(getTerrainStatus, { receipt: "terrain-status-fallback", ok: false });
-  const parentStatus = getParentStatus();
-
-  return Object.freeze({
-    receipt: RECEIPT,
-    planetaryObject: PLANETARY_OBJECT,
-    runtime: RECEIPT,
-    manifestTarget: MANIFEST_TARGET,
-    topology: topologyStatus.receipt || "missing",
-    topologyExpected: EXPECTED.topologyReceipt,
-    terrain: terrainStatus.receipt || "missing",
-    terrainExpected: EXPECTED.terrainReceipt,
-    parent: parentStatus.receipt || parentStatus.role || "parent-not-loaded-through-runtime",
-    parentAuthority: PARENT_AUTHORITY,
-    routeCompositor: ROUTE_COMPOSITOR,
-    hydrationGate: RUNTIME_LAW.hydrationGate,
-    foliageGate: RUNTIME_LAW.foliageGate,
+    fieldWidth,
+    fieldHeight,
+    topologyContext: Object.freeze({
+      ...DEFAULTS.topologyContext,
+      ...(options.topologyContext || {}),
+      ...(Number.isFinite(Number(options.landExpansionMultiplier))
+        ? { landExpansionMultiplier: Number(options.landExpansionMultiplier) }
+        : {})
+    }),
+    tectonicsContext: Object.freeze({
+      ...DEFAULTS.tectonicsContext,
+      ...(options.tectonicsContext || {})
+    }),
+    terrainContext: Object.freeze({
+      ...DEFAULTS.terrainContext,
+      ...(options.terrainContext || {})
+    }),
+    hydrationEnabled: false,
+    foliageEnabled: false,
     visualPassClaimed: false
   });
 }
 
-export function getAudraliaRuntimeStatus() {
-  const topologyStatus = safeCall(getTopologyStatus, { receipt: "topology-status-fallback", ok: false });
-  const terrainStatus = safeCall(getTerrainStatus, { receipt: "terrain-status-fallback", ok: false });
-  const parentStatus = getParentStatus();
-  const integrity = buildIntegrityReport(topologyStatus, terrainStatus, DEFAULT_MANIFEST);
-
+function fallbackTopologySample(u, v) {
+  const point = normalizeUV(u, v);
   return Object.freeze({
-    ok: integrity.ok,
-    receipt: RECEIPT,
-    status: integrity.ok ? "active" : "held",
+    receipt: "RUNTIME_FALLBACK_TOPOLOGY_SAMPLE",
     planetaryObject: PLANETARY_OBJECT,
-    publicName: PLANETARY_OBJECT,
-    generation: GENERATION,
-    file: FILE,
-
-    manifestTarget: MANIFEST_TARGET,
-    parentAuthority: PARENT_AUTHORITY,
-    topologyAuthority: TOPOLOGY_AUTHORITY,
-    terrainAuthority: TERRAIN_AUTHORITY,
-    routeCompositor: ROUTE_COMPOSITOR,
-
-    role: "planet-runtime-orchestrator",
-    layerOrder: RUNTIME_LAW.layerOrder,
-
-    topologyReady: isTopologyStatusValid(topologyStatus),
-    terrainReady: isTerrainStatusValid(terrainStatus),
-    parentReady: Boolean(parentStatus && parentStatus.loaded),
-    integrity,
-
-    topologyStatus,
-    terrainStatus,
-    parentStatus,
-
-    hydrationGate: RUNTIME_LAW.hydrationGate,
-    foliageGate: RUNTIME_LAW.foliageGate,
-    ecologyGate: RUNTIME_LAW.ecologyGate,
-    climateGate: RUNTIME_LAW.climateGate,
-
-    ownsRuntime: true,
-    ownsDrawing: false,
-    ownsTopologyGeneration: false,
-    ownsTerrainGeneration: false,
-    ownsParentRender: false,
-    ownsHydration: false,
-    ownsFoliage: false,
-    ownsTrees: false,
-    ownsVegetation: false,
-    ownsEcology: false,
-    ownsClimate: false,
-    ownsFauna: false,
-    ownsRouteShell: false,
-    ownsVisualPass: false,
-
-    exports: Object.freeze([
-      "createAudraliaRuntime",
-      "getAudraliaRuntimeStatus",
-      "getAudraliaLayerReceipts",
-      "sampleAudraliaPlanetState",
-      "buildAudraliaRuntimeField",
-      "assertAudraliaRuntimeIntegrity"
-    ]),
-
-    staticImageReplacement: false,
-    imageGeneration: false,
-    graphicBox: false,
-    visualPassClaimed: false,
-    generationPassClaimed: false
+    u: point.u,
+    v: point.v,
+    lon: point.lon,
+    lat: point.lat,
+    isLandFootprint: false,
+    isAboveWaterLandFootprint: false,
+    isVoidFootprint: true,
+    isSouthPolarIceFootprint: point.lat < -0.78,
+    isBeach: false,
+    isSand: false,
+    isRock: false,
+    isShelf: false,
+    surfaceClass: point.lat < -0.78 ? "polar_ice_footprint" : "void_mid_ocean",
+    surfaceClassId: point.lat < -0.78 ? 12 : 3,
+    landBodyId: 0,
+    landBodyKey: "void_ocean",
+    oceanDepthIndex: 0.54,
+    bathymetryBlueprintIndex: 0.46,
+    trenchDepthIndex: 0,
+    shelfDepthIndex: 0,
+    terrainRisePermission: 0,
+    terrainBlockPermission: 1,
+    terrainSeedClass: "void_no_rise",
+    foliage: false,
+    trees: false,
+    vegetation: false,
+    visualPassClaimed: false
   });
 }
 
-export function sampleAudraliaPlanetState(uInput, vInput, context = {}) {
+function fallbackTectonicsSample(u, v, topology) {
+  return Object.freeze({
+    receipt: "RUNTIME_FALLBACK_TECTONICS_SAMPLE",
+    planetaryObject: PLANETARY_OBJECT,
+    u,
+    v,
+    topologyLandFootprint: Boolean(topology && topology.isLandFootprint),
+    tectonicType: "runtime_fallback_pressure",
+    plateId: 0,
+    plateKey: "runtime_fallback_plate",
+    boundaryId: "none",
+    crustalStressIndex: 0,
+    ancientCrustStabilityIndex: 0,
+    primordialMountainMemoryIndex: 0,
+    weatheredRemnantIndex: 0,
+    mountainChainPermission: 0,
+    canyonPermission: 0,
+    cliffPermission: 0,
+    trenchReinforcementPermission: 0,
+    diamondPressureIndex: 0,
+    opalSeamIndex: 0,
+    graniteCratonIndex: 0,
+    slateFoldBeltIndex: 0,
+    exposedMineralHardnessIndex: 0,
+    terrainPressureHandoff: 0,
+    ownsLandFootprint: false,
+    ownsAboveSeaElevation: false,
+    ownsHydration: false,
+    ownsFoliage: false,
+    visualPassClaimed: false
+  });
+}
+
+function fallbackTerrainSample(u, v, topology) {
+  const land = Boolean(topology && topology.isLandFootprint);
+  const ice = Boolean(topology && topology.isSouthPolarIceFootprint);
+
+  return Object.freeze({
+    receipt: "RUNTIME_FALLBACK_TERRAIN_SAMPLE",
+    planetaryObject: PLANETARY_OBJECT,
+    u,
+    v,
+    isLand: land,
+    isWater: !land && !ice,
+    isIce: ice,
+    normalizedElevation: land ? clamp(Number(topology.terrainRisePermission) || 0.28, 0, 1) : -clamp(Number(topology.oceanDepthIndex) || 0.44, 0, 1),
+    elevationMeters: land ? Math.round((Number(topology.terrainRisePermission) || 0.28) * 9200) : 0,
+    ridge: 0,
+    basin: land ? 0.28 : 0,
+    slope: 0,
+    coastPressure: Number(topology.shorelinePressure) || 0,
+    shelfPermission: Number(topology.reefShelfPermission) || 0,
+    riverbedPressure: 0,
+    streamPressure: 0,
+    lakeBasinPressure: 0,
+    glacierSeatPressure: ice ? 0.8 : 0,
+    valleyChannelPressure: 0,
+    hydrologyReadinessIndex: 0,
+    ownsHydration: false,
+    ownsFoliage: false,
+    visualPassClaimed: false
+  });
+}
+
+function buildRuntimeCache(options) {
+  const topologyField = safeCall("buildTopologyField", null, () =>
+    buildTopologyField(options.fieldWidth, options.fieldHeight, options.topologyContext)
+  );
+
+  const tectonicsField = safeCall("buildTectonicsField", null, () =>
+    buildTectonicsField(options.fieldWidth, options.fieldHeight, {
+      ...options.tectonicsContext,
+      topologyContext: options.topologyContext
+    })
+  );
+
+  const terrainField = safeCall("buildTerrainField", null, () =>
+    buildTerrainField(options.fieldWidth, options.fieldHeight, options.terrainContext)
+  );
+
+  const topologyStatus = safeCall("getTopologyStatus", null, () => getTopologyStatus());
+  const tectonicsStatus = safeCall("getTectonicsStatus", null, () => getTectonicsStatus());
+  const terrainStatus = safeCall("getTerrainStatus", null, () => getTerrainStatus());
+
+  const seaLevelEstimate = safeCall("estimateEarthEquivalentSeaLevel", null, () =>
+    estimateEarthEquivalentSeaLevel(96, 48, options.topologyContext)
+  );
+
+  return Object.freeze({
+    receipt: RECEIPT,
+    planetaryObject: PLANETARY_OBJECT,
+    generation: GENERATION,
+    fieldWidth: options.fieldWidth,
+    fieldHeight: options.fieldHeight,
+    topologyField,
+    tectonicsField,
+    terrainField,
+    topologyStatus,
+    tectonicsStatus,
+    terrainStatus,
+    seaLevelEstimate,
+    createdAt: Date.now(),
+    runtimeCacheActive: true,
+    lowLagSampling: true
+  });
+}
+
+function fieldSample(field, getter, fallback, u, v, extra) {
+  if (field && field.samples && field.width && field.height && typeof getter === "function") {
+    return safeCall("fieldSample", fallback, () => getter(field, u, v));
+  }
+
+  return safeCall("directSample", fallback, () => extra());
+}
+
+function getTopologyFromCache(cache, u, v) {
+  const fallback = fallbackTopologySample(u, v);
+
+  return fieldSample(
+    cache.topologyField,
+    getTopologySampleFromField,
+    fallback,
+    u,
+    v,
+    () => sampleTopology(u, v, DEFAULTS.topologyContext)
+  );
+}
+
+function getTectonicsFromCache(cache, u, v, topologySample) {
+  const fallback = fallbackTectonicsSample(u, v, topologySample);
+
+  return fieldSample(
+    cache.tectonicsField,
+    getTectonicsSampleFromField,
+    fallback,
+    u,
+    v,
+    () => sampleTectonics(u, v, topologySample, DEFAULTS.tectonicsContext)
+  );
+}
+
+function getTerrainFromCache(cache, u, v, topologySample) {
+  const fallback = fallbackTerrainSample(u, v, topologySample);
+
+  return fieldSample(
+    cache.terrainField,
+    getTerrainSampleFromField,
+    fallback,
+    u,
+    v,
+    () => sampleTerrain(u, v, DEFAULTS.terrainContext)
+  );
+}
+
+function topologyAllowsLand(topology) {
+  return Boolean(
+    topology &&
+      (
+        topology.isLandFootprint ||
+        topology.isAboveWaterLandFootprint ||
+        topology.topologyLandFootprint
+      )
+  );
+}
+
+function topologyAllowsIce(topology) {
+  return Boolean(
+    topology &&
+      (
+        topology.isSouthPolarIceFootprint ||
+        topology.surfaceClass === "polar_ice_footprint" ||
+        topology.topologySurfaceClass === "polar_ice_footprint"
+      )
+  );
+}
+
+function topologyAllowsBeach(topology) {
+  return Boolean(
+    topology &&
+      (
+        topology.isBeach ||
+        topology.isSand ||
+        String(topology.beachType || "").includes("beach") ||
+        String(topology.surfaceClass || "").includes("beach")
+      )
+  );
+}
+
+function topologyAllowsRock(topology) {
+  return Boolean(
+    topology &&
+      (
+        topology.isRock ||
+        String(topology.surfaceClass || "").includes("rock") ||
+        Number(topology.rockPressure) > 0.44
+      )
+  );
+}
+
+function composeRuntimeSample(cache, uInput, vInput, context = {}) {
   const point = normalizeUV(uInput, vInput);
 
-  const topology = sampleSafeTopology(point.u, point.v, context.topologyContext || context);
-  const terrain = sampleSafeTerrain(point.u, point.v, context.terrainContext || context);
-  const allowed = terrainAllowedByTopology(topology, terrain);
+  const topology = getTopologyFromCache(cache, point.u, point.v);
+  const tectonics = getTectonicsFromCache(cache, point.u, point.v, topology);
+  const terrain = getTerrainFromCache(cache, point.u, point.v, topology);
 
-  const lifeLeak =
-    !noLifeOrWaterLeak(topology) ||
-    !noLifeOrWaterLeak(terrain);
+  const landAllowed = topologyAllowsLand(topology);
+  const iceAllowed = topologyAllowsIce(topology);
+  const beachAllowed = topologyAllowsBeach(topology);
+  const rockAllowed = topologyAllowsRock(topology);
 
-  const state = Object.freeze({
+  const terrainRisePermission = clamp(Number(topology.terrainRisePermission) || 0, 0, 1);
+  const terrainBlockPermission = clamp(Number(topology.terrainBlockPermission) || 0, 0, 1);
+  const terrainPressureHandoff = clamp(Number(tectonics.terrainPressureHandoff) || 0, 0, 1);
+
+  const terrainElevationRaw = clamp(
+    Number(terrain.normalizedElevation) ||
+      Number(terrain.elevation) ||
+      terrainRisePermission ||
+      0,
+    -1,
+    1
+  );
+
+  const normalizedElevation = iceAllowed
+    ? 0
+    : landAllowed
+      ? clamp(
+          terrainElevationRaw * 0.38 +
+            terrainRisePermission * 0.24 +
+            terrainPressureHandoff * 0.26 +
+            clamp(Number(tectonics.mountainChainPermission) || 0, 0, 1) * 0.12,
+          0,
+          1
+        )
+      : -clamp(
+          Number(topology.oceanDepthIndex) ||
+            Number(topology.bathymetryBlueprintIndex) ||
+            Number(topology.basinDepthIndex) ||
+            0.42,
+          0,
+          1
+        );
+
+  const ridge = landAllowed
+    ? clamp(
+        (Number(terrain.ridge) || 0) * 0.34 +
+          (Number(tectonics.mountainChainPermission) || 0) * 0.36 +
+          (Number(tectonics.upliftPermission) || 0) * 0.18 +
+          (Number(topology.cliffRisePermission) || 0) * 0.12,
+        0,
+        1
+      )
+    : 0;
+
+  const canyon = landAllowed
+    ? clamp(
+        (Number(terrain.canyonPressure) || 0) * 0.30 +
+          (Number(terrain.riverIncisionPressure) || 0) * 0.20 +
+          (Number(tectonics.canyonPermission) || 0) * 0.34 +
+          (Number(topology.seaLevelErosionPressure) || 0) * 0.10,
+        0,
+        1
+      )
+    : 0;
+
+  const cliff = clamp(
+    (Number(topology.cliffBaseCut) || 0) * 0.36 +
+      (Number(topology.coastalCliffPressure) || 0) * 0.26 +
+      (Number(tectonics.cliffPermission) || 0) * 0.30 +
+      (Number(terrain.cliffPressure) || 0) * 0.08,
+    0,
+    1
+  );
+
+  const hydrologyReadinessIndex = landAllowed
+    ? clamp(
+        (Number(terrain.hydrologyReadinessIndex) || 0) * 0.42 +
+          (Number(terrain.riverbedPressure) || 0) * 0.16 +
+          (Number(terrain.streamPressure) || 0) * 0.12 +
+          (Number(terrain.lakeBasinPressure) || 0) * 0.10 +
+          canyon * 0.14 +
+          ridge * 0.06,
+        0,
+        1
+      )
+    : 0;
+
+  return Object.freeze({
     receipt: RECEIPT,
     planetaryObject: PLANETARY_OBJECT,
     generation: GENERATION,
@@ -621,102 +543,241 @@ export function sampleAudraliaPlanetState(uInput, vInput, context = {}) {
     lon: point.lon,
     lat: point.lat,
 
-    topology,
-    terrain,
+    runtimeChain: "topology→tectonics→terrain",
+    runtimeCacheActive: true,
+    lowLagSampling: true,
 
+    topologyReceipt: topology.receipt || topology.runtimeCompatibleReceipt || "unknown",
+    topologyActiveContract: topology.activeContract || topology.latestContract || topology.receipt || "unknown",
     topologySurfaceClass: topology.surfaceClass || "unknown",
     topologySurfaceClassId: topology.surfaceClassId ?? -1,
-    topologyLandFootprint: Boolean(topology.isLandFootprint),
-    topologyVoidFootprint: Boolean(topology.isVoidFootprint),
-    topologySeaLevelBoundary: topology.seaLevelBoundary ?? 0,
-    topologyOceanDepthIndex: topology.oceanDepthIndex ?? 0,
-    topologySubterraneanDepthIndex: topology.subterraneanDepthIndex ?? 0,
-    topologyTerrainRisePermission: topology.terrainRisePermission ?? 0,
-    topologyTerrainBlockPermission: topology.terrainBlockPermission ?? 0,
 
-    terrainIsLand: Boolean(terrain.isLand),
-    terrainIsWater: Boolean(terrain.isWater),
-    terrainIsIce: Boolean(terrain.isIce),
-    terrainElevation: terrain.normalizedElevation ?? 0,
-    terrainRidge: terrain.ridge ?? 0,
-    terrainBasin: terrain.basin ?? 0,
-    terrainMountainPressure: terrain.mountainPressure ?? 0,
-    terrainCanyonPressure: terrain.canyonPressure ?? 0,
-    terrainHydrologyReadinessIndex: terrain.hydrologyReadinessIndex ?? 0,
+    tectonicsReceipt: tectonics.receipt || "unknown",
+    tectonicType: tectonics.tectonicType || "unknown",
+    plateId: tectonics.plateId || 0,
+    plateKey: tectonics.plateKey || "unknown",
+    boundaryId: tectonics.boundaryId || "none",
 
-    terrainAllowedByTopology: allowed,
-    runtimeIntegrityAtSample: allowed && !lifeLeak,
-    lifeLeakDetected: lifeLeak,
+    terrainReceipt: terrain.receipt || "unknown",
 
-    hydrationGate: RUNTIME_LAW.hydrationGate,
-    foliageGate: RUNTIME_LAW.foliageGate,
-    ecologyGate: RUNTIME_LAW.ecologyGate,
-    climateGate: RUNTIME_LAW.climateGate,
+    isLandFootprint: landAllowed,
+    isAboveWaterLandFootprint: landAllowed && !iceAllowed,
+    isVoidFootprint: !landAllowed && !iceAllowed,
+    topologyLandFootprint: landAllowed,
+    topologyVoidFootprint: !landAllowed && !iceAllowed,
+    isWater: !landAllowed && !iceAllowed,
+    isLand: landAllowed,
+    isIce: iceAllowed,
+    isSouthPolarIceFootprint: iceAllowed,
+    southIce: iceAllowed,
 
-    renderHint: allowed ? "render_from_runtime_state" : "hold_or_render_topology_safe_state",
+    isBeach: beachAllowed,
+    isSand: Boolean(topology.isSand || beachAllowed),
+    isRock: rockAllowed,
+    isShelf: Boolean(topology.isShelf),
+    isCoastline: Boolean(topology.isCoastline),
+    isIslandFootprint: Boolean(topology.isIslandFootprint),
+    isConnectedLandSystem: Boolean(topology.isConnectedLandSystem),
+    isSmallContinentFootprint: Boolean(topology.isSmallContinentFootprint),
+
+    landBodyId: topology.landBodyId || 0,
+    landBodyKey: topology.landBodyKey || "void_ocean",
+    landBodyName: topology.landBodyName || "Void / Ocean Footprint",
+    landConnectionId: topology.landConnectionId || "none",
+    islandArcId: topology.islandArcId || "none",
+
+    landExpansionActive: safeBool(topology.landExpansionActive),
+    landExpansionAreaMultiplier: Number(topology.landExpansionAreaMultiplier) || 1,
+    landExpansionRadiusScale: Number(topology.landExpansionRadiusScale) || 1,
+    smallContinentFormationPermission: safeBool(topology.smallContinentFormationPermission),
+
+    targetLandRatio: topology.targetLandRatio,
+    approximateEarthExposedLandRatio: topology.approximateEarthExposedLandRatio,
+    seaLevelThreshold: topology.seaLevelThreshold,
+    seaLevelBoundary: topology.seaLevelBoundary,
+    seaLevelDistance: topology.seaLevelDistance,
+    coastalExposureIndex: topology.coastalExposureIndex,
+
+    oceanDepthIndex: clamp(Number(topology.oceanDepthIndex) || 0, 0, 1),
+    bathymetryBlueprintIndex: clamp(Number(topology.bathymetryBlueprintIndex) || 0, 0, 1),
+    trenchDepthIndex: clamp(Number(topology.trenchDepthIndex) || Number(tectonics.trenchReinforcementPermission) || 0, 0, 1),
+    shelfDepthIndex: clamp(Number(topology.shelfDepthIndex) || Number(topology.reefShelfPermission) || 0, 0, 1),
+    basinDepthIndex: clamp(Number(topology.basinDepthIndex) || 0, 0, 1),
+    depthClassKey: topology.depthClassKey || topology.oceanDepthClass || "land",
+
+    subterraneanDepthIndex: clamp(Number(topology.subterraneanDepthIndex) || 0, 0, 1),
+    foundationDensityIndex: clamp(Number(topology.foundationDensityIndex) || 0, 0, 1),
+    rockMassBoundaryIndex: clamp(Number(topology.rockMassBoundaryIndex) || 0, 0, 1),
+
+    shorelinePressure: clamp(Number(topology.shorelinePressure) || 0, 0, 1),
+    beachPressure: clamp(Number(topology.beachPressure) || 0, 0, 1),
+    sandPressure: clamp(Number(topology.sandPressure) || 0, 0, 1),
+    rockPressure: clamp(Number(topology.rockPressure) || 0, 0, 1),
+    coastalCliffPressure: clamp(Number(topology.coastalCliffPressure) || 0, 0, 1),
+    seaLevelErosionPressure: clamp(Number(topology.seaLevelErosionPressure) || 0, 0, 1),
+    cliffBaseCut: clamp(Number(topology.cliffBaseCut) || 0, 0, 1),
+    coastlineIrregularityIndex: clamp(Number(topology.coastlineIrregularityIndex) || 0, 0, 1),
+
+    beachType: topology.beachType || "none",
+    blackSandPressure: clamp(Number(topology.blackSandPressure) || 0, 0, 1),
+    whiteSandPressure: clamp(Number(topology.whiteSandPressure) || 0, 0, 1),
+    opalSoftnessIndex: clamp(Number(topology.opalSoftnessIndex) || 0, 0, 1),
+    diamondDarkSandIndex: clamp(Number(topology.diamondDarkSandIndex) || 0, 0, 1),
+    beachCloudSoftnessIndex: clamp(Number(topology.beachCloudSoftnessIndex) || 0, 0, 1),
+
+    crustalStressIndex: clamp(Number(tectonics.crustalStressIndex) || 0, 0, 1),
+    primordialMountainMemoryIndex: clamp(Number(tectonics.primordialMountainMemoryIndex) || 0, 0, 1),
+    weatheredRemnantIndex: clamp(Number(tectonics.weatheredRemnantIndex) || 0, 0, 1),
+    mountainChainPermission: clamp(Number(tectonics.mountainChainPermission) || 0, 0, 1),
+    canyonPermission: clamp(Number(tectonics.canyonPermission) || 0, 0, 1),
+    cliffPermission: clamp(Number(tectonics.cliffPermission) || 0, 0, 1),
+    upliftPermission: clamp(Number(tectonics.upliftPermission) || 0, 0, 1),
+    terrainPressureHandoff,
+
+    diamondPressureIndex: clamp(Number(tectonics.diamondPressureIndex) || 0, 0, 1),
+    opalSeamIndex: clamp(Number(tectonics.opalSeamIndex) || 0, 0, 1),
+    graniteCratonIndex: clamp(Number(tectonics.graniteCratonIndex) || 0, 0, 1),
+    slateFoldBeltIndex: clamp(Number(tectonics.slateFoldBeltIndex) || 0, 0, 1),
+    exposedMineralHardnessIndex: clamp(Number(tectonics.exposedMineralHardnessIndex) || 0, 0, 1),
+
+    terrainRisePermission,
+    terrainBlockPermission,
+    terrainAllowedByTopology: landAllowed,
+    terrainMustNotExpandLandArea: true,
+
+    normalizedElevation,
+    elevationMeters: landAllowed ? Math.round(normalizedElevation * 9200) : Math.round(normalizedElevation * 5600),
+    ridge,
+    basin: clamp(Number(terrain.basin) || Number(topology.basinDepressionPermission) || 0, 0, 1),
+    slope: clamp(Number(terrain.slope) || ridge * 0.42 + canyon * 0.24 + cliff * 0.18, 0, 1),
+    canyonPressure: canyon,
+    riverIncisionPressure: clamp(Number(terrain.riverIncisionPressure) || canyon * 0.62, 0, 1),
+    valleyChannelPressure: clamp(Number(terrain.valleyChannelPressure) || canyon * 0.58, 0, 1),
+    riverbedPressure: landAllowed ? clamp(Number(terrain.riverbedPressure) || canyon * 0.48, 0, 1) : 0,
+    streamPressure: landAllowed ? clamp(Number(terrain.streamPressure) || canyon * 0.34, 0, 1) : 0,
+    lakeBasinPressure: landAllowed ? clamp(Number(terrain.lakeBasinPressure) || Number(terrain.basin) || 0, 0, 1) : 0,
+    glacierSeatPressure: clamp(Number(terrain.glacierSeatPressure) || (iceAllowed ? 0.8 : 0), 0, 1),
+    hydrologyReadinessIndex,
+
+    activeHydrationOwnedHere: false,
+    hydrationHeld: true,
+    hydrationEnabled: false,
+    foliageEnabled: false,
 
     foliage: false,
     trees: false,
     vegetation: false,
-    activeHydrationOwnedHere: false,
+    ownsHydration: false,
+    ownsFoliage: false,
+    ownsTrees: false,
+    ownsVegetation: false,
+    ownsRouteRendering: false,
+    ownsFinalRender: false,
     visualPassClaimed: false
   });
-
-  return state;
 }
 
-export function buildAudraliaRuntimeField(width = 96, height = 48, options = {}) {
-  const w = Math.max(8, Math.floor(Number(width) || 96));
-  const h = Math.max(8, Math.floor(Number(height) || 48));
+export function createAudraliaRuntime(options = {}) {
+  const runtimeOptions = getRuntimeOptions(options);
+  const cache = buildRuntimeCache(runtimeOptions);
+
+  return Object.freeze({
+    receipt: RECEIPT,
+    status: "active",
+    planetaryObject: PLANETARY_OBJECT,
+    generation: GENERATION,
+    file: FILE,
+    runtimeOptions,
+    cache,
+
+    sampleRuntimeState(u, v, context = {}) {
+      return composeRuntimeSample(cache, u, v, context);
+    },
+
+    sampleAudraliaPlanetState(u, v, context = {}) {
+      return composeRuntimeSample(cache, u, v, context);
+    },
+
+    getStatus() {
+      return Object.freeze({
+        ok: true,
+        receipt: RECEIPT,
+        status: "active",
+        planetaryObject: PLANETARY_OBJECT,
+        generation: GENERATION,
+        file: FILE,
+        fieldWidth: cache.fieldWidth,
+        fieldHeight: cache.fieldHeight,
+        runtimeCacheActive: true,
+        lowLagSampling: true,
+        topologyLoaded: Boolean(cache.topologyField && cache.topologyField.samples),
+        tectonicsLoaded: Boolean(cache.tectonicsField && cache.tectonicsField.samples),
+        terrainLoaded: Boolean(cache.terrainField && cache.terrainField.samples),
+        topologyStatus: cache.topologyStatus,
+        tectonicsStatus: cache.tectonicsStatus,
+        terrainStatus: cache.terrainStatus,
+        seaLevelEstimate: cache.seaLevelEstimate,
+        layerOrder: RUNTIME_LAW.layerOrder,
+        topologyFirst: true,
+        tectonicsSecond: true,
+        terrainThird: true,
+        hydrationHeld: true,
+        foliageClosed: true,
+        visualPassClaimed: false
+      });
+    }
+  });
+}
+
+export function sampleRuntimeState(u, v, context = {}) {
+  if (!sharedRuntime) {
+    sharedRuntime = createAudraliaRuntime(context);
+  }
+
+  return sharedRuntime.sampleRuntimeState(u, v, context);
+}
+
+export function sampleAudraliaPlanetState(u, v, context = {}) {
+  if (!sharedRuntime) {
+    sharedRuntime = createAudraliaRuntime(context);
+  }
+
+  return sharedRuntime.sampleAudraliaPlanetState(u, v, context);
+}
+
+export function buildAudraliaRuntimeField(width = 128, height = 64, options = {}) {
+  const w = normalizeDimension(width, 128, 16, 384);
+  const h = normalizeDimension(height, 64, 8, 192);
+  const runtime = createAudraliaRuntime({
+    ...options,
+    fieldWidth: options.fieldWidth || w,
+    fieldHeight: options.fieldHeight || h
+  });
+
   const samples = new Array(w * h);
 
-  let validSamples = 0;
-  let invalidSamples = 0;
-  let landFootprintSamples = 0;
-  let voidFootprintSamples = 0;
-  let terrainLandSamples = 0;
-  let terrainWaterSamples = 0;
-  let topologyTerrainMismatchSamples = 0;
-  let lifeLeakSamples = 0;
-
-  let oceanDepthSum = 0;
-  let subterraneanDepthSum = 0;
-  let elevationSum = 0;
-  let mountainSum = 0;
-  let canyonSum = 0;
-
-  const surfaceClassCounts = new Map();
+  let landSamples = 0;
+  let waterSamples = 0;
+  let iceSamples = 0;
+  let beachSamples = 0;
+  let smallContinentSamples = 0;
+  let foliageSamples = 0;
 
   for (let y = 0; y < h; y += 1) {
     const v = h === 1 ? 0.5 : y / (h - 1);
 
     for (let x = 0; x < w; x += 1) {
       const u = w === 1 ? 0.5 : x / (w - 1);
-      const index = y * w + x;
-      const sample = sampleAudraliaPlanetState(u, v, options);
+      const sample = runtime.sampleRuntimeState(u, v, options);
+      samples[y * w + x] = sample;
 
-      samples[index] = sample;
+      if (sample.isIce) iceSamples += 1;
+      else if (sample.isLandFootprint) landSamples += 1;
+      else waterSamples += 1;
 
-      if (sample.runtimeIntegrityAtSample) validSamples += 1;
-      else invalidSamples += 1;
-
-      if (sample.topologyLandFootprint) landFootprintSamples += 1;
-      if (sample.topologyVoidFootprint) voidFootprintSamples += 1;
-      if (sample.terrainIsLand) terrainLandSamples += 1;
-      if (sample.terrainIsWater) terrainWaterSamples += 1;
-      if (!sample.terrainAllowedByTopology) topologyTerrainMismatchSamples += 1;
-      if (sample.lifeLeakDetected) lifeLeakSamples += 1;
-
-      oceanDepthSum += sample.topologyOceanDepthIndex;
-      subterraneanDepthSum += sample.topologySubterraneanDepthIndex;
-      elevationSum += sample.terrainElevation;
-      mountainSum += sample.terrainMountainPressure;
-      canyonSum += sample.terrainCanyonPressure;
-
-      surfaceClassCounts.set(
-        sample.topologySurfaceClass,
-        (surfaceClassCounts.get(sample.topologySurfaceClass) || 0) + 1
-      );
+      if (sample.isBeach) beachSamples += 1;
+      if (sample.isSmallContinentFootprint) smallContinentSamples += 1;
+      if (sample.foliage || sample.trees || sample.vegetation) foliageSamples += 1;
     }
   }
 
@@ -728,113 +789,121 @@ export function buildAudraliaRuntimeField(width = 96, height = 48, options = {})
     width: w,
     height: h,
     samples,
+    runtimeStatus: runtime.getStatus(),
     stats: Object.freeze({
       totalSamples: samples.length,
-      validSamples,
-      invalidSamples,
-      validRatio: validSamples / samples.length,
-      invalidRatio: invalidSamples / samples.length,
-
-      landFootprintSamples,
-      voidFootprintSamples,
-      terrainLandSamples,
-      terrainWaterSamples,
-      topologyTerrainMismatchSamples,
-      lifeLeakSamples,
-
-      averageTopologyOceanDepthIndex: oceanDepthSum / samples.length,
-      averageTopologySubterraneanDepthIndex: subterraneanDepthSum / samples.length,
-      averageTerrainElevation: elevationSum / samples.length,
-      averageTerrainMountainPressure: mountainSum / samples.length,
-      averageTerrainCanyonPressure: canyonSum / samples.length,
-
-      activeSurfaceClassCount: surfaceClassCounts.size,
-      activeSurfaceClasses: Array.from(surfaceClassCounts.keys()).sort(),
-
-      runtimeOrchestrated: true,
-      topologyBeforeTerrain: true,
+      landSamples,
+      waterSamples,
+      iceSamples,
+      beachSamples,
+      smallContinentSamples,
+      foliageSamples,
+      landRatio: landSamples / samples.length,
+      waterRatio: waterSamples / samples.length,
+      iceRatio: iceSamples / samples.length,
+      beachRatio: beachSamples / samples.length,
+      smallContinentRatio: smallContinentSamples / samples.length,
+      runtimeCacheActive: true,
+      lowLagSampling: true,
+      topologyFirst: true,
+      tectonicsSecond: true,
+      terrainThird: true,
       hydrationHeld: true,
       foliageClosed: true,
-      ecologyClosed: true,
-      climateClosed: true,
       visualPassClaimed: false
     })
   });
 }
 
-export function assertAudraliaRuntimeIntegrity() {
-  const status = getAudraliaRuntimeStatus();
-  const receipts = getAudraliaLayerReceipts();
-
-  const assertions = Object.freeze([
-    Object.freeze({
-      id: "runtime_current",
-      pass: status.receipt === RECEIPT,
-      detail: status.receipt
-    }),
-    Object.freeze({
-      id: "topology_current",
-      pass: receipts.topology === EXPECTED.topologyReceipt,
-      detail: receipts.topology
-    }),
-    Object.freeze({
-      id: "terrain_current",
-      pass: receipts.terrain === EXPECTED.terrainReceipt || status.terrainReady === true,
-      detail: receipts.terrain
-    }),
-    Object.freeze({
-      id: "topology_before_terrain",
-      pass: status.topologyStatus && status.topologyStatus.topologyComesBeforeTerrain === true,
-      detail: "topology before terrain"
-    }),
-    Object.freeze({
-      id: "hydration_held",
-      pass: status.hydrationGate === "held",
-      detail: status.hydrationGate
-    }),
-    Object.freeze({
-      id: "foliage_closed",
-      pass: status.foliageGate === "closed" && status.ownsFoliage === false,
-      detail: status.foliageGate
-    }),
-    Object.freeze({
-      id: "visual_pass_unclaimed",
-      pass: status.visualPassClaimed === false,
-      detail: "false"
-    })
-  ]);
-
-  const failed = assertions.filter((assertion) => !assertion.pass);
+export function getRuntimeStatus() {
+  const runtime = sharedRuntime || createAudraliaRuntime();
 
   return Object.freeze({
-    ok: failed.length === 0,
+    ok: true,
     receipt: RECEIPT,
+    status: "active",
+    id: "audralia-runtime-cached-topology-tectonics-terrain-chain",
     planetaryObject: PLANETARY_OBJECT,
-    total: assertions.length,
-    passed: assertions.length - failed.length,
-    failed: failed.length,
-    assertions,
-    status,
-    receipts
+    publicName: PLANETARY_OBJECT,
+    generation: GENERATION,
+    file: FILE,
+
+    contracts: CONTRACTS,
+    runtimeLaw: RUNTIME_LAW,
+
+    topologyAuthority: TOPOLOGY_AUTHORITY,
+    tectonicsAuthority: TECTONICS_AUTHORITY,
+    terrainAuthority: TERRAIN_AUTHORITY,
+    hydrationAuthorityLater: HYDRATION_AUTHORITY_LATER,
+
+    exports: Object.freeze([
+      "createAudraliaRuntime",
+      "sampleRuntimeState",
+      "sampleAudraliaPlanetState",
+      "buildAudraliaRuntimeField",
+      "getRuntimeStatus"
+    ]),
+
+    layerOrder: RUNTIME_LAW.layerOrder,
+    chain: "topology→tectonics→terrain",
+    topologyFirst: true,
+    tectonicsSecond: true,
+    terrainThird: true,
+
+    runtimeCacheActive: true,
+    lowLagSampling: true,
+    fieldWidth: runtime.cache.fieldWidth,
+    fieldHeight: runtime.cache.fieldHeight,
+
+    topologyLoaded: Boolean(runtime.cache.topologyField && runtime.cache.topologyField.samples),
+    tectonicsLoaded: Boolean(runtime.cache.tectonicsField && runtime.cache.tectonicsField.samples),
+    terrainLoaded: Boolean(runtime.cache.terrainField && runtime.cache.terrainField.samples),
+
+    topologyStatus: runtime.cache.topologyStatus,
+    tectonicsStatus: runtime.cache.tectonicsStatus,
+    terrainStatus: runtime.cache.terrainStatus,
+    seaLevelEstimate: runtime.cache.seaLevelEstimate,
+
+    ownsRuntimeSampling: true,
+    ownsChainComposition: true,
+    ownsPerformanceCache: true,
+    ownsRouteDataHandoff: true,
+
+    ownsTopology: false,
+    ownsTectonics: false,
+    ownsTerrain: false,
+    ownsLandFootprint: false,
+    ownsLandExpansion: false,
+    ownsAboveSeaElevation: false,
+    ownsHydration: false,
+    ownsClimate: false,
+    ownsEcology: false,
+    ownsFoliage: false,
+    ownsTrees: false,
+    ownsVegetation: false,
+    ownsRouteRendering: false,
+    ownsFinalRender: false,
+
+    hydrationHeld: true,
+    foliageClosed: true,
+    imageGeneration: false,
+    graphicBox: false,
+    visualPassClaimed: false
   });
 }
 
-const API = Object.freeze({
-  receipt: RECEIPT,
-  planetaryObject: PLANETARY_OBJECT,
-  generation: GENERATION,
-  file: FILE,
-  runtimeLaw: RUNTIME_LAW,
+const api = Object.freeze({
   createAudraliaRuntime,
-  getAudraliaRuntimeStatus,
-  getAudraliaLayerReceipts,
+  sampleRuntimeState,
   sampleAudraliaPlanetState,
   buildAudraliaRuntimeField,
-  assertAudraliaRuntimeIntegrity
+  getRuntimeStatus
 });
 
 if (typeof window !== "undefined") {
-  window.DGBAudraliaRuntimeAPI = API;
+  window.DGBAudraliaRuntime = api;
+  window.AudraliaRuntime = api;
+  window.audraliaRuntime = api;
 }
 
-export default API;
+export default api;

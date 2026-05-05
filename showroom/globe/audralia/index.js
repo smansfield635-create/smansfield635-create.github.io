@@ -2,6 +2,7 @@
 // AUDRALIA_ROUTE_CONSUME_CURRENT_RUNTIME_GENEALOGY_SURFACE_TNT_v1
 //
 // Active renewal:
+// - AUDRALIA_ROUTE_RESTORE_FULL_EXECUTABLE_BODY_TNT_v1
 // - AUDRALIA_ROUTE_TEXTURE_COMPOSER_CONSUMER_ONLY_SOFT_WATER_BLEND_TNT_v1
 //
 // Role:
@@ -9,36 +10,13 @@
 // - Owns route boot, mount connection, runtime import, texture composition, and hex child handoff.
 // - Consumes runtime truth only.
 // - Consumes hex child renderer only.
+// - Restores complete executable route body.
 // - Demotes route water painting to soft consumer-only blending.
 // - Does not hard-paint DeepOcean.
 // - Does not classify DeepOcean.
 // - Does not create land.
 // - Does not create water.
 // - Does not mutate topology, tectonics, terrain, hydration, oceans, climate, runtime, hex child, or gauges.
-//
-// Hard locks:
-// - No route-owned land generation.
-// - No route-owned water generation.
-// - No hard DeepOcean route color.
-// - No DeepOcean showroom child.
-// - No topology rewrite.
-// - No tectonics rewrite.
-// - No terrain rewrite.
-// - No hydration rewrite.
-// - No oceans rewrite.
-// - No climate rewrite.
-// - No runtime rewrite.
-// - No hex rewrite.
-// - No ecology.
-// - No foliage.
-// - No trees.
-// - No vegetation.
-// - No animals.
-// - No marine life.
-// - No construct civilization.
-// - No graphic box.
-// - No image generation.
-// - No visual pass claim.
 
 import * as RuntimeModule from "../../../assets/audralia/audralia.runtime.js?v=AUDRALIA_RUNTIME_ORGANIC_OCEAN_PLACEMENT_CONTRACT_v1";
 
@@ -48,8 +26,11 @@ import {
 } from "./audralia.hex.surface.js?v=AUDRALIA_G8_HEX_CHILD_GLOBAL_AQUEOUS_GLAZE_LAYER_TNT_v1";
 
 const RECEIPT = "AUDRALIA_ROUTE_CONSUME_CURRENT_RUNTIME_GENEALOGY_SURFACE_TNT_v1";
-const ACTIVE_RENEWAL = "AUDRALIA_ROUTE_TEXTURE_COMPOSER_CONSUMER_ONLY_SOFT_WATER_BLEND_TNT_v1";
+const ACTIVE_RENEWAL = "AUDRALIA_ROUTE_RESTORE_FULL_EXECUTABLE_BODY_TNT_v1";
+const TEXTURE_RENEWAL = "AUDRALIA_ROUTE_TEXTURE_COMPOSER_CONSUMER_ONLY_SOFT_WATER_BLEND_TNT_v1";
+
 const PREVIOUS_RENEWALS = Object.freeze([
+  "AUDRALIA_ROUTE_TEXTURE_COMPOSER_CONSUMER_ONLY_SOFT_WATER_BLEND_TNT_v1",
   "AUDRALIA_G7_HEX_SURFACE_CHILD_RENDERER_TWO_FILE_TNT_v1",
   "AUDRALIA_G6_SURFACE_SAMPLING_AND_TERRAIN_REFINEMENT_TNT_v1",
   "AUDRALIA_ROUTE_RUNTIME_HYDRATION_WATER_RENDER_TNT_v1",
@@ -70,30 +51,7 @@ const DEFAULTS = Object.freeze({
   runtimeFieldHeight: 192,
   phase: 0.18084,
   velocity: 0,
-  renderMode: "hex-surface-child",
-  textureSofteningPasses: 1
-});
-
-const HARD_LOCKS = Object.freeze({
-  routeOwnedLandGeneration: false,
-  routeOwnedWaterGeneration: false,
-  deepOceanRouteHardPaint: false,
-  deepOceanRouteClassification: false,
-  topologyRewrittenHere: false,
-  tectonicsRewrittenHere: false,
-  terrainRewrittenHere: false,
-  hydrationRewrittenHere: false,
-  oceansRewrittenHere: false,
-  climateRewrittenHere: false,
-  runtimeRewrittenHere: false,
-  hexRewrittenHere: false,
-  noTrees: true,
-  noFoliage: true,
-  noVegetation: true,
-  noGreenYellowDots: true,
-  graphicBox: false,
-  imageGeneration: false,
-  visualPassClaimed: false
+  renderMode: "hex-surface-child"
 });
 
 function clamp(value, min, max) {
@@ -108,11 +66,6 @@ function mix(a, b, t) {
 
 function wrap01(value) {
   return ((Number(value) % 1) + 1) % 1;
-}
-
-function smoothstep(edge0, edge1, value) {
-  const t = clamp((value - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
-  return t * t * (3 - 2 * t);
 }
 
 function readRuntimeApi() {
@@ -202,20 +155,6 @@ function safeSampleRuntime(runtime, u, v) {
   };
 }
 
-function isSolidSurface(sample) {
-  return Boolean(
-    sample &&
-      (
-        sample.solidSurfaceLand ||
-        sample.solidSurface ||
-        sample.topologyLandFootprint ||
-        sample.isIce ||
-        sample.isGlacier ||
-        sample.isSnowpack
-      )
-  );
-}
-
 function isVisibleTerrainLand(sample) {
   return Boolean(
     sample &&
@@ -245,6 +184,19 @@ function isIceSurface(sample) {
         text.includes("ice") ||
         text.includes("glacier") ||
         text.includes("snowpack")
+      )
+  );
+}
+
+function isSolidSurface(sample) {
+  return Boolean(
+    sample &&
+      (
+        sample.solidSurfaceLand ||
+        sample.solidSurface ||
+        sample.topologyLandFootprint ||
+        isVisibleTerrainLand(sample) ||
+        isIceSurface(sample)
       )
   );
 }
@@ -401,11 +353,7 @@ function waterColorConsumerOnly(sample, u, v) {
 
   let color = colorMix(openWater, softBlue, clamp(routeSafeDepth * 0.30, 0, 0.34));
 
-  // DeepOcean is allowed only as a soft depth influence.
-  // It must not become a hard visible object or dark navy class.
   color = colorMix(color, mildDepth, clamp(softDeepField * 0.16, 0, 0.18));
-
-  // Shelf/coastal water remains the dominant visible water expression.
   color = colorMix(color, turquoise, clamp(shelf * 0.58, 0, 0.66));
   color = colorMix(color, paleShelf, clamp(Math.max(0, shelf - 0.60) * 0.20, 0, 0.22));
 
@@ -578,15 +526,17 @@ function createHiddenReceipt(status) {
   receipt.dataset.route = ROUTE;
   receipt.dataset.receipt = RECEIPT;
   receipt.dataset.activeRenewal = ACTIVE_RENEWAL;
+  receipt.dataset.textureRenewal = TEXTURE_RENEWAL;
   receipt.dataset.runtimeVersion = status.runtimeVersion || "";
   receipt.dataset.hexSurfaceChild = "AUDRALIA_G7_HEX_SURFACE_CHILD_RENDERER_TNT_v1";
-  receipt.dataset.routeTextureComposer = ACTIVE_RENEWAL;
+  receipt.dataset.routeTextureComposer = TEXTURE_RENEWAL;
   receipt.dataset.consumerOnlySoftWaterBlend = "true";
   receipt.dataset.hardDeepOceanRouteColor = "removed";
   receipt.dataset.deepOceanRouteClassification = "forbidden";
   receipt.dataset.visualPassClaimed = "false";
   receipt.textContent = [
-    "AUDRALIA_ROUTE=CONSUMER_ONLY_SOFT_WATER_BLEND",
+    "AUDRALIA_ROUTE=RESTORED_FULL_EXECUTABLE_BODY",
+    "TEXTURE_COMPOSER=CONSUMER_ONLY_SOFT_WATER_BLEND",
     "HARD_DEEP_OCEAN_ROUTE_COLOR=REMOVED",
     "ROUTE_OWNED_LAND=false",
     "ROUTE_OWNED_WATER=false",
@@ -602,7 +552,8 @@ function writeDataset(target, status, textureCounters, runtimeStats, runtimeStat
   target.dataset.route = ROUTE;
   target.dataset.contract = RECEIPT;
   target.dataset.activeRenewal = ACTIVE_RENEWAL;
-  target.dataset.routeTextureComposer = ACTIVE_RENEWAL;
+  target.dataset.textureRenewal = TEXTURE_RENEWAL;
+  target.dataset.routeTextureComposer = TEXTURE_RENEWAL;
   target.dataset.previousContracts = PREVIOUS_RENEWALS.join("|");
   target.dataset.routeScript = "showroom/globe/audralia/index.js";
   target.dataset.routeScriptContract = RECEIPT;
@@ -699,6 +650,7 @@ function buildRouteStatus(statusInput) {
     ok: Boolean(status.ok),
     receipt: RECEIPT,
     activeRenewal: ACTIVE_RENEWAL,
+    textureRenewal: TEXTURE_RENEWAL,
     previousReceipts: PREVIOUS_RENEWALS,
     body: BODY,
     route: ROUTE,
@@ -710,7 +662,7 @@ function buildRouteStatus(statusInput) {
     runtimeInstanceLoaded: Boolean(status.runtimeInstanceLoaded),
     hexSurfaceChildLoaded: Boolean(status.hexSurfaceChildLoaded),
     hexSurfaceChild: status.hexSurfaceChild || "",
-    routeTextureComposer: ACTIVE_RENEWAL,
+    routeTextureComposer: TEXTURE_RENEWAL,
     consumerOnlySoftWaterBlend: true,
     hardDeepOceanRouteColor: false,
     deepOceanRouteClassification: false,
@@ -904,6 +856,7 @@ if (document.readyState === "loading") {
 export {
   RECEIPT,
   ACTIVE_RENEWAL,
+  TEXTURE_RENEWAL,
   PREVIOUS_RENEWALS,
   renderAudraliaRoute,
   runtimeSurfaceColor,
@@ -915,6 +868,7 @@ export {
 export default Object.freeze({
   receipt: RECEIPT,
   activeRenewal: ACTIVE_RENEWAL,
+  textureRenewal: TEXTURE_RENEWAL,
   previousRenewals: PREVIOUS_RENEWALS,
   renderAudraliaRoute,
   runtimeSurfaceColor,

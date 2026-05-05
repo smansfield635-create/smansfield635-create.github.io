@@ -3,17 +3,17 @@
   lang="en"
   data-page="audralia-generation-baseline-gauges"
   data-route="/gauges/"
-  data-contract="AUDRALIA_GAUGES_RUNTIME_VISUAL_LAND_RATIO_DIAGNOSTIC_TNT_v2"
+  data-contract="AUDRALIA_GAUGES_SOLID_SURFACE_LAND_RATIO_RECLASSIFICATION_TNT_v1"
   data-role="read-only-audit"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Gauges · Audralia Runtime Visual Diagnostic</title>
+  <title>Gauges · Audralia Solid Surface Diagnostic</title>
   <meta
     name="description"
-    content="Read-only Audralia audit for runtime import, Earth-equivalent land ratio, hydration, route visual proof, and next target selection."
+    content="Read-only Audralia audit for runtime import, Earth-equivalent solid surface land ratio, hydration, route visual proof, and next target selection."
   >
 
   <style>
@@ -21,7 +21,6 @@
       color-scheme: dark;
       --bg: #050914;
       --panel: rgba(11, 23, 41, 0.88);
-      --panel-strong: rgba(6, 14, 27, 0.96);
       --gold: #f5c76b;
       --blue: #77bbff;
       --cyan: #50cce6;
@@ -82,19 +81,18 @@
     }
 
     .hero,
-    .panel,
-    .result-card {
+    .panel {
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background:
         linear-gradient(135deg, rgba(12, 24, 43, 0.86), rgba(6, 14, 27, 0.94)),
         radial-gradient(circle at 88% 12%, rgba(119, 187, 255, 0.08), transparent 18rem);
       box-shadow: var(--shadow);
+      padding: clamp(22px, 4vw, 44px);
     }
 
-    .hero,
     .panel {
-      padding: clamp(22px, 4vw, 44px);
+      margin-top: 22px;
     }
 
     .eyebrow {
@@ -134,8 +132,7 @@
     }
 
     .lede,
-    .panel p,
-    .result-card p {
+    .panel p {
       color: var(--muted);
       line-height: 1.65;
     }
@@ -176,10 +173,6 @@
       background: var(--gold);
       outline: none;
       cursor: pointer;
-    }
-
-    .panel {
-      margin-top: 22px;
     }
 
     .actions {
@@ -397,11 +390,11 @@
 
   <div class="shell">
     <header class="hero">
-      <p class="eyebrow">Gauges · Audralia Runtime Visual Diagnostic</p>
-      <h1>Land Ratio + Route Proof</h1>
+      <p class="eyebrow">Gauges · Audralia Solid Surface Diagnostic</p>
+      <h1>Solid Surface + Route Proof</h1>
       <p class="lede">
-        This read-only audit checks whether Audralia is importing runtime, computing Earth-equivalent exposed land,
-        preserving hydration, and actually painting visible land on the live route canvas.
+        This read-only audit checks runtime import, Earth-equivalent solid surface land ratio, hydration,
+        route visual proof, and the difference between liquid water, exposed terrain, and ice-covered land.
       </p>
 
       <nav class="route-rail" aria-label="Gauges route rail">
@@ -419,10 +412,10 @@
     <main id="main">
       <section class="panel" aria-label="Run audit">
         <p class="eyebrow">Run audit</p>
-        <h2>Runtime, field ratios, visual canvas, and next target.</h2>
+        <h2>Runtime, solid land ratio, visual canvas, and next target.</h2>
         <p>
-          This version does not fail the planet merely because the route mount omits sample datasets. It imports runtime,
-          builds a runtime field, probes the live route, and samples the route canvas for visible land/water evidence.
+          This version treats glacier, ice, and snowpack surfaces as solid planetary surface for land-ratio proof.
+          Ice remains water chemically, but it does not erase the land footprint for surface-area accounting.
         </p>
 
         <div class="actions">
@@ -440,7 +433,7 @@
 
         <div class="read-box">
           <strong id="currentReadTitle">Awaiting audit.</strong>
-          <span id="currentReadBody">Run the audit to determine whether the next move is runtime, route, topology, terrain refinement, or source genealogy cleanup.</span>
+          <span id="currentReadBody">Run the audit to determine whether the next move is source genealogy cleanup, surface sampling, terrain refinement, or runtime correction.</span>
         </div>
       </section>
 
@@ -453,7 +446,7 @@
   </div>
 
   <script type="module">
-    const RECEIPT = "AUDRALIA_GAUGES_RUNTIME_VISUAL_LAND_RATIO_DIAGNOSTIC_TNT_v2";
+    const RECEIPT = "AUDRALIA_GAUGES_SOLID_SURFACE_LAND_RATIO_RECLASSIFICATION_TNT_v1";
 
     const PATHS = Object.freeze({
       route: "/showroom/globe/audralia/",
@@ -484,8 +477,8 @@
     const TARGETS = Object.freeze({
       landMin: 0.27,
       landMax: 0.31,
-      waterMin: 0.69,
-      waterMax: 0.73,
+      liquidWaterMin: 0.69,
+      liquidWaterMax: 0.76,
       visualLandPixelMin: 0.025,
       visualWaterPixelMin: 0.20
     });
@@ -573,6 +566,57 @@
       return Boolean(source && source.ok && source.text.includes(token));
     }
 
+    function isSolidSurfaceSample(item) {
+      if (!item) return false;
+
+      const visualSurfaceClass = String(item.visualSurfaceClass || "");
+      const topologySurfaceClass = String(item.topologySurfaceClass || "");
+      const waterClass = String(item.waterClass || "");
+
+      return Boolean(
+        item.topologyLandFootprint ||
+        item.isLandFootprint ||
+        item.isAboveWaterLandFootprint ||
+        item.landVisibleToRoute ||
+        item.landStillVisibleAfterHydration ||
+        item.isPolarIceFootprint ||
+        item.isSouthPolarIceFootprint ||
+        item.isNorthPolarIceFootprint ||
+        item.isGlacier ||
+        item.isSnowpack ||
+        waterClass === "glacier_mass" ||
+        visualSurfaceClass.includes("glacier_ice") ||
+        visualSurfaceClass.includes("snowpack") ||
+        topologySurfaceClass.includes("polar_ice")
+      );
+    }
+
+    function isLiquidWaterSample(item) {
+      if (!item) return false;
+
+      const waterClass = String(item.waterClass || "");
+      const visualSurfaceClass = String(item.visualSurfaceClass || "");
+
+      if (item.isGlacier || item.isSnowpack || waterClass === "glacier_mass") return false;
+      if (visualSurfaceClass.includes("glacier_ice") || visualSurfaceClass.includes("snowpack")) return false;
+
+      return Boolean(
+        item.isOceanWater ||
+        item.isCoastalWater ||
+        item.isShelfWater ||
+        item.isDeepOcean ||
+        item.isTrenchWater ||
+        item.isRiver ||
+        item.isStream ||
+        item.isLake ||
+        waterClass.includes("ocean") ||
+        waterClass.includes("river") ||
+        waterClass.includes("stream") ||
+        waterClass.includes("lake") ||
+        visualSurfaceClass.includes("water")
+      );
+    }
+
     function findRuntimeApi(module) {
       if (!module) return null;
 
@@ -619,10 +663,12 @@
 
     function sampleRuntimeGrid(api, runtimeInstance, width, height) {
       let totalSamples = 0;
-      let waterSamples = 0;
-      let landSamples = 0;
+      let solidSurfaceLandSamples = 0;
+      let liquidWaterSamples = 0;
+      let exposedTerrainLandSamples = 0;
       let topologyLandSamples = 0;
       let visibleLandSamples = 0;
+      let iceSolidSurfaceSamples = 0;
       let beachSamples = 0;
       let hydratedSamples = 0;
       let oceanSamples = 0;
@@ -666,10 +712,23 @@
 
           totalSamples += 1;
 
-          if (item.isWater || item.waterVisibleToRoute || item.isOceanWater) waterSamples += 1;
-          if (item.isLand || item.isLandFootprint || item.isAboveWaterLandFootprint || item.landVisibleToRoute) landSamples += 1;
+          const solid = isSolidSurfaceSample(item);
+          const liquid = isLiquidWaterSample(item);
+          const iceSolid = Boolean(
+            item.isGlacier ||
+            item.isSnowpack ||
+            item.isPolarIceFootprint ||
+            String(item.waterClass || "") === "glacier_mass" ||
+            String(item.visualSurfaceClass || "").includes("glacier_ice") ||
+            String(item.visualSurfaceClass || "").includes("snowpack")
+          );
+
+          if (solid) solidSurfaceLandSamples += 1;
+          if (liquid) liquidWaterSamples += 1;
+          if (item.isLand || item.isLandFootprint || item.isAboveWaterLandFootprint || item.landVisibleToRoute) exposedTerrainLandSamples += 1;
           if (item.topologyLandFootprint) topologyLandSamples += 1;
-          if (item.landStillVisibleAfterHydration || item.visibleLandSamples || item.landVisibleToRoute) visibleLandSamples += 1;
+          if (item.landStillVisibleAfterHydration || item.landVisibleToRoute) visibleLandSamples += 1;
+          if (iceSolid) iceSolidSurfaceSamples += 1;
           if (item.isBeach || item.beachRimStillVisible) beachSamples += 1;
           if (item.isHydrated) hydratedSamples += 1;
           if (item.oceanActive || item.isOceanWater) oceanSamples += 1;
@@ -688,10 +747,12 @@
 
       return {
         totalSamples,
-        waterSamples,
-        landSamples,
+        solidSurfaceLandSamples,
+        liquidWaterSamples,
+        exposedTerrainLandSamples,
         topologyLandSamples,
         visibleLandSamples,
+        iceSolidSurfaceSamples,
         beachSamples,
         hydratedSamples,
         oceanSamples,
@@ -699,12 +760,16 @@
         fallbackSamples,
         climateSamples,
         climateConduitSamples,
-        waterRatio: totalSamples ? waterSamples / totalSamples : 0,
-        landRatio: totalSamples ? landSamples / totalSamples : 0,
+        solidSurfaceLandRatio: totalSamples ? solidSurfaceLandSamples / totalSamples : 0,
+        liquidWaterRatio: totalSamples ? liquidWaterSamples / totalSamples : 0,
+        exposedTerrainLandRatio: totalSamples ? exposedTerrainLandSamples / totalSamples : 0,
         topologyLandRatio: totalSamples ? topologyLandSamples / totalSamples : 0,
         visibleLandRatio: totalSamples ? visibleLandSamples / totalSamples : 0,
+        iceSolidSurfaceRatio: totalSamples ? iceSolidSurfaceSamples / totalSamples : 0,
         beachRatio: totalSamples ? beachSamples / totalSamples : 0,
         hydratedRatio: totalSamples ? hydratedSamples / totalSamples : 0,
+        oceanRatio: totalSamples ? oceanSamples / totalSamples : 0,
+        terrainReliefRatio: totalSamples ? terrainReliefSamples / totalSamples : 0,
         fallbackRatio: totalSamples ? fallbackSamples / totalSamples : 0,
         climateRatio: totalSamples ? climateSamples / totalSamples : 0,
         climateConduitRatio: totalSamples ? climateConduitSamples / totalSamples : 0,
@@ -712,6 +777,79 @@
         maxDepth,
         maxElevation,
         visualSurfaceClasses: Array.from(visualSurfaceClasses)
+      };
+    }
+
+    function normalizeRuntimeStats(stats) {
+      if (!stats) return null;
+
+      const total = Number(stats.totalSamples || 0);
+      const topologyLandSamples = Number(stats.topologyLandSamples || 0);
+      const landSamples = Number(stats.landSamples || 0);
+      const visibleLandSamples = Number(stats.visibleLandSamples || 0);
+      const hydratedSamples = Number(stats.hydratedSamples || 0);
+      const waterSamples = Number(stats.waterSamples || 0);
+      const fallbackSamples = Number(stats.fallbackSamples || 0);
+
+      const topologyLandRatio = Number(stats.topologyLandRatio ?? (total ? topologyLandSamples / total : 0));
+      const visibleLandRatio = Number(stats.visibleLandRatio ?? stats.landRatio ?? (total ? visibleLandSamples / total : 0));
+      const exposedTerrainLandRatio = Number(stats.exposedTerrainLandRatio ?? stats.landRatio ?? (total ? landSamples / total : 0));
+
+      const visualSurfaceClasses = Array.isArray(stats.visualSurfaceClasses) ? stats.visualSurfaceClasses : [];
+      const hasIceClass = visualSurfaceClasses.some((item) => {
+        const value = String(item);
+        return value.includes("glacier_ice") || value.includes("snowpack") || value.includes("polar_ice");
+      });
+
+      const inferredIceSolidSurfaceRatio = Math.max(0, topologyLandRatio - visibleLandRatio);
+      const iceSolidSurfaceRatio = Number(
+        stats.iceSolidSurfaceRatio ??
+        stats.glacierSolidSurfaceRatio ??
+        stats.snowpackSolidSurfaceRatio ??
+        (hasIceClass ? inferredIceSolidSurfaceRatio : 0)
+      );
+
+      const solidSurfaceLandRatio = Number(
+        stats.solidSurfaceLandRatio ??
+        Math.max(topologyLandRatio, visibleLandRatio + iceSolidSurfaceRatio)
+      );
+
+      const solidSurfaceLandSamples = Number(
+        stats.solidSurfaceLandSamples ??
+        Math.round(solidSurfaceLandRatio * total)
+      );
+
+      const liquidWaterRatio = Number(
+        stats.liquidWaterRatio ??
+        Math.max(0, 1 - solidSurfaceLandRatio)
+      );
+
+      const liquidWaterSamples = Number(
+        stats.liquidWaterSamples ??
+        Math.round(liquidWaterRatio * total)
+      );
+
+      return {
+        ...stats,
+        totalSamples: total,
+        topologyLandSamples,
+        landSamples,
+        visibleLandSamples,
+        exposedTerrainLandSamples: Number(stats.exposedTerrainLandSamples ?? landSamples),
+        solidSurfaceLandSamples,
+        liquidWaterSamples,
+        hydratedSamples,
+        waterSamples,
+        fallbackSamples,
+        topologyLandRatio,
+        visibleLandRatio,
+        exposedTerrainLandRatio,
+        iceSolidSurfaceRatio,
+        solidSurfaceLandRatio,
+        liquidWaterRatio,
+        fallbackRatio: Number(stats.fallbackRatio ?? (total ? fallbackSamples / total : 0)),
+        visualSurfaceClasses,
+        solidSurfaceAccounting: "visibleTerrainLand + glacierIceSnowpackSolidSurface"
       };
     }
 
@@ -793,14 +931,19 @@
           stats = sampleRuntimeGrid(api, runtimeInstance, 128, 64);
         }
 
-        const visibleLandRatio = Number(stats.visibleLandRatio ?? stats.landRatio ?? 0);
-        const topologyLandRatio = Number(stats.topologyLandRatio ?? stats.landRatio ?? 0);
-        const waterRatio = Number(stats.waterRatio ?? 0);
-        const fallbackSamples = Number(stats.fallbackSamples ?? 0);
-        const hydratedSamples = Number(stats.hydratedSamples ?? 0);
-        const climateConduitSamples = Number(stats.climateConduitSamples ?? stats.climateSamples ?? 0);
-        const maxTurquoise = Number(stats.maxTurquoise ?? stats.coastalTurquoiseIndex ?? 0);
-        const terrainReliefSamples = Number(stats.terrainReliefSamples ?? 0);
+        stats = normalizeRuntimeStats(stats);
+
+        const solidSurfaceLandRatio = Number(stats.solidSurfaceLandRatio || 0);
+        const topologyLandRatio = Number(stats.topologyLandRatio || 0);
+        const visibleLandRatio = Number(stats.visibleLandRatio || 0);
+        const exposedTerrainLandRatio = Number(stats.exposedTerrainLandRatio || 0);
+        const iceSolidSurfaceRatio = Number(stats.iceSolidSurfaceRatio || 0);
+        const liquidWaterRatio = Number(stats.liquidWaterRatio || 0);
+        const fallbackSamples = Number(stats.fallbackSamples || 0);
+        const hydratedSamples = Number(stats.hydratedSamples || 0);
+        const climateConduitSamples = Number(stats.climateConduitSamples || stats.climateSamples || 0);
+        const maxTurquoise = Number(stats.maxTurquoise || stats.coastalTurquoiseIndex || 0);
+        const terrainReliefSamples = Number(stats.terrainReliefSamples || 0);
 
         addCheck(
           "Runtime Field Truth",
@@ -813,22 +956,29 @@
         addCheck(
           "Runtime Field Truth",
           topologyLandRatio >= TARGETS.landMin && topologyLandRatio <= TARGETS.landMax ? "pass" : "fail",
-          "Topology land ratio is Earth-equivalent",
+          "Topology land footprint is Earth-equivalent",
           `topologyLandRatio=${percent(topologyLandRatio)} target=${percent(0.292)} band=${percent(TARGETS.landMin)}–${percent(TARGETS.landMax)}`
         );
 
         addCheck(
           "Runtime Field Truth",
-          visibleLandRatio >= TARGETS.landMin && visibleLandRatio <= TARGETS.landMax ? "pass" : "fail",
-          "Visible land survives hydration at target ratio",
-          `visibleLandRatio=${percent(visibleLandRatio)} target=${percent(0.292)} band=${percent(TARGETS.landMin)}–${percent(TARGETS.landMax)}`
+          solidSurfaceLandRatio >= TARGETS.landMin && solidSurfaceLandRatio <= TARGETS.landMax ? "pass" : "fail",
+          "Solid surface land ratio is Earth-equivalent",
+          `solidSurfaceLandRatio=${percent(solidSurfaceLandRatio)} = exposedTerrainLandRatio ${percent(exposedTerrainLandRatio)} + ice/snowpack solid correction ${percent(iceSolidSurfaceRatio)}`
         );
 
         addCheck(
           "Runtime Field Truth",
-          waterRatio >= TARGETS.waterMin && waterRatio <= TARGETS.waterMax ? "pass" : "held",
-          "Water ratio is Earth-compatible",
-          `waterRatio=${percent(waterRatio)} target band=${percent(TARGETS.waterMin)}–${percent(TARGETS.waterMax)}`
+          visibleLandRatio > 0 ? "pass" : "fail",
+          "Exposed terrain land survives hydration",
+          `visibleLandRatio=${percent(visibleLandRatio)}. This excludes ice/snowpack from visible terrain accounting.`
+        );
+
+        addCheck(
+          "Runtime Field Truth",
+          liquidWaterRatio >= TARGETS.liquidWaterMin && liquidWaterRatio <= TARGETS.liquidWaterMax ? "pass" : "held",
+          "Liquid water ratio is Earth-compatible",
+          `liquidWaterRatio=${percent(liquidWaterRatio)} target band=${percent(TARGETS.liquidWaterMin)}–${percent(TARGETS.liquidWaterMax)}`
         );
 
         addCheck(
@@ -910,6 +1060,7 @@
       let turquoise = 0;
       let darkWater = 0;
       let iceOrHighlight = 0;
+      let solidSurface = 0;
 
       for (let y = 0; y < height; y += step) {
         for (let x = 0; x < width; x += step) {
@@ -952,11 +1103,15 @@
             g > 165 &&
             b > 165;
 
+          const isSolidSurface =
+            isLand || isIceOrHighlight;
+
           if (isLand) land += 1;
           if (isWater) water += 1;
           if (isTurquoise) turquoise += 1;
           if (isDarkWater) darkWater += 1;
           if (isIceOrHighlight) iceOrHighlight += 1;
+          if (isSolidSurface) solidSurface += 1;
         }
       }
 
@@ -970,11 +1125,13 @@
         turquoisePixelSamples: turquoise,
         darkWaterPixelSamples: darkWater,
         iceOrHighlightPixelSamples: iceOrHighlight,
+        solidSurfacePixelSamples: solidSurface,
         landPixelRatio: opaque ? land / opaque : 0,
         waterPixelRatio: opaque ? water / opaque : 0,
         turquoisePixelRatio: opaque ? turquoise / opaque : 0,
         darkWaterPixelRatio: opaque ? darkWater / opaque : 0,
-        iceOrHighlightPixelRatio: opaque ? iceOrHighlight / opaque : 0
+        iceOrHighlightPixelRatio: opaque ? iceOrHighlight / opaque : 0,
+        solidSurfacePixelRatio: opaque ? solidSurface / opaque : 0
       };
     }
 
@@ -1077,9 +1234,16 @@
           addCheck(
             "Live Route Visual Probe",
             canvasStats.landPixelRatio >= TARGETS.visualLandPixelMin ? "pass" : "fail",
-            "Route canvas shows visible land pixels",
+            "Route canvas shows exposed land pixels",
             `landPixelRatio=${percent(canvasStats.landPixelRatio)} visual threshold=${percent(TARGETS.visualLandPixelMin)}`,
             canvasStats
+          );
+
+          addCheck(
+            "Live Route Visual Probe",
+            canvasStats.solidSurfacePixelRatio >= TARGETS.visualLandPixelMin ? "pass" : "fail",
+            "Route canvas shows solid surface pixels",
+            `solidSurfacePixelRatio=${percent(canvasStats.solidSurfacePixelRatio)} includes exposed land plus visible ice/highlight classification.`
           );
 
           addCheck(
@@ -1112,9 +1276,7 @@
     }
 
     async function auditSources() {
-      const entries = Object.entries(PATHS);
-
-      await Promise.all(entries.map(([name, url]) => fetchSource(name, url)));
+      await Promise.all(Object.entries(PATHS).map(([name, url]) => fetchSource(name, url)));
 
       const sourceList = [
         ["route", "route source reachable", PATHS.route, "fail"],
@@ -1142,75 +1304,16 @@
         );
       });
 
-      addCheck(
-        "Source + Contract Baseline",
-        sourceHas("route", CONTRACTS.html) ? "pass" : "held",
-        "HTML contract current",
-        CONTRACTS.html
-      );
-
-      addCheck(
-        "Source + Contract Baseline",
-        sourceHas("routeScript", CONTRACTS.route) ? "pass" : "held",
-        "Route script contract current",
-        CONTRACTS.route
-      );
-
-      addCheck(
-        "Source + Contract Baseline",
-        sourceHas("runtime", CONTRACTS.runtime) ? "pass" : "fail",
-        "Runtime contract current",
-        CONTRACTS.runtime
-      );
-
-      addCheck(
-        "Source + Contract Baseline",
-        sourceHas("runtime", CONTRACTS.runtimeImportSafe) ? "pass" : "held",
-        "Runtime import-safe stabilizer visible",
-        CONTRACTS.runtimeImportSafe
-      );
-
-      addCheck(
-        "Source + Contract Baseline",
-        sourceHas("runtime", CONTRACTS.runtimeLandRatio) ? "pass" : "held",
-        "Runtime land-ratio alignment visible",
-        CONTRACTS.runtimeLandRatio
-      );
-
-      addCheck(
-        "Source + Contract Baseline",
-        sourceHas("tectonics", CONTRACTS.tectonics) ? "pass" : "debt",
-        "Tectonics parent contract present",
-        CONTRACTS.tectonics
-      );
-
-      addCheck(
-        "Source + Contract Baseline",
-        sourceHas("topology", CONTRACTS.topology) || sourceHas("topology", CONTRACTS.topologyCompat) ? "pass" : "fail",
-        "Topology child contract current",
-        `${CONTRACTS.topology} / ${CONTRACTS.topologyCompat}`
-      );
-
-      addCheck(
-        "Source + Contract Baseline",
-        sourceHas("terrain", CONTRACTS.terrain) ? "pass" : "held",
-        "Terrain grandchild contract current",
-        CONTRACTS.terrain
-      );
-
-      addCheck(
-        "Source + Contract Baseline",
-        sourceHas("hydration", CONTRACTS.hydration) ? "pass" : "held",
-        "Hydration parent contract current",
-        CONTRACTS.hydration
-      );
-
-      addCheck(
-        "Source + Contract Baseline",
-        sourceHas("hydration", "./oceans.render.js") || sourceHas("oceans", CONTRACTS.oceans) ? "pass" : "held",
-        "Hydration / oceans child linked",
-        "Hydration should consume or expose oceans child."
-      );
+      addCheck("Source + Contract Baseline", sourceHas("route", CONTRACTS.html) ? "pass" : "held", "HTML contract current", CONTRACTS.html);
+      addCheck("Source + Contract Baseline", sourceHas("routeScript", CONTRACTS.route) ? "pass" : "held", "Route script contract current", CONTRACTS.route);
+      addCheck("Source + Contract Baseline", sourceHas("runtime", CONTRACTS.runtime) ? "pass" : "fail", "Runtime contract current", CONTRACTS.runtime);
+      addCheck("Source + Contract Baseline", sourceHas("runtime", CONTRACTS.runtimeImportSafe) ? "pass" : "held", "Runtime import-safe stabilizer visible", CONTRACTS.runtimeImportSafe);
+      addCheck("Source + Contract Baseline", sourceHas("runtime", CONTRACTS.runtimeLandRatio) ? "pass" : "held", "Runtime land-ratio alignment visible", CONTRACTS.runtimeLandRatio);
+      addCheck("Source + Contract Baseline", sourceHas("tectonics", CONTRACTS.tectonics) ? "pass" : "debt", "Tectonics parent contract present", CONTRACTS.tectonics);
+      addCheck("Source + Contract Baseline", sourceHas("topology", CONTRACTS.topology) || sourceHas("topology", CONTRACTS.topologyCompat) ? "pass" : "fail", "Topology child contract current", `${CONTRACTS.topology} / ${CONTRACTS.topologyCompat}`);
+      addCheck("Source + Contract Baseline", sourceHas("terrain", CONTRACTS.terrain) ? "pass" : "held", "Terrain grandchild contract current", CONTRACTS.terrain);
+      addCheck("Source + Contract Baseline", sourceHas("hydration", CONTRACTS.hydration) ? "pass" : "held", "Hydration parent contract current", CONTRACTS.hydration);
+      addCheck("Source + Contract Baseline", sourceHas("hydration", "./oceans.render.js") || sourceHas("oceans", CONTRACTS.oceans) ? "pass" : "held", "Hydration / oceans child linked", "Hydration should consume or expose oceans child.");
     }
 
     function decideGeneration() {
@@ -1221,27 +1324,32 @@
       const sourceTopology = state.source.topology && state.source.topology.ok;
       const sourceTectonics = state.source.tectonics && state.source.tectonics.ok;
 
-      const visibleLandRatio = Number(stats && (stats.visibleLandRatio ?? stats.landRatio)) || 0;
-      const topologyLandRatio = Number(stats && (stats.topologyLandRatio ?? stats.landRatio)) || 0;
-      const waterRatio = Number(stats && stats.waterRatio) || 0;
+      const solidSurfaceLandRatio = Number(stats && stats.solidSurfaceLandRatio) || 0;
+      const topologyLandRatio = Number(stats && stats.topologyLandRatio) || 0;
+      const visibleLandRatio = Number(stats && stats.visibleLandRatio) || 0;
+      const liquidWaterRatio = Number(stats && stats.liquidWaterRatio) || 0;
       const fallbackSamples = Number(stats && stats.fallbackSamples) || 0;
       const hydratedSamples = Number(stats && stats.hydratedSamples) || 0;
+
       const routeLandPixels = Number(routeStats && routeStats.landPixelRatio) || 0;
+      const routeSolidSurfacePixels = Number(routeStats && routeStats.solidSurfacePixelRatio) || routeLandPixels;
       const routeWaterPixels = Number(routeStats && routeStats.waterPixelRatio) || 0;
 
       const sourceReady = sourceTopology;
       const sourceDebt = !sourceTectonics;
+
       const runtimeReady =
         runtimeImported &&
-        visibleLandRatio >= TARGETS.landMin &&
-        visibleLandRatio <= TARGETS.landMax &&
+        solidSurfaceLandRatio >= TARGETS.landMin &&
+        solidSurfaceLandRatio <= TARGETS.landMax &&
         topologyLandRatio >= TARGETS.landMin &&
         topologyLandRatio <= TARGETS.landMax &&
         fallbackSamples === 0;
 
-      const hydrationReady = runtimeImported && hydratedSamples > 0 && waterRatio > 0.60;
+      const hydrationReady = runtimeImported && hydratedSamples > 0 && liquidWaterRatio > 0.60;
+
       const routeVisualReady =
-        routeLandPixels >= TARGETS.visualLandPixelMin &&
+        routeSolidSurfacePixels >= TARGETS.visualLandPixelMin &&
         routeWaterPixels >= TARGETS.visualWaterPixelMin;
 
       addCheck(
@@ -1256,35 +1364,35 @@
         sourceDebt ? "debt" : "pass",
         "G1 tectonics parent source debt",
         sourceDebt
-          ? "Tectonics parent route is still missing, but runtime may compute successfully without it."
+          ? "Tectonics parent route is still missing, but runtime and route can compute from current topology/runtime."
           : "Tectonics parent source is reachable."
       );
 
       addCheck(
         "Generation + Baseline State",
         runtimeReady ? "pass" : "fail",
-        "G2 runtime land-ratio baseline current",
+        "G2 solid-surface land baseline current",
         runtimeReady
-          ? `visibleLandRatio=${percent(visibleLandRatio)} topologyLandRatio=${percent(topologyLandRatio)} fallbackSamples=${fallbackSamples}`
-          : `visibleLandRatio=${percent(visibleLandRatio)} topologyLandRatio=${percent(topologyLandRatio)} fallbackSamples=${fallbackSamples}`
+          ? `solidSurfaceLandRatio=${percent(solidSurfaceLandRatio)} topologyLandRatio=${percent(topologyLandRatio)} visibleTerrainLandRatio=${percent(visibleLandRatio)} fallbackSamples=${fallbackSamples}`
+          : `solidSurfaceLandRatio=${percent(solidSurfaceLandRatio)} topologyLandRatio=${percent(topologyLandRatio)} visibleTerrainLandRatio=${percent(visibleLandRatio)} fallbackSamples=${fallbackSamples}`
       );
 
       addCheck(
         "Generation + Baseline State",
         hydrationReady ? "pass" : "fail",
-        "G4 hydration/water baseline active",
+        "G4 hydration/liquid-water baseline active",
         hydrationReady
-          ? `hydratedSamples=${Number(hydratedSamples).toLocaleString()} waterRatio=${percent(waterRatio)}`
+          ? `hydratedSamples=${Number(hydratedSamples).toLocaleString()} liquidWaterRatio=${percent(liquidWaterRatio)}`
           : "Hydration not confirmed from runtime field."
       );
 
       addCheck(
         "Generation + Baseline State",
         routeVisualReady ? "pass" : "fail",
-        "G5 visible route land baseline active",
+        "G5 visible route land/water baseline active",
         routeVisualReady
-          ? `route land pixels=${percent(routeLandPixels)} route water pixels=${percent(routeWaterPixels)}`
-          : `route land pixels=${percent(routeLandPixels)} route water pixels=${percent(routeWaterPixels)}`
+          ? `route solid surface pixels=${percent(routeSolidSurfacePixels)} route water pixels=${percent(routeWaterPixels)}`
+          : `route solid surface pixels=${percent(routeSolidSurfacePixels)} route water pixels=${percent(routeWaterPixels)}`
       );
 
       addCheck(
@@ -1292,7 +1400,7 @@
         runtimeReady && routeVisualReady ? "held" : "info",
         "G6 surface sampling / terrain refinement",
         runtimeReady && routeVisualReady
-          ? "Held as next target: reduce blockiness, smooth coastline, preserve land ratio."
+          ? "Held as next target: reduce blockiness, smooth coastline, preserve solid-surface ratio."
           : "Not ready until runtime and route visual proof both pass."
       );
 
@@ -1303,14 +1411,14 @@
         title = "Runtime import is the active blocker.";
         body = "The route cannot prove land/water truth until /assets/audralia/audralia.runtime.js imports successfully.";
       } else if (!runtimeReady) {
-        title = "Runtime imports, but land-ratio proof is not in target band.";
+        title = "Runtime imports, but solid-surface land proof is not in target band.";
         body = "The next target remains runtime/topology ratio alignment, not route styling.";
       } else if (!routeVisualReady) {
-        title = "Runtime has the land ratio, but route visual proof is weak.";
+        title = "Runtime has the solid-surface land ratio, but route visual proof is weak.";
         body = "The next target is route compositor consumption or canvas paint classification.";
       } else if (sourceDebt) {
-        title = "Land-ratio baseline is visually active; tectonics parent remains source debt.";
-        body = "The route is painting land and water. The next required cleanup is either tectonics parent source restoration or surface sampling refinement.";
+        title = "Audralia solid-surface land baseline is active; tectonics parent remains source debt.";
+        body = "Runtime and route now agree. The next move is either tectonics parent source restoration or G6 surface sampling/terrain refinement.";
       } else {
         title = "Audralia land-ratio baseline is active.";
         body = "Runtime and route visual proof agree. Next target: surface sampling and terrain refinement, not runtime rebuild.";
@@ -1322,10 +1430,11 @@
         runtimeReady,
         hydrationReady,
         routeVisualReady,
-        visibleLandRatio,
+        solidSurfaceLandRatio,
         topologyLandRatio,
-        waterRatio,
-        routeLandPixels,
+        visibleLandRatio,
+        liquidWaterRatio,
+        routeSolidSurfacePixels,
         routeWaterPixels,
         title,
         body

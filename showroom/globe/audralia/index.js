@@ -2,7 +2,7 @@
 // AUDRALIA_ROUTE_CONSUME_CURRENT_RUNTIME_GENEALOGY_SURFACE_TNT_v1
 //
 // Active renewal:
-// - AUDRALIA_ROUTE_RESTORE_FULL_EXECUTABLE_BODY_TNT_v1
+// - AUDRALIA_ROUTE_RESTORE_FULL_EXECUTABLE_BODY_TNT_v2
 // - AUDRALIA_ROUTE_TEXTURE_COMPOSER_CONSUMER_ONLY_SOFT_WATER_BLEND_TNT_v1
 //
 // Role:
@@ -18,18 +18,12 @@
 // - Does not create water.
 // - Does not mutate topology, tectonics, terrain, hydration, oceans, climate, runtime, hex child, or gauges.
 
-import * as RuntimeModule from "../../../assets/audralia/audralia.runtime.js?v=AUDRALIA_RUNTIME_ORGANIC_OCEAN_PLACEMENT_CONTRACT_v1";
-
-import {
-  drawAudraliaHexSurfaceFrame,
-  getAudraliaHexSurfaceStatus
-} from "./audralia.hex.surface.js?v=AUDRALIA_G8_HEX_CHILD_GLOBAL_AQUEOUS_GLAZE_LAYER_TNT_v1";
-
 const RECEIPT = "AUDRALIA_ROUTE_CONSUME_CURRENT_RUNTIME_GENEALOGY_SURFACE_TNT_v1";
-const ACTIVE_RENEWAL = "AUDRALIA_ROUTE_RESTORE_FULL_EXECUTABLE_BODY_TNT_v1";
+const ACTIVE_RENEWAL = "AUDRALIA_ROUTE_RESTORE_FULL_EXECUTABLE_BODY_TNT_v2";
 const TEXTURE_RENEWAL = "AUDRALIA_ROUTE_TEXTURE_COMPOSER_CONSUMER_ONLY_SOFT_WATER_BLEND_TNT_v1";
 
 const PREVIOUS_RENEWALS = Object.freeze([
+  "AUDRALIA_ROUTE_RESTORE_FULL_EXECUTABLE_BODY_TNT_v1",
   "AUDRALIA_ROUTE_TEXTURE_COMPOSER_CONSUMER_ONLY_SOFT_WATER_BLEND_TNT_v1",
   "AUDRALIA_G7_HEX_SURFACE_CHILD_RENDERER_TWO_FILE_TNT_v1",
   "AUDRALIA_G6_SURFACE_SAMPLING_AND_TERRAIN_REFINEMENT_TNT_v1",
@@ -42,6 +36,9 @@ const BODY = "audralia";
 const ROUTE = "/showroom/globe/audralia/";
 const RUNTIME_AUTHORITY = "/assets/audralia/audralia.runtime.js";
 const HEX_CHILD_AUTHORITY = "/showroom/globe/audralia/audralia.hex.surface.js";
+
+const RUNTIME_IMPORT_URL = "../../../assets/audralia/audralia.runtime.js?v=AUDRALIA_RUNTIME_ORGANIC_OCEAN_PLACEMENT_CONTRACT_v1";
+const HEX_IMPORT_URL = "./audralia.hex.surface.js?v=AUDRALIA_G8_HEX_CHILD_GLOBAL_AQUEOUS_GLAZE_LAYER_TNT_v1";
 
 const DEFAULTS = Object.freeze({
   canvasSize: 792,
@@ -68,91 +65,38 @@ function wrap01(value) {
   return ((Number(value) % 1) + 1) % 1;
 }
 
-function readRuntimeApi() {
-  return RuntimeModule.default && typeof RuntimeModule.default === "object"
-    ? RuntimeModule.default
-    : RuntimeModule;
-}
+function sampleNumber(sample, keys, fallback = 0) {
+  if (!sample || typeof sample !== "object") return fallback;
 
-function createRuntimeInstance() {
-  const api = readRuntimeApi();
-
-  if (api && typeof api.createAudraliaRuntime === "function") {
-    return api.createAudraliaRuntime({
-      fieldWidth: DEFAULTS.runtimeFieldWidth,
-      fieldHeight: DEFAULTS.runtimeFieldHeight
-    });
+  for (let i = 0; i < keys.length; i += 1) {
+    const value = Number(sample[keys[i]]);
+    if (Number.isFinite(value)) return value;
   }
 
-  return api;
+  return fallback;
 }
 
-function safeRuntimeStatus(runtime) {
-  const api = readRuntimeApi();
-
-  try {
-    if (runtime && typeof runtime.getStatus === "function") return runtime.getStatus();
-    if (api && typeof api.getStatus === "function") return api.getStatus();
-  } catch (error) {
-    return {
-      ok: false,
-      error: String(error && error.message ? error.message : error)
-    };
-  }
-
-  return {
-    ok: false,
-    error: "AUDRALIA_RUNTIME_STATUS_UNAVAILABLE"
-  };
+function colorMix(a, b, t) {
+  return [
+    Math.round(mix(a[0], b[0], t)),
+    Math.round(mix(a[1], b[1], t)),
+    Math.round(mix(a[2], b[2], t)),
+    255
+  ];
 }
 
-function safeRuntimeStats(runtime) {
-  const api = readRuntimeApi();
-
-  try {
-    if (runtime && typeof runtime.getRuntimeStats === "function") return runtime.getRuntimeStats();
-    if (runtime && typeof runtime.getStats === "function") return runtime.getStats();
-    if (api && typeof api.getRuntimeStats === "function") return api.getRuntimeStats();
-    if (api && typeof api.getStats === "function") return api.getStats();
-  } catch (error) {
-    return {
-      totalSamples: 0,
-      error: String(error && error.message ? error.message : error)
-    };
-  }
-
-  return {
-    totalSamples: 0
-  };
+function applyLight(color, amount) {
+  return [
+    clamp(Math.round(color[0] * amount), 0, 255),
+    clamp(Math.round(color[1] * amount), 0, 255),
+    clamp(Math.round(color[2] * amount), 0, 255),
+    color[3] === undefined ? 255 : color[3]
+  ];
 }
 
-function safeSampleRuntime(runtime, u, v) {
-  const api = readRuntimeApi();
-  const input = { u: wrap01(u), v: clamp(v, 0, 1), x: wrap01(u), y: clamp(v, 0, 1) };
-
-  try {
-    if (runtime && typeof runtime.sampleRuntimeState === "function") return runtime.sampleRuntimeState(input);
-    if (runtime && typeof runtime.sampleAudraliaPlanetState === "function") return runtime.sampleAudraliaPlanetState(input);
-    if (runtime && typeof runtime.sampleSurface === "function") return runtime.sampleSurface(input);
-
-    if (api && typeof api.sampleRuntimeState === "function") return api.sampleRuntimeState(input);
-    if (api && typeof api.sampleAudraliaPlanetState === "function") return api.sampleAudraliaPlanetState(input);
-    if (api && typeof api.sampleSurface === "function") return api.sampleSurface(input);
-  } catch (error) {
-    return {
-      routeSampleError: true,
-      routeSampleErrorMessage: String(error && error.message ? error.message : error),
-      u: input.u,
-      v: input.v
-    };
-  }
-
-  return {
-    routeSampleError: true,
-    routeSampleErrorMessage: "AUDRALIA_RUNTIME_SAMPLE_UNAVAILABLE",
-    u: input.u,
-    v: input.v
-  };
+function stableDither(u, v) {
+  const s = Math.sin((u * 127.1 + v * 311.7) * 43758.5453123);
+  return s - Math.floor(s);
 }
 
 function isVisibleTerrainLand(sample) {
@@ -234,40 +178,6 @@ function isShelfSurface(sample) {
   );
 }
 
-function sampleNumber(sample, keys, fallback = 0) {
-  if (!sample || typeof sample !== "object") return fallback;
-
-  for (let i = 0; i < keys.length; i += 1) {
-    const value = Number(sample[keys[i]]);
-    if (Number.isFinite(value)) return value;
-  }
-
-  return fallback;
-}
-
-function colorMix(a, b, t) {
-  return [
-    Math.round(mix(a[0], b[0], t)),
-    Math.round(mix(a[1], b[1], t)),
-    Math.round(mix(a[2], b[2], t)),
-    255
-  ];
-}
-
-function applyLight(color, amount) {
-  return [
-    clamp(Math.round(color[0] * amount), 0, 255),
-    clamp(Math.round(color[1] * amount), 0, 255),
-    clamp(Math.round(color[2] * amount), 0, 255),
-    color[3] === undefined ? 255 : color[3]
-  ];
-}
-
-function stableDither(u, v) {
-  const s = Math.sin((u * 127.1 + v * 311.7) * 43758.5453123);
-  return s - Math.floor(s);
-}
-
 function landColor(sample, u, v) {
   const elevation = clamp(
     sampleNumber(sample, ["normalizedElevation", "elevation"], 0.28),
@@ -276,7 +186,11 @@ function landColor(sample, u, v) {
   );
 
   const mineral = clamp(
-    sampleNumber(sample, ["mineralReliefIndex", "exposedMineralHardnessIndex", "diamondGraniteSlateReliefIndex"], 0.35),
+    sampleNumber(
+      sample,
+      ["mineralReliefIndex", "exposedMineralHardnessIndex", "diamondGraniteSlateReliefIndex"],
+      0.35
+    ),
     0,
     1
   );
@@ -293,7 +207,9 @@ function landColor(sample, u, v) {
     1
   );
 
-  const beach = Boolean(sample && sample.isBeach) || sampleNumber(sample, ["beachOutlinePressure", "beachWaterContactIndex"], 0) > 0.18;
+  const beach =
+    Boolean(sample && sample.isBeach) ||
+    sampleNumber(sample, ["beachOutlinePressure", "beachWaterContactIndex"], 0) > 0.18;
 
   const baseLow = [142, 116, 80, 255];
   const baseMid = [164, 136, 92, 255];
@@ -314,8 +230,18 @@ function landColor(sample, u, v) {
 }
 
 function iceColor(sample, u, v) {
-  const relief = clamp(sampleNumber(sample, ["glacierSeatPressure", "snowpackPressure", "ridgePressure"], 0.5), 0, 1);
-  const color = colorMix([205, 222, 226, 255], [240, 248, 250, 255], clamp(0.35 + relief * 0.30, 0, 1));
+  const relief = clamp(
+    sampleNumber(sample, ["glacierSeatPressure", "snowpackPressure", "ridgePressure"], 0.5),
+    0,
+    1
+  );
+
+  const color = colorMix(
+    [205, 222, 226, 255],
+    [240, 248, 250, 255],
+    clamp(0.35 + relief * 0.30, 0, 1)
+  );
+
   const grain = (stableDither(u * 13.0, v * 13.0) - 0.5) * 0.028;
   return applyLight(color, clamp(0.96 + grain, 0.90, 1.06));
 }
@@ -387,7 +313,96 @@ function runtimeSurfaceColor(sample, u, v) {
   return waterColorConsumerOnly(sample, u, v);
 }
 
-function buildTexture(runtime, width, height) {
+function findMount() {
+  return (
+    document.getElementById("audraliaRenderMount") ||
+    document.getElementById("audreliaRenderMount") ||
+    document.querySelector("[data-audralia-render-mount]") ||
+    document.querySelector("[data-audrelia-render-mount]") ||
+    document.querySelector("[data-body='audralia'][data-render-mount]") ||
+    document.querySelector("[data-body='audrelia'][data-render-mount]")
+  );
+}
+
+function readRuntimeApi(module) {
+  return module && module.default && typeof module.default === "object" ? module.default : module;
+}
+
+function createRuntimeInstance(runtimeApi) {
+  if (runtimeApi && typeof runtimeApi.createAudraliaRuntime === "function") {
+    return runtimeApi.createAudraliaRuntime({
+      fieldWidth: DEFAULTS.runtimeFieldWidth,
+      fieldHeight: DEFAULTS.runtimeFieldHeight
+    });
+  }
+
+  return runtimeApi;
+}
+
+function safeRuntimeStatus(runtime, runtimeApi) {
+  try {
+    if (runtime && typeof runtime.getStatus === "function") return runtime.getStatus();
+    if (runtimeApi && typeof runtimeApi.getStatus === "function") return runtimeApi.getStatus();
+  } catch (error) {
+    return {
+      ok: false,
+      error: String(error && error.message ? error.message : error)
+    };
+  }
+
+  return {
+    ok: false,
+    error: "AUDRALIA_RUNTIME_STATUS_UNAVAILABLE"
+  };
+}
+
+function safeRuntimeStats(runtime, runtimeApi) {
+  try {
+    if (runtime && typeof runtime.getRuntimeStats === "function") return runtime.getRuntimeStats();
+    if (runtime && typeof runtime.getStats === "function") return runtime.getStats();
+    if (runtimeApi && typeof runtimeApi.getRuntimeStats === "function") return runtimeApi.getRuntimeStats();
+    if (runtimeApi && typeof runtimeApi.getStats === "function") return runtimeApi.getStats();
+  } catch (error) {
+    return {
+      totalSamples: 0,
+      error: String(error && error.message ? error.message : error)
+    };
+  }
+
+  return {
+    totalSamples: 0
+  };
+}
+
+function safeSampleRuntime(runtime, runtimeApi, u, v) {
+  const input = { u: wrap01(u), v: clamp(v, 0, 1), x: wrap01(u), y: clamp(v, 0, 1) };
+
+  try {
+    if (runtime && typeof runtime.sampleRuntimeState === "function") return runtime.sampleRuntimeState(input);
+    if (runtime && typeof runtime.sampleAudraliaPlanetState === "function") return runtime.sampleAudraliaPlanetState(input);
+    if (runtime && typeof runtime.sampleSurface === "function") return runtime.sampleSurface(input);
+
+    if (runtimeApi && typeof runtimeApi.sampleRuntimeState === "function") return runtimeApi.sampleRuntimeState(input);
+    if (runtimeApi && typeof runtimeApi.sampleAudraliaPlanetState === "function") return runtimeApi.sampleAudraliaPlanetState(input);
+    if (runtimeApi && typeof runtimeApi.sampleSurface === "function") return runtimeApi.sampleSurface(input);
+  } catch (error) {
+    return {
+      routeSampleError: true,
+      routeSampleErrorMessage: String(error && error.message ? error.message : error),
+      u: input.u,
+      v: input.v
+    };
+  }
+
+  return {
+    routeSampleError: true,
+    routeSampleErrorMessage: "AUDRALIA_RUNTIME_SAMPLE_UNAVAILABLE",
+    u: input.u,
+    v: input.v
+  };
+}
+
+function buildTexture(runtime, runtimeApi, width, height) {
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
@@ -421,7 +436,7 @@ function buildTexture(runtime, width, height) {
 
     for (let x = 0; x < width; x += 1) {
       const u = width <= 1 ? 0.5 : x / (width - 1);
-      const sample = safeSampleRuntime(runtime, u, v);
+      const sample = safeSampleRuntime(runtime, runtimeApi, u, v);
       const color = runtimeSurfaceColor(sample, u, v);
       const index = (y * width + x) * 4;
 
@@ -471,29 +486,6 @@ function buildTexture(runtime, width, height) {
   };
 }
 
-function drawNonRuntimeFailure(mount, message) {
-  mount.replaceChildren();
-
-  const panel = document.createElement("section");
-  panel.className = "audralia-runtime-failure-panel";
-  panel.setAttribute("role", "status");
-  panel.dataset.body = BODY;
-  panel.dataset.route = ROUTE;
-  panel.dataset.receipt = RECEIPT;
-  panel.dataset.activeRenewal = ACTIVE_RENEWAL;
-  panel.dataset.ok = "false";
-  panel.dataset.visualPassClaimed = "false";
-
-  const title = document.createElement("h2");
-  title.textContent = "Audralia runtime unavailable.";
-
-  const detail = document.createElement("p");
-  detail.textContent = message;
-
-  panel.append(title, detail);
-  mount.appendChild(panel);
-}
-
 function createCanvas(size) {
   const canvas = document.createElement("canvas");
   canvas.width = size;
@@ -517,6 +509,39 @@ function createLabel() {
   return label;
 }
 
+function drawFailure(mount, message, detailObject) {
+  mount.replaceChildren();
+
+  const panel = document.createElement("section");
+  panel.className = "audralia-runtime-failure-panel";
+  panel.setAttribute("role", "status");
+  panel.dataset.body = BODY;
+  panel.dataset.route = ROUTE;
+  panel.dataset.receipt = RECEIPT;
+  panel.dataset.activeRenewal = ACTIVE_RENEWAL;
+  panel.dataset.textureRenewal = TEXTURE_RENEWAL;
+  panel.dataset.ok = "false";
+  panel.dataset.visualPassClaimed = "false";
+  panel.dataset.error = message;
+
+  const title = document.createElement("h2");
+  title.textContent = "Audralia route did not render.";
+
+  const detail = document.createElement("p");
+  detail.textContent = message;
+
+  panel.append(title, detail);
+
+  if (detailObject) {
+    const pre = document.createElement("pre");
+    pre.textContent = JSON.stringify(detailObject, null, 2);
+    pre.hidden = true;
+    panel.appendChild(pre);
+  }
+
+  mount.appendChild(panel);
+}
+
 function createHiddenReceipt(status) {
   const receipt = document.createElement("div");
   receipt.hidden = true;
@@ -528,7 +553,7 @@ function createHiddenReceipt(status) {
   receipt.dataset.activeRenewal = ACTIVE_RENEWAL;
   receipt.dataset.textureRenewal = TEXTURE_RENEWAL;
   receipt.dataset.runtimeVersion = status.runtimeVersion || "";
-  receipt.dataset.hexSurfaceChild = "AUDRALIA_G7_HEX_SURFACE_CHILD_RENDERER_TNT_v1";
+  receipt.dataset.hexSurfaceChild = status.hexSurfaceChild || "";
   receipt.dataset.routeTextureComposer = TEXTURE_RENEWAL;
   receipt.dataset.consumerOnlySoftWaterBlend = "true";
   receipt.dataset.hardDeepOceanRouteColor = "removed";
@@ -704,7 +729,8 @@ function buildRouteStatus(statusInput) {
     imageGeneration: false,
     visualPassClaimed: false,
     textureCounters: status.textureCounters || null,
-    runtimeStats: status.runtimeStats || null
+    runtimeStats: status.runtimeStats || null,
+    error: status.error || ""
   });
 }
 
@@ -724,18 +750,42 @@ function exposeStatus(status) {
   return routeStatus;
 }
 
-function findMount() {
-  return (
-    document.getElementById("audraliaRenderMount") ||
-    document.getElementById("audreliaRenderMount") ||
-    document.querySelector("[data-audralia-render-mount]") ||
-    document.querySelector("[data-audrelia-render-mount]") ||
-    document.querySelector("[data-body='audralia'][data-render-mount]") ||
-    document.querySelector("[data-body='audrelia'][data-render-mount]")
-  );
+async function loadModules() {
+  const runtimeModule = await import(RUNTIME_IMPORT_URL);
+  const hexModule = await import(HEX_IMPORT_URL);
+
+  const runtimeApi = readRuntimeApi(runtimeModule);
+
+  const drawHex =
+    hexModule && typeof hexModule.drawAudraliaHexSurfaceFrame === "function"
+      ? hexModule.drawAudraliaHexSurfaceFrame
+      : hexModule && hexModule.default && typeof hexModule.default.drawAudraliaHexSurfaceFrame === "function"
+        ? hexModule.default.drawAudraliaHexSurfaceFrame
+        : null;
+
+  const getHexStatus =
+    hexModule && typeof hexModule.getAudraliaHexSurfaceStatus === "function"
+      ? hexModule.getAudraliaHexSurfaceStatus
+      : hexModule && hexModule.default && typeof hexModule.default.getAudraliaHexSurfaceStatus === "function"
+        ? hexModule.default.getAudraliaHexSurfaceStatus
+        : null;
+
+  if (!runtimeApi) {
+    throw new Error("AUDRALIA_RUNTIME_MODULE_IMPORTED_WITHOUT_API");
+  }
+
+  if (!drawHex || !getHexStatus) {
+    throw new Error("AUDRALIA_HEX_SURFACE_MODULE_MISSING_EXPORTS");
+  }
+
+  return {
+    runtimeApi,
+    drawHex,
+    getHexStatus
+  };
 }
 
-function renderAudraliaRoute() {
+async function renderAudraliaRoute() {
   const mount = findMount();
 
   if (!mount) {
@@ -752,15 +802,41 @@ function renderAudraliaRoute() {
     return;
   }
 
-  const runtime = createRuntimeInstance();
-  const runtimeStatus = safeRuntimeStatus(runtime);
-  const runtimeStats = safeRuntimeStats(runtime);
+  let modules;
+
+  try {
+    modules = await loadModules();
+  } catch (error) {
+    drawFailure(mount, "Audralia module import failed.", {
+      message: String(error && error.message ? error.message : error),
+      runtimeImportUrl: RUNTIME_IMPORT_URL,
+      hexImportUrl: HEX_IMPORT_URL
+    });
+
+    exposeStatus({
+      ok: false,
+      runtimeLoaded: false,
+      runtimeInstanceLoaded: false,
+      hexSurfaceChildLoaded: false,
+      runtimeVersion: "",
+      runtimeActiveRenewal: "",
+      hexSurfaceChild: "",
+      error: String(error && error.message ? error.message : error)
+    });
+
+    return;
+  }
+
+  const runtime = createRuntimeInstance(modules.runtimeApi);
+  const runtimeStatus = safeRuntimeStatus(runtime, modules.runtimeApi);
+  const runtimeStats = safeRuntimeStats(runtime, modules.runtimeApi);
 
   const runtimeLoaded = Boolean(runtimeStatus && runtimeStatus.ok !== false);
   const runtimeInstanceLoaded = Boolean(runtime);
 
   if (!runtimeLoaded || !runtimeInstanceLoaded) {
-    drawNonRuntimeFailure(mount, "The Audralia runtime did not load. Route refused fallback rendering.");
+    drawFailure(mount, "The Audralia runtime did not load. Route refused fallback rendering.", runtimeStatus);
+
     exposeStatus({
       ok: false,
       runtimeLoaded,
@@ -772,10 +848,11 @@ function renderAudraliaRoute() {
       runtimeStats,
       error: runtimeStatus && runtimeStatus.error ? runtimeStatus.error : "AUDRALIA_RUNTIME_NOT_LOADED"
     });
+
     return;
   }
 
-  const texture = buildTexture(runtime, DEFAULTS.textureWidth, DEFAULTS.textureHeight);
+  const texture = buildTexture(runtime, modules.runtimeApi, DEFAULTS.textureWidth, DEFAULTS.textureHeight);
   const canvas = createCanvas(DEFAULTS.canvasSize);
   const ctx = canvas.getContext("2d", { alpha: true });
 
@@ -787,11 +864,11 @@ function renderAudraliaRoute() {
     velocity: DEFAULTS.velocity
   };
 
-  let hexResult = null;
-  let hexStatus = null;
+  let hexResult;
+  let hexStatus;
 
   try {
-    hexResult = drawAudraliaHexSurfaceFrame(state, {
+    hexResult = modules.drawHex(state, {
       globalGlazeStrength: 1,
       landGlazeOpacity: 0.115,
       waterGlazeOpacity: 0.160,
@@ -799,9 +876,12 @@ function renderAudraliaRoute() {
       terrainRecovery: 0.42
     });
 
-    hexStatus = getAudraliaHexSurfaceStatus(state);
+    hexStatus = modules.getHexStatus(state);
   } catch (error) {
-    drawNonRuntimeFailure(mount, `Hex child renderer failed: ${String(error && error.message ? error.message : error)}`);
+    drawFailure(mount, "Hex child renderer failed.", {
+      message: String(error && error.message ? error.message : error)
+    });
+
     exposeStatus({
       ok: false,
       runtimeLoaded: true,
@@ -814,6 +894,7 @@ function renderAudraliaRoute() {
       textureCounters: texture.counters,
       error: String(error && error.message ? error.message : error)
     });
+
     return;
   }
 

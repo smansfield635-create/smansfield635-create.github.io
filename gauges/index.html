@@ -2,9 +2,11 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="audralia-hydration-runtime-and-construct-ladder-gauges"
+  data-estate="rich-manor-and-estate"
   data-route="/gauges/"
-  data-contract="AUDRALIA_GAUGES_RUNTIME_HYDRATION_AND_CONSTRUCT_LADDER_TNT_v1"
+  data-page="audralia-generation-baseline-and-water-world-audit"
+  data-contract="AUDRALIA_GAUGES_GENERATION_BASELINE_WATER_WORLD_DIAGNOSTIC_TNT_v1"
+  data-audit-target="/showroom/globe/audralia/"
   data-mutation="false"
   data-graphic-box="false"
   data-image-generation="false"
@@ -13,287 +15,334 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Gauges · Audralia Runtime + Construct Ladder</title>
+
+  <title>Gauges · Audralia Generation Baseline</title>
   <meta
     name="description"
-    content="Audits Audralia after runtime hydration consumption and declares the future construct ladder beyond hydration, foliage, animals, and marine life without falsely opening those layers."
+    content="Read-only Gauges audit for Audralia generation baseline, route/runtime contract alignment, fallback state, visible land, submerged land, topology land, hydration dominance, and next lawful target."
   >
 
   <style>
     :root {
       color-scheme: dark;
-      --bg: #050914;
-      --text: #f7efe2;
-      --muted: #b8c2cf;
+      --bg: #050812;
+      --panel: rgba(12, 20, 36, 0.88);
+      --panel-2: rgba(7, 13, 26, 0.94);
+      --text: #f6efe0;
+      --muted: #b9c3d3;
       --gold: #f5c76b;
-      --green: #92f0b8;
-      --red: #ff8f8f;
-      --amber: #ffd27c;
-      --blue: #88c9ff;
-      --line: rgba(245, 199, 107, 0.26);
-      --radius: 28px;
-      --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      --blue: #75bbff;
+      --green: #86efac;
+      --red: #fca5a5;
+      --yellow: #fde68a;
+      --line: rgba(245, 199, 107, 0.24);
+      --soft-line: rgba(117, 187, 255, 0.20);
+      --radius: 26px;
+      --shadow: 0 28px 90px rgba(0, 0, 0, 0.48);
     }
 
-    * { box-sizing: border-box; }
-
-    html {
-      min-height: 100%;
-      background: var(--bg);
+    * {
+      box-sizing: border-box;
     }
 
+    html,
     body {
       min-height: 100%;
       margin: 0;
-      color: var(--text);
       background:
-        radial-gradient(circle at 50% -8%, rgba(120, 188, 255, 0.16), transparent 34rem),
-        radial-gradient(circle at 80% 18%, rgba(245, 199, 107, 0.07), transparent 26rem),
-        linear-gradient(180deg, #02050c 0%, #050914 48%, #070d18 100%);
+        radial-gradient(circle at 50% 0%, rgba(117, 187, 255, 0.13), transparent 34rem),
+        radial-gradient(circle at 88% 14%, rgba(245, 199, 107, 0.08), transparent 28rem),
+        linear-gradient(180deg, #02040b 0%, var(--bg) 46%, #070d18 100%);
+      color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    a { color: inherit; }
+    a {
+      color: inherit;
+    }
 
     .skip-link {
       position: absolute;
       left: 1rem;
       top: 1rem;
-      z-index: 20;
-      transform: translateY(-140%);
+      z-index: 1000;
+      transform: translateY(-150%);
       border: 1px solid var(--gold);
       border-radius: 999px;
-      padding: 0.72rem 1rem;
-      color: #08111f;
+      padding: 0.7rem 1rem;
+      color: #07111f;
       background: var(--gold);
-      font-weight: 1000;
+      font-weight: 900;
       text-decoration: none;
     }
 
-    .skip-link:focus { transform: translateY(0); }
-
-    .shell {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 28px 0 56px;
+    .skip-link:focus {
+      transform: translateY(0);
     }
 
-    .card {
+    .shell {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 28px 0 64px;
+    }
+
+    .hero,
+    .panel,
+    .audit-card {
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background:
-        linear-gradient(135deg, rgba(12, 24, 42, 0.84), rgba(7, 15, 29, 0.94)),
-        radial-gradient(circle at 84% 20%, rgba(245, 199, 107, 0.08), transparent 18rem);
+        linear-gradient(135deg, rgba(12, 20, 36, 0.88), rgba(7, 13, 26, 0.94)),
+        radial-gradient(circle at 80% 18%, rgba(245, 199, 107, 0.07), transparent 18rem);
       box-shadow: var(--shadow);
     }
 
-    header.card,
-    section.card {
-      padding: clamp(22px, 3.5vw, 42px);
+    .hero,
+    .panel {
+      padding: clamp(20px, 3.4vw, 40px);
     }
 
     .eyebrow {
       margin: 0 0 0.8rem;
       color: var(--gold);
       font-size: 0.78rem;
-      font-weight: 1000;
+      font-weight: 950;
       letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
+    h1,
+    h2,
+    h3,
+    p {
+      overflow-wrap: anywhere;
+    }
+
     h1 {
       margin: 0;
-      font-size: clamp(2.25rem, 6.8vw, 5.2rem);
-      line-height: 0.92;
-      letter-spacing: -0.065em;
+      font-size: clamp(2.25rem, 6vw, 5.5rem);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
     }
 
     h2 {
       margin: 0;
-      font-size: clamp(1.45rem, 3.6vw, 2.75rem);
-      line-height: 1;
-      letter-spacing: -0.045em;
+      font-size: clamp(1.35rem, 3.4vw, 2.7rem);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
     }
 
     h3 {
       margin: 0;
-      font-size: clamp(1.05rem, 2.5vw, 1.55rem);
-      line-height: 1.1;
+      font-size: 1.04rem;
+      letter-spacing: -0.02em;
     }
 
-    p { overflow-wrap: anywhere; }
-
-    .lede,
-    .muted {
+    p {
       color: var(--muted);
-      line-height: 1.6;
+      line-height: 1.62;
     }
 
     .lede {
       max-width: 980px;
       margin: 1rem 0 0;
-      font-size: clamp(1rem, 2vw, 1.2rem);
+      font-size: clamp(1rem, 2vw, 1.18rem);
     }
 
-    nav {
+    .nav {
       display: flex;
       flex-wrap: wrap;
       gap: 0.65rem;
-      margin-top: 1.35rem;
+      margin-top: 1.4rem;
     }
 
-    nav a,
+    .nav a,
     button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      min-height: 42px;
       border: 1px solid rgba(245, 199, 107, 0.36);
       border-radius: 999px;
-      padding: 0.64rem 0.9rem;
+      padding: 0.64rem 0.92rem;
       color: var(--text);
-      background: rgba(4, 12, 24, 0.62);
+      background: rgba(4, 12, 24, 0.58);
       text-decoration: none;
       font: inherit;
-      font-weight: 1000;
+      font-weight: 900;
       line-height: 1.1;
       cursor: pointer;
     }
 
-    nav a:hover,
-    nav a:focus-visible,
-    button:hover,
-    button:focus-visible {
+    button {
       color: #07111f;
       background: var(--gold);
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible,
+    button:hover,
+    button:focus-visible {
       outline: none;
+      filter: brightness(1.08);
     }
 
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 22px;
+    .panel {
+      margin-top: 24px;
     }
 
-    .metric {
-      border: 1px solid rgba(120, 188, 255, 0.22);
-      border-radius: 22px;
-      padding: 1rem;
-      background: rgba(255, 255, 255, 0.045);
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1.3rem;
     }
 
-    .metric strong {
-      display: block;
-      font-size: clamp(1.8rem, 4vw, 3rem);
-      line-height: 0.95;
-      color: var(--gold);
-      letter-spacing: -0.05em;
-    }
-
-    .metric span {
-      display: block;
-      margin-top: 0.45rem;
+    .stamp {
       color: var(--muted);
       font-weight: 800;
     }
 
-    main {
+    .scoreboard {
       display: grid;
-      gap: 22px;
-      margin-top: 24px;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 1.25rem;
     }
 
-    .group-block { margin-top: 24px; }
-
-    .group {
-      display: grid;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .check {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 0.85rem;
-      align-items: start;
-      border: 1px solid rgba(255, 255, 255, 0.10);
+    .score {
+      border: 1px solid var(--soft-line);
       border-radius: 20px;
       padding: 1rem;
       background: rgba(255, 255, 255, 0.04);
+    }
+
+    .score strong {
+      display: block;
+      color: var(--gold);
+      font-size: clamp(1.5rem, 4vw, 2.8rem);
+      line-height: 1;
+    }
+
+    .score span {
+      display: block;
+      margin-top: 0.35rem;
+      color: var(--muted);
+      font-weight: 750;
+      line-height: 1.35;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .audit-card {
+      padding: 18px;
+    }
+
+    .audit-head {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 1rem;
     }
 
     .badge {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 4.4rem;
       border-radius: 999px;
-      padding: 0.38rem 0.62rem;
+      padding: 0.35rem 0.62rem;
       font-size: 0.72rem;
-      font-weight: 1000;
+      font-weight: 950;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+      white-space: nowrap;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
-    .pass .badge { color: #07111f; background: var(--green); }
-    .fail .badge { color: #160606; background: var(--red); }
-    .held .badge { color: #151005; background: var(--amber); }
-    .info .badge { color: #05111f; background: var(--blue); }
-
-    .check strong {
-      display: block;
-      margin-bottom: 0.3rem;
-      font-size: 1rem;
+    .pass {
+      color: #06120a;
+      background: var(--green);
     }
 
-    .check span {
-      display: block;
+    .fail {
+      color: #1b0505;
+      background: var(--red);
+    }
+
+    .held {
+      color: #1d1602;
+      background: var(--yellow);
+    }
+
+    .info {
+      color: #06111f;
+      background: var(--blue);
+    }
+
+    .rows {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+      gap: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 8px;
       color: var(--muted);
+      font-size: 0.92rem;
       line-height: 1.45;
-      overflow-wrap: anywhere;
     }
 
-    .route-receipt {
-      margin-top: 18px;
-      border: 1px solid rgba(245, 199, 107, 0.22);
-      border-radius: 18px;
-      padding: 1rem;
-      color: var(--muted);
-      background: rgba(0, 0, 0, 0.22);
+    .row b {
+      color: var(--text);
+      font-weight: 900;
+    }
+
+    .mono {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 0.82rem;
-      line-height: 1.5;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
+      font-size: 0.86em;
     }
 
-    .status-line {
-      margin-top: 1rem;
-      color: var(--muted);
-      font-weight: 800;
+    .next {
+      border-color: rgba(245, 199, 107, 0.44);
+      background:
+        linear-gradient(135deg, rgba(245, 199, 107, 0.10), rgba(7, 13, 26, 0.94)),
+        radial-gradient(circle at 84% 12%, rgba(117, 187, 255, 0.12), transparent 16rem);
     }
 
-    @media (max-width: 820px) {
-      .shell {
-        width: min(100%, calc(100% - 24px));
-        padding-top: 20px;
+    .hidden-frame {
+      position: absolute;
+      left: -9999px;
+      width: 2px;
+      height: 2px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @media (max-width: 860px) {
+      .scoreboard,
+      .grid {
+        grid-template-columns: 1fr;
       }
 
-      .summary {
-        grid-template-columns: 1fr 1fr;
+      .row {
+        grid-template-columns: 1fr;
       }
 
-      .summary .metric:last-child {
-        grid-column: 1 / -1;
-      }
-
-      nav a,
+      .nav a,
       button {
         width: 100%;
-      }
-
-      .check {
-        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -303,16 +352,16 @@
   <a class="skip-link" href="#main">Skip to Gauges</a>
 
   <div class="shell">
-    <header class="card">
-      <p class="eyebrow">Gauges · Audralia Runtime + Construct Ladder</p>
-      <h1>Hydration Runtime → Living Construct Ladder</h1>
+    <header class="hero">
+      <p class="eyebrow">Gauges · Audralia Generation Baseline</p>
+      <h1>Water World Diagnostic</h1>
       <p class="lede">
-        This audit measures whether runtime now consumes hydration after terrain and declares the
-        next construct ladder beyond hydration, foliage, animals, and marine life. Future layers
-        are tracked as controlled gates, not as active claims.
+        This read-only audit determines whether Audralia is currently a true water-only world,
+        a world with topology land hidden under hydration, a world with land that runtime sees but
+        the route fails to paint, or a stale-contract route/runtime mismatch.
       </p>
 
-      <nav aria-label="Site rail">
+      <nav class="nav" aria-label="Gauges route rail">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
@@ -321,647 +370,720 @@
         <a href="/showroom/globe/earth/">Earth</a>
         <a href="/showroom/globe/audralia/">Audralia</a>
         <a href="/products/">Products</a>
-        <a href="/gauges/">Gauges</a>
-      </nav>
-
-      <nav aria-label="Audit controls">
-        <button id="runAudit" type="button">Run Runtime + Construct Audit</button>
-        <a href="/showroom/globe/audralia/">Open Audralia</a>
       </nav>
     </header>
 
     <main id="main">
-      <section class="card" aria-label="Audit summary">
-        <p class="eyebrow">Current expected read</p>
-        <h2 id="expectedTitle">Audit not run yet.</h2>
-        <p id="expectedText" class="lede">
-          Run the audit to measure runtime hydration consumption and the future construct ladder.
+      <section class="panel" aria-label="Audit control">
+        <p class="eyebrow">Run audit</p>
+        <h2>Generation, baseline, land-under-water, and next target.</h2>
+        <p>
+          Gauges fetches source, imports the runtime, builds a runtime field, probes the live
+          Audralia route mount, and compares route-visible counts against runtime truth.
         </p>
 
-        <div class="summary" aria-label="Audit totals">
-          <div class="metric">
-            <strong id="totalMetric">0</strong>
-            <span>Total checks</span>
-          </div>
-          <div class="metric">
-            <strong id="passMetric">0</strong>
-            <span>Passed</span>
-          </div>
-          <div class="metric">
-            <strong id="failMetric">0</strong>
-            <span>Failed</span>
-          </div>
-          <div class="metric">
-            <strong id="heldMetric">0</strong>
-            <span>Held</span>
-          </div>
-          <div class="metric">
-            <strong id="scoreMetric">0%</strong>
-            <span>Readiness score</span>
-          </div>
+        <div class="toolbar">
+          <button id="runAudit" type="button">Run Water World Audit</button>
+          <span id="stamp" class="stamp">Not run yet.</span>
         </div>
 
-        <p id="lastAudit" class="status-line">Last audit: not run.</p>
+        <div class="scoreboard" aria-label="Audit summary">
+          <div class="score">
+            <strong id="scoreTotal">0</strong>
+            <span>Total checks</span>
+          </div>
+          <div class="score">
+            <strong id="scorePass">0</strong>
+            <span>Passed</span>
+          </div>
+          <div class="score">
+            <strong id="scoreFail">0</strong>
+            <span>Failed</span>
+          </div>
+          <div class="score">
+            <strong id="scoreHeld">0</strong>
+            <span>Held</span>
+          </div>
+          <div class="score">
+            <strong id="readiness">0%</strong>
+            <span>Readiness</span>
+          </div>
+        </div>
       </section>
 
-      <section class="card">
-        <p class="eyebrow">Live source audit</p>
-        <h2>Audralia runtime and construct groups</h2>
-        <div id="results"></div>
-        <div id="receipt" class="route-receipt">AUDRALIA_GAUGES_RUNTIME_HYDRATION_AND_CONSTRUCT_LADDER_TNT_v1
-MUTATION=false
-GRAPHIC_BOX=false
-IMAGE_GENERATION=false
-VISUAL_PASS_CLAIMED=false</div>
+      <section id="verdictPanel" class="panel next" aria-label="Current verdict">
+        <p class="eyebrow">Current expected read</p>
+        <h2 id="verdictTitle">Waiting for audit.</h2>
+        <p id="verdictText">
+          Run the audit to classify the water world: no-land topology, submerged land, stale route,
+          runtime fallback, or route paint/color failure.
+        </p>
       </section>
+
+      <section id="auditGrid" class="grid" aria-label="Audit groups"></section>
     </main>
   </div>
 
-  <script>
-    (function () {
-      "use strict";
+  <iframe
+    id="liveProbeFrame"
+    class="hidden-frame"
+    title="Audralia live route probe"
+    src="about:blank"
+    aria-hidden="true"
+  ></iframe>
 
-      const CONTRACT = "AUDRALIA_GAUGES_RUNTIME_HYDRATION_AND_CONSTRUCT_LADDER_TNT_v1";
+  <script type="module">
+    const CONTRACT = "AUDRALIA_GAUGES_GENERATION_BASELINE_WATER_WORLD_DIAGNOSTIC_TNT_v1";
 
-      const PATHS = Object.freeze({
-        routeHtml: "/showroom/globe/audralia/",
-        routeJs: "/showroom/globe/audralia/index.js",
-        runtime: "/assets/audralia/audralia.runtime.js",
-        topology: "/assets/audralia/audralia.topology.render.js",
-        tectonics: "/assets/audralia/audralia.tectonics.render.js",
-        terrain: "/assets/audralia/audralia.terrain.render.js",
-        hydration: "/assets/audralia/audralia.hydration.render.js"
-      });
+    const TARGETS = Object.freeze({
+      route: "/showroom/globe/audralia/",
+      routeScript: "/showroom/globe/audralia/index.js",
+      runtime: "/assets/audralia/audralia.runtime.js",
+      tectonics: "/assets/audralia/audralia/tectonics/render.js",
+      topology: "/assets/audralia/audralia/tectonics/topology/render.js",
+      terrain: "/assets/audralia/audralia/tectonics/topology/terrain.render.js",
+      hydration: "/assets/audralia/audralia/hydration/render.js",
+      oceans: "/assets/audralia/audralia/hydration/oceans.render.js"
+    });
 
-      const EXPECTED = Object.freeze({
-        routeContract: "AUDRALIA_ROUTE_TRUE_ORTHOGRAPHIC_GLOBE_RENDER_TNT_v2",
-        runtimeHydrationContract: "AUDRALIA_RUNTIME_CONSUME_HYDRATION_AFTER_TERRAIN_TNT_v1",
-        runtimePreHydrationContract: "AUDRALIA_RUNTIME_CACHED_TOPOLOGY_TECTONICS_TERRAIN_CHAIN_TNT_v2",
-        topologyContractA: "AUDRALIA_G1_TOPOLOGY_SEA_LEVEL_EARTH_LAND_RATIO_BATHYMETRY_COAST_TNT_v1",
-        topologyContractB: "AUDRALIA_G1_TOPOLOGY_LANDMASS_100_PERCENT_EXPANSION_SMALL_CONTINENTS_TNT_v1",
-        tectonicsContract: "AUDRALIA_G1_TECTONIC_PLATE_LAYER_EARTH_LAND_AREA_ANCIENT_MOUNTAIN_MEMORY_TNT_v1",
-        terrainStrongContract: "AUDRALIA_G1_TERRAIN_STRONG_RELIEF_TOPOLOGY_TECTONICS_LOCK_TNT_v2",
-        terrainEnoughContract: "AUDRALIA_G1_TERRAIN_CONSUME_TOPOLOGY_TECTONICS_RELIEF_LOCK_TNT_v1",
-        hydrationContract: "AUDRALIA_G1_HYDRATION_CONSUME_TOPOLOGY_TECTONICS_TERRAIN_WATERDOWN_TNT_v1"
-      });
+    const EXPECTED = Object.freeze({
+      htmlContract: "AUDRALIA_TRUE_GLOBE_HTML_TECTONIC_GENEALOGY_HANDOFF_TNT_v1",
+      routeContract: "AUDRALIA_ROUTE_CONSUME_CURRENT_RUNTIME_GENEALOGY_SURFACE_TNT_v1",
+      runtimeContract: "AUDRALIA_RUNTIME_ALLOW_TECTONICS_TOPOLOGY_TERRAIN_HYDRATION_SURFACE_TNT_v1",
+      runtimeRenewal: "AUDRALIA_RUNTIME_ROUTE_COMPAT_SURFACE_DIAGNOSTIC_RENEWAL_TNT_v2",
+      tectonicsContract: "AUDRALIA_TECTONICS_DERIVATIVE_ORIGIN_PARENT_TNT_v1",
+      topologyContract: "AUDRALIA_TECTONICS_TOPOLOGY_CHILD_FOOTPRINT_AUTHORITY_TNT_v1",
+      terrainContract: "AUDRALIA_TECTONICS_TOPOLOGY_TERRAIN_GRANDCHILD_RELIEF_TNT_v1",
+      hydrationContract: "AUDRALIA_HYDRATION_PARENT_TECTONIC_GENEALOGY_ALIGNMENT_TNT_v1",
+      oceansContract: "AUDRALIA_HYDRATION_OCEANS_CHILD_TURQUOISE_DEPTH_GRADIENT_TNT_v1",
+      genealogy: "tectonics→topology→terrain→hydration(parent→oceans_child)"
+    });
 
-      const FUTURE_LADDER = Object.freeze([
-        Object.freeze({
-          order: 1,
-          key: "atmosphere",
-          label: "Atmosphere",
-          target: "/assets/audralia/audralia.atmosphere.render.js",
-          role: "air mass, pressure, sky, cloud permission, breathable envelope"
-        }),
-        Object.freeze({
-          order: 2,
-          key: "climate",
-          label: "Climate",
-          target: "/assets/audralia/audralia.climate.render.js",
-          role: "temperature bands, weather permission, wind, rainfall, seasonal motion"
-        }),
-        Object.freeze({
-          order: 3,
-          key: "ecology",
-          label: "Ecology",
-          target: "/assets/audralia/audralia.ecology.render.js",
-          role: "habitability zones and biome permission without drawing foliage yet"
-        }),
-        Object.freeze({
-          order: 4,
-          key: "foliage",
-          label: "Foliage",
-          target: "/assets/audralia/audralia.foliage.render.js",
-          role: "plant cover, canopy, grass, moss, forest permission"
-        }),
-        Object.freeze({
-          order: 5,
-          key: "marine",
-          label: "Marine Life",
-          target: "/assets/audralia/audralia.marine.render.js",
-          role: "ocean life, reef life, aquatic movement permission"
-        }),
-        Object.freeze({
-          order: 6,
-          key: "fauna",
-          label: "Land Animals",
-          target: "/assets/audralia/audralia.fauna.render.js",
-          role: "land animals, migration, territory, food-chain pressure"
-        }),
-        Object.freeze({
-          order: 7,
-          key: "civilization",
-          label: "Construct Civilization",
-          target: "/assets/audralia/audralia.construct.render.js",
-          role: "settlement, paths, structures, culture, tools, and intelligent construct layer"
-        })
-      ]);
+    const state = {
+      checks: [],
+      source: {},
+      runtime: null,
+      runtimeStatus: null,
+      runtimeField: null,
+      routeProbe: null,
+      errors: []
+    };
 
-      const state = {
-        sources: {},
-        groups: [],
-        runtimeHydrationActive: false,
-        hydrationLive: false
+    const el = {
+      runAudit: document.getElementById("runAudit"),
+      stamp: document.getElementById("stamp"),
+      scoreTotal: document.getElementById("scoreTotal"),
+      scorePass: document.getElementById("scorePass"),
+      scoreFail: document.getElementById("scoreFail"),
+      scoreHeld: document.getElementById("scoreHeld"),
+      readiness: document.getElementById("readiness"),
+      verdictTitle: document.getElementById("verdictTitle"),
+      verdictText: document.getElementById("verdictText"),
+      auditGrid: document.getElementById("auditGrid"),
+      frame: document.getElementById("liveProbeFrame")
+    };
+
+    function cache(url) {
+      const mark = Date.now().toString(36) + Math.random().toString(36).slice(2);
+      return `${url}${url.includes("?") ? "&" : "?"}_gauges=${encodeURIComponent(CONTRACT)}&t=${mark}`;
+    }
+
+    async function fetchText(url) {
+      const res = await fetch(cache(url), { cache: "no-store" });
+      const text = await res.text();
+
+      return {
+        ok: res.ok,
+        status: res.status,
+        url,
+        text
       };
+    }
 
-      function cacheUrl(path) {
-        return path + (path.includes("?") ? "&" : "?") + "_gauges=" + encodeURIComponent(CONTRACT) + "&t=" + Date.now();
-      }
+    function includes(source, pattern) {
+      return Boolean(source && source.text && source.text.includes(pattern));
+    }
 
-      async function fetchText(path) {
-        try {
-          const response = await fetch(cacheUrl(path), {
-            cache: "no-store",
-            credentials: "same-origin"
-          });
+    function check(group, label, status, detail, data = {}) {
+      state.checks.push({
+        group,
+        label,
+        status,
+        detail,
+        data
+      });
+    }
 
-          const text = await response.text();
+    function pass(group, label, detail, data) {
+      check(group, label, "pass", detail, data);
+    }
 
-          return {
-            ok: response.ok,
-            status: response.status,
-            text,
-            path
-          };
-        } catch (error) {
-          return {
-            ok: false,
-            status: 0,
-            text: "",
-            path,
-            error: error && error.message ? error.message : String(error)
-          };
-        }
-      }
+    function fail(group, label, detail, data) {
+      check(group, label, "fail", detail, data);
+    }
 
-      function has(source, pattern) {
-        if (!source || !source.text) return false;
-        if (pattern instanceof RegExp) return pattern.test(source.text);
-        return source.text.includes(pattern);
-      }
+    function held(group, label, detail, data) {
+      check(group, label, "held", detail, data);
+    }
 
-      function lacks(source, pattern) {
-        return !has(source, pattern);
-      }
+    function info(group, label, detail, data) {
+      check(group, label, "info", detail, data);
+    }
 
-      function pass(title, detail) {
-        return { status: "pass", title, detail };
-      }
+    function bool(value) {
+      return value === true || value === "true" || value === 1 || value === "1";
+    }
 
-      function fail(title, detail) {
-        return { status: "fail", title, detail };
-      }
+    function number(value, fallback = 0) {
+      const n = Number(value);
+      return Number.isFinite(n) ? n : fallback;
+    }
 
-      function held(title, detail) {
-        return { status: "held", title, detail };
-      }
-
-      function info(title, detail) {
-        return { status: "info", title, detail };
-      }
-
-      function group(title, purpose, checks) {
-        return { title, purpose, checks };
-      }
-
-      function sourceStatus(source, label) {
-        if (!source) return fail(label + " missing", "No source object was returned.");
-        if (!source.ok) return fail(label + " reachable", source.path + " returned " + source.status + ".");
-        return pass(label + " reachable", source.path + " returned " + source.status + ".");
-      }
-
-      function hydrationAuthorityIsLive(hydration) {
-        return Boolean(
-          hydration &&
-          hydration.ok &&
-          has(hydration, EXPECTED.hydrationContract) &&
-          has(hydration, "sampleHydration") &&
-          has(hydration, "buildHydrationField") &&
-          has(hydration, "getHydrationStatus")
-        );
-      }
-
-      function runtimeHydrationIsActive(runtime) {
-        return Boolean(
-          runtime &&
-          runtime.ok &&
-          (
-            has(runtime, EXPECTED.runtimeHydrationContract) ||
-            (
-              has(runtime, "./audralia.hydration.render.js") &&
-              has(runtime, "sampleHydration") &&
-              has(runtime, "buildHydrationField") &&
-              has(runtime, "getHydrationSampleFromField") &&
-              has(runtime, "getHydrationStatus") &&
-              has(runtime, "topology→tectonics→terrain→hydration")
-            )
-          )
-        );
-      }
-
-      function auditRoute() {
-        const html = state.sources.routeHtml;
-        const js = state.sources.routeJs;
-
-        return group(
-          "Route and True Globe Baseline",
-          "Confirms the Audralia route remains a handoff shell and true orthographic renderer.",
-          [
-            sourceStatus(html, "Audralia route"),
-            sourceStatus(js, "Route script"),
-            has(html, "id=\"audraliaRenderMount\"") || has(html, "data-audralia-render-mount")
-              ? pass("Audralia mount exists", "Route source includes the Audralia render mount.")
-              : fail("Audralia mount exists", "Route source does not expose the Audralia mount."),
-            has(html, "Audralia") && lacks(html, "Australia") && lacks(html, "Adralia")
-              ? pass("Audralia identity clean", "Route names Audralia and does not expose Australia or Adralia.")
-              : fail("Audralia identity clean", "Route source contains an identity leak or lacks Audralia."),
-            has(js, EXPECTED.routeContract)
-              ? pass("True orthographic route contract current", EXPECTED.routeContract)
-              : fail("True orthographic route contract current", "Expected true orthographic route contract not found."),
-            has(js, "orthographic-sphere-coordinate-sampling") || has(js, "drawOrthographicSphere")
-              ? pass("Orthographic projection present", "Route renders through true sphere-coordinate sampling.")
-              : fail("Orthographic projection present", "Orthographic projection markers were not found."),
-            has(js, "routeOwnedLandGeneration") && has(js, "forbidden")
-              ? pass("Route does not generate land", "Route declares routeOwnedLandGeneration forbidden.")
-              : fail("Route does not generate land", "No routeOwnedLandGeneration forbidden receipt found."),
-            has(js, "/assets/audralia/audralia.runtime.js") && has(js, "loadRuntimeAuthority")
-              ? pass("Route consumes runtime", "Route loads the Audralia runtime authority.")
-              : fail("Route consumes runtime", "Route does not clearly load runtime authority."),
-            has(js, "sampleHydration") || has(js, "isOceanWater") || has(js, "isRiver")
-              ? info("Route water rendering appears started", "Route source already references hydration/water fields. Verify visually after runtime pass.")
-              : info("Route water rendering remains later", "Route does not yet render hydration directly, which is allowed until runtime is confirmed.")
-          ]
-        );
-      }
-
-      function auditRuntime() {
-        const runtime = state.sources.runtime;
-        const activeHydration = runtimeHydrationIsActive(runtime);
-        state.runtimeHydrationActive = activeHydration;
-
-        return group(
-          "Runtime Hydration Consumption",
-          "Confirms runtime now consumes topology → tectonics → terrain → hydration.",
-          [
-            sourceStatus(runtime, "Runtime authority"),
-            has(runtime, EXPECTED.runtimeHydrationContract)
-              ? pass("Runtime hydration contract current", EXPECTED.runtimeHydrationContract)
-              : held("Runtime hydration contract current", "Runtime hydration contract not found yet."),
-            has(runtime, EXPECTED.runtimePreHydrationContract)
-              ? info("Previous runtime receipt retained", "Prior cached topology→tectonics→terrain receipt is still recorded as previous/legacy.")
-              : info("Previous runtime receipt not required", "Prior runtime receipt is not required for pass."),
-            has(runtime, "sampleAudraliaPlanetState")
-              ? pass("Runtime sample API present", "sampleAudraliaPlanetState is present.")
-              : fail("Runtime sample API present", "Runtime does not expose sampleAudraliaPlanetState."),
-            has(runtime, "createAudraliaRuntime")
-              ? pass("Runtime creation API present", "createAudraliaRuntime is present.")
-              : held("Runtime creation API present", "Runtime creation API not found."),
-            has(runtime, "sampleTopology") || has(runtime, "/assets/audralia/audralia.topology.render.js")
-              ? pass("Runtime consumes topology", "Runtime references topology authority.")
-              : fail("Runtime consumes topology", "Runtime does not clearly consume topology."),
-            has(runtime, "sampleTectonics") || has(runtime, "/assets/audralia/audralia.tectonics.render.js")
-              ? pass("Runtime consumes tectonics", "Runtime references tectonic authority.")
-              : fail("Runtime consumes tectonics", "Runtime does not clearly consume tectonics."),
-            has(runtime, "sampleTerrain") || has(runtime, "/assets/audralia/audralia.terrain.render.js")
-              ? pass("Runtime consumes terrain", "Runtime references terrain authority.")
-              : fail("Runtime consumes terrain", "Runtime does not clearly consume terrain."),
-            has(runtime, "./audralia.hydration.render.js") && has(runtime, "sampleHydration")
-              ? pass("Runtime imports hydration", "Runtime imports the hydration authority.")
-              : held("Runtime imports hydration", "Hydration import/sample markers not found."),
-            has(runtime, "buildHydrationField") && has(runtime, "getHydrationSampleFromField") && has(runtime, "getHydrationStatus")
-              ? pass("Runtime caches hydration", "Runtime builds and samples cached hydration field.")
-              : held("Runtime caches hydration", "Hydration cache markers not fully detected."),
-            has(runtime, "runtimeCacheActive") && has(runtime, "lowLagSampling")
-              ? pass("Runtime cache active", "Runtime exposes cache and low-lag sampling markers.")
-              : held("Runtime cache active", "Runtime cache markers not found."),
-            has(runtime, "hydrationCacheActive") && has(runtime, "hydrationConsumedAfterTerrain")
-              ? pass("Hydration cache active", "Runtime exposes hydration cache and after-terrain consumption markers.")
-              : held("Hydration cache active", "Hydration cache/ordering markers not found."),
-            has(runtime, "topology→tectonics→terrain→hydration")
-              ? pass("Runtime chain order current", "Runtime declares topology→tectonics→terrain→hydration.")
-              : held("Runtime chain order current", "Current hydration chain marker not found."),
-            activeHydration
-              ? pass("Runtime consumes hydration after terrain", "Runtime imports, caches, and samples hydration after terrain.")
-              : held("Runtime consumes hydration after terrain", "Hydration authority exists, but runtime has not yet fully consumed it.")
-          ]
-        );
-      }
-
-      function auditUpstream() {
-        const topology = state.sources.topology;
-        const tectonics = state.sources.tectonics;
-        const terrain = state.sources.terrain;
-        const hydration = state.sources.hydration;
-
-        const hydrologyReady =
-          has(terrain, "hydrologyReadinessIndex") &&
-          has(terrain, "riverbedPressure") &&
-          has(terrain, "streamPressure") &&
-          has(terrain, "lakeBasinPressure") &&
-          has(terrain, "glacierSeatPressure");
-
-        return group(
-          "Upstream Authority Chain",
-          "Confirms topology, tectonics, terrain, and hydration remain clean after runtime expansion.",
-          [
-            sourceStatus(topology, "Topology authority"),
-            sourceStatus(tectonics, "Tectonics authority"),
-            sourceStatus(terrain, "Terrain authority"),
-            sourceStatus(hydration, "Hydration authority"),
-            has(topology, EXPECTED.topologyContractA) || has(topology, EXPECTED.topologyContractB) || has(topology, "estimateEarthEquivalentSeaLevel")
-              ? pass("Topology contract recognized", "Topology source contains a recognized Audralia topology contract.")
-              : fail("Topology contract recognized", "No recognized topology contract found."),
-            has(topology, "approximateEarthExposedLandRatio") && has(topology, "bathymetryBlueprintIndex")
-              ? pass("Topology land/void and bathymetry active", "Topology owns land ratio, sea level, and bathymetry data.")
-              : fail("Topology land/void and bathymetry active", "Required topology land/void or bathymetry fields are missing."),
-            has(tectonics, EXPECTED.tectonicsContract)
-              ? pass("Tectonics contract current", EXPECTED.tectonicsContract)
-              : fail("Tectonics contract current", "Expected tectonics contract not found."),
-            has(tectonics, "diamondPressureIndex") && has(tectonics, "opalSeamIndex") && has(tectonics, "graniteCratonIndex") && has(tectonics, "slateFoldBeltIndex")
-              ? pass("Mineral memory active", "Diamond, opal, granite, and slate pressure fields are present.")
-              : fail("Mineral memory active", "Dominant mineral pressure fields are missing."),
-            has(terrain, EXPECTED.terrainStrongContract) || has(terrain, EXPECTED.terrainEnoughContract) || has(terrain, "sampleTopology")
-              ? pass("Terrain contract recognized", "Terrain contains recognized final terrain or direct topology consumption markers.")
-              : held("Terrain contract recognized", "Terrain contract marker not fully detected."),
-            hydrologyReady
-              ? pass("Terrain hydrology-readiness present", "Terrain exposes water-receiving structures.")
-              : fail("Terrain hydrology-readiness present", "Terrain hydrology-readiness fields are missing."),
-            hydrationAuthorityIsLive(hydration)
-              ? pass("Hydration authority live", "Hydration file is reachable, current, and exports the hydration API.")
-              : fail("Hydration authority live", "Hydration authority is not fully live."),
-            has(hydration, "ownsHydration: true") && has(hydration, "ownsWaterPlacement: true")
-              ? pass("Hydration owns water behavior", "Hydration owns water placement without opening route rendering.")
-              : fail("Hydration owns water behavior", "Hydration ownership fields are missing."),
-            lacks(topology, "ownsHydration: true") &&
-              lacks(tectonics, "ownsHydration: true") &&
-              lacks(terrain, "ownsHydration: true")
-              ? pass("Hydration ownership is isolated", "Topology, tectonics, and terrain do not overclaim hydration.")
-              : fail("Hydration ownership is isolated", "An upstream layer overclaims hydration.")
-          ]
-        );
-      }
-
-      function auditConstructLadder() {
-        const checks = [
-          info(
-            "Construct ladder declared",
-            "Future construction now extends beyond hydration, foliage, animals, and marine life without opening those layers prematurely."
-          ),
-          info(
-            "Current active chain",
-            "topology → tectonics → terrain → hydration"
-          ),
-          state.runtimeHydrationActive
-            ? pass("Foundation ready for next construct gate", "Runtime hydration consumption is active; the next layer can be planned.")
-            : held("Foundation ready for next construct gate", "Runtime hydration consumption must pass before the next construct layer opens.")
-        ];
-
-        for (const layer of FUTURE_LADDER) {
-          checks.push(info(
-            String(layer.order) + ". " + layer.label,
-            layer.target + " — " + layer.role
-          ));
-        }
-
-        checks.push(info(
-          "Not opened by this Gauges TNT",
-          "Atmosphere, climate, ecology, foliage, marine life, land fauna, and civilization/construct layers remain future gates."
-        ));
-
-        checks.push(info(
-          "Suggested next construct order",
-          "Atmosphere → Climate → Ecology → Foliage → Marine Life → Land Animals → Construct Civilization"
-        ));
-
-        return group(
-          "Future Construct Ladder",
-          "Declares the longer Audralia build order beyond water, plants, animals, and marine life.",
-          checks
-        );
-      }
-
-      function auditClosedFutureLayers() {
-        const all = [
-          state.sources.routeHtml,
-          state.sources.routeJs,
-          state.sources.runtime,
-          state.sources.topology,
-          state.sources.tectonics,
-          state.sources.terrain,
-          state.sources.hydration
-        ];
-
-        const combined = all.map((source) => source && source.text ? source.text : "").join("\n");
-
-        return group(
-          "Closed Future Layer Boundary",
-          "Confirms future construct layers are not falsely active in the current source chain.",
-          [
-            lacks(combined, "ownsClimate: true") && lacks(combined, "climateEnabled: true")
-              ? pass("Climate remains closed", "No active climate ownership detected.")
-              : fail("Climate remains closed", "Climate appears active before authorization."),
-            lacks(combined, "ownsEcology: true") && lacks(combined, "ecologyEnabled: true")
-              ? pass("Ecology remains closed", "No active ecology ownership detected.")
-              : fail("Ecology remains closed", "Ecology appears active before authorization."),
-            lacks(combined, "ownsFoliage: true") && lacks(combined, "foliageEnabled: true")
-              ? pass("Foliage remains closed", "No active foliage ownership detected.")
-              : fail("Foliage remains closed", "Foliage appears active before authorization."),
-            lacks(combined, "ownsTrees: true") && lacks(combined, "trees: true")
-              ? pass("Trees remain closed", "No active tree ownership detected.")
-              : fail("Trees remain closed", "Trees appear active before authorization."),
-            lacks(combined, "ownsVegetation: true") && lacks(combined, "vegetation: true")
-              ? pass("Vegetation remains closed", "No active vegetation ownership detected.")
-              : fail("Vegetation remains closed", "Vegetation appears active before authorization."),
-            lacks(combined, "ownsFauna: true") && lacks(combined, "faunaEnabled: true")
-              ? pass("Land animals remain closed", "No active land-fauna ownership detected.")
-              : fail("Land animals remain closed", "Land fauna appears active before authorization."),
-            lacks(combined, "ownsMarineLife: true") && lacks(combined, "marineLifeEnabled: true")
-              ? pass("Marine life remains closed", "No active marine-life ownership detected.")
-              : fail("Marine life remains closed", "Marine life appears active before authorization."),
-            lacks(combined, "ownsCivilization: true") && lacks(combined, "civilizationEnabled: true")
-              ? pass("Construct civilization remains closed", "No active civilization/settlement ownership detected.")
-              : fail("Construct civilization remains closed", "Construct civilization appears active before authorization.")
-          ]
-        );
-      }
-
-      function auditGlobalGate() {
-        const all = [
-          state.sources.routeHtml,
-          state.sources.routeJs,
-          state.sources.runtime,
-          state.sources.topology,
-          state.sources.tectonics,
-          state.sources.terrain,
-          state.sources.hydration
-        ];
-
-        const combined = all.map((source) => source && source.text ? source.text : "").join("\n");
-
-        return group(
-          "Global Boundary Gate",
-          "Confirms the chain remains read-only, no graphic box is involved, no image generation is involved, and visual pass remains unclaimed.",
-          [
-            !combined.includes("Australia") && !combined.includes("Adralia")
-              ? pass("No Australia / Adralia leak", "Audited sources do not expose Australia or Adralia strings.")
-              : fail("No Australia / Adralia leak", "Audited source contains Australia or Adralia."),
-            combined.includes("imageGeneration: false") || combined.includes("IMAGE_GENERATION=false") || combined.includes("imageGeneration")
-              ? pass("Image generation blocked", "Image generation restraint is present.")
-              : held("Image generation blocked", "Image-generation restraint not clearly found."),
-            combined.includes("graphicBox: false") || combined.includes("GRAPHIC_BOX=false") || combined.includes("graphicBox")
-              ? pass("Graphic box blocked", "Graphic-box restraint is present.")
-              : held("Graphic box blocked", "Graphic-box restraint not clearly found."),
-            combined.includes("visualPassClaimed: false") || combined.includes("VISUAL_PASS_CLAIMED=false") || combined.includes("visualPassClaimed")
-              ? pass("Visual pass not claimed", "Visual pass remains held or false.")
-              : held("Visual pass not claimed", "No explicit visual-pass hold receipt found."),
-            pass("Gauges are read-only", "This page uses fetch/source inspection only; mutation=false.")
-          ]
-        );
-      }
-
-      function flattenGroups(groups) {
-        return groups.flatMap((group) => group.checks);
-      }
-
-      function scoreItems(items) {
-        const scored = items.filter((item) => item.status !== "info");
-        const total = scored.length;
-        const passed = scored.filter((item) => item.status === "pass").length;
-        const failed = scored.filter((item) => item.status === "fail").length;
-        const held = scored.filter((item) => item.status === "held").length;
-        const score = total ? Math.round((passed / total) * 100) : 0;
-        return { total, passed, failed, held, score };
-      }
-
-      function render(groups) {
-        const results = document.getElementById("results");
-        const receipt = document.getElementById("receipt");
-
-        results.replaceChildren();
-
-        for (const groupItem of groups) {
-          const section = document.createElement("section");
-          section.className = "group-block";
-
-          const title = document.createElement("h3");
-          title.textContent = groupItem.title;
-
-          const purpose = document.createElement("p");
-          purpose.className = "muted";
-          purpose.textContent = groupItem.purpose;
-
-          const list = document.createElement("div");
-          list.className = "group";
-
-          for (const item of groupItem.checks) {
-            const row = document.createElement("article");
-            row.className = "check " + item.status;
-
-            const badge = document.createElement("div");
-            badge.className = "badge";
-            badge.textContent = item.status;
-
-            const body = document.createElement("div");
-
-            const strong = document.createElement("strong");
-            strong.textContent = item.title;
-
-            const span = document.createElement("span");
-            span.textContent = item.detail;
-
-            body.appendChild(strong);
-            body.appendChild(span);
-            row.appendChild(badge);
-            row.appendChild(body);
-            list.appendChild(row);
+    async function loadSources() {
+      const entries = await Promise.all(
+        Object.entries(TARGETS).map(async ([key, url]) => {
+          try {
+            const source = await fetchText(url);
+            return [key, source];
+          } catch (error) {
+            return [key, {
+              ok: false,
+              status: 0,
+              url,
+              text: "",
+              error: error && error.message ? error.message : String(error)
+            }];
           }
+        })
+      );
 
-          section.appendChild(title);
-          section.appendChild(purpose);
-          section.appendChild(list);
-          results.appendChild(section);
+      state.source = Object.fromEntries(entries);
+    }
+
+    async function importRuntime() {
+      try {
+        const module = await import(cache(TARGETS.runtime));
+        const runtimeApi = module.default || module;
+        state.runtime = runtimeApi;
+
+        if (runtimeApi && typeof runtimeApi.getRuntimeStatus === "function") {
+          state.runtimeStatus = runtimeApi.getRuntimeStatus();
         }
 
-        const scored = scoreItems(flattenGroups(groups));
+        if (runtimeApi && typeof runtimeApi.buildAudraliaRuntimeField === "function") {
+          state.runtimeField = runtimeApi.buildAudraliaRuntimeField(128, 64, {
+            fieldWidth: 160,
+            fieldHeight: 80,
+            consumesTectonicGenealogy: true,
+            consumesHydrationParent: true,
+            hydrationEnabled: true,
+            hydrationAllowedToRender: true,
+            allowsLand: true,
+            allowsWater: true,
+            allowsRelief: true,
+            visualPassClaimed: false
+          });
+        }
+      } catch (error) {
+        state.errors.push({
+          type: "runtimeImport",
+          message: error && error.message ? error.message : String(error)
+        });
+      }
+    }
 
-        document.getElementById("totalMetric").textContent = String(scored.total);
-        document.getElementById("passMetric").textContent = String(scored.passed);
-        document.getElementById("failMetric").textContent = String(scored.failed);
-        document.getElementById("heldMetric").textContent = String(scored.held);
-        document.getElementById("scoreMetric").textContent = scored.score + "%";
-        document.getElementById("lastAudit").textContent = "Last audit: " + new Date().toLocaleString();
+    async function probeLiveRoute() {
+      return new Promise((resolve) => {
+        const timeout = window.setTimeout(() => {
+          resolve({
+            ok: false,
+            reason: "route probe timeout"
+          });
+        }, 9000);
 
-        const expectedTitle = document.getElementById("expectedTitle");
-        const expectedText = document.getElementById("expectedText");
+        el.frame.onload = () => {
+          window.clearTimeout(timeout);
 
-        if (scored.failed > 0) {
-          expectedTitle.textContent = "A blocking source mismatch remains.";
-          expectedText.textContent =
-            "At least one current authority or boundary is failing. Do not open the next construct layer yet.";
-        } else if (state.runtimeHydrationActive) {
-          expectedTitle.textContent = "Runtime hydration is active. The construct ladder can be planned.";
-          expectedText.textContent =
-            "The current live chain is topology → tectonics → terrain → hydration. Future construct layers are declared but remain closed until explicitly opened.";
+          try {
+            const doc = el.frame.contentWindow.document;
+            const win = el.frame.contentWindow;
+            const mount =
+              doc.getElementById("audraliaRenderMount") ||
+              doc.querySelector("[data-audralia-render-mount]");
+
+            const routeStatus =
+              win.DGBAudraliaRouteControl &&
+              typeof win.DGBAudraliaRouteControl.getStatus === "function"
+                ? win.DGBAudraliaRouteControl.getStatus()
+                : null;
+
+            resolve({
+              ok: true,
+              mountDataset: mount ? { ...mount.dataset } : null,
+              htmlDataset: doc.documentElement ? { ...doc.documentElement.dataset } : null,
+              bodyDataset: doc.body ? { ...doc.body.dataset } : null,
+              routeStatus
+            });
+          } catch (error) {
+            resolve({
+              ok: false,
+              reason: error && error.message ? error.message : String(error)
+            });
+          }
+        };
+
+        el.frame.src = cache(TARGETS.route);
+      });
+    }
+
+    function runSourceAudit() {
+      const g = "Source + Contract Baseline";
+
+      for (const [key, source] of Object.entries(state.source)) {
+        if (source.ok) {
+          pass(g, `${key} source reachable`, `${source.url} returned ${source.status}.`);
         } else {
-          expectedTitle.textContent = "Hydration authority is open. Runtime hydration consumption remains the active gate.";
-          expectedText.textContent =
-            "Hydration is live, but runtime must pass hydration consumption before the next construct layer opens.";
+          fail(g, `${key} source reachable`, `${source.url} failed or was unreadable.`, source);
         }
-
-        const runId = "audit_" + Math.random().toString(36).slice(2, 10);
-
-        receipt.textContent =
-          CONTRACT +
-          " RUN_ID=" + runId +
-          " TOTAL=" + scored.total +
-          " PASS=" + scored.passed +
-          " FAIL=" + scored.failed +
-          " HELD=" + scored.held +
-          " SCORE=" + scored.score + "%" +
-          " ROUTE=/showroom/globe/audralia/" +
-          " CURRENT_CHAIN=topology→tectonics→terrain→hydration" +
-          " RUNTIME_HYDRATION_CONSUMPTION=" + (state.runtimeHydrationActive ? "PASS" : "PENDING") +
-          " FUTURE_CONSTRUCT_LADDER=atmosphere→climate→ecology→foliage→marine_life→land_animals→construct_civilization" +
-          " FUTURE_LAYERS_ACTIVE=false" +
-          " MUTATION=false" +
-          " GRAPHIC_BOX=false" +
-          " IMAGE_GENERATION=false" +
-          " VISUAL_PASS_CLAIMED=false";
       }
 
-      async function runAudit() {
-        document.getElementById("expectedTitle").textContent = "Running runtime and construct audit.";
-        document.getElementById("expectedText").textContent =
-          "Fetching Audralia route, runtime, topology, tectonics, terrain, and hydration authorities.";
+      includes(state.source.route, EXPECTED.htmlContract)
+        ? pass(g, "HTML contract current", EXPECTED.htmlContract)
+        : held(g, "HTML contract not current or not deployed", EXPECTED.htmlContract);
 
-        const entries = await Promise.all(
-          Object.entries(PATHS).map(async ([key, path]) => [key, await fetchText(path)])
-        );
+      includes(state.source.routeScript, EXPECTED.routeContract)
+        ? pass(g, "Route script contract current", EXPECTED.routeContract)
+        : held(g, "Route script may still be stale", EXPECTED.routeContract);
 
-        state.sources = Object.fromEntries(entries);
-        state.runtimeHydrationActive = false;
-        state.hydrationLive = hydrationAuthorityIsLive(state.sources.hydration);
+      includes(state.source.routeScript, EXPECTED.runtimeContract)
+        ? pass(g, "Route requests current runtime", EXPECTED.runtimeContract)
+        : fail(g, "Route does not request current runtime", "The route script may still be importing a stale runtime version.");
 
-        state.groups = [
-          auditRoute(),
-          auditRuntime(),
-          auditUpstream(),
-          auditConstructLadder(),
-          auditClosedFutureLayers(),
-          auditGlobalGate()
-        ];
+      includes(state.source.runtime, EXPECTED.runtimeContract)
+        ? pass(g, "Runtime contract current", EXPECTED.runtimeContract)
+        : fail(g, "Runtime contract missing", EXPECTED.runtimeContract);
 
-        render(state.groups);
+      includes(state.source.runtime, EXPECTED.runtimeRenewal)
+        ? pass(g, "Runtime active renewal visible", EXPECTED.runtimeRenewal)
+        : held(g, "Runtime renewal marker not visible", EXPECTED.runtimeRenewal);
+
+      includes(state.source.tectonics, EXPECTED.tectonicsContract)
+        ? pass(g, "Tectonics parent contract current", EXPECTED.tectonicsContract)
+        : fail(g, "Tectonics parent contract missing", EXPECTED.tectonicsContract);
+
+      includes(state.source.topology, EXPECTED.topologyContract)
+        ? pass(g, "Topology child contract current", EXPECTED.topologyContract)
+        : fail(g, "Topology child contract missing", EXPECTED.topologyContract);
+
+      includes(state.source.terrain, EXPECTED.terrainContract)
+        ? pass(g, "Terrain grandchild contract current", EXPECTED.terrainContract)
+        : fail(g, "Terrain grandchild contract missing", EXPECTED.terrainContract);
+
+      includes(state.source.hydration, EXPECTED.hydrationContract)
+        ? pass(g, "Hydration parent contract current", EXPECTED.hydrationContract)
+        : fail(g, "Hydration parent contract missing", EXPECTED.hydrationContract);
+
+      includes(state.source.hydration, "./oceans.render.js")
+        ? pass(g, "Hydration imports oceans child", "Hydration parent consumes ./oceans.render.js.")
+        : fail(g, "Hydration does not import oceans child", "Expected ./oceans.render.js import.");
+    }
+
+    function runRuntimeAudit() {
+      const g = "Runtime Field Truth";
+
+      if (!state.runtime) {
+        fail(g, "Runtime module imported", "Runtime import failed.", state.errors);
+        return;
       }
 
-      document.getElementById("runAudit").addEventListener("click", runAudit);
+      pass(g, "Runtime module imported", TARGETS.runtime);
 
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", runAudit, { once: true });
-      } else {
-        runAudit();
+      const status = state.runtimeStatus || {};
+      const field = state.runtimeField || {};
+      const stats = field.stats || status.runtimeFieldStats || {};
+      const fallback = status.fallbackReport || field.fallbackReport || {};
+
+      status.receipt === EXPECTED.runtimeContract
+        ? pass(g, "Runtime receipt matches route expectation", status.receipt)
+        : fail(g, "Runtime receipt mismatch", `Expected ${EXPECTED.runtimeContract}; got ${status.receipt || "unknown"}.`);
+
+      status.activeRenewal === EXPECTED.runtimeRenewal || includes(state.source.runtime, EXPECTED.runtimeRenewal)
+        ? pass(g, "Runtime diagnostic renewal active", EXPECTED.runtimeRenewal)
+        : held(g, "Runtime diagnostic renewal not confirmed", EXPECTED.runtimeRenewal);
+
+      bool(status.tectonicsLoaded)
+        ? pass(g, "Runtime loaded tectonics field", "tectonicsLoaded=true")
+        : held(g, "Runtime tectonics field not confirmed", "tectonicsLoaded=false or lightweight status.");
+
+      bool(status.topologyLoaded)
+        ? pass(g, "Runtime loaded topology field", "topologyLoaded=true")
+        : held(g, "Runtime topology field not confirmed", "topologyLoaded=false or lightweight status.");
+
+      bool(status.terrainLoaded)
+        ? pass(g, "Runtime loaded terrain field", "terrainLoaded=true")
+        : held(g, "Runtime terrain field not confirmed", "terrainLoaded=false or lightweight status.");
+
+      bool(status.hydrationLoaded)
+        ? pass(g, "Runtime loaded hydration field", "hydrationLoaded=true")
+        : held(g, "Runtime hydration field not confirmed", "hydrationLoaded=false or lightweight status.");
+
+      fallback.tectonicsFallbackUsed
+        ? fail(g, "Tectonics fallback is false", "Runtime is using tectonics fallback.", fallback)
+        : pass(g, "Tectonics fallback is false", "No tectonics fallback reported.");
+
+      fallback.topologyFallbackUsed
+        ? fail(g, "Topology fallback is false", "Runtime is using topology fallback.", fallback)
+        : pass(g, "Topology fallback is false", "No topology fallback reported.");
+
+      fallback.terrainFallbackUsed
+        ? fail(g, "Terrain fallback is false", "Runtime is using terrain fallback.", fallback)
+        : pass(g, "Terrain fallback is false", "No terrain fallback reported.");
+
+      fallback.hydrationFallbackUsed
+        ? fail(g, "Hydration fallback is false", "Runtime is using hydration fallback.", fallback)
+        : pass(g, "Hydration fallback is false", "No hydration fallback reported.");
+
+      const topologyLandSamples = number(stats.topologyLandSamples);
+      const visibleLandSamples = number(stats.visibleLandSamples);
+      const landSamples = number(stats.landSamples);
+      const waterSamples = number(stats.waterSamples);
+      const hydratedSamples = number(stats.hydratedSamples);
+      const fallbackSamples = number(stats.fallbackSamples);
+      const terrainReliefSamples = number(stats.terrainReliefSamples);
+      const beachSamples = number(stats.beachSamples);
+      const totalSamples = number(stats.totalSamples);
+
+      totalSamples > 0
+        ? pass(g, "Runtime field has samples", `${totalSamples} samples.`)
+        : fail(g, "Runtime field has samples", "No runtime field samples returned.");
+
+      topologyLandSamples > 0
+        ? pass(g, "Topology land exists under current runtime", `${topologyLandSamples} topology land samples.`)
+        : fail(g, "Topology land exists under current runtime", "topologyLandSamples=0. This reads as a true water-world/no-land topology.");
+
+      visibleLandSamples > 0
+        ? pass(g, "Visible land survives hydration", `${visibleLandSamples} visible land samples.`)
+        : held(g, "Visible land does not survive hydration", "visibleLandSamples=0. Land may be submerged or absent.");
+
+      landSamples > 0
+        ? pass(g, "Route-compatible land samples exist", `${landSamples} landSamples.`)
+        : held(g, "Route-compatible land samples absent", "landSamples=0.");
+
+      waterSamples > 0
+        ? pass(g, "Water samples exist", `${waterSamples} waterSamples.`)
+        : fail(g, "Water samples exist", "waterSamples=0. Hydration/water is not reaching runtime.");
+
+      hydratedSamples > 0
+        ? pass(g, "Hydration samples exist", `${hydratedSamples} hydratedSamples.`)
+        : held(g, "Hydration sample count absent", "hydratedSamples=0 or not reported.");
+
+      terrainReliefSamples > 0
+        ? pass(g, "Terrain relief exists", `${terrainReliefSamples} terrainReliefSamples.`)
+        : held(g, "Terrain relief not visible in runtime field", "terrainReliefSamples=0.");
+
+      beachSamples > 0
+        ? pass(g, "Beach outline exists", `${beachSamples} beachSamples.`)
+        : held(g, "Beach outline not visible in runtime field", "beachSamples=0.");
+
+      fallbackSamples > 0
+        ? fail(g, "Runtime field fallback samples are zero", `${fallbackSamples} fallback samples.`)
+        : pass(g, "Runtime field fallback samples are zero", "fallbackSamples=0.");
+
+      info(g, "Runtime stats", "Runtime field statistics captured.", stats);
+      info(g, "Runtime fallback report", "Runtime fallback report captured.", fallback);
+    }
+
+    function runLiveRouteAudit() {
+      const g = "Live Route Probe";
+
+      const probe = state.routeProbe;
+
+      if (!probe || !probe.ok) {
+        held(g, "Live route probe readable", probe ? probe.reason : "No probe result.");
+        return;
       }
-    })();
+
+      pass(g, "Live route probe readable", "Same-origin route probe loaded.");
+
+      const mount = probe.mountDataset || {};
+      const html = probe.htmlDataset || {};
+      const routeStatus = probe.routeStatus || {};
+
+      mount.runtimeVersion === EXPECTED.runtimeContract || html.audraliaRuntimeVersion === EXPECTED.runtimeContract || routeStatus.runtimeVersion === EXPECTED.runtimeContract
+        ? pass(g, "Live route uses current runtime version", EXPECTED.runtimeContract)
+        : fail(g, "Live route runtime version stale", `mount=${mount.runtimeVersion || "none"} html=${html.audraliaRuntimeVersion || "none"} status=${routeStatus.runtimeVersion || "none"}`);
+
+      mount.contract === EXPECTED.routeContract || routeStatus.receipt === EXPECTED.routeContract || html.audraliaRouteCompositor === EXPECTED.routeContract
+        ? pass(g, "Live route compositor current", EXPECTED.routeContract)
+        : held(g, "Live route compositor not confirmed current", `mount=${mount.contract || "none"} status=${routeStatus.receipt || "none"} html=${html.audraliaRouteCompositor || "none"}`);
+
+      number(mount.runtimeSamples) > 0
+        ? pass(g, "Route mount has runtime samples", `${mount.runtimeSamples} runtime samples.`)
+        : held(g, "Route mount runtime samples absent", "Route did not expose runtimeSamples.");
+
+      number(mount.landSamples) > 0
+        ? pass(g, "Route mount has land samples", `${mount.landSamples} land samples.`)
+        : held(g, "Route mount has no land samples", "Route mount landSamples=0 or absent.");
+
+      number(mount.waterSamples) > 0
+        ? pass(g, "Route mount has water samples", `${mount.waterSamples} water samples.`)
+        : held(g, "Route mount has no water samples", "Route mount waterSamples=0 or absent.");
+
+      number(mount.fallbackSamples) > 0
+        ? fail(g, "Route mount fallback samples are zero", `${mount.fallbackSamples} fallback samples.`)
+        : pass(g, "Route mount fallback samples are zero or absent", `${mount.fallbackSamples || 0} fallback samples.`);
+
+      info(g, "Route mount dataset", "Captured live mount dataset.", mount);
+      info(g, "Route status", "Captured route status object.", routeStatus);
+    }
+
+    function runGenerationAudit() {
+      const g = "Generation + Baseline State";
+
+      const status = state.runtimeStatus || {};
+      const stats = (state.runtimeField && state.runtimeField.stats) || status.runtimeFieldStats || {};
+      const fallback = status.fallbackReport || {};
+      const route = state.routeProbe || {};
+      const mount = route.mountDataset || {};
+
+      const sourceReady =
+        includes(state.source.tectonics, EXPECTED.tectonicsContract) &&
+        includes(state.source.topology, EXPECTED.topologyContract) &&
+        includes(state.source.terrain, EXPECTED.terrainContract) &&
+        includes(state.source.hydration, EXPECTED.hydrationContract);
+
+      sourceReady
+        ? pass(g, "G1 source genealogy deployed", "Tectonics, topology, terrain, and hydration contracts are present.")
+        : fail(g, "G1 source genealogy deployed", "One or more source contracts are missing.");
+
+      status.receipt === EXPECTED.runtimeContract
+        ? pass(g, "G2 runtime baseline current", EXPECTED.runtimeContract)
+        : held(g, "G2 runtime baseline not confirmed", status.receipt || "unknown");
+
+      includes(state.source.routeScript, EXPECTED.routeContract)
+        ? pass(g, "G3 route baseline current", EXPECTED.routeContract)
+        : held(g, "G3 route baseline not confirmed", EXPECTED.routeContract);
+
+      number(stats.waterSamples) > 0 || number(mount.waterSamples) > 0
+        ? pass(g, "G4 hydration/water baseline active", "Water is reaching runtime or route.")
+        : fail(g, "G4 hydration/water baseline active", "No water samples reported.");
+
+      number(stats.visibleLandSamples) > 0 || number(mount.landSamples) > 0
+        ? pass(g, "G5 visible land baseline active", "Visible land survives to runtime or route.")
+        : held(g, "G5 visible land baseline held", "No visible land survives to runtime or route.");
+
+      const anyFallback =
+        bool(fallback.tectonicsFallbackUsed) ||
+        bool(fallback.topologyFallbackUsed) ||
+        bool(fallback.terrainFallbackUsed) ||
+        bool(fallback.hydrationFallbackUsed) ||
+        number(stats.fallbackSamples) > 0;
+
+      anyFallback
+        ? fail(g, "No fallback baseline", "Fallback is active somewhere in runtime.")
+        : pass(g, "No fallback baseline", "No fallback reported by runtime stats/status.");
+
+      info(g, "Generation interpretation", "G1 source → G2 runtime → G3 route → G4 water → G5 visible land.", {
+        sourceReady,
+        runtimeReceipt: status.receipt,
+        routeContractPresent: includes(state.source.routeScript, EXPECTED.routeContract),
+        waterSamples: stats.waterSamples,
+        visibleLandSamples: stats.visibleLandSamples,
+        topologyLandSamples: stats.topologyLandSamples,
+        fallback
+      });
+    }
+
+    function decideVerdict() {
+      const stats = (state.runtimeField && state.runtimeField.stats) || (state.runtimeStatus && state.runtimeStatus.runtimeFieldStats) || {};
+      const fallback = (state.runtimeStatus && state.runtimeStatus.fallbackReport) || {};
+      const mount = (state.routeProbe && state.routeProbe.mountDataset) || {};
+
+      const topologyLandSamples = number(stats.topologyLandSamples);
+      const visibleLandSamples = number(stats.visibleLandSamples);
+      const landSamples = number(stats.landSamples);
+      const waterSamples = number(stats.waterSamples);
+      const routeLandSamples = number(mount.landSamples);
+      const routeWaterSamples = number(mount.waterSamples);
+      const fallbackSamples = number(stats.fallbackSamples);
+
+      if (
+        bool(fallback.tectonicsFallbackUsed) ||
+        bool(fallback.topologyFallbackUsed) ||
+        bool(fallback.terrainFallbackUsed) ||
+        bool(fallback.hydrationFallbackUsed) ||
+        fallbackSamples > 0
+      ) {
+        return {
+          title: "Fallback is still active. Do not tune visuals yet.",
+          text: "The next move is to repair the exact fallback layer shown in runtime fallbackReport. If topology fallback is true, land truth is not reaching runtime. If hydration fallback is true, water is using safe defaults. The route should not be touched until fallback is zero."
+        };
+      }
+
+      if (waterSamples <= 0 && routeWaterSamples <= 0) {
+        return {
+          title: "Hydration is not reaching runtime or route.",
+          text: "The current failure is not land-under-water. It is missing water/hydration output. Next target: hydration parent and runtime hydration import."
+        };
+      }
+
+      if (topologyLandSamples <= 0) {
+        return {
+          title: "Current read: true water world / no topology land.",
+          text: "Runtime does not see land under the water. This means the topology child is loading but returning no land, or source logic is classifying the whole globe as void/ocean. Next target: topology child landmass renewal under tectonics, not route and not hydration."
+        };
+      }
+
+      if (topologyLandSamples > 0 && visibleLandSamples <= 0 && landSamples <= 0) {
+        return {
+          title: "Land exists under the water, but hydration is covering it.",
+          text: "Runtime sees topology land, but no visible land survives. This is the submerged-land condition. Next target: hydration sea-level / land-preservation gate so topology-authorized land cannot be converted into ocean."
+        };
+      }
+
+      if ((visibleLandSamples > 0 || landSamples > 0) && routeLandSamples <= 0) {
+        return {
+          title: "Runtime has land, but route is not painting it.",
+          text: "Runtime reports land/visible land, but the live route mount does not. Next target: route compositor consumption or cache/stale route script. The route must paint runtime visualSurfaceClass instead of old hydration dominance."
+        };
+      }
+
+      if ((visibleLandSamples > 0 || landSamples > 0) && routeLandSamples > 0) {
+        return {
+          title: "Land is present. If the screenshot still reads water, color logic is masking it.",
+          text: "Runtime and route both report land. If the visual remains water-only, the route paint/color layer is overpowering terrain and beach colors. Next target: route color weighting, not upstream genealogy."
+        };
+      }
+
+      return {
+        title: "Audit complete; classify from detailed rows.",
+        text: "Use topologyLandSamples, visibleLandSamples, route landSamples, and fallbackReport to choose the next file."
+      };
+    }
+
+    function render() {
+      const total = state.checks.filter((c) => c.status !== "info").length;
+      const passed = state.checks.filter((c) => c.status === "pass").length;
+      const failed = state.checks.filter((c) => c.status === "fail").length;
+      const heldCount = state.checks.filter((c) => c.status === "held").length;
+      const score = total ? Math.round((passed / total) * 100) : 0;
+
+      el.scoreTotal.textContent = String(total);
+      el.scorePass.textContent = String(passed);
+      el.scoreFail.textContent = String(failed);
+      el.scoreHeld.textContent = String(heldCount);
+      el.readiness.textContent = `${score}%`;
+
+      const verdict = decideVerdict();
+      el.verdictTitle.textContent = verdict.title;
+      el.verdictText.textContent = verdict.text;
+
+      const groups = [...new Set(state.checks.map((c) => c.group))];
+
+      el.auditGrid.innerHTML = groups.map((group) => {
+        const checks = state.checks.filter((c) => c.group === group);
+        const hard = checks.filter((c) => c.status !== "info");
+        const groupStatus = checks.some((c) => c.status === "fail")
+          ? "fail"
+          : checks.some((c) => c.status === "held")
+            ? "held"
+            : "pass";
+
+        const label = groupStatus === "pass" ? "pass" : groupStatus === "fail" ? "fail" : "held";
+
+        return `
+          <article class="audit-card">
+            <div class="audit-head">
+              <h3>${escapeHtml(group)}</h3>
+              <span class="badge ${label}">${label}</span>
+            </div>
+            <div class="rows">
+              ${checks.map((check) => `
+                <div class="row">
+                  <b><span class="badge ${check.status}">${check.status}</span> ${escapeHtml(check.label)}</b>
+                  <span>${escapeHtml(check.detail)}${check.data ? renderData(check.data) : ""}</span>
+                </div>
+              `).join("")}
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderData(data) {
+      if (!data || typeof data !== "object") return "";
+      let json = "";
+      try {
+        json = JSON.stringify(data, null, 2);
+      } catch {
+        return "";
+      }
+
+      if (!json || json === "{}") return "";
+
+      return `<br><span class="mono">${escapeHtml(json).slice(0, 1600)}</span>`;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    async function runAudit() {
+      state.checks = [];
+      state.source = {};
+      state.runtime = null;
+      state.runtimeStatus = null;
+      state.runtimeField = null;
+      state.routeProbe = null;
+      state.errors = [];
+
+      el.stamp.textContent = "Running audit…";
+      el.runAudit.disabled = true;
+
+      document.documentElement.dataset.auditRunning = "true";
+      document.documentElement.dataset.lastAuditContract = CONTRACT;
+
+      await loadSources();
+      await importRuntime();
+      state.routeProbe = await probeLiveRoute();
+
+      runSourceAudit();
+      runRuntimeAudit();
+      runLiveRouteAudit();
+      runGenerationAudit();
+
+      const runId = "audit_" + Date.now().toString(36);
+      const hard = state.checks.filter((c) => c.status !== "info");
+      const passed = state.checks.filter((c) => c.status === "pass").length;
+      const failed = state.checks.filter((c) => c.status === "fail").length;
+      const heldCount = state.checks.filter((c) => c.status === "held").length;
+      const score = hard.length ? Math.round((passed / hard.length) * 100) : 0;
+
+      document.documentElement.dataset.auditRunning = "false";
+      document.documentElement.dataset.auditRunId = runId;
+      document.documentElement.dataset.totalChecks = String(hard.length);
+      document.documentElement.dataset.passChecks = String(passed);
+      document.documentElement.dataset.failChecks = String(failed);
+      document.documentElement.dataset.heldChecks = String(heldCount);
+      document.documentElement.dataset.readinessScore = `${score}%`;
+      document.documentElement.dataset.mutation = "false";
+      document.documentElement.dataset.graphicBox = "false";
+      document.documentElement.dataset.imageGeneration = "false";
+      document.documentElement.dataset.visualPassClaimed = "false";
+
+      el.stamp.textContent = `Last audit: ${new Date().toLocaleString()} · ${runId}`;
+      el.runAudit.disabled = false;
+
+      render();
+    }
+
+    el.runAudit.addEventListener("click", runAudit);
+    window.addEventListener("DOMContentLoaded", runAudit, { once: true });
   </script>
 </body>
 </html>

@@ -1,49 +1,65 @@
 <!-- /gauges/index.html -->
 <!doctype html>
-<html lang="en">
+<html
+  lang="en"
+  data-page="audralia-terrain-topology-gauges"
+  data-route="/gauges/"
+  data-contract="AUDRALIA_TERRAIN_TOPOLOGY_GAUGES_PAGE_TNT_v1"
+  data-audit-target="Audralia"
+  data-terminology-lock="AUDRALIA_NOT_ADRALIA_NOT_AUSTRALIA"
+  data-graphic-box="false"
+  data-image-generation="false"
+  data-visual-pass-claimed="false"
+>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Gauges · Boundary Integrity</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+  <title>Gauges · Audralia Terrain + Topology</title>
   <meta
     name="description"
-    content="Boundary integrity audit for the Showroom Globe split, Earth route, Audralia route, and dependent route relationships."
-  />
+    content="Dedicated Audralia audit for terrain realism, topology readiness, hydrology mapping, and hydration gate status."
+  >
 
   <style>
     :root {
       color-scheme: dark;
-      --bg: #04040c;
-      --panel: rgba(18, 18, 31, 0.82);
-      --panel-strong: rgba(28, 26, 48, 0.94);
-      --line: rgba(192, 174, 255, 0.28);
-      --line-strong: rgba(210, 198, 255, 0.56);
-      --text: #f7f3ff;
-      --muted: rgba(247, 243, 255, 0.72);
-      --soft: rgba(247, 243, 255, 0.54);
-      --pass: #9ff5bf;
-      --fail: #ff9b9b;
-      --held: #ffe39b;
-      --accent: #c7a8ff;
-      --blue: #9fc7ff;
-      --green: #a7ffd1;
+      --bg: #050914;
+      --panel: rgba(10, 20, 38, 0.86);
+      --panel-2: rgba(7, 14, 27, 0.94);
+      --line: rgba(245, 199, 107, 0.26);
+      --line-blue: rgba(116, 184, 255, 0.24);
+      --gold: #f5c76b;
+      --blue: #74b8ff;
+      --text: #f6efe0;
+      --muted: #b8c2d1;
+      --pass: #86efac;
+      --fail: #fca5a5;
+      --held: #fcd34d;
+      --radius: 28px;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.48);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     * {
       box-sizing: border-box;
     }
 
-    html,
-    body {
-      margin: 0;
+    html {
       min-height: 100%;
-      background:
-        radial-gradient(circle at 50% 10%, rgba(126, 87, 255, 0.22), transparent 34rem),
-        radial-gradient(circle at 12% 82%, rgba(82, 156, 255, 0.12), transparent 28rem),
-        var(--bg);
+      background: var(--bg);
+    }
+
+    body {
+      min-height: 100%;
+      margin: 0;
       color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(116, 184, 255, 0.12), transparent 34rem),
+        radial-gradient(circle at 86% 18%, rgba(245, 199, 107, 0.07), transparent 26rem),
+        linear-gradient(180deg, #02050c 0%, #050914 52%, #070d18 100%);
+      font-family: var(--sans);
     }
 
     a {
@@ -54,441 +70,937 @@
       position: absolute;
       left: 1rem;
       top: 1rem;
-      transform: translateY(-180%);
-      background: #ffffff;
-      color: #04040c;
-      padding: 0.7rem 1rem;
+      z-index: 1000;
+      transform: translateY(-150%);
+      border: 1px solid var(--gold);
       border-radius: 999px;
-      z-index: 50;
+      padding: 0.7rem 1rem;
+      color: #07111f;
+      background: var(--gold);
+      font-weight: 1000;
       text-decoration: none;
-      font-weight: 850;
     }
 
     .skip-link:focus {
       transform: translateY(0);
     }
 
-    .page-shell {
-      width: min(1180px, calc(100% - 2rem));
+    .shell {
+      width: min(1220px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 1rem 0 4rem;
+      padding: 28px 0 64px;
     }
 
-    .site-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 0.85rem 0 1.2rem;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.7rem;
-      text-decoration: none;
-      font-weight: 950;
-      letter-spacing: 0.02em;
-    }
-
-    .brand-mark {
-      width: 2.25rem;
-      height: 2.25rem;
-      border: 1px solid var(--line);
-      border-radius: 0.8rem;
-      background:
-        linear-gradient(135deg, rgba(199, 168, 255, 0.92), rgba(78, 62, 144, 0.34)),
-        rgba(255, 255, 255, 0.05);
-      transform: rotate(45deg);
-      box-shadow: 0 0 2rem rgba(142, 99, 255, 0.28);
-    }
-
-    .nav {
+    .topnav {
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 0.45rem;
+      gap: 0.55rem;
+      margin-bottom: 18px;
     }
 
-    .nav a {
-      text-decoration: none;
-      color: var(--muted);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.045);
+    .topnav a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(245, 199, 107, 0.28);
       border-radius: 999px;
-      padding: 0.52rem 0.75rem;
-      font-size: 0.9rem;
+      padding: 0.56rem 0.78rem;
+      color: var(--text);
+      background: rgba(5, 12, 24, 0.7);
+      text-decoration: none;
+      font-weight: 900;
       line-height: 1;
     }
 
-    .nav a[aria-current="page"],
-    .nav a:hover,
-    .nav a:focus-visible {
-      color: var(--text);
-      border-color: var(--line-strong);
-      background: rgba(199, 168, 255, 0.12);
+    .topnav a:hover,
+    .topnav a:focus-visible {
+      color: #07111f;
+      background: var(--gold);
+      outline: none;
+    }
+
+    .hero,
+    .panel,
+    .card,
+    .result-group {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(12, 24, 42, 0.84), rgba(7, 15, 29, 0.94)),
+        radial-gradient(circle at 82% 18%, rgba(245, 199, 107, 0.06), transparent 18rem);
+      box-shadow: var(--shadow);
     }
 
     .hero {
-      padding: 3rem 0 1.5rem;
-      display: grid;
-      gap: 1rem;
+      padding: clamp(24px, 4vw, 48px);
     }
 
     .eyebrow {
-      margin: 0;
-      color: var(--accent);
-      font-size: 0.82rem;
-      font-weight: 950;
-      letter-spacing: 0.16em;
+      margin: 0 0 0.8rem;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 1000;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(2.45rem, 8vw, 5.8rem);
+      max-width: 1000px;
+      font-size: clamp(2.35rem, 6.5vw, 5.6rem);
       line-height: 0.92;
       letter-spacing: -0.07em;
     }
 
-    .lead {
-      max-width: 76ch;
+    h2 {
       margin: 0;
-      color: var(--muted);
-      font-size: clamp(1rem, 2vw, 1.16rem);
-      line-height: 1.7;
+      font-size: clamp(1.35rem, 3vw, 2.4rem);
+      line-height: 1;
+      letter-spacing: -0.045em;
     }
 
-    .control-row {
+    h3 {
+      margin: 0;
+      font-size: 1.03rem;
+      line-height: 1.2;
+    }
+
+    p {
+      overflow-wrap: anywhere;
+    }
+
+    .lede {
+      max-width: 960px;
+      margin: 1rem 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.22rem);
+      line-height: 1.6;
+    }
+
+    .actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.65rem;
-      align-items: center;
-      margin: 1rem 0 1.4rem;
+      gap: 0.75rem;
+      margin-top: 1.4rem;
     }
 
     button,
-    .route-link {
-      appearance: none;
-      border: 1px solid rgba(199, 168, 255, 0.46);
+    .button-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(245, 199, 107, 0.36);
       border-radius: 999px;
-      color: var(--text);
-      background: rgba(199, 168, 255, 0.14);
-      padding: 0.76rem 1rem;
-      font: inherit;
-      font-weight: 900;
-      line-height: 1;
+      padding: 0.78rem 1rem;
+      color: #07111f;
+      background: var(--gold);
+      font: 1000 0.92rem/1 var(--sans);
       text-decoration: none;
       cursor: pointer;
     }
 
-    button:hover,
-    button:focus-visible,
-    .route-link:hover,
-    .route-link:focus-visible {
-      border-color: rgba(255, 255, 255, 0.82);
-      background: rgba(199, 168, 255, 0.22);
-      outline: none;
+    button.secondary,
+    .button-link.secondary {
+      color: var(--text);
+      background: rgba(5, 12, 24, 0.7);
     }
 
-    .timestamp {
-      color: var(--soft);
-      font-size: 0.92rem;
+    button:disabled {
+      cursor: wait;
+      opacity: 0.72;
     }
 
     .summary-grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 0.75rem;
-      margin: 1rem 0;
+      gap: 14px;
+      margin-top: 20px;
     }
 
-    .summary-card {
-      border: 1px solid var(--line);
-      border-radius: 1.3rem;
-      background: rgba(255, 255, 255, 0.045);
-      padding: 1rem;
+    .card {
+      padding: 18px;
     }
 
-    .summary-card strong {
+    .metric-value {
       display: block;
-      font-size: clamp(1.8rem, 4vw, 3rem);
-      line-height: 1;
-      letter-spacing: -0.06em;
+      color: var(--gold);
+      font-size: clamp(1.8rem, 4vw, 3.2rem);
+      font-weight: 1000;
+      line-height: 0.95;
+      letter-spacing: -0.07em;
     }
 
-    .summary-card span {
+    .metric-label {
       display: block;
-      margin-top: 0.4rem;
+      margin-top: 0.45rem;
       color: var(--muted);
-      font-size: 0.92rem;
+      font-weight: 800;
+      line-height: 1.25;
     }
 
-    .audit-layout {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-      margin-top: 1rem;
+    .panel {
+      margin-top: 22px;
+      padding: clamp(20px, 3vw, 34px);
     }
 
-    .audit-section {
-      border: 1px solid var(--line);
-      border-radius: 1.6rem;
-      background:
-        linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025)),
-        var(--panel);
-      overflow: hidden;
-    }
-
-    .section-head {
+    .panel-head {
       display: flex;
+      align-items: flex-end;
       justify-content: space-between;
       gap: 1rem;
-      align-items: flex-start;
-      padding: 1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 18px;
     }
 
-    .section-head h2 {
+    .panel-head p {
       margin: 0;
-      font-size: clamp(1.2rem, 3vw, 1.7rem);
-      letter-spacing: -0.03em;
+      color: var(--muted);
+      line-height: 1.5;
     }
 
-    .section-head p {
-      max-width: 62ch;
+    .result-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .result-group {
+      padding: 18px;
+    }
+
+    .group-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 14px;
+      margin-bottom: 12px;
+    }
+
+    .group-head p {
       margin: 0.35rem 0 0;
       color: var(--muted);
-      line-height: 1.55;
+      line-height: 1.45;
     }
 
-    .section-count {
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      padding: 0.42rem 0.66rem;
+      font: 1000 0.72rem/1 var(--sans);
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
       white-space: nowrap;
-      color: var(--soft);
-      font-size: 0.9rem;
+    }
+
+    .badge.pass {
+      color: #052e16;
+      background: var(--pass);
+    }
+
+    .badge.fail {
+      color: #450a0a;
+      background: var(--fail);
+    }
+
+    .badge.held {
+      color: #422006;
+      background: var(--held);
+    }
+
+    .badge.pending {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.08);
     }
 
     .check-list {
       display: grid;
-      gap: 0.65rem;
-      padding: 1rem;
+      gap: 10px;
     }
 
     .check {
       display: grid;
       grid-template-columns: auto 1fr;
-      gap: 0.75rem;
-      align-items: flex-start;
-      padding: 0.9rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 1rem;
+      gap: 10px;
+      align-items: start;
+      border: 1px solid rgba(116, 184, 255, 0.14);
+      border-radius: 18px;
+      padding: 12px;
       background: rgba(255, 255, 255, 0.035);
     }
 
-    .badge {
-      min-width: 4.6rem;
-      display: inline-flex;
-      justify-content: center;
-      border-radius: 999px;
-      padding: 0.34rem 0.52rem;
-      font-size: 0.75rem;
-      font-weight: 950;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .dot {
+      width: 0.9rem;
+      height: 0.9rem;
+      border-radius: 50%;
+      margin-top: 0.2rem;
+      background: rgba(255, 255, 255, 0.22);
     }
 
-    .badge.pass {
-      color: #052210;
+    .check.pass .dot {
       background: var(--pass);
     }
 
-    .badge.fail {
-      color: #290606;
+    .check.fail .dot {
       background: var(--fail);
     }
 
-    .badge.held {
-      color: #2d2102;
+    .check.held .dot {
       background: var(--held);
     }
 
-    .check-title {
+    .check strong {
+      display: block;
+      font-size: 0.95rem;
+      line-height: 1.2;
+    }
+
+    .check span {
+      display: block;
+      margin-top: 0.24rem;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.42;
+    }
+
+    .receipt {
       margin: 0;
-      font-weight: 900;
-    }
-
-    .check-detail {
-      margin: 0.28rem 0 0;
-      color: var(--muted);
-      line-height: 1.5;
+      white-space: pre-wrap;
       overflow-wrap: anywhere;
-    }
-
-    .source-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
-
-    .source-card {
-      border: 1px solid var(--line);
-      border-radius: 1.2rem;
-      background: rgba(255, 255, 255, 0.04);
-      padding: 0.9rem;
-    }
-
-    .source-card strong {
-      display: block;
-      margin-bottom: 0.35rem;
-    }
-
-    .source-card span {
-      display: block;
       color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.45;
-      overflow-wrap: anywhere;
+      font: 0.82rem/1.55 var(--mono);
     }
 
-    .note {
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 1.2rem;
-      background: rgba(255, 255, 255, 0.04);
-      padding: 1rem;
-      color: var(--muted);
-      line-height: 1.6;
-      margin-top: 1rem;
+    .warning {
+      border-color: rgba(252, 211, 77, 0.42);
+      background:
+        linear-gradient(135deg, rgba(70, 48, 9, 0.36), rgba(7, 15, 29, 0.92)),
+        radial-gradient(circle at 80% 20%, rgba(252, 211, 77, 0.10), transparent 18rem);
     }
 
-    @media (max-width: 860px) {
-      .page-shell {
-        width: min(100% - 1rem, 52rem);
-        padding-bottom: 2rem;
+    @media (max-width: 900px) {
+      .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .site-header {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav {
-        justify-content: flex-start;
-      }
-
-      .nav a {
-        font-size: 0.82rem;
-        padding: 0.48rem 0.62rem;
-      }
-
-      .summary-grid,
-      .source-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .section-head {
-        flex-direction: column;
-      }
-
-      .check {
-        grid-template-columns: 1fr;
+      .panel-head,
+      .group-head {
+        display: block;
       }
 
       .badge {
-        width: fit-content;
+        margin-top: 0.8rem;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .shell {
+        width: min(100%, calc(100% - 24px));
+        padding-top: 20px;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topnav a,
+      .actions button,
+      .button-link {
+        width: 100%;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="#gauges-main">Skip to Gauges</a>
+  <a class="skip-link" href="#main">Skip to Gauges</a>
 
-  <div class="page-shell">
-    <header class="site-header" aria-label="Site header">
-      <a class="brand" href="/">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span>Diamond Gate Bridge</span>
-      </a>
+  <div class="shell">
+    <nav class="topnav" aria-label="Primary navigation">
+      <a href="/">Compass</a>
+      <a href="/door/">Door</a>
+      <a href="/home/">Home</a>
+      <a href="/showroom/">Showroom</a>
+      <a href="/showroom/globe/">Globe</a>
+      <a href="/showroom/globe/earth/">Earth</a>
+      <a href="/showroom/globe/audralia/">Audralia</a>
+      <a href="/products/">Products</a>
+      <a href="/gauges/" aria-current="page">Gauges</a>
+    </nav>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Globe</a>
-        <a href="/showroom/globe/earth/">Earth</a>
-        <a href="/showroom/globe/audralia/">Audralia</a>
-        <a href="/products/">Products</a>
-        <a href="/gauges/" aria-current="page">Gauges</a>
-      </nav>
+    <header class="hero">
+      <p class="eyebrow">Gauges · Audralia Terrain + Topology</p>
+      <h1>Terrain must pass before hydration moves.</h1>
+      <p class="lede">
+        This audit separates the working world baseline from terrain realism. Audralia can render,
+        but hydration remains held until mountains, canyons, riverbeds, streams, lakes, glaciers,
+        watersheds, and topology-readiness are proven.
+      </p>
+
+      <div class="actions">
+        <button id="runAudit" type="button">Run Audralia Audit</button>
+        <a class="button-link secondary" href="/showroom/globe/audralia/">Open Audralia</a>
+      </div>
+
+      <div class="summary-grid" aria-label="Audit summary">
+        <div class="card">
+          <span id="totalCount" class="metric-value">0</span>
+          <span class="metric-label">Total checks</span>
+        </div>
+        <div class="card">
+          <span id="passCount" class="metric-value">0</span>
+          <span class="metric-label">Passed</span>
+        </div>
+        <div class="card">
+          <span id="failCount" class="metric-value">0</span>
+          <span class="metric-label">Failed</span>
+        </div>
+        <div class="card">
+          <span id="heldCount" class="metric-value">0</span>
+          <span class="metric-label">Held</span>
+        </div>
+        <div class="card">
+          <span id="auditScore" class="metric-value">0%</span>
+          <span class="metric-label">Readiness score</span>
+        </div>
+      </div>
     </header>
 
-    <main id="gauges-main">
-      <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Gauges · Boundary Integrity</p>
-        <h1 id="page-title">Independent and Dependent Boundaries</h1>
-        <p class="lead">
-          This page audits whether the Showroom Globe selector, Earth inspection route, and Audralia inspection route
-          each keep their own precinct while still depending on the correct shared routing structure.
-        </p>
+    <main id="main">
+      <section class="panel warning" aria-label="Current terrain read">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Current expected read</p>
+            <h2>World baseline passes. Terrain realism is still held.</h2>
+          </div>
+          <span class="badge held">Hydration held</span>
+        </div>
+        <p class="receipt">CURRENT_EXPECTATION=
+WORLD_BASELINE_PASS
+ROUTE_BASELINE_PASS
+PARENT_BASELINE_PASS
+TERRAIN_CHILD_PASS_OR_PARTIAL
+TOPOLOGY_CHILD_PASS_OR_PARTIAL
+TERRAIN_REALISM_HELD
+HYDROLOGY_READINESS_DATA_CHECKED
+HYDRATION_GATE_HELD
+VISUAL_PASS_NOT_CLAIMED</p>
       </section>
 
-      <section class="control-row" aria-label="Audit controls">
-        <button id="runAuditButton" type="button">Run Boundary Audit</button>
-        <a class="route-link" href="/showroom/globe/">Open Globe Split</a>
-        <a class="route-link" href="/showroom/globe/earth/">Open Earth</a>
-        <a class="route-link" href="/showroom/globe/audralia/">Open Audralia</a>
-        <span id="auditTimestamp" class="timestamp">Audit not run yet.</span>
+      <section class="panel" aria-label="Audit results">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Live source audit</p>
+            <h2>Audralia-only gauge groups</h2>
+          </div>
+          <p id="lastRun">Not run yet.</p>
+        </div>
+
+        <div id="results" class="result-grid" aria-live="polite"></div>
       </section>
 
-      <section class="summary-grid" aria-label="Audit summary">
-        <div class="summary-card">
-          <strong id="totalCount">0</strong>
-          <span>Total checks</span>
-        </div>
-        <div class="summary-card">
-          <strong id="passCount">0</strong>
-          <span>Passed</span>
-        </div>
-        <div class="summary-card">
-          <strong id="failCount">0</strong>
-          <span>Failed</span>
-        </div>
-        <div class="summary-card">
-          <strong id="heldCount">0</strong>
-          <span>Held</span>
-        </div>
-        <div class="summary-card">
-          <strong id="boundaryScore">0%</strong>
-          <span>Boundary score</span>
-        </div>
+      <section class="panel" aria-label="Audit receipt">
+        <p class="eyebrow">Route receipt</p>
+        <p id="receipt" class="receipt">AUDRALIA_TERRAIN_TOPOLOGY_GAUGES_PAGE_TNT_v1
+STATUS=READY
+MUTATION=false
+GRAPHIC_BOX=false
+IMAGE_GENERATION=false
+VISUAL_PASS_CLAIMED=false</p>
       </section>
-
-      <section class="source-grid" aria-label="Source ledger">
-        <div class="source-card">
-          <strong>Parent selector</strong>
-          <span id="parentSourceStatus">Pending.</span>
-        </div>
-        <div class="source-card">
-          <strong>Earth route</strong>
-          <span id="earthSourceStatus">Pending.</span>
-        </div>
-        <div class="source-card">
-          <strong>Audralia route</strong>
-          <span id="audraliaSourceStatus">Pending.</span>
-        </div>
-      </section>
-
-      <section id="auditOutput" class="audit-layout" aria-live="polite"></section>
-
-      <p class="note">
-        This audit reads source and route structure only. It does not mutate render assets, does not claim visual pass,
-        and does not expose raw route receipts into public page flow.
-      </p>
     </main>
   </div>
 
-  <script type="module" src="/gauges/index.js"></script>
+  <script type="module">
+    const CONTRACT = "AUDRALIA_TERRAIN_TOPOLOGY_GAUGES_PAGE_TNT_v1";
+
+    const PATHS = Object.freeze({
+      route: "/showroom/globe/audralia/",
+      routeJs: "/showroom/globe/audralia/index.js",
+      parent: "/assets/audralia/audralia.planet.render.js",
+      terrain: "/assets/audralia/audralia.terrain.render.js",
+      topology: "/assets/audralia/audralia.topology.render.js"
+    });
+
+    const EXPECTED = Object.freeze({
+      terrainReceipt: "AUDRALIA_G1_TERRAIN_HYDROLOGY_MAP_CHILD_TNT_v1",
+      topologyReceipt: "AUDRALIA_G2_TOPOLOGY_CHILD_FROM_CONFIRMED_TERRAIN_TNT_v1"
+    });
+
+    const state = {
+      groups: [],
+      runId: ""
+    };
+
+    const resultsEl = document.getElementById("results");
+    const runButton = document.getElementById("runAudit");
+    const lastRunEl = document.getElementById("lastRun");
+    const receiptEl = document.getElementById("receipt");
+
+    function stamp() {
+      return "audit_" + Date.now().toString(36);
+    }
+
+    function url(path) {
+      const joiner = path.includes("?") ? "&" : "?";
+      return path + joiner + "v=" + encodeURIComponent(CONTRACT) + "&run=" + encodeURIComponent(state.runId);
+    }
+
+    async function fetchText(path) {
+      const response = await fetch(url(path), { cache: "no-store" });
+      const text = await response.text().catch(() => "");
+      return {
+        ok: response.ok,
+        status: response.status,
+        text,
+        path
+      };
+    }
+
+    async function importModule(path) {
+      try {
+        return {
+          ok: true,
+          module: await import(url(path)),
+          error: null
+        };
+      } catch (error) {
+        return {
+          ok: false,
+          module: null,
+          error
+        };
+      }
+    }
+
+    function bool(value) {
+      return Boolean(value);
+    }
+
+    function check(status, title, detail) {
+      return { status, title, detail };
+    }
+
+    function pass(title, detail) {
+      return check("pass", title, detail);
+    }
+
+    function fail(title, detail) {
+      return check("fail", title, detail);
+    }
+
+    function held(title, detail) {
+      return check("held", title, detail);
+    }
+
+    function group(name, description, checks) {
+      const failCount = checks.filter((item) => item.status === "fail").length;
+      const heldCount = checks.filter((item) => item.status === "held").length;
+      const status = failCount > 0 ? "fail" : heldCount > 0 ? "held" : "pass";
+
+      return {
+        name,
+        description,
+        status,
+        checks
+      };
+    }
+
+    function hasAll(source, names) {
+      return names.every((name) => new RegExp("\\b" + name + "\\b").test(source));
+    }
+
+    function textHasNoIdentityLeak(source) {
+      const normalized = source
+        .replace(/AUDRALIA_NOT_ADRALIA_NOT_AUSTRALIA/gi, "")
+        .replace(/NOT_AUSTRALIA/gi, "")
+        .replace(/NOT_ADRALIA/gi, "");
+
+      return !/\bAustralia\b/i.test(normalized) && !/\bAdralia\b/i.test(normalized);
+    }
+
+    function moduleFunction(module, name) {
+      return Boolean(module && typeof module[name] === "function");
+    }
+
+    function sampleGrid(terrainModule, topologyModule) {
+      const metrics = {
+        samples: 0,
+        landSamples: 0,
+        iceSamples: 0,
+        waterSamples: 0,
+
+        maxRidge: 0,
+        maxSlope: 0,
+        maxValley: 0,
+        maxBasin: 0,
+        maxRiverbed: 0,
+        maxStream: 0,
+        maxLake: 0,
+        maxGlacier: 0,
+        maxFloodplain: 0,
+        maxDelta: 0,
+        maxWatershed: 0,
+        maxHydrology: 0,
+
+        maxTopology: 0,
+        maxRoutePressure: 0,
+        maxWatershedPotential: 0,
+        maxClimb: 0,
+
+        regions: new Set(),
+        landBodies: new Set(),
+        watersheds: new Set(),
+        corridors: new Set()
+      };
+
+      const terrainSample =
+        terrainModule && typeof terrainModule.sampleTerrain === "function"
+          ? terrainModule.sampleTerrain
+          : null;
+
+      const topologySample =
+        topologyModule && typeof topologyModule.sampleTopology === "function"
+          ? topologyModule.sampleTopology
+          : null;
+
+      if (!terrainSample) {
+        return metrics;
+      }
+
+      const width = 48;
+      const height = 24;
+
+      for (let y = 0; y < height; y += 1) {
+        const v = y / (height - 1);
+
+        for (let x = 0; x < width; x += 1) {
+          const u = x / (width - 1);
+          let terrain = null;
+
+          try {
+            terrain = terrainSample(u, v, {
+              coherenceIndex: 0.94,
+              collaborativeExpression: 0.9
+            });
+          } catch (error) {
+            terrain = null;
+          }
+
+          if (!terrain) continue;
+
+          metrics.samples += 1;
+
+          if (terrain.isIce) metrics.iceSamples += 1;
+          else if (terrain.isLand) metrics.landSamples += 1;
+          else metrics.waterSamples += 1;
+
+          if (terrain.regionId) metrics.regions.add(String(terrain.regionId));
+          if (terrain.landBodyId) metrics.landBodies.add(String(terrain.landBodyId));
+          if (terrain.watershedId && terrain.watershedId !== "ocean") metrics.watersheds.add(String(terrain.watershedId));
+
+          metrics.maxRidge = Math.max(metrics.maxRidge, Number(terrain.ridge) || 0);
+          metrics.maxSlope = Math.max(metrics.maxSlope, Number(terrain.slope) || 0);
+          metrics.maxValley = Math.max(metrics.maxValley, Number(terrain.valleyChannelPressure) || 0);
+          metrics.maxBasin = Math.max(metrics.maxBasin, Number(terrain.basin) || 0);
+          metrics.maxRiverbed = Math.max(metrics.maxRiverbed, Number(terrain.riverbedPressure) || 0);
+          metrics.maxStream = Math.max(metrics.maxStream, Number(terrain.streamPressure) || 0);
+          metrics.maxLake = Math.max(metrics.maxLake, Number(terrain.lakeBasinPressure) || 0);
+          metrics.maxGlacier = Math.max(metrics.maxGlacier, Number(terrain.glacierSeatPressure) || 0);
+          metrics.maxFloodplain = Math.max(metrics.maxFloodplain, Number(terrain.floodplainPressure) || 0);
+          metrics.maxDelta = Math.max(metrics.maxDelta, Number(terrain.deltaReceiverPressure) || 0);
+          metrics.maxWatershed = Math.max(metrics.maxWatershed, Number(terrain.watershedStrength) || 0);
+          metrics.maxHydrology = Math.max(metrics.maxHydrology, Number(terrain.hydrologyReadinessIndex) || 0);
+
+          if (topologySample) {
+            let topology = null;
+
+            try {
+              topology = topologySample(u, v, terrain, {
+                coherenceIndex: 0.94,
+                traversalPressure: 0.82,
+                elevationDemand: 0.86
+              });
+            } catch (error) {
+              topology = null;
+            }
+
+            if (topology) {
+              if (topology.corridorId) metrics.corridors.add(String(topology.corridorId));
+
+              metrics.maxTopology = Math.max(metrics.maxTopology, Number(topology.topologyIndex) || 0);
+              metrics.maxRoutePressure = Math.max(metrics.maxRoutePressure, Number(topology.routePressure) || 0);
+              metrics.maxWatershedPotential = Math.max(metrics.maxWatershedPotential, Number(topology.watershedPotential) || 0);
+              metrics.maxClimb = Math.max(metrics.maxClimb, Number(topology.climbPressure) || 0);
+            }
+          }
+        }
+      }
+
+      return metrics;
+    }
+
+    function percent(value) {
+      return Math.round((Number(value) || 0) * 100) + "%";
+    }
+
+    function render() {
+      resultsEl.innerHTML = "";
+
+      let total = 0;
+      let passCount = 0;
+      let failCount = 0;
+      let heldCount = 0;
+
+      for (const groupItem of state.groups) {
+        const groupEl = document.createElement("article");
+        groupEl.className = "result-group";
+
+        const head = document.createElement("div");
+        head.className = "group-head";
+
+        const titleBlock = document.createElement("div");
+        const title = document.createElement("h3");
+        title.textContent = groupItem.name;
+
+        const desc = document.createElement("p");
+        desc.textContent = groupItem.description;
+
+        titleBlock.appendChild(title);
+        titleBlock.appendChild(desc);
+
+        const badge = document.createElement("span");
+        badge.className = "badge " + groupItem.status;
+        badge.textContent = groupItem.status;
+
+        head.appendChild(titleBlock);
+        head.appendChild(badge);
+
+        const list = document.createElement("div");
+        list.className = "check-list";
+
+        for (const item of groupItem.checks) {
+          total += 1;
+          if (item.status === "pass") passCount += 1;
+          if (item.status === "fail") failCount += 1;
+          if (item.status === "held") heldCount += 1;
+
+          const checkEl = document.createElement("div");
+          checkEl.className = "check " + item.status;
+
+          const dot = document.createElement("span");
+          dot.className = "dot";
+
+          const copy = document.createElement("div");
+          const strong = document.createElement("strong");
+          strong.textContent = item.title;
+
+          const detail = document.createElement("span");
+          detail.textContent = item.detail;
+
+          copy.appendChild(strong);
+          copy.appendChild(detail);
+
+          checkEl.appendChild(dot);
+          checkEl.appendChild(copy);
+          list.appendChild(checkEl);
+        }
+
+        groupEl.appendChild(head);
+        groupEl.appendChild(list);
+        resultsEl.appendChild(groupEl);
+      }
+
+      const score = total > 0 ? Math.round((passCount / total) * 100) : 0;
+
+      document.getElementById("totalCount").textContent = String(total);
+      document.getElementById("passCount").textContent = String(passCount);
+      document.getElementById("failCount").textContent = String(failCount);
+      document.getElementById("heldCount").textContent = String(heldCount);
+      document.getElementById("auditScore").textContent = score + "%";
+
+      receiptEl.textContent =
+        CONTRACT +
+        "\nRUN_ID=" + state.runId +
+        "\nTOTAL=" + total +
+        "\nPASS=" + passCount +
+        "\nFAIL=" + failCount +
+        "\nHELD=" + heldCount +
+        "\nSCORE=" + score + "%" +
+        "\nHYDRATION_GATE=" + (failCount === 0 && heldCount === 0 ? "REVIEW_ALLOWED" : "HELD") +
+        "\nMUTATION=false" +
+        "\nGRAPHIC_BOX=false" +
+        "\nIMAGE_GENERATION=false" +
+        "\nVISUAL_PASS_CLAIMED=false";
+    }
+
+    async function runAudit() {
+      runButton.disabled = true;
+      runButton.textContent = "Running...";
+      state.runId = stamp();
+      state.groups = [];
+
+      const [route, routeJs, parent, terrainSource, topologySource] = await Promise.all([
+        fetchText(PATHS.route).catch((error) => ({ ok: false, status: 0, text: String(error), path: PATHS.route })),
+        fetchText(PATHS.routeJs).catch((error) => ({ ok: false, status: 0, text: String(error), path: PATHS.routeJs })),
+        fetchText(PATHS.parent).catch((error) => ({ ok: false, status: 0, text: String(error), path: PATHS.parent })),
+        fetchText(PATHS.terrain).catch((error) => ({ ok: false, status: 0, text: String(error), path: PATHS.terrain })),
+        fetchText(PATHS.topology).catch((error) => ({ ok: false, status: 0, text: String(error), path: PATHS.topology }))
+      ]);
+
+      const [terrainImport, topologyImport] = await Promise.all([
+        importModule(PATHS.terrain),
+        importModule(PATHS.topology)
+      ]);
+
+      const terrainModule = terrainImport.ok ? terrainImport.module : null;
+      const topologyModule = topologyImport.ok ? topologyImport.module : null;
+
+      let terrainStatus = null;
+      let topologyStatus = null;
+
+      try {
+        terrainStatus = terrainModule && typeof terrainModule.getTerrainStatus === "function"
+          ? terrainModule.getTerrainStatus()
+          : null;
+      } catch (error) {
+        terrainStatus = null;
+      }
+
+      try {
+        topologyStatus = topologyModule && typeof topologyModule.getTopologyStatus === "function"
+          ? topologyModule.getTopologyStatus()
+          : null;
+      } catch (error) {
+        topologyStatus = null;
+      }
+
+      const metrics = sampleGrid(terrainModule, topologyModule);
+
+      state.groups.push(
+        group("Audralia Route Boundary", "Confirms the route is Audralia, owns its mount, and does not leak Earth/Australia identity.", [
+          route.ok ? pass("Audralia route is reachable", `${PATHS.route} returned ${route.status}.`) : fail("Audralia route is reachable", `${PATHS.route} returned ${route.status}.`),
+          /id=["']audraliaRenderMount["']/.test(route.text) || /data-audralia-render-mount/.test(route.text)
+            ? pass("Audralia mount exists", "Route source includes #audraliaRenderMount or data-audralia-render-mount.")
+            : fail("Audralia mount exists", "Route source does not expose the Audralia render mount."),
+          /\/showroom\/globe\/audralia\/index\.js/.test(route.text)
+            ? pass("Existing route script is loaded", "Route source loads /showroom/globe/audralia/index.js.")
+            : fail("Existing route script is loaded", "Route source does not load the existing Audralia route script."),
+          /\bAudralia\b/.test(route.text)
+            ? pass("Audralia identity present", "Route source names Audralia.")
+            : fail("Audralia identity present", "Route source does not clearly name Audralia."),
+          textHasNoIdentityLeak(route.text)
+            ? pass("No Australia / Adralia leak", "Route source does not expose Australia or Adralia as the public identity.")
+            : held("No Australia / Adralia leak", "Route source contains Australia or Adralia text; review whether it is only a forbidden-term receipt.")
+        ])
+      );
+
+      state.groups.push(
+        group("Parent Baseline Authority", "Confirms the parent file remains simplified and does not absorb terrain/topology/hydration.", [
+          parent.ok ? pass("Parent authority reachable", `${PATHS.parent} returned ${parent.status}.`) : fail("Parent authority reachable", `${PATHS.parent} returned ${parent.status}.`),
+          hasAll(parent.text, ["createProfile", "buildTexture", "sampleSurface", "renderSurface", "getStatus"])
+            ? pass("Parent API names present", "Parent source contains createProfile, buildTexture, sampleSurface, renderSurface, and getStatus.")
+            : held("Parent API names present", "One or more parent API names were not found by source scan."),
+          !/ownsTerrain\s*:\s*true/.test(parent.text) && !/ownsHydration\s*:\s*true/.test(parent.text) && !/ownsTopology\s*:\s*true/.test(parent.text)
+            ? pass("Parent does not overclaim child authority", "No terrain/topology/hydration ownership claim found in parent source.")
+            : fail("Parent does not overclaim child authority", "Parent source appears to claim child authority.")
+        ])
+      );
+
+      state.groups.push(
+        group("Terrain Child Authority", "Confirms terrain owns land pressure, elevation regions, and hydrology-ready placements.", [
+          terrainSource.ok ? pass("Terrain authority reachable", `${PATHS.terrain} returned ${terrainSource.status}.`) : fail("Terrain authority reachable", `${PATHS.terrain} returned ${terrainSource.status}.`),
+          terrainSource.text.includes(EXPECTED.terrainReceipt)
+            ? pass("Terrain receipt current", EXPECTED.terrainReceipt)
+            : held("Terrain receipt current", "Expected terrain hydrology receipt not found in source text."),
+          moduleFunction(terrainModule, "createTerrainProfile") &&
+          moduleFunction(terrainModule, "sampleTerrain") &&
+          moduleFunction(terrainModule, "buildTerrainField") &&
+          moduleFunction(terrainModule, "getTerrainSampleFromField") &&
+          moduleFunction(terrainModule, "getTerrainStatus")
+            ? pass("Terrain exports present", "All required terrain exports are callable.")
+            : fail("Terrain exports present", "One or more terrain exports are missing or not callable."),
+          terrainStatus && terrainStatus.hydrologyMap === "active"
+            ? pass("Hydrology map active", "Terrain status reports hydrologyMap=active.")
+            : held("Hydrology map active", "Terrain status did not confirm hydrologyMap=active."),
+          terrainStatus && terrainStatus.ownsActiveHydration === false
+            ? pass("Terrain does not own active hydration", "Terrain prepares places for water but does not animate/fill water.")
+            : fail("Terrain does not own active hydration", "Terrain status does not clearly block active hydration ownership.")
+        ])
+      );
+
+      state.groups.push(
+        group("Topology Child Authority", "Confirms topology exists, consumes terrain, and defines region/corridor structure.", [
+          topologySource.ok ? pass("Topology authority reachable", `${PATHS.topology} returned ${topologySource.status}.`) : fail("Topology authority reachable", `${PATHS.topology} returned ${topologySource.status}.`),
+          topologySource.text.includes(EXPECTED.topologyReceipt)
+            ? pass("Topology receipt current", EXPECTED.topologyReceipt)
+            : held("Topology receipt current", "Expected topology receipt not found in source text."),
+          moduleFunction(topologyModule, "createTopologyProfile") &&
+          moduleFunction(topologyModule, "sampleTopology") &&
+          moduleFunction(topologyModule, "buildTopologyField") &&
+          moduleFunction(topologyModule, "getTopologySampleFromField") &&
+          moduleFunction(topologyModule, "getTopologyStatus")
+            ? pass("Topology exports present", "All required topology exports are callable.")
+            : fail("Topology exports present", "One or more topology exports are missing or not callable."),
+          topologyStatus && topologyStatus.terrainDependencyConfirmed === true
+            ? pass("Topology confirms terrain dependency", "Topology status reports terrainDependencyConfirmed=true.")
+            : held("Topology confirms terrain dependency", "Topology status does not confirm terrain dependency."),
+          topologyStatus && topologyStatus.ownsHydration === false && topologyStatus.visualPassClaimed === false
+            ? pass("Topology does not overclaim hydration or visual pass", "Topology stays inside topology authority.")
+            : fail("Topology does not overclaim hydration or visual pass", "Topology appears to overclaim hydration or visual pass authority.")
+        ])
+      );
+
+      const terrainRealismChecks = [
+        metrics.landSamples > 0 ? pass("Land samples exist", `${metrics.landSamples} land samples found.`) : fail("Land samples exist", "No land samples found."),
+        metrics.regions.size >= 6 ? pass("Region spread exists", `${metrics.regions.size} terrain regions sampled.`) : held("Region spread exists", `${metrics.regions.size} terrain regions sampled; expected at least 6.`),
+        metrics.landBodies.size >= 4 ? pass("Land-body variety exists", `${metrics.landBodies.size} land bodies sampled.`) : held("Land-body variety exists", `${metrics.landBodies.size} land bodies sampled; expected at least 4.`),
+        metrics.maxRidge >= 0.45 ? pass("Mountain/ridge pressure measurable", `maxRidge=${percent(metrics.maxRidge)}.`) : fail("Mountain/ridge pressure measurable", `maxRidge=${percent(metrics.maxRidge)}; terrain needs stronger mountains.`),
+        metrics.maxValley >= 0.25 ? pass("Valley channel pressure measurable", `maxValley=${percent(metrics.maxValley)}.`) : fail("Valley channel pressure measurable", `maxValley=${percent(metrics.maxValley)}; terrain needs stronger valley cuts.`),
+        metrics.maxRidge * metrics.maxValley >= 0.10 ? pass("Canyon pressure derivable", `ridge×valley=${percent(metrics.maxRidge * metrics.maxValley)}.`) : fail("Canyon pressure derivable", `ridge×valley=${percent(metrics.maxRidge * metrics.maxValley)}; canyon logic is not yet strong enough.`),
+        held("Visual terrain realism", "Screenshot shows redundant soft islands; visual terrain realism is not locked.")
+      ];
+
+      state.groups.push(
+        group("Terrain Realism", "Measures whether land can read as mountains, canyons, ridges, valleys, and non-redundant topology.", terrainRealismChecks)
+      );
+
+      state.groups.push(
+        group("Hydrology Readiness", "Measures whether terrain has lawful places for rivers, streams, lakes, glaciers, deltas, and floodplains.", [
+          metrics.watersheds.size >= 4 ? pass("Watershed variety exists", `${metrics.watersheds.size} watershed corridors sampled.`) : held("Watershed variety exists", `${metrics.watersheds.size} watershed corridors sampled; expected at least 4.`),
+          metrics.maxRiverbed >= 0.35 ? pass("Riverbed pressure exists", `maxRiverbed=${percent(metrics.maxRiverbed)}.`) : fail("Riverbed pressure exists", `maxRiverbed=${percent(metrics.maxRiverbed)}.`),
+          metrics.maxStream >= 0.25 ? pass("Stream pressure exists", `maxStream=${percent(metrics.maxStream)}.`) : fail("Stream pressure exists", `maxStream=${percent(metrics.maxStream)}.`),
+          metrics.maxLake >= 0.30 ? pass("Lake basin pressure exists", `maxLake=${percent(metrics.maxLake)}.`) : held("Lake basin pressure exists", `maxLake=${percent(metrics.maxLake)}.`),
+          metrics.maxGlacier >= 0.30 ? pass("Glacier seat pressure exists", `maxGlacier=${percent(metrics.maxGlacier)}.`) : held("Glacier seat pressure exists", `maxGlacier=${percent(metrics.maxGlacier)}.`),
+          metrics.maxFloodplain >= 0.25 ? pass("Floodplain pressure exists", `maxFloodplain=${percent(metrics.maxFloodplain)}.`) : held("Floodplain pressure exists", `maxFloodplain=${percent(metrics.maxFloodplain)}.`),
+          metrics.maxDelta >= 0.18 ? pass("Delta receiver pressure exists", `maxDelta=${percent(metrics.maxDelta)}.`) : held("Delta receiver pressure exists", `maxDelta=${percent(metrics.maxDelta)}.`),
+          metrics.maxHydrology >= 0.25 ? pass("Hydrology readiness index exists", `maxHydrology=${percent(metrics.maxHydrology)}.`) : fail("Hydrology readiness index exists", `maxHydrology=${percent(metrics.maxHydrology)}.`)
+        ])
+      );
+
+      state.groups.push(
+        group("Topology + Hydration Gate", "Controls whether hydration can move after terrain/topology checks.", [
+          metrics.corridors.size >= 6 ? pass("Topology corridors sampled", `${metrics.corridors.size} topology corridors sampled.`) : held("Topology corridors sampled", `${metrics.corridors.size} topology corridors sampled; expected at least 6.`),
+          metrics.maxTopology >= 0.35 ? pass("Topology index measurable", `maxTopology=${percent(metrics.maxTopology)}.`) : held("Topology index measurable", `maxTopology=${percent(metrics.maxTopology)}.`),
+          metrics.maxRoutePressure >= 0.25 ? pass("Route pressure measurable", `maxRoutePressure=${percent(metrics.maxRoutePressure)}.`) : held("Route pressure measurable", `maxRoutePressure=${percent(metrics.maxRoutePressure)}.`),
+          metrics.maxWatershedPotential >= 0.20 ? pass("Watershed topology potential measurable", `maxWatershedPotential=${percent(metrics.maxWatershedPotential)}.`) : held("Watershed topology potential measurable", `maxWatershedPotential=${percent(metrics.maxWatershedPotential)}.`),
+          held("Hydration gate status", "Hydration remains held until terrain realism passes visually and structurally."),
+          held("Screenshot confirmation", "Final visual pass requires owner screenshot confirmation after terrain realism correction.")
+        ])
+      );
+
+      lastRunEl.textContent = "Last audit: " + new Date().toLocaleString();
+
+      render();
+
+      runButton.disabled = false;
+      runButton.textContent = "Run Audralia Audit";
+    }
+
+    runButton.addEventListener("click", runAudit);
+    runAudit();
+  </script>
 </body>
 </html>

@@ -2,21 +2,23 @@
 // AUDRALIA_G7_HEX_SURFACE_CHILD_RENDERER_TNT_v1
 //
 // Active renewal:
-// - AUDRALIA_G8_HEX_CHILD_DEEP_OCEAN_SEPARATION_TNT_v1
+// - AUDRALIA_G8_HEX_CHILD_REMOVE_STALE_DEEP_OCEAN_BLOB_LOGIC_TNT_v1
 //
 // Role:
 // - Child renderer for Audralia showroom globe route.
 // - Owns hexagonal surface sampling and square-block artifact reduction.
 // - Consumes only the parent-provided runtime texture and sphere state.
-// - Imports deep-ocean visual child only.
-// - Separates ocean, deep ocean, and shelf/coastal water visually.
+// - Does not import DeepOcean.
+// - Does not classify Ocean / DeepOcean / shelf water at route level.
+// - Does not recolor water classes.
 // - Does not import runtime.
 // - Does not create land.
 // - Does not create water.
-// - Does not mutate topology, terrain, hydration, climate, ecology, or route authority.
+// - Does not mutate topology, terrain, hydration, climate, ecology, runtime, or route authority.
 //
 // Hard locks:
 // - No runtime import.
+// - No DeepOcean showroom import.
 // - No route boot ownership.
 // - No land generation.
 // - No water generation.
@@ -34,28 +36,26 @@
 // - No image generation.
 // - No visual pass claim.
 
-import {
-  applyAudraliaOceanDepthSeparation,
-  getAudraliaDeepOceanStatus
-} from "./audralia.deep-ocean.surface.js";
-
 const RECEIPT = "AUDRALIA_G7_HEX_SURFACE_CHILD_RENDERER_TNT_v1";
-const ACTIVE_RENEWAL = "AUDRALIA_G8_HEX_CHILD_DEEP_OCEAN_SEPARATION_TNT_v1";
+const ACTIVE_RENEWAL = "AUDRALIA_G8_HEX_CHILD_REMOVE_STALE_DEEP_OCEAN_BLOB_LOGIC_TNT_v1";
 const PARENT_RECEIPT = "AUDRALIA_ROUTE_CONSUME_CURRENT_RUNTIME_GENEALOGY_SURFACE_TNT_v1";
-const TWO_FILE_RECEIPT = "AUDRALIA_G7_HEX_SURFACE_CHILD_RENDERER_TWO_FILE_TNT_v1";
-const DEEP_OCEAN_CHILD_RECEIPT = "AUDRALIA_DEEP_OCEAN_SURFACE_CHILD_TNT_v1";
+
+const REMOVED_STALE_RECEIPTS = Object.freeze([
+  "AUDRALIA_G8_HEX_CHILD_DEEP_OCEAN_SEPARATION_TNT_v1",
+  "AUDRALIA_DEEP_OCEAN_SURFACE_CHILD_TNT_v1",
+  "AUDRALIA_DEEP_OCEAN_FEATHERED_DEPTH_BLEND_TNT_v1"
+]);
 
 const DEFAULTS = Object.freeze({
   minSize: 320,
   maxSize: 720,
   radiusRatio: 0.405,
-  hexDensity: 176,
-  minHexRadius: 2.1,
-  maxHexRadius: 5.4,
-  edgeDarkening: 0.092,
-  seamSoftening: 0.058,
-  oceanSeparation: 1,
-  rimStrength: 0.36,
+  hexDensity: 196,
+  minHexRadius: 1.9,
+  maxHexRadius: 4.8,
+  edgeDarkening: 0.052,
+  seamSoftening: 0.070,
+  textureOnlyBlend: 1,
   lightX: -0.42,
   lightY: 0.36,
   lightZ: 0.83
@@ -73,6 +73,11 @@ function mix(a, b, t) {
 
 function wrap01(value) {
   return ((Number(value) % 1) + 1) % 1;
+}
+
+function smoothstep(edge0, edge1, value) {
+  const t = clamp((value - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
+  return t * t * (3 - 2 * t);
 }
 
 function cubeRound(q, r) {
@@ -113,11 +118,6 @@ function hexDistance(localX, localY, hexRadius) {
   return Math.max(Math.abs(q), Math.abs(r), Math.abs(s));
 }
 
-function smoothstep(edge0, edge1, value) {
-  const t = clamp((value - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
-  return t * t * (3 - 2 * t);
-}
-
 function sampleTexture(texture, u, v) {
   const width = texture && texture.width ? texture.width : 1;
   const height = texture && texture.height ? texture.height : 1;
@@ -135,6 +135,38 @@ function sampleTexture(texture, u, v) {
     data[index + 2] || 0,
     data[index + 3] === undefined ? 255 : data[index + 3]
   ];
+}
+
+function isLandColor(color) {
+  const r = Number(color[0]) || 0;
+  const g = Number(color[1]) || 0;
+  const b = Number(color[2]) || 0;
+
+  return r >= 92 && r >= g * 0.86 && r > b * 1.08;
+}
+
+function isWaterColor(color) {
+  const r = Number(color[0]) || 0;
+  const g = Number(color[1]) || 0;
+  const b = Number(color[2]) || 0;
+
+  return b > r * 1.02 && g > r * 0.66 && !isLandColor(color);
+}
+
+function isShelfLikeColor(color) {
+  const r = Number(color[0]) || 0;
+  const g = Number(color[1]) || 0;
+  const b = Number(color[2]) || 0;
+
+  return isWaterColor(color) && g > 82 && b > 98 && Math.abs(g - b) < 96;
+}
+
+function isIceOrHighlightColor(color) {
+  const r = Number(color[0]) || 0;
+  const g = Number(color[1]) || 0;
+  const b = Number(color[2]) || 0;
+
+  return r > 185 && g > 185 && b > 185;
 }
 
 function buildHexGeometry(size, options = {}) {
@@ -202,12 +234,12 @@ function buildHexGeometry(size, options = {}) {
 
       const dot = clamp(hx * lightX + (-hy) * lightY + z * lightZ, -1, 1);
       const edgeShadow = clamp(1 - Math.pow(r2, 1.7) * 0.34, 0.52, 1);
-      const hemisphereShade = clamp(0.68 + dot * 0.34, 0.44, 1.10);
-      const shade = clamp(edgeShadow * hemisphereShade, 0.42, 1.12);
+      const hemisphereShade = clamp(0.70 + dot * 0.32, 0.46, 1.10);
+      const shade = clamp(edgeShadow * hemisphereShade, 0.44, 1.12);
 
       const localX = xRaw - center.x;
       const localY = yRaw - center.y;
-      const edge = smoothstep(0.74, 0.98, hexDistance(localX, localY, hexRadius));
+      const edge = smoothstep(0.76, 0.99, hexDistance(localX, localY, hexRadius));
 
       indices[i] = (py * size + px) * 4;
       lonOffsets[i] = lonOffset;
@@ -222,7 +254,7 @@ function buildHexGeometry(size, options = {}) {
   return Object.freeze({
     receipt: RECEIPT,
     activeRenewal: ACTIVE_RENEWAL,
-    model: "hexagonal-orthographic-surface-sampling-with-deep-ocean-separation",
+    model: "hexagonal-orthographic-texture-only-surface-sampling",
     size,
     radius,
     hexRadius,
@@ -282,23 +314,36 @@ function drawAtmosphere(ctx, size, options = {}) {
   ctx.restore();
 }
 
-function normalizeOptions(options) {
+function normalizeOptions(options = {}) {
   return Object.freeze({
     radiusRatio: Number(options.radiusRatio) || DEFAULTS.radiusRatio,
     hexDensity: Number(options.hexDensity) || DEFAULTS.hexDensity,
     minHexRadius: Number(options.minHexRadius) || DEFAULTS.minHexRadius,
     maxHexRadius: Number(options.maxHexRadius) || DEFAULTS.maxHexRadius,
-    edgeDarkening: clamp(Number(options.edgeDarkening) || DEFAULTS.edgeDarkening, 0, 0.28),
-    seamSoftening: clamp(Number(options.seamSoftening) || DEFAULTS.seamSoftening, 0, 0.20),
-    oceanSeparation: clamp(
-      options.oceanSeparation === undefined ? DEFAULTS.oceanSeparation : Number(options.oceanSeparation),
-      0,
-      1
-    ),
+    edgeDarkening: clamp(Number(options.edgeDarkening) || DEFAULTS.edgeDarkening, 0, 0.18),
+    seamSoftening: clamp(Number(options.seamSoftening) || DEFAULTS.seamSoftening, 0, 0.18),
+    textureOnlyBlend: 1,
     lightX: Number(options.lightX) || DEFAULTS.lightX,
     lightY: Number(options.lightY) || DEFAULTS.lightY,
     lightZ: Number(options.lightZ) || DEFAULTS.lightZ
   });
+}
+
+function applyTextureOnlyHexShade(color, shade, edge, options) {
+  const edgeShade = clamp(
+    1 - edge * options.edgeDarkening + (1 - edge) * options.seamSoftening,
+    0.72,
+    1.08
+  );
+
+  const finalShade = clamp(shade * edgeShade, 0.48, 1.14);
+
+  return [
+    clamp(Math.round(color[0] * finalShade), 0, 255),
+    clamp(Math.round(color[1] * finalShade), 0, 255),
+    clamp(Math.round(color[2] * finalShade), 0, 255),
+    color[3] === undefined ? 255 : color[3]
+  ];
 }
 
 export function drawAudraliaHexSurfaceFrame(state, options = {}) {
@@ -322,11 +367,11 @@ export function drawAudraliaHexSurfaceFrame(state, options = {}) {
   const output = state.ctx.createImageData(size, size);
   const data = output.data;
 
-  let oceanPixels = 0;
-  let shelfPixels = 0;
-  let deepOceanPixels = 0;
-  let abyssalPixels = 0;
-  let separatedPixels = 0;
+  let sampledPixels = 0;
+  let landPixels = 0;
+  let waterPixels = 0;
+  let shelfLikePixels = 0;
+  let iceOrHighlightPixels = 0;
 
   for (let i = 0; i < geometry.count; i += 1) {
     const out = geometry.indices[i];
@@ -334,63 +379,48 @@ export function drawAudraliaHexSurfaceFrame(state, options = {}) {
     const v = geometry.vCoords[i];
 
     const rawColor = sampleTexture(state.texture, u, v);
+    const color = applyTextureOnlyHexShade(
+      rawColor,
+      geometry.shades[i],
+      geometry.edgeFactors[i],
+      config
+    );
 
-    const separated = applyAudraliaOceanDepthSeparation(rawColor, state.texture, u, v, {
-      u,
-      v,
-      phase: Number(state.phase) || 0,
-      geometry: "hexagonal-orthographic"
-    });
+    if (isLandColor(rawColor)) landPixels += 1;
+    if (isWaterColor(rawColor)) waterPixels += 1;
+    if (isShelfLikeColor(rawColor)) shelfLikePixels += 1;
+    if (isIceOrHighlightColor(rawColor)) iceOrHighlightPixels += 1;
 
-    const color =
-      config.oceanSeparation > 0
-        ? [
-            Math.round(mix(rawColor[0], separated.color[0], config.oceanSeparation)),
-            Math.round(mix(rawColor[1], separated.color[1], config.oceanSeparation)),
-            Math.round(mix(rawColor[2], separated.color[2], config.oceanSeparation)),
-            separated.color[3]
-          ]
-        : rawColor;
+    sampledPixels += 1;
 
-    if (separated.classification && separated.classification.water) oceanPixels += 1;
-    if (separated.classification && separated.classification.shelf) shelfPixels += 1;
-    if (separated.classification && separated.classification.deepOcean) deepOceanPixels += 1;
-    if (separated.classification && separated.classification.abyssalDeepOcean) abyssalPixels += 1;
-    if (separated.changed) separatedPixels += 1;
-
-    const shade = geometry.shades[i];
-    const edge = geometry.edgeFactors[i];
-    const edgeShade = clamp(1 - edge * config.edgeDarkening + (1 - edge) * config.seamSoftening, 0.64, 1.08);
-
-    data[out] = clamp(Math.round(color[0] * shade * edgeShade), 0, 255);
-    data[out + 1] = clamp(Math.round(color[1] * shade * edgeShade), 0, 255);
-    data[out + 2] = clamp(Math.round(color[2] * shade * edgeShade), 0, 255);
+    data[out] = color[0];
+    data[out + 1] = color[1];
+    data[out + 2] = color[2];
     data[out + 3] = color[3];
   }
 
   state.ctx.putImageData(output, 0, 0);
   drawAtmosphere(state.ctx, size, config);
 
-  const deepOceanStatus = getAudraliaDeepOceanStatus();
-
   state.canvas.dataset.hexSurfaceChild = RECEIPT;
   state.canvas.dataset.hexSurfaceActiveRenewal = ACTIVE_RENEWAL;
-  state.canvas.dataset.hexSurfaceTwoFileContract = TWO_FILE_RECEIPT;
   state.canvas.dataset.hexSurfaceParentReceipt = PARENT_RECEIPT;
-  state.canvas.dataset.deepOceanChild = DEEP_OCEAN_CHILD_RECEIPT;
-  state.canvas.dataset.deepOceanChildLoaded = String(Boolean(deepOceanStatus && deepOceanStatus.ok));
-  state.canvas.dataset.hexSurfaceModel = "hexagonal-orthographic-surface-sampling-with-deep-ocean-separation";
+  state.canvas.dataset.hexSurfaceModel = "hexagonal-orthographic-texture-only-surface-sampling";
   state.canvas.dataset.hexRadius = geometry.hexRadius.toFixed(3);
   state.canvas.dataset.hexSamples = String(geometry.count);
+  state.canvas.dataset.sampledPixels = String(sampledPixels);
+  state.canvas.dataset.landPixels = String(landPixels);
+  state.canvas.dataset.waterPixels = String(waterPixels);
+  state.canvas.dataset.shelfLikePixels = String(shelfLikePixels);
+  state.canvas.dataset.iceOrHighlightPixels = String(iceOrHighlightPixels);
   state.canvas.dataset.squareBlockArtifactReduction = "active";
-  state.canvas.dataset.oceanSeparation = "active";
-  state.canvas.dataset.deepOceanSeparation = "active";
-  state.canvas.dataset.shelfOceanSeparation = "active";
-  state.canvas.dataset.oceanPixels = String(oceanPixels);
-  state.canvas.dataset.shelfPixels = String(shelfPixels);
-  state.canvas.dataset.deepOceanPixels = String(deepOceanPixels);
-  state.canvas.dataset.abyssalDeepOceanPixels = String(abyssalPixels);
-  state.canvas.dataset.oceanSeparatedPixels = String(separatedPixels);
+  state.canvas.dataset.textureOnlySampling = "true";
+  state.canvas.dataset.staleDeepOceanBlobLogicRemoved = "true";
+  state.canvas.dataset.deepOceanShowroomImport = "removed";
+  state.canvas.dataset.deepOceanRouteOverlay = "removed";
+  state.canvas.dataset.oceanSeparation = "removed";
+  state.canvas.dataset.deepOceanSeparation = "removed";
+  state.canvas.dataset.shelfOceanSeparation = "removed";
   state.canvas.dataset.routeOwnedLandGeneration = "forbidden";
   state.canvas.dataset.routeOwnedWaterGeneration = "forbidden";
   state.canvas.dataset.runtimeImport = "forbidden";
@@ -401,23 +431,26 @@ export function drawAudraliaHexSurfaceFrame(state, options = {}) {
   return Object.freeze({
     receipt: RECEIPT,
     activeRenewal: ACTIVE_RENEWAL,
-    twoFileReceipt: TWO_FILE_RECEIPT,
     parentReceipt: PARENT_RECEIPT,
-    deepOceanChild: DEEP_OCEAN_CHILD_RECEIPT,
+    removedStaleReceipts: REMOVED_STALE_RECEIPTS,
     ok: true,
-    model: "hexagonal-orthographic-surface-sampling-with-deep-ocean-separation",
+    model: "hexagonal-orthographic-texture-only-surface-sampling",
     size,
     hexRadius: geometry.hexRadius,
     samples: geometry.count,
-    oceanPixels,
-    shelfPixels,
-    deepOceanPixels,
-    abyssalDeepOceanPixels: abyssalPixels,
-    oceanSeparatedPixels: separatedPixels,
+    sampledPixels,
+    landPixels,
+    waterPixels,
+    shelfLikePixels,
+    iceOrHighlightPixels,
     squareBlockArtifactReduction: true,
-    oceanSeparation: true,
-    deepOceanSeparation: true,
-    shelfOceanSeparation: true,
+    textureOnlySampling: true,
+    staleDeepOceanBlobLogicRemoved: true,
+    deepOceanShowroomImport: false,
+    deepOceanRouteOverlay: false,
+    oceanSeparation: false,
+    deepOceanSeparation: false,
+    shelfOceanSeparation: false,
     routeOwnedLandGeneration: false,
     routeOwnedWaterGeneration: false,
     runtimeImport: false,
@@ -432,20 +465,20 @@ export function getAudraliaHexSurfaceStatus(state = null) {
     ok: true,
     receipt: RECEIPT,
     activeRenewal: ACTIVE_RENEWAL,
-    twoFileReceipt: TWO_FILE_RECEIPT,
     parentReceipt: PARENT_RECEIPT,
-    deepOceanChild: DEEP_OCEAN_CHILD_RECEIPT,
-    role: "route-child-renderer",
+    removedStaleReceipts: REMOVED_STALE_RECEIPTS,
+    role: "route-child-texture-only-hex-renderer",
     owns: Object.freeze([
       "hexagonal_surface_sampling",
       "square_block_artifact_reduction",
-      "ocean_visual_separation",
-      "deep_ocean_visual_separation",
-      "shelf_coastal_visual_separation",
-      "canvas_frame_paint_strategy"
+      "canvas_frame_paint_strategy",
+      "sphere_shading",
+      "atmospheric_rim"
     ]),
     doesNotOwn: Object.freeze([
       "runtime_import",
+      "deep_ocean_route_overlay",
+      "ocean_classification",
       "land_generation",
       "water_generation",
       "topology",
@@ -458,6 +491,13 @@ export function getAudraliaHexSurfaceStatus(state = null) {
     geometryLoaded: Boolean(state && state.hexGeometry),
     hexRadius: state && state.hexGeometry ? state.hexGeometry.hexRadius : null,
     hexSamples: state && state.hexGeometry ? state.hexGeometry.count : null,
+    textureOnlySampling: true,
+    staleDeepOceanBlobLogicRemoved: true,
+    deepOceanShowroomImport: false,
+    deepOceanRouteOverlay: false,
+    oceanSeparation: false,
+    deepOceanSeparation: false,
+    shelfOceanSeparation: false,
     runtimeImport: false,
     routeOwnedLandGeneration: false,
     routeOwnedWaterGeneration: false,
@@ -470,9 +510,8 @@ export function getAudraliaHexSurfaceStatus(state = null) {
 const api = Object.freeze({
   receipt: RECEIPT,
   activeRenewal: ACTIVE_RENEWAL,
-  twoFileReceipt: TWO_FILE_RECEIPT,
   parentReceipt: PARENT_RECEIPT,
-  deepOceanChild: DEEP_OCEAN_CHILD_RECEIPT,
+  removedStaleReceipts: REMOVED_STALE_RECEIPTS,
   drawAudraliaHexSurfaceFrame,
   getAudraliaHexSurfaceStatus
 });

@@ -1,19 +1,25 @@
 // /assets/audralia/audralia.terrain.render.js
-// AUDRALIA_G1_TERRAIN_PRESSURE_ISLAND_ELEVATION_CHILD_TNT_v2
+// AUDRALIA_G1_TERRAIN_HYDROLOGY_MAP_CHILD_TNT_v1
+//
 // Role: first direct downstream terrain child for /assets/audralia/audralia.planet.render.js.
 // Scope: terrain data only.
-// Owns: land pressure, miscellaneous territories, island density, elevation tiers, Nine Summits terrain mapping.
-// Does not own: parent globe rendering, hydration, climate, ecology, fauna, runtime, route shell, Earth, Sun, Moon, visual pass claim.
+// Owns: land pressure, miscellaneous territories, island density, elevation tiers,
+// Nine Summits terrain mapping, and hydrology-ready terrain placement.
+// Does not own: active water rendering, hydration behavior, climate, ecology, fauna,
+// runtime, route shell, Earth, Sun, Moon, or visual pass claim.
+//
+// Terrain prepares the land for water.
+// Hydration later fills and animates the water.
 
-const RECEIPT = "AUDRALIA_G1_TERRAIN_PRESSURE_ISLAND_ELEVATION_CHILD_TNT_v2";
+const RECEIPT = "AUDRALIA_G1_TERRAIN_HYDROLOGY_MAP_CHILD_TNT_v1";
 const PLANETARY_OBJECT = "Audralia";
-const GENERATION = "G1_TERRAIN_CHILD";
+const GENERATION = "G1_TERRAIN_CHILD_HYDROLOGY_READY";
 const FILE = "/assets/audralia/audralia.terrain.render.js";
 const PARENT_AUTHORITY = "/assets/audralia/audralia.planet.render.js";
 
 const TERRAIN_LAW = Object.freeze({
   parentRole: "baseline-land-water-only",
-  terrainChildRole: "terrain-pressure-authority",
+  terrainChildRole: "terrain-pressure-and-hydrology-map-authority",
   majorLandBodies: 5,
   visibleTerrainSegments: 6,
   southPole: "ice_only",
@@ -23,8 +29,10 @@ const TERRAIN_LAW = Object.freeze({
   nineRegions: "elevation_ordered",
   region1Elevation: "lowest_origin_tier",
   region9Elevation: "highest_convergence_tier",
+  hydrologyMap: "active",
+  ownsHydrologyPlaces: true,
+  ownsActiveHydration: false,
   ownsFinalRender: false,
-  ownsHydration: false,
   ownsClimate: false,
   ownsEcology: false,
   visualPassClaimed: false
@@ -105,198 +113,38 @@ const SOUTH_POLAR_ICE = Object.freeze({
 });
 
 const MISC_TERRITORY_CLUSTERS = Object.freeze([
-  Object.freeze({
-    id: "low_origin_islands",
-    regionBias: 1,
-    centerLon: -0.42,
-    centerLat: -0.08,
-    count: 18,
-    spreadLon: 0.30,
-    spreadLat: 0.16,
-    radius: 0.034,
-    elevation: 0.12
-  }),
-  Object.freeze({
-    id: "structure_plateau_keys",
-    regionBias: 2,
-    centerLon: -0.10,
-    centerLat: 0.08,
-    count: 14,
-    spreadLon: 0.24,
-    spreadLat: 0.14,
-    radius: 0.032,
-    elevation: 0.22
-  }),
-  Object.freeze({
-    id: "balance_transition_islands",
-    regionBias: 3,
-    centerLon: 0.18,
-    centerLat: -0.02,
-    count: 16,
-    spreadLon: 0.30,
-    spreadLat: 0.16,
-    radius: 0.030,
-    elevation: 0.32
-  }),
-  Object.freeze({
-    id: "stability_temperate_shelves",
-    regionBias: 4,
-    centerLon: 0.54,
-    centerLat: 0.10,
-    count: 15,
-    spreadLon: 0.26,
-    spreadLat: 0.16,
-    radius: 0.032,
-    elevation: 0.42
-  }),
-  Object.freeze({
-    id: "peace_protected_basins",
-    regionBias: 5,
-    centerLon: -0.24,
-    centerLat: -0.24,
-    count: 13,
-    spreadLon: 0.22,
-    spreadLat: 0.14,
-    radius: 0.030,
-    elevation: 0.52
-  }),
-  Object.freeze({
-    id: "joy_reef_highlands",
-    regionBias: 6,
-    centerLon: 0.18,
-    centerLat: -0.48,
-    count: 24,
-    spreadLon: 0.44,
-    spreadLat: 0.18,
-    radius: 0.026,
-    elevation: 0.62
-  }),
-  Object.freeze({
-    id: "dignity_mineral_crowns",
-    regionBias: 7,
-    centerLon: 0.08,
-    centerLat: 0.56,
-    count: 12,
-    spreadLon: 0.28,
-    spreadLat: 0.12,
-    radius: 0.028,
-    elevation: 0.72
-  }),
-  Object.freeze({
-    id: "free_will_frontier_ridge",
-    regionBias: 8,
-    centerLon: -0.70,
-    centerLat: 0.22,
-    count: 12,
-    spreadLon: 0.24,
-    spreadLat: 0.18,
-    radius: 0.028,
-    elevation: 0.82
-  }),
-  Object.freeze({
-    id: "love_high_convergence",
-    regionBias: 9,
-    centerLon: 0.02,
-    centerLat: 0.34,
-    count: 10,
-    spreadLon: 0.18,
-    spreadLat: 0.12,
-    radius: 0.026,
-    elevation: 0.92
-  })
+  Object.freeze({ id: "low_origin_islands", regionBias: 1, centerLon: -0.42, centerLat: -0.08, count: 18, spreadLon: 0.30, spreadLat: 0.16, radius: 0.034, elevation: 0.12 }),
+  Object.freeze({ id: "structure_plateau_keys", regionBias: 2, centerLon: -0.10, centerLat: 0.08, count: 14, spreadLon: 0.24, spreadLat: 0.14, radius: 0.032, elevation: 0.22 }),
+  Object.freeze({ id: "balance_transition_islands", regionBias: 3, centerLon: 0.18, centerLat: -0.02, count: 16, spreadLon: 0.30, spreadLat: 0.16, radius: 0.030, elevation: 0.32 }),
+  Object.freeze({ id: "stability_temperate_shelves", regionBias: 4, centerLon: 0.54, centerLat: 0.10, count: 15, spreadLon: 0.26, spreadLat: 0.16, radius: 0.032, elevation: 0.42 }),
+  Object.freeze({ id: "peace_protected_basins", regionBias: 5, centerLon: -0.24, centerLat: -0.24, count: 13, spreadLon: 0.22, spreadLat: 0.14, radius: 0.030, elevation: 0.52 }),
+  Object.freeze({ id: "joy_reef_highlands", regionBias: 6, centerLon: 0.18, centerLat: -0.48, count: 24, spreadLon: 0.44, spreadLat: 0.18, radius: 0.026, elevation: 0.62 }),
+  Object.freeze({ id: "dignity_mineral_crowns", regionBias: 7, centerLon: 0.08, centerLat: 0.56, count: 12, spreadLon: 0.28, spreadLat: 0.12, radius: 0.028, elevation: 0.72 }),
+  Object.freeze({ id: "free_will_frontier_ridge", regionBias: 8, centerLon: -0.70, centerLat: 0.22, count: 12, spreadLon: 0.24, spreadLat: 0.18, radius: 0.028, elevation: 0.82 }),
+  Object.freeze({ id: "love_high_convergence", regionBias: 9, centerLon: 0.02, centerLat: 0.34, count: 10, spreadLon: 0.18, spreadLat: 0.12, radius: 0.026, elevation: 0.92 })
 ]);
 
 const NINE_REGIONS = Object.freeze([
-  Object.freeze({
-    id: 1,
-    key: "character",
-    name: "Character",
-    elevationTier: "low_origin_ground",
-    relativeElevation: 0.12,
-    anchorLon: -0.42,
-    anchorLat: -0.08,
-    regionRole: "origin plains, low coastal stone, first habitable ground"
-  }),
-  Object.freeze({
-    id: 2,
-    key: "structure",
-    name: "Structure",
-    elevationTier: "low_plateau",
-    relativeElevation: 0.22,
-    anchorLon: -0.10,
-    anchorLat: 0.08,
-    regionRole: "stable foundation plateau and broad settlement table"
-  }),
-  Object.freeze({
-    id: 3,
-    key: "balance",
-    name: "Balance",
-    elevationTier: "basin_transition",
-    relativeElevation: 0.32,
-    anchorLon: 0.18,
-    anchorLat: -0.02,
-    regionRole: "wet dry transition basin where systems meet"
-  }),
-  Object.freeze({
-    id: 4,
-    key: "stability",
-    name: "Stability",
-    elevationTier: "temperate_upland",
-    relativeElevation: 0.42,
-    anchorLon: 0.54,
-    anchorLat: 0.10,
-    regionRole: "steady upland belt with repeatable climate"
-  }),
-  Object.freeze({
-    id: 5,
-    key: "peace",
-    name: "Peace",
-    elevationTier: "protected_high_basin",
-    relativeElevation: 0.52,
-    anchorLon: -0.24,
-    anchorLat: -0.24,
-    regionRole: "sheltered green basin above lower belts"
-  }),
-  Object.freeze({
-    id: 6,
-    key: "joy",
-    name: "Joy",
-    elevationTier: "bright_island_highlands",
-    relativeElevation: 0.62,
-    anchorLon: 0.18,
-    anchorLat: -0.48,
-    regionRole: "reef islands, warm high islands, lively archipelago"
-  }),
-  Object.freeze({
-    id: 7,
-    key: "dignity",
-    name: "Dignity",
-    elevationTier: "mineral_crownland",
-    relativeElevation: 0.72,
-    anchorLon: 0.08,
-    anchorLat: 0.56,
-    regionRole: "weathered mineral ridges and old exposed value"
-  }),
-  Object.freeze({
-    id: 8,
-    key: "free_will",
-    name: "Free Will",
-    elevationTier: "frontier_ridge_belt",
-    relativeElevation: 0.82,
-    anchorLon: -0.70,
-    anchorLat: 0.22,
-    regionRole: "open high frontier, difficult traversal, mixed climate edge"
-  }),
-  Object.freeze({
-    id: 9,
-    key: "love",
-    name: "Love",
-    elevationTier: "highest_convergence_summit",
-    relativeElevation: 0.92,
-    anchorLon: 0.02,
-    anchorLat: 0.34,
-    regionRole: "highest convergence heartland where waters, ridges, routes, and climates meet"
-  })
+  Object.freeze({ id: 1, key: "character", name: "Character", elevationTier: "low_origin_ground", relativeElevation: 0.12, anchorLon: -0.42, anchorLat: -0.08, regionRole: "origin plains, low coastal stone, first habitable ground" }),
+  Object.freeze({ id: 2, key: "structure", name: "Structure", elevationTier: "low_plateau", relativeElevation: 0.22, anchorLon: -0.10, anchorLat: 0.08, regionRole: "stable foundation plateau and broad settlement table" }),
+  Object.freeze({ id: 3, key: "balance", name: "Balance", elevationTier: "basin_transition", relativeElevation: 0.32, anchorLon: 0.18, anchorLat: -0.02, regionRole: "wet dry transition basin where systems meet" }),
+  Object.freeze({ id: 4, key: "stability", name: "Stability", elevationTier: "temperate_upland", relativeElevation: 0.42, anchorLon: 0.54, anchorLat: 0.10, regionRole: "steady upland belt with repeatable climate" }),
+  Object.freeze({ id: 5, key: "peace", name: "Peace", elevationTier: "protected_high_basin", relativeElevation: 0.52, anchorLon: -0.24, anchorLat: -0.24, regionRole: "sheltered green basin above lower belts" }),
+  Object.freeze({ id: 6, key: "joy", name: "Joy", elevationTier: "bright_island_highlands", relativeElevation: 0.62, anchorLon: 0.18, anchorLat: -0.48, regionRole: "reef islands, warm high islands, lively archipelago" }),
+  Object.freeze({ id: 7, key: "dignity", name: "Dignity", elevationTier: "mineral_crownland", relativeElevation: 0.72, anchorLon: 0.08, anchorLat: 0.56, regionRole: "weathered mineral ridges and old exposed value" }),
+  Object.freeze({ id: 8, key: "free_will", name: "Free Will", elevationTier: "frontier_ridge_belt", relativeElevation: 0.82, anchorLon: -0.70, anchorLat: 0.22, regionRole: "open high frontier, difficult traversal, mixed climate edge" }),
+  Object.freeze({ id: 9, key: "love", name: "Love", elevationTier: "highest_convergence_summit", relativeElevation: 0.92, anchorLon: 0.02, anchorLat: 0.34, regionRole: "highest convergence heartland where waters, ridges, routes, and climates meet" })
+]);
+
+const HYDROLOGY_CORRIDORS = Object.freeze([
+  Object.freeze({ id: "river_09_03", sourceRegion: 9, receiverRegion: 3, type: "major_riverbed", role: "highest convergence watershed descends into balance basin", strength: 0.96 }),
+  Object.freeze({ id: "river_09_05", sourceRegion: 9, receiverRegion: 5, type: "major_riverbed", role: "summit-fed protected basin riverbed", strength: 0.88 }),
+  Object.freeze({ id: "river_07_04", sourceRegion: 7, receiverRegion: 4, type: "snowmelt_riverbed", role: "mineral crownland drains toward stable upland valleys", strength: 0.82 }),
+  Object.freeze({ id: "river_08_01", sourceRegion: 8, receiverRegion: 1, type: "frontier_cut", role: "frontier ridge cuts back toward low origin floodplain", strength: 0.74 }),
+  Object.freeze({ id: "river_06_03", sourceRegion: 6, receiverRegion: 3, type: "island_stream_return", role: "archipelago highland streams return toward balance exchanges", strength: 0.68 }),
+  Object.freeze({ id: "river_04_01", sourceRegion: 4, receiverRegion: 1, type: "temperate_valley_river", role: "stable uplands descend into low origin plain", strength: 0.78 }),
+  Object.freeze({ id: "river_05_01", sourceRegion: 5, receiverRegion: 1, type: "protected_basin_outflow", role: "peace basin outflow reaches first floodplain", strength: 0.72 }),
+  Object.freeze({ id: "river_02_03", sourceRegion: 2, receiverRegion: 3, type: "plateau_cut", role: "foundation plateau drains into transition basin", strength: 0.70 })
 ]);
 
 function clamp(value, min, max) {
@@ -540,6 +388,200 @@ function chooseRegion(lon, lat, context, baseElevation) {
   });
 }
 
+function distanceToSegment(lon, lat, ax, ay, bx, by) {
+  let wrappedB = bx;
+  let wrappedP = lon;
+
+  wrappedB = ax + wrapLonDistance(bx, ax);
+  wrappedP = ax + wrapLonDistance(lon, ax);
+
+  const vx = wrappedB - ax;
+  const vy = by - ay;
+  const wx = wrappedP - ax;
+  const wy = lat - ay;
+
+  const len2 = vx * vx + vy * vy;
+  const t = len2 <= 0.00001 ? 0 : clamp((wx * vx + wy * vy) / len2, 0, 1);
+
+  const cx = ax + vx * t;
+  const cy = ay + vy * t;
+
+  const dx = wrappedP - cx;
+  const dy = lat - cy;
+
+  return Object.freeze({
+    distance: Math.sqrt(dx * dx + dy * dy),
+    t
+  });
+}
+
+function regionById(id) {
+  return NINE_REGIONS.find((region) => region.id === id) || NINE_REGIONS[0];
+}
+
+function hydrologySignals(lon, lat, terrainBase) {
+  if (!terrainBase.isLand && !terrainBase.isIce) {
+    const shallowShelf = terrainBase.shelfPermission || 0;
+    return Object.freeze({
+      watershedId: "ocean",
+      watershedStrength: 0,
+      riverbedPressure: 0,
+      streamPressure: 0,
+      lakeBasinPressure: 0,
+      glacierSeatPressure: 0,
+      valleyChannelPressure: 0,
+      floodplainPressure: 0,
+      deltaReceiverPressure: clamp(shallowShelf * 0.38, 0, 1),
+      snowpackSourcePressure: 0,
+      hydrologyReadinessIndex: clamp(shallowShelf * 0.22, 0, 1)
+    });
+  }
+
+  let bestCorridor = HYDROLOGY_CORRIDORS[0];
+  let bestCorridorPressure = 0;
+  let bestT = 0;
+
+  for (const corridor of HYDROLOGY_CORRIDORS) {
+    const source = regionById(corridor.sourceRegion);
+    const receiver = regionById(corridor.receiverRegion);
+    const line = distanceToSegment(lon, lat, source.anchorLon, source.anchorLat, receiver.anchorLon, receiver.anchorLat);
+
+    const width = corridor.type === "major_riverbed" ? 0.055 : 0.044;
+    const pressure = smoothstep(width, 0.005, line.distance) * corridor.strength;
+
+    if (pressure > bestCorridorPressure) {
+      bestCorridorPressure = pressure;
+      bestCorridor = corridor;
+      bestT = line.t;
+    }
+  }
+
+  const region = terrainBase.regionId ? regionById(terrainBase.regionId) : regionById(1);
+  const elevation = clamp(terrainBase.normalizedElevation || 0, 0, 1);
+  const ridge = clamp(terrainBase.ridge || 0, 0, 1);
+  const basin = clamp(terrainBase.basin || 0, 0, 1);
+  const coast = clamp(terrainBase.coastPressure || 0, 0, 1);
+  const polar = clamp(terrainBase.polarSeat || 0, 0, 1);
+  const dry = clamp(terrainBase.dryInteriorPressure || 0, 0, 1);
+  const territory = clamp(terrainBase.territoryStrength || 0, 0, 1);
+
+  const sourcePotential = clamp(
+    smoothstep(0.58, 0.94, region.relativeElevation) * 0.42 +
+      ridge * 0.28 +
+      polar * 0.22 +
+      (terrainBase.landBodyKey === "north_polar_land_body" ? 0.18 : 0),
+    0,
+    1
+  );
+
+  const glacierSeatPressure = clamp(
+    sourcePotential * 0.56 +
+      smoothstep(0.68, 0.96, elevation) * 0.22 +
+      polar * 0.30 -
+      dry * 0.16,
+    0,
+    1
+  );
+
+  const snowpackSourcePressure = clamp(
+    glacierSeatPressure * 0.72 +
+      smoothstep(0.72, 0.96, region.relativeElevation) * 0.28,
+    0,
+    1
+  );
+
+  const riverbedPressure = clamp(
+    bestCorridorPressure * (0.68 + sourcePotential * 0.22) +
+      smoothstep(0.18, 0.72, elevation) * 0.08,
+    0,
+    1
+  );
+
+  const streamPressure = clamp(
+    riverbedPressure * 0.45 +
+      territory * 0.22 +
+      ridge * 0.24 +
+      sourcePotential * 0.20,
+    0,
+    1
+  );
+
+  const lakeBasinPressure = clamp(
+    basin * 0.44 +
+      (region.id === 3 ? 0.22 : 0) +
+      (region.id === 5 ? 0.32 : 0) +
+      smoothstep(0.26, 0.56, elevation) * (1 - ridge) * 0.16,
+    0,
+    1
+  );
+
+  const valleyChannelPressure = clamp(
+    riverbedPressure * 0.34 +
+      streamPressure * 0.26 +
+      ridge * (1 - basin) * 0.22 +
+      bestCorridorPressure * 0.24,
+    0,
+    1
+  );
+
+  const floodplainPressure = clamp(
+    (region.id === 1 ? 0.30 : 0) +
+      (region.id === 3 ? 0.22 : 0) +
+      (region.id === 4 ? 0.18 : 0) +
+      (region.id === 5 ? 0.14 : 0) +
+      coast * 0.22 +
+      (1 - elevation) * 0.18 +
+      riverbedPressure * 0.18,
+    0,
+    1
+  );
+
+  const deltaReceiverPressure = clamp(
+    coast * 0.36 +
+      riverbedPressure * 0.24 +
+      smoothstep(0.58, 1.0, bestT) * bestCorridorPressure * 0.22,
+    0,
+    1
+  );
+
+  const watershedStrength = clamp(
+    sourcePotential * 0.34 +
+      ridge * 0.24 +
+      valleyChannelPressure * 0.18 +
+      riverbedPressure * 0.14 +
+      lakeBasinPressure * 0.10,
+    0,
+    1
+  );
+
+  const hydrologyReadinessIndex = clamp(
+    watershedStrength * 0.18 +
+      riverbedPressure * 0.18 +
+      streamPressure * 0.12 +
+      lakeBasinPressure * 0.14 +
+      glacierSeatPressure * 0.14 +
+      valleyChannelPressure * 0.10 +
+      floodplainPressure * 0.08 +
+      deltaReceiverPressure * 0.06,
+    0,
+    1
+  );
+
+  return Object.freeze({
+    watershedId: bestCorridor.id,
+    watershedStrength,
+    riverbedPressure,
+    streamPressure,
+    lakeBasinPressure,
+    glacierSeatPressure,
+    valleyChannelPressure,
+    floodplainPressure,
+    deltaReceiverPressure,
+    snowpackSourcePressure,
+    hydrologyReadinessIndex
+  });
+}
+
 function terrainSignals(lon, lat, context) {
   const major = chooseMajorLandBody(lon, lat);
   const territory = chooseTerritory(lon, lat);
@@ -613,7 +655,7 @@ function terrainSignals(lon, lat, context) {
         ? clamp(smoothstep(0.64, 0.94, lat), 0, 1)
         : 0;
 
-  return Object.freeze({
+  const base = Object.freeze({
     major,
     territory,
     regionChoice,
@@ -633,7 +675,19 @@ function terrainSignals(lon, lat, context) {
     polarSeat,
     terrainNoise,
     fineTerrainNoise: fineNoise,
-    tectonicPressure
+    tectonicPressure,
+    region
+  });
+
+  return Object.freeze({
+    ...base,
+    hydrology: hydrologySignals(lon, lat, {
+      ...base,
+      landBodyKey: major.body ? major.body.key : "none",
+      regionId: region.id,
+      regionRelativeElevation: region.relativeElevation,
+      territoryStrength: territory.strength
+    })
   });
 }
 
@@ -646,7 +700,8 @@ function terrainColorInfluence(sample) {
       b: 252,
       ice: 1,
       shelf: 0,
-      coast: 0
+      coast: 0,
+      hydrology: sample.hydrologyReadinessIndex || 0
     });
   }
 
@@ -658,7 +713,8 @@ function terrainColorInfluence(sample) {
       coast: sample.coastPressure,
       r: Math.round(mix(8, 44, sample.shelfPermission)),
       g: Math.round(mix(30, 142, sample.shelfPermission)),
-      b: Math.round(mix(78, 168, sample.shelfPermission))
+      b: Math.round(mix(78, 168, sample.shelfPermission)),
+      hydrology: sample.hydrologyReadinessIndex || 0
     });
   }
 
@@ -666,7 +722,7 @@ function terrainColorInfluence(sample) {
   const highland = sample.ridge;
   const dry = sample.dryInteriorPressure;
   const polar = sample.polarSeat;
-  const regionWarmth = sample.regionRelativeElevation;
+  const hydro = sample.hydrologyReadinessIndex || 0;
 
   return Object.freeze({
     base: "terrain_land",
@@ -674,10 +730,10 @@ function terrainColorInfluence(sample) {
     highland,
     dry,
     polar,
-    regionWarmth,
+    hydrology: hydro,
     r: Math.round(mix(mix(88, 176, dry), 218, polar * 0.72 + highland * 0.18)),
-    g: Math.round(mix(mix(136, 126, dry), 232, polar * 0.72)),
-    b: Math.round(mix(mix(82, 94, dry), 238, polar * 0.72))
+    g: Math.round(mix(mix(136, 126, dry), 232, polar * 0.72 + hydro * 0.08)),
+    b: Math.round(mix(mix(82, 94, dry), 238, polar * 0.72 + hydro * 0.10))
   });
 }
 
@@ -689,7 +745,7 @@ export function createTerrainProfile(overrides = {}) {
     generation: GENERATION,
     file: FILE,
     parentAuthority: PARENT_AUTHORITY,
-    role: "terrain-pressure-child",
+    role: "terrain-pressure-and-hydrology-map-child",
     terrainChild: true,
 
     majorLandBodyCount: TERRAIN_LAW.majorLandBodies,
@@ -703,14 +759,20 @@ export function createTerrainProfile(overrides = {}) {
     regionOrdering: TERRAIN_LAW.nineRegions,
     regionElevationLaw: true,
 
+    hydrologyMap: true,
+    hydrologyOwnership: "terrain_places_only",
+    activeHydrationOwnedHere: false,
+    hydrologyCorridors: HYDROLOGY_CORRIDORS,
+
     majorLandBodies: MAJOR_LAND_BODIES,
     southPolarIce: SOUTH_POLAR_ICE,
     miscellaneousTerritoryClusters: MISC_TERRITORY_CLUSTERS,
     nineRegions: NINE_REGIONS,
 
     ownsTerrain: true,
+    ownsHydrologyPlaces: true,
+    ownsActiveHydration: false,
     ownsFinalRender: false,
-    ownsHydration: false,
     ownsClimate: false,
     ownsEcology: false,
     ownsFauna: false,
@@ -729,6 +791,7 @@ export function sampleTerrain(uInput, vInput, context = {}) {
   const majorBody = signals.major.body;
   const territoryCluster = signals.territory.cluster;
   const region = signals.regionChoice.region;
+  const hydrology = signals.hydrology;
 
   const sample = Object.freeze({
     receipt: RECEIPT,
@@ -785,12 +848,25 @@ export function sampleTerrain(uInput, vInput, context = {}) {
     fineTerrainNoise: signals.fineTerrainNoise,
     tectonicPressure: signals.tectonicPressure,
 
+    watershedId: hydrology.watershedId,
+    watershedStrength: hydrology.watershedStrength,
+    riverbedPressure: hydrology.riverbedPressure,
+    streamPressure: hydrology.streamPressure,
+    lakeBasinPressure: hydrology.lakeBasinPressure,
+    glacierSeatPressure: hydrology.glacierSeatPressure,
+    valleyChannelPressure: hydrology.valleyChannelPressure,
+    floodplainPressure: hydrology.floodplainPressure,
+    deltaReceiverPressure: hydrology.deltaReceiverPressure,
+    snowpackSourcePressure: hydrology.snowpackSourcePressure,
+    hydrologyReadinessIndex: hydrology.hydrologyReadinessIndex,
+
     terrainColorInfluence: null,
 
     terrainChild: true,
     ownsTerrain: true,
+    ownsHydrologyPlaces: true,
+    ownsActiveHydration: false,
     ownsFinalRender: false,
-    ownsHydration: false,
     ownsClimate: false,
     ownsEcology: false,
     visualPassClaimed: false
@@ -810,11 +886,16 @@ export function buildTerrainField(width = 128, height = 128, options = {}) {
   const landBodyCounts = new Map();
   const regionCounts = new Map();
   const territoryCounts = new Map();
+  const watershedCounts = new Map();
 
   let landSamples = 0;
   let waterSamples = 0;
   let iceSamples = 0;
   let elevationSum = 0;
+  let hydrologySum = 0;
+  let riverbedSum = 0;
+  let lakeSum = 0;
+  let glacierSum = 0;
   let maxElevation = -Infinity;
   let minElevation = Infinity;
 
@@ -827,6 +908,15 @@ export function buildTerrainField(width = 128, height = 128, options = {}) {
       const index = y * w + x;
 
       samples[index] = sample;
+
+      hydrologySum += sample.hydrologyReadinessIndex;
+      riverbedSum += sample.riverbedPressure;
+      lakeSum += sample.lakeBasinPressure;
+      glacierSum += sample.glacierSeatPressure;
+
+      if (sample.watershedId !== "ocean") {
+        watershedCounts.set(sample.watershedId, (watershedCounts.get(sample.watershedId) || 0) + 1);
+      }
 
       if (sample.isIce) {
         iceSamples += 1;
@@ -851,6 +941,7 @@ export function buildTerrainField(width = 128, height = 128, options = {}) {
   const activeLandBodies = Array.from(landBodyCounts.keys()).sort((a, b) => a - b);
   const activeRegions = Array.from(regionCounts.keys()).sort((a, b) => a - b);
   const activeTerritories = Array.from(territoryCounts.keys()).sort();
+  const activeWatersheds = Array.from(watershedCounts.keys()).sort();
 
   return Object.freeze({
     receipt: RECEIPT,
@@ -882,12 +973,23 @@ export function buildTerrainField(width = 128, height = 128, options = {}) {
       expectedMiscTerritoryClusters: MISC_TERRITORY_CLUSTERS.length,
       activeTerritories,
 
+      activeWatershedCount: activeWatersheds.length,
+      expectedHydrologyCorridorCount: HYDROLOGY_CORRIDORS.length,
+      activeWatersheds,
+
       averageLandElevation: elevationSum / Math.max(1, landSamples),
       minLandElevation: Number.isFinite(minElevation) ? minElevation : 0,
       maxLandElevation: Number.isFinite(maxElevation) ? maxElevation : 0,
 
+      averageHydrologyReadiness: hydrologySum / samples.length,
+      averageRiverbedPressure: riverbedSum / samples.length,
+      averageLakeBasinPressure: lakeSum / samples.length,
+      averageGlacierSeatPressure: glacierSum / samples.length,
+
       southPoleIceOnly: true,
       regionElevationOrdered: true,
+      hydrologyMapActive: true,
+      activeHydrationOwnedHere: false,
       parentMustCompose: true,
       terrainChildOnly: true
     }),
@@ -917,14 +1019,14 @@ export function getTerrainStatus() {
     ok: true,
     receipt: RECEIPT,
     status: "active",
-    id: "audralia-g1-terrain-pressure-island-elevation-child",
+    id: "audralia-g1-terrain-hydrology-map-child",
     planetaryObject: PLANETARY_OBJECT,
     publicName: PLANETARY_OBJECT,
     generation: GENERATION,
     file: FILE,
     parentAuthority: PARENT_AUTHORITY,
 
-    role: "terrain-pressure-child",
+    role: "terrain-pressure-and-hydrology-map-child",
     terrainChild: true,
     downstreamForParent: true,
 
@@ -941,10 +1043,30 @@ export function getTerrainStatus() {
     region1: "lowest_origin_tier",
     region9: "highest_convergence_tier",
 
+    hydrologyMap: "active",
+    hydrologyOwnership: "terrain_places_only",
+    activeHydrationOwnedHere: false,
+    hydrologyCorridorCount: HYDROLOGY_CORRIDORS.length,
+
+    newOutputFields: Object.freeze([
+      "watershedId",
+      "watershedStrength",
+      "riverbedPressure",
+      "streamPressure",
+      "lakeBasinPressure",
+      "glacierSeatPressure",
+      "valleyChannelPressure",
+      "floodplainPressure",
+      "deltaReceiverPressure",
+      "snowpackSourcePressure",
+      "hydrologyReadinessIndex"
+    ]),
+
     majorLandBodies: MAJOR_LAND_BODIES,
     southPolarIce: SOUTH_POLAR_ICE,
     miscellaneousTerritoryClusters: MISC_TERRITORY_CLUSTERS,
     nineRegions: NINE_REGIONS,
+    hydrologyCorridors: HYDROLOGY_CORRIDORS,
 
     exports: Object.freeze([
       "createTerrainProfile",
@@ -955,8 +1077,9 @@ export function getTerrainStatus() {
     ]),
 
     ownsTerrain: true,
+    ownsHydrologyPlaces: true,
+    ownsActiveHydration: false,
     ownsFinalRender: false,
-    ownsHydration: false,
     ownsClimate: false,
     ownsEcology: false,
     ownsFauna: false,

@@ -1,15 +1,21 @@
 // /assets/audralia/audralia.topology.render.js
-// AUDRALIA_G1_TOPOLOGY_SEA_LEVEL_EARTH_LAND_RATIO_BATHYMETRY_COAST_TNT_v1
+// AUDRALIA_G1_TOPOLOGY_LANDMASS_100_PERCENT_EXPANSION_SMALL_CONTINENTS_TNT_v1
 //
 // Runtime compatibility preserved:
 // AUDRALIA_G1_TOPOLOGY_PLANET_BLUEPRINT_AND_SUBTERRANEAN_DEPTH_TNT_v1
 //
 // Role:
 // - Audralia topology blueprint layer.
-// - Owns land/void footprint, Earth-equivalent exposed land ratio target,
+// - Owns land/void footprint, landmass expansion, island-chain connection,
 //   sea-level boundary, shoreline exposure, beaches, sand, rock, coastal cliffs,
 //   erosion zones, shelves, bathymetry, ocean basins, trenches, sub-sea depth,
 //   subterranean depth, and terrain-rise permissions.
+//
+// Current pass:
+// - Every existing land piece expands by +100% area.
+// - Major land bodies use radius scale ≈ sqrt(2).
+// - Island arcs expand and nearby islands may merge into small continents.
+// - Land expansion is applied first; land-ratio conflict is audited second.
 //
 // Does not own:
 // - terrain elevation
@@ -26,11 +32,12 @@
 // - final render
 // - visual pass claim
 
-const ACTIVE_CONTRACT = "AUDRALIA_G1_TOPOLOGY_SEA_LEVEL_EARTH_LAND_RATIO_BATHYMETRY_COAST_TNT_v1";
+const ACTIVE_CONTRACT = "AUDRALIA_G1_TOPOLOGY_LANDMASS_100_PERCENT_EXPANSION_SMALL_CONTINENTS_TNT_v1";
 const RUNTIME_COMPATIBLE_RECEIPT = "AUDRALIA_G1_TOPOLOGY_PLANET_BLUEPRINT_AND_SUBTERRANEAN_DEPTH_TNT_v1";
 const RECEIPT = ACTIVE_CONTRACT;
 
 const PREVIOUS_RECEIPTS = Object.freeze([
+  "AUDRALIA_G1_TOPOLOGY_SEA_LEVEL_EARTH_LAND_RATIO_BATHYMETRY_COAST_TNT_v1",
   "AUDRALIA_G1_TOPOLOGY_CONNECTED_LANDFOOTPRINT_AND_IRREGULAR_COAST_TNT_v1",
   "AUDRALIA_G1_TOPOLOGY_PLANET_BLUEPRINT_AND_SUBTERRANEAN_DEPTH_TNT_v1",
   "AUDRALIA_G2_TOPOLOGY_CHILD_FROM_CONFIRMED_TERRAIN_TNT_v1",
@@ -38,16 +45,41 @@ const PREVIOUS_RECEIPTS = Object.freeze([
 ]);
 
 const PLANETARY_OBJECT = "Audralia";
-const GENERATION = "G1_TOPOLOGY_SEA_LEVEL_BATHYMETRY_COAST";
+const GENERATION = "G1_TOPOLOGY_LANDMASS_EXPANSION_SMALL_CONTINENTS";
 const FILE = "/assets/audralia/audralia.topology.render.js";
 const PARENT_AUTHORITY = "/assets/audralia/audralia.planet.render.js";
 const TECTONICS_HANDOFF_TARGET = "/assets/audralia/audralia.tectonics.render.js";
 const TERRAIN_HANDOFF_TARGET = "/assets/audralia/audralia.terrain.render.js";
 
+const LAND_EXPANSION_LAW = Object.freeze({
+  active: true,
+  instruction: "increase_every_existing_land_piece_by_100_percent_area",
+  areaMultiplier: 2,
+  radiusScaleForAreaDoubling: Math.SQRT2,
+  majorLandRadiusScale: Math.SQRT2,
+  peninsulaRadiusScale: 1.30,
+  islandArcRadiusScale: Math.SQRT2,
+  islandArcSpreadScale: 1.18,
+  connectionWidthScale: 1.72,
+  connectionPressureScale: 1.36,
+  shelfExposureScale: 1.28,
+  coastlineMustRemainIrregular: true,
+  randomNewContinentsAllowed: false,
+  existingLandOnly: true,
+  islandChainMergePermission: true,
+  smallContinentFormationPermission: true,
+  terrainMayNotCreateLand: true,
+  routeMayNotCreateLand: true,
+  hydrationHeld: true,
+  foliageClosed: true,
+  visualPassClaimed: false
+});
+
 const EARTH_LAND_RATIO_LAW = Object.freeze({
   approximateEarthExposedLandRatio: 0.292,
   tolerance: 0.012,
-  rule: "current_exposed_land_area_no_more_no_less_than_earth_equivalent_ratio_at_planet_scale",
+  rule: "earth_equivalent_ratio_remains_audit_target_after_land_expansion_override",
+  currentPassMode: "expand_land_first_audit_ratio_second",
   topologyOwnsSeaLevelCorrection: true,
   terrainMayNotExpandLandArea: true,
   tectonicsMayNotExpandLandArea: true,
@@ -59,7 +91,7 @@ const SEA_LEVEL_LAW = Object.freeze({
   controller: "topology",
   defaultSeaLevelThreshold: 0.615,
   thresholdMeaning: "higher_threshold_submerges_more_land_lower_threshold_exposes_more_shelf",
-  adjustmentMode: "earth_equivalent_ratio_target_first",
+  adjustmentMode: "land_expansion_first_ratio_audit_second",
   exposeShelfIfUnderTarget: true,
   submergeMarginIfOverTarget: true,
   hydrationHeld: true
@@ -67,7 +99,7 @@ const SEA_LEVEL_LAW = Object.freeze({
 
 const TOPOLOGY_LAW = Object.freeze({
   parentRole: "globe-body-baseline-only",
-  topologyRole: "planet-blueprint-sea-level-land-ratio-bathymetry-coast-authority",
+  topologyRole: "landmass-expansion-sea-level-bathymetry-coast-authority",
   tectonicsRoleLater: "plate-pressure-mineral-memory-authority",
   terrainRoleLater: "above-sea-elevation-and-relief-authority",
   hydrationRoleLater: "water-fill-and-water-behavior-authority",
@@ -75,7 +107,10 @@ const TOPOLOGY_LAW = Object.freeze({
   ownsTopologyBlueprint: true,
   ownsLandVoidFootprint: true,
   ownsAboveWaterLandFootprint: true,
-  ownsEarthEquivalentLandRatio: true,
+  ownsLandmassExpansion: true,
+  ownsIslandChainConnection: true,
+  ownsSmallContinentFormation: true,
+  ownsEarthEquivalentLandRatioAudit: true,
   ownsSeaLevelBoundary: true,
   ownsSeaLevelCorrection: true,
   ownsBeachSandRockBoundary: true,
@@ -131,7 +166,7 @@ const SURFACE_CLASSES = Object.freeze([
   Object.freeze({ id: 7, key: "coastal_rock_band", name: "Coastal Rock Band", role: "rock, cliff, and hard coastline placement" }),
   Object.freeze({ id: 8, key: "low_land_footprint", name: "Low Land Footprint", role: "land exists; terrain later determines height" }),
   Object.freeze({ id: 9, key: "main_landmass_footprint", name: "Main Landmass Footprint", role: "primary stable land body" }),
-  Object.freeze({ id: 10, key: "island_footprint", name: "Island Footprint", role: "intentional geological island footprint; not foliage" }),
+  Object.freeze({ id: 10, key: "small_continent_footprint", name: "Small Continent Footprint", role: "merged island-chain land system" }),
   Object.freeze({ id: 11, key: "polar_land_footprint", name: "Polar Land Footprint", role: "north polar land footprint" }),
   Object.freeze({ id: 12, key: "polar_ice_footprint", name: "Polar Ice Footprint", role: "south pole ice-only footprint" }),
   Object.freeze({ id: 13, key: "subterranean_rock_mass", name: "Subterranean Rock Mass", role: "underground rock body and foundation" }),
@@ -167,12 +202,13 @@ const LAND_BODIES = Object.freeze([
     id: 1,
     key: "dominant_mainland_footprint",
     name: "Dominant Mainland Footprint",
-    role: "largest connected primary landmass footprint",
+    role: "largest connected primary landmass footprint expanded by 100 percent area",
     centerLon: -0.08,
     centerLat: 0.00,
     radiusLon: 0.40,
     radiusLat: 0.235,
     angle: -13,
+    expansionEligible: true,
     coastlineRoughness: 0.34,
     rockBias: 0.46,
     sandBias: 0.34,
@@ -186,12 +222,13 @@ const LAND_BODIES = Object.freeze([
     id: 2,
     key: "western_weathered_body_footprint",
     name: "Western Weathered Body Footprint",
-    role: "western landmass connected by eroded neck and shelf",
+    role: "western landmass expanded and connected by eroded neck and shelf",
     centerLon: -0.62,
     centerLat: -0.02,
     radiusLon: 0.235,
     radiusLat: 0.18,
     angle: 22,
+    expansionEligible: true,
     coastlineRoughness: 0.42,
     rockBias: 0.64,
     sandBias: 0.20,
@@ -205,12 +242,13 @@ const LAND_BODIES = Object.freeze([
     id: 3,
     key: "eastern_shelf_body_footprint",
     name: "Eastern Shelf Body Footprint",
-    role: "eastern shelf-facing landmass connected by shallow exposed bridge",
+    role: "eastern shelf-facing landmass expanded and connected by shallow exposed bridge",
     centerLon: 0.56,
     centerLat: 0.03,
     radiusLon: 0.245,
     radiusLat: 0.19,
     angle: -25,
+    expansionEligible: true,
     coastlineRoughness: 0.34,
     rockBias: 0.36,
     sandBias: 0.48,
@@ -224,12 +262,13 @@ const LAND_BODIES = Object.freeze([
     id: 4,
     key: "southern_archipelago_footprint",
     name: "Southern Archipelago Footprint",
-    role: "southern broken land system with partial shelf connections",
+    role: "southern broken land system expanded into small-continent arc",
     centerLon: 0.12,
     centerLat: -0.45,
     radiusLon: 0.335,
     radiusLat: 0.14,
     angle: 9,
+    expansionEligible: true,
     coastlineRoughness: 0.46,
     rockBias: 0.56,
     sandBias: 0.26,
@@ -243,12 +282,13 @@ const LAND_BODIES = Object.freeze([
     id: 5,
     key: "north_polar_land_footprint",
     name: "North Polar Land Footprint",
-    role: "northern polar land footprint with irregular mineral edge",
+    role: "northern polar land footprint expanded with irregular mineral edge",
     centerLon: 0.02,
     centerLat: 0.82,
     radiusLon: 0.42,
     radiusLat: 0.12,
     angle: 0,
+    expansionEligible: true,
     coastlineRoughness: 0.30,
     rockBias: 0.72,
     sandBias: 0.08,
@@ -262,12 +302,13 @@ const LAND_BODIES = Object.freeze([
     id: 6,
     key: "south_polar_ice_footprint",
     name: "South Polar Ice Footprint",
-    role: "ice-only southern polar footprint",
+    role: "ice-only southern polar footprint; not expanded as above-water land",
     centerLon: 0.0,
     centerLat: -0.88,
     radiusLon: 1.0,
     radiusLat: 0.16,
     angle: 0,
+    expansionEligible: false,
     coastlineRoughness: 0.08,
     rockBias: 0.00,
     sandBias: 0.00,
@@ -299,12 +340,12 @@ const PENINSULA_SEEDS = Object.freeze([
 ]);
 
 const BAY_CUTS = Object.freeze([
-  Object.freeze({ id: "dominant_north_bay", lon: -0.08, lat: 0.20, radiusLon: 0.14, radiusLat: 0.070, cut: 0.28 }),
-  Object.freeze({ id: "dominant_south_bay", lon: -0.02, lat: -0.19, radiusLon: 0.17, radiusLat: 0.075, cut: 0.26 }),
-  Object.freeze({ id: "western_inner_cove", lon: -0.52, lat: -0.08, radiusLon: 0.10, radiusLat: 0.060, cut: 0.24 }),
-  Object.freeze({ id: "eastern_shelf_bay", lon: 0.50, lat: 0.16, radiusLon: 0.10, radiusLat: 0.060, cut: 0.22 }),
-  Object.freeze({ id: "southern_archipelago_bite", lon: 0.18, lat: -0.38, radiusLon: 0.16, radiusLat: 0.050, cut: 0.24 }),
-  Object.freeze({ id: "polar_north_bay", lon: 0.24, lat: 0.77, radiusLon: 0.16, radiusLat: 0.050, cut: 0.18 })
+  Object.freeze({ id: "dominant_north_bay", lon: -0.08, lat: 0.20, radiusLon: 0.14, radiusLat: 0.070, cut: 0.24 }),
+  Object.freeze({ id: "dominant_south_bay", lon: -0.02, lat: -0.19, radiusLon: 0.17, radiusLat: 0.075, cut: 0.22 }),
+  Object.freeze({ id: "western_inner_cove", lon: -0.52, lat: -0.08, radiusLon: 0.10, radiusLat: 0.060, cut: 0.20 }),
+  Object.freeze({ id: "eastern_shelf_bay", lon: 0.50, lat: 0.16, radiusLon: 0.10, radiusLat: 0.060, cut: 0.18 }),
+  Object.freeze({ id: "southern_archipelago_bite", lon: 0.18, lat: -0.38, radiusLon: 0.16, radiusLat: 0.050, cut: 0.20 }),
+  Object.freeze({ id: "polar_north_bay", lon: 0.24, lat: 0.77, radiusLon: 0.16, radiusLat: 0.050, cut: 0.14 })
 ]);
 
 const ISLAND_FOOTPRINT_ARCS = Object.freeze([
@@ -414,12 +455,14 @@ function normalizeUV(uInput, vInput) {
 function getInputContext(context = {}) {
   return Object.freeze({
     blueprintResolution: clamp(Number.isFinite(Number(context.blueprintResolution)) ? Number(context.blueprintResolution) : 0.88, 0, 1),
-    coastlineComplexity: clamp(Number.isFinite(Number(context.coastlineComplexity)) ? Number(context.coastlineComplexity) : 0.90, 0, 1),
-    connectionStrength: clamp(Number.isFinite(Number(context.connectionStrength)) ? Number(context.connectionStrength) : 0.82, 0, 1),
+    coastlineComplexity: clamp(Number.isFinite(Number(context.coastlineComplexity)) ? Number(context.coastlineComplexity) : 0.92, 0, 1),
+    connectionStrength: clamp(Number.isFinite(Number(context.connectionStrength)) ? Number(context.connectionStrength) : 0.90, 0, 1),
     subterraneanPressure: clamp(Number.isFinite(Number(context.subterraneanPressure)) ? Number(context.subterraneanPressure) : 0.72, 0, 1),
     seaLevelThreshold: clamp(Number.isFinite(Number(context.seaLevelThreshold)) ? Number(context.seaLevelThreshold) : SEA_LEVEL_LAW.defaultSeaLevelThreshold, 0.42, 0.76),
     seaLevelOffset: clamp(Number.isFinite(Number(context.seaLevelOffset)) ? Number(context.seaLevelOffset) : 0, -0.16, 0.16),
-    landRatioTarget: clamp(Number.isFinite(Number(context.landRatioTarget)) ? Number(context.landRatioTarget) : EARTH_LAND_RATIO_LAW.approximateEarthExposedLandRatio, 0.20, 0.36)
+    landRatioTarget: clamp(Number.isFinite(Number(context.landRatioTarget)) ? Number(context.landRatioTarget) : EARTH_LAND_RATIO_LAW.approximateEarthExposedLandRatio, 0.20, 0.60),
+    landExpansionMultiplier: clamp(Number.isFinite(Number(context.landExpansionMultiplier)) ? Number(context.landExpansionMultiplier) : LAND_EXPANSION_LAW.areaMultiplier, 1, 4),
+    enforceEarthEquivalentLandRatio: Boolean(context.enforceEarthEquivalentLandRatio)
   });
 }
 
@@ -431,14 +474,24 @@ function seaLevelThreshold(context) {
   return clamp(context.seaLevelThreshold + context.seaLevelOffset, 0.42, 0.76);
 }
 
+function bodyRadiusScale(body, context) {
+  if (!body || !body.expansionEligible) return 1;
+  const areaMultiplier = clamp(context.landExpansionMultiplier, 1, 4);
+  return Math.sqrt(areaMultiplier);
+}
+
 function landBodyInfluence(lon, lat, body, context) {
+  const scale = bodyRadiusScale(body, context);
   const dx = wrapLonDistance(lon, body.centerLon);
   const dy = lat - body.centerLat;
   const rotated = rotatePoint(dx, dy, body.angle);
 
-  const primary = gaussian(rotated.x, rotated.y, body.radiusLon, body.radiusLat, 1.04);
-  const shoulderA = gaussian(rotated.x - body.radiusLon * 0.38, rotated.y + body.radiusLat * 0.20, body.radiusLon * 0.48, body.radiusLat * 0.40, 1.12) * 0.40;
-  const shoulderB = gaussian(rotated.x + body.radiusLon * 0.42, rotated.y - body.radiusLat * 0.24, body.radiusLon * 0.44, body.radiusLat * 0.36, 1.14) * 0.34;
+  const radiusLon = body.radiusLon * scale;
+  const radiusLat = body.radiusLat * scale;
+
+  const primary = gaussian(rotated.x, rotated.y, radiusLon, radiusLat, 1.04);
+  const shoulderA = gaussian(rotated.x - radiusLon * 0.38, rotated.y + radiusLat * 0.20, radiusLon * 0.48, radiusLat * 0.40, 1.12) * 0.40;
+  const shoulderB = gaussian(rotated.x + radiusLon * 0.42, rotated.y - radiusLat * 0.24, radiusLon * 0.44, radiusLat * 0.36, 1.14) * 0.34;
 
   const shape = Math.max(primary, shoulderA, shoulderB);
   const edge = smoothstep(0.20, 0.78, shape);
@@ -459,10 +512,19 @@ function landBodyInfluence(lon, lat, body, context) {
     const pdx = wrapLonDistance(lon, seed.lon);
     const pdy = lat - seed.lat;
     const pRot = rotatePoint(pdx, pdy, seed.angle);
-    peninsulaAdd = Math.max(peninsulaAdd, gaussian(pRot.x, pRot.y, seed.radiusLon, seed.radiusLat, 1.10) * seed.pressure);
+    peninsulaAdd = Math.max(
+      peninsulaAdd,
+      gaussian(
+        pRot.x,
+        pRot.y,
+        seed.radiusLon * LAND_EXPANSION_LAW.peninsulaRadiusScale,
+        seed.radiusLat * LAND_EXPANSION_LAW.peninsulaRadiusScale,
+        1.10
+      ) * seed.pressure
+    );
   }
 
-  return clamp(shape + roughness * edge + fracture * edge + peninsulaAdd - bayCut * edge, 0, 1.45);
+  return clamp(shape + roughness * edge + fracture * edge + peninsulaAdd - bayCut * edge, 0, 1.65);
 }
 
 function distanceToSegment(lon, lat, ax, ay, bx, by) {
@@ -495,7 +557,11 @@ function connectionInfluence(lon, lat, connection, context) {
 
   const line = distanceToSegment(lon, lat, from.centerLon, from.centerLat, to.centerLon, to.centerLat);
   const wave = 0.70 + fbm(lon * 8.0 + connection.from, lat * 8.0 - connection.to, 321 + connection.from * 7 + connection.to, 4) * 0.30;
-  const neck = smoothstep(connection.width, 0.004, line.distance) * connection.pressure * context.connectionStrength * wave;
+
+  const width = connection.width * LAND_EXPANSION_LAW.connectionWidthScale;
+  const pressure = connection.pressure * LAND_EXPANSION_LAW.connectionPressureScale;
+
+  const neck = smoothstep(width, 0.004, line.distance) * pressure * context.connectionStrength * wave;
 
   return Object.freeze({
     pressure: clamp(neck, 0, 1),
@@ -507,12 +573,12 @@ function connectionInfluence(lon, lat, connection, context) {
 
 function islandPoint(arc, index) {
   const step = index - (arc.count - 1) / 2;
-  const curve = Math.sin(index * 1.38) * arc.spreadLat * 0.24;
+  const curve = Math.sin(index * 1.38) * arc.spreadLat * LAND_EXPANSION_LAW.islandArcSpreadScale * 0.24;
 
   return Object.freeze({
-    lon: arc.centerLon + step * (arc.spreadLon / Math.max(1, arc.count - 1)) + Math.sin(index * 1.91) * 0.018,
-    lat: arc.centerLat + curve + Math.cos(index * 1.17) * arc.spreadLat * 0.16,
-    radius: arc.radius * (0.78 + (index % 3) * 0.10)
+    lon: arc.centerLon + step * ((arc.spreadLon * LAND_EXPANSION_LAW.islandArcSpreadScale) / Math.max(1, arc.count - 1)) + Math.sin(index * 1.91) * 0.018,
+    lat: arc.centerLat + curve + Math.cos(index * 1.17) * arc.spreadLat * LAND_EXPANSION_LAW.islandArcSpreadScale * 0.16,
+    radius: arc.radius * LAND_EXPANSION_LAW.islandArcRadiusScale
   });
 }
 
@@ -523,7 +589,7 @@ function islandInfluence(lon, lat, arc) {
     const point = islandPoint(arc, i);
     const dx = wrapLonDistance(lon, point.lon);
     const dy = lat - point.lat;
-    const local = gaussian(dx, dy, point.radius, point.radius * 0.62, 1.22);
+    const local = gaussian(dx, dy, point.radius, point.radius * 0.72, 1.10);
     strength = Math.max(strength, local);
   }
 
@@ -578,12 +644,14 @@ function computeFootprint(lon, lat, context) {
 
   const threshold = seaLevelThreshold(context);
   const connectedFootprintPressure = clamp(bestConnectionPressure, 0, 1);
-  const mainPressure = clamp(Math.max(bestBodyPressure, connectedFootprintPressure), 0, 1.45);
-  const landPressure = clamp(Math.max(mainPressure, bestIslandPressure * 0.98), 0, 1.45);
+  const mainPressure = clamp(Math.max(bestBodyPressure, connectedFootprintPressure), 0, 1.65);
+  const islandMergePressure = clamp(bestIslandPressure * 1.10 + connectedFootprintPressure * 0.28, 0, 1.55);
+  const landPressure = clamp(Math.max(mainPressure, islandMergePressure), 0, 1.65);
 
   const isSouthPolarIceFootprint = Boolean(bestBody && bestBody.id === 6 && southPolarIcePressure > 0.52);
-  const isIslandFootprint = Boolean(bestIslandArc && bestIslandPressure >= Math.max(threshold + 0.04, mainPressure * 1.04));
-  const isConnectedLandSystem = Boolean(bestConnection && connectedFootprintPressure >= 0.28 && connectedFootprintPressure >= bestIslandPressure * 0.72);
+  const isIslandFootprint = Boolean(bestIslandArc && islandMergePressure >= Math.max(threshold - 0.02, mainPressure * 0.86));
+  const isConnectedLandSystem = Boolean(bestConnection && connectedFootprintPressure >= 0.20 && connectedFootprintPressure >= bestIslandPressure * 0.52);
+  const isSmallContinentFootprint = Boolean(isIslandFootprint && (connectedFootprintPressure > 0.24 || bestIslandPressure > threshold + 0.05));
 
   const isLandFootprint = landPressure >= threshold || isSouthPolarIceFootprint;
   const isVoidFootprint = !isLandFootprint;
@@ -601,9 +669,9 @@ function computeFootprint(lon, lat, context) {
 
   const seaLevelBoundary = landPressure - threshold;
   const seaLevelDistance = Math.abs(seaLevelBoundary);
-  const shelfExposurePressure = clamp((landPressure - (threshold - 0.12)) / 0.12, 0, 1);
-  const exposedShelfPermission = !isLandFootprint ? clamp(shelfExposurePressure * (1 - seaLevelDistance), 0, 1) : 0;
-  const submergedShelfPermission = isVoidFootprint ? clamp(1 - seaLevelDistance / 0.20, 0, 1) : 0;
+  const shelfExposurePressure = clamp((landPressure - (threshold - 0.14)) / 0.14, 0, 1);
+  const exposedShelfPermission = !isLandFootprint ? clamp(shelfExposurePressure * LAND_EXPANSION_LAW.shelfExposureScale * (1 - seaLevelDistance), 0, 1) : 0;
+  const submergedShelfPermission = isVoidFootprint ? clamp((1 - seaLevelDistance / 0.22) * LAND_EXPANSION_LAW.shelfExposureScale, 0, 1) : 0;
 
   return Object.freeze({
     bestBody,
@@ -630,6 +698,7 @@ function computeFootprint(lon, lat, context) {
     isVoidFootprint,
     isIslandFootprint,
     isConnectedLandSystem,
+    isSmallContinentFootprint,
     isSouthPolarIceFootprint,
     isNorthPolarLandFootprint: Boolean(landBody && landBody.id === 5 && isLandFootprint),
     isPolarFootprint: Boolean((landBody && landBody.id === 5) || isSouthPolarIceFootprint)
@@ -673,10 +742,11 @@ function computeCoastalBlueprint(lon, lat, footprint, context) {
   );
 
   const coastlineIrregularityIndex = clamp(
-    Math.abs(fine - 0.5) * 1.10 +
-      body.coastlineRoughness * 0.54 +
-      (footprint.isConnectedLandSystem ? 0.12 : 0) +
-      (footprint.isIslandFootprint ? 0.08 : 0),
+    Math.abs(fine - 0.5) * 1.14 +
+      body.coastlineRoughness * 0.58 +
+      (footprint.isConnectedLandSystem ? 0.14 : 0) +
+      (footprint.isIslandFootprint ? 0.10 : 0) +
+      (footprint.isSmallContinentFootprint ? 0.12 : 0),
     0,
     1
   );
@@ -694,7 +764,7 @@ function computeCoastalBlueprint(lon, lat, footprint, context) {
   const bayPermission = clamp(boundaryBand * coastlineIrregularityIndex * (footprint.isLandFootprint ? 0.42 : 0.62), 0, 1);
   const inletPermission = clamp(boundaryBand * coastlineIrregularityIndex * (footprint.isVoidFootprint ? 0.64 : 0.36), 0, 1);
   const peninsulaPermission = clamp((footprint.isLandFootprint ? 1 : 0) * (footprint.isConnectedLandSystem ? 0.46 : 0.22) + coastlineIrregularityIndex * 0.22, 0, 1);
-  const isthmusPermission = clamp(footprint.isConnectedLandSystem ? 0.42 + footprint.connectedFootprintPressure * 0.46 : 0, 0, 1);
+  const isthmusPermission = clamp(footprint.isConnectedLandSystem ? 0.42 + footprint.connectedFootprintPressure * 0.48 : 0, 0, 1);
 
   const diamondDarkSandIndex = clamp(
     body.diamondBias * 0.32 +
@@ -978,8 +1048,9 @@ function computeTerrainPermission(footprint, coastal, subsea, subterranean) {
         0.42 +
           footprint.landPressure * 0.30 +
           coastal.dryEdgePermission * 0.14 +
-          footprint.connectedFootprintPressure * 0.10 +
-          coastal.cliffBaseCut * 0.08,
+          footprint.connectedFootprintPressure * 0.12 +
+          coastal.cliffBaseCut * 0.08 +
+          (footprint.isSmallContinentFootprint ? 0.08 : 0),
         0,
         1
       )
@@ -997,6 +1068,7 @@ function computeTerrainPermission(footprint, coastal, subsea, subterranean) {
 
   const coastalRisePermission = clamp(coastal.dryEdgePermission * (footprint.isLandFootprint ? 0.78 : 0.16), 0, 1);
   const islandRisePermission = footprint.isIslandFootprint ? clamp(0.42 + terrainRisePermission * 0.42, 0, 1) : 0;
+  const smallContinentRisePermission = footprint.isSmallContinentFootprint ? clamp(0.54 + terrainRisePermission * 0.36, 0, 1) : 0;
   const polarRisePermission = footprint.isNorthPolarLandFootprint ? clamp(0.38 + terrainRisePermission * 0.34, 0, 1) : 0;
 
   const basinDepressionPermission = clamp(
@@ -1022,6 +1094,7 @@ function computeTerrainPermission(footprint, coastal, subsea, subterranean) {
   let terrainSeedClass = "none";
   if (footprint.isSouthPolarIceFootprint) terrainSeedClass = "polar_ice_footprint";
   else if (footprint.isNorthPolarLandFootprint) terrainSeedClass = "polar_land_rise_seed";
+  else if (footprint.isSmallContinentFootprint) terrainSeedClass = "small_continent_rise_seed";
   else if (footprint.isConnectedLandSystem) terrainSeedClass = "connected_landmass_rise_seed";
   else if (footprint.isIslandFootprint) terrainSeedClass = "intentional_island_rise_seed";
   else if (cliffRisePermission > 0.52) terrainSeedClass = "rock_cliff_rise_seed";
@@ -1036,6 +1109,7 @@ function computeTerrainPermission(footprint, coastal, subsea, subterranean) {
     terrainBlockPermission,
     coastalRisePermission,
     islandRisePermission,
+    smallContinentRisePermission,
     polarRisePermission,
     basinDepressionPermission,
     cliffRisePermission,
@@ -1059,6 +1133,7 @@ function determineSurfaceClass(footprint, coastal, subsea, subterranean, permiss
   if (coastal.isBeach && coastal.sandPressure >= coastal.rockPressure) return SURFACE_CLASSES[6];
   if (coastal.isRock || coastal.coastalCliffPressure > 0.50) return SURFACE_CLASSES[7];
   if (footprint.isNorthPolarLandFootprint) return SURFACE_CLASSES[11];
+  if (footprint.isSmallContinentFootprint) return SURFACE_CLASSES[10];
   if (footprint.isIslandFootprint) return SURFACE_CLASSES[10];
   if (permission.terrainRisePermission > 0.72) return SURFACE_CLASSES[15];
   if (footprint.landPressure > footprint.seaLevelThreshold + 0.22) return SURFACE_CLASSES[9];
@@ -1089,8 +1164,8 @@ function landAreaCorrectionFromRatio(ratio, target) {
   }
 
   return Object.freeze({
-    status: "over_target",
-    direction: "raise_sea_level_submerge_marginal_shelves",
+    status: "over_target_after_expansion",
+    direction: "audit_only_do_not_recalibrate_this_pass",
     delta,
     correctionIndex: clamp(Math.abs(delta) / 0.12, 0, 1)
   });
@@ -1164,7 +1239,7 @@ export function createTopologyProfile(overrides = {}) {
     parentAuthority: PARENT_AUTHORITY,
     tectonicsHandoffTarget: TECTONICS_HANDOFF_TARGET,
     terrainHandoffTarget: TERRAIN_HANDOFF_TARGET,
-    role: "sea-level-earth-land-ratio-bathymetry-coast-blueprint-child",
+    role: "landmass-100-percent-expansion-small-continent-blueprint-child",
 
     topologyBlueprint: true,
     topologyComesBeforeTectonics: true,
@@ -1172,6 +1247,7 @@ export function createTopologyProfile(overrides = {}) {
     terrainConsumesTopology: true,
     tectonicsConsumesTopology: true,
 
+    landExpansionLaw: LAND_EXPANSION_LAW,
     earthLandRatioLaw: EARTH_LAND_RATIO_LAW,
     seaLevelLaw: SEA_LEVEL_LAW,
     topologyLaw: TOPOLOGY_LAW,
@@ -1188,7 +1264,10 @@ export function createTopologyProfile(overrides = {}) {
     ownsTopologyBlueprint: true,
     ownsLandVoidFootprint: true,
     ownsAboveWaterLandFootprint: true,
-    ownsEarthEquivalentLandRatio: true,
+    ownsLandmassExpansion: true,
+    ownsIslandChainConnection: true,
+    ownsSmallContinentFormation: true,
+    ownsEarthEquivalentLandRatioAudit: true,
     ownsSeaLevelBoundary: true,
     ownsSeaLevelCorrection: true,
     ownsBeachSandRockBoundary: true,
@@ -1269,6 +1348,12 @@ export function sampleTopology(uInput, vInput, context = {}) {
     terrainConsumesTopology: true,
     tectonicsConsumesTopology: true,
 
+    landExpansionActive: true,
+    landExpansionAreaMultiplier: LAND_EXPANSION_LAW.areaMultiplier,
+    landExpansionRadiusScale: LAND_EXPANSION_LAW.radiusScaleForAreaDoubling,
+    islandChainMergePermission: LAND_EXPANSION_LAW.islandChainMergePermission,
+    smallContinentFormationPermission: LAND_EXPANSION_LAW.smallContinentFormationPermission,
+
     targetLandRatio: topologyContext.landRatioTarget,
     approximateEarthExposedLandRatio: EARTH_LAND_RATIO_LAW.approximateEarthExposedLandRatio,
     seaLevelThreshold: footprint.seaLevelThreshold,
@@ -1289,6 +1374,7 @@ export function sampleTopology(uInput, vInput, context = {}) {
     isShelf: coastal.isShelf,
     isIslandFootprint: footprint.isIslandFootprint,
     isConnectedLandSystem: footprint.isConnectedLandSystem,
+    isSmallContinentFootprint: footprint.isSmallContinentFootprint,
     isPolarFootprint: footprint.isPolarFootprint,
     isNorthPolarLandFootprint: footprint.isNorthPolarLandFootprint,
     isSouthPolarIceFootprint: footprint.isSouthPolarIceFootprint,
@@ -1378,6 +1464,7 @@ export function sampleTopology(uInput, vInput, context = {}) {
     terrainBlockPermission: permission.terrainBlockPermission,
     coastalRisePermission: permission.coastalRisePermission,
     islandRisePermission: permission.islandRisePermission,
+    smallContinentRisePermission: permission.smallContinentRisePermission,
     polarRisePermission: permission.polarRisePermission,
     basinDepressionPermission: permission.basinDepressionPermission,
     cliffRisePermission: permission.cliffRisePermission,
@@ -1410,18 +1497,21 @@ export function sampleTopology(uInput, vInput, context = {}) {
 export function buildTopologyField(width = 128, height = 128, options = {}) {
   const w = Math.max(8, Math.floor(Number(width) || 128));
   const h = Math.max(8, Math.floor(Number(height) || 128));
+  const inputContext = getInputContext(options);
 
-  const calibration = options.disableCalibration
-    ? Object.freeze({
-        targetLandRatio: getInputContext(options).landRatioTarget,
-        calibratedSeaLevelThreshold: getInputContext(options).seaLevelThreshold,
-        sampledLandRatio: countLandRatio(Math.min(96, w), Math.min(48, h), options),
-        landRatioDelta: 0,
-        seaLevelCorrectionStatus: "disabled",
-        seaLevelCorrectionDirection: "manual_context",
-        landAreaCorrectionIndex: 0
-      })
-    : calibrateSeaLevelThreshold(Math.min(96, w), Math.min(48, h), options);
+  const auditRatioBeforeCalibration = countLandRatio(Math.min(96, w), Math.min(48, h), options);
+
+  const calibration = inputContext.enforceEarthEquivalentLandRatio
+    ? calibrateSeaLevelThreshold(Math.min(96, w), Math.min(48, h), options)
+    : Object.freeze({
+        targetLandRatio: inputContext.landRatioTarget,
+        calibratedSeaLevelThreshold: inputContext.seaLevelThreshold,
+        sampledLandRatio: auditRatioBeforeCalibration,
+        landRatioDelta: auditRatioBeforeCalibration - inputContext.landRatioTarget,
+        seaLevelCorrectionStatus: "audit_only_expansion_first",
+        seaLevelCorrectionDirection: "do_not_recalibrate_this_pass",
+        landAreaCorrectionIndex: landAreaCorrectionFromRatio(auditRatioBeforeCalibration, inputContext.landRatioTarget).correctionIndex
+      });
 
   const fieldOptions = {
     ...options,
@@ -1447,6 +1537,7 @@ export function buildTopologyField(width = 128, height = 128, options = {}) {
   let rockSamples = 0;
   let shelfSamples = 0;
   let connectedLandSamples = 0;
+  let smallContinentSamples = 0;
   let islandSamples = 0;
   let subSeaSamples = 0;
   let subterraneanSamples = 0;
@@ -1496,6 +1587,7 @@ export function buildTopologyField(width = 128, height = 128, options = {}) {
       if (sample.isRock) rockSamples += 1;
       if (sample.isShelf) shelfSamples += 1;
       if (sample.isConnectedLandSystem) connectedLandSamples += 1;
+      if (sample.isSmallContinentFootprint) smallContinentSamples += 1;
       if (sample.isIslandFootprint) islandSamples += 1;
       if (sample.isSubSea) subSeaSamples += 1;
       if (sample.isSubterranean) subterraneanSamples += 1;
@@ -1557,6 +1649,7 @@ export function buildTopologyField(width = 128, height = 128, options = {}) {
       rockSamples,
       shelfSamples,
       connectedLandSamples,
+      smallContinentSamples,
       islandSamples,
       subSeaSamples,
       subterraneanSamples,
@@ -1574,11 +1667,15 @@ export function buildTopologyField(width = 128, height = 128, options = {}) {
       landAreaCorrectionDirection: landAreaCorrection.direction,
       landAreaCorrectionIndex: landAreaCorrection.correctionIndex,
       calibratedSeaLevelThreshold: calibration.calibratedSeaLevelThreshold,
+      landExpansionAreaMultiplier: LAND_EXPANSION_LAW.areaMultiplier,
+      landExpansionRadiusScale: LAND_EXPANSION_LAW.radiusScaleForAreaDoubling,
+      landExpansionMode: EARTH_LAND_RATIO_LAW.currentPassMode,
 
       coastlineRatio: coastlineSamples / samples.length,
       beachRatio: beachSamples / samples.length,
       shelfRatio: shelfSamples / samples.length,
       connectedLandRatio: connectedLandSamples / samples.length,
+      smallContinentRatio: smallContinentSamples / samples.length,
       islandRatio: islandSamples / samples.length,
       subSeaRatio: subSeaSamples / samples.length,
       subterraneanRatio: subterraneanSamples / samples.length,
@@ -1624,8 +1721,10 @@ export function buildTopologyField(width = 128, height = 128, options = {}) {
       averageBeachCloudSoftnessIndex: cloudSoftnessSum / samples.length,
 
       topologyBlueprintActive: true,
-      earthEquivalentLandRatioActive: true,
-      seaLevelCorrectionActive: true,
+      landExpansionActive: true,
+      smallContinentFormationActive: true,
+      earthEquivalentLandRatioAuditActive: true,
+      seaLevelCorrectionAvailableButNotAppliedByDefault: true,
       bathymetryActive: true,
       blackWhiteBeachLawActive: true,
       cliffErosionActive: true,
@@ -1680,15 +1779,13 @@ export function getTopologyStatus() {
   return Object.freeze({
     ok: true,
 
-    // Runtime compatibility: the installed runtime expects this stable receipt.
-    // The active contract below identifies the current topology renewal.
     receipt: RUNTIME_COMPATIBLE_RECEIPT,
     activeContract: ACTIVE_CONTRACT,
     latestContract: ACTIVE_CONTRACT,
     previousReceipts: PREVIOUS_RECEIPTS,
 
     status: "active",
-    id: "audralia-g1-topology-sea-level-earth-land-ratio-bathymetry-coast",
+    id: "audralia-g1-topology-landmass-100-percent-expansion-small-continents",
     planetaryObject: PLANETARY_OBJECT,
     publicName: PLANETARY_OBJECT,
     generation: GENERATION,
@@ -1697,13 +1794,14 @@ export function getTopologyStatus() {
     tectonicsHandoffTarget: TECTONICS_HANDOFF_TARGET,
     terrainHandoffTarget: TERRAIN_HANDOFF_TARGET,
 
-    role: "sea-level-earth-land-ratio-bathymetry-coast-blueprint-child",
+    role: "landmass-100-percent-expansion-small-continent-blueprint-child",
     topologyBlueprint: true,
     topologyComesBeforeTectonics: true,
     topologyComesBeforeTerrain: true,
     terrainConsumesTopology: true,
     tectonicsConsumesTopology: true,
 
+    landExpansionLaw: LAND_EXPANSION_LAW,
     earthLandRatioLaw: EARTH_LAND_RATIO_LAW,
     seaLevelLaw: SEA_LEVEL_LAW,
     topologyLaw: TOPOLOGY_LAW,
@@ -1711,7 +1809,9 @@ export function getTopologyStatus() {
     approximateEarthExposedLandRatio: EARTH_LAND_RATIO_LAW.approximateEarthExposedLandRatio,
     defaultSeaLevelThreshold: SEA_LEVEL_LAW.defaultSeaLevelThreshold,
     landRatioTarget: EARTH_LAND_RATIO_LAW.approximateEarthExposedLandRatio,
-    noMoreNoLessThanEarthLandArea: true,
+    landExpansionAreaMultiplier: LAND_EXPANSION_LAW.areaMultiplier,
+    landExpansionRadiusScale: LAND_EXPANSION_LAW.radiusScaleForAreaDoubling,
+    landExpansionCurrentPassMode: EARTH_LAND_RATIO_LAW.currentPassMode,
 
     landBodyCount: LAND_BODIES.length,
     surfaceClassCount: SURFACE_CLASSES.length,
@@ -1723,9 +1823,12 @@ export function getTopologyStatus() {
     islandFootprintArcCount: ISLAND_FOOTPRINT_ARCS.length,
     oceanTrenchCount: OCEAN_TRENCHES.length,
 
+    landExpansion: "active",
+    smallContinentFormation: "active",
+    islandChainMergePermission: "active",
     connectedLandFootprint: "active",
     irregularCoastline: "active",
-    seaLevelCorrection: "active",
+    seaLevelCorrection: "available_audit_second",
     bathymetry: "active",
     oceanDepths: "active",
     cliffErosion: "active",
@@ -1747,7 +1850,10 @@ export function getTopologyStatus() {
     ownsTopologyBlueprint: true,
     ownsLandVoidFootprint: true,
     ownsAboveWaterLandFootprint: true,
-    ownsEarthEquivalentLandRatio: true,
+    ownsLandmassExpansion: true,
+    ownsIslandChainConnection: true,
+    ownsSmallContinentFormation: true,
+    ownsEarthEquivalentLandRatioAudit: true,
     ownsSeaLevelBoundary: true,
     ownsSeaLevelCorrection: true,
     ownsBeachSandRockBoundary: true,

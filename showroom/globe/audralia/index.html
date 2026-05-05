@@ -5,8 +5,9 @@
   data-estate="rich-manor-and-estate"
   data-route="/showroom/globe/audralia/"
   data-body="audralia"
-  data-route-role="audralia-independent-route-handoff-shell"
-  data-contract="AUDRALIA_ROUTE_RUNTIME_TOPOLOGY_FIRST_HANDOFF_HTML_TNT_v1"
+  data-route-role="audralia-independent-handoff-shell"
+  data-contract="AUDRALIA_TRUE_GLOBE_HANDOFF_HTML_CACHE_REWIRE_TNT_v1"
+  data-route-script-contract="AUDRALIA_ROUTE_TRUE_GLOBE_VISIBLE_HEMISPHERE_RENDER_TNT_v1"
   data-public-receipts="hidden"
   data-raw-receipts="suppressed"
   data-earth-adoption="blocked"
@@ -22,10 +23,10 @@
   <title>Audralia · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Audralia is an independent constructed-world inspection route. This HTML is a handoff shell only: it owns route identity, navigation, mount, receipt suppression, and script loading."
+    content="Audralia is the independent constructed-world inspection route. The HTML owns only the handoff shell and mount. The route script owns true-globe visible-hemisphere rendering through the runtime chain."
   >
 
-  <link rel="stylesheet" href="/showroom/showroom.css?v=audralia-runtime-topology-first-handoff-html-v1">
+  <link rel="stylesheet" href="/showroom/showroom.css?v=audralia-true-globe-handoff-html-cache-rewire-v1">
 
   <style>
     :root {
@@ -255,19 +256,22 @@
 </head>
 
 <body
-  class="audralia-route audralia-runtime-topology-first-handoff-shell"
-  data-active-route-role="audralia-independent-runtime-handoff"
+  class="audralia-route audralia-true-globe-handoff-shell"
+  data-active-route-role="audralia-independent-true-globe-handoff-shell"
   data-body="audralia"
   data-route="/showroom/globe/audralia/"
-  data-runtime-authority="/assets/audralia/audralia.runtime.js"
-  data-topology-authority="/assets/audralia/audralia.topology.render.js"
-  data-terrain-authority="/assets/audralia/audralia.terrain.render.js"
-  data-parent-authority="/assets/audralia/audralia.planet.render.js"
   data-route-script="/showroom/globe/audralia/index.js"
+  data-route-script-contract="AUDRALIA_ROUTE_TRUE_GLOBE_VISIBLE_HEMISPHERE_RENDER_TNT_v1"
+  data-runtime-authority="/assets/audralia/audralia.runtime.js"
+  data-parent-authority="/assets/audralia/audralia.planet.render.js"
+  data-topology-authority="/assets/audralia/audralia.topology.render.js"
+  data-tectonics-authority="/assets/audralia/audralia.tectonics.render.js"
+  data-terrain-authority="/assets/audralia/audralia.terrain.render.js"
   data-new-file-required="false"
   data-earth-adoption="blocked"
   data-public-receipts="hidden"
   data-raw-receipts="suppressed"
+  data-visual-pass-claimed="false"
 >
   <a class="skip-link" href="#audralia-main">Skip to Audralia</a>
 
@@ -278,11 +282,13 @@
     data-route="/showroom/globe/audralia/"
     data-parent-route="/showroom/globe/"
     data-sibling-earth-route="/showroom/globe/earth/"
+    data-route-script="/showroom/globe/audralia/index.js"
+    data-route-script-contract="AUDRALIA_ROUTE_TRUE_GLOBE_VISIBLE_HEMISPHERE_RENDER_TNT_v1"
     data-runtime-authority="/assets/audralia/audralia.runtime.js"
-    data-topology-authority="/assets/audralia/audralia.topology.render.js"
-    data-terrain-authority="/assets/audralia/audralia.terrain.render.js"
     data-parent-authority="/assets/audralia/audralia.planet.render.js"
-    data-existing-route-script="/showroom/globe/audralia/index.js"
+    data-topology-authority="/assets/audralia/audralia.topology.render.js"
+    data-tectonics-authority="/assets/audralia/audralia.tectonics.render.js"
+    data-terrain-authority="/assets/audralia/audralia.terrain.render.js"
     data-new-file-required="false"
     data-earth-authority-adoption="blocked"
     data-earth-mount-adoption="blocked"
@@ -290,12 +296,12 @@
     data-raw-receipts="suppressed"
   >
     <header class="audralia-header">
-      <p class="eyebrow">Audralia · Runtime Handoff Shell</p>
+      <p class="eyebrow">Audralia · Independent Handoff Shell</p>
       <h1>Audralia</h1>
       <p class="lede">
-        This page is the handoff shell only. It owns route identity, navigation, mount placement,
-        receipt suppression, and script loading. The route script consumes the Audralia runtime;
-        the runtime orders topology first, then terrain, then parent/body support.
+        The HTML owns only the route shell and mount. Runtime controls the chain. The route script
+        renders Audralia as a true globe using a visible front-facing hemisphere instead of stretching
+        the full map across the visible disk.
       </p>
 
       <nav class="route-rail" aria-label="Audralia route rail">
@@ -312,79 +318,83 @@
       id="audralia-main"
       data-body="audralia"
       data-route="/showroom/globe/audralia/"
+      data-route-script-contract="AUDRALIA_ROUTE_TRUE_GLOBE_VISIBLE_HEMISPHERE_RENDER_TNT_v1"
       data-public-receipts="hidden"
       data-raw-receipts="suppressed"
     >
-      <section class="audralia-stage" aria-label="Audralia runtime handoff stage">
+      <section class="audralia-stage" aria-label="Audralia true-globe handoff stage">
         <div
           id="audraliaRenderMount"
           data-audralia-render-mount="true"
           data-render-mount="true"
           data-body="audralia"
-          data-runtime-authority="/assets/audralia/audralia.runtime.js"
-          data-topology-authority="/assets/audralia/audralia.topology.render.js"
-          data-terrain-authority="/assets/audralia/audralia.terrain.render.js"
-          data-parent-authority="/assets/audralia/audralia.planet.render.js"
           data-route-script="/showroom/globe/audralia/index.js"
-          data-route-handoff-only="true"
+          data-route-script-contract="AUDRALIA_ROUTE_TRUE_GLOBE_VISIBLE_HEMISPHERE_RENDER_TNT_v1"
+          data-runtime-authority="/assets/audralia/audralia.runtime.js"
+          data-parent-authority="/assets/audralia/audralia.planet.render.js"
+          data-topology-authority="/assets/audralia/audralia.topology.render.js"
+          data-tectonics-authority="/assets/audralia/audralia.tectonics.render.js"
+          data-terrain-authority="/assets/audralia/audralia.terrain.render.js"
           data-new-file-required="false"
           data-earth-mount="false"
           data-earth-adoption="blocked"
           data-public-receipts="hidden"
           data-raw-receipts="suppressed"
+          data-visual-pass-claimed="false"
         >
           <noscript>Audralia requires JavaScript to render.</noscript>
         </div>
       </section>
 
-      <section class="audralia-panel" aria-label="Audralia handoff status">
+      <section class="audralia-panel" aria-label="Audralia route status">
         <p class="eyebrow">Route status</p>
         <h2>Handoff shell only. Runtime controls the chain.</h2>
         <p>
           The HTML does not decide land, void, beaches, coastline, terrain, elevation,
-          rotation, hydration, foliage, or visual composition. It hands the mount to the route
-          script and declares the current authority chain.
+          rotation, hydration, foliage, or visual pass. This file only loads the current
+          true-globe route script and provides the Audralia mount.
         </p>
 
         <div class="status-grid">
           <article class="status-card">
-            <strong>HTML shell</strong>
-            <span>Owns route identity, navigation, mount, script loading, and hidden receipts.</span>
+            <strong>HTML route</strong>
+            <span>Owns shell, navigation, mount, and current script handoff.</span>
           </article>
 
           <article class="status-card">
-            <strong>Runtime</strong>
-            <span>Owns orchestration: topology first, terrain second, parent/body support third.</span>
+            <strong>Route script</strong>
+            <span>Owns true-globe visible-hemisphere rendering.</span>
           </article>
 
           <article class="status-card">
-            <strong>Asset chain</strong>
-            <span>Topology owns the blueprint. Terrain owns elevation beyond topology.</span>
+            <strong>Runtime chain</strong>
+            <span>Owns topology, tectonics, terrain handoff, and hydration hold.</span>
           </article>
         </div>
       </section>
 
       <section class="raw-receipts" hidden aria-hidden="true">
-        AUDRALIA_ROUTE_RUNTIME_TOPOLOGY_FIRST_HANDOFF_HTML_TNT_v1
+        AUDRALIA_TRUE_GLOBE_HANDOFF_HTML_CACHE_REWIRE_TNT_v1
         ROUTE=/showroom/globe/audralia/
         MOUNT=#audraliaRenderMount
         SCRIPT=/showroom/globe/audralia/index.js
+        SCRIPT_CONTRACT=AUDRALIA_ROUTE_TRUE_GLOBE_VISIBLE_HEMISPHERE_RENDER_TNT_v1
         RUNTIME=/assets/audralia/audralia.runtime.js
-        TOPOLOGY=/assets/audralia/audralia.topology.render.js
-        TERRAIN=/assets/audralia/audralia.terrain.render.js
         PARENT=/assets/audralia/audralia.planet.render.js
-        HTML_ROLE=handoff_only
+        TOPOLOGY=/assets/audralia/audralia.topology.render.js
+        TECTONICS=/assets/audralia/audralia.tectonics.render.js
+        TERRAIN=/assets/audralia/audralia.terrain.render.js
         NEW_FILE_REQUIRED=false
         EARTH_ADOPTION=blocked
-        HYDRATION=held
-        FOLIAGE=closed
+        GRAPHIC_BOX=false
+        IMAGE_GENERATION=false
         VISUAL_PASS=held
       </section>
     </main>
   </div>
 
   <script
-    src="/showroom/globe/audralia/index.js?v=AUDRALIA_ROUTE_RUNTIME_TOPOLOGY_FIRST_CONSUMER_TNT_v1"
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_ROUTE_TRUE_GLOBE_VISIBLE_HEMISPHERE_RENDER_TNT_v1"
     defer
   ></script>
 </body>

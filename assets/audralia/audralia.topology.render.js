@@ -1,19 +1,47 @@
 // /assets/audralia/audralia.topology.render.js
-// AUDRALIA_G2_TOPOLOGY_CHILD_TNT_v1
+// AUDRALIA_G2_TOPOLOGY_CHILD_FROM_CONFIRMED_TERRAIN_TNT_v1
 //
 // Role:
-// - Direct downstream child after /assets/audralia/audralia.terrain.render.js.
-// - Expands terrain into topology.
-// - Owns regional topology, elevation relationships, route corridors, basins, ridges, thresholds, and adjacency.
-// - Does not own parent globe rendering, terrain generation, hydration, climate, ecology, fauna, runtime, route shell, Earth, Sun, Moon, or visual pass claim.
+// - Second downstream child in the Audralia chain.
+// - Consumes /assets/audralia/audralia.terrain.render.js.
+// - Expands terrain pressure into topology: ridges, basins, corridors, adjacency,
+//   climb paths, watershed gates, and region-to-region elevation flow.
 //
-// Correct chain:
+// Chain:
 // parent planet file = baseline land/water
 // terrain child = land pressure, islands, elevation regions
-// topology child = how regions connect, climb, divide, route, and hold shape
-// hydration child = later water behavior through the topology
+// topology child = relationships between those regions
+// hydration child = later water behavior through topology
+//
+// Owns:
+// - topology only
+// - Nine-region adjacency
+// - elevation-flow rules
+// - route/climb corridors
+// - ridge/basin relationship pressure
+// - watershed permission gates
+//
+// Does not own:
+// - parent globe rendering
+// - terrain generation
+// - hydration
+// - climate
+// - ecology
+// - fauna
+// - runtime
+// - route shell
+// - Earth
+// - Sun
+// - Moon
+// - visual pass claim
 
-const RECEIPT = "AUDRALIA_G2_TOPOLOGY_CHILD_TNT_v1";
+import {
+  sampleTerrain as sampleTerrainChild,
+  buildTerrainField as buildTerrainFieldChild,
+  getTerrainStatus as getTerrainStatusChild
+} from "./audralia.terrain.render.js?v=AUDRALIA_G1_TERRAIN_PRESSURE_ISLAND_ELEVATION_CHILD_TNT_v2";
+
+const RECEIPT = "AUDRALIA_G2_TOPOLOGY_CHILD_FROM_CONFIRMED_TERRAIN_TNT_v1";
 const PLANETARY_OBJECT = "Audralia";
 const GENERATION = "G2_TOPOLOGY_CHILD";
 const FILE = "/assets/audralia/audralia.topology.render.js";
@@ -21,10 +49,9 @@ const PARENT_AUTHORITY = "/assets/audralia/audralia.planet.render.js";
 const TERRAIN_AUTHORITY = "/assets/audralia/audralia.terrain.render.js";
 
 const TOPOLOGY_LAW = Object.freeze({
-  role: "topology-child",
   parentRole: "baseline-land-water-only",
   terrainRole: "terrain-pressure-authority",
-  topologyRole: "regional-relationship-and-elevation-flow-authority",
+  topologyRole: "region-relationship-and-elevation-flow-authority",
 
   ownsTopology: true,
   ownsFinalRender: false,
@@ -37,11 +64,11 @@ const TOPOLOGY_LAW = Object.freeze({
   visualPassClaimed: false,
 
   regionCount: 9,
-  topologyNodes: 9,
-  topologyCorridors: 16,
+  corridorCount: 16,
   elevationOrdering: "region_1_lowest_to_region_9_highest",
   southPole: "ice_only_boundary",
-  northPole: "land_body_topology_anchor"
+  northPole: "land_body_topology_anchor",
+  terrainDependency: TERRAIN_AUTHORITY
 });
 
 const REGIONS = Object.freeze([
@@ -53,7 +80,7 @@ const REGIONS = Object.freeze([
     elevation: 0.12,
     anchorLon: -0.42,
     anchorLat: -0.08,
-    topologyRole: "origin plain / first stable ground",
+    topologyRole: "origin plain and first stable ground",
     gateType: "entry"
   }),
   Object.freeze({
@@ -64,7 +91,7 @@ const REGIONS = Object.freeze([
     elevation: 0.22,
     anchorLon: -0.10,
     anchorLat: 0.08,
-    topologyRole: "foundation plateau / first organized rise",
+    topologyRole: "foundation plateau and first organized rise",
     gateType: "foundation"
   }),
   Object.freeze({
@@ -108,7 +135,7 @@ const REGIONS = Object.freeze([
     elevation: 0.62,
     anchorLon: 0.18,
     anchorLat: -0.48,
-    topologyRole: "archipelago uplands / liveliness islands",
+    topologyRole: "archipelago uplands and lively island chains",
     gateType: "island_arc"
   }),
   Object.freeze({
@@ -130,7 +157,7 @@ const REGIONS = Object.freeze([
     elevation: 0.82,
     anchorLon: -0.70,
     anchorLat: 0.22,
-    topologyRole: "frontier ridge / open traversal edge",
+    topologyRole: "frontier ridge and open traversal edge",
     gateType: "frontier"
   }),
   Object.freeze({
@@ -266,6 +293,32 @@ function distanceToRegion(lon, lat, region) {
   return Math.sqrt(dx * dx + dy * dy);
 }
 
+function safeTerrainSample(u, v, context = {}) {
+  try {
+    return sampleTerrainChild(u, v, context);
+  } catch (error) {
+    return Object.freeze({
+      u,
+      v,
+      lon: u * 2 - 1,
+      lat: 1 - v * 2,
+      isLand: false,
+      isWater: true,
+      isIce: false,
+      normalizedElevation: -0.42,
+      ridge: 0,
+      basin: 0,
+      coastPressure: 0,
+      shelfPermission: 0,
+      regionId: 0,
+      regionKey: "ocean",
+      regionName: "Ocean",
+      regionRelativeElevation: 0,
+      visualPassClaimed: false
+    });
+  }
+}
+
 function chooseRegion(lon, lat, terrainSample, context) {
   let bestRegion = REGIONS[0];
   let bestScore = -Infinity;
@@ -274,18 +327,24 @@ function chooseRegion(lon, lat, terrainSample, context) {
     ? clamp(Number(terrainSample.normalizedElevation), 0, 1)
     : 0.28;
 
+  const terrainRegionId = terrainSample && Number.isFinite(Number(terrainSample.regionId))
+    ? Number(terrainSample.regionId)
+    : 0;
+
   for (const region of REGIONS) {
     const distance = distanceToRegion(lon, lat, region);
     const proximity = 1 / (0.06 + distance);
     const elevationFit = 1 - Math.abs(region.elevation - terrainElevation);
+    const terrainRegionBonus = terrainRegionId === region.id ? 1.25 : 0;
     const access = smoothstep(region.elevation - 0.22, region.elevation + 0.18, context.coherenceIndex);
     const noise = fbm(lon * 2.2 + region.id, lat * 2.2 - region.id, 500 + region.id, 3) * 0.14;
 
     const score =
-      proximity * 0.58 +
-      elevationFit * 1.24 +
-      access * 0.68 +
-      context.elevationDemand * region.elevation * 0.32 +
+      proximity * 0.50 +
+      elevationFit * 1.18 +
+      terrainRegionBonus +
+      access * 0.60 +
+      context.elevationDemand * region.elevation * 0.28 +
       noise;
 
     if (score > bestScore) {
@@ -346,12 +405,15 @@ function chooseCorridor(lon, lat, regionChoice, context) {
     const near = 1 / (0.045 + distance);
     const involved =
       corridor.from === regionChoice.region.id || corridor.to === regionChoice.region.id ? 1 : 0;
-    const climb = Math.abs(REGIONS[corridor.to - 1].elevation - REGIONS[corridor.from - 1].elevation);
+
+    const fromRegion = REGIONS[corridor.from - 1];
+    const toRegion = REGIONS[corridor.to - 1];
+    const climb = Math.abs(toRegion.elevation - fromRegion.elevation);
     const traversalFit = 1 - Math.abs(context.traversalPressure - climb);
 
     const score =
-      near * 0.76 +
-      involved * 0.55 +
+      near * 0.72 +
+      involved * 0.62 +
       traversalFit * 0.24 +
       corridor.permeability * 0.38;
 
@@ -361,12 +423,10 @@ function chooseCorridor(lon, lat, regionChoice, context) {
     }
   }
 
-  const corridorPressure = smoothstep(11.5, 21.0, bestScore);
-
   return Object.freeze({
     corridor: bestCorridor,
     corridorScore: bestScore,
-    corridorPressure
+    corridorPressure: smoothstep(11.5, 21.0, bestScore)
   });
 }
 
@@ -378,26 +438,24 @@ function topologySignals(point, terrainSample, context) {
     ? clamp(Number(terrainSample.normalizedElevation), -1, 1)
     : 0;
 
+  const ridgeContinuity = terrainSample && Number.isFinite(Number(terrainSample.ridge))
+    ? clamp(Number(terrainSample.ridge), 0, 1)
+    : 0;
+
+  const basinContinuity = terrainSample && Number.isFinite(Number(terrainSample.basin))
+    ? clamp(Number(terrainSample.basin), 0, 1)
+    : 0;
+
+  const coastPressure = terrainSample && Number.isFinite(Number(terrainSample.coastPressure))
+    ? clamp(Number(terrainSample.coastPressure), 0, 1)
+    : 0;
+
   const region = regionChoice.region;
   const corridor = corridorChoice.corridor;
 
   const elevationDelta = clamp(region.elevation - Math.max(0, terrainElevation), -1, 1);
   const climbPressure = clamp(Math.max(0, elevationDelta) * 1.25, 0, 1);
   const descentPressure = clamp(Math.max(0, -elevationDelta) * 0.85, 0, 1);
-  const ridgeContinuity =
-    terrainSample && Number.isFinite(Number(terrainSample.ridge))
-      ? clamp(Number(terrainSample.ridge), 0, 1)
-      : 0;
-
-  const basinContinuity =
-    terrainSample && Number.isFinite(Number(terrainSample.basin))
-      ? clamp(Number(terrainSample.basin), 0, 1)
-      : 0;
-
-  const coastPressure =
-    terrainSample && Number.isFinite(Number(terrainSample.coastPressure))
-      ? clamp(Number(terrainSample.coastPressure), 0, 1)
-      : 0;
 
   const routePressure = clamp(
     corridorChoice.corridorPressure * 0.58 +
@@ -491,6 +549,7 @@ export function createTopologyProfile(overrides = {}) {
     regions: REGIONS,
     corridors: CORRIDORS,
     topologyLaw: TOPOLOGY_LAW,
+    terrainStatus: getTerrainStatusChild(),
 
     ...overrides
   });
@@ -499,8 +558,13 @@ export function createTopologyProfile(overrides = {}) {
 export function sampleTopology(uInput, vInput, terrainSample = null, context = {}) {
   const point = normalizeUV(uInput, vInput);
   const topologyContext = getInputContext(context);
-  const signals = topologySignals(point, terrainSample, topologyContext);
 
+  const safeTerrain = terrainSample || safeTerrainSample(point.u, point.v, {
+    coherenceIndex: topologyContext.coherenceIndex,
+    collaborativeExpression: topologyContext.traversalPressure
+  });
+
+  const signals = topologySignals(point, safeTerrain, topologyContext);
   const region = signals.region;
   const corridor = signals.corridor;
 
@@ -517,6 +581,10 @@ export function sampleTopology(uInput, vInput, terrainSample = null, context = {
     lon: point.lon,
     lat: point.lat,
 
+    terrainRegionId: safeTerrain.regionId || 0,
+    terrainRegionKey: safeTerrain.regionKey || "unknown",
+    terrainElevation: signals.terrainElevation,
+
     regionId: region.id,
     regionKey: region.key,
     regionName: region.name,
@@ -532,7 +600,6 @@ export function sampleTopology(uInput, vInput, terrainSample = null, context = {
     corridorGrade: corridor.grade,
     corridorPermeability: corridor.permeability,
 
-    terrainElevation: signals.terrainElevation,
     elevationDelta: signals.elevationDelta,
     climbPressure: signals.climbPressure,
     descentPressure: signals.descentPressure,
@@ -552,6 +619,7 @@ export function sampleTopology(uInput, vInput, terrainSample = null, context = {
     topologyChild: true,
     ownsTopology: true,
     ownsFinalRender: false,
+    ownsTerrainGeneration: false,
     visualPassClaimed: false
   });
 
@@ -566,6 +634,7 @@ export function buildTopologyField(width = 128, height = 128, options = {}) {
   const h = Math.max(8, Math.floor(Number(height) || 128));
   const samples = new Array(w * h);
 
+  const terrainField = buildTerrainFieldChild(w, h, options.terrainContext || {});
   const regionCounts = new Map();
   const corridorCounts = new Map();
 
@@ -579,18 +648,9 @@ export function buildTopologyField(width = 128, height = 128, options = {}) {
 
     for (let x = 0; x < w; x += 1) {
       const u = w === 1 ? 0.5 : x / (w - 1);
-      let terrainSample = null;
-
-      if (typeof options.sampleTerrain === "function") {
-        try {
-          terrainSample = options.sampleTerrain(u, v, options.terrainContext || {});
-        } catch (error) {
-          terrainSample = null;
-        }
-      }
-
-      const sample = sampleTopology(u, v, terrainSample, options);
       const index = y * w + x;
+      const terrainSample = terrainField.samples[index] || null;
+      const sample = sampleTopology(u, v, terrainSample, options);
 
       samples[index] = sample;
 
@@ -617,6 +677,7 @@ export function buildTopologyField(width = 128, height = 128, options = {}) {
     width: w,
     height: h,
     samples,
+    terrainField,
     profile: createTopologyProfile(options.profile || {}),
     stats: Object.freeze({
       activeRegionCount: activeRegions.length,
@@ -632,6 +693,7 @@ export function buildTopologyField(width = 128, height = 128, options = {}) {
       averageWatershedPotential: watershedSum / samples.length,
       averageClimbPressure: climbSum / samples.length,
 
+      terrainConsumed: true,
       elevationOrdered: true,
       topologyChildOnly: true,
       parentMustCompose: true,
@@ -663,7 +725,7 @@ export function getTopologyStatus() {
     ok: true,
     receipt: RECEIPT,
     status: "active",
-    id: "audralia-g2-topology-child",
+    id: "audralia-g2-topology-child-from-confirmed-terrain",
     planetaryObject: PLANETARY_OBJECT,
     publicName: PLANETARY_OBJECT,
     generation: GENERATION,
@@ -681,6 +743,9 @@ export function getTopologyStatus() {
     elevationOrdering: TOPOLOGY_LAW.elevationOrdering,
     southPole: TOPOLOGY_LAW.southPole,
     northPole: TOPOLOGY_LAW.northPole,
+
+    terrainDependencyConfirmed: true,
+    terrainStatus: getTerrainStatusChild(),
 
     regions: REGIONS,
     corridors: CORRIDORS,

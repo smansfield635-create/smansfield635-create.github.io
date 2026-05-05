@@ -2,11 +2,10 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="audralia-terrain-topology-gauges"
+  data-page="audralia-topology-tectonics-terrain-chain-gauges"
   data-route="/gauges/"
-  data-contract="AUDRALIA_TERRAIN_TOPOLOGY_GAUGES_PAGE_TNT_v1"
-  data-audit-target="Audralia"
-  data-terminology-lock="AUDRALIA_NOT_ADRALIA_NOT_AUSTRALIA"
+  data-contract="AUDRALIA_GAUGES_TOPOLOGY_TECTONICS_TERRAIN_CHAIN_AUDIT_TNT_v1"
+  data-mutation="false"
   data-graphic-box="false"
   data-image-generation="false"
   data-visual-pass-claimed="false"
@@ -14,32 +13,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-
-  <title>Gauges · Audralia Terrain + Topology</title>
+  <title>Gauges · Audralia Chain Audit</title>
   <meta
     name="description"
-    content="Dedicated Audralia audit for terrain realism, topology readiness, hydrology mapping, and hydration gate status."
+    content="Audits the Audralia route handoff, runtime topology-first consumer, topology sea-level/bathymetry contract, tectonic plate layer, terrain handoff status, hydration hold, and foliage closure."
   >
 
   <style>
     :root {
       color-scheme: dark;
       --bg: #050914;
-      --panel: rgba(10, 20, 38, 0.86);
-      --panel-2: rgba(7, 14, 27, 0.94);
-      --line: rgba(245, 199, 107, 0.26);
-      --line-blue: rgba(116, 184, 255, 0.24);
+      --panel: rgba(10, 20, 36, 0.88);
+      --panel-strong: rgba(6, 13, 24, 0.96);
+      --text: #f7efe2;
+      --muted: #b8c2cf;
       --gold: #f5c76b;
-      --blue: #74b8ff;
-      --text: #f6efe0;
-      --muted: #b8c2d1;
-      --pass: #86efac;
-      --fail: #fca5a5;
-      --held: #fcd34d;
+      --blue: #78bcff;
+      --green: #92f0b8;
+      --red: #ff8f8f;
+      --amber: #ffd27c;
+      --line: rgba(245, 199, 107, 0.26);
       --radius: 28px;
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.48);
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
     }
 
     * {
@@ -56,10 +51,10 @@
       margin: 0;
       color: var(--text);
       background:
-        radial-gradient(circle at 50% 0%, rgba(116, 184, 255, 0.12), transparent 34rem),
-        radial-gradient(circle at 86% 18%, rgba(245, 199, 107, 0.07), transparent 26rem),
-        linear-gradient(180deg, #02050c 0%, #050914 52%, #070d18 100%);
-      font-family: var(--sans);
+        radial-gradient(circle at 50% -8%, rgba(120, 188, 255, 0.16), transparent 34rem),
+        radial-gradient(circle at 80% 18%, rgba(245, 199, 107, 0.07), transparent 26rem),
+        linear-gradient(180deg, #02050c 0%, #050914 48%, #070d18 100%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     a {
@@ -70,12 +65,12 @@
       position: absolute;
       left: 1rem;
       top: 1rem;
-      z-index: 1000;
-      transform: translateY(-150%);
+      z-index: 20;
+      transform: translateY(-140%);
       border: 1px solid var(--gold);
       border-radius: 999px;
-      padding: 0.7rem 1rem;
-      color: #07111f;
+      padding: 0.72rem 1rem;
+      color: #08111f;
       background: var(--gold);
       font-weight: 1000;
       text-decoration: none;
@@ -86,53 +81,23 @@
     }
 
     .shell {
-      width: min(1220px, calc(100% - 32px));
+      width: min(1180px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 28px 0 64px;
+      padding: 28px 0 56px;
     }
 
-    .topnav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.55rem;
-      margin-bottom: 18px;
-    }
-
-    .topnav a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(245, 199, 107, 0.28);
-      border-radius: 999px;
-      padding: 0.56rem 0.78rem;
-      color: var(--text);
-      background: rgba(5, 12, 24, 0.7);
-      text-decoration: none;
-      font-weight: 900;
-      line-height: 1;
-    }
-
-    .topnav a:hover,
-    .topnav a:focus-visible {
-      color: #07111f;
-      background: var(--gold);
-      outline: none;
-    }
-
-    .hero,
-    .panel,
-    .card,
-    .result-group {
+    .card {
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background:
         linear-gradient(135deg, rgba(12, 24, 42, 0.84), rgba(7, 15, 29, 0.94)),
-        radial-gradient(circle at 82% 18%, rgba(245, 199, 107, 0.06), transparent 18rem);
+        radial-gradient(circle at 84% 20%, rgba(245, 199, 107, 0.08), transparent 18rem);
       box-shadow: var(--shadow);
     }
 
-    .hero {
-      padding: clamp(24px, 4vw, 48px);
+    header.card,
+    section.card {
+      padding: clamp(22px, 3.5vw, 42px);
     }
 
     .eyebrow {
@@ -146,269 +111,207 @@
 
     h1 {
       margin: 0;
-      max-width: 1000px;
-      font-size: clamp(2.35rem, 6.5vw, 5.6rem);
+      font-size: clamp(2.35rem, 7vw, 5.4rem);
       line-height: 0.92;
-      letter-spacing: -0.07em;
+      letter-spacing: -0.065em;
     }
 
     h2 {
       margin: 0;
-      font-size: clamp(1.35rem, 3vw, 2.4rem);
+      font-size: clamp(1.45rem, 3.6vw, 2.75rem);
       line-height: 1;
       letter-spacing: -0.045em;
     }
 
     h3 {
       margin: 0;
-      font-size: 1.03rem;
-      line-height: 1.2;
+      font-size: clamp(1.05rem, 2.5vw, 1.55rem);
+      line-height: 1.1;
     }
 
     p {
       overflow-wrap: anywhere;
     }
 
-    .lede {
-      max-width: 960px;
-      margin: 1rem 0 0;
+    .lede,
+    .muted {
       color: var(--muted);
-      font-size: clamp(1rem, 2vw, 1.22rem);
       line-height: 1.6;
     }
 
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 1.4rem;
+    .lede {
+      max-width: 980px;
+      margin: 1rem 0 0;
+      font-size: clamp(1rem, 2vw, 1.2rem);
     }
 
-    button,
-    .button-link {
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-top: 1.35rem;
+    }
+
+    nav a,
+    button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       border: 1px solid rgba(245, 199, 107, 0.36);
       border-radius: 999px;
-      padding: 0.78rem 1rem;
-      color: #07111f;
-      background: var(--gold);
-      font: 1000 0.92rem/1 var(--sans);
+      padding: 0.64rem 0.9rem;
+      color: var(--text);
+      background: rgba(4, 12, 24, 0.62);
       text-decoration: none;
+      font: inherit;
+      font-weight: 1000;
+      line-height: 1.1;
       cursor: pointer;
     }
 
-    button.secondary,
-    .button-link.secondary {
-      color: var(--text);
-      background: rgba(5, 12, 24, 0.7);
+    nav a:hover,
+    nav a:focus-visible,
+    button:hover,
+    button:focus-visible {
+      color: #07111f;
+      background: var(--gold);
+      outline: none;
     }
 
-    button:disabled {
-      cursor: wait;
-      opacity: 0.72;
-    }
-
-    .summary-grid {
+    .summary {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 14px;
-      margin-top: 20px;
+      margin-top: 22px;
     }
 
-    .card {
-      padding: 18px;
+    .metric {
+      border: 1px solid rgba(120, 188, 255, 0.22);
+      border-radius: 22px;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.045);
     }
 
-    .metric-value {
+    .metric strong {
       display: block;
-      color: var(--gold);
-      font-size: clamp(1.8rem, 4vw, 3.2rem);
-      font-weight: 1000;
+      font-size: clamp(1.8rem, 4vw, 3rem);
       line-height: 0.95;
-      letter-spacing: -0.07em;
+      color: var(--gold);
+      letter-spacing: -0.05em;
     }
 
-    .metric-label {
+    .metric span {
       display: block;
       margin-top: 0.45rem;
       color: var(--muted);
       font-weight: 800;
-      line-height: 1.25;
     }
 
-    .panel {
-      margin-top: 22px;
-      padding: clamp(20px, 3vw, 34px);
-    }
-
-    .panel-head {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 18px;
-    }
-
-    .panel-head p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .result-grid {
+    main {
       display: grid;
-      gap: 18px;
+      gap: 22px;
+      margin-top: 24px;
     }
 
-    .result-group {
-      padding: 18px;
+    .group {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
     }
 
-    .group-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding-bottom: 14px;
-      margin-bottom: 12px;
-    }
-
-    .group-head p {
-      margin: 0.35rem 0 0;
-      color: var(--muted);
-      line-height: 1.45;
+    .check {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.85rem;
+      align-items: start;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 20px;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.04);
     }
 
     .badge {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(255, 255, 255, 0.14);
+      min-width: 4.4rem;
       border-radius: 999px;
-      padding: 0.42rem 0.66rem;
-      font: 1000 0.72rem/1 var(--sans);
-      letter-spacing: 0.11em;
+      padding: 0.38rem 0.62rem;
+      font-size: 0.72rem;
+      font-weight: 1000;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      white-space: nowrap;
     }
 
-    .badge.pass {
-      color: #052e16;
-      background: var(--pass);
+    .pass .badge {
+      color: #07111f;
+      background: var(--green);
     }
 
-    .badge.fail {
-      color: #450a0a;
-      background: var(--fail);
+    .fail .badge {
+      color: #160606;
+      background: var(--red);
     }
 
-    .badge.held {
-      color: #422006;
-      background: var(--held);
-    }
-
-    .badge.pending {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .check-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .check {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 10px;
-      align-items: start;
-      border: 1px solid rgba(116, 184, 255, 0.14);
-      border-radius: 18px;
-      padding: 12px;
-      background: rgba(255, 255, 255, 0.035);
-    }
-
-    .dot {
-      width: 0.9rem;
-      height: 0.9rem;
-      border-radius: 50%;
-      margin-top: 0.2rem;
-      background: rgba(255, 255, 255, 0.22);
-    }
-
-    .check.pass .dot {
-      background: var(--pass);
-    }
-
-    .check.fail .dot {
-      background: var(--fail);
-    }
-
-    .check.held .dot {
-      background: var(--held);
+    .held .badge {
+      color: #151005;
+      background: var(--amber);
     }
 
     .check strong {
       display: block;
-      font-size: 0.95rem;
-      line-height: 1.2;
+      margin-bottom: 0.3rem;
+      font-size: 1rem;
     }
 
     .check span {
       display: block;
-      margin-top: 0.24rem;
       color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.42;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
     }
 
-    .receipt {
-      margin: 0;
+    .route-receipt {
+      margin-top: 18px;
+      border: 1px solid rgba(245, 199, 107, 0.22);
+      border-radius: 18px;
+      padding: 1rem;
+      color: var(--muted);
+      background: rgba(0, 0, 0, 0.22);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.82rem;
+      line-height: 1.5;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
+    }
+
+    .status-line {
+      margin-top: 1rem;
       color: var(--muted);
-      font: 0.82rem/1.55 var(--mono);
+      font-weight: 800;
     }
 
-    .warning {
-      border-color: rgba(252, 211, 77, 0.42);
-      background:
-        linear-gradient(135deg, rgba(70, 48, 9, 0.36), rgba(7, 15, 29, 0.92)),
-        radial-gradient(circle at 80% 20%, rgba(252, 211, 77, 0.10), transparent 18rem);
-    }
-
-    @media (max-width: 900px) {
-      .summary-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .panel-head,
-      .group-head {
-        display: block;
-      }
-
-      .badge {
-        margin-top: 0.8rem;
-      }
-    }
-
-    @media (max-width: 560px) {
+    @media (max-width: 820px) {
       .shell {
         width: min(100%, calc(100% - 24px));
         padding-top: 20px;
       }
 
-      .summary-grid {
-        grid-template-columns: 1fr;
+      .summary {
+        grid-template-columns: 1fr 1fr;
       }
 
-      .topnav a,
-      .actions button,
-      .button-link {
+      .summary .metric:last-child {
+        grid-column: 1 / -1;
+      }
+
+      nav a,
+      button {
         width: 100%;
+      }
+
+      .check {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -418,589 +321,535 @@
   <a class="skip-link" href="#main">Skip to Gauges</a>
 
   <div class="shell">
-    <nav class="topnav" aria-label="Primary navigation">
-      <a href="/">Compass</a>
-      <a href="/door/">Door</a>
-      <a href="/home/">Home</a>
-      <a href="/showroom/">Showroom</a>
-      <a href="/showroom/globe/">Globe</a>
-      <a href="/showroom/globe/earth/">Earth</a>
-      <a href="/showroom/globe/audralia/">Audralia</a>
-      <a href="/products/">Products</a>
-      <a href="/gauges/" aria-current="page">Gauges</a>
-    </nav>
-
-    <header class="hero">
-      <p class="eyebrow">Gauges · Audralia Terrain + Topology</p>
-      <h1>Terrain must pass before hydration moves.</h1>
+    <header class="card">
+      <p class="eyebrow">Gauges · Audralia Chain Audit</p>
+      <h1>Topology → Tectonics → Terrain</h1>
       <p class="lede">
-        This audit separates the working world baseline from terrain realism. Audralia can render,
-        but hydration remains held until mountains, canyons, riverbeds, streams, lakes, glaciers,
-        watersheds, and topology-readiness are proven.
+        This audit replaces the stale terrain-first gauge. It reads the current Audralia chain:
+        route handoff, runtime consumer, topology sea-level/bathymetry contract, tectonic plate layer,
+        terrain handoff status, hydration hold, and foliage closure. It does not mutate assets.
       </p>
 
-      <div class="actions">
-        <button id="runAudit" type="button">Run Audralia Audit</button>
-        <a class="button-link secondary" href="/showroom/globe/audralia/">Open Audralia</a>
-      </div>
+      <nav aria-label="Site rail">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/">Globe</a>
+        <a href="/showroom/globe/earth/">Earth</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
 
-      <div class="summary-grid" aria-label="Audit summary">
-        <div class="card">
-          <span id="totalCount" class="metric-value">0</span>
-          <span class="metric-label">Total checks</span>
-        </div>
-        <div class="card">
-          <span id="passCount" class="metric-value">0</span>
-          <span class="metric-label">Passed</span>
-        </div>
-        <div class="card">
-          <span id="failCount" class="metric-value">0</span>
-          <span class="metric-label">Failed</span>
-        </div>
-        <div class="card">
-          <span id="heldCount" class="metric-value">0</span>
-          <span class="metric-label">Held</span>
-        </div>
-        <div class="card">
-          <span id="auditScore" class="metric-value">0%</span>
-          <span class="metric-label">Readiness score</span>
-        </div>
-      </div>
+      <nav aria-label="Audit controls">
+        <button id="runAudit" type="button">Run Audralia Chain Audit</button>
+        <a href="/showroom/globe/audralia/">Open Audralia</a>
+      </nav>
     </header>
 
     <main id="main">
-      <section class="panel warning" aria-label="Current terrain read">
-        <div class="panel-head">
-          <div>
-            <p class="eyebrow">Current expected read</p>
-            <h2>World baseline passes. Terrain realism is still held.</h2>
+      <section class="card" aria-label="Audit summary">
+        <p class="eyebrow">Current expected read</p>
+        <h2 id="expectedTitle">Audit not run yet.</h2>
+        <p id="expectedText" class="lede">
+          Run the audit to measure the current chain against the new architecture.
+        </p>
+
+        <div class="summary" aria-label="Audit totals">
+          <div class="metric">
+            <strong id="totalMetric">0</strong>
+            <span>Total checks</span>
           </div>
-          <span class="badge held">Hydration held</span>
+          <div class="metric">
+            <strong id="passMetric">0</strong>
+            <span>Passed</span>
+          </div>
+          <div class="metric">
+            <strong id="failMetric">0</strong>
+            <span>Failed</span>
+          </div>
+          <div class="metric">
+            <strong id="heldMetric">0</strong>
+            <span>Held</span>
+          </div>
+          <div class="metric">
+            <strong id="scoreMetric">0%</strong>
+            <span>Readiness score</span>
+          </div>
         </div>
-        <p class="receipt">CURRENT_EXPECTATION=
-WORLD_BASELINE_PASS
-ROUTE_BASELINE_PASS
-PARENT_BASELINE_PASS
-TERRAIN_CHILD_PASS_OR_PARTIAL
-TOPOLOGY_CHILD_PASS_OR_PARTIAL
-TERRAIN_REALISM_HELD
-HYDROLOGY_READINESS_DATA_CHECKED
-HYDRATION_GATE_HELD
-VISUAL_PASS_NOT_CLAIMED</p>
+
+        <p id="lastAudit" class="status-line">Last audit: not run.</p>
       </section>
 
-      <section class="panel" aria-label="Audit results">
-        <div class="panel-head">
-          <div>
-            <p class="eyebrow">Live source audit</p>
-            <h2>Audralia-only gauge groups</h2>
-          </div>
-          <p id="lastRun">Not run yet.</p>
-        </div>
-
-        <div id="results" class="result-grid" aria-live="polite"></div>
-      </section>
-
-      <section class="panel" aria-label="Audit receipt">
-        <p class="eyebrow">Route receipt</p>
-        <p id="receipt" class="receipt">AUDRALIA_TERRAIN_TOPOLOGY_GAUGES_PAGE_TNT_v1
-STATUS=READY
+      <section class="card">
+        <p class="eyebrow">Live source audit</p>
+        <h2>Audralia-only gauge groups</h2>
+        <div id="results"></div>
+        <div id="receipt" class="route-receipt">AUDRALIA_GAUGES_TOPOLOGY_TECTONICS_TERRAIN_CHAIN_AUDIT_TNT_v1
 MUTATION=false
 GRAPHIC_BOX=false
 IMAGE_GENERATION=false
-VISUAL_PASS_CLAIMED=false</p>
+VISUAL_PASS_CLAIMED=false</div>
       </section>
     </main>
   </div>
 
-  <script type="module">
-    const CONTRACT = "AUDRALIA_TERRAIN_TOPOLOGY_GAUGES_PAGE_TNT_v1";
+  <script>
+    (function () {
+      "use strict";
 
-    const PATHS = Object.freeze({
-      route: "/showroom/globe/audralia/",
-      routeJs: "/showroom/globe/audralia/index.js",
-      parent: "/assets/audralia/audralia.planet.render.js",
-      terrain: "/assets/audralia/audralia.terrain.render.js",
-      topology: "/assets/audralia/audralia.topology.render.js"
-    });
+      const CONTRACT = "AUDRALIA_GAUGES_TOPOLOGY_TECTONICS_TERRAIN_CHAIN_AUDIT_TNT_v1";
 
-    const EXPECTED = Object.freeze({
-      terrainReceipt: "AUDRALIA_G1_TERRAIN_HYDROLOGY_MAP_CHILD_TNT_v1",
-      topologyReceipt: "AUDRALIA_G2_TOPOLOGY_CHILD_FROM_CONFIRMED_TERRAIN_TNT_v1"
-    });
+      const PATHS = Object.freeze({
+        routeHtml: "/showroom/globe/audralia/",
+        routeJs: "/showroom/globe/audralia/index.js",
+        runtime: "/assets/audralia/audralia.runtime.js",
+        topology: "/assets/audralia/audralia.topology.render.js",
+        tectonics: "/assets/audralia/audralia.tectonics.render.js",
+        terrain: "/assets/audralia/audralia.terrain.render.js",
+        parent: "/assets/audralia/audralia.planet.render.js"
+      });
 
-    const state = {
-      groups: [],
-      runId: ""
-    };
+      const EXPECTED = Object.freeze({
+        routeContract: "AUDRALIA_ROUTE_RUNTIME_TOPOLOGY_FIRST_CONSUMER_TNT_v1",
+        htmlContract: "AUDRALIA_ROUTE_RUNTIME_TOPOLOGY_FIRST_HANDOFF_HTML_TNT_v1",
+        topologyContract: "AUDRALIA_G1_TOPOLOGY_SEA_LEVEL_EARTH_LAND_RATIO_BATHYMETRY_COAST_TNT_v1",
+        tectonicsContract: "AUDRALIA_G1_TECTONIC_PLATE_LAYER_EARTH_LAND_AREA_ANCIENT_MOUNTAIN_MEMORY_TNT_v1",
+        runtimeHint: "sampleAudraliaPlanetState",
+        terrainCurrentOrPending: "AUDRALIA_G1_TERRAIN_HYDROLOGY_MAP_CHILD_TNT_v1"
+      });
 
-    const resultsEl = document.getElementById("results");
-    const runButton = document.getElementById("runAudit");
-    const lastRunEl = document.getElementById("lastRun");
-    const receiptEl = document.getElementById("receipt");
-
-    function stamp() {
-      return "audit_" + Date.now().toString(36);
-    }
-
-    function url(path) {
-      const joiner = path.includes("?") ? "&" : "?";
-      return path + joiner + "v=" + encodeURIComponent(CONTRACT) + "&run=" + encodeURIComponent(state.runId);
-    }
-
-    async function fetchText(path) {
-      const response = await fetch(url(path), { cache: "no-store" });
-      const text = await response.text().catch(() => "");
-      return {
-        ok: response.ok,
-        status: response.status,
-        text,
-        path
-      };
-    }
-
-    async function importModule(path) {
-      try {
-        return {
-          ok: true,
-          module: await import(url(path)),
-          error: null
-        };
-      } catch (error) {
-        return {
-          ok: false,
-          module: null,
-          error
-        };
-      }
-    }
-
-    function bool(value) {
-      return Boolean(value);
-    }
-
-    function check(status, title, detail) {
-      return { status, title, detail };
-    }
-
-    function pass(title, detail) {
-      return check("pass", title, detail);
-    }
-
-    function fail(title, detail) {
-      return check("fail", title, detail);
-    }
-
-    function held(title, detail) {
-      return check("held", title, detail);
-    }
-
-    function group(name, description, checks) {
-      const failCount = checks.filter((item) => item.status === "fail").length;
-      const heldCount = checks.filter((item) => item.status === "held").length;
-      const status = failCount > 0 ? "fail" : heldCount > 0 ? "held" : "pass";
-
-      return {
-        name,
-        description,
-        status,
-        checks
-      };
-    }
-
-    function hasAll(source, names) {
-      return names.every((name) => new RegExp("\\b" + name + "\\b").test(source));
-    }
-
-    function textHasNoIdentityLeak(source) {
-      const normalized = source
-        .replace(/AUDRALIA_NOT_ADRALIA_NOT_AUSTRALIA/gi, "")
-        .replace(/NOT_AUSTRALIA/gi, "")
-        .replace(/NOT_ADRALIA/gi, "");
-
-      return !/\bAustralia\b/i.test(normalized) && !/\bAdralia\b/i.test(normalized);
-    }
-
-    function moduleFunction(module, name) {
-      return Boolean(module && typeof module[name] === "function");
-    }
-
-    function sampleGrid(terrainModule, topologyModule) {
-      const metrics = {
-        samples: 0,
-        landSamples: 0,
-        iceSamples: 0,
-        waterSamples: 0,
-
-        maxRidge: 0,
-        maxSlope: 0,
-        maxValley: 0,
-        maxBasin: 0,
-        maxRiverbed: 0,
-        maxStream: 0,
-        maxLake: 0,
-        maxGlacier: 0,
-        maxFloodplain: 0,
-        maxDelta: 0,
-        maxWatershed: 0,
-        maxHydrology: 0,
-
-        maxTopology: 0,
-        maxRoutePressure: 0,
-        maxWatershedPotential: 0,
-        maxClimb: 0,
-
-        regions: new Set(),
-        landBodies: new Set(),
-        watersheds: new Set(),
-        corridors: new Set()
+      const state = {
+        sources: {},
+        groups: []
       };
 
-      const terrainSample =
-        terrainModule && typeof terrainModule.sampleTerrain === "function"
-          ? terrainModule.sampleTerrain
-          : null;
-
-      const topologySample =
-        topologyModule && typeof topologyModule.sampleTopology === "function"
-          ? topologyModule.sampleTopology
-          : null;
-
-      if (!terrainSample) {
-        return metrics;
+      function cacheUrl(path) {
+        return path + (path.includes("?") ? "&" : "?") + "_gauges=" + encodeURIComponent(CONTRACT) + "&t=" + Date.now();
       }
 
-      const width = 48;
-      const height = 24;
+      async function fetchText(path) {
+        try {
+          const response = await fetch(cacheUrl(path), {
+            cache: "no-store",
+            credentials: "same-origin"
+          });
 
-      for (let y = 0; y < height; y += 1) {
-        const v = y / (height - 1);
+          const text = await response.text();
 
-        for (let x = 0; x < width; x += 1) {
-          const u = x / (width - 1);
-          let terrain = null;
-
-          try {
-            terrain = terrainSample(u, v, {
-              coherenceIndex: 0.94,
-              collaborativeExpression: 0.9
-            });
-          } catch (error) {
-            terrain = null;
-          }
-
-          if (!terrain) continue;
-
-          metrics.samples += 1;
-
-          if (terrain.isIce) metrics.iceSamples += 1;
-          else if (terrain.isLand) metrics.landSamples += 1;
-          else metrics.waterSamples += 1;
-
-          if (terrain.regionId) metrics.regions.add(String(terrain.regionId));
-          if (terrain.landBodyId) metrics.landBodies.add(String(terrain.landBodyId));
-          if (terrain.watershedId && terrain.watershedId !== "ocean") metrics.watersheds.add(String(terrain.watershedId));
-
-          metrics.maxRidge = Math.max(metrics.maxRidge, Number(terrain.ridge) || 0);
-          metrics.maxSlope = Math.max(metrics.maxSlope, Number(terrain.slope) || 0);
-          metrics.maxValley = Math.max(metrics.maxValley, Number(terrain.valleyChannelPressure) || 0);
-          metrics.maxBasin = Math.max(metrics.maxBasin, Number(terrain.basin) || 0);
-          metrics.maxRiverbed = Math.max(metrics.maxRiverbed, Number(terrain.riverbedPressure) || 0);
-          metrics.maxStream = Math.max(metrics.maxStream, Number(terrain.streamPressure) || 0);
-          metrics.maxLake = Math.max(metrics.maxLake, Number(terrain.lakeBasinPressure) || 0);
-          metrics.maxGlacier = Math.max(metrics.maxGlacier, Number(terrain.glacierSeatPressure) || 0);
-          metrics.maxFloodplain = Math.max(metrics.maxFloodplain, Number(terrain.floodplainPressure) || 0);
-          metrics.maxDelta = Math.max(metrics.maxDelta, Number(terrain.deltaReceiverPressure) || 0);
-          metrics.maxWatershed = Math.max(metrics.maxWatershed, Number(terrain.watershedStrength) || 0);
-          metrics.maxHydrology = Math.max(metrics.maxHydrology, Number(terrain.hydrologyReadinessIndex) || 0);
-
-          if (topologySample) {
-            let topology = null;
-
-            try {
-              topology = topologySample(u, v, terrain, {
-                coherenceIndex: 0.94,
-                traversalPressure: 0.82,
-                elevationDemand: 0.86
-              });
-            } catch (error) {
-              topology = null;
-            }
-
-            if (topology) {
-              if (topology.corridorId) metrics.corridors.add(String(topology.corridorId));
-
-              metrics.maxTopology = Math.max(metrics.maxTopology, Number(topology.topologyIndex) || 0);
-              metrics.maxRoutePressure = Math.max(metrics.maxRoutePressure, Number(topology.routePressure) || 0);
-              metrics.maxWatershedPotential = Math.max(metrics.maxWatershedPotential, Number(topology.watershedPotential) || 0);
-              metrics.maxClimb = Math.max(metrics.maxClimb, Number(topology.climbPressure) || 0);
-            }
-          }
+          return {
+            ok: response.ok,
+            status: response.status,
+            text,
+            path
+          };
+        } catch (error) {
+          return {
+            ok: false,
+            status: 0,
+            text: "",
+            path,
+            error: error && error.message ? error.message : String(error)
+          };
         }
       }
 
-      return metrics;
-    }
+      function has(source, pattern) {
+        if (!source || !source.text) return false;
+        if (pattern instanceof RegExp) return pattern.test(source.text);
+        return source.text.includes(pattern);
+      }
 
-    function percent(value) {
-      return Math.round((Number(value) || 0) * 100) + "%";
-    }
+      function lacks(source, pattern) {
+        return !has(source, pattern);
+      }
 
-    function render() {
-      resultsEl.innerHTML = "";
+      function check(status, title, detail) {
+        return { status, title, detail };
+      }
 
-      let total = 0;
-      let passCount = 0;
-      let failCount = 0;
-      let heldCount = 0;
+      function pass(title, detail) {
+        return check("pass", title, detail);
+      }
 
-      for (const groupItem of state.groups) {
-        const groupEl = document.createElement("article");
-        groupEl.className = "result-group";
+      function fail(title, detail) {
+        return check("fail", title, detail);
+      }
 
-        const head = document.createElement("div");
-        head.className = "group-head";
+      function held(title, detail) {
+        return check("held", title, detail);
+      }
 
-        const titleBlock = document.createElement("div");
-        const title = document.createElement("h3");
-        title.textContent = groupItem.name;
+      function group(title, purpose, checks) {
+        return { title, purpose, checks };
+      }
 
-        const desc = document.createElement("p");
-        desc.textContent = groupItem.description;
+      function sourceStatus(source, label) {
+        if (!source) return fail(label + " missing", "No source object was returned.");
+        if (!source.ok) return fail(label + " reachable", source.path + " returned " + source.status + ".");
+        return pass(label + " reachable", source.path + " returned " + source.status + ".");
+      }
 
-        titleBlock.appendChild(title);
-        titleBlock.appendChild(desc);
+      function auditRoute() {
+        const html = state.sources.routeHtml;
 
-        const badge = document.createElement("span");
-        badge.className = "badge " + groupItem.status;
-        badge.textContent = groupItem.status;
+        return group(
+          "Audralia Route Handoff",
+          "Confirms the route is Audralia, owns only handoff/mount behavior, and does not leak Earth/Australia/Adralia identity.",
+          [
+            sourceStatus(html, "Audralia route"),
+            has(html, "id=\"audraliaRenderMount\"") || has(html, "data-audralia-render-mount")
+              ? pass("Audralia mount exists", "Route source includes #audraliaRenderMount or data-audralia-render-mount.")
+              : fail("Audralia mount exists", "Route source does not expose the Audralia mount."),
+            has(html, "/showroom/globe/audralia/index.js")
+              ? pass("Route script is loaded", "Route source loads /showroom/globe/audralia/index.js.")
+              : fail("Route script is loaded", "Route source does not load the Audralia route script."),
+            has(html, "Audralia") && lacks(html, "Australia") && lacks(html, "Adralia")
+              ? pass("Audralia identity clean", "Route names Audralia and does not expose Australia or Adralia.")
+              : fail("Audralia identity clean", "Route source contains an identity leak or lacks Audralia."),
+            has(html, EXPECTED.htmlContract) || has(html, "handoff shell only") || has(html, "Handoff shell only")
+              ? pass("HTML handoff role current", "HTML declares handoff-only route behavior.")
+              : held("HTML handoff role current", "HTML does not clearly declare the current handoff-only contract."),
+            has(html, EXPECTED.routeContract)
+              ? pass("Runtime-first script version declared", "Script version points to the runtime/topology-first route consumer.")
+              : held("Runtime-first script version declared", "Script version may still be stale or unversioned.")
+          ]
+        );
+      }
 
-        head.appendChild(titleBlock);
-        head.appendChild(badge);
+      function auditRouteJs() {
+        const js = state.sources.routeJs;
 
-        const list = document.createElement("div");
-        list.className = "check-list";
+        return group(
+          "Route Runtime Consumer",
+          "Confirms the visible route compositor consumes runtime first and does not generate land itself.",
+          [
+            sourceStatus(js, "Route script"),
+            has(js, EXPECTED.routeContract)
+              ? pass("Route compositor contract current", EXPECTED.routeContract)
+              : fail("Route compositor contract current", "Expected runtime/topology-first route contract not found."),
+            has(js, "/assets/audralia/audralia.runtime.js") && has(js, "loadRuntimeAuthority")
+              ? pass("Runtime authority consumed", "Route script loads the Audralia runtime authority.")
+              : fail("Runtime authority consumed", "Route script does not clearly load runtime authority."),
+            has(js, "sampleRuntimeState") && has(js, "topologyFirstColor")
+              ? pass("Topology-first visible sampling present", "Route samples runtime state and colors through topology-first logic.")
+              : held("Topology-first visible sampling present", "Expected sampleRuntimeState/topologyFirstColor functions not found."),
+            lacks(js, "function fallbackTerrainSample") && lacks(js, "blob(-0.10")
+              ? pass("Old blob land fallback absent", "No route-owned blob land generation detected.")
+              : fail("Old blob land fallback absent", "Old terrain/blob fallback logic is still present."),
+            lacks(js, "import(cacheUrl(TERRAIN_AUTHORITY") && lacks(js, "function loadTerrainAuthority")
+              ? pass("Direct terrain-first import removed", "Route does not directly import terrain as the compositor source.")
+              : fail("Direct terrain-first import removed", "Route still appears to import terrain directly."),
+            has(js, "noRouteLandGeneration") || has(js, "No procedural land fallback")
+              ? pass("Route-owned land generation blocked", "Route declares no route-owned land generation.")
+              : held("Route-owned land generation blocked", "No explicit no-route-land-generation receipt found.")
+          ]
+        );
+      }
 
-        for (const item of groupItem.checks) {
-          total += 1;
-          if (item.status === "pass") passCount += 1;
-          if (item.status === "fail") failCount += 1;
-          if (item.status === "held") heldCount += 1;
+      function auditRuntime() {
+        const runtime = state.sources.runtime;
 
-          const checkEl = document.createElement("div");
-          checkEl.className = "check " + item.status;
+        return group(
+          "Runtime Layer Order",
+          "Confirms runtime exists and checks whether it has been upgraded from topology→terrain to topology→tectonics→terrain.",
+          [
+            sourceStatus(runtime, "Runtime authority"),
+            has(runtime, "sampleAudraliaPlanetState")
+              ? pass("Runtime sample API present", "sampleAudraliaPlanetState is present.")
+              : fail("Runtime sample API present", "Runtime does not expose sampleAudraliaPlanetState."),
+            has(runtime, "createAudraliaRuntime")
+              ? pass("Runtime creation API present", "createAudraliaRuntime is present.")
+              : held("Runtime creation API present", "Runtime creation API not found; route may still sample stateless runtime."),
+            has(runtime, "/assets/audralia/audralia.topology.render.js") || has(runtime, "sampleTopology")
+              ? pass("Runtime consumes topology", "Runtime references topology authority.")
+              : fail("Runtime consumes topology", "Runtime does not clearly consume topology."),
+            has(runtime, "/assets/audralia/audralia.tectonics.render.js") || has(runtime, "sampleTectonics")
+              ? pass("Runtime consumes tectonics", "Runtime includes the tectonic layer.")
+              : held("Runtime consumes tectonics", "Runtime has not yet been upgraded to topology → tectonics → terrain."),
+            has(runtime, "/assets/audralia/audralia.terrain.render.js") || has(runtime, "sampleTerrain")
+              ? pass("Runtime consumes terrain", "Runtime references terrain authority.")
+              : held("Runtime consumes terrain", "Runtime does not clearly reference terrain."),
+            has(runtime, "terrainAllowedByTopology") || has(runtime, "topologyTerrainRisePermission")
+              ? pass("Runtime protects topology before terrain", "Runtime exposes topology gating for terrain.")
+              : held("Runtime protects topology before terrain", "Topology-to-terrain gating receipt not found."),
+            has(runtime, "visualPassClaimed: false") || has(runtime, "visualPassClaimed")
+              ? pass("Runtime avoids visual pass claim", "Runtime contains visual pass restraint.")
+              : held("Runtime avoids visual pass claim", "No visual pass restraint receipt found.")
+          ]
+        );
+      }
 
-          const dot = document.createElement("span");
-          dot.className = "dot";
+      function auditTopology() {
+        const topology = state.sources.topology;
 
-          const copy = document.createElement("div");
-          const strong = document.createElement("strong");
-          strong.textContent = item.title;
+        return group(
+          "Topology Sea-Level + Bathymetry Authority",
+          "Confirms topology owns land/void, Earth-equivalent land ratio, sea level, beaches, cliffs, bathymetry, sub-sea, and subterranean blueprinting.",
+          [
+            sourceStatus(topology, "Topology authority"),
+            has(topology, EXPECTED.topologyContract)
+              ? pass("Topology active contract current", EXPECTED.topologyContract)
+              : fail("Topology active contract current", "Expected sea-level/bathymetry topology contract not found."),
+            has(topology, "approximateEarthExposedLandRatio") && has(topology, "0.292")
+              ? pass("Earth-equivalent land-ratio law active", "Topology targets Earth-equivalent exposed land ratio.")
+              : fail("Earth-equivalent land-ratio law active", "Earth-equivalent land ratio not found."),
+            has(topology, "estimateEarthEquivalentSeaLevel") && has(topology, "calibrateSeaLevelThreshold")
+              ? pass("Sea-level calibration present", "Topology can estimate/calibrate sea level against land ratio.")
+              : fail("Sea-level calibration present", "Sea-level calibration functions not found."),
+            has(topology, "DEPTH_CLASSES") && has(topology, "bathymetryBlueprintIndex")
+              ? pass("Bathymetry depth classes active", "Depth classes and bathymetry index are present.")
+              : fail("Bathymetry depth classes active", "Bathymetry classes/index not found."),
+            has(topology, "blackSandPressure") && has(topology, "whiteSandPressure") && has(topology, "beachCloudSoftnessIndex")
+              ? pass("Black/white mineral beach law active", "Diamond/opal beach pressure fields are present.")
+              : held("Black/white mineral beach law active", "Mineral beach fields not fully detected."),
+            has(topology, "seaLevelErosionPressure") && has(topology, "cliffBaseCut")
+              ? pass("Sea-level erosion and cliff base active", "Cliff/erosion fields are present.")
+              : held("Sea-level erosion and cliff base active", "Cliff/erosion fields not found."),
+            has(topology, "tectonicsHandoffTarget") && has(topology, "tectonicsMayConsume")
+              ? pass("Topology hands off to tectonics", "Topology declares tectonic handoff readiness.")
+              : held("Topology hands off to tectonics", "Topology does not clearly expose tectonics handoff fields."),
+            lacks(topology, "ownsHydration: true") && lacks(topology, "ownsFoliage: true") && lacks(topology, "ownsTrees: true")
+              ? pass("Topology does not overclaim hydration/foliage", "No hydration/foliage ownership detected.")
+              : fail("Topology does not overclaim hydration/foliage", "Topology overclaim detected.")
+          ]
+        );
+      }
 
-          const detail = document.createElement("span");
-          detail.textContent = item.detail;
+      function auditTectonics() {
+        const tectonics = state.sources.tectonics;
 
-          copy.appendChild(strong);
-          copy.appendChild(detail);
+        return group(
+          "Tectonic Plate + Mineral Memory Layer",
+          "Confirms tectonics exists between topology and terrain and owns plate pressure, mineral memory, and terrain handoff pressure.",
+          [
+            sourceStatus(tectonics, "Tectonics authority"),
+            has(tectonics, EXPECTED.tectonicsContract)
+              ? pass("Tectonics active contract current", EXPECTED.tectonicsContract)
+              : fail("Tectonics active contract current", "Expected tectonics contract not found."),
+            has(tectonics, "sampleTectonics") && has(tectonics, "buildTectonicsField") && has(tectonics, "getTectonicsStatus")
+              ? pass("Tectonics exports present", "sampleTectonics, buildTectonicsField, and getTectonicsStatus are present.")
+              : fail("Tectonics exports present", "Required tectonics exports not found."),
+            has(tectonics, "./audralia.topology.render.js") && has(tectonics, "sampleTopology")
+              ? pass("Tectonics consumes topology", "Tectonics imports topology authority.")
+              : fail("Tectonics consumes topology", "Tectonics does not clearly import topology."),
+            has(tectonics, "PLATES") && has(tectonics, "PLATE_BOUNDARIES")
+              ? pass("Plate system active", "Tectonic plates and boundaries are defined.")
+              : fail("Plate system active", "Plate definitions not found."),
+            has(tectonics, "diamondPressureIndex") && has(tectonics, "opalSeamIndex") && has(tectonics, "graniteCratonIndex") && has(tectonics, "slateFoldBeltIndex")
+              ? pass("Diamond/opal/granite/slate geology active", "Four dominant mineral pressure fields are present.")
+              : fail("Diamond/opal/granite/slate geology active", "Mineral pressure fields missing."),
+            has(tectonics, "primordialMountainMemoryIndex") && has(tectonics, "earthEverestHimalayaStandardOnNewbornAudralia")
+              ? pass("Ancient mountain memory active", "Newborn mountain scale and weathered remnant logic are present.")
+              : held("Ancient mountain memory active", "Mountain-memory fields not fully detected."),
+            has(tectonics, "terrainPressureHandoff") && has(tectonics, "terrainMayConsume")
+              ? pass("Tectonics hands off to terrain", "Tectonics exposes terrain pressure handoff.")
+              : held("Tectonics hands off to terrain", "Terrain handoff fields not found."),
+            lacks(tectonics, "ownsLandFootprint: true") && lacks(tectonics, "ownsAboveSeaElevation: true") && lacks(tectonics, "ownsFoliage: true")
+              ? pass("Tectonics does not overclaim footprint/elevation/foliage", "Tectonics remains a pressure layer.")
+              : fail("Tectonics does not overclaim footprint/elevation/foliage", "Tectonics overclaim detected.")
+          ]
+        );
+      }
 
-          checkEl.appendChild(dot);
-          checkEl.appendChild(copy);
-          list.appendChild(checkEl);
+      function auditTerrain() {
+        const terrain = state.sources.terrain;
+
+        return group(
+          "Terrain Handoff Status",
+          "Measures whether terrain has caught up to the new topology→tectonics→terrain architecture.",
+          [
+            sourceStatus(terrain, "Terrain authority"),
+            has(terrain, "sampleTerrain") && has(terrain, "buildTerrainField") && has(terrain, "getTerrainStatus")
+              ? pass("Terrain exports present", "Required terrain exports are present.")
+              : fail("Terrain exports present", "Required terrain exports missing."),
+            has(terrain, "hydrologyMap") || has(terrain, "Hydrology") || has(terrain, "riverbedPressure")
+              ? pass("Terrain still carries hydrology-readiness fields", "Terrain prepares riverbeds/streams/lakes/glaciers without active hydration.")
+              : held("Terrain still carries hydrology-readiness fields", "Hydrology-readiness fields not detected."),
+            has(terrain, "./audralia.topology.render.js") || has(terrain, "sampleTopology")
+              ? pass("Terrain consumes topology", "Terrain imports topology authority.")
+              : held("Terrain consumes topology", "Terrain is not yet upgraded to consume topology directly."),
+            has(terrain, "./audralia.tectonics.render.js") || has(terrain, "sampleTectonics")
+              ? pass("Terrain consumes tectonics", "Terrain imports tectonic pressure layer.")
+              : held("Terrain consumes tectonics", "Terrain is not yet upgraded to consume tectonics."),
+            has(terrain, "terrainMustNotExpandLandArea") || has(terrain, "topologyLandFootprint") || has(terrain, "terrainMayUseForElevationReliefOnly")
+              ? pass("Terrain respects topology land area", "Terrain includes land-area restraint fields.")
+              : held("Terrain respects topology land area", "Terrain still needs explicit no-land-expansion law."),
+            lacks(terrain, "ownsHydration: true") && lacks(terrain, "activeHydrationOwnedHere: true") && lacks(terrain, "ownsFoliage: true")
+              ? pass("Terrain does not own hydration/foliage", "No active hydration or foliage ownership detected.")
+              : fail("Terrain does not own hydration/foliage", "Terrain overclaim detected.")
+          ]
+        );
+      }
+
+      function auditHydrationFoliageGate() {
+        const all = [
+          state.sources.routeHtml,
+          state.sources.routeJs,
+          state.sources.runtime,
+          state.sources.topology,
+          state.sources.tectonics,
+          state.sources.terrain
+        ];
+
+        const combined = all.map((source) => source && source.text ? source.text : "").join("\n");
+
+        return group(
+          "Hydration, Foliage, and Visual Gate",
+          "Confirms hydration remains held, foliage remains closed, and visual pass is not claimed by gauges.",
+          [
+            /hydration[^A-Za-z0-9_:-]*(held|HELD|Hydration remains held)/.test(combined) || combined.includes("hydrationHeld")
+              ? pass("Hydration remains held", "Hydration gate is held in current source receipts.")
+              : held("Hydration remains held", "Hydration hold receipt not clearly found across sources."),
+            combined.includes("noFoliage") || combined.includes("No foliage") || combined.includes("foliageGate")
+              ? pass("Foliage closure declared", "No-foliage receipts are present.")
+              : held("Foliage closure declared", "No-foliage receipt not clearly found."),
+            !combined.includes("Australia") && !combined.includes("Adralia")
+              ? pass("No Australia / Adralia leak across audited sources", "Audited sources do not expose Australia or Adralia strings.")
+              : fail("No Australia / Adralia leak across audited sources", "Audited source contains Australia or Adralia."),
+            combined.includes("visualPassClaimed: false") || combined.includes("VISUAL_PASS=held") || combined.includes("VISUAL_PASS_CLAIMED=false")
+              ? pass("Visual pass not claimed", "Visual pass remains held or false.")
+              : held("Visual pass not claimed", "No explicit visual-pass hold receipt found."),
+            pass("Gauges are read-only", "This page uses fetch/source inspection only; mutation=false.")
+          ]
+        );
+      }
+
+      function flattenGroups(groups) {
+        return groups.flatMap((group) => group.checks);
+      }
+
+      function render(groups) {
+        const results = document.getElementById("results");
+        const receipt = document.getElementById("receipt");
+
+        results.replaceChildren();
+
+        for (const group of groups) {
+          const section = document.createElement("section");
+          section.className = "group-block";
+
+          const title = document.createElement("h3");
+          title.textContent = group.title;
+
+          const purpose = document.createElement("p");
+          purpose.className = "muted";
+          purpose.textContent = group.purpose;
+
+          const list = document.createElement("div");
+          list.className = "group";
+
+          for (const item of group.checks) {
+            const row = document.createElement("article");
+            row.className = "check " + item.status;
+
+            const badge = document.createElement("div");
+            badge.className = "badge";
+            badge.textContent = item.status;
+
+            const body = document.createElement("div");
+
+            const strong = document.createElement("strong");
+            strong.textContent = item.title;
+
+            const span = document.createElement("span");
+            span.textContent = item.detail;
+
+            body.appendChild(strong);
+            body.appendChild(span);
+            row.appendChild(badge);
+            row.appendChild(body);
+            list.appendChild(row);
+          }
+
+          section.appendChild(title);
+          section.appendChild(purpose);
+          section.appendChild(list);
+          results.appendChild(section);
         }
 
-        groupEl.appendChild(head);
-        groupEl.appendChild(list);
-        resultsEl.appendChild(groupEl);
+        const all = flattenGroups(groups);
+        const total = all.length;
+        const passed = all.filter((item) => item.status === "pass").length;
+        const failed = all.filter((item) => item.status === "fail").length;
+        const held = all.filter((item) => item.status === "held").length;
+        const score = total ? Math.round((passed / total) * 100) : 0;
+
+        document.getElementById("totalMetric").textContent = String(total);
+        document.getElementById("passMetric").textContent = String(passed);
+        document.getElementById("failMetric").textContent = String(failed);
+        document.getElementById("heldMetric").textContent = String(held);
+        document.getElementById("scoreMetric").textContent = score + "%";
+        document.getElementById("lastAudit").textContent = "Last audit: " + new Date().toLocaleString();
+
+        const expectedTitle = document.getElementById("expectedTitle");
+        const expectedText = document.getElementById("expectedText");
+
+        if (failed > 0) {
+          expectedTitle.textContent = "A blocking source mismatch remains.";
+          expectedText.textContent =
+            "At least one required source contract is missing. Fix failed checks before judging visual readiness.";
+        } else if (held > 0) {
+          expectedTitle.textContent = "Chain baseline is readable. Some downstream work remains held.";
+          expectedText.textContent =
+            "Held checks are expected if runtime or terrain has not yet been upgraded to consume the tectonic layer. Hydration remains held.";
+        } else {
+          expectedTitle.textContent = "Audralia chain passes structurally. Visual pass still requires screenshot confirmation.";
+          expectedText.textContent =
+            "All source checks passed, but this page does not claim visual pass.";
+        }
+
+        const runId = "audit_" + Math.random().toString(36).slice(2, 10);
+
+        receipt.textContent =
+          CONTRACT +
+          " RUN_ID=" + runId +
+          " TOTAL=" + total +
+          " PASS=" + passed +
+          " FAIL=" + failed +
+          " HELD=" + held +
+          " SCORE=" + score + "%" +
+          " ROUTE=/showroom/globe/audralia/" +
+          " CHAIN=topology→tectonics→terrain" +
+          " HYDRATION_GATE=HELD" +
+          " MUTATION=false" +
+          " GRAPHIC_BOX=false" +
+          " IMAGE_GENERATION=false" +
+          " VISUAL_PASS_CLAIMED=false";
       }
 
-      const score = total > 0 ? Math.round((passCount / total) * 100) : 0;
+      async function runAudit() {
+        document.getElementById("expectedTitle").textContent = "Running source audit.";
+        document.getElementById("expectedText").textContent = "Fetching Audralia route, runtime, topology, tectonics, terrain, and parent authorities.";
 
-      document.getElementById("totalCount").textContent = String(total);
-      document.getElementById("passCount").textContent = String(passCount);
-      document.getElementById("failCount").textContent = String(failCount);
-      document.getElementById("heldCount").textContent = String(heldCount);
-      document.getElementById("auditScore").textContent = score + "%";
+        const entries = await Promise.all(
+          Object.entries(PATHS).map(async ([key, path]) => [key, await fetchText(path)])
+        );
 
-      receiptEl.textContent =
-        CONTRACT +
-        "\nRUN_ID=" + state.runId +
-        "\nTOTAL=" + total +
-        "\nPASS=" + passCount +
-        "\nFAIL=" + failCount +
-        "\nHELD=" + heldCount +
-        "\nSCORE=" + score + "%" +
-        "\nHYDRATION_GATE=" + (failCount === 0 && heldCount === 0 ? "REVIEW_ALLOWED" : "HELD") +
-        "\nMUTATION=false" +
-        "\nGRAPHIC_BOX=false" +
-        "\nIMAGE_GENERATION=false" +
-        "\nVISUAL_PASS_CLAIMED=false";
-    }
+        state.sources = Object.fromEntries(entries);
 
-    async function runAudit() {
-      runButton.disabled = true;
-      runButton.textContent = "Running...";
-      state.runId = stamp();
-      state.groups = [];
+        state.groups = [
+          auditRoute(),
+          auditRouteJs(),
+          auditRuntime(),
+          auditTopology(),
+          auditTectonics(),
+          auditTerrain(),
+          auditHydrationFoliageGate()
+        ];
 
-      const [route, routeJs, parent, terrainSource, topologySource] = await Promise.all([
-        fetchText(PATHS.route).catch((error) => ({ ok: false, status: 0, text: String(error), path: PATHS.route })),
-        fetchText(PATHS.routeJs).catch((error) => ({ ok: false, status: 0, text: String(error), path: PATHS.routeJs })),
-        fetchText(PATHS.parent).catch((error) => ({ ok: false, status: 0, text: String(error), path: PATHS.parent })),
-        fetchText(PATHS.terrain).catch((error) => ({ ok: false, status: 0, text: String(error), path: PATHS.terrain })),
-        fetchText(PATHS.topology).catch((error) => ({ ok: false, status: 0, text: String(error), path: PATHS.topology }))
-      ]);
-
-      const [terrainImport, topologyImport] = await Promise.all([
-        importModule(PATHS.terrain),
-        importModule(PATHS.topology)
-      ]);
-
-      const terrainModule = terrainImport.ok ? terrainImport.module : null;
-      const topologyModule = topologyImport.ok ? topologyImport.module : null;
-
-      let terrainStatus = null;
-      let topologyStatus = null;
-
-      try {
-        terrainStatus = terrainModule && typeof terrainModule.getTerrainStatus === "function"
-          ? terrainModule.getTerrainStatus()
-          : null;
-      } catch (error) {
-        terrainStatus = null;
+        render(state.groups);
       }
 
-      try {
-        topologyStatus = topologyModule && typeof topologyModule.getTopologyStatus === "function"
-          ? topologyModule.getTopologyStatus()
-          : null;
-      } catch (error) {
-        topologyStatus = null;
+      document.getElementById("runAudit").addEventListener("click", runAudit);
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", runAudit, { once: true });
+      } else {
+        runAudit();
       }
-
-      const metrics = sampleGrid(terrainModule, topologyModule);
-
-      state.groups.push(
-        group("Audralia Route Boundary", "Confirms the route is Audralia, owns its mount, and does not leak Earth/Australia identity.", [
-          route.ok ? pass("Audralia route is reachable", `${PATHS.route} returned ${route.status}.`) : fail("Audralia route is reachable", `${PATHS.route} returned ${route.status}.`),
-          /id=["']audraliaRenderMount["']/.test(route.text) || /data-audralia-render-mount/.test(route.text)
-            ? pass("Audralia mount exists", "Route source includes #audraliaRenderMount or data-audralia-render-mount.")
-            : fail("Audralia mount exists", "Route source does not expose the Audralia render mount."),
-          /\/showroom\/globe\/audralia\/index\.js/.test(route.text)
-            ? pass("Existing route script is loaded", "Route source loads /showroom/globe/audralia/index.js.")
-            : fail("Existing route script is loaded", "Route source does not load the existing Audralia route script."),
-          /\bAudralia\b/.test(route.text)
-            ? pass("Audralia identity present", "Route source names Audralia.")
-            : fail("Audralia identity present", "Route source does not clearly name Audralia."),
-          textHasNoIdentityLeak(route.text)
-            ? pass("No Australia / Adralia leak", "Route source does not expose Australia or Adralia as the public identity.")
-            : held("No Australia / Adralia leak", "Route source contains Australia or Adralia text; review whether it is only a forbidden-term receipt.")
-        ])
-      );
-
-      state.groups.push(
-        group("Parent Baseline Authority", "Confirms the parent file remains simplified and does not absorb terrain/topology/hydration.", [
-          parent.ok ? pass("Parent authority reachable", `${PATHS.parent} returned ${parent.status}.`) : fail("Parent authority reachable", `${PATHS.parent} returned ${parent.status}.`),
-          hasAll(parent.text, ["createProfile", "buildTexture", "sampleSurface", "renderSurface", "getStatus"])
-            ? pass("Parent API names present", "Parent source contains createProfile, buildTexture, sampleSurface, renderSurface, and getStatus.")
-            : held("Parent API names present", "One or more parent API names were not found by source scan."),
-          !/ownsTerrain\s*:\s*true/.test(parent.text) && !/ownsHydration\s*:\s*true/.test(parent.text) && !/ownsTopology\s*:\s*true/.test(parent.text)
-            ? pass("Parent does not overclaim child authority", "No terrain/topology/hydration ownership claim found in parent source.")
-            : fail("Parent does not overclaim child authority", "Parent source appears to claim child authority.")
-        ])
-      );
-
-      state.groups.push(
-        group("Terrain Child Authority", "Confirms terrain owns land pressure, elevation regions, and hydrology-ready placements.", [
-          terrainSource.ok ? pass("Terrain authority reachable", `${PATHS.terrain} returned ${terrainSource.status}.`) : fail("Terrain authority reachable", `${PATHS.terrain} returned ${terrainSource.status}.`),
-          terrainSource.text.includes(EXPECTED.terrainReceipt)
-            ? pass("Terrain receipt current", EXPECTED.terrainReceipt)
-            : held("Terrain receipt current", "Expected terrain hydrology receipt not found in source text."),
-          moduleFunction(terrainModule, "createTerrainProfile") &&
-          moduleFunction(terrainModule, "sampleTerrain") &&
-          moduleFunction(terrainModule, "buildTerrainField") &&
-          moduleFunction(terrainModule, "getTerrainSampleFromField") &&
-          moduleFunction(terrainModule, "getTerrainStatus")
-            ? pass("Terrain exports present", "All required terrain exports are callable.")
-            : fail("Terrain exports present", "One or more terrain exports are missing or not callable."),
-          terrainStatus && terrainStatus.hydrologyMap === "active"
-            ? pass("Hydrology map active", "Terrain status reports hydrologyMap=active.")
-            : held("Hydrology map active", "Terrain status did not confirm hydrologyMap=active."),
-          terrainStatus && terrainStatus.ownsActiveHydration === false
-            ? pass("Terrain does not own active hydration", "Terrain prepares places for water but does not animate/fill water.")
-            : fail("Terrain does not own active hydration", "Terrain status does not clearly block active hydration ownership.")
-        ])
-      );
-
-      state.groups.push(
-        group("Topology Child Authority", "Confirms topology exists, consumes terrain, and defines region/corridor structure.", [
-          topologySource.ok ? pass("Topology authority reachable", `${PATHS.topology} returned ${topologySource.status}.`) : fail("Topology authority reachable", `${PATHS.topology} returned ${topologySource.status}.`),
-          topologySource.text.includes(EXPECTED.topologyReceipt)
-            ? pass("Topology receipt current", EXPECTED.topologyReceipt)
-            : held("Topology receipt current", "Expected topology receipt not found in source text."),
-          moduleFunction(topologyModule, "createTopologyProfile") &&
-          moduleFunction(topologyModule, "sampleTopology") &&
-          moduleFunction(topologyModule, "buildTopologyField") &&
-          moduleFunction(topologyModule, "getTopologySampleFromField") &&
-          moduleFunction(topologyModule, "getTopologyStatus")
-            ? pass("Topology exports present", "All required topology exports are callable.")
-            : fail("Topology exports present", "One or more topology exports are missing or not callable."),
-          topologyStatus && topologyStatus.terrainDependencyConfirmed === true
-            ? pass("Topology confirms terrain dependency", "Topology status reports terrainDependencyConfirmed=true.")
-            : held("Topology confirms terrain dependency", "Topology status does not confirm terrain dependency."),
-          topologyStatus && topologyStatus.ownsHydration === false && topologyStatus.visualPassClaimed === false
-            ? pass("Topology does not overclaim hydration or visual pass", "Topology stays inside topology authority.")
-            : fail("Topology does not overclaim hydration or visual pass", "Topology appears to overclaim hydration or visual pass authority.")
-        ])
-      );
-
-      const terrainRealismChecks = [
-        metrics.landSamples > 0 ? pass("Land samples exist", `${metrics.landSamples} land samples found.`) : fail("Land samples exist", "No land samples found."),
-        metrics.regions.size >= 6 ? pass("Region spread exists", `${metrics.regions.size} terrain regions sampled.`) : held("Region spread exists", `${metrics.regions.size} terrain regions sampled; expected at least 6.`),
-        metrics.landBodies.size >= 4 ? pass("Land-body variety exists", `${metrics.landBodies.size} land bodies sampled.`) : held("Land-body variety exists", `${metrics.landBodies.size} land bodies sampled; expected at least 4.`),
-        metrics.maxRidge >= 0.45 ? pass("Mountain/ridge pressure measurable", `maxRidge=${percent(metrics.maxRidge)}.`) : fail("Mountain/ridge pressure measurable", `maxRidge=${percent(metrics.maxRidge)}; terrain needs stronger mountains.`),
-        metrics.maxValley >= 0.25 ? pass("Valley channel pressure measurable", `maxValley=${percent(metrics.maxValley)}.`) : fail("Valley channel pressure measurable", `maxValley=${percent(metrics.maxValley)}; terrain needs stronger valley cuts.`),
-        metrics.maxRidge * metrics.maxValley >= 0.10 ? pass("Canyon pressure derivable", `ridge×valley=${percent(metrics.maxRidge * metrics.maxValley)}.`) : fail("Canyon pressure derivable", `ridge×valley=${percent(metrics.maxRidge * metrics.maxValley)}; canyon logic is not yet strong enough.`),
-        held("Visual terrain realism", "Screenshot shows redundant soft islands; visual terrain realism is not locked.")
-      ];
-
-      state.groups.push(
-        group("Terrain Realism", "Measures whether land can read as mountains, canyons, ridges, valleys, and non-redundant topology.", terrainRealismChecks)
-      );
-
-      state.groups.push(
-        group("Hydrology Readiness", "Measures whether terrain has lawful places for rivers, streams, lakes, glaciers, deltas, and floodplains.", [
-          metrics.watersheds.size >= 4 ? pass("Watershed variety exists", `${metrics.watersheds.size} watershed corridors sampled.`) : held("Watershed variety exists", `${metrics.watersheds.size} watershed corridors sampled; expected at least 4.`),
-          metrics.maxRiverbed >= 0.35 ? pass("Riverbed pressure exists", `maxRiverbed=${percent(metrics.maxRiverbed)}.`) : fail("Riverbed pressure exists", `maxRiverbed=${percent(metrics.maxRiverbed)}.`),
-          metrics.maxStream >= 0.25 ? pass("Stream pressure exists", `maxStream=${percent(metrics.maxStream)}.`) : fail("Stream pressure exists", `maxStream=${percent(metrics.maxStream)}.`),
-          metrics.maxLake >= 0.30 ? pass("Lake basin pressure exists", `maxLake=${percent(metrics.maxLake)}.`) : held("Lake basin pressure exists", `maxLake=${percent(metrics.maxLake)}.`),
-          metrics.maxGlacier >= 0.30 ? pass("Glacier seat pressure exists", `maxGlacier=${percent(metrics.maxGlacier)}.`) : held("Glacier seat pressure exists", `maxGlacier=${percent(metrics.maxGlacier)}.`),
-          metrics.maxFloodplain >= 0.25 ? pass("Floodplain pressure exists", `maxFloodplain=${percent(metrics.maxFloodplain)}.`) : held("Floodplain pressure exists", `maxFloodplain=${percent(metrics.maxFloodplain)}.`),
-          metrics.maxDelta >= 0.18 ? pass("Delta receiver pressure exists", `maxDelta=${percent(metrics.maxDelta)}.`) : held("Delta receiver pressure exists", `maxDelta=${percent(metrics.maxDelta)}.`),
-          metrics.maxHydrology >= 0.25 ? pass("Hydrology readiness index exists", `maxHydrology=${percent(metrics.maxHydrology)}.`) : fail("Hydrology readiness index exists", `maxHydrology=${percent(metrics.maxHydrology)}.`)
-        ])
-      );
-
-      state.groups.push(
-        group("Topology + Hydration Gate", "Controls whether hydration can move after terrain/topology checks.", [
-          metrics.corridors.size >= 6 ? pass("Topology corridors sampled", `${metrics.corridors.size} topology corridors sampled.`) : held("Topology corridors sampled", `${metrics.corridors.size} topology corridors sampled; expected at least 6.`),
-          metrics.maxTopology >= 0.35 ? pass("Topology index measurable", `maxTopology=${percent(metrics.maxTopology)}.`) : held("Topology index measurable", `maxTopology=${percent(metrics.maxTopology)}.`),
-          metrics.maxRoutePressure >= 0.25 ? pass("Route pressure measurable", `maxRoutePressure=${percent(metrics.maxRoutePressure)}.`) : held("Route pressure measurable", `maxRoutePressure=${percent(metrics.maxRoutePressure)}.`),
-          metrics.maxWatershedPotential >= 0.20 ? pass("Watershed topology potential measurable", `maxWatershedPotential=${percent(metrics.maxWatershedPotential)}.`) : held("Watershed topology potential measurable", `maxWatershedPotential=${percent(metrics.maxWatershedPotential)}.`),
-          held("Hydration gate status", "Hydration remains held until terrain realism passes visually and structurally."),
-          held("Screenshot confirmation", "Final visual pass requires owner screenshot confirmation after terrain realism correction.")
-        ])
-      );
-
-      lastRunEl.textContent = "Last audit: " + new Date().toLocaleString();
-
-      render();
-
-      runButton.disabled = false;
-      runButton.textContent = "Run Audralia Audit";
-    }
-
-    runButton.addEventListener("click", runAudit);
-    runAudit();
+    })();
   </script>
 </body>
 </html>

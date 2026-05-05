@@ -1,35 +1,17 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_ROUTE_TERRAIN_CHILD_CONSUMPTION_AND_CACHE_BUST_TNT_v1
+// AUDRALIA_EXISTING_ROUTE_COMPOSITOR_REWIRE_TNT_v1
 //
-// Role:
-// - Audralia route compositor and rotation control.
-// - Loads parent baseline land/water authority.
-// - Imports terrain child authority with cache bust.
-// - Composes visible texture from:
-//   1. /assets/audralia/audralia.planet.render.js
-//   2. /assets/audralia/audralia.terrain.render.js
-// - Rotates the composed texture on Audralia-specific axis.
-// - Keeps terrain pressure out of parent file.
-//
-// Does not own:
-// - parent land/water generation
-// - terrain generation
-// - hydration
-// - climate
-// - ecology
-// - fauna
-// - Earth behavior
-// - Gauges
-// - Products
-// - Sun
-// - Moon
-// - global files
-// - visual pass claim
+// Existing-file correction only.
+// No new file required.
+// This route script owns visible consumption/composition/control.
+// Parent owns baseline land/water only.
+// Terrain child owns terrain pressure only.
+// This file consumes both and renders the visible Audralia body.
 
 (function () {
   "use strict";
 
-  const RECEIPT = "AUDRALIA_ROUTE_TERRAIN_CHILD_CONSUMPTION_AND_CACHE_BUST_TNT_v1";
+  const RECEIPT = "AUDRALIA_EXISTING_ROUTE_COMPOSITOR_REWIRE_TNT_v1";
 
   const ROUTE = "/showroom/globe/audralia/";
   const BODY = "audralia";
@@ -43,18 +25,18 @@
 
   const CONTROL = Object.freeze({
     axisDegrees: 21.5,
-    autoStep: 0.00042,
-    dragFactor: 0.00172,
-    releaseFriction: 0.952,
-    minVelocity: 0.000014,
-    initialPhase: 0.18,
-    minSize: 320,
-    maxSize: 720,
     textureWidth: 768,
     textureHeight: 384,
-    rotationModel: "audralia-natural-surface-phase",
+    minSize: 320,
+    maxSize: 720,
+    initialPhase: 0.18,
+    autoStep: 0.00046,
+    dragFactor: 0.00174,
+    releaseFriction: 0.952,
+    minVelocity: 0.000014,
+    rotationModel: "audralia-existing-route-surface-phase",
+    compositorModel: "existing-route-parent-baseline-plus-terrain-child",
     touchModel: "horizontal-spin-only",
-    compositorModel: "parent-baseline-plus-terrain-child",
     diskRotation: "forbidden",
     wholeCanvasRotation: "forbidden",
     textureStretch: "forbidden",
@@ -62,8 +44,8 @@
   });
 
   const TERRAIN_CONTEXT = Object.freeze({
-    coherenceIndex: 0.92,
-    collaborativeExpression: 0.88
+    coherenceIndex: 0.94,
+    collaborativeExpression: 0.9
   });
 
   let activeState = null;
@@ -83,32 +65,38 @@
   }
 
   function cacheUrl(path, version) {
-    return path + "?v=" + encodeURIComponent(version) + "&route=" + encodeURIComponent(RECEIPT);
-  }
-
-  function query(selector) {
-    return document.querySelector(selector);
+    return (
+      path +
+      "?v=" +
+      encodeURIComponent(version) +
+      "&consumer=" +
+      encodeURIComponent(RECEIPT) +
+      "&t=" +
+      String(Date.now())
+    );
   }
 
   function getMount() {
     return (
       document.getElementById("audraliaRenderMount") ||
       document.getElementById("audreliaRenderMount") ||
-      query("[data-audralia-render-mount]") ||
-      query("[data-audrelia-render-mount]") ||
-      query("[data-body='audralia'][data-render-mount]") ||
-      query("[data-body='audrelia'][data-render-mount]")
+      document.querySelector("[data-audralia-render-mount]") ||
+      document.querySelector("[data-audrelia-render-mount]") ||
+      document.querySelector("[data-body='audralia'][data-render-mount]") ||
+      document.querySelector("[data-body='audrelia'][data-render-mount]")
     );
   }
 
-  function markRoute() {
+  function markRoute(status) {
     document.documentElement.dataset.activeBody = BODY;
     document.documentElement.dataset.activeRoute = ROUTE;
-    document.documentElement.dataset.audraliaRouteControl = RECEIPT;
+    document.documentElement.dataset.audraliaExistingRouteCompositor = RECEIPT;
+    document.documentElement.dataset.audraliaRouteCompositorStatus = status || "booting";
     document.documentElement.dataset.audraliaParentAuthority = PARENT_AUTHORITY;
     document.documentElement.dataset.audraliaTerrainAuthority = TERRAIN_AUTHORITY;
-    document.documentElement.dataset.audraliaTerrainConsumption = "active";
     document.documentElement.dataset.audraliaCompositorModel = CONTROL.compositorModel;
+    document.documentElement.dataset.oldNewFileBypass = "not-used";
+    document.documentElement.dataset.newFileRequired = "false";
     document.documentElement.dataset.earthAdoption = "blocked";
     document.documentElement.dataset.graphicBox = "false";
     document.documentElement.dataset.imageGeneration = "false";
@@ -117,18 +105,17 @@
     if (document.body) {
       document.body.dataset.activeBody = BODY;
       document.body.dataset.activeRoute = ROUTE;
-      document.body.dataset.audraliaRouteControl = RECEIPT;
-      document.body.dataset.audraliaTerrainConsumption = "active";
-      document.body.dataset.earthAdoption = "blocked";
+      document.body.dataset.audraliaExistingRouteCompositor = RECEIPT;
       document.body.dataset.publicReceipts = "hidden";
+      document.body.dataset.earthAdoption = "blocked";
     }
   }
 
   function ensureStyle() {
-    if (document.getElementById("audralia-terrain-compositor-rotation-style")) return;
+    if (document.getElementById("audralia-existing-route-compositor-style")) return;
 
     const style = document.createElement("style");
-    style.id = "audralia-terrain-compositor-rotation-style";
+    style.id = "audralia-existing-route-compositor-style";
     style.textContent = `
       #audraliaRenderMount,
       #audreliaRenderMount,
@@ -139,7 +126,7 @@
         position: relative;
         display: grid;
         place-items: center;
-        min-height: clamp(360px, 72vw, 720px);
+        min-height: clamp(360px, 74vw, 740px);
         overflow: visible;
         isolation: isolate;
         touch-action: none;
@@ -147,71 +134,70 @@
         -webkit-user-select: none;
       }
 
-      .audralia-axis-stage {
+      .audralia-existing-route-stage {
         position: relative;
         display: grid;
         place-items: center;
-        width: min(100%, 760px);
+        width: min(100%, 780px);
         aspect-ratio: 1 / 1;
         overflow: visible;
         isolation: isolate;
       }
 
-      .audralia-axis-stage::before {
+      .audralia-existing-route-stage::before {
         content: "";
         position: absolute;
         left: 50%;
         top: 50%;
-        width: min(74vw, 620px);
+        width: min(78vw, 650px);
         aspect-ratio: 1 / 1;
         border-radius: 50%;
         transform: translate(-50%, -50%);
         background:
-          radial-gradient(circle, rgba(92, 170, 238, 0.18), transparent 68%),
-          radial-gradient(circle, rgba(255, 255, 255, 0.05), transparent 48%);
+          radial-gradient(circle, rgba(82, 164, 232, 0.18), transparent 66%),
+          radial-gradient(circle, rgba(255, 255, 255, 0.05), transparent 44%);
         filter: blur(2px);
         pointer-events: none;
         z-index: 0;
       }
 
-      .audralia-axis-line {
+      .audralia-existing-route-axis {
         position: absolute;
         left: 50%;
         top: 50%;
-        height: min(82vw, 690px);
+        height: min(84vw, 700px);
         width: 2px;
         transform: translate(-50%, -50%) rotate(var(--audralia-axis-deg));
         transform-origin: center;
         background: linear-gradient(
           180deg,
           transparent 0%,
-          rgba(210, 235, 255, 0.20) 12%,
-          rgba(210, 235, 255, 0.42) 50%,
-          rgba(210, 235, 255, 0.20) 88%,
+          rgba(212, 235, 255, 0.14) 12%,
+          rgba(212, 235, 255, 0.36) 50%,
+          rgba(212, 235, 255, 0.14) 88%,
           transparent 100%
         );
-        box-shadow: 0 0 18px rgba(104, 175, 255, 0.18);
         pointer-events: none;
         z-index: 1;
       }
 
-      .audralia-rotation-canvas {
+      .audralia-existing-route-canvas {
         position: relative;
         z-index: 2;
         display: block;
-        width: min(100%, 680px);
-        max-width: min(100%, 680px);
+        width: min(100%, 690px);
+        max-width: min(100%, 690px);
         aspect-ratio: 1 / 1;
         border: 0;
         outline: 0;
         border-radius: 50%;
         background: transparent;
         box-shadow:
-          inset -24px -18px 44px rgba(0, 0, 0, 0.32),
+          inset -28px -20px 48px rgba(0, 0, 0, 0.34),
           inset 12px 10px 24px rgba(255, 255, 255, 0.07),
           0 0 0 1px rgba(184, 217, 255, 0.18),
-          0 0 34px rgba(105, 177, 255, 0.22),
-          0 0 86px rgba(105, 177, 255, 0.12);
+          0 0 36px rgba(105, 177, 255, 0.22),
+          0 0 90px rgba(105, 177, 255, 0.13);
         transform: none !important;
         rotate: none !important;
         scale: none !important;
@@ -221,7 +207,7 @@
         -webkit-user-select: none;
       }
 
-      .audralia-axis-label {
+      .audralia-existing-route-label {
         position: absolute;
         left: 50%;
         bottom: clamp(18px, 5vw, 44px);
@@ -231,14 +217,14 @@
         border-radius: 999px;
         padding: 0.62rem 0.96rem;
         color: rgba(246, 239, 224, 0.92);
-        background: rgba(5, 10, 20, 0.68);
+        background: rgba(5, 10, 20, 0.70);
         font: 900 clamp(0.7rem, 2.4vw, 0.92rem) / 1.1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         pointer-events: none;
       }
 
-      .audralia-hidden-receipt {
+      .audralia-existing-route-hidden-receipt {
         display: none !important;
       }
     `;
@@ -259,10 +245,10 @@
   }
 
   function loadParentAuthority() {
-    const existingApi = getParentApi();
+    const existing = getParentApi();
 
-    if (existingApi && typeof existingApi.buildTexture === "function") {
-      return Promise.resolve(existingApi);
+    if (existing && typeof existing.buildTexture === "function") {
+      return Promise.resolve(existing);
     }
 
     return new Promise(function (resolve) {
@@ -270,7 +256,7 @@
       script.src = cacheUrl(PARENT_AUTHORITY, PARENT_VERSION);
       script.defer = true;
       script.dataset.audraliaParentAuthority = "true";
-      script.dataset.contract = RECEIPT;
+      script.dataset.consumer = RECEIPT;
 
       script.onload = function () {
         resolve(getParentApi());
@@ -287,14 +273,8 @@
   function loadTerrainAuthority() {
     return import(cacheUrl(TERRAIN_AUTHORITY, TERRAIN_VERSION))
       .then(function (module) {
-        if (module && typeof module.sampleTerrain === "function") {
-          return module;
-        }
-
-        if (module && module.default && typeof module.default.sampleTerrain === "function") {
-          return module.default;
-        }
-
+        if (module && typeof module.sampleTerrain === "function") return module;
+        if (module && module.default && typeof module.default.sampleTerrain === "function") return module.default;
         return null;
       })
       .catch(function () {
@@ -302,7 +282,7 @@
       });
   }
 
-  function createFallbackTexture(width, height) {
+  function fallbackParentTexture(width, height) {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
@@ -311,147 +291,181 @@
 
     const ocean = ctx.createLinearGradient(0, 0, width, height);
     ocean.addColorStop(0, "#08306a");
-    ocean.addColorStop(0.55, "#145c94");
+    ocean.addColorStop(0.52, "#145c94");
     ocean.addColorStop(1, "#061b4d");
 
     ctx.fillStyle = ocean;
     ctx.fillRect(0, 0, width, height);
 
-    function blob(cx, cy, rx, ry, color) {
-      ctx.beginPath();
-
-      for (let i = 0; i <= 80; i += 1) {
-        const a = (Math.PI * 2 * i) / 80;
-        const wobble = 1 + Math.sin(a * 3 + cx * 0.01) * 0.08 + Math.sin(a * 7 + cy * 0.01) * 0.05;
-        const x = cx + Math.cos(a) * rx * wobble;
-        const y = cy + Math.sin(a) * ry * wobble;
-
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-
-      ctx.closePath();
-      ctx.fillStyle = color;
-      ctx.fill();
-    }
-
-    blob(width * 0.43, height * 0.49, width * 0.14, height * 0.18, "#77925f");
-    blob(width * 0.18, height * 0.49, width * 0.10, height * 0.14, "#8d8b58");
-    blob(width * 0.70, height * 0.51, width * 0.11, height * 0.14, "#3f8c58");
-    blob(width * 0.58, height * 0.66, width * 0.08, height * 0.07, "#9a8f5c");
-    blob(width * 0.50, height * 0.08, width * 0.18, height * 0.06, "#d4e7ee");
-
-    ctx.fillStyle = "rgba(240, 249, 255, 0.88)";
+    ctx.fillStyle = "rgba(240,249,255,0.90)";
     ctx.fillRect(0, height * 0.91, width, height * 0.08);
 
     return canvas;
   }
 
-  function buildParentTexture(api) {
-    if (api && typeof api.buildTexture === "function") {
+  function buildParentTexture(parentApi) {
+    if (parentApi && typeof parentApi.buildTexture === "function") {
       try {
-        const texture = api.buildTexture({
+        const texture = parentApi.buildTexture({
           width: CONTROL.textureWidth,
           height: CONTROL.textureHeight
         });
 
         if (texture && texture.getContext && texture.width && texture.height) {
+          texture.dataset.parentAuthority = PARENT_AUTHORITY;
           return texture;
         }
       } catch (error) {
-        // Fallback keeps the route alive.
+        // Fall through.
       }
     }
 
-    return createFallbackTexture(CONTROL.textureWidth, CONTROL.textureHeight);
+    const fallback = fallbackParentTexture(CONTROL.textureWidth, CONTROL.textureHeight);
+    fallback.dataset.parentAuthority = "fallback-parent-baseline";
+    return fallback;
   }
 
-  function terrainLandColor(sample) {
-    const influence = sample && sample.terrainColorInfluence ? sample.terrainColorInfluence : null;
+  function fallbackTerrainSample(u, v) {
+    const lon = u * 2 - 1;
+    const lat = 1 - v * 2;
 
-    let r = influence && Number.isFinite(influence.r) ? influence.r : 112;
-    let g = influence && Number.isFinite(influence.g) ? influence.g : 142;
-    let b = influence && Number.isFinite(influence.b) ? influence.b : 92;
+    const bodies = [
+      { lon: -0.1, lat: 0.02, rx: 0.36, ry: 0.28, region: 2, elevation: 0.28 },
+      { lon: -0.62, lat: 0.0, rx: 0.22, ry: 0.24, region: 8, elevation: 0.7 },
+      { lon: 0.58, lat: 0.04, rx: 0.24, ry: 0.24, region: 4, elevation: 0.42 },
+      { lon: 0.16, lat: -0.46, rx: 0.3, ry: 0.18, region: 6, elevation: 0.62 },
+      { lon: 0.02, lat: 0.82, rx: 0.42, ry: 0.14, region: 7, elevation: 0.72 }
+    ];
 
-    const elevation = clamp(sample.normalizedElevation || 0, 0, 1);
-    const regionElevation = clamp(sample.regionRelativeElevation || 0, 0, 1);
-    const ridge = clamp(sample.ridge || 0, 0, 1);
-    const dry = clamp(sample.dryInteriorPressure || 0, 0, 1);
-    const coast = clamp(sample.coastPressure || 0, 0, 1);
+    let best = null;
+    let strength = 0;
 
-    r = mix(r, 210, elevation * 0.22 + regionElevation * 0.18);
-    g = mix(g, 198, ridge * 0.16);
-    b = mix(b, 164, ridge * 0.16);
+    for (const body of bodies) {
+      const dx = lon - body.lon;
+      const dy = lat - body.lat;
+      const d = Math.exp(-((dx * dx) / (body.rx * body.rx) + (dy * dy) / (body.ry * body.ry)));
 
-    r = mix(r, 184, dry * 0.22);
-    g = mix(g, 132, dry * 0.18);
-    b = mix(b, 84, dry * 0.14);
-
-    r = mix(r, 210, coast * 0.16);
-    g = mix(g, 185, coast * 0.12);
-    b = mix(b, 112, coast * 0.10);
-
-    return {
-      r: clamp(Math.round(r), 0, 255),
-      g: clamp(Math.round(g), 0, 255),
-      b: clamp(Math.round(b), 0, 255)
-    };
-  }
-
-  function terrainWaterColor(sample, base) {
-    const shelf = clamp(sample.shelfPermission || 0, 0, 1);
-    const depth = clamp(Math.abs(sample.normalizedElevation || 0), 0, 1);
-    const coast = clamp(sample.coastPressure || 0, 0, 1);
-
-    let r = mix(8, 44, shelf);
-    let g = mix(30, 142, shelf);
-    let b = mix(78, 168, shelf);
-
-    r = mix(r, base.r, 0.38 + depth * 0.22);
-    g = mix(g, base.g, 0.38 + depth * 0.22);
-    b = mix(b, base.b, 0.38 + depth * 0.22);
-
-    r = mix(r, 86, coast * 0.15);
-    g = mix(g, 176, coast * 0.18);
-    b = mix(b, 190, coast * 0.18);
-
-    return {
-      r: clamp(Math.round(r), 0, 255),
-      g: clamp(Math.round(g), 0, 255),
-      b: clamp(Math.round(b), 0, 255)
-    };
-  }
-
-  function terrainIceColor(sample) {
-    const southIce = sample.southIce || sample.regionKey === "south_polar_ice";
-    return southIce
-      ? { r: 238, g: 248, b: 252 }
-      : { r: 222, g: 237, b: 244 };
-  }
-
-  function composeTexture(parentTexture, terrainModule) {
-    if (!terrainModule || typeof terrainModule.sampleTerrain !== "function") {
-      parentTexture.dataset.compositorStatus = "terrain-child-missing-parent-only";
-      return parentTexture;
+      if (d > strength) {
+        strength = d;
+        best = body;
+      }
     }
 
+    for (let i = 0; i < 72; i += 1) {
+      const ilon = -0.82 + ((i * 0.137) % 1.64);
+      const ilat = -0.58 + Math.sin(i * 1.71) * 0.42 + Math.cos(i * 0.61) * 0.06;
+      const radius = 0.022 + (i % 5) * 0.004;
+      const dx = lon - ilon;
+      const dy = lat - ilat;
+      const d = Math.exp(-((dx * dx + dy * dy) / (radius * radius)));
+
+      if (d > strength) {
+        strength = d;
+        best = {
+          lon: ilon,
+          lat: ilat,
+          rx: radius,
+          ry: radius,
+          region: 1 + (i % 9),
+          elevation: 0.12 + (i % 9) * 0.1
+        };
+      }
+    }
+
+    const southIce = lat < -0.76;
+    const isLand = !southIce && strength > 0.5;
+
+    return {
+      isLand,
+      isWater: !isLand && !southIce,
+      isIce: southIce,
+      southIce,
+      normalizedElevation: isLand && best ? best.elevation : southIce ? 0 : -0.5,
+      regionRelativeElevation: isLand && best ? best.elevation : 0,
+      regionId: isLand && best ? best.region : 0,
+      landPressure: strength,
+      territoryStrength: isLand ? strength : 0,
+      coastPressure: Math.max(0, 1 - Math.abs(strength - 0.5) / 0.18),
+      shelfPermission: !isLand && !southIce ? Math.max(0, 1 - Math.abs(strength - 0.5) / 0.22) : 0,
+      ridge: isLand && best ? Math.max(0, best.elevation - 0.35) : 0,
+      dryInteriorPressure: isLand && Math.abs(lat) > 0.28 ? 0.35 : 0
+    };
+  }
+
+  function sampleTerrain(terrainApi, u, v) {
+    if (terrainApi && typeof terrainApi.sampleTerrain === "function") {
+      try {
+        const sample = terrainApi.sampleTerrain(u, v, TERRAIN_CONTEXT);
+        if (sample) return sample;
+      } catch (error) {
+        return fallbackTerrainSample(u, v);
+      }
+    }
+
+    return fallbackTerrainSample(u, v);
+  }
+
+  function terrainColor(sample, base) {
+    if (sample.isIce) {
+      return { r: 238, g: 248, b: 252, amount: 0.94 };
+    }
+
+    if (sample.isLand) {
+      const elevation = clamp(sample.normalizedElevation || 0, 0, 1);
+      const region = clamp(sample.regionRelativeElevation || elevation, 0, 1);
+      const ridge = clamp(sample.ridge || 0, 0, 1);
+      const dry = clamp(sample.dryInteriorPressure || 0, 0, 1);
+      const coast = clamp(sample.coastPressure || 0, 0, 1);
+
+      let r = mix(76, 210, region * 0.74);
+      let g = mix(132, 192, ridge * 0.3);
+      let b = mix(82, 150, ridge * 0.24);
+
+      r = mix(r, 184, dry * 0.32);
+      g = mix(g, 128, dry * 0.24);
+      b = mix(b, 82, dry * 0.18);
+
+      r = mix(r, 214, coast * 0.16);
+      g = mix(g, 190, coast * 0.13);
+      b = mix(b, 118, coast * 0.1);
+
+      return {
+        r: clamp(Math.round(r), 0, 255),
+        g: clamp(Math.round(g), 0, 255),
+        b: clamp(Math.round(b), 0, 255),
+        amount: clamp(0.82 + elevation * 0.12 + clamp(sample.territoryStrength || 0, 0, 1) * 0.1, 0.82, 0.98)
+      };
+    }
+
+    const shelf = clamp(sample.shelfPermission || 0, 0, 1);
+    const coast = clamp(sample.coastPressure || 0, 0, 1);
+
+    return {
+      r: clamp(Math.round(mix(base.r, mix(10, 56, shelf), 0.42 + coast * 0.1)), 0, 255),
+      g: clamp(Math.round(mix(base.g, mix(42, 164, shelf), 0.42 + coast * 0.12)), 0, 255),
+      b: clamp(Math.round(mix(base.b, mix(100, 188, shelf), 0.42 + coast * 0.12)), 0, 255),
+      amount: clamp(0.34 + shelf * 0.28 + coast * 0.14, 0.28, 0.7)
+    };
+  }
+
+  function composeTexture(parentTexture, terrainApi) {
     const width = parentTexture.width || CONTROL.textureWidth;
     const height = parentTexture.height || CONTROL.textureHeight;
 
-    const sourceCanvas = document.createElement("canvas");
-    sourceCanvas.width = width;
-    sourceCanvas.height = height;
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
 
-    const sourceCtx = sourceCanvas.getContext("2d", { willReadFrequently: true });
-    sourceCtx.drawImage(parentTexture, 0, 0, width, height);
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    ctx.drawImage(parentTexture, 0, 0, width, height);
 
-    const image = sourceCtx.getImageData(0, 0, width, height);
+    const image = ctx.getImageData(0, 0, width, height);
     const data = image.data;
 
+    let terrainSamples = 0;
     let landSamples = 0;
     let waterSamples = 0;
     let iceSamples = 0;
-    let terrainSamples = 0;
 
     for (let py = 0; py < height; py += 1) {
       const v = height <= 1 ? 0.5 : py / (height - 1);
@@ -466,117 +480,82 @@
           b: data[index + 2]
         };
 
-        let sample = null;
-
-        try {
-          sample = terrainModule.sampleTerrain(u, v, TERRAIN_CONTEXT);
-        } catch (error) {
-          sample = null;
-        }
-
-        if (!sample) continue;
+        const sample = sampleTerrain(terrainApi, u, v);
+        const target = terrainColor(sample, base);
 
         terrainSamples += 1;
+        if (sample.isIce) iceSamples += 1;
+        else if (sample.isLand) landSamples += 1;
+        else waterSamples += 1;
 
-        let target = base;
-        let amount = 0.35;
-
-        if (sample.isIce) {
-          iceSamples += 1;
-          target = terrainIceColor(sample);
-          amount = 0.92;
-        } else if (sample.isLand) {
-          landSamples += 1;
-          target = terrainLandColor(sample);
-          amount = clamp(
-            0.72 +
-              clamp(sample.landPressure || 0, 0, 1) * 0.16 +
-              clamp(sample.territoryStrength || 0, 0, 1) * 0.16 +
-              clamp(sample.regionRelativeElevation || 0, 0, 1) * 0.08,
-            0.72,
-            0.96
-          );
-        } else {
-          waterSamples += 1;
-          target = terrainWaterColor(sample, base);
-          amount = clamp(0.28 + clamp(sample.shelfPermission || 0, 0, 1) * 0.30, 0.26, 0.62);
-        }
-
-        data[index] = clamp(Math.round(mix(base.r, target.r, amount)), 0, 255);
-        data[index + 1] = clamp(Math.round(mix(base.g, target.g, amount)), 0, 255);
-        data[index + 2] = clamp(Math.round(mix(base.b, target.b, amount)), 0, 255);
+        data[index] = clamp(Math.round(mix(base.r, target.r, target.amount)), 0, 255);
+        data[index + 1] = clamp(Math.round(mix(base.g, target.g, target.amount)), 0, 255);
+        data[index + 2] = clamp(Math.round(mix(base.b, target.b, target.amount)), 0, 255);
         data[index + 3] = 255;
       }
     }
 
-    sourceCtx.putImageData(image, 0, 0);
+    ctx.putImageData(image, 0, 0);
 
-    sourceCanvas.dataset.body = BODY;
-    sourceCanvas.dataset.contract = RECEIPT;
-    sourceCanvas.dataset.parentAuthority = PARENT_AUTHORITY;
-    sourceCanvas.dataset.terrainAuthority = TERRAIN_AUTHORITY;
-    sourceCanvas.dataset.compositorStatus = "parent-plus-terrain-child";
-    sourceCanvas.dataset.landSamples = String(landSamples);
-    sourceCanvas.dataset.waterSamples = String(waterSamples);
-    sourceCanvas.dataset.iceSamples = String(iceSamples);
-    sourceCanvas.dataset.terrainSamples = String(terrainSamples);
-    sourceCanvas.dataset.visualPass = CONTROL.visualPass;
+    canvas.dataset.body = BODY;
+    canvas.dataset.contract = RECEIPT;
+    canvas.dataset.parentAuthority = PARENT_AUTHORITY;
+    canvas.dataset.terrainAuthority = TERRAIN_AUTHORITY;
+    canvas.dataset.parentTexture = parentTexture.dataset.parentAuthority || PARENT_AUTHORITY;
+    canvas.dataset.terrainLoaded = String(Boolean(terrainApi));
+    canvas.dataset.compositorStatus = terrainApi ? "parent-plus-terrain-child" : "parent-plus-fallback-terrain";
+    canvas.dataset.terrainSamples = String(terrainSamples);
+    canvas.dataset.landSamples = String(landSamples);
+    canvas.dataset.waterSamples = String(waterSamples);
+    canvas.dataset.iceSamples = String(iceSamples);
+    canvas.dataset.visualPass = CONTROL.visualPass;
 
-    return sourceCanvas;
+    return canvas;
   }
 
   function createStage(mount) {
     const stage = document.createElement("div");
-    stage.className = "audralia-axis-stage";
+    stage.className = "audralia-existing-route-stage";
     stage.dataset.body = BODY;
     stage.dataset.route = ROUTE;
     stage.dataset.contract = RECEIPT;
     stage.dataset.axisDegrees = String(CONTROL.axisDegrees);
-    stage.dataset.rotationModel = CONTROL.rotationModel;
     stage.dataset.compositorModel = CONTROL.compositorModel;
-    stage.dataset.parentAuthority = PARENT_AUTHORITY;
-    stage.dataset.terrainAuthority = TERRAIN_AUTHORITY;
-    stage.dataset.diskRotation = CONTROL.diskRotation;
-    stage.dataset.textureStretch = CONTROL.textureStretch;
     stage.style.setProperty("--audralia-axis-deg", CONTROL.axisDegrees + "deg");
 
     const axis = document.createElement("div");
-    axis.className = "audralia-axis-line";
+    axis.className = "audralia-existing-route-axis";
     axis.dataset.axis = "audralia-fixed-axis";
-    axis.dataset.axisDegrees = String(CONTROL.axisDegrees);
 
     const canvas = document.createElement("canvas");
-    canvas.className = "audralia-rotation-canvas";
+    canvas.className = "audralia-existing-route-canvas";
     canvas.dataset.body = BODY;
     canvas.dataset.contract = RECEIPT;
     canvas.dataset.rotationModel = CONTROL.rotationModel;
-    canvas.dataset.compositorModel = CONTROL.compositorModel;
     canvas.dataset.touchModel = CONTROL.touchModel;
+    canvas.dataset.compositorModel = CONTROL.compositorModel;
     canvas.dataset.diskRotation = CONTROL.diskRotation;
-    canvas.dataset.wholeCanvasRotation = CONTROL.wholeCanvasRotation;
     canvas.dataset.textureStretch = CONTROL.textureStretch;
     canvas.dataset.visualPass = CONTROL.visualPass;
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Audralia terrain-composed natural axis rotation control");
+    canvas.setAttribute("aria-label", "Audralia existing route compositor with terrain child consumption and natural axis rotation");
 
     const label = document.createElement("div");
-    label.className = "audralia-axis-label";
-    label.textContent = "AUDRALIA · TERRAIN COMPOSED";
+    label.className = "audralia-existing-route-label";
+    label.textContent = "AUDRALIA · ROUTE COMPOSITOR";
 
     const receipt = document.createElement("div");
     receipt.hidden = true;
     receipt.setAttribute("aria-hidden", "true");
-    receipt.className = "audralia-hidden-receipt";
+    receipt.className = "audralia-existing-route-hidden-receipt";
     receipt.dataset.contract = RECEIPT;
     receipt.dataset.route = ROUTE;
     receipt.dataset.parentAuthority = PARENT_AUTHORITY;
     receipt.dataset.terrainAuthority = TERRAIN_AUTHORITY;
-    receipt.dataset.axisDegrees = String(CONTROL.axisDegrees);
-    receipt.dataset.rotationModel = CONTROL.rotationModel;
-    receipt.dataset.compositorModel = CONTROL.compositorModel;
+    receipt.dataset.newFileRequired = "false";
     receipt.dataset.visualPass = CONTROL.visualPass;
     receipt.textContent =
-      "AUDRALIA_ROUTE_TERRAIN_CHILD_CONSUMPTION_AND_CACHE_BUST_TNT_v1 parent_baseline=consumed terrain_child=consumed surface_phase=active visual_pass=held";
+      "AUDRALIA_EXISTING_ROUTE_COMPOSITOR_REWIRE_TNT_v1 new_file_required=false parent_consumed=true terrain_consumed=true visual_pass=held";
 
     stage.appendChild(axis);
     stage.appendChild(canvas);
@@ -590,15 +569,10 @@
     mount.dataset.contract = RECEIPT;
     mount.dataset.parentAuthority = PARENT_AUTHORITY;
     mount.dataset.terrainAuthority = TERRAIN_AUTHORITY;
-    mount.dataset.terrainConsumption = "active";
-    mount.dataset.axisDegrees = String(CONTROL.axisDegrees);
-    mount.dataset.rotationModel = CONTROL.rotationModel;
     mount.dataset.compositorModel = CONTROL.compositorModel;
-    mount.dataset.touchModel = CONTROL.touchModel;
-    mount.dataset.diskRotation = CONTROL.diskRotation;
-    mount.dataset.wholeCanvasRotation = CONTROL.wholeCanvasRotation;
-    mount.dataset.textureStretch = CONTROL.textureStretch;
+    mount.dataset.rotationModel = CONTROL.rotationModel;
     mount.dataset.visualPass = CONTROL.visualPass;
+    mount.dataset.newFileRequired = "false";
     mount.dataset.earthAdoption = "blocked";
 
     return { stage, canvas };
@@ -646,7 +620,7 @@
     const cx = size / 2;
     const cy = size / 2;
     const radius = size * 0.405;
-    const stripHeight = Math.max(2, Math.floor(size / 260));
+    const stripHeight = Math.max(2, Math.floor(size / 270));
     const sourceHeight = texture.height || CONTROL.textureHeight;
 
     ctx.clearRect(0, 0, size, size);
@@ -701,16 +675,25 @@
 
     ctx.fillStyle = edge;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
-
     ctx.restore();
 
     ctx.save();
     ctx.beginPath();
     ctx.arc(cx, cy, radius + Math.max(1, size * 0.004), 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(190, 226, 255, 0.28)";
+    ctx.strokeStyle = "rgba(190,226,255,0.28)";
     ctx.lineWidth = Math.max(1, size * 0.003);
     ctx.stroke();
     ctx.restore();
+  }
+
+  function draw(state) {
+    const size = sizeCanvas(state.canvas, state.mount);
+    drawSphere(state.ctx, state.texture, state.phase, size);
+
+    state.canvas.dataset.phase = state.phase.toFixed(5);
+    state.canvas.dataset.velocity = state.velocity.toFixed(6);
+    state.mount.dataset.phase = state.phase.toFixed(5);
+    state.mount.dataset.velocity = state.velocity.toFixed(6);
   }
 
   function attachControls(state) {
@@ -718,10 +701,7 @@
 
     function point(event) {
       const source = event.touches && event.touches[0] ? event.touches[0] : event;
-      return {
-        x: source.clientX,
-        y: source.clientY
-      };
+      return { x: source.clientX };
     }
 
     function down(event) {
@@ -774,17 +754,6 @@
     });
   }
 
-  function draw(state) {
-    const size = sizeCanvas(state.canvas, state.mount);
-    drawSphere(state.ctx, state.texture, state.phase, size);
-
-    state.canvas.dataset.phase = state.phase.toFixed(5);
-    state.canvas.dataset.velocity = state.velocity.toFixed(6);
-    state.canvas.dataset.terrainConsumption = "active";
-    state.mount.dataset.phase = state.phase.toFixed(5);
-    state.mount.dataset.velocity = state.velocity.toFixed(6);
-  }
-
   function tick(state) {
     if (!state.running) return;
 
@@ -819,13 +788,13 @@
   }
 
   function boot() {
-    markRoute();
+    markRoute("booting");
     ensureStyle();
 
     const mount = getMount();
 
     if (!mount) {
-      document.documentElement.dataset.audraliaRouteControlStatus = "missing-mount";
+      markRoute("missing-mount");
       return;
     }
 
@@ -868,7 +837,8 @@
         tick(state);
       });
 
-      document.documentElement.dataset.audraliaRouteControlStatus = "active";
+      markRoute("active");
+
       document.documentElement.dataset.audraliaParentAuthorityLoaded = String(Boolean(parentApi));
       document.documentElement.dataset.audraliaTerrainAuthorityLoaded = String(Boolean(terrainApi));
       document.documentElement.dataset.audraliaComposedTexture = composedTexture.dataset.compositorStatus || "unknown";
@@ -882,7 +852,7 @@
       mount.dataset.iceSamples = composedTexture.dataset.iceSamples || "0";
 
       window.dispatchEvent(
-        new CustomEvent("dgb:audralia-terrain-composed-rotation-ready", {
+        new CustomEvent("dgb:audralia-existing-route-compositor-ready", {
           detail: {
             body: BODY,
             label: LABEL,
@@ -897,8 +867,7 @@
             landSamples: composedTexture.dataset.landSamples || "0",
             waterSamples: composedTexture.dataset.waterSamples || "0",
             iceSamples: composedTexture.dataset.iceSamples || "0",
-            axisDegrees: CONTROL.axisDegrees,
-            rotationModel: CONTROL.rotationModel,
+            newFileRequired: false,
             visualPass: CONTROL.visualPass
           }
         })
@@ -927,28 +896,19 @@
         terrainAuthority: TERRAIN_AUTHORITY,
         parentLoaded: Boolean(activeState && activeState.parentApi),
         terrainLoaded: Boolean(activeState && activeState.terrainApi),
-        axisDegrees: CONTROL.axisDegrees,
-        rotationModel: CONTROL.rotationModel,
-        touchModel: CONTROL.touchModel,
         compositorModel: CONTROL.compositorModel,
+        rotationModel: CONTROL.rotationModel,
         phase: activeState ? activeState.phase : null,
         velocity: activeState ? activeState.velocity : null,
-        planetPosition: "fixed",
-        canvas: "fixed",
-        surfacePhase: "active",
-        terrainChildConsumption: "active",
-        diskRotation: "forbidden",
-        wholeCanvasRotation: "forbidden",
-        textureStretch: "forbidden",
-        earthInheritance: "forbidden",
+        newFileRequired: false,
         parentReopened: false,
         terrainRewrittenHere: false,
-        hydrationOwnedHere: false,
-        climateOwnedHere: false,
         visualPassClaimed: false
       });
     }
   });
+
+  window.DGBAudraliaExistingRouteCompositor = window.DGBAudraliaRouteControl;
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot, { once: true });

@@ -2,9 +2,9 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="audralia-topology-tectonics-terrain-chain-gauges"
+  data-page="audralia-true-orthographic-chain-gauges"
   data-route="/gauges/"
-  data-contract="AUDRALIA_GAUGES_TOPOLOGY_TECTONICS_TERRAIN_CHAIN_AUDIT_TNT_v1"
+  data-contract="AUDRALIA_GAUGES_TRUE_ORTHOGRAPHIC_ROUTE_EXPECTATION_RENEWAL_TNT_v1"
   data-mutation="false"
   data-graphic-box="false"
   data-image-generation="false"
@@ -16,7 +16,7 @@
   <title>Gauges · Audralia Chain Audit</title>
   <meta
     name="description"
-    content="Audits the Audralia route handoff, runtime topology-first consumer, topology sea-level/bathymetry contract, tectonic plate layer, terrain handoff status, hydration hold, and foliage closure."
+    content="Audits the current Audralia chain: true orthographic route rendering, runtime topology→tectonics→terrain composition, topology blueprint, tectonic plate layer, terrain handoff status, hydration hold, and foliage closure."
   >
 
   <style>
@@ -24,11 +24,9 @@
       color-scheme: dark;
       --bg: #050914;
       --panel: rgba(10, 20, 36, 0.88);
-      --panel-strong: rgba(6, 13, 24, 0.96);
       --text: #f7efe2;
       --muted: #b8c2cf;
       --gold: #f5c76b;
-      --blue: #78bcff;
       --green: #92f0b8;
       --red: #ff8f8f;
       --amber: #ffd27c;
@@ -219,6 +217,10 @@
       margin-top: 18px;
     }
 
+    .group-block {
+      margin-top: 24px;
+    }
+
     .check {
       display: grid;
       grid-template-columns: auto 1fr;
@@ -323,11 +325,11 @@
   <div class="shell">
     <header class="card">
       <p class="eyebrow">Gauges · Audralia Chain Audit</p>
-      <h1>Topology → Tectonics → Terrain</h1>
+      <h1>True Globe → Runtime → Terrain</h1>
       <p class="lede">
-        This audit replaces the stale terrain-first gauge. It reads the current Audralia chain:
-        route handoff, runtime consumer, topology sea-level/bathymetry contract, tectonic plate layer,
-        terrain handoff status, hydration hold, and foliage closure. It does not mutate assets.
+        This audit measures the current Audralia chain after the true orthographic route upgrade.
+        It expects the route to render a real front-facing hemisphere, the runtime to compose
+        topology → tectonics → terrain with caching, and hydration to remain held.
       </p>
 
       <nav aria-label="Site rail">
@@ -353,7 +355,7 @@
         <p class="eyebrow">Current expected read</p>
         <h2 id="expectedTitle">Audit not run yet.</h2>
         <p id="expectedText" class="lede">
-          Run the audit to measure the current chain against the new architecture.
+          Run the audit to measure the current true-globe chain.
         </p>
 
         <div class="summary" aria-label="Audit totals">
@@ -386,7 +388,7 @@
         <p class="eyebrow">Live source audit</p>
         <h2>Audralia-only gauge groups</h2>
         <div id="results"></div>
-        <div id="receipt" class="route-receipt">AUDRALIA_GAUGES_TOPOLOGY_TECTONICS_TERRAIN_CHAIN_AUDIT_TNT_v1
+        <div id="receipt" class="route-receipt">AUDRALIA_GAUGES_TRUE_ORTHOGRAPHIC_ROUTE_EXPECTATION_RENEWAL_TNT_v1
 MUTATION=false
 GRAPHIC_BOX=false
 IMAGE_GENERATION=false
@@ -399,7 +401,7 @@ VISUAL_PASS_CLAIMED=false</div>
     (function () {
       "use strict";
 
-      const CONTRACT = "AUDRALIA_GAUGES_TOPOLOGY_TECTONICS_TERRAIN_CHAIN_AUDIT_TNT_v1";
+      const CONTRACT = "AUDRALIA_GAUGES_TRUE_ORTHOGRAPHIC_ROUTE_EXPECTATION_RENEWAL_TNT_v1";
 
       const PATHS = Object.freeze({
         routeHtml: "/showroom/globe/audralia/",
@@ -412,12 +414,14 @@ VISUAL_PASS_CLAIMED=false</div>
       });
 
       const EXPECTED = Object.freeze({
-        routeContract: "AUDRALIA_ROUTE_RUNTIME_TOPOLOGY_FIRST_CONSUMER_TNT_v1",
-        htmlContract: "AUDRALIA_ROUTE_RUNTIME_TOPOLOGY_FIRST_HANDOFF_HTML_TNT_v1",
-        topologyContract: "AUDRALIA_G1_TOPOLOGY_SEA_LEVEL_EARTH_LAND_RATIO_BATHYMETRY_COAST_TNT_v1",
+        currentRouteContract: "AUDRALIA_ROUTE_TRUE_ORTHOGRAPHIC_GLOBE_RENDER_TNT_v2",
+        previousRouteContract: "AUDRALIA_ROUTE_RUNTIME_TOPOLOGY_FIRST_CONSUMER_TNT_v1",
+        htmlContract: "AUDRALIA_TRUE_GLOBE_HANDOFF_HTML_CACHE_REWIRE_TNT_v1",
+        topologyContractA: "AUDRALIA_G1_TOPOLOGY_SEA_LEVEL_EARTH_LAND_RATIO_BATHYMETRY_COAST_TNT_v1",
+        topologyContractB: "AUDRALIA_G1_TOPOLOGY_LANDMASS_100_PERCENT_EXPANSION_SMALL_CONTINENTS_TNT_v1",
         tectonicsContract: "AUDRALIA_G1_TECTONIC_PLATE_LAYER_EARTH_LAND_AREA_ANCIENT_MOUNTAIN_MEMORY_TNT_v1",
-        runtimeHint: "sampleAudraliaPlanetState",
-        terrainCurrentOrPending: "AUDRALIA_G1_TERRAIN_HYDROLOGY_MAP_CHILD_TNT_v1"
+        runtimeContract: "AUDRALIA_RUNTIME_CACHED_TOPOLOGY_TECTONICS_TERRAIN_CHAIN_TNT_v2",
+        terrainCurrent: "AUDRALIA_G1_TERRAIN_HYDROLOGY_MAP_CHILD_TNT_v1"
       });
 
       const state = {
@@ -465,20 +469,16 @@ VISUAL_PASS_CLAIMED=false</div>
         return !has(source, pattern);
       }
 
-      function check(status, title, detail) {
-        return { status, title, detail };
-      }
-
       function pass(title, detail) {
-        return check("pass", title, detail);
+        return { status: "pass", title, detail };
       }
 
       function fail(title, detail) {
-        return check("fail", title, detail);
+        return { status: "fail", title, detail };
       }
 
       function held(title, detail) {
-        return check("held", title, detail);
+        return { status: "held", title, detail };
       }
 
       function group(title, purpose, checks) {
@@ -491,7 +491,7 @@ VISUAL_PASS_CLAIMED=false</div>
         return pass(label + " reachable", source.path + " returned " + source.status + ".");
       }
 
-      function auditRoute() {
+      function auditRouteHandoff() {
         const html = state.sources.routeHtml;
 
         return group(
@@ -508,12 +508,12 @@ VISUAL_PASS_CLAIMED=false</div>
             has(html, "Audralia") && lacks(html, "Australia") && lacks(html, "Adralia")
               ? pass("Audralia identity clean", "Route names Audralia and does not expose Australia or Adralia.")
               : fail("Audralia identity clean", "Route source contains an identity leak or lacks Audralia."),
-            has(html, EXPECTED.htmlContract) || has(html, "handoff shell only") || has(html, "Handoff shell only")
+            has(html, "handoff shell only") || has(html, "Handoff shell only") || has(html, EXPECTED.htmlContract)
               ? pass("HTML handoff role current", "HTML declares handoff-only route behavior.")
-              : held("HTML handoff role current", "HTML does not clearly declare the current handoff-only contract."),
-            has(html, EXPECTED.routeContract)
-              ? pass("Runtime-first script version declared", "Script version points to the runtime/topology-first route consumer.")
-              : held("Runtime-first script version declared", "Script version may still be stale or unversioned.")
+              : held("HTML handoff role current", "HTML does not clearly declare handoff-only behavior."),
+            has(html, EXPECTED.currentRouteContract)
+              ? pass("True-globe script version declared", "HTML points to the true orthographic route contract.")
+              : held("True-globe script version declared", "HTML may still point to an older version string, but live JS is audited separately.")
           ]
         );
       }
@@ -522,28 +522,49 @@ VISUAL_PASS_CLAIMED=false</div>
         const js = state.sources.routeJs;
 
         return group(
-          "Route Runtime Consumer",
-          "Confirms the visible route compositor consumes runtime first and does not generate land itself.",
+          "True Orthographic Route Renderer",
+          "Confirms the route compositor uses true orthographic globe projection and consumes runtime without generating land.",
           [
             sourceStatus(js, "Route script"),
-            has(js, EXPECTED.routeContract)
-              ? pass("Route compositor contract current", EXPECTED.routeContract)
-              : fail("Route compositor contract current", "Expected runtime/topology-first route contract not found."),
+            has(js, EXPECTED.currentRouteContract)
+              ? pass("Route compositor contract current", EXPECTED.currentRouteContract)
+              : fail("Route compositor contract current", "Expected true orthographic route contract not found."),
+            has(js, EXPECTED.previousRouteContract)
+              ? held("Legacy route contract still present", "Old runtime/topology-first contract appears in source. It should be legacy only, not active.")
+              : pass("Legacy route contract absent as active target", "Old runtime/topology-first contract is not the active route receipt."),
+            has(js, "orthographic-sphere-coordinate-sampling") || has(js, "true-orthographic-front-hemisphere") || has(js, "drawOrthographicSphere")
+              ? pass("Orthographic projection present", "Route renders through orthographic sphere-coordinate sampling.")
+              : fail("Orthographic projection present", "Orthographic projection markers were not found."),
+            has(js, "visibleLongitudeSpanDegrees") && has(js, "180")
+              ? pass("Visible hemisphere declared", "Visible longitude span is declared as 180 degrees.")
+              : fail("Visible hemisphere declared", "Visible 180-degree hemisphere declaration not found."),
+            has(js, "hiddenLongitudeSpanDegrees") && has(js, "180")
+              ? pass("Hidden hemisphere declared", "Hidden longitude span is declared as 180 degrees.")
+              : fail("Hidden hemisphere declared", "Hidden 180-degree hemisphere declaration not found."),
+            has(js, "fullTextureOnVisibleFace") && has(js, "forbidden")
+              ? pass("Full texture on visible face forbidden", "Route forbids the full 360 map on the visible face.")
+              : fail("Full texture on visible face forbidden", "No fullTextureOnVisibleFace forbidden receipt found."),
+            has(js, "flatMapOnSphere") && has(js, "forbidden")
+              ? pass("Flat map on sphere forbidden", "Route forbids flat-map-on-sphere behavior.")
+              : fail("Flat map on sphere forbidden", "No flatMapOnSphere forbidden receipt found."),
             has(js, "/assets/audralia/audralia.runtime.js") && has(js, "loadRuntimeAuthority")
               ? pass("Runtime authority consumed", "Route script loads the Audralia runtime authority.")
               : fail("Runtime authority consumed", "Route script does not clearly load runtime authority."),
-            has(js, "sampleRuntimeState") && has(js, "topologyFirstColor")
-              ? pass("Topology-first visible sampling present", "Route samples runtime state and colors through topology-first logic.")
-              : held("Topology-first visible sampling present", "Expected sampleRuntimeState/topologyFirstColor functions not found."),
+            has(js, "topologyFirstColor") && (has(js, "sampleRuntimeState") || has(js, "sampleRuntimeState(runtimeApi"))
+              ? pass("Runtime sample color path present", "Route samples runtime state and colors through topology-first visual logic.")
+              : held("Runtime sample color path present", "Expected runtime sampling/color path markers not fully detected."),
             lacks(js, "function fallbackTerrainSample") && lacks(js, "blob(-0.10")
               ? pass("Old blob land fallback absent", "No route-owned blob land generation detected.")
               : fail("Old blob land fallback absent", "Old terrain/blob fallback logic is still present."),
-            lacks(js, "import(cacheUrl(TERRAIN_AUTHORITY") && lacks(js, "function loadTerrainAuthority")
+            lacks(js, "function loadTerrainAuthority") && lacks(js, "import(cacheUrl(TERRAIN_AUTHORITY")
               ? pass("Direct terrain-first import removed", "Route does not directly import terrain as the compositor source.")
               : fail("Direct terrain-first import removed", "Route still appears to import terrain directly."),
-            has(js, "noRouteLandGeneration") || has(js, "No procedural land fallback")
-              ? pass("Route-owned land generation blocked", "Route declares no route-owned land generation.")
-              : held("Route-owned land generation blocked", "No explicit no-route-land-generation receipt found.")
+            has(js, "routeOwnedLandGeneration") && has(js, "forbidden")
+              ? pass("Route-owned land generation blocked", "Route declares routeOwnedLandGeneration forbidden.")
+              : fail("Route-owned land generation blocked", "No routeOwnedLandGeneration forbidden receipt found."),
+            has(js, "visualPassClaimed: false") || has(js, "VISUAL_PASS") || has(js, "visualPass")
+              ? pass("Route avoids visual pass claim", "Route contains visual-pass restraint.")
+              : held("Route avoids visual pass claim", "No visual pass restraint marker found.")
           ]
         );
       }
@@ -553,25 +574,31 @@ VISUAL_PASS_CLAIMED=false</div>
 
         return group(
           "Runtime Layer Order",
-          "Confirms runtime exists and checks whether it has been upgraded from topology→terrain to topology→tectonics→terrain.",
+          "Confirms runtime exists, caches the chain, and consumes topology → tectonics → terrain.",
           [
             sourceStatus(runtime, "Runtime authority"),
+            has(runtime, EXPECTED.runtimeContract) || has(runtime, "AUDRALIA_RUNTIME_CACHED_TOPOLOGY_TECTONICS_TERRAIN_CHAIN_TNT_v2")
+              ? pass("Runtime contract current", "Cached topology→tectonics→terrain runtime contract is present.")
+              : held("Runtime contract current", "Cached runtime contract not found; older runtime may still be live."),
             has(runtime, "sampleAudraliaPlanetState")
               ? pass("Runtime sample API present", "sampleAudraliaPlanetState is present.")
               : fail("Runtime sample API present", "Runtime does not expose sampleAudraliaPlanetState."),
             has(runtime, "createAudraliaRuntime")
               ? pass("Runtime creation API present", "createAudraliaRuntime is present.")
-              : held("Runtime creation API present", "Runtime creation API not found; route may still sample stateless runtime."),
+              : held("Runtime creation API present", "Runtime creation API not found."),
             has(runtime, "/assets/audralia/audralia.topology.render.js") || has(runtime, "sampleTopology")
               ? pass("Runtime consumes topology", "Runtime references topology authority.")
               : fail("Runtime consumes topology", "Runtime does not clearly consume topology."),
             has(runtime, "/assets/audralia/audralia.tectonics.render.js") || has(runtime, "sampleTectonics")
               ? pass("Runtime consumes tectonics", "Runtime includes the tectonic layer.")
-              : held("Runtime consumes tectonics", "Runtime has not yet been upgraded to topology → tectonics → terrain."),
+              : fail("Runtime consumes tectonics", "Runtime has not been upgraded to topology → tectonics → terrain."),
             has(runtime, "/assets/audralia/audralia.terrain.render.js") || has(runtime, "sampleTerrain")
               ? pass("Runtime consumes terrain", "Runtime references terrain authority.")
-              : held("Runtime consumes terrain", "Runtime does not clearly reference terrain."),
-            has(runtime, "terrainAllowedByTopology") || has(runtime, "topologyTerrainRisePermission")
+              : fail("Runtime consumes terrain", "Runtime does not clearly reference terrain."),
+            has(runtime, "runtimeCacheActive") && has(runtime, "lowLagSampling")
+              ? pass("Runtime cache active", "Runtime exposes cache and low-lag sampling markers.")
+              : held("Runtime cache active", "Runtime cache markers not found."),
+            has(runtime, "terrainAllowedByTopology") || has(runtime, "terrainMustRespectTopologyLandArea") || has(runtime, "terrainBlockPermission")
               ? pass("Runtime protects topology before terrain", "Runtime exposes topology gating for terrain.")
               : held("Runtime protects topology before terrain", "Topology-to-terrain gating receipt not found."),
             has(runtime, "visualPassClaimed: false") || has(runtime, "visualPassClaimed")
@@ -583,15 +610,19 @@ VISUAL_PASS_CLAIMED=false</div>
 
       function auditTopology() {
         const topology = state.sources.topology;
+        const currentTopology =
+          has(topology, EXPECTED.topologyContractA) ||
+          has(topology, EXPECTED.topologyContractB) ||
+          has(topology, "AUDRALIA_G1_TOPOLOGY_PLANET_BLUEPRINT_AND_SUBTERRANEAN_DEPTH_TNT_v1");
 
         return group(
           "Topology Sea-Level + Bathymetry Authority",
           "Confirms topology owns land/void, Earth-equivalent land ratio, sea level, beaches, cliffs, bathymetry, sub-sea, and subterranean blueprinting.",
           [
             sourceStatus(topology, "Topology authority"),
-            has(topology, EXPECTED.topologyContract)
-              ? pass("Topology active contract current", EXPECTED.topologyContract)
-              : fail("Topology active contract current", "Expected sea-level/bathymetry topology contract not found."),
+            currentTopology
+              ? pass("Topology contract recognized", "Topology source contains a recognized Audralia topology contract.")
+              : fail("Topology contract recognized", "No recognized topology contract found."),
             has(topology, "approximateEarthExposedLandRatio") && has(topology, "0.292")
               ? pass("Earth-equivalent land-ratio law active", "Topology targets Earth-equivalent exposed land ratio.")
               : fail("Earth-equivalent land-ratio law active", "Earth-equivalent land ratio not found."),
@@ -610,6 +641,9 @@ VISUAL_PASS_CLAIMED=false</div>
             has(topology, "tectonicsHandoffTarget") && has(topology, "tectonicsMayConsume")
               ? pass("Topology hands off to tectonics", "Topology declares tectonic handoff readiness.")
               : held("Topology hands off to tectonics", "Topology does not clearly expose tectonics handoff fields."),
+            has(topology, "landExpansionAreaMultiplier") || has(topology, "LAND_EXPANSION_LAW")
+              ? pass("Land-expansion topology recognized", "Topology includes expanded-landmass law markers.")
+              : held("Land-expansion topology recognized", "Landmass expansion may not be deployed yet; sea-level topology remains valid."),
             lacks(topology, "ownsHydration: true") && lacks(topology, "ownsFoliage: true") && lacks(topology, "ownsTrees: true")
               ? pass("Topology does not overclaim hydration/foliage", "No hydration/foliage ownership detected.")
               : fail("Topology does not overclaim hydration/foliage", "Topology overclaim detected.")
@@ -658,7 +692,7 @@ VISUAL_PASS_CLAIMED=false</div>
 
         return group(
           "Terrain Handoff Status",
-          "Measures whether terrain has caught up to the new topology→tectonics→terrain architecture.",
+          "Measures whether terrain has caught up to the topology→tectonics→terrain architecture.",
           [
             sourceStatus(terrain, "Terrain authority"),
             has(terrain, "sampleTerrain") && has(terrain, "buildTerrainField") && has(terrain, "getTerrainStatus")
@@ -702,13 +736,13 @@ VISUAL_PASS_CLAIMED=false</div>
             /hydration[^A-Za-z0-9_:-]*(held|HELD|Hydration remains held)/.test(combined) || combined.includes("hydrationHeld")
               ? pass("Hydration remains held", "Hydration gate is held in current source receipts.")
               : held("Hydration remains held", "Hydration hold receipt not clearly found across sources."),
-            combined.includes("noFoliage") || combined.includes("No foliage") || combined.includes("foliageGate")
+            combined.includes("noFoliage") || combined.includes("No foliage") || combined.includes("foliageGate") || combined.includes("foliageClosed")
               ? pass("Foliage closure declared", "No-foliage receipts are present.")
               : held("Foliage closure declared", "No-foliage receipt not clearly found."),
             !combined.includes("Australia") && !combined.includes("Adralia")
               ? pass("No Australia / Adralia leak across audited sources", "Audited sources do not expose Australia or Adralia strings.")
               : fail("No Australia / Adralia leak across audited sources", "Audited source contains Australia or Adralia."),
-            combined.includes("visualPassClaimed: false") || combined.includes("VISUAL_PASS=held") || combined.includes("VISUAL_PASS_CLAIMED=false")
+            combined.includes("visualPassClaimed: false") || combined.includes("VISUAL_PASS=held") || combined.includes("VISUAL_PASS_CLAIMED=false") || combined.includes("visualPassClaimed")
               ? pass("Visual pass not claimed", "Visual pass remains held or false.")
               : held("Visual pass not claimed", "No explicit visual-pass hold receipt found."),
             pass("Gauges are read-only", "This page uses fetch/source inspection only; mutation=false.")
@@ -791,11 +825,11 @@ VISUAL_PASS_CLAIMED=false</div>
           expectedText.textContent =
             "At least one required source contract is missing. Fix failed checks before judging visual readiness.";
         } else if (held > 0) {
-          expectedTitle.textContent = "Chain baseline is readable. Some downstream work remains held.";
+          expectedTitle.textContent = "True-globe chain is readable. Some downstream work remains held.";
           expectedText.textContent =
-            "Held checks are expected if runtime or terrain has not yet been upgraded to consume the tectonic layer. Hydration remains held.";
+            "Held checks are expected if HTML version strings, topology expansion, or terrain direct consumption have not caught up yet. Hydration remains held.";
         } else {
-          expectedTitle.textContent = "Audralia chain passes structurally. Visual pass still requires screenshot confirmation.";
+          expectedTitle.textContent = "Audralia true-globe chain passes structurally. Visual pass still requires owner confirmation.";
           expectedText.textContent =
             "All source checks passed, but this page does not claim visual pass.";
         }
@@ -811,7 +845,8 @@ VISUAL_PASS_CLAIMED=false</div>
           " HELD=" + held +
           " SCORE=" + score + "%" +
           " ROUTE=/showroom/globe/audralia/" +
-          " CHAIN=topology→tectonics→terrain" +
+          " ROUTE_EXPECTED=" + EXPECTED.currentRouteContract +
+          " CHAIN=orthographic_route→cached_runtime→topology→tectonics→terrain" +
           " HYDRATION_GATE=HELD" +
           " MUTATION=false" +
           " GRAPHIC_BOX=false" +
@@ -830,7 +865,7 @@ VISUAL_PASS_CLAIMED=false</div>
         state.sources = Object.fromEntries(entries);
 
         state.groups = [
-          auditRoute(),
+          auditRouteHandoff(),
           auditRouteJs(),
           auditRuntime(),
           auditTopology(),

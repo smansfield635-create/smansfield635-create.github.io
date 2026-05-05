@@ -1,43 +1,25 @@
-// /showroom/globe/audralia/audralia.hex.surface.js
+// showroom/globe/audralia/audralia.hex.surface.js
 // AUDRALIA_G7_HEX_SURFACE_CHILD_RENDERER_TNT_v1
 //
 // Active renewal:
-// - AUDRALIA_G8_HEX_CHILD_REMOVE_STALE_DEEP_OCEAN_BLOB_LOGIC_TNT_v1
+// - AUDRALIA_G8_HEX_CHILD_GLOBAL_AQUEOUS_GLAZE_LAYER_TNT_v1
 //
 // Role:
 // - Child renderer for Audralia showroom globe route.
 // - Owns hexagonal surface sampling and square-block artifact reduction.
 // - Consumes only the parent-provided runtime texture and sphere state.
+// - Adds a global low-opacity blue/turquoise aqueous glaze over the existing surface.
+// - Preserves land, terrain, shelf, water, ice, runtime truth, and land/water accounting.
 // - Does not import DeepOcean.
-// - Does not classify Ocean / DeepOcean / shelf water at route level.
-// - Does not recolor water classes.
+// - Does not classify DeepOcean at route level.
+// - Does not recolor water as isolated blobs.
 // - Does not import runtime.
 // - Does not create land.
 // - Does not create water.
 // - Does not mutate topology, terrain, hydration, climate, ecology, runtime, or route authority.
-//
-// Hard locks:
-// - No runtime import.
-// - No DeepOcean showroom import.
-// - No route boot ownership.
-// - No land generation.
-// - No water generation.
-// - No topology rewrite.
-// - No terrain rewrite.
-// - No hydration rewrite.
-// - No climate rewrite.
-// - No ecology.
-// - No foliage.
-// - No trees.
-// - No animals.
-// - No marine life.
-// - No construct civilization.
-// - No graphic box.
-// - No image generation.
-// - No visual pass claim.
 
 const RECEIPT = "AUDRALIA_G7_HEX_SURFACE_CHILD_RENDERER_TNT_v1";
-const ACTIVE_RENEWAL = "AUDRALIA_G8_HEX_CHILD_REMOVE_STALE_DEEP_OCEAN_BLOB_LOGIC_TNT_v1";
+const ACTIVE_RENEWAL = "AUDRALIA_G8_HEX_CHILD_GLOBAL_AQUEOUS_GLAZE_LAYER_TNT_v1";
 const PARENT_RECEIPT = "AUDRALIA_ROUTE_CONSUME_CURRENT_RUNTIME_GENEALOGY_SURFACE_TNT_v1";
 
 const REMOVED_STALE_RECEIPTS = Object.freeze([
@@ -55,7 +37,12 @@ const DEFAULTS = Object.freeze({
   maxHexRadius: 4.8,
   edgeDarkening: 0.052,
   seamSoftening: 0.070,
-  textureOnlyBlend: 1,
+  globalGlazeStrength: 1,
+  landGlazeOpacity: 0.135,
+  waterGlazeOpacity: 0.205,
+  shelfGlazeOpacity: 0.285,
+  iceGlazeOpacity: 0.060,
+  terrainRecovery: 0.34,
   lightX: -0.42,
   lightY: 0.36,
   lightZ: 0.83
@@ -75,9 +62,50 @@ function wrap01(value) {
   return ((Number(value) % 1) + 1) % 1;
 }
 
+function fract(value) {
+  return value - Math.floor(value);
+}
+
 function smoothstep(edge0, edge1, value) {
   const t = clamp((value - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
   return t * t * (3 - 2 * t);
+}
+
+function hash2(x, y, seed) {
+  return fract(Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123);
+}
+
+function valueNoise(x, y, seed) {
+  const ix = Math.floor(x);
+  const iy = Math.floor(y);
+  const fx = fract(x);
+  const fy = fract(y);
+
+  const a = hash2(ix, iy, seed);
+  const b = hash2(ix + 1, iy, seed);
+  const c = hash2(ix, iy + 1, seed);
+  const d = hash2(ix + 1, iy + 1, seed);
+
+  const ux = fx * fx * (3 - 2 * fx);
+  const uy = fy * fy * (3 - 2 * fy);
+
+  return mix(mix(a, b, ux), mix(c, d, ux), uy);
+}
+
+function fbm(x, y, seed, octaves) {
+  let total = 0;
+  let amplitude = 0.5;
+  let frequency = 1;
+  let normalizer = 0;
+
+  for (let i = 0; i < octaves; i += 1) {
+    total += valueNoise(x * frequency, y * frequency, seed + i * 31.17) * amplitude;
+    normalizer += amplitude;
+    amplitude *= 0.5;
+    frequency *= 2;
+  }
+
+  return total / Math.max(0.000001, normalizer);
 }
 
 function cubeRound(q, r) {
@@ -137,6 +165,25 @@ function sampleTexture(texture, u, v) {
   ];
 }
 
+function mixColor(base, overlay, amount) {
+  const t = clamp(amount, 0, 1);
+
+  return [
+    clamp(Math.round(mix(base[0], overlay[0], t)), 0, 255),
+    clamp(Math.round(mix(base[1], overlay[1], t)), 0, 255),
+    clamp(Math.round(mix(base[2], overlay[2], t)), 0, 255),
+    base[3] === undefined ? 255 : base[3]
+  ];
+}
+
+function colorLuma(color) {
+  return (
+    (Number(color[0]) || 0) * 0.2126 +
+    (Number(color[1]) || 0) * 0.7152 +
+    (Number(color[2]) || 0) * 0.0722
+  ) / 255;
+}
+
 function isLandColor(color) {
   const r = Number(color[0]) || 0;
   const g = Number(color[1]) || 0;
@@ -167,6 +214,71 @@ function isIceOrHighlightColor(color) {
   const b = Number(color[2]) || 0;
 
   return r > 185 && g > 185 && b > 185;
+}
+
+function applyGlobalAqueousGlaze(rawColor, u, v, options) {
+  const land = isLandColor(rawColor);
+  const water = isWaterColor(rawColor);
+  const shelf = isShelfLikeColor(rawColor);
+  const ice = isIceOrHighlightColor(rawColor);
+
+  const lon = wrap01(u) * 2 - 1;
+  const lat = 1 - clamp(v, 0, 1) * 2;
+
+  const glazeNoise =
+    fbm(lon * 5.6 + 2.1, lat * 5.6 - 3.4, 8101, 4) * 0.50 +
+    fbm(lon * 18.0 - 7.1, lat * 13.0 + 4.8, 8123, 3) * 0.24 +
+    fbm(lon * 41.0 + 1.9, lat * 29.0 - 8.2, 8153, 2) * 0.10;
+
+  const sphericalVariation = clamp(0.82 + (glazeNoise - 0.5) * 0.24, 0.72, 1.10);
+
+  const baseAqua = [38, 166, 204, rawColor[3]];
+  const turquoise = [58, 205, 211, rawColor[3]];
+  const oceanBlue = [18, 102, 178, rawColor[3]];
+  const softSkyWater = [84, 188, 216, rawColor[3]];
+
+  let glazeColor = baseAqua;
+  let opacity = options.landGlazeOpacity;
+
+  if (shelf) {
+    glazeColor = turquoise;
+    opacity = options.shelfGlazeOpacity;
+  } else if (water) {
+    glazeColor = oceanBlue;
+    opacity = options.waterGlazeOpacity;
+  } else if (ice) {
+    glazeColor = softSkyWater;
+    opacity = options.iceGlazeOpacity;
+  } else if (land) {
+    glazeColor = baseAqua;
+    opacity = options.landGlazeOpacity;
+  }
+
+  const globalMinimum = 0.070;
+  const effectiveOpacity = clamp(
+    Math.max(globalMinimum, opacity) *
+      sphericalVariation *
+      options.globalGlazeStrength,
+    0,
+    shelf ? 0.34 : water ? 0.26 : land ? 0.18 : 0.14
+  );
+
+  let glazed = mixColor(rawColor, glazeColor, effectiveOpacity);
+
+  if (land) {
+    const sourceLuma = colorLuma(rawColor);
+    const glazedLuma = colorLuma(glazed);
+    const terrainDelta = clamp((sourceLuma - glazedLuma) * 0.36, -0.045, 0.055);
+    const recovery = clamp(options.terrainRecovery + terrainDelta, 0.20, 0.44);
+
+    glazed = mixColor(glazed, rawColor, recovery);
+  }
+
+  if (shelf) {
+    glazed = mixColor(glazed, turquoise, clamp(0.055 + glazeNoise * 0.050, 0.05, 0.12));
+  }
+
+  return glazed;
 }
 
 function buildHexGeometry(size, options = {}) {
@@ -254,7 +366,7 @@ function buildHexGeometry(size, options = {}) {
   return Object.freeze({
     receipt: RECEIPT,
     activeRenewal: ACTIVE_RENEWAL,
-    model: "hexagonal-orthographic-texture-only-surface-sampling",
+    model: "hexagonal-orthographic-global-aqueous-glaze-surface-sampling",
     size,
     radius,
     hexRadius,
@@ -322,7 +434,16 @@ function normalizeOptions(options = {}) {
     maxHexRadius: Number(options.maxHexRadius) || DEFAULTS.maxHexRadius,
     edgeDarkening: clamp(Number(options.edgeDarkening) || DEFAULTS.edgeDarkening, 0, 0.18),
     seamSoftening: clamp(Number(options.seamSoftening) || DEFAULTS.seamSoftening, 0, 0.18),
-    textureOnlyBlend: 1,
+    globalGlazeStrength: clamp(
+      options.globalGlazeStrength === undefined ? DEFAULTS.globalGlazeStrength : Number(options.globalGlazeStrength),
+      0,
+      1.4
+    ),
+    landGlazeOpacity: clamp(Number(options.landGlazeOpacity) || DEFAULTS.landGlazeOpacity, 0, 0.24),
+    waterGlazeOpacity: clamp(Number(options.waterGlazeOpacity) || DEFAULTS.waterGlazeOpacity, 0, 0.34),
+    shelfGlazeOpacity: clamp(Number(options.shelfGlazeOpacity) || DEFAULTS.shelfGlazeOpacity, 0, 0.42),
+    iceGlazeOpacity: clamp(Number(options.iceGlazeOpacity) || DEFAULTS.iceGlazeOpacity, 0, 0.14),
+    terrainRecovery: clamp(Number(options.terrainRecovery) || DEFAULTS.terrainRecovery, 0, 0.60),
     lightX: Number(options.lightX) || DEFAULTS.lightX,
     lightY: Number(options.lightY) || DEFAULTS.lightY,
     lightZ: Number(options.lightZ) || DEFAULTS.lightZ
@@ -372,6 +493,7 @@ export function drawAudraliaHexSurfaceFrame(state, options = {}) {
   let waterPixels = 0;
   let shelfLikePixels = 0;
   let iceOrHighlightPixels = 0;
+  let glazedPixels = 0;
 
   for (let i = 0; i < geometry.count; i += 1) {
     const out = geometry.indices[i];
@@ -379,8 +501,9 @@ export function drawAudraliaHexSurfaceFrame(state, options = {}) {
     const v = geometry.vCoords[i];
 
     const rawColor = sampleTexture(state.texture, u, v);
+    const glazedColor = applyGlobalAqueousGlaze(rawColor, u, v, config);
     const color = applyTextureOnlyHexShade(
-      rawColor,
+      glazedColor,
       geometry.shades[i],
       geometry.edgeFactors[i],
       config
@@ -392,6 +515,7 @@ export function drawAudraliaHexSurfaceFrame(state, options = {}) {
     if (isIceOrHighlightColor(rawColor)) iceOrHighlightPixels += 1;
 
     sampledPixels += 1;
+    glazedPixels += 1;
 
     data[out] = color[0];
     data[out + 1] = color[1];
@@ -405,7 +529,7 @@ export function drawAudraliaHexSurfaceFrame(state, options = {}) {
   state.canvas.dataset.hexSurfaceChild = RECEIPT;
   state.canvas.dataset.hexSurfaceActiveRenewal = ACTIVE_RENEWAL;
   state.canvas.dataset.hexSurfaceParentReceipt = PARENT_RECEIPT;
-  state.canvas.dataset.hexSurfaceModel = "hexagonal-orthographic-texture-only-surface-sampling";
+  state.canvas.dataset.hexSurfaceModel = "hexagonal-orthographic-global-aqueous-glaze-surface-sampling";
   state.canvas.dataset.hexRadius = geometry.hexRadius.toFixed(3);
   state.canvas.dataset.hexSamples = String(geometry.count);
   state.canvas.dataset.sampledPixels = String(sampledPixels);
@@ -413,8 +537,13 @@ export function drawAudraliaHexSurfaceFrame(state, options = {}) {
   state.canvas.dataset.waterPixels = String(waterPixels);
   state.canvas.dataset.shelfLikePixels = String(shelfLikePixels);
   state.canvas.dataset.iceOrHighlightPixels = String(iceOrHighlightPixels);
+  state.canvas.dataset.glazedPixels = String(glazedPixels);
   state.canvas.dataset.squareBlockArtifactReduction = "active";
   state.canvas.dataset.textureOnlySampling = "true";
+  state.canvas.dataset.globalAqueousGlaze = "active";
+  state.canvas.dataset.globalAqueousGlazeLayer = "low-opacity-blue-turquoise-over-existing-surface";
+  state.canvas.dataset.landGlazePreservation = "active";
+  state.canvas.dataset.terrainContrastProtection = "active";
   state.canvas.dataset.staleDeepOceanBlobLogicRemoved = "true";
   state.canvas.dataset.deepOceanShowroomImport = "removed";
   state.canvas.dataset.deepOceanRouteOverlay = "removed";
@@ -434,7 +563,7 @@ export function drawAudraliaHexSurfaceFrame(state, options = {}) {
     parentReceipt: PARENT_RECEIPT,
     removedStaleReceipts: REMOVED_STALE_RECEIPTS,
     ok: true,
-    model: "hexagonal-orthographic-texture-only-surface-sampling",
+    model: "hexagonal-orthographic-global-aqueous-glaze-surface-sampling",
     size,
     hexRadius: geometry.hexRadius,
     samples: geometry.count,
@@ -443,8 +572,12 @@ export function drawAudraliaHexSurfaceFrame(state, options = {}) {
     waterPixels,
     shelfLikePixels,
     iceOrHighlightPixels,
+    glazedPixels,
     squareBlockArtifactReduction: true,
     textureOnlySampling: true,
+    globalAqueousGlaze: true,
+    landGlazePreservation: true,
+    terrainContrastProtection: true,
     staleDeepOceanBlobLogicRemoved: true,
     deepOceanShowroomImport: false,
     deepOceanRouteOverlay: false,
@@ -467,10 +600,12 @@ export function getAudraliaHexSurfaceStatus(state = null) {
     activeRenewal: ACTIVE_RENEWAL,
     parentReceipt: PARENT_RECEIPT,
     removedStaleReceipts: REMOVED_STALE_RECEIPTS,
-    role: "route-child-texture-only-hex-renderer",
+    role: "route-child-global-aqueous-glaze-hex-renderer",
     owns: Object.freeze([
       "hexagonal_surface_sampling",
       "square_block_artifact_reduction",
+      "global_aqueous_glaze_layer",
+      "land_preserving_blue_turquoise_finish",
       "canvas_frame_paint_strategy",
       "sphere_shading",
       "atmospheric_rim"
@@ -492,6 +627,7 @@ export function getAudraliaHexSurfaceStatus(state = null) {
     hexRadius: state && state.hexGeometry ? state.hexGeometry.hexRadius : null,
     hexSamples: state && state.hexGeometry ? state.hexGeometry.count : null,
     textureOnlySampling: true,
+    globalAqueousGlaze: true,
     staleDeepOceanBlobLogicRemoved: true,
     deepOceanShowroomImport: false,
     deepOceanRouteOverlay: false,

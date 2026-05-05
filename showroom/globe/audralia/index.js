@@ -1,17 +1,30 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_EXISTING_ROUTE_COMPOSITOR_REWIRE_TNT_v1
+// AUDRALIA_ROUTE_COMPOSITOR_NO_FOLIAGE_GEOLOGY_RENDER_TNT_v1
 //
-// Existing-file correction only.
-// No new file required.
-// This route script owns visible consumption/composition/control.
-// Parent owns baseline land/water only.
-// Terrain child owns terrain pressure only.
-// This file consumes both and renders the visible Audralia body.
+// Role:
+// - Existing Audralia route compositor.
+// - Consumes parent baseline authority and latest terrain authority.
+// - Converts terrain samples into geology-only visible texture.
+// - Owns route boot, visible texture composition, axis rotation, touch spin.
+//
+// Hard locks:
+// - No trees.
+// - No foliage.
+// - No forests.
+// - No vegetation clusters.
+// - No green/yellow decorative dots.
+// - No active hydration.
+// - No ecology.
+// - No climate.
+// - No parent rewrite.
+// - No terrain rewrite.
+// - No topology rewrite.
+// - No visual pass claim.
 
 (function () {
   "use strict";
 
-  const RECEIPT = "AUDRALIA_EXISTING_ROUTE_COMPOSITOR_REWIRE_TNT_v1";
+  const RECEIPT = "AUDRALIA_ROUTE_COMPOSITOR_NO_FOLIAGE_GEOLOGY_RENDER_TNT_v1";
 
   const ROUTE = "/showroom/globe/audralia/";
   const BODY = "audralia";
@@ -21,12 +34,12 @@
   const TERRAIN_AUTHORITY = "/assets/audralia/audralia.terrain.render.js";
 
   const PARENT_VERSION = "AUDRALIA_PARENT_BASELINE_LAND_WATER_RESTORE_TNT_v1";
-  const TERRAIN_VERSION = "AUDRALIA_G1_TERRAIN_PRESSURE_ISLAND_ELEVATION_CHILD_TNT_v2";
+  const TERRAIN_VERSION = "AUDRALIA_G1_FULL_PLANET_TERRAIN_PURIFICATION_MAP_TNT_v1";
 
   const CONTROL = Object.freeze({
     axisDegrees: 21.5,
-    textureWidth: 768,
-    textureHeight: 384,
+    textureWidth: 960,
+    textureHeight: 480,
     minSize: 320,
     maxSize: 720,
     initialPhase: 0.18,
@@ -34,12 +47,15 @@
     dragFactor: 0.00174,
     releaseFriction: 0.952,
     minVelocity: 0.000014,
-    rotationModel: "audralia-existing-route-surface-phase",
-    compositorModel: "existing-route-parent-baseline-plus-terrain-child",
+    rotationModel: "audralia-geology-only-surface-phase",
+    compositorModel: "parent-baseline-plus-latest-terrain-geology-only",
     touchModel: "horizontal-spin-only",
     diskRotation: "forbidden",
     wholeCanvasRotation: "forbidden",
     textureStretch: "forbidden",
+    hydration: "held",
+    foliage: "forbidden",
+    ecology: "forbidden",
     visualPass: "HELD_UNTIL_SCREENSHOT_OR_OWNER_CONFIRMATION"
   });
 
@@ -62,6 +78,47 @@
 
   function wrap01(value) {
     return ((value % 1) + 1) % 1;
+  }
+
+  function fract(value) {
+    return value - Math.floor(value);
+  }
+
+  function hash2(x, y, seed) {
+    return fract(Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123);
+  }
+
+  function valueNoise(x, y, seed) {
+    const ix = Math.floor(x);
+    const iy = Math.floor(y);
+    const fx = fract(x);
+    const fy = fract(y);
+
+    const a = hash2(ix, iy, seed);
+    const b = hash2(ix + 1, iy, seed);
+    const c = hash2(ix, iy + 1, seed);
+    const d = hash2(ix + 1, iy + 1, seed);
+
+    const ux = fx * fx * (3 - 2 * fx);
+    const uy = fy * fy * (3 - 2 * fy);
+
+    return mix(mix(a, b, ux), mix(c, d, ux), uy);
+  }
+
+  function fbm(x, y, seed, octaves) {
+    let total = 0;
+    let amplitude = 0.5;
+    let frequency = 1;
+    let normalizer = 0;
+
+    for (let i = 0; i < octaves; i += 1) {
+      total += valueNoise(x * frequency, y * frequency, seed + i * 31.17) * amplitude;
+      normalizer += amplitude;
+      amplitude *= 0.5;
+      frequency *= 2;
+    }
+
+    return total / Math.max(0.00001, normalizer);
   }
 
   function cacheUrl(path, version) {
@@ -90,13 +147,19 @@
   function markRoute(status) {
     document.documentElement.dataset.activeBody = BODY;
     document.documentElement.dataset.activeRoute = ROUTE;
-    document.documentElement.dataset.audraliaExistingRouteCompositor = RECEIPT;
+    document.documentElement.dataset.audraliaRouteCompositor = RECEIPT;
     document.documentElement.dataset.audraliaRouteCompositorStatus = status || "booting";
     document.documentElement.dataset.audraliaParentAuthority = PARENT_AUTHORITY;
     document.documentElement.dataset.audraliaTerrainAuthority = TERRAIN_AUTHORITY;
+    document.documentElement.dataset.audraliaTerrainVersion = TERRAIN_VERSION;
     document.documentElement.dataset.audraliaCompositorModel = CONTROL.compositorModel;
-    document.documentElement.dataset.oldNewFileBypass = "not-used";
-    document.documentElement.dataset.newFileRequired = "false";
+    document.documentElement.dataset.audraliaHydration = CONTROL.hydration;
+    document.documentElement.dataset.audraliaFoliage = CONTROL.foliage;
+    document.documentElement.dataset.audraliaEcology = CONTROL.ecology;
+    document.documentElement.dataset.noTrees = "true";
+    document.documentElement.dataset.noFoliage = "true";
+    document.documentElement.dataset.noVegetation = "true";
+    document.documentElement.dataset.noGreenYellowDots = "true";
     document.documentElement.dataset.earthAdoption = "blocked";
     document.documentElement.dataset.graphicBox = "false";
     document.documentElement.dataset.imageGeneration = "false";
@@ -105,17 +168,20 @@
     if (document.body) {
       document.body.dataset.activeBody = BODY;
       document.body.dataset.activeRoute = ROUTE;
-      document.body.dataset.audraliaExistingRouteCompositor = RECEIPT;
+      document.body.dataset.audraliaRouteCompositor = RECEIPT;
       document.body.dataset.publicReceipts = "hidden";
       document.body.dataset.earthAdoption = "blocked";
+      document.body.dataset.noTrees = "true";
+      document.body.dataset.noFoliage = "true";
+      document.body.dataset.noVegetation = "true";
     }
   }
 
   function ensureStyle() {
-    if (document.getElementById("audralia-existing-route-compositor-style")) return;
+    if (document.getElementById("audralia-geology-only-compositor-style")) return;
 
     const style = document.createElement("style");
-    style.id = "audralia-existing-route-compositor-style";
+    style.id = "audralia-geology-only-compositor-style";
     style.textContent = `
       #audraliaRenderMount,
       #audreliaRenderMount,
@@ -134,7 +200,7 @@
         -webkit-user-select: none;
       }
 
-      .audralia-existing-route-stage {
+      .audralia-geology-stage {
         position: relative;
         display: grid;
         place-items: center;
@@ -144,7 +210,7 @@
         isolation: isolate;
       }
 
-      .audralia-existing-route-stage::before {
+      .audralia-geology-stage::before {
         content: "";
         position: absolute;
         left: 50%;
@@ -154,14 +220,14 @@
         border-radius: 50%;
         transform: translate(-50%, -50%);
         background:
-          radial-gradient(circle, rgba(82, 164, 232, 0.18), transparent 66%),
-          radial-gradient(circle, rgba(255, 255, 255, 0.05), transparent 44%);
+          radial-gradient(circle, rgba(82, 164, 232, 0.17), transparent 66%),
+          radial-gradient(circle, rgba(255, 255, 255, 0.045), transparent 44%);
         filter: blur(2px);
         pointer-events: none;
         z-index: 0;
       }
 
-      .audralia-existing-route-axis {
+      .audralia-geology-axis {
         position: absolute;
         left: 50%;
         top: 50%;
@@ -172,16 +238,16 @@
         background: linear-gradient(
           180deg,
           transparent 0%,
-          rgba(212, 235, 255, 0.14) 12%,
-          rgba(212, 235, 255, 0.36) 50%,
-          rgba(212, 235, 255, 0.14) 88%,
+          rgba(212, 235, 255, 0.12) 12%,
+          rgba(212, 235, 255, 0.30) 50%,
+          rgba(212, 235, 255, 0.12) 88%,
           transparent 100%
         );
         pointer-events: none;
         z-index: 1;
       }
 
-      .audralia-existing-route-canvas {
+      .audralia-geology-canvas {
         position: relative;
         z-index: 2;
         display: block;
@@ -207,7 +273,7 @@
         -webkit-user-select: none;
       }
 
-      .audralia-existing-route-label {
+      .audralia-geology-label {
         position: absolute;
         left: 50%;
         bottom: clamp(18px, 5vw, 44px);
@@ -224,7 +290,7 @@
         pointer-events: none;
       }
 
-      .audralia-existing-route-hidden-receipt {
+      .audralia-geology-hidden-receipt {
         display: none !important;
       }
     `;
@@ -247,7 +313,7 @@
   function loadParentAuthority() {
     const existing = getParentApi();
 
-    if (existing && typeof existing.buildTexture === "function") {
+    if (existing) {
       return Promise.resolve(existing);
     }
 
@@ -282,113 +348,89 @@
       });
   }
 
-  function fallbackParentTexture(width, height) {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = width;
-    canvas.height = height;
-
-    const ocean = ctx.createLinearGradient(0, 0, width, height);
-    ocean.addColorStop(0, "#08306a");
-    ocean.addColorStop(0.52, "#145c94");
-    ocean.addColorStop(1, "#061b4d");
-
-    ctx.fillStyle = ocean;
-    ctx.fillRect(0, 0, width, height);
-
-    ctx.fillStyle = "rgba(240,249,255,0.90)";
-    ctx.fillRect(0, height * 0.91, width, height * 0.08);
-
-    return canvas;
-  }
-
-  function buildParentTexture(parentApi) {
-    if (parentApi && typeof parentApi.buildTexture === "function") {
-      try {
-        const texture = parentApi.buildTexture({
-          width: CONTROL.textureWidth,
-          height: CONTROL.textureHeight
-        });
-
-        if (texture && texture.getContext && texture.width && texture.height) {
-          texture.dataset.parentAuthority = PARENT_AUTHORITY;
-          return texture;
-        }
-      } catch (error) {
-        // Fall through.
-      }
-    }
-
-    const fallback = fallbackParentTexture(CONTROL.textureWidth, CONTROL.textureHeight);
-    fallback.dataset.parentAuthority = "fallback-parent-baseline";
-    return fallback;
-  }
-
   function fallbackTerrainSample(u, v) {
     const lon = u * 2 - 1;
     const lat = 1 - v * 2;
 
+    const northPolar = lat > 0.72;
+    const southIce = lat < -0.76;
+
+    function blob(cx, cy, rx, ry, elevation) {
+      const dx = lon - cx;
+      const dy = lat - cy;
+      const pressure = Math.exp(-((dx * dx) / (rx * rx) + (dy * dy) / (ry * ry)));
+      return { pressure, elevation };
+    }
+
     const bodies = [
-      { lon: -0.1, lat: 0.02, rx: 0.36, ry: 0.28, region: 2, elevation: 0.28 },
-      { lon: -0.62, lat: 0.0, rx: 0.22, ry: 0.24, region: 8, elevation: 0.7 },
-      { lon: 0.58, lat: 0.04, rx: 0.24, ry: 0.24, region: 4, elevation: 0.42 },
-      { lon: 0.16, lat: -0.46, rx: 0.3, ry: 0.18, region: 6, elevation: 0.62 },
-      { lon: 0.02, lat: 0.82, rx: 0.42, ry: 0.14, region: 7, elevation: 0.72 }
+      blob(-0.10, 0.02, 0.38, 0.25, 0.30),
+      blob(-0.63, 0.00, 0.25, 0.20, 0.29),
+      blob(0.58, 0.04, 0.25, 0.21, 0.27),
+      blob(0.16, -0.46, 0.35, 0.16, 0.23),
+      blob(0.02, 0.82, 0.44, 0.13, 0.44)
     ];
 
-    let best = null;
-    let strength = 0;
+    let best = { pressure: 0, elevation: 0 };
 
     for (const body of bodies) {
-      const dx = lon - body.lon;
-      const dy = lat - body.lat;
-      const d = Math.exp(-((dx * dx) / (body.rx * body.rx) + (dy * dy) / (body.ry * body.ry)));
-
-      if (d > strength) {
-        strength = d;
-        best = body;
-      }
+      if (body.pressure > best.pressure) best = body;
     }
 
-    for (let i = 0; i < 72; i += 1) {
-      const ilon = -0.82 + ((i * 0.137) % 1.64);
-      const ilat = -0.58 + Math.sin(i * 1.71) * 0.42 + Math.cos(i * 0.61) * 0.06;
-      const radius = 0.022 + (i % 5) * 0.004;
-      const dx = lon - ilon;
-      const dy = lat - ilat;
-      const d = Math.exp(-((dx * dx + dy * dy) / (radius * radius)));
+    const landPressure = best.pressure;
+    const isIce = southIce;
+    const isLand = !isIce && landPressure >= 0.5;
+    const isWater = !isLand && !isIce;
 
-      if (d > strength) {
-        strength = d;
-        best = {
-          lon: ilon,
-          lat: ilat,
-          rx: radius,
-          ry: radius,
-          region: 1 + (i % 9),
-          elevation: 0.12 + (i % 9) * 0.1
-        };
-      }
-    }
+    const ridgeNoise = fbm(lon * 7.4, lat * 7.4, 300, 5);
+    const detailNoise = fbm(lon * 19.0, lat * 19.0, 401, 4);
+    const elevation = isLand ? clamp(best.elevation + (ridgeNoise - 0.5) * 0.16, 0, 1) : -clamp(0.22 + (1 - landPressure) * 0.62, 0, 1);
 
-    const southIce = lat < -0.76;
-    const isLand = !southIce && strength > 0.5;
+    const mountainPressure = isLand ? clamp((elevation - 0.42) * 1.5 + ridgeNoise * 0.25, 0, 1) : 0;
+    const canyonPressure = isLand ? clamp((detailNoise - 0.54) * 1.6 + mountainPressure * 0.2, 0, 1) : 0;
+    const coastPressure = clamp(1 - Math.abs(landPressure - 0.5) / 0.16, 0, 1);
 
     return {
       isLand,
-      isWater: !isLand && !southIce,
-      isIce: southIce,
+      isWater,
+      isIce,
       southIce,
-      normalizedElevation: isLand && best ? best.elevation : southIce ? 0 : -0.5,
-      regionRelativeElevation: isLand && best ? best.elevation : 0,
-      regionId: isLand && best ? best.region : 0,
-      landPressure: strength,
-      territoryStrength: isLand ? strength : 0,
-      coastPressure: Math.max(0, 1 - Math.abs(strength - 0.5) / 0.18),
-      shelfPermission: !isLand && !southIce ? Math.max(0, 1 - Math.abs(strength - 0.5) / 0.22) : 0,
-      ridge: isLand && best ? Math.max(0, best.elevation - 0.35) : 0,
-      dryInteriorPressure: isLand && Math.abs(lat) > 0.28 ? 0.35 : 0
+      normalizedElevation: isIce ? 0 : elevation,
+      elevationMeters: isLand ? Math.round(elevation * 9600) : Math.round(elevation * 5600),
+      landPressure,
+      regionId: isLand ? Math.max(1, Math.min(9, Math.round(elevation * 9))) : 0,
+      regionRelativeElevation: isLand ? elevation : 0,
+      ridge: isLand ? clamp(mountainPressure * 0.65 + ridgeNoise * 0.35, 0, 1) : 0,
+      basin: isLand ? clamp((1 - mountainPressure) * 0.35, 0, 1) : 0,
+      slope: isLand ? clamp(mountainPressure * 0.55 + canyonPressure * 0.35, 0, 1) : 0,
+      coastPressure,
+      shelfPermission: isWater ? coastPressure : coastPressure * 0.28,
+      dryInteriorPressure: isLand ? clamp((1 - coastPressure) * 0.45, 0, 1) : 0,
+      polarSeat: northPolar || isIce ? 1 : 0,
+      oceanDepth: isWater ? clamp(0.18 + (1 - coastPressure) * 0.72, 0, 1) : 0,
+      trenchPressure: isWater ? clamp(detailNoise * (1 - coastPressure), 0, 1) : 0,
+      bathymetryPressure: isWater ? clamp(0.22 + detailNoise * 0.5, 0, 1) : 0,
+      watershedId: isWater ? "ocean" : "fallback_watershed",
+      watershedStrength: isLand ? clamp(mountainPressure * 0.45 + 0.22, 0, 1) : 0,
+      riverbedPressure: isLand ? clamp(canyonPressure * 0.45 + mountainPressure * 0.16, 0, 1) : 0,
+      streamPressure: isLand ? clamp(canyonPressure * 0.36 + mountainPressure * 0.26, 0, 1) : 0,
+      lakeBasinPressure: isLand ? clamp((1 - mountainPressure) * 0.35, 0, 1) : 0,
+      glacierSeatPressure: isLand || isIce ? clamp((northPolar ? 0.7 : 0) + mountainPressure * 0.26, 0, 1) : 0,
+      valleyChannelPressure: isLand ? clamp(canyonPressure * 0.55 + mountainPressure * 0.18, 0, 1) : 0,
+      floodplainPressure: isLand ? clamp(coastPressure * 0.4 + (1 - elevation) * 0.2, 0, 1) : 0,
+      deltaReceiverPressure: isLand || isWater ? clamp(coastPressure * 0.5, 0, 1) : 0,
+      snowpackSourcePressure: northPolar ? 0.72 : 0,
+      hydrologyReadinessIndex: isLand ? clamp(canyonPressure * 0.3 + mountainPressure * 0.24 + coastPressure * 0.18, 0, 1) : coastPressure * 0.2,
+      mountainPressure,
+      mountainHardness: mountainPressure,
+      canyonPressure,
+      riverIncisionPressure: isLand ? canyonPressure * 0.74 : 0,
+      streamBranchPressure: isLand ? canyonPressure * 0.54 : 0,
+      basinCutPressure: isLand ? clamp((1 - mountainPressure) * 0.22, 0, 1) : 0,
+      reliefHardness: isLand ? clamp(mountainPressure * 0.55 + canyonPressure * 0.35, 0, 1) : 0,
+      geologicalIslet: false,
+      foliage: false,
+      trees: false,
+      vegetation: false
     };
   }
 
@@ -405,67 +447,124 @@
     return fallbackTerrainSample(u, v);
   }
 
-  function terrainColor(sample, base) {
-    if (sample.isIce) {
-      return { r: 238, g: 248, b: 252, amount: 0.94 };
-    }
+  function terrainSampleToGeologyColor(sample, u, v) {
+    const lon = u * 2 - 1;
+    const lat = 1 - v * 2;
 
-    if (sample.isLand) {
-      const elevation = clamp(sample.normalizedElevation || 0, 0, 1);
-      const region = clamp(sample.regionRelativeElevation || elevation, 0, 1);
-      const ridge = clamp(sample.ridge || 0, 0, 1);
-      const dry = clamp(sample.dryInteriorPressure || 0, 0, 1);
-      const coast = clamp(sample.coastPressure || 0, 0, 1);
+    const reliefNoise = fbm(lon * 15.0 + 0.7, lat * 15.0 - 1.2, 741, 4);
+    const microRelief = fbm(lon * 35.0 - 3.1, lat * 35.0 + 2.6, 951, 3);
 
-      let r = mix(76, 210, region * 0.74);
-      let g = mix(132, 192, ridge * 0.3);
-      let b = mix(82, 150, ridge * 0.24);
-
-      r = mix(r, 184, dry * 0.32);
-      g = mix(g, 128, dry * 0.24);
-      b = mix(b, 82, dry * 0.18);
-
-      r = mix(r, 214, coast * 0.16);
-      g = mix(g, 190, coast * 0.13);
-      b = mix(b, 118, coast * 0.1);
+    if (sample.isIce || sample.southIce) {
+      const glacier = clamp(sample.glacierSeatPressure || sample.polarSeat || 0, 0, 1);
+      const shade = mix(0.88, 1.08, reliefNoise * 0.55 + glacier * 0.35);
 
       return {
-        r: clamp(Math.round(r), 0, 255),
-        g: clamp(Math.round(g), 0, 255),
-        b: clamp(Math.round(b), 0, 255),
-        amount: clamp(0.82 + elevation * 0.12 + clamp(sample.territoryStrength || 0, 0, 1) * 0.1, 0.82, 0.98)
+        r: clamp(Math.round(224 * shade), 190, 248),
+        g: clamp(Math.round(236 * shade), 202, 252),
+        b: clamp(Math.round(242 * shade), 210, 255),
+        a: 255
       };
     }
 
-    const shelf = clamp(sample.shelfPermission || 0, 0, 1);
+    if (!sample.isLand) {
+      const shelf = clamp(sample.shelfPermission || 0, 0, 1);
+      const depth = clamp(sample.oceanDepth || Math.abs(sample.normalizedElevation || 0), 0, 1);
+      const trench = clamp(sample.trenchPressure || 0, 0, 1);
+      const bathymetry = clamp(sample.bathymetryPressure || 0, 0, 1);
+      const band = reliefNoise * 0.08 + microRelief * 0.04;
+
+      const r = mix(5, 48, shelf) - trench * 5 - depth * 4 + band * 8;
+      const g = mix(24, 130, shelf) - trench * 14 - depth * 8 + band * 12;
+      const b = mix(72, 176, shelf) - trench * 22 - bathymetry * 10 + band * 10;
+
+      return {
+        r: clamp(Math.round(r), 0, 80),
+        g: clamp(Math.round(g), 12, 150),
+        b: clamp(Math.round(b), 52, 190),
+        a: 255
+      };
+    }
+
+    const elevation = clamp(sample.normalizedElevation || 0, 0, 1);
+    const ridge = clamp(sample.ridge || 0, 0, 1);
+    const mountain = clamp(sample.mountainPressure || 0, 0, 1);
+    const hard = clamp(sample.mountainHardness || sample.reliefHardness || 0, 0, 1);
+    const canyon = clamp(sample.canyonPressure || 0, 0, 1);
+    const incision = clamp(sample.riverIncisionPressure || 0, 0, 1);
+    const stream = clamp(sample.streamBranchPressure || sample.streamPressure || 0, 0, 1);
+    const basin = clamp(sample.basin || sample.basinCutPressure || 0, 0, 1);
+    const lakeBasin = clamp(sample.lakeBasinPressure || 0, 0, 1);
+    const glacier = clamp(sample.glacierSeatPressure || sample.snowpackSourcePressure || 0, 0, 1);
     const coast = clamp(sample.coastPressure || 0, 0, 1);
+    const dry = clamp(sample.dryInteriorPressure || 0, 0, 1);
+    const slope = clamp(sample.slope || 0, 0, 1);
+
+    const landform = clamp(elevation * 0.34 + ridge * 0.20 + mountain * 0.18 + hard * 0.16 + slope * 0.12, 0, 1);
+    const fracture = clamp(canyon * 0.42 + incision * 0.32 + stream * 0.16 + (microRelief > 0.62 ? (microRelief - 0.62) * 0.8 : 0), 0, 1);
+    const basinShadow = clamp(basin * 0.34 + lakeBasin * 0.32, 0, 1);
+    const coastalShelf = clamp(coast * 0.36, 0, 1);
+
+    let r = mix(96, 186, landform);
+    let g = mix(82, 154, landform * 0.55);
+    let b = mix(62, 132, landform * 0.50);
+
+    r = mix(r, 198, mountain * 0.28 + hard * 0.18);
+    g = mix(g, 184, mountain * 0.22 + hard * 0.18);
+    b = mix(b, 164, mountain * 0.22 + hard * 0.18);
+
+    r = mix(r, 104, fracture * 0.46);
+    g = mix(g, 82, fracture * 0.42);
+    b = mix(b, 68, fracture * 0.38);
+
+    r = mix(r, 112, basinShadow * 0.30);
+    g = mix(g, 96, basinShadow * 0.26);
+    b = mix(b, 82, basinShadow * 0.24);
+
+    r = mix(r, 188, coastalShelf * 0.30);
+    g = mix(g, 164, coastalShelf * 0.24);
+    b = mix(b, 122, coastalShelf * 0.20);
+
+    r = mix(r, 184, dry * 0.22);
+    g = mix(g, 128, dry * 0.20);
+    b = mix(b, 86, dry * 0.16);
+
+    r = mix(r, 226, glacier * 0.42);
+    g = mix(g, 236, glacier * 0.44);
+    b = mix(b, 240, glacier * 0.46);
+
+    const reliefShade = mix(0.88, 1.10, reliefNoise * 0.52 + ridge * 0.18 + mountain * 0.16);
+    const incisionShade = mix(1, 0.72, fracture * 0.62);
 
     return {
-      r: clamp(Math.round(mix(base.r, mix(10, 56, shelf), 0.42 + coast * 0.1)), 0, 255),
-      g: clamp(Math.round(mix(base.g, mix(42, 164, shelf), 0.42 + coast * 0.12)), 0, 255),
-      b: clamp(Math.round(mix(base.b, mix(100, 188, shelf), 0.42 + coast * 0.12)), 0, 255),
-      amount: clamp(0.34 + shelf * 0.28 + coast * 0.14, 0.28, 0.7)
+      r: clamp(Math.round(r * reliefShade * incisionShade), 55, 238),
+      g: clamp(Math.round(g * reliefShade * incisionShade), 48, 240),
+      b: clamp(Math.round(b * reliefShade * incisionShade), 42, 246),
+      a: 255
     };
   }
 
-  function composeTexture(parentTexture, terrainApi) {
-    const width = parentTexture.width || CONTROL.textureWidth;
-    const height = parentTexture.height || CONTROL.textureHeight;
+  function composeGeologyTexture(terrainApi) {
+    const width = CONTROL.textureWidth;
+    const height = CONTROL.textureHeight;
 
     const canvas = document.createElement("canvas");
     canvas.width = width;
     canvas.height = height;
 
     const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    ctx.drawImage(parentTexture, 0, 0, width, height);
-
-    const image = ctx.getImageData(0, 0, width, height);
+    const image = ctx.createImageData(width, height);
     const data = image.data;
 
     let terrainSamples = 0;
     let landSamples = 0;
     let waterSamples = 0;
     let iceSamples = 0;
+    let foliageSamples = 0;
+
+    let maxMountain = 0;
+    let maxCanyon = 0;
+    let maxRiverIncision = 0;
+    let maxBathymetry = 0;
 
     for (let py = 0; py < height; py += 1) {
       const v = height <= 1 ? 0.5 : py / (height - 1);
@@ -473,25 +572,28 @@
       for (let px = 0; px < width; px += 1) {
         const u = width <= 1 ? 0.5 : px / (width - 1);
         const index = (py * width + px) * 4;
-
-        const base = {
-          r: data[index],
-          g: data[index + 1],
-          b: data[index + 2]
-        };
-
         const sample = sampleTerrain(terrainApi, u, v);
-        const target = terrainColor(sample, base);
+        const color = terrainSampleToGeologyColor(sample, u, v);
 
         terrainSamples += 1;
-        if (sample.isIce) iceSamples += 1;
+
+        if (sample.isIce || sample.southIce) iceSamples += 1;
         else if (sample.isLand) landSamples += 1;
         else waterSamples += 1;
 
-        data[index] = clamp(Math.round(mix(base.r, target.r, target.amount)), 0, 255);
-        data[index + 1] = clamp(Math.round(mix(base.g, target.g, target.amount)), 0, 255);
-        data[index + 2] = clamp(Math.round(mix(base.b, target.b, target.amount)), 0, 255);
-        data[index + 3] = 255;
+        if (sample.foliage || sample.trees || sample.vegetation) {
+          foliageSamples += 1;
+        }
+
+        maxMountain = Math.max(maxMountain, Number(sample.mountainPressure) || 0);
+        maxCanyon = Math.max(maxCanyon, Number(sample.canyonPressure) || 0);
+        maxRiverIncision = Math.max(maxRiverIncision, Number(sample.riverIncisionPressure) || 0);
+        maxBathymetry = Math.max(maxBathymetry, Number(sample.bathymetryPressure) || 0);
+
+        data[index] = color.r;
+        data[index + 1] = color.g;
+        data[index + 2] = color.b;
+        data[index + 3] = color.a;
       }
     }
 
@@ -501,13 +603,21 @@
     canvas.dataset.contract = RECEIPT;
     canvas.dataset.parentAuthority = PARENT_AUTHORITY;
     canvas.dataset.terrainAuthority = TERRAIN_AUTHORITY;
-    canvas.dataset.parentTexture = parentTexture.dataset.parentAuthority || PARENT_AUTHORITY;
-    canvas.dataset.terrainLoaded = String(Boolean(terrainApi));
-    canvas.dataset.compositorStatus = terrainApi ? "parent-plus-terrain-child" : "parent-plus-fallback-terrain";
+    canvas.dataset.terrainVersion = TERRAIN_VERSION;
+    canvas.dataset.compositorStatus = terrainApi ? "latest-terrain-geology-only" : "fallback-geology-only";
     canvas.dataset.terrainSamples = String(terrainSamples);
     canvas.dataset.landSamples = String(landSamples);
     canvas.dataset.waterSamples = String(waterSamples);
     canvas.dataset.iceSamples = String(iceSamples);
+    canvas.dataset.foliageSamples = String(foliageSamples);
+    canvas.dataset.maxMountain = maxMountain.toFixed(4);
+    canvas.dataset.maxCanyon = maxCanyon.toFixed(4);
+    canvas.dataset.maxRiverIncision = maxRiverIncision.toFixed(4);
+    canvas.dataset.maxBathymetry = maxBathymetry.toFixed(4);
+    canvas.dataset.noTrees = "true";
+    canvas.dataset.noFoliage = "true";
+    canvas.dataset.noVegetation = "true";
+    canvas.dataset.hydration = CONTROL.hydration;
     canvas.dataset.visualPass = CONTROL.visualPass;
 
     return canvas;
@@ -515,20 +625,23 @@
 
   function createStage(mount) {
     const stage = document.createElement("div");
-    stage.className = "audralia-existing-route-stage";
+    stage.className = "audralia-geology-stage";
     stage.dataset.body = BODY;
     stage.dataset.route = ROUTE;
     stage.dataset.contract = RECEIPT;
     stage.dataset.axisDegrees = String(CONTROL.axisDegrees);
     stage.dataset.compositorModel = CONTROL.compositorModel;
+    stage.dataset.noTrees = "true";
+    stage.dataset.noFoliage = "true";
+    stage.dataset.noVegetation = "true";
     stage.style.setProperty("--audralia-axis-deg", CONTROL.axisDegrees + "deg");
 
     const axis = document.createElement("div");
-    axis.className = "audralia-existing-route-axis";
+    axis.className = "audralia-geology-axis";
     axis.dataset.axis = "audralia-fixed-axis";
 
     const canvas = document.createElement("canvas");
-    canvas.className = "audralia-existing-route-canvas";
+    canvas.className = "audralia-geology-canvas";
     canvas.dataset.body = BODY;
     canvas.dataset.contract = RECEIPT;
     canvas.dataset.rotationModel = CONTROL.rotationModel;
@@ -536,26 +649,34 @@
     canvas.dataset.compositorModel = CONTROL.compositorModel;
     canvas.dataset.diskRotation = CONTROL.diskRotation;
     canvas.dataset.textureStretch = CONTROL.textureStretch;
+    canvas.dataset.noTrees = "true";
+    canvas.dataset.noFoliage = "true";
+    canvas.dataset.noVegetation = "true";
+    canvas.dataset.hydration = CONTROL.hydration;
     canvas.dataset.visualPass = CONTROL.visualPass;
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Audralia existing route compositor with terrain child consumption and natural axis rotation");
+    canvas.setAttribute("aria-label", "Audralia geology-only terrain globe with no foliage");
 
     const label = document.createElement("div");
-    label.className = "audralia-existing-route-label";
-    label.textContent = "AUDRALIA · ROUTE COMPOSITOR";
+    label.className = "audralia-geology-label";
+    label.textContent = "AUDRALIA · GEOLOGY ONLY";
 
     const receipt = document.createElement("div");
     receipt.hidden = true;
     receipt.setAttribute("aria-hidden", "true");
-    receipt.className = "audralia-existing-route-hidden-receipt";
+    receipt.className = "audralia-geology-hidden-receipt";
     receipt.dataset.contract = RECEIPT;
     receipt.dataset.route = ROUTE;
     receipt.dataset.parentAuthority = PARENT_AUTHORITY;
     receipt.dataset.terrainAuthority = TERRAIN_AUTHORITY;
-    receipt.dataset.newFileRequired = "false";
+    receipt.dataset.terrainVersion = TERRAIN_VERSION;
+    receipt.dataset.noTrees = "true";
+    receipt.dataset.noFoliage = "true";
+    receipt.dataset.noVegetation = "true";
+    receipt.dataset.hydration = CONTROL.hydration;
     receipt.dataset.visualPass = CONTROL.visualPass;
     receipt.textContent =
-      "AUDRALIA_EXISTING_ROUTE_COMPOSITOR_REWIRE_TNT_v1 new_file_required=false parent_consumed=true terrain_consumed=true visual_pass=held";
+      "AUDRALIA_ROUTE_COMPOSITOR_NO_FOLIAGE_GEOLOGY_RENDER_TNT_v1 latest_terrain=true geology_only=true no_trees=true no_foliage=true hydration=held visual_pass=held";
 
     stage.appendChild(axis);
     stage.appendChild(canvas);
@@ -569,11 +690,16 @@
     mount.dataset.contract = RECEIPT;
     mount.dataset.parentAuthority = PARENT_AUTHORITY;
     mount.dataset.terrainAuthority = TERRAIN_AUTHORITY;
+    mount.dataset.terrainVersion = TERRAIN_VERSION;
     mount.dataset.compositorModel = CONTROL.compositorModel;
     mount.dataset.rotationModel = CONTROL.rotationModel;
-    mount.dataset.visualPass = CONTROL.visualPass;
     mount.dataset.newFileRequired = "false";
+    mount.dataset.noTrees = "true";
+    mount.dataset.noFoliage = "true";
+    mount.dataset.noVegetation = "true";
+    mount.dataset.hydration = CONTROL.hydration;
     mount.dataset.earthAdoption = "blocked";
+    mount.dataset.visualPass = CONTROL.visualPass;
 
     return { stage, canvas };
   }
@@ -620,7 +746,7 @@
     const cx = size / 2;
     const cy = size / 2;
     const radius = size * 0.405;
-    const stripHeight = Math.max(2, Math.floor(size / 270));
+    const stripHeight = Math.max(2, Math.floor(size / 280));
     const sourceHeight = texture.height || CONTROL.textureHeight;
 
     ctx.clearRect(0, 0, size, size);
@@ -662,16 +788,16 @@
 
     light.addColorStop(0, "rgba(255,255,255,0.20)");
     light.addColorStop(0.35, "rgba(255,255,255,0.06)");
-    light.addColorStop(0.74, "rgba(0,0,0,0.10)");
-    light.addColorStop(1, "rgba(0,0,0,0.42)");
+    light.addColorStop(0.74, "rgba(0,0,0,0.12)");
+    light.addColorStop(1, "rgba(0,0,0,0.46)");
 
     ctx.fillStyle = light;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     const edge = ctx.createRadialGradient(cx, cy, radius * 0.72, cx, cy, radius);
     edge.addColorStop(0, "rgba(0,0,0,0)");
-    edge.addColorStop(0.82, "rgba(8,23,44,0.10)");
-    edge.addColorStop(1, "rgba(10,24,42,0.38)");
+    edge.addColorStop(0.82, "rgba(8,23,44,0.12)");
+    edge.addColorStop(1, "rgba(10,24,42,0.40)");
 
     ctx.fillStyle = edge;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
@@ -804,9 +930,7 @@
       const parentApi = results[0];
       const terrainApi = results[1];
 
-      const parentTexture = buildParentTexture(parentApi);
-      const composedTexture = composeTexture(parentTexture, terrainApi);
-
+      const geologyTexture = composeGeologyTexture(terrainApi);
       const parts = createStage(mount);
       const ctx = parts.canvas.getContext("2d", { alpha: true });
 
@@ -815,7 +939,7 @@
         stage: parts.stage,
         canvas: parts.canvas,
         ctx,
-        texture: composedTexture,
+        texture: geologyTexture,
         parentApi,
         terrainApi,
         phase: CONTROL.initialPhase,
@@ -841,18 +965,24 @@
 
       document.documentElement.dataset.audraliaParentAuthorityLoaded = String(Boolean(parentApi));
       document.documentElement.dataset.audraliaTerrainAuthorityLoaded = String(Boolean(terrainApi));
-      document.documentElement.dataset.audraliaComposedTexture = composedTexture.dataset.compositorStatus || "unknown";
+      document.documentElement.dataset.audraliaComposedTexture = geologyTexture.dataset.compositorStatus || "unknown";
+      document.documentElement.dataset.audraliaFoliageSamples = geologyTexture.dataset.foliageSamples || "0";
 
       mount.dataset.parentAuthorityLoaded = String(Boolean(parentApi));
       mount.dataset.terrainAuthorityLoaded = String(Boolean(terrainApi));
-      mount.dataset.composedTexture = composedTexture.dataset.compositorStatus || "unknown";
-      mount.dataset.terrainSamples = composedTexture.dataset.terrainSamples || "0";
-      mount.dataset.landSamples = composedTexture.dataset.landSamples || "0";
-      mount.dataset.waterSamples = composedTexture.dataset.waterSamples || "0";
-      mount.dataset.iceSamples = composedTexture.dataset.iceSamples || "0";
+      mount.dataset.composedTexture = geologyTexture.dataset.compositorStatus || "unknown";
+      mount.dataset.terrainSamples = geologyTexture.dataset.terrainSamples || "0";
+      mount.dataset.landSamples = geologyTexture.dataset.landSamples || "0";
+      mount.dataset.waterSamples = geologyTexture.dataset.waterSamples || "0";
+      mount.dataset.iceSamples = geologyTexture.dataset.iceSamples || "0";
+      mount.dataset.foliageSamples = geologyTexture.dataset.foliageSamples || "0";
+      mount.dataset.maxMountain = geologyTexture.dataset.maxMountain || "0";
+      mount.dataset.maxCanyon = geologyTexture.dataset.maxCanyon || "0";
+      mount.dataset.maxRiverIncision = geologyTexture.dataset.maxRiverIncision || "0";
+      mount.dataset.maxBathymetry = geologyTexture.dataset.maxBathymetry || "0";
 
       window.dispatchEvent(
-        new CustomEvent("dgb:audralia-existing-route-compositor-ready", {
+        new CustomEvent("dgb:audralia-geology-only-compositor-ready", {
           detail: {
             body: BODY,
             label: LABEL,
@@ -860,14 +990,19 @@
             contract: RECEIPT,
             parentAuthority: PARENT_AUTHORITY,
             terrainAuthority: TERRAIN_AUTHORITY,
+            terrainVersion: TERRAIN_VERSION,
             parentLoaded: Boolean(parentApi),
             terrainLoaded: Boolean(terrainApi),
-            composedTexture: composedTexture.dataset.compositorStatus || "unknown",
-            terrainSamples: composedTexture.dataset.terrainSamples || "0",
-            landSamples: composedTexture.dataset.landSamples || "0",
-            waterSamples: composedTexture.dataset.waterSamples || "0",
-            iceSamples: composedTexture.dataset.iceSamples || "0",
-            newFileRequired: false,
+            composedTexture: geologyTexture.dataset.compositorStatus || "unknown",
+            terrainSamples: geologyTexture.dataset.terrainSamples || "0",
+            landSamples: geologyTexture.dataset.landSamples || "0",
+            waterSamples: geologyTexture.dataset.waterSamples || "0",
+            iceSamples: geologyTexture.dataset.iceSamples || "0",
+            foliageSamples: geologyTexture.dataset.foliageSamples || "0",
+            noTrees: true,
+            noFoliage: true,
+            noVegetation: true,
+            hydration: CONTROL.hydration,
             visualPass: CONTROL.visualPass
           }
         })
@@ -900,9 +1035,14 @@
         rotationModel: CONTROL.rotationModel,
         phase: activeState ? activeState.phase : null,
         velocity: activeState ? activeState.velocity : null,
-        newFileRequired: false,
+        noTrees: true,
+        noFoliage: true,
+        noVegetation: true,
+        noGreenYellowDots: true,
+        hydrationHeld: true,
         parentReopened: false,
         terrainRewrittenHere: false,
+        topologyRewrittenHere: false,
         visualPassClaimed: false
       });
     }

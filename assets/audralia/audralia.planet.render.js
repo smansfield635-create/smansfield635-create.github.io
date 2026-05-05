@@ -1,24 +1,22 @@
 /*
   /assets/audralia/audralia.planet.render.js
-  AUDRALIA_G2_DISTRIBUTED_LAND_SEGMENTATION_TNT_v1
+  AUDRALIA_G2_HEALTHY_CLIMATE_ISLAND_AND_ELEVATION_REGION_TNT_v1
 
   Purpose:
-  - Reduce the oversized single land body.
-  - Split Audralia into five distributed land bodies plus one South Pole ice-only segment.
-  - Preserve G2 parent-consumed terrain + hydration + climate.
-  - Preserve G3 ecology preparation without falsely claiming G3 completion.
-  - Preserve Audralia identity, API compatibility, and route/instrument handoff.
-
-  Land law:
-  - 5 land bodies total.
-  - 1 dominant non-polar land body remains near the current visual position.
-  - 3 additional non-polar distributed land bodies / island-chain structures.
-  - 1 North Pole land body.
-  - South Pole is ice only, not a landmass.
+  - Preserve Audralia as the active constructed home-world body.
+  - Keep G2 parent-consumed terrain + hydration + climate.
+  - Increase islands and miscellaneous territories so all Nine Summits regions have enough land capacity.
+  - Preserve five major land bodies.
+  - Preserve North Pole land body.
+  - Preserve South Pole ice-only law.
+  - Make Audralia behave like a clean, healthy Earth-like climate system.
+  - Keep Audralia four-times-Earth-age in geological maturity without industrial poisoning.
+  - Bind the Nine Summits regions to elevation order: higher regions occupy higher elevational status.
+  - Prepare G3 ecology without falsely claiming G3 completion.
 
   Scope:
   - Audralia parent render-body authority only.
-  - No Earth, Showroom selector, CSS, Gauges, Products, Sun, Moon, route shell, or global file mutation.
+  - No Earth, Showroom selector, CSS, Gauges, Products, Sun, Moon, route shell, or global mutation.
 
   Public API preserved:
   - createProfile
@@ -32,7 +30,7 @@
 (function () {
   "use strict";
 
-  const VERSION = "AUDRALIA_G2_DISTRIBUTED_LAND_SEGMENTATION_TNT_v1";
+  const VERSION = "AUDRALIA_G2_HEALTHY_CLIMATE_ISLAND_AND_ELEVATION_REGION_TNT_v1";
 
   const BODY = Object.freeze({
     id: "audralia",
@@ -41,7 +39,7 @@
     publicLabel: "Audralia",
     classification: "constructed-home-world-body",
     parentAuthority: "/assets/audralia/audralia.planet.render.js",
-    generation: "G2_PARENT_CONSUMED_DISTRIBUTED_LAND",
+    generation: "G2_HEALTHY_CLIMATE_ISLAND_ELEVATION_REGION",
     generationClaim: "G2",
     generation3Prepared: true,
     generation3Claimed: false,
@@ -51,11 +49,19 @@
   const CONTRACT = Object.freeze({
     landBodies: 5,
     visibleSegments: 6,
+    miscellaneousTerritories: "INCREASED",
+    islandDensity: "HIGH",
+    enoughLandForNineRegions: true,
+    regionElevationLaw: true,
     southPoleIceOnly: true,
     northPoleLandBody: true,
-    dominantLandReduced: true,
-    noSingleOversizedLandPlate: true,
-    noCrossSeamContinentChord: true,
+    healthyClimate: true,
+    earthLikeClimate: true,
+    fourTimesEarthAge: true,
+    toxicIndustrialHistory: false,
+    toxicGasPoisoning: false,
+    industrialWastePoisoning: false,
+    pollutedAtmosphere: false,
     terrainFoundationPreserved: true,
     hydrationConsumed: true,
     climateConsumed: true,
@@ -91,16 +97,127 @@
     }
   });
 
-  const LAND_SEGMENTS = Object.freeze([
+  const REGION_TIERS = Object.freeze([
+    {
+      region: 1,
+      key: "character",
+      name: "Character",
+      elevationTier: "low-origin-ground",
+      relativeElevation: 0.12,
+      terrainRole: "origin plains, low coastal stone, first habitable ground",
+      lon: 0.32,
+      lat: 0.55,
+      radius: 0.092,
+      moisture: 0.10
+    },
+    {
+      region: 2,
+      key: "structure",
+      name: "Structure",
+      elevationTier: "low-plateau",
+      relativeElevation: 0.22,
+      terrainRole: "stable foundation plateau and broad settlement table",
+      lon: 0.42,
+      lat: 0.47,
+      radius: 0.094,
+      moisture: 0.04
+    },
+    {
+      region: 3,
+      key: "balance",
+      name: "Balance",
+      elevationTier: "basin-transition",
+      relativeElevation: 0.32,
+      terrainRole: "wet dry transition basin where systems meet",
+      lon: 0.52,
+      lat: 0.50,
+      radius: 0.096,
+      moisture: 0.12
+    },
+    {
+      region: 4,
+      key: "stability",
+      name: "Stability",
+      elevationTier: "temperate-upland",
+      relativeElevation: 0.42,
+      terrainRole: "steady upland belt with repeatable climate",
+      lon: 0.65,
+      lat: 0.45,
+      radius: 0.098,
+      moisture: 0.10
+    },
+    {
+      region: 5,
+      key: "peace",
+      name: "Peace",
+      elevationTier: "protected-high-basin",
+      relativeElevation: 0.52,
+      terrainRole: "sheltered green basin above lower belts",
+      lon: 0.38,
+      lat: 0.60,
+      radius: 0.100,
+      moisture: 0.22
+    },
+    {
+      region: 6,
+      key: "joy",
+      name: "Joy",
+      elevationTier: "bright-island-highlands",
+      relativeElevation: 0.62,
+      terrainRole: "reef islands, warm high islands, lively archipelago",
+      lon: 0.60,
+      lat: 0.68,
+      radius: 0.102,
+      moisture: 0.25
+    },
+    {
+      region: 7,
+      key: "dignity",
+      name: "Dignity",
+      elevationTier: "mineral-crownland",
+      relativeElevation: 0.72,
+      terrainRole: "weathered mineral ridges and old exposed value",
+      lon: 0.55,
+      lat: 0.30,
+      radius: 0.104,
+      moisture: -0.06
+    },
+    {
+      region: 8,
+      key: "free-will",
+      name: "Free Will",
+      elevationTier: "frontier-ridge-belt",
+      relativeElevation: 0.82,
+      terrainRole: "open high frontier, difficult traversal, mixed climate edge",
+      lon: 0.22,
+      lat: 0.46,
+      radius: 0.106,
+      moisture: 0.02
+    },
+    {
+      region: 9,
+      key: "love",
+      name: "Love",
+      elevationTier: "highest-convergence-summit",
+      relativeElevation: 0.92,
+      terrainRole: "highest convergence heartland where waters, ridges, routes, and climates meet",
+      lon: 0.48,
+      lat: 0.42,
+      radius: 0.112,
+      moisture: 0.16
+    }
+  ]);
+
+  const MAJOR_LAND_SEGMENTS = Object.freeze([
     {
       id: "dominant-mainland",
       type: "land",
       role: "dominant_current_position_body",
       lon: 0.44,
-      lat: 0.49,
-      radiusX: 0.145,
-      radiusY: 0.185,
-      height: 0.58,
+      lat: 0.50,
+      radiusX: 0.135,
+      radiusY: 0.170,
+      height: 0.54,
       moisture: 0.08,
       climate: "temperate-convergence",
       priority: 1
@@ -111,8 +228,8 @@
       role: "secondary_weathered_continent",
       lon: 0.18,
       lat: 0.48,
-      radiusX: 0.105,
-      radiusY: 0.155,
+      radiusX: 0.108,
+      radiusY: 0.150,
       height: 0.44,
       moisture: 0.02,
       climate: "weathered-western-basin",
@@ -122,26 +239,26 @@
       id: "eastern-shelf-body",
       type: "land",
       role: "temperate_shelf_continent",
-      lon: 0.69,
+      lon: 0.70,
       lat: 0.51,
-      radiusX: 0.11,
-      radiusY: 0.145,
+      radiusX: 0.112,
+      radiusY: 0.142,
       height: 0.42,
       moisture: 0.14,
       climate: "temperate-eastern-shelf",
       priority: 3
     },
     {
-      id: "southern-archipelago",
+      id: "southern-archipelago-body",
       type: "archipelago",
-      role: "broken_island_chain",
-      lon: 0.58,
+      role: "major_broken_island_chain",
+      lon: 0.59,
       lat: 0.68,
-      radiusX: 0.075,
-      radiusY: 0.055,
-      height: 0.30,
-      moisture: 0.20,
-      islandCount: 9,
+      radiusX: 0.080,
+      radiusY: 0.060,
+      height: 0.31,
+      moisture: 0.22,
+      islandCount: 13,
       climate: "warm-reef-archipelago",
       priority: 4
     },
@@ -149,42 +266,27 @@
       id: "north-polar-land",
       type: "land",
       role: "north_pole_land_body",
-      lon: 0.5,
-      lat: 0.075,
-      radiusX: 0.18,
-      radiusY: 0.075,
-      height: 0.34,
+      lon: 0.50,
+      lat: 0.078,
+      radiusX: 0.185,
+      radiusY: 0.078,
+      height: 0.35,
       moisture: -0.04,
       climate: "north-polar-mineral-land",
       polar: "north",
       priority: 5
-    },
-    {
-      id: "south-polar-ice",
-      type: "ice",
-      role: "south_pole_ice_only",
-      lon: 0.5,
-      lat: 0.94,
-      radiusX: 0.5,
-      radiusY: 0.085,
-      height: 0,
-      moisture: 0,
-      climate: "south-polar-ice-only",
-      polar: "south",
-      priority: 6
     }
   ]);
 
-  const NINE_SUMMITS = Object.freeze([
-    { key: "character", index: 1, lon: 0.34, lat: 0.33, radius: 0.09, elevation: 0.22, moisture: -0.04 },
-    { key: "structure", index: 2, lon: 0.43, lat: 0.42, radius: 0.11, elevation: 0.16, moisture: -0.02 },
-    { key: "balance", index: 3, lon: 0.52, lat: 0.50, radius: 0.10, elevation: 0.04, moisture: 0.10 },
-    { key: "stability", index: 4, lon: 0.66, lat: 0.45, radius: 0.10, elevation: 0.06, moisture: 0.14 },
-    { key: "peace", index: 5, lon: 0.36, lat: 0.58, radius: 0.09, elevation: -0.02, moisture: 0.22 },
-    { key: "joy", index: 6, lon: 0.58, lat: 0.68, radius: 0.09, elevation: -0.04, moisture: 0.25 },
-    { key: "dignity", index: 7, lon: 0.53, lat: 0.28, radius: 0.08, elevation: 0.24, moisture: -0.10 },
-    { key: "free-will", index: 8, lon: 0.21, lat: 0.52, radius: 0.10, elevation: 0.08, moisture: 0.02 },
-    { key: "love", index: 9, lon: 0.47, lat: 0.50, radius: 0.12, elevation: 0.06, moisture: 0.16 }
+  const MISC_TERRITORY_CLUSTERS = Object.freeze([
+    { id: "equatorial-west-islands", lon: 0.09, lat: 0.53, count: 11, stepLon: 0.025, stepLat: 0.006, radius: 0.017, height: 0.22, moisture: 0.17, regionBias: 1 },
+    { id: "balance-chain", lon: 0.36, lat: 0.49, count: 10, stepLon: 0.020, stepLat: -0.008, radius: 0.018, height: 0.24, moisture: 0.13, regionBias: 3 },
+    { id: "joy-reef-chain", lon: 0.56, lat: 0.67, count: 16, stepLon: 0.018, stepLat: -0.010, radius: 0.016, height: 0.21, moisture: 0.24, regionBias: 6 },
+    { id: "eastern-temperate-islands", lon: 0.77, lat: 0.47, count: 12, stepLon: -0.017, stepLat: 0.011, radius: 0.017, height: 0.22, moisture: 0.15, regionBias: 4 },
+    { id: "frontier-fracture-islands", lon: 0.23, lat: 0.36, count: 9, stepLon: 0.021, stepLat: -0.013, radius: 0.015, height: 0.27, moisture: 0.03, regionBias: 8 },
+    { id: "northern-shelf-territories", lon: 0.50, lat: 0.19, count: 14, stepLon: 0.020, stepLat: 0.004, radius: 0.016, height: 0.25, moisture: 0.01, regionBias: 7 },
+    { id: "love-convergence-islands", lon: 0.48, lat: 0.39, count: 8, stepLon: 0.016, stepLat: 0.014, radius: 0.019, height: 0.29, moisture: 0.18, regionBias: 9 },
+    { id: "southern-clean-ocean-keys", lon: 0.40, lat: 0.72, count: 10, stepLon: 0.026, stepLat: 0.002, radius: 0.014, height: 0.18, moisture: 0.22, regionBias: 6 }
   ]);
 
   function clamp(value, min, max) {
@@ -256,67 +358,79 @@
       (fbm(x * noiseScale + segment.priority * 11, y * noiseScale + segment.priority * 17, 4) - 0.5) *
       0.24;
 
-    const eroded = d + n;
-    return smoothstep(1.12, 0.34, eroded);
+    return smoothstep(1.13, 0.33, d + n);
   }
 
-  function archipelagoInfluence(x, y, segment) {
+  function islandInfluence(x, y, cluster) {
     let height = 0;
     let moisture = 0;
     let strength = 0;
+    let regionBias = 0;
 
-    for (let i = 0; i < segment.islandCount; i += 1) {
-      const lon = wrap01(segment.lon + (i - 4) * 0.028 + Math.sin(i * 1.73) * 0.011);
-      const lat = clamp(segment.lat + Math.cos(i * 1.17) * 0.038 + (i % 3 - 1) * 0.01, 0.08, 0.88);
-      const radiusX = segment.radiusX * (0.34 + (i % 4) * 0.055);
-      const radiusY = segment.radiusY * (0.46 + (i % 3) * 0.055);
+    for (let i = 0; i < cluster.count; i += 1) {
+      const lon = wrap01(cluster.lon + (i - cluster.count / 2) * cluster.stepLon + Math.sin(i * 1.71) * 0.010);
+      const lat = clamp(cluster.lat + Math.cos(i * 1.23) * 0.030 + (i % 3 - 1) * cluster.stepLat, 0.08, 0.86);
+      const radiusX = cluster.radius * (0.78 + (i % 5) * 0.055);
+      const radiusY = cluster.radius * (0.62 + (i % 4) * 0.050);
 
-      const local = ellipseInfluence(x, y, {
-        lon,
-        lat,
-        radiusX,
-        radiusY,
-        priority: segment.priority + i,
-        height: segment.height,
-        moisture: segment.moisture
-      }, 76);
+      const influence = ellipseInfluence(
+        x,
+        y,
+        {
+          lon,
+          lat,
+          radiusX,
+          radiusY,
+          priority: cluster.regionBias + i,
+          height: cluster.height,
+          moisture: cluster.moisture
+        },
+        92
+      );
 
-      if (local > 0) {
-        height += segment.height * local;
-        moisture += segment.moisture * local;
-        strength = Math.max(strength, local);
+      if (influence > 0) {
+        const shaped = influence * influence * (3 - 2 * influence);
+        height += cluster.height * shaped;
+        moisture += cluster.moisture * shaped;
+        strength = Math.max(strength, shaped);
+        regionBias = cluster.regionBias;
       }
     }
 
-    return { height, moisture, strength };
+    return { height, moisture, strength, regionBias };
   }
 
   function landDistribution(x, y) {
-    let elevation = -0.46;
+    let elevation = -0.47;
     let moisture = 0;
     let dominantSegment = "deep-ocean";
     let dominantStrength = 0;
-    let landBodyCounted = false;
-    let southIceStrength = 0;
+    let regionBias = 0;
 
-    for (let i = 0; i < LAND_SEGMENTS.length; i += 1) {
-      const segment = LAND_SEGMENTS[i];
-
-      if (segment.type === "ice") {
-        const iceStrength = ellipseInfluence(x, y, segment, 28);
-        southIceStrength = Math.max(southIceStrength, iceStrength);
-        continue;
-      }
-
-      let influence;
+    for (let i = 0; i < MAJOR_LAND_SEGMENTS.length; i += 1) {
+      const segment = MAJOR_LAND_SEGMENTS[i];
+      let influence = 0;
 
       if (segment.type === "archipelago") {
-        const chain = archipelagoInfluence(x, y, segment);
+        const chain = islandInfluence(x, y, {
+          id: segment.id,
+          lon: segment.lon,
+          lat: segment.lat,
+          count: segment.islandCount,
+          stepLon: 0.025,
+          stepLat: -0.010,
+          radius: 0.020,
+          height: segment.height,
+          moisture: segment.moisture,
+          regionBias: 6
+        });
+
         influence = chain.strength;
         elevation += chain.height;
         moisture += chain.moisture;
+        regionBias = influence > dominantStrength ? chain.regionBias : regionBias;
       } else {
-        influence = ellipseInfluence(x, y, segment, 38);
+        influence = ellipseInfluence(x, y, segment, 42);
         elevation += segment.height * influence;
         moisture += segment.moisture * influence;
       }
@@ -324,10 +438,24 @@
       if (influence > dominantStrength) {
         dominantStrength = influence;
         dominantSegment = segment.id;
+        if (segment.id === "north-polar-land") regionBias = 7;
+        if (segment.id === "dominant-mainland") regionBias = 2;
+        if (segment.id === "western-weathered-body") regionBias = 8;
+        if (segment.id === "eastern-shelf-body") regionBias = 4;
       }
+    }
 
-      if (influence > 0.18) {
-        landBodyCounted = true;
+    for (let c = 0; c < MISC_TERRITORY_CLUSTERS.length; c += 1) {
+      const cluster = MISC_TERRITORY_CLUSTERS[c];
+      const islands = islandInfluence(x, y, cluster);
+
+      elevation += islands.height;
+      moisture += islands.moisture;
+
+      if (islands.strength > dominantStrength) {
+        dominantStrength = islands.strength;
+        dominantSegment = cluster.id;
+        regionBias = islands.regionBias;
       }
     }
 
@@ -336,55 +464,97 @@
       moisture,
       dominantSegment,
       dominantStrength,
-      landBodyCounted,
-      southIceStrength
+      regionBias
     };
   }
 
-  function summitInfluence(x, y, landStrength) {
-    let elevation = 0;
+  function regionInfluence(x, y, landStrength, currentElevation) {
+    let elevationBoost = 0;
     let moisture = 0;
     let regionKey = "open-ocean";
+    let regionName = "Open Ocean";
+    let regionNumber = 0;
     let regionStrength = 0;
+    let relativeElevation = 0;
 
-    for (let i = 0; i < NINE_SUMMITS.length; i += 1) {
-      const summit = NINE_SUMMITS[i];
-      const dx = wrapDistance(x, summit.lon) / summit.radius;
-      const dy = Math.abs(y - summit.lat) / summit.radius;
+    for (let i = 0; i < REGION_TIERS.length; i += 1) {
+      const region = REGION_TIERS[i];
+      const dx = wrapDistance(x, region.lon) / region.radius;
+      const dy = Math.abs(y - region.lat) / region.radius;
       const d = Math.sqrt(dx * dx + dy * dy);
-      const strength = Math.max(0, 1 - d);
+      const influence = Math.max(0, 1 - d);
 
-      if (strength > 0) {
-        const shaped = strength * strength * (3 - 2 * strength);
-        const landLimited = shaped * clamp(landStrength * 1.35, 0, 1);
+      if (influence > 0) {
+        const shaped = influence * influence * (3 - 2 * influence);
+        const landLimited = shaped * clamp(landStrength * 1.45, 0, 1);
+        const targetElevation = region.relativeElevation * 0.62;
+        const lift = Math.max(0, targetElevation - Math.max(0, currentElevation));
 
-        elevation += summit.elevation * landLimited;
-        moisture += summit.moisture * landLimited;
+        elevationBoost += lift * landLimited;
+        moisture += region.moisture * landLimited;
 
         if (landLimited > regionStrength) {
           regionStrength = landLimited;
-          regionKey = summit.key;
+          regionKey = region.key;
+          regionName = region.name;
+          regionNumber = region.region;
+          relativeElevation = region.relativeElevation;
         }
       }
     }
 
-    return { elevation, moisture, regionKey, regionStrength };
+    return {
+      elevationBoost,
+      moisture,
+      regionKey,
+      regionName,
+      regionNumber,
+      regionStrength,
+      relativeElevation
+    };
   }
 
   function ridgeField(x, y, landStrength) {
-    const folded =
+    const fold =
       1 -
       Math.abs(
-        Math.sin((x * 2.15 - y * 1.3 + fbm(x * 9 + 4, y * 9 + 7, 4) * 0.13) * Math.PI)
+        Math.sin((x * 2.20 - y * 1.32 + fbm(x * 9 + 4, y * 9 + 7, 4) * 0.13) * Math.PI)
       );
 
     const ancient =
       1 -
       Math.abs(
-        Math.sin((x * 1.5 + y * 0.84 + fbm(x * 11 + 8, y * 10 + 3, 4) * 0.10) * Math.PI)
+        Math.sin((x * 1.56 + y * 0.86 + fbm(x * 11 + 8, y * 10 + 3, 4) * 0.10) * Math.PI)
       );
 
-    return Math.pow(Math.max(folded, ancient * 0.78), 4) * clamp(landStrength * 1.25, 0, 1);
+    return Math.pow(Math.max(fold, ancient * 0.78), 4) * clamp(landStrength * 1.3, 0, 1);
+  }
+
+  function cleanClimate(x, y, surfaceBase) {
+    const latFromEquator = Math.abs(y - 0.5) * 2;
+    const equatorialWarmth = 1 - smoothstep(0.08, 0.55, Math.abs(y - 0.5));
+    const temperateBelt = smoothstep(0.22, 0.48, latFromEquator) * (1 - smoothstep(0.58, 0.90, latFromEquator));
+    const polarCold = smoothstep(0.70, 0.98, latFromEquator);
+    const oceanicFlow = fbm(x * 4.0 + 9, y * 5.0 + 3, 4);
+    const wind = fbm(x * 8.0 + 21, y * 3.0 + 11, 4);
+
+    const dryPressure =
+      smoothstep(0.18, 0.46, latFromEquator) *
+      (1 - smoothstep(0.56, 0.78, latFromEquator)) *
+      (1 - surfaceBase.moisture * 0.5);
+
+    return {
+      equatorialWarmth,
+      temperateBelt,
+      polarCold,
+      oceanicFlow,
+      wind,
+      dryPressure,
+      cleanAtmosphere: true,
+      pollutedAtmosphere: false,
+      toxicGas: false,
+      industrialWaste: false
+    };
   }
 
   function calculateSurface(xInput, yInput) {
@@ -398,32 +568,37 @@
 
     const distribution = landDistribution(x, y);
     const landStrength = clamp(distribution.dominantStrength, 0, 1);
-    const summit = summitInfluence(x, y, landStrength);
-    const ridges = ridgeField(x, y, landStrength);
 
     const macro = fbm(x * 3.5, y * 2.8, 5);
     const erosion = fbm(x * 22 + 19, y * 18 + 7, 5);
     const micro = fbm(x * 74 + 2, y * 58 + 11, 3);
+    const ridges = ridgeField(x, y, landStrength);
 
     let elevation =
       distribution.elevation +
-      summit.elevation +
       ridges * 0.14 +
-      (macro - 0.5) * 0.14 * clamp(landStrength + 0.18, 0, 1) +
+      (macro - 0.5) * 0.13 * clamp(landStrength + 0.18, 0, 1) +
       (erosion - 0.5) * 0.09 * clamp(landStrength + 0.2, 0, 1) +
       (micro - 0.5) * 0.025 * clamp(landStrength + 0.1, 0, 1);
 
-    const southIce = southPolar > 0.32 || distribution.southIceStrength > 0.32;
+    const region = regionInfluence(x, y, landStrength, elevation);
+    elevation += region.elevationBoost;
+
+    const southIce = southPolar > 0.32;
 
     if (southIce) {
-      elevation = Math.min(elevation, -0.08);
+      elevation = Math.min(elevation, -0.09);
     }
 
-    elevation = clamp(elevation, -0.96, 0.9);
+    elevation = clamp(elevation, -0.96, 0.92);
 
     const isLand = elevation >= 0 && !southIce;
     const isWater = !isLand && !southIce;
-    const isIce = southIce || (!isWater && northPolar > 0.66 && elevation > -0.05);
+    const isIce = southIce || (!isWater && northPolar > 0.70 && elevation > -0.05);
+
+    const climate = cleanClimate(x, y, {
+      moisture: distribution.moisture + region.moisture
+    });
 
     const depth = isWater ? clamp(Math.abs(elevation), 0, 1) : 0;
     const coast = isLand ? 1 - clamp(Math.abs(elevation) / 0.16, 0, 1) : 0;
@@ -433,21 +608,18 @@
       equatorial *
       smoothstep(0.48, 0.78, fbm(x * 44 + 5, y * 44 + 17, 3));
 
-    const aridity =
-      smoothstep(0.18, 0.48, latFromEquator) *
-      (1 - smoothstep(0.58, 0.92, latFromEquator));
-
-    const mountainCold = isLand ? smoothstep(0.28, 0.62, elevation) : 0;
+    const mountainCold = isLand ? smoothstep(0.26, 0.62, elevation) : 0;
 
     const moisture = clamp(
-      0.46 +
+      0.45 +
         distribution.moisture +
-        summit.moisture +
-        equatorial * 0.18 -
-        aridity * 0.22 +
+        region.moisture +
+        climate.equatorialWarmth * 0.18 +
+        climate.oceanicFlow * 0.12 -
+        climate.dryPressure * 0.22 +
         coast * 0.12 -
         mountainCold * 0.08 +
-        (fbm(x * 7 + 6, y * 9 + 3, 4) - 0.5) * 0.16,
+        (climate.wind - 0.5) * 0.12,
       0,
       1
     );
@@ -458,10 +630,12 @@
     else if (isIce) biome = "north-polar-land-ice";
     else if (isWater && shelf > 0.25) biome = reef > 0.35 ? "reef-shelf" : "shallow-shelf";
     else if (isWater) biome = depth > 0.48 ? "deep-ocean" : "open-ocean";
-    else if (isLand && elevation > 0.42) biome = "weathered-mountain-ridge";
+    else if (isLand && elevation > 0.58) biome = "highest-convergence-summit";
+    else if (isLand && elevation > 0.46) biome = "high-frontier-ridge";
+    else if (isLand && elevation > 0.36) biome = "mineral-crownland";
     else if (isLand && moisture < 0.27) biome = "ancient-dry-interior";
     else if (isLand && moisture > 0.64 && equatorial > 0.35) biome = "humid-green-belt";
-    else if (isLand && moisture > 0.5) biome = "temperate-green-coast";
+    else if (isLand && moisture > 0.50) biome = "temperate-green-coast";
     else if (isLand) biome = "olive-weathered-basin";
 
     return {
@@ -483,8 +657,12 @@
       biome,
       segment: distribution.dominantSegment,
       segmentStrength: distribution.dominantStrength,
-      summitRegion: summit.regionKey,
-      summitStrength: summit.regionStrength,
+      regionKey: region.regionKey,
+      regionName: region.regionName,
+      regionNumber: region.regionNumber,
+      regionStrength: region.regionStrength,
+      regionRelativeElevation: region.relativeElevation,
+      climate,
       generation: BODY.generation,
       parentConsumption: "terrain+hydration+climate",
       ecologyPrep: true
@@ -512,17 +690,13 @@
     };
   }
 
-  function rgba(color, alpha) {
-    return "rgba(" + color.r + "," + color.g + "," + color.b + "," + alpha + ")";
-  }
-
   function surfaceColor(surface) {
     if (surface.isIce) {
       if (surface.southIce) {
-        return mixColor("#dfeff7", "#ffffff", 0.48 + surface.southPolar * 0.28);
+        return mixColor("#e4f2f8", "#ffffff", 0.52 + surface.southPolar * 0.26);
       }
 
-      return mixColor("#d3e4ea", "#f7fbff", 0.34 + surface.northPolar * 0.22);
+      return mixColor("#d2e4ea", "#f7fbff", 0.32 + surface.northPolar * 0.24);
     }
 
     if (surface.isWater) {
@@ -538,29 +712,34 @@
       return color;
     }
 
-    const dry = colorToBytes("#b8894f");
-    const basin = colorToBytes("#8f8b57");
+    const lowOrigin = colorToBytes("#9c9461");
+    const plateau = colorToBytes("#8f8b57");
     const green = colorToBytes("#3f8c58");
     const humid = colorToBytes("#2d7d4e");
+    const dry = colorToBytes("#b8894f");
+    const crown = colorToBytes("#a89171");
     const ridge = colorToBytes("#817363");
-    const mineral = colorToBytes("#a89171");
+    const summit = colorToBytes("#c8b384");
 
     let color;
 
     if (surface.biome === "ancient-dry-interior") color = dry;
     else if (surface.biome === "humid-green-belt") color = humid;
     else if (surface.biome === "temperate-green-coast") color = green;
-    else if (surface.biome === "weathered-mountain-ridge") color = ridge;
-    else color = basin;
+    else if (surface.biome === "mineral-crownland") color = crown;
+    else if (surface.biome === "high-frontier-ridge") color = ridge;
+    else if (surface.biome === "highest-convergence-summit") color = summit;
+    else color = surface.regionNumber <= 2 ? lowOrigin : plateau;
 
-    color = mixColor(color, mineral, surface.ridges * 0.24);
+    color = mixColor(color, crown, surface.ridges * 0.20);
+    color = mixColor(color, summit, Math.max(0, surface.regionRelativeElevation - 0.62) * 0.44);
 
     if (surface.coast > 0.35) {
       color = mixColor(color, "#d1b878", surface.coast * 0.18);
     }
 
-    if (surface.summitStrength > 0.35) {
-      color = mixColor(color, "#c2a163", surface.summitStrength * 0.12);
+    if (surface.regionStrength > 0.35) {
+      color = mixColor(color, "#c2a163", surface.regionStrength * surface.regionRelativeElevation * 0.16);
     }
 
     return color;
@@ -577,8 +756,13 @@
     canvas.dataset.generation = BODY.generation;
     canvas.dataset.landBodies = String(CONTRACT.landBodies);
     canvas.dataset.visibleSegments = String(CONTRACT.visibleSegments);
+    canvas.dataset.miscellaneousTerritories = CONTRACT.miscellaneousTerritories;
+    canvas.dataset.islandDensity = CONTRACT.islandDensity;
     canvas.dataset.southPole = "ice-only";
     canvas.dataset.northPole = "land-body";
+    canvas.dataset.regionElevationLaw = "active";
+    canvas.dataset.healthyClimate = "active";
+    canvas.dataset.toxicIndustrialHistory = "false";
     canvas.dataset.visualPass = CONTRACT.visualPass;
     return canvas;
   }
@@ -608,27 +792,28 @@
         const surface = calculateSurface(x, y);
         const color = surfaceColor(surface);
 
-        const textureNoise = fbm(x * 96 + 41, y * 96 + 83, 2) - 0.5;
-        const light =
-          0.88 +
+        const cleanAirLight =
+          0.89 +
           surface.ridges * 0.08 +
           surface.coast * 0.04 +
           surface.reef * 0.06 -
           surface.depth * 0.035 +
-          textureNoise * 0.052;
+          (fbm(x * 96 + 41, y * 96 + 83, 2) - 0.5) * 0.052;
 
         const index = (py * width + px) * 4;
-        data[index] = clamp(Math.round(color.r * light), 0, 255);
-        data[index + 1] = clamp(Math.round(color.g * light), 0, 255);
-        data[index + 2] = clamp(Math.round(color.b * light), 0, 255);
+        data[index] = clamp(Math.round(color.r * cleanAirLight), 0, 255);
+        data[index + 1] = clamp(Math.round(color.g * cleanAirLight), 0, 255);
+        data[index + 2] = clamp(Math.round(color.b * cleanAirLight), 0, 255);
         data[index + 3] = 255;
       }
     }
 
     context.putImageData(image, 0, 0);
 
-    canvas.dataset.textureStatus = "AUDRALIA_G2_DISTRIBUTED_LAND_TEXTURE_READY";
-    canvas.dataset.landDistribution = "five-land-bodies-plus-south-pole-ice";
+    canvas.dataset.textureStatus = "AUDRALIA_G2_HEALTHY_CLIMATE_ISLAND_ELEVATION_REGION_READY";
+    canvas.dataset.landDistribution = "five-land-bodies-plus-many-islands-plus-south-pole-ice";
+    canvas.dataset.regionElevationLaw = "nine-regions-ascending-elevation";
+    canvas.dataset.cleanClimate = "healthy-earthlike-no-industrial-poisoning";
     canvas.dataset.staticPictureReplacement = "false";
     canvas.dataset.imageGeneration = "false";
 
@@ -642,7 +827,9 @@
         label: BODY.label,
         version: VERSION,
         generation: BODY.generation,
-        landSegments: LAND_SEGMENTS,
+        majorLandSegments: MAJOR_LAND_SEGMENTS,
+        miscellaneousTerritories: MISC_TERRITORY_CLUSTERS,
+        regionTiers: REGION_TIERS,
         status: getStatus()
       };
     }
@@ -689,30 +876,10 @@
     const firstDestWidth = dw * (firstSourceWidth / sourceWidth);
     const secondDestWidth = dw - firstDestWidth;
 
-    ctx.drawImage(
-      texture,
-      start,
-      safeSy,
-      firstSourceWidth,
-      safeSh,
-      dx,
-      dy,
-      firstDestWidth,
-      dh
-    );
+    ctx.drawImage(texture, start, safeSy, firstSourceWidth, safeSh, dx, dy, firstDestWidth, dh);
 
     if (secondDestWidth > 0.5) {
-      ctx.drawImage(
-        texture,
-        0,
-        safeSy,
-        start,
-        safeSh,
-        dx + firstDestWidth,
-        dy,
-        secondDestWidth,
-        dh
-      );
+      ctx.drawImage(texture, 0, safeSy, start, safeSh, dx + firstDestWidth, dy, secondDestWidth, dh);
     }
   }
 
@@ -767,12 +934,12 @@
     ctx.fillStyle = light;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-    const rim = ctx.createRadialGradient(cx, cy, radius * 0.76, cx, cy, radius);
-    rim.addColorStop(0, "rgba(0,0,0,0)");
-    rim.addColorStop(0.82, "rgba(10,25,44,0.08)");
-    rim.addColorStop(1, "rgba(10,20,38,0.34)");
+    const atmosphere = ctx.createRadialGradient(cx, cy, radius * 0.76, cx, cy, radius);
+    atmosphere.addColorStop(0, "rgba(0,0,0,0)");
+    atmosphere.addColorStop(0.82, "rgba(10,25,44,0.08)");
+    atmosphere.addColorStop(1, "rgba(80,140,190,0.22)");
 
-    ctx.fillStyle = rim;
+    ctx.fillStyle = atmosphere;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     ctx.restore();
@@ -790,7 +957,7 @@
     const receipt = document.createElement("div");
     receipt.hidden = true;
     receipt.setAttribute("aria-hidden", "true");
-    receipt.className = "audralia-distributed-land-receipt";
+    receipt.className = "audralia-healthy-climate-elevation-region-receipt";
     receipt.dataset.body = BODY.id;
     receipt.dataset.legacyBody = BODY.legacyId;
     receipt.dataset.label = BODY.label;
@@ -798,14 +965,19 @@
     receipt.dataset.generation = BODY.generation;
     receipt.dataset.landBodies = String(CONTRACT.landBodies);
     receipt.dataset.visibleSegments = String(CONTRACT.visibleSegments);
-    receipt.dataset.southPole = "ice-only";
-    receipt.dataset.northPole = "land-body";
+    receipt.dataset.miscellaneousTerritories = CONTRACT.miscellaneousTerritories;
+    receipt.dataset.islandDensity = CONTRACT.islandDensity;
+    receipt.dataset.regionElevationLaw = "active";
+    receipt.dataset.healthyClimate = "active";
+    receipt.dataset.toxicIndustrialHistory = "false";
     receipt.dataset.visualPass = CONTRACT.visualPass;
     receipt.textContent = [
-      "AUDRALIA_LAND_DISTRIBUTION=5_LAND_BODIES_PLUS_SOUTH_POLE_ICE",
-      "DOMINANT_MAINLAND=REDUCED",
-      "NORTH_POLE=LAND_BODY",
+      "AUDRALIA_HEALTHY_CLIMATE=ACTIVE",
+      "ISLAND_DENSITY=HIGH",
+      "MISC_TERRITORIES=INCREASED",
+      "NINE_REGIONS=ELEVATION_ORDERED",
       "SOUTH_POLE=ICE_ONLY",
+      "G3_ECOLOGY=PREPARED_NOT_CLAIMED",
       "VISUAL_PASS=HELD"
     ].join(" · ");
 
@@ -837,14 +1009,16 @@
     canvas.className = [
       "audralia-world-body-canvas",
       "audralia-g2-parent-consumed",
-      "audralia-distributed-land-body",
+      "audralia-healthy-climate-body",
+      "audralia-many-islands",
+      "audralia-elevation-regions",
       "audralia-g3-ecology-prep"
     ].join(" ");
 
     canvas.setAttribute("role", "img");
     canvas.setAttribute(
       "aria-label",
-      "Audralia Generation 2 distributed land world body with five land bodies and South Pole ice only"
+      "Audralia Generation 2 healthy climate world body with many islands and nine elevation ordered regions"
     );
 
     canvas.style.width = "100%";
@@ -870,8 +1044,13 @@
       target.dataset.generation = BODY.generation;
       target.dataset.landBodies = String(CONTRACT.landBodies);
       target.dataset.visibleSegments = String(CONTRACT.visibleSegments);
+      target.dataset.miscellaneousTerritories = CONTRACT.miscellaneousTerritories;
+      target.dataset.islandDensity = CONTRACT.islandDensity;
       target.dataset.southPole = "ice-only";
       target.dataset.northPole = "land-body";
+      target.dataset.regionElevationLaw = "active";
+      target.dataset.healthyClimate = "active";
+      target.dataset.toxicIndustrialHistory = "false";
       target.dataset.parentConsumption = "terrain-hydration-climate";
       target.dataset.g3EcologyPrep = "true";
       target.dataset.g3Claimed = "false";
@@ -904,20 +1083,27 @@
         generation4Claimed: false,
         landBodies: CONTRACT.landBodies,
         visibleSegments: CONTRACT.visibleSegments,
-        landLaw: "five-land-bodies-plus-south-pole-ice",
-        landSegments: LAND_SEGMENTS,
+        miscellaneousTerritories: CONTRACT.miscellaneousTerritories,
+        islandDensity: CONTRACT.islandDensity,
+        enoughLandForNineRegions: true,
+        climateLaw: {
+          earthLikeClimate: true,
+          healthyBirthlikeClimate: true,
+          fourTimesEarthAge: true,
+          toxicIndustrialHistory: false,
+          toxicGasPoisoning: false,
+          industrialWastePoisoning: false,
+          pollutedAtmosphere: false
+        },
+        regionElevationLaw: REGION_TIERS,
+        majorLandSegments: MAJOR_LAND_SEGMENTS,
+        miscellaneousTerritoryClusters: MISC_TERRITORY_CLUSTERS,
         activeDownstreamChildren: ["terrain", "hydration", "climate"],
         consumedChildren: ["terrain", "hydration", "climate"],
         preparedChildren: ["ecology"],
         futureChildren: ["fauna"],
         children: CHILDREN,
         contract: CONTRACT,
-        nineSummits: NINE_SUMMITS.map(function (region) {
-          return {
-            index: region.index,
-            key: region.key
-          };
-        }),
         api: {
           createProfile: true,
           buildTexture: true,
@@ -948,13 +1134,34 @@
       g3Claimed: false,
       g4FaunaBuilt: false,
       children: CHILDREN,
-      landDistribution: "FIVE_LAND_BODIES_PLUS_SOUTH_POLE_ICE",
+      landDistribution: "FIVE_MAJOR_LAND_BODIES_PLUS_MANY_ISLANDS_AND_MISC_TERRITORIES",
       visibleSegments: CONTRACT.visibleSegments,
       landBodies: CONTRACT.landBodies,
-      dominantMainland: "REDUCED_AND_PRESERVED_NEAR_CURRENT_POSITION",
+      miscellaneousTerritories: CONTRACT.miscellaneousTerritories,
+      islandDensity: CONTRACT.islandDensity,
+      enoughLandForNineRegions: true,
       northPole: "LAND_BODY",
       southPole: "ICE_ONLY",
-      oversizedLandPlate: "REMOVED",
+      regionElevationLaw: "NINE_REGIONS_ASCEND_BY_ELEVATION_STATUS",
+      regionTiers: REGION_TIERS.map(function (region) {
+        return {
+          region: region.region,
+          key: region.key,
+          name: region.name,
+          relativeElevation: region.relativeElevation,
+          elevationTier: region.elevationTier
+        };
+      }),
+      climate: {
+        earthLike: true,
+        healthyBirthlike: true,
+        cleanAtmosphere: true,
+        fourTimesEarthAge: true,
+        toxicIndustrialHistory: false,
+        toxicGasPoisoning: false,
+        industrialWastePoisoning: false,
+        pollutedAtmosphere: false
+      },
       seamSafeTerrainGrammar: true,
       noCrossSeamContinentChord: true,
       terrainHydrationClimateParentConsumed: true,
@@ -974,7 +1181,7 @@
         "global files"
       ],
       returnReceipt:
-        "AUDRALIA_DISTRIBUTED_LAND_SEGMENTATION_ACTIVE_5_LAND_BODIES_NORTH_POLE_LAND_SOUTH_POLE_ICE_ONLY"
+        "AUDRALIA_HEALTHY_CLIMATE_ISLAND_DENSITY_AND_ELEVATION_REGION_LAW_ACTIVE"
     };
   }
 
@@ -1029,7 +1236,7 @@
     });
 
     window.dispatchEvent(
-      new CustomEvent("dgb:audralia-distributed-land-ready", {
+      new CustomEvent("dgb:audralia-healthy-climate-island-elevation-ready", {
         detail: {
           body: BODY.id,
           legacyId: BODY.legacyId,
@@ -1038,6 +1245,9 @@
           generation: BODY.generation,
           landBodies: CONTRACT.landBodies,
           visibleSegments: CONTRACT.visibleSegments,
+          miscellaneousTerritories: CONTRACT.miscellaneousTerritories,
+          regionElevationLaw: true,
+          healthyClimate: true,
           api
         }
       })
@@ -1066,8 +1276,9 @@
     body: BODY,
     children: CHILDREN,
     contract: CONTRACT,
-    landSegments: LAND_SEGMENTS,
-    nineSummits: NINE_SUMMITS,
+    regionTiers: REGION_TIERS,
+    majorLandSegments: MAJOR_LAND_SEGMENTS,
+    miscellaneousTerritoryClusters: MISC_TERRITORY_CLUSTERS,
     createProfile,
     buildTexture,
     sampleSurface,

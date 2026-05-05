@@ -2,9 +2,9 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="audralia-hydration-readiness-gauges"
+  data-page="audralia-hydration-runtime-contract-gauges"
   data-route="/gauges/"
-  data-contract="AUDRALIA_GAUGES_TERRAIN_PASSED_ENOUGH_HYDRATION_GATE_TNT_v1"
+  data-contract="AUDRALIA_GAUGES_HYDRATION_RUNTIME_PENDING_ALIGNMENT_TNT_v1"
   data-mutation="false"
   data-graphic-box="false"
   data-image-generation="false"
@@ -13,17 +13,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Gauges · Audralia Hydration Readiness</title>
+  <title>Gauges · Audralia Hydration Runtime Gate</title>
   <meta
     name="description"
-    content="Audits the Audralia chain after terrain becomes sufficient to open hydration: true-globe route, cached runtime, topology, tectonics, terrain readiness, hydration authority, and downstream runtime hydration hold."
+    content="Audits Audralia after hydration opens. This contract separates hydration authority from runtime hydration consumption so the next gate is measured without contradiction."
   >
 
   <style>
     :root {
       color-scheme: dark;
       --bg: #050914;
-      --panel: rgba(10, 20, 36, 0.88);
       --text: #f7efe2;
       --muted: #b8c2cf;
       --gold: #f5c76b;
@@ -36,7 +35,9 @@
       --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html {
       min-height: 100%;
@@ -54,7 +55,9 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    a { color: inherit; }
+    a {
+      color: inherit;
+    }
 
     .skip-link {
       position: absolute;
@@ -71,7 +74,9 @@
       text-decoration: none;
     }
 
-    .skip-link:focus { transform: translateY(0); }
+    .skip-link:focus {
+      transform: translateY(0);
+    }
 
     .shell {
       width: min(1180px, calc(100% - 32px));
@@ -122,7 +127,9 @@
       line-height: 1.1;
     }
 
-    p { overflow-wrap: anywhere; }
+    p {
+      overflow-wrap: anywhere;
+    }
 
     .lede,
     .muted {
@@ -204,13 +211,15 @@
       margin-top: 24px;
     }
 
+    .group-block {
+      margin-top: 24px;
+    }
+
     .group {
       display: grid;
       gap: 12px;
       margin-top: 18px;
     }
-
-    .group-block { margin-top: 24px; }
 
     .check {
       display: grid;
@@ -320,12 +329,12 @@
 
   <div class="shell">
     <header class="card">
-      <p class="eyebrow">Gauges · Audralia Hydration Readiness</p>
-      <h1>Terrain Passed → Hydration Opens</h1>
+      <p class="eyebrow">Gauges · Audralia Hydration Runtime Gate</p>
+      <h1>Hydration Open → Runtime Pending</h1>
       <p class="lede">
-        This audit marks terrain as structurally sufficient to open hydration. Terrain may still
-        receive later visual strengthening, but it now provides enough elevation, carving, basins,
-        channels, glacier seats, and hydrology-readiness fields for the water-down layer to begin.
+        This audit separates three states: terrain passed enough, hydration authority is live,
+        and runtime hydration consumption is the remaining gate. It prevents Gauges from treating
+        “hydration exists” and “runtime consumes hydration” as the same condition.
       </p>
 
       <nav aria-label="Site rail">
@@ -341,7 +350,7 @@
       </nav>
 
       <nav aria-label="Audit controls">
-        <button id="runAudit" type="button">Run Hydration Readiness Audit</button>
+        <button id="runAudit" type="button">Run Hydration Runtime Audit</button>
         <a href="/showroom/globe/audralia/">Open Audralia</a>
       </nav>
     </header>
@@ -351,7 +360,7 @@
         <p class="eyebrow">Current expected read</p>
         <h2 id="expectedTitle">Audit not run yet.</h2>
         <p id="expectedText" class="lede">
-          Run the audit to measure terrain readiness and hydration authority.
+          Run the audit to measure hydration authority and runtime hydration consumption.
         </p>
 
         <div class="summary" aria-label="Audit totals">
@@ -382,9 +391,9 @@
 
       <section class="card">
         <p class="eyebrow">Live source audit</p>
-        <h2>Audralia hydration-readiness groups</h2>
+        <h2>Audralia hydration-runtime groups</h2>
         <div id="results"></div>
-        <div id="receipt" class="route-receipt">AUDRALIA_GAUGES_TERRAIN_PASSED_ENOUGH_HYDRATION_GATE_TNT_v1
+        <div id="receipt" class="route-receipt">AUDRALIA_GAUGES_HYDRATION_RUNTIME_PENDING_ALIGNMENT_TNT_v1
 MUTATION=false
 GRAPHIC_BOX=false
 IMAGE_GENERATION=false
@@ -397,7 +406,7 @@ VISUAL_PASS_CLAIMED=false</div>
     (function () {
       "use strict";
 
-      const CONTRACT = "AUDRALIA_GAUGES_TERRAIN_PASSED_ENOUGH_HYDRATION_GATE_TNT_v1";
+      const CONTRACT = "AUDRALIA_GAUGES_HYDRATION_RUNTIME_PENDING_ALIGNMENT_TNT_v1";
 
       const PATHS = Object.freeze({
         routeHtml: "/showroom/globe/audralia/",
@@ -411,18 +420,21 @@ VISUAL_PASS_CLAIMED=false</div>
 
       const EXPECTED = Object.freeze({
         routeContract: "AUDRALIA_ROUTE_TRUE_ORTHOGRAPHIC_GLOBE_RENDER_TNT_v2",
-        runtimeContract: "AUDRALIA_RUNTIME_CACHED_TOPOLOGY_TECTONICS_TERRAIN_CHAIN_TNT_v2",
-        terrainStrongContract: "AUDRALIA_G1_TERRAIN_STRONG_RELIEF_TOPOLOGY_TECTONICS_LOCK_TNT_v2",
-        terrainEnoughContract: "AUDRALIA_G1_TERRAIN_CONSUME_TOPOLOGY_TECTONICS_RELIEF_LOCK_TNT_v1",
-        hydrationContract: "AUDRALIA_G1_HYDRATION_CONSUME_TOPOLOGY_TECTONICS_TERRAIN_WATERDOWN_TNT_v1",
+        runtimePreHydrationContract: "AUDRALIA_RUNTIME_CACHED_TOPOLOGY_TECTONICS_TERRAIN_CHAIN_TNT_v2",
+        runtimeHydrationContract: "AUDRALIA_RUNTIME_CONSUME_HYDRATION_AFTER_TERRAIN_TNT_v1",
         topologyContractA: "AUDRALIA_G1_TOPOLOGY_SEA_LEVEL_EARTH_LAND_RATIO_BATHYMETRY_COAST_TNT_v1",
         topologyContractB: "AUDRALIA_G1_TOPOLOGY_LANDMASS_100_PERCENT_EXPANSION_SMALL_CONTINENTS_TNT_v1",
-        tectonicsContract: "AUDRALIA_G1_TECTONIC_PLATE_LAYER_EARTH_LAND_AREA_ANCIENT_MOUNTAIN_MEMORY_TNT_v1"
+        tectonicsContract: "AUDRALIA_G1_TECTONIC_PLATE_LAYER_EARTH_LAND_AREA_ANCIENT_MOUNTAIN_MEMORY_TNT_v1",
+        terrainStrongContract: "AUDRALIA_G1_TERRAIN_STRONG_RELIEF_TOPOLOGY_TECTONICS_LOCK_TNT_v2",
+        terrainEnoughContract: "AUDRALIA_G1_TERRAIN_CONSUME_TOPOLOGY_TECTONICS_RELIEF_LOCK_TNT_v1",
+        hydrationContract: "AUDRALIA_G1_HYDRATION_CONSUME_TOPOLOGY_TECTONICS_TERRAIN_WATERDOWN_TNT_v1"
       });
 
       const state = {
         sources: {},
-        groups: []
+        groups: [],
+        runtimeHydrationActive: false,
+        hydrationLive: false
       };
 
       function cacheUrl(path) {
@@ -491,13 +503,42 @@ VISUAL_PASS_CLAIMED=false</div>
         return pass(label + " reachable", source.path + " returned " + source.status + ".");
       }
 
+      function runtimeHydrationIsActive(runtime) {
+        return Boolean(
+          runtime &&
+          runtime.ok &&
+          (
+            has(runtime, EXPECTED.runtimeHydrationContract) ||
+            (
+              has(runtime, "./audralia.hydration.render.js") &&
+              has(runtime, "sampleHydration") &&
+              has(runtime, "buildHydrationField") &&
+              has(runtime, "getHydrationSampleFromField") &&
+              has(runtime, "getHydrationStatus") &&
+              has(runtime, "topology→tectonics→terrain→hydration")
+            )
+          )
+        );
+      }
+
+      function hydrationAuthorityIsLive(hydration) {
+        return Boolean(
+          hydration &&
+          hydration.ok &&
+          has(hydration, EXPECTED.hydrationContract) &&
+          has(hydration, "sampleHydration") &&
+          has(hydration, "buildHydrationField") &&
+          has(hydration, "getHydrationStatus")
+        );
+      }
+
       function auditRoute() {
         const html = state.sources.routeHtml;
         const js = state.sources.routeJs;
 
         return group(
           "Route and True Globe Baseline",
-          "Confirms the Audralia route remains a handoff shell and true orthographic route renderer.",
+          "Confirms the Audralia route remains a handoff shell and true orthographic renderer.",
           [
             sourceStatus(html, "Audralia route"),
             sourceStatus(js, "Route script"),
@@ -528,15 +569,18 @@ VISUAL_PASS_CLAIMED=false</div>
 
       function auditRuntime() {
         const runtime = state.sources.runtime;
+        const activeHydration = runtimeHydrationIsActive(runtime);
+
+        state.runtimeHydrationActive = activeHydration;
 
         return group(
-          "Runtime Chain Status",
-          "Confirms runtime has enough cached topology → tectonics → terrain chain support to serve hydration later.",
+          "Runtime Hydration Gate",
+          "Confirms runtime chain status without confusing hydration existence with hydration consumption.",
           [
             sourceStatus(runtime, "Runtime authority"),
-            has(runtime, EXPECTED.runtimeContract) || has(runtime, "AUDRALIA_RUNTIME_CACHED_TOPOLOGY_TECTONICS_TERRAIN_CHAIN_TNT_v2")
-              ? pass("Runtime cached chain contract current", "Cached topology→tectonics→terrain runtime contract is present.")
-              : held("Runtime cached chain contract current", "Cached runtime contract not found; older runtime may still be live."),
+            has(runtime, EXPECTED.runtimePreHydrationContract) || has(runtime, EXPECTED.runtimeHydrationContract)
+              ? pass("Runtime contract recognized", "Runtime contains a recognized Audralia runtime contract.")
+              : held("Runtime contract recognized", "Runtime contract marker not found."),
             has(runtime, "sampleAudraliaPlanetState")
               ? pass("Runtime sample API present", "sampleAudraliaPlanetState is present.")
               : fail("Runtime sample API present", "Runtime does not expose sampleAudraliaPlanetState."),
@@ -555,9 +599,12 @@ VISUAL_PASS_CLAIMED=false</div>
             has(runtime, "runtimeCacheActive") && has(runtime, "lowLagSampling")
               ? pass("Runtime cache active", "Runtime exposes cache and low-lag sampling markers.")
               : held("Runtime cache active", "Runtime cache markers not found."),
-            has(runtime, "hydration") || has(runtime, "hydration_later") || has(runtime, "HYDRATION_AUTHORITY_LATER")
-              ? held("Runtime hydration consumption pending", "Runtime still needs the next upgrade to consume hydration after terrain.")
-              : held("Runtime hydration consumption pending", "Hydration is not yet wired into runtime, which is expected at this stage.")
+            has(runtime, "HYDRATION_AUTHORITY_LATER") || has(runtime, "hydration_later") || has(runtime, "/assets/audralia/audralia.hydration.render.js")
+              ? pass("Runtime hydration target registered", "Runtime acknowledges hydration as a target or later layer.")
+              : held("Runtime hydration target registered", "Runtime does not yet acknowledge hydration as a target."),
+            activeHydration
+              ? pass("Runtime consumes hydration after terrain", "Runtime imports and samples hydration after terrain.")
+              : held("Runtime consumes hydration after terrain", "Hydration authority exists, but runtime has not yet been renewed to import/cache/sample hydration after terrain.")
           ]
         );
       }
@@ -568,7 +615,7 @@ VISUAL_PASS_CLAIMED=false</div>
 
         return group(
           "Topology and Tectonics Baseline",
-          "Confirms upstream structure remains valid while hydration opens.",
+          "Confirms upstream structure remains valid while hydration moves into runtime.",
           [
             sourceStatus(topology, "Topology authority"),
             sourceStatus(tectonics, "Tectonics authority"),
@@ -581,7 +628,7 @@ VISUAL_PASS_CLAIMED=false</div>
             has(topology, "blackSandPressure") && has(topology, "whiteSandPressure")
               ? pass("Mineral beach boundary active", "Topology contains black/white sand beach pressure fields.")
               : held("Mineral beach boundary active", "Mineral beach fields are not fully detected."),
-            has(topology, "ownsHydration: false") || has(topology, "ownsHydration") || lacks(topology, "ownsHydration: true")
+            lacks(topology, "ownsHydration: true")
               ? pass("Topology does not own hydration", "No topology hydration overclaim detected.")
               : fail("Topology does not own hydration", "Topology overclaims hydration."),
             has(tectonics, EXPECTED.tectonicsContract)
@@ -600,7 +647,7 @@ VISUAL_PASS_CLAIMED=false</div>
         );
       }
 
-      function auditTerrainPassedEnough() {
+      function auditTerrainGate() {
         const terrain = state.sources.terrain;
 
         const directStrong =
@@ -629,7 +676,7 @@ VISUAL_PASS_CLAIMED=false</div>
 
         return group(
           "Terrain Passed Enough for Hydration",
-          "Marks terrain as sufficient to open hydration while preserving the right to improve terrain visuals later.",
+          "Confirms terrain remains sufficient for hydration even if later terrain visual strengthening is still allowed.",
           [
             sourceStatus(terrain, "Terrain authority"),
             directStrong
@@ -647,13 +694,13 @@ VISUAL_PASS_CLAIMED=false</div>
             noLandExpansion
               ? pass("Terrain land-expansion blocked", "Terrain includes no-land-expansion / elevation-only restraints.")
               : held("Terrain land-expansion blocked", "Explicit no-land-expansion receipt not detected."),
-            has(terrain, "ownsHydration: false") || has(terrain, "activeHydrationOwnedHere: false") || lacks(terrain, "ownsHydration: true")
+            lacks(terrain, "ownsHydration: true") && lacks(terrain, "activeHydrationOwnedHere: true")
               ? pass("Terrain does not own active hydration", "Terrain prepares water placement but does not own water fill.")
               : fail("Terrain does not own active hydration", "Terrain appears to overclaim hydration."),
             lacks(terrain, "ownsFoliage: true") && lacks(terrain, "ownsTrees: true") && lacks(terrain, "ownsVegetation: true")
               ? pass("Terrain foliage remains closed", "No foliage/tree/vegetation ownership detected.")
               : fail("Terrain foliage remains closed", "Terrain overclaims foliage or vegetation."),
-            hydrologyReady && reliefReady
+            hydrologyReady && reliefReady && noLandExpansion
               ? pass("Terrain passed enough to open hydration", "Terrain is structurally sufficient for first water-down activation. Later terrain visual tuning remains allowed.")
               : fail("Terrain passed enough to open hydration", "Terrain is not yet structurally sufficient to open hydration.")
           ]
@@ -662,24 +709,27 @@ VISUAL_PASS_CLAIMED=false</div>
 
       function auditHydrationAuthority() {
         const hydration = state.sources.hydration;
+        const live = hydrationAuthorityIsLive(hydration);
+
+        state.hydrationLive = live;
 
         return group(
           "Hydration Authority",
-          "Confirms the first hydration file exists and owns water placement without overclaiming land, terrain, climate, or foliage.",
+          "Confirms hydration exists and owns water behavior without overclaiming topology, terrain, climate, or foliage.",
           [
             sourceStatus(hydration, "Hydration authority"),
             has(hydration, EXPECTED.hydrationContract)
               ? pass("Hydration contract current", EXPECTED.hydrationContract)
-              : held("Hydration contract current", "Hydration contract not found yet. Deploy hydration file before runtime hydration wiring."),
+              : fail("Hydration contract current", "Expected hydration contract not found."),
             has(hydration, "sampleHydration") && has(hydration, "buildHydrationField") && has(hydration, "getHydrationStatus")
               ? pass("Hydration exports present", "Required hydration exports are present.")
-              : held("Hydration exports present", "Hydration exports not fully detected."),
+              : fail("Hydration exports present", "Hydration exports not fully detected."),
             has(hydration, "sampleTopology") && has(hydration, "sampleTectonics") && has(hydration, "sampleTerrain")
               ? pass("Hydration consumes upstream chain", "Hydration consumes topology, tectonics, and terrain.")
-              : held("Hydration consumes upstream chain", "Hydration upstream consumption not fully detected."),
+              : fail("Hydration consumes upstream chain", "Hydration upstream consumption not fully detected."),
             has(hydration, "ownsHydration: true") && has(hydration, "ownsWaterPlacement: true") && has(hydration, "ownsFlowPermission: true")
               ? pass("Hydration owns water behavior", "Hydration owns water placement and flow permission.")
-              : held("Hydration owns water behavior", "Water ownership fields not fully detected."),
+              : fail("Hydration owns water behavior", "Water ownership fields not fully detected."),
             has(hydration, "isOceanWater") && has(hydration, "isRiver") && has(hydration, "isStream") && has(hydration, "isLake") && has(hydration, "isGlacier")
               ? pass("Surface water classes active", "Ocean, river, stream, lake, and glacier classes are present.")
               : held("Surface water classes active", "Surface water classes are not fully detected."),
@@ -703,28 +753,19 @@ VISUAL_PASS_CLAIMED=false</div>
       }
 
       function auditNextGate() {
-        const runtime = state.sources.runtime;
-        const hydration = state.sources.hydration;
-
-        const hydrationLive = hydration && hydration.ok && has(hydration, EXPECTED.hydrationContract);
-        const runtimeConsumesHydration =
-          has(runtime, "sampleHydration") ||
-          has(runtime, "audralia.hydration.render.js") ||
-          has(runtime, "HYDRATION_AUTHORITY");
-
         return group(
-          "Next Gate: Runtime Hydration Consumption",
-          "Confirms hydration can open while identifying the next file that must consume it.",
+          "Next Gate Declaration",
+          "Declares the exact next move without creating a false pass.",
           [
-            hydrationLive
-              ? pass("Hydration file deployed", "Hydration authority is reachable and current.")
-              : held("Hydration file deployed", "Hydration authority is not fully deployed yet."),
-            runtimeConsumesHydration
-              ? pass("Runtime consumes hydration", "Runtime appears to consume hydration after terrain.")
-              : held("Runtime consumes hydration", "Runtime still needs the next TNT to consume hydration after terrain."),
-            info("Next required runtime chain", "Expected next chain: topology → tectonics → terrain → hydration."),
-            info("Next runtime target", "/assets/audralia/audralia.runtime.js"),
-            info("Next route target after runtime", "Only after runtime consumes hydration should /showroom/globe/audralia/index.js visually display water.")
+            state.hydrationLive
+              ? pass("Hydration authority open", "Hydration file is reachable, current, and exports the hydration API.")
+              : fail("Hydration authority open", "Hydration file is not fully live."),
+            state.runtimeHydrationActive
+              ? pass("Runtime hydration consumption complete", "Runtime already imports and samples hydration after terrain.")
+              : info("Runtime hydration consumption remains next", "/assets/audralia/audralia.runtime.js must be renewed to consume hydration after terrain."),
+            info("Required next chain", "topology → tectonics → terrain → hydration"),
+            info("Next runtime contract", "AUDRALIA_RUNTIME_CONSUME_HYDRATION_AFTER_TERRAIN_TNT_v1"),
+            info("Route water rendering remains later", "Only after runtime consumes hydration should /showroom/globe/audralia/index.js visually display water.")
           ]
         );
       }
@@ -786,21 +827,21 @@ VISUAL_PASS_CLAIMED=false</div>
 
         results.replaceChildren();
 
-        for (const group of groups) {
+        for (const groupItem of groups) {
           const section = document.createElement("section");
           section.className = "group-block";
 
           const title = document.createElement("h3");
-          title.textContent = group.title;
+          title.textContent = groupItem.title;
 
           const purpose = document.createElement("p");
           purpose.className = "muted";
-          purpose.textContent = group.purpose;
+          purpose.textContent = groupItem.purpose;
 
           const list = document.createElement("div");
           list.className = "group";
 
-          for (const item of group.checks) {
+          for (const item of groupItem.checks) {
             const row = document.createElement("article");
             row.className = "check " + item.status;
 
@@ -844,20 +885,15 @@ VISUAL_PASS_CLAIMED=false</div>
         if (scored.failed > 0) {
           expectedTitle.textContent = "A blocking source mismatch remains.";
           expectedText.textContent =
-            "At least one required source contract or boundary is missing. Fix failed checks before wiring hydration into runtime.";
+            "At least one required source contract or boundary is missing. Fix failed checks before moving the runtime chain forward.";
+        } else if (state.runtimeHydrationActive) {
+          expectedTitle.textContent = "Hydration authority is open and runtime consumption is complete.";
+          expectedText.textContent =
+            "The runtime now consumes hydration after terrain. The next lawful move is route water rendering, without opening climate, ecology, or foliage.";
         } else {
-          const hydration = state.sources.hydration;
-          const hydrationLive = hydration && hydration.ok && has(hydration, EXPECTED.hydrationContract);
-
-          if (hydrationLive) {
-            expectedTitle.textContent = "Terrain passed enough. Hydration authority is open.";
-            expectedText.textContent =
-              "Terrain remains eligible for later visual strengthening, but it is now structurally sufficient for the hydration water-down layer. The next move is runtime hydration consumption.";
-          } else {
-            expectedTitle.textContent = "Terrain passed enough. Hydration file is the active next gate.";
-            expectedText.textContent =
-              "Terrain has enough hydrology-readiness structure to move forward. Deploy hydration, then wire runtime to consume hydration after terrain.";
-          }
+          expectedTitle.textContent = "Hydration authority is open. Runtime hydration consumption is the remaining gate.";
+          expectedText.textContent =
+            "Terrain passed enough, hydration is live, and the next file is /assets/audralia/audralia.runtime.js. This is a pending runtime-consumption gate, not a failure.";
         }
 
         const runId = "audit_" + Math.random().toString(36).slice(2, 10);
@@ -873,8 +909,11 @@ VISUAL_PASS_CLAIMED=false</div>
           " ROUTE=/showroom/globe/audralia/" +
           " TERRAIN_GATE=PASSED_ENOUGH_FOR_HYDRATION" +
           " HYDRATION_AUTHORITY=/assets/audralia/audralia.hydration.render.js" +
-          " NEXT_CHAIN=topology→tectonics→terrain→hydration" +
+          " HYDRATION_OPEN=" + String(state.hydrationLive) +
+          " RUNTIME_HYDRATION_CONSUMPTION=" + (state.runtimeHydrationActive ? "PASS" : "PENDING") +
           " NEXT_RUNTIME_TARGET=/assets/audralia/audralia.runtime.js" +
+          " NEXT_RUNTIME_CONTRACT=AUDRALIA_RUNTIME_CONSUME_HYDRATION_AFTER_TERRAIN_TNT_v1" +
+          " NEXT_CHAIN=topology→tectonics→terrain→hydration" +
           " MUTATION=false" +
           " GRAPHIC_BOX=false" +
           " IMAGE_GENERATION=false" +
@@ -882,7 +921,7 @@ VISUAL_PASS_CLAIMED=false</div>
       }
 
       async function runAudit() {
-        document.getElementById("expectedTitle").textContent = "Running hydration-readiness audit.";
+        document.getElementById("expectedTitle").textContent = "Running hydration-runtime audit.";
         document.getElementById("expectedText").textContent =
           "Fetching Audralia route, runtime, topology, tectonics, terrain, and hydration authorities.";
 
@@ -891,12 +930,14 @@ VISUAL_PASS_CLAIMED=false</div>
         );
 
         state.sources = Object.fromEntries(entries);
+        state.runtimeHydrationActive = false;
+        state.hydrationLive = false;
 
         state.groups = [
           auditRoute(),
           auditRuntime(),
           auditTopologyTectonics(),
-          auditTerrainPassedEnough(),
+          auditTerrainGate(),
           auditHydrationAuthority(),
           auditNextGate(),
           auditGlobalGate()

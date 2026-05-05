@@ -2,23 +2,31 @@
 // AUDRALIA_RUNTIME_ALLOW_TECTONICS_TOPOLOGY_TERRAIN_HYDRATION_SURFACE_TNT_v1
 //
 // Active renewal:
-// - AUDRALIA_G8_RUNTIME_RATIO_RESTRAINT_RESTORE_TNT_v1
+// - AUDRALIA_G8_RUNTIME_RETURN_TO_BLUE_WATER_HEX_BASELINE_TNT_v1
+//
+// Compatibility receipts retained:
+// - AUDRALIA_RUNTIME_IMPORT_SAFE_TOPOLOGY_ALIGNMENT_STABILIZER_TNT_v1
+// - AUDRALIA_TOPOLOGY_RUNTIME_EARTH_EQUIVALENT_LAND_RATIO_ALIGNMENT_TNT_v1
+// - AUDRALIA_RUNTIME_ROUTE_COMPAT_SURFACE_DIAGNOSTIC_RENEWAL_TNT_v2
 //
 // Role:
 // - Audralia runtime authority.
-// - Restores Earth-equivalent solid-surface accounting after G8 overreach.
-// - Preserves topology land ratio near Earth-equivalent target.
-// - Preserves hydration, liquid water, shelf water, visible land, ice/snowpack solid accounting,
-//   terrain relief fields, climate conduit, and route-compatible diagnostics.
-// - Allows the hex child to render surface detail without letting runtime convert the world into a land mask.
+// - Restores the blue-water / turquoise-shelf / restrained-land hex baseline.
+// - Preserves Earth-equivalent solid surface accounting.
+// - Keeps terrain fields active without allowing terrain to expand the land mask.
+// - Keeps hydration active without allowing hydration to erase topology land.
+// - Keeps climate as invariant conduit without rendering climate directly.
+// - Does not own route boot, route canvas, hex geometry, topology, terrain source, hydration source, or gauges.
 //
 // Hard locks:
+// - No Earth mutation.
 // - No route boot ownership.
-// - No hex geometry ownership.
+// - No hex renderer ownership.
 // - No land-ratio expansion beyond target band.
-// - No hydration erasure.
+// - No water erasure.
 // - No topology rewrite.
 // - No terrain source rewrite.
+// - No hydration rewrite.
 // - No climate rewrite.
 // - No ecology.
 // - No foliage.
@@ -32,7 +40,7 @@
 // - No visual pass claim.
 
 const RECEIPT = "AUDRALIA_RUNTIME_ALLOW_TECTONICS_TOPOLOGY_TERRAIN_HYDRATION_SURFACE_TNT_v1";
-const ACTIVE_RENEWAL = "AUDRALIA_G8_RUNTIME_RATIO_RESTRAINT_RESTORE_TNT_v1";
+const ACTIVE_RENEWAL = "AUDRALIA_G8_RUNTIME_RETURN_TO_BLUE_WATER_HEX_BASELINE_TNT_v1";
 
 const COMPATIBILITY_RECEIPTS = Object.freeze([
   "AUDRALIA_RUNTIME_IMPORT_SAFE_TOPOLOGY_ALIGNMENT_STABILIZER_TNT_v1",
@@ -47,6 +55,9 @@ const TARGET_SOLID_SURFACE_RATIO = 0.292;
 const TARGET_MIN = 0.27;
 const TARGET_MAX = 0.31;
 
+const DEFAULT_WIDTH = 384;
+const DEFAULT_HEIGHT = 192;
+
 const CONTRACT = Object.freeze({
   receipt: RECEIPT,
   activeRenewal: ACTIVE_RENEWAL,
@@ -54,15 +65,13 @@ const CONTRACT = Object.freeze({
   targetSolidSurfaceRatio: TARGET_SOLID_SURFACE_RATIO,
   targetSolidSurfaceRatioMin: TARGET_MIN,
   targetSolidSurfaceRatioMax: TARGET_MAX,
+  blueWaterHexBaselineRestored: true,
+  runtimeMustNotExpandLandMask: true,
   hydrationCannotEraseTopologyLand: true,
   oceansMayFillOnlyTopologyVoid: true,
   terrainCanDefineReliefOnly: true,
-  runtimeMustNotExpandLandMask: true,
   climateInvariant: true,
   climateConducesHydration: true,
-  ratioRestraintRestoreActive: true,
-  hexChildMayReadRuntime: true,
-  hexChildMayNotChangeRuntimeLaw: true,
   fallbackAllowed: false,
   graphicBox: false,
   imageGeneration: false,
@@ -120,7 +129,7 @@ function fbm(x, y, seed, octaves) {
   let normalizer = 0;
 
   for (let i = 0; i < octaves; i += 1) {
-    total += valueNoise(x * frequency, y * frequency, seed + i * 29.77) * amplitude;
+    total += valueNoise(x * frequency, y * frequency, seed + i * 31.77) * amplitude;
     normalizer += amplitude;
     amplitude *= 0.5;
     frequency *= 2;
@@ -177,9 +186,9 @@ function ellipseInfluence(u, v, cx, cy, rx, ry, rotation, seed) {
   const y = dx * sin + dy * cos;
 
   const d = Math.sqrt((x / rx) * (x / rx) + (y / ry) * (y / ry));
-  const wobble = (fbm(u * 24 + cx * 11, v * 24 + cy * 13, seed, 4) - 0.5) * 0.18;
+  const wobble = (fbm(u * 22 + cx * 17, v * 22 + cy * 19, seed, 4) - 0.5) * 0.20;
 
-  return smoothstep(1.06, 0.36, d + wobble);
+  return smoothstep(1.08, 0.36, d + wobble);
 }
 
 function surfacePotential(u, v) {
@@ -188,28 +197,28 @@ function surfacePotential(u, v) {
   const absLat = Math.abs(lat);
 
   const mainland =
-    ellipseInfluence(u, v, 0.42, 0.50, 0.34, 0.112, -0.03, 1101) * 0.92 +
-    ellipseInfluence(u, v, 0.68, 0.50, 0.20, 0.102, 0.08, 1117) * 0.48 +
-    ellipseInfluence(u, v, 0.16, 0.52, 0.16, 0.104, -0.10, 1133) * 0.34;
+    ellipseInfluence(u, v, 0.42, 0.50, 0.34, 0.114, -0.035, 1001) * 0.92 +
+    ellipseInfluence(u, v, 0.68, 0.50, 0.20, 0.104, 0.075, 1031) * 0.48 +
+    ellipseInfluence(u, v, 0.16, 0.52, 0.16, 0.104, -0.11, 1061) * 0.34;
 
   const secondary =
-    ellipseInfluence(u, v, 0.66, 0.30, 0.18, 0.070, 0.14, 1163) * 0.36 +
-    ellipseInfluence(u, v, 0.28, 0.26, 0.14, 0.060, -0.12, 1181) * 0.26 +
-    ellipseInfluence(u, v, 0.58, 0.70, 0.18, 0.074, -0.16, 1201) * 0.26 +
-    ellipseInfluence(u, v, 0.08, 0.72, 0.10, 0.062, 0.12, 1223) * 0.18 +
-    ellipseInfluence(u, v, 0.86, 0.73, 0.10, 0.060, -0.10, 1249) * 0.18;
+    ellipseInfluence(u, v, 0.66, 0.30, 0.18, 0.070, 0.14, 1091) * 0.36 +
+    ellipseInfluence(u, v, 0.28, 0.26, 0.14, 0.060, -0.12, 1121) * 0.26 +
+    ellipseInfluence(u, v, 0.58, 0.70, 0.18, 0.074, -0.16, 1151) * 0.26 +
+    ellipseInfluence(u, v, 0.08, 0.72, 0.10, 0.062, 0.12, 1181) * 0.18 +
+    ellipseInfluence(u, v, 0.86, 0.73, 0.10, 0.060, -0.10, 1211) * 0.18;
 
   const polarSolid =
     smoothstep(0.84, 0.985, absLat) *
-    (0.34 + fbm(lon * 5.6 + 1.1, lat * 5.6 - 2.4, 1301, 4) * 0.30);
+    (0.34 + fbm(lon * 5.6 + 1.1, lat * 5.6 - 2.4, 1241, 4) * 0.30);
 
   const islands =
-    smoothstep(0.835, 0.988, fbm(lon * 18.0 + 5.4, lat * 18.0 - 3.9, 1331, 4)) * 0.18 +
-    smoothstep(0.860, 0.994, fbm(lon * 39.0 - 2.8, lat * 39.0 + 7.2, 1361, 3)) * 0.12;
+    smoothstep(0.835, 0.988, fbm(lon * 18.0 + 5.4, lat * 18.0 - 3.9, 1271, 4)) * 0.18 +
+    smoothstep(0.860, 0.994, fbm(lon * 39.0 - 2.8, lat * 39.0 + 7.2, 1301, 3)) * 0.12;
 
   const tectonicNoise =
-    (fbm(lon * 7.2 + 4.1, lat * 7.2 - 1.3, 1409, 5) - 0.5) * 0.16 +
-    (fbm(lon * 21.0 - 7.2, lat * 21.0 + 4.9, 1427, 4) - 0.5) * 0.08;
+    (fbm(lon * 7.2 + 4.1, lat * 7.2 - 1.3, 1331, 5) - 0.5) * 0.16 +
+    (fbm(lon * 21.0 - 7.2, lat * 21.0 + 4.9, 1361, 4) - 0.5) * 0.08;
 
   const latitudeRestraint = smoothstep(0.72, 0.98, absLat) * 0.07;
 
@@ -221,25 +230,24 @@ function computeRankedMask(width, height, targetRatio) {
   const target = clamp(Math.round(total * targetRatio), 1, total - 1);
   const ranked = new Array(total);
 
-  let i = 0;
+  let cursor = 0;
 
   for (let y = 0; y < height; y += 1) {
     const v = height <= 1 ? 0.5 : y / (height - 1);
 
     for (let x = 0; x < width; x += 1) {
       const u = width <= 1 ? 0.5 : x / (width - 1);
-      const tieBreaker = hash2(x, y, 9001) * 0.000001;
 
-      ranked[i] = {
-        index: i,
+      ranked[cursor] = {
+        index: cursor,
         x,
         y,
         u,
         v,
-        score: surfacePotential(u, v) + tieBreaker
+        score: surfacePotential(u, v) + hash2(x, y, 9301) * 0.000001
       };
 
-      i += 1;
+      cursor += 1;
     }
   }
 
@@ -249,8 +257,8 @@ function computeRankedMask(width, height, targetRatio) {
 
   const mask = new Uint8Array(total);
 
-  for (let n = 0; n < target; n += 1) {
-    mask[ranked[n].index] = 1;
+  for (let i = 0; i < target; i += 1) {
+    mask[ranked[i].index] = 1;
   }
 
   return Object.freeze({
@@ -724,6 +732,7 @@ function createSample(u, v, solidSurfaceLand, threshold) {
     oceansMayFillOnlyTopologyVoid: true,
     terrainExpressionActive: true,
     g8TerrainDefinitionActive: true,
+    blueWaterHexBaselineRestored: true,
     ratioRestraintRestoreActive: true,
     hexRuntimeAlignmentSafe: true,
 
@@ -755,8 +764,8 @@ function createSample(u, v, solidSurfaceLand, threshold) {
 
 function buildRuntimeField(options) {
   const config = options || {};
-  const width = clamp(Math.floor(Number(config.fieldWidth) || Number(config.width) || 384), 64, 1024);
-  const height = clamp(Math.floor(Number(config.fieldHeight) || Number(config.height) || 192), 32, 512);
+  const width = clamp(Math.floor(Number(config.fieldWidth) || Number(config.width) || DEFAULT_WIDTH), 64, 1024);
+  const height = clamp(Math.floor(Number(config.fieldHeight) || Number(config.height) || DEFAULT_HEIGHT), 32, 512);
   const targetRatio = clamp(Number(config.targetLandRatio) || TARGET_SOLID_SURFACE_RATIO, TARGET_MIN, TARGET_MAX);
 
   const ranked = computeRankedMask(width, height, targetRatio);
@@ -954,6 +963,7 @@ function buildRuntimeField(options) {
   stats.perPixelChainRecalculation = false;
   stats.terrainTransmissionActive = true;
   stats.g8TerrainDefinitionActive = true;
+  stats.blueWaterHexBaselineRestored = true;
   stats.ratioRestraintRestoreActive = true;
   stats.hexRuntimeAlignmentSafe = true;
 
@@ -1042,8 +1052,8 @@ let defaultRuntime = null;
 function getDefaultRuntime() {
   if (!defaultRuntime) {
     defaultRuntime = createAudraliaRuntime({
-      fieldWidth: 384,
-      fieldHeight: 192,
+      fieldWidth: DEFAULT_WIDTH,
+      fieldHeight: DEFAULT_HEIGHT,
       targetLandRatio: TARGET_SOLID_SURFACE_RATIO
     });
   }
@@ -1089,6 +1099,7 @@ function getStatus() {
     targetSolidSurfaceRatioMin: TARGET_MIN,
     targetSolidSurfaceRatioMax: TARGET_MAX,
 
+    blueWaterHexBaselineRestored: true,
     ratioRestraintRestoreActive: true,
     terrainTransmissionActive: true,
     g8TerrainDefinitionActive: true,

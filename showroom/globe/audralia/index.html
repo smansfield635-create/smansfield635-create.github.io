@@ -5,8 +5,8 @@
   data-estate="rich-manor-and-estate"
   data-route="/showroom/globe/audralia/"
   data-body="audralia"
-  data-route-role="audralia-independent-route-shell"
-  data-contract="AUDRALIA_EXISTING_ROUTE_COMPOSITOR_HTML_RENEWAL_TNT_v1"
+  data-route-role="audralia-independent-route-handoff-shell"
+  data-contract="AUDRALIA_ROUTE_RUNTIME_TOPOLOGY_FIRST_HANDOFF_HTML_TNT_v1"
   data-public-receipts="hidden"
   data-raw-receipts="suppressed"
   data-earth-adoption="blocked"
@@ -22,10 +22,10 @@
   <title>Audralia · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Audralia is the independent constructed-world inspection route. The HTML owns the route shell and mount; the route script owns compositor behavior, axis rotation, and terrain-child consumption."
+    content="Audralia is an independent constructed-world inspection route. This HTML is a handoff shell only: it owns route identity, navigation, mount, receipt suppression, and script loading."
   >
 
-  <link rel="stylesheet" href="/showroom/showroom.css?v=audralia-existing-route-compositor-html-renewal-v1">
+  <link rel="stylesheet" href="/showroom/showroom.css?v=audralia-runtime-topology-first-handoff-html-v1">
 
   <style>
     :root {
@@ -255,12 +255,14 @@
 </head>
 
 <body
-  class="audralia-route audralia-existing-route-compositor-shell"
-  data-active-route-role="audralia-independent-existing-route-compositor"
+  class="audralia-route audralia-runtime-topology-first-handoff-shell"
+  data-active-route-role="audralia-independent-runtime-handoff"
   data-body="audralia"
   data-route="/showroom/globe/audralia/"
-  data-parent-authority="/assets/audralia/audralia.planet.render.js"
+  data-runtime-authority="/assets/audralia/audralia.runtime.js"
+  data-topology-authority="/assets/audralia/audralia.topology.render.js"
   data-terrain-authority="/assets/audralia/audralia.terrain.render.js"
+  data-parent-authority="/assets/audralia/audralia.planet.render.js"
   data-route-script="/showroom/globe/audralia/index.js"
   data-new-file-required="false"
   data-earth-adoption="blocked"
@@ -276,8 +278,10 @@
     data-route="/showroom/globe/audralia/"
     data-parent-route="/showroom/globe/"
     data-sibling-earth-route="/showroom/globe/earth/"
-    data-parent-authority="/assets/audralia/audralia.planet.render.js"
+    data-runtime-authority="/assets/audralia/audralia.runtime.js"
+    data-topology-authority="/assets/audralia/audralia.topology.render.js"
     data-terrain-authority="/assets/audralia/audralia.terrain.render.js"
+    data-parent-authority="/assets/audralia/audralia.planet.render.js"
     data-existing-route-script="/showroom/globe/audralia/index.js"
     data-new-file-required="false"
     data-earth-authority-adoption="blocked"
@@ -286,12 +290,12 @@
     data-raw-receipts="suppressed"
   >
     <header class="audralia-header">
-      <p class="eyebrow">Audralia · Independent Existing Route Compositor</p>
+      <p class="eyebrow">Audralia · Runtime Handoff Shell</p>
       <h1>Audralia</h1>
       <p class="lede">
-        Audralia uses the existing route script as the compositor bridge. The HTML owns the
-        route shell and mount, the parent file owns the land/water baseline, and the terrain
-        child owns terrain pressure, islands, elevation, and Nine Summits terrain data.
+        This page is the handoff shell only. It owns route identity, navigation, mount placement,
+        receipt suppression, and script loading. The route script consumes the Audralia runtime;
+        the runtime orders topology first, then terrain, then parent/body support.
       </p>
 
       <nav class="route-rail" aria-label="Audralia route rail">
@@ -311,15 +315,18 @@
       data-public-receipts="hidden"
       data-raw-receipts="suppressed"
     >
-      <section class="audralia-stage" aria-label="Audralia existing-route compositor stage">
+      <section class="audralia-stage" aria-label="Audralia runtime handoff stage">
         <div
           id="audraliaRenderMount"
           data-audralia-render-mount="true"
           data-render-mount="true"
           data-body="audralia"
-          data-parent-authority="/assets/audralia/audralia.planet.render.js"
+          data-runtime-authority="/assets/audralia/audralia.runtime.js"
+          data-topology-authority="/assets/audralia/audralia.topology.render.js"
           data-terrain-authority="/assets/audralia/audralia.terrain.render.js"
+          data-parent-authority="/assets/audralia/audralia.planet.render.js"
           data-route-script="/showroom/globe/audralia/index.js"
+          data-route-handoff-only="true"
           data-new-file-required="false"
           data-earth-mount="false"
           data-earth-adoption="blocked"
@@ -330,49 +337,54 @@
         </div>
       </section>
 
-      <section class="audralia-panel" aria-label="Audralia compositor status">
+      <section class="audralia-panel" aria-label="Audralia handoff status">
         <p class="eyebrow">Route status</p>
-        <h2>Existing file. Correct responsibility. No new compositor file.</h2>
+        <h2>Handoff shell only. Runtime controls the chain.</h2>
         <p>
-          This page restores the Audralia HTML shell after accidental overwrite. It loads the
-          existing route script and keeps the mount ready for parent-baseline plus terrain-child
-          consumption.
+          The HTML does not decide land, void, beaches, coastline, terrain, elevation,
+          rotation, hydration, foliage, or visual composition. It hands the mount to the route
+          script and declares the current authority chain.
         </p>
 
         <div class="status-grid">
           <article class="status-card">
-            <strong>HTML route</strong>
-            <span>Owns page shell, navigation, mount, and script loading.</span>
+            <strong>HTML shell</strong>
+            <span>Owns route identity, navigation, mount, script loading, and hidden receipts.</span>
           </article>
 
           <article class="status-card">
-            <strong>Route script</strong>
-            <span>Owns compositor behavior, axis rotation, and visible route control.</span>
+            <strong>Runtime</strong>
+            <span>Owns orchestration: topology first, terrain second, parent/body support third.</span>
           </article>
 
           <article class="status-card">
-            <strong>Asset authorities</strong>
-            <span>Parent owns baseline. Terrain child owns terrain pressure.</span>
+            <strong>Asset chain</strong>
+            <span>Topology owns the blueprint. Terrain owns elevation beyond topology.</span>
           </article>
         </div>
       </section>
 
       <section class="raw-receipts" hidden aria-hidden="true">
-        AUDRALIA_EXISTING_ROUTE_COMPOSITOR_HTML_RENEWAL_TNT_v1
+        AUDRALIA_ROUTE_RUNTIME_TOPOLOGY_FIRST_HANDOFF_HTML_TNT_v1
         ROUTE=/showroom/globe/audralia/
         MOUNT=#audraliaRenderMount
         SCRIPT=/showroom/globe/audralia/index.js
-        PARENT=/assets/audralia/audralia.planet.render.js
+        RUNTIME=/assets/audralia/audralia.runtime.js
+        TOPOLOGY=/assets/audralia/audralia.topology.render.js
         TERRAIN=/assets/audralia/audralia.terrain.render.js
+        PARENT=/assets/audralia/audralia.planet.render.js
+        HTML_ROLE=handoff_only
         NEW_FILE_REQUIRED=false
         EARTH_ADOPTION=blocked
+        HYDRATION=held
+        FOLIAGE=closed
         VISUAL_PASS=held
       </section>
     </main>
   </div>
 
   <script
-    src="/showroom/globe/audralia/index.js?v=AUDRALIA_EXISTING_ROUTE_COMPOSITOR_REWIRE_TNT_v1"
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_ROUTE_RUNTIME_TOPOLOGY_FIRST_CONSUMER_TNT_v1"
     defer
   ></script>
 </body>

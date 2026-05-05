@@ -1,24 +1,24 @@
 // /assets/audralia/audralia.terrain.render.js
-// AUDRALIA_G1_TERRAIN_CONSUME_TOPOLOGY_TECTONICS_RELIEF_LOCK_TNT_v1
+// AUDRALIA_G1_TERRAIN_STRONG_RELIEF_TOPOLOGY_TECTONICS_LOCK_TNT_v2
 //
 // Role:
 // - Final terrain authority before hydration.
 // - Consumes topology first.
 // - Consumes tectonics second.
-// - Adds above-sea elevation, relief, mountains, canyons, valleys, cliffs,
-//   basins, plateaus, riverbeds, stream cuts, lake basins, glacier seats,
-//   floodplain readiness, and delta readiness.
+// - Expresses stronger above-sea relief without changing land footprint.
+// - Makes mountains, ridges, cliffs, canyons, valleys, basins, glacier seats,
+//   riverbeds, stream cuts, lake basins, floodplains, and delta receivers more readable.
 //
 // Hard locks:
 // - Topology owns land/void footprint.
-// - Topology owns sea level, beaches as boundary, ocean depth, shelves, and bathymetry.
+// - Topology owns sea level, beaches as land/void boundary, ocean depth, shelves, and bathymetry.
 // - Tectonics owns plates, mineral stress, ancient mountain memory, and pressure handoff.
-// - Terrain may add elevation and relief only where topology permits land.
+// - Terrain owns elevation and relief only.
 // - Terrain must not expand land.
 // - Terrain must not create islands.
 // - Terrain must not fill water.
 // - Terrain must not own hydration.
-// - Terrain must not own foliage, trees, vegetation, climate, ecology, fauna, route, runtime, or final visual pass.
+// - Terrain must not own foliage, trees, vegetation, climate, ecology, fauna, route, runtime, or visual pass.
 
 import {
   sampleTopology,
@@ -30,16 +30,17 @@ import {
   getTectonicsStatus
 } from "./audralia.tectonics.render.js?v=AUDRALIA_G1_TECTONIC_PLATE_LAYER_EARTH_LAND_AREA_ANCIENT_MOUNTAIN_MEMORY_TNT_v1";
 
-const RECEIPT = "AUDRALIA_G1_TERRAIN_CONSUME_TOPOLOGY_TECTONICS_RELIEF_LOCK_TNT_v1";
+const RECEIPT = "AUDRALIA_G1_TERRAIN_STRONG_RELIEF_TOPOLOGY_TECTONICS_LOCK_TNT_v2";
 
 const PREVIOUS_RECEIPTS = Object.freeze([
+  "AUDRALIA_G1_TERRAIN_CONSUME_TOPOLOGY_TECTONICS_RELIEF_LOCK_TNT_v1",
   "AUDRALIA_G1_TERRAIN_HYDROLOGY_MAP_CHILD_TNT_v1",
   "AUDRALIA_G1_FULL_PLANET_TERRAIN_PURIFICATION_MAP_TNT_v1",
   "AUDRALIA_G1_TERRAIN_PRESSURE_ISLAND_ELEVATION_CHILD_TNT_v2"
 ]);
 
 const PLANETARY_OBJECT = "Audralia";
-const GENERATION = "G1_TERRAIN_FINAL_RELIEF_BEFORE_HYDRATION";
+const GENERATION = "G1_TERRAIN_STRONG_RELIEF_BEFORE_HYDRATION";
 const FILE = "/assets/audralia/audralia.terrain.render.js";
 
 const TOPOLOGY_AUTHORITY = "/assets/audralia/audralia.topology.render.js";
@@ -47,11 +48,15 @@ const TECTONICS_AUTHORITY = "/assets/audralia/audralia.tectonics.render.js";
 const HYDRATION_AUTHORITY_LATER = "/assets/audralia/audralia.hydration.render.js";
 
 const TERRAIN_LAW = Object.freeze({
-  role: "above-sea-elevation-and-relief-authority",
+  role: "strong-above-sea-elevation-and-relief-authority",
   finalTerrainBeforeHydration: true,
 
   consumesTopology: true,
   consumesTectonics: true,
+  topologyDependencyConfirmed: true,
+  tectonicsDependencyConfirmed: true,
+
+  topologyLandFootprint: "authoritative",
   terrainRespectsTopologyLandArea: true,
   terrainMustNotExpandLandArea: true,
   terrainMayUseForElevationReliefOnly: true,
@@ -101,15 +106,15 @@ const TERRAIN_LAW = Object.freeze({
 });
 
 const TERRAIN_REGIONS = Object.freeze([
-  Object.freeze({ id: 1, key: "character", name: "Character", baseElevation: 0.18, reliefBias: 0.30, hydrologyBias: 0.44 }),
-  Object.freeze({ id: 2, key: "structure", name: "Structure", baseElevation: 0.27, reliefBias: 0.38, hydrologyBias: 0.38 }),
-  Object.freeze({ id: 3, key: "balance", name: "Balance", baseElevation: 0.34, reliefBias: 0.34, hydrologyBias: 0.58 }),
-  Object.freeze({ id: 4, key: "stability", name: "Stability", baseElevation: 0.43, reliefBias: 0.44, hydrologyBias: 0.42 }),
-  Object.freeze({ id: 5, key: "peace", name: "Peace", baseElevation: 0.50, reliefBias: 0.32, hydrologyBias: 0.62 }),
-  Object.freeze({ id: 6, key: "joy", name: "Joy", baseElevation: 0.58, reliefBias: 0.46, hydrologyBias: 0.56 }),
-  Object.freeze({ id: 7, key: "dignity", name: "Dignity", baseElevation: 0.68, reliefBias: 0.70, hydrologyBias: 0.34 }),
-  Object.freeze({ id: 8, key: "free_will", name: "Free Will", baseElevation: 0.76, reliefBias: 0.82, hydrologyBias: 0.30 }),
-  Object.freeze({ id: 9, key: "love", name: "Love", baseElevation: 0.86, reliefBias: 0.92, hydrologyBias: 0.48 })
+  Object.freeze({ id: 1, key: "character", name: "Character", baseElevation: 0.20, reliefBias: 0.36, hydrologyBias: 0.48 }),
+  Object.freeze({ id: 2, key: "structure", name: "Structure", baseElevation: 0.30, reliefBias: 0.48, hydrologyBias: 0.42 }),
+  Object.freeze({ id: 3, key: "balance", name: "Balance", baseElevation: 0.38, reliefBias: 0.44, hydrologyBias: 0.66 }),
+  Object.freeze({ id: 4, key: "stability", name: "Stability", baseElevation: 0.48, reliefBias: 0.56, hydrologyBias: 0.46 }),
+  Object.freeze({ id: 5, key: "peace", name: "Peace", baseElevation: 0.56, reliefBias: 0.42, hydrologyBias: 0.74 }),
+  Object.freeze({ id: 6, key: "joy", name: "Joy", baseElevation: 0.64, reliefBias: 0.58, hydrologyBias: 0.64 }),
+  Object.freeze({ id: 7, key: "dignity", name: "Dignity", baseElevation: 0.74, reliefBias: 0.82, hydrologyBias: 0.42 }),
+  Object.freeze({ id: 8, key: "free_will", name: "Free Will", baseElevation: 0.84, reliefBias: 0.94, hydrologyBias: 0.36 }),
+  Object.freeze({ id: 9, key: "love", name: "Love", baseElevation: 0.92, reliefBias: 1.00, hydrologyBias: 0.54 })
 ]);
 
 const RELIEF_ZONES = Object.freeze([
@@ -131,15 +136,15 @@ const RELIEF_ZONES = Object.freeze([
 ]);
 
 const WATERSHED_CORRIDORS = Object.freeze([
-  Object.freeze({ id: "w01_origin_lowland_run", fromRegion: 1, toRegion: 3, gradient: 0.34, lakeBias: 0.42, riverBias: 0.52 }),
-  Object.freeze({ id: "w02_structure_plateau_cut", fromRegion: 2, toRegion: 4, gradient: 0.40, lakeBias: 0.26, riverBias: 0.46 }),
-  Object.freeze({ id: "w03_balance_basin_receiver", fromRegion: 3, toRegion: 5, gradient: 0.24, lakeBias: 0.70, riverBias: 0.40 }),
-  Object.freeze({ id: "w04_stability_upland_channel", fromRegion: 4, toRegion: 3, gradient: 0.46, lakeBias: 0.22, riverBias: 0.58 }),
-  Object.freeze({ id: "w05_peace_protected_lake_basin", fromRegion: 5, toRegion: 1, gradient: 0.22, lakeBias: 0.82, riverBias: 0.38 }),
-  Object.freeze({ id: "w06_joy_island_streams", fromRegion: 6, toRegion: 3, gradient: 0.50, lakeBias: 0.24, riverBias: 0.64 }),
-  Object.freeze({ id: "w07_dignity_mineral_canyon", fromRegion: 7, toRegion: 4, gradient: 0.68, lakeBias: 0.14, riverBias: 0.70 }),
-  Object.freeze({ id: "w08_free_will_frontier_gorge", fromRegion: 8, toRegion: 2, gradient: 0.78, lakeBias: 0.10, riverBias: 0.76 }),
-  Object.freeze({ id: "w09_love_summit_source", fromRegion: 9, toRegion: 5, gradient: 0.86, lakeBias: 0.30, riverBias: 0.84 })
+  Object.freeze({ id: "w01_origin_lowland_run", fromRegion: 1, toRegion: 3, gradient: 0.38, lakeBias: 0.46, riverBias: 0.58 }),
+  Object.freeze({ id: "w02_structure_plateau_cut", fromRegion: 2, toRegion: 4, gradient: 0.48, lakeBias: 0.28, riverBias: 0.56 }),
+  Object.freeze({ id: "w03_balance_basin_receiver", fromRegion: 3, toRegion: 5, gradient: 0.30, lakeBias: 0.76, riverBias: 0.48 }),
+  Object.freeze({ id: "w04_stability_upland_channel", fromRegion: 4, toRegion: 3, gradient: 0.56, lakeBias: 0.24, riverBias: 0.68 }),
+  Object.freeze({ id: "w05_peace_protected_lake_basin", fromRegion: 5, toRegion: 1, gradient: 0.26, lakeBias: 0.88, riverBias: 0.44 }),
+  Object.freeze({ id: "w06_joy_island_streams", fromRegion: 6, toRegion: 3, gradient: 0.58, lakeBias: 0.28, riverBias: 0.72 }),
+  Object.freeze({ id: "w07_dignity_mineral_canyon", fromRegion: 7, toRegion: 4, gradient: 0.76, lakeBias: 0.16, riverBias: 0.82 }),
+  Object.freeze({ id: "w08_free_will_frontier_gorge", fromRegion: 8, toRegion: 2, gradient: 0.88, lakeBias: 0.12, riverBias: 0.88 }),
+  Object.freeze({ id: "w09_love_summit_source", fromRegion: 9, toRegion: 5, gradient: 0.94, lakeBias: 0.34, riverBias: 0.92 })
 ]);
 
 function clamp(value, min, max) {
@@ -212,12 +217,13 @@ function normalizeUV(uInput, vInput) {
 
 function getInputContext(context = {}) {
   return Object.freeze({
-    coherenceIndex: clamp(Number.isFinite(Number(context.coherenceIndex)) ? Number(context.coherenceIndex) : 0.94, 0, 1),
-    collaborativeExpression: clamp(Number.isFinite(Number(context.collaborativeExpression)) ? Number(context.collaborativeExpression) : 0.90, 0, 1),
-    reliefDemand: clamp(Number.isFinite(Number(context.reliefDemand)) ? Number(context.reliefDemand) : 0.92, 0, 1),
-    canyonDemand: clamp(Number.isFinite(Number(context.canyonDemand)) ? Number(context.canyonDemand) : 0.84, 0, 1),
-    hydrologyReadinessDemand: clamp(Number.isFinite(Number(context.hydrologyReadinessDemand)) ? Number(context.hydrologyReadinessDemand) : 0.82, 0, 1),
-    glacierDemand: clamp(Number.isFinite(Number(context.glacierDemand)) ? Number(context.glacierDemand) : 0.72, 0, 1),
+    coherenceIndex: clamp(Number.isFinite(Number(context.coherenceIndex)) ? Number(context.coherenceIndex) : 0.96, 0, 1),
+    collaborativeExpression: clamp(Number.isFinite(Number(context.collaborativeExpression)) ? Number(context.collaborativeExpression) : 0.92, 0, 1),
+    reliefDemand: clamp(Number.isFinite(Number(context.reliefDemand)) ? Number(context.reliefDemand) : 1.0, 0, 1),
+    canyonDemand: clamp(Number.isFinite(Number(context.canyonDemand)) ? Number(context.canyonDemand) : 0.94, 0, 1),
+    cliffDemand: clamp(Number.isFinite(Number(context.cliffDemand)) ? Number(context.cliffDemand) : 0.90, 0, 1),
+    hydrologyReadinessDemand: clamp(Number.isFinite(Number(context.hydrologyReadinessDemand)) ? Number(context.hydrologyReadinessDemand) : 0.90, 0, 1),
+    glacierDemand: clamp(Number.isFinite(Number(context.glacierDemand)) ? Number(context.glacierDemand) : 0.78, 0, 1),
     terrainMayUseForElevationReliefOnly: true,
     terrainMustNotExpandLandArea: true,
     hydrationEnabled: false,
@@ -318,7 +324,7 @@ function isTopologyIce(topology) {
 function regionFromTopology(topology, tectonics, elevationSeed) {
   const topologyRegionId = Number(topology.regionId || topology.terrainRegionId || topology.landBodyId || 0);
   const tectonicLift = clamp(Number(tectonics.terrainPressureHandoff) || Number(tectonics.mountainChainPermission) || 0, 0, 1);
-  const elevationBased = Math.max(1, Math.min(9, Math.round(clamp(elevationSeed + tectonicLift * 0.20, 0, 1) * 8 + 1)));
+  const elevationBased = Math.max(1, Math.min(9, Math.round(clamp(elevationSeed + tectonicLift * 0.24, 0, 1) * 8 + 1)));
 
   const id = topologyRegionId >= 1 && topologyRegionId <= 9 ? topologyRegionId : elevationBased;
   return TERRAIN_REGIONS[id - 1] || TERRAIN_REGIONS[0];
@@ -330,8 +336,8 @@ function watershedForRegion(region, lon, lat) {
 
   for (const corridor of WATERSHED_CORRIDORS) {
     const involved = corridor.fromRegion === region.id || corridor.toRegion === region.id ? 1 : 0;
-    const texture = fbm(lon * 2.4 + corridor.fromRegion, lat * 2.4 - corridor.toRegion, 1600 + corridor.fromRegion * 11 + corridor.toRegion, 3);
-    const score = involved * 2 + corridor.gradient * 0.8 + corridor.riverBias * 0.5 + texture * 0.4;
+    const texture = fbm(lon * 2.8 + corridor.fromRegion, lat * 2.8 - corridor.toRegion, 1600 + corridor.fromRegion * 11 + corridor.toRegion, 3);
+    const score = involved * 2.2 + corridor.gradient * 0.95 + corridor.riverBias * 0.62 + texture * 0.44;
 
     if (score > bestScore) {
       bestScore = score;
@@ -350,7 +356,6 @@ function reliefSignals(point, topology, tectonics, context) {
   const cliffTopology = clamp(Number(topology.cliffBaseCut) || Number(topology.coastalCliffPressure) || 0, 0, 1);
   const seaErosion = clamp(Number(topology.seaLevelErosionPressure) || 0, 0, 1);
   const terrainRise = clamp(Number(topology.terrainRisePermission) || Number(topology.topologyTerrainRisePermission) || 0, 0, 1);
-  const terrainBlock = clamp(Number(topology.terrainBlockPermission) || 0, 0, 1);
   const bathymetry = clamp(Number(topology.oceanDepthIndex) || Number(topology.bathymetryBlueprintIndex) || 0, 0, 1);
 
   const crustStress = clamp(Number(tectonics.crustalStressIndex) || 0, 0, 1);
@@ -366,12 +371,12 @@ function reliefSignals(point, topology, tectonics, context) {
   const opal = clamp(Number(tectonics.opalSeamIndex) || 0, 0, 1);
   const granite = clamp(Number(tectonics.graniteCratonIndex) || 0, 0, 1);
   const slate = clamp(Number(tectonics.slateFoldBeltIndex) || 0, 0, 1);
-  const mineralHardness = clamp(Number(tectonics.exposedMineralHardnessIndex) || diamond * 0.32 + granite * 0.30 + slate * 0.24 + opal * 0.14, 0, 1);
+  const mineralHardness = clamp(Number(tectonics.exposedMineralHardnessIndex) || diamond * 0.34 + granite * 0.32 + slate * 0.24 + opal * 0.10, 0, 1);
 
-  const broadNoise = fbm(point.lon * 4.0 + 3.1, point.lat * 4.0 - 2.2, 2100, 5);
-  const ridgeNoise = fbm(point.lon * 9.5 - 4.4, point.lat * 9.5 + 1.8, 2200, 5);
-  const fineNoise = fbm(point.lon * 25.0 + 0.8, point.lat * 25.0 - 1.6, 2300, 4);
-  const cutNoise = fbm(point.lon * 15.0 - 5.3, point.lat * 15.0 + 4.7, 2400, 4);
+  const broadNoise = fbm(point.lon * 5.0 + 3.1, point.lat * 5.0 - 2.2, 2100, 5);
+  const ridgeNoise = fbm(point.lon * 13.0 - 4.4, point.lat * 13.0 + 1.8, 2200, 5);
+  const fineNoise = fbm(point.lon * 34.0 + 0.8, point.lat * 34.0 - 1.6, 2300, 4);
+  const cutNoise = fbm(point.lon * 22.0 - 5.3, point.lat * 22.0 + 4.7, 2400, 4);
 
   if (!land && !ice) {
     return Object.freeze({
@@ -409,7 +414,7 @@ function reliefSignals(point, topology, tectonics, context) {
   }
 
   if (ice) {
-    const polarTexture = clamp(0.62 + broadNoise * 0.24 + fineNoise * 0.14, 0, 1);
+    const polarTexture = clamp(0.68 + broadNoise * 0.22 + fineNoise * 0.18, 0, 1);
     return Object.freeze({
       land: false,
       ice: true,
@@ -437,7 +442,7 @@ function reliefSignals(point, topology, tectonics, context) {
       lakeBasinPressure: 0,
       riverbedPressure: 0,
       streamPressure: 0,
-      hydrologyReadinessIndex: clamp(polarTexture * 0.32, 0, 1),
+      hydrologyReadinessIndex: clamp(polarTexture * 0.40, 0, 1),
       terrainNoise: broadNoise,
       fineTerrainNoise: fineNoise,
       reliefZone: "south_polar_ice_seat"
@@ -445,133 +450,134 @@ function reliefSignals(point, topology, tectonics, context) {
   }
 
   const baseSeed = clamp(
-    terrainRise * 0.30 +
-      terrainHandoff * 0.24 +
-      uplift * 0.16 +
-      mountainMemory * 0.12 +
-      broadNoise * 0.10 +
-      (1 - coast) * 0.08,
+    terrainRise * 0.26 +
+      terrainHandoff * 0.28 +
+      uplift * 0.18 +
+      mountainMemory * 0.16 +
+      broadNoise * 0.08 +
+      (1 - coast) * 0.04,
     0,
     1
   );
 
   const region = regionFromTopology(topology, tectonics, baseSeed);
-  const regionLift = region.baseElevation * 0.28 + region.reliefBias * 0.14;
+  const regionLift = region.baseElevation * 0.30 + region.reliefBias * 0.18;
 
   const mountainPressure = clamp(
-    mountainTectonics * 0.32 +
-      mountainMemory * 0.22 +
-      uplift * 0.16 +
-      crustStress * 0.10 +
-      ridgeNoise * 0.12 +
-      context.reliefDemand * 0.08,
+    mountainTectonics * 0.36 +
+      mountainMemory * 0.24 +
+      uplift * 0.18 +
+      crustStress * 0.12 +
+      ridgeNoise * 0.18 +
+      context.reliefDemand * 0.10,
     0,
     1
   );
 
   const ridge = clamp(
-    mountainPressure * 0.44 +
-      terrainHandoff * 0.18 +
-      mineralHardness * 0.14 +
-      ridgeNoise * 0.18 +
-      weathered * 0.06,
+    mountainPressure * 0.48 +
+      terrainHandoff * 0.20 +
+      mineralHardness * 0.16 +
+      ridgeNoise * 0.22 +
+      weathered * 0.08,
     0,
     1
   );
 
   const canyonPressure = clamp(
-    canyonTectonics * 0.36 +
-      crustStress * 0.14 +
-      ridge * 0.14 +
-      Math.max(0, cutNoise - 0.44) * 0.42 +
-      context.canyonDemand * 0.08 -
-      coast * 0.08,
+    canyonTectonics * 0.42 +
+      crustStress * 0.16 +
+      ridge * 0.18 +
+      Math.max(0, cutNoise - 0.38) * 0.58 +
+      context.canyonDemand * 0.10 -
+      coast * 0.05,
     0,
     1
   );
 
   const valleyChannelPressure = clamp(
-    canyonPressure * 0.42 +
-      (1 - mountainPressure) * 0.18 +
-      cutNoise * 0.20 +
-      region.hydrologyBias * 0.12 +
+    canyonPressure * 0.46 +
+      (1 - mountainPressure) * 0.16 +
+      cutNoise * 0.24 +
+      region.hydrologyBias * 0.14 +
       coast * 0.08,
     0,
     1
   );
 
   const plateauPressure = clamp(
-    (1 - canyonPressure) * 0.20 +
-      granite * 0.22 +
-      slate * 0.10 +
-      region.reliefBias * 0.18 +
-      smoothstep(0.36, 0.68, baseSeed) * 0.22,
+    (1 - canyonPressure) * 0.18 +
+      granite * 0.24 +
+      slate * 0.12 +
+      region.reliefBias * 0.22 +
+      smoothstep(0.32, 0.68, baseSeed) * 0.26,
     0,
     1
   );
 
   const basin = clamp(
-    (1 - ridge) * 0.22 +
-      valleyChannelPressure * 0.18 +
-      region.hydrologyBias * 0.18 +
-      Math.max(0, 0.52 - broadNoise) * 0.34 +
-      coast * 0.08,
+    (1 - ridge) * 0.24 +
+      valleyChannelPressure * 0.22 +
+      region.hydrologyBias * 0.22 +
+      Math.max(0, 0.58 - broadNoise) * 0.38 +
+      coast * 0.10,
     0,
     1
   );
 
-  const basinCutPressure = clamp(basin * 0.44 + valleyChannelPressure * 0.20 + seaErosion * 0.12, 0, 1);
+  const basinCutPressure = clamp(basin * 0.50 + valleyChannelPressure * 0.24 + seaErosion * 0.14, 0, 1);
 
   const cliffPressure = clamp(
-    cliffTopology * 0.36 +
-      cliffTectonics * 0.34 +
-      seaErosion * 0.14 +
-      mineralHardness * 0.10 +
-      coast * 0.06,
+    cliffTopology * 0.38 +
+      cliffTectonics * 0.36 +
+      seaErosion * 0.16 +
+      mineralHardness * 0.12 +
+      coast * 0.08 +
+      context.cliffDemand * 0.06,
     0,
     1
   );
 
   const dryInteriorPressure = clamp(
-    (1 - coast) * 0.34 +
-      mineralHardness * 0.18 +
+    (1 - coast) * 0.36 +
+      mineralHardness * 0.20 +
       Math.abs(point.lat) * 0.10 +
-      (1 - region.hydrologyBias) * 0.16 +
-      fineNoise * 0.10,
+      (1 - region.hydrologyBias) * 0.18 +
+      fineNoise * 0.14,
     0,
     1
   );
 
   const glacierSeatPressure = clamp(
-    smoothstep(0.62, 0.92, point.lat) * 0.30 +
-      smoothstep(0.66, 0.94, baseSeed + mountainPressure * 0.34) * 0.38 +
-      mountainPressure * 0.18 +
-      context.glacierDemand * 0.08,
+    smoothstep(0.58, 0.92, point.lat) * 0.34 +
+      smoothstep(0.60, 0.94, baseSeed + mountainPressure * 0.42) * 0.44 +
+      mountainPressure * 0.24 +
+      context.glacierDemand * 0.10,
     0,
     1
   );
 
-  const snowpackSourcePressure = clamp(glacierSeatPressure * 0.72 + mountainPressure * 0.20 + smoothstep(0.65, 0.95, point.lat) * 0.16, 0, 1);
+  const snowpackSourcePressure = clamp(glacierSeatPressure * 0.76 + mountainPressure * 0.24 + smoothstep(0.62, 0.95, point.lat) * 0.18, 0, 1);
 
   const normalizedElevation = clamp(
-    baseSeed * 0.34 +
+    baseSeed * 0.32 +
       regionLift +
-      ridge * 0.18 +
-      mountainPressure * 0.16 +
-      plateauPressure * 0.08 -
-      canyonPressure * 0.08 -
-      basin * 0.05 -
-      coast * 0.04,
-    0.03,
-    0.98
+      ridge * 0.22 +
+      mountainPressure * 0.22 +
+      plateauPressure * 0.10 -
+      canyonPressure * 0.10 -
+      basin * 0.04 -
+      coast * 0.03,
+    0.04,
+    1
   );
 
   const slope = clamp(
-    ridge * 0.30 +
-      cliffPressure * 0.24 +
-      canyonPressure * 0.18 +
-      Math.abs(fineNoise - broadNoise) * 0.26 +
-      mountainPressure * 0.14,
+    ridge * 0.34 +
+      cliffPressure * 0.28 +
+      canyonPressure * 0.22 +
+      Math.abs(fineNoise - broadNoise) * 0.30 +
+      mountainPressure * 0.16,
     0,
     1
   );
@@ -579,101 +585,101 @@ function reliefSignals(point, topology, tectonics, context) {
   const watershed = watershedForRegion(region, point.lon, point.lat);
 
   const riverIncisionPressure = clamp(
-    canyonPressure * 0.34 +
-      valleyChannelPressure * 0.24 +
-      watershed.riverBias * 0.16 +
-      mountainPressure * 0.10 +
-      context.hydrologyReadinessDemand * 0.10,
+    canyonPressure * 0.40 +
+      valleyChannelPressure * 0.26 +
+      watershed.riverBias * 0.18 +
+      mountainPressure * 0.12 +
+      context.hydrologyReadinessDemand * 0.12,
     0,
     1
   );
 
   const streamBranchPressure = clamp(
-    riverIncisionPressure * 0.34 +
-      ridge * 0.18 +
-      fineNoise * 0.18 +
-      watershed.gradient * 0.14 +
-      region.hydrologyBias * 0.10,
+    riverIncisionPressure * 0.38 +
+      ridge * 0.20 +
+      fineNoise * 0.22 +
+      watershed.gradient * 0.16 +
+      region.hydrologyBias * 0.12,
     0,
     1
   );
 
   const riverbedPressure = clamp(
-    riverIncisionPressure * 0.42 +
-      valleyChannelPressure * 0.24 +
-      streamBranchPressure * 0.16 +
-      basin * 0.08,
+    riverIncisionPressure * 0.48 +
+      valleyChannelPressure * 0.26 +
+      streamBranchPressure * 0.18 +
+      basin * 0.10,
     0,
     1
   );
 
   const streamPressure = clamp(
-    streamBranchPressure * 0.48 +
-      riverbedPressure * 0.22 +
-      ridge * 0.12 +
-      fineNoise * 0.10,
+    streamBranchPressure * 0.52 +
+      riverbedPressure * 0.24 +
+      ridge * 0.14 +
+      fineNoise * 0.12,
     0,
     1
   );
 
   const lakeBasinPressure = clamp(
-    basin * 0.34 +
-      basinCutPressure * 0.24 +
-      watershed.lakeBias * 0.20 +
-      (1 - slope) * 0.12 +
-      Math.max(0, 0.48 - canyonPressure) * 0.10,
+    basin * 0.38 +
+      basinCutPressure * 0.28 +
+      watershed.lakeBias * 0.22 +
+      (1 - slope) * 0.14 +
+      Math.max(0, 0.52 - canyonPressure) * 0.12,
     0,
     1
   );
 
   const floodplainPressure = clamp(
-    coast * 0.20 +
-      basin * 0.22 +
-      riverbedPressure * 0.22 +
-      lakeBasinPressure * 0.12 +
-      (1 - slope) * 0.12 +
-      valleyChannelPressure * 0.12,
+    coast * 0.22 +
+      basin * 0.24 +
+      riverbedPressure * 0.24 +
+      lakeBasinPressure * 0.14 +
+      (1 - slope) * 0.14 +
+      valleyChannelPressure * 0.14,
     0,
     1
   );
 
   const deltaReceiverPressure = clamp(
-    coast * 0.42 +
-      riverbedPressure * 0.20 +
-      floodplainPressure * 0.16 +
-      seaErosion * 0.10 +
-      (topology.isCoastline ? 0.12 : 0),
+    coast * 0.46 +
+      riverbedPressure * 0.22 +
+      floodplainPressure * 0.18 +
+      seaErosion * 0.12 +
+      (topology.isCoastline ? 0.14 : 0),
     0,
     1
   );
 
   const hydrologyReadinessIndex = clamp(
-    riverbedPressure * 0.18 +
-      streamPressure * 0.14 +
-      lakeBasinPressure * 0.13 +
+    riverbedPressure * 0.20 +
+      streamPressure * 0.16 +
+      lakeBasinPressure * 0.14 +
       glacierSeatPressure * 0.12 +
       floodplainPressure * 0.12 +
       deltaReceiverPressure * 0.10 +
       valleyChannelPressure * 0.10 +
       canyonPressure * 0.08 +
-      context.hydrologyReadinessDemand * 0.03,
+      context.hydrologyReadinessDemand * 0.04,
     0,
     1
   );
 
   let reliefZone = "low_plain";
-  if (glacierSeatPressure > 0.64) reliefZone = "glacier_source";
-  else if (mountainPressure > 0.76 && normalizedElevation > 0.74) reliefZone = "summit_memory";
-  else if (mountainPressure > 0.62) reliefZone = "mountain_chain";
-  else if (ridge > 0.62) reliefZone = "ridge_backbone";
-  else if (canyonPressure > 0.58) reliefZone = "canyon_cut";
-  else if (valleyChannelPressure > 0.54) reliefZone = "valley_cut";
-  else if (cliffPressure > 0.54) reliefZone = "cliff_wall";
-  else if (plateauPressure > 0.56) reliefZone = "plateau_table";
-  else if (basin > 0.58) reliefZone = "basin_floor";
+  if (glacierSeatPressure > 0.62) reliefZone = "glacier_source";
+  else if (mountainPressure > 0.78 && normalizedElevation > 0.76) reliefZone = "summit_memory";
+  else if (mountainPressure > 0.60) reliefZone = "mountain_chain";
+  else if (ridge > 0.58) reliefZone = "ridge_backbone";
+  else if (canyonPressure > 0.54) reliefZone = "canyon_cut";
+  else if (valleyChannelPressure > 0.52) reliefZone = "valley_cut";
+  else if (cliffPressure > 0.50) reliefZone = "cliff_wall";
+  else if (plateauPressure > 0.52) reliefZone = "plateau_table";
+  else if (basin > 0.56) reliefZone = "basin_floor";
   else if (topology.isBeach || topology.isSand) reliefZone = "beach_backrise";
-  else if (coast > 0.42) reliefZone = "coastal_lowland";
-  else if (weathered > 0.52) reliefZone = "weathered_highland";
+  else if (coast > 0.40) reliefZone = "coastal_lowland";
+  else if (weathered > 0.50) reliefZone = "weathered_highland";
 
   return Object.freeze({
     land,
@@ -684,7 +690,7 @@ function reliefSignals(point, topology, tectonics, context) {
     baseElevation: baseSeed,
     ridge,
     mountainPressure,
-    mountainHardness: clamp(mineralHardness * 0.42 + mountainPressure * 0.28 + weathered * 0.18 + diamond * 0.12, 0, 1),
+    mountainHardness: clamp(mineralHardness * 0.46 + mountainPressure * 0.30 + weathered * 0.18 + diamond * 0.14, 0, 1),
     canyonPressure,
     riverIncisionPressure,
     streamBranchPressure,
@@ -744,32 +750,32 @@ function terrainColorInfluence(sample) {
   const dry = clamp(sample.dryInteriorPressure, 0, 1);
   const glacier = clamp(sample.glacierSeatPressure, 0, 1);
 
-  let r = mix(88, 178, elevation);
-  let g = mix(104, 152, elevation * 0.60);
-  let b = mix(78, 124, elevation * 0.56);
+  let r = mix(82, 190, elevation);
+  let g = mix(96, 164, elevation * 0.64);
+  let b = mix(70, 134, elevation * 0.58);
 
-  r = mix(r, 190, mountain * 0.22 + cliff * 0.18);
-  g = mix(g, 178, mountain * 0.18 + cliff * 0.14);
-  b = mix(b, 164, mountain * 0.18 + cliff * 0.12);
+  r = mix(r, 206, mountain * 0.30 + cliff * 0.20);
+  g = mix(g, 194, mountain * 0.24 + cliff * 0.16);
+  b = mix(b, 178, mountain * 0.22 + cliff * 0.14);
 
-  r = mix(r, 92, canyon * 0.34);
-  g = mix(g, 76, canyon * 0.30);
-  b = mix(b, 64, canyon * 0.26);
+  r = mix(r, 78, canyon * 0.42);
+  g = mix(g, 62, canyon * 0.36);
+  b = mix(b, 54, canyon * 0.32);
 
-  r = mix(r, 108, basin * 0.18);
-  g = mix(g, 116, basin * 0.16);
-  b = mix(b, 96, basin * 0.14);
+  r = mix(r, 104, basin * 0.22);
+  g = mix(g, 112, basin * 0.18);
+  b = mix(b, 92, basin * 0.16);
 
-  r = mix(r, 174, dry * 0.18);
-  g = mix(g, 126, dry * 0.16);
-  b = mix(b, 86, dry * 0.14);
+  r = mix(r, 184, dry * 0.22);
+  g = mix(g, 132, dry * 0.18);
+  b = mix(b, 88, dry * 0.16);
 
-  r = mix(r, 228, glacier * 0.38);
-  g = mix(g, 238, glacier * 0.40);
-  b = mix(b, 244, glacier * 0.42);
+  r = mix(r, 230, glacier * 0.44);
+  g = mix(g, 240, glacier * 0.46);
+  b = mix(b, 248, glacier * 0.48);
 
   return Object.freeze({
-    base: "terrain_relief",
+    base: "terrain_strong_relief",
     elevation,
     mountain,
     canyon,
@@ -777,9 +783,9 @@ function terrainColorInfluence(sample) {
     basin,
     dry,
     glacier,
-    r: Math.round(clamp(r, 42, 240)),
-    g: Math.round(clamp(g, 38, 240)),
-    b: Math.round(clamp(b, 34, 248))
+    r: Math.round(clamp(r, 34, 246)),
+    g: Math.round(clamp(g, 32, 246)),
+    b: Math.round(clamp(b, 30, 252))
   });
 }
 
@@ -791,7 +797,7 @@ export function createTerrainProfile(overrides = {}) {
     planetaryObject: PLANETARY_OBJECT,
     generation: GENERATION,
     file: FILE,
-    role: "final-terrain-relief-before-hydration",
+    role: "strong-final-terrain-relief-before-hydration",
     topologyAuthority: TOPOLOGY_AUTHORITY,
     tectonicsAuthority: TECTONICS_AUTHORITY,
     hydrationAuthorityLater: HYDRATION_AUTHORITY_LATER,
@@ -803,10 +809,15 @@ export function createTerrainProfile(overrides = {}) {
 
     consumesTopology: true,
     consumesTectonics: true,
+    topologyDependencyConfirmed: true,
+    tectonicsDependencyConfirmed: true,
     topologyLandFootprint: "authoritative",
+    terrainRespectsTopologyLandArea: true,
     terrainMustNotExpandLandArea: true,
     terrainMayUseForElevationReliefOnly: true,
     terrainNeverCreatesLand: true,
+    terrainNeverCreatesIslands: true,
+    terrainNeverChangesSeaLevel: true,
 
     ownsAboveSeaElevation: true,
     ownsTerrainRelief: true,
@@ -883,13 +894,18 @@ export function sampleTerrain(uInput, vInput, context = {}) {
 
     consumesTopology: true,
     consumesTectonics: true,
+    topologyDependencyConfirmed: true,
+    tectonicsDependencyConfirmed: true,
     topologyLandFootprint: isLand,
     topologyIceFootprint: isIce,
     topologyVoidFootprint: isWater,
     terrainAllowedByTopology: isLand,
+    terrainRespectsTopologyLandArea: true,
     terrainMustNotExpandLandArea: true,
     terrainMayUseForElevationReliefOnly: true,
     terrainNeverCreatesLand: true,
+    terrainNeverCreatesIslands: true,
+    terrainNeverChangesSeaLevel: true,
 
     isLand,
     isWater,
@@ -911,7 +927,7 @@ export function sampleTerrain(uInput, vInput, context = {}) {
     watershedFromRegion: isLand ? watershed.fromRegion : 0,
     watershedToRegion: isLand ? watershed.toRegion : 0,
     watershedGradient: isLand ? watershed.gradient : 0,
-    watershedStrength: isLand ? clamp(relief.hydrologyReadinessIndex * 0.56 + watershed.riverBias * 0.26 + watershed.lakeBias * 0.18, 0, 1) : 0,
+    watershedStrength: isLand ? clamp(relief.hydrologyReadinessIndex * 0.58 + watershed.riverBias * 0.26 + watershed.lakeBias * 0.18, 0, 1) : 0,
 
     normalizedElevation: relief.normalizedElevation,
     elevationMeters: isLand ? Math.round(relief.normalizedElevation * 9200) : isWater ? Math.round(relief.normalizedElevation * 5600) : 0,
@@ -1142,10 +1158,15 @@ export function buildTerrainField(width = 128, height = 128, options = {}) {
 
       consumesTopology: true,
       consumesTectonics: true,
+      topologyDependencyConfirmed: true,
+      tectonicsDependencyConfirmed: true,
       topologyLandFootprintAuthoritative: true,
+      terrainRespectsTopologyLandArea: true,
       terrainMustNotExpandLandArea: true,
       terrainMayUseForElevationReliefOnly: true,
       terrainNeverCreatesLand: true,
+      terrainNeverCreatesIslands: true,
+      terrainNeverChangesSeaLevel: true,
       hydrologyMap: "active",
       hydrationHeld: true,
       foliageClosed: true,
@@ -1180,13 +1201,13 @@ export function getTerrainStatus() {
     receipt: RECEIPT,
     previousReceipts: PREVIOUS_RECEIPTS,
     status: "active",
-    id: "audralia-g1-terrain-consume-topology-tectonics-relief-lock",
+    id: "audralia-g1-terrain-strong-relief-topology-tectonics-lock",
     planetaryObject: PLANETARY_OBJECT,
     publicName: PLANETARY_OBJECT,
     generation: GENERATION,
     file: FILE,
 
-    role: "final-terrain-relief-before-hydration",
+    role: "strong-final-terrain-relief-before-hydration",
     topologyAuthority: TOPOLOGY_AUTHORITY,
     tectonicsAuthority: TECTONICS_AUTHORITY,
     hydrationAuthorityLater: HYDRATION_AUTHORITY_LATER,

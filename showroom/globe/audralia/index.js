@@ -1,28 +1,37 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_ROUTE_TRUE_ORTHOGRAPHIC_GLOBE_RENDER_TNT_v2
+// AUDRALIA_ROUTE_RUNTIME_HYDRATION_WATER_RENDER_TNT_v1
 //
 // Role:
 // - Existing Audralia route compositor.
 // - Consumes Audralia runtime only.
 // - Renders Audralia as a true orthographic globe.
 // - Shows only the front-facing hemisphere.
-// - Suppresses the rear hemisphere until rotation carries it forward.
+// - Reads hydration from runtime and visually displays water.
+// - Does not generate land, terrain, or water in the route.
 //
 // Fix:
-// - Removes flat strip illusion.
-// - Removes full-map-on-disk behavior.
-// - Uses sphere coordinate projection per visible pixel:
-//   x/y disk position → visible 3D sphere point → longitude/latitude sample.
+// - Keeps true orthographic globe behavior.
+// - Keeps runtime-only route authority.
+// - Adds runtime hydration visual readout:
+//   ocean, coastal water, shelf water, deep ocean, trench water,
+//   rivers, streams, lakes, glaciers, snowpack, floodplains, deltas,
+//   springs, and subterranean wetness influence.
 //
 // Hard locks:
 // - No route-owned land generation.
+// - No route-owned water generation.
 // - No topology rewrite.
 // - No tectonics rewrite.
 // - No terrain rewrite.
-// - No active hydration.
+// - No hydration rewrite.
+// - No climate.
+// - No ecology.
 // - No foliage.
 // - No trees.
 // - No vegetation.
+// - No animals.
+// - No marine life.
+// - No construct civilization.
 // - No graphic box.
 // - No image generation.
 // - No visual pass claim.
@@ -30,14 +39,15 @@
 (function () {
   "use strict";
 
-  const RECEIPT = "AUDRALIA_ROUTE_TRUE_ORTHOGRAPHIC_GLOBE_RENDER_TNT_v2";
+  const RECEIPT = "AUDRALIA_ROUTE_RUNTIME_HYDRATION_WATER_RENDER_TNT_v1";
+  const PREVIOUS_RECEIPT = "AUDRALIA_ROUTE_TRUE_ORTHOGRAPHIC_GLOBE_RENDER_TNT_v2";
 
   const ROUTE = "/showroom/globe/audralia/";
   const BODY = "audralia";
   const LABEL = "Audralia";
 
   const RUNTIME_AUTHORITY = "/assets/audralia/audralia.runtime.js";
-  const RUNTIME_VERSION = "AUDRALIA_RUNTIME_TOPOLOGY_TECTONICS_TERRAIN_CHAIN_TNT_v1";
+  const RUNTIME_VERSION = "AUDRALIA_RUNTIME_CONSUME_HYDRATION_AFTER_TERRAIN_TNT_v1";
 
   const CONTROL = Object.freeze({
     axisDegrees: 21.5,
@@ -56,18 +66,26 @@
     visibleLongitudeSpanDegrees: 180,
     hiddenLongitudeSpanDegrees: 180,
     phaseWindow: "front_hemisphere_only",
-    compositorModel: "runtime-consumer-orthographic-globe",
+    compositorModel: "runtime-consumer-orthographic-globe-with-hydration-readout",
 
     diskRotation: "forbidden",
     fullTextureOnVisibleFace: "forbidden",
     flatMapOnSphere: "forbidden",
     routeOwnedLandGeneration: "forbidden",
+    routeOwnedWaterGeneration: "forbidden",
     topologyRewriteHere: "forbidden",
     tectonicsRewriteHere: "forbidden",
     terrainRewriteHere: "forbidden",
-    hydration: "held",
-    foliage: "forbidden",
+    hydrationRewriteHere: "forbidden",
+    hydration: "runtime-read-only-active",
+    climate: "forbidden",
     ecology: "forbidden",
+    foliage: "forbidden",
+    trees: "forbidden",
+    vegetation: "forbidden",
+    animals: "forbidden",
+    marineLife: "forbidden",
+    constructCivilization: "forbidden",
     visualPass: "HELD_UNTIL_OWNER_SCREENSHOT_CONFIRMATION"
   });
 
@@ -75,8 +93,14 @@
     topologyFirst: true,
     tectonicsEnabled: true,
     terrainEnabled: true,
-    hydrationEnabled: false,
+    hydrationEnabled: true,
+    hydrationConsumedAfterTerrain: true,
     foliageEnabled: false,
+    climateEnabled: false,
+    ecologyEnabled: false,
+    faunaEnabled: false,
+    marineLifeEnabled: false,
+    constructCivilizationEnabled: false,
     visualPassClaimed: false
   });
 
@@ -161,6 +185,7 @@
     document.documentElement.dataset.activeBody = BODY;
     document.documentElement.dataset.activeRoute = ROUTE;
     document.documentElement.dataset.audraliaRouteCompositor = RECEIPT;
+    document.documentElement.dataset.audraliaPreviousRouteCompositor = PREVIOUS_RECEIPT;
     document.documentElement.dataset.audraliaRouteCompositorStatus = status || "booting";
     document.documentElement.dataset.audraliaRuntimeAuthority = RUNTIME_AUTHORITY;
     document.documentElement.dataset.audraliaRuntimeVersion = RUNTIME_VERSION;
@@ -172,8 +197,14 @@
     document.documentElement.dataset.audraliaFullTextureOnVisibleFace = CONTROL.fullTextureOnVisibleFace;
     document.documentElement.dataset.audraliaFlatMapOnSphere = CONTROL.flatMapOnSphere;
     document.documentElement.dataset.audraliaRouteOwnedLandGeneration = CONTROL.routeOwnedLandGeneration;
+    document.documentElement.dataset.audraliaRouteOwnedWaterGeneration = CONTROL.routeOwnedWaterGeneration;
     document.documentElement.dataset.audraliaHydration = CONTROL.hydration;
+    document.documentElement.dataset.audraliaHydrationReadout = "runtime-only";
     document.documentElement.dataset.audraliaFoliage = CONTROL.foliage;
+    document.documentElement.dataset.audraliaClimate = CONTROL.climate;
+    document.documentElement.dataset.audraliaEcology = CONTROL.ecology;
+    document.documentElement.dataset.audraliaAnimals = CONTROL.animals;
+    document.documentElement.dataset.audraliaMarineLife = CONTROL.marineLife;
     document.documentElement.dataset.noTrees = "true";
     document.documentElement.dataset.noFoliage = "true";
     document.documentElement.dataset.noVegetation = "true";
@@ -196,10 +227,10 @@
   }
 
   function ensureStyle() {
-    if (document.getElementById("audralia-true-orthographic-globe-style")) return;
+    if (document.getElementById("audralia-runtime-hydration-water-globe-style")) return;
 
     const style = document.createElement("style");
-    style.id = "audralia-true-orthographic-globe-style";
+    style.id = "audralia-runtime-hydration-water-globe-style";
     style.textContent = `
       #audraliaRenderMount,
       [data-audralia-render-mount],
@@ -444,6 +475,131 @@
     );
   }
 
+  function blendRgb(base, overlay, amount) {
+    const t = clamp(amount, 0, 1);
+
+    return [
+      clamp(Math.round(mix(base[0], overlay[0], t)), 0, 255),
+      clamp(Math.round(mix(base[1], overlay[1], t)), 0, 255),
+      clamp(Math.round(mix(base[2], overlay[2], t)), 0, 255),
+      255
+    ];
+  }
+
+  function hydrationColorFromRuntime(sample, baseColor) {
+    if (!sample) return baseColor;
+
+    const waterClass = String(sample.waterClass || "");
+    const hydrationColorInfluence = sample.hydrationColorInfluence || null;
+
+    const surfaceWaterIndex = clamp(Number(sample.surfaceWaterIndex) || 0, 0, 1);
+    const hydrationActivationIndex = clamp(Number(sample.hydrationActivationIndex) || 0, 0, 1);
+    const shelfPressure = clamp(Number(sample.shelfPressure) || Number(sample.shelfDepthIndex) || 0, 0, 1);
+    const bathymetry = clamp(Number(sample.bathymetryHydrationIndex) || Number(sample.oceanDepthIndex) || 0, 0, 1);
+    const trench = clamp(Number(sample.trenchHydrationIndex) || Number(sample.trenchDepthIndex) || 0, 0, 1);
+
+    if (sample.isOceanWater || waterClass === "ocean_water" || waterClass === "coastal_water" || waterClass === "shelf_water" || waterClass === "deep_ocean_water" || waterClass === "trench_water") {
+      let water = [8, 62, 132, 255];
+
+      if (sample.isCoastalWater || waterClass === "coastal_water") {
+        water = [
+          Math.round(mix(18, 42, shelfPressure)),
+          Math.round(mix(104, 154, shelfPressure)),
+          Math.round(mix(154, 214, shelfPressure)),
+          255
+        ];
+      } else if (sample.isShelfWater || waterClass === "shelf_water") {
+        water = [
+          Math.round(mix(10, 38, shelfPressure)),
+          Math.round(mix(86, 140, shelfPressure)),
+          Math.round(mix(138, 198, shelfPressure)),
+          255
+        ];
+      } else if (sample.isTrenchWater || waterClass === "trench_water") {
+        water = [
+          Math.round(mix(0, 8, 1 - trench)),
+          Math.round(mix(12, 40, 1 - trench)),
+          Math.round(mix(58, 106, 1 - trench)),
+          255
+        ];
+      } else if (sample.isDeepOcean || waterClass === "deep_ocean_water") {
+        water = [
+          Math.round(mix(2, 12, 1 - bathymetry)),
+          Math.round(mix(30, 72, 1 - bathymetry)),
+          Math.round(mix(92, 156, 1 - bathymetry)),
+          255
+        ];
+      } else {
+        water = [
+          Math.round(mix(4, 22, shelfPressure)),
+          Math.round(mix(42, 112, shelfPressure)),
+          Math.round(mix(110, 188, shelfPressure)),
+          255
+        ];
+      }
+
+      return blendRgb(baseColor, water, clamp(0.72 + surfaceWaterIndex * 0.28, 0, 1));
+    }
+
+    if (sample.isGlacier || waterClass === "glacier_mass") {
+      const pressure = clamp(Number(sample.glacierMassPressure) || hydrationActivationIndex, 0, 1);
+      return blendRgb(baseColor, [226, 242, 250, 255], clamp(0.34 + pressure * 0.50, 0, 0.92));
+    }
+
+    if (sample.isSnowpack || waterClass === "snowpack_source") {
+      const pressure = clamp(Number(sample.snowpackPressure) || hydrationActivationIndex, 0, 1);
+      return blendRgb(baseColor, [234, 246, 252, 255], clamp(0.22 + pressure * 0.36, 0, 0.72));
+    }
+
+    if (sample.isLake || waterClass === "lake_fill") {
+      const pressure = clamp(Number(sample.lakeFillPressure) || hydrationActivationIndex, 0, 1);
+      return blendRgb(baseColor, [42, 126, 184, 255], clamp(0.22 + pressure * 0.56, 0, 0.82));
+    }
+
+    if (sample.isRiver || waterClass === "river_flow") {
+      const pressure = clamp(Number(sample.riverFlowPressure) || hydrationActivationIndex, 0, 1);
+      return blendRgb(baseColor, [54, 152, 214, 255], clamp(0.18 + pressure * 0.48, 0, 0.72));
+    }
+
+    if (sample.isStream || waterClass === "stream_flow") {
+      const pressure = clamp(Number(sample.streamFlowPressure) || hydrationActivationIndex, 0, 1);
+      return blendRgb(baseColor, [70, 174, 224, 255], clamp(0.14 + pressure * 0.34, 0, 0.58));
+    }
+
+    if (sample.isDelta || waterClass === "delta_wetness") {
+      const pressure = clamp(Number(sample.deltaWetness) || hydrationActivationIndex, 0, 1);
+      return blendRgb(baseColor, [54, 146, 168, 255], clamp(0.12 + pressure * 0.34, 0, 0.58));
+    }
+
+    if (sample.isFloodplain || waterClass === "floodplain_wetness") {
+      const pressure = clamp(Number(sample.floodplainWetness) || hydrationActivationIndex, 0, 1);
+      return blendRgb(baseColor, [62, 136, 148, 255], clamp(0.10 + pressure * 0.30, 0, 0.48));
+    }
+
+    if (sample.isSpring || waterClass === "spring_seep") {
+      const pressure = clamp(Number(sample.springSeepPressure) || hydrationActivationIndex, 0, 1);
+      return blendRgb(baseColor, [76, 166, 190, 255], clamp(0.08 + pressure * 0.28, 0, 0.44));
+    }
+
+    if (sample.isSubterraneanWater || waterClass === "subterranean_water") {
+      const pressure = clamp(Number(sample.subterraneanWaterPressure) || hydrationActivationIndex, 0, 1);
+      return blendRgb(baseColor, [48, 96, 118, 255], clamp(0.05 + pressure * 0.18, 0, 0.30));
+    }
+
+    if (hydrationColorInfluence && Number(hydrationColorInfluence.a) > 0) {
+      const influence = [
+        Number(hydrationColorInfluence.r) || baseColor[0],
+        Number(hydrationColorInfluence.g) || baseColor[1],
+        Number(hydrationColorInfluence.b) || baseColor[2],
+        255
+      ];
+
+      return blendRgb(baseColor, influence, clamp(Number(hydrationColorInfluence.a) || 0, 0, 0.55));
+    }
+
+    return baseColor;
+  }
+
   function topologyFirstColor(sample, u, v) {
     const lon = u * 2 - 1;
     const lat = 1 - v * 2;
@@ -463,7 +619,8 @@
 
     if (isIceSample(sample)) {
       const ice = clamp(
-        Number(sample.glacierSeatPressure) ||
+        Number(sample.glacierMassPressure) ||
+          Number(sample.glacierSeatPressure) ||
           Number(sample.polarSeat) ||
           Number(sample.snowpackSourcePressure) ||
           0.72,
@@ -473,12 +630,12 @@
 
       const shade = mix(0.88, 1.08, broad * 0.42 + detail * 0.24 + ice * 0.28);
 
-      return [
+      return hydrationColorFromRuntime(sample, [
         clamp(Math.round(224 * shade), 188, 250),
         clamp(Math.round(236 * shade), 202, 252),
         clamp(Math.round(244 * shade), 210, 255),
         255
-      ];
+      ]);
     }
 
     if (!isLandSample(sample)) {
@@ -509,12 +666,12 @@
         1
       );
 
-      return [
+      return hydrationColorFromRuntime(sample, [
         clamp(Math.round(mix(4, 36, shelf) - trench * 8 + broad * 8), 0, 70),
         clamp(Math.round(mix(24, 132, shelf) - depth * 10 - trench * 12 + detail * 12), 14, 150),
         clamp(Math.round(mix(76, 182, shelf) - depth * 18 - trench * 20 + broad * 18), 54, 194),
         255
-      ];
+      ]);
     }
 
     const beach = isBeachSample(sample);
@@ -610,12 +767,12 @@
     const shade = mix(0.84, 1.12, broad * 0.46 + elevation * 0.20 + mountain * 0.10);
     const cut = mix(1, 0.76, fracture);
 
-    return [
+    return hydrationColorFromRuntime(sample, [
       clamp(Math.round(r * shade * cut), 42, 238),
       clamp(Math.round(g * shade * cut), 38, 236),
       clamp(Math.round(b * shade * cut), 34, 234),
       255
-    ];
+    ]);
   }
 
   function composeRuntimeTexture(runtimeApi, runtimeInstance) {
@@ -635,7 +792,21 @@
     let waterSamples = 0;
     let iceSamples = 0;
     let beachSamples = 0;
+    let hydratedSamples = 0;
+    let oceanWaterSamples = 0;
+    let riverSamples = 0;
+    let streamSamples = 0;
+    let lakeSamples = 0;
+    let glacierSamples = 0;
+    let snowpackSamples = 0;
+    let floodplainSamples = 0;
+    let deltaSamples = 0;
+    let springSamples = 0;
+    let subterraneanSamples = 0;
     let foliageSamples = 0;
+
+    let maxSurfaceWaterIndex = 0;
+    let maxHydrationActivationIndex = 0;
 
     for (let py = 0; py < height; py += 1) {
       const v = height <= 1 ? 0.5 : py / (height - 1);
@@ -654,6 +825,23 @@
         else waterSamples += 1;
 
         if (isBeachSample(sample)) beachSamples += 1;
+
+        if (sample && sample.isHydrated) hydratedSamples += 1;
+        if (sample && sample.isOceanWater) oceanWaterSamples += 1;
+        if (sample && sample.isRiver) riverSamples += 1;
+        if (sample && sample.isStream) streamSamples += 1;
+        if (sample && sample.isLake) lakeSamples += 1;
+        if (sample && sample.isGlacier) glacierSamples += 1;
+        if (sample && sample.isSnowpack) snowpackSamples += 1;
+        if (sample && sample.isFloodplain) floodplainSamples += 1;
+        if (sample && sample.isDelta) deltaSamples += 1;
+        if (sample && sample.isSpring) springSamples += 1;
+        if (sample && sample.isSubterraneanWater) subterraneanSamples += 1;
+
+        if (sample) {
+          maxSurfaceWaterIndex = Math.max(maxSurfaceWaterIndex, Number(sample.surfaceWaterIndex) || 0);
+          maxHydrationActivationIndex = Math.max(maxHydrationActivationIndex, Number(sample.hydrationActivationIndex) || 0);
+        }
 
         if (sample && (sample.foliage || sample.trees || sample.vegetation)) {
           foliageSamples += 1;
@@ -682,8 +870,21 @@
         waterSamples,
         iceSamples,
         beachSamples,
+        hydratedSamples,
+        oceanWaterSamples,
+        riverSamples,
+        streamSamples,
+        lakeSamples,
+        glacierSamples,
+        snowpackSamples,
+        floodplainSamples,
+        deltaSamples,
+        springSamples,
+        subterraneanSamples,
         foliageSamples,
-        compositorStatus: runtimeApi ? "runtime-texture-active" : "runtime-unavailable-ocean-safe-fallback"
+        maxSurfaceWaterIndex,
+        maxHydrationActivationIndex,
+        compositorStatus: runtimeApi ? "runtime-hydration-water-texture-active" : "runtime-unavailable-ocean-safe-fallback"
       })
     });
   }
@@ -694,6 +895,7 @@
     stage.dataset.body = BODY;
     stage.dataset.route = ROUTE;
     stage.dataset.contract = RECEIPT;
+    stage.dataset.previousContract = PREVIOUS_RECEIPT;
     stage.dataset.axisDegrees = String(CONTROL.axisDegrees);
     stage.dataset.compositorModel = CONTROL.compositorModel;
     stage.dataset.rotationModel = CONTROL.rotationModel;
@@ -703,6 +905,8 @@
     stage.dataset.fullTextureOnVisibleFace = CONTROL.fullTextureOnVisibleFace;
     stage.dataset.flatMapOnSphere = CONTROL.flatMapOnSphere;
     stage.dataset.routeOwnedLandGeneration = CONTROL.routeOwnedLandGeneration;
+    stage.dataset.routeOwnedWaterGeneration = CONTROL.routeOwnedWaterGeneration;
+    stage.dataset.hydrationReadout = "runtime-only";
     stage.dataset.noTrees = "true";
     stage.dataset.noFoliage = "true";
     stage.dataset.noVegetation = "true";
@@ -716,6 +920,7 @@
     canvas.className = "audralia-orthographic-canvas";
     canvas.dataset.body = BODY;
     canvas.dataset.contract = RECEIPT;
+    canvas.dataset.previousContract = PREVIOUS_RECEIPT;
     canvas.dataset.rotationModel = CONTROL.rotationModel;
     canvas.dataset.projectionModel = CONTROL.projectionModel;
     canvas.dataset.compositorModel = CONTROL.compositorModel;
@@ -725,23 +930,26 @@
     canvas.dataset.visibleLongitudeSpanDegrees = String(CONTROL.visibleLongitudeSpanDegrees);
     canvas.dataset.hiddenLongitudeSpanDegrees = String(CONTROL.hiddenLongitudeSpanDegrees);
     canvas.dataset.routeOwnedLandGeneration = CONTROL.routeOwnedLandGeneration;
+    canvas.dataset.routeOwnedWaterGeneration = CONTROL.routeOwnedWaterGeneration;
     canvas.dataset.noTrees = "true";
     canvas.dataset.noFoliage = "true";
     canvas.dataset.noVegetation = "true";
     canvas.dataset.hydration = CONTROL.hydration;
+    canvas.dataset.hydrationReadout = "runtime-only";
     canvas.dataset.visualPass = CONTROL.visualPass;
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Audralia true orthographic globe render");
+    canvas.setAttribute("aria-label", "Audralia true orthographic globe render with runtime hydration water readout");
 
     const label = document.createElement("div");
     label.className = "audralia-orthographic-label";
-    label.textContent = "AUDRALIA · TRUE GLOBE";
+    label.textContent = "AUDRALIA · WATER RUNTIME";
 
     const receipt = document.createElement("div");
     receipt.hidden = true;
     receipt.setAttribute("aria-hidden", "true");
     receipt.className = "audralia-orthographic-hidden-receipt";
     receipt.dataset.contract = RECEIPT;
+    receipt.dataset.previousContract = PREVIOUS_RECEIPT;
     receipt.dataset.route = ROUTE;
     receipt.dataset.runtimeAuthority = RUNTIME_AUTHORITY;
     receipt.dataset.runtimeVersion = RUNTIME_VERSION;
@@ -750,16 +958,21 @@
     receipt.dataset.fullTextureOnVisibleFace = CONTROL.fullTextureOnVisibleFace;
     receipt.dataset.flatMapOnSphere = CONTROL.flatMapOnSphere;
     receipt.dataset.routeOwnedLandGeneration = CONTROL.routeOwnedLandGeneration;
+    receipt.dataset.routeOwnedWaterGeneration = CONTROL.routeOwnedWaterGeneration;
     receipt.dataset.noTrees = "true";
     receipt.dataset.noFoliage = "true";
     receipt.dataset.noVegetation = "true";
     receipt.dataset.hydration = CONTROL.hydration;
+    receipt.dataset.hydrationReadout = "runtime-only";
     receipt.dataset.visualPass = CONTROL.visualPass;
     receipt.textContent =
-      "AUDRALIA_ROUTE_TRUE_ORTHOGRAPHIC_GLOBE_RENDER_TNT_v2 " +
+      "AUDRALIA_ROUTE_RUNTIME_HYDRATION_WATER_RENDER_TNT_v1 " +
       "projection=orthographic visible_hemisphere=180deg hidden_hemisphere=180deg " +
       "full_texture_on_visible_face=false flat_map_on_sphere=false " +
-      "route_owned_land_generation=false hydration=held foliage=false visual_pass=held";
+      "route_owned_land_generation=false route_owned_water_generation=false " +
+      "runtime_hydration_readout=true waterClass=true hydrationColorInfluence=true " +
+      "surfaceWaterIndex=true isOceanWater=true isRiver=true isLake=true " +
+      "climate=false ecology=false foliage=false animals=false marine_life=false visual_pass=held";
 
     stage.appendChild(axis);
     stage.appendChild(canvas);
@@ -771,6 +984,7 @@
     mount.dataset.body = BODY;
     mount.dataset.route = ROUTE;
     mount.dataset.contract = RECEIPT;
+    mount.dataset.previousContract = PREVIOUS_RECEIPT;
     mount.dataset.runtimeAuthority = RUNTIME_AUTHORITY;
     mount.dataset.runtimeVersion = RUNTIME_VERSION;
     mount.dataset.compositorModel = CONTROL.compositorModel;
@@ -781,11 +995,13 @@
     mount.dataset.fullTextureOnVisibleFace = CONTROL.fullTextureOnVisibleFace;
     mount.dataset.flatMapOnSphere = CONTROL.flatMapOnSphere;
     mount.dataset.routeOwnedLandGeneration = CONTROL.routeOwnedLandGeneration;
+    mount.dataset.routeOwnedWaterGeneration = CONTROL.routeOwnedWaterGeneration;
     mount.dataset.newFileRequired = "false";
     mount.dataset.noTrees = "true";
     mount.dataset.noFoliage = "true";
     mount.dataset.noVegetation = "true";
     mount.dataset.hydration = CONTROL.hydration;
+    mount.dataset.hydrationReadout = "runtime-only";
     mount.dataset.earthAdoption = "blocked";
     mount.dataset.visualPass = CONTROL.visualPass;
 
@@ -967,6 +1183,9 @@
     state.canvas.dataset.hiddenLongitudeSpanDegrees = String(CONTROL.hiddenLongitudeSpanDegrees);
     state.canvas.dataset.fullTextureOnVisibleFace = CONTROL.fullTextureOnVisibleFace;
     state.canvas.dataset.projectionModel = CONTROL.projectionModel;
+    state.canvas.dataset.hydration = CONTROL.hydration;
+    state.canvas.dataset.hydrationReadout = "runtime-only";
+    state.canvas.dataset.routeOwnedWaterGeneration = CONTROL.routeOwnedWaterGeneration;
 
     state.mount.dataset.phase = state.phase.toFixed(5);
     state.mount.dataset.velocity = state.velocity.toFixed(6);
@@ -1120,6 +1339,13 @@
     document.documentElement.dataset.audraliaHiddenLongitudeSpanDegrees = String(CONTROL.hiddenLongitudeSpanDegrees);
     document.documentElement.dataset.audraliaFullTextureOnVisibleFace = CONTROL.fullTextureOnVisibleFace;
     document.documentElement.dataset.audraliaFlatMapOnSphere = CONTROL.flatMapOnSphere;
+    document.documentElement.dataset.audraliaHydrationReadout = "runtime-only";
+    document.documentElement.dataset.audraliaHydratedSamples = String(texture.stats.hydratedSamples);
+    document.documentElement.dataset.audraliaOceanWaterSamples = String(texture.stats.oceanWaterSamples);
+    document.documentElement.dataset.audraliaRiverSamples = String(texture.stats.riverSamples);
+    document.documentElement.dataset.audraliaStreamSamples = String(texture.stats.streamSamples);
+    document.documentElement.dataset.audraliaLakeSamples = String(texture.stats.lakeSamples);
+    document.documentElement.dataset.audraliaGlacierSamples = String(texture.stats.glacierSamples);
     document.documentElement.dataset.audraliaFoliageSamples = String(texture.stats.foliageSamples);
 
     mount.dataset.runtimeAuthorityLoaded = String(Boolean(runtimeApi));
@@ -1130,20 +1356,36 @@
     mount.dataset.waterSamples = String(texture.stats.waterSamples);
     mount.dataset.iceSamples = String(texture.stats.iceSamples);
     mount.dataset.beachSamples = String(texture.stats.beachSamples);
+    mount.dataset.hydratedSamples = String(texture.stats.hydratedSamples);
+    mount.dataset.oceanWaterSamples = String(texture.stats.oceanWaterSamples);
+    mount.dataset.riverSamples = String(texture.stats.riverSamples);
+    mount.dataset.streamSamples = String(texture.stats.streamSamples);
+    mount.dataset.lakeSamples = String(texture.stats.lakeSamples);
+    mount.dataset.glacierSamples = String(texture.stats.glacierSamples);
+    mount.dataset.snowpackSamples = String(texture.stats.snowpackSamples);
+    mount.dataset.floodplainSamples = String(texture.stats.floodplainSamples);
+    mount.dataset.deltaSamples = String(texture.stats.deltaSamples);
+    mount.dataset.springSamples = String(texture.stats.springSamples);
+    mount.dataset.subterraneanSamples = String(texture.stats.subterraneanSamples);
     mount.dataset.foliageSamples = String(texture.stats.foliageSamples);
+    mount.dataset.maxSurfaceWaterIndex = String(texture.stats.maxSurfaceWaterIndex.toFixed(4));
+    mount.dataset.maxHydrationActivationIndex = String(texture.stats.maxHydrationActivationIndex.toFixed(4));
     mount.dataset.projectionModel = CONTROL.projectionModel;
     mount.dataset.visibleLongitudeSpanDegrees = String(CONTROL.visibleLongitudeSpanDegrees);
     mount.dataset.hiddenLongitudeSpanDegrees = String(CONTROL.hiddenLongitudeSpanDegrees);
     mount.dataset.fullTextureOnVisibleFace = CONTROL.fullTextureOnVisibleFace;
     mount.dataset.flatMapOnSphere = CONTROL.flatMapOnSphere;
+    mount.dataset.routeOwnedWaterGeneration = CONTROL.routeOwnedWaterGeneration;
+    mount.dataset.hydrationReadout = "runtime-only";
 
     window.dispatchEvent(
-      new CustomEvent("dgb:audralia-true-orthographic-globe-ready", {
+      new CustomEvent("dgb:audralia-runtime-hydration-water-globe-ready", {
         detail: {
           body: BODY,
           label: LABEL,
           route: ROUTE,
           contract: RECEIPT,
+          previousContract: PREVIOUS_RECEIPT,
           runtimeAuthority: RUNTIME_AUTHORITY,
           runtimeVersion: RUNTIME_VERSION,
           runtimeLoaded: Boolean(runtimeApi),
@@ -1154,16 +1396,41 @@
           waterSamples: texture.stats.waterSamples,
           iceSamples: texture.stats.iceSamples,
           beachSamples: texture.stats.beachSamples,
+          hydratedSamples: texture.stats.hydratedSamples,
+          oceanWaterSamples: texture.stats.oceanWaterSamples,
+          riverSamples: texture.stats.riverSamples,
+          streamSamples: texture.stats.streamSamples,
+          lakeSamples: texture.stats.lakeSamples,
+          glacierSamples: texture.stats.glacierSamples,
+          snowpackSamples: texture.stats.snowpackSamples,
+          floodplainSamples: texture.stats.floodplainSamples,
+          deltaSamples: texture.stats.deltaSamples,
+          springSamples: texture.stats.springSamples,
+          subterraneanSamples: texture.stats.subterraneanSamples,
           foliageSamples: texture.stats.foliageSamples,
+          maxSurfaceWaterIndex: texture.stats.maxSurfaceWaterIndex,
+          maxHydrationActivationIndex: texture.stats.maxHydrationActivationIndex,
           projectionModel: CONTROL.projectionModel,
           visibleLongitudeSpanDegrees: CONTROL.visibleLongitudeSpanDegrees,
           hiddenLongitudeSpanDegrees: CONTROL.hiddenLongitudeSpanDegrees,
           fullTextureOnVisibleFace: false,
           flatMapOnSphere: false,
           routeOwnedLandGeneration: false,
+          routeOwnedWaterGeneration: false,
+          runtimeHydrationReadout: true,
+          waterClass: true,
+          hydrationColorInfluence: true,
+          surfaceWaterIndex: true,
+          isOceanWater: true,
+          isRiver: true,
+          isLake: true,
           noTrees: true,
           noFoliage: true,
           noVegetation: true,
+          climate: CONTROL.climate,
+          ecology: CONTROL.ecology,
+          animals: CONTROL.animals,
+          marineLife: CONTROL.marineLife,
           hydration: CONTROL.hydration,
           visualPass: CONTROL.visualPass
         }
@@ -1173,6 +1440,7 @@
 
   window.DGBAudraliaRouteControl = Object.freeze({
     receipt: RECEIPT,
+    previousReceipt: PREVIOUS_RECEIPT,
     body: BODY,
     label: LABEL,
     route: ROUTE,
@@ -1184,6 +1452,7 @@
       return Object.freeze({
         ok: Boolean(activeState),
         receipt: RECEIPT,
+        previousReceipt: PREVIOUS_RECEIPT,
         body: BODY,
         route: ROUTE,
         runtimeAuthority: RUNTIME_AUTHORITY,
@@ -1200,14 +1469,24 @@
         fullTextureOnVisibleFace: false,
         flatMapOnSphere: false,
         routeOwnedLandGeneration: false,
+        routeOwnedWaterGeneration: false,
+        runtimeHydrationReadout: true,
         topologyRewrittenHere: false,
         tectonicsRewrittenHere: false,
         terrainRewrittenHere: false,
+        hydrationRewrittenHere: false,
         noTrees: true,
         noFoliage: true,
         noVegetation: true,
         noGreenYellowDots: true,
-        hydrationHeld: true,
+        hydrationHeld: false,
+        hydrationReadOnlyFromRuntime: true,
+        climateEnabled: false,
+        ecologyEnabled: false,
+        foliageEnabled: false,
+        animalsEnabled: false,
+        marineLifeEnabled: false,
+        constructCivilizationEnabled: false,
         visualPassClaimed: false
       });
     }
@@ -1216,6 +1495,7 @@
   window.DGBAudraliaExistingRouteCompositor = window.DGBAudraliaRouteControl;
   window.DGBAudraliaTrueGlobeRenderer = window.DGBAudraliaRouteControl;
   window.DGBAudraliaTrueOrthographicRenderer = window.DGBAudraliaRouteControl;
+  window.DGBAudraliaRuntimeHydrationWaterRenderer = window.DGBAudraliaRouteControl;
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot, { once: true });

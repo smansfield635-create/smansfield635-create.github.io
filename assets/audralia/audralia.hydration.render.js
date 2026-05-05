@@ -1,20 +1,12 @@
 // /assets/audralia/audralia.hydration.render.js
-// AUDRALIA_HYDRATION_VISIBLE_DEPTH_BEACH_RIM_EXPOSED_LAND_TNT_v1
+// AUDRALIA_HYDRATION_PARENT_CONSUME_OCEANS_CHILD_TNT_v1
 //
 // Role:
-// - Audralia hydration authority.
-// - Consumes topology, tectonics, and terrain.
-// - Makes sea-level hydration visually legible.
-// - Amplifies water-depth classes so the route can distinguish coastal water,
-//   shelf water, open ocean, deep ocean, trench water, river flow, lake fill,
-//   glacier/snowpack, beach-contact rim, and exposed land.
-// - Reports remaining exposed land after hydration without redefining topology.
-//
-// Correction:
-// - Hydration no longer reads as a flat pale sand/opal sheet.
-// - Ocean depth, shelf depth, trench darkness, coastal contact, and beach rim
-//   receive explicit visibility indexes.
-// - Hydration may cover sand, but it does not own or rewrite land footprint.
+// - Audralia hydration parent authority.
+// - Consumes topology, tectonics, terrain, and oceans child.
+// - Hydration remains the parent water authority.
+// - Oceans child owns ocean-specific expression under hydration.
+// - Hydration exposes composed water fields upward to runtime.
 //
 // Hard locks:
 // - No DOM mutation.
@@ -57,44 +49,49 @@ import {
   getTerrainStatus
 } from "./audralia.terrain.render.js?v=AUDRALIA_G1_TERRAIN_STRONG_RELIEF_TOPOLOGY_TECTONICS_LOCK_TNT_v2";
 
-const RECEIPT = "AUDRALIA_HYDRATION_VISIBLE_DEPTH_BEACH_RIM_EXPOSED_LAND_TNT_v1";
+import {
+  sampleOceans,
+  buildOceansField,
+  getOceansSampleFromField,
+  getOceansStatus
+} from "./audralia.oceans.render.js?v=AUDRALIA_OCEANS_CHILD_TURQUOISE_DEPTH_GRADIENT_TNT_v1";
+
+const RECEIPT = "AUDRALIA_HYDRATION_PARENT_CONSUME_OCEANS_CHILD_TNT_v1";
 
 const PREVIOUS_RECEIPTS = Object.freeze([
+  "AUDRALIA_HYDRATION_VISIBLE_DEPTH_BEACH_RIM_EXPOSED_LAND_TNT_v1",
   "AUDRALIA_HYDRATION_SEA_LEVEL_WATER_DEPTH_BEACH_OUTLINE_TNT_v1",
   "AUDRALIA_G1_HYDRATION_CONSUME_TOPOLOGY_TECTONICS_TERRAIN_WATERDOWN_TNT_v1"
 ]);
 
 const PLANETARY_OBJECT = "Audralia";
-const GENERATION = "G1_HYDRATION_VISIBLE_DEPTH_BEACH_RIM_EXPOSED_LAND";
+const GENERATION = "G1_HYDRATION_PARENT_OCEANS_CHILD";
 const FILE = "/assets/audralia/audralia.hydration.render.js";
 
-const TOPOLOGY_AUTHORITY = "/assets/audralia/audralia.topology.render.js";
-const TECTONICS_AUTHORITY = "/assets/audralia/audralia.tectonics.render.js";
-const TERRAIN_AUTHORITY = "/assets/audralia/audralia.terrain.render.js";
+const CONTRACTS = Object.freeze({
+  hydration: RECEIPT,
+  previousHydration: "AUDRALIA_HYDRATION_VISIBLE_DEPTH_BEACH_RIM_EXPOSED_LAND_TNT_v1",
+  oceansChild: "AUDRALIA_OCEANS_CHILD_TURQUOISE_DEPTH_GRADIENT_TNT_v1",
+  topology: "AUDRALIA_TOPOLOGY_BEACH_OUTLINE_ONLY_WATER_DOMINANT_TNT_v1",
+  tectonics: "AUDRALIA_G1_TECTONIC_PLATE_LAYER_EARTH_LAND_AREA_ANCIENT_MOUNTAIN_MEMORY_TNT_v1",
+  terrain: "AUDRALIA_G1_TERRAIN_STRONG_RELIEF_TOPOLOGY_TECTONICS_LOCK_TNT_v2",
+  runtimeExpected: "AUDRALIA_RUNTIME_CONSUME_HYDRATION_PARENT_OCEANS_CHILD_TNT_v1"
+});
 
 const HYDRATION_LAW = Object.freeze({
-  ownsHydration: true,
+  ownsHydrationParent: true,
+  ownsWaterSystemParent: true,
   ownsWaterPlacement: true,
   ownsWaterFlowPermission: true,
   ownsWaterDepthVisibility: true,
-  ownsBeachContactRim: true,
-  ownsExposedLandReport: true,
+  ownsOceansChildHandoff: true,
 
+  ownsOceansChildExpression: false,
   ownsTopology: false,
   ownsLandFootprint: false,
-  ownsVoidFootprint: false,
   ownsSeaLevelBoundary: false,
   ownsTectonics: false,
   ownsTerrain: false,
-  ownsAboveSeaElevation: false,
-  ownsClimate: false,
-  ownsEcology: false,
-  ownsFoliage: false,
-  ownsTrees: false,
-  ownsVegetation: false,
-  ownsAnimals: false,
-  ownsMarineLife: false,
-  ownsConstructCivilization: false,
   ownsRouteRendering: false,
   ownsRuntimeRendering: false,
   ownsFinalRender: false,
@@ -102,22 +99,10 @@ const HYDRATION_LAW = Object.freeze({
   consumesTopology: true,
   consumesTectonics: true,
   consumesTerrain: true,
+  consumesOceansChild: true,
   seaLevelHydrationActive: true,
-  waterDepthActive: true,
-  depthVisibilityActive: true,
-  beachRimActive: true,
-  exposedLandReportActive: true,
-  hydrationMayCoverSand: true,
+  oceansChildActive: true,
   visualPassClaimed: false
-});
-
-const CONTRACTS = Object.freeze({
-  hydration: RECEIPT,
-  previousHydration: "AUDRALIA_HYDRATION_SEA_LEVEL_WATER_DEPTH_BEACH_OUTLINE_TNT_v1",
-  topology: "AUDRALIA_TOPOLOGY_BEACH_OUTLINE_ONLY_WATER_DOMINANT_TNT_v1",
-  tectonics: "AUDRALIA_G1_TECTONIC_PLATE_LAYER_EARTH_LAND_AREA_ANCIENT_MOUNTAIN_MEMORY_TNT_v1",
-  terrain: "AUDRALIA_G1_TERRAIN_STRONG_RELIEF_TOPOLOGY_TECTONICS_LOCK_TNT_v2",
-  runtimeExpected: "AUDRALIA_RUNTIME_CONSUME_BEACH_OUTLINE_TOPOLOGY_SEA_LEVEL_HYDRATION_TNT_v1"
 });
 
 const DEFAULTS = Object.freeze({
@@ -126,123 +111,19 @@ const DEFAULTS = Object.freeze({
   minFieldWidth: 64,
   minFieldHeight: 32,
   maxFieldWidth: 512,
-  maxFieldHeight: 256,
-
-  topologyContext: Object.freeze({
-    blueprintResolution: 0.88,
-    coastlineComplexity: 0.94,
-    connectionStrength: 0.92,
-    subterraneanPressure: 0.72,
-    landExpansionMultiplier: 2,
-    enforceEarthEquivalentLandRatio: true,
-    beachWidth: 0.050,
-    shelfWidth: 0.145,
-    cliffWidth: 0.075
-  }),
-
-  tectonicsContext: Object.freeze({
-    tectonicStressDemand: 0.84,
-    ancientMountainMemory: 0.96,
-    mineralExposureDemand: 0.88,
-    erosionAge: 1
-  }),
-
-  terrainContext: Object.freeze({
-    coherenceIndex: 0.96,
-    collaborativeExpression: 0.92,
-    reliefDemand: 1.0,
-    canyonDemand: 0.94,
-    cliffDemand: 0.90,
-    hydrologyReadinessDemand: 0.90,
-    glacierDemand: 0.78
-  }),
-
-  hydrationContext: Object.freeze({
-    seaLevelFill: 1.0,
-    waterdownStrength: 1.0,
-    visibleDepthDemand: 1.0,
-    oceanFillDemand: 1.0,
-    coastalFillDemand: 0.96,
-    shelfFillDemand: 0.95,
-    openOceanDemand: 0.92,
-    deepOceanDemand: 0.96,
-    trenchDemand: 0.98,
-    beachRimDemand: 0.94,
-    beachContactDemand: 0.92,
-    exposedLandReportDemand: 1.0,
-    riverActivationDemand: 0.78,
-    streamActivationDemand: 0.70,
-    lakeActivationDemand: 0.76,
-    glacierActivationDemand: 0.76,
-    snowpackActivationDemand: 0.68,
-    floodplainActivationDemand: 0.66,
-    deltaActivationDemand: 0.68,
-    springActivationDemand: 0.58,
-    subterraneanActivationDemand: 0.64
-  })
+  maxFieldHeight: 256
 });
 
 function clamp(value, min, max) {
-  const number = Number(value);
-  if (!Number.isFinite(number)) return min;
-  return Math.max(min, Math.min(max, number));
-}
-
-function mix(a, b, t) {
-  return a + (b - a) * clamp(t, 0, 1);
-}
-
-function fract(value) {
-  return value - Math.floor(value);
+  const n = Number(value);
+  if (!Number.isFinite(n)) return min;
+  return Math.max(min, Math.min(max, n));
 }
 
 function normalizeUV(uInput, vInput) {
   const u = ((Number(uInput) || 0) % 1 + 1) % 1;
   const v = clamp(Number(vInput) || 0, 0, 1);
-
-  return Object.freeze({
-    u,
-    v,
-    lon: u * 2 - 1,
-    lat: 1 - v * 2
-  });
-}
-
-function hash2(x, y, seed) {
-  return fract(Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123);
-}
-
-function valueNoise(x, y, seed) {
-  const ix = Math.floor(x);
-  const iy = Math.floor(y);
-  const fx = fract(x);
-  const fy = fract(y);
-
-  const a = hash2(ix, iy, seed);
-  const b = hash2(ix + 1, iy, seed);
-  const c = hash2(ix, iy + 1, seed);
-  const d = hash2(ix + 1, iy + 1, seed);
-
-  const ux = fx * fx * (3 - 2 * fx);
-  const uy = fy * fy * (3 - 2 * fy);
-
-  return mix(mix(a, b, ux), mix(c, d, ux), uy);
-}
-
-function fbm(x, y, seed, octaves) {
-  let total = 0;
-  let amplitude = 0.5;
-  let frequency = 1;
-  let normalizer = 0;
-
-  for (let i = 0; i < octaves; i += 1) {
-    total += valueNoise(x * frequency, y * frequency, seed + i * 31.17) * amplitude;
-    normalizer += amplitude;
-    amplitude *= 0.5;
-    frequency *= 2;
-  }
-
-  return total / Math.max(0.00001, normalizer);
+  return Object.freeze({ u, v, lon: u * 2 - 1, lat: 1 - v * 2 });
 }
 
 function normalizeDimension(value, fallback, min, max) {
@@ -253,266 +134,138 @@ function safeCall(fallback, fn) {
   try {
     const value = fn();
     return value == null ? fallback : value;
-  } catch (error) {
+  } catch {
     return fallback;
   }
 }
 
-function getOptions(context = {}) {
-  return Object.freeze({
-    fieldWidth: normalizeDimension(
-      context.fieldWidth,
-      DEFAULTS.fieldWidth,
-      DEFAULTS.minFieldWidth,
-      DEFAULTS.maxFieldWidth
-    ),
-    fieldHeight: normalizeDimension(
-      context.fieldHeight,
-      DEFAULTS.fieldHeight,
-      DEFAULTS.minFieldHeight,
-      DEFAULTS.maxFieldHeight
-    ),
-
-    topologyContext: Object.freeze({
-      ...DEFAULTS.topologyContext,
-      ...(context.topologyContext || {})
-    }),
-
-    tectonicsContext: Object.freeze({
-      ...DEFAULTS.tectonicsContext,
-      ...(context.tectonicsContext || {})
-    }),
-
-    terrainContext: Object.freeze({
-      ...DEFAULTS.terrainContext,
-      ...(context.terrainContext || {})
-    }),
-
-    hydrationContext: Object.freeze({
-      ...DEFAULTS.hydrationContext,
-      ...(context.hydrationContext || {}),
-      seaLevelFill: Number.isFinite(Number(context.seaLevelFill))
-        ? Number(context.seaLevelFill)
-        : (context.hydrationContext && Number.isFinite(Number(context.hydrationContext.seaLevelFill)))
-          ? Number(context.hydrationContext.seaLevelFill)
-          : DEFAULTS.hydrationContext.seaLevelFill
-    })
-  });
-}
-
-function fallbackTopologySample(u, v) {
+function fallbackTopology(u, v) {
   const point = normalizeUV(u, v);
-  const polarIce = point.lat < -0.80 || point.lat > 0.88;
+  const ice = point.lat < -0.80 || point.lat > 0.88;
 
   return Object.freeze({
-    receipt: "HYDRATION_FALLBACK_TOPOLOGY_SAMPLE",
-    planetaryObject: PLANETARY_OBJECT,
+    receipt: "HYDRATION_PARENT_FALLBACK_TOPOLOGY",
     u: point.u,
     v: point.v,
     lon: point.lon,
     lat: point.lat,
-
     isLandFootprint: false,
     isAboveWaterLandFootprint: false,
-    isVoidFootprint: !polarIce,
-    isWaterFootprint: !polarIce,
+    isVoidFootprint: !ice,
+    isWaterFootprint: !ice,
+    isPolarIceFootprint: ice,
     isSouthPolarIceFootprint: point.lat < -0.80,
     isNorthPolarIceFootprint: point.lat > 0.88,
-    isPolarIceFootprint: polarIce,
-
-    surfaceClass: polarIce ? "polar_ice_footprint" : "open_ocean_blueprint",
-    topologySurfaceClass: polarIce ? "polar_ice_footprint" : "open_ocean_blueprint",
-
     isBeach: false,
-    isSand: false,
-    isShelf: !polarIce,
-    isCoastline: false,
-    isCoastalCliff: false,
-
-    beachOutlineOnly: true,
-    sandInteriorBlocked: true,
-    wholeLandBeachBlocked: true,
-    inlandTerrainPlaceholderActive: true,
-    waterDominatesSeaLevel: true,
-
-    oceanDepthIndex: polarIce ? 0 : 0.62,
-    bathymetryBlueprintIndex: polarIce ? 0 : 0.58,
+    surfaceClass: ice ? "polar_ice_footprint" : "open_ocean_blueprint",
+    oceanDepthIndex: ice ? 0 : 0.62,
+    bathymetryBlueprintIndex: ice ? 0 : 0.58,
+    shelfDepthIndex: ice ? 0 : 0.18,
     trenchDepthIndex: 0,
-    shelfDepthIndex: polarIce ? 0 : 0.18,
-    basinDepthIndex: polarIce ? 0 : 0.52,
-    depthClassKey: polarIce ? "polar_ice" : "open_ocean",
-
     shorelinePressure: 0,
-    beachPressure: 0,
-    beachOutlinePressure: 0,
-    beachWaterContactIndex: 0,
-    sandPressure: 0,
-    blackSandPressure: 0,
-    whiteSandPressure: 0,
-    opalSoftnessIndex: 0,
-    diamondDarkSandIndex: 0,
-    beachCloudSoftnessIndex: 0,
-
-    coastalExposureIndex: 0,
-    coastalCliffPressure: 0,
-    seaLevelErosionPressure: 0,
-    cliffBaseCut: 0,
-
-    terrainRisePermission: 0,
-    terrainBlockPermission: 1,
-
-    subterraneanDepthIndex: polarIce ? 0.3 : 0.58,
-    foundationDensityIndex: 0.44,
-    rockMassBoundaryIndex: 0.32,
-
-    ownsHydration: false,
-    visualPassClaimed: false
+    beachOutlinePressure: 0
   });
 }
 
-function fallbackTectonicsSample(u, v, topology) {
+function fallbackTectonics(u, v, topology) {
   return Object.freeze({
-    receipt: "HYDRATION_FALLBACK_TECTONICS_SAMPLE",
-    planetaryObject: PLANETARY_OBJECT,
+    receipt: "HYDRATION_PARENT_FALLBACK_TECTONICS",
     u,
     v,
     topologyLandFootprint: Boolean(topology && topology.isLandFootprint),
-    tectonicType: "hydration_fallback_pressure",
-    plateId: 0,
-    plateKey: "hydration_fallback_plate",
-    boundaryId: "none",
-    crustalStressIndex: 0,
-    ancientCrustStabilityIndex: 0,
-    primordialMountainMemoryIndex: 0,
-    weatheredRemnantIndex: 0,
-    mountainChainPermission: 0,
-    canyonPermission: 0,
-    cliffPermission: 0,
-    trenchReinforcementPermission: 0,
-    upliftPermission: 0,
-    diamondPressureIndex: 0,
-    opalSeamIndex: 0,
-    graniteCratonIndex: 0,
-    slateFoldBeltIndex: 0,
-    exposedMineralHardnessIndex: 0,
-    terrainPressureHandoff: 0,
-    ownsHydration: false,
-    visualPassClaimed: false
+    trenchReinforcementPermission: 0
   });
 }
 
-function fallbackTerrainSample(u, v, topology) {
+function fallbackTerrain(u, v, topology) {
   const land = Boolean(topology && topology.isLandFootprint);
   const ice = Boolean(topology && (topology.isPolarIceFootprint || topology.isSouthPolarIceFootprint || topology.isNorthPolarIceFootprint));
 
   return Object.freeze({
-    receipt: "HYDRATION_FALLBACK_TERRAIN_SAMPLE",
-    planetaryObject: PLANETARY_OBJECT,
+    receipt: "HYDRATION_PARENT_FALLBACK_TERRAIN",
     u,
     v,
-
     isLand: land,
-    isWater: !land && !ice,
     isIce: ice,
-
-    normalizedElevation: land
-      ? clamp(Number(topology.terrainRisePermission) || 0.28, 0, 1)
-      : -clamp(Number(topology.oceanDepthIndex) || 0.50, 0, 1),
-
-    elevationMeters: land ? Math.round((Number(topology.terrainRisePermission) || 0.28) * 9200) : 0,
-
-    ridge: 0,
-    mountainPressure: 0,
-    canyonPressure: 0,
-    basin: land ? 0.28 : 0,
-    slope: 0,
-
-    coastPressure: Number(topology.shorelinePressure) || 0,
-    shelfPermission: Number(topology.shelfDepthIndex) || 0,
-
+    normalizedElevation: land ? 0.24 : -0.48,
     riverbedPressure: 0,
     streamPressure: 0,
     lakeBasinPressure: 0,
     glacierSeatPressure: ice ? 0.8 : 0,
     snowpackSourcePressure: ice ? 0.7 : 0,
-    valleyChannelPressure: 0,
     floodplainPressure: 0,
     deltaReceiverPressure: 0,
-    hydrologyReadinessIndex: 0,
+    hydrologyReadinessIndex: 0
+  });
+}
 
-    watershedId: land ? "hydration_fallback_land_watershed" : "ocean",
-    watershedStrength: 0,
+function fallbackOceans(u, v, topology) {
+  const land = Boolean(topology && (topology.isLandFootprint || topology.isAboveWaterLandFootprint));
+  const ice = Boolean(topology && (topology.isPolarIceFootprint || topology.isSouthPolarIceFootprint || topology.isNorthPolarIceFootprint));
+  const ocean = !land && !ice;
 
-    ownsHydration: false,
-    visualPassClaimed: false
+  return Object.freeze({
+    receipt: "HYDRATION_PARENT_FALLBACK_OCEANS",
+    u,
+    v,
+    oceanClass: ice ? "polar_ice" : ocean ? "open_ocean" : "not_ocean",
+    oceanClassId: ice ? 15 : ocean ? 70 : 0,
+    oceanActive: ocean,
+    oceanAllowed: ocean,
+    coastalTurquoiseIndex: 0,
+    shelfWaterIndex: ocean ? 0.18 : 0,
+    openOceanIndex: ocean ? 0.76 : 0,
+    deepOceanIndex: ocean ? 0.46 : 0,
+    trenchWaterIndex: 0,
+    shorelineContactIndex: 0,
+    beachRimIndex: 0,
+    beachRimPreserved: false,
+    visibleOceanIndex: ocean ? 0.70 : 0,
+    oceanDepthIndex: ocean ? 0.62 : 0,
+    bathymetryOceanIndex: ocean ? 0.58 : 0,
+    landPreservedByTopology: land,
+    oceanDoesNotOwnLand: true
   });
 }
 
 function getTopology(context, u, v) {
-  if (context && context.topologyField) {
-    return getTopologySampleFromField(context.topologyField, u, v);
-  }
-
-  return safeCall(fallbackTopologySample(u, v), () =>
-    sampleTopology(u, v, context && context.topologyContext ? context.topologyContext : DEFAULTS.topologyContext)
-  );
+  if (context && context.topologyField) return getTopologySampleFromField(context.topologyField, u, v);
+  return safeCall(fallbackTopology(u, v), () => sampleTopology(u, v, context && context.topologyContext ? context.topologyContext : {}));
 }
 
 function getTectonics(context, u, v, topology) {
-  if (context && context.tectonicsField) {
-    return getTectonicsSampleFromField(context.tectonicsField, u, v);
-  }
-
-  return safeCall(fallbackTectonicsSample(u, v, topology), () =>
-    sampleTectonics(
-      u,
-      v,
-      topology,
-      context && context.tectonicsContext ? context.tectonicsContext : DEFAULTS.tectonicsContext
-    )
-  );
+  if (context && context.tectonicsField) return getTectonicsSampleFromField(context.tectonicsField, u, v);
+  return safeCall(fallbackTectonics(u, v, topology), () => sampleTectonics(u, v, topology, context && context.tectonicsContext ? context.tectonicsContext : {}));
 }
 
 function getTerrain(context, u, v, topology) {
-  if (context && context.terrainField) {
-    return getTerrainSampleFromField(context.terrainField, u, v);
-  }
-
-  return safeCall(fallbackTerrainSample(u, v, topology), () =>
-    sampleTerrain(
-      u,
-      v,
-      context && context.terrainContext ? context.terrainContext : DEFAULTS.terrainContext
-    )
-  );
+  if (context && context.terrainField) return getTerrainSampleFromField(context.terrainField, u, v);
+  return safeCall(fallbackTerrain(u, v, topology), () => sampleTerrain(u, v, context && context.terrainContext ? context.terrainContext : {}));
 }
 
-function isLand(topology) {
+function getOceans(context, u, v, topology) {
+  if (context && context.oceansField) return getOceansSampleFromField(context.oceansField, u, v);
+  return safeCall(fallbackOceans(u, v, topology), () => sampleOceans(u, v, context || {}));
+}
+
+function topologyLand(topology) {
+  return Boolean(topology && (topology.isLandFootprint || topology.isAboveWaterLandFootprint));
+}
+
+function topologyIce(topology) {
   return Boolean(
     topology &&
-      (
-        topology.isLandFootprint ||
-        topology.isAboveWaterLandFootprint ||
-        topology.topologyLandFootprint
-      )
-  );
-}
-
-function isIce(topology, terrain) {
-  return Boolean(
-    (topology &&
       (
         topology.isPolarIceFootprint ||
         topology.isSouthPolarIceFootprint ||
         topology.isNorthPolarIceFootprint ||
         topology.surfaceClass === "polar_ice_footprint" ||
         topology.topologySurfaceClass === "polar_ice_footprint"
-      )) ||
-      (terrain && (terrain.isIce || terrain.southIce))
+      )
   );
 }
 
-function isBeach(topology) {
+function topologyBeach(topology) {
   return Boolean(
     topology &&
       (
@@ -524,407 +277,61 @@ function isBeach(topology) {
   );
 }
 
-function isInlandTerrain(topology) {
-  return Boolean(
-    topology &&
-      (
-        topology.inlandTerrainPlaceholder ||
-        topology.inlandTerrainPlaceholderActive ||
-        String(topology.surfaceClass || "").includes("inland_terrain")
-      )
-  );
-}
-
-function deriveOceanDepth(topology, tectonics) {
-  const base = clamp(
-    Number(topology.oceanDepthIndex) ||
-      Number(topology.bathymetryBlueprintIndex) ||
-      Number(topology.basinDepthIndex) ||
-      0,
-    0,
-    1
-  );
-
-  const bathy = clamp(Number(topology.bathymetryBlueprintIndex) || base, 0, 1);
-  const trench = clamp(
-    Number(topology.trenchDepthIndex) ||
-      Number(tectonics.trenchReinforcementPermission) ||
-      0,
-    0,
-    1
-  );
-
-  return clamp(base * 0.54 + bathy * 0.30 + trench * 0.22, 0, 1);
-}
-
-function deriveVisibleDepthClass(depth, shelf, trench, coastal) {
-  if (trench >= 0.58 || depth >= 0.86) return "trench";
-  if (depth >= 0.70) return "deep_ocean";
-  if (shelf >= 0.42) return "shelf";
-  if (coastal >= 0.36) return "coastal";
-  return "open_ocean";
-}
-
-function deriveWaterClass(flags) {
-  if (flags.glacier > 0.62) return "glacier_mass";
-  if (flags.snowpack > 0.62) return "snowpack_source";
-
-  if (flags.ocean) {
-    if (flags.trench > 0.58 || flags.depth > 0.86) return "trench_water";
-    if (flags.depth > 0.70) return "deep_ocean_water";
-    if (flags.shelf > 0.42) return "shelf_water";
-    if (flags.coastal > 0.36) return "coastal_water";
-    return "ocean_water";
+function waterClassFromOceans(oceans) {
+  if (!oceans) return "dry_land";
+  switch (oceans.oceanClass) {
+    case "trench_ocean": return "trench_water";
+    case "deep_ocean": return "deep_ocean_water";
+    case "open_ocean": return "ocean_water";
+    case "shelf_water": return "shelf_water";
+    case "coastal_turquoise": return "coastal_water";
+    case "polar_ice": return "glacier_mass";
+    default: return "dry_land";
   }
-
-  if (flags.lake > 0.58) return "lake_fill";
-  if (flags.river > 0.54) return "river_flow";
-  if (flags.stream > 0.50) return "stream_flow";
-  if (flags.delta > 0.52) return "delta_wetland";
-  if (flags.floodplain > 0.54) return "floodplain_wetland";
-  if (flags.spring > 0.50) return "spring_seep";
-  if (flags.subterranean > 0.58) return "subterranean_water";
-
-  return "dry_land";
-}
-
-function waterClassIdFor(waterClass) {
-  switch (waterClass) {
-    case "trench_water": return 90;
-    case "deep_ocean_water": return 80;
-    case "ocean_water": return 70;
-    case "shelf_water": return 60;
-    case "coastal_water": return 50;
-    case "lake_fill": return 40;
-    case "river_flow": return 35;
-    case "stream_flow": return 30;
-    case "delta_wetland": return 25;
-    case "floodplain_wetland": return 24;
-    case "spring_seep": return 22;
-    case "subterranean_water": return 20;
-    case "glacier_mass": return 15;
-    case "snowpack_source": return 14;
-    default: return 0;
-  }
-}
-
-function deriveFlowDirection(topology, terrain, u, v) {
-  const slope = clamp(Number(terrain.slope) || 0, 0, 1);
-  const canyon = clamp(Number(terrain.canyonPressure) || Number(terrain.riverIncisionPressure) || 0, 0, 1);
-  const coast = clamp(Number(topology.shorelinePressure) || 0, 0, 1);
-
-  const angle = (Number(topology.landBodyId) || 1) * 0.73 + u * Math.PI * 2 + v * Math.PI;
-  const strength = clamp(slope * 0.34 + canyon * 0.38 + coast * 0.18, 0, 1);
-
-  return Object.freeze({
-    flowDirection: strength > 0.16 ? "terrain_to_receiver" : "none",
-    flowVectorX: Math.cos(angle) * strength,
-    flowVectorY: Math.sin(angle) * strength,
-    flowStrength: strength
-  });
 }
 
 function composeHydrationSample(uInput, vInput, context = {}) {
-  const options = getOptions(context);
   const point = normalizeUV(uInput, vInput);
+  const topology = getTopology(context, point.u, point.v);
+  const tectonics = getTectonics(context, point.u, point.v, topology);
+  const terrain = getTerrain(context, point.u, point.v, topology);
+  const oceans = getOceans(context, point.u, point.v, topology);
 
-  const topology = getTopology(options, point.u, point.v);
-  const tectonics = getTectonics(options, point.u, point.v, topology);
-  const terrain = getTerrain(options, point.u, point.v, topology);
+  const land = topologyLand(topology);
+  const ice = topologyIce(topology);
+  const beach = topologyBeach(topology);
 
-  const land = isLand(topology);
-  const ice = isIce(topology, terrain);
-  const beach = isBeach(topology);
-  const inland = isInlandTerrain(topology);
-  const ocean = !land && !ice;
+  const oceanWaterClass = waterClassFromOceans(oceans);
+  const oceanActive = Boolean(oceans.oceanActive);
+  const waterFromOcean = oceanWaterClass !== "dry_land";
 
-  const h = options.hydrationContext;
+  const river = land ? clamp(Number(terrain.riverbedPressure) || 0, 0, 1) : 0;
+  const stream = land ? clamp(Number(terrain.streamPressure) || 0, 0, 1) : 0;
+  const lake = land ? clamp(Number(terrain.lakeBasinPressure) || 0, 0, 1) : 0;
+  const glacier = ice ? 0.88 : land ? clamp(Number(terrain.glacierSeatPressure) || 0, 0, 1) : 0;
+  const snowpack = ice ? 0.74 : land ? clamp(Number(terrain.snowpackSourcePressure) || 0, 0, 1) : 0;
+  const floodplain = land ? clamp(Number(terrain.floodplainPressure) || 0, 0, 1) : 0;
+  const delta = clamp((Number(terrain.deltaReceiverPressure) || 0) * 0.62 + Number(oceans.shorelineContactIndex || 0) * 0.22, 0, 1);
+  const spring = land ? clamp((Number(terrain.hydrologyReadinessIndex) || 0) * 0.24 + (Number(topology.subterraneanDepthIndex) || 0) * 0.22, 0, 1) : 0;
+  const subterranean = clamp((Number(topology.subterraneanDepthIndex) || 0) * 0.42 + (land ? Number(terrain.hydrologyReadinessIndex) || 0 : Number(oceans.oceanDepthIndex) || 0) * 0.16, 0, 1);
 
-  const broadNoise = fbm(point.lon * 4.4 + 1.5, point.lat * 4.4 - 1.1, 808, 4);
-  const detailNoise = fbm(point.lon * 13.0 - 2.6, point.lat * 13.0 + 0.8, 909, 4);
+  let waterClass = oceanWaterClass;
 
-  const oceanDepthIndex = ocean
-    ? deriveOceanDepth(topology, tectonics)
-    : 0;
+  if (waterClass === "dry_land") {
+    if (glacier > 0.62) waterClass = "glacier_mass";
+    else if (snowpack > 0.62) waterClass = "snowpack_source";
+    else if (lake > 0.58) waterClass = "lake_fill";
+    else if (river > 0.54) waterClass = "river_flow";
+    else if (stream > 0.50) waterClass = "stream_flow";
+    else if (delta > 0.56) waterClass = "delta_wetland";
+    else if (floodplain > 0.56) waterClass = "floodplain_wetland";
+    else if (spring > 0.54) waterClass = "spring_seep";
+    else if (subterranean > 0.62) waterClass = "subterranean_water";
+  }
 
-  const bathymetryHydrationIndex = ocean
-    ? clamp(
-        oceanDepthIndex * 0.58 +
-          (Number(topology.bathymetryBlueprintIndex) || 0) * 0.30 +
-          detailNoise * 0.12,
-        0,
-        1
-      )
-    : 0;
-
-  const trenchHydrationIndex = ocean
-    ? clamp(
-        (Number(topology.trenchDepthIndex) || 0) * 0.58 +
-          (Number(tectonics.trenchReinforcementPermission) || 0) * 0.26 +
-          Math.max(0, detailNoise - 0.52) * 0.38,
-        0,
-        1
-      )
-    : 0;
-
-  const shelfPressure = ocean
-    ? clamp(
-        (Number(topology.shelfDepthIndex) || 0) * 0.58 +
-          (Number(topology.reefShelfPermission) || 0) * 0.26 +
-          (Number(topology.coastalExposureIndex) || 0) * 0.16,
-        0,
-        1
-      )
-    : 0;
-
-  const coastalPressure = ocean
-    ? clamp(
-        (Number(topology.coastalExposureIndex) || 0) * 0.46 +
-          (Number(topology.shorelinePressure) || 0) * 0.34 +
-          shelfPressure * 0.18,
-        0,
-        1
-      )
-    : 0;
-
-  const visibleWaterDepthClass = ocean
-    ? deriveVisibleDepthClass(oceanDepthIndex, shelfPressure, trenchHydrationIndex, coastalPressure)
-    : "none";
-
-  const visibleWaterDepthIndex = ocean
-    ? clamp(
-        oceanDepthIndex * 0.46 +
-          bathymetryHydrationIndex * 0.30 +
-          trenchHydrationIndex * 0.18 +
-          (1 - shelfPressure) * 0.10,
-        0,
-        1
-      )
-    : 0;
-
-  const waterVisibilityIndex = ocean
-    ? clamp(
-        h.visibleDepthDemand * 0.28 +
-          visibleWaterDepthIndex * 0.46 +
-          Math.abs(detailNoise - 0.5) * 0.18 +
-          broadNoise * 0.08,
-        0,
-        1
-      )
-    : 0;
-
-  const coastalShelfBlueIndex = ocean
-    ? clamp(shelfPressure * 0.62 + coastalPressure * 0.26 + waterVisibilityIndex * 0.12, 0, 1)
-    : 0;
-
-  const deepOceanBlueIndex = ocean
-    ? clamp(oceanDepthIndex * 0.58 + bathymetryHydrationIndex * 0.26 + (1 - shelfPressure) * 0.16, 0, 1)
-    : 0;
-
-  const trenchDarknessIndex = ocean
-    ? clamp(trenchHydrationIndex * 0.72 + oceanDepthIndex * 0.18 + detailNoise * 0.10, 0, 1)
-    : 0;
-
-  const shorelinePressure = clamp(Number(topology.shorelinePressure) || 0, 0, 1);
-  const beachOutlinePressure = clamp(
-    Number(topology.beachOutlinePressure) ||
-      Number(topology.beachPressure) ||
-      (beach ? shorelinePressure : 0),
-    0,
-    1
-  );
-
-  const beachContactRimIndex = clamp(
-    beachOutlinePressure * 0.44 +
-      shorelinePressure * 0.28 +
-      coastalPressure * 0.18 +
-      h.beachRimDemand * 0.10,
-    0,
-    1
-  );
-
-  const beachWaterContactIndex = clamp(
-    Number(topology.beachWaterContactIndex) ||
-      beachContactRimIndex * 0.84 +
-        shelfPressure * 0.10,
-    0,
-    1
-  );
-
-  const riverFlowPressure = land
-    ? clamp(
-        (Number(terrain.riverbedPressure) || 0) * 0.48 +
-          (Number(terrain.riverIncisionPressure) || 0) * 0.24 +
-          (Number(terrain.hydrologyReadinessIndex) || 0) * 0.18 +
-          h.riverActivationDemand * 0.10,
-        0,
-        1
-      )
-    : 0;
-
-  const streamFlowPressure = land
-    ? clamp(
-        (Number(terrain.streamPressure) || 0) * 0.54 +
-          (Number(terrain.valleyChannelPressure) || 0) * 0.18 +
-          h.streamActivationDemand * 0.10,
-        0,
-        1
-      )
-    : 0;
-
-  const lakeFillPressure = land
-    ? clamp(
-        (Number(terrain.lakeBasinPressure) || 0) * 0.62 +
-          (Number(terrain.basin) || 0) * 0.16 +
-          h.lakeActivationDemand * 0.10,
-        0,
-        1
-      )
-    : 0;
-
-  const glacierMassPressure = ice
-    ? clamp(0.72 + h.glacierActivationDemand * 0.18, 0, 1)
-    : land
-      ? clamp(
-          (Number(terrain.glacierSeatPressure) || 0) * 0.66 +
-            (Number(terrain.snowpackSourcePressure) || 0) * 0.18 +
-            h.glacierActivationDemand * 0.08,
-          0,
-          1
-        )
-      : 0;
-
-  const snowpackPressure = ice
-    ? clamp(0.64 + h.snowpackActivationDemand * 0.18, 0, 1)
-    : land
-      ? clamp(
-          (Number(terrain.snowpackSourcePressure) || 0) * 0.68 +
-            glacierMassPressure * 0.20,
-          0,
-          1
-        )
-      : 0;
-
-  const floodplainWetness = land
-    ? clamp(
-        (Number(terrain.floodplainPressure) || 0) * 0.60 +
-          riverFlowPressure * 0.18 +
-          h.floodplainActivationDemand * 0.08,
-        0,
-        1
-      )
-    : 0;
-
-  const deltaWetness = clamp(
-    (Number(terrain.deltaReceiverPressure) || 0) * 0.54 +
-      coastalPressure * 0.20 +
-      riverFlowPressure * 0.18 +
-      h.deltaActivationDemand * 0.06,
-    0,
-    1
-  );
-
-  const springSeepPressure = land
-    ? clamp(
-        (Number(topology.subterraneanDepthIndex) || 0) * 0.22 +
-          (Number(tectonics.crustalStressIndex) || 0) * 0.18 +
-          (Number(terrain.hydrologyReadinessIndex) || 0) * 0.20 +
-          h.springActivationDemand * 0.10,
-        0,
-        1
-      )
-    : 0;
-
-  const subterraneanWaterPressure = clamp(
-    (Number(topology.subterraneanDepthIndex) || 0) * 0.36 +
-      (Number(topology.foundationDensityIndex) || 0) * 0.12 +
-      (land ? (Number(terrain.hydrologyReadinessIndex) || 0) * 0.18 : oceanDepthIndex * 0.20) +
-      h.subterraneanActivationDemand * 0.10,
-    0,
-    1
-  );
-
-  const waterClass = deriveWaterClass({
-    ocean,
-    depth: oceanDepthIndex,
-    shelf: shelfPressure,
-    trench: trenchHydrationIndex,
-    coastal: coastalPressure,
-    river: riverFlowPressure,
-    stream: streamFlowPressure,
-    lake: lakeFillPressure,
-    glacier: glacierMassPressure,
-    snowpack: snowpackPressure,
-    floodplain: floodplainWetness,
-    delta: deltaWetness,
-    spring: springSeepPressure,
-    subterranean: subterraneanWaterPressure
-  });
-
-  const surfaceWaterIndex = clamp(
-    ocean
-      ? 0.70 +
-          waterVisibilityIndex * 0.18 +
-          visibleWaterDepthIndex * 0.12
-      : Math.max(
-          riverFlowPressure,
-          streamFlowPressure,
-          lakeFillPressure,
-          glacierMassPressure,
-          snowpackPressure,
-          floodplainWetness,
-          deltaWetness,
-          springSeepPressure
-        ),
-    0,
-    1
-  );
-
-  const hydrationActivationIndex = clamp(
-    waterClass === "dry_land"
-      ? Math.max(
-          subterraneanWaterPressure * 0.30,
-          beachContactRimIndex * 0.20
-        )
-      : surfaceWaterIndex,
-    0,
-    1
-  );
-
+  const hydrated = waterClass !== "dry_land";
+  const landStillVisible = land && !hydrated;
   const exposedLandAfterSeaLevel = land && !ice;
-  const landStillVisibleAfterHydration =
-    exposedLandAfterSeaLevel &&
-    !(
-      lakeFillPressure > 0.74 ||
-      riverFlowPressure > 0.72 ||
-      floodplainWetness > 0.78 ||
-      deltaWetness > 0.78
-    );
-
-  const hydrationMayCoverSand = true;
-  const sandCoveredByHydration =
-    beach &&
-    (
-      beachWaterContactIndex > 0.54 ||
-      coastalPressure > 0.46 ||
-      deltaWetness > 0.60
-    );
-
-  const beachRimStillVisible =
-    beach &&
-    beachContactRimIndex > 0.20 &&
-    !sandCoveredByHydration;
-
-  const visualHydrationClass =
-    waterClass === "dry_land"
-      ? beachRimStillVisible
-        ? "beach_rim_visible"
-        : inland
-          ? "exposed_inland_land"
-          : "exposed_land"
-      : waterClass;
-
-  const flow = deriveFlowDirection(topology, terrain, point.u, point.v);
 
   return Object.freeze({
     receipt: RECEIPT,
@@ -934,58 +341,53 @@ function composeHydrationSample(uInput, vInput, context = {}) {
     planetaryObject: PLANETARY_OBJECT,
     generation: GENERATION,
     file: FILE,
+    contracts: CONTRACTS,
+    hydrationLaw: HYDRATION_LAW,
 
     u: point.u,
     v: point.v,
     lon: point.lon,
     lat: point.lat,
 
-    hydrationLaw: HYDRATION_LAW,
-    contracts: CONTRACTS,
-
     topologyReceipt: topology.receipt || "unknown",
     tectonicsReceipt: tectonics.receipt || "unknown",
     terrainReceipt: terrain.receipt || "unknown",
+    oceansReceipt: oceans.receipt || "unknown",
 
     consumesTopology: true,
     consumesTectonics: true,
     consumesTerrain: true,
+    consumesOceansChild: true,
 
+    hydrationParentActive: true,
+    oceansChildActive: true,
     seaLevelHydrationActive: true,
     waterDepthActive: true,
     depthVisibilityActive: true,
     beachRimActive: true,
     exposedLandReportActive: true,
-    hydrationMayCoverSand,
-
-    topologyLandFootprint: land,
-    topologyVoidFootprint: !land && !ice,
-    isLandFootprint: land,
-    isAboveWaterLandFootprint: land && !ice,
-    isVoidFootprint: !land && !ice,
-    isWaterFootprint: !land && !ice,
-    isIceFootprint: ice,
-    isBeachFootprint: beach,
-    isInlandTerrainFootprint: inland,
-
-    exposedLandAfterSeaLevel,
-    landStillVisibleAfterHydration,
-    exposedLandVisibilityIndex: landStillVisibleAfterHydration
-      ? clamp(0.62 + (Number(terrain.normalizedElevation) || 0) * 0.22, 0, 1)
-      : 0,
-    exposedLandClass: landStillVisibleAfterHydration
-      ? beach
-        ? "beach_outline_remaining"
-        : inland
-          ? "inland_terrain_remaining"
-          : "land_remaining"
-      : "covered_or_not_land",
 
     waterClass,
-    waterClassId: waterClassIdFor(waterClass),
-    visualHydrationClass,
+    waterClassId:
+      waterClass === "trench_water" ? 90 :
+      waterClass === "deep_ocean_water" ? 80 :
+      waterClass === "ocean_water" ? 70 :
+      waterClass === "shelf_water" ? 60 :
+      waterClass === "coastal_water" ? 50 :
+      waterClass === "lake_fill" ? 40 :
+      waterClass === "river_flow" ? 35 :
+      waterClass === "stream_flow" ? 30 :
+      waterClass === "delta_wetland" ? 25 :
+      waterClass === "floodplain_wetland" ? 24 :
+      waterClass === "spring_seep" ? 22 :
+      waterClass === "subterranean_water" ? 20 :
+      waterClass === "glacier_mass" ? 15 :
+      waterClass === "snowpack_source" ? 14 :
+      0,
 
-    isHydrated: waterClass !== "dry_land",
+    visualHydrationClass: hydrated ? waterClass : land ? "exposed_land" : "dry_void",
+
+    isHydrated: hydrated,
     isOceanWater: waterClass === "ocean_water",
     isCoastalWater: waterClass === "coastal_water",
     isShelfWater: waterClass === "shelf_water",
@@ -999,83 +401,95 @@ function composeHydrationSample(uInput, vInput, context = {}) {
     isFloodplain: waterClass === "floodplain_wetland",
     isDelta: waterClass === "delta_wetland",
     isSpring: waterClass === "spring_seep",
-    isSubterraneanWater: subterraneanWaterPressure > 0.58,
+    isSubterraneanWater: waterClass === "subterranean_water",
 
-    visibleWaterDepthClass,
-    visibleWaterDepthIndex,
-    waterVisibilityIndex,
-    coastalShelfBlueIndex,
-    deepOceanBlueIndex,
-    trenchDarknessIndex,
+    topologyLandFootprint: land,
+    topologyVoidFootprint: !land && !ice,
+    isLandFootprint: land,
+    isAboveWaterLandFootprint: land && !ice,
+    isVoidFootprint: !land && !ice,
+    isWaterFootprint: !land && !ice,
+    isIceFootprint: ice,
+    isBeachFootprint: beach,
 
-    oceanDepthIndex,
-    bathymetryHydrationIndex,
-    trenchHydrationIndex,
-    shelfPressure,
-    coastalWaterPressure: coastalPressure,
+    exposedLandAfterSeaLevel,
+    landStillVisibleAfterHydration: landStillVisible,
+    exposedLandVisibilityIndex: landStillVisible ? 0.74 : 0,
+    exposedLandClass: landStillVisible ? (beach ? "beach_outline_remaining" : "inland_land_remaining") : "covered_or_not_land",
 
-    beachOutlinePressure,
-    beachContactRimIndex,
-    beachWaterContactIndex,
-    beachRimStillVisible,
-    sandCoveredByHydration,
+    visibleWaterDepthClass: oceans.oceanDepthClass || oceans.oceanClass || "none",
+    visibleWaterDepthIndex: clamp(Number(oceans.oceanDepthIndex) || 0, 0, 1),
+    waterVisibilityIndex: clamp(Number(oceans.visibleOceanIndex) || 0, 0, 1),
+    coastalShelfBlueIndex: clamp(Math.max(Number(oceans.coastalTurquoiseIndex) || 0, Number(oceans.shelfWaterIndex) || 0), 0, 1),
+    deepOceanBlueIndex: clamp(Number(oceans.deepOceanIndex) || 0, 0, 1),
+    trenchDarknessIndex: clamp(Number(oceans.trenchWaterIndex) || 0, 0, 1),
 
-    riverFlowPressure,
-    streamFlowPressure,
-    lakeFillPressure,
-    glacierMassPressure,
-    snowpackPressure,
-    floodplainWetness,
-    deltaWetness,
-    springSeepPressure,
-    subterraneanWaterPressure,
+    oceanClass: oceans.oceanClass,
+    oceanClassId: oceans.oceanClassId,
+    oceanActive,
+    oceanFromChild: true,
+    oceanDoesNotOwnLand: true,
+    landPreservedByTopology: Boolean(oceans.landPreservedByTopology),
+    coastalTurquoiseIndex: clamp(Number(oceans.coastalTurquoiseIndex) || 0, 0, 1),
+    shelfWaterIndex: clamp(Number(oceans.shelfWaterIndex) || 0, 0, 1),
+    openOceanIndex: clamp(Number(oceans.openOceanIndex) || 0, 0, 1),
+    deepOceanIndex: clamp(Number(oceans.deepOceanIndex) || 0, 0, 1),
+    trenchWaterIndex: clamp(Number(oceans.trenchWaterIndex) || 0, 0, 1),
+    shorelineContactIndex: clamp(Number(oceans.shorelineContactIndex) || 0, 0, 1),
 
-    surfaceWaterIndex,
-    hydrationActivationIndex,
+    oceanDepthIndex: clamp(Number(oceans.oceanDepthIndex) || Number(topology.oceanDepthIndex) || 0, 0, 1),
+    bathymetryHydrationIndex: clamp(Number(oceans.bathymetryOceanIndex) || Number(topology.bathymetryBlueprintIndex) || 0, 0, 1),
+    trenchHydrationIndex: clamp(Number(oceans.trenchWaterIndex) || Number(topology.trenchDepthIndex) || 0, 0, 1),
+    shelfPressure: clamp(Number(oceans.shelfWaterIndex) || Number(topology.shelfDepthIndex) || 0, 0, 1),
+    coastalWaterPressure: clamp(Number(oceans.coastalTurquoiseIndex) || Number(topology.coastalExposureIndex) || 0, 0, 1),
 
-    seaLevelFill: h.seaLevelFill,
-    waterdownStrength: h.waterdownStrength,
+    beachOutlinePressure: clamp(Number(topology.beachOutlinePressure) || 0, 0, 1),
+    beachContactRimIndex: clamp(Number(oceans.beachRimIndex) || 0, 0, 1),
+    beachWaterContactIndex: clamp(Number(topology.beachWaterContactIndex) || Number(oceans.shorelineContactIndex) || 0, 0, 1),
+    beachRimStillVisible: Boolean(oceans.beachRimPreserved),
+    sandCoveredByHydration: beach && waterFromOcean,
 
-    watershedId: terrain.watershedId || (ocean ? "ocean" : "unassigned_land_watershed"),
-    flowDirection: flow.flowDirection,
-    flowVectorX: flow.flowVectorX,
-    flowVectorY: flow.flowVectorY,
-    flowStrength: flow.flowStrength,
+    riverFlowPressure: river,
+    streamFlowPressure: stream,
+    lakeFillPressure: lake,
+    glacierMassPressure: glacier,
+    snowpackPressure: snowpack,
+    floodplainWetness: floodplain,
+    deltaWetness: delta,
+    springSeepPressure: spring,
+    subterraneanWaterPressure: subterranean,
+
+    surfaceWaterIndex: hydrated ? clamp(Math.max(Number(oceans.visibleOceanIndex) || 0, river, stream, lake, glacier, snowpack, delta, floodplain), 0, 1) : 0,
+    hydrationActivationIndex: hydrated ? clamp(Math.max(Number(oceans.visibleOceanIndex) || 0, river, stream, lake, glacier, snowpack, delta, floodplain), 0, 1) : 0,
 
     hydrationColorInfluence: Object.freeze({
-      waterDominance: clamp(surfaceWaterIndex * 0.84 + waterVisibilityIndex * 0.16, 0, 1),
-      coastalBlue: coastalShelfBlueIndex,
-      deepBlue: deepOceanBlueIndex,
-      trenchDark: trenchDarknessIndex,
-      beachRim: beachContactRimIndex,
-      exposedLand: landStillVisibleAfterHydration ? 1 : 0,
-      glacierWhite: glacierMassPressure,
-      riverBlue: riverFlowPressure,
-      lakeBlue: lakeFillPressure
+      waterDominance: hydrated ? 1 : 0,
+      turquoise: Number(oceans.coastalTurquoiseIndex) || 0,
+      coastalBlue: Number(oceans.coastalTurquoiseIndex) || 0,
+      shelfBlue: Number(oceans.shelfWaterIndex) || 0,
+      openBlue: Number(oceans.openOceanIndex) || 0,
+      deepBlue: Number(oceans.deepOceanIndex) || 0,
+      trenchDark: Number(oceans.trenchWaterIndex) || 0,
+      beachRim: Number(oceans.beachRimIndex) || 0,
+      exposedLand: landStillVisible ? 1 : 0,
+      glacierWhite: glacier,
+      riverBlue: river,
+      lakeBlue: lake
     }),
 
-    ownsHydration: true,
+    ownsHydrationParent: true,
+    ownsWaterSystemParent: true,
     ownsWaterPlacement: true,
     ownsWaterFlowPermission: true,
     ownsWaterDepthVisibility: true,
-    ownsBeachContactRim: true,
-    ownsExposedLandReport: true,
+    ownsOceansChildHandoff: true,
 
+    ownsOceansChildExpression: false,
     ownsTopology: false,
     ownsLandFootprint: false,
-    ownsVoidFootprint: false,
     ownsSeaLevelBoundary: false,
     ownsTectonics: false,
     ownsTerrain: false,
-    ownsAboveSeaElevation: false,
-    ownsClimate: false,
-    ownsEcology: false,
-    ownsFoliage: false,
-    ownsTrees: false,
-    ownsVegetation: false,
-    ownsAnimals: false,
-    ownsMarineLife: false,
-    ownsConstructCivilization: false,
     ownsRouteRendering: false,
     ownsRuntimeRendering: false,
     ownsFinalRender: false,
@@ -1086,12 +500,11 @@ function composeHydrationSample(uInput, vInput, context = {}) {
     animalsEnabled: false,
     marineLifeEnabled: false,
     constructCivilizationEnabled: false,
-
     foliage: false,
     trees: false,
     vegetation: false,
-    imageGeneration: false,
     graphicBox: false,
+    imageGeneration: false,
     visualPassClaimed: false
   });
 }
@@ -1101,83 +514,38 @@ export function sampleHydration(u, v, context = {}) {
 }
 
 export function buildHydrationField(width = DEFAULTS.fieldWidth, height = DEFAULTS.fieldHeight, context = {}) {
-  const options = getOptions({
-    ...context,
-    fieldWidth: width,
-    fieldHeight: height
-  });
-
   const w = normalizeDimension(width, DEFAULTS.fieldWidth, DEFAULTS.minFieldWidth, DEFAULTS.maxFieldWidth);
   const h = normalizeDimension(height, DEFAULTS.fieldHeight, DEFAULTS.minFieldHeight, DEFAULTS.maxFieldHeight);
 
-  const topologyField = safeCall(null, () =>
-    buildTopologyField(w, h, options.topologyContext)
-  );
-
-  const tectonicsField = safeCall(null, () =>
-    buildTectonicsField(w, h, {
-      ...options.tectonicsContext,
-      topologyContext: options.topologyContext
-    })
-  );
-
-  const terrainField = safeCall(null, () =>
-    buildTerrainField(w, h, {
-      ...options.terrainContext,
-      topologyContext: options.topologyContext,
-      tectonicsContext: options.tectonicsContext
-    })
-  );
+  const topologyField = safeCall(null, () => buildTopologyField(w, h, context.topologyContext || {}));
+  const tectonicsField = safeCall(null, () => buildTectonicsField(w, h, context.tectonicsContext || {}));
+  const terrainField = safeCall(null, () => buildTerrainField(w, h, context.terrainContext || {}));
+  const oceansField = safeCall(null, () => buildOceansField(w, h, context.oceansContext || context));
 
   const samplingContext = Object.freeze({
-    ...options,
+    ...context,
     topologyField,
     tectonicsField,
-    terrainField
+    terrainField,
+    oceansField
   });
 
   const samples = new Array(w * h);
 
-  let landSamples = 0;
-  let voidSamples = 0;
-  let iceSamples = 0;
-  let beachSamples = 0;
-  let exposedLandSamples = 0;
-  let visibleLandSamples = 0;
   let hydratedSamples = 0;
   let oceanSamples = 0;
   let coastalSamples = 0;
   let shelfSamples = 0;
   let deepOceanSamples = 0;
   let trenchSamples = 0;
-  let riverSamples = 0;
-  let streamSamples = 0;
-  let lakeSamples = 0;
-  let glacierSamples = 0;
-  let snowpackSamples = 0;
-  let floodplainSamples = 0;
-  let deltaSamples = 0;
-  let springSamples = 0;
-  let subterraneanSamples = 0;
+  let visibleLandSamples = 0;
   let beachRimSamples = 0;
-  let sandCoveredSamples = 0;
   let foliageSamples = 0;
-
-  let maxWaterVisibility = 0;
-  let maxVisibleDepth = 0;
-  let maxCoastalBlue = 0;
-  let maxDeepBlue = 0;
-  let maxTrenchDark = 0;
-  let maxBeachRim = 0;
-  let maxHydration = 0;
-  let maxSurfaceWater = 0;
-  let maxRiver = 0;
-  let maxLake = 0;
-  let maxGlacier = 0;
+  let maxTurquoise = 0;
+  let maxDepth = 0;
+  let maxTrench = 0;
 
   const waterClasses = new Set();
-  const visualHydrationClasses = new Set();
-  const visibleDepthClasses = new Set();
 
   for (let y = 0; y < h; y += 1) {
     const v = h === 1 ? 0.5 : y / (h - 1);
@@ -1187,52 +555,23 @@ export function buildHydrationField(width = DEFAULTS.fieldWidth, height = DEFAUL
       const sample = composeHydrationSample(u, v, samplingContext);
 
       samples[y * w + x] = sample;
-
       waterClasses.add(sample.waterClass);
-      visualHydrationClasses.add(sample.visualHydrationClass);
-      visibleDepthClasses.add(sample.visibleWaterDepthClass);
 
-      if (sample.isIceFootprint) iceSamples += 1;
-      else if (sample.isLandFootprint) landSamples += 1;
-      else voidSamples += 1;
-
-      if (sample.isBeachFootprint) beachSamples += 1;
-      if (sample.exposedLandAfterSeaLevel) exposedLandSamples += 1;
-      if (sample.landStillVisibleAfterHydration) visibleLandSamples += 1;
       if (sample.isHydrated) hydratedSamples += 1;
-      if (sample.isOceanWater) oceanSamples += 1;
+      if (sample.oceanActive) oceanSamples += 1;
       if (sample.isCoastalWater) coastalSamples += 1;
       if (sample.isShelfWater) shelfSamples += 1;
       if (sample.isDeepOcean) deepOceanSamples += 1;
       if (sample.isTrenchWater) trenchSamples += 1;
-      if (sample.isRiver) riverSamples += 1;
-      if (sample.isStream) streamSamples += 1;
-      if (sample.isLake) lakeSamples += 1;
-      if (sample.isGlacier) glacierSamples += 1;
-      if (sample.isSnowpack) snowpackSamples += 1;
-      if (sample.isFloodplain) floodplainSamples += 1;
-      if (sample.isDelta) deltaSamples += 1;
-      if (sample.isSpring) springSamples += 1;
-      if (sample.isSubterraneanWater) subterraneanSamples += 1;
+      if (sample.landStillVisibleAfterHydration) visibleLandSamples += 1;
       if (sample.beachRimStillVisible) beachRimSamples += 1;
-      if (sample.sandCoveredByHydration) sandCoveredSamples += 1;
       if (sample.foliage || sample.trees || sample.vegetation) foliageSamples += 1;
 
-      maxWaterVisibility = Math.max(maxWaterVisibility, sample.waterVisibilityIndex);
-      maxVisibleDepth = Math.max(maxVisibleDepth, sample.visibleWaterDepthIndex);
-      maxCoastalBlue = Math.max(maxCoastalBlue, sample.coastalShelfBlueIndex);
-      maxDeepBlue = Math.max(maxDeepBlue, sample.deepOceanBlueIndex);
-      maxTrenchDark = Math.max(maxTrenchDark, sample.trenchDarknessIndex);
-      maxBeachRim = Math.max(maxBeachRim, sample.beachContactRimIndex);
-      maxHydration = Math.max(maxHydration, sample.hydrationActivationIndex);
-      maxSurfaceWater = Math.max(maxSurfaceWater, sample.surfaceWaterIndex);
-      maxRiver = Math.max(maxRiver, sample.riverFlowPressure);
-      maxLake = Math.max(maxLake, sample.lakeFillPressure);
-      maxGlacier = Math.max(maxGlacier, sample.glacierMassPressure);
+      maxTurquoise = Math.max(maxTurquoise, sample.coastalTurquoiseIndex);
+      maxDepth = Math.max(maxDepth, sample.visibleWaterDepthIndex);
+      maxTrench = Math.max(maxTrench, sample.trenchDarknessIndex);
     }
   }
-
-  const totalSamples = samples.length;
 
   return Object.freeze({
     receipt: RECEIPT,
@@ -1243,91 +582,37 @@ export function buildHydrationField(width = DEFAULTS.fieldWidth, height = DEFAUL
     width: w,
     height: h,
     samples,
-    hydrationLaw: HYDRATION_LAW,
-    contracts: CONTRACTS,
-
     topologyField,
     tectonicsField,
     terrainField,
-
+    oceansField,
     stats: Object.freeze({
-      totalSamples,
-      landSamples,
-      voidSamples,
-      iceSamples,
-      beachSamples,
-      exposedLandSamples,
-      visibleLandSamples,
+      totalSamples: samples.length,
       hydratedSamples,
       oceanSamples,
       coastalSamples,
       shelfSamples,
       deepOceanSamples,
       trenchSamples,
-      riverSamples,
-      streamSamples,
-      lakeSamples,
-      glacierSamples,
-      snowpackSamples,
-      floodplainSamples,
-      deltaSamples,
-      springSamples,
-      subterraneanSamples,
+      visibleLandSamples,
       beachRimSamples,
-      sandCoveredSamples,
       foliageSamples,
-
-      landRatio: totalSamples ? landSamples / totalSamples : 0,
-      voidRatio: totalSamples ? voidSamples / totalSamples : 0,
-      iceRatio: totalSamples ? iceSamples / totalSamples : 0,
-      beachRatio: totalSamples ? beachSamples / totalSamples : 0,
-      exposedLandRatio: totalSamples ? exposedLandSamples / totalSamples : 0,
-      visibleLandRatio: totalSamples ? visibleLandSamples / totalSamples : 0,
-      hydrationRatio: totalSamples ? hydratedSamples / totalSamples : 0,
-      oceanRatio: totalSamples ? oceanSamples / totalSamples : 0,
-      coastalRatio: totalSamples ? coastalSamples / totalSamples : 0,
-      shelfRatio: totalSamples ? shelfSamples / totalSamples : 0,
-      deepOceanRatio: totalSamples ? deepOceanSamples / totalSamples : 0,
-      trenchRatio: totalSamples ? trenchSamples / totalSamples : 0,
-      riverRatio: totalSamples ? riverSamples / totalSamples : 0,
-      streamRatio: totalSamples ? streamSamples / totalSamples : 0,
-      lakeRatio: totalSamples ? lakeSamples / totalSamples : 0,
-      glacierRatio: totalSamples ? glacierSamples / totalSamples : 0,
-      snowpackRatio: totalSamples ? snowpackSamples / totalSamples : 0,
-      floodplainRatio: totalSamples ? floodplainSamples / totalSamples : 0,
-      deltaRatio: totalSamples ? deltaSamples / totalSamples : 0,
-      springRatio: totalSamples ? springSamples / totalSamples : 0,
-      subterraneanRatio: totalSamples ? subterraneanSamples / totalSamples : 0,
-      beachRimRatio: totalSamples ? beachRimSamples / totalSamples : 0,
-      sandCoveredRatio: totalSamples ? sandCoveredSamples / totalSamples : 0,
-
-      maxWaterVisibility,
-      maxVisibleDepth,
-      maxCoastalBlue,
-      maxDeepBlue,
-      maxTrenchDark,
-      maxBeachRim,
-      maxHydration,
-      maxSurfaceWater,
-      maxRiver,
-      maxLake,
-      maxGlacier,
-
+      hydrationRatio: samples.length ? hydratedSamples / samples.length : 0,
+      oceanRatio: samples.length ? oceanSamples / samples.length : 0,
+      coastalRatio: samples.length ? coastalSamples / samples.length : 0,
+      shelfRatio: samples.length ? shelfSamples / samples.length : 0,
+      deepOceanRatio: samples.length ? deepOceanSamples / samples.length : 0,
+      trenchRatio: samples.length ? trenchSamples / samples.length : 0,
+      visibleLandRatio: samples.length ? visibleLandSamples / samples.length : 0,
+      beachRimRatio: samples.length ? beachRimSamples / samples.length : 0,
+      maxTurquoise,
+      maxDepth,
+      maxTrench,
       waterClasses: Object.freeze(Array.from(waterClasses)),
-      visualHydrationClasses: Object.freeze(Array.from(visualHydrationClasses)),
-      visibleDepthClasses: Object.freeze(Array.from(visibleDepthClasses)),
-
-      seaLevelHydrationActive: true,
-      waterDepthActive: true,
-      depthVisibilityActive: true,
-      beachRimActive: true,
-      exposedLandReportActive: true,
-      hydrationMayCoverSand: true,
-
-      topologyContract: CONTRACTS.topology,
-      terrainContract: CONTRACTS.terrain,
-
-      foliageClosed: true,
+      hydrationParentActive: true,
+      oceansChildActive: true,
+      oceanDoesNotOwnLand: true,
+      landPreservedByTopology: true,
       visualPassClaimed: false
     })
   });
@@ -1346,118 +631,41 @@ export function getHydrationSampleFromField(field, uInput, vInput) {
 }
 
 export function getHydrationStatus() {
-  const topologyStatus = safeCall(null, () => getTopologyStatus());
-  const tectonicsStatus = safeCall(null, () => getTectonicsStatus());
-  const terrainStatus = safeCall(null, () => getTerrainStatus());
-
   return Object.freeze({
     ok: true,
     receipt: RECEIPT,
     previousReceipts: PREVIOUS_RECEIPTS,
     status: "active",
-    id: "audralia-hydration-visible-depth-beach-rim-exposed-land",
+    id: "audralia-hydration-parent-consume-oceans-child",
     planetaryObject: PLANETARY_OBJECT,
-    publicName: PLANETARY_OBJECT,
     generation: GENERATION,
     file: FILE,
-
     contracts: CONTRACTS,
     hydrationLaw: HYDRATION_LAW,
-
-    topologyAuthority: TOPOLOGY_AUTHORITY,
-    tectonicsAuthority: TECTONICS_AUTHORITY,
-    terrainAuthority: TERRAIN_AUTHORITY,
-
-    topologyStatus,
-    tectonicsStatus,
-    terrainStatus,
-
+    topologyStatus: safeCall(null, () => getTopologyStatus()),
+    tectonicsStatus: safeCall(null, () => getTectonicsStatus()),
+    terrainStatus: safeCall(null, () => getTerrainStatus()),
+    oceansStatus: safeCall(null, () => getOceansStatus()),
     exports: Object.freeze([
       "sampleHydration",
       "buildHydrationField",
       "getHydrationSampleFromField",
       "getHydrationStatus"
     ]),
-
     consumesTopology: true,
     consumesTectonics: true,
     consumesTerrain: true,
-
-    seaLevelHydrationActive: true,
-    waterDepthActive: true,
-    depthVisibilityActive: true,
-    beachRimActive: true,
-    exposedLandReportActive: true,
-    hydrationMayCoverSand: true,
-
-    visibleWaterDepthFields: Object.freeze([
-      "visibleWaterDepthClass",
-      "visibleWaterDepthIndex",
-      "waterVisibilityIndex",
-      "coastalShelfBlueIndex",
-      "deepOceanBlueIndex",
-      "trenchDarknessIndex",
-      "beachContactRimIndex",
-      "exposedLandAfterSeaLevel",
-      "landStillVisibleAfterHydration",
-      "sandCoveredByHydration"
-    ]),
-
-    surfaceWaterClasses: Object.freeze([
-      "ocean_water",
-      "coastal_water",
-      "shelf_water",
-      "deep_ocean_water",
-      "trench_water",
-      "river_flow",
-      "stream_flow",
-      "lake_fill",
-      "glacier_mass",
-      "snowpack_source",
-      "delta_wetland",
-      "floodplain_wetland",
-      "spring_seep",
-      "subterranean_water",
-      "dry_land"
-    ]),
-
-    ownsHydration: true,
-    ownsWaterPlacement: true,
-    ownsWaterFlowPermission: true,
-    ownsWaterDepthVisibility: true,
-    ownsBeachContactRim: true,
-    ownsExposedLandReport: true,
-
-    ownsTopology: false,
-    ownsLandFootprint: false,
-    ownsVoidFootprint: false,
-    ownsSeaLevelBoundary: false,
-    ownsTectonics: false,
-    ownsTerrain: false,
-    ownsAboveSeaElevation: false,
-    ownsClimate: false,
-    ownsEcology: false,
-    ownsFoliage: false,
-    ownsTrees: false,
-    ownsVegetation: false,
-    ownsAnimals: false,
-    ownsMarineLife: false,
-    ownsConstructCivilization: false,
+    consumesOceansChild: true,
+    hydrationParentActive: true,
+    oceansChildActive: true,
+    oceanDoesNotOwnLand: true,
+    landPreservedByTopology: true,
+    turquoiseCoastalOutlineActive: true,
     ownsRouteRendering: false,
     ownsRuntimeRendering: false,
     ownsFinalRender: false,
-
-    climateClosed: true,
-    ecologyClosed: true,
-    foliageClosed: true,
-    treesClosed: true,
-    vegetationClosed: true,
-    animalsClosed: true,
-    marineLifeClosed: true,
-    constructCivilizationClosed: true,
-
-    imageGeneration: false,
     graphicBox: false,
+    imageGeneration: false,
     visualPassClaimed: false
   });
 }

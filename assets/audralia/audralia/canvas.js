@@ -1,39 +1,3 @@
-// assets/audralia/audralia.canvas.js
-// AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v2
-//
-// Role:
-// - Audralia adopted-column canvas authority.
-// - Owns canvas creation, runtime sampling, orthographic globe paint, soft water blend,
-//   land/water/ice visual classification, route-visible proof data.
-// - Keeps showroom/globe/audralia/index.js as doorway only.
-// - Consumes runtime truth from assets/audralia/audralia.runtime.js.
-// - Does not mutate runtime, topology, terrain, hydration, oceans, route shell, gauges, or Earth.
-
-const RECEIPT = "AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v2";
-const ROUTE_RECEIPT = "AUDRALIA_ROUTE_CONSUME_CURRENT_RUNTIME_GENEALOGY_SURFACE_TNT_v1";
-const ROUTE_RENEWAL = "AUDRALIA_ROUTE_ADOPTED_CANVAS_DOORWAY_TNT_v2";
-const RUNTIME_AUTHORITY = "/assets/audralia/audralia.runtime.js";
-const RUNTIME_IMPORT_URL = "/assets/audralia/audralia.runtime.js?v=AUDRALIA_RUNTIME_ORGANIC_OCEAN_PLACEMENT_CONTRACT_v1";
-
-const BODY = "audralia";
-const ROUTE = "/showroom/globe/audralia/";
-
-const DEFAULTS = Object.freeze({
-  canvasSize: 792,
-  radiusRatio: 0.405,
-  phase: 0.18084,
-  velocity: 0,
-  runtimeFieldWidth: 384,
-  runtimeFieldHeight: 192,
-  hexRadius: 4.5
-});
-
-function clamp(value, min, max) {
-  const number = Number(value);
-  if (!Number.isFinite(number)) return min;
-  return Math.max(min, Math.min(max, number));
-}
-
 function mix(a, b, t) {
   return a + (b - a) * clamp(t, 0, 1);
 }

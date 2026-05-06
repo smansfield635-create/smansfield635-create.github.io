@@ -1,13 +1,12 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="audralia-adopted-canvas-doorway"
+  data-page="audralia-adopted-canvas-contained-doorway"
   data-route="/showroom/globe/audralia/"
-  data-contract="AUDRALIA_HTML_STAGE_CONTAINMENT_AND_CACHE_KEY_TNT_v16"
-  data-legacy-contract-1="AUDRALIA_HTML_PROOF_CHAIN_ALIGNMENT_TNT_v13"
-  data-legacy-contract-2="AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_HANDOFF_TNT_v2"
-  data-legacy-contract-3="AUDRALIA_ROUTE_ADOPTED_CANVAS_DOORWAY_TNT_v2"
-  data-legacy-contract-4="AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v2"
+  data-contract="AUDRALIA_SERVED_SOURCE_ALIGNMENT_TNT_v17"
+  data-html-contract="AUDRALIA_HTML_SERVED_SOURCE_ALIGNMENT_TNT_v17"
+  data-stage-containment="true"
+  data-square-shell="true"
   data-graphicbox="false"
   data-image-generation="false"
   data-canvas-auto-mount="false"
@@ -18,19 +17,17 @@
   <title>Diamond Gate Bridge · Audralia</title>
   <meta
     name="description"
-    content="Audralia adopted-canvas route shell. The HTML owns the page shell, square containment box, and auditable mount. The canvas authority renders inside the box."
+    content="Audralia adopted-canvas route shell. The HTML owns the contained square shell and mount. The canvas authority renders inside the shell."
   >
 
   <style>
     :root {
       --bg: #02070d;
       --panel: rgba(8, 18, 30, 0.86);
-      --panel-2: rgba(11, 24, 38, 0.72);
       --line: rgba(129, 211, 224, 0.23);
       --text: #edf6f8;
       --muted: #aab8c2;
       --cyan: #8bddea;
-      --deep: #06111d;
       color-scheme: dark;
     }
 
@@ -139,17 +136,18 @@
       position: relative;
       overflow: hidden;
       contain: layout paint style;
+      isolation: isolate;
       z-index: 1;
     }
 
     .canvas-shell {
       position: relative;
-      width: min(88vw, 30rem);
+      width: min(88vw, 22rem);
       max-width: 100%;
       aspect-ratio: 1 / 1;
       margin: 0 auto;
       border: 1px solid rgba(143, 219, 231, 0.22);
-      border-radius: clamp(1.6rem, 8vw, 4rem);
+      border-radius: 2rem;
       background:
         radial-gradient(circle at 50% 42%, rgba(55, 151, 176, 0.11), transparent 42%),
         linear-gradient(180deg, rgba(11, 28, 44, 0.82), rgba(4, 10, 17, 0.92));
@@ -177,6 +175,8 @@
     }
 
     #audraliaCanvas {
+      position: absolute;
+      inset: 0;
       display: block;
       width: 100%;
       height: 100%;
@@ -263,7 +263,7 @@
 
     @media (min-width: 761px) {
       .canvas-shell {
-        width: min(82vw, 42.5rem);
+        width: min(82vw, 34rem);
       }
     }
 
@@ -273,7 +273,7 @@
       }
 
       .canvas-shell {
-        width: min(88vw, 22rem);
+        width: min(86vw, 20rem);
       }
     }
   </style>
@@ -287,7 +287,8 @@
     class="wrap"
     data-audralia-route
     data-audralia-proof-route="true"
-    data-audralia-html-receipt="AUDRALIA_HTML_STAGE_CONTAINMENT_AND_CACHE_KEY_TNT_v16"
+    data-audralia-html-receipt="AUDRALIA_HTML_SERVED_SOURCE_ALIGNMENT_TNT_v17"
+    data-audralia-served-source="AUDRALIA_SERVED_SOURCE_ALIGNMENT_TNT_v17"
     data-audralia-handoff="AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_HANDOFF_TNT_v2"
     data-stage-containment="true"
   >
@@ -310,13 +311,14 @@
       aria-label="Audralia canvas stage"
       data-audralia-stage
       data-audralia-stage-containment="true"
+      data-audralia-served-source-stage="v17"
     >
       <div
         class="canvas-shell"
         id="audraliaCanvasShell"
         data-audralia-canvas-shell
         data-audralia-square-shell="true"
-        data-audralia-stage-lock="AUDRALIA_HTML_STAGE_CONTAINMENT_AND_CACHE_KEY_TNT_v16"
+        data-audralia-stage-lock="AUDRALIA_SERVED_SOURCE_ALIGNMENT_TNT_v17"
       >
         <div
           id="audraliaCanvasMount"
@@ -342,13 +344,13 @@
       </div>
     </section>
 
-    <div class="tag">Audralia · Contained Canvas Doorway</div>
+    <div class="tag">Audralia · Served Source v17 · Contained Canvas Doorway</div>
 
     <h1>Audralia</h1>
 
     <p>
       The HTML owns the page shell, square containment box, and auditable mount. The doorway route imports
-      the adopted-column canvas authority. The canvas authority renders Audralia inside the contained box.
+      the adopted-column canvas authority with the current served-source cache key. The canvas renders only inside the contained square shell.
     </p>
 
     <nav class="nav" aria-label="Audralia actions">
@@ -360,7 +362,7 @@
     <section aria-labelledby="route-status-title">
       <h2 id="route-status-title">Route Status</h2>
       <p id="audraliaRouteStatus" data-audralia-status>
-        Doorway route initializing. Canvas authority handoff pending.
+        Served-source v17 shell loaded. Doorway route initializing.
       </p>
     </section>
 
@@ -378,11 +380,11 @@
         </div>
         <div class="card">
           <strong>Route doorway</strong>
-          Owns import resolution, renderer selection, single render call, and route receipts.
+          Owns import resolution, renderer selection, single render call, cache-key proof, and route receipts.
         </div>
         <div class="card">
           <strong>Canvas authority</strong>
-          Owns canvas creation, runtime sampling, surface paint, animation, dimension receipt, and proof dataset.
+          Owns runtime sampling, surface paint, animation, dimension receipt, and pixel proof inside the square shell.
         </div>
       </div>
     </section>
@@ -390,13 +392,11 @@
     <section aria-labelledby="receipt-title">
       <h2 id="receipt-title">Handoff Receipts</h2>
       <div class="receipts">
-        <p><strong>HTML shell</strong> <code>AUDRALIA_HTML_STAGE_CONTAINMENT_AND_CACHE_KEY_TNT_v16</code></p>
-        <p><strong>Legacy HTML shell</strong> <code>AUDRALIA_HTML_PROOF_CHAIN_ALIGNMENT_TNT_v13</code></p>
-        <p><strong>Legacy handoff</strong> <code>AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_HANDOFF_TNT_v2</code></p>
-        <p><strong>Legacy route contract</strong> <code>AUDRALIA_ROUTE_ADOPTED_CANVAS_DOORWAY_TNT_v2</code></p>
-        <p><strong>Legacy canvas contract</strong> <code>AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v2</code></p>
-        <p><strong>Doorway route</strong> <code>/showroom/globe/audralia/index.js</code></p>
-        <p><strong>Canvas authority</strong> <code>/assets/audralia/audralia.canvas.js</code></p>
+        <p><strong>Served source</strong> <code>AUDRALIA_SERVED_SOURCE_ALIGNMENT_TNT_v17</code></p>
+        <p><strong>HTML shell</strong> <code>AUDRALIA_HTML_SERVED_SOURCE_ALIGNMENT_TNT_v17</code></p>
+        <p><strong>Legacy HTML shell</strong> <code>AUDRALIA_HTML_STAGE_CONTAINMENT_AND_CACHE_KEY_TNT_v16</code></p>
+        <p><strong>Doorway route</strong> <code>/showroom/globe/audralia/index.js?v=audralia-served-source-v17</code></p>
+        <p><strong>Canvas authority</strong> <code>/assets/audralia/audralia.canvas.js?v=audralia-served-source-v17</code></p>
         <p><strong>Runtime truth</strong> <code>/assets/audralia/audralia.runtime.js</code></p>
         <p><strong>Square shell</strong> <code>true</code></p>
         <p><strong>Contained mount</strong> <code>true</code></p>
@@ -407,16 +407,17 @@
     </section>
 
     <footer>
-      Audralia · stage containment locked · current route cache key · no body wipe · no GraphicBox · no image generation.
+      Audralia · served-source aligned · stage containment locked · current route cache key · no GraphicBox · no image generation.
     </footer>
   </main>
 
   <script>
     window.__AUDRALIA_HTML_RECEIPT__ = {
-      contract: "AUDRALIA_HTML_STAGE_CONTAINMENT_AND_CACHE_KEY_TNT_v16",
+      contract: "AUDRALIA_HTML_SERVED_SOURCE_ALIGNMENT_TNT_v17",
+      servedSource: "AUDRALIA_SERVED_SOURCE_ALIGNMENT_TNT_v17",
       legacyContracts: [
+        "AUDRALIA_HTML_STAGE_CONTAINMENT_AND_CACHE_KEY_TNT_v16",
         "AUDRALIA_HTML_PROOF_CHAIN_ALIGNMENT_TNT_v13",
-        "AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_HANDOFF_TNT_v1",
         "AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_HANDOFF_TNT_v2",
         "AUDRALIA_ROUTE_ADOPTED_CANVAS_DOORWAY_TNT_v2",
         "AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v2"
@@ -430,16 +431,17 @@
       graphicBox: false,
       imageGeneration: false,
       canvasAutoMount: false,
-      status: "html-stage-contained"
+      status: "html-served-source-v17-contained"
     };
 
-    document.documentElement.dataset.audraliaHtmlReceipt = "AUDRALIA_HTML_STAGE_CONTAINMENT_AND_CACHE_KEY_TNT_v16";
+    document.documentElement.dataset.audraliaHtmlReceipt = "AUDRALIA_HTML_SERVED_SOURCE_ALIGNMENT_TNT_v17";
+    document.documentElement.dataset.audraliaServedSource = "AUDRALIA_SERVED_SOURCE_ALIGNMENT_TNT_v17";
     document.documentElement.dataset.audraliaStageContainment = "true";
     document.documentElement.dataset.audraliaSquareShell = "true";
     document.documentElement.dataset.graphicBox = "false";
     document.documentElement.dataset.imageGeneration = "false";
   </script>
 
-  <script type="module" src="./index.js?v=audralia-stage-containment-v16"></script>
+  <script type="module" src="./index.js?v=audralia-served-source-v17"></script>
 </body>
 </html>

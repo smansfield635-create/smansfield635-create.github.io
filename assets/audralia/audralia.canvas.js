@@ -1,18 +1,19 @@
 // assets/audralia/audralia.canvas.js
-// AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v1
+// AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v2
 //
 // Role:
 // - Audralia adopted-column canvas authority.
 // - Owns canvas creation, runtime sampling, orthographic globe paint, soft water blend,
-//   land/water/ice visual classification, hex sampling, and route-visible proof data.
+//   land/water/ice visual classification, route-visible proof data.
 // - Keeps showroom/globe/audralia/index.js as doorway only.
 // - Consumes runtime truth from assets/audralia/audralia.runtime.js.
 // - Does not mutate runtime, topology, terrain, hydration, oceans, route shell, gauges, or Earth.
 
-const RECEIPT = "AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v1";
-const ROUTE_RECEIPT = "AUDRALIA_ROUTE_ADOPTED_CANVAS_DOORWAY_TNT_v1";
+const RECEIPT = "AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v2";
+const ROUTE_RECEIPT = "AUDRALIA_ROUTE_CONSUME_CURRENT_RUNTIME_GENEALOGY_SURFACE_TNT_v1";
+const ROUTE_RENEWAL = "AUDRALIA_ROUTE_ADOPTED_CANVAS_DOORWAY_TNT_v2";
 const RUNTIME_AUTHORITY = "/assets/audralia/audralia.runtime.js";
-const RUNTIME_IMPORT_URL = "./audralia.runtime.js?v=AUDRALIA_RUNTIME_ORGANIC_OCEAN_PLACEMENT_CONTRACT_v1";
+const RUNTIME_IMPORT_URL = "/assets/audralia/audralia.runtime.js?v=AUDRALIA_RUNTIME_ORGANIC_OCEAN_PLACEMENT_CONTRACT_v1";
 
 const BODY = "audralia";
 const ROUTE = "/showroom/globe/audralia/";
@@ -22,12 +23,9 @@ const DEFAULTS = Object.freeze({
   radiusRatio: 0.405,
   phase: 0.18084,
   velocity: 0,
-  hexRadius: 4.5,
   runtimeFieldWidth: 384,
   runtimeFieldHeight: 192,
-  waterLift: 1,
-  landLift: 1,
-  glazeStrength: 0.135
+  hexRadius: 4.5
 });
 
 function clamp(value, min, max) {
@@ -42,11 +40,6 @@ function mix(a, b, t) {
 
 function wrap01(value) {
   return ((Number(value) % 1) + 1) % 1;
-}
-
-function smoothstep(edge0, edge1, value) {
-  const t = clamp((value - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
-  return t * t * (3 - 2 * t);
 }
 
 function stableDither(u, v) {
@@ -324,10 +317,6 @@ function applyAqueousGlaze(color, sample) {
   }
 
   return color;
-}
-
-function loadRuntimeModule() {
-  return import(RUNTIME_IMPORT_URL);
 }
 
 function readRuntimeApi(module) {
@@ -614,6 +603,7 @@ function createReceipt(status) {
   receipt.dataset.route = ROUTE;
   receipt.dataset.receipt = RECEIPT;
   receipt.dataset.routeReceipt = ROUTE_RECEIPT;
+  receipt.dataset.routeRenewal = ROUTE_RENEWAL;
   receipt.dataset.runtimeAuthority = RUNTIME_AUTHORITY;
   receipt.dataset.runtimeVersion = status.runtimeVersion || "";
   receipt.dataset.canvasAuthority = "assets/audralia/audralia.canvas.js";
@@ -637,7 +627,7 @@ function writeProofDataset(target, result) {
   target.dataset.body = BODY;
   target.dataset.route = ROUTE;
   target.dataset.contract = ROUTE_RECEIPT;
-  target.dataset.activeRenewal = "AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v1";
+  target.dataset.activeRenewal = ROUTE_RENEWAL;
   target.dataset.canvasAuthority = "assets/audralia/audralia.canvas.js";
   target.dataset.canvasAuthorityReceipt = RECEIPT;
   target.dataset.routeMode = "doorway-only";
@@ -725,7 +715,8 @@ function exposeCanvasStatus(result) {
     ok: Boolean(result.ok),
     receipt: RECEIPT,
     routeReceipt: ROUTE_RECEIPT,
-    activeRenewal: "AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v1",
+    routeRenewal: ROUTE_RENEWAL,
+    activeRenewal: RECEIPT,
     body: BODY,
     route: ROUTE,
     canvasAuthority: "assets/audralia/audralia.canvas.js",
@@ -840,7 +831,7 @@ async function renderAudraliaCanvas(mountInput, options = {}) {
   let runtimeModule;
 
   try {
-    runtimeModule = await loadRuntimeModule();
+    runtimeModule = await import(RUNTIME_IMPORT_URL);
   } catch (error) {
     return renderFailure(mount, "Audralia runtime module import failed.", {
       message: String(error && error.message ? error.message : error),
@@ -897,7 +888,8 @@ function getAudraliaCanvasStatus() {
     ok: false,
     receipt: RECEIPT,
     routeReceipt: ROUTE_RECEIPT,
-    activeRenewal: "AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v1",
+    routeRenewal: ROUTE_RENEWAL,
+    activeRenewal: RECEIPT,
     canvasAuthority: "assets/audralia/audralia.canvas.js",
     canvasRendered: false
   });
@@ -906,6 +898,7 @@ function getAudraliaCanvasStatus() {
 const api = Object.freeze({
   receipt: RECEIPT,
   routeReceipt: ROUTE_RECEIPT,
+  routeRenewal: ROUTE_RENEWAL,
   renderAudraliaCanvas,
   getAudraliaCanvasStatus
 });
@@ -919,6 +912,7 @@ if (typeof window !== "undefined") {
 export {
   RECEIPT,
   ROUTE_RECEIPT,
+  ROUTE_RENEWAL,
   renderAudraliaCanvas,
   getAudraliaCanvasStatus
 };

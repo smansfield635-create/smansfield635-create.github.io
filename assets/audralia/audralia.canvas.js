@@ -1,16 +1,16 @@
 /* /assets/audralia/audralia.canvas.js */
-/* AUDRALIA_CANVAS_VISUAL_RECOVERY_OCEAN_FIRST_TERRAIN_SUBTLE_TNT_v10
-   Jurisdiction: cached visual recovery, restored blue ocean/bathymetry range, subtle terrain overlay, restrained mineral relief, mobile budget governor, low-lag spherical projection, receipts.
+/* AUDRALIA_CANVAS_CLIMATE_FIRST_HYDRATION_READY_TNT_v11
+   Jurisdiction: cached climate-first surface, restored hydration readability, subtle terrain, mobile budget governor, low-lag spherical projection, climate overlay, receipts.
    Non-jurisdiction: HTML shell, route doorway, document.body mutation, Gauges scoring, image generation, GraphicBox.
 */
 
-const AUDRALIA_CANVAS_CONTRACT = "AUDRALIA_CANVAS_VISUAL_RECOVERY_OCEAN_FIRST_TERRAIN_SUBTLE_TNT_v10";
+const AUDRALIA_CANVAS_CONTRACT = "AUDRALIA_CANVAS_CLIMATE_FIRST_HYDRATION_READY_TNT_v11";
 
 const TAU = Math.PI * 2;
 const HALF_PI = Math.PI / 2;
 
 const DEFAULT_OPTIONS = {
-  rotationSpeed: 0.11,
+  rotationSpeed: 0.1,
   initialRotation: -2.18,
   mobileTextureWidth: 448,
   balancedTextureWidth: 576,
@@ -97,7 +97,7 @@ function waveNoise(lon, lat, scale, phase) {
   const b = Math.cos(lat * scale * 0.83 - phase * 0.7) * 0.3;
   const c = Math.sin((lon + lat) * scale * 0.47 + phase * 1.3) * 0.2;
   const d = Math.cos((lon - lat) * scale * 0.31 - phase * 0.4) * 0.12;
-  return 0.5 + 0.5 * (a + b + c + d);
+  return clamp(0.5 + 0.5 * (a + b + c + d), 0, 1);
 }
 
 function continentCap(point, centerLon, centerLat, radius, strength, warp) {
@@ -111,7 +111,6 @@ function continentCap(point, centerLon, centerLat, radius, strength, warp) {
 
 function plateCurve(lon, lat, centerLon, centerLat, length, thickness, phase, bend, strength) {
   const dLon = wrapLongitude(lon - centerLon);
-
   const trail =
     centerLat +
     Math.sin(dLon * 1.8 + phase) * bend +
@@ -174,9 +173,9 @@ function sampleAudraliaSurface(lon, lat) {
     plateCurve(lon, lat, 2.38, -0.02, 1.15, 0.09, 1.6, 0.17, 0.28);
 
   const subductionTrench =
-    plateCurve(lon, lat, -1.58, -0.32, 1.18, 0.12, -0.45, 0.2, 0.22) +
-    plateCurve(lon, lat, 0.98, 0.34, 1.05, 0.11, 1.25, 0.18, 0.2) +
-    plateCurve(lon, lat, 2.72, -0.28, 0.78, 0.1, -1.8, 0.16, 0.16);
+    plateCurve(lon, lat, -1.58, -0.32, 1.18, 0.12, -0.45, 0.2, 0.18) +
+    plateCurve(lon, lat, 0.98, 0.34, 1.05, 0.11, 1.25, 0.18, 0.16) +
+    plateCurve(lon, lat, 2.72, -0.28, 0.78, 0.1, -1.8, 0.16, 0.13);
 
   const tectonicMemory =
     Math.sin(lon * 3.8 + lat * 2.1) * 0.05 +
@@ -201,9 +200,9 @@ function sampleAudraliaSurface(lon, lat) {
   const slope = clamp(1 - Math.abs(topology - (seaLevel - 0.12)) * 6.0, 0, 1) * (1 - landMask);
 
   const basinFloor = clamp(
-    (seaLevel - topology) * 1.65 +
-      (0.58 - broad) * 0.15 +
-      (basinNoise - 0.5) * 0.18,
+    (seaLevel - topology) * 1.45 +
+      (0.58 - broad) * 0.12 +
+      (basinNoise - 0.5) * 0.14,
     0,
     1
   );
@@ -212,32 +211,32 @@ function sampleAudraliaSurface(lon, lat) {
   const trenchDepth = clamp(subductionTrench * (1 - landMask), 0, 1);
 
   const bathymetry = clamp(
-    basinFloor * 0.55 +
-      trenchDepth * 0.1 -
-      shelf * 0.38 -
-      slope * 0.1 -
-      ridgeUplift * 0.22,
+    basinFloor * 0.5 +
+      trenchDepth * 0.08 -
+      shelf * 0.34 -
+      slope * 0.08 -
+      ridgeUplift * 0.18,
     0,
     1
   );
 
-  const abyssalPlain = smoothstep(0.58, 0.88, bathymetry) * (1 - trenchDepth * 0.24);
-  const midOcean = (1 - landMask) * smoothstep(0.14, 0.5, bathymetry) * (1 - smoothstep(0.74, 0.96, bathymetry));
+  const abyssalPlain = smoothstep(0.6, 0.9, bathymetry) * (1 - trenchDepth * 0.18);
+  const midOcean = (1 - landMask) * smoothstep(0.1, 0.5, bathymetry) * (1 - smoothstep(0.76, 0.98, bathymetry));
   const shallowShelf = shelf * (1 - landMask);
 
   const mountain = clamp(
-    continentalRidge * 1.0 +
-      landMask * (rough - 0.36) * 0.38 +
-      rawLand * 0.14 +
-      tectonicMemory * 0.72,
+    continentalRidge * 0.9 +
+      landMask * (rough - 0.36) * 0.32 +
+      rawLand * 0.12 +
+      tectonicMemory * 0.62,
     0,
     1
   );
 
   const plateau = clamp(
     landMask *
-      smoothstep(0.54, 0.82, rawLand + broad * 0.14 + continentalRidge * 0.2) *
-      (0.36 + rough * 0.38),
+      smoothstep(0.54, 0.82, rawLand + broad * 0.12 + continentalRidge * 0.18) *
+      (0.34 + rough * 0.34),
     0,
     1
   );
@@ -245,26 +244,59 @@ function sampleAudraliaSurface(lon, lat) {
   const terrain = clamp(
     landMask *
       (
-        0.12 +
-        mountain * 0.34 +
-        plateau * 0.16 +
-        mineral * 0.08 +
-        fractureNoise * 0.035
+        0.1 +
+        mountain * 0.28 +
+        plateau * 0.14 +
+        mineral * 0.07 +
+        fractureNoise * 0.03
       ),
     0,
     1
   );
 
-  const highland = clamp(landMask * smoothstep(0.54, 0.84, terrain + mountain * 0.16), 0, 1);
-  const summit = clamp(landMask * smoothstep(0.82, 0.995, terrain + mountain * 0.1), 0, 1);
+  const highland = clamp(landMask * smoothstep(0.56, 0.86, terrain + mountain * 0.14), 0, 1);
+  const summit = clamp(landMask * smoothstep(0.84, 0.995, terrain + mountain * 0.09), 0, 1);
   const lowland = clamp(landMask * (1 - coastBand) * (1 - smoothstep(0.44, 0.74, terrain)), 0, 1);
+
+  const temperature = clamp(
+    1 -
+      Math.abs(lat) / HALF_PI * 0.78 -
+      highland * 0.18 -
+      summit * 0.22 +
+      shallowShelf * 0.08,
+    0,
+    1
+  );
+
+  const pressure =
+    0.5 +
+    Math.sin(lat * 3.1) * 0.12 +
+    Math.cos(lon * 1.6 + lat * 2.4) * 0.08 -
+    mountain * 0.1;
+
+  const oceanEvaporation = (1 - landMask) * (0.28 + shallowShelf * 0.38 + midOcean * 0.22 + temperature * 0.18);
+  const orographicLift = landMask * mountain * (0.5 + coastBand * 0.5);
+  const humidity = clamp(oceanEvaporation + coastBand * 0.34 + orographicLift * 0.24, 0, 1);
+  const glacialInfluence = clamp(summit * smoothstep(0.82, 1.36, Math.abs(lat)) + highland * 0.12, 0, 1);
+  const windShear = clamp(Math.abs(Math.sin(lat * 4.0 + lon * 0.65)) * 0.55 + Math.abs(pressure - 0.5) * 0.8, 0, 1);
+
+  const cloudDensity = clamp(
+    humidity * 0.42 +
+      windShear * 0.18 +
+      orographicLift * 0.22 +
+      glacialInfluence * 0.14 +
+      waveNoise(lon, lat, 6.0, 21.3) * 0.16 -
+      landMask * 0.08,
+    0,
+    1
+  );
 
   const glacier = clamp(
     landMask *
-      smoothstep(0.84, 0.995, terrain) *
+      smoothstep(0.86, 0.995, terrain) *
       (
-        smoothstep(0.94, 1.36, Math.abs(lat)) * 0.5 +
-        smoothstep(0.93, 1.0, mountain) * 0.12
+        smoothstep(0.94, 1.36, Math.abs(lat)) * 0.42 +
+        smoothstep(0.94, 1.0, mountain) * 0.1
       ),
     0,
     1
@@ -273,33 +305,33 @@ function sampleAudraliaSurface(lon, lat) {
   const erosionChannels = clamp(
     landMask *
       (1 - coastBand * 0.3) *
-      smoothstep(0.58, 0.98, mountain + plateau * 0.28) *
-      smoothstep(0.64, 0.99, erosionNoise) *
-      (0.24 + Math.abs(Math.sin(lon * 6.0 + lat * 8.0)) * 0.28),
+      smoothstep(0.6, 0.99, mountain + plateau * 0.24) *
+      smoothstep(0.66, 0.99, erosionNoise) *
+      (0.2 + Math.abs(Math.sin(lon * 6.0 + lat * 8.0)) * 0.24),
     0,
     1
   );
 
   const hydrologyCuts = clamp(
-    erosionChannels * (0.18 + glacier * 0.16 + coastBand * 0.1),
+    erosionChannels * (0.14 + glacier * 0.12 + coastBand * 0.08),
     0,
     1
   );
 
-  const runoff = clamp(coastBand * (0.23 + glacier * 0.14 + mountain * 0.1) + hydrologyCuts * 0.1, 0, 1);
+  const runoff = clamp(coastBand * (0.24 + glacier * 0.12 + mountain * 0.08) + hydrologyCuts * 0.08, 0, 1);
 
-  const diamond = clamp(summit * 0.12 + mineral * 0.08 + glacier * 0.04, 0, 1);
-  const opal = clamp((0.5 + Math.sin(lon * 2.4 - lat * 3.1) * 0.5) * terrain * 0.28 + runoff * 0.12, 0, 1);
-  const granite = clamp(lowland * 0.28 + plateau * 0.3 + rough * 0.14, 0, 1);
-  const slate = clamp(highland * 0.18 + fractureNoise * 0.18 + erosionChannels * 0.12, 0, 1);
+  const diamond = clamp(summit * 0.08 + mineral * 0.05 + glacier * 0.03, 0, 1);
+  const opal = clamp((0.5 + Math.sin(lon * 2.4 - lat * 3.1) * 0.5) * terrain * 0.22 + runoff * 0.1, 0, 1);
+  const granite = clamp(lowland * 0.28 + plateau * 0.26 + rough * 0.12, 0, 1);
+  const slate = clamp(highland * 0.16 + fractureNoise * 0.14 + erosionChannels * 0.09, 0, 1);
 
   let elevationClass = "ocean";
   if (land) elevationClass = "lowland";
   if (land && coastBand > 0.26) elevationClass = "coast";
-  if (land && plateau > 0.4) elevationClass = "plateau";
-  if (land && highland > 0.5) elevationClass = "highland";
-  if (land && summit > 0.5) elevationClass = "summit";
-  if (glacier > 0.52) elevationClass = "glacier";
+  if (land && plateau > 0.42) elevationClass = "plateau";
+  if (land && highland > 0.54) elevationClass = "highland";
+  if (land && summit > 0.56) elevationClass = "summit";
+  if (glacier > 0.56) elevationClass = "glacier";
 
   let mineralClass = "ocean";
   if (land) mineralClass = "granite";
@@ -310,11 +342,10 @@ function sampleAudraliaSurface(lon, lat) {
   let classification = "mid-ocean";
   if (!land && shallowShelf > 0.24) classification = "shallow-shelf";
   else if (!land && slope > 0.26) classification = "continental-slope";
-  else if (!land && trenchDepth > 0.42) classification = "subduction-trench";
+  else if (!land && trenchDepth > 0.46) classification = "subduction-trench";
   else if (!land && ridgeUplift > 0.24) classification = "ridge-seamount";
-  else if (!land && abyssalPlain > 0.34) classification = "abyssal-plain";
-  else if (!land && midOcean > 0.18) classification = "mid-ocean";
-
+  else if (!land && abyssalPlain > 0.38) classification = "abyssal-plain";
+  else if (!land && midOcean > 0.16) classification = "mid-ocean";
   if (land) classification = elevationClass;
 
   return {
@@ -346,6 +377,13 @@ function sampleAudraliaSurface(lon, lat) {
     opal,
     granite,
     slate,
+    temperature,
+    pressure,
+    humidity,
+    windShear,
+    cloudDensity,
+    orographicLift,
+    glacialInfluence,
     elevationClass,
     mineralClass,
     classification
@@ -353,34 +391,35 @@ function sampleAudraliaSurface(lon, lat) {
 }
 
 function baseColorForSample(sample) {
-  const trench = [12, 38, 76];
-  const abyss = [13, 52, 92];
-  const basin = [16, 78, 116];
-  const mid = [22, 110, 142];
-  const slope = [44, 144, 156];
-  const shelf = [68, 172, 168];
-  const shelfGlow = [96, 208, 194];
-  const ridgeGlow = [72, 166, 176];
+  const trench = [20, 64, 108];
+  const abyss = [18, 76, 124];
+  const basin = [20, 102, 148];
+  const mid = [28, 132, 164];
+  const slope = [48, 156, 166];
+  const shelf = [76, 180, 172];
+  const shelfGlow = [102, 214, 198];
+  const ridgeGlow = [78, 174, 184];
 
-  const blackSand = [52, 46, 40];
-  const whiteSand = [154, 146, 130];
-  const lowGranite = [88, 84, 76];
-  const warmGranite = [118, 108, 90];
-  const darkSlate = [54, 64, 70];
-  const blueSlate = [70, 84, 92];
-  const mutedOpal = [94, 134, 130];
-  const brightOpal = [118, 160, 152];
-  const diamondStone = [132, 150, 146];
-  const glacialIce = [160, 178, 182];
+  const blackSand = [54, 48, 42];
+  const whiteSand = [150, 142, 126];
+  const lowGranite = [82, 80, 74];
+  const warmGranite = [112, 104, 88];
+  const darkSlate = [52, 62, 70];
+  const blueSlate = [68, 82, 92];
+  const mutedOpal = [88, 126, 124];
+  const brightOpal = [112, 152, 146];
+  const diamondStone = [126, 144, 142];
+  const glacialIce = [154, 174, 178];
+  const cloudSoft = [178, 194, 190];
 
   if (!sample.land) {
-    const deepBase = mixRgb(trench, abyss, 1 - sample.trenchDepth * 0.16);
-    const basinBase = mixRgb(deepBase, basin, 1 - sample.abyssalPlain * 0.22);
-    const midColor = mixRgb(basinBase, mid, sample.midOcean * 0.74);
-    const slopeColor = mixRgb(midColor, slope, sample.slope * 0.68);
-    const shelfColor = mixRgb(slopeColor, shelf, sample.shallowShelf * 0.82);
-    const ridgeColor = mixRgb(shelfColor, ridgeGlow, sample.ridgeUplift * 0.28);
-    const glowColor = mixRgb(ridgeColor, shelfGlow, sample.shallowShelf * 0.32 + sample.runoff * 0.12);
+    const deepBase = mixRgb(trench, abyss, 1 - sample.trenchDepth * 0.12);
+    const basinBase = mixRgb(deepBase, basin, 1 - sample.abyssalPlain * 0.18);
+    const midColor = mixRgb(basinBase, mid, sample.midOcean * 0.78);
+    const slopeColor = mixRgb(midColor, slope, sample.slope * 0.72);
+    const shelfColor = mixRgb(slopeColor, shelf, sample.shallowShelf * 0.86);
+    const ridgeColor = mixRgb(shelfColor, ridgeGlow, sample.ridgeUplift * 0.26);
+    let rgb = mixRgb(ridgeColor, shelfGlow, sample.shallowShelf * 0.34 + sample.runoff * 0.12);
 
     const basinTexture =
       waveNoise(sample.lon, sample.lat, 8.0, 3.4) * 8 +
@@ -391,45 +430,47 @@ function baseColorForSample(sample) {
       sample.slope * 6 +
       sample.ridgeUplift * 8 -
       sample.abyssalPlain * 1 -
-      sample.trenchDepth * 2 +
+      sample.trenchDepth * 1 +
       basinTexture;
 
-    return [
-      clamp(Math.round(glowColor[0] + relief), 0, 255),
-      clamp(Math.round(glowColor[1] + relief), 0, 255),
-      clamp(Math.round(glowColor[2] + relief), 0, 255)
+    rgb = [
+      clamp(Math.round(rgb[0] + relief), 0, 255),
+      clamp(Math.round(rgb[1] + relief), 0, 255),
+      clamp(Math.round(rgb[2] + relief), 0, 255)
     ];
+
+    return mixRgb(rgb, cloudSoft, sample.cloudDensity * 0.08);
   }
 
   const sand = mixRgb(blackSand, whiteSand, smoothstep(0.3, 0.84, sample.mineral));
   const granite = mixRgb(lowGranite, warmGranite, sample.granite);
   const slate = mixRgb(darkSlate, blueSlate, sample.slate);
   const opal = mixRgb(mutedOpal, brightOpal, sample.opal);
-  const summitStone = mixRgb(slate, diamondStone, sample.diamond * 0.22);
+  const summitStone = mixRgb(slate, diamondStone, sample.diamond * 0.18);
 
   let rgb = granite;
+  rgb = mixRgb(rgb, slate, sample.highland * 0.22 + sample.slate * 0.1);
+  rgb = mixRgb(rgb, opal, sample.opal * 0.14);
+  rgb = mixRgb(rgb, summitStone, sample.summit * 0.18);
+  rgb = mixRgb(rgb, sand, sample.coastBand * 0.42);
+  rgb = mixRgb(rgb, glacialIce, sample.glacier * 0.12);
+  rgb = mixRgb(rgb, cloudSoft, sample.cloudDensity * 0.1);
 
-  rgb = mixRgb(rgb, slate, sample.highland * 0.26 + sample.slate * 0.12);
-  rgb = mixRgb(rgb, opal, sample.opal * 0.16);
-  rgb = mixRgb(rgb, summitStone, sample.summit * 0.22);
-  rgb = mixRgb(rgb, sand, sample.coastBand * 0.44);
-  rgb = mixRgb(rgb, glacialIce, sample.glacier * 0.16);
-
-  const channelDarken = sample.hydrologyCuts * 12 + sample.erosionChannels * 5;
+  const channelDarken = sample.hydrologyCuts * 10 + sample.erosionChannels * 4;
   const relief =
     sample.lowland * 2 +
-    sample.plateau * 5 +
-    sample.highland * 9 +
-    sample.summit * 10 +
+    sample.plateau * 4 +
+    sample.highland * 7 +
+    sample.summit * 8 +
     sample.coastBand * 4 -
     channelDarken;
 
   const stoneTexture =
-    (waveNoise(sample.lon, sample.lat, 11.0, 4.1) - 0.5) * 10 +
-    (waveNoise(sample.lon, sample.lat, 18.0, 8.3) - 0.5) * 6;
+    (waveNoise(sample.lon, sample.lat, 11.0, 4.1) - 0.5) * 8 +
+    (waveNoise(sample.lon, sample.lat, 18.0, 8.3) - 0.5) * 4;
 
   const wetLift = sample.runoff * 5;
-  const mineralLift = sample.opal * 3 + sample.diamond * 2;
+  const mineralLift = sample.opal * 2 + sample.diamond * 1;
 
   return [
     clamp(Math.round(rgb[0] + relief + wetLift + mineralLift + stoneTexture), 0, 255),
@@ -510,8 +551,8 @@ function createReceiptBase(canvas, mount, options) {
     contract: AUDRALIA_CANVAS_CONTRACT,
     status: "initializing",
     jurisdiction: [
-      "cached visual recovery",
-      "ocean first bathymetry",
+      "cached climate first surface",
+      "hydration ready ocean",
       "subtle terrain overlay",
       "restrained mineral relief",
       "mobile budget throttling",
@@ -563,8 +604,8 @@ function drawAtmosphere(ctx, cx, cy, radius) {
 
   const aura = ctx.createRadialGradient(cx, cy, radius * 0.72, cx, cy, radius * 1.22);
   aura.addColorStop(0, "rgba(48,168,190,0)");
-  aura.addColorStop(0.72, "rgba(68,178,204,0.045)");
-  aura.addColorStop(0.92, "rgba(152,221,232,0.145)");
+  aura.addColorStop(0.72, "rgba(68,178,204,0.05)");
+  aura.addColorStop(0.92, "rgba(152,221,232,0.16)");
   aura.addColorStop(1, "rgba(152,221,232,0)");
 
   ctx.fillStyle = aura;
@@ -573,12 +614,43 @@ function drawAtmosphere(ctx, cx, cy, radius) {
   ctx.fill();
 
   ctx.globalCompositeOperation = "screen";
-  ctx.strokeStyle = "rgba(183,232,238,0.09)";
+  ctx.strokeStyle = "rgba(183,232,238,0.1)";
   ctx.lineWidth = Math.max(1, radius * 0.007);
   ctx.beginPath();
   ctx.arc(cx, cy, radius * 1.004, 0, TAU);
   ctx.stroke();
 
+  ctx.restore();
+}
+
+function drawClimateOverlay(ctx, cx, cy, radius, rotation, frame, performanceMode) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius * 0.99, 0, TAU);
+  ctx.clip();
+  ctx.globalCompositeOperation = "screen";
+
+  const bandCount = performanceMode === "mobile" ? 4 : 6;
+  const phase = frame * 0.018 + rotation * 0.4;
+
+  for (let i = 0; i < bandCount; i += 1) {
+    const t = bandCount === 1 ? 0.5 : i / (bandCount - 1);
+    const lat = lerp(-0.72, 0.72, t);
+    const y = cy - Math.sin(lat) * radius;
+    const ry = Math.cos(lat) * radius * (0.72 + 0.08 * Math.sin(phase + i * 1.7));
+    const bandHeight = radius * (0.018 + 0.006 * Math.cos(phase * 0.7 + i));
+
+    ctx.strokeStyle = `rgba(200, 224, 220, ${0.018 + 0.012 * Math.sin(phase + i * 2.1)})`;
+    ctx.lineWidth = Math.max(1, bandHeight);
+    ctx.setLineDash([radius * 0.12, radius * 0.16, radius * 0.04, radius * 0.18]);
+    ctx.lineDashOffset = -phase * radius * (0.28 + i * 0.02);
+
+    ctx.beginPath();
+    ctx.ellipse(cx, y, ry, bandHeight, Math.sin(phase + i) * 0.12, 0, TAU);
+    ctx.stroke();
+  }
+
+  ctx.setLineDash([]);
   ctx.restore();
 }
 
@@ -594,10 +666,10 @@ function drawDepthOverlay(ctx, cx, cy, radius) {
     radius
   );
 
-  shade.addColorStop(0, "rgba(255,255,255,0.06)");
-  shade.addColorStop(0.38, "rgba(255,255,255,0.01)");
-  shade.addColorStop(0.76, "rgba(0,0,0,0.04)");
-  shade.addColorStop(1, "rgba(0,0,0,0.24)");
+  shade.addColorStop(0, "rgba(255,255,255,0.05)");
+  shade.addColorStop(0.4, "rgba(255,255,255,0.008)");
+  shade.addColorStop(0.78, "rgba(0,0,0,0.035)");
+  shade.addColorStop(1, "rgba(0,0,0,0.2)");
 
   ctx.globalCompositeOperation = "multiply";
   ctx.fillStyle = shade;
@@ -616,8 +688,8 @@ function drawDepthOverlay(ctx, cx, cy, radius) {
     radius * 0.72
   );
 
-  highlight.addColorStop(0, "rgba(255,255,255,0.1)");
-  highlight.addColorStop(0.38, "rgba(255,255,255,0.026)");
+  highlight.addColorStop(0, "rgba(255,255,255,0.09)");
+  highlight.addColorStop(0.38, "rgba(255,255,255,0.024)");
   highlight.addColorStop(1, "rgba(255,255,255,0)");
 
   ctx.fillStyle = highlight;
@@ -690,6 +762,7 @@ class AudraliaCanvasController {
       surfaceBuilt: false,
       surfaceVersion: 0,
       classificationCounts: {},
+      climateTotals: {},
       mineralCounts: {}
     };
 
@@ -898,6 +971,13 @@ class AudraliaCanvasController {
       diamond: 0
     };
 
+    const climateTotals = {
+      humidity: 0,
+      cloudDensity: 0,
+      temperature: 0,
+      pressure: 0
+    };
+
     for (let y = 0; y < height; y += 1) {
       const lat = HALF_PI - (y / Math.max(1, height - 1)) * Math.PI;
 
@@ -913,6 +993,11 @@ class AudraliaCanvasController {
           minerals[sample.mineralClass] += 1;
         }
 
+        climateTotals.humidity += sample.humidity;
+        climateTotals.cloudDensity += sample.cloudDensity;
+        climateTotals.temperature += sample.temperature;
+        climateTotals.pressure += sample.pressure;
+
         data[index] = rgb[0];
         data[index + 1] = rgb[1];
         data[index + 2] = rgb[2];
@@ -920,10 +1005,18 @@ class AudraliaCanvasController {
       }
     }
 
+    const totalPixels = Math.max(1, width * height);
+
     this.surfaceCtx.putImageData(image, 0, 0);
     this.surfaceImageData = image;
     this.state.classificationCounts = counts;
     this.state.mineralCounts = minerals;
+    this.state.climateTotals = {
+      humidity: Number((climateTotals.humidity / totalPixels).toFixed(4)),
+      cloudDensity: Number((climateTotals.cloudDensity / totalPixels).toFixed(4)),
+      temperature: Number((climateTotals.temperature / totalPixels).toFixed(4)),
+      pressure: Number((climateTotals.pressure / totalPixels).toFixed(4))
+    };
     this.state.surfaceBuilt = true;
     this.state.surfaceVersion += 1;
   }
@@ -1012,9 +1105,9 @@ class AudraliaCanvasController {
         const rawLight = dot(viewNormal, light);
         const day = smoothstep(-0.28, 0.9, rawLight);
         const rim = smoothstep(0.66, 1, Math.hypot(viewNormal.x, viewNormal.y));
-        const limb = 1 - rim * 0.24;
-        const shade = clamp(0.48 + day * 0.72 + rim * 0.025, 0, 1.1);
-        const alpha = Math.round(255 * (1 - smoothstep(0.82, 1, Math.sqrt(rr)) * 0.04));
+        const limb = 1 - rim * 0.2;
+        const shade = clamp(0.58 + day * 0.56 + rim * 0.02, 0, 1.08);
+        const alpha = Math.round(255 * (1 - smoothstep(0.82, 1, Math.sqrt(rr)) * 0.035));
 
         data[index] = clamp(Math.round(base[0] * shade * limb), 0, 255);
         data[index + 1] = clamp(Math.round(base[1] * shade * limb), 0, 255);
@@ -1089,6 +1182,7 @@ class AudraliaCanvasController {
     ctx.drawImage(this.projectedCanvas, cx - radius, cy - radius, radius * 2, radius * 2);
     ctx.restore();
 
+    drawClimateOverlay(ctx, cx, cy, radius, this.state.rotation, this.state.frame, this.state.performanceMode);
     drawDepthOverlay(ctx, cx, cy, radius);
     drawAtmosphere(ctx, cx, cy, radius);
 
@@ -1121,6 +1215,7 @@ class AudraliaCanvasController {
       this.receipt.selectionPauseActive = performance.now() < this.state.userPauseUntil;
       this.receipt.classificationCounts = { ...this.state.classificationCounts };
       this.receipt.mineralCounts = { ...this.state.mineralCounts };
+      this.receipt.climateTotals = { ...this.state.climateTotals };
       this.receipt.measuredLandRatio = visiblePixels
         ? Number((landPixels / visiblePixels).toFixed(4))
         : 0;
@@ -1130,13 +1225,14 @@ class AudraliaCanvasController {
       this.canvas.dataset.frame = String(this.state.frame);
       this.canvas.dataset.rotation = String(this.receipt.rotation);
       this.canvas.dataset.measuredLandRatio = String(this.receipt.measuredLandRatio);
-      this.canvas.dataset.visualDefinition = "ocean-first-terrain-subtle";
+      this.canvas.dataset.visualDefinition = "climate-first-hydration-ready";
       this.canvas.dataset.performanceBudget = "selection-safe";
       this.canvas.dataset.surfaceCache = "active";
+      this.canvas.dataset.climateModel = "canvas-contained";
+      this.canvas.dataset.hydrationReturn = "ready";
       this.canvas.dataset.terrainRelief = "subtle";
       this.canvas.dataset.mineralDepth = "restrained";
-      this.canvas.dataset.oceanBathymetry = "restored-first";
-      this.canvas.dataset.hydrologyCuts = "subtle";
+      this.canvas.dataset.oceanBathymetry = "hydration-readable";
       this.canvas.dataset.fps = String(this.state.fps);
       this.canvas.dataset.animation = "throttled";
 

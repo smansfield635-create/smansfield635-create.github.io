@@ -1,19 +1,25 @@
 // /assets/audralia/audralia.canvas.js
-// AUDRALIA_ADOPTED_CANVAS_DOWNSTREAM_OBEDIENCE_RENDERER_TNT_v7
+// AUDRALIA_ADOPTED_CANVAS_DOWNSTREAM_SWEEP_ENTRY_TNT_v8
 // Full-file replacement. Canvas authority only.
-// Purpose: demote canvas from land/water designer to final renderer.
-// Land, water, shelf, beach, terrain, ice, depth, elevation, and hydration come from runtime/downstream files.
-// Canvas owns only mount, texture preparation, color mapping, lighting, atmosphere, proof, and smooth rotation.
+// Purpose: make canvas the final renderer and first diagnostic sweep surface.
+// Canvas must not define land/water/terrain/hydration/ocean truth.
+// Canvas samples downstream runtime, builds an evidence texture, detects banding/collapse,
+// exposes sweep metrics, and renders smoothly while the downstream files are repaired.
 // No GraphicBox. No image generation. No visual-pass claim.
 
-const AUDRALIA_CANVAS_RECEIPT = "AUDRALIA_ADOPTED_CANVAS_DOWNSTREAM_OBEDIENCE_RENDERER_TNT_v7";
+const AUDRALIA_CANVAS_RECEIPT = "AUDRALIA_ADOPTED_CANVAS_DOWNSTREAM_SWEEP_ENTRY_TNT_v8";
 const AUDRALIA_RUNTIME_PATH = "/assets/audralia/audralia.runtime.js";
+
+const TEXTURE_WIDTH = 512;
+const TEXTURE_HEIGHT = 256;
+const MAX_CANVAS_SIDE = 900;
+const FRAME_RATE_TARGET = 30;
 
 const STATUS = {
   ok: false,
   receipt: AUDRALIA_CANVAS_RECEIPT,
   file: "assets/audralia/audralia.canvas.js",
-  role: "audralia-adopted-canvas-final-render-layer",
+  role: "audralia-adopted-canvas-final-render-and-downstream-sweep-entry",
   lineage: "tectonics→topology→terrain→hydration→oceans→runtime→canvas-renderer→route",
   runtimePath: AUDRALIA_RUNTIME_PATH,
   runtimeImported: false,
@@ -25,6 +31,7 @@ const STATUS = {
   labelVisible: false,
   animationActive: false,
   downstreamObedienceActive: true,
+  downstreamSweepActive: true,
   canvasDefinesLandWater: false,
   canvasDefinesTerrain: false,
   canvasDefinesHydration: false,
@@ -32,6 +39,9 @@ const STATUS = {
   canvasOwnsFinalRenderingOnly: true,
   textureBuiltFromRuntime: false,
   smoothRotationActive: true,
+  downstreamBandingDetected: false,
+  downstreamCollapseRiskDetected: false,
+  downstreamBullseyeRiskDetected: false,
   fallbackAllowed: false,
   fallbackSamples: 0,
   graphicBox: false,
@@ -39,11 +49,35 @@ const STATUS = {
   visualPassClaimed: false,
   compatibilityReceipts: [
     "AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_HANDOFF_TNT_v2",
-    "AUDRALIA_DOORWAY_EXPECT_STABLE_OCEAN_WORLD_CANVAS_TNT_v4",
-    "AUDRALIA_RUNTIME_STABLE_TERRAIN_READY_OCEAN_WORLD_TNT_v2",
-    "AUDRALIA_ADOPTED_CANVAS_STABLE_OCEAN_WORLD_DESIGN_TNT_v6"
+    "AUDRALIA_ADOPTED_CANVAS_DOWNSTREAM_OBEDIENCE_RENDERER_TNT_v7",
+    "AUDRALIA_RUNTIME_STABLE_TERRAIN_READY_OCEAN_WORLD_TNT_v2"
   ],
   error: ""
+};
+
+const SWEEP_REPORT = {
+  receipt: AUDRALIA_CANVAS_RECEIPT,
+  file: "assets/audralia/audralia.canvas.js",
+  downstreamFilesToSweepNext: [
+    "/assets/audralia/audralia.runtime.js",
+    "/assets/audralia/audralia/tectonics/topology/render.js",
+    "/assets/audralia/audralia/tectonics/topology/terrain.render.js",
+    "/assets/audralia/audralia/hydration/render.js",
+    "/assets/audralia/audralia/hydration/oceans.render.js",
+    "/assets/audralia/audralia/hydration/deep-ocean.render.js"
+  ],
+  textureWidth: TEXTURE_WIDTH,
+  textureHeight: TEXTURE_HEIGHT,
+  totalSamples: 0,
+  fallbackSamples: 0,
+  uniqueSurfaceClasses: [],
+  rowBandingIndex: 0,
+  columnCollapseIndex: 0,
+  bullseyeRiskIndex: 0,
+  horizontalStripeRows: 0,
+  dominantClassRatio: 0,
+  landWaterTransitionRatio: 0,
+  status: "not-run"
 };
 
 let activeController = null;
@@ -55,6 +89,8 @@ function exposeStatus(extra = {}) {
   window.AUDRALIA_CANVAS_STATUS = STATUS;
   window.__AUDRALIA_ADOPTED_CANVAS_STATUS__ = STATUS;
   window.__AUDRALIA_CANVAS_RECEIPT__ = AUDRALIA_CANVAS_RECEIPT;
+  window.AUDRALIA_DOWNSTREAM_SWEEP_REPORT = SWEEP_REPORT;
+  window.__AUDRALIA_DOWNSTREAM_SWEEP_REPORT__ = SWEEP_REPORT;
 
   document.documentElement.dataset.audraliaCanvasAuthority = "active";
   document.documentElement.dataset.audraliaCanvasReceipt = AUDRALIA_CANVAS_RECEIPT;
@@ -62,8 +98,12 @@ function exposeStatus(extra = {}) {
   document.documentElement.dataset.audraliaCanvasPainted = String(Boolean(STATUS.canvasPainted));
   document.documentElement.dataset.audraliaCanvasRuntimeImported = String(Boolean(STATUS.runtimeImported));
   document.documentElement.dataset.audraliaCanvasDownstreamObedience = "true";
+  document.documentElement.dataset.audraliaCanvasDownstreamSweep = "true";
   document.documentElement.dataset.audraliaCanvasDefinesLandWater = "false";
   document.documentElement.dataset.audraliaCanvasFinalRenderOnly = "true";
+  document.documentElement.dataset.audraliaDownstreamBandingDetected = String(Boolean(STATUS.downstreamBandingDetected));
+  document.documentElement.dataset.audraliaDownstreamCollapseRiskDetected = String(Boolean(STATUS.downstreamCollapseRiskDetected));
+  document.documentElement.dataset.audraliaDownstreamBullseyeRiskDetected = String(Boolean(STATUS.downstreamBullseyeRiskDetected));
   document.documentElement.dataset.graphicBox = "false";
   document.documentElement.dataset.imageGeneration = "false";
   document.documentElement.dataset.visualPassClaimed = "false";
@@ -85,10 +125,10 @@ function findMount(explicitMount) {
 }
 
 function injectStyle() {
-  if (document.querySelector("#audralia-downstream-obedience-style")) return;
+  if (document.querySelector("#audralia-downstream-sweep-entry-style")) return;
 
   const style = document.createElement("style");
-  style.id = "audralia-downstream-obedience-style";
+  style.id = "audralia-downstream-sweep-entry-style";
   style.textContent = `
     .audralia-canvas-shell {
       position: relative;
@@ -131,7 +171,7 @@ function injectStyle() {
       right: 1rem;
       bottom: 1rem;
       z-index: 2;
-      max-width: min(34rem, calc(100% - 2rem));
+      max-width: min(36rem, calc(100% - 2rem));
       padding: 0.55rem 0.68rem;
       border: 1px solid rgba(116, 185, 215, 0.22);
       border-radius: 16px;
@@ -291,8 +331,8 @@ function resizeCanvas(canvas) {
   const cssWidth = Math.max(360, rect.width || 720);
   const cssHeight = Math.max(420, rect.height || 720);
 
-  const width = Math.min(900, Math.max(420, Math.floor(cssWidth * dpr)));
-  const height = Math.min(900, Math.max(460, Math.floor(cssHeight * dpr)));
+  const width = Math.min(MAX_CANVAS_SIDE, Math.max(420, Math.floor(cssWidth * dpr)));
+  const height = Math.min(MAX_CANVAS_SIDE, Math.max(460, Math.floor(cssHeight * dpr)));
 
   if (canvas.width !== width || canvas.height !== height) {
     canvas.width = width;
@@ -380,8 +420,22 @@ function boolValue(sample, keys) {
   return keys.some((key) => Boolean(sample?.[key]));
 }
 
-function colorFromRuntimeSample(sample, sx, sy, sz) {
+function sampleToKind(sample) {
   const cls = surfaceClass(sample);
+
+  if (boolValue(sample, ["ice", "glacier"]) || cls.includes("ice") || cls.includes("snow") || cls.includes("glacier")) return "ice";
+  if (cls.includes("mountain")) return "mountain";
+  if (cls.includes("ridge") || cls.includes("highland")) return "ridge";
+  if (cls.includes("beach") || Boolean(sample?.beach)) return "beach";
+  if (cls.includes("shelf") || Boolean(sample?.shelf)) return "shelf";
+  if (cls.includes("ocean") || Boolean(sample?.ocean) || Boolean(sample?.liquidWater)) return "ocean";
+  if (cls.includes("cliff") || cls.includes("rock") || cls.includes("terrain") || cls.includes("basin") || boolValue(sample, ["land", "solidSurfaceLand"])) return "rock";
+
+  return "unknown";
+}
+
+function colorFromRuntimeSample(sample, sx, sy, sz) {
+  const kind = sampleToKind(sample);
 
   const elevation = clamp01(numberValue(sample, ["elevation", "terrainRelief", "terrainReliefIndex"], 0));
   const depth = clamp01(numberValue(sample, ["depth", "surfaceWaterIndex"], 0.34));
@@ -389,43 +443,35 @@ function colorFromRuntimeSample(sample, sx, sy, sz) {
   const mineral = clamp01(numberValue(sample, ["mineralIndex", "diamondSignal", "graniteSignal"], 0.38));
   const fine = fbm3(sx * 58.0 - 1.7, sy * 58.0 + 4.9, sz * 58.0 - 8.2, 3);
 
-  const isIce = boolValue(sample, ["ice", "glacier"]) || cls.includes("ice") || cls.includes("snow") || cls.includes("glacier");
-  const isMountain = cls.includes("mountain");
-  const isRidge = cls.includes("ridge") || cls.includes("highland");
-  const isRock = cls.includes("cliff") || cls.includes("rock") || cls.includes("terrain") || cls.includes("basin") || boolValue(sample, ["land", "solidSurfaceLand"]);
-  const isBeach = cls.includes("beach") || Boolean(sample?.beach);
-  const isShelf = cls.includes("shelf") || Boolean(sample?.shelf);
-  const isOcean = cls.includes("ocean") || Boolean(sample?.ocean) || Boolean(sample?.liquidWater);
-
   let r;
   let g;
   let b;
 
-  if (isIce) {
+  if (kind === "ice") {
     r = 198 + fine * 28;
     g = 220 + fine * 22;
     b = 232 + fine * 20;
-  } else if (isMountain) {
+  } else if (kind === "mountain") {
     r = 72 + elevation * 78 + mineral * 28;
     g = 76 + elevation * 70 + mineral * 24;
     b = 84 + elevation * 62 + mineral * 20;
-  } else if (isRidge) {
+  } else if (kind === "ridge") {
     r = 66 + elevation * 58 + mineral * 26;
     g = 74 + elevation * 54 + mineral * 22;
     b = 84 + elevation * 48 + mineral * 20;
-  } else if (isBeach) {
+  } else if (kind === "beach") {
     r = 190 + fine * 34;
     g = 183 + fine * 29;
     b = 160 + fine * 23;
-  } else if (isRock) {
+  } else if (kind === "rock") {
     r = 56 + elevation * 44 + mineral * 28;
     g = 65 + elevation * 40 + mineral * 24;
     b = 74 + elevation * 36 + mineral * 22;
-  } else if (isShelf) {
+  } else if (kind === "shelf") {
     r = 14 + fine * 10;
     g = 112 + depth * 34 + coast * 24;
     b = 138 + depth * 58 + coast * 36;
-  } else if (isOcean) {
+  } else if (kind === "ocean") {
     r = 3 + fine * 8;
     g = 34 + depth * 34;
     b = 86 + depth * 78;
@@ -435,7 +481,7 @@ function colorFromRuntimeSample(sample, sx, sy, sz) {
     b = 90;
   }
 
-  if (coast > 0 && !isIce) {
+  if (coast > 0 && kind !== "ice") {
     r = r * (1 - coast * 0.12) + 190 * coast * 0.12;
     g = g * (1 - coast * 0.12) + 178 * coast * 0.12;
     b = b * (1 - coast * 0.12) + 144 * coast * 0.12;
@@ -444,24 +490,63 @@ function colorFromRuntimeSample(sample, sx, sy, sz) {
   return [
     clamp(r, 0, 255),
     clamp(g, 0, 255),
-    clamp(b, 0, 255)
+    clamp(b, 0, 255),
+    kind
   ];
 }
 
+function analyzeRows(kindRows, classCounts, fallbackSamples) {
+  let horizontalStripeRows = 0;
+  let rowDominanceSum = 0;
+  let rowClassChanges = 0;
+
+  for (const row of kindRows) {
+    const counts = {};
+    for (const kind of row) counts[kind] = (counts[kind] || 0) + 1;
+
+    const maxCount = Math.max(...Object.values(counts));
+    const dominance = maxCount / row.length;
+    rowDominanceSum += dominance;
+
+    if (dominance > 0.86) horizontalStripeRows += 1;
+
+    for (let i = 1; i < row.length; i += 1) {
+      if (row[i] !== row[i - 1]) rowClassChanges += 1;
+    }
+  }
+
+  const total = kindRows.length * (kindRows[0]?.length || 1);
+  const dominantClassRatio = Math.max(...Object.values(classCounts)) / Math.max(1, total);
+  const rowBandingIndex = horizontalStripeRows / Math.max(1, kindRows.length);
+  const landWaterTransitionRatio = rowClassChanges / Math.max(1, total);
+  const columnCollapseIndex = dominantClassRatio;
+  const bullseyeRiskIndex = clamp01(rowBandingIndex * 0.48 + dominantClassRatio * 0.34 + (fallbackSamples / Math.max(1, total)) * 0.18);
+
+  return {
+    horizontalStripeRows,
+    dominantClassRatio,
+    rowBandingIndex,
+    columnCollapseIndex,
+    landWaterTransitionRatio,
+    bullseyeRiskIndex
+  };
+}
+
 function buildRuntimeTexture(runtimeBundle) {
-  const width = 512;
-  const height = 256;
   const sampler = runtimeSampler(runtimeBundle);
-  const pixels = new Uint8ClampedArray(width * height * 4);
+  const pixels = new Uint8ClampedArray(TEXTURE_WIDTH * TEXTURE_HEIGHT * 4);
 
   let fallbackSamples = 0;
+  const classCounts = {};
+  const kindRows = [];
 
-  for (let y = 0; y < height; y += 1) {
-    const v = (y + 0.5) / height;
+  for (let y = 0; y < TEXTURE_HEIGHT; y += 1) {
+    const rowKinds = [];
+    const v = (y + 0.5) / TEXTURE_HEIGHT;
     const lat = (0.5 - v) * Math.PI;
 
-    for (let x = 0; x < width; x += 1) {
-      const u = (x + 0.5) / width;
+    for (let x = 0; x < TEXTURE_WIDTH; x += 1) {
+      const u = (x + 0.5) / TEXTURE_WIDTH;
       const lon = (u - 0.5) * Math.PI * 2;
 
       const cosLat = Math.cos(lat);
@@ -473,21 +558,48 @@ function buildRuntimeTexture(runtimeBundle) {
       if (sample?.fallback || sample?.fallbackSample) fallbackSamples += 1;
 
       const color = colorFromRuntimeSample(sample, sx, sy, sz);
-      const index = (y * width + x) * 4;
+      const kind = color[3];
+
+      classCounts[kind] = (classCounts[kind] || 0) + 1;
+      rowKinds.push(kind);
+
+      const index = (y * TEXTURE_WIDTH + x) * 4;
 
       pixels[index] = color[0];
       pixels[index + 1] = color[1];
       pixels[index + 2] = color[2];
       pixels[index + 3] = 255;
     }
+
+    kindRows.push(rowKinds);
   }
+
+  const analysis = analyzeRows(kindRows, classCounts, fallbackSamples);
+
+  Object.assign(SWEEP_REPORT, {
+    textureWidth: TEXTURE_WIDTH,
+    textureHeight: TEXTURE_HEIGHT,
+    totalSamples: TEXTURE_WIDTH * TEXTURE_HEIGHT,
+    fallbackSamples,
+    uniqueSurfaceClasses: Object.keys(classCounts),
+    ...analysis,
+    status: "complete"
+  });
 
   exposeStatus({
     textureBuiltFromRuntime: true,
-    fallbackSamples
+    fallbackSamples,
+    downstreamBandingDetected: analysis.rowBandingIndex > 0.18,
+    downstreamCollapseRiskDetected: analysis.dominantClassRatio > 0.72,
+    downstreamBullseyeRiskDetected: analysis.bullseyeRiskIndex > 0.44
   });
 
-  return { width, height, pixels };
+  return {
+    width: TEXTURE_WIDTH,
+    height: TEXTURE_HEIGHT,
+    pixels,
+    analysis
+  };
 }
 
 function sampleTexture(texture, u, v) {
@@ -626,7 +738,7 @@ export async function mountAudraliaCanvas(options = {}) {
   let raf = 0;
   let lastPaint = 0;
   const startedAt = performance.now();
-  const frameInterval = 1000 / 30;
+  const frameInterval = 1000 / FRAME_RATE_TARGET;
 
   function frame(now) {
     if (stopped) return;
@@ -637,7 +749,7 @@ export async function mountAudraliaCanvas(options = {}) {
       lastPaint = now;
 
       proof.textContent =
-        `${AUDRALIA_CANVAS_RECEIPT} · runtime=${STATUS.runtimeImported ? "imported" : "unavailable"} · downstream-obedience=true · canvas-final-layer=true`;
+        `${AUDRALIA_CANVAS_RECEIPT} · runtime=${STATUS.runtimeImported ? "imported" : "unavailable"} · downstream-sweep=true · banding=${STATUS.downstreamBandingDetected ? "detected" : "clear"}`;
     }
 
     raf = requestAnimationFrame(frame);
@@ -653,6 +765,7 @@ export async function mountAudraliaCanvas(options = {}) {
   activeController = {
     canvas,
     status: STATUS,
+    sweepReport: SWEEP_REPORT,
     stop() {
       stopped = true;
       cancelAnimationFrame(raf);
@@ -686,6 +799,7 @@ export const createAudraliaCanvas = mountAudraliaCanvas;
 
 export const AUDRALIA_CANVAS_STATUS = STATUS;
 export const AUDRALIA_ADOPTED_CANVAS_STATUS = STATUS;
+export const AUDRALIA_DOWNSTREAM_SWEEP_REPORT_VALUE = SWEEP_REPORT;
 export const AUDRALIA_CANVAS_AUTHORITY_RECEIPT = AUDRALIA_CANVAS_RECEIPT;
 export const AUDRALIA_CANVAS_PATH = "/assets/audralia/audralia.canvas.js";
 

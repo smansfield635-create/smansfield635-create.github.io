@@ -1,24 +1,27 @@
 /* /assets/audralia/audralia.canvas.js */
-/* AUDRALIA_CANVAS_PERFORMANCE_STABILIZATION_TNT_v6_PRECLIMATE
-   Jurisdiction: canvas creation, cached tectonic/bathymetry surface, adaptive projection, animation budget redistribution, lightweight atmosphere/cloud overlay, receipts.
+/* AUDRALIA_CANVAS_MOBILE_BUDGET_GOVERNOR_TNT_v7
+   Jurisdiction: canvas creation, low-lag spherical projection, cached surface texture, mobile budget throttling, selection/copy pause, lightweight climate overlay, receipts.
    Non-jurisdiction: HTML shell, route doorway, document.body mutation, Gauges scoring, image generation, GraphicBox.
 */
 
-const AUDRALIA_CANVAS_CONTRACT = "AUDRALIA_CANVAS_PERFORMANCE_STABILIZATION_TNT_v6_PRECLIMATE";
+const AUDRALIA_CANVAS_CONTRACT = "AUDRALIA_CANVAS_MOBILE_BUDGET_GOVERNOR_TNT_v7";
 
 const TAU = Math.PI * 2;
 const HALF_PI = Math.PI / 2;
 
 const DEFAULT_OPTIONS = {
-  rotationSpeed: 0.18,
+  rotationSpeed: 0.11,
   initialRotation: -2.18,
-  pixelResolution: 430,
-  minPixelResolution: 260,
-  maxPixelResolution: 560,
-  mobilePixelResolution: 300,
-  surfaceTextureWidth: 900,
-  mobileSurfaceTextureWidth: 576,
-  devicePixelClamp: 1.65,
+  mobileTextureWidth: 384,
+  balancedTextureWidth: 512,
+  desktopTextureWidth: 640,
+  mobileRasterSize: 220,
+  balancedRasterSize: 280,
+  desktopRasterSize: 340,
+  mobileFps: 8,
+  balancedFps: 10,
+  desktopFps: 14,
+  devicePixelClamp: 1.25,
   targetLandRatio: 0.292,
   showReceipts: true
 };
@@ -50,58 +53,6 @@ function wrapLongitude(lon) {
   while (out < -Math.PI) out += TAU;
   while (out > Math.PI) out -= TAU;
   return out;
-}
-
-function hash3(x, y, z) {
-  const n = Math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453123;
-  return n - Math.floor(n);
-}
-
-function valueNoise3(x, y, z) {
-  const ix = Math.floor(x);
-  const iy = Math.floor(y);
-  const iz = Math.floor(z);
-
-  const fx = x - ix;
-  const fy = y - iy;
-  const fz = z - iz;
-
-  const ux = fx * fx * (3 - 2 * fx);
-  const uy = fy * fy * (3 - 2 * fy);
-  const uz = fz * fz * (3 - 2 * fz);
-
-  let total = 0;
-
-  for (let dz = 0; dz <= 1; dz += 1) {
-    for (let dy = 0; dy <= 1; dy += 1) {
-      for (let dx = 0; dx <= 1; dx += 1) {
-        const weight =
-          (dx ? ux : 1 - ux) *
-          (dy ? uy : 1 - uy) *
-          (dz ? uz : 1 - uz);
-
-        total += hash3(ix + dx, iy + dy, iz + dz) * weight;
-      }
-    }
-  }
-
-  return total;
-}
-
-function fbm3(x, y, z, octaves = 5) {
-  let amplitude = 0.56;
-  let frequency = 1;
-  let total = 0;
-  let normalizer = 0;
-
-  for (let i = 0; i < octaves; i += 1) {
-    total += valueNoise3(x * frequency, y * frequency, z * frequency) * amplitude;
-    normalizer += amplitude;
-    frequency *= 2.03;
-    amplitude *= 0.5;
-  }
-
-  return total / Math.max(0.000001, normalizer);
 }
 
 function vec3(x, y, z) {
@@ -141,45 +92,32 @@ function angularDistance(a, b) {
   return Math.acos(clamp(dot(a, b), -1, 1));
 }
 
-function continentCap(point, centerLon, centerLat, radius, strength, warp = 0) {
-  const center = sphericalVector(centerLon, centerLat);
-  const d = angularDistance(point, center);
-
-  const edgeNoise = fbm3(
-    point.x * 7.5 + warp,
-    point.y * 7.5 - warp * 0.4,
-    point.z * 7.5 + warp * 0.7,
-    4
+function waveNoise(lon, lat, scale, phase) {
+  return (
+    0.5 +
+    0.5 *
+      (
+        Math.sin(lon * scale + phase) * 0.45 +
+        Math.cos(lat * scale * 0.83 - phase * 0.7) * 0.32 +
+        Math.sin((lon + lat) * scale * 0.47 + phase * 1.3) * 0.23
+      )
   );
-
-  const brokenRadius = radius * (0.86 + edgeNoise * 0.28);
-  return Math.max(0, 1 - d / Math.max(0.001, brokenRadius)) * strength;
 }
 
-function ridgeLine(lon, lat, centerLon, centerLat, length, thickness, phase, strength) {
-  const dLon = wrapLongitude(lon - centerLon);
-
-  const trail =
-    centerLat +
-    Math.sin(dLon * 2.5 + phase) * 0.13 +
-    Math.sin(dLon * 6.7 - phase) * 0.036;
-
-  const along =
-    smoothstep(-length, -length * 0.72, dLon) *
-    (1 - smoothstep(length * 0.72, length, dLon));
-
-  const cross = 1 - smoothstep(thickness * 0.35, thickness, Math.abs(lat - trail));
-  return along * cross * strength;
+function continentCap(point, centerLon, centerLat, radius, strength, warp) {
+  const center = sphericalVector(centerLon, centerLat);
+  const d = angularDistance(point, center);
+  const noise = waveNoise(centerLon + point.x, centerLat + point.y, 5.2, warp);
+  const brokenRadius = radius * (0.88 + noise * 0.24);
+  return Math.max(0, 1 - d / Math.max(0.001, brokenRadius)) * strength;
 }
 
 function plateCurve(lon, lat, centerLon, centerLat, length, thickness, phase, bend, strength) {
   const dLon = wrapLongitude(lon - centerLon);
-
   const trail =
     centerLat +
     Math.sin(dLon * 1.8 + phase) * bend +
-    Math.sin(dLon * 5.2 - phase * 0.7) * bend * 0.28 +
-    Math.cos(dLon * 8.3 + phase * 0.4) * bend * 0.12;
+    Math.sin(dLon * 4.8 - phase) * bend * 0.22;
 
   const along =
     smoothstep(-length, -length * 0.76, dLon) *
@@ -189,14 +127,14 @@ function plateCurve(lon, lat, centerLon, centerLat, length, thickness, phase, be
   return along * cross * strength;
 }
 
-function sampleAudraliaSurface(lon, lat, timeSeconds = 0) {
+function sampleAudraliaSurface(lon, lat) {
   const p = sphericalVector(lon, lat);
 
-  const broad = fbm3(p.x * 2.3 + 9.1, p.y * 2.3 - 4.2, p.z * 2.3 + 2.8, 5);
-  const coastNoise = fbm3(p.x * 9.8 - 3.7, p.y * 9.8 + 2.6, p.z * 9.8 + 7.1, 4);
-  const rough = fbm3(p.x * 22.0 + 1.6, p.y * 22.0 - 8.2, p.z * 22.0 + 4.1, 4);
-  const mineral = fbm3(p.x * 38.0 - 6.8, p.y * 38.0 + 2.9, p.z * 38.0 + 10.4, 3);
-  const basinNoise = fbm3(p.x * 5.4 - 9.8, p.y * 5.4 + 12.1, p.z * 5.4 - 4.3, 4);
+  const broad = waveNoise(lon, lat, 2.2, 0.7);
+  const coastNoise = waveNoise(lon, lat, 7.6, 2.1);
+  const rough = waveNoise(lon, lat, 15.0, 4.4);
+  const mineral = waveNoise(lon, lat, 24.0, 6.2);
+  const basinNoise = waveNoise(lon, lat, 4.6, 9.1);
 
   const west =
     continentCap(p, -2.55, 0.08, 0.6, 1.08, 1.1) +
@@ -214,55 +152,41 @@ function sampleAudraliaSurface(lon, lat, timeSeconds = 0) {
   const east =
     continentCap(p, 1.28, -0.06, 0.45, 0.78, 7.7) +
     continentCap(p, 1.84, 0.22, 0.3, 0.42, 8.8) +
-    continentCap(p, 1.02, -0.42, 0.24, 0.32, 9.9) +
-    continentCap(p, 1.58, -0.62, 0.16, 0.18, 18.4);
+    continentCap(p, 1.02, -0.42, 0.24, 0.32, 9.9);
 
   const islands =
     continentCap(p, 2.52, -0.08, 0.18, 0.28, 10.1) +
     continentCap(p, -3.02, 0.24, 0.17, 0.24, 11.2) +
     continentCap(p, 0.74, -0.62, 0.18, 0.22, 12.3) +
-    continentCap(p, 2.2, -0.55, 0.13, 0.18, 13.4) +
-    continentCap(p, -1.24, 0.62, 0.13, 0.16, 14.5) +
-    continentCap(p, -2.72, 0.64, 0.12, 0.14, 19.5) +
-    continentCap(p, -1.86, -0.68, 0.14, 0.16, 20.6) +
-    continentCap(p, -0.58, 0.56, 0.12, 0.14, 21.7);
+    continentCap(p, -1.24, 0.62, 0.13, 0.16, 14.5);
 
   const northPole = smoothstep(1.06, 1.45, lat) * (0.52 + coastNoise * 0.16);
   const southPole = smoothstep(1.06, 1.45, -lat) * (0.5 + coastNoise * 0.16);
   const rawLand = Math.max(west, middle, east, islands, northPole, southPole);
 
-  const continentalRidges =
-    ridgeLine(lon, lat, -2.2, -0.04, 0.95, 0.095, 0.6, 0.25) +
-    ridgeLine(lon, lat, -0.35, 0.02, 0.88, 0.085, -1.2, 0.22) +
-    ridgeLine(lon, lat, 1.48, 0.06, 0.74, 0.08, 2.1, 0.2);
+  const continentalRidge =
+    plateCurve(lon, lat, -2.2, -0.04, 0.95, 0.095, 0.6, 0.16, 0.25) +
+    plateCurve(lon, lat, -0.35, 0.02, 0.88, 0.085, -1.2, 0.12, 0.22) +
+    plateCurve(lon, lat, 1.48, 0.06, 0.74, 0.08, 2.1, 0.1, 0.2);
 
   const midOceanRidge =
-    plateCurve(lon, lat, -0.08, 0.04, 1.72, 0.105, 0.35, 0.22, 0.56) +
-    plateCurve(lon, lat, 2.38, -0.02, 1.15, 0.09, 1.6, 0.17, 0.34) +
-    plateCurve(lon, lat, -2.9, 0.18, 0.88, 0.075, -0.9, 0.16, 0.26);
+    plateCurve(lon, lat, -0.08, 0.04, 1.72, 0.105, 0.35, 0.22, 0.45) +
+    plateCurve(lon, lat, 2.38, -0.02, 1.15, 0.09, 1.6, 0.17, 0.28);
 
   const subductionTrench =
-    plateCurve(lon, lat, -1.58, -0.32, 1.18, 0.095, -0.45, 0.2, 0.5) +
-    plateCurve(lon, lat, 0.98, 0.34, 1.05, 0.09, 1.25, 0.18, 0.42) +
-    plateCurve(lon, lat, 2.72, -0.28, 0.78, 0.08, -1.8, 0.16, 0.32);
-
-  const seamounts =
-    continentCap(p, -0.08, -0.38, 0.09, 0.22, 31.1) +
-    continentCap(p, 0.48, 0.36, 0.08, 0.18, 32.2) +
-    continentCap(p, 1.92, -0.1, 0.07, 0.16, 33.3) +
-    continentCap(p, -2.98, 0.02, 0.08, 0.16, 34.4) +
-    continentCap(p, -1.12, 0.52, 0.07, 0.14, 35.5);
+    plateCurve(lon, lat, -1.58, -0.32, 1.18, 0.11, -0.45, 0.2, 0.34) +
+    plateCurve(lon, lat, 0.98, 0.34, 1.05, 0.1, 1.25, 0.18, 0.3) +
+    plateCurve(lon, lat, 2.72, -0.28, 0.78, 0.09, -1.8, 0.16, 0.24);
 
   const tectonicMemory =
-    Math.sin(lon * 3.8 + lat * 2.1) * 0.07 +
-    Math.sin(lon * -5.9 + lat * 4.8) * 0.045 +
-    Math.cos(lon * 8.2 - lat * 2.9) * 0.035;
+    Math.sin(lon * 3.8 + lat * 2.1) * 0.06 +
+    Math.sin(lon * -5.2 + lat * 4.2) * 0.035;
 
   const topology =
     rawLand +
-    continentalRidges +
-    (broad - 0.5) * 0.24 +
-    (coastNoise - 0.5) * 0.18 +
+    continentalRidge +
+    (broad - 0.5) * 0.2 +
+    (coastNoise - 0.5) * 0.16 +
     tectonicMemory;
 
   const seaLevel = 0.536;
@@ -277,55 +201,49 @@ function sampleAudraliaSurface(lon, lat, timeSeconds = 0) {
   const slope = clamp(1 - Math.abs(topology - (seaLevel - 0.12)) * 6.4, 0, 1) * (1 - landMask);
 
   const basinFloor = clamp(
-    (seaLevel - topology) * 2.15 +
-      (0.58 - broad) * 0.24 +
-      (basinNoise - 0.5) * 0.34,
+    (seaLevel - topology) * 2.0 +
+      (0.58 - broad) * 0.2 +
+      (basinNoise - 0.5) * 0.24,
     0,
     1
   );
 
-  const ridgeUplift = clamp(midOceanRidge * (1 - landMask) + seamounts * (1 - landMask), 0, 1);
+  const ridgeUplift = clamp(midOceanRidge * (1 - landMask), 0, 1);
   const trenchDepth = clamp(subductionTrench * (1 - landMask), 0, 1);
 
   const bathymetry = clamp(
-    basinFloor * 0.72 +
-      trenchDepth * 0.28 -
-      shelf * 0.48 -
-      slope * 0.18 -
-      ridgeUplift * 0.34,
+    basinFloor * 0.7 +
+      trenchDepth * 0.22 -
+      shelf * 0.46 -
+      slope * 0.16 -
+      ridgeUplift * 0.3,
     0,
     1
   );
 
-  const abyssalPlain = smoothstep(0.54, 0.82, bathymetry) * (1 - trenchDepth * 0.45) * (1 - ridgeUplift * 0.35);
-  const deepOcean = smoothstep(0.42, 0.9, bathymetry);
+  const abyssalPlain = smoothstep(0.54, 0.82, bathymetry) * (1 - trenchDepth * 0.38);
   const midOcean = (1 - landMask) * smoothstep(0.18, 0.46, bathymetry) * (1 - smoothstep(0.72, 0.94, bathymetry));
   const shallowShelf = shelf * (1 - landMask);
 
   const mountain = clamp(
-    continentalRidges * 1.45 +
-      landMask * (rough - 0.36) * 0.72 +
-      rawLand * 0.22 +
-      tectonicMemory * 1.1,
+    continentalRidge * 1.35 +
+      landMask * (rough - 0.36) * 0.62 +
+      rawLand * 0.18 +
+      tectonicMemory,
     0,
     1
   );
 
-  const terrain = clamp(
-    landMask * (0.2 + mountain * 0.84 + mineral * 0.2),
-    0,
-    1
-  );
-
+  const terrain = clamp(landMask * (0.2 + mountain * 0.78 + mineral * 0.18), 0, 1);
   const glacier = clamp(
     landMask *
-      smoothstep(0.68, 0.94, terrain) *
-      (smoothstep(0.78, 1.28, Math.abs(lat)) + smoothstep(0.76, 0.96, mountain) * 0.42),
+      smoothstep(0.7, 0.95, terrain) *
+      (smoothstep(0.8, 1.28, Math.abs(lat)) + smoothstep(0.78, 0.96, mountain) * 0.34),
     0,
     1
   );
 
-  const runoff = clamp(coastBand * (0.32 + glacier * 0.42 + mountain * 0.22), 0, 1);
+  const runoff = clamp(coastBand * (0.28 + glacier * 0.36 + mountain * 0.18), 0, 1);
 
   let classification = "abyssal-plain";
   if (!land && shallowShelf > 0.24) classification = "shallow-shelf";
@@ -343,22 +261,17 @@ function sampleAudraliaSurface(lon, lat, timeSeconds = 0) {
   return {
     lon,
     lat,
-    vector: p,
     land,
     landMask,
-    topology,
     terrain,
     mountain,
     shelf,
     slope,
     shallowShelf,
     bathymetry,
-    deepOcean,
-    midOcean,
     abyssalPlain,
     trenchDepth,
     ridgeUplift,
-    seamounts,
     coastBand,
     glacier,
     runoff,
@@ -369,42 +282,42 @@ function sampleAudraliaSurface(lon, lat, timeSeconds = 0) {
 }
 
 function baseColorForSample(sample) {
-  const trench = [3, 10, 24];
-  const abyss = [5, 18, 38];
-  const basin = [8, 42, 72];
-  const mid = [12, 84, 116];
-  const slope = [28, 118, 138];
+  const trench = [4, 12, 26];
+  const abyss = [6, 20, 42];
+  const basin = [8, 44, 76];
+  const mid = [14, 82, 112];
+  const slope = [30, 120, 138];
   const shelf = [50, 154, 160];
-  const shelfGlow = [88, 204, 196];
-  const ridgeGlow = [60, 152, 170];
+  const shelfGlow = [82, 196, 190];
+  const ridgeGlow = [58, 148, 164];
 
   const blackSand = [42, 38, 34];
-  const whiteSand = [210, 199, 178];
-  const granite = [138, 126, 105];
+  const whiteSand = [202, 192, 174];
+  const granite = [136, 124, 104];
   const slate = [86, 94, 100];
-  const opal = [144, 186, 176];
-  const diamond = [206, 222, 218];
-  const ice = [232, 240, 242];
+  const opal = [140, 180, 172];
+  const diamond = [202, 218, 214];
+  const ice = [228, 236, 238];
 
   if (!sample.land) {
     const depthColor = mixRgb(
-      mixRgb(trench, abyss, 1 - sample.trenchDepth * 0.42),
+      mixRgb(trench, abyss, 1 - sample.trenchDepth * 0.36),
       basin,
-      1 - sample.abyssalPlain * 0.42
+      1 - sample.abyssalPlain * 0.36
     );
 
-    const midColor = mixRgb(depthColor, mid, sample.midOcean * 0.68);
-    const slopeColor = mixRgb(midColor, slope, sample.slope * 0.62);
-    const shelfColor = mixRgb(slopeColor, shelf, sample.shallowShelf * 0.76);
-    const ridgeColor = mixRgb(shelfColor, ridgeGlow, sample.ridgeUplift * 0.38);
-    const glowColor = mixRgb(ridgeColor, shelfGlow, sample.shallowShelf * 0.3 + sample.runoff * 0.22);
+    const midColor = mixRgb(depthColor, mid, sample.midOcean * 0.64);
+    const slopeColor = mixRgb(midColor, slope, sample.slope * 0.58);
+    const shelfColor = mixRgb(slopeColor, shelf, sample.shallowShelf * 0.74);
+    const ridgeColor = mixRgb(shelfColor, ridgeGlow, sample.ridgeUplift * 0.32);
+    const glowColor = mixRgb(ridgeColor, shelfGlow, sample.shallowShelf * 0.28 + sample.runoff * 0.2);
 
     const relief =
-      sample.shallowShelf * 16 +
-      sample.slope * 9 +
-      sample.ridgeUplift * 18 -
-      sample.abyssalPlain * 8 -
-      sample.trenchDepth * 16;
+      sample.shallowShelf * 14 +
+      sample.slope * 8 +
+      sample.ridgeUplift * 14 -
+      sample.abyssalPlain * 7 -
+      sample.trenchDepth * 12;
 
     return [
       clamp(Math.round(glowColor[0] + relief), 0, 255),
@@ -415,16 +328,13 @@ function baseColorForSample(sample) {
 
   const sand = mixRgb(blackSand, whiteSand, smoothstep(0.32, 0.84, sample.mineral));
   const stone = mixRgb(granite, slate, smoothstep(0.25, 0.82, sample.rough));
-  const mineralStone = mixRgb(stone, opal, sample.terrain * 0.46);
-  const brightStone = mixRgb(mineralStone, diamond, smoothstep(0.66, 0.98, sample.terrain) * 0.28);
+  const mineralStone = mixRgb(stone, opal, sample.terrain * 0.42);
+  const brightStone = mixRgb(mineralStone, diamond, smoothstep(0.66, 0.98, sample.terrain) * 0.22);
 
-  let rgb = mixRgb(brightStone, sand, sample.coastBand * 0.58);
-  rgb = mixRgb(rgb, ice, sample.glacier * 0.72);
+  let rgb = mixRgb(brightStone, sand, sample.coastBand * 0.54);
+  rgb = mixRgb(rgb, ice, sample.glacier * 0.62);
 
-  const relief =
-    (sample.terrain - 0.35) * 34 +
-    sample.mountain * 18 +
-    sample.coastBand * 12;
+  const relief = (sample.terrain - 0.35) * 28 + sample.mountain * 14 + sample.coastBand * 10;
 
   return [
     clamp(Math.round(rgb[0] + relief), 0, 255),
@@ -465,6 +375,9 @@ function prepareCanvas(mount, options) {
     return mount;
   }
 
+  mount.style.contain = "layout paint style";
+  mount.style.contentVisibility = "auto";
+
   const existing = Array.from(
     mount.querySelectorAll("canvas[data-audralia-canvas-authority='true'], canvas[data-audralia-canvas], canvas#audraliaCanvas")
   );
@@ -491,6 +404,8 @@ function prepareCanvas(mount, options) {
   canvas.style.aspectRatio = "1 / 1";
   canvas.style.borderRadius = "50%";
   canvas.style.background = "radial-gradient(circle at 50% 50%, rgba(3,10,18,1), rgba(1,3,8,1))";
+  canvas.style.pointerEvents = "none";
+  canvas.style.userSelect = "none";
 
   return canvas;
 }
@@ -501,10 +416,10 @@ function createReceiptBase(canvas, mount, options) {
     status: "initializing",
     jurisdiction: [
       "canvas creation",
-      "cached tectonic bathymetry",
-      "adaptive projection",
-      "animation budget redistribution",
-      "lightweight atmosphere",
+      "cached surface texture",
+      "mobile budget throttling",
+      "selection copy pause",
+      "low-lag spherical projection",
       "receipts"
     ],
     nonJurisdiction: [
@@ -527,7 +442,7 @@ function createReceiptBase(canvas, mount, options) {
   };
 }
 
-function drawSpace(ctx, width, height, timeSeconds) {
+function drawSpace(ctx, width, height) {
   ctx.clearRect(0, 0, width, height);
 
   const gradient = ctx.createRadialGradient(
@@ -539,36 +454,21 @@ function drawSpace(ctx, width, height, timeSeconds) {
     width * 0.75
   );
 
-  gradient.addColorStop(0, "rgba(22, 43, 60, 0.96)");
+  gradient.addColorStop(0, "rgba(22, 43, 60, 0.94)");
   gradient.addColorStop(0.42, "rgba(5, 12, 24, 0.99)");
   gradient.addColorStop(1, "rgba(0, 2, 7, 1)");
 
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, width, height);
-
-  const count = Math.max(54, Math.floor((width * height) / 11000));
-
-  for (let i = 0; i < count; i += 1) {
-    const x = hash3(i, 4, 9) * width;
-    const y = hash3(i, 8, 2) * height;
-    const pulse = 0.4 + 0.6 * hash3(i, 11, 3);
-    const twinkle = 0.45 + 0.35 * Math.sin(timeSeconds * (0.12 + pulse) + i);
-    const r = 0.45 + hash3(i, 10, 6) * 1.0;
-
-    ctx.beginPath();
-    ctx.fillStyle = `rgba(215, 232, 255, ${0.08 + twinkle * 0.22})`;
-    ctx.arc(x, y, r, 0, TAU);
-    ctx.fill();
-  }
 }
 
-function drawAtmosphere(ctx, cx, cy, radius, timeSeconds) {
+function drawAtmosphere(ctx, cx, cy, radius) {
   ctx.save();
 
   const aura = ctx.createRadialGradient(cx, cy, radius * 0.72, cx, cy, radius * 1.22);
   aura.addColorStop(0, "rgba(48,168,190,0)");
-  aura.addColorStop(0.72, "rgba(68,178,204,0.05)");
-  aura.addColorStop(0.92, "rgba(152,221,232,0.16)");
+  aura.addColorStop(0.72, "rgba(68,178,204,0.045)");
+  aura.addColorStop(0.92, "rgba(152,221,232,0.145)");
   aura.addColorStop(1, "rgba(152,221,232,0)");
 
   ctx.fillStyle = aura;
@@ -577,84 +477,12 @@ function drawAtmosphere(ctx, cx, cy, radius, timeSeconds) {
   ctx.fill();
 
   ctx.globalCompositeOperation = "screen";
-  ctx.strokeStyle = `rgba(183,232,238,${0.1 + Math.sin(timeSeconds * 0.5) * 0.018})`;
-  ctx.lineWidth = Math.max(1, radius * 0.0075);
+  ctx.strokeStyle = "rgba(183,232,238,0.09)";
+  ctx.lineWidth = Math.max(1, radius * 0.007);
   ctx.beginPath();
   ctx.arc(cx, cy, radius * 1.004, 0, TAU);
   ctx.stroke();
 
-  ctx.restore();
-}
-
-function drawGrid(ctx, cx, cy, radius, rotation, timeSeconds, performanceMode) {
-  if (performanceMode === "mobile") return;
-
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius, 0, TAU);
-  ctx.clip();
-
-  ctx.lineWidth = Math.max(0.5, radius * 0.0018);
-
-  for (let lat = -60; lat <= 60; lat += 30) {
-    const y = cy - Math.sin((lat * Math.PI) / 180) * radius;
-    const ry = Math.cos((lat * Math.PI) / 180) * radius;
-
-    ctx.globalAlpha = 0.032;
-    ctx.strokeStyle = "rgba(222,242,238,1)";
-    ctx.beginPath();
-    ctx.ellipse(cx, y, ry, radius * 0.045, 0, 0, TAU);
-    ctx.stroke();
-  }
-
-  for (let lon = 0; lon < 360; lon += 30) {
-    const phase = rotation + (lon * Math.PI) / 180;
-    const visible = Math.cos(phase);
-
-    ctx.globalAlpha = 0.01 + Math.abs(visible) * 0.028;
-    ctx.strokeStyle = "rgba(222,242,238,1)";
-    ctx.beginPath();
-    ctx.ellipse(cx, cy, Math.abs(visible) * radius, radius, 0, -HALF_PI, HALF_PI);
-    ctx.stroke();
-  }
-
-  ctx.globalAlpha = 1;
-  ctx.strokeStyle = `rgba(180,238,238,${0.075 + Math.sin(timeSeconds * 0.35) * 0.018})`;
-  ctx.lineWidth = Math.max(1, radius * 0.003);
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius * 0.996, 0, TAU);
-  ctx.stroke();
-
-  ctx.restore();
-}
-
-function drawClimateOverlay(ctx, cx, cy, radius, rotation, timeSeconds, performanceMode) {
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius * 0.998, 0, TAU);
-  ctx.clip();
-  ctx.globalCompositeOperation = "screen";
-
-  const bandCount = performanceMode === "mobile" ? 3 : 5;
-
-  for (let band = 0; band < bandCount; band += 1) {
-    const lat = lerp(-0.68, 0.68, band / Math.max(1, bandCount - 1));
-    const y = cy - Math.sin(lat) * radius;
-    const ry = Math.cos(lat) * radius * (0.84 + Math.sin(timeSeconds * 0.14 + band) * 0.028);
-    const phase = rotation * 0.48 + band * 0.82 + timeSeconds * 0.08;
-    const alpha = 0.006 + 0.009 * Math.sin(timeSeconds * 0.25 + band * 1.7);
-
-    ctx.strokeStyle = `rgba(218,240,236,${alpha})`;
-    ctx.lineWidth = Math.max(0.7, radius * (0.002 + band * 0.00012));
-    ctx.setLineDash([radius * 0.13, radius * 0.13, radius * 0.028, radius * 0.15]);
-    ctx.lineDashOffset = -phase * radius * 0.12;
-
-    ctx.beginPath();
-    ctx.ellipse(cx, y, ry, radius * 0.014, Math.sin(phase) * 0.07, 0, TAU);
-    ctx.stroke();
-  }
-
-  ctx.setLineDash([]);
   ctx.restore();
 }
 
@@ -670,7 +498,7 @@ function drawDepthOverlay(ctx, cx, cy, radius) {
     radius
   );
 
-  shade.addColorStop(0, "rgba(255,255,255,0.08)");
+  shade.addColorStop(0, "rgba(255,255,255,0.075)");
   shade.addColorStop(0.38, "rgba(255,255,255,0.01)");
   shade.addColorStop(0.74, "rgba(0,0,0,0.07)");
   shade.addColorStop(1, "rgba(0,0,0,0.38)");
@@ -692,8 +520,8 @@ function drawDepthOverlay(ctx, cx, cy, radius) {
     radius * 0.72
   );
 
-  highlight.addColorStop(0, "rgba(255,255,255,0.13)");
-  highlight.addColorStop(0.38, "rgba(255,255,255,0.035)");
+  highlight.addColorStop(0, "rgba(255,255,255,0.12)");
+  highlight.addColorStop(0.38, "rgba(255,255,255,0.032)");
   highlight.addColorStop(1, "rgba(255,255,255,0)");
 
   ctx.fillStyle = highlight;
@@ -707,8 +535,6 @@ function drawDepthOverlay(ctx, cx, cy, radius) {
 function sampleProofPixels(ctx, width, height) {
   const points = {
     center: [0.5, 0.5],
-    north: [0.5, 0.22],
-    south: [0.5, 0.78],
     west: [0.24, 0.5],
     east: [0.76, 0.5]
   };
@@ -748,24 +574,26 @@ class AudraliaCanvasController {
     this.state = {
       running: false,
       destroyed: false,
+      visible: true,
+      userPauseUntil: 0,
       animationFrame: 0,
       frame: 0,
       width: 1,
       height: 1,
       dpr: 1,
       radius: 1,
-      rasterSize: this.options.pixelResolution,
-      textureWidth: this.options.surfaceTextureWidth,
-      textureHeight: Math.floor(this.options.surfaceTextureWidth / 2),
-      performanceMode: "desktop",
-      projectionStride: 1,
+      textureWidth: this.options.mobileTextureWidth,
+      textureHeight: Math.floor(this.options.mobileTextureWidth / 2),
+      rasterSize: this.options.mobileRasterSize,
+      fps: this.options.mobileFps,
+      frameInterval: 1000 / this.options.mobileFps,
+      performanceMode: "mobile",
       rotation: Number.isFinite(this.options.initialRotation) ? this.options.initialRotation : -2.18,
-      timeSeconds: 0,
       lastTimestamp: 0,
-      classificationCounts: {},
+      lastDrawAt: 0,
       surfaceBuilt: false,
       surfaceVersion: 0,
-      lastProjectionFrame: -1
+      classificationCounts: {}
     };
 
     this.surfaceImageData = null;
@@ -778,9 +606,14 @@ class AudraliaCanvasController {
     this.receipt = createReceiptBase(canvas, mount, this.options);
 
     this.resizeObserver = null;
+    this.intersectionObserver = null;
+
     this.resize = this.resize.bind(this);
     this.tick = this.tick.bind(this);
     this.destroy = this.destroy.bind(this);
+    this.pauseForUserAction = this.pauseForUserAction.bind(this);
+    this.handleSelectionChange = this.handleSelectionChange.bind(this);
+    this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
 
     this.install();
   }
@@ -790,6 +623,7 @@ class AudraliaCanvasController {
     this.canvas.dataset.status = "installed";
     this.resize();
     this.buildSurfaceCache();
+    this.renderProjection();
 
     if (typeof ResizeObserver !== "undefined") {
       this.resizeObserver = new ResizeObserver(this.resize);
@@ -798,6 +632,26 @@ class AudraliaCanvasController {
       window.addEventListener("resize", this.resize, { passive: true });
     }
 
+    if (typeof IntersectionObserver !== "undefined") {
+      this.intersectionObserver = new IntersectionObserver((entries) => {
+        this.state.visible = entries.some((entry) => entry.isIntersecting);
+      });
+      this.intersectionObserver.observe(this.canvas);
+    }
+
+    document.addEventListener("visibilitychange", this.handleVisibilityChange);
+    document.addEventListener("selectionchange", this.handleSelectionChange);
+    document.addEventListener("copy", this.pauseForUserAction);
+    document.addEventListener("cut", this.pauseForUserAction);
+    document.addEventListener("paste", this.pauseForUserAction);
+    document.addEventListener("pointerdown", this.pauseForUserAction, { passive: true });
+    document.addEventListener("touchstart", this.pauseForUserAction, { passive: true });
+    document.addEventListener("keydown", (event) => {
+      if ((event.ctrlKey || event.metaKey) && ["a", "c", "v", "x"].includes(String(event.key).toLowerCase())) {
+        this.pauseForUserAction();
+      }
+    });
+
     this.receipt.status = "installed";
     this.receipt.animation = "ready";
     this.receipt.performanceMode = this.state.performanceMode;
@@ -805,34 +659,35 @@ class AudraliaCanvasController {
   }
 
   resolvePerformanceProfile(cssSize, dpr) {
+    const cores = navigator.hardwareConcurrency || 4;
     const mobile =
-      cssSize <= 520 ||
+      cssSize <= 560 ||
       window.matchMedia?.("(max-width: 760px)")?.matches ||
-      navigator.hardwareConcurrency <= 4;
+      cores <= 4;
 
     if (mobile) {
       return {
         performanceMode: "mobile",
-        rasterSize: this.options.mobilePixelResolution,
-        textureWidth: this.options.mobileSurfaceTextureWidth,
-        projectionStride: 3
+        textureWidth: this.options.mobileTextureWidth,
+        rasterSize: this.options.mobileRasterSize,
+        fps: this.options.mobileFps
       };
     }
 
-    if (dpr > 1.35) {
+    if (dpr > 1.15 || cores <= 6) {
       return {
         performanceMode: "balanced",
-        rasterSize: Math.min(this.options.pixelResolution, 400),
-        textureWidth: Math.min(this.options.surfaceTextureWidth, 760),
-        projectionStride: 2
+        textureWidth: this.options.balancedTextureWidth,
+        rasterSize: this.options.balancedRasterSize,
+        fps: this.options.balancedFps
       };
     }
 
     return {
       performanceMode: "desktop",
-      rasterSize: this.options.pixelResolution,
-      textureWidth: this.options.surfaceTextureWidth,
-      projectionStride: 1
+      textureWidth: this.options.desktopTextureWidth,
+      rasterSize: this.options.desktopRasterSize,
+      fps: this.options.desktopFps
     };
   }
 
@@ -853,35 +708,30 @@ class AudraliaCanvasController {
       this.canvas.height = size;
     }
 
+    const profile = this.resolvePerformanceProfile(cssSize, dpr);
+    const nextTextureWidth = Math.max(256, Math.floor(profile.textureWidth));
+    const nextTextureHeight = Math.floor(nextTextureWidth / 2);
+    const nextRasterSize = Math.max(180, Math.floor(profile.rasterSize));
+
     this.state.width = size;
     this.state.height = size;
     this.state.dpr = dpr;
     this.state.radius = Math.floor(size * 0.435);
-
-    const profile = this.resolvePerformanceProfile(cssSize, dpr);
-    const nextRasterSize = clamp(
-      Math.floor(profile.rasterSize * dpr),
-      this.options.minPixelResolution,
-      this.options.maxPixelResolution
-    );
-    const nextTextureWidth = Math.max(384, Math.floor(profile.textureWidth));
-    const nextTextureHeight = Math.floor(nextTextureWidth / 2);
-
     this.state.performanceMode = profile.performanceMode;
-    this.state.projectionStride = profile.projectionStride;
+    this.state.fps = profile.fps;
+    this.state.frameInterval = 1000 / profile.fps;
 
-    if (this.state.rasterSize !== nextRasterSize) {
-      this.state.rasterSize = nextRasterSize;
-      this.projectedCanvas.width = nextRasterSize;
-      this.projectedCanvas.height = nextRasterSize;
-      this.state.lastProjectionFrame = -1;
-    }
-
-    if (this.state.textureWidth !== nextTextureWidth || this.state.textureHeight !== nextTextureHeight) {
+    if (
+      this.state.textureWidth !== nextTextureWidth ||
+      this.state.textureHeight !== nextTextureHeight ||
+      this.state.rasterSize !== nextRasterSize
+    ) {
       this.state.textureWidth = nextTextureWidth;
       this.state.textureHeight = nextTextureHeight;
+      this.state.rasterSize = nextRasterSize;
       this.state.surfaceBuilt = false;
-      this.state.lastProjectionFrame = -1;
+      this.buildSurfaceCache();
+      this.renderProjection();
     }
 
     this.canvas.dataset.pixelWidth = String(size);
@@ -889,7 +739,31 @@ class AudraliaCanvasController {
     this.canvas.dataset.rasterSize = String(this.state.rasterSize);
     this.canvas.dataset.textureWidth = String(this.state.textureWidth);
     this.canvas.dataset.performanceMode = this.state.performanceMode;
-    this.canvas.dataset.projectionStride = String(this.state.projectionStride);
+    this.canvas.dataset.fps = String(this.state.fps);
+  }
+
+  pauseForUserAction() {
+    this.state.userPauseUntil = performance.now() + 1600;
+  }
+
+  handleSelectionChange() {
+    const selection = window.getSelection?.();
+    if (selection && !selection.isCollapsed) {
+      this.state.userPauseUntil = performance.now() + 2200;
+    }
+  }
+
+  handleVisibilityChange() {
+    this.state.visible = !document.hidden;
+  }
+
+  shouldPause(now) {
+    return (
+      this.state.destroyed ||
+      document.hidden ||
+      !this.state.visible ||
+      now < this.state.userPauseUntil
+    );
   }
 
   buildSurfaceCache() {
@@ -920,7 +794,7 @@ class AudraliaCanvasController {
 
       for (let x = 0; x < width; x += 1) {
         const lon = (x / Math.max(1, width - 1)) * TAU - Math.PI;
-        const sample = sampleAudraliaSurface(lon, lat, 0);
+        const sample = sampleAudraliaSurface(lon, lat);
         const rgb = baseColorForSample(sample);
         const index = (y * width + x) * 4;
 
@@ -957,27 +831,22 @@ class AudraliaCanvasController {
     return [data[index], data[index + 1], data[index + 2]];
   }
 
-  renderProjectionIfNeeded() {
+  renderProjection() {
     if (!this.state.surfaceBuilt) this.buildSurfaceCache();
 
-    const shouldProject =
-      this.state.lastProjectionFrame < 0 ||
-      this.state.frame % this.state.projectionStride === 0;
-
-    if (!shouldProject) return;
-
     const size = this.state.rasterSize;
+    this.projectedCanvas.width = size;
+    this.projectedCanvas.height = size;
+
     const image = this.projectedCtx.createImageData(size, size);
     const data = image.data;
 
     const rotation = this.state.rotation;
     const axialTilt = -0.18;
-
     const cosR = Math.cos(rotation);
     const sinR = Math.sin(rotation);
     const cosT = Math.cos(axialTilt);
     const sinT = Math.sin(axialTilt);
-
     const light = normalize(vec3(-0.42, 0.34, 0.84));
 
     for (let py = 0; py < size; py += 1) {
@@ -1022,7 +891,6 @@ class AudraliaCanvasController {
     }
 
     this.projectedCtx.putImageData(image, 0, 0);
-    this.state.lastProjectionFrame = this.state.frame;
   }
 
   start() {
@@ -1030,6 +898,7 @@ class AudraliaCanvasController {
 
     this.state.running = true;
     this.state.lastTimestamp = performance.now();
+    this.state.lastDrawAt = 0;
     this.canvas.dataset.status = "running";
     this.receipt.status = "running";
     this.receipt.animation = "active";
@@ -1056,13 +925,16 @@ class AudraliaCanvasController {
   tick(timestamp) {
     if (!this.state.running || this.state.destroyed) return;
 
-    const dt = clamp((timestamp - this.state.lastTimestamp) / 1000, 0, 0.08);
+    if (!this.shouldPause(timestamp) && timestamp - this.state.lastDrawAt >= this.state.frameInterval) {
+      const dt = clamp((timestamp - this.state.lastTimestamp) / 1000, 0, 0.12);
 
-    this.state.lastTimestamp = timestamp;
-    this.state.timeSeconds += dt;
-    this.state.rotation = wrapLongitude(this.state.rotation + dt * this.options.rotationSpeed);
+      this.state.lastTimestamp = timestamp;
+      this.state.lastDrawAt = timestamp;
+      this.state.rotation = wrapLongitude(this.state.rotation + dt * this.options.rotationSpeed);
 
-    this.draw();
+      this.renderProjection();
+      this.draw();
+    }
 
     this.state.animationFrame = requestAnimationFrame(this.tick);
   }
@@ -1075,10 +947,8 @@ class AudraliaCanvasController {
     const cy = height / 2;
     const radius = this.state.radius;
 
-    this.renderProjectionIfNeeded();
-
-    drawSpace(ctx, width, height, this.state.timeSeconds);
-    drawAtmosphere(ctx, cx, cy, radius, this.state.timeSeconds);
+    drawSpace(ctx, width, height);
+    drawAtmosphere(ctx, cx, cy, radius);
 
     ctx.save();
     ctx.imageSmoothingEnabled = true;
@@ -1086,14 +956,12 @@ class AudraliaCanvasController {
     ctx.drawImage(this.projectedCanvas, cx - radius, cy - radius, radius * 2, radius * 2);
     ctx.restore();
 
-    drawGrid(ctx, cx, cy, radius, this.state.rotation, this.state.timeSeconds, this.state.performanceMode);
-    drawClimateOverlay(ctx, cx, cy, radius, this.state.rotation, this.state.timeSeconds, this.state.performanceMode);
     drawDepthOverlay(ctx, cx, cy, radius);
-    drawAtmosphere(ctx, cx, cy, radius, this.state.timeSeconds);
+    drawAtmosphere(ctx, cx, cy, radius);
 
     this.state.frame += 1;
 
-    if (this.state.frame % 24 === 1 || this.state.frame < 3) {
+    if (this.state.frame % 48 === 1 || this.state.frame < 3) {
       const visiblePixels = Object.values(this.state.classificationCounts).reduce(
         (sum, count) => sum + count,
         0
@@ -1114,7 +982,8 @@ class AudraliaCanvasController {
       this.receipt.textureHeight = this.state.textureHeight;
       this.receipt.surfaceVersion = this.state.surfaceVersion;
       this.receipt.performanceMode = this.state.performanceMode;
-      this.receipt.projectionStride = this.state.projectionStride;
+      this.receipt.fps = this.state.fps;
+      this.receipt.selectionPauseActive = performance.now() < this.state.userPauseUntil;
       this.receipt.classificationCounts = { ...this.state.classificationCounts };
       this.receipt.measuredLandRatio = visiblePixels
         ? Number((landPixels / visiblePixels).toFixed(4))
@@ -1125,13 +994,11 @@ class AudraliaCanvasController {
       this.canvas.dataset.frame = String(this.state.frame);
       this.canvas.dataset.rotation = String(this.receipt.rotation);
       this.canvas.dataset.measuredLandRatio = String(this.receipt.measuredLandRatio);
-      this.canvas.dataset.visualDefinition = "performance-stabilized-preclimate";
-      this.canvas.dataset.sphericalWrapping = "active";
-      this.canvas.dataset.bathymetry = "cached-layered";
-      this.canvas.dataset.performanceBudget = "redistributed";
+      this.canvas.dataset.visualDefinition = "mobile-budget-governed";
+      this.canvas.dataset.performanceBudget = "selection-safe";
       this.canvas.dataset.surfaceCache = "active";
-      this.canvas.dataset.projectionStride = String(this.state.projectionStride);
-      this.canvas.dataset.animation = "active";
+      this.canvas.dataset.fps = String(this.state.fps);
+      this.canvas.dataset.animation = "throttled";
 
       installReceipt(this.receipt);
     }
@@ -1141,11 +1008,17 @@ class AudraliaCanvasController {
     this.stop();
     this.state.destroyed = true;
 
-    if (this.resizeObserver) {
-      this.resizeObserver.disconnect();
-    } else {
-      window.removeEventListener("resize", this.resize);
-    }
+    if (this.resizeObserver) this.resizeObserver.disconnect();
+    if (this.intersectionObserver) this.intersectionObserver.disconnect();
+
+    document.removeEventListener("visibilitychange", this.handleVisibilityChange);
+    document.removeEventListener("selectionchange", this.handleSelectionChange);
+    document.removeEventListener("copy", this.pauseForUserAction);
+    document.removeEventListener("cut", this.pauseForUserAction);
+    document.removeEventListener("paste", this.pauseForUserAction);
+    document.removeEventListener("pointerdown", this.pauseForUserAction);
+    document.removeEventListener("touchstart", this.pauseForUserAction);
+    window.removeEventListener("resize", this.resize);
 
     this.canvas.dataset.status = "destroyed";
     this.receipt.status = "destroyed";

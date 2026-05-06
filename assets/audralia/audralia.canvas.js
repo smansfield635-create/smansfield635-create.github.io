@@ -1,10 +1,10 @@
 /* /assets/audralia/audralia.canvas.js */
-/* AUDRALIA_CANVAS_MOBILE_BUDGET_GOVERNOR_TNT_v7
-   Jurisdiction: canvas creation, low-lag spherical projection, cached surface texture, mobile budget throttling, selection/copy pause, lightweight climate overlay, receipts.
+/* AUDRALIA_CANVAS_TERRAIN_RELIEF_AND_MINERAL_DEPTH_TNT_v8
+   Jurisdiction: canvas creation, cached terrain surface, mineral depth, elevation bands, hydrology-ready cuts, mobile budget governor, low-lag spherical projection, receipts.
    Non-jurisdiction: HTML shell, route doorway, document.body mutation, Gauges scoring, image generation, GraphicBox.
 */
 
-const AUDRALIA_CANVAS_CONTRACT = "AUDRALIA_CANVAS_MOBILE_BUDGET_GOVERNOR_TNT_v7";
+const AUDRALIA_CANVAS_CONTRACT = "AUDRALIA_CANVAS_TERRAIN_RELIEF_AND_MINERAL_DEPTH_TNT_v8";
 
 const TAU = Math.PI * 2;
 const HALF_PI = Math.PI / 2;
@@ -114,6 +114,7 @@ function continentCap(point, centerLon, centerLat, radius, strength, warp) {
 
 function plateCurve(lon, lat, centerLon, centerLat, length, thickness, phase, bend, strength) {
   const dLon = wrapLongitude(lon - centerLon);
+
   const trail =
     centerLat +
     Math.sin(dLon * 1.8 + phase) * bend +
@@ -135,6 +136,8 @@ function sampleAudraliaSurface(lon, lat) {
   const rough = waveNoise(lon, lat, 15.0, 4.4);
   const mineral = waveNoise(lon, lat, 24.0, 6.2);
   const basinNoise = waveNoise(lon, lat, 4.6, 9.1);
+  const erosionNoise = waveNoise(lon, lat, 18.0, 12.4);
+  const fractureNoise = waveNoise(lon, lat, 10.5, 18.2);
 
   const west =
     continentCap(p, -2.55, 0.08, 0.6, 1.08, 1.1) +
@@ -226,24 +229,86 @@ function sampleAudraliaSurface(lon, lat) {
   const shallowShelf = shelf * (1 - landMask);
 
   const mountain = clamp(
-    continentalRidge * 1.35 +
-      landMask * (rough - 0.36) * 0.62 +
-      rawLand * 0.18 +
-      tectonicMemory,
+    continentalRidge * 1.45 +
+      landMask * (rough - 0.34) * 0.7 +
+      rawLand * 0.2 +
+      tectonicMemory * 1.1,
     0,
     1
   );
 
-  const terrain = clamp(landMask * (0.2 + mountain * 0.78 + mineral * 0.18), 0, 1);
+  const plateau = clamp(
+    landMask *
+      smoothstep(0.52, 0.78, rawLand + broad * 0.2 + continentalRidge * 0.35) *
+      (0.45 + rough * 0.55),
+    0,
+    1
+  );
+
+  const terrain = clamp(
+    landMask *
+      (
+        0.16 +
+        mountain * 0.58 +
+        plateau * 0.3 +
+        mineral * 0.12 +
+        fractureNoise * 0.08
+      ),
+    0,
+    1
+  );
+
+  const highland = clamp(landMask * smoothstep(0.5, 0.78, terrain + mountain * 0.24), 0, 1);
+  const summit = clamp(landMask * smoothstep(0.74, 0.96, terrain + mountain * 0.18), 0, 1);
+  const lowland = clamp(landMask * (1 - coastBand) * (1 - smoothstep(0.42, 0.72, terrain)), 0, 1);
+
   const glacier = clamp(
     landMask *
-      smoothstep(0.7, 0.95, terrain) *
-      (smoothstep(0.8, 1.28, Math.abs(lat)) + smoothstep(0.78, 0.96, mountain) * 0.34),
+      smoothstep(0.72, 0.96, terrain) *
+      (
+        smoothstep(0.8, 1.28, Math.abs(lat)) * 0.82 +
+        smoothstep(0.82, 0.98, mountain) * 0.28
+      ),
     0,
     1
   );
 
-  const runoff = clamp(coastBand * (0.28 + glacier * 0.36 + mountain * 0.18), 0, 1);
+  const erosionChannels = clamp(
+    landMask *
+      (1 - coastBand * 0.4) *
+      smoothstep(0.48, 0.92, mountain + plateau * 0.4) *
+      smoothstep(0.52, 0.98, erosionNoise) *
+      (0.5 + Math.abs(Math.sin(lon * 9.0 + lat * 11.0)) * 0.5),
+    0,
+    1
+  );
+
+  const hydrologyCuts = clamp(
+    erosionChannels * (0.42 + glacier * 0.38 + coastBand * 0.2),
+    0,
+    1
+  );
+
+  const runoff = clamp(coastBand * (0.28 + glacier * 0.36 + mountain * 0.18) + hydrologyCuts * 0.22, 0, 1);
+
+  const diamond = clamp(summit * 0.42 + mineral * 0.22 + glacier * 0.18, 0, 1);
+  const opal = clamp((0.5 + Math.sin(lon * 2.4 - lat * 3.1) * 0.5) * terrain * 0.62 + runoff * 0.2, 0, 1);
+  const granite = clamp(lowland * 0.35 + plateau * 0.44 + rough * 0.22, 0, 1);
+  const slate = clamp(highland * 0.36 + fractureNoise * 0.34 + erosionChannels * 0.28, 0, 1);
+
+  let elevationClass = "ocean";
+  if (land) elevationClass = "lowland";
+  if (land && coastBand > 0.26) elevationClass = "coast";
+  if (land && plateau > 0.36) elevationClass = "plateau";
+  if (land && highland > 0.42) elevationClass = "highland";
+  if (land && summit > 0.36) elevationClass = "summit";
+  if (glacier > 0.38) elevationClass = "glacier";
+
+  let mineralClass = "ocean";
+  if (land) mineralClass = "granite";
+  if (land && slate > granite && slate > opal) mineralClass = "slate";
+  if (land && opal > granite && opal >= slate) mineralClass = "opal";
+  if (land && diamond > 0.36) mineralClass = "diamond";
 
   let classification = "abyssal-plain";
   if (!land && shallowShelf > 0.24) classification = "shallow-shelf";
@@ -253,10 +318,7 @@ function sampleAudraliaSurface(lon, lat) {
   else if (!land && midOcean > 0.24) classification = "mid-ocean";
   else if (!land && abyssalPlain > 0.24) classification = "abyssal-plain";
 
-  if (land) classification = "land";
-  if (land && coastBand > 0.26) classification = "coast";
-  if (land && terrain > 0.62) classification = "highland";
-  if (glacier > 0.44) classification = "glacier";
+  if (land) classification = elevationClass;
 
   return {
     lon,
@@ -265,6 +327,10 @@ function sampleAudraliaSurface(lon, lat) {
     landMask,
     terrain,
     mountain,
+    plateau,
+    highland,
+    summit,
+    lowland,
     shelf,
     slope,
     shallowShelf,
@@ -275,8 +341,16 @@ function sampleAudraliaSurface(lon, lat) {
     coastBand,
     glacier,
     runoff,
+    hydrologyCuts,
+    erosionChannels,
     rough,
     mineral,
+    diamond,
+    opal,
+    granite,
+    slate,
+    elevationClass,
+    mineralClass,
     classification
   };
 }
@@ -292,12 +366,15 @@ function baseColorForSample(sample) {
   const ridgeGlow = [58, 148, 164];
 
   const blackSand = [42, 38, 34];
-  const whiteSand = [202, 192, 174];
-  const granite = [136, 124, 104];
-  const slate = [86, 94, 100];
-  const opal = [140, 180, 172];
-  const diamond = [202, 218, 214];
-  const ice = [228, 236, 238];
+  const whiteSand = [196, 188, 170];
+  const lowGranite = [128, 118, 100];
+  const warmGranite = [148, 134, 108];
+  const darkSlate = [58, 68, 76];
+  const blueSlate = [82, 98, 106];
+  const mutedOpal = [124, 164, 158];
+  const brightOpal = [164, 202, 190];
+  const diamondStone = [184, 202, 198];
+  const glacialIce = [218, 230, 232];
 
   if (!sample.land) {
     const depthColor = mixRgb(
@@ -326,20 +403,36 @@ function baseColorForSample(sample) {
     ];
   }
 
-  const sand = mixRgb(blackSand, whiteSand, smoothstep(0.32, 0.84, sample.mineral));
-  const stone = mixRgb(granite, slate, smoothstep(0.25, 0.82, sample.rough));
-  const mineralStone = mixRgb(stone, opal, sample.terrain * 0.42);
-  const brightStone = mixRgb(mineralStone, diamond, smoothstep(0.66, 0.98, sample.terrain) * 0.22);
+  const sand = mixRgb(blackSand, whiteSand, smoothstep(0.26, 0.76, sample.mineral));
+  const granite = mixRgb(lowGranite, warmGranite, sample.granite);
+  const slate = mixRgb(darkSlate, blueSlate, sample.slate);
+  const opal = mixRgb(mutedOpal, brightOpal, sample.opal);
+  const summitStone = mixRgb(slate, diamondStone, sample.diamond * 0.48);
 
-  let rgb = mixRgb(brightStone, sand, sample.coastBand * 0.54);
-  rgb = mixRgb(rgb, ice, sample.glacier * 0.62);
+  let rgb = granite;
 
-  const relief = (sample.terrain - 0.35) * 28 + sample.mountain * 14 + sample.coastBand * 10;
+  rgb = mixRgb(rgb, slate, sample.highland * 0.52 + sample.slate * 0.22);
+  rgb = mixRgb(rgb, opal, sample.opal * 0.32);
+  rgb = mixRgb(rgb, summitStone, sample.summit * 0.48);
+  rgb = mixRgb(rgb, sand, sample.coastBand * 0.58);
+  rgb = mixRgb(rgb, glacialIce, sample.glacier * 0.58);
+
+  const channelDarken = sample.hydrologyCuts * 32 + sample.erosionChannels * 14;
+  const relief =
+    sample.lowland * 4 +
+    sample.plateau * 13 +
+    sample.highland * 22 +
+    sample.summit * 26 +
+    sample.coastBand * 8 -
+    channelDarken;
+
+  const wetLift = sample.runoff * 10;
+  const mineralLift = sample.opal * 8 + sample.diamond * 6;
 
   return [
-    clamp(Math.round(rgb[0] + relief), 0, 255),
-    clamp(Math.round(rgb[1] + relief), 0, 255),
-    clamp(Math.round(rgb[2] + relief), 0, 255)
+    clamp(Math.round(rgb[0] + relief + wetLift + mineralLift), 0, 255),
+    clamp(Math.round(rgb[1] + relief + wetLift + mineralLift), 0, 255),
+    clamp(Math.round(rgb[2] + relief + wetLift + mineralLift), 0, 255)
   ];
 }
 
@@ -416,10 +509,12 @@ function createReceiptBase(canvas, mount, options) {
     status: "initializing",
     jurisdiction: [
       "canvas creation",
-      "cached surface texture",
+      "cached terrain surface",
+      "mineral depth",
+      "elevation bands",
+      "hydrology ready cuts",
       "mobile budget throttling",
-      "selection copy pause",
-      "low-lag spherical projection",
+      "low lag spherical projection",
       "receipts"
     ],
     nonJurisdiction: [
@@ -614,6 +709,7 @@ class AudraliaCanvasController {
     this.pauseForUserAction = this.pauseForUserAction.bind(this);
     this.handleSelectionChange = this.handleSelectionChange.bind(this);
     this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
+    this.handleKeydown = this.handleKeydown.bind(this);
 
     this.install();
   }
@@ -646,11 +742,7 @@ class AudraliaCanvasController {
     document.addEventListener("paste", this.pauseForUserAction);
     document.addEventListener("pointerdown", this.pauseForUserAction, { passive: true });
     document.addEventListener("touchstart", this.pauseForUserAction, { passive: true });
-    document.addEventListener("keydown", (event) => {
-      if ((event.ctrlKey || event.metaKey) && ["a", "c", "v", "x"].includes(String(event.key).toLowerCase())) {
-        this.pauseForUserAction();
-      }
-    });
+    document.addEventListener("keydown", this.handleKeydown);
 
     this.receipt.status = "installed";
     this.receipt.animation = "ready";
@@ -757,6 +849,12 @@ class AudraliaCanvasController {
     this.state.visible = !document.hidden;
   }
 
+  handleKeydown(event) {
+    if ((event.ctrlKey || event.metaKey) && ["a", "c", "v", "x"].includes(String(event.key).toLowerCase())) {
+      this.pauseForUserAction();
+    }
+  }
+
   shouldPause(now) {
     return (
       this.state.destroyed ||
@@ -777,9 +875,11 @@ class AudraliaCanvasController {
     const data = image.data;
 
     const counts = {
-      land: 0,
       coast: 0,
+      lowland: 0,
+      plateau: 0,
       highland: 0,
+      summit: 0,
       glacier: 0,
       "shallow-shelf": 0,
       "continental-slope": 0,
@@ -787,6 +887,13 @@ class AudraliaCanvasController {
       "abyssal-plain": 0,
       "subduction-trench": 0,
       "ridge-seamount": 0
+    };
+
+    const minerals = {
+      granite: 0,
+      slate: 0,
+      opal: 0,
+      diamond: 0
     };
 
     for (let y = 0; y < height; y += 1) {
@@ -800,6 +907,10 @@ class AudraliaCanvasController {
 
         counts[sample.classification] = (counts[sample.classification] || 0) + 1;
 
+        if (sample.land && minerals[sample.mineralClass] !== undefined) {
+          minerals[sample.mineralClass] += 1;
+        }
+
         data[index] = rgb[0];
         data[index + 1] = rgb[1];
         data[index + 2] = rgb[2];
@@ -810,6 +921,7 @@ class AudraliaCanvasController {
     this.surfaceCtx.putImageData(image, 0, 0);
     this.surfaceImageData = image;
     this.state.classificationCounts = counts;
+    this.state.mineralCounts = minerals;
     this.state.surfaceBuilt = true;
     this.state.surfaceVersion += 1;
   }
@@ -968,9 +1080,11 @@ class AudraliaCanvasController {
       );
 
       const landPixels =
-        (this.state.classificationCounts.land || 0) +
         (this.state.classificationCounts.coast || 0) +
+        (this.state.classificationCounts.lowland || 0) +
+        (this.state.classificationCounts.plateau || 0) +
         (this.state.classificationCounts.highland || 0) +
+        (this.state.classificationCounts.summit || 0) +
         (this.state.classificationCounts.glacier || 0);
 
       this.receipt.status = "running";
@@ -985,6 +1099,7 @@ class AudraliaCanvasController {
       this.receipt.fps = this.state.fps;
       this.receipt.selectionPauseActive = performance.now() < this.state.userPauseUntil;
       this.receipt.classificationCounts = { ...this.state.classificationCounts };
+      this.receipt.mineralCounts = { ...this.state.mineralCounts };
       this.receipt.measuredLandRatio = visiblePixels
         ? Number((landPixels / visiblePixels).toFixed(4))
         : 0;
@@ -994,9 +1109,12 @@ class AudraliaCanvasController {
       this.canvas.dataset.frame = String(this.state.frame);
       this.canvas.dataset.rotation = String(this.receipt.rotation);
       this.canvas.dataset.measuredLandRatio = String(this.receipt.measuredLandRatio);
-      this.canvas.dataset.visualDefinition = "mobile-budget-governed";
+      this.canvas.dataset.visualDefinition = "terrain-relief-mineral-depth";
       this.canvas.dataset.performanceBudget = "selection-safe";
       this.canvas.dataset.surfaceCache = "active";
+      this.canvas.dataset.terrainRelief = "active";
+      this.canvas.dataset.mineralDepth = "active";
+      this.canvas.dataset.hydrologyCuts = "active";
       this.canvas.dataset.fps = String(this.state.fps);
       this.canvas.dataset.animation = "throttled";
 
@@ -1018,6 +1136,7 @@ class AudraliaCanvasController {
     document.removeEventListener("paste", this.pauseForUserAction);
     document.removeEventListener("pointerdown", this.pauseForUserAction);
     document.removeEventListener("touchstart", this.pauseForUserAction);
+    document.removeEventListener("keydown", this.handleKeydown);
     window.removeEventListener("resize", this.resize);
 
     this.canvas.dataset.status = "destroyed";

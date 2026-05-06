@@ -1,51 +1,52 @@
 /* /assets/audralia/audralia.canvas.js */
-/* AUDRALIA_CANVAS_DIMENSION_AUTHORITY_TNT_v14
+/* AUDRALIA_CANVAS_CONTAINED_SHELL_OBEDIENCE_TNT_v18
    Full-file replacement.
 
    Jurisdiction:
    - adopted canvas authority
-   - dimension control panel
-   - square-box enforcement
-   - mount measurement
-   - intended globe diameter
-   - canvas intrinsic pixel sizing
-   - render radius
-   - low-lag frame budget
-   - immediate nonblank pixel proof
-   - runtime-fed surface sampling
+   - contained-shell obedience
+   - shell-only dimension measurement
+   - no mount enlargement
+   - no page expansion
+   - runtime-compatible imports
+   - visible land/water/shelf/atmosphere rendering
+   - low-lag animation budget
+   - pixel proof
    - receipts
 
    Non-jurisdiction:
-   - HTML route shell ownership
+   - HTML route shell authorship
    - showroom selector routing
    - topology land/void authority
    - terrain authority
    - hydration authority
-   - oceans/deep-ocean authority
+   - oceans authority
+   - deep-ocean authority
    - Gauges scoring
    - GraphicBox
    - image generation
 */
 
-import RuntimeTruth, {
-  sampleAudraliaRuntime,
-  getAudraliaRuntimeStatus
-} from "./audralia.runtime.js?v=audralia-canvas-dimension-authority-v14";
+import RuntimeDefault, {
+  sampleSurface as sampleRuntimeSurface,
+  getStatus as getRuntimeStatus
+} from "./audralia.runtime.js?v=audralia-contained-shell-obedience-v18";
 
-const AUDRALIA_CANVAS_CONTRACT = "AUDRALIA_CANVAS_DIMENSION_AUTHORITY_TNT_v14";
+const AUDRALIA_CANVAS_CONTRACT = "AUDRALIA_CANVAS_CONTAINED_SHELL_OBEDIENCE_TNT_v18";
+const AUDRALIA_SERVED_SOURCE_CONTRACT = "AUDRALIA_SERVED_SOURCE_ALIGNMENT_TNT_v17";
 
 const AUDRALIA_CANVAS_LEGACY_CONTRACTS = [
-  "AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v2",
-  "AUDRALIA_CANVAS_HYDRATION_VISIBILITY_FLOOR_TNT_v12",
-  "AUDRALIA_CANVAS_CLIMATE_FIRST_HYDRATION_READY_TNT_v11",
-  "AUDRALIA_CANVAS_PROOF_CHAIN_ALIGNMENT_TNT_v13"
+  "AUDRALIA_CANVAS_SERVED_SOURCE_ALIGNMENT_TNT_v17",
+  "AUDRALIA_CANVAS_EARTH_TEMPLATE_DIMENSION_AUTHORITY_TNT_v15",
+  "AUDRALIA_CANVAS_DIMENSION_AUTHORITY_TNT_v14",
+  "AUDRALIA_CANVAS_PROOF_CHAIN_ALIGNMENT_TNT_v13",
+  "AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v2"
 ];
 
 const TAU = Math.PI * 2;
-const HALF_PI = Math.PI / 2;
 
 const DEFAULT_OPTIONS = {
-  rotationSpeed: 0.08,
+  rotationSpeed: 0.075,
   initialRotation: -2.15,
 
   mobileFps: 8,
@@ -56,19 +57,30 @@ const DEFAULT_OPTIONS = {
   balancedRasterSize: 300,
   desktopRasterSize: 360,
 
-  mobileMaxGlobeDiameter: 520,
-  balancedMaxGlobeDiameter: 620,
-  desktopMaxGlobeDiameter: 720,
-
-  minGlobeDiameter: 260,
-  stagePadding: 0,
-  viewportHeightRatio: 0.68,
+  minShellSize: 220,
+  fallbackShellSize: 320,
   devicePixelClamp: 1.25,
-  renderRadiusScale: 0.435
+  renderRadiusScale: 0.455,
+
+  brighten: 1.18,
+  waterVisibilityFloor: 0.34,
+  landVisibilityFloor: 0.42,
+  atmosphereStrength: 0.82
 };
+
+let runtimeAuthority = null;
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
+}
+
+function clamp01(value) {
+  return clamp(value, 0, 1);
+}
+
+function safeNumber(value, fallback = 0) {
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : fallback;
 }
 
 function lerp(a, b, t) {
@@ -81,12 +93,28 @@ function smoothstep(edge0, edge1, value) {
 }
 
 function mixRgb(a, b, t) {
-  const u = clamp(t, 0, 1);
+  const u = clamp01(t);
 
   return [
     Math.round(lerp(a[0], b[0], u)),
     Math.round(lerp(a[1], b[1], u)),
     Math.round(lerp(a[2], b[2], u))
+  ];
+}
+
+function scaleRgb(rgb, factor) {
+  return [
+    clamp(Math.round(rgb[0] * factor), 0, 255),
+    clamp(Math.round(rgb[1] * factor), 0, 255),
+    clamp(Math.round(rgb[2] * factor), 0, 255)
+  ];
+}
+
+function addRgb(rgb, amount) {
+  return [
+    clamp(Math.round(rgb[0] + amount), 0, 255),
+    clamp(Math.round(rgb[1] + amount), 0, 255),
+    clamp(Math.round(rgb[2] + amount), 0, 255)
   ];
 }
 
@@ -128,7 +156,7 @@ function waveNoise(lon, lat, scale, phase) {
   const c = Math.sin((lon + lat) * scale * 0.47 + phase * 1.3) * 0.2;
   const d = Math.cos((lon - lat) * scale * 0.31 - phase * 0.4) * 0.12;
 
-  return clamp(0.5 + 0.5 * (a + b + c + d), 0, 1);
+  return clamp01(0.5 + 0.5 * (a + b + c + d));
 }
 
 function resolveElement(target) {
@@ -136,6 +164,17 @@ function resolveElement(target) {
   if (typeof target === "string") return document.querySelector(target);
   if (typeof Element !== "undefined" && target instanceof Element) return target;
   return null;
+}
+
+function resolveAudraliaShell(explicitShell) {
+  const explicit = resolveElement(explicitShell);
+  if (explicit) return explicit;
+
+  return (
+    document.querySelector("#audraliaCanvasShell") ||
+    document.querySelector("[data-audralia-canvas-shell]") ||
+    null
+  );
 }
 
 function resolveAudraliaMount(explicitMount) {
@@ -152,152 +191,281 @@ function resolveAudraliaMount(explicitMount) {
   );
 }
 
-function getRuntimeSampler() {
+function resolveAudraliaCanvas(explicitCanvas, mount) {
+  const explicit = resolveElement(explicitCanvas);
+  if (explicit) return explicit;
+
   return (
-    RuntimeTruth?.sample ||
-    RuntimeTruth?.sampleSurface ||
-    RuntimeTruth?.sampleAudraliaRuntime ||
-    sampleAudraliaRuntime ||
-    window.AudraliaRuntimeTruth?.sample ||
-    window.sampleAudraliaRuntime ||
+    mount?.querySelector("#audraliaCanvas") ||
+    mount?.querySelector("canvas[data-audralia-canvas]") ||
+    mount?.querySelector("canvas[data-audralia-canvas-authority]") ||
+    document.querySelector("#audraliaCanvas") ||
+    document.querySelector("canvas[data-audralia-canvas]") ||
     null
   );
+}
+
+function getRuntimeAuthority() {
+  if (runtimeAuthority) return runtimeAuthority;
+
+  if (RuntimeDefault && typeof RuntimeDefault === "object") {
+    runtimeAuthority = RuntimeDefault;
+    return runtimeAuthority;
+  }
+
+  if (typeof RuntimeDefault === "function") {
+    try {
+      runtimeAuthority = RuntimeDefault();
+      return runtimeAuthority;
+    } catch (_) {
+      runtimeAuthority = null;
+    }
+  }
+
+  runtimeAuthority = window.AudraliaRuntimeTruth || window.AUDRALIA_RUNTIME || null;
+  return runtimeAuthority;
+}
+
+function getRuntimeSampler() {
+  const authority = getRuntimeAuthority();
+
+  return (
+    authority?.sampleSurface ||
+    authority?.sampleAudraliaSurface ||
+    authority?.sampleRuntimeState ||
+    authority?.sampleAudraliaPlanetState ||
+    authority?.sampleAudraliaRuntime ||
+    sampleRuntimeSurface ||
+    window.sampleAudraliaRuntime ||
+    window.sampleAudraliaSurface ||
+    null
+  );
+}
+
+function normalizeSample(raw, lon, lat) {
+  const visualSurfaceClass = String(
+    raw?.visualSurfaceClass ||
+    raw?.surfaceClass ||
+    raw?.className ||
+    raw?.type ||
+    ""
+  ).toLowerCase();
+
+  const declaredWater = Boolean(
+    raw?.liquidWater ||
+    raw?.water ||
+    raw?.ocean ||
+    raw?.shelf ||
+    visualSurfaceClass.includes("ocean") ||
+    visualSurfaceClass.includes("water") ||
+    visualSurfaceClass.includes("shelf")
+  );
+
+  const declaredIce = Boolean(
+    raw?.ice ||
+    raw?.glacier ||
+    visualSurfaceClass.includes("ice") ||
+    visualSurfaceClass.includes("snow")
+  );
+
+  const declaredLand = Boolean(
+    raw?.solidSurfaceLand ||
+    raw?.solidSurface ||
+    raw?.land ||
+    raw?.exposedTerrainLand ||
+    visualSurfaceClass.includes("terrain") ||
+    visualSurfaceClass.includes("land") ||
+    visualSurfaceClass.includes("ridge") ||
+    visualSurfaceClass.includes("mountain") ||
+    visualSurfaceClass.includes("plateau") ||
+    visualSurfaceClass.includes("coastal")
+  );
+
+  const isWater = declaredWater && !declaredLand && !declaredIce;
+  const isLand = declaredLand && !declaredWater;
+  const isIce = declaredIce;
+
+  return {
+    ...(raw || {}),
+    lon,
+    lat,
+    visualSurfaceClass,
+    fallback: Boolean(raw?.fallback || raw?.fallbackSample || raw?.isFallback),
+    isFallback: Boolean(raw?.fallback || raw?.fallbackSample || raw?.isFallback),
+
+    liquidWater: isWater,
+    water: isWater,
+    ocean: Boolean(raw?.ocean || (isWater && !raw?.shelf)),
+    shelf: Boolean(raw?.shelf || visualSurfaceClass.includes("shelf")),
+    solidSurfaceLand: isLand || isIce,
+    solidSurface: isLand || isIce,
+    land: isLand,
+    exposedTerrainLand: isLand,
+    ice: isIce,
+    glacier: Boolean(raw?.glacier || isIce),
+
+    hydration: clamp01(safeNumber(raw?.hydration ?? raw?.hydrationIndex, isWater ? 0.74 : 0.28)),
+    hydrationIndex: clamp01(safeNumber(raw?.hydrationIndex ?? raw?.hydration, isWater ? 0.74 : 0.28)),
+    shallowShelf: clamp01(safeNumber(raw?.shallowShelf ?? raw?.shelfIndex ?? raw?.shelfSeed, isWater ? 0.24 : 0)),
+    shelfIndex: clamp01(safeNumber(raw?.shelfIndex ?? raw?.shallowShelf ?? raw?.shelfSeed, isWater ? 0.24 : 0)),
+    terrainRelief: clamp01(safeNumber(raw?.terrainRelief ?? raw?.terrainReliefIndex ?? raw?.elevation, isLand ? 0.32 : 0)),
+    terrainReliefIndex: clamp01(safeNumber(raw?.terrainReliefIndex ?? raw?.terrainRelief ?? raw?.elevation, isLand ? 0.32 : 0)),
+    coastBand: clamp01(safeNumber(raw?.coastBand ?? raw?.coastlineIndex ?? raw?.coastalFeather, 0)),
+    coastlineIndex: clamp01(safeNumber(raw?.coastlineIndex ?? raw?.coastBand ?? raw?.coastalFeather, 0)),
+    runoff: clamp01(safeNumber(raw?.runoff ?? raw?.surfaceWaterIndex, 0)),
+    mineral: clamp01(safeNumber(raw?.mineral ?? raw?.mineralIndex, isLand ? 0.42 : 0)),
+    mineralIndex: clamp01(safeNumber(raw?.mineralIndex ?? raw?.mineral, isLand ? 0.42 : 0)),
+    cloudDensity: clamp01(safeNumber(raw?.cloudDensity ?? raw?.cloudCover ?? raw?.climateCloud, 0))
+  };
+}
+
+function fallbackSample(lon, lat) {
+  const body = waveNoise(lon, lat, 3.2, 1.7);
+  const ridge = waveNoise(lon, lat, 11.0, 4.6);
+  const shelf = body > 0.62 && body <= 0.72;
+  const land = body > 0.72;
+  const ice = Math.abs(Math.sin(lat)) > 0.93;
+
+  return normalizeSample({
+    fallback: true,
+    land: land || ice,
+    solidSurfaceLand: land || ice,
+    exposedTerrainLand: land && !ice,
+    ice,
+    glacier: ice,
+    liquidWater: !land && !ice,
+    water: !land && !ice,
+    ocean: !land && !ice && !shelf,
+    shelf,
+    hydration: land ? 0.22 : 0.76,
+    shallowShelf: shelf ? 0.86 : 0.16,
+    shelfIndex: shelf ? 0.86 : 0.16,
+    terrainRelief: land ? 0.24 + ridge * 0.26 : 0,
+    terrainReliefIndex: land ? 0.24 + ridge * 0.26 : 0,
+    coastBand: shelf ? 0.76 : 0.08,
+    coastlineIndex: shelf ? 0.76 : 0.08,
+    runoff: shelf ? 0.35 : 0.02,
+    mineral: ridge,
+    mineralIndex: ridge,
+    cloudDensity: waveNoise(lon, lat, 6, 21.3) * 0.18,
+    visualSurfaceClass: ice
+      ? "glacier_ice_snowpack_surface"
+      : land
+        ? "inland_terrain_land_surface"
+        : shelf
+          ? "shelf_water_surface"
+          : "ocean_water_surface"
+  }, lon, lat);
 }
 
 function sampleSurface(lon, lat) {
   const runtimeSampler = getRuntimeSampler();
 
   if (typeof runtimeSampler === "function") {
-    const sample = runtimeSampler({ lon, lat });
-
-    return {
-      ...sample,
-      lon,
-      lat,
-      fallback: Boolean(sample?.fallback),
-      isFallback: Boolean(sample?.isFallback)
-    };
+    try {
+      const sample = runtimeSampler({ lon, lat });
+      if (sample && typeof sample === "object") {
+        return normalizeSample(sample, lon, lat);
+      }
+    } catch (_) {}
   }
 
-  const waterNoise = waveNoise(lon, lat, 3.2, 1.7);
-  const land = waterNoise > 0.72;
-
-  return {
-    lon,
-    lat,
-    fallback: true,
-    isFallback: true,
-    land,
-    solidSurface: land,
-    solidSurfaceLand: land,
-    liquidWater: !land,
-    water: !land,
-    ocean: !land,
-    shelf: !land && waterNoise > 0.62,
-    hydration: land ? 0.18 : 0.72,
-    hydratedRatio: land ? 0.24 : 1,
-    shallowShelf: !land && waterNoise > 0.62 ? 0.8 : 0.1,
-    terrainRelief: land ? 0.38 : 0,
-    coastBand: waterNoise > 0.64 && waterNoise < 0.78 ? 0.8 : 0.1,
-    runoff: waterNoise > 0.64 && waterNoise < 0.78 ? 0.34 : 0,
-    mineral: waveNoise(lon, lat, 18, 6.2),
-    cloudDensity: waveNoise(lon, lat, 6, 21.3) * 0.22
-  };
+  return fallbackSample(lon, lat);
 }
 
-function colorForSample(sample) {
-  const oceanDeep = [26, 102, 156];
-  const oceanMid = [35, 142, 182];
-  const oceanShelf = [88, 198, 190];
+function colorForSample(sample, options) {
+  const oceanDeep = [28, 92, 132];
+  const oceanMid = [38, 134, 170];
+  const oceanShelf = [78, 190, 184];
   const oceanGlow = [118, 226, 206];
 
-  const granite = [92, 86, 76];
-  const slate = [56, 70, 80];
-  const opal = [92, 132, 128];
-  const sand = [136, 128, 112];
-  const ice = [146, 166, 172];
-  const cloud = [176, 196, 194];
+  const granite = [124, 116, 98];
+  const slate = [76, 88, 94];
+  const opal = [126, 160, 154];
+  const sand = [166, 150, 118];
+  const ice = [184, 202, 202];
+  const snow = [214, 226, 224];
 
-  const isWater =
-    sample.liquidWater ||
-    sample.water ||
-    sample.ocean ||
-    sample.shelf ||
-    !sample.solidSurfaceLand;
+  const isWater = Boolean(sample.liquidWater || sample.water || sample.ocean || sample.shelf);
+  const isIce = Boolean(sample.ice || sample.glacier);
+  const isLand = Boolean(sample.solidSurfaceLand || sample.land || sample.exposedTerrainLand);
 
-  if (isWater) {
+  if (isIce) {
+    let rgb = mixRgb(ice, snow, clamp01(sample.terrainRelief || 0.3));
+    rgb = mixRgb(rgb, opal, clamp01(sample.mineralIndex || 0.2) * 0.16);
+    return scaleRgb(rgb, options.brighten);
+  }
+
+  if (isWater || !isLand) {
     let rgb = mixRgb(
       oceanDeep,
       oceanMid,
-      clamp(sample.hydration || sample.hydratedRatio || 0.42, 0, 1)
+      clamp01((sample.hydration || sample.hydrationIndex || 0.58) * 0.9)
     );
 
-    rgb = mixRgb(rgb, oceanShelf, clamp(sample.shallowShelf || sample.shelfIndex || 0, 0, 1) * 0.82);
-    rgb = mixRgb(rgb, oceanGlow, clamp(sample.runoff || sample.coastlineIndex || 0, 0, 1) * 0.2);
+    rgb = mixRgb(rgb, oceanShelf, clamp01(sample.shallowShelf || sample.shelfIndex || 0) * 0.78);
+    rgb = mixRgb(rgb, oceanGlow, clamp01(sample.runoff || sample.coastlineIndex || sample.coastBand || 0) * 0.18);
 
     const texture =
-      waveNoise(sample.lon, sample.lat, 8, 3.4) * 10 +
-      waveNoise(sample.lon, sample.lat, 13, 6.8) * 5;
+      (waveNoise(sample.lon, sample.lat, 8, 3.4) - 0.5) * 12 +
+      (waveNoise(sample.lon, sample.lat, 13, 6.8) - 0.5) * 7;
 
-    return [
-      clamp(Math.round(rgb[0] + texture), 0, 255),
-      clamp(Math.round(rgb[1] + texture), 0, 255),
-      clamp(Math.round(rgb[2] + texture), 0, 255)
-    ];
+    rgb = addRgb(rgb, texture);
+    rgb = mixRgb(rgb, [70, 155, 185], options.waterVisibilityFloor * 0.18);
+
+    return scaleRgb(rgb, options.brighten);
   }
 
   let rgb = granite;
 
-  rgb = mixRgb(rgb, slate, clamp(sample.terrainRelief || sample.terrainReliefIndex || 0, 0, 1) * 0.35);
-  rgb = mixRgb(rgb, opal, clamp(sample.mineral || sample.mineralIndex || 0, 0, 1) * 0.16);
-  rgb = mixRgb(rgb, sand, clamp(sample.coastBand || sample.coastlineIndex || 0, 0, 1) * 0.34);
-  rgb = mixRgb(rgb, ice, clamp(sample.glacier || sample.ice || 0, 0, 1) * 0.18);
-  rgb = mixRgb(rgb, cloud, clamp(sample.cloudDensity || 0, 0, 1) * 0.07);
+  rgb = mixRgb(rgb, slate, clamp01(sample.terrainRelief || sample.terrainReliefIndex || 0) * 0.34);
+  rgb = mixRgb(rgb, opal, clamp01(sample.mineral || sample.mineralIndex || 0) * 0.18);
+  rgb = mixRgb(rgb, sand, clamp01(sample.coastBand || sample.coastlineIndex || 0) * 0.35);
 
   const relief =
-    clamp(sample.terrainRelief || sample.terrainReliefIndex || 0, 0, 1) * 18 +
-    (waveNoise(sample.lon, sample.lat, 12, 4.4) - 0.5) * 8;
+    clamp01(sample.terrainRelief || sample.terrainReliefIndex || 0) * 20 +
+    (waveNoise(sample.lon, sample.lat, 12, 4.4) - 0.5) * 9;
 
-  return [
-    clamp(Math.round(rgb[0] + relief), 0, 255),
-    clamp(Math.round(rgb[1] + relief), 0, 255),
-    clamp(Math.round(rgb[2] + relief), 0, 255)
-  ];
+  rgb = addRgb(rgb, relief);
+  rgb = mixRgb(rgb, [145, 133, 106], options.landVisibilityFloor * 0.2);
+
+  return scaleRgb(rgb, options.brighten);
 }
 
-function prepareCanvas(mount, options = {}) {
+function prepareCanvas(shell, mount, explicitCanvas) {
   if (!mount) throw new Error("Audralia canvas mount was not found.");
+
+  if (shell && !shell.contains(mount)) {
+    throw new Error("Audralia mount is not inside the square shell.");
+  }
 
   mount.dataset.audraliaCanvasMount = "true";
   mount.dataset.audraliaMount = "true";
   mount.dataset.adoptedCanvasMount = "true";
   mount.dataset.audraliaProofMount = "true";
-  mount.dataset.audraliaDimensionAuthority = AUDRALIA_CANVAS_CONTRACT;
+  mount.dataset.audraliaContainedMount = "true";
+  mount.dataset.audraliaCanvasContract = AUDRALIA_CANVAS_CONTRACT;
 
-  let canvas =
-    mount.tagName?.toLowerCase() === "canvas"
-      ? mount
-      : mount.querySelector("#audraliaCanvas") ||
-        mount.querySelector("canvas[data-audralia-canvas]") ||
-        mount.querySelector("canvas[data-audralia-canvas-authority]") ||
-        null;
+  let canvas = explicitCanvas || resolveAudraliaCanvas(null, mount);
 
   if (!canvas) {
     canvas = document.createElement("canvas");
-    canvas.id = options.canvasId || "audraliaCanvas";
+    canvas.id = "audraliaCanvas";
     mount.appendChild(canvas);
   }
 
   canvas.dataset.audraliaCanvas = "true";
   canvas.dataset.audraliaCanvasAuthority = "true";
   canvas.dataset.audraliaProofCanvas = "true";
+  canvas.dataset.audraliaContainedCanvas = "true";
   canvas.dataset.contract = AUDRALIA_CANVAS_CONTRACT;
-  canvas.dataset.dimensionAuthority = "active";
+  canvas.dataset.servedSource = AUDRALIA_SERVED_SOURCE_CONTRACT;
+
   canvas.setAttribute("aria-label", "Audralia adopted canvas proof surface");
 
-  canvas.style.display = "block";
   canvas.style.position = "absolute";
   canvas.style.inset = "0";
+  canvas.style.display = "block";
   canvas.style.width = "100%";
   canvas.style.height = "100%";
   canvas.style.maxWidth = "100%";
@@ -312,20 +480,19 @@ function prepareCanvas(mount, options = {}) {
   return canvas;
 }
 
-function resolvePerformanceProfile(cssDiameter, options) {
+function resolveProfile(cssSize, options) {
   const cores = navigator.hardwareConcurrency || 4;
   const dpr = window.devicePixelRatio || 1;
   const mobile =
-    cssDiameter <= 560 ||
     window.matchMedia?.("(max-width: 760px)")?.matches ||
+    cssSize <= 420 ||
     cores <= 4;
 
   if (mobile) {
     return {
       mode: "mobile",
       fps: options.mobileFps,
-      rasterSize: options.mobileRasterSize,
-      maxGlobeDiameter: options.mobileMaxGlobeDiameter
+      rasterSize: options.mobileRasterSize
     };
   }
 
@@ -333,104 +500,81 @@ function resolvePerformanceProfile(cssDiameter, options) {
     return {
       mode: "balanced",
       fps: options.balancedFps,
-      rasterSize: options.balancedRasterSize,
-      maxGlobeDiameter: options.balancedMaxGlobeDiameter
+      rasterSize: options.balancedRasterSize
     };
   }
 
   return {
     mode: "desktop",
     fps: options.desktopFps,
-    rasterSize: options.desktopRasterSize,
-    maxGlobeDiameter: options.desktopMaxGlobeDiameter
+    rasterSize: options.desktopRasterSize
   };
 }
 
-function measureDimensionBox(mount, canvas, options) {
-  const parent = mount.parentElement || mount;
-  const parentRect = parent.getBoundingClientRect();
-  const mountRect = mount.getBoundingClientRect();
+function measureContainedShell(shell, mount, options) {
+  const controlBox = shell || mount;
+  const rect = controlBox.getBoundingClientRect();
   const viewportWidth = window.innerWidth || document.documentElement.clientWidth || 390;
-  const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 780;
 
-  const availableWidth = Math.max(
-    options.minGlobeDiameter,
-    Math.floor(
-      Math.min(
-        parentRect.width || viewportWidth,
-        mountRect.width || parentRect.width || viewportWidth,
-        viewportWidth - 24
-      )
-    )
+  const fallbackSize = Math.min(viewportWidth * 0.86, options.fallbackShellSize);
+  const measuredWidth = safeNumber(rect.width, fallbackSize);
+  const measuredHeight = safeNumber(rect.height, measuredWidth || fallbackSize);
+
+  const cssSize = Math.max(
+    options.minShellSize,
+    Math.floor(Math.min(measuredWidth || fallbackSize, measuredHeight || measuredWidth || fallbackSize))
   );
 
-  const preliminaryProfile = resolvePerformanceProfile(availableWidth, options);
-  const mobileSafeHeight = Math.max(
-    options.minGlobeDiameter,
-    Math.floor(viewportHeight * options.viewportHeightRatio)
-  );
-
-  const intendedGlobeDiameter = Math.floor(
-    clamp(
-      Math.min(availableWidth, mobileSafeHeight, preliminaryProfile.maxGlobeDiameter),
-      options.minGlobeDiameter,
-      preliminaryProfile.maxGlobeDiameter
-    )
-  );
-
+  const profile = resolveProfile(cssSize, options);
   const dpr = clamp(window.devicePixelRatio || 1, 1, options.devicePixelClamp);
-  const intrinsicPixelSize = Math.max(
-    options.minGlobeDiameter,
-    Math.floor(intendedGlobeDiameter * dpr)
-  );
-
-  const renderRadius = Math.floor(intrinsicPixelSize * options.renderRadiusScale);
+  const intrinsicPixelSize = Math.max(options.minShellSize, Math.floor(cssSize * dpr));
 
   return {
     contract: AUDRALIA_CANVAS_CONTRACT,
-    availableWidth,
-    mobileSafeHeight,
-    intendedGlobeDiameter,
-    boxWidth: intendedGlobeDiameter,
-    boxHeight: intendedGlobeDiameter,
-    canvasCssWidth: intendedGlobeDiameter,
-    canvasCssHeight: intendedGlobeDiameter,
+    servedSource: AUDRALIA_SERVED_SOURCE_CONTRACT,
+    shellFound: Boolean(shell),
+    mountFound: Boolean(mount),
+    cssSize,
+    boxWidth: cssSize,
+    boxHeight: cssSize,
     intrinsicPixelSize,
-    renderRadius,
+    renderRadius: Math.floor(intrinsicPixelSize * options.renderRadiusScale),
     dpr,
-    performanceMode: preliminaryProfile.mode,
-    fps: preliminaryProfile.fps,
-    rasterSize: preliminaryProfile.rasterSize,
-    frameInterval: 1000 / preliminaryProfile.fps,
+    performanceMode: profile.mode,
+    fps: profile.fps,
+    rasterSize: profile.rasterSize,
+    frameInterval: 1000 / profile.fps,
+    shellObedience: true,
+    mountEnlargementSuppressed: true,
     squareBoxEnforced: true,
     ovalStretchSuppressed: true,
     pageExpansionAllowed: false
   };
 }
 
-function applyDimensionLaw(mount, canvas, dimension) {
-  const target = `${dimension.intendedGlobeDiameter}px`;
+function applyContainedShellLaw(shell, mount, canvas, dimension) {
+  if (shell) {
+    shell.dataset.audraliaSquareShell = "true";
+    shell.dataset.audraliaCanvasContract = AUDRALIA_CANVAS_CONTRACT;
+    shell.style.position = shell.style.position || "relative";
+    shell.style.overflow = "hidden";
+    shell.style.aspectRatio = "1 / 1";
+    shell.style.contain = "layout paint style";
+  }
 
-  mount.style.position = "relative";
-  mount.style.display = "block";
-  mount.style.width = target;
-  mount.style.height = target;
-  mount.style.minWidth = target;
-  mount.style.minHeight = target;
-  mount.style.maxWidth = "min(100%, " + target + ")";
-  mount.style.maxHeight = target;
+  mount.style.position = "absolute";
+  mount.style.inset = "0";
+  mount.style.display = "grid";
+  mount.style.placeItems = "center";
+  mount.style.width = "100%";
+  mount.style.height = "100%";
+  mount.style.minWidth = "0";
+  mount.style.minHeight = "0";
+  mount.style.maxWidth = "100%";
+  mount.style.maxHeight = "100%";
   mount.style.aspectRatio = "1 / 1";
-  mount.style.margin = "0 auto";
   mount.style.overflow = "hidden";
   mount.style.contain = "layout paint style";
-  mount.style.borderRadius = "50%";
-
-  if (mount.parentElement) {
-    mount.parentElement.style.display = "grid";
-    mount.parentElement.style.placeItems = "center";
-    mount.parentElement.style.overflow = "hidden";
-    mount.parentElement.style.contain = "layout paint style";
-  }
 
   canvas.style.position = "absolute";
   canvas.style.inset = "0";
@@ -441,7 +585,6 @@ function applyDimensionLaw(mount, canvas, dimension) {
   canvas.style.maxWidth = "100%";
   canvas.style.maxHeight = "100%";
   canvas.style.aspectRatio = "1 / 1";
-  canvas.style.objectFit = "contain";
   canvas.style.overflow = "hidden";
 
   if (canvas.width !== dimension.intrinsicPixelSize) canvas.width = dimension.intrinsicPixelSize;
@@ -451,6 +594,7 @@ function applyDimensionLaw(mount, canvas, dimension) {
   mount.dataset.audraliaBoxHeight = String(dimension.boxHeight);
   mount.dataset.audraliaSquareBox = "true";
   mount.dataset.audraliaOvalStretchSuppressed = "true";
+  mount.dataset.audraliaMountEnlargementSuppressed = "true";
 
   canvas.dataset.pixelWidth = String(dimension.intrinsicPixelSize);
   canvas.dataset.pixelHeight = String(dimension.intrinsicPixelSize);
@@ -462,29 +606,39 @@ function applyDimensionLaw(mount, canvas, dimension) {
 }
 
 function createReceipt(controller, status = "running") {
-  const canvas = controller.canvas;
-  const mount = controller.mount;
-
   return {
     contract: AUDRALIA_CANVAS_CONTRACT,
+    servedSource: AUDRALIA_SERVED_SOURCE_CONTRACT,
     legacyContracts: AUDRALIA_CANVAS_LEGACY_CONTRACTS.slice(),
     status,
-    mountFound: Boolean(mount),
-    mountId: mount?.id || null,
-    canvasFound: Boolean(canvas),
-    canvasId: canvas?.id || null,
+    shellFound: Boolean(controller.shell),
+    shellId: controller.shell?.id || null,
+    mountFound: Boolean(controller.mount),
+    mountId: controller.mount?.id || null,
+    canvasFound: Boolean(controller.canvas),
+    canvasId: controller.canvas?.id || null,
     dimension: controller.dimension || null,
-    runtimeStatus: getAudraliaRuntimeStatus?.() || window.__AUDRALIA_RUNTIME_RECEIPT__ || null,
+    runtimeStatus: safeRuntimeStatus(),
     graphicBox: false,
     imageGeneration: false,
     bodyWipe: false,
     pageExpansionAllowed: false,
+    shellObedience: true,
+    mountEnlargementSuppressed: true,
     squareBoxEnforced: true,
     ovalStretchSuppressed: true,
     pixelProof: controller.pixelProof || null,
     frame: controller.frame,
     updatedAt: new Date().toISOString()
   };
+}
+
+function safeRuntimeStatus() {
+  try {
+    if (typeof getRuntimeStatus === "function") return getRuntimeStatus();
+  } catch (_) {}
+
+  return window.__AUDRALIA_RUNTIME_STATUS__ || window.AUDRALIA_RUNTIME_STATUS || null;
 }
 
 function installReceipt(controller, status = "running") {
@@ -500,9 +654,11 @@ function installReceipt(controller, status = "running") {
   }
 
   document.documentElement.dataset.audraliaCanvasContract = AUDRALIA_CANVAS_CONTRACT;
+  document.documentElement.dataset.audraliaServedSource = AUDRALIA_SERVED_SOURCE_CONTRACT;
   document.documentElement.dataset.audraliaCanvasStatus = status;
   document.documentElement.dataset.audraliaCanvasFrame = String(controller.frame);
-  document.documentElement.dataset.audraliaDimensionAuthority = "active";
+  document.documentElement.dataset.audraliaShellObedience = "true";
+  document.documentElement.dataset.audraliaMountEnlargementSuppressed = "true";
   document.documentElement.dataset.audraliaSquareBox = "true";
   document.documentElement.dataset.audraliaOvalStretchSuppressed = "true";
   document.documentElement.dataset.graphicBox = "false";
@@ -512,9 +668,10 @@ function installReceipt(controller, status = "running") {
 }
 
 class AudraliaCanvasController {
-  constructor(canvas, mount, options = {}) {
-    this.canvas = canvas;
+  constructor(shell, mount, canvas, options = {}) {
+    this.shell = shell;
     this.mount = mount;
+    this.canvas = canvas;
     this.options = { ...DEFAULT_OPTIONS, ...options };
     this.ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: true });
 
@@ -563,8 +720,8 @@ class AudraliaCanvasController {
   resize() {
     if (this.destroyed) return;
 
-    this.dimension = measureDimensionBox(this.mount, this.canvas, this.options);
-    applyDimensionLaw(this.mount, this.canvas, this.dimension);
+    this.dimension = measureContainedShell(this.shell, this.mount, this.options);
+    applyContainedShellLaw(this.shell, this.mount, this.canvas, this.dimension);
 
     this.width = this.dimension.intrinsicPixelSize;
     this.height = this.dimension.intrinsicPixelSize;
@@ -613,6 +770,7 @@ class AudraliaCanvasController {
     let water = 0;
     let solid = 0;
     let turquoise = 0;
+    let fallback = 0;
 
     for (let py = 0; py < size; py += 1) {
       const y = 1 - (py / Math.max(1, size - 1)) * 2;
@@ -640,26 +798,21 @@ class AudraliaCanvasController {
         const world = normalize(vec3(wx, wy, wz));
         const ll = lonLatFromVector(world);
         const sample = sampleSurface(ll.lon, ll.lat);
+        let base = colorForSample(sample, this.options);
 
-        let base = colorForSample(sample);
+        const isWater = Boolean(sample.liquidWater || sample.water || sample.ocean || sample.shelf);
+        const isSolid = Boolean(sample.solidSurfaceLand || sample.land || sample.exposedTerrainLand || sample.ice);
 
-        const isWater =
-          sample.liquidWater ||
-          sample.water ||
-          sample.ocean ||
-          sample.shelf ||
-          !sample.solidSurfaceLand;
-
-        const day = smoothstep(-0.28, 0.9, dot(viewNormal, light));
+        const day = smoothstep(-0.22, 0.92, dot(viewNormal, light));
         const rim = smoothstep(0.66, 1, Math.hypot(viewNormal.x, viewNormal.y));
-        const shade = clamp((isWater ? 0.78 : 0.62) + day * 0.36 + rim * 0.018, 0, 1.12);
-        const limb = 1 - rim * (isWater ? 0.13 : 0.2);
 
-        base = [
-          clamp(Math.round(base[0] * shade * limb), 0, 255),
-          clamp(Math.round(base[1] * shade * limb), 0, 255),
-          clamp(Math.round(base[2] * shade * limb), 0, 255)
-        ];
+        const visibilityFloor = isWater
+          ? this.options.waterVisibilityFloor
+          : this.options.landVisibilityFloor;
+
+        const shade = clamp(visibilityFloor + day * 0.52 - rim * 0.09, 0.22, 1.16);
+
+        base = scaleRgb(base, shade);
 
         data[index] = base[0];
         data[index + 1] = base[1];
@@ -668,8 +821,9 @@ class AudraliaCanvasController {
 
         nonblank += 1;
         if (isWater) water += 1;
-        else solid += 1;
-        if (base[1] > 130 && base[2] > 145 && base[0] < 120) turquoise += 1;
+        if (isSolid && !isWater) solid += 1;
+        if (sample.fallback || sample.isFallback) fallback += 1;
+        if (base[1] > 125 && base[2] > 135 && base[0] < 135) turquoise += 1;
       }
     }
 
@@ -679,10 +833,12 @@ class AudraliaCanvasController {
 
     this.pixelProof = {
       contract: AUDRALIA_CANVAS_CONTRACT,
+      servedSource: AUDRALIA_SERVED_SOURCE_CONTRACT,
       nonblankPixelRatio: Number((nonblank / (size * size)).toFixed(5)),
       waterPixelRatio: Number((water / total).toFixed(5)),
       solidSurfacePixelRatio: Number((solid / total).toFixed(5)),
       turquoisePixelRatio: Number((turquoise / total).toFixed(5)),
+      fallbackPixelRatio: Number((fallback / total).toFixed(5)),
       rasterSize: size,
       readable: true,
       blank: false,
@@ -715,20 +871,20 @@ class AudraliaCanvasController {
   drawAtmosphere(cx, cy, radius) {
     this.ctx.save();
 
-    const aura = this.ctx.createRadialGradient(cx, cy, radius * 0.72, cx, cy, radius * 1.22);
+    const aura = this.ctx.createRadialGradient(cx, cy, radius * 0.72, cx, cy, radius * 1.2);
     aura.addColorStop(0, "rgba(48,168,190,0)");
-    aura.addColorStop(0.72, "rgba(68,178,204,0.05)");
-    aura.addColorStop(0.92, "rgba(152,221,232,0.16)");
+    aura.addColorStop(0.72, `rgba(68,178,204,${0.045 * this.options.atmosphereStrength})`);
+    aura.addColorStop(0.92, `rgba(152,221,232,${0.18 * this.options.atmosphereStrength})`);
     aura.addColorStop(1, "rgba(152,221,232,0)");
 
     this.ctx.fillStyle = aura;
     this.ctx.beginPath();
-    this.ctx.arc(cx, cy, radius * 1.22, 0, TAU);
+    this.ctx.arc(cx, cy, radius * 1.2, 0, TAU);
     this.ctx.fill();
 
     this.ctx.globalCompositeOperation = "screen";
-    this.ctx.strokeStyle = "rgba(183,232,238,0.1)";
-    this.ctx.lineWidth = Math.max(1, radius * 0.007);
+    this.ctx.strokeStyle = `rgba(183,232,238,${0.16 * this.options.atmosphereStrength})`;
+    this.ctx.lineWidth = Math.max(1, radius * 0.008);
     this.ctx.beginPath();
     this.ctx.arc(cx, cy, radius * 1.004, 0, TAU);
     this.ctx.stroke();
@@ -751,9 +907,9 @@ class AudraliaCanvasController {
       const lat = lerp(-0.72, 0.72, t);
       const y = cy - Math.sin(lat) * radius;
       const ry = Math.cos(lat) * radius * (0.72 + 0.08 * Math.sin(phase + i * 1.7));
-      const bandHeight = radius * 0.012;
+      const bandHeight = radius * 0.011;
 
-      this.ctx.strokeStyle = `rgba(200,224,220,${0.012 + 0.006 * Math.sin(phase + i * 2.1)})`;
+      this.ctx.strokeStyle = `rgba(210,232,228,${0.022 + 0.008 * Math.sin(phase + i * 2.1)})`;
       this.ctx.lineWidth = Math.max(1, bandHeight);
       this.ctx.setLineDash([radius * 0.12, radius * 0.16, radius * 0.04, radius * 0.18]);
       this.ctx.lineDashOffset = -phase * radius * (0.28 + i * 0.02);
@@ -779,10 +935,10 @@ class AudraliaCanvasController {
       radius
     );
 
-    shade.addColorStop(0, "rgba(255,255,255,0.045)");
-    shade.addColorStop(0.42, "rgba(255,255,255,0.006)");
-    shade.addColorStop(0.8, "rgba(0,0,0,0.025)");
-    shade.addColorStop(1, "rgba(0,0,0,0.15)");
+    shade.addColorStop(0, "rgba(255,255,255,0.055)");
+    shade.addColorStop(0.42, "rgba(255,255,255,0.016)");
+    shade.addColorStop(0.82, "rgba(0,0,0,0.015)");
+    shade.addColorStop(1, "rgba(0,0,0,0.095)");
 
     this.ctx.globalCompositeOperation = "multiply";
     this.ctx.fillStyle = shade;
@@ -819,15 +975,17 @@ class AudraliaCanvasController {
     this.canvas.dataset.frame = String(this.frame);
     this.canvas.dataset.audraliaCanvasAuthority = "true";
     this.canvas.dataset.contract = AUDRALIA_CANVAS_CONTRACT;
-    this.canvas.dataset.visualDefinition = "dimension-authority-hydration-visible";
+    this.canvas.dataset.servedSource = AUDRALIA_SERVED_SOURCE_CONTRACT;
+    this.canvas.dataset.visualDefinition = "contained-shell-obedience-visible-runtime";
     this.canvas.dataset.pixelProof = "readable";
     this.canvas.dataset.nonblank = "true";
     this.canvas.dataset.waterPixels = String(this.pixelProof?.waterPixelRatio || 0);
     this.canvas.dataset.solidSurfacePixels = String(this.pixelProof?.solidSurfacePixelRatio || 0);
     this.canvas.dataset.turquoisePixels = String(this.pixelProof?.turquoisePixelRatio || 0);
-    this.canvas.dataset.dimensionAuthority = "active";
+    this.canvas.dataset.fallbackPixels = String(this.pixelProof?.fallbackPixelRatio || 0);
     this.canvas.dataset.squareBox = "true";
     this.canvas.dataset.ovalStretchSuppressed = "true";
+    this.canvas.dataset.mountEnlargementSuppressed = "true";
 
     installReceipt(this, "running");
   }
@@ -842,7 +1000,7 @@ class AudraliaCanvasController {
     this.renderProjection();
     this.draw();
 
-    this.raf = requestAnimationFrame(this.tick.bind(this));
+    this.raf = requestAnimationFrame(this.tick);
     return this;
   }
 
@@ -863,7 +1021,7 @@ class AudraliaCanvasController {
       this.draw();
     }
 
-    this.raf = requestAnimationFrame(this.tick.bind(this));
+    this.raf = requestAnimationFrame(this.tick);
   }
 
   stop() {
@@ -897,14 +1055,16 @@ class AudraliaCanvasController {
 }
 
 function renderAudraliaCanvas(options = {}) {
+  const shell = resolveAudraliaShell(options.shell);
   const mount = resolveAudraliaMount(options.mount || options.el || options.container || options.target);
-  const canvas = prepareCanvas(mount, options);
+  const explicitCanvas = resolveAudraliaCanvas(options.canvas, mount);
+  const canvas = prepareCanvas(shell, mount, explicitCanvas);
 
   if (canvas.__audraliaCanvasController) {
     canvas.__audraliaCanvasController.destroy();
   }
 
-  const controller = new AudraliaCanvasController(canvas, mount, options);
+  const controller = new AudraliaCanvasController(shell, mount, canvas, options);
   controller.start();
 
   window.AudraliaCanvasAuthority.current = controller;
@@ -945,6 +1105,7 @@ function installGlobalAuthority() {
   window.AudraliaCanvasAuthority = {
     ...existing,
     contract: AUDRALIA_CANVAS_CONTRACT,
+    servedSource: AUDRALIA_SERVED_SOURCE_CONTRACT,
     legacyContracts: AUDRALIA_CANVAS_LEGACY_CONTRACTS.slice(),
     render: renderAudraliaCanvas,
     mount: mountAudraliaCanvas,
@@ -978,6 +1139,7 @@ if (autoMount && !autoMount.querySelector("canvas[data-audralia-canvas-authority
 
 export {
   AUDRALIA_CANVAS_CONTRACT,
+  AUDRALIA_SERVED_SOURCE_CONTRACT,
   AUDRALIA_CANVAS_LEGACY_CONTRACTS,
   AudraliaCanvasController,
   renderAudraliaCanvas,
@@ -988,6 +1150,7 @@ export {
   getAudraliaPixelProof,
   getAudraliaDimensionReceipt,
   resolveAudraliaMount,
+  resolveAudraliaShell,
   sampleSurface
 };
 

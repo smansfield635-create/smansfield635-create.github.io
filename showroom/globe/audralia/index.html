@@ -1,273 +1,584 @@
-// /showroom/globe/audralia/index.js
-// AUDRALIA_DOORWAY_IMPORT_ADOPTED_CANVAS_AUTHORITY_TNT_v2
-// Full-file replacement. Doorway only. No generated image. No GraphicBox.
+<!doctype html>
+<html
+  lang="en"
+  data-page="audralia-adopted-canvas-doorway"
+  data-route="/showroom/globe/audralia/"
+  data-contract="AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_HANDOFF_TNT_v2"
+  data-role="audralia-html-shell"
+  data-audralia-html-handoff="active"
+  data-audralia-canvas-authority="/assets/audralia/audralia.canvas.js"
+  data-graphic-box="false"
+  data-image-generation="false"
+  data-visual-pass-claimed="false"
+>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Diamond Gate Bridge · Audralia</title>
+  <meta
+    name="description"
+    content="Audralia adopted canvas doorway. HTML owns only shell, navigation, mount, and script handoff. The route doorway imports the adopted canvas authority."
+  >
 
-const AUDRALIA_ROUTE_RECEIPT = "AUDRALIA_DOORWAY_IMPORT_ADOPTED_CANVAS_AUTHORITY_TNT_v2";
-const AUDRALIA_CANVAS_PATH = "/assets/audralia/audralia.canvas.js";
-
-const routeStatus = {
-  ok: false,
-  receipt: AUDRALIA_ROUTE_RECEIPT,
-  file: "showroom/globe/audralia/index.js",
-  role: "audralia-doorway-route",
-  owns: [
-    "route mount discovery",
-    "canvas authority import",
-    "canvas authority handoff",
-    "route-visible receipt exposure"
-  ],
-  doesNotOwn: [
-    "land decision",
-    "void decision",
-    "beach decision",
-    "coastline decision",
-    "terrain decision",
-    "elevation decision",
-    "hydration decision",
-    "runtime truth",
-    "canvas paint authority",
-    "visual pass claim"
-  ],
-  canvasAuthorityPath: AUDRALIA_CANVAS_PATH,
-  mountFound: false,
-  importAttempted: false,
-  importSucceeded: false,
-  renderExportFound: false,
-  renderCalled: false,
-  renderCompleted: false,
-  canvasFoundAfterRender: false,
-  labelFoundAfterRender: false,
-  graphicBox: false,
-  imageGeneration: false,
-  visualPassClaimed: false,
-  error: ""
-};
-
-function exposeRouteStatus(extra = {}) {
-  Object.assign(routeStatus, extra);
-
-  window.AUDRALIA_DOORWAY_ROUTE_STATUS = routeStatus;
-  window.AUDRALIA_ROUTE_STATUS = routeStatus;
-  window.__AUDRALIA_DOORWAY_ROUTE_STATUS__ = routeStatus;
-  window.__AUDRALIA_ROUTE_RECEIPT__ = AUDRALIA_ROUTE_RECEIPT;
-
-  document.documentElement.dataset.audraliaRouteReceipt = AUDRALIA_ROUTE_RECEIPT;
-  document.documentElement.dataset.audraliaDoorwayRoute = "active";
-  document.documentElement.dataset.audraliaCanvasAuthorityPath = AUDRALIA_CANVAS_PATH;
-  document.documentElement.dataset.audraliaCanvasImportSucceeded = String(routeStatus.importSucceeded);
-  document.documentElement.dataset.audraliaCanvasRenderCalled = String(routeStatus.renderCalled);
-  document.documentElement.dataset.audraliaCanvasFound = String(routeStatus.canvasFoundAfterRender);
-
-  return routeStatus;
-}
-
-function findAudraliaMount() {
-  const existing =
-    document.querySelector("#audraliaRenderMount") ||
-    document.querySelector("[data-audralia-render-mount]") ||
-    document.querySelector("[data-audralia-mount]") ||
-    document.querySelector("#audralia-main");
-
-  if (existing instanceof HTMLElement) {
-    existing.id = existing.id || "audraliaRenderMount";
-    existing.dataset.audraliaRenderMount = "true";
-    existing.dataset.audraliaRouteReceipt = AUDRALIA_ROUTE_RECEIPT;
-    return existing;
-  }
-
-  const main = document.querySelector("main") || document.body;
-  const mount = document.createElement("section");
-  mount.id = "audraliaRenderMount";
-  mount.dataset.audraliaRenderMount = "true";
-  mount.dataset.audraliaRouteReceipt = AUDRALIA_ROUTE_RECEIPT;
-  mount.setAttribute("aria-label", "Audralia render mount");
-  main.prepend(mount);
-
-  return mount;
-}
-
-function setDoorwayMessage(message, state = "info") {
-  const mount = findAudraliaMount();
-
-  let panel = document.querySelector("[data-audralia-doorway-message]");
-  if (!panel) {
-    panel = document.createElement("aside");
-    panel.dataset.audraliaDoorwayMessage = "true";
-    panel.style.margin = "1rem auto";
-    panel.style.maxWidth = "980px";
-    panel.style.padding = "0.85rem 1rem";
-    panel.style.border = "1px solid rgba(255, 220, 150, 0.18)";
-    panel.style.borderRadius = "18px";
-    panel.style.background = "rgba(5, 10, 22, 0.58)";
-    panel.style.color = "rgba(255, 239, 205, 0.92)";
-    panel.style.font = "600 0.92rem/1.35 system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
-    mount.before(panel);
-  }
-
-  panel.dataset.state = state;
-  panel.textContent = message;
-}
-
-async function importCanvasAuthority() {
-  exposeRouteStatus({
-    importAttempted: true,
-    error: ""
-  });
-
-  try {
-    return await import(AUDRALIA_CANVAS_PATH);
-  } catch (firstError) {
-    try {
-      const cacheBypassPath = `${AUDRALIA_CANVAS_PATH}?receipt=${encodeURIComponent(AUDRALIA_ROUTE_RECEIPT)}&t=${Date.now()}`;
-      return await import(cacheBypassPath);
-    } catch (secondError) {
-      exposeRouteStatus({
-        ok: false,
-        importSucceeded: false,
-        error: `Canvas authority import failed. First: ${firstError.message}. Second: ${secondError.message}`
-      });
-
-      setDoorwayMessage("Audralia canvas authority import failed.", "fail");
-      throw secondError;
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-2: #07101f;
+      --panel: rgba(9, 15, 30, 0.76);
+      --panel-2: rgba(13, 22, 40, 0.82);
+      --line: rgba(255, 220, 150, 0.18);
+      --line-strong: rgba(255, 220, 150, 0.34);
+      --text: rgba(248, 242, 224, 0.94);
+      --muted: rgba(248, 242, 224, 0.68);
+      --gold: #f1c86b;
+      --blue: #74b9d7;
+      --danger: #f09a8f;
+      --ok: #a8dcc0;
+      --shadow: rgba(0, 0, 0, 0.42);
     }
-  }
-}
 
-function selectRenderFunction(module) {
-  const candidates = [
-    module.mountAudraliaCanvas,
-    module.mountAudraliaAdoptedCanvas,
-    module.renderAudraliaCanvas,
-    module.renderAudraliaAdoptedCanvas,
-    module.bootAudraliaCanvas,
-    module.createAudraliaCanvas,
-    module.default
-  ];
+    * {
+      box-sizing: border-box;
+    }
 
-  return candidates.find((candidate) => typeof candidate === "function") || null;
-}
+    html {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      scroll-behavior: smooth;
+    }
 
-function verifyRouteCanvas() {
-  const canvas =
-    document.querySelector("#audraliaAdoptedCanvas") ||
-    document.querySelector("canvas[data-audralia-canvas]") ||
-    document.querySelector("#audraliaRenderMount canvas") ||
-    document.querySelector("[data-audralia-render-mount] canvas");
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(77, 120, 170, 0.18), transparent 34rem),
+        radial-gradient(circle at 18% 28%, rgba(241, 200, 107, 0.08), transparent 28rem),
+        linear-gradient(180deg, #02050d 0%, var(--bg) 48%, #02040a 100%);
+      color: var(--text);
+    }
 
-  const label =
-    document.querySelector("[data-audralia-canvas-label]") ||
-    Array.from(document.querySelectorAll("h1, h2, h3, div, span, p")).find((node) =>
-      String(node.textContent || "").trim().toLowerCase().includes("audralia")
-    );
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.68) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(255,255,255,0.34) 0 1px, transparent 1.5px);
+      background-position: 0 0, 43px 71px;
+      background-size: 152px 152px, 211px 211px;
+      opacity: 0.16;
+      z-index: -1;
+    }
 
-  exposeRouteStatus({
-    canvasFoundAfterRender: Boolean(canvas),
-    labelFoundAfterRender: Boolean(label)
-  });
+    a {
+      color: inherit;
+    }
 
-  return { canvas, label };
-}
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      z-index: 30;
+      transform: translateY(-180%);
+      padding: 0.65rem 0.9rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(3, 7, 18, 0.94);
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 800;
+    }
 
-async function bootAudraliaDoorway() {
-  exposeRouteStatus();
+    .skip-link:focus {
+      transform: translateY(0);
+    }
 
-  const mount = findAudraliaMount();
+    .page {
+      width: min(1180px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 1rem 0 4rem;
+    }
 
-  exposeRouteStatus({
-    mountFound: Boolean(mount)
-  });
+    header {
+      padding: 0.75rem 0 1.25rem;
+    }
 
-  if (!mount) {
-    exposeRouteStatus({
-      ok: false,
-      error: "Audralia mount not found."
-    });
-    setDoorwayMessage("Audralia mount not found.", "fail");
-    return routeStatus;
-  }
+    .topline {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+      margin-bottom: 1rem;
+    }
 
-  setDoorwayMessage("Audralia doorway is loading the adopted canvas authority.", "loading");
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
 
-  let canvasModule;
+    .brand-dot {
+      width: 0.64rem;
+      height: 0.64rem;
+      border-radius: 999px;
+      background: var(--gold);
+      box-shadow: 0 0 24px rgba(241, 200, 107, 0.56);
+    }
 
-  try {
-    canvasModule = await importCanvasAuthority();
-  } catch (_) {
-    return routeStatus;
-  }
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      justify-content: flex-end;
+    }
 
-  exposeRouteStatus({
-    importSucceeded: true,
-    error: ""
-  });
+    nav a,
+    .link-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.3rem;
+      padding: 0.58rem 0.78rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(7, 12, 24, 0.62);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+    }
 
-  const render = selectRenderFunction(canvasModule);
+    nav a:hover,
+    .link-button:hover {
+      border-color: var(--line-strong);
+      background: rgba(15, 27, 48, 0.78);
+    }
 
-  exposeRouteStatus({
-    renderExportFound: Boolean(render)
-  });
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(1.2rem, 3vw, 2.2rem);
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, rgba(11, 20, 38, 0.92), rgba(4, 8, 18, 0.86)),
+        radial-gradient(circle at 72% 30%, rgba(116, 185, 215, 0.18), transparent 24rem);
+      box-shadow: 0 28px 90px var(--shadow);
+    }
 
-  if (!render) {
-    exposeRouteStatus({
-      ok: false,
-      error: "Canvas authority imported, but no compatible render export was found."
-    });
-    setDoorwayMessage("Audralia canvas authority imported, but no render export was found.", "fail");
-    return routeStatus;
-  }
+    .kicker {
+      margin: 0 0 0.75rem;
+      color: var(--gold);
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
 
-  try {
-    exposeRouteStatus({
-      renderCalled: true
-    });
+    h1 {
+      max-width: 760px;
+      margin: 0;
+      font-size: clamp(2.5rem, 7vw, 5.8rem);
+      line-height: 0.88;
+      letter-spacing: -0.07em;
+    }
 
-    await render({
-      mount,
-      routeStatus,
-      routeReceipt: AUDRALIA_ROUTE_RECEIPT,
-      source: "audralia-doorway-route"
-    });
+    .lede {
+      max-width: 780px;
+      margin: 1rem 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      line-height: 1.6;
+    }
 
-    const proof = verifyRouteCanvas();
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-top: 1.25rem;
+    }
 
-    exposeRouteStatus({
-      ok: Boolean(proof.canvas),
-      renderCompleted: true,
-      error: proof.canvas ? "" : "Canvas authority rendered, but no route canvas was found afterward."
-    });
+    main {
+      display: grid;
+      gap: 1rem;
+      padding-top: 1rem;
+    }
 
-    setDoorwayMessage(
-      proof.canvas
-        ? "Audralia adopted canvas authority loaded."
-        : "Audralia canvas authority returned, but no canvas was exposed.",
-      proof.canvas ? "pass" : "fail"
-    );
+    .status-panel,
+    .contract-panel,
+    .proof-panel {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--panel);
+      box-shadow: 0 20px 58px rgba(0, 0, 0, 0.28);
+    }
 
-    return routeStatus;
-  } catch (error) {
-    exposeRouteStatus({
-      ok: false,
-      renderCompleted: false,
-      error: `Canvas authority render failed: ${error.message}`
-    });
+    .status-panel {
+      padding: 1rem;
+    }
 
-    setDoorwayMessage("Audralia canvas authority render failed.", "fail");
-    return routeStatus;
-  }
-}
+    .status-panel h2,
+    .contract-panel h2,
+    .proof-panel h2 {
+      margin: 0 0 0.5rem;
+      font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+      letter-spacing: -0.03em;
+    }
 
-export {
-  AUDRALIA_ROUTE_RECEIPT,
-  AUDRALIA_CANVAS_PATH,
-  routeStatus,
-  bootAudraliaDoorway,
-  exposeRouteStatus
-};
+    .status-panel p,
+    .contract-panel p,
+    .proof-panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
 
-export default bootAudraliaDoorway;
+    .doorway-message {
+      margin-top: 0.85rem;
+      padding: 0.8rem 0.95rem;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(3, 7, 18, 0.58);
+      color: var(--muted);
+      font-weight: 800;
+    }
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", bootAudraliaDoorway, { once: true });
-} else {
-  bootAudraliaDoorway();
-}
+    .doorway-message[data-state="fail"] {
+      border-color: rgba(240, 154, 143, 0.34);
+      color: var(--danger);
+    }
+
+    .doorway-message[data-state="pass"] {
+      border-color: rgba(168, 220, 192, 0.34);
+      color: var(--ok);
+    }
+
+    .doorway-message[data-state="loading"] {
+      border-color: rgba(116, 185, 215, 0.34);
+      color: var(--blue);
+    }
+
+    .mount-panel {
+      min-height: clamp(420px, 74vw, 820px);
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at 50% 46%, rgba(116, 185, 215, 0.1), transparent 28rem),
+        rgba(4, 8, 18, 0.72);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+        0 28px 90px rgba(0, 0, 0, 0.34);
+      overflow: hidden;
+    }
+
+    #audraliaRenderMount {
+      min-height: inherit;
+    }
+
+    .contract-panel {
+      padding: 1rem;
+    }
+
+    .contract-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.85rem;
+    }
+
+    .contract-card {
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--panel-2);
+    }
+
+    .contract-card strong {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: var(--gold);
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .contract-card span {
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 0.92rem;
+    }
+
+    .proof-panel {
+      padding: 1rem;
+    }
+
+    .proof-list {
+      display: grid;
+      gap: 0.5rem;
+      margin: 0.85rem 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .proof-list li {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.55rem;
+      padding: 0.72rem 0.82rem;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(3, 7, 18, 0.42);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .proof-list code {
+      color: var(--text);
+      font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        "Liberation Mono",
+        monospace;
+      font-size: 0.82rem;
+      overflow-wrap: anywhere;
+    }
+
+    footer {
+      padding: 2rem 0 0;
+      color: rgba(248, 242, 224, 0.5);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        width: min(100% - 1rem, 1180px);
+      }
+
+      .topline {
+        align-items: flex-start;
+      }
+
+      nav {
+        justify-content: flex-start;
+      }
+
+      .hero,
+      .mount-panel,
+      .status-panel,
+      .contract-panel,
+      .proof-panel {
+        border-radius: 22px;
+      }
+
+      .contract-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <script>
+    window.AUDRALIA_HTML_HANDOFF_STATUS = {
+      ok: true,
+      receipt: "AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_HANDOFF_TNT_v2",
+      compatibilityReceipts: [
+        "AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_HANDOFF_TNT_v1",
+        "AUDRALIA_DOORWAY_IMPORT_ADOPTED_CANVAS_AUTHORITY_TNT_v2",
+        "AUDRALIA_ADOPTED_CANVAS_AUTHORITY_TNT_v1",
+        "AUDRALIA_RUNTIME_ALLOW_TECTONICS_TOPOLOGY_TERRAIN_HYDRATION_SURFACE_TNT_v1"
+      ],
+      file: "showroom/globe/audralia/index.html",
+      role: "audralia-html-shell-and-script-handoff",
+      owns: [
+        "document shell",
+        "navigation",
+        "audralia render mount",
+        "script handoff",
+        "HTML receipt exposure"
+      ],
+      doesNotOwn: [
+        "canvas creation",
+        "runtime sampling",
+        "surface painting",
+        "land decision",
+        "water decision",
+        "terrain decision",
+        "hydration decision",
+        "visual pass claim"
+      ],
+      canvasAuthorityPath: "/assets/audralia/audralia.canvas.js",
+      doorwayRoutePath: "/showroom/globe/audralia/index.js",
+      graphicBox: false,
+      imageGeneration: false,
+      visualPassClaimed: false
+    };
+
+    window.__AUDRALIA_HTML_HANDOFF_RECEIPT__ =
+      "AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_HANDOFF_TNT_v2";
+  </script>
+</head>
+
+<body>
+  <a class="skip-link" href="#audralia-main">Skip to Audralia</a>
+
+  <div class="page">
+    <header>
+      <div class="topline">
+        <a class="brand" href="/" aria-label="Diamond Gate Bridge">
+          <span class="brand-dot" aria-hidden="true"></span>
+          <span>Diamond Gate Bridge</span>
+        </a>
+
+        <nav aria-label="Audralia route navigation">
+          <a href="/showroom/globe/">Return to Globe Split</a>
+          <a href="/showroom/globe/earth/">Inspect Earth</a>
+          <a href="/showroom/">Showroom</a>
+          <a href="/">Compass</a>
+          <a href="/products/">Products</a>
+          <a href="/gauges/">Gauges</a>
+        </nav>
+      </div>
+
+      <section class="hero" aria-labelledby="audralia-title">
+        <p class="kicker">Audralia · Adopted Canvas Doorway</p>
+        <h1 id="audralia-title">Audralia</h1>
+        <p class="lede">
+          The HTML owns only the route shell and mount. The route doorway imports the adopted-column canvas authority.
+          The canvas authority renders Audralia from runtime truth.
+        </p>
+
+        <div class="hero-actions" aria-label="Primary route actions">
+          <a class="link-button" href="/showroom/globe/">Return to Globe Split</a>
+          <a class="link-button" href="/showroom/globe/earth/">Inspect Earth</a>
+          <a class="link-button" href="/gauges/">Run Gauges</a>
+        </div>
+      </section>
+    </header>
+
+    <main
+      id="audralia-main"
+      tabindex="-1"
+      data-audralia-main="true"
+      data-audralia-html-receipt="AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_HANDOFF_TNT_v2"
+    >
+      <section class="status-panel" aria-labelledby="doorway-status-title">
+        <h2 id="doorway-status-title">Route Status</h2>
+        <p>
+          Doorway shell only. Canvas authority controls the render.
+        </p>
+        <div
+          class="doorway-message"
+          data-audralia-doorway-message="true"
+          data-state="loading"
+          role="status"
+          aria-live="polite"
+        >
+          Audralia doorway is waiting for the adopted canvas authority.
+        </div>
+      </section>
+
+      <section
+        class="mount-panel"
+        aria-label="Audralia adopted canvas mount"
+      >
+        <div
+          id="audraliaRenderMount"
+          data-audralia-render-mount="true"
+          data-audralia-mount="true"
+          data-audralia-html-handoff="AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_HANDOFF_TNT_v2"
+          data-canvas-authority="/assets/audralia/audralia.canvas.js"
+          aria-label="Audralia canvas authority mount"
+        ></div>
+      </section>
+
+      <section class="contract-panel" aria-labelledby="contract-title">
+        <h2 id="contract-title">Doorway shell only. Canvas authority controls the render.</h2>
+        <p>
+          The HTML does not decide land, void, beaches, coastline, terrain, elevation, hydration, rotation, foliage, or visual pass.
+          This file loads the current route doorway. The doorway imports the adopted Audralia canvas authority.
+        </p>
+
+        <div class="contract-grid">
+          <article class="contract-card">
+            <strong>HTML route</strong>
+            <span>Owns shell, navigation, mount, and script handoff only.</span>
+          </article>
+
+          <article class="contract-card">
+            <strong>Canvas authority</strong>
+            <span>Owns canvas creation, runtime sampling, surface paint, animation, and proof dataset.</span>
+          </article>
+
+          <article class="contract-card">
+            <strong>Runtime chain</strong>
+            <span>Runtime remains source truth for land, water, ice, terrain, hydration, and sampled surface state.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="proof-panel" aria-labelledby="proof-title">
+        <h2 id="proof-title">Handoff Receipts</h2>
+        <p>
+          These receipts are exposed for Gauges and route inspection.
+        </p>
+
+        <ul class="proof-list">
+          <li>
+            <span>HTML handoff</span>
+            <code>AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_HANDOFF_TNT_v2</code>
+          </li>
+          <li>
+            <span>Doorway route</span>
+            <code>/showroom/globe/audralia/index.js</code>
+          </li>
+          <li>
+            <span>Canvas authority</span>
+            <code>/assets/audralia/audralia.canvas.js</code>
+          </li>
+          <li>
+            <span>Runtime truth</span>
+            <code>/assets/audralia/audralia.runtime.js</code>
+          </li>
+          <li>
+            <span>GraphicBox</span>
+            <code>false</code>
+          </li>
+          <li>
+            <span>Image generation</span>
+            <code>false</code>
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      Audralia · HTML handoff renewed · no GraphicBox · no image generation · shell only.
+    </footer>
+  </div>
+
+  <script type="module" src="/showroom/globe/audralia/index.js"></script>
+</body>
+</html>

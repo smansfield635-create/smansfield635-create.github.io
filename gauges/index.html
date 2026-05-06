@@ -1,38 +1,50 @@
+Destination file:
+
+gauges/index.html
+
 <!doctype html>
 <html
   lang="en"
-  data-page="audralia-generation-baseline-gauges"
+  data-page="gauges-audralia-adopted-canvas-access-proof"
   data-route="/gauges/"
-  data-contract="AUDRALIA_GAUGES_SOLID_SURFACE_LAND_RATIO_RECLASSIFICATION_TNT_v1"
-  data-role="read-only-audit"
-  data-visual-pass-claimed="false"
+  data-contract="GAUGES_ADOPTED_CANVAS_AUDRALIA_ACCESS_AND_PROOF_RENEWAL_TNT_v1"
+  data-mode="read-only"
+  data-mutates-runtime="false"
+  data-mutates-route="false"
+  data-mutates-canvas="false"
+  data-mutates-assets="false"
+  data-graphic-box="false"
+  data-image-generation="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Gauges · Audralia Solid Surface Diagnostic</title>
+  <title>Gauges · Audralia Adopted Canvas Proof</title>
   <meta
     name="description"
-    content="Read-only Audralia audit for runtime import, Earth-equivalent solid surface land ratio, hydration, route visual proof, and next target selection."
+    content="Read-only access and proof console for Audralia HTML handoff, doorway route, adopted canvas authority, runtime truth, hex surface child, topology, terrain, hydration, oceans, and DeepOcean debt."
   >
 
   <style>
     :root {
+      --bg: #03070d;
+      --panel: rgba(8, 18, 34, 0.92);
+      --panel2: rgba(10, 24, 45, 0.88);
+      --line: rgba(142, 187, 236, 0.22);
+      --line2: rgba(226, 192, 118, 0.25);
+      --text: rgba(255, 249, 235, 0.96);
+      --muted: rgba(213, 224, 240, 0.72);
+      --soft: rgba(213, 224, 240, 0.54);
+      --cyan: #58d7e8;
+      --green: #8ce6a9;
+      --yellow: #f1d178;
+      --red: #ff7b7b;
+      --gold: rgba(228, 194, 124, 0.82);
+      --shadow: rgba(0, 0, 0, 0.55);
       color-scheme: dark;
-      --bg: #050914;
-      --panel: rgba(11, 23, 41, 0.88);
-      --gold: #f5c76b;
-      --blue: #77bbff;
-      --cyan: #50cce6;
-      --green: #8ee6a8;
-      --red: #ff8a8a;
-      --amber: #ffc875;
-      --text: #f7efe0;
-      --muted: #b7c2d3;
-      --line: rgba(245, 199, 107, 0.28);
-      --line-blue: rgba(119, 187, 255, 0.22);
-      --radius: 26px;
-      --shadow: 0 26px 80px rgba(0, 0, 0, 0.48);
+      font-family:
+        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
     }
 
     * {
@@ -44,1491 +56,1568 @@
       min-height: 100%;
       margin: 0;
       background:
-        radial-gradient(circle at 50% 0%, rgba(80, 204, 230, 0.10), transparent 34rem),
-        radial-gradient(circle at 84% 18%, rgba(245, 199, 107, 0.06), transparent 26rem),
-        linear-gradient(180deg, #02050c 0%, var(--bg) 54%, #07101d 100%);
+        radial-gradient(circle at 50% 0%, rgba(62, 160, 206, 0.18), transparent 28rem),
+        radial-gradient(circle at 50% 38%, rgba(41, 114, 181, 0.14), transparent 36rem),
+        linear-gradient(180deg, #02050a 0%, #06111f 46%, #02050a 100%);
       color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      overflow-x: hidden;
     }
 
     a {
       color: inherit;
-    }
-
-    .skip-link {
-      position: absolute;
-      left: 1rem;
-      top: 1rem;
-      z-index: 1000;
-      transform: translateY(-150%);
-      border: 1px solid var(--gold);
-      border-radius: 999px;
-      padding: 0.72rem 1rem;
-      color: #07111e;
-      background: var(--gold);
-      font-weight: 950;
       text-decoration: none;
     }
 
-    .skip-link:focus {
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid rgba(88, 215, 232, 0.76);
+      outline-offset: 4px;
+    }
+
+    .gSkip {
+      position: absolute;
+      left: 16px;
+      top: 12px;
+      z-index: 20;
+      transform: translateY(-170%);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: rgba(2, 8, 16, 0.95);
+      color: var(--text);
+    }
+
+    .gSkip:focus {
       transform: translateY(0);
     }
 
-    .shell {
-      width: min(1180px, calc(100% - 28px));
+    .gPage {
+      width: min(100%, 1120px);
       margin: 0 auto;
-      padding: 28px 0 60px;
+      padding: 28px clamp(18px, 5vw, 46px) 72px;
     }
 
-    .hero,
-    .panel {
+    .gHero,
+    .gPanel,
+    .gCard {
       border: 1px solid var(--line);
-      border-radius: var(--radius);
       background:
-        linear-gradient(135deg, rgba(12, 24, 43, 0.86), rgba(6, 14, 27, 0.94)),
-        radial-gradient(circle at 88% 12%, rgba(119, 187, 255, 0.08), transparent 18rem);
-      box-shadow: var(--shadow);
-      padding: clamp(22px, 4vw, 44px);
+        linear-gradient(180deg, rgba(10, 24, 45, 0.92), rgba(5, 13, 26, 0.96)),
+        var(--panel);
+      box-shadow:
+        0 28px 70px var(--shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
     }
 
-    .panel {
-      margin-top: 22px;
+    .gHero {
+      border-radius: 34px;
+      padding: clamp(24px, 5vw, 46px);
+      margin: 0 0 26px;
     }
 
-    .eyebrow {
-      margin: 0 0 0.78rem;
-      color: var(--gold);
+    .gKicker,
+    .gPanelKicker {
+      margin: 0 0 12px;
+      color: var(--cyan);
       font-size: 0.78rem;
-      font-weight: 950;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-    }
-
-    h1,
-    h2,
-    h3,
-    p {
-      overflow-wrap: anywhere;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(2.2rem, 6.6vw, 5.4rem);
-      line-height: 0.94;
-      letter-spacing: -0.065em;
-    }
-
-    h2 {
-      margin: 0;
-      font-size: clamp(1.35rem, 3.5vw, 2.8rem);
-      line-height: 1.02;
-      letter-spacing: -0.045em;
-    }
-
-    h3 {
-      margin: 0;
-      font-size: 1.05rem;
-      letter-spacing: -0.02em;
-    }
-
-    .lede,
-    .panel p {
-      color: var(--muted);
-      line-height: 1.65;
-    }
-
-    .lede {
-      max-width: 980px;
-      margin: 1rem 0 0;
-      font-size: clamp(1rem, 2vw, 1.18rem);
-    }
-
-    .route-rail {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.65rem;
-      margin-top: 1.4rem;
-    }
-
-    .route-rail a,
-    .run-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(245, 199, 107, 0.34);
-      border-radius: 999px;
-      padding: 0.72rem 1rem;
-      color: var(--text);
-      background: rgba(5, 12, 24, 0.62);
-      text-decoration: none;
-      font-weight: 950;
-      line-height: 1.1;
-    }
-
-    .route-rail a:hover,
-    .route-rail a:focus-visible,
-    .run-button:hover,
-    .run-button:focus-visible {
-      color: #07111e;
-      background: var(--gold);
-      outline: none;
-      cursor: pointer;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-      align-items: center;
-      margin-top: 1.2rem;
-    }
-
-    .run-button {
-      appearance: none;
-      min-height: 44px;
-    }
-
-    .timestamp {
-      color: var(--muted);
-      font-size: 0.92rem;
-      font-weight: 800;
-    }
-
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 1.3rem;
-    }
-
-    .metric {
-      border: 1px solid var(--line-blue);
-      border-radius: 20px;
-      padding: 1rem;
-      background: rgba(255, 255, 255, 0.045);
-    }
-
-    .metric strong {
-      display: block;
-      font-size: clamp(1.55rem, 4vw, 2.6rem);
-      line-height: 1;
-      color: var(--text);
-      letter-spacing: -0.06em;
-    }
-
-    .metric span {
-      display: block;
-      margin-top: 0.35rem;
-      color: var(--muted);
-      font-size: 0.82rem;
       font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
     }
 
-    .read-box {
-      margin-top: 1.2rem;
-      border: 1px solid rgba(80, 204, 230, 0.30);
-      border-radius: 22px;
-      padding: 1rem;
-      background: rgba(80, 204, 230, 0.07);
+    .gTitle {
+      margin: 0;
+      font-size: clamp(2.2rem, 8.5vw, 5rem);
+      line-height: 0.95;
+      letter-spacing: -0.07em;
     }
 
-    .read-box strong {
-      display: block;
-      color: var(--cyan);
-      font-size: 1.05rem;
-    }
-
-    .read-box span {
-      display: block;
-      margin-top: 0.45rem;
+    .gSub {
+      max-width: 76ch;
+      margin: 20px 0 0;
       color: var(--muted);
+      font-size: clamp(1rem, 2.8vw, 1.26rem);
       line-height: 1.55;
     }
 
-    .section {
-      margin-top: 20px;
-    }
-
-    .section-title {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 0.8rem;
-      margin-bottom: 0.8rem;
-    }
-
-    .section-title small {
-      color: var(--muted);
-      font-weight: 850;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .checks {
+    .gNav {
       display: grid;
-      gap: 10px;
-    }
-
-    .check {
-      display: grid;
-      grid-template-columns: 86px minmax(0, 1fr);
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      border-radius: 18px;
-      padding: 0.92rem;
-      background: rgba(255, 255, 255, 0.04);
+      margin: 26px 0 0;
     }
 
-    .badge {
+    .gNav a,
+    .gBtn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 76px;
-      height: 30px;
+      min-height: 48px;
+      border: 1px solid var(--line2);
       border-radius: 999px;
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      padding: 10px 14px;
+      background: rgba(4, 13, 25, 0.72);
+      color: var(--text);
+      font: inherit;
+      font-weight: 850;
+      letter-spacing: -0.03em;
+      cursor: pointer;
     }
 
-    .pass .badge {
-      color: #07140c;
-      background: var(--green);
+    .gNav a:hover,
+    .gBtn:hover {
+      border-color: rgba(88, 215, 232, 0.48);
+      background: rgba(8, 31, 50, 0.78);
     }
 
-    .fail .badge {
-      color: #230707;
-      background: var(--red);
+    .gBtnPrimary {
+      border-color: rgba(88, 215, 232, 0.52);
+      background: rgba(29, 119, 152, 0.30);
     }
 
-    .held .badge {
-      color: #211404;
-      background: var(--amber);
+    .gActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 24px 0 0;
     }
 
-    .debt .badge {
-      color: #1f1706;
-      background: #d9b46a;
+    .gSummaryGrid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      margin: 26px 0;
     }
 
-    .info .badge {
-      color: #07111e;
-      background: var(--blue);
+    .gMetric {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 18px;
+      background: rgba(10, 24, 45, 0.68);
+      min-height: 120px;
     }
 
-    .check strong {
+    .gMetric strong {
       display: block;
       color: var(--text);
-      font-size: 0.98rem;
+      font-size: clamp(2rem, 5vw, 3rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
     }
 
-    .check span {
+    .gMetric span {
       display: block;
-      margin-top: 0.26rem;
+      margin-top: 10px;
+      color: rgba(213, 224, 240, 0.84);
+      font-size: 0.8rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    .gReadout {
+      border: 1px solid rgba(88, 215, 232, 0.30);
+      border-radius: 28px;
+      padding: 22px;
+      background: rgba(8, 36, 50, 0.44);
       color: var(--muted);
-      line-height: 1.48;
+      margin: 26px 0;
+    }
+
+    .gReadout h2 {
+      margin: 0 0 10px;
+      color: var(--cyan);
+      font-size: clamp(1.4rem, 5vw, 2rem);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+    }
+
+    .gReadout p {
+      margin: 0;
+      line-height: 1.5;
+      font-size: clamp(1rem, 3vw, 1.2rem);
+    }
+
+    .gPanel {
+      border-radius: 34px;
+      padding: clamp(22px, 5vw, 42px);
+      margin: 28px 0;
+    }
+
+    .gPanel h2 {
+      margin: 0 0 20px;
+      font-size: clamp(1.8rem, 5.2vw, 3rem);
+      line-height: 1.02;
+      letter-spacing: -0.06em;
+    }
+
+    .gLayer {
+      display: grid;
+      gap: 14px;
+    }
+
+    .gCard {
+      border-radius: 24px;
+      padding: 18px;
+      background: rgba(8, 18, 34, 0.72);
+    }
+
+    .gCardHead {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .gCard h3 {
+      margin: 0;
+      font-size: clamp(1rem, 3vw, 1.24rem);
+      letter-spacing: -0.03em;
+    }
+
+    .gMeta {
+      margin-top: 8px;
+      color: var(--soft);
+      font-family:
+        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", monospace;
+      font-size: 0.84rem;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .gBadge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 76px;
+      border: 1px solid rgba(213, 224, 240, 0.20);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.76rem;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .gPass {
+      background: rgba(60, 183, 111, 0.16);
+      color: var(--green);
+      border-color: rgba(140, 230, 169, 0.36);
+    }
+
+    .gFail {
+      background: rgba(200, 49, 63, 0.16);
+      color: var(--red);
+      border-color: rgba(255, 123, 123, 0.38);
+    }
+
+    .gDebt,
+    .gHeld {
+      background: rgba(202, 151, 48, 0.16);
+      color: var(--yellow);
+      border-color: rgba(241, 209, 120, 0.36);
+    }
+
+    .gInfo {
+      background: rgba(88, 215, 232, 0.12);
+      color: var(--cyan);
+      border-color: rgba(88, 215, 232, 0.30);
     }
 
     details {
-      margin-top: 0.55rem;
-      color: var(--muted);
+      margin-top: 12px;
+      border-top: 1px solid rgba(213, 224, 240, 0.10);
+      padding-top: 12px;
     }
 
     summary {
       cursor: pointer;
-      color: var(--gold);
-      font-weight: 900;
+      color: rgba(213, 224, 240, 0.84);
+      font-weight: 850;
     }
 
     pre {
       overflow: auto;
-      max-height: 280px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 14px;
-      padding: 0.8rem;
-      background: rgba(0, 0, 0, 0.28);
-      color: #dbe8ff;
+      max-height: 520px;
+      margin: 12px 0 0;
+      border: 1px solid rgba(213, 224, 240, 0.12);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(1, 6, 12, 0.72);
+      color: rgba(235, 242, 250, 0.86);
       font-size: 0.78rem;
       line-height: 1.45;
-      white-space: pre-wrap;
     }
 
-    .hidden-frame {
-      position: fixed;
-      left: -9999px;
-      top: 0;
-      width: 820px;
-      height: 980px;
-      border: 0;
+    .gProbeFrame {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      left: -10000px;
+      top: -10000px;
       opacity: 0;
       pointer-events: none;
+      border: 0;
     }
 
-    @media (max-width: 860px) {
-      .summary-grid {
+    .gFooter {
+      margin: 34px 0 0;
+      color: rgba(213, 224, 240, 0.50);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 900px) {
+      .gNav {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .route-rail a,
-      .run-button {
-        width: 100%;
+      .gSummaryGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .gPage {
+        padding-inline: 22px;
       }
 
-      .check {
+      .gHero,
+      .gPanel {
+        border-radius: 30px;
+      }
+
+      .gSummaryGrid,
+      .gNav {
         grid-template-columns: 1fr;
+      }
+
+      .gCardHead {
+        flex-direction: column;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="#main">Skip to Gauges</a>
+  <a class="gSkip" href="#main">Skip to Gauges</a>
 
-  <div class="shell">
-    <header class="hero">
-      <p class="eyebrow">Gauges · Audralia Solid Surface Diagnostic</p>
-      <h1>Solid Surface + Route Proof</h1>
-      <p class="lede">
-        This read-only audit checks runtime import, Earth-equivalent solid surface land ratio, hydration,
-        route visual proof, and the difference between liquid water, exposed terrain, and ice-covered land.
+  <main class="gPage" id="main">
+    <section class="gHero">
+      <p class="gKicker">Gauges · Adopted Canvas · Access + Proof</p>
+      <h1 class="gTitle">Audralia Proof Console</h1>
+      <p class="gSub">
+        This read-only audit checks the complete Audralia adopted-canvas chain:
+        HTML shell, doorway route, adopted canvas authority, asset hex surface child,
+        runtime truth, topology, terrain, hydration, oceans, DeepOcean debt, live route status,
+        and canvas-pixel proof.
       </p>
 
-      <nav class="route-rail" aria-label="Gauges route rail">
+      <nav class="gNav" aria-label="Gauges navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Globe</a>
-        <a href="/showroom/globe/earth/">Earth</a>
-        <a href="/showroom/globe/audralia/">Audralia</a>
         <a href="/products/">Products</a>
       </nav>
-    </header>
 
-    <main id="main">
-      <section class="panel" aria-label="Run audit">
-        <p class="eyebrow">Run audit</p>
-        <h2>Runtime, solid land ratio, visual canvas, and next target.</h2>
-        <p>
-          This version treats glacier, ice, and snowpack surfaces as solid planetary surface for land-ratio proof.
-          Ice remains water chemically, but it does not erase the land footprint for surface-area accounting.
-        </p>
+      <div class="gActions">
+        <button class="gBtn gBtnPrimary" id="runAudit" type="button">Run Audralia Audit</button>
+        <a class="gBtn" href="/showroom/globe/audralia/">Open Audralia</a>
+        <a class="gBtn" href="/assets/audralia/audralia.canvas.js">Canvas Source</a>
+        <a class="gBtn" href="/assets/audralia/audralia.runtime.js">Runtime Source</a>
+      </div>
+    </section>
 
-        <div class="actions">
-          <button id="runAudit" class="run-button" type="button">Run Audralia Audit</button>
-          <span id="timestamp" class="timestamp">Not run yet.</span>
-        </div>
+    <section class="gSummaryGrid" aria-label="Audit score summary">
+      <div class="gMetric">
+        <strong id="totalCount">0</strong>
+        <span>Total</span>
+      </div>
+      <div class="gMetric">
+        <strong id="passCount">0</strong>
+        <span>Passed</span>
+      </div>
+      <div class="gMetric">
+        <strong id="failCount">0</strong>
+        <span>Failed</span>
+      </div>
+      <div class="gMetric">
+        <strong id="debtCount">0</strong>
+        <span>Held / Debt</span>
+      </div>
+      <div class="gMetric">
+        <strong id="readinessCount">0%</strong>
+        <span>Readiness</span>
+      </div>
+    </section>
 
-        <div class="summary-grid" aria-label="Audit summary">
-          <div class="metric"><strong id="totalCount">0</strong><span>Total</span></div>
-          <div class="metric"><strong id="passCount">0</strong><span>Passed</span></div>
-          <div class="metric"><strong id="failCount">0</strong><span>Failed</span></div>
-          <div class="metric"><strong id="heldCount">0</strong><span>Held / Debt</span></div>
-          <div class="metric"><strong id="readiness">0%</strong><span>Readiness</span></div>
-        </div>
+    <section class="gReadout" aria-live="polite">
+      <h2 id="auditHeadline">Audit has not run yet.</h2>
+      <p id="auditInterpretation">
+        Press Run Audralia Audit. The renewed console will verify the adopted-canvas route model
+        instead of the old pre-adopted route compositor model.
+      </p>
+      <p class="gMeta" id="lastAudit">No audit run.</p>
+    </section>
 
-        <div class="read-box">
-          <strong id="currentReadTitle">Awaiting audit.</strong>
-          <span id="currentReadBody">Run the audit to determine whether the next move is source genealogy cleanup, surface sampling, terrain refinement, or runtime correction.</span>
-        </div>
-      </section>
+    <section class="gPanel">
+      <p class="gPanelKicker">Results</p>
+      <h2>Audit output</h2>
+      <div id="resultRoot" class="gLayer"></div>
+    </section>
 
-      <section id="results" class="panel" aria-label="Audit results">
-        <p class="eyebrow">Results</p>
-        <h2>Audit output</h2>
-        <div id="resultSections"></div>
-      </section>
-    </main>
-  </div>
+    <footer class="gFooter">
+      GAUGES_ADOPTED_CANVAS_AUDRALIA_ACCESS_AND_PROOF_RENEWAL_TNT_v1 · read-only · no GraphicBox · no image generation
+    </footer>
+  </main>
 
   <script type="module">
-    const RECEIPT = "AUDRALIA_GAUGES_SOLID_SURFACE_LAND_RATIO_RECLASSIFICATION_TNT_v1";
+    const CONTRACT = "GAUGES_ADOPTED_CANVAS_AUDRALIA_ACCESS_AND_PROOF_RENEWAL_TNT_v1";
+    const AUDIT_ROUTE = "/showroom/globe/audralia/";
+    const CACHE_KEY = () => `audit_${Date.now().toString(36)}_${Math.random().toString(36).slice(2)}`;
 
-    const PATHS = Object.freeze({
-      route: "/showroom/globe/audralia/",
-      routeScript: "/showroom/globe/audralia/index.js",
-      runtime: "/assets/audralia/audralia.runtime.js",
-      tectonics: "/assets/audralia/audralia/tectonics/render.js",
-      topology: "/assets/audralia/audralia/tectonics/topology/render.js",
-      terrain: "/assets/audralia/audralia/tectonics/topology/terrain.render.js",
-      hydration: "/assets/audralia/audralia/hydration/render.js",
-      oceans: "/assets/audralia/audralia/hydration/oceans.render.js"
-    });
-
-    const CONTRACTS = Object.freeze({
-      html: "AUDRALIA_TRUE_GLOBE_HTML_TECTONIC_GENEALOGY_HANDOFF_TNT_v1",
-      route: "AUDRALIA_ROUTE_CONSUME_CURRENT_RUNTIME_GENEALOGY_SURFACE_TNT_v1",
+    const REQUIRED = Object.freeze({
+      html: "AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_HANDOFF_TNT_v1",
+      routeDoorway: "AUDRALIA_ROUTE_ADOPTED_CANVAS_DOORWAY_TNT_v2",
+      routeLegacyReceipt: "AUDRALIA_ROUTE_CONSUME_CURRENT_RUNTIME_GENEALOGY_SURFACE_TNT_v1",
+      canvas: "AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v2",
+      hex: "AUDRALIA_G8_HEX_CHILD_GLOBAL_AQUEOUS_GLAZE_LAYER_TNT_v1",
+      hexExport: "drawAudraliaHexSurfaceFrame",
+      canvasExport: "renderAudraliaCanvas",
       runtime: "AUDRALIA_RUNTIME_ALLOW_TECTONICS_TOPOLOGY_TERRAIN_HYDRATION_SURFACE_TNT_v1",
-      runtimeImportSafe: "AUDRALIA_RUNTIME_IMPORT_SAFE_TOPOLOGY_ALIGNMENT_STABILIZER_TNT_v1",
-      runtimeLandRatio: "AUDRALIA_TOPOLOGY_RUNTIME_EARTH_EQUIVALENT_LAND_RATIO_ALIGNMENT_TNT_v1",
-      runtimeDiagnostic: "AUDRALIA_RUNTIME_ROUTE_COMPAT_SURFACE_DIAGNOSTIC_RENEWAL_TNT_v2",
-      tectonics: "AUDRALIA_TECTONICS_DERIVATIVE_ORIGIN_PARENT_TNT_v1",
-      topology: "AUDRALIA_TOPOLOGY_EARTH_EQUIVALENT_EXPOSED_LAND_RATIO_TNT_v1",
-      topologyCompat: "AUDRALIA_TECTONICS_TOPOLOGY_CHILD_FOOTPRINT_AUTHORITY_TNT_v1",
+      runtimeStabilizer: "AUDRALIA_RUNTIME_IMPORT_SAFE_TOPOLOGY_ALIGNMENT_STABILIZER_TNT_v1",
+      topologyA: "AUDRALIA_TOPOLOGY_EARTH_EQUIVALENT_EXPOSED_LAND_RATIO_TNT_v1",
+      topologyB: "AUDRALIA_TECTONICS_TOPOLOGY_CHILD_FOOTPRINT_AUTHORITY_TNT_v1",
       terrain: "AUDRALIA_TECTONICS_TOPOLOGY_TERRAIN_GRANDCHILD_RELIEF_TNT_v1",
       hydration: "AUDRALIA_HYDRATION_PARENT_TECTONIC_GENEALOGY_ALIGNMENT_TNT_v1",
-      oceans: "AUDRALIA_HYDRATION_OCEANS_CHILD_TURQUOISE_DEPTH_GRADIENT_TNT_v1"
+      tectonicsParent: "AUDRALIA_TECTONICS_DERIVATIVE_ORIGIN_PARENT_TNT_v1"
     });
 
-    const TARGETS = Object.freeze({
-      landMin: 0.27,
-      landMax: 0.31,
-      liquidWaterMin: 0.69,
-      liquidWaterMax: 0.76,
-      visualLandPixelMin: 0.025,
-      visualWaterPixelMin: 0.20
-    });
+    const SOURCES = Object.freeze([
+      {
+        key: "html",
+        label: "Audralia HTML handoff shell",
+        url: "/showroom/globe/audralia/",
+        required: true,
+        expectAny: [REQUIRED.html, REQUIRED.routeDoorway, REQUIRED.canvas]
+      },
+      {
+        key: "route",
+        label: "Audralia doorway route script",
+        url: "/showroom/globe/audralia/index.js",
+        required: true,
+        expectAny: [REQUIRED.routeDoorway, REQUIRED.routeLegacyReceipt, "/assets/audralia/audralia.canvas.js"]
+      },
+      {
+        key: "canvas",
+        label: "Audralia adopted canvas authority",
+        url: "/assets/audralia/audralia.canvas.js",
+        required: true,
+        expectAny: [REQUIRED.canvas, REQUIRED.canvasExport]
+      },
+      {
+        key: "hex",
+        label: "Audralia asset hex surface child",
+        url: "/assets/audralia/audralia.hex.surface.js",
+        required: true,
+        expectAny: [REQUIRED.hex, REQUIRED.hexExport]
+      },
+      {
+        key: "runtime",
+        label: "Audralia runtime truth",
+        url: "/assets/audralia/audralia.runtime.js",
+        required: true,
+        expectAny: [REQUIRED.runtime, REQUIRED.runtimeStabilizer]
+      },
+      {
+        key: "climate",
+        label: "Audralia climate conduit",
+        url: "/assets/audralia/audralia.climate.render.js",
+        required: false,
+        debtIfMissing: true,
+        expectAny: ["AUDRALIA", "climate", "Climate"]
+      },
+      {
+        key: "tectonicsParent",
+        label: "Tectonics derivative-origin parent",
+        url: "/assets/audralia/audralia/tectonics/render.js",
+        required: false,
+        debtIfMissing: true,
+        expectAny: [REQUIRED.tectonicsParent]
+      },
+      {
+        key: "topology",
+        label: "Topology footprint authority",
+        url: "/assets/audralia/audralia/tectonics/topology/render.js",
+        required: true,
+        expectAny: [REQUIRED.topologyA, REQUIRED.topologyB]
+      },
+      {
+        key: "terrain",
+        label: "Terrain relief authority",
+        url: "/assets/audralia/audralia/tectonics/topology/terrain.render.js",
+        required: true,
+        expectAny: [REQUIRED.terrain]
+      },
+      {
+        key: "hydration",
+        label: "Hydration parent",
+        url: "/assets/audralia/audralia/hydration/render.js",
+        required: true,
+        expectAny: [REQUIRED.hydration]
+      },
+      {
+        key: "oceans",
+        label: "Ocean authority",
+        url: "/assets/audralia/audralia/hydration/oceans.render.js",
+        required: true,
+        expectAny: ["ocean", "Ocean", "OCEAN", "water", "Water"]
+      },
+      {
+        key: "deepOcean",
+        label: "DeepOcean authority",
+        url: "/assets/audralia/audralia/hydration/deep-ocean.render.js",
+        required: false,
+        debtIfMissing: true,
+        expectAny: ["deep", "DeepOcean", "DEEP_OCEAN", "bathymetry"]
+      }
+    ]);
 
     const state = {
       auditId: "",
-      checks: [],
-      source: {},
-      runtime: null,
-      route: null,
-      generation: null
+      results: [],
+      payload: {}
     };
 
-    const runButton = document.getElementById("runAudit");
-    const timestamp = document.getElementById("timestamp");
-    const totalCount = document.getElementById("totalCount");
-    const passCount = document.getElementById("passCount");
-    const failCount = document.getElementById("failCount");
-    const heldCount = document.getElementById("heldCount");
-    const readiness = document.getElementById("readiness");
-    const currentReadTitle = document.getElementById("currentReadTitle");
-    const currentReadBody = document.getElementById("currentReadBody");
-    const resultSections = document.getElementById("resultSections");
-
-    function escapeHtml(value) {
-      return String(value ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    function percent(value) {
-      const n = Number(value);
-      if (!Number.isFinite(n)) return "0.00%";
-      return (n * 100).toFixed(2) + "%";
-    }
-
-    function addCheck(section, status, label, detail, data) {
-      state.checks.push({
-        section,
-        status,
-        label,
-        detail: detail || "",
-        data: data === undefined ? null : data
-      });
+    function nowLabel() {
+      return new Date().toLocaleString();
     }
 
     function cacheUrl(url) {
       const joiner = url.includes("?") ? "&" : "?";
-      return `${url}${joiner}_gauges=${encodeURIComponent(RECEIPT)}&t=${encodeURIComponent(state.auditId)}`;
+      return `${url}${joiner}_gauges=${encodeURIComponent(CONTRACT)}&t=${encodeURIComponent(state.auditId)}`;
     }
 
-    async function fetchSource(name, url) {
+    function clamp(value, min, max) {
+      const number = Number(value);
+      if (!Number.isFinite(number)) return min;
+      return Math.max(min, Math.min(max, number));
+    }
+
+    function percent(value) {
+      if (!Number.isFinite(Number(value))) return "0.00%";
+      return `${(Number(value) * 100).toFixed(2)}%`;
+    }
+
+    function safeJson(value) {
       try {
-        const response = await fetch(cacheUrl(url), { cache: "no-store" });
-        const text = await response.text();
-
-        const result = {
-          ok: response.ok,
-          status: response.status,
-          url,
-          text
-        };
-
-        state.source[name] = result;
-        return result;
+        return JSON.stringify(value, null, 2);
       } catch (error) {
-        const result = {
-          ok: false,
-          status: 0,
-          url,
-          text: "",
-          error: String(error && error.message ? error.message : error)
-        };
-
-        state.source[name] = result;
-        return result;
+        return String(value);
       }
     }
 
-    function sourceHas(name, token) {
-      const source = state.source[name];
-      return Boolean(source && source.ok && source.text.includes(token));
-    }
-
-    function isSolidSurfaceSample(item) {
-      if (!item) return false;
-
-      const visualSurfaceClass = String(item.visualSurfaceClass || "");
-      const topologySurfaceClass = String(item.topologySurfaceClass || "");
-      const waterClass = String(item.waterClass || "");
-
-      return Boolean(
-        item.topologyLandFootprint ||
-        item.isLandFootprint ||
-        item.isAboveWaterLandFootprint ||
-        item.landVisibleToRoute ||
-        item.landStillVisibleAfterHydration ||
-        item.isPolarIceFootprint ||
-        item.isSouthPolarIceFootprint ||
-        item.isNorthPolarIceFootprint ||
-        item.isGlacier ||
-        item.isSnowpack ||
-        waterClass === "glacier_mass" ||
-        visualSurfaceClass.includes("glacier_ice") ||
-        visualSurfaceClass.includes("snowpack") ||
-        topologySurfaceClass.includes("polar_ice")
-      );
-    }
-
-    function isLiquidWaterSample(item) {
-      if (!item) return false;
-
-      const waterClass = String(item.waterClass || "");
-      const visualSurfaceClass = String(item.visualSurfaceClass || "");
-
-      if (item.isGlacier || item.isSnowpack || waterClass === "glacier_mass") return false;
-      if (visualSurfaceClass.includes("glacier_ice") || visualSurfaceClass.includes("snowpack")) return false;
-
-      return Boolean(
-        item.isOceanWater ||
-        item.isCoastalWater ||
-        item.isShelfWater ||
-        item.isDeepOcean ||
-        item.isTrenchWater ||
-        item.isRiver ||
-        item.isStream ||
-        item.isLake ||
-        waterClass.includes("ocean") ||
-        waterClass.includes("river") ||
-        waterClass.includes("stream") ||
-        waterClass.includes("lake") ||
-        visualSurfaceClass.includes("water")
-      );
-    }
-
-    function findRuntimeApi(module) {
-      if (!module) return null;
-
-      const candidates = [
-        module,
-        module.default,
-        window.DGBAudraliaRuntime,
-        window.AudraliaRuntime,
-        window.audraliaRuntime
-      ];
-
-      return candidates.find((candidate) => {
-        return candidate && (
-          typeof candidate.createAudraliaRuntime === "function" ||
-          typeof candidate.buildAudraliaRuntimeField === "function" ||
-          typeof candidate.sampleRuntimeState === "function" ||
-          typeof candidate.sampleAudraliaPlanetState === "function"
-        );
-      }) || null;
-    }
-
-    function extractRuntimeStatus(api, runtimeInstance) {
-      try {
-        if (runtimeInstance && typeof runtimeInstance.getStatus === "function") {
-          return runtimeInstance.getStatus();
-        }
-
-        if (api && typeof api.getRuntimeStatus === "function") {
-          return api.getRuntimeStatus();
-        }
-
-        if (api && typeof api.getStatus === "function") {
-          return api.getStatus();
-        }
-      } catch (error) {
-        return {
-          ok: false,
-          error: String(error && error.message ? error.message : error)
-        };
-      }
-
-      return null;
-    }
-
-    function sampleRuntimeGrid(api, runtimeInstance, width, height) {
-      let totalSamples = 0;
-      let solidSurfaceLandSamples = 0;
-      let liquidWaterSamples = 0;
-      let exposedTerrainLandSamples = 0;
-      let topologyLandSamples = 0;
-      let visibleLandSamples = 0;
-      let iceSolidSurfaceSamples = 0;
-      let beachSamples = 0;
-      let hydratedSamples = 0;
-      let oceanSamples = 0;
-      let terrainReliefSamples = 0;
-      let fallbackSamples = 0;
-      let climateSamples = 0;
-      let climateConduitSamples = 0;
-      let maxTurquoise = 0;
-      let maxDepth = 0;
-      let maxElevation = -1;
-      const visualSurfaceClasses = new Set();
-
-      function sample(u, v) {
-        if (runtimeInstance && typeof runtimeInstance.sampleRuntimeState === "function") {
-          return runtimeInstance.sampleRuntimeState(u, v);
-        }
-
-        if (runtimeInstance && typeof runtimeInstance.sampleAudraliaPlanetState === "function") {
-          return runtimeInstance.sampleAudraliaPlanetState(u, v);
-        }
-
-        if (api && typeof api.sampleRuntimeState === "function") {
-          return api.sampleRuntimeState(u, v);
-        }
-
-        if (api && typeof api.sampleAudraliaPlanetState === "function") {
-          return api.sampleAudraliaPlanetState(u, v);
-        }
-
-        return null;
-      }
-
-      for (let y = 0; y < height; y += 1) {
-        const v = height <= 1 ? 0.5 : y / (height - 1);
-
-        for (let x = 0; x < width; x += 1) {
-          const u = width <= 1 ? 0.5 : x / (width - 1);
-          const item = sample(u, v);
-
-          if (!item) continue;
-
-          totalSamples += 1;
-
-          const solid = isSolidSurfaceSample(item);
-          const liquid = isLiquidWaterSample(item);
-          const iceSolid = Boolean(
-            item.isGlacier ||
-            item.isSnowpack ||
-            item.isPolarIceFootprint ||
-            String(item.waterClass || "") === "glacier_mass" ||
-            String(item.visualSurfaceClass || "").includes("glacier_ice") ||
-            String(item.visualSurfaceClass || "").includes("snowpack")
-          );
-
-          if (solid) solidSurfaceLandSamples += 1;
-          if (liquid) liquidWaterSamples += 1;
-          if (item.isLand || item.isLandFootprint || item.isAboveWaterLandFootprint || item.landVisibleToRoute) exposedTerrainLandSamples += 1;
-          if (item.topologyLandFootprint) topologyLandSamples += 1;
-          if (item.landStillVisibleAfterHydration || item.landVisibleToRoute) visibleLandSamples += 1;
-          if (iceSolid) iceSolidSurfaceSamples += 1;
-          if (item.isBeach || item.beachRimStillVisible) beachSamples += 1;
-          if (item.isHydrated) hydratedSamples += 1;
-          if (item.oceanActive || item.isOceanWater) oceanSamples += 1;
-          if (Number(item.ridge) > 0.38 || Number(item.canyonPressure) > 0.38 || Number(item.cliffPressure) > 0.38) terrainReliefSamples += 1;
-          if (item.fallbackUsed) fallbackSamples += 1;
-          if (item.climateActive) climateSamples += 1;
-          if (item.climateConducesHydration) climateConduitSamples += 1;
-
-          maxTurquoise = Math.max(maxTurquoise, Number(item.coastalTurquoiseIndex) || 0);
-          maxDepth = Math.max(maxDepth, Number(item.visibleWaterDepthIndex) || Number(item.oceanDepthIndex) || 0);
-          maxElevation = Math.max(maxElevation, Number(item.normalizedElevation) || -1);
-
-          if (item.visualSurfaceClass) visualSurfaceClasses.add(String(item.visualSurfaceClass));
-        }
-      }
-
-      return {
-        totalSamples,
-        solidSurfaceLandSamples,
-        liquidWaterSamples,
-        exposedTerrainLandSamples,
-        topologyLandSamples,
-        visibleLandSamples,
-        iceSolidSurfaceSamples,
-        beachSamples,
-        hydratedSamples,
-        oceanSamples,
-        terrainReliefSamples,
-        fallbackSamples,
-        climateSamples,
-        climateConduitSamples,
-        solidSurfaceLandRatio: totalSamples ? solidSurfaceLandSamples / totalSamples : 0,
-        liquidWaterRatio: totalSamples ? liquidWaterSamples / totalSamples : 0,
-        exposedTerrainLandRatio: totalSamples ? exposedTerrainLandSamples / totalSamples : 0,
-        topologyLandRatio: totalSamples ? topologyLandSamples / totalSamples : 0,
-        visibleLandRatio: totalSamples ? visibleLandSamples / totalSamples : 0,
-        iceSolidSurfaceRatio: totalSamples ? iceSolidSurfaceSamples / totalSamples : 0,
-        beachRatio: totalSamples ? beachSamples / totalSamples : 0,
-        hydratedRatio: totalSamples ? hydratedSamples / totalSamples : 0,
-        oceanRatio: totalSamples ? oceanSamples / totalSamples : 0,
-        terrainReliefRatio: totalSamples ? terrainReliefSamples / totalSamples : 0,
-        fallbackRatio: totalSamples ? fallbackSamples / totalSamples : 0,
-        climateRatio: totalSamples ? climateSamples / totalSamples : 0,
-        climateConduitRatio: totalSamples ? climateConduitSamples / totalSamples : 0,
-        maxTurquoise,
-        maxDepth,
-        maxElevation,
-        visualSurfaceClasses: Array.from(visualSurfaceClasses)
+    function addResult(section, status, label, message, details = null) {
+      const item = {
+        section,
+        status,
+        label,
+        message,
+        details
       };
+
+      state.results.push(item);
+      return item;
     }
 
-    function normalizeRuntimeStats(stats) {
-      if (!stats) return null;
+    function getBadgeClass(status) {
+      if (status === "pass") return "gBadge gPass";
+      if (status === "fail") return "gBadge gFail";
+      if (status === "debt") return "gBadge gDebt";
+      if (status === "held") return "gBadge gHeld";
+      return "gBadge gInfo";
+    }
 
-      const total = Number(stats.totalSamples || 0);
-      const topologyLandSamples = Number(stats.topologyLandSamples || 0);
-      const landSamples = Number(stats.landSamples || 0);
-      const visibleLandSamples = Number(stats.visibleLandSamples || 0);
-      const hydratedSamples = Number(stats.hydratedSamples || 0);
-      const waterSamples = Number(stats.waterSamples || 0);
-      const fallbackSamples = Number(stats.fallbackSamples || 0);
+    function renderResults() {
+      const root = document.getElementById("resultRoot");
+      const bySection = new Map();
 
-      const topologyLandRatio = Number(stats.topologyLandRatio ?? (total ? topologyLandSamples / total : 0));
-      const visibleLandRatio = Number(stats.visibleLandRatio ?? stats.landRatio ?? (total ? visibleLandSamples / total : 0));
-      const exposedTerrainLandRatio = Number(stats.exposedTerrainLandRatio ?? stats.landRatio ?? (total ? landSamples / total : 0));
+      for (const item of state.results) {
+        if (!bySection.has(item.section)) bySection.set(item.section, []);
+        bySection.get(item.section).push(item);
+      }
 
-      const visualSurfaceClasses = Array.isArray(stats.visualSurfaceClasses) ? stats.visualSurfaceClasses : [];
-      const hasIceClass = visualSurfaceClasses.some((item) => {
-        const value = String(item);
-        return value.includes("glacier_ice") || value.includes("snowpack") || value.includes("polar_ice");
+      root.innerHTML = "";
+
+      for (const [section, items] of bySection.entries()) {
+        const panel = document.createElement("section");
+        panel.className = "gCard";
+
+        const counts = {
+          pass: items.filter((x) => x.status === "pass").length,
+          fail: items.filter((x) => x.status === "fail").length,
+          debt: items.filter((x) => x.status === "debt").length,
+          held: items.filter((x) => x.status === "held").length,
+          info: items.filter((x) => x.status === "info").length
+        };
+
+        const header = document.createElement("div");
+        header.className = "gCardHead";
+
+        const titleWrap = document.createElement("div");
+        const title = document.createElement("h3");
+        title.textContent = section;
+
+        const meta = document.createElement("div");
+        meta.className = "gMeta";
+        meta.textContent =
+          `${counts.pass} pass · ${counts.fail} fail · ${counts.debt + counts.held} held/debt · ${counts.info} info`;
+
+        titleWrap.append(title, meta);
+
+        const badge = document.createElement("span");
+        badge.className = counts.fail > 0 ? "gBadge gFail" : counts.debt + counts.held > 0 ? "gBadge gDebt" : "gBadge gPass";
+        badge.textContent = counts.fail > 0 ? "FAIL" : counts.debt + counts.held > 0 ? "HELD" : "PASS";
+
+        header.append(titleWrap, badge);
+        panel.appendChild(header);
+
+        for (const item of items) {
+          const row = document.createElement("article");
+          row.className = "gCard";
+          row.style.marginTop = "14px";
+
+          const rowHead = document.createElement("div");
+          rowHead.className = "gCardHead";
+
+          const textWrap = document.createElement("div");
+          const label = document.createElement("h3");
+          label.textContent = item.label;
+
+          const message = document.createElement("div");
+          message.className = "gMeta";
+          message.textContent = item.message;
+
+          textWrap.append(label, message);
+
+          const rowBadge = document.createElement("span");
+          rowBadge.className = getBadgeClass(item.status);
+          rowBadge.textContent = item.status;
+
+          rowHead.append(textWrap, rowBadge);
+          row.appendChild(rowHead);
+
+          if (item.details !== null && item.details !== undefined) {
+            const details = document.createElement("details");
+            const summary = document.createElement("summary");
+            summary.textContent = "details";
+            const pre = document.createElement("pre");
+            pre.textContent = safeJson(item.details);
+            details.append(summary, pre);
+            row.appendChild(details);
+          }
+
+          panel.appendChild(row);
+        }
+
+        root.appendChild(panel);
+      }
+    }
+
+    function updateSummary() {
+      const pass = state.results.filter((x) => x.status === "pass").length;
+      const fail = state.results.filter((x) => x.status === "fail").length;
+      const debt = state.results.filter((x) => x.status === "debt" || x.status === "held").length;
+      const total = state.results.filter((x) => x.status !== "info").length;
+      const readiness = total ? Math.round((pass / total) * 100) : 0;
+
+      document.getElementById("totalCount").textContent = String(total);
+      document.getElementById("passCount").textContent = String(pass);
+      document.getElementById("failCount").textContent = String(fail);
+      document.getElementById("debtCount").textContent = String(debt);
+      document.getElementById("readinessCount").textContent = `${readiness}%`;
+      document.getElementById("lastAudit").textContent = `Last audit: ${nowLabel()} · ${state.auditId}`;
+
+      const headline = document.getElementById("auditHeadline");
+      const interpretation = document.getElementById("auditInterpretation");
+
+      const adoptedChainPass = Boolean(
+        state.payload.live &&
+        state.payload.live.canvasExists &&
+        state.payload.live.canvasStats &&
+        state.payload.live.canvasStats.opaqueSamples > 0 &&
+        (
+          state.payload.live.htmlHandoffStatus ||
+          state.payload.live.routeStatus ||
+          state.payload.live.canvasStatus ||
+          state.payload.live.mountDataset
+        )
+      );
+
+      const runtimePass = Boolean(
+        state.payload.runtime &&
+        state.payload.runtime.imported &&
+        state.payload.runtime.stats &&
+        Number(state.payload.runtime.stats.fallbackRatio || 0) === 0
+      );
+
+      if (fail === 0 && adoptedChainPass && runtimePass) {
+        headline.textContent = "Audralia adopted-canvas chain is visible and runtime proof is active.";
+        interpretation.textContent =
+          "HTML handoff, route doorway, canvas authority, runtime truth, and live canvas proof are available. Remaining held items are debt unless the source layer is required for the next generation.";
+      } else if (adoptedChainPass && runtimePass) {
+        headline.textContent = "Audralia renders, but one or more source/access contracts need attention.";
+        interpretation.textContent =
+          "The visible planet chain is functioning. Failures should be interpreted from the source/access layer rather than as proof that the planet is not rendering.";
+      } else if (runtimePass && !adoptedChainPass) {
+        headline.textContent = "Runtime is alive, but live route/canvas proof is not complete.";
+        interpretation.textContent =
+          "The next target is HTML handoff, doorway execution, or adopted canvas exposure. Runtime is not the first blocker when runtime import and samples pass.";
+      } else {
+        headline.textContent = "Audit found active blockers.";
+        interpretation.textContent =
+          "Open the failed sections below. This console separates source proof, handoff proof, canvas proof, and runtime proof so the next target is explicit.";
+      }
+    }
+
+    async function fetchText(url) {
+      const response = await fetch(cacheUrl(url), {
+        cache: "no-store",
+        credentials: "same-origin"
       });
 
-      const inferredIceSolidSurfaceRatio = Math.max(0, topologyLandRatio - visibleLandRatio);
-      const iceSolidSurfaceRatio = Number(
-        stats.iceSolidSurfaceRatio ??
-        stats.glacierSolidSurfaceRatio ??
-        stats.snowpackSolidSurfaceRatio ??
-        (hasIceClass ? inferredIceSolidSurfaceRatio : 0)
-      );
-
-      const solidSurfaceLandRatio = Number(
-        stats.solidSurfaceLandRatio ??
-        Math.max(topologyLandRatio, visibleLandRatio + iceSolidSurfaceRatio)
-      );
-
-      const solidSurfaceLandSamples = Number(
-        stats.solidSurfaceLandSamples ??
-        Math.round(solidSurfaceLandRatio * total)
-      );
-
-      const liquidWaterRatio = Number(
-        stats.liquidWaterRatio ??
-        Math.max(0, 1 - solidSurfaceLandRatio)
-      );
-
-      const liquidWaterSamples = Number(
-        stats.liquidWaterSamples ??
-        Math.round(liquidWaterRatio * total)
-      );
+      const text = await response.text();
 
       return {
-        ...stats,
-        totalSamples: total,
-        topologyLandSamples,
-        landSamples,
-        visibleLandSamples,
-        exposedTerrainLandSamples: Number(stats.exposedTerrainLandSamples ?? landSamples),
-        solidSurfaceLandSamples,
-        liquidWaterSamples,
-        hydratedSamples,
-        waterSamples,
-        fallbackSamples,
-        topologyLandRatio,
-        visibleLandRatio,
-        exposedTerrainLandRatio,
-        iceSolidSurfaceRatio,
-        solidSurfaceLandRatio,
-        liquidWaterRatio,
-        fallbackRatio: Number(stats.fallbackRatio ?? (total ? fallbackSamples / total : 0)),
-        visualSurfaceClasses,
-        solidSurfaceAccounting: "visibleTerrainLand + glacierIceSnowpackSolidSurface"
+        ok: response.ok,
+        status: response.status,
+        url,
+        fetchedUrl: response.url,
+        text
       };
     }
 
-    async function auditRuntime() {
-      try {
-        const module = await import(cacheUrl(PATHS.runtime));
-        const api = findRuntimeApi(module);
+    function containsAny(text, needles) {
+      return needles.some((needle) => text.includes(needle));
+    }
 
-        if (!api) {
-          addCheck("Runtime Field Truth", "fail", "Runtime API resolved", "Runtime imported, but no expected runtime API was found.");
-          return null;
-        }
+    async function auditSources() {
+      const fetched = {};
 
-        addCheck("Runtime Field Truth", "pass", "Runtime module imported", PATHS.runtime);
-
-        let runtimeInstance = null;
+      for (const source of SOURCES) {
+        let result;
 
         try {
-          if (typeof api.createAudraliaRuntime === "function") {
-            runtimeInstance = api.createAudraliaRuntime({
-              fieldWidth: 160,
-              fieldHeight: 80,
-              targetLandRatio: 0.292
-            });
-          }
+          result = await fetchText(source.url);
         } catch (error) {
-          addCheck("Runtime Field Truth", "held", "Runtime instance creation", "Runtime imported, but createAudraliaRuntime threw an error.", {
-            message: String(error && error.message ? error.message : error)
-          });
+          const status = source.required ? "fail" : "debt";
+          addResult(
+            "Source + Contract Access",
+            status,
+            `${source.label} reachable`,
+            `${source.url} fetch threw.`,
+            { error: String(error && error.message ? error.message : error), source }
+          );
+          fetched[source.key] = { ok: false, error: String(error), text: "" };
+          continue;
         }
 
-        const status = extractRuntimeStatus(api, runtimeInstance);
-        const receipt = String(
-          (runtimeInstance && runtimeInstance.receipt) ||
-          (status && status.receipt) ||
-          (api && api.receipt) ||
-          ""
-        );
+        fetched[source.key] = result;
 
-        const activeRenewal = String(
-          (runtimeInstance && runtimeInstance.activeRenewal) ||
-          (status && status.activeRenewal) ||
-          (api && api.activeRenewal) ||
-          ""
-        );
-
-        addCheck(
-          "Runtime Field Truth",
-          receipt === CONTRACTS.runtime ? "pass" : "fail",
-          "Runtime receipt matches route expectation",
-          receipt || "No runtime receipt exposed."
-        );
-
-        addCheck(
-          "Runtime Field Truth",
-          activeRenewal === CONTRACTS.runtimeImportSafe || activeRenewal === CONTRACTS.runtimeLandRatio ? "pass" : "held",
-          "Runtime active renewal current",
-          activeRenewal || "No active renewal exposed."
-        );
-
-        let stats = status && status.runtimeFieldStats ? status.runtimeFieldStats : null;
-
-        if (!stats && runtimeInstance && runtimeInstance.cache && runtimeInstance.cache.runtimeField && runtimeInstance.cache.runtimeField.stats) {
-          stats = runtimeInstance.cache.runtimeField.stats;
+        if (!result.ok) {
+          addResult(
+            "Source + Contract Access",
+            source.required ? "fail" : "debt",
+            `${source.label} reachable`,
+            `${source.url} returned ${result.status}.`,
+            {
+              url: source.url,
+              status: result.status,
+              text: result.text.slice(0, 1400)
+            }
+          );
+          continue;
         }
 
-        if (!stats && typeof api.buildAudraliaRuntimeField === "function") {
-          try {
-            const field = api.buildAudraliaRuntimeField(160, 80, { targetLandRatio: 0.292 });
-            stats = field && field.stats ? field.stats : null;
-          } catch (error) {
-            addCheck("Runtime Field Truth", "held", "Runtime field build", "buildAudraliaRuntimeField threw an error.", {
-              message: String(error && error.message ? error.message : error)
-            });
+        addResult(
+          "Source + Contract Access",
+          "pass",
+          `${source.label} reachable`,
+          `${source.url} returned ${result.status}.`,
+          { url: source.url, bytes: result.text.length }
+        );
+
+        const contractPresent = containsAny(result.text, source.expectAny || []);
+
+        addResult(
+          "Source + Contract Access",
+          contractPresent ? "pass" : source.required ? "fail" : "held",
+          `${source.label} contract/export visible`,
+          contractPresent
+            ? `Found expected receipt/export in ${source.url}.`
+            : `Expected one of: ${(source.expectAny || []).join(", ")}`,
+          {
+            url: source.url,
+            expected: source.expectAny,
+            first1200: result.text.slice(0, 1200)
           }
-        }
-
-        if (!stats) {
-          stats = sampleRuntimeGrid(api, runtimeInstance, 128, 64);
-        }
-
-        stats = normalizeRuntimeStats(stats);
-
-        const solidSurfaceLandRatio = Number(stats.solidSurfaceLandRatio || 0);
-        const topologyLandRatio = Number(stats.topologyLandRatio || 0);
-        const visibleLandRatio = Number(stats.visibleLandRatio || 0);
-        const exposedTerrainLandRatio = Number(stats.exposedTerrainLandRatio || 0);
-        const iceSolidSurfaceRatio = Number(stats.iceSolidSurfaceRatio || 0);
-        const liquidWaterRatio = Number(stats.liquidWaterRatio || 0);
-        const fallbackSamples = Number(stats.fallbackSamples || 0);
-        const hydratedSamples = Number(stats.hydratedSamples || 0);
-        const climateConduitSamples = Number(stats.climateConduitSamples || stats.climateSamples || 0);
-        const maxTurquoise = Number(stats.maxTurquoise || stats.coastalTurquoiseIndex || 0);
-        const terrainReliefSamples = Number(stats.terrainReliefSamples || 0);
-
-        addCheck(
-          "Runtime Field Truth",
-          Number(stats.totalSamples || 0) > 0 ? "pass" : "fail",
-          "Runtime field has samples",
-          `${Number(stats.totalSamples || 0).toLocaleString()} samples.`,
-          stats
         );
+      }
 
-        addCheck(
-          "Runtime Field Truth",
-          topologyLandRatio >= TARGETS.landMin && topologyLandRatio <= TARGETS.landMax ? "pass" : "fail",
-          "Topology land footprint is Earth-equivalent",
-          `topologyLandRatio=${percent(topologyLandRatio)} target=${percent(0.292)} band=${percent(TARGETS.landMin)}–${percent(TARGETS.landMax)}`
-        );
+      state.payload.sources = fetched;
+      return fetched;
+    }
 
-        addCheck(
-          "Runtime Field Truth",
-          solidSurfaceLandRatio >= TARGETS.landMin && solidSurfaceLandRatio <= TARGETS.landMax ? "pass" : "fail",
-          "Solid surface land ratio is Earth-equivalent",
-          `solidSurfaceLandRatio=${percent(solidSurfaceLandRatio)} = exposedTerrainLandRatio ${percent(exposedTerrainLandRatio)} + ice/snowpack solid correction ${percent(iceSolidSurfaceRatio)}`
-        );
+    function iframeWait(frame, timeoutMs = 7000) {
+      return new Promise((resolve) => {
+        let done = false;
 
-        addCheck(
-          "Runtime Field Truth",
-          visibleLandRatio > 0 ? "pass" : "fail",
-          "Exposed terrain land survives hydration",
-          `visibleLandRatio=${percent(visibleLandRatio)}. This excludes ice/snowpack from visible terrain accounting.`
-        );
-
-        addCheck(
-          "Runtime Field Truth",
-          liquidWaterRatio >= TARGETS.liquidWaterMin && liquidWaterRatio <= TARGETS.liquidWaterMax ? "pass" : "held",
-          "Liquid water ratio is Earth-compatible",
-          `liquidWaterRatio=${percent(liquidWaterRatio)} target band=${percent(TARGETS.liquidWaterMin)}–${percent(TARGETS.liquidWaterMax)}`
-        );
-
-        addCheck(
-          "Runtime Field Truth",
-          hydratedSamples > 0 ? "pass" : "fail",
-          "Hydration samples exist",
-          `${Number(hydratedSamples).toLocaleString()} hydrated samples.`
-        );
-
-        addCheck(
-          "Runtime Field Truth",
-          climateConduitSamples > 0 ? "pass" : "held",
-          "Climate conduit active",
-          `${Number(climateConduitSamples).toLocaleString()} climate conduit samples.`
-        );
-
-        addCheck(
-          "Runtime Field Truth",
-          maxTurquoise > 0.05 ? "pass" : "held",
-          "Turquoise shelf/coastal signal exists",
-          `maxTurquoise=${maxTurquoise.toFixed(4)}`
-        );
-
-        addCheck(
-          "Runtime Field Truth",
-          terrainReliefSamples > 0 ? "pass" : "held",
-          "Terrain relief exists",
-          `${Number(terrainReliefSamples).toLocaleString()} relief samples.`
-        );
-
-        addCheck(
-          "Runtime Field Truth",
-          fallbackSamples === 0 ? "pass" : "fail",
-          "Runtime fallback samples are zero",
-          `fallbackSamples=${fallbackSamples}`
-        );
-
-        state.runtime = {
-          api,
-          runtimeInstance,
-          status,
-          stats,
-          receipt,
-          activeRenewal
+        const finish = () => {
+          if (done) return;
+          done = true;
+          resolve(frame);
         };
 
-        return state.runtime;
-      } catch (error) {
-        addCheck("Runtime Field Truth", "fail", "Runtime module imported", "Runtime import failed.", {
-          type: "runtimeImport",
-          message: String(error && error.message ? error.message : error)
-        });
-        return null;
-      }
+        frame.addEventListener("load", () => {
+          window.setTimeout(finish, 1800);
+        }, { once: true });
+
+        window.setTimeout(finish, timeoutMs);
+      });
     }
 
-    function wait(ms) {
-      return new Promise((resolve) => window.setTimeout(resolve, ms));
+    function datasetToObject(element) {
+      if (!element || !element.dataset) return null;
+      return Object.fromEntries(Object.entries(element.dataset));
     }
 
-    function sampleCanvas(canvas) {
-      if (!canvas || typeof canvas.getContext !== "function") {
-        return null;
-      }
+    function readCanvasStats(canvas) {
+      if (!canvas) return null;
 
       const ctx = canvas.getContext("2d", { willReadFrequently: true });
-      const width = canvas.width;
-      const height = canvas.height;
+      const width = canvas.width || canvas.clientWidth || 0;
+      const height = canvas.height || canvas.clientHeight || 0;
 
-      if (!ctx || !width || !height) return null;
+      if (!ctx || !width || !height) {
+        return {
+          canvasWidth: width,
+          canvasHeight: height,
+          error: "CANVAS_CONTEXT_OR_SIZE_MISSING"
+        };
+      }
 
-      const image = ctx.getImageData(0, 0, width, height);
+      const sampleStep = Math.max(2, Math.floor(Math.max(width, height) / 220));
+      let image;
+
+      try {
+        image = ctx.getImageData(0, 0, width, height);
+      } catch (error) {
+        return {
+          canvasWidth: width,
+          canvasHeight: height,
+          error: String(error && error.message ? error.message : error),
+          tainted: true
+        };
+      }
+
       const data = image.data;
-      const step = Math.max(1, Math.floor(Math.max(width, height) / 180));
 
-      let opaque = 0;
-      let land = 0;
-      let water = 0;
-      let turquoise = 0;
-      let darkWater = 0;
-      let iceOrHighlight = 0;
-      let solidSurface = 0;
+      const stats = {
+        canvasWidth: width,
+        canvasHeight: height,
+        sampleStep,
+        totalSamples: 0,
+        opaqueSamples: 0,
+        blankSamples: 0,
+        landPixelSamples: 0,
+        waterPixelSamples: 0,
+        turquoisePixelSamples: 0,
+        darkWaterPixelSamples: 0,
+        iceOrHighlightPixelSamples: 0,
+        solidSurfacePixelSamples: 0
+      };
 
-      for (let y = 0; y < height; y += step) {
-        for (let x = 0; x < width; x += step) {
+      for (let y = 0; y < height; y += sampleStep) {
+        for (let x = 0; x < width; x += sampleStep) {
           const index = (y * width + x) * 4;
-          const r = data[index];
-          const g = data[index + 1];
-          const b = data[index + 2];
-          const a = data[index + 3];
+          const r = data[index] || 0;
+          const g = data[index + 1] || 0;
+          const b = data[index + 2] || 0;
+          const a = data[index + 3] || 0;
 
-          if (a < 32) continue;
+          stats.totalSamples += 1;
 
-          opaque += 1;
+          if (a < 20) {
+            stats.blankSamples += 1;
+            continue;
+          }
 
-          const isLand =
-            r > 70 &&
-            g > 45 &&
-            b < 150 &&
-            r >= b * 0.92 &&
-            r >= g * 0.72;
+          stats.opaqueSamples += 1;
 
-          const isTurquoise =
-            r < 90 &&
-            g > 85 &&
-            b > 105 &&
-            b >= r * 1.35;
+          const land = r >= 88 && r >= g * 0.78 && r > b * 0.78;
+          const ice = r > 184 && g > 184 && b > 184;
+          const turquoise = g > 126 && b > 132 && g >= r * 1.10;
+          const darkWater = b > r * 1.10 && b > g * 0.88 && r < 46 && g < 118;
+          const water = b > r * 1.02 && g > r * 0.62 && !land && !ice;
 
-          const isWater =
-            b > 62 &&
-            g > 28 &&
-            b >= r * 1.18;
-
-          const isDarkWater =
-            isWater &&
-            b > 70 &&
-            r < 55 &&
-            g < 105;
-
-          const isIceOrHighlight =
-            r > 165 &&
-            g > 165 &&
-            b > 165;
-
-          const isSolidSurface =
-            isLand || isIceOrHighlight;
-
-          if (isLand) land += 1;
-          if (isWater) water += 1;
-          if (isTurquoise) turquoise += 1;
-          if (isDarkWater) darkWater += 1;
-          if (isIceOrHighlight) iceOrHighlight += 1;
-          if (isSolidSurface) solidSurface += 1;
+          if (land) stats.landPixelSamples += 1;
+          if (water) stats.waterPixelSamples += 1;
+          if (turquoise) stats.turquoisePixelSamples += 1;
+          if (darkWater) stats.darkWaterPixelSamples += 1;
+          if (ice) stats.iceOrHighlightPixelSamples += 1;
+          if (land || ice) stats.solidSurfacePixelSamples += 1;
         }
       }
 
-      return {
-        canvasWidth: width,
-        canvasHeight: height,
-        sampleStep: step,
-        opaqueSamples: opaque,
-        landPixelSamples: land,
-        waterPixelSamples: water,
-        turquoisePixelSamples: turquoise,
-        darkWaterPixelSamples: darkWater,
-        iceOrHighlightPixelSamples: iceOrHighlight,
-        solidSurfacePixelSamples: solidSurface,
-        landPixelRatio: opaque ? land / opaque : 0,
-        waterPixelRatio: opaque ? water / opaque : 0,
-        turquoisePixelRatio: opaque ? turquoise / opaque : 0,
-        darkWaterPixelRatio: opaque ? darkWater / opaque : 0,
-        iceOrHighlightPixelRatio: opaque ? iceOrHighlight / opaque : 0,
-        solidSurfacePixelRatio: opaque ? solidSurface / opaque : 0
-      };
+      const denominator = Math.max(1, stats.opaqueSamples);
+      stats.blankRatio = stats.blankSamples / Math.max(1, stats.totalSamples);
+      stats.opaqueRatio = stats.opaqueSamples / Math.max(1, stats.totalSamples);
+      stats.landPixelRatio = stats.landPixelSamples / denominator;
+      stats.waterPixelRatio = stats.waterPixelSamples / denominator;
+      stats.turquoisePixelRatio = stats.turquoisePixelSamples / denominator;
+      stats.darkWaterPixelRatio = stats.darkWaterPixelSamples / denominator;
+      stats.iceOrHighlightPixelRatio = stats.iceOrHighlightPixelSamples / denominator;
+      stats.solidSurfacePixelRatio = stats.solidSurfacePixelSamples / denominator;
+
+      return stats;
     }
 
-    async function probeRoute() {
-      const iframe = document.createElement("iframe");
-      iframe.className = "hidden-frame";
-      iframe.title = "Audralia route probe";
-      iframe.src = cacheUrl(PATHS.route);
+    async function auditLiveRoute() {
+      const frame = document.createElement("iframe");
+      frame.className = "gProbeFrame";
+      frame.src = cacheUrl(AUDIT_ROUTE);
+      frame.setAttribute("aria-hidden", "true");
+      document.body.appendChild(frame);
 
-      document.body.appendChild(iframe);
+      await iframeWait(frame);
+
+      const live = {
+        routeReadable: false,
+        canvasExists: false,
+        mountDataset: null,
+        canvasDataset: null,
+        htmlHandoffStatus: null,
+        routeStatus: null,
+        canvasStatus: null,
+        hexRendererStatus: null,
+        labelText: "",
+        canvasStats: null
+      };
 
       try {
-        await new Promise((resolve, reject) => {
-          const timer = window.setTimeout(() => reject(new Error("route iframe load timeout")), 9000);
-          iframe.addEventListener("load", () => {
-            window.clearTimeout(timer);
-            resolve();
-          }, { once: true });
-        });
-
-        await wait(1600);
-
-        const win = iframe.contentWindow;
-        const doc = iframe.contentDocument || (win && win.document);
+        const win = frame.contentWindow;
+        const doc = frame.contentDocument || (win && win.document);
 
         if (!win || !doc) {
-          addCheck("Live Route Visual Probe", "fail", "Live route probe readable", "Route iframe loaded, but same-origin document was not readable.");
-          return null;
+          addResult(
+            "Live Handoff + Route Probe",
+            "fail",
+            "Live route probe readable",
+            "Iframe loaded but same-origin document was not readable.",
+            {}
+          );
+          return live;
         }
+
+        live.routeReadable = true;
+        addResult(
+          "Live Handoff + Route Probe",
+          "pass",
+          "Live route probe readable",
+          "Same-origin Audralia route probe loaded.",
+          { route: AUDIT_ROUTE }
+        );
 
         const mount =
           doc.getElementById("audraliaRenderMount") ||
           doc.querySelector("[data-audralia-render-mount]") ||
           doc.querySelector("[data-body='audralia'][data-render-mount]");
 
-        const canvas =
-          doc.querySelector("canvas.audralia-orthographic-canvas") ||
-          doc.querySelector("#audraliaRenderMount canvas") ||
-          doc.querySelector("canvas[data-body='audralia']") ||
-          doc.querySelector("canvas");
+        live.mountDataset = datasetToObject(mount);
 
-        const label =
-          doc.querySelector(".audralia-orthographic-label") ||
-          doc.querySelector("[data-audralia-label]");
+        addResult(
+          "Live Handoff + Route Probe",
+          mount ? "pass" : "fail",
+          "Audralia mount exists",
+          mount ? "#audraliaRenderMount or equivalent mount found." : "No Audralia mount found.",
+          live.mountDataset
+        );
 
-        let routeStatus = null;
+        const canvas = mount ? mount.querySelector("canvas") : doc.querySelector("canvas");
+        live.canvasExists = Boolean(canvas);
+        live.canvasDataset = datasetToObject(canvas);
 
-        try {
-          if (win.DGBAudraliaRouteControl && typeof win.DGBAudraliaRouteControl.getStatus === "function") {
-            routeStatus = win.DGBAudraliaRouteControl.getStatus();
+        addResult(
+          "Live Handoff + Route Probe",
+          canvas ? "pass" : "fail",
+          "Audralia canvas exists",
+          canvas ? "Route contains a canvas." : "No route canvas found.",
+          live.canvasDataset
+        );
+
+        live.htmlHandoffStatus = win.DGBAudraliaHtmlHandoffStatus || win.AudraliaHtmlHandoffStatus || win.audraliaHtmlHandoffStatus || null;
+        live.routeStatus = win.DGBAudraliaRouteStatus || win.AudraliaRouteStatus || win.audraliaRouteStatus || null;
+        live.canvasStatus = win.DGBAudraliaCanvasStatus || win.AudraliaCanvasStatus || win.audraliaCanvasStatus || null;
+        live.hexRendererStatus =
+          win.DGBAudraliaHexSurfaceRenderer && typeof win.DGBAudraliaHexSurfaceRenderer.getAudraliaHexSurfaceStatus === "function"
+            ? win.DGBAudraliaHexSurfaceRenderer.getAudraliaHexSurfaceStatus()
+            : win.DGBAudraliaHexSurfaceRenderer || null;
+
+        const anyStatus = Boolean(live.htmlHandoffStatus || live.routeStatus || live.canvasStatus);
+
+        addResult(
+          "Live Handoff + Route Probe",
+          anyStatus ? "pass" : "held",
+          "Adopted status object visible",
+          anyStatus
+            ? "At least one adopted status object was exposed."
+            : "No adopted status object was exposed; canvas/mount proof still controls.",
+          {
+            htmlHandoffStatus: live.htmlHandoffStatus,
+            routeStatus: live.routeStatus,
+            canvasStatus: live.canvasStatus
           }
-        } catch (error) {
-          routeStatus = {
-            ok: false,
-            error: String(error && error.message ? error.message : error)
-          };
-        }
-
-        const canvasStats = sampleCanvas(canvas);
-
-        const routeData = {
-          mountDataset: mount ? { ...mount.dataset } : null,
-          canvasDataset: canvas ? { ...canvas.dataset } : null,
-          labelText: label ? label.textContent.trim() : "",
-          routeStatus,
-          canvasStats
-        };
-
-        addCheck("Live Route Visual Probe", "pass", "Live route probe readable", "Same-origin route probe loaded.");
-        addCheck("Live Route Visual Probe", mount ? "pass" : "fail", "Audralia mount exists", mount ? "#audraliaRenderMount found." : "Audralia mount not found.");
-        addCheck("Live Route Visual Probe", canvas ? "pass" : "fail", "Audralia canvas exists", canvas ? "Route canvas found." : "No route canvas found.");
-
-        const routeReceipt = String(routeStatus && routeStatus.receipt ? routeStatus.receipt : "");
-        const runtimeVersion = String(routeStatus && routeStatus.runtimeVersion ? routeStatus.runtimeVersion : "");
-        const runtimeLoaded = Boolean(routeStatus && routeStatus.runtimeLoaded);
-        const runtimeInstanceLoaded = Boolean(routeStatus && routeStatus.runtimeInstanceLoaded);
-
-        addCheck(
-          "Live Route Visual Probe",
-          routeReceipt === CONTRACTS.route ? "pass" : "held",
-          "Route compositor current",
-          routeReceipt || "Route status receipt not exposed."
         );
 
-        addCheck(
-          "Live Route Visual Probe",
-          runtimeVersion === CONTRACTS.runtime ? "pass" : "held",
-          "Route requests current runtime",
-          runtimeVersion || "Route runtime version not exposed."
+        const label = mount ? mount.querySelector(".audralia-globe-label") : null;
+        live.labelText = label ? label.textContent.trim() : "";
+
+        addResult(
+          "Live Handoff + Route Probe",
+          live.labelText ? "pass" : "held",
+          "Audralia label visible",
+          live.labelText || "No label text captured.",
+          { labelText: live.labelText }
         );
 
-        addCheck(
-          "Live Route Visual Probe",
-          runtimeLoaded || runtimeInstanceLoaded ? "pass" : "held",
-          "Route reports runtime loaded",
-          `runtimeLoaded=${runtimeLoaded} runtimeInstanceLoaded=${runtimeInstanceLoaded}`
-        );
+        if (canvas) {
+          live.canvasStats = readCanvasStats(canvas);
 
-        if (canvasStats) {
-          addCheck(
-            "Live Route Visual Probe",
-            canvasStats.landPixelRatio >= TARGETS.visualLandPixelMin ? "pass" : "fail",
-            "Route canvas shows exposed land pixels",
-            `landPixelRatio=${percent(canvasStats.landPixelRatio)} visual threshold=${percent(TARGETS.visualLandPixelMin)}`,
-            canvasStats
+          const nonBlank = live.canvasStats && live.canvasStats.opaqueSamples > 0 && live.canvasStats.blankRatio < 0.98;
+
+          addResult(
+            "Canvas Pixel Proof",
+            nonBlank ? "pass" : "fail",
+            "Canvas is nonblank",
+            nonBlank
+              ? `opaqueRatio=${percent(live.canvasStats.opaqueRatio)} blankRatio=${percent(live.canvasStats.blankRatio)}`
+              : "Canvas is blank or unreadable.",
+            live.canvasStats
           );
 
-          addCheck(
-            "Live Route Visual Probe",
-            canvasStats.solidSurfacePixelRatio >= TARGETS.visualLandPixelMin ? "pass" : "fail",
-            "Route canvas shows solid surface pixels",
-            `solidSurfacePixelRatio=${percent(canvasStats.solidSurfacePixelRatio)} includes exposed land plus visible ice/highlight classification.`
+          addResult(
+            "Canvas Pixel Proof",
+            live.canvasStats && live.canvasStats.waterPixelRatio > 0.10 ? "pass" : "held",
+            "Canvas water pixels visible",
+            live.canvasStats ? `waterPixelRatio=${percent(live.canvasStats.waterPixelRatio)}` : "No canvas stats.",
+            live.canvasStats
           );
 
-          addCheck(
-            "Live Route Visual Probe",
-            canvasStats.waterPixelRatio >= TARGETS.visualWaterPixelMin ? "pass" : "fail",
-            "Route canvas shows visible water pixels",
-            `waterPixelRatio=${percent(canvasStats.waterPixelRatio)} visual threshold=${percent(TARGETS.visualWaterPixelMin)}`
+          addResult(
+            "Canvas Pixel Proof",
+            live.canvasStats && live.canvasStats.solidSurfacePixelRatio > 0.015 ? "pass" : "held",
+            "Canvas solid surface pixels visible",
+            live.canvasStats ? `solidSurfacePixelRatio=${percent(live.canvasStats.solidSurfacePixelRatio)}` : "No canvas stats.",
+            live.canvasStats
           );
 
-          addCheck(
-            "Live Route Visual Probe",
-            canvasStats.turquoisePixelRatio > 0.005 ? "pass" : "held",
-            "Route canvas shows shelf/coastal turquoise",
-            `turquoisePixelRatio=${percent(canvasStats.turquoisePixelRatio)}`
+          addResult(
+            "Canvas Pixel Proof",
+            live.canvasStats && live.canvasStats.turquoisePixelRatio > 0.015 ? "pass" : "held",
+            "Canvas turquoise / shelf signal visible",
+            live.canvasStats ? `turquoisePixelRatio=${percent(live.canvasStats.turquoisePixelRatio)}` : "No canvas stats.",
+            live.canvasStats
           );
         }
 
-        addCheck("Live Route Visual Probe", "info", "Route visual probe payload", "Captured mount, route status, label, and canvas-pixel evidence.", routeData);
-
-        state.route = routeData;
-        return routeData;
+        addResult(
+          "Live Handoff + Route Probe",
+          "info",
+          "Live route payload",
+          "Captured route/mount/status/canvas payload.",
+          live
+        );
       } catch (error) {
-        addCheck("Live Route Visual Probe", "fail", "Live route probe readable", "Route probe failed.", {
-          message: String(error && error.message ? error.message : error)
-        });
-        return null;
-      } finally {
-        iframe.remove();
-      }
-    }
-
-    async function auditSources() {
-      await Promise.all(Object.entries(PATHS).map(([name, url]) => fetchSource(name, url)));
-
-      const sourceList = [
-        ["route", "route source reachable", PATHS.route, "fail"],
-        ["routeScript", "routeScript source reachable", PATHS.routeScript, "fail"],
-        ["runtime", "runtime source reachable", PATHS.runtime, "fail"],
-        ["tectonics", "tectonics parent source reachable", PATHS.tectonics, "debt"],
-        ["topology", "topology source reachable", PATHS.topology, "fail"],
-        ["terrain", "terrain source reachable", PATHS.terrain, "held"],
-        ["hydration", "hydration source reachable", PATHS.hydration, "held"],
-        ["oceans", "oceans source reachable", PATHS.oceans, "held"]
-      ];
-
-      sourceList.forEach(([name, label, url, failStatus]) => {
-        const source = state.source[name];
-        const status = source && source.ok ? "pass" : failStatus;
-
-        addCheck(
-          "Source + Contract Baseline",
-          status,
-          label,
-          source && source.ok
-            ? `${url} returned ${source.status}.`
-            : `${url} failed or was unreadable.`,
-          source && source.ok ? null : source
+        addResult(
+          "Live Handoff + Route Probe",
+          "fail",
+          "Live route probe crashed",
+          String(error && error.message ? error.message : error),
+          { error: String(error && error.stack ? error.stack : error) }
         );
-      });
-
-      addCheck("Source + Contract Baseline", sourceHas("route", CONTRACTS.html) ? "pass" : "held", "HTML contract current", CONTRACTS.html);
-      addCheck("Source + Contract Baseline", sourceHas("routeScript", CONTRACTS.route) ? "pass" : "held", "Route script contract current", CONTRACTS.route);
-      addCheck("Source + Contract Baseline", sourceHas("runtime", CONTRACTS.runtime) ? "pass" : "fail", "Runtime contract current", CONTRACTS.runtime);
-      addCheck("Source + Contract Baseline", sourceHas("runtime", CONTRACTS.runtimeImportSafe) ? "pass" : "held", "Runtime import-safe stabilizer visible", CONTRACTS.runtimeImportSafe);
-      addCheck("Source + Contract Baseline", sourceHas("runtime", CONTRACTS.runtimeLandRatio) ? "pass" : "held", "Runtime land-ratio alignment visible", CONTRACTS.runtimeLandRatio);
-      addCheck("Source + Contract Baseline", sourceHas("tectonics", CONTRACTS.tectonics) ? "pass" : "debt", "Tectonics parent contract present", CONTRACTS.tectonics);
-      addCheck("Source + Contract Baseline", sourceHas("topology", CONTRACTS.topology) || sourceHas("topology", CONTRACTS.topologyCompat) ? "pass" : "fail", "Topology child contract current", `${CONTRACTS.topology} / ${CONTRACTS.topologyCompat}`);
-      addCheck("Source + Contract Baseline", sourceHas("terrain", CONTRACTS.terrain) ? "pass" : "held", "Terrain grandchild contract current", CONTRACTS.terrain);
-      addCheck("Source + Contract Baseline", sourceHas("hydration", CONTRACTS.hydration) ? "pass" : "held", "Hydration parent contract current", CONTRACTS.hydration);
-      addCheck("Source + Contract Baseline", sourceHas("hydration", "./oceans.render.js") || sourceHas("oceans", CONTRACTS.oceans) ? "pass" : "held", "Hydration / oceans child linked", "Hydration should consume or expose oceans child.");
-    }
-
-    function decideGeneration() {
-      const stats = state.runtime && state.runtime.stats ? state.runtime.stats : null;
-      const routeStats = state.route && state.route.canvasStats ? state.route.canvasStats : null;
-
-      const runtimeImported = Boolean(state.runtime);
-      const sourceTopology = state.source.topology && state.source.topology.ok;
-      const sourceTectonics = state.source.tectonics && state.source.tectonics.ok;
-
-      const solidSurfaceLandRatio = Number(stats && stats.solidSurfaceLandRatio) || 0;
-      const topologyLandRatio = Number(stats && stats.topologyLandRatio) || 0;
-      const visibleLandRatio = Number(stats && stats.visibleLandRatio) || 0;
-      const liquidWaterRatio = Number(stats && stats.liquidWaterRatio) || 0;
-      const fallbackSamples = Number(stats && stats.fallbackSamples) || 0;
-      const hydratedSamples = Number(stats && stats.hydratedSamples) || 0;
-
-      const routeLandPixels = Number(routeStats && routeStats.landPixelRatio) || 0;
-      const routeSolidSurfacePixels = Number(routeStats && routeStats.solidSurfacePixelRatio) || routeLandPixels;
-      const routeWaterPixels = Number(routeStats && routeStats.waterPixelRatio) || 0;
-
-      const sourceReady = sourceTopology;
-      const sourceDebt = !sourceTectonics;
-
-      const runtimeReady =
-        runtimeImported &&
-        solidSurfaceLandRatio >= TARGETS.landMin &&
-        solidSurfaceLandRatio <= TARGETS.landMax &&
-        topologyLandRatio >= TARGETS.landMin &&
-        topologyLandRatio <= TARGETS.landMax &&
-        fallbackSamples === 0;
-
-      const hydrationReady = runtimeImported && hydratedSamples > 0 && liquidWaterRatio > 0.60;
-
-      const routeVisualReady =
-        routeSolidSurfacePixels >= TARGETS.visualLandPixelMin &&
-        routeWaterPixels >= TARGETS.visualWaterPixelMin;
-
-      addCheck(
-        "Generation + Baseline State",
-        sourceReady ? "pass" : "fail",
-        "G1 topology source deployed",
-        sourceReady ? "Topology source is reachable." : "Topology source is not reachable."
-      );
-
-      addCheck(
-        "Generation + Baseline State",
-        sourceDebt ? "debt" : "pass",
-        "G1 tectonics parent source debt",
-        sourceDebt
-          ? "Tectonics parent route is still missing, but runtime and route can compute from current topology/runtime."
-          : "Tectonics parent source is reachable."
-      );
-
-      addCheck(
-        "Generation + Baseline State",
-        runtimeReady ? "pass" : "fail",
-        "G2 solid-surface land baseline current",
-        runtimeReady
-          ? `solidSurfaceLandRatio=${percent(solidSurfaceLandRatio)} topologyLandRatio=${percent(topologyLandRatio)} visibleTerrainLandRatio=${percent(visibleLandRatio)} fallbackSamples=${fallbackSamples}`
-          : `solidSurfaceLandRatio=${percent(solidSurfaceLandRatio)} topologyLandRatio=${percent(topologyLandRatio)} visibleTerrainLandRatio=${percent(visibleLandRatio)} fallbackSamples=${fallbackSamples}`
-      );
-
-      addCheck(
-        "Generation + Baseline State",
-        hydrationReady ? "pass" : "fail",
-        "G4 hydration/liquid-water baseline active",
-        hydrationReady
-          ? `hydratedSamples=${Number(hydratedSamples).toLocaleString()} liquidWaterRatio=${percent(liquidWaterRatio)}`
-          : "Hydration not confirmed from runtime field."
-      );
-
-      addCheck(
-        "Generation + Baseline State",
-        routeVisualReady ? "pass" : "fail",
-        "G5 visible route land/water baseline active",
-        routeVisualReady
-          ? `route solid surface pixels=${percent(routeSolidSurfacePixels)} route water pixels=${percent(routeWaterPixels)}`
-          : `route solid surface pixels=${percent(routeSolidSurfacePixels)} route water pixels=${percent(routeWaterPixels)}`
-      );
-
-      addCheck(
-        "Generation + Baseline State",
-        runtimeReady && routeVisualReady ? "held" : "info",
-        "G6 surface sampling / terrain refinement",
-        runtimeReady && routeVisualReady
-          ? "Held as next target: reduce blockiness, smooth coastline, preserve solid-surface ratio."
-          : "Not ready until runtime and route visual proof both pass."
-      );
-
-      let title;
-      let body;
-
-      if (!runtimeImported) {
-        title = "Runtime import is the active blocker.";
-        body = "The route cannot prove land/water truth until /assets/audralia/audralia.runtime.js imports successfully.";
-      } else if (!runtimeReady) {
-        title = "Runtime imports, but solid-surface land proof is not in target band.";
-        body = "The next target remains runtime/topology ratio alignment, not route styling.";
-      } else if (!routeVisualReady) {
-        title = "Runtime has the solid-surface land ratio, but route visual proof is weak.";
-        body = "The next target is route compositor consumption or canvas paint classification.";
-      } else if (sourceDebt) {
-        title = "Audralia solid-surface land baseline is active; tectonics parent remains source debt.";
-        body = "Runtime and route now agree. The next move is either tectonics parent source restoration or G6 surface sampling/terrain refinement.";
-      } else {
-        title = "Audralia land-ratio baseline is active.";
-        body = "Runtime and route visual proof agree. Next target: surface sampling and terrain refinement, not runtime rebuild.";
+      } finally {
+        frame.remove();
       }
 
-      state.generation = {
-        sourceReady,
-        sourceDebt,
-        runtimeReady,
-        hydrationReady,
-        routeVisualReady,
-        solidSurfaceLandRatio,
-        topologyLandRatio,
-        visibleLandRatio,
-        liquidWaterRatio,
-        routeSolidSurfacePixels,
-        routeWaterPixels,
-        title,
-        body
+      state.payload.live = live;
+      return live;
+    }
+
+    function readRuntimeApi(module) {
+      return module && module.default && typeof module.default === "object" ? module.default : module;
+    }
+
+    function createRuntimeInstance(runtimeApi) {
+      if (runtimeApi && typeof runtimeApi.createAudraliaRuntime === "function") {
+        return runtimeApi.createAudraliaRuntime({
+          fieldWidth: 384,
+          fieldHeight: 192
+        });
+      }
+
+      return runtimeApi;
+    }
+
+    function safeRuntimeStatus(runtime, runtimeApi) {
+      try {
+        if (runtime && typeof runtime.getStatus === "function") return runtime.getStatus();
+        if (runtimeApi && typeof runtimeApi.getStatus === "function") return runtimeApi.getStatus();
+      } catch (error) {
+        return { ok: false, error: String(error && error.message ? error.message : error) };
+      }
+
+      return { ok: true, note: "status method absent; import object exists" };
+    }
+
+    function safeRuntimeStats(runtime, runtimeApi) {
+      try {
+        if (runtime && typeof runtime.getRuntimeStats === "function") return runtime.getRuntimeStats();
+        if (runtime && typeof runtime.getStats === "function") return runtime.getStats();
+        if (runtimeApi && typeof runtimeApi.getRuntimeStats === "function") return runtimeApi.getRuntimeStats();
+        if (runtimeApi && typeof runtimeApi.getStats === "function") return runtimeApi.getStats();
+      } catch (error) {
+        return { error: String(error && error.message ? error.message : error) };
+      }
+
+      return null;
+    }
+
+    function sampleRuntime(runtime, runtimeApi, u, v) {
+      const input = { u, v, x: u, y: v };
+
+      try {
+        if (runtime && typeof runtime.sampleRuntimeState === "function") return runtime.sampleRuntimeState(input);
+        if (runtime && typeof runtime.sampleAudraliaPlanetState === "function") return runtime.sampleAudraliaPlanetState(input);
+        if (runtime && typeof runtime.sampleSurface === "function") return runtime.sampleSurface(input);
+
+        if (runtimeApi && typeof runtimeApi.sampleRuntimeState === "function") return runtimeApi.sampleRuntimeState(input);
+        if (runtimeApi && typeof runtimeApi.sampleAudraliaPlanetState === "function") return runtimeApi.sampleAudraliaPlanetState(input);
+        if (runtimeApi && typeof runtimeApi.sampleSurface === "function") return runtimeApi.sampleSurface(input);
+      } catch (error) {
+        return { routeSampleError: true, error: String(error && error.message ? error.message : error) };
+      }
+
+      return null;
+    }
+
+    function sampleNumber(sample, keys, fallback = 0) {
+      if (!sample || typeof sample !== "object") return fallback;
+      for (const key of keys) {
+        const value = Number(sample[key]);
+        if (Number.isFinite(value)) return value;
+      }
+      return fallback;
+    }
+
+    function classifyRuntimeSample(sample) {
+      const text = [
+        sample && sample.visualSurfaceClass,
+        sample && sample.surfaceClass,
+        sample && sample.waterClass
+      ].join(" ");
+
+      const ice = Boolean(
+        sample &&
+          (
+            sample.isIce ||
+            sample.isGlacier ||
+            sample.isSnowpack ||
+            text.includes("ice") ||
+            text.includes("glacier") ||
+            text.includes("snowpack")
+          )
+      );
+
+      const land = Boolean(
+        sample &&
+          (
+            sample.visibleTerrainLand ||
+            sample.landVisibleToRoute ||
+            sample.isLand ||
+            sample.land ||
+            sample.isAboveWaterLandFootprint
+          )
+      );
+
+      const solid = Boolean(
+        sample &&
+          (
+            sample.solidSurfaceLand ||
+            sample.solidSurface ||
+            sample.topologyLandFootprint ||
+            land ||
+            ice
+          )
+      );
+
+      const water = Boolean(
+        sample &&
+          (
+            sample.isOceanWater ||
+            sample.isWater ||
+            sample.waterVisibleToRoute ||
+            sample.waterClass === "ocean_water" ||
+            sample.waterClass === "shelf_water" ||
+            sample.waterClass === "coastal_water" ||
+            sample.waterClass === "terrain_moisture"
+          ) &&
+          !land &&
+          !ice
+      );
+
+      return { ice, land, solid, water };
+    }
+
+    async function auditRuntime() {
+      const runtimePayload = {
+        imported: false,
+        status: null,
+        stats: null,
+        sampledStats: null,
+        error: ""
       };
 
-      currentReadTitle.textContent = title;
-      currentReadBody.textContent = body;
+      let module;
+
+      try {
+        module = await import(`/assets/audralia/audralia.runtime.js?_gauges=${encodeURIComponent(CONTRACT)}&t=${encodeURIComponent(state.auditId)}`);
+        runtimePayload.imported = true;
+      } catch (error) {
+        runtimePayload.error = String(error && error.message ? error.message : error);
+        addResult(
+          "Runtime Field Truth",
+          "fail",
+          "Runtime module imported",
+          "Runtime import failed.",
+          runtimePayload
+        );
+        state.payload.runtime = runtimePayload;
+        return runtimePayload;
+      }
+
+      addResult(
+        "Runtime Field Truth",
+        "pass",
+        "Runtime module imported",
+        "/assets/audralia/audralia.runtime.js imported.",
+        {}
+      );
+
+      const runtimeApi = readRuntimeApi(module);
+      const runtime = createRuntimeInstance(runtimeApi);
+      const status = safeRuntimeStatus(runtime, runtimeApi);
+      const directStats = safeRuntimeStats(runtime, runtimeApi);
+
+      runtimePayload.status = status;
+      runtimePayload.stats = directStats;
+
+      addResult(
+        "Runtime Field Truth",
+        status && status.ok === false ? "held" : "pass",
+        "Runtime status available",
+        status && status.receipt ? status.receipt : "Runtime object is available.",
+        status
+      );
+
+      const sampled = {
+        totalSamples: 0,
+        solidSurfaceLandSamples: 0,
+        liquidWaterSamples: 0,
+        exposedTerrainLandSamples: 0,
+        iceSolidSurfaceSamples: 0,
+        fallbackSamples: 0,
+        terrainReliefSamples: 0,
+        hydratedSamples: 0,
+        visualSurfaceClasses: [],
+        maxTurquoise: 0,
+        maxDepth: 0,
+        maxElevation: 0
+      };
+
+      const classSet = new Set();
+
+      for (let y = 0; y < 64; y += 1) {
+        const v = y / 63;
+        for (let x = 0; x < 128; x += 1) {
+          const u = x / 127;
+          const sample = sampleRuntime(runtime, runtimeApi, u, v);
+
+          sampled.totalSamples += 1;
+
+          if (!sample || sample.routeSampleError) {
+            sampled.fallbackSamples += 1;
+            continue;
+          }
+
+          const cls = classifyRuntimeSample(sample);
+
+          if (cls.solid) sampled.solidSurfaceLandSamples += 1;
+          if (cls.water) sampled.liquidWaterSamples += 1;
+          if (cls.land) sampled.exposedTerrainLandSamples += 1;
+          if (cls.ice) sampled.iceSolidSurfaceSamples += 1;
+
+          if (sample.isHydrated || sample.isWater || sample.isOceanWater) sampled.hydratedSamples += 1;
+
+          const relief = Math.max(
+            sampleNumber(sample, ["terrainReliefIndex", "terrainRelief", "ridgePressure", "mountainPressure"], 0),
+            sampleNumber(sample, ["normalizedElevation", "elevation"], 0)
+          );
+
+          if (relief > 0.08) sampled.terrainReliefSamples += 1;
+
+          const visualClass = sample.visualSurfaceClass || sample.surfaceClass || sample.waterClass || "";
+          if (visualClass) classSet.add(String(visualClass));
+
+          sampled.maxTurquoise = Math.max(sampled.maxTurquoise, sampleNumber(sample, ["coastalTurquoiseIndex", "shelfWaterIndex"], 0));
+          sampled.maxDepth = Math.max(sampled.maxDepth, sampleNumber(sample, ["maxDepth", "oceanDepthIndex", "visibleWaterDepthIndex", "bathymetryHydrationIndex"], 0));
+          sampled.maxElevation = Math.max(sampled.maxElevation, sampleNumber(sample, ["maxElevation", "normalizedElevation", "elevation"], 0));
+        }
+      }
+
+      sampled.visualSurfaceClasses = Array.from(classSet).slice(0, 40);
+      sampled.solidSurfaceLandRatio = sampled.solidSurfaceLandSamples / Math.max(1, sampled.totalSamples);
+      sampled.liquidWaterRatio = sampled.liquidWaterSamples / Math.max(1, sampled.totalSamples);
+      sampled.exposedTerrainLandRatio = sampled.exposedTerrainLandSamples / Math.max(1, sampled.totalSamples);
+      sampled.iceSolidSurfaceRatio = sampled.iceSolidSurfaceSamples / Math.max(1, sampled.totalSamples);
+      sampled.fallbackRatio = sampled.fallbackSamples / Math.max(1, sampled.totalSamples);
+      sampled.terrainReliefRatio = sampled.terrainReliefSamples / Math.max(1, sampled.totalSamples);
+      sampled.hydratedRatio = sampled.hydratedSamples / Math.max(1, sampled.totalSamples);
+
+      const mergedStats = Object.assign({}, sampled, directStats || {});
+      runtimePayload.stats = mergedStats;
+      runtimePayload.sampledStats = sampled;
+
+      const solidRatio = Number(mergedStats.solidSurfaceLandRatio);
+      const waterRatio = Number(mergedStats.liquidWaterRatio);
+      const fallbackRatio = Number(mergedStats.fallbackRatio);
+
+      addResult(
+        "Runtime Field Truth",
+        solidRatio >= 0.27 && solidRatio <= 0.31 ? "pass" : "held",
+        "Solid surface land ratio in target band",
+        `solidSurfaceLandRatio=${percent(solidRatio)} target band=27.00%–31.00%`,
+        mergedStats
+      );
+
+      addResult(
+        "Runtime Field Truth",
+        waterRatio >= 0.69 && waterRatio <= 0.76 ? "pass" : "held",
+        "Liquid water ratio Earth-compatible",
+        `liquidWaterRatio=${percent(waterRatio)} target band=69.00%–76.00%`,
+        mergedStats
+      );
+
+      addResult(
+        "Runtime Field Truth",
+        fallbackRatio === 0 ? "pass" : "fail",
+        "Runtime fallback samples are zero",
+        `fallbackRatio=${percent(fallbackRatio)}`,
+        mergedStats
+      );
+
+      addResult(
+        "Runtime Field Truth",
+        Number(mergedStats.terrainReliefRatio || 0) > 0.02 ? "pass" : "held",
+        "Terrain relief exists",
+        `terrainReliefRatio=${percent(Number(mergedStats.terrainReliefRatio || 0))}`,
+        mergedStats
+      );
+
+      addResult(
+        "Runtime Field Truth",
+        Number(mergedStats.hydratedRatio || 0) > 0.20 ? "pass" : "held",
+        "Hydration signal exists",
+        `hydratedRatio=${percent(Number(mergedStats.hydratedRatio || 0))}`,
+        mergedStats
+      );
+
+      addResult(
+        "Runtime Field Truth",
+        "info",
+        "Runtime payload",
+        "Captured direct runtime stats and sampled runtime stats.",
+        runtimePayload
+      );
+
+      state.payload.runtime = runtimePayload;
+      return runtimePayload;
     }
 
-    function renderResults() {
-      const sections = new Map();
+    function auditGenerationState() {
+      const source = state.payload.sources || {};
+      const live = state.payload.live || {};
+      const runtime = state.payload.runtime || {};
+      const stats = runtime.stats || {};
 
-      state.checks.forEach((check) => {
-        if (!sections.has(check.section)) sections.set(check.section, []);
-        sections.get(check.section).push(check);
-      });
+      const htmlCurrent =
+        source.html &&
+        source.html.ok &&
+        source.html.text &&
+        source.html.text.includes(REQUIRED.html);
 
-      resultSections.innerHTML = Array.from(sections.entries()).map(([section, checks]) => {
-        const sectionPass = checks.filter((item) => item.status === "pass").length;
-        const sectionFail = checks.filter((item) => item.status === "fail").length;
-        const sectionHeld = checks.filter((item) => item.status === "held" || item.status === "debt").length;
+      const routeCurrent =
+        source.route &&
+        source.route.ok &&
+        source.route.text &&
+        (
+          source.route.text.includes(REQUIRED.routeDoorway) ||
+          source.route.text.includes(REQUIRED.routeLegacyReceipt)
+        );
 
-        return `
-          <div class="section">
-            <div class="section-title">
-              <h3>${escapeHtml(section)}</h3>
-              <small>${sectionPass} pass · ${sectionFail} fail · ${sectionHeld} held/debt</small>
-            </div>
+      const canvasCurrent =
+        source.canvas &&
+        source.canvas.ok &&
+        source.canvas.text &&
+        source.canvas.text.includes(REQUIRED.canvas);
 
-            <div class="checks">
-              ${checks.map((check) => `
-                <article class="check ${escapeHtml(check.status)}">
-                  <div><span class="badge">${escapeHtml(check.status)}</span></div>
-                  <div>
-                    <strong>${escapeHtml(check.label)}</strong>
-                    <span>${escapeHtml(check.detail)}</span>
-                    ${check.data ? `
-                      <details>
-                        <summary>details</summary>
-                        <pre>${escapeHtml(JSON.stringify(check.data, null, 2))}</pre>
-                      </details>
-                    ` : ""}
-                  </div>
-                </article>
-              `).join("")}
-            </div>
-          </div>
-        `;
-      }).join("");
+      const hexCurrent =
+        source.hex &&
+        source.hex.ok &&
+        source.hex.text &&
+        source.hex.text.includes(REQUIRED.hex);
 
-      const total = state.checks.length;
-      const pass = state.checks.filter((item) => item.status === "pass").length;
-      const fail = state.checks.filter((item) => item.status === "fail").length;
-      const held = state.checks.filter((item) => item.status === "held" || item.status === "debt").length;
-      const score = total ? Math.round((pass / total) * 100) : 0;
+      const runtimeCurrent =
+        runtime.imported &&
+        Number(stats.fallbackRatio || 0) === 0;
 
-      totalCount.textContent = String(total);
-      passCount.textContent = String(pass);
-      failCount.textContent = String(fail);
-      heldCount.textContent = String(held);
-      readiness.textContent = `${score}%`;
+      const canvasVisible =
+        live.canvasExists &&
+        live.canvasStats &&
+        live.canvasStats.opaqueSamples > 0 &&
+        live.canvasStats.blankRatio < 0.98;
+
+      addResult(
+        "Generation + Baseline State",
+        htmlCurrent ? "pass" : "fail",
+        "G0 HTML adopted-canvas handoff current",
+        htmlCurrent ? REQUIRED.html : "HTML did not expose adopted-canvas handoff receipt.",
+        { htmlCurrent }
+      );
+
+      addResult(
+        "Generation + Baseline State",
+        routeCurrent ? "pass" : "fail",
+        "G1 doorway route source current",
+        routeCurrent ? "Route doorway/source receipt visible." : "Route doorway receipt not visible.",
+        { routeCurrent }
+      );
+
+      addResult(
+        "Generation + Baseline State",
+        canvasCurrent ? "pass" : "fail",
+        "G2 adopted canvas authority current",
+        canvasCurrent ? REQUIRED.canvas : "Canvas authority receipt missing.",
+        { canvasCurrent }
+      );
+
+      addResult(
+        "Generation + Baseline State",
+        hexCurrent ? "pass" : "held",
+        "G3 asset hex surface child current",
+        hexCurrent ? REQUIRED.hex : "Hex child receipt missing or not required by active canvas.",
+        { hexCurrent }
+      );
+
+      addResult(
+        "Generation + Baseline State",
+        runtimeCurrent ? "pass" : "fail",
+        "G4 runtime truth active",
+        runtimeCurrent ? "Runtime imports and fallback samples are zero." : "Runtime import/fallback proof failed.",
+        { runtimeCurrent, stats }
+      );
+
+      addResult(
+        "Generation + Baseline State",
+        canvasVisible ? "pass" : "fail",
+        "G5 visible route canvas active",
+        canvasVisible
+          ? `opaqueRatio=${percent(live.canvasStats.opaqueRatio)} water=${percent(live.canvasStats.waterPixelRatio)} solid=${percent(live.canvasStats.solidSurfacePixelRatio)}`
+          : "Visible route canvas proof failed.",
+        live.canvasStats || live
+      );
+
+      if (source.tectonicsParent && !source.tectonicsParent.ok) {
+        addResult(
+          "Generation + Baseline State",
+          "debt",
+          "G1 tectonics parent source debt",
+          "Tectonics parent source remains missing. This is debt unless next generation requires parent restoration.",
+          source.tectonicsParent
+        );
+      }
     }
 
     async function runAudit() {
-      state.auditId = `audit_${Date.now().toString(36)}`;
-      state.checks = [];
-      state.source = {};
-      state.runtime = null;
-      state.route = null;
-      state.generation = null;
+      state.auditId = CACHE_KEY();
+      state.results = [];
+      state.payload = {};
 
-      runButton.disabled = true;
-      runButton.textContent = "Running...";
-      timestamp.textContent = `Running ${state.auditId}...`;
-      currentReadTitle.textContent = "Audit running.";
-      currentReadBody.textContent = "Fetching source, importing runtime, building runtime field, and probing live route canvas.";
-      resultSections.innerHTML = "";
+      document.getElementById("auditHeadline").textContent = "Audit running.";
+      document.getElementById("auditInterpretation").textContent =
+        "Fetching sources, importing runtime, probing live route, and sampling canvas pixels.";
+      document.getElementById("lastAudit").textContent = `Running · ${state.auditId}`;
+      document.getElementById("resultRoot").innerHTML = "";
 
-      try {
-        await auditSources();
-        await auditRuntime();
-        await probeRoute();
-        decideGeneration();
-      } finally {
-        timestamp.textContent = `Last audit: ${new Date().toLocaleString()} · ${state.auditId}`;
-        runButton.disabled = false;
-        runButton.textContent = "Run Audralia Audit";
-        renderResults();
-      }
+      addResult(
+        "Audit Contract",
+        "info",
+        "Gauges contract",
+        CONTRACT,
+        {
+          route: "/gauges/",
+          readOnly: true,
+          mutatesRuntime: false,
+          mutatesRoute: false,
+          mutatesCanvas: false,
+          graphicBox: false,
+          imageGeneration: false
+        }
+      );
+
+      await auditSources();
+      await auditRuntime();
+      await auditLiveRoute();
+      auditGenerationState();
+
+      renderResults();
+      updateSummary();
+
+      window.DGBAudraliaGaugesAudit = Object.freeze({
+        ok: state.results.filter((x) => x.status === "fail").length === 0,
+        receipt: CONTRACT,
+        auditId: state.auditId,
+        generatedAt: new Date().toISOString(),
+        results: state.results,
+        payload: state.payload
+      });
     }
 
-    runButton.addEventListener("click", runAudit);
+    document.getElementById("runAudit").addEventListener("click", runAudit);
     window.addEventListener("load", () => {
-      window.setTimeout(runAudit, 350);
+      window.setTimeout(runAudit, 250);
     });
   </script>
 </body>

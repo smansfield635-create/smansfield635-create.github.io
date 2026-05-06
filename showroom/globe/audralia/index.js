@@ -1,5 +1,8 @@
 // showroom/globe/audralia/index.js
-// AUDRALIA_ROUTE_ADOPTED_CANVAS_DOORWAY_TNT_v1
+// AUDRALIA_ROUTE_CONSUME_CURRENT_RUNTIME_GENEALOGY_SURFACE_TNT_v1
+//
+// Active renewal:
+// - AUDRALIA_ROUTE_ADOPTED_CANVAS_DOORWAY_TNT_v2
 //
 // Role:
 // - Audralia route doorway only.
@@ -13,12 +16,13 @@
 // - Does not create land.
 // - Does not create water.
 
-const RECEIPT = "AUDRALIA_ROUTE_ADOPTED_CANVAS_DOORWAY_TNT_v1";
-const CANVAS_RECEIPT = "AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v1";
+const RECEIPT = "AUDRALIA_ROUTE_CONSUME_CURRENT_RUNTIME_GENEALOGY_SURFACE_TNT_v1";
+const ACTIVE_RENEWAL = "AUDRALIA_ROUTE_ADOPTED_CANVAS_DOORWAY_TNT_v2";
+const CANVAS_RECEIPT = "AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v2";
 const BODY = "audralia";
 const ROUTE = "/showroom/globe/audralia/";
 const CANVAS_AUTHORITY = "/assets/audralia/audralia.canvas.js";
-const CANVAS_IMPORT_URL = "/assets/audralia/audralia.canvas.js?v=AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v1";
+const CANVAS_IMPORT_URL = "/assets/audralia/audralia.canvas.js?v=AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN_TNT_v2";
 
 function findMount() {
   return (
@@ -35,6 +39,7 @@ function buildRouteStatus(input = {}) {
   return Object.freeze({
     ok: Boolean(input.ok),
     receipt: RECEIPT,
+    activeRenewal: ACTIVE_RENEWAL,
     canvasReceipt: CANVAS_RECEIPT,
     body: BODY,
     route: ROUTE,
@@ -93,7 +98,7 @@ function writeDoorwayDataset(target, status) {
   target.dataset.body = BODY;
   target.dataset.route = ROUTE;
   target.dataset.contract = RECEIPT;
-  target.dataset.activeRenewal = RECEIPT;
+  target.dataset.activeRenewal = ACTIVE_RENEWAL;
   target.dataset.routeMode = "doorway-only";
   target.dataset.canvasAuthority = CANVAS_AUTHORITY;
   target.dataset.canvasAuthorityReceipt = CANVAS_RECEIPT;
@@ -134,6 +139,7 @@ function drawFailure(mount, message, detail) {
   panel.dataset.body = BODY;
   panel.dataset.route = ROUTE;
   panel.dataset.receipt = RECEIPT;
+  panel.dataset.activeRenewal = ACTIVE_RENEWAL;
   panel.dataset.ok = "false";
   panel.dataset.error = message;
   panel.dataset.visualPassClaimed = "false";
@@ -261,6 +267,7 @@ if (document.readyState === "loading") {
 
 export {
   RECEIPT,
+  ACTIVE_RENEWAL,
   CANVAS_RECEIPT,
   bootAudraliaDoorway,
   buildRouteStatus
@@ -268,6 +275,7 @@ export {
 
 export default Object.freeze({
   receipt: RECEIPT,
+  activeRenewal: ACTIVE_RENEWAL,
   canvasReceipt: CANVAS_RECEIPT,
   bootAudraliaDoorway,
   buildRouteStatus

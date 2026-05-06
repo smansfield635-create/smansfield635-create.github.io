@@ -1,801 +1,711 @@
 // /assets/audralia/audralia/tectonics/topology/render.js
-// AUDRALIA_TECTONICS_TOPOLOGY_CHILD_FOOTPRINT_AUTHORITY_TNT_v1
-//
-// Role:
-// - Audralia topology child authority.
-// - Born from tectonics.
-// - Tectonics begot topology.
-// - Topology begot terrain.
-// - Owns land/void footprint, sea-level boundary, coastline, beach outline, bathymetry, and land-preservation gate.
-// - Does not own terrain relief.
-// - Does not own hydration.
-// - Does not own route rendering.
-//
-// Hard locks:
-// - No DOM mutation.
-// - No route rendering.
-// - No runtime rendering.
-// - No terrain elevation ownership.
-// - No hydration.
-// - No climate.
-// - No ecology.
-// - No foliage.
-// - No trees.
-// - No vegetation.
-// - No animals.
-// - No marine life.
-// - No construct civilization.
-// - No graphic box.
-// - No image generation.
-// - No visual pass claim.
+// AUDRALIA_TOPOLOGY_DOWNSTREAM_REBASE_TNT_v13
+// Full-file replacement. Topology authority only.
+// Purpose: define Audralia land/void/sea-level/coastline footprint for downstream terrain, hydration, oceans, deep-ocean, runtime, and canvas.
+// Topology owns: land/void footprint, sea-level boundary, coastline bands, beaches/shelf seeds, topology proof.
+// Topology does not own: terrain relief, hydration fill, ocean depth, deep-ocean biology, canvas drawing, route shell, Gauges scoring, GraphicBox, image generation.
 
-import {
-  sampleTectonics,
-  buildTectonicsField,
-  getTectonicsSampleFromField,
-  getTectonicsStatus
-} from "../render.js?v=AUDRALIA_TECTONICS_DERIVATIVE_ORIGIN_PARENT_TNT_v1";
+const AUDRALIA_TOPOLOGY_RECEIPT = "AUDRALIA_TOPOLOGY_DOWNSTREAM_REBASE_TNT_v13";
+const AUDRALIA_TOPOLOGY_COMPATIBILITY_RECEIPT = "AUDRALIA_TOPOLOGY_CONTINUOUS_LAND_VOID_BOUNDARY_SWEEP_TNT_v2";
 
-const RECEIPT = "AUDRALIA_TECTONICS_TOPOLOGY_CHILD_FOOTPRINT_AUTHORITY_TNT_v1";
+const TAU = Math.PI * 2;
+const HALF_PI = Math.PI / 2;
 
-const PLANETARY_OBJECT = "Audralia";
-const GENERATION = "G1_TOPOLOGY_CHILD_OF_TECTONICS";
-const FILE = "/assets/audralia/audralia/tectonics/topology/render.js";
+const TARGET_SOLID_SURFACE_RATIO = 0.292;
+const TARGET_SOLID_SURFACE_RATIO_MIN = 0.27;
+const TARGET_SOLID_SURFACE_RATIO_MAX = 0.31;
+const TARGET_LIQUID_VOID_RATIO = 0.708;
+const TARGET_LIQUID_VOID_RATIO_MIN = 0.69;
+const TARGET_LIQUID_VOID_RATIO_MAX = 0.76;
 
-const TARGET_EXPOSED_LAND_RATIO = 0.292;
+const STATUS = {
+  ok: true,
+  receipt: AUDRALIA_TOPOLOGY_RECEIPT,
+  compatibilityReceipt: AUDRALIA_TOPOLOGY_COMPATIBILITY_RECEIPT,
+  activeRenewal: "AUDRALIA_TOPOLOGY_DOWNSTREAM_REBASE_CONTRACT_v13",
+  file: "assets/audralia/audralia/tectonics/topology/render.js",
+  role: "audralia-topology-land-void-sea-level-authority",
+  lineage: "tectonics→topology→terrain→hydration→oceans→deep-ocean→runtime→canvas-renderer→route",
 
-const TOPOLOGY_LAW = Object.freeze({
-  genealogy: "tectonics→topology→terrain",
-  childOfTectonics: true,
-  begotTerrain: true,
+  topologyOwnsLandVoid: true,
+  topologyOwnsSeaLevelBoundary: true,
+  topologyOwnsCoastlineSeed: true,
+  topologyOwnsBeachSeed: true,
+  topologyOwnsShelfSeed: true,
 
-  parentTectonics: "/assets/audralia/audralia/tectonics/render.js",
-  terrainGrandchildExpected: "/assets/audralia/audralia/tectonics/topology/terrain.render.js",
+  topologyDefinesTerrainRelief: false,
+  topologyDefinesHydrationFill: false,
+  topologyDefinesOceanDepth: false,
+  topologyDefinesDeepOcean: false,
+  topologyDefinesClimate: false,
+  topologyDrawsCanvas: false,
 
-  ownsTopology: true,
-  ownsLandVoidFootprint: true,
-  ownsSeaLevelBoundary: true,
-  ownsCoastline: true,
-  ownsBeachOutline: true,
-  ownsBathymetryBlueprint: true,
-  ownsSubterraneanBlueprint: true,
-  ownsLandPreservationGate: true,
+  targetSolidSurfaceRatio: TARGET_SOLID_SURFACE_RATIO,
+  targetSolidSurfaceRatioMin: TARGET_SOLID_SURFACE_RATIO_MIN,
+  targetSolidSurfaceRatioMax: TARGET_SOLID_SURFACE_RATIO_MAX,
+  targetLiquidVoidRatio: TARGET_LIQUID_VOID_RATIO,
+  targetLiquidVoidRatioMin: TARGET_LIQUID_VOID_RATIO_MIN,
+  targetLiquidVoidRatioMax: TARGET_LIQUID_VOID_RATIO_MAX,
 
-  ownsTectonics: false,
-  ownsTerrain: false,
-  ownsTerrainElevation: false,
-  ownsHydration: false,
-  ownsWaterFill: false,
-  ownsRouteRendering: false,
-  ownsRuntimeRendering: false,
-  ownsFinalRender: false,
-
-  hydrationMayNotConvertLandToOcean: true,
-  terrainMustNotExpandLandArea: true,
+  landVoidBoundaryActive: true,
+  seaLevelBoundaryActive: true,
+  downstreamReady: true,
+  terrainReadyToConsume: true,
+  hydrationReadyToConsume: true,
+  oceansReadyToConsume: true,
+  deepOceanReadyToConsume: true,
+  runtimeReadyToConsume: true,
 
   graphicBox: false,
   imageGeneration: false,
-  visualPassClaimed: false
-});
+  visualPassClaimed: false,
 
-const DEFAULTS = Object.freeze({
-  fieldWidth: 224,
-  fieldHeight: 112,
-  minFieldWidth: 64,
-  minFieldHeight: 32,
-  maxFieldWidth: 512,
-  maxFieldHeight: 256,
-
-  coastlineComplexity: 0.94,
-  connectionStrength: 0.88,
-  beachOutlineStrength: 0.92,
-  tectonicLandCoupling: 0.92,
-  seaLevelBias: 0,
-  enforceEarthEquivalentLandRatio: true
-});
-
-const LAND_BODIES = Object.freeze([
-  {
-    id: 1,
-    key: "mainland",
-    name: "Mainland",
-    lon: -0.38,
-    lat: 0.10,
-    rx: 0.48,
-    ry: 0.31,
-    weight: 1.12
-  },
-  {
-    id: 2,
-    key: "western_lobe",
-    name: "Western Regional Landmass",
-    lon: -0.76,
-    lat: -0.22,
-    rx: 0.24,
-    ry: 0.25,
-    weight: 0.74
-  },
-  {
-    id: 3,
-    key: "eastern_lobe",
-    name: "Eastern Regional Landmass",
-    lon: 0.44,
-    lat: -0.03,
-    rx: 0.35,
-    ry: 0.28,
-    weight: 0.94
-  },
-  {
-    id: 4,
-    key: "northern_highland",
-    name: "Northern Regional Landmass",
-    lon: 0.05,
-    lat: 0.58,
-    rx: 0.38,
-    ry: 0.20,
-    weight: 0.78
-  },
-  {
-    id: 5,
-    key: "southern_weathered_arc",
-    name: "Southern Regional Landmass",
-    lon: 0.28,
-    lat: -0.62,
-    rx: 0.41,
-    ry: 0.18,
-    weight: 0.80
-  },
-  {
-    id: 6,
-    key: "north_polar_land",
-    name: "North Polar Landmass",
-    lon: 0.00,
-    lat: 0.92,
-    rx: 0.92,
-    ry: 0.095,
-    weight: 0.66
-  },
-  {
-    id: 7,
-    key: "south_polar_land",
-    name: "South Polar Landmass",
-    lon: 0.00,
-    lat: -0.91,
-    rx: 0.92,
-    ry: 0.105,
-    weight: 0.70
+  api: {
+    createAudraliaTopology: true,
+    createAudraliaTopologyAsync: true,
+    sampleTopology: true,
+    sampleAudraliaTopology: true,
+    sampleSurface: true,
+    buildTopologyField: true,
+    getStats: true,
+    getTopologyStats: true,
+    getStatus: true
   }
-]);
+};
+
+let cachedStats = null;
+let cachedAuthority = null;
 
 function clamp(value, min, max) {
-  const n = Number(value);
-  if (!Number.isFinite(n)) return min;
-  return Math.max(min, Math.min(max, n));
+  return Math.max(min, Math.min(max, value));
 }
 
-function normalizeDimension(value, fallback, min, max) {
-  return clamp(Math.floor(Number(value) || fallback), min, max);
+function clamp01(value) {
+  return clamp(value, 0, 1);
 }
 
-function normalizeUV(uInput, vInput) {
-  const u = ((Number(uInput) || 0) % 1 + 1) % 1;
-  const v = clamp(Number(vInput) || 0, 0, 1);
+function safeNumber(value, fallback = 0) {
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : fallback;
+}
 
-  return Object.freeze({
+function smoothstep(edge0, edge1, value) {
+  const t = clamp((value - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
+  return t * t * (3 - 2 * t);
+}
+
+function wrapLongitude(lon) {
+  let out = Number.isFinite(lon) ? lon : 0;
+  while (out < -Math.PI) out += TAU;
+  while (out > Math.PI) out -= TAU;
+  return out;
+}
+
+function normalizeCoordinateInput(input, lonArg, uArg, vArg) {
+  if (typeof input === "object" && input !== null) {
+    let lat = Number(input.lat ?? input.latitude ?? input.phi);
+    let lon = Number(input.lon ?? input.lng ?? input.longitude ?? input.theta);
+
+    const u = Number.isFinite(Number(input.u ?? input.x ?? uArg))
+      ? Number(input.u ?? input.x ?? uArg)
+      : 0.5;
+
+    const v = Number.isFinite(Number(input.v ?? input.y ?? vArg))
+      ? Number(input.v ?? input.y ?? vArg)
+      : 0.5;
+
+    if (!Number.isFinite(lat)) lat = (0.5 - v) * Math.PI;
+    if (!Number.isFinite(lon)) lon = (u - 0.5) * TAU;
+
+    if (Math.abs(lat) > HALF_PI + 0.01) lat = lat * Math.PI / 180;
+    if (Math.abs(lon) > TAU + 0.01) lon = lon * Math.PI / 180;
+
+    return {
+      lat: clamp(lat, -HALF_PI, HALF_PI),
+      lon: wrapLongitude(lon),
+      u,
+      v
+    };
+  }
+
+  let lat = Number(input);
+  let lon = Number(lonArg);
+  const u = Number.isFinite(Number(uArg)) ? Number(uArg) : 0.5;
+  const v = Number.isFinite(Number(vArg)) ? Number(vArg) : 0.5;
+
+  if (!Number.isFinite(lat)) lat = (0.5 - v) * Math.PI;
+  if (!Number.isFinite(lon)) lon = (u - 0.5) * TAU;
+
+  if (Math.abs(lat) > HALF_PI + 0.01) lat = lat * Math.PI / 180;
+  if (Math.abs(lon) > TAU + 0.01) lon = lon * Math.PI / 180;
+
+  return {
+    lat: clamp(lat, -HALF_PI, HALF_PI),
+    lon: wrapLongitude(lon),
     u,
-    v,
-    lon: u * 2 - 1,
-    lat: 1 - v * 2
-  });
+    v
+  };
 }
 
-function fract(value) {
-  return value - Math.floor(value);
+function latLonToPoint(lat, lon) {
+  const cosLat = Math.cos(lat);
+
+  return {
+    x: cosLat * Math.sin(lon),
+    y: Math.sin(lat),
+    z: cosLat * Math.cos(lon)
+  };
 }
 
-function mix(a, b, t) {
-  return a + (b - a) * clamp(t, 0, 1);
+function dot(a, b) {
+  return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-function hash2(x, y, seed) {
-  return fract(Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123);
+function sphericalVector(lon, lat) {
+  const cosLat = Math.cos(lat);
+
+  return {
+    x: Math.sin(lon) * cosLat,
+    y: Math.sin(lat),
+    z: Math.cos(lon) * cosLat
+  };
 }
 
-function valueNoise(x, y, seed) {
-  const ix = Math.floor(x);
-  const iy = Math.floor(y);
-  const fx = fract(x);
-  const fy = fract(y);
-
-  const a = hash2(ix, iy, seed);
-  const b = hash2(ix + 1, iy, seed);
-  const c = hash2(ix, iy + 1, seed);
-  const d = hash2(ix + 1, iy + 1, seed);
-
-  const ux = fx * fx * (3 - 2 * fx);
-  const uy = fy * fy * (3 - 2 * fy);
-
-  return mix(mix(a, b, ux), mix(c, d, ux), uy);
+function angularDistance(lonA, latA, lonB, latB) {
+  return Math.acos(clamp(dot(sphericalVector(lonA, latA), sphericalVector(lonB, latB)), -1, 1));
 }
 
-function fbm(x, y, seed, octaves = 4) {
-  let total = 0;
-  let amplitude = 0.5;
-  let frequency = 1;
-  let normalizer = 0;
+function waveNoise(lon, lat, scale, phase) {
+  const a = Math.sin(lon * scale + phase) * 0.38;
+  const b = Math.cos(lat * scale * 0.83 - phase * 0.7) * 0.3;
+  const c = Math.sin((lon + lat) * scale * 0.47 + phase * 1.3) * 0.2;
+  const d = Math.cos((lon - lat) * scale * 0.31 - phase * 0.4) * 0.12;
 
-  for (let i = 0; i < octaves; i += 1) {
-    total += valueNoise(x * frequency, y * frequency, seed + i * 29.31) * amplitude;
-    normalizer += amplitude;
-    amplitude *= 0.5;
-    frequency *= 2;
-  }
-
-  return total / Math.max(0.00001, normalizer);
+  return clamp01(0.5 + 0.5 * (a + b + c + d));
 }
 
-function wrappedLonDistance(a, b) {
-  const direct = Math.abs(a - b);
-  return Math.min(direct, 2 - direct);
+function continentCap(lon, lat, centerLon, centerLat, radius, strength, warp) {
+  const noise = waveNoise(lon + centerLon, lat + centerLat, 4.8, warp);
+  const brokenRadius = radius * (0.9 + noise * 0.2);
+  const distance = angularDistance(lon, lat, centerLon, centerLat);
+  const body = Math.max(0, 1 - distance / Math.max(0.001, brokenRadius));
+
+  return smoothstep(0, 0.92, body) * strength;
 }
 
-function landBodyScore(point, body) {
-  const dx = wrappedLonDistance(point.lon, body.lon) / body.rx;
-  const dy = Math.abs(point.lat - body.lat) / body.ry;
-  const d = Math.sqrt(dx * dx + dy * dy);
-  return clamp((1 - d) * body.weight, 0, 1);
+function plateCurve(lon, lat, centerLon, centerLat, length, thickness, phase, bend, strength) {
+  const dLon = wrapLongitude(lon - centerLon);
+
+  const trail =
+    centerLat +
+    Math.sin(dLon * 1.8 + phase) * bend +
+    Math.sin(dLon * 4.8 - phase) * bend * 0.22;
+
+  const along =
+    smoothstep(-length, -length * 0.76, dLon) *
+    (1 - smoothstep(length * 0.76, length, dLon));
+
+  const cross = 1 - smoothstep(thickness * 0.3, thickness, Math.abs(lat - trail));
+
+  return clamp01(along * cross * strength);
 }
 
-function strongestLandBody(point) {
-  let best = LAND_BODIES[0];
-  let bestScore = 0;
+function topologyRawField(lon, lat) {
+  const broad = waveNoise(lon, lat, 2.2, 0.7);
+  const coastNoise = waveNoise(lon, lat, 7.2, 2.1);
 
-  for (const body of LAND_BODIES) {
-    const score = landBodyScore(point, body);
+  const westernBody =
+    continentCap(lon, lat, -2.55, 0.08, 0.6, 1.08, 1.1) +
+    continentCap(lon, lat, -2.02, -0.18, 0.43, 0.72, 2.2) +
+    continentCap(lon, lat, -2.94, -0.28, 0.31, 0.38, 3.3) +
+    continentCap(lon, lat, -2.35, 0.42, 0.22, 0.28, 15.1);
 
-    if (score > bestScore) {
-      best = body;
-      bestScore = score;
-    }
-  }
+  const centralBody =
+    continentCap(lon, lat, -0.82, -0.04, 0.54, 0.76, 4.4) +
+    continentCap(lon, lat, -0.28, 0.2, 0.36, 0.5, 5.5) +
+    continentCap(lon, lat, 0.28, -0.18, 0.32, 0.38, 6.6) +
+    continentCap(lon, lat, -1.34, -0.46, 0.24, 0.26, 16.2) +
+    continentCap(lon, lat, -1.48, 0.24, 0.2, 0.24, 17.3);
 
-  return Object.freeze({
-    body: best,
-    score: bestScore
-  });
-}
+  const easternBody =
+    continentCap(lon, lat, 1.28, -0.06, 0.45, 0.78, 7.7) +
+    continentCap(lon, lat, 1.84, 0.22, 0.3, 0.42, 8.8) +
+    continentCap(lon, lat, 1.02, -0.42, 0.24, 0.32, 9.9);
 
-function safeTectonics(context, point) {
-  if (context && context.tectonics) return context.tectonics;
-  if (context && context.tectonicsSample) return context.tectonicsSample;
+  const islands =
+    continentCap(lon, lat, 2.52, -0.08, 0.18, 0.28, 10.1) +
+    continentCap(lon, lat, -3.02, 0.24, 0.17, 0.24, 11.2) +
+    continentCap(lon, lat, 0.74, -0.62, 0.18, 0.22, 12.3) +
+    continentCap(lon, lat, -1.24, 0.62, 0.13, 0.16, 14.5);
 
-  if (context && context.tectonicsField) {
-    return getTectonicsSampleFromField(context.tectonicsField, point.u, point.v);
-  }
+  const northPole =
+    smoothstep(1.06, 1.45, lat) *
+    (0.52 + coastNoise * 0.16);
 
-  try {
-    return sampleTectonics(
-      point.u,
-      point.v,
-      context && context.tectonicsContext ? context.tectonicsContext : {}
-    );
-  } catch (error) {
-    return Object.freeze({
-      receipt: "TOPOLOGY_CHILD_FALLBACK_TECTONICS",
-      fallbackUsed: true,
-      error: error && error.message ? error.message : String(error),
+  const southPole =
+    smoothstep(1.06, 1.45, -lat) *
+    (0.5 + coastNoise * 0.16);
 
-      crustalStressIndex: 0,
-      ancientCrustStabilityIndex: 0,
-      primordialMountainMemoryIndex: 0,
-      weatheredRemnantIndex: 0,
-      mountainChainPermission: 0,
-      canyonPermission: 0,
-      cliffPermission: 0,
-      upliftPermission: 0,
-      trenchReinforcementPermission: 0,
-      terrainPressureHandoff: 0,
-
-      diamondPressureIndex: 0,
-      opalSeamIndex: 0,
-      graniteCratonIndex: 0,
-      slateFoldBeltIndex: 0,
-      exposedMineralHardnessIndex: 0,
-
-      visualPassClaimed: false
-    });
-  }
-}
-
-function classifyDepth(depth) {
-  if (depth > 0.78) return "trench_ocean";
-  if (depth > 0.58) return "deep_ocean";
-  if (depth > 0.36) return "open_ocean";
-  if (depth > 0.18) return "shelf_water";
-  return "nearshore_water";
-}
-
-function sampleRawTopology(point, tectonics, context) {
-  const broad = fbm(point.lon * 3.1 + 1.7, point.lat * 3.1 - 2.4, 3001, 5);
-  const coast = fbm(point.lon * 12.6 - 4.8, point.lat * 12.6 + 1.1, 3011, 4);
-  const detail = fbm(point.lon * 26.0 + 0.4, point.lat * 26.0 - 0.9, 3029, 3);
-  const islandNoise = fbm(point.lon * 38.0 + 2.8, point.lat * 38.0 + 5.6, 3047, 3);
-
-  const bodyResult = strongestLandBody(point);
-
-  const tectonicLift = clamp(
-    Number(tectonics.terrainPressureHandoff) * 0.34 +
-      Number(tectonics.mountainChainPermission) * 0.20 +
-      Number(tectonics.crustalStressIndex) * 0.18 +
-      Number(tectonics.upliftPermission) * 0.16 +
-      Number(tectonics.exposedMineralHardnessIndex) * 0.12,
-    0,
-    1
+  const bodyField = Math.max(
+    westernBody,
+    centralBody,
+    easternBody,
+    islands,
+    northPole,
+    southPole
   );
 
-  const polarSeat = Math.abs(point.lat) > 0.84
-    ? clamp((Math.abs(point.lat) - 0.84) / 0.16, 0, 1)
-    : 0;
+  const inheritedTectonicRidgeSeed =
+    plateCurve(lon, lat, -2.2, -0.04, 0.95, 0.095, 0.6, 0.16, 0.18) +
+    plateCurve(lon, lat, -0.35, 0.02, 0.88, 0.085, -1.2, 0.12, 0.16) +
+    plateCurve(lon, lat, 1.48, 0.06, 0.74, 0.08, 2.1, 0.1, 0.14);
 
-  const arcConnector =
-    clamp(1 - Math.abs(point.lat - (-0.14 + 0.10 * Math.sin((point.lon + 0.24) * Math.PI * 2.0))) * 6.8, 0, 1) *
-    clamp(1 - Math.abs(point.lon + 0.12) * 0.76, 0, 1);
+  const tectonicMemory =
+    Math.sin(lon * 3.8 + lat * 2.1) * 0.035 +
+    Math.sin(lon * -5.2 + lat * 4.2) * 0.02;
 
-  const smallIslandPermission = clamp(
-    Math.max(0, islandNoise - 0.62) * 1.8 +
-      Number(tectonics.boundaryPressure) * 0.22 +
-      Number(tectonics.trenchReinforcementPermission) * 0.12,
-    0,
-    1
-  );
-
-  const landPotential = clamp(
-    bodyResult.score * 0.58 +
-      tectonicLift * 0.20 +
-      broad * 0.12 +
-      (coast - 0.5) * 0.10 +
-      (detail - 0.5) * 0.06 +
-      arcConnector * 0.10 +
-      smallIslandPermission * 0.06 +
-      polarSeat * 0.24,
-    0,
-    1
-  );
-
-  const seaLevelThreshold = clamp(
-    0.49 +
-      Number(context && context.seaLevelBias ? context.seaLevelBias : 0) +
-      (context && context.enforceEarthEquivalentLandRatio === false ? -0.04 : 0),
-    0.41,
-    0.64
-  );
-
-  return Object.freeze({
-    landPotential,
-    seaLevelThreshold,
-    bodyResult,
+  return {
+    raw:
+      bodyField +
+      inheritedTectonicRidgeSeed +
+      (broad - 0.5) * 0.14 +
+      (coastNoise - 0.5) * 0.1 +
+      tectonicMemory,
+    bodyField,
+    westernBody,
+    centralBody,
+    easternBody,
+    islands,
+    northPole,
+    southPole,
+    inheritedTectonicRidgeSeed,
+    tectonicMemory,
     broad,
-    coast,
-    detail,
-    islandNoise,
-    tectonicLift,
-    polarSeat,
-    arcConnector,
-    smallIslandPermission
-  });
+    coastNoise
+  };
 }
 
-function surfaceClassIdFor(surfaceClass) {
-  if (surfaceClass === "polar_ice_footprint") return 12;
-  if (surfaceClass === "beach_outline_land") return 8;
-  if (surfaceClass === "topology_land_footprint") return 7;
-  if (surfaceClass === "nearshore_shelf_void") return 5;
-  if (surfaceClass === "trench_ocean") return 4;
-  if (surfaceClass === "deep_ocean") return 3;
-  if (surfaceClass === "open_ocean") return 2;
-  if (surfaceClass === "nearshore_water") return 1;
-  return 0;
+function classifyLandmass(raw) {
+  if (raw.northPole > 0.18) return "north-polar-cap";
+  if (raw.southPole > 0.18) return "south-polar-cap";
+
+  const bodyScores = [
+    ["western-mainland-lobe", raw.westernBody],
+    ["central-mainland-lobe", raw.centralBody],
+    ["eastern-region-lobe", raw.easternBody],
+    ["island-territory", raw.islands]
+  ];
+
+  bodyScores.sort((a, b) => b[1] - a[1]);
+  return bodyScores[0][1] > 0.08 ? bodyScores[0][0] : "open-void";
 }
 
-export function sampleTopology(uInput, vInput, context = {}) {
-  const point = normalizeUV(uInput, vInput);
-  const options = Object.freeze({ ...DEFAULTS, ...(context || {}) });
-  const tectonics = safeTectonics(options, point);
-  const raw = sampleRawTopology(point, tectonics, options);
-
-  const margin = raw.landPotential - raw.seaLevelThreshold;
-  const isLand = margin > 0;
-  const isBeach = Math.abs(margin) <= 0.055;
-  const isShelf = !isLand && margin > -0.12;
-  const isPolarIce = Math.abs(point.lat) > 0.88;
-  const isSouthPolarIce = point.lat < -0.88;
-  const isNorthPolarIce = point.lat > 0.88;
-
-  const oceanDepthIndex = isLand
-    ? 0
-    : clamp(
-        Math.abs(margin) * 1.7 +
-          Number(tectonics.trenchReinforcementPermission) * 0.24 +
-          (1 - raw.broad) * 0.18,
-        0,
-        1
-      );
-
-  const bathymetryBlueprintIndex = isLand
-    ? 0
-    : clamp(
-        oceanDepthIndex * 0.76 +
-          Number(tectonics.trenchReinforcementPermission) * 0.24,
-        0,
-        1
-      );
-
-  const beachOutlinePressure = clamp(1 - Math.abs(margin) / 0.08, 0, 1);
-  const shorelinePressure = clamp(1 - Math.abs(margin) / 0.16, 0, 1);
-
-  const surfaceClass = isPolarIce
-    ? "polar_ice_footprint"
-    : isLand && isBeach
-      ? "beach_outline_land"
-      : isLand
-        ? "topology_land_footprint"
-        : isShelf
-          ? "nearshore_shelf_void"
-          : classifyDepth(oceanDepthIndex);
-
-  const body = raw.bodyResult.body;
-
-  const blackSandPressure = isBeach
-    ? clamp(Number(tectonics.diamondPressureIndex) * 0.82, 0, 1)
-    : 0;
-
-  const whiteSandPressure = isBeach
-    ? clamp(Number(tectonics.opalSeamIndex) * 0.82, 0, 1)
-    : 0;
-
-  return Object.freeze({
-    receipt: RECEIPT,
-    activeContract: RECEIPT,
-    latestContract: RECEIPT,
-    planetaryObject: PLANETARY_OBJECT,
-    generation: GENERATION,
-    file: FILE,
-
-    u: point.u,
-    v: point.v,
-    lon: point.lon,
-    lat: point.lat,
-
-    genealogy: TOPOLOGY_LAW.genealogy,
-    childOfTectonics: true,
-    begotTerrain: true,
-    parentTectonicsReceipt: tectonics.receipt || "unknown",
-
-    ownsTopology: true,
-    ownsLandVoidFootprint: true,
-    ownsSeaLevelBoundary: true,
-    ownsCoastline: true,
-    ownsBeachOutline: true,
-    ownsBathymetryBlueprint: true,
-    ownsSubterraneanBlueprint: true,
-    ownsLandPreservationGate: true,
-
-    ownsTectonics: false,
-    ownsTerrain: false,
-    ownsTerrainElevation: false,
-    ownsHydration: false,
-    ownsWaterFill: false,
-
-    landPotential: raw.landPotential,
-    seaLevelThreshold: raw.seaLevelThreshold,
-    seaLevelBoundary: raw.seaLevelThreshold,
-    seaLevelDistance: margin,
-    targetLandRatio: TARGET_EXPOSED_LAND_RATIO,
-    approximateEarthExposedLandRatio: TARGET_EXPOSED_LAND_RATIO,
-
-    isLandFootprint: isLand,
-    isAboveWaterLandFootprint: isLand && !isPolarIce,
-    topologyLandFootprint: isLand,
-    isVoidFootprint: !isLand && !isPolarIce,
-    isWaterFootprint: !isLand && !isPolarIce,
-    isPolarIceFootprint: isPolarIce,
-    isSouthPolarIceFootprint: isSouthPolarIce,
-    isNorthPolarIceFootprint: isNorthPolarIce,
-
-    isBeach,
-    isSand: isBeach,
-    isRock: isLand && !isBeach && Number(tectonics.exposedMineralHardnessIndex) > 0.48,
-    isShelf,
-    isCoastline: shorelinePressure > 0.35,
-    isIslandFootprint: isLand && raw.bodyResult.score < 0.55 && raw.islandNoise > 0.58,
-    isConnectedLandSystem: isLand && (raw.bodyResult.score >= 0.42 || raw.arcConnector > 0.32),
-    isSmallContinentFootprint: isLand && body.id > 1 && body.id < 6,
-
-    surfaceClass,
-    topologySurfaceClass: surfaceClass,
-    surfaceClassId: surfaceClassIdFor(surfaceClass),
-
-    landBodyId: isLand ? body.id : 0,
-    landBodyKey: isLand ? body.key : "void_ocean",
-    landBodyName: isLand ? body.name : "Void / Ocean Footprint",
-    landConnectionId: isLand ? `${body.key}_connection` : "none",
-    islandArcId: isLand && raw.islandNoise > 0.62 ? `${body.key}_island_arc` : "none",
-
-    terrainRisePermission: isLand
-      ? clamp(margin * 2.0 + raw.tectonicLift * 0.42, 0, 1)
-      : 0,
-    terrainBlockPermission: isLand ? 0 : 1,
-    terrainSeedClass: isLand ? "topology_land_rise_allowed" : "void_no_rise",
-
-    oceanDepthIndex,
-    bathymetryBlueprintIndex,
-    basinDepthIndex: oceanDepthIndex,
-    trenchDepthIndex: !isLand
-      ? clamp(Number(tectonics.trenchReinforcementPermission) * oceanDepthIndex, 0, 1)
-      : 0,
-    shelfDepthIndex: isShelf ? clamp(1 - oceanDepthIndex, 0, 1) : 0,
-    reefShelfPermission: isShelf ? clamp(1 - oceanDepthIndex * 0.70, 0, 1) : 0,
-    depthClassKey: isLand ? "land" : classifyDepth(oceanDepthIndex),
-    oceanDepthClass: isLand ? "land" : classifyDepth(oceanDepthIndex),
-
-    subterraneanDepthIndex: clamp(
-      Number(tectonics.crustalStressIndex) * 0.36 +
-        raw.broad * 0.24 +
-        raw.detail * 0.16,
-      0,
-      1
-    ),
-    foundationDensityIndex: clamp(
-      Number(tectonics.graniteCratonIndex) * 0.34 +
-        Number(tectonics.diamondPressureIndex) * 0.28 +
-        raw.tectonicLift * 0.20,
-      0,
-      1
-    ),
-    rockMassBoundaryIndex: clamp(
-      Number(tectonics.exposedMineralHardnessIndex) * 0.42 +
-        shorelinePressure * 0.18,
-      0,
-      1
-    ),
-
-    shorelinePressure,
-    beachPressure: beachOutlinePressure,
-    sandPressure: beachOutlinePressure,
-    rockPressure: clamp(Number(tectonics.exposedMineralHardnessIndex) * (isLand ? 1 : 0), 0, 1),
-    coastalCliffPressure: clamp(shorelinePressure * Number(tectonics.cliffPermission), 0, 1),
-    seaLevelErosionPressure: clamp(shorelinePressure * 0.62 + raw.coast * 0.22, 0, 1),
-    cliffBaseCut: clamp(shorelinePressure * Number(tectonics.cliffPermission) * 0.72, 0, 1),
-    coastlineIrregularityIndex: clamp(
-      raw.coast * 0.56 +
-        raw.detail * 0.28 +
-        shorelinePressure * 0.16,
-      0,
-      1
-    ),
-
-    beachType:
-      isBeach && whiteSandPressure >= blackSandPressure
-        ? "white_opal_beach_outline"
-        : isBeach
-          ? "black_diamond_beach_outline"
-          : "none",
-
-    blackSandPressure,
-    whiteSandPressure,
-    opalSoftnessIndex: clamp(Number(tectonics.opalSeamIndex) || 0, 0, 1),
-    diamondDarkSandIndex: clamp(Number(tectonics.diamondPressureIndex) || 0, 0, 1),
-    beachCloudSoftnessIndex: isBeach
-      ? clamp(Number(tectonics.opalSeamIndex) * 0.36 + beachOutlinePressure * 0.44, 0, 1)
-      : 0,
-
-    beachOutlinePressure,
-    beachWaterContactIndex: beachOutlinePressure,
-    landPreservationGate: isLand,
-    hydrationMayNotConvertLandToOcean: true,
-    terrainMustNotExpandLandArea: true,
-
-    foliage: false,
-    trees: false,
-    vegetation: false,
-    animals: false,
-    marineLife: false,
-    constructCivilization: false,
-
-    fallbackUsed: false,
-    graphicBox: false,
-    imageGeneration: false,
-    visualPassClaimed: false
-  });
+function classifyTopologyZone(sample) {
+  if (sample.polarIceSeed > 0.5) return "polar-solid-surface";
+  if (sample.landMask > 0.64 && sample.coastBand < 0.22) return "inland-solid-surface";
+  if (sample.landMask > 0.5 && sample.coastBand >= 0.22) return "coastal-solid-surface";
+  if (sample.landMask <= 0.5 && sample.shelfSeed > 0.35) return "shelf-void";
+  if (sample.landMask <= 0.5 && sample.slopeSeed > 0.28) return "slope-void";
+  return "open-ocean-void";
 }
 
-export function buildTopologyField(width = DEFAULTS.fieldWidth, height = DEFAULTS.fieldHeight, context = {}) {
-  const w = normalizeDimension(width, DEFAULTS.fieldWidth, DEFAULTS.minFieldWidth, DEFAULTS.maxFieldWidth);
-  const h = normalizeDimension(height, DEFAULTS.fieldHeight, DEFAULTS.minFieldHeight, DEFAULTS.maxFieldHeight);
+function evaluateTopology(lon, lat) {
+  const raw = topologyRawField(lon, lat);
+  const seaLevel = 0.15;
 
-  const tectonicsField = context.tectonicsField || buildTectonicsField(w, h, context.tectonicsContext || {});
-  const samples = new Array(w * h);
+  const landMask = smoothstep(seaLevel - 0.035, seaLevel + 0.052, raw.raw);
+  const voidMask = 1 - landMask;
+  const aboveSeaLevel = raw.raw - seaLevel;
 
-  let landSamples = 0;
-  let waterSamples = 0;
-  let beachSamples = 0;
-  let shelfSamples = 0;
-  let iceSamples = 0;
-  let smallContinentSamples = 0;
-  let islandSamples = 0;
-  let maxDepth = 0;
-  let maxCoastline = 0;
-  let maxBeachOutline = 0;
+  const coastBand =
+    smoothstep(seaLevel - 0.08, seaLevel + 0.025, raw.raw) *
+    (1 - smoothstep(seaLevel + 0.055, seaLevel + 0.19, raw.raw));
 
-  for (let y = 0; y < h; y += 1) {
-    const v = h === 1 ? 0.5 : y / (h - 1);
+  const coastlineIndex = clamp01(coastBand);
+  const shelfSeed = clamp01(voidMask * (1 - Math.abs(raw.raw - seaLevel) * 5.8));
+  const slopeSeed = clamp01(voidMask * (1 - Math.abs(raw.raw - (seaLevel - 0.14)) * 5.2));
+  const basinSeed = clamp01(voidMask * smoothstep(seaLevel - 0.18, seaLevel - 0.42, raw.raw));
+  const beachSeed = clamp01(coastBand * (0.28 + raw.coastNoise * 0.58));
+  const whiteSandSeed = clamp01(beachSeed * smoothstep(0.46, 0.88, raw.coastNoise));
+  const blackSandSeed = clamp01(beachSeed * (1 - whiteSandSeed) * (0.45 + raw.broad * 0.35));
 
-    for (let x = 0; x < w; x += 1) {
-      const u = w === 1 ? 0.5 : x / (w - 1);
-      const tectonics = getTectonicsSampleFromField(tectonicsField, u, v);
-      const sample = sampleTopology(u, v, { ...context, tectonics });
+  const polarIceSeed = clamp01(
+    smoothstep(1.04, 1.43, lat) * 0.88 +
+    smoothstep(1.04, 1.43, -lat) * 0.86
+  );
 
-      samples[y * w + x] = sample;
+  const topologyLand = landMask > 0.5;
+  const topologyVoid = !topologyLand;
+  const landmassId = classifyLandmass(raw);
 
-      if (sample.isPolarIceFootprint) {
-        iceSamples += 1;
-      } else if (sample.isLandFootprint) {
-        landSamples += 1;
-      } else {
-        waterSamples += 1;
-      }
+  const plateStressSeed = clamp01(
+    raw.inheritedTectonicRidgeSeed * 0.82 +
+    Math.abs(raw.tectonicMemory) * 4.2 +
+    coastBand * 0.18
+  );
 
-      if (sample.isBeach) beachSamples += 1;
-      if (sample.isShelf) shelfSamples += 1;
-      if (sample.isSmallContinentFootprint) smallContinentSamples += 1;
-      if (sample.isIslandFootprint) islandSamples += 1;
+  const topologySample = {
+    seaLevel,
+    rawTopologyField: raw.raw,
+    topologyField: raw.raw,
+    aboveSeaLevel,
+    landMask,
+    voidMask,
+    topologyLand,
+    topologyVoid,
+    solidSurfaceLand: topologyLand,
+    liquidVoid: topologyVoid,
+    waterVoid: topologyVoid,
+    oceanVoidCandidate: topologyVoid && shelfSeed <= 0.35,
+    shelfVoidCandidate: topologyVoid && shelfSeed > 0.35,
+    landVoidBoundary: coastBand > 0.08,
+    coastBand,
+    coastlineIndex,
+    coastalFeather: coastlineIndex,
+    shelfSeed,
+    slopeSeed,
+    basinSeed,
+    beachSeed,
+    whiteSandSeed,
+    blackSandSeed,
+    polarIceSeed,
+    landmassId,
+    inheritedTectonicRidgeSeed: raw.inheritedTectonicRidgeSeed,
+    plateStressSeed,
+    topologyZone: "",
+    topologyClass: "",
+    surfaceClass: "",
+    visualSurfaceClass: ""
+  };
 
-      maxDepth = Math.max(maxDepth, sample.oceanDepthIndex);
-      maxCoastline = Math.max(maxCoastline, sample.shorelinePressure);
-      maxBeachOutline = Math.max(maxBeachOutline, sample.beachOutlinePressure);
-    }
-  }
+  topologySample.topologyZone = classifyTopologyZone(topologySample);
 
-  return Object.freeze({
-    receipt: RECEIPT,
-    activeContract: RECEIPT,
-    planetaryObject: PLANETARY_OBJECT,
-    generation: GENERATION,
-    file: FILE,
-    width: w,
-    height: h,
-    samples,
-    tectonicsField,
+  topologySample.topologyClass = topologyLand
+    ? polarIceSeed > 0.5
+      ? "solid-polar-surface"
+      : coastBand > 0.2
+        ? "solid-coastal-surface"
+        : "solid-inland-surface"
+    : shelfSeed > 0.35
+      ? "void-shelf-water-candidate"
+      : slopeSeed > 0.28
+        ? "void-slope-water-candidate"
+        : "void-ocean-candidate";
 
-    stats: Object.freeze({
-      totalSamples: samples.length,
-      landSamples,
-      waterSamples,
-      beachSamples,
-      shelfSamples,
-      iceSamples,
-      smallContinentSamples,
-      islandSamples,
+  topologySample.surfaceClass = topologySample.topologyClass;
+  topologySample.visualSurfaceClass = topologySample.topologyClass;
 
-      landRatio: samples.length ? landSamples / samples.length : 0,
-      waterRatio: samples.length ? waterSamples / samples.length : 0,
-      beachRatio: samples.length ? beachSamples / samples.length : 0,
-      shelfRatio: samples.length ? shelfSamples / samples.length : 0,
-      iceRatio: samples.length ? iceSamples / samples.length : 0,
-      smallContinentRatio: samples.length ? smallContinentSamples / samples.length : 0,
-      islandRatio: samples.length ? islandSamples / samples.length : 0,
-
-      targetLandRatio: TARGET_EXPOSED_LAND_RATIO,
-      maxDepth,
-      maxCoastline,
-      maxBeachOutline,
-
-      childOfTectonics: true,
-      begotTerrain: true,
-      landPreservationGate: true,
-      hydrationMayNotConvertLandToOcean: true,
-      terrainMustNotExpandLandArea: true,
-
-      graphicBox: false,
-      imageGeneration: false,
-      visualPassClaimed: false
-    })
-  });
+  return topologySample;
 }
 
-export function getTopologySampleFromField(field, uInput, vInput) {
-  if (!field || !field.samples || !field.width || !field.height) {
-    return sampleTopology(uInput, vInput);
-  }
+function sampleAudraliaTopology(input, lonArg, uArg, vArg) {
+  const coordinate = normalizeCoordinateInput(input, lonArg, uArg, vArg);
+  const point = latLonToPoint(coordinate.lat, coordinate.lon);
+  const topology = evaluateTopology(coordinate.lon, coordinate.lat);
 
-  const point = normalizeUV(uInput, vInput);
-  const x = clamp(Math.round(point.u * (field.width - 1)), 0, field.width - 1);
-  const y = clamp(Math.round(point.v * (field.height - 1)), 0, field.height - 1);
-
-  return field.samples[y * field.width + x] || sampleTopology(point.u, point.v);
-}
-
-export function estimateEarthEquivalentSeaLevel(width = 96, height = 48, context = {}) {
-  const field = buildTopologyField(width, height, context);
-
-  return Object.freeze({
-    receipt: "AUDRALIA_TOPOLOGY_SEA_LEVEL_ESTIMATE",
-    targetLandRatio: TARGET_EXPOSED_LAND_RATIO,
-    estimatedLandRatio: field.stats.landRatio,
-    seaLevelThreshold: 0.49,
-    totalSamples: field.stats.totalSamples,
-    landSamples: field.stats.landSamples,
-    waterSamples: field.stats.waterSamples,
-    beachSamples: field.stats.beachSamples,
-    status:
-      Math.abs(field.stats.landRatio - TARGET_EXPOSED_LAND_RATIO) <= 0.12
-        ? "within_working_band"
-        : "needs_later_calibration",
-    visualPassClaimed: false
-  });
-}
-
-export function getTopologyStatus() {
-  return Object.freeze({
+  return {
     ok: true,
-    receipt: RECEIPT,
-    activeContract: RECEIPT,
-    status: "active",
-    id: "audralia-topology-child-footprint-authority",
-    planetaryObject: PLANETARY_OBJECT,
-    generation: GENERATION,
-    file: FILE,
+    receipt: AUDRALIA_TOPOLOGY_RECEIPT,
+    compatibilityReceipt: AUDRALIA_TOPOLOGY_COMPATIBILITY_RECEIPT,
+    source: "audralia-topology-downstream-rebase",
+    lineage: STATUS.lineage,
 
-    topologyLaw: TOPOLOGY_LAW,
-    parentTectonicsStatus: getTectonicsStatus(),
+    lat: coordinate.lat,
+    lon: coordinate.lon,
+    latitude: coordinate.lat,
+    longitude: coordinate.lon,
+    u: coordinate.u,
+    v: coordinate.v,
+    x: coordinate.u,
+    y: coordinate.v,
+    sx: point.x,
+    sy: point.y,
+    sz: point.z,
 
-    exports: Object.freeze([
-      "sampleTopology",
-      "buildTopologyField",
-      "getTopologySampleFromField",
-      "estimateEarthEquivalentSeaLevel",
-      "getTopologyStatus"
-    ]),
+    ...topology,
 
-    childOfTectonics: true,
-    begotTerrain: true,
+    land: topology.topologyLand,
+    water: topology.topologyVoid,
+    liquidWaterCandidate: topology.topologyVoid,
+    solidSurface: topology.topologyLand,
+    solidSurfaceLand: topology.topologyLand,
+    exposedTerrainLand: topology.topologyLand && topology.polarIceSeed <= 0.5,
+    visibleLand: topology.topologyLand && topology.polarIceSeed <= 0.5,
+    iceCandidate: topology.polarIceSeed > 0.5,
+    glacierCandidate: topology.polarIceSeed > 0.5,
 
-    ownsTopology: true,
-    ownsLandVoidFootprint: true,
-    ownsSeaLevelBoundary: true,
-    ownsCoastline: true,
-    ownsBeachOutline: true,
-    ownsBathymetryBlueprint: true,
-    ownsSubterraneanBlueprint: true,
-    ownsLandPreservationGate: true,
+    terrainReliefDefined: false,
+    terrainMayConsume: topology.topologyLand,
+    terrainReliefSeed: topology.topologyLand
+      ? clamp01(0.12 + topology.inheritedTectonicRidgeSeed * 0.72 + topology.plateStressSeed * 0.22)
+      : 0,
 
-    ownsTectonics: false,
-    ownsTerrain: false,
-    ownsTerrainElevation: false,
-    ownsHydration: false,
-    ownsWaterFill: false,
+    hydrationDefined: false,
+    hydrationMayConsume: true,
+    hydrationVoidCandidate: topology.topologyVoid,
+    hydrationCoastalCandidate: topology.coastlineIndex > 0.08,
+    hydrationShelfCandidate: topology.shelfSeed > 0.22,
 
-    hydrationMayNotConvertLandToOcean: true,
-    terrainMustNotExpandLandArea: true,
+    oceansDefined: false,
+    oceansMayFillOnlyVoid: topology.topologyVoid,
+    oceansMustNotEraseLand: topology.topologyLand,
+
+    deepOceanDefined: false,
+    deepOceanMayConsumeVoidDepthOnly: topology.topologyVoid,
+
+    topologyOwnsLandVoid: true,
+    topologyOwnsSeaLevelBoundary: true,
+    topologyOwnsCoastlineSeed: true,
+    topologyDefinesTerrainRelief: false,
+    topologyDefinesHydrationFill: false,
+    topologyDefinesOceanDepth: false,
+    topologyDefinesDeepOcean: false,
 
     graphicBox: false,
     imageGeneration: false,
     visualPassClaimed: false
+  };
+}
+
+function buildTopologyField(options = {}) {
+  const width = Math.max(8, Math.floor(safeNumber(options.width ?? options.columns, 128)));
+  const height = Math.max(4, Math.floor(safeNumber(options.height ?? options.rows, 64)));
+  const includeCells = Boolean(options.includeCells);
+
+  const cells = [];
+  const classCounts = {};
+  const landmassCounts = {};
+  const rowDominance = [];
+
+  let solidSurfaceSamples = 0;
+  let liquidVoidSamples = 0;
+  let coastlineSamples = 0;
+  let shelfSamples = 0;
+  let beachSamples = 0;
+  let polarSamples = 0;
+  let weightedTotal = 0;
+  let weightedLand = 0;
+  let weightedVoid = 0;
+
+  for (let row = 0; row < height; row += 1) {
+    const v = (row + 0.5) / height;
+    const lat = (0.5 - v) * Math.PI;
+    const rowCounts = {};
+
+    for (let col = 0; col < width; col += 1) {
+      const u = (col + 0.5) / width;
+      const lon = (u - 0.5) * TAU;
+      const sample = sampleAudraliaTopology({ lat, lon, u, v });
+      const weight = Math.max(0.000001, Math.cos(lat));
+
+      classCounts[sample.topologyClass] = (classCounts[sample.topologyClass] || 0) + 1;
+      landmassCounts[sample.landmassId] = (landmassCounts[sample.landmassId] || 0) + 1;
+      rowCounts[sample.topologyClass] = (rowCounts[sample.topologyClass] || 0) + 1;
+
+      if (sample.topologyLand) solidSurfaceSamples += 1;
+      if (sample.topologyVoid) liquidVoidSamples += 1;
+      if (sample.coastlineIndex > 0.08) coastlineSamples += 1;
+      if (sample.shelfSeed > 0.22) shelfSamples += 1;
+      if (sample.beachSeed > 0.18) beachSamples += 1;
+      if (sample.polarIceSeed > 0.5) polarSamples += 1;
+
+      weightedTotal += weight;
+      if (sample.topologyLand) weightedLand += weight;
+      if (sample.topologyVoid) weightedVoid += weight;
+
+      if (includeCells) cells.push(sample);
+    }
+
+    rowDominance.push(Math.max(...Object.values(rowCounts)) / width);
+  }
+
+  const totalSamples = Math.max(1, width * height);
+  const solidSurfaceRatio = solidSurfaceSamples / totalSamples;
+  const liquidVoidRatio = liquidVoidSamples / totalSamples;
+  const weightedSolidSurfaceRatio = weightedLand / Math.max(0.000001, weightedTotal);
+  const weightedLiquidVoidRatio = weightedVoid / Math.max(0.000001, weightedTotal);
+  const coastlineRatio = coastlineSamples / totalSamples;
+  const shelfRatio = shelfSamples / totalSamples;
+  const beachRatio = beachSamples / totalSamples;
+  const polarRatio = polarSamples / totalSamples;
+  const averageRowDominance = rowDominance.reduce((sum, value) => sum + value, 0) / rowDominance.length;
+  const maxDominantRowRatio = Math.max(...rowDominance);
+
+  return {
+    ok: true,
+    receipt: AUDRALIA_TOPOLOGY_RECEIPT,
+    compatibilityReceipt: AUDRALIA_TOPOLOGY_COMPATIBILITY_RECEIPT,
+    status: "topology-field-ready",
+    width,
+    height,
+    totalSamples,
+    classCounts,
+    landmassCounts,
+
+    solidSurfaceSamples,
+    liquidVoidSamples,
+    coastlineSamples,
+    shelfSamples,
+    beachSamples,
+    polarSamples,
+
+    solidSurfaceRatio,
+    liquidVoidRatio,
+    weightedSolidSurfaceRatio,
+    weightedLiquidVoidRatio,
+    coastlineRatio,
+    shelfRatio,
+    beachRatio,
+    polarRatio,
+
+    targetSolidSurfaceRatio: TARGET_SOLID_SURFACE_RATIO,
+    targetSolidSurfaceRatioMin: TARGET_SOLID_SURFACE_RATIO_MIN,
+    targetSolidSurfaceRatioMax: TARGET_SOLID_SURFACE_RATIO_MAX,
+    targetLiquidVoidRatio: TARGET_LIQUID_VOID_RATIO,
+    targetLiquidVoidRatioMin: TARGET_LIQUID_VOID_RATIO_MIN,
+    targetLiquidVoidRatioMax: TARGET_LIQUID_VOID_RATIO_MAX,
+
+    solidSurfaceRatioTargetMet:
+      weightedSolidSurfaceRatio >= TARGET_SOLID_SURFACE_RATIO_MIN &&
+      weightedSolidSurfaceRatio <= TARGET_SOLID_SURFACE_RATIO_MAX,
+
+    liquidVoidRatioTargetMet:
+      weightedLiquidVoidRatio >= TARGET_LIQUID_VOID_RATIO_MIN &&
+      weightedLiquidVoidRatio <= TARGET_LIQUID_VOID_RATIO_MAX,
+
+    rowBandingSuppressed: averageRowDominance < 0.84,
+    bullseyeCollapseSuppressed: maxDominantRowRatio < 0.95,
+    averageRowDominance,
+    maxDominantRowRatio,
+
+    topologyOwnsLandVoid: true,
+    topologyOwnsSeaLevelBoundary: true,
+    topologyOwnsCoastlineSeed: true,
+    topologyDefinesTerrainRelief: false,
+    topologyDefinesHydrationFill: false,
+    topologyDefinesOceanDepth: false,
+    topologyDefinesDeepOcean: false,
+
+    terrainReadyToConsume: true,
+    hydrationReadyToConsume: true,
+    oceansReadyToConsume: true,
+    deepOceanReadyToConsume: true,
+    runtimeReadyToConsume: true,
+
+    graphicBox: false,
+    imageGeneration: false,
+    visualPassClaimed: false,
+
+    cells: includeCells ? cells : undefined
+  };
+}
+
+function computeStats() {
+  if (cachedStats) return cachedStats;
+
+  cachedStats = buildTopologyField({
+    width: 192,
+    height: 96,
+    includeCells: false
   });
+
+  exposeTopologyStatus({
+    measuredSolidSurfaceRatio: cachedStats.weightedSolidSurfaceRatio,
+    measuredLiquidVoidRatio: cachedStats.weightedLiquidVoidRatio,
+    solidSurfaceRatioTargetMet: cachedStats.solidSurfaceRatioTargetMet,
+    liquidVoidRatioTargetMet: cachedStats.liquidVoidRatioTargetMet
+  });
+
+  return cachedStats;
 }
 
-const api = Object.freeze({
-  sampleTopology,
+function exposeTopologyStatus(extra = {}) {
+  Object.assign(STATUS, extra);
+
+  if (typeof window !== "undefined") {
+    window.AUDRALIA_TOPOLOGY_STATUS = STATUS;
+    window.AUDRALIA_TOPOLOGY_RECEIPT = AUDRALIA_TOPOLOGY_RECEIPT;
+    window.__AUDRALIA_TOPOLOGY_STATUS__ = STATUS;
+    window.__AUDRALIA_TOPOLOGY_RECEIPT__ = AUDRALIA_TOPOLOGY_RECEIPT;
+  }
+
+  if (typeof document !== "undefined" && document.documentElement) {
+    document.documentElement.dataset.audraliaTopologyReceipt = AUDRALIA_TOPOLOGY_RECEIPT;
+    document.documentElement.dataset.audraliaTopologyCompatibilityReceipt = AUDRALIA_TOPOLOGY_COMPATIBILITY_RECEIPT;
+    document.documentElement.dataset.audraliaTopologyLandVoidBoundary = "true";
+    document.documentElement.dataset.audraliaTopologySeaLevelBoundary = "true";
+    document.documentElement.dataset.audraliaTopologyDownstreamReady = "true";
+    document.documentElement.dataset.graphicBox = "false";
+    document.documentElement.dataset.imageGeneration = "false";
+    document.documentElement.dataset.visualPassClaimed = "false";
+  }
+
+  return STATUS;
+}
+
+function createAuthority() {
+  if (cachedAuthority) return cachedAuthority;
+
+  cachedAuthority = {
+    ok: true,
+    receipt: AUDRALIA_TOPOLOGY_RECEIPT,
+    compatibilityReceipt: AUDRALIA_TOPOLOGY_COMPATIBILITY_RECEIPT,
+    status: STATUS,
+    sampleTopology: sampleAudraliaTopology,
+    sampleAudraliaTopology,
+    sampleSurface: sampleAudraliaTopology,
+    buildTopologyField,
+    getStats,
+    getTopologyStats,
+    getStatus
+  };
+
+  return cachedAuthority;
+}
+
+export function getStatus() {
+  return {
+    ...STATUS,
+    stats: computeStats()
+  };
+}
+
+export function getStats() {
+  return computeStats();
+}
+
+export function getTopologyStats() {
+  return computeStats();
+}
+
+export function sampleTopology(input, lonArg, uArg, vArg) {
+  return sampleAudraliaTopology(input, lonArg, uArg, vArg);
+}
+
+export function sampleAudraliaTopologyState(input, lonArg, uArg, vArg) {
+  return sampleAudraliaTopology(input, lonArg, uArg, vArg);
+}
+
+export function sampleSurface(input, lonArg, uArg, vArg) {
+  return sampleAudraliaTopology(input, lonArg, uArg, vArg);
+}
+
+export function createAudraliaTopology() {
+  return createAuthority();
+}
+
+export async function createAudraliaTopologyAsync() {
+  return createAuthority();
+}
+
+export {
+  AUDRALIA_TOPOLOGY_RECEIPT,
+  AUDRALIA_TOPOLOGY_COMPATIBILITY_RECEIPT,
+  STATUS as AUDRALIA_TOPOLOGY_STATUS,
   buildTopologyField,
-  getTopologySampleFromField,
-  estimateEarthEquivalentSeaLevel,
-  getTopologyStatus
-});
+  sampleAudraliaTopology
+};
 
-if (typeof window !== "undefined") {
-  window.DGBAudraliaTopology = api;
-  window.AudraliaTopology = api;
-  window.audraliaTopology = api;
-}
+exposeTopologyStatus();
 
-export default api;
+export default createAudraliaTopology;

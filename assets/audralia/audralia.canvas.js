@@ -1,22 +1,22 @@
 /* /assets/audralia/audralia.canvas.js */
-/* AUDRALIA_ADOPTED_CANVAS_AUTHORITY_TNT_v1
+/* AUDRALIA_CANVAS_GLOBE_REFINEMENT_TNT_v2
    Precinct: Audralia visible canvas expression.
-   Jurisdiction: canvas creation, globe drawing, animation, surface sampling, route-visible proof receipts.
-   Non-jurisdiction: route shell copy, global showroom layout, Gauges scoring, runtime truth ownership.
+   Jurisdiction: canvas creation, spherical globe drawing, animation, sampled surface expression, water-land separation, proof receipts.
+   Non-jurisdiction: route shell copy, global showroom layout, Gauges scoring, runtime truth ownership, document.body replacement.
 */
 
-const AUDRALIA_CANVAS_CONTRACT = "AUDRALIA_ADOPTED_CANVAS_AUTHORITY_TNT_v1";
+const AUDRALIA_CANVAS_CONTRACT = "AUDRALIA_CANVAS_GLOBE_REFINEMENT_TNT_v2";
 
 const TAU = Math.PI * 2;
 const HALF_PI = Math.PI / 2;
 
 const DEFAULT_OPTIONS = {
   targetLandRatio: 0.292,
-  rotationSpeed: 0.105,
-  internalMotionSpeed: 0.72,
-  pixelResolution: 384,
-  minPixelResolution: 256,
-  maxPixelResolution: 520,
+  rotationSpeed: 0.18,
+  internalMotionSpeed: 0.85,
+  pixelResolution: 448,
+  minPixelResolution: 320,
+  maxPixelResolution: 640,
   devicePixelClamp: 2,
   showReceipts: true
 };
@@ -50,15 +50,12 @@ function valueNoise3(x, y, z) {
   const ix = Math.floor(x);
   const iy = Math.floor(y);
   const iz = Math.floor(z);
-
   const fx = x - ix;
   const fy = y - iy;
   const fz = z - iz;
-
   const ux = fx * fx * (3 - 2 * fx);
   const uy = fy * fy * (3 - 2 * fy);
   const uz = fz * fz * (3 - 2 * fz);
-
   let accum = 0;
 
   for (let dz = 0; dz <= 1; dz += 1) {
@@ -68,7 +65,6 @@ function valueNoise3(x, y, z) {
           (dx ? ux : 1 - ux) *
           (dy ? uy : 1 - uy) *
           (dz ? uz : 1 - uz);
-
         accum += hash3(ix + dx, iy + dy, iz + dz) * weight;
       }
     }
@@ -83,11 +79,11 @@ function fractalNoise3(x, y, z) {
   let total = 0;
   let norm = 0;
 
-  for (let octave = 0; octave < 5; octave += 1) {
+  for (let octave = 0; octave < 6; octave += 1) {
     total += valueNoise3(x * freq, y * freq, z * freq) * amp;
     norm += amp;
-    freq *= 2.04;
-    amp *= 0.52;
+    freq *= 2.02;
+    amp *= 0.51;
   }
 
   return total / Math.max(0.000001, norm);
@@ -102,117 +98,152 @@ function sphericalVector(lon, lat) {
   };
 }
 
-function angularDistance(lonA, latA, lonB, latB) {
-  const sinA = Math.sin(latA);
-  const sinB = Math.sin(latB);
-  const cosA = Math.cos(latA);
-  const cosB = Math.cos(latB);
-  const cosDelta = Math.cos(wrapLongitude(lonA - lonB));
-  const v = clamp(sinA * sinB + cosA * cosB * cosDelta, -1, 1);
-  return Math.acos(v);
+function normalize3(vector) {
+  const length = Math.hypot(vector.x, vector.y, vector.z) || 1;
+  return {
+    x: vector.x / length,
+    y: vector.y / length,
+    z: vector.z / length
+  };
+}
+
+function dot3(a, b) {
+  return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
 function ellipticalContinent(lon, lat, centerLon, centerLat, radiusLon, radiusLat, tilt, strength) {
   const dLon = wrapLongitude(lon - centerLon) * Math.cos(centerLat);
   const dLat = lat - centerLat;
-
   const ct = Math.cos(tilt);
   const st = Math.sin(tilt);
-
   const rx = dLon * ct - dLat * st;
   const ry = dLon * st + dLat * ct;
-
   const d = Math.sqrt((rx * rx) / (radiusLon * radiusLon) + (ry * ry) / (radiusLat * radiusLat));
   return Math.max(0, 1 - d) * strength;
+}
+
+function ridgeBand(lon, lat, anchorLon, anchorLat, length, thickness, bend, strength) {
+  const dLon = wrapLongitude(lon - anchorLon);
+  const warpedLat =
+    anchorLat +
+    Math.sin(dLon * 2.1 + bend) * 0.18 +
+    Math.sin(dLon * 5.2 - bend) * 0.052;
+
+  const along =
+    smoothstep(-length, -length * 0.55, dLon) *
+    (1 - smoothstep(length * 0.55, length, dLon));
+
+  const cross = 1 - smoothstep(thickness * 0.35, thickness, Math.abs(lat - warpedLat));
+  return along * cross * strength;
+}
+
+function polarCap(lat, side) {
+  const signedLat = side > 0 ? lat : -lat;
+  return smoothstep(1.02, 1.42, signedLat);
 }
 
 function sampleAudraliaSurface(lon, lat, timeSeconds = 0) {
   const v = sphericalVector(lon, lat);
 
-  const n1 = fractalNoise3(v.x * 2.8 + 10.1, v.y * 2.8 - 4.2, v.z * 2.8 + 3.7);
-  const n2 = fractalNoise3(v.x * 7.4 - 1.3, v.y * 7.4 + 2.5, v.z * 7.4 - 8.2);
-  const n3 = fractalNoise3(v.x * 15.2 + 9.5, v.y * 15.2 + 1.1, v.z * 15.2 - 2.6);
+  const nBroad = fractalNoise3(v.x * 2.4 + 4.2, v.y * 2.4 - 1.8, v.z * 2.4 + 7.5);
+  const nCoast = fractalNoise3(v.x * 8.6 - 3.2, v.y * 8.6 + 5.7, v.z * 8.6 - 0.9);
+  const nRough = fractalNoise3(v.x * 18.5 + 11.3, v.y * 18.5 - 4.1, v.z * 18.5 + 2.6);
+  const nMineral = fractalNoise3(v.x * 33.0 - 7.4, v.y * 33.0 + 1.9, v.z * 33.0 + 8.1);
 
-  const westernMass =
-    ellipticalContinent(lon, lat, -2.42, 0.18, 0.92, 0.48, -0.38, 1.05) +
-    ellipticalContinent(lon, lat, -1.88, -0.08, 0.72, 0.40, 0.52, 0.82) +
-    ellipticalContinent(lon, lat, -2.82, -0.28, 0.58, 0.31, -0.12, 0.62);
+  const continentWest =
+    ellipticalContinent(lon, lat, -2.62, 0.15, 0.74, 0.38, -0.36, 1.03) +
+    ellipticalContinent(lon, lat, -2.05, -0.12, 0.58, 0.30, 0.46, 0.74) +
+    ellipticalContinent(lon, lat, -2.88, -0.34, 0.42, 0.22, -0.12, 0.44);
 
-  const centralMass =
-    ellipticalContinent(lon, lat, -0.58, -0.02, 1.26, 0.50, 0.18, 1.16) +
-    ellipticalContinent(lon, lat, 0.12, 0.18, 0.82, 0.34, -0.58, 0.78) +
-    ellipticalContinent(lon, lat, -1.08, 0.31, 0.62, 0.28, 0.76, 0.52);
+  const continentArc =
+    ellipticalContinent(lon, lat, -0.88, -0.02, 0.82, 0.34, 0.14, 0.86) +
+    ellipticalContinent(lon, lat, -0.22, 0.20, 0.54, 0.25, -0.62, 0.58) +
+    ellipticalContinent(lon, lat, 0.34, -0.18, 0.48, 0.24, 0.36, 0.52);
 
-  const easternMass =
-    ellipticalContinent(lon, lat, 1.52, -0.06, 0.88, 0.44, -0.34, 1.0) +
-    ellipticalContinent(lon, lat, 2.12, 0.28, 0.54, 0.30, 0.62, 0.68) +
-    ellipticalContinent(lon, lat, 1.06, -0.42, 0.42, 0.26, -0.78, 0.48);
+  const continentEast =
+    ellipticalContinent(lon, lat, 1.35, -0.05, 0.64, 0.34, -0.28, 0.9) +
+    ellipticalContinent(lon, lat, 1.95, 0.26, 0.42, 0.23, 0.58, 0.52) +
+    ellipticalContinent(lon, lat, 1.06, -0.46, 0.34, 0.20, -0.78, 0.43);
 
-  const islandArc =
-    ellipticalContinent(lon, lat, 2.78, -0.04, 0.34, 0.18, 0.18, 0.42) +
-    ellipticalContinent(lon, lat, -3.02, 0.24, 0.28, 0.16, -0.2, 0.36) +
-    ellipticalContinent(lon, lat, 0.72, -0.58, 0.42, 0.17, 0.44, 0.34);
+  const islandChains =
+    ellipticalContinent(lon, lat, 2.64, -0.10, 0.22, 0.13, 0.2, 0.34) +
+    ellipticalContinent(lon, lat, -3.05, 0.25, 0.20, 0.12, -0.2, 0.32) +
+    ellipticalContinent(lon, lat, 0.76, -0.61, 0.26, 0.12, 0.44, 0.28) +
+    ellipticalContinent(lon, lat, 2.28, -0.52, 0.22, 0.10, -0.28, 0.24) +
+    ellipticalContinent(lon, lat, -1.28, 0.64, 0.24, 0.12, 0.18, 0.22);
 
-  const polarNorth = smoothstep(1.03, 1.37, lat) * 0.72;
-  const polarSouth = smoothstep(1.02, 1.35, -lat) * 0.68;
+  const ridges =
+    ridgeBand(lon, lat, -1.85, 0.0, 1.28, 0.145, 0.7, 0.34) +
+    ridgeBand(lon, lat, 0.42, -0.08, 1.18, 0.13, -1.2, 0.29) +
+    ridgeBand(lon, lat, 2.15, 0.12, 0.82, 0.12, 2.2, 0.24);
 
-  const rawContinents = Math.max(
-    westernMass,
-    centralMass,
-    easternMass,
-    islandArc,
-    polarNorth,
-    polarSouth
-  );
+  const polarNorth = polarCap(lat, 1) * (0.58 + nCoast * 0.18);
+  const polarSouth = polarCap(lat, -1) * (0.55 + nCoast * 0.18);
 
-  const tectonicRidge =
-    0.18 * Math.sin(lon * 4.0 + lat * 2.2) +
-    0.12 * Math.sin(lon * -2.7 + lat * 5.4) +
-    0.10 * Math.cos(lon * 6.3 - lat * 1.7);
+  const rawMass = Math.max(continentWest, continentArc, continentEast, islandChains, polarNorth, polarSouth);
 
-  const topology = rawContinents + (n1 - 0.5) * 0.42 + (n2 - 0.5) * 0.18 + tectonicRidge;
-  const coastBand = smoothstep(0.48, 0.62, topology) * (1 - smoothstep(0.62, 0.78, topology));
-  const landMask = smoothstep(0.575, 0.66, topology);
-  const land = landMask > 0.47;
+  const stress =
+    0.11 * Math.sin(lon * 3.4 + lat * 2.6) +
+    0.08 * Math.sin(lon * -5.2 + lat * 4.4) +
+    0.06 * Math.cos(lon * 7.0 - lat * 2.2);
 
-  const mountainSeed =
-    Math.max(0, rawContinents - 0.34) *
-    (0.52 + n2 * 0.68) *
-    (0.65 + n3 * 0.45);
+  const coastBreak = (nCoast - 0.5) * 0.27 + (nRough - 0.5) * 0.11;
+  const topology = rawMass + ridges + (nBroad - 0.5) * 0.34 + coastBreak + stress;
 
-  const ancientRelief = clamp(
-    mountainSeed + tectonicRidge * 0.25 + (n3 - 0.5) * 0.34,
+  const seaLevel = 0.57;
+  const landMask = smoothstep(seaLevel - 0.035, seaLevel + 0.055, topology);
+  const land = landMask > 0.48;
+
+  const coastBand =
+    smoothstep(seaLevel - 0.07, seaLevel + 0.035, topology) *
+    (1 - smoothstep(seaLevel + 0.055, seaLevel + 0.18, topology));
+
+  const shelf = clamp(1 - Math.abs(topology - seaLevel) * 7.8, 0, 1);
+  const bathymetry = clamp((seaLevel - topology) * 2.8 + (0.55 - nBroad) * 0.22, 0, 1);
+  const deepOcean = smoothstep(0.36, 0.88, bathymetry);
+
+  const mountainLine = clamp(
+    ridges * 1.15 + rawMass * 0.28 + (nRough - 0.44) * 0.48 + stress * 0.55,
     0,
     1
   );
 
-  const glacier =
-    landMask *
-    smoothstep(0.58, 0.86, ancientRelief) *
-    (smoothstep(0.78, 1.2, Math.abs(lat)) + smoothstep(0.76, 0.94, ancientRelief) * 0.42);
+  const ancientRelief = clamp(
+    landMask * (0.24 + mountainLine * 0.76 + nMineral * 0.22),
+    0,
+    1
+  );
 
-  const bathymetry = clamp((0.575 - topology) * 2.8 + (0.5 - n1) * 0.22, 0, 1);
-  const shelf = clamp(1 - Math.abs(topology - 0.575) * 8.0, 0, 1);
-  const deepOcean = smoothstep(0.35, 0.82, bathymetry);
-  const current =
+  const glacier = clamp(
+    landMask *
+      smoothstep(0.62, 0.88, ancientRelief) *
+      (smoothstep(0.78, 1.25, Math.abs(lat)) + smoothstep(0.78, 0.96, mountainLine) * 0.46),
+    0,
+    1
+  );
+
+  const waterMotion =
     0.5 +
     0.5 *
       Math.sin(
-        lon * 5.0 +
-          lat * 8.0 +
-          timeSeconds * 0.16 +
-          Math.sin(lat * 3.0 + timeSeconds * 0.05)
+        lon * 5.8 +
+          lat * 7.2 +
+          timeSeconds * 0.26 +
+          Math.sin(lat * 3.1 + timeSeconds * 0.07)
       );
 
-  const hydration = clamp((1 - landMask) * (0.78 + deepOcean * 0.22) + coastBand * 0.38 + glacier * 0.46, 0, 1);
+  const hydration = clamp(
+    (1 - landMask) * (0.76 + deepOcean * 0.24) + shelf * 0.28 + coastBand * 0.38 + glacier * 0.52,
+    0,
+    1
+  );
 
   let classification = "deep-ocean";
+  if (!land && shelf > 0.24) classification = "shelf";
   if (land) classification = "land";
-  if (land && coastBand > 0.24) classification = "coast";
-  if (land && ancientRelief > 0.65) classification = "highland";
+  if (land && coastBand > 0.28) classification = "coast";
+  if (land && ancientRelief > 0.63) classification = "highland";
   if (glacier > 0.42) classification = "glacier";
-  if (!land && shelf > 0.26) classification = "shelf";
-  if (!land && deepOcean > 0.72) classification = "deep-ocean";
 
   return {
     lon,
@@ -228,72 +259,78 @@ function sampleAudraliaSurface(lon, lat, timeSeconds = 0) {
     coastBand,
     deepOcean,
     glacier,
-    current,
+    current: waterMotion,
+    mineral: nMineral,
+    roughness: nRough,
     classification
   };
 }
 
 function mixRgb(a, b, t) {
+  const u = clamp(t, 0, 1);
   return [
-    Math.round(lerp(a[0], b[0], t)),
-    Math.round(lerp(a[1], b[1], t)),
-    Math.round(lerp(a[2], b[2], t))
+    Math.round(lerp(a[0], b[0], u)),
+    Math.round(lerp(a[1], b[1], u)),
+    Math.round(lerp(a[2], b[2], u))
   ];
 }
 
-function rgbString(rgb, alpha = 1) {
-  return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
-}
+function colorForSample(sample, viewNormal) {
+  const lightVector = normalize3({ x: -0.46, y: 0.32, z: 0.83 });
+  const rawLight = dot3(viewNormal, lightVector);
+  const dayLight = smoothstep(-0.24, 0.92, rawLight);
+  const rim = smoothstep(0.66, 1.0, Math.hypot(viewNormal.x, viewNormal.y));
 
-function colorForSample(sample, light, rim, timeSeconds) {
-  const deep = [8, 24, 48];
-  const ocean = [13, 64, 96];
-  const shelf = [42, 122, 132];
-  const coastWater = [76, 156, 150];
+  const deep = [5, 18, 38];
+  const abyss = [3, 10, 24];
+  const ocean = [10, 70, 102];
+  const shelf = [38, 138, 148];
+  const glowShelf = [82, 196, 198];
 
-  const blackSand = [28, 29, 31];
-  const whiteSand = [214, 205, 184];
-  const granite = [91, 84, 74];
-  const slate = [54, 66, 78];
-  const opal = [122, 156, 154];
-  const diamond = [198, 220, 218];
-  const highIce = [226, 236, 236];
+  const blackSand = [34, 31, 29];
+  const whiteSand = [216, 205, 181];
+  const granite = [124, 113, 96];
+  const slate = [68, 80, 88];
+  const opal = [126, 172, 166];
+  const diamond = [210, 228, 224];
+  const ice = [226, 238, 240];
 
   let rgb;
 
   if (!sample.land) {
-    const oceanBase = mixRgb(deep, ocean, 1 - sample.deepOcean);
+    const deepBase = mixRgb(abyss, deep, 1 - sample.deepOcean * 0.35);
+    const oceanBase = mixRgb(deepBase, ocean, 1 - sample.deepOcean);
     const shelfBase = mixRgb(oceanBase, shelf, sample.shelf);
-    const currentLift = smoothstep(0.52, 1.0, sample.current) * 0.18;
-    rgb = mixRgb(shelfBase, coastWater, currentLift + sample.shelf * 0.22);
+    const currentLift = smoothstep(0.48, 1.0, sample.current) * 0.18;
+    rgb = mixRgb(shelfBase, glowShelf, sample.shelf * 0.34 + currentLift);
   } else {
-    const mineralNoise = fractalNoise3(
-      sample.vector.x * 22.0 + 1.4,
-      sample.vector.y * 22.0 - 2.8,
-      sample.vector.z * 22.0 + timeSeconds * 0.006
-    );
-
-    const sand = mixRgb(blackSand, whiteSand, smoothstep(0.35, 0.78, mineralNoise));
-    const stoneA = mixRgb(granite, slate, smoothstep(0.2, 0.9, mineralNoise));
-    const stoneB = mixRgb(stoneA, opal, sample.terrain * 0.36);
-    const stoneC = mixRgb(stoneB, diamond, smoothstep(0.68, 0.98, sample.terrain) * 0.28);
-
-    rgb = mixRgb(stoneC, sand, sample.coastBand * 0.72);
-    rgb = mixRgb(rgb, highIce, clamp(sample.glacier, 0, 0.92));
+    const sandBlend = smoothstep(0.32, 0.82, sample.mineral);
+    const sand = mixRgb(blackSand, whiteSand, sandBlend);
+    const stoneA = mixRgb(granite, slate, smoothstep(0.24, 0.86, sample.roughness));
+    const stoneB = mixRgb(stoneA, opal, sample.terrain * 0.42);
+    const stoneC = mixRgb(stoneB, diamond, smoothstep(0.62, 0.98, sample.terrain) * 0.32);
+    rgb = mixRgb(stoneC, sand, sample.coastBand * 0.68);
+    rgb = mixRgb(rgb, ice, sample.glacier * 0.92);
   }
 
-  const shade = clamp(0.28 + light * 0.88 + rim * 0.18, 0, 1.18);
+  const relief = sample.land
+    ? (sample.terrain - 0.42) * 26 + sample.coastBand * 14 + sample.glacier * 12
+    : sample.shelf * 18 - sample.deepOcean * 16 + (sample.current - 0.5) * 7;
+
+  const shade = clamp(0.24 + dayLight * 0.92 + rim * 0.08, 0, 1.12);
+  const limbShade = 1 - rim * 0.38;
+
   return [
-    clamp(Math.round(rgb[0] * shade), 0, 255),
-    clamp(Math.round(rgb[1] * shade), 0, 255),
-    clamp(Math.round(rgb[2] * shade), 0, 255)
+    clamp(Math.round((rgb[0] + relief) * shade * limbShade), 0, 255),
+    clamp(Math.round((rgb[1] + relief) * shade * limbShade), 0, 255),
+    clamp(Math.round((rgb[2] + relief) * shade * limbShade), 0, 255)
   ];
 }
 
 function resolveElement(target) {
   if (!target) return null;
   if (typeof target === "string") return document.querySelector(target);
-  if (target instanceof Element) return target;
+  if (typeof Element !== "undefined" && target instanceof Element) return target;
   return null;
 }
 
@@ -311,15 +348,13 @@ function resolveAudraliaMount(explicitMount) {
     document.querySelector("#audraliaStage") ||
     document.querySelector("#globe-stage") ||
     document.querySelector("#globeStage") ||
-    document.querySelector("#globe-main") ||
-    document.querySelector("main") ||
-    document.body
+    null
   );
 }
 
 function prepareCanvas(mount, options) {
   if (!mount) {
-    throw new Error("Audralia canvas mount was not found.");
+    throw new Error("Audralia canvas mount was not found. The route doorway must provide #audraliaCanvasMount.");
   }
 
   if (mount.tagName && mount.tagName.toLowerCase() === "canvas") {
@@ -328,10 +363,13 @@ function prepareCanvas(mount, options) {
     return mount;
   }
 
-  let canvas =
-    mount.querySelector(":scope > canvas[data-audralia-canvas-authority='true']") ||
-    mount.querySelector("canvas#audraliaCanvas") ||
-    mount.querySelector("canvas[data-audralia-canvas]");
+  const oldCanvases = Array.from(
+    mount.querySelectorAll("canvas[data-audralia-canvas-authority='true'], canvas[data-audralia-canvas]")
+  );
+
+  oldCanvases.slice(1).forEach((oldCanvas) => oldCanvas.remove());
+
+  let canvas = oldCanvases[0] || mount.querySelector("canvas#audraliaCanvas");
 
   if (!canvas) {
     canvas = document.createElement("canvas");
@@ -352,12 +390,6 @@ function prepareCanvas(mount, options) {
   canvas.style.borderRadius = "50%";
   canvas.style.background = "radial-gradient(circle at 50% 50%, rgba(4,10,18,1), rgba(1,3,8,1))";
 
-  if (mount !== document.body) {
-    const existingPosition = window.getComputedStyle(mount).position;
-    if (existingPosition === "static") mount.style.position = "relative";
-    if (!mount.style.minHeight) mount.style.minHeight = "min(78vw, 680px)";
-  }
-
   return canvas;
 }
 
@@ -368,7 +400,7 @@ function createReceiptBase(canvas, mount, options) {
     precinct: "Audralia visible canvas expression",
     jurisdiction: [
       "canvas creation",
-      "globe drawing",
+      "spherical globe drawing",
       "animation loop",
       "surface sampling",
       "water land separation",
@@ -378,7 +410,8 @@ function createReceiptBase(canvas, mount, options) {
       "route shell copy",
       "global showroom layout",
       "Gauges scoring",
-      "runtime truth ownership"
+      "runtime truth ownership",
+      "document.body replacement"
     ],
     mountFound: Boolean(mount),
     canvasFound: Boolean(canvas),
@@ -396,31 +429,32 @@ function drawStarfield(ctx, width, height, timeSeconds) {
   ctx.clearRect(0, 0, width, height);
 
   const gradient = ctx.createRadialGradient(
-    width * 0.52,
-    height * 0.45,
-    width * 0.06,
+    width * 0.5,
+    height * 0.46,
+    width * 0.04,
     width * 0.5,
     height * 0.5,
     width * 0.72
   );
 
-  gradient.addColorStop(0, "rgba(16, 25, 42, 0.95)");
-  gradient.addColorStop(0.46, "rgba(5, 10, 20, 0.98)");
+  gradient.addColorStop(0, "rgba(18, 35, 54, 0.95)");
+  gradient.addColorStop(0.44, "rgba(5, 12, 24, 0.98)");
   gradient.addColorStop(1, "rgba(0, 2, 7, 1)");
 
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, width, height);
 
-  const count = Math.max(60, Math.floor((width * height) / 9400));
+  const count = Math.max(70, Math.floor((width * height) / 7800));
+
   for (let i = 0; i < count; i += 1) {
     const x = hash3(i, 4, 9) * width;
     const y = hash3(i, 8, 2) * height;
     const pulse = 0.35 + 0.65 * hash3(i, 11, 3);
-    const twinkle = 0.45 + 0.35 * Math.sin(timeSeconds * (0.22 + pulse) + i);
-    const r = 0.55 + hash3(i, 10, 6) * 1.2;
+    const twinkle = 0.45 + 0.35 * Math.sin(timeSeconds * (0.18 + pulse) + i);
+    const r = 0.45 + hash3(i, 10, 6) * 1.1;
 
     ctx.beginPath();
-    ctx.fillStyle = `rgba(215, 232, 255, ${0.12 + twinkle * 0.34})`;
+    ctx.fillStyle = `rgba(215, 232, 255, ${0.10 + twinkle * 0.28})`;
     ctx.arc(x, y, r, 0, TAU);
     ctx.fill();
   }
@@ -428,22 +462,88 @@ function drawStarfield(ctx, width, height, timeSeconds) {
   ctx.restore();
 }
 
+function renderGlobeRaster(offscreen, state) {
+  const size = state.rasterSize;
+  const ctx = offscreen.getContext("2d", { willReadFrequently: true });
+  const image = ctx.createImageData(size, size);
+  const data = image.data;
+  const timeSeconds = state.timeSeconds;
+  const rotation = state.rotation;
+
+  const counts = {
+    land: 0,
+    coast: 0,
+    highland: 0,
+    glacier: 0,
+    shelf: 0,
+    "deep-ocean": 0
+  };
+
+  const cosRot = Math.cos(rotation);
+  const sinRot = Math.sin(rotation);
+
+  for (let py = 0; py < size; py += 1) {
+    const y = 1 - (py / (size - 1)) * 2;
+
+    for (let px = 0; px < size; px += 1) {
+      const x = (px / (size - 1)) * 2 - 1;
+      const index = (py * size + px) * 4;
+      const rr = x * x + y * y;
+
+      if (rr > 1) {
+        data[index + 3] = 0;
+        continue;
+      }
+
+      const z = Math.sqrt(1 - rr);
+      const viewNormal = { x, y, z };
+      const wx = x * cosRot + z * sinRot;
+      const wz = z * cosRot - x * sinRot;
+      const lon = wrapLongitude(Math.atan2(wx, wz));
+      const lat = Math.asin(y);
+      const sample = sampleAudraliaSurface(lon, lat, timeSeconds);
+
+      counts[sample.classification] = (counts[sample.classification] || 0) + 1;
+
+      const rgb = colorForSample(sample, viewNormal);
+      const rim = smoothstep(0.78, 1.0, Math.sqrt(rr));
+      const alpha = Math.round(255 * (1 - rim * 0.08));
+
+      data[index] = rgb[0];
+      data[index + 1] = rgb[1];
+      data[index + 2] = rgb[2];
+      data[index + 3] = alpha;
+    }
+  }
+
+  ctx.putImageData(image, 0, 0);
+  state.classificationCounts = counts;
+}
+
+function drawRasterToMain(ctx, offscreen, cx, cy, radius) {
+  ctx.save();
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(offscreen, cx - radius, cy - radius, radius * 2, radius * 2);
+  ctx.restore();
+}
+
 function drawAtmosphere(ctx, cx, cy, radius, timeSeconds) {
   ctx.save();
 
-  const aura = ctx.createRadialGradient(cx, cy, radius * 0.72, cx, cy, radius * 1.22);
+  const aura = ctx.createRadialGradient(cx, cy, radius * 0.72, cx, cy, radius * 1.26);
   aura.addColorStop(0, "rgba(48, 168, 190, 0)");
-  aura.addColorStop(0.72, "rgba(68, 178, 204, 0.10)");
-  aura.addColorStop(0.92, "rgba(152, 221, 232, 0.24)");
+  aura.addColorStop(0.70, "rgba(68, 178, 204, 0.11)");
+  aura.addColorStop(0.91, "rgba(152, 221, 232, 0.27)");
   aura.addColorStop(1, "rgba(152, 221, 232, 0)");
 
   ctx.fillStyle = aura;
   ctx.beginPath();
-  ctx.arc(cx, cy, radius * 1.22, 0, TAU);
+  ctx.arc(cx, cy, radius * 1.26, 0, TAU);
   ctx.fill();
 
   ctx.globalCompositeOperation = "screen";
-  ctx.strokeStyle = `rgba(183, 232, 238, ${0.16 + 0.04 * Math.sin(timeSeconds * 0.7)})`;
+  ctx.strokeStyle = `rgba(183, 232, 238, ${0.18 + 0.04 * Math.sin(timeSeconds * 0.7)})`;
   ctx.lineWidth = Math.max(1, radius * 0.012);
   ctx.beginPath();
   ctx.arc(cx, cy, radius * 1.004, 0, TAU);
@@ -458,13 +558,14 @@ function drawLatitudeLongitude(ctx, cx, cy, radius, rotation, timeSeconds) {
   ctx.arc(cx, cy, radius, 0, TAU);
   ctx.clip();
 
-  ctx.lineWidth = Math.max(0.5, radius * 0.0028);
-  ctx.strokeStyle = "rgba(222, 242, 238, 0.115)";
+  ctx.lineWidth = Math.max(0.5, radius * 0.0024);
 
   for (let lat = -60; lat <= 60; lat += 20) {
     const y = cy - Math.sin((lat * Math.PI) / 180) * radius;
     const ry = Math.cos((lat * Math.PI) / 180) * radius;
 
+    ctx.globalAlpha = 0.1;
+    ctx.strokeStyle = "rgba(222, 242, 238, 1)";
     ctx.beginPath();
     ctx.ellipse(cx, y, ry, radius * 0.055, 0, 0, TAU);
     ctx.stroke();
@@ -472,20 +573,12 @@ function drawLatitudeLongitude(ctx, cx, cy, radius, rotation, timeSeconds) {
 
   for (let lon = 0; lon < 360; lon += 20) {
     const phase = rotation + (lon * Math.PI) / 180;
-    const xOffset = Math.sin(phase) * radius;
     const visible = Math.cos(phase);
 
+    ctx.globalAlpha = 0.028 + Math.abs(visible) * 0.082;
+    ctx.strokeStyle = "rgba(222, 242, 238, 1)";
     ctx.beginPath();
-    ctx.ellipse(
-      cx + xOffset * 0.012,
-      cy,
-      Math.abs(visible) * radius,
-      radius,
-      0,
-      -HALF_PI,
-      HALF_PI
-    );
-    ctx.globalAlpha = 0.045 + Math.abs(visible) * 0.075;
+    ctx.ellipse(cx, cy, Math.abs(visible) * radius, radius, 0, -HALF_PI, HALF_PI);
     ctx.stroke();
   }
 
@@ -507,20 +600,20 @@ function drawCloudAndCurrentBands(ctx, cx, cy, radius, rotation, timeSeconds) {
 
   ctx.globalCompositeOperation = "screen";
 
-  for (let band = 0; band < 9; band += 1) {
-    const lat = lerp(-0.82, 0.82, band / 8);
+  for (let band = 0; band < 11; band += 1) {
+    const lat = lerp(-0.9, 0.9, band / 10);
     const y = cy - Math.sin(lat) * radius;
-    const ry = Math.cos(lat) * radius * (0.84 + 0.08 * Math.sin(timeSeconds * 0.15 + band));
-    const phase = rotation * 0.42 + band * 0.7 + timeSeconds * 0.06;
-    const alpha = 0.025 + 0.025 * Math.sin(timeSeconds * 0.31 + band * 1.7);
+    const ry = Math.cos(lat) * radius * (0.86 + 0.06 * Math.sin(timeSeconds * 0.16 + band));
+    const phase = rotation * 0.52 + band * 0.76 + timeSeconds * 0.09;
+    const alpha = 0.028 + 0.024 * Math.sin(timeSeconds * 0.31 + band * 1.7);
 
     ctx.strokeStyle = `rgba(218, 240, 236, ${alpha})`;
-    ctx.lineWidth = Math.max(1, radius * (0.006 + band * 0.00035));
-    ctx.setLineDash([radius * 0.16, radius * 0.09, radius * 0.04, radius * 0.12]);
-    ctx.lineDashOffset = -phase * radius * 0.12;
+    ctx.lineWidth = Math.max(1, radius * (0.0048 + band * 0.00028));
+    ctx.setLineDash([radius * 0.17, radius * 0.1, radius * 0.045, radius * 0.13]);
+    ctx.lineDashOffset = -phase * radius * 0.16;
 
     ctx.beginPath();
-    ctx.ellipse(cx, y, ry, radius * 0.032, Math.sin(phase) * 0.08, 0, TAU);
+    ctx.ellipse(cx, y, ry, radius * 0.027, Math.sin(phase) * 0.08, 0, TAU);
     ctx.stroke();
   }
 
@@ -528,102 +621,22 @@ function drawCloudAndCurrentBands(ctx, cx, cy, radius, rotation, timeSeconds) {
   ctx.restore();
 }
 
-function renderGlobeRaster(offscreen, state, options) {
-  const size = state.rasterSize;
-  const ctx = offscreen.getContext("2d", { willReadFrequently: true });
-  const image = ctx.createImageData(size, size);
-  const data = image.data;
-
-  const timeSeconds = state.timeSeconds;
-  const rotation = state.rotation;
-  const lightVector = {
-    x: -0.45,
-    y: 0.28,
-    z: 0.84
-  };
-
-  const counts = {
-    land: 0,
-    coast: 0,
-    highland: 0,
-    glacier: 0,
-    shelf: 0,
-    "deep-ocean": 0
-  };
-
-  for (let py = 0; py < size; py += 1) {
-    const y = 1 - (py / (size - 1)) * 2;
-
-    for (let px = 0; px < size; px += 1) {
-      const x = (px / (size - 1)) * 2 - 1;
-      const index = (py * size + px) * 4;
-      const rr = x * x + y * y;
-
-      if (rr > 1) {
-        data[index + 3] = 0;
-        continue;
-      }
-
-      const z = Math.sqrt(1 - rr);
-      const lon = wrapLongitude(Math.atan2(x, z) + rotation);
-      const lat = Math.asin(y);
-
-      const sample = sampleAudraliaSurface(lon, lat, timeSeconds);
-      counts[sample.classification] = (counts[sample.classification] || 0) + 1;
-
-      const light = clamp(
-        sample.vector.x * lightVector.x +
-          sample.vector.y * lightVector.y +
-          sample.vector.z * lightVector.z,
-        -0.3,
-        1
-      );
-
-      const rim = smoothstep(0.48, 1.0, Math.sqrt(rr));
-      const rgb = colorForSample(sample, light, rim, timeSeconds);
-
-      const reliefShadow = sample.land
-        ? (sample.terrain - 0.46) * 20 + sample.coastBand * 12
-        : sample.shelf * 10 - sample.deepOcean * 12;
-
-      const terminator = smoothstep(-0.18, 0.88, light);
-      const edgeFade = 1 - smoothstep(0.84, 1.02, Math.sqrt(rr)) * 0.32;
-
-      data[index] = clamp(rgb[0] + reliefShadow, 0, 255);
-      data[index + 1] = clamp(rgb[1] + reliefShadow, 0, 255);
-      data[index + 2] = clamp(rgb[2] + reliefShadow, 0, 255);
-      data[index + 3] = Math.round(255 * edgeFade * (0.72 + terminator * 0.28));
-    }
-  }
-
-  ctx.putImageData(image, 0, 0);
-  state.classificationCounts = counts;
-}
-
-function drawRasterToMain(ctx, offscreen, cx, cy, radius) {
-  ctx.save();
-  ctx.imageSmoothingEnabled = true;
-  ctx.imageSmoothingQuality = "high";
-  ctx.drawImage(offscreen, cx - radius, cy - radius, radius * 2, radius * 2);
-  ctx.restore();
-}
-
 function drawShadowAndDepth(ctx, cx, cy, radius) {
   ctx.save();
 
   const shade = ctx.createRadialGradient(
-    cx - radius * 0.32,
-    cy - radius * 0.22,
-    radius * 0.1,
+    cx - radius * 0.34,
+    cy - radius * 0.24,
+    radius * 0.08,
     cx,
     cy,
     radius
   );
 
-  shade.addColorStop(0, "rgba(255,255,255,0.10)");
-  shade.addColorStop(0.42, "rgba(255,255,255,0.015)");
-  shade.addColorStop(0.76, "rgba(0,0,0,0.10)");
-  shade.addColorStop(1, "rgba(0,0,0,0.58)");
+  shade.addColorStop(0, "rgba(255,255,255,0.12)");
+  shade.addColorStop(0.42, "rgba(255,255,255,0.018)");
+  shade.addColorStop(0.76, "rgba(0,0,0,0.08)");
+  shade.addColorStop(1, "rgba(0,0,0,0.48)");
 
   ctx.globalCompositeOperation = "multiply";
   ctx.fillStyle = shade;
@@ -632,17 +645,18 @@ function drawShadowAndDepth(ctx, cx, cy, radius) {
   ctx.fill();
 
   ctx.globalCompositeOperation = "screen";
+
   const highlight = ctx.createRadialGradient(
-    cx - radius * 0.36,
-    cy - radius * 0.28,
+    cx - radius * 0.38,
+    cy - radius * 0.3,
     0,
-    cx - radius * 0.36,
-    cy - radius * 0.28,
+    cx - radius * 0.38,
+    cy - radius * 0.3,
     radius * 0.72
   );
 
-  highlight.addColorStop(0, "rgba(255,255,255,0.20)");
-  highlight.addColorStop(0.38, "rgba(255,255,255,0.07)");
+  highlight.addColorStop(0, "rgba(255,255,255,0.18)");
+  highlight.addColorStop(0.38, "rgba(255,255,255,0.06)");
   highlight.addColorStop(1, "rgba(255,255,255,0)");
 
   ctx.fillStyle = highlight;
@@ -741,12 +755,11 @@ class AudraliaCanvasController {
   install() {
     this.canvas.__audraliaCanvasController = this;
     this.canvas.dataset.status = "installed";
-
     this.resize();
 
     if (typeof ResizeObserver !== "undefined") {
       this.resizeObserver = new ResizeObserver(this.resize);
-      this.resizeObserver.observe(this.mount === document.body ? this.canvas : this.mount);
+      this.resizeObserver.observe(this.mount.tagName?.toLowerCase() === "canvas" ? this.canvas : this.mount);
     } else {
       window.addEventListener("resize", this.resize, { passive: true });
     }
@@ -767,16 +780,9 @@ class AudraliaCanvasController {
     const rect = this.canvas.getBoundingClientRect();
     const mountRect = this.mount && this.mount.getBoundingClientRect ? this.mount.getBoundingClientRect() : rect;
 
-    const cssSize = Math.max(
-      260,
-      Math.floor(
-        Math.min(
-          rect.width || mountRect.width || 680,
-          rect.height || mountRect.height || rect.width || mountRect.width || 680
-        )
-      )
-    );
-
+    const cssWidth = rect.width || mountRect.width || 680;
+    const cssHeight = rect.height || mountRect.height || cssWidth;
+    const cssSize = Math.max(260, Math.floor(Math.min(cssWidth, cssHeight)));
     const dpr = clamp(window.devicePixelRatio || 1, 1, this.options.devicePixelClamp);
     const size = Math.floor(cssSize * dpr);
 
@@ -788,7 +794,7 @@ class AudraliaCanvasController {
     this.state.width = size;
     this.state.height = size;
     this.state.dpr = dpr;
-    this.state.radius = Math.floor(size * 0.43);
+    this.state.radius = Math.floor(size * 0.435);
 
     const rasterSize = clamp(
       Math.floor(this.options.pixelResolution * dpr),
@@ -847,6 +853,7 @@ class AudraliaCanvasController {
     if (!this.state.running || this.state.destroyed) return;
 
     const dt = clamp((timestamp - this.state.lastTimestamp) / 1000, 0, 0.08);
+
     this.state.lastTimestamp = timestamp;
     this.state.timeSeconds += dt;
     this.state.rotation = wrapLongitude(this.state.rotation + dt * this.options.rotationSpeed);
@@ -866,10 +873,8 @@ class AudraliaCanvasController {
 
     drawStarfield(ctx, width, height, this.state.timeSeconds);
     drawAtmosphere(ctx, cx, cy, radius, this.state.timeSeconds);
-
-    renderGlobeRaster(this.offscreen, this.state, this.options);
+    renderGlobeRaster(this.offscreen, this.state);
     drawRasterToMain(ctx, this.offscreen, cx, cy, radius);
-
     drawLatitudeLongitude(ctx, cx, cy, radius, this.state.rotation, this.state.timeSeconds);
     drawCloudAndCurrentBands(ctx, cx, cy, radius, this.state.rotation, this.state.timeSeconds);
     drawShadowAndDepth(ctx, cx, cy, radius);
@@ -888,6 +893,7 @@ class AudraliaCanvasController {
       this.receipt.lastFrameAt = new Date().toISOString();
 
       const visiblePixels = Object.values(this.receipt.classificationCounts).reduce((sum, count) => sum + count, 0);
+
       const landPixels =
         (this.receipt.classificationCounts.land || 0) +
         (this.receipt.classificationCounts.coast || 0) +
@@ -901,7 +907,8 @@ class AudraliaCanvasController {
       this.canvas.dataset.frame = String(this.state.frame);
       this.canvas.dataset.rotation = String(this.receipt.rotation);
       this.canvas.dataset.measuredLandRatio = String(this.receipt.measuredLandRatio);
-      this.canvas.dataset.visualDefinition = "active";
+      this.canvas.dataset.visualDefinition = "refined";
+      this.canvas.dataset.sphericalWrapping = "active";
       this.canvas.dataset.waterLandSeparation = "active";
       this.canvas.dataset.animation = "active";
 
@@ -944,7 +951,6 @@ function renderAudraliaCanvas(options = {}) {
   const canvas = prepareCanvas(mount, options);
 
   if (canvas.__audraliaCanvasController) {
-    canvas.__audraliaCanvasController.stop();
     canvas.__audraliaCanvasController.destroy();
   }
 
@@ -1003,6 +1009,7 @@ if (document.readyState === "loading") {
     "DOMContentLoaded",
     () => {
       const autoMount = document.querySelector("[data-audralia-canvas-auto='true']");
+
       if (autoMount && !autoMount.querySelector("canvas[data-audralia-canvas-authority='true']")) {
         renderAudraliaCanvas({ mount: autoMount });
       }
@@ -1011,6 +1018,7 @@ if (document.readyState === "loading") {
   );
 } else {
   const autoMount = document.querySelector("[data-audralia-canvas-auto='true']");
+
   if (autoMount && !autoMount.querySelector("canvas[data-audralia-canvas-authority='true']")) {
     renderAudraliaCanvas({ mount: autoMount });
   }

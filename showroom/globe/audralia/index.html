@@ -3,11 +3,13 @@
   lang="en"
   data-page="audralia-adopted-canvas-doorway"
   data-route="/showroom/globe/audralia/"
-  data-contract="AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_CLEAN_MOUNT_TNT_v1"
+  data-contract="AUDRALIA_HTML_STABLE_SHELL_NO_AUTO_MOUNT_TNT_v3"
   data-role="audralia-route-shell"
   data-graphic-box="false"
   data-image-generation="false"
-  data-shell-only="true"
+  data-shell-owner="html"
+  data-route-doorway="/showroom/globe/audralia/index.js"
+  data-canvas-authority="/assets/audralia/audralia.canvas.js"
 >
 <head>
   <meta charset="utf-8">
@@ -15,7 +17,7 @@
   <title>Diamond Gate Bridge · Audralia</title>
   <meta
     name="description"
-    content="Audralia route shell. HTML owns only navigation, explanatory copy, mount, and doorway script handoff. The adopted canvas authority renders Audralia."
+    content="Audralia stable HTML shell. The HTML owns navigation, page structure, mount, and route status. The route doorway imports the adopted canvas authority."
   >
 
   <style>
@@ -32,6 +34,7 @@
       --accent: rgba(118, 210, 230, 0.88);
       --good: rgba(138, 228, 184, 0.9);
       --warn: rgba(246, 211, 133, 0.92);
+      --danger: rgba(255, 132, 132, 0.92);
       --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
       font-family:
         Inter,
@@ -63,6 +66,7 @@
       background:
         linear-gradient(180deg, rgba(2, 4, 10, 0.32), rgba(2, 4, 10, 0.94)),
         transparent;
+      overflow-x: hidden;
     }
 
     a {
@@ -124,6 +128,7 @@
       border: 1px solid rgba(170, 232, 244, 0.82);
       background: linear-gradient(135deg, rgba(90, 202, 224, 0.72), rgba(255, 255, 255, 0.12));
       box-shadow: 0 0 22px rgba(104, 218, 240, 0.32);
+      flex: 0 0 auto;
     }
 
     .nav-links {
@@ -218,6 +223,7 @@
         linear-gradient(180deg, rgba(15, 28, 48, 0.78), rgba(3, 7, 14, 0.9));
       box-shadow: var(--shadow);
       overflow: hidden;
+      min-height: clamp(320px, 74vw, 760px);
     }
 
     .stage-shell::before {
@@ -253,7 +259,9 @@
       position: relative;
       z-index: 1;
       width: min(82vw, 680px);
-      min-height: min(82vw, 680px);
+      height: min(82vw, 680px);
+      min-width: 260px;
+      min-height: 260px;
       margin: 0 auto;
       display: grid;
       place-items: center;
@@ -277,6 +285,15 @@
       box-shadow:
         inset -24px -32px 64px rgba(0, 0, 0, 0.4),
         inset 12px 12px 34px rgba(255, 255, 255, 0.055);
+    }
+
+    .canvas-mount canvas {
+      position: relative;
+      z-index: 0;
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+      border-radius: 50%;
     }
 
     .status-card,
@@ -307,6 +324,8 @@
       background: rgba(246, 211, 133, 0.08);
       color: rgba(255, 236, 188, 0.96);
       line-height: 1.48;
+      font-family: inherit;
+      font-size: 1rem;
     }
 
     .route-status[data-state="active"] {
@@ -397,7 +416,7 @@
 
       .canvas-mount {
         width: min(88vw, 620px);
-        min-height: min(88vw, 620px);
+        height: min(88vw, 620px);
       }
 
       .content-grid {
@@ -446,10 +465,10 @@
   <main id="audralia-main" data-audralia-main="true">
     <section class="hero" aria-labelledby="audralia-title">
       <div>
-        <p class="eyebrow">Audralia · Adopted Canvas Doorway</p>
+        <p class="eyebrow">Audralia · Stable Canvas Doorway</p>
         <h1 id="audralia-title">Audralia</h1>
         <p class="lead">
-          The HTML owns only the route shell and mount. The route doorway imports the adopted-column canvas authority.
+          The HTML owns the page shell and mount. The route doorway imports the adopted-column canvas authority.
           The canvas authority renders Audralia from runtime truth.
         </p>
 
@@ -465,8 +484,9 @@
           id="audraliaCanvasMount"
           class="canvas-mount"
           data-audralia-canvas-mount="true"
-          data-audralia-canvas-auto="true"
-          data-contract="AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_CLEAN_MOUNT_TNT_v1"
+          data-audralia-canvas-auto="false"
+          data-audralia-canvas-control="route-doorway"
+          data-contract="AUDRALIA_HTML_STABLE_SHELL_NO_AUTO_MOUNT_TNT_v3"
           aria-label="Audralia adopted canvas mount"
         ></section>
       </div>
@@ -488,24 +508,23 @@
       <h2 id="doorway-title">Doorway shell only. Canvas authority controls the render.</h2>
       <p class="lead">
         The HTML does not decide land, void, beaches, coastline, terrain, elevation, hydration, rotation,
-        foliage, or visual pass. This file exposes the mount and loads the route doorway. The doorway imports
-        the adopted Audralia canvas authority.
+        foliage, or visual pass. The HTML only holds the page structure and the canvas mount.
       </p>
 
       <div class="content-grid" aria-label="Authority split">
         <article class="content-card">
           <h3>HTML route</h3>
-          <p>Owns shell, navigation, mount, route status seat, and script handoff only.</p>
+          <p>Owns shell, navigation, mount, status seat, and script handoff only.</p>
+        </article>
+
+        <article class="content-card">
+          <h3>Route doorway</h3>
+          <p>Owns import resolution, renderer selection, single render call, and route receipts.</p>
         </article>
 
         <article class="content-card">
           <h3>Canvas authority</h3>
           <p>Owns canvas creation, runtime sampling, surface paint, animation, and proof dataset.</p>
-        </article>
-
-        <article class="content-card">
-          <h3>Runtime chain</h3>
-          <p>Runtime remains source truth for land, water, ice, terrain, hydration, and sampled surface state.</p>
         </article>
       </div>
     </section>
@@ -516,12 +535,16 @@
 
       <ul class="receipt-list">
         <li>
-          <strong>HTML handoff</strong>
-          <code>AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_CLEAN_MOUNT_TNT_v1</code>
+          <strong>HTML shell</strong>
+          <code>AUDRALIA_HTML_STABLE_SHELL_NO_AUTO_MOUNT_TNT_v3</code>
         </li>
         <li>
           <strong>Doorway route</strong>
           <code>/showroom/globe/audralia/index.js</code>
+        </li>
+        <li>
+          <strong>Doorway contract</strong>
+          <code>AUDRALIA_ROUTE_DOORWAY_NO_BODY_WIPE_TNT_v3</code>
         </li>
         <li>
           <strong>Canvas authority</strong>
@@ -539,11 +562,15 @@
           <strong>Image generation</strong>
           <code>false</code>
         </li>
+        <li>
+          <strong>Canvas auto-mount</strong>
+          <code>false</code>
+        </li>
       </ul>
     </section>
 
     <p class="footer-note">
-      Audralia · HTML handoff clean mount renewed · no GraphicBox · no image generation · shell only.
+      Audralia · stable HTML shell · no body wipe · no canvas auto-mount · no GraphicBox · no image generation.
     </p>
   </main>
 
@@ -555,25 +582,32 @@
 
   <script>
     window.__AUDRALIA_HTML_HANDOFF__ = {
-      contract: "AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_CLEAN_MOUNT_TNT_v1",
+      contract: "AUDRALIA_HTML_STABLE_SHELL_NO_AUTO_MOUNT_TNT_v3",
       route: "/showroom/globe/audralia/",
+      shellOwner: "html",
       shellOnly: true,
+      bodyWipeAllowed: false,
+      canvasAutoMount: false,
       graphicBox: false,
       imageGeneration: false,
       mount: "#audraliaCanvasMount",
+      status: "#audraliaRouteStatus",
       doorway: "/showroom/globe/audralia/index.js",
+      doorwayContract: "AUDRALIA_ROUTE_DOORWAY_NO_BODY_WIPE_TNT_v3",
       canvasAuthority: "/assets/audralia/audralia.canvas.js",
-      status: "html-shell-ready",
+      runtimeTruth: "/assets/audralia/audralia.runtime.js",
       updatedAt: new Date().toISOString()
     };
 
     document.documentElement.dataset.audraliaHtmlHandoff =
-      "AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_CLEAN_MOUNT_TNT_v1";
+      "AUDRALIA_HTML_STABLE_SHELL_NO_AUTO_MOUNT_TNT_v3";
+    document.documentElement.dataset.audraliaCanvasAutoMount = "false";
+    document.documentElement.dataset.bodyWipeAllowed = "false";
   </script>
 
   <script
     type="module"
-    src="/showroom/globe/audralia/index.js?html=AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_CLEAN_MOUNT_TNT_v1"
+    src="/showroom/globe/audralia/index.js?html=AUDRALIA_HTML_STABLE_SHELL_NO_AUTO_MOUNT_TNT_v3"
   ></script>
 </body>
 </html>

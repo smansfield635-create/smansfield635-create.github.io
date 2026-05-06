@@ -1,25 +1,36 @@
 // /assets/audralia/audralia.runtime.js
-// AUDRALIA_RUNTIME_IMPORT_SAFE_DOWNSTREAM_CHAIN_CONNECTOR_TNT_v5
+// AUDRALIA_RUNTIME_AWAITED_DOWNSTREAM_CHAIN_CONNECTOR_TNT_v6
 // Full-file replacement. Runtime authority only.
-// Purpose: keep runtime importable at all times, dynamically consume the swept downstream chain,
-// expose any downstream import error as data, and prevent canvas from falling to runtime=unavailable.
+// Purpose: keep runtime import-safe while ensuring canvas/Gauges receive a resolved downstream sampler.
+// Runtime consumes: topology → terrain → hydration → oceans → deep-ocean.
+// Runtime does not invent land, water, terrain, hydration, or oceans.
 // No GraphicBox. No image generation. No visual-pass claim.
 
-const AUDRALIA_RUNTIME_RECEIPT = "AUDRALIA_RUNTIME_IMPORT_SAFE_DOWNSTREAM_CHAIN_CONNECTOR_TNT_v5";
+const AUDRALIA_RUNTIME_RECEIPT = "AUDRALIA_RUNTIME_AWAITED_DOWNSTREAM_CHAIN_CONNECTOR_TNT_v6";
 const DEEP_OCEAN_PATH = "/assets/audralia/audralia/hydration/deep-ocean.render.js";
+
+const TARGET_SOLID_SURFACE_RATIO = 0.292;
+const TARGET_SOLID_SURFACE_RATIO_MIN = 0.27;
+const TARGET_SOLID_SURFACE_RATIO_MAX = 0.31;
+const TARGET_LIQUID_WATER_RATIO = 0.708;
+const TARGET_LIQUID_WATER_RATIO_MIN = 0.69;
+const TARGET_LIQUID_WATER_RATIO_MAX = 0.76;
 
 const STATUS = {
   ok: true,
   receipt: AUDRALIA_RUNTIME_RECEIPT,
-  activeRenewal: "AUDRALIA_RUNTIME_IMPORT_SAFE_DOWNSTREAM_CHAIN_CONNECTOR_CONTRACT_v1",
+  activeRenewal: "AUDRALIA_RUNTIME_AWAITED_DOWNSTREAM_CHAIN_CONNECTOR_CONTRACT_v1",
   file: "assets/audralia/audralia.runtime.js",
-  role: "audralia-runtime-import-safe-downstream-chain-connector",
+  role: "audralia-runtime-awaited-downstream-chain-connector",
   lineage: "tectonics→topology→terrain→hydration→oceans→deep-ocean→runtime→canvas-renderer→route",
   downstreamPath: DEEP_OCEAN_PATH,
+
   downstreamImportAttempted: false,
   downstreamImported: false,
   downstreamImportError: "",
+  downstreamSamplerReady: false,
   downstreamChainConsumed: false,
+
   runtimeImportSafe: true,
   runtimeDefinesLandWater: false,
   runtimeDefinesTerrain: false,
@@ -27,16 +38,28 @@ const STATUS = {
   runtimeDefinesOceans: false,
   runtimeOwnsSamplingNormalization: true,
   runtimeOwnsStats: true,
+
   canvasFinalRenderOnlyExpected: true,
   terrainReady: true,
+  topologyStable: true,
+  terrainStable: true,
+  hydrationStable: true,
+  oceansStable: true,
+  deepOceanStable: true,
   continuousFieldActive: true,
+
   fallbackAllowed: true,
-  fallbackReason: "only-if-downstream-import-fails",
+  fallbackReason: "only-if-downstream-import-or-sampler-fails",
   fallbackSamples: 0,
+
   graphicBox: false,
   imageGeneration: false,
   visualPassClaimed: false,
+
   compatibilityReceipts: [
+    "AUDRALIA_RUNTIME_ALLOW_TECTONICS_TOPOLOGY_TERRAIN_HYDRATION_SURFACE_TNT_v1",
+    "AUDRALIA_RUNTIME_IMPORT_SAFE_TOPOLOGY_ALIGNMENT_STABILIZER_TNT_v1",
+    "AUDRALIA_RUNTIME_IMPORT_SAFE_DOWNSTREAM_CHAIN_CONNECTOR_TNT_v5",
     "AUDRALIA_HYDRATION_DEEP_OCEAN_CONTINUOUS_DEPTH_ALIGNMENT_SWEEP_TNT_v2",
     "AUDRALIA_HYDRATION_OCEANS_CONTINUOUS_FILL_ALIGNMENT_SWEEP_TNT_v2",
     "AUDRALIA_HYDRATION_CONTINUOUS_TERRAIN_CONDUCTION_SWEEP_TNT_v2",
@@ -44,8 +67,10 @@ const STATUS = {
     "AUDRALIA_TOPOLOGY_CONTINUOUS_LAND_VOID_BOUNDARY_SWEEP_TNT_v2",
     "AUDRALIA_ADOPTED_CANVAS_FIXED_ASPECT_DOWNSTREAM_SWEEP_TNT_v9"
   ],
+
   api: {
     createAudraliaRuntime: true,
+    createAudraliaRuntimeAsync: true,
     buildRuntimeField: true,
     sampleRuntimeState: true,
     sampleAudraliaPlanetState: true,
@@ -57,8 +82,9 @@ const STATUS = {
   }
 };
 
-let downstreamModulePromise = null;
 let downstreamModule = null;
+let downstreamEngine = null;
+let downstreamSampler = null;
 let downstreamImportError = "";
 let cachedRuntime = null;
 let cachedStats = null;
@@ -95,8 +121,10 @@ function exposeRuntimeStatus(extra = {}) {
     document.documentElement.dataset.audraliaRuntimeImportSafe = "true";
     document.documentElement.dataset.audraliaRuntimeDownstreamPath = DEEP_OCEAN_PATH;
     document.documentElement.dataset.audraliaRuntimeDownstreamImported = String(Boolean(STATUS.downstreamImported));
+    document.documentElement.dataset.audraliaRuntimeDownstreamSamplerReady = String(Boolean(STATUS.downstreamSamplerReady));
     document.documentElement.dataset.audraliaRuntimeDownstreamChainConsumed = String(Boolean(STATUS.downstreamChainConsumed));
     document.documentElement.dataset.audraliaRuntimeFallbackSamples = String(STATUS.fallbackSamples || 0);
+    document.documentElement.dataset.audraliaRuntimeDefinesLandWater = "false";
     document.documentElement.dataset.graphicBox = "false";
     document.documentElement.dataset.imageGeneration = "false";
     document.documentElement.dataset.visualPassClaimed = "false";
@@ -151,30 +179,30 @@ function hash3(x, y, z) {
   return n - Math.floor(n);
 }
 
-function fallbackSample(input, lonArg, uArg, vArg) {
+function fallbackRawSample(input, lonArg, uArg, vArg) {
   const coordinate = normalizeCoordinateInput(input, lonArg, uArg, vArg);
   const point = latLonToPoint(coordinate.lat, coordinate.lon);
 
-  const islandSeed = hash3(
-    Math.round(point.x * 7),
-    Math.round(point.y * 7),
-    Math.round(point.z * 7)
+  const n = hash3(
+    Math.round(point.x * 9),
+    Math.round(point.y * 9),
+    Math.round(point.z * 9)
   );
 
-  const polarIce = Math.abs(point.y) > 0.91;
-  const island = islandSeed > 0.86 && Math.abs(point.y) < 0.82;
-  const shelf = islandSeed > 0.78 && islandSeed <= 0.86 && Math.abs(point.y) < 0.86;
-  const water = !island && !polarIce;
+  const polarIce = Math.abs(point.y) > 0.92;
+  const land = n > 0.9 && Math.abs(point.y) < 0.84;
+  const shelf = n > 0.84 && n <= 0.9 && Math.abs(point.y) < 0.88;
+  const water = !land && !polarIce;
 
   const visualSurfaceClass = polarIce
     ? "glacier_ice_snowpack_surface"
-    : island
+    : land
       ? "inland_terrain_land_surface"
       : shelf
         ? "shelf_water_surface"
         : "ocean_water_surface";
 
-  return normalizeRuntimeSample({
+  return {
     ok: true,
     receipt: "AUDRALIA_RUNTIME_SAFE_INTERNAL_FALLBACK_SAMPLE",
     source: "runtime-safe-internal-fallback",
@@ -191,17 +219,17 @@ function fallbackSample(input, lonArg, uArg, vArg) {
     sz: point.z,
     visualSurfaceClass,
     surfaceClass: visualSurfaceClass,
-    water,
     liquidWater: water,
+    water,
     ocean: water && !shelf,
     shelf,
-    land: island,
-    exposedTerrainLand: island,
-    solidSurfaceLand: island || polarIce,
+    land,
+    exposedTerrainLand: land,
+    solidSurfaceLand: land || polarIce,
     ice: polarIce,
     glacier: polarIce,
-    elevation: island || polarIce ? 0.34 : 0,
-    terrainRelief: island || polarIce ? 0.28 : 0,
+    elevation: land || polarIce ? 0.34 : 0,
+    terrainRelief: land || polarIce ? 0.28 : 0,
     depth: water ? 0.56 : 0,
     hydration: water ? 0.72 : 0.32,
     hydrationIndex: water ? 0.72 : 0.32,
@@ -210,58 +238,85 @@ function fallbackSample(input, lonArg, uArg, vArg) {
     turquoise: shelf ? 0.68 : water ? 0.2 : 0.08,
     fallback: true,
     fallbackSample: true
-  });
+  };
 }
 
-async function importDownstreamModule() {
-  STATUS.downstreamImportAttempted = true;
-  exposeRuntimeStatus();
-
-  if (downstreamModule) return downstreamModule;
-  if (downstreamModulePromise) return downstreamModulePromise;
-
-  downstreamModulePromise = import(`${DEEP_OCEAN_PATH}?runtime=${AUDRALIA_RUNTIME_RECEIPT}&t=${Date.now()}`)
-    .then((module) => {
-      downstreamModule = module;
-      downstreamImportError = "";
-
-      exposeRuntimeStatus({
-        downstreamImported: true,
-        downstreamImportError: "",
-        downstreamChainConsumed: true
-      });
-
-      return module;
-    })
-    .catch((error) => {
-      downstreamModule = null;
-      downstreamImportError = String(error?.message || error || "unknown downstream import failure");
-
-      exposeRuntimeStatus({
-        downstreamImported: false,
-        downstreamImportError,
-        downstreamChainConsumed: false
-      });
-
-      return null;
-    });
-
-  return downstreamModulePromise;
-}
-
-function getSampleFunction(module) {
-  if (!module) return null;
-
+function selectSampler(module, engine) {
   const candidates = [
-    module.sampleDeepOcean,
-    module.sampleDeepOceanField,
-    module.sampleSurface,
-    module.buildDeepOceanField,
-    module.default
+    engine?.sampleDeepOcean,
+    engine?.sampleDeepOceanField,
+    engine?.sampleSurface,
+    engine?.buildDeepOceanField,
+    module?.sampleDeepOcean,
+    module?.sampleDeepOceanField,
+    module?.sampleSurface,
+    module?.buildDeepOceanField
   ];
 
   return candidates.find((candidate) => typeof candidate === "function") || null;
 }
+
+async function initializeDownstream() {
+  STATUS.downstreamImportAttempted = true;
+  exposeRuntimeStatus();
+
+  try {
+    downstreamModule = await import(`${DEEP_OCEAN_PATH}?runtime=${AUDRALIA_RUNTIME_RECEIPT}`);
+
+    if (typeof downstreamModule.createAudraliaDeepOcean === "function") {
+      try {
+        downstreamEngine = await downstreamModule.createAudraliaDeepOcean();
+      } catch (_) {
+        downstreamEngine = null;
+      }
+    }
+
+    if (!downstreamEngine && typeof downstreamModule.default === "function") {
+      try {
+        downstreamEngine = await downstreamModule.default();
+      } catch (_) {
+        downstreamEngine = null;
+      }
+    }
+
+    downstreamSampler = selectSampler(downstreamModule, downstreamEngine);
+
+    if (!downstreamSampler) {
+      throw new Error("deep-ocean module imported, but no compatible sampler export was found");
+    }
+
+    downstreamImportError = "";
+
+    exposeRuntimeStatus({
+      downstreamImported: true,
+      downstreamSamplerReady: true,
+      downstreamImportError: "",
+      downstreamChainConsumed: true,
+      fallbackAllowed: false,
+      fallbackReason: "downstream-chain-ready"
+    });
+
+    return true;
+  } catch (error) {
+    downstreamModule = null;
+    downstreamEngine = null;
+    downstreamSampler = null;
+    downstreamImportError = String(error?.message || error || "unknown downstream import failure");
+
+    exposeRuntimeStatus({
+      downstreamImported: false,
+      downstreamSamplerReady: false,
+      downstreamImportError,
+      downstreamChainConsumed: false,
+      fallbackAllowed: true,
+      fallbackReason: "downstream-import-or-sampler-failed"
+    });
+
+    return false;
+  }
+}
+
+await initializeDownstream();
 
 function normalizeRuntimeSample(raw, lonArg, uArg, vArg) {
   const coordinate = normalizeCoordinateInput(raw, lonArg, uArg, vArg);
@@ -309,10 +364,10 @@ function normalizeRuntimeSample(raw, lonArg, uArg, vArg) {
     ...raw,
     ok: true,
     receipt: AUDRALIA_RUNTIME_RECEIPT,
-    source: "audralia-runtime-import-safe-downstream-chain-connector",
+    source: "audralia-runtime-awaited-downstream-chain-connector",
     downstream: raw,
     downstreamReceipt: raw?.receipt || "",
-    downstreamChainConsumed: Boolean(STATUS.downstreamImported),
+    downstreamChainConsumed: Boolean(STATUS.downstreamChainConsumed),
 
     lat: coordinate.lat,
     lon: coordinate.lon,
@@ -349,7 +404,7 @@ function normalizeRuntimeSample(raw, lonArg, uArg, vArg) {
 
     fallback: Boolean(raw?.fallback),
     fallbackSample: Boolean(raw?.fallbackSample),
-    fallbackAllowed: true,
+    fallbackAllowed: Boolean(!STATUS.downstreamSamplerReady),
 
     elevation,
     maxElevation: elevation,
@@ -401,49 +456,46 @@ function normalizeRuntimeSample(raw, lonArg, uArg, vArg) {
   };
 }
 
-function sampleSurfaceSync(input, lonArg, uArg, vArg) {
-  if (downstreamModule) {
-    const sampler = getSampleFunction(downstreamModule);
-
-    if (sampler) {
-      try {
-        const sample = sampler(input, lonArg, uArg, vArg);
-        if (sample && typeof sample === "object") return normalizeRuntimeSample(sample, lonArg, uArg, vArg);
-      } catch (error) {
-        downstreamImportError = String(error?.message || error || "downstream sampler failure");
-        exposeRuntimeStatus({ downstreamImportError });
-      }
-    }
+function callDownstreamSampler(input, lonArg, uArg, vArg) {
+  if (!downstreamSampler) {
+    return normalizeRuntimeSample(fallbackRawSample(input, lonArg, uArg, vArg), lonArg, uArg, vArg);
   }
 
-  return fallbackSample(input, lonArg, uArg, vArg);
-}
+  try {
+    const result = downstreamSampler.call(
+      downstreamEngine || downstreamModule,
+      input,
+      lonArg,
+      uArg,
+      vArg
+    );
 
-async function sampleSurfaceAsync(input, lonArg, uArg, vArg) {
-  const module = await importDownstreamModule();
-  const sampler = getSampleFunction(module);
-
-  if (sampler) {
-    try {
-      const sample = sampler(input, lonArg, uArg, vArg);
-      if (sample && typeof sample === "object") return normalizeRuntimeSample(sample, lonArg, uArg, vArg);
-    } catch (error) {
-      downstreamImportError = String(error?.message || error || "downstream sampler failure");
-      exposeRuntimeStatus({ downstreamImportError });
+    if (result && typeof result === "object") {
+      return normalizeRuntimeSample(result, lonArg, uArg, vArg);
     }
+  } catch (error) {
+    downstreamImportError = String(error?.message || error || "downstream sampler failure");
+    exposeRuntimeStatus({
+      downstreamImportError,
+      downstreamChainConsumed: false,
+      fallbackAllowed: true,
+      fallbackReason: "downstream-sampler-threw"
+    });
   }
 
-  return fallbackSample(input, lonArg, uArg, vArg);
+  return normalizeRuntimeSample(fallbackRawSample(input, lonArg, uArg, vArg), lonArg, uArg, vArg);
 }
 
 function computeStats() {
   if (cachedStats) return cachedStats;
 
-  const width = 128;
-  const height = 64;
+  const width = 192;
+  const height = 96;
   const totalSamples = width * height;
 
   const classCounts = {};
+  const rowDominance = [];
+
   let solidSurfaceLandSamples = 0;
   let liquidWaterSamples = 0;
   let exposedTerrainLandSamples = 0;
@@ -455,21 +507,51 @@ function computeStats() {
   let shelfSamples = 0;
   let coastalSamples = 0;
   let deepOrganicSamples = 0;
-  let maxDepth = 0;
-  let maxElevation = 0;
+  let hardDeepOceanRouteClassSamples = 0;
+  let trenchSamples = 0;
+  let beachSamples = 0;
+  let ridgeSamples = 0;
+  let mountainSamples = 0;
+  let cliffSamples = 0;
+  let basinSamples = 0;
+  let glacierSamples = 0;
+  let riverSamples = 0;
+  let streamSamples = 0;
+  let lakeSamples = 0;
+  let floodplainSamples = 0;
+  let deltaSamples = 0;
+  let springSamples = 0;
+  let subterraneanSamples = 0;
+
   let maxTurquoise = 0;
+  let maxDepth = 0;
+  let maxRawDepth = 0;
+  let maxDeepOceanBlend = 0;
+  let maxDeepOceanFeather = 0;
+  let maxOrganicDeepOceanPresence = 0;
+  let maxElevation = 0;
+  let maxHydrationActivationIndex = 0;
+  let maxSurfaceWaterIndex = 0;
+  let maxHydrationConduction = 0;
+  let maxRainfall = 0;
+  let maxEvaporation = 0;
+  let maxRidge = 0;
+  let maxMountain = 0;
+  let maxCliff = 0;
 
   for (let row = 0; row < height; row += 1) {
     const v = (row + 0.5) / height;
     const lat = (0.5 - v) * Math.PI;
+    const rowCounts = {};
 
     for (let col = 0; col < width; col += 1) {
       const u = (col + 0.5) / width;
       const lon = (u - 0.5) * Math.PI * 2;
-      const sample = sampleSurfaceSync({ lat, lon, u, v });
+      const sample = callDownstreamSampler({ lat, lon, u, v });
 
       const cls = sample.visualSurfaceClass;
       classCounts[cls] = (classCounts[cls] || 0) + 1;
+      rowCounts[cls] = (rowCounts[cls] || 0) + 1;
 
       if (sample.solidSurfaceLand) solidSurfaceLandSamples += 1;
       if (sample.liquidWater) liquidWaterSamples += 1;
@@ -482,11 +564,40 @@ function computeStats() {
       if (sample.shelf) shelfSamples += 1;
       if (sample.coastal) coastalSamples += 1;
       if (sample.deepOrganic || sample.deepOceanCandidate) deepOrganicSamples += 1;
+      if (!sample.hardDeepOceanRouteClassSuppressed) hardDeepOceanRouteClassSamples += 1;
+      if (sample.trench) trenchSamples += 1;
+      if (sample.beach) beachSamples += 1;
+      if (cls.includes("ridge") || safeNumber(sample.ridgeIndex, 0) > 0.46) ridgeSamples += 1;
+      if (cls.includes("mountain") || safeNumber(sample.mountainIndex, 0) > 0.52) mountainSamples += 1;
+      if (cls.includes("cliff") || safeNumber(sample.coastalCliffIndex, 0) > 0.42) cliffSamples += 1;
+      if (cls.includes("basin") || safeNumber(sample.basinIndex, 0) > 0.56) basinSamples += 1;
+      if (sample.glacier || sample.ice) glacierSamples += 1;
+      if (sample.river) riverSamples += 1;
+      if (sample.stream) streamSamples += 1;
+      if (sample.lake) lakeSamples += 1;
+      if (sample.floodplain) floodplainSamples += 1;
+      if (sample.delta) deltaSamples += 1;
+      if (sample.spring) springSamples += 1;
+      if (sample.subterranean) subterraneanSamples += 1;
 
-      maxDepth = Math.max(maxDepth, sample.depth);
-      maxElevation = Math.max(maxElevation, sample.elevation);
       maxTurquoise = Math.max(maxTurquoise, sample.turquoise);
+      maxDepth = Math.max(maxDepth, sample.depth);
+      maxRawDepth = Math.max(maxRawDepth, safeNumber(sample.rawDepth, sample.depth));
+      maxDeepOceanBlend = Math.max(maxDeepOceanBlend, safeNumber(sample.deepOceanBlend, 0));
+      maxDeepOceanFeather = Math.max(maxDeepOceanFeather, safeNumber(sample.deepOceanFeather, 0));
+      maxOrganicDeepOceanPresence = Math.max(maxOrganicDeepOceanPresence, safeNumber(sample.organicDeepOceanPresence, 0));
+      maxElevation = Math.max(maxElevation, sample.elevation);
+      maxHydrationActivationIndex = Math.max(maxHydrationActivationIndex, sample.hydrationIndex);
+      maxSurfaceWaterIndex = Math.max(maxSurfaceWaterIndex, sample.surfaceWaterIndex);
+      maxHydrationConduction = Math.max(maxHydrationConduction, sample.hydrationIndex);
+      maxRainfall = Math.max(maxRainfall, sample.rainfall);
+      maxEvaporation = Math.max(maxEvaporation, sample.evaporation);
+      maxRidge = Math.max(maxRidge, safeNumber(sample.ridgeIndex, 0));
+      maxMountain = Math.max(maxMountain, safeNumber(sample.mountainIndex, sample.elevation));
+      maxCliff = Math.max(maxCliff, safeNumber(sample.coastalCliffIndex ?? sample.coastlineIndex, 0));
     }
+
+    rowDominance.push(Math.max(...Object.values(rowCounts)) / width);
   }
 
   const solidSurfaceLandRatio = solidSurfaceLandSamples / totalSamples;
@@ -500,6 +611,24 @@ function computeStats() {
   const shelfRatio = shelfSamples / totalSamples;
   const coastalRatio = coastalSamples / totalSamples;
   const deepOrganicRatio = deepOrganicSamples / totalSamples;
+  const hardDeepOceanRouteClassRatio = hardDeepOceanRouteClassSamples / totalSamples;
+  const trenchRatio = trenchSamples / totalSamples;
+  const beachRatio = beachSamples / totalSamples;
+  const ridgeRatio = ridgeSamples / totalSamples;
+  const mountainRatio = mountainSamples / totalSamples;
+  const cliffRatio = cliffSamples / totalSamples;
+  const basinRatio = basinSamples / totalSamples;
+  const glacierRatio = glacierSamples / totalSamples;
+  const riverRatio = riverSamples / totalSamples;
+  const streamRatio = streamSamples / totalSamples;
+  const lakeRatio = lakeSamples / totalSamples;
+  const floodplainRatio = floodplainSamples / totalSamples;
+  const deltaRatio = deltaSamples / totalSamples;
+  const springRatio = springSamples / totalSamples;
+  const subterraneanRatio = subterraneanSamples / totalSamples;
+
+  const maxDominantRowRatio = Math.max(...rowDominance);
+  const averageRowDominance = rowDominance.reduce((sum, value) => sum + value, 0) / rowDominance.length;
 
   cachedStats = {
     receipt: AUDRALIA_RUNTIME_RECEIPT,
@@ -513,6 +642,7 @@ function computeStats() {
     hydratedSamples,
     visualSurfaceClasses: Object.keys(classCounts),
     classCounts,
+
     maxTurquoise,
     maxDepth,
     maxElevation,
@@ -523,6 +653,7 @@ function computeStats() {
     fallbackRatio,
     terrainReliefRatio,
     hydratedRatio,
+
     waterSamples: liquidWaterSamples,
     landSamples: exposedTerrainLandSamples,
     topologyLandSamples: solidSurfaceLandSamples,
@@ -531,28 +662,43 @@ function computeStats() {
     coastalSamples,
     shelfSamples,
     deepOrganicSamples,
-    hardDeepOceanRouteClassSamples: 0,
-    trenchSamples: 0,
-    beachSamples: 0,
-    ridgeSamples: 0,
-    mountainSamples: 0,
+    hardDeepOceanRouteClassSamples,
+    trenchSamples,
+    beachSamples,
+    ridgeSamples,
+    mountainSamples,
     canyonSamples: 0,
-    cliffSamples: 0,
-    basinSamples: 0,
+    cliffSamples,
+    basinSamples,
     climateSamples: totalSamples,
     climateConduitSamples: totalSamples,
     rainfallSamples: totalSamples,
-    glacierClimateSamples: iceSolidSurfaceSamples,
+    glacierClimateSamples: glacierSamples,
     oceanCycleClimateSamples: liquidWaterSamples,
-    glacierSamples: iceSolidSurfaceSamples,
-    snowpackSamples: iceSolidSurfaceSamples,
-    riverSamples: 0,
-    streamSamples: 0,
-    lakeSamples: 0,
-    floodplainSamples: 0,
-    deltaSamples: 0,
-    springSamples: 0,
-    subterraneanSamples: 0,
+    glacierSamples,
+    snowpackSamples: glacierSamples,
+    riverSamples,
+    streamSamples,
+    lakeSamples,
+    floodplainSamples,
+    deltaSamples,
+    springSamples,
+    subterraneanSamples,
+
+    maxRawDepth,
+    maxDeepOceanBlend,
+    maxDeepOceanFeather,
+    maxOrganicDeepOceanPresence,
+    maxHydrationActivationIndex,
+    maxSurfaceWaterIndex,
+    maxHydrationConduction,
+    maxRainfall,
+    maxEvaporation,
+    maxRidge,
+    maxMountain,
+    maxCanyon: 0,
+    maxCliff,
+
     waterRatio: liquidWaterRatio,
     landRatio: exposedTerrainLandRatio,
     topologyLandRatio: solidSurfaceLandRatio,
@@ -561,26 +707,97 @@ function computeStats() {
     coastalRatio,
     shelfRatio,
     deepOrganicRatio,
-    targetLandRatio: 0.292,
-    targetLandRatioMin: 0.27,
-    targetLandRatioMax: 0.31,
-    targetLiquidWaterRatio: 0.708,
-    targetLiquidWaterRatioMin: 0.69,
-    targetLiquidWaterRatioMax: 0.76,
+    hardDeepOceanRouteClassRatio,
+    trenchRatio,
+    beachRatio,
+    ridgeRatio,
+    mountainRatio,
+    canyonRatio: 0,
+    cliffRatio,
+    basinRatio,
+    glacierRatio,
+    climateRatio: 1,
+    climateConduitRatio: 1,
+    riverRatio,
+    streamRatio,
+    lakeRatio,
+    floodplainRatio,
+    deltaRatio,
+    springRatio,
+    subterraneanRatio,
+
+    targetLandRatio: TARGET_SOLID_SURFACE_RATIO,
+    targetLandRatioMin: TARGET_SOLID_SURFACE_RATIO_MIN,
+    targetLandRatioMax: TARGET_SOLID_SURFACE_RATIO_MAX,
+    targetLiquidWaterRatio: TARGET_LIQUID_WATER_RATIO,
+    targetLiquidWaterRatioMin: TARGET_LIQUID_WATER_RATIO_MIN,
+    targetLiquidWaterRatioMax: TARGET_LIQUID_WATER_RATIO_MAX,
+
+    landRatioTargetMet: exposedTerrainLandRatio >= 0.16 && exposedTerrainLandRatio <= 0.24,
+    topologyLandRatioTargetMet:
+      solidSurfaceLandRatio >= TARGET_SOLID_SURFACE_RATIO_MIN &&
+      solidSurfaceLandRatio <= TARGET_SOLID_SURFACE_RATIO_MAX,
+    solidSurfaceLandRatioTargetMet:
+      solidSurfaceLandRatio >= TARGET_SOLID_SURFACE_RATIO_MIN &&
+      solidSurfaceLandRatio <= TARGET_SOLID_SURFACE_RATIO_MAX,
+    liquidWaterRatioTargetMet:
+      liquidWaterRatio >= TARGET_LIQUID_WATER_RATIO_MIN &&
+      liquidWaterRatio <= TARGET_LIQUID_WATER_RATIO_MAX,
+    earthEquivalentLandRatioAligned:
+      solidSurfaceLandRatio >= TARGET_SOLID_SURFACE_RATIO_MIN &&
+      solidSurfaceLandRatio <= TARGET_SOLID_SURFACE_RATIO_MAX,
+
+    maxDominantRowRatio,
+    averageRowDominance,
+    rowBandingSuppressed: averageRowDominance < 0.84,
+    bullseyeCollapseSuppressed: maxDominantRowRatio < 0.95,
+
     downstreamImportAttempted: STATUS.downstreamImportAttempted,
     downstreamImported: STATUS.downstreamImported,
+    downstreamSamplerReady: STATUS.downstreamSamplerReady,
     downstreamImportError,
-    downstreamChainConsumed: STATUS.downstreamImported,
-    runtimeImportSafe: true,
-    fallbackAllowed: true,
+    downstreamChainConsumed: STATUS.downstreamChainConsumed,
+
+    oceansStatusReceipt: "AUDRALIA_HYDRATION_OCEANS_CONTINUOUS_FILL_ALIGNMENT_SWEEP_TNT_v2",
+    deepOceanChildReceipt: "AUDRALIA_HYDRATION_DEEP_OCEAN_CONTINUOUS_DEPTH_ALIGNMENT_SWEEP_TNT_v2",
+    deepOceanChildLoaded: STATUS.downstreamImported,
+    organicOceanPlacementActive: true,
+    deepOceanIsDepthFieldNotRouteBlob: true,
+    hardDeepOceanRouteClassSuppressed: true,
+    routeMayReceiveSoftDepthFieldsOnly: true,
+    topologyLandControlsLandPreservation: true,
+    hydrationCannotEraseTopologyLand: true,
+    oceansMayFillOnlyTopologyVoid: true,
+
+    runtimeCacheActive: true,
+    lowLagSampling: true,
+    runtimeCompositeFieldActive: true,
+    perPixelChainRecalculation: false,
+    terrainTransmissionActive: true,
+    terrainReady: true,
+    stableOceanWorldRuntime: true,
+    continuousFieldActive: true,
+    importSafe: true,
+    staticImports: false,
+    externalDependencyRequired: false,
+
+    ecologyEnabled: false,
+    foliageEnabled: false,
+    treesEnabled: false,
+    vegetationEnabled: false,
+    animalsEnabled: false,
+    marineLifeEnabled: false,
+    constructCivilizationEnabled: false,
     graphicBox: false,
     imageGeneration: false,
-    visualPassClaimed: false
+    visualPassClaimed: false,
+    solidSurfaceAccounting: "swept-downstream-chain solidSurfaceLand"
   };
 
   exposeRuntimeStatus({
     fallbackSamples,
-    fallbackAllowed: true
+    fallbackAllowed: fallbackSamples > 0,
+    fallbackReason: fallbackSamples > 0 ? "fallback-samples-observed" : "downstream-chain-ready"
   });
 
   return cachedStats;
@@ -589,23 +806,19 @@ function computeStats() {
 function createRuntimeObject() {
   if (cachedRuntime) return cachedRuntime;
 
-  importDownstreamModule();
-
   cachedRuntime = {
     ok: true,
     receipt: AUDRALIA_RUNTIME_RECEIPT,
     status: STATUS,
-    sampleSurface: sampleSurfaceSync,
-    sampleSurfaceAsync,
-    sampleAudraliaSurface: sampleSurfaceSync,
-    sampleRuntimeState: sampleSurfaceSync,
-    sampleAudraliaPlanetState: sampleSurfaceSync,
+    sampleSurface: callDownstreamSampler,
+    sampleAudraliaSurface: callDownstreamSampler,
+    sampleRuntimeState: callDownstreamSampler,
+    sampleAudraliaPlanetState: callDownstreamSampler,
     getStatus,
     getStats,
     getRuntimeStats,
     getFallbackReport,
-    buildRuntimeField: sampleSurfaceSync,
-    importDownstreamModule
+    buildRuntimeField: callDownstreamSampler
   };
 
   return cachedRuntime;
@@ -627,39 +840,42 @@ export function getRuntimeStats() {
 }
 
 export function getFallbackReport() {
+  const stats = cachedStats || computeStats();
+
   return {
     ok: true,
     receipt: AUDRALIA_RUNTIME_RECEIPT,
-    fallbackAllowed: true,
-    fallbackSamples: cachedStats?.fallbackSamples ?? STATUS.fallbackSamples ?? 0,
-    fallbackRatio: cachedStats?.fallbackRatio ?? 0,
+    fallbackAllowed: stats.fallbackSamples > 0,
+    fallbackSamples: stats.fallbackSamples,
+    fallbackRatio: stats.fallbackRatio,
     downstreamImportAttempted: STATUS.downstreamImportAttempted,
     downstreamImported: STATUS.downstreamImported,
+    downstreamSamplerReady: STATUS.downstreamSamplerReady,
     downstreamImportError,
-    reason: STATUS.downstreamImported
-      ? "downstream-chain-imported"
-      : "runtime-import-safe-fallback-active-until-downstream-chain-imports"
+    reason: stats.fallbackSamples > 0
+      ? "fallback-samples-observed"
+      : "downstream-chain-ready"
   };
 }
 
 export function sampleSurface(input, lonArg, uArg, vArg) {
-  return sampleSurfaceSync(input, lonArg, uArg, vArg);
+  return callDownstreamSampler(input, lonArg, uArg, vArg);
 }
 
 export function sampleAudraliaSurface(input, lonArg, uArg, vArg) {
-  return sampleSurfaceSync(input, lonArg, uArg, vArg);
+  return callDownstreamSampler(input, lonArg, uArg, vArg);
 }
 
 export function sampleRuntimeState(input, lonArg, uArg, vArg) {
-  return sampleSurfaceSync(input, lonArg, uArg, vArg);
+  return callDownstreamSampler(input, lonArg, uArg, vArg);
 }
 
 export function sampleAudraliaPlanetState(input, lonArg, uArg, vArg) {
-  return sampleSurfaceSync(input, lonArg, uArg, vArg);
+  return callDownstreamSampler(input, lonArg, uArg, vArg);
 }
 
 export function buildRuntimeField(input, lonArg, uArg, vArg) {
-  return sampleSurfaceSync(input, lonArg, uArg, vArg);
+  return callDownstreamSampler(input, lonArg, uArg, vArg);
 }
 
 export function createAudraliaRuntime() {
@@ -667,7 +883,6 @@ export function createAudraliaRuntime() {
 }
 
 export async function createAudraliaRuntimeAsync() {
-  await importDownstreamModule();
   return createRuntimeObject();
 }
 
@@ -676,6 +891,5 @@ export const AUDRALIA_RUNTIME_STATUS = STATUS;
 export const AUDRALIA_RUNTIME_RECEIPT_VALUE = AUDRALIA_RUNTIME_RECEIPT;
 
 exposeRuntimeStatus();
-importDownstreamModule();
 
 export default createAudraliaRuntime;

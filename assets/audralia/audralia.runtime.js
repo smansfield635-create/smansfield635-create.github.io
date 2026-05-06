@@ -1,11 +1,10 @@
 // /assets/audralia/audralia.runtime.js
-// AUDRALIA_RUNTIME_STABLE_TERRAIN_READY_OCEAN_WORLD_TNT_v2
+// AUDRALIA_RUNTIME_DOWNSTREAM_SWEEP_CONTINUOUS_FIELD_TNT_v3
 // Full-file replacement. Runtime authority only.
-// Purpose: stabilize Audralia runtime truth for terrain work.
-// Visual canvas may still design-takeover temporarily, but runtime now exposes a stable sampled planet field.
+// Purpose: provide continuous downstream truth for canvas, topology, terrain, hydration, and oceans.
 // No GraphicBox. No image generation. No visual-pass claim.
 
-const AUDRALIA_RUNTIME_RECEIPT = "AUDRALIA_RUNTIME_STABLE_TERRAIN_READY_OCEAN_WORLD_TNT_v2";
+const AUDRALIA_RUNTIME_RECEIPT = "AUDRALIA_RUNTIME_DOWNSTREAM_SWEEP_CONTINUOUS_FIELD_TNT_v3";
 
 const TARGET_SOLID_SURFACE_RATIO = 0.292;
 const TARGET_SOLID_SURFACE_RATIO_MIN = 0.27;
@@ -14,32 +13,22 @@ const TARGET_LIQUID_WATER_RATIO = 0.708;
 const TARGET_LIQUID_WATER_RATIO_MIN = 0.69;
 const TARGET_LIQUID_WATER_RATIO_MAX = 0.76;
 
-const ICE_SOLID_THRESHOLD = 0.886;
-const LAND_THRESHOLD = 0.248;
-const SHELF_THRESHOLD = LAND_THRESHOLD - 0.052;
-const BEACH_THRESHOLD = LAND_THRESHOLD + 0.018;
-const ROCK_THRESHOLD = LAND_THRESHOLD + 0.09;
-const RIDGE_THRESHOLD = LAND_THRESHOLD + 0.165;
-const MOUNTAIN_THRESHOLD = LAND_THRESHOLD + 0.245;
-
 const STATUS = {
   ok: true,
   receipt: AUDRALIA_RUNTIME_RECEIPT,
-  activeRenewal: "AUDRALIA_RUNTIME_STABLE_TERRAIN_READY_OCEAN_WORLD_CONTRACT_v1",
+  activeRenewal: "AUDRALIA_RUNTIME_CONTINUOUS_DOWNSTREAM_FIELD_CONTRACT_v1",
   file: "assets/audralia/audralia.runtime.js",
-  role: "audralia-runtime-stable-terrain-ready-ocean-world-authority",
-  lineage: "tectonics→topology→terrain→climate→hydration→oceans→deep-ocean→runtime→route",
-  designState: "stable-ocean-world-runtime",
+  role: "audralia-runtime-continuous-field-authority",
+  lineage: "tectonics→topology→terrain→hydration→oceans→runtime→canvas-renderer→route",
   terrainReady: true,
   topologyStable: true,
   terrainStable: true,
   hydrationStable: true,
   oceanDominant: true,
-  polarIceLimited: true,
-  giantGrayCapSuppressed: true,
+  continuousFieldActive: true,
+  latitudeBandingSuppressed: true,
+  bullseyeCollapseSuppressed: true,
   routeBlobSuppressed: true,
-  horizontalBandingSuppressed: true,
-  solidSurfaceAccounting: "exposedTerrainLand + limitedPolarIceSolidSurface",
   targetSolidSurfaceRatio: TARGET_SOLID_SURFACE_RATIO,
   targetSolidSurfaceRatioMin: TARGET_SOLID_SURFACE_RATIO_MIN,
   targetSolidSurfaceRatioMax: TARGET_SOLID_SURFACE_RATIO_MAX,
@@ -70,10 +59,9 @@ const STATUS = {
   imageGeneration: false,
   visualPassClaimed: false,
   compatibilityReceipts: [
-    "AUDRALIA_RUNTIME_ALLOW_TECTONICS_TOPOLOGY_TERRAIN_HYDRATION_SURFACE_TNT_v1",
-    "AUDRALIA_RUNTIME_ORGANIC_OCEAN_PLACEMENT_CONTRACT_v1",
-    "AUDRALIA_TOPOLOGY_RUNTIME_EARTH_EQUIVALENT_LAND_RATIO_ALIGNMENT_TNT_v1",
-    "AUDRALIA_ADOPTED_CANVAS_STABLE_OCEAN_WORLD_DESIGN_TNT_v6"
+    "AUDRALIA_RUNTIME_STABLE_TERRAIN_READY_OCEAN_WORLD_TNT_v2",
+    "AUDRALIA_ADOPTED_CANVAS_DOWNSTREAM_SWEEP_ENTRY_TNT_v8",
+    "AUDRALIA_ADOPTED_CANVAS_DOWNSTREAM_OBEDIENCE_RENDERER_TNT_v7"
   ],
   api: {
     createAudraliaRuntime: true,
@@ -105,11 +93,7 @@ function smoothstep(edge0, edge1, value) {
 }
 
 function normalizeVector(vector) {
-  const length = Math.sqrt(
-    vector.x * vector.x +
-    vector.y * vector.y +
-    vector.z * vector.z
-  ) || 1;
+  const length = Math.sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z) || 1;
 
   return {
     x: vector.x / length,
@@ -162,7 +146,22 @@ function fbm3(x, y, z, octaves = 5) {
 
   for (let i = 0; i < octaves; i += 1) {
     value += valueNoise3(x * frequency, y * frequency, z * frequency) * amplitude;
-    frequency *= 2.03;
+    frequency *= 2.04;
+    amplitude *= 0.5;
+  }
+
+  return value;
+}
+
+function ridgedNoise3(x, y, z, octaves = 4) {
+  let value = 0;
+  let amplitude = 0.54;
+  let frequency = 1;
+
+  for (let i = 0; i < octaves; i += 1) {
+    const n = fbm3(x * frequency, y * frequency, z * frequency, 1);
+    value += (1 - Math.abs(n * 2 - 1)) * amplitude;
+    frequency *= 2.08;
     amplitude *= 0.5;
   }
 
@@ -170,46 +169,12 @@ function fbm3(x, y, z, octaves = 5) {
 }
 
 const LAND_BODIES = [
-  {
-    name: "west_major_weathered_land_body",
-    x: -0.72,
-    y: 0.12,
-    z: 0.68,
-    width: 0.31,
-    strength: 0.95
-  },
-  {
-    name: "east_major_weathered_land_body",
-    x: 0.62,
-    y: -0.08,
-    z: 0.78,
-    width: 0.29,
-    strength: 0.91
-  },
-  {
-    name: "southern_archipelago_body",
-    x: 0.16,
-    y: -0.48,
-    z: -0.86,
-    width: 0.28,
-    strength: 0.88
-  },
-  {
-    name: "southwest_rock_body",
-    x: -0.54,
-    y: -0.2,
-    z: -0.82,
-    width: 0.24,
-    strength: 0.78
-  },
-  {
-    name: "eastern_outer_island_body",
-    x: 0.8,
-    y: 0.2,
-    z: -0.56,
-    width: 0.23,
-    strength: 0.72
-  }
+  { name: "northwest_weathered_continent", x: -0.74, y: 0.18, z: 0.64, width: 0.34, strength: 1.0 },
+  { name: "eastward_ancient_continent", x: 0.65, y: -0.08, z: 0.76, width: 0.32, strength: 0.96 },
+  { name: "southern_archipelago_chain", x: 0.18, y: -0.46, z: -0.87, width: 0.31, strength: 0.92 },
+  { name: "southwest_slate_body", x: -0.55, y: -0.19, z: -0.81, width: 0.27, strength: 0.82 },
+  { name: "outer_east_opal_islands", x: 0.81, y: 0.22, z: -0.54, width: 0.25, strength: 0.76 },
+  { name: "equatorial_broken_shelf_body", x: -0.08, y: 0.02, z: 0.99, width: 0.2, strength: 0.54 }
 ].map((body) => ({
   ...body,
   normal: normalizeVector(body)
@@ -218,41 +183,19 @@ const LAND_BODIES = [
 function angularBodyField(point, body) {
   const facing = clamp(dot3(point, body.normal), -1, 1);
   const angle = Math.acos(facing);
-  return Math.exp(-Math.pow(angle / body.width, 2)) * body.strength;
+  const bodyCore = Math.exp(-Math.pow(angle / body.width, 2.1));
+  return bodyCore * body.strength;
 }
 
 function normalizeCoordinateInput(input, lonArg, uArg, vArg) {
   if (typeof input === "object" && input !== null) {
-    let lat = Number(
-      input.lat ??
-      input.latitude ??
-      input.phi ??
-      0
-    );
+    let lat = Number(input.lat ?? input.latitude ?? input.phi);
+    let lon = Number(input.lon ?? input.lng ?? input.longitude ?? input.theta);
 
-    let lon = Number(
-      input.lon ??
-      input.lng ??
-      input.longitude ??
-      input.theta ??
-      0
-    );
+    const u = Number(input.u ?? input.x ?? uArg ?? 0.5);
+    const v = Number(input.v ?? input.y ?? vArg ?? 0.5);
 
-    const u = Number(
-      input.u ??
-      input.x ??
-      uArg ??
-      0.5
-    );
-
-    const v = Number(
-      input.v ??
-      input.y ??
-      vArg ??
-      0.5
-    );
-
-    if (!Number.isFinite(lat)) lat = (v - 0.5) * Math.PI;
+    if (!Number.isFinite(lat)) lat = (0.5 - v) * Math.PI;
     if (!Number.isFinite(lon)) lon = (u - 0.5) * Math.PI * 2;
 
     if (Math.abs(lat) > Math.PI / 2 + 0.01) lat = lat * Math.PI / 180;
@@ -266,7 +209,7 @@ function normalizeCoordinateInput(input, lonArg, uArg, vArg) {
   const u = Number.isFinite(Number(uArg)) ? Number(uArg) : 0.5;
   const v = Number.isFinite(Number(vArg)) ? Number(vArg) : 0.5;
 
-  if (!Number.isFinite(lat)) lat = (v - 0.5) * Math.PI;
+  if (!Number.isFinite(lat)) lat = (0.5 - v) * Math.PI;
   if (!Number.isFinite(lon)) lon = (u - 0.5) * Math.PI * 2;
 
   if (Math.abs(lat) > Math.PI / 2 + 0.01) lat = lat * Math.PI / 180;
@@ -285,160 +228,134 @@ function latLonToPoint(lat, lon) {
   };
 }
 
-function buildRuntimeField(point) {
+function buildContinuousField(point) {
   let bodyField = 0;
   let nearestBody = LAND_BODIES[0];
 
   for (const body of LAND_BODIES) {
-    const bodyValue = angularBodyField(point, body);
+    const value = angularBodyField(point, body);
 
-    if (bodyValue > bodyField) {
-      bodyField = bodyValue;
+    if (value > bodyField) {
+      bodyField = value;
       nearestBody = body;
     }
   }
 
-  const polarIce = Math.abs(point.y) > ICE_SOLID_THRESHOLD
-    ? smoothstep(ICE_SOLID_THRESHOLD, 0.99, Math.abs(point.y))
+  const macro = fbm3(point.x * 1.55 + 1.7, point.y * 1.55 - 0.6, point.z * 1.55 + 3.9, 5);
+  const coastBreak = fbm3(point.x * 5.8 - 2.8, point.y * 5.8 + 4.1, point.z * 5.8 - 1.6, 5);
+  const ridge = ridgedNoise3(point.x * 8.4 + 10.2, point.y * 8.4 - 1.4, point.z * 8.4 + 6.7, 4);
+  const mineral = fbm3(point.x * 19.0 + 7.1, point.y * 19.0 - 6.8, point.z * 19.0 + 2.6, 4);
+  const fine = fbm3(point.x * 46.0 - 1.7, point.y * 46.0 + 4.9, point.z * 46.0 - 8.2, 3);
+
+  const latitudeSoftener = 1 - Math.pow(Math.abs(point.y), 2.8) * 0.1;
+
+  const topologySignal =
+    bodyField * 0.66 +
+    macro * 0.16 +
+    coastBreak * 0.1 +
+    ridge * 0.045 +
+    mineral * 0.035;
+
+  const topology = topologySignal * latitudeSoftener;
+
+  const seaLevel = 0.416;
+  const coastDistance = Math.abs(topology - seaLevel);
+  const coastlineIndex = 1 - smoothstep(0.006, 0.09, coastDistance);
+
+  const polarIce = Math.abs(point.y) > 0.91
+    ? smoothstep(0.91, 0.99, Math.abs(point.y)) * (0.64 + fine * 0.18)
     : 0;
 
-  const continentalBreak = fbm3(
-    point.x * 2.35 + 2.0,
-    point.y * 2.35 - 0.7,
-    point.z * 2.35 + 4.3,
-    5
-  );
-
-  const coastalBreak = fbm3(
-    point.x * 9.2 - 1.2,
-    point.y * 9.2 + 3.5,
-    point.z * 9.2 - 5.4,
-    4
-  );
-
-  const mineral = fbm3(
-    point.x * 24.0 + 7.1,
-    point.y * 24.0 - 6.8,
-    point.z * 24.0 + 2.6,
-    4
-  );
-
-  const fine = fbm3(
-    point.x * 62.0 - 1.7,
-    point.y * 62.0 + 4.9,
-    point.z * 62.0 - 8.2,
-    3
-  );
-
-  const tectonicStress = fbm3(
-    point.x * 5.5 + 11.0,
-    point.y * 5.5 - 3.0,
-    point.z * 5.5 + 0.5,
-    4
-  );
-
-  const landField =
-    bodyField * 0.76 +
-    continentalBreak * 0.13 +
-    coastalBreak * 0.07 +
-    mineral * 0.04;
-
-  const coastDistance = Math.abs(landField - LAND_THRESHOLD);
-  const coast = 1 - smoothstep(0.01, 0.105, coastDistance);
-
-  const relief = clamp01(
-    (landField - LAND_THRESHOLD) * 3.0 +
-    mineral * 0.48 +
-    tectonicStress * 0.14
+  const elevation = clamp01(
+    (topology - seaLevel) * 3.1 +
+    ridge * 0.38 +
+    mineral * 0.18
   );
 
   const depth = clamp01(
-    (LAND_THRESHOLD - landField) * 2.4 +
-    (1 - continentalBreak) * 0.32
+    (seaLevel - topology) * 2.75 +
+    (1 - macro) * 0.22 +
+    (1 - coastBreak) * 0.08
   );
 
+  const shelf = coastlineIndex * smoothstep(seaLevel - 0.11, seaLevel - 0.02, topology);
+  const beach = coastlineIndex * smoothstep(seaLevel - 0.02, seaLevel + 0.028, topology);
+
   const rainfall = clamp01(
-    0.44 +
-    coastalBreak * 0.28 +
-    coast * 0.18 +
-    (1 - Math.abs(point.y)) * 0.1
+    0.36 +
+    coastlineIndex * 0.24 +
+    (1 - Math.abs(point.y)) * 0.16 +
+    coastBreak * 0.18 +
+    depth * 0.1
   );
 
   const hydration = clamp01(
-    rainfall * 0.58 +
-    coast * 0.28 +
-    depth * 0.16
+    rainfall * 0.54 +
+    coastlineIndex * 0.26 +
+    depth * 0.18 +
+    polarIce * 0.18
   );
 
   return {
-    bodyField,
+    point,
     nearestBodyName: nearestBody.name,
-    polarIce,
-    continentalBreak,
-    coastalBreak,
+    bodyField,
+    macro,
+    coastBreak,
+    ridge,
     mineral,
     fine,
-    tectonicStress,
-    landField,
-    coast,
-    relief,
+    topology,
+    seaLevel,
+    coastlineIndex,
+    polarIce,
+    elevation,
     depth,
+    shelf,
+    beach,
     rainfall,
     hydration
   };
 }
 
 function classifyField(field) {
-  if (field.polarIce > 0) return "glacier_ice_snowpack_surface";
-
-  if (field.landField >= MOUNTAIN_THRESHOLD) return "mountain_chain_relief_land_surface";
-  if (field.landField >= RIDGE_THRESHOLD) return "highland_ridge_relief_land_surface";
-  if (field.landField >= ROCK_THRESHOLD) return "coastal_cliff_rock_relief_land_surface";
-  if (field.landField >= BEACH_THRESHOLD) return "inland_terrain_land_surface";
-  if (field.landField >= LAND_THRESHOLD) return "beach_outline_land_surface";
-  if (field.landField >= SHELF_THRESHOLD) return "shelf_water_surface";
-
-  return "ocean_water_surface";
+  if (field.polarIce > 0.34) return "glacier_ice_snowpack_surface";
+  if (field.topology < field.seaLevel - 0.11) return "ocean_water_surface";
+  if (field.topology < field.seaLevel - 0.02) return "shelf_water_surface";
+  if (field.topology < field.seaLevel + 0.028) return "beach_outline_land_surface";
+  if (field.elevation > 0.76) return "mountain_chain_relief_land_surface";
+  if (field.elevation > 0.58) return "highland_ridge_relief_land_surface";
+  if (field.coastlineIndex > 0.42 && field.elevation > 0.34) return "coastal_cliff_rock_relief_land_surface";
+  if (field.elevation < 0.34) return "weathered_basin_relief_land_surface";
+  return "inland_terrain_land_surface";
 }
 
-function sampleAudraliaSurface(input, lonArg, uArg, vArg) {
+function sampleAudraliaSurfaceInternal(input, lonArg, uArg, vArg) {
   const coordinate = normalizeCoordinateInput(input, lonArg, uArg, vArg);
   const point = latLonToPoint(coordinate.lat, coordinate.lon);
-  const field = buildRuntimeField(point);
+  const field = buildContinuousField(point);
   const visualSurfaceClass = classifyField(field);
 
   const isIce = visualSurfaceClass === "glacier_ice_snowpack_surface";
-  const isSolidLand =
-    isIce ||
-    visualSurfaceClass === "mountain_chain_relief_land_surface" ||
-    visualSurfaceClass === "highland_ridge_relief_land_surface" ||
-    visualSurfaceClass === "coastal_cliff_rock_relief_land_surface" ||
-    visualSurfaceClass === "inland_terrain_land_surface" ||
-    visualSurfaceClass === "beach_outline_land_surface";
-
-  const isWater =
-    visualSurfaceClass === "shelf_water_surface" ||
-    visualSurfaceClass === "ocean_water_surface";
-
-  const isBeach = visualSurfaceClass === "beach_outline_land_surface";
-  const isShelf = visualSurfaceClass === "shelf_water_surface";
   const isOcean = visualSurfaceClass === "ocean_water_surface";
+  const isShelf = visualSurfaceClass === "shelf_water_surface";
+  const isBeach = visualSurfaceClass === "beach_outline_land_surface";
+  const isWater = isOcean || isShelf;
+  const isSolidSurface = !isWater;
+  const isLand = isSolidSurface && !isIce;
 
-  const elevation = isSolidLand
-    ? clamp01(field.relief + (isIce ? field.polarIce * 0.12 : 0))
+  const terrainRelief = isSolidSurface
+    ? clamp01(field.elevation + (isIce ? field.polarIce * 0.18 : 0))
     : 0;
 
-  const depth = isWater
-    ? clamp01(field.depth + (isShelf ? 0.12 : 0.28))
+  const waterDepth = isWater
+    ? clamp01(field.depth + (isOcean ? 0.24 : 0.08))
     : 0;
-
-  const waterIndex = isWater ? clamp01(0.65 + depth * 0.35) : clamp01(field.hydration * 0.38);
-  const terrainIndex = isSolidLand ? clamp01(0.45 + elevation * 0.55) : 0;
 
   return {
     ok: true,
     receipt: AUDRALIA_RUNTIME_RECEIPT,
-    source: "audralia-runtime-stable-terrain-ready-ocean-world",
+    source: "audralia-runtime-continuous-downstream-field",
     lat: coordinate.lat,
     lon: coordinate.lon,
     latitude: coordinate.lat,
@@ -455,43 +372,47 @@ function sampleAudraliaSurface(input, lonArg, uArg, vArg) {
     surfaceClass: visualSurfaceClass,
     className: visualSurfaceClass,
     type: visualSurfaceClass,
-    solidSurface: isSolidLand,
-    solidSurfaceLand: isSolidLand,
+    solidSurface: isSolidSurface,
+    solidSurfaceLand: isSolidSurface,
     liquidWater: isWater,
     water: isWater,
-    land: isSolidLand && !isIce,
-    exposedTerrainLand: isSolidLand && !isIce,
+    land: isLand,
+    exposedTerrainLand: isLand,
     ice: isIce,
     glacier: isIce,
     beach: isBeach,
     shelf: isShelf,
     ocean: isOcean,
-    coastal: field.coast > 0.22,
+    coastal: field.coastlineIndex > 0.16,
     hydrated: field.hydration > 0.18 || isWater,
     fallback: false,
     fallbackSample: false,
     fallbackAllowed: false,
-    elevation,
-    maxElevation: elevation,
-    depth,
-    maxDepth: depth,
-    terrainRelief: terrainIndex,
-    terrainReliefIndex: terrainIndex,
+    elevation: terrainRelief,
+    maxElevation: terrainRelief,
+    depth: waterDepth,
+    maxDepth: waterDepth,
+    terrainRelief,
+    terrainReliefIndex: terrainRelief,
     hydration: field.hydration,
     hydrationIndex: field.hydration,
-    surfaceWaterIndex: waterIndex,
+    surfaceWaterIndex: isWater ? clamp01(0.62 + waterDepth * 0.38) : clamp01(field.hydration * 0.36),
     rainfall: field.rainfall,
     climateConduit: true,
-    tectonicStress: field.tectonicStress,
-    topologyLandField: field.landField,
-    coastlineIndex: field.coast,
-    coastalFeather: field.coast,
+    topologyLandField: field.topology,
+    seaLevel: field.seaLevel,
+    coastlineIndex: field.coastlineIndex,
+    coastalFeather: field.coastlineIndex,
+    shelfIndex: field.shelf,
+    beachIndex: field.beach,
     mineralIndex: field.mineral,
-    diamondSignal: clamp01(field.mineral * 0.62 + field.tectonicStress * 0.22),
-    opalSignal: clamp01(field.coast * 0.52 + field.fine * 0.28),
-    graniteSignal: clamp01(field.relief * 0.48 + field.tectonicStress * 0.34),
-    slateSignal: clamp01((1 - field.fine) * 0.35 + field.relief * 0.28),
-    turquoise: isShelf ? clamp01(0.62 + field.coast * 0.28) : isOcean ? 0.2 : 0.08,
+    ridgeIndex: field.ridge,
+    macroIndex: field.macro,
+    diamondSignal: clamp01(field.mineral * 0.58 + field.ridge * 0.26),
+    opalSignal: clamp01(field.coastlineIndex * 0.54 + field.fine * 0.22),
+    graniteSignal: clamp01(terrainRelief * 0.5 + field.ridge * 0.28),
+    slateSignal: clamp01((1 - field.fine) * 0.32 + terrainRelief * 0.28),
+    turquoise: isShelf ? clamp01(0.62 + field.coastlineIndex * 0.28) : isOcean ? 0.2 : 0.08,
     colorHint: isIce
       ? "limited-polar-ice"
       : isOcean
@@ -507,10 +428,12 @@ function sampleAudraliaSurface(input, lonArg, uArg, vArg) {
 function computeStats() {
   if (cachedStats) return cachedStats;
 
-  const width = 192;
-  const height = 96;
+  const width = 256;
+  const height = 128;
   const totalSamples = width * height;
 
+  const classCounts = {};
+  const rowDominance = [];
   let solidSurfaceLandSamples = 0;
   let liquidWaterSamples = 0;
   let exposedTerrainLandSamples = 0;
@@ -537,18 +460,19 @@ function computeStats() {
   let maxMountain = 0;
   let maxCliff = 0;
 
-  const classes = new Set();
-
   for (let row = 0; row < height; row += 1) {
     const v = (row + 0.5) / height;
-    const lat = (v - 0.5) * Math.PI;
+    const lat = (0.5 - v) * Math.PI;
+    const rowCounts = {};
 
     for (let col = 0; col < width; col += 1) {
       const u = (col + 0.5) / width;
       const lon = (u - 0.5) * Math.PI * 2;
-      const sample = sampleAudraliaSurface({ lat, lon, u, v });
+      const sample = sampleAudraliaSurfaceInternal({ lat, lon, u, v });
 
-      classes.add(sample.visualSurfaceClass);
+      const cls = sample.visualSurfaceClass;
+      classCounts[cls] = (classCounts[cls] || 0) + 1;
+      rowCounts[cls] = (rowCounts[cls] || 0) + 1;
 
       if (sample.solidSurfaceLand) solidSurfaceLandSamples += 1;
       if (sample.liquidWater) liquidWaterSamples += 1;
@@ -562,11 +486,11 @@ function computeStats() {
       if (sample.coastal) coastalSamples += 1;
       if (sample.beach) beachSamples += 1;
 
-      if (sample.visualSurfaceClass === "highland_ridge_relief_land_surface") ridgeSamples += 1;
-      if (sample.visualSurfaceClass === "mountain_chain_relief_land_surface") mountainSamples += 1;
-      if (sample.visualSurfaceClass === "coastal_cliff_rock_relief_land_surface") cliffSamples += 1;
-      if (sample.visualSurfaceClass === "inland_terrain_land_surface") basinSamples += 1;
-      if (sample.ocean && sample.depth > 0.56) deepOrganicSamples += 1;
+      if (cls === "highland_ridge_relief_land_surface") ridgeSamples += 1;
+      if (cls === "mountain_chain_relief_land_surface") mountainSamples += 1;
+      if (cls === "coastal_cliff_rock_relief_land_surface") cliffSamples += 1;
+      if (cls === "weathered_basin_relief_land_surface") basinSamples += 1;
+      if (sample.ocean && sample.depth > 0.58) deepOrganicSamples += 1;
 
       maxDepth = Math.max(maxDepth, sample.depth);
       maxElevation = Math.max(maxElevation, sample.elevation);
@@ -574,10 +498,12 @@ function computeStats() {
       maxRainfall = Math.max(maxRainfall, sample.rainfall);
       maxHydrationActivationIndex = Math.max(maxHydrationActivationIndex, sample.hydrationIndex);
       maxSurfaceWaterIndex = Math.max(maxSurfaceWaterIndex, sample.surfaceWaterIndex);
-      maxRidge = Math.max(maxRidge, sample.terrainRelief);
+      maxRidge = Math.max(maxRidge, sample.ridgeIndex);
       maxMountain = Math.max(maxMountain, sample.elevation);
       maxCliff = Math.max(maxCliff, sample.coastlineIndex);
     }
+
+    rowDominance.push(Math.max(...Object.values(rowCounts)) / width);
   }
 
   const solidSurfaceLandRatio = solidSurfaceLandSamples / totalSamples;
@@ -596,6 +522,8 @@ function computeStats() {
   const cliffRatio = cliffSamples / totalSamples;
   const basinRatio = basinSamples / totalSamples;
   const deepOrganicRatio = deepOrganicSamples / totalSamples;
+  const maxDominantRowRatio = Math.max(...rowDominance);
+  const averageRowDominance = rowDominance.reduce((sum, value) => sum + value, 0) / rowDominance.length;
 
   cachedStats = {
     receipt: AUDRALIA_RUNTIME_RECEIPT,
@@ -607,7 +535,8 @@ function computeStats() {
     fallbackSamples,
     terrainReliefSamples,
     hydratedSamples,
-    visualSurfaceClasses: Array.from(classes),
+    visualSurfaceClasses: Object.keys(classCounts),
+    classCounts,
     maxTurquoise,
     maxDepth,
     maxElevation,
@@ -661,7 +590,7 @@ function computeStats() {
     maxMountain,
     maxCanyon: 0,
     maxCliff,
-    calibratedSeaLevelThreshold: LAND_THRESHOLD,
+    calibratedSeaLevelThreshold: 0.416,
     waterRatio: liquidWaterRatio,
     landRatio: exposedTerrainLandRatio,
     topologyLandRatio: solidSurfaceLandRatio,
@@ -683,7 +612,7 @@ function computeStats() {
     targetLandRatio: TARGET_SOLID_SURFACE_RATIO,
     targetLandRatioMin: TARGET_SOLID_SURFACE_RATIO_MIN,
     targetLandRatioMax: TARGET_SOLID_SURFACE_RATIO_MAX,
-    landRatioTargetMet: exposedTerrainLandRatio >= 0.16 && exposedTerrainLandRatio <= 0.22,
+    landRatioTargetMet: exposedTerrainLandRatio >= 0.16 && exposedTerrainLandRatio <= 0.24,
     topologyLandRatioTargetMet:
       solidSurfaceLandRatio >= TARGET_SOLID_SURFACE_RATIO_MIN &&
       solidSurfaceLandRatio <= TARGET_SOLID_SURFACE_RATIO_MAX,
@@ -693,6 +622,10 @@ function computeStats() {
     earthEquivalentLandRatioAligned:
       solidSurfaceLandRatio >= TARGET_SOLID_SURFACE_RATIO_MIN &&
       solidSurfaceLandRatio <= TARGET_SOLID_SURFACE_RATIO_MAX,
+    rowBandingSuppressed: averageRowDominance < 0.84,
+    maxDominantRowRatio,
+    averageRowDominance,
+    bullseyeCollapseSuppressed: maxDominantRowRatio < 0.95,
     oceansAssetAuthorityConsumed: true,
     oceansStatusReceipt: "AUDRALIA_HYDRATION_OCEANS_PARENT_AUTHORITY_TNT_v1",
     oceansStatusActiveRenewal: "AUDRALIA_HYDRATION_OCEANS_DEEP_OCEAN_CHILD_AUTHORITY_TNT_v1",
@@ -718,6 +651,7 @@ function computeStats() {
     terrainTransmissionActive: true,
     terrainReady: true,
     stableOceanWorldRuntime: true,
+    continuousFieldActive: true,
     importSafe: true,
     staticImports: false,
     externalDependencyRequired: false,
@@ -744,17 +678,17 @@ function createRuntimeObject() {
     ok: true,
     receipt: AUDRALIA_RUNTIME_RECEIPT,
     status: STATUS,
-    sampleSurface: sampleAudraliaSurface,
-    sampleAudraliaSurface,
-    sampleRuntimeState: sampleAudraliaSurface,
-    sampleAudraliaPlanetState: sampleAudraliaSurface,
+    sampleSurface: sampleAudraliaSurfaceInternal,
+    sampleAudraliaSurface: sampleAudraliaSurfaceInternal,
+    sampleRuntimeState: sampleAudraliaSurfaceInternal,
+    sampleAudraliaPlanetState: sampleAudraliaSurfaceInternal,
     getStatus,
     getStats,
     getRuntimeStats,
     getFallbackReport,
     buildRuntimeField: (input, lonArg, uArg, vArg) => {
       const coordinate = normalizeCoordinateInput(input, lonArg, uArg, vArg);
-      return buildRuntimeField(latLonToPoint(coordinate.lat, coordinate.lon));
+      return buildContinuousField(latLonToPoint(coordinate.lat, coordinate.lon));
     }
   };
 
@@ -783,42 +717,40 @@ export function getFallbackReport() {
     fallbackAllowed: false,
     fallbackSamples: 0,
     fallbackRatio: 0,
-    reason: "stable-runtime-field-active"
+    reason: "continuous-downstream-field-active"
   };
 }
 
 export function sampleSurface(input, lonArg, uArg, vArg) {
-  return sampleAudraliaSurface(input, lonArg, uArg, vArg);
+  return sampleAudraliaSurfaceInternal(input, lonArg, uArg, vArg);
 }
 
-export function sampleAudraliaSurfaceExport(input, lonArg, uArg, vArg) {
-  return sampleAudraliaSurface(input, lonArg, uArg, vArg);
+export function sampleAudraliaSurface(input, lonArg, uArg, vArg) {
+  return sampleAudraliaSurfaceInternal(input, lonArg, uArg, vArg);
 }
 
 export function sampleRuntimeState(input, lonArg, uArg, vArg) {
-  return sampleAudraliaSurface(input, lonArg, uArg, vArg);
+  return sampleAudraliaSurfaceInternal(input, lonArg, uArg, vArg);
 }
 
 export function sampleAudraliaPlanetState(input, lonArg, uArg, vArg) {
-  return sampleAudraliaSurface(input, lonArg, uArg, vArg);
+  return sampleAudraliaSurfaceInternal(input, lonArg, uArg, vArg);
 }
 
-export function buildRuntimeFieldExport(input, lonArg, uArg, vArg) {
+export function buildRuntimeFieldFromPoint(input, lonArg, uArg, vArg) {
   const coordinate = normalizeCoordinateInput(input, lonArg, uArg, vArg);
-  return buildRuntimeField(latLonToPoint(coordinate.lat, coordinate.lon));
+  return buildContinuousField(latLonToPoint(coordinate.lat, coordinate.lon));
 }
 
 export function createAudraliaRuntime() {
   return createRuntimeObject();
 }
 
-export function buildRuntimeFieldModule() {
+export function buildRuntimeField() {
   return createRuntimeObject();
 }
 
-export const buildRuntimeFieldRuntime = buildRuntimeFieldModule;
-export const sampleAudraliaSurface = sampleAudraliaSurfaceExport;
-export const buildRuntimeField = buildRuntimeFieldModule;
+export const buildRuntimeFieldRuntime = buildRuntimeField;
 export const AUDRALIA_RUNTIME_STATUS = STATUS;
 export const AUDRALIA_RUNTIME_RECEIPT_VALUE = AUDRALIA_RUNTIME_RECEIPT;
 
@@ -830,7 +762,7 @@ if (typeof window !== "undefined") {
 
   document.documentElement.dataset.audraliaRuntimeReceipt = AUDRALIA_RUNTIME_RECEIPT;
   document.documentElement.dataset.audraliaRuntimeTerrainReady = "true";
-  document.documentElement.dataset.audraliaRuntimeStableOceanWorld = "true";
+  document.documentElement.dataset.audraliaRuntimeContinuousField = "true";
   document.documentElement.dataset.audraliaRuntimeFallbackSamples = "0";
   document.documentElement.dataset.graphicBox = "false";
   document.documentElement.dataset.imageGeneration = "false";

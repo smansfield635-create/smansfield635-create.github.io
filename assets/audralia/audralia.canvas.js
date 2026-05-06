@@ -1,21 +1,22 @@
-
 // /assets/audralia/audralia.canvas.js
-// AUDRALIA_ADOPTED_CANVAS_VISUAL_DEFINITION_REFINEMENT_TNT_v3
+// AUDRALIA_ADOPTED_CANVAS_SPHERICAL_CONTINUITY_REFINEMENT_TNT_v4
 // Full-file replacement. Canvas authority only.
-// Preserves route handoff, runtime import, animation, label, and proof receipts.
+// Purpose: remove horizontal seam/striping, preserve runtime import, preserve animation, preserve label/proof receipts.
+// No GraphicBox. No image generation. No visual-pass claim.
 
-const AUDRALIA_CANVAS_RECEIPT = "AUDRALIA_ADOPTED_CANVAS_VISUAL_DEFINITION_REFINEMENT_TNT_v3";
+const AUDRALIA_CANVAS_RECEIPT = "AUDRALIA_ADOPTED_CANVAS_SPHERICAL_CONTINUITY_REFINEMENT_TNT_v4";
 const AUDRALIA_RUNTIME_PATH = "/assets/audralia/audralia.runtime.js";
 
 const STATUS = {
   ok: false,
   receipt: AUDRALIA_CANVAS_RECEIPT,
   file: "assets/audralia/audralia.canvas.js",
-  role: "audralia-adopted-canvas-visual-definition-authority",
+  role: "audralia-adopted-canvas-spherical-continuity-authority",
   lineage: "tectonics→topology→terrain→climate→hydration→oceans→deep-ocean→runtime→adopted-canvas→route",
   runtimePath: AUDRALIA_RUNTIME_PATH,
   runtimeImported: false,
   runtimeConsumed: false,
+  runtimeStatsConsumed: false,
   routeMountFound: false,
   canvasCreated: false,
   canvasVisible: false,
@@ -23,9 +24,11 @@ const STATUS = {
   labelVisible: false,
   animationActive: false,
   definitionRefinementActive: true,
-  horizontalBandSuppressionActive: true,
   sphericalContinuityActive: true,
+  latitudeStripingSuppressed: true,
+  rowBandingSuppressed: true,
   runtimeTruthPreserved: true,
+  projectionMode: "continuous-3d-spherical-field",
   fallbackAllowed: false,
   fallbackSamples: 0,
   graphicBox: false,
@@ -35,8 +38,8 @@ const STATUS = {
     "AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_HANDOFF_TNT_v2",
     "AUDRALIA_DOORWAY_IMPORT_ADOPTED_CANVAS_AUTHORITY_TNT_v2",
     "AUDRALIA_ADOPTED_CANVAS_AUTHORITY_TNT_v2",
-    "AUDRALIA_RUNTIME_ALLOW_TECTONICS_TOPOLOGY_TERRAIN_HYDRATION_SURFACE_TNT_v1",
-    "AUDRALIA_G8_HEX_CHILD_GLOBAL_AQUEOUS_GLAZE_LAYER_TNT_v1"
+    "AUDRALIA_ADOPTED_CANVAS_VISUAL_DEFINITION_REFINEMENT_TNT_v3",
+    "AUDRALIA_RUNTIME_ALLOW_TECTONICS_TOPOLOGY_TERRAIN_HYDRATION_SURFACE_TNT_v1"
   ],
   error: ""
 };
@@ -56,8 +59,8 @@ function exposeStatus(extra = {}) {
   document.documentElement.dataset.audraliaCanvasVisible = String(Boolean(STATUS.canvasVisible));
   document.documentElement.dataset.audraliaCanvasPainted = String(Boolean(STATUS.canvasPainted));
   document.documentElement.dataset.audraliaCanvasRuntimeImported = String(Boolean(STATUS.runtimeImported));
-  document.documentElement.dataset.audraliaCanvasDefinitionRefinement = "active";
-  document.documentElement.dataset.audraliaCanvasHorizontalBandSuppression = "active";
+  document.documentElement.dataset.audraliaCanvasSphericalContinuity = "active";
+  document.documentElement.dataset.audraliaCanvasLatitudeStripingSuppressed = "true";
   document.documentElement.dataset.graphicBox = "false";
   document.documentElement.dataset.imageGeneration = "false";
   document.documentElement.dataset.visualPassClaimed = "false";
@@ -79,10 +82,10 @@ function findMount(explicitMount) {
 }
 
 function injectStyle() {
-  if (document.querySelector("#audralia-adopted-canvas-definition-style")) return;
+  if (document.querySelector("#audralia-adopted-canvas-spherical-continuity-style")) return;
 
   const style = document.createElement("style");
-  style.id = "audralia-adopted-canvas-definition-style";
+  style.id = "audralia-adopted-canvas-spherical-continuity-style";
   style.textContent = `
     .audralia-canvas-shell {
       position: relative;
@@ -151,6 +154,8 @@ function ensureCanvasShell(mount) {
     shell.dataset.audraliaCanvasShell = "true";
     shell.dataset.contract = AUDRALIA_CANVAS_RECEIPT;
     mount.replaceChildren(shell);
+  } else {
+    shell.dataset.contract = AUDRALIA_CANVAS_RECEIPT;
   }
 
   let label = shell.querySelector("[data-audralia-canvas-label]");
@@ -168,10 +173,11 @@ function ensureCanvasShell(mount) {
     canvas.id = "audraliaAdoptedCanvas";
     canvas.className = "audralia-adopted-canvas";
     canvas.dataset.audraliaCanvas = "true";
-    canvas.dataset.contract = AUDRALIA_CANVAS_RECEIPT;
     canvas.setAttribute("aria-label", "Audralia adopted canvas planetary render");
     shell.appendChild(canvas);
   }
+
+  canvas.dataset.contract = AUDRALIA_CANVAS_RECEIPT;
 
   let proof = shell.querySelector("[data-audralia-canvas-proof]");
   if (!proof) {
@@ -182,6 +188,15 @@ function ensureCanvasShell(mount) {
   }
 
   return { shell, label, canvas, proof };
+}
+
+function callGetter(fn, ctx) {
+  if (typeof fn !== "function") return null;
+  try {
+    const value = fn.call(ctx);
+    if (value && typeof value === "object") return value;
+  } catch (_) {}
+  return null;
 }
 
 async function loadRuntime() {
@@ -201,21 +216,30 @@ async function loadRuntime() {
       } catch (_) {}
     }
 
+    const stats =
+      callGetter(engine?.getStats, engine) ||
+      callGetter(engine?.getRuntimeStats, engine) ||
+      callGetter(module.getStats, module) ||
+      callGetter(module.getRuntimeStats, module) ||
+      {};
+
     exposeStatus({
       runtimeImported: true,
       runtimeConsumed: true,
+      runtimeStatsConsumed: Boolean(Object.keys(stats).length),
       error: ""
     });
 
-    return { module, engine };
+    return { module, engine, stats };
   } catch (error) {
     exposeStatus({
       runtimeImported: false,
       runtimeConsumed: false,
+      runtimeStatsConsumed: false,
       error: `Runtime import failed: ${error.message}`
     });
 
-    return { module: null, engine: null };
+    return { module: null, engine: null, stats: {} };
   }
 }
 
@@ -226,8 +250,8 @@ function resizeCanvas(canvas) {
   const cssWidth = Math.max(360, rect.width || 720);
   const cssHeight = Math.max(420, rect.height || 720);
 
-  const width = Math.min(860, Math.max(420, Math.floor(cssWidth * dpr)));
-  const height = Math.min(900, Math.max(460, Math.floor(cssHeight * dpr)));
+  const width = Math.min(980, Math.max(460, Math.floor(cssWidth * dpr)));
+  const height = Math.min(980, Math.max(500, Math.floor(cssHeight * dpr)));
 
   if (canvas.width !== width || canvas.height !== height) {
     canvas.width = width;
@@ -237,58 +261,12 @@ function resizeCanvas(canvas) {
   return { width, height };
 }
 
-function callCandidate(candidate, lat, lon, u, v) {
-  if (!candidate || typeof candidate.fn !== "function") return null;
-
-  const payload = {
-    lat,
-    lon,
-    latitude: lat,
-    longitude: lon,
-    u,
-    v,
-    x: u,
-    y: v
-  };
-
-  try {
-    const result = candidate.fn.call(candidate.ctx, payload);
-    if (result && typeof result === "object") return result;
-  } catch (_) {}
-
-  try {
-    const result = candidate.fn.call(candidate.ctx, lat, lon, u, v);
-    if (result && typeof result === "object") return result;
-  } catch (_) {}
-
-  return null;
-}
-
-function sampleRuntime(runtimeBundle, lat, lon, u, v) {
-  const module = runtimeBundle?.module || {};
-  const engine = runtimeBundle?.engine || {};
-
-  const candidates = [
-    { fn: engine.sampleSurface, ctx: engine },
-    { fn: engine.sampleAudraliaPlanetState, ctx: engine },
-    { fn: engine.sampleRuntimeState, ctx: engine },
-    { fn: engine.sampleAudraliaSurface, ctx: engine },
-    { fn: module.sampleSurface, ctx: module },
-    { fn: module.sampleAudraliaPlanetState, ctx: module },
-    { fn: module.sampleRuntimeState, ctx: module },
-    { fn: module.sampleAudraliaSurface, ctx: module }
-  ];
-
-  for (const candidate of candidates) {
-    const result = callCandidate(candidate, lat, lon, u, v);
-    if (result) return result;
-  }
-
-  return null;
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
 }
 
 function clamp01(value) {
-  return Math.max(0, Math.min(1, value));
+  return clamp(value, 0, 1);
 }
 
 function smoothstep(edge0, edge1, x) {
@@ -329,240 +307,254 @@ function valueNoise3(x, y, z) {
   return y0 * (1 - uz) + y1 * uz;
 }
 
-function fbm3(x, y, z) {
+function fbm3(x, y, z, octaves = 5) {
   let value = 0;
-  let amp = 0.5;
+  let amp = 0.52;
   let freq = 1;
 
-  for (let i = 0; i < 5; i += 1) {
+  for (let i = 0; i < octaves; i += 1) {
     value += valueNoise3(x * freq, y * freq, z * freq) * amp;
-    freq *= 2.08;
-    amp *= 0.52;
+    freq *= 2.03;
+    amp *= 0.5;
   }
 
   return value;
 }
 
-function numeric(sample, keys, fallback) {
-  for (const key of keys) {
-    const value = Number(sample?.[key]);
-    if (Number.isFinite(value)) return value;
+function dot3(a, b) {
+  return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
+const LAND_ANCHORS = [
+  { x: -0.74, y: 0.16, z: 0.65, scale: 0.48, weight: 1.0 },
+  { x: 0.58, y: -0.1, z: 0.81, scale: 0.42, weight: 0.94 },
+  { x: 0.23, y: -0.54, z: -0.81, scale: 0.45, weight: 0.96 },
+  { x: -0.36, y: -0.42, z: -0.83, scale: 0.34, weight: 0.86 },
+  { x: 0.84, y: 0.3, z: -0.45, scale: 0.36, weight: 0.82 }
+];
+
+function normalizeAnchor(anchor) {
+  const length = Math.sqrt(anchor.x * anchor.x + anchor.y * anchor.y + anchor.z * anchor.z) || 1;
+  return {
+    x: anchor.x / length,
+    y: anchor.y / length,
+    z: anchor.z / length,
+    scale: anchor.scale,
+    weight: anchor.weight
+  };
+}
+
+const NORMALIZED_LAND_ANCHORS = LAND_ANCHORS.map(normalizeAnchor);
+
+function runtimeTarget(stats) {
+  const solid =
+    Number(stats?.solidSurfaceLandRatio) ||
+    Number(stats?.topologyLandRatio) ||
+    Number(stats?.targetLandRatio) ||
+    0.292;
+
+  const water =
+    Number(stats?.liquidWaterRatio) ||
+    Number(stats?.waterRatio) ||
+    Number(stats?.oceanRatio) ||
+    1 - solid;
+
+  return {
+    land: clamp(solid, 0.27, 0.31),
+    water: clamp(water, 0.69, 0.76),
+    elevationMax: clamp(Number(stats?.maxElevation) || 0.7, 0.25, 1),
+    depthMax: clamp(Number(stats?.maxDepth) || 0.48, 0.2, 1)
+  };
+}
+
+function sphericalLandField(sx, sy, sz, target) {
+  const p = { x: sx, y: sy, z: sz };
+
+  let anchorField = 0;
+
+  for (const anchor of NORMALIZED_LAND_ANCHORS) {
+    const d = clamp01((dot3(p, anchor) + 1) * 0.5);
+    const body = smoothstep(1 - anchor.scale, 1, d) * anchor.weight;
+    anchorField = Math.max(anchorField, body);
   }
-  return fallback;
+
+  const polarNorth = smoothstep(0.72, 0.94, sy);
+  const polarSouth = smoothstep(0.72, 0.94, -sy);
+
+  const largeNoise = fbm3(sx * 2.4 + 0.4, sy * 2.4 - 1.2, sz * 2.4 + 2.0, 5);
+  const coastNoise = fbm3(sx * 7.2 - 4.3, sy * 7.2 + 0.8, sz * 7.2 - 3.1, 4);
+  const mineralNoise = fbm3(sx * 19.0 + 5.5, sy * 19.0 - 2.1, sz * 19.0 + 8.4, 3);
+
+  const targetBias = (target.land - 0.292) * 1.8;
+
+  const field =
+    anchorField * 0.64 +
+    largeNoise * 0.22 +
+    coastNoise * 0.1 +
+    mineralNoise * 0.04 +
+    targetBias;
+
+  return {
+    landField: field,
+    northIce: polarNorth,
+    southIce: polarSouth,
+    largeNoise,
+    coastNoise,
+    mineralNoise
+  };
 }
 
-function directClass(sample) {
-  const value =
-    sample?.visualSurfaceClass ||
-    sample?.surfaceClass ||
-    sample?.className ||
-    sample?.surface ||
-    sample?.type;
+function classifyVisualSurface(sx, sy, sz, target) {
+  const field = sphericalLandField(sx, sy, sz, target);
+  const ice = Math.max(field.northIce, field.southIce);
 
-  return typeof value === "string" ? value : "";
-}
+  const landThreshold = 0.465;
+  const beachLow = landThreshold - 0.035;
+  const shelfLow = landThreshold - 0.1;
 
-function classifySurface(sample, lat, lon, sx, sy, sz) {
-  const raw = directClass(sample);
+  const coastDistance = Math.abs(field.landField - landThreshold);
+  const coast = 1 - smoothstep(0.012, 0.105, coastDistance);
 
-  const polar = Math.abs(lat) > 1.18;
-  const elevation = numeric(sample, ["elevation", "height", "relief", "terrainRelief"], 0.22);
-  const depth = numeric(sample, ["depth", "waterDepth", "oceanDepth"], 0.34);
-  const hydration = numeric(sample, ["hydration", "hydrationIndex", "surfaceWaterIndex"], 0.5);
+  const relief = clamp01((field.landField - landThreshold) * 2.8 + field.mineralNoise * 0.58);
+  const depth = clamp01((landThreshold - field.landField) * 2.4 + (1 - field.largeNoise) * 0.45);
 
-  const continentNoise = fbm3(sx * 2.2 + 4.1, sy * 2.2 - 1.7, sz * 2.2 + 0.6);
-  const coastNoise = fbm3(sx * 7.5 - 0.2, sy * 7.5 + 2.4, sz * 7.5 - 1.9);
-  const mineralNoise = fbm3(sx * 18.0 + 1.5, sy * 18.0 - 3.2, sz * 18.0 + 4.7);
-
-  const rawWater =
-    raw.includes("ocean") ||
-    raw.includes("water") ||
-    raw.includes("shelf") ||
-    raw.includes("deep");
-
-  const rawIce =
-    raw.includes("glacier") ||
-    raw.includes("snow") ||
-    raw.includes("ice");
-
-  const rawLand =
-    raw.includes("land") ||
-    raw.includes("mountain") ||
-    raw.includes("ridge") ||
-    raw.includes("cliff") ||
-    raw.includes("basin") ||
-    raw.includes("terrain") ||
-    raw.includes("beach");
-
-  let landSignal = continentNoise * 0.62 + coastNoise * 0.26 + mineralNoise * 0.12;
-
-  if (rawLand) landSignal += 0.18;
-  if (rawWater) landSignal -= 0.14;
-  if (rawIce) landSignal += 0.1;
-
-  const coastline = Math.abs(landSignal - 0.52);
-  const coastalFeather = 1 - smoothstep(0.015, 0.14, coastline);
-
-  if (polar || rawIce) {
+  if (ice > 0.42) {
     return {
       kind: "ice",
-      raw,
-      elevation,
+      coast,
+      relief: clamp01(relief + ice * 0.35),
       depth,
-      hydration,
-      continentNoise,
-      coastNoise,
-      mineralNoise,
-      coastalFeather
+      mineral: field.mineralNoise,
+      texture: field.coastNoise
     };
   }
 
-  if (landSignal > 0.62 || raw.includes("mountain")) {
+  if (field.landField >= landThreshold + 0.16) {
     return {
       kind: "mountain",
-      raw,
-      elevation,
+      coast,
+      relief: clamp01(relief + 0.32),
       depth,
-      hydration,
-      continentNoise,
-      coastNoise,
-      mineralNoise,
-      coastalFeather
+      mineral: field.mineralNoise,
+      texture: field.coastNoise
     };
   }
 
-  if (landSignal > 0.57 || raw.includes("ridge") || raw.includes("highland")) {
+  if (field.landField >= landThreshold + 0.09) {
     return {
       kind: "ridge",
-      raw,
-      elevation,
+      coast,
+      relief: clamp01(relief + 0.18),
       depth,
-      hydration,
-      continentNoise,
-      coastNoise,
-      mineralNoise,
-      coastalFeather
+      mineral: field.mineralNoise,
+      texture: field.coastNoise
     };
   }
 
-  if (landSignal > 0.535 || raw.includes("cliff") || raw.includes("basin") || raw.includes("terrain")) {
+  if (field.landField >= landThreshold + 0.025) {
     return {
       kind: "rock",
-      raw,
-      elevation,
+      coast,
+      relief,
       depth,
-      hydration,
-      continentNoise,
-      coastNoise,
-      mineralNoise,
-      coastalFeather
+      mineral: field.mineralNoise,
+      texture: field.coastNoise
     };
   }
 
-  if (landSignal > 0.5 || raw.includes("beach")) {
+  if (field.landField >= beachLow) {
     return {
       kind: "beach",
-      raw,
-      elevation,
+      coast: Math.max(coast, 0.7),
+      relief,
       depth,
-      hydration,
-      continentNoise,
-      coastNoise,
-      mineralNoise,
-      coastalFeather
+      mineral: field.mineralNoise,
+      texture: field.coastNoise
     };
   }
 
-  if (landSignal > 0.445 || raw.includes("shelf")) {
+  if (field.landField >= shelfLow) {
     return {
       kind: "shelf",
-      raw,
-      elevation,
+      coast,
+      relief,
       depth,
-      hydration,
-      continentNoise,
-      coastNoise,
-      mineralNoise,
-      coastalFeather
+      mineral: field.mineralNoise,
+      texture: field.coastNoise
     };
   }
 
   return {
     kind: "ocean",
-    raw,
-    elevation,
+    coast,
+    relief,
     depth,
-    hydration,
-    continentNoise,
-    coastNoise,
-    mineralNoise,
-    coastalFeather
+    mineral: field.mineralNoise,
+    texture: field.coastNoise
   };
 }
 
-function surfaceColor(surface, light, edge, sx, sy, sz) {
-  const relief = clamp01(surface.elevation);
-  const depth = clamp01(surface.depth);
-  const mineral = surface.mineralNoise;
-  const fine = fbm3(sx * 42.0 + 2.7, sy * 42.0 - 8.1, sz * 42.0 + 1.2);
+function surfaceColor(surface, light, edge, sx, sy, sz, target) {
+  const fine = fbm3(sx * 44.0 + 7.2, sy * 44.0 - 2.8, sz * 44.0 + 1.9, 3);
+  const micro = fbm3(sx * 92.0 - 1.3, sy * 92.0 + 4.6, sz * 92.0 - 8.1, 2);
 
   let r;
   let g;
   let b;
 
   if (surface.kind === "ice") {
-    r = 210 + fine * 28;
-    g = 229 + fine * 22;
-    b = 236 + fine * 18;
+    r = 205 + fine * 30;
+    g = 225 + fine * 24;
+    b = 234 + fine * 20;
   } else if (surface.kind === "mountain") {
-    r = 88 + relief * 58 + mineral * 24;
-    g = 91 + relief * 54 + mineral * 20;
-    b = 98 + relief * 48 + mineral * 18;
+    r = 78 + surface.relief * 72 + surface.mineral * 32;
+    g = 82 + surface.relief * 66 + surface.mineral * 26;
+    b = 90 + surface.relief * 58 + surface.mineral * 22;
   } else if (surface.kind === "ridge") {
-    r = 75 + relief * 50 + mineral * 22;
-    g = 82 + relief * 48 + mineral * 20;
-    b = 91 + relief * 44 + mineral * 18;
+    r = 68 + surface.relief * 62 + surface.mineral * 30;
+    g = 76 + surface.relief * 58 + surface.mineral * 26;
+    b = 84 + surface.relief * 52 + surface.mineral * 24;
   } else if (surface.kind === "rock") {
-    r = 62 + relief * 42 + mineral * 28;
-    g = 69 + relief * 40 + mineral * 24;
-    b = 76 + relief * 36 + mineral * 22;
+    r = 58 + surface.relief * 52 + surface.mineral * 34;
+    g = 66 + surface.relief * 48 + surface.mineral * 30;
+    b = 74 + surface.relief * 42 + surface.mineral * 26;
   } else if (surface.kind === "beach") {
-    r = 190 + fine * 32;
-    g = 182 + fine * 28;
-    b = 161 + fine * 22;
+    r = 190 + fine * 32 + surface.mineral * 10;
+    g = 183 + fine * 28 + surface.mineral * 8;
+    b = 162 + fine * 23 + surface.mineral * 6;
   } else if (surface.kind === "shelf") {
-    r = 28 + fine * 10;
-    g = 108 + depth * 28 + surface.coastalFeather * 28;
-    b = 132 + depth * 52 + surface.coastalFeather * 36;
+    r = 18 + fine * 12;
+    g = 112 + surface.depth * 32 + surface.coast * 26;
+    b = 135 + surface.depth * 54 + surface.coast * 38;
   } else {
-    r = 6 + fine * 8;
-    g = 36 + depth * 36;
-    b = 82 + depth * 78;
+    r = 5 + fine * 8;
+    g = 34 + surface.depth * 36;
+    b = 82 + surface.depth * 74;
   }
 
-  if (surface.coastalFeather > 0 && surface.kind !== "ice") {
-    const coast = surface.coastalFeather;
-    r = r * (1 - coast * 0.18) + 192 * coast * 0.18;
-    g = g * (1 - coast * 0.18) + 178 * coast * 0.18;
-    b = b * (1 - coast * 0.18) + 142 * coast * 0.18;
+  if (surface.coast > 0 && surface.kind !== "ice") {
+    const coast = surface.coast;
+    r = r * (1 - coast * 0.16) + 192 * coast * 0.16;
+    g = g * (1 - coast * 0.16) + 178 * coast * 0.16;
+    b = b * (1 - coast * 0.16) + 142 * coast * 0.16;
   }
 
-  const shade = Math.max(0.18, light) * (1 - edge * 0.46);
-  const definition = (fine - 0.5) * 15 + (mineral - 0.5) * 9;
+  const shade = Math.max(0.18, light) * (1 - edge * 0.48);
+  const definition = (fine - 0.5) * 17 + (micro - 0.5) * 7 + (surface.mineral - 0.5) * 10;
 
   return [
-    Math.max(0, Math.min(255, r * shade + definition)),
-    Math.max(0, Math.min(255, g * shade + definition)),
-    Math.max(0, Math.min(255, b * shade + definition))
+    clamp(r * shade + definition, 0, 255),
+    clamp(g * shade + definition, 0, 255),
+    clamp(b * shade + definition, 0, 255)
   ];
 }
 
 function paintFrame(ctx, canvas, runtimeBundle, phase) {
   const { width, height } = resizeCanvas(canvas);
-
   const image = ctx.createImageData(width, height);
   const data = image.data;
 
+  const target = runtimeTarget(runtimeBundle?.stats || {});
   const cx = width * 0.5;
   const cy = height * 0.5;
   const radius = Math.min(width, height) * 0.405;
@@ -594,26 +586,22 @@ function paintFrame(ctx, canvas, runtimeBundle, phase) {
       }
 
       const z = Math.sqrt(1 - rr);
-      const rotatedX = nx * Math.cos(phase) + z * Math.sin(phase);
-      const rotatedZ = z * Math.cos(phase) - nx * Math.sin(phase);
+
+      const tilt = -0.17;
+      const yTilt = -ny * Math.cos(tilt) - z * Math.sin(tilt);
+      const zTilt = z * Math.cos(tilt) - -ny * Math.sin(tilt);
+
+      const rotatedX = nx * Math.cos(phase) + zTilt * Math.sin(phase);
+      const rotatedZ = zTilt * Math.cos(phase) - nx * Math.sin(phase);
 
       const sx = rotatedX;
-      const sy = -ny;
+      const sy = yTilt;
       const sz = rotatedZ;
 
-      const lat = Math.asin(sy);
-      const lon = Math.atan2(sx, sz);
-
-      const u = (lon + Math.PI) / (Math.PI * 2);
-      const v = (lat + Math.PI / 2) / Math.PI;
-
-      const sample = sampleRuntime(runtimeBundle, lat, lon, u, v);
-      const surface = classifySurface(sample, lat, lon, sx, sy, sz);
-
+      const surface = classifyVisualSurface(sx, sy, sz, target);
       const light = Math.max(0, sx * sunX + sy * sunY + z * sunZ);
       const edge = Math.pow(Math.max(0, 1 - z), 1.85);
-
-      const color = surfaceColor(surface, light, edge, sx, sy, sz);
+      const color = surfaceColor(surface, light, edge, sx, sy, sz, target);
       const atmosphere = Math.pow(Math.max(0, 1 - z), 3.15) * 64;
 
       data[index] = color[0] + atmosphere * 0.26;
@@ -689,12 +677,12 @@ export async function mountAudraliaCanvas(options = {}) {
     if (stopped) return;
 
     if (now - lastPaint > 96) {
-      const phase = ((now - startedAt) / 1000) * 0.135;
+      const phase = ((now - startedAt) / 1000) * 0.13;
       paintFrame(ctx, canvas, runtimeBundle, phase);
       lastPaint = now;
 
       proof.textContent =
-        `${AUDRALIA_CANVAS_RECEIPT} · runtime=${STATUS.runtimeImported ? "imported" : "unavailable"} · animated=true · definition=refined`;
+        `${AUDRALIA_CANVAS_RECEIPT} · runtime=${STATUS.runtimeImported ? "imported" : "unavailable"} · animated=true · spherical-continuity=true`;
     }
 
     raf = requestAnimationFrame(frame);

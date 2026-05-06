@@ -1,7 +1,7 @@
 // /showroom/globe/audralia/index.js
 // AUDRALIA_DOORWAY_EXPECT_STABLE_OCEAN_WORLD_CANVAS_TNT_v4
 // Full-file replacement. Doorway only.
-// Purpose: expect the current v6 canvas authority and stop falsely marking v5/v6 as stale.
+// Purpose: expect the current v6 canvas authority and stop falsely marking v6 as stale.
 // No GraphicBox. No image generation. No visual-pass claim.
 
 const AUDRALIA_ROUTE_RECEIPT = "AUDRALIA_DOORWAY_EXPECT_STABLE_OCEAN_WORLD_CANVAS_TNT_v4";
@@ -49,6 +49,9 @@ function exposeRouteStatus(extra = {}) {
   document.documentElement.dataset.audraliaCanvasRenderCalled = String(routeStatus.renderCalled);
   document.documentElement.dataset.audraliaCanvasFound = String(routeStatus.canvasFoundAfterRender);
   document.documentElement.dataset.audraliaStaleCanvasDetected = String(routeStatus.staleCanvasDetected);
+  document.documentElement.dataset.graphicBox = "false";
+  document.documentElement.dataset.imageGeneration = "false";
+  document.documentElement.dataset.visualPassClaimed = "false";
 
   return routeStatus;
 }

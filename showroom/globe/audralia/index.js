@@ -1,18 +1,18 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_DOORWAY_EXPECT_STABLE_OCEAN_WORLD_CANVAS_TNT_v4
+// AUDRALIA_DOORWAY_EXPECT_FIXED_ASPECT_DOWNSTREAM_SWEEP_CANVAS_TNT_v5
 // Full-file replacement. Doorway only.
-// Purpose: expect the current v6 canvas authority and stop falsely marking v6 as stale.
+// Purpose: expect the current v9 canvas authority and clear the false stale-canvas warning.
 // No GraphicBox. No image generation. No visual-pass claim.
 
-const AUDRALIA_ROUTE_RECEIPT = "AUDRALIA_DOORWAY_EXPECT_STABLE_OCEAN_WORLD_CANVAS_TNT_v4";
+const AUDRALIA_ROUTE_RECEIPT = "AUDRALIA_DOORWAY_EXPECT_FIXED_ASPECT_DOWNSTREAM_SWEEP_CANVAS_TNT_v5";
 const AUDRALIA_CANVAS_PATH = "/assets/audralia/audralia.canvas.js";
-const EXPECTED_CANVAS_RECEIPT = "AUDRALIA_ADOPTED_CANVAS_STABLE_OCEAN_WORLD_DESIGN_TNT_v6";
+const EXPECTED_CANVAS_RECEIPT = "AUDRALIA_ADOPTED_CANVAS_FIXED_ASPECT_DOWNSTREAM_SWEEP_TNT_v9";
 
 const routeStatus = {
   ok: false,
   receipt: AUDRALIA_ROUTE_RECEIPT,
   file: "showroom/globe/audralia/index.js",
-  role: "audralia-doorway-route-stable-ocean-world-expectation",
+  role: "audralia-doorway-route-fixed-aspect-downstream-sweep-expectation",
   canvasAuthorityPath: AUDRALIA_CANVAS_PATH,
   expectedCanvasReceipt: EXPECTED_CANVAS_RECEIPT,
   mountFound: false,
@@ -207,7 +207,7 @@ async function bootAudraliaDoorway() {
     return routeStatus;
   }
 
-  setDoorwayMessage("Audralia doorway is loading the current stable ocean-world canvas authority.", "loading");
+  setDoorwayMessage("Audralia doorway is loading the current fixed-aspect downstream canvas authority.", "loading");
 
   let canvasModule;
 
@@ -242,7 +242,7 @@ async function bootAudraliaDoorway() {
       routeStatus,
       routeReceipt: AUDRALIA_ROUTE_RECEIPT,
       expectedCanvasReceipt: EXPECTED_CANVAS_RECEIPT,
-      source: "audralia-doorway-route-stable-ocean-world"
+      source: "audralia-doorway-route-fixed-aspect-downstream-sweep"
     });
 
     const proof = verifyRouteCanvas();

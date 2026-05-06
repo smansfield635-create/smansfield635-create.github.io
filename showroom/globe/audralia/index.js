@@ -1,42 +1,30 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_DOORWAY_IMPORT_ADOPTED_CANVAS_AUTHORITY_TNT_v2
-// Full-file replacement. Doorway only. No generated image. No GraphicBox.
+// AUDRALIA_DOORWAY_FORCE_CANVAS_AUTHORITY_REFRESH_TNT_v3
+// Full-file replacement. Doorway only.
+// Purpose: force the route to import the current canvas authority instead of stale cached v3.
+// No GraphicBox. No image generation. No visual-pass claim.
 
-const AUDRALIA_ROUTE_RECEIPT = "AUDRALIA_DOORWAY_IMPORT_ADOPTED_CANVAS_AUTHORITY_TNT_v2";
+const AUDRALIA_ROUTE_RECEIPT = "AUDRALIA_DOORWAY_FORCE_CANVAS_AUTHORITY_REFRESH_TNT_v3";
 const AUDRALIA_CANVAS_PATH = "/assets/audralia/audralia.canvas.js";
+const EXPECTED_CANVAS_RECEIPT = "AUDRALIA_ADOPTED_CANVAS_SPHERICAL_CONTINUITY_REFINEMENT_TNT_v4";
 
 const routeStatus = {
   ok: false,
   receipt: AUDRALIA_ROUTE_RECEIPT,
   file: "showroom/globe/audralia/index.js",
-  role: "audralia-doorway-route",
-  owns: [
-    "route mount discovery",
-    "canvas authority import",
-    "canvas authority handoff",
-    "route-visible receipt exposure"
-  ],
-  doesNotOwn: [
-    "land decision",
-    "void decision",
-    "beach decision",
-    "coastline decision",
-    "terrain decision",
-    "elevation decision",
-    "hydration decision",
-    "runtime truth",
-    "canvas paint authority",
-    "visual pass claim"
-  ],
+  role: "audralia-doorway-route-cache-refresh",
   canvasAuthorityPath: AUDRALIA_CANVAS_PATH,
+  expectedCanvasReceipt: EXPECTED_CANVAS_RECEIPT,
   mountFound: false,
   importAttempted: false,
   importSucceeded: false,
+  importUrl: "",
   renderExportFound: false,
   renderCalled: false,
   renderCompleted: false,
   canvasFoundAfterRender: false,
   labelFoundAfterRender: false,
+  staleCanvasDetected: false,
   graphicBox: false,
   imageGeneration: false,
   visualPassClaimed: false,
@@ -54,9 +42,11 @@ function exposeRouteStatus(extra = {}) {
   document.documentElement.dataset.audraliaRouteReceipt = AUDRALIA_ROUTE_RECEIPT;
   document.documentElement.dataset.audraliaDoorwayRoute = "active";
   document.documentElement.dataset.audraliaCanvasAuthorityPath = AUDRALIA_CANVAS_PATH;
+  document.documentElement.dataset.audraliaExpectedCanvasReceipt = EXPECTED_CANVAS_RECEIPT;
   document.documentElement.dataset.audraliaCanvasImportSucceeded = String(routeStatus.importSucceeded);
   document.documentElement.dataset.audraliaCanvasRenderCalled = String(routeStatus.renderCalled);
   document.documentElement.dataset.audraliaCanvasFound = String(routeStatus.canvasFoundAfterRender);
+  document.documentElement.dataset.audraliaStaleCanvasDetected = String(routeStatus.staleCanvasDetected);
 
   return routeStatus;
 }
@@ -108,28 +98,41 @@ function setDoorwayMessage(message, state = "info") {
   panel.textContent = message;
 }
 
+function buildFreshCanvasImportUrl() {
+  const url = new URL(AUDRALIA_CANVAS_PATH, window.location.origin);
+  url.searchParams.set("expected", EXPECTED_CANVAS_RECEIPT);
+  url.searchParams.set("doorway", AUDRALIA_ROUTE_RECEIPT);
+  url.searchParams.set("t", String(Date.now()));
+  return url.pathname + url.search;
+}
+
 async function importCanvasAuthority() {
+  const importUrl = buildFreshCanvasImportUrl();
+
   exposeRouteStatus({
     importAttempted: true,
+    importUrl,
     error: ""
   });
 
   try {
-    return await import(AUDRALIA_CANVAS_PATH);
-  } catch (firstError) {
-    try {
-      const cacheBypassPath = `${AUDRALIA_CANVAS_PATH}?receipt=${encodeURIComponent(AUDRALIA_ROUTE_RECEIPT)}&t=${Date.now()}`;
-      return await import(cacheBypassPath);
-    } catch (secondError) {
-      exposeRouteStatus({
-        ok: false,
-        importSucceeded: false,
-        error: `Canvas authority import failed. First: ${firstError.message}. Second: ${secondError.message}`
-      });
+    const module = await import(importUrl);
 
-      setDoorwayMessage("Audralia canvas authority import failed.", "fail");
-      throw secondError;
-    }
+    exposeRouteStatus({
+      importSucceeded: true,
+      error: ""
+    });
+
+    return module;
+  } catch (error) {
+    exposeRouteStatus({
+      ok: false,
+      importSucceeded: false,
+      error: `Canvas authority import failed: ${error.message}`
+    });
+
+    setDoorwayMessage("Audralia canvas authority import failed.", "fail");
+    throw error;
   }
 }
 
@@ -160,12 +163,26 @@ function verifyRouteCanvas() {
       String(node.textContent || "").trim().toLowerCase().includes("audralia")
     );
 
+  const canvasReceipt =
+    window.__AUDRALIA_CANVAS_RECEIPT__ ||
+    window.AUDRALIA_CANVAS_STATUS?.receipt ||
+    window.AUDRALIA_ADOPTED_CANVAS_STATUS?.receipt ||
+    canvas?.dataset?.contract ||
+    "";
+
+  const staleCanvasDetected =
+    Boolean(canvasReceipt) &&
+    canvasReceipt !== EXPECTED_CANVAS_RECEIPT;
+
   exposeRouteStatus({
     canvasFoundAfterRender: Boolean(canvas),
-    labelFoundAfterRender: Boolean(label)
+    labelFoundAfterRender: Boolean(label),
+    staleCanvasDetected
   });
 
-  return { canvas, label };
+  document.documentElement.dataset.audraliaObservedCanvasReceipt = String(canvasReceipt || "missing");
+
+  return { canvas, label, canvasReceipt, staleCanvasDetected };
 }
 
 async function bootAudraliaDoorway() {
@@ -186,7 +203,7 @@ async function bootAudraliaDoorway() {
     return routeStatus;
   }
 
-  setDoorwayMessage("Audralia doorway is loading the adopted canvas authority.", "loading");
+  setDoorwayMessage("Audralia doorway is loading the current adopted canvas authority.", "loading");
 
   let canvasModule;
 
@@ -195,11 +212,6 @@ async function bootAudraliaDoorway() {
   } catch (_) {
     return routeStatus;
   }
-
-  exposeRouteStatus({
-    importSucceeded: true,
-    error: ""
-  });
 
   const render = selectRenderFunction(canvasModule);
 
@@ -225,22 +237,29 @@ async function bootAudraliaDoorway() {
       mount,
       routeStatus,
       routeReceipt: AUDRALIA_ROUTE_RECEIPT,
-      source: "audralia-doorway-route"
+      expectedCanvasReceipt: EXPECTED_CANVAS_RECEIPT,
+      source: "audralia-doorway-route-cache-refresh"
     });
 
     const proof = verifyRouteCanvas();
 
     exposeRouteStatus({
-      ok: Boolean(proof.canvas),
+      ok: Boolean(proof.canvas) && !proof.staleCanvasDetected,
       renderCompleted: true,
-      error: proof.canvas ? "" : "Canvas authority rendered, but no route canvas was found afterward."
+      error: proof.staleCanvasDetected
+        ? `Stale canvas authority detected: ${proof.canvasReceipt}`
+        : proof.canvas
+          ? ""
+          : "Canvas authority rendered, but no route canvas was found afterward."
     });
 
     setDoorwayMessage(
-      proof.canvas
-        ? "Audralia adopted canvas authority loaded."
-        : "Audralia canvas authority returned, but no canvas was exposed.",
-      proof.canvas ? "pass" : "fail"
+      proof.staleCanvasDetected
+        ? `Audralia loaded a stale canvas authority: ${proof.canvasReceipt}`
+        : proof.canvas
+          ? "Audralia adopted canvas authority loaded."
+          : "Audralia canvas authority returned, but no canvas was exposed.",
+      proof.staleCanvasDetected ? "fail" : proof.canvas ? "pass" : "fail"
     );
 
     return routeStatus;
@@ -259,6 +278,7 @@ async function bootAudraliaDoorway() {
 export {
   AUDRALIA_ROUTE_RECEIPT,
   AUDRALIA_CANVAS_PATH,
+  EXPECTED_CANVAS_RECEIPT,
   routeStatus,
   bootAudraliaDoorway,
   exposeRouteStatus

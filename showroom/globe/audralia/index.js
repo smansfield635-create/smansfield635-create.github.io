@@ -1,18 +1,18 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_DOORWAY_FORCE_CANVAS_AUTHORITY_REFRESH_TNT_v3
+// AUDRALIA_DOORWAY_EXPECT_STABLE_OCEAN_WORLD_CANVAS_TNT_v4
 // Full-file replacement. Doorway only.
-// Purpose: force the route to import the current canvas authority instead of stale cached v3.
+// Purpose: expect the current v6 canvas authority and stop falsely marking v5/v6 as stale.
 // No GraphicBox. No image generation. No visual-pass claim.
 
-const AUDRALIA_ROUTE_RECEIPT = "AUDRALIA_DOORWAY_FORCE_CANVAS_AUTHORITY_REFRESH_TNT_v3";
+const AUDRALIA_ROUTE_RECEIPT = "AUDRALIA_DOORWAY_EXPECT_STABLE_OCEAN_WORLD_CANVAS_TNT_v4";
 const AUDRALIA_CANVAS_PATH = "/assets/audralia/audralia.canvas.js";
-const EXPECTED_CANVAS_RECEIPT = "AUDRALIA_ADOPTED_CANVAS_SPHERICAL_CONTINUITY_REFINEMENT_TNT_v4";
+const EXPECTED_CANVAS_RECEIPT = "AUDRALIA_ADOPTED_CANVAS_STABLE_OCEAN_WORLD_DESIGN_TNT_v6";
 
 const routeStatus = {
   ok: false,
   receipt: AUDRALIA_ROUTE_RECEIPT,
   file: "showroom/globe/audralia/index.js",
-  role: "audralia-doorway-route-cache-refresh",
+  role: "audralia-doorway-route-stable-ocean-world-expectation",
   canvasAuthorityPath: AUDRALIA_CANVAS_PATH,
   expectedCanvasReceipt: EXPECTED_CANVAS_RECEIPT,
   mountFound: false,
@@ -25,6 +25,7 @@ const routeStatus = {
   canvasFoundAfterRender: false,
   labelFoundAfterRender: false,
   staleCanvasDetected: false,
+  observedCanvasReceipt: "",
   graphicBox: false,
   imageGeneration: false,
   visualPassClaimed: false,
@@ -43,6 +44,7 @@ function exposeRouteStatus(extra = {}) {
   document.documentElement.dataset.audraliaDoorwayRoute = "active";
   document.documentElement.dataset.audraliaCanvasAuthorityPath = AUDRALIA_CANVAS_PATH;
   document.documentElement.dataset.audraliaExpectedCanvasReceipt = EXPECTED_CANVAS_RECEIPT;
+  document.documentElement.dataset.audraliaObservedCanvasReceipt = String(routeStatus.observedCanvasReceipt || "missing");
   document.documentElement.dataset.audraliaCanvasImportSucceeded = String(routeStatus.importSucceeded);
   document.documentElement.dataset.audraliaCanvasRenderCalled = String(routeStatus.renderCalled);
   document.documentElement.dataset.audraliaCanvasFound = String(routeStatus.canvasFoundAfterRender);
@@ -177,10 +179,9 @@ function verifyRouteCanvas() {
   exposeRouteStatus({
     canvasFoundAfterRender: Boolean(canvas),
     labelFoundAfterRender: Boolean(label),
+    observedCanvasReceipt: String(canvasReceipt || "missing"),
     staleCanvasDetected
   });
-
-  document.documentElement.dataset.audraliaObservedCanvasReceipt = String(canvasReceipt || "missing");
 
   return { canvas, label, canvasReceipt, staleCanvasDetected };
 }
@@ -203,7 +204,7 @@ async function bootAudraliaDoorway() {
     return routeStatus;
   }
 
-  setDoorwayMessage("Audralia doorway is loading the current adopted canvas authority.", "loading");
+  setDoorwayMessage("Audralia doorway is loading the current stable ocean-world canvas authority.", "loading");
 
   let canvasModule;
 
@@ -238,7 +239,7 @@ async function bootAudraliaDoorway() {
       routeStatus,
       routeReceipt: AUDRALIA_ROUTE_RECEIPT,
       expectedCanvasReceipt: EXPECTED_CANVAS_RECEIPT,
-      source: "audralia-doorway-route-cache-refresh"
+      source: "audralia-doorway-route-stable-ocean-world"
     });
 
     const proof = verifyRouteCanvas();

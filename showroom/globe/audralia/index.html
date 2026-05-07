@@ -2,19 +2,20 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="audralia-v15-route-status-cache-bind-shell"
+  data-page="audralia-canonical-mount-canvas-attachment"
   data-route="/showroom/globe/audralia/"
-  data-contract="AUDRALIA_HTML_V15_ROUTE_STATUS_CACHE_BIND_TNT_v1"
-  data-previous-contract="AUDRALIA_HTML_V14_ROUTE_PAIR_STATUS_RECEIPT_TNT_v1"
-  data-clean-handoff="AUDRALIA_HTML_CLEAN_CANARY_HANDOFF_TNT_v1"
-  data-active-renewal="AUDRALIA_HTML_CLEAN_CANARY_HANDOFF_TNT_v2"
-  data-cache-break-renewal="AUDRALIA_HTML_ROUTE_CACHE_BREAK_AND_STATUS_GATE_TNT_v1"
-  data-pair-route-contract="AUDRALIA_ROUTE_V15_ROUTE_STATUS_SOVEREIGNTY_LOCK_TNT_v1"
-  data-role="audralia-route-shell"
-  data-shell-only="true"
+  data-contract="AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_TNT_v1"
+  data-previous-contract="AUDRALIA_HTML_V15_ROUTE_STATUS_CACHE_BIND_TNT_v1"
+  data-route-js-contract="AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_JS_TNT_v1"
+  data-body="Audralia"
+  data-role="audralia-route-doorway"
+  data-canonical-mount="audralia-canvas-mount"
   data-status-target="audralia-route-status"
-  data-canvas-mount="audralia-canvas-mount"
-  data-script-handoff="/showroom/globe/audralia/index.js"
+  data-canvas-authority="/assets/audralia/audralia.canvas.js"
+  data-runtime-authority="/assets/audralia/audralia.runtime.js"
+  data-surface-authority="/assets/audralia/audralia.surface.js"
+  data-hex-child-authority="/assets/audralia/audralia.hex.surface.js"
+  data-grandchild-relief-authority="/assets/audralia/audralia.relief.surface.js"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -27,66 +28,43 @@
   <title>Diamond Gate Bridge · Audralia</title>
   <meta
     name="description"
-    content="Audralia V15 route shell. The HTML owns shell, navigation, status target, canvas mount, receipt exposure, and the V15 script handoff only."
+    content="Audralia route doorway with canonical canvas mount, route-owned status, and V16 canvas attachment proof."
   >
 
   <style>
     :root {
-      color-scheme: dark;
-      --bg: #030713;
-      --panel: rgba(7, 13, 28, 0.86);
-      --line: rgba(190, 214, 255, 0.16);
-      --text: #fff4d8;
-      --muted: rgba(230, 238, 255, 0.76);
-      --faint: rgba(230, 238, 255, 0.52);
-      --gold: #f3c86f;
-      --blue: #8dd8ff;
-      --purple: #8f65ff;
-      --max: 1140px;
+      --bg: #030407;
+      --panel: rgba(8, 12, 20, 0.88);
+      --panel-2: rgba(255,255,255,0.045);
+      --line: rgba(255,255,255,0.16);
+      --text: #f7f1df;
+      --muted: rgba(242,246,255,0.72);
+      --faint: rgba(242,246,255,0.48);
+      --gold: #f2c76f;
+      --blue: #78d8ff;
+      --green: #a5efcc;
+      --stage: min(100%, 1180px);
     }
 
     * {
       box-sizing: border-box;
     }
 
-    html {
-      min-width: 320px;
-      min-height: 100%;
-      background: var(--bg);
-      scroll-behavior: smooth;
+    html,
+    body {
+      width: 100%;
+      margin: 0;
       overflow-x: hidden;
+      background:
+        radial-gradient(circle at 50% 12%, rgba(120,216,255,0.14), transparent 28rem),
+        radial-gradient(circle at 50% 58%, rgba(242,199,111,0.10), transparent 34rem),
+        linear-gradient(180deg, #060914, #030407 72%, #010205);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     body {
-      margin: 0;
-      min-width: 320px;
-      min-height: 100vh;
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.5;
-      overflow-x: hidden;
-      background:
-        radial-gradient(circle at 50% -8%, rgba(143, 101, 255, 0.22), transparent 30rem),
-        radial-gradient(circle at 12% 22%, rgba(141, 216, 255, 0.15), transparent 30rem),
-        radial-gradient(circle at 85% 28%, rgba(243, 200, 111, 0.12), transparent 28rem),
-        linear-gradient(180deg, #070b18 0%, #030713 58%, #010207 100%);
-      -webkit-font-smoothing: antialiased;
-      text-rendering: geometricPrecision;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background-image:
-        radial-gradient(circle, rgba(255, 255, 255, 0.18) 0 1px, transparent 1.5px),
-        linear-gradient(rgba(141, 216, 255, 0.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(141, 216, 255, 0.045) 1px, transparent 1px);
-      background-size: 220px 260px, 54px 54px, 54px 54px;
-      opacity: 0.20;
-      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.42) 70%, rgba(0, 0, 0, 0.14));
+      min-height: 100svh;
     }
 
     a {
@@ -94,290 +72,312 @@
       text-decoration: none;
     }
 
-    .skip {
+    .skip-link {
       position: absolute;
-      left: -999px;
-      top: 8px;
-      z-index: 50;
+      left: 1rem;
+      top: -4rem;
+      z-index: 20;
       padding: 0.75rem 1rem;
       border-radius: 999px;
-      color: #05070d;
       background: var(--gold);
-      font-weight: 950;
+      color: #080a0f;
+      font-weight: 900;
     }
 
-    .skip:focus {
-      left: 8px;
+    .skip-link:focus {
+      top: 1rem;
     }
 
     .shell {
-      position: relative;
-      z-index: 2;
-      width: min(var(--max), calc(100% - 28px));
+      width: var(--stage);
       margin: 0 auto;
-      padding: max(20px, env(safe-area-inset-top)) 0 max(44px, env(safe-area-inset-bottom));
+      padding: max(1rem, env(safe-area-inset-top)) clamp(0.85rem, 3vw, 2rem)
+        max(1.5rem, env(safe-area-inset-bottom));
     }
 
     .topbar {
-      display: grid;
-      grid-template-columns: auto 1fr;
+      display: flex;
       align-items: center;
-      gap: 18px;
-      padding: 12px 0 18px;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 0 1rem;
     }
 
     .brand {
-      display: grid;
-      gap: 0.16rem;
-      min-width: 230px;
-    }
-
-    .brand strong {
-      font-size: clamp(1rem, 2.8vw, 1.45rem);
-      line-height: 1;
-      letter-spacing: -0.04em;
-    }
-
-    .brand span {
-      color: var(--muted);
-      font-size: 0.72rem;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.08rem;
       font-weight: 950;
-      letter-spacing: 0.14em;
+      line-height: 1.05;
+      letter-spacing: 0.04em;
+    }
+
+    .brand span:first-child {
+      font-size: clamp(0.95rem, 2.8vw, 1.08rem);
+      text-transform: uppercase;
+    }
+
+    .brand span:last-child {
+      color: var(--muted);
+      font-size: clamp(0.66rem, 2.2vw, 0.76rem);
+      letter-spacing: 0.12em;
       text-transform: uppercase;
     }
 
     .nav {
       display: flex;
-      flex-wrap: wrap;
       justify-content: flex-end;
-      gap: 0.48rem;
+      flex-wrap: wrap;
+      gap: 0.42rem;
     }
 
     .nav a {
-      min-height: 2.25rem;
+      min-height: 2.1rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(255, 255, 255, 0.13);
-      border-radius: 999px;
-      padding: 0.5rem 0.74rem;
-      color: rgba(241, 246, 255, 0.84);
-      background: rgba(255, 255, 255, 0.035);
-      font-size: 0.68rem;
-      font-weight: 950;
-      letter-spacing: 0.055em;
-      text-transform: uppercase;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-    }
-
-    .panel {
+      padding: 0.45rem 0.72rem;
       border: 1px solid var(--line);
-      border-radius: clamp(1.25rem, 4vw, 2rem);
-      background:
-        radial-gradient(circle at 14% 0%, rgba(141, 216, 255, 0.10), transparent 28rem),
-        radial-gradient(circle at 86% 18%, rgba(143, 101, 255, 0.14), transparent 28rem),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.022)),
-        var(--panel);
-      box-shadow: 0 28px 96px rgba(0, 0, 0, 0.44), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-      overflow: hidden;
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.035);
+      font-size: 0.74rem;
+      font-weight: 850;
+      white-space: nowrap;
     }
 
     .hero {
       display: grid;
-      gap: 1rem;
-      padding: clamp(1.2rem, 4vw, 2.5rem);
-      margin-top: 0.6rem;
+      gap: 0.85rem;
+      padding: clamp(1.2rem, 4vw, 2.2rem) 0 clamp(1rem, 3vw, 1.45rem);
+      text-align: center;
     }
 
-    .kicker {
-      width: fit-content;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.55rem;
-      padding: 0.56rem 0.9rem;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 999px;
-      color: rgba(230, 238, 255, 0.86);
-      background: rgba(255, 255, 255, 0.04);
-      font-size: 0.72rem;
+    .eyebrow {
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(0.72rem, 2.5vw, 0.84rem);
       font-weight: 950;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
-    .kicker::before {
-      content: "";
-      width: 0.72rem;
-      height: 0.72rem;
-      border-radius: 0.18rem;
-      transform: rotate(45deg);
-      background: linear-gradient(135deg, #fff2a8, var(--gold));
-      box-shadow: 0 0 1.1rem rgba(243, 200, 111, 0.46);
-    }
-
     h1 {
-      margin: 0;
-      max-width: 900px;
-      font-size: clamp(2.85rem, 8vw, 5.8rem);
-      line-height: 0.88;
-      letter-spacing: -0.085em;
+      width: min(100%, 880px);
+      margin: 0 auto;
+      font-size: clamp(2.2rem, 8vw, 4.9rem);
+      line-height: 0.94;
+      letter-spacing: -0.065em;
       text-wrap: balance;
     }
 
-    h2 {
-      margin: 0;
-      color: var(--gold);
-      font-size: clamp(1.35rem, 3.8vw, 2.2rem);
-      line-height: 1;
-      letter-spacing: -0.055em;
-      text-wrap: balance;
-    }
-
-    p {
-      margin: 0;
+    .summary {
+      width: min(100%, 780px);
+      margin: 0 auto;
       color: var(--muted);
-      font-size: clamp(0.96rem, 2.4vw, 1.08rem);
-      line-height: 1.55;
+      font-size: clamp(0.98rem, 3vw, 1.12rem);
+      line-height: 1.5;
+      text-wrap: balance;
     }
 
     .actions {
       display: flex;
+      justify-content: center;
       flex-wrap: wrap;
-      gap: 0.58rem;
+      gap: 0.55rem;
     }
 
     .button {
-      min-height: 2.55rem;
+      min-height: 2.4rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.58rem 0.92rem;
+      border: 1px solid rgba(242,199,111,0.85);
       border-radius: 999px;
-      padding: 0.64rem 0.95rem;
-      background: rgba(255, 255, 255, 0.045);
-      color: rgba(241, 246, 255, 0.88);
-      font-size: 0.74rem;
+      color: #080a0f;
+      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+      box-shadow: 0 0.85rem 2rem rgba(242,199,111,0.16);
+      font-size: 0.76rem;
       font-weight: 950;
       letter-spacing: 0.055em;
       text-transform: uppercase;
     }
 
-    .button.gold {
-      border-color: rgba(243, 200, 111, 0.9);
-      color: #060811;
-      background: linear-gradient(135deg, #fff2a8, #f3c86f);
+    .button.secondary {
+      border-color: rgba(255,255,255,0.22);
+      color: var(--text);
+      background: rgba(255,255,255,0.055);
+      box-shadow: none;
     }
 
-    .section {
-      margin-top: 1.1rem;
-      padding: clamp(1rem, 3vw, 1.35rem);
-      display: grid;
-      gap: 1rem;
+    .route-status-card,
+    .canvas-card,
+    .handoff-card {
+      width: min(100%, 980px);
+      margin: clamp(0.9rem, 3vw, 1.2rem) auto 0;
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: clamp(1rem, 3vw, 1.35rem);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.060), rgba(255,255,255,0.018)),
+        rgba(8,12,20,0.76);
+      box-shadow:
+        0 1.5rem 5rem rgba(0,0,0,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+      overflow: hidden;
     }
 
-    .status-box {
-      border: 1px solid rgba(243, 200, 111, 0.20);
-      border-radius: 1.1rem;
-      padding: 1rem;
-      background: rgba(0, 0, 0, 0.18);
+    .route-status-card {
+      padding: clamp(0.85rem, 3vw, 1.05rem);
+      text-align: center;
+    }
+
+    .route-status-card h2,
+    .handoff-card h2 {
+      margin: 0 0 0.55rem;
+      color: var(--gold);
+      font-size: 0.82rem;
+      font-weight: 950;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
     }
 
     #audralia-route-status {
-      color: rgba(255, 244, 216, 0.92);
-      font-size: 0.88rem;
-      font-weight: 750;
-      line-height: 1.48;
-      white-space: pre-line;
+      min-height: 4.4rem;
+      display: grid;
+      align-content: center;
+      gap: 0.35rem;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.42;
+      white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
 
+    .canvas-card {
+      padding: clamp(0.65rem, 2.4vw, 0.9rem);
+    }
+
     .canvas-shell {
-      margin-top: 1.1rem;
-      padding: clamp(0.85rem, 2.6vw, 1.1rem);
+      position: relative;
+      width: min(100%, 760px);
+      aspect-ratio: 1 / 1;
+      margin: 0 auto;
+      border: 1px solid rgba(120,216,255,0.18);
+      border-radius: clamp(1rem, 4vw, 1.4rem);
+      background:
+        radial-gradient(circle at 50% 42%, rgba(120,216,255,0.10), transparent 46%),
+        radial-gradient(circle at 50% 58%, rgba(242,199,111,0.08), transparent 52%),
+        rgba(0,0,0,0.42);
+      overflow: hidden;
+      contain: layout paint;
     }
 
     #audralia-canvas-mount {
-      min-height: min(92vw, 820px);
+      position: absolute;
+      inset: 0;
       display: grid;
       place-items: center;
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      border-radius: 1.5rem;
-      background:
-        radial-gradient(circle at 50% 46%, rgba(143, 101, 255, 0.14), transparent 24rem),
-        rgba(0, 0, 0, 0.20);
-      overflow: hidden;
+      min-height: 18rem;
+    }
+
+    #audralia-canvas-mount canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .mount-fallback {
+      position: absolute;
+      inset: auto 1rem 1rem;
+      z-index: 1;
+      color: var(--faint);
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-align: center;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    .handoff-card {
+      padding: clamp(0.85rem, 3vw, 1.05rem);
     }
 
     .handoff-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.75rem;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.6rem;
     }
 
-    .handoff-card {
-      min-height: 8rem;
+    .handoff-item {
+      min-height: 5.4rem;
       display: grid;
-      gap: 0.35rem;
-      align-content: start;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 1rem;
-      padding: 0.9rem;
-      background: rgba(255, 255, 255, 0.035);
+      align-content: center;
+      gap: 0.22rem;
+      padding: 0.75rem;
+      border: 1px dashed rgba(255,255,255,0.14);
+      border-radius: 0.95rem;
+      background: rgba(255,255,255,0.028);
+      text-align: center;
     }
 
-    .handoff-card strong {
-      color: var(--gold);
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
+    .handoff-item strong {
+      color: rgba(255,241,205,0.96);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .handoff-card span {
+    .handoff-item span {
       color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.42;
+      font-size: 0.74rem;
+      line-height: 1.28;
     }
 
-    .receipt-list {
+    .receipt {
+      width: min(100%, 920px);
+      margin: clamp(0.9rem, 3vw, 1.2rem) auto 0;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.03);
+      color: var(--faint);
+      overflow: hidden;
+    }
+
+    .receipt summary {
+      cursor: pointer;
+      padding: 0.75rem 0.9rem;
+      color: var(--faint);
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .receipt pre {
       margin: 0;
-      padding-left: 1.1rem;
-      color: var(--muted);
-    }
-
-    .receipt-list code {
-      color: rgba(255, 244, 216, 0.92);
+      padding: 0 0.9rem 0.9rem;
+      font: 700 0.68rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space: pre-wrap;
       overflow-wrap: anywhere;
-    }
-
-    [data-audralia-route-v7-proof],
-    [data-audralia-route-v6-proof],
-    [data-stale-audralia-proof] {
-      display: none !important;
-      visibility: hidden !important;
-    }
-
-    [data-audralia-canvas-proof] {
-      display: block;
-      visibility: visible;
-      max-width: 100%;
-      overflow-wrap: anywhere;
-    }
-
-    template,
-    .hidden-receipt {
-      display: none !important;
     }
 
     footer {
-      padding: 1.35rem 0 0.5rem;
+      padding: 1.35rem 0 0.45rem;
       color: var(--faint);
+      font-size: 0.74rem;
+      line-height: 1.45;
       text-align: center;
-      font-size: 0.76rem;
     }
 
-    @media (max-width: 860px) {
+    @media (max-width: 900px) {
       .topbar {
-        grid-template-columns: 1fr;
+        align-items: flex-start;
+        flex-direction: column;
       }
 
       .nav {
@@ -388,34 +388,22 @@
         grid-template-columns: 1fr;
       }
     }
-
-    @media (max-width: 560px) {
-      .shell {
-        width: min(100% - 20px, var(--max));
-      }
-
-      .actions {
-        display: grid;
-      }
-
-      .button {
-        width: 100%;
-      }
-    }
   </style>
+
+  <script src="/showroom/globe/audralia/index.js?v=AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_JS_TNT_v1" defer></script>
 </head>
 
 <body>
-  <a class="skip" href="#audralia-main">Skip to Audralia</a>
+  <a class="skip-link" href="#audralia-main">Skip to Audralia</a>
 
   <div class="shell">
-    <header class="topbar" aria-label="Audralia header">
-      <a class="brand" href="/">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
         <span>Diamond Gate Bridge</span>
-        <strong>Audralia · Adopted Canvas Doorway</strong>
+        <span>Audralia · V16 Canonical Mount</span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
+      <nav class="nav" aria-label="Audralia route navigation">
         <a href="/showroom/globe/">Return to Globe Split</a>
         <a href="/showroom/globe/earth/">Inspect Earth</a>
         <a href="/showroom/">Showroom</a>
@@ -426,120 +414,110 @@
     </header>
 
     <main id="audralia-main">
-      <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Audralia · V15 Route Status Sovereignty</div>
-        <h1 id="page-title">Audralia</h1>
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">Audralia · V16 Doorway Attachment</p>
+        <h1 id="page-title">Audralia mounts through one canonical canvas seat.</h1>
 
-        <p>
-          The page shell exposes navigation, route status, receipt targets, and the canvas mount. The doorway script imports the active route status sovereignty lock, mounts the canvas authority, and publishes the parent, child, grandchild, and runtime chain.
+        <p class="summary">
+          HTML owns the route shell and canonical mount. The doorway script imports the canvas authority, calls the mount function, verifies the live canvas, and publishes honest route status.
         </p>
 
-        <div class="actions">
-          <a class="button gold" href="/showroom/globe/">Return to Globe Split</a>
-          <a class="button" href="/showroom/globe/earth/">Inspect Earth</a>
+        <div class="actions" aria-label="Audralia primary actions">
           <a class="button" href="/gauges/">Run Gauges</a>
+          <a class="button secondary" href="/showroom/globe/">Return to Globe Split</a>
+          <a class="button secondary" href="/showroom/globe/earth/">Inspect Earth</a>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="status-title">
-        <h2 id="status-title">Route Status</h2>
-
-        <div class="status-box">
-          <p id="audralia-route-status" data-audralia-route-status>
-            Audralia V15 route status sovereignty preparing canvas, parent surface, child, grandchild relief, and runtime receipts.
-          </p>
-        </div>
-      </section>
-
-      <section class="panel canvas-shell" aria-label="Audralia canvas shell">
+      <section class="route-status-card" aria-labelledby="route-status-title">
+        <h2 id="route-status-title">Route Status</h2>
         <div
-          id="audralia-canvas-mount"
-          data-audralia-canvas-mount
-          data-canvas-mount-receipt="AUDRALIA_HTML_V15_ROUTE_STATUS_CACHE_BIND_TNT_v1"
-          aria-label="Audralia canvas mount"
-        ></div>
+          id="audralia-route-status"
+          data-audralia-route-status
+          data-audralia-route-loaded="false"
+          data-audralia-route-receipt="AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_TNT_v1"
+          data-audralia-canvas-receipt=""
+          data-audralia-canvas-contract=""
+          data-audralia-canvas-mounted="false"
+          data-graphic-box="false"
+          data-image-generation="false"
+          data-visual-pass-claimed="false"
+        >Audralia V16 canonical mount attachment preparing.</div>
       </section>
 
-      <section class="panel section" aria-labelledby="handoff-title">
-        <h2 id="handoff-title">Audralia handoff</h2>
+      <section class="canvas-card" aria-labelledby="canvas-title">
+        <h2 id="canvas-title" class="eyebrow">Canonical Canvas Mount</h2>
 
-        <p>
-          HTML stays limited to the page shell. The route script owns the import call, status bridge, and public status sovereignty. The canvas authority owns canvas creation, animation, pixel proof, and visible Audralia render.
-        </p>
+        <div class="canvas-shell">
+          <div
+            id="audralia-canvas-mount"
+            data-audralia-canvas-mount
+            data-canonical-mount="true"
+            data-route="/showroom/globe/audralia/"
+            data-route-contract="AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_TNT_v1"
+          ></div>
+
+          <div class="mount-fallback" data-audralia-mount-fallback>
+            Waiting for Audralia canvas authority.
+          </div>
+        </div>
+      </section>
+
+      <section class="handoff-card" aria-labelledby="handoff-title">
+        <h2 id="handoff-title">Doorway Jurisdiction</h2>
 
         <div class="handoff-grid">
-          <div class="handoff-card">
-            <strong>HTML route</strong>
-            <span>Owns shell, navigation, status target, canvas mount, receipt exposure, and V15 script handoff only.</span>
+          <div class="handoff-item">
+            <strong>HTML Route</strong>
+            <span>Owns shell, navigation, route status, and canonical mount only.</span>
           </div>
 
-          <div class="handoff-card">
-            <strong>Doorway script</strong>
-            <span>Imports runtime support, imports the canvas authority, calls the canonical mount function, and preserves route-owned status text.</span>
+          <div class="handoff-item">
+            <strong>Doorway Script</strong>
+            <span>Imports canvas authority, calls mount, verifies canvas presence, and publishes status.</span>
           </div>
 
-          <div class="handoff-card">
-            <strong>Canvas authority</strong>
-            <span>Owns canvas creation, animation, pixel proof, and the visible Audralia render.</span>
+          <div class="handoff-item">
+            <strong>Canvas Authority</strong>
+            <span>Owns canvas creation, composition, animation, and visible Audralia render.</span>
           </div>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="receipt-title">
-        <h2 id="receipt-title">Handoff Receipts</h2>
-        <p>These receipts are exposed for route inspection and Gauges renewal.</p>
-
-        <ul class="receipt-list">
-          <li>HTML route cache bind <code>AUDRALIA_HTML_V15_ROUTE_STATUS_CACHE_BIND_TNT_v1</code></li>
-          <li>Previous HTML route pair <code>AUDRALIA_HTML_V14_ROUTE_PAIR_STATUS_RECEIPT_TNT_v1</code></li>
-          <li>Clean HTML handoff <code>AUDRALIA_HTML_CLEAN_CANARY_HANDOFF_TNT_v1</code></li>
-          <li>Doorway route <code>AUDRALIA_ROUTE_V15_ROUTE_STATUS_SOVEREIGNTY_LOCK_TNT_v1</code></li>
-          <li>Previous doorway route <code>AUDRALIA_ROUTE_V14_PARENT_CHILD_GRANDCHILD_STATUS_BRIDGE_TNT_v1</code></li>
-          <li>Canvas authority <code>AUDRALIA_CANVAS_PARENT_CONTRACT_CHILD_ACTIVATION_TNT_v13</code></li>
-          <li>Canvas receipt <code>AUDRALIA_CANVAS_AUTHORITY_RECEIPT</code></li>
-          <li>Parent surface <code>AUDRALIA_SURFACE_PARENT_COASTLINE_RIDGE_FEATHER_TNT_v6</code></li>
-          <li>Hex child <code>AUDRALIA_HEX_SURFACE_CHILD_GRANDCHILD_RELIEF_BIND_TNT_v4</code></li>
-          <li>Grandchild relief <code>AUDRALIA_GRANDCHILD_RELIEF_FIELD_EXPRESSOR_TNT_v1</code></li>
-          <li>Runtime motion <code>AUDRALIA_RUNTIME_MOTION_ONLY_FULL_POTENTIAL_TNT_v10</code></li>
-          <li>GraphicBox <code>false</code></li>
-          <li>Image generation <code>false</code></li>
-          <li>Visual pass claimed <code>false</code></li>
-        </ul>
-
-        <template id="audralia-route-receipt" data-route-receipt>
-AUDRALIA_HTML_V15_ROUTE_STATUS_CACHE_BIND_TNT_v1
-AUDRALIA_HTML_V14_ROUTE_PAIR_STATUS_RECEIPT_TNT_v1
-AUDRALIA_HTML_CLEAN_CANARY_HANDOFF_TNT_v1
-AUDRALIA_HTML_CLEAN_CANARY_HANDOFF_TNT_v2
-AUDRALIA_HTML_ROUTE_CACHE_BREAK_AND_STATUS_GATE_TNT_v1
+      <details class="receipt">
+        <summary>Route receipt</summary>
+        <pre>AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_TNT_v1
+previous_html=AUDRALIA_HTML_V15_ROUTE_STATUS_CACHE_BIND_TNT_v1
+previous_route=AUDRALIA_ROUTE_V15_ROUTE_STATUS_SOVEREIGNTY_LOCK_TNT_v1
 route=/showroom/globe/audralia/
-html_owns=shell,navigation,status_target,canvas_mount,receipt_exposure,script_handoff
-html_does_not_own=runtime_truth,canvas_paint,parent_surface_truth,child_refinement,grandchild_relief,gauges_scoring
+classification=DOORWAY_ATTACHMENT_REPAIR
+html_owns=shell,navigation,status_target,canonical_canvas_mount,receipt_exposure,script_handoff
+script_owns=canvas_authority_import,mount_function_call,canvas_presence_verification,route_status_publication,readiness_receipt
+canvas_authority=/assets/audralia/audralia.canvas.js
+canvas_contract=AUDRALIA_CANVAS_PARENT_CONTRACT_CHILD_ACTIVATION_TNT_v13
+canvas_receipt=AUDRALIA_CANVAS_AUTHORITY_RECEIPT
+runtime=/assets/audralia/audralia.runtime.js
+runtime_contract=AUDRALIA_RUNTIME_MOTION_ONLY_FULL_POTENTIAL_TNT_v10
+surface=/assets/audralia/audralia.surface.js
+surface_contract=AUDRALIA_SURFACE_PARENT_COASTLINE_RIDGE_FEATHER_TNT_v6
+hex_child=/assets/audralia/audralia.hex.surface.js
+hex_child_contract=AUDRALIA_HEX_SURFACE_CHILD_GRANDCHILD_RELIEF_BIND_TNT_v4
+grandchild_relief=/assets/audralia/audralia.relief.surface.js
+grandchild_relief_contract=AUDRALIA_GRANDCHILD_RELIEF_FIELD_EXPRESSOR_TNT_v1
+canonical_mount=audralia-canvas-mount
 status_target=audralia-route-status
-canvas_mount=audralia-canvas-mount
-script=/showroom/globe/audralia/index.js?cache=AUDRALIA_ROUTE_V15_ROUTE_STATUS_SOVEREIGNTY_LOCK_TNT_v1
-route_status_sovereignty=AUDRALIA_ROUTE_V15_ROUTE_STATUS_SOVEREIGNTY_LOCK_TNT_v1
-previous_route=AUDRALIA_ROUTE_V14_PARENT_CHILD_GRANDCHILD_STATUS_BRIDGE_TNT_v1
-canvas=AUDRALIA_CANVAS_PARENT_CONTRACT_CHILD_ACTIVATION_TNT_v13
-surface=AUDRALIA_SURFACE_PARENT_COASTLINE_RIDGE_FEATHER_TNT_v6
-hex_child=AUDRALIA_HEX_SURFACE_CHILD_GRANDCHILD_RELIEF_BIND_TNT_v4
-grandchild_relief=AUDRALIA_GRANDCHILD_RELIEF_FIELD_EXPRESSOR_TNT_v1
-runtime=AUDRALIA_RUNTIME_MOTION_ONLY_FULL_POTENTIAL_TNT_v10
+route_does_not_own=runtime_truth,canvas_paint,parent_surface_truth,child_refinement,grandchild_relief,gauges_scoring
+tic_tac_toe_dynamic_protocol=target_execute_terminal
+quad_a_attack=assault_attack_adversarial_audit
 generated_image=false
 graphic_box=false
-visual_pass_claimed=false
-        </template>
-      </section>
+visual_pass_claimed=false</pre>
+      </details>
     </main>
 
     <footer>
-      Audralia · V15 route status sovereignty cache bind · parent, child, grandchild, runtime receipts exposed · no GraphicBox · no image generation.
+      AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_TNT_v1 · canonical mount · doorway attachment repair · no GraphicBox · no image generation.
     </footer>
   </div>
-
-  <script
-    type="module"
-    src="/showroom/globe/audralia/index.js?cache=AUDRALIA_ROUTE_V15_ROUTE_STATUS_SOVEREIGNTY_LOCK_TNT_v1"
-  ></script>
 </body>
 </html>

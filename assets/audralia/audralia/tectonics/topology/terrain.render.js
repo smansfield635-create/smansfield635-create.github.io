@@ -1,16 +1,18 @@
 /* /assets/audralia/audralia/tectonics/topology/terrain.render.js */
 /* AUDRALIA_TERRAIN_RELIEF_AUTHORITY */
-/* TNT: AUDRALIA_TERRAIN_4K_RELIEF_DETAIL_TNT_v2 */
+/* TNT: AUDRALIA_TERRAIN_4K_RELIEF_DETAIL_TNT_v3 */
 
 const RECEIPT = "AUDRALIA_TERRAIN_RELIEF_AUTHORITY_RECEIPT";
-const CONTRACT = "AUDRALIA_TERRAIN_4K_RELIEF_DETAIL_TNT_v2";
-const VERSION = "2026-05-06.terrain-4k-relief-detail-v2";
+const CONTRACT = "AUDRALIA_TERRAIN_4K_RELIEF_DETAIL_TNT_v3";
+const COMPATIBILITY_CONTRACT = "AUDRALIA_TERRAIN_4K_RELIEF_DETAIL_TNT_v2";
+const VERSION = "2026-05-06.terrain-4k-relief-detail-v3";
 
 const TERRAIN_AUTHORITY = Object.freeze({
   name: "Audralia Terrain Relief Authority",
   planet: "Audralia",
   receipt: RECEIPT,
   contract: CONTRACT,
+  compatibilityContract: COMPATIBILITY_CONTRACT,
   version: VERSION,
   lineage: "tectonics -> topology -> terrain",
   role: "above-sea-level-relief-expression",
@@ -27,7 +29,8 @@ const TERRAIN_AUTHORITY = Object.freeze({
     "surface-roughness",
     "coastal-terrain-transition",
     "terrain-color-hints",
-    "canvas-consumable-terrain-samples"
+    "canvas-consumable-terrain-samples",
+    "runtime-consumable-terrain-samples"
   ],
   nonJurisdiction: [
     "route-shell",
@@ -37,6 +40,7 @@ const TERRAIN_AUTHORITY = Object.freeze({
     "runtime-boot",
     "hydration-ownership",
     "ocean-depth-ownership",
+    "topology-land-void-footprint",
     "GraphicBox",
     "image-generation"
   ],
@@ -241,7 +245,9 @@ const RELIEF_PALETTE = Object.freeze({
 });
 
 function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
+  const number = Number(value);
+  if (!Number.isFinite(number)) return min;
+  return Math.max(min, Math.min(max, number));
 }
 
 function normalizeLongitude(lon) {
@@ -255,13 +261,54 @@ function normalizeLatitude(lat) {
   return clamp(Number(lat) || 0, -90, 90);
 }
 
-function hash01(seed) {
-  const x = Math.sin(seed * 12.9898) * 43758.5453123;
-  return x - Math.floor(x);
+function radToDeg(value) {
+  return value * 180 / Math.PI;
+}
+
+function normalizeCoordinateInput(input, lonArg, options = {}) {
+  if (typeof input === "object" && input !== null) {
+    let lat = Number(input.latDeg ?? input.latitudeDegrees ?? input.latDegrees);
+    let lon = Number(input.lonDeg ?? input.lngDeg ?? input.longitudeDegrees ?? input.lonDegrees);
+
+    const latRad = Number(input.lat ?? input.latitude ?? input.phi);
+    const lonRad = Number(input.lon ?? input.lng ?? input.longitude ?? input.theta);
+
+    if (!Number.isFinite(lat) && Number.isFinite(latRad)) {
+      lat = Math.abs(latRad) <= Math.PI / 2 + 0.01 ? radToDeg(latRad) : latRad;
+    }
+
+    if (!Number.isFinite(lon) && Number.isFinite(lonRad)) {
+      lon = Math.abs(lonRad) <= Math.PI * 2 + 0.01 ? radToDeg(lonRad) : lonRad;
+    }
+
+    const u = Number(input.u ?? input.x ?? options.u);
+    const v = Number(input.v ?? input.y ?? options.v);
+
+    if (!Number.isFinite(lat) && Number.isFinite(v)) lat = (0.5 - clamp(v, 0, 1)) * 180;
+    if (!Number.isFinite(lon) && Number.isFinite(u)) lon = ((u % 1 + 1) % 1 - 0.5) * 360;
+
+    return {
+      lat: normalizeLatitude(lat),
+      lon: normalizeLongitude(lon),
+      options: { ...options, ...(input.options || input.context || {}) }
+    };
+  }
+
+  return {
+    lat: normalizeLatitude(input),
+    lon: normalizeLongitude(lonArg),
+    options
+  };
 }
 
 function smoothstep(edge0, edge1, value) {
-  const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+  const denominator = edge1 - edge0;
+
+  if (Math.abs(denominator) < 0.000001) {
+    return value >= edge1 ? 1 : 0;
+  }
+
+  const t = clamp((value - edge0) / denominator, 0, 1);
   return t * t * (3 - 2 * t);
 }
 
@@ -365,8 +412,10 @@ function resolveRegion(lat, lon) {
 }
 
 function sampleTerrain(latInput, lonInput, options = {}) {
-  const lat = normalizeLatitude(latInput);
-  const lon = normalizeLongitude(lonInput);
+  const coordinate = normalizeCoordinateInput(latInput, lonInput, options);
+  const lat = coordinate.lat;
+  const lon = coordinate.lon;
+  const localOptions = coordinate.options || options || {};
   const absoluteLatitude = Math.abs(lat);
   const resolved = resolveRegion(lat, lon);
   const region = resolved.region;
@@ -439,39 +488,67 @@ function sampleTerrain(latInput, lonInput, options = {}) {
     colorHint = RELIEF_PALETTE.weatheredStone;
   }
 
+  const admissible = bestInfluence > 0.08;
+  const highland = elevation > 0.62;
+  const mountain = elevation > 0.70 || ridge > 0.68;
+  const coastalCliff = cliff > 0.54 && coastalCut > 0.18;
+
   return {
     lat,
     lon,
-    admissible: bestInfluence > 0.08,
-    detailLevel: options.detailLevel || "4k",
+    latDeg: lat,
+    lonDeg: lon,
+    admissible,
+    detailLevel: localOptions.detailLevel || "4k",
     regionId: region ? region.id : "void-or-ocean",
     regionClass: region ? region.className : "void-or-ocean",
     regionNumber: region ? region.region : 8,
     influence: Number(bestInfluence.toFixed(4)),
     elevation: Number(elevation.toFixed(4)),
+    maxElevation: Number(elevation.toFixed(4)),
+    normalizedElevation: Number(elevation.toFixed(4)),
     slope: Number(slope.toFixed(4)),
     roughness: Number(roughness.toFixed(4)),
     cliff: Number(cliff.toFixed(4)),
+    cliffIndex: Number(cliff.toFixed(4)),
+    coastalCliffIndex: Number(coastalCliff ? cliff.toFixed(4) : "0"),
     ridge: Number(ridge.toFixed(4)),
+    ridgeIndex: Number(ridge.toFixed(4)),
+    mountainIndex: Number((mountain ? Math.max(elevation, ridge) : 0).toFixed(4)),
     valley: Number(valley.toFixed(4)),
+    valleyIndex: Number(valley.toFixed(4)),
     valleyBlue: Number(valleyBlue.toFixed(4)),
     pressure: Number(pressure.toFixed(4)),
+    mineralIndex: Number(pressure.toFixed(4)),
     erosion: Number(erosion.toFixed(4)),
     ancientWeathering: Number(ancientWeathering.toFixed(4)),
     glacier: Number(glacier.toFixed(4)),
+    ice: glacier > 0.48,
     beach: Number(beach.toFixed(4)),
     blackSand: Number(blackSand.toFixed(4)),
     whiteSand: Number(whiteSand.toFixed(4)),
     exposedRock: Number(exposedRock.toFixed(4)),
+    exposedTerrainLand: admissible,
+    solidSurfaceLand: admissible || glacier > 0.48,
+    terrainRelief: Number(elevation.toFixed(4)),
+    terrainReliefIndex: Number(elevation.toFixed(4)),
     opalSignal: Number(opalSignal.toFixed(4)),
     diamondSignal: Number(diamondSignal.toFixed(4)),
     slateSignal: Number(slateSignal.toFixed(4)),
     graniteSignal: Number(graniteSignal.toFixed(4)),
     microPitting: Number(microPitting.toFixed(4)),
+    highland,
+    mountain,
+    coastalCliff,
     material,
     colorHint,
     terrainAuthority: RECEIPT,
-    contract: CONTRACT
+    receipt: RECEIPT,
+    contract: CONTRACT,
+    compatibilityContract: COMPATIBILITY_CONTRACT,
+    graphicBox: false,
+    imageGeneration: false,
+    visualPassClaimed: false
   };
 }
 
@@ -484,8 +561,22 @@ function sampleTerrainColor(lat, lon, options = {}) {
     alpha: clamp(0.18 + sample.influence * 0.64 + sample.exposedRock * 0.18, 0, 0.96),
     highlight: sample.diamondSignal > 0.72 || sample.opalSignal > 0.72,
     shadow: sample.cliff > 0.62,
-    sample
+    sample,
+    receipt: RECEIPT,
+    contract: CONTRACT
   };
+}
+
+function sampleAudraliaTerrain(input, lonArg, options = {}) {
+  return sampleTerrain(input, lonArg, options);
+}
+
+function sampleSurface(input, lonArg, options = {}) {
+  return sampleTerrain(input, lonArg, options);
+}
+
+function sample(input, lonArg, options = {}) {
+  return sampleTerrain(input, lonArg, options);
 }
 
 function buildTerrainGrid(options = {}) {
@@ -512,19 +603,21 @@ function buildReliefLayer(options = {}) {
 
   for (let lat = -84; lat <= 84; lat += latStep) {
     for (let lon = -180; lon < 180; lon += lonStep) {
-      const sample = sampleTerrain(lat, lon, { detailLevel: "relief-layer" });
+      const terrainSample = sampleTerrain(lat, lon, { detailLevel: "relief-layer" });
 
-      if (sample.influence >= minInfluence) {
+      if (terrainSample.influence >= minInfluence) {
         points.push({
-          lat: sample.lat,
-          lon: sample.lon,
-          elevation: sample.elevation,
-          slope: sample.slope,
-          roughness: sample.roughness,
-          cliff: sample.cliff,
-          material: sample.material,
-          colorHint: sample.colorHint,
-          alpha: clamp(0.15 + sample.influence * 0.55 + sample.exposedRock * 0.20, 0.12, 0.94)
+          lat: terrainSample.lat,
+          lon: terrainSample.lon,
+          elevation: terrainSample.elevation,
+          slope: terrainSample.slope,
+          roughness: terrainSample.roughness,
+          cliff: terrainSample.cliff,
+          ridge: terrainSample.ridge,
+          valley: terrainSample.valley,
+          material: terrainSample.material,
+          colorHint: terrainSample.colorHint,
+          alpha: clamp(0.15 + terrainSample.influence * 0.55 + terrainSample.exposedRock * 0.20, 0.12, 0.94)
         });
       }
     }
@@ -533,6 +626,7 @@ function buildReliefLayer(options = {}) {
   return {
     receipt: RECEIPT,
     contract: CONTRACT,
+    compatibilityContract: COMPATIBILITY_CONTRACT,
     version: VERSION,
     pointCount: points.length,
     points
@@ -572,26 +666,31 @@ function summarizeTerrain(options = {}) {
   let granite = 0;
   let cliff = 0;
   let valley = 0;
+  let ridge = 0;
+  let mountain = 0;
 
   for (let index = 0; index < grid.length; index += 1) {
-    const sample = grid[index];
+    const terrainSample = grid[index];
 
-    if (sample.admissible) admissible += 1;
-    if (sample.glacier > 0.35) glacier += 1;
-    if (sample.beach > 0.25) beach += 1;
-    if (sample.exposedRock > 0.4) exposedRock += 1;
-    if (sample.elevation > 0.62) highRelief += 1;
-    if (sample.diamondSignal > 0.68) diamond += 1;
-    if (sample.opalSignal > 0.64) opal += 1;
-    if (sample.slateSignal > 0.62) slate += 1;
-    if (sample.graniteSignal > 0.56) granite += 1;
-    if (sample.cliff > 0.60) cliff += 1;
-    if (sample.valley > 0.46) valley += 1;
+    if (terrainSample.admissible) admissible += 1;
+    if (terrainSample.glacier > 0.35) glacier += 1;
+    if (terrainSample.beach > 0.25) beach += 1;
+    if (terrainSample.exposedRock > 0.4) exposedRock += 1;
+    if (terrainSample.elevation > 0.62) highRelief += 1;
+    if (terrainSample.diamondSignal > 0.68) diamond += 1;
+    if (terrainSample.opalSignal > 0.64) opal += 1;
+    if (terrainSample.slateSignal > 0.62) slate += 1;
+    if (terrainSample.graniteSignal > 0.56) granite += 1;
+    if (terrainSample.cliff > 0.60) cliff += 1;
+    if (terrainSample.valley > 0.46) valley += 1;
+    if (terrainSample.ridge > 0.46) ridge += 1;
+    if (terrainSample.mountainIndex > 0.52) mountain += 1;
   }
 
   return {
     receipt: RECEIPT,
     contract: CONTRACT,
+    compatibilityContract: COMPATIBILITY_CONTRACT,
     version: VERSION,
     totalSamples: total,
     admissibleRatio: Number((admissible / total).toFixed(4)),
@@ -605,6 +704,8 @@ function summarizeTerrain(options = {}) {
     graniteSignalRatio: Number((granite / total).toFixed(4)),
     cliffRatio: Number((cliff / total).toFixed(4)),
     valleyRatio: Number((valley / total).toFixed(4)),
+    ridgeRatio: Number((ridge / total).toFixed(4)),
+    mountainRatio: Number((mountain / total).toFixed(4)),
     graphicBox: false,
     imageGeneration: false,
     visualPassClaimed: false
@@ -633,28 +734,37 @@ function getTerrainPalette() {
   return RELIEF_PALETTE;
 }
 
-function publishTerrainAuthority() {
-  if (typeof window === "undefined") {
-    return TERRAIN_AUTHORITY;
-  }
-
-  const status = {
+function getTerrainStatus() {
+  return {
     loaded: true,
     receipt: RECEIPT,
     contract: CONTRACT,
+    compatibilityContract: COMPATIBILITY_CONTRACT,
     version: VERSION,
     authority: TERRAIN_AUTHORITY,
     geology: GEOLOGY,
     summary: TERRAIN_SUMMARY,
     exposesSampleTerrain: true,
+    exposesSampleAudraliaTerrain: true,
     exposesSampleTerrainColor: true,
+    exposesSampleSurface: true,
+    exposesSample: true,
     exposesTerrainGrid: true,
     exposesReliefLayer: true,
     exposesRidgeLines: true,
+    importSafe: true,
     graphicBox: false,
     imageGeneration: false,
     visualPassClaimed: false
   };
+}
+
+function publishTerrainAuthority() {
+  if (typeof window === "undefined") {
+    return TERRAIN_AUTHORITY;
+  }
+
+  const status = getTerrainStatus();
 
   window.__AUDRALIA_TERRAIN_AUTHORITY__ = status;
   window.__AUDRALIA_TERRAIN_STATUS__ = status;
@@ -673,6 +783,7 @@ function publishTerrainAuthority() {
 const api = {
   RECEIPT,
   CONTRACT,
+  COMPATIBILITY_CONTRACT,
   VERSION,
   TERRAIN_AUTHORITY,
   GEOLOGY,
@@ -680,7 +791,10 @@ const api = {
   RELIEF_PALETTE,
   TERRAIN_SUMMARY,
   sampleTerrain,
+  sampleAudraliaTerrain,
   sampleTerrainColor,
+  sampleSurface,
+  sample,
   buildTerrainGrid,
   buildReliefLayer,
   traceRidgeLines,
@@ -690,7 +804,8 @@ const api = {
   getTerrainGeology,
   getTerrainRegions,
   getTerrainSummary,
-  getTerrainPalette
+  getTerrainPalette,
+  getTerrainStatus
 };
 
 if (typeof window !== "undefined") {
@@ -702,6 +817,7 @@ publishTerrainAuthority();
 export {
   RECEIPT,
   CONTRACT,
+  COMPATIBILITY_CONTRACT,
   VERSION,
   TERRAIN_AUTHORITY,
   GEOLOGY,
@@ -709,7 +825,10 @@ export {
   RELIEF_PALETTE,
   TERRAIN_SUMMARY,
   sampleTerrain,
+  sampleAudraliaTerrain,
   sampleTerrainColor,
+  sampleSurface,
+  sample,
   buildTerrainGrid,
   buildReliefLayer,
   traceRidgeLines,
@@ -719,7 +838,8 @@ export {
   getTerrainGeology,
   getTerrainRegions,
   getTerrainSummary,
-  getTerrainPalette
+  getTerrainPalette,
+  getTerrainStatus
 };
 
 export default api;

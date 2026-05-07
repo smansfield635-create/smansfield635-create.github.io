@@ -1,24 +1,25 @@
 /*
   /assets/earth/earth_canvas.js
-  EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2
+  EARTH_G4_PNG_ONLY_NASA_SURFACE_NO_CARTOON_FALLBACK_TNT_v3
 
   Full-file replacement.
 
   Scope:
   - Earth canvas/source authority only.
-  - Loads manifest as truth map with deep fallback merge.
-  - Ensures Earth material CSS is available but does not own material styling.
-  - Uses surface image as surface authority.
-  - Uses PNG cloud layer first, JPG cloud layer as fallback.
-  - Controls fixed canvas, fixed sphere projection, surface-phase rotation, cloud-phase rotation, horizontal touch rotation, and inertia.
-  - Forbids disk rotation, texture stretch, whole-canvas transform, vertical drag deformation, GraphicBox, image generation, and visual-pass claims.
+  - PNG-only NASA surface discipline.
+  - No procedural cartoon fallback.
+  - No JPG surface.
+  - No JPG cloud fallback.
+  - If PNG surface is not available, hold without drawing a fake map.
+  - Fixed canvas, fixed sphere projection, surface-phase rotation, cloud-phase rotation, horizontal touch rotation, and inertia.
+  - Does not own material styling, route shell, Audralia, Gauges, Products, Sun, Moon, GraphicBox, image generation, or visual-pass claims.
 */
 
 (function () {
   "use strict";
 
-  const VERSION = "EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2";
-  const PREVIOUS_VERSION = "EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v1";
+  const VERSION = "EARTH_G4_PNG_ONLY_NASA_SURFACE_NO_CARTOON_FALLBACK_TNT_v3";
+  const PREVIOUS_VERSION = "EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2";
 
   const FALLBACK_MANIFEST = Object.freeze({
     body: "earth",
@@ -28,9 +29,8 @@
     generation: "G4_REFERENCE_BODY_SURFACE_PHASE_ROTATION",
     reference_standard: "NASA_BLUE_MARBLE_REFERENCE_DISCIPLINE",
     active_assets: {
-      surface: "/assets/earth/earth_surface_2048.jpg",
+      surface: "/assets/earth/earth_surface_2048.png",
       clouds_primary: "/assets/earth/earth_clouds_2048.png",
-      clouds_fallback: "/assets/earth/earth_clouds_2048.jpg",
       material: "/assets/earth/earth_material.css",
       canvas: "/assets/earth/earth_canvas.js",
       fallback_svg: "/assets/earth/earth.svg"
@@ -69,15 +69,30 @@
     return Number.isFinite(n) ? n : fallback;
   }
 
+  function isJpgPath(path) {
+    return typeof path === "string" && /\.(jpg|jpeg)(\?|#|$)/i.test(path);
+  }
+
+  function pngOnly(path, fallback) {
+    if (!path || typeof path !== "string") return fallback;
+    if (isJpgPath(path)) return fallback;
+    return path;
+  }
+
   function mergeManifest(manifest) {
     const json = manifest && typeof manifest === "object" ? manifest : {};
+    const jsonAssets = json.active_assets && typeof json.active_assets === "object" ? json.active_assets : {};
 
     return Object.assign({}, FALLBACK_MANIFEST, json, {
-      active_assets: Object.assign(
-        {},
-        FALLBACK_MANIFEST.active_assets,
-        json.active_assets && typeof json.active_assets === "object" ? json.active_assets : {}
-      )
+      contract: VERSION,
+      previous_contract: PREVIOUS_VERSION,
+      active_assets: {
+        surface: pngOnly(jsonAssets.surface, FALLBACK_MANIFEST.active_assets.surface),
+        clouds_primary: pngOnly(jsonAssets.clouds_primary, FALLBACK_MANIFEST.active_assets.clouds_primary),
+        material: jsonAssets.material || FALLBACK_MANIFEST.active_assets.material,
+        canvas: jsonAssets.canvas || FALLBACK_MANIFEST.active_assets.canvas,
+        fallback_svg: jsonAssets.fallback_svg || FALLBACK_MANIFEST.active_assets.fallback_svg
+      }
     });
   }
 
@@ -111,20 +126,21 @@
           "earth_horizontal_touch_rotation",
           "earth_inertia",
           "earth_asset_manifest_loading",
-          "earth_hidden_receipt"
+          "earth_png_only_surface_discipline"
         ],
         doesNotOwn: [
+          "earth_material_styling",
+          "route_shell",
           "Audralia",
           "Showroom selector",
-          "Showroom CSS",
           "Gauges",
           "Products",
           "Sun",
           "Moon",
           "global files",
-          "material styling",
           "image generation",
-          "GraphicBox"
+          "GraphicBox",
+          "visual pass claim"
         ],
         canvasBoundary: "fixed",
         sphereMask: "fixed",
@@ -134,6 +150,9 @@
         verticalDragTextureEffect: "disabled",
         wholeCanvasTransform: "forbidden",
         wholeObjectRotation: "forbidden",
+        proceduralCartoonFallback: "forbidden",
+        jpgSurface: "forbidden",
+        jpgCloudFallback: "forbidden",
         generatedImage: false,
         graphicBox: false,
         visualPass: "HELD_UNTIL_SCREENSHOT_OR_OWNER_CONFIRMATION",
@@ -149,6 +168,8 @@
     document.documentElement.dataset.earthGeneratedImage = "false";
     document.documentElement.dataset.earthGraphicBox = "false";
     document.documentElement.dataset.earthVisualPassClaimed = "false";
+    document.documentElement.dataset.earthProceduralFallback = "false";
+    document.documentElement.dataset.earthJpgAllowed = "false";
   }
 
   function loadManifest() {
@@ -204,6 +225,17 @@
       });
     }
 
+    if (isJpgPath(src)) {
+      return Promise.resolve({
+        ok: false,
+        src,
+        image: null,
+        width: 0,
+        height: 0,
+        reason: "jpg-forbidden"
+      });
+    }
+
     if (imageCache[src]) return imageCache[src];
 
     imageCache[src] = new Promise(function (resolve) {
@@ -238,58 +270,6 @@
     return imageCache[src];
   }
 
-  function createFallbackTexture(width, height, variant) {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = width;
-    canvas.height = height;
-
-    ctx.fillStyle = variant === "clouds" ? "rgba(255,255,255,0)" : "#0d4f8f";
-    ctx.fillRect(0, 0, width, height);
-
-    function blob(cx, cy, rx, ry, color) {
-      ctx.beginPath();
-
-      for (let i = 0; i <= 72; i += 1) {
-        const a = (Math.PI * 2 * i) / 72;
-        const wobble = 1 + Math.sin(a * 3 + cx * 0.01) * 0.08 + Math.sin(a * 7) * 0.04;
-        const x = cx + Math.cos(a) * rx * wobble;
-        const y = cy + Math.sin(a) * ry * wobble;
-
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-
-      ctx.closePath();
-      ctx.fillStyle = color;
-      ctx.fill();
-    }
-
-    if (variant === "clouds") {
-      for (let i = 0; i < 32; i += 1) {
-        blob(
-          (i * 173) % width,
-          (i * 91) % height,
-          58 + (i % 5) * 18,
-          14 + (i % 3) * 7,
-          i % 2 ? "rgba(255,255,255,0.46)" : "rgba(255,255,255,0.30)"
-        );
-      }
-    } else {
-      blob(width * 0.23, height * 0.48, width * 0.14, height * 0.24, "#3f8c58");
-      blob(width * 0.42, height * 0.43, width * 0.14, height * 0.17, "#b58d57");
-      blob(width * 0.58, height * 0.49, width * 0.17, height * 0.20, "#3f8c58");
-      blob(width * 0.75, height * 0.46, width * 0.12, height * 0.16, "#b58d57");
-
-      ctx.fillStyle = "rgba(238,245,248,0.88)";
-      ctx.fillRect(0, 0, width, height * 0.07);
-      ctx.fillRect(0, height * 0.93, width, height * 0.07);
-    }
-
-    return canvas;
-  }
-
   function createProfile(overrides) {
     return Object.assign(
       {
@@ -312,7 +292,10 @@
         verticalDragTextureEffect: "disabled",
         wholeCanvasTransform: "forbidden",
         wholeObjectRotation: "forbidden",
-        surfaceAuthority: "/assets/earth/earth_surface_2048.jpg",
+        proceduralCartoonFallback: "forbidden",
+        jpgSurface: "forbidden",
+        jpgCloudFallback: "forbidden",
+        surfaceAuthority: "/assets/earth/earth_surface_2048.png",
         cloudAuthority: "/assets/earth/earth_clouds_2048.png",
         materialAuthority: "/assets/earth/earth_material.css",
         manifestAuthority: "/assets/earth/earth_manifest.json",
@@ -340,12 +323,16 @@
     canvas.dataset.wholeCanvasTransform = "forbidden";
     canvas.dataset.projectionSampling = "locked";
     canvas.dataset.materialAuthority = "/assets/earth/earth_material.css";
+    canvas.dataset.surfaceAuthority = "/assets/earth/earth_surface_2048.png";
+    canvas.dataset.cloudAuthority = "/assets/earth/earth_clouds_2048.png";
+    canvas.dataset.proceduralFallback = "false";
+    canvas.dataset.jpgAllowed = "false";
     canvas.dataset.generatedImage = "false";
     canvas.dataset.graphicBox = "false";
     canvas.dataset.visualPassClaimed = "false";
     canvas.dataset.publicReceipts = "hidden";
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Earth G4 reference globe with surface-phase rotation");
+    canvas.setAttribute("aria-label", "Earth G4 NASA reference globe with PNG-only surface-phase rotation");
     canvas.style.transform = "none";
     canvas.style.touchAction = "none";
     return canvas;
@@ -386,6 +373,37 @@
 
     state.size = px;
     state.cssSize = cssSize;
+  }
+
+  function drawPendingHold(ctx, state) {
+    const size = state.size || 640;
+    const center = size / 2;
+    const radius = size * 0.405 * clamp(state.zoom, state.options.minZoom, state.options.maxZoom);
+
+    ctx.clearRect(0, 0, size, size);
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(center, center, radius, 0, Math.PI * 2);
+    ctx.clip();
+
+    const hold = ctx.createRadialGradient(center, center, radius * 0.08, center, center, radius);
+    hold.addColorStop(0, "rgba(20,44,78,0.26)");
+    hold.addColorStop(0.68, "rgba(7,18,34,0.30)");
+    hold.addColorStop(1, "rgba(0,0,0,0.46)");
+
+    ctx.fillStyle = hold;
+    ctx.fillRect(center - radius, center - radius, radius * 2, radius * 2);
+
+    ctx.restore();
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(center, center, radius + Math.max(1, size * 0.004), 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(188,223,255,0.28)";
+    ctx.lineWidth = Math.max(1, size * 0.003);
+    ctx.stroke();
+    ctx.restore();
   }
 
   function drawWrappedStrip(ctx, image, phase, sy, sh, dx, dy, dw, dh) {
@@ -490,20 +508,23 @@
     resize(canvas, state.mount, state);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const surface =
-      state.surface.ok && state.surface.image
-        ? state.surface.image
-        : state.fallbackSurface;
+    const surfaceReady = Boolean(state.surface.ok && state.surface.image);
+    const cloudReady = Boolean(state.cloudsPrimary.ok && state.cloudsPrimary.image);
 
-    const clouds =
-      state.cloudsPrimary.ok && state.cloudsPrimary.image
-        ? state.cloudsPrimary.image
-        : state.cloudsFallback.ok && state.cloudsFallback.image
-          ? state.cloudsFallback.image
-          : state.fallbackClouds;
+    if (!surfaceReady) {
+      canvas.dataset.renderHold = "waiting-for-png-nasa-surface";
+      drawPendingHold(ctx, state);
+      return;
+    }
 
-    drawTextureSphere(ctx, state, surface, state.surfacePhase, 1);
-    drawTextureSphere(ctx, state, clouds, state.cloudPhase, state.cloudsPrimary.ok ? 0.42 : 0.30);
+    canvas.dataset.renderHold = "false";
+
+    drawTextureSphere(ctx, state, state.surface.image, state.surfacePhase, 1);
+
+    if (cloudReady) {
+      drawTextureSphere(ctx, state, state.cloudsPrimary.image, state.cloudPhase, 0.42);
+    }
+
     drawAtmosphereAndLight(ctx, state);
 
     canvas.dataset.surfacePhase = state.surfacePhase.toFixed(5);
@@ -528,13 +549,14 @@
     mount.dataset.canvasAuthority = assets.canvas || FALLBACK_MANIFEST.active_assets.canvas;
     mount.dataset.surfaceAuthority = assets.surface || FALLBACK_MANIFEST.active_assets.surface;
     mount.dataset.cloudAuthority = assets.clouds_primary || FALLBACK_MANIFEST.active_assets.clouds_primary;
-    mount.dataset.cloudFallbackAuthority = assets.clouds_fallback || FALLBACK_MANIFEST.active_assets.clouds_fallback;
     mount.dataset.rotationModel = "surface-longitude-phase";
     mount.dataset.touchModel = "horizontal-drag-only";
     mount.dataset.textureStretch = "forbidden";
     mount.dataset.diskRotation = "forbidden";
     mount.dataset.wholeCanvasTransform = "forbidden";
     mount.dataset.projectionSampling = "locked";
+    mount.dataset.proceduralFallback = "false";
+    mount.dataset.jpgAllowed = "false";
     mount.dataset.generatedImage = "false";
     mount.dataset.graphicBox = "false";
     mount.dataset.visualPassClaimed = "false";
@@ -543,6 +565,8 @@
     if (state) {
       mount.dataset.surfacePhase = state.surfacePhase.toFixed(5);
       mount.dataset.cloudPhase = state.cloudPhase.toFixed(5);
+      mount.dataset.surfaceAssetLoaded = String(Boolean(state.surface.ok));
+      mount.dataset.cloudPrimaryLoaded = String(Boolean(state.cloudsPrimary.ok));
     }
   }
 
@@ -652,16 +676,18 @@
     node.dataset.manifest = "/assets/earth/earth_manifest.json";
     node.dataset.material = "/assets/earth/earth_material.css";
     node.dataset.canvas = "/assets/earth/earth_canvas.js";
-    node.dataset.surface = "/assets/earth/earth_surface_2048.jpg";
+    node.dataset.surface = "/assets/earth/earth_surface_2048.png";
     node.dataset.clouds = "/assets/earth/earth_clouds_2048.png";
     node.dataset.rotationModel = "surface-longitude-phase";
     node.dataset.textureStretch = "forbidden";
     node.dataset.diskRotation = "forbidden";
+    node.dataset.proceduralFallback = "false";
+    node.dataset.jpgAllowed = "false";
     node.dataset.generatedImage = "false";
     node.dataset.graphicBox = "false";
     node.dataset.visualPassClaimed = "false";
     node.textContent =
-      "EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2 visual_pass=held graphic_box=false generated_image=false";
+      "EARTH_G4_PNG_ONLY_NASA_SURFACE_NO_CARTOON_FALLBACK_TNT_v3 visual_pass=held jpg_allowed=false procedural_fallback=false";
     return node;
   }
 
@@ -722,9 +748,6 @@
       manifest: mergeManifest(FALLBACK_MANIFEST),
       surface: { ok: false, image: null },
       cloudsPrimary: { ok: false, image: null },
-      cloudsFallback: { ok: false, image: null },
-      fallbackSurface: createFallbackTexture(1024, 512, "surface"),
-      fallbackClouds: createFallbackTexture(1024, 512, "clouds"),
       cleanup: []
     };
 
@@ -746,16 +769,15 @@
 
       Promise.all([
         loadImage(assets.surface),
-        loadImage(assets.clouds_primary),
-        loadImage(assets.clouds_fallback)
+        loadImage(assets.clouds_primary)
       ]).then(function (results) {
         state.surface = results[0];
         state.cloudsPrimary = results[1];
-        state.cloudsFallback = results[2];
 
         target.dataset.surfaceAssetLoaded = String(Boolean(state.surface.ok));
         target.dataset.cloudPrimaryLoaded = String(Boolean(state.cloudsPrimary.ok));
-        target.dataset.cloudFallbackLoaded = String(Boolean(state.cloudsFallback.ok));
+        target.dataset.surfaceAssetPath = assets.surface;
+        target.dataset.cloudAssetPath = assets.clouds_primary;
 
         setDatasets(target, state);
         drawFrame(state);
@@ -765,10 +787,11 @@
           materialAuthority: assets.material,
           surfaceAuthority: assets.surface,
           cloudAuthority: assets.clouds_primary,
-          cloudFallbackAuthority: assets.clouds_fallback,
           surfaceAssetLoaded: Boolean(state.surface.ok),
           cloudPrimaryLoaded: Boolean(state.cloudsPrimary.ok),
-          cloudFallbackLoaded: Boolean(state.cloudsFallback.ok)
+          pngOnly: true,
+          jpgAllowed: false,
+          proceduralFallback: false
         });
       });
     });
@@ -823,7 +846,14 @@
         dragging: state.dragging,
         surfaceAssetLoaded: Boolean(state.surface.ok),
         cloudPrimaryLoaded: Boolean(state.cloudsPrimary.ok),
-        cloudFallbackLoaded: Boolean(state.cloudsFallback.ok)
+        surfaceAssetPath:
+          state.manifest && state.manifest.active_assets
+            ? state.manifest.active_assets.surface
+            : FALLBACK_MANIFEST.active_assets.surface,
+        cloudAssetPath:
+          state.manifest && state.manifest.active_assets
+            ? state.manifest.active_assets.clouds_primary
+            : FALLBACK_MANIFEST.active_assets.clouds_primary
       });
     }
 
@@ -842,7 +872,10 @@
 
     exposeReceipt({
       mounted: true,
-      mountDetected: true
+      mountDetected: true,
+      pngOnly: true,
+      jpgAllowed: false,
+      proceduralFallback: false
     });
 
     return api;
@@ -882,15 +915,12 @@
       velocityX: 0,
       zoom: 1,
       surface: { ok: false, image: null },
-      cloudsPrimary: { ok: false, image: null },
-      cloudsFallback: { ok: false, image: null },
-      fallbackSurface: createFallbackTexture(1024, 512, "surface"),
-      fallbackClouds: createFallbackTexture(1024, 512, "clouds")
+      cloudsPrimary: { ok: false, image: null }
     };
 
     canvas.width = 640;
     canvas.height = 640;
-    drawFrame(state);
+    drawPendingHold(state.ctx, state);
 
     if (options && options.returnObject === true) {
       return { canvas, version: VERSION, profile: createProfile(), status: getStatus() };
@@ -906,31 +936,29 @@
 
       return Promise.all([
         loadImage(assets.surface),
-        loadImage(assets.clouds_primary),
-        loadImage(assets.clouds_fallback)
+        loadImage(assets.clouds_primary)
       ]).then(function (results) {
         return {
           version: VERSION,
           previousVersion: PREVIOUS_VERSION,
           manifest: "/assets/earth/earth_manifest.json",
           material: assets.material,
+          pngOnly: true,
+          jpgAllowed: false,
+          proceduralFallback: false,
           surface: {
             path: assets.surface,
             ok: Boolean(results[0] && results[0].ok),
             width: results[0] ? results[0].width : 0,
-            height: results[0] ? results[0].height : 0
+            height: results[0] ? results[0].height : 0,
+            reason: results[0] ? results[0].reason || "" : ""
           },
           cloudsPrimary: {
             path: assets.clouds_primary,
             ok: Boolean(results[1] && results[1].ok),
             width: results[1] ? results[1].width : 0,
-            height: results[1] ? results[1].height : 0
-          },
-          cloudsFallback: {
-            path: assets.clouds_fallback,
-            ok: Boolean(results[2] && results[2].ok),
-            width: results[2] ? results[2].width : 0,
-            height: results[2] ? results[2].height : 0
+            height: results[1] ? results[1].height : 0,
+            reason: results[1] ? results[1].reason || "" : ""
           },
           generatedImage: false,
           graphicBox: false,
@@ -951,7 +979,7 @@
         authority: "/assets/earth/earth_canvas.js",
         manifestAuthority: "/assets/earth/earth_manifest.json",
         materialAuthority: "/assets/earth/earth_material.css",
-        surfaceAuthority: "/assets/earth/earth_surface_2048.jpg",
+        surfaceAuthority: "/assets/earth/earth_surface_2048.png",
         cloudAuthority: "/assets/earth/earth_clouds_2048.png",
         generation: "G4_REFERENCE_BODY_SURFACE_PHASE_ROTATION",
         rotationModel: "surface-longitude-phase",
@@ -965,6 +993,10 @@
         verticalDragTextureEffect: "disabled",
         wholeCanvasTransform: "forbidden",
         wholeObjectRotation: "forbidden",
+        proceduralCartoonFallback: "forbidden",
+        jpgSurface: "forbidden",
+        jpgCloudFallback: "forbidden",
+        pngOnly: true,
         generatedImage: false,
         graphicBox: false,
         visualPass: "HELD_UNTIL_SCREENSHOT_OR_OWNER_CONFIRMATION",
@@ -980,7 +1012,7 @@
           "global files"
         ],
         returnReceipt:
-          "EARTH_G4_RESPONSIBILITY_SPLIT_ACTIVE_CANVAS_CONTROLS_MOTION_MATERIAL_CONTROLS_GLOW_IMAGES_CONTROL_SOURCE"
+          "EARTH_G4_PNG_ONLY_NASA_SURFACE_NO_CARTOON_FALLBACK_ACTIVE"
       },
       extra || {}
     );
@@ -1032,17 +1064,27 @@
       version: VERSION,
       previousVersion: PREVIOUS_VERSION,
       api: window.DGBEarthCanvas,
+      pngOnly: true,
+      jpgAllowed: false,
+      proceduralFallback: false,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
     });
   }
 
+  function runtimeScriptPresent() {
+    return Boolean(document.querySelector('script[src*="/runtime/earth_asset_runtime.js"]'));
+  }
+
   function autoMount() {
+    if (runtimeScriptPresent()) return;
+
     const target =
       document.getElementById("earthRenderMount") ||
       document.querySelector("[data-earth-render-mount]") ||
-      document.querySelector("[data-body='earth'][data-render-mount]");
+      document.querySelector("[data-body='earth'][data-render-mount]") ||
+      document.querySelector("[data-dgb-earth-mount]");
 
     if (!target) return;
 
@@ -1070,7 +1112,10 @@
 
   exposeReceipt({
     booted: true,
-    mounted: false
+    mounted: false,
+    pngOnly: true,
+    jpgAllowed: false,
+    proceduralFallback: false
   });
 
   if (document.readyState === "loading") {

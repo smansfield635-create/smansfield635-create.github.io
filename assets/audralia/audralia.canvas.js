@@ -1,21 +1,23 @@
 // /assets/audralia/audralia.canvas.js
-// AUDRALIA_CANVAS_SURFACE_TRUTH_DECOUPLED_ORTHOGRAPHIC_TNT_v12
+// AUDRALIA_CANVAS_PARENT_CONTRACT_CHILD_ACTIVATION_TNT_v13
 // Full-file replacement. Canvas authority only.
 // Purpose:
 // - Canvas owns final visible composition.
+// - Parent surface owns static surface truth.
 // - Runtime owns motion only.
-// - Surface bridge owns static surface truth.
-// - Canvas must not ask runtime for land/water/terrain/ocean visual samples.
-// - Preserve first-paint clarity after runtime starts.
+// - Hex child activates only after parent surface contract is visible.
+// - Canvas must not ask runtime for land/water/terrain/ocean truth.
+// - Parent activates children; children refine only.
 // - No GraphicBox. No image generation. No visual-pass claim.
 
 const RECEIPT = "AUDRALIA_CANVAS_AUTHORITY_RECEIPT";
-const CONTRACT = "AUDRALIA_CANVAS_SURFACE_TRUTH_DECOUPLED_ORTHOGRAPHIC_TNT_v12";
-const PREVIOUS_CONTRACT = "AUDRALIA_CANVAS_SPHERICAL_TEXTURE_UNWRAP_AND_POLAR_BLEND_TNT_v11";
-const VERSION = "2026-05-07.surface-truth-decoupled-orthographic-v12";
+const CONTRACT = "AUDRALIA_CANVAS_PARENT_CONTRACT_CHILD_ACTIVATION_TNT_v13";
+const PREVIOUS_CONTRACT = "AUDRALIA_CANVAS_SURFACE_TRUTH_DECOUPLED_ORTHOGRAPHIC_TNT_v12";
+const VERSION = "2026-05-07.parent-contract-child-activation-v13";
 
 const SURFACE_PATH = "/assets/audralia/audralia.surface.js";
 const RUNTIME_PATH = "/assets/audralia/audralia.runtime.js";
+const HEX_CHILD_PATH = "/assets/audralia/audralia.hex.surface.js";
 
 let activeController = null;
 
@@ -30,13 +32,24 @@ const STATUS = {
   runtimeReceipt: "",
   runtimeSovereignty: "motion-only",
   runtimeVisualSovereignty: false,
+
   surfaceReceipt: "",
+  surfaceContract: "",
   surfaceTruthBridge: false,
+  surfaceParentStandard: false,
+  surfaceRatioLocked: false,
+
+  hexChildReceipt: "",
+  hexChildActiveRenewal: "",
+  hexChildLoaded: false,
+  hexChildActivatedByParentContract: false,
+  childActivationSource: "pending-parent-contract",
 
   canvasOwnsFinalVisibleComposition: true,
   canvasUsesRuntimeForMotionOnly: true,
   canvasUsesSurfaceForSurfaceTruth: true,
   canvasUsesRuntimeForSurfaceTruth: false,
+  canvasUsesHexChildForRefinementOnly: true,
 
   graphicBox: false,
   imageGeneration: false,
@@ -59,6 +72,10 @@ function clamp01(value) {
 
 function mix(a, b, t) {
   return a + (b - a) * clamp01(t);
+}
+
+function wrap01(value) {
+  return ((Number(value) % 1) + 1) % 1;
 }
 
 function normalizeLongitudeRadians(lon) {
@@ -106,32 +123,27 @@ function setRouteStatus(message) {
 }
 
 function removeResidue() {
-  const badText = {
-    "Loading Audralia": true,
-    "Audralia canvas authority import failed.": true,
-    "Audralia canvas authority import failed. missing ) after argument list": true,
-    "Canvas authority imported · no render export found": true,
-    "Audralia canvas authority imported, but no render export was found.": true,
-    "Audralia doorway is loading the current adopted canvas authority.": true
-  };
+  const badText = new Set([
+    "Loading Audralia",
+    "Audralia canvas authority import failed.",
+    "Audralia canvas authority import failed. missing ) after argument list",
+    "Canvas authority imported · no render export found",
+    "Audralia canvas authority imported, but no render export was found.",
+    "Audralia doorway is loading the current adopted canvas authority.",
+    "AUDRALIA SURFACE BRIDGE LOADING"
+  ]);
 
   const nodes = document.querySelectorAll("p, div, span, li, h2, h3");
 
   for (const node of nodes) {
     const text = (node.textContent || "").trim();
-
-    if (node.children.length === 0 && badText[text]) {
-      node.remove();
-    }
+    if (node.children.length === 0 && badText.has(text)) node.remove();
   }
 }
 
 function clearOwnedNodes(mount) {
   const nodes = mount.querySelectorAll("[data-audralia-canvas-authority='true']");
-
-  for (const node of nodes) {
-    node.remove();
-  }
+  for (const node of nodes) node.remove();
 }
 
 function createCanvas(mount) {
@@ -149,7 +161,7 @@ function createCanvas(mount) {
   shell.style.isolation = "isolate";
 
   const frame = document.createElement("div");
-  frame.setAttribute("data-audralia-canvas-frame", "surface-truth-decoupled-orthographic-v12");
+  frame.setAttribute("data-audralia-canvas-frame", "parent-contract-child-activation-v13");
   frame.style.width = "min(92vw, 820px)";
   frame.style.aspectRatio = "1 / 1";
   frame.style.position = "relative";
@@ -162,7 +174,7 @@ function createCanvas(mount) {
 
   const canvas = document.createElement("canvas");
   canvas.setAttribute("data-audralia-canvas", "true");
-  canvas.setAttribute("aria-label", "Audralia surface-truth decoupled orthographic canvas");
+  canvas.setAttribute("aria-label", "Audralia parent-contract child-activated orthographic canvas");
   canvas.style.width = "100%";
   canvas.style.height = "100%";
   canvas.style.display = "block";
@@ -197,9 +209,7 @@ function setupCanvas(canvas, frame) {
 
   const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
 
-  if (!ctx) {
-    throw new Error("Audralia canvas context unavailable.");
-  }
+  if (!ctx) throw new Error("Audralia canvas context unavailable.");
 
   ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
   ctx.imageSmoothingEnabled = true;
@@ -208,127 +218,137 @@ function setupCanvas(canvas, frame) {
   return { ctx, size, ratio };
 }
 
-function makeBuffer(size) {
-  const buffer = document.createElement("canvas");
-  const resolution = Math.floor(clamp(size * 0.82, 360, 660));
-  buffer.width = resolution;
-  buffer.height = resolution;
+function createWorkingCanvas(size) {
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
 
-  const bufferCtx = buffer.getContext("2d", { alpha: true });
+  const ctx = canvas.getContext("2d", { alpha: true });
+  if (!ctx) throw new Error("Audralia working canvas context unavailable.");
 
-  if (!bufferCtx) {
-    throw new Error("Audralia surface buffer unavailable.");
-  }
-
-  return {
-    canvas: buffer,
-    ctx: bufferCtx,
-    size: resolution
-  };
+  return { canvas, ctx, size };
 }
 
-function radial(ctx, x0, y0, r0, x1, y1, r1, stops) {
-  const gradient = ctx.createRadialGradient(x0, y0, r0, x1, y1, r1);
-
-  for (const stop of stops) {
-    gradient.addColorStop(stop[0], stop[1]);
-  }
-
-  return gradient;
-}
-
-function drawStarField(ctx, size, time) {
-  ctx.save();
-  ctx.fillStyle = "#020713";
-  ctx.fillRect(0, 0, size, size);
-
-  for (let index = 0; index < 150; index += 1) {
-    const sx = Math.sin(index * 917.17) * 10000;
-    const sy = Math.sin(index * 421.91) * 10000;
-    const x = (sx - Math.floor(sx)) * size;
-    const y = (sy - Math.floor(sy)) * size;
-    const pulse = 0.22 + 0.55 * Math.abs(Math.sin(time * 0.001 + index));
-
-    ctx.globalAlpha = pulse;
-    ctx.fillStyle = index % 7 === 0 ? "rgba(245,221,166,0.86)" : "rgba(185,216,255,0.72)";
-    ctx.beginPath();
-    ctx.arc(x, y, index % 13 === 0 ? 1.35 : 0.72, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  ctx.restore();
-}
-
-function colorForSample(sample, light, edge, altitudeShade) {
+function colorForParentSample(sample) {
   const relief = clamp01(sample.terrainReliefIndex ?? sample.terrainRelief ?? sample.elevation ?? 0);
   const mineral = clamp01(sample.mineralIndex ?? 0);
   const texture = clamp01(sample.colorBreak ?? sample.reliefTexture ?? 0);
   const turquoise = clamp01(sample.turquoiseIndex ?? sample.turquoise ?? 0);
+  const edge = clamp01(sample.coastlineIndex ?? sample.coastalFeather ?? 0);
 
   let r;
   let g;
   let b;
 
   if (sample.ice || sample.glacier || sample.visualSurfaceClass === "glacier_ice_snowpack_surface") {
-    r = mix(188, 245, light);
-    g = mix(207, 252, light);
-    b = mix(216, 255, light);
-    r = mix(r, 255, texture * 0.16);
-    g = mix(g, 255, texture * 0.16);
-    b = mix(b, 255, texture * 0.16);
+    r = mix(196, 246, texture * 0.45);
+    g = mix(214, 252, texture * 0.45);
+    b = mix(225, 255, texture * 0.50);
   } else if (sample.liquidWater || sample.water || sample.ocean || sample.shelf) {
     const depth = clamp01(sample.depth ?? sample.oceanDepth ?? 0.4);
-    const shelf = Boolean(sample.shelf);
 
-    if (shelf) {
-      r = mix(24, 92, turquoise);
-      g = mix(114, 206, turquoise);
-      b = mix(150, 219, turquoise);
+    if (sample.shelf) {
+      r = mix(28, 73, turquoise);
+      g = mix(142, 216, turquoise);
+      b = mix(174, 228, turquoise);
     } else {
-      r = mix(4, 20, depth);
-      g = mix(50, 86, depth * 0.75);
-      b = mix(93, 150, 1 - depth * 0.24);
+      r = mix(6, 20, depth);
+      g = mix(82, 122, 1 - depth * 0.35);
+      b = mix(150, 216, 1 - depth * 0.20);
     }
 
-    r = mix(r, 9, depth * 0.22);
-    g = mix(g, 33, depth * 0.18);
-    b = mix(b, 83, depth * 0.12);
+    r = mix(r, 32, edge * 0.28);
+    g = mix(g, 170, edge * 0.22);
+    b = mix(b, 200, edge * 0.20);
   } else {
-    const gold = clamp01(sample.diamondSignal ?? mineral);
+    const diamond = clamp01(sample.diamondSignal ?? mineral);
     const slate = clamp01(sample.slateSignal ?? relief);
+    const opal = clamp01(sample.opalSignal ?? edge);
 
-    r = mix(70, 154, texture * 0.5 + relief * 0.18);
-    g = mix(99, 143, texture * 0.34 + relief * 0.20);
-    b = mix(72, 87, texture * 0.18);
+    r = mix(72, 153, texture * 0.46 + relief * 0.22);
+    g = mix(101, 148, texture * 0.34 + relief * 0.20);
+    b = mix(72, 91, texture * 0.18 + opal * 0.10);
 
-    r = mix(r, 166, gold * 0.22);
-    g = mix(g, 139, gold * 0.16);
-    b = mix(b, 72, gold * 0.10);
+    r = mix(r, 179, diamond * 0.20);
+    g = mix(g, 148, diamond * 0.16);
+    b = mix(b, 78, diamond * 0.10);
 
-    r = mix(r, 74, slate * 0.18);
-    g = mix(g, 82, slate * 0.14);
-    b = mix(b, 84, slate * 0.18);
+    r = mix(r, 67, slate * 0.14);
+    g = mix(g, 76, slate * 0.14);
+    b = mix(b, 82, slate * 0.18);
   }
 
-  const shade = clamp01(0.24 + light * 0.76);
-  const limb = clamp01(0.50 + edge * 0.50);
-  const finalShade = shade * limb * altitudeShade;
-
   return [
-    Math.floor(clamp(r * finalShade, 0, 255)),
-    Math.floor(clamp(g * finalShade, 0, 255)),
-    Math.floor(clamp(b * finalShade, 0, 255)),
+    Math.floor(clamp(r, 0, 255)),
+    Math.floor(clamp(g, 0, 255)),
+    Math.floor(clamp(b, 0, 255)),
     255
   ];
 }
 
-function renderSurfaceBuffer(state, motion) {
-  const buffer = state.buffer;
-  const size = buffer.size;
-  const radius = size * 0.43;
+function buildParentSurfaceTexture(state) {
+  if (!state.surface || typeof state.surface.sampleSurface !== "function") return null;
+
+  const width = 512;
+  const height = 256;
+  const image = new ImageData(width, height);
+  const data = image.data;
+
+  for (let y = 0; y < height; y += 1) {
+    const v = (y + 0.5) / height;
+    const lat = (0.5 - v) * Math.PI;
+
+    for (let x = 0; x < width; x += 1) {
+      const u = (x + 0.5) / width;
+      const lon = (u - 0.5) * Math.PI * 2;
+      const sample = state.surface.sampleSurface({ lat, lon, u, v });
+      const color = colorForParentSample(sample);
+      const offset = (y * width + x) * 4;
+
+      data[offset] = color[0];
+      data[offset + 1] = color[1];
+      data[offset + 2] = color[2];
+      data[offset + 3] = color[3];
+    }
+  }
+
+  return {
+    width,
+    height,
+    data,
+    receipt: state.surfaceReceipt,
+    contract: state.surfaceContract
+  };
+}
+
+function drawSparseStarField(ctx, size, time) {
+  ctx.save();
+  ctx.clearRect(0, 0, size, size);
+
+  for (let index = 0; index < 120; index += 1) {
+    const sx = Math.sin(index * 917.17) * 10000;
+    const sy = Math.sin(index * 421.91) * 10000;
+    const x = (sx - Math.floor(sx)) * size;
+    const y = (sy - Math.floor(sy)) * size;
+    const pulse = 0.16 + 0.52 * Math.abs(Math.sin(time * 0.001 + index));
+
+    ctx.globalAlpha = pulse;
+    ctx.fillStyle = index % 7 === 0 ? "rgba(245,221,166,0.82)" : "rgba(185,216,255,0.70)";
+    ctx.beginPath();
+    ctx.arc(x, y, index % 13 === 0 ? 1.24 : 0.68, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function drawDirectFallbackPlanet(state, motion) {
+  const size = state.size;
+  const ctx = state.ctx;
+  const radius = size * 0.405;
   const cx = size / 2;
   const cy = size / 2;
-  const image = buffer.ctx.createImageData(size, size);
+  const image = ctx.createImageData(size, size);
   const data = image.data;
 
   const rotationRad = Number.isFinite(Number(motion.rotationRad))
@@ -342,11 +362,6 @@ function renderSurfaceBuffer(state, motion) {
   const cosTilt = Math.cos(-tiltRad);
   const sinTilt = Math.sin(-tiltRad);
 
-  const lightPhase = Number.isFinite(Number(motion.lightPhase)) ? Number(motion.lightPhase) * Math.PI / 180 : 0;
-  const lx = -0.38 + Math.sin(lightPhase) * 0.05;
-  const ly = 0.24;
-  const lz = 0.90;
-
   for (let py = 0; py < size; py += 1) {
     const ny = (py - cy) / radius;
 
@@ -355,13 +370,7 @@ function renderSurfaceBuffer(state, motion) {
       const rr = nx * nx + ny * ny;
       const offset = (py * size + px) * 4;
 
-      if (rr > 1) {
-        data[offset] = 0;
-        data[offset + 1] = 0;
-        data[offset + 2] = 0;
-        data[offset + 3] = 0;
-        continue;
-      }
+      if (rr > 1) continue;
 
       const zView = Math.sqrt(Math.max(0, 1 - rr));
       const xView = nx;
@@ -372,111 +381,39 @@ function renderSurfaceBuffer(state, motion) {
 
       const lon = normalizeLongitudeRadians(Math.atan2(xView, zTilted) - rotationRad);
       const lat = Math.asin(clamp(yWorld, -1, 1));
-
-      const u = (lon / (Math.PI * 2)) + 0.5;
+      const u = lon / (Math.PI * 2) + 0.5;
       const v = 0.5 - lat / Math.PI;
-
       const sample = state.surface.sampleSurface({ lat, lon, u, v });
+      const color = colorForParentSample(sample);
+      const edgeShade = clamp01(0.34 + Math.pow(zView, 0.56) * 0.66);
 
-      const light = clamp01((xView * lx + yWorld * ly + zView * lz) * 0.58 + 0.48);
-      const edge = Math.pow(clamp01(zView), 0.58);
-      const altitudeShade = sample.liquidWater ? 1 : clamp01(0.88 + (sample.elevation || 0) * 0.20);
-
-      const color = colorForSample(sample, light, edge, altitudeShade);
-
-      data[offset] = color[0];
-      data[offset + 1] = color[1];
-      data[offset + 2] = color[2];
-      data[offset + 3] = color[3];
+      data[offset] = Math.floor(color[0] * edgeShade);
+      data[offset + 1] = Math.floor(color[1] * edgeShade);
+      data[offset + 2] = Math.floor(color[2] * edgeShade);
+      data[offset + 3] = 255;
     }
   }
 
-  buffer.ctx.putImageData(image, 0, 0);
-}
-
-function drawLatitudeLines(ctx, size, motion) {
-  const cx = size / 2;
-  const cy = size / 2;
-  const radius = size * 0.348;
-  const rotation = (Number(motion.rotationDeg) || 0) * Math.PI / 180;
-
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-  ctx.clip();
-
-  ctx.globalAlpha = 0.18;
-  ctx.strokeStyle = "rgba(235,244,255,0.45)";
-  ctx.lineWidth = 0.7;
-
-  for (let lat = -60; lat <= 60; lat += 15) {
-    const latRad = lat * Math.PI / 180;
-    const y = cy - Math.sin(latRad) * radius * 0.94;
-    const rx = Math.cos(latRad) * radius;
-
-    ctx.beginPath();
-
-    for (let i = 0; i <= 80; i += 1) {
-      const t = (i / 80) * Math.PI * 2;
-      const wave = Math.sin(t * 4 + rotation) * 1.2;
-      const x = cx + Math.cos(t) * rx;
-      const yy = y + Math.sin(t) * radius * 0.018 + wave;
-
-      if (i === 0) ctx.moveTo(x, yy);
-      else ctx.lineTo(x, yy);
-    }
-
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function drawGlobe(ctx, size, buffer, motion) {
-  const cx = size / 2;
-  const cy = size / 2;
-  const radius = size * 0.348;
-
-  ctx.save();
-
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-  ctx.clip();
-
-  ctx.drawImage(buffer.canvas, cx - radius, cy - radius, radius * 2, radius * 2);
-
-  const shade = radial(ctx, cx - radius * 0.45, cy - radius * 0.42, radius * 0.08, cx + radius * 0.20, cy + radius * 0.16, radius * 1.18, [
-    [0, "rgba(255,255,255,0.14)"],
-    [0.48, "rgba(255,255,255,0.018)"],
-    [0.74, "rgba(0,0,0,0.18)"],
-    [1, "rgba(0,0,0,0.68)"]
-  ]);
-
-  ctx.fillStyle = shade;
-  ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
-
-  ctx.restore();
-
-  drawLatitudeLines(ctx, size, motion);
+  ctx.putImageData(image, 0, 0);
 }
 
 function drawAtmosphere(ctx, size, time) {
   const cx = size / 2;
   const cy = size / 2;
-  const radius = size * 0.348;
-  const pulse = 0.42 + Math.sin(time * 0.0013) * 0.045;
+  const radius = size * 0.405;
+  const pulse = 0.36 + Math.sin(time * 0.0013) * 0.045;
 
   ctx.save();
 
   ctx.beginPath();
   ctx.arc(cx, cy, radius, 0, Math.PI * 2);
   ctx.strokeStyle = `rgba(145,205,255,${pulse.toFixed(3)})`;
-  ctx.lineWidth = size * 0.011;
+  ctx.lineWidth = size * 0.010;
   ctx.stroke();
 
   ctx.beginPath();
   ctx.arc(cx, cy, radius * 1.035, 0, Math.PI * 2);
-  ctx.strokeStyle = "rgba(74,138,214,0.22)";
+  ctx.strokeStyle = "rgba(74,138,214,0.20)";
   ctx.lineWidth = size * 0.006;
   ctx.stroke();
 
@@ -493,21 +430,45 @@ function drawDiagnostics(ctx, size) {
 
   ctx.fillStyle = "rgba(205,220,238,0.76)";
   ctx.font = `700 ${Math.max(9, size * 0.013)}px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`;
-  ctx.fillText("SURFACE TRUTH DECOUPLED · ORTHOGRAPHIC V12", size / 2, size * 0.872);
+  ctx.fillText("PARENT SURFACE · CHILD REFINEMENT · RUNTIME MOTION", size / 2, size * 0.872);
 
   ctx.restore();
 }
 
 function samplePixelProof(ctx, size) {
   try {
-    const sample = ctx.getImageData(Math.floor(size / 2), Math.floor(size / 2), 1, 1).data;
+    const data = ctx.getImageData(0, 0, size, size).data;
+    let opaque = 0;
+    let water = 0;
+    let solid = 0;
+    let turquoise = 0;
+    let ice = 0;
+
+    for (let index = 0; index < data.length; index += 16) {
+      const r = data[index];
+      const g = data[index + 1];
+      const b = data[index + 2];
+      const a = data[index + 3];
+
+      if (a < 20) continue;
+
+      opaque += 1;
+
+      if (b > 105 && g > 70 && b > r * 1.18) water += 1;
+      if (r > 68 && g > 56 && r >= b * 0.80 && !(b > r * 1.20)) solid += 1;
+      if (g > 120 && b > 125 && Math.abs(g - b) < 105) turquoise += 1;
+      if (r > 188 && g > 188 && b > 188) ice += 1;
+    }
+
+    const total = Math.max(1, data.length / 16);
 
     return {
-      r: sample[0],
-      g: sample[1],
-      b: sample[2],
-      a: sample[3],
-      notBlank: sample[3] > 0 && sample[0] + sample[1] + sample[2] > 12
+      opaqueRatio: opaque / total,
+      waterPixelRatio: water / total,
+      solidSurfacePixelRatio: solid / total,
+      turquoisePixelRatio: turquoise / total,
+      icePixelRatio: ice / total,
+      notBlank: opaque > 0
     };
   } catch (error) {
     return {
@@ -523,9 +484,18 @@ function publishStatus(state) {
   STATUS.runtimeSovereignty = "motion-only";
   STATUS.runtimeVisualSovereignty = false;
   STATUS.surfaceReceipt = state.surfaceReceipt || "";
+  STATUS.surfaceContract = state.surfaceContract || "";
   STATUS.surfaceTruthBridge = Boolean(state.surface);
+  STATUS.surfaceParentStandard = Boolean(state.surfaceParentStandard);
+  STATUS.surfaceRatioLocked = Boolean(state.surfaceRatioLocked);
+  STATUS.hexChildReceipt = state.hexChildReceipt || "";
+  STATUS.hexChildActiveRenewal = state.hexChildActiveRenewal || "";
+  STATUS.hexChildLoaded = Boolean(state.hexChild);
+  STATUS.hexChildActivatedByParentContract = Boolean(state.hexChildActivatedByParentContract);
+  STATUS.childActivationSource = state.childActivationSource || STATUS.childActivationSource;
   STATUS.frameCount = state.frameCount;
   STATUS.pixelProof = state.pixelProof || null;
+  STATUS.errors = state.errors.slice();
 
   if (typeof window !== "undefined") {
     window.__AUDRALIA_CANVAS_STATUS__ = STATUS;
@@ -543,47 +513,14 @@ function publishStatus(state) {
     document.documentElement.dataset.audraliaCanvasUsesRuntimeForMotionOnly = "true";
     document.documentElement.dataset.audraliaCanvasUsesSurfaceForSurfaceTruth = "true";
     document.documentElement.dataset.audraliaCanvasUsesRuntimeForSurfaceTruth = "false";
+    document.documentElement.dataset.audraliaCanvasUsesHexChildForRefinementOnly = "true";
+    document.documentElement.dataset.audraliaHexChildActivatedByParentContract = String(Boolean(state.hexChildActivatedByParentContract));
     document.documentElement.dataset.graphicBox = "false";
     document.documentElement.dataset.imageGeneration = "false";
     document.documentElement.dataset.visualPassClaimed = "false";
   }
 
   return STATUS;
-}
-
-async function loadAuthorities(state) {
-  try {
-    const surface = await import(`${SURFACE_PATH}?canvas=${encodeURIComponent(CONTRACT)}`);
-    state.surface = surface;
-    state.surfaceReceipt =
-      surface.AUDRALIA_SURFACE_RECEIPT_VALUE ||
-      surface.default?.receipt ||
-      "AUDRALIA_SURFACE_TRUTH_BRIDGE_STATIC_AUTHORITY_TNT_v1";
-  } catch (error) {
-    state.errors.push(`surface import failed: ${String(error?.message || error || "unknown")}`);
-  }
-
-  try {
-    const runtime = await import(`${RUNTIME_PATH}?canvas=${encodeURIComponent(CONTRACT)}`);
-    state.runtime = runtime;
-    state.runtimeReceipt =
-      runtime.AUDRALIA_RUNTIME_RECEIPT_VALUE ||
-      runtime.default?.receipt ||
-      "AUDRALIA_RUNTIME_MOTION_ONLY_FULL_POTENTIAL_TNT_v10";
-
-    if (typeof runtime.start === "function") {
-      runtime.start();
-    }
-  } catch (error) {
-    state.errors.push(`runtime import failed: ${String(error?.message || error || "unknown")}`);
-  }
-
-  if (!state.surface || typeof state.surface.sampleSurface !== "function") {
-    throw new Error("Audralia surface truth bridge missing sampleSurface export.");
-  }
-
-  state.ready = true;
-  publishStatus(state);
 }
 
 function getMotion(state, time) {
@@ -605,52 +542,172 @@ function getMotion(state, time) {
   };
 }
 
+function parentContractAllowsChild(state) {
+  return Boolean(
+    state.surface &&
+    typeof state.surface.sampleSurface === "function" &&
+    (
+      state.surfaceParentStandard ||
+      state.surface.AUDRALIA_SURFACE_PARENT_STANDARD === true ||
+      state.surface.AUDRALIA_SURFACE_RATIO_LOCKED === true
+    )
+  );
+}
+
+async function loadAuthorities(state) {
+  try {
+    const surface = await import(`${SURFACE_PATH}?canvas=${encodeURIComponent(CONTRACT)}`);
+    state.surface = surface;
+    state.surfaceReceipt =
+      surface.AUDRALIA_SURFACE_RECEIPT_VALUE ||
+      surface.default?.receipt ||
+      "AUDRALIA_SURFACE_PARENT_STANDARD_RATIO_LOCK_TNT_v4";
+
+    state.surfaceContract =
+      surface.AUDRALIA_SURFACE_CONTRACT_VALUE ||
+      surface.default?.contract ||
+      "";
+
+    state.surfaceParentStandard = Boolean(
+      surface.AUDRALIA_SURFACE_PARENT_STANDARD ||
+      surface.default?.parentStandard ||
+      surface.getParentStandard?.().ok
+    );
+
+    state.surfaceRatioLocked = Boolean(
+      surface.AUDRALIA_SURFACE_RATIO_LOCKED ||
+      surface.default?.ratioLocked ||
+      surface.getParentStandard?.().downstreamClassificationOverrideAllowed === false
+    );
+
+    if (typeof surface.initializeSurfaceDownstream === "function") {
+      surface.initializeSurfaceDownstream().catch(() => {});
+    }
+  } catch (error) {
+    state.errors.push(`surface import failed: ${String(error?.message || error || "unknown")}`);
+  }
+
+  try {
+    const runtime = await import(`${RUNTIME_PATH}?canvas=${encodeURIComponent(CONTRACT)}`);
+    state.runtime = runtime;
+    state.runtimeReceipt =
+      runtime.AUDRALIA_RUNTIME_RECEIPT_VALUE ||
+      runtime.default?.receipt ||
+      "AUDRALIA_RUNTIME_MOTION_ONLY_FULL_POTENTIAL_TNT_v10";
+
+    if (typeof runtime.start === "function") runtime.start();
+  } catch (error) {
+    state.errors.push(`runtime import failed: ${String(error?.message || error || "unknown")}`);
+  }
+
+  if (!state.surface || typeof state.surface.sampleSurface !== "function") {
+    throw new Error("Audralia parent surface contract missing sampleSurface export.");
+  }
+
+  state.texture = buildParentSurfaceTexture(state);
+
+  if (parentContractAllowsChild(state)) {
+    try {
+      const hexChild = await import(`${HEX_CHILD_PATH}?canvas=${encodeURIComponent(CONTRACT)}&parent=${encodeURIComponent(state.surfaceReceipt)}`);
+      state.hexChild = hexChild;
+      state.hexChildReceipt =
+        hexChild.AUDRALIA_HEX_SURFACE_CHILD_RECEIPT_VALUE ||
+        hexChild.default?.receipt ||
+        "";
+
+      state.hexChildActiveRenewal =
+        hexChild.AUDRALIA_HEX_SURFACE_CHILD_ACTIVE_RENEWAL_VALUE ||
+        hexChild.default?.activeRenewal ||
+        "";
+
+      state.hexChildActivatedByParentContract =
+        typeof hexChild.drawAudraliaHexSurfaceFrame === "function";
+
+      state.childActivationSource = state.hexChildActivatedByParentContract
+        ? "parent-surface-contract"
+        : "hex-child-export-missing";
+    } catch (error) {
+      state.errors.push(`hex child import failed: ${String(error?.message || error || "unknown")}`);
+      state.childActivationSource = "hex-child-import-failed";
+    }
+  } else {
+    state.childActivationSource = "parent-contract-not-visible";
+  }
+
+  state.ready = true;
+  publishStatus(state);
+}
+
 function renderFrame(state, time) {
   const ctx = state.ctx;
   const size = state.size;
 
-  ctx.clearRect(0, 0, size, size);
+  drawSparseStarField(ctx, size, time);
 
-  drawStarField(ctx, size, time);
-
-  if (!state.ready || !state.surface) {
+  if (!state.ready || !state.surface || !state.texture) {
     ctx.save();
     ctx.fillStyle = "rgba(255,244,216,0.82)";
     ctx.font = `800 ${Math.max(13, size * 0.024)}px system-ui`;
     ctx.textAlign = "center";
-    ctx.fillText("AUDRALIA SURFACE BRIDGE LOADING", size / 2, size / 2);
+    ctx.fillText("AUDRALIA PARENT SURFACE CONTRACT LOADING", size / 2, size / 2);
     ctx.restore();
   } else {
     const motion = getMotion(state, time);
 
     if (
-      !state.lastSurfacePaint ||
-      time - state.lastSurfacePaint > 42 ||
-      Math.abs((motion.rotationDeg || 0) - state.lastRotationDeg) > 0.28
+      state.hexChildActivatedByParentContract &&
+      state.hexChild &&
+      typeof state.hexChild.drawAudraliaHexSurfaceFrame === "function"
     ) {
-      renderSurfaceBuffer(state, motion);
-      state.lastSurfacePaint = time;
-      state.lastRotationDeg = motion.rotationDeg || 0;
+      if (!state.childLayer || state.childLayer.size !== size) {
+        state.childLayer = createWorkingCanvas(size);
+      }
+
+      state.childLayer.ctx.clearRect(0, 0, size, size);
+
+      state.hexChild.drawAudraliaHexSurfaceFrame(
+        {
+          canvas: state.childLayer.canvas,
+          ctx: state.childLayer.ctx,
+          texture: state.texture,
+          phase: wrap01((motion.rotationDeg || 0) / 360),
+          parentReceipt: state.surfaceReceipt,
+          parentContract: state.surfaceContract,
+          parentStandard: state.surfaceParentStandard,
+          parentRatioLocked: state.surfaceRatioLocked
+        },
+        {
+          radiusRatio: 0.405,
+          globalGlazeStrength: 0.82,
+          terrainRecovery: 0.54,
+          waterGlazeOpacity: 0.12,
+          shelfGlazeOpacity: 0.18,
+          landGlazeOpacity: 0.055,
+          iceGlazeOpacity: 0.035,
+          edgeDarkening: 0.032,
+          seamSoftening: 0.046
+        }
+      );
+
+      ctx.drawImage(state.childLayer.canvas, 0, 0, size, size);
+    } else {
+      drawDirectFallbackPlanet(state, motion);
     }
 
-    drawGlobe(ctx, size, state.buffer, motion);
     drawAtmosphere(ctx, size, time);
     drawDiagnostics(ctx, size);
   }
 
   state.frameCount += 1;
 
-  if (state.frameCount === 4 || state.frameCount % 120 === 0) {
+  if (state.frameCount === 4 || state.frameCount % 90 === 0) {
     state.pixelProof = samplePixelProof(ctx, size);
     publishStatus(state);
   }
 }
 
 function stopActiveController() {
-  if (activeController && typeof activeController.stop === "function") {
-    activeController.stop();
-  }
-
+  if (activeController && typeof activeController.stop === "function") activeController.stop();
   activeController = null;
 }
 
@@ -662,7 +719,6 @@ function startCanvas(target, options) {
   const mount = resolveMount(target);
   const nodes = createCanvas(mount);
   const setup = setupCanvas(nodes.canvas, nodes.frame);
-  const buffer = makeBuffer(setup.size);
 
   const state = {
     shell: nodes.shell,
@@ -672,7 +728,6 @@ function startCanvas(target, options) {
     ctx: setup.ctx,
     size: setup.size,
     ratio: setup.ratio,
-    buffer,
     mount,
     options: options || {},
     frameCount: 0,
@@ -681,12 +736,24 @@ function startCanvas(target, options) {
     stopped: false,
     rafId: null,
     resizeTimer: null,
-    lastSurfacePaint: 0,
-    lastRotationDeg: -999,
+
     runtime: null,
     runtimeReceipt: "",
+
     surface: null,
     surfaceReceipt: "",
+    surfaceContract: "",
+    surfaceParentStandard: false,
+    surfaceRatioLocked: false,
+
+    texture: null,
+    hexChild: null,
+    hexChildReceipt: "",
+    hexChildActiveRenewal: "",
+    hexChildActivatedByParentContract: false,
+    childActivationSource: "pending-parent-contract",
+    childLayer: null,
+
     errors: []
   };
 
@@ -703,8 +770,7 @@ function startCanvas(target, options) {
       state.ctx = next.ctx;
       state.size = next.size;
       state.ratio = next.ratio;
-      state.buffer = makeBuffer(next.size);
-      state.lastSurfacePaint = 0;
+      state.childLayer = null;
       renderFrame(state, performance.now());
       publishStatus(state);
     }, 120);
@@ -712,11 +778,7 @@ function startCanvas(target, options) {
 
   state.stop = function stop() {
     state.stopped = true;
-
-    if (state.rafId) {
-      window.cancelAnimationFrame(state.rafId);
-    }
-
+    if (state.rafId) window.cancelAnimationFrame(state.rafId);
     window.removeEventListener("resize", resize);
   };
 
@@ -725,7 +787,7 @@ function startCanvas(target, options) {
   activeController = state;
 
   setRouteStatus(
-    `Audralia adopted canvas authority loaded. Canvas ${CONTRACT} · Surface bridge pending · Runtime motion-only · GraphicBox false · Image generation false · Visual pass claimed false`
+    `Audralia adopted canvas authority loaded. Canvas ${CONTRACT} · Parent surface pending · Hex child pending parent contract · Runtime motion-only · GraphicBox false · Image generation false · Visual pass claimed false`
   );
 
   publishStatus(state);
@@ -733,9 +795,8 @@ function startCanvas(target, options) {
   loadAuthorities(state)
     .then(() => {
       setRouteStatus(
-        `Audralia adopted canvas authority loaded. Canvas ${CONTRACT} · Surface ${state.surfaceReceipt} · Runtime ${state.runtimeReceipt} · Runtime sovereignty motion-only · Runtime visual sovereignty false · GraphicBox false · Image generation false · Visual pass claimed false`
+        `Audralia adopted canvas authority loaded. Canvas ${CONTRACT} · Surface ${state.surfaceReceipt} · Parent standard ${String(state.surfaceParentStandard)} · Ratio locked ${String(state.surfaceRatioLocked)} · Hex child ${state.hexChildActiveRenewal || state.hexChildReceipt || "not activated"} · Child activated by parent contract ${String(state.hexChildActivatedByParentContract)} · Runtime ${state.runtimeReceipt} · Runtime sovereignty motion-only · Runtime visual sovereignty false · GraphicBox false · Image generation false · Visual pass claimed false`
       );
-      state.lastSurfacePaint = 0;
       publishStatus(state);
     })
     .catch((error) => {
@@ -799,10 +860,16 @@ export function getAudraliaSurfaceDataset() {
     contract: CONTRACT,
     version: VERSION,
     surfaceReceipt: STATUS.surfaceReceipt,
-    runtimeReceipt: STATUS.runtimeReceipt,
+    surfaceContract: STATUS.surfaceContract,
+    surfaceParentStandard: STATUS.surfaceParentStandard,
+    surfaceRatioLocked: STATUS.surfaceRatioLocked,
+    hexChildReceipt: STATUS.hexChildReceipt,
+    hexChildActiveRenewal: STATUS.hexChildActiveRenewal,
+    hexChildActivatedByParentContract: STATUS.hexChildActivatedByParentContract,
     canvasUsesRuntimeForMotionOnly: true,
     canvasUsesSurfaceForSurfaceTruth: true,
     canvasUsesRuntimeForSurfaceTruth: false,
+    canvasUsesHexChildForRefinementOnly: true,
     graphicBox: false,
     imageGeneration: false,
     visualPassClaimed: false

@@ -1,6 +1,6 @@
 {
-  "contract": "EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2",
-  "previous_contract": "EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v1",
+  "contract": "EARTH_G4_PNG_ONLY_NASA_SURFACE_NO_CARTOON_FALLBACK_TNT_v3",
+  "previous_contract": "EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2",
   "body": "earth",
   "label": "Earth",
   "route": "/showroom/globe/earth/",
@@ -12,174 +12,9 @@
   "graphic_box": false,
   "visual_pass_claimed": false,
 
-  "responsibility_split": {
-    "earth_manifest_json": {
-      "path": "/assets/earth/earth_manifest.json",
-      "interest": "source truth map / file-interest registry / asset responsibility contract",
-      "jurisdiction": [
-        "asset registry",
-        "file roles",
-        "Earth G4 source truth",
-        "dependency direction",
-        "public receipts hidden standard",
-        "responsibility split declaration",
-        "active asset path declaration"
-      ],
-      "non_jurisdiction": [
-        "rendering",
-        "touch control",
-        "route shell",
-        "visual styling",
-        "Audralia adoption",
-        "canvas projection",
-        "material polish"
-      ]
-    },
-
-    "earth_canvas_js": {
-      "path": "/assets/earth/earth_canvas.js",
-      "interest": "canvas control engine / fixed projection / surface-phase rotation / cloud-phase rotation / touch control / inertia",
-      "jurisdiction": [
-        "mount",
-        "canvas composition",
-        "fixed sphere projection",
-        "surface longitude phase",
-        "cloud longitude phase",
-        "horizontal drag rotation",
-        "release inertia",
-        "asset loading",
-        "manifest loading",
-        "hidden receipt exposure"
-      ],
-      "non_jurisdiction": [
-        "route shell ownership",
-        "permanent material styling",
-        "global CSS",
-        "Audralia",
-        "Gauges",
-        "Products",
-        "Sun",
-        "Moon",
-        "image generation",
-        "GraphicBox",
-        "visual pass claim"
-      ]
-    },
-
-    "earth_material_css": {
-      "path": "/assets/earth/earth_material.css",
-      "interest": "glow / atmosphere / rim clarity / material polish / containment / visual presentation",
-      "jurisdiction": [
-        "atmospheric glow",
-        "rim clarity",
-        "stage containment",
-        "canvas presentation",
-        "label overlay safety",
-        "mobile sizing",
-        "visual material treatment"
-      ],
-      "non_jurisdiction": [
-        "touch logic",
-        "image sampling",
-        "route ownership",
-        "Earth authority receipts",
-        "Audralia adoption",
-        "surface phase",
-        "cloud phase",
-        "asset truth"
-      ]
-    },
-
-    "earth_surface_2048_jpg": {
-      "path": "/assets/earth/earth_surface_2048.jpg",
-      "interest": "primary Earth surface reference body",
-      "jurisdiction": [
-        "land",
-        "ocean",
-        "surface color",
-        "NASA-style reference texture",
-        "surface image truth"
-      ],
-      "non_jurisdiction": [
-        "motion",
-        "clouds",
-        "glow",
-        "route",
-        "control",
-        "canvas projection"
-      ]
-    },
-
-    "earth_clouds_2048_png": {
-      "path": "/assets/earth/earth_clouds_2048.png",
-      "interest": "primary transparent cloud overlay candidate",
-      "jurisdiction": [
-        "transparent cloud layer",
-        "independent cloud phase material",
-        "primary cloud overlay when alpha channel loads"
-      ],
-      "non_jurisdiction": [
-        "surface authority",
-        "route authority",
-        "control authority",
-        "fallback cloud authority when PNG fails"
-      ]
-    },
-
-    "earth_clouds_2048_jpg": {
-      "path": "/assets/earth/earth_clouds_2048.jpg",
-      "interest": "fallback cloud texture",
-      "jurisdiction": [
-        "fallback cloud layer",
-        "cloud layer backup when PNG alpha source is unavailable"
-      ],
-      "non_jurisdiction": [
-        "primary cloud authority when PNG alpha works",
-        "surface authority",
-        "route authority",
-        "control authority"
-      ]
-    },
-
-    "earth_svg": {
-      "path": "/assets/earth/earth.svg",
-      "interest": "static fallback / emblem / non-runtime reference only",
-      "jurisdiction": [
-        "fallback icon",
-        "static emblem",
-        "non-runtime symbolic reference"
-      ],
-      "non_jurisdiction": [
-        "runtime Earth",
-        "G4 planet claim",
-        "surface-phase rotation",
-        "cloud-phase rotation",
-        "canvas projection"
-      ]
-    },
-
-    "assets_earth_index_html": {
-      "path": "/assets/earth/index.html",
-      "interest": "asset directory landing / fallback explanation only",
-      "jurisdiction": [
-        "asset directory explanation",
-        "safe navigation",
-        "asset-source context"
-      ],
-      "non_jurisdiction": [
-        "showroom route",
-        "rotation",
-        "canvas control",
-        "planet rendering",
-        "material authority"
-      ]
-    }
-  },
-
   "active_assets": {
-    "surface": "/assets/earth/earth_surface_2048.jpg",
+    "surface": "/assets/earth/earth_surface_2048.png",
     "clouds_primary": "/assets/earth/earth_clouds_2048.png",
-    "clouds_fallback": "/assets/earth/earth_clouds_2048.jpg",
     "material": "/assets/earth/earth_material.css",
     "canvas": "/assets/earth/earth_canvas.js",
     "fallback_svg": "/assets/earth/earth.svg"
@@ -198,7 +33,10 @@
     "disk_rotation": "forbidden",
     "texture_stretch": "forbidden",
     "whole_canvas_transform": "forbidden",
-    "whole_object_rotation": "forbidden"
+    "whole_object_rotation": "forbidden",
+    "procedural_cartoon_fallback": "forbidden",
+    "jpg_surface": "forbidden",
+    "jpg_cloud_fallback": "forbidden"
   },
 
   "material_law": {
@@ -235,17 +73,18 @@
   ],
 
   "receipt": {
-    "contract": "EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2",
+    "contract": "EARTH_G4_PNG_ONLY_NASA_SURFACE_NO_CARTOON_FALLBACK_TNT_v3",
     "route": "/showroom/globe/earth/",
     "authority": "/assets/earth/earth_canvas.js",
     "manifest": "/assets/earth/earth_manifest.json",
     "material": "/assets/earth/earth_material.css",
-    "surface": "/assets/earth/earth_surface_2048.jpg",
+    "surface": "/assets/earth/earth_surface_2048.png",
     "clouds_primary": "/assets/earth/earth_clouds_2048.png",
-    "clouds_fallback": "/assets/earth/earth_clouds_2048.jpg",
     "canvas_boundary": "fixed",
     "rotation_model": "surface-longitude-phase",
     "touch_model": "horizontal-drag-only",
+    "procedural_fallback": false,
+    "jpg_allowed": false,
     "generated_image": false,
     "graphic_box": false,
     "visual_pass": "HELD_UNTIL_SCREENSHOT_OR_OWNER_CONFIRMATION",

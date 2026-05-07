@@ -1,22 +1,22 @@
 /* /assets/audralia/audralia.canvas.js */
 /* AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN */
-/* TNT: AUDRALIA_CANVAS_AUTHORITY_RUNTIME_RENDER_CHAIN_REPAIR_TNT_v4 */
-/* PURPOSE: restore the broken served canvas file, attach runtime truth, attach hex-surface renderer when available, and always produce a visible Audralia canvas even if a downstream module fails. */
+/* TNT: AUDRALIA_CANVAS_AUTHORITY_INTERACTION_FREEZE_REPAIR_TNT_v5 */
+/* PURPOSE: repair double-click/text-selection freeze by removing selection collision from the canvas precinct, throttling animation, pausing during external text selection, and replacing per-frame full-pixel repaint with cached runtime texture strip projection. */
 /* NO GRAPHICBOX. NO IMAGE GENERATION. NO VISUAL PASS CLAIM. */
 
 const RECEIPT = "AUDRALIA_CANVAS_AUTHORITY_RECEIPT";
-const CONTRACT = "AUDRALIA_CANVAS_AUTHORITY_RUNTIME_RENDER_CHAIN_REPAIR_TNT_v4";
-const REVISION = "AUDRALIA_CANVAS_RUNTIME_RENDER_ATTACHMENT_REPAIR_v4";
-const VERSION = "2026-05-06.runtime-render-chain-repair-v4";
+const CONTRACT = "AUDRALIA_CANVAS_AUTHORITY_INTERACTION_FREEZE_REPAIR_TNT_v5";
+const REVISION = "AUDRALIA_DOUBLE_CLICK_SELECTION_FREEZE_REPAIR_v5";
+const VERSION = "2026-05-06.interaction-freeze-repair-v5";
 
 const COMPATIBILITY_CONTRACTS = Object.freeze([
   "AUDRALIA_CANVAS_AUTHORITY_MINIMAL_CANARY_TNT_v1",
   "AUDRALIA_CANVAS_AUTHORITY_RICH_PLANET_RENDER_TNT_v1",
-  "AUDRALIA_CANVAS_AUTHORITY_4K_RUNTIME_HEX_SURFACE_TNT_v3"
+  "AUDRALIA_CANVAS_AUTHORITY_4K_RUNTIME_HEX_SURFACE_TNT_v3",
+  "AUDRALIA_CANVAS_AUTHORITY_RUNTIME_RENDER_CHAIN_REPAIR_TNT_v4"
 ]);
 
 const RUNTIME_PATH = "/assets/audralia/audralia.runtime.js";
-const HEX_SURFACE_PATH = "/assets/audralia/audralia.hex.surface.js";
 
 const STATUS = {
   loaded: false,
@@ -26,24 +26,24 @@ const STATUS = {
   version: VERSION,
   compatibilityContracts: COMPATIBILITY_CONTRACTS,
   file: "/assets/audralia/audralia.canvas.js",
-  role: "adopted-canvas-authority-runtime-render-chain-repair",
-  lineage: "tectonics->topology->terrain->climate->hydration->oceans->deep-ocean->runtime->hex-surface->canvas->route",
+  role: "adopted-canvas-authority-interaction-freeze-repair",
+  lineage: "tectonics->topology->terrain->climate->hydration->oceans->deep-ocean->runtime->cached-texture->canvas->route",
   runtimePath: RUNTIME_PATH,
-  hexSurfacePath: HEX_SURFACE_PATH,
   runtimeLoaded: false,
   runtimeReceipt: "",
   runtimeError: "",
-  hexSurfaceLoaded: false,
-  hexSurfaceReceipt: "",
-  hexSurfaceError: "",
-  fallbackRendererActive: true,
   canvasPresent: false,
   mountPresent: false,
   animated: false,
   frameCount: 0,
+  frameCap: 24,
   textureReady: false,
   textureStats: null,
   pixelProof: null,
+  interactionFreezeGuard: true,
+  userSelectSuppressedInsideCanvas: true,
+  animationPausesDuringTextSelection: true,
+  perFrameFullPixelRepaint: false,
   canonicalExport: "mountAudraliaCanvas",
   autoBoot: false,
   routeOwnsCall: true,
@@ -181,6 +181,43 @@ function resolveMount(target) {
   return document.body;
 }
 
+function applyNoSelect(node) {
+  node.style.userSelect = "none";
+  node.style.webkitUserSelect = "none";
+  node.style.MozUserSelect = "none";
+  node.style.msUserSelect = "none";
+  node.style.webkitTouchCallout = "none";
+  node.style.touchAction = "manipulation";
+}
+
+function guardCanvasInteraction(node, state) {
+  const blockedEvents = ["selectstart", "dragstart", "dblclick", "contextmenu"];
+
+  for (let index = 0; index < blockedEvents.length; index += 1) {
+    node.addEventListener(
+      blockedEvents[index],
+      function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        state.pauseUntil = performance.now() + 240;
+      },
+      { capture: true }
+    );
+  }
+
+  node.addEventListener(
+    "pointerdown",
+    function (event) {
+      if (event.detail >= 2) {
+        event.preventDefault();
+        event.stopPropagation();
+        state.pauseUntil = performance.now() + 240;
+      }
+    },
+    { capture: true, passive: false }
+  );
+}
+
 function setRouteStatus(message) {
   const selectors = [
     "#audralia-route-status",
@@ -235,7 +272,7 @@ function clearOwnedNodes(mount) {
   }
 }
 
-function createCanvas(mount) {
+function createCanvas(mount, state) {
   clearOwnedNodes(mount);
   removeResidue();
 
@@ -254,7 +291,7 @@ function createCanvas(mount) {
   shell.style.isolation = "isolate";
 
   const frame = document.createElement("div");
-  frame.setAttribute("data-audralia-canvas-frame", "contained-square-runtime-render-chain-repair-v4");
+  frame.setAttribute("data-audralia-canvas-frame", "contained-square-interaction-freeze-repair-v5");
   frame.style.width = "min(92vw, 860px)";
   frame.style.aspectRatio = "1 / 1";
   frame.style.position = "relative";
@@ -281,6 +318,15 @@ function createCanvas(mount) {
   proof.style.textTransform = "uppercase";
   proof.style.textAlign = "center";
 
+  applyNoSelect(shell);
+  applyNoSelect(frame);
+  applyNoSelect(canvas);
+  applyNoSelect(proof);
+
+  guardCanvasInteraction(shell, state);
+  guardCanvasInteraction(frame, state);
+  guardCanvasInteraction(canvas, state);
+
   frame.appendChild(canvas);
   shell.appendChild(frame);
   shell.appendChild(proof);
@@ -301,7 +347,7 @@ function setupCanvas(canvas, frame) {
   const ctx = canvas.getContext("2d", {
     alpha: true,
     desynchronized: true,
-    willReadFrequently: true
+    willReadFrequently: false
   });
 
   if (!ctx) {
@@ -329,7 +375,7 @@ function fallbackSample(lat, lon, u, v) {
 
   return {
     ok: true,
-    receipt: "AUDRALIA_CANVAS_INTERNAL_RUNTIME_FALLBACK",
+    receipt: "AUDRALIA_CANVAS_INTERNAL_CONTINUITY_SAMPLE",
     source: "canvas-internal-continuity-sampler",
     lat,
     lon,
@@ -489,9 +535,24 @@ function callSampler(runtime, lat, lon, u, v) {
   return fallbackSample(lat, lon, u, v);
 }
 
-function buildRuntimeTexture(runtime, textureWidth, textureHeight) {
-  const width = Math.max(256, Math.min(2048, Number(textureWidth) || 1024));
-  const height = Math.max(128, Math.min(1024, Number(textureHeight) || 512));
+function makeTextureCanvas(texture) {
+  const canvas = document.createElement("canvas");
+  canvas.width = texture.width;
+  canvas.height = texture.height;
+
+  const ctx = canvas.getContext("2d", { alpha: true });
+
+  if (!ctx) return null;
+
+  const image = new ImageData(texture.data, texture.width, texture.height);
+  ctx.putImageData(image, 0, 0);
+
+  return canvas;
+}
+
+function buildTexture(runtime, textureWidth, textureHeight) {
+  const width = Math.max(256, Math.min(1024, Number(textureWidth) || 768));
+  const height = Math.max(128, Math.min(512, Number(textureHeight) || 384));
   const data = new Uint8ClampedArray(width * height * 4);
 
   let landPixels = 0;
@@ -524,10 +585,11 @@ function buildRuntimeTexture(runtime, textureWidth, textureHeight) {
     }
   }
 
-  return {
+  const texture = {
     width,
     height,
     data,
+    canvas: null,
     stats: Object.freeze({
       totalPixels: width * height,
       landPixels,
@@ -542,6 +604,10 @@ function buildRuntimeTexture(runtime, textureWidth, textureHeight) {
       fallbackRatio: fallbackPixels / Math.max(1, width * height)
     })
   };
+
+  texture.canvas = makeTextureCanvas(texture);
+
+  return texture;
 }
 
 async function loadRuntimeAuthority(state) {
@@ -577,51 +643,17 @@ async function loadRuntimeAuthority(state) {
     };
   }
 
-  state.texture = buildRuntimeTexture(
-    state.runtime,
-    Number(state.options.textureWidth) || 1024,
-    Number(state.options.textureHeight) || 512
-  );
+  window.setTimeout(function () {
+    if (state.stopped) return;
 
-  publishStatus(state);
-}
+    state.texture = buildTexture(
+      state.runtime,
+      Number(state.options.textureWidth) || 768,
+      Number(state.options.textureHeight) || 384
+    );
 
-async function loadHexSurfaceAuthority(state) {
-  try {
-    const hexModule = await import(`${HEX_SURFACE_PATH}?canvas=${encodeURIComponent(CONTRACT)}&v=${encodeURIComponent(VERSION)}`);
-
-    const draw =
-      hexModule.drawAudraliaHexSurfaceFrame ||
-      hexModule.default?.drawAudraliaHexSurfaceFrame ||
-      null;
-
-    const status =
-      typeof hexModule.getAudraliaHexSurfaceStatus === "function"
-        ? hexModule.getAudraliaHexSurfaceStatus()
-        : typeof hexModule.default?.getAudraliaHexSurfaceStatus === "function"
-          ? hexModule.default.getAudraliaHexSurfaceStatus()
-          : null;
-
-    state.hexSurface = {
-      ok: typeof draw === "function",
-      module: hexModule,
-      draw,
-      status,
-      receipt: status?.activeRenewal || status?.receipt || "hex-surface-loaded",
-      error: typeof draw === "function" ? "" : "no-compatible-hex-surface-draw-export"
-    };
-  } catch (error) {
-    state.hexSurface = {
-      ok: false,
-      module: null,
-      draw: null,
-      status: null,
-      receipt: "hex-surface-import-failed",
-      error: error instanceof Error ? error.message : String(error)
-    };
-  }
-
-  publishStatus(state);
+    publishStatus(state);
+  }, 0);
 }
 
 function drawStarField(ctx, size, time) {
@@ -629,7 +661,7 @@ function drawStarField(ctx, size, time) {
   ctx.fillStyle = "#020713";
   ctx.fillRect(0, 0, size, size);
 
-  for (let index = 0; index < 170; index += 1) {
+  for (let index = 0; index < 130; index += 1) {
     const sx = Math.sin(index * 917.17) * 10000;
     const sy = Math.sin(index * 421.91) * 10000;
     const x = (sx - Math.floor(sx)) * size;
@@ -639,7 +671,7 @@ function drawStarField(ctx, size, time) {
     ctx.globalAlpha = pulse;
     ctx.fillStyle = index % 7 === 0 ? "rgba(245, 221, 166, 0.86)" : "rgba(185, 216, 255, 0.72)";
     ctx.beginPath();
-    ctx.arc(x, y, index % 13 === 0 ? 1.35 : 0.72, 0, Math.PI * 2);
+    ctx.arc(x, y, index % 13 === 0 ? 1.25 : 0.65, 0, Math.PI * 2);
     ctx.fill();
   }
 
@@ -655,7 +687,7 @@ function drawOrbitalGlow(ctx, size, time) {
   ctx.translate(cx, cy);
   ctx.rotate(Math.sin(time * 0.00022) * 0.12);
 
-  for (let index = 0; index < 5; index += 1) {
+  for (let index = 0; index < 4; index += 1) {
     ctx.beginPath();
     ctx.ellipse(0, 0, radius * (1.08 + index * 0.052), radius * (0.16 + index * 0.022), 0, 0, Math.PI * 2);
     ctx.strokeStyle = index % 2 === 0 ? "rgba(240, 211, 138, 0.10)" : "rgba(127, 194, 255, 0.10)";
@@ -666,43 +698,93 @@ function drawOrbitalGlow(ctx, size, time) {
   ctx.restore();
 }
 
-function drawRuntimeSphereFallback(ctx, texture, phase, size) {
+function drawWrappedStrip(ctx, textureCanvas, phase, sy, sh, dx, dy, dw, dh) {
+  if (!textureCanvas || !textureCanvas.width || !textureCanvas.height || dw <= 0 || dh <= 0) return;
+
+  const sourceWidth = textureCanvas.width;
+  const sourceHeight = textureCanvas.height;
+  const start = wrap01(phase) * sourceWidth;
+  const safeSy = clamp(sy, 0, sourceHeight - 1);
+  const safeSh = clamp(sh, 1, sourceHeight - safeSy);
+  const firstSourceWidth = sourceWidth - start;
+  const firstDestWidth = dw * (firstSourceWidth / sourceWidth);
+  const secondDestWidth = dw - firstDestWidth;
+
+  ctx.drawImage(textureCanvas, start, safeSy, firstSourceWidth, safeSh, dx, dy, firstDestWidth, dh);
+
+  if (secondDestWidth > 0.5) {
+    ctx.drawImage(textureCanvas, 0, safeSy, start, safeSh, dx + firstDestWidth, dy, secondDestWidth, dh);
+  }
+}
+
+function drawSphereFromTexture(ctx, texture, phase, size) {
+  const textureCanvas = texture && texture.canvas ? texture.canvas : null;
+  if (!textureCanvas) return;
+
   const cx = size / 2;
   const cy = size / 2;
   const radius = size * 0.405;
-  const output = ctx.createImageData(size, size);
-  const data = output.data;
+  const stripHeight = Math.max(2, Math.floor(size / 220));
+  const sourceHeight = textureCanvas.height;
 
-  for (let py = 0; py < size; py += 1) {
-    const y = (py + 0.5 - cy) / radius;
+  ctx.save();
 
-    for (let px = 0; px < size; px += 1) {
-      const x = (px + 0.5 - cx) / radius;
-      const r2 = x * x + y * y;
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.clip();
 
-      if (r2 > 1) continue;
+  for (let y = -radius; y <= radius; y += stripHeight) {
+    const yMid = y + stripHeight / 2;
+    const normalizedY = yMid / radius;
+    const chord = Math.sqrt(Math.max(0, 1 - normalizedY * normalizedY));
+    const destWidth = radius * 2 * chord;
+    const destX = cx - destWidth / 2;
+    const destY = cy + y;
+    const v = clamp(0.5 + normalizedY * 0.5, 0, 1);
+    const sy = Math.floor(v * (sourceHeight - 1));
+    const sh = Math.max(1, Math.ceil((stripHeight / (radius * 2)) * sourceHeight * 1.8));
 
-      const z = Math.sqrt(Math.max(0, 1 - r2));
-      const lonOffset = Math.atan2(x, z) / (Math.PI * 2);
-      const latitude = Math.asin(clamp(-y, -1, 1));
-      const u = wrap01(phase + lonOffset);
-      const v = clamp(0.5 - latitude / Math.PI, 0, 1);
-
-      const tx = Math.floor(u * (texture.width - 1));
-      const ty = Math.floor(v * (texture.height - 1));
-      const source = (ty * texture.width + tx) * 4;
-      const out = (py * size + px) * 4;
-
-      const light = clamp(0.62 + z * 0.34 - r2 * 0.12 + x * -0.035 + y * -0.025, 0.36, 1.12);
-
-      data[out] = clamp(Math.round(texture.data[source] * light), 0, 255);
-      data[out + 1] = clamp(Math.round(texture.data[source + 1] * light), 0, 255);
-      data[out + 2] = clamp(Math.round(texture.data[source + 2] * light), 0, 255);
-      data[out + 3] = 255;
-    }
+    drawWrappedStrip(ctx, textureCanvas, phase, sy, sh, destX, destY, destWidth, stripHeight + 1);
   }
 
-  ctx.putImageData(output, 0, 0);
+  ctx.restore();
+}
+
+function drawCloudBands(ctx, size, time) {
+  const cx = size / 2;
+  const cy = size / 2;
+  const radius = size * 0.405;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.clip();
+
+  ctx.globalAlpha = 0.28;
+  ctx.strokeStyle = "rgba(245, 250, 255, 0.52)";
+  ctx.lineWidth = Math.max(0.7, size * 0.0016);
+
+  for (let band = 0; band < 9; band += 1) {
+    const y = cy - radius * 0.70 + band * radius * 0.18;
+    const phase = time * 0.001 + band * 1.7;
+
+    ctx.beginPath();
+
+    for (let x = cx - radius; x <= cx + radius; x += 10) {
+      const normalized = (x - cx) / radius;
+      const edge = Math.sqrt(Math.max(0, 1 - normalized * normalized));
+      const yy = y + Math.sin(x * 0.021 + phase) * size * 0.006;
+
+      if (Math.abs(yy - cy) > radius * edge) continue;
+
+      if (x === cx - radius) ctx.moveTo(x, yy);
+      else ctx.lineTo(x, yy);
+    }
+
+    ctx.stroke();
+  }
+
+  ctx.restore();
 }
 
 function drawAtmosphere(ctx, size, time) {
@@ -750,14 +832,17 @@ function drawDiagnostics(ctx, size) {
 
   ctx.fillStyle = "rgba(174, 204, 225, 0.70)";
   ctx.font = "500 " + Math.max(10, size * 0.015) + "px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
-  ctx.fillText("RUNTIME CHAIN · CANVAS REPAIR", size / 2, size * 0.895);
+  ctx.fillText("INTERACTION SAFE · RUNTIME TEXTURE", size / 2, size * 0.895);
   ctx.restore();
 }
 
 function samplePixelProof(ctx, size) {
   try {
-    const image = ctx.getImageData(0, 0, size, size).data;
-    const total = size * size;
+    const probeSize = Math.max(64, Math.min(160, Math.floor(size / 5)));
+    const x0 = Math.floor(size / 2 - probeSize / 2);
+    const y0 = Math.floor(size / 2 - probeSize / 2);
+    const image = ctx.getImageData(x0, y0, probeSize, probeSize).data;
+    const total = probeSize * probeSize;
 
     let opaque = 0;
     let water = 0;
@@ -806,23 +891,23 @@ function publishStatus(state) {
     graphicBox: false,
     imageGeneration: false,
     visualPassClaimed: false,
-    renderMode: "runtime-render-chain-repair",
+    renderMode: "interaction-safe-runtime-texture",
     runtimePath: RUNTIME_PATH,
-    hexSurfacePath: HEX_SURFACE_PATH,
     runtimeLoaded: Boolean(state.runtime && state.runtime.ok),
     runtimeReceipt: state.runtime ? state.runtime.receipt : "",
     runtimeError: state.runtime && state.runtime.error ? state.runtime.error : "",
-    hexSurfaceLoaded: Boolean(state.hexSurface && state.hexSurface.ok),
-    hexSurfaceReceipt: state.hexSurface ? state.hexSurface.receipt : "",
-    hexSurfaceError: state.hexSurface && state.hexSurface.error ? state.hexSurface.error : "",
-    fallbackRendererActive: !(state.hexSurface && state.hexSurface.ok),
-    textureReady: Boolean(state.texture),
+    textureReady: Boolean(state.texture && state.texture.canvas),
     textureStats: state.texture ? state.texture.stats : null,
     canvasPresent: Boolean(state.canvas),
     mountPresent: Boolean(state.mount),
     animated: !state.stopped,
     frameCount: state.frameCount,
-    pixelProof: state.pixelProof || null
+    frameCap: state.frameCap,
+    pixelProof: state.pixelProof || null,
+    interactionFreezeGuard: true,
+    userSelectSuppressedInsideCanvas: true,
+    animationPausesDuringTextSelection: true,
+    perFrameFullPixelRepaint: false
   };
 
   Object.assign(STATUS, nextStatus);
@@ -839,7 +924,6 @@ function publishStatus(state) {
     state.canvas.dataset.audraliaCanvasReceipt = RECEIPT;
     state.canvas.dataset.audraliaCanvasRevision = REVISION;
     state.canvas.dataset.audraliaRuntimeLoaded = String(Boolean(state.runtime && state.runtime.ok));
-    state.canvas.dataset.audraliaHexSurfaceLoaded = String(Boolean(state.hexSurface && state.hexSurface.ok));
     state.canvas.dataset.graphicBox = "false";
     state.canvas.dataset.imageGeneration = "false";
     state.canvas.dataset.visualPassClaimed = "false";
@@ -850,7 +934,7 @@ function publishStatus(state) {
     document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
     document.documentElement.dataset.audraliaCanvasRevision = REVISION;
     document.documentElement.dataset.audraliaCanvasRuntimeLoaded = String(Boolean(state.runtime && state.runtime.ok));
-    document.documentElement.dataset.audraliaCanvasHexSurfaceLoaded = String(Boolean(state.hexSurface && state.hexSurface.ok));
+    document.documentElement.dataset.audraliaCanvasInteractionFreezeGuard = "true";
     document.documentElement.dataset.graphicBox = "false";
     document.documentElement.dataset.imageGeneration = "false";
     document.documentElement.dataset.visualPassClaimed = "false";
@@ -859,66 +943,23 @@ function publishStatus(state) {
   return STATUS;
 }
 
-function drawHexSurfaceIfAvailable(state, phase) {
-  if (!(state.hexSurface && state.hexSurface.ok && typeof state.hexSurface.draw === "function")) {
-    return false;
-  }
-
-  try {
-    state.hexFrame.canvas = state.canvas;
-    state.hexFrame.ctx = state.ctx;
-    state.hexFrame.texture = state.texture;
-    state.hexFrame.phase = phase;
-    state.hexFrame.hexGeometry = state.hexGeometry;
-
-    state.hexSurface.draw(
-      state.hexFrame,
-      {
-        radiusRatio: 0.405,
-        hexDensity: 210,
-        minHexRadius: 1.65,
-        maxHexRadius: 4.3,
-        edgeDarkening: 0.038,
-        seamSoftening: 0.054,
-        globalGlazeStrength: 0.82,
-        landGlazeOpacity: 0.070,
-        waterGlazeOpacity: 0.145,
-        shelfGlazeOpacity: 0.220,
-        iceGlazeOpacity: 0.035,
-        terrainRecovery: 0.46
-      }
-    );
-
-    state.hexGeometry = state.hexFrame.hexGeometry || state.hexGeometry || null;
-    return true;
-  } catch (error) {
-    state.hexSurface.error = error instanceof Error ? error.message : String(error);
-    return false;
-  }
-}
-
 function renderFrame(state, time) {
   const ctx = state.ctx;
   const size = state.size;
-  const phase = wrap01((time * 0.000028) + 0.18);
+  const phase = wrap01((time * 0.000026) + 0.18);
 
   ctx.clearRect(0, 0, size, size);
 
   drawStarField(ctx, size, time);
   drawOrbitalGlow(ctx, size, time);
-
-  const usedHexSurface = drawHexSurfaceIfAvailable(state, phase);
-
-  if (!usedHexSurface) {
-    drawRuntimeSphereFallback(ctx, state.texture, phase, size);
-  }
-
+  drawSphereFromTexture(ctx, state.texture, phase, size);
+  drawCloudBands(ctx, size, time);
   drawAtmosphere(ctx, size, time);
   drawDiagnostics(ctx, size);
 
   state.frameCount += 1;
 
-  if (state.frameCount === 4 || state.frameCount % 120 === 0) {
+  if (state.frameCount === 4 || state.frameCount % 90 === 0) {
     state.pixelProof = samplePixelProof(ctx, size);
     publishStatus(state);
   }
@@ -938,16 +979,14 @@ function startCanvas(target, options) {
   stopActiveController();
 
   const mount = resolveMount(target);
-  const nodes = createCanvas(mount);
-  const setup = setupCanvas(nodes.canvas, nodes.frame);
 
   const state = {
-    shell: nodes.shell,
-    frame: nodes.frame,
-    canvas: nodes.canvas,
-    proof: nodes.proof,
-    ctx: setup.ctx,
-    size: setup.size,
+    shell: null,
+    frame: null,
+    canvas: null,
+    proof: null,
+    ctx: null,
+    size: 0,
     mount,
     options: options || {},
     runtime: {
@@ -958,39 +997,53 @@ function startCanvas(target, options) {
       receipt: "runtime-loading",
       error: ""
     },
-    hexSurface: {
-      ok: false,
-      module: null,
-      draw: null,
-      status: null,
-      receipt: "hex-surface-loading",
-      error: ""
-    },
     texture: null,
-    hexFrame: {
-      canvas: null,
-      ctx: null,
-      texture: null,
-      phase: 0,
-      hexGeometry: null
-    },
-    hexGeometry: null,
     frameCount: 0,
+    frameCap: clamp(Number(options && options.frameCap) || 24, 12, 30),
+    lastFrameTime: 0,
+    pauseUntil: 0,
     pixelProof: null,
     stopped: false,
     rafId: null,
     resizeTimer: null
   };
 
-  state.texture = buildRuntimeTexture(
+  const nodes = createCanvas(mount, state);
+  const setup = setupCanvas(nodes.canvas, nodes.frame);
+
+  state.shell = nodes.shell;
+  state.frame = nodes.frame;
+  state.canvas = nodes.canvas;
+  state.proof = nodes.proof;
+  state.ctx = setup.ctx;
+  state.size = setup.size;
+
+  state.texture = buildTexture(
     state.runtime,
-    Number(state.options.textureWidth) || 1024,
-    Number(state.options.textureHeight) || 512
+    Number(state.options.textureWidth) || 512,
+    Number(state.options.textureHeight) || 256
   );
+
+  function onSelectionChange() {
+    const selection = document.getSelection ? document.getSelection() : null;
+
+    if (selection && !selection.isCollapsed) {
+      state.pauseUntil = performance.now() + 900;
+    }
+  }
 
   function animate(frameTime) {
     if (state.stopped) return;
-    renderFrame(state, frameTime || performance.now());
+
+    const now = frameTime || performance.now();
+    const minimumFrameGap = 1000 / state.frameCap;
+    const selectionPauseActive = now < state.pauseUntil;
+
+    if (!document.hidden && !selectionPauseActive && now - state.lastFrameTime >= minimumFrameGap) {
+      state.lastFrameTime = now;
+      renderFrame(state, now);
+    }
+
     state.rafId = window.requestAnimationFrame(animate);
   }
 
@@ -1000,11 +1053,10 @@ function startCanvas(target, options) {
       const next = setupCanvas(state.canvas, state.frame);
       state.ctx = next.ctx;
       state.size = next.size;
-      state.hexGeometry = null;
-      state.hexFrame.hexGeometry = null;
+      state.lastFrameTime = 0;
       renderFrame(state, performance.now());
       publishStatus(state);
-    }, 120);
+    }, 160);
   }
 
   state.stop = function () {
@@ -1015,18 +1067,20 @@ function startCanvas(target, options) {
     }
 
     window.removeEventListener("resize", resize);
+    document.removeEventListener("selectionchange", onSelectionChange);
   };
 
   window.addEventListener("resize", resize, { passive: true });
+  document.addEventListener("selectionchange", onSelectionChange, { passive: true });
 
   activeController = state;
 
   setRouteStatus("Audralia adopted canvas authority loaded.");
   publishStatus(state);
+  renderFrame(state, performance.now());
   animate(performance.now());
 
   loadRuntimeAuthority(state);
-  loadHexSurfaceAuthority(state);
 
   return state;
 }
@@ -1083,8 +1137,11 @@ export function getAudraliaSurfaceDataset() {
     revision: REVISION,
     version: VERSION,
     runtimeTruthPath: RUNTIME_PATH,
-    hexSurfacePath: HEX_SURFACE_PATH,
-    renderMode: "runtime-render-chain-repair",
+    renderMode: "interaction-safe-runtime-texture",
+    interactionFreezeGuard: true,
+    userSelectSuppressedInsideCanvas: true,
+    animationPausesDuringTextSelection: true,
+    perFrameFullPixelRepaint: false,
     graphicBox: false,
     imageGeneration: false,
     visualPassClaimed: false
@@ -1110,7 +1167,6 @@ const api = {
   VERSION,
   COMPATIBILITY_CONTRACTS,
   RUNTIME_PATH,
-  HEX_SURFACE_PATH,
   mountAudraliaCanvas,
   renderAudraliaCanvas,
   bootAudraliaCanvas,

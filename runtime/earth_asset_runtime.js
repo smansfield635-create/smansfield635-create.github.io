@@ -1,28 +1,14 @@
 /* /runtime/earth_asset_runtime.js
-   EARTH_G4_DEDICATED_ASSET_RUNTIME_TNT_v1
+   EARTH_G5_NON_NASA_SATELLITE_ASSET_RUNTIME_TNT_v2
    Full-file replacement.
-
-   Purpose:
-   - Earth runtime authority only.
-   - Owns lifecycle orchestration, mount detection, asset verification, runtime status, visibility pause/resume, and public route readiness.
-   - Consumes /assets/earth/earth_canvas.js without owning canvas projection.
-   - Consumes /assets/earth/earth_manifest.json without owning asset truth.
-   - Consumes /assets/earth/earth_material.css without owning material styling.
-   - Does not render Audralia.
-   - Does not mutate Showroom selector.
-   - Does not touch Gauges, Products, Sun, Moon, or global files.
-   - Does not create GraphicBox.
-   - Does not use image generation.
-   - Does not claim visual pass.
 */
 
 (function () {
   "use strict";
 
-  const CONTRACT = "EARTH_G4_DEDICATED_ASSET_RUNTIME_TNT_v1";
-  const CANVAS_CONTRACT = "EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2";
-  const ROUTE = "/showroom/globe/earth/";
-  const ASSET_ROUTE = "/assets/earth/";
+  const CONTRACT = "EARTH_G5_NON_NASA_SATELLITE_ASSET_RUNTIME_TNT_v2";
+  const PREVIOUS_CONTRACT = "EARTH_G4_DEDICATED_ASSET_RUNTIME_TNT_v1";
+  const CANVAS_CONTRACT = "EARTH_G5_NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE_TNT_v1";
 
   const SELECTORS = [
     "#earthRenderMount",
@@ -33,7 +19,8 @@
 
   const STATE = {
     contract: CONTRACT,
-    route: window.location.pathname,
+    previousContract: PREVIOUS_CONTRACT,
+    canvasContract: CANVAS_CONTRACT,
     mounted: false,
     mountFound: false,
     canvasAuthorityFound: false,
@@ -41,10 +28,7 @@
     runtimeStatus: "booting",
     visibility: document.visibilityState || "visible",
     assetStatus: null,
-    lastError: null,
-    visualPassClaimed: false,
-    generatedImage: false,
-    graphicBox: false
+    lastError: null
   };
 
   let runtimeInstance = null;
@@ -57,7 +41,6 @@
       const node = document.querySelector(selector);
       if (node) return node;
     }
-
     return null;
   }
 
@@ -65,20 +48,19 @@
     return window.DGBEarthCanvas || window.DGBEarthCanvasAuthority || window.EarthCanvas || window.earthCanvas || null;
   }
 
-  function setDataset(target, key, value) {
-    if (!target || !target.dataset) return;
-    target.dataset[key] = String(value);
-  }
-
   function markRoot() {
     const root = document.documentElement;
-
     root.dataset.earthRuntimeContract = CONTRACT;
+    root.dataset.earthRuntimePreviousContract = PREVIOUS_CONTRACT;
     root.dataset.earthRuntimeCanvasContract = CANVAS_CONTRACT;
     root.dataset.earthRuntimeStatus = STATE.runtimeStatus;
     root.dataset.earthRuntimeMounted = String(STATE.mounted);
     root.dataset.earthRuntimeMountFound = String(STATE.mountFound);
     root.dataset.earthRuntimeCanvasAuthorityFound = String(STATE.canvasAuthorityFound);
+    root.dataset.earthSourceStandard = "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE";
+    root.dataset.earthNasaReference = "forbidden";
+    root.dataset.earthJpgAllowed = "false";
+    root.dataset.earthProceduralFallback = "false";
     root.dataset.earthRuntimeGeneratedImage = "false";
     root.dataset.earthRuntimeGraphicBox = "false";
     root.dataset.earthRuntimeVisualPassClaimed = "false";
@@ -86,7 +68,7 @@
     if (document.body) {
       document.body.dataset.earthRuntimeContract = CONTRACT;
       document.body.dataset.earthRuntimeStatus = STATE.runtimeStatus;
-      document.body.dataset.earthRuntimeMounted = String(STATE.mounted);
+      document.body.dataset.earthSourceStandard = "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE";
       document.body.dataset.generatedImage = "false";
       document.body.dataset.graphicBox = "false";
       document.body.dataset.visualPassClaimed = "false";
@@ -97,10 +79,9 @@
     window.DGB_EARTH_ASSET_RUNTIME_RECEIPT = Object.assign(
       {
         contract: CONTRACT,
+        previousContract: PREVIOUS_CONTRACT,
         canvasContract: CANVAS_CONTRACT,
         route: window.location.pathname,
-        targetRoute: ROUTE,
-        assetRoute: ASSET_ROUTE,
         mounted: STATE.mounted,
         mountFound: STATE.mountFound,
         canvasAuthorityFound: STATE.canvasAuthorityFound,
@@ -109,6 +90,10 @@
         visibility: STATE.visibility,
         assetStatus: STATE.assetStatus,
         lastError: STATE.lastError,
+        sourceStandard: "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE",
+        nasaReference: "forbidden",
+        jpgAllowed: false,
+        proceduralFallback: false,
         owns: [
           "earth_lifecycle_orchestration",
           "earth_mount_detection",
@@ -148,19 +133,17 @@
       window.dispatchEvent(new CustomEvent("dgb:earth-asset-runtime", {
         detail: window.DGB_EARTH_ASSET_RUNTIME_RECEIPT
       }));
-    } catch (error) {
-      /* Event dispatch is optional. */
-    }
+    } catch (error) {}
   }
 
   function writeStatus(message) {
-    const statusNodes = [
+    const nodes = [
       document.querySelector("[data-earth-preview-status]"),
       document.querySelector("[data-earth-route-status]"),
       document.querySelector("[data-earth-runtime-status]")
     ].filter(Boolean);
 
-    statusNodes.forEach((node) => {
+    nodes.forEach((node) => {
       node.innerHTML = "<strong>Earth runtime:</strong> " + message;
     });
   }
@@ -169,7 +152,7 @@
     if (!api || typeof api.verifyAssets !== "function") {
       STATE.assetStatus = {
         verified: false,
-        reason: "verifyAssets not available on Earth canvas authority"
+        reason: "verifyAssets not available"
       };
       return Promise.resolve(STATE.assetStatus);
     }
@@ -203,11 +186,15 @@
       return false;
     }
 
-    setDataset(mount, "earthRuntimeContract", CONTRACT);
-    setDataset(mount, "earthRuntimeAuthority", "/runtime/earth_asset_runtime.js");
-    setDataset(mount, "generatedImage", "false");
-    setDataset(mount, "graphicBox", "false");
-    setDataset(mount, "visualPassClaimed", "false");
+    mount.dataset.earthRuntimeContract = CONTRACT;
+    mount.dataset.earthRuntimeAuthority = "/runtime/earth_asset_runtime.js";
+    mount.dataset.earthSourceStandard = "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE";
+    mount.dataset.nasaReference = "forbidden";
+    mount.dataset.jpgAllowed = "false";
+    mount.dataset.proceduralFallback = "false";
+    mount.dataset.generatedImage = "false";
+    mount.dataset.graphicBox = "false";
+    mount.dataset.visualPassClaimed = "false";
 
     if (!api || typeof api.mount !== "function") {
       STATE.runtimeStatus = "waiting-for-earth-canvas-authority";
@@ -216,13 +203,14 @@
     }
 
     try {
-      const existingCanvas = mount.querySelector("canvas.earth-g4-canvas, canvas.earth-reference-canvas, canvas.earth-material-canvas");
+      const existingCanvas = mount.querySelector("canvas.earth-g5-canvas, canvas.earth-g4-canvas");
 
       if (!existingCanvas || !runtimeInstance) {
         runtimeInstance = api.mount(mount, {
           initialZoom: 1,
           initialPhase: 0.18,
-          initialCloudPhase: 0.08
+          initialCloudPhase: 0.08,
+          axialTiltDegrees: 23.44
         });
       }
 
@@ -231,24 +219,24 @@
       STATE.runtimeStatus = runtimeInstance ? "mounted" : "mount-returned-null";
 
       verifyAssets(api).then(() => {
-        const surfaceLoaded = STATE.assetStatus && STATE.assetStatus.surface && STATE.assetStatus.surface.ok;
-        const cloudsPrimaryLoaded = STATE.assetStatus && STATE.assetStatus.cloudsPrimary && STATE.assetStatus.cloudsPrimary.ok;
-        const cloudsFallbackLoaded = STATE.assetStatus && STATE.assetStatus.cloudsFallback && STATE.assetStatus.cloudsFallback.ok;
+        const surface = STATE.assetStatus && STATE.assetStatus.surface;
+        const clouds = STATE.assetStatus && STATE.assetStatus.cloudsPrimary;
 
         writeStatus(
-          "mounted · surface=" +
-          (surfaceLoaded ? "loaded" : "missing") +
-          " · primary clouds=" +
-          (cloudsPrimaryLoaded ? "loaded" : "missing") +
-          " · fallback clouds=" +
-          (cloudsFallbackLoaded ? "loaded" : "missing") +
-          " · visual pass held"
+          "mounted · satellite surface=" +
+          (surface && surface.ok ? "loaded" : "missing") +
+          " · surface mode=" +
+          (surface && surface.mode ? surface.mode : "unread") +
+          " · satellite clouds=" +
+          (clouds && clouds.ok ? "loaded" : "missing") +
+          " · no NASA · no JPG · no cartoon fallback · visual pass held"
         );
 
         publish({
-          surfaceLoaded: Boolean(surfaceLoaded),
-          cloudsPrimaryLoaded: Boolean(cloudsPrimaryLoaded),
-          cloudsFallbackLoaded: Boolean(cloudsFallbackLoaded)
+          surfaceLoaded: Boolean(surface && surface.ok),
+          surfaceMode: surface && surface.mode ? surface.mode : "unread",
+          cloudsPrimaryLoaded: Boolean(clouds && clouds.ok),
+          cloudMode: clouds && clouds.mode ? clouds.mode : "unread"
         });
       });
 
@@ -291,9 +279,7 @@
 
       if (runtimeInstance && typeof runtimeInstance.getStatus === "function") {
         try {
-          publish({
-            canvasStatus: runtimeInstance.getStatus()
-          });
+          publish({ canvasStatus: runtimeInstance.getStatus() });
         } catch (error) {
           STATE.lastError = error && error.message ? error.message : "status read failed";
           publish();
@@ -330,37 +316,20 @@
     publish();
   }
 
-  function bindRuntimeControls() {
-    document.addEventListener("visibilitychange", handleVisibility);
-
-    window.addEventListener("pagehide", () => {
-      stopStatusLoop();
-
-      if (runtimeInstance && typeof runtimeInstance.stop === "function") {
-        runtimeInstance.stop();
-      }
-
-      STATE.runtimeStatus = "pagehide-stopped";
-      publish();
-    }, { once: true });
-
-    window.addEventListener("pageshow", () => {
-      if (runtimeInstance && typeof runtimeInstance.start === "function") {
-        runtimeInstance.start();
-      }
-
-      STATE.runtimeStatus = "pageshow-active";
-      startStatusLoop();
-      publish();
-    });
-  }
-
   function init() {
     STATE.runtimeStatus = "initializing";
     markRoot();
     publish({ booted: true });
 
-    bindRuntimeControls();
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    window.addEventListener("pagehide", () => {
+      stopStatusLoop();
+      if (runtimeInstance && typeof runtimeInstance.stop === "function") runtimeInstance.stop();
+      STATE.runtimeStatus = "pagehide-stopped";
+      publish();
+    }, { once: true });
+
     retryMountLoop();
     startStatusLoop();
   }

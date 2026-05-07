@@ -582,4 +582,450 @@ function drawStarField(ctx, size, time) {
     const sx = Math.sin(index * 917.17) * 10000;
     const sy = Math.sin(index * 421.91) * 10000;
     const x = (sx - Math.floor(sx)) * size;
-    const y
+    const y = (sy - Math.floor(sy)) * size;
+    const pulse = 0.20 + 0.60 * Math.abs(Math.sin(time * 0.001 + index));
+
+    ctx.globalAlpha = pulse;
+    ctx.fillStyle = index % 7 === 0 ? "rgba(245, 221, 166, 0.86)" : "rgba(185, 216, 255, 0.72)";
+    ctx.beginPath();
+    ctx.arc(x, y, index % 13 === 0 ? 1.35 : 0.72, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function drawOrbitalGlow(ctx, size, time) {
+  const cx = size / 2;
+  const cy = size / 2;
+  const radius = size * 0.348;
+
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(Math.sin(time * 0.00022) * 0.12);
+
+  for (let index = 0; index < 5; index += 1) {
+    ctx.beginPath();
+    ctx.ellipse(0, 0, radius * (1.08 + index * 0.052), radius * (0.16 + index * 0.022), 0, 0, Math.PI * 2);
+    ctx.strokeStyle = index % 2 === 0 ? "rgba(240, 211, 138, 0.10)" : "rgba(127, 194, 255, 0.10)";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+function drawRuntimeSphereFallback(ctx, texture, phase, size) {
+  const cx = size / 2;
+  const cy = size / 2;
+  const radius = size * 0.405;
+  const output = ctx.createImageData(size, size);
+  const data = output.data;
+
+  for (let py = 0; py < size; py += 1) {
+    const y = (py + 0.5 - cy) / radius;
+
+    for (let px = 0; px < size; px += 1) {
+      const x = (px + 0.5 - cx) / radius;
+      const r2 = x * x + y * y;
+
+      if (r2 > 1) continue;
+
+      const z = Math.sqrt(Math.max(0, 1 - r2));
+      const lonOffset = Math.atan2(x, z) / (Math.PI * 2);
+      const latitude = Math.asin(clamp(-y, -1, 1));
+      const u = wrap01(phase + lonOffset);
+      const v = clamp(0.5 - latitude / Math.PI, 0, 1);
+
+      const tx = Math.floor(u * (texture.width - 1));
+      const ty = Math.floor(v * (texture.height - 1));
+      const source = (ty * texture.width + tx) * 4;
+      const out = (py * size + px) * 4;
+
+      const light = clamp(0.62 + z * 0.34 - r2 * 0.12 + x * -0.035 + y * -0.025, 0.36, 1.12);
+
+      data[out] = clamp(Math.round(texture.data[source] * light), 0, 255);
+      data[out + 1] = clamp(Math.round(texture.data[source + 1] * light), 0, 255);
+      data[out + 2] = clamp(Math.round(texture.data[source + 2] * light), 0, 255);
+      data[out + 3] = 255;
+    }
+  }
+
+  ctx.putImageData(output, 0, 0);
+}
+
+function drawAtmosphere(ctx, size, time) {
+  const cx = size / 2;
+  const cy = size / 2;
+  const radius = size * 0.405;
+  const pulse = 0.42 + Math.sin(time * 0.0013) * 0.05;
+
+  ctx.save();
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.strokeStyle = "rgba(159, 214, 255, " + pulse.toFixed(3) + ")";
+  ctx.lineWidth = size * 0.010;
+  ctx.stroke();
+
+  const shade = ctx.createRadialGradient(
+    cx - radius * 0.42,
+    cy - radius * 0.46,
+    radius * 0.05,
+    cx + radius * 0.18,
+    cy + radius * 0.16,
+    radius * 1.18
+  );
+
+  shade.addColorStop(0, "rgba(255, 255, 255, 0.13)");
+  shade.addColorStop(0.52, "rgba(255, 255, 255, 0.018)");
+  shade.addColorStop(0.76, "rgba(0, 0, 0, 0.17)");
+  shade.addColorStop(1, "rgba(0, 0, 0, 0.62)");
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.fillStyle = shade;
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function drawDiagnostics(ctx, size) {
+  ctx.save();
+  ctx.fillStyle = "rgba(244, 226, 178, 0.90)";
+  ctx.font = "700 " + Math.max(13, size * 0.027) + "px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("AUDRALIA", size / 2, size * 0.864);
+
+  ctx.fillStyle = "rgba(174, 204, 225, 0.70)";
+  ctx.font = "500 " + Math.max(10, size * 0.015) + "px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+  ctx.fillText("4K RUNTIME CHAIN · HEX SURFACE", size / 2, size * 0.895);
+  ctx.restore();
+}
+
+function samplePixelProof(ctx, size) {
+  try {
+    const image = ctx.getImageData(0, 0, size, size).data;
+    const total = size * size;
+
+    let opaque = 0;
+    let water = 0;
+    let solid = 0;
+    let turquoise = 0;
+
+    for (let i = 0; i < image.length; i += 16) {
+      const r = image[i];
+      const g = image[i + 1];
+      const b = image[i + 2];
+      const a = image[i + 3];
+
+      if (a > 0) opaque += 4;
+      if (b > r * 1.06 && g > r * 0.70) water += 4;
+      if (r >= 72 && r >= b * 0.78 && g >= 62 && b < 190) solid += 4;
+      if (g > 125 && b > 130 && Math.abs(g - b) < 92) turquoise += 4;
+    }
+
+    return {
+      opaqueRatio: opaque / total,
+      waterPixelRatio: water / total,
+      solidSurfacePixelRatio: solid / total,
+      turquoisePixelRatio: turquoise / total,
+      notBlank: opaque > total * 0.12
+    };
+  } catch (error) {
+    return { notBlank: null, error: error instanceof Error ? error.message : String(error) };
+  }
+}
+
+function publishStatus(state) {
+  const status = {
+    loaded: true,
+    receipt: RECEIPT,
+    contract: CONTRACT,
+    revision: REVISION,
+    version: VERSION,
+    compatibility: COMPATIBILITY_CONTRACT,
+    autoBoot: false,
+    routeOwnsCall: true,
+    graphicBox: false,
+    imageGeneration: false,
+    visualPassClaimed: false,
+    canonicalExport: "mountAudraliaCanvas",
+    renderMode: PLANET.renderMode,
+    runtimeTruthPath: RUNTIME_PATH,
+    hexSurfacePath: HEX_SURFACE_PATH,
+    runtimeLoaded: Boolean(state.runtime && state.runtime.ok),
+    runtimeReceipt: state.runtime ? state.runtime.receipt : "",
+    runtimeError: state.runtime && state.runtime.error ? state.runtime.error : "",
+    hexSurfaceLoaded: Boolean(state.hexSurface && state.hexSurface.ok),
+    hexSurfaceReceipt: state.hexSurface ? state.hexSurface.receipt : "",
+    hexSurfaceError: state.hexSurface && state.hexSurface.error ? state.hexSurface.error : "",
+    textureStats: state.texture ? state.texture.stats : null,
+    canvasPresent: Boolean(state.canvas),
+    mountPresent: Boolean(state.mount),
+    animated: true,
+    frameCount: state.frameCount,
+    pixelProof: state.pixelProof || null
+  };
+
+  window.__AUDRALIA_CANVAS_STATUS__ = status;
+  window.__AUDRALIA_ADOPTED_CANVAS_AUTHORITY__ = status;
+  window.dispatchEvent(new CustomEvent("audralia:canvas-authority-status", { detail: status }));
+
+  if (state.canvas) {
+    state.canvas.dataset.audraliaCanvasStatus = CONTRACT;
+    state.canvas.dataset.audraliaCanvasReceipt = RECEIPT;
+    state.canvas.dataset.audraliaCanvasRevision = REVISION;
+    state.canvas.dataset.audraliaRuntimeLoaded = String(Boolean(state.runtime && state.runtime.ok));
+    state.canvas.dataset.audraliaHexSurfaceLoaded = String(Boolean(state.hexSurface && state.hexSurface.ok));
+    state.canvas.dataset.graphicBox = "false";
+    state.canvas.dataset.imageGeneration = "false";
+    state.canvas.dataset.visualPassClaimed = "false";
+  }
+
+  return status;
+}
+
+function renderFrame(state, time) {
+  const ctx = state.ctx;
+  const size = state.size;
+  const phase = wrap01((time * 0.000028) + 0.18);
+
+  ctx.clearRect(0, 0, size, size);
+
+  drawStarField(ctx, size, time);
+  drawOrbitalGlow(ctx, size, time);
+
+  ctx.save();
+
+  if (state.hexSurface && state.hexSurface.ok && typeof state.hexSurface.draw === "function") {
+    try {
+      state.hexSurface.draw(
+        {
+          canvas: state.canvas,
+          ctx,
+          texture: state.texture,
+          phase,
+          hexGeometry: state.hexGeometry || null
+        },
+        {
+          radiusRatio: 0.405,
+          hexDensity: 210,
+          minHexRadius: 1.65,
+          maxHexRadius: 4.3,
+          edgeDarkening: 0.038,
+          seamSoftening: 0.054,
+          globalGlazeStrength: 0.82,
+          landGlazeOpacity: 0.070,
+          waterGlazeOpacity: 0.145,
+          shelfGlazeOpacity: 0.220,
+          iceGlazeOpacity: 0.035,
+          terrainRecovery: 0.46
+        }
+      );
+
+      state.hexGeometry = state.canvas.hexGeometry || state.hexGeometry || null;
+    } catch (_) {
+      drawRuntimeSphereFallback(ctx, state.texture, phase, size);
+    }
+  } else {
+    drawRuntimeSphereFallback(ctx, state.texture, phase, size);
+  }
+
+  ctx.restore();
+
+  drawAtmosphere(ctx, size, time);
+  drawDiagnostics(ctx, size);
+
+  state.frameCount += 1;
+
+  if (state.frameCount === 4 || state.frameCount % 120 === 0) {
+    state.pixelProof = samplePixelProof(ctx, size);
+    publishStatus(state);
+  }
+}
+
+function stopActiveController() {
+  if (activeController && typeof activeController.stop === "function") {
+    activeController.stop();
+  }
+
+  activeController = null;
+}
+
+async function startCanvas(target, options) {
+  if (typeof window === "undefined" || typeof document === "undefined") return null;
+
+  stopActiveController();
+
+  const mount = resolveMount(target);
+  const nodes = createCanvas(mount);
+  const setup = setupCanvas(nodes.canvas, nodes.frame);
+
+  const state = {
+    shell: nodes.shell,
+    frame: nodes.frame,
+    canvas: nodes.canvas,
+    proof: nodes.proof,
+    ctx: setup.ctx,
+    size: setup.size,
+    ratio: setup.ratio,
+    mount,
+    options: options || {},
+    runtime: null,
+    hexSurface: null,
+    texture: null,
+    hexGeometry: null,
+    frameCount: 0,
+    pixelProof: null,
+    stopped: false,
+    rafId: null,
+    resizeTimer: null
+  };
+
+  state.runtime = await loadRuntimeAuthority();
+  state.hexSurface = await loadHexSurfaceAuthority();
+  state.texture = buildRuntimeTexture(
+    state.runtime,
+    Number(state.options.textureWidth) || 1024,
+    Number(state.options.textureHeight) || 512
+  );
+
+  function animate(frameTime) {
+    if (state.stopped) return;
+    renderFrame(state, frameTime || performance.now());
+    state.rafId = window.requestAnimationFrame(animate);
+  }
+
+  function resize() {
+    window.clearTimeout(state.resizeTimer);
+    state.resizeTimer = window.setTimeout(function () {
+      const next = setupCanvas(state.canvas, state.frame);
+      state.ctx = next.ctx;
+      state.size = next.size;
+      state.ratio = next.ratio;
+      state.hexGeometry = null;
+      renderFrame(state, performance.now());
+      publishStatus(state);
+    }, 120);
+  }
+
+  state.stop = function () {
+    state.stopped = true;
+
+    if (state.rafId) {
+      window.cancelAnimationFrame(state.rafId);
+    }
+
+    window.removeEventListener("resize", resize);
+  };
+
+  window.addEventListener("resize", resize, { passive: true });
+
+  activeController = state;
+
+  setRouteStatus("Audralia adopted canvas authority loaded.");
+  publishStatus(state);
+  animate(performance.now());
+
+  return state;
+}
+
+export function mountAudraliaCanvas(target, options) {
+  return startCanvas(target, options || {});
+}
+
+export function renderAudraliaCanvas(target, options) {
+  return startCanvas(target, options || {});
+}
+
+export function bootAudraliaCanvas(target, options) {
+  return startCanvas(target, options || {});
+}
+
+export function createAudraliaCanvas(target, options) {
+  return startCanvas(target, options || {});
+}
+
+export function initAudraliaCanvas(target, options) {
+  return startCanvas(target, options || {});
+}
+
+export function renderAudralia(target, options) {
+  return startCanvas(target, options || {});
+}
+
+export function mountAudralia(target, options) {
+  return startCanvas(target, options || {});
+}
+
+export function render(target, options) {
+  return startCanvas(target, options || {});
+}
+
+export function mount(target, options) {
+  return startCanvas(target, options || {});
+}
+
+export function init(target, options) {
+  return startCanvas(target, options || {});
+}
+
+export function getAudraliaCanvasStatus() {
+  return window.__AUDRALIA_CANVAS_STATUS__ || {
+    loaded: false,
+    receipt: RECEIPT,
+    contract: CONTRACT,
+    revision: REVISION,
+    version: VERSION,
+    compatibility: COMPATIBILITY_CONTRACT,
+    canonicalExport: "mountAudraliaCanvas"
+  };
+}
+
+export function getAudraliaSurfaceDataset() {
+  return PLANET;
+}
+
+export function stopAudraliaCanvas() {
+  stopActiveController();
+
+  return {
+    stopped: true,
+    receipt: RECEIPT,
+    contract: CONTRACT,
+    revision: REVISION,
+    version: VERSION
+  };
+}
+
+const api = {
+  RECEIPT,
+  CONTRACT,
+  REVISION,
+  VERSION,
+  COMPATIBILITY_CONTRACT,
+  PLANET,
+  mountAudraliaCanvas,
+  renderAudraliaCanvas,
+  bootAudraliaCanvas,
+  createAudraliaCanvas,
+  initAudraliaCanvas,
+  renderAudralia,
+  mountAudralia,
+  render,
+  mount,
+  init,
+  getAudraliaCanvasStatus,
+  getAudraliaSurfaceDataset,
+  stopAudraliaCanvas
+};
+
+if (typeof window !== "undefined") {
+  window.DGBAudraliaCanvasAuthority = api;
+  window.AudraliaCanvasAuthority = api;
+  window.mountAudraliaCanvas = mountAudraliaCanvas;
+  window.renderAudraliaCanvas = renderAudraliaCanvas;
+}
+
+export default api;

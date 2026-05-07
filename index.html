@@ -2,17 +2,17 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="compass-three-lens-interplanetary-gate"
+  data-page="compass-three-lens-flat-round-globe-gate"
   data-route="/"
-  data-contract="COMPASS_THREE_LENS_INTERPLANETARY_GATE_TNT_v7"
-  data-previous-contract="COMPASS_INTERPLANETARY_4_PLUS_16_COMMAND_SURFACE_TNT_v6"
-  data-runtime-contract="COMPASS_THREE_LENS_RUNTIME_TNT_v2"
-  data-route-js-contract="COMPASS_THREE_LENS_ROUTE_ONLY_JS_TNT_v3"
+  data-contract="COMPASS_THREE_LENS_FLAT_ROUND_GLOBE_GATE_TNT_v8"
+  data-previous-contract="COMPASS_THREE_LENS_INTERPLANETARY_GATE_TNT_v7"
+  data-runtime-contract="COMPASS_THREE_LENS_RUNTIME_TNT_v3"
+  data-route-js-contract="COMPASS_THREE_LENS_ROUTE_ONLY_JS_TNT_v4"
   data-room="compass"
   data-role="three-lens-public-command-gate"
   data-theme="violet-purple-primary-gold-border-black-gold-inlay"
-  data-background-authority="/assets/dgb-interplanetary-background.js"
   data-view-selector-authority="/door/"
+  data-round-background-authority="/assets/dgb-interplanetary-background.js"
   data-globe-authority="/nine-summits/universe/"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
@@ -27,12 +27,11 @@
   <title>Compass · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Compass: a three-lens command gate for flat, round, and globe-scale movement."
+    content="Diamond Gate Bridge Compass: choose Flat, Round, or Globe lens. Flat is a two-dimensional route map, Round is animated Compass orbit, and Globe opens the Nine Summits Universe."
   />
 
-  <script src="/assets/dgb-interplanetary-background.js?v=DGB_INTERPLANETARY_AXIS_FLOATING_FIGURES_BACKGROUND_JS_TNT_v1" defer></script>
-  <script src="/index.runtime.js?v=COMPASS_THREE_LENS_RUNTIME_TNT_v2" defer></script>
-  <script src="/index.js?v=COMPASS_THREE_LENS_ROUTE_ONLY_JS_TNT_v3" defer></script>
+  <script src="/index.runtime.js?v=COMPASS_THREE_LENS_RUNTIME_TNT_v3" defer></script>
+  <script src="/index.js?v=COMPASS_THREE_LENS_ROUTE_ONLY_JS_TNT_v4" defer></script>
 
   <style>
     :root {
@@ -46,21 +45,17 @@
       --purple-2: #c4b5fd;
       --gold: #f4c95d;
       --gold-2: #ffe8a8;
-      --gold-3: #b9821f;
       --text: #fff8e8;
       --muted: rgba(255,247,226,0.74);
       --faint: rgba(255,247,226,0.48);
       --line: rgba(196,181,253,0.22);
       --line-gold: rgba(255,232,168,0.34);
-      --panel: rgba(3,2,5,0.80);
-      --panel-strong: rgba(5,3,8,0.92);
+      --panel: rgba(3,2,5,0.84);
       --inner-orbit-duration: 38s;
       --outer-orbit-duration: 58s;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html,
     body {
@@ -77,6 +72,19 @@
 
     body {
       min-height: 100svh;
+    }
+
+    body[data-active-lens="flat"],
+    body[data-active-lens="gate"] {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.16), transparent 24rem),
+        radial-gradient(circle at 80% 38%, rgba(244,201,93,0.09), transparent 34rem),
+        linear-gradient(180deg, #07040b, #020104 66%, #000);
+    }
+
+    body[data-active-lens="flat"] .dgb-interplanetary-bg,
+    body[data-active-lens="gate"] .dgb-interplanetary-bg {
+      display: none !important;
     }
 
     a {
@@ -97,9 +105,7 @@
       font-weight: 900;
     }
 
-    .skip-link:focus {
-      top: 1rem;
-    }
+    .skip-link:focus { top: 1rem; }
 
     .shell {
       position: relative;
@@ -204,6 +210,11 @@
       text-align: center;
     }
 
+    body[data-active-lens="flat"] .gate-only,
+    body[data-active-lens="round"] .gate-only {
+      display: none !important;
+    }
+
     .eyebrow {
       margin: 0;
       color: var(--gold-2);
@@ -273,19 +284,19 @@
       right: -2.5rem;
       top: -2.5rem;
       border: 1px solid rgba(196,181,253,0.18);
-      border-radius: 50%;
-      box-shadow: 0 0 2rem rgba(139,92,246,0.14);
       opacity: 0.76;
       pointer-events: none;
     }
 
     .lens-card[data-lens="flat"]::before {
-      border-radius: 1rem;
-      transform: rotate(45deg);
+      border-radius: 0.9rem;
+      transform: rotate(0deg);
+      box-shadow: 0 0 1.6rem rgba(244,201,93,0.10);
     }
 
     .lens-card[data-lens="round"]::before {
       border-radius: 50%;
+      box-shadow: 0 0 2rem rgba(139,92,246,0.14);
     }
 
     .lens-card[data-lens="globe"]::before {
@@ -293,6 +304,9 @@
       background:
         radial-gradient(circle at 35% 30%, rgba(255,255,255,0.14), transparent 18%),
         radial-gradient(circle at 58% 55%, rgba(139,92,246,0.16), transparent 54%);
+      box-shadow:
+        0 0 2rem rgba(139,92,246,0.14),
+        inset 0 0 1.5rem rgba(244,201,93,0.06);
     }
 
     .lens-top {
@@ -310,7 +324,8 @@
       text-transform: uppercase;
     }
 
-    .lens-card h2 {
+    .lens-card h2,
+    .active-panel h2 {
       margin: 0;
       font-size: clamp(1.5rem, 4.8vw, 2.4rem);
       line-height: 0.96;
@@ -318,7 +333,8 @@
       text-wrap: balance;
     }
 
-    .lens-card p {
+    .lens-card p,
+    .active-panel p {
       margin: 0;
       color: var(--muted);
       font-size: 0.94rem;
@@ -349,10 +365,11 @@
       letter-spacing: 0.06em;
       position: relative;
       z-index: 1;
+      cursor: pointer;
     }
 
-    .lens-button.secondary,
-    .button.secondary {
+    .button.secondary,
+    .lens-button.secondary {
       border-color: rgba(255,232,168,0.42);
       color: var(--text);
       background:
@@ -368,9 +385,86 @@
       content: " →";
     }
 
+    .active-panel {
+      display: none;
+      width: min(100%, 1040px);
+      margin: clamp(1rem, 3vw, 1.5rem) auto 0;
+      border: 1px solid rgba(255,232,168,0.24);
+      border-radius: clamp(1.15rem, 3vw, 1.6rem);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.10), transparent 34%),
+        linear-gradient(180deg, rgba(139,92,246,0.055), rgba(244,201,93,0.018)),
+        rgba(0,0,0,0.82);
+      box-shadow:
+        0 0 2rem rgba(139,92,246,0.10),
+        0 0 2.8rem rgba(244,201,93,0.07),
+        0 24px 72px rgba(0,0,0,0.28);
+      padding: clamp(1rem, 3vw, 1.35rem);
+    }
+
+    body[data-active-lens="flat"] .flat-panel,
+    body[data-active-lens="round"] .round-panel {
+      display: block;
+    }
+
+    .panel-head {
+      display: grid;
+      gap: 0.45rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .panel-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-top: 1rem;
+    }
+
+    .flat-map {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.7rem;
+      margin-top: 1rem;
+    }
+
+    .flat-cell {
+      min-height: 6.3rem;
+      display: grid;
+      align-content: center;
+      gap: 0.35rem;
+      border: 1px solid rgba(255,232,168,0.22);
+      border-radius: 1rem;
+      padding: 0.85rem;
+      background:
+        linear-gradient(180deg, rgba(139,92,246,0.06), rgba(244,201,93,0.018)),
+        rgba(0,0,0,0.54);
+      text-align: left;
+    }
+
+    .flat-cell strong {
+      color: var(--gold-2);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .flat-cell span {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.34;
+    }
+
+    .flat-cell a {
+      color: var(--text);
+      font-weight: 900;
+    }
+
     .round-preview {
       width: min(100%, 740px);
-      margin: clamp(1rem, 3vw, 1.5rem) auto 0;
+      margin: 0 auto;
       display: grid;
       place-items: center;
     }
@@ -481,9 +575,7 @@
       pointer-events: auto;
     }
 
-    .orbit-ring.inner .diamond-node {
-      --radius: -4rem;
-    }
+    .orbit-ring.inner .diamond-node { --radius: -4rem; }
 
     .orbit-ring.outer .diamond-node {
       --radius: -12.1rem;
@@ -534,55 +626,6 @@
       animation: keepTextUprightOuter var(--outer-orbit-duration) linear infinite;
     }
 
-    .compact-panel {
-      width: min(100%, 920px);
-      margin: clamp(1rem, 3vw, 1.5rem) auto 0;
-      border: 1px solid rgba(255,232,168,0.22);
-      border-radius: 1.35rem;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.10), transparent 34%),
-        linear-gradient(180deg, rgba(139,92,246,0.055), rgba(244,201,93,0.018)),
-        rgba(0,0,0,0.78);
-      box-shadow:
-        0 0 2rem rgba(139,92,246,0.10),
-        0 0 2.8rem rgba(244,201,93,0.07),
-        0 24px 72px rgba(0,0,0,0.28);
-      overflow: hidden;
-    }
-
-    .compact-panel summary {
-      cursor: pointer;
-      padding: 1rem 1.1rem;
-      color: var(--gold-2);
-      font-size: 0.78rem;
-      font-weight: 950;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .route-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.7rem;
-      padding: 0 1rem 1rem;
-    }
-
-    .route-grid a {
-      min-height: 2.75rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(196,181,253,0.24);
-      border-radius: 999px;
-      padding: 0.65rem;
-      background:
-        linear-gradient(180deg, rgba(139,92,246,0.08), rgba(244,201,93,0.025)),
-        rgba(0,0,0,0.38);
-      color: var(--text);
-      font-weight: 850;
-      text-align: center;
-    }
-
     .status-card {
       width: min(100%, 920px);
       margin: 1rem auto 0;
@@ -594,9 +637,7 @@
       line-height: 1.55;
     }
 
-    .status-card strong {
-      color: var(--gold-2);
-    }
+    .status-card strong { color: var(--gold-2); }
 
     .route-receipt,
     [data-route-receipt],
@@ -677,7 +718,7 @@
         min-height: 12rem;
       }
 
-      .route-grid {
+      .flat-map {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
@@ -701,9 +742,7 @@
         margin: -1.9rem 0 0 -1.9rem;
       }
 
-      .orbit-ring.inner .diamond-node {
-        --radius: -3.35rem;
-      }
+      .orbit-ring.inner .diamond-node { --radius: -3.35rem; }
 
       .orbit-ring.outer .diamond-node {
         --radius: -8.75rem;
@@ -729,7 +768,7 @@
         font-size: clamp(2.8rem, 16vw, 4.6rem);
       }
 
-      .route-grid {
+      .flat-map {
         grid-template-columns: 1fr;
       }
     }
@@ -750,7 +789,8 @@
 <body
   data-room="compass"
   data-route="/"
-  data-contract="COMPASS_THREE_LENS_INTERPLANETARY_GATE_TNT_v7"
+  data-contract="COMPASS_THREE_LENS_FLAT_ROUND_GLOBE_GATE_TNT_v8"
+  data-active-lens="gate"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claimed="false"
@@ -779,170 +819,228 @@
     </header>
 
     <main id="compass-main">
-      <section class="hero" aria-labelledby="compass-title">
-        <p class="eyebrow">Compass · Three-Lens Interplanetary Gate</p>
+      <section class="hero gate-only" aria-labelledby="compass-title">
+        <p class="eyebrow">Compass · Three-Lens Gate</p>
         <h1 id="compass-title">Pressure is the door.</h1>
         <p class="subtitle">
-          Choose the lens before crossing. Compass presents the choice; Door admits flat and round; Universe owns globe scale.
+          Choose the lens first. Flat shows a two-dimensional map. Round shows motion and orbit. Globe jumps to the Nine Summits Universe.
         </p>
       </section>
 
-      <section class="lens-gate" aria-label="World lens choices">
+      <section class="lens-gate gate-only" aria-label="World lens choices">
         <article class="lens-card" data-lens="flat">
           <div class="lens-top">
             <span class="lens-kicker">Lens One</span>
             <h2>The World Is Flat</h2>
-            <p>
-              A readable map, table, and linear route view. Use this when the visitor needs structure before motion.
-            </p>
+            <p>A strictly two-dimensional route map. No orbit field, no spinning figures, no globe jump.</p>
           </div>
-          <a class="lens-button" href="/door/?view=flat" data-lens-link="flat">Enter Flat View</a>
+          <a class="lens-button" href="/?lens=flat&view=flat" data-lens-link="flat">See Flat</a>
         </article>
 
         <article class="lens-card" data-lens="round">
           <div class="lens-top">
             <span class="lens-kicker">Lens Two</span>
             <h2>The World Is Round</h2>
-            <p>
-              A circular estate-orbit view. Use this when the visitor should understand rooms as a rotating system.
-            </p>
+            <p>The rotating Compass lens. This view activates the interplanetary axis and floating figures.</p>
           </div>
-          <a class="lens-button" href="/door/?view=round" data-lens-link="round">Enter Round View</a>
+          <a class="lens-button" href="/?lens=round&view=round" data-lens-link="round">See Round</a>
         </article>
 
         <article class="lens-card" data-lens="globe">
           <div class="lens-top">
             <span class="lens-kicker">Lens Three</span>
             <h2>The World Is a Globe</h2>
-            <p>
-              A world-setting jump. Globe scale belongs to the Nine Summits Universe, not the Door selector.
-            </p>
+            <p>A universe-scale jump. Globe belongs to the Nine Summits Universe page.</p>
           </div>
           <a class="lens-button" href="/nine-summits/universe/" data-lens-link="globe" data-no-view-carry="true">Open Universe</a>
         </article>
       </section>
 
-      <section class="round-preview" aria-label="Round world preview">
-        <div class="compass-card" data-round-preview="true">
-          <div class="center-anchor" aria-hidden="true">
-            <span>Compass<br />Round<br />Preview</span>
-          </div>
+      <section class="active-panel flat-panel" aria-labelledby="flat-title">
+        <div class="panel-head">
+          <p class="eyebrow">Compass Lens · Flat</p>
+          <h2 id="flat-title">The World Is Flat</h2>
+          <p>
+            This is the two-dimensional route format: readable, linear, non-orbital, and table-like. Door admits the selected flat view.
+          </p>
+        </div>
 
-          <div class="orbit-ring inner">
-            <a class="diamond-node" style="--angle: 0deg" href="/">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Compass</b></span>
-            </a>
-            <a class="diamond-node" style="--angle: 90deg" href="/door/?view=round">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Door</b></span>
-            </a>
-            <a class="diamond-node" style="--angle: 180deg" href="/home/">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Home</b></span>
-            </a>
-            <a class="diamond-node" style="--angle: 270deg" href="/explore/">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Manor</b></span>
-            </a>
+        <div class="flat-map" aria-label="Flat two-dimensional route map">
+          <div class="flat-cell">
+            <strong>1 · Compass</strong>
+            <span><a href="/">Orientation root</a></span>
           </div>
+          <div class="flat-cell">
+            <strong>2 · Door</strong>
+            <span><a href="/door/?view=flat">Flat admission</a></span>
+          </div>
+          <div class="flat-cell">
+            <strong>3 · Home</strong>
+            <span><a href="/home/?view=flat">Receiver layer</a></span>
+          </div>
+          <div class="flat-cell">
+            <strong>4 · Manor</strong>
+            <span><a href="/explore/?view=flat">Estate map</a></span>
+          </div>
+          <div class="flat-cell">
+            <strong>5 · Laws</strong>
+            <span><a href="/laws/?view=flat">Boundary rules</a></span>
+          </div>
+          <div class="flat-cell">
+            <strong>6 · Book</strong>
+            <span><a href="/nine-summits-of-love/" data-no-view-carry="true">Human climb</a></span>
+          </div>
+          <div class="flat-cell">
+            <strong>7 · Products</strong>
+            <span><a href="/products/?view=flat">Use layer</a></span>
+          </div>
+          <div class="flat-cell">
+            <strong>8 · Showroom</strong>
+            <span><a href="/showroom/?view=flat">Proof atrium</a></span>
+          </div>
+          <div class="flat-cell">
+            <strong>9 · Frontier</strong>
+            <span><a href="/frontier/?view=flat">Expansion edge</a></span>
+          </div>
+          <div class="flat-cell">
+            <strong>10 · Gauges</strong>
+            <span><a href="/gauges/" data-no-view-carry="true">Source proof</a></span>
+          </div>
+          <div class="flat-cell">
+            <strong>11 · Audralia</strong>
+            <span><a href="/showroom/globe/audralia/" data-no-view-carry="true">Planet route</a></span>
+          </div>
+          <div class="flat-cell">
+            <strong>12 · Universe</strong>
+            <span><a href="/nine-summits/universe/" data-no-view-carry="true">Globe scale</a></span>
+          </div>
+        </div>
 
-          <div class="orbit-ring outer">
-            <a class="diamond-node" style="--angle: 0deg" href="/laws/">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Laws</b></span>
-            </a>
-            <a class="diamond-node" style="--angle: 22.5deg" href="/nine-summits/">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Nine</b></span>
-            </a>
-            <a class="diamond-node" style="--angle: 45deg" href="/nine-summits-of-love/" data-no-view-carry="true">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Book</b></span>
-            </a>
-            <a class="diamond-node" style="--angle: 67.5deg" href="/nine-summits/universe/" data-no-view-carry="true">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Universe</b></span>
-            </a>
-            <a class="diamond-node" style="--angle: 90deg" href="/products/">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Products</b></span>
-            </a>
-            <a class="diamond-node" style="--angle: 112.5deg" href="/showroom/">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Show</b></span>
-            </a>
-            <a class="diamond-node" style="--angle: 135deg" href="/frontier/">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Frontier</b></span>
-            </a>
-            <a class="diamond-node" style="--angle: 157.5deg" href="/gauges/" data-no-view-carry="true">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Gauges</b></span>
-            </a>
-            <a class="diamond-node" style="--angle: 180deg" href="/about-this-underdog/">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Under</b></span>
-            </a>
-            <a class="diamond-node" style="--angle: 202.5deg" href="/meet-sean-mansfield/">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Sean</b></span>
-            </a>
-            <a class="diamond-node" style="--angle: 225deg" href="/showroom/globe/audralia/" data-no-view-carry="true">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Audralia</b></span>
-            </a>
-            <a class="diamond-node" style="--angle: 247.5deg" href="/products/five-flags/">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Flags</b></span>
-            </a>
-            <a class="diamond-node" style="--angle: 270deg" href="/door/">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Entry</b></span>
-            </a>
-            <a class="diamond-node" style="--angle: 292.5deg" href="/home/">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Receive</b></span>
-            </a>
-            <a class="diamond-node" style="--angle: 315deg" href="/explore/">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Map</b></span>
-            </a>
-            <a class="diamond-node" style="--angle: 337.5deg" href="/gauges/" data-no-view-carry="true">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Proof</b></span>
-            </a>
-          </div>
+        <div class="panel-actions">
+          <a class="button" href="/door/?view=flat">Cross Door in Flat</a>
+          <a class="button secondary" href="/">Choose Another Lens</a>
         </div>
       </section>
 
-      <details class="compact-panel">
-        <summary>Command routes</summary>
-        <nav class="route-grid" aria-label="Command route links">
-          <a href="/door/?view=flat">Flat Door</a>
-          <a href="/door/?view=round">Round Door</a>
-          <a href="/nine-summits/universe/" data-no-view-carry="true">Globe Universe</a>
-          <a href="/home/">Home</a>
-          <a href="/explore/">Manor</a>
-          <a href="/laws/">Laws</a>
-          <a href="/nine-summits/">Nine Summits</a>
-          <a href="/nine-summits-of-love/" data-no-view-carry="true">Book</a>
-          <a href="/products/">Products</a>
-          <a href="/showroom/">Showroom</a>
-          <a href="/frontier/">Frontier</a>
-          <a href="/gauges/" data-no-view-carry="true">Gauges</a>
-        </nav>
-      </details>
+      <section class="active-panel round-panel" aria-labelledby="round-title">
+        <div class="panel-head">
+          <p class="eyebrow">Compass Lens · Round</p>
+          <h2 id="round-title">The World Is Round</h2>
+          <p>
+            This is the rotating Compass lens: the interplanetary axis runs behind the room while the Compass orbit remains in front.
+          </p>
+        </div>
+
+        <div class="round-preview" aria-label="Round world rotating preview">
+          <div class="compass-card" data-round-preview="true">
+            <div class="center-anchor" aria-hidden="true">
+              <span>Compass<br />Round<br />Lens</span>
+            </div>
+
+            <div class="orbit-ring inner">
+              <a class="diamond-node" style="--angle: 0deg" href="/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Compass</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 90deg" href="/door/?view=round">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Door</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 180deg" href="/home/?view=round">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Home</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 270deg" href="/explore/?view=round">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Manor</b></span>
+              </a>
+            </div>
+
+            <div class="orbit-ring outer">
+              <a class="diamond-node" style="--angle: 0deg" href="/laws/?view=round">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Laws</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 22.5deg" href="/nine-summits/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Nine</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 45deg" href="/nine-summits-of-love/" data-no-view-carry="true">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Book</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 67.5deg" href="/nine-summits/universe/" data-no-view-carry="true">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Universe</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 90deg" href="/products/?view=round">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Products</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 112.5deg" href="/showroom/?view=round">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Show</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 135deg" href="/frontier/?view=round">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Frontier</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 157.5deg" href="/gauges/" data-no-view-carry="true">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Gauges</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 180deg" href="/about-this-underdog/?view=round">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Under</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 202.5deg" href="/meet-sean-mansfield/?view=round">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Sean</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 225deg" href="/showroom/globe/audralia/" data-no-view-carry="true">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Audralia</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 247.5deg" href="/products/five-flags/?view=round">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Flags</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 270deg" href="/door/?view=round">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Entry</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 292.5deg" href="/home/?view=round">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Receive</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 315deg" href="/explore/?view=round">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Map</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 337.5deg" href="/gauges/" data-no-view-carry="true">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Proof</b></span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-actions">
+          <a class="button" href="/door/?view=round">Cross Door in Round</a>
+          <a class="button secondary" href="/">Choose Another Lens</a>
+        </div>
+      </section>
 
       <aside class="status-card" aria-label="Compass status" data-compass-status>
         <strong>Compass status:</strong>
-        Three-lens gate active · Flat and Round route through Door · Globe routes to Nine Summits Universe · Runtime rebuilt.
+        Three-lens gate active · Flat is 2D only · Round is animated only · Globe jumps to Nine Summits Universe.
       </aside>
 
       <template id="route-receipt" data-route-receipt>
-COMPASS_THREE_LENS_INTERPLANETARY_GATE_TNT_v7
-previous_contract=COMPASS_INTERPLANETARY_4_PLUS_16_COMMAND_SURFACE_TNT_v6
+COMPASS_THREE_LENS_FLAT_ROUND_GLOBE_GATE_TNT_v8
+previous_contract=COMPASS_THREE_LENS_INTERPLANETARY_GATE_TNT_v7
 route=/
 page=compass
 room=compass
 role=three_lens_public_command_gate
-theme=violet_purple_primary_gold_border_black_gold_inlay
-message=choose_the_lens_before_crossing
-background_authority=/assets/dgb-interplanetary-background.js
-background_contract=DGB_INTERPLANETARY_AXIS_FLOATING_FIGURES_BACKGROUND_JS_TNT_v1
-runtime_authority=/index.runtime.js
-runtime_contract=COMPASS_THREE_LENS_RUNTIME_TNT_v2
-route_js=/index.js
-route_js_contract=COMPASS_THREE_LENS_ROUTE_ONLY_JS_TNT_v3
-lens_1=world_is_flat:/door/?view=flat
-lens_2=world_is_round:/door/?view=round
-lens_3=world_is_a_globe:/nine-summits/universe/
+message=flat_is_2d_round_is_motion_globe_is_universe
+lens_gate=front_page
+lens_1=world_is_flat
+lens_1_behavior=in_page_2d_only
+lens_1_route=/door/?view=flat
+lens_2=world_is_round
+lens_2_behavior=in_page_rotating_items_and_interplanetary_background
+lens_2_route=/door/?view=round
+lens_3=world_is_a_globe
+lens_3_behavior=jump_to_nine_summits_universe
+lens_3_route=/nine-summits/universe/
 door_owns=flat_admission,round_admission
 universe_owns=globe_scale
-compass_owns=lens_presentation,public_orientation,round_preview,compressed_command_routes
-compass_does_not_own=view_selector_authority,planet_rendering,canvas_creation,gauges_logic,graphicbox,image_generation,visual_pass_claim
-foreground_visual_system=compact_round_preview
-scroll_depth_reduced=true
+compass_owns=lens_presentation,flat_2d_map,round_orbit_preview
+compass_does_not_own=planet_rendering,canvas_creation,gauges_logic,graphicbox,image_generation,visual_pass_claim
+flat_background=static_no_interplanetary_axis
+round_background=/assets/dgb-interplanetary-background.js
+globe_background=not_on_compass
 heavy_runtime_loaded=false
 render_files_touched=false
 instrument_touched=false
@@ -955,8 +1053,4 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      COMPASS_THREE_LENS_INTERPLANETARY_GATE_TNT_v7 · Compass · Flat / Round / Globe.
-    </footer>
-  </div>
-</body>
-</html>
+      COMPASS_TH

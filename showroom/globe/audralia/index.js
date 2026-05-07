@@ -1,5 +1,5 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_ROUTE_V14_PARENT_CHILD_GRANDCHILD_STATUS_BRIDGE_TNT_v1
+// AUDRALIA_ROUTE_V15_ROUTE_STATUS_SOVEREIGNTY_LOCK_TNT_v1
 // Full-file replacement. Route doorway authority only.
 // Purpose:
 // - Import runtime V10 motion-only authority.
@@ -7,10 +7,12 @@
 // - Import parent surface, hex child, and grandchild relief modules for route-facing receipt proof only.
 // - Mount canvas.
 // - Publish complete active chain status.
-// - Stop stale V8/V9/V11/V12 route/runtime status from controlling public route text.
+// - Lock #audralia-route-status under route sovereignty.
+// - Prevent canvas/runtime/surface/child/grandchild late writers from replacing public route text with stale V13/V14/incomplete status.
 // - No GraphicBox. No image generation. No visual-pass claim.
 
-const ROUTE_RECEIPT = "AUDRALIA_ROUTE_V14_PARENT_CHILD_GRANDCHILD_STATUS_BRIDGE_TNT_v1";
+const ROUTE_RECEIPT = "AUDRALIA_ROUTE_V15_ROUTE_STATUS_SOVEREIGNTY_LOCK_TNT_v1";
+const PREVIOUS_ROUTE_RECEIPT = "AUDRALIA_ROUTE_V14_PARENT_CHILD_GRANDCHILD_STATUS_BRIDGE_TNT_v1";
 
 const EXPECTED_RUNTIME_RECEIPT = "AUDRALIA_RUNTIME_MOTION_ONLY_FULL_POTENTIAL_TNT_v10";
 const EXPECTED_CANVAS_RECEIPT = "AUDRALIA_CANVAS_AUTHORITY_RECEIPT";
@@ -18,6 +20,16 @@ const EXPECTED_CANVAS_CONTRACT = "AUDRALIA_CANVAS_PARENT_CONTRACT_CHILD_ACTIVATI
 const EXPECTED_SURFACE_RECEIPT = "AUDRALIA_SURFACE_PARENT_COASTLINE_RIDGE_FEATHER_TNT_v6";
 const EXPECTED_HEX_CHILD_RECEIPT = "AUDRALIA_HEX_SURFACE_CHILD_GRANDCHILD_RELIEF_BIND_TNT_v4";
 const EXPECTED_GRANDCHILD_RELIEF_RECEIPT = "AUDRALIA_GRANDCHILD_RELIEF_FIELD_EXPRESSOR_TNT_v1";
+
+const STALE_ROUTE_RECEIPTS = Object.freeze([
+  "AUDRALIA_ROUTE_V13_RUNTIME_MOTION_ONLY_DYNAMIC_STATUS_BRIDGE_TNT_v1",
+  "AUDRALIA_ROUTE_V14_PARENT_CHILD_GRANDCHILD_STATUS_BRIDGE_TNT_v1",
+  "AUDRALIA_ROUTE_V12_RUNTIME_V9_DYNAMIC_STATUS_AND_SUMMARY_BRIDGE_TNT_v1",
+  "AUDRALIA_ROUTE_V11_HARD_BIND_CANVAS_V11_CALLER_TNT_v1",
+  "AUDRALIA_ROUTE_V10_STATUS_GATE_AND_CANVAS_V9_BRIDGE_TNT_v1",
+  "AUDRALIA_ROUTE_V8_HARD_BIND_CANVAS_V9_CALLER_TNT_v1",
+  "AUDRALIA_ROUTE_V7_HARD_BIND_CANVAS_CALLER_TNT_v1"
+]);
 
 const RUNTIME_PATH = "/assets/audralia/audralia.runtime.js";
 const CANVAS_PATH = "/assets/audralia/audralia.canvas.js";
@@ -29,8 +41,9 @@ const ROUTE_STATE = {
   ok: false,
   loaded: false,
   receipt: ROUTE_RECEIPT,
+  previousReceipt: PREVIOUS_ROUTE_RECEIPT,
   route: "/showroom/globe/audralia/",
-  role: "audralia-doorway-parent-child-grandchild-status-bridge",
+  role: "audralia-doorway-route-status-sovereignty-lock",
 
   runtimeReceipt: "",
   runtimeSummaryReceipt: "",
@@ -61,12 +74,21 @@ const ROUTE_STATE = {
   mountPresent: false,
   statusNodePresent: false,
 
+  routeStatusSovereignty: true,
+  routeStatusObserverActive: false,
+  routeStatusRestores: 0,
+  routeStatusLastUnauthorizedText: "",
+
   graphicBox: false,
   imageGeneration: false,
   visualPassClaimed: false,
 
   errors: []
 };
+
+let routeStatusObserver = null;
+let routeOwnedWriteActive = false;
+let latestRouteOwnedStatusText = "";
 
 function $(selector) {
   return document.querySelector(selector);
@@ -365,6 +387,11 @@ function publishRouteState(extra = {}) {
 
   if (document.documentElement) {
     document.documentElement.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
+    document.documentElement.dataset.audraliaRoutePreviousReceipt = PREVIOUS_ROUTE_RECEIPT;
+    document.documentElement.dataset.audraliaRouteStatusSovereignty = "true";
+    document.documentElement.dataset.audraliaRouteStatusObserverActive = String(Boolean(ROUTE_STATE.routeStatusObserverActive));
+    document.documentElement.dataset.audraliaRouteStatusRestores = String(ROUTE_STATE.routeStatusRestores);
+
     document.documentElement.dataset.audraliaRouteRuntimeReceipt = ROUTE_STATE.runtimeReceipt || EXPECTED_RUNTIME_RECEIPT;
     document.documentElement.dataset.audraliaRouteRuntimeSovereignty = "motion-only";
     document.documentElement.dataset.audraliaRouteRuntimeVisualSovereignty = "false";
@@ -396,15 +423,41 @@ function publishRouteState(extra = {}) {
   return ROUTE_STATE;
 }
 
-function setStatusText(message) {
-  const node = resolveStatusNode();
-  ROUTE_STATE.statusNodePresent = Boolean(node);
+function buildStatusText() {
+  return [
+    "Audralia adopted canvas authority loaded.",
+    `Route ${ROUTE_RECEIPT}`,
+    `Previous route ${PREVIOUS_ROUTE_RECEIPT}`,
+    `Canvas ${ROUTE_STATE.canvasContract || EXPECTED_CANVAS_CONTRACT}`,
+    `Canvas receipt ${ROUTE_STATE.canvasReceipt || EXPECTED_CANVAS_RECEIPT}`,
+    `Surface ${ROUTE_STATE.surfaceReceipt || EXPECTED_SURFACE_RECEIPT}`,
+    `Hex child ${ROUTE_STATE.hexChildReceipt || EXPECTED_HEX_CHILD_RECEIPT}`,
+    `Grandchild relief ${ROUTE_STATE.grandchildReliefReceipt || EXPECTED_GRANDCHILD_RELIEF_RECEIPT}`,
+    `Runtime ${ROUTE_STATE.runtimeReceipt || EXPECTED_RUNTIME_RECEIPT}`,
+    `Runtime summary ${ROUTE_STATE.runtimeSummaryReceipt || ROUTE_STATE.runtimeReceipt || EXPECTED_RUNTIME_RECEIPT}`,
+    "Runtime sovereignty motion-only",
+    "Runtime visual sovereignty false",
+    `parentStandard ${Boolean(ROUTE_STATE.parentStandard)}`,
+    `ratioLocked ${Boolean(ROUTE_STATE.ratioLocked)}`,
+    `childActivatedByParentContract ${Boolean(ROUTE_STATE.childActivatedByParentContract)}`,
+    `grandchildReliefActivated ${Boolean(ROUTE_STATE.grandchildReliefActivated)}`,
+    "Route status sovereignty true",
+    `Route status restores ${ROUTE_STATE.routeStatusRestores}`,
+    "Retired route/runtime visual-compositor receipts are non-controlling.",
+    "GraphicBox false",
+    "Image generation false",
+    "Visual pass claimed false"
+  ].join("\n");
+}
 
+function decorateStatusNode(node) {
   if (!node) return;
 
-  node.textContent = message;
   node.setAttribute("data-audralia-route-loaded", "true");
   node.setAttribute("data-audralia-route-receipt", ROUTE_RECEIPT);
+  node.setAttribute("data-audralia-route-previous-receipt", PREVIOUS_ROUTE_RECEIPT);
+  node.setAttribute("data-audralia-route-status-sovereignty", "true");
+  node.setAttribute("data-audralia-route-status-restores", String(ROUTE_STATE.routeStatusRestores));
 
   node.setAttribute("data-audralia-runtime-receipt", ROUTE_STATE.runtimeReceipt || EXPECTED_RUNTIME_RECEIPT);
   node.setAttribute("data-audralia-runtime-sovereignty", "motion-only");
@@ -421,30 +474,106 @@ function setStatusText(message) {
   node.setAttribute("data-audralia-ratio-locked", String(Boolean(ROUTE_STATE.ratioLocked)));
   node.setAttribute("data-audralia-child-activated-by-parent-contract", String(Boolean(ROUTE_STATE.childActivatedByParentContract)));
   node.setAttribute("data-audralia-grandchild-relief-activated", String(Boolean(ROUTE_STATE.grandchildReliefActivated)));
+
+  node.setAttribute("data-graphic-box", "false");
+  node.setAttribute("data-image-generation", "false");
+  node.setAttribute("data-visual-pass-claimed", "false");
 }
 
-function buildStatusText() {
-  return [
-    "Audralia adopted canvas authority loaded.",
-    `Route ${ROUTE_RECEIPT}`,
-    `Canvas ${ROUTE_STATE.canvasContract || EXPECTED_CANVAS_CONTRACT}`,
-    `Canvas receipt ${ROUTE_STATE.canvasReceipt || EXPECTED_CANVAS_RECEIPT}`,
-    `Surface ${ROUTE_STATE.surfaceReceipt || EXPECTED_SURFACE_RECEIPT}`,
-    `Hex child ${ROUTE_STATE.hexChildReceipt || EXPECTED_HEX_CHILD_RECEIPT}`,
-    `Grandchild relief ${ROUTE_STATE.grandchildReliefReceipt || EXPECTED_GRANDCHILD_RELIEF_RECEIPT}`,
-    `Runtime ${ROUTE_STATE.runtimeReceipt || EXPECTED_RUNTIME_RECEIPT}`,
-    `Runtime summary ${ROUTE_STATE.runtimeSummaryReceipt || ROUTE_STATE.runtimeReceipt || EXPECTED_RUNTIME_RECEIPT}`,
-    "Runtime sovereignty motion-only",
-    "Runtime visual sovereignty false",
-    `parentStandard ${Boolean(ROUTE_STATE.parentStandard)}`,
-    `ratioLocked ${Boolean(ROUTE_STATE.ratioLocked)}`,
-    `childActivatedByParentContract ${Boolean(ROUTE_STATE.childActivatedByParentContract)}`,
-    `grandchildReliefActivated ${Boolean(ROUTE_STATE.grandchildReliefActivated)}`,
-    "Retired runtime visual-compositor receipts are non-controlling.",
-    "GraphicBox false",
-    "Image generation false",
-    "Visual pass claimed false"
-  ].join("\n");
+function writeRouteOwnedStatusText(reason = "route-owned-write") {
+  const node = resolveStatusNode();
+  ROUTE_STATE.statusNodePresent = Boolean(node);
+
+  if (!node) return;
+
+  publishRouteState();
+
+  const message = buildStatusText();
+  latestRouteOwnedStatusText = message;
+
+  routeOwnedWriteActive = true;
+
+  node.textContent = message;
+  decorateStatusNode(node);
+  node.setAttribute("data-audralia-route-status-write-reason", reason);
+
+  routeOwnedWriteActive = false;
+}
+
+function isUnauthorizedRouteStatusText(text) {
+  const value = String(text || "");
+
+  if (!value.trim()) return true;
+
+  if (!value.includes(ROUTE_RECEIPT)) return true;
+  if (!value.includes(EXPECTED_CANVAS_CONTRACT)) return true;
+  if (!value.includes(EXPECTED_SURFACE_RECEIPT)) return true;
+  if (!value.includes(EXPECTED_HEX_CHILD_RECEIPT)) return true;
+  if (!value.includes(EXPECTED_GRANDCHILD_RELIEF_RECEIPT)) return true;
+  if (!value.includes(EXPECTED_RUNTIME_RECEIPT)) return true;
+  if (!value.includes("Route status sovereignty true")) return true;
+
+  for (const stale of STALE_ROUTE_RECEIPTS) {
+    if (stale !== PREVIOUS_ROUTE_RECEIPT && value.includes(stale)) return true;
+  }
+
+  if (value.includes("AUDRALIA_ROUTE_V13_RUNTIME_MOTION_ONLY_DYNAMIC_STATUS_BRIDGE_TNT_v1")) return true;
+  if (value.includes("AUDRALIA_RUNTIME_LAND_WATER_NORMALIZATION_TNT_v8")) return true;
+  if (value.includes("AUDRALIA_RUNTIME_ORGANIC_LAND_WATER_COMPOSITOR_TNT_v9")) return true;
+
+  return false;
+}
+
+function enforceRouteStatusSovereignty(reason = "sovereignty-enforce") {
+  const node = resolveStatusNode();
+  ROUTE_STATE.statusNodePresent = Boolean(node);
+
+  if (!node) return;
+
+  const currentText = node.textContent || "";
+
+  if (!isUnauthorizedRouteStatusText(currentText)) {
+    decorateStatusNode(node);
+    return;
+  }
+
+  ROUTE_STATE.routeStatusRestores += 1;
+  ROUTE_STATE.routeStatusLastUnauthorizedText = currentText.slice(0, 1000);
+
+  writeRouteOwnedStatusText(reason);
+}
+
+function installRouteStatusSovereigntyLock() {
+  const node = resolveStatusNode();
+
+  if (!node) {
+    ROUTE_STATE.statusNodePresent = false;
+    return;
+  }
+
+  if (routeStatusObserver) {
+    routeStatusObserver.disconnect();
+    routeStatusObserver = null;
+  }
+
+  routeStatusObserver = new MutationObserver(() => {
+    if (routeOwnedWriteActive) return;
+
+    window.queueMicrotask(() => {
+      if (routeOwnedWriteActive) return;
+      enforceRouteStatusSovereignty("mutation-observer-restore");
+    });
+  });
+
+  routeStatusObserver.observe(node, {
+    childList: true,
+    characterData: true,
+    subtree: true
+  });
+
+  ROUTE_STATE.routeStatusObserverActive = true;
+  publishRouteState();
+  decorateStatusNode(node);
 }
 
 function removeStalePublicProofText() {
@@ -516,6 +645,8 @@ function mountCanvas(canvasModule, runtimeInfo, chainInfo) {
   try {
     controller = mountFn(mount, {
       routeReceipt: ROUTE_RECEIPT,
+      previousRouteReceipt: PREVIOUS_ROUTE_RECEIPT,
+      routeStatusSovereignty: true,
 
       runtimeReceipt: runtimeInfo.receipt,
       runtimeSovereignty: "motion-only",
@@ -608,25 +739,42 @@ async function importModule(path, label, query = "") {
   }
 }
 
-function refreshStatusText() {
+function refreshRouteStatus(reason = "refresh") {
   publishRouteState();
-  setStatusText(buildStatusText());
+  writeRouteOwnedStatusText(reason);
+  enforceRouteStatusSovereignty(`${reason}-enforce`);
 }
 
-function scheduleReceiptRefreshes() {
-  const delays = [80, 180, 320, 600, 1000, 1600, 2400, 3600];
+function scheduleRouteStatusRefreshes() {
+  const delays = [
+    0,
+    40,
+    80,
+    140,
+    220,
+    320,
+    480,
+    700,
+    1000,
+    1400,
+    1900,
+    2600,
+    3600,
+    5200,
+    7600
+  ];
 
   for (const delay of delays) {
-    window.setTimeout(refreshStatusText, delay);
+    window.setTimeout(() => refreshRouteStatus(`scheduled-refresh-${delay}`), delay);
   }
 
   let frames = 0;
 
   function frameRefresh() {
     frames += 1;
-    refreshStatusText();
+    refreshRouteStatus(`animation-frame-refresh-${frames}`);
 
-    if (frames < 24) {
+    if (frames < 36) {
       window.requestAnimationFrame(frameRefresh);
     }
   }
@@ -648,7 +796,7 @@ function attachStatusListeners() {
     );
     ROUTE_STATE.canvasMounted = true;
 
-    refreshStatusText();
+    refreshRouteStatus("canvas-status-event");
   });
 
   window.addEventListener("audralia:runtime-status", (event) => {
@@ -665,7 +813,7 @@ function attachStatusListeners() {
     ROUTE_STATE.runtimeSovereignty = "motion-only";
     ROUTE_STATE.runtimeVisualSovereignty = false;
 
-    refreshStatusText();
+    refreshRouteStatus("runtime-status-event");
   });
 
   window.addEventListener("audralia:surface-status", (event) => {
@@ -676,12 +824,15 @@ function attachStatusListeners() {
     ROUTE_STATE.parentStandard = boolFrom(detail.parentStandard, ROUTE_STATE.parentStandard);
     ROUTE_STATE.ratioLocked = boolFrom(detail.ratioLocked, ROUTE_STATE.ratioLocked);
 
-    refreshStatusText();
+    refreshRouteStatus("surface-status-event");
   });
 }
 
 async function boot() {
   removeStalePublicProofText();
+
+  installRouteStatusSovereigntyLock();
+  writeRouteOwnedStatusText("pre-import-sovereignty-claim");
 
   let runtimeModule = null;
   let canvasModule = null;
@@ -764,6 +915,7 @@ async function boot() {
 
   ROUTE_STATE.parentStandard = true;
   ROUTE_STATE.ratioLocked = true;
+
   ROUTE_STATE.childActivatedByParentContract =
     ROUTE_STATE.childActivatedByParentContract ||
     (
@@ -786,8 +938,9 @@ async function boot() {
     grandchildReliefReceipt: reliefInfo.receipt
   });
 
-  setStatusText(buildStatusText());
-  scheduleReceiptRefreshes();
+  installRouteStatusSovereigntyLock();
+  refreshRouteStatus("post-boot-route-sovereignty-lock");
+  scheduleRouteStatusRefreshes();
 
   return ROUTE_STATE;
 }
@@ -800,6 +953,7 @@ if (document.readyState === "loading") {
 
 export {
   ROUTE_RECEIPT,
+  PREVIOUS_ROUTE_RECEIPT,
   EXPECTED_RUNTIME_RECEIPT,
   EXPECTED_CANVAS_RECEIPT,
   EXPECTED_CANVAS_CONTRACT,
@@ -807,7 +961,8 @@ export {
   EXPECTED_HEX_CHILD_RECEIPT,
   EXPECTED_GRANDCHILD_RELIEF_RECEIPT,
   ROUTE_STATE,
-  boot
+  boot,
+  enforceRouteStatusSovereignty
 };
 
 export default boot;

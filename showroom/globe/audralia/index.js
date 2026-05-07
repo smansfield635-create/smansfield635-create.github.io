@@ -1,16 +1,16 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_ROUTE_V12_RUNTIME_V9_DYNAMIC_STATUS_AND_SUMMARY_BRIDGE_TNT_v1
+// AUDRALIA_ROUTE_V13_RUNTIME_MOTION_ONLY_DYNAMIC_STATUS_BRIDGE_TNT_v1
 // Full-file replacement. Route doorway authority only.
 // Purpose:
-// - Import runtime V9 dynamically.
-// - Import canvas V11 without rewriting canvas.
-// - Mount the existing canvas authority.
-// - Stop route-facing stale V8 runtime status.
-// - Expose route status object for Gauges.
+// - Import runtime V10 motion-only authority.
+// - Import existing canvas authority without rewriting canvas.
+// - Mount canvas.
+// - Stop stale V8/V9 runtime status from controlling public route text.
+// - Route status reads runtime receipt dynamically.
 // - No GraphicBox. No image generation. No visual-pass claim.
 
-const ROUTE_RECEIPT = "AUDRALIA_ROUTE_V12_RUNTIME_V9_DYNAMIC_STATUS_AND_SUMMARY_BRIDGE_TNT_v1";
-const EXPECTED_RUNTIME_RECEIPT = "AUDRALIA_RUNTIME_ORGANIC_LAND_WATER_COMPOSITOR_TNT_v9";
+const ROUTE_RECEIPT = "AUDRALIA_ROUTE_V13_RUNTIME_MOTION_ONLY_DYNAMIC_STATUS_BRIDGE_TNT_v1";
+const EXPECTED_RUNTIME_RECEIPT = "AUDRALIA_RUNTIME_MOTION_ONLY_FULL_POTENTIAL_TNT_v10";
 const EXPECTED_CANVAS_RECEIPT = "AUDRALIA_CANVAS_AUTHORITY_RECEIPT";
 const EXPECTED_CANVAS_CONTRACT = "AUDRALIA_CANVAS_SPHERICAL_TEXTURE_UNWRAP_AND_POLAR_BLEND_TNT_v11";
 
@@ -22,20 +22,27 @@ const ROUTE_STATE = {
   loaded: false,
   receipt: ROUTE_RECEIPT,
   route: "/showroom/globe/audralia/",
-  role: "audralia-doorway-runtime-summary-dynamic-status-bridge",
+  role: "audralia-doorway-runtime-motion-only-dynamic-status-bridge",
+
   runtimeReceipt: "",
   runtimeSummaryReceipt: "",
-  runtimeSummaryVisible: false,
+  runtimeSovereignty: "motion-only",
+  runtimeVisualSovereignty: false,
   runtimeStatusVisible: false,
+  runtimeSummaryVisible: false,
+
   canvasReceipt: EXPECTED_CANVAS_RECEIPT,
-  canvasContract: "",
+  canvasContract: EXPECTED_CANVAS_CONTRACT,
   canvasMounted: false,
   canvasStatusVisible: false,
+
   mountPresent: false,
   statusNodePresent: false,
+
   graphicBox: false,
   imageGeneration: false,
   visualPassClaimed: false,
+
   errors: []
 };
 
@@ -85,9 +92,11 @@ function safeCall(fn) {
   }
 }
 
-function readRuntimeReceipt(runtimeModule) {
+function readRuntime(runtimeModule) {
   const status = safeCall(() => runtimeModule.getStatus && runtimeModule.getStatus());
-  const summary = safeCall(() => runtimeModule.getSummary && runtimeModule.getSummary()) ||
+
+  const summary =
+    safeCall(() => runtimeModule.getSummary && runtimeModule.getSummary()) ||
     safeCall(() => runtimeModule.getRuntimeSummary && runtimeModule.getRuntimeSummary());
 
   const windowStatus = window.__AUDRALIA_RUNTIME_STATUS__ || window.AUDRALIA_RUNTIME_STATUS || {};
@@ -111,6 +120,12 @@ function readRuntimeReceipt(runtimeModule) {
 
   ROUTE_STATE.runtimeReceipt = receipt;
   ROUTE_STATE.runtimeSummaryReceipt = summaryReceipt;
+  ROUTE_STATE.runtimeSovereignty = firstString(
+    status && status.runtimeSovereignty,
+    summary && summary.runtimeSovereignty,
+    "motion-only"
+  );
+  ROUTE_STATE.runtimeVisualSovereignty = false;
   ROUTE_STATE.runtimeStatusVisible = Boolean(status && status.receipt) || Boolean(windowStatus && windowStatus.receipt);
   ROUTE_STATE.runtimeSummaryVisible = Boolean(summary && summary.receipt) || Boolean(windowSummary && windowSummary.receipt);
 
@@ -119,25 +134,24 @@ function readRuntimeReceipt(runtimeModule) {
     summaryReceipt,
     status,
     summary,
-    windowStatus,
-    windowSummary
+    module: runtimeModule
   };
 }
 
-function readCanvasReceipt(canvasModule) {
+function readCanvas(canvasModule) {
   const status =
     safeCall(() => canvasModule.getAudraliaCanvasStatus && canvasModule.getAudraliaCanvasStatus()) ||
     window.__AUDRALIA_CANVAS_STATUS__ ||
     window.__AUDRALIA_ADOPTED_CANVAS_AUTHORITY__ ||
     {};
 
-  const receipt = firstString(
+  ROUTE_STATE.canvasReceipt = firstString(
     status.receipt,
     canvasModule.RECEIPT,
     EXPECTED_CANVAS_RECEIPT
   );
 
-  const contract = firstString(
+  ROUTE_STATE.canvasContract = firstString(
     status.contract,
     status.revision,
     canvasModule.CONTRACT,
@@ -145,13 +159,11 @@ function readCanvasReceipt(canvasModule) {
     EXPECTED_CANVAS_CONTRACT
   );
 
-  ROUTE_STATE.canvasReceipt = receipt;
-  ROUTE_STATE.canvasContract = contract;
   ROUTE_STATE.canvasStatusVisible = Boolean(status && status.receipt);
 
   return {
-    receipt,
-    contract,
+    receipt: ROUTE_STATE.canvasReceipt,
+    contract: ROUTE_STATE.canvasContract,
     status
   };
 }
@@ -159,7 +171,12 @@ function readCanvasReceipt(canvasModule) {
 function publishRouteState(extra = {}) {
   Object.assign(ROUTE_STATE, extra);
 
-  ROUTE_STATE.ok = Boolean(ROUTE_STATE.mountPresent && ROUTE_STATE.canvasMounted && ROUTE_STATE.runtimeReceipt);
+  ROUTE_STATE.ok = Boolean(
+    ROUTE_STATE.mountPresent &&
+    ROUTE_STATE.canvasMounted &&
+    ROUTE_STATE.runtimeReceipt
+  );
+
   ROUTE_STATE.loaded = ROUTE_STATE.ok;
 
   window.__AUDRALIA_ROUTE_STATUS__ = ROUTE_STATE;
@@ -170,6 +187,8 @@ function publishRouteState(extra = {}) {
   if (document.documentElement) {
     document.documentElement.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
     document.documentElement.dataset.audraliaRouteRuntimeReceipt = ROUTE_STATE.runtimeReceipt || EXPECTED_RUNTIME_RECEIPT;
+    document.documentElement.dataset.audraliaRouteRuntimeSovereignty = "motion-only";
+    document.documentElement.dataset.audraliaRouteRuntimeVisualSovereignty = "false";
     document.documentElement.dataset.audraliaRouteRuntimeSummaryVisible = String(Boolean(ROUTE_STATE.runtimeSummaryVisible));
     document.documentElement.dataset.audraliaRouteCanvasReceipt = ROUTE_STATE.canvasReceipt || EXPECTED_CANVAS_RECEIPT;
     document.documentElement.dataset.audraliaRouteCanvasMounted = String(Boolean(ROUTE_STATE.canvasMounted));
@@ -180,9 +199,7 @@ function publishRouteState(extra = {}) {
 
   try {
     window.dispatchEvent(new CustomEvent("audralia:route-status", { detail: ROUTE_STATE }));
-  } catch (_) {
-    /* no-op */
-  }
+  } catch (_) {}
 
   return ROUTE_STATE;
 }
@@ -197,23 +214,22 @@ function setStatusText(message) {
   node.setAttribute("data-audralia-route-loaded", "true");
   node.setAttribute("data-audralia-route-receipt", ROUTE_RECEIPT);
   node.setAttribute("data-audralia-runtime-receipt", ROUTE_STATE.runtimeReceipt || EXPECTED_RUNTIME_RECEIPT);
+  node.setAttribute("data-audralia-runtime-sovereignty", "motion-only");
+  node.setAttribute("data-audralia-runtime-visual-sovereignty", "false");
   node.setAttribute("data-audralia-canvas-receipt", ROUTE_STATE.canvasReceipt || EXPECTED_CANVAS_RECEIPT);
 }
 
 function buildStatusText() {
-  const runtimeReceipt = ROUTE_STATE.runtimeReceipt || EXPECTED_RUNTIME_RECEIPT;
-  const runtimeSummaryReceipt = ROUTE_STATE.runtimeSummaryReceipt || runtimeReceipt;
-  const canvasContract = ROUTE_STATE.canvasContract || EXPECTED_CANVAS_CONTRACT;
-  const canvasReceipt = ROUTE_STATE.canvasReceipt || EXPECTED_CANVAS_RECEIPT;
-
   return [
     "Audralia adopted canvas authority loaded.",
     `Route ${ROUTE_RECEIPT}`,
-    `Canvas ${canvasContract}`,
-    `Canvas receipt ${canvasReceipt}`,
-    `Runtime ${runtimeReceipt}`,
-    `Runtime summary ${runtimeSummaryReceipt}`,
-    "Retired canvas receipts are non-controlling.",
+    `Canvas ${ROUTE_STATE.canvasContract || EXPECTED_CANVAS_CONTRACT}`,
+    `Canvas receipt ${ROUTE_STATE.canvasReceipt || EXPECTED_CANVAS_RECEIPT}`,
+    `Runtime ${ROUTE_STATE.runtimeReceipt || EXPECTED_RUNTIME_RECEIPT}`,
+    "Runtime sovereignty motion-only",
+    "Runtime visual sovereignty false",
+    `Runtime summary ${ROUTE_STATE.runtimeSummaryReceipt || ROUTE_STATE.runtimeReceipt || EXPECTED_RUNTIME_RECEIPT}`,
+    "Retired runtime visual-compositor receipts are non-controlling.",
     "GraphicBox false · Image generation false · Visual pass claimed false"
   ].join(" · ");
 }
@@ -221,8 +237,9 @@ function buildStatusText() {
 function removeStalePublicProofText() {
   const staleSnippets = [
     "AUDRALIA_RUNTIME_LAND_WATER_NORMALIZATION_TNT_v8",
-    "AUDRALIA_ROUTE_V7_HARD_BIND_CANVAS_CALLER_TNT_v1",
-    "AUDRALIA_ROUTE_V8_HARD_BIND_CANVAS_V9_CALLER_TNT_v1"
+    "AUDRALIA_RUNTIME_ORGANIC_LAND_WATER_COMPOSITOR_TNT_v9",
+    "AUDRALIA_ROUTE_V11_HARD_BIND_CANVAS_V11_CALLER_TNT_v1",
+    "AUDRALIA_ROUTE_V12_RUNTIME_V9_DYNAMIC_STATUS_AND_SUMMARY_BRIDGE_TNT_v1"
   ];
 
   const nodes = document.querySelectorAll("p, div, span, li, aside");
@@ -286,6 +303,10 @@ function mountCanvas(canvasModule, runtimeInfo) {
     controller = mountFn(mount, {
       routeReceipt: ROUTE_RECEIPT,
       runtimeReceipt: runtimeInfo.receipt,
+      runtimeSovereignty: "motion-only",
+      runtimeVisualSovereignty: false,
+      runtime: runtimeInfo.module || null,
+      runtimeMotion: runtimeInfo.module || null,
       runtimeSummaryReceipt: runtimeInfo.summaryReceipt,
       canvasReceipt: ROUTE_STATE.canvasReceipt || EXPECTED_CANVAS_RECEIPT,
       graphicBox: false,
@@ -302,6 +323,55 @@ function mountCanvas(canvasModule, runtimeInfo) {
   return controller;
 }
 
+function attachRuntimeInteraction(runtimeModule) {
+  if (!runtimeModule) return;
+
+  safeCall(() => runtimeModule.start && runtimeModule.start());
+
+  const mount = resolveMount();
+  if (!mount) return;
+
+  let lastX = 0;
+  let lastY = 0;
+  let active = false;
+
+  mount.addEventListener(
+    "pointerdown",
+    (event) => {
+      active = true;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      safeCall(() => runtimeModule.setPointerActive && runtimeModule.setPointerActive(true));
+    },
+    { passive: true }
+  );
+
+  mount.addEventListener(
+    "pointermove",
+    (event) => {
+      if (!active) return;
+
+      const dx = event.clientX - lastX;
+      const dy = event.clientY - lastY;
+
+      lastX = event.clientX;
+      lastY = event.clientY;
+
+      safeCall(() => runtimeModule.applyDragImpulse && runtimeModule.applyDragImpulse(dx, dy, 1));
+    },
+    { passive: true }
+  );
+
+  function endPointer() {
+    active = false;
+    safeCall(() => runtimeModule.setPointerActive && runtimeModule.setPointerActive(false));
+  }
+
+  mount.addEventListener("pointerup", endPointer, { passive: true });
+  mount.addEventListener("pointercancel", endPointer, { passive: true });
+  mount.addEventListener("pointerleave", endPointer, { passive: true });
+}
+
 async function boot() {
   removeStalePublicProofText();
 
@@ -309,34 +379,43 @@ async function boot() {
   let canvasModule = null;
 
   try {
-    runtimeModule = await import(`${RUNTIME_PATH}?route=${encodeURIComponent(ROUTE_RECEIPT)}`);
+    runtimeModule = await import(
+      `${RUNTIME_PATH}?route=${encodeURIComponent(ROUTE_RECEIPT)}&motion=${encodeURIComponent(EXPECTED_RUNTIME_RECEIPT)}`
+    );
   } catch (error) {
     ROUTE_STATE.errors.push(`runtime import failed: ${String(error?.message || error || "unknown")}`);
   }
 
   const runtimeInfo = runtimeModule
-    ? readRuntimeReceipt(runtimeModule)
+    ? readRuntime(runtimeModule)
     : {
         receipt: EXPECTED_RUNTIME_RECEIPT,
         summaryReceipt: EXPECTED_RUNTIME_RECEIPT,
+        module: null,
         status: null,
         summary: null
       };
 
   try {
-    canvasModule = await import(`${CANVAS_PATH}?route=${encodeURIComponent(ROUTE_RECEIPT)}&runtime=${encodeURIComponent(runtimeInfo.receipt)}`);
+    canvasModule = await import(
+      `${CANVAS_PATH}?route=${encodeURIComponent(ROUTE_RECEIPT)}&runtime=${encodeURIComponent(runtimeInfo.receipt)}`
+    );
   } catch (error) {
     ROUTE_STATE.errors.push(`canvas import failed: ${String(error?.message || error || "unknown")}`);
   }
 
   if (canvasModule) {
-    readCanvasReceipt(canvasModule);
+    readCanvas(canvasModule);
     mountCanvas(canvasModule, runtimeInfo);
   }
 
+  attachRuntimeInteraction(runtimeModule);
+
   publishRouteState({
     runtimeReceipt: runtimeInfo.receipt,
-    runtimeSummaryReceipt: runtimeInfo.summaryReceipt
+    runtimeSummaryReceipt: runtimeInfo.summaryReceipt,
+    runtimeSovereignty: "motion-only",
+    runtimeVisualSovereignty: false
   });
 
   setStatusText(buildStatusText());
@@ -346,7 +425,12 @@ async function boot() {
 
     ROUTE_STATE.canvasStatusVisible = true;
     ROUTE_STATE.canvasReceipt = firstString(detail.receipt, ROUTE_STATE.canvasReceipt, EXPECTED_CANVAS_RECEIPT);
-    ROUTE_STATE.canvasContract = firstString(detail.contract, detail.revision, ROUTE_STATE.canvasContract, EXPECTED_CANVAS_CONTRACT);
+    ROUTE_STATE.canvasContract = firstString(
+      detail.contract,
+      detail.revision,
+      ROUTE_STATE.canvasContract,
+      EXPECTED_CANVAS_CONTRACT
+    );
     ROUTE_STATE.canvasMounted = true;
 
     publishRouteState();
@@ -364,6 +448,8 @@ async function boot() {
       ROUTE_STATE.runtimeReceipt
     );
     ROUTE_STATE.runtimeSummaryVisible = Boolean(detail.summary && detail.summary.receipt);
+    ROUTE_STATE.runtimeSovereignty = "motion-only";
+    ROUTE_STATE.runtimeVisualSovereignty = false;
 
     publishRouteState();
     setStatusText(buildStatusText());

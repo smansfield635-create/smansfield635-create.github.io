@@ -4,13 +4,17 @@
   lang="en"
   data-page="laws-16-point-rule-chamber"
   data-route="/laws/"
-  data-contract="LAWS_16_POINT_RULE_CHAMBER_ANIMATED_DIAMONDS_TNT_v2"
+  data-contract="LAWS_PURPLE_RULE_CHAMBER_PAIR_RENEWAL_TNT_v1"
+  data-previous-contract="LAWS_16_POINT_RULE_CHAMBER_ANIMATED_DIAMONDS_TNT_v2"
+  data-script-contract="LAWS_PURPLE_RULE_CHAMBER_PAIR_RUNTIME_TNT_v1"
   data-role="rule-chamber"
   data-message="proof-outranks-confidence"
   data-field-system="16-point-law-chamber"
   data-foreground-core="laws-entry-proof-return"
+  data-purple-theme="active"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
+  data-graphic-box="false"
   data-streaming="false"
   data-visual-pass-claimed="false"
 >
@@ -25,15 +29,23 @@
 
   <style>
     :root {
-      --panel: rgba(9, 14, 26, 0.90);
-      --line: rgba(255,255,255,0.15);
-      --text: #f8f1dd;
-      --muted: rgba(242,246,255,0.74);
-      --faint: rgba(242,246,255,0.48);
+      color-scheme: dark;
+      --bg: #04010d;
+      --panel: rgba(18, 8, 38, 0.91);
+      --panel2: rgba(32, 13, 63, 0.74);
+      --line: rgba(191, 154, 255, 0.22);
+      --line-gold: rgba(242, 199, 111, 0.26);
+      --text: #fff4f9;
+      --muted: rgba(238, 229, 255, 0.78);
+      --faint: rgba(238, 229, 255, 0.50);
       --gold: #f2c76f;
-      --blue: #78d8ff;
-      --green: #a5efcc;
-      --red: #ff9c9c;
+      --gold2: #fff0a3;
+      --violet: #b58cff;
+      --purple: #8f65ff;
+      --purple2: #5e35d6;
+      --plum: #2d0f58;
+      --magenta: #d083ff;
+      --blue: #8dd8ff;
       --stage: min(100%, 1180px);
     }
 
@@ -44,16 +56,24 @@
       width: 100%;
       margin: 0;
       overflow-x: hidden;
-      background:
-        radial-gradient(circle at 50% 8%, rgba(242,199,111,0.17), transparent 28rem),
-        radial-gradient(circle at 50% 42%, rgba(120,216,255,0.13), transparent 34rem),
-        radial-gradient(circle at 50% 86%, rgba(165,239,204,0.08), transparent 34rem),
-        linear-gradient(180deg, #060916, #03050d 74%, #02040a);
+      background: var(--bg);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body { min-height: 100svh; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100svh;
+      background:
+        radial-gradient(circle at 50% -8%, rgba(208, 131, 255, 0.24), transparent 31rem),
+        radial-gradient(circle at 10% 18%, rgba(143, 101, 255, 0.30), transparent 30rem),
+        radial-gradient(circle at 90% 30%, rgba(93, 49, 211, 0.24), transparent 32rem),
+        radial-gradient(circle at 50% 82%, rgba(242, 199, 111, 0.10), transparent 36rem),
+        linear-gradient(180deg, #110421, #070214 72%, #020106);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
 
     body::before {
       content: "";
@@ -62,13 +82,36 @@
       z-index: 0;
       pointer-events: none;
       background-image:
-        radial-gradient(circle at 12% 20%, rgba(255,255,255,0.18) 0, rgba(255,255,255,0) 1.2px),
-        radial-gradient(circle at 72% 16%, rgba(255,255,255,0.13) 0, rgba(255,255,255,0) 1.1px),
-        radial-gradient(circle at 84% 58%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0) 1px),
-        radial-gradient(circle at 24% 72%, rgba(255,255,255,0.12) 0, rgba(255,255,255,0) 1.2px);
-      background-size: 180px 220px, 240px 260px, 210px 250px, 260px 300px;
-      opacity: 0.38;
+        radial-gradient(circle, rgba(255,255,255,0.20) 0 1px, transparent 1.4px),
+        linear-gradient(rgba(181,140,255,0.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(181,140,255,0.055) 1px, transparent 1px);
+      background-size: 210px 250px, 54px 54px, 54px 54px;
+      opacity: 0.30;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.94), rgba(0,0,0,0.58) 66%, rgba(0,0,0,0.22));
     }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: -20%;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        conic-gradient(from 45deg at 50% 50%,
+          transparent 0deg,
+          rgba(181,140,255,0.045) 48deg,
+          transparent 96deg,
+          rgba(242,199,111,0.035) 144deg,
+          transparent 192deg,
+          rgba(141,216,255,0.030) 240deg,
+          transparent 288deg,
+          rgba(208,131,255,0.045) 336deg,
+          transparent 360deg);
+      opacity: 0.50;
+      animation: lawFieldTurn 54s linear infinite;
+    }
+
+    @keyframes lawFieldTurn { to { transform: rotate(360deg); } }
 
     a { color: inherit; text-decoration: none; }
 
@@ -79,9 +122,9 @@
       z-index: 20;
       padding: 0.75rem 1rem;
       border-radius: 999px;
-      background: var(--gold);
-      color: #090b10;
-      font-weight: 900;
+      background: linear-gradient(135deg, var(--gold2), var(--gold));
+      color: #09020f;
+      font-weight: 950;
     }
 
     .skip-link:focus { top: 1rem; }
@@ -104,20 +147,51 @@
     }
 
     .brand {
-      display: inline-flex;
-      flex-direction: column;
-      gap: 0.08rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 0.85rem;
       font-weight: 950;
       line-height: 1.05;
-      letter-spacing: 0.04em;
     }
 
-    .brand span:first-child {
-      font-size: clamp(0.95rem, 2.8vw, 1.08rem);
+    .brand-mark {
+      width: 3.65rem;
+      height: 3.65rem;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(242,199,111,0.42);
+      border-radius: 1rem;
+      transform: rotate(45deg);
+      background:
+        radial-gradient(circle at 42% 22%, rgba(255,255,255,0.28), transparent 42%),
+        radial-gradient(circle at 70% 76%, rgba(208,131,255,0.42), transparent 58%),
+        linear-gradient(145deg, rgba(72,35,145,0.96), rgba(10,3,28,0.98));
+      box-shadow:
+        0 0 2.2rem rgba(181,140,255,0.32),
+        0 1rem 2.4rem rgba(0,0,0,0.46),
+        inset 0 1px 0 rgba(255,255,255,0.18);
+    }
+
+    .brand-mark span {
+      transform: rotate(-45deg);
+      color: rgba(255,244,249,0.98);
+      font-size: 0.86rem;
+      letter-spacing: 0.08em;
+    }
+
+    .brand-copy {
+      display: grid;
+      gap: 0.12rem;
+    }
+
+    .brand-copy strong {
+      font-size: clamp(0.98rem, 2.8vw, 1.18rem);
+      letter-spacing: 0.02em;
       text-transform: uppercase;
     }
 
-    .brand span:last-child {
+    .brand-copy span {
       color: var(--muted);
       font-size: clamp(0.66rem, 2.2vw, 0.76rem);
       letter-spacing: 0.12em;
@@ -137,19 +211,19 @@
       align-items: center;
       justify-content: center;
       padding: 0.45rem 0.72rem;
-      border: 1px solid var(--line);
+      border: 1px solid rgba(210,178,255,0.18);
       border-radius: 999px;
       color: var(--muted);
-      background: rgba(255,255,255,0.035);
+      background: rgba(181,140,255,0.055);
       font-size: 0.74rem;
       font-weight: 850;
       white-space: nowrap;
     }
 
     .nav a[aria-current="page"] {
-      border-color: rgba(242,199,111,0.9);
-      color: #080a0f;
-      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+      border-color: rgba(242,199,111,0.90);
+      color: #09020f;
+      background: linear-gradient(135deg, var(--gold2), var(--gold));
     }
 
     .hero {
@@ -160,8 +234,13 @@
     }
 
     .eyebrow {
-      margin: 0;
-      color: var(--gold);
+      width: fit-content;
+      margin: 0 auto;
+      padding: 0.55rem 0.9rem;
+      border: 1px solid rgba(210,178,255,0.20);
+      border-radius: 999px;
+      color: rgba(238,229,255,0.90);
+      background: rgba(181,140,255,0.08);
       font-size: clamp(0.72rem, 2.5vw, 0.84rem);
       font-weight: 950;
       letter-spacing: 0.18em;
@@ -180,7 +259,7 @@
     .quote {
       width: min(100%, 780px);
       margin: 0 auto;
-      color: rgba(255,241,205,0.96);
+      color: rgba(255,244,249,0.96);
       font-size: clamp(1.02rem, 3.4vw, 1.22rem);
       line-height: 1.52;
       text-wrap: balance;
@@ -200,30 +279,31 @@
       justify-content: center;
       border-radius: 999px;
       padding: 0.58rem 0.95rem;
-      border: 1px solid rgba(242,199,111,0.9);
-      color: #080a0f;
-      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+      border: 1px solid rgba(242,199,111,0.90);
+      color: #09020f;
+      background: linear-gradient(135deg, var(--gold2), var(--gold));
       box-shadow: 0 0.8rem 2rem rgba(242,199,111,0.16);
       font-size: 0.78rem;
       font-weight: 950;
       letter-spacing: 0.055em;
       text-transform: uppercase;
-      transition: transform 160ms ease, box-shadow 160ms ease;
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
     }
 
     .button::after { content: " →"; }
 
     .button.secondary {
-      border-color: rgba(255,255,255,0.24);
+      border-color: rgba(210,178,255,0.22);
       color: var(--text);
-      background: rgba(255,255,255,0.055);
+      background: rgba(181,140,255,0.075);
       box-shadow: none;
     }
 
     .button:hover,
     .button:focus-visible {
       transform: translateY(-2px);
-      box-shadow: 0 1rem 2.5rem rgba(242,199,111,0.22);
+      border-color: rgba(242,199,111,0.82);
+      box-shadow: 0 1rem 2.5rem rgba(242,199,111,0.20);
       outline: none;
     }
 
@@ -232,15 +312,15 @@
     .route-panel {
       width: min(100%, 1060px);
       margin: clamp(0.85rem, 2.5vw, 1.25rem) auto 0;
-      border: 1px solid rgba(242,199,111,0.24);
+      border: 1px solid rgba(191,154,255,0.24);
       border-radius: clamp(1.25rem, 5vw, 2rem);
       background:
-        radial-gradient(circle at 50% 0%, rgba(242,199,111,0.11), transparent 35%),
-        radial-gradient(circle at 50% 52%, rgba(120,216,255,0.13), transparent 44%),
-        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.016)),
-        rgba(8,12,20,0.62);
+        radial-gradient(circle at 50% 0%, rgba(208,131,255,0.14), transparent 35%),
+        radial-gradient(circle at 50% 52%, rgba(143,101,255,0.16), transparent 44%),
+        linear-gradient(180deg, rgba(255,255,255,0.060), rgba(255,255,255,0.018)),
+        var(--panel);
       box-shadow:
-        0 2rem 7rem rgba(0,0,0,0.34),
+        0 2rem 7rem rgba(0,0,0,0.38),
         inset 0 1px 0 rgba(255,255,255,0.09);
       overflow: hidden;
       isolation: isolate;
@@ -259,8 +339,8 @@
       bottom: 4%;
       width: 1px;
       transform: translateX(-50%);
-      background: linear-gradient(180deg, transparent, rgba(242,199,111,0.35), rgba(120,216,255,0.20), transparent);
-      opacity: 0.70;
+      background: linear-gradient(180deg, transparent, rgba(242,199,111,0.35), rgba(181,140,255,0.26), transparent);
+      opacity: 0.74;
       z-index: -1;
     }
 
@@ -271,8 +351,8 @@
       right: 6%;
       top: 50%;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(242,199,111,0.28), rgba(120,216,255,0.18), transparent);
-      opacity: 0.68;
+      background: linear-gradient(90deg, transparent, rgba(242,199,111,0.28), rgba(181,140,255,0.24), transparent);
+      opacity: 0.70;
       z-index: -1;
     }
 
@@ -314,7 +394,7 @@
     .field-orbit::before,
     .field-orbit::after {
       position: absolute;
-      border: 1px solid rgba(255,255,255,0.11);
+      border: 1px solid rgba(210,178,255,0.13);
       border-radius: 50%;
       pointer-events: none;
     }
@@ -325,30 +405,31 @@
       top: 21%;
       height: 58%;
       transform: rotate(-14deg);
-      opacity: 0.8;
+      opacity: 0.86;
+      box-shadow: 0 0 3rem rgba(181,140,255,0.10);
     }
 
     .field-orbit::before {
       content: "";
       inset: -20% -5%;
       transform: rotate(38deg);
-      opacity: 0.62;
+      opacity: 0.64;
     }
 
     .field-orbit::after {
       content: "";
       inset: 20% 15%;
       transform: rotate(-38deg);
-      opacity: 0.52;
+      opacity: 0.54;
     }
 
     .axis-letter {
       position: absolute;
-      color: rgba(255,241,205,0.90);
+      color: rgba(255,244,249,0.90);
       font-size: clamp(0.92rem, 2.7vw, 1.25rem);
       font-weight: 950;
       line-height: 1;
-      text-shadow: 0 0 1rem rgba(242,199,111,0.18);
+      text-shadow: 0 0 1rem rgba(181,140,255,0.30);
       pointer-events: none;
       user-select: none;
       z-index: 3;
@@ -398,15 +479,15 @@
 
     .law-diamond.behind {
       z-index: 7;
-      opacity: 0.68;
-      filter: saturate(0.84) brightness(0.94);
+      opacity: 0.70;
+      filter: saturate(0.90) brightness(0.96);
     }
 
     .law-diamond.forefront {
       --node-size: var(--node-foreground);
       z-index: 18;
       opacity: 1;
-      filter: saturate(1.15) brightness(1.06);
+      filter: saturate(1.18) brightness(1.08);
       animation-duration: 8.5s;
     }
 
@@ -414,26 +495,14 @@
     .law-diamond:focus-visible {
       --lift: 1.065;
       opacity: 1;
-      filter: brightness(1.16) saturate(1.12);
+      filter: brightness(1.16) saturate(1.14);
     }
 
     @keyframes lawDiamondDrift {
-      0%, 100% {
-        margin-left: 0;
-        margin-top: 0;
-      }
-      25% {
-        margin-left: 10px;
-        margin-top: -6px;
-      }
-      50% {
-        margin-left: 0;
-        margin-top: 8px;
-      }
-      75% {
-        margin-left: -10px;
-        margin-top: -4px;
-      }
+      0%, 100% { margin-left: 0; margin-top: 0; }
+      25% { margin-left: 10px; margin-top: -6px; }
+      50% { margin-left: 0; margin-top: 8px; }
+      75% { margin-left: -10px; margin-top: -4px; }
     }
 
     .diamond-shell {
@@ -441,15 +510,16 @@
       inset: 0;
       transform: rotate(45deg);
       transform-origin: 50% 50%;
-      border: 2px solid rgba(242,199,111,0.76);
+      border: 2px solid rgba(242,199,111,0.72);
       border-radius: 0.95rem;
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.18), transparent 24%),
-        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.26), transparent 32%),
-        radial-gradient(circle at 30% 72%, rgba(120,216,255,0.24), transparent 38%),
-        linear-gradient(145deg, rgba(48,74,141,0.76), rgba(128,72,142,0.64) 58%, rgba(242,199,111,0.18));
+        linear-gradient(135deg, rgba(255,255,255,0.20), transparent 24%),
+        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.22), transparent 32%),
+        radial-gradient(circle at 30% 72%, rgba(181,140,255,0.30), transparent 38%),
+        linear-gradient(145deg, rgba(91,56,174,0.78), rgba(52,23,107,0.68) 58%, rgba(242,199,111,0.16));
       box-shadow:
-        0 1.1rem 2.8rem rgba(0,0,0,0.30),
+        0 1.1rem 2.8rem rgba(0,0,0,0.32),
+        0 0 1.6rem rgba(181,140,255,0.16),
         inset 0 0 0 1px rgba(255,255,255,0.15),
         inset 0 0 1.6rem rgba(255,255,255,0.06);
       overflow: hidden;
@@ -458,26 +528,26 @@
     }
 
     .law-diamond.behind .diamond-shell {
-      border-color: rgba(255,255,255,0.25);
+      border-color: rgba(210,178,255,0.28);
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.105), transparent 28%),
-        radial-gradient(circle at 64% 36%, rgba(242,199,111,0.14), transparent 34%),
-        linear-gradient(145deg, rgba(37,52,90,0.74), rgba(56,43,91,0.56));
+        linear-gradient(135deg, rgba(255,255,255,0.11), transparent 28%),
+        radial-gradient(circle at 64% 36%, rgba(181,140,255,0.18), transparent 34%),
+        linear-gradient(145deg, rgba(43,26,89,0.76), rgba(36,19,75,0.60));
       box-shadow:
-        0 0.85rem 2.1rem rgba(0,0,0,0.24),
+        0 0.85rem 2.1rem rgba(0,0,0,0.25),
         inset 0 0 0 1px rgba(255,255,255,0.10);
     }
 
     .law-diamond.forefront .diamond-shell {
       border-color: rgba(255,224,141,0.95);
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.23), transparent 24%),
-        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.33), transparent 32%),
-        radial-gradient(circle at 30% 72%, rgba(120,216,255,0.30), transparent 38%),
-        linear-gradient(145deg, rgba(58,83,150,0.83), rgba(128,72,142,0.74) 58%, rgba(242,199,111,0.25));
+        linear-gradient(135deg, rgba(255,255,255,0.24), transparent 24%),
+        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.32), transparent 32%),
+        radial-gradient(circle at 30% 72%, rgba(208,131,255,0.34), transparent 38%),
+        linear-gradient(145deg, rgba(109,66,199,0.88), rgba(76,36,156,0.78) 58%, rgba(242,199,111,0.24));
       box-shadow:
-        0 1.45rem 3.4rem rgba(0,0,0,0.36),
-        0 0 2.35rem rgba(242,199,111,0.14),
+        0 1.45rem 3.4rem rgba(0,0,0,0.38),
+        0 0 2.35rem rgba(181,140,255,0.22),
         inset 0 0 0 1px rgba(255,255,255,0.18),
         inset 0 0 1.8rem rgba(255,255,255,0.07);
     }
@@ -487,14 +557,14 @@
       content: "";
       position: absolute;
       inset: 15%;
-      border: 1px solid rgba(255,241,205,0.30);
+      border: 1px solid rgba(255,244,249,0.26);
       border-radius: 0.55rem;
       pointer-events: none;
     }
 
     .diamond-shell::after {
       inset: 29%;
-      opacity: 0.50;
+      opacity: 0.48;
     }
 
     .diamond-lines {
@@ -510,12 +580,8 @@
     }
 
     @keyframes lawDiamondFacetTurn {
-      from {
-        transform: rotate(45deg);
-      }
-      to {
-        transform: rotate(405deg);
-      }
+      from { transform: rotate(45deg); }
+      to { transform: rotate(405deg); }
     }
 
     .diamond-lines::before {
@@ -523,10 +589,10 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(90deg, transparent 49.5%, rgba(255,241,205,0.30) 50%, transparent 50.5%),
-        linear-gradient(0deg, transparent 49.5%, rgba(255,241,205,0.24) 50%, transparent 50.5%),
-        linear-gradient(45deg, transparent 49.5%, rgba(255,241,205,0.16) 50%, transparent 50.5%),
-        linear-gradient(-45deg, transparent 49.5%, rgba(255,241,205,0.16) 50%, transparent 50.5%);
+        linear-gradient(90deg, transparent 49.5%, rgba(255,244,249,0.30) 50%, transparent 50.5%),
+        linear-gradient(0deg, transparent 49.5%, rgba(255,244,249,0.22) 50%, transparent 50.5%),
+        linear-gradient(45deg, transparent 49.5%, rgba(255,244,249,0.16) 50%, transparent 50.5%),
+        linear-gradient(-45deg, transparent 49.5%, rgba(255,244,249,0.16) 50%, transparent 50.5%);
       opacity: 0.76;
     }
 
@@ -543,17 +609,17 @@
     }
 
     .diamond-content strong {
-      color: rgba(255,241,205,0.98);
+      color: rgba(255,244,249,0.98);
       font-size: clamp(0.47rem, 1.16vw, 0.68rem);
       line-height: 0.98;
       font-weight: 950;
       letter-spacing: 0.07em;
       text-transform: uppercase;
-      text-shadow: 0 2px 0 rgba(0,0,0,0.18);
+      text-shadow: 0 2px 0 rgba(0,0,0,0.20);
     }
 
     .diamond-content span {
-      color: rgba(242,246,255,0.76);
+      color: rgba(238,229,255,0.76);
       font-size: clamp(0.38rem, 0.98vw, 0.52rem);
       line-height: 1.08;
       font-weight: 850;
@@ -570,13 +636,14 @@
     }
 
     .center-diamond .diamond-shell {
-      border-color: rgba(255,241,205,0.62);
+      border-color: rgba(255,244,249,0.62);
       background:
-        radial-gradient(circle at 50% 50%, rgba(255,241,205,0.22), transparent 44%),
-        radial-gradient(circle at 70% 28%, rgba(242,199,111,0.20), transparent 32%),
-        linear-gradient(145deg, rgba(33,47,84,0.82), rgba(20,27,48,0.86));
+        radial-gradient(circle at 50% 50%, rgba(255,244,249,0.20), transparent 44%),
+        radial-gradient(circle at 70% 28%, rgba(242,199,111,0.18), transparent 32%),
+        linear-gradient(145deg, rgba(75,42,147,0.86), rgba(29,13,61,0.88));
       box-shadow:
-        0 1rem 2.5rem rgba(0,0,0,0.28),
+        0 1rem 2.5rem rgba(0,0,0,0.30),
+        0 0 2rem rgba(181,140,255,0.16),
         inset 0 0 0 1px rgba(255,255,255,0.13);
       animation: none;
     }
@@ -586,12 +653,8 @@
     }
 
     @keyframes lawCenterFacetTurn {
-      from {
-        transform: rotate(45deg);
-      }
-      to {
-        transform: rotate(-315deg);
-      }
+      from { transform: rotate(45deg); }
+      to { transform: rotate(-315deg); }
     }
 
     .center-diamond .diamond-content strong {
@@ -623,11 +686,11 @@
     }
 
     details.law-card {
-      border: 1px solid rgba(255,255,255,0.12);
+      border: 1px solid rgba(210,178,255,0.16);
       border-radius: 1rem;
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.06), transparent 34%),
-        rgba(255,255,255,0.025);
+        linear-gradient(135deg, rgba(255,255,255,0.065), transparent 34%),
+        rgba(181,140,255,0.045);
       overflow: hidden;
     }
 
@@ -642,7 +705,7 @@
     .law-card summary::-webkit-details-marker { display: none; }
 
     .law-card summary strong {
-      color: rgba(255,241,205,0.96);
+      color: rgba(255,244,249,0.96);
       font-size: 0.9rem;
       font-weight: 950;
       letter-spacing: 0.08em;
@@ -690,10 +753,10 @@
       align-items: center;
       justify-content: center;
       padding: 0.48rem 0.72rem;
-      border: 1px solid rgba(255,255,255,0.15);
+      border: 1px solid rgba(210,178,255,0.16);
       border-radius: 999px;
       color: var(--muted);
-      background: rgba(255,255,255,0.035);
+      background: rgba(181,140,255,0.055);
       font-size: 0.74rem;
       font-weight: 900;
       letter-spacing: 0.06em;
@@ -705,32 +768,26 @@
       color: var(--gold);
     }
 
-    .receipt {
-      width: min(100%, 900px);
-      margin: clamp(1rem, 3vw, 1.5rem) auto 0;
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 1rem;
-      background: rgba(255,255,255,0.03);
-      color: var(--faint);
-      overflow: hidden;
-    }
-
-    .receipt summary {
-      cursor: pointer;
-      padding: 0.75rem 0.9rem;
-      color: var(--faint);
-      font-size: 0.72rem;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .receipt pre {
-      margin: 0;
-      padding: 0 0.9rem 0.9rem;
-      font: 700 0.68rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
+    .route-receipt,
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt] {
+      display: none !important;
+      visibility: hidden !important;
+      overflow: hidden !important;
+      width: 0 !important;
+      height: 0 !important;
+      max-width: 0 !important;
+      max-height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      position: absolute !important;
+      inset: auto !important;
+      clip-path: inset(50%) !important;
+      white-space: nowrap !important;
     }
 
     footer {
@@ -739,6 +796,15 @@
       font-size: 0.74rem;
       line-height: 1.45;
       text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav { justify-content: flex-start; }
     }
 
     @media (max-width: 760px) {
@@ -770,31 +836,25 @@
       }
     }
 
-    @media (max-width: 900px) {
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav { justify-content: flex-start; }
-    }
-
     @media (max-width: 540px) {
-      .law-field {
-        min-height: 34.5rem;
-      }
+      .law-field { min-height: 34.5rem; }
+      .hero-actions { display: grid; }
+      .button { width: 100%; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .law-diamond,
-      .law-diamond .diamond-shell,
-      .law-diamond .diamond-lines,
-      .center-diamond .diamond-lines {
-        animation: none !important;
-        transition: none !important;
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
       }
     }
   </style>
+
+  <script src="/laws/index.js" defer></script>
 </head>
 
 <body>
@@ -803,8 +863,11 @@
   <div class="shell">
     <header class="topbar">
       <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
-        <span>Diamond Gate Bridge</span>
-        <span>Rich Manor and Estate</span>
+        <span class="brand-mark" aria-hidden="true"><span>LAW</span></span>
+        <span class="brand-copy">
+          <strong>Diamond Gate Bridge</strong>
+          <span>Rich Manor and Estate · Rule Chamber</span>
+        </span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
@@ -825,7 +888,7 @@
 
     <main id="laws-main">
       <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Laws · Rule Chamber</p>
+        <p class="eyebrow">Laws · Purple Rule Chamber</p>
         <h1 id="page-title">Proof outranks confidence.</h1>
 
         <p class="quote">
@@ -845,7 +908,7 @@
           <p>The law chamber keeps authority, routes, proof, runtime, generation, products, planets, human boundaries, receipts, and return paths available.</p>
         </div>
 
-        <div class="law-field" aria-label="16-point law chamber field">
+        <div class="law-field" aria-label="16-point law chamber field" data-law-field>
           <div class="field-orbit" aria-hidden="true"></div>
           <span class="axis-letter n" aria-hidden="true">N</span>
           <span class="axis-letter e" aria-hidden="true">E</span>
@@ -946,7 +1009,7 @@
       <section class="law-stack" aria-labelledby="law-stack-title">
         <p class="law-stack-title" id="law-stack-title">Open only the law you need</p>
 
-        <div class="law-grid">
+        <div class="law-grid" data-law-grid>
           <details class="law-card" id="authority-law" open>
             <summary><strong>Authority law</strong><span>Root ownership stays explicit before design, runtime, or presentation claims.</span></summary>
             <p>Every chamber needs a route, parent, construct class, and owner function before it can make a larger claim. Compass orients, Door admits, Home stabilizes, Manor maps, Laws governs, Showroom displays, and Gauges measures.</p>
@@ -1044,9 +1107,10 @@
         </nav>
       </section>
 
-      <details class="receipt">
-        <summary>Route receipt</summary>
-        <pre>LAWS_16_POINT_RULE_CHAMBER_ANIMATED_DIAMONDS_TNT_v2
+      <template id="route-receipt" data-route-receipt>
+LAWS_PURPLE_RULE_CHAMBER_PAIR_RENEWAL_TNT_v1
+previous=LAWS_16_POINT_RULE_CHAMBER_ANIMATED_DIAMONDS_TNT_v2
+script=LAWS_PURPLE_RULE_CHAMBER_PAIR_RUNTIME_TNT_v1
 route=/laws/
 page=laws
 role=rule_chamber
@@ -1055,83 +1119,26 @@ center=laws_chamber_decorative
 design_object=16_point_law_chamber
 foreground_core=laws,entry,proof,return
 available_laws=authority,route,proof,runtime,generation,product_planet_separation,human_boundary,interaction,receipt,visual_claim,foreground,access,stale_language,animation,scope,return
-change=animated_existing_diamonds_without_route_or_layout_rebuild
-animation=lawDiamondDrift,lawDiamondFacetTurn,lawCenterFacetTurn,existing_runtime_dx_dy_loop
+change=purple_rule_chamber_surface_renewal_and_js_pair_preparation
+animation=external_law_field_motion,index_js_single_open_law_cards,index_js_receipts
 preserved=law_copy,law_cards,route_links,16_point_chamber,foreground_core,receipt_structure
+renewed=purple_theme,brand_spacing,public_receipt_leak_removed,script_pair_split
 route_owns=rule_chamber,law_access,16_point_law_field,law_cards,route_links,receipt
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
-removed=earth_g1_active_language,explore_as_primary_identity,demo_universe_active_language,long_visible_receipt_dominance
 heavy_runtime_loaded=false
 render_files_touched=false
 instrument_touched=false
 gauges_logic_touched=false
 generated_image=false
+graphic_box=false
 streaming=false
-visual_pass_claimed=false</pre>
-      </details>
+visual_pass_claimed=false
+      </template>
     </main>
 
     <footer>
-      LAWS_16_POINT_RULE_CHAMBER_ANIMATED_DIAMONDS_TNT_v2 · Laws · Rule Chamber · Animated diamonds · Proof outranks confidence.
+      LAWS_PURPLE_RULE_CHAMBER_PAIR_RENEWAL_TNT_v1 · Laws · Purple Rule Chamber · Proof outranks confidence.
     </footer>
   </div>
-
-  <script>
-    (() => {
-      "use strict";
-
-      const reduceMotion =
-        window.matchMedia &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-      const field = document.querySelector(".law-field");
-      const nodes = Array.from(document.querySelectorAll(".law-diamond"));
-
-      if (!field || !nodes.length || reduceMotion) return;
-
-      let start = 0;
-      let raf = 0;
-
-      function frame(now) {
-        if (!start) start = now;
-
-        const rect = field.getBoundingClientRect();
-        const t = ((now - start) / 1000) * 0.52;
-        const ampX = Math.min(18, Math.max(8, rect.width * 0.022));
-        const ampY = Math.min(13, Math.max(6, rect.height * 0.015));
-
-        nodes.forEach((node, index) => {
-          const phase = Number(node.dataset.phase || index * 0.392699);
-          const loop = node.dataset.loop || "a";
-          const isForeground = node.classList.contains("forefront");
-          const p = t + phase;
-          const localAmpX = isForeground ? ampX * 0.58 : ampX;
-          const localAmpY = isForeground ? ampY * 0.58 : ampY;
-
-          let dx;
-          let dy;
-
-          if (loop === "a") {
-            dx = Math.sin(p) * localAmpX;
-            dy = Math.sin(p * 2) * localAmpY;
-          } else {
-            dx = Math.sin(p * 2) * localAmpX;
-            dy = Math.sin(p) * localAmpY;
-          }
-
-          node.style.setProperty("--dx", dx.toFixed(2) + "px");
-          node.style.setProperty("--dy", dy.toFixed(2) + "px");
-        });
-
-        raf = window.requestAnimationFrame(frame);
-      }
-
-      raf = window.requestAnimationFrame(frame);
-
-      window.addEventListener("pagehide", () => {
-        if (raf) window.cancelAnimationFrame(raf);
-      }, { once: true });
-    })();
-  </script>
 </body>
 </html>

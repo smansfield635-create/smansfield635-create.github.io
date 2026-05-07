@@ -1,0 +1,485 @@
+/* /assets/dgb-interplanetary-background.css */
+/* DGB_INTERPLANETARY_AXIS_FLOATING_FIGURES_BACKGROUND_TNT_v1 */
+/* Full-file replacement. Code-only background system. */
+/* No canvas. No GraphicBox. No image generation. No visual-pass claim. */
+
+:root {
+  --dgb-bg-black: #020104;
+  --dgb-bg-black-2: #050208;
+  --dgb-bg-black-3: #090511;
+
+  --dgb-bg-violet: #8b5cf6;
+  --dgb-bg-violet-2: #a78bfa;
+  --dgb-bg-purple: #5b21b6;
+  --dgb-bg-purple-2: #c4b5fd;
+
+  --dgb-bg-gold: #f4c95d;
+  --dgb-bg-gold-2: #ffe8a8;
+  --dgb-bg-gold-3: #b9821f;
+
+  --dgb-bg-text: #fff8e8;
+  --dgb-bg-muted: rgba(255, 247, 226, 0.72);
+
+  --dgb-axis-gold-line: rgba(255, 232, 168, 0.32);
+  --dgb-axis-violet-line: rgba(196, 181, 253, 0.24);
+  --dgb-axis-glow-gold: rgba(244, 201, 93, 0.38);
+  --dgb-axis-glow-violet: rgba(139, 92, 246, 0.34);
+
+  --dgb-bg-z: 0;
+  --dgb-content-z: 2;
+}
+
+html[data-dgb-interplanetary-background="true"],
+body[data-dgb-interplanetary-background="true"] {
+  background:
+    radial-gradient(circle at 50% 7%, rgba(139, 92, 246, 0.24), transparent 25rem),
+    radial-gradient(circle at 18% 34%, rgba(91, 33, 182, 0.20), transparent 31rem),
+    radial-gradient(circle at 82% 44%, rgba(244, 201, 93, 0.14), transparent 34rem),
+    radial-gradient(circle at 50% 100%, rgba(167, 139, 250, 0.12), transparent 36rem),
+    linear-gradient(180deg, #09050d, #030205 64%, #000000);
+  color: var(--dgb-bg-text);
+}
+
+body[data-dgb-interplanetary-background="true"] {
+  position: relative;
+  min-height: 100svh;
+  overflow-x: hidden;
+}
+
+body[data-dgb-interplanetary-background="true"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: var(--dgb-bg-z);
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 12% 20%, rgba(196,181,253,0.22) 0, rgba(196,181,253,0) 1.2px),
+    radial-gradient(circle at 72% 16%, rgba(255,232,168,0.16) 0, rgba(255,232,168,0) 1.1px),
+    radial-gradient(circle at 84% 58%, rgba(139,92,246,0.15) 0, rgba(139,92,246,0) 1px),
+    radial-gradient(circle at 24% 72%, rgba(244,201,93,0.13) 0, rgba(244,201,93,0) 1.2px);
+  background-size: 180px 220px, 240px 260px, 210px 250px, 260px 300px;
+  opacity: 0.44;
+}
+
+.dgb-interplanetary-bg {
+  position: fixed;
+  inset: 0;
+  z-index: var(--dgb-bg-z);
+  pointer-events: none;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.dgb-interplanetary-bg::before {
+  content: "";
+  position: absolute;
+  inset: -24%;
+  opacity: 0.52;
+  filter: blur(42px);
+  background:
+    conic-gradient(
+      from var(--dgb-phase, 0deg) at 50% 50%,
+      transparent 0deg,
+      rgba(139,92,246,0.22) 42deg,
+      transparent 82deg,
+      rgba(244,201,93,0.12) 128deg,
+      transparent 184deg,
+      rgba(167,139,250,0.20) 238deg,
+      transparent 292deg,
+      rgba(255,232,168,0.10) 336deg,
+      transparent 360deg
+    );
+  animation: dgb-interplanetary-sweep 52s linear infinite;
+}
+
+.dgb-interplanetary-axis-wrap {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: min(92vw, 48rem);
+  height: min(92vw, 48rem);
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+}
+
+.dgb-interplanetary-axis {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(78vw, 38rem);
+  height: min(78vw, 38rem);
+  transform: translate(-50%, -50%) rotate(var(--dgb-axis-tilt, -13deg));
+  border-radius: 999px;
+  animation: dgb-axis-slow-turn 66s linear infinite;
+}
+
+.dgb-interplanetary-axis::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -6%;
+  bottom: -6%;
+  width: 1px;
+  transform: translateX(-50%);
+  background:
+    linear-gradient(
+      180deg,
+      transparent,
+      rgba(196,181,253,0.46),
+      rgba(255,232,168,0.44),
+      rgba(196,181,253,0.34),
+      transparent
+    );
+  box-shadow:
+    0 0 1rem rgba(139,92,246,0.34),
+    0 0 1.6rem rgba(244,201,93,0.22);
+}
+
+.dgb-interplanetary-axis::after {
+  content: "";
+  position: absolute;
+  left: -6%;
+  right: -6%;
+  top: 50%;
+  height: 1px;
+  transform: translateY(-50%);
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,232,168,0.30),
+      rgba(196,181,253,0.40),
+      rgba(255,232,168,0.30),
+      transparent
+    );
+  box-shadow:
+    0 0 1rem rgba(139,92,246,0.24),
+    0 0 1.4rem rgba(244,201,93,0.18);
+}
+
+.dgb-interplanetary-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(7.5rem, 22vw, 14rem);
+  height: clamp(7.5rem, 22vw, 14rem);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 42% 42%, rgba(196,181,253,0.30), transparent 34%),
+    radial-gradient(circle at 58% 56%, rgba(244,201,93,0.18), transparent 52%),
+    radial-gradient(circle at 50% 50%, rgba(139,92,246,0.16), transparent 64%);
+  box-shadow:
+    0 0 3.4rem rgba(139,92,246,0.26),
+    0 0 4.2rem rgba(244,201,93,0.14),
+    inset 0 0 2.8rem rgba(255,232,168,0.07);
+  animation: dgb-core-breathe 7s ease-in-out infinite;
+}
+
+.dgb-interplanetary-orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border: 1px solid var(--dgb-axis-violet-line);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(var(--orbit-start, 0deg));
+  box-shadow:
+    0 0 2rem rgba(139,92,246,0.10),
+    inset 0 0 1.5rem rgba(244,201,93,0.04);
+  opacity: var(--orbit-opacity, 0.72);
+  animation: dgb-orbit-turn var(--orbit-speed, 44s) linear infinite;
+}
+
+.dgb-interplanetary-orbit.gold {
+  border-color: var(--dgb-axis-gold-line);
+  box-shadow:
+    0 0 2rem rgba(244,201,93,0.12),
+    inset 0 0 1.5rem rgba(139,92,246,0.04);
+}
+
+.dgb-interplanetary-orbit.one {
+  width: min(122vw, 78rem);
+  height: min(50vw, 29rem);
+  --orbit-speed: 48s;
+  --orbit-start: -12deg;
+  --orbit-opacity: 0.84;
+}
+
+.dgb-interplanetary-orbit.two {
+  width: min(96vw, 58rem);
+  height: min(39vw, 21rem);
+  --orbit-speed: 36s;
+  --orbit-start: 28deg;
+  --orbit-opacity: 0.74;
+  animation-direction: reverse;
+}
+
+.dgb-interplanetary-orbit.three {
+  width: min(74vw, 38rem);
+  height: min(31vw, 14rem);
+  --orbit-speed: 29s;
+  --orbit-start: -44deg;
+  --orbit-opacity: 0.62;
+}
+
+.dgb-interplanetary-orbit.four {
+  width: min(104vw, 66rem);
+  height: min(23vw, 13rem);
+  --orbit-speed: 57s;
+  --orbit-start: 62deg;
+  --orbit-opacity: 0.44;
+}
+
+.dgb-floating-figure {
+  position: absolute;
+  width: clamp(2.7rem, 7vw, 5.8rem);
+  height: clamp(2.7rem, 7vw, 5.8rem);
+  border: 1px solid rgba(196,181,253,0.40);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.14), transparent 28%),
+    radial-gradient(circle at 68% 28%, rgba(196,181,253,0.30), transparent 34%),
+    linear-gradient(145deg, rgba(139,92,246,0.20), rgba(3,3,3,0.22) 58%, rgba(244,201,93,0.10));
+  box-shadow:
+    0 0 1.4rem rgba(139,92,246,0.22),
+    0 0 2.2rem rgba(244,201,93,0.12),
+    inset 0 0 1.2rem rgba(255,232,168,0.08);
+  transform: rotate(45deg);
+  opacity: 0.56;
+  animation: dgb-floating-figure-drift var(--float-speed, 12s) ease-in-out infinite;
+}
+
+.dgb-floating-figure.gold {
+  border-color: rgba(255,232,168,0.46);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.14), transparent 28%),
+    radial-gradient(circle at 68% 28%, rgba(255,232,168,0.30), transparent 34%),
+    linear-gradient(145deg, rgba(244,201,93,0.16), rgba(3,3,3,0.22) 58%, rgba(139,92,246,0.10));
+  box-shadow:
+    0 0 1.4rem rgba(244,201,93,0.22),
+    0 0 2.2rem rgba(139,92,246,0.12),
+    inset 0 0 1.2rem rgba(255,232,168,0.08);
+}
+
+.dgb-floating-figure::after {
+  content: attr(data-mark);
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transform: rotate(-45deg);
+  color: rgba(255,248,232,0.76);
+  font-size: clamp(0.58rem, 1.8vw, 0.78rem);
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 0.7rem rgba(139,92,246,0.42),
+    0 0 1rem rgba(244,201,93,0.24);
+}
+
+.dgb-floating-figure.audralia {
+  left: 12%;
+  top: 18%;
+  --float-speed: 11s;
+}
+
+.dgb-floating-figure.book {
+  right: 14%;
+  top: 24%;
+  --float-speed: 13s;
+  animation-delay: -2s;
+}
+
+.dgb-floating-figure.showroom {
+  left: 16%;
+  bottom: 18%;
+  --float-speed: 15s;
+  animation-delay: -5s;
+}
+
+.dgb-floating-figure.frontier {
+  right: 13%;
+  bottom: 16%;
+  --float-speed: 12s;
+  animation-delay: -7s;
+}
+
+.dgb-floating-figure.lattice {
+  left: 46%;
+  bottom: 10%;
+  --float-speed: 18s;
+  animation-delay: -9s;
+}
+
+.dgb-axis-node {
+  position: absolute;
+  width: 2.35rem;
+  height: 2.35rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,232,168,0.18);
+  border-radius: 999px;
+  color: rgba(255,248,232,0.48);
+  background: rgba(0,0,0,0.28);
+  font: 900 0.72rem/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: 0.08em;
+  box-shadow:
+    0 0 1rem rgba(244,201,93,0.12),
+    0 0 1.2rem rgba(139,92,246,0.10);
+  animation: dgb-axis-node-pulse var(--node-speed, 12s) ease-in-out infinite;
+}
+
+.dgb-axis-node.n {
+  left: 50%;
+  top: 5%;
+  transform: translateX(-50%);
+}
+
+.dgb-axis-node.e {
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.dgb-axis-node.s {
+  left: 50%;
+  bottom: 5%;
+  transform: translateX(-50%);
+}
+
+.dgb-axis-node.w {
+  left: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.dgb-lattice-mote {
+  position: absolute;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(196,181,253,0.18);
+  border-radius: 999px;
+  color: rgba(196,181,253,0.48);
+  background: rgba(0,0,0,0.22);
+  font: 900 0.66rem/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: 0.08em;
+  box-shadow:
+    0 0 1.2rem rgba(139,92,246,0.14),
+    0 0 1.8rem rgba(244,201,93,0.07);
+  animation: dgb-lattice-mote-drift var(--mote-speed, 20s) ease-in-out infinite;
+}
+
+.dgb-lattice-mote.gold {
+  border-color: rgba(255,232,168,0.20);
+  color: rgba(255,248,232,0.52);
+  box-shadow:
+    0 0 1.2rem rgba(244,201,93,0.16),
+    0 0 1.8rem rgba(139,92,246,0.06);
+}
+
+.dgb-global-content,
+.shell,
+header,
+main,
+footer {
+  position: relative;
+  z-index: var(--dgb-content-z);
+}
+
+@keyframes dgb-interplanetary-sweep {
+  from { transform: rotate(0deg) scale(1); }
+  to { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes dgb-axis-slow-turn {
+  from { transform: translate(-50%, -50%) rotate(var(--dgb-axis-tilt, -13deg)); }
+  to { transform: translate(-50%, -50%) rotate(calc(var(--dgb-axis-tilt, -13deg) + 360deg)); }
+}
+
+@keyframes dgb-orbit-turn {
+  from { transform: translate(-50%, -50%) rotate(var(--orbit-start, 0deg)); }
+  to { transform: translate(-50%, -50%) rotate(calc(var(--orbit-start, 0deg) + 360deg)); }
+}
+
+@keyframes dgb-core-breathe {
+  0%, 100% {
+    opacity: 0.52;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    opacity: 0.86;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+@keyframes dgb-floating-figure-drift {
+  0%, 100% {
+    transform: rotate(45deg) translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: rotate(45deg) translate3d(0, -0.7rem, 0) scale(1.04);
+  }
+}
+
+@keyframes dgb-axis-node-pulse {
+  0%, 100% {
+    opacity: 0.36;
+    box-shadow:
+      0 0 1rem rgba(244,201,93,0.10),
+      0 0 1.2rem rgba(139,92,246,0.08);
+  }
+
+  50% {
+    opacity: 0.72;
+    box-shadow:
+      0 0 1.6rem rgba(244,201,93,0.18),
+      0 0 2.2rem rgba(139,92,246,0.18);
+  }
+}
+
+@keyframes dgb-lattice-mote-drift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.26;
+  }
+
+  50% {
+    transform: translate3d(0.8rem, -1.1rem, 0) scale(1.08);
+    opacity: 0.62;
+  }
+}
+
+@media (max-width: 760px) {
+  .dgb-floating-figure {
+    opacity: 0.30;
+  }
+
+  .dgb-interplanetary-orbit {
+    opacity: calc(var(--orbit-opacity, 0.72) * 0.72);
+  }
+
+  .dgb-interplanetary-core {
+    opacity: 0.72;
+  }
+
+  .dgb-lattice-mote {
+    opacity: 0.32;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dgb-interplanetary-bg::before,
+  .dgb-interplanetary-axis,
+  .dgb-interplanetary-core,
+  .dgb-interplanetary-orbit,
+  .dgb-floating-figure,
+  .dgb-axis-node,
+  .dgb-lattice-mote {
+    animation: none !important;
+  }
+}

@@ -1,17 +1,18 @@
 // /assets/audralia/audralia.surface.js
-// AUDRALIA_SURFACE_PARENT_STANDARD_4K_HEX_MICRO_TRUTH_TNT_v2
+// AUDRALIA_SURFACE_PARENT_STANDARD_NONBLOCKING_BOOT_TNT_v3
 // Full-file replacement.
 // Purpose:
-// - Raise Audralia surface truth to the parent standard.
-// - Own static surface truth, material hints, micro-relief, coastline gradients, and hex-cell metadata.
-// - Feed canvas and child glaze layers with parent-grade surface data.
+// - Preserve parent-standard surface truth.
+// - Remove top-level await / blocking import stall.
+// - Let canvas render immediately from procedural parent surface.
+// - Initialize downstream authorities asynchronously after first paint.
 // - Never animate, never paint, never blur, never import runtime.
 // - No GraphicBox. No image generation. No visual-pass claim.
 
-const RECEIPT = "AUDRALIA_SURFACE_PARENT_STANDARD_4K_HEX_MICRO_TRUTH_TNT_v2";
-const PREVIOUS_RECEIPT = "AUDRALIA_SURFACE_TRUTH_BRIDGE_STATIC_AUTHORITY_TNT_v1";
-const CONTRACT = "AUDRALIA_SURFACE_PARENT_STANDARD_GAP_CLOSE_TNT_v2";
-const VERSION = "2026-05-07.surface-parent-standard-4k-hex-micro-truth.v2";
+const RECEIPT = "AUDRALIA_SURFACE_PARENT_STANDARD_NONBLOCKING_BOOT_TNT_v3";
+const PREVIOUS_RECEIPT = "AUDRALIA_SURFACE_PARENT_STANDARD_4K_HEX_MICRO_TRUTH_TNT_v2";
+const CONTRACT = "AUDRALIA_SURFACE_PARENT_STANDARD_GAP_CLOSE_NONBLOCKING_TNT_v3";
+const VERSION = "2026-05-07.surface-parent-standard-nonblocking-boot.v3";
 
 const TOPOLOGY_PATH = "/assets/audralia/audralia/tectonics/topology/render.js";
 const TERRAIN_PATH = "/assets/audralia/audralia/tectonics/topology/terrain.render.js";
@@ -19,8 +20,8 @@ const HYDRATION_PATH = "/assets/audralia/audralia/hydration/render.js";
 const OCEANS_PATH = "/assets/audralia/audralia/hydration/oceans.render.js";
 const DEEP_OCEAN_PATH = "/assets/audralia/audralia/hydration/deep-ocean.render.js";
 
-const GRID_WIDTH = 192;
-const GRID_HEIGHT = 96;
+const GRID_WIDTH = 144;
+const GRID_HEIGHT = 72;
 const TARGET_SOLID_SURFACE_RATIO = 0.292;
 const TARGET_SOLID_SURFACE_RATIO_MIN = 0.27;
 const TARGET_SOLID_SURFACE_RATIO_MAX = 0.31;
@@ -35,9 +36,13 @@ const STATUS = {
   previousReceipt: PREVIOUS_RECEIPT,
   contract: CONTRACT,
   version: VERSION,
-  role: "audralia-parent-standard-static-surface-truth-authority",
+  role: "audralia-parent-standard-static-surface-truth-nonblocking-authority",
+
   parentStandard: true,
-  childGlazeStandardPromoted: true,
+  nonblockingBoot: true,
+  importsBlockFirstPaint: false,
+  downstreamInitializedAsync: false,
+
   runtimeAuthority: false,
   motionAuthority: false,
   paintAuthority: false,
@@ -91,7 +96,7 @@ const STATUS = {
   targetLiquidWaterRatioMax: TARGET_LIQUID_WATER_RATIO_MAX,
 
   fallbackAllowed: true,
-  fallbackReason: "parent-standard-procedural-surface-model-keeps-canvas-fed-if-downstream-is-incomplete",
+  fallbackReason: "nonblocking-parent-procedural-surface-feeds-canvas-before-downstream-finishes",
 
   graphicBox: false,
   imageGeneration: false,
@@ -120,7 +125,7 @@ const MODULE_RECORDS = {
 };
 
 let selectedRecord = null;
-let surfaceModel = null;
+let downstreamInitStarted = false;
 let cachedSummary = null;
 
 function clamp(value, min, max) {
@@ -388,7 +393,7 @@ function buildSurfaceModel() {
   });
 }
 
-surfaceModel = buildSurfaceModel();
+const surfaceModel = buildSurfaceModel();
 
 function collectFunctionCandidates(object) {
   if (!object || typeof object !== "object") return [];
@@ -487,8 +492,11 @@ async function importRecord(item) {
   return item;
 }
 
-async function initializeDownstream() {
-  const records = await Promise.all([
+async function initializeDownstreamAsync() {
+  if (downstreamInitStarted) return STATUS;
+  downstreamInitStarted = true;
+
+  const records = await Promise.allSettled([
     importRecord(MODULE_RECORDS.topology),
     importRecord(MODULE_RECORDS.terrain),
     importRecord(MODULE_RECORDS.hydration),
@@ -504,17 +512,22 @@ async function initializeDownstream() {
     MODULE_RECORDS.topology
   ].find((item) => item.imported && item.samplerReady) || null;
 
-  STATUS.downstreamImported = records.some((item) => item.imported);
+  STATUS.downstreamInitializedAsync = true;
+  STATUS.downstreamImported = Object.values(MODULE_RECORDS).some((item) => item.imported);
   STATUS.downstreamSamplerReady = Boolean(selectedRecord);
   STATUS.downstreamChainConsumed = STATUS.downstreamImported;
-  STATUS.downstreamImportError = records
+  STATUS.downstreamImportError = Object.values(MODULE_RECORDS)
     .filter((item) => item.importError)
     .map((item) => `${item.key}:${item.importError}`)
     .join(" | ");
 
+  cachedSummary = null;
   exposeSurfaceStatus();
 
-  return STATUS.downstreamImported;
+  return {
+    status: STATUS,
+    records
+  };
 }
 
 function callDownstream(coordinate) {
@@ -750,7 +763,7 @@ function classifySurface(coordinate) {
     receipt: RECEIPT,
     previousReceipt: PREVIOUS_RECEIPT,
     contract: CONTRACT,
-    source: "audralia-parent-standard-static-surface-truth",
+    source: "audralia-parent-standard-static-surface-truth-nonblocking",
     downstream: raw,
     downstreamReceipt: raw?.receipt || "",
     downstreamSource: selectedRecord?.key || "procedural-parent-standard-surface",
@@ -872,7 +885,6 @@ function computeSummary() {
   if (cachedSummary) return cachedSummary;
 
   const classCounts = {};
-  const hexRings = new Map();
   let solidSurfaceLandSamples = 0;
   let liquidWaterSamples = 0;
   let exposedTerrainLandSamples = 0;
@@ -901,7 +913,6 @@ function computeSummary() {
       const sample = classifySurface({ lat, lon, u, v });
 
       classCounts[sample.visualSurfaceClass] = (classCounts[sample.visualSurfaceClass] || 0) + 1;
-      hexRings.set(sample.hexRing, (hexRings.get(sample.hexRing) || 0) + 1);
 
       if (sample.solidSurfaceLand) solidSurfaceLandSamples += 1;
       if (sample.liquidWater) liquidWaterSamples += 1;
@@ -958,9 +969,11 @@ function computeSummary() {
     targetLiquidWaterRatio: TARGET_LIQUID_WATER_RATIO,
     targetLiquidWaterRatioMin: TARGET_LIQUID_WATER_RATIO_MIN,
     targetLiquidWaterRatioMax: TARGET_LIQUID_WATER_RATIO_MAX,
+
     solidSurfaceLandRatioTargetMet:
       solidSurfaceLandRatio >= TARGET_SOLID_SURFACE_RATIO_MIN &&
       solidSurfaceLandRatio <= TARGET_SOLID_SURFACE_RATIO_MAX,
+
     liquidWaterRatioTargetMet:
       liquidWaterRatio >= TARGET_LIQUID_WATER_RATIO_MIN &&
       liquidWaterRatio <= TARGET_LIQUID_WATER_RATIO_MAX,
@@ -975,9 +988,9 @@ function computeSummary() {
     averageParentEdgeDefinition: parentEdgeDefinitionAccum / total,
 
     hexResolution: HEX_RESOLUTION,
-    hexRingCount: hexRings.size,
     model: surfaceModel,
 
+    downstreamInitializedAsync: STATUS.downstreamInitializedAsync,
     downstreamImported: STATUS.downstreamImported,
     downstreamSamplerReady: STATUS.downstreamSamplerReady,
     downstreamChainConsumed: STATUS.downstreamChainConsumed,
@@ -1017,6 +1030,7 @@ function exposeSurfaceStatus() {
     document.documentElement.dataset.audraliaSurfaceContract = CONTRACT;
     document.documentElement.dataset.audraliaSurfaceTruthBridge = "true";
     document.documentElement.dataset.audraliaSurfaceParentStandard = "true";
+    document.documentElement.dataset.audraliaSurfaceNonblockingBoot = "true";
     document.documentElement.dataset.audraliaSurfaceHexMicroTruth = "true";
     document.documentElement.dataset.audraliaSurfaceRuntimeAuthority = "false";
     document.documentElement.dataset.audraliaSurfacePaintAuthority = "false";
@@ -1051,10 +1065,14 @@ export function sampleParentSurface(input, lonArg, uArg, vArg) {
   return sampleSurface(input, lonArg, uArg, vArg);
 }
 
+export function initializeSurfaceDownstream() {
+  return initializeDownstreamAsync();
+}
+
 export function getStatus() {
   return {
     ...STATUS,
-    summary: getSummary()
+    summary: cachedSummary
   };
 }
 
@@ -1075,7 +1093,8 @@ export function getParentStandard() {
     previousReceipt: PREVIOUS_RECEIPT,
     contract: CONTRACT,
     version: VERSION,
-    standard: "parent-surface-truth-4k-hex-micro-standard",
+    standard: "parent-surface-truth-4k-hex-micro-standard-nonblocking",
+    importsBlockFirstPaint: false,
     owns: Object.freeze([
       "static_surface_truth",
       "land_water_ice_shelf_classification",
@@ -1110,7 +1129,7 @@ export function getSurfaceDataset() {
     version: VERSION,
     model: surfaceModel,
     landLobes: LAND_LOBES,
-    summary: getSummary(),
+    summary: cachedSummary,
     status: getStatus(),
     parentStandard: getParentStandard()
   });
@@ -1121,6 +1140,7 @@ export const AUDRALIA_SURFACE_RECEIPT_VALUE = RECEIPT;
 export const AUDRALIA_SURFACE_PREVIOUS_RECEIPT_VALUE = PREVIOUS_RECEIPT;
 export const AUDRALIA_SURFACE_CONTRACT_VALUE = CONTRACT;
 export const AUDRALIA_SURFACE_PARENT_STANDARD = true;
+export const AUDRALIA_SURFACE_NONBLOCKING_BOOT = true;
 export const AUDRALIA_SURFACE_DATASET = Object.freeze({
   receipt: RECEIPT,
   previousReceipt: PREVIOUS_RECEIPT,
@@ -1129,13 +1149,27 @@ export const AUDRALIA_SURFACE_DATASET = Object.freeze({
   model: surfaceModel,
   landLobes: LAND_LOBES,
   hexResolution: HEX_RESOLUTION,
-  parentStandard: true
+  parentStandard: true,
+  nonblockingBoot: true
 });
 
-await initializeDownstream();
-
-cachedSummary = computeSummary();
 exposeSurfaceStatus();
+
+if (typeof queueMicrotask === "function") {
+  queueMicrotask(() => {
+    initializeDownstreamAsync().catch((error) => {
+      STATUS.downstreamImportError = String(error?.message || error || "async downstream initialization failure");
+      exposeSurfaceStatus();
+    });
+  });
+} else {
+  setTimeout(() => {
+    initializeDownstreamAsync().catch((error) => {
+      STATUS.downstreamImportError = String(error?.message || error || "async downstream initialization failure");
+      exposeSurfaceStatus();
+    });
+  }, 0);
+}
 
 export default Object.freeze({
   receipt: RECEIPT,
@@ -1143,10 +1177,12 @@ export default Object.freeze({
   contract: CONTRACT,
   version: VERSION,
   parentStandard: true,
+  nonblockingBoot: true,
   sampleSurface,
   sampleAudraliaSurface,
   sampleAudraliaSurfaceTruth,
   sampleParentSurface,
+  initializeSurfaceDownstream,
   getStatus,
   getSummary,
   getSurfaceSummary,

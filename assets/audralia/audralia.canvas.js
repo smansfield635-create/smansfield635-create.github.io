@@ -1,72 +1,27 @@
-/* /assets/audralia/audralia.runtime.js */
-/* AUDRALIA_RUNTIME_TRUTH_AUTHORITY */
-/* TNT: AUDRALIA_RUNTIME_TRUTH_RENEWAL_TNT_v1 */
+/* /assets/audralia/audralia.canvas.js */
+/* AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN */
+/* TNT: AUDRALIA_CANVAS_AUTHORITY_CANONICAL_EXPORT_TNT_v1 */
 
-const RECEIPT = "AUDRALIA_RUNTIME_TRUTH_RECEIPT";
-const CONTRACT = "AUDRALIA_RUNTIME_TRUTH_RENEWAL_TNT_v1";
-const VERSION = "2026-05-06.runtime-truth-renewal";
+const RECEIPT = "AUDRALIA_CANVAS_AUTHORITY_RECEIPT";
+const CONTRACT = "AUDRALIA_CANVAS_AUTHORITY_CANONICAL_EXPORT_TNT_v1";
+const VERSION = "2026-05-06.canvas-canonical-export";
 
-const PLANET = Object.freeze({
-  name: "Audralia",
-  route: "/showroom/globe/audralia/",
-  canvasAuthority: "/assets/audralia/audralia.canvas.js",
-  runtimeAuthority: "/assets/audralia/audralia.runtime.js",
+const SURFACE_DATASET = Object.freeze({
+  receipt: "AUDRALIA_CANVAS_SURFACE_DATASET_CANONICAL_v1",
+  authority: "adopted-column-canvas-authority",
+  autoBoot: false,
+  routeOwnsCall: true,
   graphicBox: false,
   imageGeneration: false,
   visualPassClaimed: false,
-  lineage: "tectonics -> topology -> terrain",
-  runtimeRole: "truth-object-provider",
-  topologyRole: "subterranean-and-sea-level-blueprint",
-  terrainRole: "above-sea-level-elevation-expression",
-  hydrationRole: "water-authority-boundary-and-depth",
-  exposedLandRatioTarget: 0.292,
-  ageRelation: "approximately-four-times-earth",
-  climatePremise: "clean-early-world-ecology-with-ancient-weathered-geology"
-});
-
-const REGIONS = Object.freeze([
-  { id: 1, key: "north-crown", elevationBand: "highest", role: "ice-reserve-and-pressure-cap" },
-  { id: 2, key: "west-mainland", elevationBand: "high", role: "weathered-granite-slate-mainland" },
-  { id: 3, key: "east-mainland", elevationBand: "medium-high", role: "opal-granite-coastal-rise" },
-  { id: 4, key: "equatorial-chain", elevationBand: "medium", role: "ancient-eroded-mountain-memory" },
-  { id: 5, key: "southern-mass", elevationBand: "medium-low", role: "diamond-opal-wet-edge" },
-  { id: 6, key: "island-belt-alpha", elevationBand: "low", role: "island-and-shelf-expression" },
-  { id: 7, key: "island-belt-beta", elevationBand: "low", role: "miscellaneous-territory-expression" },
-  { id: 8, key: "deep-basin-grid", elevationBand: "below-sea", role: "ocean-basin-and-void-definition" },
-  { id: 9, key: "subterranean-grid", elevationBand: "subsurface", role: "pressure-lines-caverns-and-underbody-boundaries" }
-]);
-
-const MATERIALS = Object.freeze({
-  primary: ["diamond", "opal", "granite", "slate"],
-  metals: ["gold", "platinum", "silver", "copper", "iron", "lead"],
-  coastalSands: ["white-opal-sand", "black-diamond-sand"],
-  waterStates: ["deep-ocean", "shelf-water", "coastal-water", "glacier-reserve", "ice-cap"]
-});
-
-const TOPOLOGY = Object.freeze({
-  receipt: "AUDRALIA_TOPOLOGY_RUNTIME_BLUEPRINT_v1",
-  scope: "subterranean-and-sea-level-blueprint-only",
-  owns: [
-    "land-void-footprint",
-    "sea-level-boundary",
-    "coastal-shelf",
-    "beach-threshold",
-    "basin-depth",
-    "subsurface-boundaries",
-    "pressure-line-map"
-  ],
-  doesNotOwn: [
-    "foliage",
-    "climate-animation",
-    "final-canvas-render",
-    "above-sea-terrain-relief",
-    "visual-pass-claim"
-  ],
+  runtimeTruthPath: "/assets/audralia/audralia.runtime.js",
+  topologyMode: "subterranean-and-sea-level-blueprint-consumed-by-canvas",
+  lineage: "tectonics -> topology -> terrain -> canvas",
   landmasses: [
     {
       id: "western-mainland-arc",
-      region: 2,
-      seaLevelState: "exposed",
+      fill: "rgba(92, 120, 88, 0.95)",
+      stroke: "rgba(242, 218, 158, 0.42)",
       points: [
         [-53, -156], [-43, -139], [-31, -126], [-15, -130],
         [-2, -116], [13, -103], [23, -83], [14, -63],
@@ -75,8 +30,8 @@ const TOPOLOGY = Object.freeze({
     },
     {
       id: "eastern-attached-mainland",
-      region: 3,
-      seaLevelState: "exposed",
+      fill: "rgba(133, 122, 89, 0.95)",
+      stroke: "rgba(242, 218, 158, 0.38)",
       points: [
         [-19, -61], [-2, -40], [12, -22], [28, -7],
         [35, 16], [29, 43], [12, 56], [-8, 49],
@@ -85,8 +40,8 @@ const TOPOLOGY = Object.freeze({
     },
     {
       id: "northern-rock-crown",
-      region: 1,
-      seaLevelState: "exposed-ice-cap",
+      fill: "rgba(194, 218, 222, 0.88)",
+      stroke: "rgba(236, 247, 255, 0.58)",
       points: [
         [43, -148], [58, -112], [65, -66], [60, -18],
         [49, 22], [39, 0], [35, -42], [38, -91]
@@ -94,8 +49,8 @@ const TOPOLOGY = Object.freeze({
     },
     {
       id: "southern-weathered-mass",
-      region: 5,
-      seaLevelState: "exposed-wet-edge",
+      fill: "rgba(113, 126, 105, 0.94)",
+      stroke: "rgba(218, 238, 229, 0.42)",
       points: [
         [-66, -42], [-58, 9], [-48, 54], [-35, 78],
         [-24, 113], [-38, 147], [-57, 171], [-72, 132],
@@ -104,19 +59,13 @@ const TOPOLOGY = Object.freeze({
     },
     {
       id: "equatorial-ancient-chain",
-      region: 4,
-      seaLevelState: "exposed-chain",
+      fill: "rgba(120, 105, 83, 0.94)",
+      stroke: "rgba(235, 207, 149, 0.40)",
       points: [
         [-9, 67], [4, 82], [17, 105], [14, 139],
         [1, 162], [-13, 150], [-19, 115], [-18, 86]
       ]
     }
-  ],
-  islandBelts: [
-    { id: "alpha-islands", region: 6, center: [-7, 128], spread: 26, count: 18 },
-    { id: "beta-islands", region: 7, center: [18, -166], spread: 30, count: 22 },
-    { id: "southern-shelf-islands", region: 6, center: [-42, 108], spread: 18, count: 14 },
-    { id: "western-pressure-islands", region: 7, center: [4, -142], spread: 22, count: 16 }
   ],
   shelves: [
     [[-58, -161], [-44, -144], [-30, -133], [-10, -139], [9, -118], [28, -88], [20, -57], [-4, -48], [-29, -61], [-43, -95], [-56, -126]],
@@ -138,368 +87,213 @@ const TOPOLOGY = Object.freeze({
   ]
 });
 
-const HYDRATION = Object.freeze({
-  receipt: "AUDRALIA_HYDRATION_RUNTIME_BOUNDARY_v1",
-  seaLevel: 0,
-  deepOceanBelow: -0.62,
-  shelfRange: [-0.62, -0.08],
-  coastalRange: [-0.08, 0.035],
-  beachRange: [0.035, 0.085],
-  glacierAbove: 0.82,
-  owns: [
-    "ocean-depth",
-    "shelf-water",
-    "coastal-wet-edge",
-    "sea-level-datum",
-    "glacier-reserve-state"
-  ]
-});
+let activeController = null;
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function normalizeLon(lon) {
-  let value = Number(lon) || 0;
+function normalizeMount(target) {
+  if (target instanceof HTMLElement) return target;
 
-  while (value > 180) value -= 360;
-  while (value < -180) value += 360;
+  if (target && target.mount instanceof HTMLElement) return target.mount;
+  if (target && target.target instanceof HTMLElement) return target.target;
+  if (target && target.container instanceof HTMLElement) return target.container;
 
-  return value;
-}
-
-function normalizeLat(lat) {
-  return clamp(Number(lat) || 0, -90, 90);
-}
-
-function hash01(seed) {
-  const x = Math.sin(seed * 12.9898) * 43758.5453123;
-  return x - Math.floor(x);
-}
-
-function smoothstep(edge0, edge1, value) {
-  const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
-  return t * t * (3 - 2 * t);
-}
-
-function signedDistanceToPoint(lat, lon, pointLat, pointLon) {
-  const dLat = lat - pointLat;
-  const dLon = normalizeLon(lon - pointLon);
-  return Math.sqrt(dLat * dLat + dLon * dLon);
-}
-
-function pointScoreFromPolygon(lat, lon, points) {
-  let minDistance = Infinity;
-
-  for (const [pointLat, pointLon] of points) {
-    minDistance = Math.min(minDistance, signedDistanceToPoint(lat, lon, pointLat, pointLon));
+  if (typeof target === "string") {
+    const found = document.querySelector(target);
+    if (found instanceof HTMLElement) return found;
   }
 
-  const anchorScore = smoothstep(42, 0, minDistance);
-  const waveScore =
-    Math.sin((lat + points.length * 7) * 0.075) * 0.07 +
-    Math.cos((lon - points.length * 11) * 0.061) * 0.07;
+  const selectors = [
+    "#audralia-canvas-mount",
+    "[data-audralia-canvas-mount]",
+    "#audralia-mount",
+    "[data-audralia-mount]",
+    "[data-audralia-render-mount]",
+    "#audralia-main",
+    "main"
+  ];
 
-  return clamp(anchorScore + waveScore, 0, 1);
+  for (const selector of selectors) {
+    const found = document.querySelector(selector);
+    if (found instanceof HTMLElement) return found;
+  }
+
+  return document.body;
 }
 
-function computeLandInfluence(lat, lon) {
-  let best = {
-    influence: 0,
-    region: 8,
-    massId: "ocean-void"
-  };
+function setRouteStatus(message) {
+  const selectors = [
+    "#audralia-route-status",
+    "[data-audralia-route-status]",
+    "#audralia-status",
+    "[data-route-status]"
+  ];
 
-  for (const mass of TOPOLOGY.landmasses) {
-    const influence = pointScoreFromPolygon(lat, lon, mass.points);
-
-    if (influence > best.influence) {
-      best = {
-        influence,
-        region: mass.region,
-        massId: mass.id
-      };
+  for (const selector of selectors) {
+    const target = document.querySelector(selector);
+    if (target instanceof HTMLElement) {
+      target.textContent = message;
+      target.dataset.audraliaCanvasLoaded = "true";
+      target.dataset.audraliaCanvasReceipt = RECEIPT;
+      return;
     }
   }
-
-  for (const belt of TOPOLOGY.islandBelts) {
-    for (let i = 0; i < belt.count; i += 1) {
-      const angle = hash01((i + 1) * 91 + belt.region) * Math.PI * 2;
-      const radius = hash01((i + 1) * 193 + belt.region) * belt.spread;
-      const islandLat = clamp(belt.center[0] + Math.sin(angle) * radius * 0.55, -72, 72);
-      const islandLon = normalizeLon(belt.center[1] + Math.cos(angle) * radius);
-      const distance = signedDistanceToPoint(lat, lon, islandLat, islandLon);
-      const influence = smoothstep(7.5, 0, distance) * 0.78;
-
-      if (influence > best.influence) {
-        best = {
-          influence,
-          region: belt.region,
-          massId: `${belt.id}-${i + 1}`
-        };
-      }
-    }
-  }
-
-  return best;
 }
 
-function computePressure(lat, lon) {
-  let pressure = 0;
+function removeResidue() {
+  const badText = new Set([
+    "Loading Audralia",
+    "Canvas authority imported · no render export found",
+    "Audralia canvas authority imported, but no render export was found.",
+    "Audralia doorway is loading the current adopted canvas authority."
+  ]);
 
-  for (const line of TOPOLOGY.pressureLines) {
-    for (const [lineLat, lineLon] of line) {
-      const distance = signedDistanceToPoint(lat, lon, lineLat, lineLon);
-      pressure = Math.max(pressure, smoothstep(24, 0, distance));
-    }
+  const nodes = Array.from(document.querySelectorAll("p, div, span, li, h2, h3"));
+
+  for (const node of nodes) {
+    if (!(node instanceof HTMLElement)) continue;
+    if (node.children.length > 0) continue;
+
+    const text = (node.textContent || "").trim();
+    if (badText.has(text)) node.remove();
   }
-
-  const mineralNoise =
-    hash01(lat * 17.31 + lon * 3.77) * 0.16 +
-    Math.abs(Math.sin(lat * 0.21) * Math.cos(lon * 0.13)) * 0.22;
-
-  return clamp(pressure * 0.72 + mineralNoise, 0, 1);
 }
 
-function computeBasin(lat, lon) {
-  let basin = 0;
-
-  for (const line of TOPOLOGY.basinLines) {
-    for (const [lineLat, lineLon] of line) {
-      const distance = signedDistanceToPoint(lat, lon, lineLat, lineLon);
-      basin = Math.max(basin, smoothstep(34, 0, distance));
-    }
-  }
-
-  const oceanNoise = Math.abs(Math.sin((lat - 12) * 0.087) * Math.cos((lon + 31) * 0.049));
-
-  return clamp(basin * 0.65 + oceanNoise * 0.28, 0, 1);
+function removeOwnedNodes(mount) {
+  const owned = mount.querySelectorAll("[data-audralia-canvas-authority='true']");
+  owned.forEach((node) => node.remove());
 }
 
-function computeElevation(lat, lon) {
-  const land = computeLandInfluence(lat, lon);
-  const pressure = computePressure(lat, lon);
-  const basin = computeBasin(lat, lon);
-  const polarLift = smoothstep(42, 88, Math.abs(lat)) * 0.36;
-  const raw =
-    land.influence * 1.15 +
-    pressure * 0.28 +
-    polarLift -
-    basin * 0.44 -
-    0.42;
+function createShell(mount) {
+  removeOwnedNodes(mount);
+  removeResidue();
 
-  return clamp(raw, -1, 1);
+  const shell = document.createElement("section");
+  shell.dataset.audraliaCanvasAuthority = "true";
+  shell.dataset.audraliaReceipt = RECEIPT;
+  shell.dataset.audraliaContract = CONTRACT;
+  shell.style.width = "min(100%, 920px)";
+  shell.style.margin = "18px auto";
+  shell.style.display = "grid";
+  shell.style.placeItems = "center";
+  shell.style.position = "relative";
+  shell.style.isolation = "isolate";
+
+  const frame = document.createElement("div");
+  frame.dataset.audraliaCanvasFrame = "contained-square";
+  frame.style.width = "min(92vw, 760px)";
+  frame.style.aspectRatio = "1 / 1";
+  frame.style.position = "relative";
+  frame.style.overflow = "hidden";
+  frame.style.borderRadius = "28px";
+  frame.style.border = "1px solid rgba(231, 204, 142, 0.28)";
+  frame.style.background = "radial-gradient(circle at 50% 42%, rgba(29,55,83,0.32), rgba(3,8,18,0.96) 62%, rgba(1,3,10,1))";
+  frame.style.boxShadow = "0 28px 90px rgba(0,0,0,0.48), inset 0 0 70px rgba(147,198,255,0.08)";
+
+  const canvas = document.createElement("canvas");
+  canvas.dataset.audraliaCanvas = "true";
+  canvas.setAttribute("aria-label", "Audralia animated constructed-world canvas");
+  canvas.style.width = "100%";
+  canvas.style.height = "100%";
+  canvas.style.display = "block";
+
+  const proof = document.createElement("p");
+  proof.dataset.audraliaCanvasProof = "true";
+  proof.textContent = RECEIPT;
+  proof.style.margin = "12px 0 0";
+  proof.style.color = "rgba(245,233,199,0.86)";
+  proof.style.font = "700 0.74rem/1.35 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
+  proof.style.letterSpacing = "0.08em";
+  proof.style.textTransform = "uppercase";
+  proof.style.textAlign = "center";
+
+  frame.appendChild(canvas);
+  shell.appendChild(frame);
+  shell.appendChild(proof);
+  mount.prepend(shell);
+
+  return { shell, frame, canvas, proof };
 }
 
-function classifySurface(latInput, lonInput) {
-  const lat = normalizeLat(latInput);
-  const lon = normalizeLon(lonInput);
-  const land = computeLandInfluence(lat, lon);
-  const pressure = computePressure(lat, lon);
-  const basin = computeBasin(lat, lon);
-  const elevation = computeElevation(lat, lon);
-  const absLat = Math.abs(lat);
+function setupCanvas(canvas, frame) {
+  const rect = frame.getBoundingClientRect();
+  const fallbackSize = Math.min(window.innerWidth || 720, 760);
+  const cssSize = Math.max(320, Math.floor(Math.min(rect.width || fallbackSize, rect.height || fallbackSize)));
+  const ratio = clamp(window.devicePixelRatio || 1, 1, 2.5);
 
-  let region = land.region;
-  let className = "deep-ocean";
-  let hydration = "deep-ocean";
-  let material = "basaltic-basin";
+  canvas.width = Math.floor(cssSize * ratio);
+  canvas.height = Math.floor(cssSize * ratio);
+  canvas.dataset.pixelRatio = String(ratio);
 
-  if (elevation >= HYDRATION.glacierAbove || absLat >= 68) {
-    className = "ice-cap-glacier-reserve";
-    hydration = "frozen-water";
-    material = "ice-over-slate-diamond";
-    region = absLat >= 0 ? (lat >= 0 ? 1 : 5) : region;
-  } else if (elevation > HYDRATION.beachRange[1]) {
-    className = "exposed-weathered-land";
-    hydration = "above-sea";
-    material = pressure > 0.66 ? "diamond-opal-granite-slate" : "granite-slate";
-  } else if (elevation > HYDRATION.beachRange[0]) {
-    className = "beach-threshold";
-    hydration = "wet-edge";
-    material = pressure > 0.52 ? "black-diamond-and-white-opal-sand" : "white-opal-sand";
-  } else if (elevation > HYDRATION.coastalRange[0]) {
-    className = "coastal-water";
-    hydration = "coastal-water";
-    material = "coastal-shelf";
-  } else if (elevation > HYDRATION.deepOceanBelow) {
-    className = "continental-shelf-water";
-    hydration = "shelf-water";
-    material = "submerged-shelf";
-    region = 8;
-  } else {
-    className = "deep-ocean-basin";
-    hydration = "deep-ocean";
-    material = basin > 0.56 ? "deep-basin" : "ocean-void";
-    region = 8;
-  }
+  const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
+  if (!ctx) throw new Error("Audralia canvas context unavailable.");
 
-  if (pressure > 0.72 && elevation < 0.18) {
-    region = 9;
-  }
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+  return { ctx, size: cssSize, ratio };
+}
+
+function project(latDeg, lonDeg, rotationDeg, size) {
+  const lat = latDeg * Math.PI / 180;
+  const lon = (lonDeg + rotationDeg) * Math.PI / 180;
+  const tilt = -8 * Math.PI / 180;
+  const cosLat = Math.cos(lat);
+
+  const x = cosLat * Math.sin(lon);
+  const y = Math.sin(lat) * Math.cos(tilt) - cosLat * Math.cos(lon) * Math.sin(tilt);
+  const z = Math.sin(lat) * Math.sin(tilt) + cosLat * Math.cos(lon) * Math.cos(tilt);
+  const radius = size * 0.337;
 
   return {
-    lat,
-    lon,
-    className,
-    region,
-    regionKey: REGIONS.find((item) => item.id === region)?.key || "unclassified",
-    massId: land.massId,
-    elevation,
-    landInfluence: land.influence,
-    pressure,
-    basin,
-    hydration,
-    material,
-    isLand: elevation > HYDRATION.beachRange[1],
-    isBeach: elevation > HYDRATION.beachRange[0] && elevation <= HYDRATION.beachRange[1],
-    isWater: elevation <= HYDRATION.beachRange[0],
-    isFrozen: hydration === "frozen-water",
-    isSubterraneanRelevant: pressure > 0.62 || region === 9
+    x: size / 2 + x * radius,
+    y: size / 2 - y * radius,
+    z,
+    visible: z > -0.035
   };
 }
 
-function buildLattice256() {
-  const states = [];
+function drawProjectedPath(ctx, path, rotation, size, options = {}) {
+  const points = path.map(([lat, lon]) => project(lat, lon, rotation, size));
+  const visible = points.filter((point) => point.visible);
 
-  for (let i = 0; i < 256; i += 1) {
-    const bits = i.toString(2).padStart(8, "0");
-    const latBand = parseInt(bits.slice(0, 3), 2);
-    const lonBand = parseInt(bits.slice(3, 6), 2);
-    const depthBit = Number(bits[6]);
-    const pressureBit = Number(bits[7]);
+  if (visible.length < 2) return false;
 
-    const lat = -78 + latBand * (156 / 7);
-    const lon = -168 + lonBand * (336 / 7);
-    const sample = classifySurface(lat, lon);
+  ctx.save();
+  ctx.beginPath();
 
-    states.push({
-      id: i,
-      bits,
-      lat,
-      lon,
-      depthClass: depthBit ? "subsurface" : "surface",
-      pressureClass: pressureBit ? "high-pressure" : "standard-pressure",
-      surfaceClass: sample.className,
-      region: sample.region,
-      hydration: sample.hydration,
-      material: sample.material,
-      admissible: true
-    });
-  }
+  let started = false;
 
-  return states;
-}
+  for (const point of points) {
+    if (!point.visible) continue;
 
-function computeRuntimeSummary() {
-  const sampleGrid = [];
-  let land = 0;
-  let water = 0;
-  let beach = 0;
-  let frozen = 0;
-  let subterranean = 0;
-
-  for (let lat = -75; lat <= 75; lat += 15) {
-    for (let lon = -165; lon <= 165; lon += 15) {
-      const sample = classifySurface(lat, lon);
-      sampleGrid.push(sample);
-
-      if (sample.isLand) land += 1;
-      if (sample.isWater) water += 1;
-      if (sample.isBeach) beach += 1;
-      if (sample.isFrozen) frozen += 1;
-      if (sample.isSubterraneanRelevant) subterranean += 1;
+    if (!started) {
+      ctx.moveTo(point.x, point.y);
+      started = true;
+    } else {
+      ctx.lineTo(point.x, point.y);
     }
   }
 
-  const total = sampleGrid.length || 1;
+  if (options.close) ctx.closePath();
 
-  return {
-    sampleCount: total,
-    landRatio: Number((land / total).toFixed(3)),
-    waterRatio: Number((water / total).toFixed(3)),
-    beachRatio: Number((beach / total).toFixed(3)),
-    frozenRatio: Number((frozen / total).toFixed(3)),
-    subterraneanRatio: Number((subterranean / total).toFixed(3)),
-    targetLandRatio: PLANET.exposedLandRatioTarget,
-    visualPassClaimed: false
-  };
-}
-
-const lattice256 = buildLattice256();
-
-const runtimeTruth = {
-  loaded: true,
-  receipt: RECEIPT,
-  contract: CONTRACT,
-  version: VERSION,
-  generatedAt: new Date().toISOString(),
-  planet: PLANET,
-  regions: REGIONS,
-  materials: MATERIALS,
-  topology: TOPOLOGY,
-  hydration: HYDRATION,
-  lattice256,
-  summary: computeRuntimeSummary(),
-  classifySurface,
-  sampleSurface: classifySurface,
-  getSurfaceAt: classifySurface,
-  getTopology: () => TOPOLOGY,
-  getHydration: () => HYDRATION,
-  getRegions: () => REGIONS,
-  getMaterials: () => MATERIALS,
-  getLattice256: () => lattice256,
-  getSummary: computeRuntimeSummary
-};
-
-function publishRuntimeTruth() {
-  if (typeof window === "undefined") {
-    return runtimeTruth;
+  if (options.fill) {
+    ctx.fillStyle = options.fill;
+    ctx.fill();
   }
 
-  const status = {
-    loaded: true,
-    receipt: RECEIPT,
-    contract: CONTRACT,
-    version: VERSION,
-    graphicBox: false,
-    imageGeneration: false,
-    visualPassClaimed: false,
-    runtimeTruthReady: true,
-    exposesClassifySurface: true,
-    exposesLattice256: true,
-    exposesTopology: true,
-    exposesHydration: true,
-    summary: runtimeTruth.summary
-  };
+  if (options.stroke) {
+    ctx.strokeStyle = options.stroke;
+    ctx.lineWidth = options.lineWidth || 1;
+    ctx.globalAlpha = options.alpha ?? 1;
+    ctx.stroke();
+  }
 
-  window.__AUDRALIA_RUNTIME_TRUTH__ = runtimeTruth;
-  window.__AUDRALIA_RUNTIME_STATUS__ = status;
-  window.DGBAudraliaRuntime = runtimeTruth;
-  window.DGBAudraliaRuntimeStatus = status;
-
-  window.dispatchEvent(new CustomEvent("audralia:runtime-truth-ready", {
-    detail: status
-  }));
-
-  return runtimeTruth;
+  ctx.restore();
+  return true;
 }
 
-publishRuntimeTruth();
-
-export {
-  RECEIPT,
-  CONTRACT,
-  VERSION,
-  PLANET,
-  REGIONS,
-  MATERIALS,
-  TOPOLOGY,
-  HYDRATION,
-  lattice256,
-  classifySurface,
-  computeRuntimeSummary,
-  publishRuntimeTruth
-};
-
-export default runtimeTruth;
+function radial(ctx, x0, y0, r0, x1, y1, r1, stops) {
+  const gradient = ctx.createRadialGradient(x0, y0, r0, x1, y1, r1);
+  stops.forEach(([offset, color]) => gradient.addColorStop

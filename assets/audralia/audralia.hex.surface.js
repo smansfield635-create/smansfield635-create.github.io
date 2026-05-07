@@ -1,11 +1,22 @@
 // /assets/audralia/audralia.hex.surface.js
-// AUDRALIA_G7_HEX_SURFACE_CHILD_RENDERER_TNT_v1
-// Active renewal: AUDRALIA_G9_HEX_CHILD_4K_MICRO_SURFACE_GLAZE_TNT_v1
+// AUDRALIA_HEX_SURFACE_CHILD_PARENT_FIELD_EXPRESSOR_TNT_v3
+// Full-file replacement.
+// Purpose:
+// - Renew the child contract in order under the active parent surface standard.
+// - Child expresses parent fields; child does not create land/water/world truth.
+// - Child may refine texture, ridge, shelf, coastline, mineral, glaze, and micro-surface expression.
+// - Child must not import runtime.
+// - Child must not overwrite parent classification.
+// - Grandchildren remain downstream and are not activated here.
+// - No GraphicBox. No image generation. No visual-pass claim.
 
-const RECEIPT = "AUDRALIA_G7_HEX_SURFACE_CHILD_RENDERER_TNT_v1";
-const ACTIVE_RENEWAL = "AUDRALIA_G9_HEX_CHILD_4K_MICRO_SURFACE_GLAZE_TNT_v1";
+const RECEIPT = "AUDRALIA_HEX_SURFACE_CHILD_PARENT_FIELD_EXPRESSOR_TNT_v3";
+const PREVIOUS_RECEIPT = "AUDRALIA_G7_HEX_SURFACE_CHILD_RENDERER_TNT_v1";
+const PREVIOUS_ACTIVE_RENEWAL = "AUDRALIA_G9_HEX_CHILD_4K_MICRO_SURFACE_GLAZE_TNT_v1";
 const COMPATIBILITY_RENEWAL = "AUDRALIA_G8_HEX_CHILD_GLOBAL_AQUEOUS_GLAZE_LAYER_TNT_v1";
-const PARENT_RECEIPT = "AUDRALIA_ROUTE_CONSUME_CURRENT_RUNTIME_GENEALOGY_SURFACE_TNT_v1";
+const PARENT_REQUIRED_RECEIPT = "AUDRALIA_SURFACE_PARENT_COASTLINE_RIDGE_FEATHER_TNT_v6";
+const PARENT_FALLBACK_RECEIPT = "AUDRALIA_SURFACE_PARENT_BASIN_RIDGE_DISTRIBUTION_TNT_v5";
+const CHILD_CONTRACT = "AUDRALIA_HEX_CHILD_PARENT_FIELD_EXPRESSION_CONTRACT_v1";
 
 const REMOVED_STALE_RECEIPTS = Object.freeze([
   "AUDRALIA_G8_HEX_CHILD_DEEP_OCEAN_SEPARATION_TNT_v1",
@@ -15,27 +26,80 @@ const REMOVED_STALE_RECEIPTS = Object.freeze([
 
 const DEFAULTS = Object.freeze({
   minSize: 320,
-  maxSize: 860,
+  maxSize: 900,
   radiusRatio: 0.405,
-  hexDensity: 236,
-  minHexRadius: 1.35,
-  maxHexRadius: 3.85,
-  edgeDarkening: 0.036,
-  seamSoftening: 0.052,
-  globalGlazeStrength: 0.96,
-  landGlazeOpacity: 0.092,
-  waterGlazeOpacity: 0.176,
-  shelfGlazeOpacity: 0.255,
-  iceGlazeOpacity: 0.044,
-  terrainRecovery: 0.46,
-  microTerrainStrength: 0.24,
-  coastlineSparkleStrength: 0.15,
-  opalRefractionStrength: 0.12,
-  diamondGlintStrength: 0.08,
+  hexDensity: 252,
+  minHexRadius: 1.12,
+  maxHexRadius: 3.55,
+  edgeDarkening: 0.038,
+  seamSoftening: 0.042,
+  parentFieldStrength: 0.92,
+  parentTextureBlend: 0.28,
+  ridgeExpressionStrength: 0.42,
+  mountainExpressionStrength: 0.36,
+  coastlineExpressionStrength: 0.42,
+  shelfExpressionStrength: 0.38,
+  mineralExpressionStrength: 0.30,
+  microTerrainStrength: 0.34,
+  glazeStrength: 0.18,
+  atmosphereStrength: 1,
   lightX: -0.42,
   lightY: 0.36,
   lightZ: 0.83
 });
+
+const STATUS = {
+  ok: true,
+  receipt: RECEIPT,
+  previousReceipt: PREVIOUS_RECEIPT,
+  previousActiveRenewal: PREVIOUS_ACTIVE_RENEWAL,
+  compatibilityRenewal: COMPATIBILITY_RENEWAL,
+  parentRequiredReceipt: PARENT_REQUIRED_RECEIPT,
+  parentFallbackReceipt: PARENT_FALLBACK_RECEIPT,
+  childContract: CHILD_CONTRACT,
+  role: "audralia-child-parent-field-expressor",
+  parentStandardRequired: true,
+  childActivatedByParentContract: false,
+  parentReceiptDetected: "",
+  parentSurfaceSamplerDetected: false,
+  textureFallbackAvailable: false,
+  owns: Object.freeze([
+    "hexagonal_surface_sampling",
+    "parent_field_expression",
+    "ridge_expression",
+    "mountain_expression",
+    "coastline_expression",
+    "shelf_expression",
+    "mineral_expression",
+    "micro_surface_refinement",
+    "atmospheric_rim",
+    "canvas_frame_paint_strategy"
+  ]),
+  doesNotOwn: Object.freeze([
+    "runtime_import",
+    "runtime_motion",
+    "land_water_classification",
+    "parent_surface_truth",
+    "planet_generation",
+    "topology_authority",
+    "terrain_authority",
+    "hydration_authority",
+    "ocean_authority",
+    "route_boot",
+    "gauges_scoring",
+    "visual_pass_claim"
+  ]),
+  runtimeImport: false,
+  runtimeAuthority: false,
+  routeOwnedLandGeneration: false,
+  routeOwnedWaterGeneration: false,
+  downstreamClassificationOverrideAllowed: false,
+  parentClassificationPreserved: true,
+  grandchildrenActivated: false,
+  graphicBox: false,
+  imageGeneration: false,
+  visualPassClaimed: false
+};
 
 function clamp(value, min, max) {
   const number = Number(value);
@@ -43,8 +107,12 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, number));
 }
 
+function clamp01(value) {
+  return clamp(value, 0, 1);
+}
+
 function mix(a, b, t) {
-  return a + (b - a) * clamp(t, 0, 1);
+  return a + (b - a) * clamp01(t);
 }
 
 function wrap01(value) {
@@ -56,7 +124,8 @@ function fract(value) {
 }
 
 function smoothstep(edge0, edge1, value) {
-  const t = clamp((value - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
+  const denominator = Math.max(0.000001, edge1 - edge0);
+  const t = clamp01((value - edge0) / denominator);
   return t * t * (3 - 2 * t);
 }
 
@@ -83,15 +152,15 @@ function valueNoise(x, y, seed) {
 
 function fbm(x, y, seed, octaves) {
   let total = 0;
-  let amplitude = 0.5;
+  let amplitude = 0.52;
   let frequency = 1;
   let normalizer = 0;
 
-  for (let i = 0; i < octaves; i += 1) {
-    total += valueNoise(x * frequency, y * frequency, seed + i * 31.17) * amplitude;
+  for (let index = 0; index < octaves; index += 1) {
+    total += valueNoise(x * frequency, y * frequency, seed + index * 29.37) * amplitude;
     normalizer += amplitude;
     amplitude *= 0.5;
-    frequency *= 2;
+    frequency *= 2.04;
   }
 
   return total / Math.max(0.000001, normalizer);
@@ -123,7 +192,9 @@ function nearestHexCenter(xPx, yPx, hexRadius) {
 
   return {
     x: hexRadius * Math.sqrt(3) * (rounded.q + rounded.r / 2),
-    y: hexRadius * 1.5 * rounded.r
+    y: hexRadius * 1.5 * rounded.r,
+    q: rounded.q,
+    r: rounded.r
   };
 }
 
@@ -135,12 +206,76 @@ function hexDistance(localX, localY, hexRadius) {
   return Math.max(Math.abs(q), Math.abs(r), Math.abs(s));
 }
 
+function normalizeOptions(options = {}) {
+  return Object.freeze({
+    radiusRatio: clamp(Number(options.radiusRatio) || DEFAULTS.radiusRatio, 0.32, 0.48),
+    hexDensity: clamp(Number(options.hexDensity) || DEFAULTS.hexDensity, 120, 420),
+    minHexRadius: clamp(Number(options.minHexRadius) || DEFAULTS.minHexRadius, 0.75, 3),
+    maxHexRadius: clamp(Number(options.maxHexRadius) || DEFAULTS.maxHexRadius, 1.4, 6),
+    edgeDarkening: clamp(Number(options.edgeDarkening) || DEFAULTS.edgeDarkening, 0, 0.18),
+    seamSoftening: clamp(Number(options.seamSoftening) || DEFAULTS.seamSoftening, 0, 0.18),
+    parentFieldStrength: clamp(
+      options.parentFieldStrength === undefined ? DEFAULTS.parentFieldStrength : Number(options.parentFieldStrength),
+      0,
+      1
+    ),
+    parentTextureBlend: clamp(
+      options.parentTextureBlend === undefined ? DEFAULTS.parentTextureBlend : Number(options.parentTextureBlend),
+      0,
+      0.55
+    ),
+    ridgeExpressionStrength: clamp(
+      options.ridgeExpressionStrength === undefined ? DEFAULTS.ridgeExpressionStrength : Number(options.ridgeExpressionStrength),
+      0,
+      0.75
+    ),
+    mountainExpressionStrength: clamp(
+      options.mountainExpressionStrength === undefined ? DEFAULTS.mountainExpressionStrength : Number(options.mountainExpressionStrength),
+      0,
+      0.75
+    ),
+    coastlineExpressionStrength: clamp(
+      options.coastlineExpressionStrength === undefined ? DEFAULTS.coastlineExpressionStrength : Number(options.coastlineExpressionStrength),
+      0,
+      0.80
+    ),
+    shelfExpressionStrength: clamp(
+      options.shelfExpressionStrength === undefined ? DEFAULTS.shelfExpressionStrength : Number(options.shelfExpressionStrength),
+      0,
+      0.80
+    ),
+    mineralExpressionStrength: clamp(
+      options.mineralExpressionStrength === undefined ? DEFAULTS.mineralExpressionStrength : Number(options.mineralExpressionStrength),
+      0,
+      0.60
+    ),
+    microTerrainStrength: clamp(
+      options.microTerrainStrength === undefined ? DEFAULTS.microTerrainStrength : Number(options.microTerrainStrength),
+      0,
+      0.65
+    ),
+    glazeStrength: clamp(
+      options.glazeStrength === undefined ? DEFAULTS.glazeStrength : Number(options.glazeStrength),
+      0,
+      0.50
+    ),
+    atmosphereStrength: clamp(
+      options.atmosphereStrength === undefined ? DEFAULTS.atmosphereStrength : Number(options.atmosphereStrength),
+      0,
+      1.4
+    ),
+    lightX: Number(options.lightX) || DEFAULTS.lightX,
+    lightY: Number(options.lightY) || DEFAULTS.lightY,
+    lightZ: Number(options.lightZ) || DEFAULTS.lightZ
+  });
+}
+
 function sampleTexture(texture, u, v) {
   const width = texture && texture.width ? texture.width : 1;
   const height = texture && texture.height ? texture.height : 1;
   const data = texture && texture.data ? texture.data : null;
 
-  if (!data) return [12, 66, 124, 255];
+  if (!data) return [8, 45, 78, 255];
 
   const tx = Math.floor(wrap01(u) * (width - 1));
   const ty = Math.floor(clamp(v, 0, 1) * (height - 1));
@@ -191,7 +326,7 @@ function sampleTextureBilinear(texture, u, v) {
 }
 
 function mixColor(base, overlay, amount) {
-  const t = clamp(amount, 0, 1);
+  const t = clamp01(amount);
 
   return [
     clamp(Math.round(mix(base[0], overlay[0], t)), 0, 255),
@@ -218,175 +353,259 @@ function colorLuma(color) {
   ) / 255;
 }
 
-function chroma(color) {
+function resolveParentSurfaceSampler(state) {
+  const candidates = [
+    state && state.surface && state.surface.sampleSurface,
+    state && state.surface && state.surface.sampleAudraliaSurface,
+    state && state.parentSurface && state.parentSurface.sampleSurface,
+    state && state.parentSurface && state.parentSurface.sampleAudraliaSurface,
+    state && state.parentSurfaceSampler,
+    state && state.surfaceSampler,
+    state && state.parent && state.parent.sampleSurface,
+    state && state.parent && state.parent.sampleAudraliaSurface
+  ];
+
+  return candidates.find((candidate) => typeof candidate === "function") || null;
+}
+
+function resolveParentReceipt(state) {
+  const candidates = [
+    state && state.surfaceReceipt,
+    state && state.parentSurfaceReceipt,
+    state && state.surface && state.surface.AUDRALIA_SURFACE_RECEIPT_VALUE,
+    state && state.surface && state.surface.default && state.surface.default.receipt,
+    state && state.parentSurface && state.parentSurface.AUDRALIA_SURFACE_RECEIPT_VALUE,
+    state && state.parentSurface && state.parentSurface.default && state.parentSurface.default.receipt,
+    state && state.parent && state.parent.receipt
+  ];
+
+  return String(candidates.find((value) => typeof value === "string" && value.length) || "");
+}
+
+function isParentReceiptAccepted(receipt) {
+  return receipt === PARENT_REQUIRED_RECEIPT || receipt === PARENT_FALLBACK_RECEIPT || receipt.includes("AUDRALIA_SURFACE_PARENT_");
+}
+
+function fallbackTextureClassification(color) {
   const r = Number(color[0]) || 0;
   const g = Number(color[1]) || 0;
   const b = Number(color[2]) || 0;
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
+  const luma = colorLuma(color);
 
-  return (max - min) / 255;
-}
-
-function isLandColor(color) {
-  const r = Number(color[0]) || 0;
-  const g = Number(color[1]) || 0;
-  const b = Number(color[2]) || 0;
-
-  return r >= 82 && g >= 62 && r >= b * 0.92 && g > b * 0.58;
-}
-
-function isWaterColor(color) {
-  const r = Number(color[0]) || 0;
-  const g = Number(color[1]) || 0;
-  const b = Number(color[2]) || 0;
-
-  return b > r * 1.02 && g > r * 0.58 && !isLandColor(color);
-}
-
-function isShelfLikeColor(color) {
-  const r = Number(color[0]) || 0;
-  const g = Number(color[1]) || 0;
-  const b = Number(color[2]) || 0;
-
-  return isWaterColor(color) && g > 78 && b > 94 && Math.abs(g - b) < 105;
-}
-
-function isIceOrHighlightColor(color) {
-  const r = Number(color[0]) || 0;
-  const g = Number(color[1]) || 0;
-  const b = Number(color[2]) || 0;
-
-  return r > 185 && g > 185 && b > 185;
-}
-
-function edgeContrast(texture, u, v) {
-  const delta = 1 / Math.max(texture && texture.width ? texture.width : 256, texture && texture.height ? texture.height : 256);
-  const c = sampleTextureBilinear(texture, u, v);
-  const cx = sampleTextureBilinear(texture, u + delta * 2, v);
-  const cy = sampleTextureBilinear(texture, u, v + delta * 2);
-  const lx = Math.abs(colorLuma(c) - colorLuma(cx));
-  const ly = Math.abs(colorLuma(c) - colorLuma(cy));
-
-  return clamp((lx + ly) * 2.3, 0, 1);
-}
-
-function classifySurface(rawColor) {
-  const land = isLandColor(rawColor);
-  const water = isWaterColor(rawColor);
-  const shelf = isShelfLikeColor(rawColor);
-  const ice = isIceOrHighlightColor(rawColor);
-  const luma = colorLuma(rawColor);
-  const chromaValue = chroma(rawColor);
-
-  let className = "void";
-  if (ice) className = "ice-highlight";
-  else if (shelf) className = "shelf-water";
-  else if (water) className = "water";
-  else if (land && luma > 0.62 && chromaValue < 0.22) className = "stone-highlight";
-  else if (land) className = "land";
+  const ice = r > 184 && g > 184 && b > 184;
+  const water = b > r * 1.02 && g > r * 0.55;
+  const shelf = water && g > 88 && b > 98 && Math.abs(g - b) < 112;
+  const land = !ice && !water && r >= 50 && g >= 54;
 
   return {
-    land,
+    ok: true,
+    receipt: "TEXTURE_FALLBACK_PARENT_UNAVAILABLE",
+    visualSurfaceClass: ice
+      ? "glacier_ice_snowpack_surface"
+      : land
+        ? "inland_terrain_land_surface"
+        : shelf
+          ? "shelf_water_surface"
+          : "ocean_water_surface",
+    ice,
+    glacier: ice,
+    liquidWater: water,
     water,
     shelf,
-    ice,
-    luma,
-    chroma: chromaValue,
-    className
+    ocean: water && !shelf,
+    exposedTerrainLand: land,
+    land,
+    visibleLand: land,
+    solidSurfaceLand: land || ice,
+    topologyLand: land || ice,
+    coastlineIndex: shelf ? 0.72 : 0,
+    shelfIndex: shelf ? 0.78 : 0,
+    shelfGradientIndex: shelf ? 0.78 : 0,
+    turquoiseIndex: shelf ? 0.74 : water ? 0.18 : 0,
+    parentEdgeDefinition: shelf ? 0.40 : land ? 0.16 : 0.08,
+    ridgeIndex: land ? clamp01((luma - 0.28) * 1.2) : 0,
+    mountainIndex: land ? clamp01((luma - 0.36) * 1.1) : 0,
+    microGlazeIndex: clamp01(luma * 0.35),
+    parentHexDetailIndex: 0.32,
+    mineralIndex: land ? 0.34 : 0.10,
+    diamondSignal: ice ? 0.32 : land ? 0.12 : 0.04,
+    opalSignal: shelf ? 0.38 : land ? 0.12 : 0.08,
+    graniteSignal: land ? 0.34 : 0.05,
+    slateSignal: land ? 0.22 : water ? 0.14 : 0.06,
+    elevation: land ? 0.34 : ice ? 0.42 : 0,
+    depth: water ? 0.42 : 0,
+    graphicBox: false,
+    imageGeneration: false,
+    visualPassClaimed: false
   };
 }
 
-function applyGlobalAqueousGlaze(rawColor, u, v, options, edgeValue) {
-  const surface = classifySurface(rawColor);
-  const lon = wrap01(u) * 2 - 1;
-  const lat = 1 - clamp(v, 0, 1) * 2;
+function sampleParent(state, sampler, u, v) {
+  const lon = (wrap01(u) - 0.5) * Math.PI * 2;
+  const lat = (0.5 - clamp(v, 0, 1)) * Math.PI;
 
-  const broadGlaze =
-    fbm(lon * 5.6 + 2.1, lat * 5.6 - 3.4, 8101, 4) * 0.50 +
-    fbm(lon * 18.0 - 7.1, lat * 13.0 + 4.8, 8123, 3) * 0.24 +
-    fbm(lon * 41.0 + 1.9, lat * 29.0 - 8.2, 8153, 2) * 0.10;
-
-  const microMineral =
-    fbm(lon * 88.0 + 5.3, lat * 74.0 - 2.7, 9013, 3) * 0.54 +
-    fbm(lon * 151.0 - 1.8, lat * 126.0 + 8.9, 9029, 2) * 0.46;
-
-  const sphericalVariation = clamp(0.82 + (broadGlaze - 0.5) * 0.24, 0.72, 1.10);
-
-  const baseAqua = [38, 166, 204, rawColor[3]];
-  const turquoise = [58, 205, 211, rawColor[3]];
-  const oceanBlue = [18, 102, 178, rawColor[3]];
-  const softSkyWater = [84, 188, 216, rawColor[3]];
-  const opalSheen = [184, 235, 222, rawColor[3]];
-  const diamondSheen = [238, 248, 255, rawColor[3]];
-  const slateShadow = [58, 72, 82, rawColor[3]];
-
-  let glazeColor = baseAqua;
-  let opacity = options.landGlazeOpacity;
-
-  if (surface.shelf) {
-    glazeColor = turquoise;
-    opacity = options.shelfGlazeOpacity;
-  } else if (surface.water) {
-    glazeColor = oceanBlue;
-    opacity = options.waterGlazeOpacity;
-  } else if (surface.ice) {
-    glazeColor = softSkyWater;
-    opacity = options.iceGlazeOpacity;
-  } else if (surface.land) {
-    glazeColor = baseAqua;
-    opacity = options.landGlazeOpacity;
+  if (typeof sampler === "function") {
+    try {
+      const sample = sampler({ lat, lon, u: wrap01(u), v: clamp(v, 0, 1), x: wrap01(u), y: clamp(v, 0, 1) });
+      if (sample && typeof sample === "object") return sample;
+    } catch (_) {}
   }
 
-  const globalMinimum = 0.045;
-  const effectiveOpacity = clamp(
-    Math.max(globalMinimum, opacity) *
-      sphericalVariation *
-      options.globalGlazeStrength,
-    0,
-    surface.shelf ? 0.31 : surface.water ? 0.24 : surface.land ? 0.145 : 0.11
-  );
+  const textureColor = sampleTextureBilinear(state.texture, u, v);
+  return fallbackTextureClassification(textureColor);
+}
 
-  let color = mixColor(rawColor, glazeColor, effectiveOpacity);
+function baseColorFromParent(sample) {
+  const relief = clamp01(sample.terrainReliefIndex ?? sample.terrainRelief ?? sample.elevation ?? 0);
+  const mineral = clamp01(sample.mineralIndex ?? 0);
+  const coast = clamp01(sample.coastlineIndex ?? sample.coastalFeather ?? 0);
+  const shelf = clamp01(sample.shelfGradientIndex ?? sample.shelfIndex ?? 0);
+  const turquoise = clamp01(sample.turquoiseIndex ?? sample.turquoise ?? 0);
+  const glaze = clamp01(sample.microGlazeIndex ?? 0);
+  const ridge = clamp01(sample.ridgeIndex ?? 0);
+  const mountain = clamp01(sample.mountainIndex ?? 0);
 
-  if (surface.land) {
-    const terrainRecover = clamp(options.terrainRecovery + edgeValue * 0.12, 0.22, 0.62);
-    color = mixColor(color, rawColor, terrainRecover);
+  if (sample.ice || sample.glacier || sample.visualSurfaceClass === "glacier_ice_snowpack_surface") {
+    return [
+      Math.round(mix(182, 244, glaze * 0.40 + relief * 0.20)),
+      Math.round(mix(204, 250, glaze * 0.40 + relief * 0.20)),
+      Math.round(mix(213, 255, glaze * 0.42 + relief * 0.18)),
+      255
+    ];
+  }
 
-    const mineralLift = clamp((microMineral - 0.52) * options.microTerrainStrength, -0.075, 0.090);
-
-    if (mineralLift > 0) {
-      color = mixColor(color, surface.luma > 0.56 ? diamondSheen : opalSheen, mineralLift);
-    } else {
-      color = mixColor(color, slateShadow, Math.abs(mineralLift) * 0.72);
+  if (sample.liquidWater || sample.water || sample.ocean || sample.shelf || sample.visualSurfaceClass === "shelf_water_surface" || sample.visualSurfaceClass === "ocean_water_surface") {
+    if (sample.shelf || sample.visualSurfaceClass === "shelf_water_surface") {
+      return [
+        Math.round(mix(20, 78, turquoise * 0.55 + shelf * 0.25)),
+        Math.round(mix(126, 218, turquoise * 0.62 + shelf * 0.22)),
+        Math.round(mix(146, 224, turquoise * 0.58 + shelf * 0.26)),
+        255
+      ];
     }
+
+    const depth = clamp01(sample.depth ?? sample.oceanDepth ?? 0.48);
+
+    return [
+      Math.round(mix(5, 14, depth)),
+      Math.round(mix(47, 78, 1 - depth * 0.24)),
+      Math.round(mix(95, 162, 1 - depth * 0.18)),
+      255
+    ];
   }
 
-  if (surface.shelf) {
-    color = mixColor(color, turquoise, clamp(0.042 + broadGlaze * 0.045 + edgeValue * 0.08, 0.04, 0.15));
-  }
+  const greenBase = [
+    mix(68, 138, glaze * 0.35 + relief * 0.20),
+    mix(91, 132, glaze * 0.30 + relief * 0.18),
+    mix(64, 82, glaze * 0.22)
+  ];
 
-  if (surface.water) {
-    const deepVariation = clamp((microMineral - 0.48) * 0.055, -0.035, 0.045);
-    color = multiplyColor(color, 1 + deepVariation);
-  }
+  const ridgeDark = [
+    mix(53, 88, mineral * 0.18),
+    mix(64, 88, mineral * 0.14),
+    mix(57, 70, mineral * 0.12)
+  ];
 
-  if (surface.ice) {
-    color = mixColor(color, diamondSheen, clamp(0.08 + microMineral * 0.05, 0.06, 0.14));
-  }
+  const highRange = [
+    mix(116, 174, mineral * 0.18),
+    mix(119, 152, mineral * 0.16),
+    mix(94, 108, mineral * 0.12)
+  ];
+
+  let color = [
+    Math.round(greenBase[0]),
+    Math.round(greenBase[1]),
+    Math.round(greenBase[2]),
+    255
+  ];
+
+  color = mixColor(color, [ridgeDark[0], ridgeDark[1], ridgeDark[2], 255], ridge * 0.24);
+  color = mixColor(color, [highRange[0], highRange[1], highRange[2], 255], mountain * 0.18);
+  color = mixColor(color, [186, 158, 91, 255], clamp01(sample.diamondSignal ?? 0) * 0.10);
+  color = mixColor(color, [168, 218, 202, 255], clamp01(sample.opalSignal ?? 0) * 0.10);
+  color = mixColor(color, [229, 214, 164, 255], coast * 0.10);
 
   return color;
 }
 
+function applyParentExpression(baseColor, textureColor, sample, geometryIndex, geometry, config) {
+  const ridge = clamp01(sample.ridgeIndex ?? 0);
+  const mountain = clamp01(sample.mountainIndex ?? 0);
+  const coast = clamp01(sample.coastlineIndex ?? sample.coastalFeather ?? 0);
+  const shelf = clamp01(sample.shelfGradientIndex ?? sample.shelfIndex ?? 0);
+  const edgeDefinition = clamp01(sample.parentEdgeDefinition ?? coast);
+  const micro = clamp01(sample.parentHexDetailIndex ?? sample.microTerrainIndex ?? 0);
+  const glaze = clamp01(sample.microGlazeIndex ?? 0);
+  const diamond = clamp01(sample.diamondSignal ?? 0);
+  const opal = clamp01(sample.opalSignal ?? 0);
+  const granite = clamp01(sample.graniteSignal ?? 0);
+  const slate = clamp01(sample.slateSignal ?? 0);
+  const seed = geometry.microSeeds[geometryIndex];
+  const zDepth = geometry.sphericalDepths[geometryIndex];
+
+  let color = baseColor;
+
+  if (textureColor && textureColor[3] > 0) {
+    color = mixColor(color, textureColor, config.parentTextureBlend);
+  }
+
+  const fineNoise = fbm(
+    geometry.hexQ[geometryIndex] * 0.17 + seed * 2.0,
+    geometry.hexR[geometryIndex] * 0.17 - seed * 3.0,
+    1711,
+    3
+  );
+
+  const ridgeLift = clamp01(ridge * config.ridgeExpressionStrength * (0.60 + fineNoise * 0.55));
+  const mountainLift = clamp01(mountain * config.mountainExpressionStrength * (0.55 + seed * 0.55));
+  const coastLift = clamp01(coast * config.coastlineExpressionStrength);
+  const shelfLift = clamp01(shelf * config.shelfExpressionStrength);
+  const mineralLift = clamp01((diamond + opal + granite + slate) * 0.25 * config.mineralExpressionStrength);
+  const microLift = clamp01((micro * 0.60 + glaze * 0.40) * config.microTerrainStrength);
+
+  if (sample.exposedTerrainLand || sample.land || sample.visibleLand) {
+    color = mixColor(color, [52, 65, 54, 255], ridgeLift * 0.22);
+    color = mixColor(color, [166, 154, 112, 255], mountainLift * 0.14);
+    color = mixColor(color, [218, 204, 156, 255], coastLift * 0.13);
+    color = mixColor(color, [202, 224, 199, 255], opal * 0.06 + diamond * 0.045);
+    color = mixColor(color, [80, 88, 82, 255], slate * 0.08);
+  }
+
+  if (sample.shelf || sample.visualSurfaceClass === "shelf_water_surface") {
+    color = mixColor(color, [66, 218, 223, 255], shelfLift * 0.22 + coastLift * 0.10);
+    color = mixColor(color, [218, 232, 204, 255], opal * 0.05);
+  }
+
+  if (sample.ocean || sample.visualSurfaceClass === "ocean_water_surface") {
+    color = mixColor(color, [7, 28, 75, 255], clamp01(sample.depth ?? 0.45) * 0.12);
+  }
+
+  if (sample.ice || sample.glacier) {
+    color = mixColor(color, [250, 253, 255, 255], diamond * 0.10 + seed > 0.94 ? 0.04 : 0);
+  }
+
+  const hexEdge = geometry.edgeFactors[geometryIndex];
+  const seam = clamp(
+    1 - hexEdge * config.edgeDarkening + (1 - hexEdge) * config.seamSoftening,
+    0.75,
+    1.09
+  );
+
+  const sphericalShade = clamp(0.60 + zDepth * 0.48, 0.48, 1.08);
+  const microShade = clamp(0.955 + (fineNoise - 0.5) * 0.09 + microLift * 0.05 + mineralLift * 0.03, 0.88, 1.12);
+
+  return multiplyColor(color, seam * sphericalShade * microShade);
+}
+
 function buildHexGeometry(size, options = {}) {
-  const radius = size * (Number(options.radiusRatio) || DEFAULTS.radiusRatio);
+  const radius = size * options.radiusRatio;
   const cx = size / 2;
   const cy = size / 2;
 
   const hexRadius = clamp(
-    size / (Number(options.hexDensity) || DEFAULTS.hexDensity),
-    Number(options.minHexRadius) || DEFAULTS.minHexRadius,
-    Number(options.maxHexRadius) || DEFAULTS.maxHexRadius
+    size / options.hexDensity,
+    options.minHexRadius,
+    options.maxHexRadius
   );
 
   let count = 0;
@@ -403,14 +622,11 @@ function buildHexGeometry(size, options = {}) {
   const indices = new Uint32Array(count);
   const lonOffsets = new Float32Array(count);
   const vCoords = new Float32Array(count);
-  const shades = new Float32Array(count);
   const edgeFactors = new Float32Array(count);
   const microSeeds = new Float32Array(count);
   const sphericalDepths = new Float32Array(count);
-
-  const lightX = Number(options.lightX) || DEFAULTS.lightX;
-  const lightY = Number(options.lightY) || DEFAULTS.lightY;
-  const lightZ = Number(options.lightZ) || DEFAULTS.lightZ;
+  const hexQ = new Int32Array(count);
+  const hexR = new Int32Array(count);
 
   let i = 0;
 
@@ -443,12 +659,6 @@ function buildHexGeometry(size, options = {}) {
       const latitude = Math.asin(clamp(-hy, -1, 1));
       const v = clamp(0.5 - latitude / Math.PI, 0, 1);
 
-      const dot = clamp(hx * lightX + (-hy) * lightY + z * lightZ, -1, 1);
-      const edgeShadow = clamp(1 - Math.pow(r2, 1.7) * 0.34, 0.52, 1);
-      const hemisphereShade = clamp(0.70 + dot * 0.32, 0.46, 1.10);
-      const depthRim = clamp(0.62 + z * 0.42, 0.52, 1.08);
-      const shade = clamp(edgeShadow * hemisphereShade * depthRim, 0.42, 1.15);
-
       const localX = xRaw - center.x;
       const localY = yRaw - center.y;
       const edge = smoothstep(0.78, 1.02, hexDistance(localX, localY, hexRadius));
@@ -456,10 +666,11 @@ function buildHexGeometry(size, options = {}) {
       indices[i] = (py * size + px) * 4;
       lonOffsets[i] = lonOffset;
       vCoords[i] = v;
-      shades[i] = shade;
       edgeFactors[i] = edge;
-      microSeeds[i] = hash2(px, py, 1709);
+      microSeeds[i] = hash2(center.q, center.r, 2027);
       sphericalDepths[i] = z;
+      hexQ[i] = center.q;
+      hexR[i] = center.r;
 
       i += 1;
     }
@@ -467,9 +678,12 @@ function buildHexGeometry(size, options = {}) {
 
   return Object.freeze({
     receipt: RECEIPT,
-    activeRenewal: ACTIVE_RENEWAL,
+    previousReceipt: PREVIOUS_RECEIPT,
+    previousActiveRenewal: PREVIOUS_ACTIVE_RENEWAL,
     compatibilityRenewal: COMPATIBILITY_RENEWAL,
-    model: "hexagonal-orthographic-4k-micro-surface-global-aqueous-glaze",
+    parentRequiredReceipt: PARENT_REQUIRED_RECEIPT,
+    childContract: CHILD_CONTRACT,
+    model: "parent-field-expressive-hex-child-surface",
     size,
     radius,
     hexRadius,
@@ -477,17 +691,19 @@ function buildHexGeometry(size, options = {}) {
     indices,
     lonOffsets,
     vCoords,
-    shades,
     edgeFactors,
     microSeeds,
-    sphericalDepths
+    sphericalDepths,
+    hexQ,
+    hexR
   });
 }
 
 function drawAtmosphere(ctx, size, options = {}) {
   const cx = size / 2;
   const cy = size / 2;
-  const radius = size * (Number(options.radiusRatio) || DEFAULTS.radiusRatio);
+  const radius = size * options.radiusRatio;
+  const strength = options.atmosphereStrength;
 
   ctx.save();
 
@@ -504,18 +720,18 @@ function drawAtmosphere(ctx, size, options = {}) {
     radius * 1.16
   );
 
-  highlight.addColorStop(0, "rgba(255,255,255,0.17)");
-  highlight.addColorStop(0.28, "rgba(255,255,255,0.052)");
-  highlight.addColorStop(0.72, "rgba(0,0,0,0.10)");
-  highlight.addColorStop(1, "rgba(0,0,0,0.45)");
+  highlight.addColorStop(0, `rgba(255,255,255,${0.13 * strength})`);
+  highlight.addColorStop(0.32, `rgba(255,255,255,${0.035 * strength})`);
+  highlight.addColorStop(0.74, "rgba(0,0,0,0.10)");
+  highlight.addColorStop(1, "rgba(0,0,0,0.50)");
 
   ctx.fillStyle = highlight;
   ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
   const edge = ctx.createRadialGradient(cx, cy, radius * 0.66, cx, cy, radius);
   edge.addColorStop(0, "rgba(0,0,0,0)");
-  edge.addColorStop(0.78, "rgba(8,23,44,0.17)");
-  edge.addColorStop(1, "rgba(4,10,20,0.60)");
+  edge.addColorStop(0.78, `rgba(8,23,44,${0.16 * strength})`);
+  edge.addColorStop(1, `rgba(4,10,20,${0.62 * strength})`);
 
   ctx.fillStyle = edge;
   ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
@@ -523,68 +739,76 @@ function drawAtmosphere(ctx, size, options = {}) {
   ctx.restore();
 
   ctx.save();
+
   ctx.beginPath();
   ctx.arc(cx, cy, radius + Math.max(1, size * 0.004), 0, Math.PI * 2);
-  ctx.strokeStyle = "rgba(190,226,255,0.30)";
+  ctx.strokeStyle = `rgba(190,226,255,${0.30 * strength})`;
   ctx.lineWidth = Math.max(1, size * 0.003);
   ctx.stroke();
 
   ctx.beginPath();
   ctx.arc(cx, cy, radius + Math.max(2, size * 0.011), 0, Math.PI * 2);
-  ctx.strokeStyle = "rgba(108,185,232,0.10)";
+  ctx.strokeStyle = `rgba(108,185,232,${0.12 * strength})`;
   ctx.lineWidth = Math.max(1, size * 0.006);
   ctx.stroke();
+
   ctx.restore();
 }
 
-function normalizeOptions(options = {}) {
-  return Object.freeze({
-    radiusRatio: Number(options.radiusRatio) || DEFAULTS.radiusRatio,
-    hexDensity: Number(options.hexDensity) || DEFAULTS.hexDensity,
-    minHexRadius: Number(options.minHexRadius) || DEFAULTS.minHexRadius,
-    maxHexRadius: Number(options.maxHexRadius) || DEFAULTS.maxHexRadius,
-    edgeDarkening: clamp(Number(options.edgeDarkening) || DEFAULTS.edgeDarkening, 0, 0.18),
-    seamSoftening: clamp(Number(options.seamSoftening) || DEFAULTS.seamSoftening, 0, 0.18),
-    globalGlazeStrength: clamp(
-      options.globalGlazeStrength === undefined ? DEFAULTS.globalGlazeStrength : Number(options.globalGlazeStrength),
-      0,
-      1.4
-    ),
-    landGlazeOpacity: clamp(Number(options.landGlazeOpacity) || DEFAULTS.landGlazeOpacity, 0, 0.24),
-    waterGlazeOpacity: clamp(Number(options.waterGlazeOpacity) || DEFAULTS.waterGlazeOpacity, 0, 0.34),
-    shelfGlazeOpacity: clamp(Number(options.shelfGlazeOpacity) || DEFAULTS.shelfGlazeOpacity, 0, 0.42),
-    iceGlazeOpacity: clamp(Number(options.iceGlazeOpacity) || DEFAULTS.iceGlazeOpacity, 0, 0.14),
-    terrainRecovery: clamp(Number(options.terrainRecovery) || DEFAULTS.terrainRecovery, 0, 0.70),
-    microTerrainStrength: clamp(Number(options.microTerrainStrength) || DEFAULTS.microTerrainStrength, 0, 0.44),
-    coastlineSparkleStrength: clamp(Number(options.coastlineSparkleStrength) || DEFAULTS.coastlineSparkleStrength, 0, 0.30),
-    opalRefractionStrength: clamp(Number(options.opalRefractionStrength) || DEFAULTS.opalRefractionStrength, 0, 0.28),
-    diamondGlintStrength: clamp(Number(options.diamondGlintStrength) || DEFAULTS.diamondGlintStrength, 0, 0.24),
-    lightX: Number(options.lightX) || DEFAULTS.lightX,
-    lightY: Number(options.lightY) || DEFAULTS.lightY,
-    lightZ: Number(options.lightZ) || DEFAULTS.lightZ
-  });
-}
+function publishChildStatus(state, frameReceipt) {
+  const parentReceipt = resolveParentReceipt(state);
+  const parentSampler = resolveParentSurfaceSampler(state);
 
-function applyTextureOnlyHexShade(color, shade, edge, microSeed, zDepth, options) {
-  const edgeShade = clamp(
-    1 - edge * options.edgeDarkening + (1 - edge) * options.seamSoftening,
-    0.74,
-    1.08
-  );
+  STATUS.childActivatedByParentContract = Boolean(parentSampler && isParentReceiptAccepted(parentReceipt));
+  STATUS.parentSurfaceSamplerDetected = Boolean(parentSampler);
+  STATUS.parentReceiptDetected = parentReceipt;
+  STATUS.textureFallbackAvailable = Boolean(state && state.texture && state.texture.data);
+  STATUS.grandchildrenActivated = false;
 
-  const micro = clamp(0.965 + (microSeed - 0.5) * 0.044 + zDepth * 0.025, 0.92, 1.055);
-  const finalShade = clamp(shade * edgeShade * micro, 0.48, 1.16);
+  if (state && state.canvas) {
+    state.canvas.dataset.hexSurfaceChild = RECEIPT;
+    state.canvas.dataset.hexSurfacePreviousReceipt = PREVIOUS_RECEIPT;
+    state.canvas.dataset.hexSurfacePreviousActiveRenewal = PREVIOUS_ACTIVE_RENEWAL;
+    state.canvas.dataset.hexSurfaceCompatibilityRenewal = COMPATIBILITY_RENEWAL;
+    state.canvas.dataset.hexSurfaceParentRequiredReceipt = PARENT_REQUIRED_RECEIPT;
+    state.canvas.dataset.hexSurfaceParentFallbackReceipt = PARENT_FALLBACK_RECEIPT;
+    state.canvas.dataset.hexSurfaceParentReceiptDetected = parentReceipt || "";
+    state.canvas.dataset.hexSurfaceChildContract = CHILD_CONTRACT;
+    state.canvas.dataset.hexSurfaceModel = "parent-field-expressive-hex-child-surface";
+    state.canvas.dataset.childActivatedByParentContract = String(STATUS.childActivatedByParentContract);
+    state.canvas.dataset.parentSurfaceSamplerDetected = String(Boolean(parentSampler));
+    state.canvas.dataset.parentClassificationPreserved = "true";
+    state.canvas.dataset.downstreamClassificationOverrideAllowed = "false";
+    state.canvas.dataset.grandchildrenActivated = "false";
+    state.canvas.dataset.runtimeImport = "false";
+    state.canvas.dataset.runtimeAuthority = "false";
+    state.canvas.dataset.routeOwnedLandGeneration = "false";
+    state.canvas.dataset.routeOwnedWaterGeneration = "false";
+    state.canvas.dataset.graphicBox = "false";
+    state.canvas.dataset.imageGeneration = "false";
+    state.canvas.dataset.visualPassClaimed = "false";
 
-  return [
-    clamp(Math.round(color[0] * finalShade), 0, 255),
-    clamp(Math.round(color[1] * finalShade), 0, 255),
-    clamp(Math.round(color[2] * finalShade), 0, 255),
-    color[3] === undefined ? 255 : color[3]
-  ];
+    if (frameReceipt) {
+      state.canvas.dataset.hexSurfaceFrameReceipt = frameReceipt.receipt;
+      state.canvas.dataset.hexSamples = String(frameReceipt.samples || 0);
+      state.canvas.dataset.parentSamples = String(frameReceipt.parentSamples || 0);
+      state.canvas.dataset.textureFallbackSamples = String(frameReceipt.textureFallbackSamples || 0);
+      state.canvas.dataset.ridgeExpressedPixels = String(frameReceipt.ridgeExpressedPixels || 0);
+      state.canvas.dataset.mountainExpressedPixels = String(frameReceipt.mountainExpressedPixels || 0);
+      state.canvas.dataset.coastlineExpressedPixels = String(frameReceipt.coastlineExpressedPixels || 0);
+      state.canvas.dataset.shelfExpressedPixels = String(frameReceipt.shelfExpressedPixels || 0);
+    }
+  }
+
+  if (typeof window !== "undefined") {
+    window.DGBAudraliaHexSurfaceStatus = STATUS;
+  }
+
+  return STATUS;
 }
 
 export function drawAudraliaHexSurfaceFrame(state, options = {}) {
-  if (!state || !state.canvas || !state.ctx || !state.texture) {
+  if (!state || !state.canvas || !state.ctx) {
     throw new Error("AUDRALIA_HEX_SURFACE_MISSING_STATE");
   }
 
@@ -595,71 +819,59 @@ export function drawAudraliaHexSurfaceFrame(state, options = {}) {
   }
 
   const config = normalizeOptions(options);
+  const parentSampler = resolveParentSurfaceSampler(state);
+  const parentReceipt = resolveParentReceipt(state);
+  const parentAccepted = Boolean(parentSampler && isParentReceiptAccepted(parentReceipt));
 
-  if (!state.hexGeometry || state.hexGeometry.size !== size || state.hexGeometry.activeRenewal !== ACTIVE_RENEWAL) {
+  if (!state.hexGeometry || state.hexGeometry.size !== size || state.hexGeometry.receipt !== RECEIPT) {
     state.hexGeometry = buildHexGeometry(size, config);
   }
 
   const geometry = state.hexGeometry;
   const output = state.ctx.createImageData(size, size);
   const data = output.data;
+  const phase = Number(state.phase) || 0;
 
   let sampledPixels = 0;
+  let parentSamples = 0;
+  let textureFallbackSamples = 0;
   let landPixels = 0;
   let waterPixels = 0;
-  let shelfLikePixels = 0;
-  let iceOrHighlightPixels = 0;
-  let glazedPixels = 0;
-  let microDetailPixels = 0;
-  let coastlineDetailPixels = 0;
-  let opalRefractionPixels = 0;
-  let diamondGlintPixels = 0;
+  let shelfPixels = 0;
+  let icePixels = 0;
+  let ridgeExpressedPixels = 0;
+  let mountainExpressedPixels = 0;
+  let coastlineExpressedPixels = 0;
+  let shelfExpressedPixels = 0;
+  let mineralExpressedPixels = 0;
 
   for (let i = 0; i < geometry.count; i += 1) {
     const out = geometry.indices[i];
-    const u = wrap01((Number(state.phase) || 0) + geometry.lonOffsets[i]);
+    const u = wrap01(phase + geometry.lonOffsets[i]);
     const v = geometry.vCoords[i];
-    const rawColor = sampleTextureBilinear(state.texture, u, v);
-    const edgeValue = edgeContrast(state.texture, u, v);
-    const surface = classifySurface(rawColor);
+    const textureColor = sampleTextureBilinear(state.texture, u, v);
+    const sample = sampleParent(state, parentSampler, u, v);
+    const usedParent = Boolean(parentSampler && sample && sample.receipt && sample.receipt !== "TEXTURE_FALLBACK_PARENT_UNAVAILABLE");
 
-    let glazedColor = applyGlobalAqueousGlaze(rawColor, u, v, config, edgeValue);
+    if (usedParent) parentSamples += 1;
+    else textureFallbackSamples += 1;
 
-    if (surface.land && edgeValue > 0.10) {
-      coastlineDetailPixels += 1;
-      glazedColor = mixColor(glazedColor, [246, 224, 170, rawColor[3]], clamp(edgeValue * config.coastlineSparkleStrength, 0, 0.16));
+    const baseColor = baseColorFromParent(sample);
+    const color = applyParentExpression(baseColor, textureColor, sample, i, geometry, config);
+
+    if (sample.exposedTerrainLand || sample.land || sample.visibleLand) landPixels += 1;
+    if (sample.liquidWater || sample.water || sample.ocean) waterPixels += 1;
+    if (sample.shelf) shelfPixels += 1;
+    if (sample.ice || sample.glacier) icePixels += 1;
+    if (clamp01(sample.ridgeIndex ?? 0) > 0.34) ridgeExpressedPixels += 1;
+    if (clamp01(sample.mountainIndex ?? 0) > 0.34) mountainExpressedPixels += 1;
+    if (clamp01(sample.coastlineIndex ?? sample.coastalFeather ?? 0) > 0.22) coastlineExpressedPixels += 1;
+    if (clamp01(sample.shelfGradientIndex ?? sample.shelfIndex ?? 0) > 0.22) shelfExpressedPixels += 1;
+    if ((clamp01(sample.diamondSignal ?? 0) + clamp01(sample.opalSignal ?? 0) + clamp01(sample.graniteSignal ?? 0) + clamp01(sample.slateSignal ?? 0)) > 0.32) {
+      mineralExpressedPixels += 1;
     }
-
-    if (surface.land && surface.luma > 0.45 && geometry.microSeeds[i] > 0.78) {
-      opalRefractionPixels += 1;
-      glazedColor = mixColor(glazedColor, [184, 235, 222, rawColor[3]], clamp(config.opalRefractionStrength * geometry.microSeeds[i], 0, 0.18));
-    }
-
-    if ((surface.ice || surface.luma > 0.58) && geometry.microSeeds[i] > 0.91) {
-      diamondGlintPixels += 1;
-      glazedColor = mixColor(glazedColor, [246, 252, 255, rawColor[3]], clamp(config.diamondGlintStrength * geometry.microSeeds[i], 0, 0.16));
-    }
-
-    if (geometry.microSeeds[i] > 0.52) {
-      microDetailPixels += 1;
-    }
-
-    const color = applyTextureOnlyHexShade(
-      glazedColor,
-      geometry.shades[i],
-      geometry.edgeFactors[i],
-      geometry.microSeeds[i],
-      geometry.sphericalDepths[i],
-      config
-    );
-
-    if (surface.land) landPixels += 1;
-    if (surface.water) waterPixels += 1;
-    if (surface.shelf) shelfLikePixels += 1;
-    if (surface.ice) iceOrHighlightPixels += 1;
 
     sampledPixels += 1;
-    glazedPixels += 1;
 
     data[out] = color[0];
     data[out + 1] = color[1];
@@ -670,129 +882,85 @@ export function drawAudraliaHexSurfaceFrame(state, options = {}) {
   state.ctx.putImageData(output, 0, 0);
   drawAtmosphere(state.ctx, size, config);
 
-  state.canvas.dataset.hexSurfaceChild = RECEIPT;
-  state.canvas.dataset.hexSurfaceActiveRenewal = ACTIVE_RENEWAL;
-  state.canvas.dataset.hexSurfaceCompatibilityRenewal = COMPATIBILITY_RENEWAL;
-  state.canvas.dataset.hexSurfaceParentReceipt = PARENT_RECEIPT;
-  state.canvas.dataset.hexSurfaceModel = "hexagonal-orthographic-4k-micro-surface-global-aqueous-glaze";
-  state.canvas.dataset.hexRadius = geometry.hexRadius.toFixed(3);
-  state.canvas.dataset.hexSamples = String(geometry.count);
-  state.canvas.dataset.sampledPixels = String(sampledPixels);
-  state.canvas.dataset.landPixels = String(landPixels);
-  state.canvas.dataset.waterPixels = String(waterPixels);
-  state.canvas.dataset.shelfLikePixels = String(shelfLikePixels);
-  state.canvas.dataset.iceOrHighlightPixels = String(iceOrHighlightPixels);
-  state.canvas.dataset.glazedPixels = String(glazedPixels);
-  state.canvas.dataset.microDetailPixels = String(microDetailPixels);
-  state.canvas.dataset.coastlineDetailPixels = String(coastlineDetailPixels);
-  state.canvas.dataset.opalRefractionPixels = String(opalRefractionPixels);
-  state.canvas.dataset.diamondGlintPixels = String(diamondGlintPixels);
-  state.canvas.dataset.squareBlockArtifactReduction = "active";
-  state.canvas.dataset.textureOnlySampling = "true";
-  state.canvas.dataset.globalAqueousGlaze = "active";
-  state.canvas.dataset.globalAqueousGlazeLayer = "low-opacity-blue-turquoise-over-existing-surface";
-  state.canvas.dataset.landGlazePreservation = "active";
-  state.canvas.dataset.terrainContrastProtection = "active";
-  state.canvas.dataset.fourKMicroSurface = "active";
-  state.canvas.dataset.coastlineSparkle = "active";
-  state.canvas.dataset.opalRefraction = "active";
-  state.canvas.dataset.diamondGlint = "active";
-  state.canvas.dataset.staleDeepOceanBlobLogicRemoved = "true";
-  state.canvas.dataset.deepOceanShowroomImport = "removed";
-  state.canvas.dataset.deepOceanRouteOverlay = "removed";
-  state.canvas.dataset.oceanSeparation = "removed";
-  state.canvas.dataset.deepOceanSeparation = "removed";
-  state.canvas.dataset.shelfOceanSeparation = "removed";
-  state.canvas.dataset.routeOwnedLandGeneration = "forbidden";
-  state.canvas.dataset.routeOwnedWaterGeneration = "forbidden";
-  state.canvas.dataset.runtimeImport = "forbidden";
-  state.canvas.dataset.graphicBox = "false";
-  state.canvas.dataset.imageGeneration = "false";
-  state.canvas.dataset.visualPassClaimed = "false";
-
-  return Object.freeze({
-    receipt: RECEIPT,
-    activeRenewal: ACTIVE_RENEWAL,
-    compatibilityRenewal: COMPATIBILITY_RENEWAL,
-    parentReceipt: PARENT_RECEIPT,
-    removedStaleReceipts: REMOVED_STALE_RECEIPTS,
+  const frameReceipt = Object.freeze({
     ok: true,
-    model: "hexagonal-orthographic-4k-micro-surface-global-aqueous-glaze",
+    receipt: RECEIPT,
+    previousReceipt: PREVIOUS_RECEIPT,
+    previousActiveRenewal: PREVIOUS_ACTIVE_RENEWAL,
+    compatibilityRenewal: COMPATIBILITY_RENEWAL,
+    parentRequiredReceipt: PARENT_REQUIRED_RECEIPT,
+    parentFallbackReceipt: PARENT_FALLBACK_RECEIPT,
+    parentReceiptDetected: parentReceipt,
+    childContract: CHILD_CONTRACT,
+    parentAccepted,
+    childActivatedByParentContract: parentAccepted,
+    model: "parent-field-expressive-hex-child-surface",
     size,
-    hexRadius: geometry.hexRadius,
     samples: geometry.count,
+    hexRadius: geometry.hexRadius,
     sampledPixels,
+    parentSamples,
+    textureFallbackSamples,
     landPixels,
     waterPixels,
-    shelfLikePixels,
-    iceOrHighlightPixels,
-    glazedPixels,
-    microDetailPixels,
-    coastlineDetailPixels,
-    opalRefractionPixels,
-    diamondGlintPixels,
-    squareBlockArtifactReduction: true,
-    textureOnlySampling: true,
-    globalAqueousGlaze: true,
-    landGlazePreservation: true,
-    terrainContrastProtection: true,
-    fourKMicroSurface: true,
-    staleDeepOceanBlobLogicRemoved: true,
-    deepOceanShowroomImport: false,
-    deepOceanRouteOverlay: false,
-    oceanSeparation: false,
-    deepOceanSeparation: false,
-    shelfOceanSeparation: false,
+    shelfPixels,
+    icePixels,
+    ridgeExpressedPixels,
+    mountainExpressedPixels,
+    coastlineExpressedPixels,
+    shelfExpressedPixels,
+    mineralExpressedPixels,
+    parentClassificationPreserved: true,
+    downstreamClassificationOverrideAllowed: false,
+    grandchildrenActivated: false,
+    runtimeImport: false,
+    runtimeAuthority: false,
     routeOwnedLandGeneration: false,
     routeOwnedWaterGeneration: false,
-    runtimeImport: false,
     graphicBox: false,
     imageGeneration: false,
     visualPassClaimed: false
   });
+
+  publishChildStatus(state, frameReceipt);
+
+  return frameReceipt;
 }
 
 export function getAudraliaHexSurfaceStatus(state = null) {
+  const parentReceipt = state ? resolveParentReceipt(state) : STATUS.parentReceiptDetected;
+  const parentSampler = state ? resolveParentSurfaceSampler(state) : null;
+  const childActivated = Boolean(parentSampler && isParentReceiptAccepted(parentReceipt));
+
   return Object.freeze({
     ok: true,
     receipt: RECEIPT,
-    activeRenewal: ACTIVE_RENEWAL,
+    previousReceipt: PREVIOUS_RECEIPT,
+    previousActiveRenewal: PREVIOUS_ACTIVE_RENEWAL,
     compatibilityRenewal: COMPATIBILITY_RENEWAL,
-    parentReceipt: PARENT_RECEIPT,
-    removedStaleReceipts: REMOVED_STALE_RECEIPTS,
-    role: "route-child-4k-micro-surface-global-aqueous-glaze-hex-renderer",
-    owns: Object.freeze([
-      "hexagonal_surface_sampling",
-      "square_block_artifact_reduction",
-      "4k_micro_surface_detail",
-      "global_aqueous_glaze_layer",
-      "land_preserving_blue_turquoise_finish",
-      "canvas_frame_paint_strategy",
-      "sphere_shading",
-      "atmospheric_rim",
-      "coastline_sparkle",
-      "opal_refraction",
-      "diamond_glint"
-    ]),
-    doesNotOwn: Object.freeze([
-      "runtime_import",
-      "deep_ocean_route_overlay",
-      "ocean_classification",
-      "land_generation",
-      "water_generation",
-      "topology",
-      "terrain",
-      "hydration",
-      "climate",
-      "ecology",
-      "route_boot"
-    ]),
+    parentRequiredReceipt: PARENT_REQUIRED_RECEIPT,
+    parentFallbackReceipt: PARENT_FALLBACK_RECEIPT,
+    parentReceiptDetected: parentReceipt || STATUS.parentReceiptDetected || "",
+    childContract: CHILD_CONTRACT,
+    role: "audralia-child-parent-field-expressor",
+    childActivatedByParentContract: childActivated || STATUS.childActivatedByParentContract,
+    parentSurfaceSamplerDetected: Boolean(parentSampler) || STATUS.parentSurfaceSamplerDetected,
+    parentStandardRequired: true,
+    parentClassificationPreserved: true,
+    downstreamClassificationOverrideAllowed: false,
+    grandchildrenActivated: false,
+    owns: STATUS.owns,
+    doesNotOwn: STATUS.doesNotOwn,
     geometryLoaded: Boolean(state && state.hexGeometry),
     hexRadius: state && state.hexGeometry ? state.hexGeometry.hexRadius : null,
     hexSamples: state && state.hexGeometry ? state.hexGeometry.count : null,
-    textureOnlySampling: true,
-    globalAqueousGlaze: true,
-    fourKMicroSurface: true,
+    textureOnlySampling: false,
+    parentFieldExpression: true,
+    ridgeExpression: true,
+    mountainExpression: true,
+    coastlineExpression: true,
+    shelfExpression: true,
+    mineralExpression: true,
     staleDeepOceanBlobLogicRemoved: true,
     deepOceanShowroomImport: false,
     deepOceanRouteOverlay: false,
@@ -800,6 +968,7 @@ export function getAudraliaHexSurfaceStatus(state = null) {
     deepOceanSeparation: false,
     shelfOceanSeparation: false,
     runtimeImport: false,
+    runtimeAuthority: false,
     routeOwnedLandGeneration: false,
     routeOwnedWaterGeneration: false,
     graphicBox: false,
@@ -810,9 +979,12 @@ export function getAudraliaHexSurfaceStatus(state = null) {
 
 const api = Object.freeze({
   receipt: RECEIPT,
-  activeRenewal: ACTIVE_RENEWAL,
+  previousReceipt: PREVIOUS_RECEIPT,
+  previousActiveRenewal: PREVIOUS_ACTIVE_RENEWAL,
   compatibilityRenewal: COMPATIBILITY_RENEWAL,
-  parentReceipt: PARENT_RECEIPT,
+  parentRequiredReceipt: PARENT_REQUIRED_RECEIPT,
+  parentFallbackReceipt: PARENT_FALLBACK_RECEIPT,
+  childContract: CHILD_CONTRACT,
   removedStaleReceipts: REMOVED_STALE_RECEIPTS,
   drawAudraliaHexSurfaceFrame,
   getAudraliaHexSurfaceStatus
@@ -820,6 +992,16 @@ const api = Object.freeze({
 
 if (typeof window !== "undefined") {
   window.DGBAudraliaHexSurfaceRenderer = api;
+  window.DGBAudraliaHexSurfaceStatus = STATUS;
 }
+
+export const AUDRALIA_HEX_SURFACE_RECEIPT_VALUE = RECEIPT;
+export const AUDRALIA_HEX_SURFACE_PREVIOUS_RECEIPT_VALUE = PREVIOUS_RECEIPT;
+export const AUDRALIA_HEX_SURFACE_PARENT_REQUIRED_RECEIPT_VALUE = PARENT_REQUIRED_RECEIPT;
+export const AUDRALIA_HEX_SURFACE_CHILD_CONTRACT_VALUE = CHILD_CONTRACT;
+export const AUDRALIA_HEX_SURFACE_PARENT_FIELD_EXPRESSION_ACTIVE = true;
+export const AUDRALIA_HEX_SURFACE_GRANDCHILDREN_ACTIVATED = false;
+export const AUDRALIA_HEX_SURFACE_RUNTIME_IMPORT = false;
+export const AUDRALIA_HEX_SURFACE_STATUS = STATUS;
 
 export default api;

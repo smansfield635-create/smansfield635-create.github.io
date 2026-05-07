@@ -1,31 +1,69 @@
+<!-- /index.html -->
 <!doctype html>
-<html lang="en">
+<html
+  lang="en"
+  data-page="compass-interplanetary-command-surface"
+  data-route="/"
+  data-contract="COMPASS_INTERPLANETARY_4_PLUS_16_COMMAND_SURFACE_TNT_v6"
+  data-previous-contract="COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v5"
+  data-runtime-contract="COMPASS_INTERPLANETARY_UNIFORMITY_RUNTIME_TNT_v1"
+  data-route-js-contract="COMPASS_ROUTE_ONLY_VIEW_CARRY_INTERPLANETARY_UNIFORMITY_TNT_v2"
+  data-room="compass"
+  data-role="animated-public-command-surface"
+  data-theme="violet-purple-primary-gold-border-black-gold-inlay"
+  data-background-authority="/assets/dgb-interplanetary-background.js"
+  data-foreground-authority="compass-4-plus-16-diamond-orbit"
+  data-view-selector-authority="/door/"
+  data-heavy-runtime-loaded="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-streaming="false"
+  data-visual-pass-claimed="false"
+>
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 
   <title>Compass · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Compass: public command surface for the estate, product wing, showroom, Audralia, and gauges."
+    content="Diamond Gate Bridge Compass: public command surface for the estate, product wing, showroom, Audralia, universe, and gauges."
   />
 
   <link rel="stylesheet" href="/assets/diamond-orbit.css" />
 
+  <script src="/assets/dgb-interplanetary-background.js?v=DGB_INTERPLANETARY_AXIS_FLOATING_FIGURES_BACKGROUND_JS_TNT_v1" defer></script>
+  <script src="/index.runtime.js?v=COMPASS_INTERPLANETARY_UNIFORMITY_RUNTIME_TNT_v1" defer></script>
+  <script src="/index.js?v=COMPASS_ROUTE_ONLY_VIEW_CARRY_INTERPLANETARY_UNIFORMITY_TNT_v2" defer></script>
+
   <style>
     :root {
-      --dg-bg: #030712;
-      --dg-panel: rgba(10, 18, 34, 0.78);
-      --dg-panel-strong: rgba(12, 21, 40, 0.92);
-      --dg-gold: #f6d98b;
-      --dg-gold-soft: rgba(246, 217, 139, 0.45);
-      --dg-text: #f7f2df;
-      --dg-muted: rgba(247, 242, 223, 0.72);
-      --dg-line: rgba(246, 217, 139, 0.26);
-      --dg-purple: rgba(134, 92, 246, 0.88);
-      --dg-purple-soft: rgba(134, 92, 246, 0.28);
-      --dg-blue: rgba(59, 130, 246, 0.22);
       --dg-max: 1180px;
+
+      --dg-black: #020104;
+      --dg-black-2: #050208;
+      --dg-black-3: #090511;
+
+      --dg-violet: #8b5cf6;
+      --dg-violet-2: #a78bfa;
+      --dg-purple: #5b21b6;
+      --dg-purple-2: #c4b5fd;
+
+      --dg-gold: #f4c95d;
+      --dg-gold-2: #ffe8a8;
+      --dg-gold-3: #b9821f;
+
+      --dg-text: #fff8e8;
+      --dg-muted: rgba(255,247,226,0.74);
+      --dg-faint: rgba(255,247,226,0.50);
+
+      --dg-line: rgba(196,181,253,0.22);
+      --dg-line-gold: rgba(255,232,168,0.30);
+      --dg-line-gold-strong: rgba(255,232,168,0.58);
+
+      --dg-panel: rgba(3,2,5,0.80);
+      --dg-panel-strong: rgba(5,3,8,0.92);
+
       --inner-orbit-duration: 38s;
       --outer-orbit-duration: 58s;
     }
@@ -36,7 +74,7 @@
 
     html {
       min-width: 320px;
-      background: var(--dg-bg);
+      background: var(--dg-black);
       color: var(--dg-text);
       overflow-x: hidden;
       scroll-behavior: smooth;
@@ -45,21 +83,14 @@
     body {
       margin: 0;
       min-width: 320px;
-      min-height: 100vh;
+      min-height: 100svh;
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 0%, rgba(134, 92, 246, 0.24), transparent 34rem),
-        radial-gradient(circle at 15% 25%, rgba(246, 217, 139, 0.08), transparent 24rem),
-        linear-gradient(180deg, #020611 0%, #050814 48%, #02040c 100%);
+        radial-gradient(circle at 50% 7%, rgba(139,92,246,0.20), transparent 25rem),
+        radial-gradient(circle at 82% 44%, rgba(244,201,93,0.10), transparent 34rem),
+        linear-gradient(180deg, #09050d, #030205 64%, #000000);
       color: var(--dg-text);
-      font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     a {
@@ -73,11 +104,12 @@
       top: 1rem;
       z-index: 50;
       transform: translateY(-180%);
-      border: 1px solid var(--dg-line);
+      border: 1px solid var(--dg-line-gold);
       border-radius: 999px;
-      background: #050814;
+      background: #050208;
       padding: 0.65rem 0.9rem;
       color: var(--dg-text);
+      font-weight: 900;
     }
 
     .skip-link:focus {
@@ -86,49 +118,11 @@
 
     .site-shell {
       position: relative;
+      z-index: 2;
       isolation: isolate;
       width: 100%;
-      min-height: 100vh;
+      min-height: 100svh;
       overflow-x: clip;
-    }
-
-    .site-shell::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -3;
-      pointer-events: none;
-      background-image:
-        radial-gradient(circle, rgba(255, 255, 255, 0.52) 0 1px, transparent 1.5px),
-        radial-gradient(circle, rgba(246, 217, 139, 0.32) 0 1px, transparent 1.6px);
-      background-size: 84px 84px, 136px 136px;
-      background-position: 7px 13px, 31px 47px;
-      opacity: 0.16;
-    }
-
-    .ambient-orbit {
-      position: fixed;
-      inset: -16vmax;
-      z-index: -2;
-      pointer-events: none;
-      opacity: 0.72;
-      background:
-        conic-gradient(
-          from 0deg,
-          transparent,
-          rgba(134, 92, 246, 0.17),
-          transparent,
-          rgba(246, 217, 139, 0.08),
-          transparent
-        );
-      animation: dgAmbientSpin 52s linear infinite;
-      filter: blur(2px);
-    }
-
-    @keyframes dgAmbientSpin {
-      to {
-        transform: rotate(360deg);
-      }
     }
 
     .topbar {
@@ -136,9 +130,13 @@
       top: 0;
       z-index: 30;
       width: 100%;
-      border-bottom: 1px solid rgba(246, 217, 139, 0.16);
-      background: rgba(3, 7, 18, 0.86);
+      border-bottom: 1px solid rgba(255,232,168,0.16);
+      background:
+        linear-gradient(180deg, rgba(9,5,13,0.92), rgba(3,2,5,0.82));
       backdrop-filter: blur(18px);
+      box-shadow:
+        0 0 2rem rgba(139,92,246,0.08),
+        0 0 2rem rgba(244,201,93,0.05);
     }
 
     .topbar-inner {
@@ -155,7 +153,7 @@
       align-items: center;
       gap: 0.65rem;
       min-width: max-content;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: 0.02em;
     }
 
@@ -164,13 +162,16 @@
       place-items: center;
       width: 2.35rem;
       height: 2.35rem;
-      border: 1px solid var(--dg-line);
+      border: 1px solid rgba(255,232,168,0.38);
       border-radius: 0.82rem;
       background:
-        radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.35), transparent 32%),
-        linear-gradient(135deg, rgba(134, 92, 246, 0.38), rgba(246, 217, 139, 0.16));
-      color: var(--dg-gold);
+        radial-gradient(circle at 35% 25%, rgba(255,255,255,0.35), transparent 32%),
+        linear-gradient(135deg, rgba(139,92,246,0.42), rgba(244,201,93,0.20));
+      color: var(--dg-gold-2);
       font-size: 0.82rem;
+      box-shadow:
+        0 0 1.2rem rgba(139,92,246,0.16),
+        0 0 1.3rem rgba(244,201,93,0.10);
     }
 
     .nav {
@@ -182,25 +183,34 @@
     }
 
     .nav a {
-      border: 1px solid transparent;
+      border: 1px solid rgba(196,181,253,0.20);
       border-radius: 999px;
       padding: 0.5rem 0.7rem;
       color: var(--dg-muted);
-      font-size: 0.9rem;
+      background:
+        linear-gradient(180deg, rgba(139,92,246,0.08), rgba(244,201,93,0.025)),
+        rgba(0,0,0,0.36);
+      font-size: 0.88rem;
+      font-weight: 780;
       line-height: 1;
+      box-shadow:
+        inset 0 0 0 1px rgba(244,201,93,0.035),
+        0 0 1rem rgba(139,92,246,0.06);
     }
 
     .nav a:hover,
     .nav a:focus {
-      border-color: var(--dg-line);
+      border-color: rgba(255,232,168,0.58);
       color: var(--dg-text);
-      background: rgba(255, 255, 255, 0.05);
+      box-shadow:
+        0 0 1rem rgba(244,201,93,0.16),
+        0 0 1.8rem rgba(139,92,246,0.14);
       outline: none;
     }
 
     main {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       width: min(var(--dg-max), calc(100% - 2rem));
       margin: 0 auto;
       padding: clamp(2rem, 4vw, 4.25rem) 0 4rem;
@@ -224,11 +234,14 @@
 
     .eyebrow {
       margin: 0 0 0.85rem;
-      color: var(--dg-gold);
+      color: var(--dg-gold-2);
       font-size: 0.79rem;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: 0.18em;
       text-transform: uppercase;
+      text-shadow:
+        0 0 1rem rgba(244,201,93,0.34),
+        0 0 1.4rem rgba(139,92,246,0.28);
     }
 
     h1 {
@@ -237,6 +250,7 @@
       font-size: clamp(3rem, 9.2vw, 7.2rem);
       line-height: 0.86;
       letter-spacing: -0.08em;
+      text-wrap: balance;
     }
 
     .subtitle {
@@ -245,13 +259,13 @@
       color: var(--dg-muted);
       font-size: clamp(1.08rem, 2.15vw, 1.55rem);
       line-height: 1.35;
-      font-weight: 650;
+      font-weight: 700;
     }
 
     .lead {
       margin: 1rem 0 0;
       max-width: 34rem;
-      color: rgba(247, 242, 223, 0.76);
+      color: rgba(255,247,226,0.76);
       font-size: 1rem;
       line-height: 1.7;
     }
@@ -268,25 +282,40 @@
       align-items: center;
       justify-content: center;
       min-height: 2.85rem;
-      border: 1px solid var(--dg-line);
+      border: 1px solid rgba(255,232,168,0.42);
       border-radius: 999px;
       padding: 0.78rem 1.05rem;
-      background: rgba(255, 255, 255, 0.055);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.16), transparent 42%),
+        linear-gradient(180deg, rgba(139,92,246,0.10), rgba(244,201,93,0.030)),
+        rgba(0,0,0,0.72);
       color: var(--dg-text);
-      font-weight: 780;
+      font-weight: 820;
       line-height: 1;
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
+      box-shadow:
+        0 0 0.75rem rgba(139,92,246,0.18),
+        0 0 1.9rem rgba(244,201,93,0.10),
+        0 18px 40px rgba(0,0,0,0.20);
+      transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
     }
 
     .button.primary {
-      background: linear-gradient(135deg, rgba(246, 217, 139, 0.95), rgba(198, 153, 74, 0.82));
-      color: #171007;
-      border-color: rgba(246, 217, 139, 0.8);
+      border-color: rgba(255,232,168,0.96);
+      color: #090604;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.58), transparent 38%),
+        linear-gradient(135deg, #fff3c4, #f4c95d 44%, #a78bfa 78%, #6d28d9);
+      box-shadow:
+        0 0 0.9rem rgba(255,232,168,0.54),
+        0 0 2.6rem rgba(244,201,93,0.30),
+        0 0 3.4rem rgba(139,92,246,0.18),
+        0 1rem 2.5rem rgba(244,201,93,0.16);
     }
 
     .button:hover,
     .button:focus {
       transform: translateY(-1px);
+      filter: saturate(1.08);
       outline: none;
     }
 
@@ -308,14 +337,17 @@
       aspect-ratio: 0.76;
       min-height: 33rem;
       max-height: 44rem;
-      border: 1px solid var(--dg-line);
+      border: 1px solid rgba(255,232,168,0.26);
       border-radius: 2.2rem;
       background:
-        linear-gradient(180deg, rgba(13, 24, 45, 0.9), rgba(4, 10, 23, 0.86)),
-        radial-gradient(circle at 50% 15%, rgba(134, 92, 246, 0.24), transparent 44%);
+        radial-gradient(circle at 50% 12%, rgba(139,92,246,0.20), transparent 44%),
+        radial-gradient(circle at 50% 62%, rgba(244,201,93,0.10), transparent 48%),
+        linear-gradient(180deg, rgba(10,6,15,0.94), rgba(0,0,0,0.86));
       box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.03),
-        0 26px 80px rgba(0, 0, 0, 0.42);
+        inset 0 0 0 1px rgba(255,232,168,0.06),
+        0 0 2.8rem rgba(139,92,246,0.14),
+        0 0 2.8rem rgba(244,201,93,0.08),
+        0 26px 80px rgba(0,0,0,0.42);
       overflow: hidden;
       isolation: isolate;
     }
@@ -334,14 +366,14 @@
     .compass-card::before {
       width: 84%;
       height: 84%;
-      border: 1px solid rgba(246, 217, 139, 0.08);
-      box-shadow: 0 0 34px rgba(134, 92, 246, 0.08);
+      border: 1px solid rgba(255,232,168,0.10);
+      box-shadow: 0 0 34px rgba(139,92,246,0.10);
     }
 
     .compass-card::after {
       width: 62%;
       height: 62%;
-      border: 1px solid rgba(134, 92, 246, 0.14);
+      border: 1px solid rgba(196,181,253,0.18);
     }
 
     .center-anchor {
@@ -354,17 +386,18 @@
       width: 10.8rem;
       height: 10.8rem;
       transform: translate(-50%, -50%) rotate(45deg);
-      border: 1px solid rgba(246, 217, 139, 0.12);
+      border: 1px solid rgba(255,232,168,0.20);
       border-radius: 1.8rem;
       background:
-        radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.16), transparent 31%),
-        linear-gradient(135deg, rgba(134, 92, 246, 0.4), rgba(27, 17, 75, 0.42));
+        radial-gradient(circle at 35% 28%, rgba(255,255,255,0.16), transparent 31%),
+        linear-gradient(135deg, rgba(139,92,246,0.42), rgba(244,201,93,0.12));
       box-shadow:
-        0 0 70px rgba(134, 92, 246, 0.18),
-        inset 0 0 26px rgba(255, 255, 255, 0.04);
-      opacity: 0.48;
+        0 0 70px rgba(139,92,246,0.22),
+        0 0 44px rgba(244,201,93,0.08),
+        inset 0 0 26px rgba(255,255,255,0.04);
+      opacity: 0.56;
       pointer-events: none;
-      filter: saturate(0.92);
+      filter: saturate(0.96);
       animation: anchorPulse 7s ease-in-out infinite;
     }
 
@@ -373,13 +406,13 @@
       position: absolute;
       inset: 14%;
       border-radius: 1.25rem;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255,255,255,0.06);
     }
 
     .center-anchor span {
       display: block;
       transform: rotate(-45deg);
-      color: rgba(247, 242, 223, 0.86);
+      color: rgba(255,248,232,0.90);
       text-align: center;
       font-size: 0.78rem;
       font-weight: 900;
@@ -389,15 +422,14 @@
     }
 
     @keyframes anchorPulse {
-      0%,
-      100% {
+      0%, 100% {
         transform: translate(-50%, -50%) rotate(45deg) scale(0.98);
-        opacity: 0.44;
+        opacity: 0.48;
       }
 
       50% {
         transform: translate(-50%, -50%) rotate(45deg) scale(1.02);
-        opacity: 0.54;
+        opacity: 0.62;
       }
     }
 
@@ -425,15 +457,11 @@
     }
 
     @keyframes orbitClockwise {
-      to {
-        transform: translate(-50%, -50%) rotate(360deg);
-      }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
     }
 
     @keyframes orbitCounter {
-      to {
-        transform: translate(-50%, -50%) rotate(-360deg);
-      }
+      to { transform: translate(-50%, -50%) rotate(-360deg); }
     }
 
     .diamond-node {
@@ -446,17 +474,18 @@
       margin: -2.95rem 0 0 -2.95rem;
       width: 5.9rem;
       height: 5.9rem;
-      border: 1px solid rgba(246, 217, 139, 0.18);
+      border: 1px solid rgba(255,232,168,0.26);
       border-radius: 1.55rem;
       background:
-        radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.08) 24%, transparent 42%),
-        radial-gradient(circle at 72% 78%, rgba(33, 15, 91, 0.38), transparent 48%),
-        linear-gradient(145deg, rgba(168, 132, 255, 0.98), rgba(103, 69, 225, 0.94) 52%, rgba(58, 34, 164, 0.96) 100%);
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.34), rgba(255,255,255,0.08) 24%, transparent 42%),
+        radial-gradient(circle at 72% 78%, rgba(139,92,246,0.34), transparent 48%),
+        linear-gradient(145deg, rgba(167,139,250,0.98), rgba(91,33,182,0.94) 52%, rgba(20,8,40,0.96) 100%);
       box-shadow:
-        0 16px 34px rgba(39, 18, 116, 0.34),
-        0 0 26px rgba(134, 92, 246, 0.22),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2),
-        inset 0 -12px 22px rgba(22, 10, 65, 0.18);
+        0 16px 34px rgba(39,18,116,0.34),
+        0 0 26px rgba(139,92,246,0.24),
+        0 0 22px rgba(244,201,93,0.10),
+        inset 0 1px 0 rgba(255,255,255,0.20),
+        inset 0 -12px 22px rgba(22,10,65,0.18);
       transform:
         rotate(var(--angle))
         translateY(var(--radius))
@@ -472,8 +501,7 @@
       position: absolute;
       inset: 8%;
       border-radius: 1.15rem;
-      background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 55%);
+      background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent 55%);
       opacity: 0.72;
       pointer-events: none;
       transform: translateZ(1px);
@@ -485,8 +513,8 @@
       inset: 0;
       border-radius: 1.55rem;
       box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.05),
-        inset 0 -18px 24px rgba(21, 9, 62, 0.16);
+        inset 0 0 0 1px rgba(255,255,255,0.05),
+        inset 0 -18px 24px rgba(21,9,62,0.16);
       pointer-events: none;
     }
 
@@ -495,11 +523,6 @@
       width: 5.55rem;
       height: 5.55rem;
       margin: -2.775rem 0 0 -2.775rem;
-      box-shadow:
-        0 22px 42px rgba(39, 18, 116, 0.42),
-        0 0 34px rgba(134, 92, 246, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.24),
-        inset 0 -12px 22px rgba(22, 10, 65, 0.22);
     }
 
     .orbit-ring.outer .diamond-node {
@@ -512,12 +535,12 @@
     .diamond-node:hover,
     .diamond-node:focus {
       outline: none;
-      border-color: rgba(246, 217, 139, 0.72);
+      border-color: rgba(255,232,168,0.78);
       box-shadow:
-        0 22px 42px rgba(39, 18, 116, 0.42),
-        0 0 34px rgba(134, 92, 246, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.22),
-        inset 0 -12px 22px rgba(22, 10, 65, 0.18);
+        0 22px 42px rgba(39,18,116,0.42),
+        0 0 34px rgba(139,92,246,0.32),
+        0 0 30px rgba(244,201,93,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.22);
       filter: brightness(1.06);
     }
 
@@ -542,7 +565,7 @@
       letter-spacing: 0.11em;
       line-height: 1.1;
       text-transform: uppercase;
-      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.8);
     }
 
     .orbit-ring.inner .diamond-label-text {
@@ -554,15 +577,11 @@
     }
 
     @keyframes keepTextUprightInner {
-      to {
-        transform: rotate(-360deg);
-      }
+      to { transform: rotate(-360deg); }
     }
 
     @keyframes keepTextUprightOuter {
-      to {
-        transform: rotate(360deg);
-      }
+      to { transform: rotate(360deg); }
     }
 
     .route-panel {
@@ -570,11 +589,17 @@
       z-index: 4;
       margin: clamp(1.5rem, 4vw, 3rem) auto 0;
       max-width: 52rem;
-      border: 1px solid var(--dg-line);
+      border: 1px solid rgba(255,232,168,0.24);
       border-radius: 2rem;
-      background: var(--dg-panel);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.10), transparent 34%),
+        linear-gradient(180deg, rgba(139,92,246,0.055), rgba(244,201,93,0.018)),
+        rgba(0,0,0,0.78);
       padding: clamp(1.25rem, 3vw, 2rem);
-      box-shadow: 0 24px 72px rgba(0, 0, 0, 0.28);
+      box-shadow:
+        0 0 2rem rgba(139,92,246,0.10),
+        0 0 2.8rem rgba(244,201,93,0.07),
+        0 24px 72px rgba(0,0,0,0.28);
     }
 
     .route-panel h2 {
@@ -591,7 +616,8 @@
       line-height: 1.65;
     }
 
-    .logic-grid {
+    .logic-grid,
+    .route-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 0.85rem;
@@ -600,15 +626,17 @@
 
     .logic-card {
       min-width: 0;
-      border: 1px solid rgba(246, 217, 139, 0.18);
+      border: 1px solid rgba(255,232,168,0.20);
       border-radius: 1.25rem;
-      background: rgba(255, 255, 255, 0.04);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.12), transparent 42%),
+        rgba(255,232,168,0.026);
       padding: 1rem;
     }
 
     .logic-card strong {
       display: block;
-      color: var(--dg-gold);
+      color: var(--dg-gold-2);
       font-size: 0.74rem;
       letter-spacing: 0.13em;
       text-transform: uppercase;
@@ -622,23 +650,18 @@
       line-height: 1.45;
     }
 
-    .route-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.7rem;
-      margin-top: 1.35rem;
-    }
-
     .route-grid a {
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 3.1rem;
-      border: 1px solid var(--dg-line);
+      border: 1px solid rgba(196,181,253,0.24);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.045);
+      background:
+        linear-gradient(180deg, rgba(139,92,246,0.08), rgba(244,201,93,0.025)),
+        rgba(0,0,0,0.38);
       color: var(--dg-text);
-      font-weight: 800;
+      font-weight: 820;
       text-align: center;
       padding: 0.65rem;
     }
@@ -646,23 +669,23 @@
     .route-grid a:hover,
     .route-grid a:focus {
       outline: none;
-      background: rgba(246, 217, 139, 0.1);
-      border-color: rgba(246, 217, 139, 0.55);
+      background: rgba(244,201,93,0.10);
+      border-color: rgba(255,232,168,0.55);
     }
 
     .status-card {
       margin: 1rem auto 0;
       max-width: 52rem;
-      border: 1px solid rgba(246, 217, 139, 0.18);
+      border: 1px solid rgba(255,232,168,0.20);
       border-radius: 1.5rem;
-      background: rgba(3, 7, 18, 0.64);
+      background: rgba(3,2,5,0.64);
       padding: 1rem 1.15rem;
       color: var(--dg-muted);
       line-height: 1.55;
     }
 
     .status-card strong {
-      color: var(--dg-gold);
+      color: var(--dg-gold-2);
     }
 
     .route-receipt,
@@ -691,7 +714,7 @@
       width: min(var(--dg-max), calc(100% - 2rem));
       margin: 0 auto;
       padding: 2rem 0 3rem;
-      color: rgba(247, 242, 223, 0.52);
+      color: rgba(255,247,226,0.52);
       font-size: 0.88rem;
       text-align: center;
     }
@@ -896,12 +919,17 @@
   </style>
 </head>
 
-<body>
+<body
+  data-room="compass"
+  data-route="/"
+  data-contract="COMPASS_INTERPLANETARY_4_PLUS_16_COMMAND_SURFACE_TNT_v6"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-visual-pass-claimed="false"
+>
   <a class="skip-link" href="#compass-main">Skip to Compass</a>
 
   <div class="site-shell">
-    <div class="ambient-orbit" aria-hidden="true"></div>
-
     <header class="topbar" aria-label="Primary site navigation">
       <div class="topbar-inner">
         <a class="brand" href="/" aria-label="Diamond Gate Bridge Compass">
@@ -916,7 +944,7 @@
           <a href="/explore/">Explore</a>
           <a href="/laws/">Laws</a>
           <a href="/nine-summits/">Nine Summits</a>
-          <a href="/book/">Book</a>
+          <a href="/nine-summits-of-love/">Book</a>
           <a href="/nine-summits/universe/">Universe</a>
           <a href="/products/">Products</a>
           <a href="/showroom/">Showroom</a>
@@ -931,7 +959,7 @@
     <main id="compass-main">
       <section class="hero" aria-labelledby="compass-title">
         <div class="hero-copy">
-          <p class="eyebrow">Compass · Animated Purple Diamond Command Surface</p>
+          <p class="eyebrow">Compass · Interplanetary Diamond Command Surface</p>
           <h1 id="compass-title">Pressure is the door.</h1>
           <p class="subtitle">One message. Many rooms. One bridge.</p>
           <p class="lead">
@@ -978,7 +1006,7 @@
               <a class="diamond-node" style="--angle: 22.5deg" href="/nine-summits/">
                 <span class="diamond-label-shell"><b class="diamond-label-text">Nine<br />Summits</b></span>
               </a>
-              <a class="diamond-node" style="--angle: 45deg" href="/book/">
+              <a class="diamond-node" style="--angle: 45deg" href="/nine-summits-of-love/">
                 <span class="diamond-label-shell"><b class="diamond-label-text">Book</b></span>
               </a>
               <a class="diamond-node" style="--angle: 67.5deg" href="/nine-summits/universe/">
@@ -1002,10 +1030,10 @@
               <a class="diamond-node" style="--angle: 202.5deg" href="/meet-sean-mansfield/">
                 <span class="diamond-label-shell"><b class="diamond-label-text">Meet<br />Sean</b></span>
               </a>
-              <a class="diamond-node" style="--angle: 225deg" href="/showroom/globe/">
+              <a class="diamond-node" style="--angle: 225deg" href="/showroom/globe/audralia/">
                 <span class="diamond-label-shell"><b class="diamond-label-text">Audralia</b></span>
               </a>
-              <a class="diamond-node" style="--angle: 247.5deg" href="/five-flags/">
+              <a class="diamond-node" style="--angle: 247.5deg" href="/products/five-flags/">
                 <span class="diamond-label-shell"><b class="diamond-label-text">Five<br />Flags</b></span>
               </a>
               <a class="diamond-node" style="--angle: 270deg" href="/door/">
@@ -1026,11 +1054,10 @@
       </section>
 
       <section class="route-panel" aria-labelledby="command-field-title">
-        <p class="eyebrow">Compass Background Command Anchor</p>
+        <p class="eyebrow">Compass Foreground Route Instrument</p>
         <h2 id="command-field-title">Chronological command field</h2>
         <p>
-          The room diamonds sit in front. Compass stays behind them. The public route field remains readable on
-          mobile, tablet, and desktop.
+          The interplanetary axis moves behind the room. The Compass route diamonds remain the foreground command instrument.
         </p>
 
         <div class="route-grid" aria-label="Chronological route field">
@@ -1040,7 +1067,7 @@
           <a href="/explore/">Explore Map</a>
           <a href="/laws/">Laws Boundary</a>
           <a href="/nine-summits/">Nine Summits Gate</a>
-          <a href="/book/">Book Climb</a>
+          <a href="/nine-summits-of-love/">Book Climb</a>
           <a href="/nine-summits/universe/">Universe World</a>
           <a href="/products/">Products Use</a>
           <a href="/showroom/">Showroom Atrium</a>
@@ -1048,8 +1075,8 @@
           <a href="/gauges/">Gauges Proof</a>
           <a href="/about-this-underdog/">Underdog Universal</a>
           <a href="/meet-sean-mansfield/">Meet Sean Voice</a>
-          <a href="/showroom/globe/">Audralia World</a>
-          <a href="/five-flags/">Five Flags Game</a>
+          <a href="/showroom/globe/audralia/">Audralia World</a>
+          <a href="/products/five-flags/">Five Flags Game</a>
         </div>
       </section>
 
@@ -1090,7 +1117,7 @@
           <a href="/explore/">Explore</a>
           <a href="/laws/">Laws</a>
           <a href="/nine-summits/">Nine Summits</a>
-          <a href="/book/">Book</a>
+          <a href="/nine-summits-of-love/">Book</a>
           <a href="/nine-summits/universe/">Universe</a>
           <a href="/products/">Products</a>
           <a href="/showroom/">Showroom</a>
@@ -1100,34 +1127,35 @@
         </div>
       </section>
 
-      <aside class="status-card" aria-label="Compass status">
+      <aside class="status-card" aria-label="Compass status" data-compass-status>
         <strong>Compass status:</strong>
-        Shared Diamond Orbit · Explore route restored · Inner four pulled into center precinct · Outer ring remains visually above inner four.
+        Interplanetary background active · Compass 4+16 foreground route instrument · Door remains view-selector authority.
       </aside>
 
       <template id="route-receipt" data-route-receipt>
-COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v5
+COMPASS_INTERPLANETARY_4_PLUS_16_COMMAND_SURFACE_TNT_v6
+previous_contract=COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v5
 route=/
 page=compass
+room=compass
 role=animated_public_command_surface
 message=one_message_many_rooms_one_bridge
+background_authority=/assets/dgb-interplanetary-background.js
+background_contract=DGB_INTERPLANETARY_AXIS_FLOATING_FIGURES_BACKGROUND_JS_TNT_v1
+runtime_authority=/index.runtime.js
+runtime_contract=COMPASS_INTERPLANETARY_UNIFORMITY_RUNTIME_TNT_v1
+route_js=/index.js
+route_js_contract=COMPASS_ROUTE_ONLY_VIEW_CARRY_INTERPLANETARY_UNIFORMITY_TNT_v2
 shared_css=/assets/diamond-orbit.css
-animation_standard=UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1
-center=compass_background_anchor_only
-visual_system=compass_4_plus_12_diamond_orbit
-ring_system=4_plus_12
+foreground_visual_system=compass_4_plus_16_diamond_orbit
+ring_system=4_inner_plus_16_outer
 inner_ring=compass,door,home,explore
-outer_ring=laws,nine_summits,book,universe,products,showroom,frontier,gauges,underdog,meet_sean,audralia,five_flags
-z_index_law=ambient_background,compass_anchor_background,inner_orbit_field,outer_orbit_field,route_labels
-overlap_law=inner_four_overlap_center_anchor_but_remain_below_outer_ring
-route_fix=/manor/_rerouted_to_/explore/
-animation=inner_clockwise_outer_counterclockwise
-label_law=diamond_labels_counter_rotate_to_remain_readable
-mobile_law=compact_4_plus_12_orbit_no_hidden_nodes
-upgraded=inner_four_pulled_into_center_precinct,inner_four_overlap_center_background,explore_route_replaces_missing_manor_route,inner_four_layered_below_outer_ring,readable_rotating_labels,three_dimensional_diamonds
-preserved=animated_purple_diamonds,center_background_only,chronological_route_field,route_readability
-route_owns=public_orientation,chronological_route_field,animated_diamond_routes,room_routes,bridge_orientation
-route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
+outer_ring=laws,nine_summits,book,universe,products,showroom,frontier,gauges,underdog,meet_sean,audralia,five_flags,entry,receiver,map,proof
+canonical_links=book:/nine-summits-of-love/,five_flags:/products/five-flags/,audralia:/showroom/globe/audralia/
+z_index_law=interplanetary_background,compass_anchor_background,inner_orbit_field,outer_orbit_field,route_labels
+route_owns=public_orientation,chronological_route_field,animated_diamond_routes,room_routes,bridge_orientation,foreground_compass_instrument
+route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic,canvas_creation,graphicbox
+view_selector_authority=/door/
 heavy_runtime_loaded=false
 render_files_touched=false
 instrument_touched=false
@@ -1140,7 +1168,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v5 · Compass · Inner four pulled into center precinct.
+      COMPASS_INTERPLANETARY_4_PLUS_16_COMMAND_SURFACE_TNT_v6 · Compass · Interplanetary background · foreground route instrument.
     </footer>
   </div>
 </body>

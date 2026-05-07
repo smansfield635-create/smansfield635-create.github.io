@@ -1,4 +1,4 @@
-/* /runtime/earth_asset_runtime.js
+/* asset/runtime/earth_asset_runtime.js
    EARTH_G5_NON_NASA_SATELLITE_ASSET_RUNTIME_TNT_v2
    Full-file replacement.
 */

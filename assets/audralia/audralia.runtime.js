@@ -3,17 +3,16 @@
 // Full-file replacement. Runtime authority only.
 // Purpose:
 // - Preserve downstream import chain.
-// - Keep runtime as final normalizer/compositor, not visual painter.
-// - Restore organic land/water classification instead of broad latitude bands.
-// - Preserve Earth-compatible solid/liquid accounting.
-// - Expose runtime summary object for Gauges.
-// - Keep zero fallback samples.
+// - Replace stale V8 runtime receipt with V9 runtime truth.
+// - Expose runtime summary surfaces for Gauges.
+// - Preserve land/water normalization while reducing hard latitude-band behavior.
+// - Keep fallbackSamples = 0.
 // - No GraphicBox. No image generation. No visual-pass claim.
 
 const AUDRALIA_RUNTIME_RECEIPT = "AUDRALIA_RUNTIME_ORGANIC_LAND_WATER_COMPOSITOR_TNT_v9";
 const AUDRALIA_RUNTIME_COMPATIBILITY_RECEIPT = "AUDRALIA_RUNTIME_LAND_WATER_NORMALIZATION_TNT_v8";
 const AUDRALIA_RUNTIME_PREVIOUS_RECEIPT = "AUDRALIA_RUNTIME_4K_DOWNSTREAM_SURFACE_CONNECTOR_TNT_v7";
-const AUDRALIA_RUNTIME_ALIGNMENT_RECEIPT = "AUDRALIA_RUNTIME_ORGANIC_SURFACE_RATIO_ALIGNMENT_TNT_v1";
+const AUDRALIA_RUNTIME_ALIGNMENT_RECEIPT = "AUDRALIA_RUNTIME_ROUTE_V9_SUMMARY_AND_DYNAMIC_STATUS_BRIDGE_TNT_v1";
 
 const TOPOLOGY_PATH = "/assets/audralia/audralia/tectonics/topology/render.js";
 const TERRAIN_PATH = "/assets/audralia/audralia/tectonics/topology/terrain.render.js";
@@ -28,8 +27,10 @@ const TARGET_LIQUID_WATER_RATIO = 0.708;
 const TARGET_LIQUID_WATER_RATIO_MIN = 0.69;
 const TARGET_LIQUID_WATER_RATIO_MAX = 0.76;
 
-const NORMALIZATION_GRID_WIDTH = 192;
-const NORMALIZATION_GRID_HEIGHT = 96;
+const GRID_WIDTH = 192;
+const GRID_HEIGHT = 96;
+
+export let AUDRALIA_RUNTIME_SUMMARY = null;
 
 const STATUS = {
   ok: true,
@@ -39,8 +40,8 @@ const STATUS = {
   alignmentReceipt: AUDRALIA_RUNTIME_ALIGNMENT_RECEIPT,
   activeRenewal: "AUDRALIA_RUNTIME_ORGANIC_LAND_WATER_COMPOSITOR_CONTRACT_v1",
   file: "assets/audralia/audralia.runtime.js",
-  role: "audralia-runtime-organic-land-water-compositor",
-  lineage: "tectonics→topology→terrain→climate→hydration→oceans→deep-ocean→runtime-compositor→canvas-renderer→route",
+  role: "audralia-runtime-organic-land-water-compositor-authority",
+  lineage: "tectonics→topology→terrain→climate→hydration→oceans→deep-ocean→runtime-organic-compositor→canvas-renderer→route",
 
   topologyPath: TOPOLOGY_PATH,
   terrainPath: TERRAIN_PATH,
@@ -77,16 +78,14 @@ const STATUS = {
   downstreamImported: false,
   downstreamSamplerReady: false,
   downstreamImportError: "",
-  downstreamChainConsumed: true,
+  downstreamChainConsumed: false,
 
   runtimeImportSafe: true,
   runtimeDefinesLandWater: false,
   runtimeOwnsFinalNormalization: true,
   runtimeOwnsSamplingNormalization: true,
   runtimeOwnsStats: true,
-  runtimeOrganicCompositorActive: true,
-  runtimeLatitudeBandSuppressionActive: true,
-  runtimeRectangularMaskSuppressed: true,
+  runtimeOwnsSummary: true,
 
   targetSolidSurfaceRatio: TARGET_SOLID_SURFACE_RATIO,
   targetSolidSurfaceRatioMin: TARGET_SOLID_SURFACE_RATIO_MIN,
@@ -103,32 +102,38 @@ const STATUS = {
   imageGeneration: false,
   visualPassClaimed: false,
 
-  compatibilityReceipts: [
-    "AUDRALIA_RUNTIME_ORGANIC_LAND_WATER_COMPOSITOR_TNT_v9",
-    "AUDRALIA_RUNTIME_LAND_WATER_NORMALIZATION_TNT_v8",
-    "AUDRALIA_RUNTIME_4K_DOWNSTREAM_SURFACE_CONNECTOR_TNT_v7",
-    "AUDRALIA_TOPOLOGY_4K_FOOTPRINT_AUTHORITY_TNT_v1",
-    "AUDRALIA_TERRAIN_4K_RELIEF_DETAIL_TNT_v2",
-    "AUDRALIA_HYDRATION_CONTINUOUS_TERRAIN_CONDUCTION_SWEEP_TNT_v2",
-    "AUDRALIA_HYDRATION_OCEANS_CONTINUOUS_FILL_ALIGNMENT_SWEEP_TNT_v2",
-    "AUDRALIA_HYDRATION_DEEP_OCEAN_CONTINUOUS_DEPTH_ALIGNMENT_SWEEP_TNT_v2"
-  ]
+  api: {
+    createAudraliaRuntime: true,
+    createAudraliaRuntimeAsync: true,
+    buildRuntimeField: true,
+    sampleRuntimeState: true,
+    sampleAudraliaPlanetState: true,
+    sampleAudraliaRuntime: true,
+    sampleSurface: true,
+    sampleAudraliaSurface: true,
+    getStats: true,
+    getRuntimeStats: true,
+    getSummary: true,
+    getRuntimeSummary: true,
+    getFallbackReport: true,
+    getStatus: true
+  }
 };
 
 const MODULE_RECORDS = {
-  topology: makeModuleRecord("topology", TOPOLOGY_PATH),
-  terrain: makeModuleRecord("terrain", TERRAIN_PATH),
-  hydration: makeModuleRecord("hydration", HYDRATION_PATH),
-  oceans: makeModuleRecord("oceans", OCEANS_PATH),
-  deepOcean: makeModuleRecord("deepOcean", DEEP_OCEAN_PATH)
+  topology: makeRecord("topology", TOPOLOGY_PATH),
+  terrain: makeRecord("terrain", TERRAIN_PATH),
+  hydration: makeRecord("hydration", HYDRATION_PATH),
+  oceans: makeRecord("oceans", OCEANS_PATH),
+  deepOcean: makeRecord("deepOcean", DEEP_OCEAN_PATH)
 };
 
 let selectedDownstreamRecord = null;
 let cachedStats = null;
 let cachedRuntime = null;
-let cachedSummary = null;
+let normalizationModel = null;
 
-function makeModuleRecord(key, path) {
+function makeRecord(key, path) {
   return {
     key,
     path,
@@ -142,9 +147,9 @@ function makeModuleRecord(key, path) {
 }
 
 function clamp(value, min, max) {
-  const n = Number(value);
-  if (!Number.isFinite(n)) return min;
-  return Math.max(min, Math.min(max, n));
+  const number = Number(value);
+  if (!Number.isFinite(number)) return min;
+  return Math.max(min, Math.min(max, number));
 }
 
 function clamp01(value) {
@@ -160,14 +165,14 @@ function fract(value) {
 }
 
 function smoothstep(edge0, edge1, value) {
-  const d = Math.max(0.000001, edge1 - edge0);
-  const t = clamp01((value - edge0) / d);
+  const denominator = Math.max(0.000001, edge1 - edge0);
+  const t = clamp01((value - edge0) / denominator);
   return t * t * (3 - 2 * t);
 }
 
 function safeNumber(value, fallback = 0) {
-  const n = Number(value);
-  return Number.isFinite(n) ? n : fallback;
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : fallback;
 }
 
 function normalizeLongitudeRadians(lon) {
@@ -219,7 +224,7 @@ function fbm3(x, y, z, octaves = 5) {
   let frequency = 1;
   let normalizer = 0;
 
-  for (let i = 0; i < octaves; i += 1) {
+  for (let index = 0; index < octaves; index += 1) {
     value += valueNoise3(x * frequency, y * frequency, z * frequency) * amplitude;
     normalizer += amplitude;
     frequency *= 2.04;
@@ -229,17 +234,17 @@ function fbm3(x, y, z, octaves = 5) {
   return value / Math.max(0.000001, normalizer);
 }
 
-function ridged3(x, y, z, octaves = 4) {
+function ridgedNoise3(x, y, z, octaves = 4) {
   let value = 0;
-  let amplitude = 0.56;
+  let amplitude = 0.54;
   let frequency = 1;
   let normalizer = 0;
 
-  for (let i = 0; i < octaves; i += 1) {
+  for (let index = 0; index < octaves; index += 1) {
     const n = fbm3(x * frequency, y * frequency, z * frequency, 1);
     value += (1 - Math.abs(n * 2 - 1)) * amplitude;
     normalizer += amplitude;
-    frequency *= 2.07;
+    frequency *= 2.08;
     amplitude *= 0.5;
   }
 
@@ -302,157 +307,144 @@ function normalizeCoordinateInput(input, lonArg, uArg, vArg) {
 }
 
 const LAND_LOBES = Object.freeze([
-  { id: "western-mainland-arc", lat: -17, lon: -112, rx: 50, ry: 25, twist: -17, weight: 1.10 },
-  { id: "eastern-attached-mainland", lat: 6, lon: -24, rx: 39, ry: 26, twist: 12, weight: 1.00 },
-  { id: "northern-rock-crown", lat: 50, lon: -76, rx: 46, ry: 16, twist: 3, weight: 0.80 },
-  { id: "southern-weathered-mass", lat: -57, lon: 83, rx: 58, ry: 18, twist: -9, weight: 0.94 },
-  { id: "equatorial-ancient-chain", lat: -8, lon: 121, rx: 35, ry: 15, twist: 17, weight: 0.78 },
-  { id: "south-east-shelf-islands", lat: -34, lon: 135, rx: 27, ry: 12, twist: 22, weight: 0.58 },
-  { id: "far-east-reef-knife", lat: -24, lon: 169, rx: 24, ry: 10, twist: 32, weight: 0.48 },
-  { id: "western-pressure-islands", lat: 8, lon: -154, rx: 22, ry: 11, twist: -24, weight: 0.44 }
+  { id: "western-mainland-arc", lat: -17, lon: -112, rx: 58, ry: 29, twist: -16, weight: 1.08 },
+  { id: "eastern-attached-mainland", lat: 6, lon: -24, rx: 45, ry: 31, twist: 11, weight: 0.98 },
+  { id: "northern-rock-crown", lat: 53, lon: -76, rx: 60, ry: 20, twist: 2, weight: 0.92 },
+  { id: "southern-weathered-mass", lat: -59, lon: 82, rx: 73, ry: 23, twist: -8, weight: 1.02 },
+  { id: "equatorial-ancient-chain", lat: -7, lon: 121, rx: 44, ry: 18, twist: 16, weight: 0.84 },
+  { id: "south-east-shelf-islands", lat: -34, lon: 135, rx: 34, ry: 15, twist: 21, weight: 0.68 },
+  { id: "far-east-reef-knife", lat: -24, lon: 169, rx: 31, ry: 12, twist: 31, weight: 0.52 },
+  { id: "western-pressure-islands", lat: 8, lon: -154, rx: 27, ry: 14, twist: -24, weight: 0.48 }
 ]);
 
 function ellipseInfluenceDegrees(latDeg, lonDeg, lobe) {
-  const adjustedLon = normalizeLongitudeDegrees(lonDeg - lobe.lon) * Math.max(0.24, Math.cos(latDeg * Math.PI / 180));
-  const adjustedLat = latDeg - lobe.lat;
+  const latitudeScale = Math.max(0.22, Math.cos(latDeg * Math.PI / 180));
+  const deltaLon = normalizeLongitudeDegrees(lonDeg - lobe.lon) * latitudeScale;
+  const deltaLat = latDeg - lobe.lat;
   const twist = lobe.twist * Math.PI / 180;
 
-  const x = adjustedLon * Math.cos(twist) - adjustedLat * Math.sin(twist);
-  const y = adjustedLon * Math.sin(twist) + adjustedLat * Math.cos(twist);
+  const x = deltaLon * Math.cos(twist) - deltaLat * Math.sin(twist);
+  const y = deltaLon * Math.sin(twist) + deltaLat * Math.cos(twist);
 
   const dx = x / Math.max(1, lobe.rx);
   const dy = y / Math.max(1, lobe.ry);
   const distance = Math.sqrt(dx * dx + dy * dy);
 
-  return smoothstep(1.08, 0.22, distance) * lobe.weight;
+  return smoothstep(1.08, 0.26, distance) * lobe.weight;
 }
 
-function organicLandPotential(lat, lon) {
+function landPotentialRaw(lat, lon) {
   const point = latLonToPoint(lat, lon);
   const latDeg = lat * 180 / Math.PI;
   const lonDeg = lon * 180 / Math.PI;
 
   let strongest = 0;
-  let bodySum = 0;
+  let sum = 0;
 
-  for (const lobe of LAND_LOBES) {
-    const influence = ellipseInfluenceDegrees(latDeg, lonDeg, lobe);
+  for (let index = 0; index < LAND_LOBES.length; index += 1) {
+    const influence = ellipseInfluenceDegrees(latDeg, lonDeg, LAND_LOBES[index]);
     strongest = Math.max(strongest, influence);
-    bodySum += influence * 0.18;
+    sum += influence * 0.22;
   }
 
-  const continentalBreakup = fbm3(
-    point.x * 3.8 + 4.1,
-    point.y * 3.8 - 2.2,
-    point.z * 3.8 + 8.3,
-    5
-  );
+  const broad = fbm3(point.x * 2.7 + 3.1, point.y * 2.7 - 1.4, point.z * 2.7 + 5.9, 5);
+  const ridge = ridgedNoise3(point.x * 5.8 - 7.2, point.y * 5.8 + 4.4, point.z * 5.8 - 2.9, 4);
+  const micro = fbm3(point.x * 18.0 + 1.8, point.y * 18.0 - 9.6, point.z * 18.0 + 6.2, 3);
 
-  const shorelineRaggedness = ridged3(
-    point.x * 8.7 - 3.6,
-    point.y * 8.7 + 5.4,
-    point.z * 8.7 - 7.1,
-    4
-  );
-
-  const microArchipelago = fbm3(
-    point.x * 19.0 + 1.2,
-    point.y * 19.0 - 9.1,
-    point.z * 19.0 + 6.8,
-    3
-  );
-
-  const polarPenalty = smoothstep(0.74, 0.96, Math.abs(point.y)) * 0.18;
+  const latitudeSoftener = 1 - Math.abs(point.y) * 0.18;
+  const polarContinuity = smoothstep(0.70, 0.95, Math.abs(point.y)) * (0.055 + ridge * 0.07);
+  const organicBreak = Math.sin((lonDeg * 0.021) + (latDeg * 0.037)) * 0.018;
 
   return clamp01(
     strongest * 0.66 +
-      clamp(bodySum, 0, 0.28) +
-      continentalBreakup * 0.13 +
-      shorelineRaggedness * 0.08 +
-      microArchipelago * 0.035 -
-      polarPenalty
+    clamp(sum, 0, 0.42) +
+    broad * 0.12 +
+    ridge * 0.08 +
+    micro * 0.04 +
+    polarContinuity +
+    latitudeSoftener * 0.045 +
+    organicBreak
   );
 }
 
 function buildNormalizationModel() {
   const scores = [];
 
-  for (let row = 0; row < NORMALIZATION_GRID_HEIGHT; row += 1) {
-    const v = (row + 0.5) / NORMALIZATION_GRID_HEIGHT;
+  for (let row = 0; row < GRID_HEIGHT; row += 1) {
+    const v = (row + 0.5) / GRID_HEIGHT;
     const lat = (0.5 - v) * Math.PI;
 
-    for (let col = 0; col < NORMALIZATION_GRID_WIDTH; col += 1) {
-      const u = (col + 0.5) / NORMALIZATION_GRID_WIDTH;
+    for (let col = 0; col < GRID_WIDTH; col += 1) {
+      const u = (col + 0.5) / GRID_WIDTH;
       const lon = (u - 0.5) * Math.PI * 2;
-      scores.push(organicLandPotential(lat, lon));
+      scores.push(landPotentialRaw(lat, lon));
     }
   }
 
   scores.sort((a, b) => b - a);
 
-  const index = clamp(Math.floor(scores.length * TARGET_SOLID_SURFACE_RATIO) - 1, 0, scores.length - 1);
+  const total = scores.length;
+  const index = clamp(Math.floor(total * TARGET_SOLID_SURFACE_RATIO) - 1, 0, total - 1);
   const threshold = scores[index];
 
   return Object.freeze({
     receipt: AUDRALIA_RUNTIME_RECEIPT,
-    gridWidth: NORMALIZATION_GRID_WIDTH,
-    gridHeight: NORMALIZATION_GRID_HEIGHT,
-    totalSamples: scores.length,
+    gridWidth: GRID_WIDTH,
+    gridHeight: GRID_HEIGHT,
+    totalSamples: total,
     targetSolidSurfaceRatio: TARGET_SOLID_SURFACE_RATIO,
     targetLiquidWaterRatio: TARGET_LIQUID_WATER_RATIO,
-    landThreshold: threshold,
-    model: "organic-continent-mask-no-latitude-band"
+    landThreshold: threshold
   });
 }
 
-const NORMALIZATION_MODEL = buildNormalizationModel();
+normalizationModel = buildNormalizationModel();
 
-function classifyOrganicSurface(coordinate) {
+function classifyNormalizedSurface(coordinate) {
   const point = latLonToPoint(coordinate.lat, coordinate.lon);
-  const score = organicLandPotential(coordinate.lat, coordinate.lon);
-  const threshold = NORMALIZATION_MODEL.landThreshold;
+  const score = landPotentialRaw(coordinate.lat, coordinate.lon);
+  const threshold = normalizationModel.landThreshold;
 
   const solidSurfaceLand = score >= threshold;
   const liquidWater = !solidSurfaceLand;
   const edgeDistance = Math.abs(score - threshold);
+  const nearCoast = edgeDistance < 0.075;
 
-  const coarse = fbm3(point.x * 6.0 + 2.2, point.y * 6.0 - 5.1, point.z * 6.0 + 1.4, 5);
-  const fine = fbm3(point.x * 22.0 - 1.9, point.y * 22.0 + 8.8, point.z * 22.0 - 3.2, 3);
-  const ridge = ridged3(point.x * 12.0 + 7.1, point.y * 12.0 - 4.4, point.z * 12.0 + 9.8, 4);
-  const oceanTexture = fbm3(point.x * 14.0 - 8.0, point.y * 14.0 + 2.6, point.z * 14.0 - 4.3, 4);
-  const iceTexture = fbm3(point.x * 10.0 + 2.8, point.y * 10.0 + 12.2, point.z * 10.0 - 8.4, 4);
+  const waterTexture = fbm3(point.x * 14.0 + 8.7, point.y * 14.0 - 3.4, point.z * 14.0 + 2.6, 4);
+  const iceTexture = fbm3(point.x * 11.0 - 4.3, point.y * 11.0 + 11.1, point.z * 11.0 - 5.7, 4);
+  const reliefTexture = ridgedNoise3(point.x * 15.5 + 2.2, point.y * 15.5 - 8.1, point.z * 15.5 + 6.4, 4);
+  const colorBreak = fbm3(point.x * 31.0 + 4.1, point.y * 31.0 - 2.8, point.z * 31.0 + 7.2, 3);
 
-  const coastlineIndex = edgeDistance < 0.105 ? clamp01(1 - edgeDistance / 0.105) : 0;
-  const shelf = liquidWater && (coastlineIndex > 0.12 || score > threshold - 0.085 || oceanTexture > 0.88);
+  const shelf = liquidWater && (score > threshold - 0.105 || waterTexture > 0.86);
   const ocean = liquidWater && !shelf;
-  const coastal = coastlineIndex > 0.08 || shelf;
 
-  const polarLandIcePermission =
+  const ice =
     solidSurfaceLand &&
-    Math.abs(point.y) > 0.70 &&
-    iceTexture > mix(0.72, 0.34, smoothstep(0.70, 0.96, Math.abs(point.y)));
+    (
+      (Math.abs(point.y) > 0.86 && iceTexture > 0.16) ||
+      (Math.abs(point.y) > 0.74 && iceTexture > 0.66)
+    );
 
-  const ice = Boolean(polarLandIcePermission);
   const exposedTerrainLand = solidSurfaceLand && !ice;
+  const coastal = nearCoast || shelf;
+  const beach = coastal && (shelf || exposedTerrainLand);
 
   const elevation = solidSurfaceLand
-    ? clamp01(0.14 + (score - threshold) * 2.0 + ridge * 0.30 + coarse * 0.16 + (ice ? 0.08 : 0))
+    ? clamp01(0.14 + (score - threshold) * 2.15 + reliefTexture * 0.32 + (ice ? 0.14 : 0))
     : 0;
 
   const depth = liquidWater
-    ? clamp01(0.18 + (threshold - score) * 1.55 + oceanTexture * 0.30 + (ocean ? 0.16 : 0))
+    ? clamp01(0.16 + (threshold - score) * 1.45 + waterTexture * 0.28 + (ocean ? 0.18 : 0))
     : 0;
 
-  const shelfIndex = shelf ? clamp01(0.36 + coastlineIndex * 0.42 + oceanTexture * 0.22) : 0;
+  const coastlineIndex = coastal ? clamp01(1 - edgeDistance / 0.105) : 0;
+  const shelfIndex = shelf ? clamp01(0.42 + coastlineIndex * 0.36 + waterTexture * 0.22) : 0;
+
   const turquoiseIndex = shelf
-    ? clamp01(0.36 + shelfIndex * 0.42 + oceanTexture * 0.12)
+    ? clamp01(0.38 + shelfIndex * 0.38 + waterTexture * 0.12)
     : ocean
-      ? clamp01(0.06 + oceanTexture * 0.10)
-      : clamp01(coastlineIndex * 0.16);
-
-  const mineralIndex = exposedTerrainLand
-    ? clamp01(ridge * 0.38 + fine * 0.24 + coarse * 0.18 + coastlineIndex * 0.08)
-    : 0;
+      ? clamp01(0.06 + waterTexture * 0.11)
+      : clamp01(coastlineIndex * 0.15);
 
   const visualSurfaceClass = ice
     ? "glacier_ice_snowpack_surface"
@@ -466,7 +458,6 @@ function classifyOrganicSurface(coordinate) {
     score,
     threshold,
     point,
-
     solidSurfaceLand,
     liquidWater,
     water: liquidWater,
@@ -479,9 +470,8 @@ function classifyOrganicSurface(coordinate) {
     ice,
     glacier: ice,
     coastal,
-    beach: coastal && (shelf || exposedTerrainLand),
-    hydrated: true,
-
+    beach,
+    hydrated: liquidWater || coastal || ice || exposedTerrainLand,
     elevation,
     maxElevation: elevation,
     terrainRelief: elevation,
@@ -489,33 +479,18 @@ function classifyOrganicSurface(coordinate) {
     depth,
     maxDepth: depth,
     oceanDepth: depth,
-
     coastlineIndex,
     coastalFeather: coastlineIndex,
     shelfIndex,
     turquoise: turquoiseIndex,
     turquoiseIndex,
-    blueWaterIndex: ocean ? clamp01(0.60 + depth * 0.30) : shelf ? clamp01(0.28 + turquoiseIndex * 0.18) : 0,
-
-    mountainIndex: exposedTerrainLand ? clamp01(elevation * 0.62 + ridge * 0.30) : 0,
-    ridgeIndex: exposedTerrainLand ? clamp01(ridge * 0.58 + mineralIndex * 0.26 + elevation * 0.12) : 0,
-    basinIndex: exposedTerrainLand ? clamp01((1 - elevation) * 0.26 + coarse * 0.18 + coastlineIndex * 0.12) : 0,
-    coastalCliffIndex: coastal && exposedTerrainLand ? clamp01(elevation * 0.42 + ridge * 0.28 + coastlineIndex * 0.24) : 0,
-
-    mineralIndex,
-    weatheringIndex: exposedTerrainLand ? clamp01(coarse * 0.36 + fine * 0.26 + ridge * 0.20) : 0,
-    roughnessIndex: exposedTerrainLand ? clamp01(ridge * 0.42 + fine * 0.34 + elevation * 0.18) : 0,
-
+    blueWaterIndex: ocean ? clamp01(0.58 + depth * 0.30) : shelf ? 0.34 : 0,
+    reliefTexture,
+    colorBreak,
     visualSurfaceClass,
     surfaceClass: visualSurfaceClass,
     className: visualSurfaceClass,
     type: visualSurfaceClass,
-
-    organicTexture: coarse,
-    fineTexture: fine,
-    ridgeTexture: ridge,
-    oceanTexture,
-    iceTexture,
     normalizationSource: "runtime-organic-land-water-compositor"
   });
 }
@@ -526,15 +501,11 @@ function collectFunctionCandidates(object) {
   return [
     object.sampleDeepOcean,
     object.sampleDeepOceanField,
-    object.sampleDeepOceanState,
-    object.buildDeepOceanField,
     object.sampleOcean,
     object.sampleOceans,
     object.sampleOceanField,
-    object.buildOceanField,
     object.sampleHydration,
     object.sampleHydrationField,
-    object.buildHydrationField,
     object.sampleTerrain,
     object.sampleTerrainColor,
     object.sampleTopology,
@@ -544,7 +515,10 @@ function collectFunctionCandidates(object) {
     object.sampleRuntimeState,
     object.sampleAudraliaPlanetState,
     object.sample,
-    object.buildRuntimeField
+    object.buildRuntimeField,
+    object.buildOceanField,
+    object.buildHydrationField,
+    object.buildDeepOceanField
   ];
 }
 
@@ -598,7 +572,7 @@ async function importModuleRecord(record) {
 
   try {
     const module = await import(
-      `${record.path}?runtime=${encodeURIComponent(AUDRALIA_RUNTIME_RECEIPT)}&alignment=${encodeURIComponent(AUDRALIA_RUNTIME_ALIGNMENT_RECEIPT)}`
+      `${record.path}?runtime=${encodeURIComponent(AUDRALIA_RUNTIME_RECEIPT)}&bridge=${encodeURIComponent(AUDRALIA_RUNTIME_ALIGNMENT_RECEIPT)}`
     );
 
     const sampler = selectSampler(module);
@@ -639,8 +613,13 @@ async function initializeDownstream() {
   ]);
 
   selectedDownstreamRecord =
-    [MODULE_RECORDS.deepOcean, MODULE_RECORDS.oceans, MODULE_RECORDS.hydration, MODULE_RECORDS.terrain, MODULE_RECORDS.topology]
-      .find((record) => record.imported && record.samplerReady) || null;
+    [
+      MODULE_RECORDS.deepOcean,
+      MODULE_RECORDS.oceans,
+      MODULE_RECORDS.hydration,
+      MODULE_RECORDS.terrain,
+      MODULE_RECORDS.topology
+    ].find((record) => record.imported && record.samplerReady) || null;
 
   const imported = records.some((record) => record.imported);
   const samplerReady = Boolean(selectedDownstreamRecord);
@@ -660,11 +639,14 @@ async function initializeDownstream() {
   STATUS.deepOceanChildReceipt = MODULE_RECORDS.deepOcean.statusReceipt || "AUDRALIA_HYDRATION_DEEP_OCEAN_CONTINUOUS_DEPTH_ALIGNMENT_SWEEP_TNT_v2";
 
   exposeRuntimeStatus();
+
   return imported;
 }
 
 function callSelectedDownstreamSampler(coordinate) {
-  if (!selectedDownstreamRecord || typeof selectedDownstreamRecord.sampler !== "function") return null;
+  if (!selectedDownstreamRecord || typeof selectedDownstreamRecord.sampler !== "function") {
+    return null;
+  }
 
   try {
     const sample = selectedDownstreamRecord.sampler.call(
@@ -690,67 +672,86 @@ function callSelectedDownstreamSampler(coordinate) {
 }
 
 function normalizeRuntimeSample(raw, coordinate) {
-  const normalized = classifyOrganicSurface(coordinate);
+  const normalized = classifyNormalizedSurface(coordinate);
   const point = normalized.point;
 
-  const rawDepth = clamp01(safeNumber(raw?.depth ?? raw?.oceanDepth ?? raw?.finalDepth ?? raw?.routeSafeDepth, normalized.depth));
-  const rawElevation = clamp01(safeNumber(raw?.elevation ?? raw?.maxElevation ?? raw?.terrainRelief ?? raw?.terrainReliefIndex, normalized.elevation));
-  const rawHydration = clamp01(safeNumber(raw?.hydrationIndex ?? raw?.hydration, normalized.liquidWater ? 0.72 : normalized.coastal ? 0.48 : 0.34));
+  const rawDepth = clamp01(safeNumber(
+    raw?.depth ?? raw?.oceanDepth ?? raw?.finalDepth ?? raw?.routeSafeDepth,
+    normalized.depth
+  ));
+
+  const rawElevation = clamp01(safeNumber(
+    raw?.elevation ?? raw?.maxElevation ?? raw?.terrainRelief ?? raw?.terrainReliefIndex,
+    normalized.elevation
+  ));
+
+  const rawHydration = clamp01(safeNumber(
+    raw?.hydrationIndex ?? raw?.hydration,
+    normalized.liquidWater ? 0.74 : normalized.coastal ? 0.48 : 0.34
+  ));
+
   const rawRainfall = clamp01(safeNumber(raw?.rainfall, normalized.coastal ? 0.48 : normalized.liquidWater ? 0.34 : 0.24));
   const rawEvaporation = clamp01(safeNumber(raw?.evaporation, normalized.liquidWater ? 0.50 : 0.12));
-  const rawMineral = clamp01(safeNumber(raw?.mineralIndex ?? raw?.pressure, normalized.mineralIndex));
+  const rawMineral = clamp01(safeNumber(raw?.mineralIndex, normalized.solidSurfaceLand ? 0.42 : 0.12));
   const rawDeepBlend = clamp01(safeNumber(raw?.deepOceanBlend ?? raw?.organicDeepOceanPresence, normalized.ocean ? 0.40 : 0));
   const rawDeepFeather = clamp01(safeNumber(raw?.deepOceanFeather, normalized.ocean ? 0.42 : 0));
 
   const depth = normalized.liquidWater
-    ? clamp01(normalized.depth * 0.78 + rawDepth * 0.22)
+    ? clamp01(normalized.depth * 0.76 + rawDepth * 0.24)
     : 0;
 
   const elevation = normalized.solidSurfaceLand
-    ? clamp01(normalized.elevation * 0.78 + rawElevation * 0.22)
+    ? clamp01(normalized.elevation * 0.76 + rawElevation * 0.24)
+    : 0;
+
+  const terrainRelief = normalized.solidSurfaceLand
+    ? clamp01(elevation * 0.68 + normalized.reliefTexture * 0.22 + rawMineral * 0.10)
+    : 0;
+
+  const coastlineIndex = normalized.coastlineIndex;
+  const shelfIndex = normalized.shelfIndex;
+
+  const mountainIndex = normalized.exposedTerrainLand
+    ? clamp01(elevation * 0.60 + normalized.reliefTexture * 0.40)
     : 0;
 
   const ridgeIndex = normalized.exposedTerrainLand
-    ? clamp01(normalized.ridgeIndex * 0.74 + rawMineral * 0.14 + elevation * 0.12)
+    ? clamp01(normalized.reliefTexture * 0.58 + rawMineral * 0.22 + elevation * 0.20)
     : 0;
 
-  const mountainIndex = normalized.exposedTerrainLand
-    ? clamp01(normalized.mountainIndex * 0.72 + elevation * 0.22)
+  const coastalCliffIndex = normalized.coastal && normalized.solidSurfaceLand
+    ? clamp01(elevation * 0.46 + normalized.reliefTexture * 0.34 + coastlineIndex * 0.20)
     : 0;
 
   const basinIndex = normalized.exposedTerrainLand
-    ? clamp01(normalized.basinIndex * 0.66 + rawHydration * 0.18 + (1 - elevation) * 0.10)
-    : 0;
-
-  const coastalCliffIndex = normalized.exposedTerrainLand && normalized.coastal
-    ? clamp01(normalized.coastalCliffIndex * 0.72 + ridgeIndex * 0.16)
+    ? clamp01((1 - elevation) * 0.32 + rawHydration * 0.24 + normalized.colorBreak * 0.20)
     : 0;
 
   const riverCandidate = normalized.exposedTerrainLand
-    ? clamp01(rawRainfall * 0.28 + basinIndex * 0.22 + ridgeIndex * 0.15 + normalized.coastlineIndex * 0.12)
+    ? clamp01(rawRainfall * 0.30 + basinIndex * 0.23 + ridgeIndex * 0.16 + coastlineIndex * 0.12)
     : 0;
 
   const lakeBasinCandidate = normalized.exposedTerrainLand
-    ? clamp01(basinIndex * 0.46 + rawHydration * 0.24 + (1 - elevation) * 0.14)
+    ? clamp01(basinIndex * 0.44 + rawHydration * 0.30 + (1 - elevation) * 0.16)
     : 0;
 
   const springCandidate = normalized.exposedTerrainLand
-    ? clamp01(rawMineral * 0.22 + rawHydration * 0.24 + normalized.fineTexture * 0.18)
+    ? clamp01(rawMineral * 0.24 + rawHydration * 0.26 + normalized.colorBreak * 0.18)
     : 0;
 
   const hydrationIndex = normalized.liquidWater
-    ? clamp01(0.70 + rawEvaporation * 0.10 + normalized.shelfIndex * 0.12)
+    ? clamp01(0.70 + rawEvaporation * 0.12 + shelfIndex * 0.10)
     : normalized.ice
-      ? clamp01(0.46 + rawRainfall * 0.18)
-      : clamp01(rawHydration * 0.46 + normalized.coastlineIndex * 0.18 + riverCandidate * 0.12 + lakeBasinCandidate * 0.10);
+      ? clamp01(0.44 + rawRainfall * 0.18)
+      : clamp01(rawHydration * 0.52 + coastlineIndex * 0.18 + riverCandidate * 0.12 + lakeBasinCandidate * 0.10);
 
   const surfaceWaterIndex = normalized.liquidWater
-    ? clamp01(0.70 + depth * 0.20 + normalized.shelfIndex * 0.10)
-    : clamp01(hydrationIndex * 0.42 + riverCandidate * 0.16 + lakeBasinCandidate * 0.18 + springCandidate * 0.12);
+    ? clamp01(0.70 + depth * 0.20 + shelfIndex * 0.10)
+    : clamp01(hydrationIndex * 0.44 + riverCandidate * 0.16 + lakeBasinCandidate * 0.18 + springCandidate * 0.12);
 
   const deepOrganic = normalized.ocean && depth > 0.46;
-  const organicDeepOceanPresence = deepOrganic
-    ? clamp01(rawDeepBlend * 0.42 + depth * 0.36 + rawDeepFeather * 0.16)
+  const deepOrganicPresence = deepOrganic
+    ? clamp01(rawDeepBlend * 0.46 + depth * 0.34 + rawDeepFeather * 0.20)
     : 0;
 
   return {
@@ -761,7 +762,6 @@ function normalizeRuntimeSample(raw, coordinate) {
     compatibilityReceipt: AUDRALIA_RUNTIME_COMPATIBILITY_RECEIPT,
     previousReceipt: AUDRALIA_RUNTIME_PREVIOUS_RECEIPT,
     alignmentReceipt: AUDRALIA_RUNTIME_ALIGNMENT_RECEIPT,
-
     source: "audralia-runtime-organic-land-water-compositor",
     downstream: raw || null,
     downstreamReceipt: raw?.receipt || "",
@@ -769,7 +769,7 @@ function normalizeRuntimeSample(raw, coordinate) {
     downstreamChainConsumed: Boolean(STATUS.downstreamImported),
 
     normalizationReceipt: AUDRALIA_RUNTIME_RECEIPT,
-    normalizationModel: NORMALIZATION_MODEL,
+    normalizationModel,
     normalizationSource: normalized.normalizationSource,
     normalizationScore: normalized.score,
     normalizationThreshold: normalized.threshold,
@@ -817,8 +817,8 @@ function normalizeRuntimeSample(raw, coordinate) {
     depth,
     maxDepth: depth,
     oceanDepth: depth,
-    terrainRelief: elevation,
-    terrainReliefIndex: elevation,
+    terrainRelief,
+    terrainReliefIndex: terrainRelief,
 
     hydration: hydrationIndex,
     hydrationIndex,
@@ -827,24 +827,24 @@ function normalizeRuntimeSample(raw, coordinate) {
     evaporation: rawEvaporation,
     climateConduit: true,
 
-    coastlineIndex: normalized.coastlineIndex,
-    coastalFeather: normalized.coastlineIndex,
-    shelfIndex: normalized.shelfIndex,
+    coastlineIndex,
+    coastalFeather: coastlineIndex,
+    shelfIndex,
     mineralIndex: rawMineral,
 
     diamondSignal: normalized.ice
       ? 0.50
       : normalized.exposedTerrainLand
-        ? clamp01(rawMineral * 0.42 + ridgeIndex * 0.18)
+        ? clamp01(rawMineral * 0.44 + ridgeIndex * 0.18)
         : 0.04,
 
     opalSignal: normalized.coastal
-      ? clamp01(normalized.coastlineIndex * 0.46 + normalized.turquoiseIndex * 0.22)
+      ? clamp01(coastlineIndex * 0.46 + normalized.turquoiseIndex * 0.20)
       : normalized.exposedTerrainLand
         ? clamp01(rawMineral * 0.20)
         : 0.08,
 
-    graniteSignal: normalized.exposedTerrainLand ? clamp01(elevation * 0.42 + rawMineral * 0.24) : 0.06,
+    graniteSignal: normalized.exposedTerrainLand ? clamp01(terrainRelief * 0.48 + rawMineral * 0.24) : 0.06,
     slateSignal: normalized.exposedTerrainLand ? clamp01(ridgeIndex * 0.36 + rawMineral * 0.18) : 0.08,
 
     turquoise: normalized.turquoise,
@@ -868,29 +868,21 @@ function normalizeRuntimeSample(raw, coordinate) {
     riverCandidate,
     streamCandidate: riverCandidate,
     lakeBasinCandidate,
-    floodplainCandidate: normalized.coastal ? clamp01(riverCandidate * 0.58 + normalized.coastlineIndex * 0.28) : 0,
-    deltaCandidate: normalized.coastal ? clamp01(riverCandidate * 0.46 + normalized.coastlineIndex * 0.38) : 0,
+    floodplainCandidate: normalized.coastal ? clamp01(riverCandidate * 0.58 + coastlineIndex * 0.28) : 0,
+    deltaCandidate: normalized.coastal ? clamp01(riverCandidate * 0.46 + coastlineIndex * 0.38) : 0,
     springCandidate,
     subterraneanCandidate: normalized.exposedTerrainLand ? clamp01(springCandidate * 0.62 + rawMineral * 0.20) : 0,
 
     deepOrganic,
-    deepOrganicPresence: organicDeepOceanPresence,
-    organicDeepOceanPresence,
-    deepOceanBlend: normalized.ocean ? clamp01(rawDeepBlend * 0.56 + depth * 0.26) : 0,
-    deepOceanFeather: normalized.ocean ? clamp01(rawDeepFeather * 0.50 + depth * 0.22) : 0,
+    deepOrganicPresence,
+    deepOceanBlend: normalized.ocean ? clamp01(rawDeepBlend * 0.58 + depth * 0.24) : 0,
+    deepOceanFeather: normalized.ocean ? clamp01(rawDeepFeather * 0.52 + depth * 0.20) : 0,
+    organicDeepOceanPresence: deepOrganicPresence,
     hardDeepOceanRouteClassSamples: 0,
     hardDeepOceanRouteClassSuppressed: true,
     routeMayReceiveSoftDepthFieldsOnly: true,
     deepOceanIsDepthFieldNotRouteBlob: true,
     trench: false,
-
-    organicTexture: normalized.organicTexture,
-    fineTexture: normalized.fineTexture,
-    ridgeTexture: normalized.ridgeTexture,
-    oceanTexture: normalized.oceanTexture,
-    iceTexture: normalized.iceTexture,
-    roughnessIndex: normalized.roughnessIndex,
-    weatheringIndex: normalized.weatheringIndex,
 
     runtimeDefinesLandWater: false,
     runtimeDefinesTerrain: false,
@@ -908,21 +900,18 @@ function normalizeRuntimeSample(raw, coordinate) {
 
 function sampleInternal(input, lonArg, uArg, vArg, options = {}) {
   const coordinate = normalizeCoordinateInput(input, lonArg, uArg, vArg);
-  const consumeDownstream = options.consumeDownstream === true;
-  const raw = consumeDownstream ? callSelectedDownstreamSampler(coordinate) : null;
+  const raw = options.consumeDownstream === true ? callSelectedDownstreamSampler(coordinate) : null;
   return normalizeRuntimeSample(raw, coordinate);
 }
 
 function computeStats() {
   if (cachedStats) return cachedStats;
 
-  const width = NORMALIZATION_GRID_WIDTH;
-  const height = NORMALIZATION_GRID_HEIGHT;
+  const width = GRID_WIDTH;
+  const height = GRID_HEIGHT;
   const totalSamples = width * height;
-
   const classCounts = {};
   const rowDominance = [];
-  const interiorRowDominance = [];
 
   let solidSurfaceLandSamples = 0;
   let liquidWaterSamples = 0;
@@ -935,10 +924,13 @@ function computeStats() {
   let shelfSamples = 0;
   let coastalSamples = 0;
   let deepOrganicSamples = 0;
+  let hardDeepOceanRouteClassSamples = 0;
+  let trenchSamples = 0;
   let beachSamples = 0;
   let ridgeSamples = 0;
   let mountainSamples = 0;
   let cliffSamples = 0;
+  let basinSamples = 0;
   let glacierSamples = 0;
   let riverSamples = 0;
   let streamSamples = 0;
@@ -950,12 +942,14 @@ function computeStats() {
 
   let maxTurquoise = 0;
   let maxDepth = 0;
+  let maxRawDepth = 0;
   let maxDeepOceanBlend = 0;
   let maxDeepOceanFeather = 0;
   let maxOrganicDeepOceanPresence = 0;
   let maxElevation = 0;
   let maxHydrationActivationIndex = 0;
   let maxSurfaceWaterIndex = 0;
+  let maxHydrationConduction = 0;
   let maxRainfall = 0;
   let maxEvaporation = 0;
   let maxRidge = 0;
@@ -987,10 +981,13 @@ function computeStats() {
       if (sample.shelf) shelfSamples += 1;
       if (sample.coastal) coastalSamples += 1;
       if (sample.deepOrganic || sample.deepOceanCandidate) deepOrganicSamples += 1;
+      if (!sample.hardDeepOceanRouteClassSuppressed) hardDeepOceanRouteClassSamples += 1;
+      if (sample.trench) trenchSamples += 1;
       if (sample.beach) beachSamples += 1;
       if (sample.ridgeIndex > 0.46) ridgeSamples += 1;
       if (sample.mountainIndex > 0.52) mountainSamples += 1;
       if (sample.coastalCliffIndex > 0.42) cliffSamples += 1;
+      if (sample.basinIndex > 0.56) basinSamples += 1;
       if (sample.glacier || sample.ice) glacierSamples += 1;
       if (sample.river) riverSamples += 1;
       if (sample.stream) streamSamples += 1;
@@ -1002,12 +999,14 @@ function computeStats() {
 
       maxTurquoise = Math.max(maxTurquoise, safeNumber(sample.turquoise, 0));
       maxDepth = Math.max(maxDepth, safeNumber(sample.depth, 0));
+      maxRawDepth = Math.max(maxRawDepth, safeNumber(sample.rawDepth, sample.depth));
       maxDeepOceanBlend = Math.max(maxDeepOceanBlend, safeNumber(sample.deepOceanBlend, 0));
       maxDeepOceanFeather = Math.max(maxDeepOceanFeather, safeNumber(sample.deepOceanFeather, 0));
       maxOrganicDeepOceanPresence = Math.max(maxOrganicDeepOceanPresence, safeNumber(sample.organicDeepOceanPresence, 0));
       maxElevation = Math.max(maxElevation, safeNumber(sample.elevation, 0));
       maxHydrationActivationIndex = Math.max(maxHydrationActivationIndex, safeNumber(sample.hydrationIndex, 0));
       maxSurfaceWaterIndex = Math.max(maxSurfaceWaterIndex, safeNumber(sample.surfaceWaterIndex, 0));
+      maxHydrationConduction = Math.max(maxHydrationConduction, safeNumber(sample.hydrationIndex, 0));
       maxRainfall = Math.max(maxRainfall, safeNumber(sample.rainfall, 0));
       maxEvaporation = Math.max(maxEvaporation, safeNumber(sample.evaporation, 0));
       maxRidge = Math.max(maxRidge, safeNumber(sample.ridgeIndex, 0));
@@ -1015,13 +1014,7 @@ function computeStats() {
       maxCliff = Math.max(maxCliff, safeNumber(sample.coastalCliffIndex ?? sample.coastlineIndex, 0));
     }
 
-    const dominant = Math.max(...Object.values(rowCounts));
-    const dominance = dominant / width;
-    rowDominance.push(dominance);
-
-    if (row >= 6 && row <= height - 7) {
-      interiorRowDominance.push(dominance);
-    }
+    rowDominance.push(Math.max(...Object.values(rowCounts)) / width);
   }
 
   const solidSurfaceLandRatio = solidSurfaceLandSamples / totalSamples;
@@ -1035,10 +1028,13 @@ function computeStats() {
   const shelfRatio = shelfSamples / totalSamples;
   const coastalRatio = coastalSamples / totalSamples;
   const deepOrganicRatio = deepOrganicSamples / totalSamples;
+  const hardDeepOceanRouteClassRatio = hardDeepOceanRouteClassSamples / totalSamples;
+  const trenchRatio = trenchSamples / totalSamples;
   const beachRatio = beachSamples / totalSamples;
   const ridgeRatio = ridgeSamples / totalSamples;
   const mountainRatio = mountainSamples / totalSamples;
   const cliffRatio = cliffSamples / totalSamples;
+  const basinRatio = basinSamples / totalSamples;
   const glacierRatio = glacierSamples / totalSamples;
   const riverRatio = riverSamples / totalSamples;
   const streamRatio = streamSamples / totalSamples;
@@ -1049,19 +1045,16 @@ function computeStats() {
   const subterraneanRatio = subterraneanSamples / totalSamples;
 
   const maxDominantRowRatio = Math.max(...rowDominance);
-  const maxDominantInteriorRowRatio = Math.max(...interiorRowDominance);
   const averageRowDominance = rowDominance.reduce((sum, value) => sum + value, 0) / rowDominance.length;
-  const averageInteriorRowDominance = interiorRowDominance.reduce((sum, value) => sum + value, 0) / interiorRowDominance.length;
 
   cachedStats = {
-    ok: true,
     receipt: AUDRALIA_RUNTIME_RECEIPT,
     compatibilityReceipt: AUDRALIA_RUNTIME_COMPATIBILITY_RECEIPT,
     previousReceipt: AUDRALIA_RUNTIME_PREVIOUS_RECEIPT,
     alignmentReceipt: AUDRALIA_RUNTIME_ALIGNMENT_RECEIPT,
 
     totalSamples,
-    normalizationModel: NORMALIZATION_MODEL,
+    normalizationModel,
     solidSurfaceLandSamples,
     liquidWaterSamples,
     exposedTerrainLandSamples,
@@ -1091,14 +1084,14 @@ function computeStats() {
     coastalSamples,
     shelfSamples,
     deepOrganicSamples,
-    hardDeepOceanRouteClassSamples: 0,
-    trenchSamples: 0,
+    hardDeepOceanRouteClassSamples,
+    trenchSamples,
     beachSamples,
     ridgeSamples,
     mountainSamples,
     canyonSamples: 0,
     cliffSamples,
-    basinSamples: 0,
+    basinSamples,
     climateSamples: totalSamples,
     climateConduitSamples: totalSamples,
     rainfallSamples: totalSamples,
@@ -1114,13 +1107,13 @@ function computeStats() {
     springSamples,
     subterraneanSamples,
 
-    maxRawDepth: maxDepth,
+    maxRawDepth,
     maxDeepOceanBlend,
     maxDeepOceanFeather,
     maxOrganicDeepOceanPresence,
     maxHydrationActivationIndex,
     maxSurfaceWaterIndex,
-    maxHydrationConduction: maxHydrationActivationIndex,
+    maxHydrationConduction,
     maxRainfall,
     maxEvaporation,
     maxRidge,
@@ -1136,14 +1129,14 @@ function computeStats() {
     coastalRatio,
     shelfRatio,
     deepOrganicRatio,
-    hardDeepOceanRouteClassRatio: 0,
-    trenchRatio: 0,
+    hardDeepOceanRouteClassRatio,
+    trenchRatio,
     beachRatio,
     ridgeRatio,
     mountainRatio,
     canyonRatio: 0,
     cliffRatio,
-    basinRatio: 0,
+    basinRatio,
     glacierRatio,
     climateRatio: 1,
     climateConduitRatio: 1,
@@ -1162,32 +1155,24 @@ function computeStats() {
     targetLiquidWaterRatioMin: TARGET_LIQUID_WATER_RATIO_MIN,
     targetLiquidWaterRatioMax: TARGET_LIQUID_WATER_RATIO_MAX,
 
-    landRatioTargetMet:
-      exposedTerrainLandRatio >= 0.16 &&
-      exposedTerrainLandRatio <= TARGET_SOLID_SURFACE_RATIO_MAX,
-
+    landRatioTargetMet: exposedTerrainLandRatio >= 0.16 && exposedTerrainLandRatio <= 0.31,
     topologyLandRatioTargetMet:
       solidSurfaceLandRatio >= TARGET_SOLID_SURFACE_RATIO_MIN &&
       solidSurfaceLandRatio <= TARGET_SOLID_SURFACE_RATIO_MAX,
-
     solidSurfaceLandRatioTargetMet:
       solidSurfaceLandRatio >= TARGET_SOLID_SURFACE_RATIO_MIN &&
       solidSurfaceLandRatio <= TARGET_SOLID_SURFACE_RATIO_MAX,
-
     liquidWaterRatioTargetMet:
       liquidWaterRatio >= TARGET_LIQUID_WATER_RATIO_MIN &&
       liquidWaterRatio <= TARGET_LIQUID_WATER_RATIO_MAX,
-
     earthEquivalentLandRatioAligned:
       solidSurfaceLandRatio >= TARGET_SOLID_SURFACE_RATIO_MIN &&
       solidSurfaceLandRatio <= TARGET_SOLID_SURFACE_RATIO_MAX,
 
     maxDominantRowRatio,
-    maxDominantInteriorRowRatio,
     averageRowDominance,
-    averageInteriorRowDominance,
-    rowBandingSuppressed: averageInteriorRowDominance < 0.84,
-    bullseyeCollapseSuppressed: maxDominantInteriorRowRatio < 0.95,
+    rowBandingSuppressed: averageRowDominance < 0.84,
+    bullseyeCollapseSuppressed: maxDominantRowRatio < 0.95,
 
     topologyImportAttempted: STATUS.topologyImportAttempted,
     topologyImported: STATUS.topologyImported,
@@ -1237,6 +1222,7 @@ function computeStats() {
     runtimeCacheActive: true,
     lowLagSampling: true,
     runtimeCompositeFieldActive: true,
+    runtimeOrganicCompositorActive: true,
     perPixelChainRecalculation: false,
     terrainTransmissionActive: true,
     terrainReady: true,
@@ -1248,9 +1234,6 @@ function computeStats() {
 
     runtimeFinalLandWaterNormalized: true,
     runtimeNormalizesSweptChain: true,
-    runtimeOrganicCompositorActive: true,
-    runtimeLatitudeBandSuppressionActive: true,
-    runtimeRectangularMaskSuppressed: true,
     finalClassificationSource: STATUS.finalClassificationSource,
     solidSurfaceAccounting: "runtime-organic earth-compatible solidSurfaceLand",
 
@@ -1274,66 +1257,93 @@ function computeStats() {
     runtimeOrganicCompositorActive: true,
     solidSurfaceLandRatio,
     liquidWaterRatio,
-    rowBandingSuppressed: cachedStats.rowBandingSuppressed,
     bullseyeCollapseSuppressed: cachedStats.bullseyeCollapseSuppressed
   });
-
-  cachedSummary = makeRuntimeSummary(cachedStats);
-  exposeRuntimeSummary(cachedSummary);
 
   return cachedStats;
 }
 
-function makeRuntimeSummary(stats) {
+function buildRuntimeSummary() {
+  const stats = computeStats();
+
   return {
     ok: true,
     receipt: AUDRALIA_RUNTIME_RECEIPT,
     compatibilityReceipt: AUDRALIA_RUNTIME_COMPATIBILITY_RECEIPT,
     previousReceipt: AUDRALIA_RUNTIME_PREVIOUS_RECEIPT,
     alignmentReceipt: AUDRALIA_RUNTIME_ALIGNMENT_RECEIPT,
+    source: "audralia-runtime-summary",
+    activeRenewal: STATUS.activeRenewal,
+
     totalSamples: stats.totalSamples,
+    solidSurfaceLandSamples: stats.solidSurfaceLandSamples,
+    liquidWaterSamples: stats.liquidWaterSamples,
+    exposedTerrainLandSamples: stats.exposedTerrainLandSamples,
+    iceSolidSurfaceSamples: stats.iceSolidSurfaceSamples,
+    fallbackSamples: stats.fallbackSamples,
+
     solidSurfaceLandRatio: stats.solidSurfaceLandRatio,
     liquidWaterRatio: stats.liquidWaterRatio,
     exposedTerrainLandRatio: stats.exposedTerrainLandRatio,
     iceSolidSurfaceRatio: stats.iceSolidSurfaceRatio,
     fallbackRatio: stats.fallbackRatio,
-    classCounts: stats.classCounts,
+
     visualSurfaceClasses: stats.visualSurfaceClasses,
-    maxTurquoise: stats.maxTurquoise,
-    maxDepth: stats.maxDepth,
-    maxElevation: stats.maxElevation,
-    targetSolidSurfaceRatio: TARGET_SOLID_SURFACE_RATIO,
-    targetLiquidWaterRatio: TARGET_LIQUID_WATER_RATIO,
+    classCounts: stats.classCounts,
+
+    waterSamples: stats.waterSamples,
+    landSamples: stats.landSamples,
+    topologyLandSamples: stats.topologyLandSamples,
+    visibleLandSamples: stats.visibleLandSamples,
+
+    targetLandRatio: stats.targetLandRatio,
+    targetLandRatioMin: stats.targetLandRatioMin,
+    targetLandRatioMax: stats.targetLandRatioMax,
+    targetLiquidWaterRatio: stats.targetLiquidWaterRatio,
+    targetLiquidWaterRatioMin: stats.targetLiquidWaterRatioMin,
+    targetLiquidWaterRatioMax: stats.targetLiquidWaterRatioMax,
+
     solidSurfaceLandRatioTargetMet: stats.solidSurfaceLandRatioTargetMet,
     liquidWaterRatioTargetMet: stats.liquidWaterRatioTargetMet,
     earthEquivalentLandRatioAligned: stats.earthEquivalentLandRatioAligned,
+
+    maxDominantRowRatio: stats.maxDominantRowRatio,
+    averageRowDominance: stats.averageRowDominance,
     rowBandingSuppressed: stats.rowBandingSuppressed,
     bullseyeCollapseSuppressed: stats.bullseyeCollapseSuppressed,
+
+    downstreamImportAttempted: stats.downstreamImportAttempted,
+    downstreamImported: stats.downstreamImported,
+    downstreamSamplerReady: stats.downstreamSamplerReady,
+    downstreamImportError: stats.downstreamImportError,
+    downstreamChainConsumed: stats.downstreamChainConsumed,
+
+    runtimeFinalLandWaterNormalized: true,
+    runtimeNormalizesSweptChain: true,
     runtimeOrganicCompositorActive: true,
-    runtimeRectangularMaskSuppressed: true,
+    finalClassificationSource: STATUS.finalClassificationSource,
+
+    fallbackAllowed: false,
     graphicBox: false,
     imageGeneration: false,
     visualPassClaimed: false
   };
 }
 
-function exposeRuntimeSummary(summary) {
-  if (typeof window !== "undefined") {
-    window.AUDRALIA_RUNTIME_SUMMARY = summary;
-    window.__AUDRALIA_RUNTIME_SUMMARY__ = summary;
-  }
-
-  return summary;
-}
-
 function exposeRuntimeStatus(extra = {}) {
   Object.assign(STATUS, extra);
+
+  if (AUDRALIA_RUNTIME_SUMMARY) {
+    STATUS.summary = AUDRALIA_RUNTIME_SUMMARY;
+  }
 
   if (typeof window !== "undefined") {
     window.AUDRALIA_RUNTIME_STATUS = STATUS;
     window.AUDRALIA_RUNTIME_RECEIPT = AUDRALIA_RUNTIME_RECEIPT;
+    window.AUDRALIA_RUNTIME_SUMMARY = AUDRALIA_RUNTIME_SUMMARY;
     window.__AUDRALIA_RUNTIME_STATUS__ = STATUS;
     window.__AUDRALIA_RUNTIME_RECEIPT__ = AUDRALIA_RUNTIME_RECEIPT;
+    window.__AUDRALIA_RUNTIME_SUMMARY__ = AUDRALIA_RUNTIME_SUMMARY;
   }
 
   if (typeof document !== "undefined" && document.documentElement) {
@@ -1342,13 +1352,13 @@ function exposeRuntimeStatus(extra = {}) {
     document.documentElement.dataset.audraliaRuntimeAlignmentReceipt = AUDRALIA_RUNTIME_ALIGNMENT_RECEIPT;
     document.documentElement.dataset.audraliaRuntimeImportSafe = "true";
     document.documentElement.dataset.audraliaRuntimeLandWaterNormalized = "true";
-    document.documentElement.dataset.audraliaRuntimeOrganicCompositorActive = "true";
-    document.documentElement.dataset.audraliaRuntimeRectangularMaskSuppressed = "true";
+    document.documentElement.dataset.audraliaRuntimeOrganicCompositor = "true";
     document.documentElement.dataset.audraliaRuntimeFinalClassificationSource = STATUS.finalClassificationSource;
     document.documentElement.dataset.audraliaRuntimeDownstreamImported = String(Boolean(STATUS.downstreamImported));
     document.documentElement.dataset.audraliaRuntimeDownstreamSamplerReady = String(Boolean(STATUS.downstreamSamplerReady));
     document.documentElement.dataset.audraliaRuntimeDownstreamChainConsumed = String(Boolean(STATUS.downstreamChainConsumed));
     document.documentElement.dataset.audraliaRuntimeFallbackSamples = String(STATUS.fallbackSamples || 0);
+    document.documentElement.dataset.audraliaRuntimeSummaryExposed = String(Boolean(AUDRALIA_RUNTIME_SUMMARY));
     document.documentElement.dataset.audraliaRuntimeDefinesLandWater = "false";
     document.documentElement.dataset.graphicBox = "false";
     document.documentElement.dataset.imageGeneration = "false";
@@ -1368,7 +1378,7 @@ function createRuntimeObject() {
     previousReceipt: AUDRALIA_RUNTIME_PREVIOUS_RECEIPT,
     alignmentReceipt: AUDRALIA_RUNTIME_ALIGNMENT_RECEIPT,
     status: STATUS,
-    normalizationModel: NORMALIZATION_MODEL,
+    normalizationModel,
     sampleSurface,
     sampleAudraliaSurface,
     sampleRuntimeState,
@@ -1377,8 +1387,8 @@ function createRuntimeObject() {
     getStatus,
     getStats,
     getRuntimeStats,
-    getRuntimeSummary,
     getSummary,
+    getRuntimeSummary,
     getFallbackReport,
     buildRuntimeField
   };
@@ -1389,8 +1399,8 @@ function createRuntimeObject() {
 export function getStatus() {
   return {
     ...STATUS,
-    summary: getRuntimeSummary(),
-    stats: getStats()
+    summary: AUDRALIA_RUNTIME_SUMMARY || buildRuntimeSummary(),
+    stats: computeStats()
   };
 }
 
@@ -1402,17 +1412,21 @@ export function getRuntimeStats() {
   return computeStats();
 }
 
-export function getRuntimeSummary() {
-  if (cachedSummary) return cachedSummary;
-  return makeRuntimeSummary(computeStats());
+export function getSummary() {
+  if (!AUDRALIA_RUNTIME_SUMMARY) {
+    AUDRALIA_RUNTIME_SUMMARY = buildRuntimeSummary();
+    exposeRuntimeStatus();
+  }
+
+  return AUDRALIA_RUNTIME_SUMMARY;
 }
 
-export function getSummary() {
-  return getRuntimeSummary();
+export function getRuntimeSummary() {
+  return getSummary();
 }
 
 export function getFallbackReport() {
-  const stats = getStats();
+  const stats = cachedStats || computeStats();
 
   return {
     ok: true,
@@ -1451,8 +1465,8 @@ export function sampleAudraliaRuntime(input, lonArg, uArg, vArg) {
   return sampleInternal(input, lonArg, uArg, vArg);
 }
 
-export function buildRuntimeField(input, lonArg, uArg, vArg, options = {}) {
-  return sampleInternal(input, lonArg, uArg, vArg, options);
+export function buildRuntimeField(input, lonArg, uArg, vArg) {
+  return sampleInternal(input, lonArg, uArg, vArg);
 }
 
 export function createAudraliaRuntime() {
@@ -1469,17 +1483,15 @@ export const AUDRALIA_RUNTIME_RECEIPT_VALUE = AUDRALIA_RUNTIME_RECEIPT;
 export const AUDRALIA_RUNTIME_COMPATIBILITY_RECEIPT_VALUE = AUDRALIA_RUNTIME_COMPATIBILITY_RECEIPT;
 export const AUDRALIA_RUNTIME_PREVIOUS_RECEIPT_VALUE = AUDRALIA_RUNTIME_PREVIOUS_RECEIPT;
 export const AUDRALIA_RUNTIME_ALIGNMENT_RECEIPT_VALUE = AUDRALIA_RUNTIME_ALIGNMENT_RECEIPT;
-export const AUDRALIA_RUNTIME_NORMALIZATION_MODEL = NORMALIZATION_MODEL;
+export const AUDRALIA_RUNTIME_NORMALIZATION_MODEL = normalizationModel;
 
 await initializeDownstream();
 
-exposeRuntimeStatus();
-exposeRuntimeSummary(getRuntimeSummary());
+AUDRALIA_RUNTIME_SUMMARY = buildRuntimeSummary();
 
-if (typeof window !== "undefined") {
-  window.DGBAudraliaRuntime = createRuntimeObject();
-  window.AudraliaRuntime = window.DGBAudraliaRuntime;
-  window.audraliaRuntime = window.DGBAudraliaRuntime;
-}
+exposeRuntimeStatus({
+  summary: AUDRALIA_RUNTIME_SUMMARY,
+  runtimeSummaryExposed: true
+});
 
 export default createAudraliaRuntime;

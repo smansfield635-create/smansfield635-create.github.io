@@ -1,530 +1,335 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_ROUTE_V11_SINGLE_STATUS_CANVAS_V10_CALLER_TNT_v1
+// AUDRALIA_ROUTE_V11_HARD_BIND_CANVAS_V11_CALLER_TNT_v1
 // Full-file replacement. Doorway route only.
-//
-// Result:
-// - Route owns the public status line.
-// - Canvas is imported and mounted only.
-// - Stale V6/V7/V8/V9 route proof panels are removed from public flow.
-// - No proof panel is created by this route.
-// - Runtime V8 remains preserved.
-// - Canvas V10 is expected to be render-only and must not write route status.
+// Purpose:
+// - Force the Audralia route to import the current canvas authority with a cache-bound URL.
+// - Mount the V11 spherical unwrap / polar blend canvas.
+// - Preserve HTML shell authority.
+// - Preserve runtime support-only status.
+// - Do not mutate runtime, canvas source, Gauges, Earth, Showroom selector, CSS, or products.
 // - No GraphicBox. No image generation. No visual-pass claim.
 
-const ROUTE_RECEIPT = "AUDRALIA_ROUTE_V11_SINGLE_STATUS_CANVAS_V10_CALLER_TNT_v1";
-const CANVAS_CONTRACT = "AUDRALIA_CANVAS_RENDER_ONLY_ORTHOGRAPHIC_REALISM_TNT_v10";
+const ROUTE_RECEIPT = "AUDRALIA_ROUTE_V11_HARD_BIND_CANVAS_V11_CALLER_TNT_v1";
+const CANVAS_CONTRACT = "AUDRALIA_CANVAS_SPHERICAL_TEXTURE_UNWRAP_AND_POLAR_BLEND_TNT_v11";
 const CANVAS_RECEIPT = "AUDRALIA_CANVAS_AUTHORITY_RECEIPT";
 const RUNTIME_RECEIPT = "AUDRALIA_RUNTIME_LAND_WATER_NORMALIZATION_TNT_v8";
+const HTML_HANDOFF = "AUDRALIA_HTML_ROUTE_CACHE_BREAK_AND_STATUS_GATE_TNT_v1";
 
-const RETIRED_ROUTE_RECEIPTS = Object.freeze([
-  "AUDRALIA_ROUTE_V10_STATUS_GATE_AND_CANVAS_V9_BRIDGE_TNT_v1",
-  "AUDRALIA_ROUTE_V9_PUBLIC_STATE_DEDUP_AND_CANVAS_V10_ALIGNMENT_TNT_v1",
-  "AUDRALIA_ROUTE_V8_HARD_BIND_CANVAS_V9_CALLER_TNT_v1",
-  "AUDRALIA_ROUTE_V7_HARD_BIND_CANVAS_CALLER_TNT_v1",
-  "AUDRALIA_ROUTE_V6_HARD_BIND_CANVAS_CALLER_TNT_v1"
-]);
+const CANVAS_SOURCE =
+  "/assets/audralia/audralia.canvas.js?cache=AUDRALIA_CANVAS_SPHERICAL_TEXTURE_UNWRAP_AND_POLAR_BLEND_TNT_v11";
 
-const RETIRED_CANVAS_CONTRACTS = Object.freeze([
-  "AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_TNT_v9_ROUTE_V8_ALIGNMENT_TNT_v10",
+const RUNTIME_SOURCE =
+  "/assets/audralia/audralia.runtime.js?cache=AUDRALIA_RUNTIME_LAND_WATER_NORMALIZATION_TNT_v8";
+
+const RETIRED_CANVAS_CONTRACTS = [
+  "AUDRALIA_CANVAS_RENDER_ONLY_ORTHOGRAPHIC_REALISM_TNT_v10",
   "AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_TNT_v9",
-  "AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_TNT_v8",
   "AUDRALIA_CANVAS_FAIL_OPEN_ORTHOGRAPHIC_FIRST_PAINT_TNT_v7",
   "AUDRALIA_CANVAS_INTERACTION_SAFE_ORTHOGRAPHIC_4K_TNT_v6",
   "AUDRALIA_CANVAS_AUTHORITY_INTERACTION_FREEZE_REPAIR_TNT_v5",
-  "AUDRALIA_CANVAS_AUTHORITY_RICH_PLANET_RENDER_TNT_v1",
-  "AUDRALIA_CANVAS_AUTHORITY_MINIMAL_CANARY_TNT_v1"
-]);
-
-const CANVAS_AUTHORITY_PATH =
-  "/assets/audralia/audralia.canvas.js" +
-  "?route=AUDRALIA_ROUTE_V11_SINGLE_STATUS_CANVAS_V10_CALLER_TNT_v1" +
-  "&canvas=AUDRALIA_CANVAS_RENDER_ONLY_ORTHOGRAPHIC_REALISM_TNT_v10" +
-  "&cache=2026-05-07-route-v11-canvas-v10-render-only";
-
-const RUNTIME_AUTHORITY_PATH =
-  "/assets/audralia/audralia.runtime.js" +
-  "?route=AUDRALIA_ROUTE_V11_SINGLE_STATUS_CANVAS_V10_CALLER_TNT_v1" +
-  "&runtime=AUDRALIA_RUNTIME_LAND_WATER_NORMALIZATION_TNT_v8" +
-  "&cache=2026-05-07-route-v11-runtime-v8-preserved";
-
-const STATUS_SELECTORS = Object.freeze([
-  "#audralia-route-status",
-  "[data-audralia-route-status]",
-  "#audralia-status",
-  "[data-route-status]"
-]);
-
-const MOUNT_SELECTORS = Object.freeze([
-  "#audralia-canvas-mount",
-  "[data-audralia-canvas-mount]",
-  "#audraliaRenderMount",
-  "#audralia-mount",
-  "[data-audralia-mount]",
-  "[data-audralia-render-mount]",
-  "#audralia-main",
-  "main"
-]);
-
-const STALE_TEXT_TOKENS = Object.freeze([
-  "AUDRALIA_ROUTE_V10_STATUS_GATE_AND_CANVAS_V9_BRIDGE_TNT_v1",
-  "AUDRALIA_ROUTE_V9_PUBLIC_STATE_DEDUP_AND_CANVAS_V10_ALIGNMENT_TNT_v1",
-  "AUDRALIA_ROUTE_V8_HARD_BIND_CANVAS_V9_CALLER_TNT_v1",
-  "AUDRALIA_ROUTE_V7_HARD_BIND_CANVAS_CALLER_TNT_v1",
-  "AUDRALIA_ROUTE_V6_HARD_BIND_CANVAS_CALLER_TNT_v1",
-  "AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_TNT_v9_ROUTE_V8_ALIGNMENT_TNT_v10",
-  "AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_TNT_v9",
-  "AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_TNT_v8",
-  "AUDRALIA_CANVAS_FAIL_OPEN_ORTHOGRAPHIC_FIRST_PAINT_TNT_v7",
-  "AUDRALIA_CANVAS_INTERACTION_SAFE_ORTHOGRAPHIC_4K_TNT_v6",
-  "AUDRALIA_CANVAS_AUTHORITY_INTERACTION_FREEZE_REPAIR_TNT_v5",
-  "AUDRALIA_CANVAS_AUTHORITY_RICH_PLANET_RENDER_TNT_v1",
-  "Route AUDRALIA_ROUTE_V",
-  "Retired AUDRALIA_CANVAS_",
-  "Canvas authority imported · no render export found",
-  "Audralia canvas authority imported, but no render export was found.",
-  "Audralia doorway loading V9 canvas authority.",
-  "Audralia doorway loading v7 fail-open canvas authority.",
-  "Audralia doorway is loading the current adopted canvas authority."
-]);
+  "AUDRALIA_CANVAS_AUTHORITY_RICH_PLANET_RENDER_TNT_v1"
+];
 
 const ROUTE_STATUS = {
   ok: false,
   loaded: false,
   receipt: ROUTE_RECEIPT,
+  htmlHandoff: HTML_HANDOFF,
   canvasContract: CANVAS_CONTRACT,
   canvasReceipt: CANVAS_RECEIPT,
   runtimeReceipt: RUNTIME_RECEIPT,
-  retiredRouteReceipts: RETIRED_ROUTE_RECEIPTS,
+  canvasSource: CANVAS_SOURCE,
+  runtimeSource: RUNTIME_SOURCE,
   retiredCanvasContracts: RETIRED_CANVAS_CONTRACTS,
-  runtimeImported: false,
-  canvasImported: false,
-  mountFound: false,
-  mounted: false,
-  publicStatusWriter: "route-only",
-  routeCreatesProofPanel: false,
-  canvasMayWriteRouteStatus: false,
-  stalePublicProofRemoved: false,
+  routeOwns: [
+    "import_call",
+    "mount_call",
+    "status_gate",
+    "route_receipt"
+  ],
+  routeDoesNotOwn: [
+    "html_shell",
+    "canvas_paint",
+    "runtime_truth",
+    "topology",
+    "terrain",
+    "hydration",
+    "oceans",
+    "deep_ocean",
+    "gauges_scoring",
+    "earth_route",
+    "showroom_selector"
+  ],
   graphicBox: false,
   imageGeneration: false,
   visualPassClaimed: false
 };
 
-let observer = null;
-let cleanupInterval = 0;
-let statusLocked = false;
+function publishRouteStatus(extra = {}) {
+  const status = {
+    ...ROUTE_STATUS,
+    ...extra,
+    updatedAt: new Date().toISOString()
+  };
 
-function hasDOM() {
-  return typeof window !== "undefined" && typeof document !== "undefined";
-}
-
-function selectFirst(selectors) {
-  if (!hasDOM()) return null;
-
-  for (const selector of selectors) {
-    const node = document.querySelector(selector);
-    if (node) return node;
-  }
-
-  return null;
-}
-
-function getStatusTarget() {
-  return selectFirst(STATUS_SELECTORS);
-}
-
-function getMountTarget() {
-  return selectFirst(MOUNT_SELECTORS);
-}
-
-function exposeStatus(extra = {}) {
-  Object.assign(ROUTE_STATUS, extra);
-
-  if (!hasDOM()) return ROUTE_STATUS;
-
-  window.AUDRALIA_ROUTE_STATUS = ROUTE_STATUS;
-  window.__AUDRALIA_ROUTE_STATUS__ = ROUTE_STATUS;
+  window.__AUDRALIA_ROUTE_STATUS__ = status;
+  window.__AUDRALIA_ROUTE_V11_STATUS__ = status;
   window.AUDRALIA_ROUTE_RECEIPT = ROUTE_RECEIPT;
+  window.AUDRALIA_ROUTE_CANVAS_CONTRACT = CANVAS_CONTRACT;
+  window.AUDRALIA_ROUTE_RUNTIME_RECEIPT = RUNTIME_RECEIPT;
 
-  document.documentElement.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
-  document.documentElement.dataset.audraliaCanvasContract = CANVAS_CONTRACT;
-  document.documentElement.dataset.audraliaCanvasReceipt = CANVAS_RECEIPT;
-  document.documentElement.dataset.audraliaRuntimeReceipt = RUNTIME_RECEIPT;
-  document.documentElement.dataset.audraliaRoutePublicStatusWriter = "route-only";
-  document.documentElement.dataset.audraliaRouteCreatesProofPanel = "false";
-  document.documentElement.dataset.audraliaCanvasMayWriteRouteStatus = "false";
-  document.documentElement.dataset.graphicBox = "false";
-  document.documentElement.dataset.imageGeneration = "false";
-  document.documentElement.dataset.visualPassClaimed = "false";
+  if (document.documentElement) {
+    document.documentElement.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
+    document.documentElement.dataset.audraliaRouteCanvasContract = CANVAS_CONTRACT;
+    document.documentElement.dataset.audraliaRouteCanvasReceipt = CANVAS_RECEIPT;
+    document.documentElement.dataset.audraliaRouteRuntimeReceipt = RUNTIME_RECEIPT;
+    document.documentElement.dataset.audraliaRouteCanvasV11Caller = "true";
+    document.documentElement.dataset.graphicBox = "false";
+    document.documentElement.dataset.imageGeneration = "false";
+    document.documentElement.dataset.visualPassClaimed = "false";
+  }
 
   try {
     window.dispatchEvent(
       new CustomEvent("audralia:route-status", {
-        detail: Object.freeze({ ...ROUTE_STATUS })
+        detail: status
       })
     );
-  } catch (_) {}
-
-  return ROUTE_STATUS;
-}
-
-function publicStatusText(message) {
-  return [
-    message,
-    `Route ${ROUTE_RECEIPT}`,
-    `Canvas ${CANVAS_CONTRACT}`,
-    `Receipt ${CANVAS_RECEIPT}`,
-    `Runtime ${RUNTIME_RECEIPT}`,
-    "GraphicBox false",
-    "Image generation false",
-    "Visual pass claimed false"
-  ].join("\n");
-}
-
-function writeStatus(message, tone = "ok") {
-  if (!hasDOM()) return;
-
-  const target = getStatusTarget();
-
-  if (!target) return;
-
-  statusLocked = true;
-  target.textContent = publicStatusText(message);
-  target.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
-  target.dataset.audraliaCanvasContract = CANVAS_CONTRACT;
-  target.dataset.audraliaCanvasReceipt = CANVAS_RECEIPT;
-  target.dataset.audraliaRuntimeReceipt = RUNTIME_RECEIPT;
-  target.dataset.audraliaRouteTone = tone;
-  target.dataset.audraliaPublicStatusWriter = "route-only";
-  target.dataset.graphicBox = "false";
-  target.dataset.imageGeneration = "false";
-  target.dataset.visualPassClaimed = "false";
-
-  window.setTimeout(() => {
-    statusLocked = false;
-  }, 0);
-}
-
-function isStatusTarget(node) {
-  if (!node || typeof node.matches !== "function") return false;
-
-  return STATUS_SELECTORS.some((selector) => {
-    try {
-      return node.matches(selector);
-    } catch (_) {
-      return false;
-    }
-  });
-}
-
-function containsStaleToken(text) {
-  return STALE_TEXT_TOKENS.some((token) => text.includes(token));
-}
-
-function removeNode(node) {
-  if (!node || isStatusTarget(node)) return;
-
-  try {
-    node.remove();
   } catch (_) {
-    node.hidden = true;
-    node.setAttribute("aria-hidden", "true");
-    node.style.display = "none";
+    // no-op
   }
+
+  return status;
 }
 
-function cleanStaleProof() {
-  if (!hasDOM()) return;
+function getStatusNode() {
+  return (
+    document.getElementById("audralia-route-status") ||
+    document.querySelector("[data-audralia-route-status]") ||
+    document.querySelector("[data-route-status]")
+  );
+}
 
-  const staleSelector = [
-    "[data-audralia-route-v8-proof]",
-    "[data-audralia-route-v7-proof]",
+function setStatusText(text) {
+  const node = getStatusNode();
+
+  if (!node) return;
+
+  node.textContent = text;
+  node.dataset.audraliaRouteLoaded = "true";
+  node.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
+  node.dataset.audraliaCanvasContract = CANVAS_CONTRACT;
+  node.dataset.audraliaCanvasReceipt = CANVAS_RECEIPT;
+  node.dataset.audraliaRuntimeReceipt = RUNTIME_RECEIPT;
+}
+
+function getMount() {
+  return (
+    document.getElementById("audralia-canvas-mount") ||
+    document.querySelector("[data-audralia-canvas-mount]") ||
+    document.querySelector("[data-audralia-render-mount]")
+  );
+}
+
+function removeStaleRouteResidue() {
+  const staleSelectors = [
     "[data-audralia-route-v6-proof]",
-    "[data-audralia-route-proof]",
-    "[data-audralia-stale-proof]",
+    "[data-audralia-route-v7-proof]",
+    "[data-audralia-route-v8-proof]",
     "[data-stale-audralia-proof]"
-  ].join(",");
+  ];
 
-  document.querySelectorAll(staleSelector).forEach(removeNode);
-
-  document.querySelectorAll("[data-audralia-canvas-proof]").forEach((node) => {
-    node.hidden = true;
-    node.setAttribute("aria-hidden", "true");
-    node.style.display = "none";
+  staleSelectors.forEach((selector) => {
+    document.querySelectorAll(selector).forEach((node) => node.remove());
   });
 
-  document.querySelectorAll("section, aside, div, p, span, li").forEach((node) => {
-    if (!node || node === document.body || node === document.documentElement) return;
-    if (isStatusTarget(node)) return;
+  const staleTextFragments = [
+    "AUDRALIA_CANVAS_RENDER_ONLY_ORTHOGRAPHIC_REALISM_TNT_v10",
+    "AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_TNT_v9",
+    "AUDRALIA_CANVAS_FAIL_OPEN_ORTHOGRAPHIC_FIRST_PAINT_TNT_v7",
+    "AUDRALIA_CANVAS_INTERACTION_SAFE_ORTHOGRAPHIC_4K_TNT_v6"
+  ];
+
+  document.querySelectorAll("p, div, span, li").forEach((node) => {
+    if (node.children.length) return;
 
     const text = (node.textContent || "").trim();
 
     if (!text) return;
 
-    const hasInteractiveOrCanvas = Boolean(
-      node.querySelector("a, button, canvas, input, textarea, select, nav, main, header")
-    );
+    const stale = staleTextFragments.some((fragment) => text.includes(fragment));
 
-    if (hasInteractiveOrCanvas) return;
-
-    if (containsStaleToken(text) && text.length < 2200) {
-      removeNode(node);
+    if (stale && !node.matches("#audralia-route-status, [data-audralia-route-status]")) {
+      node.remove();
     }
   });
-
-  exposeStatus({ stalePublicProofRemoved: true });
 }
 
-function normalizeCanvasGlobals() {
-  if (!hasDOM()) return;
-
-  const existing =
-    window.__AUDRALIA_CANVAS_STATUS__ ||
-    window.__AUDRALIA_ADOPTED_CANVAS_AUTHORITY__ ||
-    {};
-
-  const normalized = {
-    ...existing,
-    loaded: Boolean(existing.loaded),
-    receipt: CANVAS_RECEIPT,
-    contract: CANVAS_CONTRACT,
-    routeReceipt: ROUTE_RECEIPT,
-    runtimeReceipt: RUNTIME_RECEIPT,
-    publicStatusWriter: "route-only",
-    canvasMayWriteRouteStatus: false,
-    routeCreatesProofPanel: false,
-    retiredRouteReceipts: RETIRED_ROUTE_RECEIPTS,
-    retiredCanvasContracts: RETIRED_CANVAS_CONTRACTS,
-    graphicBox: false,
-    imageGeneration: false,
-    visualPassClaimed: false
-  };
-
-  window.__AUDRALIA_CANVAS_STATUS__ = normalized;
-  window.__AUDRALIA_ADOPTED_CANVAS_AUTHORITY__ = normalized;
-}
-
-function repairStatusIfNeeded() {
-  if (!hasDOM() || statusLocked) return;
-
-  const target = getStatusTarget();
-  if (!target) return;
-
-  const text = target.textContent || "";
-
-  const stale = containsStaleToken(text);
-  const missing =
-    !text.includes(ROUTE_RECEIPT) ||
-    !text.includes(CANVAS_CONTRACT) ||
-    !text.includes(RUNTIME_RECEIPT);
-
-  if (stale || missing) {
-    writeStatus("Audralia adopted canvas authority loaded.", "ok");
-  }
-}
-
-function startCleanupLoop() {
-  if (!hasDOM()) return;
-
-  if (observer) observer.disconnect();
-
-  if (typeof MutationObserver !== "undefined") {
-    observer = new MutationObserver(() => {
-      cleanStaleProof();
-      normalizeCanvasGlobals();
-      repairStatusIfNeeded();
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      characterData: true
-    });
-  }
-
-  const started = performance.now();
-
-  cleanupInterval = window.setInterval(() => {
-    cleanStaleProof();
-    normalizeCanvasGlobals();
-    repairStatusIfNeeded();
-
-    if (performance.now() - started > 10000) {
-      window.clearInterval(cleanupInterval);
-      cleanupInterval = 0;
-    }
-  }, 220);
-
-  window.addEventListener(
-    "pagehide",
-    () => {
-      if (observer) observer.disconnect();
-      if (cleanupInterval) window.clearInterval(cleanupInterval);
-    },
-    { once: true }
-  );
-}
-
-async function waitFrame(count = 1) {
-  if (!hasDOM()) return;
-
-  for (let index = 0; index < count; index += 1) {
-    await new Promise((resolve) => window.requestAnimationFrame(resolve));
-  }
-}
-
-async function importRuntime() {
-  try {
-    const runtimeModule = await import(RUNTIME_AUTHORITY_PATH);
-    exposeStatus({ runtimeImported: true, runtimeError: "" });
-    return runtimeModule;
-  } catch (error) {
-    exposeStatus({
-      runtimeImported: false,
-      runtimeError: error instanceof Error ? error.message : String(error)
-    });
-    return null;
-  }
-}
-
-function resolveMountFunction(module) {
+function chooseMountFunction(canvasModule) {
   return (
-    module.mountAudraliaCanvas ||
-    module.renderAudraliaCanvas ||
-    module.bootAudraliaCanvas ||
-    module.createAudraliaCanvas ||
-    module.initAudraliaCanvas ||
-    module.renderAudralia ||
-    module.mountAudralia ||
-    module.render ||
-    module.mount ||
-    module.init ||
-    module.default?.mountAudraliaCanvas ||
-    module.default?.renderAudraliaCanvas ||
-    module.default?.bootAudraliaCanvas ||
-    module.default?.createAudraliaCanvas ||
-    module.default?.initAudraliaCanvas ||
-    module.default?.renderAudralia ||
-    module.default?.mountAudralia ||
-    module.default?.render ||
-    module.default?.mount ||
-    module.default?.init ||
+    canvasModule.mountAudraliaCanvas ||
+    canvasModule.renderAudraliaCanvas ||
+    canvasModule.bootAudraliaCanvas ||
+    canvasModule.createAudraliaCanvas ||
+    canvasModule.initAudraliaCanvas ||
+    canvasModule.renderAudralia ||
+    canvasModule.mountAudralia ||
+    canvasModule.render ||
+    canvasModule.mount ||
+    canvasModule.init ||
+    (canvasModule.default && canvasModule.default.mountAudraliaCanvas) ||
+    (canvasModule.default && canvasModule.default.renderAudraliaCanvas) ||
     null
   );
 }
 
-async function importAndMountCanvas(mount) {
-  const canvasModule = await import(CANVAS_AUTHORITY_PATH);
-  const mountFunction = resolveMountFunction(canvasModule);
+async function importRuntimeSupport() {
+  try {
+    const runtimeModule = await import(RUNTIME_SOURCE);
 
-  exposeStatus({
-    canvasImported: true,
-    mountFunctionFound: typeof mountFunction === "function"
-  });
+    publishRouteStatus({
+      runtimeImported: true,
+      runtimeImportError: "",
+      runtimeModuleKeys: Object.keys(runtimeModule || {})
+    });
+
+    return runtimeModule;
+  } catch (error) {
+    publishRouteStatus({
+      runtimeImported: false,
+      runtimeImportError: error instanceof Error ? error.message : String(error)
+    });
+
+    return null;
+  }
+}
+
+async function importCanvasAuthority() {
+  const canvasModule = await import(CANVAS_SOURCE);
+
+  const mountFunction = chooseMountFunction(canvasModule);
 
   if (typeof mountFunction !== "function") {
-    throw new Error("AUDRALIA_ROUTE_V11_CANVAS_MOUNT_EXPORT_MISSING");
+    throw new Error("AUDRALIA_CANVAS_V11_EXPORT_NOT_FOUND");
   }
 
-  const controller = mountFunction(mount, {
-    routeReceipt: ROUTE_RECEIPT,
-    canvasContract: CANVAS_CONTRACT,
-    canvasReceipt: CANVAS_RECEIPT,
-    runtimeReceipt: RUNTIME_RECEIPT,
-    publicStatusWriter: "route-only",
-    canvasMayWriteRouteStatus: false,
-    createProofPanel: false,
-    visibleCanvasReceipt: false,
-    maxRenderSize: 720,
-    firstPaintTextureWidth: 360,
-    firstPaintTextureHeight: 180,
-    runtimeTextureWidth: 720,
-    runtimeTextureHeight: 360,
-    frameRateTarget: 24,
-    graphicBox: false,
-    imageGeneration: false,
-    visualPassClaimed: false
-  });
+  return {
+    canvasModule,
+    mountFunction
+  };
+}
 
-  exposeStatus({
-    mounted: Boolean(controller),
-    loaded: Boolean(controller),
-    ok: Boolean(controller)
-  });
+function publicLoadedText(canvasStatus) {
+  const statusContract =
+    canvasStatus &&
+    typeof canvasStatus === "object" &&
+    canvasStatus.contract
+      ? canvasStatus.contract
+      : CANVAS_CONTRACT;
 
-  return controller;
+  return [
+    "Audralia adopted canvas authority loaded.",
+    [
+      `Route ${ROUTE_RECEIPT}`,
+      `Canvas ${statusContract}`,
+      `Receipt ${CANVAS_RECEIPT}`,
+      `Runtime ${RUNTIME_RECEIPT}`,
+      `Retired ${RETIRED_CANVAS_CONTRACTS.join(", ")}`,
+      "GraphicBox false",
+      "Image generation false",
+      "Visual pass claimed false"
+    ].join(" · ")
+  ].join("\n");
 }
 
 async function bootAudraliaRoute() {
-  if (!hasDOM()) return null;
+  removeStaleRouteResidue();
 
-  exposeStatus();
-  startCleanupLoop();
-  cleanStaleProof();
-  normalizeCanvasGlobals();
-
-  writeStatus("Audralia doorway loading render-only canvas authority.", "loading");
-
-  const mount = getMountTarget();
-
-  exposeStatus({
-    mountFound: Boolean(mount),
-    mountId: mount && mount.id ? mount.id : ""
-  });
+  const mount = getMount();
 
   if (!mount) {
-    writeStatus("Audralia mount not found.", "error");
-    exposeStatus({ ok: false, loaded: false, mounted: false });
-    return null;
+    setStatusText("Audralia route mount missing.");
+    publishRouteStatus({
+      ok: false,
+      loaded: false,
+      mountPresent: false,
+      error: "AUDRALIA_CANVAS_MOUNT_NOT_FOUND"
+    });
+    return;
   }
 
-  await importRuntime();
+  mount.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
+  mount.dataset.audraliaCanvasContract = CANVAS_CONTRACT;
+  mount.dataset.audraliaCanvasReceipt = CANVAS_RECEIPT;
+
+  setStatusText("Audralia doorway importing canvas authority.");
+
+  publishRouteStatus({
+    ok: false,
+    loaded: false,
+    mountPresent: true,
+    importStarted: true
+  });
+
+  await importRuntimeSupport();
 
   try {
-    const controller = await importAndMountCanvas(mount);
+    const { canvasModule, mountFunction } = await importCanvasAuthority();
 
-    await waitFrame(2);
-    cleanStaleProof();
-    normalizeCanvasGlobals();
-    writeStatus("Audralia adopted canvas authority loaded.", "ok");
+    const controller = mountFunction(mount, {
+      routeReceipt: ROUTE_RECEIPT,
+      canvasContract: CANVAS_CONTRACT,
+      runtimeReceipt: RUNTIME_RECEIPT,
+      textureWidth: 384,
+      textureHeight: 192,
+      targetFps: 24,
+      labelEnabled: true
+    });
 
-    window.setTimeout(() => {
-      cleanStaleProof();
-      normalizeCanvasGlobals();
-      writeStatus("Audralia adopted canvas authority loaded.", "ok");
-    }, 650);
+    const canvasStatus =
+      typeof canvasModule.getAudraliaCanvasStatus === "function"
+        ? canvasModule.getAudraliaCanvasStatus()
+        : window.__AUDRALIA_CANVAS_STATUS__ || null;
 
-    window.setTimeout(() => {
-      cleanStaleProof();
-      normalizeCanvasGlobals();
-      writeStatus("Audralia adopted canvas authority loaded.", "ok");
-    }, 1800);
+    setStatusText(publicLoadedText(canvasStatus));
 
-    return controller;
+    publishRouteStatus({
+      ok: true,
+      loaded: true,
+      mountPresent: true,
+      canvasImported: true,
+      canvasImportError: "",
+      canvasModuleKeys: Object.keys(canvasModule || {}),
+      canvasStatus,
+      controllerPresent: Boolean(controller),
+      routeStatusTextCaptured: true,
+      staleCanvasContractsRetired: RETIRED_CANVAS_CONTRACTS,
+      graphicBox: false,
+      imageGeneration: false,
+      visualPassClaimed: false
+    });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
 
-    exposeStatus({
+    setStatusText(`Audralia canvas authority import failed. ${message}`);
+
+    publishRouteStatus({
       ok: false,
       loaded: false,
-      mounted: false,
-      canvasError: message
+      mountPresent: true,
+      canvasImported: false,
+      canvasImportError: message,
+      graphicBox: false,
+      imageGeneration: false,
+      visualPassClaimed: false
     });
-
-    writeStatus(`Audralia canvas authority import failed. ${message}`, "error");
-    cleanStaleProof();
-
-    return null;
   }
 }
 
-exposeStatus();
-
-if (hasDOM()) {
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", bootAudraliaRoute, { once: true });
-  } else {
-    bootAudraliaRoute();
-  }
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", bootAudraliaRoute, { once: true });
+} else {
+  bootAudraliaRoute();
 }
 
 export {
@@ -532,12 +337,23 @@ export {
   CANVAS_CONTRACT,
   CANVAS_RECEIPT,
   RUNTIME_RECEIPT,
-  RETIRED_ROUTE_RECEIPTS,
+  HTML_HANDOFF,
+  CANVAS_SOURCE,
+  RUNTIME_SOURCE,
   RETIRED_CANVAS_CONTRACTS,
-  CANVAS_AUTHORITY_PATH,
-  RUNTIME_AUTHORITY_PATH,
-  ROUTE_STATUS,
+  publishRouteStatus,
   bootAudraliaRoute
 };
 
-export default bootAudraliaRoute;
+export default {
+  ROUTE_RECEIPT,
+  CANVAS_CONTRACT,
+  CANVAS_RECEIPT,
+  RUNTIME_RECEIPT,
+  HTML_HANDOFF,
+  CANVAS_SOURCE,
+  RUNTIME_SOURCE,
+  RETIRED_CANVAS_CONTRACTS,
+  publishRouteStatus,
+  bootAudraliaRoute
+};a

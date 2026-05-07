@@ -1,32 +1,42 @@
 // /assets/audralia/audralia/hydration/deep-ocean.render.js
-// AUDRALIA_HYDRATION_DEEP_OCEAN_CONTINUOUS_DEPTH_ALIGNMENT_SWEEP_TNT_v2
+// AUDRALIA_HYDRATION_DEEP_OCEAN_CONTINUOUS_DEPTH_ALIGNMENT_SWEEP_TNT_v3
 // Full-file replacement. Deep-ocean child authority only.
 // Purpose: consume oceans parent and define continuous deep-ocean depth, abyssal gradients,
-// soft trench pressure, deep-water blend, and route-safe depth handoff.
+// soft trench pressure, deep-water blend, organic depth presence, route-safe depth handoff,
+// and 4K-compatible underwater depth signal.
 // Does not own land/void footprint, terrain relief, hydration cycle, ocean fill parent,
 // canvas paint, route shell, or visual pass.
 // No GraphicBox. No image generation. No visual-pass claim.
 
 import {
   sampleOcean,
-  getOceansStats
+  sampleOceanState,
+  sampleSurface as sampleOceanSurface,
+  getOceansStats,
+  getOceansStatus
 } from "./oceans.render.js";
 
-const AUDRALIA_DEEP_OCEAN_RECEIPT = "AUDRALIA_HYDRATION_DEEP_OCEAN_CONTINUOUS_DEPTH_ALIGNMENT_SWEEP_TNT_v2";
+const AUDRALIA_DEEP_OCEAN_RECEIPT = "AUDRALIA_HYDRATION_DEEP_OCEAN_CONTINUOUS_DEPTH_ALIGNMENT_SWEEP_TNT_v3";
+const AUDRALIA_DEEP_OCEAN_COMPATIBILITY_RECEIPT = "AUDRALIA_HYDRATION_DEEP_OCEAN_CONTINUOUS_DEPTH_ALIGNMENT_SWEEP_TNT_v2";
+const AUDRALIA_DEEP_OCEAN_ALIGNMENT_RECEIPT = "AUDRALIA_DEEP_OCEAN_OCEANS_PARENT_SOFT_DEPTH_ALIGNMENT_TNT_v1";
 
 const STATUS = {
   ok: true,
   receipt: AUDRALIA_DEEP_OCEAN_RECEIPT,
-  activeRenewal: "AUDRALIA_HYDRATION_DEEP_OCEAN_CONTINUOUS_DEPTH_ALIGNMENT_CONTRACT_v1",
+  compatibilityReceipt: AUDRALIA_DEEP_OCEAN_COMPATIBILITY_RECEIPT,
+  alignmentReceipt: AUDRALIA_DEEP_OCEAN_ALIGNMENT_RECEIPT,
+  activeRenewal: "AUDRALIA_HYDRATION_DEEP_OCEAN_CONTINUOUS_DEPTH_ALIGNMENT_CONTRACT_v2",
   file: "assets/audralia/audralia/hydration/deep-ocean.render.js",
   role: "audralia-deep-ocean-child-continuous-depth-authority",
-  lineage: "tectonics→topology→terrain→hydration→oceans→deep-ocean→runtime→canvas-renderer→route",
+  lineage: "tectonics->topology->terrain->climate-conduit->hydration->oceans->deep-ocean->runtime->canvas-renderer->route",
   owns: [
     "deep-ocean depth field",
     "abyssal gradient",
     "soft trench pressure",
     "organic deep-water presence",
     "deep-ocean feather",
+    "abyssal blue handoff",
+    "turquoise suppression handoff",
     "depth handoff to runtime",
     "route-safe soft depth fields"
   ],
@@ -39,7 +49,9 @@ const STATUS = {
     "hard route trench class",
     "canvas paint",
     "route shell",
-    "visual pass claim"
+    "visual pass claim",
+    "GraphicBox",
+    "image generation"
   ],
   oceansConsumed: true,
   deepOceanStable: true,
@@ -58,22 +70,33 @@ const STATUS = {
   imageGeneration: false,
   visualPassClaimed: false,
   compatibilityReceipts: [
-    "AUDRALIA_HYDRATION_OCEANS_CONTINUOUS_FILL_ALIGNMENT_SWEEP_TNT_v2",
-    "AUDRALIA_HYDRATION_CONTINUOUS_TERRAIN_CONDUCTION_SWEEP_TNT_v2",
-    "AUDRALIA_TERRAIN_CONTINUOUS_RELIEF_ALIGNMENT_SWEEP_TNT_v2",
-    "AUDRALIA_TOPOLOGY_CONTINUOUS_LAND_VOID_BOUNDARY_SWEEP_TNT_v2",
-    "AUDRALIA_RUNTIME_DOWNSTREAM_SWEEP_CONTINUOUS_FIELD_TNT_v3",
+    "AUDRALIA_HYDRATION_DEEP_OCEAN_CONTINUOUS_DEPTH_ALIGNMENT_SWEEP_TNT_v2",
+    "AUDRALIA_HYDRATION_DEEP_OCEAN_CONTINUOUS_DEPTH_ALIGNMENT_SWEEP_TNT_v3",
+    "AUDRALIA_HYDRATION_OCEANS_CONTINUOUS_FILL_ALIGNMENT_SWEEP_TNT_v3",
+    "AUDRALIA_HYDRATION_CONTINUOUS_TERRAIN_CONDUCTION_SWEEP_TNT_v3",
+    "AUDRALIA_CLIMATE_4K_ENVIRONMENTAL_CONDUIT_TNT_v2",
+    "AUDRALIA_TERRAIN_4K_RELIEF_DETAIL_TNT_v3",
+    "AUDRALIA_TOPOLOGY_4K_FOOTPRINT_AUTHORITY_TNT_v1",
+    "AUDRALIA_RUNTIME_4K_DOWNSTREAM_SURFACE_CONNECTOR_TNT_v7",
     "AUDRALIA_ADOPTED_CANVAS_FIXED_ASPECT_DOWNSTREAM_SWEEP_TNT_v9"
   ],
   api: {
     createAudraliaDeepOcean: true,
     buildDeepOceanField: true,
+    buildDeepOceanGrid: true,
     sampleDeepOcean: true,
+    sampleDeepOceanState: true,
     sampleDeepOceanField: true,
+    sampleAudraliaDeepOcean: true,
     sampleSurface: true,
+    sample: true,
+    sampleOcean: true,
+    sampleOceans: true,
+    sampleHydration: true,
     getStats: true,
     getDeepOceanStats: true,
-    getStatus: true
+    getStatus: true,
+    getDeepOceanStatus: true
   }
 };
 
@@ -81,7 +104,9 @@ let cachedStats = null;
 let cachedDeepOcean = null;
 
 function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
+  const number = Number(value);
+  if (!Number.isFinite(number)) return min;
+  return Math.max(min, Math.min(max, number));
 }
 
 function clamp01(value) {
@@ -89,7 +114,13 @@ function clamp01(value) {
 }
 
 function smoothstep(edge0, edge1, value) {
-  const t = clamp01((value - edge0) / (edge1 - edge0));
+  const denominator = edge1 - edge0;
+
+  if (Math.abs(denominator) < 0.000001) {
+    return value >= edge1 ? 1 : 0;
+  }
+
+  const t = clamp01((value - edge0) / denominator);
   return t * t * (3 - 2 * t);
 }
 
@@ -130,29 +161,51 @@ function fbm3(x, y, z, octaves = 5) {
   let value = 0;
   let amplitude = 0.52;
   let frequency = 1;
+  let normalizer = 0;
 
   for (let i = 0; i < octaves; i += 1) {
     value += valueNoise3(x * frequency, y * frequency, z * frequency) * amplitude;
+    normalizer += amplitude;
     frequency *= 2.04;
     amplitude *= 0.5;
   }
 
-  return value;
+  return value / Math.max(0.000001, normalizer);
 }
 
 function ridgedNoise3(x, y, z, octaves = 4) {
   let value = 0;
   let amplitude = 0.54;
   let frequency = 1;
+  let normalizer = 0;
 
   for (let i = 0; i < octaves; i += 1) {
-    const n = fbm3(x * frequency, y * frequency, z * frequency, 1);
+    const n = valueNoise3(x * frequency, y * frequency, z * frequency);
     value += (1 - Math.abs(n * 2 - 1)) * amplitude;
+    normalizer += amplitude;
     frequency *= 2.08;
     amplitude *= 0.5;
   }
 
-  return value;
+  return value / Math.max(0.000001, normalizer);
+}
+
+function radToDeg(value) {
+  return value * 180 / Math.PI;
+}
+
+function degToRad(value) {
+  return value * Math.PI / 180;
+}
+
+function normalizeLongitudeDegrees(value) {
+  let lon = Number(value);
+  if (!Number.isFinite(lon)) lon = 0;
+
+  while (lon > 180) lon -= 360;
+  while (lon < -180) lon += 360;
+
+  return lon;
 }
 
 function normalizeCoordinateInput(input, lonArg, uArg, vArg) {
@@ -160,16 +213,29 @@ function normalizeCoordinateInput(input, lonArg, uArg, vArg) {
     let lat = Number(input.lat ?? input.latitude ?? input.phi);
     let lon = Number(input.lon ?? input.lng ?? input.longitude ?? input.theta);
 
-    const u = Number(input.u ?? input.x ?? uArg ?? 0.5);
-    const v = Number(input.v ?? input.y ?? vArg ?? 0.5);
+    const latDegInput = Number(input.latDeg ?? input.latitudeDegrees ?? input.latDegrees);
+    const lonDegInput = Number(input.lonDeg ?? input.longitudeDegrees ?? input.lngDeg ?? input.lonDegrees);
+
+    const u = Number.isFinite(Number(input.u ?? input.x ?? uArg)) ? Number(input.u ?? input.x ?? uArg) : 0.5;
+    const v = Number.isFinite(Number(input.v ?? input.y ?? vArg)) ? Number(input.v ?? input.y ?? vArg) : 0.5;
+
+    if (Number.isFinite(latDegInput)) lat = degToRad(latDegInput);
+    if (Number.isFinite(lonDegInput)) lon = degToRad(lonDegInput);
 
     if (!Number.isFinite(lat)) lat = (0.5 - v) * Math.PI;
     if (!Number.isFinite(lon)) lon = (u - 0.5) * Math.PI * 2;
 
-    if (Math.abs(lat) > Math.PI / 2 + 0.01) lat = lat * Math.PI / 180;
-    if (Math.abs(lon) > Math.PI * 2 + 0.01) lon = lon * Math.PI / 180;
+    if (Math.abs(lat) > Math.PI / 2 + 0.01) lat = degToRad(lat);
+    if (Math.abs(lon) > Math.PI * 2 + 0.01) lon = degToRad(lon);
 
-    return { lat, lon, u, v };
+    return {
+      lat,
+      lon,
+      latDeg: radToDeg(lat),
+      lonDeg: normalizeLongitudeDegrees(radToDeg(lon)),
+      u,
+      v
+    };
   }
 
   let lat = Number(input);
@@ -180,10 +246,17 @@ function normalizeCoordinateInput(input, lonArg, uArg, vArg) {
   if (!Number.isFinite(lat)) lat = (0.5 - v) * Math.PI;
   if (!Number.isFinite(lon)) lon = (u - 0.5) * Math.PI * 2;
 
-  if (Math.abs(lat) > Math.PI / 2 + 0.01) lat = lat * Math.PI / 180;
-  if (Math.abs(lon) > Math.PI * 2 + 0.01) lon = lon * Math.PI / 180;
+  if (Math.abs(lat) > Math.PI / 2 + 0.01) lat = degToRad(lat);
+  if (Math.abs(lon) > Math.PI * 2 + 0.01) lon = degToRad(lon);
 
-  return { lat, lon, u, v };
+  return {
+    lat,
+    lon,
+    latDeg: radToDeg(lat),
+    lonDeg: normalizeLongitudeDegrees(radToDeg(lon)),
+    u,
+    v
+  };
 }
 
 function latLonToPoint(lat, lon) {
@@ -196,69 +269,138 @@ function latLonToPoint(lat, lon) {
   };
 }
 
-function sampleOceanSafe(input, lonArg, uArg, vArg) {
-  try {
-    const sample = sampleOcean(input, lonArg, uArg, vArg);
-    if (sample && typeof sample === "object") return sample;
-  } catch (_) {}
+function safeNumber(value, fallback = 0) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : fallback;
+}
+
+function oceanFallback(coordinate) {
+  const point = latLonToPoint(coordinate.lat, coordinate.lon);
+  const polarIce = Math.abs(point.y) > 0.925;
+  const field = hash3(
+    Math.round(point.x * 8),
+    Math.round(point.y * 8),
+    Math.round(point.z * 8)
+  );
+  const land = field > 0.835 && Math.abs(point.y) < 0.86;
+  const shelf = !land && !polarIce && field > 0.765 && field <= 0.835;
+  const water = !land && !polarIce;
+  const depth = water ? clamp01(0.34 + (1 - field) * 0.46) : 0;
 
   return {
     ok: false,
-    oceanClass: "ocean_open_water",
-    visualSurfaceClass: "ocean_water_surface",
-    water: true,
-    liquidWater: true,
-    ocean: true,
-    shelf: false,
-    coastal: false,
-    land: false,
-    exposedTerrainLand: false,
-    solidSurfaceLand: false,
-    ice: false,
-    glacier: false,
-    depth: 0.5,
-    rawDepth: 0.5,
-    oceanDepth: 0.5,
-    oceanMask: 1,
-    openOceanMask: 1,
-    shelfMask: 0,
-    coastWaterMask: 0,
-    turquoise: 0.2,
-    blueWaterIndex: 0.7,
-    surfaceCurrentIndex: 0.4,
-    waveEnergyIndex: 0.4,
-    deepOceanCandidate: true,
+    receipt: "AUDRALIA_DEEP_OCEAN_INTERNAL_OCEAN_FALLBACK",
+    oceanClass: water ? (shelf ? "ocean_shelf_water" : "ocean_open_water") : polarIce ? "ocean_ice_passthrough" : "ocean_land_passthrough",
+    visualSurfaceClass: polarIce
+      ? "glacier_ice_snowpack_surface"
+      : land
+        ? "inland_terrain_land_surface"
+        : shelf
+          ? "shelf_water_surface"
+          : "ocean_water_surface",
+    water,
+    liquidWater: water,
+    ocean: water && !shelf,
+    shelf,
+    coastal: shelf,
+    land,
+    exposedTerrainLand: land,
+    visibleLand: land,
+    solidSurfaceLand: land || polarIce,
+    topologyLand: land || polarIce,
+    ice: polarIce,
+    glacier: polarIce,
+    depth,
+    rawDepth: depth,
+    oceanDepth: depth,
+    oceanMask: water ? 1 : 0,
+    openOceanMask: water && !shelf ? 1 : 0,
+    shelfMask: shelf ? 0.64 : 0,
+    coastWaterMask: shelf ? 0.58 : 0,
+    turquoise: shelf ? 0.72 : water ? 0.24 : 0,
+    turquoiseIndex: shelf ? 0.72 : water ? 0.24 : 0,
+    blueWaterIndex: water ? 0.7 : 0,
+    surfaceCurrentIndex: water ? 0.4 : 0,
+    waveEnergyIndex: water ? 0.4 : 0,
+    deepOceanCandidate: water && !shelf,
     fallback: true,
     fallbackSample: true
   };
 }
 
+function sampleOceanSafe(coordinate) {
+  const payload = {
+    lat: coordinate.lat,
+    lon: coordinate.lon,
+    latitude: coordinate.lat,
+    longitude: coordinate.lon,
+    latDeg: coordinate.latDeg,
+    lonDeg: coordinate.lonDeg,
+    u: coordinate.u,
+    v: coordinate.v,
+    x: coordinate.u,
+    y: coordinate.v
+  };
+
+  const attempts = [
+    () => sampleOcean(payload),
+    () => sampleOceanState(payload),
+    () => sampleOceanSurface(payload),
+    () => sampleOcean(coordinate.lat, coordinate.lon, coordinate.u, coordinate.v),
+    () => sampleOcean(coordinate.latDeg, coordinate.lonDeg, coordinate.u, coordinate.v)
+  ];
+
+  for (const attempt of attempts) {
+    try {
+      const sample = attempt();
+
+      if (sample && typeof sample === "object") {
+        return sample.sample && typeof sample.sample === "object" ? sample.sample : sample;
+      }
+    } catch (_) {
+      /* try next */
+    }
+  }
+
+  return oceanFallback(coordinate);
+}
+
 function buildDeepOceanFieldInternal(input, lonArg, uArg, vArg) {
   const coordinate = normalizeCoordinateInput(input, lonArg, uArg, vArg);
   const point = latLonToPoint(coordinate.lat, coordinate.lon);
-  const ocean = sampleOceanSafe({ ...coordinate, lat: coordinate.lat, lon: coordinate.lon });
+  const ocean = sampleOceanSafe(coordinate);
 
-  const isWater = Boolean(ocean.water || ocean.liquidWater || ocean.ocean || ocean.shelf);
-  const isOpenOcean = Boolean(ocean.ocean);
-  const isShelf = Boolean(ocean.shelf);
-  const isLand = Boolean(ocean.land || ocean.exposedTerrainLand) && !isWater;
+  const hydration = ocean.hydration || {};
+  const terrain = ocean.terrain || hydration.terrain || {};
+  const topology = ocean.topology || hydration.topology || terrain.topology || {};
+  const climate = ocean.climate || hydration.climate || {};
+
   const isIce = Boolean(ocean.ice || ocean.glacier);
+  const isLand = Boolean(ocean.land || ocean.exposedTerrainLand || ocean.visibleLand) && !ocean.liquidWater && !ocean.water && !isIce;
+  const isWater = Boolean(ocean.water || ocean.liquidWater || ocean.ocean || ocean.shelf) && !isLand && !isIce;
+  const isOpenOcean = Boolean(ocean.ocean || ocean.oceanClass === "ocean_open_water") && isWater;
+  const isShelf = Boolean(ocean.shelf || ocean.oceanClass === "ocean_shelf_water" || ocean.oceanClass === "ocean_coastal_water") && isWater;
 
-  const oceanMask = clamp01(Number(ocean.oceanMask ?? (isWater ? 1 : 0)));
-  const openOceanMask = clamp01(Number(ocean.openOceanMask ?? (isOpenOcean ? 1 : 0)));
-  const shelfMask = clamp01(Number(ocean.shelfMask ?? (isShelf ? 1 : 0)));
-  const coastWaterMask = clamp01(Number(ocean.coastWaterMask ?? 0));
-  const parentDepth = clamp01(Number(ocean.depth ?? ocean.oceanDepth ?? ocean.rawDepth ?? 0));
-  const surfaceCurrentIndex = clamp01(Number(ocean.surfaceCurrentIndex ?? 0));
-  const waveEnergyIndex = clamp01(Number(ocean.waveEnergyIndex ?? 0));
-  const blueWaterIndex = clamp01(Number(ocean.blueWaterIndex ?? 0));
-  const turquoiseIndex = clamp01(Number(ocean.turquoiseIndex ?? ocean.turquoise ?? 0));
+  const oceanMask = clamp01(safeNumber(ocean.oceanMask, isWater ? 1 : 0));
+  const openOceanMask = clamp01(safeNumber(ocean.openOceanMask, isOpenOcean ? 1 : 0));
+  const shelfMask = clamp01(safeNumber(ocean.shelfMask, isShelf ? 0.66 : 0));
+  const coastWaterMask = clamp01(safeNumber(ocean.coastWaterMask, ocean.coastal ? 0.46 : 0));
+  const parentDepth = clamp01(safeNumber(ocean.depth ?? ocean.oceanDepth ?? ocean.rawDepth, isWater ? 0.42 : 0));
+  const surfaceCurrentIndex = clamp01(safeNumber(ocean.surfaceCurrentIndex, 0));
+  const waveEnergyIndex = clamp01(safeNumber(ocean.waveEnergyIndex, 0));
+  const blueWaterIndex = clamp01(safeNumber(ocean.blueWaterIndex, isWater ? 0.62 : 0));
+  const turquoiseIndex = clamp01(safeNumber(ocean.turquoiseIndex ?? ocean.turquoise, isShelf ? 0.66 : isWater ? 0.22 : 0));
+  const oceanContinuity = clamp01(safeNumber(ocean.oceanContinuity, 0.5));
+  const climateWind = clamp01(safeNumber(ocean.windCorridorIndex ?? hydration.windCorridorIndex ?? climate.windCorridorIndex, 0.42));
+  const evaporation = clamp01(safeNumber(ocean.evaporation ?? hydration.evaporation ?? climate.evaporationTendency, isWater ? 0.66 : 0.18));
+  const rainfall = clamp01(safeNumber(ocean.rainfall ?? hydration.rainfall ?? climate.rainfallTendency, 0.34));
+  const oceanCycleInfluence = clamp01(safeNumber(ocean.oceanCycleInfluence ?? hydration.oceanCycleInfluence ?? climate.oceanCycleInfluence, isWater ? 0.72 : 0.12));
 
   const abyssalContinuity = fbm3(
     point.x * 1.12 + 13.5,
     point.y * 1.12 - 4.8,
     point.z * 1.12 + 6.4,
-    5
+    6
   );
 
   const basinDepthField = fbm3(
@@ -279,13 +421,20 @@ function buildDeepOceanFieldInternal(input, lonArg, uArg, vArg) {
     point.x * 7.8 + 8.4,
     point.y * 7.8 - 2.7,
     point.z * 7.8 + 14.6,
-    4
+    5
   );
 
   const currentShearField = fbm3(
     point.x * 10.5 - 6.6,
     point.y * 10.5 + 3.2,
     point.z * 10.5 - 8.9,
+    4
+  );
+
+  const abyssalMicroTexture = fbm3(
+    point.x * 24.0 + 2.7,
+    point.y * 24.0 - 12.4,
+    point.z * 24.0 + 18.2,
     3
   );
 
@@ -294,82 +443,105 @@ function buildDeepOceanFieldInternal(input, lonArg, uArg, vArg) {
 
   const deepOceanActivation = openWaterDepthAuthority
     ? clamp01(
-        openOceanMask * 0.48 +
-        parentDepth * 0.28 +
-        abyssalContinuity * 0.12 +
-        basinDepthField * 0.08 +
-        (1 - shelfMask) * 0.04
+        openOceanMask * 0.44 +
+          parentDepth * 0.26 +
+          abyssalContinuity * 0.12 +
+          basinDepthField * 0.08 +
+          oceanContinuity * 0.06 +
+          (1 - shelfMask) * 0.04
       )
     : 0;
 
   const organicDeepOceanPresence = openWaterDepthAuthority
     ? clamp01(
-        deepOceanActivation * 0.48 +
-        abyssalPlainField * 0.22 +
-        softTrenchPressure * 0.16 +
-        blueWaterIndex * 0.14
+        deepOceanActivation * 0.44 +
+          abyssalPlainField * 0.20 +
+          softTrenchPressure * 0.14 +
+          blueWaterIndex * 0.12 +
+          oceanCycleInfluence * 0.06 +
+          abyssalMicroTexture * 0.04
       )
     : 0;
 
   const deepOceanFeather = openWaterDepthAuthority
     ? clamp01(
-        openOceanMask * 0.42 +
-        (1 - coastWaterMask) * 0.22 +
-        (1 - shelfMask) * 0.22 +
-        abyssalContinuity * 0.14
+        openOceanMask * 0.40 +
+          (1 - coastWaterMask) * 0.20 +
+          (1 - shelfMask) * 0.20 +
+          abyssalContinuity * 0.12 +
+          parentDepth * 0.08
       )
     : 0;
 
   const softTrenchIndex = openWaterDepthAuthority
     ? clamp01(
-        softTrenchPressure * 0.48 +
-        basinDepthField * 0.24 +
-        deepOceanFeather * 0.2 +
-        currentShearField * 0.08
+        softTrenchPressure * 0.42 +
+          basinDepthField * 0.22 +
+          deepOceanFeather * 0.18 +
+          currentShearField * 0.08 +
+          waveEnergyIndex * 0.06 +
+          climateWind * 0.04
+      )
+    : 0;
+
+  const abyssalPressureIndex = openWaterDepthAuthority
+    ? clamp01(
+        parentDepth * 0.28 +
+          openOceanMask * 0.22 +
+          softTrenchIndex * 0.20 +
+          organicDeepOceanPresence * 0.16 +
+          abyssalMicroTexture * 0.08 +
+          polarDarkening * 0.06
       )
     : 0;
 
   const deepOceanBlend = openWaterDepthAuthority
     ? clamp01(
-        parentDepth * 0.36 +
-        deepOceanActivation * 0.28 +
-        organicDeepOceanPresence * 0.22 +
-        softTrenchIndex * 0.14
+        parentDepth * 0.32 +
+          deepOceanActivation * 0.25 +
+          organicDeepOceanPresence * 0.19 +
+          softTrenchIndex * 0.13 +
+          abyssalPressureIndex * 0.11
       )
     : 0;
 
   const finalDepth = openWaterDepthAuthority
     ? clamp01(
-        parentDepth * 0.42 +
-        deepOceanBlend * 0.34 +
-        softTrenchIndex * 0.12 +
-        polarDarkening * 0.06 +
-        currentShearField * 0.06
+        parentDepth * 0.38 +
+          deepOceanBlend * 0.31 +
+          softTrenchIndex * 0.11 +
+          abyssalPressureIndex * 0.08 +
+          polarDarkening * 0.05 +
+          currentShearField * 0.04 +
+          evaporation * 0.03
       )
     : parentDepth;
 
   const routeSafeDepth = openWaterDepthAuthority
-    ? clamp01(finalDepth * 0.72 + deepOceanFeather * 0.16 + organicDeepOceanPresence * 0.12)
+    ? clamp01(finalDepth * 0.70 + deepOceanFeather * 0.15 + organicDeepOceanPresence * 0.10 + abyssalPressureIndex * 0.05)
     : 0;
 
   const abyssalBlueIndex = openWaterDepthAuthority
-    ? clamp01(blueWaterIndex * 0.38 + finalDepth * 0.42 + organicDeepOceanPresence * 0.2)
+    ? clamp01(blueWaterIndex * 0.34 + finalDepth * 0.38 + organicDeepOceanPresence * 0.16 + abyssalPressureIndex * 0.12)
     : 0;
 
   const turquoiseSuppression = openWaterDepthAuthority
-    ? clamp01(deepOceanBlend * 0.56 + openOceanMask * 0.28 + (1 - shelfMask) * 0.16)
+    ? clamp01(deepOceanBlend * 0.52 + openOceanMask * 0.26 + (1 - shelfMask) * 0.14 + abyssalPressureIndex * 0.08)
     : 0;
 
   const visibleTurquoiseIndex = openWaterDepthAuthority
     ? clamp01(turquoiseIndex * (1 - turquoiseSuppression * 0.72))
     : turquoiseIndex;
 
+  const deepOrganicPresence = organicDeepOceanPresence;
+
   let deepOceanClass = "deep_ocean_non_water_passthrough";
+
   if (isIce) deepOceanClass = "deep_ocean_ice_passthrough";
   else if (isLand) deepOceanClass = "deep_ocean_land_passthrough";
   else if (!openWaterDepthAuthority) deepOceanClass = "deep_ocean_non_water_passthrough";
   else if (shelfMask > 0.42 || coastWaterMask > 0.42) deepOceanClass = "deep_ocean_shelf_soft_depth";
-  else if (deepOceanBlend > 0.58) deepOceanClass = "deep_ocean_abyssal_soft_depth";
+  else if (deepOceanBlend > 0.58 || abyssalPressureIndex > 0.62) deepOceanClass = "deep_ocean_abyssal_soft_depth";
   else deepOceanClass = "deep_ocean_open_soft_depth";
 
   const visualSurfaceClass =
@@ -383,14 +555,23 @@ function buildDeepOceanFieldInternal(input, lonArg, uArg, vArg) {
     ...ocean,
     ok: true,
     receipt: AUDRALIA_DEEP_OCEAN_RECEIPT,
+    compatibilityReceipt: AUDRALIA_DEEP_OCEAN_COMPATIBILITY_RECEIPT,
+    alignmentReceipt: AUDRALIA_DEEP_OCEAN_ALIGNMENT_RECEIPT,
     source: "audralia-deep-ocean-continuous-depth-alignment",
     ocean,
+    hydration,
+    terrain,
+    topology,
+    climate,
     oceansReceipt: ocean.receipt || "",
     oceansConsumed: true,
+
     lat: coordinate.lat,
     lon: coordinate.lon,
     latitude: coordinate.lat,
     longitude: coordinate.lon,
+    latDeg: coordinate.latDeg,
+    lonDeg: coordinate.lonDeg,
     u: coordinate.u,
     v: coordinate.v,
     x: coordinate.u,
@@ -398,25 +579,32 @@ function buildDeepOceanFieldInternal(input, lonArg, uArg, vArg) {
     sx: point.x,
     sy: point.y,
     sz: point.z,
+
     deepOceanClass,
     visualSurfaceClass,
     surfaceClass: visualSurfaceClass,
+
     abyssalContinuity,
     basinDepthField,
     abyssalPlainField,
     softTrenchPressure,
     currentShearField,
+    abyssalMicroTexture,
     polarDarkening,
     deepOceanActivation,
     organicDeepOceanPresence,
+    deepOrganicPresence,
+    deepOrganic: deepOrganicPresence > 0.42,
     deepOceanFeather,
     softTrenchIndex,
+    abyssalPressureIndex,
     deepOceanBlend,
     finalDepth,
     routeSafeDepth,
     abyssalBlueIndex,
     turquoiseSuppression,
     visibleTurquoiseIndex,
+
     depth: openWaterDepthAuthority ? finalDepth : parentDepth,
     maxDepth: openWaterDepthAuthority ? finalDepth : parentDepth,
     rawDepth: parentDepth,
@@ -425,9 +613,11 @@ function buildDeepOceanFieldInternal(input, lonArg, uArg, vArg) {
     maxDeepOceanBlend: deepOceanBlend,
     maxDeepOceanFeather: deepOceanFeather,
     maxOrganicDeepOceanPresence: organicDeepOceanPresence,
+
     turquoise: visibleTurquoiseIndex,
     turquoiseIndex: visibleTurquoiseIndex,
     blueWaterIndex: abyssalBlueIndex,
+
     deepOceanCandidate: openWaterDepthAuthority && deepOceanBlend > 0.42,
     deepOceanIsDepthFieldNotRouteBlob: true,
     hardDeepOceanRouteClassSuppressed: true,
@@ -436,20 +626,31 @@ function buildDeepOceanFieldInternal(input, lonArg, uArg, vArg) {
     trenchSamples: 0,
     trenchRatio: 0,
     routeMayReceiveSoftDepthFieldsOnly: true,
-    water: Boolean(ocean.water),
-    liquidWater: Boolean(ocean.liquidWater),
-    ocean: Boolean(ocean.ocean),
+
+    water: Boolean(ocean.water || ocean.liquidWater || openWaterDepthAuthority),
+    liquidWater: Boolean(ocean.liquidWater || openWaterDepthAuthority),
+    ocean: Boolean(ocean.ocean && !isShelf),
     shelf: Boolean(ocean.shelf),
     coastal: Boolean(ocean.coastal),
-    land: Boolean(ocean.land),
-    exposedTerrainLand: Boolean(ocean.exposedTerrainLand),
-    solidSurfaceLand: Boolean(ocean.solidSurfaceLand),
-    ice: Boolean(ocean.ice),
-    glacier: Boolean(ocean.glacier),
+    land: Boolean(ocean.land) && !openWaterDepthAuthority,
+    exposedTerrainLand: Boolean(ocean.exposedTerrainLand) && !openWaterDepthAuthority,
+    visibleLand: Boolean(ocean.visibleLand || ocean.exposedTerrainLand) && !openWaterDepthAuthority,
+    solidSurfaceLand: Boolean(ocean.solidSurfaceLand || isIce) && !openWaterDepthAuthority,
+    topologyLand: Boolean(ocean.topologyLand || isIce) && !openWaterDepthAuthority,
+    ice: isIce,
+    glacier: isIce,
+
+    rainfall,
+    evaporation,
+    oceanCycleInfluence,
+    surfaceCurrentIndex,
+    waveEnergyIndex,
+
     deepOceanMayOnlyDeepenWater: true,
     deepOceanCannotCreateWater: true,
     deepOceanCannotCreateLand: true,
     deepOceanCannotEraseTopologyLand: true,
+
     fallback: false,
     fallbackSample: false,
     fallbackAllowed: false,
@@ -462,8 +663,8 @@ function buildDeepOceanFieldInternal(input, lonArg, uArg, vArg) {
 function computeStats() {
   if (cachedStats) return cachedStats;
 
-  const width = 256;
-  const height = 128;
+  const width = 192;
+  const height = 96;
   const totalSamples = width * height;
 
   const classCounts = {};
@@ -488,6 +689,7 @@ function computeStats() {
   let maxDeepOceanFeather = 0;
   let maxOrganicDeepOceanPresence = 0;
   let maxSoftTrenchIndex = 0;
+  let maxAbyssalPressureIndex = 0;
   let maxRouteSafeDepth = 0;
   let maxAbyssalBlueIndex = 0;
   let maxVisibleTurquoiseIndex = 0;
@@ -506,7 +708,7 @@ function computeStats() {
       classCounts[cls] = (classCounts[cls] || 0) + 1;
       rowCounts[cls] = (rowCounts[cls] || 0) + 1;
 
-      if (sample.deepOceanCandidate) deepOrganicSamples += 1;
+      if (sample.deepOceanCandidate || sample.deepOrganic) deepOrganicSamples += 1;
       if (sample.deepOceanClass === "deep_ocean_open_soft_depth") openSoftDepthSamples += 1;
       if (sample.deepOceanClass === "deep_ocean_abyssal_soft_depth") abyssalSoftDepthSamples += 1;
       if (sample.deepOceanClass === "deep_ocean_shelf_soft_depth") shelfSoftDepthSamples += 1;
@@ -525,6 +727,7 @@ function computeStats() {
       maxDeepOceanFeather = Math.max(maxDeepOceanFeather, sample.deepOceanFeather);
       maxOrganicDeepOceanPresence = Math.max(maxOrganicDeepOceanPresence, sample.organicDeepOceanPresence);
       maxSoftTrenchIndex = Math.max(maxSoftTrenchIndex, sample.softTrenchIndex);
+      maxAbyssalPressureIndex = Math.max(maxAbyssalPressureIndex, sample.abyssalPressureIndex);
       maxRouteSafeDepth = Math.max(maxRouteSafeDepth, sample.routeSafeDepth);
       maxAbyssalBlueIndex = Math.max(maxAbyssalBlueIndex, sample.abyssalBlueIndex);
       maxVisibleTurquoiseIndex = Math.max(maxVisibleTurquoiseIndex, sample.visibleTurquoiseIndex);
@@ -551,10 +754,14 @@ function computeStats() {
   cachedStats = {
     ok: true,
     receipt: AUDRALIA_DEEP_OCEAN_RECEIPT,
-    oceansStats: getOceansStats(),
+    compatibilityReceipt: AUDRALIA_DEEP_OCEAN_COMPATIBILITY_RECEIPT,
+    alignmentReceipt: AUDRALIA_DEEP_OCEAN_ALIGNMENT_RECEIPT,
+    oceansStats: safeGetOceansStats(),
+    oceansStatus: safeGetOceansStatus(),
     totalSamples,
     classCounts,
     visualSurfaceClasses: Object.keys(classCounts),
+
     deepOrganicSamples,
     openSoftDepthSamples,
     abyssalSoftDepthSamples,
@@ -568,6 +775,7 @@ function computeStats() {
     fallbackSamples,
     hardDeepOceanRouteClassSamples,
     trenchSamples,
+
     deepOrganicRatio,
     openSoftDepthRatio,
     abyssalSoftDepthRatio,
@@ -581,19 +789,23 @@ function computeStats() {
     fallbackRatio,
     hardDeepOceanRouteClassRatio,
     trenchRatio,
+
     maxDepth,
     maxRawDepth,
     maxDeepOceanBlend,
     maxDeepOceanFeather,
     maxOrganicDeepOceanPresence,
     maxSoftTrenchIndex,
+    maxAbyssalPressureIndex,
     maxRouteSafeDepth,
     maxAbyssalBlueIndex,
     maxVisibleTurquoiseIndex,
+
     maxDominantRowRatio,
     averageRowDominance,
     rowBandingSuppressed: averageRowDominance < 0.84,
     bullseyeCollapseSuppressed: maxDominantRowRatio < 0.95,
+
     deepOceanMayOnlyDeepenWater: true,
     deepOceanCannotCreateWater: true,
     deepOceanCannotCreateLand: true,
@@ -609,7 +821,58 @@ function computeStats() {
     visualPassClaimed: false
   };
 
+  STATUS.fallbackSamples = fallbackSamples;
+  STATUS.fallbackAllowed = fallbackSamples > 0;
+  STATUS.fallbackReason = fallbackSamples > 0 ? "deep-ocean-fallback-samples-observed" : "oceans-parent-soft-depth-ready";
+
   return cachedStats;
+}
+
+function safeGetOceansStats() {
+  try {
+    return getOceansStats();
+  } catch (_) {
+    return null;
+  }
+}
+
+function safeGetOceansStatus() {
+  try {
+    return getOceansStatus();
+  } catch (_) {
+    return null;
+  }
+}
+
+function buildDeepOceanGrid(options = {}) {
+  const width = clamp(Math.floor(Number(options.width) || 96), 24, 384);
+  const height = clamp(Math.floor(Number(options.height) || 48), 12, 192);
+  const samples = new Array(width * height);
+
+  for (let row = 0; row < height; row += 1) {
+    const v = height === 1 ? 0.5 : row / (height - 1);
+    const lat = (0.5 - v) * Math.PI;
+
+    for (let col = 0; col < width; col += 1) {
+      const u = width === 1 ? 0.5 : col / (width - 1);
+      const lon = (u - 0.5) * Math.PI * 2;
+      samples[row * width + col] = buildDeepOceanFieldInternal({ lat, lon, u, v });
+    }
+  }
+
+  return {
+    ok: true,
+    receipt: AUDRALIA_DEEP_OCEAN_RECEIPT,
+    compatibilityReceipt: AUDRALIA_DEEP_OCEAN_COMPATIBILITY_RECEIPT,
+    alignmentReceipt: AUDRALIA_DEEP_OCEAN_ALIGNMENT_RECEIPT,
+    width,
+    height,
+    samples,
+    stats: computeStats(),
+    graphicBox: false,
+    imageGeneration: false,
+    visualPassClaimed: false
+  };
 }
 
 function createDeepOceanObject() {
@@ -618,12 +881,22 @@ function createDeepOceanObject() {
   cachedDeepOcean = {
     ok: true,
     receipt: AUDRALIA_DEEP_OCEAN_RECEIPT,
+    compatibilityReceipt: AUDRALIA_DEEP_OCEAN_COMPATIBILITY_RECEIPT,
+    alignmentReceipt: AUDRALIA_DEEP_OCEAN_ALIGNMENT_RECEIPT,
     status: STATUS,
     sampleDeepOcean: buildDeepOceanFieldInternal,
+    sampleDeepOceanState: buildDeepOceanFieldInternal,
     sampleDeepOceanField: buildDeepOceanFieldInternal,
+    sampleAudraliaDeepOcean: buildDeepOceanFieldInternal,
+    sampleOcean: buildDeepOceanFieldInternal,
+    sampleOceans: buildDeepOceanFieldInternal,
+    sampleHydration: buildDeepOceanFieldInternal,
     sampleSurface: buildDeepOceanFieldInternal,
+    sample: buildDeepOceanFieldInternal,
     buildDeepOceanField: buildDeepOceanFieldInternal,
+    buildDeepOceanGrid,
     getStatus,
+    getDeepOceanStatus,
     getStats,
     getDeepOceanStats
   };
@@ -638,6 +911,10 @@ export function getStatus() {
   };
 }
 
+export function getDeepOceanStatus() {
+  return getStatus();
+}
+
 export function getStats() {
   return computeStats();
 }
@@ -650,11 +927,23 @@ export function sampleDeepOcean(input, lonArg, uArg, vArg) {
   return buildDeepOceanFieldInternal(input, lonArg, uArg, vArg);
 }
 
+export function sampleDeepOceanState(input, lonArg, uArg, vArg) {
+  return buildDeepOceanFieldInternal(input, lonArg, uArg, vArg);
+}
+
 export function sampleDeepOceanField(input, lonArg, uArg, vArg) {
   return buildDeepOceanFieldInternal(input, lonArg, uArg, vArg);
 }
 
+export function sampleAudraliaDeepOcean(input, lonArg, uArg, vArg) {
+  return buildDeepOceanFieldInternal(input, lonArg, uArg, vArg);
+}
+
 export function sampleSurface(input, lonArg, uArg, vArg) {
+  return buildDeepOceanFieldInternal(input, lonArg, uArg, vArg);
+}
+
+export function sample(input, lonArg, uArg, vArg) {
   return buildDeepOceanFieldInternal(input, lonArg, uArg, vArg);
 }
 
@@ -668,15 +957,23 @@ export function createAudraliaDeepOcean() {
 
 export const AUDRALIA_DEEP_OCEAN_STATUS = STATUS;
 export const AUDRALIA_DEEP_OCEAN_RECEIPT_VALUE = AUDRALIA_DEEP_OCEAN_RECEIPT;
+export const AUDRALIA_DEEP_OCEAN_COMPATIBILITY_RECEIPT_VALUE = AUDRALIA_DEEP_OCEAN_COMPATIBILITY_RECEIPT;
+export const AUDRALIA_DEEP_OCEAN_ALIGNMENT_RECEIPT_VALUE = AUDRALIA_DEEP_OCEAN_ALIGNMENT_RECEIPT;
+
+const api = createDeepOceanObject();
 
 if (typeof window !== "undefined") {
   window.AUDRALIA_DEEP_OCEAN_STATUS = STATUS;
   window.AUDRALIA_DEEP_OCEAN_RECEIPT = AUDRALIA_DEEP_OCEAN_RECEIPT;
   window.__AUDRALIA_DEEP_OCEAN_STATUS__ = STATUS;
   window.__AUDRALIA_DEEP_OCEAN_RECEIPT__ = AUDRALIA_DEEP_OCEAN_RECEIPT;
+  window.AudraliaDeepOcean = api;
+  window.DGBAudraliaDeepOcean = api;
 
   if (typeof document !== "undefined" && document.documentElement) {
     document.documentElement.dataset.audraliaDeepOceanReceipt = AUDRALIA_DEEP_OCEAN_RECEIPT;
+    document.documentElement.dataset.audraliaDeepOceanCompatibilityReceipt = AUDRALIA_DEEP_OCEAN_COMPATIBILITY_RECEIPT;
+    document.documentElement.dataset.audraliaDeepOceanAlignmentReceipt = AUDRALIA_DEEP_OCEAN_ALIGNMENT_RECEIPT;
     document.documentElement.dataset.audraliaDeepOceanContinuousField = "true";
     document.documentElement.dataset.audraliaDeepOceanConsumesOceans = "true";
     document.documentElement.dataset.audraliaDeepOceanIsDepthFieldNotRouteBlob = "true";

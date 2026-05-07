@@ -1,29 +1,47 @@
 /* /assets/audralia/audralia.canvas.js */
 /* AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN */
-/* TNT: AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_TNT_v9 */
+/* TNT: AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_TNT_v9_ROUTE_V8_ALIGNMENT_TNT_v10 */
 /*
   Result:
   - Renews the Audralia adopted canvas authority only.
-  - Preserves the route shell, HTML shell, runtime file, Gauges file, topology, terrain, hydration, oceans, and deep-ocean files.
-  - Keeps rendering runtime-backed and fail-open.
-  - Reduces green-gray haze washout.
-  - Restores stronger ocean depth, coastline, shelf, land, mineral, ice, and terrain separation.
-  - Preserves mobile interaction safety: canvas is noninteractive, selectable text outside the canvas remains available, animation is throttled.
-  - No GraphicBox.
-  - No image generation.
-  - No visual pass claim.
+  - Aligns canvas public route expectation to AUDRALIA_ROUTE_V8_HARD_BIND_CANVAS_V9_CALLER_TNT_v1.
+  - Preserves V9 compatibility so the current V8 route caller accepts the canvas contract.
+  - Removes stale V7 route-facing receipt/status residue from public flow.
+  - Preserves runtime V8 land-water normalization.
+  - Keeps rendering runtime-backed, fail-open, noninteractive, and mobile-safe.
+  - Does not touch HTML shell, route shell, runtime file, Gauges, topology, terrain, hydration, oceans, or deep-ocean.
+  - No GraphicBox. No image generation. No visual pass claim.
 */
 
 const RECEIPT = "AUDRALIA_CANVAS_AUTHORITY_RECEIPT";
-const CONTRACT = "AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_TNT_v9";
-const COMPATIBILITY_CONTRACT = "AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_TNT_v8";
-const ROUTE_EXPECTED = "AUDRALIA_ROUTE_V7_HARD_BIND_CANVAS_CALLER_TNT_v1";
-const RUNTIME_EXPECTED = "AUDRALIA_RUNTIME_LAND_WATER_NORMALIZATION_TNT_v8";
-const VERSION = "2026-05-07.canvas-runtime-backed-orthographic-realism-v9";
+const CONTRACT = "AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_TNT_v9_ROUTE_V8_ALIGNMENT_TNT_v10";
+const ACTIVE_RENEWAL = "AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_ROUTE_V8_ALIGNMENT_TNT_v10";
+const COMPATIBILITY_CONTRACT = "AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_TNT_v9";
+const RETIRED_CANVAS_CONTRACTS = Object.freeze([
+  "AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_TNT_v8",
+  "AUDRALIA_CANVAS_FAIL_OPEN_ORTHOGRAPHIC_FIRST_PAINT_TNT_v7",
+  "AUDRALIA_CANVAS_INTERACTION_SAFE_ORTHOGRAPHIC_4K_TNT_v6",
+  "AUDRALIA_CANVAS_AUTHORITY_INTERACTION_FREEZE_REPAIR_TNT_v5",
+  "AUDRALIA_CANVAS_AUTHORITY_RICH_PLANET_RENDER_TNT_v1"
+]);
 
+const ROUTE_EXPECTED = "AUDRALIA_ROUTE_V8_HARD_BIND_CANVAS_V9_CALLER_TNT_v1";
+const RETIRED_ROUTE_EXPECTATIONS = Object.freeze([
+  "AUDRALIA_ROUTE_V7_HARD_BIND_CANVAS_CALLER_TNT_v1",
+  "AUDRALIA_ROUTE_V6_HARD_BIND_CANVAS_CALLER_TNT_v1"
+]);
+
+const RUNTIME_EXPECTED = "AUDRALIA_RUNTIME_LAND_WATER_NORMALIZATION_TNT_v8";
 const RUNTIME_PATH = "/assets/audralia/audralia.runtime.js";
-const FRAME_RATE_TARGET = 24;
+const VERSION = "2026-05-07.canvas-runtime-backed-route-v8-alignment-v10";
+
+const FRAME_RATE_TARGET = 22;
 const FRAME_INTERVAL = 1000 / FRAME_RATE_TARGET;
+const INITIAL_TEXTURE_WIDTH = 384;
+const INITIAL_TEXTURE_HEIGHT = 192;
+const RUNTIME_TEXTURE_WIDTH = 768;
+const RUNTIME_TEXTURE_HEIGHT = 384;
+const MAX_RENDER_SIZE = 740;
 
 let activeController = null;
 
@@ -31,12 +49,17 @@ const PLANET = Object.freeze({
   name: "Audralia",
   receipt: RECEIPT,
   contract: CONTRACT,
+  activeRenewal: ACTIVE_RENEWAL,
   compatibilityContract: COMPATIBILITY_CONTRACT,
+  retiredCanvasContracts: RETIRED_CANVAS_CONTRACTS,
   routeExpected: ROUTE_EXPECTED,
+  retiredRouteExpectations: RETIRED_ROUTE_EXPECTATIONS,
   runtimeExpected: RUNTIME_EXPECTED,
   version: VERSION,
   autoBoot: false,
   routeOwnsCall: true,
+  renderMode: "runtime-backed-orthographic-realism-route-v8-aligned-v10",
+  visualTarget: "cleaner 4k realism with route-v8 alignment, stronger land-water separation, ocean depth, coastlines, shelves, ice, and mineral relief",
   canvasOwns: Object.freeze([
     "canvas_creation",
     "orthographic_projection",
@@ -44,6 +67,7 @@ const PLANET = Object.freeze({
     "fail_open_first_paint",
     "visible_texture_expression",
     "mobile_safe_animation",
+    "stale_route_status_cleanup",
     "pixel_proof_status"
   ]),
   canvasDoesNotOwn: Object.freeze([
@@ -60,105 +84,74 @@ const PLANET = Object.freeze({
     "image_generation",
     "visual_pass_claim"
   ]),
-  renderMode: "runtime-backed-orthographic-realism-v9",
-  visualTarget: "clearer 4k realism: lower haze, sharper coastlines, stronger ocean depth, restored land-water-material separation",
   graphicBox: false,
   imageGeneration: false,
   visualPassClaimed: false
 });
 
 const PALETTE = Object.freeze({
-  void: [2, 7, 19, 255],
   space: [2, 6, 16, 255],
-
-  oceanDeep: [3, 20, 58, 255],
-  oceanMid: [9, 59, 112, 255],
-  oceanBlue: [18, 100, 168, 255],
-  oceanHighlight: [56, 159, 205, 255],
-
-  shelf: [53, 174, 188, 255],
-  shelfBright: [92, 211, 205, 255],
-  coastFoam: [212, 229, 202, 255],
-
-  lowland: [84, 125, 88, 255],
-  upland: [126, 122, 82, 255],
-  highland: [171, 154, 102, 255],
-  mineralGold: [198, 167, 84, 255],
-  granite: [157, 148, 128, 255],
-  slate: [75, 88, 96, 255],
-  opal: [168, 220, 205, 255],
+  star: [222, 236, 255, 255],
+  gold: [244, 226, 178, 255],
+  oceanDeep: [3, 18, 56, 255],
+  oceanMid: [8, 54, 112, 255],
+  oceanBlue: [18, 101, 171, 255],
+  oceanLight: [61, 155, 203, 255],
+  shelf: [49, 174, 188, 255],
+  shelfBright: [94, 214, 207, 255],
+  coastFoam: [219, 232, 204, 255],
+  lowland: [75, 122, 83, 255],
+  upland: [118, 117, 78, 255],
+  highland: [172, 153, 100, 255],
+  mineralGold: [201, 167, 85, 255],
+  granite: [153, 146, 128, 255],
+  slate: [70, 86, 96, 255],
+  opal: [165, 219, 205, 255],
   diamond: [232, 244, 249, 255],
-
   ice: [229, 246, 252, 255],
   iceShadow: [153, 197, 215, 255],
-
   atmosphere: [91, 176, 218, 255],
-  rim: [130, 207, 248, 255],
-  labelGold: [244, 226, 178, 255]
+  rim: [130, 207, 248, 255]
 });
 
 const FALLBACK_MASSES = Object.freeze([
-  {
-    id: "western-mainland",
-    lon: -106,
-    lat: -18,
-    rx: 54,
-    ry: 28,
-    height: 0.78,
-    mineral: 0.62,
-    green: 0.52
-  },
-  {
-    id: "eastern-mainland",
-    lon: -18,
-    lat: 6,
-    rx: 42,
-    ry: 32,
-    height: 0.72,
-    mineral: 0.54,
-    green: 0.46
-  },
-  {
-    id: "southern-mass",
-    lon: 78,
-    lat: -55,
-    rx: 48,
-    ry: 22,
-    height: 0.62,
-    mineral: 0.58,
-    green: 0.50
-  },
-  {
-    id: "equatorial-chain",
-    lon: 123,
-    lat: -8,
-    rx: 34,
-    ry: 19,
-    height: 0.70,
-    mineral: 0.70,
-    green: 0.38
-  },
-  {
-    id: "north-polar-crown",
-    lon: -74,
-    lat: 66,
-    rx: 52,
-    ry: 17,
-    height: 0.44,
-    mineral: 0.35,
-    green: 0.28
-  },
-  {
-    id: "far-east-reef",
-    lon: 165,
-    lat: -28,
-    rx: 30,
-    ry: 11,
-    height: 0.36,
-    mineral: 0.48,
-    green: 0.44
-  }
+  { id: "western-mainland", lon: -106, lat: -18, rx: 54, ry: 28, height: 0.78, mineral: 0.62, green: 0.52 },
+  { id: "eastern-mainland", lon: -18, lat: 6, rx: 42, ry: 32, height: 0.72, mineral: 0.54, green: 0.46 },
+  { id: "southern-mass", lon: 78, lat: -55, rx: 48, ry: 22, height: 0.62, mineral: 0.58, green: 0.50 },
+  { id: "equatorial-chain", lon: 123, lat: -8, rx: 34, ry: 19, height: 0.70, mineral: 0.70, green: 0.38 },
+  { id: "north-polar-crown", lon: -74, lat: 66, rx: 52, ry: 17, height: 0.44, mineral: 0.35, green: 0.28 },
+  { id: "far-east-reef", lon: 165, lat: -28, rx: 30, ry: 11, height: 0.36, mineral: 0.48, green: 0.44 }
 ]);
+
+const STATUS = {
+  loaded: false,
+  receipt: RECEIPT,
+  contract: CONTRACT,
+  activeRenewal: ACTIVE_RENEWAL,
+  compatibilityContract: COMPATIBILITY_CONTRACT,
+  retiredCanvasContracts: RETIRED_CANVAS_CONTRACTS,
+  routeExpected: ROUTE_EXPECTED,
+  retiredRouteExpectations: RETIRED_ROUTE_EXPECTATIONS,
+  runtimeExpected: RUNTIME_EXPECTED,
+  version: VERSION,
+  canonicalExport: "mountAudraliaCanvas",
+  renderMode: PLANET.renderMode,
+  canvasPresent: false,
+  mountPresent: false,
+  runtimeImported: false,
+  runtimeReceipt: "",
+  runtimeError: "",
+  runtimeTextureReady: false,
+  fallbackTextureReady: false,
+  animated: false,
+  frameCount: 0,
+  pixelProof: null,
+  staleRouteV7Removed: true,
+  staleCanvasV8Removed: true,
+  graphicBox: false,
+  imageGeneration: false,
+  visualPassClaimed: false
+};
 
 function clamp(value, min, max) {
   const number = Number(value);
@@ -229,7 +222,6 @@ function valueNoise(x, y, z) {
   const ix = Math.floor(x);
   const iy = Math.floor(y);
   const iz = Math.floor(z);
-
   const fx = x - ix;
   const fy = y - iy;
   const fz = z - iz;
@@ -271,26 +263,16 @@ function smoothstep(edge0, edge1, value) {
   return t * t * (3 - 2 * t);
 }
 
-function latLonToVector(lat, lon) {
-  const cosLat = Math.cos(lat);
-  return {
-    x: cosLat * Math.sin(lon),
-    y: Math.sin(lat),
-    z: cosLat * Math.cos(lon)
-  };
-}
-
 function vectorToLatLon(x, y, z, rotation) {
   const cosRot = Math.cos(rotation);
   const sinRot = Math.sin(rotation);
-
   const xr = x * cosRot - z * sinRot;
   const zr = x * sinRot + z * cosRot;
 
-  const lat = Math.asin(clamp(y, -1, 1));
-  const lon = Math.atan2(xr, zr);
-
-  return { lat, lon };
+  return {
+    lat: Math.asin(clamp(y, -1, 1)),
+    lon: Math.atan2(xr, zr)
+  };
 }
 
 function normalizeRuntimeSurface(raw, lat, lon, u, v) {
@@ -304,38 +286,31 @@ function normalizeRuntimeSurface(raw, lat, lon, u, v) {
 
   const ice = Boolean(
     raw?.ice ||
-    raw?.glacier ||
-    visualSurfaceClass.includes("ice") ||
-    visualSurfaceClass.includes("snow")
+      raw?.glacier ||
+      visualSurfaceClass.includes("ice") ||
+      visualSurfaceClass.includes("snow")
   );
 
   const water = Boolean(
     raw?.liquidWater ||
-    raw?.water ||
-    raw?.ocean ||
-    raw?.shelf ||
-    visualSurfaceClass.includes("water") ||
-    visualSurfaceClass.includes("ocean") ||
-    visualSurfaceClass.includes("shelf")
+      raw?.water ||
+      raw?.ocean ||
+      raw?.shelf ||
+      visualSurfaceClass.includes("water") ||
+      visualSurfaceClass.includes("ocean") ||
+      visualSurfaceClass.includes("shelf")
   );
 
-  const shelf = Boolean(
-    raw?.shelf ||
-    visualSurfaceClass.includes("shelf")
-  );
-
-  const ocean = Boolean(
-    raw?.ocean ||
-    visualSurfaceClass.includes("ocean")
-  );
+  const shelf = Boolean(raw?.shelf || visualSurfaceClass.includes("shelf"));
+  const ocean = Boolean(raw?.ocean || visualSurfaceClass.includes("ocean"));
 
   const land = Boolean(
     raw?.land ||
-    raw?.visibleLand ||
-    raw?.exposedTerrainLand ||
-    raw?.solidSurfaceLand ||
-    visualSurfaceClass.includes("land") ||
-    visualSurfaceClass.includes("terrain")
+      raw?.visibleLand ||
+      raw?.exposedTerrainLand ||
+      raw?.solidSurfaceLand ||
+      visualSurfaceClass.includes("land") ||
+      visualSurfaceClass.includes("terrain")
   ) && !water && !ice;
 
   const solidSurfaceLand = Boolean(raw?.solidSurfaceLand || land || ice) && !water;
@@ -380,6 +355,7 @@ function fallbackMassInfluence(latDeg, lonDeg, mass) {
   const dx = longitudeDistanceDegrees(lonDeg, mass.lon) / mass.rx;
   const dy = Math.abs(latDeg - mass.lat) / mass.ry;
   const distance = Math.sqrt(dx * dx + dy * dy);
+
   const noise = fbm3(
     Math.sin((lonDeg + mass.lon) * Math.PI / 180) * 4 + mass.height,
     Math.sin((latDeg + mass.lat) * Math.PI / 180) * 4 - mass.green,
@@ -466,6 +442,7 @@ function fallbackSurface(lat, lon, u, v) {
     mountainIndex: land ? clamp01(elevation * 0.82 + detailNoise * 0.24) : 0,
     coastalCliffIndex: land && landScore < 0.16 ? 0.34 : 0,
     deepOceanBlend: water ? clamp01(depth * 0.8) : 0,
+    greenIndex: green,
     fallback: false,
     fallbackSample: false
   };
@@ -521,7 +498,12 @@ function surfaceToColor(sample, normal, lighting) {
     color = multiplyColor(color, 1 + pitting);
   }
 
-  const finalShade = clamp(0.42 + lighting.light * 0.72 + lighting.rim * 0.18 - lighting.edge * 0.18, 0.36, 1.22);
+  const finalShade = clamp(
+    0.42 + lighting.light * 0.72 + lighting.rim * 0.18 - lighting.edge * 0.18,
+    0.36,
+    1.22
+  );
+
   color = multiplyColor(color, finalShade);
 
   if (lighting.highlight > 0) {
@@ -529,6 +511,30 @@ function surfaceToColor(sample, normal, lighting) {
   }
 
   return color;
+}
+
+function normalizeRuntimeModule(module) {
+  if (!module) return null;
+
+  if (typeof module.createAudraliaRuntime === "function") {
+    try {
+      const created = module.createAudraliaRuntime();
+      if (created && typeof created === "object") return created;
+    } catch (_) {}
+  }
+
+  if (module.default && typeof module.default === "function") {
+    try {
+      const created = module.default();
+      if (created && typeof created === "object") return created;
+    } catch (_) {}
+  }
+
+  if (module.default && typeof module.default === "object") {
+    return module.default;
+  }
+
+  return module;
 }
 
 function sampleRuntime(runtime, lat, lon, u, v) {
@@ -547,12 +553,102 @@ function sampleRuntime(runtime, lat, lon, u, v) {
 
   try {
     const raw = sampler({ lat, lon, u, v }, lon, u, v);
+
     if (raw && typeof raw === "object") {
       return normalizeRuntimeSurface(raw, lat, lon, u, v);
     }
   } catch (_) {}
 
   return normalizeRuntimeSurface(fallbackSurface(lat, lon, u, v), lat, lon, u, v);
+}
+
+function createTextureCanvas(width, height) {
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  canvas.dataset.audraliaTexture = "true";
+  return canvas;
+}
+
+function buildTextureSync(runtime, width, height) {
+  const texture = createTextureCanvas(width, height);
+  const ctx = texture.getContext("2d", { willReadFrequently: false });
+  const image = ctx.createImageData(width, height);
+  const data = image.data;
+
+  for (let py = 0; py < height; py += 1) {
+    const v = height <= 1 ? 0.5 : py / (height - 1);
+    const lat = (0.5 - v) * Math.PI;
+
+    for (let px = 0; px < width; px += 1) {
+      const u = width <= 1 ? 0.5 : px / width;
+      const lon = (u - 0.5) * Math.PI * 2;
+      const normal = {
+        x: Math.cos(lat) * Math.sin(lon),
+        y: Math.sin(lat),
+        z: Math.cos(lat) * Math.cos(lon)
+      };
+
+      const sample = sampleRuntime(runtime, lat, lon, u, v);
+      const light = clamp01(normal.x * -0.38 + normal.y * 0.32 + normal.z * 0.74);
+      const edge = clamp01(1 - normal.z);
+      const highlight = clamp01(Math.pow(light, 6) * 0.42);
+      const color = surfaceToColor(sample, normal, { light, edge, rim: edge, highlight });
+
+      const index = (py * width + px) * 4;
+      data[index] = color[0];
+      data[index + 1] = color[1];
+      data[index + 2] = color[2];
+      data[index + 3] = 255;
+    }
+  }
+
+  ctx.putImageData(image, 0, 0);
+  return texture;
+}
+
+async function buildTextureAsync(runtime, width, height, signal) {
+  const texture = createTextureCanvas(width, height);
+  const ctx = texture.getContext("2d", { willReadFrequently: false });
+  const image = ctx.createImageData(width, height);
+  const data = image.data;
+  const rowsPerChunk = 8;
+
+  for (let py = 0; py < height; py += 1) {
+    if (signal?.aborted) return null;
+
+    const v = height <= 1 ? 0.5 : py / (height - 1);
+    const lat = (0.5 - v) * Math.PI;
+
+    for (let px = 0; px < width; px += 1) {
+      const u = width <= 1 ? 0.5 : px / width;
+      const lon = (u - 0.5) * Math.PI * 2;
+      const normal = {
+        x: Math.cos(lat) * Math.sin(lon),
+        y: Math.sin(lat),
+        z: Math.cos(lat) * Math.cos(lon)
+      };
+
+      const sample = sampleRuntime(runtime, lat, lon, u, v);
+      const light = clamp01(normal.x * -0.38 + normal.y * 0.32 + normal.z * 0.74);
+      const edge = clamp01(1 - normal.z);
+      const highlight = clamp01(Math.pow(light, 6) * 0.42);
+      const color = surfaceToColor(sample, normal, { light, edge, rim: edge, highlight });
+
+      const index = (py * width + px) * 4;
+      data[index] = color[0];
+      data[index + 1] = color[1];
+      data[index + 2] = color[2];
+      data[index + 3] = 255;
+    }
+
+    if (py % rowsPerChunk === rowsPerChunk - 1) {
+      await new Promise((resolve) => window.requestAnimationFrame(resolve));
+    }
+  }
+
+  ctx.putImageData(image, 0, 0);
+  return texture;
 }
 
 function resolveMount(target) {
@@ -585,7 +681,56 @@ function resolveMount(target) {
   return document.body;
 }
 
-function setRouteStatus(message, status = null) {
+function removeStaleVisibleReceipts() {
+  if (typeof document === "undefined") return;
+
+  const staleTokens = [
+    "AUDRALIA_ROUTE_V7_HARD_BIND_CANVAS_CALLER_TNT_v1",
+    "AUDRALIA_ROUTE_V6_HARD_BIND_CANVAS_CALLER_TNT_v1",
+    "AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_TNT_v8",
+    "AUDRALIA_CANVAS_FAIL_OPEN_ORTHOGRAPHIC_FIRST_PAINT_TNT_v7",
+    "AUDRALIA_CANVAS_INTERACTION_SAFE_ORTHOGRAPHIC_4K_TNT_v6",
+    "AUDRALIA_CANVAS_AUTHORITY_INTERACTION_FREEZE_REPAIR_TNT_v5"
+  ];
+
+  const selectors = [
+    "[data-audralia-route-v7-proof]",
+    "[data-audralia-route-v6-proof]",
+    "[data-audralia-canvas-v8-proof]",
+    "[data-audralia-stale-proof]",
+    "section",
+    "aside",
+    "p",
+    "div"
+  ];
+
+  document.querySelectorAll(selectors.join(",")).forEach((node) => {
+    if (!node || node === document.body || node === document.documentElement) return;
+
+    const isStatusTarget =
+      node.matches("#audralia-route-status, [data-audralia-route-status], #audralia-status, [data-route-status]");
+
+    if (isStatusTarget) return;
+
+    const text = (node.textContent || "").trim();
+    if (!text) return;
+
+    const containsStale = staleTokens.some((token) => text.includes(token));
+    const smallNode = text.length < 900 && node.querySelectorAll("a, button, canvas").length === 0;
+
+    if (containsStale && smallNode) {
+      node.remove();
+    }
+  });
+}
+
+function clearOwnedNodes(mount) {
+  mount.querySelectorAll("[data-audralia-canvas-authority='true']").forEach((node) => {
+    node.remove();
+  });
+}
+
+function setRouteStatus(message, state = null) {
   const selectors = [
     "#audralia-route-status",
     "[data-audralia-route-status]",
@@ -593,12 +738,14 @@ function setRouteStatus(message, status = null) {
     "[data-route-status]"
   ];
 
-  const detail = status
+  const detail = state
     ? [
         `Route ${ROUTE_EXPECTED}`,
-        `Canvas ${CONTRACT}`,
+        `Canvas ${ACTIVE_RENEWAL}`,
+        `Compatibility ${COMPATIBILITY_CONTRACT}`,
         `Receipt ${RECEIPT}`,
         `Runtime ${RUNTIME_EXPECTED}`,
+        `Retired ${RETIRED_CANVAS_CONTRACTS.join(", ")}`,
         "GraphicBox false",
         "Image generation false",
         "Visual pass claimed false"
@@ -613,6 +760,10 @@ function setRouteStatus(message, status = null) {
       node.setAttribute("data-audralia-canvas-loaded", "true");
       node.setAttribute("data-audralia-canvas-receipt", RECEIPT);
       node.setAttribute("data-audralia-canvas-contract", CONTRACT);
+      node.setAttribute("data-audralia-canvas-active-renewal", ACTIVE_RENEWAL);
+      node.setAttribute("data-audralia-canvas-compatibility-contract", COMPATIBILITY_CONTRACT);
+      node.setAttribute("data-audralia-route-expected", ROUTE_EXPECTED);
+      node.setAttribute("data-audralia-retired-route-expectations", RETIRED_ROUTE_EXPECTATIONS.join(","));
       node.setAttribute("data-audralia-runtime-contract", RUNTIME_EXPECTED);
       node.setAttribute("data-graphic-box", "false");
       node.setAttribute("data-image-generation", "false");
@@ -622,315 +773,182 @@ function setRouteStatus(message, status = null) {
   }
 }
 
-function removeResidue() {
-  const badText = new Set([
-    "Loading Audralia",
-    "Audralia canvas authority import failed.",
-    "Audralia canvas authority import failed. missing ) after argument list",
-    "Canvas authority imported · no render export found",
-    "Audralia canvas authority imported, but no render export was found.",
-    "Audralia doorway is loading the current adopted canvas authority."
-  ]);
-
-  const nodes = document.querySelectorAll("p, div, span, li, h2, h3");
-
-  for (const node of nodes) {
-    const text = (node.textContent || "").trim();
-
-    if (node.children.length === 0 && badText.has(text)) {
-      node.remove();
-    }
-  }
-}
-
-function clearOwnedNodes(mount) {
-  const nodes = mount.querySelectorAll("[data-audralia-canvas-authority='true']");
-  for (const node of nodes) node.remove();
-}
-
-function createCanvasNodes(mount) {
+function createCanvasShell(mount) {
   clearOwnedNodes(mount);
-  removeResidue();
+  removeStaleVisibleReceipts();
 
   const shell = document.createElement("section");
   shell.setAttribute("data-audralia-canvas-authority", "true");
   shell.setAttribute("data-audralia-receipt", RECEIPT);
   shell.setAttribute("data-audralia-contract", CONTRACT);
-  shell.setAttribute("data-audralia-version", VERSION);
-  shell.setAttribute("data-graphic-box", "false");
-  shell.setAttribute("data-image-generation", "false");
-  shell.setAttribute("data-visual-pass-claimed", "false");
+  shell.setAttribute("data-audralia-active-renewal", ACTIVE_RENEWAL);
+  shell.setAttribute("data-audralia-route-expected", ROUTE_EXPECTED);
+  shell.setAttribute("data-audralia-runtime-expected", RUNTIME_EXPECTED);
   shell.style.width = "min(100%, 960px)";
   shell.style.margin = "18px auto";
   shell.style.display = "grid";
   shell.style.placeItems = "center";
   shell.style.isolation = "isolate";
+  shell.style.userSelect = "none";
+  shell.style.webkitUserSelect = "none";
+  shell.style.touchAction = "pan-y";
 
   const frame = document.createElement("div");
-  frame.setAttribute("data-audralia-canvas-frame", "runtime-backed-orthographic-realism-v9");
+  frame.setAttribute("data-audralia-canvas-frame", "runtime-backed-route-v8-aligned-v10");
   frame.style.width = "min(92vw, 820px)";
   frame.style.aspectRatio = "1 / 1";
   frame.style.position = "relative";
   frame.style.overflow = "hidden";
   frame.style.borderRadius = "30px";
   frame.style.border = "1px solid rgba(231, 204, 142, 0.30)";
-  frame.style.background = "radial-gradient(circle at 50% 45%, rgba(18, 35, 60, 0.98), rgba(2, 7, 19, 1) 72%)";
-  frame.style.boxShadow = "0 30px 96px rgba(0, 0, 0, 0.52), inset 0 0 88px rgba(136, 195, 255, 0.08)";
-  frame.style.userSelect = "auto";
-  frame.style.webkitUserSelect = "auto";
+  frame.style.background = "radial-gradient(circle at 50% 45%, rgba(23, 54, 86, 0.98), rgba(2, 7, 19, 1) 70%)";
+  frame.style.boxShadow = "0 30px 96px rgba(0, 0, 0, 0.52), inset 0 0 88px rgba(136, 195, 255, 0.09)";
+  frame.style.userSelect = "none";
+  frame.style.webkitUserSelect = "none";
   frame.style.touchAction = "pan-y";
 
   const canvas = document.createElement("canvas");
   canvas.setAttribute("data-audralia-canvas", "true");
-  canvas.setAttribute("aria-label", "Audralia runtime-backed orthographic realism canvas");
+  canvas.setAttribute("aria-label", "Audralia runtime-backed orthographic planet canvas");
   canvas.style.width = "100%";
   canvas.style.height = "100%";
   canvas.style.display = "block";
   canvas.style.pointerEvents = "none";
   canvas.style.userSelect = "none";
   canvas.style.webkitUserSelect = "none";
-  canvas.style.touchAction = "none";
+  canvas.style.touchAction = "pan-y";
 
   const proof = document.createElement("p");
   proof.setAttribute("data-audralia-canvas-proof", "true");
   proof.textContent = RECEIPT;
-  proof.style.margin = "12px 0 0";
-  proof.style.color = "rgba(245, 233, 199, 0.88)";
-  proof.style.font = "700 0.74rem/1.35 system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
-  proof.style.letterSpacing = "0.08em";
-  proof.style.textTransform = "uppercase";
-  proof.style.textAlign = "center";
-  proof.style.overflowWrap = "anywhere";
-
-  const statusCard = document.createElement("div");
-  statusCard.setAttribute("data-audralia-canvas-status-card", "true");
-  statusCard.style.marginTop = "14px";
-  statusCard.style.width = "min(92vw, 820px)";
-  statusCard.style.border = "1px solid rgba(180, 206, 255, 0.14)";
-  statusCard.style.borderRadius = "18px";
-  statusCard.style.padding = "14px 16px";
-  statusCard.style.background = "rgba(5, 10, 23, 0.60)";
-  statusCard.style.color = "rgba(221, 230, 246, 0.84)";
-  statusCard.style.font = "700 0.84rem/1.45 system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
-  statusCard.style.overflowWrap = "anywhere";
-  statusCard.textContent = [
-    `Route ${ROUTE_EXPECTED}`,
-    `Canvas ${CONTRACT}`,
-    `Receipt ${RECEIPT}`,
-    `Runtime ${RUNTIME_EXPECTED}`,
-    "Retired " + COMPATIBILITY_CONTRACT,
-    "GraphicBox false",
-    "Image generation false",
-    "Visual pass claimed false"
-  ].join(" · ");
+  proof.hidden = true;
+  proof.setAttribute("aria-hidden", "true");
+  proof.style.display = "none";
 
   frame.appendChild(canvas);
   shell.appendChild(frame);
   shell.appendChild(proof);
-  shell.appendChild(statusCard);
   mount.prepend(shell);
 
-  return { shell, frame, canvas, proof, statusCard };
+  return { shell, frame, canvas, proof };
 }
 
-function setupCanvas(canvas, frame) {
+function setupCanvas(canvas, frame, options = {}) {
   const rect = frame.getBoundingClientRect();
   const fallback = Math.min(window.innerWidth || 760, 820);
-  const cssSize = Math.max(320, Math.floor(Math.min(rect.width || fallback, rect.height || fallback)));
+  const cssSize = Math.max(320, Math.floor(Math.min(rect.width || fallback, rect.height || fallback, options.maxRenderSize || MAX_RENDER_SIZE)));
   const ratio = clamp(window.devicePixelRatio || 1, 1, 1.75);
+  const backingSize = Math.floor(Math.min(cssSize * ratio, MAX_RENDER_SIZE));
 
-  canvas.width = Math.floor(cssSize * ratio);
-  canvas.height = Math.floor(cssSize * ratio);
+  canvas.width = backingSize;
+  canvas.height = backingSize;
   canvas.setAttribute("data-pixel-ratio", String(ratio));
-  canvas.setAttribute("data-css-size", String(cssSize));
+  canvas.setAttribute("data-backing-size", String(backingSize));
 
-  const ctx = canvas.getContext("2d", {
-    alpha: true,
-    desynchronized: true,
-    willReadFrequently: true
-  });
+  const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
 
   if (!ctx) {
     throw new Error("AUDRALIA_CANVAS_CONTEXT_UNAVAILABLE");
   }
 
-  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-
-  return { ctx, size: cssSize, ratio };
-}
-
-async function importRuntime() {
-  try {
-    const module = await import(`${RUNTIME_PATH}?canvas=${encodeURIComponent(CONTRACT)}&v=${encodeURIComponent(VERSION)}`);
-
-    let runtime = module;
-
-    if (typeof module.createAudraliaRuntime === "function") {
-      runtime = module.createAudraliaRuntime();
-    } else if (typeof module.createAudraliaRuntimeAsync === "function") {
-      runtime = await module.createAudraliaRuntimeAsync();
-    } else if (typeof module.default === "function") {
-      runtime = module.default();
-    } else if (module.default && typeof module.default === "object") {
-      runtime = module.default;
-    }
-
-    return {
-      ok: true,
-      module,
-      runtime,
-      error: "",
-      receipt:
-        module.AUDRALIA_RUNTIME_RECEIPT_VALUE ||
-        runtime?.receipt ||
-        window.AUDRALIA_RUNTIME_RECEIPT ||
-        RUNTIME_EXPECTED
-    };
-  } catch (error) {
-    return {
-      ok: false,
-      module: null,
-      runtime: null,
-      error: String(error?.message || error || "runtime import failed"),
-      receipt: "RUNTIME_IMPORT_FAIL_OPEN"
-    };
-  }
-}
-
-function buildTexture(runtimePack, width = 384, height = 192) {
-  const texture = {
-    width,
-    height,
-    data: new Uint8ClampedArray(width * height * 4),
-    stats: {
-      samples: width * height,
-      water: 0,
-      land: 0,
-      ice: 0,
-      shelf: 0,
-      fallback: 0,
-      maxDepth: 0,
-      maxElevation: 0,
-      maxTurquoise: 0,
-      runtimeBacked: Boolean(runtimePack.ok && runtimePack.runtime)
-    }
+  return {
+    ctx,
+    size: backingSize,
+    ratio,
+    cssSize
   };
-
-  for (let y = 0; y < height; y += 1) {
-    const v = (y + 0.5) / height;
-    const lat = (0.5 - v) * Math.PI;
-
-    for (let x = 0; x < width; x += 1) {
-      const u = (x + 0.5) / width;
-      const lon = (u - 0.5) * Math.PI * 2;
-      const vector = latLonToVector(lat, lon);
-      const sample = sampleRuntime(runtimePack.runtime, lat, lon, u, v);
-
-      const lightProbe = {
-        light: 0.86,
-        rim: 0.1,
-        edge: 0,
-        highlight: 0
-      };
-
-      const color = surfaceToColor(sample, vector, lightProbe);
-      const index = (y * width + x) * 4;
-
-      texture.data[index] = color[0];
-      texture.data[index + 1] = color[1];
-      texture.data[index + 2] = color[2];
-      texture.data[index + 3] = 255;
-
-      if (sample.water) texture.stats.water += 1;
-      if (sample.land || sample.solidSurfaceLand) texture.stats.land += 1;
-      if (sample.ice) texture.stats.ice += 1;
-      if (sample.shelf) texture.stats.shelf += 1;
-      if (sample.fallback) texture.stats.fallback += 1;
-      texture.stats.maxDepth = Math.max(texture.stats.maxDepth, sample.depth);
-      texture.stats.maxElevation = Math.max(texture.stats.maxElevation, sample.elevation);
-      texture.stats.maxTurquoise = Math.max(texture.stats.maxTurquoise, sample.turquoise);
-    }
-  }
-
-  texture.stats.waterRatio = texture.stats.water / texture.stats.samples;
-  texture.stats.landRatio = texture.stats.land / texture.stats.samples;
-  texture.stats.iceRatio = texture.stats.ice / texture.stats.samples;
-  texture.stats.shelfRatio = texture.stats.shelf / texture.stats.samples;
-  texture.stats.fallbackRatio = texture.stats.fallback / texture.stats.samples;
-
-  return texture;
 }
 
-function sampleTexture(texture, u, v) {
-  const x = Math.floor(wrap01(u) * (texture.width - 1));
-  const y = Math.floor(clamp01(v) * (texture.height - 1));
-  const index = (y * texture.width + x) * 4;
-
-  return [
-    texture.data[index],
-    texture.data[index + 1],
-    texture.data[index + 2],
-    texture.data[index + 3]
-  ];
-}
-
-function drawStarField(ctx, size, time) {
-  ctx.save();
-  ctx.fillStyle = "rgb(2, 7, 19)";
+function drawBackground(ctx, size, time) {
+  ctx.fillStyle = "#020610";
   ctx.fillRect(0, 0, size, size);
 
-  const glow = ctx.createRadialGradient(
-    size * 0.50,
-    size * 0.44,
-    size * 0.08,
-    size * 0.50,
-    size * 0.50,
-    size * 0.72
-  );
-  glow.addColorStop(0, "rgba(42, 79, 124, 0.18)");
-  glow.addColorStop(0.48, "rgba(8, 24, 52, 0.18)");
-  glow.addColorStop(1, "rgba(0, 0, 0, 0)");
-  ctx.fillStyle = glow;
-  ctx.fillRect(0, 0, size, size);
-
-  for (let index = 0; index < 120; index += 1) {
-    const sx = fract(Math.sin(index * 917.17) * 10000);
-    const sy = fract(Math.sin(index * 421.91) * 10000);
-    const x = sx * size;
-    const y = sy * size;
-    const pulse = 0.22 + 0.50 * Math.abs(Math.sin(time * 0.0007 + index));
+  for (let index = 0; index < 132; index += 1) {
+    const sx = Math.sin(index * 917.17) * 10000;
+    const sy = Math.sin(index * 421.91) * 10000;
+    const x = (sx - Math.floor(sx)) * size;
+    const y = (sy - Math.floor(sy)) * size;
+    const pulse = 0.20 + 0.48 * Math.abs(Math.sin(time * 0.0008 + index));
 
     ctx.globalAlpha = pulse;
-    ctx.fillStyle = index % 9 === 0 ? "rgba(245, 221, 166, 0.78)" : "rgba(185, 216, 255, 0.64)";
+    ctx.fillStyle = index % 9 === 0 ? "rgba(245, 221, 166, 0.86)" : "rgba(185, 216, 255, 0.72)";
     ctx.beginPath();
-    ctx.arc(x, y, index % 17 === 0 ? 1.22 : 0.66, 0, Math.PI * 2);
+    ctx.arc(x, y, index % 17 === 0 ? 1.35 : 0.72, 0, Math.PI * 2);
     ctx.fill();
+  }
+
+  ctx.globalAlpha = 1;
+}
+
+function drawWrappedStrip(ctx, texture, phase, sy, sh, dx, dy, dw, dh) {
+  if (!texture || !texture.width || !texture.height || dw <= 0 || dh <= 0) return;
+
+  const sourceWidth = texture.width;
+  const sourceHeight = texture.height;
+  const start = wrap01(phase) * sourceWidth;
+  const safeSy = clamp(sy, 0, sourceHeight - 1);
+  const safeSh = clamp(sh, 1, sourceHeight - safeSy);
+  const firstSourceWidth = sourceWidth - start;
+  const firstDestWidth = dw * (firstSourceWidth / sourceWidth);
+  const secondDestWidth = dw - firstDestWidth;
+
+  ctx.drawImage(texture, start, safeSy, firstSourceWidth, safeSh, dx, dy, firstDestWidth, dh);
+
+  if (secondDestWidth > 0.5) {
+    ctx.drawImage(texture, 0, safeSy, start, safeSh, dx + firstDestWidth, dy, secondDestWidth, dh);
+  }
+}
+
+function drawSphereTexture(ctx, texture, phase, size) {
+  const cx = size / 2;
+  const cy = size / 2;
+  const radius = size * 0.355;
+  const stripHeight = Math.max(1, Math.floor(size / 360));
+  const sourceHeight = texture.height || 192;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.clip();
+
+  for (let y = -radius; y <= radius; y += stripHeight) {
+    const yMid = y + stripHeight / 2;
+    const normalizedY = yMid / radius;
+    const chord = Math.sqrt(Math.max(0, 1 - normalizedY * normalizedY));
+    const destWidth = radius * 2 * chord;
+    const destX = cx - destWidth / 2;
+    const destY = cy + y;
+    const v = clamp(0.5 + normalizedY * 0.5, 0, 1);
+    const sy = Math.floor(v * (sourceHeight - 1));
+    const sh = Math.max(1, Math.ceil((stripHeight / (radius * 2)) * sourceHeight * 1.85));
+
+    drawWrappedStrip(ctx, texture, phase, sy, sh, destX, destY, destWidth, stripHeight + 1);
   }
 
   ctx.restore();
 }
 
-function drawOrbitalRings(ctx, size, time) {
+function drawOrbitalField(ctx, size, time) {
   const cx = size / 2;
   const cy = size / 2;
-  const radius = size * 0.345;
+  const radius = size * 0.355;
 
   ctx.save();
   ctx.translate(cx, cy);
-  ctx.rotate(-0.08 + Math.sin(time * 0.00016) * 0.05);
+  ctx.rotate(Math.sin(time * 0.00022) * 0.12);
 
   for (let index = 0; index < 4; index += 1) {
     ctx.beginPath();
     ctx.ellipse(
       0,
-      radius * 0.04,
-      radius * (1.08 + index * 0.045),
-      radius * (0.145 + index * 0.017),
+      0,
+      radius * (1.08 + index * 0.06),
+      radius * (0.16 + index * 0.026),
       0,
       0,
       Math.PI * 2
     );
-    ctx.strokeStyle = index % 2 === 0 ? "rgba(240, 211, 138, 0.08)" : "rgba(127, 194, 255, 0.08)";
+    ctx.strokeStyle = index % 2 === 0 ? "rgba(240, 211, 138, 0.10)" : "rgba(127, 194, 255, 0.10)";
     ctx.lineWidth = 1;
     ctx.stroke();
   }
@@ -938,297 +956,255 @@ function drawOrbitalRings(ctx, size, time) {
   ctx.restore();
 }
 
-function renderPlanetImageData(state, time) {
-  const size = state.size;
-  const radius = size * 0.352;
+function drawClouds(ctx, size, time, phase) {
   const cx = size / 2;
   const cy = size / 2;
-  const rotation = (time * 0.000055 + state.rotationSeed) % (Math.PI * 2);
-  const image = state.ctx.createImageData(size, size);
-  const data = image.data;
-  const light = {
-    x: -0.47,
-    y: -0.38,
-    z: 0.79
-  };
+  const radius = size * 0.355;
 
-  let opaque = 0;
-  let water = 0;
-  let solid = 0;
-  let turquoise = 0;
-  let gold = 0;
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.clip();
 
-  for (let py = 0; py < size; py += 1) {
-    const ny = (py + 0.5 - cy) / radius;
+  ctx.globalAlpha = 0.24;
+  ctx.strokeStyle = "rgba(245, 250, 255, 0.55)";
+  ctx.lineWidth = Math.max(1, size * 0.0018);
 
-    for (let px = 0; px < size; px += 1) {
-      const nx = (px + 0.5 - cx) / radius;
-      const r2 = nx * nx + ny * ny;
-      const index = (py * size + px) * 4;
+  for (let band = 0; band < 9; band += 1) {
+    const y = cy - radius * 0.66 + (band / 8) * radius * 1.32;
+    const widthFactor = Math.sqrt(Math.max(0, 1 - Math.pow((y - cy) / radius, 2)));
+    const left = cx - radius * widthFactor;
+    const right = cx + radius * widthFactor;
+    const cloudPhase = time * 0.001 + band * 1.7 + phase * 5.2;
 
-      if (r2 > 1) {
-        data[index] = 0;
-        data[index + 1] = 0;
-        data[index + 2] = 0;
-        data[index + 3] = 0;
-        continue;
-      }
+    ctx.beginPath();
 
-      const z = Math.sqrt(Math.max(0, 1 - r2));
-      const rotated = vectorToLatLon(nx, -ny, z, rotation);
-      const u = wrap01(rotated.lon / (Math.PI * 2) + 0.5);
-      const v = clamp01(0.5 - rotated.lat / Math.PI);
+    for (let x = left; x <= right; x += 8) {
+      const wave = Math.sin(x * 0.023 + cloudPhase) * radius * 0.014;
+      const ripple = Math.cos(x * 0.041 - cloudPhase) * radius * 0.006;
+      const yy = y + wave + ripple;
 
-      const lat = rotated.lat;
-      const lon = rotated.lon;
-      const normal = latLonToVector(lat, lon);
-      const surface = sampleRuntime(state.runtimePack.runtime, lat, lon, u, v);
-
-      let color = sampleTexture(state.texture, u, v);
-
-      const runtimeColor = surfaceToColor(surface, normal, {
-        light: 0.86,
-        rim: 0,
-        edge: 0,
-        highlight: 0
-      });
-
-      color = mixColor(color, runtimeColor, 0.46);
-
-      const lightDot = clamp(normal.x * light.x + normal.y * light.y + normal.z * light.z, -1, 1);
-      const directional = clamp01(0.34 + lightDot * 0.66);
-      const edge = smoothstep(0.58, 1.0, Math.sqrt(r2));
-      const rim = smoothstep(0.72, 1.0, Math.sqrt(r2));
-      const highlight = smoothstep(0.82, 0.995, 1 - Math.sqrt((nx + 0.34) * (nx + 0.34) + (ny + 0.36) * (ny + 0.36)));
-      const shadow = smoothstep(0.16, 0.98, nx * 0.46 + ny * 0.18 + 0.35);
-
-      let shade = 0.48 + directional * 0.62;
-      shade -= edge * 0.22;
-      shade -= shadow * 0.16;
-      shade += highlight * 0.12;
-
-      color = multiplyColor(color, clamp(shade, 0.34, 1.18));
-
-      const atmosphericEdge = rim * 0.30;
-      color = mixColor(color, PALETTE.rim, atmosphericEdge);
-
-      if (surface.water) {
-        water += 1;
-        const waterSpark = fbm3(normal.x * 42 + 2, normal.y * 42 - 7, normal.z * 42 + time * 0.00004, 3);
-        color = lighten(color, waterSpark * 0.026);
-        if (surface.turquoise > 0.33) turquoise += 1;
-      }
-
-      if (surface.land || surface.solidSurfaceLand || surface.ice) {
-        solid += 1;
-      }
-
-      if (surface.mineral > 0.58 && (surface.land || surface.solidSurfaceLand)) {
-        const mineralSignal = clamp01((surface.mineral - 0.58) * 1.8);
-        color = mixColor(color, PALETTE.mineralGold, mineralSignal * 0.13);
-        if (mineralSignal > 0.15) gold += 1;
-      }
-
-      data[index] = color[0];
-      data[index + 1] = color[1];
-      data[index + 2] = color[2];
-      data[index + 3] = 255;
-      opaque += 1;
+      if (x === left) ctx.moveTo(x, yy);
+      else ctx.lineTo(x, yy);
     }
+
+    ctx.stroke();
   }
 
-  state.pixelStats = {
-    opaque,
-    total: size * size,
-    opaqueRatio: opaque / (size * size),
-    water,
-    solid,
-    turquoise,
-    gold,
-    waterRatio: water / Math.max(1, opaque),
-    solidRatio: solid / Math.max(1, opaque),
-    turquoiseRatio: turquoise / Math.max(1, opaque),
-    goldRatio: gold / Math.max(1, opaque)
-  };
-
-  return image;
+  ctx.restore();
+  ctx.globalAlpha = 1;
 }
 
 function drawAtmosphere(ctx, size, time) {
   const cx = size / 2;
   const cy = size / 2;
-  const radius = size * 0.352;
+  const radius = size * 0.355;
+  const pulse = 0.42 + Math.sin(time * 0.0013) * 0.04;
 
   ctx.save();
 
   ctx.beginPath();
-  ctx.arc(cx, cy, radius + size * 0.004, 0, Math.PI * 2);
-  ctx.strokeStyle = "rgba(121, 203, 247, 0.36)";
-  ctx.lineWidth = Math.max(2, size * 0.008);
+  ctx.arc(cx, cy, radius + size * 0.003, 0, Math.PI * 2);
+  ctx.strokeStyle = `rgba(159, 214, 255, ${pulse.toFixed(3)})`;
+  ctx.lineWidth = Math.max(2, size * 0.010);
   ctx.stroke();
 
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius + size * 0.015, 0, Math.PI * 2);
-  ctx.strokeStyle = "rgba(97, 178, 230, 0.10)";
-  ctx.lineWidth = Math.max(4, size * 0.018);
-  ctx.stroke();
-
-  const glass = ctx.createRadialGradient(
-    cx - radius * 0.34,
-    cy - radius * 0.36,
-    radius * 0.04,
-    cx,
-    cy,
-    radius * 1.14
+  const shade = ctx.createRadialGradient(
+    cx - radius * 0.42,
+    cy - radius * 0.46,
+    radius * 0.05,
+    cx + radius * 0.18,
+    cy + radius * 0.16,
+    radius * 1.18
   );
 
-  glass.addColorStop(0, "rgba(255, 255, 255, 0.105)");
-  glass.addColorStop(0.28, "rgba(255, 255, 255, 0.030)");
-  glass.addColorStop(0.58, "rgba(255, 255, 255, 0.000)");
-  glass.addColorStop(0.83, "rgba(0, 0, 0, 0.12)");
-  glass.addColorStop(1, "rgba(0, 0, 0, 0.46)");
+  shade.addColorStop(0, "rgba(255, 255, 255, 0.13)");
+  shade.addColorStop(0.52, "rgba(255, 255, 255, 0.018)");
+  shade.addColorStop(0.76, "rgba(0, 0, 0, 0.17)");
+  shade.addColorStop(1, "rgba(0, 0, 0, 0.68)");
 
   ctx.beginPath();
   ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-  ctx.fillStyle = glass;
+  ctx.fillStyle = shade;
   ctx.fill();
 
-  const polarSoftening = ctx.createLinearGradient(0, cy - radius, 0, cy - radius * 0.70);
-  polarSoftening.addColorStop(0, "rgba(238, 248, 255, 0.16)");
-  polarSoftening.addColorStop(1, "rgba(238, 248, 255, 0)");
-  ctx.fillStyle = polarSoftening;
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-  ctx.clip();
-  ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 0.40);
-
-  ctx.restore();
-
-  ctx.save();
-  ctx.globalAlpha = 0.13 + Math.sin(time * 0.001) * 0.018;
-  ctx.strokeStyle = "rgba(190, 232, 255, 0.42)";
-  ctx.lineWidth = 0.9;
-
-  ctx.beginPath();
-  for (let band = 0; band < 8; band += 1) {
-    const y = cy - radius * 0.58 + band * radius * 0.16;
-    const half = Math.sqrt(Math.max(0, radius * radius - (y - cy) * (y - cy)));
-    ctx.moveTo(cx - half, y);
-    ctx.lineTo(cx + half, y);
-  }
-  ctx.stroke();
   ctx.restore();
 }
 
-function drawLabels(ctx, size) {
+function drawDiagnostics(ctx, size) {
   ctx.save();
-
-  ctx.fillStyle = "rgba(244, 226, 178, 0.92)";
-  ctx.font = "800 " + Math.max(13, size * 0.027) + "px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+  ctx.fillStyle = "rgba(244, 226, 178, 0.90)";
+  ctx.font = `700 ${Math.max(13, size * 0.027)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
   ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("AUDRALIA", size / 2, size * 0.846);
+  ctx.fillText("AUDRALIA", size / 2, size * 0.864);
 
-  ctx.fillStyle = "rgba(188, 208, 226, 0.72)";
-  ctx.font = "650 " + Math.max(10, size * 0.015) + "px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
-  ctx.fillText("RUNTIME-BACKED ORTHOGRAPHIC · REALISM V9", size / 2, size * 0.884);
-
+  ctx.fillStyle = "rgba(174, 204, 225, 0.70)";
+  ctx.font = `500 ${Math.max(10, size * 0.015)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+  ctx.fillText("RUNTIME-BACKED · ROUTE V8 ALIGNED", size / 2, size * 0.895);
   ctx.restore();
 }
 
-function samplePixelProof(ctx, size, pixelStats) {
+function samplePixelProof(ctx, size) {
   try {
     const center = ctx.getImageData(Math.floor(size / 2), Math.floor(size / 2), 1, 1).data;
+    const quarter = ctx.getImageData(Math.floor(size * 0.64), Math.floor(size * 0.44), 1, 1).data;
 
     return {
-      r: center[0],
-      g: center[1],
-      b: center[2],
-      a: center[3],
-      notBlank: center[3] > 0 && center[0] + center[1] + center[2] > 12,
-      pixelStats: pixelStats || null
+      center: { r: center[0], g: center[1], b: center[2], a: center[3] },
+      quarter: { r: quarter[0], g: quarter[1], b: quarter[2], a: quarter[3] },
+      notBlank:
+        (center[3] > 0 && center[0] + center[1] + center[2] > 12) ||
+        (quarter[3] > 0 && quarter[0] + quarter[1] + quarter[2] > 12)
     };
   } catch (error) {
     return {
       notBlank: null,
-      error: String(error?.message || error || "pixel proof unavailable"),
-      pixelStats: pixelStats || null
+      error: error instanceof Error ? error.message : String(error)
     };
   }
 }
 
-function publishStatus(state, extra = {}) {
-  const status = {
-    loaded: true,
-    ok: true,
-    receipt: RECEIPT,
-    contract: CONTRACT,
-    compatibilityContract: COMPATIBILITY_CONTRACT,
-    routeExpected: ROUTE_EXPECTED,
-    runtimeExpected: RUNTIME_EXPECTED,
-    version: VERSION,
-    canonicalExport: "mountAudraliaCanvas",
-    renderMode: PLANET.renderMode,
-    runtimeBacked: Boolean(state.runtimePack && state.runtimePack.ok),
-    runtimeReceipt: state.runtimePack?.receipt || "",
-    runtimeImportError: state.runtimePack?.error || "",
-    failOpen: Boolean(state.runtimePack && !state.runtimePack.ok),
-    canvasPresent: Boolean(state.canvas),
-    mountPresent: Boolean(state.mount),
-    animated: !state.reducedMotion,
-    frameCount: state.frameCount,
-    textureStats: state.texture?.stats || null,
-    pixelProof: state.pixelProof || null,
+function publishStatus(state = null, extra = {}) {
+  Object.assign(STATUS, {
+    loaded: Boolean(state),
+    canvasPresent: Boolean(state?.canvas),
+    mountPresent: Boolean(state?.mount),
+    animated: Boolean(state && !state.stopped),
+    frameCount: state?.frameCount || STATUS.frameCount,
+    pixelProof: state?.pixelProof || STATUS.pixelProof,
     graphicBox: false,
     imageGeneration: false,
-    visualPassClaimed: false,
-    ...extra
-  };
+    visualPassClaimed: false
+  }, extra);
 
   if (typeof window !== "undefined") {
-    window.__AUDRALIA_CANVAS_STATUS__ = status;
-    window.__AUDRALIA_ADOPTED_CANVAS_AUTHORITY__ = status;
-    window.AUDRALIA_CANVAS_AUTHORITY_RECEIPT = RECEIPT;
-    window.AUDRALIA_CANVAS_AUTHORITY_CONTRACT = CONTRACT;
+    window.__AUDRALIA_CANVAS_STATUS__ = STATUS;
+    window.__AUDRALIA_ADOPTED_CANVAS_AUTHORITY__ = STATUS;
 
     try {
-      window.dispatchEvent(new CustomEvent("audralia:canvas-authority-status", { detail: status }));
+      window.dispatchEvent(
+        new CustomEvent("audralia:canvas-authority-status", {
+          detail: Object.freeze({ ...STATUS })
+        })
+      );
     } catch (_) {}
   }
 
-  if (state.canvas) {
-    state.canvas.dataset.audraliaCanvasReceipt = RECEIPT;
-    state.canvas.dataset.audraliaCanvasContract = CONTRACT;
-    state.canvas.dataset.audraliaRuntimeContract = RUNTIME_EXPECTED;
-    state.canvas.dataset.audraliaRuntimeBacked = String(Boolean(status.runtimeBacked));
-    state.canvas.dataset.audraliaFailOpen = String(Boolean(status.failOpen));
-    state.canvas.dataset.graphicBox = "false";
-    state.canvas.dataset.imageGeneration = "false";
-    state.canvas.dataset.visualPassClaimed = "false";
+  if (typeof document !== "undefined" && document.documentElement) {
+    document.documentElement.dataset.audraliaCanvasReceipt = RECEIPT;
+    document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
+    document.documentElement.dataset.audraliaCanvasActiveRenewal = ACTIVE_RENEWAL;
+    document.documentElement.dataset.audraliaCanvasCompatibilityContract = COMPATIBILITY_CONTRACT;
+    document.documentElement.dataset.audraliaCanvasRouteExpected = ROUTE_EXPECTED;
+    document.documentElement.dataset.audraliaCanvasRuntimeExpected = RUNTIME_EXPECTED;
+    document.documentElement.dataset.audraliaCanvasLoaded = String(Boolean(state));
+    document.documentElement.dataset.audraliaCanvasRuntimeTextureReady = String(Boolean(STATUS.runtimeTextureReady));
+    document.documentElement.dataset.audraliaCanvasFallbackTextureReady = String(Boolean(STATUS.fallbackTextureReady));
+    document.documentElement.dataset.audraliaCanvasStaleRouteV7Removed = "true";
+    document.documentElement.dataset.audraliaCanvasStaleCanvasV8Removed = "true";
+    document.documentElement.dataset.graphicBox = "false";
+    document.documentElement.dataset.imageGeneration = "false";
+    document.documentElement.dataset.visualPassClaimed = "false";
   }
 
-  return status;
+  return STATUS;
 }
 
 function renderFrame(state, time) {
+  if (!state || state.stopped) return;
+
+  const elapsed = time - state.lastFrameTime;
+
+  if (elapsed < FRAME_INTERVAL && state.frameCount > 0) {
+    state.rafId = window.requestAnimationFrame((nextTime) => renderFrame(state, nextTime));
+    return;
+  }
+
+  state.lastFrameTime = time;
+
   const ctx = state.ctx;
   const size = state.size;
+  const phase = wrap01((time * 0.000026) + state.phaseOffset);
+  const texture = state.runtimeTexture || state.fallbackTexture;
 
-  drawStarField(ctx, size, time);
-  drawOrbitalRings(ctx, size, time);
+  ctx.clearRect(0, 0, size, size);
 
-  const image = renderPlanetImageData(state, time);
-  ctx.putImageData(image, 0, 0);
+  drawBackground(ctx, size, time);
+  drawOrbitalField(ctx, size, time);
 
+  if (texture) {
+    drawSphereTexture(ctx, texture, phase, size);
+  }
+
+  drawClouds(ctx, size, time, phase);
   drawAtmosphere(ctx, size, time);
-  drawLabels(ctx, size);
+  drawDiagnostics(ctx, size);
 
   state.frameCount += 1;
 
-  if (state.frameCount === 2 || state.frameCount % 120 === 0) {
-    state.pixelProof = samplePixelProof(ctx, size, state.pixelStats);
+  if (state.frameCount === 4 || state.frameCount % 90 === 0) {
+    state.pixelProof = samplePixelProof(ctx, size);
     publishStatus(state);
   }
+
+  state.rafId = window.requestAnimationFrame((nextTime) => renderFrame(state, nextTime));
+}
+
+async function importRuntimeForState(state) {
+  try {
+    const module = await import(
+      `${RUNTIME_PATH}?canvas=${encodeURIComponent(ACTIVE_RENEWAL)}&runtime=${encodeURIComponent(RUNTIME_EXPECTED)}&cache=2026-05-07-canvas-v10-runtime-v8`
+    );
+
+    const runtime = normalizeRuntimeModule(module);
+    const runtimeReceipt =
+      module.AUDRALIA_RUNTIME_RECEIPT_VALUE ||
+      module.AUDRALIA_RUNTIME_STATUS?.receipt ||
+      runtime?.receipt ||
+      runtime?.status?.receipt ||
+      RUNTIME_EXPECTED;
+
+    state.runtime = runtime;
+
+    publishStatus(state, {
+      runtimeImported: true,
+      runtimeReceipt,
+      runtimeError: ""
+    });
+
+    return runtime;
+  } catch (error) {
+    const runtimeError = error instanceof Error ? error.message : String(error);
+
+    publishStatus(state, {
+      runtimeImported: false,
+      runtimeReceipt: "",
+      runtimeError
+    });
+
+    return null;
+  }
+}
+
+async function buildRuntimeTextureForState(state) {
+  const runtime = await importRuntimeForState(state);
+  if (!runtime || state.stopped) return;
+
+  const abortSignal = state.abortController?.signal || null;
+  const texture = await buildTextureAsync(
+    runtime,
+    Number(state.options.textureWidth) || RUNTIME_TEXTURE_WIDTH,
+    Number(state.options.textureHeight) || RUNTIME_TEXTURE_HEIGHT,
+    abortSignal
+  );
+
+  if (!texture || state.stopped) return;
+
+  state.runtimeTexture = texture;
+
+  publishStatus(state, {
+    runtimeTextureReady: true
+  });
 }
 
 function stopActiveController() {
@@ -1239,92 +1215,57 @@ function stopActiveController() {
   activeController = null;
 }
 
-async function startCanvas(target, options = {}) {
+function startCanvas(target, options = {}) {
   if (typeof window === "undefined" || typeof document === "undefined") return null;
 
   stopActiveController();
+  removeStaleVisibleReceipts();
 
   const mount = resolveMount(target);
-  const nodes = createCanvasNodes(mount);
-  const setup = setupCanvas(nodes.canvas, nodes.frame);
-
-  const reducedMotion =
-    Boolean(options.reducedMotion) ||
-    Boolean(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const nodes = createCanvasShell(mount);
+  const setup = setupCanvas(nodes.canvas, nodes.frame, options);
 
   const state = {
     shell: nodes.shell,
     frame: nodes.frame,
     canvas: nodes.canvas,
     proof: nodes.proof,
-    statusCard: nodes.statusCard,
     ctx: setup.ctx,
     size: setup.size,
     ratio: setup.ratio,
+    cssSize: setup.cssSize,
     mount,
     options,
     frameCount: 0,
     pixelProof: null,
-    pixelStats: null,
     stopped: false,
-    rafId: null,
-    resizeTimer: null,
+    rafId: 0,
+    resizeTimer: 0,
     lastFrameTime: 0,
-    rotationSeed: Number(options.rotationSeed) || 0.18,
-    runtimePack: {
-      ok: false,
-      runtime: null,
-      module: null,
-      error: "runtime pending",
-      receipt: "RUNTIME_PENDING"
-    },
-    texture: buildTexture({ ok: false, runtime: null }, 384, 192),
-    reducedMotion
+    phaseOffset: 0.18,
+    runtime: null,
+    fallbackTexture: null,
+    runtimeTexture: null,
+    abortController: typeof AbortController !== "undefined" ? new AbortController() : null
   };
 
-  activeController = state;
-
-  setRouteStatus("Audralia adopted canvas authority loaded.", true);
-  publishStatus(state, { bootPhase: "fail-open-first-paint" });
-
-  renderFrame(state, performance.now());
-
-  importRuntime().then((runtimePack) => {
-    if (state.stopped) return;
-
-    state.runtimePack = runtimePack;
-    state.texture = buildTexture(runtimePack, 384, 192);
-    state.pixelProof = null;
-
-    renderFrame(state, performance.now());
-    publishStatus(state, { bootPhase: runtimePack.ok ? "runtime-backed" : "fail-open-runtime-unavailable" });
-  });
-
-  function animate(frameTime) {
-    if (state.stopped) return;
-
-    if (frameTime - state.lastFrameTime >= FRAME_INTERVAL) {
-      state.lastFrameTime = frameTime;
-      renderFrame(state, frameTime || performance.now());
-    }
-
-    state.rafId = window.requestAnimationFrame(animate);
-  }
+  state.fallbackTexture = buildTextureSync(
+    null,
+    Number(options.initialTextureWidth) || INITIAL_TEXTURE_WIDTH,
+    Number(options.initialTextureHeight) || INITIAL_TEXTURE_HEIGHT
+  );
 
   function resize() {
     window.clearTimeout(state.resizeTimer);
     state.resizeTimer = window.setTimeout(() => {
-      if (state.stopped) return;
-
-      const next = setupCanvas(state.canvas, state.frame);
+      const next = setupCanvas(state.canvas, state.frame, state.options);
       state.ctx = next.ctx;
       state.size = next.size;
       state.ratio = next.ratio;
+      state.cssSize = next.cssSize;
       state.pixelProof = null;
-
-      renderFrame(state, performance.now());
-      publishStatus(state, { bootPhase: "resized" });
-    }, 160);
+      publishStatus(state);
+    }, 140);
   }
 
   state.stop = function stop() {
@@ -1334,19 +1275,43 @@ async function startCanvas(target, options = {}) {
       window.cancelAnimationFrame(state.rafId);
     }
 
+    if (state.abortController) {
+      state.abortController.abort();
+    }
+
     window.clearTimeout(state.resizeTimer);
     window.removeEventListener("resize", resize);
-    window.removeEventListener("orientationchange", resize);
+    document.removeEventListener("visibilitychange", visibilityHandler);
   };
 
-  window.addEventListener("resize", resize, { passive: true });
-  window.addEventListener("orientationchange", resize, { passive: true });
+  function visibilityHandler() {
+    if (document.hidden) {
+      if (state.rafId) {
+        window.cancelAnimationFrame(state.rafId);
+        state.rafId = 0;
+      }
+      return;
+    }
 
-  if (!reducedMotion) {
-    state.rafId = window.requestAnimationFrame(animate);
-  } else {
-    publishStatus(state, { reducedMotion: true });
+    if (!state.rafId && !state.stopped) {
+      state.lastFrameTime = 0;
+      state.rafId = window.requestAnimationFrame((time) => renderFrame(state, time));
+    }
   }
+
+  window.addEventListener("resize", resize, { passive: true });
+  document.addEventListener("visibilitychange", visibilityHandler);
+
+  activeController = state;
+
+  publishStatus(state, {
+    fallbackTextureReady: true
+  });
+
+  setRouteStatus("Audralia adopted canvas authority loaded.", state);
+
+  state.rafId = window.requestAnimationFrame((time) => renderFrame(state, time));
+  buildRuntimeTextureForState(state);
 
   return state;
 }
@@ -1392,13 +1357,18 @@ export function init(target, options) {
 }
 
 export function getAudraliaCanvasStatus() {
-  return window.__AUDRALIA_CANVAS_STATUS__ || {
-    loaded: false,
-    ok: false,
+  publishStatus(activeController);
+
+  return {
+    ...STATUS,
+    loaded: Boolean(activeController),
     receipt: RECEIPT,
     contract: CONTRACT,
+    activeRenewal: ACTIVE_RENEWAL,
     compatibilityContract: COMPATIBILITY_CONTRACT,
+    retiredCanvasContracts: RETIRED_CANVAS_CONTRACTS,
     routeExpected: ROUTE_EXPECTED,
+    retiredRouteExpectations: RETIRED_ROUTE_EXPECTATIONS,
     runtimeExpected: RUNTIME_EXPECTED,
     version: VERSION,
     canonicalExport: "mountAudraliaCanvas",
@@ -1412,30 +1382,46 @@ export function getAudraliaSurfaceDataset() {
   return PLANET;
 }
 
-export function getAudraliaCanvasDataset() {
-  return PLANET;
-}
-
 export function stopAudraliaCanvas() {
   stopActiveController();
+
+  publishStatus(null, {
+    loaded: false,
+    animated: false
+  });
 
   return {
     stopped: true,
     receipt: RECEIPT,
     contract: CONTRACT,
-    compatibilityContract: COMPATIBILITY_CONTRACT,
-    version: VERSION,
-    graphicBox: false,
-    imageGeneration: false,
-    visualPassClaimed: false
+    activeRenewal: ACTIVE_RENEWAL,
+    routeExpected: ROUTE_EXPECTED,
+    runtimeExpected: RUNTIME_EXPECTED,
+    version: VERSION
   };
 }
+
+export {
+  RECEIPT,
+  CONTRACT,
+  ACTIVE_RENEWAL,
+  COMPATIBILITY_CONTRACT,
+  RETIRED_CANVAS_CONTRACTS,
+  ROUTE_EXPECTED,
+  RETIRED_ROUTE_EXPECTATIONS,
+  RUNTIME_EXPECTED,
+  VERSION,
+  PLANET
+};
 
 const api = Object.freeze({
   RECEIPT,
   CONTRACT,
+  ACTIVE_RENEWAL,
   COMPATIBILITY_CONTRACT,
+  RETIRED_CANVAS_CONTRACTS,
   ROUTE_EXPECTED,
+  RETIRED_ROUTE_EXPECTATIONS,
   RUNTIME_EXPECTED,
   VERSION,
   PLANET,
@@ -1451,7 +1437,6 @@ const api = Object.freeze({
   init,
   getAudraliaCanvasStatus,
   getAudraliaSurfaceDataset,
-  getAudraliaCanvasDataset,
   stopAudraliaCanvas
 });
 
@@ -1460,8 +1445,10 @@ if (typeof window !== "undefined") {
   window.AudraliaCanvasAuthority = api;
   window.mountAudraliaCanvas = mountAudraliaCanvas;
   window.renderAudraliaCanvas = renderAudraliaCanvas;
-  window.AUDRALIA_CANVAS_AUTHORITY_RECEIPT = RECEIPT;
-  window.AUDRALIA_CANVAS_AUTHORITY_CONTRACT = CONTRACT;
+  window.__AUDRALIA_CANVAS_STATUS__ = STATUS;
+  window.__AUDRALIA_ADOPTED_CANVAS_AUTHORITY__ = STATUS;
 }
+
+publishStatus(null);
 
 export default api;

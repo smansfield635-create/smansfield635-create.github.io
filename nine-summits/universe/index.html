@@ -2,9 +2,11 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="nine-summits-universe-four-diamond-setting"
+  data-page="nine-summits-universe-purple-four-diamond-setting"
   data-route="/nine-summits/universe/"
-  data-contract="NINE_SUMMITS_UNIVERSE_FOUR_DIAMOND_WORLD_SETTING_TNT_v1"
+  data-contract="NINE_SUMMITS_UNIVERSE_PURPLE_FOUR_DIAMOND_WORLD_SETTING_TNT_v2"
+  data-previous-contract="NINE_SUMMITS_UNIVERSE_FOUR_DIAMOND_WORLD_SETTING_TNT_v1"
+  data-theme="purple-universe-continuity"
   data-universe="nine-summits-universe"
   data-home-world="Audralia"
   data-earth-relationship="mirror-planet-reference"
@@ -22,21 +24,25 @@
   <title>Diamond Gate Bridge · Nine Summits Universe</title>
   <meta
     name="description"
-    content="The Nine Summits Universe is the world-setting layer for Audralia, the mirror planet to Earth, expressed through four primary world options."
+    content="The Nine Summits Universe is the purple world-setting layer for Audralia, the mirror planet to Earth, expressed through four primary world options."
   >
 
   <style>
     :root {
-      --panel: rgba(9, 14, 26, 0.90);
-      --glass: rgba(255,255,255,0.055);
-      --glass-2: rgba(255,255,255,0.024);
-      --line: rgba(255,255,255,0.15);
-      --text: #f8f1dd;
-      --muted: rgba(242,246,255,0.74);
-      --faint: rgba(242,246,255,0.48);
-      --gold: #f2c76f;
-      --blue: #78d8ff;
-      --green: #a5efcc;
+      --panel: rgba(18, 9, 36, 0.92);
+      --glass: rgba(221, 196, 255, 0.072);
+      --glass-2: rgba(221, 196, 255, 0.034);
+      --line: rgba(226, 206, 255, 0.18);
+      --text: #fbf5ff;
+      --muted: rgba(226, 215, 255, 0.78);
+      --faint: rgba(226, 215, 255, 0.50);
+      --purple: #a78bfa;
+      --violet: #7c3aed;
+      --deep-violet: #4c1d95;
+      --lavender: #e9d5ff;
+      --plum: #c084fc;
+      --magenta: #f0abfc;
+      --indigo: #818cf8;
       --stage: min(100%, 1180px);
     }
 
@@ -48,10 +54,10 @@
       margin: 0;
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 8%, rgba(242,199,111,0.17), transparent 28rem),
-        radial-gradient(circle at 50% 42%, rgba(120,216,255,0.13), transparent 34rem),
-        radial-gradient(circle at 50% 86%, rgba(165,239,204,0.08), transparent 34rem),
-        linear-gradient(180deg, #060916, #03050d 74%, #02040a);
+        radial-gradient(circle at 50% 8%, rgba(192,132,252,0.26), transparent 28rem),
+        radial-gradient(circle at 50% 42%, rgba(124,58,237,0.20), transparent 34rem),
+        radial-gradient(circle at 50% 86%, rgba(240,171,252,0.12), transparent 34rem),
+        linear-gradient(180deg, #10051f, #080413 74%, #03020a);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -65,12 +71,12 @@
       z-index: 0;
       pointer-events: none;
       background-image:
-        radial-gradient(circle at 12% 20%, rgba(255,255,255,0.18) 0, rgba(255,255,255,0) 1.2px),
-        radial-gradient(circle at 72% 16%, rgba(255,255,255,0.13) 0, rgba(255,255,255,0) 1.1px),
-        radial-gradient(circle at 84% 58%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0) 1px),
-        radial-gradient(circle at 24% 72%, rgba(255,255,255,0.12) 0, rgba(255,255,255,0) 1.2px);
+        radial-gradient(circle at 12% 20%, rgba(233,213,255,0.22) 0, rgba(233,213,255,0) 1.2px),
+        radial-gradient(circle at 72% 16%, rgba(192,132,252,0.18) 0, rgba(192,132,252,0) 1.1px),
+        radial-gradient(circle at 84% 58%, rgba(240,171,252,0.13) 0, rgba(240,171,252,0) 1px),
+        radial-gradient(circle at 24% 72%, rgba(167,139,250,0.17) 0, rgba(167,139,250,0) 1.2px);
       background-size: 180px 220px, 240px 260px, 210px 250px, 260px 300px;
-      opacity: 0.38;
+      opacity: 0.42;
     }
 
     a { color: inherit; text-decoration: none; }
@@ -82,8 +88,8 @@
       z-index: 20;
       padding: 0.75rem 1rem;
       border-radius: 999px;
-      background: var(--gold);
-      color: #090b10;
+      background: var(--lavender);
+      color: #13051f;
       font-weight: 900;
     }
 
@@ -143,16 +149,17 @@
       border: 1px solid var(--line);
       border-radius: 999px;
       color: var(--muted);
-      background: rgba(255,255,255,0.035);
+      background: rgba(233,213,255,0.045);
       font-size: 0.74rem;
       font-weight: 850;
       white-space: nowrap;
     }
 
     .nav a[aria-current="page"] {
-      border-color: rgba(242,199,111,0.9);
-      color: #080a0f;
-      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+      border-color: rgba(233,213,255,0.92);
+      color: #13051f;
+      background: linear-gradient(135deg, #f5e8ff, #c084fc 48%, #a78bfa);
+      box-shadow: 0 0.65rem 1.8rem rgba(167,139,250,0.18);
     }
 
     .hero {
@@ -164,11 +171,12 @@
 
     .eyebrow {
       margin: 0;
-      color: var(--gold);
+      color: var(--lavender);
       font-size: clamp(0.72rem, 2.5vw, 0.84rem);
       font-weight: 950;
       letter-spacing: 0.18em;
       text-transform: uppercase;
+      text-shadow: 0 0 1rem rgba(192,132,252,0.28);
     }
 
     h1 {
@@ -183,7 +191,7 @@
     .quote {
       width: min(100%, 780px);
       margin: 0 auto;
-      color: rgba(255,241,205,0.96);
+      color: rgba(245,232,255,0.96);
       font-size: clamp(1.02rem, 3.4vw, 1.22rem);
       line-height: 1.52;
       text-wrap: balance;
@@ -203,10 +211,10 @@
       justify-content: center;
       border-radius: 999px;
       padding: 0.58rem 0.95rem;
-      border: 1px solid rgba(242,199,111,0.9);
-      color: #080a0f;
-      background: linear-gradient(135deg, #fff0a3, #f2c76f);
-      box-shadow: 0 0.8rem 2rem rgba(242,199,111,0.16);
+      border: 1px solid rgba(233,213,255,0.9);
+      color: #13051f;
+      background: linear-gradient(135deg, #f5e8ff, #c084fc 45%, #a78bfa);
+      box-shadow: 0 0.8rem 2rem rgba(167,139,250,0.20);
       font-size: 0.78rem;
       font-weight: 950;
       letter-spacing: 0.055em;
@@ -217,16 +225,16 @@
     .button::after { content: " →"; }
 
     .button.secondary {
-      border-color: rgba(255,255,255,0.24);
+      border-color: rgba(226,206,255,0.26);
       color: var(--text);
-      background: rgba(255,255,255,0.055);
+      background: rgba(233,213,255,0.06);
       box-shadow: none;
     }
 
     .button:hover,
     .button:focus-visible {
       transform: translateY(-2px);
-      box-shadow: 0 1rem 2.5rem rgba(242,199,111,0.22);
+      box-shadow: 0 1rem 2.5rem rgba(192,132,252,0.24);
       outline: none;
     }
 
@@ -235,16 +243,16 @@
       margin: clamp(1rem, 3vw, 1.45rem) auto 0;
       position: relative;
       padding: clamp(1rem, 4vw, 1.6rem);
-      border: 1px solid rgba(242,199,111,0.24);
+      border: 1px solid rgba(192,132,252,0.30);
       border-radius: clamp(1.35rem, 5vw, 2.2rem);
       background:
-        radial-gradient(circle at 50% 0%, rgba(242,199,111,0.11), transparent 35%),
-        radial-gradient(circle at 50% 52%, rgba(120,216,255,0.13), transparent 44%),
-        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.016)),
-        rgba(8,12,20,0.62);
+        radial-gradient(circle at 50% 0%, rgba(233,213,255,0.13), transparent 35%),
+        radial-gradient(circle at 50% 52%, rgba(124,58,237,0.20), transparent 44%),
+        linear-gradient(180deg, rgba(233,213,255,0.070), rgba(233,213,255,0.018)),
+        rgba(13,7,29,0.72);
       box-shadow:
-        0 2rem 7rem rgba(0,0,0,0.34),
-        inset 0 1px 0 rgba(255,255,255,0.09);
+        0 2rem 7rem rgba(0,0,0,0.38),
+        inset 0 1px 0 rgba(255,255,255,0.11);
       overflow: hidden;
       isolation: isolate;
     }
@@ -257,8 +265,8 @@
       bottom: 5%;
       width: 1px;
       transform: translateX(-50%);
-      background: linear-gradient(180deg, transparent, rgba(242,199,111,0.35), rgba(120,216,255,0.20), transparent);
-      opacity: 0.70;
+      background: linear-gradient(180deg, transparent, rgba(233,213,255,0.46), rgba(192,132,252,0.32), transparent);
+      opacity: 0.76;
       z-index: -1;
     }
 
@@ -269,8 +277,8 @@
       right: 7%;
       top: 50%;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(242,199,111,0.28), rgba(120,216,255,0.18), transparent);
-      opacity: 0.68;
+      background: linear-gradient(90deg, transparent, rgba(233,213,255,0.42), rgba(192,132,252,0.26), transparent);
+      opacity: 0.72;
       z-index: -1;
     }
 
@@ -313,7 +321,7 @@
     .compass-orbit::before,
     .compass-orbit::after {
       position: absolute;
-      border: 1px solid rgba(255,255,255,0.11);
+      border: 1px solid rgba(233,213,255,0.14);
       border-radius: 50%;
       pointer-events: none;
     }
@@ -322,30 +330,30 @@
       width: min(90%, 44rem);
       height: min(52vw, 21rem);
       transform: rotate(-12deg);
-      opacity: 0.8;
+      opacity: 0.84;
     }
 
     .compass-orbit::before {
       content: "";
       inset: -22% -8%;
       transform: rotate(32deg);
-      opacity: 0.62;
+      opacity: 0.65;
     }
 
     .compass-orbit::after {
       content: "";
       inset: 18% 13%;
       transform: rotate(-34deg);
-      opacity: 0.52;
+      opacity: 0.55;
     }
 
     .axis-letter {
       position: absolute;
-      color: rgba(255,241,205,0.90);
+      color: rgba(245,232,255,0.94);
       font-size: clamp(1rem, 3vw, 1.35rem);
       font-weight: 950;
       line-height: 1;
-      text-shadow: 0 0 1rem rgba(242,199,111,0.18);
+      text-shadow: 0 0 1rem rgba(192,132,252,0.24);
       pointer-events: none;
       user-select: none;
     }
@@ -428,18 +436,51 @@
       position: absolute;
       inset: 0;
       transform: rotate(45deg);
-      border: 2px solid rgba(242,199,111,0.78);
+      border: 2px solid rgba(233,213,255,0.78);
       border-radius: 1.15rem;
       background:
         linear-gradient(135deg, rgba(255,255,255,0.18), transparent 24%),
-        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.28), transparent 32%),
-        radial-gradient(circle at 30% 72%, rgba(120,216,255,0.26), transparent 38%),
-        linear-gradient(145deg, rgba(48,74,141,0.76), rgba(128,72,142,0.64) 58%, rgba(242,199,111,0.18));
+        radial-gradient(circle at 68% 32%, rgba(240,171,252,0.30), transparent 32%),
+        radial-gradient(circle at 30% 72%, rgba(167,139,250,0.34), transparent 38%),
+        linear-gradient(145deg, rgba(76,29,149,0.82), rgba(124,58,237,0.68) 58%, rgba(192,132,252,0.24));
       box-shadow:
-        0 1.4rem 3.5rem rgba(0,0,0,0.30),
-        inset 0 0 0 1px rgba(255,255,255,0.16),
-        inset 0 0 2rem rgba(255,255,255,0.07);
+        0 1.4rem 3.5rem rgba(0,0,0,0.32),
+        0 0 2.1rem rgba(167,139,250,0.16),
+        inset 0 0 0 1px rgba(255,255,255,0.17),
+        inset 0 0 2rem rgba(255,255,255,0.08);
       overflow: hidden;
+    }
+
+    .world-diamond.north .diamond-shell {
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.20), transparent 24%),
+        radial-gradient(circle at 64% 28%, rgba(245,232,255,0.34), transparent 34%),
+        radial-gradient(circle at 30% 74%, rgba(167,139,250,0.38), transparent 40%),
+        linear-gradient(145deg, rgba(76,29,149,0.86), rgba(124,58,237,0.72) 58%, rgba(233,213,255,0.28));
+    }
+
+    .world-diamond.east .diamond-shell {
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.18), transparent 24%),
+        radial-gradient(circle at 66% 30%, rgba(240,171,252,0.36), transparent 34%),
+        radial-gradient(circle at 30% 74%, rgba(192,132,252,0.34), transparent 40%),
+        linear-gradient(145deg, rgba(88,28,135,0.86), rgba(126,34,206,0.72) 58%, rgba(240,171,252,0.25));
+    }
+
+    .world-diamond.south .diamond-shell {
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.18), transparent 24%),
+        radial-gradient(circle at 66% 30%, rgba(196,181,253,0.32), transparent 34%),
+        radial-gradient(circle at 30% 74%, rgba(129,140,248,0.30), transparent 40%),
+        linear-gradient(145deg, rgba(49,46,129,0.86), rgba(109,40,217,0.72) 58%, rgba(167,139,250,0.25));
+    }
+
+    .world-diamond.west .diamond-shell {
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.18), transparent 24%),
+        radial-gradient(circle at 66% 30%, rgba(216,180,254,0.34), transparent 34%),
+        radial-gradient(circle at 30% 74%, rgba(147,51,234,0.34), transparent 40%),
+        linear-gradient(145deg, rgba(59,7,100,0.86), rgba(107,33,168,0.72) 58%, rgba(192,132,252,0.25));
     }
 
     .diamond-shell::before,
@@ -447,14 +488,14 @@
       content: "";
       position: absolute;
       inset: 14%;
-      border: 1px solid rgba(255,241,205,0.34);
+      border: 1px solid rgba(245,232,255,0.38);
       border-radius: 0.65rem;
       pointer-events: none;
     }
 
     .diamond-shell::after {
       inset: 27%;
-      opacity: 0.55;
+      opacity: 0.58;
     }
 
     .diamond-lines {
@@ -471,11 +512,11 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(90deg, transparent 49.5%, rgba(255,241,205,0.36) 50%, transparent 50.5%),
-        linear-gradient(0deg, transparent 49.5%, rgba(255,241,205,0.28) 50%, transparent 50.5%),
-        linear-gradient(45deg, transparent 49.5%, rgba(255,241,205,0.20) 50%, transparent 50.5%),
-        linear-gradient(-45deg, transparent 49.5%, rgba(255,241,205,0.20) 50%, transparent 50.5%);
-      opacity: 0.8;
+        linear-gradient(90deg, transparent 49.5%, rgba(245,232,255,0.40) 50%, transparent 50.5%),
+        linear-gradient(0deg, transparent 49.5%, rgba(245,232,255,0.30) 50%, transparent 50.5%),
+        linear-gradient(45deg, transparent 49.5%, rgba(245,232,255,0.24) 50%, transparent 50.5%),
+        linear-gradient(-45deg, transparent 49.5%, rgba(245,232,255,0.24) 50%, transparent 50.5%);
+      opacity: 0.84;
     }
 
     .diamond-content {
@@ -491,17 +532,17 @@
     }
 
     .diamond-content strong {
-      color: rgba(255,241,205,0.98);
+      color: rgba(251,245,255,0.99);
       font-size: clamp(0.76rem, 2.1vw, 1.05rem);
       line-height: 1.02;
       font-weight: 950;
       letter-spacing: 0.09em;
       text-transform: uppercase;
-      text-shadow: 0 2px 0 rgba(0,0,0,0.18);
+      text-shadow: 0 2px 0 rgba(0,0,0,0.20);
     }
 
     .diamond-content span {
-      color: rgba(242,246,255,0.78);
+      color: rgba(226,215,255,0.82);
       font-size: clamp(0.58rem, 1.7vw, 0.72rem);
       line-height: 1.22;
       font-weight: 850;
@@ -510,14 +551,15 @@
     }
 
     .center-diamond .diamond-shell {
-      border-color: rgba(255,241,205,0.65);
+      border-color: rgba(245,232,255,0.72);
       background:
-        radial-gradient(circle at 50% 50%, rgba(255,241,205,0.22), transparent 44%),
-        radial-gradient(circle at 70% 28%, rgba(242,199,111,0.20), transparent 32%),
-        linear-gradient(145deg, rgba(33,47,84,0.82), rgba(20,27,48,0.86));
+        radial-gradient(circle at 50% 50%, rgba(245,232,255,0.25), transparent 44%),
+        radial-gradient(circle at 70% 28%, rgba(192,132,252,0.24), transparent 32%),
+        linear-gradient(145deg, rgba(49,24,88,0.88), rgba(22,13,44,0.90));
       box-shadow:
-        0 1rem 2.5rem rgba(0,0,0,0.28),
-        inset 0 0 0 1px rgba(255,255,255,0.13);
+        0 1rem 2.5rem rgba(0,0,0,0.32),
+        0 0 2rem rgba(192,132,252,0.18),
+        inset 0 0 0 1px rgba(255,255,255,0.15);
     }
 
     .center-diamond .diamond-content strong {
@@ -532,15 +574,15 @@
       width: min(100%, 940px);
       margin: clamp(1rem, 3vw, 1.5rem) auto 0;
       padding: clamp(0.8rem, 2.8vw, 1rem);
-      border: 1px solid rgba(255,255,255,0.10);
+      border: 1px solid rgba(226,206,255,0.13);
       border-radius: 1.25rem;
-      background: rgba(255,255,255,0.025);
+      background: rgba(233,213,255,0.030);
       text-align: center;
     }
 
     .route-panel-title {
       margin: 0 0 0.7rem;
-      color: var(--gold);
+      color: var(--lavender);
       font-size: 0.72rem;
       font-weight: 950;
       letter-spacing: 0.16em;
@@ -560,10 +602,10 @@
       align-items: center;
       justify-content: center;
       padding: 0.48rem 0.72rem;
-      border: 1px solid rgba(255,255,255,0.15);
+      border: 1px solid rgba(226,206,255,0.18);
       border-radius: 999px;
       color: var(--muted);
-      background: rgba(255,255,255,0.035);
+      background: rgba(233,213,255,0.045);
       font-size: 0.74rem;
       font-weight: 900;
       letter-spacing: 0.06em;
@@ -572,7 +614,7 @@
 
     .route-link::after {
       content: " →";
-      color: var(--gold);
+      color: var(--lavender);
     }
 
     .scope-strip {
@@ -590,16 +632,16 @@
       justify-items: center;
       gap: 0.25rem;
       padding: 0.85rem;
-      border: 1px dashed rgba(242,199,111,0.24);
+      border: 1px dashed rgba(192,132,252,0.34);
       border-radius: 1rem;
-      background: rgba(255,255,255,0.024);
+      background: rgba(233,213,255,0.030);
       text-align: center;
       pointer-events: none;
       user-select: none;
     }
 
     .scope-tile strong {
-      color: rgba(255,241,205,0.95);
+      color: rgba(245,232,255,0.98);
       font-size: clamp(1.15rem, 4vw, 1.55rem);
       line-height: 1;
       font-weight: 950;
@@ -614,9 +656,9 @@
     .receipt {
       width: min(100%, 900px);
       margin: clamp(1rem, 3vw, 1.5rem) auto 0;
-      border: 1px solid rgba(255,255,255,0.10);
+      border: 1px solid rgba(226,206,255,0.13);
       border-radius: 1rem;
-      background: rgba(255,255,255,0.03);
+      background: rgba(233,213,255,0.034);
       color: var(--faint);
       overflow: hidden;
     }
@@ -729,7 +771,7 @@
 
     <main id="main">
       <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Universe · World Setting</p>
+        <p class="eyebrow">Universe · Purple World Setting</p>
         <h1 id="page-title">The Nine Summits Universe lives here.</h1>
 
         <p class="quote">
@@ -737,7 +779,7 @@
         </p>
 
         <div class="hero-actions" aria-label="Primary universe actions">
-          <a class="button" href="/showroom/globe/">Inspect Audralia</a>
+          <a class="button" href="/showroom/globe/audralia/">Inspect Audralia</a>
           <a class="button secondary" href="/nine-summits-of-love/">Open the Book</a>
           <a class="button secondary" href="/explore/">Return to Manor</a>
         </div>
@@ -745,8 +787,8 @@
 
       <section class="universe-stage" aria-labelledby="universe-title">
         <div class="stage-title">
-          <h2 id="universe-title">Four options hold the world setting.</h2>
-          <p>Audralia is the home world and mirror planet to Earth. The universe route now expresses four primary directions without becoming the renderer.</p>
+          <h2 id="universe-title">Four purple diamonds hold the world setting.</h2>
+          <p>Audralia is the home world and mirror planet to Earth. The universe route expresses four primary directions without becoming the renderer.</p>
         </div>
 
         <div class="diamond-compass" aria-label="Universe diamond compass">
@@ -765,7 +807,7 @@
             </div>
           </div>
 
-          <a class="world-diamond north" href="/showroom/globe/" aria-label="Inspect Audralia home world">
+          <a class="world-diamond north" href="/showroom/globe/audralia/" aria-label="Inspect Audralia home world">
             <div class="diamond-shell" aria-hidden="true"></div>
             <div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content">
@@ -819,7 +861,7 @@
       <section class="scope-strip" aria-label="Universe diagnostic scope">
         <div class="scope-tile">
           <strong>1</strong>
-          <span>One universe setting.</span>
+          <span>One purple universe setting.</span>
         </div>
 
         <div class="scope-tile">
@@ -840,20 +882,23 @@
 
       <details class="receipt">
         <summary>Route receipt</summary>
-        <pre>NINE_SUMMITS_UNIVERSE_FOUR_DIAMOND_WORLD_SETTING_TNT_v1
+        <pre>NINE_SUMMITS_UNIVERSE_PURPLE_FOUR_DIAMOND_WORLD_SETTING_TNT_v2
+previous_contract=NINE_SUMMITS_UNIVERSE_FOUR_DIAMOND_WORLD_SETTING_TNT_v1
 route=/nine-summits/universe/
 page=universe
 role=world_setting
+theme=purple_universe_continuity
 home_world=Audralia
 earth_relationship=mirror_planet_reference
 center=universe_setting_decorative
-north=home_world:/showroom/globe/
+north=home_world:/showroom/globe/audralia/
 east=book_spine:/nine-summits-of-love/
 south=atrium_spine:/showroom/
 west=frontier_spine:/frontier/
 return_routes=compass,door,home,manor,products,gauges
-removed=long_route_list,visible_long_contract,flat_world_routes_only
-route_owns=world_context,four_diamond_options,route_links,256_scope_expression
+renewed=purple_theme_continuity,lavender_violet_plum_diamond_system,purple_route_receipt
+removed=mixed_gold_blue_green_emphasis,long_route_list,visible_long_contract,flat_world_routes_only
+route_owns=world_context,four_diamond_options,route_links,256_scope_expression,purple_visual_theme
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
 heavy_runtime_loaded=false
 render_files_touched=false
@@ -867,7 +912,7 @@ visual_pass_claimed=false</pre>
     </main>
 
     <footer>
-      NINE_SUMMITS_UNIVERSE_FOUR_DIAMOND_WORLD_SETTING_TNT_v1 · Universe · Four Options · Audralia Baseline.
+      NINE_SUMMITS_UNIVERSE_PURPLE_FOUR_DIAMOND_WORLD_SETTING_TNT_v2 · Universe · Purple Four Options · Audralia Baseline.
     </footer>
   </div>
 </body>

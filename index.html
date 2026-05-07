@@ -1,1175 +1,286 @@
-<!-- /index.html -->
-<!doctype html>
-<html
-  lang="en"
-  data-page="compass-interplanetary-command-surface"
-  data-route="/"
-  data-contract="COMPASS_INTERPLANETARY_4_PLUS_16_COMMAND_SURFACE_TNT_v6"
-  data-previous-contract="COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v5"
-  data-runtime-contract="COMPASS_INTERPLANETARY_UNIFORMITY_RUNTIME_TNT_v1"
-  data-route-js-contract="COMPASS_ROUTE_ONLY_VIEW_CARRY_INTERPLANETARY_UNIFORMITY_TNT_v2"
-  data-room="compass"
-  data-role="animated-public-command-surface"
-  data-theme="violet-purple-primary-gold-border-black-gold-inlay"
-  data-background-authority="/assets/dgb-interplanetary-background.js"
-  data-foreground-authority="compass-4-plus-16-diamond-orbit"
-  data-view-selector-authority="/door/"
-  data-heavy-runtime-loaded="false"
-  data-generated-image="false"
-  data-graphic-box="false"
-  data-streaming="false"
-  data-visual-pass-claimed="false"
->
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-
-  <title>Compass · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Diamond Gate Bridge Compass: public command surface for the estate, product wing, showroom, Audralia, universe, and gauges."
-  />
-
-  <link rel="stylesheet" href="/assets/diamond-orbit.css" />
-
-  <script src="/assets/dgb-interplanetary-background.js?v=DGB_INTERPLANETARY_AXIS_FLOATING_FIGURES_BACKGROUND_JS_TNT_v1" defer></script>
-  <script src="/index.runtime.js?v=COMPASS_INTERPLANETARY_UNIFORMITY_RUNTIME_TNT_v1" defer></script>
-  <script src="/index.js?v=COMPASS_ROUTE_ONLY_VIEW_CARRY_INTERPLANETARY_UNIFORMITY_TNT_v2" defer></script>
-
-  <style>
-    :root {
-      --dg-max: 1180px;
-
-      --dg-black: #020104;
-      --dg-black-2: #050208;
-      --dg-black-3: #090511;
-
-      --dg-violet: #8b5cf6;
-      --dg-violet-2: #a78bfa;
-      --dg-purple: #5b21b6;
-      --dg-purple-2: #c4b5fd;
-
-      --dg-gold: #f4c95d;
-      --dg-gold-2: #ffe8a8;
-      --dg-gold-3: #b9821f;
-
-      --dg-text: #fff8e8;
-      --dg-muted: rgba(255,247,226,0.74);
-      --dg-faint: rgba(255,247,226,0.50);
-
-      --dg-line: rgba(196,181,253,0.22);
-      --dg-line-gold: rgba(255,232,168,0.30);
-      --dg-line-gold-strong: rgba(255,232,168,0.58);
-
-      --dg-panel: rgba(3,2,5,0.80);
-      --dg-panel-strong: rgba(5,3,8,0.92);
-
-      --inner-orbit-duration: 38s;
-      --outer-orbit-duration: 58s;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      min-width: 320px;
-      background: var(--dg-black);
-      color: var(--dg-text);
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      min-width: 320px;
-      min-height: 100svh;
-      overflow-x: hidden;
-      background:
-        radial-gradient(circle at 50% 7%, rgba(139,92,246,0.20), transparent 25rem),
-        radial-gradient(circle at 82% 44%, rgba(244,201,93,0.10), transparent 34rem),
-        linear-gradient(180deg, #09050d, #030205 64%, #000000);
-      color: var(--dg-text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .skip-link {
-      position: absolute;
-      left: 1rem;
-      top: 1rem;
-      z-index: 50;
-      transform: translateY(-180%);
-      border: 1px solid var(--dg-line-gold);
-      border-radius: 999px;
-      background: #050208;
-      padding: 0.65rem 0.9rem;
-      color: var(--dg-text);
-      font-weight: 900;
-    }
-
-    .skip-link:focus {
-      transform: translateY(0);
-    }
-
-    .site-shell {
-      position: relative;
-      z-index: 2;
-      isolation: isolate;
-      width: 100%;
-      min-height: 100svh;
-      overflow-x: clip;
-    }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      width: 100%;
-      border-bottom: 1px solid rgba(255,232,168,0.16);
-      background:
-        linear-gradient(180deg, rgba(9,5,13,0.92), rgba(3,2,5,0.82));
-      backdrop-filter: blur(18px);
-      box-shadow:
-        0 0 2rem rgba(139,92,246,0.08),
-        0 0 2rem rgba(244,201,93,0.05);
-    }
-
-    .topbar-inner {
-      width: min(var(--dg-max), calc(100% - 2rem));
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.78rem 0;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.65rem;
-      min-width: max-content;
-      font-weight: 900;
-      letter-spacing: 0.02em;
-    }
-
-    .brand-mark {
-      display: grid;
-      place-items: center;
-      width: 2.35rem;
-      height: 2.35rem;
-      border: 1px solid rgba(255,232,168,0.38);
-      border-radius: 0.82rem;
-      background:
-        radial-gradient(circle at 35% 25%, rgba(255,255,255,0.35), transparent 32%),
-        linear-gradient(135deg, rgba(139,92,246,0.42), rgba(244,201,93,0.20));
-      color: var(--dg-gold-2);
-      font-size: 0.82rem;
-      box-shadow:
-        0 0 1.2rem rgba(139,92,246,0.16),
-        0 0 1.3rem rgba(244,201,93,0.10);
-    }
-
-    .nav {
-      margin-left: auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 0.45rem;
-    }
-
-    .nav a {
-      border: 1px solid rgba(196,181,253,0.20);
-      border-radius: 999px;
-      padding: 0.5rem 0.7rem;
-      color: var(--dg-muted);
-      background:
-        linear-gradient(180deg, rgba(139,92,246,0.08), rgba(244,201,93,0.025)),
-        rgba(0,0,0,0.36);
-      font-size: 0.88rem;
-      font-weight: 780;
-      line-height: 1;
-      box-shadow:
-        inset 0 0 0 1px rgba(244,201,93,0.035),
-        0 0 1rem rgba(139,92,246,0.06);
-    }
-
-    .nav a:hover,
-    .nav a:focus {
-      border-color: rgba(255,232,168,0.58);
-      color: var(--dg-text);
-      box-shadow:
-        0 0 1rem rgba(244,201,93,0.16),
-        0 0 1.8rem rgba(139,92,246,0.14);
-      outline: none;
-    }
-
-    main {
-      position: relative;
-      z-index: 2;
-      width: min(var(--dg-max), calc(100% - 2rem));
-      margin: 0 auto;
-      padding: clamp(2rem, 4vw, 4.25rem) 0 4rem;
-    }
-
-    .hero {
-      position: relative;
-      display: grid;
-      grid-template-columns: minmax(0, 1.02fr) minmax(20rem, 0.98fr);
-      align-items: center;
-      gap: clamp(1.25rem, 4vw, 3.5rem);
-      min-height: clamp(620px, 78vh, 840px);
-      overflow: hidden;
-    }
-
-    .hero-copy {
-      position: relative;
-      z-index: 5;
-      max-width: 42rem;
-    }
-
-    .eyebrow {
-      margin: 0 0 0.85rem;
-      color: var(--dg-gold-2);
-      font-size: 0.79rem;
-      font-weight: 900;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      text-shadow:
-        0 0 1rem rgba(244,201,93,0.34),
-        0 0 1.4rem rgba(139,92,246,0.28);
-    }
-
-    h1 {
-      margin: 0;
-      max-width: 11ch;
-      font-size: clamp(3rem, 9.2vw, 7.2rem);
-      line-height: 0.86;
-      letter-spacing: -0.08em;
-      text-wrap: balance;
-    }
-
-    .subtitle {
-      margin: 1.15rem 0 0;
-      max-width: 34rem;
-      color: var(--dg-muted);
-      font-size: clamp(1.08rem, 2.15vw, 1.55rem);
-      line-height: 1.35;
-      font-weight: 700;
-    }
-
-    .lead {
-      margin: 1rem 0 0;
-      max-width: 34rem;
-      color: rgba(255,247,226,0.76);
-      font-size: 1rem;
-      line-height: 1.7;
-    }
-
-    .cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 1.55rem;
-    }
-
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 2.85rem;
-      border: 1px solid rgba(255,232,168,0.42);
-      border-radius: 999px;
-      padding: 0.78rem 1.05rem;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.16), transparent 42%),
-        linear-gradient(180deg, rgba(139,92,246,0.10), rgba(244,201,93,0.030)),
-        rgba(0,0,0,0.72);
-      color: var(--dg-text);
-      font-weight: 820;
-      line-height: 1;
-      box-shadow:
-        0 0 0.75rem rgba(139,92,246,0.18),
-        0 0 1.9rem rgba(244,201,93,0.10),
-        0 18px 40px rgba(0,0,0,0.20);
-      transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
-    }
-
-    .button.primary {
-      border-color: rgba(255,232,168,0.96);
-      color: #090604;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.58), transparent 38%),
-        linear-gradient(135deg, #fff3c4, #f4c95d 44%, #a78bfa 78%, #6d28d9);
-      box-shadow:
-        0 0 0.9rem rgba(255,232,168,0.54),
-        0 0 2.6rem rgba(244,201,93,0.30),
-        0 0 3.4rem rgba(139,92,246,0.18),
-        0 1rem 2.5rem rgba(244,201,93,0.16);
-    }
-
-    .button:hover,
-    .button:focus {
-      transform: translateY(-1px);
-      filter: saturate(1.08);
-      outline: none;
-    }
-
-    .compass-stage {
-      position: relative;
-      z-index: 3;
-      width: min(100%, 35rem);
-      min-height: 35rem;
-      margin-inline: auto;
-      display: grid;
-      place-items: center;
-      overflow: visible;
-      contain: layout paint;
-    }
-
-    .compass-card {
-      position: relative;
-      width: min(100%, 33rem);
-      aspect-ratio: 0.76;
-      min-height: 33rem;
-      max-height: 44rem;
-      border: 1px solid rgba(255,232,168,0.26);
-      border-radius: 2.2rem;
-      background:
-        radial-gradient(circle at 50% 12%, rgba(139,92,246,0.20), transparent 44%),
-        radial-gradient(circle at 50% 62%, rgba(244,201,93,0.10), transparent 48%),
-        linear-gradient(180deg, rgba(10,6,15,0.94), rgba(0,0,0,0.86));
-      box-shadow:
-        inset 0 0 0 1px rgba(255,232,168,0.06),
-        0 0 2.8rem rgba(139,92,246,0.14),
-        0 0 2.8rem rgba(244,201,93,0.08),
-        0 26px 80px rgba(0,0,0,0.42);
-      overflow: hidden;
-      isolation: isolate;
-    }
-
-    .compass-card::before,
-    .compass-card::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      border-radius: 50%;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-    }
-
-    .compass-card::before {
-      width: 84%;
-      height: 84%;
-      border: 1px solid rgba(255,232,168,0.10);
-      box-shadow: 0 0 34px rgba(139,92,246,0.10);
-    }
-
-    .compass-card::after {
-      width: 62%;
-      height: 62%;
-      border: 1px solid rgba(196,181,253,0.18);
-    }
-
-    .center-anchor {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      z-index: 0;
-      display: grid;
-      place-items: center;
-      width: 10.8rem;
-      height: 10.8rem;
-      transform: translate(-50%, -50%) rotate(45deg);
-      border: 1px solid rgba(255,232,168,0.20);
-      border-radius: 1.8rem;
-      background:
-        radial-gradient(circle at 35% 28%, rgba(255,255,255,0.16), transparent 31%),
-        linear-gradient(135deg, rgba(139,92,246,0.42), rgba(244,201,93,0.12));
-      box-shadow:
-        0 0 70px rgba(139,92,246,0.22),
-        0 0 44px rgba(244,201,93,0.08),
-        inset 0 0 26px rgba(255,255,255,0.04);
-      opacity: 0.56;
-      pointer-events: none;
-      filter: saturate(0.96);
-      animation: anchorPulse 7s ease-in-out infinite;
-    }
-
-    .center-anchor::after {
-      content: "";
-      position: absolute;
-      inset: 14%;
-      border-radius: 1.25rem;
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .center-anchor span {
-      display: block;
-      transform: rotate(-45deg);
-      color: rgba(255,248,232,0.90);
-      text-align: center;
-      font-size: 0.78rem;
-      font-weight: 900;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      line-height: 1.2;
-    }
+/* /index.js
+   COMPASS_THREE_LENS_ROUTE_ONLY_JS_TNT_v3
+   Full-file replacement.
+   Purpose:
+   - Keep Compass route-only.
+   - Present and preserve the three-lens decision gate.
+   - Flat routes to /door/?view=flat.
+   - Round routes to /door/?view=round.
+   - Globe routes to /nine-summits/universe/.
+   - Preserve Door as Flat/Round view-selector authority.
+   - Preserve Universe as Globe-scale authority.
+   - Carry flat/round view through eligible internal links only.
+   - Do not mount Flat/Round/Globe selector behavior on the root page.
+   - Do not render planets, canvases, or GraphicBox.
+   - Do not claim visual pass.
+*/
+
+(function () {
+  "use strict";
+
+  var CONTRACT = "COMPASS_THREE_LENS_ROUTE_ONLY_JS_TNT_v3";
+  var PREVIOUS_CONTRACT = "COMPASS_ROUTE_ONLY_VIEW_CARRY_INTERPLANETARY_UNIFORMITY_TNT_v2";
+  var PAGE_CONTRACT = "COMPASS_THREE_LENS_INTERPLANETARY_GATE_TNT_v7";
+  var STORAGE_KEY = "dgb:viewMode";
+  var LENS_KEY = "dgb:worldLens";
+  var VALID_VIEW = { flat: true, round: true };
+  var VALID_LENS = { flat: true, round: true, globe: true };
+
+  function safeGetStorage(key) {
+    try {
+      return window.localStorage ? window.localStorage.getItem(key) : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function safeSetStorage(key, value) {
+    try {
+      if (window.localStorage) window.localStorage.setItem(key, value);
+    } catch (error) {
+      /* Storage can fail in privacy modes. Compass remains route-only. */
+    }
+  }
+
+  function readParams() {
+    return new URLSearchParams(window.location.search);
+  }
+
+  function getIncomingLens() {
+    var params = readParams();
+    var incomingLens = params.get("lens");
+    var incomingView = params.get("view");
+
+    if (VALID_LENS[incomingLens]) return incomingLens;
+    if (VALID_VIEW[incomingView]) return incomingView;
+
+    return "";
+  }
+
+  function getCurrentLens() {
+    var incoming = getIncomingLens();
+    var saved = safeGetStorage(LENS_KEY);
+    var savedView = safeGetStorage(STORAGE_KEY);
+
+    if (VALID_LENS[incoming]) {
+      safeSetStorage(LENS_KEY, incoming);
+      if (VALID_VIEW[incoming]) safeSetStorage(STORAGE_KEY, incoming);
+      return incoming;
+    }
+
+    if (VALID_LENS[saved]) return saved;
+    if (VALID_VIEW[savedView]) return savedView;
+
+    return "round";
+  }
+
+  function getCarryView(lens) {
+    if (VALID_VIEW[lens]) return lens;
+
+    var savedView = safeGetStorage(STORAGE_KEY);
+    if (VALID_VIEW[savedView]) return savedView;
+
+    return "";
+  }
+
+  function shouldCarryView(link) {
+    var href = link.getAttribute("href") || "";
+    var url;
+
+    if (!href) return false;
+    if (href.indexOf("#") === 0) return false;
+    if (href.indexOf("mailto:") === 0) return false;
+    if (href.indexOf("tel:") === 0) return false;
+    if (href.indexOf("javascript:") === 0) return false;
+    if (link.hasAttribute("download")) return false;
+    if (link.dataset.noViewCarry === "true") return false;
+
+    try {
+      url = new URL(href, window.location.origin);
+    } catch (error) {
+      return false;
+    }
+
+    if (url.origin !== window.location.origin) return false;
 
-    @keyframes anchorPulse {
-      0%, 100% {
-        transform: translate(-50%, -50%) rotate(45deg) scale(0.98);
-        opacity: 0.48;
-      }
-
-      50% {
-        transform: translate(-50%, -50%) rotate(45deg) scale(1.02);
-        opacity: 0.62;
-      }
-    }
-
-    .orbit-ring {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      border-radius: 999px;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-    }
-
-    .orbit-ring.inner {
-      width: 12.5rem;
-      height: 12.5rem;
-      z-index: 2;
-      animation: orbitClockwise var(--inner-orbit-duration) linear infinite;
-    }
-
-    .orbit-ring.outer {
-      width: 31.5rem;
-      height: 31.5rem;
-      z-index: 4;
-      animation: orbitCounter var(--outer-orbit-duration) linear infinite;
-    }
-
-    @keyframes orbitClockwise {
-      to { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-
-    @keyframes orbitCounter {
-      to { transform: translate(-50%, -50%) rotate(-360deg); }
-    }
-
-    .diamond-node {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      margin: -2.95rem 0 0 -2.95rem;
-      width: 5.9rem;
-      height: 5.9rem;
-      border: 1px solid rgba(255,232,168,0.26);
-      border-radius: 1.55rem;
-      background:
-        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.34), rgba(255,255,255,0.08) 24%, transparent 42%),
-        radial-gradient(circle at 72% 78%, rgba(139,92,246,0.34), transparent 48%),
-        linear-gradient(145deg, rgba(167,139,250,0.98), rgba(91,33,182,0.94) 52%, rgba(20,8,40,0.96) 100%);
-      box-shadow:
-        0 16px 34px rgba(39,18,116,0.34),
-        0 0 26px rgba(139,92,246,0.24),
-        0 0 22px rgba(244,201,93,0.10),
-        inset 0 1px 0 rgba(255,255,255,0.20),
-        inset 0 -12px 22px rgba(22,10,65,0.18);
-      transform:
-        rotate(var(--angle))
-        translateY(var(--radius))
-        rotate(calc(-1 * var(--angle)))
-        rotate(45deg);
-      pointer-events: auto;
-      backface-visibility: hidden;
-      transform-style: preserve-3d;
-    }
-
-    .diamond-node::before {
-      content: "";
-      position: absolute;
-      inset: 8%;
-      border-radius: 1.15rem;
-      background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent 55%);
-      opacity: 0.72;
-      pointer-events: none;
-      transform: translateZ(1px);
-    }
-
-    .diamond-node::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 1.55rem;
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.05),
-        inset 0 -18px 24px rgba(21,9,62,0.16);
-      pointer-events: none;
-    }
-
-    .orbit-ring.inner .diamond-node {
-      --radius: -5.6rem;
-      width: 5.55rem;
-      height: 5.55rem;
-      margin: -2.775rem 0 0 -2.775rem;
-    }
-
-    .orbit-ring.outer .diamond-node {
-      --radius: -15.45rem;
-      width: 5.1rem;
-      height: 5.1rem;
-      margin: -2.55rem 0 0 -2.55rem;
-    }
-
-    .diamond-node:hover,
-    .diamond-node:focus {
-      outline: none;
-      border-color: rgba(255,232,168,0.78);
-      box-shadow:
-        0 22px 42px rgba(39,18,116,0.42),
-        0 0 34px rgba(139,92,246,0.32),
-        0 0 30px rgba(244,201,93,0.18),
-        inset 0 1px 0 rgba(255,255,255,0.22);
-      filter: brightness(1.06);
-    }
-
-    .diamond-label-shell {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100%;
-      padding: 0.35rem;
-      transform: rotate(-45deg);
-      text-align: center;
-    }
-
-    .diamond-label-text {
-      display: block;
-      max-width: 4.65rem;
-      color: var(--dg-text);
-      text-align: center;
-      font-size: 0.66rem;
-      font-weight: 900;
-      letter-spacing: 0.11em;
-      line-height: 1.1;
-      text-transform: uppercase;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.8);
-    }
-
-    .orbit-ring.inner .diamond-label-text {
-      animation: keepTextUprightInner var(--inner-orbit-duration) linear infinite;
-    }
-
-    .orbit-ring.outer .diamond-label-text {
-      animation: keepTextUprightOuter var(--outer-orbit-duration) linear infinite;
-    }
-
-    @keyframes keepTextUprightInner {
-      to { transform: rotate(-360deg); }
-    }
-
-    @keyframes keepTextUprightOuter {
-      to { transform: rotate(360deg); }
-    }
-
-    .route-panel {
-      position: relative;
-      z-index: 4;
-      margin: clamp(1.5rem, 4vw, 3rem) auto 0;
-      max-width: 52rem;
-      border: 1px solid rgba(255,232,168,0.24);
-      border-radius: 2rem;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.10), transparent 34%),
-        linear-gradient(180deg, rgba(139,92,246,0.055), rgba(244,201,93,0.018)),
-        rgba(0,0,0,0.78);
-      padding: clamp(1.25rem, 3vw, 2rem);
-      box-shadow:
-        0 0 2rem rgba(139,92,246,0.10),
-        0 0 2.8rem rgba(244,201,93,0.07),
-        0 24px 72px rgba(0,0,0,0.28);
-    }
-
-    .route-panel h2 {
-      margin: 0;
-      color: var(--dg-text);
-      font-size: clamp(1.55rem, 3vw, 2.3rem);
-      line-height: 1.05;
-      letter-spacing: -0.045em;
-    }
-
-    .route-panel p {
-      margin: 0.75rem 0 0;
-      color: var(--dg-muted);
-      line-height: 1.65;
-    }
-
-    .logic-grid,
-    .route-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.85rem;
-      margin-top: 1.3rem;
-    }
-
-    .logic-card {
-      min-width: 0;
-      border: 1px solid rgba(255,232,168,0.20);
-      border-radius: 1.25rem;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.12), transparent 42%),
-        rgba(255,232,168,0.026);
-      padding: 1rem;
-    }
-
-    .logic-card strong {
-      display: block;
-      color: var(--dg-gold-2);
-      font-size: 0.74rem;
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
-    }
-
-    .logic-card span {
-      display: block;
-      margin-top: 0.42rem;
-      color: var(--dg-muted);
-      font-size: 0.91rem;
-      line-height: 1.45;
-    }
-
-    .route-grid a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 3.1rem;
-      border: 1px solid rgba(196,181,253,0.24);
-      border-radius: 999px;
-      background:
-        linear-gradient(180deg, rgba(139,92,246,0.08), rgba(244,201,93,0.025)),
-        rgba(0,0,0,0.38);
-      color: var(--dg-text);
-      font-weight: 820;
-      text-align: center;
-      padding: 0.65rem;
-    }
-
-    .route-grid a:hover,
-    .route-grid a:focus {
-      outline: none;
-      background: rgba(244,201,93,0.10);
-      border-color: rgba(255,232,168,0.55);
-    }
-
-    .status-card {
-      margin: 1rem auto 0;
-      max-width: 52rem;
-      border: 1px solid rgba(255,232,168,0.20);
-      border-radius: 1.5rem;
-      background: rgba(3,2,5,0.64);
-      padding: 1rem 1.15rem;
-      color: var(--dg-muted);
-      line-height: 1.55;
-    }
-
-    .status-card strong {
-      color: var(--dg-gold-2);
-    }
-
-    .route-receipt,
-    [data-route-receipt],
-    [data-contract-receipt],
-    [data-debug-receipt] {
-      display: none !important;
-      visibility: hidden !important;
-      overflow: hidden !important;
-      width: 0 !important;
-      height: 0 !important;
-      max-width: 0 !important;
-      max-height: 0 !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      border: 0 !important;
-      opacity: 0 !important;
-      pointer-events: none !important;
-      position: absolute !important;
-      inset: auto !important;
-      clip-path: inset(50%) !important;
-      white-space: nowrap !important;
-    }
-
-    footer {
-      width: min(var(--dg-max), calc(100% - 2rem));
-      margin: 0 auto;
-      padding: 2rem 0 3rem;
-      color: rgba(255,247,226,0.52);
-      font-size: 0.88rem;
-      text-align: center;
-    }
-
-    @media (max-width: 860px) {
-      .topbar-inner {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav {
-        width: 100%;
-        justify-content: flex-start;
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        padding-bottom: 0.15rem;
-      }
-
-      .nav a {
-        flex: 0 0 auto;
-      }
-
-      .hero {
-        grid-template-columns: 1fr;
-        min-height: 0;
-      }
-
-      .hero-copy {
-        max-width: none;
-      }
-
-      h1 {
-        max-width: 10ch;
-      }
-
-      .compass-stage {
-        width: min(100%, 24rem);
-        min-height: 31rem;
-      }
-
-      .compass-card {
-        width: min(100%, 23.25rem);
-        min-height: 30rem;
-        max-height: none;
-        aspect-ratio: auto;
-      }
-
-      .center-anchor {
-        width: 8.9rem;
-        height: 8.9rem;
-        border-radius: 1.45rem;
-      }
-
-      .center-anchor span {
-        font-size: 0.62rem;
-      }
-
-      .orbit-ring.inner {
-        width: 9.8rem;
-        height: 9.8rem;
-      }
-
-      .orbit-ring.outer {
-        width: 22.8rem;
-        height: 22.8rem;
-      }
-
-      .orbit-ring.inner .diamond-node {
-        --radius: -4.35rem;
-        width: 4.65rem;
-        height: 4.65rem;
-        margin: -2.325rem 0 0 -2.325rem;
-      }
-
-      .orbit-ring.outer .diamond-node {
-        --radius: -10.8rem;
-        width: 3.95rem;
-        height: 3.95rem;
-        margin: -1.975rem 0 0 -1.975rem;
-      }
-
-      .diamond-label-text {
-        max-width: 3.1rem;
-        font-size: 0.5rem;
-        letter-spacing: 0.065em;
-      }
-
-      .logic-grid,
-      .route-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 460px) {
-      main {
-        width: min(100% - 1rem, var(--dg-max));
-        padding-top: 1.35rem;
-      }
-
-      .topbar-inner {
-        width: min(100% - 1rem, var(--dg-max));
-      }
-
-      .brand {
-        font-size: 0.94rem;
-      }
-
-      .hero {
-        gap: 1.2rem;
-      }
-
-      .eyebrow {
-        font-size: 0.68rem;
-      }
-
-      h1 {
-        font-size: clamp(2.55rem, 16vw, 4.25rem);
-        letter-spacing: -0.075em;
-      }
-
-      .subtitle {
-        font-size: 1.02rem;
-      }
-
-      .lead {
-        font-size: 0.94rem;
-      }
-
-      .cta-row {
-        flex-direction: column;
-      }
-
-      .button {
-        width: 100%;
-      }
-
-      .compass-stage {
-        width: 100%;
-        min-height: 27.5rem;
-      }
-
-      .compass-card {
-        width: min(100%, 20.9rem);
-        min-height: 27.5rem;
-        border-radius: 1.65rem;
-      }
-
-      .center-anchor {
-        width: 7.9rem;
-        height: 7.9rem;
-      }
-
-      .orbit-ring.inner {
-        width: 8.2rem;
-        height: 8.2rem;
-      }
-
-      .orbit-ring.outer {
-        width: 19.4rem;
-        height: 19.4rem;
-      }
-
-      .orbit-ring.inner .diamond-node {
-        --radius: -3.65rem;
-        width: 4.25rem;
-        height: 4.25rem;
-        margin: -2.125rem 0 0 -2.125rem;
-      }
-
-      .orbit-ring.outer .diamond-node {
-        --radius: -9.15rem;
-        width: 3.45rem;
-        height: 3.45rem;
-        margin: -1.725rem 0 0 -1.725rem;
-      }
-
-      .diamond-label-text {
-        max-width: 2.75rem;
-        font-size: 0.44rem;
-      }
-
-      .logic-grid,
-      .route-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .route-panel {
-        border-radius: 1.35rem;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        scroll-behavior: auto !important;
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-  </style>
-</head>
-
-<body
-  data-room="compass"
-  data-route="/"
-  data-contract="COMPASS_INTERPLANETARY_4_PLUS_16_COMMAND_SURFACE_TNT_v6"
-  data-generated-image="false"
-  data-graphic-box="false"
-  data-visual-pass-claimed="false"
->
-  <a class="skip-link" href="#compass-main">Skip to Compass</a>
-
-  <div class="site-shell">
-    <header class="topbar" aria-label="Primary site navigation">
-      <div class="topbar-inner">
-        <a class="brand" href="/" aria-label="Diamond Gate Bridge Compass">
-          <span class="brand-mark" aria-hidden="true">DG</span>
-          <span>Diamond Gate Bridge</span>
-        </a>
-
-        <nav class="nav" aria-label="Main navigation">
-          <a href="/">Compass</a>
-          <a href="/door/">Door</a>
-          <a href="/home/">Home</a>
-          <a href="/explore/">Explore</a>
-          <a href="/laws/">Laws</a>
-          <a href="/nine-summits/">Nine Summits</a>
-          <a href="/nine-summits-of-love/">Book</a>
-          <a href="/nine-summits/universe/">Universe</a>
-          <a href="/products/">Products</a>
-          <a href="/showroom/">Showroom</a>
-          <a href="/frontier/">Frontier</a>
-          <a href="/about-this-underdog/">Underdog</a>
-          <a href="/meet-sean-mansfield/">Meet Sean</a>
-          <a href="/gauges/">Gauges</a>
-        </nav>
-      </div>
-    </header>
-
-    <main id="compass-main">
-      <section class="hero" aria-labelledby="compass-title">
-        <div class="hero-copy">
-          <p class="eyebrow">Compass · Interplanetary Diamond Command Surface</p>
-          <h1 id="compass-title">Pressure is the door.</h1>
-          <p class="subtitle">One message. Many rooms. One bridge.</p>
-          <p class="lead">
-            The Compass orients the visitor before movement. The command field keeps the center behind the route
-            diamonds so the estate can move without losing readability.
-          </p>
-          <p class="lead">
-            A bridge is useful only when the way across stays readable.
-          </p>
-
-          <div class="cta-row" aria-label="Primary actions">
-            <a class="button primary" href="/door/">Cross the Door</a>
-            <a class="button" href="/home/">Enter Home</a>
-            <a class="button" href="/explore/">Explore the Manor</a>
-            <a class="button" href="/nine-summits/">Open Nine Summits</a>
-          </div>
-        </div>
-
-        <div class="compass-stage" aria-label="Compass route diamond field">
-          <div class="compass-card">
-            <div class="center-anchor" aria-hidden="true">
-              <span>Compass<br />Command<br />Anchor</span>
-            </div>
-
-            <div class="orbit-ring inner">
-              <a class="diamond-node" style="--angle: 0deg" href="/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Compass</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 90deg" href="/door/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Door</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 180deg" href="/home/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Home</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 270deg" href="/explore/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Explore</b></span>
-              </a>
-            </div>
-
-            <div class="orbit-ring outer">
-              <a class="diamond-node" style="--angle: 0deg" href="/laws/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Laws</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 22.5deg" href="/nine-summits/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Nine<br />Summits</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 45deg" href="/nine-summits-of-love/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Book</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 67.5deg" href="/nine-summits/universe/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Universe</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 90deg" href="/products/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Products</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 112.5deg" href="/showroom/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Showroom</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 135deg" href="/frontier/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Frontier</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 157.5deg" href="/gauges/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Gauges</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 180deg" href="/about-this-underdog/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Under<br />dog</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 202.5deg" href="/meet-sean-mansfield/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Meet<br />Sean</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 225deg" href="/showroom/globe/audralia/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Audralia</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 247.5deg" href="/products/five-flags/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Five<br />Flags</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 270deg" href="/door/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Entry</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 292.5deg" href="/home/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Receiver</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 315deg" href="/explore/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Map</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 337.5deg" href="/gauges/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Proof</b></span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="route-panel" aria-labelledby="command-field-title">
-        <p class="eyebrow">Compass Foreground Route Instrument</p>
-        <h2 id="command-field-title">Chronological command field</h2>
-        <p>
-          The interplanetary axis moves behind the room. The Compass route diamonds remain the foreground command instrument.
-        </p>
-
-        <div class="route-grid" aria-label="Chronological route field">
-          <a href="/">Compass Root</a>
-          <a href="/door/">Door Entry</a>
-          <a href="/home/">Home Receiver</a>
-          <a href="/explore/">Explore Map</a>
-          <a href="/laws/">Laws Boundary</a>
-          <a href="/nine-summits/">Nine Summits Gate</a>
-          <a href="/nine-summits-of-love/">Book Climb</a>
-          <a href="/nine-summits/universe/">Universe World</a>
-          <a href="/products/">Products Use</a>
-          <a href="/showroom/">Showroom Atrium</a>
-          <a href="/frontier/">Frontier Edge</a>
-          <a href="/gauges/">Gauges Proof</a>
-          <a href="/about-this-underdog/">Underdog Universal</a>
-          <a href="/meet-sean-mansfield/">Meet Sean Voice</a>
-          <a href="/showroom/globe/audralia/">Audralia World</a>
-          <a href="/products/five-flags/">Five Flags Game</a>
-        </div>
-      </section>
-
-      <section class="route-panel" aria-labelledby="compass-logic-title">
-        <p class="eyebrow">Compass logic</p>
-        <h2 id="compass-logic-title">Compass orients. Door admits. Home stabilizes. Explore maps.</h2>
-
-        <div class="logic-grid">
-          <article class="logic-card">
-            <strong>Entry</strong>
-            <span>Door is the first crossing point. It admits the visitor into the estate.</span>
-          </article>
-
-          <article class="logic-card">
-            <strong>Stability</strong>
-            <span>Home receives the visitor. It keeps the next movement coherent.</span>
-          </article>
-
-          <article class="logic-card">
-            <strong>Explore</strong>
-            <span>Explore gives the route field structure. It prevents every room from doing one job.</span>
-          </article>
-
-          <article class="logic-card">
-            <strong>Proof</strong>
-            <span>Gauges measure served route truth. The page is measured by source, not intention.</span>
-          </article>
-        </div>
-      </section>
-
-      <section class="route-panel" aria-labelledby="command-routes-title">
-        <p class="eyebrow">Command routes</p>
-        <h2 id="command-routes-title">Move from Compass without losing the bridge.</h2>
-
-        <div class="route-grid" aria-label="Command route links">
-          <a href="/door/">Door</a>
-          <a href="/home/">Home</a>
-          <a href="/explore/">Explore</a>
-          <a href="/laws/">Laws</a>
-          <a href="/nine-summits/">Nine Summits</a>
-          <a href="/nine-summits-of-love/">Book</a>
-          <a href="/nine-summits/universe/">Universe</a>
-          <a href="/products/">Products</a>
-          <a href="/showroom/">Showroom</a>
-          <a href="/frontier/">Frontier</a>
-          <a href="/about-this-underdog/">Underdog</a>
-          <a href="/meet-sean-mansfield/">Meet Sean</a>
-        </div>
-      </section>
-
-      <aside class="status-card" aria-label="Compass status" data-compass-status>
-        <strong>Compass status:</strong>
-        Interplanetary background active · Compass 4+16 foreground route instrument · Door remains view-selector authority.
-      </aside>
-
-      <template id="route-receipt" data-route-receipt>
-COMPASS_INTERPLANETARY_4_PLUS_16_COMMAND_SURFACE_TNT_v6
-previous_contract=COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v5
-route=/
-page=compass
-room=compass
-role=animated_public_command_surface
-message=one_message_many_rooms_one_bridge
-background_authority=/assets/dgb-interplanetary-background.js
-background_contract=DGB_INTERPLANETARY_AXIS_FLOATING_FIGURES_BACKGROUND_JS_TNT_v1
-runtime_authority=/index.runtime.js
-runtime_contract=COMPASS_INTERPLANETARY_UNIFORMITY_RUNTIME_TNT_v1
-route_js=/index.js
-route_js_contract=COMPASS_ROUTE_ONLY_VIEW_CARRY_INTERPLANETARY_UNIFORMITY_TNT_v2
-shared_css=/assets/diamond-orbit.css
-foreground_visual_system=compass_4_plus_16_diamond_orbit
-ring_system=4_inner_plus_16_outer
-inner_ring=compass,door,home,explore
-outer_ring=laws,nine_summits,book,universe,products,showroom,frontier,gauges,underdog,meet_sean,audralia,five_flags,entry,receiver,map,proof
-canonical_links=book:/nine-summits-of-love/,five_flags:/products/five-flags/,audralia:/showroom/globe/audralia/
-z_index_law=interplanetary_background,compass_anchor_background,inner_orbit_field,outer_orbit_field,route_labels
-route_owns=public_orientation,chronological_route_field,animated_diamond_routes,room_routes,bridge_orientation,foreground_compass_instrument
-route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic,canvas_creation,graphicbox
-view_selector_authority=/door/
-heavy_runtime_loaded=false
-render_files_touched=false
-instrument_touched=false
-gauges_logic_touched=false
-generated_image=false
-graphic_box=false
-streaming=false
-visual_pass_claimed=false
-      </template>
-    </main>
-
-    <footer>
-      COMPASS_INTERPLANETARY_4_PLUS_16_COMMAND_SURFACE_TNT_v6 · Compass · Interplanetary background · foreground route instrument.
-    </footer>
-  </div>
-</body>
-</html>
+    if (
+      url.pathname.indexOf("/nine-summits/universe/") === 0 ||
+      url.pathname.indexOf("/showroom/globe/") === 0 ||
+      url.pathname.indexOf("/gauges/") === 0
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  function normalizeLensLinks() {
+    var flat = document.querySelector("[data-lens-link='flat']");
+    var round = document.querySelector("[data-lens-link='round']");
+    var globe = document.querySelector("[data-lens-link='globe']");
+
+    if (flat) flat.setAttribute("href", "/door/?view=flat");
+    if (round) round.setAttribute("href", "/door/?view=round");
+    if (globe) {
+      globe.setAttribute("href", "/nine-summits/universe/");
+      globe.dataset.noViewCarry = "true";
+    }
+  }
+
+  function setRouteHref(link, mode) {
+    var rawHref = link.getAttribute("href") || "/";
+    var url;
+
+    if (!mode || !VALID_VIEW[mode]) return;
+    if (!shouldCarryView(link)) return;
+
+    try {
+      url = new URL(rawHref, window.location.origin);
+    } catch (error) {
+      return;
+    }
+
+    url.searchParams.set("view", mode);
+    link.setAttribute("href", url.pathname + url.search + url.hash);
+  }
+
+  function carryViewThroughLinks(mode) {
+    var links = Array.prototype.slice.call(document.querySelectorAll("a[href]"));
+
+    links.forEach(function (link) {
+      setRouteHref(link, mode);
+    });
+
+    normalizeLensLinks();
+  }
+
+  function tagLensCards(activeLens) {
+    var cards = Array.prototype.slice.call(document.querySelectorAll("[data-lens]"));
+
+    cards.forEach(function (card) {
+      var isActive = card.dataset.lens === activeLens;
+      card.dataset.activeLens = isActive ? "true" : "false";
+      card.setAttribute("aria-current", isActive ? "true" : "false");
+    });
+  }
+
+  function bindLensEvents() {
+    var links = Array.prototype.slice.call(document.querySelectorAll("[data-lens-link]"));
+
+    links.forEach(function (link) {
+      link.addEventListener("click", function () {
+        var lens = link.dataset.lensLink;
+
+        if (!VALID_LENS[lens]) return;
+
+        safeSetStorage(LENS_KEY, lens);
+
+        if (VALID_VIEW[lens]) {
+          safeSetStorage(STORAGE_KEY, lens);
+        }
+
+        document.documentElement.dataset.selectedWorldLens = lens;
+        if (document.body) document.body.dataset.selectedWorldLens = lens;
+      });
+    });
+  }
+
+  function tagRoot(lens, carryView) {
+    document.documentElement.dataset.pageContract = PAGE_CONTRACT;
+    document.documentElement.dataset.rootIndexJs = CONTRACT;
+    document.documentElement.dataset.rootIndexPreviousJs = PREVIOUS_CONTRACT;
+    document.documentElement.dataset.compassPosture = "route-only";
+    document.documentElement.dataset.worldLensGate = "active";
+    document.documentElement.dataset.selectedWorldLens = lens;
+    document.documentElement.dataset.activeViewCarried = carryView || "none";
+    document.documentElement.dataset.viewSelectorAuthority = "/door/";
+    document.documentElement.dataset.globeAuthority = "/nine-summits/universe/";
+    document.documentElement.dataset.doorOwnsFlatRound = "true";
+    document.documentElement.dataset.universeOwnsGlobe = "true";
+    document.documentElement.dataset.generatedImage = "false";
+    document.documentElement.dataset.graphicBox = "false";
+    document.documentElement.dataset.visualPassClaim = "false";
+    document.documentElement.dataset.visualPassClaimed = "false";
+
+    if (document.body) {
+      document.body.dataset.pageContract = PAGE_CONTRACT;
+      document.body.dataset.rootIndexJs = CONTRACT;
+      document.body.dataset.compassPosture = "route-only";
+      document.body.dataset.worldLensGate = "active";
+      document.body.dataset.selectedWorldLens = lens;
+      document.body.dataset.activeViewCarried = carryView || "none";
+      document.body.dataset.viewSelectorAuthority = "/door/";
+      document.body.dataset.globeAuthority = "/nine-summits/universe/";
+      document.body.dataset.generatedImage = "false";
+      document.body.dataset.graphicBox = "false";
+      document.body.dataset.visualPassClaimed = "false";
+    }
+  }
+
+  function publishReady(lens, carryView) {
+    var detail = {
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      pageContract: PAGE_CONTRACT,
+      route: "/",
+      posture: "route-only",
+      selectedLens: lens,
+      carriedView: carryView || null,
+      lensRoutes: {
+        flat: "/door/?view=flat",
+        round: "/door/?view=round",
+        globe: "/nine-summits/universe/"
+      },
+      authority: {
+        compass: ["lens_presentation", "public_orientation", "round_preview"],
+        door: ["flat_admission", "round_admission"],
+        universe: ["globe_scale"]
+      },
+      owns: [
+        "lens_link_normalization",
+        "flat_round_view_carry",
+        "root_route_posture_receipt",
+        "internal_link_view_continuity_for_eligible_routes"
+      ],
+      doesNotOwn: [
+        "view_selector_ui",
+        "planet_rendering",
+        "canvas_creation",
+        "Gauges_logic",
+        "GraphicBox",
+        "image_generation",
+        "visual_pass_claim"
+      ],
+      generatedImage: false,
+      graphicBox: false,
+      visualPassClaimed: false,
+      timestamp: new Date().toISOString()
+    };
+
+    window.DGB_COMPASS_THREE_LENS_ROUTE_RECEIPT = detail;
+
+    try {
+      window.dispatchEvent(new CustomEvent("dgb:compass:lens-ready", { detail: detail }));
+    } catch (error) {
+      /* Event dispatch is optional. */
+    }
+  }
+
+  function apply() {
+    var lens = getCurrentLens();
+    var carryView = getCarryView(lens);
+
+    normalizeLensLinks();
+    tagRoot(lens, carryView);
+    tagLensCards(lens);
+    carryViewThroughLinks(carryView);
+    bindLensEvents();
+    publishReady(lens, carryView);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", apply, { once: true });
+  } else {
+    apply();
+  }
+})();

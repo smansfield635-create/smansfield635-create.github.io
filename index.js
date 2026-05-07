@@ -1,16 +1,14 @@
 /* /index.js
-   COMPASS_THREE_LENS_ROUTE_ONLY_JS_TNT_v3
+   COMPASS_THREE_LENS_ROUTE_ONLY_JS_TNT_v4
    Full-file replacement.
    Purpose:
    - Keep Compass route-only.
-   - Present and preserve the three-lens decision gate.
-   - Flat routes to /door/?view=flat.
-   - Round routes to /door/?view=round.
-   - Globe routes to /nine-summits/universe/.
-   - Preserve Door as Flat/Round view-selector authority.
+   - Front page presents three lenses.
+   - Flat activates in-page 2D-only Compass map.
+   - Round activates in-page rotating Compass orbit and interplanetary background.
+   - Globe routes directly to /nine-summits/universe/.
+   - Preserve Door as Flat/Round admission authority.
    - Preserve Universe as Globe-scale authority.
-   - Carry flat/round view through eligible internal links only.
-   - Do not mount Flat/Round/Globe selector behavior on the root page.
    - Do not render planets, canvases, or GraphicBox.
    - Do not claim visual pass.
 */
@@ -18,13 +16,16 @@
 (function () {
   "use strict";
 
-  var CONTRACT = "COMPASS_THREE_LENS_ROUTE_ONLY_JS_TNT_v3";
-  var PREVIOUS_CONTRACT = "COMPASS_ROUTE_ONLY_VIEW_CARRY_INTERPLANETARY_UNIFORMITY_TNT_v2";
-  var PAGE_CONTRACT = "COMPASS_THREE_LENS_INTERPLANETARY_GATE_TNT_v7";
-  var STORAGE_KEY = "dgb:viewMode";
-  var LENS_KEY = "dgb:worldLens";
+  var CONTRACT = "COMPASS_THREE_LENS_ROUTE_ONLY_JS_TNT_v4";
+  var PREVIOUS_CONTRACT = "COMPASS_THREE_LENS_ROUTE_ONLY_JS_TNT_v3";
+  var PAGE_CONTRACT = "COMPASS_THREE_LENS_FLAT_ROUND_GLOBE_GATE_TNT_v8";
+  var RUNTIME_CONTRACT = "COMPASS_THREE_LENS_RUNTIME_TNT_v3";
+  var STORAGE_VIEW_KEY = "dgb:viewMode";
+  var STORAGE_LENS_KEY = "dgb:worldLens";
+  var ROUND_BACKGROUND_SRC = "/assets/dgb-interplanetary-background.js?v=DGB_INTERPLANETARY_AXIS_FLOATING_FIGURES_BACKGROUND_JS_TNT_v1";
+
+  var VALID_LENS = { gate: true, flat: true, round: true, globe: true };
   var VALID_VIEW = { flat: true, round: true };
-  var VALID_LENS = { flat: true, round: true, globe: true };
 
   function safeGetStorage(key) {
     try {
@@ -46,72 +47,53 @@
     return new URLSearchParams(window.location.search);
   }
 
-  function getIncomingLens() {
+  function readIncomingLens() {
     var params = readParams();
-    var incomingLens = params.get("lens");
-    var incomingView = params.get("view");
+    var lens = params.get("lens");
+    var view = params.get("view");
 
-    if (VALID_LENS[incomingLens]) return incomingLens;
-    if (VALID_VIEW[incomingView]) return incomingView;
+    if (VALID_LENS[lens]) return lens;
+    if (VALID_VIEW[view]) return view;
 
     return "";
   }
 
-  function getCurrentLens() {
-    var incoming = getIncomingLens();
-    var saved = safeGetStorage(LENS_KEY);
-    var savedView = safeGetStorage(STORAGE_KEY);
+  function getInitialLens() {
+    var incoming = readIncomingLens();
 
-    if (VALID_LENS[incoming]) {
-      safeSetStorage(LENS_KEY, incoming);
-      if (VALID_VIEW[incoming]) safeSetStorage(STORAGE_KEY, incoming);
+    if (incoming === "flat" || incoming === "round") {
+      safeSetStorage(STORAGE_LENS_KEY, incoming);
+      safeSetStorage(STORAGE_VIEW_KEY, incoming);
       return incoming;
     }
 
-    if (VALID_LENS[saved]) return saved;
-    if (VALID_VIEW[savedView]) return savedView;
-
-    return "round";
+    return "gate";
   }
 
-  function getCarryView(lens) {
-    if (VALID_VIEW[lens]) return lens;
+  function setInterplanetaryEnabled(enabled) {
+    var field = document.querySelector("[data-dgb-interplanetary-background-field='true']");
 
-    var savedView = safeGetStorage(STORAGE_KEY);
-    if (VALID_VIEW[savedView]) return savedView;
+    document.documentElement.dataset.dgbInterplanetaryBackground = enabled ? "true" : "false";
+    document.body.dataset.dgbInterplanetaryBackground = enabled ? "true" : "false";
 
-    return "";
+    if (field) {
+      field.style.display = enabled ? "" : "none";
+    }
   }
 
-  function shouldCarryView(link) {
-    var href = link.getAttribute("href") || "";
-    var url;
+  function ensureRoundBackground() {
+    var existing = document.querySelector("script[data-compass-round-background='true']");
 
-    if (!href) return false;
-    if (href.indexOf("#") === 0) return false;
-    if (href.indexOf("mailto:") === 0) return false;
-    if (href.indexOf("tel:") === 0) return false;
-    if (href.indexOf("javascript:") === 0) return false;
-    if (link.hasAttribute("download")) return false;
-    if (link.dataset.noViewCarry === "true") return false;
+    setInterplanetaryEnabled(true);
 
-    try {
-      url = new URL(href, window.location.origin);
-    } catch (error) {
-      return false;
-    }
+    if (existing) return;
 
-    if (url.origin !== window.location.origin) return false;
-
-    if (
-      url.pathname.indexOf("/nine-summits/universe/") === 0 ||
-      url.pathname.indexOf("/showroom/globe/") === 0 ||
-      url.pathname.indexOf("/gauges/") === 0
-    ) {
-      return false;
-    }
-
-    return true;
+    var script = document.createElement("script");
+    script.src = ROUND_BACKGROUND_SRC;
+    script.defer = true;
+    script.dataset.compassRoundBackground = "true";
+    script.dataset.contract = "DGB_INTERPLANETARY_AXIS_FLOATING_FIGURES_BACKGROUND_JS_TNT_v1";
+    document.head.appendChild(script);
   }
 
   function normalizeLensLinks() {
@@ -119,39 +101,55 @@
     var round = document.querySelector("[data-lens-link='round']");
     var globe = document.querySelector("[data-lens-link='globe']");
 
-    if (flat) flat.setAttribute("href", "/door/?view=flat");
-    if (round) round.setAttribute("href", "/door/?view=round");
+    if (flat) flat.setAttribute("href", "/?lens=flat&view=flat");
+    if (round) round.setAttribute("href", "/?lens=round&view=round");
+
     if (globe) {
       globe.setAttribute("href", "/nine-summits/universe/");
       globe.dataset.noViewCarry = "true";
     }
   }
 
-  function setRouteHref(link, mode) {
-    var rawHref = link.getAttribute("href") || "/";
-    var url;
+  function setActiveLens(lens, updateHistory) {
+    var nextLens = VALID_LENS[lens] ? lens : "gate";
 
-    if (!mode || !VALID_VIEW[mode]) return;
-    if (!shouldCarryView(link)) return;
-
-    try {
-      url = new URL(rawHref, window.location.origin);
-    } catch (error) {
+    if (nextLens === "globe") {
+      window.location.href = "/nine-summits/universe/";
       return;
     }
 
-    url.searchParams.set("view", mode);
-    link.setAttribute("href", url.pathname + url.search + url.hash);
-  }
+    document.body.dataset.activeLens = nextLens;
+    document.documentElement.dataset.activeLens = nextLens;
+    document.documentElement.dataset.selectedWorldLens = nextLens;
+    document.body.dataset.selectedWorldLens = nextLens;
 
-  function carryViewThroughLinks(mode) {
-    var links = Array.prototype.slice.call(document.querySelectorAll("a[href]"));
+    if (nextLens === "flat" || nextLens === "round") {
+      safeSetStorage(STORAGE_LENS_KEY, nextLens);
+      safeSetStorage(STORAGE_VIEW_KEY, nextLens);
+      document.documentElement.dataset.activeViewCarried = nextLens;
+      document.body.dataset.activeViewCarried = nextLens;
+    } else {
+      document.documentElement.dataset.activeViewCarried = "none";
+      document.body.dataset.activeViewCarried = "none";
+    }
 
-    links.forEach(function (link) {
-      setRouteHref(link, mode);
-    });
+    if (nextLens === "round") {
+      ensureRoundBackground();
+    } else {
+      setInterplanetaryEnabled(false);
+    }
 
-    normalizeLensLinks();
+    tagLensCards(nextLens);
+
+    if (updateHistory && window.history && window.history.pushState) {
+      if (nextLens === "gate") {
+        window.history.pushState({ lens: "gate" }, "", "/");
+      } else {
+        window.history.pushState({ lens: nextLens }, "", "/?lens=" + nextLens + "&view=" + nextLens);
+      }
+    }
+
+    publishReady(nextLens);
   }
 
   function tagLensCards(activeLens) {
@@ -168,82 +166,94 @@
     var links = Array.prototype.slice.call(document.querySelectorAll("[data-lens-link]"));
 
     links.forEach(function (link) {
-      link.addEventListener("click", function () {
+      link.addEventListener("click", function (event) {
         var lens = link.dataset.lensLink;
 
+        if (lens === "globe") return;
         if (!VALID_LENS[lens]) return;
 
-        safeSetStorage(LENS_KEY, lens);
-
-        if (VALID_VIEW[lens]) {
-          safeSetStorage(STORAGE_KEY, lens);
-        }
-
-        document.documentElement.dataset.selectedWorldLens = lens;
-        if (document.body) document.body.dataset.selectedWorldLens = lens;
+        event.preventDefault();
+        setActiveLens(lens, true);
       });
     });
   }
 
-  function tagRoot(lens, carryView) {
+  function bindChooseAgainLinks() {
+    var links = Array.prototype.slice.call(document.querySelectorAll("a[href='/']"));
+
+    links.forEach(function (link) {
+      if (link.closest(".nav")) return;
+
+      link.addEventListener("click", function (event) {
+        event.preventDefault();
+        setActiveLens("gate", true);
+      });
+    });
+  }
+
+  function tagRoot() {
     document.documentElement.dataset.pageContract = PAGE_CONTRACT;
     document.documentElement.dataset.rootIndexJs = CONTRACT;
     document.documentElement.dataset.rootIndexPreviousJs = PREVIOUS_CONTRACT;
+    document.documentElement.dataset.compassRuntimeExpected = RUNTIME_CONTRACT;
     document.documentElement.dataset.compassPosture = "route-only";
     document.documentElement.dataset.worldLensGate = "active";
-    document.documentElement.dataset.selectedWorldLens = lens;
-    document.documentElement.dataset.activeViewCarried = carryView || "none";
+    document.documentElement.dataset.flatLensBehavior = "in-page-2d-only";
+    document.documentElement.dataset.roundLensBehavior = "in-page-rotating-orbit-and-background";
+    document.documentElement.dataset.globeLensBehavior = "route-to-nine-summits-universe";
     document.documentElement.dataset.viewSelectorAuthority = "/door/";
     document.documentElement.dataset.globeAuthority = "/nine-summits/universe/";
-    document.documentElement.dataset.doorOwnsFlatRound = "true";
-    document.documentElement.dataset.universeOwnsGlobe = "true";
     document.documentElement.dataset.generatedImage = "false";
     document.documentElement.dataset.graphicBox = "false";
     document.documentElement.dataset.visualPassClaim = "false";
     document.documentElement.dataset.visualPassClaimed = "false";
 
-    if (document.body) {
-      document.body.dataset.pageContract = PAGE_CONTRACT;
-      document.body.dataset.rootIndexJs = CONTRACT;
-      document.body.dataset.compassPosture = "route-only";
-      document.body.dataset.worldLensGate = "active";
-      document.body.dataset.selectedWorldLens = lens;
-      document.body.dataset.activeViewCarried = carryView || "none";
-      document.body.dataset.viewSelectorAuthority = "/door/";
-      document.body.dataset.globeAuthority = "/nine-summits/universe/";
-      document.body.dataset.generatedImage = "false";
-      document.body.dataset.graphicBox = "false";
-      document.body.dataset.visualPassClaimed = "false";
-    }
+    document.body.dataset.pageContract = PAGE_CONTRACT;
+    document.body.dataset.rootIndexJs = CONTRACT;
+    document.body.dataset.compassPosture = "route-only";
+    document.body.dataset.worldLensGate = "active";
+    document.body.dataset.viewSelectorAuthority = "/door/";
+    document.body.dataset.globeAuthority = "/nine-summits/universe/";
+    document.body.dataset.generatedImage = "false";
+    document.body.dataset.graphicBox = "false";
+    document.body.dataset.visualPassClaimed = "false";
   }
 
-  function publishReady(lens, carryView) {
+  function publishReady(lens) {
     var detail = {
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       pageContract: PAGE_CONTRACT,
+      runtimeExpected: RUNTIME_CONTRACT,
       route: "/",
       posture: "route-only",
-      selectedLens: lens,
-      carriedView: carryView || null,
+      activeLens: lens,
+      lensBehavior: {
+        gate: "front_page_three_lens_choice",
+        flat: "in_page_2d_only",
+        round: "in_page_rotating_items_and_interplanetary_background",
+        globe: "route_to_nine_summits_universe"
+      },
       lensRoutes: {
-        flat: "/door/?view=flat",
-        round: "/door/?view=round",
+        flat: "/?lens=flat&view=flat",
+        flatDoor: "/door/?view=flat",
+        round: "/?lens=round&view=round",
+        roundDoor: "/door/?view=round",
         globe: "/nine-summits/universe/"
       },
       authority: {
-        compass: ["lens_presentation", "public_orientation", "round_preview"],
+        compass: ["lens_presentation", "flat_2d_map", "round_orbit_preview"],
         door: ["flat_admission", "round_admission"],
         universe: ["globe_scale"]
       },
       owns: [
-        "lens_link_normalization",
-        "flat_round_view_carry",
-        "root_route_posture_receipt",
-        "internal_link_view_continuity_for_eligible_routes"
+        "lens_switching",
+        "flat_2d_visibility",
+        "round_animation_visibility",
+        "round_background_activation",
+        "globe_route_normalization"
       ],
       doesNotOwn: [
-        "view_selector_ui",
         "planet_rendering",
         "canvas_creation",
         "Gauges_logic",
@@ -267,15 +277,17 @@
   }
 
   function apply() {
-    var lens = getCurrentLens();
-    var carryView = getCarryView(lens);
+    var initialLens = getInitialLens();
 
+    tagRoot();
     normalizeLensLinks();
-    tagRoot(lens, carryView);
-    tagLensCards(lens);
-    carryViewThroughLinks(carryView);
     bindLensEvents();
-    publishReady(lens, carryView);
+    bindChooseAgainLinks();
+    setActiveLens(initialLens, false);
+
+    window.addEventListener("popstate", function () {
+      setActiveLens(getInitialLens(), false);
+    });
   }
 
   if (document.readyState === "loading") {

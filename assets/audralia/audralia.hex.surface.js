@@ -1,22 +1,30 @@
 // /assets/audralia/audralia.hex.surface.js
-// AUDRALIA_HEX_SURFACE_CHILD_PARENT_FIELD_EXPRESSOR_TNT_v3
+// AUDRALIA_HEX_SURFACE_CHILD_GRANDCHILD_RELIEF_BIND_TNT_v4
 // Full-file replacement.
 // Purpose:
-// - Renew the child contract in order under the active parent surface standard.
-// - Child expresses parent fields; child does not create land/water/world truth.
-// - Child may refine texture, ridge, shelf, coastline, mineral, glaze, and micro-surface expression.
+// - Renew child after parent v6 and bind first grandchild relief layer.
+// - Child expresses parent fields and grandchild relief overlays.
+// - Child does not create land/water/world truth.
 // - Child must not import runtime.
 // - Child must not overwrite parent classification.
-// - Grandchildren remain downstream and are not activated here.
+// - Grandchild is relief-only.
 // - No GraphicBox. No image generation. No visual-pass claim.
 
-const RECEIPT = "AUDRALIA_HEX_SURFACE_CHILD_PARENT_FIELD_EXPRESSOR_TNT_v3";
-const PREVIOUS_RECEIPT = "AUDRALIA_G7_HEX_SURFACE_CHILD_RENDERER_TNT_v1";
+import {
+  refineAudraliaReliefSample,
+  getAudraliaReliefSurfaceStatus,
+  AUDRALIA_RELIEF_SURFACE_RECEIPT_VALUE
+} from "/assets/audralia/audralia.relief.surface.js";
+
+const RECEIPT = "AUDRALIA_HEX_SURFACE_CHILD_GRANDCHILD_RELIEF_BIND_TNT_v4";
+const PREVIOUS_RECEIPT = "AUDRALIA_HEX_SURFACE_CHILD_PARENT_FIELD_EXPRESSOR_TNT_v3";
+const LEGACY_RECEIPT = "AUDRALIA_G7_HEX_SURFACE_CHILD_RENDERER_TNT_v1";
 const PREVIOUS_ACTIVE_RENEWAL = "AUDRALIA_G9_HEX_CHILD_4K_MICRO_SURFACE_GLAZE_TNT_v1";
 const COMPATIBILITY_RENEWAL = "AUDRALIA_G8_HEX_CHILD_GLOBAL_AQUEOUS_GLAZE_LAYER_TNT_v1";
 const PARENT_REQUIRED_RECEIPT = "AUDRALIA_SURFACE_PARENT_COASTLINE_RIDGE_FEATHER_TNT_v6";
 const PARENT_FALLBACK_RECEIPT = "AUDRALIA_SURFACE_PARENT_BASIN_RIDGE_DISTRIBUTION_TNT_v5";
-const CHILD_CONTRACT = "AUDRALIA_HEX_CHILD_PARENT_FIELD_EXPRESSION_CONTRACT_v1";
+const GRANDCHILD_RELIEF_RECEIPT = "AUDRALIA_GRANDCHILD_RELIEF_FIELD_EXPRESSOR_TNT_v1";
+const CHILD_CONTRACT = "AUDRALIA_HEX_CHILD_GRANDCHILD_RELIEF_BIND_CONTRACT_v1";
 
 const REMOVED_STALE_RECEIPTS = Object.freeze([
   "AUDRALIA_G8_HEX_CHILD_DEEP_OCEAN_SEPARATION_TNT_v1",
@@ -25,23 +33,20 @@ const REMOVED_STALE_RECEIPTS = Object.freeze([
 ]);
 
 const DEFAULTS = Object.freeze({
-  minSize: 320,
-  maxSize: 900,
   radiusRatio: 0.405,
-  hexDensity: 252,
-  minHexRadius: 1.12,
-  maxHexRadius: 3.55,
+  hexDensity: 268,
+  minHexRadius: 0.92,
+  maxHexRadius: 3.30,
   edgeDarkening: 0.038,
-  seamSoftening: 0.042,
-  parentFieldStrength: 0.92,
-  parentTextureBlend: 0.28,
-  ridgeExpressionStrength: 0.42,
-  mountainExpressionStrength: 0.36,
-  coastlineExpressionStrength: 0.42,
-  shelfExpressionStrength: 0.38,
-  mineralExpressionStrength: 0.30,
-  microTerrainStrength: 0.34,
-  glazeStrength: 0.18,
+  seamSoftening: 0.040,
+  parentTextureBlend: 0.22,
+  ridgeExpressionStrength: 0.48,
+  mountainExpressionStrength: 0.42,
+  coastlineExpressionStrength: 0.48,
+  shelfExpressionStrength: 0.42,
+  mineralExpressionStrength: 0.34,
+  reliefGrandchildStrength: 0.62,
+  microTerrainStrength: 0.38,
   atmosphereStrength: 1,
   lightX: -0.42,
   lightY: 0.36,
@@ -52,50 +57,32 @@ const STATUS = {
   ok: true,
   receipt: RECEIPT,
   previousReceipt: PREVIOUS_RECEIPT,
+  legacyReceipt: LEGACY_RECEIPT,
   previousActiveRenewal: PREVIOUS_ACTIVE_RENEWAL,
   compatibilityRenewal: COMPATIBILITY_RENEWAL,
   parentRequiredReceipt: PARENT_REQUIRED_RECEIPT,
   parentFallbackReceipt: PARENT_FALLBACK_RECEIPT,
+  grandchildReliefReceipt: GRANDCHILD_RELIEF_RECEIPT,
+  grandchildReliefImportedReceipt: AUDRALIA_RELIEF_SURFACE_RECEIPT_VALUE,
   childContract: CHILD_CONTRACT,
-  role: "audralia-child-parent-field-expressor",
+
+  role: "audralia-child-grandchild-relief-bound-parent-field-expressor",
   parentStandardRequired: true,
   childActivatedByParentContract: false,
   parentReceiptDetected: "",
   parentSurfaceSamplerDetected: false,
-  textureFallbackAvailable: false,
-  owns: Object.freeze([
-    "hexagonal_surface_sampling",
-    "parent_field_expression",
-    "ridge_expression",
-    "mountain_expression",
-    "coastline_expression",
-    "shelf_expression",
-    "mineral_expression",
-    "micro_surface_refinement",
-    "atmospheric_rim",
-    "canvas_frame_paint_strategy"
-  ]),
-  doesNotOwn: Object.freeze([
-    "runtime_import",
-    "runtime_motion",
-    "land_water_classification",
-    "parent_surface_truth",
-    "planet_generation",
-    "topology_authority",
-    "terrain_authority",
-    "hydration_authority",
-    "ocean_authority",
-    "route_boot",
-    "gauges_scoring",
-    "visual_pass_claim"
-  ]),
+  grandchildReliefActivated: true,
+  grandchildReliefStatus: getAudraliaReliefSurfaceStatus(),
+
+  parentClassificationPreserved: true,
+  downstreamClassificationOverrideAllowed: false,
+  grandchildrenActivated: true,
+
   runtimeImport: false,
   runtimeAuthority: false,
   routeOwnedLandGeneration: false,
   routeOwnedWaterGeneration: false,
-  downstreamClassificationOverrideAllowed: false,
-  parentClassificationPreserved: true,
-  grandchildrenActivated: false,
+
   graphicBox: false,
   imageGeneration: false,
   visualPassClaimed: false
@@ -209,61 +196,20 @@ function hexDistance(localX, localY, hexRadius) {
 function normalizeOptions(options = {}) {
   return Object.freeze({
     radiusRatio: clamp(Number(options.radiusRatio) || DEFAULTS.radiusRatio, 0.32, 0.48),
-    hexDensity: clamp(Number(options.hexDensity) || DEFAULTS.hexDensity, 120, 420),
-    minHexRadius: clamp(Number(options.minHexRadius) || DEFAULTS.minHexRadius, 0.75, 3),
+    hexDensity: clamp(Number(options.hexDensity) || DEFAULTS.hexDensity, 120, 440),
+    minHexRadius: clamp(Number(options.minHexRadius) || DEFAULTS.minHexRadius, 0.70, 3),
     maxHexRadius: clamp(Number(options.maxHexRadius) || DEFAULTS.maxHexRadius, 1.4, 6),
     edgeDarkening: clamp(Number(options.edgeDarkening) || DEFAULTS.edgeDarkening, 0, 0.18),
     seamSoftening: clamp(Number(options.seamSoftening) || DEFAULTS.seamSoftening, 0, 0.18),
-    parentFieldStrength: clamp(
-      options.parentFieldStrength === undefined ? DEFAULTS.parentFieldStrength : Number(options.parentFieldStrength),
-      0,
-      1
-    ),
-    parentTextureBlend: clamp(
-      options.parentTextureBlend === undefined ? DEFAULTS.parentTextureBlend : Number(options.parentTextureBlend),
-      0,
-      0.55
-    ),
-    ridgeExpressionStrength: clamp(
-      options.ridgeExpressionStrength === undefined ? DEFAULTS.ridgeExpressionStrength : Number(options.ridgeExpressionStrength),
-      0,
-      0.75
-    ),
-    mountainExpressionStrength: clamp(
-      options.mountainExpressionStrength === undefined ? DEFAULTS.mountainExpressionStrength : Number(options.mountainExpressionStrength),
-      0,
-      0.75
-    ),
-    coastlineExpressionStrength: clamp(
-      options.coastlineExpressionStrength === undefined ? DEFAULTS.coastlineExpressionStrength : Number(options.coastlineExpressionStrength),
-      0,
-      0.80
-    ),
-    shelfExpressionStrength: clamp(
-      options.shelfExpressionStrength === undefined ? DEFAULTS.shelfExpressionStrength : Number(options.shelfExpressionStrength),
-      0,
-      0.80
-    ),
-    mineralExpressionStrength: clamp(
-      options.mineralExpressionStrength === undefined ? DEFAULTS.mineralExpressionStrength : Number(options.mineralExpressionStrength),
-      0,
-      0.60
-    ),
-    microTerrainStrength: clamp(
-      options.microTerrainStrength === undefined ? DEFAULTS.microTerrainStrength : Number(options.microTerrainStrength),
-      0,
-      0.65
-    ),
-    glazeStrength: clamp(
-      options.glazeStrength === undefined ? DEFAULTS.glazeStrength : Number(options.glazeStrength),
-      0,
-      0.50
-    ),
-    atmosphereStrength: clamp(
-      options.atmosphereStrength === undefined ? DEFAULTS.atmosphereStrength : Number(options.atmosphereStrength),
-      0,
-      1.4
-    ),
+    parentTextureBlend: clamp(options.parentTextureBlend === undefined ? DEFAULTS.parentTextureBlend : Number(options.parentTextureBlend), 0, 0.48),
+    ridgeExpressionStrength: clamp(options.ridgeExpressionStrength === undefined ? DEFAULTS.ridgeExpressionStrength : Number(options.ridgeExpressionStrength), 0, 0.80),
+    mountainExpressionStrength: clamp(options.mountainExpressionStrength === undefined ? DEFAULTS.mountainExpressionStrength : Number(options.mountainExpressionStrength), 0, 0.80),
+    coastlineExpressionStrength: clamp(options.coastlineExpressionStrength === undefined ? DEFAULTS.coastlineExpressionStrength : Number(options.coastlineExpressionStrength), 0, 0.85),
+    shelfExpressionStrength: clamp(options.shelfExpressionStrength === undefined ? DEFAULTS.shelfExpressionStrength : Number(options.shelfExpressionStrength), 0, 0.85),
+    mineralExpressionStrength: clamp(options.mineralExpressionStrength === undefined ? DEFAULTS.mineralExpressionStrength : Number(options.mineralExpressionStrength), 0, 0.70),
+    reliefGrandchildStrength: clamp(options.reliefGrandchildStrength === undefined ? DEFAULTS.reliefGrandchildStrength : Number(options.reliefGrandchildStrength), 0, 1),
+    microTerrainStrength: clamp(options.microTerrainStrength === undefined ? DEFAULTS.microTerrainStrength : Number(options.microTerrainStrength), 0, 0.72),
+    atmosphereStrength: clamp(options.atmosphereStrength === undefined ? DEFAULTS.atmosphereStrength : Number(options.atmosphereStrength), 0, 1.4),
     lightX: Number(options.lightX) || DEFAULTS.lightX,
     lightY: Number(options.lightY) || DEFAULTS.lightY,
     lightZ: Number(options.lightZ) || DEFAULTS.lightZ
@@ -425,6 +371,7 @@ function fallbackTextureClassification(color) {
     parentEdgeDefinition: shelf ? 0.40 : land ? 0.16 : 0.08,
     ridgeIndex: land ? clamp01((luma - 0.28) * 1.2) : 0,
     mountainIndex: land ? clamp01((luma - 0.36) * 1.1) : 0,
+    basinIndex: land ? clamp01((0.62 - luma) * 0.8) : 0,
     microGlazeIndex: clamp01(luma * 0.35),
     parentHexDetailIndex: 0.32,
     mineralIndex: land ? 0.34 : 0.10,
@@ -528,7 +475,7 @@ function baseColorFromParent(sample) {
   return color;
 }
 
-function applyParentExpression(baseColor, textureColor, sample, geometryIndex, geometry, config) {
+function applyParentAndGrandchildExpression(baseColor, textureColor, sample, relief, geometryIndex, geometry, config) {
   const ridge = clamp01(sample.ridgeIndex ?? 0);
   const mountain = clamp01(sample.mountainIndex ?? 0);
   const coast = clamp01(sample.coastlineIndex ?? sample.coastalFeather ?? 0);
@@ -556,32 +503,36 @@ function applyParentExpression(baseColor, textureColor, sample, geometryIndex, g
     3
   );
 
-  const ridgeLift = clamp01(ridge * config.ridgeExpressionStrength * (0.60 + fineNoise * 0.55));
-  const mountainLift = clamp01(mountain * config.mountainExpressionStrength * (0.55 + seed * 0.55));
-  const coastLift = clamp01(coast * config.coastlineExpressionStrength);
-  const shelfLift = clamp01(shelf * config.shelfExpressionStrength);
-  const mineralLift = clamp01((diamond + opal + granite + slate) * 0.25 * config.mineralExpressionStrength);
-  const microLift = clamp01((micro * 0.60 + glaze * 0.40) * config.microTerrainStrength);
+  const ridgeLift = clamp01((ridge * 0.70 + relief.ridgeOverlay * 0.80) * config.ridgeExpressionStrength);
+  const mountainLift = clamp01((mountain * 0.68 + relief.mountainOverlay * 0.82) * config.mountainExpressionStrength);
+  const coastLift = clamp01((coast * 0.70 + relief.coastlineGritOverlay * 0.80) * config.coastlineExpressionStrength);
+  const shelfLift = clamp01((shelf * 0.72 + relief.shelfReliefOverlay * 0.80) * config.shelfExpressionStrength);
+  const mineralLift = clamp01((diamond + opal + granite + slate + relief.mineralPressureOverlay) * 0.22 * config.mineralExpressionStrength);
+  const reliefLift = clamp01(relief.reliefContrast * config.reliefGrandchildStrength);
+  const microLift = clamp01((micro * 0.52 + glaze * 0.34 + relief.microNoise * 0.34) * config.microTerrainStrength);
+  const shadeLift = clamp01(relief.shadeLift * config.reliefGrandchildStrength);
+  const shadeDrop = clamp01(relief.shadeDrop * config.reliefGrandchildStrength);
 
   if (sample.exposedTerrainLand || sample.land || sample.visibleLand) {
-    color = mixColor(color, [52, 65, 54, 255], ridgeLift * 0.22);
-    color = mixColor(color, [166, 154, 112, 255], mountainLift * 0.14);
-    color = mixColor(color, [218, 204, 156, 255], coastLift * 0.13);
-    color = mixColor(color, [202, 224, 199, 255], opal * 0.06 + diamond * 0.045);
-    color = mixColor(color, [80, 88, 82, 255], slate * 0.08);
+    color = mixColor(color, [48, 61, 52, 255], ridgeLift * 0.24 + shadeDrop * 0.18);
+    color = mixColor(color, [166, 154, 112, 255], mountainLift * 0.17 + shadeLift * 0.12);
+    color = mixColor(color, [218, 204, 156, 255], coastLift * 0.16);
+    color = mixColor(color, [202, 224, 199, 255], opal * 0.06 + diamond * 0.045 + mineralLift * 0.08);
+    color = mixColor(color, [78, 86, 82, 255], slate * 0.10 + relief.subterraneanPressureOverlay * 0.08);
+    color = mixColor(color, [112, 100, 70, 255], relief.basinShadowOverlay * 0.10);
   }
 
   if (sample.shelf || sample.visualSurfaceClass === "shelf_water_surface") {
-    color = mixColor(color, [66, 218, 223, 255], shelfLift * 0.22 + coastLift * 0.10);
-    color = mixColor(color, [218, 232, 204, 255], opal * 0.05);
+    color = mixColor(color, [66, 218, 223, 255], shelfLift * 0.26 + coastLift * 0.10);
+    color = mixColor(color, [218, 232, 204, 255], opal * 0.05 + relief.coastlineGritOverlay * 0.04);
   }
 
   if (sample.ocean || sample.visualSurfaceClass === "ocean_water_surface") {
-    color = mixColor(color, [7, 28, 75, 255], clamp01(sample.depth ?? 0.45) * 0.12);
+    color = mixColor(color, [7, 28, 75, 255], clamp01(sample.depth ?? 0.45) * 0.12 + relief.deepWaterVariationOverlay * 0.08);
   }
 
   if (sample.ice || sample.glacier) {
-    color = mixColor(color, [250, 253, 255, 255], diamond * 0.10 + seed > 0.94 ? 0.04 : 0);
+    color = mixColor(color, [250, 253, 255, 255], diamond * 0.10 + relief.iceRidgeOverlay * 0.08 + (seed > 0.94 ? 0.04 : 0));
   }
 
   const hexEdge = geometry.edgeFactors[geometryIndex];
@@ -592,9 +543,10 @@ function applyParentExpression(baseColor, textureColor, sample, geometryIndex, g
   );
 
   const sphericalShade = clamp(0.60 + zDepth * 0.48, 0.48, 1.08);
-  const microShade = clamp(0.955 + (fineNoise - 0.5) * 0.09 + microLift * 0.05 + mineralLift * 0.03, 0.88, 1.12);
+  const microShade = clamp(0.955 + (fineNoise - 0.5) * 0.09 + microLift * 0.05 + mineralLift * 0.03 + reliefLift * 0.04, 0.88, 1.13);
+  const reliefShade = clamp(1 + shadeLift * 0.16 - shadeDrop * 0.14, 0.84, 1.16);
 
-  return multiplyColor(color, seam * sphericalShade * microShade);
+  return multiplyColor(color, seam * sphericalShade * microShade * reliefShade);
 }
 
 function buildHexGeometry(size, options = {}) {
@@ -679,11 +631,11 @@ function buildHexGeometry(size, options = {}) {
   return Object.freeze({
     receipt: RECEIPT,
     previousReceipt: PREVIOUS_RECEIPT,
-    previousActiveRenewal: PREVIOUS_ACTIVE_RENEWAL,
     compatibilityRenewal: COMPATIBILITY_RENEWAL,
     parentRequiredReceipt: PARENT_REQUIRED_RECEIPT,
+    grandchildReliefReceipt: GRANDCHILD_RELIEF_RECEIPT,
     childContract: CHILD_CONTRACT,
-    model: "parent-field-expressive-hex-child-surface",
+    model: "parent-field-expressive-hex-child-grandchild-relief-bound-surface",
     size,
     radius,
     hexRadius,
@@ -762,24 +714,28 @@ function publishChildStatus(state, frameReceipt) {
   STATUS.childActivatedByParentContract = Boolean(parentSampler && isParentReceiptAccepted(parentReceipt));
   STATUS.parentSurfaceSamplerDetected = Boolean(parentSampler);
   STATUS.parentReceiptDetected = parentReceipt;
-  STATUS.textureFallbackAvailable = Boolean(state && state.texture && state.texture.data);
-  STATUS.grandchildrenActivated = false;
+  STATUS.grandchildReliefActivated = true;
+  STATUS.grandchildReliefImportedReceipt = AUDRALIA_RELIEF_SURFACE_RECEIPT_VALUE;
+  STATUS.grandchildReliefStatus = getAudraliaReliefSurfaceStatus();
 
   if (state && state.canvas) {
     state.canvas.dataset.hexSurfaceChild = RECEIPT;
     state.canvas.dataset.hexSurfacePreviousReceipt = PREVIOUS_RECEIPT;
+    state.canvas.dataset.hexSurfaceLegacyReceipt = LEGACY_RECEIPT;
     state.canvas.dataset.hexSurfacePreviousActiveRenewal = PREVIOUS_ACTIVE_RENEWAL;
     state.canvas.dataset.hexSurfaceCompatibilityRenewal = COMPATIBILITY_RENEWAL;
     state.canvas.dataset.hexSurfaceParentRequiredReceipt = PARENT_REQUIRED_RECEIPT;
     state.canvas.dataset.hexSurfaceParentFallbackReceipt = PARENT_FALLBACK_RECEIPT;
     state.canvas.dataset.hexSurfaceParentReceiptDetected = parentReceipt || "";
+    state.canvas.dataset.hexSurfaceGrandchildReliefReceipt = GRANDCHILD_RELIEF_RECEIPT;
+    state.canvas.dataset.hexSurfaceGrandchildReliefImportedReceipt = AUDRALIA_RELIEF_SURFACE_RECEIPT_VALUE;
     state.canvas.dataset.hexSurfaceChildContract = CHILD_CONTRACT;
-    state.canvas.dataset.hexSurfaceModel = "parent-field-expressive-hex-child-surface";
+    state.canvas.dataset.hexSurfaceModel = "parent-field-expressive-hex-child-grandchild-relief-bound-surface";
     state.canvas.dataset.childActivatedByParentContract = String(STATUS.childActivatedByParentContract);
     state.canvas.dataset.parentSurfaceSamplerDetected = String(Boolean(parentSampler));
+    state.canvas.dataset.grandchildReliefActivated = "true";
     state.canvas.dataset.parentClassificationPreserved = "true";
     state.canvas.dataset.downstreamClassificationOverrideAllowed = "false";
-    state.canvas.dataset.grandchildrenActivated = "false";
     state.canvas.dataset.runtimeImport = "false";
     state.canvas.dataset.runtimeAuthority = "false";
     state.canvas.dataset.routeOwnedLandGeneration = "false";
@@ -797,6 +753,8 @@ function publishChildStatus(state, frameReceipt) {
       state.canvas.dataset.mountainExpressedPixels = String(frameReceipt.mountainExpressedPixels || 0);
       state.canvas.dataset.coastlineExpressedPixels = String(frameReceipt.coastlineExpressedPixels || 0);
       state.canvas.dataset.shelfExpressedPixels = String(frameReceipt.shelfExpressedPixels || 0);
+      state.canvas.dataset.grandchildReliefPixels = String(frameReceipt.grandchildReliefPixels || 0);
+      state.canvas.dataset.subterraneanExpressedPixels = String(frameReceipt.subterraneanExpressedPixels || 0);
     }
   }
 
@@ -844,6 +802,8 @@ export function drawAudraliaHexSurfaceFrame(state, options = {}) {
   let coastlineExpressedPixels = 0;
   let shelfExpressedPixels = 0;
   let mineralExpressedPixels = 0;
+  let grandchildReliefPixels = 0;
+  let subterraneanExpressedPixels = 0;
 
   for (let i = 0; i < geometry.count; i += 1) {
     const out = geometry.indices[i];
@@ -856,20 +816,29 @@ export function drawAudraliaHexSurfaceFrame(state, options = {}) {
     if (usedParent) parentSamples += 1;
     else textureFallbackSamples += 1;
 
+    const relief = refineAudraliaReliefSample(sample, {
+      seed: geometry.microSeeds[i],
+      phase,
+      childReceipt: RECEIPT,
+      parentReceipt
+    });
+
     const baseColor = baseColorFromParent(sample);
-    const color = applyParentExpression(baseColor, textureColor, sample, i, geometry, config);
+    const color = applyParentAndGrandchildExpression(baseColor, textureColor, sample, relief, i, geometry, config);
 
     if (sample.exposedTerrainLand || sample.land || sample.visibleLand) landPixels += 1;
     if (sample.liquidWater || sample.water || sample.ocean) waterPixels += 1;
     if (sample.shelf) shelfPixels += 1;
     if (sample.ice || sample.glacier) icePixels += 1;
-    if (clamp01(sample.ridgeIndex ?? 0) > 0.34) ridgeExpressedPixels += 1;
-    if (clamp01(sample.mountainIndex ?? 0) > 0.34) mountainExpressedPixels += 1;
-    if (clamp01(sample.coastlineIndex ?? sample.coastalFeather ?? 0) > 0.22) coastlineExpressedPixels += 1;
-    if (clamp01(sample.shelfGradientIndex ?? sample.shelfIndex ?? 0) > 0.22) shelfExpressedPixels += 1;
-    if ((clamp01(sample.diamondSignal ?? 0) + clamp01(sample.opalSignal ?? 0) + clamp01(sample.graniteSignal ?? 0) + clamp01(sample.slateSignal ?? 0)) > 0.32) {
+    if (clamp01(sample.ridgeIndex ?? 0) > 0.34 || relief.expressiveRidge) ridgeExpressedPixels += 1;
+    if (clamp01(sample.mountainIndex ?? 0) > 0.34 || relief.expressiveMountain) mountainExpressedPixels += 1;
+    if (clamp01(sample.coastlineIndex ?? sample.coastalFeather ?? 0) > 0.22 || relief.expressiveCoastline) coastlineExpressedPixels += 1;
+    if (clamp01(sample.shelfGradientIndex ?? sample.shelfIndex ?? 0) > 0.22 || relief.expressiveShelf) shelfExpressedPixels += 1;
+    if ((clamp01(sample.diamondSignal ?? 0) + clamp01(sample.opalSignal ?? 0) + clamp01(sample.graniteSignal ?? 0) + clamp01(sample.slateSignal ?? 0)) > 0.32 || relief.mineralPressureOverlay > 0.22) {
       mineralExpressedPixels += 1;
     }
+    if (relief.reliefContrast > 0.18) grandchildReliefPixels += 1;
+    if (relief.expressiveSubterranean) subterraneanExpressedPixels += 1;
 
     sampledPixels += 1;
 
@@ -886,15 +855,18 @@ export function drawAudraliaHexSurfaceFrame(state, options = {}) {
     ok: true,
     receipt: RECEIPT,
     previousReceipt: PREVIOUS_RECEIPT,
-    previousActiveRenewal: PREVIOUS_ACTIVE_RENEWAL,
+    legacyReceipt: LEGACY_RECEIPT,
     compatibilityRenewal: COMPATIBILITY_RENEWAL,
     parentRequiredReceipt: PARENT_REQUIRED_RECEIPT,
     parentFallbackReceipt: PARENT_FALLBACK_RECEIPT,
     parentReceiptDetected: parentReceipt,
+    grandchildReliefReceipt: GRANDCHILD_RELIEF_RECEIPT,
+    grandchildReliefImportedReceipt: AUDRALIA_RELIEF_SURFACE_RECEIPT_VALUE,
     childContract: CHILD_CONTRACT,
     parentAccepted,
     childActivatedByParentContract: parentAccepted,
-    model: "parent-field-expressive-hex-child-surface",
+    grandchildReliefActivated: true,
+    model: "parent-field-expressive-hex-child-grandchild-relief-bound-surface",
     size,
     samples: geometry.count,
     hexRadius: geometry.hexRadius,
@@ -910,9 +882,10 @@ export function drawAudraliaHexSurfaceFrame(state, options = {}) {
     coastlineExpressedPixels,
     shelfExpressedPixels,
     mineralExpressedPixels,
+    grandchildReliefPixels,
+    subterraneanExpressedPixels,
     parentClassificationPreserved: true,
     downstreamClassificationOverrideAllowed: false,
-    grandchildrenActivated: false,
     runtimeImport: false,
     runtimeAuthority: false,
     routeOwnedLandGeneration: false,
@@ -936,21 +909,24 @@ export function getAudraliaHexSurfaceStatus(state = null) {
     ok: true,
     receipt: RECEIPT,
     previousReceipt: PREVIOUS_RECEIPT,
+    legacyReceipt: LEGACY_RECEIPT,
     previousActiveRenewal: PREVIOUS_ACTIVE_RENEWAL,
     compatibilityRenewal: COMPATIBILITY_RENEWAL,
     parentRequiredReceipt: PARENT_REQUIRED_RECEIPT,
     parentFallbackReceipt: PARENT_FALLBACK_RECEIPT,
     parentReceiptDetected: parentReceipt || STATUS.parentReceiptDetected || "",
+    grandchildReliefReceipt: GRANDCHILD_RELIEF_RECEIPT,
+    grandchildReliefImportedReceipt: AUDRALIA_RELIEF_SURFACE_RECEIPT_VALUE,
     childContract: CHILD_CONTRACT,
-    role: "audralia-child-parent-field-expressor",
+    role: "audralia-child-grandchild-relief-bound-parent-field-expressor",
     childActivatedByParentContract: childActivated || STATUS.childActivatedByParentContract,
     parentSurfaceSamplerDetected: Boolean(parentSampler) || STATUS.parentSurfaceSamplerDetected,
     parentStandardRequired: true,
     parentClassificationPreserved: true,
     downstreamClassificationOverrideAllowed: false,
-    grandchildrenActivated: false,
-    owns: STATUS.owns,
-    doesNotOwn: STATUS.doesNotOwn,
+    grandchildrenActivated: true,
+    grandchildReliefActivated: true,
+    grandchildReliefStatus: getAudraliaReliefSurfaceStatus(),
     geometryLoaded: Boolean(state && state.hexGeometry),
     hexRadius: state && state.hexGeometry ? state.hexGeometry.hexRadius : null,
     hexSamples: state && state.hexGeometry ? state.hexGeometry.count : null,
@@ -980,10 +956,12 @@ export function getAudraliaHexSurfaceStatus(state = null) {
 const api = Object.freeze({
   receipt: RECEIPT,
   previousReceipt: PREVIOUS_RECEIPT,
+  legacyReceipt: LEGACY_RECEIPT,
   previousActiveRenewal: PREVIOUS_ACTIVE_RENEWAL,
   compatibilityRenewal: COMPATIBILITY_RENEWAL,
   parentRequiredReceipt: PARENT_REQUIRED_RECEIPT,
   parentFallbackReceipt: PARENT_FALLBACK_RECEIPT,
+  grandchildReliefReceipt: GRANDCHILD_RELIEF_RECEIPT,
   childContract: CHILD_CONTRACT,
   removedStaleReceipts: REMOVED_STALE_RECEIPTS,
   drawAudraliaHexSurfaceFrame,
@@ -998,9 +976,11 @@ if (typeof window !== "undefined") {
 export const AUDRALIA_HEX_SURFACE_RECEIPT_VALUE = RECEIPT;
 export const AUDRALIA_HEX_SURFACE_PREVIOUS_RECEIPT_VALUE = PREVIOUS_RECEIPT;
 export const AUDRALIA_HEX_SURFACE_PARENT_REQUIRED_RECEIPT_VALUE = PARENT_REQUIRED_RECEIPT;
+export const AUDRALIA_HEX_SURFACE_GRANDCHILD_RELIEF_RECEIPT_VALUE = GRANDCHILD_RELIEF_RECEIPT;
 export const AUDRALIA_HEX_SURFACE_CHILD_CONTRACT_VALUE = CHILD_CONTRACT;
 export const AUDRALIA_HEX_SURFACE_PARENT_FIELD_EXPRESSION_ACTIVE = true;
-export const AUDRALIA_HEX_SURFACE_GRANDCHILDREN_ACTIVATED = false;
+export const AUDRALIA_HEX_SURFACE_GRANDCHILD_RELIEF_ACTIVE = true;
+export const AUDRALIA_HEX_SURFACE_GRANDCHILDREN_ACTIVATED = true;
 export const AUDRALIA_HEX_SURFACE_RUNTIME_IMPORT = false;
 export const AUDRALIA_HEX_SURFACE_STATUS = STATUS;
 

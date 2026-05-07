@@ -1,19 +1,19 @@
 /* /assets/audralia/audralia.canvas.js */
 /* AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN */
-/* TNT: AUDRALIA_CANVAS_AUTHORITY_INTERACTION_FREEZE_REPAIR_TNT_v5 */
-/* PURPOSE: repair double-click/text-selection freeze by removing selection collision from the canvas precinct, throttling animation, pausing during external text selection, and replacing per-frame full-pixel repaint with cached runtime texture strip projection. */
+/* TNT: AUDRALIA_CANVAS_INTERACTION_SAFE_ORTHOGRAPHIC_4K_TNT_v6 */
+/* PURPOSE: preserve double-click/selection freeze protection while replacing strip-texture projection with an interaction-safe orthographic runtime globe renderer. */
 /* NO GRAPHICBOX. NO IMAGE GENERATION. NO VISUAL PASS CLAIM. */
 
 const RECEIPT = "AUDRALIA_CANVAS_AUTHORITY_RECEIPT";
-const CONTRACT = "AUDRALIA_CANVAS_AUTHORITY_INTERACTION_FREEZE_REPAIR_TNT_v5";
-const REVISION = "AUDRALIA_DOUBLE_CLICK_SELECTION_FREEZE_REPAIR_v5";
-const VERSION = "2026-05-06.interaction-freeze-repair-v5";
+const CONTRACT = "AUDRALIA_CANVAS_INTERACTION_SAFE_ORTHOGRAPHIC_4K_TNT_v6";
+const REVISION = "AUDRALIA_ORTHOGRAPHIC_RUNTIME_PROJECTION_UPGRADE_v6";
+const VERSION = "2026-05-06.interaction-safe-orthographic-4k-v6";
 
 const COMPATIBILITY_CONTRACTS = Object.freeze([
   "AUDRALIA_CANVAS_AUTHORITY_MINIMAL_CANARY_TNT_v1",
   "AUDRALIA_CANVAS_AUTHORITY_RICH_PLANET_RENDER_TNT_v1",
-  "AUDRALIA_CANVAS_AUTHORITY_4K_RUNTIME_HEX_SURFACE_TNT_v3",
-  "AUDRALIA_CANVAS_AUTHORITY_RUNTIME_RENDER_CHAIN_REPAIR_TNT_v4"
+  "AUDRALIA_CANVAS_AUTHORITY_RUNTIME_RENDER_CHAIN_REPAIR_TNT_v4",
+  "AUDRALIA_CANVAS_AUTHORITY_INTERACTION_FREEZE_REPAIR_TNT_v5"
 ]);
 
 const RUNTIME_PATH = "/assets/audralia/audralia.runtime.js";
@@ -26,8 +26,8 @@ const STATUS = {
   version: VERSION,
   compatibilityContracts: COMPATIBILITY_CONTRACTS,
   file: "/assets/audralia/audralia.canvas.js",
-  role: "adopted-canvas-authority-interaction-freeze-repair",
-  lineage: "tectonics->topology->terrain->climate->hydration->oceans->deep-ocean->runtime->cached-texture->canvas->route",
+  role: "adopted-canvas-authority-interaction-safe-orthographic-runtime-renderer",
+  lineage: "tectonics->topology->terrain->climate->hydration->oceans->deep-ocean->runtime-normalizer->orthographic-canvas->route",
   runtimePath: RUNTIME_PATH,
   runtimeLoaded: false,
   runtimeReceipt: "",
@@ -36,14 +36,19 @@ const STATUS = {
   mountPresent: false,
   animated: false,
   frameCount: 0,
-  frameCap: 24,
+  frameCap: 18,
   textureReady: false,
   textureStats: null,
+  textureBuildProgress: 0,
+  projectionGeometryReady: false,
   pixelProof: null,
   interactionFreezeGuard: true,
   userSelectSuppressedInsideCanvas: true,
   animationPausesDuringTextSelection: true,
-  perFrameFullPixelRepaint: false,
+  stripProjectionRemoved: true,
+  orthographicProjectionActive: true,
+  perFrameRuntimeSampling: false,
+  perFrameFullTextureRebuild: false,
   canonicalExport: "mountAudraliaCanvas",
   autoBoot: false,
   routeOwnsCall: true,
@@ -74,6 +79,12 @@ function wrap01(value) {
 
 function fract(value) {
   return value - Math.floor(value);
+}
+
+function smoothstep(edge0, edge1, value) {
+  const denominator = Math.max(0.000001, edge1 - edge0);
+  const t = clamp01((value - edge0) / denominator);
+  return t * t * (3 - 2 * t);
 }
 
 function hash3(x, y, z) {
@@ -199,7 +210,7 @@ function guardCanvasInteraction(node, state) {
       function (event) {
         event.preventDefault();
         event.stopPropagation();
-        state.pauseUntil = performance.now() + 240;
+        state.pauseUntil = performance.now() + 260;
       },
       { capture: true }
     );
@@ -211,7 +222,7 @@ function guardCanvasInteraction(node, state) {
       if (event.detail >= 2) {
         event.preventDefault();
         event.stopPropagation();
-        state.pauseUntil = performance.now() + 240;
+        state.pauseUntil = performance.now() + 260;
       }
     },
     { capture: true, passive: false }
@@ -291,7 +302,7 @@ function createCanvas(mount, state) {
   shell.style.isolation = "isolate";
 
   const frame = document.createElement("div");
-  frame.setAttribute("data-audralia-canvas-frame", "contained-square-interaction-freeze-repair-v5");
+  frame.setAttribute("data-audralia-canvas-frame", "orthographic-4k-contained-square-v6");
   frame.style.width = "min(92vw, 860px)";
   frame.style.aspectRatio = "1 / 1";
   frame.style.position = "relative";
@@ -303,7 +314,7 @@ function createCanvas(mount, state) {
 
   const canvas = document.createElement("canvas");
   canvas.setAttribute("data-audralia-canvas", "true");
-  canvas.setAttribute("aria-label", "Audralia runtime render canvas");
+  canvas.setAttribute("aria-label", "Audralia interaction-safe orthographic runtime canvas");
   canvas.style.width = "100%";
   canvas.style.height = "100%";
   canvas.style.display = "block";
@@ -335,19 +346,22 @@ function createCanvas(mount, state) {
   return { shell, frame, canvas, proof };
 }
 
-function setupCanvas(canvas, frame) {
+function setupCanvas(canvas, frame, options = {}) {
   const rect = frame.getBoundingClientRect();
   const fallback = Math.min(window.innerWidth || 760, 860);
-  const size = Math.max(320, Math.floor(Math.min(rect.width || fallback, rect.height || fallback)));
+  const visibleSize = Math.max(320, Math.floor(Math.min(rect.width || fallback, rect.height || fallback)));
+  const maxRenderSize = clamp(Number(options.maxRenderSize) || 640, 420, 760);
+  const size = Math.max(360, Math.min(visibleSize, maxRenderSize));
 
   canvas.width = size;
   canvas.height = size;
   canvas.setAttribute("data-render-size", String(size));
+  canvas.setAttribute("data-visible-size", String(visibleSize));
 
   const ctx = canvas.getContext("2d", {
     alpha: true,
     desynchronized: true,
-    willReadFrequently: false
+    willReadFrequently: true
   });
 
   if (!ctx) {
@@ -356,7 +370,7 @@ function setupCanvas(canvas, frame) {
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-  return { ctx, size };
+  return { ctx, size, visibleSize };
 }
 
 function fallbackSample(lat, lon, u, v) {
@@ -535,31 +549,43 @@ function callSampler(runtime, lat, lon, u, v) {
   return fallbackSample(lat, lon, u, v);
 }
 
-function makeTextureCanvas(texture) {
-  const canvas = document.createElement("canvas");
-  canvas.width = texture.width;
-  canvas.height = texture.height;
-
-  const ctx = canvas.getContext("2d", { alpha: true });
-
-  if (!ctx) return null;
-
-  const image = new ImageData(texture.data, texture.width, texture.height);
-  ctx.putImageData(image, 0, 0);
-
-  return canvas;
+function createTextureShell(width, height) {
+  return {
+    width,
+    height,
+    data: new Uint8ClampedArray(width * height * 4),
+    stats: {
+      totalPixels: width * height,
+      landPixels: 0,
+      waterPixels: 0,
+      icePixels: 0,
+      shelfPixels: 0,
+      fallbackPixels: 0,
+      landRatio: 0,
+      waterRatio: 0,
+      iceRatio: 0,
+      shelfRatio: 0,
+      fallbackRatio: 0
+    },
+    complete: false
+  };
 }
 
-function buildTexture(runtime, textureWidth, textureHeight) {
-  const width = Math.max(256, Math.min(1024, Number(textureWidth) || 768));
-  const height = Math.max(128, Math.min(512, Number(textureHeight) || 384));
-  const data = new Uint8ClampedArray(width * height * 4);
+function finalizeTexture(texture) {
+  const total = Math.max(1, texture.width * texture.height);
+  texture.stats.landRatio = texture.stats.landPixels / total;
+  texture.stats.waterRatio = texture.stats.waterPixels / total;
+  texture.stats.iceRatio = texture.stats.icePixels / total;
+  texture.stats.shelfRatio = texture.stats.shelfPixels / total;
+  texture.stats.fallbackRatio = texture.stats.fallbackPixels / total;
+  texture.complete = true;
+  return texture;
+}
 
-  let landPixels = 0;
-  let waterPixels = 0;
-  let icePixels = 0;
-  let shelfPixels = 0;
-  let fallbackPixels = 0;
+function buildTextureSync(runtime, textureWidth, textureHeight) {
+  const width = Math.max(384, Math.min(1024, Number(textureWidth) || 768));
+  const height = Math.max(192, Math.min(512, Number(textureHeight) || 384));
+  const texture = createTextureShell(width, height);
 
   for (let py = 0; py < height; py += 1) {
     const v = height === 1 ? 0.5 : py / (height - 1);
@@ -572,42 +598,74 @@ function buildTexture(runtime, textureWidth, textureHeight) {
       const color = sampleToColor(sample, lat, lon);
       const index = (py * width + px) * 4;
 
-      if (sample.fallbackSample || sample.isFallback || sample.fallback) fallbackPixels += 1;
-      if (sample.ice || sample.glacier) icePixels += 1;
-      else if (sample.water || sample.liquidWater || sample.ocean || sample.shelf) waterPixels += 1;
-      if (sample.shelf) shelfPixels += 1;
-      if ((sample.land || sample.exposedTerrainLand || sample.visibleLand || sample.solidSurfaceLand) && !(sample.water || sample.liquidWater)) landPixels += 1;
+      if (sample.fallbackSample || sample.isFallback || sample.fallback) texture.stats.fallbackPixels += 1;
+      if (sample.ice || sample.glacier) texture.stats.icePixels += 1;
+      else if (sample.water || sample.liquidWater || sample.ocean || sample.shelf) texture.stats.waterPixels += 1;
+      if (sample.shelf) texture.stats.shelfPixels += 1;
+      if ((sample.land || sample.exposedTerrainLand || sample.visibleLand || sample.solidSurfaceLand) && !(sample.water || sample.liquidWater)) texture.stats.landPixels += 1;
 
-      data[index] = color[0];
-      data[index + 1] = color[1];
-      data[index + 2] = color[2];
-      data[index + 3] = color[3];
+      texture.data[index] = color[0];
+      texture.data[index + 1] = color[1];
+      texture.data[index + 2] = color[2];
+      texture.data[index + 3] = color[3];
     }
   }
 
-  const texture = {
-    width,
-    height,
-    data,
-    canvas: null,
-    stats: Object.freeze({
-      totalPixels: width * height,
-      landPixels,
-      waterPixels,
-      icePixels,
-      shelfPixels,
-      fallbackPixels,
-      landRatio: landPixels / Math.max(1, width * height),
-      waterRatio: waterPixels / Math.max(1, width * height),
-      iceRatio: icePixels / Math.max(1, width * height),
-      shelfRatio: shelfPixels / Math.max(1, width * height),
-      fallbackRatio: fallbackPixels / Math.max(1, width * height)
-    })
-  };
+  return finalizeTexture(texture);
+}
 
-  texture.canvas = makeTextureCanvas(texture);
+function buildTextureAsync(state, runtime, textureWidth, textureHeight) {
+  const width = Math.max(512, Math.min(1536, Number(textureWidth) || 1024));
+  const height = Math.max(256, Math.min(768, Number(textureHeight) || 512));
+  const texture = createTextureShell(width, height);
+  const rowsPerChunk = 6;
 
-  return texture;
+  let py = 0;
+
+  function step() {
+    if (state.stopped) return;
+
+    const endRow = Math.min(height, py + rowsPerChunk);
+
+    for (; py < endRow; py += 1) {
+      const v = height === 1 ? 0.5 : py / (height - 1);
+      const lat = (0.5 - v) * Math.PI;
+
+      for (let px = 0; px < width; px += 1) {
+        const u = width === 1 ? 0.5 : px / (width - 1);
+        const lon = (u - 0.5) * Math.PI * 2;
+        const sample = callSampler(runtime, lat, lon, u, v);
+        const color = sampleToColor(sample, lat, lon);
+        const index = (py * width + px) * 4;
+
+        if (sample.fallbackSample || sample.isFallback || sample.fallback) texture.stats.fallbackPixels += 1;
+        if (sample.ice || sample.glacier) texture.stats.icePixels += 1;
+        else if (sample.water || sample.liquidWater || sample.ocean || sample.shelf) texture.stats.waterPixels += 1;
+        if (sample.shelf) texture.stats.shelfPixels += 1;
+        if ((sample.land || sample.exposedTerrainLand || sample.visibleLand || sample.solidSurfaceLand) && !(sample.water || sample.liquidWater)) texture.stats.landPixels += 1;
+
+        texture.data[index] = color[0];
+        texture.data[index + 1] = color[1];
+        texture.data[index + 2] = color[2];
+        texture.data[index + 3] = color[3];
+      }
+    }
+
+    state.textureBuildProgress = py / height;
+    publishStatus(state);
+
+    if (py < height) {
+      window.setTimeout(step, 0);
+      return;
+    }
+
+    state.texture = finalizeTexture(texture);
+    state.textureBuildProgress = 1;
+    state.geometry = null;
+    publishStatus(state);
+  }
+
+  window.setTimeout(step, 0);
 }
 
 async function loadRuntimeAuthority(state) {
@@ -643,17 +701,225 @@ async function loadRuntimeAuthority(state) {
     };
   }
 
-  window.setTimeout(function () {
-    if (state.stopped) return;
+  buildTextureAsync(
+    state,
+    state.runtime,
+    Number(state.options.textureWidth) || 1024,
+    Number(state.options.textureHeight) || 512
+  );
 
-    state.texture = buildTexture(
-      state.runtime,
-      Number(state.options.textureWidth) || 768,
-      Number(state.options.textureHeight) || 384
+  publishStatus(state);
+}
+
+function buildProjectionGeometry(size) {
+  const cx = size / 2;
+  const cy = size / 2;
+  const radius = size * 0.405;
+  const radiusSq = radius * radius;
+
+  let count = 0;
+
+  for (let py = 0; py < size; py += 1) {
+    const dy = py + 0.5 - cy;
+
+    for (let px = 0; px < size; px += 1) {
+      const dx = px + 0.5 - cx;
+      if (dx * dx + dy * dy <= radiusSq) count += 1;
+    }
+  }
+
+  const indices = new Uint32Array(count);
+  const lonOffsets = new Float32Array(count);
+  const vCoords = new Float32Array(count);
+  const shades = new Float32Array(count);
+  const edgeFactors = new Float32Array(count);
+  const noiseSeeds = new Float32Array(count);
+
+  const lightX = -0.38;
+  const lightY = -0.30;
+  const lightZ = 0.86;
+
+  let cursor = 0;
+
+  for (let py = 0; py < size; py += 1) {
+    const dy = py + 0.5 - cy;
+
+    for (let px = 0; px < size; px += 1) {
+      const dx = px + 0.5 - cx;
+      const r2 = dx * dx + dy * dy;
+
+      if (r2 > radiusSq) continue;
+
+      const x = dx / radius;
+      const y = dy / radius;
+      const z = Math.sqrt(Math.max(0, 1 - x * x - y * y));
+      const latitude = Math.asin(clamp(-y, -1, 1));
+      const lonOffset = Math.atan2(x, z) / (Math.PI * 2);
+      const v = clamp(0.5 - latitude / Math.PI, 0, 1);
+      const dot = clamp(x * lightX + (-y) * lightY + z * lightZ, -1, 1);
+      const edge = Math.sqrt(r2) / radius;
+      const shade = clamp(0.68 + dot * 0.28 - Math.pow(edge, 2.4) * 0.16, 0.42, 1.10);
+
+      indices[cursor] = (py * size + px) * 4;
+      lonOffsets[cursor] = lonOffset;
+      vCoords[cursor] = v;
+      shades[cursor] = shade;
+      edgeFactors[cursor] = edge;
+      noiseSeeds[cursor] = hash3(Math.round(x * 64), Math.round(y * 64), Math.round(z * 64));
+
+      cursor += 1;
+    }
+  }
+
+  return Object.freeze({
+    size,
+    radius,
+    count,
+    indices,
+    lonOffsets,
+    vCoords,
+    shades,
+    edgeFactors,
+    noiseSeeds
+  });
+}
+
+function sampleTextureBilinear(texture, u, v) {
+  const width = texture.width;
+  const height = texture.height;
+  const data = texture.data;
+
+  const x = wrap01(u) * (width - 1);
+  const y = clamp(v, 0, 1) * (height - 1);
+
+  const x0 = Math.floor(x);
+  const y0 = Math.floor(y);
+  const x1 = (x0 + 1) % width;
+  const y1 = Math.min(height - 1, y0 + 1);
+
+  const tx = x - x0;
+  const ty = y - y0;
+
+  const i00 = (y0 * width + x0) * 4;
+  const i10 = (y0 * width + x1) * 4;
+  const i01 = (y1 * width + x0) * 4;
+  const i11 = (y1 * width + x1) * 4;
+
+  const r0 = mix(data[i00], data[i10], tx);
+  const g0 = mix(data[i00 + 1], data[i10 + 1], tx);
+  const b0 = mix(data[i00 + 2], data[i10 + 2], tx);
+
+  const r1 = mix(data[i01], data[i11], tx);
+  const g1 = mix(data[i01 + 1], data[i11 + 1], tx);
+  const b1 = mix(data[i01 + 2], data[i11 + 2], tx);
+
+  return [
+    mix(r0, r1, ty),
+    mix(g0, g1, ty),
+    mix(b0, b1, ty),
+    255
+  ];
+}
+
+function classifyColor(color) {
+  const r = color[0];
+  const g = color[1];
+  const b = color[2];
+
+  const water = b > r * 1.05 && g > r * 0.64;
+  const shelf = water && g > 120 && b > 126 && Math.abs(g - b) < 96;
+  const ice = r > 198 && g > 205 && b > 208;
+  const land = !water && !ice && r > 65 && g > 52;
+
+  return { water, shelf, ice, land };
+}
+
+function applyDetail(color, u, v, shade, edge, seed) {
+  const cls = classifyColor(color);
+
+  const lon = u * 2 - 1;
+  const lat = 1 - v * 2;
+
+  const fine =
+    fbm3(lon * 14.0 + seed * 2.3, lat * 14.0 - seed * 3.1, seed * 7.7, 3) * 0.42 +
+    fbm3(lon * 44.0 - seed * 1.8, lat * 34.0 + seed * 4.6, seed * 5.2, 2) * 0.20;
+
+  let detailShade = shade;
+
+  if (cls.land) {
+    detailShade += (fine - 0.34) * 0.18;
+  } else if (cls.water) {
+    detailShade += (fine - 0.34) * 0.07;
+  } else if (cls.ice) {
+    detailShade += (fine - 0.34) * 0.12;
+  }
+
+  detailShade -= Math.pow(edge, 4.0) * 0.18;
+  detailShade = clamp(detailShade, 0.36, 1.16);
+
+  let r = color[0] * detailShade;
+  let g = color[1] * detailShade;
+  let b = color[2] * detailShade;
+
+  const lineSignalA = Math.abs(Math.sin((lon * 13.0 + lat * 8.0 + seed) * Math.PI));
+  const lineSignalB = Math.abs(Math.sin((lon * -7.0 + lat * 16.0 + seed * 0.7) * Math.PI));
+  const goldLine = cls.land && lineSignalA > 0.988 && lineSignalB > 0.62;
+  const shelfGlow = cls.shelf ? clamp(0.04 + fine * 0.05, 0.04, 0.10) : 0;
+
+  if (goldLine) {
+    r = mix(r, 238, 0.28);
+    g = mix(g, 205, 0.22);
+    b = mix(b, 125, 0.12);
+  }
+
+  if (shelfGlow > 0) {
+    r = mix(r, 62, shelfGlow);
+    g = mix(g, 210, shelfGlow);
+    b = mix(b, 214, shelfGlow);
+  }
+
+  return [
+    clamp(Math.round(r), 0, 255),
+    clamp(Math.round(g), 0, 255),
+    clamp(Math.round(b), 0, 255),
+    255
+  ];
+}
+
+function drawOrthographicGlobe(ctx, state, phase) {
+  const size = state.size;
+
+  if (!state.geometry || state.geometry.size !== size) {
+    state.geometry = buildProjectionGeometry(size);
+  }
+
+  const geometry = state.geometry;
+  const output = ctx.createImageData(size, size);
+  const data = output.data;
+  const texture = state.texture;
+
+  for (let index = 0; index < geometry.count; index += 1) {
+    const out = geometry.indices[index];
+    const u = wrap01(phase + geometry.lonOffsets[index] + 0.5);
+    const v = geometry.vCoords[index];
+
+    const base = sampleTextureBilinear(texture, u, v);
+    const color = applyDetail(
+      base,
+      u,
+      v,
+      geometry.shades[index],
+      geometry.edgeFactors[index],
+      geometry.noiseSeeds[index]
     );
 
-    publishStatus(state);
-  }, 0);
+    data[out] = color[0];
+    data[out + 1] = color[1];
+    data[out + 2] = color[2];
+    data[out + 3] = color[3];
+  }
+
+  ctx.putImageData(output, 0, 0);
 }
 
 function drawStarField(ctx, size, time) {
@@ -661,7 +927,7 @@ function drawStarField(ctx, size, time) {
   ctx.fillStyle = "#020713";
   ctx.fillRect(0, 0, size, size);
 
-  for (let index = 0; index < 130; index += 1) {
+  for (let index = 0; index < 140; index += 1) {
     const sx = Math.sin(index * 917.17) * 10000;
     const sy = Math.sin(index * 421.91) * 10000;
     const x = (sx - Math.floor(sx)) * size;
@@ -681,7 +947,7 @@ function drawStarField(ctx, size, time) {
 function drawOrbitalGlow(ctx, size, time) {
   const cx = size / 2;
   const cy = size / 2;
-  const radius = size * 0.348;
+  const radius = size * 0.405;
 
   ctx.save();
   ctx.translate(cx, cy);
@@ -689,7 +955,7 @@ function drawOrbitalGlow(ctx, size, time) {
 
   for (let index = 0; index < 4; index += 1) {
     ctx.beginPath();
-    ctx.ellipse(0, 0, radius * (1.08 + index * 0.052), radius * (0.16 + index * 0.022), 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 0, radius * (1.05 + index * 0.052), radius * (0.14 + index * 0.022), 0, 0, Math.PI * 2);
     ctx.strokeStyle = index % 2 === 0 ? "rgba(240, 211, 138, 0.10)" : "rgba(127, 194, 255, 0.10)";
     ctx.lineWidth = 1;
     ctx.stroke();
@@ -698,59 +964,7 @@ function drawOrbitalGlow(ctx, size, time) {
   ctx.restore();
 }
 
-function drawWrappedStrip(ctx, textureCanvas, phase, sy, sh, dx, dy, dw, dh) {
-  if (!textureCanvas || !textureCanvas.width || !textureCanvas.height || dw <= 0 || dh <= 0) return;
-
-  const sourceWidth = textureCanvas.width;
-  const sourceHeight = textureCanvas.height;
-  const start = wrap01(phase) * sourceWidth;
-  const safeSy = clamp(sy, 0, sourceHeight - 1);
-  const safeSh = clamp(sh, 1, sourceHeight - safeSy);
-  const firstSourceWidth = sourceWidth - start;
-  const firstDestWidth = dw * (firstSourceWidth / sourceWidth);
-  const secondDestWidth = dw - firstDestWidth;
-
-  ctx.drawImage(textureCanvas, start, safeSy, firstSourceWidth, safeSh, dx, dy, firstDestWidth, dh);
-
-  if (secondDestWidth > 0.5) {
-    ctx.drawImage(textureCanvas, 0, safeSy, start, safeSh, dx + firstDestWidth, dy, secondDestWidth, dh);
-  }
-}
-
-function drawSphereFromTexture(ctx, texture, phase, size) {
-  const textureCanvas = texture && texture.canvas ? texture.canvas : null;
-  if (!textureCanvas) return;
-
-  const cx = size / 2;
-  const cy = size / 2;
-  const radius = size * 0.405;
-  const stripHeight = Math.max(2, Math.floor(size / 220));
-  const sourceHeight = textureCanvas.height;
-
-  ctx.save();
-
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-  ctx.clip();
-
-  for (let y = -radius; y <= radius; y += stripHeight) {
-    const yMid = y + stripHeight / 2;
-    const normalizedY = yMid / radius;
-    const chord = Math.sqrt(Math.max(0, 1 - normalizedY * normalizedY));
-    const destWidth = radius * 2 * chord;
-    const destX = cx - destWidth / 2;
-    const destY = cy + y;
-    const v = clamp(0.5 + normalizedY * 0.5, 0, 1);
-    const sy = Math.floor(v * (sourceHeight - 1));
-    const sh = Math.max(1, Math.ceil((stripHeight / (radius * 2)) * sourceHeight * 1.8));
-
-    drawWrappedStrip(ctx, textureCanvas, phase, sy, sh, destX, destY, destWidth, stripHeight + 1);
-  }
-
-  ctx.restore();
-}
-
-function drawCloudBands(ctx, size, time) {
+function drawCloudWisps(ctx, size, time, phase) {
   const cx = size / 2;
   const cy = size / 2;
   const radius = size * 0.405;
@@ -760,25 +974,38 @@ function drawCloudBands(ctx, size, time) {
   ctx.arc(cx, cy, radius, 0, Math.PI * 2);
   ctx.clip();
 
-  ctx.globalAlpha = 0.28;
+  ctx.globalAlpha = 0.22;
   ctx.strokeStyle = "rgba(245, 250, 255, 0.52)";
-  ctx.lineWidth = Math.max(0.7, size * 0.0016);
+  ctx.lineWidth = Math.max(0.7, size * 0.0014);
 
-  for (let band = 0; band < 9; band += 1) {
-    const y = cy - radius * 0.70 + band * radius * 0.18;
-    const phase = time * 0.001 + band * 1.7;
+  for (let band = 0; band < 8; band += 1) {
+    const baseLat = -0.62 + band * 0.18;
+    const shift = phase * Math.PI * 2 + band * 0.77;
 
     ctx.beginPath();
 
-    for (let x = cx - radius; x <= cx + radius; x += 10) {
-      const normalized = (x - cx) / radius;
-      const edge = Math.sqrt(Math.max(0, 1 - normalized * normalized));
-      const yy = y + Math.sin(x * 0.021 + phase) * size * 0.006;
+    let started = false;
 
-      if (Math.abs(yy - cy) > radius * edge) continue;
+    for (let step = -64; step <= 64; step += 1) {
+      const xNorm = step / 64;
+      const wave = Math.sin(step * 0.16 + shift + time * 0.00035) * 0.030;
+      const yNorm = baseLat + wave;
+      const r2 = xNorm * xNorm + yNorm * yNorm;
 
-      if (x === cx - radius) ctx.moveTo(x, yy);
-      else ctx.lineTo(x, yy);
+      if (r2 > 0.96) {
+        started = false;
+        continue;
+      }
+
+      const x = cx + xNorm * radius;
+      const y = cy + yNorm * radius;
+
+      if (!started) {
+        ctx.moveTo(x, y);
+        started = true;
+      } else {
+        ctx.lineTo(x, y);
+      }
     }
 
     ctx.stroke();
@@ -832,13 +1059,13 @@ function drawDiagnostics(ctx, size) {
 
   ctx.fillStyle = "rgba(174, 204, 225, 0.70)";
   ctx.font = "500 " + Math.max(10, size * 0.015) + "px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
-  ctx.fillText("INTERACTION SAFE · RUNTIME TEXTURE", size / 2, size * 0.895);
+  ctx.fillText("ORTHOGRAPHIC 4K · INTERACTION SAFE", size / 2, size * 0.895);
   ctx.restore();
 }
 
 function samplePixelProof(ctx, size) {
   try {
-    const probeSize = Math.max(64, Math.min(160, Math.floor(size / 5)));
+    const probeSize = Math.max(64, Math.min(180, Math.floor(size / 4)));
     const x0 = Math.floor(size / 2 - probeSize / 2);
     const y0 = Math.floor(size / 2 - probeSize / 2);
     const image = ctx.getImageData(x0, y0, probeSize, probeSize).data;
@@ -848,6 +1075,7 @@ function samplePixelProof(ctx, size) {
     let water = 0;
     let solid = 0;
     let turquoise = 0;
+    let gold = 0;
 
     for (let index = 0; index < image.length; index += 16) {
       const r = image[index];
@@ -857,8 +1085,9 @@ function samplePixelProof(ctx, size) {
 
       if (a > 0) opaque += 4;
       if (b > r * 1.06 && g > r * 0.70) water += 4;
-      if (r >= 72 && r >= b * 0.78 && g >= 62 && b < 190) solid += 4;
+      if (r >= 72 && r >= b * 0.78 && g >= 52 && b < 190) solid += 4;
       if (g > 125 && b > 130 && Math.abs(g - b) < 92) turquoise += 4;
+      if (r > 150 && g > 118 && b < 120) gold += 4;
     }
 
     return {
@@ -866,6 +1095,7 @@ function samplePixelProof(ctx, size) {
       waterPixelRatio: water / total,
       solidSurfacePixelRatio: solid / total,
       turquoisePixelRatio: turquoise / total,
+      goldLineRatio: gold / total,
       notBlank: opaque > total * 0.12
     };
   } catch (error) {
@@ -891,13 +1121,15 @@ function publishStatus(state) {
     graphicBox: false,
     imageGeneration: false,
     visualPassClaimed: false,
-    renderMode: "interaction-safe-runtime-texture",
+    renderMode: "interaction-safe-orthographic-runtime-projection",
     runtimePath: RUNTIME_PATH,
     runtimeLoaded: Boolean(state.runtime && state.runtime.ok),
     runtimeReceipt: state.runtime ? state.runtime.receipt : "",
     runtimeError: state.runtime && state.runtime.error ? state.runtime.error : "",
-    textureReady: Boolean(state.texture && state.texture.canvas),
+    textureReady: Boolean(state.texture && state.texture.complete),
     textureStats: state.texture ? state.texture.stats : null,
+    textureBuildProgress: state.textureBuildProgress || 0,
+    projectionGeometryReady: Boolean(state.geometry),
     canvasPresent: Boolean(state.canvas),
     mountPresent: Boolean(state.mount),
     animated: !state.stopped,
@@ -907,7 +1139,10 @@ function publishStatus(state) {
     interactionFreezeGuard: true,
     userSelectSuppressedInsideCanvas: true,
     animationPausesDuringTextSelection: true,
-    perFrameFullPixelRepaint: false
+    stripProjectionRemoved: true,
+    orthographicProjectionActive: true,
+    perFrameRuntimeSampling: false,
+    perFrameFullTextureRebuild: false
   };
 
   Object.assign(STATUS, nextStatus);
@@ -924,6 +1159,8 @@ function publishStatus(state) {
     state.canvas.dataset.audraliaCanvasReceipt = RECEIPT;
     state.canvas.dataset.audraliaCanvasRevision = REVISION;
     state.canvas.dataset.audraliaRuntimeLoaded = String(Boolean(state.runtime && state.runtime.ok));
+    state.canvas.dataset.audraliaOrthographicProjection = "true";
+    state.canvas.dataset.audraliaStripProjectionRemoved = "true";
     state.canvas.dataset.graphicBox = "false";
     state.canvas.dataset.imageGeneration = "false";
     state.canvas.dataset.visualPassClaimed = "false";
@@ -935,6 +1172,8 @@ function publishStatus(state) {
     document.documentElement.dataset.audraliaCanvasRevision = REVISION;
     document.documentElement.dataset.audraliaCanvasRuntimeLoaded = String(Boolean(state.runtime && state.runtime.ok));
     document.documentElement.dataset.audraliaCanvasInteractionFreezeGuard = "true";
+    document.documentElement.dataset.audraliaCanvasOrthographicProjection = "true";
+    document.documentElement.dataset.audraliaCanvasStripProjectionRemoved = "true";
     document.documentElement.dataset.graphicBox = "false";
     document.documentElement.dataset.imageGeneration = "false";
     document.documentElement.dataset.visualPassClaimed = "false";
@@ -946,20 +1185,24 @@ function publishStatus(state) {
 function renderFrame(state, time) {
   const ctx = state.ctx;
   const size = state.size;
-  const phase = wrap01((time * 0.000026) + 0.18);
+  const phase = wrap01((time * 0.000030) + 0.18);
 
   ctx.clearRect(0, 0, size, size);
 
   drawStarField(ctx, size, time);
   drawOrbitalGlow(ctx, size, time);
-  drawSphereFromTexture(ctx, state.texture, phase, size);
-  drawCloudBands(ctx, size, time);
+
+  if (state.texture && state.texture.complete) {
+    drawOrthographicGlobe(ctx, state, phase);
+  }
+
+  drawCloudWisps(ctx, size, time, phase);
   drawAtmosphere(ctx, size, time);
   drawDiagnostics(ctx, size);
 
   state.frameCount += 1;
 
-  if (state.frameCount === 4 || state.frameCount % 90 === 0) {
+  if (state.frameCount === 4 || state.frameCount % 72 === 0) {
     state.pixelProof = samplePixelProof(ctx, size);
     publishStatus(state);
   }
@@ -987,6 +1230,7 @@ function startCanvas(target, options) {
     proof: null,
     ctx: null,
     size: 0,
+    visibleSize: 0,
     mount,
     options: options || {},
     runtime: {
@@ -998,8 +1242,10 @@ function startCanvas(target, options) {
       error: ""
     },
     texture: null,
+    textureBuildProgress: 0,
+    geometry: null,
     frameCount: 0,
-    frameCap: clamp(Number(options && options.frameCap) || 24, 12, 30),
+    frameCap: clamp(Number(options && options.frameCap) || 18, 10, 24),
     lastFrameTime: 0,
     pauseUntil: 0,
     pixelProof: null,
@@ -1009,7 +1255,7 @@ function startCanvas(target, options) {
   };
 
   const nodes = createCanvas(mount, state);
-  const setup = setupCanvas(nodes.canvas, nodes.frame);
+  const setup = setupCanvas(nodes.canvas, nodes.frame, state.options);
 
   state.shell = nodes.shell;
   state.frame = nodes.frame;
@@ -1017,12 +1263,15 @@ function startCanvas(target, options) {
   state.proof = nodes.proof;
   state.ctx = setup.ctx;
   state.size = setup.size;
+  state.visibleSize = setup.visibleSize;
 
-  state.texture = buildTexture(
+  state.texture = buildTextureSync(
     state.runtime,
-    Number(state.options.textureWidth) || 512,
-    Number(state.options.textureHeight) || 256
+    Number(state.options.initialTextureWidth) || 512,
+    Number(state.options.initialTextureHeight) || 256
   );
+
+  state.textureBuildProgress = 1;
 
   function onSelectionChange() {
     const selection = document.getSelection ? document.getSelection() : null;
@@ -1050,13 +1299,15 @@ function startCanvas(target, options) {
   function resize() {
     window.clearTimeout(state.resizeTimer);
     state.resizeTimer = window.setTimeout(function () {
-      const next = setupCanvas(state.canvas, state.frame);
+      const next = setupCanvas(state.canvas, state.frame, state.options);
       state.ctx = next.ctx;
       state.size = next.size;
+      state.visibleSize = next.visibleSize;
+      state.geometry = null;
       state.lastFrameTime = 0;
       renderFrame(state, performance.now());
       publishStatus(state);
-    }, 160);
+    }, 180);
   }
 
   state.stop = function () {
@@ -1137,11 +1388,14 @@ export function getAudraliaSurfaceDataset() {
     revision: REVISION,
     version: VERSION,
     runtimeTruthPath: RUNTIME_PATH,
-    renderMode: "interaction-safe-runtime-texture",
+    renderMode: "interaction-safe-orthographic-runtime-projection",
     interactionFreezeGuard: true,
     userSelectSuppressedInsideCanvas: true,
     animationPausesDuringTextSelection: true,
-    perFrameFullPixelRepaint: false,
+    stripProjectionRemoved: true,
+    orthographicProjectionActive: true,
+    perFrameRuntimeSampling: false,
+    perFrameFullTextureRebuild: false,
     graphicBox: false,
     imageGeneration: false,
     visualPassClaimed: false

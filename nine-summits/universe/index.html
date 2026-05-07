@@ -2,11 +2,11 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="nine-summits-universe-black-gold-inlay-lab-instruments"
+  data-page="nine-summits-universe-violet-gold-inlay-lab-instruments"
   data-route="/nine-summits/universe/"
-  data-contract="NINE_SUMMITS_UNIVERSE_BLACK_GOLD_INLAY_LAB_INSTRUMENTS_TNT_v4"
-  data-previous-contract="NINE_SUMMITS_UNIVERSE_GOLD_BLACK_MOTION_SETTING_TNT_v3"
-  data-theme="black-field-gold-inlay-golden-glow"
+  data-contract="NINE_SUMMITS_UNIVERSE_VIOLET_GOLD_INLAY_LAB_INSTRUMENTS_TNT_v5"
+  data-previous-contract="NINE_SUMMITS_UNIVERSE_BLACK_GOLD_INLAY_LAB_INSTRUMENTS_TNT_v4"
+  data-theme="violet-purple-primary-gold-border-black-gold-inlay"
   data-universe="nine-summits-universe"
   data-home-world="Audralia"
   data-earth-relationship="mirror-planet-reference"
@@ -26,7 +26,7 @@
   <title>Diamond Gate Bridge · Nine Summits Universe</title>
   <meta
     name="description"
-    content="The Nine Summits Universe is the black-field and gold-inlay world-setting layer for Audralia, using code-only mathematical instruments, revolving shapes, and golden route delivery."
+    content="The Nine Summits Universe is the violet, purple, black, and gold-inlay world-setting layer for Audralia, using code-only mathematical instruments, revolving shapes, and golden route delivery."
   >
 
   <style>
@@ -34,10 +34,16 @@
       --stage: min(100%, 1180px);
 
       --black: #000000;
-      --black-1: #020202;
-      --black-2: #050505;
-      --black-3: #090804;
-      --charcoal: #10100b;
+      --black-1: #020102;
+      --black-2: #050307;
+      --black-3: #09050d;
+      --charcoal: #100a16;
+
+      --violet: #8b5cf6;
+      --violet-2: #a78bfa;
+      --violet-3: #6d28d9;
+      --purple: #581c87;
+      --purple-2: #c4b5fd;
 
       --gold: #f4c95d;
       --gold-2: #ffe8a8;
@@ -49,18 +55,21 @@
       --muted: rgba(255, 247, 226, 0.76);
       --faint: rgba(255, 247, 226, 0.48);
 
-      --line: rgba(255, 225, 150, 0.20);
-      --line-strong: rgba(255, 225, 150, 0.52);
+      --line: rgba(196, 181, 253, 0.22);
+      --line-gold: rgba(255, 225, 150, 0.30);
+      --line-strong: rgba(255, 225, 150, 0.58);
 
-      --panel: rgba(2, 2, 2, 0.92);
-      --panel-2: rgba(8, 8, 6, 0.86);
-      --glass: rgba(255, 225, 150, 0.052);
+      --panel: rgba(3, 2, 5, 0.92);
+      --panel-2: rgba(10, 6, 15, 0.88);
+      --glass: rgba(139, 92, 246, 0.062);
       --glass-2: rgba(255, 225, 150, 0.026);
 
-      --glow: rgba(244, 201, 93, 0.34);
-      --glow-strong: rgba(244, 201, 93, 0.58);
+      --glow: rgba(139, 92, 246, 0.34);
+      --gold-glow: rgba(244, 201, 93, 0.48);
+      --glow-strong: rgba(244, 201, 93, 0.62);
 
       --phase: 0deg;
+      --violet-phase: 0deg;
       --tilt: -12deg;
       --golden-ratio: 1.618;
     }
@@ -75,10 +84,11 @@
       margin: 0;
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 8%, rgba(244,201,93,0.18), transparent 24rem),
-        radial-gradient(circle at 50% 44%, rgba(185,130,31,0.10), transparent 38rem),
-        radial-gradient(circle at 50% 92%, rgba(255,189,61,0.07), transparent 34rem),
-        linear-gradient(180deg, #050505, #010101 68%, #000000);
+        radial-gradient(circle at 50% 7%, rgba(139,92,246,0.24), transparent 25rem),
+        radial-gradient(circle at 18% 34%, rgba(109,40,217,0.20), transparent 31rem),
+        radial-gradient(circle at 82% 44%, rgba(244,201,93,0.14), transparent 34rem),
+        radial-gradient(circle at 50% 100%, rgba(167,139,250,0.12), transparent 36rem),
+        linear-gradient(180deg, #09050d, #030205 64%, #000000);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -94,12 +104,12 @@
       z-index: 0;
       pointer-events: none;
       background-image:
-        radial-gradient(circle at 12% 20%, rgba(255,232,168,0.22) 0, rgba(255,232,168,0) 1.2px),
-        radial-gradient(circle at 72% 16%, rgba(244,201,93,0.16) 0, rgba(244,201,93,0) 1.1px),
-        radial-gradient(circle at 84% 58%, rgba(255,189,61,0.11) 0, rgba(255,189,61,0) 1px),
-        radial-gradient(circle at 24% 72%, rgba(255,248,232,0.12) 0, rgba(255,248,232,0) 1.2px);
+        radial-gradient(circle at 12% 20%, rgba(196,181,253,0.22) 0, rgba(196,181,253,0) 1.2px),
+        radial-gradient(circle at 72% 16%, rgba(255,232,168,0.16) 0, rgba(255,232,168,0) 1.1px),
+        radial-gradient(circle at 84% 58%, rgba(139,92,246,0.15) 0, rgba(139,92,246,0) 1px),
+        radial-gradient(circle at 24% 72%, rgba(244,201,93,0.13) 0, rgba(244,201,93,0) 1.2px);
       background-size: 180px 220px, 240px 260px, 210px 250px, 260px 300px;
-      opacity: 0.36;
+      opacity: 0.44;
     }
 
     a {
@@ -136,20 +146,22 @@
       content: "";
       position: absolute;
       inset: -24%;
-      opacity: 0.38;
+      opacity: 0.52;
       filter: blur(42px);
       background:
         conic-gradient(
           from var(--phase) at 50% 50%,
           transparent 0deg,
-          rgba(244,201,93,0.13) 44deg,
-          transparent 86deg,
-          rgba(255,232,168,0.08) 138deg,
-          transparent 190deg,
-          rgba(185,130,31,0.11) 254deg,
+          rgba(139,92,246,0.22) 42deg,
+          transparent 82deg,
+          rgba(244,201,93,0.12) 128deg,
+          transparent 184deg,
+          rgba(167,139,250,0.20) 238deg,
+          transparent 292deg,
+          rgba(255,232,168,0.10) 336deg,
           transparent 360deg
         );
-      animation: universe-gold-sweep 42s linear infinite;
+      animation: universe-violet-gold-sweep 42s linear infinite;
     }
 
     .motion-core {
@@ -161,11 +173,13 @@
       transform: translate(-50%, -50%);
       border-radius: 50%;
       background:
-        radial-gradient(circle at 50% 48%, rgba(255,232,168,0.17), transparent 38%),
-        radial-gradient(circle at 50% 50%, rgba(244,201,93,0.09), transparent 60%);
+        radial-gradient(circle at 42% 42%, rgba(196,181,253,0.26), transparent 34%),
+        radial-gradient(circle at 58% 56%, rgba(244,201,93,0.16), transparent 52%),
+        radial-gradient(circle at 50% 50%, rgba(139,92,246,0.16), transparent 64%);
       box-shadow:
-        0 0 3.2rem rgba(244,201,93,0.12),
-        inset 0 0 3rem rgba(255,232,168,0.05);
+        0 0 3.4rem rgba(139,92,246,0.24),
+        0 0 4.2rem rgba(244,201,93,0.12),
+        inset 0 0 2.8rem rgba(255,232,168,0.06);
       animation: universe-core-breathe 6.2s ease-in-out infinite;
     }
 
@@ -173,9 +187,12 @@
       position: absolute;
       left: 50%;
       top: 50%;
-      border: 1px solid rgba(255,232,168,0.13);
+      border: 1px solid rgba(196,181,253,0.18);
       border-radius: 50%;
       transform: translate(-50%, -50%) rotate(var(--start, 0deg));
+      box-shadow:
+        0 0 2rem rgba(139,92,246,0.10),
+        inset 0 0 1.5rem rgba(244,201,93,0.04);
       animation: universe-orbit-turn var(--speed, 44s) linear infinite;
     }
 
@@ -191,6 +208,7 @@
       height: min(21rem, 39vw);
       --speed: 36s;
       --start: 28deg;
+      border-color: rgba(255,232,168,0.18);
       animation-direction: reverse;
       opacity: 0.74;
     }
@@ -207,13 +225,14 @@
       position: absolute;
       width: clamp(2.7rem, 7vw, 5.8rem);
       height: clamp(2.7rem, 7vw, 5.8rem);
-      border: 1px solid rgba(255,232,168,0.44);
+      border: 1px solid rgba(196,181,253,0.40);
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.13), transparent 28%),
-        radial-gradient(circle at 70% 26%, rgba(255,232,168,0.28), transparent 34%),
-        linear-gradient(145deg, rgba(244,201,93,0.16), rgba(3,3,3,0.16));
+        linear-gradient(135deg, rgba(255,255,255,0.14), transparent 28%),
+        radial-gradient(circle at 68% 28%, rgba(196,181,253,0.30), transparent 34%),
+        linear-gradient(145deg, rgba(139,92,246,0.20), rgba(3,3,3,0.22) 58%, rgba(244,201,93,0.10));
       box-shadow:
-        0 0 1.4rem rgba(244,201,93,0.22),
+        0 0 1.4rem rgba(139,92,246,0.22),
+        0 0 2.2rem rgba(244,201,93,0.12),
         inset 0 0 1.2rem rgba(255,232,168,0.08);
       transform: rotate(45deg);
       opacity: 0.56;
@@ -227,11 +246,14 @@
       display: grid;
       place-items: center;
       transform: rotate(-45deg);
-      color: rgba(255,248,232,0.72);
+      color: rgba(255,248,232,0.76);
       font-size: clamp(0.58rem, 1.8vw, 0.78rem);
       font-weight: 950;
       letter-spacing: 0.12em;
       text-transform: uppercase;
+      text-shadow:
+        0 0 0.7rem rgba(139,92,246,0.42),
+        0 0 1rem rgba(244,201,93,0.24);
     }
 
     .motion-shape.audralia {
@@ -312,10 +334,15 @@
       align-items: center;
       justify-content: center;
       padding: 0.45rem 0.72rem;
-      border: 1px solid var(--line);
+      border: 1px solid rgba(196,181,253,0.24);
       border-radius: 999px;
       color: var(--muted);
-      background: rgba(255,232,168,0.034);
+      background:
+        linear-gradient(180deg, rgba(139,92,246,0.08), rgba(244,201,93,0.025)),
+        rgba(0,0,0,0.38);
+      box-shadow:
+        inset 0 0 0 1px rgba(244,201,93,0.04),
+        0 0 1.2rem rgba(139,92,246,0.08);
       font-size: 0.74rem;
       font-weight: 850;
       white-space: nowrap;
@@ -325,18 +352,21 @@
     .nav a:hover,
     .nav a:focus-visible {
       border-color: rgba(255,232,168,0.58);
-      box-shadow: 0 0 1rem rgba(244,201,93,0.14);
+      box-shadow:
+        0 0 1rem rgba(244,201,93,0.16),
+        0 0 1.8rem rgba(139,92,246,0.16);
       outline: none;
     }
 
     .nav a[aria-current="page"] {
-      border-color: rgba(255,232,168,0.94);
+      border-color: rgba(255,232,168,0.96);
       color: #080604;
       background:
-        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.50), transparent 36%),
-        linear-gradient(135deg, #fff3c4, #f4c95d 48%, #b9821f);
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.52), transparent 38%),
+        linear-gradient(135deg, #fff3c4, #f4c95d 42%, #a78bfa 74%, #6d28d9);
       box-shadow:
-        0 0 0.9rem rgba(244,201,93,0.34),
+        0 0 0.9rem rgba(244,201,93,0.44),
+        0 0 2rem rgba(139,92,246,0.26),
         0 0.65rem 1.8rem rgba(244,201,93,0.20);
     }
 
@@ -354,7 +384,9 @@
       font-weight: 950;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      text-shadow: 0 0 1rem rgba(244,201,93,0.34);
+      text-shadow:
+        0 0 1rem rgba(244,201,93,0.34),
+        0 0 1.4rem rgba(139,92,246,0.28);
     }
 
     h1 {
@@ -392,11 +424,12 @@
       border: 1px solid rgba(255,232,168,0.98);
       color: #070503;
       background:
-        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.58), transparent 38%),
-        linear-gradient(135deg, #fff3c4, #f4c95d 42%, #b9821f);
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.62), transparent 38%),
+        linear-gradient(135deg, #fff3c4, #f4c95d 44%, #a78bfa 78%, #6d28d9);
       box-shadow:
-        0 0 0.82rem rgba(244,201,93,0.46),
-        0 0 2.2rem rgba(244,201,93,0.31),
+        0 0 0.9rem rgba(255,232,168,0.62),
+        0 0 2.5rem rgba(244,201,93,0.34),
+        0 0 3.4rem rgba(139,92,246,0.20),
         0 1rem 2.5rem rgba(244,201,93,0.18);
       font-size: 0.78rem;
       font-weight: 950;
@@ -410,15 +443,15 @@
     }
 
     .button.secondary {
-      border-color: rgba(255,232,168,0.42);
+      border-color: rgba(255,232,168,0.46);
       color: var(--text);
       background:
-        radial-gradient(circle at 50% 0%, rgba(255,232,168,0.13), transparent 42%),
-        linear-gradient(180deg, rgba(255,232,168,0.070), rgba(255,232,168,0.020)),
+        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.20), transparent 42%),
+        linear-gradient(180deg, rgba(139,92,246,0.12), rgba(244,201,93,0.035)),
         rgba(0,0,0,0.76);
       box-shadow:
-        0 0 0.75rem rgba(244,201,93,0.23),
-        0 0 1.9rem rgba(244,201,93,0.13);
+        0 0 0.75rem rgba(139,92,246,0.26),
+        0 0 1.9rem rgba(244,201,93,0.15);
     }
 
     .button:hover,
@@ -426,8 +459,9 @@
       transform: translateY(-2px);
       filter: saturate(1.09);
       box-shadow:
-        0 0 1.15rem rgba(255,232,168,0.62),
-        0 0 3rem rgba(244,201,93,0.40),
+        0 0 1.2rem rgba(255,232,168,0.72),
+        0 0 3.1rem rgba(244,201,93,0.44),
+        0 0 4.2rem rgba(139,92,246,0.30),
         0 1.2rem 3rem rgba(244,201,93,0.24);
       outline: none;
     }
@@ -437,17 +471,17 @@
       margin: clamp(1rem, 3vw, 1.45rem) auto 0;
       position: relative;
       padding: clamp(1rem, 4vw, 1.6rem);
-      border: 1px solid rgba(244,201,93,0.28);
+      border: 1px solid rgba(255,232,168,0.24);
       border-radius: clamp(1.35rem, 5vw, 2.2rem);
       background:
-        radial-gradient(circle at 50% 0%, rgba(244,201,93,0.12), transparent 35%),
-        radial-gradient(circle at 50% 52%, rgba(185,130,31,0.12), transparent 44%),
-        linear-gradient(180deg, rgba(255,232,168,0.050), rgba(255,232,168,0.012)),
-        rgba(0,0,0,0.86);
+        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.10), transparent 34%),
+        linear-gradient(180deg, rgba(139,92,246,0.055), rgba(244,201,93,0.018)),
+        rgba(0,0,0,0.78);
       box-shadow:
+        0 0 2rem rgba(139,92,246,0.10),
+        0 0 2.8rem rgba(244,201,93,0.07),
         0 2rem 7rem rgba(0,0,0,0.56),
-        0 0 3rem rgba(244,201,93,0.08),
-        inset 0 1px 0 rgba(255,232,168,0.10);
+        inset 0 1px 0 rgba(255,232,168,0.09);
       overflow: hidden;
       isolation: isolate;
     }
@@ -460,8 +494,8 @@
       bottom: 5%;
       width: 1px;
       transform: translateX(-50%);
-      background: linear-gradient(180deg, transparent, rgba(255,232,168,0.48), rgba(244,201,93,0.26), transparent);
-      opacity: 0.78;
+      background: linear-gradient(180deg, transparent, rgba(196,181,253,0.48), rgba(244,201,93,0.28), transparent);
+      opacity: 0.82;
       z-index: -1;
     }
 
@@ -472,8 +506,8 @@
       right: 7%;
       top: 50%;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,232,168,0.42), rgba(244,201,93,0.24), transparent);
-      opacity: 0.74;
+      background: linear-gradient(90deg, transparent, rgba(196,181,253,0.42), rgba(244,201,93,0.28), transparent);
+      opacity: 0.78;
       z-index: -1;
     }
 
@@ -516,9 +550,12 @@
     .compass-orbit::before,
     .compass-orbit::after {
       position: absolute;
-      border: 1px solid rgba(255,232,168,0.14);
+      border: 1px solid rgba(196,181,253,0.18);
       border-radius: 50%;
       pointer-events: none;
+      box-shadow:
+        0 0 1.4rem rgba(139,92,246,0.08),
+        0 0 1.4rem rgba(244,201,93,0.04);
     }
 
     .compass-orbit {
@@ -549,7 +586,9 @@
       font-size: clamp(1rem, 3vw, 1.35rem);
       font-weight: 950;
       line-height: 1;
-      text-shadow: 0 0 1rem rgba(244,201,93,0.30);
+      text-shadow:
+        0 0 1rem rgba(244,201,93,0.30),
+        0 0 1.4rem rgba(139,92,246,0.34);
       pointer-events: none;
       user-select: none;
     }
@@ -632,16 +671,18 @@
       position: absolute;
       inset: 0;
       transform: rotate(45deg);
-      border: 2px solid rgba(255,232,168,0.78);
+      border: 2px solid rgba(255,232,168,0.82);
       border-radius: 1.15rem;
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.13), transparent 24%),
-        radial-gradient(circle at 68% 32%, rgba(255,232,168,0.30), transparent 32%),
-        radial-gradient(circle at 30% 72%, rgba(244,201,93,0.22), transparent 38%),
-        linear-gradient(145deg, rgba(15,12,4,0.92), rgba(0,0,0,0.88) 58%, rgba(185,130,31,0.20));
+        linear-gradient(135deg, rgba(255,255,255,0.15), transparent 24%),
+        linear-gradient(45deg, transparent 0 42%, rgba(244,201,93,0.18) 43% 45%, transparent 46% 100%),
+        radial-gradient(circle at 68% 32%, rgba(196,181,253,0.28), transparent 32%),
+        radial-gradient(circle at 30% 72%, rgba(244,201,93,0.20), transparent 38%),
+        linear-gradient(145deg, rgba(10,6,15,0.94), rgba(0,0,0,0.88) 58%, rgba(109,40,217,0.26));
       box-shadow:
         0 1.4rem 3.5rem rgba(0,0,0,0.46),
-        0 0 2.1rem rgba(244,201,93,0.18),
+        0 0 2.1rem rgba(139,92,246,0.18),
+        0 0 2.4rem rgba(244,201,93,0.13),
         inset 0 0 0 1px rgba(255,232,168,0.16),
         inset 0 0 2rem rgba(255,232,168,0.07);
       overflow: hidden;
@@ -676,11 +717,11 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(90deg, transparent 49.5%, rgba(255,248,232,0.39) 50%, transparent 50.5%),
-        linear-gradient(0deg, transparent 49.5%, rgba(255,248,232,0.29) 50%, transparent 50.5%),
-        linear-gradient(45deg, transparent 49.5%, rgba(255,248,232,0.20) 50%, transparent 50.5%),
-        linear-gradient(-45deg, transparent 49.5%, rgba(255,248,232,0.20) 50%, transparent 50.5%);
-      opacity: 0.82;
+        linear-gradient(90deg, transparent 49.5%, rgba(255,232,168,0.42) 50%, transparent 50.5%),
+        linear-gradient(0deg, transparent 49.5%, rgba(196,181,253,0.36) 50%, transparent 50.5%),
+        linear-gradient(45deg, transparent 49.5%, rgba(244,201,93,0.24) 50%, transparent 50.5%),
+        linear-gradient(-45deg, transparent 49.5%, rgba(196,181,253,0.24) 50%, transparent 50.5%);
+      opacity: 0.90;
     }
 
     .diamond-content {
@@ -702,7 +743,10 @@
       font-weight: 950;
       letter-spacing: 0.09em;
       text-transform: uppercase;
-      text-shadow: 0 2px 0 rgba(0,0,0,0.22);
+      text-shadow:
+        0 0 0.75rem rgba(244,201,93,0.26),
+        0 0 1.1rem rgba(139,92,246,0.24),
+        0 2px 0 rgba(0,0,0,0.22);
     }
 
     .diamond-content span {
@@ -717,12 +761,13 @@
     .center-diamond .diamond-shell {
       border-color: rgba(255,248,232,0.70);
       background:
-        radial-gradient(circle at 50% 50%, rgba(255,232,168,0.22), transparent 44%),
+        radial-gradient(circle at 50% 50%, rgba(196,181,253,0.24), transparent 44%),
         radial-gradient(circle at 70% 28%, rgba(244,201,93,0.20), transparent 32%),
-        linear-gradient(145deg, rgba(14,11,4,0.94), rgba(0,0,0,0.94));
+        linear-gradient(145deg, rgba(14,8,18,0.94), rgba(0,0,0,0.94));
       box-shadow:
         0 1rem 2.5rem rgba(0,0,0,0.48),
-        0 0 2rem rgba(244,201,93,0.18),
+        0 0 2rem rgba(139,92,246,0.20),
+        0 0 2rem rgba(244,201,93,0.12),
         inset 0 0 0 1px rgba(255,232,168,0.14);
     }
 
@@ -738,14 +783,16 @@
       width: min(100%, 980px);
       margin: clamp(1rem, 3vw, 1.5rem) auto 0;
       padding: clamp(0.85rem, 2.8vw, 1rem);
-      border: 1px solid rgba(255,232,168,0.18);
+      border: 1px solid rgba(255,232,168,0.24);
       border-radius: 1.25rem;
       background:
-        linear-gradient(180deg, rgba(255,232,168,0.045), rgba(255,232,168,0.014)),
-        rgba(0,0,0,0.80);
+        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.10), transparent 34%),
+        linear-gradient(180deg, rgba(139,92,246,0.055), rgba(244,201,93,0.018)),
+        rgba(0,0,0,0.78);
       box-shadow:
-        0 0 1.6rem rgba(244,201,93,0.07),
-        inset 0 1px 0 rgba(255,232,168,0.08);
+        0 0 2rem rgba(139,92,246,0.10),
+        0 0 2.8rem rgba(244,201,93,0.07),
+        inset 0 1px 0 rgba(255,232,168,0.09);
     }
 
     .lab-panel h3 {
@@ -781,12 +828,25 @@
       justify-items: center;
       gap: 0.22rem;
       padding: 0.72rem;
-      border: 1px solid rgba(255,232,168,0.14);
+      border: 1px solid rgba(255,232,168,0.20);
       border-radius: 1rem;
       background:
-        radial-gradient(circle at 50% 0%, rgba(255,232,168,0.10), transparent 42%),
-        rgba(255,232,168,0.020);
+        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.14), transparent 42%),
+        linear-gradient(180deg, rgba(244,201,93,0.045), rgba(0,0,0,0.18)),
+        rgba(0,0,0,0.30);
+      box-shadow:
+        inset 0 0 0 1px rgba(244,201,93,0.035),
+        0 0 1rem rgba(139,92,246,0.08);
       text-align: center;
+      transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+    }
+
+    .instrument:hover {
+      border-color: rgba(255,232,168,0.48);
+      box-shadow:
+        0 0 1.4rem rgba(244,201,93,0.16),
+        0 0 2.2rem rgba(139,92,246,0.18);
+      transform: translateY(-1px);
     }
 
     .instrument strong {
@@ -809,9 +869,16 @@
       width: min(100%, 940px);
       margin: clamp(1rem, 3vw, 1.5rem) auto 0;
       padding: clamp(0.8rem, 2.8vw, 1rem);
-      border: 1px solid rgba(255,232,168,0.14);
+      border: 1px solid rgba(255,232,168,0.24);
       border-radius: 1.25rem;
-      background: rgba(255,232,168,0.024);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.10), transparent 34%),
+        linear-gradient(180deg, rgba(139,92,246,0.055), rgba(244,201,93,0.018)),
+        rgba(0,0,0,0.78);
+      box-shadow:
+        0 0 2rem rgba(139,92,246,0.10),
+        0 0 2.8rem rgba(244,201,93,0.07),
+        inset 0 1px 0 rgba(255,232,168,0.09);
       text-align: center;
     }
 
@@ -837,11 +904,15 @@
       align-items: center;
       justify-content: center;
       padding: 0.48rem 0.72rem;
-      border: 1px solid rgba(255,232,168,0.18);
+      border: 1px solid rgba(196,181,253,0.24);
       border-radius: 999px;
       color: var(--muted);
-      background: rgba(255,232,168,0.035);
-      box-shadow: 0 0 0.8rem rgba(244,201,93,0.08);
+      background:
+        linear-gradient(180deg, rgba(139,92,246,0.08), rgba(244,201,93,0.025)),
+        rgba(0,0,0,0.38);
+      box-shadow:
+        inset 0 0 0 1px rgba(244,201,93,0.04),
+        0 0 1.2rem rgba(139,92,246,0.08);
       font-size: 0.74rem;
       font-weight: 900;
       letter-spacing: 0.06em;
@@ -868,9 +939,12 @@
       justify-items: center;
       gap: 0.25rem;
       padding: 0.85rem;
-      border: 1px dashed rgba(244,201,93,0.30);
+      border: 1px dashed rgba(255,232,168,0.34);
       border-radius: 1rem;
-      background: rgba(255,232,168,0.024);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.10), transparent 42%),
+        rgba(255,232,168,0.024);
+      box-shadow: 0 0 1.4rem rgba(139,92,246,0.06);
       text-align: center;
       pointer-events: none;
       user-select: none;
@@ -892,9 +966,16 @@
     .receipt {
       width: min(100%, 900px);
       margin: clamp(1rem, 3vw, 1.5rem) auto 0;
-      border: 1px solid rgba(255,232,168,0.14);
+      border: 1px solid rgba(255,232,168,0.24);
       border-radius: 1rem;
-      background: rgba(255,232,168,0.026);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.10), transparent 34%),
+        linear-gradient(180deg, rgba(139,92,246,0.055), rgba(244,201,93,0.018)),
+        rgba(0,0,0,0.78);
+      box-shadow:
+        0 0 2rem rgba(139,92,246,0.10),
+        0 0 2.8rem rgba(244,201,93,0.07),
+        inset 0 1px 0 rgba(255,232,168,0.09);
       color: var(--faint);
       overflow: hidden;
     }
@@ -925,7 +1006,7 @@
       text-align: center;
     }
 
-    @keyframes universe-gold-sweep {
+    @keyframes universe-violet-gold-sweep {
       from { transform: rotate(0deg) scale(1); }
       to { transform: rotate(360deg) scale(1); }
     }
@@ -1064,7 +1145,7 @@
 
     <main id="main">
       <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Universe · Black Field / Gold Inlay</p>
+        <p class="eyebrow">Universe · Violet Field / Gold Inlay</p>
         <h1 id="page-title">The Nine Summits Universe lives here.</h1>
 
         <p class="quote">
@@ -1080,7 +1161,7 @@
 
       <section class="universe-stage" aria-labelledby="universe-title">
         <div class="stage-title">
-          <h2 id="universe-title">Four gold-inlay diamonds hold the world setting.</h2>
+          <h2 id="universe-title">Four violet-and-gold diamonds hold the world setting.</h2>
           <p>Audralia is the home world and mirror planet to Earth. This route uses lab-measured motion and cognitive delivery without becoming the renderer.</p>
         </div>
 
@@ -1188,12 +1269,12 @@
       <section class="scope-strip" aria-label="Universe diagnostic scope">
         <div class="scope-tile">
           <strong>1</strong>
-          <span>One black-field universe setting.</span>
+          <span>One violet-field universe setting.</span>
         </div>
 
         <div class="scope-tile">
           <strong>4</strong>
-          <span>Four gold-inlay world options.</span>
+          <span>Four violet-and-gold world options.</span>
         </div>
 
         <div class="scope-tile">
@@ -1209,26 +1290,24 @@
 
       <details class="receipt">
         <summary>Route receipt</summary>
-        <pre>NINE_SUMMITS_UNIVERSE_BLACK_GOLD_INLAY_LAB_INSTRUMENTS_TNT_v4
-previous_contract=NINE_SUMMITS_UNIVERSE_GOLD_BLACK_MOTION_SETTING_TNT_v3
+        <pre>NINE_SUMMITS_UNIVERSE_VIOLET_GOLD_INLAY_LAB_INSTRUMENTS_TNT_v5
+previous_contract=NINE_SUMMITS_UNIVERSE_BLACK_GOLD_INLAY_LAB_INSTRUMENTS_TNT_v4
 route=/nine-summits/universe/
 page=universe
 role=world_setting
-theme=black_field_gold_inlay_golden_glow
+theme=violet_purple_primary_gold_border_black_gold_inlay
 home_world=Audralia
 earth_relationship=mirror_planet_reference
 motion_authority=/nine-summits/universe/universe.motion.js
 lab_instruments=golden_ratio,cardinal_axis,orbit_phase,lattice_measure,delivery_cadence
-tic_tac_toe_dynamic_protocol=precode_solidified
-quad_a_attack=assault,attack,adversarially,audit
 center=universe_setting_decorative
 north=home_world:/showroom/globe/audralia/
 east=book_spine:/nine-summits-of-love/
 south=atrium_spine:/showroom/
 west=frontier_spine:/frontier/
 return_routes=compass,door,home,manor,products,gauges
-renewed=black_depth,gold_inlay,golden_glow_buttons,revolving_background_shapes,mathematical_lab_instrument_panel,cognitive_delivery_cycle
-route_owns=world_context,four_diamond_options,route_links,256_scope_expression,black_gold_visual_theme,decorative_background_motion,cognitive_prompt_text,lab_instrument_display
+renewed=violet_primary,purple_contrast,gold_borders,golden_glow_buttons,black_gold_inlay_lines,revolving_background_shapes,mathematical_lab_instrument_panel,cognitive_delivery_cycle
+route_owns=world_context,four_diamond_options,route_links,256_scope_expression,violet_gold_visual_theme,decorative_background_motion,cognitive_prompt_text,lab_instrument_display
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic,heavy_runtime
 background_motion=css_shapes_plus_js_lab_delivery_cycle
 heavy_runtime_loaded=false
@@ -1243,10 +1322,10 @@ visual_pass_claimed=false</pre>
     </main>
 
     <footer>
-      NINE_SUMMITS_UNIVERSE_BLACK_GOLD_INLAY_LAB_INSTRUMENTS_TNT_v4 · Universe · Black Field · Gold Inlay · Lab Instruments · Audralia Baseline.
+      NINE_SUMMITS_UNIVERSE_VIOLET_GOLD_INLAY_LAB_INSTRUMENTS_TNT_v5 · Universe · Violet Field · Gold Inlay · Lab Instruments · Audralia Baseline.
     </footer>
   </div>
 
-  <script src="/nine-summits/universe/universe.motion.js?v=2026-05-07-black-gold-inlay-lab-v4" defer></script>
+  <script src="/nine-summits/universe/universe.motion.js?v=NINE_SUMMITS_UNIVERSE_VIOLET_GOLD_INLAY_LAB_INSTRUMENTS_TNT_v5" defer></script>
 </body>
 </html>

@@ -1,16 +1,19 @@
 /* /assets/audralia/audralia.canvas.js */
 /* AUDRALIA_CANVAS_AUTHORITY_ADOPTED_COLUMN */
 /* TNT: AUDRALIA_CANVAS_AUTHORITY_RICH_PLANET_RENDER_TNT_v1 */
+/* REVISION: AUDRALIA_RICH_PLANET_DETAIL_UPGRADE_v2 */
 
 const RECEIPT = "AUDRALIA_CANVAS_AUTHORITY_RECEIPT";
 const CONTRACT = "AUDRALIA_CANVAS_AUTHORITY_RICH_PLANET_RENDER_TNT_v1";
-const VERSION = "2026-05-06.rich-planet-render";
+const REVISION = "AUDRALIA_RICH_PLANET_DETAIL_UPGRADE_v2";
+const VERSION = "2026-05-06.rich-planet-detail-upgrade-v2";
 const COMPATIBILITY_CONTRACT = "AUDRALIA_CANVAS_AUTHORITY_MINIMAL_CANARY_TNT_v1";
 
 const PLANET = Object.freeze({
   name: "Audralia",
   receipt: RECEIPT,
   contract: CONTRACT,
+  revision: REVISION,
   compatibility: COMPATIBILITY_CONTRACT,
   autoBoot: false,
   routeOwnsCall: true,
@@ -19,83 +22,111 @@ const PLANET = Object.freeze({
   visualPassClaimed: false,
   lineage: "tectonics -> topology -> terrain -> canvas",
   runtimeTruthPath: "/assets/audralia/audralia.runtime.js",
-  renderMode: "rich-procedural-planet",
+  renderMode: "rich-procedural-planet-detail-upgrade",
+  exposedLandRatioIntent: "earth-compatible-above-water-ratio",
+  materialLanguage: ["diamond", "opal", "granite", "slate", "white-opal-sand", "black-diamond-sand"],
   landmasses: [
     {
       id: "western-mainland-arc",
-      fill: "rgba(91, 119, 86, 0.96)",
-      high: "rgba(208, 213, 178, 0.58)",
-      coast: "rgba(239, 218, 163, 0.46)",
-      points: [[-53,-156],[-45,-143],[-34,-132],[-22,-131],[-11,-123],[-2,-115],[10,-106],[21,-89],[24,-76],[16,-63],[2,-56],[-13,-60],[-27,-75],[-38,-96],[-48,-123]]
+      fill: "rgba(89, 117, 84, 0.97)",
+      secondary: "rgba(122, 119, 88, 0.58)",
+      high: "rgba(218, 220, 181, 0.58)",
+      coast: "rgba(244, 221, 164, 0.50)",
+      shadow: "rgba(36, 43, 35, 0.38)",
+      points: [[-54,-158],[-48,-149],[-39,-140],[-29,-134],[-18,-132],[-8,-126],[1,-117],[11,-108],[20,-94],[25,-82],[23,-71],[15,-62],[3,-57],[-10,-60],[-23,-71],[-34,-90],[-44,-116],[-52,-139]]
     },
     {
       id: "eastern-attached-mainland",
-      fill: "rgba(128, 115, 83, 0.96)",
-      high: "rgba(226, 198, 148, 0.52)",
-      coast: "rgba(251, 232, 178, 0.44)",
-      points: [[-24,-65],[-10,-50],[3,-37],[15,-21],[28,-5],[36,17],[32,38],[18,55],[-1,55],[-17,41],[-25,17],[-29,-9],[-30,-34]]
+      fill: "rgba(129, 116, 82, 0.97)",
+      secondary: "rgba(99, 125, 100, 0.45)",
+      high: "rgba(232, 203, 151, 0.55)",
+      coast: "rgba(252, 233, 179, 0.47)",
+      shadow: "rgba(44, 34, 27, 0.34)",
+      points: [[-26,-68],[-14,-55],[-2,-44],[9,-31],[20,-17],[30,-2],[37,16],[35,34],[25,50],[11,58],[-5,54],[-18,42],[-26,23],[-31,-3],[-32,-31],[-30,-51]]
     },
     {
       id: "northern-rock-crown",
-      fill: "rgba(178, 205, 210, 0.90)",
-      high: "rgba(248, 252, 255, 0.74)",
-      coast: "rgba(216, 238, 246, 0.56)",
-      points: [[42,-152],[53,-126],[62,-94],[66,-61],[63,-25],[54,10],[43,28],[36,7],[34,-29],[36,-69],[38,-111]]
+      fill: "rgba(176, 205, 211, 0.91)",
+      secondary: "rgba(105, 126, 115, 0.36)",
+      high: "rgba(248, 252, 255, 0.76)",
+      coast: "rgba(221, 241, 248, 0.59)",
+      shadow: "rgba(57, 80, 90, 0.28)",
+      points: [[41,-154],[50,-132],[58,-105],[64,-76],[66,-48],[61,-20],[53,7],[44,26],[37,11],[34,-20],[35,-56],[37,-94]]
     },
     {
       id: "southern-weathered-mass",
-      fill: "rgba(108, 124, 103, 0.96)",
-      high: "rgba(204, 226, 212, 0.48)",
-      coast: "rgba(219, 238, 229, 0.48)",
-      points: [[-68,-48],[-60,-8],[-51,36],[-39,68],[-25,106],[-31,137],[-49,164],[-65,161],[-75,124],[-78,73],[-75,19]]
+      fill: "rgba(108, 125, 102, 0.97)",
+      secondary: "rgba(141, 132, 94, 0.42)",
+      high: "rgba(210, 229, 214, 0.50)",
+      coast: "rgba(222, 240, 230, 0.51)",
+      shadow: "rgba(28, 43, 34, 0.33)",
+      points: [[-69,-50],[-62,-17],[-55,20],[-47,49],[-36,76],[-25,107],[-28,130],[-41,153],[-55,166],[-68,157],[-76,122],[-80,78],[-78,28]]
     },
     {
       id: "equatorial-ancient-chain",
-      fill: "rgba(119, 101, 78, 0.95)",
-      high: "rgba(238, 210, 153, 0.52)",
-      coast: "rgba(246, 222, 168, 0.42)",
-      points: [[-12,62],[-1,78],[10,98],[18,121],[14,143],[1,163],[-12,154],[-20,128],[-21,98],[-18,76]]
+      fill: "rgba(118, 100, 77, 0.96)",
+      secondary: "rgba(102, 122, 97, 0.32)",
+      high: "rgba(241, 213, 156, 0.54)",
+      coast: "rgba(247, 224, 169, 0.45)",
+      shadow: "rgba(42, 32, 25, 0.33)",
+      points: [[-13,60],[-3,75],[9,94],[18,116],[19,137],[9,156],[-4,166],[-16,154],[-22,130],[-23,101],[-20,77]]
     },
     {
-      id: "island-belt-west",
-      fill: "rgba(125, 123, 91, 0.90)",
-      high: "rgba(230, 214, 166, 0.42)",
-      coast: "rgba(246, 228, 178, 0.38)",
-      points: [[5,-170],[16,-161],[22,-147],[17,-134],[5,-130],[-5,-140],[-6,-156]]
+      id: "western-island-belt",
+      fill: "rgba(128, 125, 91, 0.92)",
+      secondary: "rgba(102, 125, 98, 0.30)",
+      high: "rgba(232, 216, 166, 0.44)",
+      coast: "rgba(248, 229, 178, 0.40)",
+      shadow: "rgba(42, 40, 29, 0.28)",
+      points: [[4,-171],[15,-164],[23,-150],[21,-138],[11,-131],[-2,-136],[-8,-151],[-5,-165]]
     },
     {
-      id: "island-belt-east",
-      fill: "rgba(101, 123, 98, 0.88)",
-      high: "rgba(205, 231, 208, 0.38)",
-      coast: "rgba(232, 241, 207, 0.35)",
-      points: [[-40,96],[-32,109],[-28,126],[-38,139],[-50,130],[-54,111]]
+      id: "south-east-shelf-islands",
+      fill: "rgba(100, 124, 98, 0.90)",
+      secondary: "rgba(128, 116, 82, 0.30)",
+      high: "rgba(207, 233, 210, 0.40)",
+      coast: "rgba(232, 241, 207, 0.38)",
+      shadow: "rgba(30, 46, 34, 0.27)",
+      points: [[-42,92],[-34,106],[-29,122],[-34,138],[-49,134],[-56,116],[-53,100]]
+    },
+    {
+      id: "far-east-reef-knife",
+      fill: "rgba(126, 136, 91, 0.84)",
+      secondary: "rgba(75, 118, 112, 0.28)",
+      high: "rgba(233, 226, 170, 0.38)",
+      coast: "rgba(226, 240, 198, 0.34)",
+      shadow: "rgba(34, 43, 30, 0.25)",
+      points: [[-48,146],[-36,154],[-20,164],[-7,176],[0,-174],[-17,-169],[-35,-160],[-51,-151]]
     }
   ],
   shelves: [
-    [[-60,-164],[-48,-149],[-36,-139],[-18,-139],[4,-121],[27,-92],[25,-68],[5,-49],[-20,-55],[-43,-90],[-57,-126]],
-    [[-28,-70],[-2,-50],[24,-18],[43,14],[38,48],[8,70],[-20,47],[-36,2],[-36,-42]],
-    [[36,-160],[63,-126],[73,-69],[70,-9],[52,36],[32,10],[27,-45],[31,-105]],
-    [[-80,-62],[-68,10],[-55,65],[-31,96],[-18,132],[-44,174],[-70,178],[-84,125],[-86,30]],
-    [[-22,58],[2,76],[22,106],[22,145],[4,174],[-20,160],[-30,118]]
+    [[-60,-164],[-49,-150],[-37,-141],[-20,-141],[2,-124],[26,-96],[28,-72],[8,-50],[-18,-54],[-42,-88],[-58,-126]],
+    [[-30,-73],[-4,-52],[23,-20],[45,13],[40,50],[9,72],[-21,49],[-38,3],[-38,-43]],
+    [[36,-162],[64,-128],[74,-70],[72,-8],[54,37],[31,11],[26,-45],[30,-106]],
+    [[-81,-63],[-70,8],[-57,64],[-33,97],[-18,132],[-44,176],[-71,178],[-85,126],[-87,31]],
+    [[-24,56],[2,75],[24,105],[23,145],[4,176],[-22,161],[-33,118]],
+    [[-52,130],[-43,146],[-30,162],[-13,176],[4,-170],[-13,-161],[-33,-151],[-54,-139]]
   ],
   pressureLines: [
-    [[-61,-142],[-47,-120],[-35,-93],[-24,-62],[-11,-31],[7,-4],[22,26]],
-    [[41,-139],[53,-101],[57,-60],[53,-17],[43,19]],
-    [[-68,98],[-52,119],[-35,139],[-17,158],[3,177]],
-    [[-15,72],[-1,94],[7,118],[4,144],[-8,162]],
-    [[-33,-128],[-10,-114],[11,-95],[29,-72]],
-    [[28,-2],[16,26],[5,54],[-10,78],[-23,99]]
+    [[-61,-142],[-48,-121],[-36,-94],[-25,-63],[-12,-32],[6,-5],[22,26]],
+    [[40,-140],[52,-102],[57,-60],[53,-17],[43,19]],
+    [[-68,98],[-53,119],[-36,139],[-18,158],[2,177]],
+    [[-16,70],[-2,93],[7,117],[4,144],[-8,162]],
+    [[-34,-129],[-12,-115],[10,-96],[29,-72]],
+    [[28,-2],[17,25],[5,54],[-10,78],[-23,100]],
+    [[-49,144],[-36,156],[-20,168],[-2,179],[18,-169]]
   ],
   basins: [
     [[-38,112],[-18,87],[4,74],[30,73],[55,88]],
     [[-62,-18],[-39,4],[-15,17],[13,23],[39,18]],
     [[10,-169],[-7,169],[-24,145],[-41,126]],
-    [[35,76],[20,104],[3,132],[-16,154]]
+    [[35,76],[20,104],[3,132],[-16,154]],
+    [[48,-78],[32,-52],[13,-32],[-9,-20],[-31,-16]]
   ],
   storms: [
-    { lat: 18, lon: -32, radius: 0.11 },
-    { lat: -34, lon: 42, radius: 0.10 },
-    { lat: 51, lon: 128, radius: 0.08 }
+    { lat: 18, lon: -32, radius: 0.105, speed: 0.0040 },
+    { lat: -34, lon: 42, radius: 0.090, speed: -0.0032 },
+    { lat: 52, lon: 128, radius: 0.078, speed: 0.0035 }
   ]
 });
 
@@ -187,6 +218,7 @@ function createCanvas(mount) {
   shell.setAttribute("data-audralia-canvas-authority", "true");
   shell.setAttribute("data-audralia-receipt", RECEIPT);
   shell.setAttribute("data-audralia-contract", CONTRACT);
+  shell.setAttribute("data-audralia-revision", REVISION);
   shell.style.width = "min(100%, 960px)";
   shell.style.margin = "18px auto";
   shell.style.display = "grid";
@@ -194,8 +226,8 @@ function createCanvas(mount) {
   shell.style.isolation = "isolate";
 
   const frame = document.createElement("div");
-  frame.setAttribute("data-audralia-canvas-frame", "rich-planet-contained-square");
-  frame.style.width = "min(92vw, 800px)";
+  frame.setAttribute("data-audralia-canvas-frame", "rich-planet-contained-square-v2");
+  frame.style.width = "min(92vw, 820px)";
   frame.style.aspectRatio = "1 / 1";
   frame.style.position = "relative";
   frame.style.overflow = "hidden";
@@ -226,12 +258,12 @@ function createCanvas(mount) {
   shell.appendChild(proof);
   mount.prepend(shell);
 
-  return { shell: shell, frame: frame, canvas: canvas, proof: proof };
+  return { shell, frame, canvas, proof };
 }
 
 function setupCanvas(canvas, frame) {
   const rect = frame.getBoundingClientRect();
-  const fallback = Math.min(window.innerWidth || 760, 800);
+  const fallback = Math.min(window.innerWidth || 760, 820);
   const size = Math.max(320, Math.floor(Math.min(rect.width || fallback, rect.height || fallback)));
   const ratio = clamp(window.devicePixelRatio || 1, 1, 2.25);
 
@@ -247,7 +279,7 @@ function setupCanvas(canvas, frame) {
 
   ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
 
-  return { ctx: ctx, size: size, ratio: ratio };
+  return { ctx, size, ratio };
 }
 
 function normalizeLongitude(lon) {
@@ -255,6 +287,11 @@ function normalizeLongitude(lon) {
   while (value > 180) value -= 360;
   while (value < -180) value += 360;
   return value;
+}
+
+function hash01(seed) {
+  const x = Math.sin(seed * 12.9898) * 43758.5453123;
+  return x - Math.floor(x);
 }
 
 function project(latDeg, lonDeg, rotationDeg, size) {
@@ -267,14 +304,14 @@ function project(latDeg, lonDeg, rotationDeg, size) {
   const z0 = cosLat * Math.cos(lon);
   const y = y0 * Math.cos(tilt) - z0 * Math.sin(tilt);
   const z = y0 * Math.sin(tilt) + z0 * Math.cos(tilt);
-  const radius = size * 0.345;
+  const radius = size * 0.348;
 
   return {
     x: size / 2 + x0 * radius,
     y: size / 2 - y * radius,
-    z: z,
-    radius: radius,
-    visible: z > -0.03
+    z,
+    radius,
+    visible: z > -0.035
   };
 }
 
@@ -289,7 +326,7 @@ function radial(ctx, x0, y0, r0, x1, y1, r1, stops) {
 }
 
 function clipGlobe(ctx, size) {
-  const radius = size * 0.345;
+  const radius = size * 0.348;
   ctx.beginPath();
   ctx.arc(size / 2, size / 2, radius, 0, Math.PI * 2);
   ctx.clip();
@@ -346,17 +383,17 @@ function drawStarField(ctx, size, time) {
   ctx.fillStyle = "#020713";
   ctx.fillRect(0, 0, size, size);
 
-  for (let index = 0; index < 130; index += 1) {
+  for (let index = 0; index < 150; index += 1) {
     const sx = Math.sin(index * 917.17) * 10000;
     const sy = Math.sin(index * 421.91) * 10000;
     const x = (sx - Math.floor(sx)) * size;
     const y = (sy - Math.floor(sy)) * size;
-    const pulse = 0.28 + 0.52 * Math.abs(Math.sin(time * 0.001 + index));
+    const pulse = 0.24 + 0.56 * Math.abs(Math.sin(time * 0.001 + index));
 
     ctx.globalAlpha = pulse;
     ctx.fillStyle = index % 7 === 0 ? "rgba(245, 221, 166, 0.86)" : "rgba(185, 216, 255, 0.72)";
     ctx.beginPath();
-    ctx.arc(x, y, index % 13 === 0 ? 1.35 : 0.74, 0, Math.PI * 2);
+    ctx.arc(x, y, index % 13 === 0 ? 1.35 : 0.72, 0, Math.PI * 2);
     ctx.fill();
   }
 
@@ -366,15 +403,15 @@ function drawStarField(ctx, size, time) {
 function drawOrbitalGlow(ctx, size, time) {
   const cx = size / 2;
   const cy = size / 2;
-  const radius = size * 0.345;
+  const radius = size * 0.348;
 
   ctx.save();
   ctx.translate(cx, cy);
   ctx.rotate(Math.sin(time * 0.00022) * 0.12);
 
-  for (let index = 0; index < 4; index += 1) {
+  for (let index = 0; index < 5; index += 1) {
     ctx.beginPath();
-    ctx.ellipse(0, 0, radius * (1.08 + index * 0.055), radius * (0.18 + index * 0.02), 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 0, radius * (1.08 + index * 0.052), radius * (0.16 + index * 0.022), 0, 0, Math.PI * 2);
     ctx.strokeStyle = index % 2 === 0 ? "rgba(240, 211, 138, 0.10)" : "rgba(127, 194, 255, 0.10)";
     ctx.lineWidth = 1;
     ctx.stroke();
@@ -386,15 +423,15 @@ function drawOrbitalGlow(ctx, size, time) {
 function drawOceanBase(ctx, size, time) {
   const cx = size / 2;
   const cy = size / 2;
-  const radius = size * 0.345;
+  const radius = size * 0.348;
 
   ctx.save();
   clipGlobe(ctx, size);
 
-  const ocean = radial(ctx, cx - radius * 0.38, cy - radius * 0.44, radius * 0.04, cx, cy, radius * 1.22, [
-    [0, "rgba(162, 228, 255, 1)"],
-    [0.18, "rgba(54, 148, 203, 1)"],
-    [0.42, "rgba(15, 88, 154, 1)"],
+  const ocean = radial(ctx, cx - radius * 0.40, cy - radius * 0.46, radius * 0.04, cx, cy, radius * 1.24, [
+    [0, "rgba(169, 234, 255, 1)"],
+    [0.17, "rgba(58, 154, 210, 1)"],
+    [0.42, "rgba(13, 89, 158, 1)"],
     [0.72, "rgba(4, 37, 91, 1)"],
     [1, "rgba(1, 13, 40, 1)"]
   ]);
@@ -402,10 +439,10 @@ function drawOceanBase(ctx, size, time) {
   ctx.fillStyle = ocean;
   ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-  ctx.globalAlpha = 0.26;
+  ctx.globalAlpha = 0.25;
 
-  for (let band = 0; band < 16; band += 1) {
-    const y = cy - radius + (band / 15) * radius * 2;
+  for (let band = 0; band < 18; band += 1) {
+    const y = cy - radius + (band / 17) * radius * 2;
     const phase = time * 0.001 + band * 1.31;
 
     ctx.strokeStyle = band % 3 === 0 ? "rgba(190, 238, 255, 0.34)" : "rgba(24, 100, 165, 0.30)";
@@ -431,11 +468,41 @@ function drawShelves(ctx, rotation, size) {
   for (let index = 0; index < PLANET.shelves.length; index += 1) {
     drawProjectedPath(ctx, PLANET.shelves[index], rotation, size, {
       close: true,
-      fill: index % 2 === 0 ? "rgba(120, 203, 213, 0.30)" : "rgba(180, 230, 226, 0.23)",
+      fill: index % 2 === 0 ? "rgba(117, 205, 216, 0.31)" : "rgba(182, 232, 228, 0.23)",
       stroke: "rgba(226, 238, 213, 0.22)",
       lineWidth: 1.15,
-      alpha: 0.9
+      alpha: 0.92
     });
+  }
+}
+
+function drawTerrainTexture(ctx, mass, rotation, size, time, massIndex) {
+  const centroid = mass.points.reduce(function (acc, point) {
+    acc.lat += point[0];
+    acc.lon += point[1];
+    return acc;
+  }, { lat: 0, lon: 0 });
+
+  centroid.lat /= mass.points.length;
+  centroid.lon /= mass.points.length;
+
+  for (let index = 0; index < 18; index += 1) {
+    const seed = (massIndex + 1) * 100 + index;
+    const lat = centroid.lat + (hash01(seed) - 0.5) * 28;
+    const lon = centroid.lon + (hash01(seed + 7) - 0.5) * 42;
+    const point = project(lat, lon, rotation, size);
+
+    if (!point.visible) continue;
+
+    const scale = size * (0.006 + hash01(seed + 14) * 0.009);
+
+    ctx.save();
+    ctx.globalAlpha = 0.18 + hash01(seed + 30) * 0.18;
+    ctx.fillStyle = index % 3 === 0 ? mass.high : mass.secondary;
+    ctx.beginPath();
+    ctx.ellipse(point.x, point.y, scale * 2.2, scale, time * 0.00018 + seed, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
   }
 }
 
@@ -445,11 +512,21 @@ function drawLand(ctx, rotation, size, time) {
 
     drawProjectedPath(ctx, mass.points, rotation, size, {
       close: true,
+      fill: mass.shadow,
+      stroke: "rgba(10, 14, 18, 0.24)",
+      lineWidth: 2.4,
+      alpha: 0.55
+    });
+
+    drawProjectedPath(ctx, mass.points, rotation, size, {
+      close: true,
       fill: mass.fill,
       stroke: mass.coast,
-      lineWidth: 1.45,
-      alpha: 0.98
+      lineWidth: 1.55,
+      alpha: 0.99
     });
+
+    drawTerrainTexture(ctx, mass, rotation, size, time, index);
 
     const ridge = [];
     for (let j = 0; j < mass.points.length; j += 2) ridge.push(mass.points[j]);
@@ -457,8 +534,8 @@ function drawLand(ctx, rotation, size, time) {
     drawProjectedPath(ctx, ridge, rotation + Math.sin(time * 0.00012 + index) * 1.2, size, {
       close: false,
       stroke: mass.high,
-      lineWidth: 0.9,
-      alpha: 0.72
+      lineWidth: 0.95,
+      alpha: 0.78
     });
   }
 }
@@ -488,34 +565,35 @@ function drawTopology(ctx, rotation, size) {
   for (let index = 0; index < PLANET.pressureLines.length; index += 1) {
     drawProjectedPath(ctx, PLANET.pressureLines[index], rotation, size, {
       close: false,
-      stroke: index % 2 === 0 ? "rgba(238, 205, 125, 0.40)" : "rgba(177, 222, 255, 0.34)",
-      lineWidth: 1.12,
-      alpha: 0.72
+      stroke: index % 2 === 0 ? "rgba(238, 205, 125, 0.42)" : "rgba(177, 222, 255, 0.34)",
+      lineWidth: 1.14,
+      alpha: 0.74
     });
   }
 
   for (let index = 0; index < PLANET.basins.length; index += 1) {
     drawProjectedPath(ctx, PLANET.basins[index], rotation, size, {
       close: false,
-      stroke: "rgba(13, 25, 64, 0.46)",
-      lineWidth: 2.15,
-      alpha: 0.7
+      stroke: "rgba(13, 25, 64, 0.48)",
+      lineWidth: 2.2,
+      alpha: 0.72
     });
   }
 }
 
 function drawClouds(ctx, rotation, size, time) {
-  const radius = size * 0.345;
+  const radius = size * 0.348;
 
   ctx.save();
   clipGlobe(ctx, size);
-  ctx.globalAlpha = 0.38;
+  ctx.globalAlpha = 0.36;
   ctx.strokeStyle = "rgba(245, 250, 255, 0.55)";
-  ctx.lineWidth = 1.4;
+  ctx.lineWidth = 1.35;
 
-  for (let band = 0; band < 9; band += 1) {
-    const lat = -46 + band * 11;
+  for (let band = 0; band < 10; band += 1) {
+    const lat = -49 + band * 10.8;
     const offset = rotation * 0.7 + time * 0.006 + band * 31;
+
     ctx.beginPath();
 
     let started = false;
@@ -542,14 +620,14 @@ function drawClouds(ctx, rotation, size, time) {
 
   for (let index = 0; index < PLANET.storms.length; index += 1) {
     const storm = PLANET.storms[index];
-    const point = project(storm.lat, storm.lon, rotation + time * 0.004, size);
+    const point = project(storm.lat, storm.lon, rotation + time * storm.speed, size);
 
     if (!point.visible) continue;
 
     ctx.save();
     ctx.translate(point.x, point.y);
     ctx.rotate(time * 0.001 + index);
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.40)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.38)";
     ctx.lineWidth = 1;
 
     for (let loop = 0; loop < 3; loop += 1) {
@@ -567,7 +645,7 @@ function drawClouds(ctx, rotation, size, time) {
 function drawAtmosphere(ctx, size, time) {
   const cx = size / 2;
   const cy = size / 2;
-  const radius = size * 0.345;
+  const radius = size * 0.348;
   const pulse = 0.46 + Math.sin(time * 0.0013) * 0.06;
 
   ctx.save();
@@ -579,10 +657,10 @@ function drawAtmosphere(ctx, size, time) {
   ctx.stroke();
 
   const shade = radial(ctx, cx - radius * 0.42, cy - radius * 0.46, radius * 0.05, cx + radius * 0.18, cy + radius * 0.16, radius * 1.18, [
-    [0, "rgba(255, 255, 255, 0.12)"],
+    [0, "rgba(255, 255, 255, 0.13)"],
     [0.52, "rgba(255, 255, 255, 0.018)"],
-    [0.76, "rgba(0, 0, 0, 0.16)"],
-    [1, "rgba(0, 0, 0, 0.66)"]
+    [0.76, "rgba(0, 0, 0, 0.17)"],
+    [1, "rgba(0, 0, 0, 0.68)"]
   ]);
 
   ctx.beginPath();
@@ -600,9 +678,9 @@ function drawDiagnostics(ctx, size) {
   ctx.textAlign = "center";
   ctx.fillText("AUDRALIA", size / 2, size * 0.864);
 
-  ctx.fillStyle = "rgba(174, 204, 225, 0.68)";
-  ctx.font = "500 " + Math.max(10, size * 0.016) + "px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
-  ctx.fillText("RICH PLANET CANVAS · CANONICAL EXPORT", size / 2, size * 0.895);
+  ctx.fillStyle = "rgba(174, 204, 225, 0.70)";
+  ctx.font = "500 " + Math.max(10, size * 0.015) + "px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+  ctx.fillText("RICH PLANET CANVAS · DETAIL UPGRADE", size / 2, size * 0.895);
   ctx.restore();
 }
 
@@ -627,6 +705,7 @@ function publishStatus(state) {
     loaded: true,
     receipt: RECEIPT,
     contract: CONTRACT,
+    revision: REVISION,
     version: VERSION,
     compatibility: COMPATIBILITY_CONTRACT,
     autoBoot: false,
@@ -706,7 +785,7 @@ function startCanvas(target, options) {
     ctx: setup.ctx,
     size: setup.size,
     ratio: setup.ratio,
-    mount: mount,
+    mount,
     options: options || {},
     frameCount: 0,
     pixelProof: null,
@@ -799,6 +878,7 @@ export function getAudraliaCanvasStatus() {
     loaded: false,
     receipt: RECEIPT,
     contract: CONTRACT,
+    revision: REVISION,
     version: VERSION,
     canonicalExport: "mountAudraliaCanvas"
   };
@@ -811,27 +891,28 @@ export function getAudraliaSurfaceDataset() {
 export function stopAudraliaCanvas() {
   stopActiveController();
 
-  return { stopped: true, receipt: RECEIPT, contract: CONTRACT, version: VERSION };
+  return { stopped: true, receipt: RECEIPT, contract: CONTRACT, revision: REVISION, version: VERSION };
 }
 
 const api = {
-  RECEIPT: RECEIPT,
-  CONTRACT: CONTRACT,
-  VERSION: VERSION,
-  PLANET: PLANET,
-  mountAudraliaCanvas: mountAudraliaCanvas,
-  renderAudraliaCanvas: renderAudraliaCanvas,
-  bootAudraliaCanvas: bootAudraliaCanvas,
-  createAudraliaCanvas: createAudraliaCanvas,
-  initAudraliaCanvas: initAudraliaCanvas,
-  renderAudralia: renderAudralia,
-  mountAudralia: mountAudralia,
-  render: render,
-  mount: mount,
-  init: init,
-  getAudraliaCanvasStatus: getAudraliaCanvasStatus,
-  getAudraliaSurfaceDataset: getAudraliaSurfaceDataset,
-  stopAudraliaCanvas: stopAudraliaCanvas
+  RECEIPT,
+  CONTRACT,
+  REVISION,
+  VERSION,
+  PLANET,
+  mountAudraliaCanvas,
+  renderAudraliaCanvas,
+  bootAudraliaCanvas,
+  createAudraliaCanvas,
+  initAudraliaCanvas,
+  renderAudralia,
+  mountAudralia,
+  render,
+  mount,
+  init,
+  getAudraliaCanvasStatus,
+  getAudraliaSurfaceDataset,
+  stopAudraliaCanvas
 };
 
 if (typeof window !== "undefined") {

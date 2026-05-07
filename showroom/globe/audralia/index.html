@@ -2,14 +2,24 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="audralia-canonical-mount-canvas-attachment"
+  data-page="audralia-route-v17-256-lattice-canonical-bar"
   data-route="/showroom/globe/audralia/"
-  data-contract="AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_TNT_v1"
-  data-previous-contract="AUDRALIA_HTML_V15_ROUTE_STATUS_CACHE_BIND_TNT_v1"
-  data-route-js-contract="AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_JS_TNT_v1"
-  data-body="Audralia"
+  data-contract="AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_TNT_v1"
+  data-previous-html-contract="AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_TNT_v1"
+  data-previous-route-contract="AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_JS_TNT_v1"
+  data-route-js-contract="AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_JS_TNT_v1"
   data-role="audralia-route-doorway"
+  data-body="Audralia"
+  data-bar="256-lattice-canonical-route-bar"
+  data-html-role="static-geometric-foundation"
+  data-js-role="dynamic-lab-instrument-controller"
+  data-canvas-role="downstream-render-authority"
+  data-gauges-role="read-only-proof-console"
+  data-lattice-domains="16"
+  data-lattice-gates="16"
+  data-lattice-cells="256"
   data-canonical-mount="audralia-canvas-mount"
+  data-outer-mount="audralia-mount"
   data-status-target="audralia-route-status"
   data-canvas-authority="/assets/audralia/audralia.canvas.js"
   data-runtime-authority="/assets/audralia/audralia.runtime.js"
@@ -28,27 +38,23 @@
   <title>Diamond Gate Bridge · Audralia</title>
   <meta
     name="description"
-    content="Audralia route doorway with canonical canvas mount, route-owned status, and V16 canvas attachment proof."
+    content="Audralia V17 256-lattice canonical doorway route with static mount proof, dynamic canvas attachment, honest route status, and read-only Gauges compatibility."
   >
 
   <style>
     :root {
+      --stage: min(100%, 1180px);
       --bg: #030407;
       --panel: rgba(8, 12, 20, 0.88);
-      --panel-2: rgba(255,255,255,0.045);
       --line: rgba(255,255,255,0.16);
       --text: #f7f1df;
       --muted: rgba(242,246,255,0.72);
       --faint: rgba(242,246,255,0.48);
       --gold: #f2c76f;
       --blue: #78d8ff;
-      --green: #a5efcc;
-      --stage: min(100%, 1180px);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html,
     body {
@@ -63,14 +69,9 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body {
-      min-height: 100svh;
-    }
+    body { min-height: 100svh; }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
     .skip-link {
       position: absolute;
@@ -84,9 +85,7 @@
       font-weight: 900;
     }
 
-    .skip-link:focus {
-      top: 1rem;
-    }
+    .skip-link:focus { top: 1rem; }
 
     .shell {
       width: var(--stage);
@@ -124,26 +123,53 @@
       text-transform: uppercase;
     }
 
-    .nav {
+    .nav,
+    .actions,
+    .route-grid {
       display: flex;
-      justify-content: flex-end;
       flex-wrap: wrap;
-      gap: 0.42rem;
+      gap: 0.46rem;
     }
 
-    .nav a {
-      min-height: 2.1rem;
+    .nav { justify-content: flex-end; }
+    .actions, .route-grid { justify-content: center; }
+
+    .nav a,
+    .button,
+    .route-link {
+      min-height: 2.2rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.055em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .nav a,
+    .route-link {
       padding: 0.45rem 0.72rem;
       border: 1px solid var(--line);
-      border-radius: 999px;
       color: var(--muted);
       background: rgba(255,255,255,0.035);
-      font-size: 0.74rem;
-      font-weight: 850;
-      white-space: nowrap;
+    }
+
+    .button {
+      padding: 0.58rem 0.92rem;
+      border: 1px solid rgba(242,199,111,0.86);
+      color: #080a0f;
+      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+      box-shadow: 0 0.85rem 2rem rgba(242,199,111,0.16);
+    }
+
+    .button.secondary {
+      border-color: rgba(255,255,255,0.22);
+      color: var(--text);
+      background: rgba(255,255,255,0.055);
+      box-shadow: none;
     }
 
     .hero {
@@ -163,7 +189,7 @@
     }
 
     h1 {
-      width: min(100%, 880px);
+      width: min(100%, 920px);
       margin: 0 auto;
       font-size: clamp(2.2rem, 8vw, 4.9rem);
       line-height: 0.94;
@@ -172,7 +198,7 @@
     }
 
     .summary {
-      width: min(100%, 780px);
+      width: min(100%, 820px);
       margin: 0 auto;
       color: var(--muted);
       font-size: clamp(0.98rem, 3vw, 1.12rem);
@@ -180,40 +206,7 @@
       text-wrap: balance;
     }
 
-    .actions {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.55rem;
-    }
-
-    .button {
-      min-height: 2.4rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.58rem 0.92rem;
-      border: 1px solid rgba(242,199,111,0.85);
-      border-radius: 999px;
-      color: #080a0f;
-      background: linear-gradient(135deg, #fff0a3, #f2c76f);
-      box-shadow: 0 0.85rem 2rem rgba(242,199,111,0.16);
-      font-size: 0.76rem;
-      font-weight: 950;
-      letter-spacing: 0.055em;
-      text-transform: uppercase;
-    }
-
-    .button.secondary {
-      border-color: rgba(255,255,255,0.22);
-      color: var(--text);
-      background: rgba(255,255,255,0.055);
-      box-shadow: none;
-    }
-
-    .route-status-card,
-    .canvas-card,
-    .handoff-card {
+    .card {
       width: min(100%, 980px);
       margin: clamp(0.9rem, 3vw, 1.2rem) auto 0;
       border: 1px solid rgba(255,255,255,0.13);
@@ -227,13 +220,18 @@
       overflow: hidden;
     }
 
-    .route-status-card {
+    .status-card,
+    .handoff-card,
+    .route-panel,
+    .lattice-card {
       padding: clamp(0.85rem, 3vw, 1.05rem);
       text-align: center;
     }
 
-    .route-status-card h2,
-    .handoff-card h2 {
+    .status-card h2,
+    .handoff-card h2,
+    .route-panel h2,
+    .lattice-card h2 {
       margin: 0 0 0.55rem;
       color: var(--gold);
       font-size: 0.82rem;
@@ -273,6 +271,12 @@
       contain: layout paint;
     }
 
+    #audralia-mount {
+      position: relative;
+      display: block;
+      min-height: 18rem;
+    }
+
     #audralia-canvas-mount {
       position: absolute;
       inset: 0;
@@ -281,7 +285,8 @@
       min-height: 18rem;
     }
 
-    #audralia-canvas-mount canvas {
+    #audralia-canvas-mount canvas,
+    #audralia-mount canvas {
       display: block;
       width: 100%;
       height: 100%;
@@ -302,17 +307,19 @@
       pointer-events: none;
     }
 
-    .handoff-card {
-      padding: clamp(0.85rem, 3vw, 1.05rem);
-    }
-
-    .handoff-grid {
+    .handoff-grid,
+    .lattice-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 0.6rem;
     }
 
-    .handoff-item {
+    .handoff-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .handoff-item,
+    .lattice-item {
       min-height: 5.4rem;
       display: grid;
       align-content: center;
@@ -324,7 +331,8 @@
       text-align: center;
     }
 
-    .handoff-item strong {
+    .handoff-item strong,
+    .lattice-item strong {
       color: rgba(255,241,205,0.96);
       font-size: 0.78rem;
       font-weight: 950;
@@ -332,7 +340,8 @@
       text-transform: uppercase;
     }
 
-    .handoff-item span {
+    .handoff-item span,
+    .lattice-item span {
       color: var(--muted);
       font-size: 0.74rem;
       line-height: 1.28;
@@ -384,13 +393,17 @@
         justify-content: flex-start;
       }
 
-      .handoff-grid {
+      .handoff-grid,
+      .lattice-grid {
         grid-template-columns: 1fr;
       }
     }
   </style>
 
-  <script src="/showroom/globe/audralia/index.js?v=AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_JS_TNT_v1" defer></script>
+  <script
+    type="module"
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_JS_TNT_v1"
+  ></script>
 </head>
 
 <body>
@@ -400,7 +413,7 @@
     <header class="topbar">
       <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
         <span>Diamond Gate Bridge</span>
-        <span>Audralia · V16 Canonical Mount</span>
+        <span>Audralia · V17 256 Lattice</span>
       </a>
 
       <nav class="nav" aria-label="Audralia route navigation">
@@ -415,11 +428,11 @@
 
     <main id="audralia-main">
       <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Audralia · V16 Doorway Attachment</p>
-        <h1 id="page-title">Audralia mounts through one canonical canvas seat.</h1>
+        <p class="eyebrow">Audralia · V17 256-Lattice Canonical Bar</p>
+        <h1 id="page-title">Audralia now has a full geometric doorway standard.</h1>
 
         <p class="summary">
-          HTML owns the route shell and canonical mount. The doorway script imports the canvas authority, calls the mount function, verifies the live canvas, and publishes honest route status.
+          HTML is the static geometric foundation. JavaScript is the dynamic lab-instrument controller. Canvas authority remains downstream. Gauges remains read-only proof.
         </p>
 
         <div class="actions" aria-label="Audralia primary actions">
@@ -429,70 +442,138 @@
         </div>
       </section>
 
-      <section class="route-status-card" aria-labelledby="route-status-title">
+      <section class="card status-card" aria-labelledby="route-status-title">
         <h2 id="route-status-title">Route Status</h2>
         <div
           id="audralia-route-status"
-          data-audralia-route-status
+          data-audralia-route-status="true"
+          data-gauges-visible-status="true"
           data-audralia-route-loaded="false"
-          data-audralia-route-receipt="AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_TNT_v1"
+          data-audralia-route-receipt="AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_TNT_v1"
+          data-audralia-route-js-receipt="AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_JS_TNT_v1"
+          data-audralia-route-lattice-cells="256"
+          data-audralia-canvas-mounted="false"
           data-audralia-canvas-receipt=""
           data-audralia-canvas-contract=""
-          data-audralia-canvas-mounted="false"
           data-graphic-box="false"
           data-image-generation="false"
           data-visual-pass-claimed="false"
-        >Audralia V16 canonical mount attachment preparing.</div>
+        >Audralia V17 256-lattice canonical bar preparing.</div>
       </section>
 
-      <section class="canvas-card" aria-labelledby="canvas-title">
-        <h2 id="canvas-title" class="eyebrow">Canonical Canvas Mount</h2>
+      <section class="card canvas-card" aria-labelledby="canvas-title">
+        <h2 id="canvas-title" class="eyebrow">Static Mount Proof</h2>
 
-        <div class="canvas-shell">
+        <div
+          id="audralia-mount"
+          class="canvas-shell"
+          data-audralia-mount="true"
+          data-gauges-visible-mount="true"
+          data-static-mount-proof="true"
+          data-route-contract="AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_TNT_v1"
+          data-route-js-contract="AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_JS_TNT_v1"
+          data-graphic-box="false"
+          data-image-generation="false"
+          data-visual-pass-claimed="false"
+        >
           <div
             id="audralia-canvas-mount"
-            data-audralia-canvas-mount
+            data-audralia-canvas-mount="true"
+            data-audralia-mount="true"
             data-canonical-mount="true"
+            data-gauges-visible-mount="true"
+            data-static-mount-proof="true"
             data-route="/showroom/globe/audralia/"
-            data-route-contract="AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_TNT_v1"
+            data-route-contract="AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_TNT_v1"
+            data-route-js-contract="AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_JS_TNT_v1"
+            data-canvas-authority="/assets/audralia/audralia.canvas.js"
+            data-graphic-box="false"
+            data-image-generation="false"
+            data-visual-pass-claimed="false"
           ></div>
 
           <div class="mount-fallback" data-audralia-mount-fallback>
-            Waiting for Audralia canvas authority.
+            Static mount proof present. Waiting for Audralia canvas authority.
           </div>
         </div>
       </section>
 
-      <section class="handoff-card" aria-labelledby="handoff-title">
+      <section class="card lattice-card" aria-labelledby="lattice-title">
+        <h2 id="lattice-title">256-Lattice Bar</h2>
+
+        <div class="lattice-grid" aria-label="Audralia route lattice proof">
+          <div class="lattice-item">
+            <strong>16</strong>
+            <span>Route-proof domains.</span>
+          </div>
+
+          <div class="lattice-item">
+            <strong>16</strong>
+            <span>Verification gates per domain.</span>
+          </div>
+
+          <div class="lattice-item">
+            <strong>256</strong>
+            <span>Total route-proof cells.</span>
+          </div>
+
+          <div class="lattice-item">
+            <strong>0</strong>
+            <span>GraphicBox, image-generation, or visual-pass claims.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card handoff-card" aria-labelledby="handoff-title">
         <h2 id="handoff-title">Doorway Jurisdiction</h2>
 
         <div class="handoff-grid">
           <div class="handoff-item">
             <strong>HTML Route</strong>
-            <span>Owns shell, navigation, route status, and canonical mount only.</span>
+            <span>Owns shell, navigation, static mount proof, status target, and receipt exposure.</span>
           </div>
 
           <div class="handoff-item">
-            <strong>Doorway Script</strong>
-            <span>Imports canvas authority, calls mount, verifies canvas presence, and publishes status.</span>
+            <strong>Route JS</strong>
+            <span>Owns dynamic lab instruments, imports, mount call, canvas verification, and status publication.</span>
           </div>
 
           <div class="handoff-item">
             <strong>Canvas Authority</strong>
-            <span>Owns canvas creation, composition, animation, and visible Audralia render.</span>
+            <span>Owns canvas creation, composition, animation, and visible Audralia rendering.</span>
           </div>
         </div>
       </section>
 
+      <section class="card route-panel" aria-labelledby="return-title">
+        <h2 id="return-title">Return Routes</h2>
+
+        <nav class="route-grid" aria-label="Audralia return routes">
+          <a class="route-link" href="/">Compass</a>
+          <a class="route-link" href="/showroom/">Showroom</a>
+          <a class="route-link" href="/showroom/globe/">Globe</a>
+          <a class="route-link" href="/products/">Products</a>
+          <a class="route-link" href="/gauges/">Gauges</a>
+        </nav>
+      </section>
+
       <details class="receipt">
         <summary>Route receipt</summary>
-        <pre>AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_TNT_v1
-previous_html=AUDRALIA_HTML_V15_ROUTE_STATUS_CACHE_BIND_TNT_v1
-previous_route=AUDRALIA_ROUTE_V15_ROUTE_STATUS_SOVEREIGNTY_LOCK_TNT_v1
+        <pre>AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_TNT_v1
+previous_html=AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_TNT_v1
+previous_route_js=AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_JS_TNT_v1
 route=/showroom/globe/audralia/
-classification=DOORWAY_ATTACHMENT_REPAIR
-html_owns=shell,navigation,status_target,canonical_canvas_mount,receipt_exposure,script_handoff
-script_owns=canvas_authority_import,mount_function_call,canvas_presence_verification,route_status_publication,readiness_receipt
+classification=V17_256_LATTICE_CANONICAL_BAR
+html_role=STATIC_GEOMETRIC_FOUNDATION
+js_role=DYNAMIC_LAB_INSTRUMENT_CONTROLLER
+canvas_role=DOWNSTREAM_RENDER_AUTHORITY
+gauges_role=READ_ONLY_PROOF_CONSOLE
+lattice_domains=16
+lattice_gates=16
+lattice_cells=256
+outer_mount=audralia-mount
+canonical_mount=audralia-canvas-mount
+status_target=audralia-route-status
 canvas_authority=/assets/audralia/audralia.canvas.js
 canvas_contract=AUDRALIA_CANVAS_PARENT_CONTRACT_CHILD_ACTIVATION_TNT_v13
 canvas_receipt=AUDRALIA_CANVAS_AUTHORITY_RECEIPT
@@ -504,11 +585,7 @@ hex_child=/assets/audralia/audralia.hex.surface.js
 hex_child_contract=AUDRALIA_HEX_SURFACE_CHILD_GRANDCHILD_RELIEF_BIND_TNT_v4
 grandchild_relief=/assets/audralia/audralia.relief.surface.js
 grandchild_relief_contract=AUDRALIA_GRANDCHILD_RELIEF_FIELD_EXPRESSOR_TNT_v1
-canonical_mount=audralia-canvas-mount
-status_target=audralia-route-status
 route_does_not_own=runtime_truth,canvas_paint,parent_surface_truth,child_refinement,grandchild_relief,gauges_scoring
-tic_tac_toe_dynamic_protocol=target_execute_terminal
-quad_a_attack=assault_attack_adversarial_audit
 generated_image=false
 graphic_box=false
 visual_pass_claimed=false</pre>
@@ -516,7 +593,7 @@ visual_pass_claimed=false</pre>
     </main>
 
     <footer>
-      AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_TNT_v1 · canonical mount · doorway attachment repair · no GraphicBox · no image generation.
+      AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_TNT_v1 · static mount proof · dynamic lab controller · 256 route-proof cells · no GraphicBox · no image generation.
     </footer>
   </div>
 </body>

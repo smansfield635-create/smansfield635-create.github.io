@@ -1,36 +1,56 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_ROUTE_V7_HARD_BIND_CANVAS_CALLER_TNT_v1
+// AUDRALIA_ROUTE_V8_HARD_BIND_CANVAS_V9_CALLER_TNT_v1
 // Full-file replacement. Doorway route only.
+//
 // Purpose:
-// - Retire v6 live-route contract residue.
-// - Hard-bind the live route to the v7 fail-open orthographic first-paint canvas.
-// - Preserve runtime v8 handoff.
+// - Renew the Audralia doorway route caller after the canvas authority moved to V9.
+// - Hard-bind the live route to AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_TNT_v9.
+// - Preserve runtime V8 handoff.
 // - Expose route, canvas, runtime, and proof receipts for Gauges.
-// - Do not own HTML shell, runtime truth, topology, terrain, hydration, oceans, canvas paint, GraphicBox, image generation, or visual pass.
+// - Retire stale V7 route/canvas binding from the public route status.
+//
+// Scope:
+// - Owns route import/call only.
+// - Does not own HTML shell, runtime truth, topology, terrain, hydration, oceans,
+//   deep-ocean, canvas paint, Gauges scoring, GraphicBox, image generation, or visual pass.
 
-const ROUTE_RECEIPT = "AUDRALIA_ROUTE_V7_HARD_BIND_CANVAS_CALLER_TNT_v1";
-const RETIRED_ROUTE_RECEIPT = "AUDRALIA_ROUTE_V6_HARD_BIND_CANVAS_CALLER_TNT_v1";
+const ROUTE_RECEIPT = "AUDRALIA_ROUTE_V8_HARD_BIND_CANVAS_V9_CALLER_TNT_v1";
+const RETIRED_ROUTE_RECEIPTS = Object.freeze([
+  "AUDRALIA_ROUTE_V7_HARD_BIND_CANVAS_CALLER_TNT_v1",
+  "AUDRALIA_ROUTE_V6_HARD_BIND_CANVAS_CALLER_TNT_v1"
+]);
 
-const REQUIRED_CANVAS_CONTRACT = "AUDRALIA_CANVAS_FAIL_OPEN_ORTHOGRAPHIC_FIRST_PAINT_TNT_v7";
-const RETIRED_CANVAS_CONTRACT = "AUDRALIA_CANVAS_INTERACTION_SAFE_ORTHOGRAPHIC_4K_TNT_v6";
+const REQUIRED_CANVAS_CONTRACT = "AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_TNT_v9";
 const REQUIRED_CANVAS_RECEIPT = "AUDRALIA_CANVAS_AUTHORITY_RECEIPT";
+const RETIRED_CANVAS_CONTRACTS = Object.freeze([
+  "AUDRALIA_CANVAS_FAIL_OPEN_ORTHOGRAPHIC_FIRST_PAINT_TNT_v7",
+  "AUDRALIA_CANVAS_INTERACTION_SAFE_ORTHOGRAPHIC_4K_TNT_v6",
+  "AUDRALIA_CANVAS_AUTHORITY_INTERACTION_FREEZE_REPAIR_TNT_v5",
+  "AUDRALIA_CANVAS_AUTHORITY_RICH_PLANET_RENDER_TNT_v1"
+]);
 
 const REQUIRED_RUNTIME_RECEIPT = "AUDRALIA_RUNTIME_LAND_WATER_NORMALIZATION_TNT_v8";
 
 const CANVAS_AUTHORITY_PATH =
-  "/assets/audralia/audralia.canvas.js?route=AUDRALIA_ROUTE_V7_HARD_BIND_CANVAS_CALLER_TNT_v1&canvas=AUDRALIA_CANVAS_FAIL_OPEN_ORTHOGRAPHIC_FIRST_PAINT_TNT_v7&cache=2026-05-07-v7-route-hard-bind";
+  "/assets/audralia/audralia.canvas.js" +
+  "?route=AUDRALIA_ROUTE_V8_HARD_BIND_CANVAS_V9_CALLER_TNT_v1" +
+  "&canvas=AUDRALIA_CANVAS_RUNTIME_BACKED_ORTHOGRAPHIC_REALISM_TNT_v9" +
+  "&cache=2026-05-07-route-v8-canvas-v9-hard-bind";
 
 const RUNTIME_AUTHORITY_PATH =
-  "/assets/audralia/audralia.runtime.js?route=AUDRALIA_ROUTE_V7_HARD_BIND_CANVAS_CALLER_TNT_v1&runtime=AUDRALIA_RUNTIME_LAND_WATER_NORMALIZATION_TNT_v8&cache=2026-05-07-runtime-v8-route-bind";
+  "/assets/audralia/audralia.runtime.js" +
+  "?route=AUDRALIA_ROUTE_V8_HARD_BIND_CANVAS_V9_CALLER_TNT_v1" +
+  "&runtime=AUDRALIA_RUNTIME_LAND_WATER_NORMALIZATION_TNT_v8" +
+  "&cache=2026-05-07-runtime-v8-preserved-route-v8";
 
 const ROUTE_STATUS = {
   ok: false,
   loaded: false,
   receipt: ROUTE_RECEIPT,
-  retiredRouteReceipt: RETIRED_ROUTE_RECEIPT,
+  retiredRouteReceipts: RETIRED_ROUTE_RECEIPTS,
   requiredCanvasContract: REQUIRED_CANVAS_CONTRACT,
-  retiredCanvasContract: RETIRED_CANVAS_CONTRACT,
   requiredCanvasReceipt: REQUIRED_CANVAS_RECEIPT,
+  retiredCanvasContracts: RETIRED_CANVAS_CONTRACTS,
   requiredRuntimeReceipt: REQUIRED_RUNTIME_RECEIPT,
   canvasAuthorityPath: CANVAS_AUTHORITY_PATH,
   runtimeAuthorityPath: RUNTIME_AUTHORITY_PATH,
@@ -42,6 +62,8 @@ const ROUTE_STATUS = {
   canvasImported: false,
   canvasContract: "",
   canvasReceipt: "",
+  canvasRevision: "",
+  canvasVersion: "",
   canvasError: "",
 
   mountFound: false,
@@ -50,34 +72,50 @@ const ROUTE_STATUS = {
   mounted: false,
 
   routeStatusVisible: false,
-  canvasStatusVisible: false,
+  proofPanelVisible: false,
   staleV6StatusSuppressed: true,
+  staleV7StatusSuppressed: true,
+
+  routeOwnsCanvasCall: true,
+  routeOwnsCanvasPaint: false,
+  routeOwnsRuntimeTruth: false,
+  routeOwnsHTMLShell: false,
+  routeOwnsGauges: false,
 
   graphicBox: false,
   imageGeneration: false,
   visualPassClaimed: false
 };
 
+function hasDOM() {
+  return typeof window !== "undefined" && typeof document !== "undefined";
+}
+
 function exposeRouteStatus(extra = {}) {
   Object.assign(ROUTE_STATUS, extra);
+
+  if (!hasDOM()) return ROUTE_STATUS;
 
   window.AUDRALIA_ROUTE_STATUS = ROUTE_STATUS;
   window.__AUDRALIA_ROUTE_STATUS__ = ROUTE_STATUS;
   window.AUDRALIA_ROUTE_RECEIPT = ROUTE_RECEIPT;
 
-  document.documentElement.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
-  document.documentElement.dataset.audraliaRouteRetiredReceipt = RETIRED_ROUTE_RECEIPT;
-  document.documentElement.dataset.audraliaRouteRequiredCanvasContract = REQUIRED_CANVAS_CONTRACT;
-  document.documentElement.dataset.audraliaRouteRetiredCanvasContract = RETIRED_CANVAS_CONTRACT;
-  document.documentElement.dataset.audraliaRouteRequiredCanvasReceipt = REQUIRED_CANVAS_RECEIPT;
-  document.documentElement.dataset.audraliaRouteRequiredRuntimeReceipt = REQUIRED_RUNTIME_RECEIPT;
-  document.documentElement.dataset.audraliaRouteCanvasImported = String(Boolean(ROUTE_STATUS.canvasImported));
-  document.documentElement.dataset.audraliaRouteRuntimeImported = String(Boolean(ROUTE_STATUS.runtimeImported));
-  document.documentElement.dataset.audraliaRouteMounted = String(Boolean(ROUTE_STATUS.mounted));
-  document.documentElement.dataset.audraliaRouteStaleV6StatusSuppressed = "true";
-  document.documentElement.dataset.graphicBox = "false";
-  document.documentElement.dataset.imageGeneration = "false";
-  document.documentElement.dataset.visualPassClaimed = "false";
+  if (document.documentElement) {
+    document.documentElement.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
+    document.documentElement.dataset.audraliaRouteRetiredReceipts = RETIRED_ROUTE_RECEIPTS.join(",");
+    document.documentElement.dataset.audraliaRouteRequiredCanvasContract = REQUIRED_CANVAS_CONTRACT;
+    document.documentElement.dataset.audraliaRouteRequiredCanvasReceipt = REQUIRED_CANVAS_RECEIPT;
+    document.documentElement.dataset.audraliaRouteRetiredCanvasContracts = RETIRED_CANVAS_CONTRACTS.join(",");
+    document.documentElement.dataset.audraliaRouteRequiredRuntimeReceipt = REQUIRED_RUNTIME_RECEIPT;
+    document.documentElement.dataset.audraliaRouteCanvasImported = String(Boolean(ROUTE_STATUS.canvasImported));
+    document.documentElement.dataset.audraliaRouteRuntimeImported = String(Boolean(ROUTE_STATUS.runtimeImported));
+    document.documentElement.dataset.audraliaRouteMounted = String(Boolean(ROUTE_STATUS.mounted));
+    document.documentElement.dataset.audraliaRouteStaleV6StatusSuppressed = "true";
+    document.documentElement.dataset.audraliaRouteStaleV7StatusSuppressed = "true";
+    document.documentElement.dataset.graphicBox = "false";
+    document.documentElement.dataset.imageGeneration = "false";
+    document.documentElement.dataset.visualPassClaimed = "false";
+  }
 
   try {
     window.dispatchEvent(
@@ -122,33 +160,50 @@ function resolveMount() {
   ]);
 }
 
-function suppressStaleCanvasStatus() {
-  if (window.__AUDRALIA_CANVAS_STATUS__) {
-    window.__AUDRALIA_CANVAS_STATUS__ = {
-      loaded: false,
-      receipt: REQUIRED_CANVAS_RECEIPT,
-      contract: REQUIRED_CANVAS_CONTRACT,
-      retiredCanvasContract: RETIRED_CANVAS_CONTRACT,
-      routeReceipt: ROUTE_RECEIPT,
-      staleV6StatusSuppressed: true,
-      pendingV7Mount: true,
-      graphicBox: false,
-      imageGeneration: false,
-      visualPassClaimed: false
-    };
-  }
+function isRetiredCanvasStatus(status) {
+  if (!status || typeof status !== "object") return false;
 
-  window.__AUDRALIA_ADOPTED_CANVAS_AUTHORITY__ = window.__AUDRALIA_CANVAS_STATUS__;
+  const contract = String(status.contract || status.revision || status.version || "");
+  return RETIRED_CANVAS_CONTRACTS.some((retired) => contract.includes(retired));
+}
+
+function suppressRetiredCanvasStatus() {
+  if (!hasDOM()) return;
+
+  const existing = window.__AUDRALIA_CANVAS_STATUS__;
+
+  if (existing && !isRetiredCanvasStatus(existing)) return;
+
+  const pendingStatus = {
+    loaded: false,
+    receipt: REQUIRED_CANVAS_RECEIPT,
+    contract: REQUIRED_CANVAS_CONTRACT,
+    routeReceipt: ROUTE_RECEIPT,
+    retiredRouteReceipts: RETIRED_ROUTE_RECEIPTS,
+    retiredCanvasContracts: RETIRED_CANVAS_CONTRACTS,
+    pendingV9Mount: true,
+    staleV6StatusSuppressed: true,
+    staleV7StatusSuppressed: true,
+    graphicBox: false,
+    imageGeneration: false,
+    visualPassClaimed: false
+  };
+
+  window.__AUDRALIA_CANVAS_STATUS__ = pendingStatus;
+  window.__AUDRALIA_ADOPTED_CANVAS_AUTHORITY__ = pendingStatus;
 }
 
 function cleanRouteResidue() {
+  if (!hasDOM()) return;
+
   const staleText = new Set([
     "Loading Audralia",
     "Audralia canvas authority import failed.",
     "Audralia canvas authority import failed. missing ) after argument list",
     "Canvas authority imported · no render export found",
     "Audralia canvas authority imported, but no render export was found.",
-    "Audralia doorway is loading the current adopted canvas authority."
+    "Audralia doorway is loading the current adopted canvas authority.",
+    "Audralia doorway loading v7 fail-open canvas authority."
   ]);
 
   document.querySelectorAll("p, div, span, li, h2, h3").forEach((node) => {
@@ -157,6 +212,10 @@ function cleanRouteResidue() {
     if (!node.children.length && staleText.has(text)) {
       node.remove();
     }
+  });
+
+  document.querySelectorAll("[data-audralia-route-v6-proof='true'], [data-audralia-route-v7-proof='true']").forEach((node) => {
+    node.remove();
   });
 }
 
@@ -170,10 +229,10 @@ function setStatusMessage(message, tone = "ok") {
 
   target.textContent = message;
   target.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
-  target.dataset.audraliaRouteRetiredReceipt = RETIRED_ROUTE_RECEIPT;
+  target.dataset.audraliaRouteRetiredReceipts = RETIRED_ROUTE_RECEIPTS.join(",");
   target.dataset.audraliaCanvasRequiredContract = REQUIRED_CANVAS_CONTRACT;
-  target.dataset.audraliaCanvasRetiredContract = RETIRED_CANVAS_CONTRACT;
   target.dataset.audraliaCanvasRequiredReceipt = REQUIRED_CANVAS_RECEIPT;
+  target.dataset.audraliaCanvasRetiredContracts = RETIRED_CANVAS_CONTRACTS.join(",");
   target.dataset.audraliaRuntimeRequiredReceipt = REQUIRED_RUNTIME_RECEIPT;
   target.dataset.audraliaRouteTone = tone;
   target.dataset.graphicBox = "false";
@@ -186,13 +245,11 @@ function setStatusMessage(message, tone = "ok") {
 }
 
 function ensureProofPanel(mount) {
-  let panel = document.querySelector("[data-audralia-route-v7-proof='true']");
+  let panel = document.querySelector("[data-audralia-route-v8-proof='true']");
 
   if (!panel) {
-    document.querySelectorAll("[data-audralia-route-v6-proof='true']").forEach((node) => node.remove());
-
     panel = document.createElement("section");
-    panel.dataset.audraliaRouteV7Proof = "true";
+    panel.dataset.audraliaRouteV8Proof = "true";
     panel.style.margin = "12px auto 0";
     panel.style.padding = "10px 12px";
     panel.style.maxWidth = "860px";
@@ -202,6 +259,7 @@ function ensureProofPanel(mount) {
     panel.style.color = "rgba(210, 226, 245, 0.88)";
     panel.style.font = "600 0.74rem/1.45 system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
     panel.style.letterSpacing = "0.02em";
+    panel.style.overflowWrap = "anywhere";
 
     if (mount && mount.parentNode) {
       mount.parentNode.insertBefore(panel, mount.nextSibling);
@@ -213,17 +271,45 @@ function ensureProofPanel(mount) {
   return panel;
 }
 
+function normalizeCanvasStatus(canvasModule = null) {
+  const exportedStatus =
+    typeof canvasModule?.getAudraliaCanvasStatus === "function"
+      ? canvasModule.getAudraliaCanvasStatus()
+      : typeof canvasModule?.default?.getAudraliaCanvasStatus === "function"
+        ? canvasModule.default.getAudraliaCanvasStatus()
+        : null;
+
+  const liveStatus = window.__AUDRALIA_CANVAS_STATUS__ || window.__AUDRALIA_ADOPTED_CANVAS_AUTHORITY__ || null;
+  const status = exportedStatus || liveStatus || {};
+
+  return {
+    loaded: Boolean(status.loaded),
+    receipt: status.receipt || REQUIRED_CANVAS_RECEIPT,
+    contract: status.contract || canvasModule?.CONTRACT || canvasModule?.default?.CONTRACT || REQUIRED_CANVAS_CONTRACT,
+    revision: status.revision || canvasModule?.REVISION || canvasModule?.default?.REVISION || "",
+    version: status.version || canvasModule?.VERSION || canvasModule?.default?.VERSION || "",
+    canonicalExport: status.canonicalExport || "mountAudraliaCanvas",
+    animated: status.animated === undefined ? true : Boolean(status.animated),
+    pixelProof: status.pixelProof || null,
+    graphicBox: false,
+    imageGeneration: false,
+    visualPassClaimed: false
+  };
+}
+
 function writeProofPanel(mount, canvasStatus = null) {
   const panel = ensureProofPanel(mount);
-  const status = canvasStatus || window.__AUDRALIA_CANVAS_STATUS__ || {};
+  const status = canvasStatus || normalizeCanvasStatus();
 
   panel.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
-  panel.dataset.audraliaRouteRetiredReceipt = RETIRED_ROUTE_RECEIPT;
+  panel.dataset.audraliaRouteRetiredReceipts = RETIRED_ROUTE_RECEIPTS.join(",");
   panel.dataset.audraliaCanvasContract = status.contract || REQUIRED_CANVAS_CONTRACT;
-  panel.dataset.audraliaCanvasRetiredContract = RETIRED_CANVAS_CONTRACT;
   panel.dataset.audraliaCanvasReceipt = status.receipt || REQUIRED_CANVAS_RECEIPT;
+  panel.dataset.audraliaCanvasRevision = status.revision || "";
+  panel.dataset.audraliaCanvasVersion = status.version || "";
   panel.dataset.audraliaRuntimeReceipt = ROUTE_STATUS.runtimeReceipt || REQUIRED_RUNTIME_RECEIPT;
   panel.dataset.audraliaStaleV6StatusSuppressed = "true";
+  panel.dataset.audraliaStaleV7StatusSuppressed = "true";
   panel.dataset.graphicBox = "false";
   panel.dataset.imageGeneration = "false";
   panel.dataset.visualPassClaimed = "false";
@@ -233,13 +319,13 @@ function writeProofPanel(mount, canvasStatus = null) {
     `Canvas ${status.contract || REQUIRED_CANVAS_CONTRACT}`,
     `Receipt ${status.receipt || REQUIRED_CANVAS_RECEIPT}`,
     `Runtime ${ROUTE_STATUS.runtimeReceipt || REQUIRED_RUNTIME_RECEIPT}`,
-    `Retired ${RETIRED_CANVAS_CONTRACT}`,
+    `Retired ${RETIRED_CANVAS_CONTRACTS.join(", ")}`,
     "GraphicBox false",
     "Image generation false",
     "Visual pass claimed false"
   ].join(" · ");
 
-  exposeRouteStatus({ canvasStatusVisible: true });
+  exposeRouteStatus({ proofPanelVisible: true });
 
   return panel;
 }
@@ -252,6 +338,7 @@ async function importRuntime() {
       runtimeModule.AUDRALIA_RUNTIME_RECEIPT_VALUE ||
       runtimeModule.AUDRALIA_RUNTIME_STATUS?.receipt ||
       window.AUDRALIA_RUNTIME_STATUS?.receipt ||
+      window.__AUDRALIA_RUNTIME_STATUS__?.receipt ||
       REQUIRED_RUNTIME_RECEIPT;
 
     exposeRouteStatus({
@@ -285,36 +372,40 @@ function resolveMountFunction(canvasModule) {
     canvasModule.mountAudralia ||
     canvasModule.render ||
     canvasModule.mount ||
+    canvasModule.init ||
     canvasModule.default?.mountAudraliaCanvas ||
     canvasModule.default?.renderAudraliaCanvas ||
+    canvasModule.default?.bootAudraliaCanvas ||
+    canvasModule.default?.createAudraliaCanvas ||
+    canvasModule.default?.initAudraliaCanvas ||
+    canvasModule.default?.renderAudralia ||
+    canvasModule.default?.mountAudralia ||
+    canvasModule.default?.render ||
     canvasModule.default?.mount ||
+    canvasModule.default?.init ||
     null
   );
 }
 
+function canvasContractLooksCurrent(status) {
+  const contract = String(status.contract || "");
+  return contract === REQUIRED_CANVAS_CONTRACT || contract.includes("ORTHOGRAPHIC_REALISM_TNT_v9");
+}
+
 async function importAndMountCanvas(mount) {
   try {
-    suppressStaleCanvasStatus();
+    suppressRetiredCanvasStatus();
 
     const canvasModule = await import(CANVAS_AUTHORITY_PATH);
     const mountFn = resolveMountFunction(canvasModule);
-
-    const moduleContract =
-      canvasModule.CONTRACT ||
-      canvasModule.default?.CONTRACT ||
-      window.__AUDRALIA_CANVAS_STATUS__?.contract ||
-      REQUIRED_CANVAS_CONTRACT;
-
-    const moduleReceipt =
-      canvasModule.RECEIPT ||
-      canvasModule.default?.RECEIPT ||
-      window.__AUDRALIA_CANVAS_STATUS__?.receipt ||
-      REQUIRED_CANVAS_RECEIPT;
+    const moduleStatus = normalizeCanvasStatus(canvasModule);
 
     exposeRouteStatus({
       canvasImported: true,
-      canvasContract: moduleContract,
-      canvasReceipt: moduleReceipt,
+      canvasContract: moduleStatus.contract,
+      canvasReceipt: moduleStatus.receipt,
+      canvasRevision: moduleStatus.revision,
+      canvasVersion: moduleStatus.version,
       canvasError: "",
       mountFunctionFound: typeof mountFn === "function"
     });
@@ -325,36 +416,52 @@ async function importAndMountCanvas(mount) {
 
     const controller = mountFn(mount, {
       routeReceipt: ROUTE_RECEIPT,
-      retiredRouteReceipt: RETIRED_ROUTE_RECEIPT,
+      retiredRouteReceipts: RETIRED_ROUTE_RECEIPTS,
       requiredCanvasContract: REQUIRED_CANVAS_CONTRACT,
-      retiredCanvasContract: RETIRED_CANVAS_CONTRACT,
+      retiredCanvasContracts: RETIRED_CANVAS_CONTRACTS,
+      requiredCanvasReceipt: REQUIRED_CANVAS_RECEIPT,
       requiredRuntimeReceipt: REQUIRED_RUNTIME_RECEIPT,
-      maxRenderSize: 680,
+
+      maxRenderSize: 720,
       textureWidth: 1024,
       textureHeight: 512,
       initialTextureWidth: 512,
       initialTextureHeight: 256,
       frameCap: 12,
+
+      routeOwnsCanvasCall: true,
+      routeOwnsCanvasPaint: false,
+      routeOwnsRuntimeTruth: false,
       graphicBox: false,
       imageGeneration: false,
       visualPassClaimed: false
     });
 
-    const status = window.__AUDRALIA_CANVAS_STATUS__ || {
-      receipt: REQUIRED_CANVAS_RECEIPT,
-      contract: REQUIRED_CANVAS_CONTRACT
-    };
+    const liveStatus = normalizeCanvasStatus(canvasModule);
 
     exposeRouteStatus({
       ok: true,
       loaded: true,
       mounted: Boolean(controller),
-      canvasContract: status.contract || REQUIRED_CANVAS_CONTRACT,
-      canvasReceipt: status.receipt || REQUIRED_CANVAS_RECEIPT
+      canvasContract: liveStatus.contract || REQUIRED_CANVAS_CONTRACT,
+      canvasReceipt: liveStatus.receipt || REQUIRED_CANVAS_RECEIPT,
+      canvasRevision: liveStatus.revision || "",
+      canvasVersion: liveStatus.version || ""
     });
 
+    if (!canvasContractLooksCurrent(liveStatus)) {
+      exposeRouteStatus({
+        ok: false,
+        canvasError: `AUDRALIA_ROUTE_CANVAS_CONTRACT_NOT_V9: ${liveStatus.contract || "unknown"}`
+      });
+
+      setStatusMessage("Audralia canvas authority loaded, but route expected V9 contract.", "held");
+      writeProofPanel(mount, liveStatus);
+      return controller;
+    }
+
     setStatusMessage("Audralia adopted canvas authority loaded.", "ok");
-    writeProofPanel(mount, status);
+    writeProofPanel(mount, liveStatus);
 
     return controller;
   } catch (error) {
@@ -375,9 +482,13 @@ async function importAndMountCanvas(mount) {
 }
 
 async function bootAudraliaRoute() {
+  if (!hasDOM()) return null;
+
   cleanRouteResidue();
-  suppressStaleCanvasStatus();
-  setStatusMessage("Audralia doorway loading v7 fail-open canvas authority.", "loading");
+  suppressRetiredCanvasStatus();
+  exposeRouteStatus();
+
+  setStatusMessage("Audralia doorway loading V9 canvas authority.", "loading");
 
   const mount = resolveMount();
 
@@ -402,25 +513,27 @@ async function bootAudraliaRoute() {
 
   const controller = await importAndMountCanvas(mount);
 
-  writeProofPanel(mount, window.__AUDRALIA_CANVAS_STATUS__ || null);
+  writeProofPanel(mount, normalizeCanvasStatus());
 
   return controller;
 }
 
 exposeRouteStatus();
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", bootAudraliaRoute, { once: true });
-} else {
-  bootAudraliaRoute();
+if (hasDOM()) {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootAudraliaRoute, { once: true });
+  } else {
+    bootAudraliaRoute();
+  }
 }
 
 export {
   ROUTE_RECEIPT,
-  RETIRED_ROUTE_RECEIPT,
+  RETIRED_ROUTE_RECEIPTS,
   REQUIRED_CANVAS_CONTRACT,
-  RETIRED_CANVAS_CONTRACT,
   REQUIRED_CANVAS_RECEIPT,
+  RETIRED_CANVAS_CONTRACTS,
   REQUIRED_RUNTIME_RECEIPT,
   CANVAS_AUTHORITY_PATH,
   RUNTIME_AUTHORITY_PATH,

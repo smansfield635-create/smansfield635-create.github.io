@@ -1,38 +1,702 @@
+<!-- /assets/earth/index.html -->
 <!doctype html>
-<!-- TNT RENEWAL — /assets/earth/index.html
-     EARTH ASSET SPINE PREVIEW B1
--->
-
-<html lang="en">
+<html
+  lang="en"
+  data-route="/assets/earth/"
+  data-page="earth-asset-spine-preview"
+  data-room="earth-assets"
+  data-contract="EARTH_ASSET_SPINE_PREVIEW_B2_CONTRACT_RENEWAL_TNT_v2"
+  data-previous-contract="EARTH_ASSET_SPINE_PREVIEW_B1"
+  data-earth-canvas-contract="EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2"
+  data-earth-manifest-contract="EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2"
+  data-earth-material-contract="EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2"
+  data-audit-mode="preview-only"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-visual-pass-claimed="false"
+>
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>Earth Asset Spine Preview — Diamond Gate Bridge</title>
-  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=earth-asset-b1"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+  <title>Earth Asset Spine Preview · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Earth asset spine preview for Diamond Gate Bridge. This page previews the Earth G4 canvas, manifest, material CSS, surface texture, and cloud texture without taking ownership of the showroom route."
+  >
+
+  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2">
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --page-bg: #02040a;
+      --ink: #f7f1de;
+      --soft: rgba(247, 241, 222, 0.76);
+      --muted: rgba(247, 241, 222, 0.54);
+      --faint: rgba(247, 241, 222, 0.38);
+      --gold: #f4c95d;
+      --gold-2: #ffe8a8;
+      --blue: #7dbbff;
+      --violet: #a78bfa;
+      --line: rgba(184, 217, 255, 0.22);
+      --line-gold: rgba(255, 232, 168, 0.28);
+      --panel: rgba(7, 13, 24, 0.78);
+      --max: 1160px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(125, 187, 255, 0.18), transparent 28rem),
+        radial-gradient(circle at 82% 24%, rgba(244, 201, 93, 0.10), transparent 30rem),
+        radial-gradient(circle at 18% 68%, rgba(167, 139, 250, 0.12), transparent 34rem),
+        linear-gradient(180deg, #07111f 0%, #02040a 70%, #000 100%);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.26;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.22) 0 1px, transparent 1.4px),
+        radial-gradient(circle, rgba(125,187,255,0.20) 0 1px, transparent 1.6px),
+        linear-gradient(rgba(184,217,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(184,217,255,0.04) 1px, transparent 1px);
+      background-size: 180px 220px, 260px 300px, 58px 58px, 58px 58px;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.94), rgba(0,0,0,0.52) 72%, transparent);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 8px;
+      z-index: 50;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      color: #090604;
+      background: linear-gradient(135deg, var(--gold-2), var(--gold));
+      font-weight: 950;
+    }
+
+    .skip-link:focus {
+      left: 8px;
+    }
+
+    .earth-preview-shell {
+      position: relative;
+      z-index: 1;
+      width: min(var(--max), calc(100% - 28px));
+      margin: 0 auto;
+      padding: max(22px, env(safe-area-inset-top)) 0 max(46px, env(safe-area-inset-bottom));
+    }
+
+    .earth-preview-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 0 1rem;
+    }
+
+    .earth-preview-brand {
+      display: inline-grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 0.9rem;
+      min-width: 260px;
+    }
+
+    .earth-preview-mark {
+      width: 4rem;
+      height: 4rem;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(184, 217, 255, 0.34);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 34% 27%, rgba(255,255,255,0.24), transparent 22%),
+        radial-gradient(circle at 50% 50%, rgba(125,187,255,0.28), transparent 60%),
+        linear-gradient(145deg, rgba(22,48,84,0.96), rgba(3,8,15,0.98));
+      box-shadow:
+        0 0 2rem rgba(125,187,255,0.26),
+        0 1.1rem 2.6rem rgba(0,0,0,0.46),
+        inset 0 1px 0 rgba(255,255,255,0.16);
+      color: var(--gold-2);
+      font-weight: 950;
+      letter-spacing: 0.06em;
+    }
+
+    .earth-preview-brand-copy {
+      display: grid;
+      gap: 0.16rem;
+    }
+
+    .earth-preview-brand-copy span {
+      color: var(--soft);
+      font-size: 0.74rem;
+      font-weight: 950;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .earth-preview-brand-copy strong {
+      font-size: clamp(1.05rem, 3vw, 1.62rem);
+      line-height: 1;
+      letter-spacing: -0.045em;
+    }
+
+    .earth-preview-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 0.48rem;
+    }
+
+    .earth-preview-nav a {
+      min-height: 2.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.5rem 0.74rem;
+      color: rgba(247, 241, 222, 0.86);
+      background: rgba(125, 187, 255, 0.055);
+      font-size: 0.68rem;
+      font-weight: 950;
+      letter-spacing: 0.055em;
+      text-transform: uppercase;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .earth-preview-nav a[aria-current="page"] {
+      border-color: rgba(255,232,168,0.78);
+      color: #090604;
+      background: linear-gradient(135deg, #fff2a8, #f4c95d);
+    }
+
+    .earth-preview-hero,
+    .earth-preview-panel,
+    .earth-preview-diagnostics {
+      border: 1px solid var(--line);
+      border-radius: clamp(1.35rem, 5vw, 2.35rem);
+      background:
+        radial-gradient(circle at 14% 0%, rgba(125,187,255,0.16), transparent 28rem),
+        radial-gradient(circle at 86% 18%, rgba(244,201,93,0.09), transparent 28rem),
+        linear-gradient(180deg, rgba(255,255,255,0.070), rgba(255,255,255,0.022)),
+        var(--panel);
+      box-shadow:
+        0 32px 110px rgba(0,0,0,0.50),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .earth-preview-hero {
+      display: grid;
+      gap: 1rem;
+      padding: clamp(1.45rem, 5vw, 3.4rem);
+      min-height: clamp(19rem, 34vw, 27rem);
+      align-content: center;
+    }
+
+    .earth-preview-kicker {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.58rem;
+      margin: 0;
+      padding: 0.58rem 0.95rem;
+      border: 1px solid var(--line-gold);
+      border-radius: 999px;
+      color: rgba(247, 241, 222, 0.88);
+      background: rgba(125, 187, 255, 0.075);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .earth-preview-kicker::before {
+      content: "";
+      width: 0.72rem;
+      height: 0.72rem;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-2), var(--blue));
+      box-shadow: 0 0 1.1rem rgba(125,187,255,0.56);
+    }
+
+    .earth-preview-title {
+      margin: 0;
+      max-width: 980px;
+      font-size: clamp(3rem, 10vw, 7rem);
+      line-height: 0.84;
+      letter-spacing: -0.105em;
+      text-wrap: balance;
+    }
+
+    .earth-preview-copy {
+      max-width: 920px;
+      margin: 0;
+      color: var(--soft);
+      font-size: clamp(0.98rem, 2.7vw, 1.16rem);
+      line-height: 1.55;
+    }
+
+    .earth-preview-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.62rem;
+      margin-top: 0.2rem;
+    }
+
+    .earth-preview-button {
+      min-height: 2.65rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.65rem 1rem;
+      background: rgba(125, 187, 255, 0.070);
+      color: rgba(247, 241, 222, 0.90);
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.055em;
+      text-transform: uppercase;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.07);
+    }
+
+    .earth-preview-button.gold {
+      border-color: rgba(244,201,93,0.9);
+      color: #090604;
+      background: linear-gradient(135deg, #fff2a8, #f4c95d);
+      box-shadow: 0 0.8rem 1.8rem rgba(244,201,93,0.13);
+    }
+
+    .earth-preview-panel {
+      margin-top: 1.15rem;
+      padding: clamp(1rem, 3vw, 1.45rem);
+      display: grid;
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .earth-preview-panel h2,
+    .earth-preview-diagnostics h2 {
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(1.45rem, 4.7vw, 2.65rem);
+      line-height: 0.98;
+      letter-spacing: -0.07em;
+      text-wrap: balance;
+    }
+
+    #earthRenderMount {
+      border: 1px solid rgba(184,217,255,0.16);
+      border-radius: clamp(1.2rem, 4vw, 2rem);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        0 0 3rem rgba(125,187,255,0.08);
+    }
+
+    .earth-preview-caption {
+      width: fit-content;
+      margin: 0 auto;
+      border: 1px solid var(--line-gold);
+      border-radius: 999px;
+      padding: 0.72rem 1.1rem;
+      color: var(--earth-label-text, #f7f1de);
+      background: rgba(7, 13, 24, 0.78);
+      box-shadow:
+        0 16px 38px rgba(0,0,0,0.38),
+        0 0 28px rgba(100,169,255,0.16);
+      font-weight: 1000;
+      letter-spacing: 0.08em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .earth-preview-diagnostics {
+      margin-top: 1.15rem;
+      padding: clamp(1rem, 3vw, 1.45rem);
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .earth-preview-diagnostic-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .earth-preview-diagnostic-card {
+      min-height: 7rem;
+      display: grid;
+      align-content: start;
+      gap: 0.35rem;
+      border: 1px solid rgba(184,217,255,0.16);
+      border-radius: 1rem;
+      background: rgba(125,187,255,0.045);
+      padding: 0.9rem;
+      text-align: left;
+    }
+
+    .earth-preview-diagnostic-card b {
+      color: var(--gold);
+      font-size: 0.68rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .earth-preview-diagnostic-card strong {
+      color: var(--ink);
+      font-size: 1rem;
+      line-height: 1.1;
+    }
+
+    .earth-preview-diagnostic-card span,
+    .earth-preview-diagnostic-card code {
+      color: var(--soft);
+      font-size: 0.82rem;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .earth-preview-diagnostic-card code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-weight: 800;
+    }
+
+    .earth-preview-status {
+      border: 1px solid rgba(255,232,168,0.18);
+      border-radius: 1rem;
+      background: rgba(0,0,0,0.24);
+      padding: 1rem;
+      color: var(--soft);
+      font-size: 0.92rem;
+      line-height: 1.55;
+      text-align: left;
+    }
+
+    .earth-preview-status strong {
+      color: var(--gold);
+    }
+
+    .route-receipt,
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt] {
+      display: none !important;
+      visibility: hidden !important;
+      overflow: hidden !important;
+      width: 0 !important;
+      height: 0 !important;
+      max-width: 0 !important;
+      max-height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      position: absolute !important;
+      inset: auto !important;
+      clip-path: inset(50%) !important;
+      white-space: nowrap !important;
+    }
+
+    footer {
+      padding: 1.35rem 0 0.5rem;
+      color: var(--faint);
+      text-align: center;
+      font-size: 0.76rem;
+    }
+
+    @media (max-width: 920px) {
+      .earth-preview-topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .earth-preview-nav {
+        justify-content: flex-start;
+      }
+
+      .earth-preview-diagnostic-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .earth-preview-shell {
+        width: min(100% - 22px, var(--max));
+      }
+
+      .earth-preview-title {
+        font-size: clamp(3rem, 17vw, 5rem);
+      }
+
+      .earth-preview-hero {
+        min-height: 22rem;
+        padding: 1rem;
+      }
+
+      .earth-preview-actions {
+        display: grid;
+      }
+
+      .earth-preview-button {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
 </head>
 
-<body data-dgb-earth-preview>
-  <main class="dgb-earth-preview-page">
-    <header class="dgb-earth-preview-header">
-      <p class="dgb-earth-preview-kicker">Earth Asset Spine · B1</p>
-      <h1 class="dgb-earth-preview-title">Earth Preview</h1>
-      <p class="dgb-earth-preview-copy">
-        This page proves the Earth asset independently before Showroom consumes it. Earth must render as a real opaque outer-space instrument surface with spherical wrap, real clouds, 23.44° axis, auto-spin, and manual drag.
-      </p>
+<body
+  data-dgb-earth-preview
+  data-route="/assets/earth/"
+  data-contract="EARTH_ASSET_SPINE_PREVIEW_B2_CONTRACT_RENEWAL_TNT_v2"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-visual-pass-claimed="false"
+>
+  <a class="skip-link" href="#main">Skip to Earth Preview</a>
+
+  <div class="earth-preview-shell">
+    <header class="earth-preview-topbar" aria-label="Earth asset preview header">
+      <a class="earth-preview-brand" href="/" aria-label="Diamond Gate Bridge home">
+        <span class="earth-preview-mark" aria-hidden="true">E</span>
+        <span class="earth-preview-brand-copy">
+          <span>Diamond Gate Bridge</span>
+          <strong>Earth Asset Spine Preview</strong>
+        </span>
+      </a>
+
+      <nav class="earth-preview-nav" aria-label="Earth asset preview navigation">
+        <a href="/">Compass</a>
+        <a href="/showroom/globe/">Globe Split</a>
+        <a href="/showroom/globe/earth/">Earth Route</a>
+        <a href="/showroom/globe/audralia/">Audralia Route</a>
+        <a href="/gauges/">Gauges</a>
+        <a href="/assets/earth/" aria-current="page">Earth Assets</a>
+      </nav>
     </header>
 
-    <section class="dgb-earth-preview-panel" aria-label="Earth asset preview">
-      <div data-dgb-earth-mount aria-label="Interactive Earth asset"></div>
-      <div class="dgb-earth-caption">Earth Standard · 23.44° Axis · Real Clouds · Asset Spine B1</div>
-      <div class="dgb-earth-diagnostic">
-        Required local assets:
-        /assets/earth/earth_surface_2048.jpg
-        /assets/earth/earth_clouds_2048.png
-      </div>
-    </section>
-  </main>
+    <main id="main">
+      <section class="earth-preview-hero" aria-labelledby="page-title">
+        <p class="earth-preview-kicker">Earth Asset Spine · B2</p>
+        <h1 class="earth-preview-title" id="page-title">Earth Preview</h1>
+        <p class="earth-preview-copy">
+          This page proves the Earth asset independently before Showroom consumes it. Earth renders through the Earth G4 canvas authority with fixed sphere projection, surface-phase rotation, independent cloud-phase rotation, horizontal drag, inertia, and material CSS containment.
+        </p>
 
-  <script src="/assets/earth/earth_canvas.js?v=earth-asset-b1" defer></script>
-  <script src="/runtime/earth_asset_runtime.js?v=earth-asset-b1" defer></script>
+        <div class="earth-preview-actions">
+          <a class="earth-preview-button gold" href="/showroom/globe/earth/">Open Earth Route</a>
+          <a class="earth-preview-button" href="/showroom/globe/">Return to Globe Split</a>
+          <a class="earth-preview-button" href="/gauges/">Read Gauges</a>
+        </div>
+      </section>
+
+      <section class="earth-preview-panel" aria-labelledby="preview-title">
+        <h2 id="preview-title">Earth G4 reference body</h2>
+
+        <div
+          id="earthRenderMount"
+          data-earth-render-mount
+          data-body="earth"
+          data-render-mount
+          aria-label="Interactive Earth G4 asset preview"
+        ></div>
+
+        <div class="earth-preview-caption">
+          Earth Standard · NASA Reference Discipline · Surface Phase · Real Clouds
+        </div>
+      </section>
+
+      <section class="earth-preview-diagnostics" aria-labelledby="diagnostics-title">
+        <h2 id="diagnostics-title">Asset spine diagnostics</h2>
+
+        <div class="earth-preview-diagnostic-grid">
+          <div class="earth-preview-diagnostic-card">
+            <b>Canvas</b>
+            <strong>Earth G4 authority</strong>
+            <code>/assets/earth/earth_canvas.js</code>
+          </div>
+
+          <div class="earth-preview-diagnostic-card">
+            <b>Manifest</b>
+            <strong>Source truth map</strong>
+            <code>/assets/earth/earth_manifest.json</code>
+          </div>
+
+          <div class="earth-preview-diagnostic-card">
+            <b>Material</b>
+            <strong>Glow and containment</strong>
+            <code>/assets/earth/earth_material.css</code>
+          </div>
+
+          <div class="earth-preview-diagnostic-card">
+            <b>Surface</b>
+            <strong>Primary Earth texture</strong>
+            <code>/assets/earth/earth_surface_2048.jpg</code>
+          </div>
+
+          <div class="earth-preview-diagnostic-card">
+            <b>Clouds</b>
+            <strong>Transparent primary layer</strong>
+            <code>/assets/earth/earth_clouds_2048.png</code>
+          </div>
+
+          <div class="earth-preview-diagnostic-card">
+            <b>Fallback</b>
+            <strong>Cloud backup layer</strong>
+            <code>/assets/earth/earth_clouds_2048.jpg</code>
+          </div>
+        </div>
+
+        <div class="earth-preview-status" data-earth-preview-status>
+          <strong>Status:</strong>
+          Waiting for Earth canvas authority to report asset readiness.
+        </div>
+      </section>
+
+      <template id="route-receipt" data-route-receipt>
+EARTH_ASSET_SPINE_PREVIEW_B2_CONTRACT_RENEWAL_TNT_v2
+previous_contract=EARTH_ASSET_SPINE_PREVIEW_B1
+route=/assets/earth/
+page=earth_asset_spine_preview
+earth_canvas_contract=EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2
+earth_manifest_contract=EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2
+earth_material_contract=EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2
+mount=#earthRenderMount
+preview_owns=asset_directory_preview,safe_navigation,asset_spine_diagnostics
+preview_does_not_own=earth_canvas_projection,earth_touch_control,earth_material_styling,showroom_route,audralia,gauges,products,sun,moon,global_files
+generated_image=false
+graphic_box=false
+visual_pass_claimed=false
+      </template>
+    </main>
+
+    <footer>
+      EARTH_ASSET_SPINE_PREVIEW_B2_CONTRACT_RENEWAL_TNT_v2 · Earth asset preview · Canvas authority consumed, not owned.
+    </footer>
+  </div>
+
+  <script src="/assets/earth/earth_canvas.js?v=EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2" defer></script>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CONTRACT = "EARTH_ASSET_SPINE_PREVIEW_B2_CONTRACT_RENEWAL_TNT_v2";
+      const CANVAS_CONTRACT = "EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2";
+      const status = document.querySelector("[data-earth-preview-status]");
+
+      function writeStatus(message) {
+        if (!status) return;
+        status.innerHTML = "<strong>Status:</strong> " + message;
+      }
+
+      function publishPreviewReceipt(extra) {
+        window.DGB_EARTH_ASSET_SPINE_PREVIEW_RECEIPT = Object.assign(
+          {
+            contract: CONTRACT,
+            route: "/assets/earth/",
+            page: "earth_asset_spine_preview",
+            mount: "#earthRenderMount",
+            canvasContract: CANVAS_CONTRACT,
+            generatedImage: false,
+            graphicBox: false,
+            visualPassClaimed: false,
+            timestamp: new Date().toISOString()
+          },
+          extra || {}
+        );
+
+        document.documentElement.dataset.earthAssetPreviewReceipt = CONTRACT;
+        document.documentElement.dataset.generatedImage = "false";
+        document.documentElement.dataset.graphicBox = "false";
+        document.documentElement.dataset.visualPassClaimed = "false";
+      }
+
+      function inspectEarthAuthority() {
+        const api = window.DGBEarthCanvas;
+        const receipt = window.DGB_EARTH_G4_ASSET_RECEIPT;
+
+        if (!api || typeof api.verifyAssets !== "function") {
+          writeStatus("Earth canvas authority has not reported yet.");
+          publishPreviewReceipt({ canvasAuthorityDetected: false });
+          return;
+        }
+
+        api.verifyAssets()
+          .then((result) => {
+            const surface = result && result.surface && result.surface.ok;
+            const cloudsPrimary = result && result.cloudsPrimary && result.cloudsPrimary.ok;
+            const cloudsFallback = result && result.cloudsFallback && result.cloudsFallback.ok;
+
+            writeStatus(
+              "Earth authority detected. Surface: " +
+              (surface ? "loaded" : "not loaded") +
+              " · Primary clouds: " +
+              (cloudsPrimary ? "loaded" : "not loaded") +
+              " · Fallback clouds: " +
+              (cloudsFallback ? "loaded" : "not loaded") +
+              ". Visual pass remains held until screenshot or owner confirmation."
+            );
+
+            publishPreviewReceipt({
+              canvasAuthorityDetected: true,
+              earthReceiptDetected: Boolean(receipt),
+              assets: result
+            });
+          })
+          .catch((error) => {
+            writeStatus(error && error.message ? error.message : "Earth asset verification failed.");
+            publishPreviewReceipt({
+              canvasAuthorityDetected: true,
+              verificationError: error && error.message ? error.message : "unknown"
+            });
+          });
+      }
+
+      window.addEventListener("dgb:earth-canvas-ready", inspectEarthAuthority);
+      window.setTimeout(inspectEarthAuthority, 300);
+      window.setTimeout(inspectEarthAuthority, 1200);
+      window.setTimeout(inspectEarthAuthority, 2400);
+
+      publishPreviewReceipt({ booted: true });
+    })();
+  </script>
 </body>
 </html>

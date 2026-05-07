@@ -1,29 +1,29 @@
 // /assets/audralia/audralia.surface.js
-// AUDRALIA_SURFACE_PARENT_BASIN_RIDGE_DISTRIBUTION_TNT_v5
+// AUDRALIA_SURFACE_PARENT_COASTLINE_RIDGE_FEATHER_TNT_v6
 // Full-file replacement.
 // Purpose:
 // - Parent surface owns land/water/ice/shelf truth.
-// - Break the uniform green parent field.
+// - Smooth blocky coastlines from v5.
+// - Add coast feathering, island breakup, shelf gradients, ridge corridors, and mountain candidates.
 // - Preserve Earth-compatible land/water ratio.
-// - Force visible basins, oceans, shelves, coastlines, mountain-range candidates, and restrained ice.
 // - Children refine from this parent contract only.
 // - Runtime remains motion only.
 // - No GraphicBox. No image generation. No visual-pass claim.
 
-const RECEIPT = "AUDRALIA_SURFACE_PARENT_BASIN_RIDGE_DISTRIBUTION_TNT_v5";
-const PREVIOUS_RECEIPT = "AUDRALIA_SURFACE_PARENT_STANDARD_RATIO_LOCK_TNT_v4";
-const CONTRACT = "AUDRALIA_SURFACE_PARENT_BASIN_RIDGE_NO_UNIFORM_FIELD_CONTRACT_v1";
-const VERSION = "2026-05-07.surface-parent-basin-ridge-distribution.v5";
+const RECEIPT = "AUDRALIA_SURFACE_PARENT_COASTLINE_RIDGE_FEATHER_TNT_v6";
+const PREVIOUS_RECEIPT = "AUDRALIA_SURFACE_PARENT_BASIN_RIDGE_DISTRIBUTION_TNT_v5";
+const CONTRACT = "AUDRALIA_SURFACE_PARENT_COASTLINE_RIDGE_FEATHER_CONTRACT_v1";
+const VERSION = "2026-05-07.surface-parent-coastline-ridge-feather.v6";
 
-const GRID_WIDTH = 192;
-const GRID_HEIGHT = 96;
+const GRID_WIDTH = 224;
+const GRID_HEIGHT = 112;
 const TARGET_SOLID_SURFACE_RATIO = 0.292;
 const TARGET_SOLID_SURFACE_RATIO_MIN = 0.27;
 const TARGET_SOLID_SURFACE_RATIO_MAX = 0.31;
 const TARGET_LIQUID_WATER_RATIO = 0.708;
 const TARGET_LIQUID_WATER_RATIO_MIN = 0.69;
 const TARGET_LIQUID_WATER_RATIO_MAX = 0.76;
-const HEX_RESOLUTION = 192;
+const HEX_RESOLUTION = 256;
 
 const STATUS = {
   ok: true,
@@ -31,12 +31,16 @@ const STATUS = {
   previousReceipt: PREVIOUS_RECEIPT,
   contract: CONTRACT,
   version: VERSION,
-  role: "audralia-parent-surface-basin-ridge-distribution-authority",
+  role: "audralia-parent-surface-coastline-ridge-feather-authority",
 
   parentStandard: true,
   ratioLocked: true,
   basinDistributionActive: true,
   ridgeDistributionActive: true,
+  coastlineFeatherActive: true,
+  archipelagoBreakupActive: true,
+  shelfGradientActive: true,
+  mountainCandidateFieldActive: true,
   uniformFieldSuppressed: true,
   downstreamClassificationOverrideAllowed: false,
   downstreamDetailOnly: true,
@@ -95,19 +99,15 @@ function smoothstep(edge0, edge1, value) {
 
 function normalizeLongitudeRadians(lon) {
   let value = Number(lon) || 0;
-
   while (value > Math.PI) value -= Math.PI * 2;
   while (value < -Math.PI) value += Math.PI * 2;
-
   return value;
 }
 
 function normalizeLongitudeDegrees(lon) {
   let value = Number(lon) || 0;
-
   while (value > 180) value -= 360;
   while (value < -180) value += 360;
-
   return value;
 }
 
@@ -230,24 +230,42 @@ function normalizeCoordinateInput(input, lonArg, uArg, vArg) {
 }
 
 const LAND_LOBES = Object.freeze([
-  { id: "western-highland-basin-edge", lat: 14, lon: -116, rx: 31, ry: 18, twist: -18, weight: 1.06, material: "green-granite-opal" },
-  { id: "southwest-folded-range", lat: -32, lon: -68, rx: 25, ry: 34, twist: 24, weight: 0.95, material: "slate-granite-ridge" },
-  { id: "eastern-broken-continent", lat: 4, lon: 38, rx: 37, ry: 21, twist: 10, weight: 1.00, material: "gold-granite-slate" },
-  { id: "southeast-shelf-mass", lat: -42, lon: 108, rx: 38, ry: 18, twist: -8, weight: 0.92, material: "weathered-green-stone" },
-  { id: "northern-crown-islands", lat: 55, lon: -18, rx: 28, ry: 12, twist: 3, weight: 0.76, material: "ice-opal-crown" },
-  { id: "equatorial-ancient-chain", lat: -7, lon: 145, rx: 31, ry: 10, twist: 17, weight: 0.80, material: "ancient-brown-granite" },
-  { id: "western-pressure-islands", lat: 2, lon: -164, rx: 23, ry: 13, twist: -22, weight: 0.62, material: "pressure-island-slate" },
-  { id: "northwest-reef-scarp", lat: 37, lon: 128, rx: 27, ry: 14, twist: 28, weight: 0.58, material: "coastal-opal-islands" },
-  { id: "southern-ice-footland", lat: -61, lon: -12, rx: 42, ry: 10, twist: -2, weight: 0.56, material: "ice-granite-footland" },
-  { id: "far-east-reef-knife", lat: -20, lon: 171, rx: 26, ry: 10, twist: 31, weight: 0.54, material: "reef-knife-opal" }
+  { id: "western-highland-basin-edge", lat: 13, lon: -118, rx: 30, ry: 18, twist: -18, weight: 1.05, material: "green-granite-opal" },
+  { id: "southwest-folded-range", lat: -34, lon: -69, rx: 24, ry: 33, twist: 25, weight: 0.96, material: "slate-granite-ridge" },
+  { id: "eastern-broken-continent", lat: 4, lon: 38, rx: 36, ry: 21, twist: 10, weight: 1.00, material: "gold-granite-slate" },
+  { id: "southeast-shelf-mass", lat: -42, lon: 109, rx: 37, ry: 18, twist: -8, weight: 0.92, material: "weathered-green-stone" },
+  { id: "northern-crown-islands", lat: 55, lon: -18, rx: 27, ry: 12, twist: 3, weight: 0.76, material: "ice-opal-crown" },
+  { id: "equatorial-ancient-chain", lat: -7, lon: 146, rx: 30, ry: 10, twist: 17, weight: 0.80, material: "ancient-brown-granite" },
+  { id: "western-pressure-islands", lat: 2, lon: -164, rx: 22, ry: 13, twist: -22, weight: 0.62, material: "pressure-island-slate" },
+  { id: "northwest-reef-scarp", lat: 37, lon: 128, rx: 26, ry: 14, twist: 28, weight: 0.58, material: "coastal-opal-islands" },
+  { id: "southern-ice-footland", lat: -61, lon: -12, rx: 42, ry: 10, twist: -2, weight: 0.54, material: "ice-granite-footland" },
+  { id: "far-east-reef-knife", lat: -20, lon: 171, rx: 25, ry: 10, twist: 31, weight: 0.54, material: "reef-knife-opal" },
+  { id: "central-basin-island-chain", lat: -11, lon: -8, rx: 20, ry: 9, twist: -6, weight: 0.48, material: "opal-island-chain" },
+  { id: "north-sea-archipelago", lat: 31, lon: -54, rx: 23, ry: 8, twist: 13, weight: 0.44, material: "shelf-island-opal" }
 ]);
 
 const SEA_LANES = Object.freeze([
-  { id: "central-blue-basin", lon: -4, width: 34, strength: 0.38, wave: 18, phase: 0.1 },
-  { id: "western-ocean-cut", lon: -138, width: 28, strength: 0.33, wave: 22, phase: 1.7 },
-  { id: "eastern-basin-cut", lon: 78, width: 30, strength: 0.31, wave: 20, phase: 2.4 },
-  { id: "southern-shelf-channel", lon: 150, width: 24, strength: 0.27, wave: 28, phase: 3.2 }
+  { id: "central-blue-basin", lon: -4, width: 32, strength: 0.37, wave: 18, phase: 0.1 },
+  { id: "western-ocean-cut", lon: -138, width: 27, strength: 0.34, wave: 22, phase: 1.7 },
+  { id: "eastern-basin-cut", lon: 78, width: 29, strength: 0.31, wave: 20, phase: 2.4 },
+  { id: "southern-shelf-channel", lon: 150, width: 23, strength: 0.28, wave: 28, phase: 3.2 },
+  { id: "northwest-inlet-chain", lon: -62, width: 18, strength: 0.22, wave: 34, phase: 4.4 }
 ]);
+
+function warpedPoint(lat, lon) {
+  const base = latLonToPoint(lat, lon);
+  const warpA = fbm3(base.x * 1.7 + 2.1, base.y * 1.7 - 7.3, base.z * 1.7 + 4.2, 4) - 0.5;
+  const warpB = fbm3(base.x * 2.1 - 3.6, base.y * 2.1 + 1.7, base.z * 2.1 - 9.8, 4) - 0.5;
+
+  const latWarp = warpA * 0.075;
+  const lonWarp = warpB * 0.145;
+
+  return {
+    lat: clamp(lat + latWarp, -Math.PI / 2, Math.PI / 2),
+    lon: normalizeLongitudeRadians(lon + lonWarp),
+    base
+  };
+}
 
 function ellipseInfluenceDegrees(latDeg, lonDeg, lobe) {
   const latitudeScale = Math.max(0.22, Math.cos(latDeg * Math.PI / 180));
@@ -262,13 +280,13 @@ function ellipseInfluenceDegrees(latDeg, lonDeg, lobe) {
   const dy = y / Math.max(1, lobe.ry);
   const distance = Math.sqrt(dx * dx + dy * dy);
 
-  return smoothstep(1.12, 0.22, distance) * lobe.weight;
+  return smoothstep(1.15, 0.20, distance) * lobe.weight;
 }
 
 function seaLaneInfluence(latDeg, lonDeg, lane) {
   const curve = lane.lon + Math.sin((latDeg + lane.phase * 30) * Math.PI / 90) * lane.wave;
   const distance = Math.abs(normalizeLongitudeDegrees(lonDeg - curve)) * Math.max(0.32, Math.cos(latDeg * Math.PI / 180));
-  return smoothstep(lane.width, lane.width * 0.26, distance) * lane.strength;
+  return smoothstep(lane.width, lane.width * 0.24, distance) * lane.strength;
 }
 
 function lobeContext(latDeg, lonDeg) {
@@ -302,36 +320,60 @@ function basinCut(latDeg, lonDeg, point) {
     laneCut = Math.max(laneCut, seaLaneInfluence(latDeg, lonDeg, lane));
   }
 
-  const equatorialSea = smoothstep(34, 8, Math.abs(latDeg + Math.sin(lonDeg * Math.PI / 72) * 10)) * 0.16;
-  const polarWaterBreak = smoothstep(80, 61, Math.abs(latDeg)) * 0.10;
-  const organicBasinNoise = fbm3(point.x * 4.2 - 12.0, point.y * 4.2 + 3.1, point.z * 4.2 + 8.4, 4) * 0.12;
+  const equatorialSea = smoothstep(35, 8, Math.abs(latDeg + Math.sin(lonDeg * Math.PI / 72) * 10)) * 0.15;
+  const polarWaterBreak = smoothstep(80, 61, Math.abs(latDeg)) * 0.085;
+  const organicBasinNoise = fbm3(point.x * 4.2 - 12.0, point.y * 4.2 + 3.1, point.z * 4.2 + 8.4, 4) * 0.105;
+  const scallopBreak = ridged3(point.x * 8.4 + 6.2, point.y * 8.4 - 4.1, point.z * 8.4 + 10.8, 3) * 0.075;
 
-  return clamp01(laneCut + equatorialSea + polarWaterBreak + organicBasinNoise);
+  return clamp01(laneCut + equatorialSea + polarWaterBreak + organicBasinNoise + scallopBreak);
+}
+
+function archipelagoSignal(point, latDeg, lonDeg) {
+  const islandNoise = ridged3(point.x * 13.5 + 2.7, point.y * 13.5 - 6.1, point.z * 13.5 + 11.2, 4);
+  const speckle = fbm3(point.x * 41.0 - 8.0, point.y * 41.0 + 3.2, point.z * 41.0 + 5.4, 3);
+  const band = smoothstep(55, 4, Math.abs(latDeg + Math.sin(lonDeg * Math.PI / 65) * 14));
+
+  return clamp01(islandNoise * 0.11 + speckle * 0.035 + band * 0.025);
+}
+
+function ridgeCorridor(point, latDeg, lonDeg) {
+  const diagonalA = Math.abs(normalizeLongitudeDegrees(lonDeg * 0.62 + latDeg * 1.18 - 18));
+  const diagonalB = Math.abs(normalizeLongitudeDegrees(lonDeg * 0.48 - latDeg * 1.32 + 72));
+  const arcA = smoothstep(22, 4, diagonalA) * 0.26;
+  const arcB = smoothstep(20, 4, diagonalB) * 0.20;
+  const folded = ridged3(point.x * 9.2 - 3.1, point.y * 9.2 + 8.8, point.z * 9.2 - 1.6, 4) * 0.22;
+
+  return clamp01(arcA + arcB + folded);
 }
 
 function staticLandPotential(lat, lon) {
-  const point = latLonToPoint(lat, lon);
-  const latDeg = lat * 180 / Math.PI;
-  const lonDeg = lon * 180 / Math.PI;
+  const warp = warpedPoint(lat, lon);
+  const point = latLonToPoint(warp.lat, warp.lon);
+  const latDeg = warp.lat * 180 / Math.PI;
+  const lonDeg = warp.lon * 180 / Math.PI;
   const context = lobeContext(latDeg, lonDeg);
 
   const broad = fbm3(point.x * 2.9 + 3.1, point.y * 2.9 - 1.4, point.z * 2.9 + 5.9, 5);
   const ridge = ridged3(point.x * 6.2 - 7.2, point.y * 6.2 + 4.4, point.z * 6.2 - 2.9, 4);
-  const micro = fbm3(point.x * 21.0 + 1.8, point.y * 21.0 - 9.6, point.z * 21.0 + 6.2, 3);
+  const micro = fbm3(point.x * 24.0 + 1.8, point.y * 24.0 - 9.6, point.z * 24.0 + 6.2, 3);
   const cut = basinCut(latDeg, lonDeg, point);
+  const islands = archipelagoSignal(point, latDeg, lonDeg);
+  const ridgeField = ridgeCorridor(point, latDeg, lonDeg);
 
   const fragmentedContinentalMass =
-    context.strongest * 0.68 +
-    clamp(context.sum * 0.16, 0, 0.32) +
-    broad * 0.10 +
-    ridge * 0.075 +
-    micro * 0.035;
+    context.strongest * 0.66 +
+    clamp(context.sum * 0.15, 0, 0.30) +
+    broad * 0.098 +
+    ridge * 0.070 +
+    ridgeField * 0.090 +
+    micro * 0.030 +
+    islands * 0.090;
 
   const waterForces =
-    cut * 0.48 +
-    smoothstep(0.82, 0.98, Math.abs(point.y)) * 0.08;
+    cut * 0.47 +
+    smoothstep(0.82, 0.98, Math.abs(point.y)) * 0.070;
 
-  return clamp01(fragmentedContinentalMass - waterForces + 0.035);
+  return clamp01(fragmentedContinentalMass - waterForces + 0.032);
 }
 
 function buildSurfaceModel() {
@@ -427,14 +469,14 @@ function materialProfile(materialFamily, sample) {
     whiteOpalSand = clamp01(0.22 + coast * 0.16);
   } else if (sample.exposedTerrainLand) {
     diamond = clamp01(mineral * 0.40 + relief * 0.14);
-    opal = clamp01(coast * 0.30 + mineral * 0.14);
-    granite = clamp01(0.20 + relief * 0.44 + mineral * 0.14);
+    opal = clamp01(coast * 0.32 + mineral * 0.14);
+    granite = clamp01(0.20 + relief * 0.45 + mineral * 0.14);
     slate = clamp01(0.15 + relief * 0.30 + (1 - mineral) * 0.10);
-    whiteOpalSand = clamp01(coast * 0.34 + turquoise * 0.10);
+    whiteOpalSand = clamp01(coast * 0.36 + turquoise * 0.11);
     blackDiamondSand = clamp01(coast * relief * 0.24 + slate * 0.10);
   } else if (sample.shelf) {
-    opal = clamp01(0.34 + turquoise * 0.30);
-    whiteOpalSand = clamp01(0.20 + coast * 0.34);
+    opal = clamp01(0.36 + turquoise * 0.30);
+    whiteOpalSand = clamp01(0.22 + coast * 0.34);
     diamond = clamp01(0.08 + turquoise * 0.08);
   } else if (sample.ocean) {
     opal = clamp01(0.10 + turquoise * 0.08);
@@ -464,9 +506,10 @@ function materialProfile(materialFamily, sample) {
 }
 
 function classifySurface(coordinate) {
-  const point = latLonToPoint(coordinate.lat, coordinate.lon);
-  const latDeg = coordinate.lat * 180 / Math.PI;
-  const lonDeg = coordinate.lon * 180 / Math.PI;
+  const warp = warpedPoint(coordinate.lat, coordinate.lon);
+  const point = latLonToPoint(warp.lat, warp.lon);
+  const latDeg = warp.lat * 180 / Math.PI;
+  const lonDeg = warp.lon * 180 / Math.PI;
   const lobe = lobeContext(latDeg, lonDeg);
   const score = staticLandPotential(coordinate.lat, coordinate.lon);
   const threshold = surfaceModel.landThreshold;
@@ -475,7 +518,10 @@ function classifySurface(coordinate) {
   const liquidWater = !solidSurfaceLand;
   const edgeDistance = Math.abs(score - threshold);
 
-  const nearCoast = edgeDistance < 0.074;
+  const coastFeatherWidth = 0.104;
+  const coastlineIndex = clamp01(1 - edgeDistance / coastFeatherWidth);
+  const nearCoast = coastlineIndex > 0.01;
+
   const waterTexture = fbm3(point.x * 15.0 + 8.7, point.y * 15.0 - 3.4, point.z * 15.0 + 2.6, 4);
   const reliefTexture = ridged3(point.x * 17.0 + 2.2, point.y * 17.0 - 8.1, point.z * 17.0 + 6.4, 4);
   const colorBreak = fbm3(point.x * 34.0 + 4.1, point.y * 34.0 - 2.8, point.z * 34.0 + 7.2, 3);
@@ -483,60 +529,78 @@ function classifySurface(coordinate) {
   const microTerrain = ridged3(point.x * 52.0 + 11.2, point.y * 52.0 - 4.9, point.z * 52.0 + 2.1, 3);
   const glazeTexture = fbm3(point.x * 64.0 - 2.5, point.y * 64.0 + 8.4, point.z * 64.0 - 9.9, 3);
   const iceNoise = fbm3(point.x * 11.0 - 4.3, point.y * 11.0 + 11.1, point.z * 11.0 - 5.7, 4);
+  const ridgeField = ridgeCorridor(point, latDeg, lonDeg);
+  const islandField = archipelagoSignal(point, latDeg, lonDeg);
 
-  const shelf = liquidWater && (score > threshold - 0.110 || waterTexture > 0.855);
+  const shelf = liquidWater && (score > threshold - 0.140 || waterTexture > 0.840 || coastlineIndex > 0.12);
   const ocean = liquidWater && !shelf;
 
-  const highLatitudeLand = Math.abs(point.y) > 0.78;
+  const highLatitudeLand = Math.abs(point.y) > 0.79;
   const ice =
     solidSurfaceLand &&
     (
-      (Math.abs(point.y) > 0.88 && iceNoise > 0.20) ||
-      (highLatitudeLand && iceNoise > 0.72)
+      (Math.abs(point.y) > 0.90 && iceNoise > 0.24) ||
+      (highLatitudeLand && iceNoise > 0.78 && reliefTexture > 0.42)
     );
 
   const exposedTerrainLand = solidSurfaceLand && !ice;
-  const coastlineIndex = nearCoast || shelf ? clamp01(1 - edgeDistance / 0.110) : 0;
-  const shelfIndex = shelf ? clamp01(0.42 + coastlineIndex * 0.36 + waterTexture * 0.22) : 0;
+
+  const shelfIndex = shelf
+    ? clamp01(0.38 + coastlineIndex * 0.40 + waterTexture * 0.22)
+    : 0;
+
+  const coastalBlendIndex = clamp01(coastlineIndex * 0.70 + shelfIndex * 0.30);
+  const archipelagoBreakupIndex = clamp01(islandField * 0.62 + coastlineIndex * 0.25 + waterTexture * 0.13);
 
   const elevation = solidSurfaceLand
     ? clamp01(
-        0.13 +
-        (score - threshold) * 2.10 +
-        reliefTexture * 0.28 +
-        microTerrain * 0.11 +
-        (ice ? 0.12 : 0)
+        0.11 +
+        (score - threshold) * 2.00 +
+        reliefTexture * 0.27 +
+        ridgeField * 0.20 +
+        microTerrain * 0.10 +
+        (ice ? 0.11 : 0)
       )
     : 0;
 
   const depth = liquidWater
     ? clamp01(
-        0.18 +
-        (threshold - score) * 1.52 +
-        waterTexture * 0.25 +
-        (ocean ? 0.18 : 0)
+        0.16 +
+        (threshold - score) * 1.45 +
+        waterTexture * 0.23 +
+        (ocean ? 0.18 : 0) -
+        coastlineIndex * 0.10
       )
     : 0;
 
   const turquoiseIndex = shelf
-    ? clamp01(0.40 + shelfIndex * 0.38 + waterTexture * 0.12)
+    ? clamp01(0.42 + shelfIndex * 0.36 + waterTexture * 0.12)
     : ocean
-      ? clamp01(0.08 + waterTexture * 0.12)
-      : clamp01(coastlineIndex * 0.16);
+      ? clamp01(0.08 + waterTexture * 0.11)
+      : clamp01(coastlineIndex * 0.18);
 
-  const ridgeIndex = exposedTerrainLand ? clamp01(reliefTexture * 0.58 + mineralIndex * 0.20 + elevation * 0.18) : 0;
-  const mountainIndex = exposedTerrainLand ? clamp01(elevation * 0.62 + reliefTexture * 0.34 + microTerrain * 0.10) : 0;
-  const basinIndex = exposedTerrainLand ? clamp01((1 - elevation) * 0.28 + waterTexture * 0.22 + (1 - reliefTexture) * 0.14) : 0;
-  const coastalCliffIndex = exposedTerrainLand && coastlineIndex > 0
-    ? clamp01(elevation * 0.40 + reliefTexture * 0.34 + coastlineIndex * 0.22)
+  const ridgeIndex = exposedTerrainLand
+    ? clamp01(reliefTexture * 0.45 + ridgeField * 0.34 + mineralIndex * 0.13 + elevation * 0.14)
+    : 0;
+
+  const mountainIndex = exposedTerrainLand
+    ? clamp01(elevation * 0.55 + ridgeIndex * 0.28 + microTerrain * 0.14)
+    : 0;
+
+  const basinIndex = exposedTerrainLand
+    ? clamp01((1 - elevation) * 0.26 + waterTexture * 0.20 + (1 - reliefTexture) * 0.14 + coastalBlendIndex * 0.10)
+    : 0;
+
+  const coastalCliffIndex = exposedTerrainLand && nearCoast
+    ? clamp01(elevation * 0.38 + reliefTexture * 0.32 + coastlineIndex * 0.26)
     : 0;
 
   const riverCandidate = exposedTerrainLand
-    ? clamp01(basinIndex * 0.28 + ridgeIndex * 0.16 + coastlineIndex * 0.16 + waterTexture * 0.22)
+    ? clamp01(basinIndex * 0.27 + ridgeIndex * 0.18 + coastlineIndex * 0.17 + waterTexture * 0.22)
     : 0;
 
   const lakeBasinCandidate = exposedTerrainLand
-    ? clamp01(basinIndex * 0.46 + (1 - elevation) * 0.18 + waterTexture * 0.16)
+    ? clamp01(basinIndex * 0.47 + (1 - elevation) * 0.18 + waterTexture * 0.16)
     : 0;
 
   const springCandidate = exposedTerrainLand
@@ -559,9 +623,9 @@ function classifySurface(coordinate) {
 
   const material = materialProfile(lobe.materialFamily, baseSample);
   const hexCell = computeHexCell(coordinate, point);
-  const microGlazeIndex = clamp01(glazeTexture * 0.46 + microTerrain * 0.22 + material.opalSignal * 0.18 + coastlineIndex * 0.14);
-  const parentEdgeDefinition = clamp01(coastlineIndex * 0.45 + ridgeIndex * 0.20 + coastalCliffIndex * 0.20 + microTerrain * 0.15);
-  const parentHexDetailIndex = clamp01(hexCell.seed * 0.24 + microTerrain * 0.34 + reliefTexture * 0.18 + glazeTexture * 0.24);
+  const microGlazeIndex = clamp01(glazeTexture * 0.44 + microTerrain * 0.22 + material.opalSignal * 0.18 + coastlineIndex * 0.16);
+  const parentEdgeDefinition = clamp01(coastlineIndex * 0.46 + ridgeIndex * 0.20 + coastalCliffIndex * 0.20 + microTerrain * 0.14);
+  const parentHexDetailIndex = clamp01(hexCell.seed * 0.22 + microTerrain * 0.34 + reliefTexture * 0.18 + glazeTexture * 0.26);
 
   const visualSurfaceClass = ice
     ? "glacier_ice_snowpack_surface"
@@ -576,7 +640,7 @@ function classifySurface(coordinate) {
     receipt: RECEIPT,
     previousReceipt: PREVIOUS_RECEIPT,
     contract: CONTRACT,
-    source: "audralia-parent-surface-basin-ridge-distribution",
+    source: "audralia-parent-surface-coastline-ridge-feather",
 
     lat: coordinate.lat,
     lon: coordinate.lon,
@@ -631,10 +695,12 @@ function classifySurface(coordinate) {
 
     coastlineIndex,
     coastalFeather: coastlineIndex,
+    coastalBlendIndex,
     shelfIndex,
+    shelfGradientIndex: shelfIndex,
     turquoise: turquoiseIndex,
     turquoiseIndex,
-    blueWaterIndex: ocean ? clamp01(0.60 + depth * 0.30) : shelf ? 0.36 : 0,
+    blueWaterIndex: ocean ? clamp01(0.60 + depth * 0.30) : shelf ? 0.38 : 0,
 
     reliefTexture,
     colorBreak,
@@ -642,6 +708,7 @@ function classifySurface(coordinate) {
     microTerrainIndex: microTerrain,
     microGlazeIndex,
     parentEdgeDefinition,
+    archipelagoBreakupIndex,
 
     ridgeIndex,
     mountainIndex,
@@ -682,6 +749,10 @@ function classifySurface(coordinate) {
     ratioLocked: true,
     basinDistributionActive: true,
     ridgeDistributionActive: true,
+    coastlineFeatherActive: true,
+    archipelagoBreakupActive: true,
+    shelfGradientActive: true,
+    mountainCandidateFieldActive: true,
     uniformFieldSuppressed: true,
     downstreamClassificationOverrideAllowed: false,
     downstreamDetailOnly: true,
@@ -719,6 +790,9 @@ function computeSummary() {
   let maxDepth = 0;
   let maxTurquoise = 0;
   let maxMicroGlaze = 0;
+  let maxArchipelagoBreakup = 0;
+  let maxMountain = 0;
+  let maxRidge = 0;
 
   const total = GRID_WIDTH * GRID_HEIGHT;
 
@@ -751,6 +825,9 @@ function computeSummary() {
       maxDepth = Math.max(maxDepth, sample.depth);
       maxTurquoise = Math.max(maxTurquoise, sample.turquoiseIndex);
       maxMicroGlaze = Math.max(maxMicroGlaze, sample.microGlazeIndex);
+      maxArchipelagoBreakup = Math.max(maxArchipelagoBreakup, sample.archipelagoBreakupIndex);
+      maxMountain = Math.max(maxMountain, sample.mountainIndex);
+      maxRidge = Math.max(maxRidge, sample.ridgeIndex);
     }
 
     const dominant = Math.max(...Object.values(rowCounts));
@@ -820,11 +897,18 @@ function computeSummary() {
     uniformFieldSuppressed: true,
     basinDistributionActive: true,
     ridgeDistributionActive: true,
+    coastlineFeatherActive: true,
+    archipelagoBreakupActive: true,
+    shelfGradientActive: true,
+    mountainCandidateFieldActive: true,
 
     maxElevation,
     maxDepth,
     maxTurquoise,
     maxMicroGlaze,
+    maxArchipelagoBreakup,
+    maxMountain,
+    maxRidge,
     maxParentHexDetailIndex,
     maxParentEdgeDefinition,
     averageParentHexDetailIndex: parentHexDetailAccum / total,
@@ -874,6 +958,10 @@ function exposeSurfaceStatus() {
     document.documentElement.dataset.audraliaSurfaceRatioLocked = "true";
     document.documentElement.dataset.audraliaSurfaceBasinDistributionActive = "true";
     document.documentElement.dataset.audraliaSurfaceRidgeDistributionActive = "true";
+    document.documentElement.dataset.audraliaSurfaceCoastlineFeatherActive = "true";
+    document.documentElement.dataset.audraliaSurfaceArchipelagoBreakupActive = "true";
+    document.documentElement.dataset.audraliaSurfaceShelfGradientActive = "true";
+    document.documentElement.dataset.audraliaSurfaceMountainCandidateFieldActive = "true";
     document.documentElement.dataset.audraliaSurfaceUniformFieldSuppressed = "true";
     document.documentElement.dataset.audraliaSurfaceDownstreamClassificationOverrideAllowed = "false";
     document.documentElement.dataset.audraliaSurfaceDownstreamDetailOnly = "true";
@@ -939,7 +1027,7 @@ export function getParentStandard() {
     previousReceipt: PREVIOUS_RECEIPT,
     contract: CONTRACT,
     version: VERSION,
-    standard: "parent-surface-basin-ridge-distribution-standard",
+    standard: "parent-surface-coastline-ridge-feather-standard",
     importsBlockFirstPaint: false,
     downstreamClassificationOverrideAllowed: false,
     downstreamDetailOnly: true,
@@ -949,6 +1037,10 @@ export function getParentStandard() {
       "earth_compatible_ratio_lock",
       "basin_distribution",
       "ridge_distribution",
+      "coastline_feather",
+      "archipelago_breakup",
+      "shelf_gradient",
+      "mountain_candidate_field",
       "elevation_depth_scalar_fields",
       "coastline_gradient_fields",
       "material_hint_fields",
@@ -996,6 +1088,10 @@ export const AUDRALIA_SURFACE_RATIO_LOCKED = true;
 export const AUDRALIA_SURFACE_NONBLOCKING_BOOT = true;
 export const AUDRALIA_SURFACE_BASIN_DISTRIBUTION_ACTIVE = true;
 export const AUDRALIA_SURFACE_RIDGE_DISTRIBUTION_ACTIVE = true;
+export const AUDRALIA_SURFACE_COASTLINE_FEATHER_ACTIVE = true;
+export const AUDRALIA_SURFACE_ARCHIPELAGO_BREAKUP_ACTIVE = true;
+export const AUDRALIA_SURFACE_SHELF_GRADIENT_ACTIVE = true;
+export const AUDRALIA_SURFACE_MOUNTAIN_CANDIDATE_FIELD_ACTIVE = true;
 export const AUDRALIA_SURFACE_UNIFORM_FIELD_SUPPRESSED = true;
 export const AUDRALIA_SURFACE_DOWNSTREAM_CLASSIFICATION_OVERRIDE_ALLOWED = false;
 
@@ -1012,6 +1108,10 @@ export const AUDRALIA_SURFACE_DATASET = Object.freeze({
   ratioLocked: true,
   basinDistributionActive: true,
   ridgeDistributionActive: true,
+  coastlineFeatherActive: true,
+  archipelagoBreakupActive: true,
+  shelfGradientActive: true,
+  mountainCandidateFieldActive: true,
   uniformFieldSuppressed: true,
   nonblockingBoot: true,
   downstreamClassificationOverrideAllowed: false
@@ -1028,6 +1128,10 @@ export default Object.freeze({
   ratioLocked: true,
   basinDistributionActive: true,
   ridgeDistributionActive: true,
+  coastlineFeatherActive: true,
+  archipelagoBreakupActive: true,
+  shelfGradientActive: true,
+  mountainCandidateFieldActive: true,
   uniformFieldSuppressed: true,
   nonblockingBoot: true,
   downstreamClassificationOverrideAllowed: false,

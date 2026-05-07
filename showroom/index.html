@@ -1,549 +1,406 @@
-<!-- /showroom/globe/audralia/index.html -->
+<!-- /showroom/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-page="audralia-adopted-canvas-doorway"
-  data-route="/showroom/globe/audralia/"
-  data-contract="AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_CLEAN_STATUS_TNT_v1"
-  data-role="audralia-route-shell"
-  data-html-owns="shell-navigation-mount-script-handoff"
-  data-route-owns="single-caller-canvas-import"
-  data-canvas-authority="/assets/audralia/audralia.canvas.js"
-  data-runtime-truth="/assets/audralia/audralia.runtime.js"
-  data-graphicbox="false"
-  data-image-generation="false"
+  data-page="showroom-root-asset-shrine"
+  data-route="/showroom/"
+  data-contract="SHOWROOM_ROOT_ASSET_SHRINE_RESTORATION_TNT_v1"
+  data-previous-misclassification="audralia-doorway-content-on-showroom-root"
+  data-role="asset-shrine-launchpad"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Audralia</title>
+  <title>Diamond Gate Bridge · Showroom</title>
   <meta
     name="description"
-    content="Audralia route shell. The HTML owns navigation, mount, and script handoff only. The route doorway imports the adopted-column canvas authority."
+    content="Showroom is the asset shrine and launchpad for built Diamond Gate Bridge routes, globes, products, proof consoles, and frontier lanes."
   >
 
   <style>
     :root {
-      --bg: #020713;
-      --panel: rgba(8, 15, 30, 0.78);
-      --panel-strong: rgba(10, 20, 40, 0.92);
-      --line: rgba(231, 204, 142, 0.28);
-      --line-blue: rgba(151, 202, 255, 0.26);
-      --gold: #f0d38a;
-      --gold-soft: rgba(240, 211, 138, 0.76);
-      --text: rgba(248, 242, 224, 0.94);
-      --muted: rgba(205, 219, 230, 0.72);
-      --blue: rgba(127, 194, 255, 0.86);
-      --shadow: rgba(0, 0, 0, 0.48);
-      color-scheme: dark;
+      --stage: min(100%, 1180px);
+      --bg: #030407;
+      --panel: rgba(8, 12, 20, 0.88);
+      --glass: rgba(255,255,255,0.052);
+      --line: rgba(255,255,255,0.16);
+      --text: #f8f1dd;
+      --muted: rgba(242,246,255,0.72);
+      --faint: rgba(242,246,255,0.48);
+      --gold: #f2c76f;
+      --blue: #78d8ff;
+      --green: #a5efcc;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html {
-      min-height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      scroll-behavior: smooth;
-    }
-
+    html,
     body {
+      width: 100%;
       margin: 0;
-      min-height: 100vh;
-      font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+      overflow-x: hidden;
       background:
-        radial-gradient(circle at 18% 12%, rgba(75, 127, 196, 0.20), transparent 34rem),
-        radial-gradient(circle at 78% 4%, rgba(240, 211, 138, 0.13), transparent 28rem),
-        linear-gradient(180deg, #030915 0%, #020713 44%, #01040b 100%);
+        radial-gradient(circle at 50% 8%, rgba(242,199,111,0.16), transparent 28rem),
+        radial-gradient(circle at 50% 48%, rgba(120,216,255,0.12), transparent 34rem),
+        linear-gradient(180deg, #070a14, #030407 72%, #010205);
       color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        radial-gradient(circle, rgba(255, 255, 255, 0.54) 0 1px, transparent 1.4px),
-        radial-gradient(circle, rgba(240, 211, 138, 0.40) 0 1px, transparent 1.5px);
-      background-size: 110px 110px, 170px 170px;
-      background-position: 12px 20px, 64px 48px;
-      opacity: 0.18;
-      mask-image: linear-gradient(180deg, black, transparent 78%);
-    }
+    body { min-height: 100svh; }
 
-    a {
-      color: inherit;
-    }
+    a { color: inherit; text-decoration: none; }
 
     .skip-link {
       position: absolute;
       left: 1rem;
-      top: 1rem;
+      top: -4rem;
       z-index: 20;
-      transform: translateY(-150%);
       padding: 0.75rem 1rem;
-      border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(3, 9, 21, 0.96);
-      color: var(--gold);
-      font-weight: 800;
-      text-decoration: none;
+      background: var(--gold);
+      color: #080a0f;
+      font-weight: 900;
     }
 
-    .skip-link:focus {
-      transform: translateY(0);
-      outline: 2px solid var(--gold);
-      outline-offset: 3px;
-    }
+    .skip-link:focus { top: 1rem; }
 
-    .page-shell {
-      width: min(1160px, calc(100% - 32px));
+    .shell {
+      width: var(--stage);
       margin: 0 auto;
-      padding: 24px 0 46px;
-      position: relative;
-      z-index: 1;
+      padding: max(1rem, env(safe-area-inset-top)) clamp(0.85rem, 3vw, 2rem)
+        max(1.5rem, env(safe-area-inset-bottom));
     }
 
     .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      padding: 16px 18px;
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      background: rgba(4, 10, 22, 0.72);
-      box-shadow: 0 18px 50px var(--shadow);
-      backdrop-filter: blur(12px);
+      gap: 1rem;
+      padding: 0.75rem 0 1rem;
     }
 
     .brand {
       display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 900;
-      letter-spacing: 0.02em;
+      flex-direction: column;
+      gap: 0.08rem;
+      font-weight: 950;
+      line-height: 1.05;
+      letter-spacing: 0.04em;
     }
 
-    .brand-mark {
-      width: 13px;
-      height: 13px;
-      transform: rotate(45deg);
-      border: 1px solid var(--gold);
-      background: rgba(240, 211, 138, 0.20);
-      box-shadow: 0 0 20px rgba(240, 211, 138, 0.45);
-      flex: 0 0 auto;
+    .brand span:first-child {
+      font-size: clamp(0.95rem, 2.8vw, 1.08rem);
+      text-transform: uppercase;
     }
 
-    .nav {
+    .brand span:last-child {
+      color: var(--muted);
+      font-size: clamp(0.66rem, 2.2vw, 0.76rem);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .nav,
+    .hero-actions,
+    .route-grid {
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 8px;
+      gap: 0.46rem;
     }
 
+    .nav { justify-content: flex-end; }
+    .hero-actions, .route-grid { justify-content: center; }
+
     .nav a,
-    .cta-row a {
+    .button,
+    .route-link {
+      min-height: 2.2rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 38px;
-      padding: 0.62rem 0.9rem;
-      border: 1px solid rgba(231, 204, 142, 0.20);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.035);
-      color: var(--muted);
-      font-size: 0.84rem;
-      font-weight: 800;
-      text-decoration: none;
-      transition:
-        border-color 160ms ease,
-        background 160ms ease,
-        color 160ms ease,
-        transform 160ms ease;
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.055em;
+      text-transform: uppercase;
+      white-space: nowrap;
     }
 
-    .nav a:hover,
-    .cta-row a:hover {
-      transform: translateY(-1px);
-      border-color: rgba(240, 211, 138, 0.48);
-      background: rgba(240, 211, 138, 0.10);
-      color: var(--gold);
+    .nav a,
+    .route-link {
+      padding: 0.45rem 0.72rem;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: rgba(255,255,255,0.035);
+    }
+
+    .nav a[aria-current="page"] {
+      border-color: rgba(242,199,111,0.88);
+      color: #080a0f;
+      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+    }
+
+    .button {
+      padding: 0.58rem 0.92rem;
+      border: 1px solid rgba(242,199,111,0.86);
+      color: #080a0f;
+      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+      box-shadow: 0 0.85rem 2rem rgba(242,199,111,0.16);
+    }
+
+    .button.secondary {
+      border-color: rgba(255,255,255,0.22);
+      color: var(--text);
+      background: rgba(255,255,255,0.055);
+      box-shadow: none;
     }
 
     .hero {
-      margin-top: 28px;
-      padding: clamp(26px, 5vw, 56px);
-      border: 1px solid var(--line);
-      border-radius: 34px;
-      background:
-        radial-gradient(circle at 22% 18%, rgba(127, 194, 255, 0.14), transparent 26rem),
-        linear-gradient(135deg, rgba(10, 20, 40, 0.92), rgba(4, 9, 20, 0.86));
-      box-shadow: 0 28px 90px var(--shadow);
-      overflow: hidden;
+      display: grid;
+      gap: 0.85rem;
+      padding: clamp(1.2rem, 4vw, 2.6rem) 0 clamp(1rem, 3vw, 1.45rem);
+      text-align: center;
     }
 
     .eyebrow {
-      margin: 0 0 12px;
+      margin: 0;
       color: var(--gold);
-      font-size: 0.78rem;
-      font-weight: 900;
+      font-size: clamp(0.72rem, 2.5vw, 0.84rem);
+      font-weight: 950;
       letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
     h1 {
-      margin: 0;
-      max-width: 840px;
-      color: #fff8e6;
-      font-size: clamp(2.5rem, 8vw, 5.5rem);
-      line-height: 0.92;
-      letter-spacing: -0.075em;
+      width: min(100%, 920px);
+      margin: 0 auto;
+      font-size: clamp(2.25rem, 8vw, 5rem);
+      line-height: 0.94;
+      letter-spacing: -0.065em;
+      text-wrap: balance;
     }
 
-    .lead {
-      max-width: 780px;
-      margin: 22px 0 0;
+    .summary {
+      width: min(100%, 820px);
+      margin: 0 auto;
       color: var(--muted);
-      font-size: clamp(1rem, 2vw, 1.24rem);
-      line-height: 1.65;
+      font-size: clamp(0.98rem, 3vw, 1.12rem);
+      line-height: 1.5;
+      text-wrap: balance;
     }
 
-    .cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 26px;
+    .showroom-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(0.75rem, 2.2vw, 1rem);
+      margin: clamp(1rem, 3vw, 1.4rem) auto 0;
     }
 
-    .cta-row a.primary {
-      border-color: rgba(240, 211, 138, 0.60);
-      background: linear-gradient(135deg, rgba(240, 211, 138, 0.24), rgba(127, 194, 255, 0.08));
-      color: var(--gold);
-    }
-
-    .status-panel,
-    .content-panel,
-    .receipts-panel {
-      margin-top: 24px;
-      padding: clamp(20px, 4vw, 32px);
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      background: var(--panel);
-      box-shadow: 0 22px 70px var(--shadow);
-    }
-
-    .status-panel {
-      border-color: rgba(127, 194, 255, 0.24);
+    .show-card {
+      min-height: 12rem;
+      display: grid;
+      align-content: space-between;
+      gap: 0.8rem;
+      padding: clamp(0.9rem, 2.8vw, 1.2rem);
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: clamp(1rem, 3vw, 1.35rem);
       background:
-        radial-gradient(circle at 14% 8%, rgba(127, 194, 255, 0.14), transparent 22rem),
-        var(--panel);
+        radial-gradient(circle at 50% 0%, rgba(242,199,111,0.08), transparent 38%),
+        linear-gradient(180deg, rgba(255,255,255,0.060), rgba(255,255,255,0.018)),
+        rgba(8,12,20,0.76);
+      box-shadow:
+        0 1.5rem 5rem rgba(0,0,0,0.24),
+        inset 0 1px 0 rgba(255,255,255,0.08);
     }
 
-    h2 {
-      margin: 0 0 14px;
-      color: #fff8e6;
-      font-size: clamp(1.45rem, 3vw, 2.2rem);
-      line-height: 1.08;
+    .show-card strong {
+      color: rgba(255,241,205,0.96);
+      font-size: clamp(1.12rem, 3vw, 1.5rem);
+      line-height: 1.05;
       letter-spacing: -0.035em;
     }
 
-    .route-status {
+    .show-card p {
       margin: 0;
-      padding: 14px 16px;
-      border: 1px solid rgba(240, 211, 138, 0.26);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.035);
-      color: var(--gold-soft);
-      font-weight: 900;
+      color: var(--muted);
+      font-size: 0.88rem;
       line-height: 1.45;
-      letter-spacing: 0.01em;
     }
 
-    .mount-wrap {
-      margin-top: 18px;
+    .show-card a {
+      justify-self: start;
+      min-height: 2.2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.48rem 0.75rem;
+      border: 1px solid rgba(242,199,111,0.55);
+      border-radius: 999px;
+      color: #080a0f;
+      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
 
-    .mount {
-      min-height: min(92vw, 760px);
-      display: grid;
-      place-items: center;
-      border: 1px dashed rgba(127, 194, 255, 0.18);
-      border-radius: 30px;
-      background:
-        radial-gradient(circle at 50% 46%, rgba(25, 55, 86, 0.26), rgba(3, 8, 18, 0.80) 56%, rgba(1, 4, 11, 0.96));
+    .receipt {
+      width: min(100%, 920px);
+      margin: clamp(0.9rem, 3vw, 1.2rem) auto 0;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.03);
+      color: var(--faint);
       overflow: hidden;
     }
 
-    .mount:empty::before {
-      content: "Canvas mount awaiting route doorway.";
-      display: grid;
-      place-items: center;
-      width: min(92vw, 760px);
-      aspect-ratio: 1 / 1;
-      border-radius: 28px;
-      color: rgba(205, 219, 230, 0.58);
-      font-size: 0.9rem;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      text-align: center;
-    }
-
-    .role-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 20px;
-    }
-
-    .role-card {
-      padding: 18px;
-      border: 1px solid rgba(231, 204, 142, 0.18);
-      border-radius: 22px;
-      background: rgba(255, 255, 255, 0.035);
-    }
-
-    .role-card strong {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--gold);
-      font-size: 0.92rem;
-      letter-spacing: 0.05em;
+    .receipt summary {
+      cursor: pointer;
+      padding: 0.75rem 0.9rem;
+      color: var(--faint);
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .role-card span {
-      color: var(--muted);
-      line-height: 1.55;
+    .receipt pre {
+      margin: 0;
+      padding: 0 0.9rem 0.9rem;
+      font: 700 0.68rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
     }
 
-    .receipts {
-      display: grid;
-      gap: 10px;
-      margin: 16px 0 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .receipts li {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 12px 14px;
-      border: 1px solid rgba(231, 204, 142, 0.15);
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.03);
-      color: var(--muted);
-    }
-
-    code {
-      color: var(--gold);
-      font-family:
-        "SFMono-Regular",
-        Consolas,
-        "Liberation Mono",
-        Menlo,
-        monospace;
-      font-size: 0.88em;
-      word-break: break-word;
-    }
-
-    .footer {
-      margin: 28px 0 0;
-      padding: 18px;
-      border: 1px solid rgba(231, 204, 142, 0.16);
-      border-radius: 22px;
-      color: rgba(205, 219, 230, 0.66);
+    footer {
+      padding: 1.35rem 0 0.45rem;
+      color: var(--faint);
+      font-size: 0.74rem;
+      line-height: 1.45;
       text-align: center;
-      background: rgba(4, 10, 22, 0.62);
     }
 
-    @media (max-width: 780px) {
+    @media (max-width: 980px) {
+      .showroom-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 900px) {
       .topbar {
         align-items: flex-start;
         flex-direction: column;
       }
 
-      .nav {
-        justify-content: flex-start;
-      }
+      .nav { justify-content: flex-start; }
+    }
 
-      .role-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .receipts li {
-        display: block;
-      }
-
-      .receipts code {
-        display: block;
-        margin-top: 6px;
-      }
+    @media (max-width: 640px) {
+      .showroom-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="#audralia-main">Skip to Audralia</a>
+  <a class="skip-link" href="#main">Skip to Showroom</a>
 
-  <div class="page-shell">
-    <header class="topbar" aria-label="Audralia navigation">
-      <a class="brand" href="/">
-        <span class="brand-mark" aria-hidden="true"></span>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
         <span>Diamond Gate Bridge</span>
+        <span>Showroom</span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
-        <a href="/showroom/globe/">Return to Globe Split</a>
-        <a href="/showroom/globe/earth/">Inspect Earth</a>
-        <a href="/showroom/">Showroom</a>
         <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/explore/">Manor</a>
+        <a href="/nine-summits-of-love/">Book</a>
+        <a href="/nine-summits/universe/">Universe</a>
         <a href="/products/">Products</a>
+        <a href="/showroom/" aria-current="page">Showroom</a>
+        <a href="/frontier/">Frontier</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <main id="audralia-main" tabindex="-1">
-      <section class="hero" aria-labelledby="audralia-title">
-        <p class="eyebrow">Audralia · Adopted Canvas Doorway</p>
-        <h1 id="audralia-title">Audralia</h1>
-        <p class="lead">
-          The HTML owns only the route shell and mount. The route doorway imports the adopted-column canvas authority.
-          The canvas authority renders Audralia from runtime truth.
+    <main id="main">
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">Showroom · Asset Shrine / Launchpad</p>
+        <h1 id="page-title">Built assets launch from here.</h1>
+        <p class="summary">
+          Showroom is the gallery, routing hub, and proof-linked index for Diamond Gate Bridge assets. It does not own Audralia’s canvas, Earth’s reference layer, product logic, or Gauges scoring.
         </p>
 
-        <div class="cta-row" aria-label="Audralia actions">
-          <a class="primary" href="/showroom/globe/">Return to Globe Split</a>
-          <a href="/showroom/globe/earth/">Inspect Earth</a>
-          <a href="/gauges/">Run Gauges</a>
+        <div class="hero-actions" aria-label="Showroom primary actions">
+          <a class="button" href="/showroom/globe/">Open Globe Split</a>
+          <a class="button secondary" href="/showroom/globe/audralia/">Inspect Audralia</a>
+          <a class="button secondary" href="/gauges/">Run Gauges</a>
         </div>
       </section>
 
-      <section class="status-panel" aria-labelledby="route-status-title">
-        <h2 id="route-status-title">Route Status</h2>
-        <p
-          id="audralia-route-status"
-          class="route-status"
-          data-audralia-route-status
-          data-route-status
-          data-audralia-route-receipt="AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_CLEAN_STATUS_TNT_v1"
-        >
-          Audralia doorway is importing the canvas authority.
-        </p>
+      <section class="showroom-grid" aria-label="Showroom launchpad">
+        <article class="show-card">
+          <strong>Globe Split</strong>
+          <p>Selector route for Earth and Audralia. This is the clean split between real-world reference and constructed-world expression.</p>
+          <a href="/showroom/globe/">Open</a>
+        </article>
 
-        <div class="mount-wrap">
-          <div
-            id="audralia-canvas-mount"
-            class="mount"
-            data-audralia-canvas-mount
-            data-audralia-mount
-            data-audralia-render-mount
-            data-audralia-html-owns="mount-only"
-            aria-label="Audralia canvas mount"
-          ></div>
-        </div>
+        <article class="show-card">
+          <strong>Earth</strong>
+          <p>Earth remains a reference body. It should not inherit Audralia’s constructed-world generation ladder.</p>
+          <a href="/showroom/globe/earth/">Inspect</a>
+        </article>
+
+        <article class="show-card">
+          <strong>Audralia</strong>
+          <p>Audralia’s route owns doorway attachment only. Canvas authority and render truth live downstream.</p>
+          <a href="/showroom/globe/audralia/">Inspect</a>
+        </article>
+
+        <article class="show-card">
+          <strong>Products</strong>
+          <p>Product chambers remain public-facing proof lanes for named product concepts and commercial structures.</p>
+          <a href="/products/">Open</a>
+        </article>
+
+        <article class="show-card">
+          <strong>Universe</strong>
+          <p>The Nine Summits Universe holds the world-setting frame without becoming the renderer.</p>
+          <a href="/nine-summits/universe/">Open</a>
+        </article>
+
+        <article class="show-card">
+          <strong>Gauges</strong>
+          <p>Gauges stays read-only. It audits routes, receipts, source access, and visible proof without mutating targets.</p>
+          <a href="/gauges/">Run</a>
+        </article>
       </section>
 
-      <section class="content-panel" aria-labelledby="handoff-title">
-        <h2 id="handoff-title">Doorway handoff only</h2>
-        <p class="lead">
-          The HTML does not decide land, void, beaches, coastline, terrain, elevation, hydration, rotation, foliage,
-          or visual pass. This file exposes the auditable mount and loads the route doorway. The doorway imports the
-          adopted Audralia canvas authority.
-        </p>
-
-        <div class="role-grid" aria-label="Ownership boundaries">
-          <article class="role-card">
-            <strong>HTML route</strong>
-            <span>Owns shell, navigation, mount, stable status target, and script handoff only.</span>
-          </article>
-
-          <article class="role-card">
-            <strong>Canvas authority</strong>
-            <span>Owns canvas creation, final rendering, animation, and proof dataset.</span>
-          </article>
-
-          <article class="role-card">
-            <strong>Runtime chain</strong>
-            <span>Runtime remains source truth for sampled surface state consumed by canvas.</span>
-          </article>
-        </div>
-      </section>
-
-      <section class="receipts-panel" aria-labelledby="receipts-title">
-        <h2 id="receipts-title">Handoff Receipts</h2>
-        <p class="lead">These receipts are exposed for Gauges and route inspection.</p>
-
-        <ul class="receipts">
-          <li>
-            <span>HTML handoff</span>
-            <code>AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_CLEAN_STATUS_TNT_v1</code>
-          </li>
-          <li>
-            <span>Compatibility</span>
-            <code>AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_HANDOFF_TNT_v3</code>
-          </li>
-          <li>
-            <span>Compatibility</span>
-            <code>AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_HANDOFF_TNT_v2</code>
-          </li>
-          <li>
-            <span>Compatibility</span>
-            <code>AUDRALIA_HTML_ADOPTED_CANVAS_DOORWAY_HANDOFF_TNT_v1</code>
-          </li>
-          <li>
-            <span>Doorway route</span>
-            <code>/showroom/globe/audralia/index.js</code>
-          </li>
-          <li>
-            <span>Canvas authority</span>
-            <code>/assets/audralia/audralia.canvas.js</code>
-          </li>
-          <li>
-            <span>Runtime truth</span>
-            <code>/assets/audralia/audralia.runtime.js</code>
-          </li>
-          <li>
-            <span>GraphicBox</span>
-            <code>false</code>
-          </li>
-          <li>
-            <span>Image generation</span>
-            <code>false</code>
-          </li>
-          <li>
-            <span>Visual pass claimed</span>
-            <code>false</code>
-          </li>
-        </ul>
-      </section>
+      <details class="receipt">
+        <summary>Route receipt</summary>
+        <pre>SHOWROOM_ROOT_ASSET_SHRINE_RESTORATION_TNT_v1
+route=/showroom/
+classification=ROUTE_IDENTITY_REPAIR
+previous_problem=showroom_root_served_audralia_doorway_content
+showroom_role=asset_shrine,launchpad,gallery,routing_hub,proof_linked_index
+showroom_owns=route_index,launch_cards,public_navigation,asset_shrine_context
+showroom_does_not_own=audralia_canvas,earth_reference_runtime,products_logic,gauges_scoring,planet_rendering
+primary_routes=globe_split,earth,audralia,products,universe,gauges
+generated_image=false
+graphic_box=false
+streaming=false
+visual_pass_claimed=false</pre>
+      </details>
     </main>
 
-    <footer class="footer">
-      Audralia · HTML handoff cleaned · no GraphicBox · no image generation · shell, status target, mount, and script handoff only.
+    <footer>
+      SHOWROOM_ROOT_ASSET_SHRINE_RESTORATION_TNT_v1 · asset shrine · launchpad · no GraphicBox · no image generation.
     </footer>
   </div>
-
-  <script
-    type="module"
-    src="/showroom/globe/audralia/index.js?v=20260506-route-single-caller-v1"
-  ></script>
 </body>
 </html>

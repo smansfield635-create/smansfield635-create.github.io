@@ -1,14 +1,19 @@
+<!-- /explore/index.html -->
 <!doctype html>
 <html
   lang="en"
   data-route="/explore/"
-  data-page="explore-manor"
+  data-page="explore-manor-interplanetary-purple-route-map"
+  data-room="explore"
   data-former-label="manor"
-  data-version="G1-V5"
-  data-contract="EXPLORE_PURPLE_MANOR_ROUTE_MAP_SURFACE_RENEWAL_TNT_v1"
-  data-previous-contract="EXPLORE_MANOR_4_PLUS_12_TARGET_DESIGN_PLACEMENT_TNT_v4"
+  data-version="G1-V6"
+  data-contract="EXPLORE_INTERPLANETARY_PURPLE_MANOR_ROUTE_MAP_PAIR_TNT_v2"
+  data-previous-contract="EXPLORE_PURPLE_MANOR_ROUTE_MAP_SURFACE_RENEWAL_TNT_v1"
+  data-js-contract="EXPLORE_DIAMOND_CARD_MOTION_INTERPLANETARY_TNT_v2"
   data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
   data-animation-standard="UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1"
+  data-background-authority="/assets/dgb-interplanetary-background.js"
+  data-motion-authority="/explore/index.js"
   data-status="active"
   data-role="explore-manor-route-map-surface"
   data-purple-theme="active"
@@ -25,536 +30,514 @@
   <title>Explore the Manor · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Explore the Manor is the purple route-map surface for Diamond Gate Bridge: one manor, many rooms, one coherent map."
+    content="Explore the Manor is the purple interplanetary route-map surface for Diamond Gate Bridge: one manor, many rooms, one coherent map."
   >
 
   <link rel="stylesheet" href="/assets/diamond-orbit.css">
 
+  <script src="/assets/dgb-interplanetary-background.js?v=DGB_INTERPLANETARY_AXIS_FLOATING_FIGURES_BACKGROUND_JS_TNT_v1" defer></script>
+  <script src="/explore/index.js?v=EXPLORE_DIAMOND_CARD_MOTION_INTERPLANETARY_TNT_v2" defer></script>
+
   <style>
-    :root{
-      color-scheme:dark;
-      --bg:#04010d;
-      --ink:#fff4f9;
-      --muted:rgba(237,226,255,.80);
-      --faint:rgba(237,226,255,.50);
-      --gold:#f3c86f;
-      --gold2:#ffe8a3;
-      --violet:#b58cff;
-      --purple:#8f65ff;
-      --purple2:#5e35d6;
-      --plum:#2d0f58;
-      --magenta:#d083ff;
-      --blue:#8dd8ff;
-      --panel:rgba(16,8,34,.88);
-      --panel2:rgba(28,12,58,.72);
-      --line:rgba(190,151,255,.24);
-      --line2:rgba(243,200,111,.24);
-      --shadow:0 32px 110px rgba(0,0,0,.50);
-      --max:1180px;
-      --inner-orbit-duration:38s;
-      --outer-orbit-duration:58s;
+    :root {
+      color-scheme: dark;
+      --bg: #04010d;
+      --ink: #fff4f9;
+      --muted: rgba(237,226,255,.80);
+      --faint: rgba(237,226,255,.50);
+      --gold: #f3c86f;
+      --gold2: #ffe8a3;
+      --violet: #b58cff;
+      --purple: #8f65ff;
+      --purple2: #5e35d6;
+      --plum: #2d0f58;
+      --magenta: #d083ff;
+      --blue: #8dd8ff;
+      --panel: rgba(16,8,34,.88);
+      --panel2: rgba(28,12,58,.72);
+      --line: rgba(190,151,255,.24);
+      --line2: rgba(243,200,111,.24);
+      --shadow: 0 32px 110px rgba(0,0,0,.50);
+      --max: 1180px;
+      --inner-orbit-duration: 38s;
+      --outer-orbit-duration: 58s;
     }
 
-    *{box-sizing:border-box}
+    * { box-sizing: border-box; }
 
-    html{
-      min-width:320px;
-      min-height:100%;
-      background:var(--bg);
-      scroll-behavior:smooth;
-      overflow-x:hidden;
+    html {
+      min-width: 320px;
+      min-height: 100%;
+      background: var(--bg);
+      scroll-behavior: smooth;
+      overflow-x: hidden;
     }
 
-    body{
-      margin:0;
-      min-width:320px;
-      min-height:100vh;
-      color:var(--ink);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      line-height:1.5;
-      overflow-x:hidden;
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100svh;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% -10%,rgba(208,131,255,.24),transparent 30rem),
-        radial-gradient(circle at 8% 16%,rgba(143,101,255,.30),transparent 30rem),
-        radial-gradient(circle at 92% 22%,rgba(102,58,214,.26),transparent 30rem),
-        radial-gradient(circle at 52% 72%,rgba(243,200,111,.10),transparent 38rem),
-        linear-gradient(180deg,#10041f 0%,#070214 52%,#020106 100%);
-      -webkit-font-smoothing:antialiased;
-      text-rendering:geometricPrecision;
+        radial-gradient(circle at 50% -10%, rgba(208,131,255,.24), transparent 30rem),
+        radial-gradient(circle at 8% 16%, rgba(143,101,255,.30), transparent 30rem),
+        radial-gradient(circle at 92% 22%, rgba(102,58,214,.26), transparent 30rem),
+        radial-gradient(circle at 52% 72%, rgba(243,200,111,.10), transparent 38rem),
+        linear-gradient(180deg, #10041f 0%, #070214 52%, #020106 100%);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
     }
 
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
       background-image:
-        radial-gradient(circle,rgba(255,255,255,.20) 0 1px,transparent 1.5px),
-        linear-gradient(rgba(181,140,255,.055) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(181,140,255,.055) 1px,transparent 1px);
-      background-size:210px 250px,54px 54px,54px 54px;
-      opacity:.30;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.94),rgba(0,0,0,.60) 64%,rgba(0,0,0,.25));
+        radial-gradient(circle, rgba(255,255,255,.20) 0 1px, transparent 1.5px),
+        linear-gradient(rgba(181,140,255,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(181,140,255,.055) 1px, transparent 1px);
+      background-size: 210px 250px, 54px 54px, 54px 54px;
+      opacity: .30;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,.94), rgba(0,0,0,.60) 64%, rgba(0,0,0,.25));
     }
 
-    body::after{
-      content:"";
-      position:fixed;
-      inset:-20%;
-      z-index:0;
-      pointer-events:none;
+    a { color: inherit; text-decoration: none; }
+
+    .skip {
+      position: absolute;
+      left: -999px;
+      top: 8px;
+      z-index: 50;
+      padding: .75rem 1rem;
+      border-radius: 999px;
+      color: #09020f;
+      background: linear-gradient(135deg, var(--gold2), var(--gold));
+      font-weight: 950;
+    }
+
+    .skip:focus { left: 8px; }
+
+    .shell {
+      position: relative;
+      z-index: 2;
+      width: min(var(--max), calc(100% - 28px));
+      margin: 0 auto;
+      padding: max(22px, env(safe-area-inset-top)) 0 max(46px, env(safe-area-inset-bottom));
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 18px;
+      padding: 12px 0 18px;
+    }
+
+    .brand {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: .9rem;
+      min-width: 260px;
+    }
+
+    .brand-mark {
+      width: 4.2rem;
+      height: 4.2rem;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(243,200,111,.42);
+      border-radius: 1.15rem;
+      transform: rotate(45deg);
       background:
-        conic-gradient(from 45deg at 50% 50%,
-          transparent 0deg,
-          rgba(181,140,255,.045) 46deg,
-          transparent 92deg,
-          rgba(243,200,111,.035) 138deg,
-          transparent 184deg,
-          rgba(141,216,255,.035) 230deg,
-          transparent 276deg,
-          rgba(208,131,255,.045) 322deg,
-          transparent 360deg);
-      opacity:.55;
-      animation:purpleFieldTurn 48s linear infinite;
-    }
-
-    @keyframes purpleFieldTurn{
-      to{transform:rotate(360deg)}
-    }
-
-    a{color:inherit;text-decoration:none}
-
-    .skip{
-      position:absolute;
-      left:-999px;
-      top:8px;
-      z-index:50;
-      padding:.75rem 1rem;
-      border-radius:999px;
-      color:#09020f;
-      background:linear-gradient(135deg,var(--gold2),var(--gold));
-      font-weight:950;
-    }
-
-    .skip:focus{left:8px}
-
-    .shell{
-      position:relative;
-      z-index:2;
-      width:min(var(--max),calc(100% - 28px));
-      margin:0 auto;
-      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
-    }
-
-    .topbar{
-      display:grid;
-      grid-template-columns:auto 1fr;
-      align-items:center;
-      gap:18px;
-      padding:12px 0 18px;
-    }
-
-    .brand{
-      display:grid;
-      grid-template-columns:auto 1fr;
-      align-items:center;
-      gap:.9rem;
-      min-width:260px;
-    }
-
-    .brand-mark{
-      width:4.2rem;
-      height:4.2rem;
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(243,200,111,.42);
-      border-radius:1.15rem;
-      transform:rotate(45deg);
-      background:
-        radial-gradient(circle at 45% 22%,rgba(255,255,255,.28),transparent 40%),
-        radial-gradient(circle at 70% 76%,rgba(208,131,255,.42),transparent 58%),
-        linear-gradient(145deg,rgba(72,35,145,.96),rgba(10,3,28,.98));
+        radial-gradient(circle at 45% 22%, rgba(255,255,255,.28), transparent 40%),
+        radial-gradient(circle at 70% 76%, rgba(208,131,255,.42), transparent 58%),
+        linear-gradient(145deg, rgba(72,35,145,.96), rgba(10,3,28,.98));
       box-shadow:
         0 0 2.3rem rgba(181,140,255,.34),
         0 1.2rem 2.8rem rgba(0,0,0,.48),
         inset 0 1px 0 rgba(255,255,255,.18);
     }
 
-    .brand-mark span{
-      transform:rotate(-45deg);
-      font-weight:950;
-      letter-spacing:.04em;
-      color:rgba(255,244,249,.98);
+    .brand-mark span {
+      transform: rotate(-45deg);
+      font-weight: 950;
+      letter-spacing: .04em;
+      color: rgba(255,244,249,.98);
     }
 
-    .brand-copy{
-      display:grid;
-      gap:.18rem;
+    .brand-copy {
+      display: grid;
+      gap: .18rem;
     }
 
-    .brand-copy span{
-      color:var(--muted);
-      font-size:.74rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
+    .brand-copy span {
+      color: var(--muted);
+      font-size: .74rem;
+      font-weight: 950;
+      letter-spacing: .14em;
+      text-transform: uppercase;
     }
 
-    .brand-copy strong{
-      font-size:clamp(1.08rem,3vw,1.7rem);
-      line-height:1;
-      letter-spacing:-.045em;
+    .brand-copy strong {
+      font-size: clamp(1.08rem, 3vw, 1.7rem);
+      line-height: 1;
+      letter-spacing: -.045em;
     }
 
-    .nav{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:.48rem;
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: .48rem;
     }
 
-    .nav a{
-      min-height:2.25rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(210,178,255,.18);
-      border-radius:999px;
-      padding:.5rem .74rem;
-      color:rgba(244,238,255,.86);
-      background:rgba(181,140,255,.055);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.055em;
-      text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    .nav a {
+      min-height: 2.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(210,178,255,.18);
+      border-radius: 999px;
+      padding: .5rem .74rem;
+      color: rgba(244,238,255,.86);
+      background: rgba(181,140,255,.055);
+      font-size: .68rem;
+      font-weight: 950;
+      letter-spacing: .055em;
+      text-transform: uppercase;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .nav a[aria-current="page"]{
-      border-color:rgba(243,200,111,.88);
-      color:#09020f;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    .nav a[aria-current="page"] {
+      border-color: rgba(243,200,111,.88);
+      color: #09020f;
+      background: linear-gradient(135deg, #fff2a8, #f3c86f);
     }
 
-    .panel{
-      border:1px solid var(--line);
-      border-radius:clamp(1.35rem,5vw,2.35rem);
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: clamp(1.35rem, 5vw, 2.35rem);
       background:
-        radial-gradient(circle at 14% 0%,rgba(208,131,255,.16),transparent 28rem),
-        radial-gradient(circle at 86% 18%,rgba(143,101,255,.20),transparent 28rem),
-        linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.026)),
+        radial-gradient(circle at 14% 0%, rgba(208,131,255,.16), transparent 28rem),
+        radial-gradient(circle at 86% 18%, rgba(143,101,255,.20), transparent 28rem),
+        linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.026)),
         var(--panel);
-      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
-      overflow:hidden;
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.08);
+      overflow: hidden;
     }
 
-    .hero{
-      position:relative;
-      min-height:clamp(22rem,40vw,32rem);
-      display:grid;
-      align-content:center;
-      gap:1rem;
-      padding:clamp(1.45rem,5vw,3.4rem);
-      margin-top:.6rem;
-      isolation:isolate;
+    .hero {
+      position: relative;
+      min-height: clamp(22rem, 40vw, 32rem);
+      display: grid;
+      align-content: center;
+      gap: 1rem;
+      padding: clamp(1.45rem, 5vw, 3.4rem);
+      margin-top: .6rem;
+      isolation: isolate;
     }
 
-    .hero::before{
-      content:"";
-      position:absolute;
-      right:clamp(1rem,6vw,5.5rem);
-      top:50%;
-      z-index:0;
-      width:clamp(9rem,25vw,18rem);
-      height:clamp(9rem,25vw,18rem);
-      border:1px solid rgba(243,200,111,.20);
-      border-radius:2.9rem;
-      transform:translateY(-50%) rotate(45deg);
+    .hero::before {
+      content: "";
+      position: absolute;
+      right: clamp(1rem, 6vw, 5.5rem);
+      top: 50%;
+      z-index: 0;
+      width: clamp(9rem, 25vw, 18rem);
+      height: clamp(9rem, 25vw, 18rem);
+      border: 1px solid rgba(243,200,111,.20);
+      border-radius: 2.9rem;
+      transform: translateY(-50%) rotate(45deg);
       background:
-        radial-gradient(circle at 50% 28%,rgba(255,255,255,.14),transparent 42%),
-        radial-gradient(circle at 50% 72%,rgba(181,140,255,.26),transparent 62%),
-        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
-      animation:backgroundAnchorPulse 8s ease-in-out infinite;
-      pointer-events:none;
-      opacity:.58;
+        radial-gradient(circle at 50% 28%, rgba(255,255,255,.14), transparent 42%),
+        radial-gradient(circle at 50% 72%, rgba(181,140,255,.26), transparent 62%),
+        linear-gradient(145deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+      animation: backgroundAnchorPulse 8s ease-in-out infinite;
+      pointer-events: none;
+      opacity: .58;
     }
 
-    @keyframes backgroundAnchorPulse{
-      0%,100%{opacity:.44;filter:brightness(.95)}
-      50%{opacity:.66;filter:brightness(1.14)}
+    @keyframes backgroundAnchorPulse {
+      0%, 100% { opacity: .44; filter: brightness(.95); }
+      50% { opacity: .66; filter: brightness(1.14); }
     }
 
-    .kicker{
-      width:fit-content;
-      display:inline-flex;
-      align-items:center;
-      gap:.58rem;
-      padding:.58rem .95rem;
-      border:1px solid rgba(210,178,255,.20);
-      border-radius:999px;
-      color:rgba(244,238,255,.88);
-      background:rgba(181,140,255,.08);
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      position:relative;
-      z-index:2;
+    .kicker {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: .58rem;
+      padding: .58rem .95rem;
+      border: 1px solid rgba(210,178,255,.20);
+      border-radius: 999px;
+      color: rgba(244,238,255,.88);
+      background: rgba(181,140,255,.08);
+      font-size: .72rem;
+      font-weight: 950;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 2;
     }
 
-    .kicker::before{
-      content:"";
-      width:.72rem;
-      height:.72rem;
-      border-radius:.18rem;
-      transform:rotate(45deg);
-      background:linear-gradient(135deg,var(--magenta),var(--purple));
-      box-shadow:0 0 1.1rem rgba(181,140,255,.56);
+    .kicker::before {
+      content: "";
+      width: .72rem;
+      height: .72rem;
+      border-radius: .18rem;
+      transform: rotate(45deg);
+      background: linear-gradient(135deg, var(--magenta), var(--purple));
+      box-shadow: 0 0 1.1rem rgba(181,140,255,.56);
     }
 
-    h1{
-      margin:0;
-      max-width:950px;
-      font-size:clamp(3.1rem,10vw,7rem);
-      line-height:.84;
-      letter-spacing:-.105em;
-      text-wrap:balance;
-      position:relative;
-      z-index:2;
+    h1 {
+      margin: 0;
+      max-width: 950px;
+      font-size: clamp(3.1rem, 10vw, 7rem);
+      line-height: .84;
+      letter-spacing: -.105em;
+      text-wrap: balance;
+      position: relative;
+      z-index: 2;
     }
 
-    h2{
-      margin:0;
-      color:var(--gold);
-      font-size:clamp(1.45rem,4.7vw,2.65rem);
-      line-height:.98;
-      letter-spacing:-.07em;
-      text-wrap:balance;
-      position:relative;
-      z-index:2;
+    h2 {
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(1.45rem, 4.7vw, 2.65rem);
+      line-height: .98;
+      letter-spacing: -.07em;
+      text-wrap: balance;
+      position: relative;
+      z-index: 2;
     }
 
-    h3{
-      margin:0;
-      color:rgba(255,244,249,.98);
-      font-size:clamp(1.05rem,3vw,1.34rem);
-      line-height:1.08;
-      letter-spacing:-.035em;
+    h3 {
+      margin: 0;
+      color: rgba(255,244,249,.98);
+      font-size: clamp(1.05rem, 3vw, 1.34rem);
+      line-height: 1.08;
+      letter-spacing: -.035em;
     }
 
-    p{
-      margin:0;
-      color:var(--muted);
-      font-size:clamp(.98rem,2.7vw,1.16rem);
-      line-height:1.55;
+    p {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(.98rem, 2.7vw, 1.16rem);
+      line-height: 1.55;
     }
 
-    .lead{
-      max-width:900px;
-      position:relative;
-      z-index:2;
+    .lead {
+      max-width: 900px;
+      position: relative;
+      z-index: 2;
     }
 
-    .quote{
-      max-width:880px;
-      padding:1rem 1.1rem;
-      border:1px solid rgba(181,140,255,.26);
-      border-radius:1.2rem;
-      color:rgba(255,244,249,.93);
+    .quote {
+      max-width: 880px;
+      padding: 1rem 1.1rem;
+      border: 1px solid rgba(181,140,255,.26);
+      border-radius: 1.2rem;
+      color: rgba(255,244,249,.93);
       background:
-        radial-gradient(circle at 0% 0%,rgba(208,131,255,.14),transparent 62%),
+        radial-gradient(circle at 0% 0%, rgba(208,131,255,.14), transparent 62%),
         rgba(143,101,255,.075);
-      font-weight:850;
-      position:relative;
-      z-index:2;
+      font-weight: 850;
+      position: relative;
+      z-index: 2;
     }
 
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.62rem;
-      margin-top:.2rem;
-      position:relative;
-      z-index:2;
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .62rem;
+      margin-top: .2rem;
+      position: relative;
+      z-index: 2;
     }
 
-    .button{
-      min-height:2.65rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(210,178,255,.18);
-      border-radius:999px;
-      padding:.65rem 1rem;
-      background:rgba(181,140,255,.065);
-      color:rgba(244,238,255,.90);
-      font-size:.76rem;
-      font-weight:950;
-      letter-spacing:.055em;
-      text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    .button {
+      min-height: 2.65rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(210,178,255,.18);
+      border-radius: 999px;
+      padding: .65rem 1rem;
+      background: rgba(181,140,255,.065);
+      color: rgba(244,238,255,.90);
+      font-size: .76rem;
+      font-weight: 950;
+      letter-spacing: .055em;
+      text-transform: uppercase;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
     }
 
     .button:hover,
-    .button:focus-visible{
-      transform:translateY(-2px);
-      border-color:rgba(243,200,111,.62);
-      outline:none;
+    .button:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(243,200,111,.62);
+      outline: none;
     }
 
-    .button.gold{
-      border-color:rgba(243,200,111,.9);
-      color:#09020f;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
-      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+    .button.gold {
+      border-color: rgba(243,200,111,.9);
+      color: #09020f;
+      background: linear-gradient(135deg, #fff2a8, #f3c86f);
+      box-shadow: 0 .8rem 1.8rem rgba(243,200,111,.13);
     }
 
-    .section{
-      margin-top:1.15rem;
-      padding:clamp(1rem,3vw,1.45rem);
-      display:grid;
-      gap:1.05rem;
+    .section {
+      margin-top: 1.15rem;
+      padding: clamp(1rem, 3vw, 1.45rem);
+      display: grid;
+      gap: 1.05rem;
     }
 
-    .explore-stage{
-      position:relative;
-      min-height:clamp(37rem,76vw,56rem);
-      display:grid;
-      place-items:center;
-      overflow:hidden;
-      isolation:isolate;
-      border:1px solid rgba(190,151,255,.20);
-      border-radius:clamp(1.35rem,5vw,2.35rem);
+    .explore-stage {
+      position: relative;
+      min-height: clamp(37rem, 76vw, 56rem);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      isolation: isolate;
+      border: 1px solid rgba(190,151,255,.20);
+      border-radius: clamp(1.35rem, 5vw, 2.35rem);
       background:
-        radial-gradient(circle at 50% 44%,rgba(181,140,255,.20),transparent 20rem),
-        radial-gradient(circle at 50% 50%,rgba(243,200,111,.055),transparent 18rem),
-        linear-gradient(180deg,rgba(10,3,25,.76),rgba(4,2,12,.94));
+        radial-gradient(circle at 50% 44%, rgba(181,140,255,.20), transparent 20rem),
+        radial-gradient(circle at 50% 50%, rgba(243,200,111,.055), transparent 18rem),
+        linear-gradient(180deg, rgba(10,3,25,.76), rgba(4,2,12,.94));
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,.06),
         inset 0 0 90px rgba(143,101,255,.08);
     }
 
     .explore-stage::before,
-    .explore-stage::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      border-radius:50%;
-      transform:translate(-50%,-50%);
-      pointer-events:none;
+    .explore-stage::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
     }
 
-    .explore-stage::before{
-      width:min(84%,38rem);
-      height:min(84%,38rem);
-      border:1px solid rgba(243,200,111,.10);
-      box-shadow:0 0 3.4rem rgba(181,140,255,.16);
+    .explore-stage::before {
+      width: min(84%, 38rem);
+      height: min(84%, 38rem);
+      border: 1px solid rgba(243,200,111,.10);
+      box-shadow: 0 0 3.4rem rgba(181,140,255,.16);
     }
 
-    .explore-stage::after{
-      width:min(58%,25rem);
-      height:min(58%,25rem);
-      border:1px solid rgba(181,140,255,.22);
+    .explore-stage::after {
+      width: min(58%, 25rem);
+      height: min(58%, 25rem);
+      border: 1px solid rgba(181,140,255,.22);
     }
 
-    .explore-center-anchor{
-      position:absolute;
-      left:50%;
-      top:50%;
-      z-index:0;
-      display:grid;
-      place-items:center;
-      width:clamp(8.5rem,22vw,13rem);
-      height:clamp(8.5rem,22vw,13rem);
-      transform:translate(-50%,-50%) rotate(45deg);
-      border:1px solid rgba(243,200,111,.16);
-      border-radius:1.9rem;
+    .explore-center-anchor {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 0;
+      display: grid;
+      place-items: center;
+      width: clamp(8.5rem, 22vw, 13rem);
+      height: clamp(8.5rem, 22vw, 13rem);
+      transform: translate(-50%, -50%) rotate(45deg);
+      border: 1px solid rgba(243,200,111,.16);
+      border-radius: 1.9rem;
       background:
-        radial-gradient(circle at 35% 28%,rgba(255,255,255,.16),transparent 31%),
-        linear-gradient(135deg,rgba(181,140,255,.50),rgba(45,15,88,.50));
+        radial-gradient(circle at 35% 28%, rgba(255,255,255,.16), transparent 31%),
+        linear-gradient(135deg, rgba(181,140,255,.50), rgba(45,15,88,.50));
       box-shadow:
         0 0 82px rgba(181,140,255,.24),
         inset 0 0 26px rgba(255,255,255,.05);
-      opacity:.55;
-      pointer-events:none;
-      animation:exploreAnchorPulse 7s ease-in-out infinite;
+      opacity: .55;
+      pointer-events: none;
+      animation: exploreAnchorPulse 7s ease-in-out infinite;
     }
 
-    .explore-center-anchor::after{
-      content:"";
-      position:absolute;
-      inset:14%;
-      border-radius:1.25rem;
-      border:1px solid rgba(255,255,255,.06);
+    .explore-center-anchor::after {
+      content: "";
+      position: absolute;
+      inset: 14%;
+      border-radius: 1.25rem;
+      border: 1px solid rgba(255,255,255,.06);
     }
 
-    .explore-center-anchor span{
-      display:block;
-      transform:rotate(-45deg);
-      color:rgba(255,244,249,.88);
-      text-align:center;
-      font-size:.78rem;
-      font-weight:950;
-      letter-spacing:.15em;
-      text-transform:uppercase;
-      line-height:1.2;
+    .explore-center-anchor span {
+      display: block;
+      transform: rotate(-45deg);
+      color: rgba(255,244,249,.88);
+      text-align: center;
+      font-size: .78rem;
+      font-weight: 950;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      line-height: 1.2;
     }
 
-    @keyframes exploreAnchorPulse{
-      0%,100%{transform:translate(-50%,-50%) rotate(45deg) scale(.98);opacity:.46}
-      50%{transform:translate(-50%,-50%) rotate(45deg) scale(1.02);opacity:.64}
+    @keyframes exploreAnchorPulse {
+      0%, 100% { transform: translate(-50%, -50%) rotate(45deg) scale(.98); opacity: .46; }
+      50% { transform: translate(-50%, -50%) rotate(45deg) scale(1.02); opacity: .64; }
     }
 
-    .orbit-ring{
-      position:absolute;
-      left:50%;
-      top:50%;
-      border-radius:999px;
-      pointer-events:none;
-      transform:translate(-50%,-50%);
+    .orbit-ring {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      border-radius: 999px;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
     }
 
-    .orbit-ring.inner{
-      width:9.8rem;
-      height:9.8rem;
-      z-index:2;
-      animation:orbitClockwise var(--inner-orbit-duration) linear infinite;
+    .orbit-ring.inner {
+      width: 9.8rem;
+      height: 9.8rem;
+      z-index: 2;
+      animation: orbitClockwise var(--inner-orbit-duration) linear infinite;
     }
 
-    .orbit-ring.outer{
-      width:31.5rem;
-      height:31.5rem;
-      z-index:4;
-      animation:orbitCounter var(--outer-orbit-duration) linear infinite;
+    .orbit-ring.outer {
+      width: 31.5rem;
+      height: 31.5rem;
+      z-index: 4;
+      animation: orbitCounter var(--outer-orbit-duration) linear infinite;
     }
 
-    @keyframes orbitClockwise{
-      to{transform:translate(-50%,-50%) rotate(360deg)}
+    @keyframes orbitClockwise {
+      to { transform: translate(-50%, -50%) rotate(360deg); }
     }
 
-    @keyframes orbitCounter{
-      to{transform:translate(-50%,-50%) rotate(-360deg)}
+    @keyframes orbitCounter {
+      to { transform: translate(-50%, -50%) rotate(-360deg); }
     }
 
-    .diamond-node{
-      position:absolute;
-      left:50%;
-      top:50%;
-      display:grid;
-      place-items:center;
-      overflow:hidden;
-      width:5.9rem;
-      height:5.9rem;
-      margin:-2.95rem 0 0 -2.95rem;
-      border:1px solid rgba(243,200,111,.20);
-      border-radius:1.55rem;
+    .diamond-node {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      width: 5.9rem;
+      height: 5.9rem;
+      margin: -2.95rem 0 0 -2.95rem;
+      border: 1px solid rgba(243,200,111,.20);
+      border-radius: 1.55rem;
       background:
-        radial-gradient(circle at 30% 25%,rgba(255,255,255,.36),rgba(255,255,255,.09) 24%,transparent 42%),
-        radial-gradient(circle at 72% 78%,rgba(45,15,88,.44),transparent 48%),
-        linear-gradient(145deg,rgba(190,151,255,.98),rgba(143,101,255,.95) 50%,rgba(94,53,214,.98) 100%);
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,.36), rgba(255,255,255,.09) 24%, transparent 42%),
+        radial-gradient(circle at 72% 78%, rgba(45,15,88,.44), transparent 48%),
+        linear-gradient(145deg, rgba(190,151,255,.98), rgba(143,101,255,.95) 50%, rgba(94,53,214,.98) 100%);
       box-shadow:
         0 16px 34px rgba(39,18,116,.38),
         0 0 30px rgba(181,140,255,.26),
@@ -565,359 +548,327 @@
         translateY(var(--radius))
         rotate(calc(-1 * var(--angle)))
         rotate(45deg);
-      pointer-events:auto;
-      backface-visibility:hidden;
-      transform-style:preserve-3d;
+      pointer-events: auto;
+      backface-visibility: hidden;
+      transform-style: preserve-3d;
     }
 
-    .diamond-node::before{
-      content:"";
-      position:absolute;
-      inset:8%;
-      border-radius:1.15rem;
-      background:linear-gradient(135deg,rgba(255,255,255,.20),transparent 55%);
-      opacity:.76;
-      pointer-events:none;
-      transform:translateZ(1px);
+    .orbit-ring.inner .diamond-node {
+      --radius: -4.55rem;
+      width: 5.35rem;
+      height: 5.35rem;
+      margin: -2.675rem 0 0 -2.675rem;
     }
 
-    .diamond-node::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius:1.55rem;
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.06),
-        inset 0 -18px 24px rgba(21,9,62,.18);
-      pointer-events:none;
-    }
-
-    .orbit-ring.inner .diamond-node{
-      --radius:-4.55rem;
-      width:5.35rem;
-      height:5.35rem;
-      margin:-2.675rem 0 0 -2.675rem;
-      background:
-        radial-gradient(circle at 28% 24%,rgba(255,255,255,.38),rgba(255,255,255,.10) 24%,transparent 43%),
-        linear-gradient(145deg,rgba(211,174,255,.98),rgba(143,101,255,.97) 52%,rgba(76,42,186,.98));
-      box-shadow:
-        0 22px 42px rgba(39,18,116,.45),
-        0 0 38px rgba(181,140,255,.34),
-        inset 0 1px 0 rgba(255,255,255,.25),
-        inset 0 -12px 22px rgba(22,10,65,.23);
-    }
-
-    .orbit-ring.outer .diamond-node{
-      --radius:-15.45rem;
-      width:5.1rem;
-      height:5.1rem;
-      margin:-2.55rem 0 0 -2.55rem;
+    .orbit-ring.outer .diamond-node {
+      --radius: -15.45rem;
+      width: 5.1rem;
+      height: 5.1rem;
+      margin: -2.55rem 0 0 -2.55rem;
     }
 
     .diamond-node:hover,
-    .diamond-node:focus{
-      outline:none;
-      border-color:rgba(243,200,111,.74);
-      filter:brightness(1.07);
+    .diamond-node:focus {
+      outline: none;
+      border-color: rgba(243,200,111,.74);
+      filter: brightness(1.07);
     }
 
-    .diamond-label-shell{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      width:100%;
-      height:100%;
-      padding:.35rem;
-      transform:rotate(-45deg);
-      text-align:center;
+    .diamond-label-shell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      padding: .35rem;
+      transform: rotate(-45deg);
+      text-align: center;
     }
 
-    .diamond-label-text{
-      display:block;
-      max-width:4.65rem;
-      color:rgba(255,244,249,.98);
-      text-align:center;
-      font-size:.62rem;
-      font-weight:950;
-      letter-spacing:.09em;
-      line-height:1.1;
-      text-transform:uppercase;
-      text-shadow:0 2px 12px rgba(0,0,0,.82);
+    .diamond-label-text {
+      display: block;
+      max-width: 4.65rem;
+      color: rgba(255,244,249,.98);
+      text-align: center;
+      font-size: .62rem;
+      font-weight: 950;
+      letter-spacing: .09em;
+      line-height: 1.1;
+      text-transform: uppercase;
+      text-shadow: 0 2px 12px rgba(0,0,0,.82);
     }
 
-    .diamond-label-sub{
-      display:block;
-      margin-top:.14rem;
-      color:rgba(237,226,255,.74);
-      font-size:.46rem;
-      font-weight:850;
-      letter-spacing:.07em;
-      line-height:1;
-      text-transform:uppercase;
+    .diamond-label-sub {
+      display: block;
+      margin-top: .14rem;
+      color: rgba(237,226,255,.74);
+      font-size: .46rem;
+      font-weight: 850;
+      letter-spacing: .07em;
+      line-height: 1;
+      text-transform: uppercase;
     }
 
-    .orbit-ring.inner .diamond-label-text{
-      animation:keepTextUprightInner var(--inner-orbit-duration) linear infinite;
+    .orbit-ring.inner .diamond-label-text {
+      animation: keepTextUprightInner var(--inner-orbit-duration) linear infinite;
     }
 
-    .orbit-ring.outer .diamond-label-text{
-      animation:keepTextUprightOuter var(--outer-orbit-duration) linear infinite;
+    .orbit-ring.outer .diamond-label-text {
+      animation: keepTextUprightOuter var(--outer-orbit-duration) linear infinite;
     }
 
-    @keyframes keepTextUprightInner{
-      to{transform:rotate(-360deg)}
+    @keyframes keepTextUprightInner {
+      to { transform: rotate(-360deg); }
     }
 
-    @keyframes keepTextUprightOuter{
-      to{transform:rotate(360deg)}
+    @keyframes keepTextUprightOuter {
+      to { transform: rotate(360deg); }
     }
 
     .map-grid,
-    .room-grid{
-      display:grid;
-      gap:.75rem;
+    .room-grid {
+      display: grid;
+      gap: .85rem;
     }
 
-    .map-grid{
-      grid-template-columns:repeat(4,minmax(0,1fr));
+    .map-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
-    .room-grid{
-      grid-template-columns:repeat(6,minmax(0,1fr));
+    .room-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
     }
 
     .info-card,
-    .room-card{
-      min-height:10rem;
-      display:grid;
-      gap:.55rem;
-      align-content:start;
-      padding:1rem;
-      border:1px solid rgba(210,178,255,.16);
-      border-radius:1.2rem;
+    .room-card {
+      min-height: 10rem;
+      display: grid;
+      gap: .55rem;
+      align-content: start;
+      padding: 1rem;
+      border: 1px solid rgba(210,178,255,.16);
+      border-radius: 1.2rem;
       background:
-        radial-gradient(circle at 20% 0%,rgba(181,140,255,.14),transparent 60%),
+        radial-gradient(circle at 20% 0%, rgba(181,140,255,.14), transparent 60%),
         rgba(181,140,255,.045);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
     }
 
-    .room-card{
-      min-height:6.6rem;
-      place-items:center;
-      text-align:center;
+    .room-card {
+      min-height: 7.6rem;
+      place-items: center;
+      text-align: center;
     }
 
     .info-card:hover,
     .room-card:hover,
     .info-card:focus-visible,
-    .room-card:focus-visible{
-      transform:translateY(-3px);
-      border-color:rgba(243,200,111,.48);
-      outline:none;
+    .room-card:focus-visible {
+      transform: translateY(-3px);
+      border-color: rgba(243,200,111,.48);
+      outline: none;
       background:
-        radial-gradient(circle at 20% 0%,rgba(181,140,255,.20),transparent 60%),
+        radial-gradient(circle at 20% 0%, rgba(181,140,255,.20), transparent 60%),
         rgba(181,140,255,.07);
     }
 
     .info-card b,
-    .room-card b{
-      color:var(--gold);
-      font-size:.68rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+    .room-card small {
+      color: var(--gold);
+      font-size: .68rem;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
     }
 
     .info-card strong,
-    .room-card strong{
-      color:rgba(255,244,249,.98);
-      font-size:1.05rem;
-      line-height:1.1;
+    .room-card strong {
+      color: rgba(255,244,249,.98);
+      font-size: 1.05rem;
+      line-height: 1.1;
     }
 
     .info-card span,
-    .room-card span{
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.4;
+    .room-card span {
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.4;
     }
 
-    .status-card{
-      margin-top:1.15rem;
-      border:1px solid rgba(210,178,255,.16);
-      border-radius:1.2rem;
-      background:rgba(181,140,255,.055);
-      padding:1rem;
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.55;
+    .status-card {
+      margin-top: 1.15rem;
+      border: 1px solid rgba(210,178,255,.16);
+      border-radius: 1.2rem;
+      background: rgba(181,140,255,.055);
+      padding: 1rem;
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.55;
     }
 
-    .status-card strong{
-      color:var(--gold);
+    .status-card strong {
+      color: var(--gold);
     }
 
     .route-receipt,
     [data-route-receipt],
     [data-contract-receipt],
-    [data-debug-receipt]{
-      display:none!important;
-      visibility:hidden!important;
-      overflow:hidden!important;
-      width:0!important;
-      height:0!important;
-      max-width:0!important;
-      max-height:0!important;
-      margin:0!important;
-      padding:0!important;
-      border:0!important;
-      opacity:0!important;
-      pointer-events:none!important;
-      position:absolute!important;
-      inset:auto!important;
-      clip-path:inset(50%)!important;
-      white-space:nowrap!important;
+    [data-debug-receipt] {
+      display: none !important;
+      visibility: hidden !important;
+      overflow: hidden !important;
+      width: 0 !important;
+      height: 0 !important;
+      max-width: 0 !important;
+      max-height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      position: absolute !important;
+      inset: auto !important;
+      clip-path: inset(50%) !important;
+      white-space: nowrap !important;
     }
 
-    footer{
-      padding:1.35rem 0 .5rem;
-      color:var(--faint);
-      text-align:center;
-      font-size:.76rem;
+    footer {
+      padding: 1.35rem 0 .5rem;
+      color: var(--faint);
+      text-align: center;
+      font-size: .76rem;
     }
 
-    @media (max-width:1080px){
-      .map-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .room-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    @media (max-width: 1080px) {
+      .map-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .room-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
 
-    @media (max-width:980px){
-      .topbar{
-        grid-template-columns:1fr;
-        align-items:start;
+    @media (max-width: 980px) {
+      .topbar {
+        grid-template-columns: 1fr;
+        align-items: start;
       }
 
-      .nav{justify-content:flex-start}
+      .nav { justify-content: flex-start; }
     }
 
-    @media (max-width:720px){
-      .shell{width:min(100% - 22px,var(--max))}
-      h1{font-size:clamp(3rem,17vw,5rem)}
+    @media (max-width: 720px) {
+      .shell { width: min(100% - 22px, var(--max)); }
+      h1 { font-size: clamp(3rem, 17vw, 5rem); }
 
-      .hero{
-        min-height:26rem;
-        padding:1rem;
+      .hero {
+        min-height: 26rem;
+        padding: 1rem;
       }
 
-      .explore-stage{
-        min-height:35rem;
+      .explore-stage {
+        min-height: 35rem;
       }
 
-      .orbit-ring.inner{
-        width:8rem;
-        height:8rem;
+      .orbit-ring.inner {
+        width: 8rem;
+        height: 8rem;
       }
 
-      .orbit-ring.outer{
-        width:22.8rem;
-        height:22.8rem;
+      .orbit-ring.outer {
+        width: 22.8rem;
+        height: 22.8rem;
       }
 
-      .orbit-ring.inner .diamond-node{
-        --radius:-3.65rem;
-        width:4.6rem;
-        height:4.6rem;
-        margin:-2.3rem 0 0 -2.3rem;
+      .orbit-ring.inner .diamond-node {
+        --radius: -3.65rem;
+        width: 4.6rem;
+        height: 4.6rem;
+        margin: -2.3rem 0 0 -2.3rem;
       }
 
-      .orbit-ring.outer .diamond-node{
-        --radius:-10.8rem;
-        width:3.95rem;
-        height:3.95rem;
-        margin:-1.975rem 0 0 -1.975rem;
+      .orbit-ring.outer .diamond-node {
+        --radius: -10.8rem;
+        width: 3.95rem;
+        height: 3.95rem;
+        margin: -1.975rem 0 0 -1.975rem;
       }
 
-      .diamond-label-text{
-        max-width:3.1rem;
-        font-size:.47rem;
-        letter-spacing:.06em;
+      .diamond-label-text {
+        max-width: 3.1rem;
+        font-size: .47rem;
+        letter-spacing: .06em;
       }
 
-      .diamond-label-sub{
-        display:none;
-      }
+      .diamond-label-sub { display: none; }
 
       .map-grid,
-      .room-grid{
-        grid-template-columns:1fr;
+      .room-grid {
+        grid-template-columns: 1fr;
       }
 
-      .actions{
-        display:grid;
+      .actions { display: grid; }
+
+      .button { width: 100%; }
+    }
+
+    @media (max-width: 460px) {
+      .explore-stage { min-height: 30rem; }
+
+      .explore-center-anchor {
+        width: 7.9rem;
+        height: 7.9rem;
       }
 
-      .button{
-        width:100%;
+      .explore-center-anchor span { font-size: .62rem; }
+
+      .orbit-ring.inner {
+        width: 7rem;
+        height: 7rem;
+      }
+
+      .orbit-ring.outer {
+        width: 19.4rem;
+        height: 19.4rem;
+      }
+
+      .orbit-ring.inner .diamond-node {
+        --radius: -3.15rem;
+        width: 4.2rem;
+        height: 4.2rem;
+        margin: -2.1rem 0 0 -2.1rem;
+      }
+
+      .orbit-ring.outer .diamond-node {
+        --radius: -9.15rem;
+        width: 3.45rem;
+        height: 3.45rem;
+        margin: -1.725rem 0 0 -1.725rem;
+      }
+
+      .diamond-label-text {
+        max-width: 2.75rem;
+        font-size: .42rem;
       }
     }
 
-    @media (max-width:460px){
-      .explore-stage{
-        min-height:30rem;
-      }
-
-      .explore-center-anchor{
-        width:7.9rem;
-        height:7.9rem;
-      }
-
-      .explore-center-anchor span{
-        font-size:.62rem;
-      }
-
-      .orbit-ring.inner{
-        width:7rem;
-        height:7rem;
-      }
-
-      .orbit-ring.outer{
-        width:19.4rem;
-        height:19.4rem;
-      }
-
-      .orbit-ring.inner .diamond-node{
-        --radius:-3.15rem;
-        width:4.2rem;
-        height:4.2rem;
-        margin:-2.1rem 0 0 -2.1rem;
-      }
-
-      .orbit-ring.outer .diamond-node{
-        --radius:-9.15rem;
-        width:3.45rem;
-        height:3.45rem;
-        margin:-1.725rem 0 0 -1.725rem;
-      }
-
-      .diamond-label-text{
-        max-width:2.75rem;
-        font-size:.42rem;
-      }
-    }
-
-    @media (prefers-reduced-motion:reduce){
+    @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
-      *::after{
-        scroll-behavior:auto!important;
-        animation-duration:.01ms!important;
-        animation-iteration-count:1!important;
-        transition-duration:.01ms!important;
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
       }
     }
   </style>
 </head>
 
-<body>
+<body
+  data-route="/explore/"
+  data-room="explore"
+  data-contract="EXPLORE_INTERPLANETARY_PURPLE_MANOR_ROUTE_MAP_PAIR_TNT_v2"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-visual-pass-claimed="false"
+>
   <a class="skip" href="#main">Skip to Explore the Manor</a>
 
   <div class="shell">
@@ -950,7 +901,7 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Explore · Purple Route Map Surface</div>
+        <div class="kicker">Explore · Purple Interplanetary Route Map</div>
         <h1 id="page-title">One Manor. Many rooms.</h1>
 
         <p class="lead">
@@ -1029,7 +980,7 @@
               <span class="diamond-label-shell"><b class="diamond-label-text">Universe</b></span>
             </a>
 
-            <a class="diamond-node" style="--angle:180deg" href="/showroom/globe/" aria-label="Audralia Home World">
+            <a class="diamond-node" style="--angle:180deg" href="/showroom/globe/audralia/" aria-label="Audralia Home World">
               <span class="diamond-label-shell"><b class="diamond-label-text">Audralia</b></span>
             </a>
 
@@ -1045,7 +996,7 @@
               <span class="diamond-label-shell"><b class="diamond-label-text">Meet<br>Sean</b></span>
             </a>
 
-            <a class="diamond-node" style="--angle:300deg" href="/five-flags/" aria-label="Five Flags">
+            <a class="diamond-node" style="--angle:300deg" href="/products/five-flags/" aria-label="Five Flags">
               <span class="diamond-label-shell"><b class="diamond-label-text">Five<br>Flags</b></span>
             </a>
 
@@ -1057,7 +1008,7 @@
 
         <aside class="status-card" aria-label="Explore status">
           <strong>Explore status:</strong>
-          Four primary diamonds remain close to the purple center map anchor. Twelve support routes remain outside and readable. Route receipt is preserved outside public flow.
+          Four primary diamonds remain close to the purple center map anchor. Twelve support routes remain outside and readable. Route cards below are promoted into diamond surfaces by the Explore motion contract.
         </aside>
       </section>
 
@@ -1096,30 +1047,94 @@
         <div class="kicker">Rooms in the Manor</div>
         <h2 id="rooms-title">Each room keeps its own job.</h2>
 
-        <div class="room-grid">
-          <a class="room-card" href="/"><strong>Compass</strong></a>
-          <a class="room-card" href="/door/"><strong>Door</strong></a>
-          <a class="room-card" href="/home/"><strong>Home</strong></a>
-          <a class="room-card" href="/nine-summits/"><strong>Nine Summits</strong></a>
-          <a class="room-card" href="/nine-summits-of-love/"><strong>Book</strong></a>
-          <a class="room-card" href="/nine-summits/universe/"><strong>Universe</strong></a>
-          <a class="room-card" href="/products/"><strong>Products</strong></a>
-          <a class="room-card" href="/showroom/"><strong>Showroom</strong></a>
-          <a class="room-card" href="/frontier/"><strong>Frontier</strong></a>
-          <a class="room-card" href="/about-this-underdog/"><strong>Underdog</strong></a>
-          <a class="room-card" href="/meet-sean-mansfield/"><strong>Meet Sean</strong></a>
-          <a class="room-card" href="/gauges/"><strong>Gauges</strong></a>
+        <div class="room-grid route-grid" data-diamond-motion-grid="explore-routes">
+          <a class="room-card route-card compass" href="/">
+            <small>Root</small>
+            <strong>Compass</strong>
+            <span>Orient</span>
+          </a>
+
+          <a class="room-card route-card door" href="/door/">
+            <small>Entry</small>
+            <strong>Door</strong>
+            <span>Admit</span>
+          </a>
+
+          <a class="room-card route-card home" href="/home/">
+            <small>Receiver</small>
+            <strong>Home</strong>
+            <span>Stabilize</span>
+          </a>
+
+          <a class="room-card route-card summits" href="/nine-summits/">
+            <small>Gate</small>
+            <strong>Nine Summits</strong>
+            <span>Climb</span>
+          </a>
+
+          <a class="room-card route-card book" href="/nine-summits-of-love/">
+            <small>Book</small>
+            <strong>Love</strong>
+            <span>Read</span>
+          </a>
+
+          <a class="room-card route-card metaverse" href="/nine-summits/universe/">
+            <small>Globe</small>
+            <strong>Universe</strong>
+            <span>World</span>
+          </a>
+
+          <a class="room-card route-card product" href="/products/">
+            <small>Use</small>
+            <strong>Products</strong>
+            <span>Apply</span>
+          </a>
+
+          <a class="room-card route-card show" href="/showroom/">
+            <small>Atrium</small>
+            <strong>Showroom</strong>
+            <span>Inspect</span>
+          </a>
+
+          <a class="room-card route-card frontier" href="/frontier/">
+            <small>Edge</small>
+            <strong>Frontier</strong>
+            <span>Expand</span>
+          </a>
+
+          <a class="room-card route-card underdog" href="/about-this-underdog/">
+            <small>Voice</small>
+            <strong>Underdog</strong>
+            <span>Signal</span>
+          </a>
+
+          <a class="room-card route-card sean" href="/meet-sean-mansfield/">
+            <small>Origin</small>
+            <strong>Meet Sean</strong>
+            <span>Context</span>
+          </a>
+
+          <a class="room-card route-card gauge" href="/gauges/">
+            <small>Proof</small>
+            <strong>Gauges</strong>
+            <span>Measure</span>
+          </a>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-EXPLORE_PURPLE_MANOR_ROUTE_MAP_SURFACE_RENEWAL_TNT_v1
-previous=EXPLORE_MANOR_4_PLUS_12_TARGET_DESIGN_PLACEMENT_TNT_v4
+EXPLORE_INTERPLANETARY_PURPLE_MANOR_ROUTE_MAP_PAIR_TNT_v2
+previous=EXPLORE_PURPLE_MANOR_ROUTE_MAP_SURFACE_RENEWAL_TNT_v1
 route=/explore/
 page=explore_manor
+room=explore
 former_label=manor
 role=explore_manor_route_map_surface
 purple_theme=active
+background_authority=/assets/dgb-interplanetary-background.js
+background_contract=DGB_INTERPLANETARY_AXIS_FLOATING_FIGURES_BACKGROUND_JS_TNT_v1
+motion_authority=/explore/index.js
+motion_contract=EXPLORE_DIAMOND_CARD_MOTION_INTERPLANETARY_TNT_v2
 tic_tac_toe_protocol=1_to_4_to_1,1_to_16_to_1,1_to_256_to_1
 message=one_manor_many_rooms
 alignment_sequence=TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2
@@ -1127,19 +1142,20 @@ shared_css=/assets/diamond-orbit.css
 animation_standard=UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1
 center=explore_manor_map_background_anchor_only
 design_object=4_plus_12_diamond_route_field
-visual_system=purple_target_design_inner_four_center_outer_twelve_route_orbit
+visual_system=purple_interplanetary_target_design_inner_four_center_outer_twelve_route_orbit
 ring_system=4_plus_12
 inner_ring=home,nine_summits,showroom,frontier
 outer_ring=compass,door,products,gauges,book,universe,audralia,laws,underdog,meet_sean,five_flags,return
-z_index_law=ambient_background,explore_anchor_background,inner_orbit_field,outer_orbit_field,route_labels
+route_cards=diamond_motion_surfaces
+z_index_law=interplanetary_background,explore_anchor_background,inner_orbit_field,outer_orbit_field,route_labels,diamond_route_cards
 overlap_law=inner_four_moved_close_to_center_anchor_but_remain_below_outer_ring
 animation=inner_clockwise_outer_counterclockwise
 label_law=diamond_labels_counter_rotate_to_remain_readable
 mobile_law=compact_4_plus_12_orbit_no_hidden_nodes
-renewed=purple_theme_strengthened,route_map_surface_deepened,brand_anchor_cleaned,receipt_preserved
+renewed=interplanetary_background_added,route_cards_promoted_to_diamond_surfaces,purple_theme_preserved,canonical_audralia_and_five_flags_routes_corrected
 preserved=diamond_style,diamond_shape,outer_twelve_support_routes,explore_manor_route_map_surface,one_manor_many_rooms,animated_diamond_routes
-route_owns=explore_map,4_plus_12_route_field,animated_diamond_routes,256_scope_expression,purple_route_identity
-route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
+route_owns=explore_map,4_plus_12_route_field,animated_diamond_routes,diamond_route_cards,256_scope_expression,purple_route_identity
+route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic,canvas_creation,graphicbox
 heavy_runtime_loaded=false
 render_files_touched=false
 instrument_touched=false
@@ -1152,7 +1168,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      EXPLORE_PURPLE_MANOR_ROUTE_MAP_SURFACE_RENEWAL_TNT_v1 · Explore the Manor · Purple route map surface renewed.
+      EXPLORE_INTERPLANETARY_PURPLE_MANOR_ROUTE_MAP_PAIR_TNT_v2 · Explore the Manor · Purple route map surface paired with diamond card motion.
     </footer>
   </div>
 </body>

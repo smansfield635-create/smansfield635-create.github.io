@@ -1,58 +1,429 @@
 <!-- /gauges/index.html -->
 <!doctype html>
-<html lang="en" data-page="gauges-audralia-clean-chain-proof" data-route="/gauges/" data-contract="GAUGES_AUDRALIA_CLEAN_CHAIN_PROOF_TNT_v5" data-role="read-only-audit" data-graphicbox="false" data-image-generation="false">
+<html lang="en" data-page="gauges-audralia-rich-render-proof" data-route="/gauges/" data-contract="GAUGES_AUDRALIA_RICH_RENDER_PROOF_TNT_v6" data-role="read-only-audit" data-graphicbox="false" data-image-generation="false">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Diamond Gate Bridge · Gauges</title>
-  <meta name="description" content="Read-only Gauges audit for the repaired Audralia HTML, route, canvas, runtime, and pixel-proof chain.">
+  <meta name="description" content="Read-only Gauges audit for the repaired Audralia chain and rich planet canvas renderer.">
   <style>
-    :root{--bg:#020713;--panel:rgba(8,15,30,.84);--line:rgba(231,204,142,.22);--blue:rgba(127,194,255,.84);--gold:#f0d38a;--green:#bdf2c7;--red:#ffb4a8;--yellow:#ffe2a3;--muted:rgba(205,219,230,.72);--text:rgba(248,242,224,.95);--shadow:rgba(0,0,0,.48);color-scheme:dark}
-    *{box-sizing:border-box}
-    html{min-height:100%;background:var(--bg);color:var(--text);scroll-behavior:smooth}
-    body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 18% 12%,rgba(75,127,196,.20),transparent 34rem),radial-gradient(circle at 82% 4%,rgba(240,211,138,.12),transparent 28rem),linear-gradient(180deg,#030915 0%,#020713 46%,#01040b 100%);color:var(--text)}
-    body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(circle,rgba(255,255,255,.50) 0 1px,transparent 1.5px),radial-gradient(circle,rgba(240,211,138,.32) 0 1px,transparent 1.5px);background-size:112px 112px,176px 176px;background-position:12px 20px,64px 48px;opacity:.13;mask-image:linear-gradient(180deg,black,transparent 78%)}
-    a{color:inherit}
-    .skip-link{position:absolute;left:1rem;top:1rem;z-index:20;transform:translateY(-150%);padding:.75rem 1rem;border:1px solid var(--line);border-radius:999px;background:rgba(3,9,21,.96);color:var(--gold);font-weight:800;text-decoration:none}
-    .skip-link:focus{transform:translateY(0);outline:2px solid var(--gold);outline-offset:3px}
-    .shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:24px 0 46px;position:relative;z-index:1}
-    .topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 18px;border:1px solid var(--line);border-radius:24px;background:rgba(4,10,22,.72);box-shadow:0 18px 50px var(--shadow);backdrop-filter:blur(12px)}
-    .brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:900}.brand-mark{width:13px;height:13px;transform:rotate(45deg);border:1px solid var(--gold);background:rgba(240,211,138,.20);box-shadow:0 0 20px rgba(240,211,138,.45)}
-    .nav,.actions{display:flex;flex-wrap:wrap;gap:8px}.nav{justify-content:flex-end}
-    .nav a,.actions a,.actions button{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:.62rem .9rem;border:1px solid rgba(231,204,142,.20);border-radius:999px;background:rgba(255,255,255,.035);color:var(--muted);font:800 .84rem/1.1 inherit;text-decoration:none;cursor:pointer}
-    .actions button.primary{border-color:rgba(240,211,138,.60);background:linear-gradient(135deg,rgba(240,211,138,.24),rgba(127,194,255,.08));color:var(--gold)}
-    .hero,.panel{margin-top:24px;border:1px solid var(--line);border-radius:32px;background:radial-gradient(circle at 18% 12%,rgba(127,194,255,.10),transparent 24rem),var(--panel);box-shadow:0 24px 76px var(--shadow)}
-    .hero{padding:clamp(28px,5vw,58px)}.panel{padding:clamp(20px,4vw,32px)}
-    .eyebrow{margin:0 0 12px;color:var(--gold);font-size:.78rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
-    h1{margin:0;color:#fff8e6;font-size:clamp(2.4rem,7vw,5.2rem);line-height:.94;letter-spacing:-.07em}
-    h2{margin:0 0 14px;color:#fff8e6;font-size:clamp(1.45rem,3vw,2.15rem);line-height:1.08;letter-spacing:-.035em}
-    .lead{max-width:860px;margin:20px 0 0;color:var(--muted);font-size:clamp(1rem,2vw,1.2rem);line-height:1.65}.actions{margin-top:26px}
-    .cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:20px}.card{padding:18px;border:1px solid rgba(231,204,142,.16);border-radius:22px;background:rgba(255,255,255,.035)}
-    .num{display:block;color:#fff8e6;font-size:clamp(1.8rem,5vw,3.1rem);font-weight:950;line-height:1}.label{display:block;margin-top:6px;color:var(--muted);font-size:.85rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
-    .banner{margin-top:18px;padding:16px 18px;border:1px solid rgba(127,194,255,.24);border-radius:20px;background:rgba(127,194,255,.07);color:var(--muted);font-weight:850}.banner.pass{border-color:rgba(189,242,199,.36);background:rgba(189,242,199,.08);color:var(--green)}.banner.fail{border-color:rgba(255,180,168,.38);background:rgba(255,180,168,.08);color:var(--red)}.banner.held{border-color:rgba(255,226,163,.36);background:rgba(255,226,163,.08);color:var(--yellow)}
-    .groups{display:grid;gap:14px;margin-top:20px}.group{border:1px solid rgba(231,204,142,.16);border-radius:22px;background:rgba(255,255,255,.03);overflow:hidden}.group summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;cursor:pointer;font-weight:950;color:#fff8e6}.group-body{padding:0 18px 18px;display:grid;gap:10px}
-    .row{padding:13px 14px;border:1px solid rgba(231,204,142,.13);border-radius:16px;background:rgba(0,0,0,.16)}.row-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.row-title{font-weight:900;color:var(--text)}
-    .pill{display:inline-flex;align-items:center;justify-content:center;min-width:58px;padding:.28rem .52rem;border-radius:999px;font-size:.72rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase}
-    .pass .pill{background:rgba(189,242,199,.12);color:var(--green);border:1px solid rgba(189,242,199,.35)}.fail .pill{background:rgba(255,180,168,.12);color:var(--red);border:1px solid rgba(255,180,168,.35)}.held .pill,.debt .pill{background:rgba(255,226,163,.12);color:var(--yellow);border:1px solid rgba(255,226,163,.35)}.info .pill{background:rgba(127,194,255,.12);color:var(--blue);border:1px solid rgba(127,194,255,.35)}
-    .details{margin:.55rem 0 0;color:var(--muted);line-height:1.48;font-size:.93rem}.footer{margin-top:28px;padding:18px;border:1px solid rgba(231,204,142,.16);border-radius:22px;color:rgba(205,219,230,.66);text-align:center;background:rgba(4,10,22,.62)}
-    @media(max-width:880px){.topbar{align-items:flex-start;flex-direction:column}.nav{justify-content:flex-start}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.cards .card:last-child{grid-column:1/-1}.row-head{align-items:flex-start;flex-direction:column}}
+    :root {
+      --bg: #020713;
+      --panel: rgba(8, 15, 30, 0.84);
+      --line: rgba(231, 204, 142, 0.22);
+      --blue: rgba(127, 194, 255, 0.84);
+      --gold: #f0d38a;
+      --green: #bdf2c7;
+      --red: #ffb4a8;
+      --yellow: #ffe2a3;
+      --muted: rgba(205, 219, 230, 0.72);
+      --text: rgba(248, 242, 224, 0.95);
+      --shadow: rgba(0, 0, 0, 0.48);
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(75, 127, 196, 0.20), transparent 34rem),
+        radial-gradient(circle at 82% 4%, rgba(240, 211, 138, 0.12), transparent 28rem),
+        linear-gradient(180deg, #030915 0%, #020713 46%, #01040b 100%);
+      color: var(--text);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255, 255, 255, 0.50) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(240, 211, 138, 0.32) 0 1px, transparent 1.5px);
+      background-size: 112px 112px, 176px 176px;
+      background-position: 12px 20px, 64px 48px;
+      opacity: 0.13;
+      mask-image: linear-gradient(180deg, black, transparent 78%);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      z-index: 20;
+      transform: translateY(-150%);
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(3, 9, 21, 0.96);
+      color: var(--gold);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 46px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(4, 10, 22, 0.72);
+      box-shadow: 0 18px 50px var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      font-weight: 900;
+    }
+
+    .brand-mark {
+      width: 13px;
+      height: 13px;
+      transform: rotate(45deg);
+      border: 1px solid var(--gold);
+      background: rgba(240, 211, 138, 0.20);
+      box-shadow: 0 0 20px rgba(240, 211, 138, 0.45);
+    }
+
+    .nav,
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .nav {
+      justify-content: flex-end;
+    }
+
+    .nav a,
+    .actions a,
+    .actions button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 0.62rem 0.9rem;
+      border: 1px solid rgba(231, 204, 142, 0.20);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.035);
+      color: var(--muted);
+      font: 800 0.84rem/1.1 inherit;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .actions button.primary {
+      border-color: rgba(240, 211, 138, 0.60);
+      background: linear-gradient(135deg, rgba(240, 211, 138, 0.24), rgba(127, 194, 255, 0.08));
+      color: var(--gold);
+    }
+
+    .hero,
+    .panel {
+      margin-top: 24px;
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      background: radial-gradient(circle at 18% 12%, rgba(127, 194, 255, 0.10), transparent 24rem), var(--panel);
+      box-shadow: 0 24px 76px var(--shadow);
+    }
+
+    .hero {
+      padding: clamp(28px, 5vw, 58px);
+    }
+
+    .panel {
+      padding: clamp(20px, 4vw, 32px);
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      color: #fff8e6;
+      font-size: clamp(2.4rem, 7vw, 5.2rem);
+      line-height: 0.94;
+      letter-spacing: -0.07em;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      color: #fff8e6;
+      font-size: clamp(1.45rem, 3vw, 2.15rem);
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+    }
+
+    .lead {
+      max-width: 860px;
+      margin: 20px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      line-height: 1.65;
+    }
+
+    .actions {
+      margin-top: 26px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .card {
+      padding: 18px;
+      border: 1px solid rgba(231, 204, 142, 0.16);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .num {
+      display: block;
+      color: #fff8e6;
+      font-size: clamp(1.8rem, 5vw, 3.1rem);
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .label {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .banner {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border: 1px solid rgba(127, 194, 255, 0.24);
+      border-radius: 20px;
+      background: rgba(127, 194, 255, 0.07);
+      color: var(--muted);
+      font-weight: 850;
+    }
+
+    .banner.pass {
+      border-color: rgba(189, 242, 199, 0.36);
+      background: rgba(189, 242, 199, 0.08);
+      color: var(--green);
+    }
+
+    .banner.fail {
+      border-color: rgba(255, 180, 168, 0.38);
+      background: rgba(255, 180, 168, 0.08);
+      color: var(--red);
+    }
+
+    .banner.held {
+      border-color: rgba(255, 226, 163, 0.36);
+      background: rgba(255, 226, 163, 0.08);
+      color: var(--yellow);
+    }
+
+    .groups {
+      display: grid;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .group {
+      border: 1px solid rgba(231, 204, 142, 0.16);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.03);
+      overflow: hidden;
+    }
+
+    .group summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px;
+      cursor: pointer;
+      font-weight: 950;
+      color: #fff8e6;
+    }
+
+    .group-body {
+      padding: 0 18px 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .row {
+      padding: 13px 14px;
+      border: 1px solid rgba(231, 204, 142, 0.13);
+      border-radius: 16px;
+      background: rgba(0, 0, 0, 0.16);
+    }
+
+    .row-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .row-title {
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 58px;
+      padding: 0.28rem 0.52rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .pass .pill {
+      background: rgba(189, 242, 199, 0.12);
+      color: var(--green);
+      border: 1px solid rgba(189, 242, 199, 0.35);
+    }
+
+    .fail .pill {
+      background: rgba(255, 180, 168, 0.12);
+      color: var(--red);
+      border: 1px solid rgba(255, 180, 168, 0.35);
+    }
+
+    .held .pill,
+    .debt .pill {
+      background: rgba(255, 226, 163, 0.12);
+      color: var(--yellow);
+      border: 1px solid rgba(255, 226, 163, 0.35);
+    }
+
+    .info .pill {
+      background: rgba(127, 194, 255, 0.12);
+      color: var(--blue);
+      border: 1px solid rgba(127, 194, 255, 0.35);
+    }
+
+    .details {
+      margin: 0.55rem 0 0;
+      color: var(--muted);
+      line-height: 1.48;
+      font-size: 0.93rem;
+    }
+
+    .footer {
+      margin-top: 28px;
+      padding: 18px;
+      border: 1px solid rgba(231, 204, 142, 0.16);
+      border-radius: 22px;
+      color: rgba(205, 219, 230, 0.66);
+      text-align: center;
+      background: rgba(4, 10, 22, 0.62);
+    }
+
+    @media (max-width: 880px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .cards .card:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .row-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to Gauges</a>
+
   <div class="shell">
     <header class="topbar" aria-label="Gauges navigation">
-      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span><span>Diamond Gate Bridge</span></a>
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Diamond Gate Bridge</span>
+      </a>
+
       <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a><a href="/door/">Door</a><a href="/home/">Home</a><a href="/showroom/">Showroom</a><a href="/showroom/globe/">Globe</a><a href="/products/">Products</a>
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/">Globe</a>
+        <a href="/products/">Products</a>
       </nav>
     </header>
 
     <main id="main" tabindex="-1">
       <section class="hero" aria-labelledby="title">
-        <p class="eyebrow">Gauges · Audralia Clean Chain Proof</p>
+        <p class="eyebrow">Gauges · Audralia Rich Render Proof</p>
         <h1 id="title">Audralia Proof Console</h1>
-        <p class="lead">This read-only audit verifies the repaired Audralia chain: clean HTML handoff, canonical route caller, canvas authority import, runtime availability, live route status, canvas receipt, and pixel proof.</p>
+        <p class="lead">This read-only audit verifies the repaired Audralia chain and confirms the rich planet canvas renderer is active without reopening HTML, route, runtime, GraphicBox, or image generation.</p>
+
         <div class="actions">
           <button id="runAudit" class="primary" type="button">Run Audralia Audit</button>
           <a href="/showroom/globe/audralia/">Open Audralia</a>
@@ -63,6 +434,7 @@
 
       <section class="panel" aria-labelledby="summaryTitle">
         <h2 id="summaryTitle">Audit Summary</h2>
+
         <div class="cards" aria-label="Audit totals">
           <div class="card"><span id="totalCount" class="num">0</span><span class="label">Total</span></div>
           <div class="card"><span id="passCount" class="num">0</span><span class="label">Passed</span></div>
@@ -70,6 +442,7 @@
           <div class="card"><span id="heldCount" class="num">0</span><span class="label">Held / Debt</span></div>
           <div class="card"><span id="readyCount" class="num">0%</span><span class="label">Readiness</span></div>
         </div>
+
         <div id="banner" class="banner info">Audit awaiting run.</div>
       </section>
 
@@ -79,11 +452,11 @@
       </section>
     </main>
 
-    <footer class="footer">GAUGES_AUDRALIA_CLEAN_CHAIN_PROOF_TNT_v5 · read-only · no GraphicBox · no image generation</footer>
+    <footer class="footer">GAUGES_AUDRALIA_RICH_RENDER_PROOF_TNT_v6 · read-only · no GraphicBox · no image generation</footer>
   </div>
 
 <script type="module">
-const GAUGES_CONTRACT = "GAUGES_AUDRALIA_CLEAN_CHAIN_PROOF_TNT_v5";
+const GAUGES_CONTRACT = "GAUGES_AUDRALIA_RICH_RENDER_PROOF_TNT_v6";
 
 const PATHS = {
   html: "/showroom/globe/audralia/",
@@ -100,7 +473,10 @@ const PATHS = {
   deepOcean: "/assets/audralia/audralia/hydration/deep-ocean.render.js"
 };
 
-const state = { results: [] };
+const state = {
+  results: []
+};
+
 const $ = (id) => document.getElementById(id);
 
 function cacheBust(url, key) {
@@ -108,7 +484,12 @@ function cacheBust(url, key) {
 }
 
 function addResult(group, title, status, details) {
-  state.results.push({ group, title, status, details: details || "" });
+  state.results.push({
+    group,
+    title,
+    status,
+    details: details || ""
+  });
 }
 
 function hasAny(text, needles) {
@@ -118,7 +499,12 @@ function hasAny(text, needles) {
 async function fetchText(path) {
   const response = await fetch(cacheBust(path, "source"), { cache: "no-store" });
   const text = await response.text();
-  return { ok: response.ok, status: response.status, text };
+
+  return {
+    ok: response.ok,
+    status: response.status,
+    text
+  };
 }
 
 async function auditSource(path, title, expected, options = {}) {
@@ -174,10 +560,11 @@ async function auditSources() {
     "mountAudraliaCanvas"
   ]);
 
-  await auditSource(PATHS.canvas, "Audralia canvas authority", [
-    "AUDRALIA_CANVAS_AUTHORITY_RECEIPT",
+  await auditSource(PATHS.canvas, "Audralia rich canvas authority", [
+    "AUDRALIA_CANVAS_AUTHORITY_RICH_PLANET_RENDER_TNT_v1",
+    "RICH PLANET CANVAS",
     "mountAudraliaCanvas",
-    "AUDRALIA_CANVAS_AUTHORITY_MINIMAL_CANARY_TNT_v1"
+    "AUDRALIA_CANVAS_AUTHORITY_RECEIPT"
   ]);
 
   await auditSource(PATHS.runtime, "Audralia runtime truth", [
@@ -217,10 +604,13 @@ async function auditModuleImports() {
   try {
     const canvasModule = await import(cacheBust(PATHS.canvas, "canvasImport"));
     const mount = canvasModule.mountAudraliaCanvas || (canvasModule.default && canvasModule.default.mountAudraliaCanvas);
+    const status = canvasModule.getAudraliaCanvasStatus ? canvasModule.getAudraliaCanvasStatus() : null;
+    const dataset = canvasModule.getAudraliaSurfaceDataset ? canvasModule.getAudraliaSurfaceDataset() : null;
 
     addResult(group, "Canvas authority module imports", "pass", PATHS.canvas + " imported without syntax error.");
     addResult(group, "Canonical mountAudraliaCanvas export visible", typeof mount === "function" ? "pass" : "fail", typeof mount === "function" ? "mountAudraliaCanvas is callable." : "Canonical export missing after import.");
-    addResult(group, "Canvas source cleanup strings are nonblocking", "pass", "Module import and canonical export control this test.");
+    addResult(group, "Rich planet dataset available", dataset && dataset.contract === "AUDRALIA_CANVAS_AUTHORITY_RICH_PLANET_RENDER_TNT_v1" ? "pass" : "held", dataset && dataset.contract ? dataset.contract : "Dataset absent before live mount; live route proof controls.");
+    addResult(group, "Canvas status accessor available", status && status.receipt ? "pass" : "held", status && status.contract ? status.contract : "Status accessor has no mounted contract before route probe.");
   } catch (error) {
     addResult(group, "Canvas authority module imports", "fail", error instanceof Error ? error.message : String(error));
   }
@@ -252,7 +642,7 @@ function loadIframe() {
         settled = true;
         window.clearTimeout(timer);
         resolve(iframe);
-      }, 1100);
+      }, 1200);
     };
 
     iframe.onerror = () => {
@@ -282,6 +672,7 @@ function auditCanvasPixels(canvas) {
   let water = 0;
   let solid = 0;
   let turquoise = 0;
+  let goldLine = 0;
 
   for (let y = 0; y < height; y += stepY) {
     for (let x = 0; x < width; x += stepX) {
@@ -293,6 +684,7 @@ function auditCanvasPixels(canvas) {
       if (p[2] > p[0] + 18 && p[2] >= p[1]) water += 1;
       if (p[1] > p[2] * 0.55 && p[0] > p[2] * 0.35 && p[3] > 20) solid += 1;
       if (p[1] > 120 && p[2] > 130 && p[0] < 130) turquoise += 1;
+      if (p[0] > 160 && p[1] > 130 && p[2] < 130 && p[3] > 20) goldLine += 1;
     }
   }
 
@@ -301,12 +693,13 @@ function auditCanvasPixels(canvas) {
     opaqueRatio: opaque / total,
     waterRatio: water / total,
     solidRatio: solid / total,
-    turquoiseRatio: turquoise / total
+    turquoiseRatio: turquoise / total,
+    goldLineRatio: goldLine / total
   };
 }
 
 async function auditLiveRoute() {
-  const group = "Live Route + Canvas Pixel Proof";
+  const group = "Live Route + Rich Canvas Proof";
   let iframe = null;
 
   try {
@@ -330,7 +723,7 @@ async function auditLiveRoute() {
     addResult(group, "Audralia canvas exists", canvas ? "pass" : "fail", canvas ? "Route contains a canvas." : "No canvas found on route.");
     addResult(group, "Route status says loaded", statusText.includes("Audralia adopted canvas authority loaded") ? "pass" : "fail", statusText || "No route status text captured.");
     addResult(group, "Canvas receipt visible", bodyText.includes("AUDRALIA_CANVAS_AUTHORITY_RECEIPT") ? "pass" : "fail", bodyText.includes("AUDRALIA_CANVAS_AUTHORITY_RECEIPT") ? "Canvas receipt is visible." : "Canvas receipt not visible.");
-    addResult(group, "Adopted canvas status object visible", canvasStatus ? "pass" : "held", canvasStatus ? (canvasStatus.contract || canvasStatus.receipt || "Canvas status object visible.") : "Canvas/mount proof still controls if status object is absent.");
+    addResult(group, "Rich planet canvas status object visible", canvasStatus && canvasStatus.contract === "AUDRALIA_CANVAS_AUTHORITY_RICH_PLANET_RENDER_TNT_v1" ? "pass" : "held", canvasStatus && canvasStatus.contract ? canvasStatus.contract : "Canvas status object absent or not rich-render-labelled.");
     addResult(group, "Route status object visible", routeStatus ? "pass" : "held", routeStatus ? (routeStatus.contract || routeStatus.receipt || "Route status object visible.") : "Route object not exposed to probe; not blocking live chain.");
 
     if (canvas) {
@@ -342,11 +735,12 @@ async function auditLiveRoute() {
         addResult(group, "Canvas is nonblank", proof.opaqueRatio > 0.05 ? "pass" : "fail", "opaqueRatio=" + (proof.opaqueRatio * 100).toFixed(2) + "%");
         addResult(group, "Canvas water pixels visible", proof.waterRatio > 0.03 ? "pass" : "held", "waterPixelRatio=" + (proof.waterRatio * 100).toFixed(2) + "%");
         addResult(group, "Canvas solid surface pixels visible", proof.solidRatio > 0.01 ? "pass" : "held", "solidSurfacePixelRatio=" + (proof.solidRatio * 100).toFixed(2) + "%");
-        addResult(group, "Canvas turquoise / shelf signal diagnostic", proof.turquoiseRatio > 0.002 ? "pass" : "held", "turquoisePixelRatio=" + (proof.turquoiseRatio * 100).toFixed(2) + "%");
+        addResult(group, "Canvas turquoise / shelf signal visible", proof.turquoiseRatio > 0.002 ? "pass" : "held", "turquoisePixelRatio=" + (proof.turquoiseRatio * 100).toFixed(2) + "%");
+        addResult(group, "Canvas gold topology line signal visible", proof.goldLineRatio > 0.001 ? "pass" : "held", "goldLineRatio=" + (proof.goldLineRatio * 100).toFixed(2) + "%");
       }
     }
 
-    addResult(group, "Live route payload", "info", "Captured route status, canvas status, mount, canvas, and pixel proof.");
+    addResult(group, "Live route payload", "info", "Captured route status, canvas status, mount, canvas, and rich pixel proof.");
   } catch (error) {
     addResult(group, "Live route probe readable", "fail", error instanceof Error ? error.message : String(error));
   } finally {
@@ -386,7 +780,7 @@ function render() {
   const banner = $("banner");
 
   banner.className = "banner " + (summary.failed ? "fail" : (summary.held ? "held" : "pass"));
-  banner.textContent = summary.failed ? "Audit found active blockers. Open the failed sections below." : (summary.held ? "Audit passed the repaired chain with held/debt items remaining." : "Audit passed the repaired Audralia chain.");
+  banner.textContent = summary.failed ? "Audit found active blockers. Open the failed sections below." : (summary.held ? "Audit passed the rich render chain with held/debt items remaining." : "Audit passed the rich Audralia render chain.");
 
   const groups = new Map();
 

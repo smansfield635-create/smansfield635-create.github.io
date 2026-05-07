@@ -1,243 +1,245 @@
-/* /assets/audralia/audralia/tectonics/topology/terrain.render.js */
-/* AUDRALIA_TERRAIN_RELIEF_AUTHORITY */
-/* TNT: AUDRALIA_TERRAIN_4K_RELIEF_DETAIL_TNT_v2 */
+/* /assets/audralia/audralia/tectonics/topology/render.js */
+/* AUDRALIA_TOPOLOGY_FOOTPRINT_AUTHORITY */
+/* TNT: AUDRALIA_TOPOLOGY_4K_FOOTPRINT_AUTHORITY_TNT_v1 */
 
-const RECEIPT = "AUDRALIA_TERRAIN_RELIEF_AUTHORITY_RECEIPT";
-const CONTRACT = "AUDRALIA_TERRAIN_4K_RELIEF_DETAIL_TNT_v2";
-const VERSION = "2026-05-06.terrain-4k-relief-detail-v2";
+const RECEIPT = "AUDRALIA_TOPOLOGY_FOOTPRINT_AUTHORITY_RECEIPT";
+const CONTRACT = "AUDRALIA_TOPOLOGY_4K_FOOTPRINT_AUTHORITY_TNT_v1";
+const VERSION = "2026-05-06.topology-4k-footprint-authority-v1";
 
-const TERRAIN_AUTHORITY = Object.freeze({
-  name: "Audralia Terrain Relief Authority",
+const TOPOLOGY_AUTHORITY = Object.freeze({
+  name: "Audralia Topology Footprint Authority",
   planet: "Audralia",
   receipt: RECEIPT,
   contract: CONTRACT,
   version: VERSION,
   lineage: "tectonics -> topology -> terrain",
-  role: "above-sea-level-relief-expression",
-  precinct: "above-water terrain relief, ridges, slopes, mineral weathering, glacier height, coastal roughness, and 4k procedural surface detail",
+  role: "land-void-footprint-and-sea-level-boundary-authority",
+  precinct: "landmass footprint, ocean void, sea-level boundary, coastal shelves, beaches, sand class, cliff edge, subterranean plate memory, and terrain-admissible mask",
   jurisdiction: [
-    "elevation",
-    "relief",
-    "slope",
-    "ridge-field",
-    "valley-field",
-    "mineral-pressure-expression",
-    "glacier-height",
-    "rock-texture",
-    "surface-roughness",
-    "coastal-terrain-transition",
-    "terrain-color-hints",
-    "canvas-consumable-terrain-samples"
+    "land-versus-void",
+    "sea-level-boundary",
+    "coastline",
+    "coastal-shelf",
+    "beach-zone",
+    "black-diamond-sand-zone",
+    "white-opal-sand-zone",
+    "subterranean-plate-memory",
+    "terrain-admissibility-mask",
+    "land-ratio-diagnostic"
   ],
   nonJurisdiction: [
+    "terrain-elevation",
+    "terrain-relief",
+    "above-sea-slope",
+    "hydration-flow",
+    "ocean-animation",
+    "deep-ocean-current",
+    "canvas-final-render",
     "route-shell",
     "html",
-    "canvas-mount",
-    "final-canvas-composition",
     "runtime-boot",
-    "hydration-ownership",
-    "ocean-depth-ownership",
     "GraphicBox",
     "image-generation"
   ],
+  exposedLandRatioIntent: "earth-compatible-above-water-ratio",
+  targetLandRatioBand: [0.27, 0.31],
   graphicBox: false,
   imageGeneration: false,
-  visualPassClaimed: false,
-  renderResolutionIntent: "4k-procedural-terrain-sampling-authority",
-  exportedSurface: "terrain-sampler-grid-palette-ridge-relief-layer"
+  visualPassClaimed: false
 });
 
-const GEOLOGY = Object.freeze({
-  dominant: ["diamond", "opal", "granite", "slate"],
-  sands: ["white-opal-sand", "black-diamond-sand"],
-  reliefMemory: "ancient-eroded-mountain-systems",
-  weatheringAge: "approximately-forty-billion-year-surface-memory",
-  newbornComparison: "newborn-Audralia-mountains-dwarfed-Earth-Himalayan-standard",
-  currentExpression: "ancient-weathered-rocky-relief-with-mineral-pressure",
-  rule: "terrain expresses above-sea relief; topology owns land/void footprint; hydration owns water"
-});
-
-const TERRAIN_REGIONS = Object.freeze([
+const LANDMASSES = Object.freeze([
   {
     id: "western-mainland-arc",
+    className: "mainland-ancient-weathered-arc",
     region: 2,
-    className: "weathered-granite-slate-mainland",
-    center: [-25, -111],
-    influence: 46,
-    maxRelief: 0.80,
-    erosion: 0.64,
-    glacierBias: 0.08,
-    geology: ["granite", "slate", "diamond-vein"],
-    ridgeLines: [
-      [[-51, -151], [-43, -134], [-35, -112], [-27, -91], [-18, -70]],
-      [[-41, -141], [-26, -122], [-10, -108], [9, -92], [22, -77]],
-      [[-48, -124], [-34, -103], [-21, -84], [-5, -63]],
-      [[-52, -145], [-38, -128], [-24, -116], [-9, -101], [12, -83]]
+    role: "primary-mainland",
+    points: [
+      [-54, -158], [-48, -149], [-39, -140], [-29, -134], [-18, -132],
+      [-8, -126], [1, -117], [11, -108], [20, -94], [25, -82],
+      [23, -71], [15, -62], [3, -57], [-10, -60], [-23, -71],
+      [-34, -90], [-44, -116], [-52, -139]
     ],
-    valleys: [
-      [[-48, -136], [-35, -120], [-21, -106], [-8, -92]],
-      [[-38, -93], [-25, -82], [-12, -72], [3, -61]]
-    ]
+    shelf: [
+      [-61, -165], [-51, -154], [-39, -145], [-20, -144], [4, -128],
+      [28, -99], [31, -74], [10, -49], [-18, -52], [-44, -86],
+      [-60, -125]
+    ],
+    beachBias: 0.38,
+    blackSandBias: 0.42,
+    whiteSandBias: 0.26,
+    subterraneanPlate: "western-granite-slate-pressure-plate"
   },
   {
     id: "eastern-attached-mainland",
+    className: "attached-opal-granite-mainland",
     region: 3,
-    className: "opal-granite-coastal-rise",
-    center: [4, -17],
-    influence: 43,
-    maxRelief: 0.68,
-    erosion: 0.57,
-    glacierBias: 0.04,
-    geology: ["opal", "granite", "slate"],
-    ridgeLines: [
-      [[-26, -61], [-12, -44], [4, -24], [20, -6], [34, 17]],
-      [[-28, -33], [-16, -10], [-4, 14], [8, 38], [22, 54]],
-      [[-21, 36], [-5, 47], [13, 50], [29, 39]],
-      [[-5, -43], [9, -23], [21, -1], [31, 24]]
+    role: "attached-mainland",
+    points: [
+      [-26, -68], [-14, -55], [-2, -44], [9, -31], [20, -17],
+      [30, -2], [37, 16], [35, 34], [25, 50], [11, 58],
+      [-5, 54], [-18, 42], [-26, 23], [-31, -3], [-32, -31],
+      [-30, -51]
     ],
-    valleys: [
-      [[-24, -48], [-10, -28], [7, -8], [24, 12]],
-      [[-15, 42], [1, 49], [18, 48]]
-    ]
+    shelf: [
+      [-31, -74], [-5, -54], [23, -22], [46, 12], [42, 51],
+      [9, 73], [-22, 50], [-39, 4], [-39, -44]
+    ],
+    beachBias: 0.46,
+    blackSandBias: 0.18,
+    whiteSandBias: 0.51,
+    subterraneanPlate: "eastern-opal-granite-transition-plate"
   },
   {
     id: "northern-rock-crown",
+    className: "north-polar-rock-and-ice-crown",
     region: 1,
-    className: "ice-reserve-and-pressure-cap",
-    center: [55, -73],
-    influence: 40,
-    maxRelief: 0.88,
-    erosion: 0.49,
-    glacierBias: 0.90,
-    geology: ["ice", "slate", "diamond-understone"],
-    ridgeLines: [
-      [[43, -148], [53, -112], [61, -72], [62, -31], [50, 12]],
-      [[37, -93], [48, -69], [58, -43], [64, -14]],
-      [[39, -4], [46, 11], [55, 20]],
-      [[45, -132], [56, -96], [63, -55]]
+    role: "north-polar-landmass",
+    points: [
+      [41, -154], [50, -132], [58, -105], [64, -76], [66, -48],
+      [61, -20], [53, 7], [44, 26], [37, 11], [34, -20],
+      [35, -56], [37, -94]
     ],
-    valleys: [
-      [[44, -120], [51, -87], [55, -52], [53, -20]],
-      [[41, -46], [47, -25], [50, 4]]
-    ]
+    shelf: [
+      [36, -162], [64, -128], [74, -70], [72, -8], [54, 37],
+      [31, 11], [26, -45], [30, -106]
+    ],
+    beachBias: 0.12,
+    blackSandBias: 0.08,
+    whiteSandBias: 0.28,
+    subterraneanPlate: "north-slate-diamond-understone-cap"
   },
   {
     id: "southern-weathered-mass",
+    className: "south-polar-weathered-diamond-opal-mass",
     region: 5,
-    className: "diamond-opal-wet-edge",
-    center: [-58, 79],
-    influence: 46,
-    maxRelief: 0.74,
-    erosion: 0.72,
-    glacierBias: 0.66,
-    geology: ["diamond", "opal", "slate"],
-    ridgeLines: [
-      [[-70, -39], [-61, 3], [-51, 45], [-38, 82], [-29, 119]],
-      [[-77, 53], [-65, 82], [-52, 111], [-41, 142], [-54, 166]],
-      [[-58, 17], [-48, 54], [-39, 91], [-31, 130]],
-      [[-74, 93], [-61, 111], [-48, 131], [-39, 154]]
+    role: "south-polar-landmass",
+    points: [
+      [-69, -50], [-62, -17], [-55, 20], [-47, 49], [-36, 76],
+      [-25, 107], [-28, 130], [-41, 153], [-55, 166], [-68, 157],
+      [-76, 122], [-80, 78], [-78, 28]
     ],
-    valleys: [
-      [[-66, 8], [-57, 44], [-47, 78], [-37, 112]],
-      [[-73, 74], [-61, 93], [-50, 118], [-47, 146]]
-    ]
+    shelf: [
+      [-82, -64], [-70, 8], [-58, 66], [-33, 99], [-17, 133],
+      [-44, 177], [-72, 179], [-86, 126], [-88, 30]
+    ],
+    beachBias: 0.31,
+    blackSandBias: 0.24,
+    whiteSandBias: 0.49,
+    subterraneanPlate: "south-diamond-opal-weathered-plate"
   },
   {
     id: "equatorial-ancient-chain",
+    className: "equatorial-ancient-eroded-chain",
     region: 4,
-    className: "ancient-eroded-mountain-memory",
-    center: [-7, 120],
-    influence: 35,
-    maxRelief: 0.84,
-    erosion: 0.76,
-    glacierBias: 0.02,
-    geology: ["granite", "diamond", "opal"],
-    ridgeLines: [
-      [[-16, 69], [-5, 91], [8, 113], [16, 137], [6, 160]],
-      [[-21, 101], [-12, 122], [-4, 145], [1, 164]],
-      [[-11, 76], [3, 98], [15, 121]],
-      [[-20, 84], [-8, 109], [3, 132], [-1, 157]]
+    role: "equatorial-landmass-chain",
+    points: [
+      [-13, 60], [-3, 75], [9, 94], [18, 116], [19, 137],
+      [9, 156], [-4, 166], [-16, 154], [-22, 130], [-23, 101],
+      [-20, 77]
     ],
-    valleys: [
-      [[-18, 93], [-8, 116], [3, 139]],
-      [[-11, 70], [-1, 92], [10, 115]]
-    ]
-  },
-  {
-    id: "island-and-shelf-relief",
-    region: 6,
-    className: "island-and-shelf-expression",
-    center: [-36, 132],
-    influence: 26,
-    maxRelief: 0.46,
-    erosion: 0.69,
-    glacierBias: 0.00,
-    geology: ["opal", "diamond-sand", "granite"],
-    ridgeLines: [
-      [[-42, 96], [-34, 112], [-31, 129], [-40, 140]],
-      [[-50, 101], [-44, 118], [-37, 134]],
-      [[-47, 142], [-36, 154], [-21, 168]]
+    shelf: [
+      [-25, 55], [2, 74], [25, 104], [25, 146], [5, 178],
+      [-24, 162], [-35, 118]
     ],
-    valleys: [
-      [[-48, 105], [-41, 119], [-36, 133]],
-      [[-42, 145], [-32, 155], [-19, 166]]
-    ]
+    beachBias: 0.29,
+    blackSandBias: 0.34,
+    whiteSandBias: 0.33,
+    subterraneanPlate: "equatorial-diamond-granite-memory-chain"
   },
   {
     id: "western-pressure-islands",
+    className: "western-pressure-island-belt",
     region: 7,
-    className: "miscellaneous-territory-expression",
-    center: [8, -150],
-    influence: 24,
-    maxRelief: 0.40,
-    erosion: 0.59,
-    glacierBias: 0.00,
-    geology: ["slate", "opal", "black-diamond-sand"],
-    ridgeLines: [
-      [[2, -171], [11, -160], [19, -147], [16, -135]],
-      [[-6, -152], [4, -142], [14, -134]],
-      [[8, -166], [18, -154], [22, -140]]
+    role: "island-belt",
+    points: [
+      [4, -171], [15, -164], [23, -150], [21, -138],
+      [11, -131], [-2, -136], [-8, -151], [-5, -165]
     ],
-    valleys: [
-      [[2, -162], [10, -150], [17, -139]],
-      [[-4, -151], [7, -143], [17, -136]]
-    ]
+    shelf: [
+      [-2, -178], [17, -169], [29, -151], [24, -132],
+      [8, -124], [-10, -134], [-15, -154]
+    ],
+    beachBias: 0.52,
+    blackSandBias: 0.47,
+    whiteSandBias: 0.21,
+    subterraneanPlate: "western-pressure-island-fracture-belt"
+  },
+  {
+    id: "south-east-shelf-islands",
+    className: "southeast-opal-shelf-islands",
+    region: 6,
+    role: "shelf-islands",
+    points: [
+      [-42, 92], [-34, 106], [-29, 122], [-34, 138],
+      [-49, 134], [-56, 116], [-53, 100]
+    ],
+    shelf: [
+      [-56, 88], [-43, 103], [-35, 123], [-38, 145],
+      [-53, 143], [-64, 120], [-60, 98]
+    ],
+    beachBias: 0.58,
+    blackSandBias: 0.16,
+    whiteSandBias: 0.55,
+    subterraneanPlate: "southeast-opal-shelf-memory"
   },
   {
     id: "far-east-reef-knife",
+    className: "far-east-thin-reef-knife",
     region: 8,
-    className: "thin-reef-knife-relief",
-    center: [-28, 166],
-    influence: 28,
-    maxRelief: 0.50,
-    erosion: 0.68,
-    glacierBias: 0.00,
-    geology: ["opal", "slate", "white-opal-sand"],
-    ridgeLines: [
-      [[-49, 144], [-36, 156], [-20, 168], [-2, 179]],
-      [[-51, 155], [-36, 166], [-18, 177], [0, -172]],
-      [[-42, 137], [-28, 152], [-12, 166]]
+    role: "thin-reef-and-coast-knife",
+    points: [
+      [-48, 146], [-36, 154], [-20, 164], [-7, 176],
+      [0, -174], [-17, -169], [-35, -160], [-51, -151]
     ],
-    valleys: [
-      [[-48, 151], [-34, 162], [-17, 174]],
-      [[-39, 145], [-26, 158], [-10, 171]]
-    ]
+    shelf: [
+      [-54, 135], [-40, 149], [-22, 161], [-3, 174],
+      [8, -174], [-13, -158], [-37, -145], [-58, -135]
+    ],
+    beachBias: 0.62,
+    blackSandBias: 0.22,
+    whiteSandBias: 0.61,
+    subterraneanPlate: "far-east-opal-reef-knife-boundary"
   }
 ]);
 
-const RELIEF_PALETTE = Object.freeze({
-  deepShadow: "rgba(28, 32, 34, 0.42)",
-  lowland: "rgba(94, 117, 84, 0.92)",
-  weatheredStone: "rgba(127, 118, 91, 0.94)",
-  highGranite: "rgba(202, 199, 168, 0.72)",
-  opalLight: "rgba(207, 236, 224, 0.68)",
-  diamondGlint: "rgba(246, 252, 255, 0.76)",
-  slateLine: "rgba(76, 89, 96, 0.58)",
-  glacier: "rgba(235, 247, 255, 0.82)",
-  whiteSand: "rgba(246, 231, 188, 0.72)",
-  blackSand: "rgba(42, 39, 36, 0.56)",
-  cliffShadow: "rgba(35, 39, 39, 0.52)",
-  valleyBlue: "rgba(85, 132, 150, 0.36)"
+const SUBTERRANEAN_MEMORY_LINES = Object.freeze([
+  {
+    id: "western-compression-root",
+    className: "subterranean-compression",
+    line: [[-58, -150], [-42, -128], [-27, -104], [-13, -80], [2, -57]]
+  },
+  {
+    id: "east-mainland-suture",
+    className: "subterranean-suture",
+    line: [[-30, -59], [-14, -39], [4, -18], [21, 4], [35, 29]]
+  },
+  {
+    id: "north-crown-root",
+    className: "subterranean-polar-root",
+    line: [[42, -146], [54, -107], [63, -65], [61, -22], [48, 18]]
+  },
+  {
+    id: "south-weathered-root",
+    className: "subterranean-weathered-root",
+    line: [[-76, 55], [-64, 82], [-52, 111], [-43, 142], [-57, 166]]
+  },
+  {
+    id: "equatorial-chain-root",
+    className: "subterranean-equatorial-root",
+    line: [[-21, 78], [-10, 101], [2, 124], [11, 149], [0, 168]]
+  }
+]);
+
+const TOPOLOGY_PALETTE = Object.freeze({
+  land: "rgba(102, 126, 94, 0.94)",
+  shelf: "rgba(114, 205, 216, 0.30)",
+  beachWhite: "rgba(246, 231, 188, 0.74)",
+  beachBlack: "rgba(42, 39, 36, 0.58)",
+  coast: "rgba(246, 224, 170, 0.48)",
+  voidOcean: "rgba(4, 38, 92, 0.96)",
+  subterraneanLine: "rgba(238, 205, 125, 0.36)",
+  terrainMask: "rgba(255, 255, 255, 0.22)"
 });
 
 function clamp(value, min, max) {
@@ -246,8 +248,10 @@ function clamp(value, min, max) {
 
 function normalizeLongitude(lon) {
   let value = Number(lon) || 0;
+
   while (value > 180) value -= 360;
   while (value < -180) value += 360;
+
   return value;
 }
 
@@ -265,9 +269,44 @@ function smoothstep(edge0, edge1, value) {
   return t * t * (3 - 2 * t);
 }
 
+function unwrapPolygon(points, lon) {
+  const target = normalizeLongitude(lon);
+
+  return points.map(function (point) {
+    let pointLon = normalizeLongitude(point[1]);
+
+    if (Math.abs(pointLon - target) > 180) {
+      pointLon += pointLon < target ? 360 : -360;
+    }
+
+    return [point[0], pointLon];
+  });
+}
+
+function pointInPolygon(lat, lon, polygon) {
+  const unwrapped = unwrapPolygon(polygon, lon);
+  const x = normalizeLongitude(lon);
+  const y = lat;
+  let inside = false;
+
+  for (let i = 0, j = unwrapped.length - 1; i < unwrapped.length; j = i, i += 1) {
+    const yi = unwrapped[i][0];
+    const xi = unwrapped[i][1];
+    const yj = unwrapped[j][0];
+    const xj = unwrapped[j][1];
+
+    const intersect = ((yi > y) !== (yj > y)) && (x < ((xj - xi) * (y - yi)) / ((yj - yi) || 0.000001) + xi);
+
+    if (intersect) inside = !inside;
+  }
+
+  return inside;
+}
+
 function distanceLatLon(latA, lonA, latB, lonB) {
   const dLat = latA - latB;
   const dLon = normalizeLongitude(lonA - lonB);
+
   return Math.sqrt(dLat * dLat + dLon * dLon);
 }
 
@@ -296,297 +335,185 @@ function distanceToSegment(lat, lon, start, end) {
   return distanceLatLon(lat, lon, py, px);
 }
 
-function lineInfluence(lat, lon, lines, width) {
+function distanceToPolygon(lat, lon, polygon) {
+  let distance = Infinity;
+
+  for (let index = 0; index < polygon.length; index += 1) {
+    const start = polygon[index];
+    const end = polygon[(index + 1) % polygon.length];
+    distance = Math.min(distance, distanceToSegment(lat, lon, start, end));
+  }
+
+  return distance;
+}
+
+function lineInfluence(lat, lon, line, width) {
   let influence = 0;
 
-  for (let lineIndex = 0; lineIndex < lines.length; lineIndex += 1) {
-    const line = lines[lineIndex];
-
-    for (let pointIndex = 0; pointIndex < line.length - 1; pointIndex += 1) {
-      const distance = distanceToSegment(lat, lon, line[pointIndex], line[pointIndex + 1]);
-      influence = Math.max(influence, smoothstep(width, 0, distance));
-    }
+  for (let index = 0; index < line.length - 1; index += 1) {
+    const distance = distanceToSegment(lat, lon, line[index], line[index + 1]);
+    influence = Math.max(influence, smoothstep(width, 0, distance));
   }
 
   return clamp(influence, 0, 1);
 }
 
-function regionInfluence(lat, lon, region) {
-  const distance = distanceLatLon(lat, lon, region.center[0], region.center[1]);
-  const base = smoothstep(region.influence, 0, distance);
-  const ridge = lineInfluence(lat, lon, region.ridgeLines, 18);
-  const valley = lineInfluence(lat, lon, region.valleys || [], 12);
+function mineralNoise(lat, lon, seed) {
+  const a = Math.sin((lat + seed * 11.17) * 0.077) * Math.cos((lon - seed * 5.31) * 0.059);
+  const b = Math.sin((lat * 0.41 + lon * 0.19 + seed) * 0.141);
+  const c = Math.cos((lon - lat * 0.27 + seed * 2.13) * 0.033);
 
-  return clamp(base * 0.70 + ridge * 0.52 - valley * 0.16, 0, 1);
+  return clamp((a + b * 0.55 + c * 0.38 + 1.93) / 3.86, 0, 1);
 }
 
-function octaveNoise(lat, lon, scale, seed) {
-  const a = Math.sin((lat + seed * 17.13) * scale) * Math.cos((lon - seed * 9.71) * scale * 0.73);
-  const b = Math.sin((lat * 0.61 + lon * 0.23 + seed) * scale * 1.71);
-  const c = Math.cos((lon - lat * 0.31 + seed * 3.19) * scale * 0.49);
-  return clamp((a + b * 0.55 + c * 0.35 + 1.9) / 3.8, 0, 1);
+function classifySand(lat, lon, landmass, coastDistance) {
+  const mineral = mineralNoise(lat, lon, landmass.region * 17);
+  const blackWeight = landmass.blackSandBias * 0.62 + mineral * 0.38;
+  const whiteWeight = landmass.whiteSandBias * 0.58 + (1 - mineral) * 0.42;
+  const beachStrength = smoothstep(6.5, 0.2, coastDistance) * landmass.beachBias;
+
+  if (beachStrength < 0.14) return "none";
+  if (blackWeight > whiteWeight + 0.10) return "black-diamond-sand";
+  return "white-opal-sand";
 }
 
-function fractalNoise(lat, lon, seed) {
-  const low = octaveNoise(lat, lon, 0.027, seed);
-  const mid = octaveNoise(lat, lon, 0.083, seed + 17);
-  const high = octaveNoise(lat, lon, 0.191, seed + 41);
-  const micro = octaveNoise(lat, lon, 0.417, seed + 73);
-  return clamp(low * 0.42 + mid * 0.30 + high * 0.20 + micro * 0.08, 0, 1);
-}
+function sampleTopology(latInput, lonInput, options = {}) {
+  const lat = normalizeLatitude(latInput);
+  const lon = normalizeLongitude(lonInput);
+  let landmass = null;
+  let shelfMass = null;
+  let coastDistance = Infinity;
+  let shelfDistance = Infinity;
+  let insideLand = false;
+  let insideShelf = false;
 
-function mineralPressure(lat, lon) {
-  const pressure =
-    fractalNoise(lat, lon, 7) * 0.42 +
-    fractalNoise(lat * 0.7, lon * 1.2, 19) * 0.31 +
-    fractalNoise(lat * 1.4, lon * 0.5, 31) * 0.27;
+  for (let index = 0; index < LANDMASSES.length; index += 1) {
+    const current = LANDMASSES[index];
 
-  const diamondBand = Math.abs(Math.sin((lat * 0.19) + (lon * 0.043)));
-  const opalBand = Math.abs(Math.cos((lat * 0.071) - (lon * 0.113)));
+    if (pointInPolygon(lat, lon, current.points)) {
+      insideLand = true;
+      landmass = current;
+    }
 
-  return clamp(pressure * 0.72 + diamondBand * 0.17 + opalBand * 0.11, 0, 1);
-}
+    if (pointInPolygon(lat, lon, current.shelf)) {
+      insideShelf = true;
+      shelfMass = current;
+    }
 
-function resolveRegion(lat, lon) {
-  let region = null;
-  let influence = 0;
+    const localCoastDistance = distanceToPolygon(lat, lon, current.points);
+    const localShelfDistance = distanceToPolygon(lat, lon, current.shelf);
 
-  for (let index = 0; index < TERRAIN_REGIONS.length; index += 1) {
-    const candidate = TERRAIN_REGIONS[index];
-    const candidateInfluence = regionInfluence(lat, lon, candidate);
+    if (localCoastDistance < coastDistance) {
+      coastDistance = localCoastDistance;
+      if (!landmass) landmass = current;
+    }
 
-    if (candidateInfluence > influence) {
-      region = candidate;
-      influence = candidateInfluence;
+    if (localShelfDistance < shelfDistance) {
+      shelfDistance = localShelfDistance;
+      if (!shelfMass) shelfMass = current;
     }
   }
 
-  return { region, influence };
-}
+  let subterraneanInfluence = 0;
+  let subterraneanLine = null;
 
-function sampleTerrain(latInput, lonInput, options = {}) {
-  const lat = normalizeLatitude(latInput);
-  const lon = normalizeLongitude(lonInput);
-  const absoluteLatitude = Math.abs(lat);
-  const resolved = resolveRegion(lat, lon);
-  const region = resolved.region;
-  const bestInfluence = resolved.influence;
-  const ridge = region ? lineInfluence(lat, lon, region.ridgeLines, 18) : 0;
-  const valley = region ? lineInfluence(lat, lon, region.valleys || [], 12) : 0;
-  const pressure = mineralPressure(lat, lon);
-  const broadWeathering = fractalNoise(lat, lon, 41);
-  const stoneNoise = fractalNoise(lat, lon, 53);
-  const fineNoise = fractalNoise(lat, lon, 71);
-  const microPitting = fractalNoise(lat * 2.2, lon * 2.2, 97);
-  const erosion = region ? region.erosion : 0.7;
-  const regionRelief = region ? region.maxRelief : 0;
-  const erosionCut = smoothstep(0.2, 1, broadWeathering) * erosion;
-  const polarIce = smoothstep(55, 82, absoluteLatitude) * (region ? region.glacierBias : 0.15);
-  const coastalCut = bestInfluence > 0.1 && bestInfluence < 0.42 ? smoothstep(0.42, 0.1, bestInfluence) : 0;
+  for (let index = 0; index < SUBTERRANEAN_MEMORY_LINES.length; index += 1) {
+    const current = SUBTERRANEAN_MEMORY_LINES[index];
+    const influence = lineInfluence(lat, lon, current.line, 11);
 
-  const rawElevation =
-    bestInfluence * regionRelief * 0.84 +
-    ridge * 0.36 +
-    pressure * 0.18 +
-    stoneNoise * 0.11 +
-    fineNoise * 0.045 -
-    valley * 0.18 -
-    erosionCut * 0.17 -
-    coastalCut * 0.08;
-
-  const elevation = clamp(rawElevation, 0, 1);
-  const slope = clamp(ridge * 0.60 + Math.abs(fineNoise - broadWeathering) * 0.32 + valley * 0.08, 0, 1);
-  const roughness = clamp(stoneNoise * 0.40 + fineNoise * 0.25 + microPitting * 0.18 + pressure * 0.17, 0, 1);
-  const cliff = clamp(slope * 0.55 + ridge * 0.35 + coastalCut * 0.22 - valley * 0.12, 0, 1);
-  const glacier = clamp(polarIce + smoothstep(0.72, 1, elevation) * (region ? region.glacierBias : 0), 0, 1);
-  const beach = bestInfluence > 0.11 && bestInfluence < 0.34 ? smoothstep(0.34, 0.11, bestInfluence) : 0;
-  const blackSand = beach * smoothstep(0.62, 1, pressure);
-  const whiteSand = beach * (1 - blackSand) * smoothstep(0.15, 0.8, stoneNoise);
-  const exposedRock = smoothstep(0.34, 0.82, elevation) * (1 - glacier * 0.65);
-  const valleyBlue = valley * smoothstep(0.20, 0.72, bestInfluence);
-  const opalSignal = clamp(pressure * 0.44 + fractalNoise(lat, lon, 89) * 0.56, 0, 1);
-  const diamondSignal = clamp(pressure * 0.66 + ridge * 0.24 + fineNoise * 0.10, 0, 1);
-  const slateSignal = clamp(slope * 0.50 + roughness * 0.34 + (1 - opalSignal) * 0.16, 0, 1);
-  const graniteSignal = clamp(exposedRock * 0.52 + stoneNoise * 0.32 + ridge * 0.16, 0, 1);
-  const ancientWeathering = clamp(erosion * 0.48 + broadWeathering * 0.34 + microPitting * 0.18, 0, 1);
-
-  let material = "submerged-or-unassigned";
-  let colorHint = RELIEF_PALETTE.lowland;
-
-  if (glacier > 0.48) {
-    material = "glacier-over-slate-diamond";
-    colorHint = RELIEF_PALETTE.glacier;
-  } else if (blackSand > 0.28) {
-    material = "black-diamond-sand";
-    colorHint = RELIEF_PALETTE.blackSand;
-  } else if (whiteSand > 0.24) {
-    material = "white-opal-sand";
-    colorHint = RELIEF_PALETTE.whiteSand;
-  } else if (diamondSignal > 0.74 && exposedRock > 0.35) {
-    material = "diamond-granite-pressure-ridge";
-    colorHint = RELIEF_PALETTE.diamondGlint;
-  } else if (opalSignal > 0.68 && exposedRock > 0.18) {
-    material = "opal-granite-weathered-rise";
-    colorHint = RELIEF_PALETTE.opalLight;
-  } else if (slateSignal > 0.62) {
-    material = "slate-weathered-slope";
-    colorHint = RELIEF_PALETTE.slateLine;
-  } else if (graniteSignal > 0.48) {
-    material = "granite-ancient-relief";
-    colorHint = RELIEF_PALETTE.highGranite;
-  } else if (bestInfluence > 0.2) {
-    material = "weathered-lowland";
-    colorHint = RELIEF_PALETTE.weatheredStone;
+    if (influence > subterraneanInfluence) {
+      subterraneanInfluence = influence;
+      subterraneanLine = current;
+    }
   }
+
+  const activeMass = landmass || shelfMass;
+  const beachClass = activeMass ? classifySand(lat, lon, activeMass, coastDistance) : "none";
+  const coastBand = smoothstep(8, 0, coastDistance);
+  const shelfBand = insideShelf && !insideLand ? smoothstep(12, 0, shelfDistance) : 0;
+  const terrainAdmissible = insideLand || coastBand > 0.42;
+  const seaLevelBoundary = coastBand > 0.22 && coastBand < 0.92;
+  const oceanVoid = !insideLand;
+  const topologyClass = insideLand
+    ? "land"
+    : insideShelf
+      ? "coastal-shelf"
+      : subterraneanInfluence > 0.38
+        ? "subterranean-memory-under-void"
+        : "ocean-void";
 
   return {
     lat,
     lon,
-    admissible: bestInfluence > 0.08,
-    detailLevel: options.detailLevel || "4k",
-    regionId: region ? region.id : "void-or-ocean",
-    regionClass: region ? region.className : "void-or-ocean",
-    regionNumber: region ? region.region : 8,
-    influence: Number(bestInfluence.toFixed(4)),
-    elevation: Number(elevation.toFixed(4)),
-    slope: Number(slope.toFixed(4)),
-    roughness: Number(roughness.toFixed(4)),
-    cliff: Number(cliff.toFixed(4)),
-    ridge: Number(ridge.toFixed(4)),
-    valley: Number(valley.toFixed(4)),
-    valleyBlue: Number(valleyBlue.toFixed(4)),
-    pressure: Number(pressure.toFixed(4)),
-    erosion: Number(erosion.toFixed(4)),
-    ancientWeathering: Number(ancientWeathering.toFixed(4)),
-    glacier: Number(glacier.toFixed(4)),
-    beach: Number(beach.toFixed(4)),
-    blackSand: Number(blackSand.toFixed(4)),
-    whiteSand: Number(whiteSand.toFixed(4)),
-    exposedRock: Number(exposedRock.toFixed(4)),
-    opalSignal: Number(opalSignal.toFixed(4)),
-    diamondSignal: Number(diamondSignal.toFixed(4)),
-    slateSignal: Number(slateSignal.toFixed(4)),
-    graniteSignal: Number(graniteSignal.toFixed(4)),
-    microPitting: Number(microPitting.toFixed(4)),
-    material,
-    colorHint,
-    terrainAuthority: RECEIPT,
-    contract: CONTRACT
+    topologyAuthority: RECEIPT,
+    contract: CONTRACT,
+    version: VERSION,
+    topologyClass,
+    land: insideLand,
+    oceanVoid,
+    shelf: insideShelf,
+    terrainAdmissible,
+    seaLevelBoundary,
+    coastBand: Number(coastBand.toFixed(4)),
+    shelfBand: Number(shelfBand.toFixed(4)),
+    coastDistance: Number(coastDistance.toFixed(4)),
+    shelfDistance: Number(shelfDistance.toFixed(4)),
+    beachClass,
+    landmassId: activeMass ? activeMass.id : "none",
+    landmassClass: activeMass ? activeMass.className : "none",
+    region: activeMass ? activeMass.region : 0,
+    role: activeMass ? activeMass.role : "void",
+    subterraneanInfluence: Number(subterraneanInfluence.toFixed(4)),
+    subterraneanLineId: subterraneanLine ? subterraneanLine.id : "none",
+    subterraneanClass: subterraneanLine ? subterraneanLine.className : "none",
+    colorHint: insideLand
+      ? TOPOLOGY_PALETTE.land
+      : insideShelf
+        ? TOPOLOGY_PALETTE.shelf
+        : TOPOLOGY_PALETTE.voidOcean,
+    beachColorHint: beachClass === "black-diamond-sand"
+      ? TOPOLOGY_PALETTE.beachBlack
+      : beachClass === "white-opal-sand"
+        ? TOPOLOGY_PALETTE.beachWhite
+        : "rgba(0, 0, 0, 0)"
   };
 }
 
-function sampleTerrainColor(lat, lon, options = {}) {
-  const sample = sampleTerrain(lat, lon, options);
-
-  return {
-    color: sample.colorHint,
-    material: sample.material,
-    alpha: clamp(0.18 + sample.influence * 0.64 + sample.exposedRock * 0.18, 0, 0.96),
-    highlight: sample.diamondSignal > 0.72 || sample.opalSignal > 0.72,
-    shadow: sample.cliff > 0.62,
-    sample
-  };
-}
-
-function buildTerrainGrid(options = {}) {
+function buildTopologyGrid(options = {}) {
   const latStep = options.latStep || 6;
   const lonStep = options.lonStep || 6;
   const grid = [];
 
   for (let lat = -84; lat <= 84; lat += latStep) {
     for (let lon = -180; lon < 180; lon += lonStep) {
-      grid.push(sampleTerrain(lat, lon, {
-        detailLevel: options.detailLevel || "diagnostic-grid"
-      }));
+      grid.push(sampleTopology(lat, lon));
     }
   }
 
   return grid;
 }
 
-function buildReliefLayer(options = {}) {
-  const latStep = options.latStep || 4;
-  const lonStep = options.lonStep || 4;
-  const minInfluence = options.minInfluence || 0.12;
-  const points = [];
-
-  for (let lat = -84; lat <= 84; lat += latStep) {
-    for (let lon = -180; lon < 180; lon += lonStep) {
-      const sample = sampleTerrain(lat, lon, { detailLevel: "relief-layer" });
-
-      if (sample.influence >= minInfluence) {
-        points.push({
-          lat: sample.lat,
-          lon: sample.lon,
-          elevation: sample.elevation,
-          slope: sample.slope,
-          roughness: sample.roughness,
-          cliff: sample.cliff,
-          material: sample.material,
-          colorHint: sample.colorHint,
-          alpha: clamp(0.15 + sample.influence * 0.55 + sample.exposedRock * 0.20, 0.12, 0.94)
-        });
-      }
-    }
-  }
-
-  return {
-    receipt: RECEIPT,
-    contract: CONTRACT,
-    version: VERSION,
-    pointCount: points.length,
-    points
-  };
-}
-
-function traceRidgeLines() {
-  const ridges = [];
-
-  for (let regionIndex = 0; regionIndex < TERRAIN_REGIONS.length; regionIndex += 1) {
-    const region = TERRAIN_REGIONS[regionIndex];
-
-    for (let lineIndex = 0; lineIndex < region.ridgeLines.length; lineIndex += 1) {
-      ridges.push({
-        regionId: region.id,
-        regionClass: region.className,
-        geology: region.geology,
-        line: region.ridgeLines[lineIndex]
-      });
-    }
-  }
-
-  return ridges;
-}
-
-function summarizeTerrain(options = {}) {
-  const grid = buildTerrainGrid(options);
+function summarizeTopology(options = {}) {
+  const grid = buildTopologyGrid(options);
   const total = grid.length || 1;
-  let admissible = 0;
-  let glacier = 0;
-  let beach = 0;
-  let exposedRock = 0;
-  let highRelief = 0;
-  let diamond = 0;
-  let opal = 0;
-  let slate = 0;
-  let granite = 0;
-  let cliff = 0;
-  let valley = 0;
+  let land = 0;
+  let shelf = 0;
+  let seaLevel = 0;
+  let terrainMask = 0;
+  let whiteSand = 0;
+  let blackSand = 0;
+  let subterranean = 0;
 
   for (let index = 0; index < grid.length; index += 1) {
     const sample = grid[index];
 
-    if (sample.admissible) admissible += 1;
-    if (sample.glacier > 0.35) glacier += 1;
-    if (sample.beach > 0.25) beach += 1;
-    if (sample.exposedRock > 0.4) exposedRock += 1;
-    if (sample.elevation > 0.62) highRelief += 1;
-    if (sample.diamondSignal > 0.68) diamond += 1;
-    if (sample.opalSignal > 0.64) opal += 1;
-    if (sample.slateSignal > 0.62) slate += 1;
-    if (sample.graniteSignal > 0.56) granite += 1;
-    if (sample.cliff > 0.60) cliff += 1;
-    if (sample.valley > 0.46) valley += 1;
+    if (sample.land) land += 1;
+    if (sample.shelf) shelf += 1;
+    if (sample.seaLevelBoundary) seaLevel += 1;
+    if (sample.terrainAdmissible) terrainMask += 1;
+    if (sample.beachClass === "white-opal-sand") whiteSand += 1;
+    if (sample.beachClass === "black-diamond-sand") blackSand += 1;
+    if (sample.subterraneanInfluence > 0.38) subterranean += 1;
   }
 
   return {
@@ -594,48 +521,46 @@ function summarizeTerrain(options = {}) {
     contract: CONTRACT,
     version: VERSION,
     totalSamples: total,
-    admissibleRatio: Number((admissible / total).toFixed(4)),
-    glacierRatio: Number((glacier / total).toFixed(4)),
-    beachRatio: Number((beach / total).toFixed(4)),
-    exposedRockRatio: Number((exposedRock / total).toFixed(4)),
-    highReliefRatio: Number((highRelief / total).toFixed(4)),
-    diamondSignalRatio: Number((diamond / total).toFixed(4)),
-    opalSignalRatio: Number((opal / total).toFixed(4)),
-    slateSignalRatio: Number((slate / total).toFixed(4)),
-    graniteSignalRatio: Number((granite / total).toFixed(4)),
-    cliffRatio: Number((cliff / total).toFixed(4)),
-    valleyRatio: Number((valley / total).toFixed(4)),
+    landRatio: Number((land / total).toFixed(4)),
+    shelfRatio: Number((shelf / total).toFixed(4)),
+    oceanVoidRatio: Number(((total - land) / total).toFixed(4)),
+    seaLevelBoundaryRatio: Number((seaLevel / total).toFixed(4)),
+    terrainMaskRatio: Number((terrainMask / total).toFixed(4)),
+    whiteOpalSandRatio: Number((whiteSand / total).toFixed(4)),
+    blackDiamondSandRatio: Number((blackSand / total).toFixed(4)),
+    subterraneanMemoryRatio: Number((subterranean / total).toFixed(4)),
+    targetLandRatioBand: TOPOLOGY_AUTHORITY.targetLandRatioBand,
     graphicBox: false,
     imageGeneration: false,
     visualPassClaimed: false
   };
 }
 
-const TERRAIN_SUMMARY = Object.freeze(summarizeTerrain({ latStep: 8, lonStep: 8 }));
-
-function getTerrainAuthority() {
-  return TERRAIN_AUTHORITY;
+function getTopologyAuthority() {
+  return TOPOLOGY_AUTHORITY;
 }
 
-function getTerrainGeology() {
-  return GEOLOGY;
+function getTopologyLandmasses() {
+  return LANDMASSES;
 }
 
-function getTerrainRegions() {
-  return TERRAIN_REGIONS;
+function getSubterraneanMemoryLines() {
+  return SUBTERRANEAN_MEMORY_LINES;
 }
 
-function getTerrainSummary() {
-  return TERRAIN_SUMMARY;
+function getTopologyPalette() {
+  return TOPOLOGY_PALETTE;
 }
 
-function getTerrainPalette() {
-  return RELIEF_PALETTE;
+const TOPOLOGY_SUMMARY = Object.freeze(summarizeTopology({ latStep: 6, lonStep: 6 }));
+
+function getTopologySummary() {
+  return TOPOLOGY_SUMMARY;
 }
 
-function publishTerrainAuthority() {
+function publishTopologyAuthority() {
   if (typeof window === "undefined") {
-    return TERRAIN_AUTHORITY;
+    return TOPOLOGY_AUTHORITY;
   }
 
   const status = {
@@ -643,24 +568,22 @@ function publishTerrainAuthority() {
     receipt: RECEIPT,
     contract: CONTRACT,
     version: VERSION,
-    authority: TERRAIN_AUTHORITY,
-    geology: GEOLOGY,
-    summary: TERRAIN_SUMMARY,
-    exposesSampleTerrain: true,
-    exposesSampleTerrainColor: true,
-    exposesTerrainGrid: true,
-    exposesReliefLayer: true,
-    exposesRidgeLines: true,
+    authority: TOPOLOGY_AUTHORITY,
+    summary: TOPOLOGY_SUMMARY,
+    landmasses: LANDMASSES.length,
+    subterraneanMemoryLines: SUBTERRANEAN_MEMORY_LINES.length,
+    exposesSampleTopology: true,
+    exposesTopologyGrid: true,
     graphicBox: false,
     imageGeneration: false,
     visualPassClaimed: false
   };
 
-  window.__AUDRALIA_TERRAIN_AUTHORITY__ = status;
-  window.__AUDRALIA_TERRAIN_STATUS__ = status;
+  window.__AUDRALIA_TOPOLOGY_AUTHORITY__ = status;
+  window.__AUDRALIA_TOPOLOGY_STATUS__ = status;
 
   try {
-    window.dispatchEvent(new CustomEvent("audralia:terrain-authority-ready", {
+    window.dispatchEvent(new CustomEvent("audralia:topology-authority-ready", {
       detail: status
     }));
   } catch (_) {
@@ -674,52 +597,46 @@ const api = {
   RECEIPT,
   CONTRACT,
   VERSION,
-  TERRAIN_AUTHORITY,
-  GEOLOGY,
-  TERRAIN_REGIONS,
-  RELIEF_PALETTE,
-  TERRAIN_SUMMARY,
-  sampleTerrain,
-  sampleTerrainColor,
-  buildTerrainGrid,
-  buildReliefLayer,
-  traceRidgeLines,
-  summarizeTerrain,
-  publishTerrainAuthority,
-  getTerrainAuthority,
-  getTerrainGeology,
-  getTerrainRegions,
-  getTerrainSummary,
-  getTerrainPalette
+  TOPOLOGY_AUTHORITY,
+  LANDMASSES,
+  SUBTERRANEAN_MEMORY_LINES,
+  TOPOLOGY_PALETTE,
+  TOPOLOGY_SUMMARY,
+  sampleTopology,
+  buildTopologyGrid,
+  summarizeTopology,
+  getTopologyAuthority,
+  getTopologyLandmasses,
+  getSubterraneanMemoryLines,
+  getTopologyPalette,
+  getTopologySummary,
+  publishTopologyAuthority
 };
 
 if (typeof window !== "undefined") {
-  window.AudraliaTerrainAuthority = api;
+  window.AudraliaTopologyAuthority = api;
 }
 
-publishTerrainAuthority();
+publishTopologyAuthority();
 
 export {
   RECEIPT,
   CONTRACT,
   VERSION,
-  TERRAIN_AUTHORITY,
-  GEOLOGY,
-  TERRAIN_REGIONS,
-  RELIEF_PALETTE,
-  TERRAIN_SUMMARY,
-  sampleTerrain,
-  sampleTerrainColor,
-  buildTerrainGrid,
-  buildReliefLayer,
-  traceRidgeLines,
-  summarizeTerrain,
-  publishTerrainAuthority,
-  getTerrainAuthority,
-  getTerrainGeology,
-  getTerrainRegions,
-  getTerrainSummary,
-  getTerrainPalette
+  TOPOLOGY_AUTHORITY,
+  LANDMASSES,
+  SUBTERRANEAN_MEMORY_LINES,
+  TOPOLOGY_PALETTE,
+  TOPOLOGY_SUMMARY,
+  sampleTopology,
+  buildTopologyGrid,
+  summarizeTopology,
+  getTopologyAuthority,
+  getTopologyLandmasses,
+  getSubterraneanMemoryLines,
+  getTopologyPalette,
+  getTopologySummary,
+  publishTopologyAuthority
 };
 
 export default api;

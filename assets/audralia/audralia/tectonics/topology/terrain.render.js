@@ -1,599 +1,562 @@
-// /assets/audralia/audralia/tectonics/topology/terrain.render.js
-// AUDRALIA_TECTONICS_TOPOLOGY_TERRAIN_GRANDCHILD_RELIEF_TNT_v1
-//
-// Role:
-// - Audralia terrain grandchild authority.
-// - Born from topology.
-// - Topology was born from tectonics.
-// - Owns elevation, relief, ridges, basins, cliffs, carved channels, glacier seats, and hydrology readiness.
-// - Must never expand land beyond topology.
-//
-// Hard locks:
-// - No DOM mutation.
-// - No route rendering.
-// - No runtime rendering.
-// - No land generation.
-// - No topology rewrite.
-// - No tectonic overwrite.
-// - No active hydration.
-// - No foliage.
-// - No trees.
-// - No vegetation.
-// - No animals.
-// - No marine life.
-// - No construct civilization.
-// - No graphic box.
-// - No image generation.
-// - No visual pass claim.
+/* /assets/audralia/audralia/tectonics/topology/terrain.render.js */
+/* AUDRALIA_TERRAIN_RELIEF_AUTHORITY */
+/* TNT: AUDRALIA_TERRAIN_4K_RELIEF_DETAIL_TNT_v1 */
 
-import {
-  sampleTectonics,
-  buildTectonicsField,
-  getTectonicsSampleFromField,
-  getTectonicsStatus
-} from "../render.js?v=AUDRALIA_TECTONICS_DERIVATIVE_ORIGIN_PARENT_TNT_v1";
+const RECEIPT = "AUDRALIA_TERRAIN_RELIEF_AUTHORITY_RECEIPT";
+const CONTRACT = "AUDRALIA_TERRAIN_4K_RELIEF_DETAIL_TNT_v1";
+const VERSION = "2026-05-06.terrain-4k-relief-detail-v1";
 
-import {
-  sampleTopology,
-  buildTopologyField,
-  getTopologySampleFromField,
-  getTopologyStatus
-} from "./render.js?v=AUDRALIA_TECTONICS_TOPOLOGY_CHILD_FOOTPRINT_AUTHORITY_TNT_v1";
-
-const RECEIPT = "AUDRALIA_TECTONICS_TOPOLOGY_TERRAIN_GRANDCHILD_RELIEF_TNT_v1";
-
-const PLANETARY_OBJECT = "Audralia";
-const GENERATION = "G1_TERRAIN_GRANDCHILD_OF_TOPOLOGY";
-const FILE = "/assets/audralia/audralia/tectonics/topology/terrain.render.js";
-
-const TERRAIN_LAW = Object.freeze({
-  genealogy: "tectonics→topology→terrain",
-  grandchildOfTectonics: true,
-  childOfTopology: true,
-  parentTopology: "/assets/audralia/audralia/tectonics/topology/render.js",
-  grandparentTectonics: "/assets/audralia/audralia/tectonics/render.js",
-
-  ownsTerrain: true,
-  ownsElevation: true,
-  ownsRelief: true,
-  ownsRidges: true,
-  ownsBasins: true,
-  ownsCliffs: true,
-  ownsCarvedChannels: true,
-  ownsHydrologyReadiness: true,
-
-  ownsTectonics: false,
-  ownsTopology: false,
-  ownsLandFootprint: false,
-  ownsLandExpansion: false,
-  ownsHydration: false,
-  ownsRouteRendering: false,
-  ownsRuntimeRendering: false,
-  ownsFinalRender: false,
-
-  mustRespectTopologyLandArea: true,
-  visualPassClaimed: false
+const TERRAIN_AUTHORITY = Object.freeze({
+  name: "Audralia Terrain Relief Authority",
+  planet: "Audralia",
+  receipt: RECEIPT,
+  contract: CONTRACT,
+  version: VERSION,
+  lineage: "tectonics -> topology -> terrain",
+  role: "above-sea-level-relief-expression",
+  precinct: "terrain-height-mineral-relief-glacier-slope-and-surface-detail",
+  jurisdiction: [
+    "elevation",
+    "relief",
+    "slope",
+    "ridge-field",
+    "valley-field",
+    "mineral-pressure-expression",
+    "glacier-height",
+    "rock-texture",
+    "surface-roughness",
+    "terrain-color-hints"
+  ],
+  nonJurisdiction: [
+    "route-shell",
+    "html",
+    "canvas-mount",
+    "final-canvas-composition",
+    "runtime-boot",
+    "hydration-ownership",
+    "ocean-depth-ownership",
+    "GraphicBox",
+    "image-generation"
+  ],
+  graphicBox: false,
+  imageGeneration: false,
+  visualPassClaimed: false,
+  renderResolutionIntent: "4k-procedural-sampling-authority",
+  exportedSurface: "terrain-sampler-and-payload"
 });
 
-const DEFAULTS = Object.freeze({
-  fieldWidth: 224,
-  fieldHeight: 112,
-  minFieldWidth: 64,
-  minFieldHeight: 32,
-  maxFieldWidth: 512,
-  maxFieldHeight: 256,
-  reliefDemand: 1.0,
-  canyonDemand: 0.94,
-  cliffDemand: 0.90,
-  hydrologyReadinessDemand: 0.90,
-  glacierDemand: 0.78
+const GEOLOGY = Object.freeze({
+  dominant: ["diamond", "opal", "granite", "slate"],
+  sands: ["white-opal-sand", "black-diamond-sand"],
+  reliefMemory: "ancient-eroded-mountain-systems",
+  weatheringAge: "approximately-forty-billion-year-surface-memory",
+  newbornComparison: "newborn-Audralia-mountains-dwarfed-Earth-Himalayan-standard",
+  currentExpression: "ancient-weathered-rocky-relief-with-mineral-pressure"
+});
+
+const TERRAIN_REGIONS = Object.freeze([
+  {
+    id: "western-mainland-arc",
+    region: 2,
+    className: "weathered-granite-slate-mainland",
+    center: [-25, -111],
+    influence: 44,
+    maxRelief: 0.78,
+    erosion: 0.62,
+    glacierBias: 0.08,
+    geology: ["granite", "slate", "diamond-vein"],
+    ridgeLines: [
+      [[-51, -151], [-43, -134], [-35, -112], [-27, -91], [-18, -70]],
+      [[-41, -141], [-26, -122], [-10, -108], [9, -92], [22, -77]],
+      [[-48, -124], [-34, -103], [-21, -84], [-5, -63]]
+    ]
+  },
+  {
+    id: "eastern-attached-mainland",
+    region: 3,
+    className: "opal-granite-coastal-rise",
+    center: [4, -17],
+    influence: 42,
+    maxRelief: 0.66,
+    erosion: 0.56,
+    glacierBias: 0.04,
+    geology: ["opal", "granite", "slate"],
+    ridgeLines: [
+      [[-26, -61], [-12, -44], [4, -24], [20, -6], [34, 17]],
+      [[-28, -33], [-16, -10], [-4, 14], [8, 38], [22, 54]],
+      [[-21, 36], [-5, 47], [13, 50], [29, 39]]
+    ]
+  },
+  {
+    id: "northern-rock-crown",
+    region: 1,
+    className: "ice-reserve-and-pressure-cap",
+    center: [55, -73],
+    influence: 39,
+    maxRelief: 0.86,
+    erosion: 0.48,
+    glacierBias: 0.88,
+    geology: ["ice", "slate", "diamond-understone"],
+    ridgeLines: [
+      [[43, -148], [53, -112], [61, -72], [62, -31], [50, 12]],
+      [[37, -93], [48, -69], [58, -43], [64, -14]],
+      [[39, -4], [46, 11], [55, 20]]
+    ]
+  },
+  {
+    id: "southern-weathered-mass",
+    region: 5,
+    className: "diamond-opal-wet-edge",
+    center: [-58, 79],
+    influence: 45,
+    maxRelief: 0.72,
+    erosion: 0.70,
+    glacierBias: 0.64,
+    geology: ["diamond", "opal", "slate"],
+    ridgeLines: [
+      [[-70, -39], [-61, 3], [-51, 45], [-38, 82], [-29, 119]],
+      [[-77, 53], [-65, 82], [-52, 111], [-41, 142], [-54, 166]],
+      [[-58, 17], [-48, 54], [-39, 91], [-31, 130]]
+    ]
+  },
+  {
+    id: "equatorial-ancient-chain",
+    region: 4,
+    className: "ancient-eroded-mountain-memory",
+    center: [-7, 120],
+    influence: 34,
+    maxRelief: 0.81,
+    erosion: 0.74,
+    glacierBias: 0.02,
+    geology: ["granite", "diamond", "opal"],
+    ridgeLines: [
+      [[-16, 69], [-5, 91], [8, 113], [16, 137], [6, 160]],
+      [[-21, 101], [-12, 122], [-4, 145], [1, 164]],
+      [[-11, 76], [3, 98], [15, 121]]
+    ]
+  },
+  {
+    id: "island-and-shelf-relief",
+    region: 6,
+    className: "island-and-shelf-expression",
+    center: [-36, 132],
+    influence: 25,
+    maxRelief: 0.44,
+    erosion: 0.67,
+    glacierBias: 0.00,
+    geology: ["opal", "diamond-sand", "granite"],
+    ridgeLines: [
+      [[-42, 96], [-34, 112], [-31, 129], [-40, 140]],
+      [[-50, 101], [-44, 118], [-37, 134]],
+      [[-47, 142], [-36, 154], [-21, 168]]
+    ]
+  },
+  {
+    id: "western-pressure-islands",
+    region: 7,
+    className: "miscellaneous-territory-expression",
+    center: [8, -150],
+    influence: 24,
+    maxRelief: 0.38,
+    erosion: 0.58,
+    glacierBias: 0.00,
+    geology: ["slate", "opal", "black-diamond-sand"],
+    ridgeLines: [
+      [[2, -171], [11, -160], [19, -147], [16, -135]],
+      [[-6, -152], [4, -142], [14, -134]],
+      [[8, -166], [18, -154], [22, -140]]
+    ]
+  }
+]);
+
+const RELIEF_PALETTE = Object.freeze({
+  deepShadow: "rgba(28, 32, 34, 0.42)",
+  lowland: "rgba(94, 117, 84, 0.92)",
+  weatheredStone: "rgba(127, 118, 91, 0.94)",
+  highGranite: "rgba(202, 199, 168, 0.72)",
+  opalLight: "rgba(207, 236, 224, 0.68)",
+  diamondGlint: "rgba(246, 252, 255, 0.76)",
+  slateLine: "rgba(76, 89, 96, 0.58)",
+  glacier: "rgba(235, 247, 255, 0.82)",
+  whiteSand: "rgba(246, 231, 188, 0.72)",
+  blackSand: "rgba(42, 39, 36, 0.56)"
 });
 
 function clamp(value, min, max) {
-  const n = Number(value);
-  if (!Number.isFinite(n)) return min;
-  return Math.max(min, Math.min(max, n));
+  return Math.max(min, Math.min(max, value));
 }
 
-function normalizeDimension(value, fallback, min, max) {
-  return clamp(Math.floor(Number(value) || fallback), min, max);
+function normalizeLongitude(lon) {
+  let value = Number(lon) || 0;
+
+  while (value > 180) value -= 360;
+  while (value < -180) value += 360;
+
+  return value;
 }
 
-function normalizeUV(uInput, vInput) {
-  const u = ((Number(uInput) || 0) % 1 + 1) % 1;
-  const v = clamp(Number(vInput) || 0, 0, 1);
-
-  return Object.freeze({
-    u,
-    v,
-    lon: u * 2 - 1,
-    lat: 1 - v * 2
-  });
+function normalizeLatitude(lat) {
+  return clamp(Number(lat) || 0, -90, 90);
 }
 
-function fract(value) {
-  return value - Math.floor(value);
+function hash01(seed) {
+  const x = Math.sin(seed * 12.9898) * 43758.5453123;
+  return x - Math.floor(x);
 }
 
-function mix(a, b, t) {
-  return a + (b - a) * clamp(t, 0, 1);
+function smoothstep(edge0, edge1, value) {
+  const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+  return t * t * (3 - 2 * t);
 }
 
-function hash2(x, y, seed) {
-  return fract(Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123);
+function distanceLatLon(latA, lonA, latB, lonB) {
+  const dLat = latA - latB;
+  const dLon = normalizeLongitude(lonA - lonB);
+  return Math.sqrt((dLat * dLat) + (dLon * dLon));
 }
 
-function valueNoise(x, y, seed) {
-  const ix = Math.floor(x);
-  const iy = Math.floor(y);
-  const fx = fract(x);
-  const fy = fract(y);
+function distanceToSegment(lat, lon, start, end) {
+  const x = normalizeLongitude(lon);
+  const y = lat;
+  const x1 = normalizeLongitude(start[1]);
+  const y1 = start[0];
+  let x2 = normalizeLongitude(end[1]);
+  const y2 = end[0];
 
-  const a = hash2(ix, iy, seed);
-  const b = hash2(ix + 1, iy, seed);
-  const c = hash2(ix, iy + 1, seed);
-  const d = hash2(ix + 1, iy + 1, seed);
-
-  const ux = fx * fx * (3 - 2 * fx);
-  const uy = fy * fy * (3 - 2 * fy);
-
-  return mix(mix(a, b, ux), mix(c, d, ux), uy);
-}
-
-function fbm(x, y, seed, octaves = 4) {
-  let total = 0;
-  let amplitude = 0.5;
-  let frequency = 1;
-  let normalizer = 0;
-
-  for (let i = 0; i < octaves; i += 1) {
-    total += valueNoise(x * frequency, y * frequency, seed + i * 19.13) * amplitude;
-    normalizer += amplitude;
-    amplitude *= 0.5;
-    frequency *= 2;
+  if (Math.abs(x2 - x1) > 180) {
+    x2 += x2 < x1 ? 360 : -360;
   }
 
-  return total / Math.max(0.00001, normalizer);
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const lengthSq = dx * dx + dy * dy;
+
+  if (lengthSq === 0) return distanceLatLon(lat, lon, y1, x1);
+
+  const t = clamp(((x - x1) * dx + (y - y1) * dy) / lengthSq, 0, 1);
+  const px = x1 + t * dx;
+  const py = y1 + t * dy;
+
+  return distanceLatLon(lat, lon, py, px);
 }
 
-function safeTectonics(context, point) {
-  if (context && context.tectonics) return context.tectonics;
-  if (context && context.tectonicsSample) return context.tectonicsSample;
-  if (context && context.tectonicsField) return getTectonicsSampleFromField(context.tectonicsField, point.u, point.v);
+function ridgeInfluence(lat, lon, ridgeLines) {
+  let influence = 0;
 
-  try {
-    return sampleTectonics(point.u, point.v, context && context.tectonicsContext ? context.tectonicsContext : {});
-  } catch {
-    return Object.freeze({
-      receipt: "TERRAIN_GRANDCHILD_FALLBACK_TECTONICS",
-      fallbackUsed: true,
-      crustalStressIndex: 0,
-      mountainChainPermission: 0,
-      canyonPermission: 0,
-      cliffPermission: 0,
-      upliftPermission: 0,
-      trenchReinforcementPermission: 0,
-      terrainPressureHandoff: 0,
-      exposedMineralHardnessIndex: 0
-    });
-  }
-}
+  for (let lineIndex = 0; lineIndex < ridgeLines.length; lineIndex += 1) {
+    const line = ridgeLines[lineIndex];
 
-function safeTopology(context, point, tectonics) {
-  if (context && context.topology) return context.topology;
-  if (context && context.topologySample) return context.topologySample;
-  if (context && context.topologyField) return getTopologySampleFromField(context.topologyField, point.u, point.v);
+    for (let pointIndex = 0; pointIndex < line.length - 1; pointIndex += 1) {
+      const distance = distanceToSegment(lat, lon, line[pointIndex], line[pointIndex + 1]);
+      const local = smoothstep(18, 0, distance);
 
-  try {
-    return sampleTopology(point.u, point.v, { ...(context || {}), tectonics });
-  } catch {
-    return Object.freeze({
-      receipt: "TERRAIN_GRANDCHILD_FALLBACK_TOPOLOGY",
-      fallbackUsed: true,
-      isLandFootprint: false,
-      isAboveWaterLandFootprint: false,
-      isVoidFootprint: true,
-      isWaterFootprint: true,
-      isPolarIceFootprint: false,
-      isBeach: false,
-      isShelf: false,
-      oceanDepthIndex: 0.62,
-      bathymetryBlueprintIndex: 0.58,
-      terrainRisePermission: 0,
-      terrainBlockPermission: 1,
-      shorelinePressure: 0,
-      beachOutlinePressure: 0,
-      cliffBaseCut: 0
-    });
-  }
-}
-
-function isLand(topology) {
-  return Boolean(topology && (topology.isLandFootprint || topology.isAboveWaterLandFootprint));
-}
-
-function isIce(topology) {
-  return Boolean(
-    topology &&
-      (
-        topology.isPolarIceFootprint ||
-        topology.isSouthPolarIceFootprint ||
-        topology.isNorthPolarIceFootprint ||
-        topology.surfaceClass === "polar_ice_footprint" ||
-        topology.topologySurfaceClass === "polar_ice_footprint"
-      )
-  );
-}
-
-export function sampleTerrain(uInput, vInput, context = {}) {
-  const point = normalizeUV(uInput, vInput);
-  const options = Object.freeze({ ...DEFAULTS, ...(context || {}) });
-
-  const tectonics = safeTectonics(options, point);
-  const topology = safeTopology(options, point, tectonics);
-
-  const land = isLand(topology);
-  const ice = isIce(topology);
-
-  const reliefNoise = fbm(point.lon * 10.4 + 0.8, point.lat * 10.4 - 0.6, 4011, 4);
-  const fineNoise = fbm(point.lon * 26.2 - 2.6, point.lat * 26.2 + 1.4, 4049, 3);
-  const channelNoise = fbm(point.lon * 18.0 + 3.8, point.lat * 18.0 - 2.2, 4073, 4);
-
-  const topologyRise = clamp(Number(topology.terrainRisePermission) || 0, 0, 1);
-  const tectonicHandoff = clamp(Number(tectonics.terrainPressureHandoff) || 0, 0, 1);
-  const mountainPermission = clamp(Number(tectonics.mountainChainPermission) || 0, 0, 1);
-  const canyonPermission = clamp(Number(tectonics.canyonPermission) || 0, 0, 1);
-  const cliffPermission = clamp(Number(tectonics.cliffPermission) || 0, 0, 1);
-  const upliftPermission = clamp(Number(tectonics.upliftPermission) || 0, 0, 1);
-  const mineralHardness = clamp(Number(tectonics.exposedMineralHardnessIndex) || 0, 0, 1);
-
-  const ridge = land
-    ? clamp(
-        mountainPermission * 0.36 +
-          upliftPermission * 0.24 +
-          reliefNoise * 0.20 +
-          topologyRise * 0.14 +
-          mineralHardness * 0.06,
-        0,
-        1
-      )
-    : 0;
-
-  const canyonPressure = land
-    ? clamp(
-        canyonPermission * 0.38 +
-          channelNoise * 0.24 +
-          Number(topology.seaLevelErosionPressure || 0) * 0.16 +
-          (1 - reliefNoise) * 0.10 +
-          clamp(options.canyonDemand, 0, 1) * 0.12,
-        0,
-        1
-      )
-    : 0;
-
-  const cliffPressure = land
-    ? clamp(
-        cliffPermission * 0.38 +
-          Number(topology.cliffBaseCut || 0) * 0.24 +
-          Number(topology.coastalCliffPressure || 0) * 0.20 +
-          mineralHardness * 0.10 +
-          clamp(options.cliffDemand, 0, 1) * 0.08,
-        0,
-        1
-      )
-    : 0;
-
-  const basin = land
-    ? clamp(
-        (1 - ridge) * 0.26 +
-          (1 - topologyRise) * 0.22 +
-          channelNoise * 0.18 +
-          Number(topology.basinDepthIndex || 0) * 0.16,
-        0,
-        1
-      )
-    : clamp(Number(topology.oceanDepthIndex) || 0.58, 0, 1);
-
-  const normalizedElevation = ice
-    ? 0.18
-    : land
-      ? clamp(
-          topologyRise * 0.30 +
-            tectonicHandoff * 0.22 +
-            ridge * 0.22 +
-            cliffPressure * 0.10 +
-            reliefNoise * 0.10 +
-            fineNoise * 0.06,
-          0.06,
-          1
-        )
-      : -clamp(
-          Number(topology.oceanDepthIndex) ||
-            Number(topology.bathymetryBlueprintIndex) ||
-            0.56,
-          0.10,
-          1
-        );
-
-  const slope = land
-    ? clamp(ridge * 0.36 + canyonPressure * 0.24 + cliffPressure * 0.22 + fineNoise * 0.18, 0, 1)
-    : 0;
-
-  const riverbedPressure = land
-    ? clamp(canyonPressure * 0.38 + basin * 0.18 + channelNoise * 0.26 + slope * 0.08, 0, 1)
-    : 0;
-
-  const streamPressure = land
-    ? clamp(riverbedPressure * 0.62 + fineNoise * 0.18 + slope * 0.10, 0, 1)
-    : 0;
-
-  const lakeBasinPressure = land
-    ? clamp(basin * 0.42 + (1 - ridge) * 0.22 + channelNoise * 0.16 + Number(topology.shorelinePressure || 0) * 0.10, 0, 1)
-    : 0;
-
-  const valleyChannelPressure = land
-    ? clamp(canyonPressure * 0.46 + riverbedPressure * 0.26 + slope * 0.12, 0, 1)
-    : 0;
-
-  const floodplainPressure = land
-    ? clamp(lakeBasinPressure * 0.30 + riverbedPressure * 0.28 + Number(topology.shorelinePressure || 0) * 0.16, 0, 1)
-    : 0;
-
-  const deltaReceiverPressure = land
-    ? clamp(Number(topology.shorelinePressure || 0) * riverbedPressure * 0.72, 0, 1)
-    : 0;
-
-  const glacierSeatPressure = ice
-    ? 0.88
-    : land
-      ? clamp(
-          Math.max(0, Math.abs(point.lat) - 0.62) * 1.8 +
-            ridge * 0.24 +
-            mountainPermission * 0.18 +
-            clamp(options.glacierDemand, 0, 1) * 0.08,
-          0,
-          1
-        )
-      : 0;
-
-  const snowpackSourcePressure = clamp(glacierSeatPressure * 0.78 + ridge * 0.12, 0, 1);
-
-  const hydrologyReadinessIndex = land || ice
-    ? clamp(
-        riverbedPressure * 0.22 +
-          streamPressure * 0.14 +
-          lakeBasinPressure * 0.16 +
-          glacierSeatPressure * 0.14 +
-          valleyChannelPressure * 0.14 +
-          floodplainPressure * 0.10 +
-          clamp(options.hydrologyReadinessDemand, 0, 1) * 0.10,
-        0,
-        1
-      )
-    : 0;
-
-  return Object.freeze({
-    receipt: RECEIPT,
-    activeContract: RECEIPT,
-    latestContract: RECEIPT,
-    planetaryObject: PLANETARY_OBJECT,
-    generation: GENERATION,
-    file: FILE,
-
-    u: point.u,
-    v: point.v,
-    lon: point.lon,
-    lat: point.lat,
-
-    genealogy: TERRAIN_LAW.genealogy,
-    grandchildOfTectonics: true,
-    childOfTopology: true,
-    parentTopologyReceipt: topology.receipt || "unknown",
-    grandparentTectonicsReceipt: tectonics.receipt || "unknown",
-
-    ownsTerrain: true,
-    ownsElevation: true,
-    ownsRelief: true,
-    ownsRidges: true,
-    ownsBasins: true,
-    ownsCliffs: true,
-    ownsCarvedChannels: true,
-    ownsHydrologyReadiness: true,
-
-    ownsTectonics: false,
-    ownsTopology: false,
-    ownsLandFootprint: false,
-    ownsLandExpansion: false,
-    ownsHydration: false,
-
-    isLand: land,
-    isWater: !land && !ice,
-    isIce: ice,
-    topologyLandFootprint: land,
-    terrainAllowedByTopology: land || ice,
-    terrainMustNotExpandLandArea: true,
-    landExpansionBlocked: true,
-
-    normalizedElevation,
-    elevationMeters: normalizedElevation >= 0
-      ? Math.round(normalizedElevation * 9200)
-      : Math.round(normalizedElevation * 5600),
-
-    ridge,
-    mountainPressure: ridge,
-    basin,
-    slope,
-    canyonPressure,
-    cliffPressure,
-    coastPressure: clamp(Number(topology.shorelinePressure) || 0, 0, 1),
-    shelfPermission: clamp(Number(topology.reefShelfPermission) || Number(topology.shelfDepthIndex) || 0, 0, 1),
-
-    riverbedPressure,
-    streamPressure,
-    lakeBasinPressure,
-    glacierSeatPressure,
-    snowpackSourcePressure,
-    valleyChannelPressure,
-    floodplainPressure,
-    deltaReceiverPressure,
-    riverIncisionPressure: clamp(canyonPressure * 0.62 + riverbedPressure * 0.24, 0, 1),
-    hydrologyReadinessIndex,
-
-    mineralReliefIndex: mineralHardness,
-    weatheredReliefIndex: clamp(Number(tectonics.weatheredRemnantIndex) || 0, 0, 1),
-    ancientMountainMemoryReliefIndex: clamp(Number(tectonics.primordialMountainMemoryIndex) || 0, 0, 1),
-
-    activeHydrationOwnedHere: false,
-    hydrationHeld: true,
-    hydrationEnabled: false,
-    foliageEnabled: false,
-    foliage: false,
-    trees: false,
-    vegetation: false,
-    fallbackUsed: false,
-    graphicBox: false,
-    imageGeneration: false,
-    visualPassClaimed: false
-  });
-}
-
-export function buildTerrainField(width = DEFAULTS.fieldWidth, height = DEFAULTS.fieldHeight, context = {}) {
-  const w = normalizeDimension(width, DEFAULTS.fieldWidth, DEFAULTS.minFieldWidth, DEFAULTS.maxFieldWidth);
-  const h = normalizeDimension(height, DEFAULTS.fieldHeight, DEFAULTS.minFieldHeight, DEFAULTS.maxFieldHeight);
-
-  const tectonicsField = context.tectonicsField || buildTectonicsField(w, h, context.tectonicsContext || {});
-  const topologyField = context.topologyField || buildTopologyField(w, h, { ...(context.topologyContext || {}), tectonicsField });
-
-  const samples = new Array(w * h);
-
-  let landSamples = 0;
-  let waterSamples = 0;
-  let iceSamples = 0;
-  let reliefSamples = 0;
-  let hydrologyReadySamples = 0;
-  let glacierSeatSamples = 0;
-  let maxElevation = -1;
-  let maxHydrology = 0;
-
-  for (let y = 0; y < h; y += 1) {
-    const v = h === 1 ? 0.5 : y / (h - 1);
-
-    for (let x = 0; x < w; x += 1) {
-      const u = w === 1 ? 0.5 : x / (w - 1);
-      const tectonics = getTectonicsSampleFromField(tectonicsField, u, v);
-      const topology = getTopologySampleFromField(topologyField, u, v);
-      const sample = sampleTerrain(u, v, { ...context, tectonics, topology });
-
-      samples[y * w + x] = sample;
-
-      if (sample.isIce) iceSamples += 1;
-      else if (sample.isLand) landSamples += 1;
-      else waterSamples += 1;
-
-      if (sample.ridge > 0.38 || sample.canyonPressure > 0.38 || sample.cliffPressure > 0.38) reliefSamples += 1;
-      if (sample.hydrologyReadinessIndex > 0.38) hydrologyReadySamples += 1;
-      if (sample.glacierSeatPressure > 0.50) glacierSeatSamples += 1;
-
-      maxElevation = Math.max(maxElevation, sample.normalizedElevation);
-      maxHydrology = Math.max(maxHydrology, sample.hydrologyReadinessIndex);
+      influence = Math.max(influence, local);
     }
   }
 
-  return Object.freeze({
-    receipt: RECEIPT,
-    activeContract: RECEIPT,
-    planetaryObject: PLANETARY_OBJECT,
-    generation: GENERATION,
-    file: FILE,
-    width: w,
-    height: h,
-    samples,
-    tectonicsField,
-    topologyField,
-    stats: Object.freeze({
-      totalSamples: samples.length,
-      landSamples,
-      waterSamples,
-      iceSamples,
-      reliefSamples,
-      hydrologyReadySamples,
-      glacierSeatSamples,
-      landRatio: samples.length ? landSamples / samples.length : 0,
-      waterRatio: samples.length ? waterSamples / samples.length : 0,
-      iceRatio: samples.length ? iceSamples / samples.length : 0,
-      reliefRatio: samples.length ? reliefSamples / samples.length : 0,
-      hydrologyReadyRatio: samples.length ? hydrologyReadySamples / samples.length : 0,
-      glacierSeatRatio: samples.length ? glacierSeatSamples / samples.length : 0,
-      maxElevation,
-      maxHydrology,
-      grandchildOfTectonics: true,
-      childOfTopology: true,
-      terrainMustNotExpandLandArea: true,
-      visualPassClaimed: false
-    })
-  });
+  return clamp(influence, 0, 1);
 }
 
-export function getTerrainSampleFromField(field, uInput, vInput) {
-  if (!field || !field.samples || !field.width || !field.height) {
-    return sampleTerrain(uInput, vInput);
+function regionInfluence(lat, lon, region) {
+  const distance = distanceLatLon(lat, lon, region.center[0], region.center[1]);
+  const base = smoothstep(region.influence, 0, distance);
+  const ridge = ridgeInfluence(lat, lon, region.ridgeLines);
+
+  return clamp(base * 0.72 + ridge * 0.52, 0, 1);
+}
+
+function octaveNoise(lat, lon, scale, seed) {
+  const a = Math.sin((lat + seed * 17.13) * scale) * Math.cos((lon - seed * 9.71) * scale * 0.73);
+  const b = Math.sin((lat * 0.61 + lon * 0.23 + seed) * scale * 1.71);
+  const c = Math.cos((lon - lat * 0.31 + seed * 3.19) * scale * 0.49);
+
+  return clamp((a + b * 0.55 + c * 0.35 + 1.9) / 3.8, 0, 1);
+}
+
+function mineralPressure(lat, lon) {
+  const pressure =
+    octaveNoise(lat, lon, 0.077, 7) * 0.36 +
+    octaveNoise(lat, lon, 0.141, 19) * 0.29 +
+    octaveNoise(lat, lon, 0.027, 31) * 0.35;
+
+  const diamondBand = Math.abs(Math.sin((lat * 0.19) + (lon * 0.043)));
+  const opalBand = Math.abs(Math.cos((lat * 0.071) - (lon * 0.113)));
+
+  return clamp(pressure * 0.72 + diamondBand * 0.17 + opalBand * 0.11, 0, 1);
+}
+
+function sampleTerrain(latInput, lonInput, options = {}) {
+  const lat = normalizeLatitude(latInput);
+  const lon = normalizeLongitude(lonInput);
+  const absoluteLatitude = Math.abs(lat);
+
+  let region = null;
+  let bestInfluence = 0;
+
+  for (let index = 0; index < TERRAIN_REGIONS.length; index += 1) {
+    const current = TERRAIN_REGIONS[index];
+    const influence = regionInfluence(lat, lon, current);
+
+    if (influence > bestInfluence) {
+      bestInfluence = influence;
+      region = current;
+    }
   }
 
-  const point = normalizeUV(uInput, vInput);
-  const x = clamp(Math.round(point.u * (field.width - 1)), 0, field.width - 1);
-  const y = clamp(Math.round(point.v * (field.height - 1)), 0, field.height - 1);
+  const regionRelief = region ? region.maxRelief : 0;
+  const ridge = region ? ridgeInfluence(lat, lon, region.ridgeLines) : 0;
+  const pressure = mineralPressure(lat, lon);
+  const broadWeathering = octaveNoise(lat, lon, 0.031, 41);
+  const stoneNoise = octaveNoise(lat, lon, 0.119, 53);
+  const fineNoise = octaveNoise(lat, lon, 0.311, 71);
+  const erosion = region ? region.erosion : 0.7;
+  const erosionCut = smoothstep(0.2, 1, broadWeathering) * erosion;
+  const polarIce = smoothstep(55, 82, absoluteLatitude) * (region ? region.glacierBias : 0.15);
+  const coastlineSoftening = smoothstep(0.12, 0.44, bestInfluence);
+  const rawElevation =
+    bestInfluence * regionRelief * 0.84 +
+    ridge * 0.34 +
+    pressure * 0.18 +
+    stoneNoise * 0.11 +
+    fineNoise * 0.045 -
+    erosionCut * 0.19;
 
-  return field.samples[y * field.width + x] || sampleTerrain(point.u, point.v);
+  const elevation = clamp(rawElevation, 0, 1);
+  const slope = clamp(ridge * 0.58 + Math.abs(fineNoise - broadWeathering) * 0.42, 0, 1);
+  const roughness = clamp(stoneNoise * 0.45 + fineNoise * 0.35 + pressure * 0.20, 0, 1);
+  const glacier = clamp(polarIce + smoothstep(0.72, 1, elevation) * (region ? region.glacierBias : 0), 0, 1);
+  const beach = bestInfluence > 0.12 && bestInfluence < 0.32 ? smoothstep(0.32, 0.12, bestInfluence) : 0;
+  const blackSand = beach * smoothstep(0.62, 1, pressure);
+  const whiteSand = beach * (1 - blackSand) * smoothstep(0.15, 0.8, stoneNoise);
+  const exposedRock = smoothstep(0.34, 0.82, elevation) * (1 - glacier * 0.65);
+  const opalSignal = clamp(pressure * 0.44 + octaveNoise(lat, lon, 0.091, 89) * 0.56, 0, 1);
+  const diamondSignal = clamp(pressure * 0.66 + ridge * 0.24 + fineNoise * 0.10, 0, 1);
+  const slateSignal = clamp(slope * 0.50 + roughness * 0.34 + (1 - opalSignal) * 0.16, 0, 1);
+  const graniteSignal = clamp(exposedRock * 0.52 + stoneNoise * 0.32 + ridge * 0.16, 0, 1);
+
+  let material = "submerged-or-unassigned";
+  let colorHint = RELIEF_PALETTE.lowland;
+
+  if (glacier > 0.48) {
+    material = "glacier-over-slate-diamond";
+    colorHint = RELIEF_PALETTE.glacier;
+  } else if (blackSand > 0.28) {
+    material = "black-diamond-sand";
+    colorHint = RELIEF_PALETTE.blackSand;
+  } else if (whiteSand > 0.24) {
+    material = "white-opal-sand";
+    colorHint = RELIEF_PALETTE.whiteSand;
+  } else if (diamondSignal > 0.74 && exposedRock > 0.35) {
+    material = "diamond-granite-pressure-ridge";
+    colorHint = RELIEF_PALETTE.diamondGlint;
+  } else if (opalSignal > 0.68 && exposedRock > 0.18) {
+    material = "opal-granite-weathered-rise";
+    colorHint = RELIEF_PALETTE.opalLight;
+  } else if (slateSignal > 0.62) {
+    material = "slate-weathered-slope";
+    colorHint = RELIEF_PALETTE.slateLine;
+  } else if (graniteSignal > 0.48) {
+    material = "granite-ancient-relief";
+    colorHint = RELIEF_PALETTE.highGranite;
+  } else if (bestInfluence > 0.2) {
+    material = "weathered-lowland";
+    colorHint = RELIEF_PALETTE.weatheredStone;
+  }
+
+  const detailLevel = options.detailLevel || "4k";
+  const admissible = bestInfluence > 0.08;
+
+  return {
+    lat,
+    lon,
+    admissible,
+    detailLevel,
+    regionId: region ? region.id : "void-or-ocean",
+    regionClass: region ? region.className : "void-or-ocean",
+    regionNumber: region ? region.region : 8,
+    influence: Number(bestInfluence.toFixed(4)),
+    elevation: Number(elevation.toFixed(4)),
+    slope: Number(slope.toFixed(4)),
+    roughness: Number(roughness.toFixed(4)),
+    ridge: Number(ridge.toFixed(4)),
+    pressure: Number(pressure.toFixed(4)),
+    erosion: Number(erosion.toFixed(4)),
+    glacier: Number(glacier.toFixed(4)),
+    beach: Number(beach.toFixed(4)),
+    blackSand: Number(blackSand.toFixed(4)),
+    whiteSand: Number(whiteSand.toFixed(4)),
+    exposedRock: Number(exposedRock.toFixed(4)),
+    opalSignal: Number(opalSignal.toFixed(4)),
+    diamondSignal: Number(diamondSignal.toFixed(4)),
+    slateSignal: Number(slateSignal.toFixed(4)),
+    graniteSignal: Number(graniteSignal.toFixed(4)),
+    material,
+    colorHint,
+    terrainAuthority: RECEIPT,
+    contract: CONTRACT
+  };
 }
 
-export function getTerrainStatus() {
-  return Object.freeze({
-    ok: true,
+function buildTerrainGrid(options = {}) {
+  const latStep = options.latStep || 6;
+  const lonStep = options.lonStep || 6;
+  const grid = [];
+
+  for (let lat = -84; lat <= 84; lat += latStep) {
+    for (let lon = -180; lon < 180; lon += lonStep) {
+      grid.push(sampleTerrain(lat, lon, {
+        detailLevel: options.detailLevel || "diagnostic-grid"
+      }));
+    }
+  }
+
+  return grid;
+}
+
+function summarizeTerrain(options = {}) {
+  const grid = buildTerrainGrid(options);
+  const total = grid.length || 1;
+  let admissible = 0;
+  let glacier = 0;
+  let beach = 0;
+  let exposedRock = 0;
+  let highRelief = 0;
+  let diamond = 0;
+  let opal = 0;
+  let slate = 0;
+  let granite = 0;
+
+  for (let index = 0; index < grid.length; index += 1) {
+    const sample = grid[index];
+
+    if (sample.admissible) admissible += 1;
+    if (sample.glacier > 0.35) glacier += 1;
+    if (sample.beach > 0.25) beach += 1;
+    if (sample.exposedRock > 0.4) exposedRock += 1;
+    if (sample.elevation > 0.62) highRelief += 1;
+    if (sample.diamondSignal > 0.68) diamond += 1;
+    if (sample.opalSignal > 0.64) opal += 1;
+    if (sample.slateSignal > 0.62) slate += 1;
+    if (sample.graniteSignal > 0.56) granite += 1;
+  }
+
+  return {
     receipt: RECEIPT,
-    activeContract: RECEIPT,
-    status: "active",
-    id: "audralia-terrain-grandchild-relief-authority",
-    planetaryObject: PLANETARY_OBJECT,
-    generation: GENERATION,
-    file: FILE,
-    terrainLaw: TERRAIN_LAW,
-    grandparentTectonicsStatus: getTectonicsStatus(),
-    parentTopologyStatus: getTopologyStatus(),
-    exports: Object.freeze([
-      "sampleTerrain",
-      "buildTerrainField",
-      "getTerrainSampleFromField",
-      "getTerrainStatus"
-    ]),
-    grandchildOfTectonics: true,
-    childOfTopology: true,
-    ownsTerrain: true,
-    ownsElevation: true,
-    ownsRelief: true,
-    ownsHydrologyReadiness: true,
-    ownsTectonics: false,
-    ownsTopology: false,
-    ownsLandFootprint: false,
-    ownsLandExpansion: false,
-    ownsHydration: false,
-    terrainMustNotExpandLandArea: true,
+    contract: CONTRACT,
+    version: VERSION,
+    totalSamples: total,
+    admissibleRatio: Number((admissible / total).toFixed(4)),
+    glacierRatio: Number((glacier / total).toFixed(4)),
+    beachRatio: Number((beach / total).toFixed(4)),
+    exposedRockRatio: Number((exposedRock / total).toFixed(4)),
+    highReliefRatio: Number((highRelief / total).toFixed(4)),
+    diamondSignalRatio: Number((diamond / total).toFixed(4)),
+    opalSignalRatio: Number((opal / total).toFixed(4)),
+    slateSignalRatio: Number((slate / total).toFixed(4)),
+    graniteSignalRatio: Number((granite / total).toFixed(4)),
     graphicBox: false,
     imageGeneration: false,
     visualPassClaimed: false
-  });
+  };
 }
 
-const api = Object.freeze({
+const TERRAIN_SUMMARY = Object.freeze(summarizeTerrain({ latStep: 8, lonStep: 8 }));
+
+function publishTerrainAuthority() {
+  if (typeof window === "undefined") {
+    return TERRAIN_AUTHORITY;
+  }
+
+  const status = {
+    loaded: true,
+    receipt: RECEIPT,
+    contract: CONTRACT,
+    version: VERSION,
+    authority: TERRAIN_AUTHORITY,
+    geology: GEOLOGY,
+    summary: TERRAIN_SUMMARY,
+    exposesSampleTerrain: true,
+    exposesTerrainGrid: true,
+    graphicBox: false,
+    imageGeneration: false,
+    visualPassClaimed: false
+  };
+
+  window.__AUDRALIA_TERRAIN_AUTHORITY__ = status;
+  window.__AUDRALIA_TERRAIN_STATUS__ = status;
+  window.AudraliaTerrainAuthority = api;
+
+  try {
+    window.dispatchEvent(new CustomEvent("audralia:terrain-authority-ready", {
+      detail: status
+    }));
+  } catch (_) {
+    /* no-op */
+  }
+
+  return status;
+}
+
+function getTerrainAuthority() {
+  return TERRAIN_AUTHORITY;
+}
+
+function getTerrainGeology() {
+  return GEOLOGY;
+}
+
+function getTerrainRegions() {
+  return TERRAIN_REGIONS;
+}
+
+function getTerrainSummary() {
+  return TERRAIN_SUMMARY;
+}
+
+function getTerrainPalette() {
+  return RELIEF_PALETTE;
+}
+
+const api = {
+  RECEIPT,
+  CONTRACT,
+  VERSION,
+  TERRAIN_AUTHORITY,
+  GEOLOGY,
+  TERRAIN_REGIONS,
+  RELIEF_PALETTE,
+  TERRAIN_SUMMARY,
   sampleTerrain,
-  buildTerrainField,
-  getTerrainSampleFromField,
-  getTerrainStatus
-});
+  buildTerrainGrid,
+  summarizeTerrain,
+  publishTerrainAuthority,
+  getTerrainAuthority,
+  getTerrainGeology,
+  getTerrainRegions,
+  getTerrainSummary,
+  getTerrainPalette
+};
 
-if (typeof window !== "undefined") {
-  window.DGBAudraliaTerrain = api;
-  window.AudraliaTerrain = api;
-  window.audraliaTerrain = api;
-}
+publishTerrainAuthority();
+
+export {
+  RECEIPT,
+  CONTRACT,
+  VERSION,
+  TERRAIN_AUTHORITY,
+  GEOLOGY,
+  TERRAIN_REGIONS,
+  RELIEF_PALETTE,
+  TERRAIN_SUMMARY,
+  sampleTerrain,
+  buildTerrainGrid,
+  summarizeTerrain,
+  publishTerrainAuthority,
+  getTerrainAuthority,
+  getTerrainGeology,
+  getTerrainRegions,
+  getTerrainSummary,
+  getTerrainPalette
+};
 
 export default api;

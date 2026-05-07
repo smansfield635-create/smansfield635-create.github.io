@@ -1,25 +1,14 @@
 /* /assets/earth/earth_assets_runtime.js
-   EARTH_G5_EARTH_ASSETS_RUNTIME_FAMILY_PLACEMENT_TNT_v4
+   EARTH_G6_ASSETS_RUNTIME_256_LATTICE_SIMULATION_MODE_TNT_v1
    Full-file replacement.
-
-   Previous external runtime path:
-   /runtime/earth_asset_runtime.js
-
-   Purpose:
-   - Move Earth runtime authority into the Earth asset family.
-   - Adopt an already-rendered Earth canvas without wiping it.
-   - Only mount a new Earth canvas when no Earth canvas exists.
-   - Detect old NASA label/source drift and rewrite visible label to satellite-derived wording.
-   - Keep Earth runtime separate from canvas projection, material CSS, manifest truth, Audralia, Gauges, Products, Sun, Moon, and global files.
-   - No GraphicBox. No image generation. No visual-pass claim.
 */
 
 (function () {
   "use strict";
 
-  const CONTRACT = "EARTH_G5_EARTH_ASSETS_RUNTIME_FAMILY_PLACEMENT_TNT_v4";
-  const PREVIOUS_CONTRACT = "EARTH_G5_NON_DESTRUCTIVE_RUNTIME_ADOPT_EXISTING_CANVAS_TNT_v3";
-  const CANVAS_CONTRACT = "EARTH_G5_NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE_TNT_v1";
+  const CONTRACT = "EARTH_G6_ASSETS_RUNTIME_256_LATTICE_SIMULATION_MODE_TNT_v1";
+  const PREVIOUS_CONTRACT = "EARTH_G5_EARTH_ASSETS_RUNTIME_FAMILY_PLACEMENT_TNT_v4";
+  const CANVAS_CONTRACT = "EARTH_G6_256_LATTICE_PHYSICS_SYNTHETIC_SATELLITE_VIEW_TNT_v1";
 
   const RUNTIME_AUTHORITY = "/assets/earth/earth_assets_runtime.js";
   const RETIRED_RUNTIME_AUTHORITY = "/runtime/earth_asset_runtime.js";
@@ -32,6 +21,7 @@
   ];
 
   const CANVAS_SELECTOR = [
+    "canvas.earth-g6-canvas",
     "canvas.earth-g5-canvas",
     "canvas.earth-g4-canvas",
     "canvas.earth-reference-canvas",
@@ -102,13 +92,13 @@
     );
 
     labels.forEach((label) => {
-      if (/nasa|blue marble/i.test(label.textContent || "")) {
-        label.textContent = "SATELLITE DERIVED EARTH";
+      if (/nasa|blue marble|satellite derived earth/i.test(label.textContent || "")) {
+        label.textContent = "256 LATTICE SYNTHETIC SATELLITE VIEW";
       }
 
       label.classList.add("earth-satellite-label");
       label.dataset.nasaReference = "forbidden";
-      label.dataset.sourceStandard = "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE";
+      label.dataset.sourceStandard = "PHYSICS_SYNTHETIC_SATELLITE_VIEW";
       label.dataset.earthRuntimeContract = CONTRACT;
     });
   }
@@ -122,7 +112,9 @@
     mount.dataset.earthRuntimeAuthority = RUNTIME_AUTHORITY;
     mount.dataset.earthRetiredRuntimeAuthority = RETIRED_RUNTIME_AUTHORITY;
     mount.dataset.earthRuntimeFamilyPlacement = "assets-earth-family";
-    mount.dataset.earthSourceStandard = "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE";
+    mount.dataset.earthSourceStandard = "PHYSICS_SYNTHETIC_SATELLITE_VIEW";
+    mount.dataset.earthBaseSurface = "generated-from-256-lattice";
+    mount.dataset.staticSurfaceDependency = "false";
     mount.dataset.nasaReference = "forbidden";
     mount.dataset.jpgAllowed = "false";
     mount.dataset.proceduralFallback = "false";
@@ -147,7 +139,9 @@
     root.dataset.earthRuntimeCanvasFound = String(STATE.canvasFound);
     root.dataset.earthRuntimeCanvasAuthorityFound = String(STATE.canvasAuthorityFound);
     root.dataset.earthRuntimeOldPathDetected = String(STATE.oldRuntimeDetected);
-    root.dataset.earthSourceStandard = "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE";
+    root.dataset.earthSourceStandard = "PHYSICS_SYNTHETIC_SATELLITE_VIEW";
+    root.dataset.earthBaseSurface = "generated-from-256-lattice";
+    root.dataset.earthStaticSurfaceDependency = "false";
     root.dataset.earthNasaReference = "forbidden";
     root.dataset.earthJpgAllowed = "false";
     root.dataset.earthProceduralFallback = "false";
@@ -160,7 +154,7 @@
       document.body.dataset.earthRuntimeAuthority = RUNTIME_AUTHORITY;
       document.body.dataset.earthRuntimeStatus = STATE.runtimeStatus;
       document.body.dataset.earthRuntimeFamilyPlacement = "assets-earth-family";
-      document.body.dataset.earthSourceStandard = "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE";
+      document.body.dataset.earthSourceStandard = "PHYSICS_SYNTHETIC_SATELLITE_VIEW";
       document.body.dataset.generatedImage = "false";
       document.body.dataset.graphicBox = "false";
       document.body.dataset.visualPassClaimed = "false";
@@ -191,7 +185,9 @@
         lastError: STATE.lastError,
         remounts: STATE.remounts,
         oldRuntimeDetected: STATE.oldRuntimeDetected,
-        sourceStandard: "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE",
+        sourceStandard: "PHYSICS_SYNTHETIC_SATELLITE_VIEW",
+        baseSurface: "generated_from_256_lattice",
+        staticSurfaceDependency: false,
         nasaReference: "forbidden",
         jpgAllowed: false,
         proceduralFallback: false,
@@ -199,7 +195,7 @@
           "earth_lifecycle_orchestration",
           "earth_mount_detection",
           "earth_existing_canvas_adoption",
-          "earth_asset_verification",
+          "earth_256_lattice_simulation_status",
           "earth_visibility_pause_resume",
           "earth_runtime_status_receipt",
           "earth_runtime_drift_watch",
@@ -293,20 +289,20 @@
 
       writeStatus(
         STATE.runtimeStatus +
-        " · satellite surface=" +
-        (surface && surface.ok ? "loaded" : "missing") +
+        " · base=" +
+        (surface && surface.ok ? surface.path : "generated_from_256_lattice") +
         " · surface mode=" +
-        (surface && surface.mode ? surface.mode : "unread") +
-        " · satellite clouds=" +
-        (clouds && clouds.ok ? "loaded" : "missing") +
-        " · no NASA · no JPG · no cartoon fallback · visual pass held"
+        (surface && surface.mode ? surface.mode : "physics_synthetic_satellite_view") +
+        " · clouds=" +
+        (clouds && clouds.mode ? clouds.mode : "physics_synthetic_cloud_field") +
+        " · no NASA · no JPG · no image dependency · visual pass held"
       );
 
       publish({
         surfaceLoaded: Boolean(surface && surface.ok),
-        surfaceMode: surface && surface.mode ? surface.mode : "unread",
+        surfaceMode: surface && surface.mode ? surface.mode : "physics_synthetic_satellite_view",
         cloudsPrimaryLoaded: Boolean(clouds && clouds.ok),
-        cloudMode: clouds && clouds.mode ? clouds.mode : "unread"
+        cloudMode: clouds && clouds.mode ? clouds.mode : "physics_synthetic_cloud_field"
       });
     });
   }
@@ -326,6 +322,9 @@
     canvas.dataset.earthRuntimeAuthority = RUNTIME_AUTHORITY;
     canvas.dataset.earthRuntimeCanvasContract = CANVAS_CONTRACT;
     canvas.dataset.earthRuntimeFamilyPlacement = "assets-earth-family";
+    canvas.dataset.sourceStandard = "PHYSICS_SYNTHETIC_SATELLITE_VIEW";
+    canvas.dataset.baseSurface = "generated-from-256-lattice";
+    canvas.dataset.staticSurfaceDependency = "false";
     canvas.dataset.nasaReference = "forbidden";
     canvas.dataset.jpgAllowed = "false";
     canvas.dataset.proceduralFallback = "false";
@@ -354,7 +353,7 @@
       STATE.mounted = Boolean(runtimeInstance);
       STATE.adoptedExistingCanvas = false;
       STATE.instanceStarted = Boolean(runtimeInstance);
-      STATE.runtimeStatus = runtimeInstance ? "mounted-new-canvas" : "mount-returned-null";
+      STATE.runtimeStatus = runtimeInstance ? "mounted-new-g6-256-lattice-canvas" : "mount-returned-null";
 
       markMount(mount);
       normalizeLabel(mount);

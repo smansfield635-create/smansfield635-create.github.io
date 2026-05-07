@@ -1,18 +1,17 @@
 // /assets/audralia/audralia.surface.js
-// AUDRALIA_SURFACE_PARENT_STANDARD_NONBLOCKING_BOOT_TNT_v3
+// AUDRALIA_SURFACE_PARENT_STANDARD_RATIO_LOCK_TNT_v4
 // Full-file replacement.
 // Purpose:
-// - Preserve parent-standard surface truth.
-// - Remove top-level await / blocking import stall.
-// - Let canvas render immediately from procedural parent surface.
-// - Initialize downstream authorities asynchronously after first paint.
-// - Never animate, never paint, never blur, never import runtime.
+// - Parent surface owns land/water/ice/shelf truth.
+// - Locks Earth-compatible land/water ratio at the parent surface layer.
+// - Downstream authorities may add detail only; they cannot override parent classification.
+// - No runtime import. No blocking boot. No compositor. No blur.
 // - No GraphicBox. No image generation. No visual-pass claim.
 
-const RECEIPT = "AUDRALIA_SURFACE_PARENT_STANDARD_NONBLOCKING_BOOT_TNT_v3";
-const PREVIOUS_RECEIPT = "AUDRALIA_SURFACE_PARENT_STANDARD_4K_HEX_MICRO_TRUTH_TNT_v2";
-const CONTRACT = "AUDRALIA_SURFACE_PARENT_STANDARD_GAP_CLOSE_NONBLOCKING_TNT_v3";
-const VERSION = "2026-05-07.surface-parent-standard-nonblocking-boot.v3";
+const RECEIPT = "AUDRALIA_SURFACE_PARENT_STANDARD_RATIO_LOCK_TNT_v4";
+const PREVIOUS_RECEIPT = "AUDRALIA_SURFACE_PARENT_STANDARD_NONBLOCKING_BOOT_TNT_v3";
+const CONTRACT = "AUDRALIA_SURFACE_PARENT_RATIO_LOCK_NO_DOWNSTREAM_OVERRIDE_CONTRACT_v1";
+const VERSION = "2026-05-07.surface-parent-ratio-lock.v4";
 
 const TOPOLOGY_PATH = "/assets/audralia/audralia/tectonics/topology/render.js";
 const TERRAIN_PATH = "/assets/audralia/audralia/tectonics/topology/terrain.render.js";
@@ -20,8 +19,8 @@ const HYDRATION_PATH = "/assets/audralia/audralia/hydration/render.js";
 const OCEANS_PATH = "/assets/audralia/audralia/hydration/oceans.render.js";
 const DEEP_OCEAN_PATH = "/assets/audralia/audralia/hydration/deep-ocean.render.js";
 
-const GRID_WIDTH = 144;
-const GRID_HEIGHT = 72;
+const GRID_WIDTH = 160;
+const GRID_HEIGHT = 80;
 const TARGET_SOLID_SURFACE_RATIO = 0.292;
 const TARGET_SOLID_SURFACE_RATIO_MIN = 0.27;
 const TARGET_SOLID_SURFACE_RATIO_MAX = 0.31;
@@ -36,21 +35,28 @@ const STATUS = {
   previousReceipt: PREVIOUS_RECEIPT,
   contract: CONTRACT,
   version: VERSION,
-  role: "audralia-parent-standard-static-surface-truth-nonblocking-authority",
+  role: "audralia-parent-standard-surface-ratio-lock-authority",
 
   parentStandard: true,
+  ratioLocked: true,
+  downstreamClassificationOverrideAllowed: false,
+  downstreamDetailOnly: true,
   nonblockingBoot: true,
   importsBlockFirstPaint: false,
-  downstreamInitializedAsync: false,
 
+  runtimeImport: false,
   runtimeAuthority: false,
   motionAuthority: false,
   paintAuthority: false,
   blurAuthority: false,
   compositorAuthority: false,
   visualSovereignty: false,
+
   staticSurfaceTruthAuthority: true,
   hexMicroSurfaceTruthAuthority: true,
+  landWaterAuthority: true,
+  terrainScalarAuthority: true,
+  materialHintAuthority: true,
 
   topologyPath: TOPOLOGY_PATH,
   terrainPath: TERRAIN_PATH,
@@ -83,6 +89,7 @@ const STATUS = {
   deepOceanSamplerReady: false,
   deepOceanImportError: "",
 
+  downstreamInitializedAsync: false,
   downstreamImported: false,
   downstreamSamplerReady: false,
   downstreamChainConsumed: false,
@@ -94,9 +101,6 @@ const STATUS = {
   targetLiquidWaterRatio: TARGET_LIQUID_WATER_RATIO,
   targetLiquidWaterRatioMin: TARGET_LIQUID_WATER_RATIO_MIN,
   targetLiquidWaterRatioMax: TARGET_LIQUID_WATER_RATIO_MAX,
-
-  fallbackAllowed: true,
-  fallbackReason: "nonblocking-parent-procedural-surface-feeds-canvas-before-downstream-finishes",
 
   graphicBox: false,
   imageGeneration: false,
@@ -496,7 +500,7 @@ async function initializeDownstreamAsync() {
   if (downstreamInitStarted) return STATUS;
   downstreamInitStarted = true;
 
-  const records = await Promise.allSettled([
+  await Promise.allSettled([
     importRecord(MODULE_RECORDS.topology),
     importRecord(MODULE_RECORDS.terrain),
     importRecord(MODULE_RECORDS.hydration),
@@ -524,13 +528,10 @@ async function initializeDownstreamAsync() {
   cachedSummary = null;
   exposeSurfaceStatus();
 
-  return {
-    status: STATUS,
-    records
-  };
+  return STATUS;
 }
 
-function callDownstream(coordinate) {
+function callDownstreamDetail(coordinate) {
   if (!selectedRecord || typeof selectedRecord.sampler !== "function") return null;
 
   try {
@@ -659,17 +660,11 @@ function classifySurface(coordinate) {
   const lobe = lobeContext(latDeg, lonDeg);
   const score = staticLandPotential(coordinate.lat, coordinate.lon);
   const threshold = surfaceModel.landThreshold;
-  const raw = callDownstream(coordinate);
 
-  const downstreamLandHint = Boolean(raw?.solidSurfaceLand || raw?.topologyLand || raw?.land || raw?.visibleLand);
-  const downstreamWaterHint = Boolean(raw?.liquidWater || raw?.water || raw?.ocean || raw?.shelf);
-  const downstreamIceHint = Boolean(raw?.ice || raw?.glacier || raw?.snowpack);
+  const detailRaw = callDownstreamDetail(coordinate);
 
-  const solidSurfaceCandidate = score >= threshold || (downstreamLandHint && score > threshold - 0.045);
-  const waterOverride = downstreamWaterHint && score < threshold + 0.035 && !downstreamLandHint;
-  const finalLand = solidSurfaceCandidate && !waterOverride;
+  const finalLand = score >= threshold;
   const finalWater = !finalLand;
-
   const edgeDistance = Math.abs(score - threshold);
   const nearCoast = edgeDistance < 0.075;
 
@@ -687,7 +682,6 @@ function classifySurface(coordinate) {
   const ice =
     finalLand &&
     (
-      downstreamIceHint ||
       (Math.abs(point.y) > 0.86 && iceNoise > 0.16) ||
       (Math.abs(point.y) > 0.75 && iceNoise > 0.66)
     );
@@ -696,12 +690,28 @@ function classifySurface(coordinate) {
   const coastlineIndex = nearCoast || shelf ? clamp01(1 - edgeDistance / 0.105) : 0;
   const shelfIndex = shelf ? clamp01(0.42 + coastlineIndex * 0.36 + waterTexture * 0.22) : 0;
 
+  const downstreamReliefHint = clamp01(Number(detailRaw?.terrainReliefIndex ?? detailRaw?.terrainRelief ?? detailRaw?.elevation ?? 0));
+  const downstreamDepthHint = clamp01(Number(detailRaw?.depth ?? detailRaw?.oceanDepth ?? 0));
+
   const elevation = finalLand
-    ? clamp01(0.14 + (score - threshold) * 2.15 + reliefTexture * 0.32 + microTerrain * 0.10 + (ice ? 0.14 : 0))
+    ? clamp01(
+        0.14 +
+        (score - threshold) * 2.15 +
+        reliefTexture * 0.26 +
+        microTerrain * 0.10 +
+        downstreamReliefHint * 0.06 +
+        (ice ? 0.14 : 0)
+      )
     : 0;
 
   const depth = finalWater
-    ? clamp01(0.16 + (threshold - score) * 1.45 + waterTexture * 0.28 + (ocean ? 0.18 : 0))
+    ? clamp01(
+        0.16 +
+        (threshold - score) * 1.45 +
+        waterTexture * 0.24 +
+        downstreamDepthHint * 0.06 +
+        (ocean ? 0.18 : 0)
+      )
     : 0;
 
   const turquoiseIndex = shelf
@@ -763,10 +773,12 @@ function classifySurface(coordinate) {
     receipt: RECEIPT,
     previousReceipt: PREVIOUS_RECEIPT,
     contract: CONTRACT,
-    source: "audralia-parent-standard-static-surface-truth-nonblocking",
-    downstream: raw,
-    downstreamReceipt: raw?.receipt || "",
+    source: "audralia-parent-surface-ratio-lock",
+    downstreamDetail: detailRaw,
+    downstreamReceipt: detailRaw?.receipt || "",
     downstreamSource: selectedRecord?.key || "procedural-parent-standard-surface",
+    downstreamClassificationOverrideAllowed: false,
+    downstreamDetailOnly: true,
 
     lat: coordinate.lat,
     lon: coordinate.lon,
@@ -870,6 +882,7 @@ function classifySurface(coordinate) {
 
     staticSurfaceTruthAuthority: true,
     parentStandard: true,
+    ratioLocked: true,
     runtimeAuthority: false,
     motionAuthority: false,
     paintAuthority: false,
@@ -995,9 +1008,12 @@ function computeSummary() {
     downstreamSamplerReady: STATUS.downstreamSamplerReady,
     downstreamChainConsumed: STATUS.downstreamChainConsumed,
     downstreamImportError: STATUS.downstreamImportError,
+    downstreamClassificationOverrideAllowed: false,
+    downstreamDetailOnly: true,
 
     staticSurfaceTruthAuthority: true,
     parentStandard: true,
+    ratioLocked: true,
     hexMicroSurfaceTruthAuthority: true,
     runtimeAuthority: false,
     motionAuthority: false,
@@ -1030,8 +1046,10 @@ function exposeSurfaceStatus() {
     document.documentElement.dataset.audraliaSurfaceContract = CONTRACT;
     document.documentElement.dataset.audraliaSurfaceTruthBridge = "true";
     document.documentElement.dataset.audraliaSurfaceParentStandard = "true";
+    document.documentElement.dataset.audraliaSurfaceRatioLocked = "true";
     document.documentElement.dataset.audraliaSurfaceNonblockingBoot = "true";
-    document.documentElement.dataset.audraliaSurfaceHexMicroTruth = "true";
+    document.documentElement.dataset.audraliaSurfaceDownstreamClassificationOverrideAllowed = "false";
+    document.documentElement.dataset.audraliaSurfaceDownstreamDetailOnly = "true";
     document.documentElement.dataset.audraliaSurfaceRuntimeAuthority = "false";
     document.documentElement.dataset.audraliaSurfacePaintAuthority = "false";
     document.documentElement.dataset.audraliaSurfaceBlurAuthority = "false";
@@ -1093,11 +1111,14 @@ export function getParentStandard() {
     previousReceipt: PREVIOUS_RECEIPT,
     contract: CONTRACT,
     version: VERSION,
-    standard: "parent-surface-truth-4k-hex-micro-standard-nonblocking",
+    standard: "parent-surface-truth-ratio-lock-standard",
     importsBlockFirstPaint: false,
+    downstreamClassificationOverrideAllowed: false,
+    downstreamDetailOnly: true,
     owns: Object.freeze([
       "static_surface_truth",
       "land_water_ice_shelf_classification",
+      "earth_compatible_ratio_lock",
       "elevation_depth_scalar_fields",
       "coastline_gradient_fields",
       "material_hint_fields",
@@ -1140,7 +1161,10 @@ export const AUDRALIA_SURFACE_RECEIPT_VALUE = RECEIPT;
 export const AUDRALIA_SURFACE_PREVIOUS_RECEIPT_VALUE = PREVIOUS_RECEIPT;
 export const AUDRALIA_SURFACE_CONTRACT_VALUE = CONTRACT;
 export const AUDRALIA_SURFACE_PARENT_STANDARD = true;
+export const AUDRALIA_SURFACE_RATIO_LOCKED = true;
 export const AUDRALIA_SURFACE_NONBLOCKING_BOOT = true;
+export const AUDRALIA_SURFACE_DOWNSTREAM_CLASSIFICATION_OVERRIDE_ALLOWED = false;
+
 export const AUDRALIA_SURFACE_DATASET = Object.freeze({
   receipt: RECEIPT,
   previousReceipt: PREVIOUS_RECEIPT,
@@ -1150,7 +1174,9 @@ export const AUDRALIA_SURFACE_DATASET = Object.freeze({
   landLobes: LAND_LOBES,
   hexResolution: HEX_RESOLUTION,
   parentStandard: true,
-  nonblockingBoot: true
+  ratioLocked: true,
+  nonblockingBoot: true,
+  downstreamClassificationOverrideAllowed: false
 });
 
 exposeSurfaceStatus();
@@ -1162,7 +1188,7 @@ if (typeof queueMicrotask === "function") {
       exposeSurfaceStatus();
     });
   });
-} else {
+} else if (typeof setTimeout === "function") {
   setTimeout(() => {
     initializeDownstreamAsync().catch((error) => {
       STATUS.downstreamImportError = String(error?.message || error || "async downstream initialization failure");
@@ -1177,7 +1203,9 @@ export default Object.freeze({
   contract: CONTRACT,
   version: VERSION,
   parentStandard: true,
+  ratioLocked: true,
   nonblockingBoot: true,
+  downstreamClassificationOverrideAllowed: false,
   sampleSurface,
   sampleAudraliaSurface,
   sampleAudraliaSurfaceTruth,

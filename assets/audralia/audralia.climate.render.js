@@ -1,45 +1,17 @@
 // /assets/audralia/audralia.climate.render.js
 // AUDRALIA_CLIMATE_INVARIANT_HYDRATION_CONDUIT_TNT_v1
+// Active renewal: AUDRALIA_CLIMATE_4K_ENVIRONMENTAL_CONDUIT_TNT_v2
 //
-// Role:
-// - Audralia invariant climate authority.
-// - Active environmental constraint layer.
-// - Conditions hydration without rendering climate.
-// - Provides temperature, pressure, wind, rainfall, evaporation, snow, glacier,
-//   ocean-cycle, and elevation-climate permissions.
-// - Does not open ecology, foliage, animals, marine life, or civilization.
-//
-// Placement:
-// - Climate is not downstream of hydration.
-// - Climate conduces hydration.
-// - Physical genealogy remains: tectonics → topology → terrain.
-// - Environmental conduit remains: climate → hydration.
-// - Runtime later composes topology + terrain + hydration + climate-derived state.
-//
-// Hard locks:
-// - No DOM mutation.
-// - No route rendering.
-// - No canvas rendering.
-// - No cloud visual rendering.
-// - No weather animation.
-// - No land generation.
-// - No terrain generation.
-// - No hydration ownership.
-// - No ecology.
-// - No foliage.
-// - No trees.
-// - No vegetation.
-// - No animals.
-// - No marine life.
-// - No construct civilization.
-// - No graphic box.
-// - No image generation.
-// - No visual pass claim.
+// Runtime-safe climate authority only.
+// Climate conduces hydration.
+// Climate does not render.
+// Climate does not own land, water, terrain, oceans, ecology, route, canvas, GraphicBox, or image generation.
 
-const RECEIPT = "AUDRALIA_CLIMATE_INVARIANT_HYDRATION_CONDUIT_TNT_v1";
+const RECEIPT = "AUDRALIA_CLIMATE_4K_ENVIRONMENTAL_CONDUIT_TNT_v2";
+const COMPATIBILITY_RECEIPT = "AUDRALIA_CLIMATE_INVARIANT_HYDRATION_CONDUIT_TNT_v1";
 
 const PLANETARY_OBJECT = "Audralia";
-const GENERATION = "G1_CLIMATE_INVARIANT_HYDRATION_CONDUIT";
+const GENERATION = "G2_4K_CLIMATE_ENVIRONMENTAL_CONDUIT";
 const FILE = "/assets/audralia/audralia.climate.render.js";
 
 const CLIMATE_LAW = Object.freeze({
@@ -48,9 +20,9 @@ const CLIMATE_LAW = Object.freeze({
   climateConducesHydration: true,
   climateDoesNotRender: true,
 
-  physicalGenealogy: "tectonics→topology→terrain",
-  environmentalConduit: "climate→hydration",
-  runtimeCompositionExpected: "topology+terrain+hydration+climate_conditions→runtime→route",
+  physicalGenealogy: "tectonics->topology->terrain",
+  environmentalConduit: "climate->hydration",
+  runtimeCompositionExpected: "topology+terrain+hydration+climate_conditions->runtime->route",
 
   ownsClimateConstraints: true,
   ownsTemperatureBands: true,
@@ -64,6 +36,9 @@ const CLIMATE_LAW = Object.freeze({
   ownsElevationClimateRelationship: true,
   ownsRegionalClimateGates: true,
   ownsBreathableCleanAtmosphereAssumption: true,
+  ownsAtmosphericOpticsPermission: true,
+  ownsSeasonalBias: true,
+  ownsMicroclimateSampling: true,
 
   ownsTectonics: false,
   ownsTopology: false,
@@ -98,23 +73,28 @@ const CLIMATE_LAW = Object.freeze({
 });
 
 const DEFAULTS = Object.freeze({
-  fieldWidth: 192,
-  fieldHeight: 96,
+  fieldWidth: 256,
+  fieldHeight: 128,
   minFieldWidth: 48,
   minFieldHeight: 24,
-  maxFieldWidth: 384,
-  maxFieldHeight: 192,
+  maxFieldWidth: 512,
+  maxFieldHeight: 256,
 
-  cleanAtmosphereIndex: 0.96,
-  oceanCycleStrength: 0.88,
-  pressureCirculationStrength: 0.84,
-  rainfallStrength: 0.78,
-  evaporationStrength: 0.72,
-  snowlineSensitivity: 0.74,
-  glacierPermissionStrength: 0.70,
-  elevationClimateStrength: 0.86,
-  seasonalMotionStrength: 0.62,
-  breathableEnvelopeStrength: 0.96
+  cleanAtmosphereIndex: 0.965,
+  oxygenEnvelopeIndex: 0.94,
+  oceanCycleStrength: 0.90,
+  pressureCirculationStrength: 0.86,
+  rainfallStrength: 0.80,
+  evaporationStrength: 0.73,
+  snowlineSensitivity: 0.76,
+  glacierPermissionStrength: 0.72,
+  elevationClimateStrength: 0.88,
+  seasonalMotionStrength: 0.64,
+  breathableEnvelopeStrength: 0.965,
+  microclimateStrength: 0.38,
+  windShearStrength: 0.44,
+  atmosphericOpticsStrength: 0.48,
+  thermalInertiaStrength: 0.58
 });
 
 const REGION_BANDS = Object.freeze([
@@ -135,12 +115,34 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, number));
 }
 
+function clamp01(value) {
+  return clamp(value, 0, 1);
+}
+
 function mix(a, b, t) {
-  return a + (b - a) * clamp(t, 0, 1);
+  return a + (b - a) * clamp01(t);
 }
 
 function fract(value) {
   return value - Math.floor(value);
+}
+
+function wrap01(value) {
+  return ((Number(value) % 1) + 1) % 1;
+}
+
+function normalizeLongitudeDegrees(value) {
+  let lon = Number(value);
+  if (!Number.isFinite(lon)) lon = 0;
+
+  while (lon > 180) lon -= 360;
+  while (lon < -180) lon += 360;
+
+  return lon;
+}
+
+function normalizeDimension(value, fallback, min, max) {
+  return clamp(Math.floor(Number(value) || fallback), min, max);
 }
 
 function hash2(x, y, seed) {
@@ -180,24 +182,71 @@ function fbm(x, y, seed, octaves = 4) {
   return total / Math.max(0.00001, normalizer);
 }
 
-function normalizeDimension(value, fallback, min, max) {
-  return clamp(Math.floor(Number(value) || fallback), min, max);
+function smoothstep(edge0, edge1, value) {
+  const t = clamp((value - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
+  return t * t * (3 - 2 * t);
 }
 
-function normalizeUV(uInput, vInput) {
-  const u = ((Number(uInput) || 0) % 1 + 1) % 1;
-  const v = clamp(Number(vInput) || 0, 0, 1);
+function normalizePoint(a, b, context = {}) {
+  if (typeof a === "object" && a !== null) {
+    const input = a;
+    const uValue = input.u ?? input.x ?? input.textureU ?? context.u ?? 0.5;
+    const vValue = input.v ?? input.y ?? input.textureV ?? context.v ?? 0.5;
+    const u = wrap01(uValue);
+    const v = clamp(Number(vValue), 0, 1);
+
+    let latDeg = Number(input.latDeg ?? input.latitudeDegrees ?? input.latDegrees);
+    let lonDeg = Number(input.lonDeg ?? input.longitudeDegrees ?? input.lngDeg ?? input.lonDegrees);
+
+    let lat = Number(input.lat ?? input.latitude ?? input.phi);
+    let lon = Number(input.lon ?? input.lng ?? input.longitude ?? input.theta);
+
+    if (Number.isFinite(latDeg)) lat = latDeg * Math.PI / 180;
+    if (Number.isFinite(lonDeg)) lon = lonDeg * Math.PI / 180;
+
+    if (!Number.isFinite(lat)) lat = (0.5 - v) * Math.PI;
+    if (!Number.isFinite(lon)) lon = (u - 0.5) * Math.PI * 2;
+
+    if (Math.abs(lat) > Math.PI / 2 + 0.01) lat = lat * Math.PI / 180;
+    if (Math.abs(lon) > Math.PI * 2 + 0.01) lon = lon * Math.PI / 180;
+
+    latDeg = lat * 180 / Math.PI;
+    lonDeg = normalizeLongitudeDegrees(lon * 180 / Math.PI);
+
+    return Object.freeze({
+      u,
+      v,
+      lat,
+      lon,
+      latDeg,
+      lonDeg,
+      lonUnit: lonDeg / 180,
+      latUnit: latDeg / 90,
+      absLat: Math.abs(latDeg) / 90
+    });
+  }
+
+  const u = wrap01(a);
+  const v = clamp(Number(b), 0, 1);
+  const lat = (0.5 - v) * Math.PI;
+  const lon = (u - 0.5) * Math.PI * 2;
+  const latDeg = lat * 180 / Math.PI;
+  const lonDeg = normalizeLongitudeDegrees(lon * 180 / Math.PI);
 
   return Object.freeze({
     u,
     v,
-    lon: u * 2 - 1,
-    lat: 1 - v * 2,
-    absLat: Math.abs(1 - v * 2)
+    lat,
+    lon,
+    latDeg,
+    lonDeg,
+    lonUnit: lonDeg / 180,
+    latUnit: latDeg / 90,
+    absLat: Math.abs(latDeg) / 90
   });
 }
 
-function readNumber(source, keys, fallback) {
+function readNumber(source, keys, fallback = 0) {
   if (!source || typeof source !== "object") return fallback;
 
   for (const key of keys) {
@@ -208,81 +257,91 @@ function readNumber(source, keys, fallback) {
   return fallback;
 }
 
+function inferSource(context, keys) {
+  if (!context || typeof context !== "object") return null;
+
+  for (const key of keys) {
+    if (context[key] && typeof context[key] === "object") return context[key];
+  }
+
+  return null;
+}
+
 function inferElevation(context) {
-  const terrain = context && (context.terrain || context.terrainSample) ? (context.terrain || context.terrainSample) : null;
-  const topology = context && (context.topology || context.topologySample) ? (context.topology || context.topologySample) : null;
+  const terrain = inferSource(context, ["terrain", "terrainSample", "terrainState"]);
+  const topology = inferSource(context, ["topology", "topologySample", "topologyState"]);
+  const runtime = inferSource(context, ["runtime", "runtimeSample", "runtimeState", "surface"]);
 
-  const terrainElevation = readNumber(
-    terrain,
-    ["normalizedElevation", "elevation", "elevationIndex"],
-    null
-  );
+  const runtimeElevation = readNumber(runtime, ["elevation", "maxElevation", "terrainRelief", "terrainReliefIndex"], null);
+  if (Number.isFinite(runtimeElevation)) return clamp(runtimeElevation, -1, 1);
 
-  if (Number.isFinite(terrainElevation)) {
-    return clamp(terrainElevation, -1, 1);
-  }
+  const terrainElevation = readNumber(terrain, ["normalizedElevation", "elevation", "elevationIndex", "terrainRelief", "terrainReliefIndex"], null);
+  if (Number.isFinite(terrainElevation)) return clamp(terrainElevation, -1, 1);
 
-  const topologyRise = readNumber(
-    topology,
-    ["terrainRisePermission", "landPotential", "seaLevelDistance"],
-    null
-  );
+  const topologyRise = readNumber(topology, ["terrainRisePermission", "landPotential", "seaLevelDistance", "coastBand"], null);
+  if (Number.isFinite(topologyRise)) return clamp(topologyRise, -1, 1);
 
-  if (Number.isFinite(topologyRise)) {
-    return clamp(topologyRise, -1, 1);
-  }
-
-  const oceanDepth = readNumber(
-    topology,
-    ["oceanDepthIndex", "bathymetryBlueprintIndex", "basinDepthIndex"],
-    null
-  );
-
-  if (Number.isFinite(oceanDepth)) {
-    return -clamp(oceanDepth, 0, 1);
-  }
+  const oceanDepth = readNumber(runtime || topology, ["depth", "oceanDepthIndex", "bathymetryBlueprintIndex", "basinDepthIndex"], null);
+  if (Number.isFinite(oceanDepth)) return -clamp(oceanDepth, 0, 1);
 
   return 0;
 }
 
 function inferLandWater(context) {
-  const topology = context && (context.topology || context.topologySample) ? (context.topology || context.topologySample) : null;
-  const terrain = context && (context.terrain || context.terrainSample) ? (context.terrain || context.terrainSample) : null;
+  const topology = inferSource(context, ["topology", "topologySample", "topologyState"]);
+  const terrain = inferSource(context, ["terrain", "terrainSample", "terrainState"]);
+  const runtime = inferSource(context, ["runtime", "runtimeSample", "runtimeState", "surface"]);
 
   const isLand = Boolean(
-    (topology && (topology.isAboveWaterLandFootprint || topology.isLandFootprint || topology.topologyLandFootprint)) ||
-      (terrain && terrain.isLand)
+    runtime?.land ||
+      runtime?.exposedTerrainLand ||
+      runtime?.visibleLand ||
+      topology?.land ||
+      topology?.isAboveWaterLandFootprint ||
+      topology?.isLandFootprint ||
+      topology?.topologyLandFootprint ||
+      terrain?.isLand
   );
 
   const isIce = Boolean(
-    (topology && (topology.isPolarIceFootprint || topology.isSouthPolarIceFootprint || topology.isNorthPolarIceFootprint)) ||
-      (terrain && terrain.isIce)
+    runtime?.ice ||
+      runtime?.glacier ||
+      topology?.ice ||
+      topology?.isPolarIceFootprint ||
+      topology?.isSouthPolarIceFootprint ||
+      topology?.isNorthPolarIceFootprint ||
+      terrain?.isIce ||
+      terrain?.glacier
   );
 
-  const isWater = !isLand && !isIce;
+  const isShelf = Boolean(runtime?.shelf || topology?.shelf || topology?.topologyClass === "coastal-shelf");
+  const isOcean = Boolean(runtime?.ocean || runtime?.water || topology?.oceanVoid || topology?.topologyClass === "ocean-void");
+  const isWater = !isLand && !isIce ? true : Boolean(runtime?.liquidWater || isOcean || isShelf);
 
   const isCoastline = Boolean(
-    topology &&
-      (
-        topology.isCoastline ||
-        topology.isBeach ||
-        topology.isShelf ||
-        Number(topology.shorelinePressure) > 0.32
-      )
+    runtime?.coastal ||
+      runtime?.beach ||
+      runtime?.shelf ||
+      topology?.seaLevelBoundary ||
+      topology?.isCoastline ||
+      topology?.isBeach ||
+      topology?.isShelf ||
+      Number(topology?.shorelinePressure) > 0.32 ||
+      Number(topology?.coastBand) > 0.22
   );
 
   return Object.freeze({
     isLand,
     isWater,
     isIce,
+    isShelf,
+    isOcean,
     isCoastline
   });
 }
 
 function getRegionBand(elevation, point) {
-  const polar = point.absLat > 0.84;
-
-  if (polar) return REGION_BANDS[8];
+  if (point.absLat > 0.84) return REGION_BANDS[8];
 
   const normalized = clamp((elevation + 1) / 2, 0, 1);
 
@@ -326,55 +385,84 @@ function getWindBand(windIndex) {
   return "storm_permission";
 }
 
+function getOpticsBand(opticsIndex) {
+  if (opticsIndex <= 0.20) return "clear_thin_light";
+  if (opticsIndex <= 0.44) return "soft_blue_scatter";
+  if (opticsIndex <= 0.68) return "opal_atmospheric_scatter";
+  if (opticsIndex <= 0.84) return "mist_laden_light";
+  return "heavy_atmospheric_depth";
+}
+
+function resolveContext(a, b, context) {
+  if (typeof a === "object" && a !== null && !context) return a.context || a.climateContext || {};
+  return context || {};
+}
+
 export function sampleClimate(uInput, vInput, context = {}) {
-  const point = normalizeUV(uInput, vInput);
-  const options = Object.freeze({ ...DEFAULTS, ...(context.climateContext || context || {}) });
+  const resolvedContext = resolveContext(uInput, vInput, context);
+  const point = normalizePoint(uInput, vInput, resolvedContext);
+  const options = Object.freeze({ ...DEFAULTS, ...(resolvedContext.climateContext || resolvedContext.options || {}) });
 
-  const landWater = inferLandWater(context);
-  const elevation = inferElevation(context);
+  const landWater = inferLandWater(resolvedContext);
+  const elevation = inferElevation(resolvedContext);
 
-  const circulation = fbm(point.lon * 3.2 + 2.1, point.lat * 3.2 - 1.4, 6101, 4);
-  const moistureNoise = fbm(point.lon * 6.4 - 2.8, point.lat * 6.4 + 3.7, 6113, 4);
-  const pressureNoise = fbm(point.lon * 8.8 + 4.5, point.lat * 8.8 - 5.6, 6127, 3);
-  const seasonalNoise = fbm(point.lon * 2.0 - 1.5, point.lat * 2.0 + 7.9, 6139, 3);
+  const circulation = fbm(point.lonUnit * 3.2 + 2.1, point.latUnit * 3.2 - 1.4, 6101, 5);
+  const moistureNoise = fbm(point.lonUnit * 6.4 - 2.8, point.latUnit * 6.4 + 3.7, 6113, 5);
+  const pressureNoise = fbm(point.lonUnit * 8.8 + 4.5, point.latUnit * 8.8 - 5.6, 6127, 4);
+  const seasonalNoise = fbm(point.lonUnit * 2.0 - 1.5, point.latUnit * 2.0 + 7.9, 6139, 4);
+  const microclimateNoise = fbm(point.lonUnit * 21.0 + 9.2, point.latUnit * 17.0 - 4.1, 6151, 3);
+  const opticalNoise = fbm(point.lonUnit * 5.1 - 8.2, point.latUnit * 4.8 + 1.1, 6163, 4);
+  const windShearNoise = fbm(point.lonUnit * 11.0 + 3.4, point.latUnit * 9.0 - 6.8, 6173, 4);
 
   const equatorialHeat = clamp(1 - point.absLat * 1.08, 0, 1);
   const polarCold = clamp((point.absLat - 0.62) / 0.38, 0, 1);
   const elevationCooling = elevation > 0 ? clamp(elevation * options.elevationClimateStrength, 0, 1) : 0;
-  const oceanModeration = landWater.isWater ? 0.26 : landWater.isCoastline ? 0.18 : 0.04;
+  const oceanModeration = landWater.isWater ? 0.28 : landWater.isCoastline ? 0.20 : 0.045;
+  const shelfMoisture = landWater.isShelf ? 0.18 : 0;
+  const thermalInertia = clamp(
+    oceanModeration * options.thermalInertiaStrength +
+      landWater.isOcean * 0.14 +
+      landWater.isCoastline * 0.09,
+    0,
+    1
+  );
 
   const temperatureIndex = clamp(
-    equatorialHeat * 0.66 +
+    equatorialHeat * 0.64 +
       circulation * 0.10 +
-      oceanModeration -
+      oceanModeration +
+      thermalInertia * 0.08 -
       polarCold * 0.36 -
-      elevationCooling * 0.24,
+      elevationCooling * 0.25,
     0,
     1
   );
 
   const pressureIndex = clamp(
-    0.44 +
-      pressureNoise * 0.26 +
+    0.43 +
+      pressureNoise * 0.27 +
       polarCold * 0.12 +
       elevationCooling * 0.14 -
-      equatorialHeat * 0.08,
+      equatorialHeat * 0.08 +
+      windShearNoise * 0.04,
     0,
     1
   );
 
   const windCorridorIndex = clamp(
-    options.pressureCirculationStrength * 0.34 +
-      Math.abs(pressureIndex - 0.50) * 0.82 +
-      circulation * 0.24 +
-      seasonalNoise * 0.12,
+    options.pressureCirculationStrength * 0.32 +
+      Math.abs(pressureIndex - 0.50) * 0.84 +
+      circulation * 0.22 +
+      seasonalNoise * 0.12 +
+      windShearNoise * options.windShearStrength * 0.18,
     0,
     1
   );
 
   const oceanCycleInfluence = clamp(
     (landWater.isWater ? 0.72 : 0.0) +
-      (landWater.isCoastline ? 0.44 : 0.0) +
+      (landWater.isCoastline ? 0.46 : 0.0) +
+      shelfMoisture +
       moistureNoise * 0.18,
     0,
     1
@@ -384,17 +472,18 @@ export function sampleClimate(uInput, vInput, context = {}) {
     options.rainfallStrength * 0.22 +
       oceanCycleInfluence * 0.36 +
       windCorridorIndex * 0.18 +
-      moistureNoise * 0.20 -
-      elevationCooling * 0.06,
+      moistureNoise * 0.20 +
+      microclimateNoise * options.microclimateStrength * 0.08 -
+      elevationCooling * 0.055,
     0,
     1
   );
 
   const evaporationTendency = clamp(
     options.evaporationStrength * 0.22 +
-      temperatureIndex * 0.44 +
-      windCorridorIndex * 0.18 +
-      (landWater.isWater ? 0.16 : 0.04),
+      temperatureIndex * 0.43 +
+      windCorridorIndex * 0.17 +
+      (landWater.isWater ? 0.18 : landWater.isCoastline ? 0.08 : 0.04),
     0,
     1
   );
@@ -421,15 +510,28 @@ export function sampleClimate(uInput, vInput, context = {}) {
     windCorridorIndex * 0.46 +
       pressureIndex * 0.20 +
       rainfallTendency * 0.22 +
-      oceanCycleInfluence * 0.14,
+      oceanCycleInfluence * 0.14 +
+      windShearNoise * 0.06,
     0,
     1
   );
 
   const breathableEnvelopeIndex = clamp(
-    options.breathableEnvelopeStrength * 0.72 +
-      options.cleanAtmosphereIndex * 0.24 -
-      stormPermission * 0.02,
+    options.breathableEnvelopeStrength * 0.70 +
+      options.cleanAtmosphereIndex * 0.24 +
+      options.oxygenEnvelopeIndex * 0.05 -
+      stormPermission * 0.018,
+    0,
+    1
+  );
+
+  const atmosphericOpticsIndex = clamp(
+    options.atmosphericOpticsStrength * 0.20 +
+      opticalNoise * 0.28 +
+      rainfallTendency * 0.18 +
+      oceanCycleInfluence * 0.16 +
+      breathableEnvelopeIndex * 0.12 +
+      polarCold * 0.06,
     0,
     1
   );
@@ -445,10 +547,45 @@ export function sampleClimate(uInput, vInput, context = {}) {
     1
   );
 
+  const snowlineIndex = clamp(
+    snowPermission * 0.58 +
+      elevationCooling * 0.23 +
+      polarCold * 0.19,
+    0,
+    1
+  );
+
+  const glacierMeltPermission = clamp(
+    glacierPermission * 0.30 +
+      temperatureIndex * 0.22 +
+      rainfallTendency * 0.16 -
+      polarCold * 0.12,
+    0,
+    1
+  );
+
+  const pressureLiftIndex = clamp(
+    elevationCooling * 0.32 +
+      windCorridorIndex * 0.26 +
+      pressureIndex * 0.20 +
+      rainfallTendency * 0.12,
+    0,
+    1
+  );
+
+  const coastalFogPermission = clamp(
+    landWater.isCoastline || landWater.isShelf
+      ? oceanCycleInfluence * 0.38 + pressureIndex * 0.20 + temperatureIndex * 0.12 + opticalNoise * 0.18
+      : 0,
+    0,
+    1
+  );
+
   const regionBand = getRegionBand(elevation, point);
 
   return Object.freeze({
     receipt: RECEIPT,
+    compatibilityReceipt: COMPATIBILITY_RECEIPT,
     activeContract: RECEIPT,
     planetaryObject: PLANETARY_OBJECT,
     generation: GENERATION,
@@ -456,8 +593,10 @@ export function sampleClimate(uInput, vInput, context = {}) {
 
     u: point.u,
     v: point.v,
-    lon: point.lon,
-    lat: point.lat,
+    lon: point.lonUnit,
+    lat: point.latUnit,
+    lonDeg: point.lonDeg,
+    latDeg: point.latDeg,
     absLat: point.absLat,
 
     climateLaw: CLIMATE_LAW,
@@ -475,6 +614,8 @@ export function sampleClimate(uInput, vInput, context = {}) {
     isLand: landWater.isLand,
     isWater: landWater.isWater,
     isIce: landWater.isIce,
+    isShelf: landWater.isShelf,
+    isOcean: landWater.isOcean,
     isCoastline: landWater.isCoastline,
 
     regionBandId: regionBand.id,
@@ -490,17 +631,28 @@ export function sampleClimate(uInput, vInput, context = {}) {
     windCorridorIndex,
     windBand: getWindBand(windCorridorIndex),
 
+    windShearIndex: clamp(windShearNoise * options.windShearStrength, 0, 1),
+
     rainfallTendency,
     rainfallBand: getRainfallBand(rainfallTendency),
 
     evaporationTendency,
     snowPermission,
+    snowlineIndex,
     glacierPermission,
+    glacierMeltPermission,
     oceanCycleInfluence,
     stormPermission,
+    pressureLiftIndex,
+    coastalFogPermission,
     seasonalMotionIndex: clamp(seasonalNoise * options.seasonalMotionStrength, 0, 1),
+    atmosphericOpticsIndex,
+    atmosphericOpticsBand: getOpticsBand(atmosphericOpticsIndex),
     breathableEnvelopeIndex,
     cleanAtmosphereIndex: clamp(options.cleanAtmosphereIndex, 0, 1),
+    oxygenEnvelopeIndex: clamp(options.oxygenEnvelopeIndex, 0, 1),
+    thermalInertiaIndex: thermalInertia,
+    microclimateIndex: clamp(microclimateNoise * options.microclimateStrength, 0, 1),
 
     hydrationConductionIndex,
     hydrationConditioningActive: true,
@@ -508,19 +660,35 @@ export function sampleClimate(uInput, vInput, context = {}) {
     hydrationMayUseEvaporation: true,
     hydrationMayUseSnowline: true,
     hydrationMayUseGlacierPermission: true,
+    hydrationMayUseGlacierMeltPermission: true,
     hydrationMayUseOceanCycle: true,
     hydrationMayUsePressureBands: true,
     hydrationMayUseWindCorridors: true,
+    hydrationMayUseCoastalFog: true,
 
     suggestedHydrationBias: Object.freeze({
       oceanCycleInfluence,
       rainfallTendency,
       evaporationTendency,
       snowPermission,
+      snowlineIndex,
       glacierPermission,
+      glacierMeltPermission,
       pressureIndex,
+      pressureLiftIndex,
       windCorridorIndex,
+      coastalFogPermission,
       hydrationConductionIndex
+    }),
+
+    suggestedRuntimeClimate: Object.freeze({
+      atmosphericOpticsIndex,
+      breathableEnvelopeIndex,
+      cleanAtmosphereIndex: clamp(options.cleanAtmosphereIndex, 0, 1),
+      oxygenEnvelopeIndex: clamp(options.oxygenEnvelopeIndex, 0, 1),
+      thermalInertiaIndex: thermalInertia,
+      stormPermission,
+      windShearIndex: clamp(windShearNoise * options.windShearStrength, 0, 1)
     }),
 
     ownsClimateConstraints: true,
@@ -552,6 +720,19 @@ export function sampleClimate(uInput, vInput, context = {}) {
   });
 }
 
+export function sampleAudraliaClimate(input, context = {}) {
+  return sampleClimate(input, undefined, context);
+}
+
+export function sampleClimateByLatLon(latDeg, lonDeg, context = {}) {
+  return sampleClimate({
+    latDeg,
+    lonDeg,
+    u: wrap01((normalizeLongitudeDegrees(lonDeg) / 360) + 0.5),
+    v: clamp(0.5 - (Number(latDeg) || 0) / 180, 0, 1)
+  }, undefined, context);
+}
+
 export function buildClimateField(width = DEFAULTS.fieldWidth, height = DEFAULTS.fieldHeight, context = {}) {
   const w = normalizeDimension(width, DEFAULTS.fieldWidth, DEFAULTS.minFieldWidth, DEFAULTS.maxFieldWidth);
   const h = normalizeDimension(height, DEFAULTS.fieldHeight, DEFAULTS.minFieldHeight, DEFAULTS.maxFieldHeight);
@@ -567,12 +748,19 @@ export function buildClimateField(width = DEFAULTS.fieldWidth, height = DEFAULTS
   let oceanCycleSamples = 0;
   let hydrationConduitSamples = 0;
   let stormPermissionSamples = 0;
+  let opticsSamples = 0;
+  let coastalFogSamples = 0;
+  let cleanBreathableSamples = 0;
 
   let maxRainfall = 0;
   let maxEvaporation = 0;
   let maxSnow = 0;
   let maxGlacier = 0;
   let maxHydrationConduction = 0;
+  let maxOptics = 0;
+  let maxWind = 0;
+  let maxPressure = 0;
+  let maxCoastalFog = 0;
 
   for (let y = 0; y < h; y += 1) {
     const v = h === 1 ? 0.5 : y / (h - 1);
@@ -593,17 +781,27 @@ export function buildClimateField(width = DEFAULTS.fieldWidth, height = DEFAULTS
       if (sample.oceanCycleInfluence > 0.44) oceanCycleSamples += 1;
       if (sample.hydrationConductionIndex > 0.44) hydrationConduitSamples += 1;
       if (sample.stormPermission > 0.62) stormPermissionSamples += 1;
+      if (sample.atmosphericOpticsIndex > 0.44) opticsSamples += 1;
+      if (sample.coastalFogPermission > 0.34) coastalFogSamples += 1;
+      if (sample.cleanBreathableAtmosphere && sample.breathableEnvelopeIndex > 0.84) cleanBreathableSamples += 1;
 
       maxRainfall = Math.max(maxRainfall, sample.rainfallTendency);
       maxEvaporation = Math.max(maxEvaporation, sample.evaporationTendency);
       maxSnow = Math.max(maxSnow, sample.snowPermission);
       maxGlacier = Math.max(maxGlacier, sample.glacierPermission);
       maxHydrationConduction = Math.max(maxHydrationConduction, sample.hydrationConductionIndex);
+      maxOptics = Math.max(maxOptics, sample.atmosphericOpticsIndex);
+      maxWind = Math.max(maxWind, sample.windCorridorIndex);
+      maxPressure = Math.max(maxPressure, sample.pressureIndex);
+      maxCoastalFog = Math.max(maxCoastalFog, sample.coastalFogPermission);
     }
   }
 
+  const total = samples.length || 1;
+
   return Object.freeze({
     receipt: RECEIPT,
+    compatibilityReceipt: COMPATIBILITY_RECEIPT,
     activeContract: RECEIPT,
     planetaryObject: PLANETARY_OBJECT,
     generation: GENERATION,
@@ -624,22 +822,32 @@ export function buildClimateField(width = DEFAULTS.fieldWidth, height = DEFAULTS
       oceanCycleSamples,
       hydrationConduitSamples,
       stormPermissionSamples,
+      opticsSamples,
+      coastalFogSamples,
+      cleanBreathableSamples,
 
-      coldRatio: samples.length ? coldSamples / samples.length : 0,
-      temperateRatio: samples.length ? temperateSamples / samples.length : 0,
-      hotRatio: samples.length ? hotSamples / samples.length : 0,
-      rainfallRatio: samples.length ? rainfallSamples / samples.length : 0,
-      snowRatio: samples.length ? snowSamples / samples.length : 0,
-      glacierRatio: samples.length ? glacierSamples / samples.length : 0,
-      oceanCycleRatio: samples.length ? oceanCycleSamples / samples.length : 0,
-      hydrationConduitRatio: samples.length ? hydrationConduitSamples / samples.length : 0,
-      stormPermissionRatio: samples.length ? stormPermissionSamples / samples.length : 0,
+      coldRatio: coldSamples / total,
+      temperateRatio: temperateSamples / total,
+      hotRatio: hotSamples / total,
+      rainfallRatio: rainfallSamples / total,
+      snowRatio: snowSamples / total,
+      glacierRatio: glacierSamples / total,
+      oceanCycleRatio: oceanCycleSamples / total,
+      hydrationConduitRatio: hydrationConduitSamples / total,
+      stormPermissionRatio: stormPermissionSamples / total,
+      opticsRatio: opticsSamples / total,
+      coastalFogRatio: coastalFogSamples / total,
+      cleanBreathableRatio: cleanBreathableSamples / total,
 
       maxRainfall,
       maxEvaporation,
       maxSnow,
       maxGlacier,
       maxHydrationConduction,
+      maxOptics,
+      maxWind,
+      maxPressure,
+      maxCoastalFog,
 
       climateActive: true,
       climateInvariant: true,
@@ -650,6 +858,8 @@ export function buildClimateField(width = DEFAULTS.fieldWidth, height = DEFAULTS
       cleanBreathableAtmosphere: true,
       oceanDrivenClimate: true,
       elevationStructuredClimate: true,
+      atmosphericOpticsActive: true,
+      microclimateSamplingActive: true,
 
       ecologyEnabled: false,
       foliageEnabled: false,
@@ -666,25 +876,26 @@ export function buildClimateField(width = DEFAULTS.fieldWidth, height = DEFAULTS
   });
 }
 
-export function getClimateSampleFromField(field, uInput, vInput) {
+export function getClimateSampleFromField(field, uInput, vInput, context = {}) {
   if (!field || !field.samples || !field.width || !field.height) {
-    return sampleClimate(uInput, vInput);
+    return sampleClimate(uInput, vInput, context);
   }
 
-  const point = normalizeUV(uInput, vInput);
+  const point = normalizePoint(uInput, vInput, context);
   const x = clamp(Math.round(point.u * (field.width - 1)), 0, field.width - 1);
   const y = clamp(Math.round(point.v * (field.height - 1)), 0, field.height - 1);
 
-  return field.samples[y * field.width + x] || sampleClimate(point.u, point.v);
+  return field.samples[y * field.width + x] || sampleClimate(point.u, point.v, context);
 }
 
 export function getClimateStatus() {
   return Object.freeze({
     ok: true,
     receipt: RECEIPT,
+    compatibilityReceipt: COMPATIBILITY_RECEIPT,
     activeContract: RECEIPT,
     status: "active",
-    id: "audralia-climate-invariant-hydration-conduit",
+    id: "audralia-climate-4k-environmental-conduit",
     planetaryObject: PLANETARY_OBJECT,
     generation: GENERATION,
     file: FILE,
@@ -693,6 +904,8 @@ export function getClimateStatus() {
 
     exports: Object.freeze([
       "sampleClimate",
+      "sampleAudraliaClimate",
+      "sampleClimateByLatLon",
       "buildClimateField",
       "getClimateSampleFromField",
       "getClimateStatus"
@@ -719,6 +932,9 @@ export function getClimateStatus() {
     ownsElevationClimateRelationship: true,
     ownsRegionalClimateGates: true,
     ownsBreathableCleanAtmosphereAssumption: true,
+    ownsAtmosphericOpticsPermission: true,
+    ownsSeasonalBias: true,
+    ownsMicroclimateSampling: true,
 
     ownsHydration: false,
     ownsWaterPlacement: false,
@@ -749,7 +965,11 @@ export function getClimateStatus() {
 }
 
 const api = Object.freeze({
+  receipt: RECEIPT,
+  compatibilityReceipt: COMPATIBILITY_RECEIPT,
   sampleClimate,
+  sampleAudraliaClimate,
+  sampleClimateByLatLon,
   buildClimateField,
   getClimateSampleFromField,
   getClimateStatus

@@ -1,26 +1,22 @@
 // /assets/audralia/audralia.surface.js
-// AUDRALIA_SURFACE_PARENT_STANDARD_RATIO_LOCK_TNT_v4
+// AUDRALIA_SURFACE_PARENT_BASIN_RIDGE_DISTRIBUTION_TNT_v5
 // Full-file replacement.
 // Purpose:
 // - Parent surface owns land/water/ice/shelf truth.
-// - Locks Earth-compatible land/water ratio at the parent surface layer.
-// - Downstream authorities may add detail only; they cannot override parent classification.
-// - No runtime import. No blocking boot. No compositor. No blur.
+// - Break the uniform green parent field.
+// - Preserve Earth-compatible land/water ratio.
+// - Force visible basins, oceans, shelves, coastlines, mountain-range candidates, and restrained ice.
+// - Children refine from this parent contract only.
+// - Runtime remains motion only.
 // - No GraphicBox. No image generation. No visual-pass claim.
 
-const RECEIPT = "AUDRALIA_SURFACE_PARENT_STANDARD_RATIO_LOCK_TNT_v4";
-const PREVIOUS_RECEIPT = "AUDRALIA_SURFACE_PARENT_STANDARD_NONBLOCKING_BOOT_TNT_v3";
-const CONTRACT = "AUDRALIA_SURFACE_PARENT_RATIO_LOCK_NO_DOWNSTREAM_OVERRIDE_CONTRACT_v1";
-const VERSION = "2026-05-07.surface-parent-ratio-lock.v4";
+const RECEIPT = "AUDRALIA_SURFACE_PARENT_BASIN_RIDGE_DISTRIBUTION_TNT_v5";
+const PREVIOUS_RECEIPT = "AUDRALIA_SURFACE_PARENT_STANDARD_RATIO_LOCK_TNT_v4";
+const CONTRACT = "AUDRALIA_SURFACE_PARENT_BASIN_RIDGE_NO_UNIFORM_FIELD_CONTRACT_v1";
+const VERSION = "2026-05-07.surface-parent-basin-ridge-distribution.v5";
 
-const TOPOLOGY_PATH = "/assets/audralia/audralia/tectonics/topology/render.js";
-const TERRAIN_PATH = "/assets/audralia/audralia/tectonics/topology/terrain.render.js";
-const HYDRATION_PATH = "/assets/audralia/audralia/hydration/render.js";
-const OCEANS_PATH = "/assets/audralia/audralia/hydration/oceans.render.js";
-const DEEP_OCEAN_PATH = "/assets/audralia/audralia/hydration/deep-ocean.render.js";
-
-const GRID_WIDTH = 160;
-const GRID_HEIGHT = 80;
+const GRID_WIDTH = 192;
+const GRID_HEIGHT = 96;
 const TARGET_SOLID_SURFACE_RATIO = 0.292;
 const TARGET_SOLID_SURFACE_RATIO_MIN = 0.27;
 const TARGET_SOLID_SURFACE_RATIO_MAX = 0.31;
@@ -35,14 +31,15 @@ const STATUS = {
   previousReceipt: PREVIOUS_RECEIPT,
   contract: CONTRACT,
   version: VERSION,
-  role: "audralia-parent-standard-surface-ratio-lock-authority",
+  role: "audralia-parent-surface-basin-ridge-distribution-authority",
 
   parentStandard: true,
   ratioLocked: true,
+  basinDistributionActive: true,
+  ridgeDistributionActive: true,
+  uniformFieldSuppressed: true,
   downstreamClassificationOverrideAllowed: false,
   downstreamDetailOnly: true,
-  nonblockingBoot: true,
-  importsBlockFirstPaint: false,
 
   runtimeImport: false,
   runtimeAuthority: false,
@@ -58,43 +55,6 @@ const STATUS = {
   terrainScalarAuthority: true,
   materialHintAuthority: true,
 
-  topologyPath: TOPOLOGY_PATH,
-  terrainPath: TERRAIN_PATH,
-  hydrationPath: HYDRATION_PATH,
-  oceansPath: OCEANS_PATH,
-  deepOceanPath: DEEP_OCEAN_PATH,
-
-  topologyImportAttempted: false,
-  topologyImported: false,
-  topologySamplerReady: false,
-  topologyImportError: "",
-
-  terrainImportAttempted: false,
-  terrainImported: false,
-  terrainSamplerReady: false,
-  terrainImportError: "",
-
-  hydrationImportAttempted: false,
-  hydrationImported: false,
-  hydrationSamplerReady: false,
-  hydrationImportError: "",
-
-  oceansImportAttempted: false,
-  oceansImported: false,
-  oceansSamplerReady: false,
-  oceansImportError: "",
-
-  deepOceanImportAttempted: false,
-  deepOceanImported: false,
-  deepOceanSamplerReady: false,
-  deepOceanImportError: "",
-
-  downstreamInitializedAsync: false,
-  downstreamImported: false,
-  downstreamSamplerReady: false,
-  downstreamChainConsumed: false,
-  downstreamImportError: "",
-
   targetSolidSurfaceRatio: TARGET_SOLID_SURFACE_RATIO,
   targetSolidSurfaceRatioMin: TARGET_SOLID_SURFACE_RATIO_MIN,
   targetSolidSurfaceRatioMax: TARGET_SOLID_SURFACE_RATIO_MAX,
@@ -107,29 +67,6 @@ const STATUS = {
   visualPassClaimed: false
 };
 
-function createRecord(key, path) {
-  return {
-    key,
-    path,
-    imported: false,
-    samplerReady: false,
-    importError: "",
-    module: null,
-    sampler: null,
-    receipt: ""
-  };
-}
-
-const MODULE_RECORDS = {
-  topology: createRecord("topology", TOPOLOGY_PATH),
-  terrain: createRecord("terrain", TERRAIN_PATH),
-  hydration: createRecord("hydration", HYDRATION_PATH),
-  oceans: createRecord("oceans", OCEANS_PATH),
-  deepOcean: createRecord("deepOcean", DEEP_OCEAN_PATH)
-};
-
-let selectedRecord = null;
-let downstreamInitStarted = false;
 let cachedSummary = null;
 
 function clamp(value, min, max) {
@@ -158,15 +95,19 @@ function smoothstep(edge0, edge1, value) {
 
 function normalizeLongitudeRadians(lon) {
   let value = Number(lon) || 0;
+
   while (value > Math.PI) value -= Math.PI * 2;
   while (value < -Math.PI) value += Math.PI * 2;
+
   return value;
 }
 
 function normalizeLongitudeDegrees(lon) {
   let value = Number(lon) || 0;
+
   while (value > 180) value -= 360;
   while (value < -180) value += 360;
+
   return value;
 }
 
@@ -225,7 +166,7 @@ function ridged3(x, y, z, octaves = 4) {
     const n = valueNoise3(x * frequency, y * frequency, z * frequency);
     value += (1 - Math.abs(n * 2 - 1)) * amplitude;
     normalizer += amplitude;
-    frequency *= 2.1;
+    frequency *= 2.12;
     amplitude *= 0.5;
   }
 
@@ -289,14 +230,23 @@ function normalizeCoordinateInput(input, lonArg, uArg, vArg) {
 }
 
 const LAND_LOBES = Object.freeze([
-  { id: "western-mainland-arc", lat: -17, lon: -112, rx: 58, ry: 29, twist: -16, weight: 1.08, material: "green-granite-opal" },
-  { id: "eastern-attached-mainland", lat: 6, lon: -24, rx: 45, ry: 31, twist: 11, weight: 0.98, material: "gold-granite-slate" },
-  { id: "northern-rock-crown", lat: 53, lon: -76, rx: 60, ry: 20, twist: 2, weight: 0.92, material: "ice-opal-crown" },
-  { id: "southern-weathered-mass", lat: -59, lon: 82, rx: 73, ry: 23, twist: -8, weight: 1.02, material: "weathered-green-stone" },
-  { id: "equatorial-ancient-chain", lat: -7, lon: 121, rx: 44, ry: 18, twist: 16, weight: 0.84, material: "ancient-brown-granite" },
-  { id: "south-east-shelf-islands", lat: -34, lon: 135, rx: 34, ry: 15, twist: 21, weight: 0.68, material: "coastal-opal-islands" },
-  { id: "far-east-reef-knife", lat: -24, lon: 169, rx: 31, ry: 12, twist: 31, weight: 0.52, material: "reef-knife-opal" },
-  { id: "western-pressure-islands", lat: 8, lon: -154, rx: 27, ry: 14, twist: -24, weight: 0.48, material: "pressure-island-slate" }
+  { id: "western-highland-basin-edge", lat: 14, lon: -116, rx: 31, ry: 18, twist: -18, weight: 1.06, material: "green-granite-opal" },
+  { id: "southwest-folded-range", lat: -32, lon: -68, rx: 25, ry: 34, twist: 24, weight: 0.95, material: "slate-granite-ridge" },
+  { id: "eastern-broken-continent", lat: 4, lon: 38, rx: 37, ry: 21, twist: 10, weight: 1.00, material: "gold-granite-slate" },
+  { id: "southeast-shelf-mass", lat: -42, lon: 108, rx: 38, ry: 18, twist: -8, weight: 0.92, material: "weathered-green-stone" },
+  { id: "northern-crown-islands", lat: 55, lon: -18, rx: 28, ry: 12, twist: 3, weight: 0.76, material: "ice-opal-crown" },
+  { id: "equatorial-ancient-chain", lat: -7, lon: 145, rx: 31, ry: 10, twist: 17, weight: 0.80, material: "ancient-brown-granite" },
+  { id: "western-pressure-islands", lat: 2, lon: -164, rx: 23, ry: 13, twist: -22, weight: 0.62, material: "pressure-island-slate" },
+  { id: "northwest-reef-scarp", lat: 37, lon: 128, rx: 27, ry: 14, twist: 28, weight: 0.58, material: "coastal-opal-islands" },
+  { id: "southern-ice-footland", lat: -61, lon: -12, rx: 42, ry: 10, twist: -2, weight: 0.56, material: "ice-granite-footland" },
+  { id: "far-east-reef-knife", lat: -20, lon: 171, rx: 26, ry: 10, twist: 31, weight: 0.54, material: "reef-knife-opal" }
+]);
+
+const SEA_LANES = Object.freeze([
+  { id: "central-blue-basin", lon: -4, width: 34, strength: 0.38, wave: 18, phase: 0.1 },
+  { id: "western-ocean-cut", lon: -138, width: 28, strength: 0.33, wave: 22, phase: 1.7 },
+  { id: "eastern-basin-cut", lon: 78, width: 30, strength: 0.31, wave: 20, phase: 2.4 },
+  { id: "southern-shelf-channel", lon: 150, width: 24, strength: 0.27, wave: 28, phase: 3.2 }
 ]);
 
 function ellipseInfluenceDegrees(latDeg, lonDeg, lobe) {
@@ -312,7 +262,13 @@ function ellipseInfluenceDegrees(latDeg, lonDeg, lobe) {
   const dy = y / Math.max(1, lobe.ry);
   const distance = Math.sqrt(dx * dx + dy * dy);
 
-  return smoothstep(1.12, 0.24, distance) * lobe.weight;
+  return smoothstep(1.12, 0.22, distance) * lobe.weight;
+}
+
+function seaLaneInfluence(latDeg, lonDeg, lane) {
+  const curve = lane.lon + Math.sin((latDeg + lane.phase * 30) * Math.PI / 90) * lane.wave;
+  const distance = Math.abs(normalizeLongitudeDegrees(lonDeg - curve)) * Math.max(0.32, Math.cos(latDeg * Math.PI / 180));
+  return smoothstep(lane.width, lane.width * 0.26, distance) * lane.strength;
 }
 
 function lobeContext(latDeg, lonDeg) {
@@ -339,30 +295,43 @@ function lobeContext(latDeg, lonDeg) {
   };
 }
 
+function basinCut(latDeg, lonDeg, point) {
+  let laneCut = 0;
+
+  for (const lane of SEA_LANES) {
+    laneCut = Math.max(laneCut, seaLaneInfluence(latDeg, lonDeg, lane));
+  }
+
+  const equatorialSea = smoothstep(34, 8, Math.abs(latDeg + Math.sin(lonDeg * Math.PI / 72) * 10)) * 0.16;
+  const polarWaterBreak = smoothstep(80, 61, Math.abs(latDeg)) * 0.10;
+  const organicBasinNoise = fbm3(point.x * 4.2 - 12.0, point.y * 4.2 + 3.1, point.z * 4.2 + 8.4, 4) * 0.12;
+
+  return clamp01(laneCut + equatorialSea + polarWaterBreak + organicBasinNoise);
+}
+
 function staticLandPotential(lat, lon) {
   const point = latLonToPoint(lat, lon);
   const latDeg = lat * 180 / Math.PI;
   const lonDeg = lon * 180 / Math.PI;
   const context = lobeContext(latDeg, lonDeg);
 
-  const broad = fbm3(point.x * 2.7 + 3.1, point.y * 2.7 - 1.4, point.z * 2.7 + 5.9, 5);
-  const ridge = ridged3(point.x * 5.6 - 7.2, point.y * 5.6 + 4.4, point.z * 5.6 - 2.9, 4);
-  const micro = fbm3(point.x * 18.0 + 1.8, point.y * 18.0 - 9.6, point.z * 18.0 + 6.2, 3);
+  const broad = fbm3(point.x * 2.9 + 3.1, point.y * 2.9 - 1.4, point.z * 2.9 + 5.9, 5);
+  const ridge = ridged3(point.x * 6.2 - 7.2, point.y * 6.2 + 4.4, point.z * 6.2 - 2.9, 4);
+  const micro = fbm3(point.x * 21.0 + 1.8, point.y * 21.0 - 9.6, point.z * 21.0 + 6.2, 3);
+  const cut = basinCut(latDeg, lonDeg, point);
 
-  const latitudeSoftener = 1 - Math.abs(point.y) * 0.15;
-  const polarContinuity = smoothstep(0.72, 0.95, Math.abs(point.y)) * (0.04 + ridge * 0.06);
-  const organicBreak = Math.sin((lonDeg * 0.021) + (latDeg * 0.037)) * 0.018;
+  const fragmentedContinentalMass =
+    context.strongest * 0.68 +
+    clamp(context.sum * 0.16, 0, 0.32) +
+    broad * 0.10 +
+    ridge * 0.075 +
+    micro * 0.035;
 
-  return clamp01(
-    context.strongest * 0.66 +
-    clamp(context.sum * 0.22, 0, 0.42) +
-    broad * 0.12 +
-    ridge * 0.08 +
-    micro * 0.04 +
-    latitudeSoftener * 0.045 +
-    polarContinuity +
-    organicBreak
-  );
+  const waterForces =
+    cut * 0.48 +
+    smoothstep(0.82, 0.98, Math.abs(point.y)) * 0.08;
+
+  return clamp01(fragmentedContinentalMass - waterForces + 0.035);
 }
 
 function buildSurfaceModel() {
@@ -399,163 +368,6 @@ function buildSurfaceModel() {
 
 const surfaceModel = buildSurfaceModel();
 
-function collectFunctionCandidates(object) {
-  if (!object || typeof object !== "object") return [];
-
-  return [
-    object.sampleDeepOcean,
-    object.sampleDeepOceanField,
-    object.sampleOcean,
-    object.sampleOceans,
-    object.sampleOceanField,
-    object.sampleHydration,
-    object.sampleHydrationField,
-    object.sampleTerrain,
-    object.sampleTerrainColor,
-    object.sampleTopology,
-    object.sampleTopologyFootprint,
-    object.sampleSurface,
-    object.sampleAudraliaSurface,
-    object.sampleAudraliaSurfaceTruth,
-    object.sample,
-    object.buildRuntimeField
-  ];
-}
-
-function selectSampler(module) {
-  const candidates = [
-    ...collectFunctionCandidates(module),
-    ...collectFunctionCandidates(module?.default),
-    ...collectFunctionCandidates(module?.authority),
-    ...collectFunctionCandidates(module?.AudraliaTopology),
-    ...collectFunctionCandidates(module?.AudraliaTerrainAuthority),
-    ...collectFunctionCandidates(module?.AudraliaHydration),
-    ...collectFunctionCandidates(module?.AudraliaOceans),
-    ...collectFunctionCandidates(module?.AudraliaDeepOceanAuthority)
-  ];
-
-  return candidates.find((candidate) => typeof candidate === "function") || null;
-}
-
-function extractReceipt(module) {
-  const candidates = [
-    module?.AUDRALIA_TOPOLOGY_STATUS,
-    module?.AUDRALIA_TERRAIN_STATUS,
-    module?.AUDRALIA_HYDRATION_STATUS,
-    module?.AUDRALIA_OCEANS_STATUS,
-    module?.AUDRALIA_DEEP_OCEAN_STATUS,
-    module?.default?.status,
-    module?.default,
-    module?.TERRAIN_SUMMARY
-  ];
-
-  for (const candidate of candidates) {
-    if (candidate && typeof candidate === "object") {
-      if (candidate.receipt) return String(candidate.receipt);
-      if (candidate.contract) return String(candidate.contract);
-      if (candidate.activeRenewal) return String(candidate.activeRenewal);
-    }
-  }
-
-  if (module?.RECEIPT) return String(module.RECEIPT);
-  if (module?.CONTRACT) return String(module.CONTRACT);
-
-  return "";
-}
-
-async function importRecord(item) {
-  STATUS[`${item.key}ImportAttempted`] = true;
-
-  try {
-    const module = await import(`${item.path}?surface=${encodeURIComponent(RECEIPT)}&parent=${encodeURIComponent(CONTRACT)}`);
-    const sampler = selectSampler(module);
-
-    item.imported = true;
-    item.module = module;
-    item.sampler = sampler;
-    item.samplerReady = typeof sampler === "function";
-    item.importError = "";
-    item.receipt = extractReceipt(module);
-
-    STATUS[`${item.key}Imported`] = true;
-    STATUS[`${item.key}SamplerReady`] = item.samplerReady;
-    STATUS[`${item.key}ImportError`] = "";
-  } catch (error) {
-    item.imported = false;
-    item.module = null;
-    item.sampler = null;
-    item.samplerReady = false;
-    item.importError = String(error?.message || error || "import failure");
-    item.receipt = "";
-
-    STATUS[`${item.key}Imported`] = false;
-    STATUS[`${item.key}SamplerReady`] = false;
-    STATUS[`${item.key}ImportError`] = item.importError;
-  }
-
-  return item;
-}
-
-async function initializeDownstreamAsync() {
-  if (downstreamInitStarted) return STATUS;
-  downstreamInitStarted = true;
-
-  await Promise.allSettled([
-    importRecord(MODULE_RECORDS.topology),
-    importRecord(MODULE_RECORDS.terrain),
-    importRecord(MODULE_RECORDS.hydration),
-    importRecord(MODULE_RECORDS.oceans),
-    importRecord(MODULE_RECORDS.deepOcean)
-  ]);
-
-  selectedRecord = [
-    MODULE_RECORDS.deepOcean,
-    MODULE_RECORDS.oceans,
-    MODULE_RECORDS.hydration,
-    MODULE_RECORDS.terrain,
-    MODULE_RECORDS.topology
-  ].find((item) => item.imported && item.samplerReady) || null;
-
-  STATUS.downstreamInitializedAsync = true;
-  STATUS.downstreamImported = Object.values(MODULE_RECORDS).some((item) => item.imported);
-  STATUS.downstreamSamplerReady = Boolean(selectedRecord);
-  STATUS.downstreamChainConsumed = STATUS.downstreamImported;
-  STATUS.downstreamImportError = Object.values(MODULE_RECORDS)
-    .filter((item) => item.importError)
-    .map((item) => `${item.key}:${item.importError}`)
-    .join(" | ");
-
-  cachedSummary = null;
-  exposeSurfaceStatus();
-
-  return STATUS;
-}
-
-function callDownstreamDetail(coordinate) {
-  if (!selectedRecord || typeof selectedRecord.sampler !== "function") return null;
-
-  try {
-    const result = selectedRecord.sampler.call(
-      selectedRecord.module?.default || selectedRecord.module,
-      {
-        lat: coordinate.lat,
-        lon: coordinate.lon,
-        latitude: coordinate.lat,
-        longitude: coordinate.lon,
-        u: coordinate.u,
-        v: coordinate.v,
-        x: coordinate.u,
-        y: coordinate.v
-      }
-    );
-
-    return result && typeof result === "object" ? result : null;
-  } catch (error) {
-    selectedRecord.importError = String(error?.message || error || "sampler failure");
-    return null;
-  }
-}
-
 function hexRound(q, r) {
   const s = -q - r;
   let rq = Math.round(q);
@@ -583,11 +395,10 @@ function computeHexCell(coordinate, point) {
   const r = (2 / 3 * y);
   const rounded = hexRound(q, r);
   const ring = Math.max(Math.abs(rounded.q), Math.abs(rounded.r), Math.abs(rounded.s));
-  const id = `audralia-h${HEX_RESOLUTION}-q${rounded.q}-r${rounded.r}`;
   const seed = hash3(rounded.q, rounded.r, ring + point.z * 19.37);
 
   return Object.freeze({
-    id,
+    id: `audralia-h${HEX_RESOLUTION}-q${rounded.q}-r${rounded.r}`,
     q: rounded.q,
     r: rounded.r,
     s: rounded.s,
@@ -597,11 +408,11 @@ function computeHexCell(coordinate, point) {
   });
 }
 
-function materialProfile(materialFamily, normalized) {
-  const relief = clamp01(normalized.reliefTexture);
-  const mineral = clamp01(normalized.mineralIndex);
-  const coastline = clamp01(normalized.coastlineIndex);
-  const turquoise = clamp01(normalized.turquoiseIndex);
+function materialProfile(materialFamily, sample) {
+  const relief = clamp01(sample.reliefTexture);
+  const mineral = clamp01(sample.mineralIndex);
+  const coast = clamp01(sample.coastlineIndex);
+  const turquoise = clamp01(sample.turquoiseIndex);
 
   let diamond = 0.04;
   let opal = 0.06;
@@ -610,44 +421,43 @@ function materialProfile(materialFamily, normalized) {
   let whiteOpalSand = 0;
   let blackDiamondSand = 0;
 
-  if (normalized.ice) {
-    diamond = clamp01(0.32 + mineral * 0.20);
-    opal = clamp01(0.22 + turquoise * 0.18);
-    whiteOpalSand = clamp01(0.26 + coastline * 0.20);
-  } else if (normalized.exposedTerrainLand) {
-    diamond = clamp01(mineral * 0.46 + relief * 0.16);
-    opal = clamp01(coastline * 0.34 + mineral * 0.16);
-    granite = clamp01(0.22 + relief * 0.48 + mineral * 0.16);
-    slate = clamp01(0.16 + relief * 0.32 + (1 - mineral) * 0.10);
-    whiteOpalSand = clamp01(coastline * 0.38 + turquoise * 0.12);
-    blackDiamondSand = clamp01(coastline * relief * 0.28 + slate * 0.12);
-  } else if (normalized.shelf) {
-    opal = clamp01(0.34 + turquoise * 0.32);
-    whiteOpalSand = clamp01(0.20 + coastline * 0.38);
-    diamond = clamp01(0.08 + turquoise * 0.10);
-  } else if (normalized.ocean) {
-    opal = clamp01(0.10 + turquoise * 0.10);
-    slate = clamp01(0.08 + normalized.depth * 0.18);
+  if (sample.ice) {
+    diamond = clamp01(0.28 + mineral * 0.18);
+    opal = clamp01(0.20 + turquoise * 0.14);
+    whiteOpalSand = clamp01(0.22 + coast * 0.16);
+  } else if (sample.exposedTerrainLand) {
+    diamond = clamp01(mineral * 0.40 + relief * 0.14);
+    opal = clamp01(coast * 0.30 + mineral * 0.14);
+    granite = clamp01(0.20 + relief * 0.44 + mineral * 0.14);
+    slate = clamp01(0.15 + relief * 0.30 + (1 - mineral) * 0.10);
+    whiteOpalSand = clamp01(coast * 0.34 + turquoise * 0.10);
+    blackDiamondSand = clamp01(coast * relief * 0.24 + slate * 0.10);
+  } else if (sample.shelf) {
+    opal = clamp01(0.34 + turquoise * 0.30);
+    whiteOpalSand = clamp01(0.20 + coast * 0.34);
+    diamond = clamp01(0.08 + turquoise * 0.08);
+  } else if (sample.ocean) {
+    opal = clamp01(0.10 + turquoise * 0.08);
+    slate = clamp01(0.08 + sample.depth * 0.16);
   }
 
-  if (String(materialFamily).includes("opal")) opal = clamp01(opal + 0.12);
-  if (String(materialFamily).includes("granite")) granite = clamp01(granite + 0.12);
-  if (String(materialFamily).includes("slate")) slate = clamp01(slate + 0.10);
+  if (String(materialFamily).includes("opal")) opal = clamp01(opal + 0.10);
+  if (String(materialFamily).includes("granite")) granite = clamp01(granite + 0.10);
+  if (String(materialFamily).includes("slate")) slate = clamp01(slate + 0.09);
   if (String(materialFamily).includes("ice")) whiteOpalSand = clamp01(whiteOpalSand + 0.10);
 
   return Object.freeze({
-    materialFamily,
     diamondSignal: diamond,
     opalSignal: opal,
     graniteSignal: granite,
     slateSignal: slate,
     whiteOpalSandSignal: whiteOpalSand,
     blackDiamondSandSignal: blackDiamondSand,
-    parentMaterialHint: normalized.ice
+    parentMaterialHint: sample.ice
       ? "ice-opal-diamond"
-      : normalized.exposedTerrainLand
+      : sample.exposedTerrainLand
         ? materialFamily
-        : normalized.shelf
+        : sample.shelf
           ? "opal-shelf-water"
           : "deep-blue-slate-water"
   });
@@ -661,67 +471,61 @@ function classifySurface(coordinate) {
   const score = staticLandPotential(coordinate.lat, coordinate.lon);
   const threshold = surfaceModel.landThreshold;
 
-  const detailRaw = callDownstreamDetail(coordinate);
-
-  const finalLand = score >= threshold;
-  const finalWater = !finalLand;
+  const solidSurfaceLand = score >= threshold;
+  const liquidWater = !solidSurfaceLand;
   const edgeDistance = Math.abs(score - threshold);
-  const nearCoast = edgeDistance < 0.075;
 
-  const waterTexture = fbm3(point.x * 14.0 + 8.7, point.y * 14.0 - 3.4, point.z * 14.0 + 2.6, 4);
-  const reliefTexture = ridged3(point.x * 15.5 + 2.2, point.y * 15.5 - 8.1, point.z * 15.5 + 6.4, 4);
-  const colorBreak = fbm3(point.x * 31.0 + 4.1, point.y * 31.0 - 2.8, point.z * 31.0 + 7.2, 3);
-  const mineralIndex = fbm3(point.x * 24.5 - 9.1, point.y * 24.5 + 5.2, point.z * 24.5 - 1.7, 4);
-  const microTerrain = ridged3(point.x * 48.0 + 11.2, point.y * 48.0 - 4.9, point.z * 48.0 + 2.1, 3);
+  const nearCoast = edgeDistance < 0.074;
+  const waterTexture = fbm3(point.x * 15.0 + 8.7, point.y * 15.0 - 3.4, point.z * 15.0 + 2.6, 4);
+  const reliefTexture = ridged3(point.x * 17.0 + 2.2, point.y * 17.0 - 8.1, point.z * 17.0 + 6.4, 4);
+  const colorBreak = fbm3(point.x * 34.0 + 4.1, point.y * 34.0 - 2.8, point.z * 34.0 + 7.2, 3);
+  const mineralIndex = fbm3(point.x * 26.0 - 9.1, point.y * 26.0 + 5.2, point.z * 26.0 - 1.7, 4);
+  const microTerrain = ridged3(point.x * 52.0 + 11.2, point.y * 52.0 - 4.9, point.z * 52.0 + 2.1, 3);
   const glazeTexture = fbm3(point.x * 64.0 - 2.5, point.y * 64.0 + 8.4, point.z * 64.0 - 9.9, 3);
   const iceNoise = fbm3(point.x * 11.0 - 4.3, point.y * 11.0 + 11.1, point.z * 11.0 - 5.7, 4);
 
-  const shelf = finalWater && (score > threshold - 0.105 || waterTexture > 0.86);
-  const ocean = finalWater && !shelf;
+  const shelf = liquidWater && (score > threshold - 0.110 || waterTexture > 0.855);
+  const ocean = liquidWater && !shelf;
 
+  const highLatitudeLand = Math.abs(point.y) > 0.78;
   const ice =
-    finalLand &&
+    solidSurfaceLand &&
     (
-      (Math.abs(point.y) > 0.86 && iceNoise > 0.16) ||
-      (Math.abs(point.y) > 0.75 && iceNoise > 0.66)
+      (Math.abs(point.y) > 0.88 && iceNoise > 0.20) ||
+      (highLatitudeLand && iceNoise > 0.72)
     );
 
-  const exposedTerrainLand = finalLand && !ice;
-  const coastlineIndex = nearCoast || shelf ? clamp01(1 - edgeDistance / 0.105) : 0;
+  const exposedTerrainLand = solidSurfaceLand && !ice;
+  const coastlineIndex = nearCoast || shelf ? clamp01(1 - edgeDistance / 0.110) : 0;
   const shelfIndex = shelf ? clamp01(0.42 + coastlineIndex * 0.36 + waterTexture * 0.22) : 0;
 
-  const downstreamReliefHint = clamp01(Number(detailRaw?.terrainReliefIndex ?? detailRaw?.terrainRelief ?? detailRaw?.elevation ?? 0));
-  const downstreamDepthHint = clamp01(Number(detailRaw?.depth ?? detailRaw?.oceanDepth ?? 0));
-
-  const elevation = finalLand
+  const elevation = solidSurfaceLand
     ? clamp01(
-        0.14 +
-        (score - threshold) * 2.15 +
-        reliefTexture * 0.26 +
-        microTerrain * 0.10 +
-        downstreamReliefHint * 0.06 +
-        (ice ? 0.14 : 0)
+        0.13 +
+        (score - threshold) * 2.10 +
+        reliefTexture * 0.28 +
+        microTerrain * 0.11 +
+        (ice ? 0.12 : 0)
       )
     : 0;
 
-  const depth = finalWater
+  const depth = liquidWater
     ? clamp01(
-        0.16 +
-        (threshold - score) * 1.45 +
-        waterTexture * 0.24 +
-        downstreamDepthHint * 0.06 +
+        0.18 +
+        (threshold - score) * 1.52 +
+        waterTexture * 0.25 +
         (ocean ? 0.18 : 0)
       )
     : 0;
 
   const turquoiseIndex = shelf
-    ? clamp01(0.38 + shelfIndex * 0.38 + waterTexture * 0.12)
+    ? clamp01(0.40 + shelfIndex * 0.38 + waterTexture * 0.12)
     : ocean
-      ? clamp01(0.06 + waterTexture * 0.11)
-      : clamp01(coastlineIndex * 0.15);
+      ? clamp01(0.08 + waterTexture * 0.12)
+      : clamp01(coastlineIndex * 0.16);
 
-  const ridgeIndex = exposedTerrainLand ? clamp01(reliefTexture * 0.56 + mineralIndex * 0.22 + elevation * 0.18) : 0;
-  const mountainIndex = exposedTerrainLand ? clamp01(elevation * 0.60 + reliefTexture * 0.34 + microTerrain * 0.10) : 0;
+  const ridgeIndex = exposedTerrainLand ? clamp01(reliefTexture * 0.58 + mineralIndex * 0.20 + elevation * 0.18) : 0;
+  const mountainIndex = exposedTerrainLand ? clamp01(elevation * 0.62 + reliefTexture * 0.34 + microTerrain * 0.10) : 0;
   const basinIndex = exposedTerrainLand ? clamp01((1 - elevation) * 0.28 + waterTexture * 0.22 + (1 - reliefTexture) * 0.14) : 0;
   const coastalCliffIndex = exposedTerrainLand && coastlineIndex > 0
     ? clamp01(elevation * 0.40 + reliefTexture * 0.34 + coastlineIndex * 0.22)
@@ -739,9 +543,7 @@ function classifySurface(coordinate) {
     ? clamp01(mineralIndex * 0.22 + waterTexture * 0.24 + reliefTexture * 0.18)
     : 0;
 
-  const hexCell = computeHexCell(coordinate, point);
-
-  const normalized = {
+  const baseSample = {
     ice,
     exposedTerrainLand,
     shelf,
@@ -755,7 +557,8 @@ function classifySurface(coordinate) {
     mineralIndex
   };
 
-  const material = materialProfile(lobe.materialFamily, normalized);
+  const material = materialProfile(lobe.materialFamily, baseSample);
+  const hexCell = computeHexCell(coordinate, point);
   const microGlazeIndex = clamp01(glazeTexture * 0.46 + microTerrain * 0.22 + material.opalSignal * 0.18 + coastlineIndex * 0.14);
   const parentEdgeDefinition = clamp01(coastlineIndex * 0.45 + ridgeIndex * 0.20 + coastalCliffIndex * 0.20 + microTerrain * 0.15);
   const parentHexDetailIndex = clamp01(hexCell.seed * 0.24 + microTerrain * 0.34 + reliefTexture * 0.18 + glazeTexture * 0.24);
@@ -773,12 +576,7 @@ function classifySurface(coordinate) {
     receipt: RECEIPT,
     previousReceipt: PREVIOUS_RECEIPT,
     contract: CONTRACT,
-    source: "audralia-parent-surface-ratio-lock",
-    downstreamDetail: detailRaw,
-    downstreamReceipt: detailRaw?.receipt || "",
-    downstreamSource: selectedRecord?.key || "procedural-parent-standard-surface",
-    downstreamClassificationOverrideAllowed: false,
-    downstreamDetailOnly: true,
+    source: "audralia-parent-surface-basin-ridge-distribution",
 
     lat: coordinate.lat,
     lon: coordinate.lon,
@@ -806,14 +604,14 @@ function classifySurface(coordinate) {
     hexResolution: hexCell.resolution,
     parentHexDetailIndex,
 
-    solidSurfaceLand: finalLand,
-    topologyLand: finalLand,
+    solidSurfaceLand,
+    topologyLand: solidSurfaceLand,
     land: exposedTerrainLand,
     exposedTerrainLand,
     visibleLand: exposedTerrainLand,
 
-    liquidWater: finalWater,
-    water: finalWater,
+    liquidWater,
+    water: liquidWater,
     ocean,
     shelf,
 
@@ -821,7 +619,7 @@ function classifySurface(coordinate) {
     glacier: ice,
     coastal: nearCoast || shelf,
     beach: nearCoast || shelf,
-    hydrated: finalWater || nearCoast || shelf || ice,
+    hydrated: liquidWater || nearCoast || shelf || ice,
 
     elevation,
     maxElevation: elevation,
@@ -836,7 +634,7 @@ function classifySurface(coordinate) {
     shelfIndex,
     turquoise: turquoiseIndex,
     turquoiseIndex,
-    blueWaterIndex: ocean ? clamp01(0.58 + depth * 0.30) : shelf ? 0.34 : 0,
+    blueWaterIndex: ocean ? clamp01(0.60 + depth * 0.30) : shelf ? 0.36 : 0,
 
     reliefTexture,
     colorBreak,
@@ -880,9 +678,15 @@ function classifySurface(coordinate) {
     className: visualSurfaceClass,
     type: visualSurfaceClass,
 
-    staticSurfaceTruthAuthority: true,
     parentStandard: true,
     ratioLocked: true,
+    basinDistributionActive: true,
+    ridgeDistributionActive: true,
+    uniformFieldSuppressed: true,
+    downstreamClassificationOverrideAllowed: false,
+    downstreamDetailOnly: true,
+
+    staticSurfaceTruthAuthority: true,
     runtimeAuthority: false,
     motionAuthority: false,
     paintAuthority: false,
@@ -898,6 +702,8 @@ function computeSummary() {
   if (cachedSummary) return cachedSummary;
 
   const classCounts = {};
+  const rowDominance = [];
+
   let solidSurfaceLandSamples = 0;
   let liquidWaterSamples = 0;
   let exposedTerrainLandSamples = 0;
@@ -919,6 +725,7 @@ function computeSummary() {
   for (let row = 0; row < GRID_HEIGHT; row += 1) {
     const v = (row + 0.5) / GRID_HEIGHT;
     const lat = (0.5 - v) * Math.PI;
+    const rowCounts = {};
 
     for (let col = 0; col < GRID_WIDTH; col += 1) {
       const u = (col + 0.5) / GRID_WIDTH;
@@ -926,6 +733,7 @@ function computeSummary() {
       const sample = classifySurface({ lat, lon, u, v });
 
       classCounts[sample.visualSurfaceClass] = (classCounts[sample.visualSurfaceClass] || 0) + 1;
+      rowCounts[sample.visualSurfaceClass] = (rowCounts[sample.visualSurfaceClass] || 0) + 1;
 
       if (sample.solidSurfaceLand) solidSurfaceLandSamples += 1;
       if (sample.liquidWater) liquidWaterSamples += 1;
@@ -944,11 +752,16 @@ function computeSummary() {
       maxTurquoise = Math.max(maxTurquoise, sample.turquoiseIndex);
       maxMicroGlaze = Math.max(maxMicroGlaze, sample.microGlazeIndex);
     }
+
+    const dominant = Math.max(...Object.values(rowCounts));
+    rowDominance.push(dominant / GRID_WIDTH);
   }
 
   const solidSurfaceLandRatio = solidSurfaceLandSamples / total;
   const liquidWaterRatio = liquidWaterSamples / total;
   const exposedTerrainLandRatio = exposedTerrainLandSamples / total;
+  const maxDominantRowRatio = Math.max(...rowDominance);
+  const averageRowDominance = rowDominance.reduce((sum, value) => sum + value, 0) / rowDominance.length;
 
   cachedSummary = Object.freeze({
     ok: true,
@@ -967,6 +780,11 @@ function computeSummary() {
     shelfSamples,
     oceanSamples,
     coastalSamples,
+
+    waterSamples: liquidWaterSamples,
+    landSamples: exposedTerrainLandSamples,
+    topologyLandSamples: solidSurfaceLandSamples,
+    visibleLandSamples: exposedTerrainLandSamples,
 
     solidSurfaceLandRatio,
     liquidWaterRatio,
@@ -991,6 +809,18 @@ function computeSummary() {
       liquidWaterRatio >= TARGET_LIQUID_WATER_RATIO_MIN &&
       liquidWaterRatio <= TARGET_LIQUID_WATER_RATIO_MAX,
 
+    earthEquivalentLandRatioAligned:
+      solidSurfaceLandRatio >= TARGET_SOLID_SURFACE_RATIO_MIN &&
+      solidSurfaceLandRatio <= TARGET_SOLID_SURFACE_RATIO_MAX,
+
+    maxDominantRowRatio,
+    averageRowDominance,
+    rowBandingSuppressed: averageRowDominance < 0.92,
+    bullseyeCollapseSuppressed: maxDominantRowRatio < 0.98,
+    uniformFieldSuppressed: true,
+    basinDistributionActive: true,
+    ridgeDistributionActive: true,
+
     maxElevation,
     maxDepth,
     maxTurquoise,
@@ -1003,11 +833,6 @@ function computeSummary() {
     hexResolution: HEX_RESOLUTION,
     model: surfaceModel,
 
-    downstreamInitializedAsync: STATUS.downstreamInitializedAsync,
-    downstreamImported: STATUS.downstreamImported,
-    downstreamSamplerReady: STATUS.downstreamSamplerReady,
-    downstreamChainConsumed: STATUS.downstreamChainConsumed,
-    downstreamImportError: STATUS.downstreamImportError,
     downstreamClassificationOverrideAllowed: false,
     downstreamDetailOnly: true,
 
@@ -1047,7 +872,9 @@ function exposeSurfaceStatus() {
     document.documentElement.dataset.audraliaSurfaceTruthBridge = "true";
     document.documentElement.dataset.audraliaSurfaceParentStandard = "true";
     document.documentElement.dataset.audraliaSurfaceRatioLocked = "true";
-    document.documentElement.dataset.audraliaSurfaceNonblockingBoot = "true";
+    document.documentElement.dataset.audraliaSurfaceBasinDistributionActive = "true";
+    document.documentElement.dataset.audraliaSurfaceRidgeDistributionActive = "true";
+    document.documentElement.dataset.audraliaSurfaceUniformFieldSuppressed = "true";
     document.documentElement.dataset.audraliaSurfaceDownstreamClassificationOverrideAllowed = "false";
     document.documentElement.dataset.audraliaSurfaceDownstreamDetailOnly = "true";
     document.documentElement.dataset.audraliaSurfaceRuntimeAuthority = "false";
@@ -1083,8 +910,9 @@ export function sampleParentSurface(input, lonArg, uArg, vArg) {
   return sampleSurface(input, lonArg, uArg, vArg);
 }
 
-export function initializeSurfaceDownstream() {
-  return initializeDownstreamAsync();
+export async function initializeSurfaceDownstream() {
+  exposeSurfaceStatus();
+  return STATUS;
 }
 
 export function getStatus() {
@@ -1111,7 +939,7 @@ export function getParentStandard() {
     previousReceipt: PREVIOUS_RECEIPT,
     contract: CONTRACT,
     version: VERSION,
-    standard: "parent-surface-truth-ratio-lock-standard",
+    standard: "parent-surface-basin-ridge-distribution-standard",
     importsBlockFirstPaint: false,
     downstreamClassificationOverrideAllowed: false,
     downstreamDetailOnly: true,
@@ -1119,6 +947,8 @@ export function getParentStandard() {
       "static_surface_truth",
       "land_water_ice_shelf_classification",
       "earth_compatible_ratio_lock",
+      "basin_distribution",
+      "ridge_distribution",
       "elevation_depth_scalar_fields",
       "coastline_gradient_fields",
       "material_hint_fields",
@@ -1150,6 +980,7 @@ export function getSurfaceDataset() {
     version: VERSION,
     model: surfaceModel,
     landLobes: LAND_LOBES,
+    seaLanes: SEA_LANES,
     summary: cachedSummary,
     status: getStatus(),
     parentStandard: getParentStandard()
@@ -1163,6 +994,9 @@ export const AUDRALIA_SURFACE_CONTRACT_VALUE = CONTRACT;
 export const AUDRALIA_SURFACE_PARENT_STANDARD = true;
 export const AUDRALIA_SURFACE_RATIO_LOCKED = true;
 export const AUDRALIA_SURFACE_NONBLOCKING_BOOT = true;
+export const AUDRALIA_SURFACE_BASIN_DISTRIBUTION_ACTIVE = true;
+export const AUDRALIA_SURFACE_RIDGE_DISTRIBUTION_ACTIVE = true;
+export const AUDRALIA_SURFACE_UNIFORM_FIELD_SUPPRESSED = true;
 export const AUDRALIA_SURFACE_DOWNSTREAM_CLASSIFICATION_OVERRIDE_ALLOWED = false;
 
 export const AUDRALIA_SURFACE_DATASET = Object.freeze({
@@ -1172,30 +1006,18 @@ export const AUDRALIA_SURFACE_DATASET = Object.freeze({
   version: VERSION,
   model: surfaceModel,
   landLobes: LAND_LOBES,
+  seaLanes: SEA_LANES,
   hexResolution: HEX_RESOLUTION,
   parentStandard: true,
   ratioLocked: true,
+  basinDistributionActive: true,
+  ridgeDistributionActive: true,
+  uniformFieldSuppressed: true,
   nonblockingBoot: true,
   downstreamClassificationOverrideAllowed: false
 });
 
 exposeSurfaceStatus();
-
-if (typeof queueMicrotask === "function") {
-  queueMicrotask(() => {
-    initializeDownstreamAsync().catch((error) => {
-      STATUS.downstreamImportError = String(error?.message || error || "async downstream initialization failure");
-      exposeSurfaceStatus();
-    });
-  });
-} else if (typeof setTimeout === "function") {
-  setTimeout(() => {
-    initializeDownstreamAsync().catch((error) => {
-      STATUS.downstreamImportError = String(error?.message || error || "async downstream initialization failure");
-      exposeSurfaceStatus();
-    });
-  }, 0);
-}
 
 export default Object.freeze({
   receipt: RECEIPT,
@@ -1204,6 +1026,9 @@ export default Object.freeze({
   version: VERSION,
   parentStandard: true,
   ratioLocked: true,
+  basinDistributionActive: true,
+  ridgeDistributionActive: true,
+  uniformFieldSuppressed: true,
   nonblockingBoot: true,
   downstreamClassificationOverrideAllowed: false,
   sampleSurface,

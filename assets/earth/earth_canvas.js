@@ -1,36 +1,38 @@
 /*
   /assets/earth/earth_canvas.js
-  EARTH_G4_PNG_ONLY_NASA_SURFACE_NO_CARTOON_FALLBACK_TNT_v3
+  EARTH_G5_NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE_TNT_v1
 
   Full-file replacement.
 
   Scope:
   - Earth canvas/source authority only.
-  - PNG-only NASA surface discipline.
-  - No procedural cartoon fallback.
+  - Non-NASA satellite-derived PNG-only surface discipline.
+  - No NASA Blue Marble reference path.
   - No JPG surface.
   - No JPG cloud fallback.
-  - If PNG surface is not available, hold without drawing a fake map.
-  - Fixed canvas, fixed sphere projection, surface-phase rotation, cloud-phase rotation, horizontal touch rotation, and inertia.
+  - No procedural cartoon fallback.
+  - If satellite PNG surface is unavailable, hold blank with status.
+  - Supports full-disk satellite PNG and equirectangular satellite PNG.
+  - Uses physics/telemetry for sphere mask, limb glow, axial-lighting read, phase, touch, and inertia.
   - Does not own material styling, route shell, Audralia, Gauges, Products, Sun, Moon, GraphicBox, image generation, or visual-pass claims.
 */
 
 (function () {
   "use strict";
 
-  const VERSION = "EARTH_G4_PNG_ONLY_NASA_SURFACE_NO_CARTOON_FALLBACK_TNT_v3";
-  const PREVIOUS_VERSION = "EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2";
+  const VERSION = "EARTH_G5_NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE_TNT_v1";
+  const PREVIOUS_VERSION = "EARTH_G4_PNG_ONLY_NASA_SURFACE_NO_CARTOON_FALLBACK_TNT_v3";
 
   const FALLBACK_MANIFEST = Object.freeze({
     body: "earth",
     label: "Earth",
     route: "/showroom/globe/earth/",
     authority: "/assets/earth/earth_canvas.js",
-    generation: "G4_REFERENCE_BODY_SURFACE_PHASE_ROTATION",
-    reference_standard: "NASA_BLUE_MARBLE_REFERENCE_DISCIPLINE",
+    source_standard: "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE",
+    generation: "G5_NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE",
     active_assets: {
-      surface: "/assets/earth/earth_surface_2048.png",
-      clouds_primary: "/assets/earth/earth_clouds_2048.png",
+      surface: "/assets/earth/earth_surface_satellite.png",
+      clouds_primary: "/assets/earth/earth_clouds_satellite.png",
       material: "/assets/earth/earth_material.css",
       canvas: "/assets/earth/earth_canvas.js",
       fallback_svg: "/assets/earth/earth.svg"
@@ -39,9 +41,10 @@
 
   const DEFAULTS = Object.freeze({
     maxDevicePixelRatio: 2,
-    surfaceAutoStep: 0.00062,
-    cloudAutoStep: 0.00027,
-    dragLongitudeFactor: 0.00175,
+    axialTiltDegrees: 23.44,
+    surfaceAutoStep: 0.00058,
+    cloudAutoStep: 0.00024,
+    dragLongitudeFactor: 0.00165,
     releaseFriction: 0.95,
     minVelocity: 0.000018,
     minZoom: 0.9,
@@ -53,7 +56,6 @@
 
   const imageCache = Object.create(null);
   const instanceStore = new WeakMap();
-
   let manifestPromise = null;
 
   function clamp(value, min, max) {
@@ -69,29 +71,36 @@
     return Number.isFinite(n) ? n : fallback;
   }
 
-  function isJpgPath(path) {
-    return typeof path === "string" && /\.(jpg|jpeg)(\?|#|$)/i.test(path);
+  function isForbiddenPath(path) {
+    return typeof path === "string" && (
+      /\.(jpg|jpeg)(\?|#|$)/i.test(path) ||
+      /nasa/i.test(path) ||
+      /blue[_-]?marble/i.test(path)
+    );
   }
 
   function pngOnly(path, fallback) {
     if (!path || typeof path !== "string") return fallback;
-    if (isJpgPath(path)) return fallback;
+    if (isForbiddenPath(path)) return fallback;
+    if (!/\.png(\?|#|$)/i.test(path)) return fallback;
     return path;
   }
 
   function mergeManifest(manifest) {
     const json = manifest && typeof manifest === "object" ? manifest : {};
-    const jsonAssets = json.active_assets && typeof json.active_assets === "object" ? json.active_assets : {};
+    const assets = json.active_assets && typeof json.active_assets === "object" ? json.active_assets : {};
 
     return Object.assign({}, FALLBACK_MANIFEST, json, {
       contract: VERSION,
       previous_contract: PREVIOUS_VERSION,
+      source_standard: "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE",
+      generation: "G5_NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE",
       active_assets: {
-        surface: pngOnly(jsonAssets.surface, FALLBACK_MANIFEST.active_assets.surface),
-        clouds_primary: pngOnly(jsonAssets.clouds_primary, FALLBACK_MANIFEST.active_assets.clouds_primary),
-        material: jsonAssets.material || FALLBACK_MANIFEST.active_assets.material,
-        canvas: jsonAssets.canvas || FALLBACK_MANIFEST.active_assets.canvas,
-        fallback_svg: jsonAssets.fallback_svg || FALLBACK_MANIFEST.active_assets.fallback_svg
+        surface: pngOnly(assets.surface, FALLBACK_MANIFEST.active_assets.surface),
+        clouds_primary: pngOnly(assets.clouds_primary, FALLBACK_MANIFEST.active_assets.clouds_primary),
+        material: assets.material || FALLBACK_MANIFEST.active_assets.material,
+        canvas: assets.canvas || FALLBACK_MANIFEST.active_assets.canvas,
+        fallback_svg: assets.fallback_svg || FALLBACK_MANIFEST.active_assets.fallback_svg
       }
     });
   }
@@ -109,7 +118,7 @@
   }
 
   function exposeReceipt(extra) {
-    window.DGB_EARTH_G4_ASSET_RECEIPT = Object.assign(
+    window.DGB_EARTH_G5_SATELLITE_RECEIPT = Object.assign(
       {
         contract: VERSION,
         previousContract: PREVIOUS_VERSION,
@@ -117,16 +126,16 @@
         authority: "/assets/earth/earth_canvas.js",
         body: "earth",
         label: "Earth",
-        generation: "G4_REFERENCE_BODY_SURFACE_PHASE_ROTATION",
-        referenceStandard: "NASA_BLUE_MARBLE_REFERENCE_DISCIPLINE",
+        generation: "G5_NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE",
+        sourceStandard: "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE",
         owns: [
           "earth_canvas_projection",
-          "earth_surface_phase_rotation",
-          "earth_cloud_phase_rotation",
+          "earth_satellite_png_surface_sampling",
+          "earth_cloud_png_overlay_sampling",
           "earth_horizontal_touch_rotation",
-          "earth_inertia",
-          "earth_asset_manifest_loading",
-          "earth_png_only_surface_discipline"
+          "earth_inertia_for_equirectangular_assets",
+          "earth_telemetry_lighting",
+          "earth_png_only_source_discipline"
         ],
         doesNotOwn: [
           "earth_material_styling",
@@ -142,17 +151,14 @@
           "GraphicBox",
           "visual pass claim"
         ],
+        axialTiltDegrees: DEFAULTS.axialTiltDegrees,
         canvasBoundary: "fixed",
         sphereMask: "fixed",
         projectionSampling: "locked",
-        diskRotation: "forbidden",
-        textureStretch: "forbidden",
-        verticalDragTextureEffect: "disabled",
-        wholeCanvasTransform: "forbidden",
-        wholeObjectRotation: "forbidden",
-        proceduralCartoonFallback: "forbidden",
+        nasaReference: "forbidden",
         jpgSurface: "forbidden",
         jpgCloudFallback: "forbidden",
+        proceduralCartoonFallback: "forbidden",
         generatedImage: false,
         graphicBox: false,
         visualPass: "HELD_UNTIL_SCREENSHOT_OR_OWNER_CONFIRMATION",
@@ -162,14 +168,14 @@
       extra || {}
     );
 
-    document.documentElement.dataset.earthG4AssetReceipt = VERSION;
+    document.documentElement.dataset.earthG5SatelliteReceipt = VERSION;
     document.documentElement.dataset.earthCanvasAuthority = "/assets/earth/earth_canvas.js";
-    document.documentElement.dataset.earthMaterialAuthority = "/assets/earth/earth_material.css";
     document.documentElement.dataset.earthGeneratedImage = "false";
     document.documentElement.dataset.earthGraphicBox = "false";
     document.documentElement.dataset.earthVisualPassClaimed = "false";
     document.documentElement.dataset.earthProceduralFallback = "false";
     document.documentElement.dataset.earthJpgAllowed = "false";
+    document.documentElement.dataset.earthNasaReference = "forbidden";
   }
 
   function loadManifest() {
@@ -180,9 +186,7 @@
         if (!response.ok) throw new Error("manifest unavailable");
         return response.json();
       })
-      .then(function (json) {
-        return mergeManifest(json);
-      })
+      .then(mergeManifest)
       .catch(function () {
         return mergeManifest(FALLBACK_MANIFEST);
       });
@@ -193,7 +197,6 @@
   function ensureMaterialStylesheet(manifest) {
     const merged = mergeManifest(manifest);
     const path = merged.active_assets.material || FALLBACK_MANIFEST.active_assets.material;
-
     if (!path) return;
 
     const existing = document.querySelector('link[data-earth-material-css="true"]');
@@ -215,32 +218,17 @@
 
   function loadImage(src) {
     if (!src || typeof src !== "string") {
-      return Promise.resolve({
-        ok: false,
-        src: "",
-        image: null,
-        width: 0,
-        height: 0,
-        reason: "missing-src"
-      });
+      return Promise.resolve({ ok: false, src: "", image: null, width: 0, height: 0, reason: "missing-src" });
     }
 
-    if (isJpgPath(src)) {
-      return Promise.resolve({
-        ok: false,
-        src,
-        image: null,
-        width: 0,
-        height: 0,
-        reason: "jpg-forbidden"
-      });
+    if (isForbiddenPath(src) || !/\.png(\?|#|$)/i.test(src)) {
+      return Promise.resolve({ ok: false, src, image: null, width: 0, height: 0, reason: "forbidden-or-non-png" });
     }
 
     if (imageCache[src]) return imageCache[src];
 
     imageCache[src] = new Promise(function (resolve) {
       const image = new Image();
-      image.crossOrigin = "anonymous";
       image.decoding = "async";
 
       image.onload = function () {
@@ -254,20 +242,21 @@
       };
 
       image.onerror = function () {
-        resolve({
-          ok: false,
-          src,
-          image: null,
-          width: 0,
-          height: 0,
-          reason: "load-error"
-        });
+        resolve({ ok: false, src, image: null, width: 0, height: 0, reason: "load-error" });
       };
 
       image.src = src;
     });
 
     return imageCache[src];
+  }
+
+  function detectSurfaceMode(asset) {
+    if (!asset || !asset.ok || !asset.width || !asset.height) return "missing";
+    const ratio = asset.width / asset.height;
+    if (ratio > 1.72 && ratio < 2.28) return "equirectangular";
+    if (ratio > 0.75 && ratio < 1.28) return "full_disk_satellite";
+    return "unknown_png";
   }
 
   function createProfile(overrides) {
@@ -279,26 +268,20 @@
         authority: "/assets/earth/earth_canvas.js",
         version: VERSION,
         previousVersion: PREVIOUS_VERSION,
-        generation: "G4_REFERENCE_BODY_SURFACE_PHASE_ROTATION",
-        referenceStandard: "NASA_BLUE_MARBLE_REFERENCE_DISCIPLINE",
+        generation: "G5_NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE",
+        sourceStandard: "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE",
+        axialTiltDegrees: DEFAULTS.axialTiltDegrees,
         canvasBoundary: "fixed",
         sphereMask: "fixed",
-        objectBoundary: "natural-sphere-mask",
         projectionSampling: "locked",
-        rotationModel: "surface-longitude-phase",
         touchModel: "horizontal-drag-only",
-        diskRotation: "forbidden",
-        textureStretch: "forbidden",
-        verticalDragTextureEffect: "disabled",
-        wholeCanvasTransform: "forbidden",
-        wholeObjectRotation: "forbidden",
-        proceduralCartoonFallback: "forbidden",
-        jpgSurface: "forbidden",
-        jpgCloudFallback: "forbidden",
-        surfaceAuthority: "/assets/earth/earth_surface_2048.png",
-        cloudAuthority: "/assets/earth/earth_clouds_2048.png",
+        surfaceAuthority: "/assets/earth/earth_surface_satellite.png",
+        cloudAuthority: "/assets/earth/earth_clouds_satellite.png",
         materialAuthority: "/assets/earth/earth_material.css",
         manifestAuthority: "/assets/earth/earth_manifest.json",
+        nasaReference: "forbidden",
+        jpgSurface: "forbidden",
+        proceduralCartoonFallback: "forbidden",
         generatedImage: false,
         graphicBox: false,
         visualPass: "HELD_UNTIL_SCREENSHOT_OR_OWNER_CONFIRMATION",
@@ -310,29 +293,26 @@
 
   function createCanvas() {
     const canvas = document.createElement("canvas");
-    canvas.className = "earth-g4-canvas earth-material-canvas earth-reference-canvas";
+    canvas.className = "earth-g5-canvas earth-g4-canvas earth-material-canvas earth-reference-canvas";
     canvas.dataset.body = "earth";
     canvas.dataset.authority = "/assets/earth/earth_canvas.js";
     canvas.dataset.version = VERSION;
     canvas.dataset.previousVersion = PREVIOUS_VERSION;
-    canvas.dataset.rotationModel = "surface-longitude-phase";
+    canvas.dataset.sourceStandard = "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE";
     canvas.dataset.touchModel = "horizontal-drag-only";
-    canvas.dataset.diskRotation = "forbidden";
-    canvas.dataset.textureStretch = "forbidden";
-    canvas.dataset.verticalDragTextureEffect = "disabled";
-    canvas.dataset.wholeCanvasTransform = "forbidden";
     canvas.dataset.projectionSampling = "locked";
+    canvas.dataset.surfaceAuthority = "/assets/earth/earth_surface_satellite.png";
+    canvas.dataset.cloudAuthority = "/assets/earth/earth_clouds_satellite.png";
     canvas.dataset.materialAuthority = "/assets/earth/earth_material.css";
-    canvas.dataset.surfaceAuthority = "/assets/earth/earth_surface_2048.png";
-    canvas.dataset.cloudAuthority = "/assets/earth/earth_clouds_2048.png";
-    canvas.dataset.proceduralFallback = "false";
+    canvas.dataset.nasaReference = "forbidden";
     canvas.dataset.jpgAllowed = "false";
+    canvas.dataset.proceduralFallback = "false";
     canvas.dataset.generatedImage = "false";
     canvas.dataset.graphicBox = "false";
     canvas.dataset.visualPassClaimed = "false";
     canvas.dataset.publicReceipts = "hidden";
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Earth G4 NASA reference globe with PNG-only surface-phase rotation");
+    canvas.setAttribute("aria-label", "Non-NASA satellite-derived Earth globe");
     canvas.style.transform = "none";
     canvas.style.touchAction = "none";
     return canvas;
@@ -340,7 +320,7 @@
 
   function createFrame(canvas) {
     const frame = document.createElement("div");
-    frame.className = "earth-material-frame";
+    frame.className = "earth-material-frame earth-satellite-frame";
     frame.dataset.earthMaterialFrame = "true";
     frame.dataset.contract = VERSION;
     frame.dataset.previousContract = PREVIOUS_VERSION;
@@ -350,8 +330,8 @@
 
   function createLabel() {
     const label = document.createElement("div");
-    label.className = "earth-reference-label";
-    label.textContent = "NASA BLUE MARBLE REFERENCE";
+    label.className = "earth-reference-label earth-satellite-label";
+    label.textContent = "SATELLITE DERIVED EARTH";
     label.setAttribute("aria-hidden", "true");
     return label;
   }
@@ -375,7 +355,7 @@
     state.cssSize = cssSize;
   }
 
-  function drawPendingHold(ctx, state) {
+  function drawHold(ctx, state) {
     const size = state.size || 640;
     const center = size / 2;
     const radius = size * 0.405 * clamp(state.zoom, state.options.minZoom, state.options.maxZoom);
@@ -387,23 +367,15 @@
     ctx.arc(center, center, radius, 0, Math.PI * 2);
     ctx.clip();
 
-    const hold = ctx.createRadialGradient(center, center, radius * 0.08, center, center, radius);
-    hold.addColorStop(0, "rgba(20,44,78,0.26)");
-    hold.addColorStop(0.68, "rgba(7,18,34,0.30)");
-    hold.addColorStop(1, "rgba(0,0,0,0.46)");
-
+    const hold = ctx.createRadialGradient(center - radius * 0.2, center - radius * 0.2, radius * 0.08, center, center, radius);
+    hold.addColorStop(0, "rgba(28,64,105,0.30)");
+    hold.addColorStop(0.68, "rgba(7,18,34,0.32)");
+    hold.addColorStop(1, "rgba(0,0,0,0.52)");
     ctx.fillStyle = hold;
     ctx.fillRect(center - radius, center - radius, radius * 2, radius * 2);
 
     ctx.restore();
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(center, center, radius + Math.max(1, size * 0.004), 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(188,223,255,0.28)";
-    ctx.lineWidth = Math.max(1, size * 0.003);
-    ctx.stroke();
-    ctx.restore();
+    drawTelemetryLighting(ctx, state, true);
   }
 
   function drawWrappedStrip(ctx, image, phase, sy, sh, dx, dy, dw, dh) {
@@ -425,7 +397,7 @@
     }
   }
 
-  function drawTextureSphere(ctx, state, image, phase, alpha) {
+  function drawEquirectangularSphere(ctx, state, image, phase, alpha) {
     const size = state.size;
     const center = size / 2;
     const radius = size * 0.405 * clamp(state.zoom, state.options.minZoom, state.options.maxZoom);
@@ -455,38 +427,49 @@
     ctx.restore();
   }
 
-  function drawAtmosphereAndLight(ctx, state) {
+  function drawFullDiskSatellite(ctx, state, image, alpha) {
     const size = state.size;
     const center = size / 2;
     const radius = size * 0.405 * clamp(state.zoom, state.options.minZoom, state.options.maxZoom);
+    const srcSize = Math.min(image.width, image.height);
+    const sx = Math.max(0, (image.width - srcSize) / 2);
+    const sy = Math.max(0, (image.height - srcSize) / 2);
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(center, center, radius, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.globalAlpha = alpha;
+    ctx.drawImage(image, sx, sy, srcSize, srcSize, center - radius, center - radius, radius * 2, radius * 2);
+    ctx.restore();
+  }
+
+  function drawTelemetryLighting(ctx, state, holdOnly) {
+    const size = state.size;
+    const center = size / 2;
+    const radius = size * 0.405 * clamp(state.zoom, state.options.minZoom, state.options.maxZoom);
+    const tilt = (state.options.axialTiltDegrees * Math.PI) / 180;
+    const lightX = center - radius * Math.cos(tilt) * 0.34;
+    const lightY = center - radius * Math.sin(tilt) * 0.34;
 
     ctx.save();
     ctx.beginPath();
     ctx.arc(center, center, radius, 0, Math.PI * 2);
     ctx.clip();
 
-    const light = ctx.createRadialGradient(
-      center - radius * 0.36,
-      center - radius * 0.34,
-      radius * 0.03,
-      center,
-      center,
-      radius * 1.16
-    );
-
-    light.addColorStop(0, "rgba(255,255,255,0.24)");
-    light.addColorStop(0.34, "rgba(255,255,255,0.07)");
-    light.addColorStop(0.70, "rgba(0,0,0,0.10)");
-    light.addColorStop(1, "rgba(0,0,0,0.42)");
+    const light = ctx.createRadialGradient(lightX, lightY, radius * 0.03, center, center, radius * 1.18);
+    light.addColorStop(0, holdOnly ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.20)");
+    light.addColorStop(0.34, "rgba(255,255,255,0.06)");
+    light.addColorStop(0.72, "rgba(0,0,0,0.10)");
+    light.addColorStop(1, "rgba(0,0,0,0.44)");
 
     ctx.fillStyle = light;
     ctx.fillRect(center - radius, center - radius, radius * 2, radius * 2);
 
     const rim = ctx.createRadialGradient(center, center, radius * 0.78, center, center, radius);
     rim.addColorStop(0, "rgba(0,0,0,0)");
-    rim.addColorStop(0.82, "rgba(6,28,54,0.08)");
-    rim.addColorStop(1, "rgba(6,24,42,0.34)");
-
+    rim.addColorStop(0.84, "rgba(6,28,54,0.08)");
+    rim.addColorStop(1, "rgba(110,174,255,0.26)");
     ctx.fillStyle = rim;
     ctx.fillRect(center - radius, center - radius, radius * 2, radius * 2);
 
@@ -510,22 +493,38 @@
 
     const surfaceReady = Boolean(state.surface.ok && state.surface.image);
     const cloudReady = Boolean(state.cloudsPrimary.ok && state.cloudsPrimary.image);
+    const surfaceMode = detectSurfaceMode(state.surface);
+    const cloudMode = detectSurfaceMode(state.cloudsPrimary);
+
+    state.surfaceMode = surfaceMode;
+    state.cloudMode = cloudMode;
+
+    canvas.dataset.surfaceMode = surfaceMode;
+    canvas.dataset.cloudMode = cloudMode;
 
     if (!surfaceReady) {
-      canvas.dataset.renderHold = "waiting-for-png-nasa-surface";
-      drawPendingHold(ctx, state);
+      canvas.dataset.renderHold = "waiting-for-non-nasa-satellite-png";
+      drawHold(ctx, state);
       return;
     }
 
     canvas.dataset.renderHold = "false";
 
-    drawTextureSphere(ctx, state, state.surface.image, state.surfacePhase, 1);
-
-    if (cloudReady) {
-      drawTextureSphere(ctx, state, state.cloudsPrimary.image, state.cloudPhase, 0.42);
+    if (surfaceMode === "equirectangular") {
+      drawEquirectangularSphere(ctx, state, state.surface.image, state.surfacePhase, 1);
+    } else {
+      drawFullDiskSatellite(ctx, state, state.surface.image, 1);
     }
 
-    drawAtmosphereAndLight(ctx, state);
+    if (cloudReady) {
+      if (cloudMode === "equirectangular") {
+        drawEquirectangularSphere(ctx, state, state.cloudsPrimary.image, state.cloudPhase, 0.38);
+      } else {
+        drawFullDiskSatellite(ctx, state, state.cloudsPrimary.image, 0.34);
+      }
+    }
+
+    drawTelemetryLighting(ctx, state, false);
 
     canvas.dataset.surfacePhase = state.surfacePhase.toFixed(5);
     canvas.dataset.cloudPhase = state.cloudPhase.toFixed(5);
@@ -535,28 +534,25 @@
   function setDatasets(mount, state) {
     if (!mount) return;
 
-    const assets =
-      state && state.manifest && state.manifest.active_assets
-        ? state.manifest.active_assets
-        : FALLBACK_MANIFEST.active_assets;
+    const assets = state && state.manifest && state.manifest.active_assets
+      ? state.manifest.active_assets
+      : FALLBACK_MANIFEST.active_assets;
 
-    mount.classList.add("earth-material-stage");
+    mount.classList.add("earth-material-stage", "earth-satellite-stage");
     mount.dataset.body = "earth";
     mount.dataset.version = VERSION;
     mount.dataset.previousVersion = PREVIOUS_VERSION;
+    mount.dataset.sourceStandard = "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE";
     mount.dataset.manifestAuthority = "/assets/earth/earth_manifest.json";
-    mount.dataset.materialAuthority = assets.material || FALLBACK_MANIFEST.active_assets.material;
-    mount.dataset.canvasAuthority = assets.canvas || FALLBACK_MANIFEST.active_assets.canvas;
-    mount.dataset.surfaceAuthority = assets.surface || FALLBACK_MANIFEST.active_assets.surface;
-    mount.dataset.cloudAuthority = assets.clouds_primary || FALLBACK_MANIFEST.active_assets.clouds_primary;
-    mount.dataset.rotationModel = "surface-longitude-phase";
+    mount.dataset.materialAuthority = assets.material;
+    mount.dataset.canvasAuthority = assets.canvas;
+    mount.dataset.surfaceAuthority = assets.surface;
+    mount.dataset.cloudAuthority = assets.clouds_primary;
+    mount.dataset.axialTiltDegrees = String(DEFAULTS.axialTiltDegrees);
     mount.dataset.touchModel = "horizontal-drag-only";
-    mount.dataset.textureStretch = "forbidden";
-    mount.dataset.diskRotation = "forbidden";
-    mount.dataset.wholeCanvasTransform = "forbidden";
-    mount.dataset.projectionSampling = "locked";
-    mount.dataset.proceduralFallback = "false";
+    mount.dataset.nasaReference = "forbidden";
     mount.dataset.jpgAllowed = "false";
+    mount.dataset.proceduralFallback = "false";
     mount.dataset.generatedImage = "false";
     mount.dataset.graphicBox = "false";
     mount.dataset.visualPassClaimed = "false";
@@ -565,6 +561,8 @@
     if (state) {
       mount.dataset.surfacePhase = state.surfacePhase.toFixed(5);
       mount.dataset.cloudPhase = state.cloudPhase.toFixed(5);
+      mount.dataset.surfaceMode = state.surfaceMode || "unread";
+      mount.dataset.cloudMode = state.cloudMode || "unread";
       mount.dataset.surfaceAssetLoaded = String(Boolean(state.surface.ok));
       mount.dataset.cloudPrimaryLoaded = String(Boolean(state.cloudsPrimary.ok));
     }
@@ -573,23 +571,14 @@
   function attachControls(state) {
     const canvas = state.canvas;
 
-    function point(event) {
-      const source = event.touches && event.touches[0] ? event.touches[0] : event;
-      return { x: source.clientX, y: source.clientY };
-    }
-
     function down(event) {
-      const p = point(event);
       state.dragging = true;
-      state.lastX = p.x;
-      state.lastY = p.y;
+      state.lastX = event.clientX;
       state.velocityX = 0;
       canvas.dataset.dragging = "true";
 
       if (canvas.setPointerCapture && event.pointerId !== undefined) {
-        try {
-          canvas.setPointerCapture(event.pointerId);
-        } catch (error) {}
+        try { canvas.setPointerCapture(event.pointerId); } catch (error) {}
       }
 
       if (event.cancelable) event.preventDefault();
@@ -598,17 +587,16 @@
     function move(event) {
       if (!state.dragging) return;
 
-      const p = point(event);
-      const dx = p.x - state.lastX;
-
-      state.lastX = p.x;
-      state.lastY = p.y;
+      const dx = event.clientX - state.lastX;
+      state.lastX = event.clientX;
 
       const delta = -dx * state.options.dragLongitudeFactor;
-
       state.surfacePhase = wrap01(state.surfacePhase + delta);
       state.cloudPhase = wrap01(state.cloudPhase + delta * 0.44);
-      state.velocityX = delta * 0.58;
+
+      if (state.surfaceMode === "equirectangular") {
+        state.velocityX = delta * 0.58;
+      }
 
       drawFrame(state);
       setDatasets(state.mount, state);
@@ -641,7 +629,6 @@
     }
 
     window.addEventListener("resize", onResize, { passive: true });
-
     state.cleanup.push(function () {
       window.removeEventListener("resize", onResize);
     });
@@ -650,12 +637,17 @@
   function tick(state) {
     if (!state.running) return;
 
-    state.surfacePhase = wrap01(state.surfacePhase + state.options.surfaceAutoStep + state.velocityX);
-    state.cloudPhase = wrap01(state.cloudPhase + state.options.cloudAutoStep + state.velocityX * 0.42);
-    state.velocityX *= state.options.releaseFriction;
+    if (state.surfaceMode === "equirectangular") {
+      state.surfacePhase = wrap01(state.surfacePhase + state.options.surfaceAutoStep + state.velocityX);
+      state.velocityX *= state.options.releaseFriction;
 
-    if (Math.abs(state.velocityX) < state.options.minVelocity) {
-      state.velocityX = 0;
+      if (Math.abs(state.velocityX) < state.options.minVelocity) {
+        state.velocityX = 0;
+      }
+    }
+
+    if (state.cloudMode === "equirectangular") {
+      state.cloudPhase = wrap01(state.cloudPhase + state.options.cloudAutoStep + state.velocityX * 0.42);
     }
 
     drawFrame(state);
@@ -670,24 +662,22 @@
     const node = document.createElement("div");
     node.hidden = true;
     node.setAttribute("aria-hidden", "true");
-    node.className = "earth-g4-hidden-receipt";
+    node.className = "earth-g5-hidden-receipt earth-g4-hidden-receipt";
     node.dataset.contract = VERSION;
     node.dataset.previousContract = PREVIOUS_VERSION;
     node.dataset.manifest = "/assets/earth/earth_manifest.json";
     node.dataset.material = "/assets/earth/earth_material.css";
     node.dataset.canvas = "/assets/earth/earth_canvas.js";
-    node.dataset.surface = "/assets/earth/earth_surface_2048.png";
-    node.dataset.clouds = "/assets/earth/earth_clouds_2048.png";
-    node.dataset.rotationModel = "surface-longitude-phase";
-    node.dataset.textureStretch = "forbidden";
-    node.dataset.diskRotation = "forbidden";
-    node.dataset.proceduralFallback = "false";
+    node.dataset.surface = "/assets/earth/earth_surface_satellite.png";
+    node.dataset.clouds = "/assets/earth/earth_clouds_satellite.png";
+    node.dataset.sourceStandard = "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE";
+    node.dataset.nasaReference = "forbidden";
     node.dataset.jpgAllowed = "false";
+    node.dataset.proceduralFallback = "false";
     node.dataset.generatedImage = "false";
     node.dataset.graphicBox = "false";
     node.dataset.visualPassClaimed = "false";
-    node.textContent =
-      "EARTH_G4_PNG_ONLY_NASA_SURFACE_NO_CARTOON_FALLBACK_TNT_v3 visual_pass=held jpg_allowed=false procedural_fallback=false";
+    node.textContent = "EARTH_G5_NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE_TNT_v1 visual_pass=held";
     return node;
   }
 
@@ -695,7 +685,7 @@
     const input = options || {};
 
     return {
-      size: input.size,
+      axialTiltDegrees: number(input.axialTiltDegrees, DEFAULTS.axialTiltDegrees),
       surfaceAutoStep: number(input.surfaceAutoStep, DEFAULTS.surfaceAutoStep),
       cloudAutoStep: number(input.cloudAutoStep, DEFAULTS.cloudAutoStep),
       dragLongitudeFactor: number(input.dragLongitudeFactor, DEFAULTS.dragLongitudeFactor),
@@ -720,9 +710,7 @@
     if (!target) return null;
 
     const existing = instanceStore.get(target);
-    if (existing && typeof existing.destroy === "function") {
-      existing.destroy();
-    }
+    if (existing && typeof existing.destroy === "function") existing.destroy();
 
     const normalized = normalizeOptions(options);
     const canvas = createCanvas();
@@ -746,8 +734,10 @@
       velocityX: 0,
       zoom: clamp(normalized.initialZoom, normalized.minZoom, normalized.maxZoom),
       manifest: mergeManifest(FALLBACK_MANIFEST),
-      surface: { ok: false, image: null },
-      cloudsPrimary: { ok: false, image: null },
+      surface: { ok: false, image: null, width: 0, height: 0 },
+      cloudsPrimary: { ok: false, image: null, width: 0, height: 0 },
+      surfaceMode: "unread",
+      cloudMode: "unread",
       cleanup: []
     };
 
@@ -765,7 +755,7 @@
       state.manifest = mergeManifest(manifest);
       ensureMaterialStylesheet(state.manifest);
 
-      const assets = state.manifest.active_assets || FALLBACK_MANIFEST.active_assets;
+      const assets = state.manifest.active_assets;
 
       Promise.all([
         loadImage(assets.surface),
@@ -774,10 +764,8 @@
         state.surface = results[0];
         state.cloudsPrimary = results[1];
 
-        target.dataset.surfaceAssetLoaded = String(Boolean(state.surface.ok));
-        target.dataset.cloudPrimaryLoaded = String(Boolean(state.cloudsPrimary.ok));
-        target.dataset.surfaceAssetPath = assets.surface;
-        target.dataset.cloudAssetPath = assets.clouds_primary;
+        state.surfaceMode = detectSurfaceMode(state.surface);
+        state.cloudMode = detectSurfaceMode(state.cloudsPrimary);
 
         setDatasets(target, state);
         drawFrame(state);
@@ -789,7 +777,10 @@
           cloudAuthority: assets.clouds_primary,
           surfaceAssetLoaded: Boolean(state.surface.ok),
           cloudPrimaryLoaded: Boolean(state.cloudsPrimary.ok),
-          pngOnly: true,
+          surfaceMode: state.surfaceMode,
+          cloudMode: state.cloudMode,
+          satelliteDerived: true,
+          nasaReference: "forbidden",
           jpgAllowed: false,
           proceduralFallback: false
         });
@@ -807,12 +798,8 @@
 
     function stop() {
       state.running = false;
-
-      if (state.raf) {
-        window.cancelAnimationFrame(state.raf);
-        state.raf = 0;
-      }
-
+      if (state.raf) window.cancelAnimationFrame(state.raf);
+      state.raf = 0;
       return api;
     }
 
@@ -828,11 +815,7 @@
 
     function destroy() {
       stop();
-
-      state.cleanup.forEach(function (fn) {
-        fn();
-      });
-
+      state.cleanup.forEach(function (fn) { fn(); });
       state.cleanup = [];
       instanceStore.delete(target);
       return true;
@@ -846,14 +829,10 @@
         dragging: state.dragging,
         surfaceAssetLoaded: Boolean(state.surface.ok),
         cloudPrimaryLoaded: Boolean(state.cloudsPrimary.ok),
-        surfaceAssetPath:
-          state.manifest && state.manifest.active_assets
-            ? state.manifest.active_assets.surface
-            : FALLBACK_MANIFEST.active_assets.surface,
-        cloudAssetPath:
-          state.manifest && state.manifest.active_assets
-            ? state.manifest.active_assets.clouds_primary
-            : FALLBACK_MANIFEST.active_assets.clouds_primary
+        surfaceMode: state.surfaceMode,
+        cloudMode: state.cloudMode,
+        surfaceAssetPath: state.manifest.active_assets.surface,
+        cloudAssetPath: state.manifest.active_assets.clouds_primary
       });
     }
 
@@ -873,7 +852,8 @@
     exposeReceipt({
       mounted: true,
       mountDetected: true,
-      pngOnly: true,
+      satelliteDerived: true,
+      nasaReference: "forbidden",
       jpgAllowed: false,
       proceduralFallback: false
     });
@@ -885,54 +865,10 @@
     return createInstance(mountTarget, options);
   }
 
-  function renderSurface(mountTarget, options) {
-    return renderEarth(mountTarget, options);
-  }
-
-  function mount(mountTarget, options) {
-    return renderEarth(mountTarget, options);
-  }
-
-  function buildTexture(options) {
-    const canvas = createCanvas();
-    const holder = document.createElement("div");
-    holder.style.position = "fixed";
-    holder.style.left = "-99999px";
-    holder.style.top = "-99999px";
-    holder.style.width = "640px";
-    holder.style.height = "640px";
-    holder.appendChild(canvas);
-
-    const state = {
-      mount: holder,
-      canvas,
-      ctx: canvas.getContext("2d", { alpha: true }),
-      options: normalizeOptions(options),
-      size: 640,
-      cssSize: 640,
-      surfacePhase: wrap01(number(options && options.phase, DEFAULTS.initialPhase)),
-      cloudPhase: wrap01(number(options && options.cloudPhase, DEFAULTS.initialCloudPhase)),
-      velocityX: 0,
-      zoom: 1,
-      surface: { ok: false, image: null },
-      cloudsPrimary: { ok: false, image: null }
-    };
-
-    canvas.width = 640;
-    canvas.height = 640;
-    drawPendingHold(state.ctx, state);
-
-    if (options && options.returnObject === true) {
-      return { canvas, version: VERSION, profile: createProfile(), status: getStatus() };
-    }
-
-    return canvas;
-  }
-
   function verifyAssets() {
     return loadManifest().then(function (manifest) {
       const merged = mergeManifest(manifest);
-      const assets = merged.active_assets || FALLBACK_MANIFEST.active_assets;
+      const assets = merged.active_assets;
 
       return Promise.all([
         loadImage(assets.surface),
@@ -942,8 +878,9 @@
           version: VERSION,
           previousVersion: PREVIOUS_VERSION,
           manifest: "/assets/earth/earth_manifest.json",
+          sourceStandard: "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE",
           material: assets.material,
-          pngOnly: true,
+          nasaReference: "forbidden",
           jpgAllowed: false,
           proceduralFallback: false,
           surface: {
@@ -951,6 +888,7 @@
             ok: Boolean(results[0] && results[0].ok),
             width: results[0] ? results[0].width : 0,
             height: results[0] ? results[0].height : 0,
+            mode: detectSurfaceMode(results[0]),
             reason: results[0] ? results[0].reason || "" : ""
           },
           cloudsPrimary: {
@@ -958,6 +896,7 @@
             ok: Boolean(results[1] && results[1].ok),
             width: results[1] ? results[1].width : 0,
             height: results[1] ? results[1].height : 0,
+            mode: detectSurfaceMode(results[1]),
             reason: results[1] ? results[1].reason || "" : ""
           },
           generatedImage: false,
@@ -979,40 +918,23 @@
         authority: "/assets/earth/earth_canvas.js",
         manifestAuthority: "/assets/earth/earth_manifest.json",
         materialAuthority: "/assets/earth/earth_material.css",
-        surfaceAuthority: "/assets/earth/earth_surface_2048.png",
-        cloudAuthority: "/assets/earth/earth_clouds_2048.png",
-        generation: "G4_REFERENCE_BODY_SURFACE_PHASE_ROTATION",
-        rotationModel: "surface-longitude-phase",
+        surfaceAuthority: "/assets/earth/earth_surface_satellite.png",
+        cloudAuthority: "/assets/earth/earth_clouds_satellite.png",
+        generation: "G5_NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE",
+        sourceStandard: "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE",
+        axialTiltDegrees: DEFAULTS.axialTiltDegrees,
         touchModel: "horizontal-drag-only",
         canvasBoundary: "fixed",
         sphereMask: "fixed",
-        objectBoundary: "natural-sphere-mask",
         projectionSampling: "locked",
-        diskRotation: "forbidden",
-        textureStretch: "forbidden",
-        verticalDragTextureEffect: "disabled",
-        wholeCanvasTransform: "forbidden",
-        wholeObjectRotation: "forbidden",
-        proceduralCartoonFallback: "forbidden",
+        nasaReference: "forbidden",
         jpgSurface: "forbidden",
         jpgCloudFallback: "forbidden",
-        pngOnly: true,
+        proceduralCartoonFallback: "forbidden",
         generatedImage: false,
         graphicBox: false,
         visualPass: "HELD_UNTIL_SCREENSHOT_OR_OWNER_CONFIRMATION",
-        visualPassClaimed: false,
-        protectedNonJurisdiction: [
-          "Audralia",
-          "Showroom selector",
-          "Showroom CSS",
-          "Gauges",
-          "Products",
-          "Sun",
-          "Moon",
-          "global files"
-        ],
-        returnReceipt:
-          "EARTH_G4_PNG_ONLY_NASA_SURFACE_NO_CARTOON_FALLBACK_ACTIVE"
+        visualPassClaimed: false
       },
       extra || {}
     );
@@ -1021,25 +943,11 @@
   function registerExtension(target) {
     if (!target || typeof target !== "object") return window.DGBEarthCanvas;
 
-    if (typeof target.registerRenderer === "function") {
-      target.registerRenderer("earth", window.DGBEarthCanvas);
-    }
-
-    if (typeof target.registerPlanet === "function") {
-      target.registerPlanet(createProfile(), window.DGBEarthCanvas);
-    }
-
-    if (typeof target.registerExtension === "function") {
-      target.registerExtension("earth", window.DGBEarthCanvas);
-    }
-
-    if (target.extensions && typeof target.extensions === "object") {
-      target.extensions.earth = window.DGBEarthCanvas;
-    }
-
-    if (target.planets && typeof target.planets === "object") {
-      target.planets.earth = createProfile();
-    }
+    if (typeof target.registerRenderer === "function") target.registerRenderer("earth", window.DGBEarthCanvas);
+    if (typeof target.registerPlanet === "function") target.registerPlanet(createProfile(), window.DGBEarthCanvas);
+    if (typeof target.registerExtension === "function") target.registerExtension("earth", window.DGBEarthCanvas);
+    if (target.extensions && typeof target.extensions === "object") target.extensions.earth = window.DGBEarthCanvas;
+    if (target.planets && typeof target.planets === "object") target.planets.earth = createProfile();
 
     return window.DGBEarthCanvas;
   }
@@ -1054,9 +962,7 @@
       if (registry) registerExtension(registry);
     });
 
-    exposeReceipt({
-      autoRegistered: true
-    });
+    exposeReceipt({ autoRegistered: true });
 
     safeDispatch("dgb:earth-canvas-ready", {
       body: "earth",
@@ -1064,7 +970,8 @@
       version: VERSION,
       previousVersion: PREVIOUS_VERSION,
       api: window.DGBEarthCanvas,
-      pngOnly: true,
+      sourceStandard: "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE",
+      nasaReference: "forbidden",
       jpgAllowed: false,
       proceduralFallback: false,
       generatedImage: false,
@@ -1087,7 +994,6 @@
       document.querySelector("[data-dgb-earth-mount]");
 
     if (!target) return;
-
     renderEarth(target);
   }
 
@@ -1096,10 +1002,9 @@
     previousVersion: PREVIOUS_VERSION,
     createProfile,
     renderEarth,
-    renderSurface,
+    renderSurface: renderEarth,
     render: renderEarth,
-    mount,
-    buildTexture,
+    mount: renderEarth,
     verifyAssets,
     getStatus,
     registerExtension
@@ -1113,20 +1018,17 @@
   exposeReceipt({
     booted: true,
     mounted: false,
-    pngOnly: true,
+    sourceStandard: "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE",
+    nasaReference: "forbidden",
     jpgAllowed: false,
     proceduralFallback: false
   });
 
   if (document.readyState === "loading") {
-    document.addEventListener(
-      "DOMContentLoaded",
-      function () {
-        autoRegister();
-        autoMount();
-      },
-      { once: true }
-    );
+    document.addEventListener("DOMContentLoaded", function () {
+      autoRegister();
+      autoMount();
+    }, { once: true });
   } else {
     autoRegister();
     autoMount();

@@ -1,242 +1,376 @@
-// /showroom/globe/earth/index.js
-const EARTH_ROUTE_STATE = Object.freeze({
-  protocol: "TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2",
-  route: "/showroom/globe/earth/",
-  body: "Earth",
-  authority: "NASA_BLUE_MARBLE_REFERENCE",
-  authorityPath: "/assets/earth/earth_canvas.js",
-  mountId: "earthRenderMount",
-  nasaBlueMarbleImage:
-    "https://www.nasa.gov/wp-content/uploads/2023/03/618486main_earth_full.jpg?w=1041",
-  publicReceiptRendering: false,
-  mutatesRenderAsset: false,
-  visualPassClaimed: false
-});
+/* /showroom/globe/earth/index.js
+   EARTH_G5_ROUTE_BOOT_CHAIN_ALIGNMENT_TNT_v1
+   Full-file replacement.
 
-function writeMountMessage(mount, message) {
-  mount.innerHTML = "";
+   Purpose:
+   - Route boot chain only.
+   - Confirms the Earth route shell has loaded the G5 Earth asset-family runtime.
+   - Detects retired /runtime/earth_asset_runtime.js path.
+   - Does not own Earth canvas projection.
+   - Does not own Earth material CSS.
+   - Does not own Earth manifest truth.
+   - Does not render Audralia.
+   - Does not touch Gauges, Products, Sun, Moon, or global files.
+   - No GraphicBox. No image generation. No visual-pass claim.
+*/
 
-  const fallback = document.createElement("div");
-  fallback.className = "mount-fallback";
-  fallback.textContent = message;
-  mount.appendChild(fallback);
-}
+(function () {
+  "use strict";
 
-function installEarthRouteStyles() {
-  if (document.getElementById("earth-nasa-reference-route-style")) return;
+  const CONTRACT = "EARTH_G5_ROUTE_BOOT_CHAIN_ALIGNMENT_TNT_v1";
+  const ROUTE_CONTRACT = "EARTH_G5_SATELLITE_DERIVED_ROUTE_SHELL_TNT_v1";
+  const CANVAS_CONTRACT = "EARTH_G5_NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE_TNT_v1";
+  const RUNTIME_CONTRACT = "EARTH_G5_EARTH_ASSETS_RUNTIME_FAMILY_PLACEMENT_TNT_v4";
 
-  const style = document.createElement("style");
-  style.id = "earth-nasa-reference-route-style";
-  style.textContent = `
-    .earth-nasa-reference-stage {
-      width: min(100%, 760px);
-      min-height: min(68vh, 760px);
-      display: grid;
-      place-items: center;
-      position: relative;
-      isolation: isolate;
-    }
+  const REQUIRED_RUNTIME = "/assets/earth/earth_assets_runtime.js";
+  const RETIRED_RUNTIME = "/runtime/earth_asset_runtime.js";
+  const REQUIRED_SURFACE = "/assets/earth/earth_surface_satellite.png";
+  const REQUIRED_CLOUDS = "/assets/earth/earth_clouds_satellite.png";
 
-    .earth-nasa-orbit {
-      width: min(82vw, 680px);
-      aspect-ratio: 1 / 1;
-      border-radius: 999px;
-      position: relative;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 32% 28%, rgba(255,255,255,0.24), transparent 0.8rem),
-        radial-gradient(circle at 50% 50%, rgba(97, 165, 255, 0.26), transparent 62%),
-        #020714;
-      box-shadow:
-        0 0 1.5rem rgba(117, 184, 255, 0.28),
-        0 0 4rem rgba(54, 109, 255, 0.22),
-        inset -2rem -1.4rem 3.4rem rgba(0, 0, 0, 0.48),
-        inset 1.3rem 1.1rem 2.2rem rgba(255, 255, 255, 0.16);
-    }
+  const STATE = {
+    contract: CONTRACT,
+    routeContract: ROUTE_CONTRACT,
+    canvasContract: CANVAS_CONTRACT,
+    runtimeContract: RUNTIME_CONTRACT,
+    route: "/showroom/globe/earth/",
+    booted: false,
+    mountFound: false,
+    canvasFound: false,
+    canvasAuthorityFound: false,
+    runtimeReceiptFound: false,
+    requiredRuntimeLoaded: false,
+    retiredRuntimeDetected: false,
+    surfaceLoaded: false,
+    cloudLoaded: false,
+    surfaceMode: "unread",
+    cloudMode: "unread",
+    status: "booting",
+    lastError: null
+  };
 
-    .earth-nasa-orbit::before {
-      content: "";
-      position: absolute;
-      inset: -1px;
-      border-radius: inherit;
-      background:
-        radial-gradient(circle at 35% 26%, rgba(255,255,255,0.30), transparent 19%),
-        radial-gradient(circle at 71% 73%, rgba(0,0,0,0.34), transparent 43%);
-      z-index: 3;
-      pointer-events: none;
-      mix-blend-mode: screen;
-    }
+  const mountSelector = "#earthRenderMount,[data-earth-render-mount],[data-dgb-earth-mount]";
+  const canvasSelector = "canvas.earth-g5-canvas,canvas.earth-g4-canvas,canvas.earth-reference-canvas,canvas.earth-material-canvas,#earthRenderMount canvas,[data-earth-render-mount] canvas,[data-dgb-earth-mount] canvas";
 
-    .earth-nasa-orbit::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      box-shadow:
-        inset -2.2rem -1.6rem 4rem rgba(0, 0, 0, 0.62),
-        inset 0.75rem 0.75rem 1.3rem rgba(255, 255, 255, 0.18);
-      z-index: 4;
-      pointer-events: none;
-    }
+  let auditTimer = null;
+  let auditCount = 0;
 
-    .earth-nasa-blue-marble {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: inherit;
-      display: block;
-      transform-origin: center;
-      animation: earthNasaReferenceSpin 44s linear infinite;
-      filter: saturate(1.08) contrast(1.04);
-    }
-
-    .earth-nasa-reference-label {
-      position: absolute;
-      left: 50%;
-      bottom: 1rem;
-      transform: translateX(-50%);
-      z-index: 5;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: max-content;
-      max-width: calc(100% - 2rem);
-      border: 1px solid rgba(180, 212, 255, 0.38);
-      border-radius: 999px;
-      background: rgba(3, 7, 18, 0.72);
-      color: rgba(244, 248, 255, 0.9);
-      padding: 0.58rem 0.82rem;
-      font-size: 0.82rem;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      backdrop-filter: blur(10px);
-    }
-
-    @keyframes earthNasaReferenceSpin {
-      from { transform: scale(1.06) rotate(0deg); }
-      to { transform: scale(1.06) rotate(360deg); }
-    }
-
-    @media (max-width: 760px) {
-      .earth-nasa-reference-stage {
-        min-height: 28rem;
-      }
-
-      .earth-nasa-orbit {
-        width: min(88vw, 30rem);
-      }
-
-      .earth-nasa-reference-label {
-        font-size: 0.72rem;
-      }
-    }
-  `;
-
-  document.head.appendChild(style);
-}
-
-function renderNasaEarthReference(mount) {
-  installEarthRouteStyles();
-
-  mount.innerHTML = "";
-  mount.dataset.body = "Earth";
-  mount.dataset.route = EARTH_ROUTE_STATE.route;
-  mount.dataset.protocol = "TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2";
-  mount.dataset.authority = "NASA_BLUE_MARBLE_REFERENCE";
-  mount.dataset.pending = "false";
-  mount.dataset.publicReceiptRendering = "false";
-  mount.dataset.visualPassClaimed = "false";
-  mount.dataset.pairProof = "js-nasa-reference-mounted";
-
-  const stage = document.createElement("div");
-  stage.className = "earth-nasa-reference-stage";
-  stage.dataset.body = "Earth";
-
-  const orbit = document.createElement("div");
-  orbit.className = "earth-nasa-orbit";
-
-  const img = document.createElement("img");
-  img.className = "earth-nasa-blue-marble";
-  img.src = EARTH_ROUTE_STATE.nasaBlueMarbleImage;
-  img.alt = "NASA Blue Marble Earth reference";
-  img.decoding = "async";
-  img.loading = "eager";
-  img.dataset.source = "NASA_BLUE_MARBLE_2012";
-  img.dataset.visualPassClaimed = "false";
-
-  const label = document.createElement("div");
-  label.className = "earth-nasa-reference-label";
-  label.textContent = "NASA Blue Marble Reference";
-
-  orbit.appendChild(img);
-  orbit.appendChild(label);
-  stage.appendChild(orbit);
-  mount.appendChild(stage);
-
-  img.addEventListener(
-    "load",
-    () => {
-      document.documentElement.dataset.earthNasaReference = "visible";
-      window.ShowroomEarthRoute = {
-        ...EARTH_ROUTE_STATE,
-        imported: true,
-        rendered: true,
-        held: false,
-        pending: false,
-        api: "NASA Blue Marble route image"
-      };
-    },
-    { once: true }
-  );
-
-  img.addEventListener(
-    "error",
-    () => {
-      writeMountMessage(
-        mount,
-        "NASA Blue Marble reference image failed to load from NASA. Earth route remains held."
-      );
-
-      window.ShowroomEarthRoute = {
-        ...EARTH_ROUTE_STATE,
-        imported: false,
-        rendered: false,
-        held: true,
-        pending: false,
-        reason: "NASA_BLUE_MARBLE_IMAGE_LOAD_FAILED"
-      };
-    },
-    { once: true }
-  );
-}
-
-async function bootEarthRoute() {
-  document.documentElement.dataset.ticTacToeDynamicProtocol = "v2";
-  document.documentElement.dataset.globeRoute = "earth";
-  document.documentElement.dataset.publicReceipts = "hidden";
-  document.documentElement.dataset.earthRouteScript = "executed";
-  document.documentElement.dataset.earthPairProof = "html-js-paired";
-  document.documentElement.dataset.earthAuthority = "NASA_BLUE_MARBLE_REFERENCE";
-
-  const mount = document.getElementById(EARTH_ROUTE_STATE.mountId);
-
-  if (!mount) {
-    console.error("Earth mount not found.", EARTH_ROUTE_STATE.mountId);
-    return;
+  function qs(selector) {
+    return document.querySelector(selector);
   }
 
-  renderNasaEarthReference(mount);
-
-  try {
-    await import(`${EARTH_ROUTE_STATE.authorityPath}?earth_reference_probe=${Date.now()}`);
-    document.documentElement.dataset.earthLocalAuthorityReachable = "true";
-  } catch (error) {
-    document.documentElement.dataset.earthLocalAuthorityReachable = "false";
-    console.warn("Earth local authority probe held. NASA reference remains active.", error);
+  function qsa(selector) {
+    return Array.from(document.querySelectorAll(selector));
   }
-}
 
-bootEarthRoute();
+  function getMount() {
+    return qs(mountSelector);
+  }
+
+  function getCanvas() {
+    const mount = getMount();
+    return mount ? mount.querySelector(canvasSelector) : null;
+  }
+
+  function getCanvasAuthority() {
+    return window.DGBEarthCanvas ||
+      window.DGBEarthCanvasAuthority ||
+      window.EarthCanvas ||
+      window.earthCanvas ||
+      null;
+  }
+
+  function runtimeReceipt() {
+    return window.DGB_EARTH_ASSETS_RUNTIME_RECEIPT ||
+      window.DGB_EARTH_ASSET_RUNTIME_RECEIPT ||
+      null;
+  }
+
+  function scriptLoaded(path) {
+    return qsa("script[src]").some((script) => {
+      const src = script.getAttribute("src") || "";
+      return src.indexOf(path) !== -1;
+    });
+  }
+
+  function normalizeVisibleLabels() {
+    const mount = getMount();
+    if (!mount) return;
+
+    const labels = qsa(".earth-reference-label,.earth-satellite-label");
+
+    labels.forEach((label) => {
+      if (/nasa|blue marble/i.test(label.textContent || "")) {
+        label.textContent = "SATELLITE DERIVED EARTH";
+      }
+
+      label.classList.add("earth-satellite-label");
+      label.dataset.nasaReference = "forbidden";
+      label.dataset.sourceStandard = "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE";
+      label.dataset.routeBootContract = CONTRACT;
+    });
+  }
+
+  function markRoot() {
+    const root = document.documentElement;
+
+    root.dataset.earthRouteBootContract = CONTRACT;
+    root.dataset.earthRouteContract = ROUTE_CONTRACT;
+    root.dataset.earthCanvasContract = CANVAS_CONTRACT;
+    root.dataset.earthRuntimeContract = RUNTIME_CONTRACT;
+    root.dataset.earthRuntimeAuthority = REQUIRED_RUNTIME;
+    root.dataset.earthRetiredRuntimeAuthority = RETIRED_RUNTIME;
+    root.dataset.earthRouteBootStatus = STATE.status;
+    root.dataset.earthRouteMountFound = String(STATE.mountFound);
+    root.dataset.earthRouteCanvasFound = String(STATE.canvasFound);
+    root.dataset.earthRouteCanvasAuthorityFound = String(STATE.canvasAuthorityFound);
+    root.dataset.earthRouteRuntimeReceiptFound = String(STATE.runtimeReceiptFound);
+    root.dataset.earthRouteRequiredRuntimeLoaded = String(STATE.requiredRuntimeLoaded);
+    root.dataset.earthRouteRetiredRuntimeDetected = String(STATE.retiredRuntimeDetected);
+    root.dataset.earthRouteSurfaceLoaded = String(STATE.surfaceLoaded);
+    root.dataset.earthRouteCloudLoaded = String(STATE.cloudLoaded);
+    root.dataset.earthSourceStandard = "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE";
+    root.dataset.earthNasaReference = "forbidden";
+    root.dataset.earthJpgAllowed = "false";
+    root.dataset.earthProceduralFallback = "false";
+    root.dataset.generatedImage = "false";
+    root.dataset.graphicBox = "false";
+    root.dataset.visualPassClaimed = "false";
+
+    if (document.body) {
+      document.body.dataset.earthRouteBootContract = CONTRACT;
+      document.body.dataset.earthRouteBootStatus = STATE.status;
+      document.body.dataset.earthSourceStandard = "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE";
+      document.body.dataset.generatedImage = "false";
+      document.body.dataset.graphicBox = "false";
+      document.body.dataset.visualPassClaimed = "false";
+    }
+  }
+
+  function publish(extra) {
+    window.DGB_EARTH_ROUTE_BOOT_RECEIPT = Object.assign(
+      {
+        contract: CONTRACT,
+        routeContract: ROUTE_CONTRACT,
+        canvasContract: CANVAS_CONTRACT,
+        runtimeContract: RUNTIME_CONTRACT,
+        route: "/showroom/globe/earth/",
+        requiredRuntime: REQUIRED_RUNTIME,
+        retiredRuntime: RETIRED_RUNTIME,
+        requiredSurface: REQUIRED_SURFACE,
+        requiredClouds: REQUIRED_CLOUDS,
+        booted: STATE.booted,
+        mountFound: STATE.mountFound,
+        canvasFound: STATE.canvasFound,
+        canvasAuthorityFound: STATE.canvasAuthorityFound,
+        runtimeReceiptFound: STATE.runtimeReceiptFound,
+        requiredRuntimeLoaded: STATE.requiredRuntimeLoaded,
+        retiredRuntimeDetected: STATE.retiredRuntimeDetected,
+        surfaceLoaded: STATE.surfaceLoaded,
+        cloudLoaded: STATE.cloudLoaded,
+        surfaceMode: STATE.surfaceMode,
+        cloudMode: STATE.cloudMode,
+        status: STATE.status,
+        lastError: STATE.lastError,
+        owns: [
+          "earth_route_shell_boot_confirmation",
+          "earth_route_script_presence",
+          "earth_runtime_path_detection",
+          "earth_route_status_reporting",
+          "earth_visible_label_normalization"
+        ],
+        doesNotOwn: [
+          "earth_canvas_projection",
+          "earth_surface_sampling",
+          "earth_cloud_sampling",
+          "earth_material_styling",
+          "earth_manifest_truth",
+          "Audralia",
+          "Gauges",
+          "Products",
+          "Sun",
+          "Moon",
+          "global_files",
+          "GraphicBox",
+          "image_generation",
+          "visual_pass_claim"
+        ],
+        generatedImage: false,
+        graphicBox: false,
+        visualPassClaimed: false,
+        timestamp: new Date().toISOString()
+      },
+      extra || {}
+    );
+
+    markRoot();
+
+    try {
+      window.dispatchEvent(new CustomEvent("dgb:earth-route-boot", {
+        detail: window.DGB_EARTH_ROUTE_BOOT_RECEIPT
+      }));
+    } catch (error) {}
+  }
+
+  function writeStatus(message) {
+    const node = qs("[data-earth-route-status]");
+    if (!node) return;
+
+    node.innerHTML = "<strong>Earth route:</strong> " + message;
+  }
+
+  function readRuntimeReceipt() {
+    const receipt = runtimeReceipt();
+
+    STATE.runtimeReceiptFound = Boolean(receipt);
+
+    if (!receipt) return;
+
+    if (receipt.runtimeStatus) STATE.status = receipt.runtimeStatus;
+
+    if (receipt.surfaceLoaded !== undefined) STATE.surfaceLoaded = Boolean(receipt.surfaceLoaded);
+    if (receipt.cloudsPrimaryLoaded !== undefined) STATE.cloudLoaded = Boolean(receipt.cloudsPrimaryLoaded);
+    if (receipt.surfaceMode) STATE.surfaceMode = receipt.surfaceMode;
+    if (receipt.cloudMode) STATE.cloudMode = receipt.cloudMode;
+
+    if (receipt.assetStatus && receipt.assetStatus.surface) {
+      STATE.surfaceLoaded = Boolean(receipt.assetStatus.surface.ok);
+      STATE.surfaceMode = receipt.assetStatus.surface.mode || STATE.surfaceMode;
+    }
+
+    if (receipt.assetStatus && receipt.assetStatus.cloudsPrimary) {
+      STATE.cloudLoaded = Boolean(receipt.assetStatus.cloudsPrimary.ok);
+      STATE.cloudMode = receipt.assetStatus.cloudsPrimary.mode || STATE.cloudMode;
+    }
+  }
+
+  function verifyDirectly(api) {
+    if (!api || typeof api.verifyAssets !== "function") {
+      return Promise.resolve(false);
+    }
+
+    return api.verifyAssets()
+      .then((result) => {
+        if (result && result.surface) {
+          STATE.surfaceLoaded = Boolean(result.surface.ok);
+          STATE.surfaceMode = result.surface.mode || STATE.surfaceMode;
+        }
+
+        if (result && result.cloudsPrimary) {
+          STATE.cloudLoaded = Boolean(result.cloudsPrimary.ok);
+          STATE.cloudMode = result.cloudsPrimary.mode || STATE.cloudMode;
+        }
+
+        return true;
+      })
+      .catch((error) => {
+        STATE.lastError = error && error.message ? error.message : "verifyAssets failed";
+        return false;
+      });
+  }
+
+  function routeAudit() {
+    auditCount += 1;
+
+    const mount = getMount();
+    const canvas = getCanvas();
+    const api = getCanvasAuthority();
+
+    STATE.mountFound = Boolean(mount);
+    STATE.canvasFound = Boolean(canvas);
+    STATE.canvasAuthorityFound = Boolean(api);
+    STATE.requiredRuntimeLoaded = scriptLoaded(REQUIRED_RUNTIME);
+    STATE.retiredRuntimeDetected = scriptLoaded(RETIRED_RUNTIME);
+
+    normalizeVisibleLabels();
+    readRuntimeReceipt();
+
+    if (!STATE.mountFound) {
+      STATE.status = "failed-no-earth-render-mount";
+      writeStatus("failed · missing #earthRenderMount.");
+      publish();
+      return;
+    }
+
+    if (STATE.retiredRuntimeDetected) {
+      STATE.status = "blocked-retired-runtime-script-present";
+      writeStatus("blocked · retired runtime path is still present: " + RETIRED_RUNTIME);
+      publish();
+      return;
+    }
+
+    if (!STATE.requiredRuntimeLoaded) {
+      STATE.status = "blocked-earth-assets-runtime-not-loaded";
+      writeStatus("blocked · required runtime is not loaded: " + REQUIRED_RUNTIME);
+      publish();
+      return;
+    }
+
+    if (!STATE.canvasAuthorityFound) {
+      STATE.status = "waiting-for-earth-canvas-authority";
+      writeStatus("waiting · Earth canvas authority not visible yet.");
+      publish();
+      return;
+    }
+
+    verifyDirectly(api).then(() => {
+      const nextCanvas = getCanvas();
+
+      STATE.canvasFound = Boolean(nextCanvas);
+
+      if (!STATE.canvasFound) {
+        STATE.status = "waiting-for-earth-canvas";
+        writeStatus("waiting · Earth canvas has not mounted yet.");
+      } else if (!STATE.surfaceLoaded) {
+        STATE.status = "blocked-missing-satellite-surface-png";
+        writeStatus("blocked · missing or unreadable required PNG: " + REQUIRED_SURFACE);
+      } else {
+        STATE.status = "pass-earth-route-boot-chain-aligned";
+        writeStatus(
+          "pass · Earth G5 route aligned · surface=" +
+          STATE.surfaceMode +
+          " · clouds=" +
+          (STATE.cloudLoaded ? STATE.cloudMode : "optional-missing") +
+          " · runtime=" +
+          REQUIRED_RUNTIME
+        );
+      }
+
+      publish();
+    });
+  }
+
+  function startAuditLoop() {
+    if (auditTimer) window.clearInterval(auditTimer);
+
+    routeAudit();
+
+    auditTimer = window.setInterval(() => {
+      routeAudit();
+
+      if (auditCount >= 12 && STATE.status.indexOf("pass-") === 0) {
+        window.clearInterval(auditTimer);
+        auditTimer = null;
+      }
+    }, 700);
+  }
+
+  function init() {
+    STATE.booted = true;
+    STATE.status = "earth-route-script-booted";
+    markRoot();
+    publish({ booted: true });
+
+    writeStatus("route script booted · checking asset-family runtime and satellite PNG.");
+    startAuditLoop();
+  }
+
+  window.addEventListener("dgb:earth-canvas-ready", routeAudit);
+  window.addEventListener("dgb:earth-assets-runtime", routeAudit);
+  window.addEventListener("dgb:earth-asset-runtime", routeAudit);
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
+})();

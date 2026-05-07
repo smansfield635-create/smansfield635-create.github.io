@@ -4,9 +4,14 @@
   lang="en"
   data-page="audralia-clean-html-handoff"
   data-route="/showroom/globe/audralia/"
-  data-contract="AUDRALIA_HTML_ROUTE_CACHE_BREAK_AND_STATUS_GATE_TNT_v1"
+  data-contract="AUDRALIA_HTML_CLEAN_CANARY_HANDOFF_TNT_v1"
+  data-active-renewal="AUDRALIA_HTML_CLEAN_CANARY_HANDOFF_TNT_v2"
+  data-cache-break-renewal="AUDRALIA_HTML_ROUTE_CACHE_BREAK_AND_STATUS_GATE_TNT_v1"
   data-role="audralia-route-shell"
   data-shell-only="true"
+  data-status-target="audralia-route-status"
+  data-canvas-mount="audralia-canvas-mount"
+  data-script-handoff="/showroom/globe/audralia/index.js"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -19,7 +24,7 @@
   <title>Diamond Gate Bridge · Audralia</title>
   <meta
     name="description"
-    content="Audralia route shell. The HTML owns shell, navigation, status target, canvas mount, and script handoff only."
+    content="Audralia clean HTML handoff shell. The HTML owns shell, navigation, status target, canvas mount, and script handoff only."
   >
 
   <style>
@@ -283,6 +288,11 @@
       overflow-wrap: anywhere;
     }
 
+    .canvas-shell {
+      margin-top: 1.1rem;
+      padding: clamp(0.85rem, 2.6vw, 1.1rem);
+    }
+
     #audralia-canvas-mount {
       min-height: min(92vw, 820px);
       display: grid;
@@ -336,12 +346,18 @@
       overflow-wrap: anywhere;
     }
 
-    [data-audralia-canvas-proof],
     [data-audralia-route-v7-proof],
     [data-audralia-route-v6-proof],
     [data-stale-audralia-proof] {
       display: none !important;
       visibility: hidden !important;
+    }
+
+    [data-audralia-canvas-proof] {
+      display: block;
+      visibility: visible;
+      max-width: 100%;
+      overflow-wrap: anywhere;
     }
 
     template,
@@ -432,12 +448,14 @@
         </div>
       </section>
 
-      <section
-        id="audralia-canvas-mount"
-        class="panel section"
-        data-audralia-canvas-mount
-        aria-label="Audralia canvas mount"
-      ></section>
+      <section class="panel canvas-shell" aria-label="Audralia canvas shell">
+        <div
+          id="audralia-canvas-mount"
+          data-audralia-canvas-mount
+          data-canvas-mount-receipt="AUDRALIA_HTML_CLEAN_CANARY_HANDOFF_TNT_v1"
+          aria-label="Audralia canvas mount"
+        ></div>
+      </section>
 
       <section class="panel section" aria-labelledby="handoff-title">
         <h2 id="handoff-title">Audralia handoff</h2>
@@ -469,7 +487,9 @@
         <p>These receipts are exposed for route inspection and Gauges renewal.</p>
 
         <ul class="receipt-list">
-          <li>HTML handoff <code>AUDRALIA_HTML_ROUTE_CACHE_BREAK_AND_STATUS_GATE_TNT_v1</code></li>
+          <li>HTML handoff <code>AUDRALIA_HTML_CLEAN_CANARY_HANDOFF_TNT_v1</code></li>
+          <li>HTML active renewal <code>AUDRALIA_HTML_CLEAN_CANARY_HANDOFF_TNT_v2</code></li>
+          <li>Cache-break renewal <code>AUDRALIA_HTML_ROUTE_CACHE_BREAK_AND_STATUS_GATE_TNT_v1</code></li>
           <li>Doorway route <code>/showroom/globe/audralia/index.js</code></li>
           <li>Canvas authority <code>/assets/audralia/audralia.canvas.js</code></li>
           <li>Runtime truth <code>/assets/audralia/audralia.runtime.js</code></li>
@@ -479,10 +499,14 @@
         </ul>
 
         <template id="audralia-route-receipt" data-route-receipt>
+AUDRALIA_HTML_CLEAN_CANARY_HANDOFF_TNT_v1
+AUDRALIA_HTML_CLEAN_CANARY_HANDOFF_TNT_v2
 AUDRALIA_HTML_ROUTE_CACHE_BREAK_AND_STATUS_GATE_TNT_v1
 route=/showroom/globe/audralia/
 html_owns=shell,navigation,status_target,canvas_mount,script_handoff
 html_does_not_own=runtime_truth,canvas_paint,topology,terrain,hydration,oceans,deep_ocean,gauges_scoring
+status_target=audralia-route-status
+canvas_mount=audralia-canvas-mount
 script=/showroom/globe/audralia/index.js?cache=AUDRALIA_ROUTE_V10_STATUS_GATE_AND_CANVAS_V9_BRIDGE_TNT_v1
 generated_image=false
 graphic_box=false
@@ -492,7 +516,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      Audralia · clean HTML handoff · route status gate active · no GraphicBox · no image generation.
+      Audralia · clean HTML handoff · route status target restored · canvas mount restored · no GraphicBox · no image generation.
     </footer>
   </div>
 

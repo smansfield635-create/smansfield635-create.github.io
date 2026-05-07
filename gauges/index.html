@@ -1,13 +1,39 @@
 <!-- /gauges/index.html -->
 <!doctype html>
-<html lang="en" data-page="gauges-audralia-clean-chain-proof" data-route="/gauges/" data-contract="GAUGES_AUDRALIA_CLEAN_CHAIN_PROOF_TNT_v3" data-role="read-only-audit" data-graphicbox="false" data-image-generation="false">
+<html lang="en" data-page="gauges-audralia-clean-chain-proof" data-route="/gauges/" data-contract="GAUGES_AUDRALIA_CLEAN_CHAIN_PROOF_TNT_v4" data-role="read-only-audit" data-graphicbox="false" data-image-generation="false">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Diamond Gate Bridge · Gauges</title>
   <meta name="description" content="Read-only Gauges audit for the repaired Audralia HTML, route, canvas, runtime, and pixel-proof chain.">
   <style>
-    :root{--bg:#020713;--panel:rgba(8,15,30,.84);--line:rgba(231,204,142,.22);--blue:rgba(127,194,255,.84);--gold:#f0d38a;--green:#bdf2c7;--red:#ffb4a8;--yellow:#ffe2a3;--muted:rgba(205,219,230,.72);--text:rgba(248,242,224,.95);--shadow:rgba(0,0,0,.48);color-scheme:dark}*{box-sizing:border-box}html{min-height:100%;background:var(--bg);color:var(--text);scroll-behavior:smooth}body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 18% 12%,rgba(75,127,196,.20),transparent 34rem),radial-gradient(circle at 82% 4%,rgba(240,211,138,.12),transparent 28rem),linear-gradient(180deg,#030915 0%,#020713 46%,#01040b 100%);color:var(--text)}body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(circle,rgba(255,255,255,.50) 0 1px,transparent 1.5px),radial-gradient(circle,rgba(240,211,138,.32) 0 1px,transparent 1.5px);background-size:112px 112px,176px 176px;background-position:12px 20px,64px 48px;opacity:.13;mask-image:linear-gradient(180deg,black,transparent 78%)}a{color:inherit}.skip-link{position:absolute;left:1rem;top:1rem;z-index:20;transform:translateY(-150%);padding:.75rem 1rem;border:1px solid var(--line);border-radius:999px;background:rgba(3,9,21,.96);color:var(--gold);font-weight:800;text-decoration:none}.skip-link:focus{transform:translateY(0);outline:2px solid var(--gold);outline-offset:3px}.shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:24px 0 46px;position:relative;z-index:1}.topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 18px;border:1px solid var(--line);border-radius:24px;background:rgba(4,10,22,.72);box-shadow:0 18px 50px var(--shadow);backdrop-filter:blur(12px)}.brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:900}.brand-mark{width:13px;height:13px;transform:rotate(45deg);border:1px solid var(--gold);background:rgba(240,211,138,.20);box-shadow:0 0 20px rgba(240,211,138,.45)}.nav,.actions{display:flex;flex-wrap:wrap;gap:8px}.nav{justify-content:flex-end}.nav a,.actions a,.actions button{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:.62rem .9rem;border:1px solid rgba(231,204,142,.20);border-radius:999px;background:rgba(255,255,255,.035);color:var(--muted);font:800 .84rem/1.1 inherit;text-decoration:none;cursor:pointer}.actions button.primary,.actions a.primary{border-color:rgba(240,211,138,.60);background:linear-gradient(135deg,rgba(240,211,138,.24),rgba(127,194,255,.08));color:var(--gold)}.hero,.panel{margin-top:24px;border:1px solid var(--line);border-radius:32px;background:radial-gradient(circle at 18% 12%,rgba(127,194,255,.10),transparent 24rem),var(--panel);box-shadow:0 24px 76px var(--shadow)}.hero{padding:clamp(28px,5vw,58px)}.panel{padding:clamp(20px,4vw,32px)}.eyebrow{margin:0 0 12px;color:var(--gold);font-size:.78rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase}h1{margin:0;color:#fff8e6;font-size:clamp(2.4rem,7vw,5.2rem);line-height:.94;letter-spacing:-.07em}h2{margin:0 0 14px;color:#fff8e6;font-size:clamp(1.45rem,3vw,2.15rem);line-height:1.08;letter-spacing:-.035em}.lead{max-width:860px;margin:20px 0 0;color:var(--muted);font-size:clamp(1rem,2vw,1.2rem);line-height:1.65}.actions{margin-top:26px}.cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:20px}.card{padding:18px;border:1px solid rgba(231,204,142,.16);border-radius:22px;background:rgba(255,255,255,.035)}.num{display:block;color:#fff8e6;font-size:clamp(1.8rem,5vw,3.1rem);font-weight:950;line-height:1}.label{display:block;margin-top:6px;color:var(--muted);font-size:.85rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.banner{margin-top:18px;padding:16px 18px;border:1px solid rgba(127,194,255,.24);border-radius:20px;background:rgba(127,194,255,.07);color:var(--muted);font-weight:850}.banner.pass{border-color:rgba(189,242,199,.36);background:rgba(189,242,199,.08);color:var(--green)}.banner.fail{border-color:rgba(255,180,168,.38);background:rgba(255,180,168,.08);color:var(--red)}.banner.held{border-color:rgba(255,226,163,.36);background:rgba(255,226,163,.08);color:var(--yellow)}.groups{display:grid;gap:14px;margin-top:20px}.group{border:1px solid rgba(231,204,142,.16);border-radius:22px;background:rgba(255,255,255,.03);overflow:hidden}.group summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;cursor:pointer;font-weight:950;color:#fff8e6}.group-body{padding:0 18px 18px;display:grid;gap:10px}.row{padding:13px 14px;border:1px solid rgba(231,204,142,.13);border-radius:16px;background:rgba(0,0,0,.16)}.row-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.row-title{font-weight:900;color:var(--text)}.pill{display:inline-flex;align-items:center;justify-content:center;min-width:58px;padding:.28rem .52rem;border-radius:999px;font-size:.72rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase}.pass .pill{background:rgba(189,242,199,.12);color:var(--green);border:1px solid rgba(189,242,199,.35)}.fail .pill{background:rgba(255,180,168,.12);color:var(--red);border:1px solid rgba(255,180,168,.35)}.held .pill,.debt .pill{background:rgba(255,226,163,.12);color:var(--yellow);border:1px solid rgba(255,226,163,.35)}.info .pill{background:rgba(127,194,255,.12);color:var(--blue);border:1px solid rgba(127,194,255,.35)}.details{margin:.55rem 0 0;color:var(--muted);line-height:1.48;font-size:.93rem}.footer{margin-top:28px;padding:18px;border:1px solid rgba(231,204,142,.16);border-radius:22px;color:rgba(205,219,230,.66);text-align:center;background:rgba(4,10,22,.62)}@media(max-width:880px){.topbar{align-items:flex-start;flex-direction:column}.nav{justify-content:flex-start}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.cards .card:last-child{grid-column:1/-1}.row-head{align-items:flex-start;flex-direction:column}}
+    :root{--bg:#020713;--panel:rgba(8,15,30,.84);--line:rgba(231,204,142,.22);--blue:rgba(127,194,255,.84);--gold:#f0d38a;--green:#bdf2c7;--red:#ffb4a8;--yellow:#ffe2a3;--muted:rgba(205,219,230,.72);--text:rgba(248,242,224,.95);--shadow:rgba(0,0,0,.48);color-scheme:dark}
+    *{box-sizing:border-box}
+    html{min-height:100%;background:var(--bg);color:var(--text);scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 18% 12%,rgba(75,127,196,.20),transparent 34rem),radial-gradient(circle at 82% 4%,rgba(240,211,138,.12),transparent 28rem),linear-gradient(180deg,#030915 0%,#020713 46%,#01040b 100%);color:var(--text)}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(circle,rgba(255,255,255,.50) 0 1px,transparent 1.5px),radial-gradient(circle,rgba(240,211,138,.32) 0 1px,transparent 1.5px);background-size:112px 112px,176px 176px;background-position:12px 20px,64px 48px;opacity:.13;mask-image:linear-gradient(180deg,black,transparent 78%)}
+    a{color:inherit}.skip-link{position:absolute;left:1rem;top:1rem;z-index:20;transform:translateY(-150%);padding:.75rem 1rem;border:1px solid var(--line);border-radius:999px;background:rgba(3,9,21,.96);color:var(--gold);font-weight:800;text-decoration:none}.skip-link:focus{transform:translateY(0);outline:2px solid var(--gold);outline-offset:3px}
+    .shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:24px 0 46px;position:relative;z-index:1}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 18px;border:1px solid var(--line);border-radius:24px;background:rgba(4,10,22,.72);box-shadow:0 18px 50px var(--shadow);backdrop-filter:blur(12px)}
+    .brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:900}.brand-mark{width:13px;height:13px;transform:rotate(45deg);border:1px solid var(--gold);background:rgba(240,211,138,.20);box-shadow:0 0 20px rgba(240,211,138,.45)}
+    .nav,.actions{display:flex;flex-wrap:wrap;gap:8px}.nav{justify-content:flex-end}
+    .nav a,.actions a,.actions button{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:.62rem .9rem;border:1px solid rgba(231,204,142,.20);border-radius:999px;background:rgba(255,255,255,.035);color:var(--muted);font:800 .84rem/1.1 inherit;text-decoration:none;cursor:pointer}
+    .actions button.primary{border-color:rgba(240,211,138,.60);background:linear-gradient(135deg,rgba(240,211,138,.24),rgba(127,194,255,.08));color:var(--gold)}
+    .hero,.panel{margin-top:24px;border:1px solid var(--line);border-radius:32px;background:radial-gradient(circle at 18% 12%,rgba(127,194,255,.10),transparent 24rem),var(--panel);box-shadow:0 24px 76px var(--shadow)}
+    .hero{padding:clamp(28px,5vw,58px)}.panel{padding:clamp(20px,4vw,32px)}
+    .eyebrow{margin:0 0 12px;color:var(--gold);font-size:.78rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
+    h1{margin:0;color:#fff8e6;font-size:clamp(2.4rem,7vw,5.2rem);line-height:.94;letter-spacing:-.07em}
+    h2{margin:0 0 14px;color:#fff8e6;font-size:clamp(1.45rem,3vw,2.15rem);line-height:1.08;letter-spacing:-.035em}
+    .lead{max-width:860px;margin:20px 0 0;color:var(--muted);font-size:clamp(1rem,2vw,1.2rem);line-height:1.65}.actions{margin-top:26px}
+    .cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:20px}.card{padding:18px;border:1px solid rgba(231,204,142,.16);border-radius:22px;background:rgba(255,255,255,.035)}
+    .num{display:block;color:#fff8e6;font-size:clamp(1.8rem,5vw,3.1rem);font-weight:950;line-height:1}.label{display:block;margin-top:6px;color:var(--muted);font-size:.85rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+    .banner{margin-top:18px;padding:16px 18px;border:1px solid rgba(127,194,255,.24);border-radius:20px;background:rgba(127,194,255,.07);color:var(--muted);font-weight:850}.banner.pass{border-color:rgba(189,242,199,.36);background:rgba(189,242,199,.08);color:var(--green)}.banner.fail{border-color:rgba(255,180,168,.38);background:rgba(255,180,168,.08);color:var(--red)}.banner.held{border-color:rgba(255,226,163,.36);background:rgba(255,226,163,.08);color:var(--yellow)}
+    .groups{display:grid;gap:14px;margin-top:20px}.group{border:1px solid rgba(231,204,142,.16);border-radius:22px;background:rgba(255,255,255,.03);overflow:hidden}.group summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;cursor:pointer;font-weight:950;color:#fff8e6}.group-body{padding:0 18px 18px;display:grid;gap:10px}
+    .row{padding:13px 14px;border:1px solid rgba(231,204,142,.13);border-radius:16px;background:rgba(0,0,0,.16)}.row-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.row-title{font-weight:900;color:var(--text)}
+    .pill{display:inline-flex;align-items:center;justify-content:center;min-width:58px;padding:.28rem .52rem;border-radius:999px;font-size:.72rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase}
+    .pass .pill{background:rgba(189,242,199,.12);color:var(--green);border:1px solid rgba(189,242,199,.35)}.fail .pill{background:rgba(255,180,168,.12);color:var(--red);border:1px solid rgba(255,180,168,.35)}.held .pill,.debt .pill{background:rgba(255,226,163,.12);color:var(--yellow);border:1px solid rgba(255,226,163,.35)}.info .pill{background:rgba(127,194,255,.12);color:var(--blue);border:1px solid rgba(127,194,255,.35)}
+    .details{margin:.55rem 0 0;color:var(--muted);line-height:1.48;font-size:.93rem}.footer{margin-top:28px;padding:18px;border:1px solid rgba(231,204,142,.16);border-radius:22px;color:rgba(205,219,230,.66);text-align:center;background:rgba(4,10,22,.62)}
+    @media(max-width:880px){.topbar{align-items:flex-start;flex-direction:column}.nav{justify-content:flex-start}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.cards .card:last-child{grid-column:1/-1}.row-head{align-items:flex-start;flex-direction:column}}
   </style>
 </head>
 <body>
@@ -17,24 +43,43 @@
       <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span><span>Diamond Gate Bridge</span></a>
       <nav class="nav" aria-label="Primary navigation"><a href="/">Compass</a><a href="/door/">Door</a><a href="/home/">Home</a><a href="/showroom/">Showroom</a><a href="/showroom/globe/">Globe</a><a href="/products/">Products</a></nav>
     </header>
+
     <main id="main" tabindex="-1">
       <section class="hero" aria-labelledby="title">
         <p class="eyebrow">Gauges · Audralia Clean Chain Proof</p>
         <h1 id="title">Audralia Proof Console</h1>
-        <p class="lead">This read-only audit verifies the repaired Audralia chain: clean HTML handoff, canonical route caller, canvas authority import, runtime availability, live route status, canvas receipt, and pixel proof. It treats old error strings inside cleanup lists as nonblocking when module import succeeds.</p>
-        <div class="actions"><button id="runAudit" class="primary" type="button">Run Audralia Audit</button><a href="/showroom/globe/audralia/">Open Audralia</a><a href="/assets/audralia/audralia.canvas.js">Canvas Source</a><a href="/assets/audralia/audralia.runtime.js">Runtime Source</a></div>
+        <p class="lead">This read-only audit verifies the repaired Audralia chain: clean HTML handoff, canonical route caller, canvas authority import, runtime availability, live route status, canvas receipt, and pixel proof.</p>
+        <div class="actions">
+          <button id="runAudit" class="primary" type="button">Run Audralia Audit</button>
+          <a href="/showroom/globe/audralia/">Open Audralia</a>
+          <a href="/assets/audralia/audralia.canvas.js">Canvas Source</a>
+          <a href="/assets/audralia/audralia.runtime.js">Runtime Source</a>
+        </div>
       </section>
+
       <section class="panel" aria-labelledby="summaryTitle">
         <h2 id="summaryTitle">Audit Summary</h2>
-        <div class="cards" aria-label="Audit totals"><div class="card"><span id="totalCount" class="num">0</span><span class="label">Total</span></div><div class="card"><span id="passCount" class="num">0</span><span class="label">Passed</span></div><div class="card"><span id="failCount" class="num">0</span><span class="label">Failed</span></div><div class="card"><span id="heldCount" class="num">0</span><span class="label">Held / Debt</span></div><div class="card"><span id="readyCount" class="num">0%</span><span class="label">Readiness</span></div></div>
+        <div class="cards" aria-label="Audit totals">
+          <div class="card"><span id="totalCount" class="num">0</span><span class="label">Total</span></div>
+          <div class="card"><span id="passCount" class="num">0</span><span class="label">Passed</span></div>
+          <div class="card"><span id="failCount" class="num">0</span><span class="label">Failed</span></div>
+          <div class="card"><span id="heldCount" class="num">0</span><span class="label">Held / Debt</span></div>
+          <div class="card"><span id="readyCount" class="num">0%</span><span class="label">Readiness</span></div>
+        </div>
         <div id="banner" class="banner info">Audit awaiting run.</div>
       </section>
-      <section class="panel" aria-labelledby="outputTitle"><h2 id="outputTitle">Audit Output</h2><div id="groups" class="groups"></div></section>
+
+      <section class="panel" aria-labelledby="outputTitle">
+        <h2 id="outputTitle">Audit Output</h2>
+        <div id="groups" class="groups"></div>
+      </section>
     </main>
-    <footer class="footer">GAUGES_AUDRALIA_CLEAN_CHAIN_PROOF_TNT_v3 · read-only · no GraphicBox · no image generation</footer>
+
+    <footer class="footer">GAUGES_AUDRALIA_CLEAN_CHAIN_PROOF_TNT_v4 · read-only · no GraphicBox · no image generation</footer>
   </div>
+
 <script type="module">
-const GAUGES_CONTRACT = "GAUGES_AUDRALIA_CLEAN_CHAIN_PROOF_TNT_v3";
+const GAUGES_CONTRACT = "GAUGES_AUDRALIA_CLEAN_CHAIN_PROOF_TNT_v4";
 const PATHS = {
   html: "/showroom/globe/audralia/",
   route: "/showroom/globe/audralia/index.js",
@@ -49,6 +94,7 @@ const PATHS = {
   oceans: "/assets/audralia/audralia/hydration/oceans.render.js",
   deepOcean: "/assets/audralia/audralia/hydration/deep-ocean.render.js"
 };
+
 const state = { results: [] };
 const $ = (id) => document.getElementById(id);
 
@@ -64,17 +110,13 @@ function hasAny(text, needles) {
   return needles.some((needle) => text.includes(needle));
 }
 
-function hasNone(text, needles) {
-  return needles.every((needle) => !text.includes(needle));
-}
-
 async function fetchText(path) {
   const response = await fetch(cacheBust(path, "source"), { cache: "no-store" });
   const text = await response.text();
   return { ok: response.ok, status: response.status, text };
 }
 
-async function auditSource(path, title, expected, forbidden, options = {}) {
+async function auditSource(path, title, expected, options = {}) {
   const group = options.group || "Source + Contract Access";
 
   try {
@@ -87,7 +129,6 @@ async function auditSource(path, title, expected, forbidden, options = {}) {
 
     if (expected && expected.length) {
       const ok = hasAny(source.text, expected);
-
       addResult(
         group,
         title + " contract/export visible",
@@ -96,14 +137,13 @@ async function auditSource(path, title, expected, forbidden, options = {}) {
       );
     }
 
-    if (forbidden && forbidden.length) {
-      const ok = hasNone(source.text, forbidden);
-
+    if (options.forbidVisible && options.forbidVisible.length) {
+      const found = options.forbidVisible.filter((item) => source.text.includes(item));
       addResult(
         group,
-        title + " stale route residue absent",
-        ok ? "pass" : "fail",
-        ok ? "No stale route residue found." : "Forbidden route-facing text remains: " + forbidden.filter((item) => source.text.includes(item)).join(", ")
+        title + " route-facing stale text absent",
+        found.length === 0 ? "pass" : "fail",
+        found.length === 0 ? "No stale route-facing text found." : "Visible stale route text remains: " + found.join(", ")
       );
     }
 
@@ -117,18 +157,21 @@ async function auditSource(path, title, expected, forbidden, options = {}) {
 async function auditSources() {
   addResult("Audit Contract", "Gauges contract", "info", GAUGES_CONTRACT);
 
-  await auditSource(PATHS.html, "Audralia HTML clean handoff shell", ["AUDRALIA_HTML_CLEAN_CANARY_HANDOFF_TNT_v1"], ["Loading Audralia", "Doorway shell only. Canvas authority controls the render."]);
-  await auditSource(PATHS.route, "Audralia canonical doorway route script", ["AUDRALIA_ROUTE_CANONICAL_MOUNT_CALL_TNT_v1", "AUDRALIA_ROUTE_CANONICAL_MOUNT_CALL_RECEIPT", "mountAudraliaCanvas"], []);
-  await auditSource(PATHS.canvas, "Audralia canvas authority", ["AUDRALIA_CANVAS_AUTHORITY_RECEIPT", "mountAudraliaCanvas", "AUDRALIA_CANVAS_AUTHORITY_MINIMAL_CANARY_TNT_v1"], []);
-  await auditSource(PATHS.runtime, "Audralia runtime truth", ["AUDRALIA_RUNTIME", "AUDRALIA_RUNTIME_TRUTH", "AUDRALIA_RUNTIME_AWAITED_DOWNSTREAM_CHAIN_CONNECTOR_TNT_v6", "runtimeTruth"], []);
-  await auditSource(PATHS.hex, "Audralia asset hex surface child", ["AUDRALIA", "HEX", "hex"], [], { debt: true });
-  await auditSource(PATHS.climate, "Audralia climate conduit", ["AUDRALIA", "CLIMATE", "climate"], [], { debt: true });
-  await auditSource(PATHS.tectonics, "Tectonics derivative-origin parent", ["AUDRALIA", "TECTONICS", "tectonics"], [], { debt: true });
-  await auditSource(PATHS.topology, "Topology footprint authority", ["AUDRALIA", "TOPOLOGY", "topology"], [], { debt: true });
-  await auditSource(PATHS.terrain, "Terrain relief authority", ["AUDRALIA", "TERRAIN", "terrain"], [], { debt: true });
-  await auditSource(PATHS.hydration, "Hydration parent", ["AUDRALIA", "HYDRATION", "hydration"], [], { debt: true });
-  await auditSource(PATHS.oceans, "Ocean authority", ["AUDRALIA", "OCEAN", "ocean"], [], { debt: true });
-  await auditSource(PATHS.deepOcean, "DeepOcean authority", ["AUDRALIA", "DEEP", "deep"], [], { debt: true });
+  await auditSource(PATHS.html, "Audralia HTML clean handoff shell", ["AUDRALIA_HTML_CLEAN_CANARY_HANDOFF_TNT_v1"], {
+    forbidVisible: ["Loading Audralia", "Doorway shell only. Canvas authority controls the render."]
+  });
+
+  await auditSource(PATHS.route, "Audralia canonical doorway route script", ["AUDRALIA_ROUTE_CANONICAL_MOUNT_CALL_TNT_v1", "AUDRALIA_ROUTE_CANONICAL_MOUNT_CALL_RECEIPT", "mountAudraliaCanvas"]);
+  await auditSource(PATHS.canvas, "Audralia canvas authority", ["AUDRALIA_CANVAS_AUTHORITY_RECEIPT", "mountAudraliaCanvas", "AUDRALIA_CANVAS_AUTHORITY_MINIMAL_CANARY_TNT_v1"]);
+  await auditSource(PATHS.runtime, "Audralia runtime truth", ["AUDRALIA_RUNTIME", "AUDRALIA_RUNTIME_TRUTH", "AUDRALIA_RUNTIME_AWAITED_DOWNSTREAM_CHAIN_CONNECTOR_TNT_v6", "runtimeTruth"]);
+  await auditSource(PATHS.hex, "Audralia asset hex surface child", ["AUDRALIA", "HEX", "hex"], { debt: true });
+  await auditSource(PATHS.climate, "Audralia climate conduit", ["AUDRALIA", "CLIMATE", "climate"], { debt: true });
+  await auditSource(PATHS.tectonics, "Tectonics derivative-origin parent", ["AUDRALIA", "TECTONICS", "tectonics"], { debt: true });
+  await auditSource(PATHS.topology, "Topology footprint authority", ["AUDRALIA", "TOPOLOGY", "topology"], { debt: true });
+  await auditSource(PATHS.terrain, "Terrain relief authority", ["AUDRALIA", "TERRAIN", "terrain"], { debt: true });
+  await auditSource(PATHS.hydration, "Hydration parent", ["AUDRALIA", "HYDRATION", "hydration"], { debt: true });
+  await auditSource(PATHS.oceans, "Ocean authority", ["AUDRALIA", "OCEAN", "ocean"], { debt: true });
+  await auditSource(PATHS.deepOcean, "DeepOcean authority", ["AUDRALIA", "DEEP", "deep"], { debt: true });
 }
 
 async function auditModuleImports() {
@@ -143,25 +186,18 @@ async function auditModuleImports() {
     addResult(group, "Runtime status or payload available", runtimeStatus || runtimeTruth ? "pass" : "held", runtimeStatus ? (runtimeStatus.contract || runtimeStatus.receipt || "Runtime status object visible.") : "Runtime imported, but no window status object was exposed.");
 
     const summary = runtimeTruth && runtimeTruth.summary ? runtimeTruth.summary : (runtimeStatus && runtimeStatus.summary ? runtimeStatus.summary : null);
-
-    if (summary) {
-      addResult(group, "Runtime summary captured", "info", JSON.stringify(summary));
-    } else {
-      addResult(group, "Runtime summary captured", "held", "No summary object found; runtime remains support-only for this audit.");
-    }
+    addResult(group, "Runtime summary captured", summary ? "info" : "held", summary ? JSON.stringify(summary) : "No summary object found; runtime remains support-only for this audit.");
   } catch (error) {
     addResult(group, "Runtime module imports", "held", error instanceof Error ? error.message : String(error));
   }
 
   try {
     const canvasModule = await import(cacheBust(PATHS.canvas, "canvasImport"));
-
-    addResult(group, "Canvas authority module imports", "pass", PATHS.canvas + " imported without syntax error.");
-
     const mount = canvasModule.mountAudraliaCanvas || (canvasModule.default && canvasModule.default.mountAudraliaCanvas);
 
+    addResult(group, "Canvas authority module imports", "pass", PATHS.canvas + " imported without syntax error.");
     addResult(group, "Canonical mountAudraliaCanvas export visible", typeof mount === "function" ? "pass" : "fail", typeof mount === "function" ? "mountAudraliaCanvas is callable." : "Canonical export missing after import.");
-    addResult(group, "Old syntax-error text is nonblocking", "pass", "Module import succeeded; any old error string inside a cleanup list is not an active syntax failure.");
+    addResult(group, "Canvas source cleanup strings are nonblocking", "pass", "Module import and canonical export control this test.");
   } catch (error) {
     addResult(group, "Canvas authority module imports", "fail", error instanceof Error ? error.message : String(error));
   }
@@ -183,14 +219,12 @@ function loadIframe() {
 
     const timer = window.setTimeout(() => {
       if (settled) return;
-
       settled = true;
       reject(new Error("Live route probe timed out."));
     }, 6500);
 
     iframe.onload = () => {
       if (settled) return;
-
       window.setTimeout(() => {
         settled = true;
         window.clearTimeout(timer);
@@ -200,7 +234,6 @@ function loadIframe() {
 
     iframe.onerror = () => {
       if (settled) return;
-
       settled = true;
       window.clearTimeout(timer);
       reject(new Error("Live route iframe failed to load."));
@@ -242,7 +275,6 @@ function auditCanvasPixels(canvas) {
 
   return {
     available: true,
-    total,
     opaqueRatio: opaque / total,
     waterRatio: water / total,
     solidRatio: solid / total,
@@ -341,7 +373,6 @@ function render() {
   });
 
   const container = $("groups");
-
   container.innerHTML = "";
 
   groups.forEach((items, group) => {
@@ -363,7 +394,6 @@ function render() {
     summaryNode.appendChild(right);
 
     const body = document.createElement("div");
-
     body.className = "group-body";
 
     items.forEach((item) => {

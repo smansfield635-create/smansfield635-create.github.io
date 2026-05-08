@@ -4,12 +4,13 @@
   lang="en"
   data-route="/showroom/globe/earth/"
   data-page="earth"
-  data-contract="EARTH_ROUTE_HTML_JS_PAIR_RENEWAL_TNT_v1"
+  data-contract="EARTH_NASA_JPG_DEMO_RESTORE_TNT_v1"
   data-role="earth-route-shell"
   data-route-controller="/showroom/globe/earth/index.js"
+  data-image-mode="nasa-jpg"
   data-generated-image="false"
   data-graphic-box="false"
-  data-jpg="false"
+  data-procedural-placeholder="false"
   data-visual-pass-claimed="false"
 >
 <head>
@@ -18,13 +19,12 @@
   <title>Diamond Gate Bridge · Earth</title>
   <meta
     name="description"
-    content="Earth inspection route. The HTML owns the shell and explicit canvas mount. The route JS owns the procedural canvas boot."
+    content="Earth inspection route restored to NASA Blue Marble JPG demo mode. HTML owns the shell and image mount. JS owns image boot and fallback."
   >
 
   <style>
     :root {
       --bg0: #030913;
-      --panel: rgba(6, 14, 27, 0.86);
       --line: rgba(135, 177, 211, 0.24);
       --line2: rgba(135, 177, 211, 0.36);
       --text: rgba(246, 241, 229, 0.97);
@@ -101,7 +101,6 @@
       color: var(--gold);
       font-size: 30px;
       font-weight: 1000;
-      letter-spacing: 0.03em;
       background:
         radial-gradient(circle at 34% 28%, rgba(180, 214, 238, 0.42), transparent 0 14%),
         radial-gradient(circle at 50% 52%, rgba(14, 33, 58, 0.92), rgba(4, 10, 20, 0.98) 72%);
@@ -122,7 +121,6 @@
 
     .brand-title {
       margin: 0;
-      color: var(--text);
       font-size: clamp(30px, 6vw, 48px);
       line-height: 0.96;
       font-weight: 1000;
@@ -147,9 +145,6 @@
       border: 1px solid rgba(143, 183, 219, 0.24);
       background: rgba(18, 34, 57, 0.72);
       color: rgba(247, 243, 233, 0.95);
-      box-shadow:
-        inset 0 0 18px rgba(120, 179, 231, 0.05),
-        0 10px 28px rgba(0, 0, 0, 0.18);
       font-size: clamp(20px, 4.4vw, 26px);
       font-weight: 1000;
       letter-spacing: -0.05em;
@@ -160,9 +155,6 @@
       background:
         radial-gradient(circle at 46% 34%, #fff6a8, var(--gold2) 66%, #d8a934 100%);
       border-color: rgba(255, 234, 124, 0.88);
-      box-shadow:
-        inset 0 0 14px rgba(255, 255, 255, 0.22),
-        0 14px 30px rgba(0, 0, 0, 0.28);
     }
 
     .earth-card {
@@ -180,14 +172,11 @@
     }
 
     .earth-copy {
-      position: relative;
-      z-index: 2;
       margin-bottom: 22px;
     }
 
     .earth-copy h1 {
       margin: 0 0 18px;
-      color: var(--text);
       font-size: clamp(40px, 8vw, 58px);
       line-height: 0.9;
       font-weight: 1000;
@@ -203,7 +192,7 @@
       text-transform: uppercase;
     }
 
-    #earthCanvasMount {
+    #earthImageMount {
       position: relative;
       width: 100%;
       aspect-ratio: 1 / 1;
@@ -221,45 +210,71 @@
       isolation: isolate;
     }
 
-    #earthCanvasMount canvas {
+    .earth-nasa-stage {
       position: absolute;
       inset: 0;
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-
-    .route-proof {
-      margin-top: 18px;
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(38, 92, 141, 0.22), transparent 47%),
+        #020710;
     }
 
-    .proof-cell {
-      min-height: 58px;
-      padding: 10px 12px;
-      border-radius: 18px;
-      border: 1px solid rgba(135, 177, 211, 0.16);
-      background: rgba(11, 24, 42, 0.54);
+    .earth-nasa-stage::before,
+    .earth-nasa-stage::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
     }
 
-    .proof-cell strong {
+    .earth-nasa-stage::before {
+      width: 86%;
+      height: 86%;
+      border: 1px solid rgba(116, 207, 255, 0.30);
+      box-shadow:
+        0 0 20px rgba(84, 172, 236, 0.24),
+        inset 0 0 34px rgba(84, 172, 236, 0.08);
+    }
+
+    .earth-nasa-stage::after {
+      width: 94%;
+      height: 94%;
+      border: 1px solid rgba(91, 174, 236, 0.12);
+      box-shadow: 0 0 42px rgba(84, 172, 236, 0.12);
+    }
+
+    .earth-nasa-img {
+      position: relative;
+      z-index: 2;
       display: block;
-      color: rgba(255, 232, 121, 0.94);
+      width: min(84%, 620px);
+      height: auto;
+      border-radius: 50%;
+      filter:
+        saturate(1.08)
+        contrast(1.06)
+        brightness(0.96)
+        drop-shadow(0 0 30px rgba(88, 184, 255, 0.22));
+      animation: earthReferenceFloat 14s ease-in-out infinite;
+    }
+
+    .earth-source {
+      margin-top: 16px;
+      color: rgba(226, 219, 204, 0.58);
       font-size: 13px;
-      line-height: 1.1;
-      letter-spacing: 0.14em;
+      font-weight: 800;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
+      text-align: center;
     }
 
-    .proof-cell span {
-      display: block;
-      margin-top: 5px;
-      color: rgba(226, 219, 204, 0.74);
-      font-size: 12px;
-      line-height: 1.25;
-      font-weight: 700;
+    @keyframes earthReferenceFloat {
+      0%, 100% { transform: scale(1) translateY(0); }
+      50% { transform: scale(1.012) translateY(-1.5%); }
     }
 
     @media (max-width: 720px) {
@@ -267,7 +282,6 @@
 
       .masthead {
         grid-template-columns: 112px 1fr;
-        gap: 22px;
       }
 
       .nav {
@@ -285,12 +299,8 @@
         border-radius: 30px;
       }
 
-      #earthCanvasMount {
+      #earthImageMount {
         border-radius: 26px;
-      }
-
-      .route-proof {
-        grid-template-columns: 1fr 1fr;
       }
     }
 
@@ -307,20 +317,20 @@
       .earth-copy h1 { font-size: 42px; }
       .earth-copy p { font-size: 18px; }
 
-      .route-proof {
-        display: none;
+      .earth-nasa-img {
+        width: 86%;
       }
     }
   </style>
 
   <script>
-    document.documentElement.dataset.earthRouteShell = "EARTH_ROUTE_HTML_JS_PAIR_RENEWAL_TNT_v1";
-    document.documentElement.dataset.earthMountAnchor = "earthCanvasMount";
+    document.documentElement.dataset.earthRouteShell = "EARTH_NASA_JPG_DEMO_RESTORE_TNT_v1";
+    document.documentElement.dataset.earthImageMount = "earthImageMount";
     document.documentElement.dataset.earthController = "/showroom/globe/earth/index.js";
-    document.documentElement.dataset.earthExternalImages = "false";
+    document.documentElement.dataset.earthImageMode = "nasa-jpg";
   </script>
 
-  <script src="./index.js?v=earth-route-html-js-pair-renewal-v1" defer></script>
+  <script src="./index.js?v=earth-nasa-jpg-demo-restore-v1" defer></script>
 </head>
 
 <body>
@@ -348,42 +358,21 @@
     <main id="earth-main" class="earth-card">
       <section class="earth-copy" aria-labelledby="earth-title">
         <h1 id="earth-title">Earth</h1>
-        <p>Reference Inspection Route</p>
+        <p>NASA Reference JPG</p>
       </section>
 
       <section
-        id="earthCanvasMount"
-        data-earth-mount
-        data-earth-render
+        id="earthImageMount"
+        data-earth-image-mount
         data-render="earth"
         data-planet="earth"
         data-body="earth"
-        data-contract="EARTH_ROUTE_HTML_JS_PAIR_RENEWAL_TNT_v1"
-        data-earth-mount-ready="true"
-        aria-label="Earth canvas render mount"
+        data-contract="EARTH_NASA_JPG_DEMO_RESTORE_TNT_v1"
+        data-image-mode="nasa-jpg"
+        aria-label="NASA Blue Marble Earth image mount"
       ></section>
 
-      <aside class="route-proof" aria-label="Earth route proof">
-        <div class="proof-cell">
-          <strong>HTML</strong>
-          <span>Route shell present</span>
-        </div>
-
-        <div class="proof-cell">
-          <strong>JS</strong>
-          <span>Controller present</span>
-        </div>
-
-        <div class="proof-cell">
-          <strong>Mount</strong>
-          <span>Explicit canvas frame</span>
-        </div>
-
-        <div class="proof-cell">
-          <strong>404</strong>
-          <span>Route index restored</span>
-        </div>
-      </aside>
+      <p class="earth-source">NASA Blue Marble 2002 · JPG reference demo</p>
     </main>
   </div>
 </body>

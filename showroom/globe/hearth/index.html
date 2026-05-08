@@ -4,14 +4,14 @@
   lang="en"
   data-route="/showroom/globe/hearth/"
   data-page="hearth"
-  data-contract="HEARTH_G2_2_ROUTE_MOUNT_ANCHOR_TNT_v1"
-  data-previous-contract="HEARTH_G2_1_MOUNT_ADOPTION_TNT_v1"
+  data-contract="HEARTH_ROUTE_HTML_JS_PAIR_RENEWAL_TNT_v1"
   data-role="hearth-route-shell"
   data-render-owner="/assets/hearth/hearth.canvas.js"
+  data-route-controller="/showroom/globe/hearth/index.js"
   data-generated-image="false"
   data-graphic-box="false"
-  data-nasa-asset="false"
   data-jpg="false"
+  data-nasa-asset="false"
   data-visual-pass-claimed="false"
 >
 <head>
@@ -20,51 +20,42 @@
   <title>Diamond Gate Bridge · Hearth</title>
   <meta
     name="description"
-    content="Hearth is the hybrid simulation Earth route. The shell owns only identity, navigation, and the explicit canvas mount. The Hearth canvas asset owns the visible render."
+    content="Hearth is the hybrid simulation Earth route. The HTML owns the route shell and explicit canvas mount. The route JS owns boot/adoption. The Hearth canvas asset owns the render."
   >
 
   <style>
     :root {
       --bg0: #030913;
       --bg1: #071425;
-      --bg2: #0b1b31;
-      --panel: rgba(6, 14, 27, 0.82);
-      --panel2: rgba(13, 31, 50, 0.72);
-      --line: rgba(135, 177, 211, 0.22);
-      --line2: rgba(135, 177, 211, 0.34);
-      --text: rgba(246, 241, 229, 0.96);
-      --muted: rgba(226, 219, 204, 0.68);
+      --panel: rgba(6, 14, 27, 0.86);
+      --panel2: rgba(15, 36, 59, 0.72);
+      --line: rgba(135, 177, 211, 0.24);
+      --line2: rgba(135, 177, 211, 0.36);
+      --text: rgba(246, 241, 229, 0.97);
+      --muted: rgba(226, 219, 204, 0.70);
       --gold: #ffe879;
       --gold2: #ffd95f;
-      --blue: #6eb8ff;
-      --shadow: rgba(0, 0, 0, 0.42);
       color-scheme: dark;
-      font-family:
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     * {
       box-sizing: border-box;
     }
 
-    html {
+    html,
+    body {
       min-height: 100%;
+      margin: 0;
       background: var(--bg0);
+      color: var(--text);
     }
 
     body {
-      min-height: 100vh;
-      margin: 0;
-      color: var(--text);
       background:
-        radial-gradient(circle at 16% 12%, rgba(68, 116, 160, 0.22), transparent 24rem),
-        radial-gradient(circle at 78% 4%, rgba(55, 95, 140, 0.12), transparent 22rem),
-        linear-gradient(180deg, #0a1830 0%, #061120 54%, #03070d 100%);
+        radial-gradient(circle at 16% 10%, rgba(69, 119, 165, 0.24), transparent 24rem),
+        radial-gradient(circle at 78% 3%, rgba(55, 96, 143, 0.13), transparent 22rem),
+        linear-gradient(180deg, #0a1830 0%, #061120 55%, #03070d 100%);
       overflow-x: hidden;
     }
 
@@ -78,7 +69,6 @@
         radial-gradient(circle at 62% 14%, rgba(255, 255, 255, 0.07) 0 1px, transparent 2px),
         radial-gradient(circle at 72% 38%, rgba(255, 255, 255, 0.05) 0 1px, transparent 2px);
       opacity: 0.42;
-      z-index: 0;
     }
 
     a {
@@ -88,16 +78,15 @@
 
     .skip-link {
       position: fixed;
-      left: 12px;
       top: 12px;
+      left: 12px;
       z-index: 20;
       transform: translateY(-160%);
       padding: 10px 14px;
       border-radius: 999px;
-      background: rgba(255, 232, 121, 0.98);
+      background: var(--gold);
       color: #07101f;
       font-weight: 900;
-      transition: transform 160ms ease;
     }
 
     .skip-link:focus {
@@ -204,17 +193,8 @@
         radial-gradient(circle at 50% 0%, rgba(66, 116, 158, 0.18), transparent 40rem);
       box-shadow:
         inset 0 0 34px rgba(120, 180, 236, 0.04),
-        0 28px 80px var(--shadow);
+        0 28px 80px rgba(0, 0, 0, 0.42);
       overflow: hidden;
-    }
-
-    .hearth-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      border-radius: inherit;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.035);
     }
 
     .hearth-copy {
@@ -241,12 +221,6 @@
       text-transform: uppercase;
     }
 
-    /*
-      Critical route-shell correction:
-      This is the only intended Hearth render frame.
-      The canvas asset must adopt this element directly through:
-      #hearthCanvasMount / [data-hearth-mount].
-    */
     #hearthCanvasMount {
       position: relative;
       width: 100%;
@@ -265,10 +239,12 @@
       isolation: isolate;
     }
 
-    #hearthCanvasMount[data-hearth-mount-ready="true"] {
-      background:
-        radial-gradient(circle at 50% 46%, rgba(42, 83, 116, 0.28), transparent 48%),
-        radial-gradient(circle at 50% 50%, rgba(8, 22, 38, 0.90), rgba(3, 9, 18, 0.98) 74%);
+    #hearthCanvasMount canvas {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
     }
 
     .route-proof {
@@ -315,10 +291,6 @@
         gap: 22px;
       }
 
-      .brand-orb {
-        width: 112px;
-      }
-
       .nav {
         gap: 14px;
         margin-bottom: 40px;
@@ -330,7 +302,7 @@
       }
 
       .hearth-card {
-        padding: 32px 24px 32px;
+        padding: 32px 24px;
         border-radius: 30px;
       }
 
@@ -344,15 +316,6 @@
     }
 
     @media (max-width: 430px) {
-      .page {
-        padding-left: 22px;
-        padding-right: 22px;
-      }
-
-      .masthead {
-        grid-template-columns: 112px 1fr;
-      }
-
       .brand-kicker {
         font-size: 18px;
       }
@@ -382,13 +345,14 @@
   </style>
 
   <script>
-    document.documentElement.dataset.hearthRouteShell = "HEARTH_G2_2_ROUTE_MOUNT_ANCHOR_TNT_v1";
+    document.documentElement.dataset.hearthRouteShell = "HEARTH_ROUTE_HTML_JS_PAIR_RENEWAL_TNT_v1";
     document.documentElement.dataset.hearthMountAnchor = "hearthCanvasMount";
+    document.documentElement.dataset.hearthController = "/showroom/globe/hearth/index.js";
     document.documentElement.dataset.hearthRenderOwner = "/assets/hearth/hearth.canvas.js";
     document.documentElement.dataset.hearthDuplicateFrameAllowed = "false";
   </script>
 
-  <script src="/assets/hearth/hearth.canvas.js?v=hearth-g2-2-route-mount-anchor" defer></script>
+  <script src="./index.js?v=hearth-route-html-js-pair-renewal-v1" defer></script>
 </head>
 
 <body>
@@ -396,7 +360,7 @@
 
   <div class="page">
     <header class="masthead" aria-label="Diamond Gate Bridge Hearth header">
-      <a class="brand-orb" href="/showroom/globe/hearth/" aria-label="Hearth home">H</a>
+      <a class="brand-orb" href="/showroom/globe/hearth/" aria-label="Hearth route">H</a>
 
       <div>
         <p class="brand-kicker">Diamond Gate Bridge</p>
@@ -425,7 +389,7 @@
         data-render="hearth"
         data-planet="hearth"
         data-body="hearth"
-        data-contract="HEARTH_G2_2_ROUTE_MOUNT_ANCHOR_TNT_v1"
+        data-contract="HEARTH_ROUTE_HTML_JS_PAIR_RENEWAL_TNT_v1"
         data-render-owner="/assets/hearth/hearth.canvas.js"
         data-hearth-mount-ready="true"
         aria-label="Hearth canvas render mount"
@@ -433,8 +397,13 @@
 
       <aside class="route-proof" aria-label="Hearth route proof">
         <div class="proof-cell">
-          <strong>Shell</strong>
-          <span>Route identity only</span>
+          <strong>HTML</strong>
+          <span>Route shell only</span>
+        </div>
+
+        <div class="proof-cell">
+          <strong>JS</strong>
+          <span>Boot controller</span>
         </div>
 
         <div class="proof-cell">
@@ -443,13 +412,8 @@
         </div>
 
         <div class="proof-cell">
-          <strong>Canvas</strong>
-          <span>Asset owns render</span>
-        </div>
-
-        <div class="proof-cell">
-          <strong>Boundary</strong>
-          <span>No duplicate frame</span>
+          <strong>Render</strong>
+          <span>Canvas asset owns globe</span>
         </div>
       </aside>
     </main>

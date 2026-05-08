@@ -1,30 +1,34 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_G3_10_CHAIN_ALIGNMENT_SUPERCESSION_ROUTE_TNT_v1
+// HEARTH_G3_DEFINITIVE_LANDMASS_AND_ZONING_ROUTE_CONTROLLER_TNT_v1
 // Full-file replacement.
 // Purpose:
-// - Replace obsolete G2 Hearth route controller.
-// - Load current Hearth canvas through a G3.10 chain-aligned cache key.
-// - Retire G2 route/cache authority from live boot path.
-// - Preserve terrain and hydration as downstream asset authorities.
-// - No visual math. No terrain rewrite. No hydration rewrite.
-// - No JPG. No NASA asset. No generated image. No GraphicBox.
+// - Load the first true Hearth G3 standard.
+// - Retire prior globe-render / shell / visual fallback contracts from live authority.
+// - Keep "globe" as route language only.
+// - Load one active planet construction canvas.
+// - No hydration, mountains, weather, climate, clouds, humidity, or atmospheric moisture.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_10_CHAIN_ALIGNMENT_SUPERCESSION_ROUTE_TNT_v1";
-  const VERSION = "2026-05-08.hearth-g3-10-chain-alignment-route";
-  const RECEIPT = "HEARTH_G3_10_CHAIN_ALIGNMENT_ROUTE_RECEIPT";
+  const CONTRACT = "HEARTH_G3_DEFINITIVE_LANDMASS_AND_ZONING_ROUTE_CONTROLLER_TNT_v1";
+  const VERSION = "2026-05-08.hearth-g3-definitive-landmass-zoning-route-controller";
+  const RECEIPT = "HEARTH_G3_DEFINITIVE_LANDMASS_AND_ZONING_ROUTE_RECEIPT";
 
-  const CANVAS_SRC = "/assets/hearth/hearth.canvas.js?v=hearth-g3-10-chain-aligned-canvas-bind-v1";
-  const TERRAIN_OWNER = "/assets/hearth/hearth.terrain.js";
-  const HYDRATION_OWNER = "/assets/hearth/hearth.hydration.js";
+  const CANVAS_SRC = "/assets/hearth/hearth.canvas.js?v=hearth-g3-definitive-landmass-zoning-standard-v1";
   const EXPECTED_ROUTE = "/showroom/globe/hearth/";
 
-  const RETIRED_KEYS = Object.freeze([
+  const RETIRED_CONTRACT_MARKERS = Object.freeze([
     "HEARTH_G2_MODEL_RESTORE_HTML_JS_ASSET_TNT_v1",
-    "hearth-g2-model-restore-v1",
-    "hearth-g3-7-hydration-engine"
+    "HEARTH_G3_VISIBLE_PLANET_EXECUTION_RESTORE_TNT_v2",
+    "HEARTH_G3_PLANET_BODY_SINGLE_DRAW_PATH_FULL_REPLACEMENT_TNT_v1",
+    "hearth-g2-model-restore",
+    "hearth-g3-visible-planet",
+    "hearth-g3-10-chain-aligned",
+    "hearth-g3-7-hydration",
+    "model-restore",
+    "visible-planet-execution-restore",
+    "single-draw-path"
   ]);
 
   const state = {
@@ -39,48 +43,31 @@
     document.documentElement.dataset.hearthRouteControllerVersion = VERSION;
     document.documentElement.dataset.hearthRouteControllerStatus = status;
     document.documentElement.dataset.hearthExpectedRoute = EXPECTED_ROUTE;
-
-    document.documentElement.dataset.hearthHtmlOwner = "/showroom/globe/hearth/index.html";
-    document.documentElement.dataset.hearthJsOwner = "/showroom/globe/hearth/index.js";
-    document.documentElement.dataset.hearthRenderOwner = "/assets/hearth/hearth.canvas.js";
-    document.documentElement.dataset.hearthTerrainOwner = TERRAIN_OWNER;
-    document.documentElement.dataset.hearthHydrationOwner = HYDRATION_OWNER;
-
-    document.documentElement.dataset.hearthGeneration = "G3.10-chain";
-    document.documentElement.dataset.hearthGenerationFocus = "contract-cache-chain-alignment";
-    document.documentElement.dataset.hearthG2Retired = "true";
-    document.documentElement.dataset.hearthG37HydrationRetired = "true";
+    document.documentElement.dataset.hearthGeneration = "G3";
+    document.documentElement.dataset.hearthStandard = "definitive-landmass-and-zoning";
+    document.documentElement.dataset.hearthLanguageLayer = "globe";
+    document.documentElement.dataset.hearthConstructionLayer = "planet";
     document.documentElement.dataset.hearthCanvasSrc = CANVAS_SRC;
-
-    document.documentElement.dataset.hearthExternalImages = "false";
+    document.documentElement.dataset.hearthPriorGlobeContractRetired = "true";
+    document.documentElement.dataset.hearthHydrationDeferred = "true";
+    document.documentElement.dataset.hearthTerrainDetailDeferred = "true";
+    document.documentElement.dataset.hearthMountainsDeferred = "true";
+    document.documentElement.dataset.hearthWeatherClimateCloudsDeferred = "true";
+    document.documentElement.dataset.hearthHumidityDeferred = "true";
     document.documentElement.dataset.hearthGeneratedImage = "false";
-    document.documentElement.dataset.hearthNasaAsset = "false";
     document.documentElement.dataset.hearthGraphicBox = "false";
-    document.documentElement.dataset.hearthEarthPlaceholder = "false";
-    document.documentElement.dataset.hearthAudraliaMap = "false";
-    document.documentElement.dataset.hearthDuplicateFrameAllowed = "false";
   }
 
   function callKnownDisposers() {
-    const names = [
-      "__HEARTH_CANVAS_G3_10_DISPOSE__",
-      "__HEARTH_CANVAS_G3_9_DISPOSE__",
-      "__HEARTH_CANVAS_G3_8_DISPOSE__",
-      "__HEARTH_CANVAS_G3_7_DISPOSE__",
-      "__HEARTH_CANVAS_G3_6_DISPOSE__",
-      "__HEARTH_CANVAS_G3_5_DISPOSE__",
-      "__HEARTH_CANVAS_G3_4_DISPOSE__",
-      "__HEARTH_CANVAS_G3_3_DISPOSE__",
-      "__HEARTH_CANVAS_G3_2_DISPOSE__",
-      "__HEARTH_CANVAS_G3_1_DISPOSE__",
+    [
+      "__HEARTH_CANVAS_G3_ZONING_DISPOSE__",
+      "__HEARTH_CANVAS_PLANET_BODY_DISPOSE__",
+      "__HEARTH_CANVAS_VISIBLE_DISPOSE__",
       "__HEARTH_CANVAS_G3_DISPOSE__",
-      "__HEARTH_CANVAS_G4_DISPOSE__",
+      "__HEARTH_CANVAS_G3_10_DISPOSE__",
       "__HEARTH_CANVAS_DISPOSE__",
-      "__HEARTH_CANVAS_G2_DISPOSE__",
       "__HEARTH_G2_DISPOSE__"
-    ];
-
-    names.forEach((name) => {
+    ].forEach((name) => {
       if (typeof window[name] === "function") {
         try {
           window[name]();
@@ -97,35 +84,35 @@
     let mount = document.getElementById("hearthCanvasMount");
 
     if (!mount) {
-      const main = document.getElementById("hearth-main") || document.querySelector("main") || document.body;
+      const parent = document.getElementById("hearth-main") || document.querySelector("main") || document.body;
       mount = document.createElement("section");
       mount.id = "hearthCanvasMount";
-      mount.dataset.hearthMount = "";
+      mount.dataset.hearthMount = "true";
       mount.dataset.render = "hearth";
-      mount.dataset.planet = "hearth";
       mount.dataset.body = "hearth";
-      mount.setAttribute("aria-label", "Hearth G3.10 chain-aligned canvas mount");
-      main.appendChild(mount);
+      mount.setAttribute("aria-label", "Hearth G3 definitive landmass and zoning mount");
+      parent.appendChild(mount);
     }
 
     mount.dataset.hearthMountReady = "true";
     mount.dataset.hearthRouteController = CONTRACT;
     mount.dataset.hearthRouteControllerReceipt = RECEIPT;
     mount.dataset.renderOwner = "/assets/hearth/hearth.canvas.js";
-    mount.dataset.terrainOwner = TERRAIN_OWNER;
-    mount.dataset.hydrationOwner = HYDRATION_OWNER;
-    mount.dataset.hearthGeneration = "G3.10-chain";
-    mount.dataset.hearthG2Retired = "true";
-    mount.dataset.hearthG37HydrationRetired = "true";
-    mount.dataset.earthPlaceholder = "false";
-    mount.dataset.audraliaMap = "false";
-    mount.dataset.generatedImage = "false";
-    mount.dataset.graphicBox = "false";
+    mount.dataset.hearthGeneration = "G3";
+    mount.dataset.hearthStandard = "definitive-landmass-and-zoning";
+    mount.dataset.hearthLanguageLayer = "globe";
+    mount.dataset.hearthConstructionLayer = "planet";
+    mount.dataset.hearthHydrationDeferred = "true";
+    mount.dataset.hearthTerrainDetailDeferred = "true";
+    mount.dataset.hearthMountainsDeferred = "true";
+    mount.dataset.hearthWeatherClimateCloudsDeferred = "true";
+    mount.dataset.hearthGeneratedImage = "false";
+    mount.dataset.hearthGraphicBox = "false";
 
     return mount;
   }
 
-  function cleanupStrayFrames() {
+  function cleanupRetiredFrames() {
     const protectedMount = document.getElementById("hearthCanvasMount");
 
     const selectors = [
@@ -133,36 +120,15 @@
       ".hearth-js-fallback-mount",
       "[data-hearth-fallback-mount]",
       "[data-hearth-adopted-frame]",
-      "[data-earth-canvas]",
+      "[data-contract='HEARTH_G2_MODEL_RESTORE_HTML_JS_ASSET_TNT_v1']",
       "canvas[data-earth-canvas]",
-      "canvas[data-hearth-canvas]",
-      "[data-contract='HEARTH_G2_MODEL_RESTORE_HTML_JS_ASSET_TNT_v1']"
+      "canvas[data-hearth-canvas]"
     ];
 
     document.querySelectorAll(selectors.join(",")).forEach((node) => {
       if (!node || !node.parentElement) return;
       if (protectedMount && (node === protectedMount || protectedMount.contains(node))) return;
-
-      const shell =
-        node.classList && node.classList.contains("hearth-g2-shell")
-          ? node
-          : node.closest && node.closest(".hearth-g2-shell");
-
-      if (shell && shell.parentElement && shell !== protectedMount && !protectedMount?.contains(shell)) {
-        shell.remove();
-        return;
-      }
-
-      if (
-        node.matches &&
-        (
-          node.matches("canvas[data-hearth-canvas]") ||
-          node.matches("canvas[data-earth-canvas]") ||
-          node.matches("[data-contract='HEARTH_G2_MODEL_RESTORE_HTML_JS_ASSET_TNT_v1']")
-        )
-      ) {
-        node.remove();
-      }
+      node.remove();
     });
   }
 
@@ -173,11 +139,11 @@
   }
 
   function installRouteStyle() {
-    const prior = document.getElementById("hearth-route-controller-style");
+    const prior = document.getElementById("hearth-g3-zoning-route-controller-style");
     if (prior) prior.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-route-controller-style";
+    style.id = "hearth-g3-zoning-route-controller-style";
     style.textContent = `
       html,
       body {
@@ -206,10 +172,6 @@
         pointer-events: none;
         touch-action: pan-y !important;
       }
-
-      body[data-hearth-route-ready="true"] #hearthCanvasMount {
-        outline: none;
-      }
     `;
 
     document.head.appendChild(style);
@@ -224,13 +186,15 @@
     script.dataset.hearthCanvasScript = "true";
     script.dataset.contract = CONTRACT;
     script.dataset.renderOwner = "/assets/hearth/hearth.canvas.js";
-    script.dataset.generation = "G3.10-chain";
+    script.dataset.generation = "G3";
+    script.dataset.standard = "definitive-landmass-and-zoning";
 
     script.addEventListener("load", () => {
       stamp("canvas-asset-loaded");
       document.body.dataset.hearthCanvasAssetLoaded = "true";
       document.body.dataset.hearthRouteReady = "true";
-      cleanupStrayFrames();
+      cleanupRetiredFrames();
+      assertNoRetiredLiveScripts();
     });
 
     script.addEventListener("error", () => {
@@ -247,6 +211,22 @@
     state.canvasScript = script;
   }
 
+  function assertNoRetiredLiveScripts() {
+    const offenders = [];
+
+    document.querySelectorAll("script[src]").forEach((script) => {
+      const src = script.getAttribute("src") || "";
+      RETIRED_CONTRACT_MARKERS.forEach((marker) => {
+        if (src.includes(marker)) offenders.push(src);
+      });
+    });
+
+    document.documentElement.dataset.hearthRetiredScriptOffenderCount = String(offenders.length);
+    document.documentElement.dataset.hearthRetiredScriptOffenders = offenders.length ? offenders.join(" | ") : "none";
+
+    return offenders;
+  }
+
   function exposeReceipt(status = "booted") {
     window.HEARTH_ROUTE_RECEIPT = Object.freeze({
       receipt: RECEIPT,
@@ -257,41 +237,44 @@
       htmlOwner: "/showroom/globe/hearth/index.html",
       jsOwner: "/showroom/globe/hearth/index.js",
       renderOwner: "/assets/hearth/hearth.canvas.js",
-      terrainOwner: TERRAIN_OWNER,
-      hydrationOwner: HYDRATION_OWNER,
       canvasSrc: CANVAS_SRC,
-      mount: "#hearthCanvasMount",
-      generation: "G3.10-chain",
-      retiredKeys: RETIRED_KEYS,
-      g2RouteRetired: true,
-      g2CanvasCacheRetired: true,
-      g37HydrationCacheRetired: true,
-      earthPlaceholder: false,
-      audraliaMap: false,
-      duplicateFrameAllowed: false,
+      generation: "G3",
+      standard: "definitive-landmass-and-zoning",
+      languageLayer: "globe",
+      constructionLayer: "planet",
+      retiredContracts: [
+        "old globe-render contract",
+        "old shell/model-restore contract",
+        "old visible-planet fallback contract",
+        "old hydration-first path",
+        "old terrain-expression-first path",
+        "old mountain-first path"
+      ],
+      allowed: [
+        "planet body",
+        "definitive landmasses",
+        "land/water boundary",
+        "regions",
+        "countries",
+        "states/provinces",
+        "city-zone seats"
+      ],
+      deferred: [
+        "hydration",
+        "rivers",
+        "mountains",
+        "terrain detail",
+        "weather",
+        "climate",
+        "clouds",
+        "humidity",
+        "atmospheric moisture"
+      ],
       externalImages: false,
-      nasaAsset: false,
       generatedImage: false,
       graphicBox: false,
       status
     });
-  }
-
-  function assertNoRetiredLiveScripts() {
-    const offenders = [];
-
-    document.querySelectorAll("script[src]").forEach((script) => {
-      const src = script.getAttribute("src") || "";
-
-      RETIRED_KEYS.forEach((key) => {
-        if (src.includes(key)) offenders.push(src);
-      });
-    });
-
-    document.documentElement.dataset.hearthRetiredScriptOffenders = offenders.length ? offenders.join(" | ") : "none";
-    document.documentElement.dataset.hearthRetiredScriptOffenderCount = String(offenders.length);
-
-    return offenders;
   }
 
   function boot() {
@@ -306,12 +289,11 @@
     mount.replaceChildren();
     state.mount = mount;
 
-    cleanupStrayFrames();
+    cleanupRetiredFrames();
     exposeReceipt("route-controller-ready");
     loadCanvasAsset();
 
     const offenders = assertNoRetiredLiveScripts();
-
     stamp(offenders.length ? "route-ready-with-retired-script-warning" : "route-controller-ready");
     document.body.dataset.hearthRouteReady = "true";
   }

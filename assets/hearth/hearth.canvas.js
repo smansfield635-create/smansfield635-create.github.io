@@ -1,22 +1,22 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_G3_1_CARTOGRAPHIC_BODY_MASS_TNT_v1
+// HEARTH_G3_2_RELIEF_AND_BATHYMETRY_SHARPEN_TNT_v1
 // Full-file replacement.
 // Purpose:
-// - Correct the failed G3 candidate.
-// - Move Hearth from blob-first mass logic to cartographic-scaffold-first body mass.
-// - G3 scope only: terrain, map, body mass, coastlines, elevation, bathymetry, polar terrain.
-// - G4 deferred: clouds, weather, climate.
+// - Keep the accepted G3.1 cartographic scaffold.
+// - Sharpen terrain relief, elevation hierarchy, shelves, bathymetry, polar/frozen terrain, and coastline edge logic.
+// - Do NOT advance to G4.
+// - G4 remains reserved for clouds, weather, climate, and atmospheric systems.
 // - No JPG. No NASA asset. No generated image. No GraphicBox.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_1_CARTOGRAPHIC_BODY_MASS_TNT_v1";
-  const VERSION = "2026-05-08.hearth-g3-1-cartographic-body-mass";
-  const RECEIPT = "HEARTH_G3_1_CARTOGRAPHIC_BODY_MASS_RECEIPT";
+  const CONTRACT = "HEARTH_G3_2_RELIEF_AND_BATHYMETRY_SHARPEN_TNT_v1";
+  const VERSION = "2026-05-08.hearth-g3-2-relief-bathymetry-sharpen";
+  const RECEIPT = "HEARTH_G3_2_RELIEF_BATHYMETRY_RECEIPT";
 
-  const MAP_W = 840;
-  const MAP_H = 420;
+  const MAP_W = 900;
+  const MAP_H = 450;
   const MIN_RENDER_SIZE = 300;
   const MAX_RENDER_SIZE = 720;
   const TAU = Math.PI * 2;
@@ -24,31 +24,33 @@
 
   const GENERATION = Object.freeze({
     previousAccepted: "G2",
-    currentCandidate: "G3.1",
-    g3Definition: "cartographic body mass, terrain map, coastline, elevation, bathymetry, polar terrain",
-    g4Deferred: "clouds, weather, climate"
+    currentCandidate: "G3.2",
+    focus: "relief and bathymetry sharpen",
+    g3Definition: "terrain, map, body mass, coastline, elevation, bathymetry, polar/frozen terrain",
+    g4Deferred: "clouds, weather, climate, atmospheric systems"
   });
 
   const TIC_TAC_TOE = Object.freeze({
     T1: "isolate Hearth only",
-    T2: "freeze G3 definition",
-    T3: "reject blob-first landmass",
-    T4: "install cartographic scaffold",
-    T5: "roughen coastlines only after scaffold",
-    T6: "add elevation and bathymetry",
-    T7: "stress against Earth/NASA bleed",
-    T8: "keep G4 deferred",
+    T2: "preserve G3.1 cartographic scaffold",
+    T3: "do not rewrite body mass from scratch",
+    T4: "sharpen relief hierarchy",
+    T5: "sharpen shelf-to-abyss bathymetry",
+    T6: "clarify polar/frozen terrain",
+    T7: "reject clouds/weather/climate",
+    T8: "hold G3 candidate status",
     T9: "return visual proof"
   });
 
   const QUAD_A = Object.freeze({
     authority: "/assets/hearth/hearth.canvas.js only",
     axis: "Hearth local scale only",
-    artifact: "visible G3.1 terrain/body-mass correction",
-    attack: "reject clouds, weather, climate, NASA JPG, Earth placeholder, Audralia bleed, duplicate lower frame"
+    artifact: "visible G3.2 relief and bathymetry correction",
+    attack: "reject G4 weather, NASA JPG, Earth placeholder, Audralia bleed, duplicate frame"
   });
 
   [
+    "__HEARTH_CANVAS_G3_2_DISPOSE__",
     "__HEARTH_CANVAS_G3_1_DISPOSE__",
     "__HEARTH_CANVAS_G3_DISPOSE__",
     "__HEARTH_CANVAS_G4_DISPOSE__",
@@ -81,13 +83,24 @@
   const mix = (a, b, t) => Math.round(lerp(a, b, clamp(t, 0, 1)));
 
   function smoothstep(a, b, x) {
-    const t = clamp((x - a) / (b - a), 0, 1);
+    const t = clamp((x - a) / ((b - a) || 1e-9), 0, 1);
     return t * t * (3 - 2 * t);
   }
 
   function normalize3(v) {
     const l = Math.hypot(v[0], v[1], v[2]) || 1;
     return [v[0] / l, v[1] / l, v[2] / l];
+  }
+
+  function wrapLon(lon) {
+    let v = lon;
+    while (v < -180) v += 360;
+    while (v > 180) v -= 360;
+    return v;
+  }
+
+  function lonDelta(a, b) {
+    return wrapLon(a - b);
   }
 
   function hash2(x, y, seed = 0) {
@@ -125,17 +138,6 @@
     }
 
     return norm ? sum / norm : 0;
-  }
-
-  function wrapLon(lon) {
-    let v = lon;
-    while (v < -180) v += 360;
-    while (v > 180) v -= 360;
-    return v;
-  }
-
-  function lonDelta(a, b) {
-    return wrapLon(a - b);
   }
 
   function pointInPolygon(lon, lat, polygon) {
@@ -203,7 +205,7 @@
     const sx = x1 + vx * t;
     const sy = y1 + vy * t;
     const d = Math.hypot(lonDelta(lon, sx), lat - sy);
-    return amp * (1 - smoothstep(width * 0.30, width, d));
+    return amp * (1 - smoothstep(width * 0.28, width, d));
   }
 
   const CONTINENTS = [
@@ -373,8 +375,10 @@
     const land = new Uint8ClampedArray(len);
     const coast = new Uint8ClampedArray(len);
     const height = new Float32Array(len);
+    const relief = new Float32Array(len);
     const roughness = new Float32Array(len);
     const oceanDepth = new Float32Array(len);
+    const shelfDepth = new Float32Array(len);
     const ice = new Float32Array(len);
 
     for (let y = 0; y < MAP_H; y += 1) {
@@ -389,6 +393,7 @@
 
         const rawSd = cartographicSignedDistance(lon, lat);
         const coastalInfluence = 1 - smoothstep(0, 8, Math.abs(rawSd));
+
         const coastlineFracture =
           (fbm(nx * 72, ny * 41, 31.2, 4) - 0.5) * 5.2 * coastalInfluence +
           (fbm(nx * 155, ny * 88, 87.9, 3) - 0.5) * 1.8 * coastalInfluence;
@@ -405,35 +410,47 @@
 
         const terrainNoise = fbm(nx * 42 + 11, ny * 34 - 3, 13.9, 5);
         const fineNoise = fbm(nx * 136, ny * 78, 19.4, 3);
+        const reliefNoise = fbm(nx * 240, ny * 132, 122.4, 2);
         const wet = fbm(nx * 12.5 - 4, ny * 8.2 + 5, 22.5, 5);
+
         const arid =
           smoothstep(8, 30, latAbs) *
           (1 - smoothstep(31, 57, latAbs)) *
           (1 - wet * 0.55);
 
         const inland = smoothstep(0, 20, signed);
-        const shelf = isLand ? 0 : 1 - smoothstep(0.4, 7.0, -signed);
-        const depth = isLand ? 0 : smoothstep(0, 28, -signed);
+        const shelf = isLand ? 0 : 1 - smoothstep(0.35, 7.2, -signed);
+        const slope = isLand ? 0 : smoothstep(4.5, 20, -signed) * (1 - smoothstep(20, 42, -signed));
+        const abyss = isLand ? 0 : smoothstep(22, 58, -signed);
+        const depth = isLand ? 0 : smoothstep(0, 38, -signed);
 
         const h = isLand
-          ? clamp(inland * 0.75 + ridgeLift * 0.95 + (terrainNoise - 0.5) * 0.15, 0, 1)
+          ? clamp(
+              inland * 0.62 +
+              ridgeLift * 1.08 +
+              Math.pow(Math.max(0, inland), 1.6) * 0.22 +
+              (terrainNoise - 0.5) * 0.13,
+              0,
+              1
+            )
           : -depth;
 
         height[idx] = h;
         land[idx] = isLand ? 255 : 0;
 
-        const coastBand = 1 - smoothstep(0.12, 5.2, Math.abs(signed));
+        const coastBand = 1 - smoothstep(0.10, 4.7, Math.abs(signed));
         coast[idx] = Math.round(coastBand * 255);
 
         const glacialLat = smoothstep(62, 84, latAbs);
-        const highSnow = isLand ? smoothstep(0.56, 0.92, h + terrainNoise * 0.20) : 0;
-        const iceValue = clamp(glacialLat * 0.82 + highSnow * 0.45, 0, 1);
+        const highSnow = isLand ? smoothstep(0.58, 0.92, h + terrainNoise * 0.18) : 0;
+        const iceValue = clamp(glacialLat * 0.82 + highSnow * 0.40, 0, 1);
         ice[idx] = iceValue;
 
         if (isLand) {
-          const mountain = smoothstep(0.52, 0.94, h + ridgeLift * 0.55);
+          const mountain = smoothstep(0.52, 0.94, h + ridgeLift * 0.62);
+          const highland = smoothstep(0.42, 0.80, h);
           const green = clamp((wet - 0.28) * 1.38 * (1 - arid * 0.44), 0, 1);
-          const shore = smoothstep(0, 3.0, signed) * (1 - smoothstep(3.0, 8.0, signed));
+          const shore = smoothstep(0, 2.7, signed) * (1 - smoothstep(2.7, 7.8, signed));
 
           let rr = mix(132, 42, green);
           let gg = mix(105, 122, green);
@@ -443,60 +460,77 @@
           gg = mix(gg, 142, arid * 0.38);
           bb = mix(bb, 90, arid * 0.30);
 
-          rr = mix(rr, 112, mountain * 0.52);
-          gg = mix(gg, 108, mountain * 0.49);
-          bb = mix(bb, 104, mountain * 0.56);
+          rr = mix(rr, 120, highland * 0.28);
+          gg = mix(gg, 118, highland * 0.25);
+          bb = mix(bb, 106, highland * 0.22);
 
-          rr = mix(rr, 225, iceValue * 0.78);
-          gg = mix(gg, 232, iceValue * 0.78);
-          bb = mix(bb, 224, iceValue * 0.78);
+          rr = mix(rr, 100, mountain * 0.48);
+          gg = mix(gg, 100, mountain * 0.44);
+          bb = mix(bb, 98, mountain * 0.42);
 
-          rr = mix(rr, 190, shore * 0.38);
-          gg = mix(gg, 172, shore * 0.34);
-          bb = mix(bb, 122, shore * 0.30);
+          rr = mix(rr, 228, iceValue * 0.72);
+          gg = mix(gg, 234, iceValue * 0.72);
+          bb = mix(bb, 228, iceValue * 0.72);
 
-          const grain = (terrainNoise - 0.5) * 21 + (fineNoise - 0.5) * 8;
+          rr = mix(rr, 194, shore * 0.40);
+          gg = mix(gg, 176, shore * 0.36);
+          bb = mix(bb, 126, shore * 0.31);
+
+          const grain = (terrainNoise - 0.5) * 25 + (fineNoise - 0.5) * 12 + (reliefNoise - 0.5) * 7;
 
           r[idx] = clamp(rr + grain, 0, 255);
           g[idx] = clamp(gg + grain * 0.86, 0, 255);
           b[idx] = clamp(bb + grain * 0.68, 0, 255);
 
-          roughness[idx] = clamp(0.30 + terrainNoise * 0.42 + h * 0.35 + ridgeLift * 0.38, 0, 1);
+          relief[idx] = clamp(0.18 + h * 0.62 + ridgeLift * 0.72 + reliefNoise * 0.16, 0, 1);
+          roughness[idx] = clamp(0.32 + terrainNoise * 0.40 + h * 0.38 + ridgeLift * 0.42, 0, 1);
           oceanDepth[idx] = 0;
+          shelfDepth[idx] = 0;
         } else {
           const current = fbm(nx * 32 + 18, ny * 18 - 7, 31.6, 5);
-          const abyss = fbm(nx * 8.5, ny * 6.8, 35.0, 6);
+          const abyssNoise = fbm(nx * 8.5, ny * 6.8, 35.0, 6);
+          const trenchNoise = smoothstep(0.70, 0.94, fbm(nx * 28 - 12, ny * 19 + 8, 166.2, 3));
           const reef = shelf * smoothstep(0.55, 0.90, fbm(nx * 62, ny * 42, 88.1, 3));
 
-          let rr = mix(12, 0, depth);
-          let gg = mix(90, 24, depth);
-          let bb = mix(136, 78, depth);
+          let rr = mix(18, 0, depth);
+          let gg = mix(102, 24, depth);
+          let bb = mix(148, 80, depth);
 
-          rr = mix(rr, 35, shelf * 0.78);
-          gg = mix(gg, 158, shelf * 0.74);
-          bb = mix(bb, 168, shelf * 0.72);
+          rr = mix(rr, 38, shelf * 0.86);
+          gg = mix(gg, 174, shelf * 0.84);
+          bb = mix(bb, 180, shelf * 0.80);
 
-          rr = mix(rr, 3, abyss * depth * 0.42);
-          gg = mix(gg, 38, abyss * depth * 0.32);
-          bb = mix(bb, 102, abyss * depth * 0.30);
+          rr = mix(rr, 12, slope * 0.34);
+          gg = mix(gg, 84, slope * 0.34);
+          bb = mix(bb, 142, slope * 0.34);
 
-          rr = mix(rr, 74, reef * 0.22);
-          gg = mix(gg, 186, reef * 0.32);
-          bb = mix(bb, 176, reef * 0.28);
+          rr = mix(rr, 2, abyss * (0.34 + abyssNoise * 0.24));
+          gg = mix(gg, 32, abyss * (0.32 + abyssNoise * 0.22));
+          bb = mix(bb, 88, abyss * (0.34 + abyssNoise * 0.22));
 
-          const flow = (current - 0.5) * 16;
+          rr = mix(rr, 0, trenchNoise * abyss * 0.24);
+          gg = mix(gg, 20, trenchNoise * abyss * 0.22);
+          bb = mix(bb, 72, trenchNoise * abyss * 0.22);
 
-          r[idx] = clamp(rr + flow * 0.20, 0, 255);
-          g[idx] = clamp(gg + flow * 0.50, 0, 255);
+          rr = mix(rr, 78, reef * 0.24);
+          gg = mix(gg, 196, reef * 0.34);
+          bb = mix(bb, 184, reef * 0.30);
+
+          const flow = (current - 0.5) * 15;
+
+          r[idx] = clamp(rr + flow * 0.18, 0, 255);
+          g[idx] = clamp(gg + flow * 0.46, 0, 255);
           b[idx] = clamp(bb + flow, 0, 255);
 
-          roughness[idx] = clamp(0.10 + current * 0.18, 0, 1);
+          relief[idx] = clamp(0.05 + shelf * 0.24 + slope * 0.16 + trenchNoise * abyss * 0.28, 0, 1);
+          roughness[idx] = clamp(0.10 + current * 0.18 + trenchNoise * abyss * 0.24, 0, 1);
           oceanDepth[idx] = depth;
+          shelfDepth[idx] = shelf;
         }
       }
     }
 
-    return { r, g, b, land, coast, height, roughness, oceanDepth, ice };
+    return { r, g, b, land, coast, height, relief, roughness, oceanDepth, shelfDepth, ice };
   }
 
   function sampleIndex(lonRad, latRad, xShift = 0) {
@@ -537,11 +571,11 @@
   }
 
   function installStyle() {
-    const prior = document.getElementById("hearth-g3-1-cartographic-style");
+    const prior = document.getElementById("hearth-g3-2-relief-bathymetry-style");
     if (prior) prior.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-g3-1-cartographic-style";
+    style.id = "hearth-g3-2-relief-bathymetry-style";
     style.textContent = `
       html,
       body {
@@ -570,7 +604,7 @@
         touch-action: pan-y !important;
       }
 
-      .hearth-g3-1-chip {
+      .hearth-g3-2-chip {
         position: absolute;
         left: 14px;
         bottom: 12px;
@@ -588,7 +622,7 @@
       }
 
       @media (max-width: 520px) {
-        .hearth-g3-1-chip { display: none; }
+        .hearth-g3-2-chip { display: none; }
       }
     `;
 
@@ -656,6 +690,22 @@
     }
   }
 
+  function reliefShade(map, lon, lat, idx, isLand) {
+    const e = 0.012;
+    const hE = map.height[sampleIndex(lon + e, lat, 0)];
+    const hW = map.height[sampleIndex(lon - e, lat, 0)];
+    const hN = map.height[sampleIndex(lon, lat + e, 0)];
+    const hS = map.height[sampleIndex(lon, lat - e, 0)];
+    const dx = hW - hE;
+    const dy = hS - hN;
+
+    const base = isLand
+      ? 1 + dx * 1.65 + dy * 1.15 + map.relief[idx] * 0.16
+      : 1 + dx * 0.48 + dy * 0.36 - map.oceanDepth[idx] * 0.10 + map.shelfDepth[idx] * 0.08;
+
+    return clamp(base, isLand ? 0.66 : 0.80, isLand ? 1.34 : 1.18);
+  }
+
   function paintSphere(time) {
     const size = runtime.size;
     const image = runtime.image;
@@ -718,6 +768,7 @@
         const h = map.height[idx];
         const rough = map.roughness[idx];
         const depth = map.oceanDepth[idx];
+        const shelf = map.shelfDepth[idx];
         const ice = map.ice[idx];
 
         let rr = map.r[idx];
@@ -725,56 +776,63 @@
         let bb = map.b[idx];
 
         const light = clamp(nx * LIGHT[0] + ny * LIGHT[1] + z * LIGHT[2], 0, 1);
-        const softLight = 0.36 + light * 0.72;
+        const softLight = 0.35 + light * 0.74;
         const limb = Math.pow(1 - z, 1.72);
+        const reliefFactor = reliefShade(map, lon, lat, idx, isLand);
 
         if (!isLand) {
           const current = map.roughness[currentIdx];
-          const currentVeil = smoothstep(0.18, 0.29, current) * (1 - depth * 0.48);
+          const currentVeil = smoothstep(0.18, 0.31, current) * (1 - depth * 0.52);
 
-          rr = mix(rr, 45, currentVeil * 0.12);
-          gg = mix(gg, 145, currentVeil * 0.20);
-          bb = mix(bb, 190, currentVeil * 0.22);
+          rr = mix(rr, 45, currentVeil * 0.10);
+          gg = mix(gg, 142, currentVeil * 0.18);
+          bb = mix(bb, 190, currentVeil * 0.20);
 
-          if (coast > 0.05) {
-            const shelf = Math.pow(coast, 1.08);
-            rr = mix(rr, 42, shelf * 0.30);
-            gg = mix(gg, 174, shelf * 0.40);
-            bb = mix(bb, 186, shelf * 0.36);
+          if (shelf > 0.08) {
+            rr = mix(rr, 42, shelf * 0.32);
+            gg = mix(gg, 180, shelf * 0.42);
+            bb = mix(bb, 188, shelf * 0.38);
+          }
+
+          if (coast > 0.04) {
+            const edge = Math.pow(coast, 1.05);
+            rr = mix(rr, 54, edge * 0.18);
+            gg = mix(gg, 184, edge * 0.26);
+            bb = mix(bb, 196, edge * 0.24);
           }
 
           const specDot = clamp(nx * HALF_LIGHT[0] + ny * HALF_LIGHT[1] + z * HALF_LIGHT[2], 0, 1);
-          const specPower = lerp(92, 52, depth);
-          const spec = Math.pow(specDot, specPower) * clamp(light + 0.12, 0, 1) * (0.62 - depth * 0.20);
+          const specPower = lerp(94, 52, depth);
+          const spec = Math.pow(specDot, specPower) * clamp(light + 0.10, 0, 1) * (0.58 - depth * 0.18);
 
-          rr = mix(rr, 214, spec * 0.32);
-          gg = mix(gg, 234, spec * 0.30);
-          bb = mix(bb, 252, spec * 0.28);
+          rr = mix(rr, 214, spec * 0.28);
+          gg = mix(gg, 234, spec * 0.26);
+          bb = mix(bb, 252, spec * 0.24);
         }
 
         if (isLand) {
           if (coast > 0.05) {
-            rr = mix(rr, 160, coast * 0.16);
-            gg = mix(gg, 148, coast * 0.14);
-            bb = mix(bb, 112, coast * 0.12);
+            rr = mix(rr, 162, coast * 0.17);
+            gg = mix(gg, 150, coast * 0.15);
+            bb = mix(bb, 114, coast * 0.13);
           }
 
-          const relief = clamp((h * 0.82 + rough * 0.35) * light, 0, 1);
-          rr = mix(rr, rr + 18, relief * 0.14);
-          gg = mix(gg, gg + 15, relief * 0.12);
-          bb = mix(bb, bb + 11, relief * 0.09);
+          const ridgeLight = clamp((h * 0.84 + rough * 0.38) * light, 0, 1);
+          rr = mix(rr, rr + 20, ridgeLight * 0.15);
+          gg = mix(gg, gg + 16, ridgeLight * 0.13);
+          bb = mix(bb, bb + 12, ridgeLight * 0.10);
 
           if (ice > 0.20) {
-            const iceGlow = smoothstep(0.2, 0.9, ice) * (0.25 + light * 0.35);
-            rr = mix(rr, 238, iceGlow * 0.22);
-            gg = mix(gg, 244, iceGlow * 0.22);
-            bb = mix(bb, 238, iceGlow * 0.20);
+            const iceGlow = smoothstep(0.2, 0.9, ice) * (0.22 + light * 0.32);
+            rr = mix(rr, 240, iceGlow * 0.20);
+            gg = mix(gg, 246, iceGlow * 0.20);
+            bb = mix(bb, 240, iceGlow * 0.18);
           }
         }
 
-        rr *= softLight;
-        gg *= softLight;
-        bb *= softLight;
+        rr *= softLight * reliefFactor;
+        gg *= softLight * reliefFactor;
+        bb *= softLight * reliefFactor;
 
         rr = mix(rr, 22, limb * 0.30);
         gg = mix(gg, 88, limb * 0.31);
@@ -816,7 +874,7 @@
       radius * 0.62
     );
 
-    gx.addColorStop(0, "rgba(255,255,255,0.20)");
+    gx.addColorStop(0, "rgba(255,255,255,0.19)");
     gx.addColorStop(0.25, "rgba(142,205,250,0.07)");
     gx.addColorStop(1, "rgba(0,0,0,0)");
 
@@ -929,14 +987,14 @@
     const canvas = document.createElement("canvas");
     canvas.dataset.hearthCanvas = "true";
     canvas.dataset.contract = CONTRACT;
-    canvas.dataset.generation = "G3.1-candidate";
+    canvas.dataset.generation = "G3.2-candidate";
     canvas.dataset.localScale = "hearth";
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Hearth G3.1 cartographic body mass terrain map dynamic globe");
+    canvas.setAttribute("aria-label", "Hearth G3.2 relief and bathymetry sharpened globe");
 
     const chip = document.createElement("div");
-    chip.className = "hearth-g3-1-chip";
-    chip.textContent = "Hearth G3.1 · Cartographic Body";
+    chip.className = "hearth-g3-2-chip";
+    chip.textContent = "Hearth G3.2 · Relief + Bathymetry";
 
     mountEl.append(canvas, chip);
 
@@ -950,8 +1008,8 @@
     mountEl.dataset.hearthCanvasContract = CONTRACT;
     mountEl.dataset.hearthCanvasReceipt = RECEIPT;
     mountEl.dataset.hearthRenderOwner = "/assets/hearth/hearth.canvas.js";
-    mountEl.dataset.hearthGeneration = "G3.1-candidate";
-    mountEl.dataset.hearthGenerationFocus = "cartographic-body-mass-terrain-map";
+    mountEl.dataset.hearthGeneration = "G3.2-candidate";
+    mountEl.dataset.hearthGenerationFocus = "relief-bathymetry-sharpen";
     mountEl.dataset.g4Deferred = "clouds-weather-climate";
     mountEl.dataset.earthPlaceholder = "false";
     mountEl.dataset.audraliaMap = "false";
@@ -959,8 +1017,8 @@
     document.documentElement.dataset.hearthCanvasLoaded = "true";
     document.documentElement.dataset.hearthCanvasContract = CONTRACT;
     document.documentElement.dataset.hearthCanvasVersion = VERSION;
-    document.documentElement.dataset.hearthGeneration = "G3.1-candidate";
-    document.documentElement.dataset.hearthGenerationFocus = "cartographic-body-mass-terrain-map";
+    document.documentElement.dataset.hearthGeneration = "G3.2-candidate";
+    document.documentElement.dataset.hearthGenerationFocus = "relief-bathymetry-sharpen";
     document.documentElement.dataset.hearthG4Deferred = "clouds-weather-climate";
     document.documentElement.dataset.hearthExternalImages = "false";
     document.documentElement.dataset.hearthNasaAsset = "false";
@@ -986,15 +1044,16 @@
 
     if (runtime.observer) runtime.observer.disconnect();
 
-    const style = document.getElementById("hearth-g3-1-cartographic-style");
+    const style = document.getElementById("hearth-g3-2-relief-bathymetry-style");
     if (style) style.remove();
 
     if (runtime.mount) runtime.mount.replaceChildren();
 
-    window.__HEARTH_CANVAS_G3_1_DISPOSE__ = null;
+    window.__HEARTH_CANVAS_G3_2_DISPOSE__ = null;
     exposeReceipt("disposed");
   }
 
+  window.__HEARTH_CANVAS_G3_2_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_1_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G4_DISPOSE__ = dispose;

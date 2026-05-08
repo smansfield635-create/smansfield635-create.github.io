@@ -1,44 +1,64 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_G3_BODY_MASS_TERRAIN_MAP_DYNAMIC_TNT_v1
+// HEARTH_G3_1_CARTOGRAPHIC_BODY_MASS_TNT_v1
 // Full-file replacement.
 // Purpose:
-// - Reclassify prior invalid G4 attempt as not accepted.
-// - Raise Hearth from G2 to G3 by improving body mass, terrain, map shape, coastline, bathymetry, elevation, and polar/ice terrain.
-// - Do NOT add G4 clouds/weather/climate systems.
+// - Correct the failed G3 candidate.
+// - Move Hearth from blob-first mass logic to cartographic-scaffold-first body mass.
+// - G3 scope only: terrain, map, body mass, coastlines, elevation, bathymetry, polar terrain.
+// - G4 deferred: clouds, weather, climate.
 // - No JPG. No NASA asset. No generated image. No GraphicBox.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_BODY_MASS_TERRAIN_MAP_DYNAMIC_TNT_v1";
-  const VERSION = "2026-05-08.hearth-g3-body-mass-terrain-map";
-  const RECEIPT = "HEARTH_G3_BODY_MASS_TERRAIN_MAP_RECEIPT";
+  const CONTRACT = "HEARTH_G3_1_CARTOGRAPHIC_BODY_MASS_TNT_v1";
+  const VERSION = "2026-05-08.hearth-g3-1-cartographic-body-mass";
+  const RECEIPT = "HEARTH_G3_1_CARTOGRAPHIC_BODY_MASS_RECEIPT";
 
-  const MAP_W = 1080;
-  const MAP_H = 540;
+  const MAP_W = 840;
+  const MAP_H = 420;
   const MIN_RENDER_SIZE = 300;
   const MAX_RENDER_SIZE = 720;
   const TAU = Math.PI * 2;
   const HALF_PI = Math.PI / 2;
 
   const GENERATION = Object.freeze({
-    prior: "G2 accepted",
-    current: "G3 candidate",
-    g3Definition: "body mass, terrain map, coastlines, elevation, bathymetry, polar terrain",
-    g4Deferred: "clouds, weather, climate, atmospheric systems"
+    previousAccepted: "G2",
+    currentCandidate: "G3.1",
+    g3Definition: "cartographic body mass, terrain map, coastline, elevation, bathymetry, polar terrain",
+    g4Deferred: "clouds, weather, climate"
   });
 
-  if (typeof window.__HEARTH_CANVAS_G3_DISPOSE__ === "function") {
-    try { window.__HEARTH_CANVAS_G3_DISPOSE__(); } catch (_) {}
-  }
+  const TIC_TAC_TOE = Object.freeze({
+    T1: "isolate Hearth only",
+    T2: "freeze G3 definition",
+    T3: "reject blob-first landmass",
+    T4: "install cartographic scaffold",
+    T5: "roughen coastlines only after scaffold",
+    T6: "add elevation and bathymetry",
+    T7: "stress against Earth/NASA bleed",
+    T8: "keep G4 deferred",
+    T9: "return visual proof"
+  });
 
-  if (typeof window.__HEARTH_CANVAS_G4_DISPOSE__ === "function") {
-    try { window.__HEARTH_CANVAS_G4_DISPOSE__(); } catch (_) {}
-  }
+  const QUAD_A = Object.freeze({
+    authority: "/assets/hearth/hearth.canvas.js only",
+    axis: "Hearth local scale only",
+    artifact: "visible G3.1 terrain/body-mass correction",
+    attack: "reject clouds, weather, climate, NASA JPG, Earth placeholder, Audralia bleed, duplicate lower frame"
+  });
 
-  if (typeof window.__HEARTH_CANVAS_DISPOSE__ === "function") {
-    try { window.__HEARTH_CANVAS_DISPOSE__(); } catch (_) {}
-  }
+  [
+    "__HEARTH_CANVAS_G3_1_DISPOSE__",
+    "__HEARTH_CANVAS_G3_DISPOSE__",
+    "__HEARTH_CANVAS_G4_DISPOSE__",
+    "__HEARTH_CANVAS_DISPOSE__",
+    "__HEARTH_G2_DISPOSE__"
+  ].forEach((name) => {
+    if (typeof window[name] === "function") {
+      try { window[name](); } catch (_) {}
+    }
+  });
 
   const runtime = {
     mounted: false,
@@ -70,20 +90,6 @@
     return [v[0] / l, v[1] / l, v[2] / l];
   }
 
-  function wrapLon(lon) {
-    let v = lon;
-    while (v < -180) v += 360;
-    while (v > 180) v -= 360;
-    return v;
-  }
-
-  function lonDelta(a, b) {
-    return wrapLon(a - b);
-  }
-
-  const LIGHT = normalize3([-0.52, -0.34, 0.88]);
-  const HALF_LIGHT = normalize3([LIGHT[0], LIGHT[1], LIGHT[2] + 1.18]);
-
   function hash2(x, y, seed = 0) {
     const n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
     return n - Math.floor(n);
@@ -112,7 +118,7 @@
     let norm = 0;
 
     for (let i = 0; i < octaves; i += 1) {
-      sum += valueNoise(x * freq, y * freq, seed + i * 19.77) * amp;
+      sum += valueNoise(x * freq, y * freq, seed + i * 17.71) * amp;
       norm += amp;
       amp *= 0.52;
       freq *= 2.03;
@@ -121,90 +127,246 @@
     return norm ? sum / norm : 0;
   }
 
-  function ellipse(lon, lat, cx, cy, rx, ry, amp = 1, softness = 1) {
-    const dx = lonDelta(lon, cx) / rx;
-    const dy = (lat - cy) / ry;
-    const q = 1 - (dx * dx + dy * dy);
-    return amp * smoothstep(-0.35 * softness, 0.95, q);
+  function wrapLon(lon) {
+    let v = lon;
+    while (v < -180) v += 360;
+    while (v > 180) v -= 360;
+    return v;
   }
 
-  function ridge(lon, lat, x1, y1, x2, y2, width, amp) {
-    const px = lon;
-    const py = lat;
-    const ax = x1;
-    const ay = y1;
-    const bx = x2;
-    const by = y2;
+  function lonDelta(a, b) {
+    return wrapLon(a - b);
+  }
+
+  function pointInPolygon(lon, lat, polygon) {
+    let inside = false;
+
+    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i, i += 1) {
+      const xi = polygon[i][0];
+      const yi = polygon[i][1];
+      const xj = polygon[j][0];
+      const yj = polygon[j][1];
+
+      const intersects =
+        yi > lat !== yj > lat &&
+        lon < ((xj - xi) * (lat - yi)) / ((yj - yi) || 1e-9) + xi;
+
+      if (intersects) inside = !inside;
+    }
+
+    return inside;
+  }
+
+  function distanceToSegment(lon, lat, ax, ay, bx, by) {
     const vx = lonDelta(bx, ax);
     const vy = by - ay;
-    const wx = lonDelta(px, ax);
-    const wy = py - ay;
+    const wx = lonDelta(lon, ax);
+    const wy = lat - ay;
+
     const c1 = wx * vx + wy * vy;
     const c2 = vx * vx + vy * vy || 1;
     const t = clamp(c1 / c2, 0, 1);
+
     const sx = ax + vx * t;
     const sy = ay + vy * t;
-    const d = Math.hypot(lonDelta(px, sx), py - sy);
+
+    return Math.hypot(lonDelta(lon, sx), lat - sy);
+  }
+
+  function signedDistanceToPolygon(lon, lat, polygon) {
+    let minD = Infinity;
+
+    for (let i = 0; i < polygon.length; i += 1) {
+      const a = polygon[i];
+      const b = polygon[(i + 1) % polygon.length];
+      const d = distanceToSegment(lon, lat, a[0], a[1], b[0], b[1]);
+      if (d < minD) minD = d;
+    }
+
+    return pointInPolygon(lon, lat, polygon) ? minD : -minD;
+  }
+
+  function ellipseMask(lon, lat, cx, cy, rx, ry) {
+    const dx = lonDelta(lon, cx) / rx;
+    const dy = (lat - cy) / ry;
+    return 1 - (dx * dx + dy * dy);
+  }
+
+  function ridge(lon, lat, x1, y1, x2, y2, width, amp) {
+    const vx = lonDelta(x2, x1);
+    const vy = y2 - y1;
+    const wx = lonDelta(lon, x1);
+    const wy = lat - y1;
+    const c1 = wx * vx + wy * vy;
+    const c2 = vx * vx + vy * vy || 1;
+    const t = clamp(c1 / c2, 0, 1);
+    const sx = x1 + vx * t;
+    const sy = y1 + vy * t;
+    const d = Math.hypot(lonDelta(lon, sx), lat - sy);
     return amp * (1 - smoothstep(width * 0.30, width, d));
   }
 
-  function landMassField(lon, lat) {
-    let f = 0;
+  const CONTINENTS = [
+    {
+      name: "north-land",
+      weight: 1.0,
+      points: [
+        [-166, 66], [-150, 58], [-140, 52], [-130, 49], [-124, 42],
+        [-118, 34], [-112, 28], [-104, 23], [-95, 18], [-86, 20],
+        [-80, 26], [-74, 36], [-66, 44], [-55, 51], [-53, 58],
+        [-66, 66], [-92, 72], [-122, 72], [-146, 70]
+      ]
+    },
+    {
+      name: "central-bridge",
+      weight: 0.74,
+      points: [
+        [-100, 24], [-86, 23], [-78, 18], [-76, 10], [-82, 8],
+        [-90, 12], [-98, 16], [-105, 20]
+      ]
+    },
+    {
+      name: "south-spine",
+      weight: 1.0,
+      points: [
+        [-81, 12], [-69, 10], [-56, 2], [-45, -10], [-39, -22],
+        [-46, -37], [-55, -52], [-67, -55], [-73, -40], [-77, -23],
+        [-83, -8]
+      ]
+    },
+    {
+      name: "greenland-ice",
+      weight: 0.76,
+      points: [
+        [-52, 60], [-38, 64], [-30, 72], [-40, 82], [-58, 82],
+        [-68, 75], [-62, 66]
+      ]
+    },
+    {
+      name: "africa-body",
+      weight: 1.0,
+      points: [
+        [-18, 33], [2, 37], [18, 34], [32, 27], [43, 12],
+        [41, -12], [31, -30], [20, -36], [7, -32], [-6, -18],
+        [-14, 0], [-18, 16]
+      ]
+    },
+    {
+      name: "eurasia-shelf",
+      weight: 1.08,
+      points: [
+        [-10, 36], [6, 45], [24, 51], [48, 57], [76, 67],
+        [104, 66], [134, 56], [153, 48], [145, 35], [126, 26],
+        [112, 12], [96, 8], [80, 18], [62, 24], [45, 30],
+        [28, 35], [12, 40], [0, 38]
+      ]
+    },
+    {
+      name: "india-peninsula",
+      weight: 0.70,
+      points: [
+        [68, 24], [82, 26], [91, 20], [88, 10], [80, 6],
+        [73, 12]
+      ]
+    },
+    {
+      name: "arabia-horn",
+      weight: 0.52,
+      points: [
+        [38, 31], [51, 26], [56, 16], [49, 11], [42, 14],
+        [36, 22]
+      ]
+    },
+    {
+      name: "southeast-chain",
+      weight: 0.46,
+      points: [
+        [96, 22], [111, 17], [123, 5], [121, -7], [107, -6],
+        [98, 5]
+      ]
+    },
+    {
+      name: "austral-body",
+      weight: 0.84,
+      points: [
+        [112, -12], [129, -10], [149, -18], [153, -33],
+        [140, -43], [120, -36], [113, -24]
+      ]
+    },
+    {
+      name: "antarctic-ring",
+      weight: 1.02,
+      points: [
+        [-180, -72], [-140, -66], [-100, -69], [-60, -64], [-20, -70],
+        [20, -66], [60, -70], [100, -65], [140, -69], [180, -72],
+        [180, -90], [-180, -90]
+      ]
+    },
+    {
+      name: "southern-isle",
+      weight: 0.32,
+      points: [
+        [42, -46], [56, -48], [58, -55], [45, -56], [35, -51]
+      ]
+    },
+    {
+      name: "new-zealands",
+      weight: 0.26,
+      points: [
+        [166, -35], [178, -42], [172, -48], [162, -42]
+      ]
+    }
+  ];
 
-    f += ellipse(lon, lat, -106, 52, 43, 22, 1.08);
-    f += ellipse(lon, lat, -98, 35, 31, 20, 0.88);
-    f += ellipse(lon, lat, -88, 18, 17, 14, 0.58);
-    f += ellipse(lon, lat, -136, 58, 20, 11, 0.42);
-    f += ellipse(lon, lat, -42, 72, 15, 9, 0.52);
+  const LAKES_AND_INLAND_SEAS = [
+    { lon: -84, lat: 45, rx: 7, ry: 3.5, amp: 0.60 },
+    { lon: -74, lat: 44, rx: 5, ry: 2.4, amp: 0.50 },
+    { lon: 31, lat: 0, rx: 4, ry: 7, amp: 0.34 },
+    { lon: 35, lat: -7, rx: 3, ry: 5, amp: 0.28 },
+    { lon: 48, lat: 42, rx: 7, ry: 4, amp: 0.42 },
+    { lon: 90, lat: 55, rx: 10, ry: 4, amp: 0.22 }
+  ];
 
-    f += ellipse(lon, lat, -61, -15, 20, 37, 0.98);
-    f += ellipse(lon, lat, -70, -38, 13, 25, 0.55);
-    f += ellipse(lon, lat, -50, 3, 18, 16, 0.44);
+  function cartographicSignedDistance(lon, lat) {
+    let best = -Infinity;
 
-    f += ellipse(lon, lat, 18, 4, 27, 35, 0.95);
-    f += ellipse(lon, lat, 31, -23, 18, 23, 0.62);
-    f += ellipse(lon, lat, 7, 24, 20, 18, 0.45);
+    for (const continent of CONTINENTS) {
+      const sd = signedDistanceToPolygon(lon, lat, continent.points) * continent.weight;
+      if (sd > best) best = sd;
+    }
 
-    f += ellipse(lon, lat, 53, 49, 43, 18, 0.86);
-    f += ellipse(lon, lat, 92, 52, 60, 22, 1.08);
-    f += ellipse(lon, lat, 79, 24, 28, 22, 0.70);
-    f += ellipse(lon, lat, 110, 24, 38, 22, 0.72);
-    f += ellipse(lon, lat, 127, 8, 20, 18, 0.42);
-    f += ellipse(lon, lat, 139, 38, 8, 14, 0.24);
-
-    f += ellipse(lon, lat, 134, -25, 24, 17, 0.72);
-    f += ellipse(lon, lat, 146, -42, 8, 5, 0.16);
-    f += ellipse(lon, lat, 171, -42, 9, 8, 0.18);
-
-    f += ellipse(lon, lat, 0, -82, 180, 12, 0.98);
-    f += ellipse(lon, lat, -58, -63, 22, 8, 0.24);
-    f += ellipse(lon, lat, 72, -49, 17, 9, 0.24);
-
-    f -= ellipse(lon, lat, -39, 23, 42, 44, 0.55, 1.3);
-    f -= ellipse(lon, lat, -152, -6, 32, 62, 0.45, 1.2);
-    f -= ellipse(lon, lat, 65, -22, 36, 36, 0.45, 1.1);
-    f -= ellipse(lon, lat, 34, 39, 12, 9, 0.30, 0.8);
-    f -= ellipse(lon, lat, -83, 11, 12, 8, 0.22, 0.7);
-    f -= ellipse(lon, lat, 118, -4, 18, 11, 0.20, 0.8);
-
-    return f;
+    return best;
   }
 
-  function elevationBoost(lon, lat) {
+  function lakeCut(lon, lat) {
+    let cut = 0;
+
+    for (const lake of LAKES_AND_INLAND_SEAS) {
+      const q = ellipseMask(lon, lat, lake.lon, lake.lat, lake.rx, lake.ry);
+      cut += lake.amp * smoothstep(-0.25, 0.88, q);
+    }
+
+    return cut;
+  }
+
+  function elevationField(lon, lat) {
     let e = 0;
 
-    e += ridge(lon, lat, -76, 8, -70, -54, 7, 0.50);
-    e += ridge(lon, lat, -126, 52, -106, 28, 10, 0.33);
-    e += ridge(lon, lat, 67, 30, 94, 34, 9, 0.55);
+    e += ridge(lon, lat, -75, 10, -70, -54, 7, 0.46);
+    e += ridge(lon, lat, -130, 55, -106, 28, 10, 0.30);
+    e += ridge(lon, lat, -110, 42, -103, 30, 7, 0.20);
+    e += ridge(lon, lat, 66, 30, 94, 34, 9, 0.56);
+    e += ridge(lon, lat, 85, 42, 118, 55, 14, 0.25);
     e += ridge(lon, lat, 38, -5, 30, -30, 7, 0.22);
-    e += ridge(lon, lat, 8, 45, 22, 46, 6, 0.18);
-    e += ridge(lon, lat, 136, -20, 149, -36, 8, 0.18);
+    e += ridge(lon, lat, 7, 45, 20, 46, 5.5, 0.18);
+    e += ridge(lon, lat, 134, -20, 150, -36, 8, 0.18);
 
     return e;
   }
 
   function buildMap() {
     const len = MAP_W * MAP_H;
+
     const r = new Uint8ClampedArray(len);
     const g = new Uint8ClampedArray(len);
     const b = new Uint8ClampedArray(len);
@@ -225,96 +387,107 @@
         const ny = y / MAP_H;
         const idx = y * MAP_W + x;
 
-        const mass = landMassField(lon, lat);
-        const continentalNoise = (fbm(nx * 16, ny * 11, 21.4, 5) - 0.5) * 0.18;
-        const coastlineNoise = (fbm(nx * 60, ny * 38, 33.7, 4) - 0.5) * 0.075;
-        const islandNoise = smoothstep(0.74, 0.93, fbm(nx * 86, ny * 44, 92.1, 3)) * 0.09;
-        const ridgeLift = elevationBoost(lon, lat);
-        const polarLift = latAbs > 66 ? ((latAbs - 66) / 24) * 0.06 : 0;
+        const rawSd = cartographicSignedDistance(lon, lat);
+        const coastalInfluence = 1 - smoothstep(0, 8, Math.abs(rawSd));
+        const coastlineFracture =
+          (fbm(nx * 72, ny * 41, 31.2, 4) - 0.5) * 5.2 * coastalInfluence +
+          (fbm(nx * 155, ny * 88, 87.9, 3) - 0.5) * 1.8 * coastalInfluence;
 
-        const h = mass + continentalNoise + coastlineNoise + islandNoise + ridgeLift + polarLift - 0.52;
-        const isLand = h > 0;
+        const islandGain =
+          coastalInfluence * smoothstep(0.72, 0.94, fbm(nx * 112, ny * 64, 44.8, 3)) * 2.1;
 
-        height[idx] = h;
-        land[idx] = isLand ? 255 : 0;
+        const lakeLoss = lakeCut(lon, lat) * 7.2;
+        const ridgeLift = elevationField(lon, lat);
+        const polarLift = latAbs > 66 ? ((latAbs - 66) / 24) * 2.2 : 0;
 
-        const coastBand = 1 - smoothstep(0.010, 0.115, Math.abs(h));
-        coast[idx] = Math.round(coastBand * 255);
+        const signed = rawSd + coastlineFracture + islandGain - lakeLoss + polarLift;
+        const isLand = signed > 0;
 
-        const terrainNoise = fbm(nx * 44 + 11, ny * 36 - 3, 13.9, 5);
-        const fineNoise = fbm(nx * 144, ny * 84, 19.4, 3);
+        const terrainNoise = fbm(nx * 42 + 11, ny * 34 - 3, 13.9, 5);
+        const fineNoise = fbm(nx * 136, ny * 78, 19.4, 3);
         const wet = fbm(nx * 12.5 - 4, ny * 8.2 + 5, 22.5, 5);
         const arid =
           smoothstep(8, 30, latAbs) *
           (1 - smoothstep(31, 57, latAbs)) *
           (1 - wet * 0.55);
 
-        const glacialLat = smoothstep(63, 84, latAbs);
-        const highSnow = isLand ? smoothstep(0.36, 0.82, h + terrainNoise * 0.18) : 0;
-        const iceValue = clamp(glacialLat * 0.80 + highSnow * 0.42, 0, 1);
+        const inland = smoothstep(0, 20, signed);
+        const shelf = isLand ? 0 : 1 - smoothstep(0.4, 7.0, -signed);
+        const depth = isLand ? 0 : smoothstep(0, 28, -signed);
+
+        const h = isLand
+          ? clamp(inland * 0.75 + ridgeLift * 0.95 + (terrainNoise - 0.5) * 0.15, 0, 1)
+          : -depth;
+
+        height[idx] = h;
+        land[idx] = isLand ? 255 : 0;
+
+        const coastBand = 1 - smoothstep(0.12, 5.2, Math.abs(signed));
+        coast[idx] = Math.round(coastBand * 255);
+
+        const glacialLat = smoothstep(62, 84, latAbs);
+        const highSnow = isLand ? smoothstep(0.56, 0.92, h + terrainNoise * 0.20) : 0;
+        const iceValue = clamp(glacialLat * 0.82 + highSnow * 0.45, 0, 1);
         ice[idx] = iceValue;
 
         if (isLand) {
-          const elevation = clamp(h * 1.9, 0, 1);
-          const mountain = smoothstep(0.36, 0.86, elevation + ridgeLift * 1.2);
-          const green = clamp((wet - 0.28) * 1.38 * (1 - arid * 0.42), 0, 1);
-          const shore = smoothstep(0, 0.050, h) * (1 - smoothstep(0.050, 0.18, h));
+          const mountain = smoothstep(0.52, 0.94, h + ridgeLift * 0.55);
+          const green = clamp((wet - 0.28) * 1.38 * (1 - arid * 0.44), 0, 1);
+          const shore = smoothstep(0, 3.0, signed) * (1 - smoothstep(3.0, 8.0, signed));
 
           let rr = mix(132, 42, green);
-          let gg = mix(104, 120, green);
-          let bb = mix(58, 70, green);
+          let gg = mix(105, 122, green);
+          let bb = mix(58, 72, green);
 
-          rr = mix(rr, 174, arid * 0.48);
-          gg = mix(gg, 140, arid * 0.38);
-          bb = mix(bb, 88, arid * 0.30);
+          rr = mix(rr, 176, arid * 0.48);
+          gg = mix(gg, 142, arid * 0.38);
+          bb = mix(bb, 90, arid * 0.30);
 
           rr = mix(rr, 112, mountain * 0.52);
-          gg = mix(gg, 108, mountain * 0.48);
+          gg = mix(gg, 108, mountain * 0.49);
           bb = mix(bb, 104, mountain * 0.56);
 
-          rr = mix(rr, 224, iceValue * 0.78);
-          gg = mix(gg, 231, iceValue * 0.78);
-          bb = mix(bb, 223, iceValue * 0.78);
+          rr = mix(rr, 225, iceValue * 0.78);
+          gg = mix(gg, 232, iceValue * 0.78);
+          bb = mix(bb, 224, iceValue * 0.78);
 
-          rr = mix(rr, 190, shore * 0.36);
-          gg = mix(gg, 172, shore * 0.32);
-          bb = mix(bb, 122, shore * 0.28);
+          rr = mix(rr, 190, shore * 0.38);
+          gg = mix(gg, 172, shore * 0.34);
+          bb = mix(bb, 122, shore * 0.30);
 
-          const grain = (terrainNoise - 0.5) * 23 + (fineNoise - 0.5) * 8;
+          const grain = (terrainNoise - 0.5) * 21 + (fineNoise - 0.5) * 8;
 
           r[idx] = clamp(rr + grain, 0, 255);
           g[idx] = clamp(gg + grain * 0.86, 0, 255);
           b[idx] = clamp(bb + grain * 0.68, 0, 255);
 
-          roughness[idx] = clamp(0.30 + terrainNoise * 0.42 + Math.max(0, h) * 0.35 + ridgeLift * 0.45, 0, 1);
+          roughness[idx] = clamp(0.30 + terrainNoise * 0.42 + h * 0.35 + ridgeLift * 0.38, 0, 1);
           oceanDepth[idx] = 0;
         } else {
-          const depth = clamp(-h * 2.45, 0, 1);
-          const shelf = 1 - smoothstep(0.020, 0.17, -h);
           const current = fbm(nx * 32 + 18, ny * 18 - 7, 31.6, 5);
-          const abyss = fbm(nx * 9, ny * 7, 35.0, 6);
+          const abyss = fbm(nx * 8.5, ny * 6.8, 35.0, 6);
           const reef = shelf * smoothstep(0.55, 0.90, fbm(nx * 62, ny * 42, 88.1, 3));
 
           let rr = mix(12, 0, depth);
-          let gg = mix(88, 24, depth);
-          let bb = mix(134, 78, depth);
+          let gg = mix(90, 24, depth);
+          let bb = mix(136, 78, depth);
 
-          rr = mix(rr, 34, shelf * 0.76);
-          gg = mix(gg, 154, shelf * 0.72);
-          bb = mix(bb, 166, shelf * 0.70);
+          rr = mix(rr, 35, shelf * 0.78);
+          gg = mix(gg, 158, shelf * 0.74);
+          bb = mix(bb, 168, shelf * 0.72);
 
           rr = mix(rr, 3, abyss * depth * 0.42);
           gg = mix(gg, 38, abyss * depth * 0.32);
           bb = mix(bb, 102, abyss * depth * 0.30);
 
-          rr = mix(rr, 74, reef * 0.20);
-          gg = mix(gg, 184, reef * 0.30);
-          bb = mix(bb, 174, reef * 0.26);
+          rr = mix(rr, 74, reef * 0.22);
+          gg = mix(gg, 186, reef * 0.32);
+          bb = mix(bb, 176, reef * 0.28);
 
-          const flow = (current - 0.5) * 18;
+          const flow = (current - 0.5) * 16;
 
           r[idx] = clamp(rr + flow * 0.20, 0, 255);
-          g[idx] = clamp(gg + flow * 0.52, 0, 255);
+          g[idx] = clamp(gg + flow * 0.50, 0, 255);
           b[idx] = clamp(bb + flow, 0, 255);
 
           roughness[idx] = clamp(0.10 + current * 0.18, 0, 1);
@@ -336,6 +509,9 @@
 
     return y * MAP_W + x;
   }
+
+  const LIGHT = normalize3([-0.54, -0.34, 0.88]);
+  const HALF_LIGHT = normalize3([LIGHT[0], LIGHT[1], LIGHT[2] + 1.18]);
 
   function getMount() {
     const mount =
@@ -361,11 +537,11 @@
   }
 
   function installStyle() {
-    const prior = document.getElementById("hearth-g3-body-mass-style");
+    const prior = document.getElementById("hearth-g3-1-cartographic-style");
     if (prior) prior.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-g3-body-mass-style";
+    style.id = "hearth-g3-1-cartographic-style";
     style.textContent = `
       html,
       body {
@@ -394,7 +570,7 @@
         touch-action: pan-y !important;
       }
 
-      .hearth-g3-chip {
+      .hearth-g3-1-chip {
         position: absolute;
         left: 14px;
         bottom: 12px;
@@ -412,7 +588,7 @@
       }
 
       @media (max-width: 520px) {
-        .hearth-g3-chip { display: none; }
+        .hearth-g3-1-chip { display: none; }
       }
     `;
 
@@ -555,6 +731,7 @@
         if (!isLand) {
           const current = map.roughness[currentIdx];
           const currentVeil = smoothstep(0.18, 0.29, current) * (1 - depth * 0.48);
+
           rr = mix(rr, 45, currentVeil * 0.12);
           gg = mix(gg, 145, currentVeil * 0.20);
           bb = mix(bb, 190, currentVeil * 0.22);
@@ -582,9 +759,9 @@
             bb = mix(bb, 112, coast * 0.12);
           }
 
-          const relief = clamp((h * 0.80 + rough * 0.34) * light, 0, 1);
-          rr = mix(rr, rr + 17, relief * 0.13);
-          gg = mix(gg, gg + 15, relief * 0.11);
+          const relief = clamp((h * 0.82 + rough * 0.35) * light, 0, 1);
+          rr = mix(rr, rr + 18, relief * 0.14);
+          gg = mix(gg, gg + 15, relief * 0.12);
           bb = mix(bb, bb + 11, relief * 0.09);
 
           if (ice > 0.20) {
@@ -729,6 +906,8 @@
       renderOwner: "/assets/hearth/hearth.canvas.js",
       mount: "#hearthCanvasMount",
       generation: GENERATION,
+      ticTacToe: TIC_TAC_TOE,
+      quadA: QUAD_A,
       cloudsWeatherClimate: "deferred-to-G4",
       externalImages: false,
       nasaAsset: false,
@@ -750,14 +929,14 @@
     const canvas = document.createElement("canvas");
     canvas.dataset.hearthCanvas = "true";
     canvas.dataset.contract = CONTRACT;
-    canvas.dataset.generation = "G3-candidate";
+    canvas.dataset.generation = "G3.1-candidate";
     canvas.dataset.localScale = "hearth";
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Hearth G3 body mass terrain map dynamic globe");
+    canvas.setAttribute("aria-label", "Hearth G3.1 cartographic body mass terrain map dynamic globe");
 
     const chip = document.createElement("div");
-    chip.className = "hearth-g3-chip";
-    chip.textContent = "Hearth G3 · Body Mass";
+    chip.className = "hearth-g3-1-chip";
+    chip.textContent = "Hearth G3.1 · Cartographic Body";
 
     mountEl.append(canvas, chip);
 
@@ -771,8 +950,8 @@
     mountEl.dataset.hearthCanvasContract = CONTRACT;
     mountEl.dataset.hearthCanvasReceipt = RECEIPT;
     mountEl.dataset.hearthRenderOwner = "/assets/hearth/hearth.canvas.js";
-    mountEl.dataset.hearthGeneration = "G3-candidate";
-    mountEl.dataset.hearthGenerationFocus = "body-mass-terrain-map";
+    mountEl.dataset.hearthGeneration = "G3.1-candidate";
+    mountEl.dataset.hearthGenerationFocus = "cartographic-body-mass-terrain-map";
     mountEl.dataset.g4Deferred = "clouds-weather-climate";
     mountEl.dataset.earthPlaceholder = "false";
     mountEl.dataset.audraliaMap = "false";
@@ -780,8 +959,8 @@
     document.documentElement.dataset.hearthCanvasLoaded = "true";
     document.documentElement.dataset.hearthCanvasContract = CONTRACT;
     document.documentElement.dataset.hearthCanvasVersion = VERSION;
-    document.documentElement.dataset.hearthGeneration = "G3-candidate";
-    document.documentElement.dataset.hearthGenerationFocus = "body-mass-terrain-map";
+    document.documentElement.dataset.hearthGeneration = "G3.1-candidate";
+    document.documentElement.dataset.hearthGenerationFocus = "cartographic-body-mass-terrain-map";
     document.documentElement.dataset.hearthG4Deferred = "clouds-weather-climate";
     document.documentElement.dataset.hearthExternalImages = "false";
     document.documentElement.dataset.hearthNasaAsset = "false";
@@ -807,19 +986,20 @@
 
     if (runtime.observer) runtime.observer.disconnect();
 
-    const style = document.getElementById("hearth-g3-body-mass-style");
+    const style = document.getElementById("hearth-g3-1-cartographic-style");
     if (style) style.remove();
 
     if (runtime.mount) runtime.mount.replaceChildren();
 
-    window.__HEARTH_CANVAS_G3_DISPOSE__ = null;
+    window.__HEARTH_CANVAS_G3_1_DISPOSE__ = null;
     exposeReceipt("disposed");
   }
 
+  window.__HEARTH_CANVAS_G3_1_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_G4_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_DISPOSE__ = dispose;
   window.__HEARTH_G2_DISPOSE__ = dispose;
-  window.__HEARTH_CANVAS_G4_DISPOSE__ = dispose;
 
   function boot() {
     if (runtime.mounted || runtime.disposed) return;

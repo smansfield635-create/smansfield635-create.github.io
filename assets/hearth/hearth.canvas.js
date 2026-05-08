@@ -681,4 +681,304 @@
 
           if (s.coast > 0.04) {
             const edge = Math.pow(s.coast, 1.05);
-            rr = mix(rr, 64
+            rr = mix(rr, 64, edge * 0.06);
+            gg = mix(gg, 202, edge * 0.10);
+            bb = mix(bb, 210, edge * 0.09);
+          }
+        }
+
+        if (isLand) {
+          if (s.coastalWetness > 0.04) {
+            rr = mix(rr, 42, s.coastalWetness * 0.08);
+            gg = mix(gg, 150, s.coastalWetness * 0.11);
+            bb = mix(bb, 142, s.coastalWetness * 0.10);
+          }
+
+          if (s.river > 0.04 || s.lake > 0.04 || s.drainage > 0.04) {
+            const liquid = clamp(s.river * 0.58 + s.lake * 0.80 + s.drainage * 0.36, 0, 1);
+            rr = mix(rr, 30, liquid * 0.18);
+            gg = mix(gg, 144, liquid * 0.22);
+            bb = mix(bb, 164, liquid * 0.24);
+          }
+
+          if (s.frozenStorage > 0.18) {
+            const iceGlow = smoothstep(0.18, 0.9, s.frozenStorage) * 0.16;
+            rr = mix(rr, 242, iceGlow * 0.16);
+            gg = mix(gg, 248, iceGlow * 0.16);
+            bb = mix(bb, 242, iceGlow * 0.14);
+          }
+        }
+
+        rr *= proofLight * reliefFactor;
+        gg *= proofLight * reliefFactor;
+        bb *= proofLight * reliefFactor;
+
+        rr = mix(rr, 72, limb * 0.035);
+        gg = mix(gg, 150, limb * 0.040);
+        bb = mix(bb, 196, limb * 0.050);
+
+        const rim = Math.pow(limb, 2.1);
+        rr = mix(rr, 70, rim * 0.08);
+        gg = mix(gg, 184, rim * 0.12);
+        bb = mix(bb, 232, rim * 0.14);
+
+        const alpha = smoothstep(1.01, 0.985, d2);
+        const out = (y * size + x) * 4;
+
+        data[out] = clamp(rr, 0, 255);
+        data[out + 1] = clamp(gg, 0, 255);
+        data[out + 2] = clamp(bb, 0, 255);
+        data[out + 3] = Math.round(alpha * 255);
+      }
+    }
+
+    runtime.workCtx.putImageData(image, 0, 0);
+
+    const wctx = runtime.workCtx;
+
+    wctx.save();
+    wctx.beginPath();
+    wctx.arc(cx, cy, radius * 1.003, 0, TAU);
+    wctx.strokeStyle = "rgba(116, 207, 255, 0.28)";
+    wctx.lineWidth = Math.max(1, size * 0.0048);
+    wctx.stroke();
+
+    wctx.beginPath();
+    wctx.arc(cx, cy, radius * 1.037, 0, TAU);
+    wctx.strokeStyle = "rgba(91, 174, 236, 0.08)";
+    wctx.lineWidth = Math.max(1, size * 0.0075);
+    wctx.stroke();
+    wctx.restore();
+  }
+
+  function composite(time) {
+    const canvas = runtime.canvas;
+    const ctx = runtime.ctx;
+
+    if (!canvas || !ctx || !runtime.image) return;
+
+    const w = canvas.width;
+    const h = canvas.height;
+    if (!w || !h) return;
+
+    paintBackplate(ctx, w, h);
+    paintSphere(time);
+
+    const drawSize = Math.min(w, h);
+    const dx = (w - drawSize) * 0.5;
+    const dy = (h - drawSize) * 0.5;
+
+    ctx.save();
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(runtime.work, dx, dy, drawSize, drawSize);
+    ctx.restore();
+  }
+
+  function loop(time) {
+    if (runtime.disposed) return;
+
+    if (!runtime.lastFrame || time - runtime.lastFrame > 30) {
+      runtime.lastFrame = time;
+      composite(time);
+    }
+
+    runtime.raf = requestAnimationFrame(loop);
+  }
+
+  function exposeReceipt(status) {
+    const terrainReceipt =
+      window.HEARTH_TERRAIN && typeof window.HEARTH_TERRAIN.receipt === "function"
+        ? window.HEARTH_TERRAIN.receipt()
+        : null;
+
+    const hydrationReceipt =
+      window.HEARTH_HYDRATION && typeof window.HEARTH_HYDRATION.receipt === "function"
+        ? window.HEARTH_HYDRATION.receipt()
+        : null;
+
+    window.HEARTH_CANVAS_RECEIPT = Object.freeze({
+      receipt: RECEIPT,
+      contract: CONTRACT,
+      version: VERSION,
+      route: location.pathname,
+      renderOwner: "/assets/hearth/hearth.canvas.js",
+      terrainOwner: "/assets/hearth/hearth.terrain.js",
+      hydrationOwner: "/assets/hearth/hearth.hydration.js",
+      terrainSrc: TERRAIN_SRC,
+      hydrationSrc: HYDRATION_SRC,
+      terrainContract: window.HEARTH_TERRAIN?.contract || "fallback",
+      hydrationContract: window.HEARTH_HYDRATION?.contract || "fallback",
+      terrainReceipt,
+      hydrationReceipt,
+      mount: "#hearthCanvasMount",
+      generation: "G3.10-chain",
+      ticTacToe: TIC_TAC_TOE,
+      quadA: QUAD_A,
+      canvasOwns: [
+        "projection",
+        "rotation",
+        "true-sphere-composition",
+        "wrapped-sampling",
+        "proof-render"
+      ],
+      terrainOwns: [
+        "map",
+        "body-mass",
+        "elevation",
+        "mountain-ranges",
+        "relief",
+        "bathymetry"
+      ],
+      hydrationOwns: [
+        "solid-global-hydration-field",
+        "ocean-material",
+        "shelves",
+        "basins",
+        "river-candidates",
+        "drainage",
+        "frozen-water-storage",
+        "saturation"
+      ],
+      retired: [
+        "hearth-g2-model-restore-v1",
+        "HEARTH_G2_MODEL_RESTORE_HTML_JS_ASSET_TNT_v1",
+        "hearth-g3-7-hydration-engine"
+      ],
+      renderPolicy: "sampled-map plus current hydration color plus relief shade plus rim only",
+      g4Deferred: "clouds-weather-climate",
+      noClouds: true,
+      noWeather: true,
+      noClimate: true,
+      externalImages: false,
+      nasaAsset: false,
+      generatedImage: false,
+      graphicBox: false,
+      earthPlaceholder: false,
+      audraliaMap: false,
+      status
+    });
+  }
+
+  async function mount() {
+    installStyle();
+    unlockScroll();
+
+    const authorities = await loadAuthorities();
+    if (runtime.disposed) return;
+
+    const mountEl = getMount();
+    mountEl.replaceChildren();
+
+    const canvas = document.createElement("canvas");
+    canvas.dataset.hearthCanvas = "true";
+    canvas.dataset.contract = CONTRACT;
+    canvas.dataset.generation = "G3.10-chain";
+    canvas.dataset.localScale = "hearth";
+    canvas.dataset.terrainOwner = "/assets/hearth/hearth.terrain.js";
+    canvas.dataset.hydrationOwner = "/assets/hearth/hearth.hydration.js";
+    canvas.setAttribute("role", "img");
+    canvas.setAttribute("aria-label", "Hearth G3.10 chain-aligned globe");
+
+    const chip = document.createElement("div");
+    chip.className = "hearth-g3-10-chip";
+    chip.textContent =
+      authorities.terrain && authorities.hydration
+        ? "Hearth G3.10 · Chain Aligned"
+        : "Hearth G3.10 · Authority Fallback";
+
+    mountEl.append(canvas, chip);
+
+    runtime.mount = mountEl;
+    runtime.canvas = canvas;
+    runtime.ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
+    runtime.work = document.createElement("canvas");
+    runtime.workCtx = runtime.work.getContext("2d", { alpha: true, willReadFrequently: false });
+    runtime.map = buildMap(authorities);
+
+    mountEl.dataset.hearthCanvasContract = CONTRACT;
+    mountEl.dataset.hearthCanvasReceipt = RECEIPT;
+    mountEl.dataset.hearthRenderOwner = "/assets/hearth/hearth.canvas.js";
+    mountEl.dataset.hearthTerrainOwner = "/assets/hearth/hearth.terrain.js";
+    mountEl.dataset.hearthHydrationOwner = "/assets/hearth/hearth.hydration.js";
+    mountEl.dataset.hearthTerrainLoaded = authorities.terrain ? "true" : "false";
+    mountEl.dataset.hearthHydrationLoaded = authorities.hydration ? "true" : "false";
+    mountEl.dataset.hearthGeneration = "G3.10-chain";
+    mountEl.dataset.hearthGenerationFocus = "chain-aligned-canvas-bind";
+    mountEl.dataset.hearthG2Retired = "true";
+    mountEl.dataset.hearthG37HydrationRetired = "true";
+    mountEl.dataset.g4Deferred = "clouds-weather-climate";
+    mountEl.dataset.earthPlaceholder = "false";
+    mountEl.dataset.audraliaMap = "false";
+
+    document.documentElement.dataset.hearthCanvasLoaded = "true";
+    document.documentElement.dataset.hearthCanvasContract = CONTRACT;
+    document.documentElement.dataset.hearthCanvasVersion = VERSION;
+    document.documentElement.dataset.hearthTerrainOwner = "/assets/hearth/hearth.terrain.js";
+    document.documentElement.dataset.hearthHydrationOwner = "/assets/hearth/hearth.hydration.js";
+    document.documentElement.dataset.hearthTerrainLoaded = authorities.terrain ? "true" : "false";
+    document.documentElement.dataset.hearthHydrationLoaded = authorities.hydration ? "true" : "false";
+    document.documentElement.dataset.hearthGeneration = "G3.10-chain";
+    document.documentElement.dataset.hearthGenerationFocus = "chain-aligned-canvas-bind";
+    document.documentElement.dataset.hearthG2Retired = "true";
+    document.documentElement.dataset.hearthG37HydrationRetired = "true";
+    document.documentElement.dataset.hearthG4Deferred = "clouds-weather-climate";
+    document.documentElement.dataset.hearthExternalImages = "false";
+    document.documentElement.dataset.hearthNasaAsset = "false";
+    document.documentElement.dataset.hearthGeneratedImage = "false";
+    document.documentElement.dataset.hearthGraphicBox = "false";
+    document.documentElement.dataset.hearthEarthPlaceholder = "false";
+
+    runtime.observer = new ResizeObserver(resize);
+    runtime.observer.observe(mountEl);
+    window.addEventListener("resize", resize, { passive: true });
+
+    resize();
+    exposeReceipt("mounted");
+
+    runtime.mounted = true;
+    runtime.raf = requestAnimationFrame(loop);
+  }
+
+  function dispose() {
+    runtime.disposed = true;
+    cancelAnimationFrame(runtime.raf);
+    window.removeEventListener("resize", resize);
+
+    if (runtime.observer) runtime.observer.disconnect();
+
+    const style = document.getElementById("hearth-g3-10-chain-aligned-canvas-style");
+    if (style) style.remove();
+
+    if (runtime.mount) runtime.mount.replaceChildren();
+
+    window.__HEARTH_CANVAS_G3_10_DISPOSE__ = null;
+    exposeReceipt("disposed");
+  }
+
+  window.__HEARTH_CANVAS_G3_10_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_G3_9_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_G3_8_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_G3_7_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_G3_6_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_G3_5_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_G3_4_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_G3_3_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_G3_2_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_G3_1_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_G3_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_G4_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_DISPOSE__ = dispose;
+  window.__HEARTH_G2_DISPOSE__ = dispose;
+
+  function boot() {
+    if (runtime.mounted || runtime.disposed) return;
+    mount();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot, { once: true });
+  } else {
+    boot();
+  }
+})();

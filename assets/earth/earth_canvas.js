@@ -1,21 +1,25 @@
 /* /assets/earth/earth_canvas.js
-   HEARTH_G2_CANVAS_TOPOLOGY_REFINEMENT_256_LATTICE_SYNTHESIS_TNT_v1
+   HEARTH_G2_PARENT_SURFACE_STABILITY_PARITY_TNT_v1
    Full-file replacement.
    Purpose:
-   - Promote Hearth from G1 visible proof to G2 topology/material refinement.
-   - Keep canvas authority self-contained.
-   - Keep route shell clean.
-   - Render Hearth as a hybrid simulation Earth from code.
+   - Put Hearth on the same stability ladder as Audralia.
+   - Build a stable parent surface first.
+   - Project that parent surface onto the globe.
+   - Add child refinement only after the parent surface is already visible.
+   - Keep motion inside canvas authority for now.
 */
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G2_CANVAS_TOPOLOGY_REFINEMENT_256_LATTICE_SYNTHESIS_TNT_v1";
+  const CONTRACT = "HEARTH_G2_PARENT_SURFACE_STABILITY_PARITY_TNT_v1";
 
-  const SIZE = 540;
-  const CENTER = SIZE / 2;
-  const RADIUS = SIZE * 0.414;
+  const CANVAS_SIZE = 560;
+  const CENTER = CANVAS_SIZE / 2;
+  const RADIUS = CANVAS_SIZE * 0.414;
+  const TEXTURE_W = 768;
+  const TEXTURE_H = 384;
+
   const TWO_PI = Math.PI * 2;
   const HALF_PI = Math.PI / 2;
 
@@ -27,7 +31,11 @@
     lastX: 0,
     started: performance.now(),
     mounted: false,
-    raf: 0
+    parentReady: false,
+    childReady: false,
+    raf: 0,
+    parentSurface: null,
+    cloudSurface: null
   };
 
   const light = normalize({ x: -0.50, y: -0.28, z: 0.82 });
@@ -68,8 +76,10 @@
 
   function angularDelta(a, b) {
     let d = a - b;
+
     while (d > Math.PI) d -= TWO_PI;
     while (d < -Math.PI) d += TWO_PI;
+
     return d;
   }
 
@@ -139,6 +149,7 @@
     const sa = Math.sin(angle);
     const x = (dl * ca + dp * sa) / length;
     const y = (-dl * sa + dp * ca) / width;
+
     return amp * Math.exp(-(x * x + y * y));
   }
 
@@ -160,12 +171,12 @@
     value += blob(lon, lat, 2.60, -0.42, 0.18, 0.15, 0.28);
     value += blob(lon, lat, -2.95, -1.26, 2.60, 0.20, 0.64);
 
-    for (let i = 0; i < 16; i += 1) {
-      const seedLon = -Math.PI + (i / 16) * TWO_PI + (hash2(i, 3) - 0.5) * 0.22;
-      const seedLat = -1.05 + hash2(i, 9) * 2.0;
-      const rx = 0.055 + hash2(i, 12) * 0.10;
-      const ry = 0.040 + hash2(i, 18) * 0.09;
-      const amp = 0.12 + hash2(i, 24) * 0.20;
+    for (let i = 0; i < 18; i += 1) {
+      const seedLon = -Math.PI + (i / 18) * TWO_PI + (hash2(i, 3) - 0.5) * 0.24;
+      const seedLat = -1.08 + hash2(i, 9) * 2.08;
+      const rx = 0.045 + hash2(i, 12) * 0.11;
+      const ry = 0.036 + hash2(i, 18) * 0.10;
+      const amp = 0.10 + hash2(i, 24) * 0.22;
 
       value += blob(lon, lat, seedLon, seedLat, rx, ry, amp);
     }
@@ -173,12 +184,12 @@
     const u = wrap01(lon / TWO_PI + 0.5);
     const v = clamp(0.5 - lat / Math.PI, 0, 1);
 
-    const continentBreak =
-      fbm(u * 8.5 + 1.6, v * 5.8 - 0.4, 5) * 0.19 +
-      ridgedFbm(u * 16.0 - 2.5, v * 11.0 + 0.8, 4) * 0.12 -
-      fbm(u * 5.0 - 3.0, v * 3.2 + 2.0, 4) * 0.08;
+    const brokenEdge =
+      fbm(u * 8.5 + 1.6, v * 5.8 - 0.4, 5) * 0.18 +
+      ridgedFbm(u * 16.0 - 2.5, v * 11.0 + 0.8, 4) * 0.11 -
+      fbm(u * 5.0 - 3.0, v * 3.2 + 2.0, 4) * 0.07;
 
-    return value + continentBreak;
+    return value + brokenEdge;
   }
 
   function plateRidge(u, v) {
@@ -187,12 +198,7 @@
     return clamp(ridgeA * 0.68 + ridgeB * 0.32, 0, 1);
   }
 
-  function shelfColor(base, shelf, coast) {
-    const shelfBlue = mix([4, 38, 82], [31, 148, 166], shelf);
-    return mix(base, shelfBlue, clamp(coast * 0.62 + shelf * 0.34, 0, 0.82));
-  }
-
-  function sampleSurface(lat, lon, cloudPhase, time) {
+  function sampleParentSurface(lat, lon) {
     const u = wrap01(lon / TWO_PI + 0.5);
     const v = clamp(0.5 - lat / Math.PI, 0, 1);
     const absLat = Math.abs(lat) / HALF_PI;
@@ -209,7 +215,10 @@
     const coast = 1 - smoothstep(0.006, 0.048, Math.abs(landMask));
     const shelf = land ? 0 : clamp(1 - smoothstep(0.01, 0.18, -landMask), 0, 1);
 
-    const polarNoise = fbm(u * 8.0 + 1.0, v * 8.0 - 2.0, 5) * 0.10 + ridgedFbm(u * 18.0, v * 10.0, 3) * 0.05;
+    const polarNoise =
+      fbm(u * 8.0 + 1.0, v * 8.0 - 2.0, 5) * 0.10 +
+      ridgedFbm(u * 18.0, v * 10.0, 3) * 0.05;
+
     const ice = smoothstep(0.76, 0.97, absLat + polarNoise - coast * 0.04);
 
     const ridges = plateRidge(u, v);
@@ -232,12 +241,10 @@
     );
 
     let color;
-    let water = land ? 0 : 1;
 
     if (ice > 0.82) {
       const iceBreak = fbm(u * 24.0, v * 16.0, 4);
       color = mix([202, 224, 232], [250, 252, 247], clamp(ice * 0.86 + iceBreak * 0.20, 0, 1));
-      water = water ? 0.72 : 0.16;
     } else if (land) {
       const arid = moisture < 0.38 && Math.abs(lat) > 0.13 && Math.abs(lat) < 0.76;
       const forest = moisture >= 0.56 && elevation < 0.58;
@@ -264,13 +271,31 @@
       }
     } else {
       const deep = mix([2, 13, 44], [6, 46, 94], clamp(1 - oceanDepth, 0, 1));
-      color = shelfColor(deep, shelf, coast);
+      const shelfBlue = mix([4, 38, 82], [31, 148, 166], shelf);
+      color = mix(deep, shelfBlue, clamp(coast * 0.62 + shelf * 0.34, 0, 0.82));
     }
 
     const cellX = Math.floor(u * 16);
     const cellY = Math.floor(v * 16);
     const latticePulse = hash2(cellX, cellY);
-    color = mix(color, [color[0] + 14, color[1] + 14, color[2] + 14], (latticePulse - 0.5) * 0.045);
+
+    color = mix(
+      color,
+      [color[0] + 14, color[1] + 14, color[2] + 14],
+      (latticePulse - 0.5) * 0.045
+    );
+
+    return [
+      clamp(Math.round(color[0]), 0, 255),
+      clamp(Math.round(color[1]), 0, 255),
+      clamp(Math.round(color[2]), 0, 255),
+      255
+    ];
+  }
+
+  function sampleCloudAlpha(lat, lon, cloudPhase, time) {
+    const u = wrap01(lon / TWO_PI + 0.5);
+    const v = clamp(0.5 - lat / Math.PI, 0, 1);
 
     const vaporBand =
       0.50 +
@@ -286,225 +311,137 @@
     const stormB = blob(lon - cloudPhase * TWO_PI * 0.5, lat, -1.15, 0.18, 0.22, 0.18, 0.7);
     const storm = clamp(stormA + stormB, 0, 1);
 
-    const cloudAlpha = clamp(
-      smoothstep(0.62, 0.92, cloudNoise) * (0.22 + vaporBand * 0.34) +
-      storm * 0.24,
+    return clamp(
+      smoothstep(0.62, 0.92, cloudNoise) * (0.22 + vaporBand * 0.34) + storm * 0.24,
       0,
       0.54
     );
-
-    return { color, cloudAlpha, water, elevation, shelf, coast, ice };
   }
 
-  function createCanvas() {
-    const canvas = document.createElement("canvas");
-
-    canvas.width = SIZE;
-    canvas.height = SIZE;
-    canvas.className = "hearth-canvas hearth-g2-canvas";
-    canvas.dataset.contract = CONTRACT;
-    canvas.dataset.body = "hearth";
-    canvas.dataset.label = "Hearth";
-    canvas.dataset.generation = "G2";
-    canvas.dataset.mode = "hybrid-simulation-earth";
-    canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Code-generated Hearth");
-
-    return canvas;
-  }
-
-  function draw(canvas, ctx) {
-    const image = ctx.createImageData(SIZE, SIZE);
+  function buildParentSurfaceTexture() {
+    const texture = document.createElement("canvas");
+    const tctx = texture.getContext("2d", { alpha: true });
+    const image = tctx.createImageData(TEXTURE_W, TEXTURE_H);
     const data = image.data;
-    const time = (performance.now() - state.started) / 1000;
-    const tilt = 23.44 * Math.PI / 180;
 
-    for (let py = 0; py < SIZE; py += 1) {
-      const dy = (py + 0.5 - CENTER) / RADIUS;
+    texture.width = TEXTURE_W;
+    texture.height = TEXTURE_H;
 
-      for (let px = 0; px < SIZE; px += 1) {
-        const dx = (px + 0.5 - CENTER) / RADIUS;
-        const rr = dx * dx + dy * dy;
-        const idx = (py * SIZE + px) * 4;
+    for (let y = 0; y < TEXTURE_H; y += 1) {
+      const v = y / (TEXTURE_H - 1);
+      const lat = HALF_PI - v * Math.PI;
 
-        if (rr > 1) {
-          data[idx] = 0;
-          data[idx + 1] = 0;
-          data[idx + 2] = 0;
-          data[idx + 3] = 0;
-          continue;
-        }
+      for (let x = 0; x < TEXTURE_W; x += 1) {
+        const u = x / (TEXTURE_W - 1);
+        const lon = u * TWO_PI - Math.PI;
+        const color = sampleParentSurface(lat, lon);
+        const idx = (y * TEXTURE_W + x) * 4;
 
-        const z = Math.sqrt(Math.max(0, 1 - rr));
-        const normal = { x: dx, y: -dy, z };
-
-        const yTilted = normal.y * Math.cos(tilt) - normal.z * Math.sin(tilt);
-        const zTilted = normal.y * Math.sin(tilt) + normal.z * Math.cos(tilt);
-
-        const lat = Math.asin(clamp(yTilted, -1, 1));
-        const lon = Math.atan2(normal.x, zTilted) + state.phase * TWO_PI;
-
-        const sample = sampleSurface(lat, lon, state.cloudPhase, time);
-        let color = sample.color.slice();
-
-        const lightAmount = clamp(dot(normal, light) * 0.76 + 0.34, 0.13, 1.10);
-        const limb = clamp(1 - normal.z, 0, 1);
-        const haze = Math.pow(limb, 2.35);
-        const rim = Math.pow(limb, 3.1);
-        const terminator = smoothstep(0.02, 0.70, dot(normal, light));
-
-        color[0] *= lightAmount;
-        color[1] *= lightAmount;
-        color[2] *= lightAmount;
-
-        color = mix(color, [3, 8, 18], (1 - terminator) * 0.22);
-
-        if (sample.water > 0.5) {
-          const specular = Math.pow(clamp(dot(normal, light), 0, 1), 22) * Math.pow(1 - limb, 3.4);
-          color[0] += specular * 38;
-          color[1] += specular * 66;
-          color[2] += specular * 108;
-        }
-
-        if (sample.cloudAlpha > 0) {
-          color = mix(color, [230, 237, 236], sample.cloudAlpha * clamp(0.38 + lightAmount * 0.62, 0, 1));
-        }
-
-        color = mix(color, [74, 142, 218], haze * 0.16);
-
-        color[0] += rim * 18;
-        color[1] += rim * 42;
-        color[2] += rim * 88;
-
-        data[idx] = clamp(Math.round(color[0]), 0, 255);
-        data[idx + 1] = clamp(Math.round(color[1]), 0, 255);
-        data[idx + 2] = clamp(Math.round(color[2]), 0, 255);
-        data[idx + 3] = 255;
+        data[idx] = color[0];
+        data[idx + 1] = color[1];
+        data[idx + 2] = color[2];
+        data[idx + 3] = color[3];
       }
     }
 
-    ctx.clearRect(0, 0, SIZE, SIZE);
-    ctx.putImageData(image, 0, 0);
+    tctx.putImageData(image, 0, 0);
+    return texture;
+  }
 
+  function buildCloudRefinementTexture() {
+    const texture = document.createElement("canvas");
+    const tctx = texture.getContext("2d", { alpha: true });
+    const image = tctx.createImageData(TEXTURE_W, TEXTURE_H);
+    const data = image.data;
+    const time = 0;
+
+    texture.width = TEXTURE_W;
+    texture.height = TEXTURE_H;
+
+    for (let y = 0; y < TEXTURE_H; y += 1) {
+      const v = y / (TEXTURE_H - 1);
+      const lat = HALF_PI - v * Math.PI;
+
+      for (let x = 0; x < TEXTURE_W; x += 1) {
+        const u = x / (TEXTURE_W - 1);
+        const lon = u * TWO_PI - Math.PI;
+        const alpha = sampleCloudAlpha(lat, lon, 0.08, time);
+        const idx = (y * TEXTURE_W + x) * 4;
+        const shade = 226 + Math.round(fbm(u * 30, v * 18, 3) * 24);
+
+        data[idx] = shade;
+        data[idx + 1] = Math.min(255, shade + 4);
+        data[idx + 2] = Math.min(255, shade + 3);
+        data[idx + 3] = Math.round(alpha * 255);
+      }
+    }
+
+    tctx.putImageData(image, 0, 0);
+    return texture;
+  }
+
+  function drawWrappedStrip(ctx, texture, phase, sy, sh, dx, dy, dw, dh) {
+    if (!texture || !texture.width || !texture.height || dw <= 0 || dh <= 0) return;
+
+    const iw = texture.width;
+    const ih = texture.height;
+    const start = wrap01(phase) * iw;
+    const safeSy = clamp(sy, 0, ih - 1);
+    const safeSh = clamp(sh, 1, ih - safeSy);
+    const firstSourceWidth = iw - start;
+    const firstDestWidth = dw * (firstSourceWidth / iw);
+    const secondDestWidth = dw - firstDestWidth;
+
+    ctx.drawImage(texture, start, safeSy, firstSourceWidth, safeSh, dx, dy, firstDestWidth, dh);
+
+    if (secondDestWidth > 0.5) {
+      ctx.drawImage(texture, 0, safeSy, start, safeSh, dx + firstDestWidth, dy, secondDestWidth, dh);
+    }
+  }
+
+  function drawSphereTexture(ctx, texture, phase, alpha) {
+    const stripHeight = 2;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(CENTER, CENTER, RADIUS, 0, TWO_PI);
+    ctx.clip();
+    ctx.globalAlpha = alpha;
+
+    for (let y = -RADIUS; y <= RADIUS; y += stripHeight) {
+      const yMid = y + stripHeight / 2;
+      const normalizedY = clamp(yMid / RADIUS, -1, 1);
+      const chord = Math.sqrt(Math.max(0, 1 - normalizedY * normalizedY));
+      const destWidth = RADIUS * 2 * chord;
+      const destX = CENTER - destWidth / 2;
+      const destY = CENTER + y;
+      const v = clamp(0.5 + Math.asin(normalizedY) / Math.PI, 0, 1);
+      const sy = Math.floor(v * (TEXTURE_H - 1));
+      const sh = Math.max(1, Math.ceil(stripHeight / (RADIUS * 2) * TEXTURE_H * 2.0));
+
+      drawWrappedStrip(ctx, texture, phase, sy, sh, destX, destY, destWidth, stripHeight + 1);
+    }
+
+    ctx.restore();
+  }
+
+  function drawLightAndAtmosphere(ctx) {
     ctx.save();
 
     ctx.beginPath();
-    ctx.arc(CENTER, CENTER, RADIUS + 2, 0, TWO_PI);
-    ctx.strokeStyle = "rgba(188,223,255,.34)";
-    ctx.lineWidth = 2;
-    ctx.stroke();
+    ctx.arc(CENTER, CENTER, RADIUS, 0, TWO_PI);
+    ctx.clip();
 
-    ctx.beginPath();
-    ctx.arc(CENTER, CENTER, RADIUS + 15, 0, TWO_PI);
-    ctx.strokeStyle = "rgba(102,174,255,.15)";
-    ctx.lineWidth = 10;
-    ctx.stroke();
+    const lightGradient = ctx.createRadialGradient(
+      CENTER - RADIUS * 0.42,
+      CENTER - RADIUS * 0.34,
+      RADIUS * 0.03,
+      CENTER,
+      CENTER,
+      RADIUS * 1.15
+    );
 
-    ctx.beginPath();
-    ctx.arc(CENTER, CENTER, RADIUS + 30, 0, TWO_PI);
-    ctx.strokeStyle = "rgba(102,174,255,.055)";
-    ctx.lineWidth = 16;
-    ctx.stroke();
-
-    ctx.restore();
-
-    canvas.dataset.phase = state.phase.toFixed(5);
-    canvas.dataset.cloudPhase = state.cloudPhase.toFixed(5);
-  }
-
-  function bindControls(canvas, ctx) {
-    canvas.addEventListener("pointerdown", (event) => {
-      state.dragging = true;
-      state.lastX = event.clientX;
-      state.velocity = 0;
-
-      try {
-        canvas.setPointerCapture(event.pointerId);
-      } catch (error) {}
-
-      if (event.cancelable) event.preventDefault();
-    }, { passive: false });
-
-    window.addEventListener("pointermove", (event) => {
-      if (!state.dragging) return;
-
-      const dx = event.clientX - state.lastX;
-      state.lastX = event.clientX;
-
-      const delta = -dx * 0.00145;
-      state.phase = wrap01(state.phase + delta);
-      state.cloudPhase = wrap01(state.cloudPhase + delta * 0.42);
-      state.velocity = delta * 0.58;
-
-      draw(canvas, ctx);
-
-      if (event.cancelable) event.preventDefault();
-    }, { passive: false });
-
-    window.addEventListener("pointerup", () => {
-      state.dragging = false;
-    });
-
-    window.addEventListener("pointercancel", () => {
-      state.dragging = false;
-    });
-  }
-
-  function tick(canvas, ctx) {
-    state.phase = wrap01(state.phase + 0.00058 + state.velocity);
-    state.cloudPhase = wrap01(state.cloudPhase + 0.00027 + state.velocity * 0.42);
-    state.velocity *= 0.945;
-
-    if (Math.abs(state.velocity) < 0.000012) state.velocity = 0;
-
-    draw(canvas, ctx);
-    state.raf = requestAnimationFrame(() => tick(canvas, ctx));
-  }
-
-  function mount(target) {
-    if (!target || state.mounted) return null;
-
-    const canvas = createCanvas();
-    const ctx = canvas.getContext("2d", { alpha: true });
-
-    target.replaceChildren(canvas);
-    target.dataset.contract = CONTRACT;
-    target.dataset.body = "hearth";
-    target.dataset.label = "Hearth";
-    target.dataset.generation = "G2";
-    target.dataset.mode = "hybrid-simulation-earth";
-
-    state.mounted = true;
-
-    bindControls(canvas, ctx);
-    draw(canvas, ctx);
-    tick(canvas, ctx);
-
-    return canvas;
-  }
-
-  function autoMount() {
-    const target =
-      document.getElementById("hearthRenderMount") ||
-      document.querySelector("[data-hearth-render-mount]") ||
-      document.getElementById("earthRenderMount") ||
-      document.querySelector("[data-earth-render-mount]");
-
-    if (!target) return;
-    mount(target);
-  }
-
-  window.DGBHearthCanvas = Object.freeze({
-    contract: CONTRACT,
-    generation: "G2",
-    mount
-  });
-
-  window.DGBEarthCanvas = window.DGBHearthCanvas;
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", autoMount, { once: true });
-  } else {
-    autoMount();
-  }
-})();
+    lightGradient.addColorStop(0, "rgba(255,255,255,0.18)");
+    lightGradient.addColorStop(0.36, "rgba(255,255,255,0.045)");
+    lightGradient.addColorStop(0.72, "rgba(0,0,0,0.10)");
+    lightGradient.addColorStop(1, "rgba(0,0,0,0.42

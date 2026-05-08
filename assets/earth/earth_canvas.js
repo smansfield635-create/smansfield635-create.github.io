@@ -444,4 +444,211 @@
     lightGradient.addColorStop(0, "rgba(255,255,255,0.18)");
     lightGradient.addColorStop(0.36, "rgba(255,255,255,0.045)");
     lightGradient.addColorStop(0.72, "rgba(0,0,0,0.10)");
-    lightGradient.addColorStop(1, "rgba(0,0,0,0.42
+    lightGradient.addColorStop(1, "rgba(0,0,0,0.42)");
+
+    ctx.fillStyle = lightGradient;
+    ctx.fillRect(CENTER - RADIUS, CENTER - RADIUS, RADIUS * 2, RADIUS * 2);
+
+    const terminator = ctx.createLinearGradient(
+      CENTER - RADIUS * 0.75,
+      CENTER - RADIUS * 0.38,
+      CENTER + RADIUS * 0.95,
+      CENTER + RADIUS * 0.44
+    );
+
+    terminator.addColorStop(0, "rgba(255,255,255,0.035)");
+    terminator.addColorStop(0.45, "rgba(0,0,0,0.00)");
+    terminator.addColorStop(1, "rgba(0,0,0,0.28)");
+
+    ctx.fillStyle = terminator;
+    ctx.fillRect(CENTER - RADIUS, CENTER - RADIUS, RADIUS * 2, RADIUS * 2);
+
+    const haze = ctx.createRadialGradient(CENTER, CENTER, RADIUS * 0.74, CENTER, CENTER, RADIUS);
+    haze.addColorStop(0, "rgba(0,0,0,0)");
+    haze.addColorStop(0.84, "rgba(84,150,226,0.08)");
+    haze.addColorStop(1, "rgba(84,150,226,0.30)");
+
+    ctx.fillStyle = haze;
+    ctx.fillRect(CENTER - RADIUS, CENTER - RADIUS, RADIUS * 2, RADIUS * 2);
+
+    ctx.restore();
+
+    ctx.save();
+
+    ctx.beginPath();
+    ctx.arc(CENTER, CENTER, RADIUS + 2, 0, TWO_PI);
+    ctx.strokeStyle = "rgba(188,223,255,.34)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(CENTER, CENTER, RADIUS + 15, 0, TWO_PI);
+    ctx.strokeStyle = "rgba(102,174,255,.15)";
+    ctx.lineWidth = 10;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(CENTER, CENTER, RADIUS + 30, 0, TWO_PI);
+    ctx.strokeStyle = "rgba(102,174,255,.055)";
+    ctx.lineWidth = 16;
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function createCanvas() {
+    const canvas = document.createElement("canvas");
+
+    canvas.width = CANVAS_SIZE;
+    canvas.height = CANVAS_SIZE;
+    canvas.className = "hearth-canvas hearth-g2-parent-surface-canvas";
+    canvas.dataset.contract = CONTRACT;
+    canvas.dataset.body = "hearth";
+    canvas.dataset.label = "Hearth";
+    canvas.dataset.generation = "G2";
+    canvas.dataset.parentSurface = "stable";
+    canvas.dataset.childRefinement = "deferred";
+    canvas.dataset.mode = "hybrid-simulation-earth";
+    canvas.setAttribute("role", "img");
+    canvas.setAttribute("aria-label", "Code-generated Hearth");
+
+    return canvas;
+  }
+
+  function drawFrame(canvas, ctx) {
+    if (!state.parentSurface) return;
+
+    ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+
+    drawSphereTexture(ctx, state.parentSurface, state.phase, 1);
+
+    if (state.childReady && state.cloudSurface) {
+      drawSphereTexture(ctx, state.cloudSurface, state.cloudPhase, 0.72);
+    }
+
+    drawLightAndAtmosphere(ctx);
+
+    canvas.dataset.phase = state.phase.toFixed(5);
+    canvas.dataset.cloudPhase = state.cloudPhase.toFixed(5);
+    canvas.dataset.parentReady = String(state.parentReady);
+    canvas.dataset.childReady = String(state.childReady);
+  }
+
+  function bindControls(canvas, ctx) {
+    canvas.addEventListener("pointerdown", (event) => {
+      state.dragging = true;
+      state.lastX = event.clientX;
+      state.velocity = 0;
+
+      try {
+        canvas.setPointerCapture(event.pointerId);
+      } catch (error) {}
+
+      if (event.cancelable) event.preventDefault();
+    }, { passive: false });
+
+    window.addEventListener("pointermove", (event) => {
+      if (!state.dragging) return;
+
+      const dx = event.clientX - state.lastX;
+      state.lastX = event.clientX;
+
+      const delta = -dx * 0.00145;
+      state.phase = wrap01(state.phase + delta);
+      state.cloudPhase = wrap01(state.cloudPhase + delta * 0.42);
+      state.velocity = delta * 0.58;
+
+      drawFrame(canvas, ctx);
+
+      if (event.cancelable) event.preventDefault();
+    }, { passive: false });
+
+    window.addEventListener("pointerup", () => {
+      state.dragging = false;
+    });
+
+    window.addEventListener("pointercancel", () => {
+      state.dragging = false;
+    });
+  }
+
+  function tick(canvas, ctx) {
+    state.phase = wrap01(state.phase + 0.00058 + state.velocity);
+    state.cloudPhase = wrap01(state.cloudPhase + 0.00027 + state.velocity * 0.42);
+    state.velocity *= 0.945;
+
+    if (Math.abs(state.velocity) < 0.000012) state.velocity = 0;
+
+    drawFrame(canvas, ctx);
+    state.raf = requestAnimationFrame(() => tick(canvas, ctx));
+  }
+
+  function buildChildRefinementAfterParent(canvas, ctx) {
+    const build = () => {
+      state.cloudSurface = buildCloudRefinementTexture();
+      state.childReady = true;
+      drawFrame(canvas, ctx);
+    };
+
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(build, { timeout: 900 });
+    } else {
+      window.setTimeout(build, 80);
+    }
+  }
+
+  function mount(target) {
+    if (!target || state.mounted) return null;
+
+    const canvas = createCanvas();
+    const ctx = canvas.getContext("2d", { alpha: true });
+
+    target.replaceChildren(canvas);
+    target.dataset.contract = CONTRACT;
+    target.dataset.body = "hearth";
+    target.dataset.label = "Hearth";
+    target.dataset.generation = "G2";
+    target.dataset.parentSurface = "stable";
+    target.dataset.childRefinement = "deferred";
+    target.dataset.mode = "hybrid-simulation-earth";
+
+    state.mounted = true;
+
+    state.parentSurface = buildParentSurfaceTexture();
+    state.parentReady = true;
+
+    bindControls(canvas, ctx);
+    drawFrame(canvas, ctx);
+    tick(canvas, ctx);
+    buildChildRefinementAfterParent(canvas, ctx);
+
+    return canvas;
+  }
+
+  function autoMount() {
+    const target =
+      document.getElementById("hearthRenderMount") ||
+      document.querySelector("[data-hearth-render-mount]") ||
+      document.getElementById("earthRenderMount") ||
+      document.querySelector("[data-earth-render-mount]");
+
+    if (!target) return;
+    mount(target);
+  }
+
+  window.DGBHearthCanvas = Object.freeze({
+    contract: CONTRACT,
+    generation: "G2",
+    parentSurface: "stable",
+    childRefinement: "deferred",
+    mount
+  });
+
+  window.DGBEarthCanvas = window.DGBHearthCanvas;
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", autoMount, { once: true });
+  } else {
+    autoMount();
+  }
+})();

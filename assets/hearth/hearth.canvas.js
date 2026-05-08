@@ -1,33 +1,31 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_G3_CANVAS_EXECUTION_RESTORE_TNT_v1
+// HEARTH_G3_PLANET_BODY_TEMPLATE_STANDARD_RENEWAL_TNT_v1
 // Full-file replacement.
 // Purpose:
-// - Restore executable Hearth canvas body after asset truncation.
-// - Mount into #hearthCanvasMount.
-// - Load accepted terrain authority and current hydration authority.
-// - Render one continuous G3 Hearth globe.
-// - No half-globe mask, no terminator, no panel overlay, no generated image, no GraphicBox.
-// - G3 only: terrain, bathymetry, hydration, shelves, wetness, frozen storage.
-// - G4 deferred: clouds, weather, climate.
+// - Renew Hearth under the new planet-body standard.
+// - Build Hearth as a planet, not a decorative/classroom/globe-template object.
+// - Keep "globe" as website language only; render law is planet.
+// - No flat printed-map wrap as governing model.
+// - No two-piece hemisphere shell.
+// - No grocery-store globe seam.
+// - No display rim/ring system.
+// - No clouds, weather, climate, humidity, or atmospheric moisture.
+// - G3 only: planet body, terrain, oceans, bathymetry, coast shelves, frozen storage, surface hydrology.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_CANVAS_EXECUTION_RESTORE_TNT_v1";
-  const VERSION = "2026-05-08.hearth-g3-canvas-execution-restore";
-  const RECEIPT = "HEARTH_G3_CANVAS_EXECUTION_RESTORE_RECEIPT";
+  const CONTRACT = "HEARTH_G3_PLANET_BODY_TEMPLATE_STANDARD_RENEWAL_TNT_v1";
+  const VERSION = "2026-05-08.hearth-g3-planet-body-template-standard-renewal";
+  const RECEIPT = "HEARTH_G3_PLANET_BODY_STANDARD_RENEWAL_RECEIPT";
 
-  const TERRAIN_SRC = "/assets/hearth/hearth.terrain.js?v=hearth-g3-4-accepted-terrain-authority";
-  const HYDRATION_SRC = "/assets/hearth/hearth.hydration.js?v=hearth-g3-10-solid-global-hydration-field";
-
-  const MAP_W = 720;
-  const MAP_H = 360;
   const MIN_SIZE = 300;
-  const MAX_SIZE = 720;
+  const MAX_SIZE = 460;
   const TAU = Math.PI * 2;
-  const HALF_PI = Math.PI / 2;
 
   [
+    "__HEARTH_CANVAS_PLANET_BODY_DISPOSE__",
+    "__HEARTH_CANVAS_VISIBLE_DISPOSE__",
     "__HEARTH_CANVAS_G3_DISPOSE__",
     "__HEARTH_CANVAS_G3_10_DISPOSE__",
     "__HEARTH_CANVAS_DISPOSE__",
@@ -43,16 +41,13 @@
     disposed: false,
     mounted: false,
     raf: 0,
+    lastFrame: 0,
     mount: null,
     canvas: null,
     ctx: null,
-    work: null,
-    workCtx: null,
     image: null,
     size: 0,
-    map: null,
-    observer: null,
-    lastFrame: 0
+    observer: null
   };
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -64,357 +59,278 @@
     return t * t * (3 - 2 * t);
   }
 
-  function hash2(x, y, seed = 0) {
-    const n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
+  function dot3(a, b) {
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  }
+
+  function norm3(v) {
+    const m = Math.hypot(v[0], v[1], v[2]) || 1;
+    return [v[0] / m, v[1] / m, v[2] / m];
+  }
+
+  function rotateY(v, a) {
+    const c = Math.cos(a);
+    const s = Math.sin(a);
+    return [
+      v[0] * c + v[2] * s,
+      v[1],
+      -v[0] * s + v[2] * c
+    ];
+  }
+
+  function rotateX(v, a) {
+    const c = Math.cos(a);
+    const s = Math.sin(a);
+    return [
+      v[0],
+      v[1] * c - v[2] * s,
+      v[1] * s + v[2] * c
+    ];
+  }
+
+  function dirFromLonLat(lonDeg, latDeg) {
+    const lon = lonDeg * Math.PI / 180;
+    const lat = latDeg * Math.PI / 180;
+    const cl = Math.cos(lat);
+    return [cl * Math.sin(lon), Math.sin(lat), cl * Math.cos(lon)];
+  }
+
+  function hash3(x, y, z, seed = 0) {
+    const n = Math.sin(x * 127.1 + y * 311.7 + z * 74.7 + seed * 191.9) * 43758.5453123;
     return n - Math.floor(n);
   }
 
-  function noise(x, y, seed = 0) {
+  function noise3(x, y, z, seed = 0) {
     const ix = Math.floor(x);
     const iy = Math.floor(y);
+    const iz = Math.floor(z);
+
     const fx = x - ix;
     const fy = y - iy;
+    const fz = z - iz;
+
     const ux = fx * fx * (3 - 2 * fx);
     const uy = fy * fy * (3 - 2 * fy);
+    const uz = fz * fz * (3 - 2 * fz);
 
-    const a = hash2(ix, iy, seed);
-    const b = hash2(ix + 1, iy, seed);
-    const c = hash2(ix, iy + 1, seed);
-    const d = hash2(ix + 1, iy + 1, seed);
+    const c000 = hash3(ix, iy, iz, seed);
+    const c100 = hash3(ix + 1, iy, iz, seed);
+    const c010 = hash3(ix, iy + 1, iz, seed);
+    const c110 = hash3(ix + 1, iy + 1, iz, seed);
+    const c001 = hash3(ix, iy, iz + 1, seed);
+    const c101 = hash3(ix + 1, iy, iz + 1, seed);
+    const c011 = hash3(ix, iy + 1, iz + 1, seed);
+    const c111 = hash3(ix + 1, iy + 1, iz + 1, seed);
 
-    return lerp(lerp(a, b, ux), lerp(c, d, ux), uy);
+    const x00 = lerp(c000, c100, ux);
+    const x10 = lerp(c010, c110, ux);
+    const x01 = lerp(c001, c101, ux);
+    const x11 = lerp(c011, c111, ux);
+
+    const y0 = lerp(x00, x10, uy);
+    const y1 = lerp(x01, x11, uy);
+
+    return lerp(y0, y1, uz);
   }
 
-  function fbm(x, y, seed = 0, octaves = 5) {
+  function fbm3(v, scale, seed, octaves) {
     let sum = 0;
-    let amp = 0.5;
-    let freq = 1;
+    let amp = 0.52;
+    let freq = scale;
     let norm = 0;
 
     for (let i = 0; i < octaves; i += 1) {
-      sum += noise(x * freq, y * freq, seed + i * 19.19) * amp;
+      sum += noise3(v[0] * freq, v[1] * freq, v[2] * freq, seed + i * 23.19) * amp;
       norm += amp;
       amp *= 0.52;
-      freq *= 2.03;
+      freq *= 2.04;
     }
 
     return norm ? sum / norm : 0.5;
   }
 
-  function loadScriptOnce(globalName, src, marker) {
-    return new Promise((resolve) => {
-      if (window[globalName]) {
-        resolve(window[globalName]);
-        return;
-      }
+  const LAND_CORES = Object.freeze([
+    { c: dirFromLonLat(-92, 18), r: 0.52, a: 0.96 },
+    { c: dirFromLonLat(-53, -10), r: 0.44, a: 0.82 },
+    { c: dirFromLonLat(-20, -46), r: 0.30, a: 0.56 },
+    { c: dirFromLonLat(18, 28), r: 0.62, a: 0.98 },
+    { c: dirFromLonLat(64, 17), r: 0.50, a: 0.78 },
+    { c: dirFromLonLat(103, 41), r: 0.55, a: 0.76 },
+    { c: dirFromLonLat(118, -30), r: 0.37, a: 0.72 },
+    { c: dirFromLonLat(158, -44), r: 0.16, a: 0.38 },
+    { c: dirFromLonLat(-146, 49), r: 0.31, a: 0.52 }
+  ]);
 
-      const base = src.split("?")[0];
-      const existing = document.querySelector(`script[src*="${base}"]`);
+  const SEA_CUTS = Object.freeze([
+    { c: dirFromLonLat(-6, 6), r: 0.28, a: 0.46 },
+    { c: dirFromLonLat(78, -2), r: 0.33, a: 0.34 },
+    { c: dirFromLonLat(-122, 0), r: 0.28, a: 0.30 },
+    { c: dirFromLonLat(32, -12), r: 0.22, a: 0.22 }
+  ]);
 
-      if (existing) {
-        existing.addEventListener("load", () => resolve(window[globalName] || null), { once: true });
-        existing.addEventListener("error", () => resolve(null), { once: true });
-        setTimeout(() => resolve(window[globalName] || null), 300);
-        return;
-      }
-
-      const script = document.createElement("script");
-      script.src = src;
-      script.defer = true;
-      script.dataset[marker] = "true";
-      script.dataset.contract = CONTRACT;
-
-      script.addEventListener("load", () => resolve(window[globalName] || null), { once: true });
-      script.addEventListener("error", () => resolve(null), { once: true });
-
-      document.head.appendChild(script);
-    });
+  function sphericalBlob(v, core) {
+    const d = dot3(v, core.c);
+    const edge = Math.cos(core.r);
+    const q = smoothstep(edge, 1, d);
+    return q * core.a;
   }
 
-  async function loadAuthorities() {
-    const terrain = await loadScriptOnce("HEARTH_TERRAIN", TERRAIN_SRC, "hearthTerrainScript");
-    const hydration = await loadScriptOnce("HEARTH_HYDRATION", HYDRATION_SRC, "hearthHydrationScript");
-    return { terrain, hydration };
-  }
+  function samplePlanetBody(v) {
+    let field = -0.58;
 
-  function fallbackTerrain(lon, lat) {
-    const u = (lon + 180) / 360;
-    const v = (90 - lat) / 180;
+    for (const core of LAND_CORES) field += sphericalBlob(v, core);
+    for (const cut of SEA_CUTS) field -= sphericalBlob(v, cut);
 
-    const continent =
-      Math.sin(u * TAU * 2.2 + 0.8) * 0.22 +
-      Math.cos(v * TAU * 1.7 - 0.4) * 0.18 +
-      Math.sin((u + v) * TAU * 1.35) * 0.18 +
-      fbm(u * 7.5, v * 4.5, 3.7, 5) * 0.64 -
-      0.48;
+    const macro = fbm3(v, 2.4, 18.31, 5);
+    const meso = fbm3(v, 7.2, 74.22, 4);
+    const fine = fbm3(v, 18.0, 119.6, 3);
 
-    const land = continent > 0;
-    const coast = 1 - smoothstep(0.012, 0.105, Math.abs(continent));
-    const elevation = land ? clamp(continent * 2.2, 0, 1) : -clamp(-continent * 2.4, 0, 1);
-    const ridgeField = fbm(u * 26.0 + 3, v * 18.0 - 2, 41.2, 4);
-    const mountain = land ? smoothstep(0.68, 0.92, ridgeField) * smoothstep(0.22, 0.86, elevation) : 0;
-    const moisture = clamp(0.58 + Math.cos(lat * Math.PI / 90) * 0.18 + fbm(u * 8, v * 7, 12.2, 3) * 0.25 - 0.12, 0, 1);
-    const aridity = land ? clamp(fbm(u * 5 + 12, v * 5 - 9, 77.8, 4) * 0.65 - moisture * 0.28, 0, 1) : 0;
+    field += (macro - 0.5) * 0.40;
+    field += (meso - 0.5) * 0.18;
+    field += (fine - 0.5) * 0.06;
+
+    const land = field > 0;
+    const coast = 1 - smoothstep(0.01, 0.105, Math.abs(field));
+    const elevation = land ? clamp(field * 2.15, 0, 1) : 0;
+    const depth = land ? 0 : clamp(-field * 1.92, 0, 1);
+    const shelf = land ? 0 : clamp(coast * 0.96, 0, 1);
+
+    const ridgeSeed = fbm3([v[0] + 0.21, v[1] - 0.08, v[2] + 0.13], 13.0, 301.8, 4);
+    const ridgeThread = Math.abs(ridgeSeed - 0.5);
+    const ridge = land ? (1 - smoothstep(0.04, 0.24, ridgeThread)) * smoothstep(0.22, 0.88, elevation) : 0;
+    const mountain = land ? clamp(ridge * 0.68 + smoothstep(0.62, 0.92, elevation) * 0.30, 0, 1) : 0;
+
+    const latitude = Math.asin(clamp(v[1], -1, 1)) * 180 / Math.PI;
+    const latAbs = Math.abs(latitude);
+
+    const moistureField = fbm3([v[0] - 0.37, v[1] + 0.19, v[2] + 0.07], 3.8, 422.4, 5);
+    const moisture = clamp(
+      0.46 +
+      Math.cos((latitude / 90) * Math.PI) * 0.16 +
+      (moistureField - 0.5) * 0.42 -
+      elevation * 0.10,
+      0,
+      1
+    );
+
+    const aridityField = fbm3([v[0] + 0.62, v[1] - 0.44, v[2] + 0.29], 4.4, 512.7, 4);
+    const aridity = land ? clamp(aridityField * 0.68 - moisture * 0.26, 0, 1) : 0;
+
+    const basinField = fbm3([v[0] - 0.18, v[1] + 0.52, v[2] - 0.31], 9.0, 717.2, 4);
+    const basin = land
+      ? clamp(
+          smoothstep(0.58, 0.88, basinField) *
+          smoothstep(0.08, 0.54, 1 - Math.abs(elevation - 0.22)) *
+          (0.34 + moisture * 0.42),
+          0,
+          1
+        )
+      : 0;
+
+    const drainageField = fbm3([v[0] + 0.11, v[1] + 0.23, v[2] - 0.16], 16.0, 808.4, 3);
+    const drainage = land
+      ? clamp(
+          (1 - smoothstep(0.025, 0.18, Math.abs(drainageField - 0.5))) *
+          (0.18 + moisture * 0.30 + mountain * 0.18) +
+          coast * 0.12 +
+          basin * 0.16,
+          0,
+          1
+        )
+      : 0;
+
+    const frozen = land
+      ? clamp(
+          smoothstep(58, 82, latAbs) * 0.72 +
+          mountain * smoothstep(0.55, 0.92, elevation) * 0.44,
+          0,
+          1
+        )
+      : 0;
+
+    const wetness = land
+      ? clamp(coast * 0.46 + basin * 0.34 + drainage * 0.24 + moisture * 0.16, 0, 1)
+      : clamp(shelf * 0.58 + coast * 0.18, 0, 1);
 
     return {
+      field,
       land,
+      coast,
       elevation,
-      relief: land ? clamp(elevation * 0.55 + mountain * 0.40, 0, 1) : 0,
-      ridge: mountain,
+      depth,
+      shelf,
       mountain,
-      shelf: land ? 0 : clamp(coast * 0.94, 0, 1),
-      slope: land ? 0 : smoothstep(0.12, 0.58, -continent),
-      abyss: land ? 0 : smoothstep(0.48, 0.95, -continent),
-      bathymetry: land ? 0 : clamp(-continent * 2.1, 0, 1),
-      coast: clamp(coast, 0, 1),
-      ice: Math.abs(lat) > 66 || (land && mountain > 0.62) ? 0.68 : 0,
       moisture,
       aridity,
-      roughness: clamp(fbm(u * 34, v * 20, 91.6, 4), 0, 1),
-      biome: land ? "terrain" : "ocean"
+      basin,
+      drainage,
+      frozen,
+      wetness,
+      roughness: clamp(fine * 0.62 + meso * 0.38, 0, 1)
     };
   }
 
-  function fallbackHydration(_lon, _lat, terrain) {
-    const land = !!terrain.land;
-    const coast = clamp(terrain.coast || 0, 0, 1);
-    const shelf = clamp(terrain.shelf || 0, 0, 1);
-    const bathymetry = clamp(terrain.bathymetry || 0, 0, 1);
-    const moisture = clamp(terrain.moisture || 0.5, 0, 1);
-    const ice = clamp(terrain.ice || 0, 0, 1);
-    const elevation = clamp(terrain.elevation || 0, 0, 1);
+  function colorPlanet(s) {
+    if (s.land) {
+      const green = clamp((s.moisture - 0.24) * 1.24 - s.aridity * 0.22, 0, 1);
+      const high = clamp(s.elevation, 0, 1);
+      const wet = clamp(s.wetness, 0, 1);
 
-    const lake = land ? smoothstep(0.30, 0.72, moisture) * smoothstep(0.08, 0.40, 1 - Math.abs(elevation - 0.18)) * 0.32 : 0;
-    const river = land ? clamp(coast * 0.16 + moisture * 0.22 + lake * 0.28, 0, 1) : 0;
-    const frozenStorage = land ? clamp(ice * 0.72 + terrain.mountain * 0.22, 0, 1) : 0;
-
-    return {
-      land,
-      ocean: land ? 0 : 1,
-      shallowWater: land ? 0 : shelf,
-      deepWater: land ? 0 : smoothstep(0.26, 0.88, bathymetry),
-      abyssWater: land ? 0 : smoothstep(0.62, 1, bathymetry),
-      coastalWetness: land ? clamp(coast * 0.60 + moisture * 0.22, 0, 1) : clamp(coast * 0.25 + shelf * 0.68, 0, 1),
-      lake,
-      riverCandidate: river,
-      drainageCandidate: river * 0.75,
-      wetland: land ? clamp(coast * 0.32 + lake * 0.44 + moisture * 0.18, 0, 1) : 0,
-      frozenStorage,
-      meltCandidate: frozenStorage * 0.18,
-      saturation: land ? clamp(coast * 0.25 + lake * 0.38 + river * 0.26 + moisture * 0.12, 0, 1) : clamp(shelf * 0.58 + bathymetry * 0.32, 0, 1),
-      surfaceCurrent: 0.44,
-      roughWater: land ? river * 0.22 : clamp(0.22 + bathymetry * 0.18, 0, 1),
-      material: land ? "terrain" : "ocean"
-    };
-  }
-
-  function terrainSample(authorities, lon, lat) {
-    if (authorities.terrain && typeof authorities.terrain.sample === "function") {
-      try {
-        return authorities.terrain.sample(lon, lat);
-      } catch (_) {}
-    }
-    return fallbackTerrain(lon, lat);
-  }
-
-  function hydrationSample(authorities, lon, lat, terrain) {
-    if (authorities.hydration && typeof authorities.hydration.sample === "function") {
-      try {
-        return authorities.hydration.sample(lon, lat, terrain);
-      } catch (_) {}
-    }
-    return fallbackHydration(lon, lat, terrain);
-  }
-
-  function colorFor(t, h, lon, lat) {
-    const u = (lon + 180) / 360;
-    const v = (90 - lat) / 180;
-    const grain = fbm(u * 48 + 3, v * 34 - 2, 23.5, 4) - 0.5;
-    const fine = fbm(u * 122, v * 90, 62.7, 3) - 0.5;
-
-    if (t.land) {
-      const green = clamp((t.moisture - 0.25) * 1.25 - t.aridity * 0.28, 0, 1);
-      const wet = clamp((h.saturation || 0) * 0.34 + (h.coastalWetness || 0) * 0.22 + (h.lake || 0) * 0.42, 0, 1);
-      const high = clamp(t.elevation || 0, 0, 1);
-      const mountain = clamp(t.mountain || 0, 0, 1);
-      const frozen = clamp(h.frozenStorage || t.ice || 0, 0, 1);
-
-      let r = mix(154, 60, green);
-      let g = mix(122, 132, green);
+      let r = mix(154, 54, green);
+      let g = mix(124, 134, green);
       let b = mix(72, 84, green);
 
-      r = mix(r, 184, t.aridity * 0.42);
-      g = mix(g, 150, t.aridity * 0.34);
-      b = mix(b, 92, t.aridity * 0.28);
+      r = mix(r, 188, s.aridity * 0.42);
+      g = mix(g, 150, s.aridity * 0.34);
+      b = mix(b, 92, s.aridity * 0.26);
 
-      r = mix(r, 106, high * 0.22);
-      g = mix(g, 104, high * 0.18);
-      b = mix(b, 96, high * 0.16);
+      r = mix(r, 116, high * 0.20);
+      g = mix(g, 112, high * 0.17);
+      b = mix(b, 102, high * 0.14);
 
-      r = mix(r, 86, mountain * 0.36);
-      g = mix(g, 86, mountain * 0.34);
-      b = mix(b, 86, mountain * 0.32);
+      r = mix(r, 88, s.mountain * 0.36);
+      g = mix(g, 88, s.mountain * 0.34);
+      b = mix(b, 88, s.mountain * 0.32);
 
-      r = mix(r, 36, wet * 0.20);
-      g = mix(g, 146, wet * 0.24);
-      b = mix(b, 148, wet * 0.24);
+      r = mix(r, 40, wet * 0.17);
+      g = mix(g, 148, wet * 0.22);
+      b = mix(b, 142, wet * 0.21);
 
-      r = mix(r, 236, frozen * 0.70);
-      g = mix(g, 242, frozen * 0.70);
-      b = mix(b, 238, frozen * 0.70);
+      r = mix(r, 238, s.frozen * 0.72);
+      g = mix(g, 244, s.frozen * 0.72);
+      b = mix(b, 240, s.frozen * 0.72);
 
-      const g1 = grain * 20 + fine * 8;
-
-      return [
-        clamp(r + g1, 0, 255),
-        clamp(g + g1 * 0.85, 0, 255),
-        clamp(b + g1 * 0.65, 0, 255)
-      ];
+      return [r, g, b];
     }
 
-    const shallow = clamp(h.shallowWater || t.shelf || 0, 0, 1);
-    const deep = clamp(h.deepWater || t.bathymetry || 0, 0, 1);
-    const abyss = clamp(h.abyssWater || t.abyss || 0, 0, 1);
-    const reef = shallow * smoothstep(0.56, 0.92, fbm(u * 56, v * 42, 88.1, 3));
+    const abyss = smoothstep(0.62, 1, s.depth);
+    const reef = s.shelf * smoothstep(0.40, 0.82, s.wetness);
 
-    let r = mix(24, 4, deep);
-    let g = mix(116, 52, deep);
-    let b = mix(164, 126, deep);
+    let r = mix(24, 4, s.depth);
+    let g = mix(118, 50, s.depth);
+    let b = mix(166, 128, s.depth);
 
-    r = mix(r, 38, shallow * 0.92);
-    g = mix(g, 204, shallow * 0.88);
-    b = mix(b, 206, shallow * 0.84);
+    r = mix(r, 38, s.shelf * 0.92);
+    g = mix(g, 206, s.shelf * 0.88);
+    b = mix(b, 210, s.shelf * 0.84);
 
-    r = mix(r, 5, abyss * 0.22);
+    r = mix(r, 6, abyss * 0.24);
     g = mix(g, 38, abyss * 0.20);
-    b = mix(b, 100, abyss * 0.18);
+    b = mix(b, 102, abyss * 0.18);
 
     r = mix(r, 76, reef * 0.24);
     g = mix(g, 214, reef * 0.34);
-    b = mix(b, 196, reef * 0.30);
+    b = mix(b, 198, reef * 0.30);
 
-    const flow = (fbm(u * 70 + 11, v * 44 - 7, 91.2, 3) - 0.5) * 12;
-
-    return [
-      clamp(r + flow * 0.08, 0, 255),
-      clamp(g + flow * 0.18, 0, 255),
-      clamp(b + flow * 0.32, 0, 255)
-    ];
-  }
-
-  function buildMap(authorities) {
-    const len = MAP_W * MAP_H;
-    const keys = [
-      "r", "g", "b", "land", "height", "relief", "roughness", "bathymetry",
-      "coast", "shallowWater", "deepWater", "saturation", "coastalWetness",
-      "lake", "river", "drainage", "frozenStorage"
-    ];
-
-    const map = {};
-    keys.forEach((k) => { map[k] = new Float32Array(len); });
-
-    for (let y = 0; y < MAP_H; y += 1) {
-      const lat = 90 - (y / MAP_H) * 180;
-
-      for (let x = 0; x < MAP_W; x += 1) {
-        const lon = (x / MAP_W) * 360 - 180;
-        const idx = y * MAP_W + x;
-
-        const t = terrainSample(authorities, lon, lat);
-        const h = hydrationSample(authorities, lon, lat, t);
-        const c = colorFor(t, h, lon, lat);
-
-        map.r[idx] = c[0];
-        map.g[idx] = c[1];
-        map.b[idx] = c[2];
-        map.land[idx] = t.land ? 1 : 0;
-        map.height[idx] = t.elevation || 0;
-        map.relief[idx] = t.relief || 0;
-        map.roughness[idx] = t.roughness || 0;
-        map.bathymetry[idx] = t.bathymetry || 0;
-        map.coast[idx] = t.coast || 0;
-        map.shallowWater[idx] = h.shallowWater || 0;
-        map.deepWater[idx] = h.deepWater || 0;
-        map.saturation[idx] = h.saturation || 0;
-        map.coastalWetness[idx] = h.coastalWetness || 0;
-        map.lake[idx] = h.lake || 0;
-        map.river[idx] = h.riverCandidate || 0;
-        map.drainage[idx] = h.drainageCandidate || 0;
-        map.frozenStorage[idx] = h.frozenStorage || 0;
-      }
-    }
-
-    return map;
-  }
-
-  function bilinear(map, key, u, v) {
-    const x = (((u % 1) + 1) % 1) * MAP_W;
-    const y = clamp(v, 0, 0.999999) * MAP_H;
-
-    const x0 = Math.floor(x) % MAP_W;
-    const y0 = Math.floor(y);
-    const x1 = (x0 + 1) % MAP_W;
-    const y1 = Math.min(MAP_H - 1, y0 + 1);
-
-    const tx = x - Math.floor(x);
-    const ty = y - Math.floor(y);
-    const arr = map[key];
-
-    const a = arr[y0 * MAP_W + x0];
-    const b = arr[y0 * MAP_W + x1];
-    const c = arr[y1 * MAP_W + x0];
-    const d = arr[y1 * MAP_W + x1];
-
-    return lerp(lerp(a, b, tx), lerp(c, d, tx), ty);
-  }
-
-  function sampleMap(map, lonRad, latRad) {
-    const u = (lonRad + Math.PI) / TAU;
-    const v = (HALF_PI - latRad) / Math.PI;
-
-    return {
-      r: bilinear(map, "r", u, v),
-      g: bilinear(map, "g", u, v),
-      b: bilinear(map, "b", u, v),
-      land: bilinear(map, "land", u, v),
-      height: bilinear(map, "height", u, v),
-      relief: bilinear(map, "relief", u, v),
-      roughness: bilinear(map, "roughness", u, v),
-      bathymetry: bilinear(map, "bathymetry", u, v),
-      coast: bilinear(map, "coast", u, v),
-      shallowWater: bilinear(map, "shallowWater", u, v),
-      deepWater: bilinear(map, "deepWater", u, v),
-      saturation: bilinear(map, "saturation", u, v),
-      coastalWetness: bilinear(map, "coastalWetness", u, v),
-      lake: bilinear(map, "lake", u, v),
-      river: bilinear(map, "river", u, v),
-      drainage: bilinear(map, "drainage", u, v),
-      frozenStorage: bilinear(map, "frozenStorage", u, v)
-    };
-  }
-
-  function reliefShade(map, lon, lat, s) {
-    const e = 0.003;
-    const hE = sampleMap(map, lon + e, lat).height;
-    const hW = sampleMap(map, lon - e, lat).height;
-    const hN = sampleMap(map, lon, lat + e).height;
-    const hS = sampleMap(map, lon, lat - e).height;
-    const dx = hW - hE;
-    const dy = hS - hN;
-
-    if (s.land > 0.5) {
-      return clamp(1 + dx * 0.70 + dy * 0.52 + s.relief * 0.055, 0.88, 1.10);
-    }
-
-    return clamp(1 + dx * 0.05 + dy * 0.04 - s.bathymetry * 0.006 + s.shallowWater * 0.018, 0.985, 1.018);
+    return [r, g, b];
   }
 
   function installStyle() {
-    const old = document.getElementById("hearth-g3-canvas-execution-restore-style");
+    const old = document.getElementById("hearth-planet-body-standard-style");
     if (old) old.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-g3-canvas-execution-restore-style";
+    style.id = "hearth-planet-body-standard-style";
     style.textContent = `
       html, body {
         overflow-x: hidden !important;
@@ -441,28 +357,8 @@
         pointer-events: none;
         touch-action: pan-y !important;
       }
-
-      .hearth-g3-chip {
-        position: absolute;
-        left: 14px;
-        bottom: 12px;
-        z-index: 4;
-        padding: 6px 8px;
-        border-radius: 999px;
-        border: 1px solid rgba(135, 187, 221, 0.18);
-        background: rgba(4, 14, 25, 0.42);
-        color: rgba(214, 232, 244, 0.72);
-        font: 800 10px/1.1 ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        pointer-events: none;
-        user-select: none;
-      }
-
-      @media (max-width: 520px) {
-        .hearth-g3-chip { display: none; }
-      }
     `;
+
     document.head.appendChild(style);
   }
 
@@ -474,7 +370,6 @@
     document.body.style.overflowX = "hidden";
     document.body.style.overflowY = "auto";
     document.body.style.touchAction = "pan-y";
-    document.body.style.overscrollBehaviorY = "auto";
     document.body.style.webkitOverflowScrolling = "touch";
   }
 
@@ -517,40 +412,26 @@
 
     if (runtime.size !== workSize) {
       runtime.size = workSize;
-      runtime.work.width = workSize;
-      runtime.work.height = workSize;
-      runtime.image = runtime.workCtx.createImageData(workSize, workSize);
+      runtime.image = runtime.ctx.createImageData(workSize, workSize);
     }
   }
 
   function paintBackplate(ctx, w, h) {
     ctx.clearRect(0, 0, w, h);
 
-    const bg = ctx.createRadialGradient(w * 0.50, h * 0.48, w * 0.04, w * 0.50, h * 0.50, w * 0.70);
-    bg.addColorStop(0, "rgba(42, 85, 116, 0.22)");
-    bg.addColorStop(0.52, "rgba(12, 30, 52, 0.62)");
-    bg.addColorStop(1, "rgba(2, 7, 15, 1)");
+    const bg = ctx.createRadialGradient(w * 0.5, h * 0.48, w * 0.04, w * 0.5, h * 0.5, w * 0.68);
+    bg.addColorStop(0, "rgba(42,85,116,0.16)");
+    bg.addColorStop(0.54, "rgba(12,30,52,0.54)");
+    bg.addColorStop(1, "rgba(2,7,15,1)");
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, w, h);
-
-    const cx = w * 0.5;
-    const cy = h * 0.5;
-
-    for (let i = 0; i < 3; i += 1) {
-      ctx.beginPath();
-      ctx.arc(cx, cy, w * (0.398 + i * 0.032), 0, TAU);
-      ctx.strokeStyle = `rgba(102,174,225,${0.052 - i * 0.012})`;
-      ctx.lineWidth = Math.max(1, w * (0.0048 - i * 0.0007));
-      ctx.stroke();
-    }
   }
 
-  function paintSphere(time) {
+  function paintPlanet(time) {
     const size = runtime.size;
     const image = runtime.image;
-    const map = runtime.map;
 
-    if (!size || !image || !map) return;
+    if (!size || !image) return;
 
     const data = image.data;
     data.fill(0);
@@ -559,12 +440,8 @@
     const cy = size * 0.505;
     const radius = size * 0.405;
 
-    const spin = time * 0.000048;
+    const spin = time * 0.000045;
     const tilt = -0.10;
-    const cosA = Math.cos(spin);
-    const sinA = Math.sin(spin);
-    const cosT = Math.cos(tilt);
-    const sinT = Math.sin(tilt);
 
     const yMin = Math.max(0, Math.floor(cy - radius - 2));
     const yMax = Math.min(size - 1, Math.ceil(cy + radius + 2));
@@ -582,78 +459,27 @@
 
         const z = Math.sqrt(1 - d2);
 
-        let nx = sx;
-        let ny = -sy;
-        let nz = z;
+        let v = [sx, -sy, z];
+        v = rotateX(v, tilt);
+        v = rotateY(v, spin);
+        v = norm3(v);
 
-        const ty = ny * cosT - nz * sinT;
-        const tz = ny * sinT + nz * cosT;
-        ny = ty;
-        nz = tz;
+        const s = samplePlanetBody(v);
+        let [rr, gg, bb] = colorPlanet(s);
 
-        const rx = nx * cosA + nz * sinA;
-        const rz = -nx * sinA + nz * cosA;
+        const bodyCurve = 0.985 + Math.pow(z, 1.08) * 0.035;
+        const bodyRelief = s.land
+          ? clamp(0.96 + s.elevation * 0.025 + s.mountain * 0.030 + (s.roughness - 0.5) * 0.040, 0.91, 1.09)
+          : clamp(0.99 - s.depth * 0.012 + s.shelf * 0.018, 0.97, 1.02);
 
-        const lat = Math.asin(clamp(ny, -1, 1));
-        const lon = Math.atan2(rx, rz);
-        const s = sampleMap(map, lon, lat);
+        rr *= bodyCurve * bodyRelief;
+        gg *= bodyCurve * bodyRelief;
+        bb *= bodyCurve * bodyRelief;
 
-        let rr = s.r;
-        let gg = s.g;
-        let bb = s.b;
-
-        const isLand = s.land > 0.5;
-        const limb = Math.pow(1 - z, 1.8);
-        const proofLight = 0.995 + Math.pow(z, 1.05) * 0.025;
-        const rel = reliefShade(map, lon, lat, s);
-
-        if (!isLand) {
-          if (s.shallowWater > 0.06) {
-            rr = mix(rr, 48, s.shallowWater * 0.10);
-            gg = mix(gg, 206, s.shallowWater * 0.14);
-            bb = mix(bb, 210, s.shallowWater * 0.12);
-          }
-
-          if (s.coast > 0.04) {
-            const edge = Math.pow(s.coast, 1.05);
-            rr = mix(rr, 64, edge * 0.06);
-            gg = mix(gg, 202, edge * 0.10);
-            bb = mix(bb, 210, edge * 0.09);
-          }
-        } else {
-          if (s.coastalWetness > 0.04) {
-            rr = mix(rr, 42, s.coastalWetness * 0.08);
-            gg = mix(gg, 150, s.coastalWetness * 0.11);
-            bb = mix(bb, 142, s.coastalWetness * 0.10);
-          }
-
-          if (s.river > 0.04 || s.lake > 0.04 || s.drainage > 0.04) {
-            const liquid = clamp(s.river * 0.58 + s.lake * 0.80 + s.drainage * 0.36, 0, 1);
-            rr = mix(rr, 30, liquid * 0.18);
-            gg = mix(gg, 144, liquid * 0.22);
-            bb = mix(bb, 164, liquid * 0.24);
-          }
-
-          if (s.frozenStorage > 0.18) {
-            const iceGlow = smoothstep(0.18, 0.9, s.frozenStorage) * 0.16;
-            rr = mix(rr, 242, iceGlow * 0.16);
-            gg = mix(gg, 248, iceGlow * 0.16);
-            bb = mix(bb, 242, iceGlow * 0.14);
-          }
-        }
-
-        rr *= proofLight * rel;
-        gg *= proofLight * rel;
-        bb *= proofLight * rel;
-
-        rr = mix(rr, 72, limb * 0.035);
-        gg = mix(gg, 150, limb * 0.040);
-        bb = mix(bb, 196, limb * 0.050);
-
-        const rim = Math.pow(limb, 2.1);
-        rr = mix(rr, 70, rim * 0.08);
-        gg = mix(gg, 184, rim * 0.12);
-        bb = mix(bb, 232, rim * 0.14);
+        const edge = Math.pow(1 - z, 1.85);
+        rr = mix(rr, 66, edge * 0.030);
+        gg = mix(gg, 142, edge * 0.036);
+        bb = mix(bb, 188, edge * 0.045);
 
         const alpha = smoothstep(1.01, 0.985, d2);
         const out = (y * size + x) * 4;
@@ -665,21 +491,8 @@
       }
     }
 
-    runtime.workCtx.putImageData(image, 0, 0);
-
-    runtime.workCtx.save();
-    runtime.workCtx.beginPath();
-    runtime.workCtx.arc(cx, cy, radius * 1.003, 0, TAU);
-    runtime.workCtx.strokeStyle = "rgba(116,207,255,0.28)";
-    runtime.workCtx.lineWidth = Math.max(1, size * 0.0048);
-    runtime.workCtx.stroke();
-
-    runtime.workCtx.beginPath();
-    runtime.workCtx.arc(cx, cy, radius * 1.037, 0, TAU);
-    runtime.workCtx.strokeStyle = "rgba(91,174,236,0.08)";
-    runtime.workCtx.lineWidth = Math.max(1, size * 0.0075);
-    runtime.workCtx.stroke();
-    runtime.workCtx.restore();
+    const ctx = runtime.ctx;
+    ctx.putImageData(image, 0, 0);
   }
 
   function composite(time) {
@@ -693,23 +506,32 @@
     if (!w || !h) return;
 
     paintBackplate(ctx, w, h);
-    paintSphere(time);
 
-    const drawSize = Math.min(w, h);
-    const dx = (w - drawSize) * 0.5;
-    const dy = (h - drawSize) * 0.5;
+    const drawSize = runtime.size;
+    paintPlanet(time);
 
-    ctx.save();
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-    ctx.drawImage(runtime.work, dx, dy, drawSize, drawSize);
-    ctx.restore();
+    if (w !== drawSize || h !== drawSize) {
+      const temp = document.createElement("canvas");
+      temp.width = drawSize;
+      temp.height = drawSize;
+      temp.getContext("2d").putImageData(runtime.image, 0, 0);
+
+      const dx = (w - Math.min(w, h)) * 0.5;
+      const dy = (h - Math.min(w, h)) * 0.5;
+      const target = Math.min(w, h);
+
+      ctx.save();
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(temp, dx, dy, target, target);
+      ctx.restore();
+    }
   }
 
   function loop(time) {
     if (runtime.disposed) return;
 
-    if (!runtime.lastFrame || time - runtime.lastFrame > 30) {
+    if (!runtime.lastFrame || time - runtime.lastFrame > 42) {
       runtime.lastFrame = time;
       composite(time);
     }
@@ -718,42 +540,25 @@
   }
 
   function exposeReceipt(status) {
-    const terrainReceipt =
-      window.HEARTH_TERRAIN && typeof window.HEARTH_TERRAIN.receipt === "function"
-        ? window.HEARTH_TERRAIN.receipt()
-        : null;
-
-    const hydrationReceipt =
-      window.HEARTH_HYDRATION && typeof window.HEARTH_HYDRATION.receipt === "function"
-        ? window.HEARTH_HYDRATION.receipt()
-        : null;
-
     window.HEARTH_CANVAS_RECEIPT = Object.freeze({
       receipt: RECEIPT,
       contract: CONTRACT,
       version: VERSION,
       route: location.pathname,
       renderOwner: "/assets/hearth/hearth.canvas.js",
-      terrainOwner: "/assets/hearth/hearth.terrain.js",
-      hydrationOwner: "/assets/hearth/hearth.hydration.js",
-      terrainSrc: TERRAIN_SRC,
-      hydrationSrc: HYDRATION_SRC,
-      terrainContract: window.HEARTH_TERRAIN?.contract || "fallback",
-      hydrationContract: window.HEARTH_HYDRATION?.contract || "fallback",
-      terrainReceipt,
-      hydrationReceipt,
       mount: "#hearthCanvasMount",
       generation: "G3",
-      executionRestored: true,
-      renderPolicy: "single continuous sphere; no hemisphere mask; no terminator; no panel overlay",
-      g4Deferred: "clouds-weather-climate",
-      noClouds: true,
-      noWeather: true,
-      noClimate: true,
-      externalImages: false,
-      nasaAsset: false,
-      generatedImage: false,
-      graphicBox: false,
+      contractRenewal: true,
+      newStandard: "planet-body-template",
+      languageLayer: "globe",
+      constructionLayer: "planet",
+      renderPolicy: "3D planet-body surface field; no flat map wrap; no decorative globe shell",
+      noHemisphereMask: true,
+      noTwoPieceShell: true,
+      noDisplayRings: true,
+      noGraphicBox: true,
+      noGeneratedImage: true,
+      g4Deferred: "clouds-weather-climate-humidity-atmospheric-moisture",
       status
     });
   }
@@ -762,9 +567,6 @@
     installStyle();
     unlockScroll();
 
-    const authorities = await loadAuthorities();
-    if (runtime.disposed) return;
-
     const mountEl = getMount();
     mountEl.replaceChildren();
 
@@ -772,44 +574,34 @@
     canvas.dataset.hearthCanvas = "true";
     canvas.dataset.contract = CONTRACT;
     canvas.dataset.generation = "G3";
-    canvas.dataset.localScale = "hearth";
+    canvas.dataset.renderTemplate = "planet-body";
+    canvas.dataset.languageLayer = "globe";
+    canvas.dataset.constructionLayer = "planet";
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Hearth Generation 3 executable canvas globe");
+    canvas.setAttribute("aria-label", "Hearth Generation 3 planet body");
 
-    const chip = document.createElement("div");
-    chip.className = "hearth-g3-chip";
-    chip.textContent =
-      authorities.terrain && authorities.hydration
-        ? "Hearth G3 · Executable"
-        : "Hearth G3 · Fallback";
-
-    mountEl.append(canvas, chip);
+    mountEl.append(canvas);
 
     runtime.mount = mountEl;
     runtime.canvas = canvas;
     runtime.ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
-    runtime.work = document.createElement("canvas");
-    runtime.workCtx = runtime.work.getContext("2d", { alpha: true, willReadFrequently: false });
-    runtime.map = buildMap(authorities);
 
     mountEl.dataset.hearthCanvasContract = CONTRACT;
     mountEl.dataset.hearthCanvasReceipt = RECEIPT;
     mountEl.dataset.hearthGeneration = "G3";
-    mountEl.dataset.hearthExecutionRestored = "true";
-    mountEl.dataset.hearthTerrainLoaded = authorities.terrain ? "true" : "false";
-    mountEl.dataset.hearthHydrationLoaded = authorities.hydration ? "true" : "false";
-    mountEl.dataset.hearthGeneratedImage = "false";
-    mountEl.dataset.hearthGraphicBox = "false";
+    mountEl.dataset.hearthContractRenewal = "true";
+    mountEl.dataset.hearthRenderTemplate = "planet-body";
+    mountEl.dataset.hearthLanguageLayer = "globe";
+    mountEl.dataset.hearthConstructionLayer = "planet";
 
     document.documentElement.dataset.hearthCanvasLoaded = "true";
     document.documentElement.dataset.hearthCanvasContract = CONTRACT;
     document.documentElement.dataset.hearthCanvasVersion = VERSION;
     document.documentElement.dataset.hearthGeneration = "G3";
-    document.documentElement.dataset.hearthExecutionRestored = "true";
-    document.documentElement.dataset.hearthTerrainLoaded = authorities.terrain ? "true" : "false";
-    document.documentElement.dataset.hearthHydrationLoaded = authorities.hydration ? "true" : "false";
-    document.documentElement.dataset.hearthGeneratedImage = "false";
-    document.documentElement.dataset.hearthGraphicBox = "false";
+    document.documentElement.dataset.hearthContractRenewal = "true";
+    document.documentElement.dataset.hearthRenderTemplate = "planet-body";
+    document.documentElement.dataset.hearthLanguageLayer = "globe";
+    document.documentElement.dataset.hearthConstructionLayer = "planet";
 
     runtime.observer = new ResizeObserver(resize);
     runtime.observer.observe(mountEl);
@@ -829,15 +621,17 @@
 
     if (runtime.observer) runtime.observer.disconnect();
 
-    const style = document.getElementById("hearth-g3-canvas-execution-restore-style");
+    const style = document.getElementById("hearth-planet-body-standard-style");
     if (style) style.remove();
 
     if (runtime.mount) runtime.mount.replaceChildren();
 
-    window.__HEARTH_CANVAS_G3_DISPOSE__ = null;
+    window.__HEARTH_CANVAS_PLANET_BODY_DISPOSE__ = null;
     exposeReceipt("disposed");
   }
 
+  window.__HEARTH_CANVAS_PLANET_BODY_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_VISIBLE_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_10_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_DISPOSE__ = dispose;

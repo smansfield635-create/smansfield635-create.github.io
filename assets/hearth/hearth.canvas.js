@@ -1,20 +1,20 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_G3_4_MAP_GENERATION_CANVAS_BIND_TNT_v1
+// HEARTH_G3_5_PROJECTION_LIGHTING_SEAM_REPAIR_TNT_v1
 // Full-file replacement.
 // Purpose:
-// - Bind Hearth canvas to the G3.4 terrain authority.
-// - Fix visible map seam by using wrapped bilinear sampling.
-// - Canvas owns projection, rotation, lighting, and render only.
-// - Terrain owns map, elevation, mountains, relief, bathymetry.
+// - Preserve G3.4 terrain/map authority.
+// - Repair the vertical projection/light split visible on the globe.
+// - Canvas owns projection, rotation, lighting, sampling, and render composition only.
+// - Terrain remains owned by /assets/hearth/hearth.terrain.js.
 // - G3 only. G4 remains deferred: clouds, weather, climate.
 // - No JPG. No NASA asset. No generated image. No GraphicBox.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_4_MAP_GENERATION_CANVAS_BIND_TNT_v1";
-  const VERSION = "2026-05-08.hearth-g3-4-map-generation-canvas";
-  const RECEIPT = "HEARTH_G3_4_CANVAS_BIND_RECEIPT";
+  const CONTRACT = "HEARTH_G3_5_PROJECTION_LIGHTING_SEAM_REPAIR_TNT_v1";
+  const VERSION = "2026-05-08.hearth-g3-5-projection-lighting-seam-repair";
+  const RECEIPT = "HEARTH_G3_5_PROJECTION_LIGHTING_SEAM_REPAIR_RECEIPT";
   const TERRAIN_SRC = "/assets/hearth/hearth.terrain.js?v=hearth-g3-4-map-generation";
 
   const MAP_W = 900;
@@ -25,6 +25,7 @@
   const HALF_PI = Math.PI / 2;
 
   [
+    "__HEARTH_CANVAS_G3_5_DISPOSE__",
     "__HEARTH_CANVAS_G3_4_DISPOSE__",
     "__HEARTH_CANVAS_G3_3_DISPOSE__",
     "__HEARTH_CANVAS_G3_2_DISPOSE__",
@@ -106,8 +107,8 @@
     return norm ? sum / norm : 0;
   }
 
-  const LIGHT = normalize3([-0.54, -0.34, 0.88]);
-  const HALF_LIGHT = normalize3([LIGHT[0], LIGHT[1], LIGHT[2] + 1.18]);
+  const LIGHT = normalize3([-0.34, -0.28, 0.90]);
+  const SPECULAR = normalize3([-0.18, -0.24, 1.0]);
 
   function loadTerrain() {
     return new Promise((resolve) => {
@@ -116,7 +117,12 @@
         return;
       }
 
-      document.querySelectorAll('script[src*="/assets/hearth/hearth.terrain.js"]').forEach((n) => n.remove());
+      const existing = document.querySelector('script[src*="/assets/hearth/hearth.terrain.js"]');
+      if (existing) {
+        existing.addEventListener("load", () => resolve(window.HEARTH_TERRAIN || null), { once: true });
+        existing.addEventListener("error", () => resolve(null), { once: true });
+        return;
+      }
 
       const script = document.createElement("script");
       script.src = TERRAIN_SRC;
@@ -289,7 +295,7 @@
   }
 
   function bilinear(map, key, u, v) {
-    const x = ((u % 1) + 1) % 1 * MAP_W;
+    const x = (((u % 1) + 1) % 1) * MAP_W;
     const y = clamp(v, 0, 0.999999) * MAP_H;
 
     const x0 = Math.floor(x) % MAP_W;
@@ -301,7 +307,6 @@
     const ty = y - Math.floor(y);
 
     const arr = map[key];
-
     const a = arr[y0 * MAP_W + x0];
     const b = arr[y0 * MAP_W + x1];
     const c = arr[y1 * MAP_W + x0];
@@ -335,14 +340,15 @@
     const hW = sampleMap(map, lonRad - e, latRad).height;
     const hN = sampleMap(map, lonRad, latRad + e).height;
     const hS = sampleMap(map, lonRad, latRad - e).height;
+
     const dx = hW - hE;
     const dy = hS - hN;
 
     const base = isLand
-      ? 1 + dx * 1.65 + dy * 1.15 + s.relief * 0.16
-      : 1 + dx * 0.48 + dy * 0.36 - s.bathymetry * 0.10 + s.shelf * 0.08;
+      ? 1 + dx * 1.20 + dy * 0.90 + s.relief * 0.10
+      : 1 + dx * 0.22 + dy * 0.18 - s.bathymetry * 0.05 + s.shelf * 0.05;
 
-    return clamp(base, isLand ? 0.66 : 0.80, isLand ? 1.34 : 1.18);
+    return clamp(base, isLand ? 0.76 : 0.90, isLand ? 1.22 : 1.10);
   }
 
   function getMount() {
@@ -369,11 +375,11 @@
   }
 
   function installStyle() {
-    const prior = document.getElementById("hearth-g3-4-map-canvas-style");
+    const prior = document.getElementById("hearth-g3-5-projection-seam-style");
     if (prior) prior.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-g3-4-map-canvas-style";
+    style.id = "hearth-g3-5-projection-seam-style";
     style.textContent = `
       html,
       body {
@@ -402,7 +408,7 @@
         touch-action: pan-y !important;
       }
 
-      .hearth-g3-4-chip {
+      .hearth-g3-5-chip {
         position: absolute;
         left: 14px;
         bottom: 12px;
@@ -420,7 +426,7 @@
       }
 
       @media (max-width: 520px) {
-        .hearth-g3-4-chip { display: none; }
+        .hearth-g3-5-chip { display: none; }
       }
     `;
 
@@ -499,8 +505,8 @@
     const cx = size * 0.5;
     const cy = size * 0.505;
     const radius = size * 0.405;
+
     const spin = time * 0.000048;
-    const currentShift = (time * 0.000003) % 1;
     const tilt = -0.10;
 
     const cosA = Math.cos(spin);
@@ -541,84 +547,73 @@
         const lon = Math.atan2(rx, rz);
 
         const s = sampleMap(map, lon, lat);
-        const current = sampleMap(map, lon + currentShift * TAU, lat);
-
         const isLand = s.land > 0.5;
-        const light = clamp(nx * LIGHT[0] + ny * LIGHT[1] + z * LIGHT[2], 0, 1);
-        const softLight = 0.35 + light * 0.74;
-        const limb = Math.pow(1 - z, 1.72);
-        const reliefFactor = reliefShade(map, lon, lat, s, isLand);
 
         let rr = s.r;
         let gg = s.g;
         let bb = s.b;
 
+        const rawLight = nx * LIGHT[0] + ny * LIGHT[1] + z * LIGHT[2];
+        const light = 0.64 + smoothstep(-0.52, 0.92, rawLight) * 0.34;
+        const dusk = smoothstep(-0.55, 0.15, rawLight);
+        const limb = Math.pow(1 - z, 1.72);
+        const reliefFactor = reliefShade(map, lon, lat, s, isLand);
+
         if (!isLand) {
-          const currentVeil = smoothstep(0.18, 0.31, current.roughness) * (1 - s.bathymetry * 0.52);
-
-          rr = mix(rr, 45, currentVeil * 0.10);
-          gg = mix(gg, 142, currentVeil * 0.18);
-          bb = mix(bb, 190, currentVeil * 0.20);
-
           if (s.shelf > 0.08) {
-            rr = mix(rr, 42, s.shelf * 0.32);
-            gg = mix(gg, 180, s.shelf * 0.42);
-            bb = mix(bb, 188, s.shelf * 0.38);
+            rr = mix(rr, 42, s.shelf * 0.24);
+            gg = mix(gg, 180, s.shelf * 0.32);
+            bb = mix(bb, 188, s.shelf * 0.30);
           }
 
           if (s.coast > 0.04) {
             const edge = Math.pow(s.coast, 1.05);
-            rr = mix(rr, 54, edge * 0.18);
-            gg = mix(gg, 184, edge * 0.26);
-            bb = mix(bb, 196, edge * 0.24);
+            rr = mix(rr, 54, edge * 0.13);
+            gg = mix(gg, 184, edge * 0.20);
+            bb = mix(bb, 196, edge * 0.18);
           }
 
-          const specDot = clamp(nx * HALF_LIGHT[0] + ny * HALF_LIGHT[1] + z * HALF_LIGHT[2], 0, 1);
-          const specPower = lerp(94, 52, s.bathymetry);
-          const spec = Math.pow(specDot, specPower) * clamp(light + 0.10, 0, 1) * (0.58 - s.bathymetry * 0.18);
+          const specDot = clamp(nx * SPECULAR[0] + ny * SPECULAR[1] + z * SPECULAR[2], 0, 1);
+          const spec = Math.pow(specDot, 86) * (0.35 - s.bathymetry * 0.10) * dusk;
 
-          rr = mix(rr, 214, spec * 0.28);
-          gg = mix(gg, 234, spec * 0.26);
-          bb = mix(bb, 252, spec * 0.24);
+          rr = mix(rr, 214, spec * 0.24);
+          gg = mix(gg, 234, spec * 0.22);
+          bb = mix(bb, 252, spec * 0.20);
         }
 
         if (isLand) {
           if (s.coast > 0.05) {
-            rr = mix(rr, 162, s.coast * 0.17);
-            gg = mix(gg, 150, s.coast * 0.15);
-            bb = mix(bb, 114, s.coast * 0.13);
+            rr = mix(rr, 162, s.coast * 0.13);
+            gg = mix(gg, 150, s.coast * 0.12);
+            bb = mix(bb, 114, s.coast * 0.10);
           }
 
-          const ridgeLight = clamp((s.height * 0.84 + s.roughness * 0.38) * light, 0, 1);
-          rr = mix(rr, rr + 20, ridgeLight * 0.15);
-          gg = mix(gg, gg + 16, ridgeLight * 0.13);
-          bb = mix(bb, bb + 12, ridgeLight * 0.10);
+          const ridgeLight = clamp((s.height * 0.84 + s.roughness * 0.38) * dusk, 0, 1);
+
+          rr = mix(rr, rr + 18, ridgeLight * 0.12);
+          gg = mix(gg, gg + 14, ridgeLight * 0.10);
+          bb = mix(bb, bb + 10, ridgeLight * 0.08);
 
           if (s.ice > 0.20) {
-            const iceGlow = smoothstep(0.2, 0.9, s.ice) * (0.22 + light * 0.32);
-            rr = mix(rr, 240, iceGlow * 0.20);
-            gg = mix(gg, 246, iceGlow * 0.20);
-            bb = mix(bb, 240, iceGlow * 0.18);
+            const iceGlow = smoothstep(0.2, 0.9, s.ice) * (0.18 + dusk * 0.26);
+            rr = mix(rr, 240, iceGlow * 0.18);
+            gg = mix(gg, 246, iceGlow * 0.18);
+            bb = mix(bb, 240, iceGlow * 0.16);
           }
         }
 
-        rr *= softLight * reliefFactor;
-        gg *= softLight * reliefFactor;
-        bb *= softLight * reliefFactor;
+        rr *= light * reliefFactor;
+        gg *= light * reliefFactor;
+        bb *= light * reliefFactor;
 
-        rr = mix(rr, 22, limb * 0.30);
-        gg = mix(gg, 88, limb * 0.31);
-        bb = mix(bb, 145, limb * 0.43);
+        rr = mix(rr, 20, limb * 0.28);
+        gg = mix(gg, 82, limb * 0.29);
+        bb = mix(bb, 138, limb * 0.40);
 
         const atmosphere = Math.pow(limb, 2.35);
-        rr = mix(rr, 40, atmosphere * 0.36);
-        gg = mix(gg, 158, atmosphere * 0.48);
-        bb = mix(bb, 226, atmosphere * 0.54);
-
-        const terminator = smoothstep(0.0, 0.36, light);
-        rr *= 0.72 + terminator * 0.34;
-        gg *= 0.72 + terminator * 0.34;
-        bb *= 0.76 + terminator * 0.30;
+        rr = mix(rr, 40, atmosphere * 0.34);
+        gg = mix(gg, 158, atmosphere * 0.46);
+        bb = mix(bb, 226, atmosphere * 0.52);
 
         const alpha = smoothstep(1.01, 0.985, d2);
         const out = (y * size + x) * 4;
@@ -646,8 +641,8 @@
       radius * 0.62
     );
 
-    gx.addColorStop(0, "rgba(255,255,255,0.19)");
-    gx.addColorStop(0.25, "rgba(142,205,250,0.07)");
+    gx.addColorStop(0, "rgba(255,255,255,0.16)");
+    gx.addColorStop(0.25, "rgba(142,205,250,0.06)");
     gx.addColorStop(1, "rgba(0,0,0,0)");
 
     wctx.fillStyle = gx;
@@ -742,10 +737,10 @@
       terrainContract: window.HEARTH_TERRAIN?.contract || "fallback",
       terrainReceipt,
       mount: "#hearthCanvasMount",
-      generation: "G3.4-candidate",
-      canvasOwns: ["mount", "projection", "rotation", "lighting", "render-composition"],
+      generation: "G3.5-candidate",
+      canvasOwns: ["projection", "rotation", "lighting", "wrapped-sampling", "render-composition"],
       terrainOwns: ["map", "body-mass", "elevation", "mountain-ranges", "relief", "bathymetry"],
-      seamFix: "wrapped bilinear sampling plus seam-safe terrain authority",
+      seamRepair: "smooth hemispheric lighting; no hard terminator; wrapped bilinear terrain sampling",
       g4Deferred: "clouds-weather-climate",
       externalImages: false,
       nasaAsset: false,
@@ -770,14 +765,14 @@
     const canvas = document.createElement("canvas");
     canvas.dataset.hearthCanvas = "true";
     canvas.dataset.contract = CONTRACT;
-    canvas.dataset.generation = "G3.4-candidate";
+    canvas.dataset.generation = "G3.5-candidate";
     canvas.dataset.localScale = "hearth";
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Hearth G3.4 map generation terrain globe");
+    canvas.setAttribute("aria-label", "Hearth G3.5 projection and lighting seam repair globe");
 
     const chip = document.createElement("div");
-    chip.className = "hearth-g3-4-chip";
-    chip.textContent = terrain ? "Hearth G3.4 · Map Terrain" : "Hearth G3.4 · Terrain Fallback";
+    chip.className = "hearth-g3-5-chip";
+    chip.textContent = terrain ? "Hearth G3.5 · Seam Repair" : "Hearth G3.5 · Terrain Fallback";
 
     mountEl.append(canvas, chip);
 
@@ -793,8 +788,8 @@
     mountEl.dataset.hearthRenderOwner = "/assets/hearth/hearth.canvas.js";
     mountEl.dataset.hearthTerrainOwner = "/assets/hearth/hearth.terrain.js";
     mountEl.dataset.hearthTerrainLoaded = terrain ? "true" : "false";
-    mountEl.dataset.hearthGeneration = "G3.4-candidate";
-    mountEl.dataset.hearthGenerationFocus = "map-generation-terrain";
+    mountEl.dataset.hearthGeneration = "G3.5-candidate";
+    mountEl.dataset.hearthGenerationFocus = "projection-lighting-seam-repair";
     mountEl.dataset.g4Deferred = "clouds-weather-climate";
     mountEl.dataset.earthPlaceholder = "false";
     mountEl.dataset.audraliaMap = "false";
@@ -804,8 +799,8 @@
     document.documentElement.dataset.hearthCanvasVersion = VERSION;
     document.documentElement.dataset.hearthTerrainOwner = "/assets/hearth/hearth.terrain.js";
     document.documentElement.dataset.hearthTerrainLoaded = terrain ? "true" : "false";
-    document.documentElement.dataset.hearthGeneration = "G3.4-candidate";
-    document.documentElement.dataset.hearthGenerationFocus = "map-generation-terrain";
+    document.documentElement.dataset.hearthGeneration = "G3.5-candidate";
+    document.documentElement.dataset.hearthGenerationFocus = "projection-lighting-seam-repair";
     document.documentElement.dataset.hearthG4Deferred = "clouds-weather-climate";
     document.documentElement.dataset.hearthExternalImages = "false";
     document.documentElement.dataset.hearthNasaAsset = "false";
@@ -831,15 +826,16 @@
 
     if (runtime.observer) runtime.observer.disconnect();
 
-    const style = document.getElementById("hearth-g3-4-map-canvas-style");
+    const style = document.getElementById("hearth-g3-5-projection-seam-style");
     if (style) style.remove();
 
     if (runtime.mount) runtime.mount.replaceChildren();
 
-    window.__HEARTH_CANVAS_G3_4_DISPOSE__ = null;
+    window.__HEARTH_CANVAS_G3_5_DISPOSE__ = null;
     exposeReceipt("disposed");
   }
 
+  window.__HEARTH_CANVAS_G3_5_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_4_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_3_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_2_DISPOSE__ = dispose;

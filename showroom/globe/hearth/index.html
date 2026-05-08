@@ -1,322 +1,395 @@
-// /showroom/globe/hearth/index.js
-// HEARTH_G3_BOUNDARY_ALIGNMENT_ROUTE_CONTROLLER_TNT_v1
-// Full-file replacement.
-// Family: HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1
+<!-- /showroom/globe/hearth/index.html -->
+<!doctype html>
+<html
+  lang="en"
+  data-page="hearth-g3-boundary-route"
+  data-route="/showroom/globe/hearth/"
+  data-contract="HEARTH_G3_ROUTE_RESTORATION_HTML_TNT_v1"
+  data-family-contract="HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1"
+  data-generation="G3"
+  data-hearth-standard="boundary-aligned-landmass-family"
+  data-language-layer="globe"
+  data-construction-layer="planet"
+  data-generated-image="false"
+  data-graphic-box="false"
+>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Diamond Gate Bridge · Hearth</title>
+  <meta
+    name="description"
+    content="Hearth Generation 3 boundary-aligned landmass-family route. Globe remains website language; the constructed body is a planet."
+  >
 
-(() => {
-  "use strict";
-
-  const CONTRACT = "HEARTH_G3_BOUNDARY_ALIGNMENT_ROUTE_CONTROLLER_TNT_v1";
-  const FAMILY_CONTRACT = "HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1";
-  const VERSION = "2026-05-08.hearth-g3-boundary-alignment-route-controller";
-  const RECEIPT = "HEARTH_G3_BOUNDARY_ALIGNMENT_ROUTE_RECEIPT";
-  const KEY = "hearth-g3-boundary-alignment-all-five-files-v1";
-
-  const EXPECTED_ROUTE = "/showroom/globe/hearth/";
-  const TERRAIN_SRC = `/assets/hearth/hearth.terrain.js?v=${KEY}`;
-  const HYDRATION_SRC = `/assets/hearth/hearth.hydration.js?v=${KEY}`;
-  const CANVAS_SRC = `/assets/hearth/hearth.canvas.js?v=${KEY}`;
-
-  const RETIRED_MARKERS = Object.freeze([
-    "HEARTH_G2_MODEL_RESTORE_HTML_JS_ASSET_TNT_v1",
-    "HEARTH_G3_4_MAP_GENERATION_TERRAIN_AUTHORITY_TNT_v1",
-    "HEARTH_G3_7",
-    "HEARTH_G3_9_RENDER_MASK_PURGE_TRUE_SPHERE_COMPOSITION_TNT_v1",
-    "HEARTH_G3_10_CHAIN_ALIGNMENT_SUPERCESSION_ROUTE_TNT_v1",
-    "HEARTH_G3_10_SOLID_GLOBAL_HYDRATION_FIELD_TNT_v1",
-    "hearth-g2-model-restore",
-    "hearth-g3-4-map-generation",
-    "hearth-g3-7-hydration",
-    "hearth-g3-9",
-    "hearth-g3-10"
-  ]);
-
-  const state = {
-    booted: false,
-    mount: null,
-    scripts: []
-  };
-
-  function stamp(status) {
-    document.documentElement.dataset.hearthRouteControllerLoaded = "true";
-    document.documentElement.dataset.hearthRouteControllerContract = CONTRACT;
-    document.documentElement.dataset.hearthFamilyContract = FAMILY_CONTRACT;
-    document.documentElement.dataset.hearthRouteControllerVersion = VERSION;
-    document.documentElement.dataset.hearthRouteControllerStatus = status;
-    document.documentElement.dataset.hearthExpectedRoute = EXPECTED_ROUTE;
-    document.documentElement.dataset.hearthGeneration = "G3";
-    document.documentElement.dataset.hearthStandard = "boundary-aligned-landmass-family";
-    document.documentElement.dataset.hearthLanguageLayer = "globe";
-    document.documentElement.dataset.hearthConstructionLayer = "planet";
-    document.documentElement.dataset.hearthGeneralRegions = "4";
-    document.documentElement.dataset.hearthCountries = "16";
-    document.documentElement.dataset.hearthSummitRegionsPerGeneralRegion = "9";
-    document.documentElement.dataset.hearthTotalSummitRegions = "36";
-    document.documentElement.dataset.hearthTerrainSrc = TERRAIN_SRC;
-    document.documentElement.dataset.hearthHydrationSrc = HYDRATION_SRC;
-    document.documentElement.dataset.hearthCanvasSrc = CANVAS_SRC;
-    document.documentElement.dataset.hearthOldG2Retired = "true";
-    document.documentElement.dataset.hearthOldG34TerrainRetired = "true";
-    document.documentElement.dataset.hearthOldG37HydrationRetired = "true";
-    document.documentElement.dataset.hearthOldG39CanvasRetired = "true";
-    document.documentElement.dataset.hearthOldG310ChainRetired = "true";
-    document.documentElement.dataset.hearthHydrationDeferred = "true";
-    document.documentElement.dataset.hearthTerrainDetailDeferred = "true";
-    document.documentElement.dataset.hearthMountainsDeferred = "true";
-    document.documentElement.dataset.hearthWeatherClimateCloudsDeferred = "true";
-    document.documentElement.dataset.hearthHumidityDeferred = "true";
-    document.documentElement.dataset.hearthGeneratedImage = "false";
-    document.documentElement.dataset.hearthGraphicBox = "false";
-  }
-
-  function callKnownDisposers() {
-    [
-      "__HEARTH_CANVAS_BOUNDARY_DISPOSE__",
-      "__HEARTH_TERRAIN_BOUNDARY_DISPOSE__",
-      "__HEARTH_HYDRATION_BOUNDARY_DISPOSE__",
-      "__HEARTH_CANVAS_G3_FAMILY_DISPOSE__",
-      "__HEARTH_CANVAS_G3_ZONING_DISPOSE__",
-      "__HEARTH_CANVAS_PLANET_BODY_DISPOSE__",
-      "__HEARTH_CANVAS_VISIBLE_DISPOSE__",
-      "__HEARTH_CANVAS_G3_10_DISPOSE__",
-      "__HEARTH_CANVAS_G3_9_DISPOSE__",
-      "__HEARTH_CANVAS_G3_8_DISPOSE__",
-      "__HEARTH_CANVAS_G3_7_DISPOSE__",
-      "__HEARTH_CANVAS_G3_6_DISPOSE__",
-      "__HEARTH_CANVAS_G3_5_DISPOSE__",
-      "__HEARTH_CANVAS_G3_4_DISPOSE__",
-      "__HEARTH_CANVAS_G3_DISPOSE__",
-      "__HEARTH_CANVAS_DISPOSE__",
-      "__HEARTH_G2_DISPOSE__"
-    ].forEach((name) => {
-      if (typeof window[name] === "function") {
-        try { window[name](); } catch (_) {}
-      }
-      try { window[name] = null; } catch (_) {}
-    });
-  }
-
-  function installRouteStyle() {
-    const prior = document.getElementById("hearth-boundary-route-controller-style");
-    if (prior) prior.remove();
-
-    const style = document.createElement("style");
-    style.id = "hearth-boundary-route-controller-style";
-    style.textContent = `
-      html,
-      body {
-        overflow-x: hidden !important;
-        overflow-y: auto !important;
-        touch-action: pan-y !important;
-        -webkit-overflow-scrolling: touch !important;
-      }
-
-      #hearthCanvasMount {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        min-height: 300px;
-        overflow: hidden;
-        isolation: isolate;
-        touch-action: pan-y !important;
-      }
-
-      #hearthCanvasMount canvas[data-hearth-canvas] {
-        position: absolute;
-        inset: 0;
-        display: block;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        touch-action: pan-y !important;
-      }
-    `;
-
-    document.head.appendChild(style);
-  }
-
-  function ensureMount() {
-    let mount = document.getElementById("hearthCanvasMount");
-
-    if (!mount) {
-      const parent = document.getElementById("hearth-main") || document.querySelector("main") || document.body;
-      mount = document.createElement("section");
-      mount.id = "hearthCanvasMount";
-      mount.dataset.hearthMount = "true";
-      mount.dataset.render = "hearth";
-      mount.dataset.body = "hearth";
-      mount.setAttribute("aria-label", "Hearth G3 boundary-aligned landmass-family mount");
-      parent.appendChild(mount);
+  <style>
+    :root {
+      --bg: #020711;
+      --panel: rgba(7, 18, 33, 0.82);
+      --panel-2: rgba(8, 25, 43, 0.66);
+      --line: rgba(135, 187, 221, 0.20);
+      --text: rgba(232, 244, 252, 0.95);
+      --muted: rgba(190, 214, 230, 0.72);
+      --gold: rgba(236, 196, 102, 0.94);
+      --green: rgba(112, 214, 174, 0.84);
     }
 
-    mount.dataset.hearthMountReady = "true";
-    mount.dataset.hearthRouteController = CONTRACT;
-    mount.dataset.hearthFamilyContract = FAMILY_CONTRACT;
-    mount.dataset.hearthRouteControllerReceipt = RECEIPT;
-    mount.dataset.hearthGeneration = "G3";
-    mount.dataset.hearthStandard = "boundary-aligned-landmass-family";
-    mount.dataset.hearthLanguageLayer = "globe";
-    mount.dataset.hearthConstructionLayer = "planet";
-    mount.dataset.hearthGeneralRegions = "4";
-    mount.dataset.hearthCountries = "16";
-    mount.dataset.hearthSummitRegionsPerGeneralRegion = "9";
-    mount.dataset.hearthRenderOwner = "/assets/hearth/hearth.canvas.js";
-    mount.dataset.hearthTerrainOwner = "/assets/hearth/hearth.terrain.js";
-    mount.dataset.hearthHydrationOwner = "/assets/hearth/hearth.hydration.js";
-    mount.dataset.hearthGeneratedImage = "false";
-    mount.dataset.hearthGraphicBox = "false";
+    * {
+      box-sizing: border-box;
+    }
 
-    return mount;
-  }
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;
+      background:
+        radial-gradient(circle at 50% 14%, rgba(39, 93, 134, 0.30), transparent 36rem),
+        radial-gradient(circle at 50% 58%, rgba(42, 112, 160, 0.16), transparent 42rem),
+        var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
 
-  function removePriorScripts() {
-    document
-      .querySelectorAll([
-        'script[src*="/assets/hearth/hearth.canvas.js"]',
-        'script[src*="/assets/hearth/hearth.terrain.js"]',
-        'script[src*="/assets/hearth/hearth.hydration.js"]',
-        'script[data-hearth-boundary-script="true"]'
-      ].join(","))
-      .forEach((script) => script.remove());
-  }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-  function cleanupRetiredFrames() {
-    const protectedMount = document.getElementById("hearthCanvasMount");
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: -4rem;
+      z-index: 20;
+      padding: 0.65rem 0.85rem;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #06111f;
+      font-weight: 900;
+      transition: top 160ms ease;
+    }
 
-    document
-      .querySelectorAll([
-        ".hearth-g2-shell",
-        ".hearth-js-fallback-mount",
-        "[data-hearth-fallback-mount]",
-        "[data-hearth-adopted-frame]",
-        "[data-earth-canvas]",
-        "canvas[data-earth-canvas]",
-        "canvas[data-hearth-canvas]",
-        "[data-contract='HEARTH_G2_MODEL_RESTORE_HTML_JS_ASSET_TNT_v1']"
-      ].join(","))
-      .forEach((node) => {
-        if (!node || !node.parentElement) return;
-        if (protectedMount && (node === protectedMount || protectedMount.contains(node))) return;
-        node.remove();
-      });
-  }
+    .skip-link:focus {
+      top: 1rem;
+    }
 
-  function loadScript(src, role) {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.defer = true;
-      script.dataset.hearthBoundaryScript = "true";
-      script.dataset.hearthScriptRole = role;
-      script.dataset.contract = CONTRACT;
-      script.dataset.familyContract = FAMILY_CONTRACT;
-      script.addEventListener("load", () => resolve(script), { once: true });
-      script.addEventListener("error", () => reject(new Error(`Failed to load ${src}`)), { once: true });
-      document.head.appendChild(script);
-      state.scripts.push(script);
-    });
-  }
+    .page {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 18px 0 42px;
+    }
 
-  function assertNoRetiredLiveScripts() {
-    const offenders = [];
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 0 18px;
+    }
 
-    document.querySelectorAll("script[src]").forEach((script) => {
-      const src = script.getAttribute("src") || "";
-      RETIRED_MARKERS.forEach((marker) => {
-        if (src.includes(marker)) offenders.push(src);
-      });
-    });
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
 
-    document.documentElement.dataset.hearthRetiredScriptOffenderCount = String(offenders.length);
-    document.documentElement.dataset.hearthRetiredScriptOffenders = offenders.length ? offenders.join(" | ") : "none";
-    return offenders;
-  }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(236, 196, 102, 0.34);
+      border-radius: 50%;
+      color: var(--gold);
+      background: rgba(236, 196, 102, 0.08);
+    }
 
-  function exposeReceipt(status) {
-    window.HEARTH_ROUTE_RECEIPT = Object.freeze({
-      receipt: RECEIPT,
-      contract: CONTRACT,
-      familyContract: FAMILY_CONTRACT,
-      version: VERSION,
-      route: location.pathname,
-      expectedRoute: EXPECTED_ROUTE,
-      htmlOwner: "/showroom/globe/hearth/index.html",
-      jsOwner: "/showroom/globe/hearth/index.js",
-      terrainOwner: "/assets/hearth/hearth.terrain.js",
-      hydrationOwner: "/assets/hearth/hearth.hydration.js",
-      renderOwner: "/assets/hearth/hearth.canvas.js",
-      terrainSrc: TERRAIN_SRC,
-      hydrationSrc: HYDRATION_SRC,
-      canvasSrc: CANVAS_SRC,
-      generation: "G3",
-      standard: "boundary-aligned-landmass-family",
-      languageLayer: "globe",
-      constructionLayer: "planet",
-      generalRegions: 4,
-      countries: 16,
-      summitRegionsPerGeneralRegion: 9,
-      totalSummitRegions: 36,
-      retired: [
-        "G2 model restore",
-        "G3.4 terrain authority",
-        "G3.7 hydration engine",
-        "G3.9 true sphere composition",
-        "G3.10 chain alignment",
-        "round-blob standard",
-        "hydration-first path",
-        "terrain-detail-first path"
-      ],
-      deferred: [
-        "hydration expansion",
-        "rivers",
-        "mountains",
-        "terrain detail",
-        "weather",
-        "climate",
-        "clouds",
-        "humidity",
-        "atmospheric moisture"
-      ],
-      generatedImage: false,
-      graphicBox: false,
-      status
-    });
-  }
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
 
-  async function boot() {
-    if (state.booted) return;
-    state.booted = true;
+    nav a,
+    .route-link {
+      border: 1px solid rgba(135, 187, 221, 0.18);
+      border-radius: 999px;
+      padding: 8px 10px;
+      color: var(--muted);
+      background: rgba(5, 16, 30, 0.46);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
 
-    stamp("booting");
-    callKnownDisposers();
-    installRouteStyle();
+    nav a[aria-current="page"],
+    .route-link.primary {
+      color: #06111f;
+      background: var(--gold);
+      border-color: rgba(236, 196, 102, 0.70);
+    }
 
-    const mount = ensureMount();
-    mount.replaceChildren();
-    state.mount = mount;
+    .hero {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: minmax(0, 1.05fr) minmax(310px, 0.95fr);
+      align-items: center;
+      padding: 22px;
+      border: 1px solid rgba(135, 187, 221, 0.18);
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(9, 21, 39, 0.88), rgba(8, 28, 50, 0.58)),
+        rgba(3, 10, 20, 0.72);
+      box-shadow: 0 22px 80px rgba(0, 0, 0, 0.35);
+      overflow: hidden;
+    }
 
-    removePriorScripts();
-    cleanupRetiredFrames();
-    exposeReceipt("route-controller-ready");
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
 
-    try {
-      await loadScript(TERRAIN_SRC, "terrain");
-      stamp("terrain-loaded");
+    h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 7vw, 5rem);
+      line-height: 0.92;
+      letter-spacing: -0.06em;
+    }
 
-      await loadScript(HYDRATION_SRC, "hydration");
-      stamp("hydration-loaded");
+    .lede {
+      max-width: 66ch;
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
 
-      await loadScript(CANVAS_SRC, "canvas");
-      stamp("canvas-loaded");
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
 
-      cleanupRetiredFrames();
-      const offenders = assertNoRetiredLiveScripts();
+    .hearth-stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      min-height: 310px;
+      border-radius: 32px;
+      border: 1px solid rgba(135, 187, 221, 0.18);
+      background:
+        radial-gradient(circle at 50% 48%, rgba(54, 152, 220, 0.15), transparent 52%),
+        linear-gradient(180deg, rgba(4, 13, 25, 0.72), rgba(2, 7, 15, 0.92));
+      overflow: hidden;
+      isolation: isolate;
+      touch-action: pan-y;
+    }
 
-      document.body.dataset.hearthRouteReady = "true";
-      document.body.dataset.hearthCanvasAssetLoaded = "true";
-      exposeReceipt(offenders.length ? "ready-with-retired-script-warning" : "ready");
-      stamp(offenders.length ? "ready-with-retired-script-warning" : "ready");
-    } catch (error) {
-      document.body.dataset.hearthRouteReady = "false";
-      document.body.dataset.hearthCanvasAssetLoaded = "false";
-      document.documentElement.dataset.hearthRouteControllerError = error
+    #hearthCanvasMount {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 300px;
+      overflow: hidden;
+      isolation: isolate;
+      touch-action: pan-y;
+    }
+
+    #hearthCanvasMount canvas[data-hearth-canvas] {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+      touch-action: pan-y;
+    }
+
+    .audit-panel {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid rgba(135, 187, 221, 0.16);
+      border-radius: 24px;
+      background: var(--panel-2);
+    }
+
+    .audit-panel h2 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .audit-panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .status-card {
+      min-height: 92px;
+      padding: 14px;
+      border: 1px solid rgba(135, 187, 221, 0.16);
+      border-radius: 20px;
+      background: var(--panel);
+    }
+
+    .status-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text);
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .status-card span {
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.35;
+    }
+
+    .status-card[data-state="active"] strong {
+      color: var(--green);
+    }
+
+    .status-card[data-state="closed"] strong {
+      color: var(--gold);
+    }
+
+    @media (max-width: 820px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      nav {
+        justify-content: flex-start;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 16px;
+      }
+
+      .status-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body data-hearth-route-ready="false">
+  <a class="skip-link" href="#hearth-main">Skip to Hearth</a>
+
+  <div class="page">
+    <header class="topbar" aria-label="Hearth route header">
+      <a class="brand" href="/">
+        <span class="brand-mark">H</span>
+        <span>Diamond Gate Bridge</span>
+      </a>
+
+      <nav aria-label="Primary navigation">
+        <a href="/">Compass</a>
+        <a href="/showroom/globe/">Globe Split</a>
+        <a href="/showroom/globe/earth/">Earth</a>
+        <a href="/showroom/globe/hearth/" aria-current="page">Hearth</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
+
+    <main id="hearth-main" class="hero">
+      <section aria-labelledby="hearth-title">
+        <p class="eyebrow">Hearth · Generation 3 Route Restoration</p>
+        <h1 id="hearth-title">Hearth</h1>
+
+        <p class="lede">
+          Hearth is restored as a valid HTML route and standardized under the G3 boundary-aligned
+          landmass-family contract. Globe remains route language. The rendered object is a planet.
+        </p>
+
+        <div class="actions" aria-label="Hearth route actions">
+          <a class="route-link primary" href="/showroom/globe/">Return to Globe Split</a>
+          <a class="route-link" href="/showroom/globe/earth/">Inspect Earth</a>
+          <a class="route-link" href="/showroom/globe/audralia/">Inspect Audralia</a>
+          <a class="route-link" href="/gauges/">Run Gauges</a>
+        </div>
+
+        <section class="audit-panel" aria-label="Route audit summary">
+          <h2>Route Status</h2>
+          <p>
+            Route restored as HTML. Controller restored as JavaScript. Five-file G3 boundary lane remains the active standard.
+          </p>
+        </section>
+      </section>
+
+      <section class="hearth-stage" aria-label="Hearth planet stage">
+        <div
+          id="hearthCanvasMount"
+          data-hearth-mount
+          data-render="hearth"
+          data-body="hearth"
+          data-contract="HEARTH_G3_ROUTE_RESTORATION_HTML_TNT_v1"
+          data-family-contract="HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1"
+          data-generation="G3"
+          data-hearth-standard="boundary-aligned-landmass-family"
+          data-language-layer="globe"
+          data-construction-layer="planet"
+          data-general-regions="4"
+          data-countries="16"
+          data-summit-regions-per-general-region="9"
+          data-hydration-deferred="true"
+          data-terrain-detail-deferred="true"
+          data-climate-weather-clouds-deferred="true"
+          aria-label="Hearth G3 boundary-aligned landmass-family mount"
+        ></div>
+      </section>
+    </main>
+
+    <section class="status-grid" aria-label="Hearth G3 status">
+      <article class="status-card" data-state="active">
+        <strong>Route HTML</strong>
+        <span>Restored as valid page document.</span>
+      </article>
+
+      <article class="status-card" data-state="active">
+        <strong>Route JS</strong>
+        <span>Loads terrain, hydration, and canvas assets.</span>
+      </article>
+
+      <article class="status-card" data-state="active">
+        <strong>G3 Boundary</strong>
+        <span>4 regions, 16 countries, 36 Summit regions.</span>
+      </article>
+
+      <article class="status-card" data-state="closed">
+        <strong>Deferred</strong>
+        <span>Hydration expansion, mountains, weather, climate, clouds, humidity.</span>
+      </article>
+    </section>
+  </div>
+
+  <script src="./index.js?v=hearth-g3-route-restoration-v1" defer></script>
+</body>
+</html>

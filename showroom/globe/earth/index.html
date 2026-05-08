@@ -1,50 +1,36 @@
 <!-- /showroom/globe/earth/index.html -->
 <!doctype html>
-<html
-  lang="en"
-  data-route="/showroom/globe/earth/"
-  data-contract="EARTH_G6_VISUAL_PROOF_EXCEPTION_SINGLE_FILE_TNT_v1"
-  data-purpose="show-the-planet-first"
-  data-mode="caution-agility-exception"
-  data-runtime-chain="bypassed-for-visual-proof"
-  data-status-screen="forbidden"
-  data-generated-image="false"
-  data-graphic-box="false"
-  data-visual-pass-claimed="false"
->
+<html lang="en" data-route="/showroom/globe/earth/" data-page="earth-256-lattice-planet-view">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Earth · Visual Proof</title>
+  <title>Earth · 256 Lattice Simulation</title>
 
   <style>
     :root {
       color-scheme: dark;
       --ink: #f7f1de;
-      --muted: rgba(247,241,222,.62);
+      --muted: rgba(247,241,222,.64);
       --line: rgba(150,190,245,.22);
       --gold: #f4c95d;
       --blue: #7dbbff;
       --panel: rgba(5,12,24,.76);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html,
     body {
       margin: 0;
-      width: 100%;
       min-width: 320px;
       min-height: 100%;
-      overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 36%, rgba(92,156,255,.28), transparent 34rem),
+        radial-gradient(circle at 50% 36%, rgba(92,156,255,.30), transparent 34rem),
         radial-gradient(circle at 50% 62%, rgba(0,0,0,.78), transparent 44rem),
         linear-gradient(180deg, #07111f 0%, #02040a 72%, #000 100%);
       color: var(--ink);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
     }
 
     body {
@@ -59,7 +45,7 @@
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      opacity: .24;
+      opacity: .25;
       background-image:
         radial-gradient(circle, rgba(255,255,255,.24) 0 1px, transparent 1.4px),
         radial-gradient(circle, rgba(125,187,255,.18) 0 1px, transparent 1.6px);
@@ -234,30 +220,7 @@
       touch-action: none;
       user-select: none;
       -webkit-user-select: none;
-      filter: saturate(1.05) contrast(1.04);
-    }
-
-    .label {
-      position: absolute;
-      left: 50%;
-      bottom: clamp(1rem, 4vw, 2rem);
-      transform: translateX(-50%);
-      z-index: 4;
-      max-width: min(88%, 32rem);
-      border: 1px solid rgba(214,232,255,.22);
-      border-radius: 999px;
-      padding: .72rem 1.1rem;
-      color: var(--ink);
-      background: rgba(7,13,24,.78);
-      box-shadow:
-        0 16px 38px rgba(0,0,0,.38),
-        0 0 28px rgba(100,169,255,.16);
-      font-size: clamp(.72rem, 3vw, .95rem);
-      font-weight: 1000;
-      letter-spacing: .08em;
-      text-align: center;
-      text-transform: uppercase;
-      pointer-events: none;
+      filter: saturate(1.08) contrast(1.06);
     }
 
     .footer {
@@ -267,10 +230,6 @@
       font-size: .72rem;
       text-align: center;
       padding-top: .75rem;
-    }
-
-    .hidden-receipt {
-      display: none !important;
     }
 
     @media (max-width: 680px) {
@@ -319,37 +278,20 @@
       </nav>
     </header>
 
-    <main class="main" aria-label="Earth visual proof">
+    <main class="main" aria-label="Earth planet view">
       <section class="planet-card" aria-label="Earth render card">
         <div class="planet-title">
           <h1>Earth</h1>
-          <span>visual proof · raw synthesis first</span>
+          <span>256 lattice simulation</span>
         </div>
 
         <div class="mount" aria-label="Earth render mount">
-          <canvas id="earthCanvas" width="640" height="640" aria-label="Code-generated Earth visual proof"></canvas>
-          <div class="label">256 lattice synthetic satellite view</div>
+          <canvas id="earthCanvas" width="520" height="520" aria-label="Code-generated Earth"></canvas>
         </div>
       </section>
-
-      <template class="hidden-receipt">
-EARTH_G6_VISUAL_PROOF_EXCEPTION_SINGLE_FILE_TNT_v1
-goal=show_the_planet_first
-runtime_chain=bypassed_for_visual_proof
-status_screen=forbidden
-base_surface=generated_from_code
-image_dependency=false
-nasa_reference=false
-jpg_dependency=false
-graphic_box=false
-generated_image=false
-visual_pass_claimed=false
-      </template>
     </main>
 
-    <footer class="footer">
-      EARTH_G6_VISUAL_PROOF_EXCEPTION_SINGLE_FILE_TNT_v1
-    </footer>
+    <footer class="footer">Earth · 256 lattice simulation</footer>
   </div>
 
   <script>
@@ -359,8 +301,14 @@ visual_pass_claimed=false
       const canvas = document.getElementById("earthCanvas");
       const ctx = canvas.getContext("2d", { alpha: true });
 
-      const STATE = {
-        phase: 0.18,
+      const SIZE = 520;
+      const CENTER = SIZE / 2;
+      const RADIUS = SIZE * 0.412;
+      const TWO_PI = Math.PI * 2;
+      const HALF_PI = Math.PI / 2;
+
+      const state = {
+        phase: 0.16,
         cloudPhase: 0.08,
         velocity: 0,
         dragging: false,
@@ -368,12 +316,7 @@ visual_pass_claimed=false
         started: performance.now()
       };
 
-      const SIZE = 640;
-      const CENTER = SIZE / 2;
-      const RADIUS = SIZE * 0.405;
-      const TWO_PI = Math.PI * 2;
-      const HALF_PI = Math.PI / 2;
-      const LIGHT = normalize({ x: -0.48, y: -0.30, z: 0.82 });
+      const light = normalize({ x: -0.46, y: -0.28, z: 0.84 });
 
       function clamp(value, min, max) {
         return Math.min(max, Math.max(min, value));
@@ -387,18 +330,33 @@ visual_pass_claimed=false
         return a + (b - a) * t;
       }
 
-      function smoothstep(edge0, edge1, value) {
-        const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+      function smoothstep(a, b, x) {
+        const t = clamp((x - a) / (b - a), 0, 1);
         return t * t * (3 - 2 * t);
       }
 
       function normalize(v) {
-        const length = Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z) || 1;
-        return { x: v.x / length, y: v.y / length, z: v.z / length };
+        const d = Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z) || 1;
+        return { x: v.x / d, y: v.y / d, z: v.z / d };
       }
 
       function dot(a, b) {
         return a.x * b.x + a.y * b.y + a.z * b.z;
+      }
+
+      function mix(a, b, t) {
+        return [
+          lerp(a[0], b[0], t),
+          lerp(a[1], b[1], t),
+          lerp(a[2], b[2], t)
+        ];
+      }
+
+      function angularDelta(a, b) {
+        let d = a - b;
+        while (d > Math.PI) d -= TWO_PI;
+        while (d < -Math.PI) d += TWO_PI;
+        return d;
       }
 
       function hash2(x, y) {
@@ -424,111 +382,113 @@ visual_pass_claimed=false
 
       function fbm(x, y) {
         let value = 0;
-        let amplitude = 0.56;
+        let amplitude = 0.55;
         let frequency = 1;
 
-        for (let i = 0; i < 6; i += 1) {
+        for (let i = 0; i < 5; i += 1) {
           value += noise2(x * frequency, y * frequency) * amplitude;
-          frequency *= 2.02;
+          frequency *= 2.03;
           amplitude *= 0.52;
         }
 
         return clamp(value, 0, 1);
       }
 
-      function mix(a, b, t) {
-        return [
-          lerp(a[0], b[0], t),
-          lerp(a[1], b[1], t),
-          lerp(a[2], b[2], t)
-        ];
+      function blob(lon, lat, lon0, lat0, rx, ry, amp) {
+        const x = angularDelta(lon, lon0) / rx;
+        const y = (lat - lat0) / ry;
+        return amp * Math.exp(-(x * x + y * y));
+      }
+
+      function continentField(lon, lat) {
+        let value = 0;
+
+        value += blob(lon, lat, -2.35,  0.62, .42, .78, 1.15);
+        value += blob(lon, lat, -2.02, -0.35, .34, .86, 1.08);
+        value += blob(lon, lat, -1.30, -0.92, .30, .42, .72);
+
+        value += blob(lon, lat,  0.20,  0.58, 1.12, .46, 1.28);
+        value += blob(lon, lat,  1.35,  0.45, .88, .52, 1.12);
+        value += blob(lon, lat,  0.54, -0.22, .40, .66, .94);
+        value += blob(lon, lat,  1.28, -0.72, .38, .42, .62);
+
+        value += blob(lon, lat,  2.18, -0.62, .34, .30, .55);
+        value += blob(lon, lat, -3.05, -1.28, 3.2, .22, .92);
+
+        const u = wrap01(lon / TWO_PI + .5);
+        const v = clamp(.5 - lat / Math.PI, 0, 1);
+        const edge = fbm(u * 8.0 + 1.6, v * 5.5 - .4) * .26;
+
+        return value + edge;
       }
 
       function sampleSurface(lat, lon, cloudPhase, time) {
-        const u = wrap01(lon / TWO_PI + 0.5);
-        const v = clamp(0.5 - lat / Math.PI, 0, 1);
+        const u = wrap01(lon / TWO_PI + .5);
+        const v = clamp(.5 - lat / Math.PI, 0, 1);
         const absLat = Math.abs(lat) / HALF_PI;
 
-        const continent =
-          0.52 * fbm(u * 2.45 + 0.22, v * 1.78 - 0.17) +
-          0.28 * fbm(u * 5.2 - 1.4, v * 4.25 + 0.8) +
-          0.14 * Math.sin(lon * 2.2 + Math.sin(lat * 3.2)) +
-          0.10 * Math.cos(lat * 4.8 + Math.sin(lon * 1.7));
+        const field = continentField(lon, lat);
+        const threshold = .68 + .06 * Math.sin(lon * 3.0 + lat * 2.0);
+        const land = field > threshold && absLat < .86;
+        const coast = Math.abs(field - threshold) < .075 && absLat < .86;
 
-        const threshold = 0.43 + absLat * 0.11 - 0.04 * Math.sin(lon * 3.0);
-        const coastDistance = Math.abs(continent - threshold);
-        const ice = smoothstep(0.72, 0.96, absLat + fbm(u * 5.2, v * 5.2) * 0.08);
-        const land = continent > threshold && ice < 0.84;
-        const coast = coastDistance < 0.052 && ice < 0.8;
-
-        const elevation = land
-          ? clamp((continent - threshold) * 2.6 + fbm(u * 12.0, v * 8.0) * 0.46, 0, 1)
-          : 0;
-
-        const oceanDepth = land
-          ? 0
-          : clamp((threshold - continent) * 2.8 + fbm(u * 7.0 + 4.0, v * 5.0) * 0.25, 0, 1);
-
-        const moisture = clamp(
-          0.52 +
-          0.28 * Math.cos(lat * 2.0) +
-          0.18 * fbm(u * 8.0 + 9.0, v * 6.0 - 2.0) -
-          0.20 * elevation,
-          0,
-          1
-        );
+        const ice = smoothstep(.74, .95, absLat + fbm(u * 5.3, v * 5.3) * .08);
+        const elevation = land ? clamp((field - threshold) * 1.8 + fbm(u * 12.0, v * 8.0) * .42, 0, 1) : 0;
+        const oceanDepth = land ? 0 : clamp((threshold - field) * 1.65 + fbm(u * 7.0 + 4.0, v * 5.0) * .22, 0, 1);
+        const moisture = clamp(.50 + .26 * Math.cos(lat * 2.0) + .18 * fbm(u * 8.0 + 9.0, v * 6.0 - 2.0) - .22 * elevation, 0, 1);
 
         let color;
+        let water = land ? 0 : 1;
 
-        if (ice > 0.84) {
-          color = mix([218, 236, 242], [248, 250, 246], ice);
+        if (ice > .82) {
+          color = mix([220, 236, 242], [248, 250, 246], ice);
+          water = water ? .7 : .1;
         } else if (land) {
-          const arid = moisture < 0.42 && Math.abs(lat) > 0.16 && Math.abs(lat) < 0.72;
-          const forest = moisture >= 0.54 && elevation < 0.62;
-          const highland = elevation >= 0.62;
+          const arid = moisture < .42 && Math.abs(lat) > .16 && Math.abs(lat) < .74;
+          const forest = moisture >= .55 && elevation < .62;
+          const highland = elevation >= .62;
 
-          if (highland) {
-            color = mix([88, 90, 72], [190, 182, 146], elevation);
-          } else if (arid) {
-            color = mix([128, 106, 58], [190, 156, 86], 0.50 + elevation * 0.35);
-          } else if (forest) {
-            color = mix([24, 90, 56], [66, 135, 70], moisture);
-          } else {
-            color = mix([50, 112, 72], [122, 136, 78], elevation * 0.55);
-          }
-        } else if (coast || oceanDepth < 0.18) {
-          color = mix([13, 76, 105], [36, 154, 157], 1 - oceanDepth);
+          if (highland) color = mix([88, 90, 72], [190, 182, 146], elevation);
+          else if (arid) color = mix([130, 106, 58], [196, 158, 84], .50 + elevation * .35);
+          else if (forest) color = mix([22, 92, 56], [70, 142, 72], moisture);
+          else color = mix([52, 116, 72], [124, 138, 78], elevation * .55);
+        } else if (coast || oceanDepth < .20) {
+          color = mix([13, 76, 105], [38, 168, 162], 1 - oceanDepth);
         } else {
-          color = mix([3, 18, 52], [8, 56, 96], 1 - oceanDepth);
+          color = mix([3, 18, 54], [8, 58, 102], 1 - oceanDepth);
         }
 
-        if (coast && ice < 0.75) {
-          color = mix(color, land ? [184, 168, 112] : [46, 166, 160], 0.36);
+        if (coast && ice < .75) {
+          color = mix(color, land ? [188, 170, 112] : [50, 176, 164], .42);
         }
+
+        const cellX = Math.floor(u * 16);
+        const cellY = Math.floor(v * 16);
+        const cell = hash2(cellX, cellY);
+        color = mix(color, [color[0] + 18, color[1] + 18, color[2] + 18], (cell - .5) * .08);
 
         const cloudNoise =
-          0.60 * fbm(u * 9.5 + cloudPhase * 6.0, v * 5.0 + time * 0.012) +
-          0.25 * fbm(u * 23.0 - cloudPhase * 9.0, v * 11.0 + 2.0) +
-          0.12 * Math.sin((u + cloudPhase) * TWO_PI * 3.0 + v * 7.0);
+          .62 * fbm(u * 9.4 + cloudPhase * 6.0, v * 5.0 + time * .012) +
+          .24 * fbm(u * 23.0 - cloudPhase * 9.0, v * 11.0 + 2.0) +
+          .12 * Math.sin((u + cloudPhase) * TWO_PI * 3.0 + v * 7.0);
 
-        const stormBand = smoothstep(0.12, 0.60, Math.cos(lat * 3.0) * 0.5 + 0.5);
-        const cloudAlpha = clamp(smoothstep(0.58, 0.92, cloudNoise) * (0.30 + stormBand * 0.48), 0, 0.66);
+        const stormBand = smoothstep(.12, .60, Math.cos(lat * 3.0) * .5 + .5);
+        const cloudAlpha = clamp(smoothstep(.58, .90, cloudNoise) * (.28 + stormBand * .42), 0, .56);
 
-        return { color, cloudAlpha, water: land ? 0 : 1 };
+        return { color, cloudAlpha, water };
       }
 
       function draw() {
         const image = ctx.createImageData(SIZE, SIZE);
         const data = image.data;
-        const now = performance.now();
-        const time = (now - STATE.started) / 1000;
+        const time = (performance.now() - state.started) / 1000;
         const tilt = 23.44 * Math.PI / 180;
 
         for (let py = 0; py < SIZE; py += 1) {
-          const dy = (py + 0.5 - CENTER) / RADIUS;
+          const dy = (py + .5 - CENTER) / RADIUS;
 
           for (let px = 0; px < SIZE; px += 1) {
-            const dx = (px + 0.5 - CENTER) / RADIUS;
+            const dx = (px + .5 - CENTER) / RADIUS;
             const rr = dx * dx + dy * dy;
             const idx = (py * SIZE + px) * 4;
 
@@ -547,31 +507,31 @@ visual_pass_claimed=false
             const zTilted = normal.y * Math.sin(tilt) + normal.z * Math.cos(tilt);
 
             const lat = Math.asin(clamp(yTilted, -1, 1));
-            const lon = Math.atan2(normal.x, zTilted) + STATE.phase * TWO_PI;
+            const lon = Math.atan2(normal.x, zTilted) + state.phase * TWO_PI;
 
-            const sample = sampleSurface(lat, lon, STATE.cloudPhase, time);
-
+            const sample = sampleSurface(lat, lon, state.cloudPhase, time);
             let color = sample.color.slice();
-            const light = clamp(dot(normal, LIGHT) * 0.74 + 0.35, 0.14, 1.08);
+
+            const lightAmount = clamp(dot(normal, light) * .74 + .35, .14, 1.08);
             const limb = clamp(1 - normal.z, 0, 1);
             const haze = Math.pow(limb, 2.25);
             const rim = Math.pow(limb, 3.0);
 
-            color[0] *= light;
-            color[1] *= light;
-            color[2] *= light;
+            color[0] *= lightAmount;
+            color[1] *= lightAmount;
+            color[2] *= lightAmount;
 
-            if (sample.water > 0.5) {
-              const specular = Math.pow(clamp(dot(normal, LIGHT), 0, 1), 18) * Math.pow(1 - limb, 3.4);
+            if (sample.water > .5) {
+              const specular = Math.pow(clamp(dot(normal, light), 0, 1), 18) * Math.pow(1 - limb, 3.2);
               color[0] += specular * 42;
               color[1] += specular * 68;
               color[2] += specular * 98;
             }
 
-            color = mix(color, [82, 154, 230], haze * 0.20);
+            color = mix(color, [82, 154, 230], haze * .20);
 
             if (sample.cloudAlpha > 0) {
-              color = mix(color, [232, 238, 235], sample.cloudAlpha * clamp(0.42 + light * 0.58, 0, 1));
+              color = mix(color, [232, 238, 235], sample.cloudAlpha * clamp(.42 + lightAmount * .58, 0, 1));
             }
 
             color[0] += rim * 22;
@@ -591,7 +551,7 @@ visual_pass_claimed=false
         ctx.save();
         ctx.beginPath();
         ctx.arc(CENTER, CENTER, RADIUS + 2, 0, TWO_PI);
-        ctx.strokeStyle = "rgba(188,223,255,.35)";
+        ctx.strokeStyle = "rgba(188,223,255,.36)";
         ctx.lineWidth = 2;
         ctx.stroke();
 
@@ -604,64 +564,42 @@ visual_pass_claimed=false
       }
 
       function tick() {
-        STATE.phase = wrap01(STATE.phase + 0.00062 + STATE.velocity);
-        STATE.cloudPhase = wrap01(STATE.cloudPhase + 0.00024 + STATE.velocity * 0.42);
-        STATE.velocity *= 0.945;
+        state.phase = wrap01(state.phase + .00062 + state.velocity);
+        state.cloudPhase = wrap01(state.cloudPhase + .00024 + state.velocity * .42);
+        state.velocity *= .945;
 
-        if (Math.abs(STATE.velocity) < 0.000012) {
-          STATE.velocity = 0;
-        }
+        if (Math.abs(state.velocity) < .000012) state.velocity = 0;
 
         draw();
         requestAnimationFrame(tick);
       }
 
       canvas.addEventListener("pointerdown", (event) => {
-        STATE.dragging = true;
-        STATE.lastX = event.clientX;
-        STATE.velocity = 0;
+        state.dragging = true;
+        state.lastX = event.clientX;
+        state.velocity = 0;
 
-        try {
-          canvas.setPointerCapture(event.pointerId);
-        } catch (error) {}
+        try { canvas.setPointerCapture(event.pointerId); } catch (error) {}
 
         if (event.cancelable) event.preventDefault();
       }, { passive: false });
 
       window.addEventListener("pointermove", (event) => {
-        if (!STATE.dragging) return;
+        if (!state.dragging) return;
 
-        const dx = event.clientX - STATE.lastX;
-        STATE.lastX = event.clientX;
+        const dx = event.clientX - state.lastX;
+        state.lastX = event.clientX;
 
-        const delta = -dx * 0.00145;
-        STATE.phase = wrap01(STATE.phase + delta);
-        STATE.cloudPhase = wrap01(STATE.cloudPhase + delta * 0.42);
-        STATE.velocity = delta * 0.58;
+        const delta = -dx * .00145;
+        state.phase = wrap01(state.phase + delta);
+        state.cloudPhase = wrap01(state.cloudPhase + delta * .42);
+        state.velocity = delta * .58;
 
         if (event.cancelable) event.preventDefault();
       }, { passive: false });
 
-      window.addEventListener("pointerup", () => {
-        STATE.dragging = false;
-      });
-
-      window.addEventListener("pointercancel", () => {
-        STATE.dragging = false;
-      });
-
-      window.DGB_EARTH_VISUAL_PROOF_RECEIPT = {
-        contract: "EARTH_G6_VISUAL_PROOF_EXCEPTION_SINGLE_FILE_TNT_v1",
-        route: "/showroom/globe/earth/",
-        goal: "show_the_planet_first",
-        statusScreen: "forbidden",
-        runtimeChain: "bypassed_for_visual_proof",
-        baseSurface: "generated_from_code",
-        generatedImage: false,
-        graphicBox: false,
-        visualPassClaimed: false,
-        timestamp: new Date().toISOString()
-      };
+      window.addEventListener("pointerup", () => { state.dragging = false; });
+      window.addEventListener("pointercancel", () => { state.dragging = false; });
 
       draw();
       tick();

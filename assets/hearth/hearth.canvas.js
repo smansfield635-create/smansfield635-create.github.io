@@ -1,26 +1,26 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_G3_PLANET_BODY_TEMPLATE_STANDARD_RENEWAL_TNT_v1
+// HEARTH_G3_PLANET_BODY_SINGLE_DRAW_PATH_FULL_REPLACEMENT_TNT_v1
 // Full-file replacement.
+// Contract renewal standard.
 // Purpose:
-// - Renew Hearth under the new planet-body standard.
-// - Build Hearth as a planet, not a decorative/classroom/globe-template object.
-// - Keep "globe" as website language only; render law is planet.
-// - No flat printed-map wrap as governing model.
-// - No two-piece hemisphere shell.
-// - No grocery-store globe seam.
-// - No display rim/ring system.
-// - No clouds, weather, climate, humidity, or atmospheric moisture.
-// - G3 only: planet body, terrain, oceans, bathymetry, coast shelves, frozen storage, surface hydrology.
+// - Build Hearth as a planet-body renderer, not a decorative globe renderer.
+// - Enforce one visible draw path.
+// - paintPlanet prepares offscreen image data only.
+// - composite is the only function allowed to draw onto the visible canvas.
+// - Remove duplicate planet / side-body artifact.
+// - Preserve G3 scope: planet body, terrain, ocean, shelves, bathymetry, frozen storage, surface hydrology.
+// - Exclude G4 scope: clouds, weather, climate, humidity, atmospheric moisture.
+// - No external image. No generated image. No GraphicBox.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_PLANET_BODY_TEMPLATE_STANDARD_RENEWAL_TNT_v1";
-  const VERSION = "2026-05-08.hearth-g3-planet-body-template-standard-renewal";
-  const RECEIPT = "HEARTH_G3_PLANET_BODY_STANDARD_RENEWAL_RECEIPT";
+  const CONTRACT = "HEARTH_G3_PLANET_BODY_SINGLE_DRAW_PATH_FULL_REPLACEMENT_TNT_v1";
+  const VERSION = "2026-05-08.hearth-g3-planet-body-single-draw-path";
+  const RECEIPT = "HEARTH_G3_PLANET_BODY_SINGLE_DRAW_PATH_RECEIPT";
 
   const MIN_SIZE = 300;
-  const MAX_SIZE = 460;
+  const MAX_SIZE = 520;
   const TAU = Math.PI * 2;
 
   [
@@ -34,6 +34,7 @@
     if (typeof window[name] === "function") {
       try { window[name](); } catch (_) {}
     }
+
     try { window[name] = null; } catch (_) {}
   });
 
@@ -45,6 +46,8 @@
     mount: null,
     canvas: null,
     ctx: null,
+    buffer: null,
+    bufferCtx: null,
     image: null,
     size: 0,
     observer: null
@@ -68,24 +71,16 @@
     return [v[0] / m, v[1] / m, v[2] / m];
   }
 
-  function rotateY(v, a) {
-    const c = Math.cos(a);
-    const s = Math.sin(a);
-    return [
-      v[0] * c + v[2] * s,
-      v[1],
-      -v[0] * s + v[2] * c
-    ];
-  }
-
   function rotateX(v, a) {
     const c = Math.cos(a);
     const s = Math.sin(a);
-    return [
-      v[0],
-      v[1] * c - v[2] * s,
-      v[1] * s + v[2] * c
-    ];
+    return [v[0], v[1] * c - v[2] * s, v[1] * s + v[2] * c];
+  }
+
+  function rotateY(v, a) {
+    const c = Math.cos(a);
+    const s = Math.sin(a);
+    return [v[0] * c + v[2] * s, v[1], -v[0] * s + v[2] * c];
   }
 
   function dirFromLonLat(lonDeg, latDeg) {
@@ -171,8 +166,7 @@
   function sphericalBlob(v, core) {
     const d = dot3(v, core.c);
     const edge = Math.cos(core.r);
-    const q = smoothstep(edge, 1, d);
-    return q * core.a;
+    return smoothstep(edge, 1, d) * core.a;
   }
 
   function samplePlanetBody(v) {
@@ -253,7 +247,6 @@
       : clamp(shelf * 0.58 + coast * 0.18, 0, 1);
 
     return {
-      field,
       land,
       coast,
       elevation,
@@ -326,13 +319,14 @@
   }
 
   function installStyle() {
-    const old = document.getElementById("hearth-planet-body-standard-style");
+    const old = document.getElementById("hearth-single-draw-planet-style");
     if (old) old.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-planet-body-standard-style";
+    style.id = "hearth-single-draw-planet-style";
     style.textContent = `
-      html, body {
+      html,
+      body {
         overflow-x: hidden !important;
         overflow-y: auto !important;
         touch-action: pan-y !important;
@@ -395,7 +389,7 @@
   }
 
   function resize() {
-    if (!runtime.mount || !runtime.canvas) return;
+    if (!runtime.mount || !runtime.canvas || !runtime.buffer || !runtime.bufferCtx) return;
 
     const rect = runtime.mount.getBoundingClientRect();
     const cssSize = Math.max(
@@ -412,7 +406,9 @@
 
     if (runtime.size !== workSize) {
       runtime.size = workSize;
-      runtime.image = runtime.ctx.createImageData(workSize, workSize);
+      runtime.buffer.width = workSize;
+      runtime.buffer.height = workSize;
+      runtime.image = runtime.bufferCtx.createImageData(workSize, workSize);
     }
   }
 
@@ -423,6 +419,7 @@
     bg.addColorStop(0, "rgba(42,85,116,0.16)");
     bg.addColorStop(0.54, "rgba(12,30,52,0.54)");
     bg.addColorStop(1, "rgba(2,7,15,1)");
+
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, w, h);
   }
@@ -455,6 +452,7 @@
       for (let x = xMin; x <= xMax; x += 1) {
         const sx = (x - cx) / radius;
         const d2 = sx * sx + sy2;
+
         if (d2 > 1) continue;
 
         const z = Math.sqrt(1 - d2);
@@ -490,42 +488,36 @@
         data[out + 3] = Math.round(alpha * 255);
       }
     }
-
-    const ctx = runtime.ctx;
-    ctx.putImageData(image, 0, 0);
   }
 
   function composite(time) {
     const canvas = runtime.canvas;
     const ctx = runtime.ctx;
+    const buffer = runtime.buffer;
+    const bufferCtx = runtime.bufferCtx;
 
-    if (!canvas || !ctx || !runtime.image) return;
+    if (!canvas || !ctx || !buffer || !bufferCtx || !runtime.image) return;
 
     const w = canvas.width;
     const h = canvas.height;
+
     if (!w || !h) return;
 
     paintBackplate(ctx, w, h);
-
-    const drawSize = runtime.size;
     paintPlanet(time);
 
-    if (w !== drawSize || h !== drawSize) {
-      const temp = document.createElement("canvas");
-      temp.width = drawSize;
-      temp.height = drawSize;
-      temp.getContext("2d").putImageData(runtime.image, 0, 0);
+    bufferCtx.clearRect(0, 0, runtime.size, runtime.size);
+    bufferCtx.putImageData(runtime.image, 0, 0);
 
-      const dx = (w - Math.min(w, h)) * 0.5;
-      const dy = (h - Math.min(w, h)) * 0.5;
-      const target = Math.min(w, h);
+    const target = Math.min(w, h);
+    const dx = (w - target) * 0.5;
+    const dy = (h - target) * 0.5;
 
-      ctx.save();
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "high";
-      ctx.drawImage(temp, dx, dy, target, target);
-      ctx.restore();
-    }
+    ctx.save();
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(buffer, dx, dy, target, target);
+    ctx.restore();
   }
 
   function loop(time) {
@@ -552,6 +544,10 @@
       newStandard: "planet-body-template",
       languageLayer: "globe",
       constructionLayer: "planet",
+      drawPath: "single-visible-draw-path",
+      paintPlanetWritesVisibleCanvas: false,
+      compositeWritesVisibleCanvas: true,
+      duplicatePlanetPrevented: true,
       renderPolicy: "3D planet-body surface field; no flat map wrap; no decorative globe shell",
       noHemisphereMask: true,
       noTwoPieceShell: true,
@@ -577,6 +573,7 @@
     canvas.dataset.renderTemplate = "planet-body";
     canvas.dataset.languageLayer = "globe";
     canvas.dataset.constructionLayer = "planet";
+    canvas.dataset.drawPath = "single-visible-draw-path";
     canvas.setAttribute("role", "img");
     canvas.setAttribute("aria-label", "Hearth Generation 3 planet body");
 
@@ -585,6 +582,8 @@
     runtime.mount = mountEl;
     runtime.canvas = canvas;
     runtime.ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
+    runtime.buffer = document.createElement("canvas");
+    runtime.bufferCtx = runtime.buffer.getContext("2d", { alpha: true, willReadFrequently: false });
 
     mountEl.dataset.hearthCanvasContract = CONTRACT;
     mountEl.dataset.hearthCanvasReceipt = RECEIPT;
@@ -593,6 +592,7 @@
     mountEl.dataset.hearthRenderTemplate = "planet-body";
     mountEl.dataset.hearthLanguageLayer = "globe";
     mountEl.dataset.hearthConstructionLayer = "planet";
+    mountEl.dataset.hearthDrawPath = "single-visible-draw-path";
 
     document.documentElement.dataset.hearthCanvasLoaded = "true";
     document.documentElement.dataset.hearthCanvasContract = CONTRACT;
@@ -602,9 +602,11 @@
     document.documentElement.dataset.hearthRenderTemplate = "planet-body";
     document.documentElement.dataset.hearthLanguageLayer = "globe";
     document.documentElement.dataset.hearthConstructionLayer = "planet";
+    document.documentElement.dataset.hearthDrawPath = "single-visible-draw-path";
 
     runtime.observer = new ResizeObserver(resize);
     runtime.observer.observe(mountEl);
+
     window.addEventListener("resize", resize, { passive: true });
 
     resize();
@@ -621,7 +623,7 @@
 
     if (runtime.observer) runtime.observer.disconnect();
 
-    const style = document.getElementById("hearth-planet-body-standard-style");
+    const style = document.getElementById("hearth-single-draw-planet-style");
     if (style) style.remove();
 
     if (runtime.mount) runtime.mount.replaceChildren();

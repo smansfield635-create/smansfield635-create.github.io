@@ -1,20 +1,24 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_G3_7_HYDRATION_ENGINE_CANVAS_BIND_TNT_v1
+// HEARTH_G3_8_RENDER_STAGE_PURIFICATION_HYDRATION_VISIBILITY_TNT_v1
 // Full-file replacement.
 // Purpose:
-// - Bind Hearth canvas to terrain + hydration engines.
-// - Canvas owns projection, rotation, view-locked lighting, wrapped sampling, and render composition.
-// - Terrain owns body mass, elevation, mountain ranges, relief, bathymetry base.
-// - Hydration owns ocean material, shelves, lakes, basins, drainage, frozen-water storage, and water saturation.
+// - Preserve terrain and hydration engines.
+// - Purify render stage so lighting does not overpower G3 proof.
+// - Remove dark crescent dominance and post-lighting washout.
+// - Make hydration evidence visible: shallow water, deep water, wet terrain, lakes, drainage candidates,
+//   frozen-water storage, coastal saturation.
+// - Canvas owns projection, rotation, render composition, wrapped sampling, and proof visibility only.
+// - Terrain owns map/body/elevation/mountains/relief/bathymetry.
+// - Hydration owns water material/shelves/basins/drainage/frozen storage/saturation.
 // - G3 only. G4 remains deferred: clouds, weather, climate.
 // - No JPG. No NASA asset. No generated image. No GraphicBox.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_7_HYDRATION_ENGINE_CANVAS_BIND_TNT_v1";
-  const VERSION = "2026-05-08.hearth-g3-7-hydration-engine-canvas-bind";
-  const RECEIPT = "HEARTH_G3_7_HYDRATION_ENGINE_CANVAS_BIND_RECEIPT";
+  const CONTRACT = "HEARTH_G3_8_RENDER_STAGE_PURIFICATION_HYDRATION_VISIBILITY_TNT_v1";
+  const VERSION = "2026-05-08.hearth-g3-8-render-purification-hydration-visibility";
+  const RECEIPT = "HEARTH_G3_8_RENDER_STAGE_PURIFICATION_RECEIPT";
 
   const TERRAIN_SRC = "/assets/hearth/hearth.terrain.js?v=hearth-g3-4-map-generation";
   const HYDRATION_SRC = "/assets/hearth/hearth.hydration.js?v=hearth-g3-7-hydration-engine";
@@ -27,6 +31,7 @@
   const HALF_PI = Math.PI / 2;
 
   [
+    "__HEARTH_CANVAS_G3_8_DISPOSE__",
     "__HEARTH_CANVAS_G3_7_DISPOSE__",
     "__HEARTH_CANVAS_G3_6_DISPOSE__",
     "__HEARTH_CANVAS_G3_5_DISPOSE__",
@@ -106,24 +111,31 @@
     return norm ? sum / norm : 0;
   }
 
-  function loadScriptOnce(globalName, src, marker) {
+  function loadScriptOnce(globalName, src, markerName) {
     return new Promise((resolve) => {
       if (window[globalName]) {
         resolve(window[globalName]);
         return;
       }
 
-      const existing = document.querySelector(`script[data-${marker}="true"], script[src*="${src.split("?")[0]}"]`);
+      const baseSrc = src.split("?")[0];
+      const existing = document.querySelector(`script[src*="${baseSrc}"]`);
+
       if (existing) {
         existing.addEventListener("load", () => resolve(window[globalName] || null), { once: true });
         existing.addEventListener("error", () => resolve(null), { once: true });
+
+        setTimeout(() => {
+          resolve(window[globalName] || null);
+        }, 250);
+
         return;
       }
 
       const script = document.createElement("script");
       script.src = src;
       script.defer = true;
-      script.dataset[marker] = "true";
+      script.dataset[markerName] = "true";
       script.dataset.contract = CONTRACT;
 
       script.addEventListener("load", () => resolve(window[globalName] || null), { once: true });
@@ -170,7 +182,7 @@
     };
   }
 
-  function fallbackHydrationSample(lon, lat, terrainSample) {
+  function fallbackHydrationSample(_lon, _lat, terrainSample) {
     const land = !!terrainSample.land;
     const coast = clamp(terrainSample.coast || 0, 0, 1);
     const shelf = clamp(terrainSample.shelf || 0, 0, 1);
@@ -210,38 +222,45 @@
       const highland = t.highland || smoothstep(0.42, 0.80, t.elevation);
       const mountain = t.mountain || 0;
       const hydroGreen = clamp((h.saturation || 0) * 0.44 + (h.wetland || 0) * 0.34, 0, 1);
-      const wetEdge = clamp((h.coastalWetness || 0) * 0.50 + (h.riverCandidate || 0) * 0.42 + (h.lake || 0) * 0.60, 0, 1);
+      const wetEdge = clamp(
+        (h.coastalWetness || 0) * 0.62 +
+        (h.riverCandidate || 0) * 0.54 +
+        (h.lake || 0) * 0.74 +
+        (h.drainageCandidate || 0) * 0.26,
+        0,
+        1
+      );
       const frozen = clamp(h.frozenStorage || t.ice || 0, 0, 1);
 
       let r = mix(132, 42, green);
       let g = mix(105, 122, green);
       let b = mix(58, 72, green);
 
-      r = mix(r, 42, hydroGreen * 0.18);
-      g = mix(g, 132, hydroGreen * 0.20);
-      b = mix(b, 92, hydroGreen * 0.18);
+      r = mix(r, 40, hydroGreen * 0.22);
+      g = mix(g, 138, hydroGreen * 0.25);
+      b = mix(b, 96, hydroGreen * 0.22);
 
-      r = mix(r, 176, t.aridity * 0.48);
-      g = mix(g, 142, t.aridity * 0.38);
-      b = mix(b, 90, t.aridity * 0.30);
+      r = mix(r, 176, t.aridity * 0.42);
+      g = mix(g, 142, t.aridity * 0.34);
+      b = mix(b, 90, t.aridity * 0.26);
 
-      r = mix(r, 118, highland * 0.30);
-      g = mix(g, 116, highland * 0.26);
-      b = mix(b, 104, highland * 0.24);
+      r = mix(r, 118, highland * 0.28);
+      g = mix(g, 116, highland * 0.24);
+      b = mix(b, 104, highland * 0.22);
 
-      r = mix(r, 96, mountain * 0.50);
-      g = mix(g, 96, mountain * 0.46);
-      b = mix(b, 96, mountain * 0.44);
+      r = mix(r, 94, mountain * 0.46);
+      g = mix(g, 94, mountain * 0.42);
+      b = mix(b, 94, mountain * 0.40);
 
-      r = mix(r, 34, wetEdge * 0.16);
-      g = mix(g, 150, wetEdge * 0.20);
-      b = mix(b, 154, wetEdge * 0.22);
+      r = mix(r, 30, wetEdge * 0.22);
+      g = mix(g, 154, wetEdge * 0.28);
+      b = mix(b, 162, wetEdge * 0.30);
 
-      r = mix(r, 232, frozen * 0.70);
-      g = mix(g, 238, frozen * 0.70);
-      b = mix(b, 232, frozen * 0.70);
+      r = mix(r, 236, frozen * 0.72);
+      g = mix(g, 242, frozen * 0.72);
+      b = mix(b, 236, frozen * 0.72);
 
-      const grain = (texture - 0.5) * 23 + (fine - 0.5) * 10;
+      const grain = (texture - 0.5) * 21 + (fine - 0.5) * 9;
 
       return [
         clamp(r + grain, 0, 255),
@@ -255,28 +274,28 @@
     const abyss = clamp(h.abyssWater || t.abyss || 0, 0, 1);
     const rough = clamp(h.roughWater || 0, 0, 1);
     const reef = shallow * smoothstep(0.55, 0.90, fbm(nx * 58, ny * 40, 88.1, 3));
-    const current = (waterTexture - 0.5) * (12 + rough * 18);
+    const current = (waterTexture - 0.5) * (11 + rough * 16);
 
     let r = mix(18, 0, deep);
-    let g = mix(102, 24, deep);
-    let b = mix(148, 80, deep);
+    let g = mix(108, 28, deep);
+    let b = mix(154, 88, deep);
 
-    r = mix(r, 36, shallow * 0.90);
-    g = mix(g, 182, shallow * 0.86);
-    b = mix(b, 188, shallow * 0.82);
+    r = mix(r, 34, shallow * 0.92);
+    g = mix(g, 194, shallow * 0.88);
+    b = mix(b, 198, shallow * 0.84);
 
-    r = mix(r, 4, abyss * 0.48);
-    g = mix(g, 28, abyss * 0.40);
-    b = mix(b, 82, abyss * 0.38);
+    r = mix(r, 3, abyss * 0.44);
+    g = mix(g, 30, abyss * 0.36);
+    b = mix(b, 86, abyss * 0.34);
 
-    r = mix(r, 76, reef * 0.24);
-    g = mix(g, 202, reef * 0.34);
-    b = mix(b, 190, reef * 0.30);
+    r = mix(r, 76, reef * 0.28);
+    g = mix(g, 208, reef * 0.38);
+    b = mix(b, 194, reef * 0.34);
 
     return [
-      clamp(r + current * 0.16, 0, 255),
-      clamp(g + current * 0.42, 0, 255),
-      clamp(b + current, 0, 255)
+      clamp(r + current * 0.13, 0, 255),
+      clamp(g + current * 0.36, 0, 255),
+      clamp(b + current * 0.82, 0, 255)
     ];
   }
 
@@ -418,10 +437,10 @@
     const dy = hS - hN;
 
     const base = isLand
-      ? 1 + dx * 1.08 + dy * 0.80 + s.relief * 0.09
-      : 1 + dx * 0.16 + dy * 0.12 - s.bathymetry * 0.03 + s.shallowWater * 0.04;
+      ? 1 + dx * 0.92 + dy * 0.68 + s.relief * 0.075
+      : 1 + dx * 0.10 + dy * 0.08 - s.bathymetry * 0.018 + s.shallowWater * 0.032;
 
-    return clamp(base, isLand ? 0.78 : 0.92, isLand ? 1.20 : 1.08);
+    return clamp(base, isLand ? 0.82 : 0.96, isLand ? 1.15 : 1.045);
   }
 
   function getMount() {
@@ -448,11 +467,11 @@
   }
 
   function installStyle() {
-    const prior = document.getElementById("hearth-g3-7-hydration-style");
+    const prior = document.getElementById("hearth-g3-8-render-purification-style");
     if (prior) prior.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-g3-7-hydration-style";
+    style.id = "hearth-g3-8-render-purification-style";
     style.textContent = `
       html,
       body {
@@ -481,7 +500,7 @@
         touch-action: pan-y !important;
       }
 
-      .hearth-g3-7-chip {
+      .hearth-g3-8-chip {
         position: absolute;
         left: 14px;
         bottom: 12px;
@@ -499,7 +518,7 @@
       }
 
       @media (max-width: 520px) {
-        .hearth-g3-7-chip { display: none; }
+        .hearth-g3-8-chip { display: none; }
       }
     `;
 
@@ -510,6 +529,7 @@
     document.documentElement.style.overflowX = "hidden";
     document.documentElement.style.overflowY = "auto";
     document.documentElement.style.touchAction = "pan-y";
+
     document.body.style.overflowX = "hidden";
     document.body.style.overflowY = "auto";
     document.body.style.touchAction = "pan-y";
@@ -546,8 +566,8 @@
     ctx.clearRect(0, 0, w, h);
 
     const bg = ctx.createRadialGradient(w * 0.50, h * 0.45, w * 0.05, w * 0.50, h * 0.50, w * 0.70);
-    bg.addColorStop(0, "rgba(42, 85, 116, 0.34)");
-    bg.addColorStop(0.52, "rgba(12, 30, 52, 0.78)");
+    bg.addColorStop(0, "rgba(42, 85, 116, 0.30)");
+    bg.addColorStop(0.52, "rgba(12, 30, 52, 0.72)");
     bg.addColorStop(1, "rgba(2, 7, 15, 1)");
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, w, h);
@@ -559,8 +579,8 @@
     for (let i = 0; i < 4; i += 1) {
       ctx.beginPath();
       ctx.arc(cx, cy, w * (0.392 + i * 0.031), 0, TAU);
-      ctx.strokeStyle = `rgba(102, 174, 225, ${0.086 - i * 0.016 + pulse * 0.009})`;
-      ctx.lineWidth = Math.max(1, w * (0.006 - i * 0.0008));
+      ctx.strokeStyle = `rgba(102, 174, 225, ${0.070 - i * 0.012 + pulse * 0.008})`;
+      ctx.lineWidth = Math.max(1, w * (0.0055 - i * 0.0007));
       ctx.stroke();
     }
   }
@@ -626,71 +646,81 @@
         let gg = s.g;
         let bb = s.b;
 
-        const limb = Math.pow(1 - z, 1.72);
-        const curveLight = 0.82 + Math.pow(z, 0.85) * 0.18;
-        const screenLift = 1.03 - sx * 0.035 - sy * 0.025;
+        const limb = Math.pow(1 - z, 1.68);
+        const proofLight = clamp(0.94 + Math.pow(z, 0.95) * 0.08, 0.92, 1.04);
         const reliefFactor = reliefShade(map, lon, lat, s, isLand);
-        const noTerminatorLight = clamp(curveLight * screenLift, 0.78, 1.08);
 
         if (!isLand) {
-          if (s.shallowWater > 0.08) {
-            rr = mix(rr, 42, s.shallowWater * 0.18);
-            gg = mix(gg, 184, s.shallowWater * 0.24);
-            bb = mix(bb, 192, s.shallowWater * 0.22);
+          if (s.shallowWater > 0.06) {
+            rr = mix(rr, 44, s.shallowWater * 0.16);
+            gg = mix(gg, 196, s.shallowWater * 0.22);
+            bb = mix(bb, 204, s.shallowWater * 0.20);
+          }
+
+          if (s.deepWater > 0.24) {
+            rr = mix(rr, 6, s.deepWater * 0.08);
+            gg = mix(gg, 54, s.deepWater * 0.07);
+            bb = mix(bb, 124, s.deepWater * 0.08);
           }
 
           if (s.coast > 0.04) {
             const edge = Math.pow(s.coast, 1.05);
-            rr = mix(rr, 54, edge * 0.10);
-            gg = mix(gg, 188, edge * 0.16);
-            bb = mix(bb, 198, edge * 0.14);
+            rr = mix(rr, 58, edge * 0.08);
+            gg = mix(gg, 196, edge * 0.14);
+            bb = mix(bb, 206, edge * 0.12);
           }
 
-          const centerSpec = Math.pow(clamp(z, 0, 1), 18) * (0.16 - s.bathymetry * 0.05);
-          rr = mix(rr, 210, centerSpec * 0.16);
-          gg = mix(gg, 232, centerSpec * 0.14);
-          bb = mix(bb, 252, centerSpec * 0.12);
+          const centerSpec = Math.pow(clamp(z, 0, 1), 22) * (0.10 - s.bathymetry * 0.035);
+          rr = mix(rr, 206, centerSpec * 0.08);
+          gg = mix(gg, 230, centerSpec * 0.07);
+          bb = mix(bb, 250, centerSpec * 0.06);
         }
 
         if (isLand) {
-          if (s.coast > 0.05) {
-            rr = mix(rr, 52, s.coastalWetness * 0.08);
-            gg = mix(gg, 144, s.coastalWetness * 0.11);
-            bb = mix(bb, 132, s.coastalWetness * 0.10);
+          if (s.coastalWetness > 0.04) {
+            rr = mix(rr, 42, s.coastalWetness * 0.10);
+            gg = mix(gg, 150, s.coastalWetness * 0.14);
+            bb = mix(bb, 142, s.coastalWetness * 0.13);
           }
 
-          if (s.river > 0.05 || s.lake > 0.05) {
-            const liquid = clamp(s.river * 0.52 + s.lake * 0.72 + s.drainage * 0.30, 0, 1);
-            rr = mix(rr, 36, liquid * 0.18);
-            gg = mix(gg, 140, liquid * 0.22);
-            bb = mix(bb, 158, liquid * 0.24);
+          if (s.river > 0.04 || s.lake > 0.04 || s.drainage > 0.04) {
+            const liquid = clamp(s.river * 0.58 + s.lake * 0.80 + s.drainage * 0.36, 0, 1);
+            rr = mix(rr, 30, liquid * 0.22);
+            gg = mix(gg, 144, liquid * 0.26);
+            bb = mix(bb, 164, liquid * 0.30);
           }
 
-          const ridgeLight = clamp((s.height * 0.84 + s.roughness * 0.38), 0, 1);
-          rr = mix(rr, rr + 18, ridgeLight * 0.10);
-          gg = mix(gg, gg + 14, ridgeLight * 0.09);
-          bb = mix(bb, bb + 10, ridgeLight * 0.07);
+          if (s.saturation > 0.08) {
+            rr = mix(rr, 46, s.saturation * 0.06);
+            gg = mix(gg, 132, s.saturation * 0.08);
+            bb = mix(bb, 108, s.saturation * 0.06);
+          }
 
-          if (s.frozenStorage > 0.20) {
-            const iceGlow = smoothstep(0.2, 0.9, s.frozenStorage) * 0.22;
+          const ridgeLight = clamp((s.height * 0.78 + s.roughness * 0.28), 0, 1);
+          rr = mix(rr, rr + 15, ridgeLight * 0.075);
+          gg = mix(gg, gg + 12, ridgeLight * 0.065);
+          bb = mix(bb, bb + 9, ridgeLight * 0.050);
+
+          if (s.frozenStorage > 0.18) {
+            const iceGlow = smoothstep(0.18, 0.9, s.frozenStorage) * 0.20;
             rr = mix(rr, 242, iceGlow * 0.18);
             gg = mix(gg, 248, iceGlow * 0.18);
             bb = mix(bb, 242, iceGlow * 0.16);
           }
         }
 
-        rr *= noTerminatorLight * reliefFactor;
-        gg *= noTerminatorLight * reliefFactor;
-        bb *= noTerminatorLight * reliefFactor;
+        rr *= proofLight * reliefFactor;
+        gg *= proofLight * reliefFactor;
+        bb *= proofLight * reliefFactor;
 
-        rr = mix(rr, 34, limb * 0.16);
-        gg = mix(gg, 104, limb * 0.17);
-        bb = mix(bb, 160, limb * 0.21);
+        rr = mix(rr, 52, limb * 0.070);
+        gg = mix(gg, 132, limb * 0.075);
+        bb = mix(bb, 182, limb * 0.090);
 
-        const atmosphere = Math.pow(limb, 2.20);
-        rr = mix(rr, 46, atmosphere * 0.28);
-        gg = mix(gg, 168, atmosphere * 0.38);
-        bb = mix(bb, 232, atmosphere * 0.44);
+        const atmosphere = Math.pow(limb, 2.05);
+        rr = mix(rr, 64, atmosphere * 0.16);
+        gg = mix(gg, 180, atmosphere * 0.22);
+        bb = mix(bb, 236, atmosphere * 0.26);
 
         const alpha = smoothstep(1.01, 0.985, d2);
         const out = (y * size + x) * 4;
@@ -710,16 +740,16 @@
     wctx.globalCompositeOperation = "screen";
 
     const gx = wctx.createRadialGradient(
-      cx - radius * 0.20,
-      cy - radius * 0.34,
-      radius * 0.04,
+      cx - radius * 0.18,
+      cy - radius * 0.28,
+      radius * 0.03,
       cx,
       cy,
       radius * 0.62
     );
 
-    gx.addColorStop(0, "rgba(255,255,255,0.13)");
-    gx.addColorStop(0.25, "rgba(142,205,250,0.05)");
+    gx.addColorStop(0, "rgba(255,255,255,0.10)");
+    gx.addColorStop(0.25, "rgba(142,205,250,0.04)");
     gx.addColorStop(1, "rgba(0,0,0,0)");
 
     wctx.fillStyle = gx;
@@ -732,14 +762,14 @@
 
     wctx.beginPath();
     wctx.arc(cx, cy, radius * 1.003, 0, TAU);
-    wctx.strokeStyle = "rgba(116, 207, 255, 0.38)";
-    wctx.lineWidth = Math.max(1, size * 0.006);
+    wctx.strokeStyle = "rgba(116, 207, 255, 0.34)";
+    wctx.lineWidth = Math.max(1, size * 0.0055);
     wctx.stroke();
 
     wctx.beginPath();
     wctx.arc(cx, cy, radius * 1.045, 0, TAU);
-    wctx.strokeStyle = "rgba(91, 174, 236, 0.14)";
-    wctx.lineWidth = Math.max(1, size * 0.010);
+    wctx.strokeStyle = "rgba(91, 174, 236, 0.12)";
+    wctx.lineWidth = Math.max(1, size * 0.009);
     wctx.stroke();
 
     wctx.restore();
@@ -775,14 +805,14 @@
     ctx.save();
     ctx.globalCompositeOperation = "screen";
 
-    const halo = ctx.createRadialGradient(cx, cy, radius * 0.90, cx, cy, radius * 1.46);
+    const halo = ctx.createRadialGradient(cx, cy, radius * 0.88, cx, cy, radius * 1.42);
     halo.addColorStop(0, "rgba(0,0,0,0)");
-    halo.addColorStop(0.38, "rgba(62,154,226,0.11)");
+    halo.addColorStop(0.40, "rgba(62,154,226,0.08)");
     halo.addColorStop(1, "rgba(0,0,0,0)");
 
     ctx.fillStyle = halo;
     ctx.beginPath();
-    ctx.arc(cx, cy, radius * 1.46, 0, TAU);
+    ctx.arc(cx, cy, radius * 1.42, 0, TAU);
     ctx.fill();
     ctx.restore();
   }
@@ -796,30 +826,6 @@
     }
 
     runtime.raf = requestAnimationFrame(loop);
-  }
-
-  function resize() {
-    if (!runtime.mount || !runtime.canvas) return;
-
-    const rect = runtime.mount.getBoundingClientRect();
-    const cssSize = Math.max(
-      MIN_RENDER_SIZE,
-      Math.floor(Math.min(rect.width || MIN_RENDER_SIZE, rect.height || rect.width || MIN_RENDER_SIZE))
-    );
-
-    const dpr = clamp(window.devicePixelRatio || 1, 1, 2);
-    const px = Math.max(MIN_RENDER_SIZE, Math.floor(cssSize * dpr));
-    const workSize = Math.max(MIN_RENDER_SIZE, Math.min(MAX_RENDER_SIZE, px));
-
-    runtime.canvas.width = px;
-    runtime.canvas.height = px;
-
-    if (runtime.size !== workSize) {
-      runtime.size = workSize;
-      runtime.work.width = workSize;
-      runtime.work.height = workSize;
-      runtime.image = runtime.workCtx.createImageData(workSize, workSize);
-    }
   }
 
   function exposeReceipt(status) {
@@ -846,10 +852,33 @@
       terrainReceipt,
       hydrationReceipt,
       mount: "#hearthCanvasMount",
-      generation: "G3.7-candidate",
-      canvasOwns: ["projection", "rotation", "view-locked-lighting", "wrapped-sampling", "render-composition"],
-      terrainOwns: ["map", "body-mass", "elevation", "mountain-ranges", "relief", "bathymetry"],
-      hydrationOwns: ["ocean-material", "shelves", "basins", "river-candidates", "drainage", "frozen-water-storage", "saturation"],
+      generation: "G3.8-candidate",
+      canvasOwns: [
+        "projection",
+        "rotation",
+        "render-stage-purification",
+        "hydration-visibility",
+        "wrapped-sampling",
+        "proof-composition"
+      ],
+      terrainOwns: [
+        "map",
+        "body-mass",
+        "elevation",
+        "mountain-ranges",
+        "relief",
+        "bathymetry"
+      ],
+      hydrationOwns: [
+        "ocean-material",
+        "shelves",
+        "basins",
+        "river-candidates",
+        "drainage",
+        "frozen-water-storage",
+        "saturation"
+      ],
+      lightingPolicy: "proof-light only; no terminator; no dark crescent dominance",
       g4Deferred: "clouds-weather-climate",
       noClouds: true,
       noWeather: true,
@@ -877,17 +906,17 @@
     const canvas = document.createElement("canvas");
     canvas.dataset.hearthCanvas = "true";
     canvas.dataset.contract = CONTRACT;
-    canvas.dataset.generation = "G3.7-candidate";
+    canvas.dataset.generation = "G3.8-candidate";
     canvas.dataset.localScale = "hearth";
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Hearth G3.7 hydration engine globe");
+    canvas.setAttribute("aria-label", "Hearth G3.8 render purification hydration visibility globe");
 
     const chip = document.createElement("div");
-    chip.className = "hearth-g3-7-chip";
+    chip.className = "hearth-g3-8-chip";
     chip.textContent =
       authorities.terrain && authorities.hydration
-        ? "Hearth G3.7 · Hydration"
-        : "Hearth G3.7 · Hydration Fallback";
+        ? "Hearth G3.8 · Hydration Visible"
+        : "Hearth G3.8 · Authority Fallback";
 
     mountEl.append(canvas, chip);
 
@@ -905,8 +934,8 @@
     mountEl.dataset.hearthHydrationOwner = "/assets/hearth/hearth.hydration.js";
     mountEl.dataset.hearthTerrainLoaded = authorities.terrain ? "true" : "false";
     mountEl.dataset.hearthHydrationLoaded = authorities.hydration ? "true" : "false";
-    mountEl.dataset.hearthGeneration = "G3.7-candidate";
-    mountEl.dataset.hearthGenerationFocus = "hydration-engine";
+    mountEl.dataset.hearthGeneration = "G3.8-candidate";
+    mountEl.dataset.hearthGenerationFocus = "render-stage-purification-hydration-visibility";
     mountEl.dataset.g4Deferred = "clouds-weather-climate";
     mountEl.dataset.earthPlaceholder = "false";
     mountEl.dataset.audraliaMap = "false";
@@ -918,8 +947,8 @@
     document.documentElement.dataset.hearthHydrationOwner = "/assets/hearth/hearth.hydration.js";
     document.documentElement.dataset.hearthTerrainLoaded = authorities.terrain ? "true" : "false";
     document.documentElement.dataset.hearthHydrationLoaded = authorities.hydration ? "true" : "false";
-    document.documentElement.dataset.hearthGeneration = "G3.7-candidate";
-    document.documentElement.dataset.hearthGenerationFocus = "hydration-engine";
+    document.documentElement.dataset.hearthGeneration = "G3.8-candidate";
+    document.documentElement.dataset.hearthGenerationFocus = "render-stage-purification-hydration-visibility";
     document.documentElement.dataset.hearthG4Deferred = "clouds-weather-climate";
     document.documentElement.dataset.hearthExternalImages = "false";
     document.documentElement.dataset.hearthNasaAsset = "false";
@@ -945,15 +974,16 @@
 
     if (runtime.observer) runtime.observer.disconnect();
 
-    const style = document.getElementById("hearth-g3-7-hydration-style");
+    const style = document.getElementById("hearth-g3-8-render-purification-style");
     if (style) style.remove();
 
     if (runtime.mount) runtime.mount.replaceChildren();
 
-    window.__HEARTH_CANVAS_G3_7_DISPOSE__ = null;
+    window.__HEARTH_CANVAS_G3_8_DISPOSE__ = null;
     exposeReceipt("disposed");
   }
 
+  window.__HEARTH_CANVAS_G3_8_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_7_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_6_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_5_DISPOSE__ = dispose;

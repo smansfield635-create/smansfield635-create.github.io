@@ -1,654 +1,661 @@
-/* /assets/earth/earth_canvas.js
-   HEARTH_G2_PARENT_SURFACE_STABILITY_PARITY_TNT_v1
-   Full-file replacement.
-   Purpose:
-   - Put Hearth on the same stability ladder as Audralia.
-   - Build a stable parent surface first.
-   - Project that parent surface onto the globe.
-   - Add child refinement only after the parent surface is already visible.
-   - Keep motion inside canvas authority for now.
-*/
+// /assets/hearth/hearth.canvas.js
+// HEARTH_G2_SURFACE_DEFINITION_TNT_v1
+// Full-file replacement. Code-only procedural Hearth render. No JPG. No NASA asset. No generated image.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G2_PARENT_SURFACE_STABILITY_PARITY_TNT_v1";
+  const CONTRACT = "HEARTH_G2_SURFACE_DEFINITION_TNT_v1";
+  const VERSION = "2026-05-08.hearth-g2-surface-definition";
+  const RECEIPT = "HEARTH_G2_SURFACE_DEFINITION_RECEIPT";
 
-  const CANVAS_SIZE = 560;
-  const CENTER = CANVAS_SIZE / 2;
-  const RADIUS = CANVAS_SIZE * 0.414;
-  const TEXTURE_W = 768;
-  const TEXTURE_H = 384;
-
-  const TWO_PI = Math.PI * 2;
+  const MAP_W = 896;
+  const MAP_H = 448;
+  const MAX_RENDER_SIZE = 540;
+  const MIN_RENDER_SIZE = 280;
+  const TAU = Math.PI * 2;
   const HALF_PI = Math.PI / 2;
 
-  const state = {
-    phase: 0.19,
-    cloudPhase: 0.06,
-    velocity: 0,
-    dragging: false,
-    lastX: 0,
-    started: performance.now(),
-    mounted: false,
-    parentReady: false,
-    childReady: false,
+  if (window.__HEARTH_G2_DISPOSE__) {
+    try { window.__HEARTH_G2_DISPOSE__(); } catch (_) {}
+  }
+
+  const runtime = {
     raf: 0,
-    parentSurface: null,
-    cloudSurface: null
+    resizeObserver: null,
+    mounted: false,
+    disposed: false,
+    lastFrame: 0,
+    shell: null,
+    canvas: null,
+    ctx: null,
+    work: null,
+    workCtx: null,
+    image: null,
+    size: 0,
+    pixelRatio: 1,
+    map: null
   };
 
-  const light = normalize({ x: -0.50, y: -0.28, z: 0.82 });
-
-  function clamp(value, min, max) {
-    return Math.min(max, Math.max(min, value));
-  }
-
-  function wrap01(value) {
-    return ((value % 1) + 1) % 1;
-  }
-
-  function lerp(a, b, t) {
-    return a + (b - a) * t;
-  }
-
-  function smoothstep(a, b, x) {
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const mix = (a, b, t) => Math.round(lerp(a, b, clamp(t, 0, 1)));
+  const smoothstep = (a, b, x) => {
     const t = clamp((x - a) / (b - a), 0, 1);
     return t * t * (3 - 2 * t);
+  };
+  const wrapLon = (lon) => {
+    let v = lon;
+    while (v < -180) v += 360;
+    while (v > 180) v -= 360;
+    return v;
+  };
+  const lonDelta = (a, b) => wrapLon(a - b);
+  const normalize3 = (v) => {
+    const l = Math.hypot(v[0], v[1], v[2]) || 1;
+    return [v[0] / l, v[1] / l, v[2] / l];
+  };
+
+  const LIGHT = normalize3([-0.48, -0.32, 0.82]);
+  const HALF_LIGHT = normalize3([LIGHT[0], LIGHT[1], LIGHT[2] + 1.0]);
+
+  function hash2(x, y, seed = 0) {
+    const n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
+    return n - Math.floor(n);
   }
 
-  function normalize(v) {
-    const d = Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z) || 1;
-    return { x: v.x / d, y: v.y / d, z: v.z / d };
-  }
-
-  function dot(a, b) {
-    return a.x * b.x + a.y * b.y + a.z * b.z;
-  }
-
-  function mix(a, b, t) {
-    return [
-      lerp(a[0], b[0], t),
-      lerp(a[1], b[1], t),
-      lerp(a[2], b[2], t)
-    ];
-  }
-
-  function angularDelta(a, b) {
-    let d = a - b;
-
-    while (d > Math.PI) d -= TWO_PI;
-    while (d < -Math.PI) d += TWO_PI;
-
-    return d;
-  }
-
-  function hash2(x, y) {
-    const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453123;
-    return s - Math.floor(s);
-  }
-
-  function noise2(x, y) {
+  function valueNoise(x, y, seed = 0) {
     const ix = Math.floor(x);
     const iy = Math.floor(y);
     const fx = x - ix;
     const fy = y - iy;
     const ux = fx * fx * (3 - 2 * fx);
     const uy = fy * fy * (3 - 2 * fy);
-
-    const a = hash2(ix, iy);
-    const b = hash2(ix + 1, iy);
-    const c = hash2(ix, iy + 1);
-    const d = hash2(ix + 1, iy + 1);
-
+    const a = hash2(ix, iy, seed);
+    const b = hash2(ix + 1, iy, seed);
+    const c = hash2(ix, iy + 1, seed);
+    const d = hash2(ix + 1, iy + 1, seed);
     return lerp(lerp(a, b, ux), lerp(c, d, ux), uy);
   }
 
-  function ridgedNoise(x, y) {
-    return 1 - Math.abs(noise2(x, y) * 2 - 1);
-  }
-
-  function fbm(x, y, octaves = 5) {
-    let value = 0;
-    let amplitude = 0.55;
-    let frequency = 1;
-
+  function fbm(x, y, seed = 0, octaves = 5) {
+    let sum = 0;
+    let amp = 0.5;
+    let freq = 1;
+    let norm = 0;
     for (let i = 0; i < octaves; i += 1) {
-      value += noise2(x * frequency, y * frequency) * amplitude;
-      frequency *= 2.03;
-      amplitude *= 0.52;
+      sum += valueNoise(x * freq, y * freq, seed + i * 13.17) * amp;
+      norm += amp;
+      amp *= 0.52;
+      freq *= 2.03;
     }
-
-    return clamp(value, 0, 1);
+    return norm ? sum / norm : 0;
   }
 
-  function ridgedFbm(x, y, octaves = 5) {
-    let value = 0;
-    let amplitude = 0.55;
-    let frequency = 1;
+  const CONTINENT_SEEDS = [
+    { lon: -103, lat: 48, rx: 42, ry: 26, amp: 1.10 },
+    { lon: -84, lat: 20, rx: 22, ry: 16, amp: 0.58 },
+    { lon: -60, lat: -16, rx: 25, ry: 38, amp: 0.95 },
+    { lon: 20, lat: 4, rx: 28, ry: 36, amp: 0.92 },
+    { lon: 78, lat: 50, rx: 72, ry: 30, amp: 1.16 },
+    { lon: 98, lat: 23, rx: 42, ry: 24, amp: 0.75 },
+    { lon: 135, lat: -25, rx: 22, ry: 16, amp: 0.72 },
+    { lon: -42, lat: 74, rx: 18, ry: 10, amp: 0.54 },
+    { lon: 0, lat: -82, rx: 180, ry: 11, amp: 0.92 },
+    { lon: 45, lat: -48, rx: 18, ry: 9, amp: 0.35 }
+  ];
 
-    for (let i = 0; i < octaves; i += 1) {
-      value += ridgedNoise(x * frequency, y * frequency) * amplitude;
-      frequency *= 2.06;
-      amplitude *= 0.50;
+  function continentField(lon, lat) {
+    let v = 0;
+    for (const c of CONTINENT_SEEDS) {
+      const dx = lonDelta(lon, c.lon) / c.rx;
+      const dy = (lat - c.lat) / c.ry;
+      const q = 1 - (dx * dx + dy * dy);
+      v += c.amp * smoothstep(-0.18, 0.86, q);
     }
-
-    return clamp(value, 0, 1);
+    return v;
   }
 
-  function blob(lon, lat, lon0, lat0, rx, ry, amp) {
-    const x = angularDelta(lon, lon0) / rx;
-    const y = (lat - lat0) / ry;
-    return amp * Math.exp(-(x * x + y * y));
-  }
+  function makeTexture() {
+    const len = MAP_W * MAP_H;
+    const r = new Uint8ClampedArray(len);
+    const g = new Uint8ClampedArray(len);
+    const b = new Uint8ClampedArray(len);
+    const land = new Uint8ClampedArray(len);
+    const coast = new Uint8ClampedArray(len);
+    const cloud = new Uint8ClampedArray(len);
+    const height = new Float32Array(len);
 
-  function ribbon(lon, lat, lon0, lat0, angle, length, width, amp) {
-    const dl = angularDelta(lon, lon0);
-    const dp = lat - lat0;
-    const ca = Math.cos(angle);
-    const sa = Math.sin(angle);
-    const x = (dl * ca + dp * sa) / length;
-    const y = (-dl * sa + dp * ca) / width;
+    for (let y = 0; y < MAP_H; y += 1) {
+      const lat = 90 - (y / (MAP_H - 1)) * 180;
+      const latAbs = Math.abs(lat);
 
-    return amp * Math.exp(-(x * x + y * y));
-  }
+      for (let x = 0; x < MAP_W; x += 1) {
+        const lon = (x / MAP_W) * 360 - 180;
+        const idx = y * MAP_W + x;
+        const nx = x / MAP_W;
+        const ny = y / MAP_H;
 
-  function topologyField(lon, lat) {
-    let value = 0;
+        const plate = continentField(lon, lat);
+        const broad = (fbm(nx * 7.5, ny * 5.2, 2.1, 5) - 0.5) * 0.26;
+        const ridge = (fbm(nx * 24.0 + 7.0, ny * 18.0 - 3.0, 6.4, 4) - 0.5) * 0.15;
+        const micro = (fbm(nx * 80.0, ny * 55.0, 9.7, 3) - 0.5) * 0.035;
+        const polarPress = latAbs > 63 ? (latAbs - 63) / 27 * 0.035 : 0;
+        const h = plate + broad + ridge + micro + polarPress - 0.43;
+        height[idx] = h;
 
-    value += blob(lon, lat, -2.18, 0.55, 0.48, 0.72, 1.04);
-    value += blob(lon, lat, -1.95, -0.28, 0.34, 0.80, 0.98);
-    value += ribbon(lon, lat, -1.50, -0.72, -0.34, 0.50, 0.16, 0.56);
-    value += blob(lon, lat, -1.25, -1.05, 0.24, 0.24, 0.36);
+        const isLand = h > 0;
+        land[idx] = isLand ? 255 : 0;
+        const coastBand = 1 - smoothstep(0.015, 0.145, Math.abs(h));
+        coast[idx] = Math.round(coastBand * 255);
 
-    value += blob(lon, lat, 0.04, 0.54, 0.88, 0.42, 0.92);
-    value += blob(lon, lat, 1.05, 0.48, 0.74, 0.46, 0.86);
-    value += blob(lon, lat, 1.78, 0.26, 0.46, 0.34, 0.54);
-    value += ribbon(lon, lat, 0.55, -0.12, 0.12, 0.40, 0.28, 0.70);
-    value += blob(lon, lat, 1.20, -0.70, 0.38, 0.36, 0.42);
+        const terrainNoise = fbm(nx * 45.0 + 11, ny * 35.0 - 2, 13.9, 4);
+        const veinNoise = fbm(nx * 140.0, ny * 85.0, 18.4, 2);
+        const iceLat = smoothstep(64, 84, latAbs);
+        const snowHigh = isLand ? smoothstep(0.38, 0.82, h + terrainNoise * 0.18) : 0;
+        const glacier = clamp(iceLat * 0.88 + snowHigh * 0.42, 0, 1);
 
-    value += blob(lon, lat, 2.22, -0.62, 0.27, 0.22, 0.38);
-    value += blob(lon, lat, 2.60, -0.42, 0.18, 0.15, 0.28);
-    value += blob(lon, lat, -2.95, -1.26, 2.60, 0.20, 0.64);
+        if (isLand) {
+          const elevation = clamp(h * 1.85, 0, 1);
+          const arid = smoothstep(8, 31, Math.abs(lat)) * (1 - smoothstep(31, 58, Math.abs(lat)));
+          const wet = fbm(nx * 13.0 - 4.0, ny * 8.0 + 5.0, 22.5, 4);
+          const green = clamp((wet - 0.28) * 1.35 * (1 - arid * 0.45), 0, 1);
+          const mountain = smoothstep(0.38, 0.82, elevation + ridge * 1.8);
+          const mineral = smoothstep(0.55, 0.90, veinNoise);
 
-    for (let i = 0; i < 18; i += 1) {
-      const seedLon = -Math.PI + (i / 18) * TWO_PI + (hash2(i, 3) - 0.5) * 0.24;
-      const seedLat = -1.08 + hash2(i, 9) * 2.08;
-      const rx = 0.045 + hash2(i, 12) * 0.11;
-      const ry = 0.036 + hash2(i, 18) * 0.10;
-      const amp = 0.10 + hash2(i, 24) * 0.22;
+          let rr = mix(126, 42, green);
+          let gg = mix(102, 112, green);
+          let bb = mix(58, 64, green);
 
-      value += blob(lon, lat, seedLon, seedLat, rx, ry, amp);
-    }
+          rr = mix(rr, 170, arid * 0.45);
+          gg = mix(gg, 136, arid * 0.35);
+          bb = mix(bb, 86, arid * 0.28);
 
-    const u = wrap01(lon / TWO_PI + 0.5);
-    const v = clamp(0.5 - lat / Math.PI, 0, 1);
+          rr = mix(rr, 114, mountain * 0.50);
+          gg = mix(gg, 108, mountain * 0.48);
+          bb = mix(bb, 100, mountain * 0.54);
 
-    const brokenEdge =
-      fbm(u * 8.5 + 1.6, v * 5.8 - 0.4, 5) * 0.18 +
-      ridgedFbm(u * 16.0 - 2.5, v * 11.0 + 0.8, 4) * 0.11 -
-      fbm(u * 5.0 - 3.0, v * 3.2 + 2.0, 4) * 0.07;
+          rr = mix(rr, 188, mineral * mountain * 0.18);
+          gg = mix(gg, 178, mineral * mountain * 0.15);
+          bb = mix(bb, 150, mineral * mountain * 0.14);
 
-    return value + brokenEdge;
-  }
+          rr = mix(rr, 223, glacier * 0.78);
+          gg = mix(gg, 229, glacier * 0.78);
+          bb = mix(bb, 218, glacier * 0.78);
 
-  function plateRidge(u, v) {
-    const ridgeA = ridgedFbm(u * 12.0 + 2.1, v * 8.0 - 1.0, 5);
-    const ridgeB = ridgedFbm(u * 26.0 - 4.0, v * 18.0 + 2.0, 4);
-    return clamp(ridgeA * 0.68 + ridgeB * 0.32, 0, 1);
-  }
+          const shore = smoothstep(0.0, 0.055, h) * (1 - smoothstep(0.055, 0.20, h));
+          rr = mix(rr, 190, shore * 0.35);
+          gg = mix(gg, 171, shore * 0.30);
+          bb = mix(bb, 122, shore * 0.25);
 
-  function sampleParentSurface(lat, lon) {
-    const u = wrap01(lon / TWO_PI + 0.5);
-    const v = clamp(0.5 - lat / Math.PI, 0, 1);
-    const absLat = Math.abs(lat) / HALF_PI;
+          const grain = (terrainNoise - 0.5) * 22;
+          r[idx] = clamp(rr + grain, 0, 255);
+          g[idx] = clamp(gg + grain * 0.85, 0, 255);
+          b[idx] = clamp(bb + grain * 0.65, 0, 255);
+        } else {
+          const depth = clamp(-h * 2.35, 0, 1);
+          const shelf = 1 - smoothstep(0.025, 0.18, -h);
+          const current = fbm(nx * 34.0 + 18, ny * 19.0 - 7, 31.6, 4);
+          const abyss = fbm(nx * 9.0, ny * 7.0, 35.0, 5);
 
-    const topology = topologyField(lon, lat);
-    const edgeNoise =
-      (fbm(u * 19.0 + 0.4, v * 13.0 - 1.8, 4) - 0.5) * 0.13 +
-      (ridgedFbm(u * 34.0 - 1.2, v * 21.0 + 2.4, 3) - 0.5) * 0.07;
+          let rr = mix(11, 0, depth);
+          let gg = mix(84, 24, depth);
+          let bb = mix(128, 72, depth);
 
-    const threshold = 0.70 + 0.030 * Math.sin(lon * 3.0 + lat * 2.0) + edgeNoise;
-    const landMask = topology - threshold;
-    const land = landMask > 0 && absLat < 0.89;
+          rr = mix(rr, 33, shelf * 0.72);
+          gg = mix(gg, 151, shelf * 0.70);
+          bb = mix(bb, 159, shelf * 0.68);
 
-    const coast = 1 - smoothstep(0.006, 0.048, Math.abs(landMask));
-    const shelf = land ? 0 : clamp(1 - smoothstep(0.01, 0.18, -landMask), 0, 1);
+          rr = mix(rr, 3, abyss * depth * 0.40);
+          gg = mix(gg, 39, abyss * depth * 0.30);
+          bb = mix(bb, 101, abyss * depth * 0.28);
 
-    const polarNoise =
-      fbm(u * 8.0 + 1.0, v * 8.0 - 2.0, 5) * 0.10 +
-      ridgedFbm(u * 18.0, v * 10.0, 3) * 0.05;
+          const flow = (current - 0.5) * 18;
+          r[idx] = clamp(rr + flow * 0.22, 0, 255);
+          g[idx] = clamp(gg + flow * 0.58, 0, 255);
+          b[idx] = clamp(bb + flow, 0, 255);
+        }
 
-    const ice = smoothstep(0.76, 0.97, absLat + polarNoise - coast * 0.04);
-
-    const ridges = plateRidge(u, v);
-    const elevation = land
-      ? clamp(landMask * 1.85 + ridges * 0.42 + fbm(u * 22.0, v * 15.0, 4) * 0.23, 0, 1)
-      : 0;
-
-    const oceanDepth = land
-      ? 0
-      : clamp((-landMask) * 1.7 + fbm(u * 9.0 + 4.0, v * 6.0, 4) * 0.22, 0, 1);
-
-    const moisture = clamp(
-      0.52 +
-      0.30 * Math.cos(lat * 2.0) +
-      0.18 * fbm(u * 8.0 + 9.0, v * 6.0 - 2.0, 4) -
-      0.30 * elevation -
-      0.16 * smoothstep(0.25, 0.72, Math.abs(lat)),
-      0,
-      1
-    );
-
-    let color;
-
-    if (ice > 0.82) {
-      const iceBreak = fbm(u * 24.0, v * 16.0, 4);
-      color = mix([202, 224, 232], [250, 252, 247], clamp(ice * 0.86 + iceBreak * 0.20, 0, 1));
-    } else if (land) {
-      const arid = moisture < 0.38 && Math.abs(lat) > 0.13 && Math.abs(lat) < 0.76;
-      const forest = moisture >= 0.56 && elevation < 0.58;
-      const grass = moisture >= 0.42 && moisture < 0.62 && elevation < 0.66;
-      const highland = elevation >= 0.62;
-      const snowCap = smoothstep(0.76, 0.98, elevation + absLat * 0.28 + ridges * 0.15);
-
-      if (snowCap > 0.72) {
-        color = mix([145, 148, 128], [236, 238, 226], snowCap);
-      } else if (highland) {
-        color = mix([84, 84, 70], [176, 166, 132], clamp(elevation * 0.92 + ridges * 0.18, 0, 1));
-      } else if (arid) {
-        color = mix([126, 102, 58], [202, 162, 86], clamp(0.48 + elevation * 0.42 + ridges * 0.14, 0, 1));
-      } else if (forest) {
-        color = mix([20, 82, 54], [62, 128, 66], clamp(moisture + ridges * 0.08, 0, 1));
-      } else if (grass) {
-        color = mix([52, 112, 70], [128, 142, 76], clamp(elevation * 0.45 + moisture * 0.20, 0, 1));
-      } else {
-        color = mix([88, 118, 72], [142, 132, 78], clamp(elevation * 0.52, 0, 1));
+        const cloudA = fbm(nx * 15.0 + 3.5, ny * 9.0 - 2.0, 51.1, 5);
+        const cloudB = fbm(nx * 42.0 - 9.0, ny * 26.0 + 8.0, 58.3, 3);
+        const band = 0.64 + 0.12 * Math.sin((lat + 8) * Math.PI / 22) + 0.07 * Math.sin((lon - 25) * Math.PI / 31);
+        const cval = smoothstep(band, 0.91, cloudA * 0.72 + cloudB * 0.28);
+        const stormBelt = smoothstep(0, 38, 38 - Math.abs(lat)) * 0.42;
+        cloud[idx] = Math.round(clamp(cval + stormBelt * smoothstep(0.70, 0.92, cloudB), 0, 1) * 255);
       }
-
-      if (coast > 0.42) {
-        color = mix(color, [172, 156, 108], coast * 0.16);
-      }
-    } else {
-      const deep = mix([2, 13, 44], [6, 46, 94], clamp(1 - oceanDepth, 0, 1));
-      const shelfBlue = mix([4, 38, 82], [31, 148, 166], shelf);
-      color = mix(deep, shelfBlue, clamp(coast * 0.62 + shelf * 0.34, 0, 0.82));
     }
 
-    const cellX = Math.floor(u * 16);
-    const cellY = Math.floor(v * 16);
-    const latticePulse = hash2(cellX, cellY);
+    return { r, g, b, land, coast, cloud, height };
+  }
 
-    color = mix(
-      color,
-      [color[0] + 14, color[1] + 14, color[2] + 14],
-      (latticePulse - 0.5) * 0.045
-    );
+  function sampleIndex(lonRad, latRad, xShift = 0) {
+    let u = ((lonRad + Math.PI) / TAU + xShift) % 1;
+    if (u < 0) u += 1;
+    const v = clamp((HALF_PI - latRad) / Math.PI, 0, 0.999999);
+    const x = Math.floor(u * MAP_W) % MAP_W;
+    const y = Math.floor(v * MAP_H);
+    return y * MAP_W + x;
+  }
 
-    return [
-      clamp(Math.round(color[0]), 0, 255),
-      clamp(Math.round(color[1]), 0, 255),
-      clamp(Math.round(color[2]), 0, 255),
-      255
+  function resolveMount() {
+    const selectors = [
+      "#hearthCanvasMount",
+      "#hearth-canvas-mount",
+      "#hearthRender",
+      "#hearth-render",
+      "#hearthStage",
+      "#hearth-stage",
+      "[data-hearth-mount]",
+      "[data-hearth-render]",
+      "[data-hearth-stage]",
+      "[data-route='/hearth/'] [data-render-mount]",
+      "[data-route='/heart/'] [data-render-mount]",
+      ".hearth-canvas-mount",
+      ".hearth-render",
+      ".hearth-stage",
+      ".planet-stage",
+      ".planet-canvas-mount"
     ];
-  }
 
-  function sampleCloudAlpha(lat, lon, cloudPhase, time) {
-    const u = wrap01(lon / TWO_PI + 0.5);
-    const v = clamp(0.5 - lat / Math.PI, 0, 1);
+    for (const selector of selectors) {
+      const el = document.querySelector(selector);
+      if (el) return { el, clear: true };
+    }
 
-    const vaporBand =
-      0.50 +
-      0.22 * Math.cos(lat * 5.4 + Math.sin(u * TWO_PI * 2.0)) +
-      0.20 * fbm(u * 5.0 + cloudPhase * 2.5, v * 12.0, 4);
-
-    const cloudNoise =
-      0.56 * fbm(u * 9.5 + cloudPhase * 6.0, v * 5.0 + time * 0.010, 5) +
-      0.27 * ridgedFbm(u * 20.0 - cloudPhase * 8.0, v * 10.0 + 2.0, 4) +
-      0.12 * Math.sin((u + cloudPhase) * TWO_PI * 3.0 + v * 7.0);
-
-    const stormA = blob(lon + cloudPhase * TWO_PI * 0.7, lat, 1.85, -0.26, 0.28, 0.22, 1.0);
-    const stormB = blob(lon - cloudPhase * TWO_PI * 0.5, lat, -1.15, 0.18, 0.22, 0.18, 0.7);
-    const storm = clamp(stormA + stormB, 0, 1);
-
-    return clamp(
-      smoothstep(0.62, 0.92, cloudNoise) * (0.22 + vaporBand * 0.34) + storm * 0.24,
-      0,
-      0.54
+    const existingCanvas = document.querySelector(
+      "canvas[data-hearth-canvas], #hearthCanvas, #heartCanvas, canvas.hearth-canvas, canvas[data-planet='hearth']"
     );
+    if (existingCanvas && existingCanvas.parentElement) {
+      return { el: existingCanvas.parentElement, clear: true };
+    }
+
+    const probableCard = Array.from(document.querySelectorAll("section, article, main div")).find((el) => {
+      const text = (el.textContent || "").toLowerCase();
+      return text.includes("hearth") && (text.includes("hybrid") || text.includes("simulation"));
+    });
+    if (probableCard) return { el: probableCard, clear: false };
+
+    const main = document.querySelector("main") || document.body;
+    return { el: main, clear: false };
   }
 
-  function buildParentSurfaceTexture() {
-    const texture = document.createElement("canvas");
-    const tctx = texture.getContext("2d", { alpha: true });
-    const image = tctx.createImageData(TEXTURE_W, TEXTURE_H);
-    const data = image.data;
+  function installStyles() {
+    const id = "hearth-g2-style";
+    const old = document.getElementById(id);
+    if (old) old.remove();
 
-    texture.width = TEXTURE_W;
-    texture.height = TEXTURE_H;
-
-    for (let y = 0; y < TEXTURE_H; y += 1) {
-      const v = y / (TEXTURE_H - 1);
-      const lat = HALF_PI - v * Math.PI;
-
-      for (let x = 0; x < TEXTURE_W; x += 1) {
-        const u = x / (TEXTURE_W - 1);
-        const lon = u * TWO_PI - Math.PI;
-        const color = sampleParentSurface(lat, lon);
-        const idx = (y * TEXTURE_W + x) * 4;
-
-        data[idx] = color[0];
-        data[idx + 1] = color[1];
-        data[idx + 2] = color[2];
-        data[idx + 3] = color[3];
+    const style = document.createElement("style");
+    style.id = id;
+    style.textContent = `
+      .hearth-g2-shell {
+        position: relative;
+        width: min(100%, 760px);
+        aspect-ratio: 1 / 1;
+        margin: 0 auto;
+        border-radius: 28px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 50% 46%, rgba(42, 83, 116, 0.28), transparent 48%),
+          radial-gradient(circle at 50% 50%, rgba(8, 22, 38, 0.90), rgba(3, 9, 18, 0.98) 74%);
+        border: 1px solid rgba(138, 176, 208, 0.24);
+        box-shadow:
+          inset 0 0 42px rgba(117, 178, 225, 0.10),
+          0 24px 80px rgba(0, 0, 0, 0.36);
       }
-    }
-
-    tctx.putImageData(image, 0, 0);
-    return texture;
-  }
-
-  function buildCloudRefinementTexture() {
-    const texture = document.createElement("canvas");
-    const tctx = texture.getContext("2d", { alpha: true });
-    const image = tctx.createImageData(TEXTURE_W, TEXTURE_H);
-    const data = image.data;
-    const time = 0;
-
-    texture.width = TEXTURE_W;
-    texture.height = TEXTURE_H;
-
-    for (let y = 0; y < TEXTURE_H; y += 1) {
-      const v = y / (TEXTURE_H - 1);
-      const lat = HALF_PI - v * Math.PI;
-
-      for (let x = 0; x < TEXTURE_W; x += 1) {
-        const u = x / (TEXTURE_W - 1);
-        const lon = u * TWO_PI - Math.PI;
-        const alpha = sampleCloudAlpha(lat, lon, 0.08, time);
-        const idx = (y * TEXTURE_W + x) * 4;
-        const shade = 226 + Math.round(fbm(u * 30, v * 18, 3) * 24);
-
-        data[idx] = shade;
-        data[idx + 1] = Math.min(255, shade + 4);
-        data[idx + 2] = Math.min(255, shade + 3);
-        data[idx + 3] = Math.round(alpha * 255);
+      .hearth-g2-canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        touch-action: manipulation;
       }
+      .hearth-g2-receipt {
+        position: absolute;
+        left: 16px;
+        bottom: 14px;
+        padding: 6px 8px;
+        border-radius: 999px;
+        font: 700 10px/1.1 ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(214, 232, 244, 0.72);
+        background: rgba(4, 14, 25, 0.42);
+        border: 1px solid rgba(135, 187, 221, 0.18);
+        pointer-events: none;
+        user-select: none;
+      }
+      @media (max-width: 520px) {
+        .hearth-g2-shell { border-radius: 22px; }
+        .hearth-g2-receipt { display: none; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function mount() {
+    const target = resolveMount();
+    if (!target || !target.el) return false;
+
+    installStyles();
+
+    if (target.clear) {
+      target.el.replaceChildren();
     }
 
-    tctx.putImageData(image, 0, 0);
-    return texture;
-  }
+    const shell = document.createElement("section");
+    shell.className = "hearth-g2-shell";
+    shell.dataset.contract = CONTRACT;
+    shell.dataset.version = VERSION;
+    shell.dataset.receipt = RECEIPT;
 
-  function drawWrappedStrip(ctx, texture, phase, sy, sh, dx, dy, dw, dh) {
-    if (!texture || !texture.width || !texture.height || dw <= 0 || dh <= 0) return;
-
-    const iw = texture.width;
-    const ih = texture.height;
-    const start = wrap01(phase) * iw;
-    const safeSy = clamp(sy, 0, ih - 1);
-    const safeSh = clamp(sh, 1, ih - safeSy);
-    const firstSourceWidth = iw - start;
-    const firstDestWidth = dw * (firstSourceWidth / iw);
-    const secondDestWidth = dw - firstDestWidth;
-
-    ctx.drawImage(texture, start, safeSy, firstSourceWidth, safeSh, dx, dy, firstDestWidth, dh);
-
-    if (secondDestWidth > 0.5) {
-      ctx.drawImage(texture, 0, safeSy, start, safeSh, dx + firstDestWidth, dy, secondDestWidth, dh);
-    }
-  }
-
-  function drawSphereTexture(ctx, texture, phase, alpha) {
-    const stripHeight = 2;
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(CENTER, CENTER, RADIUS, 0, TWO_PI);
-    ctx.clip();
-    ctx.globalAlpha = alpha;
-
-    for (let y = -RADIUS; y <= RADIUS; y += stripHeight) {
-      const yMid = y + stripHeight / 2;
-      const normalizedY = clamp(yMid / RADIUS, -1, 1);
-      const chord = Math.sqrt(Math.max(0, 1 - normalizedY * normalizedY));
-      const destWidth = RADIUS * 2 * chord;
-      const destX = CENTER - destWidth / 2;
-      const destY = CENTER + y;
-      const v = clamp(0.5 + Math.asin(normalizedY) / Math.PI, 0, 1);
-      const sy = Math.floor(v * (TEXTURE_H - 1));
-      const sh = Math.max(1, Math.ceil(stripHeight / (RADIUS * 2) * TEXTURE_H * 2.0));
-
-      drawWrappedStrip(ctx, texture, phase, sy, sh, destX, destY, destWidth, stripHeight + 1);
-    }
-
-    ctx.restore();
-  }
-
-  function drawLightAndAtmosphere(ctx) {
-    ctx.save();
-
-    ctx.beginPath();
-    ctx.arc(CENTER, CENTER, RADIUS, 0, TWO_PI);
-    ctx.clip();
-
-    const lightGradient = ctx.createRadialGradient(
-      CENTER - RADIUS * 0.42,
-      CENTER - RADIUS * 0.34,
-      RADIUS * 0.03,
-      CENTER,
-      CENTER,
-      RADIUS * 1.15
-    );
-
-    lightGradient.addColorStop(0, "rgba(255,255,255,0.18)");
-    lightGradient.addColorStop(0.36, "rgba(255,255,255,0.045)");
-    lightGradient.addColorStop(0.72, "rgba(0,0,0,0.10)");
-    lightGradient.addColorStop(1, "rgba(0,0,0,0.42)");
-
-    ctx.fillStyle = lightGradient;
-    ctx.fillRect(CENTER - RADIUS, CENTER - RADIUS, RADIUS * 2, RADIUS * 2);
-
-    const terminator = ctx.createLinearGradient(
-      CENTER - RADIUS * 0.75,
-      CENTER - RADIUS * 0.38,
-      CENTER + RADIUS * 0.95,
-      CENTER + RADIUS * 0.44
-    );
-
-    terminator.addColorStop(0, "rgba(255,255,255,0.035)");
-    terminator.addColorStop(0.45, "rgba(0,0,0,0.00)");
-    terminator.addColorStop(1, "rgba(0,0,0,0.28)");
-
-    ctx.fillStyle = terminator;
-    ctx.fillRect(CENTER - RADIUS, CENTER - RADIUS, RADIUS * 2, RADIUS * 2);
-
-    const haze = ctx.createRadialGradient(CENTER, CENTER, RADIUS * 0.74, CENTER, CENTER, RADIUS);
-    haze.addColorStop(0, "rgba(0,0,0,0)");
-    haze.addColorStop(0.84, "rgba(84,150,226,0.08)");
-    haze.addColorStop(1, "rgba(84,150,226,0.30)");
-
-    ctx.fillStyle = haze;
-    ctx.fillRect(CENTER - RADIUS, CENTER - RADIUS, RADIUS * 2, RADIUS * 2);
-
-    ctx.restore();
-
-    ctx.save();
-
-    ctx.beginPath();
-    ctx.arc(CENTER, CENTER, RADIUS + 2, 0, TWO_PI);
-    ctx.strokeStyle = "rgba(188,223,255,.34)";
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.arc(CENTER, CENTER, RADIUS + 15, 0, TWO_PI);
-    ctx.strokeStyle = "rgba(102,174,255,.15)";
-    ctx.lineWidth = 10;
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.arc(CENTER, CENTER, RADIUS + 30, 0, TWO_PI);
-    ctx.strokeStyle = "rgba(102,174,255,.055)";
-    ctx.lineWidth = 16;
-    ctx.stroke();
-
-    ctx.restore();
-  }
-
-  function createCanvas() {
     const canvas = document.createElement("canvas");
-
-    canvas.width = CANVAS_SIZE;
-    canvas.height = CANVAS_SIZE;
-    canvas.className = "hearth-canvas hearth-g2-parent-surface-canvas";
+    canvas.className = "hearth-g2-canvas";
+    canvas.dataset.hearthCanvas = "g2";
     canvas.dataset.contract = CONTRACT;
-    canvas.dataset.body = "hearth";
-    canvas.dataset.label = "Hearth";
-    canvas.dataset.generation = "G2";
-    canvas.dataset.parentSurface = "stable";
-    canvas.dataset.childRefinement = "deferred";
-    canvas.dataset.mode = "hybrid-simulation-earth";
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Code-generated Hearth");
+    canvas.setAttribute("aria-label", "Hearth Generation 2 procedural hybrid simulation Earth render");
 
-    return canvas;
-  }
+    const receipt = document.createElement("div");
+    receipt.className = "hearth-g2-receipt";
+    receipt.textContent = "Hearth G2 · Surface Definition";
 
-  function drawFrame(canvas, ctx) {
-    if (!state.parentSurface) return;
+    shell.append(canvas, receipt);
 
-    ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-
-    drawSphereTexture(ctx, state.parentSurface, state.phase, 1);
-
-    if (state.childReady && state.cloudSurface) {
-      drawSphereTexture(ctx, state.cloudSurface, state.cloudPhase, 0.72);
-    }
-
-    drawLightAndAtmosphere(ctx);
-
-    canvas.dataset.phase = state.phase.toFixed(5);
-    canvas.dataset.cloudPhase = state.cloudPhase.toFixed(5);
-    canvas.dataset.parentReady = String(state.parentReady);
-    canvas.dataset.childReady = String(state.childReady);
-  }
-
-  function bindControls(canvas, ctx) {
-    canvas.addEventListener("pointerdown", (event) => {
-      state.dragging = true;
-      state.lastX = event.clientX;
-      state.velocity = 0;
-
-      try {
-        canvas.setPointerCapture(event.pointerId);
-      } catch (error) {}
-
-      if (event.cancelable) event.preventDefault();
-    }, { passive: false });
-
-    window.addEventListener("pointermove", (event) => {
-      if (!state.dragging) return;
-
-      const dx = event.clientX - state.lastX;
-      state.lastX = event.clientX;
-
-      const delta = -dx * 0.00145;
-      state.phase = wrap01(state.phase + delta);
-      state.cloudPhase = wrap01(state.cloudPhase + delta * 0.42);
-      state.velocity = delta * 0.58;
-
-      drawFrame(canvas, ctx);
-
-      if (event.cancelable) event.preventDefault();
-    }, { passive: false });
-
-    window.addEventListener("pointerup", () => {
-      state.dragging = false;
-    });
-
-    window.addEventListener("pointercancel", () => {
-      state.dragging = false;
-    });
-  }
-
-  function tick(canvas, ctx) {
-    state.phase = wrap01(state.phase + 0.00058 + state.velocity);
-    state.cloudPhase = wrap01(state.cloudPhase + 0.00027 + state.velocity * 0.42);
-    state.velocity *= 0.945;
-
-    if (Math.abs(state.velocity) < 0.000012) state.velocity = 0;
-
-    drawFrame(canvas, ctx);
-    state.raf = requestAnimationFrame(() => tick(canvas, ctx));
-  }
-
-  function buildChildRefinementAfterParent(canvas, ctx) {
-    const build = () => {
-      state.cloudSurface = buildCloudRefinementTexture();
-      state.childReady = true;
-      drawFrame(canvas, ctx);
-    };
-
-    if ("requestIdleCallback" in window) {
-      window.requestIdleCallback(build, { timeout: 900 });
+    if (target.clear) {
+      target.el.appendChild(shell);
     } else {
-      window.setTimeout(build, 80);
+      const old = target.el.querySelector(".hearth-g2-shell");
+      if (old) old.remove();
+      target.el.appendChild(shell);
+    }
+
+    runtime.shell = shell;
+    runtime.canvas = canvas;
+    runtime.ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
+    runtime.work = document.createElement("canvas");
+    runtime.workCtx = runtime.work.getContext("2d", { alpha: true, willReadFrequently: false });
+    runtime.map = makeTexture();
+
+    document.documentElement.dataset.hearthContract = CONTRACT;
+    document.documentElement.dataset.hearthVersion = VERSION;
+    document.documentElement.dataset.hearthRouteStable = "true";
+
+    window.HEARTH_G2_RECEIPT = Object.freeze({
+      receipt: RECEIPT,
+      contract: CONTRACT,
+      version: VERSION,
+      route: location.pathname,
+      externalImages: false,
+      nasaAsset: false,
+      generatedImage: false,
+      renderOwner: "/assets/hearth/hearth.canvas.js",
+      surface: "procedural-earth-hybrid-g2",
+      status: "mounted"
+    });
+
+    runtime.resizeObserver = new ResizeObserver(resize);
+    runtime.resizeObserver.observe(shell);
+    window.addEventListener("resize", resize, { passive: true });
+    resize();
+    runtime.mounted = true;
+    runtime.raf = requestAnimationFrame(loop);
+    return true;
+  }
+
+  function resize() {
+    if (!runtime.shell || !runtime.canvas || !runtime.ctx) return;
+    const rect = runtime.shell.getBoundingClientRect();
+    const cssSize = Math.max(MIN_RENDER_SIZE, Math.floor(rect.width || MIN_RENDER_SIZE));
+    const dpr = clamp(window.devicePixelRatio || 1, 1, 2);
+    const px = Math.max(MIN_RENDER_SIZE, Math.floor(cssSize * dpr));
+    runtime.canvas.width = px;
+    runtime.canvas.height = px;
+    runtime.pixelRatio = dpr;
+
+    const workSize = Math.max(MIN_RENDER_SIZE, Math.min(MAX_RENDER_SIZE, Math.floor(px)));
+    if (runtime.size !== workSize) {
+      runtime.size = workSize;
+      runtime.work.width = workSize;
+      runtime.work.height = workSize;
+      runtime.image = runtime.workCtx.createImageData(workSize, workSize);
     }
   }
 
-  function mount(target) {
-    if (!target || state.mounted) return null;
+  function paintBackplate(ctx, w, h, t) {
+    ctx.clearRect(0, 0, w, h);
 
-    const canvas = createCanvas();
-    const ctx = canvas.getContext("2d", { alpha: true });
+    const bg = ctx.createRadialGradient(w * 0.50, h * 0.45, w * 0.06, w * 0.50, h * 0.50, w * 0.66);
+    bg.addColorStop(0, "rgba(37, 81, 113, 0.32)");
+    bg.addColorStop(0.55, "rgba(13, 32, 54, 0.72)");
+    bg.addColorStop(1, "rgba(3, 8, 17, 1)");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
 
-    target.replaceChildren(canvas);
-    target.dataset.contract = CONTRACT;
-    target.dataset.body = "hearth";
-    target.dataset.label = "Hearth";
-    target.dataset.generation = "G2";
-    target.dataset.parentSurface = "stable";
-    target.dataset.childRefinement = "deferred";
-    target.dataset.mode = "hybrid-simulation-earth";
-
-    state.mounted = true;
-
-    state.parentSurface = buildParentSurfaceTexture();
-    state.parentReady = true;
-
-    bindControls(canvas, ctx);
-    drawFrame(canvas, ctx);
-    tick(canvas, ctx);
-    buildChildRefinementAfterParent(canvas, ctx);
-
-    return canvas;
+    const cx = w * 0.50;
+    const cy = h * 0.50;
+    const pulse = 0.5 + 0.5 * Math.sin(t * 0.0011);
+    for (let i = 0; i < 3; i += 1) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, w * (0.392 + i * 0.033), 0, TAU);
+      ctx.strokeStyle = `rgba(102, 174, 225, ${0.09 - i * 0.018 + pulse * 0.012})`;
+      ctx.lineWidth = Math.max(1, w * (0.006 - i * 0.0009));
+      ctx.stroke();
+    }
   }
 
-  function autoMount() {
-    const target =
-      document.getElementById("hearthRenderMount") ||
-      document.querySelector("[data-hearth-render-mount]") ||
-      document.getElementById("earthRenderMount") ||
-      document.querySelector("[data-earth-render-mount]");
+  function paintSphere(time) {
+    const size = runtime.size;
+    const image = runtime.image;
+    const data = image.data;
+    const map = runtime.map;
+    if (!size || !image || !map) return;
 
-    if (!target) return;
-    mount(target);
+    data.fill(0);
+
+    const cx = size * 0.5;
+    const cy = size * 0.505;
+    const radius = size * 0.402;
+    const spin = time * 0.000055;
+    const cosA = Math.cos(spin);
+    const sinA = Math.sin(spin);
+    const cloudShift = (time * 0.000006) % 1;
+    const yMin = Math.max(0, Math.floor(cy - radius - 2));
+    const yMax = Math.min(size - 1, Math.ceil(cy + radius + 2));
+    const xMin = Math.max(0, Math.floor(cx - radius - 2));
+    const xMax = Math.min(size - 1, Math.ceil(cx + radius + 2));
+
+    for (let y = yMin; y <= yMax; y += 1) {
+      const sy = (y - cy) / radius;
+      const sy2 = sy * sy;
+
+      for (let x = xMin; x <= xMax; x += 1) {
+        const sx = (x - cx) / radius;
+        const d2 = sx * sx + sy2;
+        if (d2 > 1) continue;
+
+        const z = Math.sqrt(1 - d2);
+        const nx = sx;
+        const ny = -sy;
+        const nz = z;
+
+        const rx = nx * cosA + nz * sinA;
+        const rz = -nx * sinA + nz * cosA;
+        const lat = Math.asin(clamp(ny, -1, 1));
+        const lon = Math.atan2(rx, rz);
+        const idx = sampleIndex(lon, lat, 0);
+        const cidx = sampleIndex(lon, lat, cloudShift);
+
+        const isLand = map.land[idx] > 0;
+        const coast = map.coast[idx] / 255;
+        const cloud = map.cloud[cidx] / 255;
+        const h = map.height[idx];
+
+        let rr = map.r[idx];
+        let gg = map.g[idx];
+        let bb = map.b[idx];
+
+        const light = clamp(nx * LIGHT[0] + ny * LIGHT[1] + nz * LIGHT[2], 0, 1);
+        const shade = 0.38 + light * 0.68;
+        const limb = Math.pow(1 - z, 1.65);
+        const edgeOcean = !isLand ? Math.pow(coast, 1.15) : 0;
+
+        if (edgeOcean > 0.05) {
+          rr = mix(rr, 42, edgeOcean * 0.28);
+          gg = mix(gg, 172, edgeOcean * 0.38);
+          bb = mix(bb, 183, edgeOcean * 0.34);
+        }
+
+        if (isLand && coast > 0.05) {
+          rr = mix(rr, 156, coast * 0.16);
+          gg = mix(gg, 146, coast * 0.14);
+          bb = mix(bb, 112, coast * 0.12);
+        }
+
+        if (!isLand) {
+          const specDot = clamp(nx * HALF_LIGHT[0] + ny * HALF_LIGHT[1] + nz * HALF_LIGHT[2], 0, 1);
+          const spec = Math.pow(specDot, 62) * clamp(light + 0.15, 0, 1);
+          rr = mix(rr, 210, spec * 0.42);
+          gg = mix(gg, 230, spec * 0.38);
+          bb = mix(bb, 248, spec * 0.34);
+        }
+
+        const cloudAlpha = smoothstep(0.28, 0.92, cloud) * (0.38 + 0.18 * light) * (1 - limb * 0.45);
+        if (cloudAlpha > 0.01) {
+          const cloudTone = isLand && h > 0.45 ? 224 : 236;
+          rr = mix(rr, cloudTone, cloudAlpha);
+          gg = mix(gg, cloudTone + 4, cloudAlpha);
+          bb = mix(bb, 244, cloudAlpha);
+        }
+
+        rr = rr * shade;
+        gg = gg * shade;
+        bb = bb * shade;
+
+        rr = mix(rr, 30, limb * 0.34);
+        gg = mix(gg, 99, limb * 0.32);
+        bb = mix(bb, 152, limb * 0.42);
+
+        const atmosphere = Math.pow(limb, 2.4);
+        rr = mix(rr, 42, atmosphere * 0.35);
+        gg = mix(gg, 156, atmosphere * 0.48);
+        bb = mix(bb, 224, atmosphere * 0.55);
+
+        const alpha = smoothstep(1.01, 0.985, d2);
+        const out = (y * size + x) * 4;
+        data[out] = clamp(rr, 0, 255);
+        data[out + 1] = clamp(gg, 0, 255);
+        data[out + 2] = clamp(bb, 0, 255);
+        data[out + 3] = Math.round(alpha * 255);
+      }
+    }
+
+    runtime.workCtx.putImageData(image, 0, 0);
+
+    const wctx = runtime.workCtx;
+    wctx.save();
+    wctx.globalCompositeOperation = "screen";
+    const gx = wctx.createRadialGradient(cx - radius * 0.20, cy - radius * 0.36, radius * 0.05, cx, cy, radius * 0.58);
+    gx.addColorStop(0, "rgba(255,255,255,0.22)");
+    gx.addColorStop(0.26, "rgba(120,190,245,0.08)");
+    gx.addColorStop(1, "rgba(0,0,0,0)");
+    wctx.fillStyle = gx;
+    wctx.beginPath();
+    wctx.arc(cx, cy, radius, 0, TAU);
+    wctx.fill();
+    wctx.restore();
+
+    wctx.save();
+    wctx.globalCompositeOperation = "source-over";
+    wctx.beginPath();
+    wctx.arc(cx, cy, radius * 1.003, 0, TAU);
+    wctx.strokeStyle = "rgba(116, 207, 255, 0.38)";
+    wctx.lineWidth = Math.max(1, size * 0.006);
+    wctx.stroke();
+
+    wctx.beginPath();
+    wctx.arc(cx, cy, radius * 1.045, 0, TAU);
+    wctx.strokeStyle = "rgba(91, 174, 236, 0.14)";
+    wctx.lineWidth = Math.max(1, size * 0.010);
+    wctx.stroke();
+    wctx.restore();
   }
 
-  window.DGBHearthCanvas = Object.freeze({
-    contract: CONTRACT,
-    generation: "G2",
-    parentSurface: "stable",
-    childRefinement: "deferred",
-    mount
-  });
+  function composite(time) {
+    const canvas = runtime.canvas;
+    const ctx = runtime.ctx;
+    const w = canvas.width;
+    const h = canvas.height;
+    if (!w || !h) return;
 
-  window.DGBEarthCanvas = window.DGBHearthCanvas;
+    paintBackplate(ctx, w, h, time);
+    paintSphere(time);
+
+    const size = Math.min(w, h);
+    const drawSize = size;
+    const dx = (w - drawSize) * 0.5;
+    const dy = (h - drawSize) * 0.5;
+
+    ctx.save();
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(runtime.work, dx, dy, drawSize, drawSize);
+    ctx.restore();
+
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+    const cx = w * 0.50;
+    const cy = h * 0.505;
+    const radius = drawSize * 0.402;
+    const halo = ctx.createRadialGradient(cx, cy, radius * 0.90, cx, cy, radius * 1.42);
+    halo.addColorStop(0, "rgba(0,0,0,0)");
+    halo.addColorStop(0.38, "rgba(62,154,226,0.11)");
+    halo.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.42, 0, TAU);
+    ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    ctx.globalCompositeOperation = "soft-light";
+    ctx.fillStyle = "rgba(255,255,255,0.025)";
+    const lines = 22;
+    for (let i = 0; i < lines; i += 1) {
+      const y = h * (i / lines);
+      ctx.fillRect(0, y, w, 1);
+    }
+    ctx.restore();
+  }
+
+  function loop(time) {
+    if (runtime.disposed) return;
+    if (!runtime.lastFrame || time - runtime.lastFrame > 31) {
+      runtime.lastFrame = time;
+      composite(time);
+    }
+    runtime.raf = requestAnimationFrame(loop);
+  }
+
+  function dispose() {
+    runtime.disposed = true;
+    cancelAnimationFrame(runtime.raf);
+    window.removeEventListener("resize", resize);
+    if (runtime.resizeObserver) runtime.resizeObserver.disconnect();
+    const style = document.getElementById("hearth-g2-style");
+    if (style) style.remove();
+    if (runtime.shell && runtime.shell.parentElement) runtime.shell.remove();
+    window.__HEARTH_G2_DISPOSE__ = null;
+  }
+
+  window.__HEARTH_G2_DISPOSE__ = dispose;
+
+  function boot() {
+    if (runtime.mounted || runtime.disposed) return;
+    mount();
+  }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", autoMount, { once: true });
+    document.addEventListener("DOMContentLoaded", boot, { once: true });
   } else {
-    autoMount();
+    boot();
   }
 })();

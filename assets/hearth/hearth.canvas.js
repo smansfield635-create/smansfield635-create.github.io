@@ -1,22 +1,23 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_G3_6_VIEW_LOCKED_LIGHTING_NO_TERMINATOR_TNT_v1
+// HEARTH_G3_7_HYDRATION_ENGINE_CANVAS_BIND_TNT_v1
 // Full-file replacement.
 // Purpose:
-// - Preserve G3.4/G3.5 terrain-map authority.
-// - Remove hard day/night terminator and vertical lighting slice.
-// - Use view-locked lighting for G3 terrain proof.
-// - Canvas owns projection, rotation, lighting, wrapped sampling, and render composition only.
-// - Terrain remains owned by /assets/hearth/hearth.terrain.js.
+// - Bind Hearth canvas to terrain + hydration engines.
+// - Canvas owns projection, rotation, view-locked lighting, wrapped sampling, and render composition.
+// - Terrain owns body mass, elevation, mountain ranges, relief, bathymetry base.
+// - Hydration owns ocean material, shelves, lakes, basins, drainage, frozen-water storage, and water saturation.
 // - G3 only. G4 remains deferred: clouds, weather, climate.
 // - No JPG. No NASA asset. No generated image. No GraphicBox.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_6_VIEW_LOCKED_LIGHTING_NO_TERMINATOR_TNT_v1";
-  const VERSION = "2026-05-08.hearth-g3-6-view-locked-lighting-no-terminator";
-  const RECEIPT = "HEARTH_G3_6_VIEW_LOCKED_LIGHTING_RECEIPT";
+  const CONTRACT = "HEARTH_G3_7_HYDRATION_ENGINE_CANVAS_BIND_TNT_v1";
+  const VERSION = "2026-05-08.hearth-g3-7-hydration-engine-canvas-bind";
+  const RECEIPT = "HEARTH_G3_7_HYDRATION_ENGINE_CANVAS_BIND_RECEIPT";
+
   const TERRAIN_SRC = "/assets/hearth/hearth.terrain.js?v=hearth-g3-4-map-generation";
+  const HYDRATION_SRC = "/assets/hearth/hearth.hydration.js?v=hearth-g3-7-hydration-engine";
 
   const MAP_W = 900;
   const MAP_H = 450;
@@ -26,6 +27,7 @@
   const HALF_PI = Math.PI / 2;
 
   [
+    "__HEARTH_CANVAS_G3_7_DISPOSE__",
     "__HEARTH_CANVAS_G3_6_DISPOSE__",
     "__HEARTH_CANVAS_G3_5_DISPOSE__",
     "__HEARTH_CANVAS_G3_4_DISPOSE__",
@@ -104,31 +106,37 @@
     return norm ? sum / norm : 0;
   }
 
-  function loadTerrain() {
+  function loadScriptOnce(globalName, src, marker) {
     return new Promise((resolve) => {
-      if (window.HEARTH_TERRAIN && typeof window.HEARTH_TERRAIN.sample === "function") {
-        resolve(window.HEARTH_TERRAIN);
+      if (window[globalName]) {
+        resolve(window[globalName]);
         return;
       }
 
-      const existing = document.querySelector('script[src*="/assets/hearth/hearth.terrain.js"]');
+      const existing = document.querySelector(`script[data-${marker}="true"], script[src*="${src.split("?")[0]}"]`);
       if (existing) {
-        existing.addEventListener("load", () => resolve(window.HEARTH_TERRAIN || null), { once: true });
+        existing.addEventListener("load", () => resolve(window[globalName] || null), { once: true });
         existing.addEventListener("error", () => resolve(null), { once: true });
         return;
       }
 
       const script = document.createElement("script");
-      script.src = TERRAIN_SRC;
+      script.src = src;
       script.defer = true;
-      script.dataset.hearthTerrainScript = "true";
+      script.dataset[marker] = "true";
       script.dataset.contract = CONTRACT;
 
-      script.addEventListener("load", () => resolve(window.HEARTH_TERRAIN || null), { once: true });
+      script.addEventListener("load", () => resolve(window[globalName] || null), { once: true });
       script.addEventListener("error", () => resolve(null), { once: true });
 
       document.head.appendChild(script);
     });
+  }
+
+  async function loadAuthorities() {
+    const terrain = await loadScriptOnce("HEARTH_TERRAIN", TERRAIN_SRC, "hearthTerrainScript");
+    const hydration = await loadScriptOnce("HEARTH_HYDRATION", HYDRATION_SRC, "hearthHydrationScript");
+    return { terrain, hydration };
   }
 
   function fallbackTerrainSample(lon, lat) {
@@ -162,27 +170,60 @@
     };
   }
 
-  function colorForSample(s, lon, lat) {
+  function fallbackHydrationSample(lon, lat, terrainSample) {
+    const land = !!terrainSample.land;
+    const coast = clamp(terrainSample.coast || 0, 0, 1);
+    const shelf = clamp(terrainSample.shelf || 0, 0, 1);
+    const bathymetry = clamp(terrainSample.bathymetry || 0, 0, 1);
+    const ice = clamp(terrainSample.ice || 0, 0, 1);
+    const moisture = clamp(terrainSample.moisture || 0.5, 0, 1);
+
+    return {
+      land,
+      ocean: land ? 0 : 1,
+      shallowWater: land ? 0 : shelf,
+      deepWater: land ? 0 : smoothstep(0.30, 0.92, bathymetry),
+      abyssWater: land ? 0 : smoothstep(0.62, 1, bathymetry),
+      coastalWetness: land ? coast * 0.65 + moisture * 0.2 : coast * 0.35 + shelf * 0.65,
+      lake: 0,
+      riverCandidate: 0,
+      drainageCandidate: 0,
+      wetland: 0,
+      frozenStorage: land ? ice : 0,
+      meltCandidate: 0,
+      saturation: land ? coast * 0.2 + moisture * 0.2 : shelf * 0.55 + bathymetry * 0.35,
+      surfaceCurrent: 0.4,
+      roughWater: 0.25,
+      material: land ? "dry-land" : "ocean"
+    };
+  }
+
+  function colorForSample(t, h, lon, lat) {
     const nx = (lon + 180) / 360;
     const ny = (90 - lat) / 180;
     const texture = fbm(nx * 44 + 11, ny * 34 - 3, 13.9, 4);
     const fine = fbm(nx * 124, ny * 72, 19.4, 3);
-    const current = fbm(nx * 30 + 18, ny * 18 - 7, 31.6, 4);
-    const reef = s.shelf * smoothstep(0.55, 0.90, fbm(nx * 58, ny * 40, 88.1, 3));
+    const waterTexture = fbm(nx * 64 + 5, ny * 43 - 8, 712.4, 3);
 
-    if (s.land) {
-      const green = clamp((s.moisture - 0.28) * 1.38 * (1 - s.aridity * 0.44), 0, 1);
-      const shore = smoothstep(0, 0.42, s.coast);
-      const highland = s.highland || smoothstep(0.42, 0.80, s.elevation);
-      const mountain = s.mountain || 0;
+    if (t.land) {
+      const green = clamp((t.moisture - 0.28) * 1.38 * (1 - t.aridity * 0.44), 0, 1);
+      const highland = t.highland || smoothstep(0.42, 0.80, t.elevation);
+      const mountain = t.mountain || 0;
+      const hydroGreen = clamp((h.saturation || 0) * 0.44 + (h.wetland || 0) * 0.34, 0, 1);
+      const wetEdge = clamp((h.coastalWetness || 0) * 0.50 + (h.riverCandidate || 0) * 0.42 + (h.lake || 0) * 0.60, 0, 1);
+      const frozen = clamp(h.frozenStorage || t.ice || 0, 0, 1);
 
       let r = mix(132, 42, green);
       let g = mix(105, 122, green);
       let b = mix(58, 72, green);
 
-      r = mix(r, 176, s.aridity * 0.48);
-      g = mix(g, 142, s.aridity * 0.38);
-      b = mix(b, 90, s.aridity * 0.30);
+      r = mix(r, 42, hydroGreen * 0.18);
+      g = mix(g, 132, hydroGreen * 0.20);
+      b = mix(b, 92, hydroGreen * 0.18);
+
+      r = mix(r, 176, t.aridity * 0.48);
+      g = mix(g, 142, t.aridity * 0.38);
+      b = mix(b, 90, t.aridity * 0.30);
 
       r = mix(r, 118, highland * 0.30);
       g = mix(g, 116, highland * 0.26);
@@ -192,15 +233,15 @@
       g = mix(g, 96, mountain * 0.46);
       b = mix(b, 96, mountain * 0.44);
 
-      r = mix(r, 230, s.ice * 0.70);
-      g = mix(g, 236, s.ice * 0.70);
-      b = mix(b, 230, s.ice * 0.70);
+      r = mix(r, 34, wetEdge * 0.16);
+      g = mix(g, 150, wetEdge * 0.20);
+      b = mix(b, 154, wetEdge * 0.22);
 
-      r = mix(r, 194, shore * 0.20);
-      g = mix(g, 176, shore * 0.18);
-      b = mix(b, 126, shore * 0.16);
+      r = mix(r, 232, frozen * 0.70);
+      g = mix(g, 238, frozen * 0.70);
+      b = mix(b, 232, frozen * 0.70);
 
-      const grain = (texture - 0.5) * 24 + (fine - 0.5) * 11;
+      const grain = (texture - 0.5) * 23 + (fine - 0.5) * 10;
 
       return [
         clamp(r + grain, 0, 255),
@@ -209,42 +250,39 @@
       ];
     }
 
-    const depth = s.bathymetry || 0;
-    const shelf = s.shelf || 0;
-    const slope = s.slope || 0;
-    const abyss = s.abyss || 0;
+    const shallow = clamp(h.shallowWater || t.shelf || 0, 0, 1);
+    const deep = clamp(h.deepWater || t.bathymetry || 0, 0, 1);
+    const abyss = clamp(h.abyssWater || t.abyss || 0, 0, 1);
+    const rough = clamp(h.roughWater || 0, 0, 1);
+    const reef = shallow * smoothstep(0.55, 0.90, fbm(nx * 58, ny * 40, 88.1, 3));
+    const current = (waterTexture - 0.5) * (12 + rough * 18);
 
-    let r = mix(18, 0, depth);
-    let g = mix(102, 24, depth);
-    let b = mix(148, 80, depth);
+    let r = mix(18, 0, deep);
+    let g = mix(102, 24, deep);
+    let b = mix(148, 80, deep);
 
-    r = mix(r, 38, shelf * 0.86);
-    g = mix(g, 174, shelf * 0.84);
-    b = mix(b, 180, shelf * 0.80);
+    r = mix(r, 36, shallow * 0.90);
+    g = mix(g, 182, shallow * 0.86);
+    b = mix(b, 188, shallow * 0.82);
 
-    r = mix(r, 12, slope * 0.34);
-    g = mix(g, 84, slope * 0.34);
-    b = mix(b, 142, slope * 0.34);
+    r = mix(r, 4, abyss * 0.48);
+    g = mix(g, 28, abyss * 0.40);
+    b = mix(b, 82, abyss * 0.38);
 
-    r = mix(r, 2, abyss * 0.44);
-    g = mix(g, 32, abyss * 0.36);
-    b = mix(b, 88, abyss * 0.34);
-
-    r = mix(r, 78, reef * 0.24);
-    g = mix(g, 196, reef * 0.34);
-    b = mix(b, 184, reef * 0.30);
-
-    const flow = (current - 0.5) * 15;
+    r = mix(r, 76, reef * 0.24);
+    g = mix(g, 202, reef * 0.34);
+    b = mix(b, 190, reef * 0.30);
 
     return [
-      clamp(r + flow * 0.18, 0, 255),
-      clamp(g + flow * 0.46, 0, 255),
-      clamp(b + flow, 0, 255)
+      clamp(r + current * 0.16, 0, 255),
+      clamp(g + current * 0.42, 0, 255),
+      clamp(b + current, 0, 255)
     ];
   }
 
-  function buildMap(terrain) {
+  function buildMap(authorities) {
     const len = MAP_W * MAP_H;
+
     const r = new Float32Array(len);
     const g = new Float32Array(len);
     const b = new Float32Array(len);
@@ -257,9 +295,25 @@
     const shelf = new Float32Array(len);
     const ice = new Float32Array(len);
 
-    const sample = terrain && typeof terrain.sample === "function"
-      ? terrain.sample
-      : fallbackTerrainSample;
+    const shallowWater = new Float32Array(len);
+    const deepWater = new Float32Array(len);
+    const saturation = new Float32Array(len);
+    const coastalWetness = new Float32Array(len);
+    const lake = new Float32Array(len);
+    const river = new Float32Array(len);
+    const drainage = new Float32Array(len);
+    const frozenStorage = new Float32Array(len);
+    const roughWater = new Float32Array(len);
+
+    const terrainSample =
+      authorities.terrain && typeof authorities.terrain.sample === "function"
+        ? authorities.terrain.sample
+        : fallbackTerrainSample;
+
+    const hydrationSample =
+      authorities.hydration && typeof authorities.hydration.sample === "function"
+        ? authorities.hydration.sample
+        : fallbackHydrationSample;
 
     for (let y = 0; y < MAP_H; y += 1) {
       const lat = 90 - (y / MAP_H) * 180;
@@ -267,25 +321,41 @@
       for (let x = 0; x < MAP_W; x += 1) {
         const lon = (x / MAP_W) * 360 - 180;
         const idx = y * MAP_W + x;
-        const s = sample(lon, lat);
-        const c = colorForSample(s, lon, lat);
+
+        const t = terrainSample(lon, lat);
+        const h = hydrationSample(lon, lat, t);
+        const c = colorForSample(t, h, lon, lat);
 
         r[idx] = c[0];
         g[idx] = c[1];
         b[idx] = c[2];
 
-        land[idx] = s.land ? 1 : 0;
-        coast[idx] = clamp(s.coast || 0, 0, 1);
-        height[idx] = s.elevation || 0;
-        relief[idx] = s.relief || 0;
-        roughness[idx] = s.roughness || 0;
-        bathymetry[idx] = s.bathymetry || 0;
-        shelf[idx] = s.shelf || 0;
-        ice[idx] = s.ice || 0;
+        land[idx] = t.land ? 1 : 0;
+        coast[idx] = clamp(t.coast || 0, 0, 1);
+        height[idx] = t.elevation || 0;
+        relief[idx] = t.relief || 0;
+        roughness[idx] = t.roughness || 0;
+        bathymetry[idx] = t.bathymetry || 0;
+        shelf[idx] = t.shelf || 0;
+        ice[idx] = t.ice || 0;
+
+        shallowWater[idx] = clamp(h.shallowWater || 0, 0, 1);
+        deepWater[idx] = clamp(h.deepWater || 0, 0, 1);
+        saturation[idx] = clamp(h.saturation || 0, 0, 1);
+        coastalWetness[idx] = clamp(h.coastalWetness || 0, 0, 1);
+        lake[idx] = clamp(h.lake || 0, 0, 1);
+        river[idx] = clamp(h.riverCandidate || 0, 0, 1);
+        drainage[idx] = clamp(h.drainageCandidate || 0, 0, 1);
+        frozenStorage[idx] = clamp(h.frozenStorage || 0, 0, 1);
+        roughWater[idx] = clamp(h.roughWater || 0, 0, 1);
       }
     }
 
-    return { r, g, b, land, coast, height, relief, roughness, bathymetry, shelf, ice };
+    return {
+      r, g, b, land, coast, height, relief, roughness, bathymetry, shelf, ice,
+      shallowWater, deepWater, saturation, coastalWetness, lake, river, drainage,
+      frozenStorage, roughWater
+    };
   }
 
   function bilinear(map, key, u, v) {
@@ -301,7 +371,6 @@
     const ty = y - Math.floor(y);
 
     const arr = map[key];
-
     const a = arr[y0 * MAP_W + x0];
     const b = arr[y0 * MAP_W + x1];
     const c = arr[y1 * MAP_W + x0];
@@ -325,7 +394,16 @@
       roughness: bilinear(map, "roughness", u, v),
       bathymetry: bilinear(map, "bathymetry", u, v),
       shelf: bilinear(map, "shelf", u, v),
-      ice: bilinear(map, "ice", u, v)
+      ice: bilinear(map, "ice", u, v),
+      shallowWater: bilinear(map, "shallowWater", u, v),
+      deepWater: bilinear(map, "deepWater", u, v),
+      saturation: bilinear(map, "saturation", u, v),
+      coastalWetness: bilinear(map, "coastalWetness", u, v),
+      lake: bilinear(map, "lake", u, v),
+      river: bilinear(map, "river", u, v),
+      drainage: bilinear(map, "drainage", u, v),
+      frozenStorage: bilinear(map, "frozenStorage", u, v),
+      roughWater: bilinear(map, "roughWater", u, v)
     };
   }
 
@@ -341,7 +419,7 @@
 
     const base = isLand
       ? 1 + dx * 1.08 + dy * 0.80 + s.relief * 0.09
-      : 1 + dx * 0.18 + dy * 0.14 - s.bathymetry * 0.035 + s.shelf * 0.04;
+      : 1 + dx * 0.16 + dy * 0.12 - s.bathymetry * 0.03 + s.shallowWater * 0.04;
 
     return clamp(base, isLand ? 0.78 : 0.92, isLand ? 1.20 : 1.08);
   }
@@ -370,11 +448,11 @@
   }
 
   function installStyle() {
-    const prior = document.getElementById("hearth-g3-6-view-locked-style");
+    const prior = document.getElementById("hearth-g3-7-hydration-style");
     if (prior) prior.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-g3-6-view-locked-style";
+    style.id = "hearth-g3-7-hydration-style";
     style.textContent = `
       html,
       body {
@@ -403,7 +481,7 @@
         touch-action: pan-y !important;
       }
 
-      .hearth-g3-6-chip {
+      .hearth-g3-7-chip {
         position: absolute;
         left: 14px;
         bottom: 12px;
@@ -421,7 +499,7 @@
       }
 
       @media (max-width: 520px) {
-        .hearth-g3-6-chip { display: none; }
+        .hearth-g3-7-chip { display: none; }
       }
     `;
 
@@ -555,30 +633,37 @@
         const noTerminatorLight = clamp(curveLight * screenLift, 0.78, 1.08);
 
         if (!isLand) {
-          if (s.shelf > 0.08) {
-            rr = mix(rr, 42, s.shelf * 0.22);
-            gg = mix(gg, 180, s.shelf * 0.28);
-            bb = mix(bb, 188, s.shelf * 0.26);
+          if (s.shallowWater > 0.08) {
+            rr = mix(rr, 42, s.shallowWater * 0.18);
+            gg = mix(gg, 184, s.shallowWater * 0.24);
+            bb = mix(bb, 192, s.shallowWater * 0.22);
           }
 
           if (s.coast > 0.04) {
             const edge = Math.pow(s.coast, 1.05);
-            rr = mix(rr, 54, edge * 0.11);
-            gg = mix(gg, 184, edge * 0.18);
-            bb = mix(bb, 196, edge * 0.16);
+            rr = mix(rr, 54, edge * 0.10);
+            gg = mix(gg, 188, edge * 0.16);
+            bb = mix(bb, 198, edge * 0.14);
           }
 
-          const centerSpec = Math.pow(clamp(z, 0, 1), 18) * (0.18 - s.bathymetry * 0.05);
-          rr = mix(rr, 210, centerSpec * 0.18);
-          gg = mix(gg, 232, centerSpec * 0.16);
-          bb = mix(bb, 252, centerSpec * 0.14);
+          const centerSpec = Math.pow(clamp(z, 0, 1), 18) * (0.16 - s.bathymetry * 0.05);
+          rr = mix(rr, 210, centerSpec * 0.16);
+          gg = mix(gg, 232, centerSpec * 0.14);
+          bb = mix(bb, 252, centerSpec * 0.12);
         }
 
         if (isLand) {
           if (s.coast > 0.05) {
-            rr = mix(rr, 162, s.coast * 0.12);
-            gg = mix(gg, 150, s.coast * 0.11);
-            bb = mix(bb, 114, s.coast * 0.09);
+            rr = mix(rr, 52, s.coastalWetness * 0.08);
+            gg = mix(gg, 144, s.coastalWetness * 0.11);
+            bb = mix(bb, 132, s.coastalWetness * 0.10);
+          }
+
+          if (s.river > 0.05 || s.lake > 0.05) {
+            const liquid = clamp(s.river * 0.52 + s.lake * 0.72 + s.drainage * 0.30, 0, 1);
+            rr = mix(rr, 36, liquid * 0.18);
+            gg = mix(gg, 140, liquid * 0.22);
+            bb = mix(bb, 158, liquid * 0.24);
           }
 
           const ridgeLight = clamp((s.height * 0.84 + s.roughness * 0.38), 0, 1);
@@ -586,11 +671,11 @@
           gg = mix(gg, gg + 14, ridgeLight * 0.09);
           bb = mix(bb, bb + 10, ridgeLight * 0.07);
 
-          if (s.ice > 0.20) {
-            const iceGlow = smoothstep(0.2, 0.9, s.ice) * 0.22;
-            rr = mix(rr, 240, iceGlow * 0.18);
-            gg = mix(gg, 246, iceGlow * 0.18);
-            bb = mix(bb, 240, iceGlow * 0.16);
+          if (s.frozenStorage > 0.20) {
+            const iceGlow = smoothstep(0.2, 0.9, s.frozenStorage) * 0.22;
+            rr = mix(rr, 242, iceGlow * 0.18);
+            gg = mix(gg, 248, iceGlow * 0.18);
+            bb = mix(bb, 242, iceGlow * 0.16);
           }
         }
 
@@ -713,10 +798,39 @@
     runtime.raf = requestAnimationFrame(loop);
   }
 
+  function resize() {
+    if (!runtime.mount || !runtime.canvas) return;
+
+    const rect = runtime.mount.getBoundingClientRect();
+    const cssSize = Math.max(
+      MIN_RENDER_SIZE,
+      Math.floor(Math.min(rect.width || MIN_RENDER_SIZE, rect.height || rect.width || MIN_RENDER_SIZE))
+    );
+
+    const dpr = clamp(window.devicePixelRatio || 1, 1, 2);
+    const px = Math.max(MIN_RENDER_SIZE, Math.floor(cssSize * dpr));
+    const workSize = Math.max(MIN_RENDER_SIZE, Math.min(MAX_RENDER_SIZE, px));
+
+    runtime.canvas.width = px;
+    runtime.canvas.height = px;
+
+    if (runtime.size !== workSize) {
+      runtime.size = workSize;
+      runtime.work.width = workSize;
+      runtime.work.height = workSize;
+      runtime.image = runtime.workCtx.createImageData(workSize, workSize);
+    }
+  }
+
   function exposeReceipt(status) {
     const terrainReceipt =
       window.HEARTH_TERRAIN && typeof window.HEARTH_TERRAIN.receipt === "function"
         ? window.HEARTH_TERRAIN.receipt()
+        : null;
+
+    const hydrationReceipt =
+      window.HEARTH_HYDRATION && typeof window.HEARTH_HYDRATION.receipt === "function"
+        ? window.HEARTH_HYDRATION.receipt()
         : null;
 
     window.HEARTH_CANVAS_RECEIPT = Object.freeze({
@@ -726,14 +840,20 @@
       route: location.pathname,
       renderOwner: "/assets/hearth/hearth.canvas.js",
       terrainOwner: "/assets/hearth/hearth.terrain.js",
+      hydrationOwner: "/assets/hearth/hearth.hydration.js",
       terrainContract: window.HEARTH_TERRAIN?.contract || "fallback",
+      hydrationContract: window.HEARTH_HYDRATION?.contract || "fallback",
       terrainReceipt,
+      hydrationReceipt,
       mount: "#hearthCanvasMount",
-      generation: "G3.6-candidate",
+      generation: "G3.7-candidate",
       canvasOwns: ["projection", "rotation", "view-locked-lighting", "wrapped-sampling", "render-composition"],
       terrainOwns: ["map", "body-mass", "elevation", "mountain-ranges", "relief", "bathymetry"],
-      lightingPolicy: "view-locked terrain proof; no day-night terminator; no hard vertical slice",
+      hydrationOwns: ["ocean-material", "shelves", "basins", "river-candidates", "drainage", "frozen-water-storage", "saturation"],
       g4Deferred: "clouds-weather-climate",
+      noClouds: true,
+      noWeather: true,
+      noClimate: true,
       externalImages: false,
       nasaAsset: false,
       generatedImage: false,
@@ -748,7 +868,7 @@
     installStyle();
     unlockScroll();
 
-    const terrain = await loadTerrain();
+    const authorities = await loadAuthorities();
     if (runtime.disposed) return;
 
     const mountEl = getMount();
@@ -757,14 +877,17 @@
     const canvas = document.createElement("canvas");
     canvas.dataset.hearthCanvas = "true";
     canvas.dataset.contract = CONTRACT;
-    canvas.dataset.generation = "G3.6-candidate";
+    canvas.dataset.generation = "G3.7-candidate";
     canvas.dataset.localScale = "hearth";
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Hearth G3.6 view-locked lighting no terminator globe");
+    canvas.setAttribute("aria-label", "Hearth G3.7 hydration engine globe");
 
     const chip = document.createElement("div");
-    chip.className = "hearth-g3-6-chip";
-    chip.textContent = terrain ? "Hearth G3.6 · No Terminator" : "Hearth G3.6 · Terrain Fallback";
+    chip.className = "hearth-g3-7-chip";
+    chip.textContent =
+      authorities.terrain && authorities.hydration
+        ? "Hearth G3.7 · Hydration"
+        : "Hearth G3.7 · Hydration Fallback";
 
     mountEl.append(canvas, chip);
 
@@ -773,15 +896,17 @@
     runtime.ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
     runtime.work = document.createElement("canvas");
     runtime.workCtx = runtime.work.getContext("2d", { alpha: true, willReadFrequently: false });
-    runtime.map = buildMap(terrain);
+    runtime.map = buildMap(authorities);
 
     mountEl.dataset.hearthCanvasContract = CONTRACT;
     mountEl.dataset.hearthCanvasReceipt = RECEIPT;
     mountEl.dataset.hearthRenderOwner = "/assets/hearth/hearth.canvas.js";
     mountEl.dataset.hearthTerrainOwner = "/assets/hearth/hearth.terrain.js";
-    mountEl.dataset.hearthTerrainLoaded = terrain ? "true" : "false";
-    mountEl.dataset.hearthGeneration = "G3.6-candidate";
-    mountEl.dataset.hearthGenerationFocus = "view-locked-lighting-no-terminator";
+    mountEl.dataset.hearthHydrationOwner = "/assets/hearth/hearth.hydration.js";
+    mountEl.dataset.hearthTerrainLoaded = authorities.terrain ? "true" : "false";
+    mountEl.dataset.hearthHydrationLoaded = authorities.hydration ? "true" : "false";
+    mountEl.dataset.hearthGeneration = "G3.7-candidate";
+    mountEl.dataset.hearthGenerationFocus = "hydration-engine";
     mountEl.dataset.g4Deferred = "clouds-weather-climate";
     mountEl.dataset.earthPlaceholder = "false";
     mountEl.dataset.audraliaMap = "false";
@@ -790,9 +915,11 @@
     document.documentElement.dataset.hearthCanvasContract = CONTRACT;
     document.documentElement.dataset.hearthCanvasVersion = VERSION;
     document.documentElement.dataset.hearthTerrainOwner = "/assets/hearth/hearth.terrain.js";
-    document.documentElement.dataset.hearthTerrainLoaded = terrain ? "true" : "false";
-    document.documentElement.dataset.hearthGeneration = "G3.6-candidate";
-    document.documentElement.dataset.hearthGenerationFocus = "view-locked-lighting-no-terminator";
+    document.documentElement.dataset.hearthHydrationOwner = "/assets/hearth/hearth.hydration.js";
+    document.documentElement.dataset.hearthTerrainLoaded = authorities.terrain ? "true" : "false";
+    document.documentElement.dataset.hearthHydrationLoaded = authorities.hydration ? "true" : "false";
+    document.documentElement.dataset.hearthGeneration = "G3.7-candidate";
+    document.documentElement.dataset.hearthGenerationFocus = "hydration-engine";
     document.documentElement.dataset.hearthG4Deferred = "clouds-weather-climate";
     document.documentElement.dataset.hearthExternalImages = "false";
     document.documentElement.dataset.hearthNasaAsset = "false";
@@ -818,15 +945,16 @@
 
     if (runtime.observer) runtime.observer.disconnect();
 
-    const style = document.getElementById("hearth-g3-6-view-locked-style");
+    const style = document.getElementById("hearth-g3-7-hydration-style");
     if (style) style.remove();
 
     if (runtime.mount) runtime.mount.replaceChildren();
 
-    window.__HEARTH_CANVAS_G3_6_DISPOSE__ = null;
+    window.__HEARTH_CANVAS_G3_7_DISPOSE__ = null;
     exposeReceipt("disposed");
   }
 
+  window.__HEARTH_CANVAS_G3_7_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_6_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_5_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_4_DISPOSE__ = dispose;

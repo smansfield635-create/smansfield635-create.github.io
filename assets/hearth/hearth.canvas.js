@@ -357,4 +357,506 @@
     const fallback = document.createElement("section");
     fallback.id = "hearthCanvasMount";
     fallback.dataset.hearthMount = "";
-    fallback.dataset.he
+    fallback.dataset.hearthFallbackMount = "true";
+    fallback.dataset.contract = CONTRACT;
+    fallback.style.position = "relative";
+    fallback.style.width = "100%";
+    fallback.style.aspectRatio = "1 / 1";
+    fallback.style.minHeight = "300px";
+    fallback.style.overflow = "hidden";
+    main.appendChild(fallback);
+    return fallback;
+  }
+
+  function installStyle() {
+    const prior = document.getElementById("hearth-g3-4-map-canvas-style");
+    if (prior) prior.remove();
+
+    const style = document.createElement("style");
+    style.id = "hearth-g3-4-map-canvas-style";
+    style.textContent = `
+      html,
+      body {
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        touch-action: pan-y !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+
+      #hearthCanvasMount,
+      [data-hearth-mount] {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+        touch-action: pan-y !important;
+      }
+
+      #hearthCanvasMount canvas[data-hearth-canvas],
+      [data-hearth-mount] canvas[data-hearth-canvas] {
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        touch-action: pan-y !important;
+      }
+
+      .hearth-g3-4-chip {
+        position: absolute;
+        left: 14px;
+        bottom: 12px;
+        z-index: 4;
+        padding: 6px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(135, 187, 221, 0.18);
+        background: rgba(4, 14, 25, 0.42);
+        color: rgba(214, 232, 244, 0.72);
+        font: 800 10px/1.1 ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        pointer-events: none;
+        user-select: none;
+      }
+
+      @media (max-width: 520px) {
+        .hearth-g3-4-chip { display: none; }
+      }
+    `;
+
+    document.head.appendChild(style);
+  }
+
+  function unlockScroll() {
+    document.documentElement.style.overflowX = "hidden";
+    document.documentElement.style.overflowY = "auto";
+    document.documentElement.style.touchAction = "pan-y";
+    document.body.style.overflowX = "hidden";
+    document.body.style.overflowY = "auto";
+    document.body.style.touchAction = "pan-y";
+    document.body.style.overscrollBehaviorY = "auto";
+    document.body.style.webkitOverflowScrolling = "touch";
+    document.body.dataset.hearthScrollUnlocked = "true";
+  }
+
+  function resize() {
+    if (!runtime.mount || !runtime.canvas) return;
+
+    const rect = runtime.mount.getBoundingClientRect();
+    const cssSize = Math.max(
+      MIN_RENDER_SIZE,
+      Math.floor(Math.min(rect.width || MIN_RENDER_SIZE, rect.height || rect.width || MIN_RENDER_SIZE))
+    );
+
+    const dpr = clamp(window.devicePixelRatio || 1, 1, 2);
+    const px = Math.max(MIN_RENDER_SIZE, Math.floor(cssSize * dpr));
+    const workSize = Math.max(MIN_RENDER_SIZE, Math.min(MAX_RENDER_SIZE, px));
+
+    runtime.canvas.width = px;
+    runtime.canvas.height = px;
+
+    if (runtime.size !== workSize) {
+      runtime.size = workSize;
+      runtime.work.width = workSize;
+      runtime.work.height = workSize;
+      runtime.image = runtime.workCtx.createImageData(workSize, workSize);
+    }
+  }
+
+  function paintBackplate(ctx, w, h, time) {
+    ctx.clearRect(0, 0, w, h);
+
+    const bg = ctx.createRadialGradient(w * 0.50, h * 0.45, w * 0.05, w * 0.50, h * 0.50, w * 0.70);
+    bg.addColorStop(0, "rgba(42, 85, 116, 0.34)");
+    bg.addColorStop(0.52, "rgba(12, 30, 52, 0.78)");
+    bg.addColorStop(1, "rgba(2, 7, 15, 1)");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+
+    const cx = w * 0.50;
+    const cy = h * 0.50;
+    const pulse = 0.5 + 0.5 * Math.sin(time * 0.0011);
+
+    for (let i = 0; i < 4; i += 1) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, w * (0.392 + i * 0.031), 0, TAU);
+      ctx.strokeStyle = `rgba(102, 174, 225, ${0.088 - i * 0.016 + pulse * 0.010})`;
+      ctx.lineWidth = Math.max(1, w * (0.006 - i * 0.0008));
+      ctx.stroke();
+    }
+  }
+
+  function paintSphere(time) {
+    const size = runtime.size;
+    const image = runtime.image;
+    const map = runtime.map;
+
+    if (!size || !image || !map) return;
+
+    const data = image.data;
+    data.fill(0);
+
+    const cx = size * 0.5;
+    const cy = size * 0.505;
+    const radius = size * 0.405;
+    const spin = time * 0.000048;
+    const currentShift = (time * 0.000003) % 1;
+    const tilt = -0.10;
+
+    const cosA = Math.cos(spin);
+    const sinA = Math.sin(spin);
+    const cosT = Math.cos(tilt);
+    const sinT = Math.sin(tilt);
+
+    const yMin = Math.max(0, Math.floor(cy - radius - 2));
+    const yMax = Math.min(size - 1, Math.ceil(cy + radius + 2));
+    const xMin = Math.max(0, Math.floor(cx - radius - 2));
+    const xMax = Math.min(size - 1, Math.ceil(cx + radius + 2));
+
+    for (let y = yMin; y <= yMax; y += 1) {
+      const sy = (y - cy) / radius;
+      const sy2 = sy * sy;
+
+      for (let x = xMin; x <= xMax; x += 1) {
+        const sx = (x - cx) / radius;
+        const d2 = sx * sx + sy2;
+
+        if (d2 > 1) continue;
+
+        const z = Math.sqrt(1 - d2);
+
+        let nx = sx;
+        let ny = -sy;
+        let nz = z;
+
+        const ty = ny * cosT - nz * sinT;
+        const tz = ny * sinT + nz * cosT;
+        ny = ty;
+        nz = tz;
+
+        const rx = nx * cosA + nz * sinA;
+        const rz = -nx * sinA + nz * cosA;
+
+        const lat = Math.asin(clamp(ny, -1, 1));
+        const lon = Math.atan2(rx, rz);
+
+        const s = sampleMap(map, lon, lat);
+        const current = sampleMap(map, lon + currentShift * TAU, lat);
+
+        const isLand = s.land > 0.5;
+        const light = clamp(nx * LIGHT[0] + ny * LIGHT[1] + z * LIGHT[2], 0, 1);
+        const softLight = 0.35 + light * 0.74;
+        const limb = Math.pow(1 - z, 1.72);
+        const reliefFactor = reliefShade(map, lon, lat, s, isLand);
+
+        let rr = s.r;
+        let gg = s.g;
+        let bb = s.b;
+
+        if (!isLand) {
+          const currentVeil = smoothstep(0.18, 0.31, current.roughness) * (1 - s.bathymetry * 0.52);
+
+          rr = mix(rr, 45, currentVeil * 0.10);
+          gg = mix(gg, 142, currentVeil * 0.18);
+          bb = mix(bb, 190, currentVeil * 0.20);
+
+          if (s.shelf > 0.08) {
+            rr = mix(rr, 42, s.shelf * 0.32);
+            gg = mix(gg, 180, s.shelf * 0.42);
+            bb = mix(bb, 188, s.shelf * 0.38);
+          }
+
+          if (s.coast > 0.04) {
+            const edge = Math.pow(s.coast, 1.05);
+            rr = mix(rr, 54, edge * 0.18);
+            gg = mix(gg, 184, edge * 0.26);
+            bb = mix(bb, 196, edge * 0.24);
+          }
+
+          const specDot = clamp(nx * HALF_LIGHT[0] + ny * HALF_LIGHT[1] + z * HALF_LIGHT[2], 0, 1);
+          const specPower = lerp(94, 52, s.bathymetry);
+          const spec = Math.pow(specDot, specPower) * clamp(light + 0.10, 0, 1) * (0.58 - s.bathymetry * 0.18);
+
+          rr = mix(rr, 214, spec * 0.28);
+          gg = mix(gg, 234, spec * 0.26);
+          bb = mix(bb, 252, spec * 0.24);
+        }
+
+        if (isLand) {
+          if (s.coast > 0.05) {
+            rr = mix(rr, 162, s.coast * 0.17);
+            gg = mix(gg, 150, s.coast * 0.15);
+            bb = mix(bb, 114, s.coast * 0.13);
+          }
+
+          const ridgeLight = clamp((s.height * 0.84 + s.roughness * 0.38) * light, 0, 1);
+          rr = mix(rr, rr + 20, ridgeLight * 0.15);
+          gg = mix(gg, gg + 16, ridgeLight * 0.13);
+          bb = mix(bb, bb + 12, ridgeLight * 0.10);
+
+          if (s.ice > 0.20) {
+            const iceGlow = smoothstep(0.2, 0.9, s.ice) * (0.22 + light * 0.32);
+            rr = mix(rr, 240, iceGlow * 0.20);
+            gg = mix(gg, 246, iceGlow * 0.20);
+            bb = mix(bb, 240, iceGlow * 0.18);
+          }
+        }
+
+        rr *= softLight * reliefFactor;
+        gg *= softLight * reliefFactor;
+        bb *= softLight * reliefFactor;
+
+        rr = mix(rr, 22, limb * 0.30);
+        gg = mix(gg, 88, limb * 0.31);
+        bb = mix(bb, 145, limb * 0.43);
+
+        const atmosphere = Math.pow(limb, 2.35);
+        rr = mix(rr, 40, atmosphere * 0.36);
+        gg = mix(gg, 158, atmosphere * 0.48);
+        bb = mix(bb, 226, atmosphere * 0.54);
+
+        const terminator = smoothstep(0.0, 0.36, light);
+        rr *= 0.72 + terminator * 0.34;
+        gg *= 0.72 + terminator * 0.34;
+        bb *= 0.76 + terminator * 0.30;
+
+        const alpha = smoothstep(1.01, 0.985, d2);
+        const out = (y * size + x) * 4;
+
+        data[out] = clamp(rr, 0, 255);
+        data[out + 1] = clamp(gg, 0, 255);
+        data[out + 2] = clamp(bb, 0, 255);
+        data[out + 3] = Math.round(alpha * 255);
+      }
+    }
+
+    runtime.workCtx.putImageData(image, 0, 0);
+
+    const wctx = runtime.workCtx;
+
+    wctx.save();
+    wctx.globalCompositeOperation = "screen";
+
+    const gx = wctx.createRadialGradient(
+      cx - radius * 0.22,
+      cy - radius * 0.38,
+      radius * 0.05,
+      cx,
+      cy,
+      radius * 0.62
+    );
+
+    gx.addColorStop(0, "rgba(255,255,255,0.19)");
+    gx.addColorStop(0.25, "rgba(142,205,250,0.07)");
+    gx.addColorStop(1, "rgba(0,0,0,0)");
+
+    wctx.fillStyle = gx;
+    wctx.beginPath();
+    wctx.arc(cx, cy, radius, 0, TAU);
+    wctx.fill();
+    wctx.restore();
+
+    wctx.save();
+
+    wctx.beginPath();
+    wctx.arc(cx, cy, radius * 1.003, 0, TAU);
+    wctx.strokeStyle = "rgba(116, 207, 255, 0.40)";
+    wctx.lineWidth = Math.max(1, size * 0.006);
+    wctx.stroke();
+
+    wctx.beginPath();
+    wctx.arc(cx, cy, radius * 1.045, 0, TAU);
+    wctx.strokeStyle = "rgba(91, 174, 236, 0.15)";
+    wctx.lineWidth = Math.max(1, size * 0.010);
+    wctx.stroke();
+
+    wctx.restore();
+  }
+
+  function composite(time) {
+    const canvas = runtime.canvas;
+    const ctx = runtime.ctx;
+
+    if (!canvas || !ctx || !runtime.image) return;
+
+    const w = canvas.width;
+    const h = canvas.height;
+    if (!w || !h) return;
+
+    paintBackplate(ctx, w, h, time);
+    paintSphere(time);
+
+    const drawSize = Math.min(w, h);
+    const dx = (w - drawSize) * 0.5;
+    const dy = (h - drawSize) * 0.5;
+
+    ctx.save();
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(runtime.work, dx, dy, drawSize, drawSize);
+    ctx.restore();
+
+    const cx = w * 0.5;
+    const cy = h * 0.505;
+    const radius = drawSize * 0.405;
+
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+
+    const halo = ctx.createRadialGradient(cx, cy, radius * 0.90, cx, cy, radius * 1.46);
+    halo.addColorStop(0, "rgba(0,0,0,0)");
+    halo.addColorStop(0.38, "rgba(62,154,226,0.12)");
+    halo.addColorStop(1, "rgba(0,0,0,0)");
+
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.46, 0, TAU);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function loop(time) {
+    if (runtime.disposed) return;
+
+    if (!runtime.lastFrame || time - runtime.lastFrame > 30) {
+      runtime.lastFrame = time;
+      composite(time);
+    }
+
+    runtime.raf = requestAnimationFrame(loop);
+  }
+
+  function exposeReceipt(status) {
+    const terrainReceipt =
+      window.HEARTH_TERRAIN && typeof window.HEARTH_TERRAIN.receipt === "function"
+        ? window.HEARTH_TERRAIN.receipt()
+        : null;
+
+    window.HEARTH_CANVAS_RECEIPT = Object.freeze({
+      receipt: RECEIPT,
+      contract: CONTRACT,
+      version: VERSION,
+      route: location.pathname,
+      renderOwner: "/assets/hearth/hearth.canvas.js",
+      terrainOwner: "/assets/hearth/hearth.terrain.js",
+      terrainContract: window.HEARTH_TERRAIN?.contract || "fallback",
+      terrainReceipt,
+      mount: "#hearthCanvasMount",
+      generation: "G3.4-candidate",
+      canvasOwns: ["mount", "projection", "rotation", "lighting", "render-composition"],
+      terrainOwns: ["map", "body-mass", "elevation", "mountain-ranges", "relief", "bathymetry"],
+      seamFix: "wrapped bilinear sampling plus seam-safe terrain authority",
+      g4Deferred: "clouds-weather-climate",
+      externalImages: false,
+      nasaAsset: false,
+      generatedImage: false,
+      graphicBox: false,
+      earthPlaceholder: false,
+      audraliaMap: false,
+      status
+    });
+  }
+
+  async function mount() {
+    installStyle();
+    unlockScroll();
+
+    const terrain = await loadTerrain();
+    if (runtime.disposed) return;
+
+    const mountEl = getMount();
+    mountEl.replaceChildren();
+
+    const canvas = document.createElement("canvas");
+    canvas.dataset.hearthCanvas = "true";
+    canvas.dataset.contract = CONTRACT;
+    canvas.dataset.generation = "G3.4-candidate";
+    canvas.dataset.localScale = "hearth";
+    canvas.setAttribute("role", "img");
+    canvas.setAttribute("aria-label", "Hearth G3.4 map generation terrain globe");
+
+    const chip = document.createElement("div");
+    chip.className = "hearth-g3-4-chip";
+    chip.textContent = terrain ? "Hearth G3.4 · Map Terrain" : "Hearth G3.4 · Terrain Fallback";
+
+    mountEl.append(canvas, chip);
+
+    runtime.mount = mountEl;
+    runtime.canvas = canvas;
+    runtime.ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
+    runtime.work = document.createElement("canvas");
+    runtime.workCtx = runtime.work.getContext("2d", { alpha: true, willReadFrequently: false });
+    runtime.map = buildMap(terrain);
+
+    mountEl.dataset.hearthCanvasContract = CONTRACT;
+    mountEl.dataset.hearthCanvasReceipt = RECEIPT;
+    mountEl.dataset.hearthRenderOwner = "/assets/hearth/hearth.canvas.js";
+    mountEl.dataset.hearthTerrainOwner = "/assets/hearth/hearth.terrain.js";
+    mountEl.dataset.hearthTerrainLoaded = terrain ? "true" : "false";
+    mountEl.dataset.hearthGeneration = "G3.4-candidate";
+    mountEl.dataset.hearthGenerationFocus = "map-generation-terrain";
+    mountEl.dataset.g4Deferred = "clouds-weather-climate";
+    mountEl.dataset.earthPlaceholder = "false";
+    mountEl.dataset.audraliaMap = "false";
+
+    document.documentElement.dataset.hearthCanvasLoaded = "true";
+    document.documentElement.dataset.hearthCanvasContract = CONTRACT;
+    document.documentElement.dataset.hearthCanvasVersion = VERSION;
+    document.documentElement.dataset.hearthTerrainOwner = "/assets/hearth/hearth.terrain.js";
+    document.documentElement.dataset.hearthTerrainLoaded = terrain ? "true" : "false";
+    document.documentElement.dataset.hearthGeneration = "G3.4-candidate";
+    document.documentElement.dataset.hearthGenerationFocus = "map-generation-terrain";
+    document.documentElement.dataset.hearthG4Deferred = "clouds-weather-climate";
+    document.documentElement.dataset.hearthExternalImages = "false";
+    document.documentElement.dataset.hearthNasaAsset = "false";
+    document.documentElement.dataset.hearthGeneratedImage = "false";
+    document.documentElement.dataset.hearthGraphicBox = "false";
+    document.documentElement.dataset.hearthEarthPlaceholder = "false";
+
+    runtime.observer = new ResizeObserver(resize);
+    runtime.observer.observe(mountEl);
+    window.addEventListener("resize", resize, { passive: true });
+
+    resize();
+    exposeReceipt("mounted");
+
+    runtime.mounted = true;
+    runtime.raf = requestAnimationFrame(loop);
+  }
+
+  function dispose() {
+    runtime.disposed = true;
+    cancelAnimationFrame(runtime.raf);
+    window.removeEventListener("resize", resize);
+
+    if (runtime.observer) runtime.observer.disconnect();
+
+    const style = document.getElementById("hearth-g3-4-map-canvas-style");
+    if (style) style.remove();
+
+    if (runtime.mount) runtime.mount.replaceChildren();
+
+    window.__HEARTH_CANVAS_G3_4_DISPOSE__ = null;
+    exposeReceipt("disposed");
+  }
+
+  window.__HEARTH_CANVAS_G3_4_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_G3_3_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_G3_2_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_G3_1_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_G3_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_G4_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_DISPOSE__ = dispose;
+  window.__HEARTH_G2_DISPOSE__ = dispose;
+
+  function boot() {
+    if (runtime.mounted || runtime.disposed) return;
+    mount();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot, { once: true });
+  } else {
+    boot();
+  }
+})();

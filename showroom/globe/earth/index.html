@@ -3,17 +3,12 @@
 <html
   lang="en"
   data-route="/showroom/globe/earth/"
-  data-page="earth-satellite-derived-route"
-  data-contract="EARTH_G5_SATELLITE_DERIVED_ROUTE_SHELL_TNT_v1"
-  data-previous-contract="EARTH_REFERENCE_BODY_G4_ROUTE"
-  data-earth-canvas-contract="EARTH_G5_NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE_TNT_v1"
-  data-earth-runtime-contract="EARTH_G5_EARTH_ASSETS_RUNTIME_FAMILY_PLACEMENT_TNT_v4"
-  data-earth-runtime-authority="/assets/earth/earth_assets_runtime.js"
-  data-retired-runtime-authority="/runtime/earth_asset_runtime.js"
-  data-source-standard="NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE"
-  data-nasa-reference="forbidden"
-  data-jpg-allowed="false"
-  data-procedural-fallback="false"
+  data-page="earth-planet-view-only"
+  data-contract="EARTH_G6_PLANET_VIEW_ONLY_VISIBLE_MOUNT_TNT_v1"
+  data-earth-canvas-contract="EARTH_G6_256_LATTICE_PHYSICS_SYNTHETIC_SATELLITE_VIEW_TNT_v1"
+  data-earth-runtime-contract="EARTH_G6_ASSETS_RUNTIME_256_LATTICE_SIMULATION_MODE_TNT_v1"
+  data-source-standard="PHYSICS_SYNTHETIC_SATELLITE_VIEW"
+  data-base-surface="generated-from-256-lattice"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claimed="false"
@@ -21,34 +16,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Earth · Planet View</title>
 
-  <title>Earth · Satellite Derived Globe · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Earth route for the non-NASA satellite-derived globe. The route consumes the Earth asset family and does not own the canvas projection, material CSS, or manifest truth."
-  >
-
-  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2">
+  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=EARTH_G6_PLANET_VIEW_ONLY_VISIBLE_MOUNT_TNT_v1">
 
   <style>
     :root {
       color-scheme: dark;
-      --bg: #02040a;
       --ink: #f7f1de;
-      --soft: rgba(247, 241, 222, 0.76);
-      --muted: rgba(247, 241, 222, 0.54);
-      --faint: rgba(247, 241, 222, 0.40);
+      --soft: rgba(247,241,222,.72);
+      --line: rgba(150,190,245,.22);
       --gold: #f4c95d;
-      --gold2: #ffe8a8;
       --blue: #7dbbff;
-      --violet: #a78bfa;
-      --line: rgba(184, 217, 255, 0.20);
-      --line-gold: rgba(255, 232, 168, 0.30);
-      --panel: rgba(7, 13, 24, 0.78);
-      --max: 1180px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html,
     body {
@@ -56,458 +40,217 @@
       min-width: 320px;
       min-height: 100%;
       background:
-        radial-gradient(circle at 50% 0%, rgba(125,187,255,0.18), transparent 28rem),
-        radial-gradient(circle at 82% 20%, rgba(244,201,93,0.10), transparent 28rem),
-        radial-gradient(circle at 18% 72%, rgba(167,139,250,0.12), transparent 32rem),
+        radial-gradient(circle at 50% 38%, rgba(92,156,255,.24), transparent 34rem),
+        radial-gradient(circle at 50% 55%, rgba(3,8,18,.72), transparent 44rem),
         linear-gradient(180deg, #07111f 0%, #02040a 70%, #000 100%);
       color: var(--ink);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       overflow-x: hidden;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.24;
-      background-image:
-        radial-gradient(circle, rgba(255,255,255,0.22) 0 1px, transparent 1.4px),
-        radial-gradient(circle, rgba(125,187,255,0.20) 0 1px, transparent 1.6px),
-        linear-gradient(rgba(184,217,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(184,217,255,0.04) 1px, transparent 1px);
-      background-size: 180px 220px, 260px 300px, 58px 58px, 58px 58px;
-      mask-image: linear-gradient(180deg, rgba(0,0,0,0.94), rgba(0,0,0,0.52) 72%, transparent);
+    body {
+      min-height: 100svh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .skip-link {
-      position: absolute;
-      left: -999px;
-      top: 8px;
-      z-index: 50;
-      padding: 0.75rem 1rem;
-      border-radius: 999px;
-      color: #090604;
-      background: linear-gradient(135deg, var(--gold2), var(--gold));
-      font-weight: 950;
-    }
-
-    .skip-link:focus {
-      left: 8px;
-    }
-
-    .earth-route-shell {
+    .earth-top {
       position: relative;
-      z-index: 1;
-      width: min(var(--max), calc(100% - 28px));
-      margin: 0 auto;
-      padding: max(22px, env(safe-area-inset-top)) 0 max(46px, env(safe-area-inset-bottom));
-    }
-
-    .topbar {
+      z-index: 3;
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.75rem 0 1rem;
+      gap: .75rem;
+      width: min(1180px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: max(.8rem, env(safe-area-inset-top)) 0 .7rem;
     }
 
-    .brand {
-      display: inline-grid;
-      grid-template-columns: auto 1fr;
-      align-items: center;
-      gap: 0.9rem;
-      min-width: 260px;
-    }
-
-    .brand-mark {
-      width: 4rem;
-      height: 4rem;
+    .earth-brand {
       display: grid;
-      place-items: center;
-      border: 1px solid rgba(184,217,255,0.34);
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 34% 27%, rgba(255,255,255,0.24), transparent 22%),
-        radial-gradient(circle at 50% 50%, rgba(125,187,255,0.28), transparent 60%),
-        linear-gradient(145deg, rgba(22,48,84,0.96), rgba(3,8,15,0.98));
-      box-shadow:
-        0 0 2rem rgba(125,187,255,0.26),
-        0 1.1rem 2.6rem rgba(0,0,0,0.46),
-        inset 0 1px 0 rgba(255,255,255,0.16);
-      color: var(--gold2);
-      font-weight: 950;
-      letter-spacing: 0.06em;
+      gap: .12rem;
     }
 
-    .brand-copy {
-      display: grid;
-      gap: 0.16rem;
+    .earth-brand strong {
+      font-size: clamp(1rem, 4vw, 1.35rem);
+      line-height: 1;
+      letter-spacing: -.035em;
     }
 
-    .brand-copy span {
+    .earth-brand span {
       color: var(--soft);
-      font-size: 0.74rem;
-      font-weight: 950;
-      letter-spacing: 0.14em;
+      font-size: .72rem;
+      font-weight: 900;
+      letter-spacing: .12em;
       text-transform: uppercase;
     }
 
-    .brand-copy strong {
-      font-size: clamp(1.05rem, 3vw, 1.62rem);
-      line-height: 1;
-      letter-spacing: -0.045em;
-    }
-
-    .nav {
+    .earth-nav {
       display: flex;
       flex-wrap: wrap;
       justify-content: flex-end;
-      gap: 0.48rem;
+      gap: .45rem;
     }
 
-    .nav a {
-      min-height: 2.25rem;
+    .earth-nav a {
+      min-height: 2.15rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 0.5rem 0.74rem;
-      color: rgba(247,241,222,0.86);
-      background: rgba(125,187,255,0.055);
-      font-size: 0.68rem;
-      font-weight: 950;
-      letter-spacing: 0.055em;
-      text-transform: uppercase;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+      padding: .48rem .72rem;
+      color: var(--ink);
+      background: rgba(255,255,255,.045);
+      font-size: .72rem;
+      font-weight: 900;
+      text-decoration: none;
     }
 
-    .nav a[aria-current="page"] {
-      border-color: rgba(255,232,168,0.78);
-      color: #090604;
-      background: linear-gradient(135deg, #fff2a8, #f4c95d);
-    }
-
-    .panel {
-      border: 1px solid var(--line);
-      border-radius: clamp(1.35rem, 5vw, 2.35rem);
-      background:
-        radial-gradient(circle at 14% 0%, rgba(125,187,255,0.16), transparent 28rem),
-        radial-gradient(circle at 86% 18%, rgba(244,201,93,0.09), transparent 28rem),
-        linear-gradient(180deg, rgba(255,255,255,0.070), rgba(255,255,255,0.022)),
-        var(--panel);
-      box-shadow:
-        0 32px 110px rgba(0,0,0,0.50),
-        inset 0 1px 0 rgba(255,255,255,0.08);
-      overflow: hidden;
-    }
-
-    .hero {
+    .earth-stage {
+      position: relative;
+      z-index: 2;
+      width: min(100%, 980px);
+      margin: 0 auto;
       display: grid;
-      gap: 1rem;
-      padding: clamp(1.3rem, 4vw, 2.6rem);
-      min-height: clamp(16rem, 28vw, 22rem);
-      align-content: center;
-    }
-
-    .kicker {
-      width: fit-content;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.58rem;
-      margin: 0;
-      padding: 0.58rem 0.95rem;
-      border: 1px solid var(--line-gold);
-      border-radius: 999px;
-      color: rgba(247,241,222,0.88);
-      background: rgba(125,187,255,0.075);
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .kicker::before {
-      content: "";
-      width: 0.72rem;
-      height: 0.72rem;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--gold2), var(--blue));
-      box-shadow: 0 0 1.1rem rgba(125,187,255,0.56);
-    }
-
-    h1 {
-      margin: 0;
-      max-width: 960px;
-      font-size: clamp(3rem, 9vw, 6rem);
-      line-height: 0.86;
-      letter-spacing: -0.10em;
-      text-wrap: balance;
-    }
-
-    .copy {
-      max-width: 900px;
-      margin: 0;
-      color: var(--soft);
-      font-size: clamp(0.98rem, 2.4vw, 1.14rem);
-      line-height: 1.55;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.62rem;
-      margin-top: 0.2rem;
-    }
-
-    .button {
-      min-height: 2.65rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 0.65rem 1rem;
-      background: rgba(125,187,255,0.070);
-      color: rgba(247,241,222,0.90);
-      font-size: 0.76rem;
-      font-weight: 950;
-      letter-spacing: 0.055em;
-      text-transform: uppercase;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.07);
-    }
-
-    .button.gold {
-      border-color: rgba(244,201,93,0.9);
-      color: #090604;
-      background: linear-gradient(135deg, #fff2a8, #f4c95d);
-      box-shadow: 0 0.8rem 1.8rem rgba(244,201,93,0.13);
-    }
-
-    .earth-stage-panel {
-      margin-top: 1.15rem;
-      padding: clamp(1rem, 3vw, 1.45rem);
-      display: grid;
-      gap: 1rem;
-      text-align: center;
-    }
-
-    .earth-stage-panel h2,
-    .status-panel h2 {
-      margin: 0;
-      color: var(--gold);
-      font-size: clamp(1.45rem, 4.7vw, 2.65rem);
-      line-height: 0.98;
-      letter-spacing: -0.07em;
-      text-wrap: balance;
+      place-items: center;
+      padding: clamp(.5rem, 2vw, 1rem);
     }
 
     #earthRenderMount {
-      border: 1px solid rgba(184,217,255,0.16);
-      border-radius: clamp(1.2rem, 4vw, 2rem);
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.05),
-        0 0 3rem rgba(125,187,255,0.08);
-    }
-
-    .status-panel {
-      margin-top: 1.15rem;
-      padding: clamp(1rem, 3vw, 1.45rem);
+      position: relative;
       display: grid;
-      gap: 0.8rem;
+      place-items: center;
+      width: min(100%, 860px);
+      min-height: clamp(420px, 82vw, 820px);
+      margin: 0 auto;
+      padding: clamp(8px, 2vw, 18px);
+      overflow: visible;
+      isolation: isolate;
+      border: 1px solid rgba(150,190,245,.18);
+      border-radius: clamp(1.1rem, 4vw, 2rem);
+      background:
+        radial-gradient(circle at 50% 45%, rgba(125,187,255,.22), transparent 30rem),
+        radial-gradient(circle at 50% 50%, rgba(0,0,0,.34), transparent 38rem),
+        rgba(0,0,0,.16);
+      box-shadow:
+        0 0 3rem rgba(92,156,255,.14),
+        inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .status-card {
-      border: 1px solid rgba(255,232,168,0.18);
-      border-radius: 1rem;
-      background: rgba(0,0,0,0.24);
-      padding: 1rem;
-      color: var(--soft);
-      font-size: 0.92rem;
-      line-height: 1.55;
-      text-align: left;
+    #earthRenderMount canvas {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      max-width: min(92vw, 720px) !important;
+      max-height: min(92vw, 720px) !important;
     }
 
-    .status-card strong {
-      color: var(--gold);
+    .earth-footer {
+      position: relative;
+      z-index: 3;
+      width: min(1180px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: .8rem 0 max(.9rem, env(safe-area-inset-bottom));
+      color: rgba(247,241,222,.50);
+      font-size: .72rem;
+      text-align: center;
     }
 
+    [data-earth-route-status],
+    [data-earth-preview-status],
+    [data-earth-runtime-status],
     .route-receipt,
     [data-route-receipt],
     [data-contract-receipt],
     [data-debug-receipt] {
-      display: none !important;
-      visibility: hidden !important;
-      overflow: hidden !important;
-      width: 0 !important;
-      height: 0 !important;
-      max-width: 0 !important;
-      max-height: 0 !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      border: 0 !important;
-      opacity: 0 !important;
-      pointer-events: none !important;
       position: absolute !important;
-      inset: auto !important;
+      width: 1px !important;
+      height: 1px !important;
+      overflow: hidden !important;
+      clip: rect(0 0 0 0) !important;
       clip-path: inset(50%) !important;
       white-space: nowrap !important;
+      border: 0 !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
     }
 
-    footer {
-      padding: 1.35rem 0 0.5rem;
-      color: var(--faint);
-      text-align: center;
-      font-size: 0.76rem;
-    }
-
-    @media (max-width: 920px) {
-      .topbar {
+    @media (max-width: 680px) {
+      .earth-top {
         align-items: flex-start;
         flex-direction: column;
       }
 
-      .nav {
+      .earth-nav {
         justify-content: flex-start;
       }
-    }
 
-    @media (max-width: 680px) {
-      .earth-route-shell {
-        width: min(100% - 22px, var(--max));
-      }
-
-      h1 {
-        font-size: clamp(3rem, 17vw, 5rem);
-      }
-
-      .hero {
-        min-height: 20rem;
-        padding: 1rem;
-      }
-
-      .actions {
-        display: grid;
-      }
-
-      .button {
-        width: 100%;
+      #earthRenderMount {
+        min-height: clamp(390px, 105vw, 700px);
       }
     }
   </style>
 </head>
 
-<body
-  data-earth-route
-  data-contract="EARTH_G5_SATELLITE_DERIVED_ROUTE_SHELL_TNT_v1"
-  data-source-standard="NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE"
-  data-generated-image="false"
-  data-graphic-box="false"
-  data-visual-pass-claimed="false"
->
-  <a class="skip-link" href="#main">Skip to Earth</a>
+<body>
+  <header class="earth-top">
+    <div class="earth-brand">
+      <span>Diamond Gate Bridge</span>
+      <strong>Earth</strong>
+    </div>
 
-  <div class="earth-route-shell">
-    <header class="topbar" aria-label="Earth route header">
-      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
-        <span class="brand-mark" aria-hidden="true">E</span>
-        <span class="brand-copy">
-          <span>Diamond Gate Bridge</span>
-          <strong>Earth · Satellite Derived Globe</strong>
-        </span>
-      </a>
+    <nav class="earth-nav" aria-label="Earth navigation">
+      <a href="/showroom/globe/">Globe Split</a>
+      <a href="/showroom/globe/audralia/">Audralia</a>
+      <a href="/gauges/">Gauges</a>
+    </nav>
+  </header>
 
-      <nav class="nav" aria-label="Earth navigation">
-        <a href="/">Compass</a>
-        <a href="/showroom/globe/">Globe Split</a>
-        <a href="/showroom/globe/earth/" aria-current="page">Earth</a>
-        <a href="/showroom/globe/audralia/">Audralia</a>
-        <a href="/assets/earth/">Earth Assets</a>
-        <a href="/gauges/">Gauges</a>
-      </nav>
-    </header>
+  <main class="earth-stage" aria-label="Earth planet view">
+    <div
+      id="earthRenderMount"
+      data-earth-render-mount
+      data-body="earth"
+      data-render-mount
+      data-dgb-earth-mount
+      aria-label="Interactive physics synthetic satellite-view Earth generated from the 256-state lattice"
+    ></div>
 
-    <main id="main">
-      <section class="panel hero" aria-labelledby="page-title">
-        <p class="kicker">Earth · Non-NASA Satellite Derived Route</p>
-        <h1 id="page-title">Satellite derived Earth.</h1>
-        <p class="copy">
-          This route consumes the Earth asset family. The route owns the shell and status only. The canvas owns projection. The material file owns glow. The manifest owns source truth.
-        </p>
+    <div data-earth-route-status>
+      Earth route waiting for G6 planet render.
+    </div>
 
-        <div class="actions">
-          <a class="button gold" href="/assets/earth/">Open Earth Assets</a>
-          <a class="button" href="/showroom/globe/">Return to Globe Split</a>
-          <a class="button" href="/gauges/">Read Gauges</a>
-        </div>
-      </section>
-
-      <section class="panel earth-stage-panel" aria-labelledby="earth-render-title">
-        <h2 id="earth-render-title">Earth asset-family render mount</h2>
-
-        <div
-          id="earthRenderMount"
-          data-earth-render-mount
-          data-body="earth"
-          data-render-mount
-          data-dgb-earth-mount
-          aria-label="Interactive non-NASA satellite-derived Earth globe"
-        ></div>
-      </section>
-
-      <section class="panel status-panel" aria-labelledby="status-title">
-        <h2 id="status-title">Route status</h2>
-
-        <div class="status-card" data-earth-route-status>
-          <strong>Earth route:</strong>
-          Shell loaded. Waiting for Earth asset-family canvas and runtime.
-        </div>
-
-        <div class="status-card">
-          <strong>Required surface:</strong>
-          /assets/earth/earth_surface_satellite.png
-        </div>
-
-        <div class="status-card">
-          <strong>Required runtime:</strong>
-          /assets/earth/earth_assets_runtime.js
-        </div>
-      </section>
-
-      <template id="route-receipt" data-route-receipt>
-EARTH_G5_SATELLITE_DERIVED_ROUTE_SHELL_TNT_v1
+    <template id="route-receipt" data-route-receipt>
+EARTH_G6_PLANET_VIEW_ONLY_VISIBLE_MOUNT_TNT_v1
 route=/showroom/globe/earth/
-previous_route=EARTH_REFERENCE_BODY_G4_ROUTE
-earth_canvas_contract=EARTH_G5_NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE_TNT_v1
-earth_runtime_contract=EARTH_G5_EARTH_ASSETS_RUNTIME_FAMILY_PLACEMENT_TNT_v4
-earth_runtime_authority=/assets/earth/earth_assets_runtime.js
-retired_runtime_authority=/runtime/earth_asset_runtime.js
-source_standard=NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE
-route_owns=shell,status,mount,navigation
-route_does_not_own=earth_canvas_projection,earth_material_styling,earth_manifest_truth,audralia,gauges,products,sun,moon,global_files
+purpose=show_the_planet_now
+canvas=/assets/earth/earth_canvas.js
+runtime=/assets/earth/earth_assets_runtime.js
+lattice=/assets/earth/earth_lattice_256.js
+physics=/assets/earth/earth_physics_sensor.js
+atmosphere=/assets/earth/earth_atmosphere_model.js
+base_surface=generated_from_256_lattice
+source_standard=PHYSICS_SYNTHETIC_SATELLITE_VIEW
 nasa_reference=forbidden
 jpg_allowed=false
-procedural_fallback=false
-generated_image=false
+static_image_dependency=false
 graphic_box=false
+generated_image=false
 visual_pass_claimed=false
-      </template>
-    </main>
+    </template>
+  </main>
 
-    <footer>
-      EARTH_G5_SATELLITE_DERIVED_ROUTE_SHELL_TNT_v1 · Earth route · Asset-family runtime only.
-    </footer>
-  </div>
+  <footer class="earth-footer">
+    EARTH_G6_PLANET_VIEW_ONLY_VISIBLE_MOUNT_TNT_v1 · 256 lattice simulation mode.
+  </footer>
 
-  <script src="/assets/earth/earth_canvas.js?v=EARTH_G5_NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE_TNT_v1" defer></script>
-  <script src="/assets/earth/earth_assets_runtime.js?v=EARTH_G5_EARTH_ASSETS_RUNTIME_FAMILY_PLACEMENT_TNT_v4" defer></script>
-  <script src="/showroom/globe/earth/index.js?v=EARTH_G5_ROUTE_BOOT_CHAIN_ALIGNMENT_TNT_v1" defer></script>
+  <script src="/assets/earth/earth_lattice_256.js?v=EARTH_G6_PLANET_VIEW_ONLY_VISIBLE_MOUNT_TNT_v1" defer></script>
+  <script src="/assets/earth/earth_physics_sensor.js?v=EARTH_G6_PLANET_VIEW_ONLY_VISIBLE_MOUNT_TNT_v1" defer></script>
+  <script src="/assets/earth/earth_atmosphere_model.js?v=EARTH_G6_PLANET_VIEW_ONLY_VISIBLE_MOUNT_TNT_v1" defer></script>
+  <script src="/assets/earth/earth_canvas.js?v=EARTH_G6_PLANET_VIEW_ONLY_VISIBLE_MOUNT_TNT_v1" defer></script>
+  <script src="/assets/earth/earth_assets_runtime.js?v=EARTH_G6_PLANET_VIEW_ONLY_VISIBLE_MOUNT_TNT_v1" defer></script>
 </body>
 </html>

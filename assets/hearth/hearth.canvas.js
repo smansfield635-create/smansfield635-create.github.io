@@ -1,10 +1,11 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_G3_5_PROJECTION_LIGHTING_SEAM_REPAIR_TNT_v1
+// HEARTH_G3_6_VIEW_LOCKED_LIGHTING_NO_TERMINATOR_TNT_v1
 // Full-file replacement.
 // Purpose:
-// - Preserve G3.4 terrain/map authority.
-// - Repair the vertical projection/light split visible on the globe.
-// - Canvas owns projection, rotation, lighting, sampling, and render composition only.
+// - Preserve G3.4/G3.5 terrain-map authority.
+// - Remove hard day/night terminator and vertical lighting slice.
+// - Use view-locked lighting for G3 terrain proof.
+// - Canvas owns projection, rotation, lighting, wrapped sampling, and render composition only.
 // - Terrain remains owned by /assets/hearth/hearth.terrain.js.
 // - G3 only. G4 remains deferred: clouds, weather, climate.
 // - No JPG. No NASA asset. No generated image. No GraphicBox.
@@ -12,9 +13,9 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_5_PROJECTION_LIGHTING_SEAM_REPAIR_TNT_v1";
-  const VERSION = "2026-05-08.hearth-g3-5-projection-lighting-seam-repair";
-  const RECEIPT = "HEARTH_G3_5_PROJECTION_LIGHTING_SEAM_REPAIR_RECEIPT";
+  const CONTRACT = "HEARTH_G3_6_VIEW_LOCKED_LIGHTING_NO_TERMINATOR_TNT_v1";
+  const VERSION = "2026-05-08.hearth-g3-6-view-locked-lighting-no-terminator";
+  const RECEIPT = "HEARTH_G3_6_VIEW_LOCKED_LIGHTING_RECEIPT";
   const TERRAIN_SRC = "/assets/hearth/hearth.terrain.js?v=hearth-g3-4-map-generation";
 
   const MAP_W = 900;
@@ -25,6 +26,7 @@
   const HALF_PI = Math.PI / 2;
 
   [
+    "__HEARTH_CANVAS_G3_6_DISPOSE__",
     "__HEARTH_CANVAS_G3_5_DISPOSE__",
     "__HEARTH_CANVAS_G3_4_DISPOSE__",
     "__HEARTH_CANVAS_G3_3_DISPOSE__",
@@ -65,11 +67,6 @@
     return t * t * (3 - 2 * t);
   }
 
-  function normalize3(v) {
-    const l = Math.hypot(v[0], v[1], v[2]) || 1;
-    return [v[0] / l, v[1] / l, v[2] / l];
-  }
-
   function hash2(x, y, seed = 0) {
     const n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
     return n - Math.floor(n);
@@ -106,9 +103,6 @@
 
     return norm ? sum / norm : 0;
   }
-
-  const LIGHT = normalize3([-0.34, -0.28, 0.90]);
-  const SPECULAR = normalize3([-0.18, -0.24, 1.0]);
 
   function loadTerrain() {
     return new Promise((resolve) => {
@@ -307,6 +301,7 @@
     const ty = y - Math.floor(y);
 
     const arr = map[key];
+
     const a = arr[y0 * MAP_W + x0];
     const b = arr[y0 * MAP_W + x1];
     const c = arr[y1 * MAP_W + x0];
@@ -345,10 +340,10 @@
     const dy = hS - hN;
 
     const base = isLand
-      ? 1 + dx * 1.20 + dy * 0.90 + s.relief * 0.10
-      : 1 + dx * 0.22 + dy * 0.18 - s.bathymetry * 0.05 + s.shelf * 0.05;
+      ? 1 + dx * 1.08 + dy * 0.80 + s.relief * 0.09
+      : 1 + dx * 0.18 + dy * 0.14 - s.bathymetry * 0.035 + s.shelf * 0.04;
 
-    return clamp(base, isLand ? 0.76 : 0.90, isLand ? 1.22 : 1.10);
+    return clamp(base, isLand ? 0.78 : 0.92, isLand ? 1.20 : 1.08);
   }
 
   function getMount() {
@@ -375,11 +370,11 @@
   }
 
   function installStyle() {
-    const prior = document.getElementById("hearth-g3-5-projection-seam-style");
+    const prior = document.getElementById("hearth-g3-6-view-locked-style");
     if (prior) prior.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-g3-5-projection-seam-style";
+    style.id = "hearth-g3-6-view-locked-style";
     style.textContent = `
       html,
       body {
@@ -408,7 +403,7 @@
         touch-action: pan-y !important;
       }
 
-      .hearth-g3-5-chip {
+      .hearth-g3-6-chip {
         position: absolute;
         left: 14px;
         bottom: 12px;
@@ -426,7 +421,7 @@
       }
 
       @media (max-width: 520px) {
-        .hearth-g3-5-chip { display: none; }
+        .hearth-g3-6-chip { display: none; }
       }
     `;
 
@@ -486,7 +481,7 @@
     for (let i = 0; i < 4; i += 1) {
       ctx.beginPath();
       ctx.arc(cx, cy, w * (0.392 + i * 0.031), 0, TAU);
-      ctx.strokeStyle = `rgba(102, 174, 225, ${0.088 - i * 0.016 + pulse * 0.010})`;
+      ctx.strokeStyle = `rgba(102, 174, 225, ${0.086 - i * 0.016 + pulse * 0.009})`;
       ctx.lineWidth = Math.max(1, w * (0.006 - i * 0.0008));
       ctx.stroke();
     }
@@ -553,67 +548,64 @@
         let gg = s.g;
         let bb = s.b;
 
-        const rawLight = nx * LIGHT[0] + ny * LIGHT[1] + z * LIGHT[2];
-        const light = 0.64 + smoothstep(-0.52, 0.92, rawLight) * 0.34;
-        const dusk = smoothstep(-0.55, 0.15, rawLight);
         const limb = Math.pow(1 - z, 1.72);
+        const curveLight = 0.82 + Math.pow(z, 0.85) * 0.18;
+        const screenLift = 1.03 - sx * 0.035 - sy * 0.025;
         const reliefFactor = reliefShade(map, lon, lat, s, isLand);
+        const noTerminatorLight = clamp(curveLight * screenLift, 0.78, 1.08);
 
         if (!isLand) {
           if (s.shelf > 0.08) {
-            rr = mix(rr, 42, s.shelf * 0.24);
-            gg = mix(gg, 180, s.shelf * 0.32);
-            bb = mix(bb, 188, s.shelf * 0.30);
+            rr = mix(rr, 42, s.shelf * 0.22);
+            gg = mix(gg, 180, s.shelf * 0.28);
+            bb = mix(bb, 188, s.shelf * 0.26);
           }
 
           if (s.coast > 0.04) {
             const edge = Math.pow(s.coast, 1.05);
-            rr = mix(rr, 54, edge * 0.13);
-            gg = mix(gg, 184, edge * 0.20);
-            bb = mix(bb, 196, edge * 0.18);
+            rr = mix(rr, 54, edge * 0.11);
+            gg = mix(gg, 184, edge * 0.18);
+            bb = mix(bb, 196, edge * 0.16);
           }
 
-          const specDot = clamp(nx * SPECULAR[0] + ny * SPECULAR[1] + z * SPECULAR[2], 0, 1);
-          const spec = Math.pow(specDot, 86) * (0.35 - s.bathymetry * 0.10) * dusk;
-
-          rr = mix(rr, 214, spec * 0.24);
-          gg = mix(gg, 234, spec * 0.22);
-          bb = mix(bb, 252, spec * 0.20);
+          const centerSpec = Math.pow(clamp(z, 0, 1), 18) * (0.18 - s.bathymetry * 0.05);
+          rr = mix(rr, 210, centerSpec * 0.18);
+          gg = mix(gg, 232, centerSpec * 0.16);
+          bb = mix(bb, 252, centerSpec * 0.14);
         }
 
         if (isLand) {
           if (s.coast > 0.05) {
-            rr = mix(rr, 162, s.coast * 0.13);
-            gg = mix(gg, 150, s.coast * 0.12);
-            bb = mix(bb, 114, s.coast * 0.10);
+            rr = mix(rr, 162, s.coast * 0.12);
+            gg = mix(gg, 150, s.coast * 0.11);
+            bb = mix(bb, 114, s.coast * 0.09);
           }
 
-          const ridgeLight = clamp((s.height * 0.84 + s.roughness * 0.38) * dusk, 0, 1);
-
-          rr = mix(rr, rr + 18, ridgeLight * 0.12);
-          gg = mix(gg, gg + 14, ridgeLight * 0.10);
-          bb = mix(bb, bb + 10, ridgeLight * 0.08);
+          const ridgeLight = clamp((s.height * 0.84 + s.roughness * 0.38), 0, 1);
+          rr = mix(rr, rr + 18, ridgeLight * 0.10);
+          gg = mix(gg, gg + 14, ridgeLight * 0.09);
+          bb = mix(bb, bb + 10, ridgeLight * 0.07);
 
           if (s.ice > 0.20) {
-            const iceGlow = smoothstep(0.2, 0.9, s.ice) * (0.18 + dusk * 0.26);
+            const iceGlow = smoothstep(0.2, 0.9, s.ice) * 0.22;
             rr = mix(rr, 240, iceGlow * 0.18);
             gg = mix(gg, 246, iceGlow * 0.18);
             bb = mix(bb, 240, iceGlow * 0.16);
           }
         }
 
-        rr *= light * reliefFactor;
-        gg *= light * reliefFactor;
-        bb *= light * reliefFactor;
+        rr *= noTerminatorLight * reliefFactor;
+        gg *= noTerminatorLight * reliefFactor;
+        bb *= noTerminatorLight * reliefFactor;
 
-        rr = mix(rr, 20, limb * 0.28);
-        gg = mix(gg, 82, limb * 0.29);
-        bb = mix(bb, 138, limb * 0.40);
+        rr = mix(rr, 34, limb * 0.16);
+        gg = mix(gg, 104, limb * 0.17);
+        bb = mix(bb, 160, limb * 0.21);
 
-        const atmosphere = Math.pow(limb, 2.35);
-        rr = mix(rr, 40, atmosphere * 0.34);
-        gg = mix(gg, 158, atmosphere * 0.46);
-        bb = mix(bb, 226, atmosphere * 0.52);
+        const atmosphere = Math.pow(limb, 2.20);
+        rr = mix(rr, 46, atmosphere * 0.28);
+        gg = mix(gg, 168, atmosphere * 0.38);
+        bb = mix(bb, 232, atmosphere * 0.44);
 
         const alpha = smoothstep(1.01, 0.985, d2);
         const out = (y * size + x) * 4;
@@ -633,16 +625,16 @@
     wctx.globalCompositeOperation = "screen";
 
     const gx = wctx.createRadialGradient(
-      cx - radius * 0.22,
-      cy - radius * 0.38,
-      radius * 0.05,
+      cx - radius * 0.20,
+      cy - radius * 0.34,
+      radius * 0.04,
       cx,
       cy,
       radius * 0.62
     );
 
-    gx.addColorStop(0, "rgba(255,255,255,0.16)");
-    gx.addColorStop(0.25, "rgba(142,205,250,0.06)");
+    gx.addColorStop(0, "rgba(255,255,255,0.13)");
+    gx.addColorStop(0.25, "rgba(142,205,250,0.05)");
     gx.addColorStop(1, "rgba(0,0,0,0)");
 
     wctx.fillStyle = gx;
@@ -655,13 +647,13 @@
 
     wctx.beginPath();
     wctx.arc(cx, cy, radius * 1.003, 0, TAU);
-    wctx.strokeStyle = "rgba(116, 207, 255, 0.40)";
+    wctx.strokeStyle = "rgba(116, 207, 255, 0.38)";
     wctx.lineWidth = Math.max(1, size * 0.006);
     wctx.stroke();
 
     wctx.beginPath();
     wctx.arc(cx, cy, radius * 1.045, 0, TAU);
-    wctx.strokeStyle = "rgba(91, 174, 236, 0.15)";
+    wctx.strokeStyle = "rgba(91, 174, 236, 0.14)";
     wctx.lineWidth = Math.max(1, size * 0.010);
     wctx.stroke();
 
@@ -700,7 +692,7 @@
 
     const halo = ctx.createRadialGradient(cx, cy, radius * 0.90, cx, cy, radius * 1.46);
     halo.addColorStop(0, "rgba(0,0,0,0)");
-    halo.addColorStop(0.38, "rgba(62,154,226,0.12)");
+    halo.addColorStop(0.38, "rgba(62,154,226,0.11)");
     halo.addColorStop(1, "rgba(0,0,0,0)");
 
     ctx.fillStyle = halo;
@@ -737,10 +729,10 @@
       terrainContract: window.HEARTH_TERRAIN?.contract || "fallback",
       terrainReceipt,
       mount: "#hearthCanvasMount",
-      generation: "G3.5-candidate",
-      canvasOwns: ["projection", "rotation", "lighting", "wrapped-sampling", "render-composition"],
+      generation: "G3.6-candidate",
+      canvasOwns: ["projection", "rotation", "view-locked-lighting", "wrapped-sampling", "render-composition"],
       terrainOwns: ["map", "body-mass", "elevation", "mountain-ranges", "relief", "bathymetry"],
-      seamRepair: "smooth hemispheric lighting; no hard terminator; wrapped bilinear terrain sampling",
+      lightingPolicy: "view-locked terrain proof; no day-night terminator; no hard vertical slice",
       g4Deferred: "clouds-weather-climate",
       externalImages: false,
       nasaAsset: false,
@@ -765,14 +757,14 @@
     const canvas = document.createElement("canvas");
     canvas.dataset.hearthCanvas = "true";
     canvas.dataset.contract = CONTRACT;
-    canvas.dataset.generation = "G3.5-candidate";
+    canvas.dataset.generation = "G3.6-candidate";
     canvas.dataset.localScale = "hearth";
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Hearth G3.5 projection and lighting seam repair globe");
+    canvas.setAttribute("aria-label", "Hearth G3.6 view-locked lighting no terminator globe");
 
     const chip = document.createElement("div");
-    chip.className = "hearth-g3-5-chip";
-    chip.textContent = terrain ? "Hearth G3.5 · Seam Repair" : "Hearth G3.5 · Terrain Fallback";
+    chip.className = "hearth-g3-6-chip";
+    chip.textContent = terrain ? "Hearth G3.6 · No Terminator" : "Hearth G3.6 · Terrain Fallback";
 
     mountEl.append(canvas, chip);
 
@@ -788,8 +780,8 @@
     mountEl.dataset.hearthRenderOwner = "/assets/hearth/hearth.canvas.js";
     mountEl.dataset.hearthTerrainOwner = "/assets/hearth/hearth.terrain.js";
     mountEl.dataset.hearthTerrainLoaded = terrain ? "true" : "false";
-    mountEl.dataset.hearthGeneration = "G3.5-candidate";
-    mountEl.dataset.hearthGenerationFocus = "projection-lighting-seam-repair";
+    mountEl.dataset.hearthGeneration = "G3.6-candidate";
+    mountEl.dataset.hearthGenerationFocus = "view-locked-lighting-no-terminator";
     mountEl.dataset.g4Deferred = "clouds-weather-climate";
     mountEl.dataset.earthPlaceholder = "false";
     mountEl.dataset.audraliaMap = "false";
@@ -799,8 +791,8 @@
     document.documentElement.dataset.hearthCanvasVersion = VERSION;
     document.documentElement.dataset.hearthTerrainOwner = "/assets/hearth/hearth.terrain.js";
     document.documentElement.dataset.hearthTerrainLoaded = terrain ? "true" : "false";
-    document.documentElement.dataset.hearthGeneration = "G3.5-candidate";
-    document.documentElement.dataset.hearthGenerationFocus = "projection-lighting-seam-repair";
+    document.documentElement.dataset.hearthGeneration = "G3.6-candidate";
+    document.documentElement.dataset.hearthGenerationFocus = "view-locked-lighting-no-terminator";
     document.documentElement.dataset.hearthG4Deferred = "clouds-weather-climate";
     document.documentElement.dataset.hearthExternalImages = "false";
     document.documentElement.dataset.hearthNasaAsset = "false";
@@ -826,15 +818,16 @@
 
     if (runtime.observer) runtime.observer.disconnect();
 
-    const style = document.getElementById("hearth-g3-5-projection-seam-style");
+    const style = document.getElementById("hearth-g3-6-view-locked-style");
     if (style) style.remove();
 
     if (runtime.mount) runtime.mount.replaceChildren();
 
-    window.__HEARTH_CANVAS_G3_5_DISPOSE__ = null;
+    window.__HEARTH_CANVAS_G3_6_DISPOSE__ = null;
     exposeReceipt("disposed");
   }
 
+  window.__HEARTH_CANVAS_G3_6_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_5_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_4_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_3_DISPOSE__ = dispose;

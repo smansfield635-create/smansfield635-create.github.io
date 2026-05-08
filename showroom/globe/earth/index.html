@@ -1,10 +1,10 @@
 <!-- /showroom/globe/earth/index.html -->
 <!doctype html>
-<html lang="en" data-route="/showroom/globe/earth/" data-page="earth-256-lattice-planet-view">
+<html lang="en" data-route="/showroom/globe/earth/" data-page="hearth-256-lattice-planet-view">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Earth · 256 Lattice Simulation</title>
+  <title>Hearth · 256 Lattice Simulation</title>
 
   <style>
     :root {
@@ -13,7 +13,6 @@
       --muted: rgba(247,241,222,.64);
       --line: rgba(150,190,245,.22);
       --gold: #f4c95d;
-      --blue: #7dbbff;
       --panel: rgba(5,12,24,.76);
     }
 
@@ -193,7 +192,7 @@
       text-align: right;
     }
 
-    .mount {
+    #hearthRenderMount {
       position: relative;
       display: grid;
       place-items: center;
@@ -210,7 +209,7 @@
         rgba(0,0,0,.18);
     }
 
-    canvas {
+    #hearthRenderMount canvas {
       display: block;
       width: min(92vw, 720px);
       height: min(92vw, 720px);
@@ -242,7 +241,7 @@
         justify-content: flex-start;
       }
 
-      .mount {
+      #hearthRenderMount {
         min-height: clamp(390px, 105vw, 700px);
       }
 
@@ -262,348 +261,43 @@
   <div class="shell">
     <header class="top">
       <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
-        <span class="mark" aria-hidden="true">E</span>
+        <span class="mark" aria-hidden="true">H</span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
-          <strong>Earth</strong>
+          <strong>Hearth</strong>
         </span>
       </a>
 
-      <nav class="nav" aria-label="Earth navigation">
+      <nav class="nav" aria-label="Hearth navigation">
         <a href="/">Compass</a>
         <a href="/showroom/globe/">Globe Split</a>
-        <a href="/showroom/globe/earth/" aria-current="page">Earth</a>
+        <a href="/showroom/globe/earth/" aria-current="page">Hearth</a>
         <a href="/showroom/globe/audralia/">Audralia</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <main class="main" aria-label="Earth planet view">
-      <section class="planet-card" aria-label="Earth render card">
+    <main class="main" aria-label="Hearth planet view">
+      <section class="planet-card" aria-label="Hearth render card">
         <div class="planet-title">
-          <h1>Earth</h1>
-          <span>256 lattice simulation</span>
+          <h1>Hearth</h1>
+          <span>hybrid simulation earth</span>
         </div>
 
-        <div class="mount" aria-label="Earth render mount">
-          <canvas id="earthCanvas" width="520" height="520" aria-label="Code-generated Earth"></canvas>
-        </div>
+        <div
+          id="hearthRenderMount"
+          data-hearth-render-mount
+          data-earth-render-mount
+          data-body="hearth"
+          data-render-mount
+          aria-label="Code-generated Hearth"
+        ></div>
       </section>
     </main>
 
-    <footer class="footer">Earth · 256 lattice simulation</footer>
+    <footer class="footer">Hearth · hybrid simulation earth</footer>
   </div>
 
-  <script>
-    (() => {
-      "use strict";
-
-      const canvas = document.getElementById("earthCanvas");
-      const ctx = canvas.getContext("2d", { alpha: true });
-
-      const SIZE = 520;
-      const CENTER = SIZE / 2;
-      const RADIUS = SIZE * 0.412;
-      const TWO_PI = Math.PI * 2;
-      const HALF_PI = Math.PI / 2;
-
-      const state = {
-        phase: 0.16,
-        cloudPhase: 0.08,
-        velocity: 0,
-        dragging: false,
-        lastX: 0,
-        started: performance.now()
-      };
-
-      const light = normalize({ x: -0.46, y: -0.28, z: 0.84 });
-
-      function clamp(value, min, max) {
-        return Math.min(max, Math.max(min, value));
-      }
-
-      function wrap01(value) {
-        return ((value % 1) + 1) % 1;
-      }
-
-      function lerp(a, b, t) {
-        return a + (b - a) * t;
-      }
-
-      function smoothstep(a, b, x) {
-        const t = clamp((x - a) / (b - a), 0, 1);
-        return t * t * (3 - 2 * t);
-      }
-
-      function normalize(v) {
-        const d = Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z) || 1;
-        return { x: v.x / d, y: v.y / d, z: v.z / d };
-      }
-
-      function dot(a, b) {
-        return a.x * b.x + a.y * b.y + a.z * b.z;
-      }
-
-      function mix(a, b, t) {
-        return [
-          lerp(a[0], b[0], t),
-          lerp(a[1], b[1], t),
-          lerp(a[2], b[2], t)
-        ];
-      }
-
-      function angularDelta(a, b) {
-        let d = a - b;
-        while (d > Math.PI) d -= TWO_PI;
-        while (d < -Math.PI) d += TWO_PI;
-        return d;
-      }
-
-      function hash2(x, y) {
-        const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453123;
-        return s - Math.floor(s);
-      }
-
-      function noise2(x, y) {
-        const ix = Math.floor(x);
-        const iy = Math.floor(y);
-        const fx = x - ix;
-        const fy = y - iy;
-        const ux = fx * fx * (3 - 2 * fx);
-        const uy = fy * fy * (3 - 2 * fy);
-
-        const a = hash2(ix, iy);
-        const b = hash2(ix + 1, iy);
-        const c = hash2(ix, iy + 1);
-        const d = hash2(ix + 1, iy + 1);
-
-        return lerp(lerp(a, b, ux), lerp(c, d, ux), uy);
-      }
-
-      function fbm(x, y) {
-        let value = 0;
-        let amplitude = 0.55;
-        let frequency = 1;
-
-        for (let i = 0; i < 5; i += 1) {
-          value += noise2(x * frequency, y * frequency) * amplitude;
-          frequency *= 2.03;
-          amplitude *= 0.52;
-        }
-
-        return clamp(value, 0, 1);
-      }
-
-      function blob(lon, lat, lon0, lat0, rx, ry, amp) {
-        const x = angularDelta(lon, lon0) / rx;
-        const y = (lat - lat0) / ry;
-        return amp * Math.exp(-(x * x + y * y));
-      }
-
-      function continentField(lon, lat) {
-        let value = 0;
-
-        value += blob(lon, lat, -2.35,  0.62, .42, .78, 1.15);
-        value += blob(lon, lat, -2.02, -0.35, .34, .86, 1.08);
-        value += blob(lon, lat, -1.30, -0.92, .30, .42, .72);
-
-        value += blob(lon, lat,  0.20,  0.58, 1.12, .46, 1.28);
-        value += blob(lon, lat,  1.35,  0.45, .88, .52, 1.12);
-        value += blob(lon, lat,  0.54, -0.22, .40, .66, .94);
-        value += blob(lon, lat,  1.28, -0.72, .38, .42, .62);
-
-        value += blob(lon, lat,  2.18, -0.62, .34, .30, .55);
-        value += blob(lon, lat, -3.05, -1.28, 3.2, .22, .92);
-
-        const u = wrap01(lon / TWO_PI + .5);
-        const v = clamp(.5 - lat / Math.PI, 0, 1);
-        const edge = fbm(u * 8.0 + 1.6, v * 5.5 - .4) * .26;
-
-        return value + edge;
-      }
-
-      function sampleSurface(lat, lon, cloudPhase, time) {
-        const u = wrap01(lon / TWO_PI + .5);
-        const v = clamp(.5 - lat / Math.PI, 0, 1);
-        const absLat = Math.abs(lat) / HALF_PI;
-
-        const field = continentField(lon, lat);
-        const threshold = .68 + .06 * Math.sin(lon * 3.0 + lat * 2.0);
-        const land = field > threshold && absLat < .86;
-        const coast = Math.abs(field - threshold) < .075 && absLat < .86;
-
-        const ice = smoothstep(.74, .95, absLat + fbm(u * 5.3, v * 5.3) * .08);
-        const elevation = land ? clamp((field - threshold) * 1.8 + fbm(u * 12.0, v * 8.0) * .42, 0, 1) : 0;
-        const oceanDepth = land ? 0 : clamp((threshold - field) * 1.65 + fbm(u * 7.0 + 4.0, v * 5.0) * .22, 0, 1);
-        const moisture = clamp(.50 + .26 * Math.cos(lat * 2.0) + .18 * fbm(u * 8.0 + 9.0, v * 6.0 - 2.0) - .22 * elevation, 0, 1);
-
-        let color;
-        let water = land ? 0 : 1;
-
-        if (ice > .82) {
-          color = mix([220, 236, 242], [248, 250, 246], ice);
-          water = water ? .7 : .1;
-        } else if (land) {
-          const arid = moisture < .42 && Math.abs(lat) > .16 && Math.abs(lat) < .74;
-          const forest = moisture >= .55 && elevation < .62;
-          const highland = elevation >= .62;
-
-          if (highland) color = mix([88, 90, 72], [190, 182, 146], elevation);
-          else if (arid) color = mix([130, 106, 58], [196, 158, 84], .50 + elevation * .35);
-          else if (forest) color = mix([22, 92, 56], [70, 142, 72], moisture);
-          else color = mix([52, 116, 72], [124, 138, 78], elevation * .55);
-        } else if (coast || oceanDepth < .20) {
-          color = mix([13, 76, 105], [38, 168, 162], 1 - oceanDepth);
-        } else {
-          color = mix([3, 18, 54], [8, 58, 102], 1 - oceanDepth);
-        }
-
-        if (coast && ice < .75) {
-          color = mix(color, land ? [188, 170, 112] : [50, 176, 164], .42);
-        }
-
-        const cellX = Math.floor(u * 16);
-        const cellY = Math.floor(v * 16);
-        const cell = hash2(cellX, cellY);
-        color = mix(color, [color[0] + 18, color[1] + 18, color[2] + 18], (cell - .5) * .08);
-
-        const cloudNoise =
-          .62 * fbm(u * 9.4 + cloudPhase * 6.0, v * 5.0 + time * .012) +
-          .24 * fbm(u * 23.0 - cloudPhase * 9.0, v * 11.0 + 2.0) +
-          .12 * Math.sin((u + cloudPhase) * TWO_PI * 3.0 + v * 7.0);
-
-        const stormBand = smoothstep(.12, .60, Math.cos(lat * 3.0) * .5 + .5);
-        const cloudAlpha = clamp(smoothstep(.58, .90, cloudNoise) * (.28 + stormBand * .42), 0, .56);
-
-        return { color, cloudAlpha, water };
-      }
-
-      function draw() {
-        const image = ctx.createImageData(SIZE, SIZE);
-        const data = image.data;
-        const time = (performance.now() - state.started) / 1000;
-        const tilt = 23.44 * Math.PI / 180;
-
-        for (let py = 0; py < SIZE; py += 1) {
-          const dy = (py + .5 - CENTER) / RADIUS;
-
-          for (let px = 0; px < SIZE; px += 1) {
-            const dx = (px + .5 - CENTER) / RADIUS;
-            const rr = dx * dx + dy * dy;
-            const idx = (py * SIZE + px) * 4;
-
-            if (rr > 1) {
-              data[idx] = 0;
-              data[idx + 1] = 0;
-              data[idx + 2] = 0;
-              data[idx + 3] = 0;
-              continue;
-            }
-
-            const z = Math.sqrt(Math.max(0, 1 - rr));
-            const normal = { x: dx, y: -dy, z };
-
-            const yTilted = normal.y * Math.cos(tilt) - normal.z * Math.sin(tilt);
-            const zTilted = normal.y * Math.sin(tilt) + normal.z * Math.cos(tilt);
-
-            const lat = Math.asin(clamp(yTilted, -1, 1));
-            const lon = Math.atan2(normal.x, zTilted) + state.phase * TWO_PI;
-
-            const sample = sampleSurface(lat, lon, state.cloudPhase, time);
-            let color = sample.color.slice();
-
-            const lightAmount = clamp(dot(normal, light) * .74 + .35, .14, 1.08);
-            const limb = clamp(1 - normal.z, 0, 1);
-            const haze = Math.pow(limb, 2.25);
-            const rim = Math.pow(limb, 3.0);
-
-            color[0] *= lightAmount;
-            color[1] *= lightAmount;
-            color[2] *= lightAmount;
-
-            if (sample.water > .5) {
-              const specular = Math.pow(clamp(dot(normal, light), 0, 1), 18) * Math.pow(1 - limb, 3.2);
-              color[0] += specular * 42;
-              color[1] += specular * 68;
-              color[2] += specular * 98;
-            }
-
-            color = mix(color, [82, 154, 230], haze * .20);
-
-            if (sample.cloudAlpha > 0) {
-              color = mix(color, [232, 238, 235], sample.cloudAlpha * clamp(.42 + lightAmount * .58, 0, 1));
-            }
-
-            color[0] += rim * 22;
-            color[1] += rim * 46;
-            color[2] += rim * 86;
-
-            data[idx] = clamp(Math.round(color[0]), 0, 255);
-            data[idx + 1] = clamp(Math.round(color[1]), 0, 255);
-            data[idx + 2] = clamp(Math.round(color[2]), 0, 255);
-            data[idx + 3] = 255;
-          }
-        }
-
-        ctx.clearRect(0, 0, SIZE, SIZE);
-        ctx.putImageData(image, 0, 0);
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(CENTER, CENTER, RADIUS + 2, 0, TWO_PI);
-        ctx.strokeStyle = "rgba(188,223,255,.36)";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.arc(CENTER, CENTER, RADIUS + 16, 0, TWO_PI);
-        ctx.strokeStyle = "rgba(102,174,255,.16)";
-        ctx.lineWidth = 10;
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      function tick() {
-        state.phase = wrap01(state.phase + .00062 + state.velocity);
-        state.cloudPhase = wrap01(state.cloudPhase + .00024 + state.velocity * .42);
-        state.velocity *= .945;
-
-        if (Math.abs(state.velocity) < .000012) state.velocity = 0;
-
-        draw();
-        requestAnimationFrame(tick);
-      }
-
-      canvas.addEventListener("pointerdown", (event) => {
-        state.dragging = true;
-        state.lastX = event.clientX;
-        state.velocity = 0;
-
-        try { canvas.setPointerCapture(event.pointerId); } catch (error) {}
-
-        if (event.cancelable) event.preventDefault();
-      }, { passive: false });
-
-      window.addEventListener("pointermove", (event) => {
-        if (!state.dragging) return;
-
-        const dx = event.clientX - state.lastX;
-        state.lastX = event.clientX;
-
-        const delta = -dx * .00145;
-        state.phase = wrap01(state.phase + delta);
-        state.cloudPhase = wrap01(state.cloudPhase + delta * .42);
-        state.velocity = delta * .58;
-
-        if (event.cancelable) event.preventDefault();
-      }, { passive: false });
-
-      window.addEventListener("pointerup", () => { state.dragging = false; });
-      window.addEventListener("pointercancel", () => { state.dragging = false; });
-
-      draw();
-      tick();
-    })();
-  </script>
+  <script src="/assets/earth/earth_canvas.js?v=HEARTH_G1_CANVAS_DIGITAL_PROOF_256_LATTICE_SYNTHESIS_TNT_v1" defer></script>
 </body>
 </html>

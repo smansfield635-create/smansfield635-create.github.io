@@ -3,12 +3,13 @@
 <html
   lang="en"
   data-route="/showroom/globe/earth/"
-  data-page="earth-planet-view-only"
-  data-contract="EARTH_G6_PLANET_VIEW_ONLY_VISIBLE_MOUNT_TNT_v1"
+  data-page="earth-planet-only"
+  data-contract="EARTH_G6_PLANET_ONLY_NO_STATUS_SCREEN_TNT_v1"
   data-earth-canvas-contract="EARTH_G6_256_LATTICE_PHYSICS_SYNTHETIC_SATELLITE_VIEW_TNT_v1"
   data-earth-runtime-contract="EARTH_G6_ASSETS_RUNTIME_256_LATTICE_SIMULATION_MODE_TNT_v1"
   data-source-standard="PHYSICS_SYNTHETIC_SATELLITE_VIEW"
   data-base-surface="generated-from-256-lattice"
+  data-status-screen="forbidden"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claimed="false"
@@ -18,16 +19,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Earth · Planet View</title>
 
-  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=EARTH_G6_PLANET_VIEW_ONLY_VISIBLE_MOUNT_TNT_v1">
+  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=EARTH_G6_PLANET_ONLY_NO_STATUS_SCREEN_TNT_v1">
 
   <style>
     :root {
       color-scheme: dark;
       --ink: #f7f1de;
-      --soft: rgba(247,241,222,.72);
+      --muted: rgba(247,241,222,.66);
       --line: rgba(150,190,245,.22);
       --gold: #f4c95d;
       --blue: #7dbbff;
+      --panel: rgba(5,12,24,.72);
     }
 
     * {
@@ -37,15 +39,16 @@
     html,
     body {
       margin: 0;
+      width: 100%;
       min-width: 320px;
       min-height: 100%;
+      overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 38%, rgba(92,156,255,.24), transparent 34rem),
-        radial-gradient(circle at 50% 55%, rgba(3,8,18,.72), transparent 44rem),
+        radial-gradient(circle at 50% 38%, rgba(92,156,255,.26), transparent 34rem),
+        radial-gradient(circle at 50% 55%, rgba(3,8,18,.78), transparent 44rem),
         linear-gradient(180deg, #07111f 0%, #02040a 70%, #000 100%);
       color: var(--ink);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      overflow-x: hidden;
     }
 
     body {
@@ -54,35 +57,83 @@
       grid-template-rows: auto 1fr auto;
     }
 
-    .earth-top {
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: .24;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.24) 0 1px, transparent 1.4px),
+        radial-gradient(circle, rgba(125,187,255,.18) 0 1px, transparent 1.6px);
+      background-size: 180px 220px, 260px 300px;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,.92), rgba(0,0,0,.48) 76%, transparent);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .earth-shell {
       position: relative;
-      z-index: 3;
+      z-index: 2;
+      width: min(1180px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: max(.8rem, env(safe-area-inset-top)) 0 max(.9rem, env(safe-area-inset-bottom));
+    }
+
+    .earth-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: .75rem;
-      width: min(1180px, calc(100% - 24px));
-      margin: 0 auto;
-      padding: max(.8rem, env(safe-area-inset-top)) 0 .7rem;
+      padding-bottom: .75rem;
     }
 
     .earth-brand {
       display: grid;
-      gap: .12rem;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: .8rem;
     }
 
-    .earth-brand strong {
-      font-size: clamp(1rem, 4vw, 1.35rem);
-      line-height: 1;
-      letter-spacing: -.035em;
+    .earth-mark {
+      width: 3.8rem;
+      height: 3.8rem;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(150,190,245,.28);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 34% 28%, rgba(255,255,255,.24), transparent 20%),
+        radial-gradient(circle at 50% 50%, rgba(125,187,255,.24), transparent 62%),
+        linear-gradient(145deg, rgba(20,48,84,.92), rgba(2,6,14,.98));
+      color: var(--gold);
+      font-weight: 950;
+      box-shadow:
+        0 0 2rem rgba(125,187,255,.22),
+        inset 0 1px 0 rgba(255,255,255,.14);
     }
 
-    .earth-brand span {
-      color: var(--soft);
-      font-size: .72rem;
-      font-weight: 900;
-      letter-spacing: .12em;
+    .earth-brand-copy {
+      display: grid;
+      gap: .14rem;
+    }
+
+    .earth-brand-copy span {
+      color: var(--muted);
+      font-size: .7rem;
+      font-weight: 950;
+      letter-spacing: .13em;
       text-transform: uppercase;
+    }
+
+    .earth-brand-copy strong {
+      font-size: clamp(1.05rem, 4vw, 1.5rem);
+      line-height: 1;
+      letter-spacing: -.045em;
     }
 
     .earth-nav {
@@ -104,38 +155,77 @@
       background: rgba(255,255,255,.045);
       font-size: .72rem;
       font-weight: 900;
-      text-decoration: none;
     }
 
-    .earth-stage {
-      position: relative;
-      z-index: 2;
-      width: min(100%, 980px);
-      margin: 0 auto;
+    .earth-nav a[aria-current="page"] {
+      border-color: rgba(244,201,93,.86);
+      color: #080604;
+      background: linear-gradient(135deg, #fff2a8, #f4c95d);
+    }
+
+    .earth-main {
       display: grid;
       place-items: center;
-      padding: clamp(.5rem, 2vw, 1rem);
+      min-height: calc(100svh - 9rem);
+      padding: clamp(.5rem, 2vw, 1rem) 0;
+    }
+
+    .planet-card {
+      width: min(100%, 920px);
+      display: grid;
+      gap: .75rem;
+      padding: clamp(.75rem, 2.5vw, 1.2rem);
+      border: 1px solid rgba(150,190,245,.18);
+      border-radius: clamp(1.1rem, 4vw, 2rem);
+      background:
+        radial-gradient(circle at 50% 45%, rgba(125,187,255,.18), transparent 30rem),
+        radial-gradient(circle at 50% 50%, rgba(0,0,0,.32), transparent 38rem),
+        var(--panel);
+      box-shadow:
+        0 0 3rem rgba(92,156,255,.14),
+        0 1.5rem 5rem rgba(0,0,0,.36),
+        inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .planet-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .75rem;
+      padding: .25rem .35rem 0;
+    }
+
+    .planet-title h1 {
+      margin: 0;
+      font-size: clamp(1.35rem, 5vw, 2.4rem);
+      line-height: 1;
+      letter-spacing: -.06em;
+    }
+
+    .planet-title span {
+      color: var(--muted);
+      font-size: .68rem;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      text-align: right;
     }
 
     #earthRenderMount {
       position: relative;
       display: grid;
       place-items: center;
-      width: min(100%, 860px);
+      width: 100%;
       min-height: clamp(420px, 82vw, 820px);
       margin: 0 auto;
       padding: clamp(8px, 2vw, 18px);
       overflow: visible;
       isolation: isolate;
-      border: 1px solid rgba(150,190,245,.18);
-      border-radius: clamp(1.1rem, 4vw, 2rem);
+      border: 1px solid rgba(150,190,245,.16);
+      border-radius: clamp(1rem, 3vw, 1.6rem);
       background:
-        radial-gradient(circle at 50% 45%, rgba(125,187,255,.22), transparent 30rem),
-        radial-gradient(circle at 50% 50%, rgba(0,0,0,.34), transparent 38rem),
-        rgba(0,0,0,.16);
-      box-shadow:
-        0 0 3rem rgba(92,156,255,.14),
-        inset 0 1px 0 rgba(255,255,255,.06);
+        radial-gradient(circle at 50% 46%, rgba(125,187,255,.20), transparent 29rem),
+        rgba(0,0,0,.18);
     }
 
     #earthRenderMount canvas {
@@ -148,13 +238,11 @@
 
     .earth-footer {
       position: relative;
-      z-index: 3;
-      width: min(1180px, calc(100% - 24px));
-      margin: 0 auto;
-      padding: .8rem 0 max(.9rem, env(safe-area-inset-bottom));
-      color: rgba(247,241,222,.50);
+      z-index: 2;
+      color: rgba(247,241,222,.46);
       font-size: .72rem;
       text-align: center;
+      padding-top: .75rem;
     }
 
     [data-earth-route-status],
@@ -163,19 +251,20 @@
     .route-receipt,
     [data-route-receipt],
     [data-contract-receipt],
-    [data-debug-receipt] {
+    [data-debug-receipt],
+    .earth-g6-hidden-receipt,
+    .earth-g5-hidden-receipt,
+    .earth-g4-hidden-receipt {
+      display: none !important;
+      visibility: hidden !important;
       position: absolute !important;
-      width: 1px !important;
-      height: 1px !important;
+      width: 0 !important;
+      height: 0 !important;
       overflow: hidden !important;
-      clip: rect(0 0 0 0) !important;
-      clip-path: inset(50%) !important;
-      white-space: nowrap !important;
-      border: 0 !important;
-      padding: 0 !important;
-      margin: -1px !important;
       opacity: 0 !important;
       pointer-events: none !important;
+      clip-path: inset(50%) !important;
+      white-space: nowrap !important;
     }
 
     @media (max-width: 680px) {
@@ -191,42 +280,61 @@
       #earthRenderMount {
         min-height: clamp(390px, 105vw, 700px);
       }
+
+      .planet-title {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .planet-title span {
+        text-align: left;
+      }
     }
   </style>
 </head>
 
 <body>
-  <header class="earth-top">
-    <div class="earth-brand">
-      <span>Diamond Gate Bridge</span>
-      <strong>Earth</strong>
-    </div>
+  <div class="earth-shell">
+    <header class="earth-top">
+      <a class="earth-brand" href="/" aria-label="Diamond Gate Bridge home">
+        <span class="earth-mark" aria-hidden="true">E</span>
+        <span class="earth-brand-copy">
+          <span>Diamond Gate Bridge</span>
+          <strong>Earth</strong>
+        </span>
+      </a>
 
-    <nav class="earth-nav" aria-label="Earth navigation">
-      <a href="/showroom/globe/">Globe Split</a>
-      <a href="/showroom/globe/audralia/">Audralia</a>
-      <a href="/gauges/">Gauges</a>
-    </nav>
-  </header>
+      <nav class="earth-nav" aria-label="Earth navigation">
+        <a href="/">Compass</a>
+        <a href="/showroom/globe/">Globe Split</a>
+        <a href="/showroom/globe/earth/" aria-current="page">Earth</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
 
-  <main class="earth-stage" aria-label="Earth planet view">
-    <div
-      id="earthRenderMount"
-      data-earth-render-mount
-      data-body="earth"
-      data-render-mount
-      data-dgb-earth-mount
-      aria-label="Interactive physics synthetic satellite-view Earth generated from the 256-state lattice"
-    ></div>
+    <main class="earth-main" aria-label="Earth planet view">
+      <section class="planet-card" aria-label="Earth render card">
+        <div class="planet-title">
+          <h1>Earth</h1>
+          <span>256 lattice simulation mode</span>
+        </div>
 
-    <div data-earth-route-status>
-      Earth route waiting for G6 planet render.
-    </div>
+        <div
+          id="earthRenderMount"
+          data-earth-render-mount
+          data-body="earth"
+          data-render-mount
+          data-dgb-earth-mount
+          aria-label="Interactive physics synthetic satellite-view Earth generated from the 256-state lattice"
+        ></div>
+      </section>
 
-    <template id="route-receipt" data-route-receipt>
-EARTH_G6_PLANET_VIEW_ONLY_VISIBLE_MOUNT_TNT_v1
+      <template id="route-receipt" data-route-receipt>
+EARTH_G6_PLANET_ONLY_NO_STATUS_SCREEN_TNT_v1
 route=/showroom/globe/earth/
-purpose=show_the_planet_now
+purpose=show_the_planet
+status_screen=forbidden
 canvas=/assets/earth/earth_canvas.js
 runtime=/assets/earth/earth_assets_runtime.js
 lattice=/assets/earth/earth_lattice_256.js
@@ -240,17 +348,18 @@ static_image_dependency=false
 graphic_box=false
 generated_image=false
 visual_pass_claimed=false
-    </template>
-  </main>
+      </template>
+    </main>
 
-  <footer class="earth-footer">
-    EARTH_G6_PLANET_VIEW_ONLY_VISIBLE_MOUNT_TNT_v1 · 256 lattice simulation mode.
-  </footer>
+    <footer class="earth-footer">
+      EARTH_G6_PLANET_ONLY_NO_STATUS_SCREEN_TNT_v1
+    </footer>
+  </div>
 
-  <script src="/assets/earth/earth_lattice_256.js?v=EARTH_G6_PLANET_VIEW_ONLY_VISIBLE_MOUNT_TNT_v1" defer></script>
-  <script src="/assets/earth/earth_physics_sensor.js?v=EARTH_G6_PLANET_VIEW_ONLY_VISIBLE_MOUNT_TNT_v1" defer></script>
-  <script src="/assets/earth/earth_atmosphere_model.js?v=EARTH_G6_PLANET_VIEW_ONLY_VISIBLE_MOUNT_TNT_v1" defer></script>
-  <script src="/assets/earth/earth_canvas.js?v=EARTH_G6_PLANET_VIEW_ONLY_VISIBLE_MOUNT_TNT_v1" defer></script>
-  <script src="/assets/earth/earth_assets_runtime.js?v=EARTH_G6_PLANET_VIEW_ONLY_VISIBLE_MOUNT_TNT_v1" defer></script>
+  <script src="/assets/earth/earth_lattice_256.js?v=EARTH_G6_PLANET_ONLY_NO_STATUS_SCREEN_TNT_v1" defer></script>
+  <script src="/assets/earth/earth_physics_sensor.js?v=EARTH_G6_PLANET_ONLY_NO_STATUS_SCREEN_TNT_v1" defer></script>
+  <script src="/assets/earth/earth_atmosphere_model.js?v=EARTH_G6_PLANET_ONLY_NO_STATUS_SCREEN_TNT_v1" defer></script>
+  <script src="/assets/earth/earth_canvas.js?v=EARTH_G6_PLANET_ONLY_NO_STATUS_SCREEN_TNT_v1" defer></script>
+  <script src="/assets/earth/earth_assets_runtime.js?v=EARTH_G6_PLANET_ONLY_NO_STATUS_SCREEN_TNT_v1" defer></script>
 </body>
 </html>

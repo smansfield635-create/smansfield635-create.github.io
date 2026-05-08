@@ -1,18 +1,19 @@
 // /showroom/globe/earth/index.js
-// EARTH_NASA_JPG_DEMO_RESTORE_TNT_v1
+// EARTH_NASA_JPG_SCROLL_UNLOCK_TNT_v1
 // Full-file replacement.
 // Purpose:
 // - Restore demo Earth to NASA JPG mode.
 // - Remove procedural blob placeholder.
 // - Keep Earth separate from Hearth.
+// - Explicitly restore vertical mobile page scroll.
 // - No generated image. No GraphicBox. No canvas dependency.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "EARTH_NASA_JPG_DEMO_RESTORE_TNT_v1";
-  const VERSION = "2026-05-08.earth-nasa-jpg-demo-restore";
-  const RECEIPT = "EARTH_NASA_JPG_DEMO_RESTORE_RECEIPT";
+  const CONTRACT = "EARTH_NASA_JPG_SCROLL_UNLOCK_TNT_v1";
+  const VERSION = "2026-05-08.earth-nasa-jpg-scroll-unlock";
+  const RECEIPT = "EARTH_NASA_JPG_SCROLL_UNLOCK_RECEIPT";
 
   const NASA_IMAGE_PRIMARY =
     "https://assets.science.nasa.gov/content/dam/science/psd/solar/2023/09/1/1-bluemarble_west-1.jpg";
@@ -40,6 +41,25 @@
     document.documentElement.dataset.earthGeneratedImage = "false";
     document.documentElement.dataset.earthGraphicBox = "false";
     document.documentElement.dataset.earthProceduralPlaceholder = "false";
+    document.documentElement.dataset.earthScrollAuthority = "body-pan-y";
+  }
+
+  function unlockScroll() {
+    const rootStyle = document.documentElement.style;
+    const bodyStyle = document.body.style;
+
+    rootStyle.overflowX = "hidden";
+    rootStyle.overflowY = "auto";
+    rootStyle.touchAction = "pan-y";
+
+    bodyStyle.overflowX = "hidden";
+    bodyStyle.overflowY = "auto";
+    bodyStyle.touchAction = "pan-y";
+    bodyStyle.overscrollBehaviorY = "auto";
+    bodyStyle.webkitOverflowScrolling = "touch";
+
+    document.body.dataset.scrollUnlocked = "true";
+    document.body.dataset.touchPolicy = "pan-y";
   }
 
   function ensureMount() {
@@ -58,6 +78,7 @@
       mount.dataset.body = "earth";
       mount.dataset.contract = CONTRACT;
       mount.dataset.imageMode = "nasa-jpg";
+      mount.dataset.touchPolicy = "pan-y";
       mount.setAttribute("aria-label", "NASA Blue Marble Earth image mount");
       main.appendChild(mount);
     }
@@ -66,6 +87,7 @@
     mount.dataset.earthRouteController = CONTRACT;
     mount.dataset.earthRouteControllerReceipt = RECEIPT;
     mount.dataset.imageMode = "nasa-jpg";
+    mount.dataset.touchPolicy = "pan-y";
     mount.dataset.nasaImagePrimary = NASA_IMAGE_PRIMARY;
     mount.dataset.nasaImageFallback = NASA_IMAGE_FALLBACK;
 
@@ -88,6 +110,21 @@
     const style = document.createElement("style");
     style.id = "earth-nasa-jpg-controller-style";
     style.textContent = `
+      html,
+      body {
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        touch-action: pan-y !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+
+      .page,
+      .earth-card,
+      #earthImageMount,
+      [data-earth-image-mount] {
+        touch-action: pan-y !important;
+      }
+
       #earthImageMount,
       [data-earth-image-mount] {
         position: relative;
@@ -96,6 +133,14 @@
         min-height: 280px;
         overflow: hidden;
         isolation: isolate;
+      }
+
+      .earth-nasa-stage,
+      .earth-nasa-img,
+      .earth-nasa-stage::before,
+      .earth-nasa-stage::after {
+        pointer-events: none !important;
+        touch-action: pan-y !important;
       }
 
       .earth-nasa-stage {
@@ -148,6 +193,7 @@
       imageMode: "nasa-jpg",
       primaryImage: NASA_IMAGE_PRIMARY,
       fallbackImage: NASA_IMAGE_FALLBACK,
+      scrollAuthority: "body-pan-y",
       generatedImage: false,
       graphicBox: false,
       proceduralPlaceholder: false,
@@ -165,6 +211,7 @@
     stage.className = "earth-nasa-stage";
     stage.dataset.contract = CONTRACT;
     stage.dataset.imageMode = "nasa-jpg";
+    stage.dataset.touchPolicy = "pan-y";
 
     const img = document.createElement("img");
     img.className = "earth-nasa-img";
@@ -172,16 +219,19 @@
     img.decoding = "async";
     img.loading = "eager";
     img.fetchPriority = "high";
+    img.draggable = false;
     img.dataset.contract = CONTRACT;
     img.dataset.imageSource = "NASA Blue Marble 2002";
+    img.dataset.touchPolicy = "pan-y";
     img.src = NASA_IMAGE_PRIMARY;
 
     const status = document.createElement("div");
     status.className = "earth-nasa-status";
-    status.textContent = "NASA JPG · Demo Earth";
+    status.textContent = "NASA JPG · Scroll Unlocked";
 
     img.addEventListener("load", () => {
       stamp("nasa-jpg-loaded");
+      unlockScroll();
       mount.dataset.earthImageLoaded = "true";
       mount.dataset.earthImageSourceActive = img.src;
       document.body.dataset.earthRouteReady = "true";
@@ -196,6 +246,7 @@
       }
 
       stamp("nasa-jpg-error");
+      unlockScroll();
       mount.dataset.earthImageLoaded = "false";
       document.body.dataset.earthRouteReady = "false";
       exposeReceipt("nasa-jpg-error");
@@ -214,9 +265,11 @@
 
     state.booted = true;
     stamp("booting");
+    unlockScroll();
     installStyle();
     removeProceduralPlaceholder();
     bootImage();
+    unlockScroll();
   }
 
   if (document.readyState === "loading") {

@@ -2,20 +2,12 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-g3-10-chain-aligned-route"
+  data-page="hearth-g3-route"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_G3_10_CHAIN_ALIGNMENT_SUPERCESSION_HTML_TNT_v1"
-  data-generation="G3.10-chain"
+  data-contract="HEARTH_G3_ROUTE_ELEVATION_HTML_TNT_v1"
+  data-generation="G3"
   data-hearth-route="true"
-  data-hearth-html-owner="/showroom/globe/hearth/index.html"
-  data-hearth-js-owner="/showroom/globe/hearth/index.js"
-  data-hearth-render-owner="/assets/hearth/hearth.canvas.js"
-  data-hearth-terrain-owner="/assets/hearth/hearth.terrain.js"
-  data-hearth-hydration-owner="/assets/hearth/hearth.hydration.js"
   data-hearth-g2-retired="true"
-  data-hearth-g3-7-retired="true"
-  data-earth-placeholder="false"
-  data-audralia-map="false"
   data-generated-image="false"
   data-graphic-box="false"
 >
@@ -25,25 +17,21 @@
   <title>Diamond Gate Bridge · Hearth</title>
   <meta
     name="description"
-    content="Hearth G3.10 chain-aligned route. The route shell loads the current Hearth canvas, accepted terrain authority, and solid global hydration authority without G2 cache keys."
+    content="Hearth G3 route. The route shell owns only the doorway and mount. The route controller loads the Hearth G3 canvas chain."
   >
 
   <style>
     :root {
       --bg: #020711;
       --panel: rgba(7, 18, 33, 0.78);
-      --panel-2: rgba(8, 25, 43, 0.62);
       --line: rgba(135, 187, 221, 0.22);
       --text: rgba(232, 244, 252, 0.94);
       --muted: rgba(190, 214, 230, 0.72);
       --gold: rgba(236, 196, 102, 0.92);
       --blue: rgba(99, 180, 235, 0.86);
-      --green: rgba(112, 214, 174, 0.82);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html,
     body {
@@ -61,20 +49,7 @@
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body {
-      min-height: 100vh;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    a:focus-visible,
-    button:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 3px;
-    }
+    a { color: inherit; text-decoration: none; }
 
     .skip-link {
       position: absolute;
@@ -83,15 +58,13 @@
       z-index: 20;
       padding: 0.65rem 0.85rem;
       border-radius: 999px;
-      background: rgba(236, 196, 102, 0.96);
+      background: var(--gold);
       color: #06111f;
       font-weight: 900;
       transition: top 160ms ease;
     }
 
-    .skip-link:focus {
-      top: 1rem;
-    }
+    .skip-link:focus { top: 1rem; }
 
     .page {
       width: min(1120px, calc(100% - 28px));
@@ -114,7 +87,6 @@
       font-weight: 900;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--text);
     }
 
     .brand-mark {
@@ -126,7 +98,6 @@
       border-radius: 50%;
       color: var(--gold);
       background: rgba(236, 196, 102, 0.08);
-      box-shadow: 0 0 24px rgba(236, 196, 102, 0.10);
     }
 
     nav {
@@ -148,7 +119,8 @@
       letter-spacing: 0.02em;
     }
 
-    nav a[aria-current="page"] {
+    nav a[aria-current="page"],
+    .route-link.primary {
       color: #06111f;
       background: var(--gold);
       border-color: rgba(236, 196, 102, 0.70);
@@ -200,12 +172,6 @@
       margin-top: 18px;
     }
 
-    .route-link.primary {
-      color: #06111f;
-      background: var(--gold);
-      border-color: rgba(236, 196, 102, 0.70);
-    }
-
     .hearth-stage {
       position: relative;
       width: 100%;
@@ -244,7 +210,7 @@
 
     .status-grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
       margin-top: 18px;
     }
@@ -272,26 +238,17 @@
       line-height: 1.35;
     }
 
-    .status-card[data-state="current"] strong {
-      color: var(--green);
-    }
-
-    .status-card[data-state="retired"] strong {
-      color: var(--gold);
-    }
-
     .audit-panel {
       margin-top: 18px;
       padding: 18px;
       border: 1px solid rgba(135, 187, 221, 0.16);
       border-radius: 24px;
-      background: var(--panel-2);
+      background: rgba(8, 25, 43, 0.62);
     }
 
     .audit-panel h2 {
       margin: 0 0 10px;
       font-size: 1rem;
-      color: var(--text);
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
@@ -308,18 +265,14 @@
         flex-direction: column;
       }
 
-      nav {
-        justify-content: flex-start;
-      }
+      nav { justify-content: flex-start; }
 
       .hero {
         grid-template-columns: 1fr;
         padding: 16px;
       }
 
-      .status-grid {
-        grid-template-columns: 1fr;
-      }
+      .status-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -346,12 +299,13 @@
 
     <main id="hearth-main" class="hero">
       <section aria-labelledby="hearth-title">
-        <p class="eyebrow">Hearth · G3.10 Chain Alignment</p>
+        <p class="eyebrow">Hearth · Generation 3</p>
         <h1 id="hearth-title">Hearth</h1>
+
         <p class="lede">
-          Hearth is now served as a chain-aligned G3.10 candidate. The route shell owns
-          only the doorway and mount. The route controller loads the current Hearth canvas.
-          Terrain and hydration remain asset authorities, with G2 route/cache contracts retired.
+          Hearth is now served as a Generation 3 route. The route shell owns only the doorway
+          and mount. The route controller loads the Hearth canvas authority. Terrain and hydration
+          remain downstream G3 asset authorities. G2 route and cache contracts are retired.
         </p>
 
         <div class="actions" aria-label="Hearth route actions">
@@ -364,8 +318,8 @@
         <section class="audit-panel" aria-label="Route audit summary">
           <h2>Route Status</h2>
           <p>
-            Chain-aligned Hearth receiver. No G2 model-restore route authority. No G2 canvas cache key.
-            No G3.7 hydration cache key. No Earth placeholder. No generated image.
+            G3 Hearth receiver. No G2 model-restore route authority. No G2 canvas cache key.
+            No Earth placeholder. No generated image. No graphic box.
           </p>
         </section>
       </section>
@@ -377,41 +331,35 @@
           data-render="hearth"
           data-planet="hearth"
           data-body="hearth"
-          data-contract="HEARTH_G3_10_CHAIN_ALIGNMENT_SUPERCESSION_HTML_TNT_v1"
-          data-generation="G3.10-chain"
-          data-hearth-terrain-owner="/assets/hearth/hearth.terrain.js"
-          data-hearth-hydration-owner="/assets/hearth/hearth.hydration.js"
+          data-contract="HEARTH_G3_ROUTE_ELEVATION_HTML_TNT_v1"
+          data-generation="G3"
           data-earth-placeholder="false"
           data-audralia-map="false"
-          aria-label="Hearth G3.10 chain-aligned canvas mount"
+          aria-label="Hearth G3 canvas mount"
         ></div>
       </section>
     </main>
 
     <section class="status-grid" aria-label="Hearth chain status">
-      <article class="status-card" data-state="current">
+      <article class="status-card">
         <strong>Route HTML</strong>
-        <span>G3.10 chain receiver.</span>
+        <span>G3 route receiver.</span>
       </article>
-      <article class="status-card" data-state="current">
+      <article class="status-card">
         <strong>Route JS</strong>
-        <span>Loads current canvas key.</span>
+        <span>Loads G3 canvas key.</span>
       </article>
-      <article class="status-card" data-state="current">
+      <article class="status-card">
         <strong>Canvas</strong>
-        <span>Chain-aligned render authority.</span>
+        <span>Current Hearth render authority.</span>
       </article>
-      <article class="status-card" data-state="current">
-        <strong>Hydration</strong>
-        <span>G3.10 solid global field.</span>
-      </article>
-      <article class="status-card" data-state="retired">
+      <article class="status-card">
         <strong>Retired</strong>
-        <span>G2 route/cache and G3.7 hydration key.</span>
+        <span>G2 route/cache model restore path.</span>
       </article>
     </section>
   </div>
 
-  <script src="./index.js?v=hearth-g3-10-chain-alignment-v1" defer></script>
+  <script src="./index.js?v=hearth-g3-route-elevation-v1" defer></script>
 </body>
 </html>

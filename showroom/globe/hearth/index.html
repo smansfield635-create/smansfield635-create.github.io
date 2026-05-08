@@ -2,18 +2,24 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-g3-landmass-family-zoning-route"
+  data-page="hearth-g3-boundary-alignment-route"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_G3_LANDMASS_FAMILY_ZONING_ROUTE_HTML_TNT_v1"
+  data-contract="HEARTH_G3_BOUNDARY_ALIGNMENT_ROUTE_HTML_TNT_v1"
+  data-family-contract="HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1"
   data-generation="G3"
   data-hearth-route="true"
-  data-hearth-standard="landmass-family-zoning"
+  data-hearth-standard="boundary-aligned-landmass-family"
   data-language-layer="globe"
   data-construction-layer="planet"
   data-general-regions="4"
   data-countries="16"
   data-summit-regions-per-general-region="9"
-  data-old-globe-contract-retired="true"
+  data-total-summit-regions="36"
+  data-old-g2-contract-retired="true"
+  data-old-g3-4-terrain-retired="true"
+  data-old-g3-7-hydration-retired="true"
+  data-old-g3-9-canvas-retired="true"
+  data-old-g3-10-chain-retired="true"
   data-round-blob-standard-retired="true"
   data-hydration-deferred="true"
   data-terrain-detail-deferred="true"
@@ -28,19 +34,19 @@
   <title>Diamond Gate Bridge · Hearth</title>
   <meta
     name="description"
-    content="Hearth Generation 3 landmass-family zoning standard. Four independently sized general regions, sixteen countries, and nine progressive summit regions per general region."
+    content="Hearth Generation 3 boundary-aligned landmass-family standard: four general regions, sixteen countries, and nine progressive Summit regions per general region. Globe remains route language. The constructed object is a planet."
   >
 
   <style>
     :root {
       --bg: #020711;
-      --panel: rgba(7, 18, 33, 0.78);
-      --panel-2: rgba(8, 25, 43, 0.62);
-      --line: rgba(135, 187, 221, 0.22);
-      --text: rgba(232, 244, 252, 0.94);
+      --panel: rgba(7, 18, 33, 0.80);
+      --panel2: rgba(8, 25, 43, 0.66);
+      --line: rgba(135, 187, 221, 0.20);
+      --text: rgba(232, 244, 252, 0.95);
       --muted: rgba(190, 214, 230, 0.72);
-      --gold: rgba(236, 196, 102, 0.92);
-      --green: rgba(112, 214, 174, 0.82);
+      --gold: rgba(236, 196, 102, 0.94);
+      --green: rgba(112, 214, 174, 0.84);
     }
 
     * { box-sizing: border-box; }
@@ -54,8 +60,8 @@
       touch-action: pan-y;
       -webkit-overflow-scrolling: touch;
       background:
-        radial-gradient(circle at 50% 16%, rgba(39, 93, 134, 0.30), transparent 36rem),
-        radial-gradient(circle at 50% 56%, rgba(42, 112, 160, 0.16), transparent 40rem),
+        radial-gradient(circle at 50% 14%, rgba(39, 93, 134, 0.30), transparent 36rem),
+        radial-gradient(circle at 50% 58%, rgba(42, 112, 160, 0.16), transparent 42rem),
         var(--bg);
       color: var(--text);
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -147,7 +153,7 @@
       border: 1px solid rgba(135, 187, 221, 0.18);
       border-radius: 28px;
       background:
-        linear-gradient(135deg, rgba(9, 21, 39, 0.86), rgba(8, 28, 50, 0.56)),
+        linear-gradient(135deg, rgba(9, 21, 39, 0.88), rgba(8, 28, 50, 0.58)),
         rgba(3, 10, 20, 0.72);
       box-shadow: 0 22px 80px rgba(0, 0, 0, 0.35);
       overflow: hidden;
@@ -170,7 +176,7 @@
     }
 
     .lede {
-      max-width: 64ch;
+      max-width: 66ch;
       margin: 16px 0 0;
       color: var(--muted);
       font-size: 1rem;
@@ -192,7 +198,7 @@
       border-radius: 32px;
       border: 1px solid rgba(135, 187, 221, 0.18);
       background:
-        radial-gradient(circle at 50% 48%, rgba(54, 152, 220, 0.16), transparent 52%),
+        radial-gradient(circle at 50% 48%, rgba(54, 152, 220, 0.15), transparent 52%),
         linear-gradient(180deg, rgba(4, 13, 25, 0.72), rgba(2, 7, 15, 0.92));
       overflow: hidden;
       isolation: isolate;
@@ -225,7 +231,7 @@
       padding: 18px;
       border: 1px solid rgba(135, 187, 221, 0.16);
       border-radius: 24px;
-      background: var(--panel-2);
+      background: var(--panel2);
     }
 
     .audit-panel h2 {
@@ -305,14 +311,13 @@
 
     <main id="hearth-main" class="hero">
       <section aria-labelledby="hearth-title">
-        <p class="eyebrow">Hearth · Generation 3 Landmass Family</p>
+        <p class="eyebrow">Hearth · Generation 3 Boundary Alignment</p>
         <h1 id="hearth-title">Hearth</h1>
 
         <p class="lede">
-          Hearth is governed by the G3 landmass-family standard: four independently sized general
-          regions, sixteen countries, and nine progressive Summit regions per general region.
-          The round-blob standard is retired. Mountains, hydration, climate, weather, clouds, humidity,
-          and atmospheric moisture remain closed.
+          Hearth is standardized under one G3 boundary-aligned landmass-family contract. The planet
+          contains four independently sized general regions, sixteen countries, and nine progressive
+          Summit regions per general region. Globe remains route language. The rendered object is a planet.
         </p>
 
         <div class="actions" aria-label="Hearth route actions">
@@ -325,8 +330,8 @@
         <section class="audit-panel" aria-label="Route audit summary">
           <h2>Route Status</h2>
           <p>
-            G3 landmass-family zoning route. Four general regions, sixteen countries, and nine
-            progressive Summit regions per general region. Old globe and round-blob contracts retired.
+            Five-file lane standardized. Old G2, G3.4, G3.7, G3.9, and G3.10 contracts retired.
+            Hydration, terrain detail, mountains, weather, climate, clouds, humidity, and atmospheric moisture remain closed.
           </p>
         </section>
       </section>
@@ -337,9 +342,10 @@
           data-hearth-mount
           data-render="hearth"
           data-body="hearth"
-          data-contract="HEARTH_G3_LANDMASS_FAMILY_ZONING_ROUTE_HTML_TNT_v1"
+          data-contract="HEARTH_G3_BOUNDARY_ALIGNMENT_ROUTE_HTML_TNT_v1"
+          data-family-contract="HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1"
           data-generation="G3"
-          data-hearth-standard="landmass-family-zoning"
+          data-hearth-standard="boundary-aligned-landmass-family"
           data-language-layer="globe"
           data-construction-layer="planet"
           data-general-regions="4"
@@ -348,7 +354,7 @@
           data-hydration-deferred="true"
           data-terrain-detail-deferred="true"
           data-climate-weather-clouds-deferred="true"
-          aria-label="Hearth G3 landmass-family zoning mount"
+          aria-label="Hearth G3 boundary-aligned landmass-family mount"
         ></div>
       </section>
     </main>
@@ -356,7 +362,7 @@
     <section class="status-grid" aria-label="Hearth G3 status">
       <article class="status-card" data-state="active">
         <strong>4 General Regions</strong>
-        <span>Each region sized independently.</span>
+        <span>Independently sized landmass-family regions.</span>
       </article>
 
       <article class="status-card" data-state="active">
@@ -366,7 +372,7 @@
 
       <article class="status-card" data-state="active">
         <strong>9 Summits</strong>
-        <span>Progressive access ladder per region.</span>
+        <span>Progressive access ladder inside each region.</span>
       </article>
 
       <article class="status-card" data-state="closed">
@@ -376,6 +382,6 @@
     </section>
   </div>
 
-  <script src="./index.js?v=hearth-g3-landmass-family-zoning-route-v1" defer></script>
+  <script src="./index.js?v=hearth-g3-boundary-alignment-all-five-files-v1" defer></script>
 </body>
 </html>

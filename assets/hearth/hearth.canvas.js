@@ -1,28 +1,49 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_G3_DEFINITIVE_LANDMASS_AND_ZONING_STANDARD_TNT_v1
+// HEARTH_G3_LANDMASS_FAMILY_ZONING_STANDARD_TNT_v1
 // Full-file replacement.
-// First true Hearth Generation 3 standard.
+// First true bounded Hearth Generation 3 landmass-family standard.
 // Purpose:
-// - Establish definitive planetary landmasses.
-// - Establish bounded cartographic zoning: regions, countries, states/provinces, and city-zone seats.
-// - Retire decorative globe renderer, shell renderer, hydration-first path, terrain-detail-first path, and mountain-first path.
-// - "Globe" remains website language. Constructed/rendered object is a planet.
-// - No hydration, rivers, mountains, weather, climate, clouds, humidity, or atmospheric moisture.
+// - Retire round-blob landmass standard.
+// - Build four independently sized General Regions.
+// - Build sixteen countries: four countries per General Region.
+// - Build nine progressive Summit regions inside each General Region.
+// - Technology/access progression: Summit 1 = base / broadest access / most limited technology; Summit 9 = highest challenge / narrowest access / most advanced technology.
+// - No hydration, rivers, mountains, terrain detail, weather, climate, clouds, humidity, or atmospheric moisture.
 // - No external image. No generated image. No GraphicBox.
 // - One active canvas authority. One visible draw path.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_DEFINITIVE_LANDMASS_AND_ZONING_STANDARD_TNT_v1";
-  const VERSION = "2026-05-08.hearth-g3-definitive-landmass-zoning-standard";
-  const RECEIPT = "HEARTH_G3_DEFINITIVE_LANDMASS_AND_ZONING_RECEIPT";
+  const CONTRACT = "HEARTH_G3_LANDMASS_FAMILY_ZONING_STANDARD_TNT_v1";
+  const VERSION = "2026-05-08.hearth-g3-landmass-family-zoning-standard";
+  const RECEIPT = "HEARTH_G3_LANDMASS_FAMILY_ZONING_RECEIPT";
 
   const MIN_SIZE = 300;
-  const MAX_SIZE = 480;
+  const MAX_SIZE = 500;
   const TAU = Math.PI * 2;
 
+  const TIC_TAC_TOE_DYNAMIC_PROTOCOL = Object.freeze({
+    T1: "Retire old globe and round-blob contracts.",
+    T2: "Lock G3 reach to cartographic landmass-family zoning.",
+    T3: "Define four independently sized General Regions.",
+    T4: "Assign sixteen countries, four per General Region.",
+    T5: "Assign nine progressive Summit regions per General Region.",
+    T6: "Prevent hydration, mountains, climate, weather, clouds, humidity.",
+    T7: "Keep globe as language layer and planet as construction layer.",
+    T8: "Render one active planet body with one draw path.",
+    T9: "Expose receipts for downstream family construction."
+  });
+
+  const SYSTEMIC_QUAD_A_ATTACK = Object.freeze({
+    authority: "Hearth G3 landmass-family zoning canvas authority only.",
+    axis: "Bounded cartographic planet construction.",
+    artifact: "Four General Regions, sixteen countries, and nine Summit regions per General Region.",
+    attack: "Reject round blobs, old globe contracts, hydration-first drift, terrain-detail drift, mountain drift, and endless expression."
+  });
+
   [
+    "__HEARTH_CANVAS_G3_FAMILY_DISPOSE__",
     "__HEARTH_CANVAS_G3_ZONING_DISPOSE__",
     "__HEARTH_CANVAS_PLANET_BODY_DISPOSE__",
     "__HEARTH_CANVAS_VISIBLE_DISPOSE__",
@@ -32,14 +53,10 @@
     "__HEARTH_G2_DISPOSE__"
   ].forEach((name) => {
     if (typeof window[name] === "function") {
-      try {
-        window[name]();
-      } catch (_) {}
+      try { window[name](); } catch (_) {}
     }
 
-    try {
-      window[name] = null;
-    } catch (_) {}
+    try { window[name] = null; } catch (_) {}
   });
 
   const runtime = {
@@ -109,17 +126,48 @@
     return { east, north };
   }
 
-  function cap(v, center, radius, amplitude) {
-    const d = dot3(v, center);
-    const edge = Math.cos(radius);
-    return smoothstep(edge, 1, d) * amplitude;
+  function pointInPolygon(x, y, points) {
+    let inside = false;
+
+    for (let i = 0, j = points.length - 1; i < points.length; j = i, i += 1) {
+      const xi = points[i][0];
+      const yi = points[i][1];
+      const xj = points[j][0];
+      const yj = points[j][1];
+
+      const intersect =
+        ((yi > y) !== (yj > y)) &&
+        (x < ((xj - xi) * (y - yi)) / ((yj - yi) || 1e-9) + xi);
+
+      if (intersect) inside = !inside;
+    }
+
+    return inside;
   }
 
-  function wave(v, seed) {
-    return (
-      Math.sin(v[0] * 7.13 + v[1] * 2.31 + v[2] * 4.71 + seed) * 0.50 +
-      Math.cos(v[0] * 3.77 - v[1] * 6.11 + v[2] * 2.19 + seed * 1.7) * 0.50
-    );
+  function segmentDistance(px, py, ax, ay, bx, by) {
+    const vx = bx - ax;
+    const vy = by - ay;
+    const wx = px - ax;
+    const wy = py - ay;
+    const c1 = vx * wx + vy * wy;
+    const c2 = vx * vx + vy * vy || 1e-9;
+    const t = clamp(c1 / c2, 0, 1);
+    const dx = px - (ax + vx * t);
+    const dy = py - (ay + vy * t);
+    return Math.hypot(dx, dy);
+  }
+
+  function polygonDistance(x, y, points) {
+    let min = Infinity;
+
+    for (let i = 0; i < points.length; i += 1) {
+      const a = points[i];
+      const b = points[(i + 1) % points.length];
+      min = Math.min(min, segmentDistance(x, y, a[0], a[1], b[0], b[1]));
+    }
+
+    return min;
   }
 
   function hashInt(a, b, c) {
@@ -127,318 +175,209 @@
     return n - Math.floor(n);
   }
 
-  const LANDMASSES = [
+  const GENERAL_REGIONS_RAW = [
     {
-      id: "LM01",
-      name: "Northwest Crown",
-      center: dirFromLonLat(-112, 38),
-      color: [143, 119, 78],
-      regionX: 2,
-      regionY: 2,
-      countryX: 4,
-      countryY: 3,
-      stateX: 8,
-      stateY: 6,
-      cores: [
-        [-112, 38, 0.54, 1.10],
-        [-138, 50, 0.30, 0.50],
-        [-91, 20, 0.36, 0.62]
-      ],
-      cuts: [
-        [-122, 0, 0.26, 0.32],
-        [-75, 46, 0.22, 0.22]
+      id: "GR01",
+      name: "Baseward West",
+      center: [-88, 18],
+      size: [0.86, 0.58],
+      color: [144, 118, 74],
+      countryPrefix: 1,
+      outline: [
+        [-0.90, 0.08], [-0.70, 0.42], [-0.28, 0.58], [0.20, 0.48],
+        [0.58, 0.22], [0.72, -0.08], [0.46, -0.40], [0.02, -0.56],
+        [-0.44, -0.46], [-0.78, -0.22]
       ]
     },
     {
-      id: "LM02",
-      name: "Southwest Root",
-      center: dirFromLonLat(-56, -24),
-      color: [132, 115, 74],
-      regionX: 2,
-      regionY: 3,
-      countryX: 3,
-      countryY: 5,
-      stateX: 6,
-      stateY: 10,
-      cores: [
-        [-58, -12, 0.42, 0.92],
-        [-68, -36, 0.30, 0.62],
-        [-42, -48, 0.18, 0.36]
-      ],
-      cuts: [
-        [-36, 6, 0.18, 0.30]
+      id: "GR02",
+      name: "Rising South",
+      center: [-18, -24],
+      size: [0.68, 0.74],
+      color: [158, 126, 82],
+      countryPrefix: 5,
+      outline: [
+        [-0.58, 0.48], [-0.18, 0.66], [0.36, 0.54], [0.72, 0.18],
+        [0.58, -0.28], [0.18, -0.76], [-0.30, -0.70], [-0.70, -0.32],
+        [-0.78, 0.12]
       ]
     },
     {
-      id: "LM03",
-      name: "Central Hearthland",
-      center: dirFromLonLat(18, 26),
-      color: [150, 126, 82],
-      regionX: 3,
-      regionY: 2,
-      countryX: 6,
-      countryY: 4,
-      stateX: 12,
-      stateY: 8,
-      cores: [
-        [18, 28, 0.62, 1.18],
-        [-6, 6, 0.32, 0.54],
-        [43, 14, 0.36, 0.64]
-      ],
-      cuts: [
-        [32, -12, 0.22, 0.26],
-        [3, 44, 0.18, 0.20]
+      id: "GR03",
+      name: "Middle Eastward",
+      center: [56, 22],
+      size: [0.92, 0.54],
+      color: [134, 127, 84],
+      countryPrefix: 9,
+      outline: [
+        [-0.86, 0.20], [-0.48, 0.54], [0.08, 0.62], [0.64, 0.44],
+        [0.92, 0.04], [0.74, -0.28], [0.30, -0.50], [-0.22, -0.46],
+        [-0.72, -0.22]
       ]
     },
     {
-      id: "LM04",
-      name: "Eastern Span",
-      center: dirFromLonLat(82, 33),
-      color: [134, 124, 83],
-      regionX: 3,
-      regionY: 2,
-      countryX: 6,
-      countryY: 4,
-      stateX: 12,
-      stateY: 8,
-      cores: [
-        [64, 18, 0.46, 0.76],
-        [101, 39, 0.54, 0.90],
-        [121, 6, 0.24, 0.34]
-      ],
-      cuts: [
-        [79, -3, 0.28, 0.38],
-        [117, 28, 0.17, 0.20]
-      ]
-    },
-    {
-      id: "LM05",
-      name: "Austral Table",
-      center: dirFromLonLat(122, -28),
-      color: [163, 128, 78],
-      regionX: 2,
-      regionY: 2,
-      countryX: 4,
-      countryY: 3,
-      stateX: 8,
-      stateY: 6,
-      cores: [
-        [122, -28, 0.38, 0.82],
-        [148, -42, 0.16, 0.34]
-      ],
-      cuts: [
-        [104, -12, 0.20, 0.24]
-      ]
-    },
-    {
-      id: "LM06",
-      name: "North Arc",
-      center: dirFromLonLat(160, 56),
-      color: [128, 124, 92],
-      regionX: 2,
-      regionY: 2,
-      countryX: 4,
-      countryY: 3,
-      stateX: 8,
-      stateY: 6,
-      cores: [
-        [158, 52, 0.34, 0.56],
-        [-166, 58, 0.26, 0.36]
-      ],
-      cuts: [
-        [176, 43, 0.14, 0.16]
+      id: "GR04",
+      name: "Summitward North",
+      center: [134, 42],
+      size: [0.58, 0.48],
+      color: [126, 126, 94],
+      countryPrefix: 13,
+      outline: [
+        [-0.68, 0.12], [-0.42, 0.48], [0.08, 0.56], [0.54, 0.28],
+        [0.68, -0.10], [0.30, -0.44], [-0.18, -0.48], [-0.62, -0.18]
       ]
     }
-  ].map((landmass, index) => {
-    const basis = makeBasis(landmass.center);
+  ];
 
+  const GENERAL_REGIONS = GENERAL_REGIONS_RAW.map((region, index) => {
+    const center = dirFromLonLat(region.center[0], region.center[1]);
     return Object.freeze({
-      ...landmass,
+      ...region,
       index,
-      basis,
-      cores: landmass.cores.map(([lon, lat, radius, amplitude]) => ({
-        center: dirFromLonLat(lon, lat),
-        radius,
-        amplitude
-      })),
-      cuts: landmass.cuts.map(([lon, lat, radius, amplitude]) => ({
-        center: dirFromLonLat(lon, lat),
-        radius,
-        amplitude
-      }))
+      center,
+      basis: makeBasis(center)
     });
   });
 
-  function scoreLandmass(v, landmass) {
-    let score = -0.54;
+  const SUMMIT_LABELS = Object.freeze([
+    "S1 Base",
+    "S2 Entry",
+    "S3 Tooling",
+    "S4 Systems",
+    "S5 Coordination",
+    "S6 Applied",
+    "S7 Specialized",
+    "S8 Restricted",
+    "S9 Summit"
+  ]);
 
-    for (const core of landmass.cores) {
-      score += cap(v, core.center, core.radius, core.amplitude);
-    }
+  function localize(v, region) {
+    const rawX = dot3(v, region.basis.east) / region.size[0];
+    const rawY = dot3(v, region.basis.north) / region.size[1];
+    const facing = dot3(v, region.center);
 
-    for (const cut of landmass.cuts) {
-      score -= cap(v, cut.center, cut.radius, cut.amplitude);
-    }
-
-    score += wave(v, landmass.index + 1) * 0.045;
-
-    return score;
+    return { x: rawX, y: rawY, facing };
   }
 
-  function gridLine(value, count, width) {
-    const scaled = value * count;
-    const frac = scaled - Math.floor(scaled);
-    const d = Math.min(frac, 1 - frac);
-    return 1 - smoothstep(width, width * 2.25, d);
-  }
-
-  function localCoords(v, landmass) {
-    const x = dot3(v, landmass.basis.east);
-    const y = dot3(v, landmass.basis.north);
-    const z = dot3(v, landmass.center);
-    const scale = clamp(1.38 - z * 0.30, 0.86, 1.22);
-
-    return {
-      u: clamp(0.5 + x * 0.62 * scale, 0, 1),
-      q: clamp(0.5 + y * 0.62 * scale, 0, 1)
-    };
-  }
-
-  function citySeat(u, q, landmassIndex) {
-    const cx = 10;
-    const cy = 8;
-    const gx = Math.floor(u * cx);
-    const gy = Math.floor(q * cy);
-    const fu = u * cx - gx;
-    const fq = q * cy - gy;
-    const h = hashInt(gx + landmassIndex * 17, gy + 11, landmassIndex + 3);
-
-    if (h < 0.68) return 0;
-
-    const dx = Math.abs(fu - 0.5);
-    const dy = Math.abs(fq - 0.5);
-    const d = Math.hypot(dx, dy);
-
-    return 1 - smoothstep(0.024, 0.052, d);
-  }
-
-  function samplePlanet(v) {
+  function regionSample(v) {
     let best = null;
 
-    for (const landmass of LANDMASSES) {
-      const score = scoreLandmass(v, landmass);
+    for (const region of GENERAL_REGIONS) {
+      const local = localize(v, region);
+      const inside = pointInPolygon(local.x, local.y, region.outline);
+      const distance = polygonDistance(local.x, local.y, region.outline);
+      const score = (inside ? 1 : 0) + (1 - Math.min(distance, 1)) * 0.2 + local.facing * 0.08;
+
       if (!best || score > best.score) {
-        best = { landmass, score };
+        best = { region, local, inside, distance, score };
       }
     }
 
-    const threshold = 0.045;
-    const land = best.score > threshold;
-    const coast = 1 - smoothstep(0.012, 0.080, Math.abs(best.score - threshold));
-    const waterDepth = land ? 0 : clamp((threshold - best.score) * 2.2, 0, 1);
-    const shelf = land ? 0 : clamp(coast * 0.92, 0, 1);
-
-    if (!land) {
+    if (!best || !best.inside) {
+      const shelf = best ? 1 - smoothstep(0.025, 0.155, best.distance) : 0;
       return {
         land: false,
-        waterDepth,
+        region: best ? best.region : null,
+        coast: shelf,
         shelf,
-        coast,
-        landmass: null,
-        regionLine: 0,
+        waterDepth: clamp(best ? best.distance * 1.7 : 0.8, 0, 1),
         countryLine: 0,
-        stateLine: 0,
+        summitLine: 0,
         citySeat: 0
       };
     }
 
-    const { u, q } = localCoords(v, best.landmass);
+    const u = clamp((best.local.x + 1) * 0.5, 0, 1);
+    const q = clamp((best.local.y + 1) * 0.5, 0, 1);
 
-    const regionCurveU = u + Math.sin(q * TAU * 1.1 + best.landmass.index) * 0.012;
-    const regionCurveQ = q + Math.sin(u * TAU * 1.0 + best.landmass.index * 1.7) * 0.012;
+    const countryCol = u < 0.5 ? 0 : 1;
+    const countryRow = q < 0.5 ? 1 : 0;
+    const countryIndex = countryRow * 2 + countryCol;
+    const countryId = best.region.countryPrefix + countryIndex;
 
-    const countryCurveU = u + Math.sin(q * TAU * 2.0 + best.landmass.index) * 0.010;
-    const countryCurveQ = q + Math.sin(u * TAU * 2.0 + best.landmass.index * 1.3) * 0.010;
-
-    const stateCurveU = u + Math.sin(q * TAU * 3.1 + best.landmass.index) * 0.006;
-    const stateCurveQ = q + Math.sin(u * TAU * 3.0 + best.landmass.index * 1.1) * 0.006;
-
-    const regionLine = Math.max(
-      gridLine(regionCurveU, best.landmass.regionX, 0.010),
-      gridLine(regionCurveQ, best.landmass.regionY, 0.010)
-    );
+    const summitProgress = clamp((u * 0.58 + (1 - q) * 0.42), 0, 0.999);
+    const summit = Math.floor(summitProgress * 9) + 1;
 
     const countryLine = Math.max(
-      gridLine(countryCurveU, best.landmass.countryX, 0.006),
-      gridLine(countryCurveQ, best.landmass.countryY, 0.006)
+      1 - smoothstep(0.008, 0.024, Math.abs(u - 0.5)),
+      1 - smoothstep(0.008, 0.024, Math.abs(q - 0.5))
     );
 
-    const stateLine = Math.max(
-      gridLine(stateCurveU, best.landmass.stateX, 0.0032),
-      gridLine(stateCurveQ, best.landmass.stateY, 0.0032)
-    );
+    const summitFrac = summitProgress * 9;
+    const summitEdge = Math.abs(summitFrac - Math.round(summitFrac));
+    const summitLine = 1 - smoothstep(0.018, 0.048, summitEdge);
 
-    const zoneSeat = citySeat(u, q, best.landmass.index);
+    const microX = Math.floor(u * 7);
+    const microY = Math.floor(q * 6);
+    const seatHash = hashInt(microX + countryId * 11, microY + summit * 17, best.region.index + 1);
+    const seatU = u * 7 - microX;
+    const seatQ = q * 6 - microY;
+    const seatDistance = Math.hypot(seatU - 0.5, seatQ - 0.5);
+    const citySeat = seatHash > 0.72 ? 1 - smoothstep(0.020, 0.055, seatDistance) : 0;
+
+    const coast = 1 - smoothstep(0.012, 0.080, best.distance);
 
     return {
       land: true,
-      waterDepth: 0,
-      shelf: 0,
-      coast,
-      landmass: best.landmass,
+      region: best.region,
       u,
       q,
-      regionLine: regionLine * smoothstep(threshold + 0.015, threshold + 0.12, best.score),
-      countryLine: countryLine * smoothstep(threshold + 0.025, threshold + 0.14, best.score),
-      stateLine: stateLine * smoothstep(threshold + 0.035, threshold + 0.16, best.score),
-      citySeat: zoneSeat * smoothstep(threshold + 0.06, threshold + 0.18, best.score)
+      countryId,
+      summit,
+      coast,
+      countryLine,
+      summitLine,
+      citySeat,
+      shelf: 0,
+      waterDepth: 0
     };
   }
 
-  function colorPlanet(s) {
-    if (!s.land) {
-      let r = mix(16, 5, s.waterDepth);
-      let g = mix(92, 48, s.waterDepth);
-      let b = mix(126, 110, s.waterDepth);
+  function colorSample(sample) {
+    if (!sample.land) {
+      let r = mix(15, 5, sample.waterDepth);
+      let g = mix(82, 42, sample.waterDepth);
+      let b = mix(124, 104, sample.waterDepth);
 
-      r = mix(r, 34, s.shelf * 0.82);
-      g = mix(g, 164, s.shelf * 0.78);
-      b = mix(b, 178, s.shelf * 0.74);
+      r = mix(r, 34, sample.shelf * 0.78);
+      g = mix(g, 158, sample.shelf * 0.76);
+      b = mix(b, 176, sample.shelf * 0.72);
 
       return [r, g, b];
     }
 
-    let [r, g, b] = s.landmass.color;
+    let [r, g, b] = sample.region.color;
 
-    r = mix(r, 78, s.stateLine * 0.22);
-    g = mix(g, 98, s.stateLine * 0.22);
-    b = mix(b, 82, s.stateLine * 0.22);
+    const summitTone = (sample.summit - 1) / 8;
+    r = mix(r, 196, summitTone * 0.22);
+    g = mix(g, 168, summitTone * 0.18);
+    b = mix(b, 100, summitTone * 0.10);
 
-    r = mix(r, 56, s.countryLine * 0.40);
-    g = mix(g, 72, s.countryLine * 0.40);
-    b = mix(b, 64, s.countryLine * 0.40);
+    r = mix(r, 60, sample.countryLine * 0.42);
+    g = mix(g, 74, sample.countryLine * 0.42);
+    b = mix(b, 64, sample.countryLine * 0.42);
 
-    r = mix(r, 236, s.regionLine * 0.46);
-    g = mix(g, 198, s.regionLine * 0.38);
-    b = mix(b, 112, s.regionLine * 0.26);
+    r = mix(r, 236, sample.summitLine * 0.34);
+    g = mix(g, 202, sample.summitLine * 0.30);
+    b = mix(b, 118, sample.summitLine * 0.18);
 
-    r = mix(r, 245, s.citySeat * 0.72);
-    g = mix(g, 230, s.citySeat * 0.58);
-    b = mix(b, 168, s.citySeat * 0.42);
+    r = mix(r, 245, sample.citySeat * 0.72);
+    g = mix(g, 232, sample.citySeat * 0.58);
+    b = mix(b, 172, sample.citySeat * 0.42);
 
-    r = mix(r, 210, s.coast * 0.12);
-    g = mix(g, 186, s.coast * 0.10);
-    b = mix(b, 126, s.coast * 0.08);
+    r = mix(r, 210, sample.coast * 0.10);
+    g = mix(g, 190, sample.coast * 0.08);
+    b = mix(b, 128, sample.coast * 0.07);
 
     return [r, g, b];
   }
 
   function installStyle() {
-    const old = document.getElementById("hearth-g3-zoning-standard-style");
+    const old = document.getElementById("hearth-g3-family-standard-style");
     if (old) old.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-g3-zoning-standard-style";
+    style.id = "hearth-g3-family-standard-style";
     style.textContent = `
       html,
       body {
@@ -578,10 +517,11 @@
         v = rotateY(v, spin);
         v = norm3(v);
 
-        const s = samplePlanet(v);
-        let [rr, gg, bb] = colorPlanet(s);
+        const sample = regionSample(v);
+        let [rr, gg, bb] = colorSample(sample);
 
         const curve = 0.990 + Math.pow(z, 1.08) * 0.030;
+
         rr *= curve;
         gg *= curve;
         bb *= curve;
@@ -652,31 +592,32 @@
       renderOwner: "/assets/hearth/hearth.canvas.js",
       mount: "#hearthCanvasMount",
       generation: "G3",
-      standard: "definitive-landmass-and-zoning",
+      standard: "landmass-family-zoning",
       languageLayer: "globe",
       constructionLayer: "planet",
-      firstTrueG3Standard: true,
+      ticTacToeDynamicProtocol: TIC_TAC_TOE_DYNAMIC_PROTOCOL,
+      systemicQuadAAttack: SYSTEMIC_QUAD_A_ATTACK,
       oldGlobeContractRetired: true,
-      oldShellContractRetired: true,
-      oldHydrationFirstPathRetired: true,
-      oldTerrainExpressionPathRetired: true,
+      roundBlobStandardRetired: true,
       drawPath: "single-visible-draw-path",
-      landmassCount: LANDMASSES.length,
-      landmasses: LANDMASSES.map((landmass) => ({
-        id: landmass.id,
-        name: landmass.name,
-        regions: landmass.regionX * landmass.regionY,
-        countries: landmass.countryX * landmass.countryY,
-        statesOrProvinces: landmass.stateX * landmass.stateY
+      generalRegions: GENERAL_REGIONS.map((region) => ({
+        id: region.id,
+        name: region.name,
+        countries: [region.countryPrefix, region.countryPrefix + 1, region.countryPrefix + 2, region.countryPrefix + 3],
+        summitRegions: SUMMIT_LABELS
       })),
+      totals: {
+        generalRegions: 4,
+        countries: 16,
+        summitRegionsPerGeneralRegion: 9,
+        totalSummitRegions: 36
+      },
       allowedG3: [
         "planet body",
-        "definitive landmass boundary",
-        "water/land boundary",
-        "regions",
-        "countries",
-        "states/provinces",
-        "city-zone seats"
+        "definitive landmass family",
+        "4 independently sized general regions",
+        "16 countries",
+        "9 progressive Summit regions per general region"
       ],
       deferredBeyondG3Standard: [
         "hydration",
@@ -709,16 +650,19 @@
     canvas.dataset.hearthCanvas = "true";
     canvas.dataset.contract = CONTRACT;
     canvas.dataset.generation = "G3";
-    canvas.dataset.standard = "definitive-landmass-and-zoning";
+    canvas.dataset.standard = "landmass-family-zoning";
     canvas.dataset.languageLayer = "globe";
     canvas.dataset.constructionLayer = "planet";
     canvas.dataset.drawPath = "single-visible-draw-path";
+    canvas.dataset.generalRegions = "4";
+    canvas.dataset.countries = "16";
+    canvas.dataset.summitRegionsPerGeneralRegion = "9";
     canvas.dataset.hydrationDeferred = "true";
     canvas.dataset.terrainDetailDeferred = "true";
     canvas.dataset.mountainsDeferred = "true";
     canvas.dataset.climateWeatherCloudsDeferred = "true";
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Hearth Generation 3 definitive landmass and zoning planet");
+    canvas.setAttribute("aria-label", "Hearth Generation 3 landmass-family zoning planet");
 
     mountEl.append(canvas);
 
@@ -731,10 +675,13 @@
     mountEl.dataset.hearthCanvasContract = CONTRACT;
     mountEl.dataset.hearthCanvasReceipt = RECEIPT;
     mountEl.dataset.hearthGeneration = "G3";
-    mountEl.dataset.hearthStandard = "definitive-landmass-and-zoning";
+    mountEl.dataset.hearthStandard = "landmass-family-zoning";
     mountEl.dataset.hearthLanguageLayer = "globe";
     mountEl.dataset.hearthConstructionLayer = "planet";
     mountEl.dataset.hearthDrawPath = "single-visible-draw-path";
+    mountEl.dataset.hearthGeneralRegions = "4";
+    mountEl.dataset.hearthCountries = "16";
+    mountEl.dataset.hearthSummitRegionsPerGeneralRegion = "9";
     mountEl.dataset.hearthHydrationDeferred = "true";
     mountEl.dataset.hearthTerrainDetailDeferred = "true";
     mountEl.dataset.hearthMountainsDeferred = "true";
@@ -744,7 +691,7 @@
     document.documentElement.dataset.hearthCanvasContract = CONTRACT;
     document.documentElement.dataset.hearthCanvasVersion = VERSION;
     document.documentElement.dataset.hearthGeneration = "G3";
-    document.documentElement.dataset.hearthStandard = "definitive-landmass-and-zoning";
+    document.documentElement.dataset.hearthStandard = "landmass-family-zoning";
     document.documentElement.dataset.hearthLanguageLayer = "globe";
     document.documentElement.dataset.hearthConstructionLayer = "planet";
     document.documentElement.dataset.hearthDrawPath = "single-visible-draw-path";
@@ -768,15 +715,16 @@
 
     if (runtime.observer) runtime.observer.disconnect();
 
-    const style = document.getElementById("hearth-g3-zoning-standard-style");
+    const style = document.getElementById("hearth-g3-family-standard-style");
     if (style) style.remove();
 
     if (runtime.mount) runtime.mount.replaceChildren();
 
-    window.__HEARTH_CANVAS_G3_ZONING_DISPOSE__ = null;
+    window.__HEARTH_CANVAS_G3_FAMILY_DISPOSE__ = null;
     exposeReceipt("disposed");
   }
 
+  window.__HEARTH_CANVAS_G3_FAMILY_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_ZONING_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_PLANET_BODY_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_VISIBLE_DISPOSE__ = dispose;

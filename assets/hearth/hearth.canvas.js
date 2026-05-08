@@ -1,19 +1,18 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_G2_1_MOUNT_ADOPTION_TNT_v1
+// HEARTH_G2_MODEL_RESTORE_CANVAS_TNT_v1
 // Full-file replacement.
 // Purpose:
-// - Preserve Hearth G2 surface definition.
-// - Correct mount authority.
-// - Adopt the existing Hearth visual frame instead of appending a second lower frame.
-// - No JPG. No NASA asset. No generated image. No route mutation.
+// - Restore the advanced Hearth G2 procedural model.
+// - Mount only into #hearthCanvasMount / [data-hearth-mount].
+// - No Earth placeholder.
+// - No JPG. No NASA asset. No generated image.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G2_1_MOUNT_ADOPTION_TNT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_G2_SURFACE_DEFINITION_TNT_v1";
-  const VERSION = "2026-05-08.hearth-g2-1-mount-adoption";
-  const RECEIPT = "HEARTH_G2_1_MOUNT_ADOPTION_RECEIPT";
+  const CONTRACT = "HEARTH_G2_MODEL_RESTORE_CANVAS_TNT_v1";
+  const VERSION = "2026-05-08.hearth-g2-advanced-model-restored";
+  const RECEIPT = "HEARTH_G2_ADVANCED_MODEL_RESTORED_RECEIPT";
 
   const MAP_W = 896;
   const MAP_H = 448;
@@ -22,10 +21,8 @@
   const TAU = Math.PI * 2;
   const HALF_PI = Math.PI / 2;
 
-  if (window.__HEARTH_G2_DISPOSE__) {
-    try {
-      window.__HEARTH_G2_DISPOSE__();
-    } catch (_) {}
+  if (typeof window.__HEARTH_CANVAS_G2_DISPOSE__ === "function") {
+    try { window.__HEARTH_CANVAS_G2_DISPOSE__(); } catch (_) {}
   }
 
   const runtime = {
@@ -34,15 +31,13 @@
     mounted: false,
     disposed: false,
     lastFrame: 0,
-    target: null,
-    shell: null,
+    mount: null,
     canvas: null,
     ctx: null,
     work: null,
     workCtx: null,
     image: null,
     size: 0,
-    pixelRatio: 1,
     map: null
   };
 
@@ -50,24 +45,26 @@
   const lerp = (a, b, t) => a + (b - a) * t;
   const mix = (a, b, t) => Math.round(lerp(a, b, clamp(t, 0, 1)));
 
-  const smoothstep = (a, b, x) => {
+  function smoothstep(a, b, x) {
     const t = clamp((x - a) / (b - a), 0, 1);
     return t * t * (3 - 2 * t);
-  };
+  }
 
-  const wrapLon = (lon) => {
+  function wrapLon(lon) {
     let v = lon;
     while (v < -180) v += 360;
     while (v > 180) v -= 360;
     return v;
-  };
+  }
 
-  const lonDelta = (a, b) => wrapLon(a - b);
+  function lonDelta(a, b) {
+    return wrapLon(a - b);
+  }
 
-  const normalize3 = (v) => {
+  function normalize3(v) {
     const l = Math.hypot(v[0], v[1], v[2]) || 1;
     return [v[0] / l, v[1] / l, v[2] / l];
-  };
+  }
 
   const LIGHT = normalize3([-0.48, -0.32, 0.82]);
   const HALF_LIGHT = normalize3([LIGHT[0], LIGHT[1], LIGHT[2] + 1.0]);
@@ -110,7 +107,7 @@
   }
 
   const CONTINENT_SEEDS = [
-    { lon: -103, lat: 48, rx: 42, ry: 26, amp: 1.1 },
+    { lon: -103, lat: 48, rx: 42, ry: 26, amp: 1.10 },
     { lon: -84, lat: 20, rx: 22, ry: 16, amp: 0.58 },
     { lon: -60, lat: -16, rx: 25, ry: 38, amp: 0.95 },
     { lon: 20, lat: 4, rx: 28, ry: 36, amp: 0.92 },
@@ -210,6 +207,7 @@
           bb = mix(bb, 122, shore * 0.25);
 
           const grain = (terrainNoise - 0.5) * 22;
+
           r[idx] = clamp(rr + grain, 0, 255);
           g[idx] = clamp(gg + grain * 0.85, 0, 255);
           b[idx] = clamp(bb + grain * 0.65, 0, 255);
@@ -232,6 +230,7 @@
           bb = mix(bb, 101, abyss * depth * 0.28);
 
           const flow = (current - 0.5) * 18;
+
           r[idx] = clamp(rr + flow * 0.22, 0, 255);
           g[idx] = clamp(gg + flow * 0.58, 0, 255);
           b[idx] = clamp(bb + flow, 0, 255);
@@ -261,224 +260,43 @@
     return y * MAP_W + x;
   }
 
-  function isElementVisible(el) {
-    if (!el || !(el instanceof HTMLElement)) return false;
-    const rect = el.getBoundingClientRect();
-    if (rect.width < 180 || rect.height < 180) return false;
+  function getMount() {
+    const mount =
+      document.getElementById("hearthCanvasMount") ||
+      document.querySelector("[data-hearth-mount]") ||
+      document.querySelector("[data-render='hearth']");
 
-    const style = window.getComputedStyle(el);
-    if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return false;
+    if (mount) return mount;
 
-    return true;
-  }
-
-  function cleanupOldGeneratedShells() {
-    const selectors = [
-      `.hearth-g2-shell[data-contract="${PREVIOUS_CONTRACT}"]`,
-      `.hearth-g2-shell[data-contract="${CONTRACT}"]`,
-      `.hearth-g2-shell[data-receipt="HEARTH_G2_SURFACE_DEFINITION_RECEIPT"]`,
-      `.hearth-g2-shell[data-receipt="${RECEIPT}"]`,
-      `canvas[data-hearth-canvas="g2"][data-contract="${PREVIOUS_CONTRACT}"]`,
-      `canvas[data-hearth-canvas="g2"][data-contract="${CONTRACT}"]`
-    ];
-
-    for (const selector of selectors) {
-      document.querySelectorAll(selector).forEach((el) => {
-        const shell = el.classList && el.classList.contains("hearth-g2-shell")
-          ? el
-          : el.closest(".hearth-g2-shell");
-
-        if (shell && shell.parentElement) {
-          shell.remove();
-          return;
-        }
-
-        if (el.parentElement) {
-          el.remove();
-        }
-      });
-    }
-  }
-
-  function elementTokenScore(el) {
-    const token = `${el.id || ""} ${el.className || ""} ${Object.keys(el.dataset || {}).join(" ")}`.toLowerCase();
-    let score = 0;
-
-    if (token.includes("hearth")) score += 120;
-    if (token.includes("heart")) score += 70;
-    if (token.includes("canvas")) score += 100;
-    if (token.includes("render")) score += 100;
-    if (token.includes("stage")) score += 90;
-    if (token.includes("mount")) score += 90;
-    if (token.includes("viewport")) score += 80;
-    if (token.includes("sphere")) score += 70;
-    if (token.includes("globe")) score += 70;
-    if (token.includes("planet")) score += 50;
-    if (token.includes("visual")) score += 45;
-    if (token.includes("frame")) score += 45;
-
-    return score;
-  }
-
-  function geometricFrameScore(el) {
-    if (!isElementVisible(el)) return -Infinity;
-
-    const tag = el.tagName.toLowerCase();
-    if (["html", "body", "main", "header", "nav", "footer", "script", "style"].includes(tag)) return -Infinity;
-    if (el.closest("nav, header, footer")) return -Infinity;
-
-    const rect = el.getBoundingClientRect();
-    const style = window.getComputedStyle(el);
-    const text = (el.textContent || "").replace(/\s+/g, " ").trim();
-
-    if (text.length > 140) return -Infinity;
-    if (el.querySelector("a, button, input, select, textarea")) return -Infinity;
-
-    const aspect = rect.width / rect.height;
-    if (aspect < 0.62 || aspect > 1.62) return -Infinity;
-
-    let score = 0;
-    score += elementTokenScore(el);
-
-    const size = Math.min(rect.width, rect.height);
-    score += clamp(size, 180, 760) * 0.18;
-
-    const aspectPenalty = Math.abs(1 - aspect) * 80;
-    score -= aspectPenalty;
-
-    const borderRadius = parseFloat(style.borderRadius || "0") || 0;
-    const borderTopWidth = parseFloat(style.borderTopWidth || "0") || 0;
-    const background = style.backgroundColor || "";
-
-    if (borderRadius > 8) score += 18;
-    if (borderTopWidth > 0) score += 18;
-    if (background && background !== "rgba(0, 0, 0, 0)" && background !== "transparent") score += 16;
-
-    if (text.length === 0) score += 75;
-    if (text.length > 0 && text.length <= 40) score += 20;
-
-    score -= Math.max(0, rect.top) * 0.035;
-
-    return score;
-  }
-
-  function findExplicitMount() {
-    const selectors = [
-      "#hearthCanvasMount",
-      "#hearth-canvas-mount",
-      "#hearthRender",
-      "#hearth-render",
-      "#hearthStage",
-      "#hearth-stage",
-      "#hearthViewport",
-      "#hearth-viewport",
-      "#hearthFrame",
-      "#hearth-frame",
-      "#hearthPlanet",
-      "#hearth-planet",
-      "[data-hearth-mount]",
-      "[data-hearth-render]",
-      "[data-hearth-stage]",
-      "[data-hearth-viewport]",
-      "[data-hearth-frame]",
-      "[data-render='hearth']",
-      "[data-planet='hearth']",
-      "[data-body='hearth']",
-      "[data-canvas='hearth']",
-      ".hearth-canvas-mount",
-      ".hearth-render",
-      ".hearth-stage",
-      ".hearth-viewport",
-      ".hearth-frame",
-      ".hearth-planet",
-      ".hearth-orb",
-      ".planet-stage[data-planet='hearth']",
-      ".planet-canvas-mount[data-planet='hearth']"
-    ];
-
-    for (const selector of selectors) {
-      const el = document.querySelector(selector);
-      if (el && isElementVisible(el)) {
-        return {
-          el,
-          mode: "adopt",
-          reason: `explicit:${selector}`
-        };
-      }
-    }
-
-    return null;
-  }
-
-  function findBlankVisualFrame() {
-    const root =
-      document.querySelector("[data-route='/hearth/']") ||
-      document.querySelector("[data-route='/heart/']") ||
-      document.querySelector("main") ||
-      document.body;
-
-    const candidates = Array.from(root.querySelectorAll("section, article, div, figure"))
-      .map((el) => ({ el, score: geometricFrameScore(el) }))
-      .filter((entry) => Number.isFinite(entry.score))
-      .sort((a, b) => b.score - a.score);
-
-    if (candidates.length) {
-      return {
-        el: candidates[0].el,
-        mode: "adopt",
-        reason: `geometric:${Math.round(candidates[0].score)}`
-      };
-    }
-
-    return null;
-  }
-
-  function findFallbackMount() {
     const main = document.querySelector("main") || document.body;
-
-    return {
-      el: main,
-      mode: "append",
-      reason: "fallback:main"
-    };
+    const fallback = document.createElement("section");
+    fallback.id = "hearthCanvasMount";
+    fallback.dataset.hearthMount = "";
+    fallback.dataset.hearthFallbackMount = "true";
+    fallback.dataset.contract = CONTRACT;
+    fallback.style.width = "100%";
+    fallback.style.aspectRatio = "1 / 1";
+    fallback.style.minHeight = "280px";
+    main.appendChild(fallback);
+    return fallback;
   }
 
-  function resolveMount() {
-    cleanupOldGeneratedShells();
-
-    return findExplicitMount() || findBlankVisualFrame() || findFallbackMount();
-  }
-
-  function installStyles() {
-    const id = "hearth-g2-style";
-    const old = document.getElementById(id);
-    if (old) old.remove();
+  function installStyle() {
+    const prior = document.getElementById("hearth-g2-model-style");
+    if (prior) prior.remove();
 
     const style = document.createElement("style");
-    style.id = id;
+    style.id = "hearth-g2-model-style";
     style.textContent = `
-      .hearth-g2-shell {
+      #hearthCanvasMount,
+      [data-hearth-mount] {
         position: relative;
-        width: min(100%, 760px);
-        aspect-ratio: 1 / 1;
-        margin: 0 auto;
-        border-radius: 28px;
         overflow: hidden;
-        background:
-          radial-gradient(circle at 50% 46%, rgba(42, 83, 116, 0.28), transparent 48%),
-          radial-gradient(circle at 50% 50%, rgba(8, 22, 38, 0.90), rgba(3, 9, 18, 0.98) 74%);
-        border: 1px solid rgba(138, 176, 208, 0.24);
-        box-shadow:
-          inset 0 0 42px rgba(117, 178, 225, 0.10),
-          0 24px 80px rgba(0, 0, 0, 0.36);
         isolation: isolate;
       }
 
-      .hearth-g2-shell[data-hearth-adopted-frame="true"] {
-        min-height: 280px;
-      }
-
-      .hearth-g2-canvas {
+      #hearthCanvasMount canvas[data-hearth-canvas],
+      [data-hearth-mount] canvas[data-hearth-canvas] {
         position: absolute;
         inset: 0;
         display: block;
@@ -486,146 +304,26 @@
         height: 100%;
         touch-action: manipulation;
       }
-
-      .hearth-g2-receipt {
-        position: absolute;
-        left: 16px;
-        bottom: 14px;
-        z-index: 2;
-        padding: 6px 8px;
-        border-radius: 999px;
-        font: 700 10px/1.1 ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: rgba(214, 232, 244, 0.72);
-        background: rgba(4, 14, 25, 0.42);
-        border: 1px solid rgba(135, 187, 221, 0.18);
-        pointer-events: none;
-        user-select: none;
-      }
-
-      @media (max-width: 520px) {
-        .hearth-g2-shell {
-          border-radius: 22px;
-        }
-
-        .hearth-g2-receipt {
-          display: none;
-        }
-      }
     `;
 
     document.head.appendChild(style);
   }
 
-  function prepareShell(target) {
-    if (!target || !target.el) return null;
-
-    if (target.mode === "adopt") {
-      const shell = target.el;
-
-      shell.replaceChildren();
-      shell.classList.add("hearth-g2-shell");
-      shell.dataset.hearthAdoptedFrame = "true";
-      shell.dataset.hearthMountReason = target.reason || "adopted";
-      shell.dataset.contract = CONTRACT;
-      shell.dataset.previousContract = PREVIOUS_CONTRACT;
-      shell.dataset.version = VERSION;
-      shell.dataset.receipt = RECEIPT;
-
-      return shell;
-    }
-
-    const shell = document.createElement("section");
-    shell.className = "hearth-g2-shell";
-    shell.dataset.hearthAdoptedFrame = "false";
-    shell.dataset.hearthMountReason = target.reason || "appended";
-    shell.dataset.contract = CONTRACT;
-    shell.dataset.previousContract = PREVIOUS_CONTRACT;
-    shell.dataset.version = VERSION;
-    shell.dataset.receipt = RECEIPT;
-
-    target.el.appendChild(shell);
-    return shell;
-  }
-
-  function mount() {
-    installStyles();
-
-    const target = resolveMount();
-    const shell = prepareShell(target);
-
-    if (!shell) return false;
-
-    const canvas = document.createElement("canvas");
-    canvas.className = "hearth-g2-canvas";
-    canvas.dataset.hearthCanvas = "g2";
-    canvas.dataset.contract = CONTRACT;
-    canvas.dataset.previousContract = PREVIOUS_CONTRACT;
-    canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Hearth Generation 2.1 procedural hybrid simulation Earth render");
-
-    const receipt = document.createElement("div");
-    receipt.className = "hearth-g2-receipt";
-    receipt.textContent = "Hearth G2.1 · Mount Adopted";
-
-    shell.append(canvas, receipt);
-
-    runtime.target = target;
-    runtime.shell = shell;
-    runtime.canvas = canvas;
-    runtime.ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
-    runtime.work = document.createElement("canvas");
-    runtime.workCtx = runtime.work.getContext("2d", { alpha: true, willReadFrequently: false });
-    runtime.map = makeTexture();
-
-    document.documentElement.dataset.hearthContract = CONTRACT;
-    document.documentElement.dataset.hearthVersion = VERSION;
-    document.documentElement.dataset.hearthRouteStable = "true";
-    document.documentElement.dataset.hearthMountAdopted = target.mode === "adopt" ? "true" : "false";
-    document.documentElement.dataset.hearthMountReason = target.reason || "unknown";
-
-    window.HEARTH_G2_RECEIPT = Object.freeze({
-      receipt: RECEIPT,
-      contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      version: VERSION,
-      route: location.pathname,
-      externalImages: false,
-      nasaAsset: false,
-      generatedImage: false,
-      renderOwner: "/assets/hearth/hearth.canvas.js",
-      surface: "procedural-earth-hybrid-g2-1",
-      mountMode: target.mode,
-      mountReason: target.reason,
-      status: "mounted"
-    });
-
-    runtime.resizeObserver = new ResizeObserver(resize);
-    runtime.resizeObserver.observe(shell);
-    window.addEventListener("resize", resize, { passive: true });
-
-    resize();
-
-    runtime.mounted = true;
-    runtime.raf = requestAnimationFrame(loop);
-
-    return true;
-  }
-
   function resize() {
-    if (!runtime.shell || !runtime.canvas || !runtime.ctx) return;
+    if (!runtime.mount || !runtime.canvas) return;
 
-    const rect = runtime.shell.getBoundingClientRect();
-    const cssSize = Math.max(MIN_RENDER_SIZE, Math.floor(Math.min(rect.width || MIN_RENDER_SIZE, rect.height || rect.width || MIN_RENDER_SIZE)));
+    const rect = runtime.mount.getBoundingClientRect();
+    const cssSize = Math.max(
+      MIN_RENDER_SIZE,
+      Math.floor(Math.min(rect.width || MIN_RENDER_SIZE, rect.height || rect.width || MIN_RENDER_SIZE))
+    );
+
     const dpr = clamp(window.devicePixelRatio || 1, 1, 2);
     const px = Math.max(MIN_RENDER_SIZE, Math.floor(cssSize * dpr));
+    const workSize = Math.max(MIN_RENDER_SIZE, Math.min(MAX_RENDER_SIZE, px));
 
     runtime.canvas.width = px;
     runtime.canvas.height = px;
-    runtime.pixelRatio = dpr;
-
-    const workSize = Math.max(MIN_RENDER_SIZE, Math.min(MAX_RENDER_SIZE, Math.floor(px)));
 
     if (runtime.size !== workSize) {
       runtime.size = workSize;
@@ -717,9 +415,9 @@
         const light = clamp(nx * LIGHT[0] + ny * LIGHT[1] + nz * LIGHT[2], 0, 1);
         const shade = 0.38 + light * 0.68;
         const limb = Math.pow(1 - z, 1.65);
-        const edgeOcean = !isLand ? Math.pow(coast, 1.15) : 0;
 
-        if (edgeOcean > 0.05) {
+        if (!isLand && coast > 0.05) {
+          const edgeOcean = Math.pow(coast, 1.15);
           rr = mix(rr, 42, edgeOcean * 0.28);
           gg = mix(gg, 172, edgeOcean * 0.38);
           bb = mix(bb, 183, edgeOcean * 0.34);
@@ -740,7 +438,10 @@
           bb = mix(bb, 248, spec * 0.34);
         }
 
-        const cloudAlpha = smoothstep(0.28, 0.92, cloud) * (0.38 + 0.18 * light) * (1 - limb * 0.45);
+        const cloudAlpha =
+          smoothstep(0.28, 0.92, cloud) *
+          (0.38 + 0.18 * light) *
+          (1 - limb * 0.45);
 
         if (cloudAlpha > 0.01) {
           const cloudTone = isLand && h > 0.45 ? 224 : 236;
@@ -799,7 +500,6 @@
     wctx.restore();
 
     wctx.save();
-    wctx.globalCompositeOperation = "source-over";
 
     wctx.beginPath();
     wctx.arc(cx, cy, radius * 1.003, 0, TAU);
@@ -822,13 +522,12 @@
     const w = canvas.width;
     const h = canvas.height;
 
-    if (!w || !h) return;
+    if (!w || !h || !runtime.image) return;
 
     paintBackplate(ctx, w, h, time);
     paintSphere(time);
 
-    const size = Math.min(w, h);
-    const drawSize = size;
+    const drawSize = Math.min(w, h);
     const dx = (w - drawSize) * 0.5;
     const dy = (h - drawSize) * 0.5;
 
@@ -863,8 +562,8 @@
 
     const lines = 22;
     for (let i = 0; i < lines; i += 1) {
-      const y = h * (i / lines);
-      ctx.fillRect(0, y, w, 1);
+      const yy = h * (i / lines);
+      ctx.fillRect(0, yy, w, 1);
     }
 
     ctx.restore();
@@ -881,33 +580,81 @@
     runtime.raf = requestAnimationFrame(loop);
   }
 
+  function mount() {
+    installStyle();
+
+    const mountEl = getMount();
+    mountEl.replaceChildren();
+
+    const canvas = document.createElement("canvas");
+    canvas.dataset.hearthCanvas = "true";
+    canvas.dataset.contract = CONTRACT;
+    canvas.setAttribute("role", "img");
+    canvas.setAttribute("aria-label", "Hearth G2 advanced procedural hybrid simulation Earth model");
+
+    mountEl.appendChild(canvas);
+
+    runtime.mount = mountEl;
+    runtime.canvas = canvas;
+    runtime.ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
+    runtime.work = document.createElement("canvas");
+    runtime.workCtx = runtime.work.getContext("2d", { alpha: true, willReadFrequently: false });
+    runtime.map = makeTexture();
+
+    mountEl.dataset.hearthCanvasContract = CONTRACT;
+    mountEl.dataset.hearthCanvasReceipt = RECEIPT;
+    mountEl.dataset.hearthRenderOwner = "/assets/hearth/hearth.canvas.js";
+    mountEl.dataset.earthPlaceholder = "false";
+
+    document.documentElement.dataset.hearthCanvasLoaded = "true";
+    document.documentElement.dataset.hearthCanvasContract = CONTRACT;
+    document.documentElement.dataset.hearthCanvasVersion = VERSION;
+    document.documentElement.dataset.hearthExternalImages = "false";
+    document.documentElement.dataset.hearthNasaAsset = "false";
+    document.documentElement.dataset.hearthGeneratedImage = "false";
+    document.documentElement.dataset.hearthEarthPlaceholder = "false";
+
+    window.HEARTH_CANVAS_RECEIPT = Object.freeze({
+      receipt: RECEIPT,
+      contract: CONTRACT,
+      version: VERSION,
+      route: location.pathname,
+      renderOwner: "/assets/hearth/hearth.canvas.js",
+      mount: "#hearthCanvasMount",
+      externalImages: false,
+      nasaAsset: false,
+      generatedImage: false,
+      earthPlaceholder: false,
+      status: "mounted"
+    });
+
+    runtime.resizeObserver = new ResizeObserver(resize);
+    runtime.resizeObserver.observe(mountEl);
+    window.addEventListener("resize", resize, { passive: true });
+
+    resize();
+
+    runtime.mounted = true;
+    runtime.raf = requestAnimationFrame(loop);
+  }
+
   function dispose() {
     runtime.disposed = true;
-
     cancelAnimationFrame(runtime.raf);
     window.removeEventListener("resize", resize);
 
-    if (runtime.resizeObserver) {
-      runtime.resizeObserver.disconnect();
-    }
+    if (runtime.resizeObserver) runtime.resizeObserver.disconnect();
 
-    const style = document.getElementById("hearth-g2-style");
+    const style = document.getElementById("hearth-g2-model-style");
     if (style) style.remove();
 
-    if (runtime.shell) {
-      runtime.shell.classList.remove("hearth-g2-shell");
-      runtime.shell.removeAttribute("data-hearth-adopted-frame");
-      runtime.shell.removeAttribute("data-hearth-mount-reason");
-      runtime.shell.removeAttribute("data-contract");
-      runtime.shell.removeAttribute("data-previous-contract");
-      runtime.shell.removeAttribute("data-version");
-      runtime.shell.removeAttribute("data-receipt");
-      runtime.shell.replaceChildren();
-    }
+    if (runtime.mount) runtime.mount.replaceChildren();
 
-    window.__HEARTH_G2_DISPOSE__ = null;
+    window.__HEARTH_CANVAS_G2_DISPOSE__ = null;
   }
 
+  window.__HEARTH_CANVAS_G2_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_DISPOSE__ = dispose;
   window.__HEARTH_G2_DISPOSE__ = dispose;
 
   function boot() {

@@ -1,29 +1,25 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_G3_DEFINITIVE_LANDMASS_AND_ZONING_ROUTE_CONTROLLER_TNT_v1
+// HEARTH_G3_LANDMASS_FAMILY_ZONING_ROUTE_CONTROLLER_TNT_v1
 // Full-file replacement.
-// Purpose:
-// - Load the first true Hearth G3 standard.
-// - Retire prior globe-render / shell / visual fallback contracts from live authority.
-// - Keep "globe" as route language only.
-// - Load one active planet construction canvas.
-// - No hydration, mountains, weather, climate, clouds, humidity, or atmospheric moisture.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_DEFINITIVE_LANDMASS_AND_ZONING_ROUTE_CONTROLLER_TNT_v1";
-  const VERSION = "2026-05-08.hearth-g3-definitive-landmass-zoning-route-controller";
-  const RECEIPT = "HEARTH_G3_DEFINITIVE_LANDMASS_AND_ZONING_ROUTE_RECEIPT";
+  const CONTRACT = "HEARTH_G3_LANDMASS_FAMILY_ZONING_ROUTE_CONTROLLER_TNT_v1";
+  const VERSION = "2026-05-08.hearth-g3-landmass-family-zoning-route-controller";
+  const RECEIPT = "HEARTH_G3_LANDMASS_FAMILY_ZONING_ROUTE_RECEIPT";
 
-  const CANVAS_SRC = "/assets/hearth/hearth.canvas.js?v=hearth-g3-definitive-landmass-zoning-standard-v1";
+  const CANVAS_SRC = "/assets/hearth/hearth.canvas.js?v=hearth-g3-landmass-family-zoning-standard-v1";
   const EXPECTED_ROUTE = "/showroom/globe/hearth/";
 
   const RETIRED_CONTRACT_MARKERS = Object.freeze([
     "HEARTH_G2_MODEL_RESTORE_HTML_JS_ASSET_TNT_v1",
     "HEARTH_G3_VISIBLE_PLANET_EXECUTION_RESTORE_TNT_v2",
     "HEARTH_G3_PLANET_BODY_SINGLE_DRAW_PATH_FULL_REPLACEMENT_TNT_v1",
+    "HEARTH_G3_DEFINITIVE_LANDMASS_AND_ZONING_STANDARD_TNT_v1",
     "hearth-g2-model-restore",
     "hearth-g3-visible-planet",
+    "hearth-g3-definitive-landmass-zoning",
     "hearth-g3-10-chain-aligned",
     "hearth-g3-7-hydration",
     "model-restore",
@@ -44,11 +40,15 @@
     document.documentElement.dataset.hearthRouteControllerStatus = status;
     document.documentElement.dataset.hearthExpectedRoute = EXPECTED_ROUTE;
     document.documentElement.dataset.hearthGeneration = "G3";
-    document.documentElement.dataset.hearthStandard = "definitive-landmass-and-zoning";
+    document.documentElement.dataset.hearthStandard = "landmass-family-zoning";
     document.documentElement.dataset.hearthLanguageLayer = "globe";
     document.documentElement.dataset.hearthConstructionLayer = "planet";
+    document.documentElement.dataset.hearthGeneralRegions = "4";
+    document.documentElement.dataset.hearthCountries = "16";
+    document.documentElement.dataset.hearthSummitRegionsPerGeneralRegion = "9";
     document.documentElement.dataset.hearthCanvasSrc = CANVAS_SRC;
     document.documentElement.dataset.hearthPriorGlobeContractRetired = "true";
+    document.documentElement.dataset.hearthRoundBlobStandardRetired = "true";
     document.documentElement.dataset.hearthHydrationDeferred = "true";
     document.documentElement.dataset.hearthTerrainDetailDeferred = "true";
     document.documentElement.dataset.hearthMountainsDeferred = "true";
@@ -60,6 +60,7 @@
 
   function callKnownDisposers() {
     [
+      "__HEARTH_CANVAS_G3_FAMILY_DISPOSE__",
       "__HEARTH_CANVAS_G3_ZONING_DISPOSE__",
       "__HEARTH_CANVAS_PLANET_BODY_DISPOSE__",
       "__HEARTH_CANVAS_VISIBLE_DISPOSE__",
@@ -69,14 +70,10 @@
       "__HEARTH_G2_DISPOSE__"
     ].forEach((name) => {
       if (typeof window[name] === "function") {
-        try {
-          window[name]();
-        } catch (_) {}
+        try { window[name](); } catch (_) {}
       }
 
-      try {
-        window[name] = null;
-      } catch (_) {}
+      try { window[name] = null; } catch (_) {}
     });
   }
 
@@ -90,7 +87,7 @@
       mount.dataset.hearthMount = "true";
       mount.dataset.render = "hearth";
       mount.dataset.body = "hearth";
-      mount.setAttribute("aria-label", "Hearth G3 definitive landmass and zoning mount");
+      mount.setAttribute("aria-label", "Hearth G3 landmass-family zoning mount");
       parent.appendChild(mount);
     }
 
@@ -99,9 +96,12 @@
     mount.dataset.hearthRouteControllerReceipt = RECEIPT;
     mount.dataset.renderOwner = "/assets/hearth/hearth.canvas.js";
     mount.dataset.hearthGeneration = "G3";
-    mount.dataset.hearthStandard = "definitive-landmass-and-zoning";
+    mount.dataset.hearthStandard = "landmass-family-zoning";
     mount.dataset.hearthLanguageLayer = "globe";
     mount.dataset.hearthConstructionLayer = "planet";
+    mount.dataset.hearthGeneralRegions = "4";
+    mount.dataset.hearthCountries = "16";
+    mount.dataset.hearthSummitRegionsPerGeneralRegion = "9";
     mount.dataset.hearthHydrationDeferred = "true";
     mount.dataset.hearthTerrainDetailDeferred = "true";
     mount.dataset.hearthMountainsDeferred = "true";
@@ -139,11 +139,11 @@
   }
 
   function installRouteStyle() {
-    const prior = document.getElementById("hearth-g3-zoning-route-controller-style");
+    const prior = document.getElementById("hearth-g3-family-route-controller-style");
     if (prior) prior.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-g3-zoning-route-controller-style";
+    style.id = "hearth-g3-family-route-controller-style";
     style.textContent = `
       html,
       body {
@@ -187,7 +187,7 @@
     script.dataset.contract = CONTRACT;
     script.dataset.renderOwner = "/assets/hearth/hearth.canvas.js";
     script.dataset.generation = "G3";
-    script.dataset.standard = "definitive-landmass-and-zoning";
+    script.dataset.standard = "landmass-family-zoning";
 
     script.addEventListener("load", () => {
       stamp("canvas-asset-loaded");
@@ -239,12 +239,17 @@
       renderOwner: "/assets/hearth/hearth.canvas.js",
       canvasSrc: CANVAS_SRC,
       generation: "G3",
-      standard: "definitive-landmass-and-zoning",
+      standard: "landmass-family-zoning",
       languageLayer: "globe",
       constructionLayer: "planet",
+      generalRegions: 4,
+      countries: 16,
+      summitRegionsPerGeneralRegion: 9,
+      totalSummitRegions: 36,
       retiredContracts: [
         "old globe-render contract",
         "old shell/model-restore contract",
+        "old round-blob landmass standard",
         "old visible-planet fallback contract",
         "old hydration-first path",
         "old terrain-expression-first path",
@@ -252,12 +257,10 @@
       ],
       allowed: [
         "planet body",
-        "definitive landmasses",
-        "land/water boundary",
-        "regions",
-        "countries",
-        "states/provinces",
-        "city-zone seats"
+        "definitive landmass family",
+        "4 independently sized general regions",
+        "16 countries",
+        "9 progressive Summit regions per general region"
       ],
       deferred: [
         "hydration",

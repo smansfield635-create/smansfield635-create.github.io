@@ -1,0 +1,390 @@
+<!-- /showroom/globe/earth/index.html -->
+<!doctype html>
+<html
+  lang="en"
+  data-route="/showroom/globe/earth/"
+  data-page="earth"
+  data-contract="EARTH_ROUTE_HTML_JS_PAIR_RENEWAL_TNT_v1"
+  data-role="earth-route-shell"
+  data-route-controller="/showroom/globe/earth/index.js"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-jpg="false"
+  data-visual-pass-claimed="false"
+>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Diamond Gate Bridge · Earth</title>
+  <meta
+    name="description"
+    content="Earth inspection route. The HTML owns the shell and explicit canvas mount. The route JS owns the procedural canvas boot."
+  >
+
+  <style>
+    :root {
+      --bg0: #030913;
+      --panel: rgba(6, 14, 27, 0.86);
+      --line: rgba(135, 177, 211, 0.24);
+      --line2: rgba(135, 177, 211, 0.36);
+      --text: rgba(246, 241, 229, 0.97);
+      --muted: rgba(226, 219, 204, 0.70);
+      --gold: #ffe879;
+      --gold2: #ffd95f;
+      color-scheme: dark;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+      background: var(--bg0);
+      color: var(--text);
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 16% 10%, rgba(69, 119, 165, 0.24), transparent 24rem),
+        radial-gradient(circle at 78% 3%, rgba(55, 96, 143, 0.13), transparent 22rem),
+        linear-gradient(180deg, #0a1830 0%, #061120 55%, #03070d 100%);
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 20;
+      transform: translateY(-160%);
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #07101f;
+      font-weight: 900;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+      outline: none;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 980px);
+      margin: 0 auto;
+      padding: 24px clamp(18px, 4vw, 34px) 46px;
+    }
+
+    .masthead {
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      gap: 22px;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .brand-orb {
+      width: 112px;
+      aspect-ratio: 1 / 1;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--gold);
+      font-size: 30px;
+      font-weight: 1000;
+      letter-spacing: 0.03em;
+      background:
+        radial-gradient(circle at 34% 28%, rgba(180, 214, 238, 0.42), transparent 0 14%),
+        radial-gradient(circle at 50% 52%, rgba(14, 33, 58, 0.92), rgba(4, 10, 20, 0.98) 72%);
+      border: 1px solid rgba(137, 181, 221, 0.25);
+      box-shadow:
+        inset 0 0 28px rgba(122, 188, 244, 0.10),
+        0 20px 48px rgba(0, 0, 0, 0.34);
+    }
+
+    .brand-kicker {
+      margin: 0 0 2px;
+      color: var(--muted);
+      font-size: clamp(18px, 3vw, 23px);
+      font-weight: 900;
+      letter-spacing: 0.21em;
+      text-transform: uppercase;
+    }
+
+    .brand-title {
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(30px, 6vw, 48px);
+      line-height: 0.96;
+      font-weight: 1000;
+      letter-spacing: -0.07em;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      margin: 18px 0 40px;
+    }
+
+    .nav a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 64px;
+      padding: 0 28px;
+      border-radius: 999px;
+      border: 1px solid rgba(143, 183, 219, 0.24);
+      background: rgba(18, 34, 57, 0.72);
+      color: rgba(247, 243, 233, 0.95);
+      box-shadow:
+        inset 0 0 18px rgba(120, 179, 231, 0.05),
+        0 10px 28px rgba(0, 0, 0, 0.18);
+      font-size: clamp(20px, 4.4vw, 26px);
+      font-weight: 1000;
+      letter-spacing: -0.05em;
+    }
+
+    .nav a[aria-current="page"] {
+      color: #08101d;
+      background:
+        radial-gradient(circle at 46% 34%, #fff6a8, var(--gold2) 66%, #d8a934 100%);
+      border-color: rgba(255, 234, 124, 0.88);
+      box-shadow:
+        inset 0 0 14px rgba(255, 255, 255, 0.22),
+        0 14px 30px rgba(0, 0, 0, 0.28);
+    }
+
+    .earth-card {
+      position: relative;
+      padding: clamp(26px, 5vw, 38px);
+      border-radius: 32px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(8, 18, 33, 0.94), rgba(5, 12, 24, 0.96)),
+        radial-gradient(circle at 50% 0%, rgba(66, 116, 158, 0.18), transparent 40rem);
+      box-shadow:
+        inset 0 0 34px rgba(120, 180, 236, 0.04),
+        0 28px 80px rgba(0, 0, 0, 0.42);
+      overflow: hidden;
+    }
+
+    .earth-copy {
+      position: relative;
+      z-index: 2;
+      margin-bottom: 22px;
+    }
+
+    .earth-copy h1 {
+      margin: 0 0 18px;
+      color: var(--text);
+      font-size: clamp(40px, 8vw, 58px);
+      line-height: 0.9;
+      font-weight: 1000;
+      letter-spacing: -0.09em;
+    }
+
+    .earth-copy p {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(18px, 4.4vw, 25px);
+      font-weight: 1000;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    #earthCanvasMount {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      min-height: 280px;
+      margin: 0 auto;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid var(--line2);
+      background:
+        radial-gradient(circle at 50% 45%, rgba(43, 82, 111, 0.24), transparent 46%),
+        linear-gradient(180deg, rgba(20, 42, 66, 0.72), rgba(9, 20, 36, 0.88));
+      box-shadow:
+        inset 0 0 42px rgba(113, 174, 224, 0.08),
+        0 22px 56px rgba(0, 0, 0, 0.30);
+      isolation: isolate;
+    }
+
+    #earthCanvasMount canvas {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .route-proof {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .proof-cell {
+      min-height: 58px;
+      padding: 10px 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(135, 177, 211, 0.16);
+      background: rgba(11, 24, 42, 0.54);
+    }
+
+    .proof-cell strong {
+      display: block;
+      color: rgba(255, 232, 121, 0.94);
+      font-size: 13px;
+      line-height: 1.1;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .proof-cell span {
+      display: block;
+      margin-top: 5px;
+      color: rgba(226, 219, 204, 0.74);
+      font-size: 12px;
+      line-height: 1.25;
+      font-weight: 700;
+    }
+
+    @media (max-width: 720px) {
+      .page { padding-left: 22px; padding-right: 22px; }
+
+      .masthead {
+        grid-template-columns: 112px 1fr;
+        gap: 22px;
+      }
+
+      .nav {
+        gap: 14px;
+        margin-bottom: 40px;
+      }
+
+      .nav a {
+        min-height: 64px;
+        padding: 0 24px;
+      }
+
+      .earth-card {
+        padding: 32px 24px;
+        border-radius: 30px;
+      }
+
+      #earthCanvasMount {
+        border-radius: 26px;
+      }
+
+      .route-proof {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .brand-kicker { font-size: 18px; }
+      .brand-title { font-size: 32px; }
+
+      .nav a {
+        min-height: 62px;
+        padding: 0 22px;
+        font-size: 22px;
+      }
+
+      .earth-copy h1 { font-size: 42px; }
+      .earth-copy p { font-size: 18px; }
+
+      .route-proof {
+        display: none;
+      }
+    }
+  </style>
+
+  <script>
+    document.documentElement.dataset.earthRouteShell = "EARTH_ROUTE_HTML_JS_PAIR_RENEWAL_TNT_v1";
+    document.documentElement.dataset.earthMountAnchor = "earthCanvasMount";
+    document.documentElement.dataset.earthController = "/showroom/globe/earth/index.js";
+    document.documentElement.dataset.earthExternalImages = "false";
+  </script>
+
+  <script src="./index.js?v=earth-route-html-js-pair-renewal-v1" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#earth-main">Skip to Earth</a>
+
+  <div class="page">
+    <header class="masthead" aria-label="Diamond Gate Bridge Earth header">
+      <a class="brand-orb" href="/showroom/globe/earth/" aria-label="Earth route">E</a>
+
+      <div>
+        <p class="brand-kicker">Diamond Gate Bridge</p>
+        <p class="brand-title">Earth</p>
+      </div>
+    </header>
+
+    <nav class="nav" aria-label="Primary Earth navigation">
+      <a href="/">Compass</a>
+      <a href="/showroom/globe/">Globe Split</a>
+      <a href="/showroom/globe/earth/" aria-current="page">Earth</a>
+      <a href="/showroom/globe/hearth/">Hearth</a>
+      <a href="/showroom/globe/audralia/">Audralia</a>
+      <a href="/gauges/">Gauges</a>
+    </nav>
+
+    <main id="earth-main" class="earth-card">
+      <section class="earth-copy" aria-labelledby="earth-title">
+        <h1 id="earth-title">Earth</h1>
+        <p>Reference Inspection Route</p>
+      </section>
+
+      <section
+        id="earthCanvasMount"
+        data-earth-mount
+        data-earth-render
+        data-render="earth"
+        data-planet="earth"
+        data-body="earth"
+        data-contract="EARTH_ROUTE_HTML_JS_PAIR_RENEWAL_TNT_v1"
+        data-earth-mount-ready="true"
+        aria-label="Earth canvas render mount"
+      ></section>
+
+      <aside class="route-proof" aria-label="Earth route proof">
+        <div class="proof-cell">
+          <strong>HTML</strong>
+          <span>Route shell present</span>
+        </div>
+
+        <div class="proof-cell">
+          <strong>JS</strong>
+          <span>Controller present</span>
+        </div>
+
+        <div class="proof-cell">
+          <strong>Mount</strong>
+          <span>Explicit canvas frame</span>
+        </div>
+
+        <div class="proof-cell">
+          <strong>404</strong>
+          <span>Route index restored</span>
+        </div>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>

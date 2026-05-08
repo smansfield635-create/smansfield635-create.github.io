@@ -1,15 +1,15 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_G3_BOUNDARY_ALIGNMENT_ROUTE_CONTROLLER_TNT_v1
+// HEARTH_G3_ROUTE_RESTORATION_CONTROLLER_TNT_v1
 // Full-file replacement.
 // Family: HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_BOUNDARY_ALIGNMENT_ROUTE_CONTROLLER_TNT_v1";
+  const CONTRACT = "HEARTH_G3_ROUTE_RESTORATION_CONTROLLER_TNT_v1";
   const FAMILY_CONTRACT = "HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1";
-  const VERSION = "2026-05-08.hearth-g3-boundary-alignment-route-controller";
-  const RECEIPT = "HEARTH_G3_BOUNDARY_ALIGNMENT_ROUTE_RECEIPT";
+  const VERSION = "2026-05-08.hearth-g3-route-restoration-controller";
+  const RECEIPT = "HEARTH_G3_ROUTE_RESTORATION_CONTROLLER_RECEIPT";
   const KEY = "hearth-g3-boundary-alignment-all-five-files-v1";
 
   const EXPECTED_ROUTE = "/showroom/globe/hearth/";
@@ -90,18 +90,23 @@
       "__HEARTH_G2_DISPOSE__"
     ].forEach((name) => {
       if (typeof window[name] === "function") {
-        try { window[name](); } catch (_) {}
+        try {
+          window[name]();
+        } catch (_) {}
       }
-      try { window[name] = null; } catch (_) {}
+
+      try {
+        window[name] = null;
+      } catch (_) {}
     });
   }
 
   function installRouteStyle() {
-    const prior = document.getElementById("hearth-boundary-route-controller-style");
+    const prior = document.getElementById("hearth-route-restoration-controller-style");
     if (prior) prior.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-boundary-route-controller-style";
+    style.id = "hearth-route-restoration-controller-style";
     style.textContent = `
       html,
       body {
@@ -210,8 +215,10 @@
       script.dataset.hearthScriptRole = role;
       script.dataset.contract = CONTRACT;
       script.dataset.familyContract = FAMILY_CONTRACT;
+
       script.addEventListener("load", () => resolve(script), { once: true });
       script.addEventListener("error", () => reject(new Error(`Failed to load ${src}`)), { once: true });
+
       document.head.appendChild(script);
       state.scripts.push(script);
     });
@@ -222,6 +229,7 @@
 
     document.querySelectorAll("script[src]").forEach((script) => {
       const src = script.getAttribute("src") || "";
+
       RETIRED_MARKERS.forEach((marker) => {
         if (src.includes(marker)) offenders.push(src);
       });
@@ -229,6 +237,7 @@
 
     document.documentElement.dataset.hearthRetiredScriptOffenderCount = String(offenders.length);
     document.documentElement.dataset.hearthRetiredScriptOffenders = offenders.length ? offenders.join(" | ") : "none";
+
     return offenders;
   }
 
@@ -310,13 +319,34 @@
       stamp("canvas-loaded");
 
       cleanupRetiredFrames();
+
       const offenders = assertNoRetiredLiveScripts();
+      const status = offenders.length ? "ready-with-retired-script-warning" : "ready";
 
       document.body.dataset.hearthRouteReady = "true";
       document.body.dataset.hearthCanvasAssetLoaded = "true";
-      exposeReceipt(offenders.length ? "ready-with-retired-script-warning" : "ready");
-      stamp(offenders.length ? "ready-with-retired-script-warning" : "ready");
+
+      exposeReceipt(status);
+      stamp(status);
     } catch (error) {
+      const message = error && error.message ? error.message : "unknown Hearth route controller error";
+
       document.body.dataset.hearthRouteReady = "false";
       document.body.dataset.hearthCanvasAssetLoaded = "false";
-      document.documentElement.dataset.hearthRouteControllerError = error
+      document.documentElement.dataset.hearthRouteControllerError = message;
+
+      exposeReceipt("asset-load-error");
+      stamp("asset-load-error");
+
+      if (state.mount) {
+        state.mount.dataset.hearthRouteControllerError = message;
+      }
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot, { once: true });
+  } else {
+    boot();
+  }
+})();

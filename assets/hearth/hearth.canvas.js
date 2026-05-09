@@ -1,28 +1,102 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_G3_CANVAS_CHILD_ENGINE_COMPOSITION_TNT_v1
+// HEARTH_G3_CANVAS_ADAPTIVE_HEX_SURFACE_RUNTIME_TNT_v2
 // Full-file replacement.
 // Family: HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1
 // Purpose:
-// - Compose parent terrain plus child engines.
-// - Terrain remains parent.
-// - Child engines refine terrain.
-// - Canvas renders: terrain + mountains + cliffs + valleys + beaches + islands.
-// - No GraphicBox. No image generation.
+// - Canvas owns mount, sizing, animation loop, runtime pacing, visibility pause, and final presentation.
+// - High-density Hearth hex surface owns visual frame rendering.
+// - Runtime adapts render size and frame rate for mobile performance.
+// - Terrain and child engines remain source authorities.
+// - No GraphicBox. No generated image. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_CANVAS_CHILD_ENGINE_COMPOSITION_TNT_v1";
+  const CONTRACT = "HEARTH_G3_CANVAS_ADAPTIVE_HEX_SURFACE_RUNTIME_TNT_v2";
   const FAMILY_CONTRACT = "HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1";
-  const VERSION = "2026-05-09.hearth-g3-canvas-child-engine-composition";
-  const RECEIPT = "HEARTH_G3_CANVAS_CHILD_ENGINE_COMPOSITION_RECEIPT";
+  const PREVIOUS_CONTRACT = "HEARTH_G3_CANVAS_HEX_SURFACE_CONSUMER_TNT_v1";
+  const VERSION = "2026-05-09.hearth-g3-canvas-adaptive-hex-surface-runtime";
+  const RECEIPT = "HEARTH_G3_CANVAS_ADAPTIVE_HEX_SURFACE_RUNTIME_RECEIPT";
 
   const EXPECTED_MOUNT_ID = "hearthCanvasMount";
-  const DPR_LIMIT = 2;
-  const BUFFER_MAX = 460;
-  const BUFFER_MIN = 270;
-  const FRAME_MIN_MS = 46;
-  const TAU = Math.PI * 2;
+
+  const PROFILE = Object.freeze({
+    mobileLow: {
+      name: "mobile-low",
+      dprLimit: 1.15,
+      renderMin: 260,
+      renderMax: 390,
+      frameMinMs: 120,
+      hexDensity: 190,
+      microTerrainStrength: 0.28,
+      mountainStrength: 0.40,
+      cliffStrength: 0.40,
+      valleyStrength: 0.34,
+      beachStrength: 0.34,
+      islandStrength: 0.34,
+      atmosphereStrength: 0.92
+    },
+    mobileBalanced: {
+      name: "mobile-balanced",
+      dprLimit: 1.35,
+      renderMin: 280,
+      renderMax: 470,
+      frameMinMs: 90,
+      hexDensity: 220,
+      microTerrainStrength: 0.34,
+      mountainStrength: 0.46,
+      cliffStrength: 0.46,
+      valleyStrength: 0.38,
+      beachStrength: 0.40,
+      islandStrength: 0.40,
+      atmosphereStrength: 0.96
+    },
+    mobileHigh: {
+      name: "mobile-high",
+      dprLimit: 1.55,
+      renderMin: 300,
+      renderMax: 540,
+      frameMinMs: 72,
+      hexDensity: 248,
+      microTerrainStrength: 0.38,
+      mountainStrength: 0.50,
+      cliffStrength: 0.50,
+      valleyStrength: 0.42,
+      beachStrength: 0.44,
+      islandStrength: 0.44,
+      atmosphereStrength: 1
+    },
+    desktopBalanced: {
+      name: "desktop-balanced",
+      dprLimit: 1.65,
+      renderMin: 320,
+      renderMax: 620,
+      frameMinMs: 54,
+      hexDensity: 260,
+      microTerrainStrength: 0.40,
+      mountainStrength: 0.52,
+      cliffStrength: 0.52,
+      valleyStrength: 0.44,
+      beachStrength: 0.46,
+      islandStrength: 0.46,
+      atmosphereStrength: 1
+    },
+    desktopHigh: {
+      name: "desktop-high",
+      dprLimit: 2,
+      renderMin: 340,
+      renderMax: 720,
+      frameMinMs: 46,
+      hexDensity: 268,
+      microTerrainStrength: 0.42,
+      mountainStrength: 0.52,
+      cliffStrength: 0.52,
+      valleyStrength: 0.44,
+      beachStrength: 0.46,
+      islandStrength: 0.46,
+      atmosphereStrength: 1
+    }
+  });
 
   const state = {
     canvas: null,
@@ -30,407 +104,123 @@
     mount: null,
     raf: 0,
     running: false,
+    visible: true,
+    intersecting: true,
     lastFrame: 0,
-    buffer: null,
-    bufferCtx: null,
-    imageData: null,
+    lastFrameCost: 0,
+    averageFrameCost: 0,
+    frameCostSamples: 0,
+    consecutiveSlowFrames: 0,
+    consecutiveFastFrames: 0,
+    phase: 0,
     width: 0,
     height: 0,
+    cssSize: 0,
     dpr: 1,
-    rotation: 0,
-    lastStatus: "booting"
+    profileKey: "mobileBalanced",
+    profile: PROFILE.mobileBalanced,
+    hearthHexGeometry: null,
+    lastFrameReceipt: null,
+    lastStatus: "booting",
+    resizeTimer: 0,
+    observer: null
   };
 
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
-  const lerp = (a, b, t) => a + (b - a) * clamp(t, 0, 1);
-  const mix = (a, b, t) => Math.round(lerp(a, b, t));
 
-  function smoothstep(a, b, x) {
-    const t = clamp((x - a) / ((b - a) || 1e-9), 0, 1);
-    return t * t * (3 - 2 * t);
-  }
-
-  function norm3(v) {
-    const m = Math.hypot(v[0], v[1], v[2]) || 1;
-    return [v[0] / m, v[1] / m, v[2] / m];
-  }
-
-  function rotateY(v, angle) {
-    const c = Math.cos(angle);
-    const s = Math.sin(angle);
-    return [v[0] * c + v[2] * s, v[1], -v[0] * s + v[2] * c];
-  }
-
-  function rotateX(v, angle) {
-    const c = Math.cos(angle);
-    const s = Math.sin(angle);
-    return [v[0], v[1] * c - v[2] * s, v[1] * s + v[2] * c];
-  }
-
-  function rockNoise(v, seed) {
-    return clamp(
-      0.5 +
-        Math.sin(v[0] * 31.0 + v[1] * 19.0 + v[2] * 23.0 + seed) * 0.18 +
-        Math.cos(v[0] * 47.0 - v[1] * 29.0 + v[2] * 17.0 + seed * 0.73) * 0.13 +
-        Math.sin(v[0] * 83.0 + v[1] * 61.0 - v[2] * 43.0 + seed * 1.37) * 0.08,
-      0,
-      1
+  function isMobileRuntime() {
+    return (
+      window.matchMedia("(pointer: coarse)").matches ||
+      /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "")
     );
   }
 
-  function ridgeNoise(v, seed) {
-    return clamp(
-      0.5 +
-        Math.sin(v[0] * 67.0 + v[1] * 41.0 + seed) * 0.22 +
-        Math.cos(v[2] * 73.0 - v[1] * 37.0 + seed * 0.42) * 0.16,
-      0,
-      1
-    );
+  function prefersReducedMotion() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
-  function n(value) {
-    return Number.isFinite(Number(value)) ? Number(value) : 0;
+  function initialProfileKey() {
+    if (prefersReducedMotion()) return "mobileLow";
+    return isMobileRuntime() ? "mobileBalanced" : "desktopBalanced";
   }
 
-  function color(input, fallback) {
-    if (Array.isArray(input) && input.length >= 3) {
-      return [
-        clamp(Math.round(input[0]), 0, 255),
-        clamp(Math.round(input[1]), 0, 255),
-        clamp(Math.round(input[2]), 0, 255)
-      ];
-    }
-    return fallback.slice();
+  function setProfile(key, reason = "manual") {
+    if (!PROFILE[key]) return;
+
+    state.profileKey = key;
+    state.profile = PROFILE[key];
+
+    document.documentElement.dataset.hearthCanvasRuntimeProfile = state.profile.name;
+    document.documentElement.dataset.hearthCanvasRuntimeProfileReason = reason;
+
+    resize(true);
   }
 
-  function applyMix(base, target, amount) {
-    return [
-      mix(base[0], target[0], amount),
-      mix(base[1], target[1], amount),
-      mix(base[2], target[2], amount)
-    ];
-  }
+  function degradeProfile() {
+    const next = {
+      desktopHigh: "desktopBalanced",
+      desktopBalanced: isMobileRuntime() ? "mobileBalanced" : "mobileHigh",
+      mobileHigh: "mobileBalanced",
+      mobileBalanced: "mobileLow",
+      mobileLow: "mobileLow"
+    }[state.profileKey];
 
-  function applyLight(base, amount) {
-    return [
-      clamp(Math.round(base[0] + 255 * amount), 0, 255),
-      clamp(Math.round(base[1] + 255 * amount), 0, 255),
-      clamp(Math.round(base[2] + 255 * amount), 0, 255)
-    ];
-  }
-
-  function applyDark(base, amount) {
-    return [
-      clamp(Math.round(base[0] * (1 - amount)), 0, 255),
-      clamp(Math.round(base[1] * (1 - amount)), 0, 255),
-      clamp(Math.round(base[2] * (1 - amount)), 0, 255)
-    ];
-  }
-
-  function sampleModule(name, v) {
-    const mod = window[name];
-    if (!mod || typeof mod.sampleVector !== "function") return null;
-    try {
-      return mod.sampleVector(v);
-    } catch (error) {
-      document.documentElement.dataset[`hearthCanvas${name}Error`] =
-        error && error.message ? error.message : String(error);
-      return null;
+    if (next && next !== state.profileKey) {
+      setProfile(next, "adaptive-slow-frame");
     }
   }
 
-  function receiptModule(name) {
-    const mod = window[name];
-    if (!mod || typeof mod.receipt !== "function") return null;
-    try {
-      return mod.receipt();
-    } catch (_) {
-      return null;
+  function improveProfile() {
+    if (prefersReducedMotion()) return;
+
+    const next = {
+      mobileLow: "mobileBalanced",
+      mobileBalanced: "mobileHigh",
+      mobileHigh: isMobileRuntime() ? "mobileHigh" : "desktopBalanced",
+      desktopBalanced: "desktopHigh",
+      desktopHigh: "desktopHigh"
+    }[state.profileKey];
+
+    if (next && next !== state.profileKey) {
+      setProfile(next, "adaptive-fast-stable");
     }
   }
 
-  function sampleAll(v) {
-    const terrain = sampleModule("HEARTH_TERRAIN", v);
-    const mountains = sampleModule("HEARTH_MOUNTAINS", v);
-    const cliffs = sampleModule("HEARTH_CLIFFS", v);
-    const valleys = sampleModule("HEARTH_VALLEYS", v);
-    const beaches = sampleModule("HEARTH_BEACHES", v);
-    const islands = sampleModule("HEARTH_ISLANDS", v);
+  function updateFrameCost(cost) {
+    state.lastFrameCost = cost;
+    state.frameCostSamples += 1;
 
-    return { terrain, mountains, cliffs, valleys, beaches, islands };
-  }
-
-  function shadeWater(v, sx, sy, samples, light) {
-    const terrain = samples.terrain;
-    const beach = samples.beaches && samples.beaches.active ? samples.beaches : null;
-
-    const waterDepth = clamp(n(terrain && terrain.waterDepth != null ? terrain.waterDepth : 0.72), 0, 1);
-    const shelf = clamp(n(terrain && terrain.shelf != null ? terrain.shelf : 0), 0, 1);
-    const coast = clamp(n(terrain && terrain.coast != null ? terrain.coast : 0), 0, 1);
-
-    let c = [9, 72, 132];
-
-    c = applyMix(c, [4, 34, 86], waterDepth * 0.62);
-    c = applyMix(c, [34, 170, 184], shelf * 0.66);
-    c = applyMix(c, [68, 206, 205], coast * 0.30);
-
-    if (beach) {
-      c = applyMix(c, color(beach.beachColorBias, [210, 174, 112]), clamp(n(beach.sandStrength) * 0.18, 0, 0.24));
-      c = applyLight(c, clamp(n(beach.shoreSoftness) * 0.05, 0, 0.10));
+    if (state.frameCostSamples === 1) {
+      state.averageFrameCost = cost;
+    } else {
+      state.averageFrameCost = state.averageFrameCost * 0.86 + cost * 0.14;
     }
 
-    const wave =
-      Math.sin(v[0] * 24 + v[2] * 17 + state.rotation * 2.1) * 0.018 +
-      Math.cos(v[1] * 31 - v[0] * 13 + state.rotation * 1.4) * 0.016;
+    const budget = state.profile.frameMinMs * 0.72;
 
-    c = wave > 0 ? applyLight(c, wave) : applyDark(c, -wave * 0.45);
-
-    const rim = smoothstep(0.70, 1.0, Math.hypot(sx, sy));
-    c = applyDark(c, rim * 0.28);
-    c = applyLight(c, light * 0.05);
-
-    return c;
-  }
-
-  function shadeLand(v, sx, sy, samples, light) {
-    const terrain = samples.terrain || {};
-    const mountain = samples.mountains && samples.mountains.active ? samples.mountains : null;
-    const cliff = samples.cliffs && samples.cliffs.active ? samples.cliffs : null;
-    const valley = samples.valleys && samples.valleys.active ? samples.valleys : null;
-    const beach = samples.beaches && samples.beaches.active ? samples.beaches : null;
-
-    const seed = n(terrain.globalLandformSeat || terrain.landformSeat || terrain.countryId || 1);
-    const noise = rockNoise(v, seed);
-    const ridgeTexture = ridgeNoise(v, seed * 1.7);
-
-    let c = color(terrain.color, [138, 124, 82]);
-
-    const hillStrength = clamp(n(terrain.hillStrength), 0, 1.4);
-    const mountainStrength = clamp(n(terrain.mountainStrength), 0, 1.7);
-    const cliffStrength = clamp(n(terrain.cliffStrength), 0, 1.8);
-    const valleyStrength = clamp(n(terrain.valleyStrength), 0, 1.5);
-    const rock = clamp(n(terrain.rockExposure), 0, 1.8);
-    const rigid = clamp(n(terrain.rigidLandscapeStrength), 0, 1.8);
-    const coast = clamp(n(terrain.coast), 0, 1.2);
-
-    c = applyMix(c, [118, 124, 76], hillStrength * 0.18);
-    c = applyMix(c, [216, 206, 170], mountainStrength * 0.18);
-    c = applyMix(c, [52, 54, 52], cliffStrength * 0.32);
-    c = applyMix(c, [70, 104, 72], valleyStrength * 0.24);
-    c = applyMix(c, [68, 68, 64], rock * 0.28);
-    c = applyMix(c, [52, 50, 48], rigid * 0.18);
-
-    if (mountain) {
-      c = applyMix(c, color(mountain.mountainColorBias, [226, 216, 184]), clamp(n(mountain.peakStrength) * 0.20, 0, 0.34));
-      c = applyLight(c, clamp(n(mountain.mountainHighlight), 0, 0.58));
-      c = applyDark(c, clamp(n(mountain.mountainShadow), 0, 0.42));
-      c = applyMix(c, [236, 228, 200], clamp(n(mountain.summitPressure) * 0.12, 0, 0.22));
+    if (cost > budget) {
+      state.consecutiveSlowFrames += 1;
+      state.consecutiveFastFrames = 0;
+    } else if (cost < budget * 0.42) {
+      state.consecutiveFastFrames += 1;
+      state.consecutiveSlowFrames = 0;
+    } else {
+      state.consecutiveSlowFrames = 0;
+      state.consecutiveFastFrames = 0;
     }
 
-    if (cliff) {
-      c = applyMix(c, color(cliff.cliffColorBias, [48, 50, 48]), clamp(n(cliff.cliffFaceStrength) * 0.30, 0, 0.48));
-      c = applyDark(c, clamp(n(cliff.cliffShadow), 0, 0.60));
-      c = applyLight(c, clamp(n(cliff.cliffHighlight), 0, 0.25));
-      c = applyDark(c, clamp(n(cliff.rigidBorderDetail) * 0.10, 0, 0.20));
+    if (state.consecutiveSlowFrames >= 4) {
+      state.consecutiveSlowFrames = 0;
+      degradeProfile();
     }
 
-    if (valley) {
-      c = applyMix(c, color(valley.valleyColorBias, [74, 104, 74]), clamp(n(valley.valleyDepth) * 0.24, 0, 0.40));
-      c = applyDark(c, clamp(n(valley.valleyShadow), 0, 0.38));
-      c = applyLight(c, clamp(n(valley.valleySoftLight), 0, 0.20));
+    if (state.consecutiveFastFrames >= 90) {
+      state.consecutiveFastFrames = 0;
+      improveProfile();
     }
 
-    if (beach) {
-      c = applyMix(c, color(beach.beachColorBias, [210, 174, 112]), clamp(n(beach.sandStrength) * 0.36, 0, 0.48));
-      c = applyLight(c, clamp(n(beach.shoreSoftness) * 0.10, 0, 0.18));
-    }
-
-    const fracture = (noise - 0.5) * (0.14 + rock * 0.30 + rigid * 0.22);
-    const ridgeLight = Math.max(0, ridgeTexture - 0.54) * (0.14 + mountainStrength * 0.28);
-    const lowShadow = Math.max(0, 0.55 - ridgeTexture) * (0.10 + cliffStrength * 0.20 + valleyStrength * 0.16);
-
-    c = fracture > 0 ? applyLight(c, fracture) : applyDark(c, -fracture);
-    c = applyLight(c, ridgeLight);
-    c = applyDark(c, lowShadow);
-    c = applyMix(c, [58, 200, 200], coast * 0.18);
-
-    const rim = smoothstep(0.72, 1.0, Math.hypot(sx, sy));
-    c = applyDark(c, rim * 0.22);
-    c = applyLight(c, light * 0.08);
-
-    return c;
-  }
-
-  function shadeIsland(v, sx, sy, samples, light) {
-    const island = samples.islands;
-    let c = color(island.color, [152, 132, 84]);
-
-    const noise = rockNoise(v, n(island.islandSeatNumber || 1) * 2.1);
-    const mountain = clamp(n(island.mountainStrength), 0, 1.4);
-    const cliff = clamp(n(island.cliffStrength), 0, 1.4);
-    const valley = clamp(n(island.valleyStrength), 0, 1.4);
-    const hill = clamp(n(island.hillStrength), 0, 1.4);
-
-    c = applyMix(c, [146, 136, 86], hill * 0.16);
-    c = applyMix(c, [222, 214, 182], mountain * 0.16);
-    c = applyMix(c, [58, 60, 56], cliff * 0.25);
-    c = applyMix(c, [80, 110, 76], valley * 0.18);
-
-    const texture = (noise - 0.5) * 0.18;
-    c = texture > 0 ? applyLight(c, texture) : applyDark(c, -texture);
-
-    c = applyMix(c, [62, 202, 202], clamp(n(island.coast) * 0.14, 0, 0.18));
-    c = applyLight(c, light * 0.08);
-
-    const rim = smoothstep(0.72, 1.0, Math.hypot(sx, sy));
-    c = applyDark(c, rim * 0.18);
-
-    return c;
-  }
-
-  function renderPlanet(bufferCtx, width, height, time) {
-    const imageData = state.imageData || bufferCtx.createImageData(width, height);
-    state.imageData = imageData;
-
-    const data = imageData.data;
-    const cx = width * 0.5;
-    const cy = height * 0.5;
-    const radius = Math.min(width, height) * 0.456;
-    const invRadius = 1 / radius;
-
-    state.rotation = time * 0.000055;
-
-    const axialTilt = -0.22;
-    const sun = norm3([-0.48, 0.28, 0.84]);
-    const atmosphere = [36, 170, 210];
-
-    let offset = 0;
-
-    for (let y = 0; y < height; y += 1) {
-      const sy = (y - cy) * invRadius;
-
-      for (let x = 0; x < width; x += 1) {
-        const sx = (x - cx) * invRadius;
-        const r2 = sx * sx + sy * sy;
-
-        if (r2 > 1) {
-          data[offset] = 0;
-          data[offset + 1] = 0;
-          data[offset + 2] = 0;
-          data[offset + 3] = 0;
-          offset += 4;
-          continue;
-        }
-
-        const z = Math.sqrt(1 - r2);
-        let v = [sx, -sy, z];
-
-        v = rotateX(v, axialTilt);
-        v = rotateY(v, state.rotation);
-
-        const normal = norm3([sx, -sy, z]);
-        const light = clamp(normal[0] * sun[0] + normal[1] * sun[1] + normal[2] * sun[2], 0, 1);
-        const limb = smoothstep(0.62, 1, Math.sqrt(r2));
-
-        const samples = sampleAll(v);
-        let c;
-
-        if (samples.islands && samples.islands.active && samples.islands.land && n(samples.islands.islandStrength) > 0.18) {
-          c = shadeIsland(v, sx, sy, samples, light);
-        } else if (samples.terrain && samples.terrain.land) {
-          c = shadeLand(v, sx, sy, samples, light);
-        } else {
-          c = shadeWater(v, sx, sy, samples, light);
-        }
-
-        const night = 1 - (0.38 + light * 0.62);
-        c = applyDark(c, night * 0.24);
-        c = applyMix(c, atmosphere, limb * 0.18);
-
-        data[offset] = c[0];
-        data[offset + 1] = c[1];
-        data[offset + 2] = c[2];
-        data[offset + 3] = 255;
-
-        offset += 4;
-      }
-    }
-
-    bufferCtx.putImageData(imageData, 0, 0);
-  }
-
-  function drawHalo(ctx, width, height) {
-    const cx = width * 0.5;
-    const cy = height * 0.5;
-    const radius = Math.min(width, height) * 0.456;
-
-    ctx.save();
-
-    const glow = ctx.createRadialGradient(cx, cy, radius * 0.88, cx, cy, radius * 1.30);
-    glow.addColorStop(0, "rgba(64, 194, 218, 0.15)");
-    glow.addColorStop(0.55, "rgba(38, 142, 190, 0.09)");
-    glow.addColorStop(1, "rgba(4, 12, 24, 0)");
-
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius * 1.30, 0, TAU);
-    ctx.fill();
-
-    ctx.strokeStyle = "rgba(116, 202, 228, 0.17)";
-    ctx.lineWidth = Math.max(1, width * 0.003);
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius * 1.005, 0, TAU);
-    ctx.stroke();
-
-    ctx.restore();
-  }
-
-  function drawFrame(time) {
-    if (!state.running || !state.canvas || !state.ctx || !state.buffer || !state.bufferCtx) return;
-
-    if (time - state.lastFrame < FRAME_MIN_MS) {
-      state.raf = requestAnimationFrame(drawFrame);
-      return;
-    }
-
-    state.lastFrame = time;
-
-    const ctx = state.ctx;
-    const canvas = state.canvas;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const bg = ctx.createRadialGradient(
-      canvas.width * 0.50,
-      canvas.height * 0.48,
-      canvas.width * 0.08,
-      canvas.width * 0.50,
-      canvas.height * 0.50,
-      canvas.width * 0.64
-    );
-
-    bg.addColorStop(0, "rgba(15, 39, 58, 0.94)");
-    bg.addColorStop(0.62, "rgba(4, 13, 26, 0.96)");
-    bg.addColorStop(1, "rgba(1, 5, 12, 1)");
-
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    drawHalo(ctx, canvas.width, canvas.height);
-    renderPlanet(state.bufferCtx, state.width, state.height, time);
-
-    const targetSize = Math.min(canvas.width, canvas.height);
-    const targetX = (canvas.width - targetSize) * 0.5;
-    const targetY = (canvas.height - targetSize) * 0.5;
-
-    ctx.save();
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-    ctx.drawImage(state.buffer, targetX, targetY, targetSize, targetSize);
-    ctx.restore();
-
-    stamp("rendering");
-    state.raf = requestAnimationFrame(drawFrame);
+    document.documentElement.dataset.hearthCanvasLastFrameCostMs = cost.toFixed(2);
+    document.documentElement.dataset.hearthCanvasAverageFrameCostMs = state.averageFrameCost.toFixed(2);
   }
 
   function getMount() {
@@ -449,11 +239,11 @@
   }
 
   function installStyle() {
-    const prior = document.getElementById("hearth-canvas-child-engine-composition-style");
+    const prior = document.getElementById("hearth-canvas-adaptive-hex-runtime-style");
     if (prior) prior.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-canvas-child-engine-composition-style";
+    style.id = "hearth-canvas-adaptive-hex-runtime-style";
     style.textContent = `
       #${EXPECTED_MOUNT_ID} {
         position: relative;
@@ -464,9 +254,12 @@
         isolation: isolate;
         touch-action: pan-y !important;
         border-radius: 28px;
+        background:
+          radial-gradient(circle at 50% 50%, rgba(18, 58, 86, 0.68), rgba(2, 8, 16, 0.96) 68%);
+        contain: layout paint size;
       }
 
-      #${EXPECTED_MOUNT_ID} canvas[data-hearth-canvas="child-engine-composition"] {
+      #${EXPECTED_MOUNT_ID} canvas[data-hearth-canvas="adaptive-hex-surface-runtime"] {
         position: absolute;
         inset: 0;
         display: block;
@@ -474,50 +267,70 @@
         height: 100%;
         pointer-events: none;
         touch-action: pan-y !important;
+        image-rendering: auto;
+      }
+
+      #${EXPECTED_MOUNT_ID}[data-hearth-canvas-fallback="true"]::after {
+        content: "Hearth hex surface is not available.";
+        position: absolute;
+        inset: auto 18px 18px;
+        z-index: 3;
+        padding: 12px 14px;
+        border: 1px solid rgba(228, 180, 95, 0.5);
+        border-radius: 16px;
+        background: rgba(7, 14, 24, 0.92);
+        color: #e4b45f;
+        font: 700 13px/1.35 system-ui, sans-serif;
       }
     `;
 
     document.head.appendChild(style);
   }
 
-  function resize() {
+  function resize(force = false) {
     if (!state.canvas || !state.mount) return;
 
     const rect = state.mount.getBoundingClientRect();
     const cssSize = Math.max(260, Math.min(rect.width || 360, rect.height || rect.width || 360));
-    const dpr = Math.min(window.devicePixelRatio || 1, DPR_LIMIT);
+    const dpr = Math.min(window.devicePixelRatio || 1, state.profile.dprLimit);
+    const renderSize = clamp(
+      Math.round(cssSize * dpr),
+      state.profile.renderMin,
+      state.profile.renderMax
+    );
+
+    if (!force && state.canvas.width === renderSize && state.canvas.height === renderSize) {
+      return;
+    }
 
     state.dpr = dpr;
-    state.canvas.width = Math.round(cssSize * dpr);
-    state.canvas.height = Math.round(cssSize * dpr);
+    state.cssSize = cssSize;
+    state.canvas.width = renderSize;
+    state.canvas.height = renderSize;
     state.canvas.style.width = `${cssSize}px`;
     state.canvas.style.height = `${cssSize}px`;
+    state.width = renderSize;
+    state.height = renderSize;
+    state.hearthHexGeometry = null;
+    state.lastFrameReceipt = null;
 
-    const bufferSize = clamp(Math.round(cssSize * Math.min(dpr, 1.35)), BUFFER_MIN, BUFFER_MAX);
-
-    state.width = bufferSize;
-    state.height = bufferSize;
-    state.buffer = document.createElement("canvas");
-    state.buffer.width = bufferSize;
-    state.buffer.height = bufferSize;
-    state.bufferCtx = state.buffer.getContext("2d", { alpha: true, willReadFrequently: false });
-    state.imageData = null;
-
-    document.documentElement.dataset.hearthCanvasBufferSize = String(bufferSize);
+    document.documentElement.dataset.hearthCanvasRenderSize = String(renderSize);
+    document.documentElement.dataset.hearthCanvasCssSize = String(Math.round(cssSize));
     document.documentElement.dataset.hearthCanvasDevicePixelRatio = String(dpr);
+    document.documentElement.dataset.hearthCanvasRuntimeProfile = state.profile.name;
   }
 
   function installCanvas() {
     state.mount = getMount();
-
     state.mount.querySelectorAll("canvas[data-hearth-canvas]").forEach((node) => node.remove());
 
     const canvas = document.createElement("canvas");
-    canvas.dataset.hearthCanvas = "child-engine-composition";
+    canvas.dataset.hearthCanvas = "adaptive-hex-surface-runtime";
     canvas.dataset.contract = CONTRACT;
+    canvas.dataset.previousContract = PREVIOUS_CONTRACT;
     canvas.dataset.familyContract = FAMILY_CONTRACT;
     canvas.dataset.receipt = RECEIPT;
-    canvas.setAttribute("aria-label", "Hearth G3 256 lattice child-engine composition canvas");
+    canvas.setAttribute("aria-label", "Hearth G3 adaptive high-density hex-surface planet canvas");
 
     state.mount.appendChild(canvas);
 
@@ -525,17 +338,107 @@
     state.ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: false });
 
     state.mount.dataset.hearthCanvasContract = CONTRACT;
+    state.mount.dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
     state.mount.dataset.hearthCanvasReceipt = RECEIPT;
-    state.mount.dataset.hearthCanvasConsumesTerrain = "true";
-    state.mount.dataset.hearthCanvasConsumesMountains = "true";
-    state.mount.dataset.hearthCanvasConsumesCliffs = "true";
-    state.mount.dataset.hearthCanvasConsumesValleys = "true";
-    state.mount.dataset.hearthCanvasConsumesBeaches = "true";
-    state.mount.dataset.hearthCanvasConsumesIslands = "true";
+    state.mount.dataset.hearthCanvasConsumesHexSurface = "true";
+    state.mount.dataset.hearthCanvasAdaptiveRuntime = "true";
     state.mount.dataset.hearthCanvasGeneratedImage = "false";
     state.mount.dataset.hearthCanvasGraphicBox = "false";
 
-    resize();
+    resize(true);
+  }
+
+  function clearFallback() {
+    if (!state.ctx || !state.canvas) return;
+
+    state.ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
+
+    const bg = state.ctx.createRadialGradient(
+      state.canvas.width * 0.50,
+      state.canvas.height * 0.50,
+      state.canvas.width * 0.10,
+      state.canvas.width * 0.50,
+      state.canvas.height * 0.50,
+      state.canvas.width * 0.64
+    );
+
+    bg.addColorStop(0, "rgba(18, 58, 86, 0.76)");
+    bg.addColorStop(0.65, "rgba(4, 13, 26, 0.96)");
+    bg.addColorStop(1, "rgba(1, 5, 12, 1)");
+
+    state.ctx.fillStyle = bg;
+    state.ctx.fillRect(0, 0, state.canvas.width, state.canvas.height);
+
+    if (state.mount) {
+      state.mount.dataset.hearthCanvasFallback = "true";
+    }
+  }
+
+  function getPhaseStep() {
+    if (prefersReducedMotion()) return 0.000012;
+    if (state.profileKey === "mobileLow") return 0.000032;
+    if (state.profileKey === "mobileBalanced") return 0.000044;
+    return 0.000055;
+  }
+
+  function drawFrame(time) {
+    if (!state.running || !state.canvas || !state.ctx) return;
+
+    if (!state.visible || !state.intersecting) {
+      stamp(state.visible ? "paused-offscreen" : "paused-hidden");
+      state.raf = requestAnimationFrame(drawFrame);
+      return;
+    }
+
+    if (time - state.lastFrame < state.profile.frameMinMs) {
+      state.raf = requestAnimationFrame(drawFrame);
+      return;
+    }
+
+    const frameStart = performance.now();
+
+    state.lastFrame = time;
+    state.phase = time * getPhaseStep();
+
+    const surface = window.HEARTH_HEX_SURFACE;
+
+    if (!surface || typeof surface.drawHearthHexSurfaceFrame !== "function") {
+      clearFallback();
+      stamp("waiting-for-hex-surface");
+      state.raf = requestAnimationFrame(drawFrame);
+      return;
+    }
+
+    if (state.mount) {
+      state.mount.dataset.hearthCanvasFallback = "false";
+    }
+
+    try {
+      state.lastFrameReceipt = surface.drawHearthHexSurfaceFrame(state, {
+        radiusRatio: 0.456,
+        hexDensity: state.profile.hexDensity,
+        minHexRadius: 0.92,
+        maxHexRadius: 3.3,
+        microTerrainStrength: state.profile.microTerrainStrength,
+        mountainStrength: state.profile.mountainStrength,
+        cliffStrength: state.profile.cliffStrength,
+        valleyStrength: state.profile.valleyStrength,
+        beachStrength: state.profile.beachStrength,
+        islandStrength: state.profile.islandStrength,
+        atmosphereStrength: state.profile.atmosphereStrength
+      });
+
+      const cost = performance.now() - frameStart;
+      updateFrameCost(cost);
+      stamp("rendering");
+    } catch (error) {
+      document.documentElement.dataset.hearthCanvasHexSurfaceError =
+        error && error.message ? error.message : String(error);
+      clearFallback();
+      stamp("hex-surface-error");
+    }
+
+    state.raf = requestAnimationFrame(drawFrame);
   }
 
   function stamp(status) {
@@ -543,31 +446,68 @@
 
     document.documentElement.dataset.hearthCanvasLoaded = "true";
     document.documentElement.dataset.hearthCanvasContract = CONTRACT;
+    document.documentElement.dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
     document.documentElement.dataset.hearthCanvasFamilyContract = FAMILY_CONTRACT;
     document.documentElement.dataset.hearthCanvasVersion = VERSION;
     document.documentElement.dataset.hearthCanvasReceipt = RECEIPT;
     document.documentElement.dataset.hearthCanvasStatus = status;
-    document.documentElement.dataset.hearthCanvasConsumes =
-      "terrain,mountains,cliffs,valleys,beaches,islands";
+    document.documentElement.dataset.hearthCanvasConsumes = "hex.surface";
+    document.documentElement.dataset.hearthCanvasConsumesHexSurface = "true";
+    document.documentElement.dataset.hearthCanvasAdaptiveRuntime = "true";
+    document.documentElement.dataset.hearthCanvasRuntimeProfile = state.profile.name;
+    document.documentElement.dataset.hearthCanvasRuntimeFrameMinMs = String(state.profile.frameMinMs);
     document.documentElement.dataset.hearthCanvasGeneratedImage = "false";
     document.documentElement.dataset.hearthCanvasGraphicBox = "false";
+    document.documentElement.dataset.hearthCanvasVisualPassClaimed = "false";
     document.documentElement.dataset.hearthCanvasTerrainReady = String(!!window.HEARTH_TERRAIN);
     document.documentElement.dataset.hearthCanvasMountainsReady = String(!!window.HEARTH_MOUNTAINS);
     document.documentElement.dataset.hearthCanvasCliffsReady = String(!!window.HEARTH_CLIFFS);
     document.documentElement.dataset.hearthCanvasValleysReady = String(!!window.HEARTH_VALLEYS);
     document.documentElement.dataset.hearthCanvasBeachesReady = String(!!window.HEARTH_BEACHES);
     document.documentElement.dataset.hearthCanvasIslandsReady = String(!!window.HEARTH_ISLANDS);
+    document.documentElement.dataset.hearthCanvasHexReady = String(!!window.HEARTH_HEX);
+    document.documentElement.dataset.hearthCanvasHexSurfaceReady = String(!!window.HEARTH_HEX_SURFACE);
+    document.documentElement.dataset.hearthCanvasVisible = String(state.visible);
+    document.documentElement.dataset.hearthCanvasIntersecting = String(state.intersecting);
+
+    if (state.lastFrameReceipt) {
+      document.documentElement.dataset.hearthCanvasLastFrameReceipt = String(state.lastFrameReceipt.receipt || "");
+      document.documentElement.dataset.hearthCanvasHexSamples = String(state.lastFrameReceipt.samples || 0);
+    }
+  }
+
+  function receiptModule(name) {
+    const mod = window[name];
+    if (!mod || typeof mod.receipt !== "function") return null;
+    try {
+      return mod.receipt();
+    } catch (_) {
+      return null;
+    }
   }
 
   function exposeReceipt() {
     window.HEARTH_CANVAS_RECEIPT = Object.freeze({
       receipt: RECEIPT,
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       familyContract: FAMILY_CONTRACT,
       version: VERSION,
       generation: "G3",
-      authority: "canvas-child-engine-composition",
+      authority: "canvas-adaptive-hex-surface-runtime",
+      baseline: "HEARTH_G3_HIGH_DENSITY_HEX_SURFACE_BASELINE_v1",
+      runtime: {
+        adaptive: true,
+        visibilityPause: true,
+        intersectionPause: true,
+        mobileProfiles: true,
+        frameCostAdaptiveQuality: true,
+        generatedImage: false,
+        graphicBox: false
+      },
       consumes: [
+        "HEARTH_HEX_SURFACE",
+        "HEARTH_HEX",
         "HEARTH_TERRAIN",
         "HEARTH_MOUNTAINS",
         "HEARTH_CLIFFS",
@@ -582,17 +522,33 @@
         "valley authority",
         "beach authority",
         "island authority",
+        "hex logical substrate",
+        "hex surface render method",
         "active weather",
         "clouds",
         "humidity",
         "generated images",
-        "graphic blocks"
+        "GraphicBox"
       ],
       status: () => ({
         running: state.running,
+        visible: state.visible,
+        intersecting: state.intersecting,
         width: state.width,
         height: state.height,
+        cssSize: state.cssSize,
+        dpr: state.dpr,
+        profileKey: state.profileKey,
+        profile: state.profile.name,
+        frameMinMs: state.profile.frameMinMs,
+        lastFrameCost: state.lastFrameCost,
+        averageFrameCost: state.averageFrameCost,
         lastStatus: state.lastStatus,
+        lastFrameReceipt: state.lastFrameReceipt,
+        hex: receiptModule("HEARTH_HEX"),
+        hexSurface: window.HEARTH_HEX_SURFACE && typeof window.HEARTH_HEX_SURFACE.getHearthHexSurfaceStatus === "function"
+          ? window.HEARTH_HEX_SURFACE.getHearthHexSurfaceStatus(state)
+          : null,
         terrain: receiptModule("HEARTH_TERRAIN"),
         mountains: receiptModule("HEARTH_MOUNTAINS"),
         cliffs: receiptModule("HEARTH_CLIFFS"),
@@ -603,11 +559,44 @@
     });
   }
 
+  function installVisibilityRuntime() {
+    document.addEventListener("visibilitychange", () => {
+      state.visible = document.visibilityState !== "hidden";
+      stamp(state.visible ? "visibility-resumed" : "visibility-paused");
+    });
+
+    if ("IntersectionObserver" in window && state.mount) {
+      state.observer = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          state.intersecting = Boolean(entry && entry.isIntersecting);
+          stamp(state.intersecting ? "intersection-resumed" : "intersection-paused");
+        },
+        {
+          root: null,
+          threshold: 0.05
+        }
+      );
+
+      state.observer.observe(state.mount);
+    }
+  }
+
   function boot() {
     dispose();
 
+    state.profileKey = initialProfileKey();
+    state.profile = PROFILE[state.profileKey];
+    state.visible = document.visibilityState !== "hidden";
+    state.intersecting = true;
+    state.averageFrameCost = 0;
+    state.frameCostSamples = 0;
+    state.consecutiveSlowFrames = 0;
+    state.consecutiveFastFrames = 0;
+
     installStyle();
     installCanvas();
+    installVisibilityRuntime();
     exposeReceipt();
     stamp("booted");
 
@@ -620,11 +609,11 @@
   }
 
   function handleResize() {
-    clearTimeout(handleResize._timer);
-    handleResize._timer = setTimeout(() => {
-      resize();
+    clearTimeout(state.resizeTimer);
+    state.resizeTimer = setTimeout(() => {
+      resize(true);
       stamp("resized");
-    }, 120);
+    }, 160);
   }
 
   function dispose() {
@@ -635,26 +624,34 @@
       state.raf = 0;
     }
 
+    if (state.observer) {
+      try {
+        state.observer.disconnect();
+      } catch (_) {}
+      state.observer = null;
+    }
+
     window.removeEventListener("resize", handleResize);
     window.removeEventListener("orientationchange", handleResize);
 
-    const priorStyle = document.getElementById("hearth-canvas-child-engine-composition-style");
+    const priorStyle = document.getElementById("hearth-canvas-adaptive-hex-runtime-style");
     if (priorStyle) priorStyle.remove();
 
     const mount = document.getElementById(EXPECTED_MOUNT_ID);
     if (mount) {
-      mount.querySelectorAll('canvas[data-hearth-canvas="child-engine-composition"]').forEach((node) => node.remove());
+      mount.querySelectorAll('canvas[data-hearth-canvas="adaptive-hex-surface-runtime"]').forEach((node) => node.remove());
     }
 
     state.canvas = null;
     state.ctx = null;
-    state.buffer = null;
-    state.bufferCtx = null;
-    state.imageData = null;
+    state.hearthHexGeometry = null;
+    state.lastFrameReceipt = null;
 
     document.documentElement.dataset.hearthCanvasDisposed = "true";
   }
 
+  window.__HEARTH_CANVAS_ADAPTIVE_RUNTIME_DISPOSE__ = dispose;
+  window.__HEARTH_CANVAS_HEX_SURFACE_CONSUMER_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_CHILD_ENGINE_COMPOSITION_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_LANDFORM_CONSUMPTION_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_BOUNDARY_DISPOSE__ = dispose;

@@ -2,14 +2,13 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-g3-boundary-route"
+  data-page="hearth-g3-child-engine-route"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_G3_ROUTE_RESTORATION_HTML_TNT_v1"
-  data-family-contract="HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1"
-  data-generation="G3"
-  data-hearth-standard="boundary-aligned-landmass-family"
-  data-language-layer="globe"
+  data-contract="HEARTH_G3_CHILD_ENGINE_ROUTE_HTML_TNT_v1"
+  data-family-contract="HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1"
+  data-body="hearth"
   data-construction-layer="planet"
+  data-language-layer="globe"
   data-generated-image="false"
   data-graphic-box="false"
 >
@@ -19,39 +18,39 @@
   <title>Diamond Gate Bridge · Hearth</title>
   <meta
     name="description"
-    content="Hearth Generation 3 boundary-aligned landmass-family route. Globe remains website language; the constructed body is a planet."
+    content="Hearth is the Generation 3 planet route. Globe remains route language; the rendered body is a planet. Terrain is the parent field, with mountains, cliffs, valleys, beaches, islands, and canvas as child composition authorities."
   >
-
   <style>
     :root {
-      --bg: #020711;
-      --panel: rgba(7, 18, 33, 0.82);
-      --panel-2: rgba(8, 25, 43, 0.66);
-      --line: rgba(135, 187, 221, 0.20);
-      --text: rgba(232, 244, 252, 0.95);
-      --muted: rgba(190, 214, 230, 0.72);
-      --gold: rgba(236, 196, 102, 0.94);
-      --green: rgba(112, 214, 174, 0.84);
+      --bg: #06111f;
+      --panel: rgba(8, 22, 38, 0.86);
+      --panel-2: rgba(5, 16, 28, 0.92);
+      --line: rgba(143, 187, 222, 0.18);
+      --line-strong: rgba(143, 187, 222, 0.32);
+      --text: #eaf3ff;
+      --muted: #9eacbb;
+      --gold: #e5c35f;
+      --green: #71c9a7;
+      --amber: #e4b45f;
+      --radius: 28px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html,
     body {
       margin: 0;
       min-height: 100%;
-      overflow-x: hidden;
-      overflow-y: auto;
-      touch-action: pan-y;
-      -webkit-overflow-scrolling: touch;
       background:
-        radial-gradient(circle at 50% 14%, rgba(39, 93, 134, 0.30), transparent 36rem),
-        radial-gradient(circle at 50% 58%, rgba(42, 112, 160, 0.16), transparent 42rem),
-        var(--bg);
+        radial-gradient(circle at 50% 0%, rgba(37, 73, 104, 0.28), transparent 34rem),
+        linear-gradient(180deg, #081525, #030912 70%, #02060c);
       color: var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font: 16px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+
+    body {
+      padding: max(18px, env(safe-area-inset-top)) 16px max(34px, env(safe-area-inset-bottom));
     }
 
     a {
@@ -59,257 +58,192 @@
       text-decoration: none;
     }
 
-    .skip-link {
+    .skip {
       position: absolute;
-      left: 1rem;
-      top: -4rem;
-      z-index: 20;
-      padding: 0.65rem 0.85rem;
-      border-radius: 999px;
+      left: -999px;
+      top: 0;
+    }
+
+    .skip:focus {
+      left: 16px;
+      top: 16px;
+      z-index: 10;
       background: var(--gold);
-      color: #06111f;
-      font-weight: 900;
-      transition: top 160ms ease;
+      color: #07111d;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 800;
     }
 
-    .skip-link:focus {
-      top: 1rem;
-    }
-
-    .page {
-      width: min(1120px, calc(100% - 28px));
+    .shell {
+      width: min(100%, 680px);
       margin: 0 auto;
-      padding: 18px 0 42px;
     }
 
-    .topbar {
+    .brand-row,
+    .nav-row,
+    .action-row {
       display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 10px 0 18px;
+    }
+
+    .brand-row {
+      margin-bottom: 16px;
     }
 
     .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
       font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .brand-mark {
-      display: grid;
-      place-items: center;
-      width: 34px;
-      height: 34px;
-      border: 1px solid rgba(236, 196, 102, 0.34);
-      border-radius: 50%;
-      color: var(--gold);
-      background: rgba(236, 196, 102, 0.08);
-    }
-
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-
-    nav a,
-    .route-link {
-      border: 1px solid rgba(135, 187, 221, 0.18);
-      border-radius: 999px;
-      padding: 8px 10px;
-      color: var(--muted);
-      background: rgba(5, 16, 30, 0.46);
-      font-size: 0.82rem;
-      font-weight: 800;
       letter-spacing: 0.02em;
     }
 
-    nav a[aria-current="page"],
-    .route-link.primary {
-      color: #06111f;
+    .nav-row {
+      margin-bottom: 26px;
+    }
+
+    .nav-row a,
+    .action-row a {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 11px 18px;
+      color: var(--muted);
+      background: rgba(4, 14, 26, 0.72);
+      font-weight: 800;
+    }
+
+    .action-row a:first-child {
       background: var(--gold);
-      border-color: rgba(236, 196, 102, 0.70);
+      color: #07111d;
+      border-color: rgba(255,255,255,0.18);
     }
 
     .hero {
-      display: grid;
-      gap: 18px;
-      grid-template-columns: minmax(0, 1.05fr) minmax(310px, 0.95fr);
-      align-items: center;
-      padding: 22px;
-      border: 1px solid rgba(135, 187, 221, 0.18);
-      border-radius: 28px;
-      background:
-        linear-gradient(135deg, rgba(9, 21, 39, 0.88), rgba(8, 28, 50, 0.58)),
-        rgba(3, 10, 20, 0.72);
-      box-shadow: 0 22px 80px rgba(0, 0, 0, 0.35);
-      overflow: hidden;
+      padding: 26px 0 18px;
     }
 
     .eyebrow {
-      margin: 0 0 10px;
-      color: var(--gold);
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
       font-size: 0.78rem;
       font-weight: 900;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
+      margin: 0 0 10px;
     }
 
     h1 {
-      margin: 0;
-      font-size: clamp(2.4rem, 7vw, 5rem);
+      margin: 0 0 14px;
+      font-size: clamp(2.4rem, 12vw, 5.4rem);
       line-height: 0.92;
-      letter-spacing: -0.06em;
+      letter-spacing: -0.07em;
     }
 
     .lede {
-      max-width: 66ch;
-      margin: 16px 0 0;
       color: var(--muted);
-      font-size: 1rem;
-      line-height: 1.6;
+      font-size: clamp(1.03rem, 3.4vw, 1.28rem);
+      max-width: 62ch;
+      margin: 0;
     }
 
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
+    .panel {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: var(--radius);
+      padding: clamp(22px, 5vw, 34px);
+      box-shadow: 0 22px 70px rgba(0,0,0,0.32);
+      margin: 20px 0;
     }
 
-    .hearth-stage {
+    .panel h2,
+    .card h2 {
+      margin: 0 0 14px;
+      font-size: clamp(1.18rem, 4vw, 1.46rem);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .panel p,
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 3vw, 1.18rem);
+    }
+
+    .planet-frame {
       position: relative;
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      min-height: 310px;
+      border: 1px solid var(--line-strong);
       border-radius: 32px;
-      border: 1px solid rgba(135, 187, 221, 0.18);
+      padding: clamp(18px, 4vw, 28px);
       background:
-        radial-gradient(circle at 50% 48%, rgba(54, 152, 220, 0.15), transparent 52%),
-        linear-gradient(180deg, rgba(4, 13, 25, 0.72), rgba(2, 7, 15, 0.92));
-      overflow: hidden;
-      isolation: isolate;
-      touch-action: pan-y;
+        radial-gradient(circle at 50% 42%, rgba(29, 78, 107, 0.24), transparent 44%),
+        linear-gradient(180deg, rgba(6, 20, 34, 0.95), rgba(3, 10, 19, 0.98));
+      box-shadow: inset 0 0 80px rgba(27, 112, 154, 0.10), 0 24px 70px rgba(0,0,0,0.36);
+      margin: 30px 0;
     }
 
     #hearthCanvasMount {
-      position: absolute;
-      inset: 0;
+      position: relative;
       width: 100%;
-      height: 100%;
+      aspect-ratio: 1 / 1;
       min-height: 300px;
       overflow: hidden;
       isolation: isolate;
+      border-radius: 30px;
+      background: radial-gradient(circle at 50% 50%, rgba(16, 51, 78, 0.78), rgba(1, 7, 14, 0.96) 68%);
       touch-action: pan-y;
     }
 
     #hearthCanvasMount canvas[data-hearth-canvas] {
       position: absolute;
       inset: 0;
+      display: block;
       width: 100%;
       height: 100%;
-      display: block;
       pointer-events: none;
       touch-action: pan-y;
     }
 
-    .audit-panel {
-      margin-top: 18px;
-      padding: 18px;
-      border: 1px solid rgba(135, 187, 221, 0.16);
-      border-radius: 24px;
-      background: var(--panel-2);
-    }
-
-    .audit-panel h2 {
-      margin: 0 0 10px;
-      font-size: 1rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .audit-panel p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .status-grid {
+    .grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 18px;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 24px;
     }
 
-    .status-card {
-      min-height: 92px;
-      padding: 14px;
-      border: 1px solid rgba(135, 187, 221, 0.16);
-      border-radius: 20px;
-      background: var(--panel);
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: var(--panel-2);
+      padding: 22px 24px;
     }
 
-    .status-card strong {
-      display: block;
-      margin-bottom: 6px;
-      color: var(--text);
-      font-size: 0.82rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .status-card span {
-      color: var(--muted);
-      font-size: 0.86rem;
-      line-height: 1.35;
-    }
-
-    .status-card[data-state="active"] strong {
+    .card h2 {
       color: var(--green);
+      font-size: 1rem;
+      margin-bottom: 8px;
     }
 
-    .status-card[data-state="closed"] strong {
-      color: var(--gold);
+    .card.warning h2 {
+      color: var(--amber);
     }
 
-    @media (max-width: 820px) {
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      nav {
-        justify-content: flex-start;
-      }
-
-      .hero {
-        grid-template-columns: 1fr;
-        padding: 16px;
-      }
-
-      .status-grid {
-        grid-template-columns: 1fr;
+    @media (min-width: 680px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
   </style>
 </head>
+<body>
+  <a class="skip" href="#hearth-main">Skip to Hearth</a>
 
-<body data-hearth-route-ready="false">
-  <a class="skip-link" href="#hearth-main">Skip to Hearth</a>
+  <div class="shell">
+    <header>
+      <div class="brand-row">
+        <a class="brand" href="/">HDiamond Gate Bridge</a>
+      </div>
 
-  <div class="page">
-    <header class="topbar" aria-label="Hearth route header">
-      <a class="brand" href="/">
-        <span class="brand-mark">H</span>
-        <span>Diamond Gate Bridge</span>
-      </a>
-
-      <nav aria-label="Primary navigation">
+      <nav class="nav-row" aria-label="Hearth navigation">
         <a href="/">Compass</a>
         <a href="/showroom/globe/">Globe Split</a>
         <a href="/showroom/globe/earth/">Earth</a>
@@ -319,77 +253,76 @@
       </nav>
     </header>
 
-    <main id="hearth-main" class="hero">
-      <section aria-labelledby="hearth-title">
-        <p class="eyebrow">Hearth · Generation 3 Route Restoration</p>
-        <h1 id="hearth-title">Hearth</h1>
-
+    <main id="hearth-main">
+      <section class="hero">
+        <p class="eyebrow">Hearth · Generation 3 Child-Engine Chain</p>
+        <h1>Hearth</h1>
         <p class="lede">
-          Hearth is restored as a valid HTML route and standardized under the G3 boundary-aligned
-          landmass-family contract. Globe remains route language. The rendered object is a planet.
+          Hearth is the G3 planet route. Globe remains route language. The rendered object is a planet.
+          Terrain is the parent field. Mountains, cliffs, valleys, beaches, islands, and canvas are downstream authorities.
         </p>
-
-        <div class="actions" aria-label="Hearth route actions">
-          <a class="route-link primary" href="/showroom/globe/">Return to Globe Split</a>
-          <a class="route-link" href="/showroom/globe/earth/">Inspect Earth</a>
-          <a class="route-link" href="/showroom/globe/audralia/">Inspect Audralia</a>
-          <a class="route-link" href="/gauges/">Run Gauges</a>
-        </div>
-
-        <section class="audit-panel" aria-label="Route audit summary">
-          <h2>Route Status</h2>
-          <p>
-            Route restored as HTML. Controller restored as JavaScript. Five-file G3 boundary lane remains the active standard.
-          </p>
-        </section>
       </section>
 
-      <section class="hearth-stage" aria-label="Hearth planet stage">
+      <div class="action-row">
+        <a href="/showroom/globe/">Return to Globe Split</a>
+        <a href="/showroom/globe/earth/">Inspect Earth</a>
+        <a href="/showroom/globe/audralia/">Inspect Audralia</a>
+        <a href="/gauges/">Run Gauges</a>
+      </div>
+
+      <section class="panel" aria-label="Route status">
+        <h2>Route Status</h2>
+        <p>
+          G3 child-engine chain active. Route loads terrain, hydration, mountains, cliffs, valleys, beaches, islands, and canvas.
+          Parent terrain admits the field; child engines refine; canvas composes.
+        </p>
+      </section>
+
+      <section class="planet-frame" aria-label="Hearth planet render">
         <div
           id="hearthCanvasMount"
-          data-hearth-mount
+          data-hearth-mount="true"
           data-render="hearth"
           data-body="hearth"
-          data-contract="HEARTH_G3_ROUTE_RESTORATION_HTML_TNT_v1"
-          data-family-contract="HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1"
-          data-generation="G3"
-          data-hearth-standard="boundary-aligned-landmass-family"
-          data-language-layer="globe"
-          data-construction-layer="planet"
-          data-general-regions="4"
-          data-countries="16"
-          data-summit-regions-per-general-region="9"
-          data-hydration-deferred="true"
-          data-terrain-detail-deferred="true"
-          data-climate-weather-clouds-deferred="true"
-          aria-label="Hearth G3 boundary-aligned landmass-family mount"
+          data-contract="HEARTH_G3_CHILD_ENGINE_ROUTE_HTML_TNT_v1"
+          aria-label="Hearth G3 child-engine planet render"
         ></div>
       </section>
+
+      <section class="grid" aria-label="Hearth execution receipts">
+        <article class="card">
+          <h2>Route HTML</h2>
+          <p>Valid page shell with child-engine status visible.</p>
+        </article>
+
+        <article class="card">
+          <h2>Route JS</h2>
+          <p>Loads terrain, hydration, mountains, cliffs, valleys, beaches, islands, and canvas.</p>
+        </article>
+
+        <article class="card">
+          <h2>Parent Terrain</h2>
+          <p>Owns the 4-region, 16-country, 256-seat admissible land-body field.</p>
+        </article>
+
+        <article class="card">
+          <h2>Child Engines</h2>
+          <p>Mountains, cliffs, valleys, beaches, and islands refine the parent field.</p>
+        </article>
+
+        <article class="card">
+          <h2>Canvas</h2>
+          <p>Composes parent terrain plus child-engine outputs into the visible planet.</p>
+        </article>
+
+        <article class="card warning">
+          <h2>Excluded</h2>
+          <p>Active weather, climate runtime, clouds, humidity, rivers, lakes, generated images, and GraphicBox remain excluded.</p>
+        </article>
+      </section>
     </main>
-
-    <section class="status-grid" aria-label="Hearth G3 status">
-      <article class="status-card" data-state="active">
-        <strong>Route HTML</strong>
-        <span>Restored as valid page document.</span>
-      </article>
-
-      <article class="status-card" data-state="active">
-        <strong>Route JS</strong>
-        <span>Loads terrain, hydration, and canvas assets.</span>
-      </article>
-
-      <article class="status-card" data-state="active">
-        <strong>G3 Boundary</strong>
-        <span>4 regions, 16 countries, 36 Summit regions.</span>
-      </article>
-
-      <article class="status-card" data-state="closed">
-        <strong>Deferred</strong>
-        <span>Hydration expansion, mountains, weather, climate, clouds, humidity.</span>
-      </article>
-    </section>
   </div>
 
-  <script src="./index.js?v=hearth-g3-route-restoration-v1" defer></script>
+  <script src="/showroom/globe/hearth/index.js?v=hearth-g3-child-engine-activation-v2" defer></script>
 </body>
 </html>

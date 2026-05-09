@@ -1,10 +1,11 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_G3_CANVAS_ADAPTIVE_HEX_SURFACE_RUNTIME_TNT_v2
+// HEARTH_G3_CANVAS_ADAPTIVE_HEX_SURFACE_RUNTIME_SELF_HEAL_TNT_v3
 // Full-file replacement.
 // Family: HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1
 // Purpose:
 // - Canvas owns mount, sizing, animation loop, runtime pacing, visibility pause, and final presentation.
 // - High-density Hearth hex surface owns visual frame rendering.
+// - Canvas self-loads hearth.hex.surface.js if route fails to provide it.
 // - Runtime adapts render size and frame rate for mobile performance.
 // - Terrain and child engines remain source authorities.
 // - No GraphicBox. No generated image. No visual-pass claim.
@@ -12,13 +13,16 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_CANVAS_ADAPTIVE_HEX_SURFACE_RUNTIME_TNT_v2";
+  const CONTRACT = "HEARTH_G3_CANVAS_ADAPTIVE_HEX_SURFACE_RUNTIME_SELF_HEAL_TNT_v3";
   const FAMILY_CONTRACT = "HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_G3_CANVAS_HEX_SURFACE_CONSUMER_TNT_v1";
-  const VERSION = "2026-05-09.hearth-g3-canvas-adaptive-hex-surface-runtime";
-  const RECEIPT = "HEARTH_G3_CANVAS_ADAPTIVE_HEX_SURFACE_RUNTIME_RECEIPT";
+  const PREVIOUS_CONTRACT = "HEARTH_G3_CANVAS_ADAPTIVE_HEX_SURFACE_RUNTIME_TNT_v2";
+  const BASELINE = "HEARTH_G3_HIGH_DENSITY_HEX_SURFACE_BASELINE_v1";
+  const VERSION = "2026-05-09.hearth-g3-canvas-adaptive-hex-surface-runtime-self-heal";
+  const RECEIPT = "HEARTH_G3_CANVAS_ADAPTIVE_HEX_SURFACE_RUNTIME_SELF_HEAL_RECEIPT";
 
   const EXPECTED_MOUNT_ID = "hearthCanvasMount";
+  const SURFACE_KEY = "hearth-g3-hex-surface-self-heal-v3";
+  const SURFACE_SRC = `/assets/hearth/hearth.hex.surface.js?v=${SURFACE_KEY}`;
 
   const PROFILE = Object.freeze({
     mobileLow: {
@@ -123,7 +127,10 @@
     lastFrameReceipt: null,
     lastStatus: "booting",
     resizeTimer: 0,
-    observer: null
+    observer: null,
+    surfaceLoadPromise: null,
+    surfaceLoadStatus: "not-requested",
+    surfaceLoadError: ""
   };
 
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -271,7 +278,7 @@
       }
 
       #${EXPECTED_MOUNT_ID}[data-hearth-canvas-fallback="true"]::after {
-        content: "Hearth hex surface is not available.";
+        content: attr(data-hearth-canvas-message);
         position: absolute;
         inset: auto 18px 18px;
         z-index: 3;
@@ -342,13 +349,15 @@
     state.mount.dataset.hearthCanvasReceipt = RECEIPT;
     state.mount.dataset.hearthCanvasConsumesHexSurface = "true";
     state.mount.dataset.hearthCanvasAdaptiveRuntime = "true";
+    state.mount.dataset.hearthCanvasSelfHealsHexSurface = "true";
     state.mount.dataset.hearthCanvasGeneratedImage = "false";
     state.mount.dataset.hearthCanvasGraphicBox = "false";
+    state.mount.dataset.hearthCanvasMessage = "Hearth hex surface is loading.";
 
     resize(true);
   }
 
-  function clearFallback() {
+  function clearFallback(message) {
     if (!state.ctx || !state.canvas) return;
 
     state.ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
@@ -371,7 +380,89 @@
 
     if (state.mount) {
       state.mount.dataset.hearthCanvasFallback = "true";
+      state.mount.dataset.hearthCanvasMessage = message || "Hearth hex surface is loading.";
     }
+  }
+
+  function hasSurface() {
+    return (
+      window.HEARTH_HEX_SURFACE &&
+      typeof window.HEARTH_HEX_SURFACE.drawHearthHexSurfaceFrame === "function"
+    );
+  }
+
+  function removePriorSurfaceScripts() {
+    document
+      .querySelectorAll('script[src*="/assets/hearth/hearth.hex.surface.js"][data-hearth-canvas-self-heal="true"]')
+      .forEach((node) => node.remove());
+  }
+
+  function ensureHexSurfaceLoaded() {
+    if (hasSurface()) {
+      state.surfaceLoadStatus = "available";
+      state.surfaceLoadError = "";
+      return Promise.resolve(window.HEARTH_HEX_SURFACE);
+    }
+
+    if (state.surfaceLoadPromise) {
+      return state.surfaceLoadPromise;
+    }
+
+    removePriorSurfaceScripts();
+
+    state.surfaceLoadStatus = "loading";
+    state.surfaceLoadError = "";
+    document.documentElement.dataset.hearthCanvasHexSurfaceSelfHealStatus = "loading";
+    document.documentElement.dataset.hearthCanvasHexSurfaceSelfHealSrc = SURFACE_SRC;
+
+    state.surfaceLoadPromise = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = SURFACE_SRC;
+      script.defer = true;
+      script.dataset.hearthCanvasSelfHeal = "true";
+      script.dataset.hearthScriptRole = "hexSurface";
+      script.dataset.contract = CONTRACT;
+      script.dataset.familyContract = FAMILY_CONTRACT;
+
+      script.addEventListener(
+        "load",
+        () => {
+          if (hasSurface()) {
+            state.surfaceLoadStatus = "loaded";
+            state.surfaceLoadError = "";
+            document.documentElement.dataset.hearthCanvasHexSurfaceSelfHealStatus = "loaded";
+            resolve(window.HEARTH_HEX_SURFACE);
+            return;
+          }
+
+          const error = new Error("HEARTH_HEX_SURFACE_LOADED_BUT_API_MISSING");
+          state.surfaceLoadStatus = "api-missing";
+          state.surfaceLoadError = error.message;
+          document.documentElement.dataset.hearthCanvasHexSurfaceSelfHealStatus = "api-missing";
+          document.documentElement.dataset.hearthCanvasHexSurfaceSelfHealError = error.message;
+          reject(error);
+        },
+        { once: true }
+      );
+
+      script.addEventListener(
+        "error",
+        () => {
+          const error = new Error(`HEARTH_HEX_SURFACE_LOAD_FAILED ${SURFACE_SRC}`);
+          state.surfaceLoadStatus = "failed";
+          state.surfaceLoadError = error.message;
+          state.surfaceLoadPromise = null;
+          document.documentElement.dataset.hearthCanvasHexSurfaceSelfHealStatus = "failed";
+          document.documentElement.dataset.hearthCanvasHexSurfaceSelfHealError = error.message;
+          reject(error);
+        },
+        { once: true }
+      );
+
+      document.head.appendChild(script);
+    });
+
+    return state.surfaceLoadPromise;
   }
 
   function getPhaseStep() {
@@ -395,26 +486,30 @@
       return;
     }
 
+    if (!hasSurface()) {
+      ensureHexSurfaceLoaded().catch(() => {});
+      clearFallback(
+        state.surfaceLoadStatus === "failed" || state.surfaceLoadStatus === "api-missing"
+          ? "Hearth hex surface failed to load."
+          : "Hearth hex surface is loading."
+      );
+      stamp(`hex-surface-${state.surfaceLoadStatus}`);
+      state.raf = requestAnimationFrame(drawFrame);
+      return;
+    }
+
     const frameStart = performance.now();
 
     state.lastFrame = time;
     state.phase = time * getPhaseStep();
 
-    const surface = window.HEARTH_HEX_SURFACE;
-
-    if (!surface || typeof surface.drawHearthHexSurfaceFrame !== "function") {
-      clearFallback();
-      stamp("waiting-for-hex-surface");
-      state.raf = requestAnimationFrame(drawFrame);
-      return;
-    }
-
     if (state.mount) {
       state.mount.dataset.hearthCanvasFallback = "false";
+      state.mount.dataset.hearthCanvasMessage = "";
     }
 
     try {
-      state.lastFrameReceipt = surface.drawHearthHexSurfaceFrame(state, {
+      state.lastFrameReceipt = window.HEARTH_HEX_SURFACE.drawHearthHexSurfaceFrame(state, {
         radiusRatio: 0.456,
         hexDensity: state.profile.hexDensity,
         minHexRadius: 0.92,
@@ -434,7 +529,7 @@
     } catch (error) {
       document.documentElement.dataset.hearthCanvasHexSurfaceError =
         error && error.message ? error.message : String(error);
-      clearFallback();
+      clearFallback("Hearth hex surface render error.");
       stamp("hex-surface-error");
     }
 
@@ -447,6 +542,7 @@
     document.documentElement.dataset.hearthCanvasLoaded = "true";
     document.documentElement.dataset.hearthCanvasContract = CONTRACT;
     document.documentElement.dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
+    document.documentElement.dataset.hearthCanvasBaseline = BASELINE;
     document.documentElement.dataset.hearthCanvasFamilyContract = FAMILY_CONTRACT;
     document.documentElement.dataset.hearthCanvasVersion = VERSION;
     document.documentElement.dataset.hearthCanvasReceipt = RECEIPT;
@@ -454,6 +550,8 @@
     document.documentElement.dataset.hearthCanvasConsumes = "hex.surface";
     document.documentElement.dataset.hearthCanvasConsumesHexSurface = "true";
     document.documentElement.dataset.hearthCanvasAdaptiveRuntime = "true";
+    document.documentElement.dataset.hearthCanvasSelfHealsHexSurface = "true";
+    document.documentElement.dataset.hearthCanvasHexSurfaceSelfHealStatus = state.surfaceLoadStatus;
     document.documentElement.dataset.hearthCanvasRuntimeProfile = state.profile.name;
     document.documentElement.dataset.hearthCanvasRuntimeFrameMinMs = String(state.profile.frameMinMs);
     document.documentElement.dataset.hearthCanvasGeneratedImage = "false";
@@ -466,9 +564,13 @@
     document.documentElement.dataset.hearthCanvasBeachesReady = String(!!window.HEARTH_BEACHES);
     document.documentElement.dataset.hearthCanvasIslandsReady = String(!!window.HEARTH_ISLANDS);
     document.documentElement.dataset.hearthCanvasHexReady = String(!!window.HEARTH_HEX);
-    document.documentElement.dataset.hearthCanvasHexSurfaceReady = String(!!window.HEARTH_HEX_SURFACE);
+    document.documentElement.dataset.hearthCanvasHexSurfaceReady = String(hasSurface());
     document.documentElement.dataset.hearthCanvasVisible = String(state.visible);
     document.documentElement.dataset.hearthCanvasIntersecting = String(state.intersecting);
+
+    if (state.surfaceLoadError) {
+      document.documentElement.dataset.hearthCanvasHexSurfaceSelfHealError = state.surfaceLoadError;
+    }
 
     if (state.lastFrameReceipt) {
       document.documentElement.dataset.hearthCanvasLastFrameReceipt = String(state.lastFrameReceipt.receipt || "");
@@ -494,14 +596,16 @@
       familyContract: FAMILY_CONTRACT,
       version: VERSION,
       generation: "G3",
-      authority: "canvas-adaptive-hex-surface-runtime",
-      baseline: "HEARTH_G3_HIGH_DENSITY_HEX_SURFACE_BASELINE_v1",
+      authority: "canvas-adaptive-hex-surface-runtime-self-heal",
+      baseline: BASELINE,
+      surfaceSrc: SURFACE_SRC,
       runtime: {
         adaptive: true,
         visibilityPause: true,
         intersectionPause: true,
         mobileProfiles: true,
         frameCostAdaptiveQuality: true,
+        surfaceSelfHeal: true,
         generatedImage: false,
         graphicBox: false
       },
@@ -544,6 +648,10 @@
         lastFrameCost: state.lastFrameCost,
         averageFrameCost: state.averageFrameCost,
         lastStatus: state.lastStatus,
+        surfaceLoadStatus: state.surfaceLoadStatus,
+        surfaceLoadError: state.surfaceLoadError,
+        surfaceReady: hasSurface(),
+        surfaceSrc: SURFACE_SRC,
         lastFrameReceipt: state.lastFrameReceipt,
         hex: receiptModule("HEARTH_HEX"),
         hexSurface: window.HEARTH_HEX_SURFACE && typeof window.HEARTH_HEX_SURFACE.getHearthHexSurfaceStatus === "function"
@@ -593,11 +701,15 @@
     state.frameCostSamples = 0;
     state.consecutiveSlowFrames = 0;
     state.consecutiveFastFrames = 0;
+    state.surfaceLoadPromise = null;
+    state.surfaceLoadStatus = hasSurface() ? "available" : "not-requested";
+    state.surfaceLoadError = "";
 
     installStyle();
     installCanvas();
     installVisibilityRuntime();
     exposeReceipt();
+    ensureHexSurfaceLoaded().catch(() => {});
     stamp("booted");
 
     state.running = true;
@@ -650,6 +762,7 @@
     document.documentElement.dataset.hearthCanvasDisposed = "true";
   }
 
+  window.__HEARTH_CANVAS_ADAPTIVE_RUNTIME_SELF_HEAL_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_ADAPTIVE_RUNTIME_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_HEX_SURFACE_CONSUMER_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_CHILD_ENGINE_COMPOSITION_DISPOSE__ = dispose;

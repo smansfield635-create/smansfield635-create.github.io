@@ -1,47 +1,65 @@
 // /assets/hearth/hearth.terrain.js
-// HEARTH_G3_ESCARPMENT_PLATEAU_CENTRAL_SUMMIT_TERRAIN_TNT_v1
+// HEARTH_G3_ORGANIC_BOUNDARY_COUNTRY_ONLY_TERRAIN_TNT_v1
 // Full-file replacement.
 // Family: HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1
 // Purpose:
-// - Build the admissible terrain thesis for every Hearth land body.
-// - Each General Region follows:
-//   edge / coast boundary -> escarpment edge -> plateau seat -> inward range ascent -> central/final mountain -> summit.
-// - Preserve 4 General Regions, 16 Countries, and 9 Summit regions per General Region.
-// - Plateaus sit at the escarpment edge and serve metroplex seats.
-// - Ranges connect plateau lanes inward toward the central mountain.
-// - Final mountain sits in the middle of each land body.
-// - Summit sits at the top of the final mountain.
-// - Hydration remains passive and downstream.
+// - Preserve the current successful Hearth terrain direction.
+// - Define boundary law:
+//   Organic boundaries = coast, escarpment, plateau edge, range ascent, central mountain, summit.
+//   Man-made boundaries = countries only.
+// - Keep 4 General Regions, 16 Countries, 9 Summit regions per General Region.
+// - Preserve edge escarpment -> plateau -> inward range -> central mountain -> summit.
+// - Make non-country boundaries organic fields, not grid cuts.
+// - Keep hydration passive and downstream.
 // - No rivers, lakes, weather, climate, clouds, humidity, rainfall, wind, storms, or atmospheric moisture.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_ESCARPMENT_PLATEAU_CENTRAL_SUMMIT_TERRAIN_TNT_v1";
+  const CONTRACT = "HEARTH_G3_ORGANIC_BOUNDARY_COUNTRY_ONLY_TERRAIN_TNT_v1";
   const FAMILY_CONTRACT = "HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1";
-  const VERSION = "2026-05-08.hearth-g3-escarpment-plateau-central-summit-terrain";
-  const RECEIPT = "HEARTH_G3_ESCARPMENT_PLATEAU_CENTRAL_SUMMIT_TERRAIN_RECEIPT";
+  const VERSION = "2026-05-08.hearth-g3-organic-boundary-country-only-terrain";
+  const RECEIPT = "HEARTH_G3_ORGANIC_BOUNDARY_COUNTRY_ONLY_TERRAIN_RECEIPT";
 
   const TAU = Math.PI * 2;
   const LAND_THRESHOLD = 0.105;
 
+  const BOUNDARY_LAW = Object.freeze({
+    organic: [
+      "coastline",
+      "landmass edge",
+      "escarpment edge",
+      "plateau shelf",
+      "range ascent",
+      "central mountain rise",
+      "summit peak"
+    ],
+    manMade: [
+      "country boundary"
+    ],
+    rule:
+      "Only countries are allowed to read as man-made boundaries. Terrain boundaries must read as organic topography."
+  });
+
   const TIC_TAC_TOE_DYNAMIC_PROTOCOL = Object.freeze({
     T1: "One planet-scale terrain surface.",
-    T2: "Four General Regions remain active.",
-    T3: "Each land body receives an escarpment edge.",
-    T4: "Each escarpment edge receives four plateau seats.",
-    T5: "Each plateau lane ascends inward through a range corridor.",
-    T6: "Each land body has one central final mountain.",
-    T7: "Each central final mountain has one summit peak.",
-    T8: "Hydration remains passive and downstream.",
-    T9: "Return admissible terrain receipt without G4 drift."
+    T2: "Four General Regions remain organic land bodies.",
+    T3: "Sixteen Countries remain the only man-made boundary layer.",
+    T4: "Nine Summit regions remain progressive terrain logic, not hard grid cuts.",
+    T5: "Escarpments are organic edge systems.",
+    T6: "Plateaus sit organically at the escarpment edge.",
+    T7: "Ranges ascend organically toward the central mountain.",
+    T8: "Central mountain and summit are organic terrain authority.",
+    T9: "Return country-only man-made boundary receipts."
   });
 
   const SYSTEMIC_QUAD_A_ATTACK = Object.freeze({
     authority: "/assets/hearth/hearth.terrain.js",
-    axis: "edge escarpment -> plateau -> inward range -> central final mountain -> summit",
-    artifact: "4 escarpment systems, 16 edge plateaus, 16 inward range corridors, 4 central mountains, 4 summit peaks.",
-    attack: "Reject random terrain, random plateaus, one-off mountains, hydration reshaping, new regions, new countries, climate, weather, clouds, humidity, and open-ended surface expression."
+    axis: "organic terrain boundary vs country-only man-made boundary",
+    artifact:
+      "A planet-scale Hearth terrain field where coast, escarpment, plateau, range, mountain, and summit are organic; only country lines are man-made.",
+    attack:
+      "Reject artificial terrain grids, man-made escarpments, man-made plateaus, man-made summit cuts, random relief, hydration reshaping, new regions, new countries, climate, weather, clouds, humidity, and open-ended surface expression."
   });
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -100,8 +118,8 @@
   function microSurface(localX, localY, seed) {
     return clamp(
       0.5 +
-      Math.sin(localX * 18.0 + localY * 11.0 + seed) * 0.17 +
-      Math.cos(localX * 23.0 - localY * 13.0 + seed * 0.71) * 0.11,
+        Math.sin(localX * 18.0 + localY * 11.0 + seed) * 0.17 +
+        Math.cos(localX * 23.0 - localY * 13.0 + seed * 0.71) * 0.11,
       0,
       1
     );
@@ -130,13 +148,6 @@
 
   function gridBoundary(value, divider, width) {
     return 1 - smoothstep(width, width * 2.4, Math.abs(value - divider));
-  }
-
-  function summitBoundary(progress, width) {
-    const scaled = progress * 9;
-    const frac = scaled - Math.floor(scaled);
-    const d = Math.min(frac, 1 - frac);
-    return 1 - smoothstep(width, width * 2.2, d);
   }
 
   const SUMMIT_LABELS = Object.freeze([
@@ -367,7 +378,6 @@
       smoothstep(1.32, 0.18, Math.hypot(localX, localY));
 
     field += wave3(v, region.seed * 10.0) + taper;
-
     return field;
   }
 
@@ -488,30 +498,47 @@
     const escarpmentStrength = esc.escarpmentStrength;
     const plateauStrength = plateau.plateauStrength * (0.86 - centralMountainStrength * 0.16);
     const rangeAscent = range.rangeStrength;
+
     const ridge = clamp(rangeAscent * 0.68 + centralMountainStrength * 0.34 + surfaceNoise * 0.06, 0, 1);
     const upland = clamp(
       baseUpland * 0.30 +
-      escarpmentStrength * 0.18 +
-      plateauStrength * 0.26 +
-      rangeAscent * 0.22 +
-      centralMountainStrength * 0.30,
+        escarpmentStrength * 0.18 +
+        plateauStrength * 0.26 +
+        rangeAscent * 0.22 +
+        centralMountainStrength * 0.30,
       0,
       1
     );
+
     const relief = clamp(
       escarpmentStrength * 0.24 +
-      rangeAscent * 0.36 +
-      centralMountainStrength * 0.42 +
-      summitStrength * 0.30 +
-      surfaceNoise * 0.08,
+        rangeAscent * 0.36 +
+        centralMountainStrength * 0.42 +
+        summitStrength * 0.30 +
+        surfaceNoise * 0.08,
       0,
       1
     );
-    const lowland = clamp((1 - upland) * smoothstep(LAND_THRESHOLD + 0.015, LAND_THRESHOLD + 0.22, field), 0, 1);
+
+    const lowland = clamp(
+      (1 - upland) * smoothstep(LAND_THRESHOLD + 0.015, LAND_THRESHOLD + 0.22, field),
+      0,
+      1
+    );
 
     const activePlateau = plateau.plateau && plateauStrength > 0.10 ? plateau.plateau : null;
     const activeRange = range.range && rangeAscent > 0.10 ? range.range : null;
     const activeEscarpment = esc.escarpment && escarpmentStrength > 0.10 ? esc.escarpment : null;
+
+    const organicBoundaryStrength = clamp(
+      escarpmentStrength * 0.34 +
+        plateauStrength * 0.18 +
+        rangeAscent * 0.18 +
+        centralMountainStrength * 0.18 +
+        summitStrength * 0.12,
+      0,
+      1
+    );
 
     return {
       escarpmentId: activeEscarpment ? activeEscarpment.id : null,
@@ -535,17 +562,19 @@
       summitStrength,
 
       metroplexId: activePlateau && plateauStrength > 0.14 ? activePlateau.metroplexId : null,
-      metroplexSeat: activePlateau && plateauStrength > 0.14
-        ? {
-            id: activePlateau.metroplexId,
-            plateauId: activePlateau.id,
-            escarpmentId: activeEscarpment ? activeEscarpment.id : null,
-            countryId: activePlateau.countryId,
-            direction: activePlateau.direction,
-            admissible: true
-          }
-        : null,
+      metroplexSeat:
+        activePlateau && plateauStrength > 0.14
+          ? {
+              id: activePlateau.metroplexId,
+              plateauId: activePlateau.id,
+              escarpmentId: activeEscarpment ? activeEscarpment.id : null,
+              countryId: activePlateau.countryId,
+              direction: activePlateau.direction,
+              admissible: true
+            }
+          : null,
 
+      organicBoundaryStrength,
       relief,
       ridge,
       upland,
@@ -561,20 +590,20 @@
     g = mix(g, 132, terrain.lowland * 0.16);
     b = mix(b, 84, terrain.lowland * 0.10);
 
-    r = mix(r, 156, terrain.escarpmentStrength * 0.20);
-    g = mix(g, 132, terrain.escarpmentStrength * 0.18);
-    b = mix(b, 92, terrain.escarpmentStrength * 0.12);
+    r = mix(r, 146, terrain.escarpmentStrength * 0.16);
+    g = mix(g, 128, terrain.escarpmentStrength * 0.14);
+    b = mix(b, 92, terrain.escarpmentStrength * 0.10);
 
-    r = mix(r, 178, terrain.plateauStrength * 0.24);
-    g = mix(g, 158, terrain.plateauStrength * 0.22);
-    b = mix(b, 108, terrain.plateauStrength * 0.16);
+    r = mix(r, 174, terrain.plateauStrength * 0.22);
+    g = mix(g, 156, terrain.plateauStrength * 0.20);
+    b = mix(b, 108, terrain.plateauStrength * 0.15);
 
-    r = mix(r, 108, terrain.rangeAscent * 0.22);
-    g = mix(g, 102, terrain.rangeAscent * 0.20);
-    b = mix(b, 86, terrain.rangeAscent * 0.16);
+    r = mix(r, 108, terrain.rangeAscent * 0.20);
+    g = mix(g, 102, terrain.rangeAscent * 0.18);
+    b = mix(b, 86, terrain.rangeAscent * 0.14);
 
-    r = mix(r, 78, terrain.relief * 0.24);
-    g = mix(g, 76, terrain.relief * 0.22);
+    r = mix(r, 78, terrain.relief * 0.23);
+    g = mix(g, 76, terrain.relief * 0.21);
     b = mix(b, 72, terrain.relief * 0.18);
 
     r = mix(r, 222, terrain.centralMountainStrength * 0.27);
@@ -601,33 +630,48 @@
       summitLabel: null,
       technologyRank: null,
       accessRank: null,
+
       coast: clamp(coast, 0, 1),
       shelf: clamp(shelf, 0, 1),
       waterDepth: clamp(waterDepth, 0, 1),
+
       regionBoundary: 0,
       countryBoundary: 0,
+      countryBoundaryType: "man-made",
+      manMadeBoundaryStrength: 0,
+
       summitBoundary: 0,
+      organicBoundaryStrength: 0,
+      organicBoundaryType: "water",
+
       citySeat: 0,
       localU: 0,
       localV: 0,
       color: null,
+
       escarpmentId: null,
       escarpmentDirection: null,
       escarpmentStrength: 0,
+
       plateauId: null,
       plateauDirection: null,
       plateauStrength: 0,
+
       rangeCorridorId: null,
       rangeDirection: null,
       rangeAscent: 0,
+
       centralMountainId: null,
       centralMountainStrength: 0,
       masterMountainId: null,
       masterMountainStrength: 0,
+
       summitId: null,
       summitStrength: 0,
+
       metroplexId: null,
       metroplexSeat: null,
+
       relief: 0,
       ridge: 0,
       upland: 0,
@@ -635,7 +679,8 @@
       surfaceScale: "planet",
       surfaceAreaStandard: "full-planet",
       admissibleTerrain: true,
-      authority: "terrain-escarpment-plateau-central-summit"
+      boundaryLaw: BOUNDARY_LAW,
+      authority: "terrain-organic-boundary-country-only"
     };
   }
 
@@ -678,25 +723,15 @@
       gridBoundary(q, countryDividerY, 0.010)
     );
 
-    const summitLine = summitBoundary(summitProgress, 0.018);
-
     const microX = Math.floor(u * 7);
     const microY = Math.floor(q * 6);
     const seatHash = hash3(microX + countryId * 11, microY + summit * 17, region.index + 1);
     const fu = u * 7 - microX;
     const fq = q * 6 - microY;
-    const citySeat = seatHash > 0.72
-      ? 1 - smoothstep(0.018, 0.052, Math.hypot(fu - 0.5, fq - 0.5))
-      : 0;
-
-    const regionBoundary = clamp(
-      Math.max(
-        coast,
-        1 - smoothstep(0.020, 0.095, Math.abs(selected.margin))
-      ),
-      0,
-      1
-    );
+    const citySeat =
+      seatHash > 0.72
+        ? 1 - smoothstep(0.018, 0.052, Math.hypot(fu - 0.5, fq - 0.5))
+        : 0;
 
     const hierarchy = terrainHierarchy(local, region, field);
     const color = terrainColor(region, hierarchy);
@@ -711,15 +746,24 @@
       countryIndex,
       summit,
       summitLabel: SUMMIT_LABELS[summit - 1],
+      summitProgress,
       technologyRank: summit,
       accessRank: 10 - summit,
+
       coast,
       shelf: 0,
       waterDepth: 0,
       field,
-      regionBoundary,
+
+      regionBoundary: 0,
       countryBoundary,
-      summitBoundary: summitLine,
+      countryBoundaryType: "man-made",
+      manMadeBoundaryStrength: countryBoundary,
+
+      summitBoundary: 0,
+      organicBoundaryStrength: hierarchy.organicBoundaryStrength,
+      organicBoundaryType: "terrain",
+
       citySeat,
       localU: u,
       localV: q,
@@ -756,7 +800,8 @@
       surfaceScale: "planet",
       surfaceAreaStandard: "full-planet",
       admissibleTerrain: true,
-      authority: "terrain-escarpment-plateau-central-summit"
+      boundaryLaw: BOUNDARY_LAW,
+      authority: "terrain-organic-boundary-country-only"
     };
   }
 
@@ -767,15 +812,16 @@
       familyContract: FAMILY_CONTRACT,
       version: VERSION,
       generation: "G3",
-      standard: "escarpment-plateau-central-summit-terrain",
-      authority: "terrain-escarpment-plateau-central-summit",
+      standard: "organic-boundary-country-only-terrain",
+      authority: "terrain-organic-boundary-country-only",
       surfaceScale: "planet",
       surfaceAreaStandard: "full-planet",
       visibleLandGuarantee: true,
+      boundaryLaw: BOUNDARY_LAW,
       admissibilityRule:
-        "Every escarpment, plateau, range corridor, central mountain, summit, and metroplex seat belongs to an existing General Region and Country.",
+        "Every escarpment, plateau, range corridor, central mountain, summit, and metroplex seat belongs to an existing General Region and Country. Only country boundaries are man-made.",
       terrainThesis:
-        "edge escarpment -> plateau at escarpment edge -> inward range ascent -> central final mountain -> summit peak",
+        "organic land body -> organic escarpment -> organic plateau shelf -> organic inward range ascent -> organic central mountain -> organic summit peak; country boundary remains the only man-made boundary.",
       generalRegions: GENERAL_REGIONS.map((region) => ({
         id: region.id,
         name: region.name,
@@ -787,18 +833,21 @@
         escarpments: region.escarpments.map((escarpment) => ({
           id: escarpment.id,
           direction: escarpment.direction,
-          countryId: escarpment.countryId
+          countryId: escarpment.countryId,
+          boundaryType: "organic"
         })),
         plateaus: region.plateaus.map((plateau) => ({
           id: plateau.id,
           direction: plateau.direction,
           countryId: plateau.countryId,
-          metroplexId: plateau.metroplexId
+          metroplexId: plateau.metroplexId,
+          boundaryType: "organic"
         })),
         rangeCorridors: region.ranges.map((range) => ({
           id: range.id,
           direction: range.direction,
-          countryId: range.countryId
+          countryId: range.countryId,
+          boundaryType: "organic"
         }))
       })),
       totals: {
@@ -815,17 +864,18 @@
         metroplexSeats: 16
       },
       owns: [
-        "landmass-family boundary",
+        "organic landmass-family boundary",
+        "country-only man-made boundary",
         "General Region assignment",
         "Country assignment",
-        "Summit region assignment",
+        "Summit progression assignment",
         "city-zone seat placeholders",
         "coast threshold",
-        "escarpment edges",
-        "plateaus at escarpment edge",
-        "range ascent corridors",
-        "central final mountains",
-        "summit peaks",
+        "organic escarpment edges",
+        "organic plateaus at escarpment edge",
+        "organic range ascent corridors",
+        "organic central final mountains",
+        "organic summit peaks",
         "metroplex seats",
         "relief",
         "ridge",
@@ -834,6 +884,7 @@
         "planet surface-area terrain scale"
       ],
       doesNotOwn: [
+        "man-made terrain boundaries outside countries",
         "hydration expansion",
         "rivers",
         "lakes",
@@ -863,9 +914,10 @@
     contract: CONTRACT,
     familyContract: FAMILY_CONTRACT,
     version: VERSION,
-    standard: "escarpment-plateau-central-summit-terrain",
-    authority: "terrain-escarpment-plateau-central-summit",
+    standard: "organic-boundary-country-only-terrain",
+    authority: "terrain-organic-boundary-country-only",
     visibleLandGuarantee: true,
+    boundaryLaw: BOUNDARY_LAW,
     sampleVector,
     regions: () => GENERAL_REGIONS.slice(),
     summitLabels: () => SUMMIT_LABELS.slice()
@@ -877,9 +929,11 @@
   document.documentElement.dataset.hearthTerrainContract = CONTRACT;
   document.documentElement.dataset.hearthTerrainFamilyContract = FAMILY_CONTRACT;
   document.documentElement.dataset.hearthTerrainVersion = VERSION;
-  document.documentElement.dataset.hearthTerrainStandard = "escarpment-plateau-central-summit-terrain";
+  document.documentElement.dataset.hearthTerrainStandard = "organic-boundary-country-only-terrain";
   document.documentElement.dataset.hearthTerrainSurfaceScale = "planet";
   document.documentElement.dataset.hearthTerrainVisibleLandGuarantee = "true";
+  document.documentElement.dataset.hearthTerrainOrganicBoundaries = "true";
+  document.documentElement.dataset.hearthTerrainManMadeBoundaries = "countries-only";
   document.documentElement.dataset.hearthTerrainEscarpmentSystems = "4";
   document.documentElement.dataset.hearthTerrainEscarpmentEdges = "16";
   document.documentElement.dataset.hearthTerrainPlateaus = "16";

@@ -1,19 +1,20 @@
 // /assets/audralia/audralia.terrain.fingers.js
-// AUDRALIA_V18_TERRAIN_FIVE_FINGER_REEXPRESSION_TNT_v1
+// AUDRALIA_G2_TERRAIN_FIVE_FINGER_NATURAL_READABILITY_TNT_v1
+// Full-file replacement.
 // Terrain truth expression only.
-// Five terrain fingers:
-// 1. mountains/ranges
-// 2. valleys/basins
-// 3. cliffs/escarpments
-// 4. beaches/coastal shelves
-// 5. peninsulas/bays/islands/inlets
 // Runtime remains motion-only.
 // Assets consume this terrain expression and preserve visible boundaries.
+// Five terrain fingers:
+// 1. mountains / ranges
+// 2. valleys / basins
+// 3. cliffs / escarpments
+// 4. beaches / coastal shelves
+// 5. peninsulas / bays / islands / inlets
 // No GraphicBox. No generated image. No visual-pass claim.
 
-const CONTRACT = "AUDRALIA_V18_TERRAIN_FIVE_FINGER_REEXPRESSION_TNT_v1";
-const RECEIPT = "AUDRALIA_V18_TERRAIN_FIVE_FINGER_RECEIPT";
-const VERSION = "2026-05-09.audralia-v18-five-finger-terrain-reexpression";
+const CONTRACT = "AUDRALIA_G2_TERRAIN_FIVE_FINGER_NATURAL_READABILITY_TNT_v1";
+const RECEIPT = "AUDRALIA_G2_TERRAIN_FIVE_FINGER_NATURAL_READABILITY_RECEIPT";
+const VERSION = "2026-05-09.audralia-g2-terrain-five-finger-natural-readability";
 
 const TAU = Math.PI * 2;
 
@@ -89,12 +90,12 @@ function fbm(u, v, seed) {
 }
 
 function ridged(u, v, seed) {
-  let amp = 0.54;
+  let amp = 0.56;
   let total = 0;
   let norm = 0;
-  let scale = 8;
+  let scale = 7;
 
-  for (let i = 0; i < 4; i += 1) {
+  for (let i = 0; i < 5; i += 1) {
     const n = noise(u, v, scale, seed + i * 71);
     total += (1 - Math.abs(n * 2 - 1)) * amp;
     norm += amp;
@@ -113,51 +114,75 @@ function ellipseMetrics(u, v, cx, cy, rx, ry, angle) {
 
   const x = dx * ca - dy * sa;
   const y = dx * sa + dy * ca;
-  const dist = Math.sqrt((x * x) / (rx * rx) + (y * y) / (ry * ry));
 
-  return { x, y, dist, field: 1 - dist, theta: Math.atan2(y / ry, x / rx) };
+  const dist = Math.sqrt((x * x) / (rx * rx) + (y * y) / (ry * ry));
+  const field = 1 - dist;
+  const theta = Math.atan2(y / ry, x / rx);
+
+  return { x, y, dist, field, theta, cx, cy, rx, ry, angle };
 }
 
 function maxOf(values) {
   let out = -999;
-  for (let i = 0; i < values.length; i += 1) out = Math.max(out, values[i]);
+  for (let i = 0; i < values.length; i += 1) {
+    out = Math.max(out, values[i]);
+  }
   return out;
 }
 
 function primaryLand(u, v) {
   const core = ellipseMetrics(u, v, 0.335, 0.505, 0.235, 0.265, -0.24);
-  const shoulder = ellipseMetrics(u, v, 0.275, 0.415, 0.12, 0.145, -0.86);
-  const southeast = ellipseMetrics(u, v, 0.425, 0.575, 0.13, 0.15, 0.42);
-  const lower = ellipseMetrics(u, v, 0.275, 0.665, 0.078, 0.108, 0.08);
+  const northwest = ellipseMetrics(u, v, 0.270, 0.415, 0.122, 0.148, -0.86);
+  const southeast = ellipseMetrics(u, v, 0.425, 0.575, 0.130, 0.154, 0.42);
+  const southern = ellipseMetrics(u, v, 0.278, 0.668, 0.080, 0.110, 0.08);
 
   return {
     metrics: core,
-    field: maxOf([core.field, shoulder.field, southeast.field, lower.field])
+    field: maxOf([core.field, northwest.field, southeast.field, southern.field]),
+    parts: { core, northwest, southeast, southern }
   };
 }
 
 function secondaryLand(u, v) {
-  const east = ellipseMetrics(u, v, 0.77, 0.58, 0.105, 0.315, 0.04);
-  const southeast = ellipseMetrics(u, v, 0.825, 0.695, 0.064, 0.175, -0.30);
-  const northeast = ellipseMetrics(u, v, 0.722, 0.45, 0.052, 0.112, 0.55);
+  const eastSpine = ellipseMetrics(u, v, 0.770, 0.585, 0.105, 0.318, 0.04);
+  const southeast = ellipseMetrics(u, v, 0.826, 0.700, 0.066, 0.176, -0.30);
+  const northeast = ellipseMetrics(u, v, 0.722, 0.452, 0.052, 0.114, 0.55);
+  const bayShoulder = ellipseMetrics(u, v, 0.742, 0.625, 0.050, 0.090, -0.45);
 
   return {
-    metrics: east,
-    field: maxOf([east.field, southeast.field, northeast.field])
+    metrics: eastSpine,
+    field: maxOf([eastSpine.field, southeast.field, northeast.field, bayShoulder.field]),
+    parts: { eastSpine, southeast, northeast, bayShoulder }
   };
 }
 
 function islandLand(u, v) {
-  const a = ellipseMetrics(u, v, 0.18, 0.68, 0.034, 0.06, -0.16);
-  const b = ellipseMetrics(u, v, 0.23, 0.72, 0.03, 0.052, 0.45);
-  const c = ellipseMetrics(u, v, 0.37, 0.25, 0.025, 0.018, 0.1);
-  const d = ellipseMetrics(u, v, 0.41, 0.23, 0.018, 0.013, -0.25);
-  const e = ellipseMetrics(u, v, 0.62, 0.76, 0.022, 0.04, 0.18);
+  const seats = [
+    ellipseMetrics(u, v, 0.180, 0.680, 0.034, 0.060, -0.16),
+    ellipseMetrics(u, v, 0.230, 0.720, 0.030, 0.052, 0.45),
+    ellipseMetrics(u, v, 0.370, 0.250, 0.025, 0.018, 0.10),
+    ellipseMetrics(u, v, 0.410, 0.230, 0.018, 0.013, -0.25),
+    ellipseMetrics(u, v, 0.620, 0.760, 0.022, 0.040, 0.18)
+  ];
 
   return {
-    field: maxOf([a.field, b.field, c.field, d.field, e.field]),
-    seats: [a, b, c, d, e]
+    field: maxOf(seats.map((seat) => seat.field)),
+    seats
   };
+}
+
+function inletCuts(u, v) {
+  const bayA = ellipseMetrics(u, v, 0.248, 0.548, 0.040, 0.085, -0.20);
+  const bayB = ellipseMetrics(u, v, 0.398, 0.470, 0.050, 0.075, 0.70);
+  const bayC = ellipseMetrics(u, v, 0.755, 0.535, 0.038, 0.095, 0.18);
+  const bayD = ellipseMetrics(u, v, 0.804, 0.648, 0.030, 0.080, -0.45);
+
+  const cutA = smoothstep(-0.25, 0.10, bayA.field);
+  const cutB = smoothstep(-0.25, 0.12, bayB.field);
+  const cutC = smoothstep(-0.24, 0.11, bayC.field);
+  const cutD = smoothstep(-0.24, 0.11, bayD.field);
+
+  return clamp(Math.max(cutA, cutB, cutC, cutD), 0, 1);
 }
 
 function audraliaLandField(u, v) {
@@ -165,37 +190,42 @@ function audraliaLandField(u, v) {
   const secondary = secondaryLand(u, v);
   const islands = islandLand(u, v);
 
-  const coastlineBreak = (fbm(u + 0.013, v - 0.027, 1011) - 0.5) * 0.15;
+  const coastlineBreak = (fbm(u + 0.013, v - 0.027, 1011) - 0.5) * 0.150;
   const reliefBreak = (ridged(u - 0.041, v + 0.062, 2027) - 0.5) * 0.074;
+  const inlet = inletCuts(u, v) * 0.065;
 
   return {
     primary,
     secondary,
     islands,
-    field: maxOf([primary.field, secondary.field, islands.field]) + coastlineBreak + reliefBreak
+    inlet,
+    field: maxOf([primary.field, secondary.field, islands.field]) + coastlineBreak + reliefBreak - inlet
   };
 }
 
 function ringMountain(metrics, landMask) {
   const ringDistance = Math.abs(metrics.dist - 0.58);
-  const ring = Math.exp(-(ringDistance * ringDistance) / 0.012);
-  const breakNoise = smoothstep(0.18, 0.86, ridged(metrics.x * 1.8 + 0.2, metrics.y * 1.8 - 0.1, 6001));
-  return clamp(ring * (0.72 + breakNoise * 0.38) * landMask, 0, 1);
+  const ring = Math.exp(-(ringDistance * ringDistance) / 0.010);
+  const brokenCrown = 0.76 + smoothstep(0.24, 0.92, ridged(metrics.x * 2.1 + 0.2, metrics.y * 2.1 - 0.1, 6001)) * 0.42;
+  const directionalLift = 0.82 + Math.sin(metrics.theta * 5.0 + 0.65) * 0.14;
+  return clamp(ring * brokenCrown * directionalLift * landMask, 0, 1);
 }
 
 function centralBasin(metrics, landMask) {
-  const basin = Math.exp(-(metrics.dist * metrics.dist) / 0.105);
-  const floorNoise = 1 - smoothstep(0.58, 0.92, ridged(metrics.x * 2.2, metrics.y * 2.2, 6009));
-  return clamp(basin * floorNoise * landMask, 0, 1);
+  const basin = Math.exp(-(metrics.dist * metrics.dist) / 0.100);
+  const softFloor = 1 - smoothstep(0.55, 0.96, ridged(metrics.x * 2.2, metrics.y * 2.2, 6009));
+  return clamp(basin * softFloor * landMask, 0, 1);
 }
 
 function spiralRange(metrics, landMask, turns, pressure, phase) {
   const r = metrics.dist;
   const theta = metrics.theta;
+
   const wave = 0.5 + 0.5 * Math.sin(theta * turns + r * pressure + phase);
-  const band = smoothstep(0.70, 0.98, wave);
-  const radial = smoothstep(0.18, 0.46, r) * (1 - smoothstep(0.94, 1.18, r));
-  const breakNoise = smoothstep(0.32, 0.92, ridged(metrics.x * 1.7, metrics.y * 1.7, 6047));
+  const band = smoothstep(0.67, 0.985, wave);
+  const radial = smoothstep(0.18, 0.44, r) * (1 - smoothstep(0.94, 1.18, r));
+  const breakNoise = smoothstep(0.30, 0.94, ridged(metrics.x * 1.75, metrics.y * 1.75, 6047));
+
   return clamp(band * radial * breakNoise * landMask, 0, 1);
 }
 
@@ -215,9 +245,9 @@ function classifyAudraliaTerrain(u, v) {
   const isLand = field > 0;
   const landMask = smoothstep(-0.045, 0.14, field);
 
-  const coast = 1 - clamp(Math.abs(field) * 19, 0, 1);
-  const coastline = smoothstep(0.0, 0.85, coast);
-  const shelf = smoothstep(-0.20, 0.025, field);
+  const coast = 1 - clamp(Math.abs(field) * 19.5, 0, 1);
+  const coastline = smoothstep(0.0, 0.86, coast);
+  const shelf = smoothstep(-0.215, 0.025, field);
   const deepOcean = isLand ? 0 : 1 - shelf;
   const shelfWater = isLand ? 0 : shelf;
 
@@ -228,8 +258,9 @@ function classifyAudraliaTerrain(u, v) {
   const primaryRing = ringMountain(land.primary.metrics, primaryMask);
   const primaryBasin = centralBasin(land.primary.metrics, primaryMask);
 
-  const secondarySpiral = spiralRange(land.secondary.metrics, secondaryMask, 3.25, 8.8, 0.45);
-  const secondaryOuter = spiralRange(land.secondary.metrics, secondaryMask, 4.6, 10.2, 2.1);
+  const secondarySpiralA = spiralRange(land.secondary.metrics, secondaryMask, 3.2, 8.7, 0.45);
+  const secondarySpiralB = spiralRange(land.secondary.metrics, secondaryMask, 4.7, 10.4, 2.1);
+  const secondarySpiralC = spiralRange(land.secondary.metrics, secondaryMask, 5.9, 12.2, 3.35);
 
   const broad = fbm(u + 0.117, v + 0.039, 307);
   const micro = fbm(u - 0.082, v + 0.051, 907);
@@ -237,39 +268,66 @@ function classifyAudraliaTerrain(u, v) {
   const mineralNoise = noise(u + 0.42, v - 0.18, 72, 9207);
   const seamNoise = ridged(u * 1.7 + 0.03, v * 1.4 - 0.08, 6113);
 
+  const spiralRanges = clamp(Math.max(secondarySpiralA, secondarySpiralB, secondarySpiralC), 0, 1);
+  const inheritedRidge = ridgeNoise * 0.28 * landMask;
+
   const mountainRanges = isLand
-    ? clamp(Math.max(primaryRing, secondarySpiral, secondaryOuter, ridgeNoise * 0.34 * landMask), 0, 1)
+    ? clamp(Math.max(primaryRing, spiralRanges, inheritedRidge), 0, 1)
     : 0;
 
   const basinValleys = isLand
-    ? clamp(Math.max(primaryBasin, (1 - mountainRanges) * smoothstep(0.08, 0.56, field) * (1 - ridgeNoise) * 0.7), 0, 1)
+    ? clamp(
+        Math.max(
+          primaryBasin,
+          (1 - mountainRanges) * smoothstep(0.08, 0.56, field) * (1 - ridgeNoise) * 0.62
+        ),
+        0,
+        1
+      )
     : 0;
 
   const cliffsEscarpments = isLand
-    ? clamp(coastline * smoothstep(0.46, 0.92, ridgeNoise) * (1 - smoothstep(0.52, 0.95, primaryBasin)), 0, 1)
+    ? clamp(
+        coastline * smoothstep(0.43, 0.94, ridgeNoise) * (1 - smoothstep(0.48, 0.92, primaryBasin)) +
+          mountainRanges * coastline * 0.20,
+        0,
+        1
+      )
     : 0;
 
-  const beachesShelves = clamp(
-    coastline * (isLand ? smoothstep(0.07, 0.0, Math.abs(field)) : shelfWater),
-    0,
-    1
-  );
+  const beachLand = isLand ? smoothstep(0.08, 0.0, Math.abs(field)) * coastline : 0;
+  const beachWater = !isLand ? shelfWater * coastline : 0;
+  const beachesShelves = clamp(Math.max(beachLand, beachWater), 0, 1);
 
   const peninsulaNoise = ridged(u * 2.4 - 0.18, v * 2.0 + 0.09, 7181);
   const island = islandArticulation(land.islands.seats);
+  const bayCut = land.inlet;
+
   const peninsulasBaysIslands = clamp(
-    coastline * smoothstep(0.44, 0.95, peninsulaNoise) + island * 0.9,
+    coastline * smoothstep(0.42, 0.96, peninsulaNoise) +
+      bayCut * 0.85 +
+      island * 0.92,
     0,
     1
   );
 
   const elevation = isLand
-    ? clamp(0.20 + field * 0.62 + mountainRanges * 0.72 - basinValleys * 0.34 + broad * 0.12, 0, 1)
+    ? clamp(
+        0.20 +
+          field * 0.58 +
+          mountainRanges * 0.74 -
+          basinValleys * 0.36 +
+          broad * 0.11,
+        0,
+        1
+      )
     : 0;
 
   const mineralSeam = isLand
     ? clamp(
-        smoothstep(0.84, 0.99, mineralNoise) * smoothstep(0.40, 0.98, seamNoise) * (0.35 + mountainRanges * 0.65),
+        smoothstep(0.84, 0.99, mineralNoise) *
+          smoothstep(0.39, 0.98, seamNoise) *
+          (0.34 + mountainRanges * 0.66),
         0,
         1
       )
@@ -287,7 +345,7 @@ function classifyAudraliaTerrain(u, v) {
     deepOcean,
     mountainRanges,
     primaryRing,
-    spiralRanges: clamp(Math.max(secondarySpiral, secondaryOuter), 0, 1),
+    spiralRanges,
     basinValleys,
     primaryBasin,
     cliffsEscarpments,
@@ -295,6 +353,7 @@ function classifyAudraliaTerrain(u, v) {
     peninsulasBaysIslands,
     elevation,
     mineralSeam,
+    bayCut,
     broad,
     micro,
     ridgeNoise
@@ -302,25 +361,25 @@ function classifyAudraliaTerrain(u, v) {
 }
 
 function sampleAudraliaTerrain(u, v) {
-  const t = classifyAudraliaTerrain(u, v);
+  const terrain = classifyAudraliaTerrain(u, v);
 
   return {
     contract: CONTRACT,
     receipt: RECEIPT,
     u,
     v,
-    terrain: t,
+    terrain,
     fingers: {
-      mountainsRanges: t.mountainRanges,
-      valleysBasins: t.basinValleys,
-      cliffsEscarpments: t.cliffsEscarpments,
-      beachesCoastalShelves: t.beachesShelves,
-      peninsulasBaysIslandsInlets: t.peninsulasBaysIslands
+      mountainsRanges: terrain.mountainRanges,
+      valleysBasins: terrain.basinValleys,
+      cliffsEscarpments: terrain.cliffsEscarpments,
+      beachesCoastalShelves: terrain.beachesShelves,
+      peninsulasBaysIslandsInlets: terrain.peninsulasBaysIslands
     },
     specialForms: {
-      primaryMountainRing: t.primaryRing,
-      primaryCentralValley: t.primaryBasin,
-      externalSpiralRanges: t.spiralRanges
+      primaryMountainRing: terrain.primaryRing,
+      primaryCentralValley: terrain.primaryBasin,
+      externalSpiralRanges: terrain.spiralRanges
     }
   };
 }
@@ -330,8 +389,10 @@ function getAudraliaTerrainFingerStatus() {
     contract: CONTRACT,
     receipt: RECEIPT,
     version: VERSION,
-    authority: "terrain-five-finger-expression",
+    generation: "G2",
+    authority: "terrain-five-finger-natural-readability",
     runtimeTouched: false,
+    controlsTouched: false,
     assetsAbsorbAuthority: false,
     fingers: [
       "mountains/ranges",
@@ -368,7 +429,9 @@ if (typeof window !== "undefined") {
   document.documentElement.dataset.audraliaTerrainFingersContract = CONTRACT;
   document.documentElement.dataset.audraliaTerrainFingersReceipt = RECEIPT;
   document.documentElement.dataset.audraliaTerrainFiveFingers = "true";
+  document.documentElement.dataset.audraliaG2MaterialReadability = "true";
   document.documentElement.dataset.audraliaRuntimeTouched = "false";
+  document.documentElement.dataset.audraliaControlsTouched = "false";
 }
 
 export {

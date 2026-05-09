@@ -1,9 +1,11 @@
 // /assets/audralia/audralia.assets.js
-// AUDRALIA_V18_ASSET_BOUNDARY_FIVE_FINGER_EXPRESSION_AUTHORITY_TNT_v2
+// AUDRALIA_G2_ASSET_MATERIAL_DEFINITION_AND_NATURAL_READABILITY_TNT_v1
+// Full-file replacement.
 // Assets bind, separate, define, carry, and express.
 // Assets do not absorb authority.
 // Assets consume five-finger terrain expression and preserve visible boundaries.
 // Runtime remains motion-only.
+// Controls remain input-only.
 // No GraphicBox. No generated image. No visual-pass claim.
 
 import {
@@ -12,26 +14,28 @@ import {
   getAudraliaTerrainFingerStatus
 } from "./audralia.terrain.fingers.js";
 
-const CONTRACT = "AUDRALIA_V18_ASSET_BOUNDARY_FIVE_FINGER_EXPRESSION_AUTHORITY_TNT_v2";
-const RECEIPT = "AUDRALIA_V18_ASSET_BOUNDARY_FIVE_FINGER_EXPRESSION_RECEIPT";
-const PREVIOUS_CONTRACT = "AUDRALIA_V18_ASSET_BOUNDARY_EXPRESSION_AUTHORITY_TNT_v1";
-const VERSION = "2026-05-09.audralia-v18-assets-five-finger-expression";
+const CONTRACT = "AUDRALIA_G2_ASSET_MATERIAL_DEFINITION_AND_NATURAL_READABILITY_TNT_v1";
+const RECEIPT = "AUDRALIA_G2_ASSET_MATERIAL_DEFINITION_AND_NATURAL_READABILITY_RECEIPT";
+const PREVIOUS_CONTRACT = "AUDRALIA_V18_ASSET_BOUNDARY_FIVE_FINGER_EXPRESSION_AUTHORITY_TNT_v2";
+const VERSION = "2026-05-09.audralia-g2-asset-material-definition-natural-readability";
 
 const MATERIAL = Object.freeze({
-  deepOcean: [4, 24, 54],
-  ocean: [8, 72, 126],
-  shelf: [25, 156, 184],
-  coastFoam: [120, 206, 206],
-  beach: [198, 176, 114],
-  lowland: [126, 137, 86],
-  basinGreen: [96, 128, 78],
-  upland: [104, 122, 78],
-  ridge: [92, 96, 88],
-  cliff: [78, 82, 86],
-  slate: [62, 76, 88],
+  deepOcean: [3, 20, 48],
+  ocean: [7, 66, 120],
+  shelf: [24, 153, 184],
+  shelfGlow: [54, 184, 196],
+  coastFoam: [124, 209, 204],
+  beach: [200, 178, 116],
+  dryBeach: [181, 154, 96],
+  lowland: [119, 136, 84],
+  basinGreen: [87, 125, 76],
+  upland: [105, 121, 77],
+  ridge: [91, 96, 88],
+  cliff: [72, 78, 84],
+  slate: [58, 72, 86],
   granite: [126, 119, 105],
   marble: [184, 178, 160],
-  copper: [172, 101, 62],
+  copper: [170, 99, 60],
   gold: [220, 176, 68],
   opal: [171, 216, 205],
   plasma: [88, 176, 208]
@@ -72,10 +76,17 @@ function sampleAudraliaAsset(u, v) {
   const f = terrainSample.fingers;
 
   if (!t.isLand) {
-    let color = mixColor(MATERIAL.deepOcean, MATERIAL.ocean, clamp(0.28 + t.micro * 0.58, 0, 1));
-    color = mixColor(color, MATERIAL.shelf, t.shelfWater * 0.96);
-    color = mixColor(color, MATERIAL.coastFoam, t.coastline * t.shelfWater * 0.46);
-    color = addColor(color, t.shelfWater * 5 - t.deepOcean * 5);
+    let color = mixColor(MATERIAL.deepOcean, MATERIAL.ocean, clamp(0.28 + t.micro * 0.56, 0, 1));
+
+    color = mixColor(color, MATERIAL.shelf, t.shelfWater * 0.94);
+    color = mixColor(color, MATERIAL.shelfGlow, t.shelfWater * t.coastline * 0.40);
+    color = mixColor(color, MATERIAL.coastFoam, t.coastline * t.shelfWater * 0.36);
+
+    const depthShade = -6 * t.deepOcean;
+    const currentLift = (t.micro - 0.5) * 8;
+    const bayLift = t.peninsulasBaysIslands * t.shelfWater * 6;
+
+    color = addColor(color, depthShade + currentLift + bayLift);
 
     return {
       color,
@@ -88,7 +99,7 @@ function sampleAudraliaAsset(u, v) {
         valleysBasins: 0,
         cliffsEscarpments: 0,
         beachesCoastalShelves: 0,
-        peninsulasBaysIslandsInlets: t.peninsulasBaysIslands * 0.3,
+        peninsulasBaysIslandsInlets: t.peninsulasBaysIslands * 0.42,
         mineralSeams: 0,
         plasma: 0.18
       }
@@ -96,29 +107,32 @@ function sampleAudraliaAsset(u, v) {
   }
 
   let color = mixColor(MATERIAL.lowland, MATERIAL.upland, smoothstep(0.22, 0.68, t.elevation));
-  color = mixColor(color, MATERIAL.basinGreen, f.valleysBasins * 0.44);
-  color = mixColor(color, MATERIAL.beach, f.beachesCoastalShelves * 0.78);
-  color = mixColor(color, MATERIAL.ridge, f.mountainsRanges * 0.36);
-  color = mixColor(color, MATERIAL.slate, f.mountainsRanges * t.ridgeNoise * 0.34);
-  color = mixColor(color, MATERIAL.granite, f.mountainsRanges * smoothstep(0.54, 0.92, t.ridgeNoise) * 0.28);
-  color = mixColor(color, MATERIAL.marble, t.primaryRing * smoothstep(0.72, 0.98, t.ridgeNoise) * 0.22);
-  color = mixColor(color, MATERIAL.cliff, f.cliffsEscarpments * 0.44);
 
-  const copper = t.mineralSeam * smoothstep(0.35, 0.70, t.ridgeNoise);
-  const gold = t.mineralSeam * smoothstep(0.74, 0.98, t.ridgeNoise);
-  const opal = t.mineralSeam * smoothstep(0.65, 0.96, t.broad);
+  color = mixColor(color, MATERIAL.basinGreen, f.valleysBasins * 0.52);
+  color = mixColor(color, MATERIAL.beach, f.beachesCoastalShelves * 0.72);
+  color = mixColor(color, MATERIAL.dryBeach, f.beachesCoastalShelves * t.ridgeNoise * 0.20);
+
+  color = mixColor(color, MATERIAL.ridge, f.mountainsRanges * 0.40);
+  color = mixColor(color, MATERIAL.slate, f.mountainsRanges * t.ridgeNoise * 0.36);
+  color = mixColor(color, MATERIAL.granite, f.mountainsRanges * smoothstep(0.52, 0.92, t.ridgeNoise) * 0.31);
+  color = mixColor(color, MATERIAL.marble, t.primaryRing * smoothstep(0.72, 0.98, t.ridgeNoise) * 0.24);
+  color = mixColor(color, MATERIAL.cliff, f.cliffsEscarpments * 0.52);
+
+  const copper = t.mineralSeam * smoothstep(0.32, 0.70, t.ridgeNoise);
+  const gold = t.mineralSeam * smoothstep(0.72, 0.98, t.ridgeNoise);
+  const opal = t.mineralSeam * smoothstep(0.62, 0.95, t.broad);
 
   color = mixColor(color, MATERIAL.copper, copper * 0.18);
-  color = mixColor(color, MATERIAL.gold, gold * 0.24);
-  color = mixColor(color, MATERIAL.opal, opal * 0.15);
+  color = mixColor(color, MATERIAL.gold, gold * 0.25);
+  color = mixColor(color, MATERIAL.opal, opal * 0.16);
 
-  color = addColor(
-    color,
-    t.coastline * 5 +
-      f.peninsulasBaysIslandsInlets * 4 +
-      t.primaryBasin * 4 +
-      (t.micro - 0.5) * 10
-  );
+  const ringHighlight = t.primaryRing * 8;
+  const basinLift = t.primaryBasin * 6;
+  const coastLift = t.coastline * 5;
+  const articulationLift = f.peninsulasBaysIslandsInlets * 5;
+  const naturalNoise = (t.micro - 0.5) * 9;
+
+  color = addColor(color, ringHighlight + basinLift + coastLift + articulationLift + naturalNoise);
 
   return {
     color,
@@ -170,7 +184,10 @@ function createAudraliaAssetTexture(options = {}) {
 
   canvas.dataset.audraliaAssetsContract = CONTRACT;
   canvas.dataset.audraliaAssetsReceipt = RECEIPT;
+  canvas.dataset.audraliaGeneration = "G2";
   canvas.dataset.audraliaTerrainFingers = "true";
+  canvas.dataset.audraliaMaterialDefinition = "true";
+  canvas.dataset.audraliaNaturalReadability = "true";
   canvas.dataset.audraliaAssetsBoundaryExpression = "true";
   canvas.dataset.audraliaAssetsAbsorbAuthority = "false";
   canvas.dataset.generatedImage = "false";
@@ -186,9 +203,12 @@ function getAudraliaAssetsStatus() {
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
-    authority: "asset-boundary-expression",
+    generation: "G2",
+    authority: "asset-material-definition-natural-readability",
     terrainFingers: getAudraliaTerrainFingerStatus(),
     absorbsAuthority: false,
+    runtimeTouched: false,
+    controlsTouched: false,
     verbs: ["bind", "separate", "define", "carry", "express"],
     channels: [
       "deepOcean",
@@ -230,9 +250,14 @@ if (typeof window !== "undefined") {
   document.documentElement.dataset.audraliaAssetsLoaded = "true";
   document.documentElement.dataset.audraliaAssetsContract = CONTRACT;
   document.documentElement.dataset.audraliaAssetsReceipt = RECEIPT;
+  document.documentElement.dataset.audraliaGeneration = "G2";
   document.documentElement.dataset.audraliaTerrainFingers = "true";
+  document.documentElement.dataset.audraliaMaterialDefinition = "true";
+  document.documentElement.dataset.audraliaNaturalReadability = "true";
   document.documentElement.dataset.audraliaAssetsBoundaryExpression = "true";
   document.documentElement.dataset.audraliaAssetsAbsorbAuthority = "false";
+  document.documentElement.dataset.audraliaRuntimeTouched = "false";
+  document.documentElement.dataset.audraliaControlsTouched = "false";
 }
 
 export {

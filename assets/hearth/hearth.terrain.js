@@ -1,12 +1,11 @@
 // /assets/hearth/hearth.terrain.js
-// HEARTH_G3_ORGANIC_BASIN_RING_EXTERIOR_TERRAIN_TNT_v1
+// HEARTH_G3_ORGANIC_ISLAND_PENINSULA_TERRAIN_TNT_v1
 // Full-file replacement.
 // Family: HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1
 // Purpose:
-// - Preserve organic spiral mountain range terrain.
-// - Add naturally formed depression / basin formations where admissible.
-// - Add ring-mountain formations around selected depressions.
-// - Define exterior profiles for each land body.
+// - Preserve organic basin/ring/exterior terrain progress.
+// - Add organic peninsulas extending from each land body exterior.
+// - Add 256 procedural island seats surrounding each General Region land body.
 // - Preserve 4 General Regions, 16 Countries, and 9 Summit regions per General Region.
 // - Country assignment remains the only man-made layer.
 // - Terrain boundaries remain organic.
@@ -16,18 +15,21 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_ORGANIC_BASIN_RING_EXTERIOR_TERRAIN_TNT_v1";
+  const CONTRACT = "HEARTH_G3_ORGANIC_ISLAND_PENINSULA_TERRAIN_TNT_v1";
   const FAMILY_CONTRACT = "HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1";
-  const VERSION = "2026-05-09.hearth-g3-organic-basin-ring-exterior-terrain";
-  const RECEIPT = "HEARTH_G3_ORGANIC_BASIN_RING_EXTERIOR_TERRAIN_RECEIPT";
+  const VERSION = "2026-05-09.hearth-g3-organic-island-peninsula-terrain";
+  const RECEIPT = "HEARTH_G3_ORGANIC_ISLAND_PENINSULA_TERRAIN_RECEIPT";
 
   const TAU = Math.PI * 2;
   const LAND_THRESHOLD = 0.105;
+  const ISLANDS_PER_GENERAL_REGION = 256;
 
   const BOUNDARY_LAW = Object.freeze({
     organic: [
       "coastline",
       "landmass edge",
+      "peninsula",
+      "island chain",
       "exterior slope",
       "escarpment edge",
       "plateau shelf",
@@ -39,28 +41,28 @@
     ],
     manMade: ["country assignment only"],
     rule:
-      "Only country assignment is man-made. Exteriors, basins, ring mountains, escarpments, ranges, plateaus, and summits are organic terrain."
+      "Only country assignment is man-made. Islands, peninsulas, exteriors, basins, ring mountains, escarpments, ranges, plateaus, and summits are organic terrain."
   });
 
   const TIC_TAC_TOE_DYNAMIC_PROTOCOL = Object.freeze({
     T1: "One planet-scale terrain surface.",
     T2: "Four General Regions remain organic land bodies.",
-    T3: "Exterior profiles are defined per land body.",
-    T4: "Selected land bodies may contain natural basin depressions.",
-    T5: "Natural basin depressions may be surrounded by ring mountains.",
+    T3: "Each General Region receives 256 surrounding island seats.",
+    T4: "Peninsulas extend organically from landmass exteriors.",
+    T5: "Selected land bodies may contain natural basin depressions and ring mountains.",
     T6: "Four spiral mountain ranges still emit from each central mountain.",
     T7: "Plateaus remain at escarpment edges.",
     T8: "Country assignment remains the only man-made layer.",
-    T9: "Return organic terrain receipt with exterior and basin definitions."
+    T9: "Return organic terrain receipt with island and peninsula definitions."
   });
 
   const SYSTEMIC_QUAD_A_ATTACK = Object.freeze({
     authority: "/assets/hearth/hearth.terrain.js",
-    axis: "organic exterior → escarpment → plateau → spiral ranges / basin rings → central mountain → summit",
+    axis: "organic exterior → peninsula/island ring → escarpment → plateau → spiral ranges / basin rings → central mountain → summit",
     artifact:
-      "A planet-scale Hearth terrain field with organic exteriors, selected natural depression basins, ring mountains, spiral ranges, plateaus, central mountains, and summit peaks.",
+      "A planet-scale Hearth terrain field with organic exteriors, peninsulas, 256 island seats around each General Region, selected natural depression basins, ring mountains, spiral ranges, plateaus, central mountains, and summit peaks.",
     attack:
-      "Reject X-shaped artificial terrain lines, dark gray artificial outlines, man-made terrain cuts outside countries, random basins, hydration reshaping, new countries, new regions, climate, weather, clouds, humidity, and open-ended surface expression."
+      "Reject artificial island grids, dark gray artificial outlines, man-made terrain cuts outside countries, hydration reshaping, new countries, new regions, climate, weather, clouds, humidity, and open-ended surface expression."
   });
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -164,6 +166,7 @@
       master: [0.00, 0.02],
       exteriorProfile: "broad-weathered-escarpment",
       basin: { id: "GR01-BASIN-WEST-CROWN", x: -0.28, y: 0.18, radius: 0.245, ringRadius: 0.335, strength: 0.72 },
+      peninsulaBias: [0.18, -0.08, 0.34, -0.22],
       lobes: [
         [-104, 20, 0.62, 0.88],
         [-136, 38, 0.36, 0.40],
@@ -188,6 +191,7 @@
       master: [-0.03, -0.02],
       exteriorProfile: "steep-southern-rim",
       basin: { id: "GR02-BASIN-SOUTH-BOWL", x: 0.20, y: -0.30, radius: 0.215, ringRadius: 0.305, strength: 0.62 },
+      peninsulaBias: [-0.10, 0.24, -0.18, 0.30],
       lobes: [
         [-26, -28, 0.58, 0.80],
         [-50, -8, 0.32, 0.35],
@@ -212,6 +216,7 @@
       master: [0.02, 0.00],
       exteriorProfile: "broken-coastal-plateau",
       basin: { id: "GR03-BASIN-EAST-RING", x: 0.34, y: 0.18, radius: 0.235, ringRadius: 0.325, strength: 0.68 },
+      peninsulaBias: [0.28, 0.18, -0.12, -0.26],
       lobes: [
         [58, 18, 0.64, 0.86],
         [26, 34, 0.34, 0.29],
@@ -236,6 +241,7 @@
       master: [0.00, 0.04],
       exteriorProfile: "high-northern-craton-rim",
       basin: null,
+      peninsulaBias: [-0.18, 0.26, 0.12, -0.20],
       lobes: [
         [138, 43, 0.44, 0.68],
         [164, 52, 0.27, 0.28],
@@ -460,6 +466,97 @@
     return { escarpment: best, escarpmentStrength: clamp(bestStrength, 0, 1) };
   }
 
+  function islandCandidate(region, sector) {
+    const wrapped = ((sector % ISLANDS_PER_GENERAL_REGION) + ISLANDS_PER_GENERAL_REGION) % ISLANDS_PER_GENERAL_REGION;
+    const h1 = hash3(region.index + 1, wrapped + 13, region.seed * 1000 + 1);
+    const h2 = hash3(region.index + 1, wrapped + 29, region.seed * 1000 + 2);
+    const h3 = hash3(region.index + 1, wrapped + 47, region.seed * 1000 + 3);
+    const h4 = hash3(region.index + 1, wrapped + 71, region.seed * 1000 + 4);
+
+    const baseAngle = (wrapped / ISLANDS_PER_GENERAL_REGION) * TAU;
+    const angle = baseAngle + (h1 - 0.5) * (TAU / ISLANDS_PER_GENERAL_REGION) * 1.18;
+    const ring = 1.025 + h2 * 0.235;
+    const radius = 0.010 + h3 * 0.028;
+    const strength = 0.56 + h4 * 0.42;
+
+    return {
+      id: `${region.id}-ISLAND-${String(wrapped + 1).padStart(3, "0")}`,
+      index: wrapped + 1,
+      angle,
+      ring,
+      radius,
+      strength
+    };
+  }
+
+  function islandSample(local, region) {
+    const r = Math.hypot(local.x, local.y);
+    const theta = Math.atan2(local.y, local.x);
+    const normalized = (theta + Math.PI) / TAU;
+    const centerSector = Math.floor(normalized * ISLANDS_PER_GENERAL_REGION);
+
+    let bestIsland = null;
+    let bestStrength = 0;
+    let bestDistance = Infinity;
+
+    for (let offset = -2; offset <= 2; offset += 1) {
+      const island = islandCandidate(region, centerSector + offset);
+      const dx = Math.cos(island.angle) * island.ring - local.x;
+      const dy = Math.sin(island.angle) * island.ring - local.y;
+      const d = Math.hypot(dx, dy);
+      const irregular = 0.84 + microSurface(local.x * 2.4, local.y * 2.4, region.seed * 77 + island.index) * 0.34;
+      const strength = (1 - smoothstep(island.radius * irregular, island.radius * 2.55 * irregular, d)) * island.strength;
+
+      if (strength > bestStrength) {
+        bestStrength = strength;
+        bestIsland = island;
+        bestDistance = d;
+      }
+    }
+
+    return {
+      islandId: bestIsland && bestStrength > 0.12 ? bestIsland.id : null,
+      islandIndex: bestIsland && bestStrength > 0.12 ? bestIsland.index : null,
+      islandStrength: clamp(bestStrength, 0, 1),
+      islandDistance: bestDistance,
+      islandRing: bestIsland ? bestIsland.ring : null,
+      islandCountForRegion: ISLANDS_PER_GENERAL_REGION,
+      islandBoundaryType: "organic"
+    };
+  }
+
+  function peninsulaSample(local, region) {
+    const r = Math.hypot(local.x, local.y);
+    const theta = Math.atan2(local.y, local.x);
+
+    let bestStrength = 0;
+    let bestId = null;
+    let bestDirection = null;
+
+    SPIRAL_LANES.forEach((lane, i) => {
+      const bias = region.peninsulaBias[i] || 0;
+      const expected = lane.angle + bias + Math.sin(region.seed * TAU + i) * 0.12;
+      const angularDistance = Math.abs(angleDelta(theta, expected));
+      const radialBand = 1 - smoothstep(0.72, 1.12, Math.abs(r - 0.94));
+      const angularBand = 1 - smoothstep(0.11, 0.33, angularDistance);
+      const taper = smoothstep(0.76, 0.96, r) * (1 - smoothstep(1.18, 1.35, r));
+      const strength = angularBand * radialBand * taper * (0.42 + hash3(region.index + 5, i + 31, 88) * 0.42);
+
+      if (strength > bestStrength) {
+        bestStrength = strength;
+        bestId = `${region.id}-PENINSULA-${lane.key}`;
+        bestDirection = lane.name;
+      }
+    });
+
+    return {
+      peninsulaId: bestStrength > 0.09 ? bestId : null,
+      peninsulaDirection: bestStrength > 0.09 ? bestDirection : null,
+      peninsulaStrength: clamp(bestStrength, 0, 1),
+      peninsulaBoundaryType: "organic"
+    };
+  }
+
   function basinSample(local, region) {
     if (!region.basin) {
       return {
@@ -535,7 +632,7 @@
     };
   }
 
-  function terrainHierarchy(local, region, field, coast) {
+  function terrainHierarchy(local, region, field, coast, island, peninsula) {
     const esc = nearestEscarpment(local, region);
     const plateau = nearestPlateau(local, region);
     const range = nearestSpiralRange(local, region);
@@ -553,10 +650,15 @@
     const plateauStrength = plateau.plateauStrength * (0.86 - centralMountainStrength * 0.16);
     const rangeAscent = range.rangeStrength;
 
+    const islandUplift = island.islandStrength * 0.38;
+    const peninsulaUplift = peninsula.peninsulaStrength * 0.30;
+
     const ridge = clamp(
       rangeAscent * 0.78 +
         centralMountainStrength * 0.18 +
         basin.ringMountainStrength * 0.48 +
+        islandUplift * 0.22 +
+        peninsulaUplift * 0.18 +
         surfaceNoise * 0.05,
       0,
       1
@@ -570,7 +672,9 @@
         rangeAscent * 0.30 +
         centralMountainStrength * 0.28 +
         basin.ringMountainStrength * 0.22 -
-        basin.depressionStrength * 0.20,
+        basin.depressionStrength * 0.20 +
+        islandUplift +
+        peninsulaUplift,
       0,
       1
     );
@@ -584,6 +688,8 @@
         summitStrength * 0.28 +
         basin.ringMountainStrength * 0.34 -
         basin.depressionStrength * 0.18 +
+        islandUplift * 0.35 +
+        peninsulaUplift * 0.26 +
         surfaceNoise * 0.07,
       0,
       1
@@ -601,12 +707,14 @@
     const activeEscarpment = esc.escarpment && escarpmentStrength > 0.10 ? esc.escarpment : null;
 
     const organicBoundaryStrength = clamp(
-      exterior.exteriorStrength * 0.16 +
-        escarpmentStrength * 0.17 +
-        plateauStrength * 0.14 +
-        rangeAscent * 0.30 +
-        basin.ringMountainStrength * 0.30 +
-        centralMountainStrength * 0.08 +
+      exterior.exteriorStrength * 0.13 +
+        escarpmentStrength * 0.15 +
+        plateauStrength * 0.12 +
+        rangeAscent * 0.27 +
+        basin.ringMountainStrength * 0.26 +
+        island.islandStrength * 0.36 +
+        peninsula.peninsulaStrength * 0.24 +
+        centralMountainStrength * 0.07 +
         summitStrength * 0.04,
       0,
       1
@@ -615,6 +723,8 @@
     return {
       ...exterior,
       ...basin,
+      ...island,
+      ...peninsula,
 
       escarpmentId: activeEscarpment ? activeEscarpment.id : null,
       escarpmentDirection: activeEscarpment ? activeEscarpment.direction : null,
@@ -695,6 +805,14 @@
     g = mix(g, 204, terrain.ringMountainStrength * 0.21);
     b = mix(b, 170, terrain.ringMountainStrength * 0.16);
 
+    r = mix(r, 150, terrain.peninsulaStrength * 0.12);
+    g = mix(g, 132, terrain.peninsulaStrength * 0.10);
+    b = mix(b, 88, terrain.peninsulaStrength * 0.08);
+
+    r = mix(r, 166, terrain.islandStrength * 0.16);
+    g = mix(g, 146, terrain.islandStrength * 0.14);
+    b = mix(b, 100, terrain.islandStrength * 0.11);
+
     r = mix(r, 76, terrain.relief * 0.16);
     g = mix(g, 74, terrain.relief * 0.14);
     b = mix(b, 70, terrain.relief * 0.12);
@@ -710,7 +828,7 @@
     return [r, g, b];
   }
 
-  function waterSample(region, shelf = 0, waterDepth = 1, coast = shelf) {
+  function waterSample(region, shelf = 0, waterDepth = 1, coast = shelf, island = null, peninsula = null) {
     return {
       land: false,
       visibleLand: false,
@@ -733,8 +851,8 @@
       manMadeBoundaryStrength: 0,
       administrativeBoundaryStrength: 0,
       summitBoundary: 0,
-      organicBoundaryStrength: 0,
-      organicBoundaryType: "water",
+      organicBoundaryStrength: island ? island.islandStrength : 0,
+      organicBoundaryType: island && island.islandStrength > 0.12 ? "island-ring" : "water",
       citySeat: 0,
       localU: 0,
       localV: 0,
@@ -748,6 +866,13 @@
       ringMountainId: null,
       ringMountainStrength: 0,
       basinInteriorStrength: 0,
+      islandId: island ? island.islandId : null,
+      islandIndex: island ? island.islandIndex : null,
+      islandStrength: island ? island.islandStrength : 0,
+      islandCountForRegion: ISLANDS_PER_GENERAL_REGION,
+      peninsulaId: peninsula ? peninsula.peninsulaId : null,
+      peninsulaDirection: peninsula ? peninsula.peninsulaDirection : null,
+      peninsulaStrength: peninsula ? peninsula.peninsulaStrength : 0,
       escarpmentId: null,
       escarpmentDirection: null,
       escarpmentStrength: 0,
@@ -775,7 +900,7 @@
       surfaceAreaStandard: "full-planet",
       admissibleTerrain: true,
       boundaryLaw: BOUNDARY_LAW,
-      authority: "terrain-organic-basin-ring-exterior"
+      authority: "terrain-organic-island-peninsula"
     };
   }
 
@@ -787,16 +912,22 @@
 
     const region = selected.best.region;
     const field = selected.best.field;
-    const land = field > LAND_THRESHOLD;
     const coast = 1 - smoothstep(0.015, 0.115, Math.abs(field - LAND_THRESHOLD));
+    const local = localize(v, region);
+    const island = islandSample(local, region);
+    const peninsula = peninsulaSample(local, region);
+
+    const land =
+      field > LAND_THRESHOLD ||
+      island.islandStrength > 0.28 ||
+      peninsula.peninsulaStrength > 0.24;
 
     if (!land) {
-      const shelf = clamp(coast * 0.94, 0, 1);
-      const waterDepth = clamp((LAND_THRESHOLD - field) * 1.75, 0, 1);
-      return waterSample(region, shelf, waterDepth, coast);
+      const shelf = clamp(coast * 0.94 + island.islandStrength * 0.36 + peninsula.peninsulaStrength * 0.20, 0, 1);
+      const waterDepth = clamp((LAND_THRESHOLD - field) * 1.75 - island.islandStrength * 0.40 - peninsula.peninsulaStrength * 0.25, 0, 1);
+      return waterSample(region, shelf, waterDepth, coast, island, peninsula);
     }
 
-    const local = localize(v, region);
     const r = Math.hypot(local.x, local.y);
     const country = countryAssignment(local, region);
 
@@ -818,7 +949,7 @@
         ? (1 - smoothstep(0.018, 0.046, Math.hypot(fu - 0.5, fq - 0.5))) * 0.58
         : 0;
 
-    const hierarchy = terrainHierarchy(local, region, field, coast);
+    const hierarchy = terrainHierarchy(local, region, field, coast, island, peninsula);
     const color = terrainColor(region, hierarchy);
 
     return {
@@ -846,7 +977,7 @@
       administrativeBoundaryStrength: country.administrativeBoundaryStrength,
       summitBoundary: 0,
       organicBoundaryStrength: hierarchy.organicBoundaryStrength,
-      organicBoundaryType: "terrain",
+      organicBoundaryType: island.islandStrength > 0.28 ? "island" : peninsula.peninsulaStrength > 0.24 ? "peninsula" : "terrain",
       citySeat,
       localU: clamp((local.rawX + 1) * 0.5, 0, 1),
       localV: clamp((local.rawY + 1) * 0.5, 0, 1),
@@ -861,6 +992,13 @@
       ringMountainId: hierarchy.ringMountainId,
       ringMountainStrength: hierarchy.ringMountainStrength,
       basinInteriorStrength: hierarchy.basinInteriorStrength,
+      islandId: hierarchy.islandId,
+      islandIndex: hierarchy.islandIndex,
+      islandStrength: hierarchy.islandStrength,
+      islandCountForRegion: ISLANDS_PER_GENERAL_REGION,
+      peninsulaId: hierarchy.peninsulaId,
+      peninsulaDirection: hierarchy.peninsulaDirection,
+      peninsulaStrength: hierarchy.peninsulaStrength,
       escarpmentId: hierarchy.escarpmentId,
       escarpmentDirection: hierarchy.escarpmentDirection,
       escarpmentStrength: hierarchy.escarpmentStrength,
@@ -889,7 +1027,7 @@
       surfaceAreaStandard: "full-planet",
       admissibleTerrain: true,
       boundaryLaw: BOUNDARY_LAW,
-      authority: "terrain-organic-basin-ring-exterior"
+      authority: "terrain-organic-island-peninsula"
     };
   }
 
@@ -900,22 +1038,31 @@
       familyContract: FAMILY_CONTRACT,
       version: VERSION,
       generation: "G3",
-      standard: "organic-basin-ring-exterior-terrain",
-      authority: "terrain-organic-basin-ring-exterior",
+      standard: "organic-island-peninsula-terrain",
+      authority: "terrain-organic-island-peninsula",
       surfaceScale: "planet",
       surfaceAreaStandard: "full-planet",
       visibleLandGuarantee: true,
       boundaryLaw: BOUNDARY_LAW,
       admissibilityRule:
-        "Basins, ring mountains, exteriors, escarpments, plateaus, spiral ranges, central mountains, summits, and metroplex seats must belong to existing General Regions and Countries. Only country assignment is man-made.",
+        "Islands, peninsulas, basins, ring mountains, exteriors, escarpments, plateaus, spiral ranges, central mountains, summits, and metroplex seats must belong to existing General Regions and Countries. Only country assignment is man-made.",
       terrainThesis:
-        "organic exterior -> escarpment -> plateau -> spiral mountain range / basin ring -> central mountain -> summit peak; selected land formations may contain natural depression basins surrounded by ring mountains.",
+        "organic exterior -> peninsulas and surrounding island chain -> escarpment -> plateau -> spiral mountain range / basin ring -> central mountain -> summit peak.",
       generalRegions: GENERAL_REGIONS.map((region) => ({
         id: region.id,
         name: region.name,
         countries: region.countries,
         summitRegions: SUMMIT_LABELS,
         exteriorProfile: region.exteriorProfile,
+        islands: {
+          count: ISLANDS_PER_GENERAL_REGION,
+          boundaryType: "organic"
+        },
+        peninsulas: SPIRAL_LANES.map((lane) => ({
+          id: `${region.id}-PENINSULA-${lane.key}`,
+          direction: lane.name,
+          boundaryType: "organic"
+        })),
         basin: region.basin
           ? {
               id: region.basin.id,
@@ -950,6 +1097,9 @@
         countries: 16,
         summitRegionsPerGeneralRegion: 9,
         totalSummitRegions: 36,
+        islandsPerGeneralRegion: ISLANDS_PER_GENERAL_REGION,
+        totalIslandSeats: ISLANDS_PER_GENERAL_REGION * 4,
+        peninsulaSystems: 16,
         exteriorProfiles: 4,
         naturalDepressionBasins: 3,
         ringMountainSystems: 3,
@@ -961,6 +1111,9 @@
         metroplexSeats: 16
       },
       owns: [
+        "organic island chains",
+        "256 island seats per General Region",
+        "organic peninsulas",
         "organic exterior profiles",
         "natural depression basins",
         "organic ring mountains",
@@ -1004,8 +1157,8 @@
     contract: CONTRACT,
     familyContract: FAMILY_CONTRACT,
     version: VERSION,
-    standard: "organic-basin-ring-exterior-terrain",
-    authority: "terrain-organic-basin-ring-exterior",
+    standard: "organic-island-peninsula-terrain",
+    authority: "terrain-organic-island-peninsula",
     visibleLandGuarantee: true,
     boundaryLaw: BOUNDARY_LAW,
     sampleVector,
@@ -1019,13 +1172,16 @@
   document.documentElement.dataset.hearthTerrainContract = CONTRACT;
   document.documentElement.dataset.hearthTerrainFamilyContract = FAMILY_CONTRACT;
   document.documentElement.dataset.hearthTerrainVersion = VERSION;
-  document.documentElement.dataset.hearthTerrainStandard = "organic-basin-ring-exterior-terrain";
+  document.documentElement.dataset.hearthTerrainStandard = "organic-island-peninsula-terrain";
   document.documentElement.dataset.hearthTerrainSurfaceScale = "planet";
   document.documentElement.dataset.hearthTerrainVisibleLandGuarantee = "true";
   document.documentElement.dataset.hearthTerrainOrganicBoundaries = "true";
   document.documentElement.dataset.hearthTerrainManMadeBoundaries = "country-assignment-only";
   document.documentElement.dataset.hearthTerrainNoXLines = "true";
   document.documentElement.dataset.hearthTerrainNoDarkArtificialOutlines = "true";
+  document.documentElement.dataset.hearthTerrainIslandsPerGeneralRegion = String(ISLANDS_PER_GENERAL_REGION);
+  document.documentElement.dataset.hearthTerrainTotalIslandSeats = String(ISLANDS_PER_GENERAL_REGION * 4);
+  document.documentElement.dataset.hearthTerrainPeninsulaSystems = "16";
   document.documentElement.dataset.hearthTerrainExteriorProfiles = "4";
   document.documentElement.dataset.hearthTerrainNaturalDepressionBasins = "3";
   document.documentElement.dataset.hearthTerrainRingMountainSystems = "3";

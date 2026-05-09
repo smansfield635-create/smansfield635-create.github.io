@@ -1,35 +1,44 @@
 // /assets/hearth/hearth.terrain.js
-// HEARTH_G3_ORGANIC_ISLAND_PENINSULA_TERRAIN_TNT_v1
+// HEARTH_G3_RIGID_ROCKY_TERRAIN_RENEWAL_TNT_v1
 // Full-file replacement.
 // Family: HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1
 // Purpose:
-// - Preserve organic basin/ring/exterior terrain progress.
-// - Add organic peninsulas extending from each land body exterior.
-// - Add 256 procedural island seats surrounding each General Region land body.
+// - Renew terrain after removing island ownership from the main terrain contract.
+// - Main terrain owns land bodies only: exteriors, escarpments, plateaus, spiral ranges, basins, ring mountains, central mountains, summit peaks, and attached peninsulas.
+// - Islands are excluded and moved to /assets/hearth/hearth.islands.js.
+// - Hearth is four-times-Earth-age, four-times-rocky, four-times-high in mountain expression.
+// - North/South/East/West precedence controls rockiness: North highest, South next, East next, West least.
 // - Preserve 4 General Regions, 16 Countries, and 9 Summit regions per General Region.
 // - Country assignment remains the only man-made layer.
-// - Terrain boundaries remain organic.
 // - Hydration remains passive and downstream.
 // - No rivers, lakes, weather, climate, clouds, humidity, rainfall, wind, storms, or atmospheric moisture.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_ORGANIC_ISLAND_PENINSULA_TERRAIN_TNT_v1";
+  const CONTRACT = "HEARTH_G3_RIGID_ROCKY_TERRAIN_RENEWAL_TNT_v1";
   const FAMILY_CONTRACT = "HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1";
-  const VERSION = "2026-05-09.hearth-g3-organic-island-peninsula-terrain";
-  const RECEIPT = "HEARTH_G3_ORGANIC_ISLAND_PENINSULA_TERRAIN_RECEIPT";
+  const VERSION = "2026-05-09.hearth-g3-rigid-rocky-terrain-renewal";
+  const RECEIPT = "HEARTH_G3_RIGID_ROCKY_TERRAIN_RENEWAL_RECEIPT";
 
   const TAU = Math.PI * 2;
   const LAND_THRESHOLD = 0.105;
-  const ISLANDS_PER_GENERAL_REGION = 256;
+  const PLANET_AGE_FACTOR = 4;
+  const ROCK_FACTOR = 4;
+  const MOUNTAIN_HEIGHT_FACTOR = 4;
+
+  const DIRECTION_PRECEDENCE = Object.freeze({
+    north: { rank: 4, rockyMultiplier: 1.00, heightMultiplier: 1.00 },
+    south: { rank: 3, rockyMultiplier: 0.82, heightMultiplier: 0.86 },
+    east: { rank: 2, rockyMultiplier: 0.64, heightMultiplier: 0.72 },
+    west: { rank: 1, rockyMultiplier: 0.46, heightMultiplier: 0.58 }
+  });
 
   const BOUNDARY_LAW = Object.freeze({
     organic: [
       "coastline",
       "landmass edge",
-      "peninsula",
-      "island chain",
+      "attached peninsula",
       "exterior slope",
       "escarpment edge",
       "plateau shelf",
@@ -40,29 +49,30 @@
       "summit peak"
     ],
     manMade: ["country assignment only"],
+    excludedFromTerrain: ["detached island chains", "256 island seats"],
     rule:
-      "Only country assignment is man-made. Islands, peninsulas, exteriors, basins, ring mountains, escarpments, ranges, plateaus, and summits are organic terrain."
+      "Only country assignment is man-made. Islands are not owned by this terrain file. Detached islands belong to /assets/hearth/hearth.islands.js."
   });
 
   const TIC_TAC_TOE_DYNAMIC_PROTOCOL = Object.freeze({
     T1: "One planet-scale terrain surface.",
     T2: "Four General Regions remain organic land bodies.",
-    T3: "Each General Region receives 256 surrounding island seats.",
-    T4: "Peninsulas extend organically from landmass exteriors.",
-    T5: "Selected land bodies may contain natural basin depressions and ring mountains.",
-    T6: "Four spiral mountain ranges still emit from each central mountain.",
-    T7: "Plateaus remain at escarpment edges.",
-    T8: "Country assignment remains the only man-made layer.",
-    T9: "Return organic terrain receipt with island and peninsula definitions."
+    T3: "Terrain contract excludes islands.",
+    T4: "Rockiness follows North, South, East, West precedence.",
+    T5: "Mountains render four-times high and four-times rocky.",
+    T6: "Escarpments, plateaus, spiral ranges, basins, and summits remain organic.",
+    T7: "Country assignment remains the only man-made layer.",
+    T8: "Hydration remains passive and downstream.",
+    T9: "Return rigid rocky land-body terrain receipt."
   });
 
   const SYSTEMIC_QUAD_A_ATTACK = Object.freeze({
     authority: "/assets/hearth/hearth.terrain.js",
-    axis: "organic exterior → peninsula/island ring → escarpment → plateau → spiral ranges / basin rings → central mountain → summit",
+    axis: "rigid rocky terrain → directional precedence → admissible land-body terrain",
     artifact:
-      "A planet-scale Hearth terrain field with organic exteriors, peninsulas, 256 island seats around each General Region, selected natural depression basins, ring mountains, spiral ranges, plateaus, central mountains, and summit peaks.",
+      "A full-planet Hearth terrain field with rigid exteriors, high rocky spiral ranges, basin/ring formations, plateaus, central mountains, and summit peaks. Islands are excluded.",
     attack:
-      "Reject artificial island grids, dark gray artificial outlines, man-made terrain cuts outside countries, hydration reshaping, new countries, new regions, climate, weather, clouds, humidity, and open-ended surface expression."
+      "Reject island ownership in terrain, soft terrain, flat panel terrain, X-shaped artificial terrain, dark artificial outlines, man-made terrain cuts outside countries, hydration reshaping, new countries, new regions, climate, weather, clouds, humidity, and open-ended expression."
   });
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -116,17 +126,18 @@
 
   function wave3(v, seed) {
     return (
-      Math.sin(v[0] * 5.7 + v[1] * 3.1 + v[2] * 4.2 + seed) * 0.046 +
-      Math.cos(v[0] * 8.3 - v[1] * 2.8 + v[2] * 6.1 + seed * 1.7) * 0.035 +
-      Math.sin(v[0] * 13.1 + v[1] * 7.2 - v[2] * 4.7 + seed * 2.3) * 0.021
+      Math.sin(v[0] * 5.7 + v[1] * 3.1 + v[2] * 4.2 + seed) * 0.050 +
+      Math.cos(v[0] * 8.3 - v[1] * 2.8 + v[2] * 6.1 + seed * 1.7) * 0.040 +
+      Math.sin(v[0] * 13.1 + v[1] * 7.2 - v[2] * 4.7 + seed * 2.3) * 0.026
     );
   }
 
   function microSurface(localX, localY, seed) {
     return clamp(
       0.5 +
-        Math.sin(localX * 18.0 + localY * 11.0 + seed) * 0.17 +
-        Math.cos(localX * 23.0 - localY * 13.0 + seed * 0.71) * 0.11,
+        Math.sin(localX * 23.0 + localY * 17.0 + seed) * 0.20 +
+        Math.cos(localX * 31.0 - localY * 19.0 + seed * 0.71) * 0.15 +
+        Math.sin(localX * 43.0 + localY * 29.0 + seed * 1.31) * 0.08,
       0,
       1
     );
@@ -258,11 +269,15 @@
   ];
 
   const SPIRAL_LANES = Object.freeze([
-    { key: "N", name: "north", countryOffset: 0, angle: Math.PI / 2, curl: -0.54, plateauRadius: 0.74, edgeRadius: 0.88, width: 0.118, strength: 0.96 },
-    { key: "E", name: "east", countryOffset: 1, angle: 0, curl: 0.48, plateauRadius: 0.74, edgeRadius: 0.90, width: 0.110, strength: 0.84 },
-    { key: "S", name: "south", countryOffset: 2, angle: -Math.PI / 2, curl: -0.44, plateauRadius: 0.74, edgeRadius: 0.88, width: 0.112, strength: 0.88 },
-    { key: "W", name: "west", countryOffset: 3, angle: Math.PI, curl: 0.52, plateauRadius: 0.74, edgeRadius: 0.90, width: 0.104, strength: 0.78 }
-  ]);
+    { key: "N", name: "north", countryOffset: 0, angle: Math.PI / 2, curl: -0.62, plateauRadius: 0.74, edgeRadius: 0.88, width: 0.126 },
+    { key: "S", name: "south", countryOffset: 2, angle: -Math.PI / 2, curl: -0.50, plateauRadius: 0.74, edgeRadius: 0.88, width: 0.116 },
+    { key: "E", name: "east", countryOffset: 1, angle: 0, curl: 0.44, plateauRadius: 0.74, edgeRadius: 0.90, width: 0.108 },
+    { key: "W", name: "west", countryOffset: 3, angle: Math.PI, curl: 0.38, plateauRadius: 0.74, edgeRadius: 0.90, width: 0.098 }
+  ].map((lane) => ({
+    ...lane,
+    precedence: DIRECTION_PRECEDENCE[lane.name],
+    strength: DIRECTION_PRECEDENCE[lane.name].rockyMultiplier
+  })));
 
   const GENERAL_REGIONS = GENERAL_REGION_SOURCE.map((region, index) => {
     const center = dirFromLonLat(region.centerLonLat[0], region.centerLonLat[1]);
@@ -311,7 +326,7 @@
         metroplexId: `${region.id}-METROPLEX-${lane.key}`,
         lane,
         radius: lane.plateauRadius,
-        strength: lane.key === "N" ? 0.76 : lane.key === "E" ? 0.70 : lane.key === "S" ? 0.72 : 0.66
+        strength: 0.48 + lane.precedence.rockyMultiplier * 0.28
       })),
       summitLabels: SUMMIT_LABELS
     });
@@ -376,8 +391,8 @@
   function spiralExpectedAngle(r, lane, region) {
     const t = smoothstep(0.04, 1.04, r);
     const wobble =
-      Math.sin(t * TAU * 1.4 + region.seed * TAU + lane.countryOffset * 0.87) * 0.085 +
-      Math.cos(t * TAU * 0.7 + region.seed * 3.1) * 0.040;
+      Math.sin(t * TAU * 1.4 + region.seed * TAU + lane.countryOffset * 0.87) * 0.095 +
+      Math.cos(t * TAU * 0.7 + region.seed * 3.1) * 0.052;
 
     return lane.angle + lane.curl * t + wobble;
   }
@@ -389,14 +404,23 @@
     const expected = spiralExpectedAngle(r, lane, region);
     const angularDistance = Math.abs(angleDelta(theta, expected));
 
-    const width = lane.width + smoothstep(0.05, 0.85, r) * 0.030;
+    const width = lane.width + smoothstep(0.05, 0.85, r) * 0.034;
     const angularBand = 1 - smoothstep(width, width * 2.65, angularDistance);
     const radialBirth = smoothstep(0.055, 0.160, r);
     const radialEnd = 1 - smoothstep(0.96, 1.18, r);
     const brokenStone =
-      0.82 + microSurface(local.x * 1.2, local.y * 1.2, region.seed * 33 + lane.countryOffset) * 0.22;
+      0.72 + microSurface(local.x * 1.6, local.y * 1.6, region.seed * 33 + lane.countryOffset) * 0.44;
 
-    return clamp(angularBand * radialBirth * radialEnd * lane.strength * brokenStone, 0, 1);
+    return clamp(
+      angularBand *
+        radialBirth *
+        radialEnd *
+        lane.precedence.rockyMultiplier *
+        brokenStone *
+        (ROCK_FACTOR / 2.6),
+      0,
+      1.35
+    );
   }
 
   function nearestSpiralRange(local, region) {
@@ -411,7 +435,7 @@
       }
     }
 
-    return { range: best, rangeStrength: clamp(bestStrength, 0, 1) };
+    return { range: best, rangeStrength: clamp(bestStrength, 0, 1.35) };
   }
 
   function nearestPlateau(local, region) {
@@ -455,7 +479,7 @@
 
       const angularBand = 1 - smoothstep(0.18, 0.46, angularDistance);
       const radialBand = 1 - smoothstep(0.030, 0.120, radialDistance);
-      const strength = angularBand * radialBand * 0.82;
+      const strength = angularBand * radialBand * (0.62 + lane.precedence.rockyMultiplier * 0.26);
 
       if (strength > bestStrength) {
         bestStrength = strength;
@@ -464,97 +488,6 @@
     }
 
     return { escarpment: best, escarpmentStrength: clamp(bestStrength, 0, 1) };
-  }
-
-  function islandCandidate(region, sector) {
-    const wrapped = ((sector % ISLANDS_PER_GENERAL_REGION) + ISLANDS_PER_GENERAL_REGION) % ISLANDS_PER_GENERAL_REGION;
-    const h1 = hash3(region.index + 1, wrapped + 13, region.seed * 1000 + 1);
-    const h2 = hash3(region.index + 1, wrapped + 29, region.seed * 1000 + 2);
-    const h3 = hash3(region.index + 1, wrapped + 47, region.seed * 1000 + 3);
-    const h4 = hash3(region.index + 1, wrapped + 71, region.seed * 1000 + 4);
-
-    const baseAngle = (wrapped / ISLANDS_PER_GENERAL_REGION) * TAU;
-    const angle = baseAngle + (h1 - 0.5) * (TAU / ISLANDS_PER_GENERAL_REGION) * 1.18;
-    const ring = 1.025 + h2 * 0.235;
-    const radius = 0.010 + h3 * 0.028;
-    const strength = 0.56 + h4 * 0.42;
-
-    return {
-      id: `${region.id}-ISLAND-${String(wrapped + 1).padStart(3, "0")}`,
-      index: wrapped + 1,
-      angle,
-      ring,
-      radius,
-      strength
-    };
-  }
-
-  function islandSample(local, region) {
-    const r = Math.hypot(local.x, local.y);
-    const theta = Math.atan2(local.y, local.x);
-    const normalized = (theta + Math.PI) / TAU;
-    const centerSector = Math.floor(normalized * ISLANDS_PER_GENERAL_REGION);
-
-    let bestIsland = null;
-    let bestStrength = 0;
-    let bestDistance = Infinity;
-
-    for (let offset = -2; offset <= 2; offset += 1) {
-      const island = islandCandidate(region, centerSector + offset);
-      const dx = Math.cos(island.angle) * island.ring - local.x;
-      const dy = Math.sin(island.angle) * island.ring - local.y;
-      const d = Math.hypot(dx, dy);
-      const irregular = 0.84 + microSurface(local.x * 2.4, local.y * 2.4, region.seed * 77 + island.index) * 0.34;
-      const strength = (1 - smoothstep(island.radius * irregular, island.radius * 2.55 * irregular, d)) * island.strength;
-
-      if (strength > bestStrength) {
-        bestStrength = strength;
-        bestIsland = island;
-        bestDistance = d;
-      }
-    }
-
-    return {
-      islandId: bestIsland && bestStrength > 0.12 ? bestIsland.id : null,
-      islandIndex: bestIsland && bestStrength > 0.12 ? bestIsland.index : null,
-      islandStrength: clamp(bestStrength, 0, 1),
-      islandDistance: bestDistance,
-      islandRing: bestIsland ? bestIsland.ring : null,
-      islandCountForRegion: ISLANDS_PER_GENERAL_REGION,
-      islandBoundaryType: "organic"
-    };
-  }
-
-  function peninsulaSample(local, region) {
-    const r = Math.hypot(local.x, local.y);
-    const theta = Math.atan2(local.y, local.x);
-
-    let bestStrength = 0;
-    let bestId = null;
-    let bestDirection = null;
-
-    SPIRAL_LANES.forEach((lane, i) => {
-      const bias = region.peninsulaBias[i] || 0;
-      const expected = lane.angle + bias + Math.sin(region.seed * TAU + i) * 0.12;
-      const angularDistance = Math.abs(angleDelta(theta, expected));
-      const radialBand = 1 - smoothstep(0.72, 1.12, Math.abs(r - 0.94));
-      const angularBand = 1 - smoothstep(0.11, 0.33, angularDistance);
-      const taper = smoothstep(0.76, 0.96, r) * (1 - smoothstep(1.18, 1.35, r));
-      const strength = angularBand * radialBand * taper * (0.42 + hash3(region.index + 5, i + 31, 88) * 0.42);
-
-      if (strength > bestStrength) {
-        bestStrength = strength;
-        bestId = `${region.id}-PENINSULA-${lane.key}`;
-        bestDirection = lane.name;
-      }
-    });
-
-    return {
-      peninsulaId: bestStrength > 0.09 ? bestId : null,
-      peninsulaDirection: bestStrength > 0.09 ? bestDirection : null,
-      peninsulaStrength: clamp(bestStrength, 0, 1),
-      peninsulaBoundaryType: "organic"
-    };
   }
 
   function basinSample(local, region) {
@@ -573,9 +506,9 @@
     const d = pointDistance(local.rawX, local.rawY, b.x, b.y);
     const depressionStrength = (1 - smoothstep(b.radius * 0.52, b.radius, d)) * b.strength;
     const ringDistance = Math.abs(d - b.ringRadius);
-    const ringMountainStrength = (1 - smoothstep(0.035, 0.115, ringDistance)) * b.strength;
+    const ringMountainStrength = (1 - smoothstep(0.035, 0.115, ringDistance)) * b.strength * 1.12;
     const basinInteriorStrength = (1 - smoothstep(b.radius * 0.18, b.radius * 0.92, d)) * b.strength;
-    const basinStrength = clamp(Math.max(depressionStrength, ringMountainStrength * 0.86), 0, 1);
+    const basinStrength = clamp(Math.max(depressionStrength, ringMountainStrength * 0.92), 0, 1);
 
     return {
       basinId: basinStrength > 0.08 ? b.id : null,
@@ -591,13 +524,49 @@
     const r = Math.hypot(local.x, local.y);
     const outer = smoothstep(0.62, 1.03, r);
     const escarped = smoothstep(0.08, 0.50, coast);
-    const exteriorStrength = clamp(Math.max(outer * 0.55, escarped * 0.82), 0, 1);
+    const exteriorStrength = clamp(Math.max(outer * 0.62, escarped * 0.90), 0, 1);
 
     return {
       exteriorProfile: region.exteriorProfile,
       exteriorStrength,
-      exteriorSlope: clamp(outer * 0.68 + coast * 0.32, 0, 1),
+      exteriorSlope: clamp(outer * 0.78 + coast * 0.36, 0, 1),
       exteriorBoundaryType: "organic"
+    };
+  }
+
+  function peninsulaSample(local, region) {
+    const r = Math.hypot(local.x, local.y);
+    const theta = Math.atan2(local.y, local.x);
+
+    let bestStrength = 0;
+    let bestId = null;
+    let bestDirection = null;
+
+    SPIRAL_LANES.forEach((lane, i) => {
+      const bias = region.peninsulaBias[i] || 0;
+      const expected = lane.angle + bias + Math.sin(region.seed * TAU + i) * 0.12;
+      const angularDistance = Math.abs(angleDelta(theta, expected));
+      const radialBand = 1 - smoothstep(0.72, 1.12, Math.abs(r - 0.94));
+      const angularBand = 1 - smoothstep(0.11, 0.33, angularDistance);
+      const taper = smoothstep(0.76, 0.96, r) * (1 - smoothstep(1.18, 1.35, r));
+      const strength =
+        angularBand *
+        radialBand *
+        taper *
+        (0.34 + lane.precedence.rockyMultiplier * 0.26 + hash3(region.index + 5, i + 31, 88) * 0.18);
+
+      if (strength > bestStrength) {
+        bestStrength = strength;
+        bestId = `${region.id}-PENINSULA-${lane.key}`;
+        bestDirection = lane.name;
+      }
+    });
+
+    return {
+      peninsulaId: bestStrength > 0.09 ? bestId : null,
+      peninsulaDirection: bestStrength > 0.09 ? bestDirection : null,
+      peninsulaStrength: clamp(bestStrength, 0, 1),
+      peninsulaBoundaryType: "organic"
     };
   }
 
@@ -620,7 +589,7 @@
     }
 
     const rawBoundary = 1 - smoothstep(0.020, 0.180, secondDistance - bestDistance);
-    const visibleCountryBoundary = rawBoundary * 0.035;
+    const visibleCountryBoundary = rawBoundary * 0.030;
 
     return {
       countryId: region.countryBase + bestLane.countryOffset,
@@ -628,76 +597,105 @@
       countryDirection: bestLane.name,
       countryBoundary: visibleCountryBoundary,
       manMadeBoundaryStrength: visibleCountryBoundary,
-      administrativeBoundaryStrength: rawBoundary
+      administrativeBoundaryStrength: rawBoundary,
+      rockyPrecedence: bestLane.precedence
     };
   }
 
-  function terrainHierarchy(local, region, field, coast, island, peninsula) {
+  function terrainHierarchy(local, region, field, coast) {
     const esc = nearestEscarpment(local, region);
     const plateau = nearestPlateau(local, region);
     const range = nearestSpiralRange(local, region);
     const basin = basinSample(local, region);
     const exterior = exteriorSample(local, region, coast);
+    const peninsula = peninsulaSample(local, region);
 
     const r = Math.hypot(local.x, local.y);
-    const centralMountainStrength = (1 - smoothstep(0.070, 0.335, r)) * 0.94;
-    const summitStrength = (1 - smoothstep(0.016, 0.098, r)) * 1.0;
+    const centralMountainStrength = (1 - smoothstep(0.070, 0.350, r)) * 1.18;
+    const summitStrength = (1 - smoothstep(0.016, 0.112, r)) * 1.24;
 
     const surfaceNoise = microSurface(local.x, local.y, region.seed * 19.0);
+    const fractureNoise = microSurface(local.x * 1.9, local.y * 1.9, region.seed * 41.0);
     const baseUpland = smoothstep(LAND_THRESHOLD + 0.045, LAND_THRESHOLD + 0.40, field);
 
+    const activeDirection = range.range ? range.range.direction : peninsula.peninsulaDirection || "west";
+    const precedence = DIRECTION_PRECEDENCE[activeDirection] || DIRECTION_PRECEDENCE.west;
+    const rockBias = precedence.rockyMultiplier;
+
     const escarpmentStrength = esc.escarpmentStrength;
-    const plateauStrength = plateau.plateauStrength * (0.86 - centralMountainStrength * 0.16);
+    const plateauStrength = plateau.plateauStrength * (0.86 - centralMountainStrength * 0.10);
     const rangeAscent = range.rangeStrength;
 
-    const islandUplift = island.islandStrength * 0.38;
-    const peninsulaUplift = peninsula.peninsulaStrength * 0.30;
+    const rockExposure = clamp(
+      (rangeAscent * 0.42 +
+        centralMountainStrength * 0.32 +
+        escarpmentStrength * 0.20 +
+        basin.ringMountainStrength * 0.24 +
+        exterior.exteriorSlope * 0.14 +
+        fractureNoise * 0.20) *
+        (0.70 + rockBias * 0.48),
+      0,
+      1.45
+    );
+
+    const cliffStrength = clamp(
+      escarpmentStrength * 0.34 +
+        rangeAscent * 0.28 +
+        centralMountainStrength * 0.26 +
+        basin.ringMountainStrength * 0.22 +
+        fractureNoise * 0.16,
+      0,
+      1.25
+    );
 
     const ridge = clamp(
-      rangeAscent * 0.78 +
-        centralMountainStrength * 0.18 +
-        basin.ringMountainStrength * 0.48 +
-        islandUplift * 0.22 +
-        peninsulaUplift * 0.18 +
-        surfaceNoise * 0.05,
+      rangeAscent * 0.90 +
+        centralMountainStrength * 0.32 +
+        basin.ringMountainStrength * 0.54 +
+        cliffStrength * 0.18 +
+        surfaceNoise * 0.06,
       0,
-      1
+      1.45
     );
 
     const upland = clamp(
-      baseUpland * 0.27 +
-        exterior.exteriorSlope * 0.14 +
-        escarpmentStrength * 0.13 +
-        plateauStrength * 0.21 +
-        rangeAscent * 0.30 +
-        centralMountainStrength * 0.28 +
-        basin.ringMountainStrength * 0.22 -
-        basin.depressionStrength * 0.20 +
-        islandUplift +
-        peninsulaUplift,
+      baseUpland * 0.24 +
+        exterior.exteriorSlope * 0.20 +
+        escarpmentStrength * 0.18 +
+        plateauStrength * 0.20 +
+        rangeAscent * 0.38 +
+        centralMountainStrength * 0.38 +
+        basin.ringMountainStrength * 0.26 -
+        basin.depressionStrength * 0.18 +
+        peninsula.peninsulaStrength * 0.24,
       0,
-      1
+      1.35
     );
 
     const relief = clamp(
-      exterior.exteriorSlope * 0.13 +
-        escarpmentStrength * 0.15 +
+      exterior.exteriorSlope * 0.16 +
+        escarpmentStrength * 0.20 +
         plateauStrength * 0.10 +
-        rangeAscent * 0.38 +
-        centralMountainStrength * 0.38 +
-        summitStrength * 0.28 +
-        basin.ringMountainStrength * 0.34 -
-        basin.depressionStrength * 0.18 +
-        islandUplift * 0.35 +
-        peninsulaUplift * 0.26 +
+        rangeAscent * 0.50 +
+        centralMountainStrength * 0.56 +
+        summitStrength * 0.36 +
+        basin.ringMountainStrength * 0.40 -
+        basin.depressionStrength * 0.16 +
+        rockExposure * 0.22 +
         surfaceNoise * 0.07,
       0,
-      1
+      1.55
+    );
+
+    const rigidLandscapeStrength = clamp(
+      rockExposure * 0.42 + cliffStrength * 0.28 + relief * 0.22 + ridge * 0.18,
+      0,
+      1.6
     );
 
     const lowland = clamp(
-      (1 - upland) * smoothstep(LAND_THRESHOLD + 0.015, LAND_THRESHOLD + 0.22, field) +
-        basin.depressionStrength * 0.38,
+      (1 - clamp(upland, 0, 1)) * smoothstep(LAND_THRESHOLD + 0.015, LAND_THRESHOLD + 0.22, field) +
+        basin.depressionStrength * 0.34,
       0,
       1
     );
@@ -707,23 +705,21 @@
     const activeEscarpment = esc.escarpment && escarpmentStrength > 0.10 ? esc.escarpment : null;
 
     const organicBoundaryStrength = clamp(
-      exterior.exteriorStrength * 0.13 +
-        escarpmentStrength * 0.15 +
-        plateauStrength * 0.12 +
-        rangeAscent * 0.27 +
-        basin.ringMountainStrength * 0.26 +
-        island.islandStrength * 0.36 +
-        peninsula.peninsulaStrength * 0.24 +
-        centralMountainStrength * 0.07 +
-        summitStrength * 0.04,
+      exterior.exteriorStrength * 0.16 +
+        escarpmentStrength * 0.18 +
+        plateauStrength * 0.10 +
+        rangeAscent * 0.34 +
+        basin.ringMountainStrength * 0.28 +
+        peninsula.peninsulaStrength * 0.18 +
+        centralMountainStrength * 0.08 +
+        summitStrength * 0.05,
       0,
-      1
+      1.35
     );
 
     return {
       ...exterior,
       ...basin,
-      ...island,
       ...peninsula,
 
       escarpmentId: activeEscarpment ? activeEscarpment.id : null,
@@ -766,69 +762,72 @@
       ridge,
       upland,
       lowland,
-      surfaceNoise
+      rockExposure,
+      cliffStrength,
+      rigidLandscapeStrength,
+      rockyDirection: activeDirection,
+      rockyPrecedenceRank: precedence.rank,
+      rockyMultiplier: precedence.rockyMultiplier,
+      heightMultiplier: precedence.heightMultiplier,
+      mountainHeightFactor: MOUNTAIN_HEIGHT_FACTOR,
+      rockFactor: ROCK_FACTOR,
+      planetAgeFactor: PLANET_AGE_FACTOR,
+      surfaceNoise,
+      fractureNoise
     };
   }
 
   function terrainColor(region, terrain) {
     let [r, g, b] = region.color;
 
-    r = mix(r, 92, terrain.lowland * 0.16);
-    g = mix(g, 126, terrain.lowland * 0.16);
-    b = mix(b, 84, terrain.lowland * 0.11);
+    r = mix(r, 92, terrain.lowland * 0.14);
+    g = mix(g, 126, terrain.lowland * 0.14);
+    b = mix(b, 84, terrain.lowland * 0.10);
 
-    r = mix(r, 126, terrain.exteriorStrength * 0.14);
-    g = mix(g, 116, terrain.exteriorStrength * 0.12);
-    b = mix(b, 82, terrain.exteriorStrength * 0.09);
+    r = mix(r, 118, terrain.exteriorStrength * 0.16);
+    g = mix(g, 108, terrain.exteriorStrength * 0.14);
+    b = mix(b, 82, terrain.exteriorStrength * 0.11);
 
-    r = mix(r, 144, terrain.escarpmentStrength * 0.13);
-    g = mix(g, 126, terrain.escarpmentStrength * 0.11);
-    b = mix(b, 92, terrain.escarpmentStrength * 0.08);
+    r = mix(r, 98, terrain.cliffStrength * 0.30);
+    g = mix(g, 94, terrain.cliffStrength * 0.28);
+    b = mix(b, 88, terrain.cliffStrength * 0.24);
 
-    r = mix(r, 176, terrain.plateauStrength * 0.18);
-    g = mix(g, 156, terrain.plateauStrength * 0.16);
+    r = mix(r, 66, terrain.rockExposure * 0.34);
+    g = mix(g, 68, terrain.rockExposure * 0.32);
+    b = mix(b, 66, terrain.rockExposure * 0.28);
+
+    r = mix(r, 178, terrain.plateauStrength * 0.18);
+    g = mix(g, 158, terrain.plateauStrength * 0.16);
     b = mix(b, 110, terrain.plateauStrength * 0.12);
 
-    r = mix(r, 88, terrain.rangeAscent * 0.22);
-    g = mix(g, 92, terrain.rangeAscent * 0.20);
-    b = mix(b, 82, terrain.rangeAscent * 0.14);
-
-    r = mix(r, 206, terrain.rangeAscent * 0.18);
-    g = mix(g, 192, terrain.rangeAscent * 0.14);
-    b = mix(b, 152, terrain.rangeAscent * 0.10);
+    r = mix(r, 212, terrain.ridge * 0.20);
+    g = mix(g, 198, terrain.ridge * 0.16);
+    b = mix(b, 160, terrain.ridge * 0.12);
 
     r = mix(r, 72, terrain.depressionStrength * 0.18);
-    g = mix(g, 90, terrain.depressionStrength * 0.18);
-    b = mix(b, 74, terrain.depressionStrength * 0.14);
+    g = mix(g, 88, terrain.depressionStrength * 0.18);
+    b = mix(b, 72, terrain.depressionStrength * 0.14);
 
-    r = mix(r, 214, terrain.ringMountainStrength * 0.24);
-    g = mix(g, 204, terrain.ringMountainStrength * 0.21);
-    b = mix(b, 170, terrain.ringMountainStrength * 0.16);
+    r = mix(r, 220, terrain.ringMountainStrength * 0.26);
+    g = mix(g, 210, terrain.ringMountainStrength * 0.22);
+    b = mix(b, 174, terrain.ringMountainStrength * 0.18);
 
-    r = mix(r, 150, terrain.peninsulaStrength * 0.12);
-    g = mix(g, 132, terrain.peninsulaStrength * 0.10);
-    b = mix(b, 88, terrain.peninsulaStrength * 0.08);
+    r = mix(r, 70, terrain.rigidLandscapeStrength * 0.20);
+    g = mix(g, 68, terrain.rigidLandscapeStrength * 0.18);
+    b = mix(b, 64, terrain.rigidLandscapeStrength * 0.16);
 
-    r = mix(r, 166, terrain.islandStrength * 0.16);
-    g = mix(g, 146, terrain.islandStrength * 0.14);
-    b = mix(b, 100, terrain.islandStrength * 0.11);
+    r = mix(r, 232, terrain.centralMountainStrength * 0.30);
+    g = mix(g, 222, terrain.centralMountainStrength * 0.27);
+    b = mix(b, 188, terrain.centralMountainStrength * 0.20);
 
-    r = mix(r, 76, terrain.relief * 0.16);
-    g = mix(g, 74, terrain.relief * 0.14);
-    b = mix(b, 70, terrain.relief * 0.12);
-
-    r = mix(r, 222, terrain.centralMountainStrength * 0.25);
-    g = mix(g, 210, terrain.centralMountainStrength * 0.22);
-    b = mix(b, 178, terrain.centralMountainStrength * 0.16);
-
-    r = mix(r, 244, terrain.summitStrength * 0.34);
-    g = mix(g, 236, terrain.summitStrength * 0.30);
-    b = mix(b, 212, terrain.summitStrength * 0.24);
+    r = mix(r, 248, terrain.summitStrength * 0.40);
+    g = mix(g, 242, terrain.summitStrength * 0.36);
+    b = mix(b, 222, terrain.summitStrength * 0.30);
 
     return [r, g, b];
   }
 
-  function waterSample(region, shelf = 0, waterDepth = 1, coast = shelf, island = null, peninsula = null) {
+  function waterSample(region, shelf = 0, waterDepth = 1, coast = shelf) {
     return {
       land: false,
       visibleLand: false,
@@ -851,8 +850,8 @@
       manMadeBoundaryStrength: 0,
       administrativeBoundaryStrength: 0,
       summitBoundary: 0,
-      organicBoundaryStrength: island ? island.islandStrength : 0,
-      organicBoundaryType: island && island.islandStrength > 0.12 ? "island-ring" : "water",
+      organicBoundaryStrength: 0,
+      organicBoundaryType: "water",
       citySeat: 0,
       localU: 0,
       localV: 0,
@@ -866,13 +865,9 @@
       ringMountainId: null,
       ringMountainStrength: 0,
       basinInteriorStrength: 0,
-      islandId: island ? island.islandId : null,
-      islandIndex: island ? island.islandIndex : null,
-      islandStrength: island ? island.islandStrength : 0,
-      islandCountForRegion: ISLANDS_PER_GENERAL_REGION,
-      peninsulaId: peninsula ? peninsula.peninsulaId : null,
-      peninsulaDirection: peninsula ? peninsula.peninsulaDirection : null,
-      peninsulaStrength: peninsula ? peninsula.peninsulaStrength : 0,
+      peninsulaId: null,
+      peninsulaDirection: null,
+      peninsulaStrength: 0,
       escarpmentId: null,
       escarpmentDirection: null,
       escarpmentStrength: 0,
@@ -896,11 +891,22 @@
       ridge: 0,
       upland: 0,
       lowland: 0,
+      rockExposure: 0,
+      cliffStrength: 0,
+      rigidLandscapeStrength: 0,
+      rockyDirection: null,
+      rockyPrecedenceRank: 0,
+      rockyMultiplier: 0,
+      heightMultiplier: 0,
+      mountainHeightFactor: MOUNTAIN_HEIGHT_FACTOR,
+      rockFactor: ROCK_FACTOR,
+      planetAgeFactor: PLANET_AGE_FACTOR,
+      islandExcludedFromTerrain: true,
       surfaceScale: "planet",
       surfaceAreaStandard: "full-planet",
       admissibleTerrain: true,
       boundaryLaw: BOUNDARY_LAW,
-      authority: "terrain-organic-island-peninsula"
+      authority: "terrain-rigid-rocky-landbody"
     };
   }
 
@@ -912,22 +918,16 @@
 
     const region = selected.best.region;
     const field = selected.best.field;
+    const land = field > LAND_THRESHOLD;
     const coast = 1 - smoothstep(0.015, 0.115, Math.abs(field - LAND_THRESHOLD));
-    const local = localize(v, region);
-    const island = islandSample(local, region);
-    const peninsula = peninsulaSample(local, region);
-
-    const land =
-      field > LAND_THRESHOLD ||
-      island.islandStrength > 0.28 ||
-      peninsula.peninsulaStrength > 0.24;
 
     if (!land) {
-      const shelf = clamp(coast * 0.94 + island.islandStrength * 0.36 + peninsula.peninsulaStrength * 0.20, 0, 1);
-      const waterDepth = clamp((LAND_THRESHOLD - field) * 1.75 - island.islandStrength * 0.40 - peninsula.peninsulaStrength * 0.25, 0, 1);
-      return waterSample(region, shelf, waterDepth, coast, island, peninsula);
+      const shelf = clamp(coast * 0.94, 0, 1);
+      const waterDepth = clamp((LAND_THRESHOLD - field) * 1.75, 0, 1);
+      return waterSample(region, shelf, waterDepth, coast);
     }
 
+    const local = localize(v, region);
     const r = Math.hypot(local.x, local.y);
     const country = countryAssignment(local, region);
 
@@ -949,7 +949,7 @@
         ? (1 - smoothstep(0.018, 0.046, Math.hypot(fu - 0.5, fq - 0.5))) * 0.58
         : 0;
 
-    const hierarchy = terrainHierarchy(local, region, field, coast, island, peninsula);
+    const hierarchy = terrainHierarchy(local, region, field, coast);
     const color = terrainColor(region, hierarchy);
 
     return {
@@ -977,7 +977,7 @@
       administrativeBoundaryStrength: country.administrativeBoundaryStrength,
       summitBoundary: 0,
       organicBoundaryStrength: hierarchy.organicBoundaryStrength,
-      organicBoundaryType: island.islandStrength > 0.28 ? "island" : peninsula.peninsulaStrength > 0.24 ? "peninsula" : "terrain",
+      organicBoundaryType: "terrain",
       citySeat,
       localU: clamp((local.rawX + 1) * 0.5, 0, 1),
       localV: clamp((local.rawY + 1) * 0.5, 0, 1),
@@ -992,10 +992,6 @@
       ringMountainId: hierarchy.ringMountainId,
       ringMountainStrength: hierarchy.ringMountainStrength,
       basinInteriorStrength: hierarchy.basinInteriorStrength,
-      islandId: hierarchy.islandId,
-      islandIndex: hierarchy.islandIndex,
-      islandStrength: hierarchy.islandStrength,
-      islandCountForRegion: ISLANDS_PER_GENERAL_REGION,
       peninsulaId: hierarchy.peninsulaId,
       peninsulaDirection: hierarchy.peninsulaDirection,
       peninsulaStrength: hierarchy.peninsulaStrength,
@@ -1022,12 +1018,24 @@
       ridge: hierarchy.ridge,
       upland: hierarchy.upland,
       lowland: hierarchy.lowland,
+      rockExposure: hierarchy.rockExposure,
+      cliffStrength: hierarchy.cliffStrength,
+      rigidLandscapeStrength: hierarchy.rigidLandscapeStrength,
+      rockyDirection: hierarchy.rockyDirection,
+      rockyPrecedenceRank: hierarchy.rockyPrecedenceRank,
+      rockyMultiplier: hierarchy.rockyMultiplier,
+      heightMultiplier: hierarchy.heightMultiplier,
+      mountainHeightFactor: MOUNTAIN_HEIGHT_FACTOR,
+      rockFactor: ROCK_FACTOR,
+      planetAgeFactor: PLANET_AGE_FACTOR,
       surfaceNoise: hierarchy.surfaceNoise,
+      fractureNoise: hierarchy.fractureNoise,
+      islandExcludedFromTerrain: true,
       surfaceScale: "planet",
       surfaceAreaStandard: "full-planet",
       admissibleTerrain: true,
       boundaryLaw: BOUNDARY_LAW,
-      authority: "terrain-organic-island-peninsula"
+      authority: "terrain-rigid-rocky-landbody"
     };
   }
 
@@ -1038,31 +1046,27 @@
       familyContract: FAMILY_CONTRACT,
       version: VERSION,
       generation: "G3",
-      standard: "organic-island-peninsula-terrain",
-      authority: "terrain-organic-island-peninsula",
+      standard: "rigid-rocky-landbody-terrain",
+      authority: "terrain-rigid-rocky-landbody",
       surfaceScale: "planet",
       surfaceAreaStandard: "full-planet",
       visibleLandGuarantee: true,
+      planetAgeFactor: PLANET_AGE_FACTOR,
+      rockFactor: ROCK_FACTOR,
+      mountainHeightFactor: MOUNTAIN_HEIGHT_FACTOR,
+      directionalRockPrecedence: DIRECTION_PRECEDENCE,
+      islandOwnership: "excluded-moved-to-hearth-islands-js",
       boundaryLaw: BOUNDARY_LAW,
       admissibilityRule:
-        "Islands, peninsulas, basins, ring mountains, exteriors, escarpments, plateaus, spiral ranges, central mountains, summits, and metroplex seats must belong to existing General Regions and Countries. Only country assignment is man-made.",
+        "Main terrain owns land-body terrain only. Detached island chains and 256 island seats are excluded and belong to /assets/hearth/hearth.islands.js.",
       terrainThesis:
-        "organic exterior -> peninsulas and surrounding island chain -> escarpment -> plateau -> spiral mountain range / basin ring -> central mountain -> summit peak.",
+        "organic exterior -> attached peninsula -> escarpment -> plateau -> rigid spiral mountain range / basin ring -> central mountain -> summit peak.",
       generalRegions: GENERAL_REGIONS.map((region) => ({
         id: region.id,
         name: region.name,
         countries: region.countries,
         summitRegions: SUMMIT_LABELS,
         exteriorProfile: region.exteriorProfile,
-        islands: {
-          count: ISLANDS_PER_GENERAL_REGION,
-          boundaryType: "organic"
-        },
-        peninsulas: SPIRAL_LANES.map((lane) => ({
-          id: `${region.id}-PENINSULA-${lane.key}`,
-          direction: lane.name,
-          boundaryType: "organic"
-        })),
         basin: region.basin
           ? {
               id: region.basin.id,
@@ -1076,6 +1080,8 @@
           id: range.id,
           direction: range.direction,
           countryId: range.countryId,
+          rockyPrecedenceRank: range.lane.precedence.rank,
+          rockyMultiplier: range.lane.precedence.rockyMultiplier,
           boundaryType: "organic"
         })),
         escarpments: region.escarpments.map((escarpment) => ({
@@ -1097,9 +1103,6 @@
         countries: 16,
         summitRegionsPerGeneralRegion: 9,
         totalSummitRegions: 36,
-        islandsPerGeneralRegion: ISLANDS_PER_GENERAL_REGION,
-        totalIslandSeats: ISLANDS_PER_GENERAL_REGION * 4,
-        peninsulaSystems: 16,
         exteriorProfiles: 4,
         naturalDepressionBasins: 3,
         ringMountainSystems: 3,
@@ -1108,13 +1111,13 @@
         plateaus: 16,
         centralMountains: 4,
         summitPeaks: 4,
-        metroplexSeats: 16
+        metroplexSeats: 16,
+        islandsOwnedHere: 0
       },
       owns: [
-        "organic island chains",
-        "256 island seats per General Region",
-        "organic peninsulas",
+        "rigid rocky land-body terrain",
         "organic exterior profiles",
+        "attached peninsulas",
         "natural depression basins",
         "organic ring mountains",
         "organic spiral mountain ranges",
@@ -1125,6 +1128,8 @@
         "country-only man-made assignment"
       ],
       doesNotOwn: [
+        "detached island chains",
+        "256 island seats",
         "X-shaped artificial terrain lines",
         "dark gray artificial terrain outlines",
         "man-made terrain boundaries outside country assignment",
@@ -1157,10 +1162,11 @@
     contract: CONTRACT,
     familyContract: FAMILY_CONTRACT,
     version: VERSION,
-    standard: "organic-island-peninsula-terrain",
-    authority: "terrain-organic-island-peninsula",
+    standard: "rigid-rocky-landbody-terrain",
+    authority: "terrain-rigid-rocky-landbody",
     visibleLandGuarantee: true,
     boundaryLaw: BOUNDARY_LAW,
+    directionPrecedence: DIRECTION_PRECEDENCE,
     sampleVector,
     regions: () => GENERAL_REGIONS.slice(),
     summitLabels: () => SUMMIT_LABELS.slice()
@@ -1172,23 +1178,16 @@
   document.documentElement.dataset.hearthTerrainContract = CONTRACT;
   document.documentElement.dataset.hearthTerrainFamilyContract = FAMILY_CONTRACT;
   document.documentElement.dataset.hearthTerrainVersion = VERSION;
-  document.documentElement.dataset.hearthTerrainStandard = "organic-island-peninsula-terrain";
+  document.documentElement.dataset.hearthTerrainStandard = "rigid-rocky-landbody-terrain";
   document.documentElement.dataset.hearthTerrainSurfaceScale = "planet";
   document.documentElement.dataset.hearthTerrainVisibleLandGuarantee = "true";
   document.documentElement.dataset.hearthTerrainOrganicBoundaries = "true";
   document.documentElement.dataset.hearthTerrainManMadeBoundaries = "country-assignment-only";
-  document.documentElement.dataset.hearthTerrainNoXLines = "true";
-  document.documentElement.dataset.hearthTerrainNoDarkArtificialOutlines = "true";
-  document.documentElement.dataset.hearthTerrainIslandsPerGeneralRegion = String(ISLANDS_PER_GENERAL_REGION);
-  document.documentElement.dataset.hearthTerrainTotalIslandSeats = String(ISLANDS_PER_GENERAL_REGION * 4);
-  document.documentElement.dataset.hearthTerrainPeninsulaSystems = "16";
-  document.documentElement.dataset.hearthTerrainExteriorProfiles = "4";
-  document.documentElement.dataset.hearthTerrainNaturalDepressionBasins = "3";
-  document.documentElement.dataset.hearthTerrainRingMountainSystems = "3";
-  document.documentElement.dataset.hearthTerrainSpiralMountainRanges = "16";
-  document.documentElement.dataset.hearthTerrainEscarpmentEdges = "16";
-  document.documentElement.dataset.hearthTerrainPlateaus = "16";
-  document.documentElement.dataset.hearthTerrainCentralMountains = "4";
-  document.documentElement.dataset.hearthTerrainSummitPeaks = "4";
-  document.documentElement.dataset.hearthTerrainMetroplexSeats = "16";
+  document.documentElement.dataset.hearthTerrainPlanetAgeFactor = String(PLANET_AGE_FACTOR);
+  document.documentElement.dataset.hearthTerrainRockFactor = String(ROCK_FACTOR);
+  document.documentElement.dataset.hearthTerrainMountainHeightFactor = String(MOUNTAIN_HEIGHT_FACTOR);
+  document.documentElement.dataset.hearthTerrainRockPrecedence = "north-south-east-west";
+  document.documentElement.dataset.hearthTerrainNorthRockiness = "highest";
+  document.documentElement.dataset.hearthTerrainWestRockiness = "lowest";
+  document.documentElement.dataset.hearthTerrainIslandsExcluded = "true";
 })();

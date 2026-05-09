@@ -1,17 +1,18 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_G4_AUTHORITY_REASSIGNMENT_AND_MOTION_ROUTE_CONTROLLER_TNT_v2
+// HEARTH_G4_1_ASSET_BOUNDARY_EXPRESSION_ROUTE_CONTROLLER_TNT_v1
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G4_AUTHORITY_REASSIGNMENT_AND_MOTION_ROUTE_CONTROLLER_TNT_v2";
-  const RECEIPT = "HEARTH_G4_ROUTE_MOTION_CHAIN_RECEIPT";
-  const KEY = "hearth-g4-motion-chain-v2";
+  const CONTRACT = "HEARTH_G4_1_ASSET_BOUNDARY_EXPRESSION_ROUTE_CONTROLLER_TNT_v1";
+  const RECEIPT = "HEARTH_G4_1_ROUTE_ASSET_BOUNDARY_RECEIPT";
+  const KEY = "hearth-g4-1-asset-boundary-expression-v1";
 
   const FILES = [
-    { role: "runtime", src: `/assets/hearth/hearth.runtime.js?v=${KEY}`, global: "HEARTH_RUNTIME", required: true },
-    { role: "controls", src: `/assets/hearth/hearth.controls.js?v=${KEY}`, global: "HEARTH_CONTROLS", required: true },
-    { role: "canvas", src: `/assets/hearth/hearth.canvas.js?v=${KEY}`, global: "HEARTH_CANVAS", required: true }
+    { role: "runtime", src: `/assets/hearth/hearth.runtime.js?v=${KEY}`, global: "HEARTH_RUNTIME" },
+    { role: "controls", src: `/assets/hearth/hearth.controls.js?v=${KEY}`, global: "HEARTH_CONTROLS" },
+    { role: "assets", src: `/assets/hearth/hearth.assets.js?v=${KEY}`, global: "HEARTH_ASSETS" },
+    { role: "canvas", src: `/assets/hearth/hearth.canvas.js?v=${KEY}`, global: "HEARTH_CANVAS" }
   ];
 
   const state = {
@@ -25,28 +26,30 @@
     document.documentElement.dataset.hearthRouteControllerContract = CONTRACT;
     document.documentElement.dataset.hearthRouteControllerReceipt = RECEIPT;
     document.documentElement.dataset.hearthRouteControllerStatus = status;
-    document.documentElement.dataset.hearthGeneration = "G4";
+    document.documentElement.dataset.hearthGeneration = "G4.1";
+    document.documentElement.dataset.hearthG4Job = "motion-authority-renewal";
+    document.documentElement.dataset.hearthG41Job = "asset-boundary-expression-renewal";
+    document.documentElement.dataset.hearthG5Job = "clouds-weather-living-atmosphere";
     document.documentElement.dataset.hearthProcess = "deduced-reassigned-renewed";
-    document.documentElement.dataset.hearthRuntime = "south-star-motion-authority";
-    document.documentElement.dataset.hearthControls = "drag-spin-finger-sensitivity";
-    document.documentElement.dataset.hearthCanvasWorldEngine = "truth-substrate";
-    document.documentElement.dataset.hearthRender = "drawing-authority";
-    document.documentElement.dataset.hearthAssets = "material-expression-plasma";
-    document.documentElement.dataset.hearthAxisTiltDegrees = "23.44";
+    document.documentElement.dataset.hearthAssetsAdoptAuthority = "false";
+    document.documentElement.dataset.hearthAssetsBoundaryExpression = "true";
+    document.documentElement.dataset.hearthRuntimeLocked = "true";
+    document.documentElement.dataset.hearthControlsLocked = "true";
     document.documentElement.dataset.hearthLoadedFiles = state.loaded.join(",") || "none";
     document.documentElement.dataset.hearthFailedFiles = state.failed.join(",") || "none";
     document.documentElement.dataset.hearthGeneratedImage = "false";
     document.documentElement.dataset.hearthGraphicBox = "false";
     document.documentElement.dataset.hearthVisualPassClaimed = "false";
 
-    window.HEARTH_G4_ROUTE_RECEIPT = Object.freeze({
+    window.HEARTH_G4_1_ROUTE_RECEIPT = Object.freeze({
       contract: CONTRACT,
       receipt: RECEIPT,
       status,
-      generation: "G4",
-      process: "deduced-reassigned-renewed",
+      generation: "G4.1",
       g4Job: "motion-authority-renewal",
+      g41Job: "asset-boundary-expression-renewal",
       g5Job: "clouds-weather-living-atmosphere",
+      assetsAdoptAuthority: false,
       loaded: state.loaded.slice(),
       failed: state.failed.slice(),
       mounted: state.mounted,
@@ -60,11 +63,7 @@
     [
       "__HEARTH_G4_ROUTE_DISPOSE__",
       "__HEARTH_CONTROLS_DISPOSE__",
-      "__HEARTH_CANVAS_DISPOSE__",
-      "__HEARTH_RUNTIME_DISPOSE__",
-      "__HEARTH_CANVAS_AUTHORITY_DISPOSE__",
-      "__HEARTH_CANVAS_ADAPTIVE_RUNTIME_SELF_HEAL_DISPOSE__",
-      "__HEARTH_CANVAS_ADAPTIVE_RUNTIME_DISPOSE__"
+      "__HEARTH_CANVAS_DISPOSE__"
     ].forEach((name) => {
       if (typeof window[name] === "function") {
         try { window[name](); } catch (_) {}
@@ -77,7 +76,9 @@
     document.querySelectorAll([
       'script[src*="/assets/hearth/hearth.runtime.js"]',
       'script[src*="/assets/hearth/hearth.controls.js"]',
+      'script[src*="/assets/hearth/hearth.assets.js"]',
       'script[src*="/assets/hearth/hearth.canvas.js"]',
+      'script[data-hearth-g41-file="true"]',
       'script[data-hearth-g4-motion-file="true"]'
     ].join(",")).forEach((script) => script.remove());
   }
@@ -94,11 +95,11 @@
     }
 
     mount.dataset.hearthCanvasMount = "true";
-    mount.dataset.hearthGeneration = "G4";
-    mount.dataset.hearthRuntime = "south-star-motion-authority";
-    mount.dataset.hearthControls = "drag-spin-finger-sensitivity";
-    mount.dataset.hearthCanvasWorldEngine = "truth-substrate";
-    mount.dataset.hearthRender = "drawing-authority";
+    mount.dataset.hearthGeneration = "G4.1";
+    mount.dataset.hearthAssetsBoundaryExpression = "true";
+    mount.dataset.hearthAssetsAdoptAuthority = "false";
+    mount.dataset.hearthRuntimeLocked = "true";
+    mount.dataset.hearthControlsLocked = "true";
     mount.dataset.hearthPointerEventsBlocked = "false";
     mount.dataset.hearthTouchAction = "none";
     mount.dataset.hearthRequiredFailure = "false";
@@ -108,11 +109,11 @@
   }
 
   function installStyle() {
-    const prior = document.getElementById("hearth-g4-motion-style");
+    const prior = document.getElementById("hearth-g4-1-asset-boundary-style");
     if (prior) prior.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-g4-motion-style";
+    style.id = "hearth-g4-1-asset-boundary-style";
     style.textContent = `
       #hearthCanvasMount {
         position: relative;
@@ -126,7 +127,7 @@
         user-select: none !important;
         -webkit-user-select: none !important;
         -webkit-touch-callout: none !important;
-        background: radial-gradient(circle at 50% 50%, rgba(39,117,155,.26), rgba(3,9,20,.96) 70%);
+        background: radial-gradient(circle at 50% 50%, rgba(39,117,155,.24), rgba(3,9,20,.96) 70%);
       }
 
       #hearthCanvasMount canvas[data-hearth-canvas="true"] {
@@ -171,7 +172,7 @@
       const script = document.createElement("script");
       script.src = file.src;
       script.defer = true;
-      script.dataset.hearthG4MotionFile = "true";
+      script.dataset.hearthG41File = "true";
       script.dataset.hearthFileRole = file.role;
       script.dataset.contract = CONTRACT;
 
@@ -184,7 +185,7 @@
       script.onerror = () => {
         state.failed.push(file.role);
         stamp(`failed-${file.role}`);
-        reject(new Error(`Required Hearth G4 script failed: ${file.role} ${file.src}`));
+        reject(new Error(`Required Hearth G4.1 script failed: ${file.role} ${file.src}`));
       };
 
       document.head.appendChild(script);
@@ -204,12 +205,16 @@
         await loadFile(file);
       }
 
-      if (!window.HEARTH_RUNTIME || !window.HEARTH_CONTROLS || !window.HEARTH_CANVAS) {
-        throw new Error("Hearth G4 globals missing after file load.");
+      if (!window.HEARTH_RUNTIME || !window.HEARTH_CONTROLS || !window.HEARTH_ASSETS || !window.HEARTH_CANVAS) {
+        throw new Error("Hearth G4.1 globals missing after file load.");
       }
 
       const runtime = window.HEARTH_RUNTIME;
-      const renderer = window.HEARTH_CANVAS.mount(mount, { runtime });
+      const renderer = window.HEARTH_CANVAS.mount(mount, {
+        runtime,
+        assets: window.HEARTH_ASSETS
+      });
+
       const canvas = renderer.canvas;
 
       window.HEARTH_CONTROLS.bind(canvas, runtime, {
@@ -225,14 +230,14 @@
       mount.dataset.hearthRequiredFailure = "false";
       mount.dataset.hearthRouteErrorMessage = "";
       document.body.dataset.hearthRouteReady = "true";
-      document.documentElement.dataset.hearthG4MotionReady = "true";
+      document.documentElement.dataset.hearthG41AssetBoundaryReady = "true";
 
       stamp("ready");
     } catch (error) {
       mount.dataset.hearthRequiredFailure = "true";
       mount.dataset.hearthRouteErrorMessage = error && error.message ? error.message : String(error);
       document.body.dataset.hearthRouteReady = "false";
-      document.documentElement.dataset.hearthG4MotionReady = "false";
+      document.documentElement.dataset.hearthG41AssetBoundaryReady = "false";
       stamp("failed");
     }
   }
@@ -240,7 +245,6 @@
   window.__HEARTH_G4_ROUTE_DISPOSE__ = () => {
     if (typeof window.__HEARTH_CONTROLS_DISPOSE__ === "function") window.__HEARTH_CONTROLS_DISPOSE__();
     if (typeof window.__HEARTH_CANVAS_DISPOSE__ === "function") window.__HEARTH_CANVAS_DISPOSE__();
-    if (typeof window.__HEARTH_RUNTIME_DISPOSE__ === "function") window.__HEARTH_RUNTIME_DISPOSE__();
   };
 
   if (document.readyState === "loading") {

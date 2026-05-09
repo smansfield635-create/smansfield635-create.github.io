@@ -1,600 +1,371 @@
-<!-- /showroom/globe/audralia/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-page="audralia-route-v17-256-lattice-canonical-bar"
+  data-page="audralia-v18-route-chain-asset-boundary"
   data-route="/showroom/globe/audralia/"
-  data-contract="AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_TNT_v1"
-  data-previous-html-contract="AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_TNT_v1"
-  data-previous-route-contract="AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_JS_TNT_v1"
-  data-route-js-contract="AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_JS_TNT_v1"
-  data-role="audralia-route-doorway"
-  data-body="Audralia"
-  data-bar="256-lattice-canonical-route-bar"
-  data-html-role="static-geometric-foundation"
-  data-js-role="dynamic-lab-instrument-controller"
-  data-canvas-role="downstream-render-authority"
-  data-gauges-role="read-only-proof-console"
-  data-lattice-domains="16"
-  data-lattice-gates="16"
-  data-lattice-cells="256"
-  data-canonical-mount="audralia-canvas-mount"
-  data-outer-mount="audralia-mount"
-  data-status-target="audralia-route-status"
-  data-canvas-authority="/assets/audralia/audralia.canvas.js"
-  data-runtime-authority="/assets/audralia/audralia.runtime.js"
-  data-surface-authority="/assets/audralia/audralia.surface.js"
-  data-hex-child-authority="/assets/audralia/audralia.hex.surface.js"
-  data-grandchild-relief-authority="/assets/audralia/audralia.relief.surface.js"
-  data-heavy-runtime-loaded="false"
+  data-contract="AUDRALIA_V18_ROUTE_CHAIN_AND_ASSET_BOUNDARY_HTML_TNT_v1"
+  data-body="audralia"
   data-generated-image="false"
   data-graphic-box="false"
-  data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Audralia</title>
+  <title>Diamond Gate Bridge · Audralia V18</title>
   <meta
     name="description"
-    content="Audralia V17 256-lattice canonical doorway route with static mount proof, dynamic canvas attachment, honest route status, and read-only Gauges compatibility."
+    content="Audralia V18 aligns the route chain and adds asset-boundary expression so material fields remain distinct while runtime keeps motion."
   >
 
   <style>
     :root {
-      --stage: min(100%, 1180px);
-      --bg: #030407;
-      --panel: rgba(8, 12, 20, 0.88);
-      --line: rgba(255,255,255,0.16);
-      --text: #f7f1df;
-      --muted: rgba(242,246,255,0.72);
-      --faint: rgba(242,246,255,0.48);
-      --gold: #f2c76f;
-      --blue: #78d8ff;
+      --bg: #030914;
+      --panel: rgba(7, 16, 30, 0.84);
+      --panel2: rgba(10, 24, 43, 0.78);
+      --line: rgba(231, 188, 105, 0.34);
+      --gold: #e7bc69;
+      --text: #eef6ff;
+      --muted: rgba(238, 246, 255, 0.72);
+      --blue: #4fb5db;
     }
 
     * { box-sizing: border-box; }
 
-    html,
-    body {
-      width: 100%;
-      margin: 0;
-      overflow-x: hidden;
+    html {
+      min-height: 100%;
       background:
-        radial-gradient(circle at 50% 12%, rgba(120,216,255,0.14), transparent 28rem),
-        radial-gradient(circle at 50% 58%, rgba(242,199,111,0.10), transparent 34rem),
-        linear-gradient(180deg, #060914, #030407 72%, #010205);
+        radial-gradient(circle at 50% 20%, rgba(39, 117, 155, 0.22), transparent 38%),
+        radial-gradient(circle at 18% 12%, rgba(231, 188, 105, 0.13), transparent 30%),
+        linear-gradient(180deg, #06101e, var(--bg) 72%);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body { min-height: 100svh; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+    }
 
-    a { color: inherit; text-decoration: none; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-    .skip-link {
+    a:focus-visible,
+    canvas:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
+    }
+
+    .skip {
       position: absolute;
-      left: 1rem;
-      top: -4rem;
+      top: 12px;
+      left: 16px;
       z-index: 20;
-      padding: 0.75rem 1rem;
+      transform: translateY(-140%);
+      padding: 10px 12px;
       border-radius: 999px;
       background: var(--gold);
-      color: #080a0f;
+      color: #06101e;
       font-weight: 900;
     }
 
-    .skip-link:focus { top: 1rem; }
+    .skip:focus { transform: translateY(0); }
 
     .shell {
-      width: var(--stage);
+      width: min(1120px, calc(100% - 28px));
       margin: 0 auto;
-      padding: max(1rem, env(safe-area-inset-top)) clamp(0.85rem, 3vw, 2rem)
-        max(1.5rem, env(safe-area-inset-bottom));
+      padding: 22px 0 42px;
+    }
+
+    .topbar,
+    .nav,
+    .card,
+    #audralia-canvas-mount {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(9, 22, 41, 0.88), rgba(4, 10, 20, 0.78));
+      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.38);
+      backdrop-filter: blur(10px);
     }
 
     .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 1rem;
-      padding: 0.75rem 0 1rem;
+      gap: 14px;
+      border-radius: 24px;
+      padding: 12px 14px;
     }
 
     .brand {
       display: inline-flex;
-      flex-direction: column;
-      gap: 0.08rem;
-      font-weight: 950;
-      line-height: 1.05;
-      letter-spacing: 0.04em;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
     }
 
-    .brand span:first-child {
-      font-size: clamp(0.95rem, 2.8vw, 1.08rem);
-      text-transform: uppercase;
+    .mark {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      border: 1px solid rgba(231, 188, 105, 0.46);
+      color: var(--gold);
+      background: radial-gradient(circle at 50% 36%, rgba(231, 188, 105, 0.22), rgba(7, 16, 30, 0.86));
     }
 
-    .brand span:last-child {
-      color: var(--muted);
-      font-size: clamp(0.66rem, 2.2vw, 0.76rem);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .nav,
-    .actions,
-    .route-grid {
+    .nav {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.46rem;
+      gap: 8px;
+      border-radius: 20px;
+      padding: 8px;
     }
 
-    .nav { justify-content: flex-end; }
-    .actions, .route-grid { justify-content: center; }
-
-    .nav a,
-    .button,
-    .route-link {
-      min-height: 2.2rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+    .nav a {
+      border: 1px solid rgba(231, 188, 105, 0.24);
       border-radius: 999px;
-      font-size: 0.74rem;
-      font-weight: 900;
-      letter-spacing: 0.055em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .nav a,
-    .route-link {
-      padding: 0.45rem 0.72rem;
-      border: 1px solid var(--line);
+      padding: 8px 11px;
       color: var(--muted);
-      background: rgba(255,255,255,0.035);
+      font-size: 0.86rem;
     }
 
-    .button {
-      padding: 0.58rem 0.92rem;
-      border: 1px solid rgba(242,199,111,0.86);
-      color: #080a0f;
-      background: linear-gradient(135deg, #fff0a3, #f2c76f);
-      box-shadow: 0 0.85rem 2rem rgba(242,199,111,0.16);
-    }
-
-    .button.secondary {
-      border-color: rgba(255,255,255,0.22);
-      color: var(--text);
-      background: rgba(255,255,255,0.055);
-      box-shadow: none;
+    .nav a[aria-current="page"] {
+      color: #06101e;
+      background: var(--gold);
+      font-weight: 900;
     }
 
     .hero {
       display: grid;
-      gap: 0.85rem;
-      padding: clamp(1.2rem, 4vw, 2.2rem) 0 clamp(1rem, 3vw, 1.45rem);
-      text-align: center;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 520px);
+      gap: 22px;
+      align-items: center;
+      margin-top: 22px;
     }
 
     .eyebrow {
-      margin: 0;
       color: var(--gold);
-      font-size: clamp(0.72rem, 2.5vw, 0.84rem);
-      font-weight: 950;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      width: min(100%, 920px);
-      margin: 0 auto;
-      font-size: clamp(2.2rem, 8vw, 4.9rem);
-      line-height: 0.94;
-      letter-spacing: -0.065em;
-      text-wrap: balance;
-    }
-
-    .summary {
-      width: min(100%, 820px);
-      margin: 0 auto;
-      color: var(--muted);
-      font-size: clamp(0.98rem, 3vw, 1.12rem);
-      line-height: 1.5;
-      text-wrap: balance;
-    }
-
-    .card {
-      width: min(100%, 980px);
-      margin: clamp(0.9rem, 3vw, 1.2rem) auto 0;
-      border: 1px solid rgba(255,255,255,0.13);
-      border-radius: clamp(1rem, 3vw, 1.35rem);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.060), rgba(255,255,255,0.018)),
-        rgba(8,12,20,0.76);
-      box-shadow:
-        0 1.5rem 5rem rgba(0,0,0,0.28),
-        inset 0 1px 0 rgba(255,255,255,0.08);
-      overflow: hidden;
-    }
-
-    .status-card,
-    .handoff-card,
-    .route-panel,
-    .lattice-card {
-      padding: clamp(0.85rem, 3vw, 1.05rem);
-      text-align: center;
-    }
-
-    .status-card h2,
-    .handoff-card h2,
-    .route-panel h2,
-    .lattice-card h2 {
-      margin: 0 0 0.55rem;
-      color: var(--gold);
-      font-size: 0.82rem;
-      font-weight: 950;
+      font-size: 0.78rem;
+      font-weight: 900;
       letter-spacing: 0.16em;
       text-transform: uppercase;
     }
 
-    #audralia-route-status {
-      min-height: 4.4rem;
-      display: grid;
-      align-content: center;
-      gap: 0.35rem;
+    h1 {
+      margin: 10px 0 12px;
+      font-size: clamp(2.2rem, 7vw, 5.8rem);
+      line-height: 0.9;
+      letter-spacing: -0.08em;
+    }
+
+    .lede {
+      max-width: 66ch;
+      margin: 0;
       color: var(--muted);
-      font-size: 0.84rem;
-      line-height: 1.42;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
+      font-size: clamp(1rem, 2.4vw, 1.2rem);
+      line-height: 1.6;
     }
 
-    .canvas-card {
-      padding: clamp(0.65rem, 2.4vw, 0.9rem);
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
     }
 
-    .canvas-shell {
-      position: relative;
-      width: min(100%, 760px);
-      aspect-ratio: 1 / 1;
-      margin: 0 auto;
-      border: 1px solid rgba(120,216,255,0.18);
-      border-radius: clamp(1rem, 4vw, 1.4rem);
-      background:
-        radial-gradient(circle at 50% 42%, rgba(120,216,255,0.10), transparent 46%),
-        radial-gradient(circle at 50% 58%, rgba(242,199,111,0.08), transparent 52%),
-        rgba(0,0,0,0.42);
-      overflow: hidden;
-      contain: layout paint;
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(231, 188, 105, 0.38);
+      background: rgba(231, 188, 105, 0.14);
+      color: var(--text);
+      font-weight: 800;
     }
 
-    #audralia-mount {
-      position: relative;
-      display: block;
-      min-height: 18rem;
+    .button.primary {
+      color: #05101d;
+      background: var(--gold);
     }
 
     #audralia-canvas-mount {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      min-height: 18rem;
+      position: relative;
+      width: 100%;
+      min-height: 320px;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      isolation: isolate;
+      border-radius: 32px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(39, 117, 155, 0.30), rgba(3, 9, 20, 0.96) 70%),
+        #02070e;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
     }
 
-    #audralia-canvas-mount canvas,
-    #audralia-mount canvas {
+    #audralia-canvas-mount canvas[data-audralia-canvas="true"] {
+      position: absolute;
+      inset: 0;
       display: block;
       width: 100%;
       height: 100%;
-      max-width: 100%;
-      max-height: 100%;
+      pointer-events: auto;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
     }
 
-    .mount-fallback {
-      position: absolute;
-      inset: auto 1rem 1rem;
-      z-index: 1;
-      color: var(--faint);
-      font-size: 0.72rem;
-      font-weight: 850;
-      letter-spacing: 0.08em;
-      text-align: center;
-      text-transform: uppercase;
-      pointer-events: none;
-    }
-
-    .handoff-grid,
-    .lattice-grid {
+    .grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.6rem;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
     }
 
-    .handoff-grid {
-      grid-template-columns: repeat(3, 1fr);
+    .card {
+      border-radius: 22px;
+      padding: 14px;
+      min-height: 128px;
     }
 
-    .handoff-item,
-    .lattice-item {
-      min-height: 5.4rem;
-      display: grid;
-      align-content: center;
-      gap: 0.22rem;
-      padding: 0.75rem;
-      border: 1px dashed rgba(255,255,255,0.14);
-      border-radius: 0.95rem;
-      background: rgba(255,255,255,0.028);
-      text-align: center;
+    .card h2 {
+      margin: 0 0 8px;
+      color: var(--gold);
+      font-size: 0.92rem;
     }
 
-    .handoff-item strong,
-    .lattice-item strong {
-      color: rgba(255,241,205,0.96);
-      font-size: 0.78rem;
-      font-weight: 950;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .handoff-item span,
-    .lattice-item span {
-      color: var(--muted);
-      font-size: 0.74rem;
-      line-height: 1.28;
-    }
-
-    .receipt {
-      width: min(100%, 920px);
-      margin: clamp(0.9rem, 3vw, 1.2rem) auto 0;
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 1rem;
-      background: rgba(255,255,255,0.03);
-      color: var(--faint);
-      overflow: hidden;
-    }
-
-    .receipt summary {
-      cursor: pointer;
-      padding: 0.75rem 0.9rem;
-      color: var(--faint);
-      font-size: 0.72rem;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .receipt pre {
+    .card p {
       margin: 0;
-      padding: 0 0.9rem 0.9rem;
-      font: 700 0.68rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-
-    footer {
-      padding: 1.35rem 0 0.45rem;
-      color: var(--faint);
-      font-size: 0.74rem;
+      color: var(--muted);
+      font-size: 0.9rem;
       line-height: 1.45;
-      text-align: center;
     }
 
-    @media (max-width: 900px) {
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
+    pre.receipt {
+      margin: 16px 0 0;
+      padding: 14px;
+      overflow: auto;
+      border-radius: 18px;
+      border: 1px solid rgba(231, 188, 105, 0.24);
+      color: rgba(238, 246, 255, 0.72);
+      background: rgba(2, 7, 14, 0.64);
+      font-size: 0.78rem;
+      white-space: pre-wrap;
+    }
 
-      .nav {
-        justify-content: flex-start;
-      }
-
-      .handoff-grid,
-      .lattice-grid {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+      .topbar { align-items: stretch; flex-direction: column; }
     }
   </style>
-
-  <script
-    type="module"
-    src="/showroom/globe/audralia/index.js?v=AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_JS_TNT_v1"
-  ></script>
 </head>
 
 <body>
-  <a class="skip-link" href="#audralia-main">Skip to Audralia</a>
+  <a class="skip" href="#audralia-main">Skip to Audralia</a>
 
   <div class="shell">
     <header class="topbar">
-      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
-        <span>Diamond Gate Bridge</span>
-        <span>Audralia · V17 256 Lattice</span>
+      <a class="brand" href="/">
+        <span class="mark">A</span>
+        <span>Diamond Gate Bridge · Audralia V18</span>
       </a>
 
       <nav class="nav" aria-label="Audralia route navigation">
-        <a href="/showroom/globe/">Return to Globe Split</a>
-        <a href="/showroom/globe/earth/">Inspect Earth</a>
-        <a href="/showroom/">Showroom</a>
         <a href="/">Compass</a>
-        <a href="/products/">Products</a>
+        <a href="/showroom/globe/">Globe Split</a>
+        <a href="/showroom/globe/earth/">Earth</a>
+        <a href="/showroom/globe/hearth/">Hearth</a>
+        <a href="/showroom/globe/audralia/" aria-current="page">Audralia</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
     <main id="audralia-main">
-      <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Audralia · V17 256-Lattice Canonical Bar</p>
-        <h1 id="page-title">Audralia now has a full geometric doorway standard.</h1>
+      <section class="hero" aria-labelledby="audralia-title">
+        <div>
+          <div class="eyebrow">Audralia · V18 · Route Chain + Asset Boundary Renewal</div>
+          <h1 id="audralia-title">Audralia</h1>
+          <p class="lede">
+            Audralia V18 aligns the source chain and adds asset-boundary expression.
+            Runtime remains motion-only. Canvas renders the body. Surface truth and child
+            refiners stay outside runtime. Assets bind, separate, define, carry, and express
+            material fields so the planet does not collapse into a blob.
+          </p>
 
-        <p class="summary">
-          HTML is the static geometric foundation. JavaScript is the dynamic lab-instrument controller. Canvas authority remains downstream. Gauges remains read-only proof.
-        </p>
-
-        <div class="actions" aria-label="Audralia primary actions">
-          <a class="button" href="/gauges/">Run Gauges</a>
-          <a class="button secondary" href="/showroom/globe/">Return to Globe Split</a>
-          <a class="button secondary" href="/showroom/globe/earth/">Inspect Earth</a>
+          <div class="actions">
+            <a class="button primary" href="/showroom/globe/">Return to Globe Split</a>
+            <a class="button" href="/showroom/globe/earth/">Inspect Earth</a>
+            <a class="button" href="/showroom/globe/hearth/">Inspect Hearth</a>
+            <a class="button" href="/gauges/">Run Gauges</a>
+          </div>
         </div>
-      </section>
 
-      <section class="card status-card" aria-labelledby="route-status-title">
-        <h2 id="route-status-title">Route Status</h2>
-        <div
-          id="audralia-route-status"
-          data-audralia-route-status="true"
-          data-gauges-visible-status="true"
-          data-audralia-route-loaded="false"
-          data-audralia-route-receipt="AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_TNT_v1"
-          data-audralia-route-js-receipt="AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_JS_TNT_v1"
-          data-audralia-route-lattice-cells="256"
-          data-audralia-canvas-mounted="false"
-          data-audralia-canvas-receipt=""
-          data-audralia-canvas-contract=""
-          data-graphic-box="false"
-          data-image-generation="false"
-          data-visual-pass-claimed="false"
-        >Audralia V17 256-lattice canonical bar preparing.</div>
-      </section>
-
-      <section class="card canvas-card" aria-labelledby="canvas-title">
-        <h2 id="canvas-title" class="eyebrow">Static Mount Proof</h2>
-
-        <div
-          id="audralia-mount"
-          class="canvas-shell"
-          data-audralia-mount="true"
-          data-gauges-visible-mount="true"
-          data-static-mount-proof="true"
-          data-route-contract="AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_TNT_v1"
-          data-route-js-contract="AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_JS_TNT_v1"
-          data-graphic-box="false"
-          data-image-generation="false"
-          data-visual-pass-claimed="false"
+        <section
+          id="audralia-canvas-mount"
+          data-audralia-canvas-mount="true"
+          data-audralia-generation="V18"
+          data-audralia-assets-boundary-expression="true"
+          data-audralia-assets-absorbs-authority="false"
+          aria-label="Audralia V18 canonical canvas mount"
         >
-          <div
-            id="audralia-canvas-mount"
-            data-audralia-canvas-mount="true"
-            data-audralia-mount="true"
-            data-canonical-mount="true"
-            data-gauges-visible-mount="true"
-            data-static-mount-proof="true"
-            data-route="/showroom/globe/audralia/"
-            data-route-contract="AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_TNT_v1"
-            data-route-js-contract="AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_JS_TNT_v1"
-            data-canvas-authority="/assets/audralia/audralia.canvas.js"
-            data-graphic-box="false"
-            data-image-generation="false"
-            data-visual-pass-claimed="false"
-          ></div>
-
-          <div class="mount-fallback" data-audralia-mount-fallback>
-            Static mount proof present. Waiting for Audralia canvas authority.
-          </div>
-        </div>
+          <span
+            data-audralia-mount-fallback="true"
+            style="position:absolute;inset:0;display:grid;place-items:center;color:rgba(238,246,255,.68);font-weight:800;text-align:center;padding:20px;"
+          >
+            Audralia V18 source chain loading.
+          </span>
+        </section>
       </section>
 
-      <section class="card lattice-card" aria-labelledby="lattice-title">
-        <h2 id="lattice-title">256-Lattice Bar</h2>
+      <section class="grid" aria-label="Audralia V18 authority chain">
+        <article class="card">
+          <h2>Route</h2>
+          <p>Imports and verifies the source chain. It does not draw Audralia and does not own runtime motion.</p>
+        </article>
 
-        <div class="lattice-grid" aria-label="Audralia route lattice proof">
-          <div class="lattice-item">
-            <strong>16</strong>
-            <span>Route-proof domains.</span>
-          </div>
+        <article class="card">
+          <h2>Runtime</h2>
+          <p>Motion-only authority. It conducts action, timing, drag response, phase, and orbital motion.</p>
+        </article>
 
-          <div class="lattice-item">
-            <strong>16</strong>
-            <span>Verification gates per domain.</span>
-          </div>
+        <article class="card">
+          <h2>Surface Truth</h2>
+          <p>Static surface and child refiners define body structure outside runtime.</p>
+        </article>
 
-          <div class="lattice-item">
-            <strong>256</strong>
-            <span>Total route-proof cells.</span>
-          </div>
-
-          <div class="lattice-item">
-            <strong>0</strong>
-            <span>GraphicBox, image-generation, or visual-pass claims.</span>
-          </div>
-        </div>
+        <article class="card">
+          <h2>Assets</h2>
+          <p>Material-expression layer. Separates ocean, shelf, coast, terrain, ridge, mineral, relief, and plasma fields.</p>
+        </article>
       </section>
 
-      <section class="card handoff-card" aria-labelledby="handoff-title">
-        <h2 id="handoff-title">Doorway Jurisdiction</h2>
+      <pre id="audralia-route-status" class="receipt" data-audralia-route-status="true">Audralia V18 route chain preparing.</pre>
 
-        <div class="handoff-grid">
-          <div class="handoff-item">
-            <strong>HTML Route</strong>
-            <span>Owns shell, navigation, static mount proof, status target, and receipt exposure.</span>
-          </div>
-
-          <div class="handoff-item">
-            <strong>Route JS</strong>
-            <span>Owns dynamic lab instruments, imports, mount call, canvas verification, and status publication.</span>
-          </div>
-
-          <div class="handoff-item">
-            <strong>Canvas Authority</strong>
-            <span>Owns canvas creation, composition, animation, and visible Audralia rendering.</span>
-          </div>
-        </div>
-      </section>
-
-      <section class="card route-panel" aria-labelledby="return-title">
-        <h2 id="return-title">Return Routes</h2>
-
-        <nav class="route-grid" aria-label="Audralia return routes">
-          <a class="route-link" href="/">Compass</a>
-          <a class="route-link" href="/showroom/">Showroom</a>
-          <a class="route-link" href="/showroom/globe/">Globe</a>
-          <a class="route-link" href="/products/">Products</a>
-          <a class="route-link" href="/gauges/">Gauges</a>
-        </nav>
-      </section>
-
-      <details class="receipt">
-        <summary>Route receipt</summary>
-        <pre>AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_TNT_v1
-previous_html=AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_TNT_v1
-previous_route_js=AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_JS_TNT_v1
+      <pre class="receipt">AUDRALIA_V18_ROUTE_CHAIN_AND_ASSET_BOUNDARY_HTML_TNT_v1
 route=/showroom/globe/audralia/
-classification=V17_256_LATTICE_CANONICAL_BAR
-html_role=STATIC_GEOMETRIC_FOUNDATION
-js_role=DYNAMIC_LAB_INSTRUMENT_CONTROLLER
-canvas_role=DOWNSTREAM_RENDER_AUTHORITY
-gauges_role=READ_ONLY_PROOF_CONSOLE
-lattice_domains=16
-lattice_gates=16
-lattice_cells=256
-outer_mount=audralia-mount
-canonical_mount=audralia-canvas-mount
-status_target=audralia-route-status
-canvas_authority=/assets/audralia/audralia.canvas.js
-canvas_contract=AUDRALIA_CANVAS_PARENT_CONTRACT_CHILD_ACTIVATION_TNT_v13
-canvas_receipt=AUDRALIA_CANVAS_AUTHORITY_RECEIPT
 runtime=/assets/audralia/audralia.runtime.js
-runtime_contract=AUDRALIA_RUNTIME_MOTION_ONLY_FULL_POTENTIAL_TNT_v10
+canvas=/assets/audralia/audralia.canvas.js
+assets=/assets/audralia/audralia.assets.js
 surface=/assets/audralia/audralia.surface.js
-surface_contract=AUDRALIA_SURFACE_PARENT_COASTLINE_RIDGE_FEATHER_TNT_v6
-hex_child=/assets/audralia/audralia.hex.surface.js
-hex_child_contract=AUDRALIA_HEX_SURFACE_CHILD_GRANDCHILD_RELIEF_BIND_TNT_v4
-grandchild_relief=/assets/audralia/audralia.relief.surface.js
-grandchild_relief_contract=AUDRALIA_GRANDCHILD_RELIEF_FIELD_EXPRESSOR_TNT_v1
-route_does_not_own=runtime_truth,canvas_paint,parent_surface_truth,child_refinement,grandchild_relief,gauges_scoring
+hex_surface=/assets/audralia/audralia.hex.surface.js
+relief_surface=/assets/audralia/audralia.relief.surface.js
 generated_image=false
 graphic_box=false
 visual_pass_claimed=false</pre>
-      </details>
     </main>
-
-    <footer>
-      AUDRALIA_ROUTE_V17_256_LATTICE_CANONICAL_BAR_TNT_v1 · static mount proof · dynamic lab controller · 256 route-proof cells · no GraphicBox · no image generation.
-    </footer>
   </div>
+
+  <script type="module" src="./index.js?v=audralia-v18-route-chain-asset-boundary"></script>
 </body>
 </html>

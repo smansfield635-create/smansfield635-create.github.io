@@ -1,19 +1,21 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_V18_ROUTE_CHAIN_AND_ASSET_BOUNDARY_CONTROLLER_TNT_v1
+// AUDRALIA_V18_TERRAIN_FIVE_FINGER_ROUTE_CONTROLLER_TNT_v1
 // Route doorway authority only.
+// Adds terrain five-finger proof to the V18 route chain.
 // Route imports, verifies, mounts, and reports.
 // Route does not draw Audralia. Route does not own runtime motion.
 
-const ROUTE_RECEIPT = "AUDRALIA_V18_ROUTE_CHAIN_AND_ASSET_BOUNDARY_CONTROLLER_TNT_v1";
+const ROUTE_RECEIPT = "AUDRALIA_V18_TERRAIN_FIVE_FINGER_ROUTE_CONTROLLER_TNT_v1";
 const HTML_RECEIPT = "AUDRALIA_V18_ROUTE_CHAIN_AND_ASSET_BOUNDARY_HTML_TNT_v1";
-const PREVIOUS_ROUTE_RECEIPT = "AUDRALIA_ROUTE_V16_CANONICAL_MOUNT_CANVAS_ATTACHMENT_TNT_v1";
-const CACHE_KEY = "audralia-v18-route-chain-asset-boundary";
+const PREVIOUS_ROUTE_RECEIPT = "AUDRALIA_V18_ROUTE_CHAIN_AND_ASSET_BOUNDARY_CONTROLLER_TNT_v1";
+const CACHE_KEY = "audralia-v18-terrain-five-finger-reexpression";
 
 const PATHS = Object.freeze({
   runtime: "/assets/audralia/audralia.runtime.js",
   surface: "/assets/audralia/audralia.surface.js",
   hexSurface: "/assets/audralia/audralia.hex.surface.js",
   reliefSurface: "/assets/audralia/audralia.relief.surface.js",
+  terrainFingers: "/assets/audralia/audralia.terrain.fingers.js",
   assets: "/assets/audralia/audralia.assets.js",
   canvas: "/assets/audralia/audralia.canvas.js"
 });
@@ -23,7 +25,8 @@ const EXPECTED = Object.freeze({
   surface: "AUDRALIA_SURFACE_PARENT_COASTLINE_RIDGE_FEATHER_TNT_v6",
   hexSurface: "AUDRALIA_HEX_SURFACE_CHILD_GRANDCHILD_RELIEF_BIND_TNT_v4",
   reliefSurface: "AUDRALIA_GRANDCHILD_RELIEF_FIELD_EXPRESSOR_TNT_v1",
-  assets: "AUDRALIA_V18_ASSET_BOUNDARY_EXPRESSION_AUTHORITY_TNT_v1",
+  terrainFingers: "AUDRALIA_V18_TERRAIN_FIVE_FINGER_REEXPRESSION_TNT_v1",
+  assets: "AUDRALIA_V18_ASSET_BOUNDARY_FIVE_FINGER_EXPRESSION_AUTHORITY_TNT_v2",
   canvas: "AUDRALIA_V18_CANVAS_ASSET_BOUNDARY_CONSUMER_TNT_v1"
 });
 
@@ -33,17 +36,19 @@ const ROUTE_STATE = {
   htmlReceipt: HTML_RECEIPT,
   previousRouteReceipt: PREVIOUS_ROUTE_RECEIPT,
   route: "/showroom/globe/audralia/",
-  version: "V18",
+  version: "V18.five-finger-terrain",
   mountFound: false,
   statusNodeFound: false,
   imported: {},
   receipts: {},
   canvasMounted: false,
   canvasFound: false,
+  terrainFingersLoaded: false,
   assetsLoaded: false,
   runtimeLoaded: false,
   runtimeMotionOnly: true,
   assetsAbsorbAuthority: false,
+  terrainFiveFingers: true,
   generatedImage: false,
   graphicBox: false,
   visualPassClaimed: false,
@@ -75,6 +80,7 @@ function resolveStatusNode() {
 
 function resolveCanvas() {
   const mount = resolveMount();
+
   return (
     document.querySelector("canvas[data-audralia-canvas='true']") ||
     document.querySelector("canvas[data-audralia-canvas]") ||
@@ -108,14 +114,15 @@ function moduleReceipt(module, fallback) {
   const status =
     safe(() => module.getStatus && module.getStatus(), null) ||
     safe(() => module.getAudraliaCanvasStatus && module.getAudraliaCanvasStatus(), null) ||
-    safe(() => module.getAudraliaAssetStatus && module.getAudraliaAssetStatus(), null) ||
     safe(() => module.getAudraliaAssetsStatus && module.getAudraliaAssetsStatus(), null) ||
+    safe(() => module.getAudraliaTerrainFingerStatus && module.getAudraliaTerrainFingerStatus(), null) ||
     safe(() => module.getAudraliaReliefSurfaceStatus && module.getAudraliaReliefSurfaceStatus(), null) ||
     safe(() => module.getAudraliaHexSurfaceStatus && module.getAudraliaHexSurfaceStatus(), null) ||
     module.AUDRALIA_SURFACE_STATUS ||
     module.AUDRALIA_HEX_SURFACE_STATUS ||
     module.AUDRALIA_RELIEF_SURFACE_STATUS ||
     module.AUDRALIA_ASSETS_STATUS ||
+    module.AUDRALIA_TERRAIN_FINGERS_STATUS ||
     {};
 
   return firstText(
@@ -126,6 +133,7 @@ function moduleReceipt(module, fallback) {
     module.AUDRALIA_HEX_SURFACE_RECEIPT_VALUE,
     module.AUDRALIA_RELIEF_SURFACE_RECEIPT_VALUE,
     module.AUDRALIA_ASSETS_RECEIPT_VALUE,
+    module.AUDRALIA_TERRAIN_FINGERS_RECEIPT_VALUE,
     status.receipt,
     status.contract,
     fallback
@@ -137,7 +145,9 @@ function writeStatus(status = "") {
   if (!node) return;
 
   const lines = [
-    ROUTE_STATE.ok ? "Audralia V18 route chain aligned." : "Audralia V18 route chain preparing.",
+    ROUTE_STATE.ok
+      ? "Audralia V18 five-finger terrain chain aligned."
+      : "Audralia V18 five-finger terrain chain preparing.",
     `Status ${status || "checking"}`,
     `Route ${ROUTE_RECEIPT}`,
     `Previous ${PREVIOUS_ROUTE_RECEIPT}`,
@@ -145,11 +155,13 @@ function writeStatus(status = "") {
     `Surface ${ROUTE_STATE.receipts.surface || EXPECTED.surface}`,
     `Hex Surface ${ROUTE_STATE.receipts.hexSurface || EXPECTED.hexSurface}`,
     `Relief Surface ${ROUTE_STATE.receipts.reliefSurface || EXPECTED.reliefSurface}`,
+    `Terrain Fingers ${ROUTE_STATE.receipts.terrainFingers || EXPECTED.terrainFingers}`,
     `Assets ${ROUTE_STATE.receipts.assets || EXPECTED.assets}`,
     `Canvas ${ROUTE_STATE.receipts.canvas || EXPECTED.canvas}`,
     `Mount found ${ROUTE_STATE.mountFound}`,
     `Canvas mounted ${ROUTE_STATE.canvasMounted}`,
     `Canvas found ${ROUTE_STATE.canvasFound}`,
+    `Terrain five fingers true`,
     `Assets absorb authority false`,
     `Runtime motion-only true`,
     `GraphicBox false`,
@@ -164,6 +176,7 @@ function writeStatus(status = "") {
   node.textContent = lines.join("\n");
   node.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
   node.dataset.audraliaRouteReady = String(Boolean(ROUTE_STATE.ok));
+  node.dataset.audraliaTerrainFiveFingers = "true";
   node.dataset.audraliaAssetsBoundaryExpression = "true";
   node.dataset.audraliaAssetsAbsorbAuthority = "false";
   node.dataset.generatedImage = "false";
@@ -179,9 +192,10 @@ function publish(status = "") {
 
   document.documentElement.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
   document.documentElement.dataset.audraliaRoutePreviousReceipt = PREVIOUS_ROUTE_RECEIPT;
-  document.documentElement.dataset.audraliaVersion = "V18";
+  document.documentElement.dataset.audraliaVersion = "V18.five-finger-terrain";
   document.documentElement.dataset.audraliaRouteStatus = status || "checking";
   document.documentElement.dataset.audraliaRuntimeMotionOnly = "true";
+  document.documentElement.dataset.audraliaTerrainFiveFingers = "true";
   document.documentElement.dataset.audraliaAssetsBoundaryExpression = "true";
   document.documentElement.dataset.audraliaAssetsAbsorbAuthority = "false";
   document.documentElement.dataset.generatedImage = "false";
@@ -249,6 +263,7 @@ async function waitForCanvas(timeoutMs = 8000) {
   return new Promise((resolve) => {
     const check = () => {
       const canvas = resolveCanvas();
+
       if (canvas) {
         resolve(canvas);
         return;
@@ -288,29 +303,37 @@ function connectRuntimeInput(runtimeModule, mount) {
   mount.style.touchAction = "none";
   mount.style.userSelect = "none";
 
-  mount.addEventListener("pointerdown", (event) => {
-    active = true;
-    lastX = event.clientX;
-    lastY = event.clientY;
+  mount.addEventListener(
+    "pointerdown",
+    (event) => {
+      active = true;
+      lastX = event.clientX;
+      lastY = event.clientY;
 
-    safe(() => runtimeModule.setPointerActive && runtimeModule.setPointerActive(true));
+      safe(() => runtimeModule.setPointerActive && runtimeModule.setPointerActive(true));
 
-    try {
-      mount.setPointerCapture(event.pointerId);
-    } catch (_) {}
-  }, { passive: true });
+      try {
+        mount.setPointerCapture(event.pointerId);
+      } catch (_) {}
+    },
+    { passive: true }
+  );
 
-  mount.addEventListener("pointermove", (event) => {
-    if (!active) return;
+  mount.addEventListener(
+    "pointermove",
+    (event) => {
+      if (!active) return;
 
-    const dx = event.clientX - lastX;
-    const dy = event.clientY - lastY;
+      const dx = event.clientX - lastX;
+      const dy = event.clientY - lastY;
 
-    lastX = event.clientX;
-    lastY = event.clientY;
+      lastX = event.clientX;
+      lastY = event.clientY;
 
-    safe(() => runtimeModule.applyDragImpulse && runtimeModule.applyDragImpulse(dx, dy, 1));
-  }, { passive: true });
+      safe(() => runtimeModule.applyDragImpulse && runtimeModule.applyDragImpulse(dx, dy, 1));
+    },
+    { passive: true }
+  );
 
   function end(event) {
     active = false;
@@ -338,6 +361,7 @@ async function boot() {
   }
 
   mount.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
+  mount.dataset.audraliaTerrainFiveFingers = "true";
   mount.dataset.audraliaAssetsBoundaryExpression = "true";
   mount.dataset.audraliaAssetsAbsorbAuthority = "false";
   mount.dataset.generatedImage = "false";
@@ -345,17 +369,26 @@ async function boot() {
   mount.dataset.visualPassClaimed = "false";
 
   try {
-    const [runtimeModule, surfaceModule, hexSurfaceModule, reliefSurfaceModule, assetsModule, canvasModule] =
-      await Promise.all([
-        importModule("runtime", false),
-        importModule("surface", false),
-        importModule("hexSurface", false),
-        importModule("reliefSurface", false),
-        importModule("assets", true),
-        importModule("canvas", true)
-      ]);
+    const [
+      runtimeModule,
+      surfaceModule,
+      hexSurfaceModule,
+      reliefSurfaceModule,
+      terrainFingersModule,
+      assetsModule,
+      canvasModule
+    ] = await Promise.all([
+      importModule("runtime", false),
+      importModule("surface", false),
+      importModule("hexSurface", false),
+      importModule("reliefSurface", false),
+      importModule("terrainFingers", true),
+      importModule("assets", true),
+      importModule("canvas", true)
+    ]);
 
     ROUTE_STATE.runtimeLoaded = Boolean(runtimeModule);
+    ROUTE_STATE.terrainFingersLoaded = Boolean(terrainFingersModule);
     ROUTE_STATE.assetsLoaded = Boolean(assetsModule);
 
     const mountFunction = chooseMountFunction(canvasModule);
@@ -372,10 +405,13 @@ async function boot() {
       surface: surfaceModule,
       hexSurface: hexSurfaceModule,
       reliefSurface: reliefSurfaceModule,
+      terrainFingers: terrainFingersModule,
       assets: assetsModule,
+      terrainFiveFingers: true,
       assetsBoundaryExpression: true,
       assetsAbsorbAuthority: false,
       canvasReceipt: ROUTE_STATE.receipts.canvas || EXPECTED.canvas,
+      terrainFingersReceipt: ROUTE_STATE.receipts.terrainFingers || EXPECTED.terrainFingers,
       assetsReceipt: ROUTE_STATE.receipts.assets || EXPECTED.assets,
       runtimeReceipt: ROUTE_STATE.receipts.runtime || EXPECTED.runtime,
       generatedImage: false,
@@ -393,6 +429,7 @@ async function boot() {
     if (canvas) {
       canvas.dataset.audraliaCanvas = "true";
       canvas.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
+      canvas.dataset.audraliaTerrainFiveFingers = "true";
       canvas.dataset.audraliaAssetsBoundaryExpression = "true";
       canvas.dataset.audraliaAssetsAbsorbAuthority = "false";
       canvas.dataset.generatedImage = "false";
@@ -404,8 +441,8 @@ async function boot() {
 
     clearFallback();
 
-    ROUTE_STATE.ok = Boolean(ROUTE_STATE.canvasFound && ROUTE_STATE.assetsLoaded);
-    publish(ROUTE_STATE.ok ? "ready" : "mounted-without-canvas-proof");
+    ROUTE_STATE.ok = Boolean(ROUTE_STATE.canvasFound && ROUTE_STATE.assetsLoaded && ROUTE_STATE.terrainFingersLoaded);
+    publish(ROUTE_STATE.ok ? "ready" : "mounted-without-complete-proof");
   } catch (error) {
     ROUTE_STATE.errors.push(String(error?.message || error || "boot failed"));
     ROUTE_STATE.ok = false;

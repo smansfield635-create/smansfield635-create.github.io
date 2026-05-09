@@ -1,49 +1,188 @@
-// /assets/hearth/hearth.hex.js
-// HEARTH_G3_HEX_OVERLAP_SEEDED_VARIATION_TNT_v1
-// Full-file replacement.
+// /assets/hearth/hearth.hex.surface.js
+// HEARTH_G3_HIGH_DENSITY_HEX_SURFACE_CROSS_ADOPTION_TNT_v1
+// New render child.
 // Family: HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1
 // Purpose:
-// - Correct hexagonal pixel substrate.
-// - Hex does NOT hard-quantize visual sampling.
-// - Hex provides overlapping hex influence, stable seeded variation, adjacency, and 256-state metadata.
-// - Engines keep raw vector visual sampling for crisp continuous 4K-like rendering.
-// - No GraphicBox. No generated image.
+// - Cross-adopt Audralia's high-density hex surface render technique for Hearth.
+// - Preserve Hearth identity, Hearth terrain authority, and Hearth child-engine chain.
+// - Use high-density overlapping hex footprints for crisp planet rendering.
+// - Do not import Audralia contracts, receipts, runtime, relief authority, or planet truth.
+// - Hex surface refines visual expression only.
+// - No GraphicBox. No generated image. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_HEX_OVERLAP_SEEDED_VARIATION_TNT_v1";
+  const RECEIPT = "HEARTH_G3_HIGH_DENSITY_HEX_SURFACE_CROSS_ADOPTION_TNT_v1";
   const FAMILY_CONTRACT = "HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1";
-  const VERSION = "2026-05-09.hearth-g3-hex-overlap-seeded-variation";
-  const RECEIPT = "HEARTH_G3_HEX_OVERLAP_SEEDED_VARIATION_RECEIPT";
+  const VERSION = "2026-05-09.hearth-g3-high-density-hex-surface-cross-adoption";
+
+  const DEFAULTS = Object.freeze({
+    radiusRatio: 0.456,
+    hexDensity: 268,
+    minHexRadius: 0.92,
+    maxHexRadius: 3.3,
+    edgeDarkening: 0.032,
+    seamSoftening: 0.035,
+    microTerrainStrength: 0.42,
+    terrainBlendStrength: 1,
+    mountainStrength: 0.52,
+    cliffStrength: 0.52,
+    valleyStrength: 0.44,
+    beachStrength: 0.46,
+    islandStrength: 0.46,
+    atmosphereStrength: 1,
+    axialTilt: -0.22,
+    lightX: -0.48,
+    lightY: 0.28,
+    lightZ: 0.84
+  });
+
+  const STATUS = {
+    ok: true,
+    receipt: RECEIPT,
+    familyContract: FAMILY_CONTRACT,
+    version: VERSION,
+    role: "hearth-high-density-hex-surface-render-child",
+    crossAdoptedFrom: "audralia-render-technique-only",
+    hearthIdentityPreserved: true,
+    parentClassificationPreserved: true,
+    downstreamClassificationOverrideAllowed: false,
+    terrainAuthority: false,
+    childEngineAuthority: false,
+    canvasAuthority: false,
+    runtimeAuthority: false,
+    audraliaContractImported: false,
+    audraliaPlanetTruthImported: false,
+    graphicBox: false,
+    imageGeneration: false,
+    visualPassClaimed: false
+  };
 
   const TAU = Math.PI * 2;
-  const GRID = 16;
-  const TOTAL_HEX_CELLS = GRID * GRID;
 
-  const AXIAL_NEIGHBORS = Object.freeze([
-    [1, 0],
-    [1, -1],
-    [0, -1],
-    [-1, 0],
-    [-1, 1],
-    [0, 1]
-  ]);
+  function clamp(value, min, max) {
+    const number = Number(value);
+    if (!Number.isFinite(number)) return min;
+    return Math.max(min, Math.min(max, number));
+  }
 
-  const FEATURE_CATEGORIES = Object.freeze(["peninsula", "bay", "key", "mainIsland"]);
-  const LANDFORM_CATEGORIES = Object.freeze(["hill", "mountain", "cliff", "valley"]);
+  function clamp01(value) {
+    return clamp(value, 0, 1);
+  }
 
-  const REGION_NAMES = Object.freeze([
-    "Northwest Hex Field",
-    "Northeast Hex Field",
-    "Southwest Hex Field",
-    "Southeast Hex Field"
-  ]);
+  function mix(a, b, t) {
+    return a + (b - a) * clamp01(t);
+  }
 
-  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  function fract(value) {
+    return value - Math.floor(value);
+  }
 
-  function mod(n, m) {
-    return ((n % m) + m) % m;
+  function smoothstep(edge0, edge1, value) {
+    const denominator = Math.max(0.000001, edge1 - edge0);
+    const t = clamp01((value - edge0) / denominator);
+    return t * t * (3 - 2 * t);
+  }
+
+  function hash2(x, y, seed) {
+    return fract(Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123);
+  }
+
+  function valueNoise(x, y, seed) {
+    const ix = Math.floor(x);
+    const iy = Math.floor(y);
+    const fx = fract(x);
+    const fy = fract(y);
+
+    const a = hash2(ix, iy, seed);
+    const b = hash2(ix + 1, iy, seed);
+    const c = hash2(ix, iy + 1, seed);
+    const d = hash2(ix + 1, iy + 1, seed);
+
+    const ux = fx * fx * (3 - 2 * fx);
+    const uy = fy * fy * (3 - 2 * fy);
+
+    return mix(mix(a, b, ux), mix(c, d, ux), uy);
+  }
+
+  function fbm(x, y, seed, octaves) {
+    let total = 0;
+    let amplitude = 0.52;
+    let frequency = 1;
+    let normalizer = 0;
+
+    for (let i = 0; i < octaves; i += 1) {
+      total += valueNoise(x * frequency, y * frequency, seed + i * 29.37) * amplitude;
+      normalizer += amplitude;
+      amplitude *= 0.5;
+      frequency *= 2.04;
+    }
+
+    return total / Math.max(0.000001, normalizer);
+  }
+
+  function cubeRound(q, r) {
+    const s = -q - r;
+    let rq = Math.round(q);
+    let rr = Math.round(r);
+    let rs = Math.round(s);
+
+    const qDiff = Math.abs(rq - q);
+    const rDiff = Math.abs(rr - r);
+    const sDiff = Math.abs(rs - s);
+
+    if (qDiff > rDiff && qDiff > sDiff) {
+      rq = -rr - rs;
+    } else if (rDiff > sDiff) {
+      rr = -rq - rs;
+    }
+
+    return { q: rq, r: rr };
+  }
+
+  function nearestHexCenter(xPx, yPx, hexRadius) {
+    const q = ((Math.sqrt(3) / 3) * xPx - (1 / 3) * yPx) / hexRadius;
+    const r = ((2 / 3) * yPx) / hexRadius;
+    const rounded = cubeRound(q, r);
+
+    return {
+      x: hexRadius * Math.sqrt(3) * (rounded.q + rounded.r / 2),
+      y: hexRadius * 1.5 * rounded.r,
+      q: rounded.q,
+      r: rounded.r
+    };
+  }
+
+  function hexDistance(localX, localY, hexRadius) {
+    const q = ((Math.sqrt(3) / 3) * localX - (1 / 3) * localY) / hexRadius;
+    const r = ((2 / 3) * localY) / hexRadius;
+    const s = -q - r;
+
+    return Math.max(Math.abs(q), Math.abs(r), Math.abs(s));
+  }
+
+  function normalizeOptions(options = {}) {
+    return Object.freeze({
+      radiusRatio: clamp(Number(options.radiusRatio) || DEFAULTS.radiusRatio, 0.34, 0.49),
+      hexDensity: clamp(Number(options.hexDensity) || DEFAULTS.hexDensity, 160, 520),
+      minHexRadius: clamp(Number(options.minHexRadius) || DEFAULTS.minHexRadius, 0.55, 3),
+      maxHexRadius: clamp(Number(options.maxHexRadius) || DEFAULTS.maxHexRadius, 1.4, 6),
+      edgeDarkening: clamp(options.edgeDarkening === undefined ? DEFAULTS.edgeDarkening : Number(options.edgeDarkening), 0, 0.16),
+      seamSoftening: clamp(options.seamSoftening === undefined ? DEFAULTS.seamSoftening : Number(options.seamSoftening), 0, 0.16),
+      microTerrainStrength: clamp(options.microTerrainStrength === undefined ? DEFAULTS.microTerrainStrength : Number(options.microTerrainStrength), 0, 0.8),
+      terrainBlendStrength: clamp(options.terrainBlendStrength === undefined ? DEFAULTS.terrainBlendStrength : Number(options.terrainBlendStrength), 0, 1.2),
+      mountainStrength: clamp(options.mountainStrength === undefined ? DEFAULTS.mountainStrength : Number(options.mountainStrength), 0, 1),
+      cliffStrength: clamp(options.cliffStrength === undefined ? DEFAULTS.cliffStrength : Number(options.cliffStrength), 0, 1),
+      valleyStrength: clamp(options.valleyStrength === undefined ? DEFAULTS.valleyStrength : Number(options.valleyStrength), 0, 1),
+      beachStrength: clamp(options.beachStrength === undefined ? DEFAULTS.beachStrength : Number(options.beachStrength), 0, 1),
+      islandStrength: clamp(options.islandStrength === undefined ? DEFAULTS.islandStrength : Number(options.islandStrength), 0, 1),
+      atmosphereStrength: clamp(options.atmosphereStrength === undefined ? DEFAULTS.atmosphereStrength : Number(options.atmosphereStrength), 0, 1.4),
+      axialTilt: Number.isFinite(Number(options.axialTilt)) ? Number(options.axialTilt) : DEFAULTS.axialTilt,
+      lightX: Number(options.lightX) || DEFAULTS.lightX,
+      lightY: Number(options.lightY) || DEFAULTS.lightY,
+      lightZ: Number(options.lightZ) || DEFAULTS.lightZ
+    });
   }
 
   function norm3(v) {
@@ -51,645 +190,521 @@
     return [v[0] / m, v[1] / m, v[2] / m];
   }
 
-  function seededUnit(a, b, c, d = 0) {
-    const n = Math.sin(a * 127.1 + b * 311.7 + c * 74.7 + d * 191.3) * 43758.5453123;
-    return n - Math.floor(n);
-  }
-
-  function seededSigned(a, b, c, d = 0) {
-    return seededUnit(a, b, c, d) * 2 - 1;
-  }
-
-  function vectorToLonLat(vec) {
-    const v = norm3(vec);
-    return {
-      vector: v,
-      lon: Math.atan2(v[0], v[2]),
-      lat: Math.asin(clamp(v[1], -1, 1))
-    };
-  }
-
-  function lonLatToVector(lon, lat) {
-    const cl = Math.cos(lat);
-    return [cl * Math.sin(lon), Math.sin(lat), cl * Math.cos(lon)];
-  }
-
-  function axialRound(qf, rf) {
-    let x = qf;
-    let z = rf;
-    let y = -x - z;
-
-    let rx = Math.round(x);
-    let ry = Math.round(y);
-    let rz = Math.round(z);
-
-    const xDiff = Math.abs(rx - x);
-    const yDiff = Math.abs(ry - y);
-    const zDiff = Math.abs(rz - z);
-
-    if (xDiff > yDiff && xDiff > zDiff) {
-      rx = -ry - rz;
-    } else if (yDiff > zDiff) {
-      ry = -rx - rz;
-    } else {
-      rz = -rx - ry;
-    }
-
-    return { q: mod(rx, GRID), r: mod(rz, GRID) };
-  }
-
-  function vectorToFractionalAxial(vec) {
-    const pos = vectorToLonLat(vec);
-    const u = (pos.lon + Math.PI) / TAU;
-    const v = (pos.lat + Math.PI / 2) / Math.PI;
-
-    const y = clamp(v * GRID, 0, GRID - 1e-9);
-    const x = mod(u * GRID, GRID);
-
-    return {
-      qf: x - y * 0.5,
-      rf: y,
-      u,
-      v,
-      lon: pos.lon,
-      lat: pos.lat,
-      vector: pos.vector
-    };
-  }
-
-  function vectorToAxial(vec) {
-    const f = vectorToFractionalAxial(vec);
-    return axialRound(f.qf, f.rf);
-  }
-
-  function axialToCenterVector(q, r) {
-    const y = r + 0.5;
-    const x = q + y * 0.5 + 0.5;
-    const u = mod(x / GRID, 1);
-    const v = clamp(y / GRID, 0, 1);
-    const lon = u * TAU - Math.PI;
-    const lat = v * Math.PI - Math.PI / 2;
-    return lonLatToVector(lon, lat);
-  }
-
-  function hexId(q, r) {
-    return r * GRID + q + 1;
-  }
-
-  function axialWrappedDistance(qf, rf, q, r) {
-    let best = Infinity;
-
-    for (let oq = -GRID; oq <= GRID; oq += GRID) {
-      for (let or = -GRID; or <= GRID; or += GRID) {
-        const dq = qf - (q + oq);
-        const dr = rf - (r + or);
-        const ds = -dq - dr;
-        const dist = Math.max(Math.abs(dq), Math.abs(dr), Math.abs(ds));
-        if (dist < best) best = dist;
-      }
-    }
-
-    return best;
-  }
-
-  function neighborCells(q, r) {
-    return AXIAL_NEIGHBORS.map(([dq, dr]) => {
-      const nq = mod(q + dq, GRID);
-      const nr = mod(r + dr, GRID);
-      return {
-        hexId: hexId(nq, nr),
-        q: nq,
-        r: nr,
-        cubeX: nq,
-        cubeZ: nr,
-        cubeY: -nq - nr
-      };
-    });
-  }
-
-  function regionBinding(q, r) {
-    const eastHalf = q >= GRID / 2;
-    const southHalf = r >= GRID / 2;
-
-    if (!eastHalf && !southHalf) return 1;
-    if (eastHalf && !southHalf) return 2;
-    if (!eastHalf && southHalf) return 3;
-    return 4;
-  }
-
-  function countryBinding(q, r, regionId) {
-    const localQ = q % 8;
-    const localR = r % 8;
-
-    const east = localQ >= 4;
-    const south = localR >= 4;
-
-    let offset = 0;
-    if (!east && !south) offset = 0;
-    else if (east && !south) offset = 1;
-    else if (!east && south) offset = 2;
-    else offset = 3;
-
-    return (regionId - 1) * 4 + offset + 1;
-  }
-
-  function directionBinding(q, r) {
-    const localQ = q % 4;
-    const localR = r % 4;
-
-    if (localR === 0) return "north";
-    if (localQ === 3) return "east";
-    if (localR === 3) return "south";
-    return "west";
-  }
-
-  function landformSeatBinding(q, r) {
-    return (r % 4) * 4 + (q % 4) + 1;
-  }
-
-  function landformCategoryBinding(q, r) {
-    return LANDFORM_CATEGORIES[mod(q + r, LANDFORM_CATEGORIES.length)];
-  }
-
-  function featureCategoryBinding(q, r) {
-    const ringBand = Math.floor(r / 4);
-    return FEATURE_CATEGORIES[clamp(ringBand, 0, 3)];
-  }
-
-  function featureFamilyBinding(featureCategory) {
-    if (featureCategory === "peninsula") return "attached-coastal-extension";
-    if (featureCategory === "bay") return "negative-coastline-carve";
-    if (featureCategory === "key") return "low-island-chain";
-    if (featureCategory === "mainIsland") return "major-detached-island";
-    return "latent";
-  }
-
-  function adjacencyClass(q, r) {
-    const edgeQ = q === 0 || q === GRID - 1;
-    const edgeR = r === 0 || r === GRID - 1;
-
-    if (edgeQ && edgeR) return "corner-adjacency";
-    if (edgeQ || edgeR) return "edge-adjacency";
-    return "interior-adjacency";
-  }
-
-  function coastRelationBinding(q, r) {
-    const localSeat = landformSeatBinding(q, r);
-    const feature = featureCategoryBinding(q, r);
-
-    if (feature === "peninsula") return "attached-coast-extension";
-    if (feature === "bay") return "negative-coast-carve";
-    if (feature === "key") return "near-coast-key-chain";
-    if (feature === "mainIsland") return "detached-main-island";
-
-    if (localSeat <= 4) return "coast-facing";
-    if (localSeat >= 13) return "interior-facing";
-    return "transitional";
-  }
-
-  function variationForCell(q, r) {
-    const id = hexId(q, r);
-    const regionId = regionBinding(q, r);
-    const countryId = countryBinding(q, r, regionId);
-
-    return Object.freeze({
-      seed: id * 1009 + regionId * 97 + countryId * 37,
-
-      visualJitter: seededSigned(q, r, id, 1) * 0.038,
-      coastlineJitter: seededSigned(q, r, id, 2) * 0.075,
-      mountainJitter: seededSigned(q, r, id, 3) * 0.11,
-      cliffJitter: seededSigned(q, r, id, 4) * 0.12,
-      valleyJitter: seededSigned(q, r, id, 5) * 0.10,
-      beachJitter: seededSigned(q, r, id, 6) * 0.09,
-      islandJitter: seededSigned(q, r, id, 7) * 0.12,
-      colorJitter: seededSigned(q, r, id, 8) * 0.08,
-
-      asymmetry: seededUnit(q, r, id, 9),
-      brokenArc: seededUnit(q, r, id, 10),
-      irregularWeight: 0.72 + seededUnit(q, r, id, 11) * 0.56,
-      featureThresholdOffset: seededSigned(q, r, id, 12) * 0.095,
-      localScaleOffset: seededSigned(q, r, id, 13) * 0.055,
-
-      deterministic: true,
-      randomType: "seeded-coordinated"
-    });
-  }
-
-  function sampleAxial(qInput, rInput) {
-    const q = mod(Math.round(qInput), GRID);
-    const r = mod(Math.round(rInput), GRID);
-
-    const id = hexId(q, r);
-    const regionId = regionBinding(q, r);
-    const countryId = countryBinding(q, r, regionId);
-    const landformSeat = landformSeatBinding(q, r);
-    const globalLandformSeat = (countryId - 1) * 16 + landformSeat;
-    const featureCategory = featureCategoryBinding(q, r);
-
-    return Object.freeze({
-      receipt: RECEIPT,
-      contract: CONTRACT,
-      familyContract: FAMILY_CONTRACT,
-      authority: "hearth-hexagonal-overlap-substrate",
-
-      hexId: id,
-      hexIndex: id - 1,
-      hexGridSize: GRID,
-      totalHexCells: TOTAL_HEX_CELLS,
-
-      axialQ: q,
-      axialR: r,
-      cubeX: q,
-      cubeZ: r,
-      cubeY: -q - r,
-
-      centerVector: axialToCenterVector(q, r),
-      neighborIds: neighborCells(q, r).map((cell) => cell.hexId),
-      neighbors: neighborCells(q, r),
-
-      regionId,
-      regionName: REGION_NAMES[regionId - 1],
-      countryId,
-      countryDirection: directionBinding(q, r),
-
-      landformSeat,
-      globalLandformSeat,
-      landformCategory: landformCategoryBinding(q, r),
-
-      featureSeat: id,
-      featureCategory,
-      featureFamily: featureFamilyBinding(featureCategory),
-
-      adjacencyClass: adjacencyClass(q, r),
-      coastalRelation: coastRelationBinding(q, r),
-
-      variation: variationForCell(q, r),
-
-      geometry: "overlapping-hexagonal-pixel-substrate",
-      lattice: "16x16-256-state",
-      substrateRole: "geometry-and-influence-before-terrain",
-      visualSamplingMode: "raw-vector-continuity",
-      generatedImage: false,
-      graphicBox: false
-    });
-  }
-
-  function overlappingInfluences(vec) {
-    const frac = vectorToFractionalAxial(vec);
-    const primary = axialRound(frac.qf, frac.rf);
-
-    const candidates = [
-      [primary.q, primary.r],
-      ...AXIAL_NEIGHBORS.map(([dq, dr]) => [mod(primary.q + dq, GRID), mod(primary.r + dr, GRID)])
+  function rotateY(v, angle) {
+    const c = Math.cos(angle);
+    const s = Math.sin(angle);
+    return [
+      v[0] * c + v[2] * s,
+      v[1],
+      -v[0] * s + v[2] * c
     ];
-
-    const weighted = candidates.map(([q, r]) => {
-      const dist = axialWrappedDistance(frac.qf, frac.rf, q, r);
-      const base = Math.pow(Math.max(0, 1.35 - dist), 2.15);
-      const variation = variationForCell(q, r);
-      const weight = base * variation.irregularWeight;
-
-      return {
-        ...sampleAxial(q, r),
-        distance: dist,
-        influenceWeightRaw: weight
-      };
-    });
-
-    const total = weighted.reduce((sum, cell) => sum + cell.influenceWeightRaw, 0) || 1;
-
-    return weighted
-      .map((cell) =>
-        Object.freeze({
-          ...cell,
-          influenceWeight: cell.influenceWeightRaw / total
-        })
-      )
-      .sort((a, b) => b.influenceWeight - a.influenceWeight);
   }
 
-  function blendVariation(influences) {
-    const result = {
-      visualJitter: 0,
-      coastlineJitter: 0,
-      mountainJitter: 0,
-      cliffJitter: 0,
-      valleyJitter: 0,
-      beachJitter: 0,
-      islandJitter: 0,
-      colorJitter: 0,
-      asymmetry: 0,
-      brokenArc: 0,
-      irregularWeight: 0,
-      featureThresholdOffset: 0,
-      localScaleOffset: 0
-    };
-
-    influences.forEach((cell) => {
-      const w = cell.influenceWeight || 0;
-      const v = cell.variation || {};
-
-      Object.keys(result).forEach((key) => {
-        result[key] += (v[key] || 0) * w;
-      });
-    });
-
-    result.deterministic = true;
-    result.randomType = "overlapping-seeded-coordinated";
-    return Object.freeze(result);
+  function rotateX(v, angle) {
+    const c = Math.cos(angle);
+    const s = Math.sin(angle);
+    return [
+      v[0],
+      v[1] * c - v[2] * s,
+      v[1] * s + v[2] * c
+    ];
   }
 
-  function sampleVector(vec) {
-    const influences = overlappingInfluences(vec);
-    const primary = influences[0] || sampleAxial(0, 0);
-    const blendedVariation = blendVariation(influences);
-
-    return Object.freeze({
-      ...primary,
-      primaryHex: primary,
-      overlappingHexInfluences: influences,
-      hexInfluenceCount: influences.length,
-      hexInfluenceMode: "overlapping-footprints",
-      blendedVariation,
-
-      visualSamplingMode: "raw-vector-continuity",
-      hardQuantization: false,
-      centerVectorForMetadataOnly: primary.centerVector,
-
-      geometry: "overlapping-hexagonal-pixel-substrate",
-      substrateRole: "classification-adjacency-influence",
-      generatedImage: false,
-      graphicBox: false
-    });
+  function mixColor(base, overlay, amount) {
+    const t = clamp01(amount);
+    return [
+      clamp(Math.round(mix(base[0], overlay[0], t)), 0, 255),
+      clamp(Math.round(mix(base[1], overlay[1], t)), 0, 255),
+      clamp(Math.round(mix(base[2], overlay[2], t)), 0, 255),
+      base[3] === undefined ? 255 : base[3]
+    ];
   }
 
-  function allCells() {
-    const cells = [];
-    for (let r = 0; r < GRID; r += 1) {
-      for (let q = 0; q < GRID; q += 1) {
-        cells.push(sampleAxial(q, r));
-      }
+  function multiplyColor(color, amount) {
+    return [
+      clamp(Math.round(color[0] * amount), 0, 255),
+      clamp(Math.round(color[1] * amount), 0, 255),
+      clamp(Math.round(color[2] * amount), 0, 255),
+      color[3] === undefined ? 255 : color[3]
+    ];
+  }
+
+  function rgb(input, fallback) {
+    if (Array.isArray(input) && input.length >= 3) {
+      return [
+        clamp(Math.round(input[0]), 0, 255),
+        clamp(Math.round(input[1]), 0, 255),
+        clamp(Math.round(input[2]), 0, 255),
+        input[3] === undefined ? 255 : clamp(Math.round(input[3]), 0, 255)
+      ];
     }
-    return cells;
+    return fallback.slice();
   }
 
-  function installSampleBridge(globalName) {
-    const mod = window[globalName];
+  function sampleModule(name, vec) {
+    const mod = window[name];
 
     if (!mod || typeof mod.sampleVector !== "function") {
-      return false;
+      return null;
     }
 
-    if (mod.hexBridgeContract === CONTRACT) {
-      return true;
+    try {
+      return mod.sampleVector(vec);
+    } catch (error) {
+      document.documentElement.dataset[`hearthHexSurface${name}Error`] =
+        error && error.message ? error.message : String(error);
+      return null;
+    }
+  }
+
+  function sampleHearth(vec) {
+    return {
+      terrain: sampleModule("HEARTH_TERRAIN", vec),
+      mountains: sampleModule("HEARTH_MOUNTAINS", vec),
+      cliffs: sampleModule("HEARTH_CLIFFS", vec),
+      valleys: sampleModule("HEARTH_VALLEYS", vec),
+      beaches: sampleModule("HEARTH_BEACHES", vec),
+      islands: sampleModule("HEARTH_ISLANDS", vec),
+      hex: sampleModule("HEARTH_HEX", vec)
+    };
+  }
+
+  function baseWaterColor(terrain) {
+    const depth = clamp01(Number(terrain && terrain.waterDepth !== undefined ? terrain.waterDepth : 0.72));
+    const shelf = clamp01(Number(terrain && terrain.shelf !== undefined ? terrain.shelf : 0));
+    const coast = clamp01(Number(terrain && terrain.coast !== undefined ? terrain.coast : 0));
+
+    let color = [8, 70, 132, 255];
+    color = mixColor(color, [4, 34, 86, 255], depth * 0.62);
+    color = mixColor(color, [34, 170, 184, 255], shelf * 0.66);
+    color = mixColor(color, [68, 206, 205, 255], coast * 0.30);
+    return color;
+  }
+
+  function baseLandColor(terrain) {
+    let color = rgb(terrain && terrain.color, [138, 124, 82, 255]);
+
+    const hill = clamp01(Number(terrain && terrain.hillStrength) || 0);
+    const mountain = clamp01(Number(terrain && terrain.mountainStrength) || 0);
+    const cliff = clamp01(Number(terrain && terrain.cliffStrength) || 0);
+    const valley = clamp01(Number(terrain && terrain.valleyStrength) || 0);
+    const rock = clamp01(Number(terrain && terrain.rockExposure) || 0);
+    const rigid = clamp01(Number(terrain && terrain.rigidLandscapeStrength) || 0);
+
+    color = mixColor(color, [118, 124, 76, 255], hill * 0.18);
+    color = mixColor(color, [216, 206, 170, 255], mountain * 0.18);
+    color = mixColor(color, [52, 54, 52, 255], cliff * 0.32);
+    color = mixColor(color, [70, 104, 72, 255], valley * 0.24);
+    color = mixColor(color, [68, 68, 64, 255], rock * 0.28);
+    color = mixColor(color, [52, 50, 48, 255], rigid * 0.18);
+
+    return color;
+  }
+
+  function baseIslandColor(island) {
+    let color = rgb(island && island.color, [152, 132, 84, 255]);
+
+    const hill = clamp01(Number(island && island.hillStrength) || 0);
+    const mountain = clamp01(Number(island && island.mountainStrength) || 0);
+    const cliff = clamp01(Number(island && island.cliffStrength) || 0);
+    const valley = clamp01(Number(island && island.valleyStrength) || 0);
+
+    color = mixColor(color, [146, 136, 86, 255], hill * 0.16);
+    color = mixColor(color, [222, 214, 182, 255], mountain * 0.16);
+    color = mixColor(color, [58, 60, 56, 255], cliff * 0.25);
+    color = mixColor(color, [80, 110, 76, 255], valley * 0.18);
+
+    return color;
+  }
+
+  function composeColor(samples, geometryIndex, geometry, config, light) {
+    const terrain = samples.terrain || {};
+    const mountain = samples.mountains && samples.mountains.active ? samples.mountains : null;
+    const cliff = samples.cliffs && samples.cliffs.active ? samples.cliffs : null;
+    const valley = samples.valleys && samples.valleys.active ? samples.valleys : null;
+    const beach = samples.beaches && samples.beaches.active ? samples.beaches : null;
+    const island = samples.islands && samples.islands.active && samples.islands.land ? samples.islands : null;
+
+    let color;
+    let surfaceClass = "water";
+
+    if (island) {
+      color = baseIslandColor(island);
+      surfaceClass = "island";
+    } else if (terrain && terrain.land) {
+      color = baseLandColor(terrain);
+      surfaceClass = "land";
+    } else {
+      color = baseWaterColor(terrain);
     }
 
-    const original = mod;
-    const originalSample = mod.sampleVector.bind(mod);
-    const originalReceipt = typeof mod.receipt === "function" ? mod.receipt.bind(mod) : null;
+    if (surfaceClass !== "water" && mountain) {
+      color = mixColor(color, rgb(mountain.mountainColorBias, [226, 216, 184, 255]), clamp01((Number(mountain.peakStrength) || 0) * 0.18 * config.mountainStrength));
+      color = mixColor(color, [236, 228, 200, 255], clamp01((Number(mountain.summitPressure) || 0) * 0.12 * config.mountainStrength));
+    }
 
-    const bridged = Object.freeze({
-      ...mod,
-      hexBridgeInstalled: true,
-      hexBridgeContract: CONTRACT,
-      hexBridgeFamilyContract: FAMILY_CONTRACT,
+    if (surfaceClass !== "water" && cliff) {
+      color = mixColor(color, rgb(cliff.cliffColorBias, [48, 50, 48, 255]), clamp01((Number(cliff.cliffFaceStrength) || 0) * 0.30 * config.cliffStrength));
+      color = multiplyColor(color, 1 - clamp01((Number(cliff.cliffShadow) || 0) * 0.42 * config.cliffStrength));
+    }
 
-      sampleVector(vec) {
-        const hex = sampleVector(vec);
+    if (surfaceClass !== "water" && valley) {
+      color = mixColor(color, rgb(valley.valleyColorBias, [74, 104, 74, 255]), clamp01((Number(valley.valleyDepth) || 0) * 0.24 * config.valleyStrength));
+      color = multiplyColor(color, 1 - clamp01((Number(valley.valleyShadow) || 0) * 0.28 * config.valleyStrength));
+    }
 
-        // CRITICAL:
-        // Visual sample stays raw-vector.
-        // Hex metadata is attached after sampling.
-        // Do NOT sample the visual field at hex.centerVector.
-        const source = originalSample(vec);
+    if (beach) {
+      color = mixColor(color, rgb(beach.beachColorBias, [210, 174, 112, 255]), clamp01((Number(beach.sandStrength) || 0) * 0.34 * config.beachStrength));
+    }
 
-        if (!source || typeof source !== "object") {
-          return source;
-        }
+    const seed = geometry.microSeeds[geometryIndex];
+    const hexEdge = geometry.edgeFactors[geometryIndex];
+    const zDepth = geometry.sphericalDepths[geometryIndex];
+    const hx = geometry.hexQ[geometryIndex];
+    const hr = geometry.hexR[geometryIndex];
 
-        return {
-          ...source,
+    const fineNoise = fbm(
+      hx * 0.17 + seed * 2.0,
+      hr * 0.17 - seed * 3.0,
+      1711,
+      3
+    );
 
-          hex,
-          primaryHex: hex.primaryHex,
-          overlappingHexInfluences: hex.overlappingHexInfluences,
-          hexInfluenceCount: hex.hexInfluenceCount,
-          hexInfluenceMode: hex.hexInfluenceMode,
+    const microContrast = (fineNoise - 0.5) * config.microTerrainStrength;
+    const seam = clamp(
+      1 - hexEdge * config.edgeDarkening + (1 - hexEdge) * config.seamSoftening,
+      0.80,
+      1.08
+    );
 
-          hexId: hex.hexId,
-          hexIndex: hex.hexIndex,
-          hexAxialQ: hex.axialQ,
-          hexAxialR: hex.axialR,
-          hexCubeX: hex.cubeX,
-          hexCubeY: hex.cubeY,
-          hexCubeZ: hex.cubeZ,
-          hexNeighborIds: hex.neighborIds,
+    const sphericalShade = clamp(0.60 + zDepth * 0.48, 0.50, 1.08);
+    const lightShade = clamp(0.72 + light * 0.38, 0.62, 1.12);
+    const microShade = clamp(0.965 + microContrast * 0.11, 0.90, 1.12);
 
-          hexRegionId: hex.regionId,
-          hexRegionName: hex.regionName,
-          hexCountryId: hex.countryId,
-          hexCountryDirection: hex.countryDirection,
+    if (surfaceClass !== "water") {
+      color = mixColor(color, [232, 224, 190, 255], Math.max(0, microContrast) * 0.08);
+      color = mixColor(color, [52, 54, 50, 255], Math.max(0, -microContrast) * 0.10);
+    } else {
+      color = mixColor(color, [62, 206, 210, 255], Math.max(0, microContrast) * 0.04);
+      color = mixColor(color, [4, 28, 78, 255], Math.max(0, -microContrast) * 0.05);
+    }
 
-          hexLandformSeat: hex.landformSeat,
-          hexGlobalLandformSeat: hex.globalLandformSeat,
-          hexLandformCategory: hex.landformCategory,
+    return multiplyColor(color, seam * sphericalShade * lightShade * 0.98);
+  }
 
-          hexFeatureSeat: hex.featureSeat,
-          hexFeatureCategory: hex.featureCategory,
-          hexFeatureFamily: hex.featureFamily,
-          hexAdjacencyClass: hex.adjacencyClass,
-          hexCoastalRelation: hex.coastalRelation,
+  function buildHexGeometry(size, options = {}) {
+    const radius = size * options.radiusRatio;
+    const cx = size / 2;
+    const cy = size / 2;
 
-          hexVariation: hex.blendedVariation,
-          visualJitter: hex.blendedVariation.visualJitter,
-          coastlineJitter: hex.blendedVariation.coastlineJitter,
-          mountainJitter: hex.blendedVariation.mountainJitter,
-          cliffJitter: hex.blendedVariation.cliffJitter,
-          valleyJitter: hex.blendedVariation.valleyJitter,
-          beachJitter: hex.blendedVariation.beachJitter,
-          islandJitter: hex.blendedVariation.islandJitter,
-          colorJitter: hex.blendedVariation.colorJitter,
-          asymmetry: hex.blendedVariation.asymmetry,
-          brokenArc: hex.blendedVariation.brokenArc,
-          featureThresholdOffset: hex.blendedVariation.featureThresholdOffset,
+    const hexRadius = clamp(
+      size / options.hexDensity,
+      options.minHexRadius,
+      options.maxHexRadius
+    );
 
-          hexQuantized: false,
-          hardQuantization: false,
-          visualSamplingMode: "raw-vector-continuity",
-          hexSubstrateContract: CONTRACT,
-          geometrySubstrate: "overlapping-hexagonal-pixel"
-        };
-      },
+    let count = 0;
 
-      receipt() {
-        const base = originalReceipt ? originalReceipt() : {};
-        return {
-          ...base,
-          hexBridge: {
-            installed: true,
-            contract: CONTRACT,
-            familyContract: FAMILY_CONTRACT,
-            substrate: "overlapping-hexagonal-pixel",
-            quantizedSampling: false,
-            rawVectorVisualSampling: true,
-            overlappingInfluence: true,
-            seededVariation: true,
-            geometry: "16x16-256-state"
-          }
-        };
+    for (let py = 0; py < size; py += 1) {
+      const y = (py + 0.5 - cy) / radius;
+
+      for (let px = 0; px < size; px += 1) {
+        const x = (px + 0.5 - cx) / radius;
+        if (x * x + y * y <= 1) count += 1;
       }
-    });
+    }
 
-    window[`${globalName}_UNBRIDGED`] = original;
-    window[globalName] = bridged;
+    const indices = new Uint32Array(count);
+    const sphereX = new Float32Array(count);
+    const sphereY = new Float32Array(count);
+    const sphereZ = new Float32Array(count);
+    const edgeFactors = new Float32Array(count);
+    const microSeeds = new Float32Array(count);
+    const sphericalDepths = new Float32Array(count);
+    const hexQ = new Int32Array(count);
+    const hexR = new Int32Array(count);
 
-    return true;
-  }
+    let i = 0;
 
-  function installKnownBridges() {
-    const modules = [
-      "HEARTH_TERRAIN",
-      "HEARTH_MOUNTAINS",
-      "HEARTH_CLIFFS",
-      "HEARTH_VALLEYS",
-      "HEARTH_BEACHES",
-      "HEARTH_ISLANDS"
-    ];
+    for (let py = 0; py < size; py += 1) {
+      const yRaw = py + 0.5 - cy;
+      const y = yRaw / radius;
 
-    const results = {};
+      for (let px = 0; px < size; px += 1) {
+        const xRaw = px + 0.5 - cx;
+        const x = xRaw / radius;
+        const r2 = x * x + y * y;
 
-    modules.forEach((name) => {
-      results[name] = installSampleBridge(name);
-    });
+        if (r2 > 1) continue;
 
-    document.documentElement.dataset.hearthHexBridgeResults = Object.entries(results)
-      .map(([name, ok]) => `${name}:${ok ? "bridged" : "not-present"}`)
-      .join(",");
+        const z = Math.sqrt(Math.max(0, 1 - r2));
+        const center = nearestHexCenter(xRaw, yRaw, hexRadius);
+        const localX = xRaw - center.x;
+        const localY = yRaw - center.y;
+        const edge = smoothstep(0.76, 1.05, hexDistance(localX, localY, hexRadius));
 
-    return results;
-  }
+        indices[i] = (py * size + px) * 4;
+        sphereX[i] = x;
+        sphereY[i] = -y;
+        sphereZ[i] = z;
+        edgeFactors[i] = edge;
+        microSeeds[i] = hash2(center.q, center.r, 2027);
+        sphericalDepths[i] = z;
+        hexQ[i] = center.q;
+        hexR[i] = center.r;
 
-  function receipt() {
+        i += 1;
+      }
+    }
+
     return Object.freeze({
       receipt: RECEIPT,
-      contract: CONTRACT,
-      familyContract: FAMILY_CONTRACT,
-      version: VERSION,
-      authority: "hearth-hexagonal-overlap-substrate",
-      standard: "overlapping-hexagonal-pixel-format",
-      geometry: "16x16-256-state",
-      totalHexCells: TOTAL_HEX_CELLS,
-      visualSamplingMode: "raw-vector-continuity",
-      hardQuantization: false,
-      overlappingInfluence: true,
-      seededVariation: true,
-      grid: {
-        width: GRID,
-        height: GRID,
-        coordinates: "axial/cube",
-        neighborsPerCell: 6
-      },
-      owns: [
-        "hex cell creation",
-        "256-state geometry",
-        "axial coordinates",
-        "cube coordinates",
-        "neighbor relationships",
-        "overlapping hex influence footprints",
-        "seeded coordinated variation",
-        "region binding",
-        "country binding",
-        "landform seat binding",
-        "feature category binding",
-        "coastal relation binding",
-        "raw-vector sample bridging"
-      ],
-      doesNotOwn: [
-        "terrain meaning",
-        "mountain detail",
-        "cliff detail",
-        "valley detail",
-        "beach detail",
-        "island body rendering",
-        "hydration expansion",
-        "weather",
-        "clouds",
-        "humidity",
-        "generated images",
-        "GraphicBox"
-      ],
-      correction:
-        "Hex metadata influences the render without forcing visual samples to coarse cell centers.",
-      chain: [
-        "hex",
-        "terrain",
-        "mountains",
-        "cliffs",
-        "valleys",
-        "beaches",
-        "islands",
-        "canvas"
-      ]
+      model: "hearth-high-density-overlapping-hex-surface",
+      size,
+      radius,
+      hexRadius,
+      count,
+      indices,
+      sphereX,
+      sphereY,
+      sphereZ,
+      edgeFactors,
+      microSeeds,
+      sphericalDepths,
+      hexQ,
+      hexR
     });
   }
 
-  function dispose() {
-    [
-      "HEARTH_TERRAIN",
-      "HEARTH_MOUNTAINS",
-      "HEARTH_CLIFFS",
-      "HEARTH_VALLEYS",
-      "HEARTH_BEACHES",
-      "HEARTH_ISLANDS"
-    ].forEach((name) => {
-      const original = window[`${name}_UNBRIDGED`];
+  function drawAtmosphere(ctx, size, options = {}) {
+    const cx = size / 2;
+    const cy = size / 2;
+    const radius = size * options.radiusRatio;
+    const strength = options.atmosphereStrength;
 
-      if (original) {
-        window[name] = original;
-        try {
-          delete window[`${name}_UNBRIDGED`];
-        } catch (_) {
-          window[`${name}_UNBRIDGED`] = null;
-        }
-      }
-    });
+    ctx.save();
 
-    if (window.HEARTH_HEX && window.HEARTH_HEX.contract === CONTRACT) {
-      try {
-        delete window.HEARTH_HEX;
-      } catch (_) {
-        window.HEARTH_HEX = null;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, TAU);
+    ctx.clip();
+
+    const highlight = ctx.createRadialGradient(
+      cx - radius * 0.34,
+      cy - radius * 0.36,
+      radius * 0.02,
+      cx,
+      cy,
+      radius * 1.16
+    );
+
+    highlight.addColorStop(0, `rgba(255,255,255,${0.12 * strength})`);
+    highlight.addColorStop(0.32, `rgba(255,255,255,${0.035 * strength})`);
+    highlight.addColorStop(0.74, "rgba(0,0,0,0.10)");
+    highlight.addColorStop(1, "rgba(0,0,0,0.48)");
+
+    ctx.fillStyle = highlight;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    const edge = ctx.createRadialGradient(cx, cy, radius * 0.66, cx, cy, radius);
+    edge.addColorStop(0, "rgba(0,0,0,0)");
+    edge.addColorStop(0.78, `rgba(8,23,44,${0.16 * strength})`);
+    edge.addColorStop(1, `rgba(4,10,20,${0.62 * strength})`);
+
+    ctx.fillStyle = edge;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    ctx.restore();
+
+    ctx.save();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius + Math.max(1, size * 0.004), 0, TAU);
+    ctx.strokeStyle = `rgba(190,226,255,${0.28 * strength})`;
+    ctx.lineWidth = Math.max(1, size * 0.003);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius + Math.max(2, size * 0.011), 0, TAU);
+    ctx.strokeStyle = `rgba(108,185,232,${0.11 * strength})`;
+    ctx.lineWidth = Math.max(1, size * 0.006);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function publishStatus(state, frameReceipt) {
+    if (state && state.canvas) {
+      state.canvas.dataset.hearthHexSurface = RECEIPT;
+      state.canvas.dataset.hearthHexSurfaceModel = "hearth-high-density-overlapping-hex-surface";
+      state.canvas.dataset.hearthHexSurfaceCrossAdoptedFrom = "audralia-technique-only";
+      state.canvas.dataset.hearthIdentityPreserved = "true";
+      state.canvas.dataset.parentClassificationPreserved = "true";
+      state.canvas.dataset.downstreamClassificationOverrideAllowed = "false";
+      state.canvas.dataset.graphicBox = "false";
+      state.canvas.dataset.imageGeneration = "false";
+      state.canvas.dataset.visualPassClaimed = "false";
+
+      if (frameReceipt) {
+        state.canvas.dataset.hearthHexSurfaceFrameReceipt = frameReceipt.receipt;
+        state.canvas.dataset.hearthHexSamples = String(frameReceipt.samples || 0);
+        state.canvas.dataset.hearthLandPixels = String(frameReceipt.landPixels || 0);
+        state.canvas.dataset.hearthWaterPixels = String(frameReceipt.waterPixels || 0);
+        state.canvas.dataset.hearthIslandPixels = String(frameReceipt.islandPixels || 0);
+        state.canvas.dataset.hearthBeachPixels = String(frameReceipt.beachPixels || 0);
+        state.canvas.dataset.hearthMountainPixels = String(frameReceipt.mountainPixels || 0);
+        state.canvas.dataset.hearthCliffPixels = String(frameReceipt.cliffPixels || 0);
+        state.canvas.dataset.hearthValleyPixels = String(frameReceipt.valleyPixels || 0);
       }
     }
+
+    window.HEARTH_HEX_SURFACE_STATUS = STATUS;
+    return STATUS;
   }
 
-  window.HEARTH_HEX = Object.freeze({
-    receipt,
-    contract: CONTRACT,
+  function drawHearthHexSurfaceFrame(state, options = {}) {
+    if (!state || !state.canvas || !state.ctx) {
+      throw new Error("HEARTH_HEX_SURFACE_MISSING_STATE");
+    }
+
+    const size = Number(state.canvas.width) || 0;
+
+    if (!size) {
+      throw new Error("HEARTH_HEX_SURFACE_MISSING_CANVAS_SIZE");
+    }
+
+    const config = normalizeOptions(options);
+    const phase = Number(state.phase) || 0;
+    const light = norm3([config.lightX, config.lightY, config.lightZ]);
+
+    if (!state.hearthHexGeometry || state.hearthHexGeometry.size !== size || state.hearthHexGeometry.receipt !== RECEIPT) {
+      state.hearthHexGeometry = buildHexGeometry(size, config);
+    }
+
+    const geometry = state.hearthHexGeometry;
+    const output = state.ctx.createImageData(size, size);
+    const data = output.data;
+
+    let landPixels = 0;
+    let waterPixels = 0;
+    let islandPixels = 0;
+    let beachPixels = 0;
+    let mountainPixels = 0;
+    let cliffPixels = 0;
+    let valleyPixels = 0;
+
+    for (let i = 0; i < geometry.count; i += 1) {
+      const out = geometry.indices[i];
+
+      let vec = [geometry.sphereX[i], geometry.sphereY[i], geometry.sphereZ[i]];
+      vec = rotateX(vec, config.axialTilt);
+      vec = rotateY(vec, phase);
+
+      const rawNormal = norm3([geometry.sphereX[i], geometry.sphereY[i], geometry.sphereZ[i]]);
+      const lightValue = clamp01(rawNormal[0] * light[0] + rawNormal[1] * light[1] + rawNormal[2] * light[2]);
+
+      const samples = sampleHearth(vec);
+      const color = composeColor(samples, i, geometry, config, lightValue);
+
+      const terrain = samples.terrain || {};
+      const island = samples.islands || {};
+      const mountains = samples.mountains || {};
+      const cliffs = samples.cliffs || {};
+      const valleys = samples.valleys || {};
+      const beaches = samples.beaches || {};
+
+      if (island.active && island.land) islandPixels += 1;
+      else if (terrain.land) landPixels += 1;
+      else waterPixels += 1;
+
+      if (beaches.active) beachPixels += 1;
+      if (mountains.active) mountainPixels += 1;
+      if (cliffs.active) cliffPixels += 1;
+      if (valleys.active) valleyPixels += 1;
+
+      data[out] = color[0];
+      data[out + 1] = color[1];
+      data[out + 2] = color[2];
+      data[out + 3] = color[3];
+    }
+
+    state.ctx.putImageData(output, 0, 0);
+    drawAtmosphere(state.ctx, size, config);
+
+    const frameReceipt = Object.freeze({
+      ok: true,
+      receipt: RECEIPT,
+      familyContract: FAMILY_CONTRACT,
+      version: VERSION,
+      model: "hearth-high-density-overlapping-hex-surface",
+      crossAdoptedFrom: "audralia-render-technique-only",
+      hearthIdentityPreserved: true,
+      parentClassificationPreserved: true,
+      downstreamClassificationOverrideAllowed: false,
+      size,
+      samples: geometry.count,
+      hexRadius: geometry.hexRadius,
+      landPixels,
+      waterPixels,
+      islandPixels,
+      beachPixels,
+      mountainPixels,
+      cliffPixels,
+      valleyPixels,
+      graphicBox: false,
+      imageGeneration: false,
+      visualPassClaimed: false
+    });
+
+    publishStatus(state, frameReceipt);
+    return frameReceipt;
+  }
+
+  function getHearthHexSurfaceStatus(state = null) {
+    return Object.freeze({
+      ok: true,
+      receipt: RECEIPT,
+      familyContract: FAMILY_CONTRACT,
+      version: VERSION,
+      role: "hearth-high-density-hex-surface-render-child",
+      crossAdoptedFrom: "audralia-render-technique-only",
+      hearthIdentityPreserved: true,
+      terrainAuthority: false,
+      childEngineAuthority: false,
+      canvasAuthority: false,
+      parentClassificationPreserved: true,
+      downstreamClassificationOverrideAllowed: false,
+      geometryLoaded: Boolean(state && state.hearthHexGeometry),
+      hexRadius: state && state.hearthHexGeometry ? state.hearthHexGeometry.hexRadius : null,
+      hexSamples: state && state.hearthHexGeometry ? state.hearthHexGeometry.count : null,
+      highDensityHexSurface: true,
+      overlappingHexFootprints: true,
+      rawVectorPlanetSampling: true,
+      graphicBox: false,
+      imageGeneration: false,
+      visualPassClaimed: false
+    });
+  }
+
+  const api = Object.freeze({
+    receipt: RECEIPT,
     familyContract: FAMILY_CONTRACT,
     version: VERSION,
-    authority: "hearth-hexagonal-overlap-substrate",
-    sampleVector,
-    sampleAxial,
-    allCells,
-    overlappingInfluences,
-    installSampleBridge,
-    installKnownBridges
+    drawHearthHexSurfaceFrame,
+    drawFrame: drawHearthHexSurfaceFrame,
+    buildHexGeometry,
+    getHearthHexSurfaceStatus
   });
 
-  window.__HEARTH_HEX_DISPOSE__ = dispose;
+  window.HEARTH_HEX_SURFACE = api;
+  window.HEARTH_HEX_SURFACE_STATUS = STATUS;
 
-  document.documentElement.dataset.hearthHexLoaded = "true";
-  document.documentElement.dataset.hearthHexContract = CONTRACT;
-  document.documentElement.dataset.hearthHexFamilyContract = FAMILY_CONTRACT;
-  document.documentElement.dataset.hearthHexVersion = VERSION;
-  document.documentElement.dataset.hearthHexStandard = "overlapping-hexagonal-pixel-format";
-  document.documentElement.dataset.hearthHexGeometry = "16x16-256-state";
-  document.documentElement.dataset.hearthHexTotalCells = String(TOTAL_HEX_CELLS);
-  document.documentElement.dataset.hearthHexVisualSamplingMode = "raw-vector-continuity";
-  document.documentElement.dataset.hearthHexHardQuantization = "false";
-  document.documentElement.dataset.hearthHexOverlappingInfluence = "true";
-  document.documentElement.dataset.hearthHexSeededVariation = "true";
-  document.documentElement.dataset.hearthHexGeneratedImage = "false";
-  document.documentElement.dataset.hearthHexGraphicBox = "false";
+  document.documentElement.dataset.hearthHexSurfaceLoaded = "true";
+  document.documentElement.dataset.hearthHexSurfaceReceipt = RECEIPT;
+  document.documentElement.dataset.hearthHexSurfaceFamilyContract = FAMILY_CONTRACT;
+  document.documentElement.dataset.hearthHexSurfaceVersion = VERSION;
+  document.documentElement.dataset.hearthHexSurfaceModel = "high-density-overlapping-hex-surface";
+  document.documentElement.dataset.hearthHexSurfaceCrossAdoptedFrom = "audralia-technique-only";
+  document.documentElement.dataset.hearthHexSurfaceHearthIdentityPreserved = "true";
+  document.documentElement.dataset.hearthHexSurfaceGraphicBox = "false";
+  document.documentElement.dataset.hearthHexSurfaceImageGeneration = "false";
 })();

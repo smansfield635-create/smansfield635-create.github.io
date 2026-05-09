@@ -1,19 +1,23 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_G3_TOUCH_CONTROL_FAST_STRIP_RENDER_TNT_v2
+// HEARTH_G3_WEBGL_AXIS_DRAG_SPIN_SENSOR_TNT_v3
 // Full-file replacement.
 // Scope:
 // - Canvas authority only.
-// - Fixes mobile lag by removing per-frame per-pixel projection.
-// - Generates static Hearth world texture once.
-// - Renders animation with fast cached strip blits.
-// - Restores finger drag, touch control, velocity, and inertia.
-// - Caps mobile physical render cost.
-// - Child engines remain nonblocking/deferred.
+// - Replaces ticking strip renderer with WebGL sphere renderer.
+// - Locks Hearth to Earth-like axial degree: 23.44°.
+// - Restores finger drag and flick spin inertia.
+// - Rotation occurs around the tilted planetary axis, not a flat strip.
+// - Cached world texture generated once.
+// - Child engines remain deferred/nonblocking.
 // - No GraphicBox. No image generation. No visual-pass claim.
 
-const CONTRACT = "HEARTH_G3_TOUCH_CONTROL_FAST_STRIP_RENDER_TNT_v2";
-const RECEIPT = "HEARTH_CANVAS_TOUCH_FAST_RENDER_RECEIPT";
-const VERSION = "2026-05-09.hearth-g3.touch-control-fast-strip-render.v2";
+const CONTRACT = "HEARTH_G3_WEBGL_AXIS_DRAG_SPIN_SENSOR_TNT_v3";
+const RECEIPT = "HEARTH_WEBGL_AXIS_DRAG_SPIN_RECEIPT";
+const VERSION = "2026-05-09.hearth-g3.webgl-axis-drag-spin-sensor.v3";
+
+const AXIS_TILT_DEGREES = 23.44;
+const AXIS_TILT_RADIANS = AXIS_TILT_DEGREES * Math.PI / 180;
+const TAU = Math.PI * 2;
 
 const CHILD_ENGINE_PATHS = Object.freeze({
   terrain: "/assets/hearth/hearth.terrain.js",
@@ -37,7 +41,7 @@ const DEFAULT_SELECTORS = Object.freeze([
   ".hearth-planet-mount"
 ]);
 
-const TAU = Math.PI * 2;
+const INSTANCE_BY_CANVAS = new WeakMap();
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -54,10 +58,6 @@ function smoothstep(edge0, edge1, x) {
 
 function mod(value, divisor) {
   return ((value % divisor) + divisor) % divisor;
-}
-
-function wrap01(value) {
-  return mod(value, 1);
 }
 
 function wrapDelta(value) {
@@ -249,9 +249,7 @@ function sampleSurfaceColor(u, v) {
       (ridgedFbm(u * 0.75 - 0.09, v * 0.7 + 0.12, 5119) - 0.5) * 4;
 
     const depth = (1 - shelf) * -4;
-    color = addColor(color, softCurrent + depth);
-
-    return color;
+    return addColor(color, softCurrent + depth);
   }
 
   const sand = [185, 166, 109];
@@ -273,9 +271,7 @@ function sampleSurfaceColor(u, v) {
 
   const beachLift = coast * 18;
   const terrainVariation = (micro - 0.5) * 16;
-  color = addColor(color, beachLift + terrainVariation);
-
-  return color;
+  return addColor(color, beachLift + terrainVariation);
 }
 
 function makeCanvas(width, height) {
@@ -287,16 +283,16 @@ function makeCanvas(width, height) {
 
 function generateWorldTexture(options) {
   const mobile = isMobileRuntime();
-  const width = options.textureWidth || (mobile ? 832 : 1280);
+  const width = options.textureWidth || (mobile ? 1024 : 1536);
   const height = options.textureHeight || Math.round(width / 2);
 
   const textureCanvas = makeCanvas(width, height);
-  const textureCtx = textureCanvas.getContext("2d", {
+  const ctx = textureCanvas.getContext("2d", {
     alpha: false,
     willReadFrequently: false
   });
 
-  const image = textureCtx.createImageData(width, height);
+  const image = ctx.createImageData(width, height);
   const data = image.data;
 
   for (let y = 0; y < height; y += 1) {
@@ -314,24 +310,13 @@ function generateWorldTexture(options) {
     }
   }
 
-  textureCtx.putImageData(image, 0, 0);
-
-  const repeatedCanvas = makeCanvas(width * 3, height);
-  const repeatedCtx = repeatedCanvas.getContext("2d", {
-    alpha: false,
-    willReadFrequently: false
-  });
-
-  repeatedCtx.drawImage(textureCanvas, 0, 0);
-  repeatedCtx.drawImage(textureCanvas, width, 0);
-  repeatedCtx.drawImage(textureCanvas, width * 2, 0);
+  ctx.putImageData(image, 0, 0);
 
   return {
     canvas: textureCanvas,
-    repeated: repeatedCanvas,
     width,
     height,
-    receipt: `${RECEIPT}:static-texture:${width}x${height}`
+    receipt: `${RECEIPT}:cached-world-texture:${width}x${height}`
   };
 }
 
@@ -381,10 +366,12 @@ function styleCanvas(canvas) {
   canvas.dataset.hearthCanvas = "true";
   canvas.dataset.contract = CONTRACT;
   canvas.dataset.receipt = RECEIPT;
+  canvas.dataset.axisTiltDegrees = String(AXIS_TILT_DEGREES);
+
   canvas.setAttribute("role", "img");
   canvas.setAttribute(
     "aria-label",
-    "Hearth Generation 3 touch-controlled fast cached planet render"
+    "Hearth Generation 3 WebGL globe with Earth-like axial tilt and drag spin control"
   );
 
   canvas.style.display = "block";
@@ -438,34 +425,210 @@ function upsertHiddenReceipt(canvas, diagnostics) {
   node.textContent = JSON.stringify(diagnostics);
 }
 
-const INSTANCE_BY_CANVAS = new WeakMap();
+function mat4Identity() {
+  return new Float32Array([
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1
+  ]);
+}
 
-class HearthCanvasRenderer {
+function mat4Multiply(a, b) {
+  const out = new Float32Array(16);
+
+  for (let row = 0; row < 4; row += 1) {
+    for (let col = 0; col < 4; col += 1) {
+      out[col * 4 + row] =
+        a[0 * 4 + row] * b[col * 4 + 0] +
+        a[1 * 4 + row] * b[col * 4 + 1] +
+        a[2 * 4 + row] * b[col * 4 + 2] +
+        a[3 * 4 + row] * b[col * 4 + 3];
+    }
+  }
+
+  return out;
+}
+
+function mat4RotateX(rad) {
+  const c = Math.cos(rad);
+  const s = Math.sin(rad);
+
+  return new Float32Array([
+    1, 0, 0, 0,
+    0, c, s, 0,
+    0, -s, c, 0,
+    0, 0, 0, 1
+  ]);
+}
+
+function mat4RotateY(rad) {
+  const c = Math.cos(rad);
+  const s = Math.sin(rad);
+
+  return new Float32Array([
+    c, 0, -s, 0,
+    0, 1, 0, 0,
+    s, 0, c, 0,
+    0, 0, 0, 1
+  ]);
+}
+
+function mat4RotateZ(rad) {
+  const c = Math.cos(rad);
+  const s = Math.sin(rad);
+
+  return new Float32Array([
+    c, s, 0, 0,
+    -s, c, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1
+  ]);
+}
+
+function mat4Scale(s) {
+  return new Float32Array([
+    s, 0, 0, 0,
+    0, s, 0, 0,
+    0, 0, s, 0,
+    0, 0, 0, 1
+  ]);
+}
+
+function mat4Translate(x, y, z) {
+  return new Float32Array([
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    x, y, z, 1
+  ]);
+}
+
+function mat4Ortho(left, right, bottom, top, near, far) {
+  const lr = 1 / (left - right);
+  const bt = 1 / (bottom - top);
+  const nf = 1 / (near - far);
+
+  return new Float32Array([
+    -2 * lr, 0, 0, 0,
+    0, -2 * bt, 0, 0,
+    0, 0, 2 * nf, 0,
+    (left + right) * lr,
+    (top + bottom) * bt,
+    (far + near) * nf,
+    1
+  ]);
+}
+
+function compileShader(gl, type, source) {
+  const shader = gl.createShader(type);
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    const info = gl.getShaderInfoLog(shader) || "unknown shader compile error";
+    gl.deleteShader(shader);
+    throw new Error(`${CONTRACT}: ${info}`);
+  }
+
+  return shader;
+}
+
+function createProgram(gl, vertexSource, fragmentSource) {
+  const vertex = compileShader(gl, gl.VERTEX_SHADER, vertexSource);
+  const fragment = compileShader(gl, gl.FRAGMENT_SHADER, fragmentSource);
+  const program = gl.createProgram();
+
+  gl.attachShader(program, vertex);
+  gl.attachShader(program, fragment);
+  gl.linkProgram(program);
+
+  gl.deleteShader(vertex);
+  gl.deleteShader(fragment);
+
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    const info = gl.getProgramInfoLog(program) || "unknown program link error";
+    gl.deleteProgram(program);
+    throw new Error(`${CONTRACT}: ${info}`);
+  }
+
+  return program;
+}
+
+function createSphereMesh(latSegments, lonSegments) {
+  const positions = [];
+  const normals = [];
+  const uvs = [];
+  const indices = [];
+
+  for (let lat = 0; lat <= latSegments; lat += 1) {
+    const v = lat / latSegments;
+    const theta = v * Math.PI;
+    const sinTheta = Math.sin(theta);
+    const cosTheta = Math.cos(theta);
+
+    for (let lon = 0; lon <= lonSegments; lon += 1) {
+      const u = lon / lonSegments;
+      const phi = u * TAU;
+
+      const x = Math.sin(phi) * sinTheta;
+      const y = cosTheta;
+      const z = Math.cos(phi) * sinTheta;
+
+      positions.push(x, y, z);
+      normals.push(x, y, z);
+      uvs.push(u, v);
+    }
+  }
+
+  const row = lonSegments + 1;
+
+  for (let lat = 0; lat < latSegments; lat += 1) {
+    for (let lon = 0; lon < lonSegments; lon += 1) {
+      const a = lat * row + lon;
+      const b = a + row;
+      const c = b + 1;
+      const d = a + 1;
+
+      indices.push(a, b, d);
+      indices.push(b, c, d);
+    }
+  }
+
+  return {
+    positions: new Float32Array(positions),
+    normals: new Float32Array(normals),
+    uvs: new Float32Array(uvs),
+    indices: new Uint16Array(indices)
+  };
+}
+
+class HearthWebGLRenderer {
   constructor(target, options = {}) {
     this.options = Object.assign(
       {
         autoRotate: !prefersReducedMotion(),
-        autoSpeed: 0.0065,
-        mobileAutoSpeed: 0.005,
-        dragSensitivity: 0.82,
-        inertiaFriction: 0.0032,
+        autoRadiansPerSecond: 0.085,
+        dragRadiansPerScreen: TAU * 0.92,
+        inertiaFrictionPerSecond: 2.15,
+        minSpinVelocity: 0.0005,
+        maxSpinVelocity: 8.5,
         maxCssSizeMobile: 560,
-        maxCssSizeDesktop: 720,
-        maxPhysicalMobile: 500,
-        maxPhysicalDesktop: 820,
-        maxDprMobile: 1.12,
-        maxDprDesktop: 1.6,
-        fpsMobile: 24,
-        fpsDesktop: 30,
-        stripCountMobile: 76,
-        stripCountDesktop: 118,
+        maxCssSizeDesktop: 760,
+        maxPhysicalMobile: 720,
+        maxPhysicalDesktop: 1100,
+        maxDprMobile: 1.5,
+        maxDprDesktop: 1.85,
+        latSegmentsMobile: 48,
+        lonSegmentsMobile: 96,
+        latSegmentsDesktop: 64,
+        lonSegmentsDesktop: 128,
         loadChildEngines: false
       },
       options || {}
     );
 
     this.canvas = ensureCanvas(target);
-
     if (!this.canvas) {
       throw new Error(`${CONTRACT}: no Hearth canvas mount found`);
     }
@@ -474,14 +637,30 @@ class HearthCanvasRenderer {
     if (existing) existing.destroy();
     INSTANCE_BY_CANVAS.set(this.canvas, this);
 
-    this.ctx = this.canvas.getContext("2d", {
-      alpha: true,
-      desynchronized: true,
-      willReadFrequently: false
-    });
-
     this.mobile = isMobileRuntime();
-    this.texture = generateWorldTexture(this.options);
+
+    this.gl =
+      this.canvas.getContext("webgl", {
+        alpha: true,
+        antialias: true,
+        depth: true,
+        premultipliedAlpha: false,
+        preserveDrawingBuffer: false,
+        powerPreference: "high-performance"
+      }) ||
+      this.canvas.getContext("experimental-webgl", {
+        alpha: true,
+        antialias: true,
+        depth: true,
+        premultipliedAlpha: false,
+        preserveDrawingBuffer: false
+      });
+
+    if (!this.gl) {
+      throw new Error(`${CONTRACT}: WebGL unavailable`);
+    }
+
+    this.textureSource = generateWorldTexture(this.options);
 
     this.destroyed = false;
     this.resizeObserver = null;
@@ -489,29 +668,33 @@ class HearthCanvasRenderer {
 
     this.cssSize = 0;
     this.physicalSize = 0;
-    this.radius = 0;
-    this.cx = 0;
-    this.cy = 0;
 
-    this.rotation = 0.03;
-    this.velocity = 0;
-    this.lastTick = performance.now();
-    this.lastDraw = 0;
-    this.lastInput = 0;
+    this.rotation = 0.23;
+    this.spinVelocity = 0;
     this.pointerActive = false;
     this.pointerId = null;
     this.lastPointerX = 0;
     this.lastPointerTime = 0;
-    this.dirty = true;
+    this.lastTick = performance.now();
+    this.lastInteraction = 0;
 
     this.diagnostics = {
       contract: CONTRACT,
       receipt: RECEIPT,
       version: VERSION,
       renderAuthority: "canvas",
-      renderMode: "cached-texture-fast-strip-blit",
-      lagFix: "no-per-frame-per-pixel-projection",
-      touchControl: "pointer-drag-inertia-enabled",
+      renderMode: "webgl-gpu-textured-sphere",
+      axis: {
+        locked: true,
+        samePhysicalDegreeAsEarth: true,
+        tiltDegrees: AXIS_TILT_DEGREES
+      },
+      motion: {
+        dragSensor: true,
+        spinSensor: true,
+        inertia: true,
+        tickingStripRendererRemoved: true
+      },
       childEngines: {
         mode: "deferred-nonblocking",
         loaded: [],
@@ -521,14 +704,7 @@ class HearthCanvasRenderer {
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false,
-      cache: {
-        staticTexture: true,
-        textureReceipt: this.texture.receipt
-      },
-      performance: {
-        mobile: this.mobile,
-        fpsTarget: this.mobile ? this.options.fpsMobile : this.options.fpsDesktop
-      }
+      textureReceipt: this.textureSource.receipt
     };
 
     this.resize = this.resize.bind(this);
@@ -537,7 +713,10 @@ class HearthCanvasRenderer {
     this.onPointerMove = this.onPointerMove.bind(this);
     this.onPointerUp = this.onPointerUp.bind(this);
     this.onWheel = this.onWheel.bind(this);
+    this.onContextLost = this.onContextLost.bind(this);
+    this.onContextRestored = this.onContextRestored.bind(this);
 
+    this.initGL();
     this.installResize();
     this.installInput();
     this.resize();
@@ -548,6 +727,127 @@ class HearthCanvasRenderer {
 
     this.writeDiagnostics();
     this.requestLoop();
+  }
+
+  initGL() {
+    const gl = this.gl;
+
+    const vertexSource = `
+      attribute vec3 aPosition;
+      attribute vec3 aNormal;
+      attribute vec2 aUV;
+
+      uniform mat4 uModel;
+      uniform mat4 uView;
+      uniform mat4 uProjection;
+
+      varying vec3 vNormal;
+      varying vec3 vPosition;
+      varying vec2 vUV;
+
+      void main() {
+        vec4 worldPosition = uModel * vec4(aPosition, 1.0);
+        vPosition = worldPosition.xyz;
+        vNormal = normalize((uModel * vec4(aNormal, 0.0)).xyz);
+        vUV = aUV;
+        gl_Position = uProjection * uView * worldPosition;
+      }
+    `;
+
+    const fragmentSource = `
+      precision mediump float;
+
+      uniform sampler2D uTexture;
+      uniform vec3 uLightDirection;
+      uniform vec3 uViewDirection;
+
+      varying vec3 vNormal;
+      varying vec3 vPosition;
+      varying vec2 vUV;
+
+      void main() {
+        vec3 normal = normalize(vNormal);
+        vec3 base = texture2D(uTexture, vUV).rgb;
+
+        float light = max(dot(normal, normalize(uLightDirection)), 0.0);
+        float soft = 0.38 + light * 0.68;
+
+        float rim = pow(1.0 - max(dot(normal, normalize(uViewDirection)), 0.0), 2.25);
+        vec3 atmosphere = vec3(0.22, 0.58, 0.78) * rim * 0.30;
+
+        float terminator = smoothstep(-0.26, 0.74, dot(normal, normalize(uLightDirection)));
+        vec3 night = vec3(0.015, 0.035, 0.07);
+
+        vec3 color = mix(night, base * soft, terminator);
+        color += atmosphere;
+
+        gl_FragColor = vec4(color, 1.0);
+      }
+    `;
+
+    this.program = createProgram(gl, vertexSource, fragmentSource);
+    gl.useProgram(this.program);
+
+    this.locations = {
+      aPosition: gl.getAttribLocation(this.program, "aPosition"),
+      aNormal: gl.getAttribLocation(this.program, "aNormal"),
+      aUV: gl.getAttribLocation(this.program, "aUV"),
+      uModel: gl.getUniformLocation(this.program, "uModel"),
+      uView: gl.getUniformLocation(this.program, "uView"),
+      uProjection: gl.getUniformLocation(this.program, "uProjection"),
+      uTexture: gl.getUniformLocation(this.program, "uTexture"),
+      uLightDirection: gl.getUniformLocation(this.program, "uLightDirection"),
+      uViewDirection: gl.getUniformLocation(this.program, "uViewDirection")
+    };
+
+    const latSegments = this.mobile ? this.options.latSegmentsMobile : this.options.latSegmentsDesktop;
+    const lonSegments = this.mobile ? this.options.lonSegmentsMobile : this.options.lonSegmentsDesktop;
+    const mesh = createSphereMesh(latSegments, lonSegments);
+
+    this.indexCount = mesh.indices.length;
+
+    this.positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, mesh.positions, gl.STATIC_DRAW);
+
+    this.normalBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, mesh.normals, gl.STATIC_DRAW);
+
+    this.uvBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.uvBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, mesh.uvs, gl.STATIC_DRAW);
+
+    this.indexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, mesh.indices, gl.STATIC_DRAW);
+
+    this.texture = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, this.texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      this.textureSource.canvas
+    );
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LEQUAL);
+    gl.disable(gl.CULL_FACE);
+    gl.clearColor(0, 0, 0, 0);
+
+    gl.uniform1i(this.locations.uTexture, 0);
+    gl.uniform3f(this.locations.uLightDirection, -0.42, 0.36, 0.84);
+    gl.uniform3f(this.locations.uViewDirection, 0.0, 0.0, 1.0);
   }
 
   installResize() {
@@ -565,6 +865,8 @@ class HearthCanvasRenderer {
     this.canvas.addEventListener("pointerup", this.onPointerUp, { passive: false });
     this.canvas.addEventListener("pointercancel", this.onPointerUp, { passive: false });
     this.canvas.addEventListener("wheel", this.onWheel, { passive: false });
+    this.canvas.addEventListener("webglcontextlost", this.onContextLost, { passive: false });
+    this.canvas.addEventListener("webglcontextrestored", this.onContextRestored, { passive: false });
   }
 
   removeInput() {
@@ -573,32 +875,8 @@ class HearthCanvasRenderer {
     this.canvas.removeEventListener("pointerup", this.onPointerUp);
     this.canvas.removeEventListener("pointercancel", this.onPointerUp);
     this.canvas.removeEventListener("wheel", this.onWheel);
-  }
-
-  async loadChildEngines() {
-    const entries = Object.entries(CHILD_ENGINE_PATHS);
-    const results = await Promise.allSettled(
-      entries.map(async ([name, path]) => {
-        const module = await import(path);
-        return { name, path, module };
-      })
-    );
-
-    const loaded = [];
-    const held = [];
-
-    results.forEach((result, index) => {
-      const [name, path] = entries[index];
-      if (result.status === "fulfilled") {
-        loaded.push(name);
-      } else {
-        held.push({ name, path, reason: "nonblocking-import-held" });
-      }
-    });
-
-    this.diagnostics.childEngines.loaded = loaded;
-    this.diagnostics.childEngines.held = held;
-    this.writeDiagnostics();
+    this.canvas.removeEventListener("webglcontextlost", this.onContextLost);
+    this.canvas.removeEventListener("webglcontextrestored", this.onContextRestored);
   }
 
   getRenderSize() {
@@ -625,11 +903,7 @@ class HearthCanvasRenderer {
     const cssSize = Math.min(available, cssCap);
     const physicalSize = Math.max(320, Math.min(physicalCap, Math.round(cssSize * dpr)));
 
-    return {
-      cssSize,
-      physicalSize,
-      dpr
-    };
+    return { cssSize, physicalSize, dpr };
   }
 
   resize() {
@@ -644,22 +918,24 @@ class HearthCanvasRenderer {
 
       this.cssSize = next.cssSize;
       this.physicalSize = next.physicalSize;
-      this.cx = next.physicalSize / 2;
-      this.cy = next.physicalSize / 2;
-      this.radius = next.physicalSize * 0.455;
 
-      this.diagnostics.performance.cssSize = next.cssSize;
-      this.diagnostics.performance.physicalSize = next.physicalSize;
-      this.diagnostics.performance.devicePixelRatioUsed = next.dpr;
-      this.diagnostics.performance.stripCount = this.getStripCount();
+      const gl = this.gl;
+      gl.viewport(0, 0, next.physicalSize, next.physicalSize);
 
-      this.dirty = true;
+      this.projectionMatrix = mat4Ortho(-1.08, 1.08, -1.08, 1.08, 0.1, 10);
+      this.viewMatrix = mat4Translate(0, 0, -2.7);
+
+      this.diagnostics.performance = {
+        mobile: this.mobile,
+        cssSize: next.cssSize,
+        physicalSize: next.physicalSize,
+        devicePixelRatioUsed: next.dpr,
+        renderer: "webgl",
+        frameThrottle: "none"
+      };
+
       this.writeDiagnostics();
     }
-  }
-
-  getStripCount() {
-    return this.mobile ? this.options.stripCountMobile : this.options.stripCountDesktop;
   }
 
   onPointerDown(event) {
@@ -669,17 +945,14 @@ class HearthCanvasRenderer {
     this.pointerId = event.pointerId;
     this.lastPointerX = event.clientX;
     this.lastPointerTime = performance.now();
-    this.lastInput = this.lastPointerTime;
-    this.velocity = 0;
+    this.spinVelocity = 0;
+    this.lastInteraction = this.lastPointerTime;
 
     try {
       this.canvas.setPointerCapture(event.pointerId);
-    } catch (_) {
-      // Capture is best-effort across browsers.
-    }
+    } catch (_) {}
 
-    this.canvas.dataset.hearthTouchControl = "active";
-    this.dirty = true;
+    this.canvas.dataset.hearthTouchControl = "drag-active";
     this.requestLoop();
   }
 
@@ -691,16 +964,17 @@ class HearthCanvasRenderer {
     const dx = event.clientX - this.lastPointerX;
     const dt = Math.max(8, now - this.lastPointerTime);
 
-    const deltaRotation = -(dx / Math.max(1, this.cssSize || this.canvas.clientWidth || 1)) * this.options.dragSensitivity;
+    const width = Math.max(1, this.cssSize || this.canvas.clientWidth || 1);
+    const delta = (dx / width) * this.options.dragRadiansPerScreen;
 
-    this.rotation = wrap01(this.rotation + deltaRotation);
-    this.velocity = deltaRotation / dt;
+    this.rotation += delta;
+    this.spinVelocity = clamp(delta / (dt / 1000), -this.options.maxSpinVelocity, this.options.maxSpinVelocity);
 
     this.lastPointerX = event.clientX;
     this.lastPointerTime = now;
-    this.lastInput = now;
-    this.dirty = true;
+    this.lastInteraction = now;
 
+    this.canvas.dataset.hearthTouchControl = "drag-active";
     this.requestLoop();
   }
 
@@ -710,16 +984,13 @@ class HearthCanvasRenderer {
 
     this.pointerActive = false;
     this.pointerId = null;
-    this.lastInput = performance.now();
+    this.lastInteraction = performance.now();
 
     try {
       this.canvas.releasePointerCapture(event.pointerId);
-    } catch (_) {
-      // Release is best-effort across browsers.
-    }
+    } catch (_) {}
 
-    this.canvas.dataset.hearthTouchControl = "inertia";
-    this.dirty = true;
+    this.canvas.dataset.hearthTouchControl = "spin-inertia";
     this.requestLoop();
   }
 
@@ -727,188 +998,115 @@ class HearthCanvasRenderer {
     event.preventDefault();
 
     const delta = clamp(event.deltaY || 0, -120, 120);
-    this.rotation = wrap01(this.rotation + delta * 0.0009);
-    this.velocity = delta * 0.0000015;
-    this.lastInput = performance.now();
-    this.dirty = true;
+    this.spinVelocity += -delta * 0.0025;
+    this.spinVelocity = clamp(this.spinVelocity, -this.options.maxSpinVelocity, this.options.maxSpinVelocity);
+    this.lastInteraction = performance.now();
 
+    this.canvas.dataset.hearthTouchControl = "wheel-spin";
     this.requestLoop();
   }
 
+  onContextLost(event) {
+    event.preventDefault();
+    this.canvas.dataset.hearthWebglContext = "lost";
+  }
+
+  onContextRestored() {
+    this.canvas.dataset.hearthWebglContext = "restored";
+    this.initGL();
+    this.resize();
+    this.requestLoop();
+  }
+
+  async loadChildEngines() {
+    const entries = Object.entries(CHILD_ENGINE_PATHS);
+
+    const results = await Promise.allSettled(
+      entries.map(async ([name, path]) => {
+        const module = await import(path);
+        return { name, path, module };
+      })
+    );
+
+    const loaded = [];
+    const held = [];
+
+    results.forEach((result, index) => {
+      const [name, path] = entries[index];
+
+      if (result.status === "fulfilled") {
+        loaded.push(name);
+      } else {
+        held.push({ name, path, reason: "deferred-nonblocking-import-held" });
+      }
+    });
+
+    this.diagnostics.childEngines.loaded = loaded;
+    this.diagnostics.childEngines.held = held;
+    this.writeDiagnostics();
+  }
+
   updateMotion(now) {
-    const dt = Math.min(80, Math.max(0, now - this.lastTick));
+    const dt = Math.min(0.05, Math.max(0, (now - this.lastTick) / 1000));
     this.lastTick = now;
 
     if (this.pointerActive) return;
 
-    if (Math.abs(this.velocity) > 0.000002) {
-      this.rotation = wrap01(this.rotation + this.velocity * dt);
-      this.velocity *= Math.exp(-this.options.inertiaFriction * dt);
-      this.dirty = true;
+    if (Math.abs(this.spinVelocity) > this.options.minSpinVelocity) {
+      this.rotation += this.spinVelocity * dt;
+      const decay = Math.exp(-this.options.inertiaFrictionPerSecond * dt);
+      this.spinVelocity *= decay;
       return;
     }
 
-    this.velocity = 0;
+    this.spinVelocity = 0;
 
     if (this.options.autoRotate) {
-      const speed = this.mobile ? this.options.mobileAutoSpeed : this.options.autoSpeed;
-      this.rotation = wrap01(this.rotation + speed * (dt / 1000));
-      this.dirty = true;
+      this.rotation += this.options.autoRadiansPerSecond * dt;
     }
+  }
+
+  buildModelMatrix() {
+    const scale = mat4Scale(0.91);
+    const axialTilt = mat4RotateZ(-AXIS_TILT_RADIANS);
+    const spin = mat4RotateY(this.rotation);
+
+    return mat4Multiply(axialTilt, mat4Multiply(spin, scale));
   }
 
   draw() {
-    if (!this.ctx || !this.texture || !this.physicalSize) return;
+    const gl = this.gl;
 
-    const ctx = this.ctx;
-    const size = this.physicalSize;
-    const cx = this.cx;
-    const cy = this.cy;
-    const radius = this.radius;
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.useProgram(this.program);
 
-    ctx.clearRect(0, 0, size, size);
+    const model = this.buildModelMatrix();
 
-    const background = ctx.createRadialGradient(cx, cy, radius * 0.15, cx, cy, radius * 1.16);
-    background.addColorStop(0, "rgba(10, 25, 39, 0.98)");
-    background.addColorStop(0.72, "rgba(4, 12, 22, 0.98)");
-    background.addColorStop(1, "rgba(1, 5, 10, 1)");
-    ctx.fillStyle = background;
-    ctx.fillRect(0, 0, size, size);
+    gl.uniformMatrix4fv(this.locations.uModel, false, model);
+    gl.uniformMatrix4fv(this.locations.uView, false, this.viewMatrix || mat4Translate(0, 0, -2.7));
+    gl.uniformMatrix4fv(this.locations.uProjection, false, this.projectionMatrix || mat4Ortho(-1.08, 1.08, -1.08, 1.08, 0.1, 10));
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, TAU);
-    ctx.clip();
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
+    gl.enableVertexAttribArray(this.locations.aPosition);
+    gl.vertexAttribPointer(this.locations.aPosition, 3, gl.FLOAT, false, 0, 0);
 
-    this.drawSurfaceStrips(ctx, cx, cy, radius);
-    this.drawSphereLighting(ctx, cx, cy, radius);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
+    gl.enableVertexAttribArray(this.locations.aNormal);
+    gl.vertexAttribPointer(this.locations.aNormal, 3, gl.FLOAT, false, 0, 0);
 
-    ctx.restore();
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.uvBuffer);
+    gl.enableVertexAttribArray(this.locations.aUV);
+    gl.vertexAttribPointer(this.locations.aUV, 2, gl.FLOAT, false, 0, 0);
 
-    this.drawAtmosphere(ctx, cx, cy, radius);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, this.texture);
 
-    this.canvas.dataset.hearthRotation = this.rotation.toFixed(5);
-    this.canvas.dataset.hearthFrameReceipt = `${RECEIPT}:frame:${Math.floor(performance.now())}`;
-  }
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+    gl.drawElements(gl.TRIANGLES, this.indexCount, gl.UNSIGNED_SHORT, 0);
 
-  drawSurfaceStrips(ctx, cx, cy, radius) {
-    const strips = this.getStripCount();
-    const texture = this.texture;
-    const repeated = texture.repeated;
-    const textureWidth = texture.width;
-    const textureHeight = texture.height;
-
-    const left = cx - radius;
-    const top = cy - radius;
-    const diameter = radius * 2;
-
-    const destStep = diameter / strips;
-    const srcSlice = Math.max(2, textureWidth / strips * 1.35);
-
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = this.mobile ? "medium" : "high";
-
-    for (let i = 0; i < strips; i += 1) {
-      const x0 = left + i * destStep;
-      const xMid = x0 + destStep * 0.5;
-      const nx = clamp((xMid - cx) / radius, -1, 1);
-      const nz = Math.sqrt(Math.max(0, 1 - nx * nx));
-
-      const lon = wrap01(this.rotation + 0.5 + Math.atan2(nx, nz) / TAU);
-      const sourceX = textureWidth + lon * textureWidth;
-
-      ctx.drawImage(
-        repeated,
-        sourceX,
-        0,
-        srcSlice,
-        textureHeight,
-        x0,
-        top,
-        destStep + 1.25,
-        diameter
-      );
-    }
-  }
-
-  drawSphereLighting(ctx, cx, cy, radius) {
-    const leftShadow = ctx.createRadialGradient(
-      cx - radius * 0.38,
-      cy - radius * 0.42,
-      radius * 0.15,
-      cx,
-      cy,
-      radius * 1.08
-    );
-
-    leftShadow.addColorStop(0, "rgba(255, 245, 196, 0.20)");
-    leftShadow.addColorStop(0.38, "rgba(255, 245, 196, 0.04)");
-    leftShadow.addColorStop(0.72, "rgba(5, 21, 38, 0.16)");
-    leftShadow.addColorStop(1, "rgba(0, 5, 12, 0.58)");
-
-    ctx.globalCompositeOperation = "source-over";
-    ctx.fillStyle = leftShadow;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, TAU);
-    ctx.fill();
-
-    const terminator = ctx.createLinearGradient(cx - radius, cy - radius, cx + radius, cy + radius);
-    terminator.addColorStop(0, "rgba(255, 244, 196, 0.10)");
-    terminator.addColorStop(0.46, "rgba(255, 255, 255, 0.00)");
-    terminator.addColorStop(1, "rgba(0, 6, 17, 0.38)");
-
-    ctx.fillStyle = terminator;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, TAU);
-    ctx.fill();
-
-    const highlight = ctx.createRadialGradient(
-      cx - radius * 0.2,
-      cy - radius * 0.28,
-      radius * 0.02,
-      cx - radius * 0.18,
-      cy - radius * 0.26,
-      radius * 0.55
-    );
-
-    highlight.addColorStop(0, "rgba(255, 248, 205, 0.16)");
-    highlight.addColorStop(0.48, "rgba(255, 248, 205, 0.035)");
-    highlight.addColorStop(1, "rgba(255, 248, 205, 0.00)");
-
-    ctx.fillStyle = highlight;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, TAU);
-    ctx.fill();
-  }
-
-  drawAtmosphere(ctx, cx, cy, radius) {
-    ctx.save();
-
-    const glow = ctx.createRadialGradient(cx, cy, radius * 0.76, cx, cy, radius * 1.08);
-    glow.addColorStop(0, "rgba(56, 161, 198, 0.00)");
-    glow.addColorStop(0.76, "rgba(63, 166, 202, 0.08)");
-    glow.addColorStop(1, "rgba(105, 190, 224, 0.30)");
-
-    ctx.globalCompositeOperation = "screen";
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius * 1.035, 0, TAU);
-    ctx.fill();
-
-    ctx.globalCompositeOperation = "source-over";
-    ctx.lineWidth = Math.max(1, this.physicalSize * 0.006);
-    ctx.strokeStyle = "rgba(155, 209, 228, 0.22)";
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius * 1.005, 0, TAU);
-    ctx.stroke();
-
-    ctx.lineWidth = Math.max(1, this.physicalSize * 0.0025);
-    ctx.strokeStyle = "rgba(255, 244, 199, 0.10)";
-    ctx.beginPath();
-    ctx.arc(cx - radius * 0.015, cy - radius * 0.012, radius * 0.975, 0, TAU);
-    ctx.stroke();
-
-    ctx.restore();
+    this.canvas.dataset.hearthRotationRadians = this.rotation.toFixed(5);
+    this.canvas.dataset.hearthSpinVelocity = this.spinVelocity.toFixed(5);
+    this.canvas.dataset.hearthFrameReceipt = `${RECEIPT}:webgl-frame:${Math.floor(performance.now())}`;
   }
 
   loop(now) {
@@ -922,22 +1120,14 @@ class HearthCanvasRenderer {
     }
 
     this.updateMotion(now);
+    this.draw();
 
-    const fps = this.mobile ? this.options.fpsMobile : this.options.fpsDesktop;
-    const interval = 1000 / Math.max(1, fps);
-
-    if (this.dirty && now - this.lastDraw >= interval) {
-      this.draw();
-      this.lastDraw = now;
-      this.dirty = false;
-    }
-
-    if (
+    const shouldContinue =
       this.options.autoRotate ||
       this.pointerActive ||
-      Math.abs(this.velocity) > 0.000002 ||
-      this.dirty
-    ) {
+      Math.abs(this.spinVelocity) > this.options.minSpinVelocity;
+
+    if (shouldContinue) {
       this.requestLoop();
     }
   }
@@ -951,11 +1141,15 @@ class HearthCanvasRenderer {
     this.canvas.dataset.hearthContract = CONTRACT;
     this.canvas.dataset.hearthReceipt = RECEIPT;
     this.canvas.dataset.hearthVersion = VERSION;
+    this.canvas.dataset.hearthRenderMode = "webgl-axis-sphere";
+    this.canvas.dataset.hearthAxisTiltDegrees = String(AXIS_TILT_DEGREES);
+    this.canvas.dataset.hearthAxisLock = "earth-like-23.44-degree";
+    this.canvas.dataset.hearthTouchControl = this.pointerActive ? "drag-active" : "ready";
+    this.canvas.dataset.hearthDragSensor = "true";
+    this.canvas.dataset.hearthSpinSensor = "true";
     this.canvas.dataset.hearthGeneratedImage = "false";
     this.canvas.dataset.hearthGraphicBox = "false";
     this.canvas.dataset.hearthVisualPassClaimed = "false";
-    this.canvas.dataset.hearthRenderMode = "fast-strip-blit";
-    this.canvas.dataset.hearthTouchControl = this.pointerActive ? "active" : "ready";
     this.canvas.dataset.hearthChildEngines = JSON.stringify(this.diagnostics.childEngines);
 
     if (typeof window !== "undefined") {
@@ -986,6 +1180,16 @@ class HearthCanvasRenderer {
 
     this.removeInput();
 
+    const gl = this.gl;
+    if (gl && !gl.isContextLost()) {
+      if (this.positionBuffer) gl.deleteBuffer(this.positionBuffer);
+      if (this.normalBuffer) gl.deleteBuffer(this.normalBuffer);
+      if (this.uvBuffer) gl.deleteBuffer(this.uvBuffer);
+      if (this.indexBuffer) gl.deleteBuffer(this.indexBuffer);
+      if (this.texture) gl.deleteTexture(this.texture);
+      if (this.program) gl.deleteProgram(this.program);
+    }
+
     if (this.canvas && INSTANCE_BY_CANVAS.get(this.canvas) === this) {
       INSTANCE_BY_CANVAS.delete(this.canvas);
     }
@@ -994,7 +1198,7 @@ class HearthCanvasRenderer {
 
 export function mountHearthCanvas(target, options) {
   const normalized = normalizeArgs(target, options);
-  return new HearthCanvasRenderer(normalized.target, normalized.options);
+  return new HearthWebGLRenderer(normalized.target, normalized.options);
 }
 
 export function renderHearthCanvas(target, options) {
@@ -1018,12 +1222,16 @@ export function getHearthCanvasContract() {
     contract: CONTRACT,
     receipt: RECEIPT,
     version: VERSION,
+    renderMode: "webgl-gpu-textured-sphere",
+    axisTiltDegrees: AXIS_TILT_DEGREES,
+    samePhysicalDegreeAsEarth: true,
+    dragSensor: true,
+    spinSensor: true,
+    inertia: true,
     childEnginePaths: CHILD_ENGINE_PATHS,
     generatedImage: false,
     graphicBox: false,
-    visualPassClaimed: false,
-    touchControl: true,
-    renderMode: "cached-texture-fast-strip-blit"
+    visualPassClaimed: false
   });
 }
 
@@ -1071,6 +1279,7 @@ if (typeof window !== "undefined") {
     contract: CONTRACT,
     receipt: RECEIPT,
     version: VERSION,
+    axisTiltDegrees: AXIS_TILT_DEGREES,
     mount: mountHearthCanvas,
     render: renderHearth,
     init: initHearth,

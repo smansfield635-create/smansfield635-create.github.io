@@ -1,23 +1,21 @@
 // /assets/hearth/hearth.hex.js
-// HEARTH_G3_HEXAGONAL_PIXEL_SUBSTRATE_TNT_v1
-// New substrate file.
+// HEARTH_G3_HEX_OVERLAP_SEEDED_VARIATION_TNT_v1
+// Full-file replacement.
 // Family: HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1
 // Purpose:
-// - Establish hexagonal pixel format as the shared Hearth geometry substrate.
-// - Hex is geometry, not decoration.
-// - Hex sits beneath terrain, mountains, cliffs, valleys, beaches, islands, and canvas.
-// - Preserve 256-state geometry.
-// - Provide cell IDs, axial/cube coordinates, neighbors, center vectors, region/country/seat binding.
-// - Install sample bridges so engines render through hex-quantized cells.
+// - Correct hexagonal pixel substrate.
+// - Hex does NOT hard-quantize visual sampling.
+// - Hex provides overlapping hex influence, stable seeded variation, adjacency, and 256-state metadata.
+// - Engines keep raw vector visual sampling for crisp continuous 4K-like rendering.
 // - No GraphicBox. No generated image.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_HEXAGONAL_PIXEL_SUBSTRATE_TNT_v1";
+  const CONTRACT = "HEARTH_G3_HEX_OVERLAP_SEEDED_VARIATION_TNT_v1";
   const FAMILY_CONTRACT = "HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1";
-  const VERSION = "2026-05-09.hearth-g3-hexagonal-pixel-substrate";
-  const RECEIPT = "HEARTH_G3_HEXAGONAL_PIXEL_SUBSTRATE_RECEIPT";
+  const VERSION = "2026-05-09.hearth-g3-hex-overlap-seeded-variation";
+  const RECEIPT = "HEARTH_G3_HEX_OVERLAP_SEEDED_VARIATION_RECEIPT";
 
   const TAU = Math.PI * 2;
   const GRID = 16;
@@ -32,32 +30,14 @@
     [0, 1]
   ]);
 
-  const FEATURE_CATEGORIES = Object.freeze([
-    "peninsula",
-    "bay",
-    "key",
-    "mainIsland"
-  ]);
-
-  const LANDFORM_CATEGORIES = Object.freeze([
-    "hill",
-    "mountain",
-    "cliff",
-    "valley"
-  ]);
+  const FEATURE_CATEGORIES = Object.freeze(["peninsula", "bay", "key", "mainIsland"]);
+  const LANDFORM_CATEGORIES = Object.freeze(["hill", "mountain", "cliff", "valley"]);
 
   const REGION_NAMES = Object.freeze([
     "Northwest Hex Field",
     "Northeast Hex Field",
     "Southwest Hex Field",
     "Southeast Hex Field"
-  ]);
-
-  const DIRECTION_NAMES = Object.freeze([
-    "north",
-    "east",
-    "south",
-    "west"
   ]);
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -71,11 +51,22 @@
     return [v[0] / m, v[1] / m, v[2] / m];
   }
 
+  function seededUnit(a, b, c, d = 0) {
+    const n = Math.sin(a * 127.1 + b * 311.7 + c * 74.7 + d * 191.3) * 43758.5453123;
+    return n - Math.floor(n);
+  }
+
+  function seededSigned(a, b, c, d = 0) {
+    return seededUnit(a, b, c, d) * 2 - 1;
+  }
+
   function vectorToLonLat(vec) {
     const v = norm3(vec);
-    const lon = Math.atan2(v[0], v[2]);
-    const lat = Math.asin(clamp(v[1], -1, 1));
-    return { lon, lat, vector: v };
+    return {
+      vector: v,
+      lon: Math.atan2(v[0], v[2]),
+      lat: Math.asin(clamp(v[1], -1, 1))
+    };
   }
 
   function lonLatToVector(lon, lat) {
@@ -107,31 +98,37 @@
     return { q: mod(rx, GRID), r: mod(rz, GRID) };
   }
 
-  function vectorToAxial(vec) {
+  function vectorToFractionalAxial(vec) {
     const pos = vectorToLonLat(vec);
-
     const u = (pos.lon + Math.PI) / TAU;
     const v = (pos.lat + Math.PI / 2) / Math.PI;
 
     const y = clamp(v * GRID, 0, GRID - 1e-9);
     const x = mod(u * GRID, GRID);
 
-    const qf = x - y * 0.5;
-    const rf = y;
+    return {
+      qf: x - y * 0.5,
+      rf: y,
+      u,
+      v,
+      lon: pos.lon,
+      lat: pos.lat,
+      vector: pos.vector
+    };
+  }
 
-    return axialRound(qf, rf);
+  function vectorToAxial(vec) {
+    const f = vectorToFractionalAxial(vec);
+    return axialRound(f.qf, f.rf);
   }
 
   function axialToCenterVector(q, r) {
     const y = r + 0.5;
     const x = q + y * 0.5 + 0.5;
-
     const u = mod(x / GRID, 1);
     const v = clamp(y / GRID, 0, 1);
-
     const lon = u * TAU - Math.PI;
     const lat = v * Math.PI - Math.PI / 2;
-
     return lonLatToVector(lon, lat);
   }
 
@@ -139,11 +136,26 @@
     return r * GRID + q + 1;
   }
 
+  function axialWrappedDistance(qf, rf, q, r) {
+    let best = Infinity;
+
+    for (let oq = -GRID; oq <= GRID; oq += GRID) {
+      for (let or = -GRID; or <= GRID; or += GRID) {
+        const dq = qf - (q + oq);
+        const dr = rf - (r + or);
+        const ds = -dq - dr;
+        const dist = Math.max(Math.abs(dq), Math.abs(dr), Math.abs(ds));
+        if (dist < best) best = dist;
+      }
+    }
+
+    return best;
+  }
+
   function neighborCells(q, r) {
     return AXIAL_NEIGHBORS.map(([dq, dr]) => {
       const nq = mod(q + dq, GRID);
       const nr = mod(r + dr, GRID);
-
       return {
         hexId: hexId(nq, nr),
         q: nq,
@@ -196,12 +208,20 @@
   }
 
   function landformCategoryBinding(q, r) {
-    return LANDFORM_CATEGORIES[(q + r) % LANDFORM_CATEGORIES.length];
+    return LANDFORM_CATEGORIES[mod(q + r, LANDFORM_CATEGORIES.length)];
   }
 
   function featureCategoryBinding(q, r) {
     const ringBand = Math.floor(r / 4);
     return FEATURE_CATEGORIES[clamp(ringBand, 0, 3)];
+  }
+
+  function featureFamilyBinding(featureCategory) {
+    if (featureCategory === "peninsula") return "attached-coastal-extension";
+    if (featureCategory === "bay") return "negative-coastline-carve";
+    if (featureCategory === "key") return "low-island-chain";
+    if (featureCategory === "mainIsland") return "major-detached-island";
+    return "latent";
   }
 
   function adjacencyClass(q, r) {
@@ -227,23 +247,50 @@
     return "transitional";
   }
 
+  function variationForCell(q, r) {
+    const id = hexId(q, r);
+    const regionId = regionBinding(q, r);
+    const countryId = countryBinding(q, r, regionId);
+
+    return Object.freeze({
+      seed: id * 1009 + regionId * 97 + countryId * 37,
+
+      visualJitter: seededSigned(q, r, id, 1) * 0.038,
+      coastlineJitter: seededSigned(q, r, id, 2) * 0.075,
+      mountainJitter: seededSigned(q, r, id, 3) * 0.11,
+      cliffJitter: seededSigned(q, r, id, 4) * 0.12,
+      valleyJitter: seededSigned(q, r, id, 5) * 0.10,
+      beachJitter: seededSigned(q, r, id, 6) * 0.09,
+      islandJitter: seededSigned(q, r, id, 7) * 0.12,
+      colorJitter: seededSigned(q, r, id, 8) * 0.08,
+
+      asymmetry: seededUnit(q, r, id, 9),
+      brokenArc: seededUnit(q, r, id, 10),
+      irregularWeight: 0.72 + seededUnit(q, r, id, 11) * 0.56,
+      featureThresholdOffset: seededSigned(q, r, id, 12) * 0.095,
+      localScaleOffset: seededSigned(q, r, id, 13) * 0.055,
+
+      deterministic: true,
+      randomType: "seeded-coordinated"
+    });
+  }
+
   function sampleAxial(qInput, rInput) {
     const q = mod(Math.round(qInput), GRID);
     const r = mod(Math.round(rInput), GRID);
-    const id = hexId(q, r);
 
+    const id = hexId(q, r);
     const regionId = regionBinding(q, r);
     const countryId = countryBinding(q, r, regionId);
     const landformSeat = landformSeatBinding(q, r);
     const globalLandformSeat = (countryId - 1) * 16 + landformSeat;
-    const centerVector = axialToCenterVector(q, r);
     const featureCategory = featureCategoryBinding(q, r);
 
     return Object.freeze({
       receipt: RECEIPT,
       contract: CONTRACT,
       familyContract: FAMILY_CONTRACT,
-      authority: "hearth-hexagonal-pixel-substrate",
+      authority: "hearth-hexagonal-overlap-substrate",
 
       hexId: id,
       hexIndex: id - 1,
@@ -256,7 +303,7 @@
       cubeZ: r,
       cubeY: -q - r,
 
-      centerVector,
+      centerVector: axialToCenterVector(q, r),
       neighborIds: neighborCells(q, r).map((cell) => cell.hexId),
       neighbors: neighborCells(q, r),
 
@@ -271,40 +318,118 @@
 
       featureSeat: id,
       featureCategory,
-      featureFamily:
-        featureCategory === "peninsula"
-          ? "attached-coastal-extension"
-          : featureCategory === "bay"
-            ? "negative-coastline-carve"
-            : featureCategory === "key"
-              ? "low-island-chain"
-              : "major-detached-island",
+      featureFamily: featureFamilyBinding(featureCategory),
 
       adjacencyClass: adjacencyClass(q, r),
       coastalRelation: coastRelationBinding(q, r),
 
-      geometry: "hexagonal-pixel-substrate",
+      variation: variationForCell(q, r),
+
+      geometry: "overlapping-hexagonal-pixel-substrate",
       lattice: "16x16-256-state",
-      substrateRole: "geometry-before-terrain",
+      substrateRole: "geometry-and-influence-before-terrain",
+      visualSamplingMode: "raw-vector-continuity",
       generatedImage: false,
       graphicBox: false
     });
   }
 
+  function overlappingInfluences(vec) {
+    const frac = vectorToFractionalAxial(vec);
+    const primary = axialRound(frac.qf, frac.rf);
+
+    const candidates = [
+      [primary.q, primary.r],
+      ...AXIAL_NEIGHBORS.map(([dq, dr]) => [mod(primary.q + dq, GRID), mod(primary.r + dr, GRID)])
+    ];
+
+    const weighted = candidates.map(([q, r]) => {
+      const dist = axialWrappedDistance(frac.qf, frac.rf, q, r);
+      const base = Math.pow(Math.max(0, 1.35 - dist), 2.15);
+      const variation = variationForCell(q, r);
+      const weight = base * variation.irregularWeight;
+
+      return {
+        ...sampleAxial(q, r),
+        distance: dist,
+        influenceWeightRaw: weight
+      };
+    });
+
+    const total = weighted.reduce((sum, cell) => sum + cell.influenceWeightRaw, 0) || 1;
+
+    return weighted
+      .map((cell) =>
+        Object.freeze({
+          ...cell,
+          influenceWeight: cell.influenceWeightRaw / total
+        })
+      )
+      .sort((a, b) => b.influenceWeight - a.influenceWeight);
+  }
+
+  function blendVariation(influences) {
+    const result = {
+      visualJitter: 0,
+      coastlineJitter: 0,
+      mountainJitter: 0,
+      cliffJitter: 0,
+      valleyJitter: 0,
+      beachJitter: 0,
+      islandJitter: 0,
+      colorJitter: 0,
+      asymmetry: 0,
+      brokenArc: 0,
+      irregularWeight: 0,
+      featureThresholdOffset: 0,
+      localScaleOffset: 0
+    };
+
+    influences.forEach((cell) => {
+      const w = cell.influenceWeight || 0;
+      const v = cell.variation || {};
+
+      Object.keys(result).forEach((key) => {
+        result[key] += (v[key] || 0) * w;
+      });
+    });
+
+    result.deterministic = true;
+    result.randomType = "overlapping-seeded-coordinated";
+    return Object.freeze(result);
+  }
+
   function sampleVector(vec) {
-    const axial = vectorToAxial(vec);
-    return sampleAxial(axial.q, axial.r);
+    const influences = overlappingInfluences(vec);
+    const primary = influences[0] || sampleAxial(0, 0);
+    const blendedVariation = blendVariation(influences);
+
+    return Object.freeze({
+      ...primary,
+      primaryHex: primary,
+      overlappingHexInfluences: influences,
+      hexInfluenceCount: influences.length,
+      hexInfluenceMode: "overlapping-footprints",
+      blendedVariation,
+
+      visualSamplingMode: "raw-vector-continuity",
+      hardQuantization: false,
+      centerVectorForMetadataOnly: primary.centerVector,
+
+      geometry: "overlapping-hexagonal-pixel-substrate",
+      substrateRole: "classification-adjacency-influence",
+      generatedImage: false,
+      graphicBox: false
+    });
   }
 
   function allCells() {
     const cells = [];
-
     for (let r = 0; r < GRID; r += 1) {
       for (let q = 0; q < GRID; q += 1) {
         cells.push(sampleAxial(q, r));
       }
     }
-
     return cells;
   }
 
@@ -331,7 +456,12 @@
 
       sampleVector(vec) {
         const hex = sampleVector(vec);
-        const source = originalSample(hex.centerVector || vec);
+
+        // CRITICAL:
+        // Visual sample stays raw-vector.
+        // Hex metadata is attached after sampling.
+        // Do NOT sample the visual field at hex.centerVector.
+        const source = originalSample(vec);
 
         if (!source || typeof source !== "object") {
           return source;
@@ -339,7 +469,13 @@
 
         return {
           ...source,
+
           hex,
+          primaryHex: hex.primaryHex,
+          overlappingHexInfluences: hex.overlappingHexInfluences,
+          hexInfluenceCount: hex.hexInfluenceCount,
+          hexInfluenceMode: hex.hexInfluenceMode,
+
           hexId: hex.hexId,
           hexIndex: hex.hexIndex,
           hexAxialQ: hex.axialQ,
@@ -348,21 +484,40 @@
           hexCubeY: hex.cubeY,
           hexCubeZ: hex.cubeZ,
           hexNeighborIds: hex.neighborIds,
+
           hexRegionId: hex.regionId,
           hexRegionName: hex.regionName,
           hexCountryId: hex.countryId,
           hexCountryDirection: hex.countryDirection,
+
           hexLandformSeat: hex.landformSeat,
           hexGlobalLandformSeat: hex.globalLandformSeat,
           hexLandformCategory: hex.landformCategory,
+
           hexFeatureSeat: hex.featureSeat,
           hexFeatureCategory: hex.featureCategory,
           hexFeatureFamily: hex.featureFamily,
           hexAdjacencyClass: hex.adjacencyClass,
           hexCoastalRelation: hex.coastalRelation,
-          hexQuantized: true,
+
+          hexVariation: hex.blendedVariation,
+          visualJitter: hex.blendedVariation.visualJitter,
+          coastlineJitter: hex.blendedVariation.coastlineJitter,
+          mountainJitter: hex.blendedVariation.mountainJitter,
+          cliffJitter: hex.blendedVariation.cliffJitter,
+          valleyJitter: hex.blendedVariation.valleyJitter,
+          beachJitter: hex.blendedVariation.beachJitter,
+          islandJitter: hex.blendedVariation.islandJitter,
+          colorJitter: hex.blendedVariation.colorJitter,
+          asymmetry: hex.blendedVariation.asymmetry,
+          brokenArc: hex.blendedVariation.brokenArc,
+          featureThresholdOffset: hex.blendedVariation.featureThresholdOffset,
+
+          hexQuantized: false,
+          hardQuantization: false,
+          visualSamplingMode: "raw-vector-continuity",
           hexSubstrateContract: CONTRACT,
-          geometrySubstrate: "hexagonal-pixel"
+          geometrySubstrate: "overlapping-hexagonal-pixel"
         };
       },
 
@@ -374,8 +529,11 @@
             installed: true,
             contract: CONTRACT,
             familyContract: FAMILY_CONTRACT,
-            substrate: "hexagonal-pixel",
-            quantizedSampling: true,
+            substrate: "overlapping-hexagonal-pixel",
+            quantizedSampling: false,
+            rawVectorVisualSampling: true,
+            overlappingInfluence: true,
+            seededVariation: true,
             geometry: "16x16-256-state"
           }
         };
@@ -417,10 +575,14 @@
       contract: CONTRACT,
       familyContract: FAMILY_CONTRACT,
       version: VERSION,
-      authority: "hearth-hexagonal-pixel-substrate",
-      standard: "hexagonal-pixel-format",
+      authority: "hearth-hexagonal-overlap-substrate",
+      standard: "overlapping-hexagonal-pixel-format",
       geometry: "16x16-256-state",
       totalHexCells: TOTAL_HEX_CELLS,
+      visualSamplingMode: "raw-vector-continuity",
+      hardQuantization: false,
+      overlappingInfluence: true,
+      seededVariation: true,
       grid: {
         width: GRID,
         height: GRID,
@@ -433,12 +595,14 @@
         "axial coordinates",
         "cube coordinates",
         "neighbor relationships",
+        "overlapping hex influence footprints",
+        "seeded coordinated variation",
         "region binding",
         "country binding",
         "landform seat binding",
         "feature category binding",
         "coastal relation binding",
-        "hex-quantized sample bridging"
+        "raw-vector sample bridging"
       ],
       doesNotOwn: [
         "terrain meaning",
@@ -454,6 +618,8 @@
         "generated images",
         "GraphicBox"
       ],
+      correction:
+        "Hex metadata influences the render without forcing visual samples to coarse cell centers.",
       chain: [
         "hex",
         "terrain",
@@ -502,10 +668,11 @@
     contract: CONTRACT,
     familyContract: FAMILY_CONTRACT,
     version: VERSION,
-    authority: "hearth-hexagonal-pixel-substrate",
+    authority: "hearth-hexagonal-overlap-substrate",
     sampleVector,
     sampleAxial,
     allCells,
+    overlappingInfluences,
     installSampleBridge,
     installKnownBridges
   });
@@ -516,9 +683,13 @@
   document.documentElement.dataset.hearthHexContract = CONTRACT;
   document.documentElement.dataset.hearthHexFamilyContract = FAMILY_CONTRACT;
   document.documentElement.dataset.hearthHexVersion = VERSION;
-  document.documentElement.dataset.hearthHexStandard = "hexagonal-pixel-format";
+  document.documentElement.dataset.hearthHexStandard = "overlapping-hexagonal-pixel-format";
   document.documentElement.dataset.hearthHexGeometry = "16x16-256-state";
   document.documentElement.dataset.hearthHexTotalCells = String(TOTAL_HEX_CELLS);
+  document.documentElement.dataset.hearthHexVisualSamplingMode = "raw-vector-continuity";
+  document.documentElement.dataset.hearthHexHardQuantization = "false";
+  document.documentElement.dataset.hearthHexOverlappingInfluence = "true";
+  document.documentElement.dataset.hearthHexSeededVariation = "true";
   document.documentElement.dataset.hearthHexGeneratedImage = "false";
   document.documentElement.dataset.hearthHexGraphicBox = "false";
 })();

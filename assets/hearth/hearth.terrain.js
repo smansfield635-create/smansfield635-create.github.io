@@ -1,25 +1,25 @@
 // /assets/hearth/hearth.terrain.js
-// HEARTH_G3_ORGANIC_SPIRAL_MOUNTAIN_RANGE_TERRAIN_TNT_v1
+// HEARTH_G3_ORGANIC_BASIN_RING_EXTERIOR_TERRAIN_TNT_v1
 // Full-file replacement.
 // Family: HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1
 // Purpose:
-// - Remove X-style artificial terrain reads.
-// - Remove dark gray terrain-outline emphasis.
-// - Preserve country assignment as the only man-made boundary layer.
-// - Render organic terrain through four spiral mountain ranges per General Region.
-// - Each General Region follows:
-//   organic land body -> escarpment edge -> plateau shelf -> four spiral mountain ranges -> central final mountain -> summit peak.
+// - Preserve organic spiral mountain range terrain.
+// - Add naturally formed depression / basin formations where admissible.
+// - Add ring-mountain formations around selected depressions.
+// - Define exterior profiles for each land body.
 // - Preserve 4 General Regions, 16 Countries, and 9 Summit regions per General Region.
+// - Country assignment remains the only man-made layer.
+// - Terrain boundaries remain organic.
 // - Hydration remains passive and downstream.
 // - No rivers, lakes, weather, climate, clouds, humidity, rainfall, wind, storms, or atmospheric moisture.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_ORGANIC_SPIRAL_MOUNTAIN_RANGE_TERRAIN_TNT_v1";
+  const CONTRACT = "HEARTH_G3_ORGANIC_BASIN_RING_EXTERIOR_TERRAIN_TNT_v1";
   const FAMILY_CONTRACT = "HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1";
-  const VERSION = "2026-05-09.hearth-g3-organic-spiral-mountain-range-terrain";
-  const RECEIPT = "HEARTH_G3_ORGANIC_SPIRAL_MOUNTAIN_RANGE_TERRAIN_RECEIPT";
+  const VERSION = "2026-05-09.hearth-g3-organic-basin-ring-exterior-terrain";
+  const RECEIPT = "HEARTH_G3_ORGANIC_BASIN_RING_EXTERIOR_TERRAIN_RECEIPT";
 
   const TAU = Math.PI * 2;
   const LAND_THRESHOLD = 0.105;
@@ -28,38 +28,39 @@
     organic: [
       "coastline",
       "landmass edge",
+      "exterior slope",
       "escarpment edge",
       "plateau shelf",
       "spiral mountain range",
+      "ring mountain",
+      "natural depression basin",
       "central final mountain",
       "summit peak"
     ],
-    manMade: [
-      "country assignment only"
-    ],
+    manMade: ["country assignment only"],
     rule:
-      "Country assignment is the only man-made layer. Terrain must read as organic topography, not grid, X, panel, or dark artificial outline."
+      "Only country assignment is man-made. Exteriors, basins, ring mountains, escarpments, ranges, plateaus, and summits are organic terrain."
   });
 
   const TIC_TAC_TOE_DYNAMIC_PROTOCOL = Object.freeze({
     T1: "One planet-scale terrain surface.",
     T2: "Four General Regions remain organic land bodies.",
-    T3: "Sixteen Countries remain assignment data, not dark visual scars.",
-    T4: "Nine Summit regions remain progression logic, not visible artificial cuts.",
-    T5: "Each land body has one central final mountain.",
-    T6: "Four spiral mountain ranges emit from each central mountain.",
-    T7: "Plateaus sit at the escarpment edge.",
-    T8: "Escarpments, plateaus, ranges, mountains, and summits remain organic.",
-    T9: "Return terrain without X-lines or dark gray artificial outlines."
+    T3: "Exterior profiles are defined per land body.",
+    T4: "Selected land bodies may contain natural basin depressions.",
+    T5: "Natural basin depressions may be surrounded by ring mountains.",
+    T6: "Four spiral mountain ranges still emit from each central mountain.",
+    T7: "Plateaus remain at escarpment edges.",
+    T8: "Country assignment remains the only man-made layer.",
+    T9: "Return organic terrain receipt with exterior and basin definitions."
   });
 
   const SYSTEMIC_QUAD_A_ATTACK = Object.freeze({
     authority: "/assets/hearth/hearth.terrain.js",
-    axis: "organic terrain boundaries with country-only man-made assignment",
+    axis: "organic exterior → escarpment → plateau → spiral ranges / basin rings → central mountain → summit",
     artifact:
-      "A planet-scale Hearth terrain field where each General Region has one central mountain and four organic spiral mountain ranges extending toward edge plateaus.",
+      "A planet-scale Hearth terrain field with organic exteriors, selected natural depression basins, ring mountains, spiral ranges, plateaus, central mountains, and summit peaks.",
     attack:
-      "Reject X-shaped country grid scars, dark gray artificial outlines, man-made terrain cuts, random terrain, hydration reshaping, new regions, new countries, climate, weather, clouds, humidity, and open-ended surface expression."
+      "Reject X-shaped artificial terrain lines, dark gray artificial outlines, man-made terrain cuts outside countries, random basins, hydration reshaping, new countries, new regions, climate, weather, clouds, humidity, and open-ended surface expression."
   });
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -161,6 +162,8 @@
       countryBase: 1,
       seed: 0.13,
       master: [0.00, 0.02],
+      exteriorProfile: "broad-weathered-escarpment",
+      basin: { id: "GR01-BASIN-WEST-CROWN", x: -0.28, y: 0.18, radius: 0.245, ringRadius: 0.335, strength: 0.72 },
       lobes: [
         [-104, 20, 0.62, 0.88],
         [-136, 38, 0.36, 0.40],
@@ -183,6 +186,8 @@
       countryBase: 5,
       seed: 0.39,
       master: [-0.03, -0.02],
+      exteriorProfile: "steep-southern-rim",
+      basin: { id: "GR02-BASIN-SOUTH-BOWL", x: 0.20, y: -0.30, radius: 0.215, ringRadius: 0.305, strength: 0.62 },
       lobes: [
         [-26, -28, 0.58, 0.80],
         [-50, -8, 0.32, 0.35],
@@ -205,6 +210,8 @@
       countryBase: 9,
       seed: 0.64,
       master: [0.02, 0.00],
+      exteriorProfile: "broken-coastal-plateau",
+      basin: { id: "GR03-BASIN-EAST-RING", x: 0.34, y: 0.18, radius: 0.235, ringRadius: 0.325, strength: 0.68 },
       lobes: [
         [58, 18, 0.64, 0.86],
         [26, 34, 0.34, 0.29],
@@ -227,6 +234,8 @@
       countryBase: 13,
       seed: 0.86,
       master: [0.00, 0.04],
+      exteriorProfile: "high-northern-craton-rim",
+      basin: null,
       lobes: [
         [138, 43, 0.44, 0.68],
         [164, 52, 0.27, 0.28],
@@ -243,50 +252,10 @@
   ];
 
   const SPIRAL_LANES = Object.freeze([
-    {
-      key: "N",
-      name: "north",
-      countryOffset: 0,
-      angle: Math.PI / 2,
-      curl: -0.54,
-      plateauRadius: 0.74,
-      edgeRadius: 0.88,
-      width: 0.118,
-      strength: 0.96
-    },
-    {
-      key: "E",
-      name: "east",
-      countryOffset: 1,
-      angle: 0,
-      curl: 0.48,
-      plateauRadius: 0.74,
-      edgeRadius: 0.90,
-      width: 0.110,
-      strength: 0.84
-    },
-    {
-      key: "S",
-      name: "south",
-      countryOffset: 2,
-      angle: -Math.PI / 2,
-      curl: -0.44,
-      plateauRadius: 0.74,
-      edgeRadius: 0.88,
-      width: 0.112,
-      strength: 0.88
-    },
-    {
-      key: "W",
-      name: "west",
-      countryOffset: 3,
-      angle: Math.PI,
-      curl: 0.52,
-      plateauRadius: 0.74,
-      edgeRadius: 0.90,
-      width: 0.104,
-      strength: 0.78
-    }
+    { key: "N", name: "north", countryOffset: 0, angle: Math.PI / 2, curl: -0.54, plateauRadius: 0.74, edgeRadius: 0.88, width: 0.118, strength: 0.96 },
+    { key: "E", name: "east", countryOffset: 1, angle: 0, curl: 0.48, plateauRadius: 0.74, edgeRadius: 0.90, width: 0.110, strength: 0.84 },
+    { key: "S", name: "south", countryOffset: 2, angle: -Math.PI / 2, curl: -0.44, plateauRadius: 0.74, edgeRadius: 0.88, width: 0.112, strength: 0.88 },
+    { key: "W", name: "west", countryOffset: 3, angle: Math.PI, curl: 0.52, plateauRadius: 0.74, edgeRadius: 0.90, width: 0.104, strength: 0.78 }
   ]);
 
   const GENERAL_REGIONS = GENERAL_REGION_SOURCE.map((region, index) => {
@@ -345,13 +314,8 @@
   function regionField(v, region) {
     let field = -0.125;
 
-    for (const lobe of region.lobes) {
-      field += cap(v, lobe.center, lobe.radius, lobe.amplitude);
-    }
-
-    for (const cut of region.cuts) {
-      field -= cap(v, cut.center, cut.radius, cut.amplitude);
-    }
+    for (const lobe of region.lobes) field += cap(v, lobe.center, lobe.radius, lobe.amplitude);
+    for (const cut of region.cuts) field -= cap(v, cut.center, cut.radius, cut.amplitude);
 
     const localX = dot3(v, region.basis.east) / region.size[0];
     const localY = dot3(v, region.basis.north) / region.size[1];
@@ -400,11 +364,7 @@
       }
     }
 
-    return {
-      best,
-      second,
-      margin: best && second ? best.field - second.field : 1
-    };
+    return { best, second, margin: best && second ? best.field - second.field : 1 };
   }
 
   function spiralExpectedAngle(r, lane, region) {
@@ -439,17 +399,13 @@
 
     for (const range of region.spiralRanges) {
       const strength = spiralRangeStrength(local, region, range);
-
       if (strength > bestStrength) {
         bestStrength = strength;
         best = range;
       }
     }
 
-    return {
-      range: best,
-      rangeStrength: clamp(bestStrength, 0, 1)
-    };
+    return { range: best, rangeStrength: clamp(bestStrength, 0, 1) };
   }
 
   function nearestPlateau(local, region) {
@@ -475,10 +431,7 @@
       }
     }
 
-    return {
-      plateau: best,
-      plateauStrength: clamp(bestStrength, 0, 1)
-    };
+    return { plateau: best, plateauStrength: clamp(bestStrength, 0, 1) };
   }
 
   function nearestEscarpment(local, region) {
@@ -504,9 +457,50 @@
       }
     }
 
+    return { escarpment: best, escarpmentStrength: clamp(bestStrength, 0, 1) };
+  }
+
+  function basinSample(local, region) {
+    if (!region.basin) {
+      return {
+        basinId: null,
+        basinStrength: 0,
+        depressionStrength: 0,
+        ringMountainId: null,
+        ringMountainStrength: 0,
+        basinInteriorStrength: 0
+      };
+    }
+
+    const b = region.basin;
+    const d = pointDistance(local.rawX, local.rawY, b.x, b.y);
+    const depressionStrength = (1 - smoothstep(b.radius * 0.52, b.radius, d)) * b.strength;
+    const ringDistance = Math.abs(d - b.ringRadius);
+    const ringMountainStrength = (1 - smoothstep(0.035, 0.115, ringDistance)) * b.strength;
+    const basinInteriorStrength = (1 - smoothstep(b.radius * 0.18, b.radius * 0.92, d)) * b.strength;
+    const basinStrength = clamp(Math.max(depressionStrength, ringMountainStrength * 0.86), 0, 1);
+
     return {
-      escarpment: best,
-      escarpmentStrength: clamp(bestStrength, 0, 1)
+      basinId: basinStrength > 0.08 ? b.id : null,
+      basinStrength,
+      depressionStrength,
+      ringMountainId: ringMountainStrength > 0.10 ? `${b.id}-RING-MOUNTAIN` : null,
+      ringMountainStrength,
+      basinInteriorStrength
+    };
+  }
+
+  function exteriorSample(local, region, coast) {
+    const r = Math.hypot(local.x, local.y);
+    const outer = smoothstep(0.62, 1.03, r);
+    const escarped = smoothstep(0.08, 0.50, coast);
+    const exteriorStrength = clamp(Math.max(outer * 0.55, escarped * 0.82), 0, 1);
+
+    return {
+      exteriorProfile: region.exteriorProfile,
+      exteriorStrength,
+      exteriorSlope: clamp(outer * 0.68 + coast * 0.32, 0, 1),
+      exteriorBoundaryType: "organic"
     };
   }
 
@@ -541,10 +535,12 @@
     };
   }
 
-  function terrainHierarchy(local, region, field) {
+  function terrainHierarchy(local, region, field, coast) {
     const esc = nearestEscarpment(local, region);
     const plateau = nearestPlateau(local, region);
     const range = nearestSpiralRange(local, region);
+    const basin = basinSample(local, region);
+    const exterior = exteriorSample(local, region, coast);
 
     const r = Math.hypot(local.x, local.y);
     const centralMountainStrength = (1 - smoothstep(0.070, 0.335, r)) * 0.94;
@@ -557,30 +553,45 @@
     const plateauStrength = plateau.plateauStrength * (0.86 - centralMountainStrength * 0.16);
     const rangeAscent = range.rangeStrength;
 
-    const ridge = clamp(rangeAscent * 0.82 + centralMountainStrength * 0.20 + surfaceNoise * 0.05, 0, 1);
+    const ridge = clamp(
+      rangeAscent * 0.78 +
+        centralMountainStrength * 0.18 +
+        basin.ringMountainStrength * 0.48 +
+        surfaceNoise * 0.05,
+      0,
+      1
+    );
+
     const upland = clamp(
-      baseUpland * 0.28 +
-        escarpmentStrength * 0.14 +
-        plateauStrength * 0.22 +
-        rangeAscent * 0.34 +
-        centralMountainStrength * 0.30,
+      baseUpland * 0.27 +
+        exterior.exteriorSlope * 0.14 +
+        escarpmentStrength * 0.13 +
+        plateauStrength * 0.21 +
+        rangeAscent * 0.30 +
+        centralMountainStrength * 0.28 +
+        basin.ringMountainStrength * 0.22 -
+        basin.depressionStrength * 0.20,
       0,
       1
     );
 
     const relief = clamp(
-      escarpmentStrength * 0.18 +
-        plateauStrength * 0.12 +
-        rangeAscent * 0.44 +
-        centralMountainStrength * 0.42 +
-        summitStrength * 0.30 +
+      exterior.exteriorSlope * 0.13 +
+        escarpmentStrength * 0.15 +
+        plateauStrength * 0.10 +
+        rangeAscent * 0.38 +
+        centralMountainStrength * 0.38 +
+        summitStrength * 0.28 +
+        basin.ringMountainStrength * 0.34 -
+        basin.depressionStrength * 0.18 +
         surfaceNoise * 0.07,
       0,
       1
     );
 
     const lowland = clamp(
-      (1 - upland) * smoothstep(LAND_THRESHOLD + 0.015, LAND_THRESHOLD + 0.22, field),
+      (1 - upland) * smoothstep(LAND_THRESHOLD + 0.015, LAND_THRESHOLD + 0.22, field) +
+        basin.depressionStrength * 0.38,
       0,
       1
     );
@@ -590,16 +601,21 @@
     const activeEscarpment = esc.escarpment && escarpmentStrength > 0.10 ? esc.escarpment : null;
 
     const organicBoundaryStrength = clamp(
-      escarpmentStrength * 0.22 +
-        plateauStrength * 0.18 +
-        rangeAscent * 0.42 +
-        centralMountainStrength * 0.12 +
-        summitStrength * 0.06,
+      exterior.exteriorStrength * 0.16 +
+        escarpmentStrength * 0.17 +
+        plateauStrength * 0.14 +
+        rangeAscent * 0.30 +
+        basin.ringMountainStrength * 0.30 +
+        centralMountainStrength * 0.08 +
+        summitStrength * 0.04,
       0,
       1
     );
 
     return {
+      ...exterior,
+      ...basin,
+
       escarpmentId: activeEscarpment ? activeEscarpment.id : null,
       escarpmentDirection: activeEscarpment ? activeEscarpment.direction : null,
       escarpmentStrength,
@@ -647,37 +663,49 @@
   function terrainColor(region, terrain) {
     let [r, g, b] = region.color;
 
-    r = mix(r, 96, terrain.lowland * 0.12);
-    g = mix(g, 132, terrain.lowland * 0.15);
-    b = mix(b, 84, terrain.lowland * 0.10);
+    r = mix(r, 92, terrain.lowland * 0.16);
+    g = mix(g, 126, terrain.lowland * 0.16);
+    b = mix(b, 84, terrain.lowland * 0.11);
 
-    r = mix(r, 144, terrain.escarpmentStrength * 0.14);
-    g = mix(g, 126, terrain.escarpmentStrength * 0.12);
-    b = mix(b, 92, terrain.escarpmentStrength * 0.09);
+    r = mix(r, 126, terrain.exteriorStrength * 0.14);
+    g = mix(g, 116, terrain.exteriorStrength * 0.12);
+    b = mix(b, 82, terrain.exteriorStrength * 0.09);
 
-    r = mix(r, 176, terrain.plateauStrength * 0.20);
-    g = mix(g, 156, terrain.plateauStrength * 0.18);
-    b = mix(b, 110, terrain.plateauStrength * 0.14);
+    r = mix(r, 144, terrain.escarpmentStrength * 0.13);
+    g = mix(g, 126, terrain.escarpmentStrength * 0.11);
+    b = mix(b, 92, terrain.escarpmentStrength * 0.08);
 
-    r = mix(r, 88, terrain.rangeAscent * 0.24);
-    g = mix(g, 92, terrain.rangeAscent * 0.22);
-    b = mix(b, 82, terrain.rangeAscent * 0.16);
+    r = mix(r, 176, terrain.plateauStrength * 0.18);
+    g = mix(g, 156, terrain.plateauStrength * 0.16);
+    b = mix(b, 110, terrain.plateauStrength * 0.12);
 
-    r = mix(r, 206, terrain.rangeAscent * 0.20);
-    g = mix(g, 192, terrain.rangeAscent * 0.16);
-    b = mix(b, 152, terrain.rangeAscent * 0.12);
+    r = mix(r, 88, terrain.rangeAscent * 0.22);
+    g = mix(g, 92, terrain.rangeAscent * 0.20);
+    b = mix(b, 82, terrain.rangeAscent * 0.14);
 
-    r = mix(r, 76, terrain.relief * 0.17);
-    g = mix(g, 74, terrain.relief * 0.15);
-    b = mix(b, 70, terrain.relief * 0.13);
+    r = mix(r, 206, terrain.rangeAscent * 0.18);
+    g = mix(g, 192, terrain.rangeAscent * 0.14);
+    b = mix(b, 152, terrain.rangeAscent * 0.10);
 
-    r = mix(r, 222, terrain.centralMountainStrength * 0.27);
-    g = mix(g, 210, terrain.centralMountainStrength * 0.24);
-    b = mix(b, 178, terrain.centralMountainStrength * 0.18);
+    r = mix(r, 72, terrain.depressionStrength * 0.18);
+    g = mix(g, 90, terrain.depressionStrength * 0.18);
+    b = mix(b, 74, terrain.depressionStrength * 0.14);
 
-    r = mix(r, 244, terrain.summitStrength * 0.36);
-    g = mix(g, 236, terrain.summitStrength * 0.32);
-    b = mix(b, 212, terrain.summitStrength * 0.26);
+    r = mix(r, 214, terrain.ringMountainStrength * 0.24);
+    g = mix(g, 204, terrain.ringMountainStrength * 0.21);
+    b = mix(b, 170, terrain.ringMountainStrength * 0.16);
+
+    r = mix(r, 76, terrain.relief * 0.16);
+    g = mix(g, 74, terrain.relief * 0.14);
+    b = mix(b, 70, terrain.relief * 0.12);
+
+    r = mix(r, 222, terrain.centralMountainStrength * 0.25);
+    g = mix(g, 210, terrain.centralMountainStrength * 0.22);
+    b = mix(b, 178, terrain.centralMountainStrength * 0.16);
+
+    r = mix(r, 244, terrain.summitStrength * 0.34);
+    g = mix(g, 236, terrain.summitStrength * 0.30);
+    b = mix(b, 212, terrain.summitStrength * 0.24);
 
     return [r, g, b];
   }
@@ -696,51 +724,49 @@
       summitLabel: null,
       technologyRank: null,
       accessRank: null,
-
       coast: clamp(coast, 0, 1),
       shelf: clamp(shelf, 0, 1),
       waterDepth: clamp(waterDepth, 0, 1),
-
       regionBoundary: 0,
       countryBoundary: 0,
       countryBoundaryType: "man-made-assignment-only",
       manMadeBoundaryStrength: 0,
       administrativeBoundaryStrength: 0,
-
       summitBoundary: 0,
       organicBoundaryStrength: 0,
       organicBoundaryType: "water",
-
       citySeat: 0,
       localU: 0,
       localV: 0,
       color: null,
-
+      exteriorProfile: region ? region.exteriorProfile : null,
+      exteriorStrength: 0,
+      exteriorSlope: 0,
+      basinId: null,
+      basinStrength: 0,
+      depressionStrength: 0,
+      ringMountainId: null,
+      ringMountainStrength: 0,
+      basinInteriorStrength: 0,
       escarpmentId: null,
       escarpmentDirection: null,
       escarpmentStrength: 0,
-
       plateauId: null,
       plateauDirection: null,
       plateauStrength: 0,
-
       mountainRangeId: null,
       spiralRangeId: null,
       rangeCorridorId: null,
       rangeDirection: null,
       rangeAscent: 0,
-
       centralMountainId: null,
       centralMountainStrength: 0,
       masterMountainId: null,
       masterMountainStrength: 0,
-
       summitId: null,
       summitStrength: 0,
-
       metroplexId: null,
       metroplexSeat: null,
-
       relief: 0,
       ridge: 0,
       upland: 0,
@@ -749,7 +775,7 @@
       surfaceAreaStandard: "full-planet",
       admissibleTerrain: true,
       boundaryLaw: BOUNDARY_LAW,
-      authority: "terrain-organic-spiral-mountain-range"
+      authority: "terrain-organic-basin-ring-exterior"
     };
   }
 
@@ -757,9 +783,7 @@
     const v = norm3(vec);
     const selected = bestRegion(v);
 
-    if (!selected.best) {
-      return waterSample(null, 0, 1);
-    }
+    if (!selected.best) return waterSample(null, 0, 1);
 
     const region = selected.best.region;
     const field = selected.best.field;
@@ -776,7 +800,11 @@
     const r = Math.hypot(local.x, local.y);
     const country = countryAssignment(local, region);
 
-    const summitProgress = clamp((1 - clamp(r / 0.92, 0, 1)) * 0.72 + (country.countryIndex / 4) * 0.28, 0, 0.999999);
+    const summitProgress = clamp(
+      (1 - clamp(r / 0.92, 0, 1)) * 0.72 + (country.countryIndex / 4) * 0.28,
+      0,
+      0.999999
+    );
     const summit = Math.floor(summitProgress * 9) + 1;
 
     const microX = Math.floor((local.rawX + 1) * 3.5);
@@ -790,7 +818,7 @@
         ? (1 - smoothstep(0.018, 0.046, Math.hypot(fu - 0.5, fq - 0.5))) * 0.58
         : 0;
 
-    const hierarchy = terrainHierarchy(local, region, field);
+    const hierarchy = terrainHierarchy(local, region, field, coast);
     const color = terrainColor(region, hierarchy);
 
     return {
@@ -799,63 +827,59 @@
       region: region.id,
       regionName: region.name,
       generalRegion: region,
-
       countryId: country.countryId,
       countryIndex: country.countryIndex,
       countryDirection: country.countryDirection,
-
       summit,
       summitLabel: SUMMIT_LABELS[summit - 1],
       summitProgress,
       technologyRank: summit,
       accessRank: 10 - summit,
-
       coast,
       shelf: 0,
       waterDepth: 0,
       field,
-
       regionBoundary: 0,
-
       countryBoundary: country.countryBoundary,
       countryBoundaryType: "man-made-assignment-only",
       manMadeBoundaryStrength: country.manMadeBoundaryStrength,
       administrativeBoundaryStrength: country.administrativeBoundaryStrength,
-
       summitBoundary: 0,
       organicBoundaryStrength: hierarchy.organicBoundaryStrength,
       organicBoundaryType: "terrain",
-
       citySeat,
       localU: clamp((local.rawX + 1) * 0.5, 0, 1),
       localV: clamp((local.rawY + 1) * 0.5, 0, 1),
       color,
-
+      exteriorProfile: hierarchy.exteriorProfile,
+      exteriorStrength: hierarchy.exteriorStrength,
+      exteriorSlope: hierarchy.exteriorSlope,
+      exteriorBoundaryType: hierarchy.exteriorBoundaryType,
+      basinId: hierarchy.basinId,
+      basinStrength: hierarchy.basinStrength,
+      depressionStrength: hierarchy.depressionStrength,
+      ringMountainId: hierarchy.ringMountainId,
+      ringMountainStrength: hierarchy.ringMountainStrength,
+      basinInteriorStrength: hierarchy.basinInteriorStrength,
       escarpmentId: hierarchy.escarpmentId,
       escarpmentDirection: hierarchy.escarpmentDirection,
       escarpmentStrength: hierarchy.escarpmentStrength,
-
       plateauId: hierarchy.plateauId,
       plateauDirection: hierarchy.plateauDirection,
       plateauStrength: hierarchy.plateauStrength,
-
       mountainRangeId: hierarchy.mountainRangeId,
       spiralRangeId: hierarchy.spiralRangeId,
       rangeCorridorId: hierarchy.rangeCorridorId,
       rangeDirection: hierarchy.rangeDirection,
       rangeAscent: hierarchy.rangeAscent,
-
       centralMountainId: hierarchy.centralMountainId,
       centralMountainStrength: hierarchy.centralMountainStrength,
       masterMountainId: hierarchy.masterMountainId,
       masterMountainStrength: hierarchy.masterMountainStrength,
-
       summitId: hierarchy.summitId,
       summitStrength: hierarchy.summitStrength,
-
       metroplexId: hierarchy.metroplexId,
       metroplexSeat: hierarchy.metroplexSeat,
-
       relief: hierarchy.relief,
       ridge: hierarchy.ridge,
       upland: hierarchy.upland,
@@ -865,7 +889,7 @@
       surfaceAreaStandard: "full-planet",
       admissibleTerrain: true,
       boundaryLaw: BOUNDARY_LAW,
-      authority: "terrain-organic-spiral-mountain-range"
+      authority: "terrain-organic-basin-ring-exterior"
     };
   }
 
@@ -876,22 +900,29 @@
       familyContract: FAMILY_CONTRACT,
       version: VERSION,
       generation: "G3",
-      standard: "organic-spiral-mountain-range-terrain",
-      authority: "terrain-organic-spiral-mountain-range",
+      standard: "organic-basin-ring-exterior-terrain",
+      authority: "terrain-organic-basin-ring-exterior",
       surfaceScale: "planet",
       surfaceAreaStandard: "full-planet",
       visibleLandGuarantee: true,
       boundaryLaw: BOUNDARY_LAW,
       admissibilityRule:
-        "Every escarpment, plateau, spiral mountain range, central mountain, summit, and metroplex seat belongs to an existing General Region and Country. Only country assignment is man-made.",
+        "Basins, ring mountains, exteriors, escarpments, plateaus, spiral ranges, central mountains, summits, and metroplex seats must belong to existing General Regions and Countries. Only country assignment is man-made.",
       terrainThesis:
-        "organic land body -> organic escarpment -> organic plateau shelf -> four spiral mountain ranges -> organic central mountain -> organic summit peak; countries remain assignment data, not dark surface scars.",
+        "organic exterior -> escarpment -> plateau -> spiral mountain range / basin ring -> central mountain -> summit peak; selected land formations may contain natural depression basins surrounded by ring mountains.",
       generalRegions: GENERAL_REGIONS.map((region) => ({
         id: region.id,
         name: region.name,
         countries: region.countries,
         summitRegions: SUMMIT_LABELS,
-        size: region.size,
+        exteriorProfile: region.exteriorProfile,
+        basin: region.basin
+          ? {
+              id: region.basin.id,
+              ringMountainId: `${region.basin.id}-RING-MOUNTAIN`,
+              boundaryType: "organic"
+            }
+          : null,
         centralMountainId: region.masterMountainId,
         summitId: region.summitId,
         spiralMountainRanges: region.spiralRanges.map((range) => ({
@@ -919,6 +950,9 @@
         countries: 16,
         summitRegionsPerGeneralRegion: 9,
         totalSummitRegions: 36,
+        exteriorProfiles: 4,
+        naturalDepressionBasins: 3,
+        ringMountainSystems: 3,
         spiralMountainRanges: 16,
         escarpmentEdges: 16,
         plateaus: 16,
@@ -927,22 +961,15 @@
         metroplexSeats: 16
       },
       owns: [
-        "organic landmass-family boundary",
-        "country-only man-made assignment",
-        "General Region assignment",
-        "Country assignment",
-        "Summit progression assignment",
-        "organic escarpment edges",
-        "organic plateaus at escarpment edge",
-        "four organic spiral mountain ranges per region",
-        "organic central final mountains",
-        "organic summit peaks",
-        "metroplex seats",
-        "relief",
-        "ridge",
-        "upland",
-        "lowland",
-        "planet surface-area terrain scale"
+        "organic exterior profiles",
+        "natural depression basins",
+        "organic ring mountains",
+        "organic spiral mountain ranges",
+        "organic escarpments",
+        "organic plateaus",
+        "central final mountains",
+        "summit peaks",
+        "country-only man-made assignment"
       ],
       doesNotOwn: [
         "X-shaped artificial terrain lines",
@@ -977,8 +1004,8 @@
     contract: CONTRACT,
     familyContract: FAMILY_CONTRACT,
     version: VERSION,
-    standard: "organic-spiral-mountain-range-terrain",
-    authority: "terrain-organic-spiral-mountain-range",
+    standard: "organic-basin-ring-exterior-terrain",
+    authority: "terrain-organic-basin-ring-exterior",
     visibleLandGuarantee: true,
     boundaryLaw: BOUNDARY_LAW,
     sampleVector,
@@ -992,15 +1019,17 @@
   document.documentElement.dataset.hearthTerrainContract = CONTRACT;
   document.documentElement.dataset.hearthTerrainFamilyContract = FAMILY_CONTRACT;
   document.documentElement.dataset.hearthTerrainVersion = VERSION;
-  document.documentElement.dataset.hearthTerrainStandard = "organic-spiral-mountain-range-terrain";
+  document.documentElement.dataset.hearthTerrainStandard = "organic-basin-ring-exterior-terrain";
   document.documentElement.dataset.hearthTerrainSurfaceScale = "planet";
   document.documentElement.dataset.hearthTerrainVisibleLandGuarantee = "true";
   document.documentElement.dataset.hearthTerrainOrganicBoundaries = "true";
   document.documentElement.dataset.hearthTerrainManMadeBoundaries = "country-assignment-only";
   document.documentElement.dataset.hearthTerrainNoXLines = "true";
   document.documentElement.dataset.hearthTerrainNoDarkArtificialOutlines = "true";
+  document.documentElement.dataset.hearthTerrainExteriorProfiles = "4";
+  document.documentElement.dataset.hearthTerrainNaturalDepressionBasins = "3";
+  document.documentElement.dataset.hearthTerrainRingMountainSystems = "3";
   document.documentElement.dataset.hearthTerrainSpiralMountainRanges = "16";
-  document.documentElement.dataset.hearthTerrainRangesPerRegion = "4";
   document.documentElement.dataset.hearthTerrainEscarpmentEdges = "16";
   document.documentElement.dataset.hearthTerrainPlateaus = "16";
   document.documentElement.dataset.hearthTerrainCentralMountains = "4";

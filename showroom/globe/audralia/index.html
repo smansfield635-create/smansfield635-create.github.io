@@ -1,10 +1,12 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="audralia-v18-route-chain-asset-boundary"
+  data-page="audralia-v18-five-finger-terrain-baseline"
   data-route="/showroom/globe/audralia/"
-  data-contract="AUDRALIA_V18_ROUTE_CHAIN_AND_ASSET_BOUNDARY_HTML_TNT_v1"
+  data-contract="AUDRALIA_V18_FIVE_FINGER_TERRAIN_BASELINE_HTML_TNT_v1"
   data-body="audralia"
+  data-generation-baseline="G1-coherent"
+  data-next-generation="G2-material-natural-readability"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claimed="false"
@@ -12,17 +14,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Audralia V18</title>
+  <title>Diamond Gate Bridge · Audralia V18 Five-Finger Terrain</title>
   <meta
     name="description"
-    content="Audralia V18 aligns the route chain and adds asset-boundary expression so material fields remain distinct while runtime keeps motion."
+    content="Audralia V18 five-finger terrain baseline: runtime motion-only, five terrain fingers, asset-boundary expression, canvas render, and route proof."
   >
 
   <style>
     :root {
       --bg: #030914;
       --panel: rgba(7, 16, 30, 0.84);
-      --panel2: rgba(10, 24, 43, 0.78);
       --line: rgba(231, 188, 105, 0.34);
       --gold: #e7bc69;
       --text: #eef6ff;
@@ -82,7 +83,8 @@
     .topbar,
     .nav,
     .card,
-    #audralia-canvas-mount {
+    #audralia-canvas-mount,
+    .receipt {
       border: 1px solid var(--line);
       background: linear-gradient(180deg, rgba(9, 22, 41, 0.88), rgba(4, 10, 20, 0.78));
       box-shadow: 0 22px 70px rgba(0, 0, 0, 0.38);
@@ -163,10 +165,10 @@
     }
 
     .lede {
-      max-width: 66ch;
+      max-width: 68ch;
       margin: 0;
       color: var(--muted);
-      font-size: clamp(1rem, 2.4vw, 1.2rem);
+      font-size: clamp(1rem, 2.4vw, 1.18rem);
       line-height: 1.6;
     }
 
@@ -212,7 +214,8 @@
       -webkit-touch-callout: none;
     }
 
-    #audralia-canvas-mount canvas[data-audralia-canvas="true"] {
+    #audralia-canvas-mount canvas[data-audralia-canvas="true"],
+    #audralia-canvas-mount canvas[data-audralia-canvas] {
       position: absolute;
       inset: 0;
       display: block;
@@ -227,7 +230,7 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
       margin-top: 22px;
     }
@@ -235,7 +238,7 @@
     .card {
       border-radius: 22px;
       padding: 14px;
-      min-height: 128px;
+      min-height: 132px;
     }
 
     .card h2 {
@@ -251,14 +254,12 @@
       line-height: 1.45;
     }
 
-    pre.receipt {
+    .receipt {
       margin: 16px 0 0;
       padding: 14px;
       overflow: auto;
       border-radius: 18px;
-      border: 1px solid rgba(231, 188, 105, 0.24);
       color: rgba(238, 246, 255, 0.72);
-      background: rgba(2, 7, 14, 0.64);
       font-size: 0.78rem;
       white-space: pre-wrap;
     }
@@ -294,13 +295,14 @@
     <main id="audralia-main">
       <section class="hero" aria-labelledby="audralia-title">
         <div>
-          <div class="eyebrow">Audralia · V18 · Route Chain + Asset Boundary Renewal</div>
+          <div class="eyebrow">Audralia · V18 · Five-Finger Terrain Baseline</div>
           <h1 id="audralia-title">Audralia</h1>
           <p class="lede">
-            Audralia V18 aligns the source chain and adds asset-boundary expression.
-            Runtime remains motion-only. Canvas renders the body. Surface truth and child
-            refiners stay outside runtime. Assets bind, separate, define, carry, and express
-            material fields so the planet does not collapse into a blob.
+            Audralia is at a coherent Generation 1 baseline. Runtime remains motion-only.
+            The terrain now expresses through five fingers: mountains/ranges, valleys/basins,
+            cliffs/escarpments, beaches/coastal shelves, and peninsulas/bays/islands/inlets.
+            Assets bind, separate, define, carry, and express material fields without absorbing authority.
+            Generation 2 targets material definition and natural readability.
           </p>
 
           <div class="actions">
@@ -315,23 +317,26 @@
           id="audralia-canvas-mount"
           data-audralia-canvas-mount="true"
           data-audralia-generation="V18"
+          data-audralia-generation-baseline="G1-coherent"
+          data-audralia-next-generation="G2-material-natural-readability"
+          data-audralia-terrain-five-fingers="true"
           data-audralia-assets-boundary-expression="true"
           data-audralia-assets-absorbs-authority="false"
-          aria-label="Audralia V18 canonical canvas mount"
+          aria-label="Audralia V18 five-finger terrain canvas mount"
         >
           <span
             data-audralia-mount-fallback="true"
             style="position:absolute;inset:0;display:grid;place-items:center;color:rgba(238,246,255,.68);font-weight:800;text-align:center;padding:20px;"
           >
-            Audralia V18 source chain loading.
+            Audralia V18 five-finger terrain chain loading.
           </span>
         </section>
       </section>
 
       <section class="grid" aria-label="Audralia V18 authority chain">
         <article class="card">
-          <h2>Route</h2>
-          <p>Imports and verifies the source chain. It does not draw Audralia and does not own runtime motion.</p>
+          <h2>Generation 1 Baseline</h2>
+          <p>Audralia is structurally coherent. Runtime, terrain, assets, canvas, route, and proof are separated.</p>
         </article>
 
         <article class="card">
@@ -340,32 +345,48 @@
         </article>
 
         <article class="card">
-          <h2>Surface Truth</h2>
-          <p>Static surface and child refiners define body structure outside runtime.</p>
+          <h2>Five Terrain Fingers</h2>
+          <p>Mountains, valleys, cliffs, beaches, and peninsula/bay/island/inlet articulation define the next natural read.</p>
+        </article>
+
+        <article class="card">
+          <h2>Primary Land Form</h2>
+          <p>One major land plot carries a mountain ring with a valley or basin in the middle.</p>
+        </article>
+
+        <article class="card">
+          <h2>Secondary Land Forms</h2>
+          <p>Most other landmasses carry external mountain ranges spiraling outward through the body.</p>
         </article>
 
         <article class="card">
           <h2>Assets</h2>
-          <p>Material-expression layer. Separates ocean, shelf, coast, terrain, ridge, mineral, relief, and plasma fields.</p>
+          <p>Assets preserve material boundaries. They bind, separate, define, carry, and express without absorbing authority.</p>
         </article>
       </section>
 
-      <pre id="audralia-route-status" class="receipt" data-audralia-route-status="true">Audralia V18 route chain preparing.</pre>
+      <pre id="audralia-route-status" class="receipt" data-audralia-route-status="true">Audralia V18 five-finger terrain chain preparing.</pre>
 
-      <pre class="receipt">AUDRALIA_V18_ROUTE_CHAIN_AND_ASSET_BOUNDARY_HTML_TNT_v1
+      <pre class="receipt">AUDRALIA_V18_FIVE_FINGER_TERRAIN_BASELINE_HTML_TNT_v1
 route=/showroom/globe/audralia/
+baseline=Generation 1 coherent
+next=Generation 2 material definition and natural readability
 runtime=/assets/audralia/audralia.runtime.js
-canvas=/assets/audralia/audralia.canvas.js
-assets=/assets/audralia/audralia.assets.js
 surface=/assets/audralia/audralia.surface.js
 hex_surface=/assets/audralia/audralia.hex.surface.js
 relief_surface=/assets/audralia/audralia.relief.surface.js
+terrain_fingers=/assets/audralia/audralia.terrain.fingers.js
+assets=/assets/audralia/audralia.assets.js
+canvas=/assets/audralia/audralia.canvas.js
+terrain_fingers_list=mountains/ranges | valleys/basins | cliffs/escarpments | beaches/coastal-shelves | peninsulas/bays/islands/inlets
+runtime_motion_only=true
+assets_absorb_authority=false
 generated_image=false
 graphic_box=false
 visual_pass_claimed=false</pre>
     </main>
   </div>
 
-  <script type="module" src="./index.js?v=audralia-v18-route-chain-asset-boundary"></script>
+  <script type="module" src="./index.js?v=audralia-v18-five-finger-terrain-baseline-html"></script>
 </body>
 </html>

@@ -1,31 +1,35 @@
 // /assets/hearth/hearth.terrain.js
-// HEARTH_G3_RIGID_ROCKY_TERRAIN_RENEWAL_TNT_v1
+// HEARTH_G3_256_LANDFORM_CATEGORY_TERRAIN_TNT_v1
 // Full-file replacement.
 // Family: HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1
 // Purpose:
-// - Renew terrain after removing island ownership from the main terrain contract.
-// - Main terrain owns land bodies only: exteriors, escarpments, plateaus, spiral ranges, basins, ring mountains, central mountains, summit peaks, and attached peninsulas.
-// - Islands are excluded and moved to /assets/hearth/hearth.islands.js.
-// - Hearth is four-times-Earth-age, four-times-rocky, four-times-high in mountain expression.
-// - North/South/East/West precedence controls rockiness: North highest, South next, East next, West least.
+// - Renew main land-body terrain under 256 landform geometry.
+// - Terrain owns main land bodies only.
+// - Islands remain excluded and owned by /assets/hearth/hearth.islands.js.
+// - Core rocky landform categories are hills, mountains, cliffs, and valleys.
+// - Beaches/sand are excluded for a future beach/coastal engine.
+// - 16 Countries x 16 landform seats per Country = 256 landform seats.
 // - Preserve 4 General Regions, 16 Countries, and 9 Summit regions per General Region.
-// - Country assignment remains the only man-made layer.
+// - Hearth remains four-times-Earth-age, four-times-rocky, and four-times-high in mountain expression.
+// - North/South/East/West precedence controls rockiness: North highest, West lowest.
 // - Hydration remains passive and downstream.
-// - No rivers, lakes, weather, climate, clouds, humidity, rainfall, wind, storms, or atmospheric moisture.
+// - No beaches, sand, rivers, lakes, weather, climate, clouds, humidity, rainfall, wind, storms, or atmospheric moisture.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_RIGID_ROCKY_TERRAIN_RENEWAL_TNT_v1";
+  const CONTRACT = "HEARTH_G3_256_LANDFORM_CATEGORY_TERRAIN_TNT_v1";
   const FAMILY_CONTRACT = "HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1";
-  const VERSION = "2026-05-09.hearth-g3-rigid-rocky-terrain-renewal";
-  const RECEIPT = "HEARTH_G3_RIGID_ROCKY_TERRAIN_RENEWAL_RECEIPT";
+  const VERSION = "2026-05-09.hearth-g3-256-landform-category-terrain";
+  const RECEIPT = "HEARTH_G3_256_LANDFORM_CATEGORY_TERRAIN_RECEIPT";
 
   const TAU = Math.PI * 2;
   const LAND_THRESHOLD = 0.105;
   const PLANET_AGE_FACTOR = 4;
   const ROCK_FACTOR = 4;
   const MOUNTAIN_HEIGHT_FACTOR = 4;
+
+  const LANDFORM_CATEGORIES = Object.freeze(["hill", "mountain", "cliff", "valley"]);
 
   const DIRECTION_PRECEDENCE = Object.freeze({
     north: { rank: 4, rockyMultiplier: 1.00, heightMultiplier: 1.00 },
@@ -46,33 +50,46 @@
       "ring mountain",
       "natural depression basin",
       "central final mountain",
-      "summit peak"
+      "summit peak",
+      "hill field",
+      "mountain field",
+      "cliff field",
+      "valley field"
     ],
     manMade: ["country assignment only"],
-    excludedFromTerrain: ["detached island chains", "256 island seats"],
+    excludedFromTerrain: ["detached island chains", "256 island seats", "beaches", "sand systems"],
     rule:
-      "Only country assignment is man-made. Islands are not owned by this terrain file. Detached islands belong to /assets/hearth/hearth.islands.js."
+      "Only country assignment is man-made. Islands belong to /assets/hearth/hearth.islands.js. Beaches and sand are deferred to a future beach/coastal engine."
+  });
+
+  const GEOMETRY_256 = Object.freeze({
+    formula: "16 countries x 16 landform seats per country = 256",
+    countries: 16,
+    seatsPerCountry: 16,
+    totalLandformSeats: 256,
+    categories: LANDFORM_CATEGORIES,
+    directionPrecedence: "north-south-east-west"
   });
 
   const TIC_TAC_TOE_DYNAMIC_PROTOCOL = Object.freeze({
     T1: "One planet-scale terrain surface.",
     T2: "Four General Regions remain organic land bodies.",
-    T3: "Terrain contract excludes islands.",
-    T4: "Rockiness follows North, South, East, West precedence.",
-    T5: "Mountains render four-times high and four-times rocky.",
-    T6: "Escarpments, plateaus, spiral ranges, basins, and summits remain organic.",
-    T7: "Country assignment remains the only man-made layer.",
-    T8: "Hydration remains passive and downstream.",
-    T9: "Return rigid rocky land-body terrain receipt."
+    T3: "Sixteen Countries remain the only man-made assignment layer.",
+    T4: "Each Country receives sixteen landform seats.",
+    T5: "The 256 terrain geometry is 16 Countries x 16 seats.",
+    T6: "Core rocky categories are hills, mountains, cliffs, and valleys.",
+    T7: "Beaches and sand remain excluded.",
+    T8: "North/South/East/West precedence controls rockiness.",
+    T9: "Return rigid rocky 256 landform terrain receipt."
   });
 
   const SYSTEMIC_QUAD_A_ATTACK = Object.freeze({
     authority: "/assets/hearth/hearth.terrain.js",
-    axis: "rigid rocky terrain → directional precedence → admissible land-body terrain",
+    axis: "256 geometry -> landform categories -> directional rock precedence",
     artifact:
-      "A full-planet Hearth terrain field with rigid exteriors, high rocky spiral ranges, basin/ring formations, plateaus, central mountains, and summit peaks. Islands are excluded.",
+      "A full-planet Hearth terrain field with 256 main landform seats: hills, mountains, cliffs, and valleys distributed across 16 Countries.",
     attack:
-      "Reject island ownership in terrain, soft terrain, flat panel terrain, X-shaped artificial terrain, dark artificial outlines, man-made terrain cuts outside countries, hydration reshaping, new countries, new regions, climate, weather, clouds, humidity, and open-ended expression."
+      "Reject island ownership in terrain, beaches inside terrain, sand systems, soft terrain, flat panels, X-shaped artificial terrain, dark artificial outlines, hydration reshaping, new countries, new regions, climate, weather, clouds, humidity, and open-ended expression."
   });
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -777,7 +794,80 @@
     };
   }
 
-  function terrainColor(region, terrain) {
+  function landformGeometry(local, country, terrain) {
+    const radial = clamp(Math.hypot(local.x, local.y) / 1.08, 0, 0.999999);
+    const radialBand = Math.floor(radial * 4);
+    const directionBand = clamp(country.countryIndex, 0, 3);
+
+    const hillStrength = clamp(
+      terrain.plateauStrength * 0.34 +
+        terrain.upland * 0.22 +
+        (1 - terrain.rigidLandscapeStrength) * 0.18 +
+        terrain.peninsulaStrength * 0.16 +
+        (directionBand === 3 ? 0.16 : 0),
+      0,
+      1
+    );
+
+    const mountainStrength = clamp(
+      terrain.centralMountainStrength * 0.34 +
+        terrain.rangeAscent * 0.32 +
+        terrain.ridge * 0.24 +
+        terrain.summitStrength * 0.30 +
+        (directionBand === 0 ? 0.14 : 0),
+      0,
+      1.35
+    );
+
+    const cliffStrength = clamp(
+      terrain.cliffStrength * 0.42 +
+        terrain.escarpmentStrength * 0.30 +
+        terrain.ringMountainStrength * 0.20 +
+        terrain.rockExposure * 0.28 +
+        (directionBand === 0 ? 0.12 : 0),
+      0,
+      1.35
+    );
+
+    const valleyStrength = clamp(
+      terrain.lowland * 0.34 +
+        terrain.depressionStrength * 0.36 +
+        terrain.basinInteriorStrength * 0.26 +
+        (1 - terrain.upland) * 0.16 +
+        (directionBand === 1 ? 0.08 : 0) +
+        (directionBand === 3 ? 0.12 : 0),
+      0,
+      1.2
+    );
+
+    const weighted = [
+      { category: "hill", strength: hillStrength, index: 0 },
+      { category: "mountain", strength: mountainStrength, index: 1 },
+      { category: "cliff", strength: cliffStrength, index: 2 },
+      { category: "valley", strength: valleyStrength, index: 3 }
+    ].sort((a, b) => b.strength - a.strength);
+
+    const dominant = weighted[0];
+    const landformSeat = radialBand * 4 + dominant.index + 1;
+    const globalLandformSeat = (country.countryId - 1) * 16 + landformSeat;
+
+    return {
+      landformSeat,
+      globalLandformSeat,
+      landformRing: radialBand + 1,
+      landformSpoke: dominant.index + 1,
+      landformCategory: dominant.category,
+      dominantLandform: dominant.category,
+      hillStrength,
+      mountainStrength,
+      cliffStrength,
+      valleyStrength,
+      landformGeometry: "16-countries-x-16-seats",
+      landformGeometryTotal: 256
+    };
+  }
+
+  function terrainColor(region, terrain, landform) {
     let [r, g, b] = region.color;
 
     r = mix(r, 92, terrain.lowland * 0.14);
@@ -823,6 +913,22 @@
     r = mix(r, 248, terrain.summitStrength * 0.40);
     g = mix(g, 242, terrain.summitStrength * 0.36);
     b = mix(b, 222, terrain.summitStrength * 0.30);
+
+    r = mix(r, 152, landform.hillStrength * 0.08);
+    g = mix(g, 140, landform.hillStrength * 0.08);
+    b = mix(b, 96, landform.hillStrength * 0.06);
+
+    r = mix(r, 238, landform.mountainStrength * 0.08);
+    g = mix(g, 228, landform.mountainStrength * 0.07);
+    b = mix(b, 196, landform.mountainStrength * 0.06);
+
+    r = mix(r, 56, landform.cliffStrength * 0.10);
+    g = mix(g, 58, landform.cliffStrength * 0.09);
+    b = mix(b, 56, landform.cliffStrength * 0.08);
+
+    r = mix(r, 84, landform.valleyStrength * 0.08);
+    g = mix(g, 116, landform.valleyStrength * 0.08);
+    b = mix(b, 82, landform.valleyStrength * 0.06);
 
     return [r, g, b];
   }
@@ -901,12 +1007,26 @@
       mountainHeightFactor: MOUNTAIN_HEIGHT_FACTOR,
       rockFactor: ROCK_FACTOR,
       planetAgeFactor: PLANET_AGE_FACTOR,
+      landformSeat: null,
+      globalLandformSeat: null,
+      landformRing: null,
+      landformSpoke: null,
+      landformCategory: null,
+      dominantLandform: null,
+      hillStrength: 0,
+      mountainStrength: 0,
+      valleyStrength: 0,
+      landformGeometry: "16-countries-x-16-seats",
+      landformGeometryTotal: 256,
+      beachExcludedFromTerrain: true,
+      sandExcludedFromTerrain: true,
       islandExcludedFromTerrain: true,
       surfaceScale: "planet",
       surfaceAreaStandard: "full-planet",
       admissibleTerrain: true,
       boundaryLaw: BOUNDARY_LAW,
-      authority: "terrain-rigid-rocky-landbody"
+      geometry256: GEOMETRY_256,
+      authority: "terrain-256-landform-category"
     };
   }
 
@@ -950,7 +1070,8 @@
         : 0;
 
     const hierarchy = terrainHierarchy(local, region, field, coast);
-    const color = terrainColor(region, hierarchy);
+    const landform = landformGeometry(local, country, hierarchy);
+    const color = terrainColor(region, hierarchy, landform);
 
     return {
       land: true,
@@ -1030,12 +1151,26 @@
       planetAgeFactor: PLANET_AGE_FACTOR,
       surfaceNoise: hierarchy.surfaceNoise,
       fractureNoise: hierarchy.fractureNoise,
+      landformSeat: landform.landformSeat,
+      globalLandformSeat: landform.globalLandformSeat,
+      landformRing: landform.landformRing,
+      landformSpoke: landform.landformSpoke,
+      landformCategory: landform.landformCategory,
+      dominantLandform: landform.dominantLandform,
+      hillStrength: landform.hillStrength,
+      mountainStrength: landform.mountainStrength,
+      valleyStrength: landform.valleyStrength,
+      landformGeometry: landform.landformGeometry,
+      landformGeometryTotal: landform.landformGeometryTotal,
+      beachExcludedFromTerrain: true,
+      sandExcludedFromTerrain: true,
       islandExcludedFromTerrain: true,
       surfaceScale: "planet",
       surfaceAreaStandard: "full-planet",
       admissibleTerrain: true,
       boundaryLaw: BOUNDARY_LAW,
-      authority: "terrain-rigid-rocky-landbody"
+      geometry256: GEOMETRY_256,
+      authority: "terrain-256-landform-category"
     };
   }
 
@@ -1046,21 +1181,24 @@
       familyContract: FAMILY_CONTRACT,
       version: VERSION,
       generation: "G3",
-      standard: "rigid-rocky-landbody-terrain",
-      authority: "terrain-rigid-rocky-landbody",
+      standard: "256-landform-category-terrain",
+      authority: "terrain-256-landform-category",
       surfaceScale: "planet",
       surfaceAreaStandard: "full-planet",
       visibleLandGuarantee: true,
       planetAgeFactor: PLANET_AGE_FACTOR,
       rockFactor: ROCK_FACTOR,
       mountainHeightFactor: MOUNTAIN_HEIGHT_FACTOR,
+      landformCategories: LANDFORM_CATEGORIES,
+      geometry256: GEOMETRY_256,
       directionalRockPrecedence: DIRECTION_PRECEDENCE,
       islandOwnership: "excluded-moved-to-hearth-islands-js",
+      beachOwnership: "excluded-future-beach-engine",
       boundaryLaw: BOUNDARY_LAW,
       admissibilityRule:
-        "Main terrain owns land-body terrain only. Detached island chains and 256 island seats are excluded and belong to /assets/hearth/hearth.islands.js.",
+        "Main terrain owns land-body terrain only. Core rocky categories are hills, mountains, cliffs, and valleys. Beaches/sand and detached island chains are excluded.",
       terrainThesis:
-        "organic exterior -> attached peninsula -> escarpment -> plateau -> rigid spiral mountain range / basin ring -> central mountain -> summit peak.",
+        "16 Countries x 16 landform seats per Country = 256. Organic exterior -> attached peninsula -> escarpment -> plateau -> rigid spiral mountain range / basin ring -> central mountain -> summit peak.",
       generalRegions: GENERAL_REGIONS.map((region) => ({
         id: region.id,
         name: region.name,
@@ -1101,6 +1239,8 @@
       totals: {
         generalRegions: 4,
         countries: 16,
+        seatsPerCountry: 16,
+        totalLandformSeats: 256,
         summitRegionsPerGeneralRegion: 9,
         totalSummitRegions: 36,
         exteriorProfiles: 4,
@@ -1112,9 +1252,15 @@
         centralMountains: 4,
         summitPeaks: 4,
         metroplexSeats: 16,
-        islandsOwnedHere: 0
+        islandsOwnedHere: 0,
+        beachesOwnedHere: 0
       },
       owns: [
+        "256 landform-category geometry",
+        "hills",
+        "mountains",
+        "cliffs",
+        "valleys",
         "rigid rocky land-body terrain",
         "organic exterior profiles",
         "attached peninsulas",
@@ -1130,6 +1276,8 @@
       doesNotOwn: [
         "detached island chains",
         "256 island seats",
+        "beaches",
+        "sand systems",
         "X-shaped artificial terrain lines",
         "dark gray artificial terrain outlines",
         "man-made terrain boundaries outside country assignment",
@@ -1162,10 +1310,12 @@
     contract: CONTRACT,
     familyContract: FAMILY_CONTRACT,
     version: VERSION,
-    standard: "rigid-rocky-landbody-terrain",
-    authority: "terrain-rigid-rocky-landbody",
+    standard: "256-landform-category-terrain",
+    authority: "terrain-256-landform-category",
     visibleLandGuarantee: true,
     boundaryLaw: BOUNDARY_LAW,
+    geometry256: GEOMETRY_256,
+    landformCategories: LANDFORM_CATEGORIES,
     directionPrecedence: DIRECTION_PRECEDENCE,
     sampleVector,
     regions: () => GENERAL_REGIONS.slice(),
@@ -1178,7 +1328,7 @@
   document.documentElement.dataset.hearthTerrainContract = CONTRACT;
   document.documentElement.dataset.hearthTerrainFamilyContract = FAMILY_CONTRACT;
   document.documentElement.dataset.hearthTerrainVersion = VERSION;
-  document.documentElement.dataset.hearthTerrainStandard = "rigid-rocky-landbody-terrain";
+  document.documentElement.dataset.hearthTerrainStandard = "256-landform-category-terrain";
   document.documentElement.dataset.hearthTerrainSurfaceScale = "planet";
   document.documentElement.dataset.hearthTerrainVisibleLandGuarantee = "true";
   document.documentElement.dataset.hearthTerrainOrganicBoundaries = "true";
@@ -1187,7 +1337,10 @@
   document.documentElement.dataset.hearthTerrainRockFactor = String(ROCK_FACTOR);
   document.documentElement.dataset.hearthTerrainMountainHeightFactor = String(MOUNTAIN_HEIGHT_FACTOR);
   document.documentElement.dataset.hearthTerrainRockPrecedence = "north-south-east-west";
-  document.documentElement.dataset.hearthTerrainNorthRockiness = "highest";
-  document.documentElement.dataset.hearthTerrainWestRockiness = "lowest";
+  document.documentElement.dataset.hearthTerrainLandformCategories = "hills-mountains-cliffs-valleys";
+  document.documentElement.dataset.hearthTerrainLandformGeometry = "16-countries-x-16-seats";
+  document.documentElement.dataset.hearthTerrainLandformSeats = "256";
+  document.documentElement.dataset.hearthTerrainBeachesExcluded = "true";
+  document.documentElement.dataset.hearthTerrainSandExcluded = "true";
   document.documentElement.dataset.hearthTerrainIslandsExcluded = "true";
 })();

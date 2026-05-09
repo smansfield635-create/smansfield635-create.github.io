@@ -2,9 +2,9 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-g3-high-density-hex-surface"
+  data-page="hearth-g3-nonblocking-high-density-hex-surface"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_G3_HIGH_DENSITY_HEX_SURFACE_ROUTE_HTML_TNT_v1"
+  data-contract="HEARTH_G3_NONBLOCKING_HEX_SURFACE_ROUTE_HTML_TNT_v2"
   data-family-contract="HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1"
   data-baseline="HEARTH_G3_HIGH_DENSITY_HEX_SURFACE_BASELINE_v1"
   data-generation="G3"
@@ -12,7 +12,7 @@
   data-language-layer="globe"
   data-construction-layer="planet"
   data-hex-substrate="logical-256"
-  data-hex-surface="high-density-overlapping-hex"
+  data-hex-surface="preferred-nonblocking-high-density-overlapping-hex"
   data-canvas-runtime="adaptive-self-heal-v3"
   data-generated-image="false"
   data-graphic-box="false"
@@ -23,24 +23,21 @@
   <title>Diamond Gate Bridge · Hearth</title>
   <meta
     name="description"
-    content="Hearth is the G3 planet route using parent terrain, child engines, logical 256 hex geometry, high-density hex surface rendering, and adaptive canvas runtime."
+    content="Hearth is the G3 planet route using parent terrain, child engines, logical 256 hex geometry, high-density hex surface rendering, and adaptive self-healing canvas runtime."
   >
 
   <style>
     :root {
       --bg: #06111e;
-      --bg-2: #081a2b;
       --panel: rgba(7, 20, 34, 0.88);
       --panel-2: rgba(9, 26, 43, 0.78);
-      --line: rgba(122, 177, 215, 0.20);
-      --line-strong: rgba(122, 177, 215, 0.34);
+      --line: rgba(122, 177, 215, 0.22);
+      --line-strong: rgba(122, 177, 215, 0.36);
       --text: #e8f2ff;
       --muted: #9fb0c4;
       --gold: #e5c45f;
       --green: #73c7a5;
       --amber: #e4b45f;
-      --danger: #e68a7a;
-      --shadow: rgba(0, 0, 0, 0.36);
       color-scheme: dark;
       font-family:
         Inter,
@@ -86,7 +83,7 @@
       border-radius: 999px;
       background: var(--gold);
       color: #101010;
-      font-weight: 800;
+      font-weight: 850;
       transform: translateY(-180%);
       transition: transform 160ms ease;
     }
@@ -128,20 +125,21 @@
         radial-gradient(circle at 35% 30%, rgba(255,255,255,0.22), transparent 38%),
         linear-gradient(135deg, rgba(229,196,95,0.95), rgba(128,93,35,0.96));
       color: #0a121c;
-      box-shadow: 0 12px 28px var(--shadow);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.36);
     }
 
     .brand small {
       display: block;
       color: var(--muted);
-      font-weight: 700;
+      font-weight: 750;
       letter-spacing: 0.11em;
       text-transform: uppercase;
       font-size: 0.72rem;
       margin-top: -0.15rem;
     }
 
-    .nav {
+    .nav,
+    .actions {
       display: flex;
       flex-wrap: wrap;
       gap: 0.55rem;
@@ -158,7 +156,7 @@
       border-radius: 999px;
       background: rgba(7, 20, 34, 0.62);
       color: var(--muted);
-      font-weight: 800;
+      font-weight: 850;
       box-shadow: 0 10px 24px rgba(0,0,0,0.16);
     }
 
@@ -169,17 +167,24 @@
       color: #15110a;
     }
 
+    .hero,
+    .section,
+    .planet-shell,
+    .card {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: 0 18px 48px rgba(0,0,0,0.18);
+    }
+
     .hero {
       display: grid;
       gap: 1.15rem;
       padding: clamp(1.35rem, 4vw, 2.25rem);
-      border: 1px solid var(--line);
       border-radius: 2rem;
       background:
         radial-gradient(circle at 88% 10%, rgba(229,196,95,0.09), transparent 20rem),
         radial-gradient(circle at 12% 0%, rgba(92,177,220,0.11), transparent 22rem),
         var(--panel);
-      box-shadow: 0 24px 60px rgba(0,0,0,0.28);
     }
 
     .eyebrow {
@@ -208,20 +213,10 @@
       font-weight: 650;
     }
 
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.7rem;
-      margin-top: 0.35rem;
-    }
-
     .section {
       margin-top: 1.25rem;
       padding: clamp(1.15rem, 3vw, 1.85rem);
-      border: 1px solid var(--line);
       border-radius: 2rem;
-      background: var(--panel);
-      box-shadow: 0 18px 48px rgba(0,0,0,0.18);
     }
 
     .section h2 {
@@ -242,7 +237,7 @@
     .planet-shell {
       margin-top: 1.25rem;
       padding: clamp(0.95rem, 3vw, 1.25rem);
-      border: 1px solid var(--line-strong);
+      border-color: var(--line-strong);
       border-radius: 2rem;
       background:
         radial-gradient(circle at 50% 42%, rgba(38, 95, 128, 0.18), transparent 32rem),
@@ -282,7 +277,6 @@
 
     .card {
       padding: 1.2rem;
-      border: 1px solid var(--line);
       border-radius: 1.6rem;
       background: var(--panel-2);
     }
@@ -295,15 +289,15 @@
       text-transform: uppercase;
     }
 
+    .card.warning h3 {
+      color: var(--amber);
+    }
+
     .card p {
       margin: 0;
       color: var(--muted);
       font-size: 1rem;
       font-weight: 650;
-    }
-
-    .card.warning h3 {
-      color: var(--amber);
     }
 
     .receipt {
@@ -313,11 +307,7 @@
       border-radius: 1.25rem;
       background: rgba(229,196,95,0.06);
       color: var(--muted);
-      font-family:
-        "SFMono-Regular",
-        Consolas,
-        "Liberation Mono",
-        monospace;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
       font-size: 0.8rem;
       overflow-wrap: anywhere;
     }
@@ -354,10 +344,10 @@
   </style>
 
   <script
-    src="./index.js?v=hearth-g3-adaptive-runtime-self-heal-v3"
+    src="./index.js?v=hearth-g3-nonblocking-hex-surface-canvas-self-heal-v3"
     defer
-    data-hearth-route-controller="HEARTH_G3_ADAPTIVE_RUNTIME_SELF_HEAL_ROUTE_CONTROLLER_TNT_v2"
-    data-hearth-cache-key="hearth-g3-adaptive-runtime-self-heal-v3"
+    data-hearth-route-controller="HEARTH_G3_NONBLOCKING_HEX_SURFACE_CANVAS_SELF_HEAL_ROUTE_CONTROLLER_TNT_v3"
+    data-hearth-cache-key="hearth-g3-nonblocking-hex-surface-canvas-self-heal-v3"
   ></script>
 </head>
 
@@ -386,12 +376,12 @@
 
     <main id="hearth-main">
       <section class="hero" aria-labelledby="hearth-title">
-        <p class="eyebrow">Hearth · Generation 3 · High-Density Hex Surface</p>
+        <p class="eyebrow">Hearth · Generation 3 · Nonblocking High-Density Hex Surface</p>
         <h1 id="hearth-title">Hearth</h1>
         <p class="lede">
           Hearth is the G3 planet route. Globe remains route language. The rendered object is a planet.
-          The current locked baseline uses parent terrain, child engines, a logical 256 hex substrate,
-          a high-density overlapping hex surface, and an adaptive self-healing canvas runtime.
+          The locked baseline uses parent terrain, child engines, a logical 256 hex substrate,
+          a preferred nonblocking high-density hex surface, and an adaptive self-healing canvas runtime.
         </p>
 
         <div class="actions" aria-label="Hearth route actions">
@@ -405,9 +395,9 @@
       <section class="section" aria-labelledby="route-status-title">
         <h2 id="route-status-title">Route Status</h2>
         <p>
-          G3 high-density hex-surface baseline active. Route loads logical hex, terrain, hydration,
-          mountains, cliffs, valleys, beaches, islands, high-density hex surface, and adaptive canvas.
-          Parent terrain admits the field; child engines refine; hex surface expresses; canvas presents.
+          G3 high-density hex-surface baseline active. Route requires logical hex, terrain, and canvas.
+          Hydration, mountains, cliffs, valleys, beaches, islands, and hex surface are preferred nonblocking enhancers.
+          Parent terrain admits the field; child engines refine; hex surface expresses; canvas presents and self-heals.
         </p>
       </section>
 
@@ -420,7 +410,7 @@
           data-hearth-generation="G3"
           data-hearth-baseline="HEARTH_G3_HIGH_DENSITY_HEX_SURFACE_BASELINE_v1"
           data-hearth-hex-substrate="logical-256"
-          data-hearth-hex-surface="high-density-overlapping-hex"
+          data-hearth-hex-surface="preferred-nonblocking-high-density-overlapping-hex"
           data-hearth-canvas-runtime="adaptive-self-heal-v3"
           data-hearth-generated-image="false"
           data-hearth-graphic-box="false"
@@ -431,12 +421,12 @@
       <section class="grid" aria-label="Hearth current build chain">
         <article class="card">
           <h3>Route HTML</h3>
-          <p>Valid page shell renewed for the locked high-density hex-surface baseline.</p>
+          <p>Valid page shell renewed for the nonblocking high-density hex-surface baseline.</p>
         </article>
 
         <article class="card">
           <h3>Route JS</h3>
-          <p>Loads the adaptive runtime route controller using cache key hearth-g3-adaptive-runtime-self-heal-v3.</p>
+          <p>Loads the nonblocking route controller using cache key hearth-g3-nonblocking-hex-surface-canvas-self-heal-v3.</p>
         </article>
 
         <article class="card">
@@ -456,7 +446,7 @@
 
         <article class="card">
           <h3>Hex Surface</h3>
-          <p>Uses high-density overlapping hex pixels for crisp 4K-like visual expression without replacing terrain truth.</p>
+          <p>Preferred nonblocking high-density overlapping hex pixels provide crisp visual expression without replacing terrain truth.</p>
         </article>
 
         <article class="card">
@@ -473,15 +463,15 @@
       <section class="section" aria-labelledby="baseline-title">
         <h2 id="baseline-title">Baseline</h2>
         <p>
-          HEARTH_G3_HIGH_DENSITY_HEX_SURFACE_BASELINE_v1 is the current locked Hearth visual baseline.
-          Further visual complexity should proceed after route and Gauges receipts confirm this chain is served correctly.
+          HEARTH_G3_HIGH_DENSITY_HEX_SURFACE_BASELINE_v1 remains the locked Hearth visual baseline.
+          The route now uses a nonblocking controller so the canvas can self-heal the hex surface instead of being blocked by it.
         </p>
 
         <div class="receipt" aria-label="Hearth route receipt">
-          HTML_CONTRACT=HEARTH_G3_HIGH_DENSITY_HEX_SURFACE_ROUTE_HTML_TNT_v1 ·
+          HTML_CONTRACT=HEARTH_G3_NONBLOCKING_HEX_SURFACE_ROUTE_HTML_TNT_v2 ·
           BASELINE=HEARTH_G3_HIGH_DENSITY_HEX_SURFACE_BASELINE_v1 ·
-          CONTROLLER=HEARTH_G3_ADAPTIVE_RUNTIME_SELF_HEAL_ROUTE_CONTROLLER_TNT_v2 ·
-          CACHE_KEY=hearth-g3-adaptive-runtime-self-heal-v3 ·
+          CONTROLLER=HEARTH_G3_NONBLOCKING_HEX_SURFACE_CANVAS_SELF_HEAL_ROUTE_CONTROLLER_TNT_v3 ·
+          CACHE_KEY=hearth-g3-nonblocking-hex-surface-canvas-self-heal-v3 ·
           GENERATED_IMAGE=false ·
           GRAPHIC_BOX=false
         </div>

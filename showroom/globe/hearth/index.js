@@ -1,36 +1,31 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_G3_FAIL_OPEN_RENDER_CHAIN_ROUTE_CONTROLLER_TNT_v1
+// HEARTH_G3_HEX_OVERLAP_SEEDED_VARIATION_ROUTE_CONTROLLER_TNT_v1
 // Full-file replacement.
 // Family: HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1
-// Purpose:
-// - Prevent missing/broken child engines from blanking the Hearth planet render.
-// - Required: terrain and canvas.
-// - Optional: hydration, mountains, cliffs, valleys, beaches, islands.
-// - The page must render the planet even if optional child engines fail.
-// - No GraphicBox. No generated image.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_FAIL_OPEN_RENDER_CHAIN_ROUTE_CONTROLLER_TNT_v1";
+  const CONTRACT = "HEARTH_G3_HEX_OVERLAP_SEEDED_VARIATION_ROUTE_CONTROLLER_TNT_v1";
   const FAMILY_CONTRACT = "HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1";
-  const VERSION = "2026-05-09.hearth-g3-fail-open-render-chain-route-controller";
-  const RECEIPT = "HEARTH_G3_FAIL_OPEN_RENDER_CHAIN_ROUTE_RECEIPT";
-  const KEY = "hearth-g3-fail-open-render-chain-v1";
+  const VERSION = "2026-05-09.hearth-g3-hex-overlap-seeded-variation-route-controller";
+  const RECEIPT = "HEARTH_G3_HEX_OVERLAP_SEEDED_VARIATION_ROUTE_RECEIPT";
+  const KEY = "hearth-g3-hex-overlap-seeded-variation-v1";
   const EXPECTED_ROUTE = "/showroom/globe/hearth/";
 
   const REQUIRED_SOURCES = Object.freeze([
-    { role: "terrain", src: `/assets/hearth/hearth.terrain.js?v=${KEY}` },
-    { role: "canvas", src: `/assets/hearth/hearth.canvas.js?v=${KEY}` }
+    { role: "hex", globalName: "HEARTH_HEX", src: `/assets/hearth/hearth.hex.js?v=${KEY}` },
+    { role: "terrain", globalName: "HEARTH_TERRAIN", src: `/assets/hearth/hearth.terrain.js?v=${KEY}` },
+    { role: "canvas", globalName: "HEARTH_CANVAS_RECEIPT", src: `/assets/hearth/hearth.canvas.js?v=${KEY}` }
   ]);
 
   const OPTIONAL_SOURCES = Object.freeze([
-    { role: "hydration", src: `/assets/hearth/hearth.hydration.js?v=${KEY}` },
-    { role: "mountains", src: `/assets/hearth/hearth.mountains.js?v=${KEY}` },
-    { role: "cliffs", src: `/assets/hearth/hearth.cliffs.js?v=${KEY}` },
-    { role: "valleys", src: `/assets/hearth/hearth.valleys.js?v=${KEY}` },
-    { role: "beaches", src: `/assets/hearth/hearth.beaches.js?v=${KEY}` },
-    { role: "islands", src: `/assets/hearth/hearth.islands.js?v=${KEY}` }
+    { role: "hydration", globalName: "HEARTH_HYDRATION", src: `/assets/hearth/hearth.hydration.js?v=${KEY}` },
+    { role: "mountains", globalName: "HEARTH_MOUNTAINS", src: `/assets/hearth/hearth.mountains.js?v=${KEY}` },
+    { role: "cliffs", globalName: "HEARTH_CLIFFS", src: `/assets/hearth/hearth.cliffs.js?v=${KEY}` },
+    { role: "valleys", globalName: "HEARTH_VALLEYS", src: `/assets/hearth/hearth.valleys.js?v=${KEY}` },
+    { role: "beaches", globalName: "HEARTH_BEACHES", src: `/assets/hearth/hearth.beaches.js?v=${KEY}` },
+    { role: "islands", globalName: "HEARTH_ISLANDS", src: `/assets/hearth/hearth.islands.js?v=${KEY}` }
   ]);
 
   const state = {
@@ -38,7 +33,8 @@
     loaded: [],
     failed: [],
     optionalFailed: [],
-    requiredFailed: []
+    requiredFailed: [],
+    bridged: []
   };
 
   function roleKey(role) {
@@ -54,13 +50,16 @@
     document.documentElement.dataset.hearthRouteControllerStatus = status;
     document.documentElement.dataset.hearthExpectedRoute = EXPECTED_ROUTE;
     document.documentElement.dataset.hearthGeneration = "G3";
-    document.documentElement.dataset.hearthStandard = "fail-open-child-engine-chain";
+    document.documentElement.dataset.hearthStandard = "hex-overlap-seeded-variation-render-chain";
     document.documentElement.dataset.hearthLanguageLayer = "globe";
     document.documentElement.dataset.hearthConstructionLayer = "planet";
     document.documentElement.dataset.hearthRouteLoadKey = KEY;
-    document.documentElement.dataset.hearthRequiredRenderChain = "terrain,canvas";
+    document.documentElement.dataset.hearthRequiredRenderChain = "hex,terrain,canvas";
     document.documentElement.dataset.hearthOptionalEnhancementChain =
       "hydration,mountains,cliffs,valleys,beaches,islands";
+    document.documentElement.dataset.hearthHexFirst = "true";
+    document.documentElement.dataset.hearthHexSubstrate = "overlapping-hexagonal-pixel";
+    document.documentElement.dataset.hearthHexBridgeInstalledFor = state.bridged.join(",") || "none";
     document.documentElement.dataset.hearthLoadedScripts = state.loaded.join(",") || "none";
     document.documentElement.dataset.hearthFailedScripts = state.failed.join(",") || "none";
     document.documentElement.dataset.hearthOptionalFailures = state.optionalFailed.join(",") || "none";
@@ -89,6 +88,7 @@
       "__HEARTH_ISLANDS_DISPOSE__",
       "__HEARTH_TERRAIN_BOUNDARY_DISPOSE__",
       "__HEARTH_HYDRATION_BOUNDARY_DISPOSE__",
+      "__HEARTH_HEX_DISPOSE__",
       "__HEARTH_G2_DISPOSE__"
     ].forEach((name) => {
       if (typeof window[name] === "function") {
@@ -106,6 +106,7 @@
   function removePriorScripts() {
     document
       .querySelectorAll([
+        'script[src*="/assets/hearth/hearth.hex.js"]',
         'script[src*="/assets/hearth/hearth.terrain.js"]',
         'script[src*="/assets/hearth/hearth.hydration.js"]',
         'script[src*="/assets/hearth/hearth.mountains.js"]',
@@ -130,7 +131,7 @@
       mount.dataset.hearthMount = "true";
       mount.dataset.render = "hearth";
       mount.dataset.body = "hearth";
-      mount.setAttribute("aria-label", "Hearth G3 fail-open planet mount");
+      mount.setAttribute("aria-label", "Hearth G3 overlapping-hex planet mount");
       parent.appendChild(mount);
     }
 
@@ -139,15 +140,11 @@
     mount.dataset.hearthFamilyContract = FAMILY_CONTRACT;
     mount.dataset.hearthRouteControllerReceipt = RECEIPT;
     mount.dataset.hearthGeneration = "G3";
-    mount.dataset.hearthStandard = "fail-open-child-engine-chain";
+    mount.dataset.hearthStandard = "hex-overlap-seeded-variation-render-chain";
+    mount.dataset.hearthHexOwner = "/assets/hearth/hearth.hex.js";
     mount.dataset.hearthTerrainOwner = "/assets/hearth/hearth.terrain.js";
     mount.dataset.hearthRenderOwner = "/assets/hearth/hearth.canvas.js";
-    mount.dataset.hearthHydrationOwner = "/assets/hearth/hearth.hydration.js";
-    mount.dataset.hearthMountainOwner = "/assets/hearth/hearth.mountains.js";
-    mount.dataset.hearthCliffOwner = "/assets/hearth/hearth.cliffs.js";
-    mount.dataset.hearthValleyOwner = "/assets/hearth/hearth.valleys.js";
-    mount.dataset.hearthBeachOwner = "/assets/hearth/hearth.beaches.js";
-    mount.dataset.hearthIslandOwner = "/assets/hearth/hearth.islands.js";
+    mount.dataset.hearthHexSubstrate = "overlapping-hexagonal-pixel";
     mount.dataset.hearthGeneratedImage = "false";
     mount.dataset.hearthGraphicBox = "false";
 
@@ -155,11 +152,11 @@
   }
 
   function installFallbackMountStyle() {
-    const prior = document.getElementById("hearth-fail-open-route-style");
+    const prior = document.getElementById("hearth-hex-overlap-route-style");
     if (prior) prior.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-fail-open-route-style";
+    style.id = "hearth-hex-overlap-route-style";
     style.textContent = `
       #hearthCanvasMount {
         position: relative;
@@ -185,7 +182,7 @@
       }
 
       #hearthCanvasMount[data-hearth-required-failure="true"]::after {
-        content: "Hearth render chain blocked. Terrain or canvas failed to load.";
+        content: "Hearth render chain blocked. Hex, terrain, or canvas failed to load.";
         position: absolute;
         inset: auto 18px 18px;
         z-index: 3;
@@ -247,6 +244,27 @@
     });
   }
 
+  function bridgeModule(globalName) {
+    if (!window.HEARTH_HEX || typeof window.HEARTH_HEX.installSampleBridge !== "function") {
+      return false;
+    }
+
+    const ok = window.HEARTH_HEX.installSampleBridge(globalName);
+
+    if (ok && !state.bridged.includes(globalName)) {
+      state.bridged.push(globalName);
+    }
+
+    stamp(`bridge-${globalName}-${ok ? "ok" : "not-present"}`);
+    return ok;
+  }
+
+  async function loadRequiredHexAndTerrain() {
+    await loadScript(REQUIRED_SOURCES[0], true);
+    await loadScript(REQUIRED_SOURCES[1], true);
+    bridgeModule("HEARTH_TERRAIN");
+  }
+
   async function loadOptionalEnhancements() {
     const results = [];
 
@@ -254,16 +272,17 @@
       stamp(`loading-optional-${source.role}`);
       const result = await loadScript(source, false);
       results.push(result);
+
+      if (result.loaded && source.globalName) {
+        bridgeModule(source.globalName);
+      }
     }
 
     return results;
   }
 
-  async function loadRequiredRenderChain() {
-    for (const source of REQUIRED_SOURCES) {
-      stamp(`loading-required-${source.role}`);
-      await loadScript(source, true);
-    }
+  async function loadRequiredCanvas() {
+    await loadScript(REQUIRED_SOURCES[2], true);
   }
 
   function exposeReceipt(status) {
@@ -276,19 +295,23 @@
       expectedRoute: EXPECTED_ROUTE,
       loadKey: KEY,
       generation: "G3",
-      standard: "fail-open-child-engine-chain",
+      standard: "hex-overlap-seeded-variation-render-chain",
+      hexSubstrate: "overlapping-hexagonal-pixel",
       required: REQUIRED_SOURCES.map((source) => ({
         role: source.role,
+        globalName: source.globalName,
         src: source.src
       })),
       optional: OPTIONAL_SOURCES.map((source) => ({
         role: source.role,
+        globalName: source.globalName,
         src: source.src
       })),
       loaded: state.loaded.slice(),
       failed: state.failed.slice(),
       optionalFailed: state.optionalFailed.slice(),
       requiredFailed: state.requiredFailed.slice(),
+      bridged: state.bridged.slice(),
       status
     });
   }
@@ -307,26 +330,32 @@
     ensureMount();
 
     try {
-      await loadScript(REQUIRED_SOURCES[0], true);
-
+      await loadRequiredHexAndTerrain();
       await loadOptionalEnhancements();
-
-      await loadScript(REQUIRED_SOURCES[1], true);
+      await loadRequiredCanvas();
 
       mount.dataset.hearthRequiredFailure = "false";
       mount.dataset.hearthOptionalFailures = state.optionalFailed.join(",") || "none";
+      mount.dataset.hearthHexBridgeInstalledFor = state.bridged.join(",") || "none";
+
       document.body.dataset.hearthRouteReady = "true";
       document.body.dataset.hearthCanvasAssetLoaded = "true";
       document.documentElement.dataset.hearthRenderChainReady = "true";
+      document.documentElement.dataset.hearthHexSubstrateReady = "true";
 
-      const status = state.optionalFailed.length ? "ready-with-optional-enhancement-failures" : "ready";
+      const status = state.optionalFailed.length
+        ? "ready-with-optional-enhancement-failures"
+        : "ready";
+
       stamp(status);
       exposeReceipt(status);
     } catch (error) {
       mount.dataset.hearthRequiredFailure = "true";
+
       document.body.dataset.hearthRouteReady = "false";
       document.body.dataset.hearthCanvasAssetLoaded = "false";
       document.documentElement.dataset.hearthRenderChainReady = "false";
+      document.documentElement.dataset.hearthHexSubstrateReady = "false";
       document.documentElement.dataset.hearthRouteControllerError =
         error && error.message ? error.message : String(error);
 

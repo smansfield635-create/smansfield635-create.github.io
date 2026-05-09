@@ -1,9 +1,11 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="globe-split-earth-hearth-audralia"
+  data-page="globe-split-habitability-index"
   data-route="/showroom/globe/"
-  data-contract="GLOBE_SPLIT_EARTH_HEARTH_AUDRALIA_SELECTOR_HTML_TNT_v1"
+  data-contract="GLOBE_SPLIT_HABITABILITY_SELECTOR_HTML_TNT_v2"
+  data-total-planet-target="81"
+  data-active-constructed-templates="2"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claimed="false"
@@ -14,7 +16,7 @@
   <title>Diamond Gate Bridge · Globe Split</title>
   <meta
     name="description"
-    content="Globe Split selector for Earth, Hearth, and Audralia. Each body is inspected through its own route authority."
+    content="Globe Split habitability selector for Earth, Hearth, and Audralia. Hearth and Audralia are habitable-forming constructed planet templates inside an 81-planet target system."
   >
 
   <style>
@@ -26,6 +28,8 @@
       --text: #eef6ff;
       --muted: rgba(238, 246, 255, 0.72);
       --blue: #4fb5db;
+      --green: #8bd7a3;
+      --red: #ff8f7a;
     }
 
     * { box-sizing: border-box; }
@@ -71,7 +75,7 @@
     .skip:focus { transform: translateY(0); }
 
     .shell {
-      width: min(1120px, calc(100% - 28px));
+      width: min(1160px, calc(100% - 28px));
       margin: 0 auto;
       padding: 22px 0 42px;
     }
@@ -79,6 +83,7 @@
     .topbar,
     .nav,
     .card,
+    .metric,
     .receipt {
       border: 1px solid var(--line);
       background: linear-gradient(180deg, rgba(9, 22, 41, 0.88), rgba(4, 10, 20, 0.78));
@@ -157,11 +162,38 @@
     }
 
     .lede {
-      max-width: 75ch;
+      max-width: 78ch;
       margin: 0;
       color: var(--muted);
       font-size: clamp(1rem, 2.4vw, 1.18rem);
       line-height: 1.6;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .metric {
+      border-radius: 22px;
+      padding: 16px;
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--gold);
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
+      line-height: 1;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      line-height: 1.4;
+      font-size: 0.92rem;
     }
 
     .selector {
@@ -173,7 +205,7 @@
 
     .card {
       position: relative;
-      min-height: 260px;
+      min-height: 300px;
       border-radius: 26px;
       padding: 18px;
       overflow: hidden;
@@ -191,7 +223,7 @@
       opacity: 0.95;
     }
 
-    .card .tag {
+    .tag {
       display: inline-flex;
       margin-bottom: 14px;
       padding: 6px 10px;
@@ -202,6 +234,18 @@
       font-weight: 900;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+    }
+
+    .tag.habitable {
+      color: var(--green);
+      border-color: rgba(139, 215, 163, 0.36);
+      background: rgba(139, 215, 163, 0.10);
+    }
+
+    .tag.reference {
+      color: var(--blue);
+      border-color: rgba(79, 181, 219, 0.38);
+      background: rgba(79, 181, 219, 0.10);
     }
 
     .card h2 {
@@ -237,13 +281,13 @@
 
     .proof {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
       margin-top: 18px;
     }
 
     .proof .card {
-      min-height: 118px;
+      min-height: 150px;
       border-radius: 20px;
       padding: 14px;
     }
@@ -265,7 +309,8 @@
 
     @media (max-width: 920px) {
       .selector,
-      .proof {
+      .proof,
+      .metrics {
         grid-template-columns: 1fr;
       }
 
@@ -289,90 +334,126 @@
 
       <nav class="nav" aria-label="Globe Split navigation">
         <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/" aria-current="page">Globe</a>
-        <a href="/nine-summits/universe/">Universe</a>
-        <a href="/products/">Products</a>
+        <a href="/showroom/globe/earth/">Earth</a>
+        <a href="/showroom/globe/hearth/">Hearth</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
     <main id="globe-main">
       <section class="hero" aria-labelledby="globe-title">
-        <div class="eyebrow">Standalone · Globe Authority Split</div>
-        <h1 id="globe-title">Earth, Hearth, and Audralia</h1>
+        <div class="eyebrow">Showroom Globe · Habitability Index</div>
+        <h1 id="globe-title">Habitable, Perspective Habitable, and Non-Habitable Worlds</h1>
         <p class="lede">
-          This chamber is a selector. Earth, Hearth, and Audralia no longer compete for the same public page flow.
-          Each body has its own route authority, render chain, proof receipts, and inspection path.
+          The Globe Split now uses habitability as the public standard. Hearth and Audralia are
+          habitable-forming constructed planets: they have coherent truth, material expression,
+          motion, controls, render, and proof, but they are not fully formed yet. The larger target is
+          81 total planets, with Hearth and Audralia serving as the first two simultaneous construction templates.
         </p>
+      </section>
+
+      <section class="metrics" aria-label="Planet build metrics">
+        <article class="metric">
+          <strong>81</strong>
+          <span>Total planned planet capacity across the larger planetary system.</span>
+        </article>
+
+        <article class="metric">
+          <strong>2</strong>
+          <span>Constructed planet templates currently being built simultaneously: Hearth and Audralia.</span>
+        </article>
+
+        <article class="metric">
+          <strong>G1</strong>
+          <span>Current baseline: coherent and habitable-forming, not final-formed.</span>
+        </article>
+
+        <article class="metric">
+          <strong>G2</strong>
+          <span>Next target: material definition, terrain readability, and natural formation.</span>
+        </article>
       </section>
 
       <section class="selector" aria-label="Globe body selector">
         <article class="card">
-          <span class="tag">Reference body</span>
+          <span class="tag reference">Reference Habitable</span>
           <h2>Earth</h2>
           <p>
-            Inspect Earth through its own reference-body route and Earth file chain.
-            Earth remains the real-world comparison standard.
+            Earth remains the real-world reference body. It is not a constructed template in this chain;
+            it is the known habitable comparison standard for motion, scale, atmosphere, water, and planetary read.
           </p>
           <a class="primary" href="/showroom/globe/earth/">Inspect Earth</a>
         </article>
 
         <article class="card">
-          <span class="tag">Constructed hearth body</span>
+          <span class="tag habitable">Habitable · Forming</span>
           <h2>Hearth</h2>
           <p>
-            Inspect Hearth through its coherent baseline: Canvas / World Engine truth,
-            Assets as material expression, Runtime as motion, Controls as drag and spin,
-            and Render as drawing.
+            Hearth has a coherent baseline: Canvas / World Engine truth, Assets as material expression,
+            Runtime as motion, Controls as drag and spin, Render as drawing, and West/Gauges as proof.
+            It is habitable in structure, but still forming in natural detail.
           </p>
           <a href="/showroom/globe/hearth/">Inspect Hearth</a>
         </article>
 
         <article class="card">
-          <span class="tag">Constructed world</span>
+          <span class="tag habitable">Habitable · Forming</span>
           <h2>Audralia</h2>
           <p>
-            Inspect Audralia through runtime motion-only authority, five-finger terrain,
-            asset-boundary expression, canvas/render output, and proof chain.
+            Audralia has a coherent baseline with runtime motion-only authority, five-finger terrain,
+            asset-boundary expression, canvas/render output, and route proof. It is habitable in structure,
+            but still forming in terrain, material definition, and natural readability.
           </p>
           <a href="/showroom/globe/audralia/">Inspect Audralia</a>
         </article>
       </section>
 
-      <section class="proof" aria-label="Globe split proof">
+      <section class="proof" aria-label="Habitability standards">
         <article class="card">
-          <h2>Parent route</h2>
-          <p>Selector only. This page does not own any body’s canvas, runtime, terrain, or proof chain.</p>
+          <span class="tag habitable">Habitable</span>
+          <h2>Habitable Planet</h2>
+          <p>
+            A planet has separated truth, material expression, motion, controls, render, and proof. It can support
+            upward formation because the life-bearing architecture is coherent.
+          </p>
         </article>
 
         <article class="card">
-          <h2>Separate inspection</h2>
-          <p>Each body is inspected through its own route so source authority does not collapse.</p>
+          <span class="tag">Perspective Habitable</span>
+          <h2>Perspective Habitable Planet</h2>
+          <p>
+            A candidate planet has some promising structure, but proof is incomplete. It may become habitable after
+            truth, assets, runtime, controls, render, and West verification align.
+          </p>
         </article>
 
         <article class="card">
-          <h2>Audralia baseline</h2>
-          <p>Audralia is at coherent Generation 1 with Generation 2 material readability next.</p>
-        </article>
-
-        <article class="card">
-          <h2>Weather boundary</h2>
-          <p>Clouds, weather, and living atmosphere remain later-generation work, not the selector’s job.</p>
+          <span class="tag" style="color:var(--red);border-color:rgba(255,143,122,.34);background:rgba(255,143,122,.08);">Non-Habitable</span>
+          <h2>Non-Habitable Planet</h2>
+          <p>
+            A planet is non-habitable when authority collapses, motion fails, material fields glob together, or proof
+            cannot verify the route and source chain.
+          </p>
         </article>
       </section>
 
-      <pre class="receipt">GLOBE_SPLIT_EARTH_HEARTH_AUDRALIA_SELECTOR_HTML_TNT_v1
+      <pre class="receipt">GLOBE_SPLIT_HABITABILITY_SELECTOR_HTML_TNT_v2
 route=/showroom/globe/
 selector_only=true
-bodies=Earth | Hearth | Audralia
-earth=/showroom/globe/earth/
-hearth=/showroom/globe/hearth/
-audralia=/showroom/globe/audralia/
-audralia_current=runtime-motion-only + five-finger-terrain + asset-boundary-expression + canvas/render + proof-chain
-hearth_current=coherent-baseline + motion + asset-boundary-expression
+standard=habitability
+planned_planets_total=81
+active_constructed_templates=2
+active_templates=Hearth | Audralia
+reference_body=Earth
+habitable_forming=Hearth | Audralia
+perspective_habitable=reserved-for-candidate-planets
+non_habitable=reserved-for-failed-or-unproven-planets
+hearth_current=coherent-G1-baseline + motion + asset-boundary-expression
+audralia_current=coherent-G1-baseline + runtime-motion-only + five-finger-terrain + asset-boundary-expression
+next_generation=G2-material-definition-and-natural-readability
 generated_image=false
 graphic_box=false
 visual_pass_claimed=false</pre>

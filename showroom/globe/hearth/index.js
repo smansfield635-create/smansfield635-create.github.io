@@ -1,29 +1,29 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_G3_ADAPTIVE_RUNTIME_SELF_HEAL_ROUTE_CONTROLLER_TNT_v2
+// HEARTH_G3_NONBLOCKING_HEX_SURFACE_CANVAS_SELF_HEAL_ROUTE_CONTROLLER_TNT_v3
 // Full-file replacement.
 // Family: HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1
 // Purpose:
-// - Force the live route to fetch the newest adaptive canvas runtime.
-// - Load high-density hex surface before canvas.
+// - Keep hex and terrain as route-required.
+// - Treat hex.surface as preferred but nonblocking.
+// - Always load adaptive self-healing canvas after hex and terrain.
+// - Canvas can self-load hearth.hex.surface.js if the route load fails.
 // - Preserve Hearth G3 high-density hex surface baseline.
-// - Required: hex, terrain, hex.surface, canvas.
-// - Optional: hydration, mountains, cliffs, valleys, beaches, islands.
 // - No GraphicBox. No generated image.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_ADAPTIVE_RUNTIME_SELF_HEAL_ROUTE_CONTROLLER_TNT_v2";
+  const CONTRACT = "HEARTH_G3_NONBLOCKING_HEX_SURFACE_CANVAS_SELF_HEAL_ROUTE_CONTROLLER_TNT_v3";
   const FAMILY_CONTRACT = "HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_G3_HEX_SURFACE_CROSS_ADOPTION_ROUTE_CONTROLLER_TNT_v1";
-  const VERSION = "2026-05-09.hearth-g3-adaptive-runtime-self-heal-route-controller";
-  const RECEIPT = "HEARTH_G3_ADAPTIVE_RUNTIME_SELF_HEAL_ROUTE_RECEIPT";
+  const PREVIOUS_CONTRACT = "HEARTH_G3_ADAPTIVE_RUNTIME_SELF_HEAL_ROUTE_CONTROLLER_TNT_v2";
+  const VERSION = "2026-05-09.hearth-g3-nonblocking-hex-surface-canvas-self-heal-route-controller";
+  const RECEIPT = "HEARTH_G3_NONBLOCKING_HEX_SURFACE_CANVAS_SELF_HEAL_ROUTE_RECEIPT";
   const BASELINE = "HEARTH_G3_HIGH_DENSITY_HEX_SURFACE_BASELINE_v1";
 
-  const KEY = "hearth-g3-adaptive-runtime-self-heal-v3";
+  const KEY = "hearth-g3-nonblocking-hex-surface-canvas-self-heal-v3";
   const EXPECTED_ROUTE = "/showroom/globe/hearth/";
 
-  const REQUIRED_SOURCES = Object.freeze([
+  const CORE_REQUIRED = Object.freeze([
     {
       role: "hex",
       globalName: "HEARTH_HEX",
@@ -33,20 +33,10 @@
       role: "terrain",
       globalName: "HEARTH_TERRAIN",
       src: `/assets/hearth/hearth.terrain.js?v=${KEY}`
-    },
-    {
-      role: "hexSurface",
-      globalName: "HEARTH_HEX_SURFACE",
-      src: `/assets/hearth/hearth.hex.surface.js?v=${KEY}`
-    },
-    {
-      role: "canvas",
-      globalName: "HEARTH_CANVAS_RECEIPT",
-      src: `/assets/hearth/hearth.canvas.js?v=${KEY}`
     }
   ]);
 
-  const OPTIONAL_SOURCES = Object.freeze([
+  const PREFERRED_NONBLOCKING = Object.freeze([
     {
       role: "hydration",
       globalName: "HEARTH_HYDRATION",
@@ -76,14 +66,25 @@
       role: "islands",
       globalName: "HEARTH_ISLANDS",
       src: `/assets/hearth/hearth.islands.js?v=${KEY}`
+    },
+    {
+      role: "hexSurface",
+      globalName: "HEARTH_HEX_SURFACE",
+      src: `/assets/hearth/hearth.hex.surface.js?v=${KEY}`
     }
   ]);
+
+  const CANVAS_REQUIRED = Object.freeze({
+    role: "canvas",
+    globalName: "HEARTH_CANVAS_RECEIPT",
+    src: `/assets/hearth/hearth.canvas.js?v=${KEY}`
+  });
 
   const state = {
     booted: false,
     loaded: [],
     failed: [],
-    optionalFailed: [],
+    preferredFailed: [],
     requiredFailed: [],
     bridged: []
   };
@@ -103,22 +104,23 @@
     document.documentElement.dataset.hearthBaseline = BASELINE;
     document.documentElement.dataset.hearthExpectedRoute = EXPECTED_ROUTE;
     document.documentElement.dataset.hearthGeneration = "G3";
-    document.documentElement.dataset.hearthStandard = "adaptive-runtime-self-heal-high-density-hex-surface";
+    document.documentElement.dataset.hearthStandard = "nonblocking-hex-surface-canvas-self-heal";
     document.documentElement.dataset.hearthLanguageLayer = "globe";
     document.documentElement.dataset.hearthConstructionLayer = "planet";
     document.documentElement.dataset.hearthRouteLoadKey = KEY;
-    document.documentElement.dataset.hearthRequiredRenderChain = "hex,terrain,hex.surface,canvas";
-    document.documentElement.dataset.hearthOptionalEnhancementChain =
-      "hydration,mountains,cliffs,valleys,beaches,islands";
+    document.documentElement.dataset.hearthCoreRequiredChain = "hex,terrain,canvas";
+    document.documentElement.dataset.hearthPreferredNonblockingChain =
+      "hydration,mountains,cliffs,valleys,beaches,islands,hex.surface";
     document.documentElement.dataset.hearthLoadOrder =
       "hex,terrain,hydration,mountains,cliffs,valleys,beaches,islands,hex.surface,canvas";
     document.documentElement.dataset.hearthHexFirst = "true";
-    document.documentElement.dataset.hearthHexSurface = "high-density-overlapping-hex";
+    document.documentElement.dataset.hearthHexSurface = "preferred-nonblocking-high-density-overlapping-hex";
     document.documentElement.dataset.hearthCanvasRuntime = "adaptive-self-heal-v3";
+    document.documentElement.dataset.hearthCanvasMaySelfHealHexSurface = "true";
     document.documentElement.dataset.hearthHexBridgeInstalledFor = state.bridged.join(",") || "none";
     document.documentElement.dataset.hearthLoadedScripts = state.loaded.join(",") || "none";
     document.documentElement.dataset.hearthFailedScripts = state.failed.join(",") || "none";
-    document.documentElement.dataset.hearthOptionalFailures = state.optionalFailed.join(",") || "none";
+    document.documentElement.dataset.hearthPreferredFailures = state.preferredFailed.join(",") || "none";
     document.documentElement.dataset.hearthRequiredFailures = state.requiredFailed.join(",") || "none";
     document.documentElement.dataset.hearthGeneratedImage = "false";
     document.documentElement.dataset.hearthGraphicBox = "false";
@@ -214,14 +216,15 @@
     mount.dataset.hearthRouteControllerReceipt = RECEIPT;
     mount.dataset.hearthBaseline = BASELINE;
     mount.dataset.hearthGeneration = "G3";
-    mount.dataset.hearthStandard = "adaptive-runtime-self-heal-high-density-hex-surface";
+    mount.dataset.hearthStandard = "nonblocking-hex-surface-canvas-self-heal";
     mount.dataset.hearthHexOwner = "/assets/hearth/hearth.hex.js";
     mount.dataset.hearthHexSurfaceOwner = "/assets/hearth/hearth.hex.surface.js";
     mount.dataset.hearthTerrainOwner = "/assets/hearth/hearth.terrain.js";
     mount.dataset.hearthRenderOwner = "/assets/hearth/hearth.canvas.js";
     mount.dataset.hearthRouteLoadKey = KEY;
-    mount.dataset.hearthHexSurface = "high-density-overlapping-hex";
+    mount.dataset.hearthHexSurface = "preferred-nonblocking-high-density-overlapping-hex";
     mount.dataset.hearthCanvasRuntime = "adaptive-self-heal-v3";
+    mount.dataset.hearthCanvasMaySelfHealHexSurface = "true";
     mount.dataset.hearthGeneratedImage = "false";
     mount.dataset.hearthGraphicBox = "false";
 
@@ -229,11 +232,11 @@
   }
 
   function installFallbackMountStyle() {
-    const prior = document.getElementById("hearth-adaptive-runtime-route-style");
+    const prior = document.getElementById("hearth-nonblocking-route-style");
     if (prior) prior.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-adaptive-runtime-route-style";
+    style.id = "hearth-nonblocking-route-style";
     style.textContent = `
       #hearthCanvasMount {
         position: relative;
@@ -259,7 +262,7 @@
       }
 
       #hearthCanvasMount[data-hearth-required-failure="true"]::after {
-        content: "Hearth render chain blocked. Hex, terrain, hex surface, or canvas failed to load.";
+        content: attr(data-hearth-route-error-message);
         position: absolute;
         inset: auto 18px 18px;
         z-index: 3;
@@ -311,8 +314,8 @@
             return;
           }
 
-          state.optionalFailed.push(source.role);
-          stamp(`optional-failed-${source.role}`);
+          state.preferredFailed.push(source.role);
+          stamp(`preferred-failed-${source.role}`);
           resolve({ role: source.role, loaded: false, required: false });
         },
         { once: true }
@@ -337,21 +340,21 @@
     return ok;
   }
 
-  async function loadHexAndTerrain() {
-    await loadScript(REQUIRED_SOURCES[0], true);
-    await loadScript(REQUIRED_SOURCES[1], true);
+  async function loadCore() {
+    await loadScript(CORE_REQUIRED[0], true);
+    await loadScript(CORE_REQUIRED[1], true);
     bridgeModule("HEARTH_TERRAIN");
   }
 
-  async function loadOptionalEnhancements() {
+  async function loadPreferredNonblocking() {
     const results = [];
 
-    for (const source of OPTIONAL_SOURCES) {
-      stamp(`loading-optional-${source.role}`);
+    for (const source of PREFERRED_NONBLOCKING) {
+      stamp(`loading-preferred-${source.role}`);
       const result = await loadScript(source, false);
       results.push(result);
 
-      if (result.loaded && source.globalName) {
+      if (result.loaded && source.globalName && source.globalName !== "HEARTH_HEX_SURFACE") {
         bridgeModule(source.globalName);
       }
     }
@@ -359,9 +362,8 @@
     return results;
   }
 
-  async function loadHexSurfaceAndCanvas() {
-    await loadScript(REQUIRED_SOURCES[2], true);
-    await loadScript(REQUIRED_SOURCES[3], true);
+  async function loadCanvas() {
+    await loadScript(CANVAS_REQUIRED, true);
   }
 
   function exposeReceipt(status) {
@@ -376,10 +378,11 @@
       expectedRoute: EXPECTED_ROUTE,
       loadKey: KEY,
       generation: "G3",
-      standard: "adaptive-runtime-self-heal-high-density-hex-surface",
+      standard: "nonblocking-hex-surface-canvas-self-heal",
       hexSubstrate: "logical-256",
-      hexSurface: "high-density-overlapping-hex",
+      hexSurface: "preferred-nonblocking-high-density-overlapping-hex",
       canvasRuntime: "adaptive-self-heal-v3",
+      canvasMaySelfHealHexSurface: true,
       loadOrder: [
         "hex",
         "terrain",
@@ -392,19 +395,24 @@
         "hex.surface",
         "canvas"
       ],
-      required: REQUIRED_SOURCES.map((source) => ({
+      coreRequired: CORE_REQUIRED.map((source) => ({
         role: source.role,
         globalName: source.globalName,
         src: source.src
       })),
-      optional: OPTIONAL_SOURCES.map((source) => ({
+      preferredNonblocking: PREFERRED_NONBLOCKING.map((source) => ({
         role: source.role,
         globalName: source.globalName,
         src: source.src
       })),
+      canvasRequired: {
+        role: CANVAS_REQUIRED.role,
+        globalName: CANVAS_REQUIRED.globalName,
+        src: CANVAS_REQUIRED.src
+      },
       loaded: state.loaded.slice(),
       failed: state.failed.slice(),
-      optionalFailed: state.optionalFailed.slice(),
+      preferredFailed: state.preferredFailed.slice(),
       requiredFailed: state.requiredFailed.slice(),
       bridged: state.bridged.slice(),
       status
@@ -426,40 +434,46 @@
     ensureMount();
 
     try {
-      await loadHexAndTerrain();
-      await loadOptionalEnhancements();
-      await loadHexSurfaceAndCanvas();
+      await loadCore();
+      await loadPreferredNonblocking();
+      await loadCanvas();
 
       mount.dataset.hearthRequiredFailure = "false";
-      mount.dataset.hearthOptionalFailures = state.optionalFailed.join(",") || "none";
+      mount.dataset.hearthRouteErrorMessage = "";
+      mount.dataset.hearthPreferredFailures = state.preferredFailed.join(",") || "none";
       mount.dataset.hearthHexBridgeInstalledFor = state.bridged.join(",") || "none";
 
       document.body.dataset.hearthRouteReady = "true";
       document.body.dataset.hearthCanvasAssetLoaded = "true";
       document.documentElement.dataset.hearthRenderChainReady = "true";
       document.documentElement.dataset.hearthHexSubstrateReady = "true";
-      document.documentElement.dataset.hearthHexSurfaceReady = "true";
+      document.documentElement.dataset.hearthHexSurfaceReady = String(!!window.HEARTH_HEX_SURFACE);
       document.documentElement.dataset.hearthAdaptiveRuntimeReady = "true";
 
-      const status = state.optionalFailed.length
-        ? "ready-with-optional-enhancement-failures"
+      const status = state.preferredFailed.length
+        ? "ready-with-preferred-nonblocking-failures"
         : "ready";
 
       stamp(status);
       exposeReceipt(status);
     } catch (error) {
       mount.dataset.hearthRequiredFailure = "true";
+      mount.dataset.hearthRouteErrorMessage =
+        state.requiredFailed.length
+          ? `Hearth core route chain blocked. Required failed: ${state.requiredFailed.join(", ")}.`
+          : "Hearth core route chain blocked. Hex, terrain, or canvas failed to load.";
 
       document.body.dataset.hearthRouteReady = "false";
       document.body.dataset.hearthCanvasAssetLoaded = "false";
       document.documentElement.dataset.hearthRenderChainReady = "false";
-      document.documentElement.dataset.hearthHexSurfaceReady = "false";
-      document.documentElement.dataset.hearthAdaptiveRuntimeReady = "false";
+      document.documentElement.dataset.hearthHexSubstrateReady = String(!!window.HEARTH_HEX);
+      document.documentElement.dataset.hearthHexSurfaceReady = String(!!window.HEARTH_HEX_SURFACE);
+      document.documentElement.dataset.hearthAdaptiveRuntimeReady = String(!!window.HEARTH_CANVAS_RECEIPT);
       document.documentElement.dataset.hearthRouteControllerError =
         error && error.message ? error.message : String(error);
 
-      stamp("required-chain-error");
-      exposeReceipt("required-chain-error");
+      stamp("required-core-chain-error");
+      exposeReceipt("required-core-chain-error");
     }
   }
 

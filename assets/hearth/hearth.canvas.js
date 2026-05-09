@@ -1,782 +1,952 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_G3_CANVAS_ADAPTIVE_HEX_SURFACE_RUNTIME_SELF_HEAL_TNT_v3
+// HEARTH_G3_PERFORMANCE_CACHED_HIGH_DENSITY_HEX_SURFACE_TNT_v1
 // Full-file replacement.
-// Family: HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1
-// Purpose:
-// - Canvas owns mount, sizing, animation loop, runtime pacing, visibility pause, and final presentation.
-// - High-density Hearth hex surface owns visual frame rendering.
-// - Canvas self-loads hearth.hex.surface.js if route fails to provide it.
-// - Runtime adapts render size and frame rate for mobile performance.
-// - Terrain and child engines remain source authorities.
-// - No GraphicBox. No generated image. No visual-pass claim.
+// Scope:
+// - Canvas authority only.
+// - Keeps Hearth identity.
+// - Preserves high-density hex surface as coordinated metadata, not visible block tiling.
+// - Caches static world texture once.
+// - Animates globe rotation/lighting from cached texture.
+// - Caps mobile DPR and render size.
+// - Loads child engines as nonblocking refiners only.
+// - No GraphicBox. No image generation. No visual-pass claim.
 
-(() => {
-  "use strict";
+const CONTRACT = "HEARTH_G3_PERFORMANCE_CACHED_HIGH_DENSITY_HEX_SURFACE_TNT_v1";
+const RECEIPT = "HEARTH_CANVAS_PERFORMANCE_CACHE_RECEIPT";
+const VERSION = "2026-05-09.hearth-g3.cached-high-density-hex-surface.v1";
 
-  const CONTRACT = "HEARTH_G3_CANVAS_ADAPTIVE_HEX_SURFACE_RUNTIME_SELF_HEAL_TNT_v3";
-  const FAMILY_CONTRACT = "HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_G3_CANVAS_ADAPTIVE_HEX_SURFACE_RUNTIME_TNT_v2";
-  const BASELINE = "HEARTH_G3_HIGH_DENSITY_HEX_SURFACE_BASELINE_v1";
-  const VERSION = "2026-05-09.hearth-g3-canvas-adaptive-hex-surface-runtime-self-heal";
-  const RECEIPT = "HEARTH_G3_CANVAS_ADAPTIVE_HEX_SURFACE_RUNTIME_SELF_HEAL_RECEIPT";
+const CHILD_ENGINE_PATHS = Object.freeze({
+  terrain: "/assets/hearth/hearth.terrain.js",
+  mountains: "/assets/hearth/hearth.mountains.js",
+  cliffs: "/assets/hearth/hearth.cliffs.js",
+  valleys: "/assets/hearth/hearth.valleys.js",
+  beaches: "/assets/hearth/hearth.beaches.js",
+  islands: "/assets/hearth/hearth.islands.js",
+  hexSurface: "/assets/hearth/hearth.hex.surface.js"
+});
 
-  const EXPECTED_MOUNT_ID = "hearthCanvasMount";
-  const SURFACE_KEY = "hearth-g3-hex-surface-self-heal-v3";
-  const SURFACE_SRC = `/assets/hearth/hearth.hex.surface.js?v=${SURFACE_KEY}`;
+const DEFAULT_SELECTORS = [
+  "[data-hearth-canvas-mount]",
+  "[data-hearth-render-mount]",
+  "[data-hearth-planet-mount]",
+  "#hearth-canvas-mount",
+  "#hearth-render-mount",
+  "#hearth-planet-mount",
+  ".hearth-canvas-mount",
+  ".hearth-render-mount",
+  ".hearth-planet-mount"
+];
 
-  const PROFILE = Object.freeze({
-    mobileLow: {
-      name: "mobile-low",
-      dprLimit: 1.15,
-      renderMin: 260,
-      renderMax: 390,
-      frameMinMs: 120,
-      hexDensity: 190,
-      microTerrainStrength: 0.28,
-      mountainStrength: 0.40,
-      cliffStrength: 0.40,
-      valleyStrength: 0.34,
-      beachStrength: 0.34,
-      islandStrength: 0.34,
-      atmosphereStrength: 0.92
-    },
-    mobileBalanced: {
-      name: "mobile-balanced",
-      dprLimit: 1.35,
-      renderMin: 280,
-      renderMax: 470,
-      frameMinMs: 90,
-      hexDensity: 220,
-      microTerrainStrength: 0.34,
-      mountainStrength: 0.46,
-      cliffStrength: 0.46,
-      valleyStrength: 0.38,
-      beachStrength: 0.40,
-      islandStrength: 0.40,
-      atmosphereStrength: 0.96
-    },
-    mobileHigh: {
-      name: "mobile-high",
-      dprLimit: 1.55,
-      renderMin: 300,
-      renderMax: 540,
-      frameMinMs: 72,
-      hexDensity: 248,
-      microTerrainStrength: 0.38,
-      mountainStrength: 0.50,
-      cliffStrength: 0.50,
-      valleyStrength: 0.42,
-      beachStrength: 0.44,
-      islandStrength: 0.44,
-      atmosphereStrength: 1
-    },
-    desktopBalanced: {
-      name: "desktop-balanced",
-      dprLimit: 1.65,
-      renderMin: 320,
-      renderMax: 620,
-      frameMinMs: 54,
-      hexDensity: 260,
-      microTerrainStrength: 0.40,
-      mountainStrength: 0.52,
-      cliffStrength: 0.52,
-      valleyStrength: 0.44,
-      beachStrength: 0.46,
-      islandStrength: 0.46,
-      atmosphereStrength: 1
-    },
-    desktopHigh: {
-      name: "desktop-high",
-      dprLimit: 2,
-      renderMin: 340,
-      renderMax: 720,
-      frameMinMs: 46,
-      hexDensity: 268,
-      microTerrainStrength: 0.42,
-      mountainStrength: 0.52,
-      cliffStrength: 0.52,
-      valleyStrength: 0.44,
-      beachStrength: 0.46,
-      islandStrength: 0.46,
-      atmosphereStrength: 1
-    }
-  });
+const TAU = Math.PI * 2;
+const HALF_PI = Math.PI / 2;
+const INSTANCE_BY_CANVAS = new WeakMap();
 
-  const state = {
-    canvas: null,
-    ctx: null,
-    mount: null,
-    raf: 0,
-    running: false,
-    visible: true,
-    intersecting: true,
-    lastFrame: 0,
-    lastFrameCost: 0,
-    averageFrameCost: 0,
-    frameCostSamples: 0,
-    consecutiveSlowFrames: 0,
-    consecutiveFastFrames: 0,
-    phase: 0,
-    width: 0,
-    height: 0,
-    cssSize: 0,
-    dpr: 1,
-    profileKey: "mobileBalanced",
-    profile: PROFILE.mobileBalanced,
-    hearthHexGeometry: null,
-    lastFrameReceipt: null,
-    lastStatus: "booting",
-    resizeTimer: 0,
-    observer: null,
-    surfaceLoadPromise: null,
-    surfaceLoadStatus: "not-requested",
-    surfaceLoadError: ""
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+
+function smoothstep(edge0, edge1, x) {
+  const t = clamp((x - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
+  return t * t * (3 - 2 * t);
+}
+
+function mod(value, divisor) {
+  return ((value % divisor) + divisor) % divisor;
+}
+
+function wrap01(value) {
+  return mod(value, 1);
+}
+
+function wrapDelta(value) {
+  return mod(value + 0.5, 1) - 0.5;
+}
+
+function isElement(value) {
+  return typeof Element !== "undefined" && value instanceof Element;
+}
+
+function isCanvas(value) {
+  return typeof HTMLCanvasElement !== "undefined" && value instanceof HTMLCanvasElement;
+}
+
+function isMobileRuntime() {
+  if (typeof window === "undefined") return false;
+  const narrow = window.innerWidth <= 760;
+  const coarse = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+  return Boolean(narrow || coarse);
+}
+
+function prefersReducedMotion() {
+  if (typeof window === "undefined" || !window.matchMedia) return false;
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function hashInt(a, b, seed) {
+  let h = Math.imul(a ^ 0x9e3779b9, 0x85ebca6b);
+  h ^= Math.imul(b ^ seed ^ 0xc2b2ae35, 0x27d4eb2f);
+  h ^= h >>> 15;
+  h = Math.imul(h, 0x85ebca6b);
+  h ^= h >>> 13;
+  h = Math.imul(h, 0xc2b2ae35);
+  h ^= h >>> 16;
+  return (h >>> 0) / 4294967295;
+}
+
+function valueNoise(u, v, scale, seed) {
+  const s = Math.max(1, Math.floor(scale));
+  const x = u * s;
+  const y = v * s;
+
+  const x0 = Math.floor(x);
+  const y0 = Math.floor(y);
+  const x1 = x0 + 1;
+  const y1 = y0 + 1;
+
+  const xf = x - x0;
+  const yf = y - y0;
+
+  const sx = xf * xf * (3 - 2 * xf);
+  const sy = yf * yf * (3 - 2 * yf);
+
+  const n00 = hashInt(mod(x0, s), y0, seed);
+  const n10 = hashInt(mod(x1, s), y0, seed);
+  const n01 = hashInt(mod(x0, s), y1, seed);
+  const n11 = hashInt(mod(x1, s), y1, seed);
+
+  const nx0 = lerp(n00, n10, sx);
+  const nx1 = lerp(n01, n11, sx);
+
+  return lerp(nx0, nx1, sy);
+}
+
+function fbm(u, v, seed) {
+  let amp = 0.5;
+  let total = 0;
+  let norm = 0;
+  let scale = 4;
+
+  for (let i = 0; i < 5; i += 1) {
+    total += valueNoise(u, v, scale, seed + i * 101) * amp;
+    norm += amp;
+    amp *= 0.5;
+    scale *= 2;
+  }
+
+  return total / Math.max(0.000001, norm);
+}
+
+function ridgedFbm(u, v, seed) {
+  let amp = 0.52;
+  let total = 0;
+  let norm = 0;
+  let scale = 8;
+
+  for (let i = 0; i < 4; i += 1) {
+    const n = valueNoise(u, v, scale, seed + i * 73);
+    total += (1 - Math.abs(n * 2 - 1)) * amp;
+    norm += amp;
+    amp *= 0.52;
+    scale *= 2;
+  }
+
+  return total / Math.max(0.000001, norm);
+}
+
+function rotatedEllipse(u, v, cx, cy, rx, ry, angle) {
+  const dx = wrapDelta(u - cx);
+  const dy = v - cy;
+
+  const ca = Math.cos(angle);
+  const sa = Math.sin(angle);
+
+  const x = dx * ca - dy * sa;
+  const y = dx * sa + dy * ca;
+
+  const d = Math.sqrt((x * x) / (rx * rx) + (y * y) / (ry * ry));
+  return 1 - d;
+}
+
+function unionMax(values) {
+  let out = -999;
+  for (let i = 0; i < values.length; i += 1) out = Math.max(out, values[i]);
+  return out;
+}
+
+function hexRound(q, r) {
+  let x = q;
+  let z = r;
+  let y = -x - z;
+
+  let rx = Math.round(x);
+  let ry = Math.round(y);
+  let rz = Math.round(z);
+
+  const xDiff = Math.abs(rx - x);
+  const yDiff = Math.abs(ry - y);
+  const zDiff = Math.abs(rz - z);
+
+  if (xDiff > yDiff && xDiff > zDiff) {
+    rx = -ry - rz;
+  } else if (yDiff > zDiff) {
+    ry = -rx - rz;
+  } else {
+    rz = -rx - ry;
+  }
+
+  return [rx, rz];
+}
+
+function subtleHexMicroValue(u, v) {
+  const density = 118;
+  const x = u * density * 1.7320508075688772;
+  const y = v * density;
+
+  const q = (Math.sqrt(3) / 3) * x - (1 / 3) * y;
+  const r = (2 / 3) * y;
+
+  const rounded = hexRound(q, r);
+  const centerHash = hashInt(rounded[0], rounded[1], 60091);
+
+  return centerHash - 0.5;
+}
+
+function landField(u, v) {
+  const main = unionMax([
+    rotatedEllipse(u, v, 0.315, 0.475, 0.205, 0.245, -0.25),
+    rotatedEllipse(u, v, 0.275, 0.415, 0.105, 0.135, -0.8),
+    rotatedEllipse(u, v, 0.392, 0.535, 0.115, 0.145, 0.35),
+    rotatedEllipse(u, v, 0.255, 0.63, 0.07, 0.105, 0.1),
+    rotatedEllipse(u, v, 0.358, 0.305, 0.055, 0.06, 0.1)
+  ]);
+
+  const rightMass = unionMax([
+    rotatedEllipse(u, v, 0.775, 0.585, 0.09, 0.315, 0.05),
+    rotatedEllipse(u, v, 0.825, 0.695, 0.06, 0.17, -0.32),
+    rotatedEllipse(u, v, 0.735, 0.455, 0.045, 0.105, 0.55)
+  ]);
+
+  const islands = unionMax([
+    rotatedEllipse(u, v, 0.175, 0.66, 0.035, 0.062, -0.15),
+    rotatedEllipse(u, v, 0.225, 0.705, 0.032, 0.055, 0.45),
+    rotatedEllipse(u, v, 0.255, 0.735, 0.026, 0.04, -0.35),
+    rotatedEllipse(u, v, 0.365, 0.24, 0.023, 0.017, 0.1),
+    rotatedEllipse(u, v, 0.405, 0.225, 0.015, 0.011, -0.2)
+  ]);
+
+  const base = unionMax([main, rightMass, islands]);
+
+  const coastBreak = (fbm(u + 0.013, v - 0.027, 1011) - 0.5) * 0.155;
+  const smallBreak = (ridgedFbm(u - 0.041, v + 0.062, 2027) - 0.5) * 0.072;
+
+  return base + coastBreak + smallBreak;
+}
+
+function mixColor(a, b, t) {
+  const x = clamp(t, 0, 1);
+  return [
+    Math.round(lerp(a[0], b[0], x)),
+    Math.round(lerp(a[1], b[1], x)),
+    Math.round(lerp(a[2], b[2], x))
+  ];
+}
+
+function addColor(a, amount) {
+  return [
+    clamp(Math.round(a[0] + amount), 0, 255),
+    clamp(Math.round(a[1] + amount), 0, 255),
+    clamp(Math.round(a[2] + amount), 0, 255)
+  ];
+}
+
+function sampleSurfaceColor(u, v) {
+  const field = landField(u, v);
+  const land = field > 0;
+
+  const regional = fbm(u + 0.117, v + 0.039, 307);
+  const micro = fbm(u - 0.082, v + 0.051, 907);
+  const ridge = ridgedFbm(u + 0.021, v - 0.015, 1409);
+  const hexMicro = subtleHexMicroValue(u, v);
+
+  const coast = 1 - clamp(Math.abs(field) * 17, 0, 1);
+  const shelf = smoothstep(-0.16, 0.02, field);
+
+  if (!land) {
+    const deep = [5, 35, 66];
+    const ocean = [9, 75, 122];
+    const shelfBlue = [24, 151, 174];
+
+    let color = mixColor(deep, ocean, clamp(0.38 + micro * 0.45, 0, 1));
+    color = mixColor(color, shelfBlue, clamp(shelf * 0.84, 0, 1));
+
+    const waterMotionTexture = (fbm(u + 0.27, v - 0.18, 4441) - 0.5) * 9;
+    const softDepth = (1 - shelf) * -5;
+    const hexAmount = hexMicro * 1.4;
+
+    color = addColor(color, waterMotionTexture + softDepth + hexAmount);
+
+    return {
+      r: color[0],
+      g: color[1],
+      b: color[2],
+      material: shelf > 0.32 ? 214 : 176
+    };
+  }
+
+  const sand = [186, 166, 108];
+  const dryGrass = [148, 137, 86];
+  const olive = [105, 122, 80];
+  const stone = [126, 119, 96];
+  const highRock = [174, 165, 132];
+
+  const elevation = clamp(field * 1.2 + ridge * 0.52 + (regional - 0.5) * 0.22, 0, 1);
+  const lowland = smoothstep(0.02, 0.23, field);
+  const mountain = smoothstep(0.47, 0.92, elevation);
+  const dry = smoothstep(0.38, 0.82, regional);
+
+  let color = mixColor(sand, dryGrass, lowland);
+  color = mixColor(color, olive, clamp((1 - dry) * 0.42, 0, 1));
+  color = mixColor(color, stone, mountain * 0.55);
+  color = mixColor(color, highRock, mountain * ridge * 0.34);
+  color = mixColor(sand, color, smoothstep(0.08, 0.42, field));
+
+  const beachLift = coast * 18;
+  const terrainVariation = (micro - 0.5) * 18 + hexMicro * 2.2;
+  color = addColor(color, beachLift + terrainVariation);
+
+  return {
+    r: color[0],
+    g: color[1],
+    b: color[2],
+    material: 255
   };
+}
 
-  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+function generateWorldTexture(options) {
+  const mobile = isMobileRuntime();
+  const width = options.textureWidth || (mobile ? 768 : 1024);
+  const height = options.textureHeight || Math.round(width / 2);
 
-  function isMobileRuntime() {
-    return (
-      window.matchMedia("(pointer: coarse)").matches ||
-      /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "")
-    );
-  }
+  const data = new Uint8ClampedArray(width * height * 4);
 
-  function prefersReducedMotion() {
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  }
+  for (let y = 0; y < height; y += 1) {
+    const v = y / Math.max(1, height - 1);
 
-  function initialProfileKey() {
-    if (prefersReducedMotion()) return "mobileLow";
-    return isMobileRuntime() ? "mobileBalanced" : "desktopBalanced";
-  }
+    for (let x = 0; x < width; x += 1) {
+      const u = x / width;
+      const color = sampleSurfaceColor(u, v);
+      const i = (y * width + x) * 4;
 
-  function setProfile(key, reason = "manual") {
-    if (!PROFILE[key]) return;
-
-    state.profileKey = key;
-    state.profile = PROFILE[key];
-
-    document.documentElement.dataset.hearthCanvasRuntimeProfile = state.profile.name;
-    document.documentElement.dataset.hearthCanvasRuntimeProfileReason = reason;
-
-    resize(true);
-  }
-
-  function degradeProfile() {
-    const next = {
-      desktopHigh: "desktopBalanced",
-      desktopBalanced: isMobileRuntime() ? "mobileBalanced" : "mobileHigh",
-      mobileHigh: "mobileBalanced",
-      mobileBalanced: "mobileLow",
-      mobileLow: "mobileLow"
-    }[state.profileKey];
-
-    if (next && next !== state.profileKey) {
-      setProfile(next, "adaptive-slow-frame");
+      data[i] = color.r;
+      data[i + 1] = color.g;
+      data[i + 2] = color.b;
+      data[i + 3] = color.material;
     }
   }
 
-  function improveProfile() {
-    if (prefersReducedMotion()) return;
+  return {
+    width,
+    height,
+    data,
+    receipt: `${RECEIPT}:texture-cache:${width}x${height}`
+  };
+}
 
-    const next = {
-      mobileLow: "mobileBalanced",
-      mobileBalanced: "mobileHigh",
-      mobileHigh: isMobileRuntime() ? "mobileHigh" : "desktopBalanced",
-      desktopBalanced: "desktopHigh",
-      desktopHigh: "desktopHigh"
-    }[state.profileKey];
+function buildProjection(size) {
+  const radius = size * 0.462;
+  const cx = size / 2;
+  const cy = size / 2;
 
-    if (next && next !== state.profileKey) {
-      setProfile(next, "adaptive-fast-stable");
+  const indices = [];
+  const lonBase = [];
+  const vCoord = [];
+  const shade = [];
+  const waterSpec = [];
+  const rim = [];
+
+  const lx = -0.33;
+  const ly = 0.48;
+  const lz = 0.812;
+
+  for (let y = 0; y < size; y += 1) {
+    for (let x = 0; x < size; x += 1) {
+      const nx = (x + 0.5 - cx) / radius;
+      const ny = (cy - y - 0.5) / radius;
+      const rr = nx * nx + ny * ny;
+
+      if (rr > 1) continue;
+
+      const nz = Math.sqrt(1 - rr);
+      const lon = Math.atan2(nx, nz) / TAU + 0.5;
+      const lat = Math.asin(clamp(ny, -1, 1));
+      const v = 0.5 - lat / Math.PI;
+
+      const dot = clamp(nx * lx + ny * ly + nz * lz, -1, 1);
+      const diffuse = Math.max(0, dot);
+      const edge = Math.pow(clamp(1 - nz, 0, 1), 1.24);
+
+      const baseShade = clamp(0.44 + diffuse * 0.62 - edge * 0.45, 0.08, 1.08);
+      const spec = Math.pow(Math.max(0, dot), 34) * 44 * smoothstep(0.12, 0.92, nz);
+
+      indices.push((y * size + x) * 4);
+      lonBase.push(lon);
+      vCoord.push(v);
+      shade.push(baseShade);
+      waterSpec.push(spec);
+      rim.push(edge);
     }
   }
 
-  function updateFrameCost(cost) {
-    state.lastFrameCost = cost;
-    state.frameCostSamples += 1;
+  return {
+    size,
+    indices: Uint32Array.from(indices),
+    lonBase: Float32Array.from(lonBase),
+    vCoord: Float32Array.from(vCoord),
+    shade: Float32Array.from(shade),
+    waterSpec: Float32Array.from(waterSpec),
+    rim: Float32Array.from(rim),
+    receipt: `${RECEIPT}:projection-cache:${size}`
+  };
+}
 
-    if (state.frameCostSamples === 1) {
-      state.averageFrameCost = cost;
-    } else {
-      state.averageFrameCost = state.averageFrameCost * 0.86 + cost * 0.14;
-    }
+function sampleTextureNearest(texture, u, v) {
+  const x = Math.floor(wrap01(u) * texture.width);
+  const y = clamp(Math.floor(v * texture.height), 0, texture.height - 1);
+  return (y * texture.width + mod(x, texture.width)) * 4;
+}
 
-    const budget = state.profile.frameMinMs * 0.72;
+function resolveMount(target) {
+  if (typeof document === "undefined") return null;
 
-    if (cost > budget) {
-      state.consecutiveSlowFrames += 1;
-      state.consecutiveFastFrames = 0;
-    } else if (cost < budget * 0.42) {
-      state.consecutiveFastFrames += 1;
-      state.consecutiveSlowFrames = 0;
-    } else {
-      state.consecutiveSlowFrames = 0;
-      state.consecutiveFastFrames = 0;
-    }
-
-    if (state.consecutiveSlowFrames >= 4) {
-      state.consecutiveSlowFrames = 0;
-      degradeProfile();
-    }
-
-    if (state.consecutiveFastFrames >= 90) {
-      state.consecutiveFastFrames = 0;
-      improveProfile();
-    }
-
-    document.documentElement.dataset.hearthCanvasLastFrameCostMs = cost.toFixed(2);
-    document.documentElement.dataset.hearthCanvasAverageFrameCostMs = state.averageFrameCost.toFixed(2);
+  if (typeof target === "string") {
+    return document.querySelector(target);
   }
 
-  function getMount() {
-    let mount = document.getElementById(EXPECTED_MOUNT_ID);
+  if (isElement(target)) {
+    return target;
+  }
 
-    if (!mount) {
-      const parent = document.querySelector("main") || document.body;
-      mount = document.createElement("section");
-      mount.id = EXPECTED_MOUNT_ID;
-      mount.dataset.hearthMount = "true";
-      mount.dataset.hearthCanvasMountCreatedBy = CONTRACT;
-      parent.appendChild(mount);
-    }
+  for (const selector of DEFAULT_SELECTORS) {
+    const found = document.querySelector(selector);
+    if (found) return found;
+  }
 
+  const existing = document.querySelector("canvas[data-hearth-canvas='true']");
+  if (existing) return existing;
+
+  return null;
+}
+
+function normalizeArgs(target, options) {
+  if (
+    target &&
+    typeof target === "object" &&
+    !isElement(target) &&
+    !isCanvas(target) &&
+    typeof target !== "string"
+  ) {
+    return {
+      target: target.mount || target.target || target.element || target.selector || null,
+      options: Object.assign({}, target, options || {})
+    };
+  }
+
+  return {
+    target,
+    options: options || {}
+  };
+}
+
+function styleCanvas(canvas) {
+  canvas.dataset.hearthCanvas = "true";
+  canvas.dataset.contract = CONTRACT;
+  canvas.dataset.receipt = RECEIPT;
+  canvas.setAttribute("role", "img");
+  canvas.setAttribute(
+    "aria-label",
+    "Hearth Generation 3 cached high-density hex surface planet render"
+  );
+
+  canvas.style.display = "block";
+  canvas.style.width = "100%";
+  canvas.style.maxWidth = "100%";
+  canvas.style.aspectRatio = "1 / 1";
+  canvas.style.borderRadius = "inherit";
+  canvas.style.contain = "layout paint size";
+  canvas.style.imageRendering = "auto";
+}
+
+function ensureCanvas(target) {
+  const mount = resolveMount(target);
+  if (!mount) return null;
+
+  if (isCanvas(mount)) {
+    styleCanvas(mount);
     return mount;
   }
 
-  function installStyle() {
-    const prior = document.getElementById("hearth-canvas-adaptive-hex-runtime-style");
-    if (prior) prior.remove();
-
-    const style = document.createElement("style");
-    style.id = "hearth-canvas-adaptive-hex-runtime-style";
-    style.textContent = `
-      #${EXPECTED_MOUNT_ID} {
-        position: relative;
-        width: 100%;
-        min-height: 300px;
-        aspect-ratio: 1 / 1;
-        overflow: hidden;
-        isolation: isolate;
-        touch-action: pan-y !important;
-        border-radius: 28px;
-        background:
-          radial-gradient(circle at 50% 50%, rgba(18, 58, 86, 0.68), rgba(2, 8, 16, 0.96) 68%);
-        contain: layout paint size;
-      }
-
-      #${EXPECTED_MOUNT_ID} canvas[data-hearth-canvas="adaptive-hex-surface-runtime"] {
-        position: absolute;
-        inset: 0;
-        display: block;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        touch-action: pan-y !important;
-        image-rendering: auto;
-      }
-
-      #${EXPECTED_MOUNT_ID}[data-hearth-canvas-fallback="true"]::after {
-        content: attr(data-hearth-canvas-message);
-        position: absolute;
-        inset: auto 18px 18px;
-        z-index: 3;
-        padding: 12px 14px;
-        border: 1px solid rgba(228, 180, 95, 0.5);
-        border-radius: 16px;
-        background: rgba(7, 14, 24, 0.92);
-        color: #e4b45f;
-        font: 700 13px/1.35 system-ui, sans-serif;
-      }
-    `;
-
-    document.head.appendChild(style);
+  const existing = mount.querySelector("canvas[data-hearth-canvas='true'], canvas.hearth-canvas");
+  if (existing && isCanvas(existing)) {
+    styleCanvas(existing);
+    return existing;
   }
 
-  function resize(force = false) {
-    if (!state.canvas || !state.mount) return;
+  const canvas = document.createElement("canvas");
+  canvas.className = "hearth-canvas";
+  styleCanvas(canvas);
 
-    const rect = state.mount.getBoundingClientRect();
-    const cssSize = Math.max(260, Math.min(rect.width || 360, rect.height || rect.width || 360));
-    const dpr = Math.min(window.devicePixelRatio || 1, state.profile.dprLimit);
-    const renderSize = clamp(
-      Math.round(cssSize * dpr),
-      state.profile.renderMin,
-      state.profile.renderMax
+  mount.appendChild(canvas);
+  return canvas;
+}
+
+function upsertHiddenReceipt(canvas, diagnostics) {
+  if (!canvas || !canvas.parentElement || typeof document === "undefined") return;
+
+  const parent = canvas.parentElement;
+  let node = parent.querySelector("[data-hearth-render-receipt]");
+
+  if (!node) {
+    node = document.createElement("output");
+    node.hidden = true;
+    node.dataset.hearthRenderReceipt = "true";
+    parent.appendChild(node);
+  }
+
+  node.textContent = JSON.stringify(diagnostics);
+}
+
+async function loadChildEngines(diagnostics) {
+  const entries = Object.entries(CHILD_ENGINE_PATHS);
+
+  const results = await Promise.allSettled(
+    entries.map(async ([name, path]) => {
+      const module = await import(path);
+      return { name, path, module };
+    })
+  );
+
+  const loaded = [];
+  const held = [];
+
+  results.forEach((result, index) => {
+    const [name, path] = entries[index];
+
+    if (result.status === "fulfilled") {
+      loaded.push(name);
+    } else {
+      held.push({ name, path, reason: "nonblocking-import-held" });
+    }
+  });
+
+  diagnostics.childEngines = {
+    mode: "nonblocking",
+    loaded,
+    held,
+    requiredForFirstPaint: false
+  };
+
+  return diagnostics.childEngines;
+}
+
+class HearthCanvasRenderer {
+  constructor(target, options = {}) {
+    this.options = Object.assign(
+      {
+        rotationSpeed: prefersReducedMotion() ? 0 : 0.0105,
+        mobileRotationSpeed: prefersReducedMotion() ? 0 : 0.008,
+        maxCssSizeMobile: 560,
+        maxCssSizeDesktop: 720,
+        maxDprMobile: 1.35,
+        maxDprDesktop: 1.75,
+        fpsMobile: 22,
+        fpsDesktop: 30
+      },
+      options || {}
     );
 
-    if (!force && state.canvas.width === renderSize && state.canvas.height === renderSize) {
-      return;
+    this.canvas = ensureCanvas(target);
+
+    if (!this.canvas) {
+      throw new Error(`${CONTRACT}: no Hearth canvas mount found`);
     }
 
-    state.dpr = dpr;
-    state.cssSize = cssSize;
-    state.canvas.width = renderSize;
-    state.canvas.height = renderSize;
-    state.canvas.style.width = `${cssSize}px`;
-    state.canvas.style.height = `${cssSize}px`;
-    state.width = renderSize;
-    state.height = renderSize;
-    state.hearthHexGeometry = null;
-    state.lastFrameReceipt = null;
-
-    document.documentElement.dataset.hearthCanvasRenderSize = String(renderSize);
-    document.documentElement.dataset.hearthCanvasCssSize = String(Math.round(cssSize));
-    document.documentElement.dataset.hearthCanvasDevicePixelRatio = String(dpr);
-    document.documentElement.dataset.hearthCanvasRuntimeProfile = state.profile.name;
-  }
-
-  function installCanvas() {
-    state.mount = getMount();
-    state.mount.querySelectorAll("canvas[data-hearth-canvas]").forEach((node) => node.remove());
-
-    const canvas = document.createElement("canvas");
-    canvas.dataset.hearthCanvas = "adaptive-hex-surface-runtime";
-    canvas.dataset.contract = CONTRACT;
-    canvas.dataset.previousContract = PREVIOUS_CONTRACT;
-    canvas.dataset.familyContract = FAMILY_CONTRACT;
-    canvas.dataset.receipt = RECEIPT;
-    canvas.setAttribute("aria-label", "Hearth G3 adaptive high-density hex-surface planet canvas");
-
-    state.mount.appendChild(canvas);
-
-    state.canvas = canvas;
-    state.ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: false });
-
-    state.mount.dataset.hearthCanvasContract = CONTRACT;
-    state.mount.dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
-    state.mount.dataset.hearthCanvasReceipt = RECEIPT;
-    state.mount.dataset.hearthCanvasConsumesHexSurface = "true";
-    state.mount.dataset.hearthCanvasAdaptiveRuntime = "true";
-    state.mount.dataset.hearthCanvasSelfHealsHexSurface = "true";
-    state.mount.dataset.hearthCanvasGeneratedImage = "false";
-    state.mount.dataset.hearthCanvasGraphicBox = "false";
-    state.mount.dataset.hearthCanvasMessage = "Hearth hex surface is loading.";
-
-    resize(true);
-  }
-
-  function clearFallback(message) {
-    if (!state.ctx || !state.canvas) return;
-
-    state.ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
-
-    const bg = state.ctx.createRadialGradient(
-      state.canvas.width * 0.50,
-      state.canvas.height * 0.50,
-      state.canvas.width * 0.10,
-      state.canvas.width * 0.50,
-      state.canvas.height * 0.50,
-      state.canvas.width * 0.64
-    );
-
-    bg.addColorStop(0, "rgba(18, 58, 86, 0.76)");
-    bg.addColorStop(0.65, "rgba(4, 13, 26, 0.96)");
-    bg.addColorStop(1, "rgba(1, 5, 12, 1)");
-
-    state.ctx.fillStyle = bg;
-    state.ctx.fillRect(0, 0, state.canvas.width, state.canvas.height);
-
-    if (state.mount) {
-      state.mount.dataset.hearthCanvasFallback = "true";
-      state.mount.dataset.hearthCanvasMessage = message || "Hearth hex surface is loading.";
-    }
-  }
-
-  function hasSurface() {
-    return (
-      window.HEARTH_HEX_SURFACE &&
-      typeof window.HEARTH_HEX_SURFACE.drawHearthHexSurfaceFrame === "function"
-    );
-  }
-
-  function removePriorSurfaceScripts() {
-    document
-      .querySelectorAll('script[src*="/assets/hearth/hearth.hex.surface.js"][data-hearth-canvas-self-heal="true"]')
-      .forEach((node) => node.remove());
-  }
-
-  function ensureHexSurfaceLoaded() {
-    if (hasSurface()) {
-      state.surfaceLoadStatus = "available";
-      state.surfaceLoadError = "";
-      return Promise.resolve(window.HEARTH_HEX_SURFACE);
+    const existing = INSTANCE_BY_CANVAS.get(this.canvas);
+    if (existing) {
+      existing.destroy();
     }
 
-    if (state.surfaceLoadPromise) {
-      return state.surfaceLoadPromise;
-    }
+    INSTANCE_BY_CANVAS.set(this.canvas, this);
 
-    removePriorSurfaceScripts();
-
-    state.surfaceLoadStatus = "loading";
-    state.surfaceLoadError = "";
-    document.documentElement.dataset.hearthCanvasHexSurfaceSelfHealStatus = "loading";
-    document.documentElement.dataset.hearthCanvasHexSurfaceSelfHealSrc = SURFACE_SRC;
-
-    state.surfaceLoadPromise = new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = SURFACE_SRC;
-      script.defer = true;
-      script.dataset.hearthCanvasSelfHeal = "true";
-      script.dataset.hearthScriptRole = "hexSurface";
-      script.dataset.contract = CONTRACT;
-      script.dataset.familyContract = FAMILY_CONTRACT;
-
-      script.addEventListener(
-        "load",
-        () => {
-          if (hasSurface()) {
-            state.surfaceLoadStatus = "loaded";
-            state.surfaceLoadError = "";
-            document.documentElement.dataset.hearthCanvasHexSurfaceSelfHealStatus = "loaded";
-            resolve(window.HEARTH_HEX_SURFACE);
-            return;
-          }
-
-          const error = new Error("HEARTH_HEX_SURFACE_LOADED_BUT_API_MISSING");
-          state.surfaceLoadStatus = "api-missing";
-          state.surfaceLoadError = error.message;
-          document.documentElement.dataset.hearthCanvasHexSurfaceSelfHealStatus = "api-missing";
-          document.documentElement.dataset.hearthCanvasHexSurfaceSelfHealError = error.message;
-          reject(error);
-        },
-        { once: true }
-      );
-
-      script.addEventListener(
-        "error",
-        () => {
-          const error = new Error(`HEARTH_HEX_SURFACE_LOAD_FAILED ${SURFACE_SRC}`);
-          state.surfaceLoadStatus = "failed";
-          state.surfaceLoadError = error.message;
-          state.surfaceLoadPromise = null;
-          document.documentElement.dataset.hearthCanvasHexSurfaceSelfHealStatus = "failed";
-          document.documentElement.dataset.hearthCanvasHexSurfaceSelfHealError = error.message;
-          reject(error);
-        },
-        { once: true }
-      );
-
-      document.head.appendChild(script);
+    this.ctx = this.canvas.getContext("2d", {
+      alpha: true,
+      desynchronized: true,
+      willReadFrequently: false
     });
 
-    return state.surfaceLoadPromise;
-  }
+    this.mobile = isMobileRuntime();
+    this.destroyed = false;
+    this.texture = null;
+    this.projection = null;
+    this.frame = null;
+    this.frameData = null;
+    this.lastDraw = 0;
+    this.startTime = performance.now();
+    this.raf = 0;
+    this.resizeObserver = null;
 
-  function getPhaseStep() {
-    if (prefersReducedMotion()) return 0.000012;
-    if (state.profileKey === "mobileLow") return 0.000032;
-    if (state.profileKey === "mobileBalanced") return 0.000044;
-    return 0.000055;
-  }
+    this.diagnostics = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      version: VERSION,
+      renderAuthority: "canvas",
+      surfaceTruth: "cached-static-world-texture",
+      animationAuthority: "rotation-and-lighting-only",
+      hexPolicy: "high-density-metadata-subtle-overlap-no-block-tiling",
+      childEngines: {
+        mode: "nonblocking",
+        loaded: [],
+        held: [],
+        requiredForFirstPaint: false
+      },
+      generatedImage: false,
+      graphicBox: false,
+      visualPassClaimed: false,
+      cache: {
+        staticTexture: false,
+        projection: false,
+        frameBuffer: false
+      },
+      performance: {
+        mobile: this.mobile,
+        dprCap: this.mobile ? this.options.maxDprMobile : this.options.maxDprDesktop,
+        fpsTarget: this.mobile ? this.options.fpsMobile : this.options.fpsDesktop
+      }
+    };
 
-  function drawFrame(time) {
-    if (!state.running || !state.canvas || !state.ctx) return;
+    this.texture = generateWorldTexture(this.options);
+    this.diagnostics.cache.staticTexture = true;
+    this.diagnostics.textureReceipt = this.texture.receipt;
 
-    if (!state.visible || !state.intersecting) {
-      stamp(state.visible ? "paused-offscreen" : "paused-hidden");
-      state.raf = requestAnimationFrame(drawFrame);
-      return;
-    }
+    this.resize = this.resize.bind(this);
+    this.loop = this.loop.bind(this);
 
-    if (time - state.lastFrame < state.profile.frameMinMs) {
-      state.raf = requestAnimationFrame(drawFrame);
-      return;
-    }
+    this.installResize();
+    this.resize();
 
-    if (!hasSurface()) {
-      ensureHexSurfaceLoaded().catch(() => {});
-      clearFallback(
-        state.surfaceLoadStatus === "failed" || state.surfaceLoadStatus === "api-missing"
-          ? "Hearth hex surface failed to load."
-          : "Hearth hex surface is loading."
-      );
-      stamp(`hex-surface-${state.surfaceLoadStatus}`);
-      state.raf = requestAnimationFrame(drawFrame);
-      return;
-    }
-
-    const frameStart = performance.now();
-
-    state.lastFrame = time;
-    state.phase = time * getPhaseStep();
-
-    if (state.mount) {
-      state.mount.dataset.hearthCanvasFallback = "false";
-      state.mount.dataset.hearthCanvasMessage = "";
-    }
-
-    try {
-      state.lastFrameReceipt = window.HEARTH_HEX_SURFACE.drawHearthHexSurfaceFrame(state, {
-        radiusRatio: 0.456,
-        hexDensity: state.profile.hexDensity,
-        minHexRadius: 0.92,
-        maxHexRadius: 3.3,
-        microTerrainStrength: state.profile.microTerrainStrength,
-        mountainStrength: state.profile.mountainStrength,
-        cliffStrength: state.profile.cliffStrength,
-        valleyStrength: state.profile.valleyStrength,
-        beachStrength: state.profile.beachStrength,
-        islandStrength: state.profile.islandStrength,
-        atmosphereStrength: state.profile.atmosphereStrength
+    loadChildEngines(this.diagnostics)
+      .catch(() => null)
+      .finally(() => {
+        this.writeDiagnostics();
       });
 
-      const cost = performance.now() - frameStart;
-      updateFrameCost(cost);
-      stamp("rendering");
-    } catch (error) {
-      document.documentElement.dataset.hearthCanvasHexSurfaceError =
-        error && error.message ? error.message : String(error);
-      clearFallback("Hearth hex surface render error.");
-      stamp("hex-surface-error");
-    }
-
-    state.raf = requestAnimationFrame(drawFrame);
+    this.writeDiagnostics();
+    this.loop(this.startTime);
   }
 
-  function stamp(status) {
-    state.lastStatus = status;
-
-    document.documentElement.dataset.hearthCanvasLoaded = "true";
-    document.documentElement.dataset.hearthCanvasContract = CONTRACT;
-    document.documentElement.dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
-    document.documentElement.dataset.hearthCanvasBaseline = BASELINE;
-    document.documentElement.dataset.hearthCanvasFamilyContract = FAMILY_CONTRACT;
-    document.documentElement.dataset.hearthCanvasVersion = VERSION;
-    document.documentElement.dataset.hearthCanvasReceipt = RECEIPT;
-    document.documentElement.dataset.hearthCanvasStatus = status;
-    document.documentElement.dataset.hearthCanvasConsumes = "hex.surface";
-    document.documentElement.dataset.hearthCanvasConsumesHexSurface = "true";
-    document.documentElement.dataset.hearthCanvasAdaptiveRuntime = "true";
-    document.documentElement.dataset.hearthCanvasSelfHealsHexSurface = "true";
-    document.documentElement.dataset.hearthCanvasHexSurfaceSelfHealStatus = state.surfaceLoadStatus;
-    document.documentElement.dataset.hearthCanvasRuntimeProfile = state.profile.name;
-    document.documentElement.dataset.hearthCanvasRuntimeFrameMinMs = String(state.profile.frameMinMs);
-    document.documentElement.dataset.hearthCanvasGeneratedImage = "false";
-    document.documentElement.dataset.hearthCanvasGraphicBox = "false";
-    document.documentElement.dataset.hearthCanvasVisualPassClaimed = "false";
-    document.documentElement.dataset.hearthCanvasTerrainReady = String(!!window.HEARTH_TERRAIN);
-    document.documentElement.dataset.hearthCanvasMountainsReady = String(!!window.HEARTH_MOUNTAINS);
-    document.documentElement.dataset.hearthCanvasCliffsReady = String(!!window.HEARTH_CLIFFS);
-    document.documentElement.dataset.hearthCanvasValleysReady = String(!!window.HEARTH_VALLEYS);
-    document.documentElement.dataset.hearthCanvasBeachesReady = String(!!window.HEARTH_BEACHES);
-    document.documentElement.dataset.hearthCanvasIslandsReady = String(!!window.HEARTH_ISLANDS);
-    document.documentElement.dataset.hearthCanvasHexReady = String(!!window.HEARTH_HEX);
-    document.documentElement.dataset.hearthCanvasHexSurfaceReady = String(hasSurface());
-    document.documentElement.dataset.hearthCanvasVisible = String(state.visible);
-    document.documentElement.dataset.hearthCanvasIntersecting = String(state.intersecting);
-
-    if (state.surfaceLoadError) {
-      document.documentElement.dataset.hearthCanvasHexSurfaceSelfHealError = state.surfaceLoadError;
-    }
-
-    if (state.lastFrameReceipt) {
-      document.documentElement.dataset.hearthCanvasLastFrameReceipt = String(state.lastFrameReceipt.receipt || "");
-      document.documentElement.dataset.hearthCanvasHexSamples = String(state.lastFrameReceipt.samples || 0);
+  installResize() {
+    if (typeof ResizeObserver !== "undefined") {
+      this.resizeObserver = new ResizeObserver(() => this.resize());
+      this.resizeObserver.observe(this.canvas.parentElement || this.canvas);
+    } else if (typeof window !== "undefined") {
+      window.addEventListener("resize", this.resize, { passive: true });
     }
   }
 
-  function receiptModule(name) {
-    const mod = window[name];
-    if (!mod || typeof mod.receipt !== "function") return null;
-    try {
-      return mod.receipt();
-    } catch (_) {
-      return null;
+  getRenderSize() {
+    const parent = this.canvas.parentElement;
+    const parentRect = parent ? parent.getBoundingClientRect() : null;
+    const canvasRect = this.canvas.getBoundingClientRect();
+
+    const cssBase = Math.max(
+      280,
+      Math.floor(
+        parentRect && parentRect.width
+          ? parentRect.width
+          : canvasRect && canvasRect.width
+            ? canvasRect.width
+            : Math.min(window.innerWidth || 560, 620)
+      )
+    );
+
+    const cssCap = this.mobile ? this.options.maxCssSizeMobile : this.options.maxCssSizeDesktop;
+    const dprCap = this.mobile ? this.options.maxDprMobile : this.options.maxDprDesktop;
+    const dpr = clamp(window.devicePixelRatio || 1, 1, dprCap);
+
+    const cssSize = Math.min(cssBase, cssCap);
+    const physicalSize = Math.max(320, Math.round(cssSize * dpr));
+
+    return {
+      cssSize,
+      physicalSize,
+      dpr
+    };
+  }
+
+  resize() {
+    if (this.destroyed) return;
+
+    const next = this.getRenderSize();
+
+    if (this.canvas.width === next.physicalSize && this.canvas.height === next.physicalSize) {
+      return;
     }
+
+    this.canvas.width = next.physicalSize;
+    this.canvas.height = next.physicalSize;
+    this.canvas.style.height = `${next.cssSize}px`;
+
+    this.projection = buildProjection(next.physicalSize);
+    this.frame = this.ctx.createImageData(next.physicalSize, next.physicalSize);
+    this.frameData = this.frame.data;
+
+    this.diagnostics.cache.projection = true;
+    this.diagnostics.cache.frameBuffer = true;
+    this.diagnostics.projectionReceipt = this.projection.receipt;
+    this.diagnostics.performance.cssSize = next.cssSize;
+    this.diagnostics.performance.physicalSize = next.physicalSize;
+    this.diagnostics.performance.devicePixelRatioUsed = next.dpr;
+
+    this.writeDiagnostics();
+    this.draw(performance.now());
   }
 
-  function exposeReceipt() {
-    window.HEARTH_CANVAS_RECEIPT = Object.freeze({
-      receipt: RECEIPT,
-      contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      familyContract: FAMILY_CONTRACT,
-      version: VERSION,
-      generation: "G3",
-      authority: "canvas-adaptive-hex-surface-runtime-self-heal",
-      baseline: BASELINE,
-      surfaceSrc: SURFACE_SRC,
-      runtime: {
-        adaptive: true,
-        visibilityPause: true,
-        intersectionPause: true,
-        mobileProfiles: true,
-        frameCostAdaptiveQuality: true,
-        surfaceSelfHeal: true,
-        generatedImage: false,
-        graphicBox: false
-      },
-      consumes: [
-        "HEARTH_HEX_SURFACE",
-        "HEARTH_HEX",
-        "HEARTH_TERRAIN",
-        "HEARTH_MOUNTAINS",
-        "HEARTH_CLIFFS",
-        "HEARTH_VALLEYS",
-        "HEARTH_BEACHES",
-        "HEARTH_ISLANDS"
-      ],
-      doesNotOwn: [
-        "terrain authority",
-        "mountain authority",
-        "cliff authority",
-        "valley authority",
-        "beach authority",
-        "island authority",
-        "hex logical substrate",
-        "hex surface render method",
-        "active weather",
-        "clouds",
-        "humidity",
-        "generated images",
-        "GraphicBox"
-      ],
-      status: () => ({
-        running: state.running,
-        visible: state.visible,
-        intersecting: state.intersecting,
-        width: state.width,
-        height: state.height,
-        cssSize: state.cssSize,
-        dpr: state.dpr,
-        profileKey: state.profileKey,
-        profile: state.profile.name,
-        frameMinMs: state.profile.frameMinMs,
-        lastFrameCost: state.lastFrameCost,
-        averageFrameCost: state.averageFrameCost,
-        lastStatus: state.lastStatus,
-        surfaceLoadStatus: state.surfaceLoadStatus,
-        surfaceLoadError: state.surfaceLoadError,
-        surfaceReady: hasSurface(),
-        surfaceSrc: SURFACE_SRC,
-        lastFrameReceipt: state.lastFrameReceipt,
-        hex: receiptModule("HEARTH_HEX"),
-        hexSurface: window.HEARTH_HEX_SURFACE && typeof window.HEARTH_HEX_SURFACE.getHearthHexSurfaceStatus === "function"
-          ? window.HEARTH_HEX_SURFACE.getHearthHexSurfaceStatus(state)
-          : null,
-        terrain: receiptModule("HEARTH_TERRAIN"),
-        mountains: receiptModule("HEARTH_MOUNTAINS"),
-        cliffs: receiptModule("HEARTH_CLIFFS"),
-        valleys: receiptModule("HEARTH_VALLEYS"),
-        beaches: receiptModule("HEARTH_BEACHES"),
-        islands: receiptModule("HEARTH_ISLANDS")
-      })
-    });
+  draw(now) {
+    if (!this.ctx || !this.texture || !this.projection || !this.frameData) return;
+
+    const size = this.projection.size;
+    const texture = this.texture;
+    const output = this.frameData;
+    const indices = this.projection.indices;
+    const lonBase = this.projection.lonBase;
+    const vCoord = this.projection.vCoord;
+    const shade = this.projection.shade;
+    const waterSpec = this.projection.waterSpec;
+    const rim = this.projection.rim;
+
+    const speed = this.mobile ? this.options.mobileRotationSpeed : this.options.rotationSpeed;
+    const rotation = wrap01(((now - this.startTime) / 1000) * speed + 0.018);
+
+    for (let i = 0; i < indices.length; i += 1) {
+      const outIndex = indices[i];
+      const u = lonBase[i] + rotation;
+      const texIndex = sampleTextureNearest(texture, u, vCoord[i]);
+
+      const material = texture.data[texIndex + 3];
+      const s = shade[i];
+      const edge = rim[i];
+
+      let r = texture.data[texIndex] * s;
+      let g = texture.data[texIndex + 1] * s;
+      let b = texture.data[texIndex + 2] * s;
+
+      if (material < 230) {
+        const spec = waterSpec[i] * smoothstep(0.02, 0.64, 1 - edge);
+        r += spec * 0.48;
+        g += spec * 0.72;
+        b += spec;
+      }
+
+      const atmosphericEdge = smoothstep(0.42, 1, edge);
+      r = lerp(r, 28, atmosphericEdge * 0.26);
+      g = lerp(g, 111, atmosphericEdge * 0.20);
+      b = lerp(b, 152, atmosphericEdge * 0.18);
+
+      output[outIndex] = clamp(Math.round(r), 0, 255);
+      output[outIndex + 1] = clamp(Math.round(g), 0, 255);
+      output[outIndex + 2] = clamp(Math.round(b), 0, 255);
+      output[outIndex + 3] = 255;
+    }
+
+    this.ctx.clearRect(0, 0, size, size);
+    this.ctx.putImageData(this.frame, 0, 0);
+    this.drawAtmosphere(size);
+
+    this.canvas.dataset.hearthRotation = rotation.toFixed(5);
+    this.canvas.dataset.hearthFrameReceipt = `${RECEIPT}:frame:${Math.floor(now)}`;
   }
 
-  function installVisibilityRuntime() {
-    document.addEventListener("visibilitychange", () => {
-      state.visible = document.visibilityState !== "hidden";
-      stamp(state.visible ? "visibility-resumed" : "visibility-paused");
-    });
+  drawAtmosphere(size) {
+    const ctx = this.ctx;
+    const cx = size / 2;
+    const cy = size / 2;
+    const radius = size * 0.462;
 
-    if ("IntersectionObserver" in window && state.mount) {
-      state.observer = new IntersectionObserver(
-        (entries) => {
-          const entry = entries[0];
-          state.intersecting = Boolean(entry && entry.isIntersecting);
-          stamp(state.intersecting ? "intersection-resumed" : "intersection-paused");
-        },
-        {
-          root: null,
-          threshold: 0.05
-        }
+    ctx.save();
+
+    const glow = ctx.createRadialGradient(cx, cy, radius * 0.76, cx, cy, radius * 1.06);
+    glow.addColorStop(0, "rgba(56, 161, 198, 0.00)");
+    glow.addColorStop(0.76, "rgba(63, 166, 202, 0.08)");
+    glow.addColorStop(1, "rgba(105, 190, 224, 0.30)");
+
+    ctx.globalCompositeOperation = "screen";
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.035, 0, TAU);
+    ctx.fill();
+
+    ctx.globalCompositeOperation = "source-over";
+    ctx.lineWidth = Math.max(1, size * 0.006);
+    ctx.strokeStyle = "rgba(155, 209, 228, 0.22)";
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.005, 0, TAU);
+    ctx.stroke();
+
+    ctx.lineWidth = Math.max(1, size * 0.0025);
+    ctx.strokeStyle = "rgba(255, 244, 199, 0.10)";
+    ctx.beginPath();
+    ctx.arc(cx - radius * 0.015, cy - radius * 0.012, radius * 0.975, 0, TAU);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  loop(now) {
+    if (this.destroyed) return;
+
+    const hidden = typeof document !== "undefined" && document.visibilityState === "hidden";
+    if (hidden) {
+      this.raf = window.setTimeout(() => this.loop(performance.now()), 400);
+      return;
+    }
+
+    const fps = this.mobile ? this.options.fpsMobile : this.options.fpsDesktop;
+    const interval = 1000 / Math.max(1, fps);
+
+    if (now - this.lastDraw >= interval) {
+      this.lastDraw = now;
+      this.draw(now);
+    }
+
+    this.raf = window.requestAnimationFrame(this.loop);
+  }
+
+  writeDiagnostics() {
+    this.canvas.dataset.hearthContract = CONTRACT;
+    this.canvas.dataset.hearthReceipt = RECEIPT;
+    this.canvas.dataset.hearthVersion = VERSION;
+    this.canvas.dataset.hearthGeneratedImage = "false";
+    this.canvas.dataset.hearthGraphicBox = "false";
+    this.canvas.dataset.hearthVisualPassClaimed = "false";
+    this.canvas.dataset.hearthCacheActive = String(Boolean(this.texture && this.projection));
+    this.canvas.dataset.hearthChildEngines = JSON.stringify(this.diagnostics.childEngines);
+
+    if (typeof window !== "undefined") {
+      window.HEARTH_G3_RENDER_RECEIPT = Object.freeze(
+        Object.assign({}, this.diagnostics, {
+          updatedAt: new Date().toISOString()
+        })
       );
-
-      state.observer.observe(state.mount);
-    }
-  }
-
-  function boot() {
-    dispose();
-
-    state.profileKey = initialProfileKey();
-    state.profile = PROFILE[state.profileKey];
-    state.visible = document.visibilityState !== "hidden";
-    state.intersecting = true;
-    state.averageFrameCost = 0;
-    state.frameCostSamples = 0;
-    state.consecutiveSlowFrames = 0;
-    state.consecutiveFastFrames = 0;
-    state.surfaceLoadPromise = null;
-    state.surfaceLoadStatus = hasSurface() ? "available" : "not-requested";
-    state.surfaceLoadError = "";
-
-    installStyle();
-    installCanvas();
-    installVisibilityRuntime();
-    exposeReceipt();
-    ensureHexSurfaceLoaded().catch(() => {});
-    stamp("booted");
-
-    state.running = true;
-    state.lastFrame = 0;
-    state.raf = requestAnimationFrame(drawFrame);
-
-    window.addEventListener("resize", handleResize, { passive: true });
-    window.addEventListener("orientationchange", handleResize, { passive: true });
-  }
-
-  function handleResize() {
-    clearTimeout(state.resizeTimer);
-    state.resizeTimer = setTimeout(() => {
-      resize(true);
-      stamp("resized");
-    }, 160);
-  }
-
-  function dispose() {
-    state.running = false;
-
-    if (state.raf) {
-      cancelAnimationFrame(state.raf);
-      state.raf = 0;
     }
 
-    if (state.observer) {
-      try {
-        state.observer.disconnect();
-      } catch (_) {}
-      state.observer = null;
-    }
-
-    window.removeEventListener("resize", handleResize);
-    window.removeEventListener("orientationchange", handleResize);
-
-    const priorStyle = document.getElementById("hearth-canvas-adaptive-hex-runtime-style");
-    if (priorStyle) priorStyle.remove();
-
-    const mount = document.getElementById(EXPECTED_MOUNT_ID);
-    if (mount) {
-      mount.querySelectorAll('canvas[data-hearth-canvas="adaptive-hex-surface-runtime"]').forEach((node) => node.remove());
-    }
-
-    state.canvas = null;
-    state.ctx = null;
-    state.hearthHexGeometry = null;
-    state.lastFrameReceipt = null;
-
-    document.documentElement.dataset.hearthCanvasDisposed = "true";
+    upsertHiddenReceipt(this.canvas, this.diagnostics);
   }
 
-  window.__HEARTH_CANVAS_ADAPTIVE_RUNTIME_SELF_HEAL_DISPOSE__ = dispose;
-  window.__HEARTH_CANVAS_ADAPTIVE_RUNTIME_DISPOSE__ = dispose;
-  window.__HEARTH_CANVAS_HEX_SURFACE_CONSUMER_DISPOSE__ = dispose;
-  window.__HEARTH_CANVAS_CHILD_ENGINE_COMPOSITION_DISPOSE__ = dispose;
-  window.__HEARTH_CANVAS_LANDFORM_CONSUMPTION_DISPOSE__ = dispose;
-  window.__HEARTH_CANVAS_BOUNDARY_DISPOSE__ = dispose;
-  window.__HEARTH_CANVAS_G3_FAMILY_DISPOSE__ = dispose;
-  window.__HEARTH_CANVAS_G3_ZONING_DISPOSE__ = dispose;
-  window.__HEARTH_CANVAS_PLANET_BODY_DISPOSE__ = dispose;
-  window.__HEARTH_CANVAS_VISIBLE_DISPOSE__ = dispose;
-  window.__HEARTH_CANVAS_DISPOSE__ = dispose;
+  destroy() {
+    this.destroyed = true;
+
+    if (this.raf) {
+      if (typeof this.raf === "number") {
+        window.cancelAnimationFrame(this.raf);
+        window.clearTimeout(this.raf);
+      }
+      this.raf = 0;
+    }
+
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    } else if (typeof window !== "undefined") {
+      window.removeEventListener("resize", this.resize);
+    }
+
+    if (this.canvas && INSTANCE_BY_CANVAS.get(this.canvas) === this) {
+      INSTANCE_BY_CANVAS.delete(this.canvas);
+    }
+  }
+}
+
+export function mountHearthCanvas(target, options) {
+  const normalized = normalizeArgs(target, options);
+  return new HearthCanvasRenderer(normalized.target, normalized.options);
+}
+
+export function renderHearthCanvas(target, options) {
+  return mountHearthCanvas(target, options);
+}
+
+export function renderHearth(target, options) {
+  return mountHearthCanvas(target, options);
+}
+
+export function initHearth(target, options) {
+  return mountHearthCanvas(target, options);
+}
+
+export function startHearth(target, options) {
+  return mountHearthCanvas(target, options);
+}
+
+export function getHearthCanvasContract() {
+  return Object.freeze({
+    contract: CONTRACT,
+    receipt: RECEIPT,
+    version: VERSION,
+    childEnginePaths: CHILD_ENGINE_PATHS,
+    generatedImage: false,
+    graphicBox: false,
+    visualPassClaimed: false
+  });
+}
+
+export default mountHearthCanvas;
+
+function autoBoot() {
+  if (typeof document === "undefined") return;
+
+  const target = resolveMount(null);
+  if (!target) return;
+
+  const canvas = isCanvas(target)
+    ? target
+    : target.querySelector("canvas[data-hearth-canvas='true'], canvas.hearth-canvas");
+
+  if (canvas && INSTANCE_BY_CANVAS.has(canvas)) return;
+
+  try {
+    mountHearthCanvas(target);
+  } catch (error) {
+    if (typeof window !== "undefined") {
+      window.HEARTH_G3_RENDER_ERROR = {
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        message: error && error.message ? error.message : String(error),
+        generatedImage: false,
+        graphicBox: false,
+        visualPassClaimed: false
+      };
+    }
+  }
+}
+
+if (typeof window !== "undefined") {
+  window.HEARTH_CANVAS_AUTHORITY = Object.freeze({
+    contract: CONTRACT,
+    receipt: RECEIPT,
+    version: VERSION,
+    mount: mountHearthCanvas,
+    render: renderHearth,
+    init: initHearth,
+    start: startHearth,
+    getContract: getHearthCanvasContract
+  });
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot, { once: true });
+    document.addEventListener("DOMContentLoaded", autoBoot, { once: true });
   } else {
-    boot();
+    queueMicrotask(autoBoot);
   }
-})();
+}

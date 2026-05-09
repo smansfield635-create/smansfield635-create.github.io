@@ -1,292 +1,251 @@
-/* /showroom/globe/audralia/index.js */
-/* AUDRALIA_ROUTE_CONTAINED_CANVAS_HANDOFF_RENEWAL_TNT_v18
-   Full-file replacement.
+// /showroom/globe/hearth/index.js
+// HEARTH_G4_AUTHORITY_REASSIGNMENT_AND_MOTION_ROUTE_CONTROLLER_TNT_v2
 
-   Jurisdiction:
-   - route contract renewal
-   - current canvas cache key
-   - square shell detection
-   - contained mount detection
-   - contained canvas detection
-   - single render handoff
-   - route receipts
-   - visible route status
+(() => {
+  "use strict";
 
-   Non-jurisdiction:
-   - HTML rewrite
-   - canvas internals
-   - runtime truth model
-   - topology
-   - terrain
-   - hydration
-   - oceans
-   - deep-ocean
-   - Gauges scoring
-   - GraphicBox
-   - image generation
-*/
+  const CONTRACT = "HEARTH_G4_AUTHORITY_REASSIGNMENT_AND_MOTION_ROUTE_CONTROLLER_TNT_v2";
+  const RECEIPT = "HEARTH_G4_ROUTE_MOTION_CHAIN_RECEIPT";
+  const KEY = "hearth-g4-motion-chain-v2";
 
-const AUDRALIA_ROUTE_CONTRACT = "AUDRALIA_ROUTE_CONTAINED_CANVAS_HANDOFF_RENEWAL_TNT_v18";
-const AUDRALIA_CANVAS_EXPECTED_CONTRACT = "AUDRALIA_CANVAS_CONTAINED_SHELL_OBEDIENCE_TNT_v18";
-const AUDRALIA_CANVAS_IMPORT_PATH = "/assets/audralia/audralia.canvas.js?v=audralia-contained-shell-obedience-v18";
+  const FILES = [
+    { role: "runtime", src: `/assets/hearth/hearth.runtime.js?v=${KEY}`, global: "HEARTH_RUNTIME", required: true },
+    { role: "controls", src: `/assets/hearth/hearth.controls.js?v=${KEY}`, global: "HEARTH_CONTROLS", required: true },
+    { role: "canvas", src: `/assets/hearth/hearth.canvas.js?v=${KEY}`, global: "HEARTH_CANVAS", required: true }
+  ];
 
-const AUDRALIA_ROUTE_LEGACY_CONTRACTS = [
-  "AUDRALIA_ROUTE_SERVED_SOURCE_ALIGNMENT_TNT_v17",
-  "AUDRALIA_ROUTE_STAGE_CONTAINMENT_AND_CACHE_KEY_TNT_v16",
-  "AUDRALIA_ROUTE_PROOF_CHAIN_ALIGNMENT_TNT_v13",
-  "AUDRALIA_ROUTE_ADOPTED_CANVAS_DOORWAY_TNT_v2",
-  "AUDRALIA_ROUTE_DOORWAY_NO_BODY_WIPE_TNT_v3"
-];
-
-function getShell() {
-  return (
-    document.querySelector("#audraliaCanvasShell") ||
-    document.querySelector("[data-audralia-canvas-shell]") ||
-    null
-  );
-}
-
-function getMount() {
-  return (
-    document.querySelector("#audraliaCanvasMount") ||
-    document.querySelector("[data-audralia-canvas-mount]") ||
-    document.querySelector("[data-audralia-mount]") ||
-    document.querySelector("[data-adopted-canvas-mount]") ||
-    null
-  );
-}
-
-function getCanvas() {
-  return (
-    document.querySelector("#audraliaCanvas") ||
-    document.querySelector("canvas[data-audralia-canvas]") ||
-    document.querySelector("canvas[data-audralia-canvas-authority='true']") ||
-    null
-  );
-}
-
-function setStatus(message) {
-  const status =
-    document.querySelector("#audraliaRouteStatus") ||
-    document.querySelector("[data-audralia-status]");
-
-  if (status) status.textContent = message;
-}
-
-function mountIsContained(shell, mount) {
-  return Boolean(shell && mount && shell.contains(mount));
-}
-
-function canvasIsContained(mount, canvas) {
-  return Boolean(mount && canvas && mount.contains(canvas));
-}
-
-function markRoute(shell, mount, canvas) {
-  if (shell) {
-    shell.dataset.audraliaCanvasShell = "true";
-    shell.dataset.audraliaSquareShell = "true";
-    shell.dataset.audraliaRouteContract = AUDRALIA_ROUTE_CONTRACT;
-    shell.dataset.audraliaCanvasExpectedContract = AUDRALIA_CANVAS_EXPECTED_CONTRACT;
-  }
-
-  if (mount) {
-    mount.dataset.audraliaCanvasMount = "true";
-    mount.dataset.audraliaMount = "true";
-    mount.dataset.adoptedCanvasMount = "true";
-    mount.dataset.audraliaProofMount = "true";
-    mount.dataset.audraliaContainedMount = "true";
-    mount.dataset.audraliaRouteContract = AUDRALIA_ROUTE_CONTRACT;
-    mount.dataset.audraliaCanvasExpectedContract = AUDRALIA_CANVAS_EXPECTED_CONTRACT;
-  }
-
-  if (canvas) {
-    canvas.dataset.audraliaCanvas = "true";
-    canvas.dataset.audraliaProofCanvas = "true";
-    canvas.dataset.audraliaContainedCanvas = "true";
-    canvas.dataset.audraliaRouteContract = AUDRALIA_ROUTE_CONTRACT;
-    canvas.dataset.audraliaCanvasExpectedContract = AUDRALIA_CANVAS_EXPECTED_CONTRACT;
-  }
-}
-
-function exposeRouteReceipt(extra = {}) {
-  const shell = getShell();
-  const mount = getMount();
-  const canvas = getCanvas();
-
-  const receipt = {
-    contract: AUDRALIA_ROUTE_CONTRACT,
-    expectedCanvasContract: AUDRALIA_CANVAS_EXPECTED_CONTRACT,
-    legacyContracts: AUDRALIA_ROUTE_LEGACY_CONTRACTS.slice(),
-    route: "/showroom/globe/audralia/",
-    canvasImportPath: AUDRALIA_CANVAS_IMPORT_PATH,
-
-    shellFound: Boolean(shell),
-    shellId: shell?.id || null,
-    squareShell: Boolean(shell?.dataset?.audraliaSquareShell || shell?.dataset?.audraliaCanvasShell),
-
-    mountFound: Boolean(mount),
-    mountId: mount?.id || null,
-    mountInsideShell: mountIsContained(shell, mount),
-
-    canvasFound: Boolean(canvas),
-    canvasId: canvas?.id || null,
-    canvasInsideMount: canvasIsContained(mount, canvas),
-    canvasAuthority: canvas?.dataset?.audraliaCanvasAuthority || "pending",
-
-    graphicBox: false,
-    imageGeneration: false,
-    bodyWipe: false,
-    canvasAutoMount: false,
-
-    status: extra.status || "route-loaded",
-    updatedAt: new Date().toISOString(),
-    ...extra
+  const state = {
+    loaded: [],
+    failed: [],
+    mounted: false
   };
 
-  window.__AUDRALIA_ROUTE_RECEIPT__ = receipt;
-  window.AUDRALIA_ROUTE_RECEIPT = receipt;
-  window.AudraliaRouteStatus = receipt;
-  window.AudraliaAdoptedRouteStatus = receipt;
+  function stamp(status) {
+    document.documentElement.dataset.hearthRouteControllerLoaded = "true";
+    document.documentElement.dataset.hearthRouteControllerContract = CONTRACT;
+    document.documentElement.dataset.hearthRouteControllerReceipt = RECEIPT;
+    document.documentElement.dataset.hearthRouteControllerStatus = status;
+    document.documentElement.dataset.hearthGeneration = "G4";
+    document.documentElement.dataset.hearthProcess = "deduced-reassigned-renewed";
+    document.documentElement.dataset.hearthRuntime = "south-star-motion-authority";
+    document.documentElement.dataset.hearthControls = "drag-spin-finger-sensitivity";
+    document.documentElement.dataset.hearthCanvasWorldEngine = "truth-substrate";
+    document.documentElement.dataset.hearthRender = "drawing-authority";
+    document.documentElement.dataset.hearthAssets = "material-expression-plasma";
+    document.documentElement.dataset.hearthAxisTiltDegrees = "23.44";
+    document.documentElement.dataset.hearthLoadedFiles = state.loaded.join(",") || "none";
+    document.documentElement.dataset.hearthFailedFiles = state.failed.join(",") || "none";
+    document.documentElement.dataset.hearthGeneratedImage = "false";
+    document.documentElement.dataset.hearthGraphicBox = "false";
+    document.documentElement.dataset.hearthVisualPassClaimed = "false";
 
-  document.documentElement.dataset.audraliaRouteContract = AUDRALIA_ROUTE_CONTRACT;
-  document.documentElement.dataset.audraliaCanvasExpectedContract = AUDRALIA_CANVAS_EXPECTED_CONTRACT;
-  document.documentElement.dataset.audraliaCanvasImportKey = "audralia-contained-shell-obedience-v18";
-  document.documentElement.dataset.audraliaRouteStatus = receipt.status;
-  document.documentElement.dataset.audraliaShellFound = String(receipt.shellFound);
-  document.documentElement.dataset.audraliaMountFound = String(receipt.mountFound);
-  document.documentElement.dataset.audraliaMountInsideShell = String(receipt.mountInsideShell);
-  document.documentElement.dataset.audraliaCanvasFound = String(receipt.canvasFound);
-  document.documentElement.dataset.audraliaCanvasInsideMount = String(receipt.canvasInsideMount);
-  document.documentElement.dataset.graphicBox = "false";
-  document.documentElement.dataset.imageGeneration = "false";
-
-  return receipt;
-}
-
-async function bootAudraliaDoorway() {
-  const shell = getShell();
-  const mount = getMount();
-  const canvas = getCanvas();
-
-  markRoute(shell, mount, canvas);
-
-  if (!shell) {
-    const receipt = exposeRouteReceipt({
-      status: "shell-missing",
-      error: "No Audralia square shell found."
+    window.HEARTH_G4_ROUTE_RECEIPT = Object.freeze({
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      status,
+      generation: "G4",
+      process: "deduced-reassigned-renewed",
+      g4Job: "motion-authority-renewal",
+      g5Job: "clouds-weather-living-atmosphere",
+      loaded: state.loaded.slice(),
+      failed: state.failed.slice(),
+      mounted: state.mounted,
+      generatedImage: false,
+      graphicBox: false,
+      visualPassClaimed: false
     });
-
-    setStatus("Route renewal failed: square shell missing.");
-    return receipt;
   }
 
-  if (!mount) {
-    const receipt = exposeRouteReceipt({
-      status: "mount-missing",
-      error: "No Audralia canvas mount found."
+  function disposePrior() {
+    [
+      "__HEARTH_G4_ROUTE_DISPOSE__",
+      "__HEARTH_CONTROLS_DISPOSE__",
+      "__HEARTH_CANVAS_DISPOSE__",
+      "__HEARTH_RUNTIME_DISPOSE__",
+      "__HEARTH_CANVAS_AUTHORITY_DISPOSE__",
+      "__HEARTH_CANVAS_ADAPTIVE_RUNTIME_SELF_HEAL_DISPOSE__",
+      "__HEARTH_CANVAS_ADAPTIVE_RUNTIME_DISPOSE__"
+    ].forEach((name) => {
+      if (typeof window[name] === "function") {
+        try { window[name](); } catch (_) {}
+      }
+      try { window[name] = null; } catch (_) {}
     });
-
-    setStatus("Route renewal failed: canvas mount missing.");
-    return receipt;
   }
 
-  if (!mountIsContained(shell, mount)) {
-    const receipt = exposeRouteReceipt({
-      status: "mount-outside-shell",
-      error: "Audralia mount is not contained inside the square shell."
-    });
-
-    setStatus("Route renewal failed: mount is outside the square shell.");
-    return receipt;
+  function removePriorScripts() {
+    document.querySelectorAll([
+      'script[src*="/assets/hearth/hearth.runtime.js"]',
+      'script[src*="/assets/hearth/hearth.controls.js"]',
+      'script[src*="/assets/hearth/hearth.canvas.js"]',
+      'script[data-hearth-g4-motion-file="true"]'
+    ].join(",")).forEach((script) => script.remove());
   }
 
-  exposeRouteReceipt({ status: "containment-confirmed" });
-  setStatus("Route v18 active. Square shell confirmed. Loading contained canvas authority.");
+  function ensureMount() {
+    let mount = document.getElementById("hearthCanvasMount");
 
-  try {
-    const module = await import(AUDRALIA_CANVAS_IMPORT_PATH);
-
-    const renderer =
-      module.renderAudraliaCanvas ||
-      module.mountAudraliaCanvas ||
-      module.startAudraliaCanvas ||
-      module.default ||
-      window.renderAudraliaCanvas ||
-      window.AudraliaCanvasAuthority?.render ||
-      null;
-
-    if (typeof renderer !== "function") {
-      const receipt = exposeRouteReceipt({
-        status: "canvas-renderer-missing",
-        moduleKeys: Object.keys(module || {})
-      });
-
-      setStatus("Route v18 loaded canvas module, but no renderer function was exposed.");
-      return receipt;
+    if (!mount) {
+      mount = document.createElement("section");
+      mount.id = "hearthCanvasMount";
+      mount.dataset.hearthCanvasMount = "true";
+      const parent = document.getElementById("hearth-main") || document.querySelector("main") || document.body;
+      parent.appendChild(mount);
     }
 
-    const controller = renderer({
-      shell,
-      mount,
-      canvas,
-      route: "/showroom/globe/audralia/",
-      source: "audralia-route-contained-canvas-handoff-renewal",
-      routeContract: AUDRALIA_ROUTE_CONTRACT,
-      expectedCanvasContract: AUDRALIA_CANVAS_EXPECTED_CONTRACT,
-      cacheKey: "audralia-contained-shell-obedience-v18",
-      lockToShell: true
-    });
+    mount.dataset.hearthCanvasMount = "true";
+    mount.dataset.hearthGeneration = "G4";
+    mount.dataset.hearthRuntime = "south-star-motion-authority";
+    mount.dataset.hearthControls = "drag-spin-finger-sensitivity";
+    mount.dataset.hearthCanvasWorldEngine = "truth-substrate";
+    mount.dataset.hearthRender = "drawing-authority";
+    mount.dataset.hearthPointerEventsBlocked = "false";
+    mount.dataset.hearthTouchAction = "none";
+    mount.dataset.hearthRequiredFailure = "false";
+    mount.dataset.hearthRouteErrorMessage = "";
 
-    const receipt = exposeRouteReceipt({
-      status: "render-handoff-complete",
-      rendererResolved: true,
-      controllerRunning: Boolean(controller?.running),
-      canvasReceipt:
-        window.__AUDRALIA_CANVAS_RECEIPT__ ||
-        window.AUDRALIA_CANVAS_RECEIPT ||
-        null,
-      pixelProof:
-        window.__AUDRALIA_PIXEL_PROOF__ ||
-        window.AUDRALIA_PIXEL_PROOF ||
-        null,
-      dimensionReceipt:
-        window.getAudraliaDimensionReceipt?.() ||
-        window.__AUDRALIA_CANVAS_RECEIPT__?.dimension ||
-        null
-    });
-
-    setStatus("Route v18 active. Contained shell confirmed. Canvas v18 authority resolved. Render handoff complete.");
-
-    return receipt;
-  } catch (error) {
-    const receipt = exposeRouteReceipt({
-      status: "canvas-import-failed",
-      error: error?.message || String(error)
-    });
-
-    setStatus(`Route v18 failed to import canvas authority: ${receipt.error}`);
-    return receipt;
+    return mount;
   }
-}
 
-exposeRouteReceipt({ status: "route-script-loaded" });
+  function installStyle() {
+    const prior = document.getElementById("hearth-g4-motion-style");
+    if (prior) prior.remove();
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", bootAudraliaDoorway, { once: true });
-} else {
-  bootAudraliaDoorway();
-}
+    const style = document.createElement("style");
+    style.id = "hearth-g4-motion-style";
+    style.textContent = `
+      #hearthCanvasMount {
+        position: relative;
+        width: 100%;
+        min-height: 320px;
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+        isolation: isolate;
+        border-radius: 32px;
+        touch-action: none !important;
+        user-select: none !important;
+        -webkit-user-select: none !important;
+        -webkit-touch-callout: none !important;
+        background: radial-gradient(circle at 50% 50%, rgba(39,117,155,.26), rgba(3,9,20,.96) 70%);
+      }
 
-export {
-  AUDRALIA_ROUTE_CONTRACT,
-  AUDRALIA_CANVAS_EXPECTED_CONTRACT,
-  AUDRALIA_CANVAS_IMPORT_PATH,
-  AUDRALIA_ROUTE_LEGACY_CONTRACTS,
-  bootAudraliaDoorway,
-  exposeRouteReceipt,
-  getShell,
-  getMount,
-  getCanvas
-};
+      #hearthCanvasMount canvas[data-hearth-canvas="true"] {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        pointer-events: auto !important;
+        touch-action: none !important;
+        user-select: none !important;
+        -webkit-user-select: none !important;
+        -webkit-touch-callout: none !important;
+      }
 
-export default bootAudraliaDoorway;
+      #hearthCanvasMount[data-hearth-required-failure="true"]::after {
+        content: attr(data-hearth-route-error-message);
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 18px;
+        z-index: 10;
+        padding: 14px 16px;
+        border: 1px solid rgba(231,188,105,.58);
+        border-radius: 18px;
+        background: rgba(4,10,20,.94);
+        color: #e7bc69;
+        font: 800 14px/1.4 system-ui, sans-serif;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function loadFile(file) {
+    return new Promise((resolve, reject) => {
+      if (window[file.global]) {
+        state.loaded.push(file.role);
+        resolve(file);
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = file.src;
+      script.defer = true;
+      script.dataset.hearthG4MotionFile = "true";
+      script.dataset.hearthFileRole = file.role;
+      script.dataset.contract = CONTRACT;
+
+      script.onload = () => {
+        state.loaded.push(file.role);
+        stamp(`loaded-${file.role}`);
+        resolve(file);
+      };
+
+      script.onerror = () => {
+        state.failed.push(file.role);
+        stamp(`failed-${file.role}`);
+        reject(new Error(`Required Hearth G4 script failed: ${file.role} ${file.src}`));
+      };
+
+      document.head.appendChild(script);
+    });
+  }
+
+  async function boot() {
+    const mount = ensureMount();
+
+    stamp("booting");
+    disposePrior();
+    removePriorScripts();
+    installStyle();
+
+    try {
+      for (const file of FILES) {
+        await loadFile(file);
+      }
+
+      if (!window.HEARTH_RUNTIME || !window.HEARTH_CONTROLS || !window.HEARTH_CANVAS) {
+        throw new Error("Hearth G4 globals missing after file load.");
+      }
+
+      const runtime = window.HEARTH_RUNTIME;
+      const renderer = window.HEARTH_CANVAS.mount(mount, { runtime });
+      const canvas = renderer.canvas;
+
+      window.HEARTH_CONTROLS.bind(canvas, runtime, {
+        mount,
+        dragRadiansPerScreen: Math.PI * 2.1,
+        maxSpinVelocity: 11,
+        wheelSensitivity: 0.003
+      });
+
+      runtime.start();
+
+      state.mounted = true;
+      mount.dataset.hearthRequiredFailure = "false";
+      mount.dataset.hearthRouteErrorMessage = "";
+      document.body.dataset.hearthRouteReady = "true";
+      document.documentElement.dataset.hearthG4MotionReady = "true";
+
+      stamp("ready");
+    } catch (error) {
+      mount.dataset.hearthRequiredFailure = "true";
+      mount.dataset.hearthRouteErrorMessage = error && error.message ? error.message : String(error);
+      document.body.dataset.hearthRouteReady = "false";
+      document.documentElement.dataset.hearthG4MotionReady = "false";
+      stamp("failed");
+    }
+  }
+
+  window.__HEARTH_G4_ROUTE_DISPOSE__ = () => {
+    if (typeof window.__HEARTH_CONTROLS_DISPOSE__ === "function") window.__HEARTH_CONTROLS_DISPOSE__();
+    if (typeof window.__HEARTH_CANVAS_DISPOSE__ === "function") window.__HEARTH_CANVAS_DISPOSE__();
+    if (typeof window.__HEARTH_RUNTIME_DISPOSE__ === "function") window.__HEARTH_RUNTIME_DISPOSE__();
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot, { once: true });
+  } else {
+    boot();
+  }
+})();

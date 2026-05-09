@@ -1,35 +1,26 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_G3_CANVAS_LANDFORM_CONSUMPTION_TNT_v1
+// HEARTH_G3_CANVAS_CHILD_ENGINE_COMPOSITION_TNT_v1
 // Full-file replacement.
-// Family: HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1
+// Family: HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1
 // Purpose:
-// - Canvas consumes terrain authority instead of smoothing it away.
-// - Render hill, mountain, cliff, and valley fields from /assets/hearth/hearth.terrain.js.
-// - Treat terrain sample fields as visual authority:
-//   hillStrength, mountainStrength, cliffStrength, valleyStrength,
-//   rockExposure, rigidLandscapeStrength, dominantLandform, landformCategory,
-//   globalLandformSeat.
-// - Keep hydration passive.
-// - Do not generate images.
-// - Do not create graphic blocks.
-// - Do not own terrain.
-// - Do not own islands.
-// - Do not own beaches/sand.
+// - Compose parent terrain plus child engines.
+// - Terrain remains parent.
+// - Child engines refine terrain.
+// - Canvas renders: terrain + mountains + cliffs + valleys + beaches + islands.
+// - No GraphicBox. No image generation.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_CANVAS_LANDFORM_CONSUMPTION_TNT_v1";
-  const FAMILY_CONTRACT = "HEARTH_G3_BOUNDARY_ALIGNMENT_ALL_FIVE_FILES_TNT_v1";
-  const VERSION = "2026-05-09.hearth-g3-canvas-landform-consumption";
-  const RECEIPT = "HEARTH_G3_CANVAS_LANDFORM_CONSUMPTION_RECEIPT";
+  const CONTRACT = "HEARTH_G3_CANVAS_CHILD_ENGINE_COMPOSITION_TNT_v1";
+  const FAMILY_CONTRACT = "HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1";
+  const VERSION = "2026-05-09.hearth-g3-canvas-child-engine-composition";
+  const RECEIPT = "HEARTH_G3_CANVAS_CHILD_ENGINE_COMPOSITION_RECEIPT";
 
-  const EXPECTED_TERRAIN_CONTRACT = "HEARTH_G3_256_LANDFORM_CATEGORY_TERRAIN_TNT_v1";
   const EXPECTED_MOUNT_ID = "hearthCanvasMount";
-
   const DPR_LIMIT = 2;
-  const BUFFER_MAX = 430;
-  const BUFFER_MIN = 260;
+  const BUFFER_MAX = 460;
+  const BUFFER_MIN = 270;
   const FRAME_MIN_MS = 46;
   const TAU = Math.PI * 2;
 
@@ -47,10 +38,7 @@
     height: 0,
     dpr: 1,
     rotation: 0,
-    generation: 0,
-    terrainReady: false,
-    islandsReady: false,
-    lastReceiptStatus: "booting"
+    lastStatus: "booting"
   };
 
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -70,26 +58,13 @@
   function rotateY(v, angle) {
     const c = Math.cos(angle);
     const s = Math.sin(angle);
-    return [
-      v[0] * c + v[2] * s,
-      v[1],
-      -v[0] * s + v[2] * c
-    ];
+    return [v[0] * c + v[2] * s, v[1], -v[0] * s + v[2] * c];
   }
 
   function rotateX(v, angle) {
     const c = Math.cos(angle);
     const s = Math.sin(angle);
-    return [
-      v[0],
-      v[1] * c - v[2] * s,
-      v[1] * s + v[2] * c
-    ];
-  }
-
-  function hash3(x, y, z) {
-    const n = Math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453123;
-    return n - Math.floor(n);
+    return [v[0], v[1] * c - v[2] * s, v[1] * s + v[2] * c];
   }
 
   function rockNoise(v, seed) {
@@ -113,7 +88,11 @@
     );
   }
 
-  function toColor(input, fallback) {
+  function n(value) {
+    return Number.isFinite(Number(value)) ? Number(value) : 0;
+  }
+
+  function color(input, fallback) {
     if (Array.isArray(input) && input.length >= 3) {
       return [
         clamp(Math.round(input[0]), 0, 255),
@@ -121,246 +100,192 @@
         clamp(Math.round(input[2]), 0, 255)
       ];
     }
-
     return fallback.slice();
   }
 
-  function applyMix(color, target, amount) {
+  function applyMix(base, target, amount) {
     return [
-      mix(color[0], target[0], amount),
-      mix(color[1], target[1], amount),
-      mix(color[2], target[2], amount)
+      mix(base[0], target[0], amount),
+      mix(base[1], target[1], amount),
+      mix(base[2], target[2], amount)
     ];
   }
 
-  function applyLight(color, amount) {
+  function applyLight(base, amount) {
     return [
-      clamp(Math.round(color[0] + 255 * amount), 0, 255),
-      clamp(Math.round(color[1] + 255 * amount), 0, 255),
-      clamp(Math.round(color[2] + 255 * amount), 0, 255)
+      clamp(Math.round(base[0] + 255 * amount), 0, 255),
+      clamp(Math.round(base[1] + 255 * amount), 0, 255),
+      clamp(Math.round(base[2] + 255 * amount), 0, 255)
     ];
   }
 
-  function applyDark(color, amount) {
+  function applyDark(base, amount) {
     return [
-      clamp(Math.round(color[0] * (1 - amount)), 0, 255),
-      clamp(Math.round(color[1] * (1 - amount)), 0, 255),
-      clamp(Math.round(color[2] * (1 - amount)), 0, 255)
+      clamp(Math.round(base[0] * (1 - amount)), 0, 255),
+      clamp(Math.round(base[1] * (1 - amount)), 0, 255),
+      clamp(Math.round(base[2] * (1 - amount)), 0, 255)
     ];
   }
 
-  function sampleTerrain(v) {
-    const terrain = window.HEARTH_TERRAIN;
-    if (!terrain || typeof terrain.sampleVector !== "function") {
-      return null;
-    }
-
+  function sampleModule(name, v) {
+    const mod = window[name];
+    if (!mod || typeof mod.sampleVector !== "function") return null;
     try {
-      return terrain.sampleVector(v);
+      return mod.sampleVector(v);
     } catch (error) {
-      document.documentElement.dataset.hearthCanvasTerrainSampleError = String(error && error.message ? error.message : error);
+      document.documentElement.dataset[`hearthCanvas${name}Error`] =
+        error && error.message ? error.message : String(error);
       return null;
     }
   }
 
-  function sampleIslands(v) {
-    const islands = window.HEARTH_ISLANDS;
-    if (!islands || typeof islands.sampleVector !== "function") {
-      return null;
-    }
-
+  function receiptModule(name) {
+    const mod = window[name];
+    if (!mod || typeof mod.receipt !== "function") return null;
     try {
-      const sample = islands.sampleVector(v);
-      return sample && sample.active ? sample : null;
-    } catch (error) {
-      document.documentElement.dataset.hearthCanvasIslandSampleError = String(error && error.message ? error.message : error);
-      return null;
-    }
-  }
-
-  function terrainReceipt() {
-    const terrain = window.HEARTH_TERRAIN;
-    if (!terrain || typeof terrain.receipt !== "function") return null;
-
-    try {
-      return terrain.receipt();
+      return mod.receipt();
     } catch (_) {
       return null;
     }
   }
 
-  function islandsReceipt() {
-    const islands = window.HEARTH_ISLANDS;
-    if (!islands || typeof islands.receipt !== "function") return null;
+  function sampleAll(v) {
+    const terrain = sampleModule("HEARTH_TERRAIN", v);
+    const mountains = sampleModule("HEARTH_MOUNTAINS", v);
+    const cliffs = sampleModule("HEARTH_CLIFFS", v);
+    const valleys = sampleModule("HEARTH_VALLEYS", v);
+    const beaches = sampleModule("HEARTH_BEACHES", v);
+    const islands = sampleModule("HEARTH_ISLANDS", v);
 
-    try {
-      return islands.receipt();
-    } catch (_) {
-      return null;
+    return { terrain, mountains, cliffs, valleys, beaches, islands };
+  }
+
+  function shadeWater(v, sx, sy, samples, light) {
+    const terrain = samples.terrain;
+    const beach = samples.beaches && samples.beaches.active ? samples.beaches : null;
+
+    const waterDepth = clamp(n(terrain && terrain.waterDepth != null ? terrain.waterDepth : 0.72), 0, 1);
+    const shelf = clamp(n(terrain && terrain.shelf != null ? terrain.shelf : 0), 0, 1);
+    const coast = clamp(n(terrain && terrain.coast != null ? terrain.coast : 0), 0, 1);
+
+    let c = [9, 72, 132];
+
+    c = applyMix(c, [4, 34, 86], waterDepth * 0.62);
+    c = applyMix(c, [34, 170, 184], shelf * 0.66);
+    c = applyMix(c, [68, 206, 205], coast * 0.30);
+
+    if (beach) {
+      c = applyMix(c, color(beach.beachColorBias, [210, 174, 112]), clamp(n(beach.sandStrength) * 0.18, 0, 0.24));
+      c = applyLight(c, clamp(n(beach.shoreSoftness) * 0.05, 0, 0.10));
     }
-  }
-
-  function dominantCategory(sample) {
-    return String(sample.dominantLandform || sample.landformCategory || "").toLowerCase();
-  }
-
-  function categoryBoost(sample) {
-    const category = dominantCategory(sample);
-    const hill = clamp(Number(sample.hillStrength || 0), 0, 1.4);
-    const mountain = clamp(Number(sample.mountainStrength || 0), 0, 1.6);
-    const cliff = clamp(Number(sample.cliffStrength || 0), 0, 1.6);
-    const valley = clamp(Number(sample.valleyStrength || 0), 0, 1.4);
-
-    return { category, hill, mountain, cliff, valley };
-  }
-
-  function shadeWater(v, sx, sy, sample, light) {
-    const waterDepth = clamp(Number(sample && sample.waterDepth != null ? sample.waterDepth : 0.72), 0, 1);
-    const shelf = clamp(Number(sample && sample.shelf != null ? sample.shelf : 0), 0, 1);
-    const coast = clamp(Number(sample && sample.coast != null ? sample.coast : 0), 0, 1);
-
-    let color = [10, 74, 134];
-
-    color = applyMix(color, [4, 36, 88], waterDepth * 0.62);
-    color = applyMix(color, [34, 173, 183], shelf * 0.72);
-    color = applyMix(color, [66, 205, 206], coast * 0.34);
 
     const wave =
-      Math.sin(v[0] * 28 + v[2] * 18 + state.rotation * 2.2) * 0.020 +
-      Math.cos(v[1] * 34 - v[0] * 14 + state.rotation * 1.4) * 0.018;
+      Math.sin(v[0] * 24 + v[2] * 17 + state.rotation * 2.1) * 0.018 +
+      Math.cos(v[1] * 31 - v[0] * 13 + state.rotation * 1.4) * 0.016;
 
-    color = applyLight(color, Math.max(0, wave));
-    color = applyDark(color, Math.max(0, -wave) * 0.45);
+    c = wave > 0 ? applyLight(c, wave) : applyDark(c, -wave * 0.45);
 
     const rim = smoothstep(0.70, 1.0, Math.hypot(sx, sy));
-    color = applyDark(color, rim * 0.28);
-    color = applyLight(color, light * 0.05);
+    c = applyDark(c, rim * 0.28);
+    c = applyLight(c, light * 0.05);
 
-    return color;
+    return c;
   }
 
-  function shadeLand(v, sx, sy, sample, light) {
-    const category = categoryBoost(sample);
-    const seed = Number(sample.globalLandformSeat || sample.landformSeat || sample.countryId || 1);
+  function shadeLand(v, sx, sy, samples, light) {
+    const terrain = samples.terrain || {};
+    const mountain = samples.mountains && samples.mountains.active ? samples.mountains : null;
+    const cliff = samples.cliffs && samples.cliffs.active ? samples.cliffs : null;
+    const valley = samples.valleys && samples.valleys.active ? samples.valleys : null;
+    const beach = samples.beaches && samples.beaches.active ? samples.beaches : null;
+
+    const seed = n(terrain.globalLandformSeat || terrain.landformSeat || terrain.countryId || 1);
     const noise = rockNoise(v, seed);
-    const ridge = ridgeNoise(v, seed * 1.7);
+    const ridgeTexture = ridgeNoise(v, seed * 1.7);
 
-    const relief = clamp(Number(sample.relief || 0), 0, 1.8);
-    const ridgeStrength = clamp(Number(sample.ridge || 0), 0, 1.8);
-    const upland = clamp(Number(sample.upland || 0), 0, 1.4);
-    const lowland = clamp(Number(sample.lowland || 0), 0, 1.2);
-    const rock = clamp(Number(sample.rockExposure || 0), 0, 1.8);
-    const rigid = clamp(Number(sample.rigidLandscapeStrength || 0), 0, 1.8);
-    const summit = clamp(Number(sample.summitStrength || 0), 0, 1.6);
-    const mountain = clamp(Number(sample.mountainStrength || category.mountain || 0), 0, 1.7);
-    const cliff = clamp(Number(sample.cliffStrength || category.cliff || 0), 0, 1.7);
-    const valley = clamp(Number(sample.valleyStrength || category.valley || 0), 0, 1.4);
-    const hill = clamp(Number(sample.hillStrength || category.hill || 0), 0, 1.3);
+    let c = color(terrain.color, [138, 124, 82]);
 
-    let color = toColor(sample.color, [142, 124, 78]);
+    const hillStrength = clamp(n(terrain.hillStrength), 0, 1.4);
+    const mountainStrength = clamp(n(terrain.mountainStrength), 0, 1.7);
+    const cliffStrength = clamp(n(terrain.cliffStrength), 0, 1.8);
+    const valleyStrength = clamp(n(terrain.valleyStrength), 0, 1.5);
+    const rock = clamp(n(terrain.rockExposure), 0, 1.8);
+    const rigid = clamp(n(terrain.rigidLandscapeStrength), 0, 1.8);
+    const coast = clamp(n(terrain.coast), 0, 1.2);
 
-    color = applyMix(color, [116, 124, 76], hill * 0.22);
-    color = applyMix(color, [216, 204, 166], mountain * 0.22);
-    color = applyMix(color, [58, 60, 58], cliff * 0.40);
-    color = applyMix(color, [76, 104, 72], valley * 0.30);
+    c = applyMix(c, [118, 124, 76], hillStrength * 0.18);
+    c = applyMix(c, [216, 206, 170], mountainStrength * 0.18);
+    c = applyMix(c, [52, 54, 52], cliffStrength * 0.32);
+    c = applyMix(c, [70, 104, 72], valleyStrength * 0.24);
+    c = applyMix(c, [68, 68, 64], rock * 0.28);
+    c = applyMix(c, [52, 50, 48], rigid * 0.18);
 
-    color = applyMix(color, [76, 74, 68], rock * 0.36);
-    color = applyMix(color, [54, 52, 48], rigid * 0.22);
-
-    const fracture = (noise - 0.5) * (0.18 + rock * 0.36 + rigid * 0.24);
-    const ridgeHighlight = Math.max(0, ridge - 0.54) * (ridgeStrength * 0.48 + mountain * 0.24);
-    const cliffShadow = Math.max(0, 0.56 - ridge) * (cliff * 0.36 + rigid * 0.18);
-    const valleyShadow = valley * (0.16 + lowland * 0.18);
-
-    if (fracture > 0) {
-      color = applyLight(color, fracture);
-    } else {
-      color = applyDark(color, -fracture);
+    if (mountain) {
+      c = applyMix(c, color(mountain.mountainColorBias, [226, 216, 184]), clamp(n(mountain.peakStrength) * 0.20, 0, 0.34));
+      c = applyLight(c, clamp(n(mountain.mountainHighlight), 0, 0.58));
+      c = applyDark(c, clamp(n(mountain.mountainShadow), 0, 0.42));
+      c = applyMix(c, [236, 228, 200], clamp(n(mountain.summitPressure) * 0.12, 0, 0.22));
     }
 
-    color = applyLight(color, ridgeHighlight);
-    color = applyDark(color, cliffShadow);
-    color = applyDark(color, valleyShadow);
-
-    color = applyLight(color, summit * 0.32);
-    color = applyLight(color, upland * 0.04);
-    color = applyDark(color, lowland * 0.08);
-
-    const categoryName = category.category;
-
-    if (categoryName === "hill") {
-      color = applyMix(color, [150, 138, 86], 0.12 + hill * 0.12);
-    } else if (categoryName === "mountain") {
-      color = applyMix(color, [230, 222, 190], 0.10 + mountain * 0.15);
-      color = applyDark(color, rigid * 0.08);
-    } else if (categoryName === "cliff") {
-      color = applyMix(color, [50, 52, 50], 0.14 + cliff * 0.22);
-      color = applyLight(color, ridgeHighlight * 0.35);
-    } else if (categoryName === "valley") {
-      color = applyMix(color, [70, 100, 72], 0.12 + valley * 0.18);
-      color = applyDark(color, valley * 0.10);
+    if (cliff) {
+      c = applyMix(c, color(cliff.cliffColorBias, [48, 50, 48]), clamp(n(cliff.cliffFaceStrength) * 0.30, 0, 0.48));
+      c = applyDark(c, clamp(n(cliff.cliffShadow), 0, 0.60));
+      c = applyLight(c, clamp(n(cliff.cliffHighlight), 0, 0.25));
+      c = applyDark(c, clamp(n(cliff.rigidBorderDetail) * 0.10, 0, 0.20));
     }
 
-    const coast = clamp(Number(sample.coast || 0), 0, 1);
-    color = applyMix(color, [60, 196, 196], coast * 0.20);
+    if (valley) {
+      c = applyMix(c, color(valley.valleyColorBias, [74, 104, 74]), clamp(n(valley.valleyDepth) * 0.24, 0, 0.40));
+      c = applyDark(c, clamp(n(valley.valleyShadow), 0, 0.38));
+      c = applyLight(c, clamp(n(valley.valleySoftLight), 0, 0.20));
+    }
+
+    if (beach) {
+      c = applyMix(c, color(beach.beachColorBias, [210, 174, 112]), clamp(n(beach.sandStrength) * 0.36, 0, 0.48));
+      c = applyLight(c, clamp(n(beach.shoreSoftness) * 0.10, 0, 0.18));
+    }
+
+    const fracture = (noise - 0.5) * (0.14 + rock * 0.30 + rigid * 0.22);
+    const ridgeLight = Math.max(0, ridgeTexture - 0.54) * (0.14 + mountainStrength * 0.28);
+    const lowShadow = Math.max(0, 0.55 - ridgeTexture) * (0.10 + cliffStrength * 0.20 + valleyStrength * 0.16);
+
+    c = fracture > 0 ? applyLight(c, fracture) : applyDark(c, -fracture);
+    c = applyLight(c, ridgeLight);
+    c = applyDark(c, lowShadow);
+    c = applyMix(c, [58, 200, 200], coast * 0.18);
 
     const rim = smoothstep(0.72, 1.0, Math.hypot(sx, sy));
-    color = applyDark(color, rim * 0.22);
-    color = applyLight(color, light * 0.08);
+    c = applyDark(c, rim * 0.22);
+    c = applyLight(c, light * 0.08);
 
-    return color;
+    return c;
   }
 
-  function shadeIsland(v, sx, sy, sample, light) {
-    const category = categoryBoost(sample);
-    const seed = Number(sample.islandSeatNumber || sample.islandIndex || 1);
-    const noise = rockNoise(v, seed * 2.3);
-    const relief = clamp(Number(sample.relief || 0), 0, 1.2);
-    const ridge = clamp(Number(sample.ridge || 0), 0, 1.2);
+  function shadeIsland(v, sx, sy, samples, light) {
+    const island = samples.islands;
+    let c = color(island.color, [152, 132, 84]);
 
-    let color = toColor(sample.color, [154, 132, 82]);
+    const noise = rockNoise(v, n(island.islandSeatNumber || 1) * 2.1);
+    const mountain = clamp(n(island.mountainStrength), 0, 1.4);
+    const cliff = clamp(n(island.cliffStrength), 0, 1.4);
+    const valley = clamp(n(island.valleyStrength), 0, 1.4);
+    const hill = clamp(n(island.hillStrength), 0, 1.4);
 
-    color = applyMix(color, [212, 198, 150], category.mountain * 0.18);
-    color = applyMix(color, [58, 60, 56], category.cliff * 0.28);
-    color = applyMix(color, [80, 112, 76], category.valley * 0.20);
-    color = applyMix(color, [142, 132, 84], category.hill * 0.16);
+    c = applyMix(c, [146, 136, 86], hill * 0.16);
+    c = applyMix(c, [222, 214, 182], mountain * 0.16);
+    c = applyMix(c, [58, 60, 56], cliff * 0.25);
+    c = applyMix(c, [80, 110, 76], valley * 0.18);
 
-    const texture = (noise - 0.5) * (0.12 + relief * 0.20);
-    color = texture > 0 ? applyLight(color, texture) : applyDark(color, -texture);
-    color = applyLight(color, ridge * 0.08);
-    color = applyLight(color, light * 0.08);
+    const texture = (noise - 0.5) * 0.18;
+    c = texture > 0 ? applyLight(c, texture) : applyDark(c, -texture);
 
-    const coast = clamp(Number(sample.coast || 0), 0, 1);
-    color = applyMix(color, [64, 202, 202], coast * 0.16);
+    c = applyMix(c, [62, 202, 202], clamp(n(island.coast) * 0.14, 0, 0.18));
+    c = applyLight(c, light * 0.08);
 
     const rim = smoothstep(0.72, 1.0, Math.hypot(sx, sy));
-    color = applyDark(color, rim * 0.18);
+    c = applyDark(c, rim * 0.18);
 
-    return color;
-  }
-
-  function chooseVisibleSample(v) {
-    const terrain = sampleTerrain(v);
-    const island = sampleIslands(v);
-
-    if (island && island.land && island.islandStrength > 0.20) {
-      return {
-        sample: island,
-        type: "island"
-      };
-    }
-
-    if (terrain) {
-      return {
-        sample: terrain,
-        type: terrain.land ? "land" : "water"
-      };
-    }
-
-    return {
-      sample: null,
-      type: "fallback-water"
-    };
+    return c;
   }
 
   function renderPlanet(bufferCtx, width, height, time) {
@@ -370,12 +295,12 @@
     const data = imageData.data;
     const cx = width * 0.5;
     const cy = height * 0.5;
-    const radius = Math.min(width, height) * 0.455;
+    const radius = Math.min(width, height) * 0.456;
     const invRadius = 1 / radius;
 
     state.rotation = time * 0.000055;
-    const axialTilt = -0.22;
 
+    const axialTilt = -0.22;
     const sun = norm3([-0.48, 0.28, 0.84]);
     const atmosphere = [36, 170, 210];
 
@@ -403,28 +328,28 @@
         v = rotateX(v, axialTilt);
         v = rotateY(v, state.rotation);
 
-        const visibleNormal = norm3([sx, -sy, z]);
-        const light = clamp(visibleNormal[0] * sun[0] + visibleNormal[1] * sun[1] + visibleNormal[2] * sun[2], 0, 1);
+        const normal = norm3([sx, -sy, z]);
+        const light = clamp(normal[0] * sun[0] + normal[1] * sun[1] + normal[2] * sun[2], 0, 1);
         const limb = smoothstep(0.62, 1, Math.sqrt(r2));
 
-        const visible = chooseVisibleSample(v);
-        let color;
+        const samples = sampleAll(v);
+        let c;
 
-        if (visible.type === "land") {
-          color = shadeLand(v, sx, sy, visible.sample, light);
-        } else if (visible.type === "island") {
-          color = shadeIsland(v, sx, sy, visible.sample, light);
+        if (samples.islands && samples.islands.active && samples.islands.land && n(samples.islands.islandStrength) > 0.18) {
+          c = shadeIsland(v, sx, sy, samples, light);
+        } else if (samples.terrain && samples.terrain.land) {
+          c = shadeLand(v, sx, sy, samples, light);
         } else {
-          color = shadeWater(v, sx, sy, visible.sample, light);
+          c = shadeWater(v, sx, sy, samples, light);
         }
 
         const night = 1 - (0.38 + light * 0.62);
-        color = applyDark(color, night * 0.24);
-        color = applyMix(color, atmosphere, limb * 0.18);
+        c = applyDark(c, night * 0.24);
+        c = applyMix(c, atmosphere, limb * 0.18);
 
-        data[offset] = color[0];
-        data[offset + 1] = color[1];
-        data[offset + 2] = color[2];
+        data[offset] = c[0];
+        data[offset + 1] = c[1];
+        data[offset + 2] = c[2];
         data[offset + 3] = 255;
 
         offset += 4;
@@ -437,21 +362,21 @@
   function drawHalo(ctx, width, height) {
     const cx = width * 0.5;
     const cy = height * 0.5;
-    const radius = Math.min(width, height) * 0.455;
+    const radius = Math.min(width, height) * 0.456;
 
     ctx.save();
 
-    const glow = ctx.createRadialGradient(cx, cy, radius * 0.88, cx, cy, radius * 1.28);
-    glow.addColorStop(0, "rgba(64, 194, 218, 0.16)");
-    glow.addColorStop(0.55, "rgba(38, 142, 190, 0.10)");
+    const glow = ctx.createRadialGradient(cx, cy, radius * 0.88, cx, cy, radius * 1.30);
+    glow.addColorStop(0, "rgba(64, 194, 218, 0.15)");
+    glow.addColorStop(0.55, "rgba(38, 142, 190, 0.09)");
     glow.addColorStop(1, "rgba(4, 12, 24, 0)");
 
     ctx.fillStyle = glow;
     ctx.beginPath();
-    ctx.arc(cx, cy, radius * 1.28, 0, TAU);
+    ctx.arc(cx, cy, radius * 1.30, 0, TAU);
     ctx.fill();
 
-    ctx.strokeStyle = "rgba(116, 202, 228, 0.18)";
+    ctx.strokeStyle = "rgba(116, 202, 228, 0.17)";
     ctx.lineWidth = Math.max(1, width * 0.003);
     ctx.beginPath();
     ctx.arc(cx, cy, radius * 1.005, 0, TAU);
@@ -472,8 +397,6 @@
 
     const ctx = state.ctx;
     const canvas = state.canvas;
-    const width = state.width;
-    const height = state.height;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -494,8 +417,7 @@
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     drawHalo(ctx, canvas.width, canvas.height);
-
-    renderPlanet(state.bufferCtx, width, height, time);
+    renderPlanet(state.bufferCtx, state.width, state.height, time);
 
     const targetSize = Math.min(canvas.width, canvas.height);
     const targetX = (canvas.width - targetSize) * 0.5;
@@ -507,8 +429,7 @@
     ctx.drawImage(state.buffer, targetX, targetY, targetSize, targetSize);
     ctx.restore();
 
-    stampRuntime("rendering");
-
+    stamp("rendering");
     state.raf = requestAnimationFrame(drawFrame);
   }
 
@@ -528,11 +449,11 @@
   }
 
   function installStyle() {
-    const prior = document.getElementById("hearth-canvas-landform-consumption-style");
+    const prior = document.getElementById("hearth-canvas-child-engine-composition-style");
     if (prior) prior.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-canvas-landform-consumption-style";
+    style.id = "hearth-canvas-child-engine-composition-style";
     style.textContent = `
       #${EXPECTED_MOUNT_ID} {
         position: relative;
@@ -545,7 +466,7 @@
         border-radius: 28px;
       }
 
-      #${EXPECTED_MOUNT_ID} canvas[data-hearth-canvas="landform-consumption"] {
+      #${EXPECTED_MOUNT_ID} canvas[data-hearth-canvas="child-engine-composition"] {
         position: absolute;
         inset: 0;
         display: block;
@@ -555,6 +476,7 @@
         touch-action: pan-y !important;
       }
     `;
+
     document.head.appendChild(style);
   }
 
@@ -575,14 +497,11 @@
 
     state.width = bufferSize;
     state.height = bufferSize;
-
     state.buffer = document.createElement("canvas");
     state.buffer.width = bufferSize;
     state.buffer.height = bufferSize;
     state.bufferCtx = state.buffer.getContext("2d", { alpha: true, willReadFrequently: false });
     state.imageData = null;
-
-    state.generation += 1;
 
     document.documentElement.dataset.hearthCanvasBufferSize = String(bufferSize);
     document.documentElement.dataset.hearthCanvasDevicePixelRatio = String(dpr);
@@ -591,15 +510,14 @@
   function installCanvas() {
     state.mount = getMount();
 
-    const existing = state.mount.querySelectorAll("canvas[data-hearth-canvas]");
-    existing.forEach((node) => node.remove());
+    state.mount.querySelectorAll("canvas[data-hearth-canvas]").forEach((node) => node.remove());
 
     const canvas = document.createElement("canvas");
-    canvas.dataset.hearthCanvas = "landform-consumption";
+    canvas.dataset.hearthCanvas = "child-engine-composition";
     canvas.dataset.contract = CONTRACT;
     canvas.dataset.familyContract = FAMILY_CONTRACT;
     canvas.dataset.receipt = RECEIPT;
-    canvas.setAttribute("aria-label", "Hearth G3 terrain landform rendering canvas");
+    canvas.setAttribute("aria-label", "Hearth G3 256 lattice child-engine composition canvas");
 
     state.mount.appendChild(canvas);
 
@@ -609,21 +527,19 @@
     state.mount.dataset.hearthCanvasContract = CONTRACT;
     state.mount.dataset.hearthCanvasReceipt = RECEIPT;
     state.mount.dataset.hearthCanvasConsumesTerrain = "true";
-    state.mount.dataset.hearthCanvasConsumesLandforms = "true";
-    state.mount.dataset.hearthCanvasConsumesIslands = "optional-if-loaded";
+    state.mount.dataset.hearthCanvasConsumesMountains = "true";
+    state.mount.dataset.hearthCanvasConsumesCliffs = "true";
+    state.mount.dataset.hearthCanvasConsumesValleys = "true";
+    state.mount.dataset.hearthCanvasConsumesBeaches = "true";
+    state.mount.dataset.hearthCanvasConsumesIslands = "true";
     state.mount.dataset.hearthCanvasGeneratedImage = "false";
     state.mount.dataset.hearthCanvasGraphicBox = "false";
 
     resize();
   }
 
-  function stampRuntime(status) {
-    const terrain = terrainReceipt();
-    const islands = islandsReceipt();
-
-    state.terrainReady = !!terrain;
-    state.islandsReady = !!islands;
-    state.lastReceiptStatus = status;
+  function stamp(status) {
+    state.lastStatus = status;
 
     document.documentElement.dataset.hearthCanvasLoaded = "true";
     document.documentElement.dataset.hearthCanvasContract = CONTRACT;
@@ -631,24 +547,16 @@
     document.documentElement.dataset.hearthCanvasVersion = VERSION;
     document.documentElement.dataset.hearthCanvasReceipt = RECEIPT;
     document.documentElement.dataset.hearthCanvasStatus = status;
-    document.documentElement.dataset.hearthCanvasTerrainReady = String(!!terrain);
-    document.documentElement.dataset.hearthCanvasIslandsReady = String(!!islands);
-    document.documentElement.dataset.hearthCanvasConsumesLandforms = "true";
-    document.documentElement.dataset.hearthCanvasConsumesLandformFields =
-      "hillStrength,mountainStrength,cliffStrength,valleyStrength,rockExposure,rigidLandscapeStrength,dominantLandform,landformCategory,globalLandformSeat";
+    document.documentElement.dataset.hearthCanvasConsumes =
+      "terrain,mountains,cliffs,valleys,beaches,islands";
     document.documentElement.dataset.hearthCanvasGeneratedImage = "false";
     document.documentElement.dataset.hearthCanvasGraphicBox = "false";
-
-    if (terrain) {
-      document.documentElement.dataset.hearthCanvasTerrainContract = String(terrain.contract || "unknown");
-      document.documentElement.dataset.hearthCanvasExpectedTerrainContract = EXPECTED_TERRAIN_CONTRACT;
-      document.documentElement.dataset.hearthCanvasTerrainStandard = String(terrain.standard || "unknown");
-    }
-
-    if (islands) {
-      document.documentElement.dataset.hearthCanvasIslandsContract = String(islands.contract || "unknown");
-      document.documentElement.dataset.hearthCanvasIslandsStandard = String(islands.standard || "unknown");
-    }
+    document.documentElement.dataset.hearthCanvasTerrainReady = String(!!window.HEARTH_TERRAIN);
+    document.documentElement.dataset.hearthCanvasMountainsReady = String(!!window.HEARTH_MOUNTAINS);
+    document.documentElement.dataset.hearthCanvasCliffsReady = String(!!window.HEARTH_CLIFFS);
+    document.documentElement.dataset.hearthCanvasValleysReady = String(!!window.HEARTH_VALLEYS);
+    document.documentElement.dataset.hearthCanvasBeachesReady = String(!!window.HEARTH_BEACHES);
+    document.documentElement.dataset.hearthCanvasIslandsReady = String(!!window.HEARTH_ISLANDS);
   }
 
   function exposeReceipt() {
@@ -658,30 +566,23 @@
       familyContract: FAMILY_CONTRACT,
       version: VERSION,
       generation: "G3",
-      authority: "canvas-landform-consumption",
-      expectedTerrainContract: EXPECTED_TERRAIN_CONTRACT,
+      authority: "canvas-child-engine-composition",
       consumes: [
-        "hillStrength",
-        "mountainStrength",
-        "cliffStrength",
-        "valleyStrength",
-        "rockExposure",
-        "rigidLandscapeStrength",
-        "dominantLandform",
-        "landformCategory",
-        "globalLandformSeat"
-      ],
-      optionalConsumes: [
-        "HEARTH_ISLANDS.sampleVector"
+        "HEARTH_TERRAIN",
+        "HEARTH_MOUNTAINS",
+        "HEARTH_CLIFFS",
+        "HEARTH_VALLEYS",
+        "HEARTH_BEACHES",
+        "HEARTH_ISLANDS"
       ],
       doesNotOwn: [
         "terrain authority",
+        "mountain authority",
+        "cliff authority",
+        "valley authority",
+        "beach authority",
         "island authority",
-        "hydration expansion",
-        "beaches",
-        "sand",
-        "weather",
-        "climate",
+        "active weather",
         "clouds",
         "humidity",
         "generated images",
@@ -689,13 +590,15 @@
       ],
       status: () => ({
         running: state.running,
-        terrainReady: state.terrainReady,
-        islandsReady: state.islandsReady,
         width: state.width,
         height: state.height,
-        lastReceiptStatus: state.lastReceiptStatus,
-        terrainReceipt: terrainReceipt(),
-        islandsReceipt: islandsReceipt()
+        lastStatus: state.lastStatus,
+        terrain: receiptModule("HEARTH_TERRAIN"),
+        mountains: receiptModule("HEARTH_MOUNTAINS"),
+        cliffs: receiptModule("HEARTH_CLIFFS"),
+        valleys: receiptModule("HEARTH_VALLEYS"),
+        beaches: receiptModule("HEARTH_BEACHES"),
+        islands: receiptModule("HEARTH_ISLANDS")
       })
     });
   }
@@ -706,7 +609,7 @@
     installStyle();
     installCanvas();
     exposeReceipt();
-    stampRuntime("booted");
+    stamp("booted");
 
     state.running = true;
     state.lastFrame = 0;
@@ -720,7 +623,7 @@
     clearTimeout(handleResize._timer);
     handleResize._timer = setTimeout(() => {
       resize();
-      stampRuntime("resized");
+      stamp("resized");
     }, 120);
   }
 
@@ -735,12 +638,12 @@
     window.removeEventListener("resize", handleResize);
     window.removeEventListener("orientationchange", handleResize);
 
-    const priorStyle = document.getElementById("hearth-canvas-landform-consumption-style");
+    const priorStyle = document.getElementById("hearth-canvas-child-engine-composition-style");
     if (priorStyle) priorStyle.remove();
 
     const mount = document.getElementById(EXPECTED_MOUNT_ID);
     if (mount) {
-      mount.querySelectorAll('canvas[data-hearth-canvas="landform-consumption"]').forEach((node) => node.remove());
+      mount.querySelectorAll('canvas[data-hearth-canvas="child-engine-composition"]').forEach((node) => node.remove());
     }
 
     state.canvas = null;
@@ -752,6 +655,7 @@
     document.documentElement.dataset.hearthCanvasDisposed = "true";
   }
 
+  window.__HEARTH_CANVAS_CHILD_ENGINE_COMPOSITION_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_LANDFORM_CONSUMPTION_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_BOUNDARY_DISPOSE__ = dispose;
   window.__HEARTH_CANVAS_G3_FAMILY_DISPOSE__ = dispose;

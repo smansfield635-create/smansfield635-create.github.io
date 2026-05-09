@@ -1,31 +1,82 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_G3_HEX_OVERLAP_SEEDED_VARIATION_ROUTE_CONTROLLER_TNT_v1
+// HEARTH_G3_ADAPTIVE_RUNTIME_SELF_HEAL_ROUTE_CONTROLLER_TNT_v2
 // Full-file replacement.
 // Family: HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1
+// Purpose:
+// - Force the live route to fetch the newest adaptive canvas runtime.
+// - Load high-density hex surface before canvas.
+// - Preserve Hearth G3 high-density hex surface baseline.
+// - Required: hex, terrain, hex.surface, canvas.
+// - Optional: hydration, mountains, cliffs, valleys, beaches, islands.
+// - No GraphicBox. No generated image.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_HEX_OVERLAP_SEEDED_VARIATION_ROUTE_CONTROLLER_TNT_v1";
+  const CONTRACT = "HEARTH_G3_ADAPTIVE_RUNTIME_SELF_HEAL_ROUTE_CONTROLLER_TNT_v2";
   const FAMILY_CONTRACT = "HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1";
-  const VERSION = "2026-05-09.hearth-g3-hex-overlap-seeded-variation-route-controller";
-  const RECEIPT = "HEARTH_G3_HEX_OVERLAP_SEEDED_VARIATION_ROUTE_RECEIPT";
-  const KEY = "hearth-g3-hex-overlap-seeded-variation-v1";
+  const PREVIOUS_CONTRACT = "HEARTH_G3_HEX_SURFACE_CROSS_ADOPTION_ROUTE_CONTROLLER_TNT_v1";
+  const VERSION = "2026-05-09.hearth-g3-adaptive-runtime-self-heal-route-controller";
+  const RECEIPT = "HEARTH_G3_ADAPTIVE_RUNTIME_SELF_HEAL_ROUTE_RECEIPT";
+  const BASELINE = "HEARTH_G3_HIGH_DENSITY_HEX_SURFACE_BASELINE_v1";
+
+  const KEY = "hearth-g3-adaptive-runtime-self-heal-v3";
   const EXPECTED_ROUTE = "/showroom/globe/hearth/";
 
   const REQUIRED_SOURCES = Object.freeze([
-    { role: "hex", globalName: "HEARTH_HEX", src: `/assets/hearth/hearth.hex.js?v=${KEY}` },
-    { role: "terrain", globalName: "HEARTH_TERRAIN", src: `/assets/hearth/hearth.terrain.js?v=${KEY}` },
-    { role: "canvas", globalName: "HEARTH_CANVAS_RECEIPT", src: `/assets/hearth/hearth.canvas.js?v=${KEY}` }
+    {
+      role: "hex",
+      globalName: "HEARTH_HEX",
+      src: `/assets/hearth/hearth.hex.js?v=${KEY}`
+    },
+    {
+      role: "terrain",
+      globalName: "HEARTH_TERRAIN",
+      src: `/assets/hearth/hearth.terrain.js?v=${KEY}`
+    },
+    {
+      role: "hexSurface",
+      globalName: "HEARTH_HEX_SURFACE",
+      src: `/assets/hearth/hearth.hex.surface.js?v=${KEY}`
+    },
+    {
+      role: "canvas",
+      globalName: "HEARTH_CANVAS_RECEIPT",
+      src: `/assets/hearth/hearth.canvas.js?v=${KEY}`
+    }
   ]);
 
   const OPTIONAL_SOURCES = Object.freeze([
-    { role: "hydration", globalName: "HEARTH_HYDRATION", src: `/assets/hearth/hearth.hydration.js?v=${KEY}` },
-    { role: "mountains", globalName: "HEARTH_MOUNTAINS", src: `/assets/hearth/hearth.mountains.js?v=${KEY}` },
-    { role: "cliffs", globalName: "HEARTH_CLIFFS", src: `/assets/hearth/hearth.cliffs.js?v=${KEY}` },
-    { role: "valleys", globalName: "HEARTH_VALLEYS", src: `/assets/hearth/hearth.valleys.js?v=${KEY}` },
-    { role: "beaches", globalName: "HEARTH_BEACHES", src: `/assets/hearth/hearth.beaches.js?v=${KEY}` },
-    { role: "islands", globalName: "HEARTH_ISLANDS", src: `/assets/hearth/hearth.islands.js?v=${KEY}` }
+    {
+      role: "hydration",
+      globalName: "HEARTH_HYDRATION",
+      src: `/assets/hearth/hearth.hydration.js?v=${KEY}`
+    },
+    {
+      role: "mountains",
+      globalName: "HEARTH_MOUNTAINS",
+      src: `/assets/hearth/hearth.mountains.js?v=${KEY}`
+    },
+    {
+      role: "cliffs",
+      globalName: "HEARTH_CLIFFS",
+      src: `/assets/hearth/hearth.cliffs.js?v=${KEY}`
+    },
+    {
+      role: "valleys",
+      globalName: "HEARTH_VALLEYS",
+      src: `/assets/hearth/hearth.valleys.js?v=${KEY}`
+    },
+    {
+      role: "beaches",
+      globalName: "HEARTH_BEACHES",
+      src: `/assets/hearth/hearth.beaches.js?v=${KEY}`
+    },
+    {
+      role: "islands",
+      globalName: "HEARTH_ISLANDS",
+      src: `/assets/hearth/hearth.islands.js?v=${KEY}`
+    }
   ]);
 
   const state = {
@@ -44,21 +95,26 @@
   function stamp(status) {
     document.documentElement.dataset.hearthRouteControllerLoaded = "true";
     document.documentElement.dataset.hearthRouteControllerContract = CONTRACT;
+    document.documentElement.dataset.hearthRouteControllerPreviousContract = PREVIOUS_CONTRACT;
     document.documentElement.dataset.hearthFamilyContract = FAMILY_CONTRACT;
     document.documentElement.dataset.hearthRouteControllerVersion = VERSION;
     document.documentElement.dataset.hearthRouteControllerReceipt = RECEIPT;
     document.documentElement.dataset.hearthRouteControllerStatus = status;
+    document.documentElement.dataset.hearthBaseline = BASELINE;
     document.documentElement.dataset.hearthExpectedRoute = EXPECTED_ROUTE;
     document.documentElement.dataset.hearthGeneration = "G3";
-    document.documentElement.dataset.hearthStandard = "hex-overlap-seeded-variation-render-chain";
+    document.documentElement.dataset.hearthStandard = "adaptive-runtime-self-heal-high-density-hex-surface";
     document.documentElement.dataset.hearthLanguageLayer = "globe";
     document.documentElement.dataset.hearthConstructionLayer = "planet";
     document.documentElement.dataset.hearthRouteLoadKey = KEY;
-    document.documentElement.dataset.hearthRequiredRenderChain = "hex,terrain,canvas";
+    document.documentElement.dataset.hearthRequiredRenderChain = "hex,terrain,hex.surface,canvas";
     document.documentElement.dataset.hearthOptionalEnhancementChain =
       "hydration,mountains,cliffs,valleys,beaches,islands";
+    document.documentElement.dataset.hearthLoadOrder =
+      "hex,terrain,hydration,mountains,cliffs,valleys,beaches,islands,hex.surface,canvas";
     document.documentElement.dataset.hearthHexFirst = "true";
-    document.documentElement.dataset.hearthHexSubstrate = "overlapping-hexagonal-pixel";
+    document.documentElement.dataset.hearthHexSurface = "high-density-overlapping-hex";
+    document.documentElement.dataset.hearthCanvasRuntime = "adaptive-self-heal-v3";
     document.documentElement.dataset.hearthHexBridgeInstalledFor = state.bridged.join(",") || "none";
     document.documentElement.dataset.hearthLoadedScripts = state.loaded.join(",") || "none";
     document.documentElement.dataset.hearthFailedScripts = state.failed.join(",") || "none";
@@ -73,6 +129,9 @@
 
   function callKnownDisposers() {
     [
+      "__HEARTH_CANVAS_ADAPTIVE_RUNTIME_SELF_HEAL_DISPOSE__",
+      "__HEARTH_CANVAS_ADAPTIVE_RUNTIME_DISPOSE__",
+      "__HEARTH_CANVAS_HEX_SURFACE_CONSUMER_DISPOSE__",
       "__HEARTH_CANVAS_CHILD_ENGINE_COMPOSITION_DISPOSE__",
       "__HEARTH_CANVAS_LANDFORM_CONSUMPTION_DISPOSE__",
       "__HEARTH_CANVAS_BOUNDARY_DISPOSE__",
@@ -103,10 +162,22 @@
     });
   }
 
+  function clearKnownGlobals() {
+    [
+      "HEARTH_CANVAS_RECEIPT",
+      "HEARTH_HEX_SURFACE_STATUS"
+    ].forEach((name) => {
+      try {
+        window[name] = null;
+      } catch (_) {}
+    });
+  }
+
   function removePriorScripts() {
     document
       .querySelectorAll([
         'script[src*="/assets/hearth/hearth.hex.js"]',
+        'script[src*="/assets/hearth/hearth.hex.surface.js"]',
         'script[src*="/assets/hearth/hearth.terrain.js"]',
         'script[src*="/assets/hearth/hearth.hydration.js"]',
         'script[src*="/assets/hearth/hearth.mountains.js"]',
@@ -116,7 +187,8 @@
         'script[src*="/assets/hearth/hearth.islands.js"]',
         'script[src*="/assets/hearth/hearth.canvas.js"]',
         'script[data-hearth-render-chain-script="true"]',
-        'script[data-hearth-child-engine-script="true"]'
+        'script[data-hearth-child-engine-script="true"]',
+        'script[data-hearth-canvas-self-heal="true"]'
       ].join(","))
       .forEach((script) => script.remove());
   }
@@ -131,20 +203,25 @@
       mount.dataset.hearthMount = "true";
       mount.dataset.render = "hearth";
       mount.dataset.body = "hearth";
-      mount.setAttribute("aria-label", "Hearth G3 overlapping-hex planet mount");
+      mount.setAttribute("aria-label", "Hearth G3 high-density adaptive hex-surface planet mount");
       parent.appendChild(mount);
     }
 
     mount.dataset.hearthMountReady = "true";
     mount.dataset.hearthRouteController = CONTRACT;
+    mount.dataset.hearthRouteControllerPreviousContract = PREVIOUS_CONTRACT;
     mount.dataset.hearthFamilyContract = FAMILY_CONTRACT;
     mount.dataset.hearthRouteControllerReceipt = RECEIPT;
+    mount.dataset.hearthBaseline = BASELINE;
     mount.dataset.hearthGeneration = "G3";
-    mount.dataset.hearthStandard = "hex-overlap-seeded-variation-render-chain";
+    mount.dataset.hearthStandard = "adaptive-runtime-self-heal-high-density-hex-surface";
     mount.dataset.hearthHexOwner = "/assets/hearth/hearth.hex.js";
+    mount.dataset.hearthHexSurfaceOwner = "/assets/hearth/hearth.hex.surface.js";
     mount.dataset.hearthTerrainOwner = "/assets/hearth/hearth.terrain.js";
     mount.dataset.hearthRenderOwner = "/assets/hearth/hearth.canvas.js";
-    mount.dataset.hearthHexSubstrate = "overlapping-hexagonal-pixel";
+    mount.dataset.hearthRouteLoadKey = KEY;
+    mount.dataset.hearthHexSurface = "high-density-overlapping-hex";
+    mount.dataset.hearthCanvasRuntime = "adaptive-self-heal-v3";
     mount.dataset.hearthGeneratedImage = "false";
     mount.dataset.hearthGraphicBox = "false";
 
@@ -152,11 +229,11 @@
   }
 
   function installFallbackMountStyle() {
-    const prior = document.getElementById("hearth-hex-overlap-route-style");
+    const prior = document.getElementById("hearth-adaptive-runtime-route-style");
     if (prior) prior.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-hex-overlap-route-style";
+    style.id = "hearth-adaptive-runtime-route-style";
     style.textContent = `
       #hearthCanvasMount {
         position: relative;
@@ -182,7 +259,7 @@
       }
 
       #hearthCanvasMount[data-hearth-required-failure="true"]::after {
-        content: "Hearth render chain blocked. Hex, terrain, or canvas failed to load.";
+        content: "Hearth render chain blocked. Hex, terrain, hex surface, or canvas failed to load.";
         position: absolute;
         inset: auto 18px 18px;
         z-index: 3;
@@ -208,6 +285,7 @@
       script.dataset.hearthScriptRequired = String(required);
       script.dataset.contract = CONTRACT;
       script.dataset.familyContract = FAMILY_CONTRACT;
+      script.dataset.cacheKey = KEY;
 
       script.addEventListener(
         "load",
@@ -259,7 +337,7 @@
     return ok;
   }
 
-  async function loadRequiredHexAndTerrain() {
+  async function loadHexAndTerrain() {
     await loadScript(REQUIRED_SOURCES[0], true);
     await loadScript(REQUIRED_SOURCES[1], true);
     bridgeModule("HEARTH_TERRAIN");
@@ -281,22 +359,39 @@
     return results;
   }
 
-  async function loadRequiredCanvas() {
+  async function loadHexSurfaceAndCanvas() {
     await loadScript(REQUIRED_SOURCES[2], true);
+    await loadScript(REQUIRED_SOURCES[3], true);
   }
 
   function exposeReceipt(status) {
     window.HEARTH_ROUTE_RECEIPT = Object.freeze({
       receipt: RECEIPT,
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       familyContract: FAMILY_CONTRACT,
       version: VERSION,
+      baseline: BASELINE,
       route: location.pathname,
       expectedRoute: EXPECTED_ROUTE,
       loadKey: KEY,
       generation: "G3",
-      standard: "hex-overlap-seeded-variation-render-chain",
-      hexSubstrate: "overlapping-hexagonal-pixel",
+      standard: "adaptive-runtime-self-heal-high-density-hex-surface",
+      hexSubstrate: "logical-256",
+      hexSurface: "high-density-overlapping-hex",
+      canvasRuntime: "adaptive-self-heal-v3",
+      loadOrder: [
+        "hex",
+        "terrain",
+        "hydration",
+        "mountains",
+        "cliffs",
+        "valleys",
+        "beaches",
+        "islands",
+        "hex.surface",
+        "canvas"
+      ],
       required: REQUIRED_SOURCES.map((source) => ({
         role: source.role,
         globalName: source.globalName,
@@ -326,13 +421,14 @@
     exposeReceipt("booting");
     callKnownDisposers();
     removePriorScripts();
+    clearKnownGlobals();
     installFallbackMountStyle();
     ensureMount();
 
     try {
-      await loadRequiredHexAndTerrain();
+      await loadHexAndTerrain();
       await loadOptionalEnhancements();
-      await loadRequiredCanvas();
+      await loadHexSurfaceAndCanvas();
 
       mount.dataset.hearthRequiredFailure = "false";
       mount.dataset.hearthOptionalFailures = state.optionalFailed.join(",") || "none";
@@ -342,6 +438,8 @@
       document.body.dataset.hearthCanvasAssetLoaded = "true";
       document.documentElement.dataset.hearthRenderChainReady = "true";
       document.documentElement.dataset.hearthHexSubstrateReady = "true";
+      document.documentElement.dataset.hearthHexSurfaceReady = "true";
+      document.documentElement.dataset.hearthAdaptiveRuntimeReady = "true";
 
       const status = state.optionalFailed.length
         ? "ready-with-optional-enhancement-failures"
@@ -355,7 +453,8 @@
       document.body.dataset.hearthRouteReady = "false";
       document.body.dataset.hearthCanvasAssetLoaded = "false";
       document.documentElement.dataset.hearthRenderChainReady = "false";
-      document.documentElement.dataset.hearthHexSubstrateReady = "false";
+      document.documentElement.dataset.hearthHexSurfaceReady = "false";
+      document.documentElement.dataset.hearthAdaptiveRuntimeReady = "false";
       document.documentElement.dataset.hearthRouteControllerError =
         error && error.message ? error.message : String(error);
 

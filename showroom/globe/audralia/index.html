@@ -15,10 +15,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Audralia G2 Calibration</title>
+  <title>Diamond Gate Bridge · Audralia</title>
   <meta
     name="description"
-    content="Audralia is a habitable-forming constructed planet with coherent G1 baseline achieved and G2 material/natural readability calibration active."
+    content="Audralia is a habitable-forming constructed planet with G1 coherent baseline achieved and G2 calibration active."
   >
 
   <style>
@@ -30,7 +30,7 @@
       --text: #eef6ff;
       --muted: rgba(238, 246, 255, 0.72);
       --green: #8bd7a3;
-      --blue: #4fb5db;
+      --blue: #68c7f0;
     }
 
     * { box-sizing: border-box; }
@@ -230,6 +230,7 @@
       -webkit-touch-callout: none;
     }
 
+    #audralia-canvas-mount canvas,
     #audralia-canvas-mount canvas[data-audralia-canvas="true"],
     #audralia-canvas-mount canvas[data-audralia-canvas] {
       position: absolute;
@@ -242,6 +243,10 @@
       user-select: none;
       -webkit-user-select: none;
       -webkit-touch-callout: none;
+    }
+
+    #audralia-canvas-mount [data-audralia-mount-fallback][hidden] {
+      display: none !important;
     }
 
     .grid {
@@ -315,9 +320,8 @@
           <h1 id="audralia-title">Audralia</h1>
           <p class="lede">
             Audralia has achieved a coherent Generation 1 baseline. Runtime remains motion-only.
-            Terrain, assets, canvas, route, and proof are separated. Generation 2 material and natural
-            readability calibration is active but not passed. The current calibration must represent the
-            served source honestly before the next visual renewal.
+            Terrain, assets, canvas, route, and proof are separated. Generation 2 material and natural readability
+            calibration is active but not passed. The route now boots the G2.5 free-drag and pole-swivel controller.
           </p>
           <span class="badge">Habitable · Forming</span>
 
@@ -333,23 +337,21 @@
           id="audralia-canvas-mount"
           data-audralia-canvas-mount="true"
           data-audralia-generation-baseline="G1-coherent-achieved"
-          data-audralia-current-phase="G2-calibration-active"
-          data-audralia-g2-passed="false"
-          data-audralia-terrain-five-fingers="true"
-          data-audralia-assets-boundary-expression="true"
-          data-audralia-assets-absorbs-authority="false"
-          aria-label="Audralia habitable-forming G2 calibration canvas mount"
+          data-audralia-current-phase="G2.5-free-drag-pole-swivel"
+          data-audralia-free-drag="true"
+          data-audralia-pole-swivel="true"
+          data-audralia-runtime-motion-only="true"
+          data-audralia-assets-absorb-authority="false"
+          data-audralia-touch-action="none"
+          aria-label="Audralia habitable-forming canvas mount"
         >
-          <span
-            data-audralia-mount-fallback="true"
-            style="position:absolute;inset:0;display:grid;place-items:center;color:rgba(238,246,255,.68);font-weight:800;text-align:center;padding:20px;"
-          >
-            Audralia G2 calibration chain loading.
+          <span data-audralia-mount-fallback="true" style="position:absolute;inset:0;display:grid;place-items:center;color:rgba(238,246,255,.68);font-weight:800;text-align:center;padding:20px;">
+            Audralia G2.5 free-drag and pole-swivel route loading.
           </span>
         </section>
       </section>
 
-      <section class="grid" aria-label="Audralia calibrated authority chain">
+      <section class="grid" aria-label="Audralia G2 authority chain">
         <article class="card">
           <h2>Generation 1 Baseline</h2>
           <p>Achieved. Audralia is structurally coherent and habitable-forming.</p>
@@ -376,12 +378,12 @@
         </article>
 
         <article class="card">
-          <h2>Proof</h2>
-          <p>The route must report the actual terrain and asset contracts before the next renewal.</p>
+          <h2>Controls</h2>
+          <p>Free drag, spin, and north/south pole-swivel inspection are active through the G2.5 route.</p>
         </article>
       </section>
 
-      <pre id="audralia-route-status" class="receipt" data-audralia-route-status="true">Audralia G2 calibration route preparing.</pre>
+      <pre id="audralia-route-status" class="receipt" data-audralia-route-status="true">Audralia G2.5 free-drag and pole-swivel route preparing.</pre>
 
       <pre class="receipt">AUDRALIA_HABITABLE_FORMING_G2_CALIBRATION_HTML_TNT_v1
 route=/showroom/globe/audralia/
@@ -389,6 +391,8 @@ public_identity=Audralia · Habitable Forming · G2 Calibration Active
 baseline=Generation 1 coherent achieved
 current_phase=Generation 2 calibration active
 g2_passed=false
+route_controller=AUDRALIA_G2_5_FREE_DRAG_POLE_SWIVEL_ROUTE_TNT_v1
+boot_key=audralia-g2-5-free-drag-pole-swivel-route-v1
 runtime=/assets/audralia/audralia.runtime.js
 surface=/assets/audralia/audralia.surface.js
 hex_surface=/assets/audralia/audralia.hex.surface.js
@@ -396,14 +400,17 @@ relief_surface=/assets/audralia/audralia.relief.surface.js
 terrain_fingers=/assets/audralia/audralia.terrain.fingers.js
 assets=/assets/audralia/audralia.assets.js
 canvas=/assets/audralia/audralia.canvas.js
+controls=/assets/audralia/audralia.controls.js
 runtime_motion_only=true
 assets_absorb_authority=false
+free_drag=true
+pole_swivel=true
 generated_image=false
 graphic_box=false
 visual_pass_claimed=false</pre>
     </main>
   </div>
 
-  <script type="module" src="./index.js?v=audralia-g2-calibration-current-source-alignment-v1"></script>
+  <script type="module" src="./index.js?v=audralia-g2-5-free-drag-pole-swivel-route-v1"></script>
 </body>
 </html>

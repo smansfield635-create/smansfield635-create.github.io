@@ -1,19 +1,17 @@
 // /assets/hearth/hearth.assets.js
-// HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_ASSETS_TNT_v8
+// HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_ASSETS_TNT_v9
 // Full-file replacement.
-// Assets authority with terrain texture, composition, elevation, and material differentiation.
-// TET: Terrain truth -> Elevation expression -> Terrain return.
-// MAPS: crust=body mass, sauce=terrain relief, cheese=composition blend, toppings=elevation/material features.
-// Quad-A: Audit, Attack, Adjust, Authorize.
+// Assets authority with elevation, mountain range, cliff wall, basin shadow, ridge highlight, and material-depth expression.
+// Preserves runtime, controls, canvas, route separation.
 // No GraphicBox. No generated image. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_ASSETS_TNT_v8";
-  const RECEIPT = "HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_ASSETS_RECEIPT_v8";
-  const PREVIOUS_CONTRACT = "HEARTH_JAGGED_COAST_AND_ISLAND_CHAIN_ASSETS_TNT_v7";
-  const REQUIRED_TERRAIN_EXTENSION = "HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_TERRAIN_EXTENSION_TNT_v4";
+  const CONTRACT = "HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_ASSETS_TNT_v9";
+  const RECEIPT = "HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_ASSETS_RECEIPT_v9";
+  const PREVIOUS_CONTRACT = "HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_ASSETS_TNT_v8";
+  const REQUIRED_TERRAIN_EXTENSION = "HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_TERRAIN_EXTENSION_TNT_v5";
   const BLUEPRINT = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_v1";
 
   const TAU = Math.PI * 2;
@@ -45,10 +43,13 @@
     warm: [128, 124, 70],
     upland: [102, 105, 82],
     ridge: [82, 86, 82],
-    cliff: [56, 64, 74],
+    cliff: [50, 58, 68],
+    cliffShadow: [28, 34, 42],
     granite: [122, 118, 110],
+    graniteLight: [156, 152, 140],
     slate: [48, 60, 74],
     marble: [178, 174, 160],
+    snow: [216, 232, 232],
     ice: [204, 224, 226],
     polar: [126, 140, 144],
     dark: [52, 50, 58],
@@ -242,22 +243,14 @@
 
   function paletteBase(t) {
     switch (t.primaryMassKey) {
-      case "north-crown-mass":
-        return mix(C.slate, C.polar, 0.58);
-      case "equatorial-great-mass":
-        return mix(C.lowland, C.upland, 0.34);
-      case "northwest-temperate-mass":
-        return mix(C.temperate, C.granite, 0.24);
-      case "northeast-broken-shelf-mass":
-        return mix(C.fertile, C.beach, 0.30);
-      case "southeast-warm-mass":
-        return mix(C.warm, C.beach, 0.28);
-      case "southwest-ridge-mass":
-        return mix(C.dark, C.ridge, 0.40);
-      case "south-transitional-mass":
-        return mix(C.slate, C.polar, 0.30);
-      default:
-        return C.lowland;
+      case "north-crown-mass": return mix(C.slate, C.polar, 0.58);
+      case "equatorial-great-mass": return mix(C.lowland, C.upland, 0.34);
+      case "northwest-temperate-mass": return mix(C.temperate, C.granite, 0.24);
+      case "northeast-broken-shelf-mass": return mix(C.fertile, C.beach, 0.30);
+      case "southeast-warm-mass": return mix(C.warm, C.beach, 0.28);
+      case "southwest-ridge-mass": return mix(C.dark, C.ridge, 0.40);
+      case "south-transitional-mass": return mix(C.slate, C.polar, 0.30);
+      default: return C.lowland;
     }
   }
 
@@ -277,34 +270,41 @@
 
     let color = paletteBase(t);
 
-    color = mix(color, C.soil, terrain.soil * 0.44);
-    color = mix(color, C.fertile, terrain.vegetation * 0.50);
-    color = mix(color, C.upland, terrain.elevation * 0.32);
-    color = mix(color, C.ridge, terrain.mountain * 0.42);
-    color = mix(color, C.granite, terrain.granite * 0.34);
-    color = mix(color, C.slate, terrain.slate * 0.32);
-    color = mix(color, C.cliff, clamp(terrain.cliff + terrain.hardJaggedEdge * 0.42, 0, 1) * 0.42);
-    color = mix(color, C.wetBeach, terrain.sediment * t.coast * 0.22);
-    color = mix(color, C.beach, clamp(terrain.sediment + terrain.islandEdge * 0.24, 0, 1) * t.coast * 0.26);
-    color = mix(color, C.polar, terrain.ice * 0.28);
-    color = mix(color, C.ice, terrain.ice * 0.46);
+    color = mix(color, C.soil, terrain.soil * 0.40);
+    color = mix(color, C.fertile, terrain.vegetation * 0.42);
+    color = mix(color, C.upland, terrain.elevation * 0.26);
+    color = mix(color, C.ridge, terrain.mountainRange * 0.44);
+    color = mix(color, C.granite, terrain.granite * 0.36);
+    color = mix(color, C.graniteLight, terrain.ridgeHighlight * 0.26);
+    color = mix(color, C.slate, terrain.slate * 0.34);
+    color = mix(color, C.cliff, clamp(terrain.cliffWall + terrain.escarpment * 0.48, 0, 1) * 0.48);
+    color = mix(color, C.cliffShadow, terrain.depthShadow * 0.36);
+    color = mix(color, C.shadow, terrain.shadowSlope * 0.20);
+    color = mix(color, C.wetBeach, terrain.sediment * t.coast * 0.20);
+    color = mix(color, C.beach, clamp(terrain.sediment + terrain.islandEdge * 0.24, 0, 1) * t.coast * 0.24);
+    color = mix(color, C.polar, terrain.ice * 0.26);
+    color = mix(color, C.ice, terrain.ice * 0.42);
+    color = mix(color, C.snow, terrain.ridgeHighlight * terrain.ice * 0.34);
     color = mix(color, C.dark, terrain.dryStone * 0.18);
-    color = mix(color, C.copper, terrain.copper * 0.13);
+    color = mix(color, C.copper, terrain.copper * 0.12);
     color = mix(color, C.gold, terrain.gold * 0.18);
-    color = mix(color, C.opal, terrain.opal * 0.16);
+    color = mix(color, C.opal, terrain.opal * 0.15);
     color = mix(color, C.marble, terrain.plateau * terrain.granite * 0.08);
 
-    const elevationLift =
-      terrain.elevation * 9 +
-      terrain.mountain * 10 -
-      terrain.valley * 5 -
-      terrain.basin * 6 -
-      terrain.cliff * 4 +
+    const reliefLift =
+      terrain.elevation * 10 +
+      terrain.ridgeHighlight * 16 +
+      terrain.mountainRange * 9 -
+      terrain.depthShadow * 14 -
+      terrain.shadowSlope * 7 -
+      terrain.valley * 6 -
+      terrain.basin * 7 -
+      terrain.cliffWall * 4 +
       terrain.soil * 2 +
-      terrain.grainTexture * 6 -
+      terrain.grainTexture * 5 -
       3;
 
-    color = lift(color, elevationLift);
+    color = lift(color, reliefLift);
 
     return { color, terrain: t };
   }
@@ -346,6 +346,10 @@
     canvas.dataset.hearthAssetsReceipt = RECEIPT;
     canvas.dataset.hearthTerrainExtensionContract = REQUIRED_TERRAIN_EXTENSION;
     canvas.dataset.hearthTerrainExtensionLoaded = String(Boolean(terrainExtension()));
+    canvas.dataset.hearthElevationDepthLoaded = "true";
+    canvas.dataset.hearthMountainRangeSystemLoaded = "true";
+    canvas.dataset.hearthCliffSystemLoaded = "true";
+    canvas.dataset.hearthVisualDepthActive = "true";
     canvas.dataset.hearthLandTextureCompositionLoaded = "true";
     canvas.dataset.hearthElevationDifferentiationActive = "true";
     canvas.dataset.hearthCompositionDifferentiationActive = "true";
@@ -371,6 +375,10 @@
       previousContract: PREVIOUS_CONTRACT,
       requiredTerrainExtension: REQUIRED_TERRAIN_EXTENSION,
       terrainExtensionLoaded: Boolean(extension),
+      elevationDepthLoaded: true,
+      mountainRangeSystemLoaded: true,
+      cliffSystemLoaded: true,
+      visualDepthActive: true,
       landTextureCompositionLoaded: true,
       elevationDifferentiationActive: true,
       compositionDifferentiationActive: true,
@@ -420,6 +428,10 @@
   document.documentElement.dataset.hearthAssetsLoaded = "true";
   document.documentElement.dataset.hearthAssetsContract = CONTRACT;
   document.documentElement.dataset.hearthAssetsReceipt = RECEIPT;
+  document.documentElement.dataset.hearthElevationDepthLoaded = "true";
+  document.documentElement.dataset.hearthMountainRangeSystemLoaded = "true";
+  document.documentElement.dataset.hearthCliffSystemLoaded = "true";
+  document.documentElement.dataset.hearthVisualDepthActive = "true";
   document.documentElement.dataset.hearthLandTextureCompositionLoaded = "true";
   document.documentElement.dataset.hearthElevationDifferentiationActive = "true";
   document.documentElement.dataset.hearthCompositionDifferentiationActive = "true";

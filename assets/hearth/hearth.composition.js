@@ -1,96 +1,41 @@
 // /assets/hearth/hearth.composition.js
-// HEARTH_DIAMOND_OPAL_SUMMIT_COMPOSITION_AUTHORITY_TNT_v1
-// Full-file replacement / new file.
-// Purpose:
-// - Add Hearth composition authority beneath visible terrain.
-// - Define diamond + opal as dominant deep planetary composition.
-// - Define marble, slate, granite, stone, clay, dirt, sand, gold, silver, platinum, and precious mineral abundance.
-// - Bind nine-to-one composition logic.
-// - Higher summit = more expensive environment = higher diamond/opal/platinum/gold density.
-// - This file does not render trees, bushes, forest canopy, animals, or vegetation topology.
+// HEARTH_COMPOSITION_PARENT_AUTHORITY_TNT_v2
+// Full-file replacement.
+// Parent composition authority only.
+// Owns diamond/opal/mineral substrate, nine-to-one ratio, summit expense pressure.
+// Does not own route, canvas, hydrology, terrain shape, grass, rivers, vegetation, or visual pass.
 // No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_DIAMOND_OPAL_SUMMIT_COMPOSITION_AUTHORITY_TNT_v1";
-  const RECEIPT = "HEARTH_DIAMOND_OPAL_SUMMIT_COMPOSITION_AUTHORITY_RECEIPT_v1";
-  const VERSION = "2026-05-10.hearth-diamond-opal-summit-composition-v1";
+  const CONTRACT = "HEARTH_COMPOSITION_PARENT_AUTHORITY_TNT_v2";
+  const RECEIPT = "HEARTH_COMPOSITION_PARENT_AUTHORITY_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "HEARTH_DIAMOND_OPAL_SUMMIT_COMPOSITION_AUTHORITY_TNT_v1";
+  const VERSION = "2026-05-10.hearth-composition-parent-authority-v2";
 
-  const TAU = Math.PI * 2;
-
-  const NINE_TO_ONE_RATIO = Object.freeze({
-    structuralRatio: 9,
-    preciousExposureRatio: 1,
+  const RATIO = Object.freeze({
+    structural: 9,
+    exposedPrecious: 1,
     structuralShare: 0.9,
-    preciousSurfaceExposureShare: 0.1,
+    exposedPreciousShare: 0.1,
     summitScale: 9,
     originScale: 1
   });
 
-  const DEEP_PLANETARY_SIGNATURE = Object.freeze({
-    diamond: 0.42,
-    opal: 0.28,
-    marble: 0.08,
-    slate: 0.06,
-    granite: 0.06,
-    quartz: 0.04,
-    platinum: 0.025,
-    gold: 0.02,
-    silver: 0.015,
-    tracePreciousMinerals: 0.02
-  });
-
-  const STRUCTURAL_MATERIALS = Object.freeze([
-    "marble",
-    "slate",
-    "granite",
-    "quartzite",
-    "basalt",
-    "limestone",
-    "sandstone",
-    "clay",
-    "soil",
-    "sand",
-    "rock"
-  ]);
-
-  const PRECIOUS_MATERIALS = Object.freeze([
-    "diamond",
-    "opal",
-    "platinum",
-    "gold",
-    "silver",
-    "quartz",
-    "sapphire",
-    "emerald",
-    "ruby",
-    "trace-precious-minerals"
-  ]);
-
-  const MATERIAL_TONES = Object.freeze({
-    marble: [186, 182, 168],
-    slate: [70, 78, 88],
-    granite: [122, 120, 112],
-    quartzite: [164, 159, 145],
-    basalt: [45, 50, 58],
-    limestone: [174, 166, 134],
-    sandstone: [173, 139, 88],
-    clay: [144, 92, 62],
-    soil: [102, 82, 54],
-    sand: [196, 171, 108],
-    rock: [96, 98, 92],
-
-    diamond: [210, 235, 240],
-    opal: [166, 211, 211],
+  const TONES = Object.freeze({
+    diamond: [208, 235, 240],
+    opal: [160, 210, 210],
+    marble: [184, 180, 164],
+    slate: [68, 76, 86],
+    granite: [124, 123, 114],
+    quartz: [196, 193, 180],
     platinum: [196, 198, 194],
     gold: [218, 176, 73],
     silver: [186, 192, 194],
-    quartz: [198, 196, 184],
-    sapphire: [62, 86, 148],
-    emerald: [48, 134, 86],
-    ruby: [142, 50, 62],
-    "trace-precious-minerals": [151, 128, 112]
+    clay: [145, 94, 63],
+    basalt: [43, 48, 56],
+    stone: [96, 98, 92]
   });
 
   function clamp(value, min, max) {
@@ -101,11 +46,6 @@
     return a + (b - a) * clamp(t, 0, 1);
   }
 
-  function smoothstep(edge0, edge1, x) {
-    const t = clamp((x - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
-    return t * t * (3 - 2 * t);
-  }
-
   function mix(a, b, t) {
     const k = clamp(t, 0, 1);
     return [
@@ -113,6 +53,11 @@
       Math.round(lerp(a[1], b[1], k)),
       Math.round(lerp(a[2], b[2], k))
     ];
+  }
+
+  function smoothstep(edge0, edge1, x) {
+    const t = clamp((x - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
+    return t * t * (3 - 2 * t);
   }
 
   function wrap01(value) {
@@ -134,12 +79,10 @@
     const s = Math.max(1, Math.floor(scale));
     const x = wrap01(u) * s;
     const y = clamp(v, 0, 1) * s;
-
     const x0 = Math.floor(x);
     const y0 = Math.floor(y);
     const x1 = x0 + 1;
     const y1 = y0 + 1;
-
     const xf = x - x0;
     const yf = y - y0;
     const sx = xf * xf * (3 - 2 * xf);
@@ -152,7 +95,7 @@
     );
   }
 
-  function fbm(u, v, seed, octaves = 6) {
+  function fbm(u, v, seed, octaves = 5) {
     let total = 0;
     let norm = 0;
     let amp = 0.58;
@@ -168,7 +111,7 @@
     return total / Math.max(0.000001, norm);
   }
 
-  function ridged(u, v, seed, octaves = 6) {
+  function ridged(u, v, seed, octaves = 5) {
     let total = 0;
     let norm = 0;
     let amp = 0.62;
@@ -197,181 +140,103 @@
     return items[items.length - 1];
   }
 
-  function summitLevelFromPressure(pressure) {
-    return clamp(Math.ceil(clamp(pressure, 0, 0.999999) * 9), 1, 9);
-  }
+  function sampleComposition(u, v, context = {}) {
+    const elevation = clamp(context.elevation || 0, 0, 1);
+    const mountain = clamp(context.mountain || 0, 0, 1);
+    const cliff = clamp(context.cliff || 0, 0, 1);
+    const wonder = clamp(context.wonderPressure || 0, 0, 1);
+    const mineralNoise = ridged(u * 1.5 + 0.07, v * 1.2 - 0.04, 130000, 5);
+    const seamNoise = fbm(u * 2.1 - 0.13, v * 1.7 + 0.11, 131000, 5);
 
-  function sampleSummitPressure(u, v, context = {}) {
-    const elevation = clamp(context.elevation || context.elevationPressure || 0, 0, 1);
-    const ridge = clamp(context.ridge || context.mountain || context.mountainPressure || 0, 0, 1);
-    const cliff = clamp(context.cliff || context.cliffPressure || 0, 0, 1);
-    const deepPressure = ridged(u * 1.4 + 0.09, v * 1.2 - 0.07, 130000, 6);
-    const seamPressure = fbm(u * 2.1 - 0.14, v * 1.7 + 0.11, 131000, 5);
-
-    return clamp(
-      deepPressure * 0.38 +
-        seamPressure * 0.18 +
-        elevation * 0.2 +
-        ridge * 0.18 +
-        cliff * 0.06,
+    const summitPressure = clamp(
+      mineralNoise * 0.28 +
+        seamNoise * 0.16 +
+        elevation * 0.18 +
+        mountain * 0.22 +
+        cliff * 0.06 +
+        wonder * 0.22,
       0,
       1
     );
-  }
 
-  function structuralMaterial(u, v, summitLevel) {
-    const selector = fbm(u * 1.7 + 0.13, v * 1.3 - 0.09, 140000, 5);
-    const high = summitLevel / 9;
-
-    return chooseWeighted(
-      STRUCTURAL_MATERIALS,
-      [
-        0.72 + high * 0.18, // marble
-        0.76,               // slate
-        0.88 + high * 0.16, // granite
-        0.42 + high * 0.22, // quartzite
-        0.52,               // basalt
-        0.44,               // limestone
-        0.38,               // sandstone
-        0.36 * (1 - high),  // clay
-        0.32 * (1 - high),  // soil
-        0.28 * (1 - high),  // sand
-        0.62                // rock
-      ],
-      selector
-    );
-  }
-
-  function preciousMaterial(u, v, summitLevel) {
-    const selector = fbm(u * 2.3 - 0.17, v * 1.9 + 0.12, 150000, 5);
-    const high = summitLevel / 9;
-
-    return chooseWeighted(
-      PRECIOUS_MATERIALS,
-      [
-        0.52 + high * 1.85, // diamond
-        0.72 + high * 1.35, // opal
-        0.08 + high * 1.2,  // platinum
-        0.1 + high * 1.0,   // gold
-        0.18 + high * 0.48, // silver
-        0.38,               // quartz
-        0.05 + high * 0.18, // sapphire
-        0.05 + high * 0.16, // emerald
-        0.04 + high * 0.14, // ruby
-        0.24                // trace
-      ],
-      selector
-    );
-  }
-
-  function sampleComposition(u, v, context = {}) {
-    const pressure = sampleSummitPressure(u, v, context);
-    const summitLevel = summitLevelFromPressure(pressure);
+    const summitLevel = clamp(Math.ceil(summitPressure * 9), 1, 9);
     const summitNormalized = summitLevel / 9;
 
-    const structural = structuralMaterial(u, v, summitLevel);
-    const precious = preciousMaterial(u, v, summitLevel);
-
-    const seam = ridged(u * 2.8 + 0.21, v * 2.1 - 0.18, 160000, 5);
-    const inlay = smoothstep(0.58, 0.94, seam) * smoothstep(0.18, 1, summitNormalized);
-    const exposedPreciousShare = clamp(
-      NINE_TO_ONE_RATIO.preciousSurfaceExposureShare *
-        (0.35 + summitNormalized * 1.15) *
-        (0.55 + inlay * 0.85),
-      0.02,
-      0.32
+    const structural = chooseWeighted(
+      ["marble", "slate", "granite", "quartz", "basalt", "clay", "stone"],
+      [
+        0.55 + summitNormalized * 0.34,
+        0.62,
+        0.76 + summitNormalized * 0.24,
+        0.34 + summitNormalized * 0.28,
+        0.48,
+        0.32 * (1 - summitNormalized),
+        0.72
+      ],
+      fbm(u * 1.9, v * 1.4, 140000, 4)
     );
 
-    const structuralShare = clamp(1 - exposedPreciousShare, 0.68, 0.98);
-    const expenseIndex = clamp(
-      summitNormalized * 0.55 +
-        inlay * 0.25 +
-        (precious === "diamond" ? 0.12 : 0) +
-        (precious === "platinum" ? 0.1 : 0) +
-        (precious === "gold" ? 0.08 : 0) +
-        (precious === "opal" ? 0.06 : 0),
-      0,
-      1
+    const precious = chooseWeighted(
+      ["diamond", "opal", "platinum", "gold", "silver", "quartz"],
+      [
+        0.36 + summitNormalized * 1.9,
+        0.48 + summitNormalized * 1.35,
+        0.05 + summitNormalized * 1.1,
+        0.06 + summitNormalized * 0.95,
+        0.16 + summitNormalized * 0.42,
+        0.38
+      ],
+      fbm(u * 2.2 - 0.17, v * 1.8 + 0.12, 150000, 4)
     );
 
-    const structuralTone = MATERIAL_TONES[structural] || MATERIAL_TONES.rock;
-    const preciousTone = MATERIAL_TONES[precious] || MATERIAL_TONES["trace-precious-minerals"];
-    const inlayTone = mix(structuralTone, preciousTone, exposedPreciousShare);
+    const vein = smoothstep(0.66, 0.94, ridged(u * 3.0 + 0.13, v * 2.1 - 0.09, 160000, 4));
+    const exposure = clamp(0.018 + summitNormalized * 0.055 + vein * 0.055 + wonder * 0.04, 0.012, 0.16);
+    const tone = mix(TONES[structural] || TONES.stone, TONES[precious] || TONES.quartz, exposure);
 
     return Object.freeze({
       contract: CONTRACT,
       receipt: RECEIPT,
-      ratio: NINE_TO_ONE_RATIO,
-      deepPlanetarySignature: DEEP_PLANETARY_SIGNATURE,
-
       summitLevel,
       summitNormalized,
-      summitPressure: pressure,
-      expenseIndex,
-
+      summitPressure,
       structuralMaterial: structural,
       preciousMaterial: precious,
-      primaryInlay: precious === "diamond" || precious === "opal" ? precious : summitLevel >= 7 ? "diamond-opal-inlay" : "mineral-inlay",
-
-      structuralShare,
-      preciousSurfaceExposureShare: exposedPreciousShare,
+      exposure,
+      tone,
+      ratio: RATIO,
       diamondOpalDominantInterior: true,
-
-      marbleSlateGraniteAbundant: true,
-      platinumGoldSilverAbundant: summitLevel >= 6,
-      diamondsAbundant: summitLevel >= 7,
-      opalAbundant: summitLevel >= 5,
-
-      seamPressure: seam,
-      inlayExposure: inlay,
-      tone: inlayTone,
-
-      ownsVisibleTerrainShape: false,
-      ownsGrass: false,
-      ownsTrees: false,
-      ownsBushes: false,
-      ownsForestCanopy: false,
-      ownsAnimals: false,
+      higherSummitHigherExpense: true,
+      platinumGoldDiamondDensityIncreasesWithSummit: true,
       ownsRoute: false,
       ownsCanvas: false,
-
+      ownsHydrology: false,
+      ownsVegetation: false,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
     });
   }
 
-  function tintTerrainColor(baseColor, composition, intensity = 0.12) {
-    const safeBase = Array.isArray(baseColor) ? baseColor : [110, 118, 90];
-    const tone = composition && Array.isArray(composition.tone) ? composition.tone : MATERIAL_TONES.rock;
-    const summitBoost = composition ? composition.summitNormalized * 0.06 : 0;
-    const inlayBoost = composition ? composition.inlayExposure * 0.08 : 0;
-
-    return mix(safeBase, tone, clamp(intensity + summitBoost + inlayBoost, 0, 0.28));
+  function tintTerrain(baseColor, composition, intensity = 0.08) {
+    if (!composition || !Array.isArray(composition.tone)) return baseColor;
+    return mix(baseColor, composition.tone, clamp(intensity + composition.exposure * 0.55, 0, 0.18));
   }
 
   function getStatus() {
     return Object.freeze({
       contract: CONTRACT,
       receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "hearth-composition",
-      compositionFileAdded: true,
-      nineToOneRatio: NINE_TO_ONE_RATIO,
+      authority: "composition-parent",
+      nineToOneRatio: RATIO,
       diamondOpalDominantInterior: true,
-      marbleSlateGraniteAbundant: true,
-      platinumGoldSilverAbundantBySummit: true,
       higherSummitHigherExpense: true,
-      terrainOnlyStageCompatible: true,
+      routeOwner: false,
+      canvasOwner: false,
+      hydrologyOwner: false,
+      materialOwner: false,
       vegetationTopologyHeld: true,
-      ownsVisibleTerrainShape: false,
-      ownsGrass: false,
-      ownsTrees: false,
-      ownsBushes: false,
-      ownsForestCanopy: false,
-      ownsAnimals: false,
-      ownsRoute: false,
-      ownsCanvas: false,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
@@ -381,11 +246,10 @@
   window.HEARTH_COMPOSITION = Object.freeze({
     contract: CONTRACT,
     receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
-    ratio: NINE_TO_ONE_RATIO,
-    deepPlanetarySignature: DEEP_PLANETARY_SIGNATURE,
     sampleComposition,
-    tintTerrainColor,
+    tintTerrain,
     getStatus
   });
 
@@ -394,9 +258,7 @@
   document.documentElement.dataset.hearthCompositionLoaded = "true";
   document.documentElement.dataset.hearthCompositionContract = CONTRACT;
   document.documentElement.dataset.hearthCompositionReceipt = RECEIPT;
-  document.documentElement.dataset.hearthCompositionNineToOne = "true";
-  document.documentElement.dataset.hearthDiamondOpalDominantInterior = "true";
-  document.documentElement.dataset.hearthHigherSummitHigherExpense = "true";
+  document.documentElement.dataset.hearthCompositionParentAuthority = "true";
   document.documentElement.dataset.generatedImage = "false";
   document.documentElement.dataset.graphicBox = "false";
   document.documentElement.dataset.visualPassClaimed = "false";

@@ -2,24 +2,19 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-elevation-mountain-range-cliff-depth"
+  data-page="hearth-climate-biome-region"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_HTML_TNT_v10"
+  data-contract="HEARTH_CLIMATE_BIOME_REGION_HTML_TNT_v12"
   data-body="hearth"
   data-generation-baseline="G2-seven-body-mass-formation"
-  data-current-phase="elevation-mountain-range-cliff-depth"
+  data-current-phase="climate-biome-region-coloring"
   data-body-mass-count="7"
-  data-elevation-depth-loaded="true"
-  data-mountain-range-system-loaded="true"
-  data-cliff-system-loaded="true"
-  data-visual-depth-active="true"
-  data-land-texture-composition-loaded="true"
-  data-elevation-differentiation-active="true"
-  data-composition-differentiation-active="true"
-  data-terrain-texture-active="true"
-  data-tet-map="TERRAIN_TO_ELEVATION_TO_TERRAIN"
-  data-maps-protocol="MAKE_A_PIZZA_SYSTEMIC_EXECUTION"
-  data-quad-a-audit="AUDIT_ATTACK_ADJUST_AUTHORIZE_PASS"
+  data-climate-authority-loaded="true"
+  data-dedicated-climate-file="/assets/hearth/hearth.climate.js"
+  data-region-biome-authority-loaded="true"
+  data-biome-color-not-body-mass-color="true"
+  data-body-mass-assigned-coloring="false"
+  data-climate-region-differentiation-active="true"
   data-two-body-read="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -28,7 +23,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Hearth Elevation Depth</title>
+  <title>Diamond Gate Bridge · Hearth Climate Biomes</title>
   <style>
     :root {
       --bg:#030914;
@@ -273,13 +268,13 @@
     <main id="hearth-main">
       <section class="hero" aria-labelledby="hearth-title">
         <div>
-          <div class="eyebrow">Hearth · Elevation + Mountain Ranges + Cliffs + Visual Depth</div>
+          <div class="eyebrow">Hearth · Climate + Region + Biome Coloring</div>
           <h1 id="hearth-title">Hearth</h1>
           <p class="lede">
-            Hearth now gives land visible vertical character: mountain spines, secondary ranges, escarpments,
-            cliff walls, basin shadows, ridge highlights, highlands, valleys, plateaus, mineral seams, and visual depth.
+            Hearth no longer assigns one color to each land body. Land expression now follows climate and region:
+            forest, desert, plains, mountains, tundra, wetlands, savanna, steppe, coast, ice, and highlands.
           </p>
-          <span class="badge">Elevation · Ranges · Cliffs · Depth</span>
+          <span class="badge">Biome Color · Not Body-Mass Color</span>
 
           <div class="actions">
             <a class="button primary" href="/showroom/globe/">Return to Globe Split</a>
@@ -291,54 +286,47 @@
         <section
           id="hearthCanvasMount"
           data-hearth-canvas-mount="true"
-          data-hearth-elevation-depth-loaded="true"
-          data-hearth-mountain-range-system-loaded="true"
-          data-hearth-cliff-system-loaded="true"
-          data-hearth-visual-depth-active="true"
-          data-hearth-land-texture-composition-loaded="true"
-          data-hearth-elevation-differentiation-active="true"
-          data-hearth-composition-differentiation-active="true"
-          data-hearth-terrain-texture-active="true"
-          data-hearth-tet-map="TERRAIN_TO_ELEVATION_TO_TERRAIN"
-          data-hearth-maps-protocol="MAKE_A_PIZZA_SYSTEMIC_EXECUTION"
-          data-hearth-quad-a-audit="AUDIT_ATTACK_ADJUST_AUTHORIZE_PASS"
+          data-hearth-climate-authority-loaded="true"
+          data-hearth-dedicated-climate-file="/assets/hearth/hearth.climate.js"
+          data-hearth-region-biome-authority-loaded="true"
+          data-hearth-biome-color-not-body-mass-color="true"
+          data-hearth-body-mass-assigned-coloring="false"
+          data-hearth-climate-region-differentiation-active="true"
           data-hearth-body-mass-count="7"
           data-hearth-two-body-read="false"
           data-hearth-pole-swivel="true"
-          aria-label="Hearth elevation mountain range cliff depth canvas mount"
+          aria-label="Hearth climate biome region canvas mount"
         >
           <span data-hearth-mount-fallback="true" style="position:absolute;inset:0;display:grid;place-items:center;color:rgba(238,246,255,.68);font-weight:800;text-align:center;padding:20px;">
-            Hearth elevation, mountain range, cliff, and visual-depth route loading.
+            Hearth climate/biome/region route loading.
           </span>
         </section>
       </section>
 
-      <section class="grid" aria-label="Hearth elevation mountain range cliff depth system">
-        <article class="card"><h2>Mountain Ranges</h2><p>Each body mass receives its own ridge spine, secondary range, cross-ridge, and highland pressure.</p></article>
-        <article class="card"><h2>Cliffs + Basins</h2><p>Escarpments, cliff walls, basin cuts, valleys, and shadow slopes create visible land depth.</p></article>
-        <article class="card"><h2>Material Relief</h2><p>Granite, slate, ice, soil, mineral veins, ridge highlights, and depth shadows separate surface composition.</p></article>
+      <section class="grid" aria-label="Hearth climate biome region system">
+        <article class="card"><h2>Climate Authority</h2><p>/assets/hearth/hearth.climate.js owns biome classification and region logic.</p></article>
+        <article class="card"><h2>No Body Color</h2><p>Land color now follows climate, moisture, heat, elevation, coast, and latitude.</p></article>
+        <article class="card"><h2>Regional Differentiation</h2><p>Forest, desert, plains, mountain, tundra, wetland, savanna, and steppe regions can coexist on the same mass.</p></article>
       </section>
 
-      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth elevation, mountain range, cliff, and visual-depth route preparing.</pre>
+      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth climate/biome/region route preparing.</pre>
 
-      <pre class="receipt">HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_HTML_TNT_v10
+      <pre class="receipt">HEARTH_CLIMATE_BIOME_REGION_HTML_TNT_v12
 route=/showroom/globe/hearth/
-controller=HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_ROUTE_TNT_v10
-terrain_extension=HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_TERRAIN_EXTENSION_TNT_v5
-assets=HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_ASSETS_TNT_v9
+controller=HEARTH_CLIMATE_BIOME_REGION_ROUTE_TNT_v12
+terrain_extension=HEARTH_TERRAIN_BASE_FOR_DEDICATED_ELEVATION_TNT_v6
+elevation=/assets/hearth/hearth.elevation.js
+elevation_contract=HEARTH_TANGIBLE_ELEVATION_MOUNTAINS_FOOTHILLS_CLIFFS_TNT_v1
+climate=/assets/hearth/hearth.climate.js
+climate_contract=HEARTH_CLIMATE_REGION_BIOME_AUTHORITY_TNT_v1
+assets=HEARTH_ASSETS_CLIMATE_BIOME_REGION_COLORING_TNT_v11
 controls=HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_CONTROLS_TNT_v2
 canvas=HEARTH_G2_CANVAS_POLE_SWIVEL_SEVEN_BODY_CONSUMER_TNT_v2
-elevation_depth_loaded=true
-mountain_range_system_loaded=true
-cliff_system_loaded=true
-visual_depth_active=true
-land_texture_composition_loaded=true
-elevation_differentiation_active=true
-composition_differentiation_active=true
-terrain_texture_active=true
-tet_map=TERRAIN_TO_ELEVATION_TO_TERRAIN
-maps_protocol=MAKE_A_PIZZA_SYSTEMIC_EXECUTION
-quad_a_audit=AUDIT_ATTACK_ADJUST_AUTHORIZE_PASS
+climate_authority_loaded=true
+region_biome_authority_loaded=true
+biome_color_not_body_mass_color=true
+body_mass_assigned_coloring=false
+climate_region_differentiation_active=true
 body_mass_count=7
 two_body_read=false
 runtime_touched=false
@@ -350,6 +338,6 @@ visual_pass_claimed=false</pre>
     </main>
   </div>
 
-  <script src="./index.js?v=hearth-elevation-mountain-range-cliff-depth-v10"></script>
+  <script src="./index.js?v=hearth-climate-biome-region-v12"></script>
 </body>
 </html>

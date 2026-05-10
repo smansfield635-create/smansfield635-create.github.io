@@ -1,15 +1,16 @@
 // /assets/audralia/audralia.canvas.js
-// AUDRALIA_V18_CANVAS_ASSET_BOUNDARY_CONSUMER_TNT_v1
-// Canvas draws Audralia and consumes runtime motion + asset material.
+// AUDRALIA_G2_5_CANVAS_POLE_SWIVEL_CONSUMER_TNT_v1
+// Full-file replacement.
+// Canvas remains draw/consume authority only.
+// New delta: consumes inspectionTiltRadians / poleSwivelRadians supplied by controls.
 // Runtime remains motion-only.
-// Assets bind, separate, define, carry, and express visible material boundaries.
-// No GraphicBox. No generated image. No visual-pass claim.
+// Controls own drag, spin, and pole swivel.
 
 import * as AudraliaAssets from "./audralia.assets.js";
 
-const CONTRACT = "AUDRALIA_V18_CANVAS_ASSET_BOUNDARY_CONSUMER_TNT_v1";
-const RECEIPT = "AUDRALIA_CANVAS_AUTHORITY_RECEIPT";
-const PREVIOUS_CONTRACT = "AUDRALIA_CANVAS_PARENT_CONTRACT_CHILD_ACTIVATION_TNT_v13";
+const CONTRACT = "AUDRALIA_G2_5_CANVAS_POLE_SWIVEL_CONSUMER_TNT_v1";
+const RECEIPT = "AUDRALIA_G2_5_CANVAS_POLE_SWIVEL_CONSUMER_RECEIPT";
+const PREVIOUS_CONTRACT = "AUDRALIA_V18_CANVAS_ASSET_BOUNDARY_CONSUMER_TNT_v1";
 const AXIS_TILT_DEGREES = 23.44;
 const TAU = Math.PI * 2;
 
@@ -39,24 +40,58 @@ function mat4Multiply(a, b) {
   return out;
 }
 
+function mat4RotateX(rad) {
+  const c = Math.cos(rad);
+  const s = Math.sin(rad);
+
+  return new Float32Array([
+    1, 0, 0, 0,
+    0, c, s, 0,
+    0, -s, c, 0,
+    0, 0, 0, 1
+  ]);
+}
+
 function mat4RotateY(rad) {
   const c = Math.cos(rad);
   const s = Math.sin(rad);
-  return new Float32Array([c, 0, -s, 0, 0, 1, 0, 0, s, 0, c, 0, 0, 0, 0, 1]);
+
+  return new Float32Array([
+    c, 0, -s, 0,
+    0, 1, 0, 0,
+    s, 0, c, 0,
+    0, 0, 0, 1
+  ]);
 }
 
 function mat4RotateZ(rad) {
   const c = Math.cos(rad);
   const s = Math.sin(rad);
-  return new Float32Array([c, s, 0, 0, -s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+
+  return new Float32Array([
+    c, s, 0, 0,
+    -s, c, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1
+  ]);
 }
 
 function mat4Scale(s) {
-  return new Float32Array([s, 0, 0, 0, 0, s, 0, 0, 0, 0, s, 0, 0, 0, 0, 1]);
+  return new Float32Array([
+    s, 0, 0, 0,
+    0, s, 0, 0,
+    0, 0, s, 0,
+    0, 0, 0, 1
+  ]);
 }
 
 function mat4Translate(x, y, z) {
-  return new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1]);
+  return new Float32Array([
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    x, y, z, 1
+  ]);
 }
 
 function mat4Ortho(left, right, bottom, top, near, far) {
@@ -93,7 +128,6 @@ function createProgram(gl, vertexSource, fragmentSource) {
   gl.attachShader(program, vertex);
   gl.attachShader(program, fragment);
   gl.linkProgram(program);
-
   gl.deleteShader(vertex);
   gl.deleteShader(fragment);
 
@@ -137,6 +171,7 @@ function createSphere(latSegments, lonSegments) {
     for (let lon = 0; lon < lonSegments; lon += 1) {
       const a = lat * row + lon;
       const b = a + row;
+
       indices.push(a, b, a + 1);
       indices.push(b, b + 1, a + 1);
     }
@@ -163,13 +198,13 @@ function ensureCanvas(mount) {
   canvas.dataset.audraliaCanvasReceipt = RECEIPT;
   canvas.dataset.audraliaCanvasContract = CONTRACT;
   canvas.dataset.audraliaPreviousCanvasContract = PREVIOUS_CONTRACT;
+  canvas.dataset.audraliaPoleSwivelConsumer = "true";
   canvas.dataset.audraliaAssetsBoundaryExpression = "true";
   canvas.dataset.audraliaAssetsAbsorbAuthority = "false";
   canvas.dataset.generatedImage = "false";
   canvas.dataset.graphicBox = "false";
   canvas.dataset.visualPassClaimed = "false";
   canvas.tabIndex = 0;
-
   canvas.style.position = "absolute";
   canvas.style.inset = "0";
   canvas.style.width = "100%";
@@ -182,29 +217,50 @@ function ensureCanvas(mount) {
 }
 
 function readRuntimeState(runtime, fallbackStart) {
-  const status =
-    runtime?.getState?.() ||
+  const sampled =
+    runtime?.sampleMotionState?.() ||
+    runtime?.sampleRuntimeMotion?.() ||
+    runtime?.sampleRuntimeState?.() ||
+    runtime?.sampleAudraliaRuntime?.() ||
     runtime?.getMotionState?.() ||
+    runtime?.getStatus?.()?.motion ||
     runtime?.getStatus?.() ||
     window.__AUDRALIA_RUNTIME_STATUS__ ||
     {};
 
   const elapsed = Math.max(0, (performance.now() - fallbackStart) / 1000);
 
+  const rotationRadians =
+    Number.isFinite(sampled.rotationRadians) ? sampled.rotationRadians :
+    Number.isFinite(sampled.rotationRad) ? sampled.rotationRad :
+    Number.isFinite(sampled.angleRadians) ? sampled.angleRadians :
+    Number.isFinite(sampled.orbitRadians) ? sampled.orbitRadians :
+    elapsed * 0.05;
+
+  const axisTiltRadians =
+    Number.isFinite(sampled.axisTiltRadians) ? sampled.axisTiltRadians :
+    Number.isFinite(sampled.axialTiltRad) ? sampled.axialTiltRad :
+    AXIS_TILT_DEGREES * Math.PI / 180;
+
+  const inspectionTiltRadians =
+    Number.isFinite(sampled.inspectionTiltRadians) ? sampled.inspectionTiltRadians :
+    Number.isFinite(sampled.poleSwivelRadians) ? sampled.poleSwivelRadians :
+    0;
+
   return {
-    rotationRadians: Number.isFinite(status.rotationRadians)
-      ? status.rotationRadians
-      : Number.isFinite(status.angleRadians)
-        ? status.angleRadians
-        : Number.isFinite(status.orbitRadians)
-          ? status.orbitRadians
-          : elapsed * 0.05,
-    axisTiltRadians: Number.isFinite(status.axisTiltRadians)
-      ? status.axisTiltRadians
-      : AXIS_TILT_DEGREES * Math.PI / 180,
-    waterPhase: Number.isFinite(status.waterPhase) ? status.waterPhase : elapsed * 0.16,
-    atmospherePhase: Number.isFinite(status.atmospherePhase) ? status.atmospherePhase : elapsed * 0.09,
-    frame: Number.isFinite(status.frame) ? status.frame : Math.floor(elapsed * 60)
+    rotationRadians,
+    axisTiltRadians,
+    inspectionTiltRadians,
+    poleSwivelRadians: inspectionTiltRadians,
+    waterPhase:
+      Number.isFinite(sampled.waterPhase) ? sampled.waterPhase :
+      Number.isFinite(sampled.oceanPhaseRad) ? sampled.oceanPhaseRad :
+      elapsed * 0.16,
+    atmospherePhase:
+      Number.isFinite(sampled.atmospherePhase) ? sampled.atmospherePhase :
+      Number.isFinite(sampled.atmosphericPhaseRad) ? sampled.atmosphericPhaseRad :
+      elapsed * 0.09,
+    frame: Number.isFinite(sampled.frame) ? sampled.frame : Math.floor(elapsed * 60)
   };
 }
 
@@ -250,11 +306,9 @@ class AudraliaCanvasController {
       attribute vec3 aPosition;
       attribute vec3 aNormal;
       attribute vec2 aUV;
-
       uniform mat4 uModel;
       uniform mat4 uView;
       uniform mat4 uProjection;
-
       varying vec3 vNormal;
       varying vec2 vUV;
 
@@ -268,31 +322,26 @@ class AudraliaCanvasController {
 
     const fragmentSource = `
       precision mediump float;
-
       uniform sampler2D uTexture;
       uniform vec3 uLightDirection;
       uniform vec3 uViewDirection;
       uniform float uWaterPhase;
       uniform float uAtmospherePhase;
-
       varying vec3 vNormal;
       varying vec2 vUV;
 
       void main() {
         vec3 normal = normalize(vNormal);
         vec3 base = texture2D(uTexture, vUV).rgb;
-
         float light = max(dot(normal, normalize(uLightDirection)), 0.0);
         float terminator = smoothstep(-0.25, 0.78, dot(normal, normalize(uLightDirection)));
         float rim = pow(1.0 - max(dot(normal, normalize(uViewDirection)), 0.0), 2.15);
         float plasma = 0.5 + 0.5 * sin(uAtmospherePhase + vUV.y * 6.28318);
         float waterMotion = sin(vUV.x * 18.0 + uWaterPhase) * 0.004;
-
         vec3 living = base + vec3(0.0, waterMotion, waterMotion * 1.35);
         vec3 night = vec3(0.012, 0.028, 0.06);
         vec3 color = mix(night, living * (0.40 + light * 0.70), terminator);
         color += vec3(0.22, 0.58, 0.78) * rim * (0.20 + plasma * 0.08);
-
         gl_FragColor = vec4(color, 1.0);
       }
     `;
@@ -380,7 +429,6 @@ class AudraliaCanvasController {
       this.canvas.width = physical;
       this.canvas.height = physical;
       this.canvas.style.height = `${cssSize}px`;
-
       this.gl.viewport(0, 0, physical, physical);
       this.projection = mat4Ortho(-1.08, 1.08, -1.08, 1.08, 0.1, 10);
       this.view = mat4Translate(0, 0, -2.7);
@@ -389,8 +437,11 @@ class AudraliaCanvasController {
 
   model(state) {
     return mat4Multiply(
-      mat4RotateZ(-state.axisTiltRadians),
-      mat4Multiply(mat4RotateY(state.rotationRadians), mat4Scale(0.91))
+      mat4RotateX(state.inspectionTiltRadians || 0),
+      mat4Multiply(
+        mat4RotateZ(-state.axisTiltRadians),
+        mat4Multiply(mat4RotateY(state.rotationRadians), mat4Scale(0.91))
+      )
     );
   }
 
@@ -420,11 +471,13 @@ class AudraliaCanvasController {
 
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, this.texture);
+
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
     gl.drawElements(gl.TRIANGLES, this.indexCount, gl.UNSIGNED_SHORT, 0);
 
     this.canvas.dataset.audraliaRuntimeFrame = String(state.frame || 0);
     this.canvas.dataset.audraliaRotationRadians = Number(state.rotationRadians || 0).toFixed(5);
+    this.canvas.dataset.audraliaInspectionTiltRadians = Number(state.inspectionTiltRadians || 0).toFixed(5);
   }
 
   loop() {
@@ -445,6 +498,7 @@ class AudraliaCanvasController {
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       routeConsumesAssets: true,
+      consumesPoleSwivelControls: true,
       assetsBoundaryExpression: true,
       assetsAbsorbAuthority: false,
       runtimeMotionOnly: true,
@@ -460,6 +514,7 @@ class AudraliaCanvasController {
     document.documentElement.dataset.audraliaCanvasLoaded = "true";
     document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
     document.documentElement.dataset.audraliaCanvasReceipt = RECEIPT;
+    document.documentElement.dataset.audraliaPoleSwivelConsumer = "true";
     document.documentElement.dataset.audraliaAssetsBoundaryExpression = "true";
     document.documentElement.dataset.audraliaAssetsAbsorbAuthority = "false";
     document.documentElement.dataset.generatedImage = "false";
@@ -506,7 +561,6 @@ function mountAudraliaCanvas(target, options = {}) {
 
   const controller = new AudraliaCanvasController(mount, options);
   instances.set(mount, controller);
-
   window.__AUDRALIA_CANVAS_DISPOSE__ = () => controller.destroy();
 
   return controller;
@@ -517,6 +571,7 @@ function getAudraliaCanvasStatus() {
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
+    consumesPoleSwivelControls: true,
     assetsBoundaryExpression: true,
     assetsAbsorbAuthority: false,
     runtimeMotionOnly: true,

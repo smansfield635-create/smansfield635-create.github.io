@@ -3,7 +3,7 @@
   lang="en"
   data-page="hearth-habitable-forming-coherent-baseline"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_HABITABLE_FORMING_BASELINE_MOUNT_REPAIR_HTML_TNT_v1"
+  data-contract="HEARTH_HABITABLE_FORMING_ROUTE_AND_HTML_ALIGNMENT_TNT_v1"
   data-body="hearth"
   data-generation-baseline="G1-coherent-achieved"
   data-current-phase="habitable-forming"
@@ -245,6 +245,10 @@
       -webkit-touch-callout: none;
     }
 
+    #hearthCanvasMount [data-hearth-mount-fallback][hidden] {
+      display: none !important;
+    }
+
     #hearthCanvasMount[data-hearth-required-failure="true"]::after {
       content: attr(data-hearth-route-error-message);
       position: absolute;
@@ -403,17 +407,17 @@
         </article>
       </section>
 
-      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth habitable-forming baseline route preparing.</pre>
+      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth habitable-forming route preparing.</pre>
 
-      <pre class="receipt">HEARTH_HABITABLE_FORMING_BASELINE_MOUNT_REPAIR_HTML_TNT_v1
+      <pre class="receipt">HEARTH_HABITABLE_FORMING_ROUTE_AND_HTML_ALIGNMENT_TNT_v1
 route=/showroom/globe/hearth/
 public_identity=Hearth · Habitable Forming · Coherent Baseline
 baseline=Generation 1 coherent achieved
 former_motion_renewal=folded-into-baseline
 next=Generation 2 material definition and natural readability
 later=Generation 5 clouds/weather/living-atmosphere
+controller=HEARTH_HABITABLE_FORMING_ROUTE_CONTROLLER_TNT_v1
 mount_id=hearthCanvasMount
-controller_expected_mount=hearthCanvasMount
 runtime_motion_only=true
 controls_input_only=true
 assets_absorb_authority=false
@@ -423,6 +427,6 @@ visual_pass_claimed=false</pre>
     </main>
   </div>
 
-  <script src="./index.js?v=hearth-g4-1-asset-boundary-expression-v1-repair"></script>
+  <script src="./index.js?v=hearth-habitable-forming-route-controller-v1"></script>
 </body>
 </html>

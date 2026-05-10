@@ -1,21 +1,24 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_G2_4_SOURCE_ALIGNMENT_ROUTE_CONTROLLER_TNT_v1
+// AUDRALIA_G2_CALIBRATION_ROUTE_CONTROLLER_TNT_v1
 // Full-file replacement.
 // Route doorway authority only.
-// Expanded renewal from stale V18 live route:
-// - Renews cache key.
-// - Expects G2.4 terrain/assets contracts.
-// - Imports, verifies, mounts, and reports.
+// Calibration purpose:
+// - Stop pretending the live route is still plain V18.
+// - Represent the current source state honestly.
+// - Current terrain source expectation: G2.2 relief/contrast.
+// - Current asset source expectation: G2.3 relief/shelf attenuation.
+// - Refresh import cache key.
+// - Import, verify, mount, and report.
 // - Route does not draw Audralia.
 // - Route does not own runtime motion.
 // - Route does not own terrain truth.
 // - No GraphicBox. No generated image. No visual-pass claim.
 
-const ROUTE_CONTRACT = "AUDRALIA_G2_4_SOURCE_ALIGNMENT_ROUTE_CONTROLLER_TNT_v1";
-const ROUTE_RECEIPT = "AUDRALIA_G2_4_SOURCE_ALIGNMENT_ROUTE_RECEIPT";
-const HTML_RECEIPT = "AUDRALIA_V18_FIVE_FINGER_TERRAIN_BASELINE_HTML_TNT_v1";
+const ROUTE_CONTRACT = "AUDRALIA_G2_CALIBRATION_ROUTE_CONTROLLER_TNT_v1";
+const ROUTE_RECEIPT = "AUDRALIA_G2_CALIBRATION_ROUTE_RECEIPT";
+const HTML_RECEIPT = "AUDRALIA_HABITABLE_FORMING_G2_CALIBRATION_HTML_TNT_v1";
 const PREVIOUS_ROUTE_CONTRACT = "AUDRALIA_V18_TERRAIN_FIVE_FINGER_ROUTE_CONTROLLER_TNT_v1";
-const CACHE_KEY = "audralia-g2-4-source-alignment-formation-delta-renewal";
+const CACHE_KEY = "audralia-g2-calibration-current-source-alignment-v1";
 
 const PATHS = Object.freeze({
   runtime: "/assets/audralia/audralia.runtime.js",
@@ -32,8 +35,8 @@ const EXPECTED = Object.freeze({
   surface: "AUDRALIA_SURFACE_PARENT_COASTLINE_RIDGE_FEATHER_TNT_v6",
   hexSurface: "AUDRALIA_HEX_SURFACE_CHILD_GRANDCHILD_RELIEF_BIND_TNT_v4",
   reliefSurface: "AUDRALIA_GRANDCHILD_RELIEF_FIELD_EXPRESSOR_TNT_v1",
-  terrainFingers: "AUDRALIA_G2_4_TERRAIN_FORMATION_DELTA_TNT_v1",
-  assets: "AUDRALIA_G2_4_ASSET_FORMATION_MATERIAL_DELTA_TNT_v1",
+  terrainFingers: "AUDRALIA_G2_2_RELIEF_CONTRAST_AND_NATURAL_READABILITY_TNT_v1",
+  assets: "AUDRALIA_G2_3_ASSET_RELIEF_FIELD_AND_SHELF_ATTENUATION_TNT_v1",
   canvas: "AUDRALIA_V18_CANVAS_ASSET_BOUNDARY_CONSUMER_TNT_v1"
 });
 
@@ -44,26 +47,23 @@ const ROUTE_STATE = {
   htmlReceipt: HTML_RECEIPT,
   previousRouteContract: PREVIOUS_ROUTE_CONTRACT,
   route: "/showroom/globe/audralia/",
-  generation: "G2.4",
+  publicIdentity: "Audralia · Habitable Forming · G2 Calibration Active",
+  baseline: "G1 coherent achieved",
+  currentPhase: "G2 calibration active, not passed",
   cacheKey: CACHE_KEY,
-  mountFound: false,
-  statusNodeFound: false,
   imported: {},
   contracts: {},
   receipts: {},
   expected: EXPECTED,
-  canvasMounted: false,
+  mountFound: false,
   canvasFound: false,
+  canvasMounted: false,
+  runtimeLoaded: false,
   terrainFingersLoaded: false,
   assetsLoaded: false,
-  runtimeLoaded: false,
   runtimeMotionOnly: true,
   assetsAbsorbAuthority: false,
   terrainFiveFingers: true,
-  sourceAlignmentRenewed: true,
-  formationDeltaRenewed: true,
-  shelfAttenuationRenewed: true,
-  reliefFieldRenewed: true,
   generatedImage: false,
   graphicBox: false,
   visualPassClaimed: false,
@@ -194,13 +194,16 @@ function writeStatus(status = "") {
 
   const lines = [
     ROUTE_STATE.ok
-      ? "Audralia G2.4 source alignment and formation delta ready."
-      : "Audralia G2.4 source alignment and formation delta preparing.",
+      ? "Audralia G2 calibration route aligned."
+      : "Audralia G2 calibration route preparing.",
     `Status ${status || "checking"}`,
+    `Public Identity ${ROUTE_STATE.publicIdentity}`,
+    `Baseline ${ROUTE_STATE.baseline}`,
+    `Current Phase ${ROUTE_STATE.currentPhase}`,
     `Route ${ROUTE_CONTRACT}`,
     `Route Receipt ${ROUTE_RECEIPT}`,
     `Previous ${PREVIOUS_ROUTE_CONTRACT}`,
-    `Cache key ${CACHE_KEY}`,
+    `Cache Key ${CACHE_KEY}`,
     `Runtime ${ROUTE_STATE.contracts.runtime || EXPECTED.runtime}`,
     `Surface ${ROUTE_STATE.contracts.surface || EXPECTED.surface}`,
     `Hex Surface ${ROUTE_STATE.contracts.hexSurface || EXPECTED.hexSurface}`,
@@ -213,13 +216,11 @@ function writeStatus(status = "") {
     `Mount found ${ROUTE_STATE.mountFound}`,
     `Canvas mounted ${ROUTE_STATE.canvasMounted}`,
     `Canvas found ${ROUTE_STATE.canvasFound}`,
-    `Terrain five fingers true`,
-    `Source alignment renewed true`,
-    `Formation delta renewed true`,
-    `Relief field renewed true`,
-    `Shelf attenuation renewed true`,
-    `Assets absorb authority false`,
     `Runtime motion-only true`,
+    `Terrain five fingers true`,
+    `Assets absorb authority false`,
+    `G2 calibration active true`,
+    `G2 visual pass false`,
     `GraphicBox false`,
     `Generated image false`,
     `Visual pass claimed false`
@@ -238,12 +239,11 @@ function writeStatus(status = "") {
   node.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
   node.dataset.audraliaRouteReady = String(Boolean(ROUTE_STATE.ok));
   node.dataset.audraliaCacheKey = CACHE_KEY;
+  node.dataset.audraliaBaseline = "g1-coherent-achieved";
+  node.dataset.audraliaG2Calibration = "active";
+  node.dataset.audraliaG2Passed = "false";
+  node.dataset.audraliaRuntimeMotionOnly = "true";
   node.dataset.audraliaTerrainFiveFingers = "true";
-  node.dataset.audraliaSourceAlignmentRenewed = "true";
-  node.dataset.audraliaFormationDeltaRenewed = "true";
-  node.dataset.audraliaReliefFieldRenewed = "true";
-  node.dataset.audraliaShelfAttenuationRenewed = "true";
-  node.dataset.audraliaAssetsBoundaryExpression = "true";
   node.dataset.audraliaAssetsAbsorbAuthority = "false";
   node.dataset.generatedImage = "false";
   node.dataset.graphicBox = "false";
@@ -252,22 +252,20 @@ function writeStatus(status = "") {
 
 function publish(status = "") {
   ROUTE_STATE.mountFound = Boolean(resolveMount());
-  ROUTE_STATE.statusNodeFound = Boolean(resolveStatusNode());
   ROUTE_STATE.canvasFound = Boolean(resolveCanvas());
   ROUTE_STATE.lastUpdated = new Date().toISOString();
 
   document.documentElement.dataset.audraliaRouteContract = ROUTE_CONTRACT;
   document.documentElement.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
   document.documentElement.dataset.audraliaRoutePreviousContract = PREVIOUS_ROUTE_CONTRACT;
-  document.documentElement.dataset.audraliaGeneration = "G2.4";
+  document.documentElement.dataset.audraliaGeneration = "G2-calibration";
   document.documentElement.dataset.audraliaRouteStatus = status || "checking";
   document.documentElement.dataset.audraliaCacheKey = CACHE_KEY;
+  document.documentElement.dataset.audraliaBaseline = "g1-coherent-achieved";
+  document.documentElement.dataset.audraliaG2Calibration = "active";
+  document.documentElement.dataset.audraliaG2Passed = "false";
   document.documentElement.dataset.audraliaRuntimeMotionOnly = "true";
   document.documentElement.dataset.audraliaTerrainFiveFingers = "true";
-  document.documentElement.dataset.audraliaSourceAlignmentRenewed = "true";
-  document.documentElement.dataset.audraliaFormationDeltaRenewed = "true";
-  document.documentElement.dataset.audraliaReliefFieldRenewed = "true";
-  document.documentElement.dataset.audraliaShelfAttenuationRenewed = "true";
   document.documentElement.dataset.audraliaAssetsBoundaryExpression = "true";
   document.documentElement.dataset.audraliaAssetsAbsorbAuthority = "false";
   document.documentElement.dataset.generatedImage = "false";
@@ -436,11 +434,11 @@ async function boot() {
   mount.dataset.audraliaRouteContract = ROUTE_CONTRACT;
   mount.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
   mount.dataset.audraliaCacheKey = CACHE_KEY;
+  mount.dataset.audraliaBaseline = "g1-coherent-achieved";
+  mount.dataset.audraliaG2Calibration = "active";
+  mount.dataset.audraliaG2Passed = "false";
+  mount.dataset.audraliaRuntimeMotionOnly = "true";
   mount.dataset.audraliaTerrainFiveFingers = "true";
-  mount.dataset.audraliaSourceAlignmentRenewed = "true";
-  mount.dataset.audraliaFormationDeltaRenewed = "true";
-  mount.dataset.audraliaReliefFieldRenewed = "true";
-  mount.dataset.audraliaShelfAttenuationRenewed = "true";
   mount.dataset.audraliaAssetsBoundaryExpression = "true";
   mount.dataset.audraliaAssetsAbsorbAuthority = "false";
   mount.dataset.generatedImage = "false";
@@ -489,10 +487,8 @@ async function boot() {
       terrainFingers: terrainFingersModule,
       assets: assetsModule,
       terrainFiveFingers: true,
-      sourceAlignmentRenewed: true,
-      formationDeltaRenewed: true,
-      reliefFieldRenewed: true,
-      shelfAttenuationRenewed: true,
+      g2CalibrationActive: true,
+      g2Passed: false,
       assetsBoundaryExpression: true,
       assetsAbsorbAuthority: false,
       canvasReceipt: ROUTE_STATE.receipts.canvas || EXPECTED.canvas,
@@ -516,11 +512,10 @@ async function boot() {
       canvas.dataset.audraliaRouteContract = ROUTE_CONTRACT;
       canvas.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
       canvas.dataset.audraliaCacheKey = CACHE_KEY;
+      canvas.dataset.audraliaG2Calibration = "active";
+      canvas.dataset.audraliaG2Passed = "false";
+      canvas.dataset.audraliaRuntimeMotionOnly = "true";
       canvas.dataset.audraliaTerrainFiveFingers = "true";
-      canvas.dataset.audraliaSourceAlignmentRenewed = "true";
-      canvas.dataset.audraliaFormationDeltaRenewed = "true";
-      canvas.dataset.audraliaReliefFieldRenewed = "true";
-      canvas.dataset.audraliaShelfAttenuationRenewed = "true";
       canvas.dataset.audraliaAssetsBoundaryExpression = "true";
       canvas.dataset.audraliaAssetsAbsorbAuthority = "false";
       canvas.dataset.generatedImage = "false";
@@ -554,5 +549,15 @@ if (document.readyState === "loading") {
   boot();
 }
 
-export { ROUTE_CONTRACT, ROUTE_RECEIPT, HTML_RECEIPT, PREVIOUS_ROUTE_CONTRACT, CACHE_KEY, ROUTE_STATE, boot, publish };
+export {
+  ROUTE_CONTRACT,
+  ROUTE_RECEIPT,
+  HTML_RECEIPT,
+  PREVIOUS_ROUTE_CONTRACT,
+  CACHE_KEY,
+  ROUTE_STATE,
+  boot,
+  publish
+};
+
 export default boot;

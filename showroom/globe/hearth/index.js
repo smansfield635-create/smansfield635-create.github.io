@@ -1,49 +1,105 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_G2_SEVEN_BODY_MASS_HARD_RENEWAL_ROUTE_TNT_v3
+// HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_ROUTE_TNT_v4
 // Full-file replacement.
-// Forces the renewed seven-body-mass asset contract and pole-swivel control chain.
+// Forces the blueprint-to-scale assets contract while preserving the passing runtime/controls/canvas chain.
 // Runtime remains protected.
+// Controls remain HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_CONTROLS_TNT_v2.
+// Canvas remains HEARTH_G2_CANVAS_POLE_SWIVEL_SEVEN_BODY_CONSUMER_TNT_v2.
 // No GraphicBox. No generated image. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G2_SEVEN_BODY_MASS_HARD_RENEWAL_ROUTE_TNT_v3";
-  const RECEIPT = "HEARTH_G2_SEVEN_BODY_MASS_HARD_RENEWAL_ROUTE_RECEIPT_v3";
-  const PREVIOUS_CONTRACT = "HEARTH_HABITABLE_FORMING_ROUTE_CONTROLLER_TNT_v1";
-  const KEY = "hearth-g2-seven-body-mass-hard-renewal-v3";
+  const CONTRACT = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_ROUTE_TNT_v4";
+  const RECEIPT = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_ROUTE_RECEIPT_v4";
+  const PREVIOUS_CONTRACT = "HEARTH_G2_SEVEN_BODY_MASS_HARD_RENEWAL_ROUTE_TNT_v3";
+  const KEY = "hearth-seven-body-mass-blueprint-to-scale-v4";
 
   const EXPECTED = Object.freeze({
     controls: "HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_CONTROLS_TNT_v2",
     canvas: "HEARTH_G2_CANVAS_POLE_SWIVEL_SEVEN_BODY_CONSUMER_TNT_v2",
-    assets: "HEARTH_G2_SEVEN_BODY_MASS_FORMATION_ASSETS_TNT_v2"
+    assets: "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_ASSETS_TNT_v3"
   });
 
   const FILES = [
-    { role: "runtime", src: `/assets/hearth/hearth.runtime.js?v=${KEY}`, global: "HEARTH_RUNTIME", validate: (v) => v && typeof v.start === "function" },
-    { role: "controls", src: `/assets/hearth/hearth.controls.js?v=${KEY}`, global: "HEARTH_CONTROLS", validate: (v) => v && typeof v.bind === "function" && String(v.contract || "").includes(EXPECTED.controls) },
-    { role: "assets", src: `/assets/hearth/hearth.assets.js?v=${KEY}`, global: "HEARTH_ASSETS", validate: (v) => v && typeof v.createTextureCanvas === "function" && String(v.contract || "").includes(EXPECTED.assets) },
-    { role: "canvas", src: `/assets/hearth/hearth.canvas.js?v=${KEY}`, global: "HEARTH_CANVAS", validate: (v) => v && typeof v.mount === "function" && String(v.contract || "").includes(EXPECTED.canvas) }
+    {
+      role: "runtime",
+      src: `/assets/hearth/hearth.runtime.js?v=${KEY}`,
+      global: "HEARTH_RUNTIME",
+      validate: (value) => value && typeof value.start === "function"
+    },
+    {
+      role: "controls",
+      src: `/assets/hearth/hearth.controls.js?v=${KEY}`,
+      global: "HEARTH_CONTROLS",
+      validate: (value) =>
+        value &&
+        typeof value.bind === "function" &&
+        String(value.contract || "").includes(EXPECTED.controls)
+    },
+    {
+      role: "assets",
+      src: `/assets/hearth/hearth.assets.js?v=${KEY}`,
+      global: "HEARTH_ASSETS",
+      validate: (value) =>
+        value &&
+        typeof value.createTextureCanvas === "function" &&
+        String(value.contract || "").includes(EXPECTED.assets) &&
+        value.getStatus &&
+        value.getStatus().bodyMassCount === 7 &&
+        value.getStatus().uniqueMassProfiles === true &&
+        value.getStatus().twoBodyRead === false
+    },
+    {
+      role: "canvas",
+      src: `/assets/hearth/hearth.canvas.js?v=${KEY}`,
+      global: "HEARTH_CANVAS",
+      validate: (value) =>
+        value &&
+        typeof value.mount === "function" &&
+        String(value.contract || "").includes(EXPECTED.canvas)
+    }
   ];
 
-  const state = { loaded: [], failed: [], mounted: false, canvasFound: false, controlsBound: false, error: "" };
+  const state = {
+    loaded: [],
+    failed: [],
+    mounted: false,
+    canvasFound: false,
+    controlsBound: false,
+    error: ""
+  };
 
-  function status(status) {
-    const node = document.getElementById("hearth-route-status") || document.querySelector("[data-hearth-route-status]");
+  function status(statusValue) {
+    const node =
+      document.getElementById("hearth-route-status") ||
+      document.querySelector("[data-hearth-route-status]");
+
     document.documentElement.dataset.hearthRouteControllerContract = CONTRACT;
     document.documentElement.dataset.hearthRouteControllerReceipt = RECEIPT;
+    document.documentElement.dataset.hearthRoutePreviousContract = PREVIOUS_CONTRACT;
     document.documentElement.dataset.hearthHardRenewalKey = KEY;
+    document.documentElement.dataset.hearthBlueprint = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_v1";
     document.documentElement.dataset.hearthSevenBodyMassFormation = "true";
     document.documentElement.dataset.hearthBodyMassCount = "7";
+    document.documentElement.dataset.hearthUniqueMassProfiles = "true";
+    document.documentElement.dataset.hearthTwoBodyRead = "false";
+    document.documentElement.dataset.hearthSymmetricalDotDistribution = "false";
     document.documentElement.dataset.hearthPoleSwivel = "true";
+    document.documentElement.dataset.generatedImage = "false";
+    document.documentElement.dataset.graphicBox = "false";
+    document.documentElement.dataset.visualPassClaimed = "false";
 
     if (node) {
       node.textContent = [
-        state.mounted ? "Hearth seven-body-mass hard-renewal route ready." : "Hearth seven-body-mass hard-renewal route preparing.",
-        `Status ${status}`,
+        state.mounted
+          ? "Hearth blueprint-to-scale seven-body-mass route ready."
+          : "Hearth blueprint-to-scale seven-body-mass route preparing.",
+        `Status ${statusValue}`,
         `Route ${CONTRACT}`,
         `Receipt ${RECEIPT}`,
         `Previous ${PREVIOUS_CONTRACT}`,
+        `Blueprint HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_v1`,
         `Hard Renewal Key ${KEY}`,
         `Loaded ${state.loaded.join(",") || "none"}`,
         `Failed ${state.failed.join(",") || "none"}`,
@@ -51,6 +107,12 @@
         `Canvas found ${state.canvasFound}`,
         `Controls bound ${state.controlsBound}`,
         "Body mass count 7",
+        "North Crown Mass true",
+        "Equatorial Great Mass true",
+        "Secondary masses 5",
+        "Unique mass profiles true",
+        "Two-body read false",
+        "Symmetrical dot distribution false",
         "Pole swivel true",
         "Generated image false",
         "GraphicBox false",
@@ -61,7 +123,12 @@
   }
 
   function disposePrior() {
-    ["__HEARTH_G4_ROUTE_DISPOSE__", "__HEARTH_HABITABLE_FORMING_ROUTE_DISPOSE__", "__HEARTH_CONTROLS_DISPOSE__", "__HEARTH_CANVAS_DISPOSE__"].forEach((name) => {
+    [
+      "__HEARTH_G4_ROUTE_DISPOSE__",
+      "__HEARTH_HABITABLE_FORMING_ROUTE_DISPOSE__",
+      "__HEARTH_CONTROLS_DISPOSE__",
+      "__HEARTH_CANVAS_DISPOSE__"
+    ].forEach((name) => {
       if (typeof window[name] === "function") {
         try { window[name](); } catch (_) {}
       }
@@ -80,13 +147,25 @@
   }
 
   function resetGlobals() {
-    ["HEARTH_RUNTIME", "HEARTH_CONTROLS", "HEARTH_ASSETS", "HEARTH_CANVAS", "HEARTH_CONTROLS_RECEIPT", "HEARTH_CANVAS_RECEIPT", "HEARTH_ASSETS_RECEIPT", "__HEARTH_INSPECTION_MOTION__"].forEach((name) => {
+    [
+      "HEARTH_RUNTIME",
+      "HEARTH_CONTROLS",
+      "HEARTH_ASSETS",
+      "HEARTH_CANVAS",
+      "HEARTH_CONTROLS_RECEIPT",
+      "HEARTH_CANVAS_RECEIPT",
+      "HEARTH_ASSETS_RECEIPT",
+      "__HEARTH_INSPECTION_MOTION__"
+    ].forEach((name) => {
       try { window[name] = undefined; } catch (_) {}
     });
   }
 
   function mountNode() {
-    let node = document.getElementById("hearthCanvasMount") || document.querySelector("[data-hearth-canvas-mount]");
+    let node =
+      document.getElementById("hearthCanvasMount") ||
+      document.querySelector("[data-hearth-canvas-mount]");
+
     if (!node) {
       node = document.createElement("section");
       (document.getElementById("hearth-main") || document.body).appendChild(node);
@@ -94,12 +173,16 @@
 
     node.id = "hearthCanvasMount";
     node.dataset.hearthCanvasMount = "true";
+    node.dataset.hearthBlueprint = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_v1";
     node.dataset.hearthSevenBodyMassFormation = "true";
     node.dataset.hearthBodyMassCount = "7";
+    node.dataset.hearthUniqueMassProfiles = "true";
+    node.dataset.hearthTwoBodyRead = "false";
     node.dataset.hearthPoleSwivel = "true";
     node.style.touchAction = "none";
     node.style.userSelect = "none";
     node.querySelectorAll("canvas").forEach((canvas) => canvas.remove());
+
     return node;
   }
 
@@ -111,6 +194,7 @@
       script.dataset.hearthFile = "true";
       script.dataset.hearthFileRole = file.role;
       script.dataset.hardRenewalKey = KEY;
+      script.dataset.routeContract = CONTRACT;
 
       script.onload = () => {
         if (!file.validate(window[file.global])) {
@@ -127,6 +211,7 @@
 
       script.onerror = () => {
         state.failed.push(file.role);
+        status(`failed-${file.role}`);
         reject(new Error(`Failed to load ${file.role}: ${file.src}`));
       };
 
@@ -136,23 +221,40 @@
 
   async function boot() {
     const mount = mountNode();
+
     status("booting");
     disposePrior();
     removeScripts();
     resetGlobals();
 
     try {
-      for (const file of FILES) await load(file);
+      for (const file of FILES) {
+        await load(file);
+      }
 
       const runtime = window.HEARTH_RUNTIME;
       const controls = window.HEARTH_CONTROLS;
       const assets = window.HEARTH_ASSETS;
       const canvasAuthority = window.HEARTH_CANVAS;
 
-      const renderer = canvasAuthority.mount(mount, { runtime, assets, routeContract: CONTRACT, routeReceipt: RECEIPT });
+      const renderer = canvasAuthority.mount(mount, {
+        runtime,
+        assets,
+        routeContract: CONTRACT,
+        routeReceipt: RECEIPT
+      });
+
       const canvas = renderer?.canvas || mount.querySelector("canvas");
 
-      if (!canvas) throw new Error("Canvas authority mounted, but no canvas was found.");
+      if (!canvas) {
+        throw new Error("Canvas authority mounted, but no canvas was found.");
+      }
+
+      canvas.dataset.hearthBlueprint = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_v1";
+      canvas.dataset.hearthBodyMassCount = "7";
+      canvas.dataset.hearthUniqueMassProfiles = "true";
+      canvas.dataset.hearthTwoBodyRead = "false";
+      canvas.dataset.hearthSymmetricalDotDistribution = "false";
 
       controls.bind(canvas, runtime, {
         mount,
@@ -164,7 +266,9 @@
         poleReturnStrength: 0.06
       });
 
-      if (typeof runtime.start === "function") runtime.start();
+      if (typeof runtime.start === "function") {
+        runtime.start();
+      }
 
       state.mounted = true;
       state.canvasFound = true;
@@ -184,8 +288,13 @@
   }
 
   window.__HEARTH_HABITABLE_FORMING_ROUTE_DISPOSE__ = () => {
-    if (typeof window.__HEARTH_CONTROLS_DISPOSE__ === "function") window.__HEARTH_CONTROLS_DISPOSE__();
-    if (typeof window.__HEARTH_CANVAS_DISPOSE__ === "function") window.__HEARTH_CANVAS_DISPOSE__();
+    if (typeof window.__HEARTH_CONTROLS_DISPOSE__ === "function") {
+      window.__HEARTH_CONTROLS_DISPOSE__();
+    }
+
+    if (typeof window.__HEARTH_CANVAS_DISPOSE__ === "function") {
+      window.__HEARTH_CANVAS_DISPOSE__();
+    }
   };
 
   if (document.readyState === "loading") {

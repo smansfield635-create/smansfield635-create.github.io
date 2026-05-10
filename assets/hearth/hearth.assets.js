@@ -1,22 +1,19 @@
 // /assets/hearth/hearth.assets.js
-// HEARTH_JAGGED_COAST_AND_ISLAND_CHAIN_ASSETS_TNT_v7
+// HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_ASSETS_TNT_v8
 // Full-file replacement.
-// Assets authority with rigid coast and island-chain consumption.
-// Purpose:
-// - Preserve seven body masses.
-// - Add rigid, jagged land edges.
-// - Add islands and offshore fragments.
-// - Reduce unrealistic rounded/lobed silhouettes.
-// - Preserve runtime, controls, canvas, and route separation.
+// Assets authority with terrain texture, composition, elevation, and material differentiation.
+// TET: Terrain truth -> Elevation expression -> Terrain return.
+// MAPS: crust=body mass, sauce=terrain relief, cheese=composition blend, toppings=elevation/material features.
+// Quad-A: Audit, Attack, Adjust, Authorize.
 // No GraphicBox. No generated image. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_JAGGED_COAST_AND_ISLAND_CHAIN_ASSETS_TNT_v7";
-  const RECEIPT = "HEARTH_JAGGED_COAST_AND_ISLAND_CHAIN_ASSETS_RECEIPT_v7";
-  const PREVIOUS_CONTRACT = "HEARTH_COASTLINE_FRACTURE_AND_SILHOUETTE_BREAKER_ASSETS_TNT_v6";
-  const REQUIRED_TERRAIN_EXTENSION = "HEARTH_JAGGED_COAST_AND_ISLAND_CHAIN_TERRAIN_EXTENSION_TNT_v3";
+  const CONTRACT = "HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_ASSETS_TNT_v8";
+  const RECEIPT = "HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_ASSETS_RECEIPT_v8";
+  const PREVIOUS_CONTRACT = "HEARTH_JAGGED_COAST_AND_ISLAND_CHAIN_ASSETS_TNT_v7";
+  const REQUIRED_TERRAIN_EXTENSION = "HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_TERRAIN_EXTENSION_TNT_v4";
   const BLUEPRINT = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_v1";
 
   const TAU = Math.PI * 2;
@@ -32,29 +29,33 @@
     { id: 7, key: "south-transitional-mass", name: "South Transitional Mass", lat: -59 * DEG, lon: 36 * DEG, rx: 40 * DEG, ry: 14 * DEG, angle: 9 * DEG, mountain: 0.46, ice: 0.56, beach: 0.26, shelf: 0.54, mineral: 0.44, palette: "cold" }
   ]);
 
-  const MATERIAL = Object.freeze({
+  const C = Object.freeze({
     abyss: [2, 12, 30],
-    deepOcean: [3, 20, 50],
+    deep: [3, 20, 50],
     ocean: [6, 58, 104],
     shelf: [27, 128, 148],
     shelfSoft: [58, 154, 158],
     foam: [116, 176, 166],
     beach: [202, 180, 116],
     wetBeach: [174, 158, 106],
+    soil: [96, 100, 67],
     lowland: [92, 130, 76],
-    green: [78, 132, 82],
-    warm: [126, 126, 72],
-    upland: [100, 112, 78],
-    ridge: [86, 88, 84],
-    cliff: [58, 66, 76],
-    granite: [118, 112, 102],
-    slate: [48, 62, 76],
+    fertile: [70, 128, 72],
+    temperate: [74, 112, 74],
+    warm: [128, 124, 70],
+    upland: [102, 105, 82],
+    ridge: [82, 86, 82],
+    cliff: [56, 64, 74],
+    granite: [122, 118, 110],
+    slate: [48, 60, 74],
+    marble: [178, 174, 160],
     ice: [204, 224, 226],
     polar: [126, 140, 144],
-    dark: [54, 52, 58],
+    dark: [52, 50, 58],
     copper: [156, 88, 58],
     gold: [208, 164, 66],
-    opal: [154, 190, 186]
+    opal: [154, 190, 186],
+    shadow: [16, 22, 28]
   });
 
   function clamp(value, min, max) {
@@ -148,10 +149,7 @@
   }
 
   function lonLat(u, v) {
-    return {
-      lon: (u - 0.5) * TAU,
-      lat: (0.5 - v) * Math.PI
-    };
+    return { lon: (u - 0.5) * TAU, lat: (0.5 - v) * Math.PI };
   }
 
   function angularMassField(lon, lat, u, v, mass) {
@@ -189,15 +187,7 @@
 
     if (modifier) field += modifier.fieldDelta;
 
-    return {
-      mass,
-      field,
-      theta,
-      nx,
-      ny,
-      dist,
-      modifier
-    };
+    return { mass, field, theta, nx, ny, dist, modifier };
   }
 
   function classify(u, v) {
@@ -206,7 +196,6 @@
     const reads = BODY_MASSES.map((mass) => angularMassField(p.lon, p.lat, u, v, mass)).sort((a, b) => b.field - a.field);
     const best = reads[0];
     const island = extension ? extension.sampleIslandField(u, v, p) : null;
-
     const islandWins = Boolean(island && island.field > best.field && island.field > 0);
     const mass = islandWins ? BODY_MASSES.find((m) => m.key === island.key) || best.mass : best.mass;
     const field = islandWins ? island.field : best.field;
@@ -217,13 +206,6 @@
     const shelfTexture = smoothstep(0.16, 0.90, ridged(u * 1.7 + 0.05, v * 1.35 - 0.03, 23000));
     const shelf = isLand ? 0 : clamp(shelfBase * coast * (0.30 + mass.shelf * 0.70) * (0.46 + shelfTexture * 0.42), 0, 1);
     const deepOcean = isLand ? 0 : clamp(1 - shelfBase * 0.82, 0, 1);
-
-    const latitudeCold = smoothstep(46 * DEG, 84 * DEG, Math.abs(p.lat));
-    const ridgeNoise = smoothstep(0.34, 0.94, ridged(u * 2.2 + mass.id * 0.05, v * 2.1 - mass.id * 0.04, 24000 + mass.id * 23));
-    const mountains = isLand ? clamp(ridgeNoise * mass.mountain, 0, 1) : 0;
-    const beach = clamp(coast * (isLand ? 0.82 : shelf * 0.55) * (0.18 + mass.beach * 0.82), 0, 1);
-    const mineral = isLand ? clamp(smoothstep(0.74, 0.99, noise(u + mass.id * 0.11, v - mass.id * 0.08, 92, 25000)) * mass.mineral, 0, 1) : 0;
-    const polarCold = clamp(latitudeCold * 0.55 + mass.ice * (isLand ? 0.75 : 0), 0, 1);
 
     const base = {
       u,
@@ -240,17 +222,11 @@
       shelf,
       shelfTexture,
       deepOcean,
-      polarCold,
-      mountains,
-      beach,
-      mineral,
-      ridgeNoise,
       isIsland: islandWins,
       islandField: island ? island.field : -1,
       islandKey: island ? island.key : "",
       coastlineModifier: best.modifier || null,
-      noise: noise(u, v, 48, 26000),
-      elevation: isLand ? clamp(0.18 + field * 0.56 + mountains * 0.55, 0, 1) : 0
+      noise: noise(u, v, 48, 26000)
     };
 
     const terrain = extension ? extension.sampleTerrain(u, v, base) : null;
@@ -267,21 +243,21 @@
   function paletteBase(t) {
     switch (t.primaryMassKey) {
       case "north-crown-mass":
-        return mix(MATERIAL.slate, MATERIAL.polar, 0.58);
+        return mix(C.slate, C.polar, 0.58);
       case "equatorial-great-mass":
-        return mix(MATERIAL.lowland, MATERIAL.upland, 0.34);
+        return mix(C.lowland, C.upland, 0.34);
       case "northwest-temperate-mass":
-        return mix(MATERIAL.green, MATERIAL.granite, 0.24);
+        return mix(C.temperate, C.granite, 0.24);
       case "northeast-broken-shelf-mass":
-        return mix(MATERIAL.green, MATERIAL.beach, 0.30);
+        return mix(C.fertile, C.beach, 0.30);
       case "southeast-warm-mass":
-        return mix(MATERIAL.warm, MATERIAL.beach, 0.28);
+        return mix(C.warm, C.beach, 0.28);
       case "southwest-ridge-mass":
-        return mix(MATERIAL.dark, MATERIAL.ridge, 0.38);
+        return mix(C.dark, C.ridge, 0.40);
       case "south-transitional-mass":
-        return mix(MATERIAL.slate, MATERIAL.polar, 0.30);
+        return mix(C.slate, C.polar, 0.30);
       default:
-        return MATERIAL.lowland;
+        return C.lowland;
     }
   }
 
@@ -290,37 +266,45 @@
     const terrain = t.terrain || {};
 
     if (!t.isLand) {
-      let color = mix(MATERIAL.abyss, MATERIAL.deepOcean, clamp(0.22 + t.noise * 0.44, 0, 1));
-      color = mix(color, MATERIAL.ocean, smoothstep(0.18, 0.76, 1 - t.deepOcean) * 0.42);
-      color = mix(color, MATERIAL.shelf, t.shelf * 0.62);
-      color = mix(color, MATERIAL.shelfSoft, t.shelf * t.coast * 0.28);
-      color = mix(color, MATERIAL.foam, t.shelf * t.coast * 0.10);
-      color = mix(color, MATERIAL.deepOcean, (terrain.deepWaterDropoff || 0) * 0.26);
+      let color = mix(C.abyss, C.deep, clamp(0.22 + t.noise * 0.44, 0, 1));
+      color = mix(color, C.ocean, smoothstep(0.18, 0.76, 1 - t.deepOcean) * 0.42);
+      color = mix(color, C.shelf, t.shelf * 0.62);
+      color = mix(color, C.shelfSoft, t.shelf * t.coast * 0.28);
+      color = mix(color, C.foam, t.shelf * t.coast * 0.10);
       color = lift(color, -8 * t.deepOcean + (t.noise - 0.5) * 5);
       return { color, terrain: t };
     }
 
     let color = paletteBase(t);
 
-    color = mix(color, MATERIAL.upland, t.elevation * 0.28);
-    color = mix(color, MATERIAL.ridge, (t.mountains + (terrain.ridge || 0) * 0.28) * 0.34);
-    color = mix(color, MATERIAL.cliff, clamp((terrain.cliffWalls || 0) + t.coast * t.ridgeNoise * 0.32, 0, 1) * 0.50);
-    color = mix(color, MATERIAL.wetBeach, t.beach * 0.26);
-    color = mix(color, MATERIAL.beach, clamp(t.beach + (terrain.islandEdge || 0) * 0.24, 0, 1) * 0.24);
-    color = mix(color, MATERIAL.polar, t.polarCold * 0.26);
-    color = mix(color, MATERIAL.ice, t.polarCold * 0.46);
-    color = mix(color, MATERIAL.dark, clamp((terrain.hardJaggedEdge || 0) + (terrain.cliffCut || 0), 0, 1) * 0.16);
-    color = mix(color, MATERIAL.copper, t.mineral * 0.10);
-    color = mix(color, MATERIAL.gold, t.mineral * smoothstep(0.74, 0.98, t.ridgeNoise) * 0.14);
-    color = mix(color, MATERIAL.opal, t.mineral * smoothstep(0.52, 0.92, t.noise) * 0.06);
+    color = mix(color, C.soil, terrain.soil * 0.44);
+    color = mix(color, C.fertile, terrain.vegetation * 0.50);
+    color = mix(color, C.upland, terrain.elevation * 0.32);
+    color = mix(color, C.ridge, terrain.mountain * 0.42);
+    color = mix(color, C.granite, terrain.granite * 0.34);
+    color = mix(color, C.slate, terrain.slate * 0.32);
+    color = mix(color, C.cliff, clamp(terrain.cliff + terrain.hardJaggedEdge * 0.42, 0, 1) * 0.42);
+    color = mix(color, C.wetBeach, terrain.sediment * t.coast * 0.22);
+    color = mix(color, C.beach, clamp(terrain.sediment + terrain.islandEdge * 0.24, 0, 1) * t.coast * 0.26);
+    color = mix(color, C.polar, terrain.ice * 0.28);
+    color = mix(color, C.ice, terrain.ice * 0.46);
+    color = mix(color, C.dark, terrain.dryStone * 0.18);
+    color = mix(color, C.copper, terrain.copper * 0.13);
+    color = mix(color, C.gold, terrain.gold * 0.18);
+    color = mix(color, C.opal, terrain.opal * 0.16);
+    color = mix(color, C.marble, terrain.plateau * terrain.granite * 0.08);
 
-    const terrainLift =
-      (terrain.hardJaggedEdge || 0) * 5 -
-      (terrain.cliffCut || 0) * 4 -
-      (terrain.shardCut || 0) * 4 +
-      (t.isIsland ? 3 : 0);
+    const elevationLift =
+      terrain.elevation * 9 +
+      terrain.mountain * 10 -
+      terrain.valley * 5 -
+      terrain.basin * 6 -
+      terrain.cliff * 4 +
+      terrain.soil * 2 +
+      terrain.grainTexture * 6 -
+      3;
 
-    color = lift(color, t.elevation * 5 + t.mountains * 7 - t.coast * 2 + terrainLift + (t.noise - 0.5) * 5);
+    color = lift(color, elevationLift);
 
     return { color, terrain: t };
   }
@@ -362,13 +346,13 @@
     canvas.dataset.hearthAssetsReceipt = RECEIPT;
     canvas.dataset.hearthTerrainExtensionContract = REQUIRED_TERRAIN_EXTENSION;
     canvas.dataset.hearthTerrainExtensionLoaded = String(Boolean(terrainExtension()));
-    canvas.dataset.hearthCoastlineFractureLoaded = "true";
-    canvas.dataset.hearthSilhouetteBreakerActive = "true";
-    canvas.dataset.hearthIslandChainLoaded = "true";
-    canvas.dataset.hearthHardJaggedEdges = "true";
-    canvas.dataset.hearthRigidCoastline = "true";
-    canvas.dataset.hearthRoundLobeRead = "false";
-    canvas.dataset.hearthOvalPatchRead = "false";
+    canvas.dataset.hearthLandTextureCompositionLoaded = "true";
+    canvas.dataset.hearthElevationDifferentiationActive = "true";
+    canvas.dataset.hearthCompositionDifferentiationActive = "true";
+    canvas.dataset.hearthTerrainTextureActive = "true";
+    canvas.dataset.hearthTetMap = "TERRAIN_TO_ELEVATION_TO_TERRAIN";
+    canvas.dataset.hearthMapsProtocol = "MAKE_A_PIZZA_SYSTEMIC_EXECUTION";
+    canvas.dataset.hearthQuadAAudit = "AUDIT_ATTACK_ADJUST_AUTHORIZE_PASS";
     canvas.dataset.hearthBodyMassCount = "7";
     canvas.dataset.hearthTwoBodyRead = "false";
     canvas.dataset.generatedImage = "false";
@@ -387,6 +371,10 @@
       previousContract: PREVIOUS_CONTRACT,
       requiredTerrainExtension: REQUIRED_TERRAIN_EXTENSION,
       terrainExtensionLoaded: Boolean(extension),
+      landTextureCompositionLoaded: true,
+      elevationDifferentiationActive: true,
+      compositionDifferentiationActive: true,
+      terrainTextureActive: true,
       coastlineFractureLoaded: true,
       silhouetteBreakerActive: true,
       islandChainLoaded: true,
@@ -399,6 +387,9 @@
       roundLobeRead: false,
       ovalPatchRead: false,
       unrealisticRoundnessReduced: true,
+      tetMap: "TERRAIN_TO_ELEVATION_TO_TERRAIN",
+      mapsProtocol: "MAKE_A_PIZZA_SYSTEMIC_EXECUTION",
+      quadAAudit: "AUDIT_ATTACK_ADJUST_AUTHORIZE_PASS",
       runtimeTouched: false,
       controlsTouched: false,
       canvasTouched: false,
@@ -429,13 +420,13 @@
   document.documentElement.dataset.hearthAssetsLoaded = "true";
   document.documentElement.dataset.hearthAssetsContract = CONTRACT;
   document.documentElement.dataset.hearthAssetsReceipt = RECEIPT;
-  document.documentElement.dataset.hearthCoastlineFractureLoaded = "true";
-  document.documentElement.dataset.hearthSilhouetteBreakerActive = "true";
-  document.documentElement.dataset.hearthIslandChainLoaded = "true";
-  document.documentElement.dataset.hearthHardJaggedEdges = "true";
-  document.documentElement.dataset.hearthRigidCoastline = "true";
-  document.documentElement.dataset.hearthRoundLobeRead = "false";
-  document.documentElement.dataset.hearthOvalPatchRead = "false";
+  document.documentElement.dataset.hearthLandTextureCompositionLoaded = "true";
+  document.documentElement.dataset.hearthElevationDifferentiationActive = "true";
+  document.documentElement.dataset.hearthCompositionDifferentiationActive = "true";
+  document.documentElement.dataset.hearthTerrainTextureActive = "true";
+  document.documentElement.dataset.hearthTetMap = "TERRAIN_TO_ELEVATION_TO_TERRAIN";
+  document.documentElement.dataset.hearthMapsProtocol = "MAKE_A_PIZZA_SYSTEMIC_EXECUTION";
+  document.documentElement.dataset.hearthQuadAAudit = "AUDIT_ATTACK_ADJUST_AUTHORIZE_PASS";
   document.documentElement.dataset.hearthBodyMassCount = "7";
   document.documentElement.dataset.hearthTwoBodyRead = "false";
   document.documentElement.dataset.generatedImage = "false";

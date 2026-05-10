@@ -1,9 +1,9 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="gauges-audralia-drag-formation-alignment"
+  data-page="gauges-hearth-seven-body-mass-control-audit"
   data-route="/gauges/"
-  data-contract="GAUGES_AUDRALIA_DRAG_FORMATION_ALIGNMENT_TNT_v9"
+  data-contract="GAUGES_HEARTH_SEVEN_BODY_MASS_CONTROL_AUDIT_TNT_v10"
   data-role="read-only-source-audit"
   data-generated-image="false"
   data-graphic-box="false"
@@ -15,7 +15,7 @@
   <title>Diamond Gate Bridge · Gauges</title>
   <meta
     name="description"
-    content="Read-only Gauges console for Audralia G2.4/G2.5 source alignment, drag controls, pole swivel, Hearth route health, and build position."
+    content="Read-only Gauges console for Hearth seven-body-mass renewal, pole-swivel controls, canvas contract alignment, Audralia regression checks, and build order."
   >
 
   <style>
@@ -165,7 +165,7 @@
     }
 
     .lede {
-      max-width: 82ch;
+      max-width: 88ch;
       margin: 0;
       color: var(--muted);
       font-size: clamp(1rem, 2.3vw, 1.16rem);
@@ -287,25 +287,10 @@
       text-transform: uppercase;
     }
 
-    .pass {
-      color: #06101e;
-      background: var(--green);
-    }
-
-    .fail {
-      color: #190703;
-      background: var(--red);
-    }
-
-    .hold {
-      color: #06101e;
-      background: var(--amber);
-    }
-
-    .planned {
-      color: #06101e;
-      background: var(--blue);
-    }
+    .pass { color: #06101e; background: var(--green); }
+    .fail { color: #190703; background: var(--red); }
+    .hold { color: #06101e; background: var(--amber); }
+    .planned { color: #06101e; background: var(--blue); }
 
     .receipt {
       margin: 16px 0 0;
@@ -355,18 +340,18 @@
 
     <main id="main">
       <section class="hero" aria-labelledby="title">
-        <div class="eyebrow">Read-only · Audralia control + formation alignment</div>
+        <div class="eyebrow">Read-only · Hearth seven-body-mass + control audit</div>
         <h1 id="title">Gauges</h1>
         <p class="lede">
-          This console measures what is actually served. It checks whether Audralia is still booting the old
-          G2 calibration route, whether the G2.5 drag/pole-swivel route is active, whether controls are reachable,
-          whether canvas can consume pole inspection, and whether Hearth remains healthy after its route renewal.
+          This console measures what is actually served now. It audits Hearth against the seven-body-mass renewal:
+          HTML boot key, route controller, seven-body assets, pole-swivel controls, canvas consumer, mount status,
+          and Audralia control regression. It does not judge Hearth against the old habitable-forming controller.
         </p>
 
         <div class="actions">
           <button class="primary" type="button" id="runAudit">Run Build Audit</button>
-          <a class="button" href="/showroom/globe/audralia/">Inspect Audralia</a>
           <a class="button" href="/showroom/globe/hearth/">Inspect Hearth</a>
+          <a class="button" href="/showroom/globe/audralia/">Inspect Audralia</a>
         </div>
       </section>
 
@@ -381,7 +366,7 @@
         </article>
         <article class="metric">
           <strong id="holdCount">0</strong>
-          <span>Held or partially aligned checks.</span>
+          <span>Held or planned checks.</span>
         </article>
         <article class="metric">
           <strong id="failCount">0</strong>
@@ -389,17 +374,16 @@
         </article>
         <article class="metric">
           <strong id="readinessCount">0%</strong>
-          <span>Route/source readiness.</span>
+          <span>Source readiness.</span>
         </article>
       </section>
 
       <section class="panel">
         <h2>Current build question</h2>
         <p>
-          Audralia’s visual formation is not the immediate first question. The immediate first question is whether the
-          route is actually loading the correct control chain. If the route still reports
-          <strong>AUDRALIA_G2_CALIBRATION_ROUTE_CONTROLLER_TNT_v1</strong>, drag cannot work because the G2.5 control
-          layer is not being loaded.
+          Hearth should be judged against the seven-body-mass renewal, not the old habitable-forming route. A valid
+          pass requires the v3 route, v3 HTML boot key, v2 assets, v2 controls, and v2 canvas consumer to be served
+          together. If the route says “Failed canvas,” the canvas contract is still the controlling break.
         </p>
       </section>
 
@@ -408,7 +392,7 @@
         <div id="checks" class="checks" aria-live="polite"></div>
       </section>
 
-      <pre id="receipt" class="receipt">GAUGES_AUDRALIA_DRAG_FORMATION_ALIGNMENT_TNT_v9 · waiting for audit.</pre>
+      <pre id="receipt" class="receipt">GAUGES_HEARTH_SEVEN_BODY_MASS_CONTROL_AUDIT_TNT_v10 · waiting for audit.</pre>
     </main>
   </div>
 
@@ -416,30 +400,34 @@
     (() => {
       "use strict";
 
-      const CONTRACT = "GAUGES_AUDRALIA_DRAG_FORMATION_ALIGNMENT_TNT_v9";
-      const AUDRALIA_G25_ROUTE = "AUDRALIA_G2_5_FREE_DRAG_POLE_SWIVEL_ROUTE_TNT_v1";
-      const AUDRALIA_G24_ROUTE = "AUDRALIA_G2_4_ASSET_AND_ROUTE_EXPECTATION_ALIGNMENT_ROUTE_TNT_v1";
-      const AUDRALIA_OLD_CALIBRATION_ROUTE = "AUDRALIA_G2_CALIBRATION_ROUTE_CONTROLLER_TNT_v1";
-      const AUDRALIA_G25_CONTROLS = "AUDRALIA_G2_5_FREE_DRAG_AND_POLE_SWIVEL_CONTROL_TNT_v1";
-      const AUDRALIA_G25_CANVAS = "AUDRALIA_G2_5_CANVAS_POLE_SWIVEL_CONSUMER_TNT_v1";
-      const AUDRALIA_G24_TERRAIN = "AUDRALIA_G2_4_TERRAIN_FORMATION_DELTA_TNT_v1";
-      const AUDRALIA_G24_ASSETS = "AUDRALIA_G2_4_ASSET_FORMATION_MATERIAL_DELTA_TNT_v1";
-      const HEARTH_ROUTE = "HEARTH_HABITABLE_FORMING_ROUTE_CONTROLLER_TNT_v1";
-      const HEARTH_HTML = "HEARTH_HABITABLE_FORMING_ROUTE_AND_HTML_ALIGNMENT_TNT_v1";
+      const CONTRACT = "GAUGES_HEARTH_SEVEN_BODY_MASS_CONTROL_AUDIT_TNT_v10";
 
-      const targets = {
+      const EXPECTED = Object.freeze({
+        hearthHtml: "HEARTH_G2_SEVEN_BODY_MASS_HARD_RENEWAL_HTML_TNT_v3",
+        hearthHtmlBootKey: "hearth-g2-seven-body-mass-hard-renewal-v3",
+        hearthRoute: "HEARTH_G2_SEVEN_BODY_MASS_HARD_RENEWAL_ROUTE_TNT_v3",
+        hearthAssets: "HEARTH_G2_SEVEN_BODY_MASS_FORMATION_ASSETS_TNT_v2",
+        hearthControls: "HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_CONTROLS_TNT_v2",
+        hearthCanvas: "HEARTH_G2_CANVAS_POLE_SWIVEL_SEVEN_BODY_CONSUMER_TNT_v2",
+        audraliaRoute: "AUDRALIA_G2_5_FREE_DRAG_POLE_SWIVEL_ROUTE_TNT_v1",
+        audraliaControls: "AUDRALIA_G2_5_FREE_DRAG_AND_POLE_SWIVEL_CONTROL_TNT_v1",
+        audraliaCanvas: "AUDRALIA_G2_5_CANVAS_POLE_SWIVEL_CONSUMER_TNT_v1"
+      });
+
+      const targets = Object.freeze({
+        hearthRoute: "/showroom/globe/hearth/",
+        hearthHtml: "/showroom/globe/hearth/index.html",
+        hearthIndex: "/showroom/globe/hearth/index.js",
+        hearthAssets: "/assets/hearth/hearth.assets.js",
+        hearthControls: "/assets/hearth/hearth.controls.js",
+        hearthCanvas: "/assets/hearth/hearth.canvas.js",
+        hearthRuntime: "/assets/hearth/hearth.runtime.js",
         audraliaRoute: "/showroom/globe/audralia/",
         audraliaHtml: "/showroom/globe/audralia/index.html",
         audraliaIndex: "/showroom/globe/audralia/index.js",
         audraliaControls: "/assets/audralia/audralia.controls.js",
-        audraliaCanvas: "/assets/audralia/audralia.canvas.js",
-        audraliaTerrain: "/assets/audralia/audralia.terrain.fingers.js",
-        audraliaAssets: "/assets/audralia/audralia.assets.js",
-        audraliaRuntime: "/assets/audralia/audralia.runtime.js",
-        hearthRoute: "/showroom/globe/hearth/",
-        hearthIndex: "/showroom/globe/hearth/index.js",
-        hearthHtml: "/showroom/globe/hearth/index.html"
-      };
+        audraliaCanvas: "/assets/audralia/audralia.canvas.js"
+      });
 
       const checksNode = document.getElementById("checks");
       const receiptNode = document.getElementById("receipt");
@@ -458,11 +446,13 @@
         try {
           const res = await fetch(cacheBusted(path), { cache: "no-store" });
           const text = await res.text();
+
           state.sources[path] = {
             ok: res.ok,
             status: res.status,
             text
           };
+
           return state.sources[path];
         } catch (error) {
           state.sources[path] = {
@@ -471,16 +461,25 @@
             text: "",
             error: String(error && error.message ? error.message : error)
           };
+
           return state.sources[path];
         }
+      }
+
+      function src(path) {
+        return state.sources[path] || { ok: false, status: 0, text: "" };
       }
 
       function includes(source, needle) {
         return Boolean(source && source.text && source.text.includes(needle));
       }
 
-      function addCheck(group, name, path, status, detail, expected) {
-        state.checks.push({ group, name, path, status, detail, expected });
+      function includesAny(source, needles) {
+        return needles.some((needle) => includes(source, needle));
+      }
+
+      function addCheck(group, name, path, status, detail) {
+        state.checks.push({ group, name, path, status, detail });
       }
 
       function statusClass(status) {
@@ -542,34 +541,62 @@
         ];
 
         receiptNode.textContent = lines.join("\n");
+
+        document.documentElement.dataset.gaugesContract = CONTRACT;
+        document.documentElement.dataset.gaugesTotal = String(total);
+        document.documentElement.dataset.gaugesPassed = String(pass);
+        document.documentElement.dataset.gaugesHeld = String(hold);
+        document.documentElement.dataset.gaugesFailed = String(fail);
+        document.documentElement.dataset.generatedImage = "false";
+        document.documentElement.dataset.graphicBox = "false";
+        document.documentElement.dataset.visualPassClaimed = "false";
       }
 
       function criticalInterpretation() {
-        const audraliaIndex = state.sources[targets.audraliaIndex];
-        const audraliaHtml = state.sources[targets.audraliaHtml] || state.sources[targets.audraliaRoute];
-        const audraliaCanvas = state.sources[targets.audraliaCanvas];
+        const hearthRoute = src(targets.hearthRoute);
+        const hearthHtml = src(targets.hearthHtml);
+        const hearthIndex = src(targets.hearthIndex);
+        const hearthAssets = src(targets.hearthAssets);
+        const hearthControls = src(targets.hearthControls);
+        const hearthCanvas = src(targets.hearthCanvas);
 
-        const routeIsG25 = includes(audraliaIndex, AUDRALIA_G25_ROUTE);
-        const htmlBootsG25 = includes(audraliaHtml, "audralia-g2-5-free-drag-pole-swivel-route-v1");
-        const canvasConsumesPole = includes(audraliaCanvas, AUDRALIA_G25_CANVAS) || includes(audraliaCanvas, "inspectionTiltRadians");
+        const htmlV3 = includesAny(hearthHtml, [EXPECTED.hearthHtml, EXPECTED.hearthHtmlBootKey]) ||
+          includesAny(hearthRoute, [EXPECTED.hearthHtml, EXPECTED.hearthHtmlBootKey]);
 
-        if (!routeIsG25 && includes(audraliaIndex, AUDRALIA_OLD_CALIBRATION_ROUTE)) {
-          return "Audralia is still serving the old G2 calibration route. Controls may exist, but drag cannot work until /showroom/globe/audralia/index.js and the HTML script cache key are updated.";
+        const routeV3 = includes(hearthIndex, EXPECTED.hearthRoute);
+        const assetsV2 = includes(hearthAssets, EXPECTED.hearthAssets);
+        const controlsV2 = includes(hearthControls, EXPECTED.hearthControls);
+        const canvasV2 = includes(hearthCanvas, EXPECTED.hearthCanvas);
+
+        const liveFailedCanvas = includes(hearthRoute, "Failed canvas") ||
+          includes(hearthRoute, "contract validation failed") ||
+          includes(hearthRoute, "Loaded canvas, but contract validation failed");
+
+        if (!htmlV3) {
+          return "Hearth HTML is not booting the seven-body-mass v3 route key. Update /showroom/globe/hearth/index.html first.";
         }
 
-        if (routeIsG25 && !htmlBootsG25) {
-          return "Audralia route source is G2.5, but HTML is still booting an older index.js cache key. Update /showroom/globe/audralia/index.html script src.";
+        if (!routeV3) {
+          return "Hearth HTML may be renewed, but /showroom/globe/hearth/index.js is not the seven-body-mass v3 route controller.";
         }
 
-        if (routeIsG25 && htmlBootsG25 && !canvasConsumesPole) {
-          return "Audralia route can bind controls, but canvas is not yet a pole-swivel consumer. Drag may bind, but north/south pole inspection will not render correctly until audralia.canvas.js is renewed.";
+        if (!assetsV2) {
+          return "Hearth route expects seven-body-mass assets, but /assets/hearth/hearth.assets.js is not the v2 seven-body-mass contract.";
         }
 
-        if (routeIsG25 && htmlBootsG25 && canvasConsumesPole) {
-          return "Audralia control chain is source-aligned for G2.5 drag and pole inspection. Test live finger drag next.";
+        if (!controlsV2) {
+          return "Hearth route expects v2 pole-swivel controls, but /assets/hearth/hearth.controls.js is not the v2 control contract.";
         }
 
-        return "Audit complete. Review failed checks for the first controlling break.";
+        if (!canvasV2) {
+          return "Hearth route expects the v2 seven-body/pole-swivel canvas consumer, but /assets/hearth/hearth.canvas.js is not serving that contract.";
+        }
+
+        if (liveFailedCanvas) {
+          return "Hearth source contracts look close, but the live route still reports canvas validation failure. Redeploy /assets/hearth/hearth.canvas.js with the exact v2 contract and cache-bust the route.";
+        }
+
+        return "Hearth seven-body-mass chain is source-aligned. Test visible render, drag, swivel, and body-mass distribution next.";
       }
 
       async function runAudit() {
@@ -578,172 +605,229 @@
         checksNode.innerHTML = "";
         receiptNode.textContent = `${CONTRACT} · running read-only audit...`;
 
-        const entries = Object.entries(targets);
-        await Promise.all(entries.map(([, path]) => fetchText(path)));
+        await Promise.all(Object.values(targets).map(fetchText));
 
-        const s = Object.fromEntries(Object.entries(targets).map(([k, path]) => [k, state.sources[path]]));
-
-        addCheck(
-          "Audralia Route",
-          "Route reachable",
-          targets.audraliaRoute,
-          s.audraliaRoute.ok ? "pass" : "fail",
-          s.audraliaRoute.ok ? `HTTP ${s.audraliaRoute.status}` : `not reachable ${s.audraliaRoute.error || s.audraliaRoute.status}`
-        );
-
-        addCheck(
-          "Audralia HTML",
-          "Habitable-forming calibration copy",
-          targets.audraliaHtml,
-          includes(s.audraliaHtml, "AUDRALIA_HABITABLE_FORMING_G2_CALIBRATION_HTML_TNT_v1") ||
-          includes(s.audraliaRoute, "AUDRALIA_HABITABLE_FORMING_G2_CALIBRATION_HTML_TNT_v1")
-            ? "pass"
-            : "fail",
-          "expects Audralia G2 calibration HTML receipt"
-        );
-
-        addCheck(
-          "Audralia HTML",
-          "G2.5 route boot key",
-          targets.audraliaHtml,
-          includes(s.audraliaHtml, "audralia-g2-5-free-drag-pole-swivel-route-v1") ||
-          includes(s.audraliaRoute, "audralia-g2-5-free-drag-pole-swivel-route-v1")
-            ? "pass"
-            : "fail",
-          "must boot ./index.js with G2.5 cache key"
-        );
-
-        addCheck(
-          "Audralia Route Controller",
-          "G2.5 drag route contract",
-          targets.audraliaIndex,
-          includes(s.audraliaIndex, AUDRALIA_G25_ROUTE)
-            ? "pass"
-            : includes(s.audraliaIndex, AUDRALIA_OLD_CALIBRATION_ROUTE)
-              ? "fail"
-              : "hold",
-          "route must be G2.5 free-drag/pole-swivel controller"
-        );
-
-        addCheck(
-          "Audralia Route Controller",
-          "Controls import present",
-          targets.audraliaIndex,
-          includes(s.audraliaIndex, "controls: \"/assets/audralia/audralia.controls.js\"") ||
-          includes(s.audraliaIndex, "audralia.controls.js")
-            ? "pass"
-            : "fail",
-          "route must import audralia.controls.js"
-        );
-
-        addCheck(
-          "Audralia Route Controller",
-          "Controls bind present",
-          targets.audraliaIndex,
-          includes(s.audraliaIndex, "controls.bind") && includes(s.audraliaIndex, "Controls bound")
-            ? "pass"
-            : "fail",
-          "route must bind controls to the actual canvas"
-        );
-
-        addCheck(
-          "Audralia Controls",
-          "Controls file reachable",
-          targets.audraliaControls,
-          s.audraliaControls.ok ? "pass" : "fail",
-          s.audraliaControls.ok ? `HTTP ${s.audraliaControls.status}` : "controls source not reachable"
-        );
-
-        addCheck(
-          "Audralia Controls",
-          "G2.5 free drag + pole swivel contract",
-          targets.audraliaControls,
-          includes(s.audraliaControls, AUDRALIA_G25_CONTROLS) &&
-          includes(s.audraliaControls, "inspectionTiltRadians") &&
-          includes(s.audraliaControls, "poleSwivel")
-            ? "pass"
-            : "fail",
-          "controls must expose drag, spin, and north/south pole swivel"
-        );
-
-        addCheck(
-          "Audralia Canvas",
-          "Canvas source reachable",
-          targets.audraliaCanvas,
-          s.audraliaCanvas.ok ? "pass" : "fail",
-          s.audraliaCanvas.ok ? `HTTP ${s.audraliaCanvas.status}` : "canvas source not reachable"
-        );
-
-        addCheck(
-          "Audralia Canvas",
-          "Pole-swivel consumer",
-          targets.audraliaCanvas,
-          includes(s.audraliaCanvas, AUDRALIA_G25_CANVAS) ||
-          (includes(s.audraliaCanvas, "inspectionTiltRadians") && includes(s.audraliaCanvas, "poleSwivelRadians"))
-            ? "pass"
-            : "hold",
-          "required for north/south pole inspection to render"
-        );
-
-        addCheck(
-          "Audralia Terrain",
-          "G2.4 terrain formation source",
-          targets.audraliaTerrain,
-          includes(s.audraliaTerrain, AUDRALIA_G24_TERRAIN)
-            ? "pass"
-            : "fail",
-          "terrain should remain G2.4 during control repair"
-        );
-
-        addCheck(
-          "Audralia Assets",
-          "G2.4 material formation source",
-          targets.audraliaAssets,
-          includes(s.audraliaAssets, AUDRALIA_G24_ASSETS)
-            ? "pass"
-            : "fail",
-          "assets should express G2.4 terrain fields"
-        );
-
-        addCheck(
-          "Audralia Runtime",
-          "Motion-only runtime",
-          targets.audraliaRuntime,
-          includes(s.audraliaRuntime, "MOTION_ONLY") ||
-          includes(s.audraliaRuntime, "motion-only") ||
-          includes(s.audraliaRuntime, "NO_VISUAL_SOVEREIGNTY")
-            ? "pass"
-            : "hold",
-          "runtime must remain motion-only; controls own input"
-        );
+        const hearthRoute = src(targets.hearthRoute);
+        const hearthHtml = src(targets.hearthHtml);
+        const hearthIndex = src(targets.hearthIndex);
+        const hearthAssets = src(targets.hearthAssets);
+        const hearthControls = src(targets.hearthControls);
+        const hearthCanvas = src(targets.hearthCanvas);
+        const hearthRuntime = src(targets.hearthRuntime);
+        const audraliaRoute = src(targets.audraliaRoute);
+        const audraliaHtml = src(targets.audraliaHtml);
+        const audraliaIndex = src(targets.audraliaIndex);
+        const audraliaControls = src(targets.audraliaControls);
+        const audraliaCanvas = src(targets.audraliaCanvas);
 
         addCheck(
           "Hearth Route",
           "Route reachable",
           targets.hearthRoute,
-          s.hearthRoute.ok ? "pass" : "fail",
-          s.hearthRoute.ok ? `HTTP ${s.hearthRoute.status}` : `not reachable ${s.hearthRoute.error || s.hearthRoute.status}`
-        );
-
-        addCheck(
-          "Hearth Route",
-          "Habitable-forming controller",
-          targets.hearthIndex,
-          includes(s.hearthIndex, HEARTH_ROUTE)
-            ? "pass"
-            : "fail",
-          "Hearth route should remain on repaired habitable-forming controller"
+          hearthRoute.ok ? "pass" : "fail",
+          hearthRoute.ok ? `HTTP ${hearthRoute.status}` : `not reachable ${hearthRoute.error || hearthRoute.status}`
         );
 
         addCheck(
           "Hearth HTML",
-          "Habitable-forming HTML",
+          "Seven-body-mass v3 HTML receipt",
           targets.hearthHtml,
-          includes(s.hearthHtml, HEARTH_HTML) ||
-          includes(s.hearthRoute, HEARTH_HTML)
+          includes(hearthHtml, EXPECTED.hearthHtml) || includes(hearthRoute, EXPECTED.hearthHtml)
             ? "pass"
             : "fail",
-          "Hearth public identity should remain aligned"
+          `expects ${EXPECTED.hearthHtml}`
+        );
+
+        addCheck(
+          "Hearth HTML",
+          "Seven-body-mass v3 boot key",
+          targets.hearthHtml,
+          includes(hearthHtml, EXPECTED.hearthHtmlBootKey) || includes(hearthRoute, EXPECTED.hearthHtmlBootKey)
+            ? "pass"
+            : "fail",
+          `must boot ./index.js?v=${EXPECTED.hearthHtmlBootKey}`
+        );
+
+        addCheck(
+          "Hearth Route Controller",
+          "Seven-body-mass v3 route contract",
+          targets.hearthIndex,
+          includes(hearthIndex, EXPECTED.hearthRoute)
+            ? "pass"
+            : "fail",
+          `expects ${EXPECTED.hearthRoute}`
+        );
+
+        addCheck(
+          "Hearth Route Controller",
+          "Hard-renewal key consistency",
+          targets.hearthIndex,
+          includes(hearthIndex, EXPECTED.hearthHtmlBootKey)
+            ? "pass"
+            : "fail",
+          "route controller should load child files with the same v3 renewal key"
+        );
+
+        addCheck(
+          "Hearth Assets",
+          "Seven-body-mass v2 asset contract",
+          targets.hearthAssets,
+          includes(hearthAssets, EXPECTED.hearthAssets)
+            ? "pass"
+            : "fail",
+          `expects ${EXPECTED.hearthAssets}`
+        );
+
+        addCheck(
+          "Hearth Assets",
+          "Seven-body-mass definition",
+          targets.hearthAssets,
+          includes(hearthAssets, "BODY_MASSES") &&
+          includes(hearthAssets, "north-crown-mass") &&
+          includes(hearthAssets, "equatorial-great-mass") &&
+          includes(hearthAssets, "secondaryMasses") ||
+          includes(hearthAssets, "secondaryMasses: 5")
+            ? "pass"
+            : "fail",
+          "must define one North Crown, one Equatorial Great Mass, and five secondary masses"
+        );
+
+        addCheck(
+          "Hearth Controls",
+          "V2 pole-swivel controls",
+          targets.hearthControls,
+          includes(hearthControls, EXPECTED.hearthControls)
+            ? "pass"
+            : "fail",
+          `expects ${EXPECTED.hearthControls}`
+        );
+
+        addCheck(
+          "Hearth Controls",
+          "Vertical dy control present",
+          targets.hearthControls,
+          includes(hearthControls, "const dy") &&
+          includes(hearthControls, "poleDelta") &&
+          includes(hearthControls, "inspectionTiltRadians")
+            ? "pass"
+            : "fail",
+          "controls must consume vertical drag as pole swivel"
+        );
+
+        addCheck(
+          "Hearth Canvas",
+          "V2 seven-body/pole-swivel canvas contract",
+          targets.hearthCanvas,
+          includes(hearthCanvas, EXPECTED.hearthCanvas)
+            ? "pass"
+            : "fail",
+          `expects ${EXPECTED.hearthCanvas}`
+        );
+
+        addCheck(
+          "Hearth Canvas",
+          "Consumes pole swivel",
+          targets.hearthCanvas,
+          includes(hearthCanvas, "readInspectionTilt") &&
+          includes(hearthCanvas, "hearthCanvasConsumesPoleSwivel") &&
+          includes(hearthCanvas, "mat4RotateX")
+            ? "pass"
+            : "fail",
+          "canvas must consume inspection tilt from controls"
+        );
+
+        addCheck(
+          "Hearth Canvas",
+          "Consumes seven-body assets",
+          targets.hearthCanvas,
+          includes(hearthCanvas, "hearthCanvasConsumesSevenBodyMass") &&
+          includes(hearthCanvas, "resolveTextureCanvas")
+            ? "pass"
+            : "fail",
+          "canvas must consume the renewed assets texture"
+        );
+
+        addCheck(
+          "Hearth Runtime",
+          "Runtime protected",
+          targets.hearthRuntime,
+          hearthRuntime.ok &&
+          !includes(hearthRuntime, "HEARTH_G2_SEVEN_BODY_MASS") &&
+          !includes(hearthRuntime, "BODY_MASSES")
+            ? "pass"
+            : "hold",
+          "runtime should remain motion authority, not body-mass authority"
+        );
+
+        addCheck(
+          "Hearth Live Status",
+          "No canvas validation failure",
+          targets.hearthRoute,
+          includesAny(hearthRoute, ["Failed canvas", "contract validation failed", "Loaded canvas, but contract validation failed"])
+            ? "fail"
+            : "pass",
+          "live route should not report canvas contract validation failure"
+        );
+
+        addCheck(
+          "Hearth Live Status",
+          "Mount not stuck on loading",
+          targets.hearthRoute,
+          includes(hearthRoute, "chain loading") &&
+          !includes(hearthRoute, "Mounted true")
+            ? "fail"
+            : "pass",
+          "route should not remain stuck on loading without a mounted canvas"
+        );
+
+        addCheck(
+          "Audralia Regression",
+          "Route reachable",
+          targets.audraliaRoute,
+          audraliaRoute.ok ? "pass" : "fail",
+          audraliaRoute.ok ? `HTTP ${audraliaRoute.status}` : "Audralia route not reachable"
+        );
+
+        addCheck(
+          "Audralia Regression",
+          "G2.5 route controller",
+          targets.audraliaIndex,
+          includes(audraliaIndex, EXPECTED.audraliaRoute)
+            ? "pass"
+            : "fail",
+          "Audralia should retain G2.5 free-drag/pole-swivel route source"
+        );
+
+        addCheck(
+          "Audralia Regression",
+          "G2.5 HTML boot key",
+          targets.audraliaHtml,
+          includes(audraliaHtml, "audralia-g2-5-free-drag-pole-swivel-route-v1") ||
+          includes(audraliaRoute, "audralia-g2-5-free-drag-pole-swivel-route-v1")
+            ? "pass"
+            : "fail",
+          "Audralia HTML must boot G2.5 route key"
+        );
+
+        addCheck(
+          "Audralia Regression",
+          "Controls remain reachable",
+          targets.audraliaControls,
+          audraliaControls.ok && includes(audraliaControls, EXPECTED.audraliaControls)
+            ? "pass"
+            : "fail",
+          "Audralia controls should remain G2.5"
+        );
+
+        addCheck(
+          "Audralia Regression",
+          "Canvas remains pole-swivel consumer",
+          targets.audraliaCanvas,
+          audraliaCanvas.ok &&
+          (includes(audraliaCanvas, EXPECTED.audraliaCanvas) || includes(audraliaCanvas, "inspectionTiltRadians"))
+            ? "pass"
+            : "fail",
+          "Audralia canvas should retain pole-swivel consumption"
         );
 
         addCheck(
@@ -755,12 +839,6 @@
         );
 
         renderChecks();
-
-        document.documentElement.dataset.gaugesContract = CONTRACT;
-        document.documentElement.dataset.gaugesLastRun = new Date().toISOString();
-        document.documentElement.dataset.generatedImage = "false";
-        document.documentElement.dataset.graphicBox = "false";
-        document.documentElement.dataset.visualPassClaimed = "false";
       }
 
       document.getElementById("runAudit").addEventListener("click", runAudit);

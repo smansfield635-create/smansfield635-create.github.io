@@ -1,7 +1,7 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_ROUTE_TNT_v4
+// HEARTH_ASYMMETRIC_LANDMASS_NATURALIZATION_ROUTE_TNT_v5
 // Full-file replacement.
-// Forces the blueprint-to-scale assets contract while preserving the passing runtime/controls/canvas chain.
+// Forces the asymmetric-landmass assets contract while preserving the passing runtime/controls/canvas chain.
 // Runtime remains protected.
 // Controls remain HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_CONTROLS_TNT_v2.
 // Canvas remains HEARTH_G2_CANVAS_POLE_SWIVEL_SEVEN_BODY_CONSUMER_TNT_v2.
@@ -10,15 +10,15 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_ROUTE_TNT_v4";
-  const RECEIPT = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_ROUTE_RECEIPT_v4";
-  const PREVIOUS_CONTRACT = "HEARTH_G2_SEVEN_BODY_MASS_HARD_RENEWAL_ROUTE_TNT_v3";
-  const KEY = "hearth-seven-body-mass-blueprint-to-scale-v4";
+  const CONTRACT = "HEARTH_ASYMMETRIC_LANDMASS_NATURALIZATION_ROUTE_TNT_v5";
+  const RECEIPT = "HEARTH_ASYMMETRIC_LANDMASS_NATURALIZATION_ROUTE_RECEIPT_v5";
+  const PREVIOUS_CONTRACT = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_ROUTE_TNT_v4";
+  const KEY = "hearth-asymmetric-landmass-naturalization-v5";
 
   const EXPECTED = Object.freeze({
     controls: "HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_CONTROLS_TNT_v2",
     canvas: "HEARTH_G2_CANVAS_POLE_SWIVEL_SEVEN_BODY_CONSUMER_TNT_v2",
-    assets: "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_ASSETS_TNT_v3"
+    assets: "HEARTH_ASYMMETRIC_LANDMASS_NATURALIZATION_ASSETS_TNT_v4"
   });
 
   const FILES = [
@@ -41,14 +41,20 @@
       role: "assets",
       src: `/assets/hearth/hearth.assets.js?v=${KEY}`,
       global: "HEARTH_ASSETS",
-      validate: (value) =>
-        value &&
-        typeof value.createTextureCanvas === "function" &&
-        String(value.contract || "").includes(EXPECTED.assets) &&
-        value.getStatus &&
-        value.getStatus().bodyMassCount === 7 &&
-        value.getStatus().uniqueMassProfiles === true &&
-        value.getStatus().twoBodyRead === false
+      validate: (value) => {
+        if (!value || typeof value.createTextureCanvas !== "function") return false;
+        if (!String(value.contract || "").includes(EXPECTED.assets)) return false;
+        if (typeof value.getStatus !== "function") return false;
+        const status = value.getStatus();
+        return (
+          status.bodyMassCount === 7 &&
+          status.uniqueMassProfiles === true &&
+          status.twoBodyRead === false &&
+          status.symmetryReduced === true &&
+          status.ovalPatchRead === false &&
+          status.naturalCoastlinePressure === true
+        );
+      }
     },
     {
       role: "canvas",
@@ -84,6 +90,9 @@
     document.documentElement.dataset.hearthBodyMassCount = "7";
     document.documentElement.dataset.hearthUniqueMassProfiles = "true";
     document.documentElement.dataset.hearthTwoBodyRead = "false";
+    document.documentElement.dataset.hearthSymmetryReduced = "true";
+    document.documentElement.dataset.hearthOvalPatchRead = "false";
+    document.documentElement.dataset.hearthNaturalCoastlinePressure = "true";
     document.documentElement.dataset.hearthSymmetricalDotDistribution = "false";
     document.documentElement.dataset.hearthPoleSwivel = "true";
     document.documentElement.dataset.generatedImage = "false";
@@ -93,8 +102,8 @@
     if (node) {
       node.textContent = [
         state.mounted
-          ? "Hearth blueprint-to-scale seven-body-mass route ready."
-          : "Hearth blueprint-to-scale seven-body-mass route preparing.",
+          ? "Hearth asymmetric landmass naturalization route ready."
+          : "Hearth asymmetric landmass naturalization route preparing.",
         `Status ${statusValue}`,
         `Route ${CONTRACT}`,
         `Receipt ${RECEIPT}`,
@@ -112,6 +121,9 @@
         "Secondary masses 5",
         "Unique mass profiles true",
         "Two-body read false",
+        "Symmetry reduced true",
+        "Oval patch read false",
+        "Natural coastline pressure true",
         "Symmetrical dot distribution false",
         "Pole swivel true",
         "Generated image false",
@@ -178,6 +190,9 @@
     node.dataset.hearthBodyMassCount = "7";
     node.dataset.hearthUniqueMassProfiles = "true";
     node.dataset.hearthTwoBodyRead = "false";
+    node.dataset.hearthSymmetryReduced = "true";
+    node.dataset.hearthOvalPatchRead = "false";
+    node.dataset.hearthNaturalCoastlinePressure = "true";
     node.dataset.hearthPoleSwivel = "true";
     node.style.touchAction = "none";
     node.style.userSelect = "none";
@@ -254,6 +269,9 @@
       canvas.dataset.hearthBodyMassCount = "7";
       canvas.dataset.hearthUniqueMassProfiles = "true";
       canvas.dataset.hearthTwoBodyRead = "false";
+      canvas.dataset.hearthSymmetryReduced = "true";
+      canvas.dataset.hearthOvalPatchRead = "false";
+      canvas.dataset.hearthNaturalCoastlinePressure = "true";
       canvas.dataset.hearthSymmetricalDotDistribution = "false";
 
       controls.bind(canvas, runtime, {

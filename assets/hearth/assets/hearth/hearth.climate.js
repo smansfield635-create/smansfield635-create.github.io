@@ -1,6 +1,8 @@
 // /assets/hearth/hearth.climate.js
 // HEARTH_CLIMATE_REGION_BIOME_AUTHORITY_TNT_v1
 // Full-file replacement / new file.
+// Climate + region + biome authority only.
+// No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
@@ -37,12 +39,10 @@
     const s = Math.max(1, Math.floor(scale));
     const x = u * s;
     const y = v * s;
-
     const x0 = Math.floor(x);
     const y0 = Math.floor(y);
     const x1 = x0 + 1;
     const y1 = y0 + 1;
-
     const xf = x - x0;
     const yf = y - y0;
     const sx = xf * xf * (3 - 2 * xf);

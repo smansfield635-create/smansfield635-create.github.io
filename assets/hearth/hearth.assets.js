@@ -1,250 +1,60 @@
 // /assets/hearth/hearth.assets.js
-// HEARTH_ASSETS_TERRAIN_EXTENSION_BRIDGE_TNT_v5
+// HEARTH_JAGGED_COAST_AND_ISLAND_CHAIN_ASSETS_TNT_v7
 // Full-file replacement.
-// Assets authority with terrain-extension consumption.
+// Assets authority with rigid coast and island-chain consumption.
 // Purpose:
-// - Preserve seven asymmetric body masses.
-// - Consume HEARTH_TERRAIN_EXTENSION_FINGERPRINT_AUTHORITY_TNT_v1.
-// - Let terrain extension sharpen each land mass internally.
+// - Preserve seven body masses.
+// - Add rigid, jagged land edges.
+// - Add islands and offshore fragments.
+// - Reduce unrealistic rounded/lobed silhouettes.
 // - Preserve runtime, controls, canvas, and route separation.
 // No GraphicBox. No generated image. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_ASSETS_TERRAIN_EXTENSION_BRIDGE_TNT_v5";
-  const RECEIPT = "HEARTH_ASSETS_TERRAIN_EXTENSION_BRIDGE_RECEIPT_v5";
-  const PREVIOUS_CONTRACT = "HEARTH_ASYMMETRIC_LANDMASS_NATURALIZATION_ASSETS_TNT_v4";
-  const REQUIRED_TERRAIN_EXTENSION = "HEARTH_TERRAIN_EXTENSION_FINGERPRINT_AUTHORITY_TNT_v1";
+  const CONTRACT = "HEARTH_JAGGED_COAST_AND_ISLAND_CHAIN_ASSETS_TNT_v7";
+  const RECEIPT = "HEARTH_JAGGED_COAST_AND_ISLAND_CHAIN_ASSETS_RECEIPT_v7";
+  const PREVIOUS_CONTRACT = "HEARTH_COASTLINE_FRACTURE_AND_SILHOUETTE_BREAKER_ASSETS_TNT_v6";
+  const REQUIRED_TERRAIN_EXTENSION = "HEARTH_JAGGED_COAST_AND_ISLAND_CHAIN_TERRAIN_EXTENSION_TNT_v3";
   const BLUEPRINT = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_v1";
-  const VERSION = "2026-05-10.hearth-assets-terrain-extension-bridge-v5";
 
   const TAU = Math.PI * 2;
   const DEG = Math.PI / 180;
 
   const BODY_MASSES = Object.freeze([
-    {
-      id: 1,
-      key: "north-crown-mass",
-      name: "North Crown Mass",
-      profile: "fractured-polar-crown",
-      ice: 0.88,
-      wet: 0.24,
-      shelf: 0.48,
-      mountain: 0.74,
-      cliff: 0.58,
-      basin: 0.10,
-      beach: 0.06,
-      mineral: 0.36,
-      ridgeBias: 0.76,
-      bayBias: 0.84,
-      asymmetry: 0.96,
-      lobes: [
-        { lat: 80 * DEG, lon: -52 * DEG, rx: 32 * DEG, ry: 10 * DEG, angle: -18 * DEG, power: 1.00 },
-        { lat: 82 * DEG, lon: -4 * DEG, rx: 26 * DEG, ry: 9 * DEG, angle: 9 * DEG, power: 0.92 },
-        { lat: 74 * DEG, lon: 34 * DEG, rx: 30 * DEG, ry: 10 * DEG, angle: 24 * DEG, power: 0.78 },
-        { lat: 69 * DEG, lon: -25 * DEG, rx: 42 * DEG, ry: 8 * DEG, angle: -4 * DEG, power: 0.52 }
-      ],
-      cuts: [
-        { lat: 72 * DEG, lon: -5 * DEG, rx: 18 * DEG, ry: 7 * DEG, angle: 14 * DEG, power: 0.44 },
-        { lat: 70 * DEG, lon: 54 * DEG, rx: 24 * DEG, ry: 7 * DEG, angle: -20 * DEG, power: 0.36 },
-        { lat: 73 * DEG, lon: -74 * DEG, rx: 18 * DEG, ry: 6 * DEG, angle: 30 * DEG, power: 0.34 }
-      ]
-    },
-    {
-      id: 2,
-      key: "equatorial-great-mass",
-      name: "Equatorial Great Mass",
-      profile: "rifted-equatorial-continent",
-      ice: 0.03,
-      wet: 0.66,
-      shelf: 0.72,
-      mountain: 0.60,
-      cliff: 0.38,
-      basin: 0.78,
-      beach: 0.68,
-      mineral: 0.70,
-      ridgeBias: 0.58,
-      bayBias: 0.62,
-      asymmetry: 0.86,
-      lobes: [
-        { lat: 8 * DEG, lon: -46 * DEG, rx: 30 * DEG, ry: 24 * DEG, angle: -22 * DEG, power: 1.00 },
-        { lat: -5 * DEG, lon: -12 * DEG, rx: 38 * DEG, ry: 22 * DEG, angle: 5 * DEG, power: 0.96 },
-        { lat: 13 * DEG, lon: 32 * DEG, rx: 28 * DEG, ry: 18 * DEG, angle: -18 * DEG, power: 0.74 },
-        { lat: -16 * DEG, lon: 48 * DEG, rx: 24 * DEG, ry: 15 * DEG, angle: 34 * DEG, power: 0.54 },
-        { lat: 19 * DEG, lon: 68 * DEG, rx: 15 * DEG, ry: 10 * DEG, angle: -12 * DEG, power: 0.34 }
-      ],
-      cuts: [
-        { lat: 4 * DEG, lon: 7 * DEG, rx: 13 * DEG, ry: 24 * DEG, angle: -26 * DEG, power: 0.31 },
-        { lat: -22 * DEG, lon: 20 * DEG, rx: 18 * DEG, ry: 9 * DEG, angle: 20 * DEG, power: 0.24 },
-        { lat: 24 * DEG, lon: 51 * DEG, rx: 12 * DEG, ry: 9 * DEG, angle: -40 * DEG, power: 0.26 }
-      ]
-    },
-    {
-      id: 3,
-      key: "northwest-temperate-mass",
-      name: "Northwest Temperate Mass",
-      profile: "diagonal-temperate-highland-plate",
-      ice: 0.16,
-      wet: 0.54,
-      shelf: 0.42,
-      mountain: 0.58,
-      cliff: 0.38,
-      basin: 0.46,
-      beach: 0.24,
-      mineral: 0.50,
-      ridgeBias: 0.70,
-      bayBias: 0.28,
-      asymmetry: 0.62,
-      lobes: [
-        { lat: 51 * DEG, lon: -124 * DEG, rx: 18 * DEG, ry: 13 * DEG, angle: 35 * DEG, power: 0.82 },
-        { lat: 41 * DEG, lon: -103 * DEG, rx: 25 * DEG, ry: 15 * DEG, angle: 28 * DEG, power: 1.00 },
-        { lat: 32 * DEG, lon: -82 * DEG, rx: 17 * DEG, ry: 10 * DEG, angle: 19 * DEG, power: 0.52 }
-      ],
-      cuts: [
-        { lat: 35 * DEG, lon: -68 * DEG, rx: 10 * DEG, ry: 18 * DEG, angle: 4 * DEG, power: 0.28 },
-        { lat: 56 * DEG, lon: -94 * DEG, rx: 12 * DEG, ry: 7 * DEG, angle: -22 * DEG, power: 0.22 }
-      ]
-    },
-    {
-      id: 4,
-      key: "northeast-broken-shelf-mass",
-      name: "Northeast Broken Shelf Mass",
-      profile: "fractured-shelf-archipelago",
-      ice: 0.05,
-      wet: 0.76,
-      shelf: 0.92,
-      mountain: 0.30,
-      cliff: 0.22,
-      basin: 0.22,
-      beach: 0.72,
-      mineral: 0.40,
-      ridgeBias: 0.26,
-      bayBias: 0.98,
-      asymmetry: 1.00,
-      lobes: [
-        { lat: 38 * DEG, lon: 88 * DEG, rx: 17 * DEG, ry: 11 * DEG, angle: -34 * DEG, power: 0.72 },
-        { lat: 31 * DEG, lon: 110 * DEG, rx: 18 * DEG, ry: 10 * DEG, angle: -18 * DEG, power: 0.88 },
-        { lat: 42 * DEG, lon: 128 * DEG, rx: 12 * DEG, ry: 8 * DEG, angle: 26 * DEG, power: 0.46 },
-        { lat: 24 * DEG, lon: 136 * DEG, rx: 11 * DEG, ry: 7 * DEG, angle: -6 * DEG, power: 0.36 },
-        { lat: 29 * DEG, lon: 75 * DEG, rx: 10 * DEG, ry: 6 * DEG, angle: 12 * DEG, power: 0.30 }
-      ],
-      cuts: [
-        { lat: 35 * DEG, lon: 101 * DEG, rx: 11 * DEG, ry: 7 * DEG, angle: 13 * DEG, power: 0.42 },
-        { lat: 27 * DEG, lon: 121 * DEG, rx: 12 * DEG, ry: 6 * DEG, angle: -28 * DEG, power: 0.36 },
-        { lat: 45 * DEG, lon: 112 * DEG, rx: 9 * DEG, ry: 5 * DEG, angle: 12 * DEG, power: 0.25 }
-      ]
-    },
-    {
-      id: 5,
-      key: "southeast-warm-mass",
-      name: "Southeast Warm Mass",
-      profile: "warm-crescent-shelf-continent",
-      ice: 0.00,
-      wet: 0.80,
-      shelf: 0.84,
-      mountain: 0.34,
-      cliff: 0.28,
-      basin: 0.42,
-      beach: 0.90,
-      mineral: 0.46,
-      ridgeBias: 0.32,
-      bayBias: 0.74,
-      asymmetry: 0.88,
-      lobes: [
-        { lat: -17 * DEG, lon: 124 * DEG, rx: 19 * DEG, ry: 14 * DEG, angle: 34 * DEG, power: 0.74 },
-        { lat: -27 * DEG, lon: 148 * DEG, rx: 30 * DEG, ry: 16 * DEG, angle: 20 * DEG, power: 1.00 },
-        { lat: -37 * DEG, lon: 170 * DEG, rx: 16 * DEG, ry: 10 * DEG, angle: -12 * DEG, power: 0.46 },
-        { lat: -8 * DEG, lon: 165 * DEG, rx: 11 * DEG, ry: 7 * DEG, angle: 36 * DEG, power: 0.24 }
-      ],
-      cuts: [
-        { lat: -20 * DEG, lon: 139 * DEG, rx: 13 * DEG, ry: 20 * DEG, angle: 38 * DEG, power: 0.28 },
-        { lat: -42 * DEG, lon: 130 * DEG, rx: 12 * DEG, ry: 8 * DEG, angle: -16 * DEG, power: 0.22 }
-      ]
-    },
-    {
-      id: 6,
-      key: "southwest-ridge-mass",
-      name: "Southwest Ridge Mass",
-      profile: "dark-tectonic-ridge-scar",
-      ice: 0.10,
-      wet: 0.36,
-      shelf: 0.24,
-      mountain: 0.86,
-      cliff: 0.90,
-      basin: 0.16,
-      beach: 0.12,
-      mineral: 0.84,
-      ridgeBias: 1.00,
-      bayBias: 0.28,
-      asymmetry: 0.82,
-      lobes: [
-        { lat: -25 * DEG, lon: -136 * DEG, rx: 15 * DEG, ry: 12 * DEG, angle: -45 * DEG, power: 0.54 },
-        { lat: -38 * DEG, lon: -119 * DEG, rx: 31 * DEG, ry: 12 * DEG, angle: -29 * DEG, power: 1.00 },
-        { lat: -52 * DEG, lon: -101 * DEG, rx: 20 * DEG, ry: 10 * DEG, angle: -19 * DEG, power: 0.58 },
-        { lat: -44 * DEG, lon: -154 * DEG, rx: 13 * DEG, ry: 8 * DEG, angle: 6 * DEG, power: 0.34 }
-      ],
-      cuts: [
-        { lat: -31 * DEG, lon: -112 * DEG, rx: 10 * DEG, ry: 20 * DEG, angle: -35 * DEG, power: 0.24 },
-        { lat: -53 * DEG, lon: -134 * DEG, rx: 11 * DEG, ry: 7 * DEG, angle: 30 * DEG, power: 0.20 }
-      ]
-    },
-    {
-      id: 7,
-      key: "south-transitional-mass",
-      name: "South Transitional Mass",
-      profile: "cold-storm-shelf-counterweight",
-      ice: 0.56,
-      wet: 0.34,
-      shelf: 0.54,
-      mountain: 0.46,
-      cliff: 0.48,
-      basin: 0.18,
-      beach: 0.26,
-      mineral: 0.44,
-      ridgeBias: 0.48,
-      bayBias: 0.62,
-      asymmetry: 0.76,
-      lobes: [
-        { lat: -52 * DEG, lon: 14 * DEG, rx: 18 * DEG, ry: 9 * DEG, angle: 18 * DEG, power: 0.56 },
-        { lat: -61 * DEG, lon: 42 * DEG, rx: 30 * DEG, ry: 11 * DEG, angle: 9 * DEG, power: 1.00 },
-        { lat: -67 * DEG, lon: 72 * DEG, rx: 13 * DEG, ry: 7 * DEG, angle: -18 * DEG, power: 0.34 }
-      ],
-      cuts: [
-        { lat: -58 * DEG, lon: 30 * DEG, rx: 13 * DEG, ry: 6 * DEG, angle: 8 * DEG, power: 0.26 },
-        { lat: -70 * DEG, lon: 50 * DEG, rx: 18 * DEG, ry: 5 * DEG, angle: -10 * DEG, power: 0.20 }
-      ]
-    }
+    { id: 1, key: "north-crown-mass", name: "North Crown Mass", lat: 78 * DEG, lon: -20 * DEG, rx: 42 * DEG, ry: 13 * DEG, angle: -10 * DEG, mountain: 0.74, ice: 0.88, beach: 0.05, shelf: 0.46, mineral: 0.36, palette: "polar" },
+    { id: 2, key: "equatorial-great-mass", name: "Equatorial Great Mass", lat: 1 * DEG, lon: -8 * DEG, rx: 64 * DEG, ry: 28 * DEG, angle: -8 * DEG, mountain: 0.60, ice: 0.03, beach: 0.68, shelf: 0.72, mineral: 0.70, palette: "habitable" },
+    { id: 3, key: "northwest-temperate-mass", name: "Northwest Temperate Mass", lat: 44 * DEG, lon: -104 * DEG, rx: 32 * DEG, ry: 17 * DEG, angle: 28 * DEG, mountain: 0.58, ice: 0.16, beach: 0.24, shelf: 0.42, mineral: 0.50, palette: "temperate" },
+    { id: 4, key: "northeast-broken-shelf-mass", name: "Northeast Broken Shelf Mass", lat: 34 * DEG, lon: 104 * DEG, rx: 34 * DEG, ry: 16 * DEG, angle: -24 * DEG, mountain: 0.30, ice: 0.05, beach: 0.72, shelf: 0.92, mineral: 0.40, palette: "shelf" },
+    { id: 5, key: "southeast-warm-mass", name: "Southeast Warm Mass", lat: -24 * DEG, lon: 142 * DEG, rx: 38 * DEG, ry: 20 * DEG, angle: 18 * DEG, mountain: 0.34, ice: 0.00, beach: 0.90, shelf: 0.84, mineral: 0.46, palette: "warm" },
+    { id: 6, key: "southwest-ridge-mass", name: "Southwest Ridge Mass", lat: -38 * DEG, lon: -122 * DEG, rx: 36 * DEG, ry: 18 * DEG, angle: -30 * DEG, mountain: 0.88, ice: 0.10, beach: 0.12, shelf: 0.24, mineral: 0.84, palette: "ridge" },
+    { id: 7, key: "south-transitional-mass", name: "South Transitional Mass", lat: -59 * DEG, lon: 36 * DEG, rx: 40 * DEG, ry: 14 * DEG, angle: 9 * DEG, mountain: 0.46, ice: 0.56, beach: 0.26, shelf: 0.54, mineral: 0.44, palette: "cold" }
   ]);
 
   const MATERIAL = Object.freeze({
     abyss: [2, 12, 30],
     deepOcean: [3, 20, 50],
     ocean: [6, 58, 104],
-    oceanBlue: [9, 76, 124],
     shelf: [27, 128, 148],
     shelfSoft: [58, 154, 158],
     foam: [116, 176, 166],
-    wetBeach: [174, 158, 106],
     beach: [202, 180, 116],
-    dryBeach: [170, 146, 92],
+    wetBeach: [174, 158, 106],
     lowland: [92, 130, 76],
-    greenLowland: [78, 132, 82],
-    temperate: [78, 120, 72],
-    warmLowland: [126, 126, 72],
+    green: [78, 132, 82],
+    warm: [126, 126, 72],
     upland: [100, 112, 78],
     ridge: [86, 88, 84],
     cliff: [58, 66, 76],
     granite: [118, 112, 102],
     slate: [48, 62, 76],
-    marble: [176, 170, 154],
     ice: [204, 224, 226],
-    polarStone: [126, 140, 144],
+    polar: [126, 140, 144],
+    dark: [54, 52, 58],
     copper: [156, 88, 58],
     gold: [208, 164, 66],
-    opal: [154, 190, 186],
-    darkMineral: [54, 52, 58],
-    stormShelf: [88, 104, 112]
+    opal: [154, 190, 186]
   });
 
   function clamp(value, min, max) {
@@ -311,30 +121,14 @@
     );
   }
 
-  function fbm(u, v, seed) {
-    let total = 0;
-    let norm = 0;
-    let amp = 0.52;
-    let scale = 4;
-
-    for (let i = 0; i < 6; i += 1) {
-      total += noise(u, v, scale, seed + i * 101) * amp;
-      norm += amp;
-      amp *= 0.52;
-      scale *= 2;
-    }
-
-    return total / Math.max(0.000001, norm);
-  }
-
   function ridged(u, v, seed) {
     let total = 0;
     let norm = 0;
-    let amp = 0.58;
-    let scale = 6;
+    let amp = 0.6;
+    let scale = 8;
 
     for (let i = 0; i < 6; i += 1) {
-      const n = noise(u, v, scale, seed + i * 73);
+      const n = noise(u, v, scale, seed + i * 83);
       total += (1 - Math.abs(n * 2 - 1)) * amp;
       norm += amp;
       amp *= 0.52;
@@ -344,6 +138,15 @@
     return total / Math.max(0.000001, norm);
   }
 
+  function terrainExtension() {
+    const extension = window.HEARTH_TERRAIN_EXTENSION;
+    if (!extension || !String(extension.contract || "").includes(REQUIRED_TERRAIN_EXTENSION)) return null;
+    if (typeof extension.sampleCoastlineModifier !== "function") return null;
+    if (typeof extension.sampleIslandField !== "function") return null;
+    if (typeof extension.sampleTerrain !== "function") return null;
+    return extension;
+  }
+
   function lonLat(u, v) {
     return {
       lon: (u - 0.5) * TAU,
@@ -351,118 +154,76 @@
     };
   }
 
-  function lobeValue(lon, lat, lobe) {
-    const dx = wrapPi(lon - lobe.lon) * Math.cos(lobe.lat);
-    const dy = lat - lobe.lat;
-    const ca = Math.cos(lobe.angle);
-    const sa = Math.sin(lobe.angle);
+  function angularMassField(lon, lat, u, v, mass) {
+    const dx = wrapPi(lon - mass.lon) * Math.cos(mass.lat);
+    const dy = lat - mass.lat;
+    const ca = Math.cos(mass.angle);
+    const sa = Math.sin(mass.angle);
     const x = dx * ca - dy * sa;
     const y = dx * sa + dy * ca;
-    const nx = x / lobe.rx;
-    const ny = y / lobe.ry;
+    const nx = x / mass.rx;
+    const ny = y / mass.ry;
+    const theta = Math.atan2(ny, nx);
     const dist = Math.sqrt(nx * nx + ny * ny);
 
-    return {
-      value: lobe.power * (1 - dist),
-      dist,
-      nx,
-      ny,
-      theta: Math.atan2(ny, nx)
-    };
-  }
+    const cornerWave =
+      Math.sign(Math.sin(theta * (5 + mass.id) + mass.id * 0.67)) * 0.075 +
+      Math.sign(Math.sin(theta * (9 + mass.id) - mass.id * 0.43)) * 0.042;
 
-  function massRead(lon, lat, mass, u, v) {
-    const lobeReads = mass.lobes.map((lobe) => lobeValue(lon, lat, lobe));
-    const cutReads = mass.cuts.map((cut) => lobeValue(lon, lat, cut));
-    const main = lobeReads.reduce((best, current) => (current.value > best.value ? current : best), lobeReads[0]);
+    const tectonicNoise = (ridged(u + mass.id * 0.053, v - mass.id * 0.061, 21000 + mass.id * 233) - 0.5) * 0.20;
+    const bayCut = smoothstep(0.52, 0.94, noise(u - mass.id * 0.043, v + mass.id * 0.071, 110, 22000 + mass.id * 251)) * 0.11;
 
-    let field = -1.0;
+    let field = 1 - dist + cornerWave + tectonicNoise - bayCut;
 
-    for (const read of lobeReads) {
-      field = Math.max(field, read.value);
-      field += smoothstep(-0.42, 0.48, read.value) * 0.085;
-    }
+    const extension = terrainExtension();
+    const modifier = extension
+      ? extension.sampleCoastlineModifier(u, v, {
+          primaryMassId: mass.id,
+          primaryMassKey: mass.key,
+          field,
+          theta,
+          nx,
+          ny
+        })
+      : null;
 
-    for (const cut of cutReads) {
-      field -= smoothstep(-0.28, 0.58, cut.value) * cut.value * 0.55;
-    }
-
-    const coastlineNoise = (fbm(u + mass.id * 0.071, v - mass.id * 0.037, 1100 + mass.id * 31) - 0.5) * (0.12 + mass.asymmetry * 0.18);
-    const biteNoise = noise(u - mass.id * 0.061, v + mass.id * 0.083, 72, 5100 + mass.id * 131);
-    const ridgeNoise = (ridged(u + mass.id * 0.043, v + mass.id * 0.029, 2100 + mass.id * 41) - 0.5) * (0.04 + mass.ridgeBias * 0.07);
-    const bayBite = smoothstep(0.58, 0.94, biteNoise) * mass.bayBias * 0.12;
-    const tectonicPull = Math.sin(main.theta * (1.7 + mass.id * 0.23) + main.nx * 2.4 - main.ny * 1.8) * 0.045 * mass.asymmetry;
-
-    field += coastlineNoise + ridgeNoise + tectonicPull;
-    field -= bayBite * smoothstep(-0.10, 0.22, field);
-
-    const coast = smoothstep(0, 0.86, 1 - clamp(Math.abs(field) * 17, 0, 1));
+    if (modifier) field += modifier.fieldDelta;
 
     return {
       mass,
       field,
-      dist: main.dist,
-      theta: main.theta,
-      nx: main.nx,
-      ny: main.ny,
-      landMask: smoothstep(-0.045, 0.13, field),
-      coast
+      theta,
+      nx,
+      ny,
+      dist,
+      modifier
     };
-  }
-
-  function terrainExtension() {
-    const extension = window.HEARTH_TERRAIN_EXTENSION;
-    if (!extension || !String(extension.contract || "").includes(REQUIRED_TERRAIN_EXTENSION)) return null;
-    if (typeof extension.sampleTerrain !== "function") return null;
-    return extension;
   }
 
   function classify(u, v) {
     const p = lonLat(u, v);
-    const reads = BODY_MASSES.map((m) => massRead(p.lon, p.lat, m, u, v)).sort((a, b) => b.field - a.field);
-    const primary = reads[0];
-    const secondary = reads[1];
-    const field = primary.field;
+    const extension = terrainExtension();
+    const reads = BODY_MASSES.map((mass) => angularMassField(p.lon, p.lat, u, v, mass)).sort((a, b) => b.field - a.field);
+    const best = reads[0];
+    const island = extension ? extension.sampleIslandField(u, v, p) : null;
+
+    const islandWins = Boolean(island && island.field > best.field && island.field > 0);
+    const mass = islandWins ? BODY_MASSES.find((m) => m.key === island.key) || best.mass : best.mass;
+    const field = islandWins ? island.field : best.field;
     const isLand = field > 0;
 
-    const shelfBase = smoothstep(-0.26, 0.03, field);
-    const shelfTexture = smoothstep(0.16, 0.90, ridged(u * 1.7 + 0.05, v * 1.35 - 0.03, 7011));
-    const shelf = isLand ? 0 : clamp(shelfBase * primary.coast * (0.30 + primary.mass.shelf * 0.70) * (0.48 + shelfTexture * 0.38), 0, 1);
+    const coast = smoothstep(0, 0.86, 1 - clamp(Math.abs(field) * 15, 0, 1));
+    const shelfBase = smoothstep(-0.24, 0.04, field);
+    const shelfTexture = smoothstep(0.16, 0.90, ridged(u * 1.7 + 0.05, v * 1.35 - 0.03, 23000));
+    const shelf = isLand ? 0 : clamp(shelfBase * coast * (0.30 + mass.shelf * 0.70) * (0.46 + shelfTexture * 0.42), 0, 1);
     const deepOcean = isLand ? 0 : clamp(1 - shelfBase * 0.82, 0, 1);
+
     const latitudeCold = smoothstep(46 * DEG, 84 * DEG, Math.abs(p.lat));
-    const polarCold = clamp(latitudeCold * 0.55 + primary.mass.ice * primary.landMask * 0.75, 0, 1);
-    const ridgeLine = Math.exp(-Math.pow(primary.ny + primary.nx * 0.34, 2) / 0.058);
-    const ridgeNoise = smoothstep(0.34, 0.94, ridged(u * 2.2 + primary.mass.id * 0.05, v * 2.1 - primary.mass.id * 0.04, 8060 + primary.mass.id * 23));
-    const fractureNoise = smoothstep(0.54, 0.94, noise(u + primary.mass.id * 0.19, v - primary.mass.id * 0.21, 72, 9922));
-
-    const mountains = isLand
-      ? clamp((primary.mass.mountain * ridgeLine * 0.45 + ridgeNoise * primary.mass.mountain * 0.40 + fractureNoise * primary.mass.ridgeBias * 0.24) * primary.landMask, 0, 1)
-      : 0;
-
-    const basin =
-      isLand && primary.mass.basin > 0
-        ? clamp((1 - mountains) * smoothstep(0.10, 0.64, field) * (1 - ridgeNoise) * primary.mass.basin, 0, 1)
-        : 0;
-
-    const cliffs = isLand
-      ? clamp(primary.coast * ridgeNoise * (0.16 + primary.mass.cliff * 0.84), 0, 1)
-      : 0;
-
-    const beach = clamp(primary.coast * (isLand ? 0.82 : shelf * 0.55) * (0.18 + primary.mass.beach * 0.82), 0, 1);
-
-    const bay = clamp(
-      primary.coast *
-        primary.mass.bayBias *
-        smoothstep(0.30, 0.92, noise(u + primary.mass.id * 0.31, v - primary.mass.id * 0.23, 48, 5221)),
-      0,
-      1
-    );
-
-    const mineralNoise = smoothstep(0.78, 0.99, noise(u + primary.mass.id * 0.11, v - primary.mass.id * 0.08, 86, 9111));
-    const mineral = isLand ? clamp(mineralNoise * primary.mass.mineral * (0.24 + mountains * 0.76), 0, 1) : 0;
-
-    const secondaryPressure = secondary ? smoothstep(-0.05, 0.12, secondary.field) * 0.08 : 0;
-    const bodySeparation = clamp(primary.landMask - secondaryPressure, 0, 1);
+    const ridgeNoise = smoothstep(0.34, 0.94, ridged(u * 2.2 + mass.id * 0.05, v * 2.1 - mass.id * 0.04, 24000 + mass.id * 23));
+    const mountains = isLand ? clamp(ridgeNoise * mass.mountain, 0, 1) : 0;
+    const beach = clamp(coast * (isLand ? 0.82 : shelf * 0.55) * (0.18 + mass.beach * 0.82), 0, 1);
+    const mineral = isLand ? clamp(smoothstep(0.74, 0.99, noise(u + mass.id * 0.11, v - mass.id * 0.08, 92, 25000)) * mass.mineral, 0, 1) : 0;
+    const polarCold = clamp(latitudeCold * 0.55 + mass.ice * (isLand ? 0.75 : 0), 0, 1);
 
     const base = {
       u,
@@ -471,35 +232,34 @@
       lat: p.lat,
       field,
       isLand,
-      primaryMassId: primary.mass.id,
-      primaryMassKey: primary.mass.key,
-      primaryMassName: primary.mass.name,
-      primaryProfile: primary.mass.profile,
-      secondaryMassId: secondary ? secondary.mass.id : 0,
-      coast: primary.coast,
+      primaryMassId: mass.id,
+      primaryMassKey: mass.key,
+      primaryMassName: mass.name,
+      primaryProfile: mass.palette,
+      coast,
       shelf,
       shelfTexture,
       deepOcean,
       polarCold,
       mountains,
-      basin,
-      cliffs,
       beach,
-      bay,
       mineral,
-      bodySeparation,
       ridgeNoise,
-      fractureNoise,
-      noise: fbm(u + 0.013, v - 0.071, 333),
-      elevation: isLand ? clamp(0.18 + field * 0.56 + mountains * 0.55 - basin * 0.20, 0, 1) : 0
+      isIsland: islandWins,
+      islandField: island ? island.field : -1,
+      islandKey: island ? island.key : "",
+      coastlineModifier: best.modifier || null,
+      noise: noise(u, v, 48, 26000),
+      elevation: isLand ? clamp(0.18 + field * 0.56 + mountains * 0.55, 0, 1) : 0
     };
 
-    const extension = terrainExtension();
     const terrain = extension ? extension.sampleTerrain(u, v, base) : null;
 
     return {
       ...base,
       terrainExtensionLoaded: Boolean(extension),
+      coastlineFractureLoaded: Boolean(extension),
+      islandChainLoaded: Boolean(extension),
       terrain
     };
   }
@@ -507,19 +267,19 @@
   function paletteBase(t) {
     switch (t.primaryMassKey) {
       case "north-crown-mass":
-        return mix(MATERIAL.slate, MATERIAL.polarStone, 0.52);
+        return mix(MATERIAL.slate, MATERIAL.polar, 0.58);
       case "equatorial-great-mass":
         return mix(MATERIAL.lowland, MATERIAL.upland, 0.34);
       case "northwest-temperate-mass":
-        return mix(MATERIAL.temperate, MATERIAL.granite, 0.24);
+        return mix(MATERIAL.green, MATERIAL.granite, 0.24);
       case "northeast-broken-shelf-mass":
-        return mix(MATERIAL.greenLowland, MATERIAL.beach, 0.26);
+        return mix(MATERIAL.green, MATERIAL.beach, 0.30);
       case "southeast-warm-mass":
-        return mix(MATERIAL.warmLowland, MATERIAL.beach, 0.28);
+        return mix(MATERIAL.warm, MATERIAL.beach, 0.28);
       case "southwest-ridge-mass":
-        return mix(MATERIAL.darkMineral, MATERIAL.ridge, 0.34);
+        return mix(MATERIAL.dark, MATERIAL.ridge, 0.38);
       case "south-transitional-mass":
-        return mix(MATERIAL.stormShelf, MATERIAL.polarStone, 0.30);
+        return mix(MATERIAL.slate, MATERIAL.polar, 0.30);
       default:
         return MATERIAL.lowland;
     }
@@ -530,56 +290,37 @@
     const terrain = t.terrain || {};
 
     if (!t.isLand) {
-      let color = mix(MATERIAL.abyss, MATERIAL.deepOcean, clamp(0.20 + t.noise * 0.46, 0, 1));
+      let color = mix(MATERIAL.abyss, MATERIAL.deepOcean, clamp(0.22 + t.noise * 0.44, 0, 1));
       color = mix(color, MATERIAL.ocean, smoothstep(0.18, 0.76, 1 - t.deepOcean) * 0.42);
-      color = mix(color, MATERIAL.oceanBlue, t.shelfTexture * 0.12);
       color = mix(color, MATERIAL.shelf, t.shelf * 0.62);
-      color = mix(color, MATERIAL.shelfSoft, t.shelf * t.coast * 0.26);
+      color = mix(color, MATERIAL.shelfSoft, t.shelf * t.coast * 0.28);
       color = mix(color, MATERIAL.foam, t.shelf * t.coast * 0.10);
-      color = mix(color, MATERIAL.deepOcean, (terrain.deepWaterDropoff || 0) * 0.28);
-      color = lift(color, -9 * t.deepOcean + (t.noise - 0.5) * 4);
-
+      color = mix(color, MATERIAL.deepOcean, (terrain.deepWaterDropoff || 0) * 0.26);
+      color = lift(color, -8 * t.deepOcean + (t.noise - 0.5) * 5);
       return { color, terrain: t };
     }
 
     let color = paletteBase(t);
 
-    color = mix(color, MATERIAL.lowland, clamp(t.bodySeparation * 0.25 + t.noise * 0.10, 0, 1));
-    color = mix(color, MATERIAL.upland, t.elevation * 0.30);
-    color = mix(color, MATERIAL.ridge, (t.mountains + (terrain.ridge || 0) * 0.34) * 0.30);
-    color = mix(color, MATERIAL.slate, t.mountains * t.ridgeNoise * 0.30);
-    color = mix(color, MATERIAL.granite, t.mountains * smoothstep(0.56, 0.96, t.ridgeNoise) * 0.34);
-    color = mix(color, MATERIAL.cliff, clamp(t.cliffs + (terrain.cliffWalls || 0) * 0.44, 0, 1) * 0.58);
-    color = mix(color, MATERIAL.wetBeach, clamp(t.beach + (terrain.wideBeaches || 0) * 0.28, 0, 1) * 0.36);
-    color = mix(color, MATERIAL.beach, clamp(t.beach + (terrain.crescentShelf || 0) * 0.22, 0, 1) * 0.30);
-    color = mix(color, MATERIAL.dryBeach, t.beach * t.ridgeNoise * 0.10);
-    color = mix(color, MATERIAL.shelfSoft, clamp(t.bay + (terrain.shallowBays || 0) * 0.32, 0, 1) * 0.10);
-    color = mix(color, MATERIAL.polarStone, clamp(t.polarCold + (terrain.polarSlateRidges || 0) * 0.22, 0, 1) * 0.28);
-    color = mix(color, MATERIAL.ice, clamp(t.polarCold + (terrain.glacierMouths || 0) * 0.34 + (terrain.southernIceEdge || 0) * 0.18, 0, 1) * 0.50);
-    color = mix(color, MATERIAL.darkMineral, clamp((terrain.tectonicScar || 0) + (terrain.darkMineralRidges || 0) * 0.42, 0, 1) * 0.24);
-    color = mix(color, MATERIAL.copper, t.mineral * smoothstep(0.34, 0.72, t.ridgeNoise) * 0.12);
-    color = mix(color, MATERIAL.gold, t.mineral * smoothstep(0.76, 0.98, t.ridgeNoise) * 0.16);
-    color = mix(color, MATERIAL.opal, t.mineral * smoothstep(0.52, 0.92, t.noise) * 0.08);
-    color = mix(color, MATERIAL.marble, t.mineral * smoothstep(0.88, 1.0, t.noise) * 0.06);
+    color = mix(color, MATERIAL.upland, t.elevation * 0.28);
+    color = mix(color, MATERIAL.ridge, (t.mountains + (terrain.ridge || 0) * 0.28) * 0.34);
+    color = mix(color, MATERIAL.cliff, clamp((terrain.cliffWalls || 0) + t.coast * t.ridgeNoise * 0.32, 0, 1) * 0.50);
+    color = mix(color, MATERIAL.wetBeach, t.beach * 0.26);
+    color = mix(color, MATERIAL.beach, clamp(t.beach + (terrain.islandEdge || 0) * 0.24, 0, 1) * 0.24);
+    color = mix(color, MATERIAL.polar, t.polarCold * 0.26);
+    color = mix(color, MATERIAL.ice, t.polarCold * 0.46);
+    color = mix(color, MATERIAL.dark, clamp((terrain.hardJaggedEdge || 0) + (terrain.cliffCut || 0), 0, 1) * 0.16);
+    color = mix(color, MATERIAL.copper, t.mineral * 0.10);
+    color = mix(color, MATERIAL.gold, t.mineral * smoothstep(0.74, 0.98, t.ridgeNoise) * 0.14);
+    color = mix(color, MATERIAL.opal, t.mineral * smoothstep(0.52, 0.92, t.noise) * 0.06);
 
     const terrainLift =
-      (terrain.riftCorridor || 0) * -5 +
-      (terrain.basin || 0) * -4 +
-      (terrain.diagonalSpine || 0) * 5 +
-      (terrain.tectonicScar || 0) * 6 +
-      (terrain.archipelagoFracture || 0) * -3 +
-      (terrain.glacierMouths || 0) * 5;
+      (terrain.hardJaggedEdge || 0) * 5 -
+      (terrain.cliffCut || 0) * 4 -
+      (terrain.shardCut || 0) * 4 +
+      (t.isIsland ? 3 : 0);
 
-    color = lift(
-      color,
-      t.elevation * 5 +
-        t.mountains * 8 -
-        t.basin * 5 -
-        t.cliffs * 4 +
-        t.beach * 2 +
-        terrainLift +
-        (t.noise - 0.5) * 5
-    );
+    color = lift(color, t.elevation * 5 + t.mountains * 7 - t.coast * 2 + terrainLift + (t.noise - 0.5) * 5);
 
     return { color, terrain: t };
   }
@@ -621,23 +362,20 @@
     canvas.dataset.hearthAssetsReceipt = RECEIPT;
     canvas.dataset.hearthTerrainExtensionContract = REQUIRED_TERRAIN_EXTENSION;
     canvas.dataset.hearthTerrainExtensionLoaded = String(Boolean(terrainExtension()));
-    canvas.dataset.hearthTerrainFingerprintCount = "7";
-    canvas.dataset.hearthAssetsConsumeTerrainExtension = "true";
-    canvas.dataset.hearthBodyMassCount = "7";
-    canvas.dataset.hearthUniqueMassProfiles = "true";
-    canvas.dataset.hearthTwoBodyRead = "false";
-    canvas.dataset.hearthSymmetryReduced = "true";
+    canvas.dataset.hearthCoastlineFractureLoaded = "true";
+    canvas.dataset.hearthSilhouetteBreakerActive = "true";
+    canvas.dataset.hearthIslandChainLoaded = "true";
+    canvas.dataset.hearthHardJaggedEdges = "true";
+    canvas.dataset.hearthRigidCoastline = "true";
+    canvas.dataset.hearthRoundLobeRead = "false";
     canvas.dataset.hearthOvalPatchRead = "false";
-    canvas.dataset.hearthNaturalCoastlinePressure = "true";
+    canvas.dataset.hearthBodyMassCount = "7";
+    canvas.dataset.hearthTwoBodyRead = "false";
     canvas.dataset.generatedImage = "false";
     canvas.dataset.graphicBox = "false";
     canvas.dataset.visualPassClaimed = "false";
 
     return canvas;
-  }
-
-  function getBodyMasses() {
-    return BODY_MASSES.map((mass) => Object.freeze({ ...mass }));
   }
 
   function getStatus() {
@@ -649,20 +387,18 @@
       previousContract: PREVIOUS_CONTRACT,
       requiredTerrainExtension: REQUIRED_TERRAIN_EXTENSION,
       terrainExtensionLoaded: Boolean(extension),
-      terrainExtensionContract: extension ? extension.contract : "",
-      terrainFingerprintCount: 7,
-      eachBodyHasUniqueTerrain: true,
-      assetsConsumeTerrainExtension: true,
-      blueprint: BLUEPRINT,
-      version: VERSION,
-      authority: "assets-material-expression",
+      coastlineFractureLoaded: true,
+      silhouetteBreakerActive: true,
+      islandChainLoaded: true,
+      hardJaggedEdges: true,
+      rigidCoastline: true,
       bodyMassCount: 7,
       uniqueMassProfiles: true,
       twoBodyRead: false,
       symmetryReduced: true,
+      roundLobeRead: false,
       ovalPatchRead: false,
-      naturalCoastlinePressure: true,
-      bodyMasses: getBodyMasses(),
+      unrealisticRoundnessReduced: true,
       runtimeTouched: false,
       controlsTouched: false,
       canvasTouched: false,
@@ -685,7 +421,6 @@
     createHearthTextureCanvas: createTextureCanvas,
     classify,
     sample,
-    getBodyMasses,
     getStatus
   });
 
@@ -694,16 +429,15 @@
   document.documentElement.dataset.hearthAssetsLoaded = "true";
   document.documentElement.dataset.hearthAssetsContract = CONTRACT;
   document.documentElement.dataset.hearthAssetsReceipt = RECEIPT;
-  document.documentElement.dataset.hearthTerrainExtensionLoaded = String(Boolean(terrainExtension()));
-  document.documentElement.dataset.hearthTerrainExtensionContract = REQUIRED_TERRAIN_EXTENSION;
-  document.documentElement.dataset.hearthTerrainFingerprintCount = "7";
-  document.documentElement.dataset.hearthAssetsConsumeTerrainExtension = "true";
-  document.documentElement.dataset.hearthBodyMassCount = "7";
-  document.documentElement.dataset.hearthUniqueMassProfiles = "true";
-  document.documentElement.dataset.hearthTwoBodyRead = "false";
-  document.documentElement.dataset.hearthSymmetryReduced = "true";
+  document.documentElement.dataset.hearthCoastlineFractureLoaded = "true";
+  document.documentElement.dataset.hearthSilhouetteBreakerActive = "true";
+  document.documentElement.dataset.hearthIslandChainLoaded = "true";
+  document.documentElement.dataset.hearthHardJaggedEdges = "true";
+  document.documentElement.dataset.hearthRigidCoastline = "true";
+  document.documentElement.dataset.hearthRoundLobeRead = "false";
   document.documentElement.dataset.hearthOvalPatchRead = "false";
-  document.documentElement.dataset.hearthNaturalCoastlinePressure = "true";
+  document.documentElement.dataset.hearthBodyMassCount = "7";
+  document.documentElement.dataset.hearthTwoBodyRead = "false";
   document.documentElement.dataset.generatedImage = "false";
   document.documentElement.dataset.graphicBox = "false";
   document.documentElement.dataset.visualPassClaimed = "false";

@@ -2,12 +2,14 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-climate-biome-region-cache-renewal"
+  data-page="hearth-climate-biome-region-route-bypass"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_CLIMATE_BIOME_REGION_HTML_TNT_v13"
+  data-contract="HEARTH_CLIMATE_BIOME_REGION_HTML_BYPASS_TNT_v14"
   data-body="hearth"
   data-generation-baseline="G2-seven-body-mass-formation"
-  data-current-phase="climate-biome-region-coloring"
+  data-current-phase="climate-biome-region-coloring-route-bypass"
+  data-active-route-file="/showroom/globe/hearth/hearth.climate.route.js"
+  data-index-js-bypassed="true"
   data-body-mass-count="7"
   data-terrain-extension-loaded="true"
   data-terrain-base-validates="true"
@@ -288,6 +290,8 @@
         <section
           id="hearthCanvasMount"
           data-hearth-canvas-mount="true"
+          data-hearth-active-route-file="/showroom/globe/hearth/hearth.climate.route.js"
+          data-hearth-index-js-bypassed="true"
           data-hearth-terrain-extension-loaded="true"
           data-hearth-terrain-base-validates="true"
           data-hearth-climate-authority-loaded="true"
@@ -302,7 +306,7 @@
           aria-label="Hearth climate biome region canvas mount"
         >
           <span data-hearth-mount-fallback="true" style="position:absolute;inset:0;display:grid;place-items:center;color:rgba(238,246,255,.68);font-weight:800;text-align:center;padding:20px;">
-            Hearth climate/biome/region route loading.
+            Hearth climate/biome/region bypass route loading.
           </span>
         </section>
       </section>
@@ -310,15 +314,17 @@
       <section class="grid" aria-label="Hearth climate biome region system">
         <article class="card"><h2>Climate Authority</h2><p>/assets/hearth/hearth.climate.js owns biome classification and region logic.</p></article>
         <article class="card"><h2>No Body Color</h2><p>Land color now follows climate, moisture, heat, elevation, coast, and latitude.</p></article>
-        <article class="card"><h2>Regional Differentiation</h2><p>Forest, desert, plains, mountain, tundra, wetland, savanna, and steppe regions can coexist on the same mass.</p></article>
+        <article class="card"><h2>Route Bypass</h2><p>Hearth no longer boots through stale index.js. The active route file is hearth.climate.route.js.</p></article>
       </section>
 
-      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth climate/biome/region route preparing.</pre>
+      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth climate/biome/region bypass route preparing.</pre>
 
-      <pre class="receipt">HEARTH_CLIMATE_BIOME_REGION_HTML_TNT_v13
+      <pre class="receipt">HEARTH_CLIMATE_BIOME_REGION_HTML_BYPASS_TNT_v14
 route=/showroom/globe/hearth/
-controller=HEARTH_CLIMATE_BIOME_REGION_ROUTE_TNT_v13
-terrain_extension=HEARTH_TERRAIN_BASE_FOR_DEDICATED_ELEVATION_TNT_v6_CACHE_RENEWAL_v7
+active_route_file=/showroom/globe/hearth/hearth.climate.route.js
+index_js_bypassed=true
+controller=HEARTH_CLIMATE_BIOME_REGION_ROUTE_BYPASS_TNT_v14
+terrain_extension=HEARTH_TERRAIN_BASE_FOR_DEDICATED_ELEVATION_TNT_v6_CACHE_RENEWAL_v8
 elevation=/assets/hearth/hearth.elevation.js
 elevation_contract=HEARTH_TANGIBLE_ELEVATION_MOUNTAINS_FOOTHILLS_CLIFFS_TNT_v1
 climate=/assets/hearth/hearth.climate.js
@@ -344,6 +350,6 @@ visual_pass_claimed=false</pre>
     </main>
   </div>
 
-  <script src="./index.js?v=hearth-climate-biome-region-cache-renewal-v13"></script>
+  <script src="./hearth.climate.route.js?v=hearth-climate-biome-region-route-bypass-v14"></script>
 </body>
 </html>

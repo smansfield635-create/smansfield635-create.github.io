@@ -2,13 +2,15 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-climate-biome-region"
+  data-page="hearth-climate-biome-region-cache-renewal"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_CLIMATE_BIOME_REGION_HTML_TNT_v12"
+  data-contract="HEARTH_CLIMATE_BIOME_REGION_HTML_TNT_v13"
   data-body="hearth"
   data-generation-baseline="G2-seven-body-mass-formation"
   data-current-phase="climate-biome-region-coloring"
   data-body-mass-count="7"
+  data-terrain-extension-loaded="true"
+  data-terrain-base-validates="true"
   data-climate-authority-loaded="true"
   data-dedicated-climate-file="/assets/hearth/hearth.climate.js"
   data-region-biome-authority-loaded="true"
@@ -286,6 +288,8 @@
         <section
           id="hearthCanvasMount"
           data-hearth-canvas-mount="true"
+          data-hearth-terrain-extension-loaded="true"
+          data-hearth-terrain-base-validates="true"
           data-hearth-climate-authority-loaded="true"
           data-hearth-dedicated-climate-file="/assets/hearth/hearth.climate.js"
           data-hearth-region-biome-authority-loaded="true"
@@ -311,10 +315,10 @@
 
       <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth climate/biome/region route preparing.</pre>
 
-      <pre class="receipt">HEARTH_CLIMATE_BIOME_REGION_HTML_TNT_v12
+      <pre class="receipt">HEARTH_CLIMATE_BIOME_REGION_HTML_TNT_v13
 route=/showroom/globe/hearth/
-controller=HEARTH_CLIMATE_BIOME_REGION_ROUTE_TNT_v12
-terrain_extension=HEARTH_TERRAIN_BASE_FOR_DEDICATED_ELEVATION_TNT_v6
+controller=HEARTH_CLIMATE_BIOME_REGION_ROUTE_TNT_v13
+terrain_extension=HEARTH_TERRAIN_BASE_FOR_DEDICATED_ELEVATION_TNT_v6_CACHE_RENEWAL_v7
 elevation=/assets/hearth/hearth.elevation.js
 elevation_contract=HEARTH_TANGIBLE_ELEVATION_MOUNTAINS_FOOTHILLS_CLIFFS_TNT_v1
 climate=/assets/hearth/hearth.climate.js
@@ -322,6 +326,8 @@ climate_contract=HEARTH_CLIMATE_REGION_BIOME_AUTHORITY_TNT_v1
 assets=HEARTH_ASSETS_CLIMATE_BIOME_REGION_COLORING_TNT_v11
 controls=HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_CONTROLS_TNT_v2
 canvas=HEARTH_G2_CANVAS_POLE_SWIVEL_SEVEN_BODY_CONSUMER_TNT_v2
+terrain_extension_loaded=true
+terrain_base_validates=true
 climate_authority_loaded=true
 region_biome_authority_loaded=true
 biome_color_not_body_mass_color=true
@@ -338,6 +344,6 @@ visual_pass_claimed=false</pre>
     </main>
   </div>
 
-  <script src="./index.js?v=hearth-climate-biome-region-v12"></script>
+  <script src="./index.js?v=hearth-climate-biome-region-cache-renewal-v13"></script>
 </body>
 </html>

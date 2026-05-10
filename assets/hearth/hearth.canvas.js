@@ -2,11 +2,8 @@
 // HEARTH_G2_CANVAS_POLE_SWIVEL_PRESERVATION_CONSUMER_TNT_v1
 // Full-file replacement.
 // Canvas / World Engine keeps truth substrate.
-// Assets define visible material boundaries.
-// Runtime stays motion authority.
-// Controls stay input authority.
-// New delta: consume inspectionTiltRadians / poleSwivelRadians from Hearth controls.
-// Preserve existing Hearth visual posture and texture behavior.
+// New delta: consumes inspectionTiltRadians / poleSwivelRadians from Hearth controls.
+// Preserves Hearth visual posture and texture behavior.
 // No GraphicBox. No generated image. No visual-pass claim.
 
 (() => {
@@ -30,7 +27,6 @@
 
   function mat4Multiply(a, b) {
     const out = new Float32Array(16);
-
     for (let row = 0; row < 4; row += 1) {
       for (let col = 0; col < 4; col += 1) {
         out[col * 4 + row] =
@@ -40,14 +36,12 @@
           a[3 * 4 + row] * b[col * 4 + 3];
       }
     }
-
     return out;
   }
 
   function mat4RotateX(rad) {
     const c = Math.cos(rad);
     const s = Math.sin(rad);
-
     return new Float32Array([
       1, 0, 0, 0,
       0, c, s, 0,
@@ -59,7 +53,6 @@
   function mat4RotateY(rad) {
     const c = Math.cos(rad);
     const s = Math.sin(rad);
-
     return new Float32Array([
       c, 0, -s, 0,
       0, 1, 0, 0,
@@ -71,7 +64,6 @@
   function mat4RotateZ(rad) {
     const c = Math.cos(rad);
     const s = Math.sin(rad);
-
     return new Float32Array([
       c, s, 0, 0,
       -s, c, 0, 0,
@@ -114,13 +106,11 @@
     const s = gl.createShader(type);
     gl.shaderSource(s, src);
     gl.compileShader(s);
-
     if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
       const info = gl.getShaderInfoLog(s) || "shader compile failed";
       gl.deleteShader(s);
       throw new Error(`${CONTRACT}: ${info}`);
     }
-
     return s;
   }
 
@@ -128,19 +118,16 @@
     const p = gl.createProgram();
     const v = shader(gl, gl.VERTEX_SHADER, vs);
     const f = shader(gl, gl.FRAGMENT_SHADER, fs);
-
     gl.attachShader(p, v);
     gl.attachShader(p, f);
     gl.linkProgram(p);
     gl.deleteShader(v);
     gl.deleteShader(f);
-
     if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
       const info = gl.getProgramInfoLog(p) || "program link failed";
       gl.deleteProgram(p);
       throw new Error(`${CONTRACT}: ${info}`);
     }
-
     return p;
   }
 
@@ -175,7 +162,6 @@
       for (let lon = 0; lon < lonSegments; lon += 1) {
         const a = lat * row + lon;
         const b = a + row;
-
         indices.push(a, b, a + 1);
         indices.push(b, b + 1, a + 1);
       }
@@ -196,7 +182,6 @@
 
     const ctx = canvas.getContext("2d");
     const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-
     gradient.addColorStop(0, "#0a4974");
     gradient.addColorStop(0.45, "#1696ad");
     gradient.addColorStop(0.5, "#c4ae70");
@@ -233,6 +218,7 @@
     canvas.dataset.hearthGeneratedImage = "false";
     canvas.dataset.hearthGraphicBox = "false";
     canvas.dataset.hearthVisualPassClaimed = "false";
+
     canvas.tabIndex = 0;
     canvas.style.position = "absolute";
     canvas.style.inset = "0";
@@ -248,17 +234,12 @@
   }
 
   function readInspectionTilt(state = {}) {
-    const direct =
-      Number.isFinite(state.inspectionTiltRadians) ? state.inspectionTiltRadians :
-      Number.isFinite(state.poleSwivelRadians) ? state.poleSwivelRadians :
-      null;
+    if (Number.isFinite(state.inspectionTiltRadians)) return state.inspectionTiltRadians;
+    if (Number.isFinite(state.poleSwivelRadians)) return state.poleSwivelRadians;
 
-    if (Number.isFinite(direct)) return direct;
-
-    const control = window.__HEARTH_INSPECTION_MOTION__ || {};
-
-    if (Number.isFinite(control.inspectionTiltRadians)) return control.inspectionTiltRadians;
-    if (Number.isFinite(control.poleSwivelRadians)) return control.poleSwivelRadians;
+    const motion = window.__HEARTH_INSPECTION_MOTION__ || {};
+    if (Number.isFinite(motion.inspectionTiltRadians)) return motion.inspectionTiltRadians;
+    if (Number.isFinite(motion.poleSwivelRadians)) return motion.poleSwivelRadians;
 
     return 0;
   }
@@ -296,13 +277,13 @@
 
       if (this.runtime && typeof this.runtime.subscribe === "function") {
         this.unsubscribe = this.runtime.subscribe((state) => {
-          this.lastState = state || {};
+          this.lastState = { ...this.lastState, ...(state || {}) };
           this.draw(this.lastState);
         });
       } else {
         this.lastState = {
           rotationRadians: 0,
-          axisTiltRadians: AXIS_TILT_DEGREES * Math.PI / 180
+          axisTiltRadians: (AXIS_TILT_DEGREES * Math.PI) / 180
         };
         this.draw(this.lastState);
       }
@@ -448,10 +429,10 @@
       }
     }
 
-    model(state) {
+    model(state = {}) {
       const tilt = Number.isFinite(state.axisTiltRadians)
         ? state.axisTiltRadians
-        : AXIS_TILT_DEGREES * Math.PI / 180;
+        : (AXIS_TILT_DEGREES * Math.PI) / 180;
 
       const rotation = Number.isFinite(state.rotationRadians) ? state.rotationRadians : 0;
       const inspectionTilt = readInspectionTilt(state);
@@ -479,10 +460,7 @@
     draw(state = {}) {
       if (this.destroyed) return;
 
-      this.lastState = {
-        ...this.lastState,
-        ...state
-      };
+      this.lastState = { ...this.lastState, ...state };
 
       const gl = this.gl;
 
@@ -519,9 +497,9 @@
       this.canvas.dataset.hearthSpinVelocity = Number(this.lastState.spinVelocityRadiansPerSecond || 0).toFixed(5);
       this.canvas.dataset.hearthInspectionTiltRadians = Number(inspectionTilt || 0).toFixed(5);
       this.canvas.dataset.hearthRuntimeFrame = String(this.lastState.frame || 0);
+      this.canvas.dataset.hearthPoleSwivelConsumer = "true";
       this.canvas.dataset.hearthAssetsBoundaryExpression = "true";
       this.canvas.dataset.hearthAssetsAdoptAuthority = "false";
-      this.canvas.dataset.hearthPoleSwivelConsumer = "true";
     }
 
     stamp(status) {
@@ -536,6 +514,9 @@
       document.documentElement.dataset.hearthCanvasOwnsMotion = "false";
       document.documentElement.dataset.hearthAssetsBoundaryExpression = "true";
       document.documentElement.dataset.hearthAssetsAdoptAuthority = "false";
+      document.documentElement.dataset.generatedImage = "false";
+      document.documentElement.dataset.graphicBox = "false";
+      document.documentElement.dataset.visualPassClaimed = "false";
 
       window.HEARTH_CANVAS_RECEIPT = Object.freeze({
         contract: CONTRACT,

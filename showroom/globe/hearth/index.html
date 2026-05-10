@@ -1,13 +1,15 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-seven-body-mass-hard-renewal"
+  data-page="hearth-seven-body-mass-blueprint-to-scale"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_G2_SEVEN_BODY_MASS_HARD_RENEWAL_HTML_TNT_v3"
+  data-contract="HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_HTML_TNT_v4"
   data-body="hearth"
-  data-generation-baseline="G1-coherent-achieved"
-  data-current-phase="G2-seven-body-mass-formation"
+  data-generation-baseline="G2-seven-body-mass-formation"
+  data-current-phase="blueprint-to-scale"
   data-body-mass-count="7"
+  data-unique-mass-profiles="true"
+  data-two-body-read="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claimed="false"
@@ -15,7 +17,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Hearth Seven Body Mass Formation</title>
+  <title>Diamond Gate Bridge · Hearth Blueprint to Scale</title>
   <style>
     :root {
       --bg:#030914;
@@ -42,7 +44,11 @@
     body { margin:0; min-height:100vh; }
     a { color:inherit; text-decoration:none; }
 
-    .shell { width:min(1120px,calc(100% - 28px)); margin:0 auto; padding:22px 0 42px; }
+    .shell {
+      width:min(1120px,calc(100% - 28px));
+      margin:0 auto;
+      padding:22px 0 42px;
+    }
 
     .topbar,.nav,.card,#hearthCanvasMount,.receipt {
       border:1px solid var(--line);
@@ -51,23 +57,122 @@
       backdrop-filter:blur(10px);
     }
 
-    .topbar { display:flex; justify-content:space-between; gap:14px; border-radius:24px; padding:12px 14px; }
-    .brand { display:inline-flex; align-items:center; gap:10px; font-weight:900; }
-    .mark { display:grid; place-items:center; width:36px; height:36px; border-radius:12px; border:1px solid rgba(231,188,105,.46); color:var(--gold); }
+    .topbar {
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      border-radius:24px;
+      padding:12px 14px;
+    }
 
-    .nav { display:flex; flex-wrap:wrap; gap:8px; border-radius:20px; padding:8px; }
-    .nav a { border:1px solid rgba(231,188,105,.24); border-radius:999px; padding:8px 11px; color:var(--muted); font-size:.86rem; }
-    .nav a[aria-current="page"] { color:#06101e; background:var(--gold); font-weight:900; }
+    .brand {
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-weight:900;
+    }
 
-    .hero { display:grid; grid-template-columns:minmax(0,1fr) minmax(320px,520px); gap:22px; align-items:center; margin-top:22px; }
-    .eyebrow { color:var(--gold); font-size:.78rem; font-weight:900; letter-spacing:.16em; text-transform:uppercase; }
-    h1 { margin:10px 0 12px; font-size:clamp(2.2rem,7vw,5.8rem); line-height:.9; letter-spacing:-.08em; }
-    .lede { max-width:68ch; margin:0; color:var(--muted); font-size:clamp(1rem,2.4vw,1.18rem); line-height:1.6; }
-    .badge { display:inline-flex; margin-top:12px; padding:7px 11px; border:1px solid rgba(139,215,163,.34); border-radius:999px; color:var(--green); background:rgba(139,215,163,.08); font-weight:900; font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; }
+    .mark {
+      display:grid;
+      place-items:center;
+      width:36px;
+      height:36px;
+      border-radius:12px;
+      border:1px solid rgba(231,188,105,.46);
+      color:var(--gold);
+    }
 
-    .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }
-    .button { display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:10px 14px; border-radius:999px; border:1px solid rgba(231,188,105,.38); background:rgba(231,188,105,.14); color:var(--text); font-weight:800; }
-    .button.primary { color:#05101d; background:var(--gold); }
+    .nav {
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      border-radius:20px;
+      padding:8px;
+    }
+
+    .nav a {
+      border:1px solid rgba(231,188,105,.24);
+      border-radius:999px;
+      padding:8px 11px;
+      color:var(--muted);
+      font-size:.86rem;
+    }
+
+    .nav a[aria-current="page"] {
+      color:#06101e;
+      background:var(--gold);
+      font-weight:900;
+    }
+
+    .hero {
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(320px,520px);
+      gap:22px;
+      align-items:center;
+      margin-top:22px;
+    }
+
+    .eyebrow {
+      color:var(--gold);
+      font-size:.78rem;
+      font-weight:900;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+
+    h1 {
+      margin:10px 0 12px;
+      font-size:clamp(2.2rem,7vw,5.8rem);
+      line-height:.9;
+      letter-spacing:-.08em;
+    }
+
+    .lede {
+      max-width:68ch;
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(1rem,2.4vw,1.18rem);
+      line-height:1.6;
+    }
+
+    .badge {
+      display:inline-flex;
+      margin-top:12px;
+      padding:7px 11px;
+      border:1px solid rgba(139,215,163,.34);
+      border-radius:999px;
+      color:var(--green);
+      background:rgba(139,215,163,.08);
+      font-weight:900;
+      font-size:.78rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .actions {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:20px;
+    }
+
+    .button {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(231,188,105,.38);
+      background:rgba(231,188,105,.14);
+      color:var(--text);
+      font-weight:800;
+    }
+
+    .button.primary {
+      color:#05101d;
+      background:var(--gold);
+    }
 
     #hearthCanvasMount {
       position:relative;
@@ -97,11 +202,41 @@
       -webkit-touch-callout:none;
     }
 
-    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:22px; }
-    .card { border-radius:22px; padding:14px; min-height:132px; }
-    .card h2 { margin:0 0 8px; color:var(--gold); font-size:.92rem; }
-    .card p { margin:0; color:var(--muted); font-size:.9rem; line-height:1.45; }
-    .receipt { margin:16px 0 0; padding:14px; overflow:auto; border-radius:18px; color:rgba(238,246,255,.72); font-size:.78rem; white-space:pre-wrap; }
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+      margin-top:22px;
+    }
+
+    .card {
+      border-radius:22px;
+      padding:14px;
+      min-height:132px;
+    }
+
+    .card h2 {
+      margin:0 0 8px;
+      color:var(--gold);
+      font-size:.92rem;
+    }
+
+    .card p {
+      margin:0;
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.45;
+    }
+
+    .receipt {
+      margin:16px 0 0;
+      padding:14px;
+      overflow:auto;
+      border-radius:18px;
+      color:rgba(238,246,255,.72);
+      font-size:.78rem;
+      white-space:pre-wrap;
+    }
 
     @media (max-width:860px) {
       .hero,.grid { grid-template-columns:1fr; }
@@ -127,14 +262,14 @@
     <main id="hearth-main">
       <section class="hero" aria-labelledby="hearth-title">
         <div>
-          <div class="eyebrow">Hearth · Seven Body Mass Formation · Hard Renewal</div>
+          <div class="eyebrow">Hearth · Seven Body Mass Blueprint to Scale</div>
           <h1 id="hearth-title">Hearth</h1>
           <p class="lede">
-            Hearth now forces the seven-body-mass formation contract as the active served model:
-            one North Crown mass, one Equatorial Great Mass, and five methodically disposed secondary masses.
-            Pole swivel and drag remain active.
+            Hearth now applies the seven-body-mass blueprint to scale. The North Crown, Equatorial Great Mass,
+            and five secondary bodies each carry a distinct design profile so the old two-body read is not allowed
+            to return.
           </p>
-          <span class="badge">7 Body Masses · Active Renewal</span>
+          <span class="badge">Unique Land Mass Design · Active Renewal</span>
 
           <div class="actions">
             <a class="button primary" href="/showroom/globe/">Return to Globe Split</a>
@@ -146,38 +281,49 @@
         <section
           id="hearthCanvasMount"
           data-hearth-canvas-mount="true"
+          data-hearth-blueprint="HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_v1"
           data-hearth-seven-body-mass-formation="true"
           data-hearth-body-mass-count="7"
+          data-hearth-unique-mass-profiles="true"
+          data-hearth-two-body-read="false"
+          data-hearth-symmetrical-dot-distribution="false"
           data-hearth-pole-swivel="true"
-          aria-label="Hearth seven-body-mass canvas mount"
+          aria-label="Hearth seven-body-mass blueprint-to-scale canvas mount"
         >
           <span data-hearth-mount-fallback="true" style="position:absolute;inset:0;display:grid;place-items:center;color:rgba(238,246,255,.68);font-weight:800;text-align:center;padding:20px;">
-            Hearth seven-body-mass hard-renewal chain loading.
+            Hearth blueprint-to-scale seven-body-mass chain loading.
           </span>
         </section>
       </section>
 
-      <section class="grid" aria-label="Hearth seven body mass definition">
-        <article class="card"><h2>North Crown</h2><p>One polar body mass anchors the north.</p></article>
-        <article class="card"><h2>Equatorial Great Mass</h2><p>One large mass crosses the equator and carries the primary habitable read.</p></article>
-        <article class="card"><h2>Five Secondary Masses</h2><p>Five methodically disposed bodies prevent the old two-body read.</p></article>
+      <section class="grid" aria-label="Hearth unique land mass design">
+        <article class="card"><h2>North Crown</h2><p>Broken polar crown with ice, slate, glacier mouths, and three-prong pressure.</p></article>
+        <article class="card"><h2>Equatorial Great Mass</h2><p>Main continent with western shoulder, central basin/rift, eastern split, and habitable shelves.</p></article>
+        <article class="card"><h2>Five Secondary Profiles</h2><p>Temperate plate, broken shelf, warm crescent, dark ridge pressure, and cold transitional counterweight.</p></article>
       </section>
 
-      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth seven-body-mass hard-renewal route preparing.</pre>
+      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth blueprint-to-scale seven-body-mass route preparing.</pre>
 
-      <pre class="receipt">HEARTH_G2_SEVEN_BODY_MASS_HARD_RENEWAL_HTML_TNT_v3
+      <pre class="receipt">HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_HTML_TNT_v4
 route=/showroom/globe/hearth/
-controller=HEARTH_G2_SEVEN_BODY_MASS_HARD_RENEWAL_ROUTE_TNT_v3
-assets=HEARTH_G2_SEVEN_BODY_MASS_FORMATION_ASSETS_TNT_v2
+controller=HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_ROUTE_TNT_v4
+assets=HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_ASSETS_TNT_v3
 controls=HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_CONTROLS_TNT_v2
 canvas=HEARTH_G2_CANVAS_POLE_SWIVEL_SEVEN_BODY_CONSUMER_TNT_v2
+blueprint=HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_v1
 body_mass_count=7
+north_crown_mass=true
+equatorial_great_mass=true
+secondary_masses=5
+unique_mass_profiles=true
+two_body_read=false
+symmetrical_dot_distribution=false
 generated_image=false
 graphic_box=false
 visual_pass_claimed=false</pre>
     </main>
   </div>
 
-  <script src="./index.js?v=hearth-g2-seven-body-mass-hard-renewal-v3"></script>
+  <script src="./index.js?v=hearth-seven-body-mass-blueprint-to-scale-v4"></script>
 </body>
 </html>

@@ -1,19 +1,22 @@
 // /assets/hearth/hearth.terrain.extension.js
-// HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_TERRAIN_EXTENSION_TNT_v4
+// HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_TERRAIN_EXTENSION_TNT_v5
 // Full-file replacement.
 // Terrain-extension authority only.
+// Purpose:
+// - Strengthen elevation, mountain ranges, cliff systems, escarpments, basin shadows, ridge highlights, and visual land depth.
+// - Preserve seven body masses, jagged coastlines, island chains, runtime, controls, canvas, and route separation.
 // TET: Terrain truth -> Elevation expression -> Terrain return.
-// MAPS: Make-A-Pizza-Systemic execution: crust=land mask, sauce=terrain relief, cheese=material blend, toppings=composition/elevation features.
+// MAPS: crust=body mass, sauce=relief gradient, cheese=composition blend, toppings=mountains/cliffs/depth.
 // Quad-A: Audit, Attack, Adjust, Authorize.
 // No GraphicBox. No generated image. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_TERRAIN_EXTENSION_TNT_v4";
-  const RECEIPT = "HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_TERRAIN_EXTENSION_RECEIPT_v4";
-  const PREVIOUS_CONTRACT = "HEARTH_JAGGED_COAST_AND_ISLAND_CHAIN_TERRAIN_EXTENSION_TNT_v3";
-  const VERSION = "2026-05-10.hearth-land-texture-composition-elevation-v4";
+  const CONTRACT = "HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_TERRAIN_EXTENSION_TNT_v5";
+  const RECEIPT = "HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_TERRAIN_EXTENSION_RECEIPT_v5";
+  const PREVIOUS_CONTRACT = "HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_TERRAIN_EXTENSION_TNT_v4";
+  const VERSION = "2026-05-10.hearth-elevation-mountain-range-cliff-depth-v5";
 
   const TAU = Math.PI * 2;
   const DEG = Math.PI / 180;
@@ -22,78 +25,113 @@
     "north-crown-mass": {
       id: 1,
       fingerprint: "fractured-polar-crown",
-      elevationBias: 0.72,
-      ridgeBias: 0.82,
-      valleyBias: 0.22,
-      iceBias: 0.86,
+      elevationBias: 0.82,
+      ridgeBias: 0.88,
+      cliffBias: 0.78,
+      valleyBias: 0.28,
+      basinBias: 0.12,
+      iceBias: 0.88,
       soilBias: 0.08,
       mineralBias: 0.42,
+      rangeAngle: -0.72,
+      rangeOffset: -0.05,
+      rangeWidth: 0.010,
       colorFamily: "polar-slate-ice"
     },
     "equatorial-great-mass": {
       id: 2,
       fingerprint: "rifted-habitable-continent",
-      elevationBias: 0.58,
-      ridgeBias: 0.62,
-      valleyBias: 0.76,
+      elevationBias: 0.66,
+      ridgeBias: 0.72,
+      cliffBias: 0.46,
+      valleyBias: 0.82,
+      basinBias: 0.74,
       iceBias: 0.02,
       soilBias: 0.82,
-      mineralBias: 0.70,
+      mineralBias: 0.72,
+      rangeAngle: -0.58,
+      rangeOffset: -0.04,
+      rangeWidth: 0.013,
       colorFamily: "green-basin-gold-ridge"
     },
     "northwest-temperate-mass": {
       id: 3,
       fingerprint: "diagonal-temperate-highland",
-      elevationBias: 0.64,
-      ridgeBias: 0.74,
-      valleyBias: 0.54,
-      iceBias: 0.16,
+      elevationBias: 0.70,
+      ridgeBias: 0.82,
+      cliffBias: 0.54,
+      valleyBias: 0.56,
+      basinBias: 0.42,
+      iceBias: 0.18,
       soilBias: 0.62,
-      mineralBias: 0.50,
+      mineralBias: 0.52,
+      rangeAngle: 0.78,
+      rangeOffset: 0.02,
+      rangeWidth: 0.012,
       colorFamily: "temperate-stone-green"
     },
     "northeast-broken-shelf-mass": {
       id: 4,
       fingerprint: "fractured-shelf-archipelago",
-      elevationBias: 0.32,
-      ridgeBias: 0.34,
-      valleyBias: 0.44,
+      elevationBias: 0.38,
+      ridgeBias: 0.42,
+      cliffBias: 0.42,
+      valleyBias: 0.50,
+      basinBias: 0.30,
       iceBias: 0.04,
       soilBias: 0.54,
-      mineralBias: 0.42,
+      mineralBias: 0.44,
+      rangeAngle: -0.28,
+      rangeOffset: 0.06,
+      rangeWidth: 0.018,
       colorFamily: "shelf-beach-opal"
     },
     "southeast-warm-mass": {
       id: 5,
       fingerprint: "warm-crescent-shelf",
-      elevationBias: 0.36,
-      ridgeBias: 0.38,
-      valleyBias: 0.64,
+      elevationBias: 0.42,
+      ridgeBias: 0.46,
+      cliffBias: 0.34,
+      valleyBias: 0.70,
+      basinBias: 0.58,
       iceBias: 0.00,
-      soilBias: 0.76,
-      mineralBias: 0.44,
+      soilBias: 0.78,
+      mineralBias: 0.46,
+      rangeAngle: 0.36,
+      rangeOffset: 0.08,
+      rangeWidth: 0.020,
       colorFamily: "warm-lowland-beach"
     },
     "southwest-ridge-mass": {
       id: 6,
       fingerprint: "dark-tectonic-ridge-scar",
-      elevationBias: 0.86,
-      ridgeBias: 0.96,
-      valleyBias: 0.20,
-      iceBias: 0.10,
+      elevationBias: 0.94,
+      ridgeBias: 1.00,
+      cliffBias: 0.96,
+      valleyBias: 0.24,
+      basinBias: 0.12,
+      iceBias: 0.12,
       soilBias: 0.18,
-      mineralBias: 0.92,
+      mineralBias: 0.94,
+      rangeAngle: -0.86,
+      rangeOffset: -0.01,
+      rangeWidth: 0.008,
       colorFamily: "dark-mineral-ridge"
     },
     "south-transitional-mass": {
       id: 7,
       fingerprint: "cold-storm-shelf-counterweight",
-      elevationBias: 0.50,
-      ridgeBias: 0.58,
-      valleyBias: 0.34,
-      iceBias: 0.56,
+      elevationBias: 0.58,
+      ridgeBias: 0.66,
+      cliffBias: 0.58,
+      valleyBias: 0.40,
+      basinBias: 0.22,
+      iceBias: 0.58,
       soilBias: 0.24,
-      mineralBias: 0.48,
+      mineralBias: 0.50,
+      rangeAngle: 0.18,
+      rangeOffset: -0.03,
+      rangeWidth: 0.014,
       colorFamily: "cold-storm-shelf"
     }
   });
@@ -163,6 +201,22 @@
     );
   }
 
+  function fbm(u, v, seed) {
+    let total = 0;
+    let norm = 0;
+    let amp = 0.54;
+    let scale = 5;
+
+    for (let i = 0; i < 6; i += 1) {
+      total += noise(u, v, scale, seed + i * 113) * amp;
+      norm += amp;
+      amp *= 0.52;
+      scale *= 2;
+    }
+
+    return total / Math.max(0.000001, norm);
+  }
+
   function ridged(u, v, seed) {
     let total = 0;
     let norm = 0;
@@ -172,22 +226,6 @@
     for (let i = 0; i < 6; i += 1) {
       const n = noise(u, v, scale, seed + i * 89);
       total += (1 - Math.abs(n * 2 - 1)) * amp;
-      norm += amp;
-      amp *= 0.52;
-      scale *= 2;
-    }
-
-    return total / Math.max(0.000001, norm);
-  }
-
-  function fbm(u, v, seed) {
-    let total = 0;
-    let norm = 0;
-    let amp = 0.54;
-    let scale = 5;
-
-    for (let i = 0; i < 6; i += 1) {
-      total += noise(u, v, scale, seed + i * 113) * amp;
       norm += amp;
       amp *= 0.52;
       scale *= 2;
@@ -313,42 +351,111 @@
     const broad = fbm(u + id * 0.031, v - id * 0.027, 21000 + id * 211);
     const grain = fbm(u * 3.1 + id * 0.017, v * 3.1 - id * 0.019, 22000 + id * 223);
     const ridge = ridged(u + id * 0.047, v - id * 0.041, 23000 + id * 239);
+    const ridgeFine = ridged(u * 2.8 + id * 0.071, v * 2.8 - id * 0.083, 23500 + id * 241);
     const micro = noise(u + id * 0.091, v - id * 0.067, 256, 24000 + id * 257);
 
-    const diagonalRidge = fault(u, v, -0.72 + id * 0.17, 0.02 - id * 0.006, 0.010 + id * 0.001);
-    const basinFault = fault(u, v, 0.42 - id * 0.09, -0.04 + id * 0.005, 0.030 + id * 0.002);
+    const spineA = fault(u, v, profile.rangeAngle, profile.rangeOffset, profile.rangeWidth);
+    const spineB = fault(u, v, profile.rangeAngle + 0.42, profile.rangeOffset + 0.045, profile.rangeWidth * 1.7);
+    const crossRidge = fault(u, v, profile.rangeAngle - 1.16, -profile.rangeOffset * 0.65, profile.rangeWidth * 2.2);
+    const basinFault = fault(u, v, profile.rangeAngle + 1.18, -0.04 + id * 0.005, 0.030 + id * 0.002);
+    const escarpmentFault = fault(u, v, profile.rangeAngle - 0.28, profile.rangeOffset - 0.065, profile.rangeWidth * 0.72);
 
-    const elevation = isLand
+    const mountainRange = isLand
       ? clamp(
-          0.10 +
-            field * 0.34 +
-            broad * 0.18 +
-            ridge * profile.elevationBias * 0.32 +
-            diagonalRidge * profile.ridgeBias * 0.26 -
-            basinFault * profile.valleyBias * 0.16 -
-            coast * 0.10,
+          spineA * profile.ridgeBias * 0.78 +
+            spineB * profile.ridgeBias * 0.36 +
+            crossRidge * profile.ridgeBias * 0.22 +
+            ridgeFine * profile.ridgeBias * 0.34,
           0,
           1
         )
       : 0;
 
-    const mountain = isLand ? clamp(ridge * profile.ridgeBias * smoothstep(0.34, 0.82, elevation), 0, 1) : 0;
-    const plateau = isLand ? clamp(smoothstep(0.46, 0.76, elevation) * (1 - ridge * 0.42), 0, 1) : 0;
-    const valley = isLand ? clamp((1 - ridge) * profile.valleyBias * smoothstep(0.18, 0.72, broad), 0, 1) : 0;
-    const basin = isLand ? clamp(basinFault * profile.valleyBias * (1 - mountain * 0.45), 0, 1) : 0;
-    const cliff = isLand ? clamp(coast * (ridge * 0.62 + diagonalRidge * 0.38), 0, 1) : 0;
+    const cliffWall = isLand
+      ? clamp(
+          coast * profile.cliffBias * 0.58 +
+            escarpmentFault * profile.cliffBias * 0.66 +
+            mountainRange * ridge * profile.cliffBias * 0.36,
+          0,
+          1
+        )
+      : 0;
 
-    const granite = isLand ? clamp(mountain * 0.58 + plateau * 0.24 + profile.mineralBias * ridge * 0.18, 0, 1) : 0;
-    const slate = isLand ? clamp(profile.ridgeBias * ridge * 0.48 + cliff * 0.36, 0, 1) : 0;
-    const soil = isLand ? clamp(profile.soilBias * (0.42 + valley * 0.46 + basin * 0.32) * (1 - mountain * 0.50), 0, 1) : 0;
+    const highland = isLand
+      ? clamp(
+          mountainRange * 0.62 +
+            ridge * profile.elevationBias * 0.38 +
+            broad * profile.elevationBias * 0.20 -
+            basinFault * profile.basinBias * 0.22,
+          0,
+          1
+        )
+      : 0;
+
+    const valley = isLand
+      ? clamp(
+          (1 - ridge) * profile.valleyBias * 0.50 +
+            basinFault * profile.valleyBias * 0.46 +
+            (1 - mountainRange) * broad * profile.valleyBias * 0.20,
+          0,
+          1
+        )
+      : 0;
+
+    const basin = isLand
+      ? clamp(basinFault * profile.basinBias * (1 - mountainRange * 0.55) + valley * 0.28, 0, 1)
+      : 0;
+
+    const elevation = isLand
+      ? clamp(
+          0.08 +
+            field * 0.30 +
+            highland * 0.42 +
+            mountainRange * 0.38 +
+            cliffWall * 0.18 -
+            basin * 0.22 -
+            valley * 0.10 -
+            coast * 0.08,
+          0,
+          1
+        )
+      : 0;
+
+    const shadowSlope = isLand
+      ? clamp(mountainRange * 0.34 + cliffWall * 0.42 + highland * 0.18 - valley * 0.12, 0, 1)
+      : 0;
+
+    const ridgeHighlight = isLand
+      ? clamp(
+          mountainRange * smoothstep(0.46, 0.92, ridgeFine) +
+            highland * smoothstep(0.58, 0.98, micro) * 0.36,
+          0,
+          1
+        )
+      : 0;
+
+    const depthShadow = isLand
+      ? clamp(
+          cliffWall * 0.50 +
+            basin * 0.28 +
+            valley * 0.22 +
+            (1 - micro) * mountainRange * 0.18,
+          0,
+          1
+        )
+      : 0;
+
+    const granite = isLand ? clamp(mountainRange * 0.52 + highland * 0.26 + profile.mineralBias * ridge * 0.18, 0, 1) : 0;
+    const slate = isLand ? clamp(profile.ridgeBias * ridge * 0.42 + cliffWall * 0.40, 0, 1) : 0;
+    const soil = isLand ? clamp(profile.soilBias * (0.40 + valley * 0.48 + basin * 0.36) * (1 - mountainRange * 0.58), 0, 1) : 0;
     const sediment = clamp(coast * (0.28 + profile.soilBias * 0.58) + basin * 0.22, 0, 1);
     const mineralVein = isLand ? clamp(profile.mineralBias * smoothstep(0.62, 0.96, ridge + micro * 0.22), 0, 1) : 0;
     const copper = clamp(mineralVein * smoothstep(0.34, 0.78, grain), 0, 1);
     const gold = clamp(mineralVein * smoothstep(0.72, 0.98, micro), 0, 1);
     const opal = clamp((key === "northeast-broken-shelf-mass" ? 0.55 : 0.14) * mineralVein * smoothstep(0.48, 0.94, broad), 0, 1);
     const ice = isLand ? clamp(profile.iceBias * smoothstep(0.42, 0.96, elevation + (Math.abs(base.lat || 0) / (Math.PI / 2)) * 0.32), 0, 1) : 0;
-    const vegetation = isLand ? clamp(profile.soilBias * valley * (1 - ice * 0.88) * (1 - mountain * 0.42), 0, 1) : 0;
-    const dryStone = isLand ? clamp((1 - soil) * (0.30 + mountain * 0.52 + cliff * 0.44), 0, 1) : 0;
+    const vegetation = isLand ? clamp(profile.soilBias * valley * (1 - ice * 0.88) * (1 - mountainRange * 0.54), 0, 1) : 0;
+    const dryStone = isLand ? clamp((1 - soil) * (0.30 + mountainRange * 0.52 + cliffWall * 0.44), 0, 1) : 0;
 
     const modifier = sampleCoastlineModifier(u, v, base);
     const island = sampleIslandField(u, v, base);
@@ -356,16 +463,26 @@
     return Object.freeze({
       terrainContract: CONTRACT,
       terrainReceipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
       profile: profile.fingerprint,
       colorFamily: profile.colorFamily,
+
       elevation,
-      relief: clamp(elevation * 0.54 + mountain * 0.28 + cliff * 0.18, 0, 1),
-      mountain,
-      plateau,
+      relief: clamp(elevation * 0.52 + mountainRange * 0.30 + cliffWall * 0.18, 0, 1),
+      mountainRange,
+      mountainSpine: spineA,
+      secondaryRange: spineB,
+      crossRidge,
+      highland,
+      ridgeHighlight,
+      shadowSlope,
+      depthShadow,
+      escarpment: escarpmentFault,
+      cliffWall,
       valley,
       basin,
-      cliff,
-      coast,
+      plateau: clamp(highland * (1 - mountainRange * 0.35) * (1 - basin * 0.28), 0, 1),
+
       granite,
       slate,
       soil,
@@ -377,10 +494,14 @@
       ice,
       vegetation,
       dryStone,
+
+      coast,
       broadTexture: broad,
       grainTexture: grain,
       microTexture: micro,
       ridgeTexture: ridge,
+      ridgeFineTexture: ridgeFine,
+
       hardJaggedEdge: modifier.hardJaggedEdge,
       rigidCoastline: true,
       cliffCut: modifier.cliffCut,
@@ -390,13 +511,20 @@
       islandField: island.field,
       islandKey: island.key,
       islandEdge: island.islandEdge || 0,
+
+      elevationDepthLoaded: true,
+      mountainRangeSystemLoaded: true,
+      cliffSystemLoaded: true,
+      visualDepthActive: true,
       landTextureCompositionLoaded: true,
       elevationDifferentiationActive: true,
       compositionDifferentiationActive: true,
       terrainTextureActive: true,
+
       tetMap: "TERRAIN_TO_ELEVATION_TO_TERRAIN",
       mapsProtocol: "MAKE_A_PIZZA_SYSTEMIC_EXECUTION",
       quadAAudit: "AUDIT_ATTACK_ADJUST_AUTHORIZE_PASS",
+
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
@@ -409,7 +537,7 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "terrain-texture-composition-elevation",
+      authority: "terrain-elevation-mountain-range-cliff-depth",
       terrainExtensionLoaded: true,
       coastlineFractureLoaded: true,
       silhouetteBreakerActive: true,
@@ -420,6 +548,10 @@
       elevationDifferentiationActive: true,
       compositionDifferentiationActive: true,
       terrainTextureActive: true,
+      elevationDepthLoaded: true,
+      mountainRangeSystemLoaded: true,
+      cliffSystemLoaded: true,
+      visualDepthActive: true,
       terrainFingerprintCount: 7,
       eachBodyHasUniqueTerrain: true,
       roundLobeRead: false,
@@ -452,6 +584,10 @@
   document.documentElement.dataset.hearthTerrainExtensionLoaded = "true";
   document.documentElement.dataset.hearthTerrainExtensionContract = CONTRACT;
   document.documentElement.dataset.hearthTerrainExtensionReceipt = RECEIPT;
+  document.documentElement.dataset.hearthElevationDepthLoaded = "true";
+  document.documentElement.dataset.hearthMountainRangeSystemLoaded = "true";
+  document.documentElement.dataset.hearthCliffSystemLoaded = "true";
+  document.documentElement.dataset.hearthVisualDepthActive = "true";
   document.documentElement.dataset.hearthLandTextureCompositionLoaded = "true";
   document.documentElement.dataset.hearthElevationDifferentiationActive = "true";
   document.documentElement.dataset.hearthCompositionDifferentiationActive = "true";

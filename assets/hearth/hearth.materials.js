@@ -1,13 +1,21 @@
 // /assets/hearth/hearth.materials.js
-// HEARTH_4K_NATURAL_ORGANIC_MATERIALS_TNT_v1
-// Full-file replacement / new file.
+// HEARTH_NATURAL_ORGANIC_MATERIAL_REALISM_TNT_v2
+// Full-file replacement.
+// Purpose:
+// - Remove artificial diagonal stripe artifacts.
+// - Remove polar spiral artifacts.
+// - Preserve seven body masses, jagged coastlines, shelves, and island chains.
+// - Restore natural organic biome blending: forest, desert, plains, mountains, wetlands, tundra, ice.
+// - Keep route, canvas, controls, runtime, and HTML untouched.
+// No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_4K_NATURAL_ORGANIC_MATERIALS_TNT_v1";
-  const RECEIPT = "HEARTH_4K_NATURAL_ORGANIC_MATERIALS_RECEIPT_v1";
-  const VERSION = "2026-05-10.hearth-4k-natural-organic-materials-v1";
+  const CONTRACT = "HEARTH_NATURAL_ORGANIC_MATERIAL_REALISM_TNT_v2";
+  const RECEIPT = "HEARTH_NATURAL_ORGANIC_MATERIAL_REALISM_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "HEARTH_4K_NATURAL_ORGANIC_MATERIALS_TNT_v1";
+  const VERSION = "2026-05-10.hearth-natural-organic-material-realism-v2";
 
   const TAU = Math.PI * 2;
   const DEG = Math.PI / 180;
@@ -40,31 +48,34 @@
   const C = Object.freeze({
     abyss: [2, 7, 18],
     deepOcean: [3, 18, 43],
-    ocean: [5, 48, 86],
-    shelf: [18, 102, 128],
-    shallow: [38, 138, 142],
-    foam: [138, 196, 182],
-    beach: [202, 178, 113],
-    wetSand: [156, 137, 93],
-    forestDeep: [24, 78, 50],
-    forest: [37, 112, 66],
-    jungle: [20, 94, 58],
-    plains: [128, 148, 82],
-    grassland: [104, 136, 75],
-    savanna: [164, 148, 78],
-    desert: [190, 151, 84],
-    drySteppe: [139, 122, 77],
-    clay: [149, 96, 64],
-    mountain: [93, 92, 84],
-    granite: [119, 118, 109],
-    cliff: [54, 59, 67],
-    basalt: [43, 48, 56],
-    highland: [120, 121, 94],
-    tundra: [133, 144, 124],
-    snow: [214, 225, 223],
-    ice: [188, 216, 226],
-    lake: [35, 110, 132],
-    wetland: [48, 103, 74]
+    ocean: [5, 46, 84],
+    shelf: [15, 93, 119],
+    shallow: [28, 126, 132],
+    coastFoam: [126, 184, 169],
+    beach: [198, 176, 116],
+    wetSand: [144, 128, 92],
+
+    forestDeep: [22, 72, 47],
+    forest: [36, 105, 62],
+    wetForest: [25, 92, 58],
+    jungle: [18, 86, 53],
+    plains: [119, 142, 82],
+    grassland: [92, 129, 73],
+    savanna: [158, 143, 81],
+    desert: [184, 148, 88],
+    drySteppe: [135, 121, 80],
+    clay: [145, 100, 67],
+    wetland: [45, 96, 72],
+
+    mountain: [93, 92, 86],
+    granite: [119, 118, 110],
+    basalt: [49, 53, 60],
+    cliff: [55, 60, 67],
+    highland: [116, 118, 94],
+
+    tundra: [132, 143, 125],
+    snow: [214, 226, 224],
+    ice: [188, 216, 226]
   });
 
   function clamp(value, min, max) {
@@ -73,6 +84,11 @@
 
   function lerp(a, b, t) {
     return a + (b - a) * clamp(t, 0, 1);
+  }
+
+  function smoothstep(edge0, edge1, x) {
+    const t = clamp((x - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
+    return t * t * (3 - 2 * t);
   }
 
   function mix(a, b, t) {
@@ -92,9 +108,8 @@
     ];
   }
 
-  function smoothstep(edge0, edge1, x) {
-    const t = clamp((x - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
-    return t * t * (3 - 2 * t);
+  function wrap01(value) {
+    return ((value % 1) + 1) % 1;
   }
 
   function wrapPi(value) {
@@ -114,12 +129,14 @@
 
   function noise(u, v, scale, seed) {
     const s = Math.max(1, Math.floor(scale));
-    const x = u * s;
-    const y = v * s;
+    const x = wrap01(u) * s;
+    const y = clamp(v, 0, 1) * s;
+
     const x0 = Math.floor(x);
     const y0 = Math.floor(y);
     const x1 = x0 + 1;
     const y1 = y0 + 1;
+
     const xf = x - x0;
     const yf = y - y0;
     const sx = xf * xf * (3 - 2 * xf);
@@ -136,7 +153,7 @@
     let total = 0;
     let norm = 0;
     let amp = 0.58;
-    let scale = 4;
+    let scale = 3.5;
 
     for (let i = 0; i < octaves; i += 1) {
       total += noise(u, v, scale, seed + i * 131) * amp;
@@ -152,7 +169,7 @@
     let total = 0;
     let norm = 0;
     let amp = 0.62;
-    let scale = 8;
+    let scale = 6.5;
 
     for (let i = 0; i < octaves; i += 1) {
       const n = noise(u, v, scale, seed + i * 97);
@@ -165,11 +182,21 @@
     return total / Math.max(0.000001, norm);
   }
 
+  function domainWarp(u, v, seed, strength = 0.035) {
+    const a = fbm(u + 0.17, v - 0.11, seed + 17, 4) - 0.5;
+    const b = fbm(u - 0.13, v + 0.19, seed + 31, 4) - 0.5;
+    return {
+      u: wrap01(u + a * strength),
+      v: clamp(v + b * strength, 0, 1)
+    };
+  }
+
   function ellipseField(lon, lat, body) {
     const dx = wrapPi(lon - body.lon) * Math.cos(body.lat);
     const dy = lat - body.lat;
     const ca = Math.cos(body.angle);
     const sa = Math.sin(body.angle);
+
     const x = dx * ca - dy * sa;
     const y = dx * sa + dy * ca;
     const nx = x / body.rx;
@@ -180,161 +207,216 @@
     return { nx, ny, theta, dist };
   }
 
+  function coastlineChip(u, v, body, e) {
+    const shelfNoise = ridged(u + body.seed * 0.0009, v - body.seed * 0.0007, 18000 + body.seed, 5);
+    const cutNoise = fbm(u - body.seed * 0.0013, v + body.seed * 0.0017, 21000 + body.seed, 5);
+
+    const angular =
+      Math.sign(Math.sin(e.theta * (6 + body.seed % 6) + e.nx * 4.9 - e.ny * 4.2)) * 0.045 +
+      Math.sin(e.theta * (11 + body.seed % 5) - body.seed * 0.007) * 0.032;
+
+    const fracture = (shelfNoise - 0.5) * 0.18;
+    const bay = smoothstep(0.5, 0.92, cutNoise) * 0.115;
+    const tear = smoothstep(0.58, 0.96, shelfNoise) * 0.045;
+
+    return angular + fracture - bay - tear;
+  }
+
   function landField(u, v) {
-    const lon = (u - 0.5) * TAU;
-    const lat = (0.5 - v) * Math.PI;
+    const warped = domainWarp(u, v, 12000, 0.024);
+    const lon = (warped.u - 0.5) * TAU;
+    const lat = (0.5 - warped.v) * Math.PI;
 
     let best = {
       field: -20,
       body: MASSES[0],
-      theta: 0,
       island: false
     };
 
     for (const body of MASSES) {
       const e = ellipseField(lon, lat, body);
-      const angular =
-        Math.sign(Math.sin(e.theta * (6 + body.seed % 6) + e.nx * 4.9 - e.ny * 4.2)) * 0.062 +
-        Math.sin(e.theta * (10 + body.seed % 5) - body.seed * 0.007) * 0.045 +
-        Math.sin(e.theta * (17 + body.seed % 3) + e.nx * 2.4) * 0.025;
-
-      const fracture = (ridged(u + body.seed * 0.0009, v - body.seed * 0.0007, 18000 + body.seed, 6) - 0.5) * 0.22;
-      const bay = smoothstep(0.44, 0.92, noise(u - body.seed * 0.0013, v + body.seed * 0.0017, 112, 21000 + body.seed)) * 0.13;
-      const shelfTear = smoothstep(0.55, 0.96, ridged(u + body.seed * 0.0019, v - body.seed * 0.0011, 26000 + body.seed, 4)) * 0.055;
-      const field = 1 - e.dist + angular + fracture - bay - shelfTear;
+      const field = 1 - e.dist + coastlineChip(warped.u, warped.v, body, e);
 
       if (field > best.field) {
-        best = { field, body, theta: e.theta, island: false };
+        best = { field, body, island: false };
       }
     }
 
     for (const island of ISLANDS) {
       const e = ellipseField(lon, lat, island);
-      const angular = Math.sin(e.theta * 6 + island.seed * 0.13) * 0.13 + Math.sin(e.theta * 11 - e.nx) * 0.06;
-      const chip = (ridged(u + island.seed * 0.003, v - island.seed * 0.002, 41000 + island.seed, 4) - 0.5) * 0.12;
-      const field = 0.38 + angular + chip - e.dist;
+      const chip =
+        Math.sin(e.theta * 5.7 + island.seed * 0.13) * 0.065 +
+        (ridged(warped.u + island.seed * 0.001, warped.v - island.seed * 0.001, 41000 + island.seed, 3) - 0.5) * 0.09;
+
+      const field = 0.38 + chip - e.dist;
 
       if (field > best.field) {
-        best = { field, body: MASSES[0], theta: e.theta, island: true };
+        best = { field, body: MASSES[0], island: true };
       }
     }
 
-    const coast = 1 - smoothstep(0.012, 0.135, Math.abs(best.field));
-    const shelf = smoothstep(-0.36, 0.018, best.field) * (best.field <= 0 ? 1 : 0);
-    const landEdge = smoothstep(-0.02, 0.06, best.field) * smoothstep(0.22, 0.035, best.field);
+    const coast = 1 - smoothstep(0.012, 0.13, Math.abs(best.field));
+    const shelf = smoothstep(-0.34, 0.015, best.field) * (best.field <= 0 ? 1 : 0);
 
     return {
       lon,
       lat,
+      u: warped.u,
+      v: warped.v,
       field: best.field,
       isLand: best.field > 0,
       coast: clamp(coast, 0, 1),
       shelf: clamp(shelf, 0, 1),
-      landEdge: clamp(landEdge, 0, 1),
       body: best.body,
       island: best.island
     };
   }
 
   function reliefField(u, v, land) {
-    const bodySeed = land.body.seed;
-    const ridgeA = ridged(u + bodySeed * 0.00081, v - bodySeed * 0.00062, 51000 + bodySeed, 7);
-    const ridgeB = ridged(u * 1.72 - bodySeed * 0.00031, v * 1.28 + bodySeed * 0.00051, 52000 + bodySeed, 5);
-    const grain = fbm(u * 2.3 + 0.17, v * 1.9 - 0.11, 53000 + bodySeed, 6);
-    const mountain = smoothstep(0.58, 0.91, ridgeA);
-    const foothill = smoothstep(0.43, 0.73, ridgeB);
-    const basin = smoothstep(0.2, 0.46, 1 - grain) * smoothstep(0.18, 0.62, land.field);
-    const cliff = land.coast * smoothstep(0.48, 0.86, ridgeA + ridgeB * 0.2);
+    const seed = land.body.seed;
+    const w1 = domainWarp(u + seed * 0.00013, v - seed * 0.00011, 51000 + seed, 0.045);
+    const w2 = domainWarp(u - seed * 0.00017, v + seed * 0.00009, 52000 + seed, 0.026);
+
+    const ridgeLong = ridged(w1.u * 0.92 + 0.03, w1.v * 1.08 - 0.02, 53000 + seed, 6);
+    const ridgeBroken = ridged(w2.u * 1.7 - 0.09, w2.v * 1.35 + 0.07, 54000 + seed, 5);
+    const rolling = fbm(u * 1.4 + 0.17, v * 1.2 - 0.11, 55000 + seed, 5);
+    const basinNoise = fbm(u * 1.9 - 0.21, v * 1.6 + 0.14, 56000 + seed, 5);
+
+    const mountain = smoothstep(0.63, 0.9, ridgeLong * 0.72 + ridgeBroken * 0.28);
+    const foothill = smoothstep(0.48, 0.78, ridgeBroken * 0.62 + rolling * 0.38);
+    const basin = smoothstep(0.18, 0.47, 1 - basinNoise) * smoothstep(0.14, 0.7, land.field);
+    const cliff = land.coast * smoothstep(0.54, 0.88, ridgeLong + ridgeBroken * 0.16);
 
     return {
-      ridgeA,
-      ridgeB,
-      grain,
+      ridgeLong,
+      ridgeBroken,
+      rolling,
+      basin,
       mountain,
       foothill,
-      basin,
       cliff,
-      elevation: clamp(mountain * 0.78 + foothill * 0.22 + basin * 0.06, 0, 1)
+      elevation: clamp(mountain * 0.75 + foothill * 0.28 + rolling * 0.08 - basin * 0.08, 0, 1)
     };
   }
 
-  function biomeColor(u, v, land, relief) {
-    const latCold = Math.abs(land.lat) / (Math.PI / 2);
-    const heat = clamp(1 - latCold + (noise(u, v, 8, 33000) - 0.5) * 0.26 - relief.mountain * 0.22, 0, 1);
-    const moisture =
-      clamp(
-        fbm(u + 0.17, v - 0.11, 34000, 6) * 0.68 +
-          land.coast * 0.22 +
-          (land.island ? 0.1 : 0) +
-          relief.basin * 0.14 -
-          relief.mountain * 0.12,
-        0,
-        1
-      );
+  function climateField(u, v, land, relief) {
+    const latitudeCold = Math.abs(land.lat) / (Math.PI / 2);
 
-    const arid = clamp((1 - moisture) * 0.74 + heat * 0.32 - land.coast * 0.12, 0, 1);
-    const snow = smoothstep(0.66, 0.98, latCold + relief.mountain * 0.24 - heat * 0.11);
-    const wetland = smoothstep(0.62, 0.9, moisture + relief.basin * 0.34) * smoothstep(0.18, 0.76, heat);
+    const temperature = clamp(
+      1 -
+        latitudeCold * 0.92 +
+        (fbm(u + 0.07, v - 0.09, 61000, 5) - 0.5) * 0.22 -
+        relief.mountain * 0.26 -
+        relief.elevation * 0.12,
+      0,
+      1
+    );
 
-    let color;
+    const moisture = clamp(
+      fbm(u - 0.18, v + 0.12, 62000, 6) * 0.64 +
+        land.coast * 0.22 +
+        relief.basin * 0.2 +
+        (land.island ? 0.08 : 0) -
+        relief.mountain * 0.1 -
+        temperature * 0.08,
+      0,
+      1
+    );
 
-    if (snow > 0.62) {
-      color = mix(C.tundra, C.ice, snow);
-    } else if (relief.mountain > 0.68) {
-      color = mix(C.highland, C.granite, relief.mountain);
-    } else if (relief.foothill > 0.7 && moisture < 0.48) {
-      color = C.highland;
-    } else if (wetland > 0.66) {
-      color = C.wetland;
-    } else if (heat > 0.68 && arid > 0.72) {
-      color = mix(C.desert, C.clay, noise(u, v, 36, 61000) * 0.18);
-    } else if (heat > 0.56 && arid > 0.55) {
-      color = C.savanna;
-    } else if (moisture > 0.72 && heat > 0.44) {
-      color = mix(C.jungle, C.wetForest, noise(u, v, 48, 62000) * 0.32);
-    } else if (moisture > 0.56) {
-      color = mix(C.forestDeep, C.forest, noise(u, v, 44, 63000) * 0.42);
-    } else if (latCold > 0.54) {
-      color = C.tundra;
-    } else if (moisture < 0.34) {
-      color = C.drySteppe;
-    } else {
-      color = mix(C.plains, C.grassland, noise(u, v, 54, 64000) * 0.45);
-    }
+    const aridity = clamp((1 - moisture) * 0.72 + temperature * 0.3 - land.coast * 0.12, 0, 1);
+    const snow = smoothstep(0.65, 0.96, latitudeCold + relief.mountain * 0.24 - temperature * 0.11);
+    const wetland = smoothstep(0.62, 0.94, moisture + relief.basin * 0.32) * smoothstep(0.18, 0.72, temperature);
+    const forest = smoothstep(0.48, 0.83, moisture) * smoothstep(0.22, 0.78, temperature);
+    const desert = smoothstep(0.58, 0.92, aridity) * smoothstep(0.44, 0.86, temperature);
+    const plains = smoothstep(0.22, 0.7, temperature) * (1 - Math.max(forest * 0.52, desert * 0.45, wetland * 0.45, relief.mountain * 0.48));
 
-    color = mix(color, C.beach, land.coast * 0.18);
-    color = mix(color, C.cliff, relief.cliff * 0.36);
-    color = mix(color, C.snow, snow * relief.mountain * 0.38);
+    return {
+      latitudeCold,
+      temperature,
+      moisture,
+      aridity,
+      snow,
+      wetland,
+      forest,
+      desert,
+      plains
+    };
+  }
 
-    const organicGrain =
-      (fbm(u * 4.2 + 0.13, v * 3.7 - 0.09, 70000, 5) - 0.5) * 15 +
-      (noise(u, v, 192, 71000) - 0.5) * 8;
+  function landColor(u, v, land) {
+    const relief = reliefField(u, v, land);
+    const climate = climateField(u, v, land, relief);
 
-    const lightRelief = relief.mountain * 20 + relief.foothill * 10 - relief.basin * 9 - relief.cliff * 11;
+    const patch = domainWarp(u, v, 70000, 0.055);
+    const forestPatch = fbm(patch.u * 1.2, patch.v * 1.1, 71000, 6);
+    const desertPatch = fbm(patch.u * 0.9 + 0.11, patch.v * 1.15 - 0.08, 72000, 5);
+    const grassPatch = fbm(patch.u * 1.6 - 0.13, patch.v * 1.3 + 0.09, 73000, 5);
 
-    return shade(color, organicGrain + lightRelief - 5);
+    const forestInfluence = clamp(climate.forest * smoothstep(0.34, 0.78, forestPatch), 0, 1);
+    const desertInfluence = clamp(climate.desert * smoothstep(0.36, 0.82, desertPatch), 0, 1);
+    const wetlandInfluence = clamp(climate.wetland * smoothstep(0.38, 0.82, forestPatch + relief.basin * 0.22), 0, 1);
+    const mountainInfluence = clamp(relief.mountain, 0, 1);
+    const snowInfluence = clamp(climate.snow, 0, 1);
+
+    let color = mix(C.plains, C.grassland, smoothstep(0.32, 0.78, grassPatch));
+
+    color = mix(color, C.savanna, clamp(climate.temperature * (1 - climate.moisture) * 0.9, 0, 1));
+    color = mix(color, C.drySteppe, clamp((1 - climate.moisture) * 0.42, 0, 1));
+    color = mix(color, C.desert, desertInfluence * 0.86);
+    color = mix(color, C.clay, desertInfluence * smoothstep(0.6, 0.92, desertPatch) * 0.22);
+
+    color = mix(color, C.forest, forestInfluence * 0.82);
+    color = mix(color, C.forestDeep, forestInfluence * smoothstep(0.62, 0.9, climate.moisture) * 0.34);
+    color = mix(color, C.wetForest, forestInfluence * smoothstep(0.58, 0.92, climate.temperature) * 0.22);
+    color = mix(color, C.wetland, wetlandInfluence * 0.62);
+
+    color = mix(color, C.highland, relief.foothill * 0.3);
+    color = mix(color, C.granite, mountainInfluence * 0.58);
+    color = mix(color, C.basalt, relief.cliff * 0.34);
+    color = mix(color, C.tundra, climate.latitudeCold * smoothstep(0.24, 0.7, 1 - climate.temperature) * 0.4);
+    color = mix(color, C.ice, snowInfluence * 0.58);
+    color = mix(color, C.snow, snowInfluence * mountainInfluence * 0.38);
+
+    color = mix(color, C.beach, land.coast * 0.16);
+    color = mix(color, C.wetSand, land.coast * climate.moisture * 0.12);
+    color = mix(color, C.cliff, relief.cliff * 0.32);
+
+    const fineGrain = (fbm(u * 3.4 + 0.11, v * 3.1 - 0.07, 81000, 5) - 0.5) * 12;
+    const mineral = (ridged(u * 2.1 - 0.14, v * 2.2 + 0.09, 82000, 4) - 0.5) * 8;
+    const reliefLight = relief.mountain * 15 + relief.foothill * 7 - relief.basin * 8 - relief.cliff * 12;
+
+    return shade(color, fineGrain + mineral + reliefLight - 4);
+  }
+
+  function oceanColor(u, v, land) {
+    const current = fbm(u * 1.4 + 0.05, v * 1.2 - 0.04, 91000, 5);
+    const depthNoise = fbm(u * 2.2 - 0.17, v * 1.8 + 0.09, 92000, 4);
+
+    let color = mix(C.abyss, C.deepOcean, current * 0.72);
+    color = mix(color, C.ocean, smoothstep(0.1, 0.84, depthNoise) * 0.26);
+    color = mix(color, C.shelf, land.shelf * 0.45);
+    color = mix(color, C.shallow, land.shelf * land.coast * 0.2);
+    color = mix(color, C.coastFoam, land.shelf * land.coast * 0.08);
+
+    return shade(color, (noise(u, v, 170, 93000) - 0.5) * 4);
   }
 
   function sampleMaterial(u, v) {
     const land = landField(u, v);
 
     if (!land.isLand) {
-      let water = mix(C.abyss, C.deepOcean, fbm(u, v, 91000, 5));
-      water = mix(water, C.ocean, smoothstep(0.05, 0.86, land.shelf) * 0.55);
-      water = mix(water, C.shelf, land.shelf * 0.56);
-      water = mix(water, C.shallow, land.coast * land.shelf * 0.24);
-      water = mix(water, C.foam, land.coast * land.shelf * 0.12);
-      water = shade(water, (noise(u, v, 160, 92000) - 0.5) * 5);
-      return water;
+      return oceanColor(u, v, land);
     }
 
-    const relief = reliefField(u, v, land);
-    return biomeColor(u, v, land, relief);
+    return landColor(u, v, land);
   }
 
   function createTextureCanvas(options = {}) {
-    const width = clamp(Math.floor(options.width || 1536), 512, 4096);
-    const height = clamp(Math.floor(options.height || 768), 256, 2048);
+    const requestedWidth = Math.floor(options.width || 1536);
+    const requestedHeight = Math.floor(options.height || 768);
+
+    const width = clamp(requestedWidth, 768, 4096);
+    const height = clamp(requestedHeight, 384, 2048);
 
     const canvas = document.createElement("canvas");
     canvas.width = width;
@@ -361,6 +443,15 @@
 
     ctx.putImageData(image, 0, 0);
 
+    canvas.dataset.hearthMaterialsContract = CONTRACT;
+    canvas.dataset.hearthMaterialsReceipt = RECEIPT;
+    canvas.dataset.hearthNaturalOrganicMaterialLayer = "true";
+    canvas.dataset.hearthArtificialDiagonalStripes = "false";
+    canvas.dataset.hearthPolarSpiralArtifact = "false";
+    canvas.dataset.generatedImage = "false";
+    canvas.dataset.graphicBox = "false";
+    canvas.dataset.visualPassClaimed = "false";
+
     return canvas;
   }
 
@@ -368,16 +459,22 @@
     return Object.freeze({
       contract: CONTRACT,
       receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       authority: "hearth-natural-organic-material-layer",
       naturalOrganicMaterialLayer: true,
       textureResolutionClass: "4k-capable-procedural",
+      artificialDiagonalStripes: false,
+      polarSpiralArtifact: false,
+      bodyMassAssignedColoring: false,
+      organicBiomePatches: true,
       biomeBlending: true,
       organicCoastlines: true,
-      mountainRelief: true,
+      jaggedCoastlinesPreserved: true,
+      islandChainsPreserved: true,
       shelfGradients: true,
-      forestDesertPlainsWetlandIceDifferentiation: true,
-      bodyMassAssignedColoring: false,
+      mountainRelief: true,
+      wetlandForestDesertPlainsTundraIceDifferentiation: true,
       routeOwner: false,
       canvasOwner: false,
       generatedImage: false,
@@ -389,6 +486,7 @@
   window.HEARTH_MATERIALS = Object.freeze({
     contract: CONTRACT,
     receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
     createTextureCanvas,
     sampleMaterial,
@@ -401,6 +499,8 @@
   document.documentElement.dataset.hearthMaterialsContract = CONTRACT;
   document.documentElement.dataset.hearthMaterialsReceipt = RECEIPT;
   document.documentElement.dataset.hearthNaturalOrganicMaterialLayer = "true";
+  document.documentElement.dataset.hearthArtificialDiagonalStripes = "false";
+  document.documentElement.dataset.hearthPolarSpiralArtifact = "false";
   document.documentElement.dataset.generatedImage = "false";
   document.documentElement.dataset.graphicBox = "false";
   document.documentElement.dataset.visualPassClaimed = "false";

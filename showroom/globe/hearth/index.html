@@ -1,13 +1,13 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-habitable-forming-coherent-baseline"
+  data-page="hearth-seven-body-mass-hard-renewal"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_G2_FREE_DRAG_POLE_SWIVEL_HARD_RENEWAL_HTML_TNT_v2"
+  data-contract="HEARTH_G2_SEVEN_BODY_MASS_HARD_RENEWAL_HTML_TNT_v3"
   data-body="hearth"
   data-generation-baseline="G1-coherent-achieved"
-  data-current-phase="G2-control-preservation"
-  data-next-phase="G2-material-natural-readability"
+  data-current-phase="G2-seven-body-mass-formation"
+  data-body-mass-count="7"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claimed="false"
@@ -15,308 +15,105 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Hearth G2 Control Preservation</title>
-  <meta
-    name="description"
-    content="Hearth is a habitable-forming constructed planet with G2 control preservation active: drag, spin, and north/south pole-swivel inspection."
-  >
-
+  <title>Diamond Gate Bridge · Hearth Seven Body Mass Formation</title>
   <style>
     :root {
-      --bg: #030914;
-      --panel: rgba(7, 16, 30, 0.84);
-      --line: rgba(231, 188, 105, 0.34);
-      --gold: #e7bc69;
-      --text: #eef6ff;
-      --muted: rgba(238, 246, 255, 0.72);
-      --green: #8bd7a3;
+      --bg:#030914;
+      --panel:rgba(7,16,30,.84);
+      --line:rgba(231,188,105,.34);
+      --gold:#e7bc69;
+      --text:#eef6ff;
+      --muted:rgba(238,246,255,.72);
+      --green:#8bd7a3;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing:border-box; }
 
     html {
-      min-height: 100%;
+      min-height:100%;
       background:
-        radial-gradient(circle at 50% 20%, rgba(39, 117, 155, 0.22), transparent 38%),
-        radial-gradient(circle at 18% 12%, rgba(231, 188, 105, 0.13), transparent 30%),
-        linear-gradient(180deg, #06101e, var(--bg) 72%);
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        radial-gradient(circle at 50% 20%,rgba(39,117,155,.22),transparent 38%),
+        radial-gradient(circle at 18% 12%,rgba(231,188,105,.13),transparent 30%),
+        linear-gradient(180deg,#06101e,var(--bg) 72%);
+      color:var(--text);
+      font-family:Inter,system-ui,sans-serif;
     }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
+    body { margin:0; min-height:100vh; }
+    a { color:inherit; text-decoration:none; }
+
+    .shell { width:min(1120px,calc(100% - 28px)); margin:0 auto; padding:22px 0 42px; }
+
+    .topbar,.nav,.card,#hearthCanvasMount,.receipt {
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(9,22,41,.88),rgba(4,10,20,.78));
+      box-shadow:0 22px 70px rgba(0,0,0,.38);
+      backdrop-filter:blur(10px);
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    .topbar { display:flex; justify-content:space-between; gap:14px; border-radius:24px; padding:12px 14px; }
+    .brand { display:inline-flex; align-items:center; gap:10px; font-weight:900; }
+    .mark { display:grid; place-items:center; width:36px; height:36px; border-radius:12px; border:1px solid rgba(231,188,105,.46); color:var(--gold); }
 
-    a:focus-visible,
-    canvas:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 4px;
-    }
+    .nav { display:flex; flex-wrap:wrap; gap:8px; border-radius:20px; padding:8px; }
+    .nav a { border:1px solid rgba(231,188,105,.24); border-radius:999px; padding:8px 11px; color:var(--muted); font-size:.86rem; }
+    .nav a[aria-current="page"] { color:#06101e; background:var(--gold); font-weight:900; }
 
-    .skip {
-      position: absolute;
-      top: 12px;
-      left: 16px;
-      z-index: 20;
-      transform: translateY(-140%);
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: var(--gold);
-      color: #06101e;
-      font-weight: 900;
-    }
+    .hero { display:grid; grid-template-columns:minmax(0,1fr) minmax(320px,520px); gap:22px; align-items:center; margin-top:22px; }
+    .eyebrow { color:var(--gold); font-size:.78rem; font-weight:900; letter-spacing:.16em; text-transform:uppercase; }
+    h1 { margin:10px 0 12px; font-size:clamp(2.2rem,7vw,5.8rem); line-height:.9; letter-spacing:-.08em; }
+    .lede { max-width:68ch; margin:0; color:var(--muted); font-size:clamp(1rem,2.4vw,1.18rem); line-height:1.6; }
+    .badge { display:inline-flex; margin-top:12px; padding:7px 11px; border:1px solid rgba(139,215,163,.34); border-radius:999px; color:var(--green); background:rgba(139,215,163,.08); font-weight:900; font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; }
 
-    .skip:focus { transform: translateY(0); }
-
-    .shell {
-      width: min(1120px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 22px 0 42px;
-    }
-
-    .topbar,
-    .nav,
-    .card,
-    #hearthCanvasMount,
-    .receipt {
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(9, 22, 41, 0.88), rgba(4, 10, 20, 0.78));
-      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.38);
-      backdrop-filter: blur(10px);
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      border-radius: 24px;
-      padding: 12px 14px;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 900;
-      letter-spacing: 0.02em;
-    }
-
-    .mark {
-      display: grid;
-      place-items: center;
-      width: 36px;
-      height: 36px;
-      border-radius: 12px;
-      border: 1px solid rgba(231, 188, 105, 0.46);
-      color: var(--gold);
-      background: radial-gradient(circle at 50% 36%, rgba(231, 188, 105, 0.22), rgba(7, 16, 30, 0.86));
-    }
-
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      border-radius: 20px;
-      padding: 8px;
-    }
-
-    .nav a {
-      border: 1px solid rgba(231, 188, 105, 0.24);
-      border-radius: 999px;
-      padding: 8px 11px;
-      color: var(--muted);
-      font-size: 0.86rem;
-    }
-
-    .nav a[aria-current="page"] {
-      color: #06101e;
-      background: var(--gold);
-      font-weight: 900;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(320px, 520px);
-      gap: 22px;
-      align-items: center;
-      margin-top: 22px;
-    }
-
-    .eyebrow {
-      color: var(--gold);
-      font-size: 0.78rem;
-      font-weight: 900;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    .badge {
-      display: inline-flex;
-      margin-top: 12px;
-      padding: 7px 11px;
-      border: 1px solid rgba(139, 215, 163, 0.34);
-      border-radius: 999px;
-      color: var(--green);
-      background: rgba(139, 215, 163, 0.08);
-      font-weight: 900;
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 10px 0 12px;
-      font-size: clamp(2.2rem, 7vw, 5.8rem);
-      line-height: 0.9;
-      letter-spacing: -0.08em;
-    }
-
-    .lede {
-      max-width: 68ch;
-      margin: 0;
-      color: var(--muted);
-      font-size: clamp(1rem, 2.4vw, 1.18rem);
-      line-height: 1.6;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 42px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(231, 188, 105, 0.38);
-      background: rgba(231, 188, 105, 0.14);
-      color: var(--text);
-      font-weight: 800;
-    }
-
-    .button.primary {
-      color: #05101d;
-      background: var(--gold);
-    }
+    .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }
+    .button { display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:10px 14px; border-radius:999px; border:1px solid rgba(231,188,105,.38); background:rgba(231,188,105,.14); color:var(--text); font-weight:800; }
+    .button.primary { color:#05101d; background:var(--gold); }
 
     #hearthCanvasMount {
-      position: relative;
-      width: 100%;
-      min-height: 320px;
-      aspect-ratio: 1 / 1;
-      overflow: hidden;
-      isolation: isolate;
-      border-radius: 32px;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(39, 117, 155, 0.30), rgba(3, 9, 20, 0.96) 70%),
-        #02070e;
-      touch-action: none;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
+      position:relative;
+      width:100%;
+      min-height:320px;
+      aspect-ratio:1/1;
+      overflow:hidden;
+      isolation:isolate;
+      border-radius:32px;
+      background:radial-gradient(circle at 50% 50%,rgba(39,117,155,.30),rgba(3,9,20,.96) 70%),#02070e;
+      touch-action:none;
+      user-select:none;
+      -webkit-user-select:none;
+      -webkit-touch-callout:none;
     }
 
-    #hearthCanvasMount canvas,
-    #hearthCanvasMount canvas[data-hearth-canvas="true"],
-    #hearthCanvasMount canvas[data-hearth-canvas] {
-      position: absolute;
-      inset: 0;
-      display: block;
-      width: 100%;
-      height: 100%;
-      pointer-events: auto;
-      touch-action: none;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
+    #hearthCanvasMount canvas {
+      position:absolute;
+      inset:0;
+      display:block;
+      width:100%;
+      height:100%;
+      pointer-events:auto;
+      touch-action:none;
+      user-select:none;
+      -webkit-user-select:none;
+      -webkit-touch-callout:none;
     }
 
-    #hearthCanvasMount [data-hearth-mount-fallback][hidden] {
-      display: none !important;
-    }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:22px; }
+    .card { border-radius:22px; padding:14px; min-height:132px; }
+    .card h2 { margin:0 0 8px; color:var(--gold); font-size:.92rem; }
+    .card p { margin:0; color:var(--muted); font-size:.9rem; line-height:1.45; }
+    .receipt { margin:16px 0 0; padding:14px; overflow:auto; border-radius:18px; color:rgba(238,246,255,.72); font-size:.78rem; white-space:pre-wrap; }
 
-    #hearthCanvasMount[data-hearth-required-failure="true"]::after {
-      content: attr(data-hearth-route-error-message);
-      position: absolute;
-      left: 18px;
-      right: 18px;
-      bottom: 18px;
-      z-index: 10;
-      padding: 14px 16px;
-      border: 1px solid rgba(231, 188, 105, 0.58);
-      border-radius: 18px;
-      background: rgba(4, 10, 20, 0.94);
-      color: var(--gold);
-      font: 800 14px/1.4 system-ui, sans-serif;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 22px;
-    }
-
-    .card {
-      border-radius: 22px;
-      padding: 14px;
-      min-height: 132px;
-    }
-
-    .card h2 {
-      margin: 0 0 8px;
-      color: var(--gold);
-      font-size: 0.92rem;
-    }
-
-    .card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.45;
-    }
-
-    .receipt {
-      margin: 16px 0 0;
-      padding: 14px;
-      overflow: auto;
-      border-radius: 18px;
-      color: rgba(238, 246, 255, 0.72);
-      font-size: 0.78rem;
-      white-space: pre-wrap;
-    }
-
-    @media (max-width: 860px) {
-      .hero { grid-template-columns: 1fr; }
-      .grid { grid-template-columns: 1fr; }
-      .topbar { align-items: stretch; flex-direction: column; }
+    @media (max-width:860px) {
+      .hero,.grid { grid-template-columns:1fr; }
+      .topbar { flex-direction:column; }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#hearth-main">Skip to Hearth</a>
-
   <div class="shell">
     <header class="topbar">
-      <a class="brand" href="/">
-        <span class="mark">H</span>
-        <span>Diamond Gate Bridge · Hearth</span>
-      </a>
-
+      <a class="brand" href="/"><span class="mark">H</span><span>Diamond Gate Bridge · Hearth</span></a>
       <nav class="nav" aria-label="Hearth route navigation">
         <a href="/">Compass</a>
         <a href="/showroom/globe/">Globe Split</a>
@@ -330,18 +127,17 @@
     <main id="hearth-main">
       <section class="hero" aria-labelledby="hearth-title">
         <div>
-          <div class="eyebrow">Hearth · G2 Control Preservation · Hard Renewal</div>
+          <div class="eyebrow">Hearth · Seven Body Mass Formation · Hard Renewal</div>
           <h1 id="hearth-title">Hearth</h1>
           <p class="lede">
-            Hearth remains a habitable-forming coherent baseline. This renewal forces the route to boot
-            the G2 control-preservation chain so drag, spin, and north/south pole-swivel inspection are
-            applied as the active served model.
+            Hearth now forces the seven-body-mass formation contract as the active served model:
+            one North Crown mass, one Equatorial Great Mass, and five methodically disposed secondary masses.
+            Pole swivel and drag remain active.
           </p>
-          <span class="badge">Pole Swivel · Active Renewal</span>
+          <span class="badge">7 Body Masses · Active Renewal</span>
 
           <div class="actions">
             <a class="button primary" href="/showroom/globe/">Return to Globe Split</a>
-            <a class="button" href="/showroom/globe/earth/">Inspect Earth</a>
             <a class="button" href="/showroom/globe/audralia/">Inspect Audralia</a>
             <a class="button" href="/gauges/">Run Gauges</a>
           </div>
@@ -350,64 +146,38 @@
         <section
           id="hearthCanvasMount"
           data-hearth-canvas-mount="true"
-          data-hearth-generation-baseline="G1-coherent-achieved"
-          data-hearth-current-phase="G2-control-preservation"
+          data-hearth-seven-body-mass-formation="true"
+          data-hearth-body-mass-count="7"
           data-hearth-pole-swivel="true"
-          data-hearth-hard-renewal-key="hearth-g2-free-drag-pole-swivel-hard-renewal-v2"
-          data-hearth-assets-boundary-expression="true"
-          data-hearth-assets-adopt-authority="false"
-          data-hearth-assets-absorbs-authority="false"
-          data-hearth-runtime-locked="true"
-          data-hearth-pointer-events-blocked="false"
-          data-hearth-touch-action="none"
-          data-hearth-required-failure="false"
-          data-hearth-route-error-message=""
-          aria-label="Hearth G2 pole-swivel canvas mount"
+          aria-label="Hearth seven-body-mass canvas mount"
         >
-          <span
-            data-hearth-mount-fallback="true"
-            style="position:absolute;inset:0;display:grid;place-items:center;color:rgba(238,246,255,.68);font-weight:800;text-align:center;padding:20px;"
-          >
-            Hearth G2 pole-swivel hard-renewal chain loading.
+          <span data-hearth-mount-fallback="true" style="position:absolute;inset:0;display:grid;place-items:center;color:rgba(238,246,255,.68);font-weight:800;text-align:center;padding:20px;">
+            Hearth seven-body-mass hard-renewal chain loading.
           </span>
         </section>
       </section>
 
-      <section class="grid" aria-label="Hearth G2 control-preservation authority chain">
-        <article class="card">
-          <h2>Runtime</h2>
-          <p>Motion authority remains protected. Runtime is not rewritten in this renewal.</p>
-        </article>
-
-        <article class="card">
-          <h2>Controls</h2>
-          <p>Controls own drag, spin, finger sensitivity, and north/south pole-swivel inspection.</p>
-        </article>
-
-        <article class="card">
-          <h2>Canvas</h2>
-          <p>Canvas consumes runtime state plus inspection tilt. It draws but does not own motion.</p>
-        </article>
+      <section class="grid" aria-label="Hearth seven body mass definition">
+        <article class="card"><h2>North Crown</h2><p>One polar body mass anchors the north.</p></article>
+        <article class="card"><h2>Equatorial Great Mass</h2><p>One large mass crosses the equator and carries the primary habitable read.</p></article>
+        <article class="card"><h2>Five Secondary Masses</h2><p>Five methodically disposed bodies prevent the old two-body read.</p></article>
       </section>
 
-      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth G2 free drag and pole swivel hard-renewal route preparing.</pre>
+      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth seven-body-mass hard-renewal route preparing.</pre>
 
-      <pre class="receipt">HEARTH_G2_FREE_DRAG_POLE_SWIVEL_HARD_RENEWAL_HTML_TNT_v2
+      <pre class="receipt">HEARTH_G2_SEVEN_BODY_MASS_HARD_RENEWAL_HTML_TNT_v3
 route=/showroom/globe/hearth/
-controller=HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_ROUTE_TNT_v2
-previous_controller=HEARTH_HABITABLE_FORMING_ROUTE_CONTROLLER_TNT_v1
-boot_key=hearth-g2-free-drag-pole-swivel-hard-renewal-v2
-controls=HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_CONTROLS_TNT_v1
-canvas=HEARTH_G2_CANVAS_POLE_SWIVEL_PRESERVATION_CONSUMER_TNT_v1
-runtime_motion_only=true
-assets_protected=true
-assets_absorb_authority=false
+controller=HEARTH_G2_SEVEN_BODY_MASS_HARD_RENEWAL_ROUTE_TNT_v3
+assets=HEARTH_G2_SEVEN_BODY_MASS_FORMATION_ASSETS_TNT_v2
+controls=HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_CONTROLS_TNT_v2
+canvas=HEARTH_G2_CANVAS_POLE_SWIVEL_SEVEN_BODY_CONSUMER_TNT_v2
+body_mass_count=7
 generated_image=false
 graphic_box=false
 visual_pass_claimed=false</pre>
     </main>
   </div>
 
-  <script src="./index.js?v=hearth-g2-free-drag-pole-swivel-hard-renewal-v2"></script>
+  <script src="./index.js?v=hearth-g2-seven-body-mass-hard-renewal-v3"></script>
 </body>
 </html>

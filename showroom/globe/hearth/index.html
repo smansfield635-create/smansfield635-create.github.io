@@ -2,14 +2,13 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-visible-globe-recovery"
+  data-page="hearth-source-aligned-visible-globe"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_VISIBLE_GLOBE_RECOVERY_HTML_TNT_v15"
+  data-contract="HEARTH_SOURCE_ALIGNED_VISIBLE_GLOBE_HTML_TNT_v17"
   data-body="hearth"
-  data-generation-baseline="G2-seven-body-mass-formation"
-  data-current-phase="visible-globe-recovery"
   data-active-route-file="/showroom/globe/hearth/hearth.climate.route.js"
-  data-visible-recovery-mounted="true"
+  data-source-aligned="true"
+  data-visible-globe-recovery="true"
   data-hard-child-failure-blanks-globe="false"
   data-body-mass-count="7"
   data-pole-swivel="true"
@@ -20,11 +19,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Hearth Visible Globe Recovery</title>
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Diamond Gate Bridge · Hearth Visible Globe</title>
+
   <style>
     :root {
       --bg:#030914;
-      --panel:rgba(7,16,30,.84);
       --line:rgba(231,188,105,.34);
       --gold:#e7bc69;
       --text:#eef6ff;
@@ -44,8 +46,15 @@
       font-family:Inter,system-ui,sans-serif;
     }
 
-    body { margin:0; min-height:100vh; }
-    a { color:inherit; text-decoration:none; }
+    body {
+      margin:0;
+      min-height:100vh;
+    }
+
+    a {
+      color:inherit;
+      text-decoration:none;
+    }
 
     .shell {
       width:min(1120px,calc(100% - 28px));
@@ -53,7 +62,11 @@
       padding:22px 0 42px;
     }
 
-    .topbar,.nav,.card,#hearthCanvasMount,.receipt {
+    .topbar,
+    .nav,
+    .card,
+    #hearthCanvasMount,
+    .receipt {
       border:1px solid var(--line);
       background:linear-gradient(180deg,rgba(9,22,41,.88),rgba(4,10,20,.78));
       box-shadow:0 22px 70px rgba(0,0,0,.38);
@@ -242,8 +255,14 @@
     }
 
     @media (max-width:860px) {
-      .hero,.grid { grid-template-columns:1fr; }
-      .topbar { flex-direction:column; }
+      .hero,
+      .grid {
+        grid-template-columns:1fr;
+      }
+
+      .topbar {
+        flex-direction:column;
+      }
     }
   </style>
 </head>
@@ -265,12 +284,13 @@
     <main id="hearth-main">
       <section class="hero" aria-labelledby="hearth-title">
         <div>
-          <div class="eyebrow">Hearth · Visible Globe Recovery</div>
+          <div class="eyebrow">Hearth · Source Aligned · Visible Globe</div>
           <h1 id="hearth-title">Hearth</h1>
           <p class="lede">
-            Hearth now prioritizes a visible, draggable globe. Child-file validation is still audited, but a stale or missing child contract can no longer blank the globe.
+            Hearth is source-aligned to the active route file. The globe renders first. Climate, terrain, assets, and legacy contracts cannot blank the mount.
           </p>
-          <span class="badge">Visible Globe · Recovery Route</span>
+
+          <span class="badge">Visible Globe · v17 Source Alignment</span>
 
           <div class="actions">
             <a class="button primary" href="/showroom/globe/">Return to Globe Split</a>
@@ -282,43 +302,134 @@
         <section
           id="hearthCanvasMount"
           data-hearth-canvas-mount="true"
-          data-hearth-active-route-file="/showroom/globe/hearth/hearth.climate.route.js"
-          data-hearth-visible-recovery-mounted="true"
-          data-hearth-hard-child-failure-blanks-globe="false"
-          data-hearth-body-mass-count="7"
-          data-hearth-pole-swivel="true"
-          aria-label="Hearth visible globe recovery canvas mount"
+          data-hearth-visible-recovery="true"
+          data-hearth-source-aligned="true"
+          data-hearth-route-file="/showroom/globe/hearth/hearth.climate.route.js"
+          aria-label="Hearth source-aligned visible globe canvas mount"
         >
           <span data-hearth-mount-fallback="true" style="position:absolute;inset:0;display:grid;place-items:center;color:rgba(238,246,255,.68);font-weight:800;text-align:center;padding:20px;">
-            Hearth visible-globe recovery route loading.
+            Hearth source-aligned visible globe loading.
           </span>
         </section>
       </section>
 
-      <section class="grid" aria-label="Hearth visible globe recovery system">
-        <article class="card"><h2>Visible Globe First</h2><p>The route mounts a live code-rendered Hearth globe immediately.</p></article>
-        <article class="card"><h2>Child Failure Contained</h2><p>Runtime, controls, terrain, elevation, climate, assets, and canvas are audited without blanking the mount.</p></article>
-        <article class="card"><h2>Drag + Swivel</h2><p>Horizontal drag rotates the world. Vertical drag swivels pole inspection.</p></article>
+      <section class="grid" aria-label="Hearth source-aligned visible globe system">
+        <article class="card">
+          <h2>One Active Route</h2>
+          <p>The page boots only /showroom/globe/hearth/hearth.climate.route.js.</p>
+        </article>
+
+        <article class="card">
+          <h2>Visible Globe First</h2>
+          <p>The globe mounts before any child contract can block rendering.</p>
+        </article>
+
+        <article class="card">
+          <h2>Legacy Contained</h2>
+          <p>Old route contracts are cleared from the browser runtime before v17 starts.</p>
+        </article>
       </section>
 
-      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth visible-globe recovery route preparing.</pre>
+      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth source-aligned visible globe preparing.</pre>
 
-      <pre class="receipt">HEARTH_VISIBLE_GLOBE_RECOVERY_HTML_TNT_v15
+      <pre class="receipt">HEARTH_SOURCE_ALIGNED_VISIBLE_GLOBE_HTML_TNT_v17
 route=/showroom/globe/hearth/
 active_route_file=/showroom/globe/hearth/hearth.climate.route.js
-controller=HEARTH_VISIBLE_GLOBE_RECOVERY_ROUTE_TNT_v15
-visible_globe_mounted=true
-recovery_renderer=true
+controller=HEARTH_SOURCE_ALIGNED_VISIBLE_GLOBE_ROUTE_TNT_v17
+visible_globe_recovery=true
+single_active_route=true
 hard_child_failure_blanks_globe=false
 body_mass_count=7
 pole_swivel=true
-runtime_blocking_disabled=true
 generated_image=false
 graphic_box=false
 visual_pass_claimed=false</pre>
     </main>
   </div>
 
-  <script src="./hearth.climate.route.js?v=hearth-visible-globe-recovery-v15"></script>
+  <script>
+    (() => {
+      "use strict";
+
+      const ROUTE = "./hearth.climate.route.js";
+      const KEY = "hearth-source-aligned-visible-globe-v17";
+      const node = document.getElementById("hearth-route-status");
+
+      function write(text) {
+        if (node) node.textContent = text;
+      }
+
+      function dispose(name) {
+        try {
+          if (typeof window[name] === "function") window[name]();
+        } catch (_) {}
+
+        try {
+          window[name] = undefined;
+          delete window[name];
+        } catch (_) {}
+      }
+
+      [
+        "__HEARTH_G4_ROUTE_DISPOSE__",
+        "__HEARTH_HABITABLE_FORMING_ROUTE_DISPOSE__",
+        "__HEARTH_CONTROLS_DISPOSE__",
+        "__HEARTH_CANVAS_DISPOSE__",
+        "__HEARTH_VISIBLE_RECOVERY_DISPOSE__"
+      ].forEach(dispose);
+
+      [
+        "HEARTH_RUNTIME",
+        "HEARTH_CONTROLS",
+        "HEARTH_TERRAIN_EXTENSION",
+        "HEARTH_ELEVATION",
+        "HEARTH_CLIMATE",
+        "HEARTH_ASSETS",
+        "HEARTH_CANVAS",
+        "__HEARTH_ACTIVE_ROUTE_FILE__",
+        "__HEARTH_ACTIVE_ROUTE_CONTRACT__"
+      ].forEach((name) => {
+        try {
+          window[name] = undefined;
+          delete window[name];
+        } catch (_) {}
+      });
+
+      document.querySelectorAll([
+        'script[src*="./index.js"]',
+        'script[src*="/showroom/globe/hearth/index.js"]',
+        'script[src*="hearth.visible.recovery.v16.js"]',
+        'script[src*="hearth.climate.route.js"]',
+        'script[data-hearth-file="true"]'
+      ].join(",")).forEach((script) => script.remove());
+
+      write([
+        "Hearth source alignment running.",
+        "Cleared legacy route globals.",
+        "Loading /showroom/globe/hearth/hearth.climate.route.js as the single active route.",
+        "Generated image false",
+        "GraphicBox false",
+        "Visual pass claimed false"
+      ].join("\n"));
+
+      const script = document.createElement("script");
+      script.src = `${ROUTE}?v=${KEY}-${Date.now()}`;
+      script.defer = true;
+      script.dataset.hearthFile = "true";
+      script.dataset.hearthFileRole = "source-aligned-visible-globe-v17";
+
+      script.onerror = () => {
+        write([
+          "Hearth source-aligned route failed to load.",
+          `Route ${script.src}`,
+          "Generated image false",
+          "GraphicBox false",
+          "Visual pass claimed false"
+        ].join("\n"));
+      };
+
+      document.head.appendChild(script);
+    })();
+  </script>
 </body>
 </html>

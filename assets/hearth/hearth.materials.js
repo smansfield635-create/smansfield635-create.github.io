@@ -1,19 +1,25 @@
 // /assets/hearth/hearth.materials.js
-// HEARTH_PARENT_ALIGNED_TERRAIN_MATERIALS_TNT_v5
+// HEARTH_NATURAL_TERRAIN_MATERIAL_REFINEMENT_TNT_v6
 // Full-file replacement.
 // Materials authority only.
 // Consumes HEARTH_COMPOSITION and HEARTH_HYDROLOGY when available.
-// Owns visible terrain surface: grass, dry grass, wet grass, mud, marsh ground, swamp ground, dirt, clay, sand, rock, mountain stone, cliff shadow, snow/ice, shelves, ocean depth.
+// Purpose:
+// - Reduce blue river guide-line artifacts.
+// - Make hydrology express as wet ground, marsh, swamp, lake edges, basin moisture, erosion, and subtle shallow water.
+// - Soften coast shelf glow.
+// - Reduce patchy circular land interiors.
+// - Increase believable grass/dirt/rock/mountain/mud transitions.
+// - Preserve target land ratio near 30%.
 // No trees. No bushes. No forest canopy. No animal/life topology.
 // No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_PARENT_ALIGNED_TERRAIN_MATERIALS_TNT_v5";
-  const RECEIPT = "HEARTH_PARENT_ALIGNED_TERRAIN_MATERIALS_RECEIPT_v5";
-  const PREVIOUS_CONTRACT = "HEARTH_EARTH_RATIO_HYDROLOGY_NINE_WONDERS_TERRAIN_MATERIALS_TNT_v4";
-  const VERSION = "2026-05-10.hearth-parent-aligned-terrain-materials-v5";
+  const CONTRACT = "HEARTH_NATURAL_TERRAIN_MATERIAL_REFINEMENT_TNT_v6";
+  const RECEIPT = "HEARTH_NATURAL_TERRAIN_MATERIAL_REFINEMENT_RECEIPT_v6";
+  const PREVIOUS_CONTRACT = "HEARTH_PARENT_ALIGNED_TERRAIN_MATERIALS_TNT_v5";
+  const VERSION = "2026-05-10.hearth-natural-terrain-material-refinement-v6";
 
   const TAU = Math.PI * 2;
   const DEG = Math.PI / 180;
@@ -54,33 +60,36 @@
 
   const C = Object.freeze({
     abyss: [2, 7, 18],
-    deepOcean: [3, 18, 43],
-    ocean: [5, 45, 82],
-    shelf: [15, 92, 118],
-    shallow: [28, 124, 132],
-    coastFoam: [118, 176, 164],
-    grass: [104, 134, 76],
-    darkGrass: [55, 104, 61],
-    wetGrass: [64, 118, 72],
-    dryGrass: [142, 132, 78],
-    marshGrass: [72, 110, 70],
-    swampMat: [54, 83, 61],
-    mud: [92, 72, 48],
-    peat: [60, 52, 42],
-    silt: [128, 116, 88],
-    dirt: [112, 86, 55],
-    clay: [145, 94, 63],
-    sand: [196, 171, 108],
-    wetSand: [143, 127, 91],
-    rock: [96, 98, 92],
-    mountainStone: [103, 103, 97],
-    granite: [124, 123, 114],
-    slate: [68, 76, 86],
-    marble: [184, 180, 164],
-    cliffShadow: [52, 57, 65],
+    deepOcean: [3, 18, 42],
+    ocean: [5, 42, 78],
+    shelf: [14, 78, 101],
+    shallow: [24, 106, 114],
+    coastFoam: [96, 144, 137],
+
+    grass: [102, 132, 76],
+    darkGrass: [57, 101, 61],
+    wetGrass: [65, 111, 71],
+    dryGrass: [139, 128, 78],
+    marshGrass: [73, 105, 69],
+    swampMat: [54, 79, 59],
+    mud: [89, 70, 48],
+    peat: [58, 51, 42],
+    silt: [123, 112, 87],
+    dirt: [108, 84, 56],
+    clay: [139, 92, 63],
+    sand: [187, 165, 110],
+    wetSand: [132, 120, 91],
+
+    rock: [94, 96, 91],
+    mountainStone: [101, 101, 96],
+    granite: [121, 120, 112],
+    slate: [67, 75, 84],
+    marble: [177, 173, 158],
+    cliffShadow: [51, 56, 64],
     basalt: [43, 48, 56],
-    snow: [214, 226, 224],
-    ice: [188, 216, 226]
+
+    snow: [209, 223, 222],
+    ice: [181, 209, 220]
   });
 
   function clamp(value, min, max) {
@@ -142,10 +151,12 @@
     const s = Math.max(1, Math.floor(scale));
     const x = wrap01(u) * s;
     const y = clamp(v, 0, 1) * s;
+
     const x0 = Math.floor(x);
     const y0 = Math.floor(y);
     const x1 = x0 + 1;
     const y1 = y0 + 1;
+
     const xf = x - x0;
     const yf = y - y0;
     const sx = xf * xf * (3 - 2 * xf);
@@ -191,7 +202,7 @@
     return total / Math.max(0.000001, norm);
   }
 
-  function domainWarp(u, v, seed, strength = 0.022) {
+  function domainWarp(u, v, seed, strength = 0.02) {
     const a = fbm(u + 0.17, v - 0.11, seed + 17, 4) - 0.5;
     const b = fbm(u - 0.13, v + 0.19, seed + 31, 4) - 0.5;
 
@@ -269,8 +280,8 @@
 
   function reliefField(u, v, land) {
     const seed = land.body.seed;
-    const w1 = domainWarp(u + seed * 0.00013, v - seed * 0.00011, 51000 + seed, 0.036);
-    const w2 = domainWarp(u - seed * 0.00017, v + seed * 0.00009, 52000 + seed, 0.022);
+    const w1 = domainWarp(u + seed * 0.00013, v - seed * 0.00011, 51000 + seed, 0.034);
+    const w2 = domainWarp(u - seed * 0.00017, v + seed * 0.00009, 52000 + seed, 0.02);
 
     const ridgeLong = ridged(w1.u * 0.92 + 0.03, w1.v * 1.08 - 0.02, 53000 + seed, 5);
     const ridgeBroken = ridged(w2.u * 1.7 - 0.09, w2.v * 1.35 + 0.07, 54000 + seed, 4);
@@ -308,17 +319,22 @@
     return best;
   }
 
-  function fallbackHydrology(u, v, land, relief) {
+  function fallbackHydrology(land, relief) {
     return Object.freeze({
       inlandWater: 0,
+      lakeType: "",
+      lakeKey: "",
+      lakeShore: 0,
       river: 0,
       stream: 0,
       brook: 0,
-      marsh: clamp(relief.basin * 0.22, 0, 1),
-      swamp: clamp(relief.basin * 0.12, 0, 1),
-      wetGround: clamp(relief.basin * 0.25 + land.coast * 0.08, 0, 1),
+      channelCorridor: 0,
+      erosionCorridor: 0,
+      marsh: clamp(relief.basin * 0.2, 0, 1),
+      swamp: clamp(relief.basin * 0.1, 0, 1),
+      wetGround: clamp(relief.basin * 0.24 + land.coast * 0.06, 0, 1),
       visibleWaterCore: 0,
-      lakeType: ""
+      visibleBlueLineSuppressed: true
     });
   }
 
@@ -335,7 +351,7 @@
       });
     }
 
-    return fallbackHydrology(u, v, land, relief);
+    return fallbackHydrology(land, relief);
   }
 
   function sampleComposition(u, v, relief, wonder) {
@@ -353,7 +369,7 @@
 
   function tintByComposition(color, composition) {
     if (window.HEARTH_COMPOSITION && typeof window.HEARTH_COMPOSITION.tintTerrain === "function") {
-      return window.HEARTH_COMPOSITION.tintTerrain(color, composition, 0.055);
+      return window.HEARTH_COMPOSITION.tintTerrain(color, composition, 0.048);
     }
 
     return color;
@@ -365,7 +381,7 @@
     const temperature = clamp(
       1 -
         latitudeCold * 0.92 +
-        (fbm(u + 0.07, v - 0.09, 61000, 4) - 0.5) * 0.22 -
+        (fbm(u + 0.07, v - 0.09, 61000, 4) - 0.5) * 0.18 -
         relief.mountain * 0.26 -
         relief.elevation * 0.12,
       0,
@@ -373,52 +389,59 @@
     );
 
     const moisture = clamp(
-      fbm(u - 0.18, v + 0.12, 62000, 5) * 0.52 +
-        land.coast * 0.15 +
-        hydro.wetGround * 0.35 +
-        relief.basin * 0.14 +
-        (land.island ? 0.06 : 0) -
+      fbm(u - 0.18, v + 0.12, 62000, 5) * 0.48 +
+        land.coast * 0.12 +
+        hydro.wetGround * 0.4 +
+        relief.basin * 0.12 +
+        (land.island ? 0.05 : 0) -
         relief.mountain * 0.1 -
-        temperature * 0.07,
+        temperature * 0.06,
       0,
       1
     );
 
-    const dry = clamp((1 - moisture) * 0.72 + temperature * 0.3 - land.coast * 0.12, 0, 1);
+    const dry = clamp((1 - moisture) * 0.72 + temperature * 0.3 - land.coast * 0.1, 0, 1);
     const snow = smoothstep(0.65, 0.96, latitudeCold + relief.mountain * 0.24 - temperature * 0.11);
 
     let color = C.grass;
 
-    color = mix(color, C.darkGrass, smoothstep(0.55, 0.88, moisture) * 0.42);
-    color = mix(color, C.wetGrass, hydro.wetGround * 0.35);
-    color = mix(color, C.marshGrass, hydro.marsh * 0.58);
-    color = mix(color, C.swampMat, hydro.swamp * 0.64);
-    color = mix(color, C.mud, hydro.wetGround * relief.basin * 0.48);
-    color = mix(color, C.peat, hydro.swamp * 0.28);
-    color = mix(color, C.dryGrass, smoothstep(0.38, 0.78, dry) * 0.48);
-    color = mix(color, C.dirt, smoothstep(0.52, 0.9, dry) * 0.32);
-    color = mix(color, C.clay, smoothstep(0.66, 0.94, dry) * 0.18);
-    color = mix(color, C.sand, land.coast * 0.14);
-    color = mix(color, C.rock, relief.foothill * 0.22);
-    color = mix(color, C.mountainStone, relief.mountain * 0.42);
-    color = mix(color, C.granite, relief.mountain * 0.22);
-    color = mix(color, C.cliffShadow, relief.cliff * 0.32);
-    color = mix(color, C.slate, relief.fjordCut * 0.22);
+    color = mix(color, C.darkGrass, smoothstep(0.58, 0.9, moisture) * 0.32);
+    color = mix(color, C.wetGrass, hydro.wetGround * 0.3);
+    color = mix(color, C.marshGrass, hydro.marsh * 0.5);
+    color = mix(color, C.swampMat, hydro.swamp * 0.58);
+    color = mix(color, C.mud, hydro.wetGround * relief.basin * 0.44);
+    color = mix(color, C.peat, hydro.swamp * 0.24);
 
-    if (wonder.kind === "fjord-cliff") color = mix(color, C.slate, wonder.pressure * relief.cliff * 0.28);
-    if (wonder.kind === "marble-plateau") color = mix(color, C.marble, wonder.pressure * relief.foothill * 0.22);
-    if (wonder.kind === "cliff-wall") color = mix(color, C.granite, wonder.pressure * relief.mountain * 0.3);
-    if (wonder.kind === "marsh-swamp") color = mix(color, C.marshGrass, wonder.pressure * hydro.wetGround * 0.28);
-    if (wonder.kind === "polar-glacial") color = mix(color, C.ice, wonder.pressure * snow * 0.3);
+    color = mix(color, C.dryGrass, smoothstep(0.42, 0.8, dry) * 0.42);
+    color = mix(color, C.dirt, smoothstep(0.56, 0.91, dry) * 0.28);
+    color = mix(color, C.clay, smoothstep(0.68, 0.95, dry) * 0.15);
+    color = mix(color, C.sand, land.coast * 0.105);
 
-    color = mix(color, C.ice, snow * 0.45);
-    color = mix(color, C.snow, snow * relief.mountain * 0.28);
+    color = mix(color, C.rock, relief.foothill * 0.2);
+    color = mix(color, C.mountainStone, relief.mountain * 0.38);
+    color = mix(color, C.granite, relief.mountain * 0.2);
+    color = mix(color, C.cliffShadow, relief.cliff * 0.28);
+    color = mix(color, C.slate, relief.fjordCut * 0.18);
 
-    const fineGrain = (fbm(u * 2.7 + 0.11, v * 2.4 - 0.07, 81000, 4) - 0.5) * 7;
-    const mineralGrain = (ridged(u * 1.8 - 0.14, v * 1.7 + 0.09, 82000, 4) - 0.5) * 5;
-    const reliefLight = relief.mountain * 10 + relief.foothill * 5 - relief.basin * 6 - relief.cliff * 10;
+    color = mix(color, C.mud, hydro.channelCorridor * 0.16);
+    color = mix(color, C.wetGrass, hydro.channelCorridor * 0.11);
+    color = mix(color, C.cliffShadow, hydro.erosionCorridor * 0.08);
 
-    color = shade(color, fineGrain + mineralGrain + reliefLight - 3);
+    if (wonder.kind === "fjord-cliff") color = mix(color, C.slate, wonder.pressure * relief.cliff * 0.24);
+    if (wonder.kind === "marble-plateau") color = mix(color, C.marble, wonder.pressure * relief.foothill * 0.18);
+    if (wonder.kind === "cliff-wall") color = mix(color, C.granite, wonder.pressure * relief.mountain * 0.25);
+    if (wonder.kind === "marsh-swamp") color = mix(color, C.marshGrass, wonder.pressure * hydro.wetGround * 0.24);
+    if (wonder.kind === "polar-glacial") color = mix(color, C.ice, wonder.pressure * snow * 0.26);
+
+    color = mix(color, C.ice, snow * 0.4);
+    color = mix(color, C.snow, snow * relief.mountain * 0.24);
+
+    const broadVariation = (fbm(u * 1.35 + 0.11, v * 1.25 - 0.07, 80000, 5) - 0.5) * 4;
+    const fineGrain = (fbm(u * 3.2 + 0.17, v * 2.9 - 0.19, 81000, 4) - 0.5) * 5;
+    const mineralGrain = (ridged(u * 1.8 - 0.14, v * 1.7 + 0.09, 82000, 4) - 0.5) * 4;
+    const reliefLight = relief.mountain * 9 + relief.foothill * 4 - relief.basin * 5 - relief.cliff * 8 - hydro.erosionCorridor * 2;
+
+    color = shade(color, broadVariation + fineGrain + mineralGrain + reliefLight - 2);
     color = tintByComposition(color, composition);
 
     return color;
@@ -426,29 +449,23 @@
 
   function waterColor(u, v, land, hydro) {
     if (hydro.inlandWater > 0.52) {
-      let inland = mix(C.ocean, C.shelf, 0.36);
+      let inland = mix(C.ocean, C.shelf, 0.28);
 
-      if (hydro.lakeType === "great-lake") inland = mix(C.ocean, C.shelf, 0.34);
-      if (hydro.lakeType === "inland-lake") inland = mix(C.deepOcean, C.ocean, 0.54);
-      if (hydro.lakeType === "marsh-lake") inland = mix(C.shelf, C.swampMat, 0.18);
-      if (hydro.lakeType === "glacial-lake") inland = mix(C.ice, C.ocean, 0.38);
+      if (hydro.lakeType === "great-lake") inland = mix(C.ocean, C.shelf, 0.28);
+      if (hydro.lakeType === "inland-lake") inland = mix(C.deepOcean, C.ocean, 0.48);
+      if (hydro.lakeType === "marsh-lake") inland = mix(C.shelf, C.swampMat, 0.14);
+      if (hydro.lakeType === "glacial-lake") inland = mix(C.ice, C.ocean, 0.34);
 
-      return mix(inland, C.coastFoam, land.coast * 0.055);
+      return mix(inland, C.coastFoam, hydro.lakeShore * 0.045);
     }
 
-    const channel = Math.max(hydro.river, hydro.stream * 0.82, hydro.brook * 0.62);
+    let water = mix(C.abyss, C.deepOcean, fbm(u * 1.25 + 0.05, v * 1.15 - 0.04, 91000, 4));
+    water = mix(water, C.ocean, smoothstep(0.1, 0.84, fbm(u * 2.1 - 0.17, v * 1.7 + 0.09, 92000, 4)) * 0.2);
+    water = mix(water, C.shelf, land.shelf * 0.28);
+    water = mix(water, C.shallow, land.shelf * land.coast * 0.09);
+    water = mix(water, C.coastFoam, land.shelf * land.coast * 0.028);
 
-    if (channel > 0.58) {
-      return mix(C.shelf, C.shallow, channel * 0.28);
-    }
-
-    let water = mix(C.abyss, C.deepOcean, fbm(u * 1.3 + 0.05, v * 1.2 - 0.04, 91000, 4));
-    water = mix(water, C.ocean, smoothstep(0.1, 0.84, fbm(u * 2.1 - 0.17, v * 1.7 + 0.09, 92000, 4)) * 0.24);
-    water = mix(water, C.shelf, land.shelf * 0.36);
-    water = mix(water, C.shallow, land.shelf * land.coast * 0.14);
-    water = mix(water, C.coastFoam, land.shelf * land.coast * 0.045);
-
-    return shade(water, (noise(u, v, 150, 93000) - 0.5) * 3);
+    return shade(water, (noise(u, v, 120, 93000) - 0.5) * 2.4);
   }
 
   function sampleMaterial(u, v) {
@@ -458,7 +475,7 @@
     const wonder = wonderField(land.lon, land.lat);
     const composition = sampleComposition(u, v, relief, wonder);
 
-    if (!land.isLand || hydro.inlandWater > 0.52 || hydro.river > 0.62 || hydro.stream > 0.68 || hydro.brook > 0.74) {
+    if (!land.isLand || hydro.inlandWater > 0.52) {
       return waterColor(u, v, land, hydro);
     }
 
@@ -500,6 +517,9 @@
     canvas.dataset.hearthConsumesHydrology = String(Boolean(window.HEARTH_HYDROLOGY));
     canvas.dataset.hearthParentAligned = "true";
     canvas.dataset.hearthTargetLandRatio = "0.30";
+    canvas.dataset.hearthVisibleBlueLineSuppressed = "true";
+    canvas.dataset.hearthShelfGlowSoftened = "true";
+    canvas.dataset.hearthTerrainInteriorRefined = "true";
     canvas.dataset.hearthNoTrees = "true";
     canvas.dataset.hearthNoBushes = "true";
     canvas.dataset.hearthNoForestCanopy = "true";
@@ -522,6 +542,10 @@
       parentAligned: true,
       targetLandRatio: 0.3,
       earthReferenceLandRatio: 0.29,
+      visibleBlueLineSuppressed: true,
+      shelfGlowSoftened: true,
+      terrainInteriorRefined: true,
+      hydrologyRenderedAsWetGroundFirst: true,
       vegetationTopologyHeld: true,
       noTrees: true,
       noBushes: true,
@@ -553,6 +577,9 @@
   document.documentElement.dataset.hearthParentAlignedMaterials = "true";
   document.documentElement.dataset.hearthConsumesComposition = String(Boolean(window.HEARTH_COMPOSITION));
   document.documentElement.dataset.hearthConsumesHydrology = String(Boolean(window.HEARTH_HYDROLOGY));
+  document.documentElement.dataset.hearthVisibleBlueLineSuppressed = "true";
+  document.documentElement.dataset.hearthShelfGlowSoftened = "true";
+  document.documentElement.dataset.hearthTerrainInteriorRefined = "true";
   document.documentElement.dataset.hearthNoTrees = "true";
   document.documentElement.dataset.hearthNoBushes = "true";
   document.documentElement.dataset.hearthNoForestCanopy = "true";

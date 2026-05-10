@@ -1,14 +1,21 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_V18_TERRAIN_FIVE_FINGER_ROUTE_CONTROLLER_TNT_v1
+// AUDRALIA_G2_4_SOURCE_ALIGNMENT_ROUTE_CONTROLLER_TNT_v1
+// Full-file replacement.
 // Route doorway authority only.
-// Adds terrain five-finger proof to the V18 route chain.
-// Route imports, verifies, mounts, and reports.
-// Route does not draw Audralia. Route does not own runtime motion.
+// Expanded renewal from stale V18 live route:
+// - Renews cache key.
+// - Expects G2.4 terrain/assets contracts.
+// - Imports, verifies, mounts, and reports.
+// - Route does not draw Audralia.
+// - Route does not own runtime motion.
+// - Route does not own terrain truth.
+// - No GraphicBox. No generated image. No visual-pass claim.
 
-const ROUTE_RECEIPT = "AUDRALIA_V18_TERRAIN_FIVE_FINGER_ROUTE_CONTROLLER_TNT_v1";
-const HTML_RECEIPT = "AUDRALIA_V18_ROUTE_CHAIN_AND_ASSET_BOUNDARY_HTML_TNT_v1";
-const PREVIOUS_ROUTE_RECEIPT = "AUDRALIA_V18_ROUTE_CHAIN_AND_ASSET_BOUNDARY_CONTROLLER_TNT_v1";
-const CACHE_KEY = "audralia-v18-terrain-five-finger-reexpression";
+const ROUTE_CONTRACT = "AUDRALIA_G2_4_SOURCE_ALIGNMENT_ROUTE_CONTROLLER_TNT_v1";
+const ROUTE_RECEIPT = "AUDRALIA_G2_4_SOURCE_ALIGNMENT_ROUTE_RECEIPT";
+const HTML_RECEIPT = "AUDRALIA_V18_FIVE_FINGER_TERRAIN_BASELINE_HTML_TNT_v1";
+const PREVIOUS_ROUTE_CONTRACT = "AUDRALIA_V18_TERRAIN_FIVE_FINGER_ROUTE_CONTROLLER_TNT_v1";
+const CACHE_KEY = "audralia-g2-4-source-alignment-formation-delta-renewal";
 
 const PATHS = Object.freeze({
   runtime: "/assets/audralia/audralia.runtime.js",
@@ -25,22 +32,26 @@ const EXPECTED = Object.freeze({
   surface: "AUDRALIA_SURFACE_PARENT_COASTLINE_RIDGE_FEATHER_TNT_v6",
   hexSurface: "AUDRALIA_HEX_SURFACE_CHILD_GRANDCHILD_RELIEF_BIND_TNT_v4",
   reliefSurface: "AUDRALIA_GRANDCHILD_RELIEF_FIELD_EXPRESSOR_TNT_v1",
-  terrainFingers: "AUDRALIA_V18_TERRAIN_FIVE_FINGER_REEXPRESSION_TNT_v1",
-  assets: "AUDRALIA_V18_ASSET_BOUNDARY_FIVE_FINGER_EXPRESSION_AUTHORITY_TNT_v2",
+  terrainFingers: "AUDRALIA_G2_4_TERRAIN_FORMATION_DELTA_TNT_v1",
+  assets: "AUDRALIA_G2_4_ASSET_FORMATION_MATERIAL_DELTA_TNT_v1",
   canvas: "AUDRALIA_V18_CANVAS_ASSET_BOUNDARY_CONSUMER_TNT_v1"
 });
 
 const ROUTE_STATE = {
   ok: false,
+  contract: ROUTE_CONTRACT,
   receipt: ROUTE_RECEIPT,
   htmlReceipt: HTML_RECEIPT,
-  previousRouteReceipt: PREVIOUS_ROUTE_RECEIPT,
+  previousRouteContract: PREVIOUS_ROUTE_CONTRACT,
   route: "/showroom/globe/audralia/",
-  version: "V18.five-finger-terrain",
+  generation: "G2.4",
+  cacheKey: CACHE_KEY,
   mountFound: false,
   statusNodeFound: false,
   imported: {},
+  contracts: {},
   receipts: {},
+  expected: EXPECTED,
   canvasMounted: false,
   canvasFound: false,
   terrainFingersLoaded: false,
@@ -49,10 +60,15 @@ const ROUTE_STATE = {
   runtimeMotionOnly: true,
   assetsAbsorbAuthority: false,
   terrainFiveFingers: true,
+  sourceAlignmentRenewed: true,
+  formationDeltaRenewed: true,
+  shelfAttenuationRenewed: true,
+  reliefFieldRenewed: true,
   generatedImage: false,
   graphicBox: false,
   visualPassClaimed: false,
   errors: [],
+  warnings: [],
   lastUpdated: ""
 };
 
@@ -110,8 +126,8 @@ function safe(fn, fallback = null) {
   }
 }
 
-function moduleReceipt(module, fallback) {
-  const status =
+function moduleStatus(module) {
+  return (
     safe(() => module.getStatus && module.getStatus(), null) ||
     safe(() => module.getAudraliaCanvasStatus && module.getAudraliaCanvasStatus(), null) ||
     safe(() => module.getAudraliaAssetsStatus && module.getAudraliaAssetsStatus(), null) ||
@@ -123,21 +139,53 @@ function moduleReceipt(module, fallback) {
     module.AUDRALIA_RELIEF_SURFACE_STATUS ||
     module.AUDRALIA_ASSETS_STATUS ||
     module.AUDRALIA_TERRAIN_FINGERS_STATUS ||
-    {};
+    {}
+  );
+}
+
+function moduleContract(module, fallback) {
+  const status = moduleStatus(module);
+
+  return firstText(
+    module.CONTRACT,
+    status.contract,
+    module.default && module.default.contract,
+    fallback
+  );
+}
+
+function moduleReceipt(module, fallback) {
+  const status = moduleStatus(module);
 
   return firstText(
     module.RECEIPT,
-    module.CONTRACT,
+    status.receipt,
     module.AUDRALIA_RUNTIME_RECEIPT_VALUE,
     module.AUDRALIA_SURFACE_RECEIPT_VALUE,
     module.AUDRALIA_HEX_SURFACE_RECEIPT_VALUE,
     module.AUDRALIA_RELIEF_SURFACE_RECEIPT_VALUE,
     module.AUDRALIA_ASSETS_RECEIPT_VALUE,
     module.AUDRALIA_TERRAIN_FINGERS_RECEIPT_VALUE,
-    status.receipt,
-    status.contract,
+    module.default && module.default.receipt,
     fallback
   );
+}
+
+function checkExpected(label, module) {
+  const contract = moduleContract(module, EXPECTED[label]);
+  const receipt = moduleReceipt(module, contract);
+
+  ROUTE_STATE.contracts[label] = contract;
+  ROUTE_STATE.receipts[label] = receipt;
+
+  const expected = EXPECTED[label] || "";
+  const ok = Boolean(contract && expected && contract.includes(expected));
+
+  if (!ok && (label === "terrainFingers" || label === "assets")) {
+    ROUTE_STATE.warnings.push(`${label} contract mismatch: expected ${expected}, got ${contract || "none"}`);
+  }
+
+  return { contract, receipt, ok };
 }
 
 function writeStatus(status = "") {
@@ -146,22 +194,30 @@ function writeStatus(status = "") {
 
   const lines = [
     ROUTE_STATE.ok
-      ? "Audralia V18 five-finger terrain chain aligned."
-      : "Audralia V18 five-finger terrain chain preparing.",
+      ? "Audralia G2.4 source alignment and formation delta ready."
+      : "Audralia G2.4 source alignment and formation delta preparing.",
     `Status ${status || "checking"}`,
-    `Route ${ROUTE_RECEIPT}`,
-    `Previous ${PREVIOUS_ROUTE_RECEIPT}`,
-    `Runtime ${ROUTE_STATE.receipts.runtime || EXPECTED.runtime}`,
-    `Surface ${ROUTE_STATE.receipts.surface || EXPECTED.surface}`,
-    `Hex Surface ${ROUTE_STATE.receipts.hexSurface || EXPECTED.hexSurface}`,
-    `Relief Surface ${ROUTE_STATE.receipts.reliefSurface || EXPECTED.reliefSurface}`,
-    `Terrain Fingers ${ROUTE_STATE.receipts.terrainFingers || EXPECTED.terrainFingers}`,
-    `Assets ${ROUTE_STATE.receipts.assets || EXPECTED.assets}`,
-    `Canvas ${ROUTE_STATE.receipts.canvas || EXPECTED.canvas}`,
+    `Route ${ROUTE_CONTRACT}`,
+    `Route Receipt ${ROUTE_RECEIPT}`,
+    `Previous ${PREVIOUS_ROUTE_CONTRACT}`,
+    `Cache key ${CACHE_KEY}`,
+    `Runtime ${ROUTE_STATE.contracts.runtime || EXPECTED.runtime}`,
+    `Surface ${ROUTE_STATE.contracts.surface || EXPECTED.surface}`,
+    `Hex Surface ${ROUTE_STATE.contracts.hexSurface || EXPECTED.hexSurface}`,
+    `Relief Surface ${ROUTE_STATE.contracts.reliefSurface || EXPECTED.reliefSurface}`,
+    `Terrain Fingers ${ROUTE_STATE.contracts.terrainFingers || EXPECTED.terrainFingers}`,
+    `Terrain Receipt ${ROUTE_STATE.receipts.terrainFingers || "pending"}`,
+    `Assets ${ROUTE_STATE.contracts.assets || EXPECTED.assets}`,
+    `Assets Receipt ${ROUTE_STATE.receipts.assets || "pending"}`,
+    `Canvas ${ROUTE_STATE.contracts.canvas || EXPECTED.canvas}`,
     `Mount found ${ROUTE_STATE.mountFound}`,
     `Canvas mounted ${ROUTE_STATE.canvasMounted}`,
     `Canvas found ${ROUTE_STATE.canvasFound}`,
     `Terrain five fingers true`,
+    `Source alignment renewed true`,
+    `Formation delta renewed true`,
+    `Relief field renewed true`,
+    `Shelf attenuation renewed true`,
     `Assets absorb authority false`,
     `Runtime motion-only true`,
     `GraphicBox false`,
@@ -169,14 +225,24 @@ function writeStatus(status = "") {
     `Visual pass claimed false`
   ];
 
+  if (ROUTE_STATE.warnings.length) {
+    lines.push(`Warnings ${ROUTE_STATE.warnings.slice(-4).join(" | ")}`);
+  }
+
   if (ROUTE_STATE.errors.length) {
     lines.push(`Errors ${ROUTE_STATE.errors.slice(-4).join(" | ")}`);
   }
 
   node.textContent = lines.join("\n");
+  node.dataset.audraliaRouteContract = ROUTE_CONTRACT;
   node.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
   node.dataset.audraliaRouteReady = String(Boolean(ROUTE_STATE.ok));
+  node.dataset.audraliaCacheKey = CACHE_KEY;
   node.dataset.audraliaTerrainFiveFingers = "true";
+  node.dataset.audraliaSourceAlignmentRenewed = "true";
+  node.dataset.audraliaFormationDeltaRenewed = "true";
+  node.dataset.audraliaReliefFieldRenewed = "true";
+  node.dataset.audraliaShelfAttenuationRenewed = "true";
   node.dataset.audraliaAssetsBoundaryExpression = "true";
   node.dataset.audraliaAssetsAbsorbAuthority = "false";
   node.dataset.generatedImage = "false";
@@ -190,12 +256,18 @@ function publish(status = "") {
   ROUTE_STATE.canvasFound = Boolean(resolveCanvas());
   ROUTE_STATE.lastUpdated = new Date().toISOString();
 
+  document.documentElement.dataset.audraliaRouteContract = ROUTE_CONTRACT;
   document.documentElement.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
-  document.documentElement.dataset.audraliaRoutePreviousReceipt = PREVIOUS_ROUTE_RECEIPT;
-  document.documentElement.dataset.audraliaVersion = "V18.five-finger-terrain";
+  document.documentElement.dataset.audraliaRoutePreviousContract = PREVIOUS_ROUTE_CONTRACT;
+  document.documentElement.dataset.audraliaGeneration = "G2.4";
   document.documentElement.dataset.audraliaRouteStatus = status || "checking";
+  document.documentElement.dataset.audraliaCacheKey = CACHE_KEY;
   document.documentElement.dataset.audraliaRuntimeMotionOnly = "true";
   document.documentElement.dataset.audraliaTerrainFiveFingers = "true";
+  document.documentElement.dataset.audraliaSourceAlignmentRenewed = "true";
+  document.documentElement.dataset.audraliaFormationDeltaRenewed = "true";
+  document.documentElement.dataset.audraliaReliefFieldRenewed = "true";
+  document.documentElement.dataset.audraliaShelfAttenuationRenewed = "true";
   document.documentElement.dataset.audraliaAssetsBoundaryExpression = "true";
   document.documentElement.dataset.audraliaAssetsAbsorbAuthority = "false";
   document.documentElement.dataset.generatedImage = "false";
@@ -204,6 +276,7 @@ function publish(status = "") {
 
   window.AUDRALIA_ROUTE_STATUS = ROUTE_STATE;
   window.__AUDRALIA_ROUTE_STATUS__ = ROUTE_STATE;
+  window.AUDRALIA_ROUTE_CONTRACT = ROUTE_CONTRACT;
   window.AUDRALIA_ROUTE_RECEIPT = ROUTE_RECEIPT;
   window.__AUDRALIA_ROUTE_RECEIPT__ = ROUTE_RECEIPT;
 
@@ -220,9 +293,9 @@ async function importModule(label, required = true) {
   const path = PATHS[label];
 
   try {
-    const module = await import(`${path}?v=${encodeURIComponent(CACHE_KEY)}&route=${encodeURIComponent(ROUTE_RECEIPT)}`);
+    const module = await import(`${path}?v=${encodeURIComponent(CACHE_KEY)}&route=${encodeURIComponent(ROUTE_CONTRACT)}&role=${encodeURIComponent(label)}`);
     ROUTE_STATE.imported[label] = true;
-    ROUTE_STATE.receipts[label] = moduleReceipt(module, EXPECTED[label]);
+    checkExpected(label, module);
     publish(`imported-${label}`);
     return module;
   } catch (error) {
@@ -360,8 +433,14 @@ async function boot() {
     return ROUTE_STATE;
   }
 
+  mount.dataset.audraliaRouteContract = ROUTE_CONTRACT;
   mount.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
+  mount.dataset.audraliaCacheKey = CACHE_KEY;
   mount.dataset.audraliaTerrainFiveFingers = "true";
+  mount.dataset.audraliaSourceAlignmentRenewed = "true";
+  mount.dataset.audraliaFormationDeltaRenewed = "true";
+  mount.dataset.audraliaReliefFieldRenewed = "true";
+  mount.dataset.audraliaShelfAttenuationRenewed = "true";
   mount.dataset.audraliaAssetsBoundaryExpression = "true";
   mount.dataset.audraliaAssetsAbsorbAuthority = "false";
   mount.dataset.generatedImage = "false";
@@ -399,7 +478,9 @@ async function boot() {
 
     const controller = mountFunction(mount, {
       routeReceipt: ROUTE_RECEIPT,
-      previousRouteReceipt: PREVIOUS_ROUTE_RECEIPT,
+      routeContract: ROUTE_CONTRACT,
+      previousRouteReceipt: PREVIOUS_ROUTE_CONTRACT,
+      cacheKey: CACHE_KEY,
       runtime: runtimeModule,
       runtimeMotion: runtimeModule,
       surface: surfaceModule,
@@ -408,6 +489,10 @@ async function boot() {
       terrainFingers: terrainFingersModule,
       assets: assetsModule,
       terrainFiveFingers: true,
+      sourceAlignmentRenewed: true,
+      formationDeltaRenewed: true,
+      reliefFieldRenewed: true,
+      shelfAttenuationRenewed: true,
       assetsBoundaryExpression: true,
       assetsAbsorbAuthority: false,
       canvasReceipt: ROUTE_STATE.receipts.canvas || EXPECTED.canvas,
@@ -428,8 +513,14 @@ async function boot() {
 
     if (canvas) {
       canvas.dataset.audraliaCanvas = "true";
+      canvas.dataset.audraliaRouteContract = ROUTE_CONTRACT;
       canvas.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
+      canvas.dataset.audraliaCacheKey = CACHE_KEY;
       canvas.dataset.audraliaTerrainFiveFingers = "true";
+      canvas.dataset.audraliaSourceAlignmentRenewed = "true";
+      canvas.dataset.audraliaFormationDeltaRenewed = "true";
+      canvas.dataset.audraliaReliefFieldRenewed = "true";
+      canvas.dataset.audraliaShelfAttenuationRenewed = "true";
       canvas.dataset.audraliaAssetsBoundaryExpression = "true";
       canvas.dataset.audraliaAssetsAbsorbAuthority = "false";
       canvas.dataset.generatedImage = "false";
@@ -441,7 +532,12 @@ async function boot() {
 
     clearFallback();
 
-    ROUTE_STATE.ok = Boolean(ROUTE_STATE.canvasFound && ROUTE_STATE.assetsLoaded && ROUTE_STATE.terrainFingersLoaded);
+    ROUTE_STATE.ok = Boolean(
+      ROUTE_STATE.canvasFound &&
+      ROUTE_STATE.assetsLoaded &&
+      ROUTE_STATE.terrainFingersLoaded
+    );
+
     publish(ROUTE_STATE.ok ? "ready" : "mounted-without-complete-proof");
   } catch (error) {
     ROUTE_STATE.errors.push(String(error?.message || error || "boot failed"));
@@ -458,5 +554,5 @@ if (document.readyState === "loading") {
   boot();
 }
 
-export { ROUTE_RECEIPT, HTML_RECEIPT, PREVIOUS_ROUTE_RECEIPT, ROUTE_STATE, boot, publish };
+export { ROUTE_CONTRACT, ROUTE_RECEIPT, HTML_RECEIPT, PREVIOUS_ROUTE_CONTRACT, CACHE_KEY, ROUTE_STATE, boot, publish };
 export default boot;

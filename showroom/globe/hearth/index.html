@@ -3,7 +3,7 @@
   lang="en"
   data-page="hearth-habitable-forming-coherent-baseline"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_HABITABLE_FORMING_BASELINE_HTML_TNT_v1"
+  data-contract="HEARTH_HABITABLE_FORMING_BASELINE_MOUNT_REPAIR_HTML_TNT_v1"
   data-body="hearth"
   data-generation-baseline="G1-coherent-achieved"
   data-current-phase="habitable-forming"
@@ -85,7 +85,7 @@
     .topbar,
     .nav,
     .card,
-    #hearth-canvas-mount,
+    #hearthCanvasMount,
     .receipt {
       border: 1px solid var(--line);
       background: linear-gradient(180deg, rgba(9, 22, 41, 0.88), rgba(4, 10, 20, 0.78));
@@ -213,7 +213,7 @@
       background: var(--gold);
     }
 
-    #hearth-canvas-mount {
+    #hearthCanvasMount {
       position: relative;
       width: 100%;
       min-height: 320px;
@@ -230,9 +230,9 @@
       -webkit-touch-callout: none;
     }
 
-    #hearth-canvas-mount canvas[data-hearth-canvas="true"],
-    #hearth-canvas-mount canvas[data-hearth-canvas],
-    #hearth-canvas-mount canvas {
+    #hearthCanvasMount canvas[data-hearth-canvas="true"],
+    #hearthCanvasMount canvas[data-hearth-canvas],
+    #hearthCanvasMount canvas {
       position: absolute;
       inset: 0;
       display: block;
@@ -243,6 +243,21 @@
       user-select: none;
       -webkit-user-select: none;
       -webkit-touch-callout: none;
+    }
+
+    #hearthCanvasMount[data-hearth-required-failure="true"]::after {
+      content: attr(data-hearth-route-error-message);
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      z-index: 10;
+      padding: 14px 16px;
+      border: 1px solid rgba(231, 188, 105, 0.58);
+      border-radius: 18px;
+      background: rgba(4, 10, 20, 0.94);
+      color: var(--gold);
+      font: 800 14px/1.4 system-ui, sans-serif;
     }
 
     .grid {
@@ -331,13 +346,20 @@
         </div>
 
         <section
-          id="hearth-canvas-mount"
+          id="hearthCanvasMount"
           data-hearth-canvas-mount="true"
           data-hearth-generation-baseline="G1-coherent-achieved"
           data-hearth-current-phase="habitable-forming"
           data-hearth-next-phase="G2-material-natural-readability"
           data-hearth-assets-boundary-expression="true"
+          data-hearth-assets-adopt-authority="false"
           data-hearth-assets-absorbs-authority="false"
+          data-hearth-runtime-locked="true"
+          data-hearth-controls-locked="true"
+          data-hearth-pointer-events-blocked="false"
+          data-hearth-touch-action="none"
+          data-hearth-required-failure="false"
+          data-hearth-route-error-message=""
           aria-label="Hearth habitable-forming canvas mount"
         >
           <span
@@ -383,13 +405,15 @@
 
       <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth habitable-forming baseline route preparing.</pre>
 
-      <pre class="receipt">HEARTH_HABITABLE_FORMING_BASELINE_HTML_TNT_v1
+      <pre class="receipt">HEARTH_HABITABLE_FORMING_BASELINE_MOUNT_REPAIR_HTML_TNT_v1
 route=/showroom/globe/hearth/
 public_identity=Hearth · Habitable Forming · Coherent Baseline
 baseline=Generation 1 coherent achieved
 former_motion_renewal=folded-into-baseline
 next=Generation 2 material definition and natural readability
 later=Generation 5 clouds/weather/living-atmosphere
+mount_id=hearthCanvasMount
+controller_expected_mount=hearthCanvasMount
 runtime_motion_only=true
 controls_input_only=true
 assets_absorb_authority=false
@@ -399,6 +423,6 @@ visual_pass_claimed=false</pre>
     </main>
   </div>
 
-  <script type="module" src="./index.js?v=hearth-habitable-forming-baseline-html-v1"></script>
+  <script src="./index.js?v=hearth-g4-1-asset-boundary-expression-v1-repair"></script>
 </body>
 </html>

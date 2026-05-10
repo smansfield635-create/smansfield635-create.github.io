@@ -1,19 +1,21 @@
 // /assets/audralia/audralia.terrain.fingers.js
-// AUDRALIA_G2_2_RELIEF_CONTRAST_AND_NATURAL_READABILITY_TNT_v1
+// AUDRALIA_G2_4_TERRAIN_FORMATION_DELTA_TNT_v1
 // Full-file replacement.
-// Terrain truth expression only.
-// Runtime remains motion-only.
-// Controls remain input-only.
-// Canvas remains draw/consume only.
-// Assets consume this terrain expression and preserve visible boundaries.
-// G2.2 target: stronger relief, clearer mountain ring, deeper basin,
-// more visible spiral ranges, softer shelf, better bays/peninsulas/inlets.
+// Expanded renewal, not redeploy.
+// Real delta:
+// - Adds formationField.
+// - Adds continentalShoulder to reduce single-blob land read.
+// - Adds shelfBreak and coastalTerrace.
+// - Adds explicit ringCrest and basinFloor separation.
+// - Adds secondarySpiralPressure field.
+// - Adds bayWeb / inletWeb / islandSeparation articulation.
+// - Runtime, controls, canvas, route, and HTML remain outside terrain authority.
 // No GraphicBox. No generated image. No visual-pass claim.
 
-const CONTRACT = "AUDRALIA_G2_2_RELIEF_CONTRAST_AND_NATURAL_READABILITY_TNT_v1";
-const RECEIPT = "AUDRALIA_G2_2_RELIEF_CONTRAST_AND_NATURAL_READABILITY_RECEIPT";
-const PREVIOUS_CONTRACT = "AUDRALIA_G2_1_TERRAIN_PLACEMENT_AND_NATURAL_READABILITY_TNT_v1";
-const VERSION = "2026-05-09.audralia-g2-2-relief-contrast-natural-readability";
+const CONTRACT = "AUDRALIA_G2_4_TERRAIN_FORMATION_DELTA_TNT_v1";
+const RECEIPT = "AUDRALIA_G2_4_TERRAIN_FORMATION_DELTA_RECEIPT";
+const PREVIOUS_CONTRACT = "AUDRALIA_G2_3_TERRAIN_RELIEF_FIELD_AND_SHELF_ATTENUATION_TNT_v1";
+const VERSION = "2026-05-09.audralia-g2-4-terrain-formation-delta";
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -168,19 +170,14 @@ function islandChain(u, v) {
 }
 
 function bayAndInletCuts(u, v) {
-  const bayA = ellipseMetrics(u, v, 0.455, 0.552, 0.034, 0.070, -0.30);
-  const bayB = ellipseMetrics(u, v, 0.604, 0.470, 0.042, 0.066, 0.78);
-  const bayC = ellipseMetrics(u, v, 0.724, 0.535, 0.032, 0.078, 0.20);
-  const bayD = ellipseMetrics(u, v, 0.785, 0.650, 0.026, 0.070, -0.42);
-  const lagoon = ellipseMetrics(u, v, 0.520, 0.355, 0.035, 0.044, 0.20);
-
   const cuts = [
-    smoothstep(-0.24, 0.10, bayA.field),
-    smoothstep(-0.24, 0.11, bayB.field),
-    smoothstep(-0.24, 0.10, bayC.field),
-    smoothstep(-0.24, 0.10, bayD.field),
-    smoothstep(-0.25, 0.08, lagoon.field)
-  ];
+    ellipseMetrics(u, v, 0.455, 0.552, 0.034, 0.070, -0.30),
+    ellipseMetrics(u, v, 0.604, 0.470, 0.042, 0.066, 0.78),
+    ellipseMetrics(u, v, 0.724, 0.535, 0.032, 0.078, 0.20),
+    ellipseMetrics(u, v, 0.785, 0.650, 0.026, 0.070, -0.42),
+    ellipseMetrics(u, v, 0.520, 0.355, 0.035, 0.044, 0.20),
+    ellipseMetrics(u, v, 0.560, 0.625, 0.030, 0.050, 0.55)
+  ].map((bay) => smoothstep(-0.24, 0.10, bay.field));
 
   return clamp(maxOf(cuts), 0, 1);
 }
@@ -190,9 +187,9 @@ function audraliaLandField(u, v) {
   const secondary = secondaryLand(u, v);
   const islands = islandChain(u, v);
 
-  const coastlineBreak = (fbm(u + 0.013, v - 0.027, 1011) - 0.5) * 0.108;
-  const reliefBreak = (ridged(u - 0.041, v + 0.062, 2027) - 0.5) * 0.056;
-  const inlet = bayAndInletCuts(u, v) * 0.042;
+  const coastlineBreak = (fbm(u + 0.013, v - 0.027, 1011) - 0.5) * 0.106;
+  const reliefBreak = (ridged(u - 0.041, v + 0.062, 2027) - 0.5) * 0.058;
+  const inlet = bayAndInletCuts(u, v) * 0.046;
 
   return {
     primary,
@@ -203,40 +200,40 @@ function audraliaLandField(u, v) {
   };
 }
 
-function ringMountain(metrics, landMask) {
+function ringCrest(metrics, landMask) {
   const ringDistance = Math.abs(metrics.dist - 0.585);
-  const crown = Math.exp(-(ringDistance * ringDistance) / 0.0065);
-  const brokenStone = smoothstep(0.22, 0.95, ridged(metrics.x * 2.75 + 0.2, metrics.y * 2.45 - 0.1, 6001));
+  const crown = Math.exp(-(ringDistance * ringDistance) / 0.0054);
+  const stoneBreak = smoothstep(0.18, 0.96, ridged(metrics.x * 3.15 + 0.2, metrics.y * 2.70 - 0.1, 6001));
   const directionalLift = 0.84 + Math.sin(metrics.theta * 5.25 + 0.65) * 0.15;
-  const notch = 1 - smoothstep(0.72, 0.96, Math.sin(metrics.theta * 2.0 - 0.8) * 0.5 + 0.5) * 0.18;
+  const brokenGate = 1 - smoothstep(0.72, 0.96, Math.sin(metrics.theta * 2.0 - 0.8) * 0.5 + 0.5) * 0.18;
 
-  return clamp(crown * (0.74 + brokenStone * 0.48) * directionalLift * notch * landMask, 0, 1);
+  return clamp(crown * (0.70 + stoneBreak * 0.56) * directionalLift * brokenGate * landMask, 0, 1);
 }
 
-function centralBasin(metrics, landMask) {
-  const basin = Math.exp(-(metrics.dist * metrics.dist) / 0.080);
-  const floorTexture = 1 - smoothstep(0.50, 0.96, ridged(metrics.x * 2.3, metrics.y * 2.35, 6009));
-  const innerValley = smoothstep(0.05, 0.70, basin * floorTexture);
-
-  return clamp(innerValley * landMask, 0, 1);
+function basinFloor(metrics, landMask) {
+  const bowl = Math.exp(-(metrics.dist * metrics.dist) / 0.064);
+  const floorTexture = 1 - smoothstep(0.48, 0.96, ridged(metrics.x * 2.55, metrics.y * 2.45, 6009));
+  return clamp(smoothstep(0.05, 0.70, bowl * floorTexture) * landMask, 0, 1);
 }
 
 function spiralRange(metrics, landMask, turns, pressure, phase) {
   const r = metrics.dist;
   const theta = metrics.theta;
   const wave = 0.5 + 0.5 * Math.sin(theta * turns + r * pressure + phase);
-  const band = smoothstep(0.64, 0.987, wave);
-  const radial = smoothstep(0.16, 0.40, r) * (1 - smoothstep(0.90, 1.16, r));
-  const breakNoise = smoothstep(0.28, 0.95, ridged(metrics.x * 1.95, metrics.y * 1.85, 6047));
+  const band = smoothstep(0.60, 0.987, wave);
+  const radial = smoothstep(0.15, 0.40, r) * (1 - smoothstep(0.90, 1.16, r));
+  const breakNoise = smoothstep(0.26, 0.96, ridged(metrics.x * 2.12, metrics.y * 1.96, 6047));
 
   return clamp(band * radial * breakNoise * landMask, 0, 1);
 }
 
 function islandArticulation(islandSeats) {
   let out = 0;
+
   for (const seat of islandSeats) {
     out = Math.max(out, smoothstep(-0.12, 0.12, seat.field));
   }
+
   return clamp(out, 0, 1);
 }
 
@@ -246,22 +243,29 @@ function classifyAudraliaTerrain(u, v) {
   const isLand = field > 0;
   const landMask = smoothstep(-0.045, 0.14, field);
 
-  const coast = 1 - clamp(Math.abs(field) * 22.5, 0, 1);
-  const coastline = smoothstep(0.0, 0.82, coast);
-  const shelf = smoothstep(-0.255, 0.018, field);
-  const deepOcean = isLand ? 0 : 1 - shelf;
-  const shelfWater = isLand ? 0 : shelf;
+  const rawCoast = 1 - clamp(Math.abs(field) * 23.0, 0, 1);
+  const coastline = smoothstep(0.0, 0.82, rawCoast);
+
+  const shelfBase = smoothstep(-0.265, 0.016, field);
+  const shelfBanding = smoothstep(0.22, 0.92, ridged(u * 1.58 + 0.12, v * 1.36 - 0.06, 9173));
+  const shelfBreak = clamp(coastline * (0.18 + shelfBanding * 0.42), 0, 0.64);
+  const coastalTerrace = clamp(coastline * smoothstep(0.35, 0.88, ridged(u * 2.2 - 0.07, v * 2.05 + 0.03, 9281)), 0, 1);
+  const shelfAttenuation = clamp((0.38 + shelfBanding * 0.30) * coastline, 0, 0.70);
+
+  const shelfWater = isLand ? 0 : clamp(shelfBase * shelfAttenuation, 0, 1);
+  const deepOcean = isLand ? 0 : clamp(1 - shelfBase * 0.80, 0, 1);
 
   const primaryMask = smoothstep(-0.05, 0.14, land.primary.field);
   const secondaryMask = smoothstep(-0.05, 0.14, land.secondary.field);
   const islandMask = smoothstep(-0.05, 0.14, land.islands.field);
 
-  const primaryRing = ringMountain(land.primary.metrics, primaryMask);
-  const primaryBasin = centralBasin(land.primary.metrics, primaryMask);
+  const ring = ringCrest(land.primary.metrics, primaryMask);
+  const basin = basinFloor(land.primary.metrics, primaryMask);
 
   const secondarySpiralA = spiralRange(land.secondary.metrics, secondaryMask, 3.15, 8.5, 0.35);
   const secondarySpiralB = spiralRange(land.secondary.metrics, secondaryMask, 4.55, 10.1, 2.08);
   const secondarySpiralC = spiralRange(land.secondary.metrics, secondaryMask, 5.75, 11.8, 3.18);
+  const secondarySpiralPressure = clamp(Math.max(secondarySpiralA, secondarySpiralB, secondarySpiralC), 0, 1);
 
   const broad = fbm(u + 0.117, v + 0.039, 307);
   const micro = fbm(u - 0.082, v + 0.051, 907);
@@ -270,18 +274,15 @@ function classifyAudraliaTerrain(u, v) {
   const mineralNoise = noise(u + 0.42, v - 0.18, 72, 9207);
   const seamNoise = ridged(u * 1.7 + 0.03, v * 1.4 - 0.08, 6113);
 
-  const spiralRanges = clamp(Math.max(secondarySpiralA, secondarySpiralB, secondarySpiralC), 0, 1);
-  const inheritedRidge = ridgeNoise * 0.18 * landMask;
-
-  const mountainRanges = isLand
-    ? clamp(Math.max(primaryRing, spiralRanges, inheritedRidge), 0, 1)
-    : 0;
+  const continentalShoulder = clamp(primaryMask * smoothstep(0.14, 0.74, broad) * (1 - basin * 0.38), 0, 1);
+  const inheritedRidge = ridgeNoise * 0.14 * landMask;
+  const mountainRanges = isLand ? clamp(Math.max(ring, secondarySpiralPressure, inheritedRidge), 0, 1) : 0;
 
   const basinValleys = isLand
     ? clamp(
         Math.max(
-          primaryBasin,
-          (1 - mountainRanges) * smoothstep(0.08, 0.56, field) * (1 - ridgeNoise) * 0.50
+          basin,
+          (1 - mountainRanges) * smoothstep(0.08, 0.56, field) * (1 - ridgeNoise) * 0.46
         ),
         0,
         1
@@ -290,47 +291,60 @@ function classifyAudraliaTerrain(u, v) {
 
   const cliffsEscarpments = isLand
     ? clamp(
-        coastline * smoothstep(0.50, 0.96, ridgeNoise) * (1 - smoothstep(0.50, 0.92, primaryBasin)) +
-          mountainRanges * coastline * 0.18,
+        coastline * smoothstep(0.50, 0.96, ridgeNoise) * (1 - smoothstep(0.50, 0.92, basin)) +
+          mountainRanges * coastline * 0.18 +
+          shelfBreak * 0.14,
         0,
         1
       )
     : 0;
 
   const beachLand = isLand ? smoothstep(0.072, 0.0, Math.abs(field)) * coastline : 0;
-  const beachWater = !isLand ? shelfWater * coastline * 0.66 : 0;
-  const beachesShelves = clamp(Math.max(beachLand, beachWater), 0, 1);
+  const beachWater = !isLand ? shelfWater * coastline * 0.46 : 0;
+  const beachesShelves = clamp(Math.max(beachLand, beachWater, coastalTerrace * 0.26), 0, 1);
 
-  const peninsulaNoise = ridged(u * 2.2 - 0.18, v * 1.95 + 0.09, 7181);
-  const island = islandArticulation(land.islands.seats);
-  const bayCut = land.inlet;
+  const bayWeb = land.inlet;
+  const peninsulaNoise = ridged(u * 2.22 - 0.18, v * 1.98 + 0.09, 7181);
+  const islandSeparation = islandArticulation(land.islands.seats);
+  const inletWeb = clamp(bayWeb * 0.72 + coastline * smoothstep(0.50, 0.96, peninsulaNoise), 0, 1);
 
   const peninsulasBaysIslands = clamp(
-    coastline * smoothstep(0.48, 0.96, peninsulaNoise) +
-      bayCut * 0.68 +
-      island * 0.92,
+    inletWeb +
+      islandSeparation * 0.92,
     0,
     1
   );
 
-  const reliefContrast = clamp(
-    mountainRanges * 0.48 +
-      cliffsEscarpments * 0.30 +
-      spiralRanges * 0.32 -
-      basinValleys * 0.18 +
-      fineRelief * landMask * 0.16,
+  const reliefField = clamp(
+    mountainRanges * 0.54 +
+      cliffsEscarpments * 0.34 +
+      secondarySpiralPressure * 0.38 -
+      basinValleys * 0.22 +
+      fineRelief * landMask * 0.18 +
+      continentalShoulder * 0.14,
+    0,
+    1
+  );
+
+  const formationField = clamp(
+    continentalShoulder * 0.24 +
+      reliefField * 0.34 +
+      beachesShelves * 0.12 +
+      peninsulasBaysIslands * 0.12 +
+      (1 - deepOcean) * 0.08,
     0,
     1
   );
 
   const elevation = isLand
     ? clamp(
-        0.18 +
+        0.17 +
           field * 0.54 +
-          mountainRanges * 0.82 -
-          basinValleys * 0.38 +
-          broad * 0.09 +
-          fineRelief * 0.10,
+          mountainRanges * 0.84 -
+          basinValleys * 0.40 +
+          broad * 0.08 +
+          fineRelief * 0.11 +
+          continentalShoulder * 0.08,
         0,
         1
       )
@@ -356,18 +370,29 @@ function classifyAudraliaTerrain(u, v) {
     coastline,
     shelfWater,
     deepOcean,
+    shelfAttenuation,
+    shelfBanding,
+    shelfBreak,
+    coastalTerrace,
     mountainRanges,
-    primaryRing,
-    spiralRanges,
+    primaryRing: ring,
+    primaryBasin: basin,
+    ringCrest: ring,
+    basinFloor: basin,
+    secondarySpiralPressure,
+    spiralRanges: secondarySpiralPressure,
     basinValleys,
-    primaryBasin,
     cliffsEscarpments,
     beachesShelves,
+    bayWeb,
+    inletWeb,
+    islandSeparation,
     peninsulasBaysIslands,
     elevation,
-    reliefContrast,
+    reliefField,
+    formationField,
+    continentalShoulder,
     mineralSeam,
-    bayCut,
     broad,
     micro,
     ridgeNoise,
@@ -396,7 +421,11 @@ function sampleAudraliaTerrain(u, v) {
       primaryMountainRing: terrain.primaryRing,
       primaryCentralValley: terrain.primaryBasin,
       externalSpiralRanges: terrain.spiralRanges,
-      reliefContrast: terrain.reliefContrast
+      reliefField: terrain.reliefField,
+      formationField: terrain.formationField,
+      shelfAttenuation: terrain.shelfAttenuation,
+      shelfBreak: terrain.shelfBreak,
+      coastalTerrace: terrain.coastalTerrace
     }
   };
 }
@@ -407,8 +436,8 @@ function getAudraliaTerrainFingerStatus() {
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
-    generation: "G2.2",
-    authority: "terrain-relief-contrast-natural-readability",
+    generation: "G2.4",
+    authority: "terrain-formation-delta",
     runtimeTouched: false,
     controlsTouched: false,
     canvasTouched: false,
@@ -422,18 +451,14 @@ function getAudraliaTerrainFingerStatus() {
       "beaches/coastal-shelves",
       "peninsulas/bays/islands/inlets"
     ],
-    specialForms: [
-      "primary-land-plot-mountain-ring-with-central-valley",
-      "secondary-landmasses-external-spiral-ranges",
-      "relief-contrast-field"
-    ],
-    objectives: [
-      "increase-visible-relief",
-      "reduce-halo-shelf-glow",
-      "strengthen-primary-ring",
-      "strengthen-central-basin",
-      "strengthen-secondary-spiral-ranges",
-      "increase-natural-bay-peninsula-inlet-articulation"
+    renewedDeltas: [
+      "formation-field",
+      "continental-shoulder",
+      "shelf-break",
+      "coastal-terrace",
+      "ring-crest-basin-floor-separation",
+      "secondary-spiral-pressure",
+      "bay-web-inlet-web-island-separation"
     ],
     generatedImage: false,
     graphicBox: false,
@@ -459,9 +484,11 @@ if (typeof window !== "undefined") {
   document.documentElement.dataset.audraliaTerrainFingersLoaded = "true";
   document.documentElement.dataset.audraliaTerrainFingersContract = CONTRACT;
   document.documentElement.dataset.audraliaTerrainFingersReceipt = RECEIPT;
+  document.documentElement.dataset.audraliaGeneration = "G2.4";
   document.documentElement.dataset.audraliaTerrainFiveFingers = "true";
-  document.documentElement.dataset.audraliaG22ReliefContrast = "true";
-  document.documentElement.dataset.audraliaG22NaturalReadability = "true";
+  document.documentElement.dataset.audraliaFormationField = "true";
+  document.documentElement.dataset.audraliaShelfBreak = "true";
+  document.documentElement.dataset.audraliaCoastalTerrace = "true";
   document.documentElement.dataset.audraliaRuntimeTouched = "false";
   document.documentElement.dataset.audraliaControlsTouched = "false";
   document.documentElement.dataset.audraliaCanvasTouched = "false";

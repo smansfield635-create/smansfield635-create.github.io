@@ -1,121 +1,42 @@
 // /assets/hearth/hearth.terrain.extension.js
-// HEARTH_TERRAIN_EXTENSION_FINGERPRINT_AUTHORITY_TNT_v1
+// HEARTH_JAGGED_COAST_AND_ISLAND_CHAIN_TERRAIN_EXTENSION_TNT_v3
 // Full-file replacement.
 // Terrain-extension authority only.
 // Purpose:
-// - Define seven unique terrain fingerprints downstream of body-mass formation.
-// - Do not own body-mass placement.
-// - Do not own material palette.
-// - Do not own runtime, controls, route, or canvas.
-// - Provide terrain signals for assets to consume.
+// - Add rigid tectonic coastline fracture.
+// - Add island chains and offshore fragments.
+// - Break rounded/lobed coastline read.
+// - Preserve body-mass placement in assets.
+// - Preserve runtime, controls, canvas, route separation.
 // No GraphicBox. No generated image. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_TERRAIN_EXTENSION_FINGERPRINT_AUTHORITY_TNT_v1";
-  const RECEIPT = "HEARTH_TERRAIN_EXTENSION_FINGERPRINT_AUTHORITY_RECEIPT_v1";
-  const VERSION = "2026-05-10.hearth-terrain-extension-fingerprint-authority-v1";
+  const CONTRACT = "HEARTH_JAGGED_COAST_AND_ISLAND_CHAIN_TERRAIN_EXTENSION_TNT_v3";
+  const RECEIPT = "HEARTH_JAGGED_COAST_AND_ISLAND_CHAIN_TERRAIN_EXTENSION_RECEIPT_v3";
+  const PREVIOUS_CONTRACT = "HEARTH_COASTLINE_FRACTURE_AND_SILHOUETTE_BREAKER_TERRAIN_EXTENSION_TNT_v2";
+  const VERSION = "2026-05-10.hearth-jagged-coast-and-island-chain-v3";
 
-  const TERRAIN_FINGERPRINTS = Object.freeze({
-    "north-crown-mass": Object.freeze({
-      id: 1,
-      key: "north-crown-mass",
-      name: "North Crown Mass",
-      fingerprint: "fractured-polar-crown",
-      features: [
-        "glacier-mouths",
-        "fjord-cuts",
-        "polar-slate-ridges",
-        "broken-ice-shelves",
-        "cold-sea-channels"
-      ]
-    }),
+  const TAU = Math.PI * 2;
+  const DEG = Math.PI / 180;
 
-    "equatorial-great-mass": Object.freeze({
-      id: 2,
-      key: "equatorial-great-mass",
-      name: "Equatorial Great Mass",
-      fingerprint: "rifted-habitable-continent",
-      features: [
-        "central-basin",
-        "western-mountain-shoulder",
-        "rift-corridor",
-        "river-valley-potential",
-        "torn-eastern-shelves"
-      ]
-    }),
-
-    "northwest-temperate-mass": Object.freeze({
-      id: 3,
-      key: "northwest-temperate-mass",
-      name: "Northwest Temperate Mass",
-      fingerprint: "diagonal-temperate-highland",
-      features: [
-        "diagonal-mountain-spine",
-        "highland-basin",
-        "firm-western-coast",
-        "soft-southeast-shelves",
-        "older-stone-uplands"
-      ]
-    }),
-
-    "northeast-broken-shelf-mass": Object.freeze({
-      id: 4,
-      key: "northeast-broken-shelf-mass",
-      name: "Northeast Broken Shelf Mass",
-      fingerprint: "fractured-shelf-archipelago",
-      features: [
-        "archipelago-fractures",
-        "shelf-terraces",
-        "shallow-bays",
-        "broken-land-bridges",
-        "turquoise-shelf-water"
-      ]
-    }),
-
-    "southeast-warm-mass": Object.freeze({
-      id: 5,
-      key: "southeast-warm-mass",
-      name: "Southeast Warm Mass",
-      fingerprint: "warm-crescent-shelf",
-      features: [
-        "crescent-coastline",
-        "wide-beaches",
-        "shallow-continental-shelf",
-        "warm-lowland-basin",
-        "southern-stone-ridges"
-      ]
-    }),
-
-    "southwest-ridge-mass": Object.freeze({
-      id: 6,
-      key: "southwest-ridge-mass",
-      name: "Southwest Ridge Mass",
-      fingerprint: "dark-tectonic-ridge-scar",
-      features: [
-        "tectonic-scar",
-        "dark-mineral-ridges",
-        "cliff-walls",
-        "deep-water-dropoff",
-        "sparse-beaches"
-      ]
-    }),
-
-    "south-transitional-mass": Object.freeze({
-      id: 7,
-      key: "south-transitional-mass",
-      name: "South Transitional Mass",
-      fingerprint: "cold-storm-shelf-counterweight",
-      features: [
-        "storm-shelf",
-        "cold-bays",
-        "southern-ice-edge",
-        "elongated-stone-shelf",
-        "transitional-ridges"
-      ]
-    })
-  });
+  const ISLAND_SEEDS = Object.freeze([
+    { key: "north-crown-mass", lat: 69 * DEG, lon: -76 * DEG, rx: 6 * DEG, ry: 2.4 * DEG, angle: -20 * DEG, power: 0.42 },
+    { key: "north-crown-mass", lat: 72 * DEG, lon: 44 * DEG, rx: 5 * DEG, ry: 2.0 * DEG, angle: 18 * DEG, power: 0.34 },
+    { key: "equatorial-great-mass", lat: 21 * DEG, lon: 66 * DEG, rx: 5.5 * DEG, ry: 2.3 * DEG, angle: -26 * DEG, power: 0.32 },
+    { key: "equatorial-great-mass", lat: -19 * DEG, lon: 57 * DEG, rx: 6.4 * DEG, ry: 2.5 * DEG, angle: 20 * DEG, power: 0.34 },
+    { key: "northwest-temperate-mass", lat: 33 * DEG, lon: -69 * DEG, rx: 5.4 * DEG, ry: 2.5 * DEG, angle: 14 * DEG, power: 0.30 },
+    { key: "northeast-broken-shelf-mass", lat: 44 * DEG, lon: 123 * DEG, rx: 7.4 * DEG, ry: 2.8 * DEG, angle: -18 * DEG, power: 0.46 },
+    { key: "northeast-broken-shelf-mass", lat: 34 * DEG, lon: 139 * DEG, rx: 5.7 * DEG, ry: 2.1 * DEG, angle: 31 * DEG, power: 0.38 },
+    { key: "northeast-broken-shelf-mass", lat: 25 * DEG, lon: 130 * DEG, rx: 4.8 * DEG, ry: 1.9 * DEG, angle: -8 * DEG, power: 0.30 },
+    { key: "southeast-warm-mass", lat: -9 * DEG, lon: 170 * DEG, rx: 6.6 * DEG, ry: 2.6 * DEG, angle: 34 * DEG, power: 0.34 },
+    { key: "southeast-warm-mass", lat: -41 * DEG, lon: 119 * DEG, rx: 5.2 * DEG, ry: 2.1 * DEG, angle: -16 * DEG, power: 0.28 },
+    { key: "southwest-ridge-mass", lat: -23 * DEG, lon: -151 * DEG, rx: 4.8 * DEG, ry: 1.8 * DEG, angle: -44 * DEG, power: 0.26 },
+    { key: "southwest-ridge-mass", lat: -55 * DEG, lon: -84 * DEG, rx: 5.6 * DEG, ry: 2.0 * DEG, angle: 11 * DEG, power: 0.30 },
+    { key: "south-transitional-mass", lat: -49 * DEG, lon: 2 * DEG, rx: 5.8 * DEG, ry: 2.0 * DEG, angle: 19 * DEG, power: 0.31 },
+    { key: "south-transitional-mass", lat: -70 * DEG, lon: 76 * DEG, rx: 6.2 * DEG, ry: 2.2 * DEG, angle: -20 * DEG, power: 0.32 }
+  ]);
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -128,6 +49,10 @@
   function smoothstep(edge0, edge1, x) {
     const t = clamp((x - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
     return t * t * (3 - 2 * t);
+  }
+
+  function wrapPi(value) {
+    return Math.atan2(Math.sin(value), Math.cos(value));
   }
 
   function hash(x, y, seed) {
@@ -165,10 +90,10 @@
     let total = 0;
     let norm = 0;
     let amp = 0.62;
-    let scale = 6;
+    let scale = 9;
 
-    for (let i = 0; i < 5; i += 1) {
-      const n = noise(u, v, scale, seed + i * 79);
+    for (let i = 0; i < 6; i += 1) {
+      const n = noise(u, v, scale, seed + i * 97);
       total += (1 - Math.abs(n * 2 - 1)) * amp;
       norm += amp;
       amp *= 0.52;
@@ -178,262 +103,189 @@
     return total / Math.max(0.000001, norm);
   }
 
-  function faultLine(u, v, angle, offset, width) {
-    const ca = Math.cos(angle);
-    const sa = Math.sin(angle);
-    const x = (u - 0.5) * ca - (v - 0.5) * sa;
-    return Math.exp(-Math.pow(x - offset, 2) / Math.max(0.000001, width));
+  function angularIslandField(lon, lat, seed) {
+    const dx = wrapPi(lon - seed.lon) * Math.cos(seed.lat);
+    const dy = lat - seed.lat;
+    const ca = Math.cos(seed.angle);
+    const sa = Math.sin(seed.angle);
+    const x = dx * ca - dy * sa;
+    const y = dx * sa + dy * ca;
+    const nx = x / seed.rx;
+    const ny = y / seed.ry;
+    const theta = Math.atan2(ny, nx);
+    const dist = Math.sqrt(nx * nx + ny * ny);
+    const chip = Math.sin(theta * 5.0 + seed.power * 8.7) * 0.15 + Math.sin(theta * 9.0 - seed.power * 4.1) * 0.08;
+    return seed.power + chip - dist;
   }
 
-  function sampleTerrain(u, v, base = {}) {
-    const key = base.primaryMassKey || "";
-    const massId = Number.isFinite(base.primaryMassId) ? base.primaryMassId : 0;
-    const coast = clamp(base.coast || 0, 0, 1);
-    const field = Number.isFinite(base.field) ? base.field : 0;
-    const land = base.isLand === true;
-    const ridge = ridged(u + massId * 0.037, v - massId * 0.041, 4000 + massId * 97);
-    const bite = noise(u - massId * 0.061, v + massId * 0.083, 72, 5100 + massId * 131);
-    const detail = noise(u + massId * 0.017, v - massId * 0.019, 144, 6200 + massId * 149);
+  function sampleIslandField(u, v, base = {}) {
+    const lon = Number.isFinite(base.lon) ? base.lon : (u - 0.5) * TAU;
+    const lat = Number.isFinite(base.lat) ? base.lat : (0.5 - v) * Math.PI;
 
-    const common = {
-      terrainContract: CONTRACT,
-      terrainReceipt: RECEIPT,
-      terrainFingerprint: TERRAIN_FINGERPRINTS[key]?.fingerprint || "ocean-or-unassigned",
-      terrainFingerprintKey: key || "none",
-      terrainFingerprintId: massId,
-      fingerprintStrength: land ? clamp(0.35 + ridge * 0.45 + coast * 0.20, 0, 1) : 0,
-      ridge: land ? ridge : 0,
-      bite: land ? bite : 0,
-      detail: land ? detail : 0,
-      internalPressure: land ? smoothstep(0.02, 0.46, field) : 0,
-      coastlinePressure: coast,
-      shelfTerrace: !land ? clamp(coast * (0.38 + ridge * 0.62), 0, 1) : 0,
+    let best = {
+      field: -1,
+      key: "",
+      islandChain: false,
+      islandFragment: false
+    };
+
+    for (const seed of ISLAND_SEEDS) {
+      const raw = angularIslandField(lon, lat, seed);
+      const edgeChip = (noise(u + seed.power * 0.13, v - seed.power * 0.19, 118, 14000) - 0.5) * 0.11;
+      const field = raw + edgeChip;
+
+      if (field > best.field) {
+        best = {
+          field,
+          key: seed.key,
+          islandChain: field > -0.05,
+          islandFragment: field > 0,
+          islandEdge: smoothstep(-0.08, 0.05, field) * (1 - smoothstep(0.10, 0.24, field))
+        };
+      }
+    }
+
+    return Object.freeze({
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      ...best,
+      islandChainLoaded: true,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
-    };
-
-    if (!land) {
-      return Object.freeze({
-        ...common,
-        glacierMouths: 0,
-        fjordCuts: 0,
-        riftCorridor: 0,
-        basin: 0,
-        riverValleyPotential: 0,
-        diagonalSpine: 0,
-        archipelagoFracture: 0,
-        crescentShelf: 0,
-        tectonicScar: 0,
-        stormShelf: 0,
-        cliffWalls: 0,
-        deepWaterDropoff: clamp(coast * smoothstep(0.45, 0.92, ridge), 0, 1)
-      });
-    }
-
-    switch (key) {
-      case "north-crown-mass": {
-        const prong = smoothstep(0.48, 0.94, ridged(u * 1.4 + 0.11, v * 1.8 - 0.18, 7101));
-        const fjord = smoothstep(0.58, 0.96, bite) * coast;
-        return Object.freeze({
-          ...common,
-          glacierMouths: clamp(fjord * 0.84 + prong * coast * 0.36, 0, 1),
-          fjordCuts: clamp(fjord, 0, 1),
-          polarSlateRidges: clamp(prong * 0.92, 0, 1),
-          brokenIceShelves: clamp(coast * 0.78 + prong * 0.25, 0, 1),
-          coldSeaChannels: clamp(coast * smoothstep(0.45, 0.88, detail), 0, 1),
-          riftCorridor: 0,
-          basin: 0,
-          riverValleyPotential: 0,
-          diagonalSpine: 0,
-          archipelagoFracture: 0,
-          crescentShelf: 0,
-          tectonicScar: 0,
-          stormShelf: 0,
-          cliffWalls: clamp(prong * coast * 0.62, 0, 1),
-          deepWaterDropoff: 0
-        });
-      }
-
-      case "equatorial-great-mass": {
-        const rift = faultLine(u, v, -0.58, -0.03, 0.012);
-        const basin = smoothstep(0.42, 0.88, 1 - ridge) * smoothstep(0.08, 0.58, field);
-        const westShoulder = smoothstep(0.18, 0.88, ridge) * smoothstep(0.18, 0.72, 1 - u);
-        return Object.freeze({
-          ...common,
-          glacierMouths: 0,
-          fjordCuts: 0,
-          polarSlateRidges: 0,
-          brokenIceShelves: 0,
-          coldSeaChannels: 0,
-          riftCorridor: clamp(rift * 0.88, 0, 1),
-          basin: clamp(basin, 0, 1),
-          westernMountainShoulder: clamp(westShoulder, 0, 1),
-          riverValleyPotential: clamp(basin * smoothstep(0.36, 0.82, detail), 0, 1),
-          tornEasternShelves: clamp(coast * smoothstep(0.46, 0.94, bite) * smoothstep(0.46, 0.92, u), 0, 1),
-          diagonalSpine: 0,
-          archipelagoFracture: 0,
-          crescentShelf: 0,
-          tectonicScar: 0,
-          stormShelf: 0,
-          cliffWalls: clamp(coast * ridge * 0.34, 0, 1),
-          deepWaterDropoff: 0
-        });
-      }
-
-      case "northwest-temperate-mass": {
-        const spine = faultLine(u, v, 0.72, 0.02, 0.010);
-        return Object.freeze({
-          ...common,
-          glacierMouths: 0,
-          fjordCuts: 0,
-          riftCorridor: 0,
-          basin: clamp((1 - ridge) * smoothstep(0.16, 0.58, field) * 0.74, 0, 1),
-          riverValleyPotential: clamp((1 - ridge) * detail * 0.62, 0, 1),
-          diagonalSpine: clamp(spine * 0.92 + ridge * 0.22, 0, 1),
-          firmWesternCoast: clamp(coast * smoothstep(0.55, 0.95, 1 - u), 0, 1),
-          softSoutheastShelves: clamp(coast * smoothstep(0.48, 0.95, u) * smoothstep(0.44, 0.90, v), 0, 1),
-          archipelagoFracture: 0,
-          crescentShelf: 0,
-          tectonicScar: 0,
-          stormShelf: 0,
-          cliffWalls: clamp(spine * coast * 0.48, 0, 1),
-          deepWaterDropoff: 0
-        });
-      }
-
-      case "northeast-broken-shelf-mass": {
-        const fracture = smoothstep(0.52, 0.94, bite);
-        const terrace = smoothstep(0.32, 0.86, ridge) * coast;
-        return Object.freeze({
-          ...common,
-          glacierMouths: 0,
-          fjordCuts: 0,
-          riftCorridor: 0,
-          basin: 0,
-          riverValleyPotential: 0,
-          diagonalSpine: 0,
-          archipelagoFracture: clamp(fracture, 0, 1),
-          shelfTerraces: clamp(terrace, 0, 1),
-          shallowBays: clamp(coast * (0.45 + fracture * 0.55), 0, 1),
-          brokenLandBridges: clamp(fracture * smoothstep(0.02, 0.32, field), 0, 1),
-          crescentShelf: 0,
-          tectonicScar: 0,
-          stormShelf: 0,
-          cliffWalls: clamp(coast * ridge * 0.20, 0, 1),
-          deepWaterDropoff: 0
-        });
-      }
-
-      case "southeast-warm-mass": {
-        const crescent = faultLine(u, v, 0.30, 0.09, 0.026);
-        return Object.freeze({
-          ...common,
-          glacierMouths: 0,
-          fjordCuts: 0,
-          riftCorridor: 0,
-          basin: clamp((1 - ridge) * smoothstep(0.10, 0.60, field) * 0.66, 0, 1),
-          riverValleyPotential: clamp((1 - ridge) * detail * 0.52, 0, 1),
-          diagonalSpine: 0,
-          archipelagoFracture: 0,
-          crescentShelf: clamp(crescent * 0.82 + coast * 0.34, 0, 1),
-          wideBeaches: clamp(coast * 0.88, 0, 1),
-          warmLowlandBasin: clamp((1 - ridge) * 0.72, 0, 1),
-          southernStoneRidges: clamp(ridge * smoothstep(0.55, 0.95, v), 0, 1),
-          tectonicScar: 0,
-          stormShelf: 0,
-          cliffWalls: clamp(coast * ridge * 0.24, 0, 1),
-          deepWaterDropoff: 0
-        });
-      }
-
-      case "southwest-ridge-mass": {
-        const scar = faultLine(u, v, -0.82, 0.00, 0.009);
-        return Object.freeze({
-          ...common,
-          glacierMouths: 0,
-          fjordCuts: 0,
-          riftCorridor: 0,
-          basin: clamp((1 - ridge) * smoothstep(0.16, 0.44, field) * 0.26, 0, 1),
-          riverValleyPotential: 0,
-          diagonalSpine: 0,
-          archipelagoFracture: 0,
-          crescentShelf: 0,
-          tectonicScar: clamp(scar * 0.96 + ridge * 0.34, 0, 1),
-          darkMineralRidges: clamp(ridge * 0.94, 0, 1),
-          cliffWalls: clamp(coast * ridge * 0.86, 0, 1),
-          deepWaterDropoff: clamp(coast * smoothstep(0.36, 0.82, ridge), 0, 1),
-          sparseBeaches: clamp(coast * 0.18, 0, 1),
-          stormShelf: 0
-        });
-      }
-
-      case "south-transitional-mass": {
-        const storm = smoothstep(0.38, 0.90, ridged(u * 1.2 - 0.11, v * 1.9 + 0.07, 8122));
-        return Object.freeze({
-          ...common,
-          glacierMouths: 0,
-          fjordCuts: clamp(coast * smoothstep(0.50, 0.92, bite) * 0.44, 0, 1),
-          riftCorridor: 0,
-          basin: 0,
-          riverValleyPotential: 0,
-          diagonalSpine: 0,
-          archipelagoFracture: 0,
-          crescentShelf: 0,
-          tectonicScar: 0,
-          stormShelf: clamp(storm * 0.84 + coast * 0.28, 0, 1),
-          coldBays: clamp(coast * smoothstep(0.42, 0.88, detail), 0, 1),
-          southernIceEdge: clamp(smoothstep(0.56, 0.96, v) * 0.82, 0, 1),
-          transitionalRidges: clamp(ridge * 0.58, 0, 1),
-          cliffWalls: clamp(coast * ridge * 0.42, 0, 1),
-          deepWaterDropoff: 0
-        });
-      }
-
-      default:
-        return Object.freeze(common);
-    }
+    });
   }
 
-  function getFingerprint(key) {
-    return TERRAIN_FINGERPRINTS[key] || null;
+  function edgeBand(field) {
+    return smoothstep(0.04, 0.96, 1 - clamp(Math.abs(field) * 8.5, 0, 1));
   }
 
-  function getFingerprints() {
-    return Object.freeze(
-      Object.keys(TERRAIN_FINGERPRINTS).map((key) => TERRAIN_FINGERPRINTS[key])
-    );
+  function sampleCoastlineModifier(u, v, base = {}) {
+    const id = Number.isFinite(base.primaryMassId) ? base.primaryMassId : 0;
+    const key = base.primaryMassKey || "";
+    const field = Number.isFinite(base.field) ? base.field : 0;
+    const theta = Number.isFinite(base.theta) ? base.theta : 0;
+    const nx = Number.isFinite(base.nx) ? base.nx : 0;
+    const ny = Number.isFinite(base.ny) ? base.ny : 0;
+    const band = edgeBand(field);
+
+    const hardSaw = Math.sign(Math.sin(theta * (6 + id) + nx * 5.6 - ny * 4.1)) * 0.055;
+    const chipA = smoothstep(0.49, 0.94, noise(u + id * 0.137, v - id * 0.119, 120, 15000 + id * 149));
+    const chipB = smoothstep(0.42, 0.92, ridged(u + id * 0.071, v - id * 0.053, 16000 + id * 173));
+    const cliffCut = band * chipA * 0.15;
+    const shardCut = band * chipB * 0.13;
+
+    let fieldDelta = band * hardSaw - cliffCut - shardCut;
+    let islandsBias = 0;
+
+    if (key === "northeast-broken-shelf-mass") {
+      fieldDelta -= band * smoothstep(0.36, 0.88, chipA + chipB * 0.5) * 0.14;
+      islandsBias += 0.22;
+    }
+
+    if (key === "north-crown-mass") {
+      fieldDelta -= band * Math.abs(Math.sin(theta * 4.0 + chipB * 3.0)) * 0.13;
+      islandsBias += 0.12;
+    }
+
+    if (key === "southwest-ridge-mass") {
+      fieldDelta -= band * smoothstep(0.36, 0.88, chipB) * 0.11;
+      fieldDelta += band * Math.max(0, Math.sin(theta * 2.0 - 1.4)) * 0.06;
+    }
+
+    if (key === "equatorial-great-mass") {
+      fieldDelta -= band * smoothstep(0.48, 0.90, noise(u - 0.29, v + 0.22, 64, 17000)) * smoothstep(0.42, 0.92, u) * 0.12;
+    }
+
+    return Object.freeze({
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      fieldDelta,
+      hardJaggedEdge: clamp(band * (0.42 + chipA * 0.30 + chipB * 0.28), 0, 1),
+      rigidCoastline: true,
+      cliffCut: clamp(cliffCut, 0, 1),
+      shardCut: clamp(shardCut, 0, 1),
+      islandsBias,
+      silhouetteBreakerActive: true,
+      coastlineFractureLoaded: true,
+      islandChainLoaded: true,
+      roundLobeRead: false,
+      ovalPatchRead: false,
+      generatedImage: false,
+      graphicBox: false,
+      visualPassClaimed: false
+    });
+  }
+
+  function sampleTerrain(u, v, base = {}) {
+    const modifier = sampleCoastlineModifier(u, v, base);
+    const island = sampleIslandField(u, v, base);
+    const id = Number.isFinite(base.primaryMassId) ? base.primaryMassId : 0;
+    const ridge = base.isLand ? ridged(u + id * 0.047, v - id * 0.041, 18000 + id * 97) : 0;
+
+    return Object.freeze({
+      terrainContract: CONTRACT,
+      terrainReceipt: RECEIPT,
+      terrainFingerprintCount: 7,
+      eachBodyHasUniqueTerrain: true,
+      coastlineFractureLoaded: true,
+      silhouetteBreakerActive: true,
+      islandChainLoaded: true,
+      hardJaggedEdge: modifier.hardJaggedEdge,
+      rigidCoastline: true,
+      cliffCut: modifier.cliffCut,
+      shardCut: modifier.shardCut,
+      islandChain: island.islandChain,
+      islandFragment: island.islandFragment,
+      islandField: island.field,
+      islandKey: island.key,
+      islandEdge: island.islandEdge || 0,
+      ridge,
+      cliffWalls: clamp((base.coast || 0) * ridge * 0.78 + modifier.hardJaggedEdge * 0.42, 0, 1),
+      shelfTerrace: !base.isLand ? clamp((base.coast || 0) * (0.42 + ridge * 0.58), 0, 1) : 0,
+      deepWaterDropoff: !base.isLand ? clamp((base.coast || 0) * smoothstep(0.45, 0.92, ridge), 0, 1) : 0,
+      roundLobeRead: false,
+      ovalPatchRead: false,
+      generatedImage: false,
+      graphicBox: false,
+      visualPassClaimed: false
+    });
   }
 
   function getStatus() {
     return Object.freeze({
       contract: CONTRACT,
       receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "terrain-fingerprint-extension",
+      authority: "terrain-jagged-coast-island-chain",
       terrainExtensionLoaded: true,
+      coastlineFractureLoaded: true,
+      silhouetteBreakerActive: true,
+      islandChainLoaded: true,
+      hardJaggedEdges: true,
+      rigidCoastline: true,
       terrainFingerprintCount: 7,
       eachBodyHasUniqueTerrain: true,
-      ownsBodyMassPlacement: false,
-      ownsMaterialPalette: false,
+      roundLobeRead: false,
+      ovalPatchRead: false,
       runtimeTouched: false,
       controlsTouched: false,
       canvasTouched: false,
-      routeTouched: false,
       generatedImage: false,
       graphicBox: false,
-      visualPassClaimed: false,
-      fingerprints: getFingerprints()
+      visualPassClaimed: false
     });
   }
 
   window.HEARTH_TERRAIN_EXTENSION = Object.freeze({
     contract: CONTRACT,
     receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
+    sampleCoastlineModifier,
+    sampleIslandField,
     sampleTerrain,
-    getFingerprint,
-    getFingerprints,
     getStatus
   });
 
@@ -442,8 +294,13 @@
   document.documentElement.dataset.hearthTerrainExtensionLoaded = "true";
   document.documentElement.dataset.hearthTerrainExtensionContract = CONTRACT;
   document.documentElement.dataset.hearthTerrainExtensionReceipt = RECEIPT;
-  document.documentElement.dataset.hearthTerrainFingerprintCount = "7";
-  document.documentElement.dataset.hearthEachBodyHasUniqueTerrain = "true";
+  document.documentElement.dataset.hearthCoastlineFractureLoaded = "true";
+  document.documentElement.dataset.hearthSilhouetteBreakerActive = "true";
+  document.documentElement.dataset.hearthIslandChainLoaded = "true";
+  document.documentElement.dataset.hearthHardJaggedEdges = "true";
+  document.documentElement.dataset.hearthRigidCoastline = "true";
+  document.documentElement.dataset.hearthRoundLobeRead = "false";
+  document.documentElement.dataset.hearthOvalPatchRead = "false";
   document.documentElement.dataset.generatedImage = "false";
   document.documentElement.dataset.graphicBox = "false";
   document.documentElement.dataset.visualPassClaimed = "false";

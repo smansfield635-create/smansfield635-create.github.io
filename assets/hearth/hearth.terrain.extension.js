@@ -1,20 +1,17 @@
 // /assets/hearth/hearth.terrain.extension.js
-// HEARTH_TERRAIN_BASE_FOR_DEDICATED_ELEVATION_TNT_v6
+// HEARTH_TERRAIN_BASE_FOR_DEDICATED_ELEVATION_TNT_v6_CACHE_RENEWAL_v8
 // Full-file replacement.
 // Terrain-extension authority only.
-// Purpose:
-// - Pass HEARTH_CLIMATE_BIOME_REGION_ROUTE_TNT_v12 terrainExtension validation.
-// - Own coastline fracture, island chains, terrain base, and terrain fingerprints.
-// - Do NOT own tangible elevation; elevation is delegated to /assets/hearth/hearth.elevation.js.
-// No GraphicBox. No generated image. No visual-pass claim.
+// Owns coastline fracture, islands, terrain base, and terrain fingerprints.
+// Does not own elevation. Elevation is delegated to /assets/hearth/hearth.elevation.js.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_TERRAIN_BASE_FOR_DEDICATED_ELEVATION_TNT_v6";
-  const RECEIPT = "HEARTH_TERRAIN_BASE_FOR_DEDICATED_ELEVATION_RECEIPT_v6";
-  const PREVIOUS_CONTRACT = "HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_TERRAIN_EXTENSION_TNT_v5";
-  const VERSION = "2026-05-10.hearth-terrain-base-for-dedicated-elevation-v6";
+  const CONTRACT = "HEARTH_TERRAIN_BASE_FOR_DEDICATED_ELEVATION_TNT_v6_CACHE_RENEWAL_v8";
+  const RECEIPT = "HEARTH_TERRAIN_BASE_FOR_DEDICATED_ELEVATION_RECEIPT_v8";
+  const PREVIOUS_CONTRACT = "HEARTH_TERRAIN_BASE_FOR_DEDICATED_ELEVATION_TNT_v6_CACHE_RENEWAL_v7";
+  const VERSION = "2026-05-10.hearth-terrain-base-cache-renewal-v8";
 
   const TAU = Math.PI * 2;
   const DEG = Math.PI / 180;

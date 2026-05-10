@@ -2,9 +2,9 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-parent-chain-aligned"
+  data-page="hearth-parent-chain-force-aligned"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_PARENT_CHAIN_ALIGNED_HTML_TNT_v19"
+  data-contract="HEARTH_PARENT_CHAIN_FORCE_ALIGNED_HTML_TNT_v20"
   data-body="hearth"
   data-active-route-file="/showroom/globe/hearth/hearth.climate.route.js"
   data-parent-chain-aligned="true"
@@ -14,6 +14,7 @@
   data-canvas-authority="/assets/hearth/hearth.canvas.js"
   data-target-land-ratio="0.30"
   data-earth-reference-land-ratio="0.29"
+  data-visible-globe-v17-retired="true"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claimed="false"
@@ -48,8 +49,15 @@
       font-family:Inter,system-ui,sans-serif;
     }
 
-    body { margin:0; min-height:100vh; }
-    a { color:inherit; text-decoration:none; }
+    body {
+      margin:0;
+      min-height:100vh;
+    }
+
+    a {
+      color:inherit;
+      text-decoration:none;
+    }
 
     .shell {
       width:min(1120px,calc(100% - 28px));
@@ -250,8 +258,14 @@
     }
 
     @media (max-width:860px) {
-      .hero,.grid { grid-template-columns:1fr; }
-      .topbar { flex-direction:column; }
+      .hero,
+      .grid {
+        grid-template-columns:1fr;
+      }
+
+      .topbar {
+        flex-direction:column;
+      }
     }
   </style>
 </head>
@@ -279,7 +293,7 @@
             Hearth now routes through a clean parent chain: composition, hydrology, materials, and canvas. The planet remains visible while terrain, water, mineral substrate, and surface material stay separated.
           </p>
 
-          <span class="badge">Parent Chain · v19</span>
+          <span class="badge">Parent Chain · v20 Force Alignment</span>
 
           <div class="actions">
             <a class="button primary" href="/showroom/globe/">Return to Globe Split</a>
@@ -320,7 +334,7 @@
 
       <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth parent-chain route preparing.</pre>
 
-      <pre class="receipt">HEARTH_PARENT_CHAIN_ALIGNED_HTML_TNT_v19
+      <pre class="receipt">HEARTH_PARENT_CHAIN_FORCE_ALIGNED_HTML_TNT_v20
 route=/showroom/globe/hearth/
 active_route_file=/showroom/globe/hearth/hearth.climate.route.js
 composition=/assets/hearth/hearth.composition.js
@@ -329,6 +343,7 @@ materials=/assets/hearth/hearth.materials.js
 canvas=/assets/hearth/hearth.canvas.js
 target_land_ratio=0.30
 earth_reference_land_ratio=0.29
+visible_globe_v17_retired=true
 vegetation_topology=held
 trees=false
 bushes=false
@@ -339,6 +354,90 @@ visual_pass_claimed=false</pre>
     </main>
   </div>
 
-  <script src="./hearth.climate.route.js?v=hearth-parent-chain-v19"></script>
+  <script>
+    (() => {
+      "use strict";
+
+      const key = `hearth-parent-chain-v20-force-${Date.now()}`;
+
+      [
+        "__HEARTH_G4_ROUTE_DISPOSE__",
+        "__HEARTH_HABITABLE_FORMING_ROUTE_DISPOSE__",
+        "__HEARTH_CONTROLS_DISPOSE__",
+        "__HEARTH_CANVAS_DISPOSE__",
+        "__HEARTH_VISIBLE_RECOVERY_DISPOSE__"
+      ].forEach((name) => {
+        try {
+          if (typeof window[name] === "function") window[name]();
+        } catch (_) {}
+
+        try {
+          window[name] = undefined;
+          delete window[name];
+        } catch (_) {}
+      });
+
+      [
+        "HEARTH_RUNTIME",
+        "HEARTH_CONTROLS",
+        "HEARTH_TERRAIN_EXTENSION",
+        "HEARTH_ELEVATION",
+        "HEARTH_CLIMATE",
+        "HEARTH_COMPOSITION",
+        "HEARTH_HYDROLOGY",
+        "HEARTH_MATERIALS",
+        "HEARTH_ASSETS",
+        "HEARTH_CANVAS",
+        "__HEARTH_ACTIVE_ROUTE_FILE__",
+        "__HEARTH_ACTIVE_ROUTE_CONTRACT__"
+      ].forEach((name) => {
+        try {
+          window[name] = undefined;
+          delete window[name];
+        } catch (_) {}
+      });
+
+      document.querySelectorAll([
+        'script[src*="./index.js"]',
+        'script[src*="/showroom/globe/hearth/index.js"]',
+        'script[src*="hearth.visible.recovery"]',
+        'script[src*="hearth.climate.route.js"]',
+        'script[data-hearth-file="true"]'
+      ].join(",")).forEach((script) => script.remove());
+
+      const status = document.getElementById("hearth-route-status");
+      if (status) {
+        status.textContent = [
+          "Hearth parent-chain force-aligned HTML loaded.",
+          "Visible Globe v17 shell retired.",
+          "Loading active route file.",
+          "Route /showroom/globe/hearth/hearth.climate.route.js",
+          "Generated image false",
+          "GraphicBox false",
+          "Visual pass claimed false"
+        ].join("\n");
+      }
+
+      const script = document.createElement("script");
+      script.src = `./hearth.climate.route.js?v=${key}`;
+      script.defer = true;
+      script.dataset.hearthFile = "true";
+      script.dataset.hearthFileRole = "parent-chain-route-v20-force";
+
+      script.onerror = () => {
+        if (status) {
+          status.textContent = [
+            "Hearth parent-chain route failed to load.",
+            `Route ${script.src}`,
+            "Generated image false",
+            "GraphicBox false",
+            "Visual pass claimed false"
+          ].join("\n");
+        }
+      };
+
+      document.head.appendChild(script);
+    })();
+  </script>
 </body>
 </html>

@@ -1,11 +1,11 @@
 // /assets/hearth/hearth.climate.js
 // HEARTH_CLIMATE_REGION_BIOME_AUTHORITY_TNT_v1
-// Full-file replacement / new dedicated climate + regional biome authority.
+// Full-file replacement / new file.
+// Climate + region + biome authority only.
 // Purpose:
-// - Own climate/region/biome classification only.
-// - Replace body-mass-assigned color logic with climate-driven material expression.
-// - Classify forest, desert, plains, mountains, tundra, wetland, savanna, steppe, coast, ice, and highland regions.
-// - Preserve terrain, elevation, assets, runtime, controls, canvas, and route authority separation.
+// - Classify land by climate and biome instead of assigning color by body mass.
+// - Support forest, desert, plains, mountains, tundra, wetlands, savanna, steppe, coast, ice, and highlands.
+// - Preserve terrain, elevation, assets, runtime, controls, canvas, and route separation.
 // No GraphicBox. No generated image. No visual-pass claim.
 
 (() => {
@@ -43,10 +43,12 @@
     const s = Math.max(1, Math.floor(scale));
     const x = u * s;
     const y = v * s;
+
     const x0 = Math.floor(x);
     const y0 = Math.floor(y);
     const x1 = x0 + 1;
     const y1 = y0 + 1;
+
     const xf = x - x0;
     const yf = y - y0;
     const sx = xf * xf * (3 - 2 * xf);
@@ -75,7 +77,7 @@
     return total / Math.max(0.000001, norm);
   }
 
-  function classifyBiome(climate) {
+  function classifyBiome(field) {
     const {
       isLand,
       temperature,
@@ -87,28 +89,28 @@
       ice,
       wetness,
       latitudeCold
-    } = climate;
+    } = field;
 
     if (!isLand) {
-      if (coast > 0.50) return "coastal-shelf";
+      if (coast > 0.5) return "coastal-shelf";
       return "ocean";
     }
 
     if (ice > 0.64 || (latitudeCold > 0.72 && temperature < 0.25)) return "ice-cap";
-    if (mountain > 0.70 && temperature < 0.42) return "snowy-mountains";
+    if (mountain > 0.7 && temperature < 0.42) return "snowy-mountains";
     if (mountain > 0.62) return "rocky-mountains";
     if (elevation > 0.66 && moisture > 0.46) return "highland-forest";
-    if (elevation > 0.60 && moisture <= 0.46) return "dry-highlands";
+    if (elevation > 0.6 && moisture <= 0.46) return "dry-highlands";
 
-    if (temperature > 0.68 && aridity > 0.70) return "hot-desert";
+    if (temperature > 0.68 && aridity > 0.7) return "hot-desert";
     if (temperature > 0.58 && aridity > 0.58) return "semi-desert";
-    if (temperature > 0.56 && moisture > 0.70) return "wet-forest";
+    if (temperature > 0.56 && moisture > 0.7) return "wet-forest";
     if (temperature > 0.52 && moisture > 0.52) return "seasonal-forest";
     if (temperature > 0.56 && moisture > 0.36) return "savanna";
 
     if (temperature > 0.36 && moisture > 0.66 && wetness > 0.58) return "wetland";
     if (temperature > 0.34 && moisture > 0.54) return "temperate-forest";
-    if (temperature > 0.30 && moisture > 0.34) return "plains";
+    if (temperature > 0.3 && moisture > 0.34) return "plains";
     if (temperature > 0.24 && moisture <= 0.34) return "steppe";
 
     if (latitudeCold > 0.52 && moisture > 0.36) return "tundra";
@@ -138,6 +140,7 @@
     const equatorHeat = clamp(1 - latitude01, 0, 1);
     const latitudeCold = clamp(latitude01, 0, 1);
     const altitudeCooling = verticalRelief * 0.34 + mountain * 0.28 + highlands * 0.12;
+
     const temperature = clamp(
       equatorHeat * 0.78 +
         heatNoise * 0.18 +
@@ -149,25 +152,26 @@
     );
 
     const oceanMoisture = coast * 0.44 + islandEdge * 0.18;
-    const valleyMoisture = valley * 0.24 + basin * 0.20;
+    const valleyMoisture = valley * 0.24 + basin * 0.2;
     const rainBand = Math.sin((0.5 - Math.abs(v - 0.5)) * Math.PI);
     const rainShadow = mountain * smoothstep(0.34, 0.86, highlands + cliff * 0.32) * 0.34;
+
     const moisture = clamp(
       oceanMoisture +
         valleyMoisture +
         moistureNoise * 0.42 +
         rainBand * 0.16 -
         rainShadow -
-        temperature * 0.10,
+        temperature * 0.1,
       0,
       1
     );
 
-    const wetness = clamp(moisture * 0.66 + basin * 0.20 + valley * 0.14, 0, 1);
+    const wetness = clamp(moisture * 0.66 + basin * 0.2 + valley * 0.14, 0, 1);
     const aridity = clamp((1 - moisture) * 0.72 + temperature * 0.34 + rainShadow * 0.32 - coast * 0.18, 0, 1);
-    const ice = clamp((elevation.snowLine || 0) * 0.72 + latitudeCold * 0.22 + mountain * 0.16 - temperature * 0.20, 0, 1);
+    const ice = clamp((elevation.snowLine || 0) * 0.72 + latitudeCold * 0.22 + mountain * 0.16 - temperature * 0.2, 0, 1);
 
-    const climate = {
+    const field = {
       contract: CONTRACT,
       receipt: RECEIPT,
       isLand,
@@ -192,6 +196,7 @@
       climateAuthorityLoaded: true,
       regionBiomeAuthorityLoaded: true,
       biomeColorNotBodyMassColor: true,
+      bodyMassAssignedColoring: false,
       ownsBodyMassPlacement: false,
       ownsCoastline: false,
       ownsElevation: false,
@@ -202,8 +207,8 @@
     };
 
     return Object.freeze({
-      ...climate,
-      biome: classifyBiome(climate)
+      ...field,
+      biome: classifyBiome(field)
     });
   }
 

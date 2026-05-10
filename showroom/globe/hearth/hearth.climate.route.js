@@ -1,20 +1,18 @@
 // /showroom/globe/hearth/hearth.climate.route.js
-// HEARTH_VISIBLE_GLOBE_RECOVERY_ROUTE_TNT_v15
+// HEARTH_SOURCE_ALIGNED_VISIBLE_GLOBE_ROUTE_TNT_v17
 // Full-file replacement.
 // Purpose:
-// - Restore a visible, draggable Hearth globe immediately.
-// - Stop blank/loading-state regression caused by hard child-contract failure.
-// - Load child authorities as audit/background support, but do not let a stale or missing child file blank the globe.
-// - Preserve route separation: this route conducts recovery rendering only.
+// - Make this file the single active Hearth route.
+// - Mount a visible draggable globe immediately.
+// - Do not hard-block on climate, terrain, assets, runtime, controls, canvas, or old contracts.
 // No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_VISIBLE_GLOBE_RECOVERY_ROUTE_TNT_v15";
-  const RECEIPT = "HEARTH_VISIBLE_GLOBE_RECOVERY_ROUTE_RECEIPT_v15";
-  const PREVIOUS_CONTRACT = "HEARTH_CLIMATE_BIOME_REGION_ROUTE_BYPASS_TNT_v14";
-  const KEY = "hearth-visible-globe-recovery-v15";
+  const CONTRACT = "HEARTH_SOURCE_ALIGNED_VISIBLE_GLOBE_ROUTE_TNT_v17";
+  const RECEIPT = "HEARTH_SOURCE_ALIGNED_VISIBLE_GLOBE_ROUTE_RECEIPT_v17";
+  const VERSION = "2026-05-10.hearth-source-aligned-visible-globe-v17";
 
   const TAU = Math.PI * 2;
   const DEG = Math.PI / 180;
@@ -23,109 +21,55 @@
   window.__HEARTH_ACTIVE_ROUTE_CONTRACT__ = CONTRACT;
 
   const state = {
-    loaded: [],
-    failed: [],
     mounted: false,
     canvasFound: false,
     controlsBound: false,
-    recoveryRenderer: false,
-    childAuditComplete: false,
+    frames: 0,
+    dragging: false,
     error: ""
   };
 
-  const CHILD_FILES = [
-    {
-      role: "runtime",
-      src: `/assets/hearth/hearth.runtime.js?v=${KEY}`,
-      global: "HEARTH_RUNTIME",
-      validate: (value) => Boolean(value && typeof value.start === "function")
-    },
-    {
-      role: "controls",
-      src: `/assets/hearth/hearth.controls.js?v=${KEY}`,
-      global: "HEARTH_CONTROLS",
-      validate: (value) => Boolean(value && typeof value.bind === "function")
-    },
-    {
-      role: "terrainExtension",
-      src: `/assets/hearth/hearth.terrain.extension.js?v=${KEY}`,
-      global: "HEARTH_TERRAIN_EXTENSION",
-      validate: (value) =>
-        Boolean(
-          value &&
-            typeof value.sampleTerrain === "function" &&
-            typeof value.sampleCoastlineModifier === "function" &&
-            typeof value.sampleIslandField === "function"
-        )
-    },
-    {
-      role: "elevation",
-      src: `/assets/hearth/hearth.elevation.js?v=${KEY}`,
-      global: "HEARTH_ELEVATION",
-      validate: (value) => Boolean(value && typeof value.sampleElevation === "function")
-    },
-    {
-      role: "climate",
-      src: `/assets/hearth/hearth.climate.js?v=${KEY}`,
-      global: "HEARTH_CLIMATE",
-      validate: (value) => Boolean(value && typeof value.sampleClimate === "function")
-    },
-    {
-      role: "assets",
-      src: `/assets/hearth/hearth.assets.js?v=${KEY}`,
-      global: "HEARTH_ASSETS",
-      validate: (value) => Boolean(value && typeof value.createTextureCanvas === "function")
-    },
-    {
-      role: "canvas",
-      src: `/assets/hearth/hearth.canvas.js?v=${KEY}`,
-      global: "HEARTH_CANVAS",
-      validate: (value) => Boolean(value && typeof value.mount === "function")
-    }
-  ];
-
   const BODY_MASSES = Object.freeze([
-    { key: "north-crown-mass", lat: 78 * DEG, lon: -20 * DEG, rx: 42 * DEG, ry: 13 * DEG, angle: -10 * DEG, seed: 11 },
-    { key: "equatorial-great-mass", lat: 1 * DEG, lon: -8 * DEG, rx: 64 * DEG, ry: 28 * DEG, angle: -8 * DEG, seed: 22 },
-    { key: "northwest-temperate-mass", lat: 44 * DEG, lon: -104 * DEG, rx: 32 * DEG, ry: 17 * DEG, angle: 28 * DEG, seed: 33 },
-    { key: "northeast-broken-shelf-mass", lat: 34 * DEG, lon: 104 * DEG, rx: 34 * DEG, ry: 16 * DEG, angle: -24 * DEG, seed: 44 },
-    { key: "southeast-warm-mass", lat: -24 * DEG, lon: 142 * DEG, rx: 38 * DEG, ry: 20 * DEG, angle: 18 * DEG, seed: 55 },
-    { key: "southwest-ridge-mass", lat: -38 * DEG, lon: -122 * DEG, rx: 36 * DEG, ry: 18 * DEG, angle: -30 * DEG, seed: 66 },
-    { key: "south-transitional-mass", lat: -59 * DEG, lon: 36 * DEG, rx: 40 * DEG, ry: 14 * DEG, angle: 9 * DEG, seed: 77 }
+    { key:"north-crown", lat:78 * DEG, lon:-20 * DEG, rx:42 * DEG, ry:13 * DEG, angle:-10 * DEG, seed:11 },
+    { key:"equatorial-great", lat:1 * DEG, lon:-8 * DEG, rx:64 * DEG, ry:28 * DEG, angle:-8 * DEG, seed:22 },
+    { key:"northwest-temperate", lat:44 * DEG, lon:-104 * DEG, rx:32 * DEG, ry:17 * DEG, angle:28 * DEG, seed:33 },
+    { key:"northeast-broken-shelf", lat:34 * DEG, lon:104 * DEG, rx:34 * DEG, ry:16 * DEG, angle:-24 * DEG, seed:44 },
+    { key:"southeast-warm", lat:-24 * DEG, lon:142 * DEG, rx:38 * DEG, ry:20 * DEG, angle:18 * DEG, seed:55 },
+    { key:"southwest-ridge", lat:-38 * DEG, lon:-122 * DEG, rx:36 * DEG, ry:18 * DEG, angle:-30 * DEG, seed:66 },
+    { key:"south-transitional", lat:-59 * DEG, lon:36 * DEG, rx:40 * DEG, ry:14 * DEG, angle:9 * DEG, seed:77 }
   ]);
 
   const ISLANDS = Object.freeze([
-    { lat: 69 * DEG, lon: -76 * DEG, rx: 6 * DEG, ry: 2.4 * DEG, angle: -20 * DEG, seed: 101 },
-    { lat: 72 * DEG, lon: 44 * DEG, rx: 5 * DEG, ry: 2 * DEG, angle: 18 * DEG, seed: 102 },
-    { lat: 21 * DEG, lon: 66 * DEG, rx: 5.5 * DEG, ry: 2.3 * DEG, angle: -26 * DEG, seed: 103 },
-    { lat: -19 * DEG, lon: 57 * DEG, rx: 6.4 * DEG, ry: 2.5 * DEG, angle: 20 * DEG, seed: 104 },
-    { lat: 44 * DEG, lon: 123 * DEG, rx: 7.4 * DEG, ry: 2.8 * DEG, angle: -18 * DEG, seed: 105 },
-    { lat: 34 * DEG, lon: 139 * DEG, rx: 5.7 * DEG, ry: 2.1 * DEG, angle: 31 * DEG, seed: 106 },
-    { lat: -9 * DEG, lon: 170 * DEG, rx: 6.6 * DEG, ry: 2.6 * DEG, angle: 34 * DEG, seed: 107 },
-    { lat: -55 * DEG, lon: -84 * DEG, rx: 5.6 * DEG, ry: 2 * DEG, angle: 11 * DEG, seed: 108 },
-    { lat: -70 * DEG, lon: 76 * DEG, rx: 6.2 * DEG, ry: 2.2 * DEG, angle: -20 * DEG, seed: 109 }
+    { lat:69 * DEG, lon:-76 * DEG, rx:6 * DEG, ry:2.4 * DEG, angle:-20 * DEG, seed:101 },
+    { lat:72 * DEG, lon:44 * DEG, rx:5 * DEG, ry:2 * DEG, angle:18 * DEG, seed:102 },
+    { lat:21 * DEG, lon:66 * DEG, rx:5.5 * DEG, ry:2.3 * DEG, angle:-26 * DEG, seed:103 },
+    { lat:-19 * DEG, lon:57 * DEG, rx:6.4 * DEG, ry:2.5 * DEG, angle:20 * DEG, seed:104 },
+    { lat:44 * DEG, lon:123 * DEG, rx:7.4 * DEG, ry:2.8 * DEG, angle:-18 * DEG, seed:105 },
+    { lat:34 * DEG, lon:139 * DEG, rx:5.7 * DEG, ry:2.1 * DEG, angle:31 * DEG, seed:106 },
+    { lat:-9 * DEG, lon:170 * DEG, rx:6.6 * DEG, ry:2.6 * DEG, angle:34 * DEG, seed:107 },
+    { lat:-55 * DEG, lon:-84 * DEG, rx:5.6 * DEG, ry:2 * DEG, angle:11 * DEG, seed:108 },
+    { lat:-70 * DEG, lon:76 * DEG, rx:6.2 * DEG, ry:2.2 * DEG, angle:-20 * DEG, seed:109 }
   ]);
 
   const COLOR = Object.freeze({
-    abyss: [2, 10, 26],
-    deep: [4, 24, 55],
-    ocean: [7, 55, 96],
-    shelf: [24, 116, 136],
-    coastFoam: [115, 177, 160],
-    beach: [198, 177, 116],
-    forest: [36, 104, 64],
-    wetForest: [26, 88, 58],
-    plains: [125, 145, 82],
-    savanna: [158, 144, 78],
-    desert: [184, 148, 86],
-    steppe: [132, 122, 82],
-    mountain: [92, 92, 86],
-    cliff: [46, 54, 66],
-    highland: [112, 116, 94],
-    tundra: [132, 140, 122],
-    snow: [214, 228, 228],
-    ice: [194, 218, 224],
-    shadow: [14, 18, 24]
+    abyss:[2,10,26],
+    deep:[4,24,55],
+    ocean:[7,55,96],
+    shelf:[24,116,136],
+    foam:[115,177,160],
+    beach:[198,177,116],
+    forest:[36,104,64],
+    wetForest:[26,88,58],
+    plains:[125,145,82],
+    savanna:[158,144,78],
+    desert:[184,148,86],
+    steppe:[132,122,82],
+    mountain:[92,92,86],
+    cliff:[46,54,66],
+    highland:[112,116,94],
+    tundra:[132,140,122],
+    snow:[214,228,228],
+    ice:[194,218,224]
   });
 
   function clamp(value, min, max) {
@@ -230,9 +174,10 @@
     const lat = (0.5 - v) * Math.PI;
 
     let best = {
-      field: -10,
-      mass: BODY_MASSES[0],
-      theta: 0
+      field:-10,
+      mass:BODY_MASSES[0],
+      theta:0,
+      island:false
     };
 
     for (const mass of BODY_MASSES) {
@@ -245,7 +190,7 @@
       const field = 1 - e.dist + chip + fracture - bayCut;
 
       if (field > best.field) {
-        best = { field, mass, theta: e.theta };
+        best = { field, mass, theta:e.theta, island:false };
       }
     }
 
@@ -255,7 +200,7 @@
       const field = 0.35 + chip - e.dist;
 
       if (field > best.field) {
-        best = { field, mass: BODY_MASSES[0], theta: e.theta, island: true };
+        best = { field, mass:BODY_MASSES[0], theta:e.theta, island:true };
       }
     }
 
@@ -263,12 +208,12 @@
     const shelf = smoothstep(-0.28, 0.03, best.field) * (best.field <= 0 ? 1 : 0);
 
     return {
-      field: best.field,
-      isLand: best.field > 0,
-      coast: clamp(coast, 0, 1),
-      shelf: clamp(shelf, 0, 1),
-      mass: best.mass,
-      island: best.island === true,
+      field:best.field,
+      isLand:best.field > 0,
+      coast:clamp(coast, 0, 1),
+      shelf:clamp(shelf, 0, 1),
+      mass:best.mass,
+      island:best.island,
       lon,
       lat
     };
@@ -277,7 +222,7 @@
   function climateColor(u, v, land) {
     const latCold = Math.abs(land.lat) / (Math.PI / 2);
     const heat = clamp(1 - latCold + (noise(u, v, 8, 33000) - 0.5) * 0.24, 0, 1);
-    const moisture = clamp(noise(u + 0.17, v - 0.11, 10, 34000) * 0.72 + land.coast * 0.22 + land.island * 0.08, 0, 1);
+    const moisture = clamp(noise(u + 0.17, v - 0.11, 10, 34000) * 0.72 + land.coast * 0.22 + (land.island ? 0.08 : 0), 0, 1);
     const ridge = ridged(u + land.mass.seed * 0.021, v - land.mass.seed * 0.017, 35000);
     const mountain = smoothstep(0.58, 0.92, ridge);
     const highland = smoothstep(0.46, 0.82, ridge);
@@ -322,7 +267,7 @@
       let c = mix(COLOR.abyss, COLOR.deep, noise(u, v, 12, 31000));
       c = mix(c, COLOR.ocean, smoothstep(0.2, 0.9, land.shelf) * 0.48);
       c = mix(c, COLOR.shelf, land.shelf * 0.58);
-      c = mix(c, COLOR.coastFoam, land.coast * land.shelf * 0.16);
+      c = mix(c, COLOR.foam, land.coast * land.shelf * 0.16);
       return c;
     }
 
@@ -334,7 +279,7 @@
     canvas.width = width;
     canvas.height = height;
 
-    const ctx = canvas.getContext("2d", { alpha: false });
+    const ctx = canvas.getContext("2d", { alpha:false });
     const image = ctx.createImageData(width, height);
     const data = image.data;
 
@@ -362,6 +307,47 @@
     };
   }
 
+  function status(value) {
+    const node =
+      document.getElementById("hearth-route-status") ||
+      document.querySelector("[data-hearth-route-status]");
+
+    document.documentElement.dataset.hearthRouteControllerContract = CONTRACT;
+    document.documentElement.dataset.hearthRouteControllerReceipt = RECEIPT;
+    document.documentElement.dataset.hearthRouteVersion = VERSION;
+    document.documentElement.dataset.hearthActiveRouteFile = "/showroom/globe/hearth/hearth.climate.route.js";
+    document.documentElement.dataset.hearthVisibleRecoveryMounted = String(state.mounted);
+    document.documentElement.dataset.hearthCanvasFound = String(state.canvasFound);
+    document.documentElement.dataset.hearthControlsBound = String(state.controlsBound);
+    document.documentElement.dataset.hearthFrames = String(state.frames);
+    document.documentElement.dataset.generatedImage = "false";
+    document.documentElement.dataset.graphicBox = "false";
+    document.documentElement.dataset.visualPassClaimed = "false";
+
+    if (node) {
+      node.textContent = [
+        "Hearth source-aligned visible globe route.",
+        `Status ${value}`,
+        `Route ${CONTRACT}`,
+        `Receipt ${RECEIPT}`,
+        `Version ${VERSION}`,
+        "Active route /showroom/globe/hearth/hearth.climate.route.js",
+        `Mounted ${state.mounted}`,
+        `Canvas found ${state.canvasFound}`,
+        `Controls bound ${state.controlsBound}`,
+        `Frames ${state.frames}`,
+        "Body mass count 7",
+        "Drag enabled true",
+        "Pole swivel true",
+        "Hard child failure blanks globe false",
+        "Generated image false",
+        "GraphicBox false",
+        "Visual pass claimed false",
+        state.error ? `Error ${state.error}` : ""
+      ].filter(Boolean).join("\n");
+    }
+  }
+
   function mountNode() {
     let node =
       document.getElementById("hearthCanvasMount") ||
@@ -374,90 +360,13 @@
 
     node.id = "hearthCanvasMount";
     node.dataset.hearthCanvasMount = "true";
+    node.dataset.hearthVisibleRecovery = "true";
+    node.dataset.hearthRouteControllerContract = CONTRACT;
     node.style.touchAction = "none";
     node.style.userSelect = "none";
     node.querySelectorAll("canvas").forEach((canvas) => canvas.remove());
 
     return node;
-  }
-
-  function status(statusValue) {
-    const node =
-      document.getElementById("hearth-route-status") ||
-      document.querySelector("[data-hearth-route-status]");
-
-    document.documentElement.dataset.hearthRouteControllerContract = CONTRACT;
-    document.documentElement.dataset.hearthRouteControllerReceipt = RECEIPT;
-    document.documentElement.dataset.hearthRoutePreviousContract = PREVIOUS_CONTRACT;
-    document.documentElement.dataset.hearthHardRenewalKey = KEY;
-    document.documentElement.dataset.hearthActiveRouteFile = "/showroom/globe/hearth/hearth.climate.route.js";
-    document.documentElement.dataset.hearthVisibleRecoveryMounted = String(state.mounted);
-    document.documentElement.dataset.hearthRecoveryRenderer = String(state.recoveryRenderer);
-    document.documentElement.dataset.hearthCanvasFound = String(state.canvasFound);
-    document.documentElement.dataset.hearthControlsBound = String(state.controlsBound);
-    document.documentElement.dataset.hearthChildAuditComplete = String(state.childAuditComplete);
-    document.documentElement.dataset.hearthBodyMassCount = "7";
-    document.documentElement.dataset.hearthPoleSwivel = "true";
-    document.documentElement.dataset.generatedImage = "false";
-    document.documentElement.dataset.graphicBox = "false";
-    document.documentElement.dataset.visualPassClaimed = "false";
-
-    if (node) {
-      node.textContent = [
-        "Hearth visible-globe recovery route.",
-        `Status ${statusValue}`,
-        `Route ${CONTRACT}`,
-        `Receipt ${RECEIPT}`,
-        `Previous ${PREVIOUS_CONTRACT}`,
-        `Hard Renewal Key ${KEY}`,
-        "Active Route File /showroom/globe/hearth/hearth.climate.route.js",
-        "Visible globe mounted true",
-        `Recovery renderer ${state.recoveryRenderer}`,
-        `Loaded children ${state.loaded.join(",") || "none"}`,
-        `Failed children ${state.failed.join(",") || "none"}`,
-        `Mounted ${state.mounted}`,
-        `Canvas found ${state.canvasFound}`,
-        `Controls bound ${state.controlsBound}`,
-        `Child audit complete ${state.childAuditComplete}`,
-        "Body mass count 7",
-        "Pole swivel true",
-        "Runtime blocking disabled true",
-        "Hard child failure blanks globe false",
-        "Generated image false",
-        "GraphicBox false",
-        "Visual pass claimed false",
-        state.error ? `Error ${state.error}` : ""
-      ].filter(Boolean).join("\n");
-    }
-  }
-
-  function disposePrior() {
-    [
-      "__HEARTH_G4_ROUTE_DISPOSE__",
-      "__HEARTH_HABITABLE_FORMING_ROUTE_DISPOSE__",
-      "__HEARTH_CONTROLS_DISPOSE__",
-      "__HEARTH_CANVAS_DISPOSE__",
-      "__HEARTH_VISIBLE_RECOVERY_DISPOSE__"
-    ].forEach((name) => {
-      if (typeof window[name] === "function") {
-        try { window[name](); } catch (_) {}
-      }
-
-      try { window[name] = undefined; } catch (_) {}
-    });
-  }
-
-  function removeChildScripts() {
-    document.querySelectorAll([
-      'script[src*="/assets/hearth/hearth.runtime.js"]',
-      'script[src*="/assets/hearth/hearth.controls.js"]',
-      'script[src*="/assets/hearth/hearth.terrain.extension.js"]',
-      'script[src*="/assets/hearth/hearth.elevation.js"]',
-      'script[src*="/assets/hearth/hearth.climate.js"]',
-      'script[src*="/assets/hearth/hearth.assets.js"]',
-      'script[src*="/assets/hearth/hearth.canvas.js"]',
-      'script[data-hearth-file="true"]'
-    ].join(",")).forEach((script) => script.remove());
   }
 
   function hideFallback(mount) {
@@ -467,15 +376,14 @@
     });
   }
 
-  function mountRecoveryGlobe(mount) {
+  function boot() {
+    const mount = mountNode();
     const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d", { alpha: true });
+    const ctx = canvas.getContext("2d", { alpha:true });
 
     canvas.dataset.hearthRecoveryCanvas = "true";
     canvas.dataset.hearthRouteControllerContract = CONTRACT;
     canvas.dataset.hearthRouteControllerReceipt = RECEIPT;
-    canvas.dataset.hearthBodyMassCount = "7";
-    canvas.dataset.hearthPoleSwivel = "true";
     canvas.dataset.generatedImage = "false";
     canvas.dataset.graphicBox = "false";
     canvas.dataset.visualPassClaimed = "false";
@@ -491,7 +399,7 @@
     mount.appendChild(canvas);
     hideFallback(mount);
 
-    const texture = createTexture(1024, 512);
+    const texture = createTexture(768, 384);
 
     let disposed = false;
     let dragging = false;
@@ -505,8 +413,8 @@
     function resize() {
       const box = mount.getBoundingClientRect();
       const cssSize = Math.max(280, Math.floor(Math.min(box.width || 420, box.height || box.width || 420)));
-      const dpr = Math.min(2, window.devicePixelRatio || 1);
-      const size = Math.min(720, Math.max(360, Math.floor(cssSize * dpr)));
+      const dpr = Math.min(1.7, window.devicePixelRatio || 1);
+      const size = Math.min(560, Math.max(340, Math.floor(cssSize * dpr)));
 
       if (canvas.width !== size || canvas.height !== size) {
         canvas.width = size;
@@ -564,10 +472,12 @@
           const lat = Math.asin(clamp(yy, -1, 1));
           const u = lon / TAU + 0.5;
           const v = 0.5 - lat / Math.PI;
+
           let c = sampleTexture(u, v);
 
           const light = clamp(0.42 + z * 0.58 + sx * -0.08 + sy * -0.08, 0.18, 1.08);
           const limb = clamp(0.35 + z * 0.78, 0.2, 1);
+
           c = [
             Math.round(c[0] * light * limb),
             Math.round(c[1] * light * limb),
@@ -593,14 +503,22 @@
         tiltVelocity *= 0.93;
 
         if (Math.abs(yawVelocity) < 0.0014) yawVelocity = 0.0014;
+
         if (tilt > 1.25) {
           tilt = 1.25;
           tiltVelocity *= -0.2;
         }
+
         if (tilt < -1.25) {
           tilt = -1.25;
           tiltVelocity *= -0.2;
         }
+      }
+
+      state.frames += 1;
+
+      if (state.frames < 4 || state.frames % 90 === 0) {
+        status("visible-rendering");
       }
 
       requestAnimationFrame(render);
@@ -608,6 +526,7 @@
 
     function pointerDown(event) {
       dragging = true;
+      state.dragging = true;
       lastX = event.clientX;
       lastY = event.clientY;
       yawVelocity = 0;
@@ -636,14 +555,15 @@
 
     function pointerUp(event) {
       dragging = false;
+      state.dragging = false;
       canvas.releasePointerCapture?.(event.pointerId);
       event.preventDefault();
     }
 
-    canvas.addEventListener("pointerdown", pointerDown, { passive: false });
-    canvas.addEventListener("pointermove", pointerMove, { passive: false });
-    canvas.addEventListener("pointerup", pointerUp, { passive: false });
-    canvas.addEventListener("pointercancel", pointerUp, { passive: false });
+    canvas.addEventListener("pointerdown", pointerDown, { passive:false });
+    canvas.addEventListener("pointermove", pointerMove, { passive:false });
+    canvas.addEventListener("pointerup", pointerUp, { passive:false });
+    canvas.addEventListener("pointercancel", pointerUp, { passive:false });
 
     window.__HEARTH_VISIBLE_RECOVERY_DISPOSE__ = () => {
       disposed = true;
@@ -654,74 +574,18 @@
       canvas.remove();
     };
 
-    requestAnimationFrame(render);
-
-    return canvas;
-  }
-
-  function loadChild(file) {
-    return new Promise((resolve) => {
-      const script = document.createElement("script");
-      script.src = file.src;
-      script.defer = true;
-      script.dataset.hearthFile = "true";
-      script.dataset.hearthFileRole = file.role;
-      script.dataset.routeContract = CONTRACT;
-
-      script.onload = () => {
-        try {
-          if (file.validate(window[file.global])) {
-            state.loaded.push(file.role);
-          } else {
-            state.failed.push(`${file.role}:invalid`);
-          }
-        } catch (error) {
-          state.failed.push(`${file.role}:validate-error`);
-        }
-
-        status(`child-${file.role}-checked`);
-        resolve();
-      };
-
-      script.onerror = () => {
-        state.failed.push(`${file.role}:load-error`);
-        status(`child-${file.role}-load-error`);
-        resolve();
-      };
-
-      document.head.appendChild(script);
-    });
-  }
-
-  async function auditChildren() {
-    for (const file of CHILD_FILES) {
-      await loadChild(file);
-    }
-
-    state.childAuditComplete = true;
-    status("visible-ready-child-audit-complete");
-  }
-
-  function boot() {
-    disposePrior();
-    removeChildScripts();
-
-    const mount = mountNode();
-    const canvas = mountRecoveryGlobe(mount);
-
     state.mounted = true;
-    state.canvasFound = Boolean(canvas);
+    state.canvasFound = true;
     state.controlsBound = true;
-    state.recoveryRenderer = true;
     state.error = "";
 
-    status("visible-recovery-mounted");
+    status("visible-mounted");
 
-    auditChildren();
+    requestAnimationFrame(render);
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot, { once: true });
+    document.addEventListener("DOMContentLoaded", boot, { once:true });
   } else {
     boot();
   }

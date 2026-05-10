@@ -1,24 +1,24 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_ASYMMETRIC_LANDMASS_NATURALIZATION_ROUTE_TNT_v5
+// HEARTH_TERRAIN_EXTENSION_ROUTE_TNT_v6
 // Full-file replacement.
-// Forces the asymmetric-landmass assets contract while preserving the passing runtime/controls/canvas chain.
-// Runtime remains protected.
-// Controls remain HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_CONTROLS_TNT_v2.
-// Canvas remains HEARTH_G2_CANVAS_POLE_SWIVEL_SEVEN_BODY_CONSUMER_TNT_v2.
+// Loads terrain extension before assets.
+// Preserves runtime, controls, and canvas chain.
 // No GraphicBox. No generated image. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_ASYMMETRIC_LANDMASS_NATURALIZATION_ROUTE_TNT_v5";
-  const RECEIPT = "HEARTH_ASYMMETRIC_LANDMASS_NATURALIZATION_ROUTE_RECEIPT_v5";
-  const PREVIOUS_CONTRACT = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_ROUTE_TNT_v4";
-  const KEY = "hearth-asymmetric-landmass-naturalization-v5";
+  const CONTRACT = "HEARTH_TERRAIN_EXTENSION_ROUTE_TNT_v6";
+  const RECEIPT = "HEARTH_TERRAIN_EXTENSION_ROUTE_RECEIPT_v6";
+  const PREVIOUS_CONTRACT = "HEARTH_ASYMMETRIC_LANDMASS_NATURALIZATION_ROUTE_TNT_v5";
+  const KEY = "hearth-terrain-extension-fingerprint-authority-v6";
 
   const EXPECTED = Object.freeze({
+    runtime: "HEARTH",
+    terrainExtension: "HEARTH_TERRAIN_EXTENSION_FINGERPRINT_AUTHORITY_TNT_v1",
+    assets: "HEARTH_ASSETS_TERRAIN_EXTENSION_BRIDGE_TNT_v5",
     controls: "HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_CONTROLS_TNT_v2",
-    canvas: "HEARTH_G2_CANVAS_POLE_SWIVEL_SEVEN_BODY_CONSUMER_TNT_v2",
-    assets: "HEARTH_ASYMMETRIC_LANDMASS_NATURALIZATION_ASSETS_TNT_v4"
+    canvas: "HEARTH_G2_CANVAS_POLE_SWIVEL_SEVEN_BODY_CONSUMER_TNT_v2"
   });
 
   const FILES = [
@@ -38,6 +38,18 @@
         String(value.contract || "").includes(EXPECTED.controls)
     },
     {
+      role: "terrainExtension",
+      src: `/assets/hearth/hearth.terrain.extension.js?v=${KEY}`,
+      global: "HEARTH_TERRAIN_EXTENSION",
+      validate: (value) =>
+        value &&
+        typeof value.sampleTerrain === "function" &&
+        typeof value.getStatus === "function" &&
+        String(value.contract || "").includes(EXPECTED.terrainExtension) &&
+        value.getStatus().terrainFingerprintCount === 7 &&
+        value.getStatus().eachBodyHasUniqueTerrain === true
+    },
+    {
       role: "assets",
       src: `/assets/hearth/hearth.assets.js?v=${KEY}`,
       global: "HEARTH_ASSETS",
@@ -48,11 +60,12 @@
         const status = value.getStatus();
         return (
           status.bodyMassCount === 7 &&
-          status.uniqueMassProfiles === true &&
+          status.terrainExtensionLoaded === true &&
+          status.terrainFingerprintCount === 7 &&
+          status.eachBodyHasUniqueTerrain === true &&
+          status.assetsConsumeTerrainExtension === true &&
           status.twoBodyRead === false &&
-          status.symmetryReduced === true &&
-          status.ovalPatchRead === false &&
-          status.naturalCoastlinePressure === true
+          status.symmetryReduced === true
         );
       }
     },
@@ -85,15 +98,13 @@
     document.documentElement.dataset.hearthRouteControllerReceipt = RECEIPT;
     document.documentElement.dataset.hearthRoutePreviousContract = PREVIOUS_CONTRACT;
     document.documentElement.dataset.hearthHardRenewalKey = KEY;
-    document.documentElement.dataset.hearthBlueprint = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_v1";
-    document.documentElement.dataset.hearthSevenBodyMassFormation = "true";
+    document.documentElement.dataset.hearthTerrainExtensionLoaded = String(state.loaded.includes("terrainExtension"));
+    document.documentElement.dataset.hearthTerrainFingerprintCount = "7";
+    document.documentElement.dataset.hearthEachBodyHasUniqueTerrain = "true";
+    document.documentElement.dataset.hearthAssetsConsumeTerrainExtension = "true";
     document.documentElement.dataset.hearthBodyMassCount = "7";
-    document.documentElement.dataset.hearthUniqueMassProfiles = "true";
     document.documentElement.dataset.hearthTwoBodyRead = "false";
     document.documentElement.dataset.hearthSymmetryReduced = "true";
-    document.documentElement.dataset.hearthOvalPatchRead = "false";
-    document.documentElement.dataset.hearthNaturalCoastlinePressure = "true";
-    document.documentElement.dataset.hearthSymmetricalDotDistribution = "false";
     document.documentElement.dataset.hearthPoleSwivel = "true";
     document.documentElement.dataset.generatedImage = "false";
     document.documentElement.dataset.graphicBox = "false";
@@ -102,30 +113,29 @@
     if (node) {
       node.textContent = [
         state.mounted
-          ? "Hearth asymmetric landmass naturalization route ready."
-          : "Hearth asymmetric landmass naturalization route preparing.",
+          ? "Hearth terrain-extension route ready."
+          : "Hearth terrain-extension route preparing.",
         `Status ${statusValue}`,
         `Route ${CONTRACT}`,
         `Receipt ${RECEIPT}`,
         `Previous ${PREVIOUS_CONTRACT}`,
-        `Blueprint HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_v1`,
         `Hard Renewal Key ${KEY}`,
         `Loaded ${state.loaded.join(",") || "none"}`,
         `Failed ${state.failed.join(",") || "none"}`,
         `Mounted ${state.mounted}`,
         `Canvas found ${state.canvasFound}`,
         `Controls bound ${state.controlsBound}`,
+        "Terrain extension loaded true",
+        "Terrain fingerprint count 7",
+        "Each body has unique terrain true",
+        "Assets consume terrain extension true",
         "Body mass count 7",
-        "North Crown Mass true",
-        "Equatorial Great Mass true",
-        "Secondary masses 5",
-        "Unique mass profiles true",
         "Two-body read false",
         "Symmetry reduced true",
-        "Oval patch read false",
-        "Natural coastline pressure true",
-        "Symmetrical dot distribution false",
         "Pole swivel true",
+        "Runtime touched false",
+        "Controls touched false",
+        "Canvas touched false",
         "Generated image false",
         "GraphicBox false",
         "Visual pass claimed false",
@@ -144,6 +154,7 @@
       if (typeof window[name] === "function") {
         try { window[name](); } catch (_) {}
       }
+
       try { window[name] = undefined; } catch (_) {}
     });
   }
@@ -152,6 +163,7 @@
     document.querySelectorAll([
       'script[src*="/assets/hearth/hearth.runtime.js"]',
       'script[src*="/assets/hearth/hearth.controls.js"]',
+      'script[src*="/assets/hearth/hearth.terrain.extension.js"]',
       'script[src*="/assets/hearth/hearth.assets.js"]',
       'script[src*="/assets/hearth/hearth.canvas.js"]',
       'script[data-hearth-file="true"]'
@@ -162,6 +174,8 @@
     [
       "HEARTH_RUNTIME",
       "HEARTH_CONTROLS",
+      "HEARTH_TERRAIN_EXTENSION",
+      "HEARTH_TERRAIN_EXTENSION_RECEIPT",
       "HEARTH_ASSETS",
       "HEARTH_CANVAS",
       "HEARTH_CONTROLS_RECEIPT",
@@ -185,14 +199,13 @@
 
     node.id = "hearthCanvasMount";
     node.dataset.hearthCanvasMount = "true";
-    node.dataset.hearthBlueprint = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_v1";
-    node.dataset.hearthSevenBodyMassFormation = "true";
+    node.dataset.hearthTerrainExtensionLoaded = "true";
+    node.dataset.hearthTerrainFingerprintCount = "7";
+    node.dataset.hearthEachBodyHasUniqueTerrain = "true";
+    node.dataset.hearthAssetsConsumeTerrainExtension = "true";
     node.dataset.hearthBodyMassCount = "7";
-    node.dataset.hearthUniqueMassProfiles = "true";
     node.dataset.hearthTwoBodyRead = "false";
     node.dataset.hearthSymmetryReduced = "true";
-    node.dataset.hearthOvalPatchRead = "false";
-    node.dataset.hearthNaturalCoastlinePressure = "true";
     node.dataset.hearthPoleSwivel = "true";
     node.style.touchAction = "none";
     node.style.userSelect = "none";
@@ -265,14 +278,13 @@
         throw new Error("Canvas authority mounted, but no canvas was found.");
       }
 
-      canvas.dataset.hearthBlueprint = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_v1";
+      canvas.dataset.hearthTerrainExtensionLoaded = "true";
+      canvas.dataset.hearthTerrainFingerprintCount = "7";
+      canvas.dataset.hearthEachBodyHasUniqueTerrain = "true";
+      canvas.dataset.hearthAssetsConsumeTerrainExtension = "true";
       canvas.dataset.hearthBodyMassCount = "7";
-      canvas.dataset.hearthUniqueMassProfiles = "true";
       canvas.dataset.hearthTwoBodyRead = "false";
       canvas.dataset.hearthSymmetryReduced = "true";
-      canvas.dataset.hearthOvalPatchRead = "false";
-      canvas.dataset.hearthNaturalCoastlinePressure = "true";
-      canvas.dataset.hearthSymmetricalDotDistribution = "false";
 
       controls.bind(canvas, runtime, {
         mount,

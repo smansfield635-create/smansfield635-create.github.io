@@ -3,7 +3,7 @@
   lang="en"
   data-page="gauges-hearth-seven-body-mass-control-audit"
   data-route="/gauges/"
-  data-contract="GAUGES_HEARTH_SEVEN_BODY_MASS_CONTROL_AUDIT_TNT_v10"
+  data-contract="GAUGES_HEARTH_SEVEN_BODY_MASS_CONTROL_AUDIT_TNT_v10_1"
   data-role="read-only-source-audit"
   data-generated-image="false"
   data-graphic-box="false"
@@ -15,14 +15,13 @@
   <title>Diamond Gate Bridge · Gauges</title>
   <meta
     name="description"
-    content="Read-only Gauges console for Hearth seven-body-mass renewal, pole-swivel controls, canvas contract alignment, Audralia regression checks, and build order."
+    content="Read-only Gauges console for Hearth seven-body-mass pass recognition, Audralia boot-key regression, and build-order status."
   >
 
   <style>
     :root {
       --bg: #030914;
       --panel: rgba(7, 16, 30, 0.86);
-      --panel2: rgba(9, 22, 41, 0.78);
       --line: rgba(231, 188, 105, 0.34);
       --gold: #e7bc69;
       --text: #eef6ff;
@@ -45,15 +44,8 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    body { margin: 0; min-height: 100vh; }
+    a { color: inherit; text-decoration: none; }
 
     a:focus-visible,
     button:focus-visible {
@@ -340,12 +332,12 @@
 
     <main id="main">
       <section class="hero" aria-labelledby="title">
-        <div class="eyebrow">Read-only · Hearth seven-body-mass + control audit</div>
+        <div class="eyebrow">Read-only · Hearth pass recognition + Audralia boot-key audit</div>
         <h1 id="title">Gauges</h1>
         <p class="lede">
-          This console measures what is actually served now. It audits Hearth against the seven-body-mass renewal:
-          HTML boot key, route controller, seven-body assets, pole-swivel controls, canvas consumer, mount status,
-          and Audralia control regression. It does not judge Hearth against the old habitable-forming controller.
+          This console measures what is actually served now. It recognizes Hearth’s seven-body-mass pass state
+          from the route receipt, not from static fallback text. It also keeps the Audralia regression check active
+          so the remaining boot-key repair is visible.
         </p>
 
         <div class="actions">
@@ -381,9 +373,9 @@
       <section class="panel">
         <h2>Current build question</h2>
         <p>
-          Hearth should be judged against the seven-body-mass renewal, not the old habitable-forming route. A valid
-          pass requires the v3 route, v3 HTML boot key, v2 assets, v2 controls, and v2 canvas consumer to be served
-          together. If the route says “Failed canvas,” the canvas contract is still the controlling break.
+          Hearth passes only when the route receipt reports ready, loaded runtime/controls/assets/canvas,
+          failed none, mounted true, canvas found true, controls bound true, body mass count 7, and pole swivel true.
+          Static fallback text no longer counts as a Hearth failure if the route receipt proves the canvas mounted.
         </p>
       </section>
 
@@ -392,7 +384,7 @@
         <div id="checks" class="checks" aria-live="polite"></div>
       </section>
 
-      <pre id="receipt" class="receipt">GAUGES_HEARTH_SEVEN_BODY_MASS_CONTROL_AUDIT_TNT_v10 · waiting for audit.</pre>
+      <pre id="receipt" class="receipt">GAUGES_HEARTH_SEVEN_BODY_MASS_CONTROL_AUDIT_TNT_v10_1 · waiting for audit.</pre>
     </main>
   </div>
 
@@ -400,7 +392,7 @@
     (() => {
       "use strict";
 
-      const CONTRACT = "GAUGES_HEARTH_SEVEN_BODY_MASS_CONTROL_AUDIT_TNT_v10";
+      const CONTRACT = "GAUGES_HEARTH_SEVEN_BODY_MASS_CONTROL_AUDIT_TNT_v10_1";
 
       const EXPECTED = Object.freeze({
         hearthHtml: "HEARTH_G2_SEVEN_BODY_MASS_HARD_RENEWAL_HTML_TNT_v3",
@@ -411,7 +403,8 @@
         hearthCanvas: "HEARTH_G2_CANVAS_POLE_SWIVEL_SEVEN_BODY_CONSUMER_TNT_v2",
         audraliaRoute: "AUDRALIA_G2_5_FREE_DRAG_POLE_SWIVEL_ROUTE_TNT_v1",
         audraliaControls: "AUDRALIA_G2_5_FREE_DRAG_AND_POLE_SWIVEL_CONTROL_TNT_v1",
-        audraliaCanvas: "AUDRALIA_G2_5_CANVAS_POLE_SWIVEL_CONSUMER_TNT_v1"
+        audraliaCanvas: "AUDRALIA_G2_5_CANVAS_POLE_SWIVEL_CONSUMER_TNT_v1",
+        audraliaBootKey: "audralia-g2-5-free-drag-pole-swivel-route-v1"
       });
 
       const targets = Object.freeze({
@@ -489,6 +482,20 @@
         return "planned";
       }
 
+      function routeReceiptPass(hearthRoute) {
+        return (
+          includes(hearthRoute, "Hearth seven-body-mass hard-renewal route ready") &&
+          includes(hearthRoute, "Status ready") &&
+          includes(hearthRoute, "Loaded runtime,controls,assets,canvas") &&
+          includes(hearthRoute, "Failed none") &&
+          includes(hearthRoute, "Mounted true") &&
+          includes(hearthRoute, "Canvas found true") &&
+          includes(hearthRoute, "Controls bound true") &&
+          includes(hearthRoute, "Body mass count 7") &&
+          includes(hearthRoute, "Pole swivel true")
+        );
+      }
+
       function renderChecks() {
         checksNode.innerHTML = "";
 
@@ -559,44 +566,36 @@
         const hearthAssets = src(targets.hearthAssets);
         const hearthControls = src(targets.hearthControls);
         const hearthCanvas = src(targets.hearthCanvas);
+        const audraliaHtml = src(targets.audraliaHtml);
+        const audraliaRoute = src(targets.audraliaRoute);
 
-        const htmlV3 = includesAny(hearthHtml, [EXPECTED.hearthHtml, EXPECTED.hearthHtmlBootKey]) ||
-          includesAny(hearthRoute, [EXPECTED.hearthHtml, EXPECTED.hearthHtmlBootKey]);
+        const hearthSourceAligned =
+          (includes(hearthHtml, EXPECTED.hearthHtml) || includes(hearthRoute, EXPECTED.hearthHtml)) &&
+          (includes(hearthHtml, EXPECTED.hearthHtmlBootKey) || includes(hearthRoute, EXPECTED.hearthHtmlBootKey)) &&
+          includes(hearthIndex, EXPECTED.hearthRoute) &&
+          includes(hearthAssets, EXPECTED.hearthAssets) &&
+          includes(hearthControls, EXPECTED.hearthControls) &&
+          includes(hearthCanvas, EXPECTED.hearthCanvas);
 
-        const routeV3 = includes(hearthIndex, EXPECTED.hearthRoute);
-        const assetsV2 = includes(hearthAssets, EXPECTED.hearthAssets);
-        const controlsV2 = includes(hearthControls, EXPECTED.hearthControls);
-        const canvasV2 = includes(hearthCanvas, EXPECTED.hearthCanvas);
+        const hearthReceiptPassed = routeReceiptPass(hearthRoute);
 
-        const liveFailedCanvas = includes(hearthRoute, "Failed canvas") ||
-          includes(hearthRoute, "contract validation failed") ||
-          includes(hearthRoute, "Loaded canvas, but contract validation failed");
+        const audraliaBootPass =
+          includes(audraliaHtml, EXPECTED.audraliaBootKey) ||
+          includes(audraliaRoute, EXPECTED.audraliaBootKey);
 
-        if (!htmlV3) {
-          return "Hearth HTML is not booting the seven-body-mass v3 route key. Update /showroom/globe/hearth/index.html first.";
+        if (!hearthSourceAligned) {
+          return "Hearth is not fully source-aligned. Review the failed Hearth source checks first.";
         }
 
-        if (!routeV3) {
-          return "Hearth HTML may be renewed, but /showroom/globe/hearth/index.js is not the seven-body-mass v3 route controller.";
+        if (!hearthReceiptPassed) {
+          return "Hearth source is aligned, but the route receipt does not yet prove mounted true. Inspect Hearth directly or wait for cache propagation.";
         }
 
-        if (!assetsV2) {
-          return "Hearth route expects seven-body-mass assets, but /assets/hearth/hearth.assets.js is not the v2 seven-body-mass contract.";
+        if (!audraliaBootPass) {
+          return "Hearth is passed. The remaining real fail is Audralia HTML boot key. Repair /showroom/globe/audralia/index.html.";
         }
 
-        if (!controlsV2) {
-          return "Hearth route expects v2 pole-swivel controls, but /assets/hearth/hearth.controls.js is not the v2 control contract.";
-        }
-
-        if (!canvasV2) {
-          return "Hearth route expects the v2 seven-body/pole-swivel canvas consumer, but /assets/hearth/hearth.canvas.js is not serving that contract.";
-        }
-
-        if (liveFailedCanvas) {
-          return "Hearth source contracts look close, but the live route still reports canvas validation failure. Redeploy /assets/hearth/hearth.canvas.js with the exact v2 contract and cache-bust the route.";
-        }
-
-        return "Hearth seven-body-mass chain is source-aligned. Test visible render, drag, swivel, and body-mass distribution next.";
+        return "Hearth seven-body-mass chain is passed and Audralia boot key is aligned. Ground level remains intentionally held.";
       }
 
       async function runAudit() {
@@ -682,11 +681,12 @@
           "Hearth Assets",
           "Seven-body-mass definition",
           targets.hearthAssets,
-          includes(hearthAssets, "BODY_MASSES") &&
-          includes(hearthAssets, "north-crown-mass") &&
-          includes(hearthAssets, "equatorial-great-mass") &&
-          includes(hearthAssets, "secondaryMasses") ||
-          includes(hearthAssets, "secondaryMasses: 5")
+          (
+            includes(hearthAssets, "BODY_MASSES") &&
+            includes(hearthAssets, "north-crown-mass") &&
+            includes(hearthAssets, "equatorial-great-mass") &&
+            (includes(hearthAssets, "secondaryMasses") || includes(hearthAssets, "secondaryMasses: 5"))
+          )
             ? "pass"
             : "fail",
           "must define one North Crown, one Equatorial Great Mass, and five secondary masses"
@@ -771,13 +771,14 @@
 
         addCheck(
           "Hearth Live Status",
-          "Mount not stuck on loading",
+          "Mounted receipt",
           targets.hearthRoute,
-          includes(hearthRoute, "chain loading") &&
-          !includes(hearthRoute, "Mounted true")
-            ? "fail"
-            : "pass",
-          "route should not remain stuck on loading without a mounted canvas"
+          routeReceiptPass(hearthRoute)
+            ? "pass"
+            : includesAny(hearthRoute, ["Status failed", "Failed canvas", "contract validation failed"])
+              ? "fail"
+              : "hold",
+          "passes only when route receipt reports ready, loaded all files, failed none, mounted true, canvas found true, controls bound true, body mass count 7, and pole swivel true"
         );
 
         addCheck(
@@ -802,11 +803,10 @@
           "Audralia Regression",
           "G2.5 HTML boot key",
           targets.audraliaHtml,
-          includes(audraliaHtml, "audralia-g2-5-free-drag-pole-swivel-route-v1") ||
-          includes(audraliaRoute, "audralia-g2-5-free-drag-pole-swivel-route-v1")
+          includes(audraliaHtml, EXPECTED.audraliaBootKey) || includes(audraliaRoute, EXPECTED.audraliaBootKey)
             ? "pass"
             : "fail",
-          "Audralia HTML must boot G2.5 route key"
+          `Audralia HTML must boot ${EXPECTED.audraliaBootKey}`
         );
 
         addCheck(

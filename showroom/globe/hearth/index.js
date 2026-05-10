@@ -1,23 +1,28 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_HABITABLE_FORMING_ROUTE_CONTROLLER_TNT_v1
+// HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_ROUTE_TNT_v2
 // Full-file replacement.
-// Route/controller renewal only.
+// Hard renewal alignment.
 // Purpose:
-// - Replace stale G4/G4.1 route identity with Hearth Habitable Forming baseline identity.
-// - Preserve the existing working Hearth engine chain.
-// - Keep runtime, controls, assets, and canvas files protected.
-// - Mount through #hearthCanvasMount.
-// - Hide fallback after successful mount.
-// - Report honest route status.
+// - Force Hearth to boot the G2 pole-swivel control chain.
+// - Stop live page from applying HEARTH_HABITABLE_FORMING_ROUTE_CONTROLLER_TNT_v1.
+// - Load runtime, controls, assets, and canvas with one hard-renewal cache key.
+// - Preserve runtime and asset source authority.
+// - Bind controls to the actual mounted canvas.
+// - Require canvas to consume pole swivel.
 // No GraphicBox. No generated image. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_HABITABLE_FORMING_ROUTE_CONTROLLER_TNT_v1";
-  const RECEIPT = "HEARTH_HABITABLE_FORMING_ROUTE_RECEIPT";
-  const PREVIOUS_CONTRACT = "HEARTH_G4_1_ASSET_BOUNDARY_EXPRESSION_ROUTE_CONTROLLER_TNT_v1";
-  const KEY = "hearth-habitable-forming-route-controller-v1";
+  const CONTRACT = "HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_ROUTE_TNT_v2";
+  const RECEIPT = "HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_ROUTE_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "HEARTH_HABITABLE_FORMING_ROUTE_CONTROLLER_TNT_v1";
+  const KEY = "hearth-g2-free-drag-pole-swivel-hard-renewal-v2";
+
+  const EXPECTED = Object.freeze({
+    controls: "HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_CONTROLS_TNT_v1",
+    canvas: "HEARTH_G2_CANVAS_POLE_SWIVEL_PRESERVATION_CONSUMER_TNT_v1"
+  });
 
   const FILES = [
     {
@@ -30,7 +35,10 @@
       role: "controls",
       src: `/assets/hearth/hearth.controls.js?v=${KEY}`,
       global: "HEARTH_CONTROLS",
-      validate: (value) => value && typeof value.bind === "function"
+      validate: (value) =>
+        value &&
+        typeof value.bind === "function" &&
+        String(value.contract || window.HEARTH_CONTROLS_RECEIPT?.contract || "").includes(EXPECTED.controls)
     },
     {
       role: "assets",
@@ -42,15 +50,21 @@
       role: "canvas",
       src: `/assets/hearth/hearth.canvas.js?v=${KEY}`,
       global: "HEARTH_CANVAS",
-      validate: (value) => value && typeof value.mount === "function"
+      validate: (value) =>
+        value &&
+        typeof value.mount === "function" &&
+        String(value.contract || window.HEARTH_CANVAS_RECEIPT?.contract || "").includes(EXPECTED.canvas)
     }
   ];
 
   const state = {
     loaded: [],
     failed: [],
+    warnings: [],
     mounted: false,
     canvasFound: false,
+    controlsBound: false,
+    canvasConsumesPoleSwivel: false,
     status: "initial",
     error: ""
   };
@@ -65,40 +79,34 @@
     document.documentElement.dataset.hearthRouteControllerStatus = status;
     document.documentElement.dataset.hearthPublicIdentity = "Hearth Habitable Forming Coherent Baseline";
     document.documentElement.dataset.hearthGenerationBaseline = "G1-coherent-achieved";
-    document.documentElement.dataset.hearthCurrentPhase = "habitable-forming";
-    document.documentElement.dataset.hearthNextPhase = "G2-material-natural-readability";
-    document.documentElement.dataset.hearthFormerMotionRenewal = "folded-into-baseline";
-    document.documentElement.dataset.hearthG5Job = "clouds-weather-living-atmosphere-later";
-    document.documentElement.dataset.hearthAssetsAdoptAuthority = "false";
-    document.documentElement.dataset.hearthAssetsAbsorbAuthority = "false";
-    document.documentElement.dataset.hearthAssetsBoundaryExpression = "true";
-    document.documentElement.dataset.hearthRuntimeLocked = "true";
-    document.documentElement.dataset.hearthControlsLocked = "true";
+    document.documentElement.dataset.hearthCurrentPhase = "G2-control-preservation";
+    document.documentElement.dataset.hearthHardRenewalKey = KEY;
+    document.documentElement.dataset.hearthPoleSwivel = "true";
+    document.documentElement.dataset.hearthPhysicalAxisDeg = "23.44";
     document.documentElement.dataset.hearthLoadedFiles = state.loaded.join(",") || "none";
     document.documentElement.dataset.hearthFailedFiles = state.failed.join(",") || "none";
     document.documentElement.dataset.hearthMounted = String(state.mounted);
     document.documentElement.dataset.hearthCanvasFound = String(state.canvasFound);
-    document.documentElement.dataset.hearthGeneratedImage = "false";
-    document.documentElement.dataset.hearthGraphicBox = "false";
-    document.documentElement.dataset.hearthVisualPassClaimed = "false";
+    document.documentElement.dataset.hearthControlsBound = String(state.controlsBound);
+    document.documentElement.dataset.hearthCanvasConsumesPoleSwivel = String(state.canvasConsumesPoleSwivel);
+    document.documentElement.dataset.generatedImage = "false";
+    document.documentElement.dataset.graphicBox = "false";
+    document.documentElement.dataset.visualPassClaimed = "false";
 
-    window.HEARTH_HABITABLE_FORMING_ROUTE_RECEIPT = Object.freeze({
+    window.HEARTH_G2_POLE_SWIVEL_ROUTE_STATUS = Object.freeze({
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
+      key: KEY,
       status,
-      publicIdentity: "Hearth · Habitable Forming · Coherent Baseline",
-      baseline: "G1 coherent achieved",
-      currentPhase: "habitable-forming",
-      nextPhase: "G2 material definition and natural readability",
-      formerMotionRenewal: "folded-into-baseline",
-      runtimeLocked: true,
-      controlsLocked: true,
-      assetsAbsorbAuthority: false,
       loaded: state.loaded.slice(),
       failed: state.failed.slice(),
+      warnings: state.warnings.slice(),
       mounted: state.mounted,
       canvasFound: state.canvasFound,
+      controlsBound: state.controlsBound,
+      canvasConsumesPoleSwivel: state.canvasConsumesPoleSwivel,
+      error: state.error,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
@@ -116,28 +124,33 @@
 
     const lines = [
       state.mounted
-        ? "Hearth habitable-forming route ready."
-        : "Hearth habitable-forming route preparing.",
+        ? "Hearth G2 free drag and pole swivel hard-renewal route ready."
+        : "Hearth G2 free drag and pole swivel hard-renewal route preparing.",
       `Status ${status}`,
       `Route ${CONTRACT}`,
       `Receipt ${RECEIPT}`,
       `Previous ${PREVIOUS_CONTRACT}`,
+      `Hard Renewal Key ${KEY}`,
       "Public Identity Hearth · Habitable Forming · Coherent Baseline",
-      "Baseline Generation 1 coherent achieved",
-      "Former motion renewal folded into baseline",
-      "Next Generation 2 material definition and natural readability",
-      "Later Generation 5 clouds/weather/living atmosphere",
+      "Current Phase G2 control preservation",
+      "Pole swivel true",
+      "Physical axis 23.44deg",
       `Loaded ${state.loaded.join(",") || "none"}`,
       `Failed ${state.failed.join(",") || "none"}`,
       `Mounted ${state.mounted}`,
       `Canvas found ${state.canvasFound}`,
+      `Controls bound ${state.controlsBound}`,
+      `Canvas consumes pole swivel ${state.canvasConsumesPoleSwivel}`,
       "Runtime locked true",
-      "Controls locked true",
-      "Assets absorb authority false",
+      "Assets protected true",
       "GraphicBox false",
       "Generated image false",
       "Visual pass claimed false"
     ];
+
+    if (state.warnings.length) {
+      lines.push(`Warnings ${state.warnings.slice(-5).join(" | ")}`);
+    }
 
     if (state.error) {
       lines.push(`Error ${state.error}`);
@@ -147,10 +160,12 @@
     node.dataset.hearthRouteControllerContract = CONTRACT;
     node.dataset.hearthRouteControllerReceipt = RECEIPT;
     node.dataset.hearthRouteReady = String(Boolean(state.mounted));
-    node.dataset.hearthCurrentPhase = "habitable-forming";
-    node.dataset.hearthGeneratedImage = "false";
-    node.dataset.hearthGraphicBox = "false";
-    node.dataset.hearthVisualPassClaimed = "false";
+    node.dataset.hearthPoleSwivel = "true";
+    node.dataset.hearthControlsBound = String(state.controlsBound);
+    node.dataset.hearthCanvasConsumesPoleSwivel = String(state.canvasConsumesPoleSwivel);
+    node.dataset.generatedImage = "false";
+    node.dataset.graphicBox = "false";
+    node.dataset.visualPassClaimed = "false";
   }
 
   function disposePrior() {
@@ -172,7 +187,7 @@
     });
   }
 
-  function removePriorScripts() {
+  function removePriorAssetScripts() {
     document
       .querySelectorAll(
         [
@@ -181,11 +196,27 @@
           'script[src*="/assets/hearth/hearth.assets.js"]',
           'script[src*="/assets/hearth/hearth.canvas.js"]',
           'script[data-hearth-file="true"]',
-          'script[data-hearth-g41-file="true"]',
-          'script[data-hearth-g4-motion-file="true"]'
+          'script[data-hearth-g4-motion-file="true"]',
+          'script[data-hearth-g41-file="true"]'
         ].join(",")
       )
       .forEach((script) => script.remove());
+  }
+
+  function resetGlobals() {
+    [
+      "HEARTH_RUNTIME",
+      "HEARTH_CONTROLS",
+      "HEARTH_ASSETS",
+      "HEARTH_CANVAS",
+      "HEARTH_CONTROLS_RECEIPT",
+      "HEARTH_CANVAS_RECEIPT",
+      "__HEARTH_INSPECTION_MOTION__"
+    ].forEach((name) => {
+      try {
+        window[name] = undefined;
+      } catch (_) {}
+    });
   }
 
   function ensureMount() {
@@ -205,30 +236,28 @@
 
     mount.id = "hearthCanvasMount";
     mount.dataset.hearthCanvasMount = "true";
-    mount.dataset.hearthGenerationBaseline = "G1-coherent-achieved";
-    mount.dataset.hearthCurrentPhase = "habitable-forming";
-    mount.dataset.hearthNextPhase = "G2-material-natural-readability";
-    mount.dataset.hearthAssetsBoundaryExpression = "true";
-    mount.dataset.hearthAssetsAdoptAuthority = "false";
-    mount.dataset.hearthAssetsAbsorbAuthority = "false";
-    mount.dataset.hearthRuntimeLocked = "true";
-    mount.dataset.hearthControlsLocked = "true";
+    mount.dataset.hearthCurrentPhase = "G2-control-preservation";
+    mount.dataset.hearthPoleSwivel = "true";
+    mount.dataset.hearthPhysicalAxisDeg = "23.44";
     mount.dataset.hearthPointerEventsBlocked = "false";
     mount.dataset.hearthTouchAction = "none";
-    mount.dataset.hearthRequiredFailure = "false";
-    mount.dataset.hearthRouteErrorMessage = "";
+    mount.dataset.hearthHardRenewalKey = KEY;
+    mount.style.touchAction = "none";
+    mount.style.userSelect = "none";
+    mount.style.webkitUserSelect = "none";
+    mount.style.webkitTouchCallout = "none";
 
     mount.querySelectorAll("canvas").forEach((canvas) => canvas.remove());
 
     return mount;
   }
 
-  function installStyle() {
-    const prior = document.getElementById("hearth-habitable-forming-route-style");
-    if (prior) prior.remove();
+  function ensureRouteStyle() {
+    const previous = document.getElementById("hearth-g2-hard-renewal-route-style");
+    if (previous) previous.remove();
 
     const style = document.createElement("style");
-    style.id = "hearth-habitable-forming-route-style";
+    style.id = "hearth-g2-hard-renewal-route-style";
     style.textContent = `
       #hearthCanvasMount {
         position: relative;
@@ -242,9 +271,6 @@
         user-select: none !important;
         -webkit-user-select: none !important;
         -webkit-touch-callout: none !important;
-        background:
-          radial-gradient(circle at 50% 50%, rgba(39,117,155,.24), rgba(3,9,20,.96) 70%),
-          #02070e;
       }
 
       #hearthCanvasMount canvas,
@@ -295,29 +321,19 @@
 
   function loadFile(file) {
     return new Promise((resolve, reject) => {
-      if (isUsable(file)) {
-        if (!state.loaded.includes(file.role)) state.loaded.push(file.role);
-        stamp(`global-ready-${file.role}`);
-        resolve(file);
-        return;
-      }
-
-      try {
-        window[file.global] = undefined;
-      } catch (_) {}
-
       const script = document.createElement("script");
       script.src = file.src;
       script.defer = true;
       script.dataset.hearthFile = "true";
       script.dataset.hearthFileRole = file.role;
       script.dataset.contract = CONTRACT;
+      script.dataset.hardRenewalKey = KEY;
 
       script.onload = () => {
         if (!isUsable(file)) {
           state.failed.push(file.role);
           stamp(`invalid-${file.role}`);
-          reject(new Error(`Required Hearth script loaded but did not expose usable global: ${file.role} ${file.src}`));
+          reject(new Error(`Required Hearth script loaded but did not expose expected G2 swivel authority: ${file.role}`));
           return;
         }
 
@@ -344,13 +360,25 @@
     fallback.style.display = "none";
   }
 
+  function canvasConsumesPoleSwivel(canvas) {
+    return Boolean(
+      canvas &&
+        (
+          canvas.dataset.hearthPoleSwivelConsumer === "true" ||
+          document.documentElement.dataset.hearthCanvasConsumesPoleSwivel === "true" ||
+          window.HEARTH_CANVAS_RECEIPT?.consumesPoleSwivel === true
+        )
+    );
+  }
+
   async function boot() {
     const mount = ensureMount();
-    stamp("booting");
 
+    stamp("booting");
     disposePrior();
-    removePriorScripts();
-    installStyle();
+    removePriorAssetScripts();
+    resetGlobals();
+    ensureRouteStyle();
 
     try {
       for (const file of FILES) {
@@ -363,11 +391,15 @@
       const canvasAuthority = window.HEARTH_CANVAS;
 
       if (!runtime || !controls || !assets || !canvasAuthority) {
-        throw new Error("Hearth globals missing after file load.");
+        throw new Error("Hearth globals missing after hard-renewal file load.");
       }
 
       if (typeof canvasAuthority.mount !== "function") {
         throw new Error("Hearth canvas authority missing mount function.");
+      }
+
+      if (typeof controls.bind !== "function") {
+        throw new Error("Hearth controls authority missing bind function.");
       }
 
       const renderer = canvasAuthority.mount(mount, {
@@ -376,9 +408,9 @@
         routeContract: CONTRACT,
         routeReceipt: RECEIPT,
         publicIdentity: "Hearth · Habitable Forming · Coherent Baseline",
-        baseline: "G1 coherent achieved",
-        currentPhase: "habitable-forming",
-        nextPhase: "G2 material definition and natural readability",
+        currentPhase: "G2 control preservation",
+        poleSwivel: true,
+        physicalAxisDeg: 23.44,
         generatedImage: false,
         graphicBox: false,
         visualPassClaimed: false
@@ -396,22 +428,41 @@
       canvas.dataset.hearthCanvas = "true";
       canvas.dataset.hearthRouteControllerContract = CONTRACT;
       canvas.dataset.hearthRouteControllerReceipt = RECEIPT;
-      canvas.dataset.hearthCurrentPhase = "habitable-forming";
+      canvas.dataset.hearthCurrentPhase = "G2-control-preservation";
+      canvas.dataset.hearthPoleSwivel = "true";
+      canvas.dataset.hearthHardRenewalKey = KEY;
       canvas.dataset.generatedImage = "false";
       canvas.dataset.graphicBox = "false";
       canvas.dataset.visualPassClaimed = "false";
+      canvas.style.pointerEvents = "auto";
+      canvas.style.touchAction = "none";
+      canvas.style.userSelect = "none";
+      canvas.style.webkitUserSelect = "none";
+      canvas.style.webkitTouchCallout = "none";
 
       controls.bind(canvas, runtime, {
         mount,
-        dragRadiansPerScreen: Math.PI * 2.1,
-        maxSpinVelocity: 11,
-        wheelSensitivity: 0.003
+        dragRadiansPerScreen: Math.PI * 2.45,
+        poleRadiansPerScreen: Math.PI * 1.18,
+        maxSpinVelocity: 13,
+        wheelSensitivity: 0.003,
+        lockDelayMs: 2400,
+        poleReturnStrength: 0.06
       });
 
-      runtime.start();
+      state.controlsBound = true;
+      state.canvasFound = true;
+      state.canvasConsumesPoleSwivel = canvasConsumesPoleSwivel(canvas);
+
+      if (!state.canvasConsumesPoleSwivel) {
+        state.warnings.push("Canvas mounted, but pole-swivel consumer receipt was not detected.");
+      }
+
+      if (typeof runtime.start === "function") {
+        runtime.start();
+      }
 
       state.mounted = true;
-      state.canvasFound = true;
       state.error = "";
 
       hideFallback(mount);
@@ -419,18 +470,15 @@
       mount.dataset.hearthRequiredFailure = "false";
       mount.dataset.hearthRouteErrorMessage = "";
       document.body.dataset.hearthRouteReady = "true";
-      document.documentElement.dataset.hearthHabitableFormingReady = "true";
+      document.documentElement.dataset.hearthG2PoleSwivelReady = "true";
 
       stamp("ready");
     } catch (error) {
-      const message = error && error.message ? error.message : String(error);
-
-      state.error = message;
+      state.error = error && error.message ? error.message : String(error);
       mount.dataset.hearthRequiredFailure = "true";
-      mount.dataset.hearthRouteErrorMessage = message;
+      mount.dataset.hearthRouteErrorMessage = state.error;
       document.body.dataset.hearthRouteReady = "false";
-      document.documentElement.dataset.hearthHabitableFormingReady = "false";
-
+      document.documentElement.dataset.hearthG2PoleSwivelReady = "false";
       stamp("failed");
     }
   }

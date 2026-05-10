@@ -2,10 +2,8 @@
 // HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_CONTROLS_TNT_v1
 // Full-file replacement.
 // Controls authority only.
-// Preserves Hearth's current working drag/spin behavior.
-// Adds north/south pole swivel inspection without changing runtime, assets, route, or HTML.
-// Runtime remains motion authority.
-// Controls feed drag, spin, finger sensitivity, inspection tilt, and soft axis return.
+// Preserves Hearth horizontal drag/spin and adds north/south pole swivel inspection.
+// Runtime remains motion authority. Canvas consumes inspection tilt.
 // No GraphicBox. No generated image. No visual-pass claim.
 
 (() => {
@@ -17,8 +15,8 @@
 
   const TAU = Math.PI * 2;
   const PHYSICAL_AXIS_DEG = 23.44;
-  const PHYSICAL_AXIS_RAD = PHYSICAL_AXIS_DEG * Math.PI / 180;
-  const MAX_POLE_SWIVEL_RAD = 78 * Math.PI / 180;
+  const PHYSICAL_AXIS_RAD = (PHYSICAL_AXIS_DEG * Math.PI) / 180;
+  const MAX_POLE_SWIVEL_RAD = (78 * Math.PI) / 180;
 
   const bindings = new WeakMap();
 
@@ -50,24 +48,24 @@
     element.dataset.hearthTouchAction = "none";
   }
 
-  function dispatchMotion(detail) {
-    window.__HEARTH_INSPECTION_MOTION__ = Object.freeze({
+  function publishInspection(detail) {
+    const motion = Object.freeze({
       contract: CONTRACT,
       receipt: RECEIPT,
-      ...detail,
       physicalAxisRadians: PHYSICAL_AXIS_RAD,
       physicalAxisDeg: PHYSICAL_AXIS_DEG,
       runtimeMotionOnly: true,
       controlsAuthority: true,
       generatedImage: false,
       graphicBox: false,
-      visualPassClaimed: false
+      visualPassClaimed: false,
+      ...detail
     });
 
+    window.__HEARTH_INSPECTION_MOTION__ = motion;
+
     try {
-      window.dispatchEvent(new CustomEvent("hearth:control-motion", {
-        detail: window.__HEARTH_INSPECTION_MOTION__
-      }));
+      window.dispatchEvent(new CustomEvent("hearth:control-motion", { detail: motion }));
     } catch (_) {}
   }
 
@@ -84,15 +82,15 @@
 
     const dragRadiansPerScreen = Number.isFinite(options.dragRadiansPerScreen)
       ? options.dragRadiansPerScreen
-      : TAU * 2.35;
+      : TAU * 2.45;
 
     const poleRadiansPerScreen = Number.isFinite(options.poleRadiansPerScreen)
       ? options.poleRadiansPerScreen
-      : Math.PI * 1.12;
+      : Math.PI * 1.18;
 
     const maxSpinVelocity = Number.isFinite(options.maxSpinVelocity)
       ? options.maxSpinVelocity
-      : 12.5;
+      : 13;
 
     const wheelSensitivity = Number.isFinite(options.wheelSensitivity)
       ? options.wheelSensitivity
@@ -100,11 +98,11 @@
 
     const lockDelayMs = Number.isFinite(options.lockDelayMs)
       ? options.lockDelayMs
-      : 2300;
+      : 2400;
 
     const poleReturnStrength = Number.isFinite(options.poleReturnStrength)
       ? options.poleReturnStrength
-      : 0.075;
+      : 0.06;
 
     const local = {
       active: false,
@@ -135,13 +133,14 @@
       document.documentElement.dataset.hearthPhysicalAxisDeg = String(PHYSICAL_AXIS_DEG);
       document.documentElement.dataset.hearthControlsDraws = "false";
       document.documentElement.dataset.hearthControlsHoldsTruth = "false";
+      document.documentElement.dataset.generatedImage = "false";
+      document.documentElement.dataset.graphicBox = "false";
+      document.documentElement.dataset.visualPassClaimed = "false";
 
       canvas.dataset.hearthControlsBound = "true";
       canvas.dataset.hearthDragSensor = "true";
       canvas.dataset.hearthSpinSensor = "true";
       canvas.dataset.hearthPoleSwivel = "true";
-      canvas.dataset.hearthFingerSensitivity = String(dragRadiansPerScreen);
-      canvas.dataset.hearthPoleSensitivity = String(poleRadiansPerScreen);
       canvas.dataset.hearthInspectionTiltRadians = local.poleSwivel.toFixed(5);
 
       window.HEARTH_CONTROLS_RECEIPT = Object.freeze({
@@ -173,22 +172,20 @@
       canvas.dataset.hearthInspectionTiltRadians = local.poleSwivel.toFixed(5);
       canvas.dataset.hearthPoleVelocity = local.poleVelocity.toFixed(5);
 
-      dispatchMotion({
+      publishInspection({
         status,
         pointerActive: local.active,
         inspectionTiltRadians: local.poleSwivel,
         poleSwivelRadians: local.poleSwivel,
         poleVelocity: local.poleVelocity,
-        poleInspectionActive: Math.abs(local.poleSwivel) > 0.01,
-        physicalAxisRadians: PHYSICAL_AXIS_RAD
+        poleInspectionActive: Math.abs(local.poleSwivel) > 0.01
       });
     }
 
     function returnTowardAxis() {
       if (local.disposed || local.active) return;
 
-      const elapsedSinceRelease = now() - local.releaseTime;
-      if (elapsedSinceRelease < lockDelayMs) {
+      if (now() - local.releaseTime < lockDelayMs) {
         local.returnRaf = requestAnimationFrame(returnTowardAxis);
         return;
       }
@@ -211,7 +208,6 @@
 
     function down(event) {
       event.preventDefault();
-
       stopReturn();
 
       local.active = true;
@@ -222,9 +218,7 @@
       local.velocity = 0;
       local.poleVelocity = 0;
 
-      if (typeof runtime.dragStart === "function") {
-        runtime.dragStart();
-      }
+      if (typeof runtime.dragStart === "function") runtime.dragStart();
 
       try {
         target.setPointerCapture(event.pointerId);
@@ -236,7 +230,6 @@
 
     function move(event) {
       if (!local.active || event.pointerId !== local.pointerId) return;
-
       event.preventDefault();
 
       const current = now();
@@ -258,38 +251,30 @@
       local.poleSwivel = clamp(local.poleSwivel + poleDelta, -MAX_POLE_SWIVEL_RAD, MAX_POLE_SWIVEL_RAD);
       local.poleVelocity = poleVelocity;
 
-      if (typeof runtime.dragMove === "function") {
-        runtime.dragMove(deltaRadians, velocity);
-      }
+      if (typeof runtime.dragMove === "function") runtime.dragMove(deltaRadians, velocity);
 
-      publish("drag-moving");
       canvas.dataset.hearthSpinVelocity = velocity.toFixed(5);
+      publish("drag-moving");
       stamp("drag-moving");
     }
 
     function up(event) {
       if (!local.active || event.pointerId !== local.pointerId) return;
-
       event.preventDefault();
 
       local.active = false;
       local.pointerId = null;
       local.releaseTime = now();
 
-      if (typeof runtime.setSpinVelocity === "function") {
-        runtime.setSpinVelocity(local.velocity);
-      }
-
-      if (typeof runtime.dragEnd === "function") {
-        runtime.dragEnd();
-      }
+      if (typeof runtime.setSpinVelocity === "function") runtime.setSpinVelocity(local.velocity);
+      if (typeof runtime.dragEnd === "function") runtime.dragEnd();
 
       try {
         target.releasePointerCapture(event.pointerId);
       } catch (_) {}
 
-      publish("spin-inertia-pole-hold");
       canvas.dataset.hearthSpinVelocity = local.velocity.toFixed(5);
+      publish("spin-inertia-pole-hold");
       stamp("spin-inertia-pole-hold");
 
       stopReturn();
@@ -302,12 +287,10 @@
       const delta = clamp(event.deltaY || 0, -180, 180);
       const velocity = clamp(-delta * wheelSensitivity, -maxSpinVelocity, maxSpinVelocity);
 
-      if (typeof runtime.addSpin === "function") {
-        runtime.addSpin(velocity);
-      }
+      if (typeof runtime.addSpin === "function") runtime.addSpin(velocity);
 
-      publish("wheel-spin");
       canvas.dataset.hearthWheelVelocity = velocity.toFixed(5);
+      publish("wheel-spin");
       stamp("wheel-spin");
     }
 

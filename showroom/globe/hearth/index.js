@@ -1,22 +1,24 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_ROUTE_TNT_v10
+// HEARTH_CLIMATE_BIOME_REGION_ROUTE_TNT_v12
 // Full-file replacement.
-// Loads elevation/mountain/cliff/depth terrain extension before assets.
-// Preserves runtime, controls, and canvas chain.
-// TET + MAPS + Quad-A source validation active.
+// Loads dedicated climate/biome authority after elevation and before assets.
+// New file loaded: /assets/hearth/hearth.climate.js
+// Preserves terrain, elevation, runtime, controls, and canvas chain.
 // No GraphicBox. No generated image. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_ROUTE_TNT_v10";
-  const RECEIPT = "HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_ROUTE_RECEIPT_v10";
-  const PREVIOUS_CONTRACT = "HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_ROUTE_TNT_v9";
-  const KEY = "hearth-elevation-mountain-range-cliff-depth-v10";
+  const CONTRACT = "HEARTH_CLIMATE_BIOME_REGION_ROUTE_TNT_v12";
+  const RECEIPT = "HEARTH_CLIMATE_BIOME_REGION_ROUTE_RECEIPT_v12";
+  const PREVIOUS_CONTRACT = "HEARTH_DEDICATED_ELEVATION_AUTHORITY_ROUTE_TNT_v11";
+  const KEY = "hearth-climate-biome-region-v12";
 
   const EXPECTED = Object.freeze({
-    terrainExtension: "HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_TERRAIN_EXTENSION_TNT_v5",
-    assets: "HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_ASSETS_TNT_v9",
+    terrainExtension: "HEARTH_TERRAIN_BASE_FOR_DEDICATED_ELEVATION_TNT_v6",
+    elevation: "HEARTH_TANGIBLE_ELEVATION_MOUNTAINS_FOOTHILLS_CLIFFS_TNT_v1",
+    climate: "HEARTH_CLIMATE_REGION_BIOME_AUTHORITY_TNT_v1",
+    assets: "HEARTH_ASSETS_CLIMATE_BIOME_REGION_COLORING_TNT_v11",
     controls: "HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_CONTROLS_TNT_v2",
     canvas: "HEARTH_G2_CANVAS_POLE_SWIVEL_SEVEN_BODY_CONSUMER_TNT_v2"
   });
@@ -50,17 +52,47 @@
 
         return (
           String(value.contract || "").includes(EXPECTED.terrainExtension) &&
-          status.elevationDepthLoaded === true &&
-          status.mountainRangeSystemLoaded === true &&
+          status.terrainBaseLoaded === true &&
+          status.ownsTangibleElevation === false &&
+          status.elevationDelegatedTo === "/assets/hearth/hearth.elevation.js"
+        );
+      }
+    },
+    {
+      role: "elevation",
+      src: `/assets/hearth/hearth.elevation.js?v=${KEY}`,
+      global: "HEARTH_ELEVATION",
+      validate: (value) => {
+        if (!value || typeof value.sampleElevation !== "function") return false;
+        if (!value.getStatus || typeof value.getStatus !== "function") return false;
+        const status = value.getStatus();
+
+        return (
+          String(value.contract || "").includes(EXPECTED.elevation) &&
+          status.elevationAuthorityLoaded === true &&
+          status.tangibleElevationLoaded === true &&
+          status.mountainRangeLoaded === true &&
+          status.foothillsLoaded === true &&
           status.cliffSystemLoaded === true &&
-          status.visualDepthActive === true &&
-          status.landTextureCompositionLoaded === true &&
-          status.elevationDifferentiationActive === true &&
-          status.compositionDifferentiationActive === true &&
-          status.terrainTextureActive === true &&
-          status.tetMap === "TERRAIN_TO_ELEVATION_TO_TERRAIN" &&
-          status.mapsProtocol === "MAKE_A_PIZZA_SYSTEMIC_EXECUTION" &&
-          status.quadAAudit === "AUDIT_ATTACK_ADJUST_AUTHORIZE_PASS"
+          status.visualDepthActive === true
+        );
+      }
+    },
+    {
+      role: "climate",
+      src: `/assets/hearth/hearth.climate.js?v=${KEY}`,
+      global: "HEARTH_CLIMATE",
+      validate: (value) => {
+        if (!value || typeof value.sampleClimate !== "function") return false;
+        if (!value.getStatus || typeof value.getStatus !== "function") return false;
+        const status = value.getStatus();
+
+        return (
+          String(value.contract || "").includes(EXPECTED.climate) &&
+          status.climateAuthorityLoaded === true &&
+          status.regionBiomeAuthorityLoaded === true &&
+          status.biomeColorNotBodyMassColor === true &&
+          status.bodyMassAssignedColoring === false
         );
       }
     },
@@ -77,13 +109,11 @@
         return (
           status.bodyMassCount === 7 &&
           status.terrainExtensionLoaded === true &&
-          status.elevationDepthLoaded === true &&
-          status.mountainRangeSystemLoaded === true &&
-          status.cliffSystemLoaded === true &&
-          status.visualDepthActive === true &&
-          status.twoBodyRead === false &&
-          status.roundLobeRead === false &&
-          status.ovalPatchRead === false
+          status.elevationAuthorityLoaded === true &&
+          status.climateAuthorityLoaded === true &&
+          status.assetsConsumeClimateAuthority === true &&
+          status.biomeColorNotBodyMassColor === true &&
+          status.bodyMassAssignedColoring === false
         );
       }
     },
@@ -116,17 +146,11 @@
     document.documentElement.dataset.hearthRouteControllerReceipt = RECEIPT;
     document.documentElement.dataset.hearthRoutePreviousContract = PREVIOUS_CONTRACT;
     document.documentElement.dataset.hearthHardRenewalKey = KEY;
-    document.documentElement.dataset.hearthElevationDepthLoaded = "true";
-    document.documentElement.dataset.hearthMountainRangeSystemLoaded = "true";
-    document.documentElement.dataset.hearthCliffSystemLoaded = "true";
-    document.documentElement.dataset.hearthVisualDepthActive = "true";
-    document.documentElement.dataset.hearthLandTextureCompositionLoaded = "true";
-    document.documentElement.dataset.hearthElevationDifferentiationActive = "true";
-    document.documentElement.dataset.hearthCompositionDifferentiationActive = "true";
-    document.documentElement.dataset.hearthTerrainTextureActive = "true";
-    document.documentElement.dataset.hearthTetMap = "TERRAIN_TO_ELEVATION_TO_TERRAIN";
-    document.documentElement.dataset.hearthMapsProtocol = "MAKE_A_PIZZA_SYSTEMIC_EXECUTION";
-    document.documentElement.dataset.hearthQuadAAudit = "AUDIT_ATTACK_ADJUST_AUTHORIZE_PASS";
+    document.documentElement.dataset.hearthClimateAuthorityLoaded = String(state.loaded.includes("climate"));
+    document.documentElement.dataset.hearthRegionBiomeAuthorityLoaded = "true";
+    document.documentElement.dataset.hearthBiomeColorNotBodyMassColor = "true";
+    document.documentElement.dataset.hearthBodyMassAssignedColoring = "false";
+    document.documentElement.dataset.hearthClimateRegionDifferentiationActive = "true";
     document.documentElement.dataset.hearthBodyMassCount = "7";
     document.documentElement.dataset.hearthTwoBodyRead = "false";
     document.documentElement.dataset.hearthPoleSwivel = "true";
@@ -137,8 +161,8 @@
     if (node) {
       node.textContent = [
         state.mounted
-          ? "Hearth elevation, mountain range, cliff, and visual-depth route ready."
-          : "Hearth elevation, mountain range, cliff, and visual-depth route preparing.",
+          ? "Hearth climate/biome/region route ready."
+          : "Hearth climate/biome/region route preparing.",
         `Status ${statusValue}`,
         `Route ${CONTRACT}`,
         `Receipt ${RECEIPT}`,
@@ -149,17 +173,12 @@
         `Mounted ${state.mounted}`,
         `Canvas found ${state.canvasFound}`,
         `Controls bound ${state.controlsBound}`,
-        "Elevation depth loaded true",
-        "Mountain range system loaded true",
-        "Cliff system loaded true",
-        "Visual depth active true",
-        "Land texture composition loaded true",
-        "Elevation differentiation active true",
-        "Composition differentiation active true",
-        "Terrain texture active true",
-        "TET map TERRAIN_TO_ELEVATION_TO_TERRAIN",
-        "MAPS protocol MAKE_A_PIZZA_SYSTEMIC_EXECUTION",
-        "Quad-A audit AUDIT_ATTACK_ADJUST_AUTHORIZE_PASS",
+        "Climate authority loaded true",
+        "Dedicated climate file /assets/hearth/hearth.climate.js",
+        "Region biome authority loaded true",
+        "Biome color not body-mass color true",
+        "Body-mass assigned coloring false",
+        "Climate region differentiation active true",
         "Body mass count 7",
         "Two-body read false",
         "Pole swivel true",
@@ -194,6 +213,8 @@
       'script[src*="/assets/hearth/hearth.runtime.js"]',
       'script[src*="/assets/hearth/hearth.controls.js"]',
       'script[src*="/assets/hearth/hearth.terrain.extension.js"]',
+      'script[src*="/assets/hearth/hearth.elevation.js"]',
+      'script[src*="/assets/hearth/hearth.climate.js"]',
       'script[src*="/assets/hearth/hearth.assets.js"]',
       'script[src*="/assets/hearth/hearth.canvas.js"]',
       'script[data-hearth-file="true"]'
@@ -206,6 +227,10 @@
       "HEARTH_CONTROLS",
       "HEARTH_TERRAIN_EXTENSION",
       "HEARTH_TERRAIN_EXTENSION_RECEIPT",
+      "HEARTH_ELEVATION",
+      "HEARTH_ELEVATION_RECEIPT",
+      "HEARTH_CLIMATE",
+      "HEARTH_CLIMATE_RECEIPT",
       "HEARTH_ASSETS",
       "HEARTH_CANVAS",
       "HEARTH_CONTROLS_RECEIPT",
@@ -229,17 +254,11 @@
 
     node.id = "hearthCanvasMount";
     node.dataset.hearthCanvasMount = "true";
-    node.dataset.hearthElevationDepthLoaded = "true";
-    node.dataset.hearthMountainRangeSystemLoaded = "true";
-    node.dataset.hearthCliffSystemLoaded = "true";
-    node.dataset.hearthVisualDepthActive = "true";
-    node.dataset.hearthLandTextureCompositionLoaded = "true";
-    node.dataset.hearthElevationDifferentiationActive = "true";
-    node.dataset.hearthCompositionDifferentiationActive = "true";
-    node.dataset.hearthTerrainTextureActive = "true";
-    node.dataset.hearthTetMap = "TERRAIN_TO_ELEVATION_TO_TERRAIN";
-    node.dataset.hearthMapsProtocol = "MAKE_A_PIZZA_SYSTEMIC_EXECUTION";
-    node.dataset.hearthQuadAAudit = "AUDIT_ATTACK_ADJUST_AUTHORIZE_PASS";
+    node.dataset.hearthClimateAuthorityLoaded = "true";
+    node.dataset.hearthRegionBiomeAuthorityLoaded = "true";
+    node.dataset.hearthBiomeColorNotBodyMassColor = "true";
+    node.dataset.hearthBodyMassAssignedColoring = "false";
+    node.dataset.hearthClimateRegionDifferentiationActive = "true";
     node.dataset.hearthBodyMassCount = "7";
     node.dataset.hearthTwoBodyRead = "false";
     node.dataset.hearthPoleSwivel = "true";
@@ -314,17 +333,11 @@
         throw new Error("Canvas authority mounted, but no canvas was found.");
       }
 
-      canvas.dataset.hearthElevationDepthLoaded = "true";
-      canvas.dataset.hearthMountainRangeSystemLoaded = "true";
-      canvas.dataset.hearthCliffSystemLoaded = "true";
-      canvas.dataset.hearthVisualDepthActive = "true";
-      canvas.dataset.hearthLandTextureCompositionLoaded = "true";
-      canvas.dataset.hearthElevationDifferentiationActive = "true";
-      canvas.dataset.hearthCompositionDifferentiationActive = "true";
-      canvas.dataset.hearthTerrainTextureActive = "true";
-      canvas.dataset.hearthTetMap = "TERRAIN_TO_ELEVATION_TO_TERRAIN";
-      canvas.dataset.hearthMapsProtocol = "MAKE_A_PIZZA_SYSTEMIC_EXECUTION";
-      canvas.dataset.hearthQuadAAudit = "AUDIT_ATTACK_ADJUST_AUTHORIZE_PASS";
+      canvas.dataset.hearthClimateAuthorityLoaded = "true";
+      canvas.dataset.hearthRegionBiomeAuthorityLoaded = "true";
+      canvas.dataset.hearthBiomeColorNotBodyMassColor = "true";
+      canvas.dataset.hearthBodyMassAssignedColoring = "false";
+      canvas.dataset.hearthClimateRegionDifferentiationActive = "true";
       canvas.dataset.hearthBodyMassCount = "7";
       canvas.dataset.hearthTwoBodyRead = "false";
 

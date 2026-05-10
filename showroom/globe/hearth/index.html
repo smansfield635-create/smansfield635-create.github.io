@@ -1,49 +1,46 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-g4-motion-renewal"
+  data-page="hearth-habitable-forming-coherent-baseline"
   data-route="/showroom/globe/hearth/"
-  data-generation="G4"
-  data-contract="HEARTH_G4_MOTION_RENEWAL_ROUTE_HTML_TNT_v1"
-  data-world-engine="canvas-truth-substrate"
-  data-runtime="south-star-motion-authority"
-  data-controls="drag-spin-finger-sensitivity"
-  data-render="drawing-authority"
-  data-assets="material-expression-plasma"
+  data-contract="HEARTH_HABITABLE_FORMING_BASELINE_HTML_TNT_v1"
+  data-body="hearth"
+  data-generation-baseline="G1-coherent-achieved"
+  data-current-phase="habitable-forming"
+  data-next-phase="G2-material-natural-readability"
   data-generated-image="false"
   data-graphic-box="false"
+  data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Hearth G4 Motion Renewal</title>
+  <title>Diamond Gate Bridge · Hearth Habitable Forming</title>
   <meta
     name="description"
-    content="Hearth Generation 4 renews motion authority: runtime as South Star conductor, controls as drag and spin input, canvas as world-engine truth, assets as material expression, and render as drawing authority."
+    content="Hearth is a habitable-forming constructed planet template with coherent baseline achieved and G2 material/natural readability next."
   >
 
   <style>
     :root {
       --bg: #030914;
-      --panel: rgba(7, 16, 30, 0.82);
-      --panel2: rgba(10, 24, 43, 0.78);
+      --panel: rgba(7, 16, 30, 0.84);
       --line: rgba(231, 188, 105, 0.34);
       --gold: #e7bc69;
       --text: #eef6ff;
       --muted: rgba(238, 246, 255, 0.72);
+      --green: #8bd7a3;
       --blue: #4fb5db;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       min-height: 100%;
       background:
-        radial-gradient(circle at 50% 22%, rgba(39, 117, 155, 0.22), transparent 36%),
+        radial-gradient(circle at 50% 20%, rgba(39, 117, 155, 0.22), transparent 38%),
         radial-gradient(circle at 18% 12%, rgba(231, 188, 105, 0.13), transparent 30%),
-        linear-gradient(180deg, #06101e, var(--bg) 70%);
+        linear-gradient(180deg, #06101e, var(--bg) 72%);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -59,7 +56,6 @@
     }
 
     a:focus-visible,
-    button:focus-visible,
     canvas:focus-visible {
       outline: 2px solid var(--gold);
       outline-offset: 4px;
@@ -67,20 +63,18 @@
 
     .skip {
       position: absolute;
-      left: 16px;
       top: 12px;
+      left: 16px;
+      z-index: 20;
       transform: translateY(-140%);
       padding: 10px 12px;
       border-radius: 999px;
       background: var(--gold);
       color: #06101e;
-      font-weight: 800;
-      z-index: 20;
+      font-weight: 900;
     }
 
-    .skip:focus {
-      transform: translateY(0);
-    }
+    .skip:focus { transform: translateY(0); }
 
     .shell {
       width: min(1120px, calc(100% - 28px));
@@ -91,7 +85,8 @@
     .topbar,
     .nav,
     .card,
-    #hearthCanvasMount {
+    #hearth-canvas-mount,
+    .receipt {
       border: 1px solid var(--line);
       background: linear-gradient(180deg, rgba(9, 22, 41, 0.88), rgba(4, 10, 20, 0.78));
       box-shadow: 0 22px 70px rgba(0, 0, 0, 0.38);
@@ -156,15 +151,25 @@
       margin-top: 22px;
     }
 
-    .copy {
-      padding: 12px 4px;
-    }
-
     .eyebrow {
       color: var(--gold);
       font-size: 0.78rem;
       font-weight: 900;
       letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .badge {
+      display: inline-flex;
+      margin-top: 12px;
+      padding: 7px 11px;
+      border: 1px solid rgba(139, 215, 163, 0.34);
+      border-radius: 999px;
+      color: var(--green);
+      background: rgba(139, 215, 163, 0.08);
+      font-weight: 900;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
@@ -176,10 +181,10 @@
     }
 
     .lede {
-      max-width: 65ch;
+      max-width: 68ch;
       margin: 0;
       color: var(--muted);
-      font-size: clamp(1rem, 2.4vw, 1.2rem);
+      font-size: clamp(1rem, 2.4vw, 1.18rem);
       line-height: 1.6;
     }
 
@@ -208,7 +213,7 @@
       background: var(--gold);
     }
 
-    #hearthCanvasMount {
+    #hearth-canvas-mount {
       position: relative;
       width: 100%;
       min-height: 320px;
@@ -217,7 +222,7 @@
       isolation: isolate;
       border-radius: 32px;
       background:
-        radial-gradient(circle at 50% 50%, rgba(39, 117, 155, 0.34), rgba(3, 9, 20, 0.96) 70%),
+        radial-gradient(circle at 50% 50%, rgba(39, 117, 155, 0.30), rgba(3, 9, 20, 0.96) 70%),
         #02070e;
       touch-action: none;
       user-select: none;
@@ -225,7 +230,9 @@
       -webkit-touch-callout: none;
     }
 
-    #hearthCanvasMount canvas[data-hearth-canvas] {
+    #hearth-canvas-mount canvas[data-hearth-canvas="true"],
+    #hearth-canvas-mount canvas[data-hearth-canvas],
+    #hearth-canvas-mount canvas {
       position: absolute;
       inset: 0;
       display: block;
@@ -240,7 +247,7 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
       margin-top: 22px;
     }
@@ -265,25 +272,19 @@
     }
 
     .receipt {
-      margin-top: 16px;
-      color: rgba(238, 246, 255, 0.58);
+      margin: 16px 0 0;
+      padding: 14px;
+      overflow: auto;
+      border-radius: 18px;
+      color: rgba(238, 246, 255, 0.72);
       font-size: 0.78rem;
-      overflow-wrap: anywhere;
+      white-space: pre-wrap;
     }
 
     @media (max-width: 860px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .topbar {
-        align-items: stretch;
-        flex-direction: column;
-      }
+      .hero { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+      .topbar { align-items: stretch; flex-direction: column; }
     }
   </style>
 </head>
@@ -295,7 +296,7 @@
     <header class="topbar">
       <a class="brand" href="/">
         <span class="mark">H</span>
-        <span>Diamond Gate Bridge · Hearth G4</span>
+        <span>Diamond Gate Bridge · Hearth</span>
       </a>
 
       <nav class="nav" aria-label="Hearth route navigation">
@@ -310,14 +311,16 @@
 
     <main id="hearth-main">
       <section class="hero" aria-labelledby="hearth-title">
-        <div class="copy">
-          <div class="eyebrow">Hearth · Generation 4 · Motion Authority Renewal</div>
+        <div>
+          <div class="eyebrow">Hearth · Habitable Forming · Coherent Baseline</div>
           <h1 id="hearth-title">Hearth</h1>
           <p class="lede">
-            Hearth G4 reassigns authority before renewal. Canvas / World Engine holds material truth.
-            Assets define the living visible material. Runtime conducts motion. Controls feed drag,
-            spin, and finger sensitivity into runtime. Render draws the moving world state.
+            Hearth has achieved a coherent baseline. The former G4 motion-authority renewal is now
+            folded into the baseline: Canvas / World Engine holds material truth, Assets define visible
+            material, Runtime conducts motion, Controls feed drag and spin, and Render draws the moving
+            world state. The next target is G2 material definition and natural readability.
           </p>
+          <span class="badge">Habitable · Forming</span>
 
           <div class="actions">
             <a class="button primary" href="/showroom/globe/">Return to Globe Split</a>
@@ -328,56 +331,74 @@
         </div>
 
         <section
-          id="hearthCanvasMount"
+          id="hearth-canvas-mount"
           data-hearth-canvas-mount="true"
-          data-hearth-generation="G4"
-          data-hearth-world-engine="canvas-truth-substrate"
-          data-hearth-runtime="south-star-motion-authority"
-          data-hearth-controls="drag-spin-finger-sensitivity"
-          data-hearth-render="drawing-authority"
-          data-hearth-assets="material-expression-plasma"
-          aria-label="Hearth G4 drag and spin planet mount"
-        ></section>
+          data-hearth-generation-baseline="G1-coherent-achieved"
+          data-hearth-current-phase="habitable-forming"
+          data-hearth-next-phase="G2-material-natural-readability"
+          data-hearth-assets-boundary-expression="true"
+          data-hearth-assets-absorbs-authority="false"
+          aria-label="Hearth habitable-forming canvas mount"
+        >
+          <span
+            data-hearth-mount-fallback="true"
+            style="position:absolute;inset:0;display:grid;place-items:center;color:rgba(238,246,255,.68);font-weight:800;text-align:center;padding:20px;"
+          >
+            Hearth habitable-forming chain loading.
+          </span>
+        </section>
       </section>
 
-      <section class="grid" aria-label="Hearth G4 authority reassignment">
+      <section class="grid" aria-label="Hearth calibrated authority chain">
         <article class="card">
-          <h2>Canvas / World Engine</h2>
-          <p>Truth substrate. Defines composition: diamond, opal, gold, slate, marble, granite, metals, stone, soil, and land-body material.</p>
-        </article>
-
-        <article class="card">
-          <h2>Assets</h2>
-          <p>Eyes and plasma. Defines what is seen through texture, atmosphere, surface character, and living material expression.</p>
+          <h2>Coherent Baseline</h2>
+          <p>Motion authority renewal is completed and folded into the habitable-forming baseline.</p>
         </article>
 
         <article class="card">
           <h2>Runtime</h2>
-          <p>South Star motion authority. Owns clock, spin, axis, inertia, water phase, cloud phase, atmosphere phase, and cadence.</p>
+          <p>South Star motion authority. Runtime owns clock, axis, spin, inertia, and phase motion.</p>
         </article>
 
         <article class="card">
           <h2>Controls</h2>
-          <p>Drag and spin sensor. Owns finger sensitivity, pointer capture, swipe velocity, and input feed into runtime.</p>
+          <p>Controls feed drag, spin, pointer capture, swipe velocity, and finger sensitivity into runtime.</p>
+        </article>
+
+        <article class="card">
+          <h2>Assets</h2>
+          <p>Assets define visible material and preserve boundaries without absorbing authority.</p>
         </article>
 
         <article class="card">
           <h2>Render</h2>
-          <p>Drawing authority. Draws runtime state and asset material. It does not own truth or motion.</p>
+          <p>Render draws runtime state and asset material. It does not own truth or motion.</p>
+        </article>
+
+        <article class="card">
+          <h2>Next Target</h2>
+          <p>G2 material definition and natural readability. G5 weather and living atmosphere remain later.</p>
         </article>
       </section>
 
-      <p class="receipt">
-        HTML_CONTRACT=HEARTH_G4_MOTION_RENEWAL_ROUTE_HTML_TNT_v1 ·
-        GENERATION=G4 ·
-        G4_JOB=motion-authority-renewal ·
-        G5_JOB=clouds-weather-living-atmosphere ·
-        GENERATED_IMAGE=false ·
-        GRAPHIC_BOX=false
-      </p>
+      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth habitable-forming baseline route preparing.</pre>
+
+      <pre class="receipt">HEARTH_HABITABLE_FORMING_BASELINE_HTML_TNT_v1
+route=/showroom/globe/hearth/
+public_identity=Hearth · Habitable Forming · Coherent Baseline
+baseline=Generation 1 coherent achieved
+former_motion_renewal=folded-into-baseline
+next=Generation 2 material definition and natural readability
+later=Generation 5 clouds/weather/living-atmosphere
+runtime_motion_only=true
+controls_input_only=true
+assets_absorb_authority=false
+generated_image=false
+graphic_box=false
+visual_pass_claimed=false</pre>
     </main>
   </div>
 
-  <script defer src="./index.js?v=hearth-g4-authority-reassignment-motion-renewal-v1"></script>
+  <script type="module" src="./index.js?v=hearth-habitable-forming-baseline-html-v1"></script>
 </body>
 </html>

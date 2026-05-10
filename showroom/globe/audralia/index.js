@@ -1,24 +1,21 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_G2_CALIBRATION_ROUTE_CONTROLLER_TNT_v1
+// AUDRALIA_G2_4_ASSET_AND_ROUTE_EXPECTATION_ALIGNMENT_ROUTE_TNT_v1
 // Full-file replacement.
 // Route doorway authority only.
-// Calibration purpose:
-// - Stop pretending the live route is still plain V18.
-// - Represent the current source state honestly.
-// - Current terrain source expectation: G2.2 relief/contrast.
-// - Current asset source expectation: G2.3 relief/shelf attenuation.
-// - Refresh import cache key.
-// - Import, verify, mount, and report.
-// - Route does not draw Audralia.
-// - Route does not own runtime motion.
-// - Route does not own terrain truth.
+// Purpose:
+// - Align route expectations with the actual served G2.4 terrain source.
+// - Expect G2.4 asset material formation.
+// - Remove the stale G2.2 terrain expectation warning.
+// - Preserve runtime motion-only authority.
+// - Preserve canvas draw/consume authority.
+// - No terrain rewrite. No runtime rewrite. No canvas rewrite.
 // - No GraphicBox. No generated image. No visual-pass claim.
 
-const ROUTE_CONTRACT = "AUDRALIA_G2_CALIBRATION_ROUTE_CONTROLLER_TNT_v1";
-const ROUTE_RECEIPT = "AUDRALIA_G2_CALIBRATION_ROUTE_RECEIPT";
+const ROUTE_CONTRACT = "AUDRALIA_G2_4_ASSET_AND_ROUTE_EXPECTATION_ALIGNMENT_ROUTE_TNT_v1";
+const ROUTE_RECEIPT = "AUDRALIA_G2_4_ASSET_AND_ROUTE_EXPECTATION_ALIGNMENT_ROUTE_RECEIPT";
 const HTML_RECEIPT = "AUDRALIA_HABITABLE_FORMING_G2_CALIBRATION_HTML_TNT_v1";
-const PREVIOUS_ROUTE_CONTRACT = "AUDRALIA_V18_TERRAIN_FIVE_FINGER_ROUTE_CONTROLLER_TNT_v1";
-const CACHE_KEY = "audralia-g2-calibration-current-source-alignment-v1";
+const PREVIOUS_ROUTE_CONTRACT = "AUDRALIA_G2_CALIBRATION_ROUTE_CONTROLLER_TNT_v1";
+const CACHE_KEY = "audralia-g2-4-asset-route-expectation-alignment-v1";
 
 const PATHS = Object.freeze({
   runtime: "/assets/audralia/audralia.runtime.js",
@@ -31,12 +28,12 @@ const PATHS = Object.freeze({
 });
 
 const EXPECTED = Object.freeze({
-  runtime: "AUDRALIA_RUNTIME_MOTION_ONLY_FULL_POTENTIAL_TNT_v10",
-  surface: "AUDRALIA_SURFACE_PARENT_COASTLINE_RIDGE_FEATHER_TNT_v6",
+  runtime: "AUDRALIA_RUNTIME_MOTION_ONLY_NO_VISUAL_SOVEREIGNTY_CONTRACT_v1",
+  surface: "AUDRALIA_SURFACE_PARENT_COASTLINE_RIDGE_FEATHER_CONTRACT_v1",
   hexSurface: "AUDRALIA_HEX_SURFACE_CHILD_GRANDCHILD_RELIEF_BIND_TNT_v4",
-  reliefSurface: "AUDRALIA_GRANDCHILD_RELIEF_FIELD_EXPRESSOR_TNT_v1",
-  terrainFingers: "AUDRALIA_G2_2_RELIEF_CONTRAST_AND_NATURAL_READABILITY_TNT_v1",
-  assets: "AUDRALIA_G2_3_ASSET_RELIEF_FIELD_AND_SHELF_ATTENUATION_TNT_v1",
+  reliefSurface: "AUDRALIA_GRANDCHILD_RELIEF_FIELD_EXPRESSOR_CONTRACT_v1",
+  terrainFingers: "AUDRALIA_G2_4_TERRAIN_FORMATION_DELTA_TNT_v1",
+  assets: "AUDRALIA_G2_4_ASSET_FORMATION_MATERIAL_DELTA_TNT_v1",
   canvas: "AUDRALIA_V18_CANVAS_ASSET_BOUNDARY_CONSUMER_TNT_v1"
 });
 
@@ -47,9 +44,10 @@ const ROUTE_STATE = {
   htmlReceipt: HTML_RECEIPT,
   previousRouteContract: PREVIOUS_ROUTE_CONTRACT,
   route: "/showroom/globe/audralia/",
-  publicIdentity: "Audralia · Habitable Forming · G2 Calibration Active",
+  publicIdentity: "Audralia · Habitable Forming · G2.4 Material Formation Alignment",
   baseline: "G1 coherent achieved",
-  currentPhase: "G2 calibration active, not passed",
+  currentPhase: "G2.4 asset and route expectation alignment",
+  visualPass: false,
   cacheKey: CACHE_KEY,
   imported: {},
   contracts: {},
@@ -64,6 +62,7 @@ const ROUTE_STATE = {
   runtimeMotionOnly: true,
   assetsAbsorbAuthority: false,
   terrainFiveFingers: true,
+  materialFormationAligned: true,
   generatedImage: false,
   graphicBox: false,
   visualPassClaimed: false,
@@ -104,16 +103,16 @@ function resolveCanvas() {
   );
 }
 
-function asText(value) {
-  if (value === null || value === undefined) return "";
-  return String(value);
+function text(value) {
+  return value === null || value === undefined ? "" : String(value).trim();
 }
 
 function firstText(...values) {
   for (const value of values) {
-    const text = asText(value).trim();
-    if (text) return text;
+    const next = text(value);
+    if (next) return next;
   }
+
   return "";
 }
 
@@ -194,8 +193,8 @@ function writeStatus(status = "") {
 
   const lines = [
     ROUTE_STATE.ok
-      ? "Audralia G2 calibration route aligned."
-      : "Audralia G2 calibration route preparing.",
+      ? "Audralia G2.4 asset and route expectation alignment ready."
+      : "Audralia G2.4 asset and route expectation alignment preparing.",
     `Status ${status || "checking"}`,
     `Public Identity ${ROUTE_STATE.publicIdentity}`,
     `Baseline ${ROUTE_STATE.baseline}`,
@@ -219,7 +218,7 @@ function writeStatus(status = "") {
     `Runtime motion-only true`,
     `Terrain five fingers true`,
     `Assets absorb authority false`,
-    `G2 calibration active true`,
+    `Material formation aligned true`,
     `G2 visual pass false`,
     `GraphicBox false`,
     `Generated image false`,
@@ -240,7 +239,7 @@ function writeStatus(status = "") {
   node.dataset.audraliaRouteReady = String(Boolean(ROUTE_STATE.ok));
   node.dataset.audraliaCacheKey = CACHE_KEY;
   node.dataset.audraliaBaseline = "g1-coherent-achieved";
-  node.dataset.audraliaG2Calibration = "active";
+  node.dataset.audraliaG24MaterialFormation = "aligned";
   node.dataset.audraliaG2Passed = "false";
   node.dataset.audraliaRuntimeMotionOnly = "true";
   node.dataset.audraliaTerrainFiveFingers = "true";
@@ -258,11 +257,11 @@ function publish(status = "") {
   document.documentElement.dataset.audraliaRouteContract = ROUTE_CONTRACT;
   document.documentElement.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
   document.documentElement.dataset.audraliaRoutePreviousContract = PREVIOUS_ROUTE_CONTRACT;
-  document.documentElement.dataset.audraliaGeneration = "G2-calibration";
+  document.documentElement.dataset.audraliaGeneration = "G2.4";
   document.documentElement.dataset.audraliaRouteStatus = status || "checking";
   document.documentElement.dataset.audraliaCacheKey = CACHE_KEY;
   document.documentElement.dataset.audraliaBaseline = "g1-coherent-achieved";
-  document.documentElement.dataset.audraliaG2Calibration = "active";
+  document.documentElement.dataset.audraliaG24MaterialFormation = "aligned";
   document.documentElement.dataset.audraliaG2Passed = "false";
   document.documentElement.dataset.audraliaRuntimeMotionOnly = "true";
   document.documentElement.dataset.audraliaTerrainFiveFingers = "true";
@@ -434,8 +433,7 @@ async function boot() {
   mount.dataset.audraliaRouteContract = ROUTE_CONTRACT;
   mount.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
   mount.dataset.audraliaCacheKey = CACHE_KEY;
-  mount.dataset.audraliaBaseline = "g1-coherent-achieved";
-  mount.dataset.audraliaG2Calibration = "active";
+  mount.dataset.audraliaG24MaterialFormation = "aligned";
   mount.dataset.audraliaG2Passed = "false";
   mount.dataset.audraliaRuntimeMotionOnly = "true";
   mount.dataset.audraliaTerrainFiveFingers = "true";
@@ -487,7 +485,7 @@ async function boot() {
       terrainFingers: terrainFingersModule,
       assets: assetsModule,
       terrainFiveFingers: true,
-      g2CalibrationActive: true,
+      materialFormationAligned: true,
       g2Passed: false,
       assetsBoundaryExpression: true,
       assetsAbsorbAuthority: false,
@@ -512,7 +510,7 @@ async function boot() {
       canvas.dataset.audraliaRouteContract = ROUTE_CONTRACT;
       canvas.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
       canvas.dataset.audraliaCacheKey = CACHE_KEY;
-      canvas.dataset.audraliaG2Calibration = "active";
+      canvas.dataset.audraliaG24MaterialFormation = "aligned";
       canvas.dataset.audraliaG2Passed = "false";
       canvas.dataset.audraliaRuntimeMotionOnly = "true";
       canvas.dataset.audraliaTerrainFiveFingers = "true";

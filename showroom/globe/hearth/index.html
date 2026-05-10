@@ -2,13 +2,17 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-land-texture-composition-elevation"
+  data-page="hearth-elevation-mountain-range-cliff-depth"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_HTML_TNT_v9"
+  data-contract="HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_HTML_TNT_v10"
   data-body="hearth"
   data-generation-baseline="G2-seven-body-mass-formation"
-  data-current-phase="land-texture-composition-elevation"
+  data-current-phase="elevation-mountain-range-cliff-depth"
   data-body-mass-count="7"
+  data-elevation-depth-loaded="true"
+  data-mountain-range-system-loaded="true"
+  data-cliff-system-loaded="true"
+  data-visual-depth-active="true"
   data-land-texture-composition-loaded="true"
   data-elevation-differentiation-active="true"
   data-composition-differentiation-active="true"
@@ -24,7 +28,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Hearth Land Texture</title>
+  <title>Diamond Gate Bridge · Hearth Elevation Depth</title>
   <style>
     :root {
       --bg:#030914;
@@ -269,13 +273,13 @@
     <main id="hearth-main">
       <section class="hero" aria-labelledby="hearth-title">
         <div>
-          <div class="eyebrow">Hearth · Land Texture + Composition + Elevation</div>
+          <div class="eyebrow">Hearth · Elevation + Mountain Ranges + Cliffs + Visual Depth</div>
           <h1 id="hearth-title">Hearth</h1>
           <p class="lede">
-            Hearth now maps terrain to elevation, elevation to material expression, and material expression back to terrain.
-            Land masses receive differentiated ridge systems, basin cuts, soil fields, mineral veins, stone composition, ice, and elevation texture.
+            Hearth now gives land visible vertical character: mountain spines, secondary ranges, escarpments,
+            cliff walls, basin shadows, ridge highlights, highlands, valleys, plateaus, mineral seams, and visual depth.
           </p>
-          <span class="badge">TET · MAPS · Quad-A · Active Renewal</span>
+          <span class="badge">Elevation · Ranges · Cliffs · Depth</span>
 
           <div class="actions">
             <a class="button primary" href="/showroom/globe/">Return to Globe Split</a>
@@ -287,6 +291,10 @@
         <section
           id="hearthCanvasMount"
           data-hearth-canvas-mount="true"
+          data-hearth-elevation-depth-loaded="true"
+          data-hearth-mountain-range-system-loaded="true"
+          data-hearth-cliff-system-loaded="true"
+          data-hearth-visual-depth-active="true"
           data-hearth-land-texture-composition-loaded="true"
           data-hearth-elevation-differentiation-active="true"
           data-hearth-composition-differentiation-active="true"
@@ -297,29 +305,33 @@
           data-hearth-body-mass-count="7"
           data-hearth-two-body-read="false"
           data-hearth-pole-swivel="true"
-          aria-label="Hearth land texture composition elevation canvas mount"
+          aria-label="Hearth elevation mountain range cliff depth canvas mount"
         >
           <span data-hearth-mount-fallback="true" style="position:absolute;inset:0;display:grid;place-items:center;color:rgba(238,246,255,.68);font-weight:800;text-align:center;padding:20px;">
-            Hearth land texture, composition, and elevation route loading.
+            Hearth elevation, mountain range, cliff, and visual-depth route loading.
           </span>
         </section>
       </section>
 
-      <section class="grid" aria-label="Hearth texture composition elevation system">
-        <article class="card"><h2>T → E → T</h2><p>Terrain truth maps to elevation expression and returns as differentiated terrain material.</p></article>
-        <article class="card"><h2>MAPS</h2><p>Body mass, terrain relief, material blend, and surface features execute as one layered sequence.</p></article>
-        <article class="card"><h2>Quad-A</h2><p>Audit, attack, adjust, and authorize checks reject flat color, repeated material, and fake texture.</p></article>
+      <section class="grid" aria-label="Hearth elevation mountain range cliff depth system">
+        <article class="card"><h2>Mountain Ranges</h2><p>Each body mass receives its own ridge spine, secondary range, cross-ridge, and highland pressure.</p></article>
+        <article class="card"><h2>Cliffs + Basins</h2><p>Escarpments, cliff walls, basin cuts, valleys, and shadow slopes create visible land depth.</p></article>
+        <article class="card"><h2>Material Relief</h2><p>Granite, slate, ice, soil, mineral veins, ridge highlights, and depth shadows separate surface composition.</p></article>
       </section>
 
-      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth land texture, composition, and elevation route preparing.</pre>
+      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth elevation, mountain range, cliff, and visual-depth route preparing.</pre>
 
-      <pre class="receipt">HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_HTML_TNT_v9
+      <pre class="receipt">HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_HTML_TNT_v10
 route=/showroom/globe/hearth/
-controller=HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_ROUTE_TNT_v9
-terrain_extension=HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_TERRAIN_EXTENSION_TNT_v4
-assets=HEARTH_LAND_TEXTURE_COMPOSITION_ELEVATION_ASSETS_TNT_v8
+controller=HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_ROUTE_TNT_v10
+terrain_extension=HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_TERRAIN_EXTENSION_TNT_v5
+assets=HEARTH_ELEVATION_MOUNTAIN_RANGE_CLIFF_DEPTH_ASSETS_TNT_v9
 controls=HEARTH_G2_FREE_DRAG_POLE_SWIVEL_PRESERVATION_CONTROLS_TNT_v2
 canvas=HEARTH_G2_CANVAS_POLE_SWIVEL_SEVEN_BODY_CONSUMER_TNT_v2
+elevation_depth_loaded=true
+mountain_range_system_loaded=true
+cliff_system_loaded=true
+visual_depth_active=true
 land_texture_composition_loaded=true
 elevation_differentiation_active=true
 composition_differentiation_active=true
@@ -338,6 +350,6 @@ visual_pass_claimed=false</pre>
     </main>
   </div>
 
-  <script src="./index.js?v=hearth-land-texture-composition-elevation-v9"></script>
+  <script src="./index.js?v=hearth-elevation-mountain-range-cliff-depth-v10"></script>
 </body>
 </html>

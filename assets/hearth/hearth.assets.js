@@ -1,22 +1,23 @@
 // /assets/hearth/hearth.assets.js
-// HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_ASSETS_TNT_v3
+// HEARTH_ASYMMETRIC_LANDMASS_NATURALIZATION_ASSETS_TNT_v4
 // Full-file replacement.
 // Assets authority only.
 // Purpose:
-// - Convert HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_v1 into deterministic material fields.
-// - Give every Hearth body mass a unique scaled design profile.
-// - Preserve runtime, controls, canvas, route separation.
-// - Prevent two-body read.
-// - No GraphicBox. No generated image. No visual-pass claim.
+// - Break excessive symmetry in Hearth landmass formation.
+// - Preserve seven body masses.
+// - Convert oval/patch read into pressure-shaped landmasses.
+// - Give each mass a different deformation engine.
+// - Preserve runtime, controls, canvas, and route separation.
+// No GraphicBox. No generated image. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_ASSETS_TNT_v3";
-  const RECEIPT = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_ASSETS_RECEIPT_v3";
-  const PREVIOUS_CONTRACT = "HEARTH_G2_SEVEN_BODY_MASS_FORMATION_ASSETS_TNT_v2";
+  const CONTRACT = "HEARTH_ASYMMETRIC_LANDMASS_NATURALIZATION_ASSETS_TNT_v4";
+  const RECEIPT = "HEARTH_ASYMMETRIC_LANDMASS_NATURALIZATION_ASSETS_RECEIPT_v4";
+  const PREVIOUS_CONTRACT = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_ASSETS_TNT_v3";
   const BLUEPRINT = "HEARTH_SEVEN_BODY_MASS_BLUEPRINT_TO_SCALE_v1";
-  const VERSION = "2026-05-10.hearth-seven-body-mass-blueprint-to-scale-v3";
+  const VERSION = "2026-05-10.hearth-asymmetric-landmass-naturalization-v4";
 
   const TAU = Math.PI * 2;
   const DEG = Math.PI / 180;
@@ -26,183 +27,221 @@
       id: 1,
       key: "north-crown-mass",
       name: "North Crown Mass",
-      landWeight: 0.11,
+      profile: "fractured-polar-crown",
       lat: 78 * DEG,
-      lon: -18 * DEG,
-      rx: 66 * DEG,
-      ry: 15 * DEG,
-      angle: -8 * DEG,
-      profile: "broken-polar-crown",
-      prongs: 3,
-      crownBreak: 0.82,
-      shelf: 0.46,
-      mountain: 0.72,
-      cliff: 0.52,
-      basin: 0.12,
-      beach: 0.08,
-      wet: 0.28,
-      ice: 0.86,
-      mineral: 0.38,
-      ridgeBias: 0.72,
-      bayBias: 0.72,
-      asymmetry: 0.78,
-      palette: "polar-slate-ice"
+      lon: -20 * DEG,
+      landWeight: 0.11,
+      palette: "polar-slate-ice",
+      ice: 0.88,
+      wet: 0.24,
+      shelf: 0.48,
+      mountain: 0.74,
+      cliff: 0.58,
+      basin: 0.10,
+      beach: 0.06,
+      mineral: 0.36,
+      ridgeBias: 0.76,
+      bayBias: 0.84,
+      asymmetry: 0.96,
+      lobes: [
+        { lat: 80 * DEG, lon: -52 * DEG, rx: 32 * DEG, ry: 10 * DEG, angle: -18 * DEG, power: 1.00 },
+        { lat: 82 * DEG, lon: -4 * DEG, rx: 26 * DEG, ry: 9 * DEG, angle: 9 * DEG, power: 0.92 },
+        { lat: 74 * DEG, lon: 34 * DEG, rx: 30 * DEG, ry: 10 * DEG, angle: 24 * DEG, power: 0.78 },
+        { lat: 69 * DEG, lon: -25 * DEG, rx: 42 * DEG, ry: 8 * DEG, angle: -4 * DEG, power: 0.52 }
+      ],
+      cuts: [
+        { lat: 72 * DEG, lon: -5 * DEG, rx: 18 * DEG, ry: 7 * DEG, angle: 14 * DEG, power: 0.44 },
+        { lat: 70 * DEG, lon: 54 * DEG, rx: 24 * DEG, ry: 7 * DEG, angle: -20 * DEG, power: 0.36 },
+        { lat: 73 * DEG, lon: -74 * DEG, rx: 18 * DEG, ry: 6 * DEG, angle: 30 * DEG, power: 0.34 }
+      ]
     },
     {
       id: 2,
       key: "equatorial-great-mass",
       name: "Equatorial Great Mass",
+      profile: "rifted-equatorial-continent",
+      lat: 1 * DEG,
+      lon: -6 * DEG,
       landWeight: 0.34,
-      lat: 2 * DEG,
-      lon: 0 * DEG,
-      rx: 62 * DEG,
-      ry: 29 * DEG,
-      angle: -11 * DEG,
-      profile: "great-equatorial-continent",
-      prongs: 5,
-      crownBreak: 0.24,
-      shelf: 0.70,
-      mountain: 0.58,
+      palette: "habitable-upland-basin",
+      ice: 0.03,
+      wet: 0.66,
+      shelf: 0.72,
+      mountain: 0.60,
       cliff: 0.38,
-      basin: 0.72,
-      beach: 0.66,
-      wet: 0.64,
-      ice: 0.04,
-      mineral: 0.68,
+      basin: 0.78,
+      beach: 0.68,
+      mineral: 0.70,
       ridgeBias: 0.58,
-      bayBias: 0.50,
-      asymmetry: 0.62,
-      palette: "habitable-upland-basin"
+      bayBias: 0.62,
+      asymmetry: 0.86,
+      lobes: [
+        { lat: 8 * DEG, lon: -46 * DEG, rx: 30 * DEG, ry: 24 * DEG, angle: -22 * DEG, power: 1.00 },
+        { lat: -5 * DEG, lon: -12 * DEG, rx: 38 * DEG, ry: 22 * DEG, angle: 5 * DEG, power: 0.96 },
+        { lat: 13 * DEG, lon: 32 * DEG, rx: 28 * DEG, ry: 18 * DEG, angle: -18 * DEG, power: 0.74 },
+        { lat: -16 * DEG, lon: 48 * DEG, rx: 24 * DEG, ry: 15 * DEG, angle: 34 * DEG, power: 0.54 },
+        { lat: 19 * DEG, lon: 68 * DEG, rx: 15 * DEG, ry: 10 * DEG, angle: -12 * DEG, power: 0.34 }
+      ],
+      cuts: [
+        { lat: 4 * DEG, lon: 7 * DEG, rx: 13 * DEG, ry: 24 * DEG, angle: -26 * DEG, power: 0.31 },
+        { lat: -22 * DEG, lon: 20 * DEG, rx: 18 * DEG, ry: 9 * DEG, angle: 20 * DEG, power: 0.24 },
+        { lat: 24 * DEG, lon: 51 * DEG, rx: 12 * DEG, ry: 9 * DEG, angle: -40 * DEG, power: 0.26 }
+      ]
     },
     {
       id: 3,
       key: "northwest-temperate-mass",
       name: "Northwest Temperate Mass",
-      landWeight: 0.10,
+      profile: "diagonal-temperate-highland-plate",
       lat: 44 * DEG,
       lon: -104 * DEG,
-      rx: 32 * DEG,
-      ry: 18 * DEG,
-      angle: 24 * DEG,
-      profile: "temperate-highland-plate",
-      prongs: 4,
-      crownBreak: 0.30,
+      landWeight: 0.10,
+      palette: "temperate-stone-green",
+      ice: 0.16,
+      wet: 0.54,
       shelf: 0.42,
-      mountain: 0.54,
-      cliff: 0.36,
-      basin: 0.48,
-      beach: 0.26,
-      wet: 0.56,
-      ice: 0.14,
+      mountain: 0.58,
+      cliff: 0.38,
+      basin: 0.46,
+      beach: 0.24,
       mineral: 0.50,
-      ridgeBias: 0.66,
-      bayBias: 0.24,
-      asymmetry: 0.48,
-      palette: "temperate-stone-green"
+      ridgeBias: 0.70,
+      bayBias: 0.28,
+      asymmetry: 0.62,
+      lobes: [
+        { lat: 51 * DEG, lon: -124 * DEG, rx: 18 * DEG, ry: 13 * DEG, angle: 35 * DEG, power: 0.82 },
+        { lat: 41 * DEG, lon: -103 * DEG, rx: 25 * DEG, ry: 15 * DEG, angle: 28 * DEG, power: 1.00 },
+        { lat: 32 * DEG, lon: -82 * DEG, rx: 17 * DEG, ry: 10 * DEG, angle: 19 * DEG, power: 0.52 }
+      ],
+      cuts: [
+        { lat: 35 * DEG, lon: -68 * DEG, rx: 10 * DEG, ry: 18 * DEG, angle: 4 * DEG, power: 0.28 },
+        { lat: 56 * DEG, lon: -94 * DEG, rx: 12 * DEG, ry: 7 * DEG, angle: -22 * DEG, power: 0.22 }
+      ]
     },
     {
       id: 4,
       key: "northeast-broken-shelf-mass",
       name: "Northeast Broken Shelf Mass",
-      landWeight: 0.09,
+      profile: "fractured-shelf-archipelago",
       lat: 34 * DEG,
       lon: 104 * DEG,
-      rx: 30 * DEG,
-      ry: 16 * DEG,
-      angle: -31 * DEG,
-      profile: "broken-shelf-archipelago",
-      prongs: 7,
-      crownBreak: 0.74,
-      shelf: 0.88,
-      mountain: 0.34,
-      cliff: 0.24,
-      basin: 0.26,
-      beach: 0.62,
-      wet: 0.72,
-      ice: 0.06,
-      mineral: 0.42,
-      ridgeBias: 0.34,
-      bayBias: 0.92,
-      asymmetry: 0.86,
-      palette: "turquoise-shelf-bays"
+      landWeight: 0.09,
+      palette: "turquoise-shelf-bays",
+      ice: 0.05,
+      wet: 0.76,
+      shelf: 0.92,
+      mountain: 0.30,
+      cliff: 0.22,
+      basin: 0.22,
+      beach: 0.72,
+      mineral: 0.40,
+      ridgeBias: 0.26,
+      bayBias: 0.98,
+      asymmetry: 1.00,
+      lobes: [
+        { lat: 38 * DEG, lon: 88 * DEG, rx: 17 * DEG, ry: 11 * DEG, angle: -34 * DEG, power: 0.72 },
+        { lat: 31 * DEG, lon: 110 * DEG, rx: 18 * DEG, ry: 10 * DEG, angle: -18 * DEG, power: 0.88 },
+        { lat: 42 * DEG, lon: 128 * DEG, rx: 12 * DEG, ry: 8 * DEG, angle: 26 * DEG, power: 0.46 },
+        { lat: 24 * DEG, lon: 136 * DEG, rx: 11 * DEG, ry: 7 * DEG, angle: -6 * DEG, power: 0.36 },
+        { lat: 29 * DEG, lon: 75 * DEG, rx: 10 * DEG, ry: 6 * DEG, angle: 12 * DEG, power: 0.30 }
+      ],
+      cuts: [
+        { lat: 35 * DEG, lon: 101 * DEG, rx: 11 * DEG, ry: 7 * DEG, angle: 13 * DEG, power: 0.42 },
+        { lat: 27 * DEG, lon: 121 * DEG, rx: 12 * DEG, ry: 6 * DEG, angle: -28 * DEG, power: 0.36 },
+        { lat: 45 * DEG, lon: 112 * DEG, rx: 9 * DEG, ry: 5 * DEG, angle: 12 * DEG, power: 0.25 }
+      ]
     },
     {
       id: 5,
       key: "southeast-warm-mass",
       name: "Southeast Warm Mass",
-      landWeight: 0.13,
+      profile: "warm-crescent-shelf-continent",
       lat: -24 * DEG,
       lon: 142 * DEG,
-      rx: 36 * DEG,
-      ry: 20 * DEG,
-      angle: 18 * DEG,
-      profile: "warm-crescent-shelf-continent",
-      prongs: 4,
-      crownBreak: 0.36,
-      shelf: 0.82,
-      mountain: 0.36,
-      cliff: 0.26,
-      basin: 0.42,
-      beach: 0.86,
-      wet: 0.78,
+      landWeight: 0.13,
+      palette: "warm-beach-lowland",
       ice: 0.00,
-      mineral: 0.48,
-      ridgeBias: 0.36,
-      bayBias: 0.68,
-      asymmetry: 0.72,
-      palette: "warm-beach-lowland"
+      wet: 0.80,
+      shelf: 0.84,
+      mountain: 0.34,
+      cliff: 0.28,
+      basin: 0.42,
+      beach: 0.90,
+      mineral: 0.46,
+      ridgeBias: 0.32,
+      bayBias: 0.74,
+      asymmetry: 0.88,
+      lobes: [
+        { lat: -17 * DEG, lon: 124 * DEG, rx: 19 * DEG, ry: 14 * DEG, angle: 34 * DEG, power: 0.74 },
+        { lat: -27 * DEG, lon: 148 * DEG, rx: 30 * DEG, ry: 16 * DEG, angle: 20 * DEG, power: 1.00 },
+        { lat: -37 * DEG, lon: 170 * DEG, rx: 16 * DEG, ry: 10 * DEG, angle: -12 * DEG, power: 0.46 },
+        { lat: -8 * DEG, lon: 165 * DEG, rx: 11 * DEG, ry: 7 * DEG, angle: 36 * DEG, power: 0.24 }
+      ],
+      cuts: [
+        { lat: -20 * DEG, lon: 139 * DEG, rx: 13 * DEG, ry: 20 * DEG, angle: 38 * DEG, power: 0.28 },
+        { lat: -42 * DEG, lon: 130 * DEG, rx: 12 * DEG, ry: 8 * DEG, angle: -16 * DEG, power: 0.22 }
+      ]
     },
     {
       id: 6,
       key: "southwest-ridge-mass",
       name: "Southwest Ridge Mass",
-      landWeight: 0.14,
+      profile: "dark-tectonic-ridge-scar",
       lat: -38 * DEG,
       lon: -122 * DEG,
-      rx: 34 * DEG,
-      ry: 20 * DEG,
-      angle: -22 * DEG,
-      profile: "dark-ridge-cliff-pressure",
-      prongs: 5,
-      crownBreak: 0.40,
+      landWeight: 0.14,
+      palette: "dark-ridge-mineral",
+      ice: 0.10,
+      wet: 0.36,
       shelf: 0.24,
-      mountain: 0.82,
-      cliff: 0.82,
-      basin: 0.22,
-      beach: 0.16,
-      wet: 0.40,
-      ice: 0.12,
-      mineral: 0.78,
-      ridgeBias: 0.94,
-      bayBias: 0.32,
-      asymmetry: 0.66,
-      palette: "dark-ridge-mineral"
+      mountain: 0.86,
+      cliff: 0.90,
+      basin: 0.16,
+      beach: 0.12,
+      mineral: 0.84,
+      ridgeBias: 1.00,
+      bayBias: 0.28,
+      asymmetry: 0.82,
+      lobes: [
+        { lat: -25 * DEG, lon: -136 * DEG, rx: 15 * DEG, ry: 12 * DEG, angle: -45 * DEG, power: 0.54 },
+        { lat: -38 * DEG, lon: -119 * DEG, rx: 31 * DEG, ry: 12 * DEG, angle: -29 * DEG, power: 1.00 },
+        { lat: -52 * DEG, lon: -101 * DEG, rx: 20 * DEG, ry: 10 * DEG, angle: -19 * DEG, power: 0.58 },
+        { lat: -44 * DEG, lon: -154 * DEG, rx: 13 * DEG, ry: 8 * DEG, angle: 6 * DEG, power: 0.34 }
+      ],
+      cuts: [
+        { lat: -31 * DEG, lon: -112 * DEG, rx: 10 * DEG, ry: 20 * DEG, angle: -35 * DEG, power: 0.24 },
+        { lat: -53 * DEG, lon: -134 * DEG, rx: 11 * DEG, ry: 7 * DEG, angle: 30 * DEG, power: 0.20 }
+      ]
     },
     {
       id: 7,
       key: "south-transitional-mass",
       name: "South Transitional Mass",
-      landWeight: 0.09,
+      profile: "cold-storm-shelf-counterweight",
       lat: -59 * DEG,
       lon: 36 * DEG,
-      rx: 38 * DEG,
-      ry: 15 * DEG,
-      angle: 13 * DEG,
-      profile: "cold-transitional-counterweight",
-      prongs: 4,
-      crownBreak: 0.58,
-      shelf: 0.52,
-      mountain: 0.48,
-      cliff: 0.46,
-      basin: 0.20,
-      beach: 0.28,
-      wet: 0.36,
-      ice: 0.52,
+      landWeight: 0.09,
+      palette: "cold-storm-shelf",
+      ice: 0.56,
+      wet: 0.34,
+      shelf: 0.54,
+      mountain: 0.46,
+      cliff: 0.48,
+      basin: 0.18,
+      beach: 0.26,
       mineral: 0.44,
-      ridgeBias: 0.50,
-      bayBias: 0.56,
-      asymmetry: 0.58,
-      palette: "cold-storm-shelf"
+      ridgeBias: 0.48,
+      bayBias: 0.62,
+      asymmetry: 0.76,
+      lobes: [
+        { lat: -52 * DEG, lon: 14 * DEG, rx: 18 * DEG, ry: 9 * DEG, angle: 18 * DEG, power: 0.56 },
+        { lat: -61 * DEG, lon: 42 * DEG, rx: 30 * DEG, ry: 11 * DEG, angle: 9 * DEG, power: 1.00 },
+        { lat: -67 * DEG, lon: 72 * DEG, rx: 13 * DEG, ry: 7 * DEG, angle: -18 * DEG, power: 0.34 }
+      ],
+      cuts: [
+        { lat: -58 * DEG, lon: 30 * DEG, rx: 13 * DEG, ry: 6 * DEG, angle: 8 * DEG, power: 0.26 },
+        { lat: -70 * DEG, lon: 50 * DEG, rx: 18 * DEG, ry: 5 * DEG, angle: -10 * DEG, power: 0.20 }
+      ]
     }
   ]);
 
@@ -340,74 +379,88 @@
     };
   }
 
-  function massRead(lon, lat, mass, u, v) {
-    const dx = wrapPi(lon - mass.lon) * Math.cos(mass.lat);
-    const dy = lat - mass.lat;
-
-    const ca = Math.cos(mass.angle);
-    const sa = Math.sin(mass.angle);
-
+  function lobeValue(lon, lat, lobe) {
+    const dx = wrapPi(lon - lobe.lon) * Math.cos(lobe.lat);
+    const dy = lat - lobe.lat;
+    const ca = Math.cos(lobe.angle);
+    const sa = Math.sin(lobe.angle);
     const x = dx * ca - dy * sa;
     const y = dx * sa + dy * ca;
-
-    const nx = x / mass.rx;
-    const ny = y / mass.ry;
+    const nx = x / lobe.rx;
+    const ny = y / lobe.ry;
     const dist = Math.sqrt(nx * nx + ny * ny);
-    const theta = Math.atan2(ny, nx);
+    return {
+      value: lobe.power * (1 - dist),
+      dist,
+      nx,
+      ny,
+      theta: Math.atan2(ny, nx)
+    };
+  }
 
-    const coastlineNoise = (fbm(u + mass.id * 0.071, v - mass.id * 0.037, 1100 + mass.id * 31) - 0.5) * (0.10 + mass.asymmetry * 0.10);
-    const ridgeNoise = (ridged(u + mass.id * 0.043, v + mass.id * 0.029, 2100 + mass.id * 41) - 0.5) * (0.04 + mass.ridgeBias * 0.06);
-    const bayWave = Math.sin(theta * mass.prongs + dist * (3.2 + mass.id * 0.27)) * 0.035 * mass.bayBias;
-    const crownWave = Math.cos(theta * Math.max(3, mass.prongs - 1) - dist * 2.1) * 0.026 * mass.crownBreak;
-    const asymmetryWave = Math.sin(theta * 2.0 + mass.id * 1.77) * 0.025 * mass.asymmetry;
+  function massRead(lon, lat, mass, u, v) {
+    const lobeReads = mass.lobes.map((lobe) => lobeValue(lon, lat, lobe));
+    const cutReads = mass.cuts.map((cut) => lobeValue(lon, lat, cut));
+    const main = lobeReads.reduce((best, current) => (current.value > best.value ? current : best), lobeReads[0]);
 
-    let field = 1 - dist + coastlineNoise + ridgeNoise + bayWave + crownWave + asymmetryWave;
+    let field = -1.0;
+
+    for (const read of lobeReads) {
+      field = Math.max(field, read.value);
+      field += smoothstep(-0.42, 0.48, read.value) * 0.085;
+    }
+
+    for (const cut of cutReads) {
+      field -= smoothstep(-0.28, 0.58, cut.value) * cut.value * 0.55;
+    }
+
+    const coastlineNoise = (fbm(u + mass.id * 0.071, v - mass.id * 0.037, 1100 + mass.id * 31) - 0.5) * (0.12 + mass.asymmetry * 0.18);
+    const biteNoise = noise(u + mass.id * 0.211, v - mass.id * 0.191, 54, 4800 + mass.id * 91);
+    const ridgeNoise = (ridged(u + mass.id * 0.043, v + mass.id * 0.029, 2100 + mass.id * 41) - 0.5) * (0.04 + mass.ridgeBias * 0.07);
+    const bayBite = smoothstep(0.58, 0.94, biteNoise) * mass.bayBias * 0.12;
+    const tectonicPull = Math.sin(main.theta * (1.7 + mass.id * 0.23) + main.nx * 2.4 - main.ny * 1.8) * 0.045 * mass.asymmetry;
+
+    field += coastlineNoise + ridgeNoise + tectonicPull;
+    field -= bayBite * smoothstep(-0.10, 0.22, field);
 
     if (mass.key === "north-crown-mass") {
-      const prongCut = Math.sin(theta * 3.0 + 0.7) * 0.10;
-      const southernFracture = smoothstep(-0.70, -0.05, ny) * 0.14;
-      field += prongCut - southernFracture;
+      const fracture = Math.sin(main.theta * 3.0 + main.dist * 5.6) * 0.11;
+      const glacierMouths = smoothstep(0.60, 0.95, noise(u + 0.18, v - 0.23, 46, 9118)) * 0.13;
+      field += fracture;
+      field -= glacierMouths * smoothstep(-0.08, 0.26, field);
     }
 
     if (mass.key === "equatorial-great-mass") {
-      const westernShoulder = smoothstep(-0.95, -0.15, nx) * 0.10;
-      const easternSplit = smoothstep(0.15, 0.95, nx) * Math.sin(theta * 4.0 + 1.2) * 0.075;
-      const centralRift = Math.exp(-Math.pow(nx * 1.7 + ny * 0.35, 2) / 0.09) * 0.075;
-      field += westernShoulder + easternSplit - centralRift;
+      const rift = Math.exp(-Math.pow(main.nx * 1.3 + main.ny * 0.52, 2) / 0.045) * 0.16;
+      const westernShoulder = smoothstep(-1.15, -0.05, main.nx) * 0.10;
+      const tornEast = Math.sin(main.theta * 4.5 + main.dist * 3.2) * smoothstep(0.08, 0.95, main.nx) * 0.08;
+      field += westernShoulder + tornEast - rift;
     }
 
     if (mass.key === "northeast-broken-shelf-mass") {
-      const archipelagoCut = noise(u + 0.31, v + 0.17, 34, 4488);
-      field -= smoothstep(0.48, 0.86, archipelagoCut) * 0.18;
-      field += Math.sin(theta * 7.0 + dist * 5.4) * 0.052;
-    }
-
-    if (mass.key === "southeast-warm-mass") {
-      const crescent = Math.sin(theta + 1.4) * 0.12 - Math.cos(theta * 2.0) * 0.045;
-      field += crescent;
+      const archipelagoSplit = smoothstep(0.48, 0.88, noise(u + 0.31, v + 0.17, 34, 4488));
+      const shallowCuts = smoothstep(0.52, 0.92, noise(u - 0.11, v + 0.27, 61, 7781));
+      field -= archipelagoSplit * 0.16;
+      field -= shallowCuts * 0.10 * smoothstep(-0.12, 0.25, field);
     }
 
     if (mass.key === "southwest-ridge-mass") {
-      const ridgeScar = Math.exp(-Math.pow(ny + nx * 0.34, 2) / 0.045) * 0.13;
-      field += ridgeScar;
+      const tectonicScar = Math.exp(-Math.pow(main.ny + main.nx * 0.42, 2) / 0.032) * 0.15;
+      const hardCut = smoothstep(0.56, 0.90, noise(u - 0.29, v + 0.09, 42, 8862)) * 0.08;
+      field += tectonicScar;
+      field -= hardCut * smoothstep(-0.06, 0.22, field);
     }
 
-    if (mass.key === "south-transitional-mass") {
-      const elongatedShelf = Math.cos(theta * 2.0 - 0.9) * 0.06;
-      const southBreak = smoothstep(0.20, 0.92, -ny) * 0.07;
-      field += elongatedShelf - southBreak;
-    }
-
-    const coast = smoothstep(0, 0.86, 1 - clamp(Math.abs(field) * 18, 0, 1));
+    const coast = smoothstep(0, 0.86, 1 - clamp(Math.abs(field) * 17, 0, 1));
 
     return {
       mass,
       field,
-      dist,
-      theta,
-      nx,
-      ny,
-      landMask: smoothstep(-0.04, 0.13, field),
+      dist: main.dist,
+      theta: main.theta,
+      nx: main.nx,
+      ny: main.ny,
+      landMask: smoothstep(-0.045, 0.13, field),
       coast
     };
   }
@@ -420,39 +473,45 @@
     const field = primary.field;
     const isLand = field > 0;
 
-    const shelfBase = smoothstep(-0.25, 0.02, field);
-    const shelfTexture = smoothstep(0.18, 0.90, ridged(u * 1.7 + 0.05, v * 1.35 - 0.03, 7011));
-    const shelf = isLand ? 0 : clamp(shelfBase * primary.coast * (0.30 + primary.mass.shelf * 0.70) * (0.48 + shelfTexture * 0.36), 0, 1);
+    const shelfBase = smoothstep(-0.26, 0.03, field);
+    const shelfTexture = smoothstep(0.16, 0.90, ridged(u * 1.7 + 0.05, v * 1.35 - 0.03, 7011));
+    const shelf = isLand ? 0 : clamp(shelfBase * primary.coast * (0.30 + primary.mass.shelf * 0.70) * (0.48 + shelfTexture * 0.38), 0, 1);
     const deepOcean = isLand ? 0 : clamp(1 - shelfBase * 0.82, 0, 1);
 
     const latitudeCold = smoothstep(46 * DEG, 84 * DEG, Math.abs(p.lat));
     const polarCold = clamp(latitudeCold * 0.55 + primary.mass.ice * primary.landMask * 0.75, 0, 1);
 
-    const ridgeLine = Math.exp(-Math.pow(primary.ny + primary.nx * 0.28, 2) / 0.07);
-    const ring = Math.exp(-Math.pow(primary.dist - 0.56, 2) / 0.014);
+    const ridgeLine = Math.exp(-Math.pow(primary.ny + primary.nx * 0.34, 2) / 0.058);
     const ridgeNoise = smoothstep(0.34, 0.94, ridged(u * 2.2 + primary.mass.id * 0.05, v * 2.1 - primary.mass.id * 0.04, 8060 + primary.mass.id * 23));
+    const fractureNoise = smoothstep(0.54, 0.94, noise(u + primary.mass.id * 0.19, v - primary.mass.id * 0.21, 72, 9922));
 
     const mountains = isLand
-      ? clamp((primary.mass.mountain * ring * 0.44 + primary.mass.ridgeBias * ridgeLine * 0.34 + ridgeNoise * primary.mass.mountain * 0.38) * primary.landMask, 0, 1)
+      ? clamp((primary.mass.mountain * ridgeLine * 0.45 + ridgeNoise * primary.mass.mountain * 0.40 + fractureNoise * primary.mass.ridgeBias * 0.24) * primary.landMask, 0, 1)
       : 0;
 
     const basin =
       isLand && primary.mass.basin > 0
-        ? clamp((1 - mountains) * smoothstep(0.10, 0.62, field) * (1 - ridgeNoise) * primary.mass.basin, 0, 1)
+        ? clamp((1 - mountains) * smoothstep(0.10, 0.64, field) * (1 - ridgeNoise) * primary.mass.basin, 0, 1)
         : 0;
 
     const cliffs = isLand
-      ? clamp(primary.coast * ridgeNoise * (0.16 + primary.mass.cliff * 0.80), 0, 1)
+      ? clamp(primary.coast * ridgeNoise * (0.16 + primary.mass.cliff * 0.84), 0, 1)
       : 0;
 
     const beach = clamp(primary.coast * (isLand ? 0.82 : shelf * 0.55) * (0.18 + primary.mass.beach * 0.82), 0, 1);
 
-    const bay = clamp(primary.coast * primary.mass.bayBias * smoothstep(0.30, 0.92, noise(u + primary.mass.id * 0.31, v - primary.mass.id * 0.23, 48, 5221)), 0, 1);
+    const bay = clamp(
+      primary.coast *
+        primary.mass.bayBias *
+        smoothstep(0.30, 0.92, noise(u + primary.mass.id * 0.31, v - primary.mass.id * 0.23, 48, 5221)),
+      0,
+      1
+    );
 
     const mineralNoise = smoothstep(0.78, 0.99, noise(u + primary.mass.id * 0.11, v - primary.mass.id * 0.08, 86, 9111));
     const mineral = isLand ? clamp(mineralNoise * primary.mass.mineral * (0.24 + mountains * 0.76), 0, 1) : 0;
 
-    const secondaryPressure = secondary ? smoothstep(-0.05, 0.12, secondary.field) * 0.12 : 0;
+    const secondaryPressure = secondary ? smoothstep(-0.05, 0.12, secondary.field) * 0.08 : 0;
     const bodySeparation = clamp(primary.landMask - secondaryPressure, 0, 1);
 
     return {
@@ -480,27 +539,28 @@
       mineral,
       bodySeparation,
       ridgeNoise,
+      fractureNoise,
       noise: fbm(u + 0.013, v - 0.071, 333),
-      elevation: isLand ? clamp(0.18 + field * 0.55 + mountains * 0.55 - basin * 0.20, 0, 1) : 0
+      elevation: isLand ? clamp(0.18 + field * 0.56 + mountains * 0.55 - basin * 0.20, 0, 1) : 0
     };
   }
 
   function paletteBase(t) {
     switch (t.primaryMassKey) {
       case "north-crown-mass":
-        return mix(MATERIAL.slate, MATERIAL.polarStone, 0.46);
+        return mix(MATERIAL.slate, MATERIAL.polarStone, 0.52);
       case "equatorial-great-mass":
         return mix(MATERIAL.lowland, MATERIAL.upland, 0.34);
       case "northwest-temperate-mass":
         return mix(MATERIAL.temperate, MATERIAL.granite, 0.24);
       case "northeast-broken-shelf-mass":
-        return mix(MATERIAL.greenLowland, MATERIAL.beach, 0.22);
+        return mix(MATERIAL.greenLowland, MATERIAL.beach, 0.26);
       case "southeast-warm-mass":
-        return mix(MATERIAL.warmLowland, MATERIAL.beach, 0.26);
+        return mix(MATERIAL.warmLowland, MATERIAL.beach, 0.28);
       case "southwest-ridge-mass":
-        return mix(MATERIAL.darkMineral, MATERIAL.ridge, 0.30);
+        return mix(MATERIAL.darkMineral, MATERIAL.ridge, 0.34);
       case "south-transitional-mass":
-        return mix(MATERIAL.stormShelf, MATERIAL.polarStone, 0.26);
+        return mix(MATERIAL.stormShelf, MATERIAL.polarStone, 0.30);
       default:
         return MATERIAL.lowland;
     }
@@ -596,6 +656,9 @@
     canvas.dataset.hearthSecondaryMasses = "5";
     canvas.dataset.hearthUniqueMassProfiles = "true";
     canvas.dataset.hearthTwoBodyRead = "false";
+    canvas.dataset.hearthSymmetryReduced = "true";
+    canvas.dataset.hearthOvalPatchRead = "false";
+    canvas.dataset.hearthNaturalCoastlinePressure = "true";
     canvas.dataset.hearthSymmetricalDotDistribution = "false";
     canvas.dataset.generatedImage = "false";
     canvas.dataset.graphicBox = "false";
@@ -622,6 +685,9 @@
       secondaryMasses: 5,
       uniqueMassProfiles: true,
       twoBodyRead: false,
+      symmetryReduced: true,
+      ovalPatchRead: false,
+      naturalCoastlinePressure: true,
       symmetricalDotDistribution: false,
       landDistributionTarget: {
         northCrownMass: 0.11,
@@ -680,6 +746,9 @@
   document.documentElement.dataset.hearthSecondaryMasses = "5";
   document.documentElement.dataset.hearthUniqueMassProfiles = "true";
   document.documentElement.dataset.hearthTwoBodyRead = "false";
+  document.documentElement.dataset.hearthSymmetryReduced = "true";
+  document.documentElement.dataset.hearthOvalPatchRead = "false";
+  document.documentElement.dataset.hearthNaturalCoastlinePressure = "true";
   document.documentElement.dataset.hearthSymmetricalDotDistribution = "false";
   document.documentElement.dataset.generatedImage = "false";
   document.documentElement.dataset.graphicBox = "false";

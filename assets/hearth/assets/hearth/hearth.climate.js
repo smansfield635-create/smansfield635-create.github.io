@@ -1,12 +1,6 @@
 // /assets/hearth/hearth.climate.js
 // HEARTH_CLIMATE_REGION_BIOME_AUTHORITY_TNT_v1
 // Full-file replacement / new file.
-// Climate + region + biome authority only.
-// Purpose:
-// - Classify land by climate and biome instead of assigning color by body mass.
-// - Support forest, desert, plains, mountains, tundra, wetlands, savanna, steppe, coast, ice, and highlands.
-// - Preserve terrain, elevation, assets, runtime, controls, canvas, and route separation.
-// No GraphicBox. No generated image. No visual-pass claim.
 
 (() => {
   "use strict";
@@ -222,27 +216,6 @@
       regionBiomeAuthorityLoaded: true,
       biomeColorNotBodyMassColor: true,
       bodyMassAssignedColoring: false,
-      supportedBiomes: [
-        "ice-cap",
-        "snowy-mountains",
-        "rocky-mountains",
-        "highland-forest",
-        "dry-highlands",
-        "hot-desert",
-        "semi-desert",
-        "wet-forest",
-        "seasonal-forest",
-        "savanna",
-        "wetland",
-        "temperate-forest",
-        "plains",
-        "steppe",
-        "tundra",
-        "cold-steppe",
-        "mixed-lowland",
-        "coastal-shelf",
-        "ocean"
-      ],
       ownsBodyMassPlacement: false,
       ownsCoastline: false,
       ownsElevation: false,

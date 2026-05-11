@@ -2,18 +2,21 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-parent-chain-force-aligned"
+  data-page="hearth-tectonic-parent-chain"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_PARENT_CHAIN_FORCE_ALIGNED_HTML_TNT_v20"
+  data-contract="HEARTH_TECTONIC_PARENT_CHAIN_HTML_TNT_v21"
   data-body="hearth"
   data-active-route-file="/showroom/globe/hearth/hearth.climate.route.js"
   data-parent-chain-aligned="true"
+  data-tectonics-authority="/assets/hearth/hearth.tectonics.js"
   data-composition-authority="/assets/hearth/hearth.composition.js"
   data-hydrology-authority="/assets/hearth/hearth.hydrology.js"
   data-materials-authority="/assets/hearth/hearth.materials.js"
   data-canvas-authority="/assets/hearth/hearth.canvas.js"
   data-target-land-ratio="0.30"
   data-earth-reference-land-ratio="0.29"
+  data-rocky-means-jagged-not-gray="true"
+  data-plate-tectonics-active="true"
   data-visible-globe-v17-retired="true"
   data-generated-image="false"
   data-graphic-box="false"
@@ -25,7 +28,7 @@
   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>Diamond Gate Bridge · Hearth Parent Chain</title>
+  <title>Diamond Gate Bridge · Hearth Tectonic Parent Chain</title>
 
   <style>
     :root {
@@ -223,7 +226,7 @@
 
     .grid {
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-columns:repeat(4,minmax(0,1fr));
       gap:12px;
       margin-top:22px;
     }
@@ -257,7 +260,7 @@
       white-space:pre-wrap;
     }
 
-    @media (max-width:860px) {
+    @media (max-width:980px) {
       .hero,
       .grid {
         grid-template-columns:1fr;
@@ -287,13 +290,14 @@
     <main id="hearth-main">
       <section class="hero" aria-labelledby="hearth-title">
         <div>
-          <div class="eyebrow">Hearth · Parent Chain Aligned</div>
+          <div class="eyebrow">Hearth · Tectonic Parent Chain</div>
           <h1 id="hearth-title">Hearth</h1>
           <p class="lede">
-            Hearth now routes through a clean parent chain: composition, hydrology, materials, and canvas. The planet remains visible while terrain, water, mineral substrate, and surface material stay separated.
+            Hearth now routes through a tectonic parent chain. Rocky means jagged, not gray: plate stress, uplift ridges, fractured coastlines, collapsed basins, hydrology, mineral substrate, and surface materials stay separated while the planet remains visible.
           </p>
 
-          <span class="badge">Parent Chain · v20 Force Alignment</span>
+          <span class="badge">Parent Chain · v21 Tectonics</span>
+          <span class="badge" style="margin-left:8px;">Parent Chain · v20 Force Alignment</span>
 
           <div class="actions">
             <a class="button primary" href="/showroom/globe/">Return to Globe Split</a>
@@ -307,15 +311,20 @@
           data-hearth-canvas-mount="true"
           data-hearth-parent-chain-aligned="true"
           data-hearth-route-file="/showroom/globe/hearth/hearth.climate.route.js"
-          aria-label="Hearth parent-chain aligned globe canvas mount"
+          aria-label="Hearth tectonic parent-chain globe canvas mount"
         >
           <span data-hearth-mount-fallback="true" style="position:absolute;inset:0;display:grid;place-items:center;color:rgba(238,246,255,.68);font-weight:800;text-align:center;padding:20px;">
-            Hearth parent-chain route loading.
+            Hearth tectonic parent-chain route loading.
           </span>
         </section>
       </section>
 
       <section class="grid" aria-label="Hearth parent chain">
+        <article class="card">
+          <h2>Tectonics</h2>
+          <p>Plate stress, uplift ridges, fault pressure, cliff cuts, island breaks, and jagged coast behavior define the exposed land.</p>
+        </article>
+
         <article class="card">
           <h2>Composition</h2>
           <p>Diamond, opal, marble, slate, granite, gold, platinum, and silver remain substrate authority.</p>
@@ -323,7 +332,7 @@
 
         <article class="card">
           <h2>Hydrology</h2>
-          <p>Inland lakes, rivers, streams, brooks, marshes, swamps, shelves, and wet basins are separated from materials.</p>
+          <p>Inland lakes, rivers, streams, brooks, marshes, swamps, shelves, and wet basins follow tectonic scars.</p>
         </article>
 
         <article class="card">
@@ -332,18 +341,21 @@
         </article>
       </section>
 
-      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth parent-chain route preparing.</pre>
+      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth tectonic parent-chain route preparing.</pre>
 
-      <pre class="receipt">HEARTH_PARENT_CHAIN_FORCE_ALIGNED_HTML_TNT_v20
+      <pre class="receipt">HEARTH_TECTONIC_PARENT_CHAIN_HTML_TNT_v21
 route=/showroom/globe/hearth/
 active_route_file=/showroom/globe/hearth/hearth.climate.route.js
+tectonics=/assets/hearth/hearth.tectonics.js
 composition=/assets/hearth/hearth.composition.js
 hydrology=/assets/hearth/hearth.hydrology.js
 materials=/assets/hearth/hearth.materials.js
 canvas=/assets/hearth/hearth.canvas.js
+compatibility_marker=HEARTH_PARENT_CHAIN_FORCE_ALIGNED_HTML_TNT_v20
 target_land_ratio=0.30
 earth_reference_land_ratio=0.29
-visible_globe_v17_retired=true
+rocky_means_jagged_not_gray=true
+plate_tectonics_active=true
 vegetation_topology=held
 trees=false
 bushes=false
@@ -358,7 +370,7 @@ visual_pass_claimed=false</pre>
     (() => {
       "use strict";
 
-      const key = `hearth-parent-chain-v20-force-${Date.now()}`;
+      const key = `hearth-tectonic-parent-chain-v21-${Date.now()}`;
 
       [
         "__HEARTH_G4_ROUTE_DISPOSE__",
@@ -383,6 +395,7 @@ visual_pass_claimed=false</pre>
         "HEARTH_TERRAIN_EXTENSION",
         "HEARTH_ELEVATION",
         "HEARTH_CLIMATE",
+        "HEARTH_TECTONICS",
         "HEARTH_COMPOSITION",
         "HEARTH_HYDROLOGY",
         "HEARTH_MATERIALS",
@@ -408,8 +421,8 @@ visual_pass_claimed=false</pre>
       const status = document.getElementById("hearth-route-status");
       if (status) {
         status.textContent = [
-          "Hearth parent-chain force-aligned HTML loaded.",
-          "Visible Globe v17 shell retired.",
+          "Hearth tectonic parent-chain HTML loaded.",
+          "Rocky means jagged, not gray.",
           "Loading active route file.",
           "Route /showroom/globe/hearth/hearth.climate.route.js",
           "Generated image false",
@@ -422,12 +435,12 @@ visual_pass_claimed=false</pre>
       script.src = `./hearth.climate.route.js?v=${key}`;
       script.defer = true;
       script.dataset.hearthFile = "true";
-      script.dataset.hearthFileRole = "parent-chain-route-v20-force";
+      script.dataset.hearthFileRole = "tectonic-parent-chain-route-v21";
 
       script.onerror = () => {
         if (status) {
           status.textContent = [
-            "Hearth parent-chain route failed to load.",
+            "Hearth tectonic parent-chain route failed to load.",
             `Route ${script.src}`,
             "Generated image false",
             "GraphicBox false",

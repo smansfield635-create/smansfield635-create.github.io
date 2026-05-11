@@ -1,70 +1,43 @@
 // /assets/audralia/audralia.canvas.js
-// AUDRALIA_G1_THIN_COASTAL_BEACH_RESTRAINT_CANVAS_TNT_v14
+// AUDRALIA_G1_COORDINATE_LANDMAP_CANVAS_CONSUMER_TNT_v15
 // Full-file replacement.
 // Canvas authority only.
-// Compatibility markers:
-// AUDRALIA_G1_VISIBLE_LANDMASS_RESTORE_CANVAS_TNT_v12
-// AUDRALIA_G1_BEACH_EXPRESSION_CANVAS_TNT_v13
-// AUDRALIA_G1_BALANCED_LANDMASS_RESTORE_CANVAS_TNT_v11
-// AUDRALIA_G1_RESTRAINT_DESTRIPING_CANVAS_TNT_v10
-// AUDRALIA_G1_PLAINS_DESERTS_MARSHES_CANVAS_TNT_v9
-// AUDRALIA_G1_HIGH_MOUNTAIN_RANGE_COMMUNITY_CANVAS_TNT_v8
-// AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_CANVAS_TNT_v5
-// AUDRALIA_G1_BEACH_TO_LAND_RISE_CANVAS_TNT_v4
-// AUDRALIA_G1_TERRAIN_ELEVATION_CANVAS_TNT_v3
-//
 // Purpose:
-// - Restore accepted v12 visible-landmass footprint.
-// - Reject broad v13 beach reclassification.
-// - Beaches are thin coastal-edge material only.
-// - Do not redraw continents.
-// - Do not expand land.
-// - Do not recolor interior plains as beach.
-// - Do not create rectangular tan fields.
-// - Keep ocean dominant.
+// - Dynamically loads /assets/audralia/audralia.landmap.js if route has not loaded it.
+// - Consumes landmap as footprint truth.
+// - Canvas renders; it does not invent landmass.
+// - Pointer/drag inspection exposes longitude, latitude, quadrant, band, cell16, cell64, cell256, and terrain class.
+// - Preserves accepted G1 visible-landmass footprint.
+// - Keeps thin coastal beaches restrained.
 // - No trees. No bushes. No forest canopy.
 // - No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G1_THIN_COASTAL_BEACH_RESTRAINT_CANVAS_TNT_v14";
-  const RECEIPT = "AUDRALIA_G1_THIN_COASTAL_BEACH_RESTRAINT_CANVAS_RECEIPT_v14";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G1_BEACH_EXPRESSION_CANVAS_TNT_v13";
-  const RESTORED_BASELINE = "AUDRALIA_G1_VISIBLE_LANDMASS_RESTORE_CANVAS_TNT_v12";
-  const VERSION = "2026-05-10.audralia-g1-thin-coastal-beach-restraint-canvas-v14";
+  const CONTRACT = "AUDRALIA_G1_COORDINATE_LANDMAP_CANVAS_CONSUMER_TNT_v15";
+  const RECEIPT = "AUDRALIA_G1_COORDINATE_LANDMAP_CANVAS_CONSUMER_RECEIPT_v15";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G1_THIN_COASTAL_BEACH_RESTRAINT_CANVAS_TNT_v14";
+  const LANDMAP_CONTRACT = "AUDRALIA_G1_COORDINATE_LANDMAP_AUTHORITY_TNT_v1";
+  const VERSION = "2026-05-10.audralia-g1-coordinate-landmap-canvas-consumer-v15";
   const TAU = Math.PI * 2;
 
   const COLORS = Object.freeze({
     deepOcean: [3, 18, 44],
     ocean: [5, 56, 98],
-    oceanBlue: [8, 73, 116],
     shelf: [20, 106, 132],
     shallow: [48, 143, 146],
-    lagoon: [63, 158, 159],
     beach: [202, 186, 128],
-    dryBeach: [213, 195, 138],
     wetBeach: [156, 157, 116],
-    tidalFlat: [118, 137, 108],
-    raisedLand: [90, 127, 76],
+    land: [90, 127, 76],
     grassland: [77, 122, 72],
     plains: [128, 142, 87],
     desert: [174, 148, 90],
-    dryBasin: [144, 124, 86],
     marsh: [50, 101, 78],
-    wetFlat: [68, 118, 106],
-    mineralFlat: [170, 162, 126],
-    lowland: [66, 108, 70],
-    plateau: [119, 137, 89],
-    foothill: [108, 128, 84],
-    ridge: [134, 132, 119],
-    stone: [118, 118, 112],
-    darkStone: [72, 74, 74],
-    cliff: [88, 88, 84],
+    basin: [66, 108, 70],
+    highland: [134, 132, 119],
+    ridge: [118, 118, 112],
     snow: [218, 232, 226],
-    ice: [190, 220, 225],
-    community: [207, 172, 96],
-    terrace: [150, 134, 88],
     atmosphere: [86, 157, 194],
     cloud: [230, 238, 238]
   });
@@ -153,445 +126,117 @@
     return total / Math.max(0.000001, norm);
   }
 
-  function ridged(u, v, seed, octaves = 5) {
-    let total = 0;
-    let norm = 0;
-    let amp = 0.62;
-    let scale = 6.5;
+  function ensureLandmap() {
+    if (window.AUDRALIA_LANDMAP?.sampleLandmap) return Promise.resolve(true);
 
-    for (let i = 0; i < octaves; i += 1) {
-      const n = noise(u, v, scale, seed + i * 97);
-      total += (1 - Math.abs(n * 2 - 1)) * amp;
-      norm += amp;
-      amp *= 0.52;
-      scale *= 2;
-    }
+    return new Promise((resolve) => {
+      const existing = document.querySelector("script[data-audralia-landmap-loader='true']");
+      if (existing) {
+        existing.addEventListener("load", () => resolve(Boolean(window.AUDRALIA_LANDMAP?.sampleLandmap)), { once: true });
+        existing.addEventListener("error", () => resolve(false), { once: true });
+        return;
+      }
 
-    return total / Math.max(0.000001, norm);
+      const script = document.createElement("script");
+      script.src = `/assets/audralia/audralia.landmap.js?v=audralia-landmap-v1-${Date.now()}`;
+      script.defer = true;
+      script.dataset.audraliaLandmapLoader = "true";
+      script.dataset.audraliaCanvasContract = CONTRACT;
+
+      script.onload = () => resolve(Boolean(window.AUDRALIA_LANDMAP?.sampleLandmap));
+      script.onerror = () => resolve(false);
+
+      document.head.appendChild(script);
+    });
   }
 
-  function sampleSummit(u, v, longitude, latitude) {
-    if (window.AUDRALIA_SUMMITS?.sampleSummit) {
-      return window.AUDRALIA_SUMMITS.sampleSummit(u, v, { longitude, latitude });
-    }
+  function fallbackLandmap(u, v) {
+    const longitude = u * 360 - 180;
+    const latitude = 90 - v * 180;
+    const base = fbm(u * 0.62 + 0.11, v * 0.56 - 0.07, 1700000, 6);
+    const mass = fbm(u * 0.92 - 0.21, v * 0.82 + 0.14, 1700500, 6);
+    const islands = fbm(u * 2.0 - 0.13, v * 1.55 + 0.08, 1701000, 5);
+    const exposure = clamp(base * 0.52 + mass * 0.38 + islands * 0.1 - 0.2, 0, 1);
+    const isLand = exposure > 0.405;
+    const shelf = clamp(exposure + islands * 0.18, 0, 1);
+    const beachEdge = smoothstep(0.365, 0.49, exposure) * (1 - smoothstep(0.505, 0.64, exposure));
 
     return {
+      u,
+      v,
+      longitude,
+      latitude,
+      longitudeRadians: (longitude / 180) * Math.PI,
+      latitudeRadians: (latitude / 180) * Math.PI,
+      quadrant: `${latitude >= 0 ? "N" : "S"}${longitude >= 0 ? "E" : "W"}`,
+      band: Math.abs(latitude) < 8 ? "equatorial" : Math.abs(latitude) < 23.5 ? "subtropical" : Math.abs(latitude) < 45 ? "temperate" : "polar",
+      cell16: 1,
+      cell64: 1,
+      cell256: 1,
       primarySummit: "Gratitude",
       internalSummit: "Gratitude",
-      primaryWeight: 0.72,
-      internalWeight: 0.5,
-      nineWithinNine: true,
-      bookSummitLaw: true
-    };
-  }
-
-  function landShape(u, v, longitude, latitude) {
-    const tectonics = window.AUDRALIA_TECTONICS?.sampleTectonics
-      ? window.AUDRALIA_TECTONICS.sampleTectonics(u, v, { longitude, latitude })
-      : {
-          exposedLandPressure: ridged(u * 1.5, v * 1.2, 211000, 5),
-          shelfPressure: ridged(u * 2.2, v * 1.7, 212000, 5),
-          basinPressure: 1 - fbm(u * 1.8, v * 1.4, 213000, 5),
-          oldRidgePressure: ridged(u * 1.5, v * 1.2, 211000, 5),
-          islandPressure: ridged(u * 2.6, v * 2.0, 214000, 4),
-          weatheredEdgePressure: fbm(u * 2.4, v * 2.0, 215000, 4),
-          oceanPressure: 0.72
-        };
-
-    const topology = window.AUDRALIA_TOPOLOGY?.sampleTopology
-      ? window.AUDRALIA_TOPOLOGY.sampleTopology(u, v, { longitude, latitude })
-      : {
-          landEligibility: tectonics.exposedLandPressure,
-          islandEligibility: tectonics.islandPressure,
-          shelf: tectonics.shelfPressure,
-          basin: tectonics.basinPressure,
-          belowSeaDepth: tectonics.oceanPressure,
-          aboveSeaPressure: tectonics.exposedLandPressure
-        };
-
-    const latitudeAbs = Math.abs(latitude) / (Math.PI / 2);
-
-    const continentalMemory = fbm(u * 0.62 + 0.11, v * 0.56 - 0.07, 1700000, 6);
-    const mediumMass = fbm(u * 0.92 - 0.21, v * 0.82 + 0.14, 1700500, 6);
-    const southernMass = fbm(u * 0.78 + 0.37, v * 1.02 - 0.28, 1700600, 5);
-    const islandChain = ridged(u * 2.0 - 0.13, v * 1.55 + 0.08, 1701000, 5);
-    const brokenCoast = ridged(u * 3.1 + 0.2, v * 2.42 - 0.14, 1702000, 4);
-    const oceanBasin = fbm(u * 1.06 - 0.22, v * 0.86 + 0.15, 1703000, 5);
-    const interiorSea = fbm(u * 1.62 + 0.18, v * 1.34 - 0.2, 1703500, 5);
-    const plateArc =
-      Math.sin(longitude * 1.02 + Math.cos(latitude * 1.35) * 0.52) * 0.12 +
-      Math.cos(longitude * 0.58 - Math.sin(latitude * 1.12) * 0.46) * 0.1;
-
-    const macroLand = clamp(
-      continentalMemory * 0.3 +
-        mediumMass * 0.25 +
-        southernMass * 0.13 +
-        topology.landEligibility * 0.24 +
-        tectonics.exposedLandPressure * 0.18 +
-        plateArc * 0.08 -
-        oceanBasin * 0.09 -
-        latitudeAbs * 0.03,
-      0,
-      1
-    );
-
-    const separationCut = clamp(
-      smoothstep(0.62, 0.9, interiorSea * 0.5 + oceanBasin * 0.32 + brokenCoast * 0.18) *
-        (1 - smoothstep(0.62, 0.9, macroLand + topology.landEligibility * 0.15)),
-      0,
-      1
-    );
-
-    const landSignal = clamp(
-      macroLand * 0.92 +
-        topology.islandEligibility * 0.08 -
-        separationCut * 0.12 -
-        0.035,
-      0,
-      1
-    );
-
-    const islandSignal = smoothstep(
-      0.52,
-      0.84,
-      islandChain * 0.5 +
-        brokenCoast * 0.24 +
-        topology.islandEligibility * 0.22 +
-        mediumMass * 0.08 -
-        oceanBasin * 0.045
-    );
-
-    const shelf = clamp(
-      topology.shelf * 0.5 +
-        smoothstep(0.34, 0.58, landSignal) * 0.3 +
-        islandSignal * 0.14,
-      0,
-      1
-    );
-
-    const exposure = clamp(Math.max(landSignal, islandSignal * 0.86), 0, 1);
-
-    return {
-      tectonics,
-      topology,
-      landSignal,
-      islandSignal,
-      shelf,
       exposure,
-      separationCut,
-      continentalMemory,
-      mediumMass,
-      targetVisibleLandClass: "substantial-ocean-dominant"
-    };
-  }
-
-  function sampleElevation(u, v, longitude, latitude, shape) {
-    if (window.AUDRALIA_ELEVATION?.sampleElevation) {
-      return window.AUDRALIA_ELEVATION.sampleElevation(u, v, {
-        longitude,
-        latitude,
-        isLand: shape.exposure > 0.4,
-        landSignal: shape.landSignal,
-        shelf: shape.shelf
-      });
-    }
-
-    return {
-      elevation: ridged(u * 1.9, v * 1.46, 440000, 5),
-      ridge: ridged(u * 1.52, v * 1.18, 510000, 5),
-      highland: fbm(u * 1.18, v * 1.02, 512000, 5),
-      basin: 1 - fbm(u * 1.68, v * 1.34, 513000, 5),
-      valley: ridged(u * 2.75, v * 2.2, 514000, 4),
-      reliefShadow: 0.35,
-      reliefHighlight: 0.35,
-      terrainDepth: 0.4,
-      oceanDepthRelief: shape.topology.belowSeaDepth * 0.38,
-      seaFloorRidge: ridged(u * 1.85, v * 1.52, 515000, 5)
-    };
-  }
-
-  function sampleBeach(u, v, longitude, latitude, shape, elevation) {
-    if (window.AUDRALIA_BEACHES?.sampleBeach) {
-      return window.AUDRALIA_BEACHES.sampleBeach(u, v, {
-        longitude,
-        latitude,
-        isLand: shape.exposure > 0.4,
-        landSignal: shape.landSignal,
-        islandSignal: shape.islandSignal,
-        shelf: shape.shelf,
-        elevation: elevation.elevation
-      });
-    }
-
-    const beachEdge =
-      smoothstep(0.365, 0.49, shape.exposure) *
-      (1 - smoothstep(0.505, 0.64, shape.exposure)) *
-      smoothstep(0.28, 0.78, shape.shelf);
-
-    return {
-      beachBand: beachEdge,
-      beachSand: beachEdge * 0.68,
-      wetBeach: beachEdge * 0.26,
-      tidalFlat: beachEdge * 0.18,
-      coastalShelf: shape.shelf * beachEdge,
-      lagoon: beachEdge * 0.04,
-      delta: beachEdge * 0.04,
-      beachBreak: beachEdge * 0.12,
-      coastalWetland: beachEdge * 0.05,
-      duneRise: beachEdge * 0.12,
-      thinCoastalEdgeOnly: true
-    };
-  }
-
-  function sampleLandRise(u, v, longitude, latitude, shape, elevation, beach) {
-    if (window.AUDRALIA_LANDRISE?.sampleLandRise) {
-      const delegated = window.AUDRALIA_LANDRISE.sampleLandRise(u, v, {
-        longitude,
-        latitude,
-        landSignal: shape.landSignal,
-        islandSignal: shape.islandSignal,
-        shelf: shape.shelf,
-        elevation: elevation.elevation,
-        beachBand: beach.beachBand
-      });
-
-      return {
-        ...delegated,
-        raisedTerrain: clamp((delegated.raisedTerrain || 0) * 1.18 + smoothstep(0.39, 0.58, shape.exposure) * 0.18, 0, 1),
-        inlandCore: clamp((delegated.inlandCore || 0) * 1.14 + smoothstep(0.48, 0.66, shape.exposure) * 0.14, 0, 1),
-        lowland: clamp((delegated.lowland || 0) * 1.08 + smoothstep(0.42, 0.62, shape.exposure) * 0.08, 0, 1),
-        plateau: clamp((delegated.plateau || 0) * 1.08 + smoothstep(0.5, 0.7, shape.exposure) * 0.07, 0, 1),
-        ridgeBack: clamp((delegated.ridgeBack || 0) * 1.06 + smoothstep(0.54, 0.76, shape.exposure) * 0.05, 0, 1),
-        terrainAboveSeaLevel: shape.exposure > 0.415 || (delegated.raisedTerrain || 0) > 0.12,
-        terrainMassAttached: shape.exposure > 0.405 || delegated.terrainMassAttached === true
-      };
-    }
-
-    const exposure = shape.exposure;
-    const beachEdge =
-      smoothstep(0.38, 0.485, exposure) *
-      (1 - smoothstep(0.565, 0.72, exposure));
-
-    const terrainDrive =
-      exposure * 0.55 +
-      elevation.elevation * 0.18 +
-      shape.continentalMemory * 0.14 +
-      shape.mediumMass * 0.13 +
-      ridged(u * 1.74, v * 1.36, 1615000, 5) * 0.1 -
-      beachEdge * 0.07 -
-      shape.separationCut * 0.08;
-
-    const raisedTerrain = clamp(
-      smoothstep(0.35, 0.6, terrainDrive) +
-        smoothstep(0.43, 0.66, exposure) * 0.34,
-      0,
-      1
-    );
-
-    return {
-      beachRemainsSeaLevel: true,
+      shelf,
       beachEdge,
-      oceanCut: shape.separationCut,
-      raisedTerrain,
-      inlandCore: Math.max(0, raisedTerrain - beachEdge * 0.08),
-      lowland: raisedTerrain * 0.34 + elevation.basin * 0.14,
-      plateau: raisedTerrain * 0.32 + elevation.highland * 0.16,
-      ridgeBack: raisedTerrain * 0.2 + elevation.ridge * 0.18,
-      terrainShadow: elevation.reliefShadow * 0.2,
-      terrainHighlight: elevation.reliefHighlight * 0.2 + raisedTerrain * 0.16,
-      terrainAboveSeaLevel: raisedTerrain > 0.12,
-      terrainMassAttached: raisedTerrain > 0.11
+      isLand,
+      isOcean: !isLand && shelf < 0.48,
+      isShelf: !isLand && shelf >= 0.48,
+      isBeach: !isLand && beachEdge > 0.14,
+      isCoast: exposure > 0.36 && exposure < 0.58,
+      isIsland: false,
+      isInland: isLand && exposure >= 0.58,
+      isBasin: false,
+      isHighland: false,
+      terrainClass: isLand ? "inland" : shelf >= 0.48 ? "shelf" : "ocean"
     };
   }
 
-  function sampleMountains(u, v, longitude, latitude, shape, elevation, beach, landrise, summit) {
-    if (window.AUDRALIA_MOUNTAINS?.sampleMountains) {
-      return window.AUDRALIA_MOUNTAINS.sampleMountains(u, v, {
-        longitude,
-        latitude,
-        exposure: shape.exposure,
-        beachEdge: beach.beachBand,
-        elevation,
-        landrise,
-        summit
-      });
-    }
-
-    const rangeSpine =
-      smoothstep(0.6, 0.86, ridged(u * 1.35 + v * 0.42, v * 1.08 - u * 0.22, 1510000, 6) * 0.4 + landrise.ridgeBack * 0.3 + landrise.raisedTerrain * 0.2) *
-      smoothstep(0.28, 0.86, landrise.raisedTerrain);
-
-    const peak =
-      smoothstep(0.72, 0.93, ridged(u * 3.8, v * 3.0, 1512000, 5) * 0.36 + rangeSpine * 0.32 + elevation.elevation * 0.1) *
-      smoothstep(0.36, 0.82, landrise.inlandCore + landrise.raisedTerrain * 0.18);
-
-    return {
-      highMountain: clamp(rangeSpine * 0.38 + peak * 0.42, 0, 1),
-      rangeSpine,
-      secondaryRange: rangeSpine * 0.45,
-      peak,
-      snowCap: smoothstep(0.7, 0.92, rangeSpine * 0.45 + peak * 0.35),
-      cliffFace: peak * 0.36,
-      foothills: Math.max(0, landrise.raisedTerrain - peak * 0.45),
-      mountainPass: 0.18,
-      terrace: 0.12,
-      community: 0.01
-    };
+  function sampleMap(u, v) {
+    if (window.AUDRALIA_LANDMAP?.sampleLandmap) return window.AUDRALIA_LANDMAP.sampleLandmap(u, v);
+    return fallbackLandmap(u, v);
   }
 
-  function sampleGroundcover(u, v, longitude, latitude, shape, elevation, beach, landrise, mountains, summit) {
-    if (window.AUDRALIA_GROUNDCOVER?.sampleGroundcover) {
-      return window.AUDRALIA_GROUNDCOVER.sampleGroundcover(u, v, {
-        longitude,
-        latitude,
-        shape,
-        elevation,
-        beach,
-        landrise,
-        mountains,
-        summit,
-        exposure: shape.exposure,
-        shelf: shape.shelf,
-        beachEdge: beach.beachBand
-      });
-    }
-
-    return {
-      plains: landrise.lowland * 0.4,
-      deserts: landrise.plateau * 0.24,
-      marshes: landrise.lowland * shape.shelf * 0.3,
-      wetFlats: shape.shelf * 0.22,
-      grassland: landrise.lowland * 0.3,
-      dryBasins: elevation.basin * 0.18,
-      mineralFlats: 0.06,
-      groundMoisture: 0.5,
-      groundDryness: 0.35
-    };
-  }
-
-  function surfaceColor(u, v, longitude, latitude) {
-    const summit = sampleSummit(u, v, longitude, latitude);
-    const shape = landShape(u, v, longitude, latitude);
-    const elevation = sampleElevation(u, v, longitude, latitude, shape);
-    const beach = sampleBeach(u, v, longitude, latitude, shape, elevation);
-    const landrise = sampleLandRise(u, v, longitude, latitude, shape, elevation, beach);
-    const mountains = sampleMountains(u, v, longitude, latitude, shape, elevation, beach, landrise, summit);
-    const ground = sampleGroundcover(u, v, longitude, latitude, shape, elevation, beach, landrise, mountains, summit);
-
-    const latitudeAbs = Math.abs(latitude) / (Math.PI / 2);
-
-    const forcedTerrain =
-      shape.exposure > 0.405 ||
-      landrise.terrainAboveSeaLevel ||
-      landrise.raisedTerrain > 0.12;
-
-    const beachOnly =
-      !forcedTerrain &&
-      beach.beachBand > 0.14 &&
-      shape.exposure > 0.35 &&
-      shape.exposure < 0.57;
-
-    const tidalOnly =
-      !forcedTerrain &&
-      !beachOnly &&
-      beach.tidalFlat > 0.16 &&
-      shape.exposure > 0.32 &&
-      shape.exposure < 0.52;
-
-    if (!forcedTerrain && !beachOnly && !tidalOnly) {
-      let water = mix(
-        COLORS.deepOcean,
-        COLORS.ocean,
-        smoothstep(0.22, 0.86, 1 - shape.topology.belowSeaDepth + fbm(u, v, 450000, 4) * 0.26)
-      );
-
-      water = mix(water, COLORS.oceanBlue, smoothstep(0.32, 0.74, 1 - shape.topology.belowSeaDepth) * 0.16);
-      water = mix(water, COLORS.shelf, smoothstep(0.5, 0.88, shape.shelf) * 0.34);
-      water = mix(water, COLORS.shallow, shape.islandSignal * 0.1);
-      water = mix(water, COLORS.lagoon, beach.coastalShelf * 0.08 + beach.lagoon * 0.14);
-      water = mix(water, COLORS.deepOcean, elevation.oceanDepthRelief * 0.1);
-
-      return shade(
-        water,
-        (elevation.seaFloorRidge || 0) * 3 -
-          (elevation.oceanDepthRelief || 0) * 5 +
-          (fbm(u * 1.8, v * 1.5, 451000, 4) - 0.5) * 6
-      );
-    }
-
-    if (beachOnly || tidalOnly) {
-      let sand = COLORS.beach;
-
-      sand = mix(sand, COLORS.dryBeach, beach.beachSand * 0.28);
-      sand = mix(sand, COLORS.wetBeach, beach.wetBeach * 0.34);
-      sand = mix(sand, COLORS.tidalFlat, beach.tidalFlat * 0.28);
-      sand = mix(sand, COLORS.lagoon, beach.lagoon * 0.14);
-      sand = mix(sand, COLORS.shallow, tidalOnly ? 0.1 : 0.02);
-
-      return shade(
-        sand,
-        (fbm(u * 5.6, v * 4.7, 650000, 4) - 0.5) * 5 +
-          (beach.duneRise || 0) * 2 -
-          beach.tidalFlat * 3 +
-          beach.beachBreak
-      );
-    }
-
-    let land = COLORS.raisedLand;
-
-    land = mix(land, COLORS.grassland, ground.grassland * 0.32);
-    land = mix(land, COLORS.plains, ground.plains * 0.42);
-    land = mix(land, COLORS.desert, ground.deserts * 0.5);
-    land = mix(land, COLORS.marsh, ground.marshes * 0.52);
-    land = mix(land, COLORS.wetFlat, ground.wetFlats * 0.3);
-    land = mix(land, COLORS.dryBasin, ground.dryBasins * 0.3);
-    land = mix(land, COLORS.mineralFlat, ground.mineralFlats * 0.22);
-    land = mix(land, COLORS.lowland, landrise.lowland * 0.16);
-    land = mix(land, COLORS.plateau, landrise.plateau * 0.18);
-    land = mix(land, COLORS.foothill, mountains.foothills * 0.2);
-    land = mix(land, COLORS.ridge, landrise.ridgeBack * 0.15 + mountains.rangeSpine * 0.2);
-    land = mix(land, COLORS.stone, mountains.highMountain * 0.26);
-    land = mix(land, COLORS.cliff, mountains.cliffFace * 0.2);
-    land = mix(land, COLORS.darkStone, mountains.peak * 0.12);
-
-    const interiorCoastLimit =
-      beach.beachBand *
-      smoothstep(0.36, 0.49, shape.exposure) *
-      (1 - smoothstep(0.52, 0.66, shape.exposure));
-
-    land = mix(land, COLORS.beach, interiorCoastLimit * 0.075);
-    land = mix(land, COLORS.dryBeach, beach.beachSand * interiorCoastLimit * 0.08);
-    land = mix(land, COLORS.wetBeach, beach.wetBeach * interiorCoastLimit * 0.07);
-    land = mix(land, COLORS.tidalFlat, beach.tidalFlat * interiorCoastLimit * 0.06);
-    land = mix(land, COLORS.marsh, beach.coastalWetland * interiorCoastLimit * 0.08);
-
-    land = mix(land, COLORS.snow, mountains.snowCap * 0.45);
-    land = mix(land, COLORS.ice, smoothstep(0.75, 0.97, latitudeAbs + elevation.elevation * 0.1) * 0.14);
-    land = mix(land, COLORS.terrace, mountains.terrace * 0.1);
-    land = mix(land, COLORS.community, mountains.community * 0.72);
+  function surfaceColor(map) {
+    const u = map.u;
+    const v = map.v;
 
     const grain = (fbm(u * 2.4 + 0.15, v * 2.0 - 0.11, 460000, 4) - 0.5) * 7;
-    const beachRelief =
-      interiorCoastLimit * 2 +
-      beach.duneRise * interiorCoastLimit * 2 -
-      beach.wetBeach * interiorCoastLimit -
-      beach.tidalFlat * interiorCoastLimit * 2;
+    const moisture = fbm(u * 1.35 - 0.19, v * 1.08 + 0.12, 1411000, 5);
+    const dryness = fbm(u * 1.22 + 0.11, v * 0.96 - 0.08, 1412000, 5);
+    const ridge = fbm(u * 1.52, v * 1.18, 510000, 5);
+    const cloudShadow = fbm(u * 1.5, v * 1.25, 470000, 3);
 
-    const mountainRelief =
-      mountains.highMountain * 14 +
-      mountains.peak * 12 +
-      mountains.snowCap * 12 -
-      mountains.cliffFace * 6;
+    if (map.isOcean) {
+      let water = mix(COLORS.deepOcean, COLORS.ocean, smoothstep(0.2, 0.9, map.shelf + cloudShadow * 0.08));
+      return shade(water, grain * 0.35 - 3);
+    }
 
-    const reliefLight =
-      landrise.terrainHighlight * 11 -
-      landrise.terrainShadow * 10 +
-      elevation.reliefHighlight * 4 -
-      elevation.reliefShadow * 4 +
-      mountainRelief +
-      beachRelief;
+    if (map.isShelf) {
+      let shelf = mix(COLORS.ocean, COLORS.shelf, smoothstep(0.42, 0.9, map.shelf));
+      shelf = mix(shelf, COLORS.shallow, map.beachEdge * 0.18);
+      return shade(shelf, grain * 0.3 + 2);
+    }
 
-    return shade(land, grain + reliefLight - 4);
+    if (map.isBeach) {
+      let beach = mix(COLORS.beach, COLORS.wetBeach, smoothstep(0.42, 0.88, map.shelf));
+      beach = mix(beach, COLORS.shallow, map.beachEdge * 0.1);
+      return shade(beach, grain * 0.45 + 2);
+    }
+
+    let land = COLORS.land;
+
+    if (map.isBasin) land = mix(land, COLORS.basin, 0.38);
+    if (map.isHighland) land = mix(land, COLORS.highland, 0.42);
+    if (map.isCoast) land = mix(land, COLORS.beach, map.beachEdge * 0.09);
+
+    land = mix(land, COLORS.grassland, moisture * 0.2);
+    land = mix(land, COLORS.plains, smoothstep(0.36, 0.76, moisture) * 0.16);
+    land = mix(land, COLORS.desert, smoothstep(0.62, 0.9, dryness) * 0.16);
+    land = mix(land, COLORS.marsh, map.isBasin ? moisture * 0.18 : 0);
+    land = mix(land, COLORS.ridge, smoothstep(0.58, 0.86, ridge) * 0.18);
+    land = mix(land, COLORS.snow, map.isHighland ? smoothstep(0.78, 0.94, ridge) * 0.22 : 0);
+
+    return shade(land, grain + ridge * 8 - 4);
   }
 
   function buildTexture(width, height) {
@@ -605,12 +250,11 @@
 
     for (let y = 0; y < height; y += 1) {
       const v = y / Math.max(1, height - 1);
-      const latitude = (0.5 - v) * Math.PI;
 
       for (let x = 0; x < width; x += 1) {
         const u = x / width;
-        const longitude = (u - 0.5) * TAU;
-        const color = surfaceColor(u, v, longitude, latitude);
+        const map = sampleMap(u, v);
+        const color = surfaceColor(map);
         const index = (y * width + x) * 4;
 
         data[index] = color[0];
@@ -628,7 +272,6 @@
     const x = Math.floor(wrap01(u) * texture.width) % texture.width;
     const y = clamp(Math.floor(clamp(v, 0, 1) * (texture.height - 1)), 0, texture.height - 1);
     const index = (y * texture.width + x) * 4;
-
     return [texture.data[index], texture.data[index + 1], texture.data[index + 2]];
   }
 
@@ -641,37 +284,10 @@
     canvas.dataset.audraliaParentChainCanvas = "true";
     canvas.dataset.audraliaCanvasContract = CONTRACT;
     canvas.dataset.audraliaCanvasReceipt = RECEIPT;
-    canvas.dataset.audraliaGeneration = "1";
-    canvas.dataset.audraliaG1Baseline = "visible-landmass-thin-coastal-beach-restraint";
-    canvas.dataset.audraliaRestoredBaseline = RESTORED_BASELINE;
-    canvas.dataset.audraliaRejectedPreviousBeachOverreach = "true";
-    canvas.dataset.audraliaThinCoastalBeachExpression = "true";
-    canvas.dataset.audraliaPreserveLandWaterFootprint = "true";
-    canvas.dataset.audraliaBeachCanCreateLand = "false";
-    canvas.dataset.audraliaBeachRecolorsInteriorLand = "false";
-    canvas.dataset.audraliaBeachCreatesRectangles = "false";
-    canvas.dataset.audraliaSandBeaches = "true";
-    canvas.dataset.audraliaWetBeaches = "true";
-    canvas.dataset.audraliaTidalFlats = "true";
-    canvas.dataset.audraliaCoastalShelves = "true";
-    canvas.dataset.audraliaLagoons = "true";
-    canvas.dataset.audraliaDeltas = "true";
-    canvas.dataset.audraliaBeachBreaks = "true";
-    canvas.dataset.audraliaPrimarySummit = "Gratitude";
-    canvas.dataset.audraliaNineWithinNine = "true";
-    canvas.dataset.audraliaBookSummitLaw = "true";
-    canvas.dataset.audraliaVisibleLandmassRestore = "true";
-    canvas.dataset.audraliaSubstantialLandVisible = "true";
-    canvas.dataset.audraliaOceanDominantStillTrue = "true";
-    canvas.dataset.audraliaDestripingActive = "true";
-    canvas.dataset.audraliaScanlineArtifacts = "false";
-    canvas.dataset.audraliaBeachRemainsSeaLevel = "true";
-    canvas.dataset.audraliaRaisedTerrainBehindBeach = "true";
-    canvas.dataset.audraliaTerrainMassAttached = "true";
-    canvas.dataset.audraliaTerrainAboveSeaLevel = "true";
-    canvas.dataset.audraliaTrees = "false";
-    canvas.dataset.audraliaBushes = "false";
-    canvas.dataset.audraliaForestCanopy = "false";
+    canvas.dataset.audraliaLandmapContract = LANDMAP_CONTRACT;
+    canvas.dataset.audraliaCanvasConsumesLandmap = "true";
+    canvas.dataset.audraliaCanvasOwnsFootprint = "false";
+    canvas.dataset.audraliaCoordinateInspection = "true";
     canvas.dataset.generatedImage = "false";
     canvas.dataset.graphicBox = "false";
     canvas.dataset.visualPassClaimed = "false";
@@ -689,8 +305,24 @@
     mount.style.touchAction = "none";
     mount.appendChild(canvas);
 
+    const readout = document.createElement("div");
+    readout.dataset.audraliaCoordinateReadout = "true";
+    readout.style.position = "absolute";
+    readout.style.left = "10px";
+    readout.style.bottom = "10px";
+    readout.style.padding = "7px 9px";
+    readout.style.borderRadius = "12px";
+    readout.style.background = "rgba(3,9,20,.68)";
+    readout.style.color = "rgba(238,246,255,.88)";
+    readout.style.font = "600 11px/1.35 system-ui, sans-serif";
+    readout.style.pointerEvents = "none";
+    readout.style.maxWidth = "86%";
+    readout.textContent = "Audralia coordinate map loading…";
+    mount.appendChild(readout);
+
     const ctx = canvas.getContext("2d", { alpha: true });
-    const texture = buildTexture(1024, 512);
+
+    let texture = null;
 
     const state = {
       disposed: false,
@@ -701,7 +333,8 @@
       tilt: -0.08,
       velocity: 0.0024,
       frames: 0,
-      lastRender: 0
+      lastRender: 0,
+      ready: false
     };
 
     function resize() {
@@ -712,14 +345,74 @@
       canvas.height = Math.floor(size * dpr);
     }
 
+    function pointerToMap(event) {
+      const rect = canvas.getBoundingClientRect();
+      const x = ((event.clientX || 0) - rect.left) / Math.max(1, rect.width);
+      const y = ((event.clientY || 0) - rect.top) / Math.max(1, rect.height);
+
+      const px = (x - 0.5) / 0.44;
+      const py = (y - 0.5) / 0.44;
+      const rr = px * px + py * py;
+
+      if (rr > 1) return null;
+
+      const z = Math.sqrt(1 - rr);
+      const cosSpin = Math.cos(state.spin);
+      const sinSpin = Math.sin(state.spin);
+      const cosTilt = Math.cos(state.tilt);
+      const sinTilt = Math.sin(state.tilt);
+
+      let sx = px;
+      let sy = py;
+      let sz = z;
+
+      const ty = sy * cosTilt - sz * sinTilt;
+      const tz = sy * sinTilt + sz * cosTilt;
+
+      sy = ty;
+      sz = tz;
+
+      const wx = sx * cosSpin - sz * sinSpin;
+      const wz = sx * sinSpin + sz * cosSpin;
+
+      const longitude = Math.atan2(wz, wx);
+      const latitude = Math.asin(clamp(sy, -1, 1));
+      const u = longitude / TAU + 0.5;
+      const v = 0.5 - latitude / Math.PI;
+
+      return sampleMap(u, v);
+    }
+
+    function updateReadout(map) {
+      if (!map) {
+        readout.textContent = "Pointer outside globe";
+        return;
+      }
+
+      readout.textContent = [
+        `lat ${map.latitude.toFixed(2)} · lon ${map.longitude.toFixed(2)}`,
+        `cell ${map.cell256}/256 · ${map.quadrant} · ${map.band}`,
+        `${map.terrainClass} · Gratitude → ${map.internalSummit}`
+      ].join("\n");
+
+      document.documentElement.dataset.audraliaLastLatitude = String(map.latitude.toFixed(4));
+      document.documentElement.dataset.audraliaLastLongitude = String(map.longitude.toFixed(4));
+      document.documentElement.dataset.audraliaLastCell256 = String(map.cell256);
+      document.documentElement.dataset.audraliaLastTerrainClass = map.terrainClass;
+      document.documentElement.dataset.audraliaLastInternalSummit = map.internalSummit;
+    }
+
     function pointerDown(event) {
       state.dragging = true;
       state.lastX = event.clientX || event.touches?.[0]?.clientX || 0;
       state.lastY = event.clientY || event.touches?.[0]?.clientY || 0;
+      updateReadout(pointerToMap(event));
       canvas.setPointerCapture?.(event.pointerId);
     }
 
     function pointerMove(event) {
+      updateReadout(pointerToMap(event));
+
       if (!state.dragging) return;
 
       const x = event.clientX || event.touches?.[0]?.clientX || 0;
@@ -740,6 +433,11 @@
 
     function render(now) {
       if (state.disposed) return;
+
+      if (!state.ready || !texture) {
+        requestAnimationFrame(render);
+        return;
+      }
 
       if (!state.dragging) state.spin += state.velocity;
 
@@ -808,7 +506,6 @@
 
           color = shade(color, shadeAmount);
           color = mix(COLORS.atmosphere, color, limb);
-          color = mix(color, COLORS.cloud, smoothstep(0.82, 0.985, fbm(u * 1.5 + state.spin * 0.012, v * 1.25, 470000, 3)) * 0.024);
 
           data[index] = color[0];
           data[index + 1] = color[1];
@@ -825,7 +522,8 @@
           mounted: true,
           canvasFound: true,
           controlsBound: true,
-          frames: state.frames
+          frames: state.frames,
+          landmapLoaded: Boolean(window.AUDRALIA_LANDMAP?.sampleLandmap)
         });
       }
 
@@ -840,7 +538,25 @@
     canvas.addEventListener("pointerup", pointerUp);
     canvas.addEventListener("pointercancel", pointerUp);
 
-    requestAnimationFrame(render);
+    ensureLandmap().then(() => {
+      texture = buildTexture(1024, 512);
+      state.ready = true;
+      const center = sampleMap(0.5, 0.5);
+      updateReadout(center);
+
+      document.documentElement.dataset.audraliaCanvasLoaded = "true";
+      document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
+      document.documentElement.dataset.audraliaCanvasReceipt = RECEIPT;
+      document.documentElement.dataset.audraliaLandmapLoaded = String(Boolean(window.AUDRALIA_LANDMAP?.sampleLandmap));
+      document.documentElement.dataset.audraliaCanvasConsumesLandmap = "true";
+      document.documentElement.dataset.audraliaCanvasOwnsFootprint = "false";
+      document.documentElement.dataset.audraliaCoordinateInspection = "true";
+      document.documentElement.dataset.generatedImage = "false";
+      document.documentElement.dataset.graphicBox = "false";
+      document.documentElement.dataset.visualPassClaimed = "false";
+
+      requestAnimationFrame(render);
+    });
 
     function dispose() {
       state.disposed = true;
@@ -850,26 +566,10 @@
       canvas.removeEventListener("pointerup", pointerUp);
       canvas.removeEventListener("pointercancel", pointerUp);
       canvas.remove();
+      readout.remove();
     }
 
     window.__AUDRALIA_CANVAS_DISPOSE__ = dispose;
-
-    document.documentElement.dataset.audraliaCanvasLoaded = "true";
-    document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
-    document.documentElement.dataset.audraliaCanvasReceipt = RECEIPT;
-    document.documentElement.dataset.audraliaCanvasMounted = "true";
-    document.documentElement.dataset.audraliaRestoredBaseline = RESTORED_BASELINE;
-    document.documentElement.dataset.audraliaRejectedPreviousBeachOverreach = "true";
-    document.documentElement.dataset.audraliaThinCoastalBeachExpression = "true";
-    document.documentElement.dataset.audraliaPreserveLandWaterFootprint = "true";
-    document.documentElement.dataset.audraliaBeachCanCreateLand = "false";
-    document.documentElement.dataset.audraliaBeachRecolorsInteriorLand = "false";
-    document.documentElement.dataset.audraliaBeachCreatesRectangles = "false";
-    document.documentElement.dataset.audraliaVisibleLandmassRestore = "true";
-    document.documentElement.dataset.audraliaOceanDominantStillTrue = "true";
-    document.documentElement.dataset.generatedImage = "false";
-    document.documentElement.dataset.graphicBox = "false";
-    document.documentElement.dataset.visualPassClaimed = "false";
 
     return { canvas, controlsBound: true, dispose, getStatus };
   }
@@ -879,41 +579,17 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
-      restoredBaseline: RESTORED_BASELINE,
+      landmapContract: LANDMAP_CONTRACT,
       version: VERSION,
       authority: "audralia-canvas",
-      generation: 1,
-      baseline: "visible-landmass-thin-coastal-beach-restraint",
-      rejectedPreviousBeachOverreach: true,
-      thinCoastalBeachExpression: true,
-      preservesLandWaterFootprint: true,
-      beachCanCreateLand: false,
-      beachRecolorsInteriorLand: false,
-      beachCreatesRectangles: false,
-      sandBeaches: true,
-      wetBeaches: true,
-      tidalFlats: true,
-      coastalShelves: true,
-      lagoons: true,
-      deltas: true,
-      beachBreaks: true,
-      consumesBeaches: Boolean(window.AUDRALIA_BEACHES),
-      consumesSummits: Boolean(window.AUDRALIA_SUMMITS),
-      consumesMountains: Boolean(window.AUDRALIA_MOUNTAINS),
-      consumesGroundcover: Boolean(window.AUDRALIA_GROUNDCOVER),
-      consumesLandrise: Boolean(window.AUDRALIA_LANDRISE),
+      consumesLandmap: Boolean(window.AUDRALIA_LANDMAP?.sampleLandmap),
+      canvasOwnsFootprint: false,
+      coordinateInspection: true,
+      longitudeLatitudeSystem: true,
+      cell16: true,
+      cell64: true,
+      cell256: true,
       primarySummit: "Gratitude",
-      nineWithinNine: true,
-      bookSummitLaw: true,
-      visibleLandmassRestore: true,
-      substantialLandVisible: true,
-      oceanDominantStillTrue: true,
-      destripingActive: true,
-      scanlineArtifacts: false,
-      beachRemainsSeaLevel: true,
-      raisedTerrainBehindBeach: true,
-      terrainMassAttached: true,
-      terrainAboveSeaLevel: true,
       trees: false,
       bushes: false,
       forestCanopy: false,
@@ -927,7 +603,7 @@
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
-    restoredBaseline: RESTORED_BASELINE,
+    landmapContract: LANDMAP_CONTRACT,
     version: VERSION,
     mount,
     getStatus
@@ -939,6 +615,9 @@
   document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
   document.documentElement.dataset.audraliaCanvasReceipt = RECEIPT;
   document.documentElement.dataset.audraliaCanvasExposesMount = "true";
+  document.documentElement.dataset.audraliaCanvasConsumesLandmap = "true";
+  document.documentElement.dataset.audraliaCanvasOwnsFootprint = "false";
+  document.documentElement.dataset.audraliaCoordinateInspection = "true";
   document.documentElement.dataset.generatedImage = "false";
   document.documentElement.dataset.graphicBox = "false";
   document.documentElement.dataset.visualPassClaimed = "false";

@@ -2,515 +2,492 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-globe-tv-set"
+  data-page="showroom-globe-showcase-bookcase"
   data-route="/showroom/globe/"
-  data-contract="SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_HTML_TNT_v13"
-  data-pair-contract="SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_PAIR_TNT_v13"
-  data-previous-contract="H_EARTH_G1_SHOWROOM_GLOBE_CONSUMER_ALIGNMENT_TNT_v12D"
-  data-showroom-mode="planet-projection-tv-set"
-  data-default-channel="h-earth"
-  data-lattice-geometry="4x64=256"
+  data-contract="SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_HTML_TNT_v20B"
+  data-pair-contract="SHOWROOM_COVER_GLOBE_SHOWCASE_DISPLAY_CASE_PAIR_TNT_v20"
+  data-previous-contract="SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_HTML_TNT_v13"
+  data-showroom-mode="showcase-bookcase-display-case"
+  data-cover-route="/showroom/"
+  data-default-display="h-earth"
+  data-display-case-layer="true"
+  data-full-inspection-layer="planet-private-routes"
   data-card-transform="forbidden"
   data-parent-mutation-authorized="false"
   data-earth-mutation-authorized="false"
   data-h-earth-mutation-authorized="false"
   data-hearth-mutation-authorized="false"
   data-audralia-mutation-authorized="false"
-  data-visual-pass-claim="false"
-  data-graphic-box="false"
+  data-visible-diagnostics="false"
   data-generated-image="false"
+  data-graphic-box="false"
+  data-visual-pass-claim="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Showroom Globe TV Set</title>
+  <title>Diamond Gate Bridge · Globe Showcase</title>
   <meta
     name="description"
-    content="The Showroom Globe route is a planet projection TV set. Earth, H-Earth, Hearth, and Audralia are selectable channels with mini spinning previews and a central projection screen."
+    content="The Globe Showcase is the visual bookcase and display-case layer for Earth, H-Earth, Hearth, and Audralia."
   >
 
   <style>
     :root {
       color-scheme: dark;
-      --bg: #050812;
-      --panel: rgba(10, 18, 32, 0.84);
-      --panel2: rgba(5, 10, 22, 0.86);
-      --line: rgba(244, 191, 96, 0.30);
-      --line-blue: rgba(142, 190, 255, 0.22);
-      --text: #f6ead2;
-      --muted: #b8c0ce;
-      --gold: #f4bf60;
-      --blue: #8ebeff;
-      --green: #8ff0c3;
-      --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
-      --radius: 24px;
-      --max: 1220px;
+      --bg:#030713;
+      --panel:rgba(10,17,31,.82);
+      --panel2:rgba(5,10,22,.88);
+      --line:rgba(244,191,96,.32);
+      --soft-line:rgba(255,255,255,.10);
+      --text:#f8ead0;
+      --muted:#bac2cf;
+      --gold:#f4bf60;
+      --blue:#8ebeff;
+      --green:#8ff0c3;
+      --shadow:0 26px 82px rgba(0,0,0,.44);
+      --radius:28px;
+      --max:1220px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing:border-box; }
 
     html {
-      min-height: 100%;
+      min-height:100%;
       background:
-        radial-gradient(circle at 50% 4%, rgba(142, 190, 255, 0.18), transparent 34rem),
-        radial-gradient(circle at 14% 18%, rgba(244, 191, 96, 0.12), transparent 28rem),
-        radial-gradient(circle at 86% 20%, rgba(143, 240, 195, 0.08), transparent 26rem),
-        linear-gradient(180deg, var(--bg), #02040a 74%);
+        radial-gradient(circle at 50% 4%,rgba(142,190,255,.18),transparent 34rem),
+        radial-gradient(circle at 12% 20%,rgba(244,191,96,.12),transparent 30rem),
+        radial-gradient(circle at 88% 24%,rgba(143,240,195,.08),transparent 28rem),
+        linear-gradient(180deg,var(--bg),#01030a 78%);
     }
 
     body {
-      min-height: 100%;
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
+      min-height:100%;
+      margin:0;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);
       background:
-        linear-gradient(145deg, rgba(255, 255, 255, 0.035), transparent 38%),
-        radial-gradient(circle at 82% 12%, rgba(143, 240, 195, 0.08), transparent 24rem);
+        linear-gradient(145deg,rgba(255,255,255,.035),transparent 42%),
+        radial-gradient(circle at 52% 62%,rgba(244,191,96,.08),transparent 34rem);
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color:inherit; text-decoration:none; }
 
     a:focus-visible,
     button:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 4px;
+      outline:2px solid var(--gold);
+      outline-offset:4px;
     }
 
-    button {
-      font: inherit;
-    }
+    button { font:inherit; cursor:pointer; }
 
     .skip-link {
-      position: absolute;
-      left: 1rem;
-      top: 1rem;
-      z-index: 30;
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: #08101d;
-      color: var(--text);
-      transform: translateY(-180%);
-      transition: transform 160ms ease;
+      position:absolute;
+      left:1rem;
+      top:1rem;
+      z-index:30;
+      padding:.75rem 1rem;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:#08101d;
+      color:var(--text);
+      transform:translateY(-180%);
+      transition:transform 160ms ease;
     }
 
-    .skip-link:focus {
-      transform: translateY(0);
-    }
+    .skip-link:focus { transform:translateY(0); }
 
-    .page-shell {
-      width: min(var(--max), calc(100% - 32px));
-      margin: 0 auto;
-      padding: 24px 0 46px;
+    .shell {
+      width:min(var(--max),calc(100% - 32px));
+      margin:0 auto;
+      padding:24px 0 48px;
     }
 
     .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 14px 16px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(5, 9, 18, 0.72);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      padding:14px 16px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(5,9,18,.72);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(16px);
     }
 
     .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      min-width: max-content;
-      font-weight: 800;
-      letter-spacing: 0.02em;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      min-width:max-content;
+      font-weight:900;
+      letter-spacing:.02em;
     }
 
     .brand-mark {
-      width: 18px;
-      height: 18px;
-      border: 1px solid var(--gold);
-      transform: rotate(45deg);
-      background: linear-gradient(135deg, rgba(244, 191, 96, 0.22), transparent), rgba(255, 255, 255, 0.04);
-      box-shadow: 0 0 24px rgba(244, 191, 96, 0.18);
+      width:18px;
+      height:18px;
+      border:1px solid var(--gold);
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,rgba(244,191,96,.22),transparent),rgba(255,255,255,.04);
+      box-shadow:0 0 24px rgba(244,191,96,.18);
     }
 
     .nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 8px;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:8px;
     }
 
     .nav a {
-      padding: 8px 11px;
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      border-radius: 999px;
-      color: var(--muted);
-      font-size: 0.88rem;
-      background: rgba(255, 255, 255, 0.035);
+      padding:8px 11px;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:999px;
+      color:var(--muted);
+      font-size:.88rem;
+      background:rgba(255,255,255,.035);
     }
 
     .nav a[aria-current="page"] {
-      border-color: rgba(244, 191, 96, 0.52);
-      color: var(--gold);
-      background: rgba(244, 191, 96, 0.09);
+      border-color:rgba(244,191,96,.52);
+      color:var(--gold);
+      background:rgba(244,191,96,.09);
     }
 
     .hero,
-    .projection-set,
-    .planet-card,
-    .panel,
-    .receipt-panel {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent), var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
+    .showcase,
+    .display-case,
+    .world-card,
+    .receipt {
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:linear-gradient(180deg,rgba(255,255,255,.055),transparent),var(--panel);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(18px);
     }
 
     .hero {
-      margin-top: 24px;
-      padding: clamp(22px, 4vw, 42px);
+      margin-top:24px;
+      padding:clamp(22px,4vw,42px);
     }
 
     .eyebrow {
-      display: inline-flex;
-      margin: 0 0 18px;
-      padding: 8px 12px;
-      border: 1px solid var(--line-blue);
-      border-radius: 999px;
-      color: var(--blue);
-      background: rgba(142, 190, 255, 0.08);
-      font-size: 0.86rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      display:inline-flex;
+      width:fit-content;
+      margin:0 0 18px;
+      padding:8px 12px;
+      border:1px solid rgba(142,190,255,.24);
+      border-radius:999px;
+      color:var(--blue);
+      background:rgba(142,190,255,.08);
+      font-size:.86rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
 
     h1 {
-      margin: 0;
-      font-size: clamp(2.4rem, 7vw, 5.8rem);
-      line-height: 0.9;
-      letter-spacing: -0.075em;
+      margin:0;
+      max-width:900px;
+      font-size:clamp(2.8rem,7vw,6.2rem);
+      line-height:.86;
+      letter-spacing:-.08em;
     }
 
     .lede {
-      max-width: 88ch;
-      margin: 22px 0 0;
-      color: var(--muted);
-      font-size: clamp(1rem, 2.2vw, 1.16rem);
-      line-height: 1.65;
+      max-width:84ch;
+      margin:22px 0 0;
+      color:var(--muted);
+      font-size:clamp(1rem,2.2vw,1.16rem);
+      line-height:1.65;
     }
 
-    .projection-set {
-      margin-top: 18px;
-      padding: 18px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
-      gap: 18px;
-      align-items: stretch;
+    .showcase {
+      margin-top:18px;
+      padding:18px;
+      display:grid;
+      grid-template-columns:minmax(0,.92fr) minmax(320px,1.08fr);
+      gap:18px;
     }
 
-    .projection-screen {
-      position: relative;
-      min-height: clamp(430px, 65vw, 720px);
-      border: 1px solid rgba(142, 190, 255, 0.20);
-      border-radius: calc(var(--radius) - 6px);
-      overflow: hidden;
+    .bookcase {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      align-content:start;
+    }
+
+    .world-card {
+      padding:14px;
+      cursor:pointer;
+      transform:none !important;
+      box-shadow:none;
+      background:linear-gradient(180deg,rgba(255,255,255,.055),transparent),rgba(7,13,27,.74);
+    }
+
+    .world-card[aria-selected="true"] {
+      border-color:rgba(143,240,195,.54);
+      box-shadow:0 0 0 1px rgba(143,240,195,.14), 0 18px 48px rgba(0,0,0,.28);
+    }
+
+    .world-head {
+      display:grid;
+      grid-template-columns:86px minmax(0,1fr);
+      gap:12px;
+      align-items:center;
+    }
+
+    .preview-case {
+      width:86px;
+      aspect-ratio:1/1;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(142,190,255,.20);
+      border-radius:20px;
       background:
-        radial-gradient(circle at 50% 40%, rgba(142, 190, 255, 0.16), transparent 24rem),
-        linear-gradient(180deg, rgba(4, 9, 20, 0.96), rgba(1, 3, 9, 0.98));
+        radial-gradient(circle at 50% 48%,rgba(244,191,96,.10),transparent 4.6rem),
+        rgba(0,0,0,.22);
+      overflow:hidden;
     }
 
-    .projection-screen::before {
-      content: "Central Projection Screen";
-      position: absolute;
-      left: 16px;
-      top: 16px;
-      z-index: 2;
-      padding: 7px 10px;
-      border: 1px solid rgba(244, 191, 96, 0.30);
-      border-radius: 999px;
-      color: var(--gold);
-      background: rgba(5, 9, 18, 0.70);
-      font-size: 0.74rem;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .preview-case canvas {
+      width:100%;
+      height:100%;
+      display:block;
+      transform:none !important;
     }
 
-    #showroomProjectionCanvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-      min-height: clamp(430px, 65vw, 720px);
-      transform: none !important;
-      touch-action: none;
+    .world-card h2 {
+      margin:0 0 5px;
+      font-size:1.12rem;
+      letter-spacing:-.03em;
+      line-height:1.05;
     }
 
-    .projection-status {
-      position: absolute;
-      left: 16px;
-      right: 16px;
-      bottom: 16px;
-      z-index: 2;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-    }
-
-    .projection-status span {
-      padding: 9px 10px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 14px;
-      background: rgba(5, 9, 18, 0.70);
-      color: var(--muted);
-      font-size: 0.82rem;
-      line-height: 1.3;
-      overflow-wrap: anywhere;
-    }
-
-    .projection-status strong {
-      display: block;
-      color: var(--gold);
-      font-size: 0.68rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 2px;
-    }
-
-    .channel-rail {
-      display: grid;
-      gap: 12px;
-      align-content: start;
-    }
-
-    .planet-card {
-      padding: 13px;
-      cursor: pointer;
-      transform: none !important;
-    }
-
-    .planet-card[aria-selected="true"] {
-      border-color: rgba(143, 240, 195, 0.54);
-      box-shadow: 0 0 0 1px rgba(143, 240, 195, 0.12), var(--shadow);
-    }
-
-    .planet-card:focus-within {
-      border-color: rgba(244, 191, 96, 0.52);
-    }
-
-    .planet-card-header {
-      display: grid;
-      grid-template-columns: 82px minmax(0, 1fr);
-      gap: 12px;
-      align-items: center;
-    }
-
-    .preview-wrap {
-      position: relative;
-      width: 82px;
-      aspect-ratio: 1 / 1;
-      border: 1px solid rgba(142, 190, 255, 0.20);
-      border-radius: 50%;
-      overflow: hidden;
-      background: rgba(0, 0, 0, 0.24);
-    }
-
-    .preview-wrap canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-      transform: none !important;
-    }
-
-    .planet-card h2 {
-      margin: 0 0 5px;
-      font-size: 1.08rem;
-      line-height: 1.05;
-      letter-spacing: -0.03em;
-    }
-
-    .planet-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.84rem;
-      line-height: 1.38;
-    }
-
-    .planet-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 11px;
-    }
-
-    .planet-actions a,
-    .planet-actions button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 34px;
-      padding: 8px 10px;
-      border: 1px solid rgba(244, 191, 96, 0.30);
-      border-radius: 999px;
-      background: rgba(244, 191, 96, 0.08);
-      color: var(--text);
-      font-size: 0.82rem;
-      font-weight: 850;
-      cursor: pointer;
-    }
-
-    .planet-actions button {
-      background: rgba(143, 240, 195, 0.07);
-      border-color: rgba(143, 240, 195, 0.28);
+    .world-card p {
+      margin:0;
+      color:var(--muted);
+      font-size:.86rem;
+      line-height:1.42;
     }
 
     .tag-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 10px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-top:11px;
     }
 
     .tag {
-      display: inline-flex;
-      align-items: center;
-      min-height: 23px;
-      padding: 5px 8px;
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      border-radius: 999px;
-      color: var(--muted);
-      background: rgba(255, 255, 255, 0.04);
-      font-size: 0.68rem;
-      font-weight: 850;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+      display:inline-flex;
+      align-items:center;
+      min-height:23px;
+      padding:5px 8px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      color:var(--muted);
+      background:rgba(255,255,255,.04);
+      font-size:.68rem;
+      font-weight:850;
+      letter-spacing:.04em;
+      text-transform:uppercase;
     }
 
     .tag.gold {
-      color: var(--gold);
-      border-color: rgba(244, 191, 96, 0.34);
-      background: rgba(244, 191, 96, 0.08);
+      color:var(--gold);
+      border-color:rgba(244,191,96,.34);
+      background:rgba(244,191,96,.08);
     }
 
     .tag.green {
-      color: var(--green);
-      border-color: rgba(143, 240, 195, 0.30);
-      background: rgba(143, 240, 195, 0.07);
+      color:var(--green);
+      border-color:rgba(143,240,195,.30);
+      background:rgba(143,240,195,.07);
     }
 
-    .panel {
-      margin-top: 16px;
-      padding: 18px;
+    .display-case {
+      min-height:640px;
+      padding:16px;
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      gap:14px;
+      background:
+        radial-gradient(circle at 50% 18%,rgba(244,191,96,.12),transparent 22rem),
+        linear-gradient(180deg,rgba(255,255,255,.055),transparent),
+        var(--panel2);
     }
 
-    .panel h2 {
-      margin: 0 0 10px;
-      font-size: 1rem;
-      letter-spacing: 0.02em;
+    .display-header {
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
     }
 
-    .panel p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.55;
+    .display-header h2 {
+      margin:0 0 6px;
+      font-size:clamp(1.8rem,4vw,3rem);
+      line-height:.95;
+      letter-spacing:-.055em;
     }
 
-    .receipt-panel {
-      margin-top: 16px;
-      padding: 16px;
-      border-color: rgba(143, 240, 195, 0.18);
-      background: rgba(143, 240, 195, 0.055);
+    .display-header p {
+      margin:0;
+      color:var(--muted);
+      line-height:1.48;
     }
 
-    .receipt-panel code {
-      display: block;
-      overflow-wrap: anywhere;
-      color: var(--green);
-      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-      font-size: 0.84rem;
-      line-height: 1.55;
+    .display-window {
+      position:relative;
+      display:grid;
+      place-items:center;
+      min-height:420px;
+      border:1px solid rgba(142,190,255,.18);
+      border-radius:22px;
+      background:
+        radial-gradient(circle at 50% 44%,rgba(142,190,255,.12),transparent 16rem),
+        linear-gradient(180deg,rgba(7,13,30,1),rgba(2,5,12,1));
+      overflow:hidden;
+    }
+
+    #displayCanvas {
+      display:block;
+      width:min(94%,720px);
+      aspect-ratio:1/1;
+      border-radius:999px;
+      transform:none !important;
+    }
+
+    .display-meta {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:8px;
+    }
+
+    .display-meta span {
+      padding:10px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:14px;
+      background:rgba(5,9,18,.70);
+      color:var(--muted);
+      font-size:.84rem;
+      line-height:1.35;
+      overflow-wrap:anywhere;
+    }
+
+    .display-meta strong {
+      display:block;
+      color:var(--gold);
+      font-size:.70rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:3px;
+    }
+
+    .display-actions {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .button {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:10px 14px;
+      border:1px solid rgba(244,191,96,.32);
+      border-radius:999px;
+      background:rgba(244,191,96,.09);
+      color:var(--text);
+      font-weight:900;
+    }
+
+    .button.primary {
+      color:#06101d;
+      background:var(--gold);
+    }
+
+    .receipt {
+      margin-top:18px;
+      padding:16px;
+      border-color:rgba(143,240,195,.18);
+      background:rgba(143,240,195,.055);
+    }
+
+    .receipt code {
+      display:block;
+      overflow-wrap:anywhere;
+      color:var(--green);
+      font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+      font-size:.84rem;
+      line-height:1.55;
     }
 
     .footer {
-      margin-top: 18px;
-      color: rgba(246, 234, 210, 0.62);
-      font-size: 0.88rem;
-      line-height: 1.55;
-      text-align: center;
+      margin-top:18px;
+      color:rgba(246,234,210,.62);
+      font-size:.88rem;
+      line-height:1.55;
+      text-align:center;
     }
 
-    @media (max-width: 980px) {
-      .projection-set {
-        grid-template-columns: 1fr;
+    @media (max-width:980px) {
+      .showcase {
+        grid-template-columns:1fr;
       }
 
-      .channel-rail {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+      .display-case {
+        min-height:auto;
       }
     }
 
-    @media (max-width: 760px) {
+    @media (max-width:760px) {
       .topbar {
-        align-items: flex-start;
-        border-radius: 22px;
-        flex-direction: column;
+        align-items:flex-start;
+        border-radius:22px;
+        flex-direction:column;
       }
 
-      .nav {
-        justify-content: flex-start;
+      .nav { justify-content:flex-start; }
+
+      .bookcase {
+        grid-template-columns:1fr;
       }
 
-      .channel-rail {
-        grid-template-columns: 1fr;
-      }
-
-      .projection-status {
-        grid-template-columns: 1fr;
+      .display-meta {
+        grid-template-columns:1fr;
       }
     }
 
-    @media (max-width: 560px) {
-      .page-shell {
-        width: min(100% - 20px, var(--max));
-        padding-top: 10px;
+    @media (max-width:560px) {
+      .shell {
+        width:min(100% - 20px,var(--max));
+        padding-top:10px;
       }
 
       .hero,
-      .projection-set,
-      .planet-card,
-      .panel,
-      .receipt-panel {
-        border-radius: 18px;
+      .showcase,
+      .display-case,
+      .world-card,
+      .receipt {
+        border-radius:18px;
       }
 
-      .projection-set {
-        padding: 10px;
-      }
-
-      .planet-card-header {
-        grid-template-columns: 72px minmax(0, 1fr);
-      }
-
-      .preview-wrap {
-        width: 72px;
+      .showcase {
+        padding:10px;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="#globe-main">Skip to Showroom Globe</a>
+  <a class="skip-link" href="/showroom/globe/#globe-main">Skip to Globe Showcase</a>
 
-  <div class="page-shell">
-    <header class="topbar" aria-label="Showroom Globe route navigation">
+  <div class="shell">
+    <header class="topbar" aria-label="Globe Showcase navigation">
       <a class="brand" href="/" aria-label="Return to Diamond Gate Bridge Compass">
         <span class="brand-mark" aria-hidden="true"></span>
         <span>Diamond Gate Bridge</span>
@@ -518,213 +495,174 @@
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/" aria-current="page">Globe</a>
-        <a href="/showroom/globe/h-earth/">H-Earth</a>
+        <a href="/showroom/">Showroom Cover</a>
+        <a href="/showroom/globe/" aria-current="page">Globe Showcase</a>
+        <a href="/products/">Products</a>
         <a href="/gauges/">Triple G</a>
       </nav>
     </header>
 
     <main id="globe-main" tabindex="-1">
       <section class="hero">
-        <p class="eyebrow">Showroom TV Set · Planet Projection</p>
-        <h1>Planet Projection Room</h1>
+        <p class="eyebrow">Showcase / Bookcase · Display Case</p>
+        <h1>Choose the world from the case.</h1>
         <p class="lede">
-          The Showroom Globe route now acts as a TV set. Select Earth, H-Earth, Hearth, or Audralia
-          to project the planet on the central screen. Each channel card carries a mini spinning preview.
-          Full inspection routes remain separate and protected.
+          The Globe Showcase is the organized collection. Select a world from the bookcase to place it in the display case.
+          Then open the full inspection view when you are ready to enter that planet’s private room.
         </p>
       </section>
 
       <section
-        class="projection-set"
-        aria-label="Planet projection TV set"
-        data-showroom-projection-set="true"
-        data-lattice-geometry="4x64=256"
-        data-default-channel="h-earth"
+        class="showcase"
+        aria-label="World showcase bookcase and display case"
+        data-showroom-globe-showcase="true"
+        data-display-case-layer="true"
+        data-default-display="h-earth"
         data-card-transform="forbidden"
         data-parent-mutation-authorized="false"
       >
-        <section class="projection-screen" aria-label="Central selected planet projection">
-          <canvas
-            id="showroomProjectionCanvas"
-            width="1400"
-            height="1400"
-            data-central-projection-canvas="true"
-            data-card-transform="forbidden"
-            aria-label="Central planet projection canvas"
-            role="img"
-          ></canvas>
-
-          <div id="projectionStatus" class="projection-status" aria-live="polite">
-            <span><strong>Channel</strong><em>H-Earth</em></span>
-            <span><strong>Mode</strong><em>planet-projection-tv-set</em></span>
-            <span><strong>Lattice</strong><em>4 × 64 = 256</em></span>
-          </div>
-        </section>
-
-        <section class="channel-rail" aria-label="Planet channel rail">
-          <article class="planet-card" data-planet-card="earth" data-channel-card="earth" aria-selected="false" tabindex="0">
-            <div class="planet-card-header">
-              <div class="preview-wrap">
-                <canvas width="220" height="220" data-preview-canvas="earth" aria-label="Earth mini spinning preview"></canvas>
+        <section class="bookcase" aria-label="World bookcase">
+          <article class="world-card" data-world-card="earth" aria-selected="false" tabindex="0">
+            <div class="world-head">
+              <div class="preview-case">
+                <canvas width="220" height="220" data-preview-canvas="earth" aria-label="Earth preview"></canvas>
               </div>
               <div>
                 <h2>Earth</h2>
-                <p>Protected reference body. Reference route only.</p>
+                <p>Protected reference body.</p>
               </div>
             </div>
             <div class="tag-row">
               <span class="tag gold">Reference</span>
               <span class="tag">Protected</span>
             </div>
-            <div class="planet-actions">
-              <button type="button" data-select-channel="earth">Project</button>
-              <a href="/showroom/globe/earth/" data-inspect-route="earth">Inspect</a>
-            </div>
           </article>
 
-          <article class="planet-card" data-planet-card="h-earth" data-channel-card="h-earth" aria-selected="true" tabindex="0">
-            <div class="planet-card-header">
-              <div class="preview-wrap">
-                <canvas width="220" height="220" data-preview-canvas="h-earth" aria-label="H-Earth mini spinning preview"></canvas>
+          <article class="world-card" data-world-card="h-earth" aria-selected="true" tabindex="0">
+            <div class="world-head">
+              <div class="preview-case">
+                <canvas width="220" height="220" data-preview-canvas="h-earth" aria-label="H-Earth preview"></canvas>
               </div>
               <div>
                 <h2>H-Earth</h2>
-                <p>Hybrid Earth. Active orbital/aerial build planet.</p>
+                <p>Hybrid Earth. Active build planet.</p>
               </div>
             </div>
             <div class="tag-row">
               <span class="tag green">Active</span>
-              <span class="tag gold">Build planet</span>
+              <span class="tag gold">Build</span>
               <span class="tag">Orbital first</span>
-            </div>
-            <div class="planet-actions">
-              <button type="button" data-select-channel="h-earth">Project</button>
-              <a href="/showroom/globe/h-earth/" data-inspect-route="h-earth">Inspect</a>
             </div>
           </article>
 
-          <article class="planet-card" data-planet-card="hearth" data-channel-card="hearth" aria-selected="false" tabindex="0">
-            <div class="planet-card-header">
-              <div class="preview-wrap">
-                <canvas width="220" height="220" data-preview-canvas="hearth" aria-label="Hearth mini spinning preview"></canvas>
+          <article class="world-card" data-world-card="hearth" aria-selected="false" tabindex="0">
+            <div class="world-head">
+              <div class="preview-case">
+                <canvas width="220" height="220" data-preview-canvas="hearth" aria-label="Hearth preview"></canvas>
               </div>
               <div>
                 <h2>Hearth</h2>
-                <p>Separate planet lane. Regression and terrain lane.</p>
+                <p>Separate terrain lane.</p>
               </div>
             </div>
             <div class="tag-row">
               <span class="tag">Separate</span>
               <span class="tag">Regression</span>
             </div>
-            <div class="planet-actions">
-              <button type="button" data-select-channel="hearth">Project</button>
-              <a href="/showroom/globe/hearth/" data-inspect-route="hearth">Inspect</a>
-            </div>
           </article>
 
-          <article class="planet-card" data-planet-card="audralia" data-channel-card="audralia" aria-selected="false" tabindex="0">
-            <div class="planet-card-header">
-              <div class="preview-wrap">
-                <canvas width="220" height="220" data-preview-canvas="audralia" aria-label="Audralia mini spinning preview"></canvas>
+          <article class="world-card" data-world-card="audralia" aria-selected="false" tabindex="0">
+            <div class="world-head">
+              <div class="preview-case">
+                <canvas width="220" height="220" data-preview-canvas="audralia" aria-label="Audralia preview"></canvas>
               </div>
               <div>
                 <h2>Audralia</h2>
-                <p>Constructed world. Separate parent-chain lane.</p>
+                <p>Constructed-world lane.</p>
               </div>
             </div>
             <div class="tag-row">
               <span class="tag">Constructed</span>
               <span class="tag">Separate</span>
             </div>
-            <div class="planet-actions">
-              <button type="button" data-select-channel="audralia">Project</button>
-              <a href="/showroom/globe/audralia/" data-inspect-route="audralia">Inspect</a>
-            </div>
           </article>
+        </section>
+
+        <section class="display-case" aria-label="Selected world display case">
+          <div class="display-header">
+            <div>
+              <h2 id="displayTitle">H-Earth</h2>
+              <p id="displayCopy">Hybrid Earth. Active orbital/aerial build planet.</p>
+            </div>
+          </div>
+
+          <div class="display-window">
+            <canvas
+              id="displayCanvas"
+              width="1000"
+              height="1000"
+              aria-label="Selected world display"
+              role="img"
+              data-display-case-canvas="true"
+            ></canvas>
+          </div>
+
+          <div class="display-meta" id="displayMeta" aria-live="polite">
+            <span><strong>Layer</strong>Display case</span>
+            <span><strong>Selection</strong>H-Earth</span>
+            <span><strong>Inspection</strong>Private route</span>
+          </div>
+
+          <div class="display-actions">
+            <a class="button primary" id="inspectSelected" href="/showroom/globe/h-earth/">Open Full Inspection</a>
+            <a class="button" href="/showroom/">Return to Cover</a>
+            <a class="button" href="/gauges/">Run Triple G</a>
+          </div>
         </section>
       </section>
 
-      <section class="panel">
-        <h2>Showroom Role</h2>
-        <p>
-          This page is a projection consumer. It may preview and project planets, but it does not own or
-          mutate Earth, H-Earth, Hearth, Audralia, parent truth, orbital surface truth, ground-level mode,
-          or estate placement.
-        </p>
-      </section>
-
-      <section class="panel">
-        <h2>256 Projection Geometry</h2>
-        <p>
-          The Showroom TV set uses four planet channels with sixty-four projection states each.
-          Earth, H-Earth, Hearth, and Audralia together form a 256-seat showroom projection lattice.
-        </p>
-      </section>
-
       <section
-        id="globeReceiptPanel"
-        class="receipt-panel"
-        aria-label="Showroom Globe projection receipts"
-        data-receipt-panel="showroom-globe-tv-set"
-        data-pair-contract="SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_PAIR_TNT_v13"
-        data-html-contract="SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_HTML_TNT_v13"
-        data-required-route-contract="SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_ROUTE_TNT_v13"
-        data-previous-contract="H_EARTH_G1_SHOWROOM_GLOBE_CONSUMER_ALIGNMENT_TNT_v12D"
-        data-showroom-mode="planet-projection-tv-set"
-        data-default-channel="h-earth"
-        data-lattice-geometry="4x64=256"
-        data-central-projection-mount="#showroomProjectionCanvas"
-        data-earth-preview-canvas="true"
-        data-h-earth-preview-canvas="true"
-        data-hearth-preview-canvas="true"
-        data-audralia-preview-canvas="true"
+        id="globeShowcaseReceipt"
+        class="receipt"
+        aria-label="Globe showcase route receipt"
+        data-receipt-panel="showroom-globe-showcase-bookcase"
+        data-html-contract="SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_HTML_TNT_v20B"
+        data-required-route-contract="SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_ROUTE_TNT_v20C"
+        data-pair-contract="SHOWROOM_COVER_GLOBE_SHOWCASE_DISPLAY_CASE_PAIR_TNT_v20"
+        data-showroom-mode="showcase-bookcase-display-case"
+        data-default-display="h-earth"
+        data-full-inspection-layer="planet-private-routes"
         data-card-transform="forbidden"
         data-parent-mutation-authorized="false"
-        data-earth-mutation-authorized="false"
-        data-h-earth-mutation-authorized="false"
-        data-hearth-mutation-authorized="false"
-        data-audralia-mutation-authorized="false"
-        data-visual-pass-claim="false"
-        data-graphic-box="false"
+        data-visible-diagnostics="false"
         data-generated-image="false"
+        data-graphic-box="false"
+        data-visual-pass-claim="false"
       >
-        <code>PAIR_RECEIPT: SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_PAIR_TNT_v13</code>
-        <code>HTML_RECEIPT: SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_HTML_TNT_v13</code>
-        <code>REQUIRED_ROUTE: SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_ROUTE_TNT_v13</code>
-        <code>PREVIOUS_RECEIPT: H_EARTH_G1_SHOWROOM_GLOBE_CONSUMER_ALIGNMENT_TNT_v12D</code>
-        <code>SHOWROOM_MODE: planet-projection-tv-set</code>
-        <code>DEFAULT_CHANNEL: h-earth</code>
-        <code>LATTICE_GEOMETRY: 4x64=256</code>
-        <code>CENTRAL_PROJECTION_CANVAS: #showroomProjectionCanvas</code>
-        <code>EARTH_PREVIEW_CANVAS: true</code>
-        <code>H_EARTH_PREVIEW_CANVAS: true</code>
-        <code>HEARTH_PREVIEW_CANVAS: true</code>
-        <code>AUDRALIA_PREVIEW_CANVAS: true</code>
+        <code>HTML_RECEIPT: SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_HTML_TNT_v20B</code>
+        <code>PAIR_RECEIPT: SHOWROOM_COVER_GLOBE_SHOWCASE_DISPLAY_CASE_PAIR_TNT_v20</code>
+        <code>REQUIRED_ROUTE: SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_ROUTE_TNT_v20C</code>
+        <code>SHOWROOM_MODE: showcase-bookcase-display-case</code>
+        <code>DEFAULT_DISPLAY: h-earth</code>
+        <code>FULL_INSPECTION_LAYER: planet-private-routes</code>
         <code>CARD_TRANSFORM: forbidden</code>
         <code>PARENT_MUTATION_AUTHORIZED: false</code>
-        <code>VISUAL_PASS_CLAIM: false</code>
-        <code>SCRIPT_HANDOFF: ./index.js?v=SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_ROUTE_TNT_v13</code>
       </section>
     </main>
 
     <footer class="footer">
-      Showroom Globe TV set active. Central projection and mini previews are lightweight consumers only.
+      Cover → Showcase / Bookcase → Display Case → Full Inspection.
     </footer>
   </div>
 
   <script
-    id="showroomGlobeProjectionHandoff"
+    id="globeShowcaseHandoff"
     type="module"
-    src="./index.js?v=SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_ROUTE_TNT_v13"
-    data-handoff="showroom-globe-tv-set-planet-projection"
-    data-required-route-contract="SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_ROUTE_TNT_v13"
-    data-html-contract="SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_HTML_TNT_v13"
-    data-pair-contract="SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_PAIR_TNT_v13"
+    src="./index.js?v=SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_ROUTE_TNT_v20C"
+    data-handoff="showroom-globe-showcase-bookcase-display-case"
+    data-required-route-contract="SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_ROUTE_TNT_v20C"
+    data-html-contract="SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_HTML_TNT_v20B"
+    data-pair-contract="SHOWROOM_COVER_GLOBE_SHOWCASE_DISPLAY_CASE_PAIR_TNT_v20"
   ></script>
 </body>
 </html>

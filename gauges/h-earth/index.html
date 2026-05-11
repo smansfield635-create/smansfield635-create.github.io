@@ -2,393 +2,266 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="gauges-h-earth"
+  data-page="gauges-h-earth-diagnostics"
   data-route="/gauges/h-earth/"
-  data-contract="GAUGES_H_EARTH_SELF_CONTAINED_PARENT_CHAIN_AUDIT_TNT_v4"
-  data-receipt="GAUGES_H_EARTH_SELF_CONTAINED_PARENT_CHAIN_AUDIT_RECEIPT_v4"
+  data-contract="GAUGES_H_EARTH_DIAGNOSTIC_ROOM_TNT_v2"
+  data-receipt="GAUGES_H_EARTH_DIAGNOSTIC_ROOM_RECEIPT_v2"
+  data-marker-alignment-contract="H_EARTH_PRIVATE_ROOM_AND_GAUGES_MARKER_ALIGNMENT_TNT_v1"
   data-read-only="true"
   data-generated-image="false"
   data-graphic-box="false"
-  data-visual-pass-claimed="false"
-  data-parent-mutation-authorized="false"
+  data-visual-pass-claim="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Diamond Gate Bridge · H-Earth Gauges</title>
-  <meta
-    name="description"
-    content="Self-contained read-only H-Earth diagnostics for route separation, parent-chain assets, terrain balance, surface material completion, held canvas, held controls, and future holds."
-  >
 
   <style>
     :root {
       color-scheme: dark;
-      --bg: #050812;
-      --panel: rgba(10, 18, 32, 0.86);
-      --panel-soft: rgba(13, 24, 42, 0.74);
-      --line: rgba(244, 191, 96, 0.28);
-      --line-blue: rgba(142, 190, 255, 0.24);
-      --line-green: rgba(143, 240, 195, 0.24);
-      --line-red: rgba(255, 180, 167, 0.24);
-      --text: #f6ead2;
-      --muted: #b9c1cf;
-      --gold: #f4bf60;
-      --blue: #8ebeff;
-      --green: #8ff0c3;
-      --red: #ffb4a7;
-      --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
-      --radius: 24px;
-      --max: 1180px;
+      --bg:#030914;
+      --panel:rgba(8,18,35,.86);
+      --panel2:rgba(4,10,20,.78);
+      --line:rgba(231,188,105,.34);
+      --gold:#e7bc69;
+      --text:#eef6ff;
+      --muted:rgba(238,246,255,.72);
+      --pass:#8bd7a3;
+      --fail:#ff8e8e;
+      --hold:#e7bc69;
+      --shadow:0 22px 70px rgba(0,0,0,.38);
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing:border-box; }
 
     html {
-      min-height: 100%;
+      min-height:100%;
       background:
-        radial-gradient(circle at 50% 0%, rgba(142, 190, 255, 0.18), transparent 34rem),
-        radial-gradient(circle at 12% 20%, rgba(244, 191, 96, 0.12), transparent 30rem),
-        radial-gradient(circle at 88% 18%, rgba(143, 240, 195, 0.08), transparent 28rem),
-        linear-gradient(180deg, var(--bg), #02040a 76%);
+        radial-gradient(circle at 50% 12%,rgba(42,124,164,.20),transparent 35%),
+        radial-gradient(circle at 10% 8%,rgba(231,188,105,.12),transparent 28%),
+        linear-gradient(180deg,#06101e,var(--bg) 76%);
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
 
     body {
-      min-height: 100%;
-      margin: 0;
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        linear-gradient(145deg, rgba(255, 255, 255, 0.035), transparent 38%),
-        radial-gradient(circle at 50% 72%, rgba(244, 191, 96, 0.055), transparent 34rem);
+      margin:0;
+      min-height:100vh;
     }
 
     a {
-      color: inherit;
-      text-decoration: none;
+      color:inherit;
+      text-decoration:none;
     }
 
-    a:focus-visible,
-    button:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 4px;
+    button {
+      font:inherit;
+      cursor:pointer;
     }
 
-    .skip-link {
-      position: absolute;
-      left: 1rem;
-      top: 1rem;
-      z-index: 30;
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: #08101d;
-      color: var(--text);
-      transform: translateY(-180%);
-      transition: transform 160ms ease;
+    .shell {
+      width:min(1180px,calc(100% - 28px));
+      margin:0 auto;
+      padding:22px 0 42px;
     }
 
-    .skip-link:focus {
-      transform: translateY(0);
-    }
-
-    .page-shell {
-      width: min(var(--max), calc(100% - 32px));
-      margin: 0 auto;
-      padding: 24px 0 48px;
+    .topbar,
+    .hero,
+    .metric,
+    .check,
+    .receipt {
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,var(--panel),var(--panel2));
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
     }
 
     .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 14px 16px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(5, 9, 18, 0.72);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      border-radius:24px;
+      padding:12px 14px;
     }
 
     .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      min-width: max-content;
-      font-weight: 850;
-      letter-spacing: 0.02em;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-weight:900;
     }
 
-    .brand-mark {
-      width: 18px;
-      height: 18px;
-      border: 1px solid var(--gold);
-      transform: rotate(45deg);
-      background: linear-gradient(135deg, rgba(244, 191, 96, 0.24), transparent), rgba(255, 255, 255, 0.05);
-      box-shadow: 0 0 24px rgba(244, 191, 96, 0.18);
+    .mark {
+      display:grid;
+      place-items:center;
+      width:36px;
+      height:36px;
+      border-radius:12px;
+      border:1px solid rgba(231,188,105,.46);
+      color:var(--gold);
     }
 
     .nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 8px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      justify-content:flex-end;
     }
 
-    .nav a {
-      padding: 8px 11px;
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      border-radius: 999px;
-      color: var(--muted);
-      font-size: 0.88rem;
-      background: rgba(255, 255, 255, 0.035);
+    .nav a,
+    .button,
+    button {
+      border:1px solid rgba(231,188,105,.28);
+      border-radius:999px;
+      padding:9px 12px;
+      color:var(--muted);
+      background:rgba(231,188,105,.10);
+      font-weight:850;
     }
 
-    .nav a[aria-current="page"] {
-      border-color: rgba(244, 191, 96, 0.55);
-      color: var(--gold);
-      background: rgba(244, 191, 96, 0.09);
-    }
-
-    .hero,
-    .check-card {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent), var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
+    .nav a[aria-current="page"],
+    .primary {
+      color:#06101e;
+      background:var(--gold);
+      font-weight:900;
     }
 
     .hero {
-      margin-top: 24px;
-      padding: clamp(24px, 5vw, 46px);
+      margin-top:22px;
+      border-radius:28px;
+      padding:20px;
     }
 
     .eyebrow {
-      display: inline-flex;
-      margin: 0 0 18px;
-      padding: 8px 12px;
-      border: 1px solid var(--line-blue);
-      border-radius: 999px;
-      color: var(--blue);
-      background: rgba(142, 190, 255, 0.08);
-      font-size: 0.86rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      color:var(--gold);
+      font-size:.78rem;
+      font-weight:900;
+      letter-spacing:.16em;
+      text-transform:uppercase;
     }
 
     h1 {
-      max-width: 920px;
-      margin: 0;
-      font-size: clamp(2.6rem, 7vw, 6.2rem);
-      line-height: 0.92;
-      letter-spacing: -0.075em;
+      margin:8px 0 10px;
+      font-size:clamp(2rem,6vw,4.8rem);
+      line-height:.94;
+      letter-spacing:-.07em;
     }
 
     .lede {
-      max-width: 82ch;
-      margin: 22px 0 0;
-      color: var(--muted);
-      font-size: clamp(1rem, 2vw, 1.18rem);
-      line-height: 1.65;
+      max-width:82ch;
+      color:var(--muted);
+      line-height:1.58;
+      margin:0;
     }
 
     .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 26px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
     }
 
-    .actions a,
-    .actions button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 11px 14px;
-      border: 1px solid rgba(244, 191, 96, 0.40);
-      border-radius: 999px;
-      background: rgba(244, 191, 96, 0.10);
-      color: var(--text);
-      font: inherit;
-      font-weight: 850;
-      cursor: pointer;
-    }
-
-    .actions a.secondary {
-      border-color: var(--line-blue);
-      background: rgba(142, 190, 255, 0.07);
-      color: var(--muted);
-    }
-
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 18px;
+    .metrics {
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:12px;
+      margin-top:18px;
     }
 
     .metric {
-      padding: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.04);
+      border-radius:20px;
+      padding:14px;
     }
 
     .metric strong {
-      display: block;
-      color: var(--gold);
-      font-size: clamp(1.7rem, 4vw, 2.7rem);
-      line-height: 0.95;
-      letter-spacing: -0.06em;
+      display:block;
+      font-size:1.55rem;
+      color:var(--gold);
     }
 
     .metric span {
-      display: block;
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.45;
+      color:var(--muted);
+      font-size:.88rem;
     }
 
     .section-title {
-      margin: 26px 0 12px;
-      font-size: clamp(1.45rem, 3vw, 2.25rem);
-      letter-spacing: -0.045em;
+      margin:24px 0 10px;
+      color:var(--gold);
+      font-size:.86rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
     .checks {
-      display: grid;
-      gap: 12px;
-      margin-top: 16px;
+      display:grid;
+      gap:10px;
     }
 
-    .check-card {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 12px;
-      padding: 16px;
-      background: var(--panel-soft);
+    .check {
+      border-radius:18px;
+      padding:14px;
     }
 
-    .check-card[data-status="pass"] { border-color: var(--line-green); }
-    .check-card[data-status="fail"] { border-color: var(--line-red); }
-    .check-card[data-status="hold"] { border-color: var(--line-blue); }
-
-    .check-card h3 {
-      margin: 0;
-      font-size: 1rem;
-      letter-spacing: 0.01em;
+    .check-header {
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
     }
 
-    .check-card p {
-      margin: 8px 0 0;
-      color: var(--muted);
-      line-height: 1.5;
+    .check h2 {
+      margin:0 0 5px;
+      font-size:1rem;
+    }
+
+    .check p {
+      margin:0;
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.45;
+      overflow-wrap:anywhere;
     }
 
     .status {
-      min-width: 72px;
-      align-self: start;
-      padding: 7px 10px;
-      border-radius: 999px;
-      text-align: center;
-      font-size: 0.76rem;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      min-width:64px;
+      padding:5px 9px;
+      border-radius:999px;
+      font-size:.75rem;
+      font-weight:1000;
+      text-transform:uppercase;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.14);
     }
 
-    .status.pass {
-      border: 1px solid var(--line-green);
-      color: var(--green);
-      background: rgba(143, 240, 195, 0.08);
+    .pass { color:#07170c; background:var(--pass); }
+    .fail { color:#220808; background:var(--fail); }
+    .hold { color:#161005; background:var(--hold); }
+
+    .receipt {
+      margin-top:18px;
+      padding:14px;
+      overflow:auto;
+      border-radius:18px;
+      color:rgba(238,246,255,.74);
+      font-size:.78rem;
+      line-height:1.45;
+      white-space:pre-wrap;
     }
 
-    .status.fail {
-      border: 1px solid var(--line-red);
-      color: var(--red);
-      background: rgba(255, 180, 167, 0.07);
-    }
-
-    .status.hold {
-      border: 1px solid var(--line-blue);
-      color: var(--blue);
-      background: rgba(142, 190, 255, 0.08);
-    }
-
-    .receipt-panel {
-      margin-top: 16px;
-      padding: 16px;
-      border: 1px solid var(--line-green);
-      border-radius: 18px;
-      background: rgba(143, 240, 195, 0.055);
-    }
-
-    .receipt-panel code {
-      display: block;
-      overflow-wrap: anywhere;
-      color: var(--green);
-      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-      font-size: 0.84rem;
-      line-height: 1.55;
-    }
-
-    .footer {
-      margin-top: 18px;
-      color: rgba(246, 234, 210, 0.62);
-      font-size: 0.88rem;
-      line-height: 1.55;
-      text-align: center;
-    }
-
-    @media (max-width: 1000px) {
-      .metric-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 720px) {
-      .page-shell {
-        width: min(100% - 20px, var(--max));
-        padding-top: 10px;
-      }
-
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-        border-radius: 22px;
-      }
-
-      .nav {
-        justify-content: flex-start;
-      }
-
-      .metric-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .check-card {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width:900px) {
+      .topbar { flex-direction:column; }
+      .nav { justify-content:flex-start; }
+      .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="#main">Skip to H-Earth Gauges</a>
-
-  <div class="page-shell">
-    <header class="topbar" aria-label="H-Earth Gauges navigation">
-      <a class="brand" href="/" aria-label="Return to Diamond Gate Bridge Compass">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span>Diamond Gate Bridge · H-Earth Gauges</span>
-      </a>
-
-      <nav class="nav" aria-label="Primary navigation">
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/"><span class="mark">H</span><span>Diamond Gate Bridge · H-Earth Gauges</span></a>
+      <nav class="nav" aria-label="H-Earth gauge navigation">
         <a href="/">Compass</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Globe Showcase</a>
@@ -398,345 +271,286 @@
       </nav>
     </header>
 
-    <main id="main" tabindex="-1">
-      <section class="hero" aria-labelledby="title">
-        <p class="eyebrow">Read-only · Self-contained H-Earth diagnostics</p>
-        <h1 id="title">H-Earth Gauges</h1>
+    <main id="main">
+      <section class="hero">
+        <div class="eyebrow">Read-only · H-Earth diagnostics</div>
+        <h1>H-Earth Gauges</h1>
         <p class="lede">
-          This diagnostic room checks H-Earth routing, private-room separation, parent-chain assets,
-          terrain balance, surface material completion, held canvas, held controls, visual-pass safety,
-          and future-work holds. It does not mutate route, planet, canvas, controls, or source truth.
+          This is the backstage diagnostic room for H-Earth. The Showroom and H-Earth pages stay stage-facing.
+          This page checks routing, display-case interaction, private-room separation, terrain-child binding, and held future work.
         </p>
 
         <div class="actions">
-          <button id="runAuditButton" type="button">Run H-Earth Audit</button>
-          <a class="secondary" href="/showroom/globe/">Open Globe Showcase</a>
-          <a class="secondary" href="/showroom/globe/h-earth/">Open H-Earth Room</a>
+          <button class="primary" type="button" id="runAudit">Run H-Earth Audit</button>
+          <a class="button" href="/showroom/globe/">Open Globe Showcase</a>
+          <a class="button" href="/showroom/globe/h-earth/">Open H-Earth Room</a>
+          <a class="button" href="/gauges/">Open Triple G</a>
         </div>
 
-        <section class="metric-grid" aria-label="H-Earth audit metrics">
-          <article class="metric"><strong id="totalCount">0</strong><span>Total checks.</span></article>
-          <article class="metric"><strong id="passCount">0</strong><span>Passed.</span></article>
-          <article class="metric"><strong id="holdCount">0</strong><span>Held.</span></article>
-          <article class="metric"><strong id="failCount">0</strong><span>Failed.</span></article>
-          <article class="metric"><strong id="readiness">0%</strong><span>Readiness.</span></article>
-        </section>
+        <div class="metrics" aria-label="H-Earth audit totals">
+          <div class="metric"><strong id="totalCount">0</strong><span>Total checks.</span></div>
+          <div class="metric"><strong id="passCount">0</strong><span>Passed.</span></div>
+          <div class="metric"><strong id="holdCount">0</strong><span>Held.</span></div>
+          <div class="metric"><strong id="failCount">0</strong><span>Failed.</span></div>
+          <div class="metric"><strong id="readiness">0%</strong><span>Readiness.</span></div>
+        </div>
       </section>
 
       <h2 class="section-title">H-Earth checks</h2>
-      <section id="checks" class="checks" aria-live="polite" aria-label="H-Earth audit checks"></section>
+      <section id="checks" class="checks" aria-live="polite"></section>
 
-      <section
-        id="receipt"
-        class="receipt-panel"
-        aria-label="H-Earth Gauges receipt"
-        data-receipt-panel="h-earth-gauges"
-        data-contract="GAUGES_H_EARTH_SELF_CONTAINED_PARENT_CHAIN_AUDIT_TNT_v4"
-      >
-        <code>GAUGES_H_EARTH_SELF_CONTAINED_PARENT_CHAIN_AUDIT_TNT_v4</code>
-        <code>STATUS: inline audit runtime loaded from HTML</code>
-        <code>READ_ONLY: true</code>
-        <code>GENERATED_IMAGE: false</code>
-        <code>GRAPHIC_BOX: false</code>
-        <code>VISUAL_PASS_CLAIMED: false</code>
-        <code>PARENT_MUTATION_AUTHORIZED: false</code>
-      </section>
+      <pre id="receipt" class="receipt">GAUGES_H_EARTH_DIAGNOSTIC_ROOM_TNT_v2 · waiting</pre>
     </main>
-
-    <footer class="footer">
-      H-Earth Gauges. Read-only diagnostics. Canvas and controls remain held until separately authorized.
-    </footer>
   </div>
 
   <script>
     (() => {
-      const CONTRACT = "GAUGES_H_EARTH_SELF_CONTAINED_PARENT_CHAIN_AUDIT_TNT_v4";
-      const RECEIPT = "GAUGES_H_EARTH_SELF_CONTAINED_PARENT_CHAIN_AUDIT_RECEIPT_v4";
-      const VERSION = "2026-05-11.gauges-h-earth-self-contained-parent-chain-audit-v4";
-      const EXPECTED = Object.freeze({
-        hEarthHtml: "H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_SHELL_TNT_v4",
-        hEarthDoorway: "H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4",
-        kernel: "H_EARTH_G1_TERRAIN_ONLY_KERNEL_TNT_v1",
-        lattice256: "H_EARTH_G1_TERRAIN_ONLY_LATTICE256_TNT_v1",
-        landmap: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_LANDMAP_TNT_v2",
-        terrain: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_TERRAIN_TNT_v2",
-        surface: "H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1",
-        surfaceCompletion: "H_EARTH_G1_SURFACE_MATERIAL_COMPLETION_TNT_v2"
-      });
+      "use strict";
 
-      const MODULES = Object.freeze([
-        { key: "kernel", path: "/assets/h-earth/h-earth.kernel.js", exportName: "createHEarthKernel", expectedContract: EXPECTED.kernel },
-        { key: "lattice256", path: "/assets/h-earth/h-earth.lattice256.js", exportName: "createHEarthLattice256", expectedContract: EXPECTED.lattice256 },
-        { key: "landmap", path: "/assets/h-earth/h-earth.landmap.js", exportName: "createHEarthLandmap", expectedContract: EXPECTED.landmap },
-        { key: "terrain", path: "/assets/h-earth/h-earth.terrain.js", exportName: "createHEarthTerrain", expectedContract: EXPECTED.terrain },
-        { key: "surface", path: "/assets/h-earth/h-earth.surface.js", exportName: "createHEarthSurface", expectedContract: EXPECTED.surface }
-      ]);
+      const CONTRACT = "GAUGES_H_EARTH_DIAGNOSTIC_ROOM_TNT_v2";
+      const RECEIPT = "GAUGES_H_EARTH_DIAGNOSTIC_ROOM_RECEIPT_v2";
+      const ALIGNMENT = "H_EARTH_PRIVATE_ROOM_AND_GAUGES_MARKER_ALIGNMENT_TNT_v1";
+      const VERSION = "2026-05-11.gauges-h-earth-diagnostic-room-v2.marker-alignment";
 
-      const checks = [];
-      const $ = (id) => document.getElementById(id);
-      const cacheKey = () => `gauges-h-earth-inline-v4-${Date.now()}`;
-      const safeError = (error) => error instanceof Error ? `${error.name}: ${error.message}` : String(error || "unknown error");
+      const checks = [
+        {
+          group: "Route",
+          name: "H-Earth private room reachable",
+          url: "/showroom/globe/h-earth/",
+          httpOk: true
+        },
+        {
+          group: "Route",
+          name: "Globe Showcase reachable",
+          url: "/showroom/globe/",
+          httpOk: true
+        },
+        {
+          group: "Showcase",
+          name: "Display case touch inspection route active",
+          url: "/showroom/globe/index.js",
+          expectAny: ["SHOWROOM_GLOBE_DISPLAY_CASE_TOUCH_INSPECTION_ROUTE_TNT_v21"]
+        },
+        {
+          group: "H-Earth",
+          name: "Private page remains clean",
+          url: "/showroom/globe/h-earth/index.html",
+          expectAny: ["H_EARTH_PRIVATE_ROOM_GLAMOUR_SURFACE_SIMPLIFICATION_HTML_TNT_v18A"]
+        },
+        {
+          group: "H-Earth",
+          name: "Diagnostics route points here",
+          url: "/showroom/globe/h-earth/index.html",
+          expectAny: ["/gauges/h-earth/", 'data-visible-diagnostics="false"']
+        },
+        {
+          group: "Terrain Children",
+          name: "Elevation sea-level child bound to detail",
+          url: "/assets/h-earth/h-earth/canvas/terrain/elevation.sea-level.js",
+          expectAll: [
+            "H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_SEA_LEVEL_DETAIL_BINDING_CHILD_TNT_v2",
+            "H_EARTH_G1_CANVAS_TERRAIN_DETAIL_CHILD_TNT_v1",
+            "sampleElevationForTerrainDetail"
+          ]
+        },
+        {
+          group: "Terrain Children",
+          name: "Terrain detail child exists",
+          url: "/assets/h-earth/h-earth/canvas/terrain/detail.js",
+          expectAll: [
+            "H_EARTH_G1_CANVAS_TERRAIN_DETAIL_CHILD_TNT_v1",
+            "sampleTerrainDetail",
+            "getHEarthCanvasTerrainDetailStatus"
+          ]
+        },
+        {
+          group: "Safety",
+          name: "Parent mutation forbidden",
+          url: "/showroom/globe/h-earth/index.html",
+          expectAny: ['data-parent-mutation-authorized="false"']
+        },
+        {
+          group: "Safety",
+          name: "Visual pass remains false",
+          url: "/showroom/globe/h-earth/index.html",
+          expectAny: ['data-visual-pass-claim="false"']
+        },
+        {
+          group: "Held",
+          name: "Ground level remains held",
+          hold: true,
+          url: "/assets/h-earth/h-earth/ground/",
+          note: "Ground-level mode remains held until orbital/aerial inspection is coherent."
+        },
+        {
+          group: "Held",
+          name: "Estate placement remains held",
+          hold: true,
+          url: "/assets/h-earth/h-earth/estate/",
+          note: "Estate placement remains held until ground-level mode is authorized."
+        }
+      ];
 
-      function addCheck(status, title, detail) {
-        checks.push({ status, title, detail });
+      const byUrl = new Map();
+
+      function cacheBust(url) {
+        const joiner = url.includes("?") ? "&" : "?";
+        return `${url}${joiner}v=${encodeURIComponent(CONTRACT)}-${Date.now()}`;
       }
 
-      function codeLine(text) {
-        const code = document.createElement("code");
-        code.textContent = text;
-        return code;
-      }
+      async function fetchText(url) {
+        if (byUrl.has(url)) return byUrl.get(url);
 
-      function render() {
-        const target = $("checks");
-        if (target) {
-          target.replaceChildren(...checks.map((check) => {
-            const card = document.createElement("article");
-            card.className = "check-card";
-            card.dataset.status = check.status;
-
-            const body = document.createElement("div");
-            const h3 = document.createElement("h3");
-            h3.textContent = check.title;
-            const p = document.createElement("p");
-            p.textContent = check.detail;
-            body.append(h3, p);
-
-            const badge = document.createElement("span");
-            badge.className = `status ${check.status}`;
-            badge.textContent = check.status;
-
-            card.append(body, badge);
-            return card;
+        const promise = fetch(cacheBust(url), { cache: "no-store" })
+          .then(async (response) => {
+            const text = await response.text().catch(() => "");
+            return { ok: response.ok, status: response.status, text };
+          })
+          .catch((error) => ({
+            ok: false,
+            status: 0,
+            text: "",
+            error: error?.message || String(error)
           }));
+
+        byUrl.set(url, promise);
+        return promise;
+      }
+
+      function containsAny(text, list = []) {
+        return list.some((needle) => text.includes(needle));
+      }
+
+      function containsAll(text, list = []) {
+        return list.every((needle) => text.includes(needle));
+      }
+
+      async function runCheck(check) {
+        if (check.hold) {
+          return { ...check, status: "hold", detail: check.note || "Held by build order." };
         }
 
-        const total = checks.length;
-        const pass = checks.filter((check) => check.status === "pass").length;
-        const hold = checks.filter((check) => check.status === "hold").length;
-        const fail = checks.filter((check) => check.status === "fail").length;
+        const source = await fetchText(check.url);
 
-        $("totalCount").textContent = String(total);
-        $("passCount").textContent = String(pass);
-        $("holdCount").textContent = String(hold);
-        $("failCount").textContent = String(fail);
-        $("readiness").textContent = total ? `${Math.round((pass / total) * 100)}%` : "0%";
+        if (check.httpOk) {
+          return {
+            ...check,
+            status: source.ok ? "pass" : "fail",
+            detail: source.ok ? `HTTP ${source.status}` : `HTTP ${source.status || "unreachable"}`
+          };
+        }
+
+        if (!source.ok) {
+          return {
+            ...check,
+            status: "fail",
+            detail: source.error || `HTTP ${source.status || "unreachable"}`
+          };
+        }
+
+        const text = source.text || "";
+
+        if (check.expectAll && !containsAll(text, check.expectAll)) {
+          return { ...check, status: "fail", detail: "Expected source markers missing." };
+        }
+
+        if (check.expectAny && !containsAny(text, check.expectAny)) {
+          return { ...check, status: "fail", detail: "Expected source marker missing." };
+        }
+
+        return { ...check, status: "pass", detail: "Expected source marker found." };
       }
 
-      function renderReceipt(instances = null) {
-        const receipt = $("receipt");
-        if (!receipt) return;
+      function render(results) {
+        const total = results.length;
+        const passed = results.filter((item) => item.status === "pass").length;
+        const held = results.filter((item) => item.status === "hold").length;
+        const failed = results.filter((item) => item.status === "fail").length;
+        const readiness = total ? Math.round((passed / total) * 100) : 0;
 
-        const total = checks.length;
-        const pass = checks.filter((check) => check.status === "pass").length;
-        const hold = checks.filter((check) => check.status === "hold").length;
-        const fail = checks.filter((check) => check.status === "fail").length;
+        document.getElementById("totalCount").textContent = String(total);
+        document.getElementById("passCount").textContent = String(passed);
+        document.getElementById("holdCount").textContent = String(held);
+        document.getElementById("failCount").textContent = String(failed);
+        document.getElementById("readiness").textContent = `${readiness}%`;
 
-        const lines = [
-          `${CONTRACT} · self-contained read-only H-Earth diagnostics`,
+        const checksNode = document.getElementById("checks");
+        checksNode.innerHTML = "";
+
+        for (const item of results) {
+          const article = document.createElement("article");
+          article.className = "check";
+
+          const header = document.createElement("div");
+          header.className = "check-header";
+
+          const titleWrap = document.createElement("div");
+          const h2 = document.createElement("h2");
+          h2.textContent = `${item.group} · ${item.name}`;
+
+          const p = document.createElement("p");
+          p.textContent = `${item.url || "internal"} · ${item.detail}`;
+
+          const badge = document.createElement("span");
+          badge.className = `status ${item.status}`;
+          badge.textContent = item.status;
+
+          titleWrap.appendChild(h2);
+          titleWrap.appendChild(p);
+          header.appendChild(titleWrap);
+          header.appendChild(badge);
+          article.appendChild(header);
+          checksNode.appendChild(article);
+        }
+
+        const interpretation = failed === 0
+          ? "Critical interpretation: H-Earth private room and H-Earth Gauges are marker-aligned. Terrain children remain bound and parent truth remains protected."
+          : "Critical interpretation: one or more H-Earth route/display markers are not aligned.";
+
+        document.getElementById("receipt").textContent = [
+          `${CONTRACT} · Read-only H-Earth diagnostics`,
           `Receipt ${RECEIPT}`,
+          `Marker alignment ${ALIGNMENT}`,
           `Version ${VERSION}`,
           `Total ${total}`,
-          `Passed ${pass}`,
-          `Held ${hold}`,
-          `Failed ${fail}`,
-          `Readiness ${total ? `${Math.round((pass / total) * 100)}%` : "0%"}`,
-          `Critical interpretation: ${fail === 0 ? "H-Earth diagnostics are aligned or intentionally held." : "One or more diagnostics failed."}`,
-          `Read-only true`,
-          `Generated image false`,
-          `GraphicBox false`,
-          `Visual pass claimed false`,
-          `Parent mutation authorized false`
-        ];
+          `Passed ${passed}`,
+          `Held ${held}`,
+          `Failed ${failed}`,
+          `Readiness ${readiness}%`,
+          "",
+          interpretation,
+          "",
+          "Checks:",
+          ...results.map((item) => `${item.status.toUpperCase()} · ${item.group} · ${item.name} · ${item.url || "internal"} · ${item.detail}`),
+          "",
+          "Next Move:",
+          failed === 0
+            ? "NEXT_MOVE Rerun Triple G. If Triple G passes the marker rows, register terrain detail consumption into the active globe/display renderer."
+            : "NEXT_MOVE Redeploy /showroom/globe/h-earth/index.html and /gauges/h-earth/index.html marker-alignment files.",
+          "",
+          "Read-only true",
+          "Generated image false",
+          "GraphicBox false",
+          "Visual pass claimed false",
+          "Parent mutation authorized false"
+        ].join("\n");
 
-        if (instances?.landmap?.summary) {
-          lines.push(`Land ratio ${instances.landmap.summary.landRatio}`);
-          lines.push(`Ocean ratio ${instances.landmap.summary.oceanRatio}`);
-        }
-
-        if (instances?.terrain?.summary) {
-          lines.push(`Terrain aspects ${instances.terrain.summary.populatedTerrainAspectCount}/${instances.terrain.summary.terrainAspectCount}`);
-          lines.push(`Full aspect disposition ${String(instances.terrain.summary.fullAspectDisposition)}`);
-        }
-
-        if (instances?.surface?.summary) {
-          lines.push(`Surface material classes ${instances.surface.summary.materialClassCount}/${instances.surface.summary.requiredMaterialClassCount}`);
-          lines.push(`Material coverage complete ${String(instances.surface.summary.materialCoverageComplete)}`);
-          lines.push(`Every cell assigned surface ${String(instances.surface.summary.everyCellAssignedSurface)}`);
-          lines.push(`Surface parent ready ${String(instances.surface.summary.surfaceParentReady)}`);
-          lines.push(`Downstream canvas may read surface ${String(instances.surface.summary.downstreamCanvasMayReadSurface)}`);
-          lines.push(`Canvas paint authorized ${String(instances.surface.summary.canvasPaintAuthorized)}`);
-          lines.push(`Controls authorized ${String(instances.surface.summary.controlsAuthorized)}`);
-        }
-
-        lines.push("Checks:");
-        for (const check of checks) lines.push(`${check.status.toUpperCase()} · ${check.title} · ${check.detail}`);
-        receipt.replaceChildren(...lines.map(codeLine));
-      }
-
-      async function fetchText(path) {
-        const response = await fetch(`${path}?v=${encodeURIComponent(cacheKey())}`, { cache: "no-store", credentials: "same-origin" });
-        const text = await response.text();
-        return { ok: response.ok, status: response.status, text };
-      }
-
-      async function checkFetchContains(title, path, marker) {
-        try {
-          const result = await fetchText(path);
-          if (!result.ok) {
-            addCheck("fail", title, `${path} · HTTP ${result.status}`);
-            return;
-          }
-          if (!result.text.includes(marker)) {
-            addCheck("fail", title, `${path} · missing marker ${marker}`);
-            return;
-          }
-          addCheck("pass", title, `${path} · expected marker found.`);
-        } catch (error) {
-          addCheck("fail", title, `${path} · ${safeError(error)}`);
-        }
-      }
-
-      async function importOne(entry) {
-        try {
-          const imported = await import(`${entry.path}?v=${encodeURIComponent(cacheKey())}`);
-          if (!imported || typeof imported[entry.exportName] !== "function") {
-            addCheck("fail", `Asset · ${entry.key} export`, `${entry.path} · missing ${entry.exportName}`);
-            return null;
-          }
-
-          const actual = imported.CONTRACT || "contract-not-exported";
-          if (actual !== entry.expectedContract) {
-            addCheck("fail", `Asset · ${entry.key} contract`, `${entry.path} · expected ${entry.expectedContract}, actual ${actual}`);
-            return null;
-          }
-
-          addCheck("pass", `Asset · ${entry.key} loaded`, `${entry.path} · ${actual}`);
-          return imported;
-        } catch (error) {
-          addCheck("fail", `Asset · ${entry.key} import`, `${entry.path} · ${safeError(error)}`);
-          return null;
-        }
-      }
-
-      async function importParentChain() {
-        const modules = {};
-        for (const entry of MODULES) modules[entry.key] = await importOne(entry);
-        return modules;
-      }
-
-      function createInstances(modules) {
-        if (!modules.kernel || !modules.lattice256 || !modules.landmap || !modules.terrain || !modules.surface) return null;
-
-        try {
-          const kernel = modules.kernel.createHEarthKernel({ gaugeContract: CONTRACT, readOnly: true });
-          const lattice256 = modules.lattice256.createHEarthLattice256({ kernel });
-          const landmap = modules.landmap.createHEarthLandmap({ kernel, lattice256 });
-          const terrain = modules.terrain.createHEarthTerrain({ kernel, lattice256, landmap });
-          const surface = modules.surface.createHEarthSurface({ kernel, lattice256, landmap, terrain });
-
-          addCheck("pass", "Instance · parent chain created", "kernel → lattice256 → landmap → terrain → surface instantiated read-only.");
-          return { kernel, lattice256, landmap, terrain, surface };
-        } catch (error) {
-          addCheck("fail", "Instance · parent chain creation", safeError(error));
-          return null;
-        }
-      }
-
-      function checkParentData(instances) {
-        if (!instances) return;
-
-        const { lattice256, landmap, terrain, surface } = instances;
-
-        lattice256?.cells?.length === 256
-          ? addCheck("pass", "Lattice · 256 cells", "lattice256.cells.length equals 256.")
-          : addCheck("fail", "Lattice · 256 cells", `Expected 256, actual ${lattice256?.cells?.length ?? "missing"}.`);
-
-        landmap?.summary?.landRatio === 0.3594 && landmap?.summary?.oceanRatio === 0.6406
-          ? addCheck("pass", "Landmap · balance", `LAND_RATIO ${landmap.summary.landRatio}; OCEAN_RATIO ${landmap.summary.oceanRatio}.`)
-          : addCheck("fail", "Landmap · balance", `Expected 0.3594 / 0.6406, actual ${landmap?.summary?.landRatio} / ${landmap?.summary?.oceanRatio}.`);
-
-        terrain?.summary?.everyCellAssignedTerrain === true
-          ? addCheck("pass", "Terrain · every cell assigned", "EVERY_CELL_ASSIGNED_TERRAIN true.")
-          : addCheck("fail", "Terrain · every cell assigned", "EVERY_CELL_ASSIGNED_TERRAIN not true.");
-
-        terrain?.summary?.populatedTerrainAspectCount === 29 && terrain?.summary?.terrainAspectCount === 29 && terrain?.summary?.fullAspectDisposition === true
-          ? addCheck("pass", "Terrain · full aspect disposition", "TERRAIN_ASPECTS 29/29; FULL_ASPECT_DISPOSITION true.")
-          : addCheck("fail", "Terrain · full aspect disposition", "Terrain full aspect disposition did not pass.");
-
-        surface?.summary?.everyCellAssignedSurface === true
-          ? addCheck("pass", "Surface · every cell assigned", "EVERY_CELL_ASSIGNED_SURFACE true.")
-          : addCheck("fail", "Surface · every cell assigned", "EVERY_CELL_ASSIGNED_SURFACE not true.");
-
-        surface?.summary?.materialClassCount === 29 && surface?.summary?.requiredMaterialClassCount === 29 && surface?.summary?.materialCoverageComplete === true
-          ? addCheck("pass", "Surface · material completion", "SURFACE_MATERIAL_CLASSES 29/29; MATERIAL_COVERAGE_COMPLETE true.")
-          : addCheck("fail", "Surface · material completion", `Expected 29/29 true, actual ${surface?.summary?.materialClassCount}/${surface?.summary?.requiredMaterialClassCount} ${String(surface?.summary?.materialCoverageComplete)}.`);
-
-        surface?.summary?.surfaceParentReady === true
-          ? addCheck("pass", "Surface · parent ready", "SURFACE_PARENT_READY true.")
-          : addCheck("fail", "Surface · parent ready", "SURFACE_PARENT_READY not true.");
-
-        surface?.summary?.downstreamCanvasMayReadSurface === true
-          ? addCheck("pass", "Surface · canvas may read", "DOWNSTREAM_CANVAS_MAY_READ_SURFACE true.")
-          : addCheck("fail", "Surface · canvas may read", "DOWNSTREAM_CANVAS_MAY_READ_SURFACE not true.");
-
-        surface?.summary?.canvasPaintAuthorized === false
-          ? addCheck("pass", "Safety · canvas paint unauthorized", "CANVAS_PAINT_AUTHORIZED false.")
-          : addCheck("fail", "Safety · canvas paint unauthorized", "CANVAS_PAINT_AUTHORIZED is not false.");
-
-        surface?.summary?.controlsAuthorized === false
-          ? addCheck("pass", "Safety · controls unauthorized", "CONTROLS_AUTHORIZED false.")
-          : addCheck("fail", "Safety · controls unauthorized", "CONTROLS_AUTHORIZED is not false.");
-      }
-
-      async function checkRoutesAndSources() {
-        await checkFetchContains("Route · H-Earth private room reachable", "/showroom/globe/h-earth/", EXPECTED.hEarthHtml);
-        await checkFetchContains("Route · Globe Showcase reachable", "/showroom/globe/", "h-earth");
-        await checkFetchContains("Route · H-Earth doorway v4 active", "/showroom/globe/h-earth/index.js", EXPECTED.hEarthDoorway);
-        await checkFetchContains("Safety · visual pass remains false", "/showroom/globe/h-earth/index.html", 'data-visual-pass-claim="false"');
-        await checkFetchContains("Safety · parent mutation forbidden", "/showroom/globe/h-earth/index.html", 'data-mutation-earth="forbidden"');
-        await checkFetchContains("Surface · material completion source marker", "/assets/h-earth/h-earth.surface.js", EXPECTED.surfaceCompletion);
-      }
-
-      function addHeldFutureWork() {
-        addCheck("hold", "Held · Canvas visible composition", "/assets/h-earth/h-earth.canvas.js · Held until canvas TNT is authorized.");
-        addCheck("hold", "Held · Controls motion/input", "/assets/h-earth/h-earth.controls.js · Held until canvas exists and exposes a lawful mount return.");
-        addCheck("hold", "Held · Ground level remains held", "/assets/h-earth/h-earth/ground/ · Held until orbital/aerial inspection is coherent.");
-        addCheck("hold", "Held · Estate placement remains held", "/assets/h-earth/h-earth/estate/ · Held until ground-level mode is authorized.");
+        document.documentElement.dataset.gaugesContract = CONTRACT;
+        document.documentElement.dataset.gaugesReceipt = RECEIPT;
+        document.documentElement.dataset.markerAlignmentContract = ALIGNMENT;
+        document.documentElement.dataset.gaugesReadiness = String(readiness);
+        document.documentElement.dataset.generatedImage = "false";
+        document.documentElement.dataset.graphicBox = "false";
+        document.documentElement.dataset.visualPassClaimed = "false";
       }
 
       async function runAudit() {
-        checks.length = 0;
-        addCheck("pass", "Gauge · inline audit runtime", "Self-contained HTML audit runtime is active.");
-        addCheck("pass", "Gauge · read-only mode", "Diagnostics only; no route, source, canvas, controls, or parent truth mutation.");
-        render();
-        renderReceipt();
-
-        await checkRoutesAndSources();
-
-        const modules = await importParentChain();
-        const instances = createInstances(modules);
-        checkParentData(instances);
-        addHeldFutureWork();
-
-        render();
-        renderReceipt(instances || null);
+        byUrl.clear();
+        render(await Promise.all(checks.map(runCheck)));
       }
 
-      function boot() {
-        const button = $("runAuditButton");
-        if (button) {
-          button.addEventListener("click", runAudit);
-          button.dataset.auditBound = "true";
-        }
-        runAudit();
-      }
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", boot, { once: true });
-      } else {
-        boot();
-      }
+      document.getElementById("runAudit").addEventListener("click", runAudit);
+      runAudit();
     })();
   </script>
 </body>

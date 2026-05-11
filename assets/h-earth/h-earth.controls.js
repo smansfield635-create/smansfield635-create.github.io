@@ -2,40 +2,14 @@
 // H_EARTH_G1_CONTROLS_MOTION_INPUT_TNT_v1
 // Full-file replacement.
 // Controls motion/input authority only.
-//
-// Purpose:
-// - Bind drag, rotation, zoom, and inertia to the already-mounted H-Earth canvas.
-// - Consume canvas authority without redefining planet truth.
-// - Request canvas repaint through canvasAuthority.paintFrame only.
-// - Preserve kernel, lattice, landmap, terrain, surface, and canvas truth boundaries.
-//
-// Owns:
-// - motion
-// - drag
-// - rotation request
-// - zoom presentation
-// - inertia
-// - input handling
-// - interaction receipts
-//
-// Does not own:
-// - planet truth
-// - land/water classification
-// - terrain
-// - surface color
-// - canvas paint sovereignty
-// - route boot
-// - weather
-// - atmosphere
-// - life systems
 
-const CONTRACT = "H_EARTH_G1_CONTROLS_MOTION_INPUT_TNT_v1";
-const REQUIRED_PARENT = "canvas";
-const REQUIRED_CANVAS_CONTRACT = "H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_TNT_v1";
-const SEED_PACKET = "H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1";
-const VERSION = "2026-05-11.h-earth.g1.controls-motion-input-v1";
+export const CONTRACT = "H_EARTH_G1_CONTROLS_MOTION_INPUT_TNT_v1";
+export const REQUIRED_PARENT = "canvas";
+export const REQUIRED_CANVAS_CONTRACT = "H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_TNT_v1";
+export const SEED_PACKET = "H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1";
+export const VERSION = "2026-05-11.h-earth.g1.controls-motion-input-stable-export-v1";
 
-const DEFAULTS = Object.freeze({
+export const DEFAULTS = Object.freeze({
   rotationRadians: -0.3141592654,
   tiltRadians: -0.1396263402,
   zoom: 1,
@@ -57,38 +31,43 @@ function round(value, places = 6) {
   return Math.round(value * factor) / factor;
 }
 
-function freezeDeep(value) {
-  if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;
-  Object.freeze(value);
-  for (const key of Object.keys(value)) freezeDeep(value[key]);
-  return value;
+function safeNumber(value, fallback) {
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : fallback;
 }
 
-function safeNumber(value, fallback) {
-  return Number.isFinite(Number(value)) ? Number(value) : fallback;
+function freezePlain(value) {
+  if (!value || typeof value !== "object") return value;
+  return Object.freeze(value);
 }
 
 function validateCanvas(canvasAuthority) {
   const failures = [];
 
   if (!canvasAuthority) failures.push("canvas-authority-missing");
+
   if (canvasAuthority && canvasAuthority.contract !== REQUIRED_CANVAS_CONTRACT) {
     failures.push(`canvas-contract-mismatch:${canvasAuthority.contract || "missing"}`);
   }
-  if (canvasAuthority && typeof canvasAuthority.paintFrame !== "function") failures.push("canvas-paintFrame-missing");
-  if (canvasAuthority && typeof canvasAuthority.getCanvasReceipt !== "function") failures.push("canvas-receipt-reader-missing");
 
-  const receipt = canvasAuthority?.getCanvasReceipt?.() || canvasAuthority?.receipts?.canvas || null;
+  if (canvasAuthority && typeof canvasAuthority.paintFrame !== "function") {
+    failures.push("canvas-paintFrame-missing");
+  }
+
+  if (canvasAuthority && typeof canvasAuthority.getCanvasReceipt !== "function") {
+    failures.push("canvas-receipt-reader-missing");
+  }
+
+  const receipt =
+    canvasAuthority && typeof canvasAuthority.getCanvasReceipt === "function"
+      ? canvasAuthority.getCanvasReceipt()
+      : canvasAuthority?.receipts?.canvas || null;
 
   if (!receipt || receipt.contract !== REQUIRED_CANVAS_CONTRACT) {
     failures.push(`canvas-receipt-mismatch:${receipt?.contract || "missing"}`);
   }
 
-  if (receipt && receipt.controlsAuthorized !== false) {
-    failures.push("canvas-receipt-incorrectly-authorizes-controls");
-  }
-
-  return freezeDeep({
+  return freezePlain({
     passed: failures.length === 0,
     failures,
     parentContract: canvasAuthority?.contract || "missing",
@@ -116,33 +95,6 @@ function findCanvasElement(canvasAuthority, mount) {
   return canvasAuthority?.state?.canvas || mount?.querySelector?.("canvas") || null;
 }
 
-function createReceipt(state, canvasValidation) {
-  return freezeDeep({
-    contract: CONTRACT,
-    seedPacket: SEED_PACKET,
-    requiredParent: REQUIRED_PARENT,
-    requiredCanvasContract: REQUIRED_CANVAS_CONTRACT,
-    parentCanvasContract: canvasValidation.parentContract,
-    controlsBound: state.bound,
-    controlsActive: state.active,
-    dragEnabled: state.dragEnabled,
-    zoomEnabled: state.zoomEnabled,
-    inertiaEnabled: state.inertiaEnabled,
-    rotationRadians: round(state.rotationRadians),
-    tiltRadians: round(state.tiltRadians),
-    zoom: round(state.zoom),
-    canvasPaintSovereignty: false,
-    planetTruthOwned: false,
-    surfaceTruthOwned: false,
-    terrainTruthOwned: false,
-    visualPassClaimed: false,
-    generatedImage: false,
-    graphicBox: false,
-    groundModeAuthorized: false,
-    estateModeAuthorized: false
-  });
-}
-
 export function createHEarthControls(context = {}) {
   const canvasAuthority = context.canvasAuthority || context.canvas || null;
   const canvasValidation = validateCanvas(canvasAuthority);
@@ -166,9 +118,35 @@ export function createHEarthControls(context = {}) {
     frameId: 0,
     mount: null,
     canvasElement: null,
-    receipt: null,
     errors: []
   };
+
+  function createReceipt() {
+    return freezePlain({
+      contract: CONTRACT,
+      seedPacket: SEED_PACKET,
+      requiredParent: REQUIRED_PARENT,
+      requiredCanvasContract: REQUIRED_CANVAS_CONTRACT,
+      parentCanvasContract: canvasValidation.parentContract,
+      controlsBound: state.bound,
+      controlsActive: state.active,
+      dragEnabled: state.dragEnabled,
+      zoomEnabled: state.zoomEnabled,
+      inertiaEnabled: state.inertiaEnabled,
+      rotationRadians: round(state.rotationRadians),
+      tiltRadians: round(state.tiltRadians),
+      zoom: round(state.zoom),
+      canvasPaintSovereignty: false,
+      planetTruthOwned: false,
+      surfaceTruthOwned: false,
+      terrainTruthOwned: false,
+      visualPassClaimed: false,
+      generatedImage: false,
+      graphicBox: false,
+      groundModeAuthorized: false,
+      estateModeAuthorized: false
+    });
+  }
 
   function applyZoom() {
     if (!state.canvasElement) return;
@@ -180,11 +158,11 @@ export function createHEarthControls(context = {}) {
 
   function paint(reason = "controls-motion") {
     if (!canvasValidation.passed) {
-      state.errors.push(`paint-blocked:${canvasValidation.failures.join("|")}`);
-      return freezeDeep({
+      return freezePlain({
         painted: false,
         reason: "canvas-parent-not-ready",
-        failures: canvasValidation.failures
+        failures: canvasValidation.failures,
+        controlsReceipt: createReceipt()
       });
     }
 
@@ -196,13 +174,11 @@ export function createHEarthControls(context = {}) {
 
     applyZoom();
 
-    state.receipt = createReceipt(state, canvasValidation);
-
-    return freezeDeep({
+    return freezePlain({
       painted: Boolean(result?.painted),
       reason,
       canvasResult: result,
-      controlsReceipt: state.receipt
+      controlsReceipt: createReceipt()
     });
   }
 
@@ -223,11 +199,11 @@ export function createHEarthControls(context = {}) {
       state.velocityY *= DEFAULTS.inertiaDecay;
 
       paint("controls-inertia");
-      requestNextFrame();
+      requestFrame();
     }
   }
 
-  function requestNextFrame() {
+  function requestFrame() {
     if (state.frameId || state.disposed) return;
 
     const win = getWindow(context);
@@ -258,8 +234,11 @@ export function createHEarthControls(context = {}) {
     state.velocityX = 0;
     state.velocityY = 0;
 
-    state.canvasElement?.setPointerCapture?.(event.pointerId);
-    state.canvasElement.style.cursor = "grabbing";
+    if (state.canvasElement?.setPointerCapture) {
+      state.canvasElement.setPointerCapture(event.pointerId);
+    }
+
+    if (state.canvasElement) state.canvasElement.style.cursor = "grabbing";
 
     event.preventDefault();
   }
@@ -293,7 +272,7 @@ export function createHEarthControls(context = {}) {
 
     if (state.canvasElement) state.canvasElement.style.cursor = "grab";
 
-    requestNextFrame();
+    requestFrame();
     event.preventDefault();
   }
 
@@ -310,7 +289,6 @@ export function createHEarthControls(context = {}) {
 
     state.zoom = nextZoom;
     applyZoom();
-    state.receipt = createReceipt(state, canvasValidation);
 
     event.preventDefault();
   }
@@ -320,21 +298,19 @@ export function createHEarthControls(context = {}) {
 
     if (!mount) {
       state.errors.push("mount-missing");
-      state.receipt = createReceipt(state, canvasValidation);
-      return freezeDeep({
+      return freezePlain({
         bound: false,
         reason: "mount-missing",
-        receipt: state.receipt
+        receipt: createReceipt()
       });
     }
 
     if (!canvasValidation.passed) {
-      state.receipt = createReceipt(state, canvasValidation);
-      return freezeDeep({
+      return freezePlain({
         bound: false,
         reason: "canvas-parent-not-ready",
         failures: canvasValidation.failures,
-        receipt: state.receipt
+        receipt: createReceipt()
       });
     }
 
@@ -342,11 +318,10 @@ export function createHEarthControls(context = {}) {
 
     if (!canvasElement) {
       state.errors.push("canvas-element-missing");
-      state.receipt = createReceipt(state, canvasValidation);
-      return freezeDeep({
+      return freezePlain({
         bound: false,
         reason: "canvas-element-missing",
-        receipt: state.receipt
+        receipt: createReceipt()
       });
     }
 
@@ -376,12 +351,10 @@ export function createHEarthControls(context = {}) {
     applyZoom();
     paint("controls-bind-initial");
 
-    state.receipt = createReceipt(state, canvasValidation);
-
-    return freezeDeep({
+    return freezePlain({
       bound: true,
       contract: CONTRACT,
-      receipt: state.receipt
+      receipt: createReceipt()
     });
   }
 
@@ -407,11 +380,10 @@ export function createHEarthControls(context = {}) {
     state.active = false;
     state.bound = false;
     state.disposed = true;
-    state.receipt = createReceipt(state, canvasValidation);
 
-    return freezeDeep({
+    return freezePlain({
       disposed: true,
-      receipt: state.receipt
+      receipt: createReceipt()
     });
   }
 
@@ -424,17 +396,15 @@ export function createHEarthControls(context = {}) {
   function setZoom(zoom) {
     state.zoom = clamp(safeNumber(zoom, state.zoom), DEFAULTS.minZoom, DEFAULTS.maxZoom);
     applyZoom();
-    state.receipt = createReceipt(state, canvasValidation);
 
-    return freezeDeep({
+    return freezePlain({
       zoom: state.zoom,
-      receipt: state.receipt
+      receipt: createReceipt()
     });
   }
 
   function getControlsReceipt() {
-    state.receipt = createReceipt(state, canvasValidation);
-    return state.receipt;
+    return createReceipt();
   }
 
   return {
@@ -476,14 +446,5 @@ export function createHEarthControls(context = {}) {
     getControlsReceipt
   };
 }
-
-export {
-  CONTRACT,
-  REQUIRED_PARENT,
-  REQUIRED_CANVAS_CONTRACT,
-  SEED_PACKET,
-  VERSION,
-  DEFAULTS
-};
 
 export default createHEarthControls;

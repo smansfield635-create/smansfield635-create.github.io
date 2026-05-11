@@ -1,34 +1,45 @@
-<!-- /showroom/index.html -->
+<!-- /showroom/globe/h-earth/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom"
-  data-route="/showroom/"
-  data-contract="SHOWROOM_HABITABILITY_DISPLAY_H_EARTH_ACCESS_MERGE_TNT_v1"
-  data-previous-contract="SHOWROOM_HABITABILITY_DISPLAY_HTML_TNT_v1"
-  data-purpose="planet-habitability-display-and-public-proof-room"
-  data-standard="habitability"
-  data-planned-planets-total="81"
-  data-active-constructed-templates="2"
-  data-active-templates="Hearth | Audralia"
-  data-experimental-third-lane="H-Earth"
-  data-h-earth-access="enabled"
-  data-globe-split-access="enabled"
-  data-earth-reference="protected"
-  data-hearth-lane="preserved"
-  data-audralia-lane="preserved"
+  data-page="h-earth"
+  data-route="/showroom/globe/h-earth/"
+  data-planet-lane="h-earth"
+  data-planet-name="H-Earth"
+  data-planet-meaning="Hybrid Earth"
+  data-generation="G1"
+  data-seed-packet="H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1"
+  data-contract="H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_HTML_TNT_v10B"
+  data-route-doorway-required="H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_ROUTE_TNT_v10B"
+  data-previous-contract="H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_HTML_TNT_v9"
+  data-previous-doorway="H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9"
+  data-authority="route-shell-only"
+  data-parent-core-chain="kernel-lattice256-landmap-terrain-surface"
+  data-active-chain="kernel-lattice256-landmap-terrain-surface-nested-canvas-controls"
+  data-surface="active-read-only"
+  data-canvas="nested-child-asset-alignment"
+  data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
+  data-controls="active-motion-input-authority"
+  data-canvas-controls-receipt-aligned="route-gated"
+  data-canvas-paint-authorized="true"
+  data-controls-authorized="true"
+  data-parent-mutation-authorized="false"
+  data-earth-reference-shell="protected-reference-only"
+  data-mutation-earth="forbidden"
+  data-mutation-hearth="forbidden"
+  data-mutation-audralia="forbidden"
   data-australia-terminology="forbidden"
-  data-generated-image="false"
-  data-graphic-box="false"
-  data-visual-pass-claimed="false"
+  data-graphic-box="forbidden"
+  data-image-generation="forbidden"
+  data-visual-pass-claim="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Showroom</title>
+  <title>Diamond Gate Bridge · H-Earth</title>
   <meta
     name="description"
-    content="The Showroom displays the planet build by habitability while exposing direct access to Earth, H-Earth, Hearth, Audralia, Globe Split, and Gauges without merging lane authority."
+    content="H-Earth is the Hybrid Earth experimental third-planet lane. This shell aligns the route doorway with the nested H-Earth canvas child asset path. Canvas reads upstream surface truth directly. Controls remain downstream motion/input authority only."
   >
 
   <style>
@@ -36,56 +47,39 @@
       color-scheme: dark;
       --bg: #050812;
       --panel: rgba(10, 18, 32, 0.84);
-      --panel-soft: rgba(13, 24, 42, 0.74);
       --line: rgba(244, 191, 96, 0.28);
-      --line-blue: rgba(142, 190, 255, 0.24);
-      --line-green: rgba(143, 240, 195, 0.24);
-      --line-red: rgba(255, 180, 167, 0.22);
+      --line-blue: rgba(142, 190, 255, 0.22);
       --text: #f6ead2;
-      --muted: #b9c1cf;
+      --muted: #b8c0ce;
       --gold: #f4bf60;
       --blue: #8ebeff;
       --green: #8ff0c3;
-      --red: #ffb4a7;
       --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
       --radius: 24px;
       --max: 1180px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       min-height: 100%;
       background:
-        radial-gradient(circle at 50% 0%, rgba(142, 190, 255, 0.18), transparent 34rem),
-        radial-gradient(circle at 12% 18%, rgba(244, 191, 96, 0.13), transparent 30rem),
-        radial-gradient(circle at 88% 22%, rgba(143, 240, 195, 0.09), transparent 26rem),
-        linear-gradient(180deg, var(--bg), #02040a 76%);
+        radial-gradient(circle at 50% 0%, rgba(142, 190, 255, 0.16), transparent 34rem),
+        radial-gradient(circle at 12% 22%, rgba(244, 191, 96, 0.12), transparent 28rem),
+        linear-gradient(180deg, var(--bg), #02040a 74%);
     }
 
     body {
       min-height: 100%;
       margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text);
-      font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
       background:
         linear-gradient(145deg, rgba(255, 255, 255, 0.035), transparent 38%),
-        radial-gradient(circle at 50% 70%, rgba(244, 191, 96, 0.055), transparent 34rem);
+        radial-gradient(circle at 82% 12%, rgba(143, 240, 195, 0.08), transparent 24rem);
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
     a:focus-visible {
       outline: 2px solid var(--gold);
@@ -96,7 +90,7 @@
       position: absolute;
       left: 1rem;
       top: 1rem;
-      z-index: 20;
+      z-index: 30;
       padding: 0.75rem 1rem;
       border: 1px solid var(--line);
       border-radius: 999px;
@@ -106,14 +100,12 @@
       transition: transform 160ms ease;
     }
 
-    .skip-link:focus {
-      transform: translateY(0);
-    }
+    .skip-link:focus { transform: translateY(0); }
 
     .page-shell {
       width: min(var(--max), calc(100% - 32px));
       margin: 0 auto;
-      padding: 24px 0 48px;
+      padding: 24px 0 46px;
     }
 
     .topbar {
@@ -134,7 +126,7 @@
       align-items: center;
       gap: 10px;
       min-width: max-content;
-      font-weight: 850;
+      font-weight: 800;
       letter-spacing: 0.02em;
     }
 
@@ -143,9 +135,7 @@
       height: 18px;
       border: 1px solid var(--gold);
       transform: rotate(45deg);
-      background:
-        linear-gradient(135deg, rgba(244, 191, 96, 0.24), transparent),
-        rgba(255, 255, 255, 0.05);
+      background: linear-gradient(135deg, rgba(244, 191, 96, 0.22), transparent), rgba(255, 255, 255, 0.04);
       box-shadow: 0 0 24px rgba(244, 191, 96, 0.18);
     }
 
@@ -166,27 +156,35 @@
     }
 
     .nav a[aria-current="page"] {
-      border-color: rgba(244, 191, 96, 0.55);
+      border-color: rgba(244, 191, 96, 0.52);
       color: var(--gold);
       background: rgba(244, 191, 96, 0.09);
     }
 
     .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(340px, 1.05fr);
+      gap: 22px;
+      align-items: stretch;
       margin-top: 24px;
-      padding: clamp(24px, 5vw, 48px);
+    }
+
+    .hero-copy,
+    .stage,
+    .canvas-composition-mount,
+    .controls-mount,
+    .panel {
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent),
-        var(--panel);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent), var(--panel);
       box-shadow: var(--shadow);
       backdrop-filter: blur(18px);
     }
 
+    .hero-copy { padding: clamp(22px, 4vw, 42px); }
+
     .eyebrow {
       display: inline-flex;
-      align-items: center;
-      gap: 9px;
       margin: 0 0 18px;
       padding: 8px 12px;
       border: 1px solid var(--line-blue);
@@ -194,292 +192,221 @@
       color: var(--blue);
       background: rgba(142, 190, 255, 0.08);
       font-size: 0.86rem;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
     h1 {
-      max-width: 980px;
       margin: 0;
-      font-size: clamp(2.7rem, 7vw, 6.5rem);
-      line-height: 0.92;
-      letter-spacing: -0.075em;
+      font-size: clamp(2.7rem, 8vw, 6.8rem);
+      line-height: 0.88;
+      letter-spacing: -0.085em;
     }
 
     .lede {
-      max-width: 82ch;
+      max-width: 64ch;
       margin: 22px 0 0;
       color: var(--muted);
-      font-size: clamp(1rem, 2vw, 1.18rem);
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
       line-height: 1.65;
     }
 
-    .primary-actions {
+    .route-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 26px;
     }
 
-    .primary-actions a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 11px 14px;
-      border: 1px solid rgba(244, 191, 96, 0.40);
+    .route-actions a {
+      padding: 12px 14px;
+      border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(244, 191, 96, 0.10);
+      background: rgba(244, 191, 96, 0.09);
       color: var(--text);
-      font-weight: 850;
+      font-weight: 750;
     }
 
-    .primary-actions a.secondary {
+    .route-actions a.secondary {
       border-color: var(--line-blue);
       background: rgba(142, 190, 255, 0.07);
       color: var(--muted);
     }
 
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .metric {
-      padding: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .metric strong {
-      display: block;
-      color: var(--gold);
-      font-size: clamp(1.7rem, 4vw, 2.7rem);
-      line-height: 0.95;
-      letter-spacing: -0.06em;
-    }
-
-    .metric span {
-      display: block;
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.45;
-    }
-
-    .section-title {
-      margin: 26px 0 12px;
-      font-size: clamp(1.45rem, 3vw, 2.25rem);
-      letter-spacing: -0.045em;
-    }
-
-    .standard-grid,
-    .planet-grid,
-    .proof-grid {
-      display: grid;
-      gap: 16px;
-      margin-top: 16px;
-    }
-
-    .standard-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .planet-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .proof-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .card {
+    .stage {
       position: relative;
+      min-height: clamp(430px, 60vw, 680px);
       overflow: hidden;
-      min-height: 260px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 18px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background:
-        radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.075), transparent 14rem),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent),
-        var(--panel-soft);
-      box-shadow: var(--shadow);
       isolation: isolate;
+      padding: 18px;
     }
 
-    .card::before {
+    .stage::before {
       content: "";
       position: absolute;
-      right: -58px;
-      bottom: -62px;
-      width: 190px;
-      height: 190px;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(142, 190, 255, 0.14), transparent 20rem),
+        radial-gradient(circle at 50% 50%, rgba(244, 191, 96, 0.10), transparent 28rem),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+    }
+
+    .mount-shell {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      min-height: calc(clamp(430px, 60vw, 680px) - 36px);
+      border-radius: calc(var(--radius) - 10px);
+    }
+
+    #hEarthCanvasMount {
+      position: relative;
+      width: min(100%, 620px);
+      aspect-ratio: 1 / 1;
+      border: 1px solid rgba(142, 190, 255, 0.22);
       border-radius: 50%;
-      z-index: -1;
       background:
-        radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.28), transparent 13%),
-        radial-gradient(circle at 45% 55%, rgba(142, 190, 255, 0.30), transparent 45%),
-        radial-gradient(circle at 65% 46%, rgba(244, 191, 96, 0.14), transparent 46%),
-        rgba(17, 35, 58, 0.75);
+        radial-gradient(circle at 36% 24%, rgba(255, 255, 255, 0.14), transparent 13%),
+        radial-gradient(circle at 50% 50%, rgba(142, 190, 255, 0.09), transparent 46%),
+        rgba(0, 0, 0, 0.18);
       box-shadow:
-        inset -22px -24px 42px rgba(0, 0, 0, 0.45),
-        0 0 72px rgba(142, 190, 255, 0.14);
+        inset 0 0 70px rgba(0, 0, 0, 0.32),
+        0 0 90px rgba(142, 190, 255, 0.12);
+      overflow: hidden;
     }
 
-    .card[data-status="habitable"] {
-      border-color: var(--line-green);
-    }
-
-    .card[data-status="perspective"] {
-      border-color: var(--line-blue);
-    }
-
-    .card[data-status="non-habitable"] {
-      border-color: var(--line-red);
-    }
-
-    .card[data-card="h-earth"] {
-      border-color: rgba(143, 240, 195, 0.38);
-      background:
-        radial-gradient(circle at 50% 20%, rgba(143, 240, 195, 0.11), transparent 14rem),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent),
-        rgba(10, 22, 33, 0.82);
-    }
-
-    .card[data-card="h-earth"]::before {
-      background:
-        radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.30), transparent 13%),
-        radial-gradient(circle at 40% 56%, rgba(142, 190, 255, 0.38), transparent 42%),
-        radial-gradient(circle at 63% 52%, rgba(143, 240, 195, 0.32), transparent 34%),
-        radial-gradient(circle at 54% 40%, rgba(244, 191, 96, 0.16), transparent 34%),
-        rgba(14, 40, 48, 0.86);
-      box-shadow:
-        inset -22px -24px 42px rgba(0, 0, 0, 0.46),
-        0 0 82px rgba(143, 240, 195, 0.16);
-    }
-
-    .card[data-card="earth"]::before {
-      background:
-        radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.30), transparent 13%),
-        radial-gradient(circle at 42% 56%, rgba(65, 145, 255, 0.42), transparent 42%),
-        radial-gradient(circle at 62% 50%, rgba(73, 180, 112, 0.28), transparent 30%),
-        rgba(17, 35, 58, 0.85);
-    }
-
-    .card[data-card="hearth"]::before {
-      background:
-        radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.24), transparent 13%),
-        radial-gradient(circle at 45% 55%, rgba(244, 191, 96, 0.30), transparent 42%),
-        radial-gradient(circle at 65% 46%, rgba(190, 92, 58, 0.24), transparent 32%),
-        rgba(45, 25, 18, 0.82);
-    }
-
-    .card[data-card="audralia"]::before {
-      background:
-        radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.24), transparent 13%),
-        radial-gradient(circle at 45% 55%, rgba(51, 150, 196, 0.32), transparent 42%),
-        radial-gradient(circle at 65% 46%, rgba(80, 214, 156, 0.22), transparent 32%),
-        rgba(12, 38, 46, 0.84);
-    }
-
-    .label {
-      display: inline-flex;
-      width: max-content;
-      padding: 7px 10px;
-      border: 1px solid rgba(255, 255, 255, 0.10);
+    #hEarthCanvasMount[data-route-mount="awaiting-nested-canvas-asset-path-alignment"]::before {
+      content: "Awaiting H-Earth nested canvas asset path alignment";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(82%, 430px);
+      transform: translate(-50%, -50%);
+      padding: 13px 16px;
+      border: 1px solid rgba(244, 191, 96, 0.28);
       border-radius: 999px;
+      background: rgba(5, 9, 18, 0.76);
       color: var(--muted);
-      background: rgba(0, 0, 0, 0.22);
-      font-size: 0.76rem;
-      font-weight: 850;
+      text-align: center;
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+    }
+
+    .stage-label {
+      position: absolute;
+      left: 22px;
+      top: 22px;
+      display: inline-flex;
+      padding: 8px 11px;
+      border: 1px solid rgba(143, 240, 195, 0.22);
+      border-radius: 999px;
+      background: rgba(8, 18, 30, 0.72);
+      color: var(--green);
+      font-size: 0.78rem;
+      font-weight: 800;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .card[data-status="habitable"] .label,
-    .card[data-card="h-earth"] .label {
-      border-color: rgba(143, 240, 195, 0.28);
-      color: var(--green);
-      background: rgba(143, 240, 195, 0.08);
+    .canvas-composition-mount,
+    .controls-mount {
+      margin-top: 16px;
+      padding: 16px;
+      min-height: 120px;
     }
 
-    .card[data-status="perspective"] .label {
-      border-color: rgba(142, 190, 255, 0.28);
-      color: var(--blue);
-      background: rgba(142, 190, 255, 0.08);
+    .canvas-composition-mount:empty::before {
+      content: "Nested canvas child asset mount ready. Route doorway will import /assets/h-earth/h-earth/canvas.alignment.v3.js.";
+      display: block;
+      padding: 16px;
+      border: 1px dashed rgba(142, 190, 255, 0.22);
+      border-radius: 18px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.55;
+      background: rgba(255, 255, 255, 0.025);
     }
 
-    .card[data-status="non-habitable"] .label {
-      border-color: rgba(255, 180, 167, 0.28);
-      color: var(--red);
-      background: rgba(255, 180, 167, 0.07);
+    .controls-mount:empty::before {
+      content: "Controls mount ready. Controls remain downstream motion/input authority after nested canvas proof passes.";
+      display: block;
+      padding: 16px;
+      border: 1px dashed rgba(244, 191, 96, 0.28);
+      border-radius: 18px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.55;
+      background: rgba(255, 255, 255, 0.025);
     }
 
-    .card h2,
-    .card h3 {
-      margin: 14px 0 0;
-      font-size: clamp(1.35rem, 2.6vw, 2.05rem);
-      line-height: 1;
-      letter-spacing: -0.045em;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
     }
 
-    .card p {
-      margin: 12px 0 0;
+    .panel {
+      padding: 18px;
+      min-height: 100%;
+    }
+
+    .panel h2 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      letter-spacing: 0.02em;
+    }
+
+    .panel p {
+      margin: 0;
       color: var(--muted);
       line-height: 1.55;
-      font-size: 0.95rem;
     }
 
-    .card-actions {
+    .chain-list {
       display: grid;
-      gap: 9px;
+      gap: 8px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
     }
 
-    .open-link {
-      display: inline-flex;
+    .chain-list li {
+      display: flex;
       align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 11px 13px;
-      border: 1px solid rgba(244, 191, 96, 0.38);
-      border-radius: 999px;
-      background: rgba(244, 191, 96, 0.10);
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.035);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .chain-list strong {
       color: var(--text);
-      font-weight: 850;
+      font-weight: 760;
     }
 
-    .card[data-card="h-earth"] .open-link {
-      border-color: rgba(143, 240, 195, 0.42);
-      background: rgba(143, 240, 195, 0.10);
-      color: var(--green);
+    .status-pill {
+      min-width: max-content;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
 
-    .proof {
-      display: block;
-      overflow-wrap: anywhere;
-      color: rgba(246, 234, 210, 0.62);
-      font-family:
-        "SFMono-Regular",
-        Consolas,
-        "Liberation Mono",
-        monospace;
-      font-size: 0.74rem;
-      line-height: 1.45;
-    }
+    .status-pill.ready { color: var(--green); }
+    .status-pill.held { color: var(--muted); }
 
     .receipt-panel {
       margin-top: 16px;
       padding: 16px;
-      border: 1px solid var(--line-green);
+      border: 1px solid rgba(143, 240, 195, 0.18);
       border-radius: 18px;
       background: rgba(143, 240, 195, 0.055);
     }
@@ -488,27 +415,9 @@
       display: block;
       overflow-wrap: anywhere;
       color: var(--green);
-      font-family:
-        "SFMono-Regular",
-        Consolas,
-        "Liberation Mono",
-        monospace;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
       font-size: 0.84rem;
       line-height: 1.55;
-    }
-
-    .guard-panel {
-      margin-top: 16px;
-      padding: 16px;
-      border: 1px solid rgba(244, 191, 96, 0.22);
-      border-radius: 18px;
-      background: rgba(244, 191, 96, 0.055);
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .guard-panel strong {
-      color: var(--gold);
     }
 
     .footer {
@@ -519,304 +428,253 @@
       text-align: center;
     }
 
-    @media (max-width: 1120px) {
-      .metric-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    @media (max-width: 920px) {
+      .topbar {
+        align-items: flex-start;
+        border-radius: 22px;
+        flex-direction: column;
       }
 
-      .standard-grid,
-      .planet-grid,
-      .proof-grid {
-        grid-template-columns: 1fr;
-      }
+      .nav { justify-content: flex-start; }
+      .hero { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
     }
 
-    @media (max-width: 720px) {
+    @media (max-width: 560px) {
       .page-shell {
         width: min(100% - 20px, var(--max));
         padding-top: 10px;
       }
 
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-        border-radius: 22px;
-      }
-
-      .nav {
-        justify-content: flex-start;
-      }
-
-      .hero,
-      .card {
+      .hero-copy,
+      .panel,
+      .stage,
+      .canvas-composition-mount,
+      .controls-mount {
         border-radius: 18px;
       }
 
-      .metric-grid {
-        grid-template-columns: 1fr;
-      }
+      .stage { padding: 10px; }
+      .mount-shell { min-height: 360px; }
+      .stage-label { left: 14px; top: 14px; }
+      #hEarthCanvasMount { width: min(100%, 330px); }
+      .canvas-composition-mount,
+      .controls-mount { padding: 10px; }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="#showroom-main">Skip to Showroom</a>
+  <a class="skip-link" href="#h-earth-main">Skip to H-Earth</a>
 
   <div class="page-shell">
-    <header class="topbar" aria-label="Showroom navigation">
+    <header class="topbar" aria-label="H-Earth route navigation">
       <a class="brand" href="/" aria-label="Return to Diamond Gate Bridge Compass">
         <span class="brand-mark" aria-hidden="true"></span>
-        <span>Diamond Gate Bridge · Showroom</span>
+        <span>Diamond Gate Bridge</span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/showroom/" aria-current="page">Showroom</a>
+        <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Globe Split</a>
-        <a href="/showroom/globe/h-earth/">H-Earth</a>
+        <a href="/showroom/globe/earth/">Earth</a>
+        <a href="/showroom/globe/h-earth/" aria-current="page">H-Earth</a>
         <a href="/showroom/globe/hearth/">Hearth</a>
         <a href="/showroom/globe/audralia/">Audralia</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <main id="showroom-main" tabindex="-1">
-      <section class="hero" aria-labelledby="showroom-title">
-        <p class="eyebrow">Showroom · Habitability Display · H-Earth Access Bridge</p>
-        <h1 id="showroom-title">Planet Habitability Standard</h1>
-        <p class="lede">
-          The Showroom displays the planet build by habitability. Hearth and Audralia remain the first two
-          simultaneous constructed planet templates. Both are habitable-forming: coherent enough to build upward,
-          but not yet fully formed in terrain, atmosphere, weather, and final planetary beauty.
-          H-Earth is now added as the Hybrid Earth experimental third-planet lane, reachable from Showroom
-          without mutating Earth, Hearth, or Audralia.
-        </p>
+    <main id="h-earth-main" tabindex="-1">
+      <section class="hero" aria-labelledby="h-earth-title">
+        <div class="hero-copy">
+          <p class="eyebrow">H-Earth · G1 · Nested Canvas Asset Path Alignment</p>
+          <h1 id="h-earth-title">H-Earth</h1>
+          <p class="lede">
+            H-Earth means Hybrid Earth. The route now aligns with the nested H-Earth asset precinct.
+            Canvas is a downstream child asset at <strong>/assets/h-earth/h-earth/canvas.alignment.v3.js</strong>.
+            It reads upstream surface truth directly and does not execute the legacy canvas path.
+            Controls remain downstream motion/input authority only.
+          </p>
 
-        <div class="primary-actions" aria-label="Primary Showroom actions">
-          <a href="/showroom/globe/">Open Globe Split</a>
-          <a href="/showroom/globe/h-earth/">Open H-Earth</a>
-          <a class="secondary" href="/showroom/globe/hearth/">Inspect Hearth</a>
-          <a class="secondary" href="/showroom/globe/audralia/">Inspect Audralia</a>
-          <a class="secondary" href="/gauges/">Run Gauges</a>
+          <div class="route-actions" aria-label="Route actions">
+            <a href="/showroom/globe/">Return to Globe Split</a>
+            <a class="secondary" href="/showroom/globe/earth/">Inspect Earth Reference</a>
+            <a class="secondary" href="/showroom/">Return to Showroom</a>
+            <a class="secondary" href="/gauges/">Run Gauges</a>
+          </div>
+
+          <section
+            id="hEarthStatusTarget"
+            class="receipt-panel"
+            aria-label="H-Earth route status target"
+            data-status-target="h-earth-route"
+            data-current-status="nested-canvas-asset-path-alignment-html-loaded-awaiting-v10b-doorway"
+            data-route-shell="ready"
+            data-route-doorway="awaiting-nested-canvas-asset-path-alignment-route"
+            data-parent-core-chain="kernel-lattice256-landmap-terrain-surface"
+            data-active-chain="kernel-lattice256-landmap-terrain-surface-nested-canvas-controls"
+            data-surface="active-read-only"
+            data-canvas="nested-child-asset-alignment"
+            data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
+            data-controls="active-motion-input-authority"
+            data-canvas-controls-receipt-aligned="route-gated"
+            data-parent-mutation-authorized="false"
+          >
+            <code>ROUTE_RECEIPT: H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_HTML_TNT_v10B</code>
+            <code>PREVIOUS_ROUTE_RECEIPT: H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_HTML_TNT_v9</code>
+            <code>SEED_PACKET: H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1</code>
+            <code>REQUIRED_DOORWAY: H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_ROUTE_TNT_v10B</code>
+            <code>CANVAS_ASSET_PATH: /assets/h-earth/h-earth/canvas.alignment.v3.js</code>
+            <code>STATUS: nested canvas asset path alignment HTML loaded; awaiting v10B doorway module</code>
+          </section>
         </div>
 
-        <section class="metric-grid" aria-label="Showroom planet metrics">
-          <article class="metric">
-            <strong>81</strong>
-            <span>Total planned planets across the larger planetary system.</span>
-          </article>
-
-          <article class="metric">
-            <strong>2</strong>
-            <span>Constructed planet templates currently being built simultaneously.</span>
-          </article>
-
-          <article class="metric">
-            <strong>1</strong>
-            <span>Experimental third-planet lane now accessible as H-Earth.</span>
-          </article>
-
-          <article class="metric">
-            <strong>G1</strong>
-            <span>Current baseline: coherent, habitable-forming, and ready for upward generation.</span>
-          </article>
-
-          <article class="metric">
-            <strong>G2</strong>
-            <span>Next target: material definition and natural planetary readability.</span>
-          </article>
+        <section class="stage" aria-label="H-Earth nested canvas asset path alignment and status stage">
+          <div class="stage-label">Nested Asset Alignment Mount</div>
+          <div class="mount-shell">
+            <div
+              id="hEarthCanvasMount"
+              role="img"
+              aria-label="H-Earth status mount awaiting nested canvas asset path alignment"
+              data-mount="h-earth-parent-chain-status"
+              data-route-mount="awaiting-nested-canvas-asset-path-alignment"
+              data-h-earth-surface-status-mount="true"
+              data-surface-authority="active-read-only"
+              data-canvas-authority="nested-child-asset-alignment"
+              data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
+              data-controls-authority="active-motion-input-authority"
+              data-canvas-controls-receipt-aligned="route-gated"
+              data-parent-mutation-authorized="false"
+              data-planet-truth-owner="parent-chain"
+            ></div>
+          </div>
         </section>
       </section>
 
-      <h2 class="section-title">Habitability standard</h2>
+      <section
+        id="hEarthCanvasCompositionMount"
+        class="canvas-composition-mount"
+        aria-label="H-Earth nested child canvas visible-composition mount"
+        data-h-earth-canvas-mount="true"
+        data-canvas-composition-mount="h-earth"
+        data-canvas-authority="visible-composition-only"
+        data-canvas-consumer="nested-child-asset"
+        data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
+        data-surface-source="parent-material-truth"
+        data-controls-authority="active-motion-input-authority"
+      ></section>
 
-      <section class="standard-grid" aria-label="Habitability standard cards">
-        <article class="card" data-status="habitable">
-          <div>
-            <span class="label">Habitable</span>
-            <h2>Habitable Planet</h2>
-            <p>
-              The planet has coherent truth, material expression, motion, controls, render, and proof.
-              It can support upward formation and future life-bearing systems.
-            </p>
-          </div>
+      <section
+        id="hEarthControlsMount"
+        class="controls-mount"
+        aria-label="H-Earth controls motion input mount"
+        data-h-earth-controls-mount="true"
+        data-controls-authority="motion-input-only"
+        data-parent-mutation-authorized="false"
+      ></section>
+
+      <section class="grid" aria-label="H-Earth route shell authority">
+        <article class="panel">
+          <h2>Route Shell Owns</h2>
+          <p>
+            Navigation, status target, status mount, canvas mount, controls mount,
+            script handoff, and receipt exposure. It does not generate planet truth.
+          </p>
         </article>
 
-        <article class="card" data-status="perspective">
-          <div>
-            <span class="label">Perspective Habitable</span>
-            <h2>Perspective Habitable Planet</h2>
-            <p>
-              The planet has promising structure but incomplete proof. It is a candidate for habitability,
-              not yet a stable habitable-forming body.
-            </p>
-          </div>
+        <article class="panel">
+          <h2>Nested Canvas Child Asset</h2>
+          <p>
+            Canvas now resolves from the nested H-Earth asset precinct. It is a child asset,
+            not a parent, and does not import or execute the legacy canvas file.
+          </p>
         </article>
 
-        <article class="card" data-status="non-habitable">
-          <div>
-            <span class="label">Non-Habitable</span>
-            <h2>Non-Habitable Planet</h2>
-            <p>
-              The planet cannot yet support upward formation because authority collapses, material fields
-              glob together, motion fails, or West proof cannot verify the source chain.
-            </p>
-          </div>
-        </article>
-      </section>
-
-      <h2 class="section-title">Active planet lanes</h2>
-
-      <section class="planet-grid" aria-label="Active planet lane cards">
-        <article class="card" data-card="hearth" data-status="habitable">
-          <div>
-            <span class="label">Habitable · Forming</span>
-            <h3>Hearth</h3>
-            <p>
-              Template one. Hearth has coherent motion, drag/spin controls, asset-boundary expression,
-              and render proof. It remains in formation toward natural material definition.
-            </p>
-          </div>
-
-          <div class="card-actions">
-            <a class="open-link" href="/showroom/globe/hearth/">Inspect Hearth</a>
-            <code class="proof">ROUTE: /showroom/globe/hearth/</code>
-          </div>
-        </article>
-
-        <article class="card" data-card="audralia" data-status="habitable">
-          <div>
-            <span class="label">Habitable · Forming</span>
-            <h3>Audralia</h3>
-            <p>
-              Template two. Audralia has runtime motion-only authority, terrain formation,
-              asset-boundary expression, canvas/render output, and route proof.
-            </p>
-          </div>
-
-          <div class="card-actions">
-            <a class="open-link" href="/showroom/globe/audralia/">Inspect Audralia</a>
-            <code class="proof">ROUTE: /showroom/globe/audralia/</code>
-          </div>
-        </article>
-
-        <article class="card" data-card="h-earth" data-status="perspective">
-          <div>
-            <span class="label">Perspective Habitable · Experimental</span>
-            <h3>H-Earth</h3>
-            <p>
-              Hybrid Earth. H-Earth is a separate experimental third-planet lane using the current Earth
-              shell as reference only. It begins as a parent-core chain candidate until kernel, lattice,
-              landmap, terrain, surface, canvas, and controls are all visible.
-            </p>
-          </div>
-
-          <div class="card-actions">
-            <a class="open-link" href="/showroom/globe/h-earth/">Open H-Earth</a>
-            <code class="proof">ROUTE: /showroom/globe/h-earth/</code>
-          </div>
+        <article class="panel">
+          <h2>Protected Separation</h2>
+          <p>
+            H-Earth remains a separate experimental third-planet lane. Earth, Hearth, and Audralia
+            are not mutated.
+          </p>
         </article>
       </section>
 
-      <h2 class="section-title">Template system</h2>
+      <section class="panel" aria-labelledby="chain-title" style="margin-top:16px;">
+        <h2 id="chain-title">Nested Canvas Asset Path Alignment Chain Order</h2>
+        <p>
+          The parent chain remains upstream. The nested canvas child asset consumes surface truth directly.
+          Controls remain downstream motion/input only.
+        </p>
 
-      <section class="proof-grid" aria-label="Showroom proof route cards">
-        <article class="card">
-          <div>
-            <span class="label">Template System</span>
-            <h3>Two-at-a-Time Build Pattern</h3>
-            <p>
-              Hearth and Audralia establish the first simultaneous build template for scaling toward
-              the 81-planet target without collapsing body authority or route proof.
-            </p>
-          </div>
-        </article>
-
-        <article class="card">
-          <div>
-            <span class="label">Experimental Lane</span>
-            <h3>H-Earth Parent-Core Chain</h3>
-            <p>
-              H-Earth extends the template system as a third lane, but it does not change the count of
-              two active constructed templates until its parent-core chain proves stable.
-            </p>
-          </div>
-
-          <div class="card-actions">
-            <a class="open-link" href="/showroom/globe/h-earth/">Open H-Earth</a>
-            <code class="proof">CHAIN: kernel → lattice256 → landmap → terrain → surface → canvas → controls</code>
-          </div>
-        </article>
-
-        <article class="card">
-          <div>
-            <span class="label">Selector</span>
-            <h3>Globe Split</h3>
-            <p>
-              The Globe Split page routes Earth, H-Earth, Hearth, and Audralia into separate inspection
-              lanes without merging or mutating their authorities.
-            </p>
-          </div>
-
-          <div class="card-actions">
-            <a class="open-link" href="/showroom/globe/">Open Globe Split</a>
-            <code class="proof">ROUTE: /showroom/globe/</code>
-          </div>
-        </article>
+        <ol class="chain-list">
+          <li><strong>HTML route shell</strong><span class="status-pill">current file v10B</span></li>
+          <li><strong>Route doorway</strong><span class="status-pill">index.js v10B</span></li>
+          <li><strong>Kernel parent core</strong><span class="status-pill">locked</span></li>
+          <li><strong>256 lattice parent-coordinate engine</strong><span class="status-pill">locked</span></li>
+          <li><strong>Landmap parent mask</strong><span class="status-pill">terrain balance v2</span></li>
+          <li><strong>Terrain parent relief</strong><span class="status-pill">full aspect v2</span></li>
+          <li><strong>Surface parent material truth</strong><span class="status-pill">active read</span></li>
+          <li><strong>Nested canvas child asset</strong><span class="status-pill ready">path aligned</span></li>
+          <li><strong>Controls motion/input only</strong><span class="status-pill ready">active downstream</span></li>
+        </ol>
       </section>
 
       <section
+        id="hEarthReceiptPanel"
         class="receipt-panel"
-        aria-label="Showroom habitability and H-Earth access receipts"
-        data-receipt-panel="showroom-habitability-h-earth-access"
-        data-contract="SHOWROOM_HABITABILITY_DISPLAY_H_EARTH_ACCESS_MERGE_TNT_v1"
-        data-previous-contract="SHOWROOM_HABITABILITY_DISPLAY_HTML_TNT_v1"
-        data-route="/showroom/"
-        data-standard="habitability"
-        data-planned-planets-total="81"
-        data-active-constructed-templates="2"
-        data-active-templates="Hearth | Audralia"
-        data-experimental-third-lane="H-Earth"
-        data-h-earth-route="/showroom/globe/h-earth/"
-        data-globe-split-route="/showroom/globe/"
-        data-earth-route="/showroom/globe/earth/"
-        data-hearth-route="/showroom/globe/hearth/"
-        data-audralia-route="/showroom/globe/audralia/"
+        aria-label="H-Earth public receipts"
+        data-receipt-panel="h-earth"
+        data-receipt-route="H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_HTML_TNT_v10B"
+        data-previous-receipt-route="H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_HTML_TNT_v9"
+        data-receipt-seed="H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1"
+        data-required-doorway="H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_ROUTE_TNT_v10B"
+        data-active-chain="kernel-lattice256-landmap-terrain-surface-nested-canvas-controls"
+        data-expected-surface-contract="H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1"
+        data-expected-canvas-contract="H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3"
+        data-expected-controls-contract="H_EARTH_G1_CONTROLS_MOTION_INPUT_AUTHORITY_TNT_v1"
+        data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
+        data-canvas-controls-receipt-aligned="route-gated"
+        data-parent-mutation-authorized="false"
+        data-receipt-graphic-box="FORBIDDEN"
+        data-receipt-image-generation="FORBIDDEN"
+        data-receipt-visual-pass-claim="FALSE"
       >
-        <code>SHOWROOM_RECEIPT: SHOWROOM_HABITABILITY_DISPLAY_H_EARTH_ACCESS_MERGE_TNT_v1</code>
-        <code>PREVIOUS_CONTRACT: SHOWROOM_HABITABILITY_DISPLAY_HTML_TNT_v1</code>
-        <code>STANDARD: habitability</code>
-        <code>PLANNED_PLANETS_TOTAL: 81</code>
-        <code>ACTIVE_CONSTRUCTED_TEMPLATES: 2</code>
-        <code>ACTIVE_TEMPLATES: Hearth | Audralia</code>
-        <code>EXPERIMENTAL_THIRD_LANE: H-Earth</code>
-        <code>H_EARTH_ACCESS: enabled via /showroom/globe/h-earth/</code>
-        <code>GLOBE_SPLIT_ACCESS: enabled via /showroom/globe/</code>
-        <code>EARTH_REFERENCE: protected; no mutation authorized</code>
-        <code>HEARTH_LANE: preserved</code>
-        <code>AUDRALIA_LANE: preserved</code>
-        <code>AUSTRALIA_TERMINOLOGY: forbidden</code>
-        <code>SHOWROOM_OWNS_PLANET_RENDERING: false</code>
-        <code>GENERATED_IMAGE: false</code>
-        <code>GRAPHIC_BOX: false</code>
-        <code>VISUAL_PASS_CLAIMED: false</code>
-        <code>NEXT_GENERATION: G2-material-definition-and-natural-readability</code>
-      </section>
-
-      <section class="guard-panel" aria-label="Showroom boundary guard">
-        <strong>Boundary guard:</strong>
-        this Showroom update preserves the habitability display and adds H-Earth access only.
-        It does not create planet truth, does not paint canvas, does not define land/water ratios,
-        does not control motion, does not rewrite Gauges, and does not mutate Earth, Hearth, or Audralia.
+        <code>H_EARTH_IDENTITY: separate experimental third-planet lane</code>
+        <code>ROUTE_AUTHORITY: shell only</code>
+        <code>ROUTE_RECEIPT: H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_HTML_TNT_v10B</code>
+        <code>REQUIRED_DOORWAY: H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_ROUTE_TNT_v10B</code>
+        <code>EXPECTED_SURFACE: H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1</code>
+        <code>EXPECTED_CANVAS: H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3</code>
+        <code>EXPECTED_CONTROLS: H_EARTH_G1_CONTROLS_MOTION_INPUT_AUTHORITY_TNT_v1</code>
+        <code>CANVAS_ASSET_PATH: /assets/h-earth/h-earth/canvas.alignment.v3.js</code>
+        <code>ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface → nested-canvas-child → controls</code>
+        <code>LEGACY_CANVAS_EXECUTION: forbidden</code>
+        <code>PARENT_MUTATION_AUTHORIZED: false</code>
+        <code>STATUS_TARGET: #hEarthStatusTarget</code>
+        <code>STATUS_MOUNT: #hEarthCanvasMount</code>
+        <code>CANVAS_COMPOSITION_MOUNT: #hEarthCanvasCompositionMount</code>
+        <code>CONTROLS_MOUNT: #hEarthControlsMount</code>
+        <code>SCRIPT_HANDOFF: ./index.js?v=H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_ROUTE_TNT_v10B</code>
+        <code>EARTH_REFERENCE_SHELL: protected; no mutation authorized</code>
       </section>
     </main>
 
     <footer class="footer">
-      Showroom Habitability Display. Hearth and Audralia remain the two active constructed templates.
-      H-Earth is now accessible as the Hybrid Earth experimental third lane.
+      H-Earth G1 nested canvas asset path alignment shell. Canvas is a downstream child asset.
+      Parent truth remains immutable. Visual pass claim remains false until owner visual confirmation.
     </footer>
   </div>
+
+  <script
+    id="hEarthModuleHandoff"
+    type="module"
+    src="./index.js?v=H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_ROUTE_TNT_v10B"
+    data-handoff="h-earth-nested-canvas-asset-path-alignment-route"
+    data-required-next-contract="H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_ROUTE_TNT_v10B"
+    data-previous-contract="H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9"
+    data-cache-key="2026-05-11-h-earth-nested-canvas-asset-path-alignment-html-v10b"
+  ></script>
 </body>
 </html>

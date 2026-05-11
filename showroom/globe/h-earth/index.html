@@ -9,30 +9,25 @@
   data-planet-meaning="Hybrid Earth"
   data-generation="G1"
   data-seed-packet="H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1"
-  data-contract="H_EARTH_G1_ROUTE_SHELL_RESTORE_AFTER_SELECTOR_MISPLACEMENT_TNT_v12E"
-  data-route-doorway-required="H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11"
-  data-previous-contract="H_EARTH_G1_INTERACTIVE_VIEW_HTML_RECEIPT_TNT_v11"
-  data-restore-reason="showroom-selector-was-misplaced-on-h-earth-route"
+  data-contract="H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_HTML_TNT_v14B"
+  data-route-doorway-required="H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_ROUTE_TNT_v14A"
+  data-previous-contract="H_EARTH_G1_ROUTE_SHELL_RESTORE_AFTER_SELECTOR_MISPLACEMENT_TNT_v12E"
   data-authority="h-earth-route-shell-only"
+  data-build-mode="orbital-aerial"
+  data-interaction-target="planet-surface-view"
   data-parent-core-chain="kernel-lattice256-landmap-terrain-surface"
-  data-active-chain="kernel-lattice256-landmap-terrain-surface-nested-canvas-direct-globe-controls"
-  data-surface="active-read-only"
-  data-canvas="nested-child-direct-globe-redraw"
-  data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
-  data-expected-canvas-contract="H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3"
-  data-expected-canvas-renewal="H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A"
-  data-controls="direct-globe-interaction-controls"
-  data-expected-controls-contract="H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2"
-  data-expected-controls-renewal="H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C"
-  data-interaction-mode="direct-globe-redraw"
-  data-card-transform="forbidden"
-  data-drag-authorized="route-gated"
-  data-touch-authorized="route-gated"
-  data-zoom-authorized="route-gated"
-  data-inertia-authorized="route-gated"
-  data-canvas-controls-receipt-aligned="route-gated"
-  data-canvas-paint-authorized="true"
-  data-controls-authorized="route-gated"
+  data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas-index-terrain-elevation-orbital-build-surface"
+  data-canvas-index="/assets/h-earth/h-earth/canvas/index.js"
+  data-terrain-elevation-child="/assets/h-earth/h-earth/canvas/terrain/elevation.sea-level.js"
+  data-orbital-surface="/assets/h-earth/h-earth/orbital.build.surface.js"
+  data-expected-canvas-index="H_EARTH_G1_CANVAS_INDEX_CHILD_RECEIVER_TNT_v1"
+  data-expected-terrain-elevation="H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_SEA_LEVEL_CHILD_TNT_v1"
+  data-expected-orbital-surface="H_EARTH_G1_ORBITAL_BUILD_SURFACE_CANVAS_TNT_v13A"
+  data-legacy-root-canvas-import="forbidden"
+  data-legacy-controls-import="forbidden"
+  data-orbital-controls="held"
+  data-estate-placement-ready="false"
+  data-ground-level-ready="false"
   data-parent-mutation-authorized="false"
   data-earth-reference-shell="protected-reference-only"
   data-mutation-earth="forbidden"
@@ -46,10 +41,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · H-Earth Interactive View</title>
+  <title>Diamond Gate Bridge · H-Earth Orbital Build Surface</title>
   <meta
     name="description"
-    content="H-Earth is the Hybrid Earth experimental third-planet lane. This restored route shell exposes the direct-globe interaction view: nested canvas redraw, recursion-safe controls, no card transform, and immutable parent truth."
+    content="H-Earth is the Hybrid Earth build planet. This route assimilates the canvas index, terrain elevation child, and orbital build surface so the planet can be built from the air before any ground-level estate placement."
   >
 
   <style>
@@ -96,8 +91,7 @@
       text-decoration: none;
     }
 
-    a:focus-visible,
-    button:focus-visible {
+    a:focus-visible {
       outline: 2px solid var(--gold);
       outline-offset: 4px;
     }
@@ -225,7 +219,7 @@
     }
 
     .lede {
-      max-width: 66ch;
+      max-width: 68ch;
       margin: 22px 0 0;
       color: var(--muted);
       font-size: clamp(1rem, 2.2vw, 1.2rem);
@@ -297,12 +291,12 @@
       overflow: hidden;
     }
 
-    #hEarthCanvasMount[data-route-mount="awaiting-h-earth-restored-interactive-route"]::before {
-      content: "Awaiting restored H-Earth interactive route doorway";
+    #hEarthCanvasMount[data-route-mount="awaiting-h-earth-canvas-index-orbital-assimilation"]::before {
+      content: "Awaiting H-Earth canvas index and orbital build surface assimilation";
       position: absolute;
       left: 50%;
       top: 50%;
-      width: min(82%, 430px);
+      width: min(82%, 450px);
       transform: translate(-50%, -50%);
       padding: 13px 16px;
       border: 1px solid rgba(244, 191, 96, 0.28);
@@ -338,7 +332,7 @@
     }
 
     .canvas-composition-mount:empty::before {
-      content: "Direct-globe canvas mount ready. Route doorway imports /assets/h-earth/h-earth/canvas.alignment.v3.js and expects v12A renewal.";
+      content: "Orbital build surface mount ready. Route doorway imports canvas/index.js first, then orbital.build.surface.js.";
       display: block;
       padding: 16px;
       border: 1px dashed rgba(142, 190, 255, 0.22);
@@ -350,7 +344,7 @@
     }
 
     .controls-mount:empty::before {
-      content: "Direct-globe controls mount ready. Controls expect recursion-safe v12C behavior and must not transform the card.";
+      content: "Orbital controls are held. Controls will be authored as /assets/h-earth/h-earth/orbital.build.controls.js after the orbital surface passes.";
       display: block;
       padding: 16px;
       border: 1px dashed rgba(244, 191, 96, 0.28);
@@ -422,6 +416,10 @@
 
     .status-pill.ready {
       color: var(--green);
+    }
+
+    .status-pill.held {
+      color: var(--muted);
     }
 
     .receipt-panel {
@@ -533,13 +531,13 @@
     <main id="h-earth-main" tabindex="-1">
       <section class="hero" aria-labelledby="h-earth-title">
         <div class="hero-copy">
-          <p class="eyebrow">H-Earth · G1 · Restored Interactive View</p>
+          <p class="eyebrow">H-Earth · G1 · Orbital Build Surface</p>
           <h1 id="h-earth-title">H-Earth</h1>
           <p class="lede">
-            H-Earth means Hybrid Earth. This route shell restores the H-Earth inspection lane after
-            the Globe Split selector was misplaced here. The nested canvas child paints the visible
-            globe from <strong>/assets/h-earth/h-earth/canvas.alignment.v3.js</strong>. Controls target
-            the globe view directly by yaw, pitch, and zoom. The card frame must remain stationary.
+            H-Earth means Hybrid Earth. This route now assimilates the canvas-layer index,
+            the terrain elevation child, and the orbital build surface. The active build mode is
+            aerial/orbital. Ground-level mode and estate placement remain held until the planet surface
+            is coherent from the air.
           </p>
 
           <div class="route-actions" aria-label="Route actions">
@@ -554,61 +552,60 @@
             class="receipt-panel"
             aria-label="H-Earth route status target"
             data-status-target="h-earth-route"
-            data-current-status="h-earth-route-shell-restored-awaiting-v11-doorway"
-            data-route-shell="restored"
-            data-route-doorway="awaiting-interactive-view-route-receipt"
+            data-current-status="h-earth-canvas-index-orbital-assimilation-html-loaded"
+            data-route-shell="ready"
+            data-route-doorway="awaiting-canvas-index-orbital-assimilation-route"
+            data-build-mode="orbital-aerial"
+            data-interaction-target="planet-surface-view"
             data-parent-core-chain="kernel-lattice256-landmap-terrain-surface"
-            data-active-chain="kernel-lattice256-landmap-terrain-surface-nested-canvas-direct-globe-controls"
-            data-surface="active-read-only"
-            data-canvas="nested-child-direct-globe-redraw"
-            data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
-            data-expected-canvas-contract="H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3"
-            data-expected-canvas-renewal="H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A"
-            data-controls="direct-globe-interaction-controls"
-            data-expected-controls-contract="H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2"
-            data-expected-controls-renewal="H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C"
-            data-interaction-mode="direct-globe-redraw"
-            data-card-transform="forbidden"
+            data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas-index-terrain-elevation-orbital-build-surface"
+            data-canvas-index="/assets/h-earth/h-earth/canvas/index.js"
+            data-terrain-elevation-child="/assets/h-earth/h-earth/canvas/terrain/elevation.sea-level.js"
+            data-orbital-surface="/assets/h-earth/h-earth/orbital.build.surface.js"
+            data-expected-canvas-index="H_EARTH_G1_CANVAS_INDEX_CHILD_RECEIVER_TNT_v1"
+            data-expected-terrain-elevation="H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_SEA_LEVEL_CHILD_TNT_v1"
+            data-expected-orbital-surface="H_EARTH_G1_ORBITAL_BUILD_SURFACE_CANVAS_TNT_v13A"
+            data-estate-placement-ready="false"
+            data-ground-level-ready="false"
             data-parent-mutation-authorized="false"
           >
-            <code>ROUTE_RECEIPT: H_EARTH_G1_ROUTE_SHELL_RESTORE_AFTER_SELECTOR_MISPLACEMENT_TNT_v12E</code>
-            <code>RESTORE_REASON: showroom selector content was placed on /showroom/globe/h-earth/</code>
-            <code>PREVIOUS_ROUTE_RECEIPT: H_EARTH_G1_INTERACTIVE_VIEW_HTML_RECEIPT_TNT_v11</code>
+            <code>ROUTE_RECEIPT: H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_HTML_TNT_v14B</code>
+            <code>REQUIRED_DOORWAY: H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_ROUTE_TNT_v14A</code>
+            <code>PREVIOUS_ROUTE_RECEIPT: H_EARTH_G1_ROUTE_SHELL_RESTORE_AFTER_SELECTOR_MISPLACEMENT_TNT_v12E</code>
             <code>SEED_PACKET: H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1</code>
-            <code>REQUIRED_DOORWAY: H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11</code>
-            <code>CANVAS_ASSET_PATH: /assets/h-earth/h-earth/canvas.alignment.v3.js</code>
-            <code>EXPECTED_CANVAS: H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3</code>
-            <code>EXPECTED_CANVAS_RENEWAL: H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A</code>
-            <code>EXPECTED_CONTROLS: H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2</code>
-            <code>EXPECTED_CONTROLS_RENEWAL: H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C</code>
-            <code>INTERACTION_MODE: direct-globe-redraw</code>
-            <code>CARD_TRANSFORM: forbidden</code>
-            <code>STATUS: H-Earth route shell restored; awaiting v11 doorway module</code>
+            <code>PLANET_BUILD_MODE: orbital-aerial</code>
+            <code>INTERACTION_TARGET: planet-surface-view</code>
+            <code>CANVAS_INDEX: /assets/h-earth/h-earth/canvas/index.js</code>
+            <code>TERRAIN_ELEVATION_CHILD: /assets/h-earth/h-earth/canvas/terrain/elevation.sea-level.js</code>
+            <code>ORBITAL_SURFACE: /assets/h-earth/h-earth/orbital.build.surface.js</code>
+            <code>EXPECTED_CANVAS_INDEX: H_EARTH_G1_CANVAS_INDEX_CHILD_RECEIVER_TNT_v1</code>
+            <code>EXPECTED_TERRAIN_ELEVATION: H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_SEA_LEVEL_CHILD_TNT_v1</code>
+            <code>EXPECTED_ORBITAL_SURFACE: H_EARTH_G1_ORBITAL_BUILD_SURFACE_CANVAS_TNT_v13A</code>
+            <code>ESTATE_PLACEMENT_READY: false</code>
+            <code>GROUND_LEVEL_READY: false</code>
+            <code>PARENT_MUTATION_AUTHORIZED: false</code>
+            <code>STATUS: H-Earth HTML loaded; awaiting v14A doorway module</code>
           </section>
         </div>
 
-        <section class="stage" aria-label="H-Earth restored interactive view status stage">
-          <div class="stage-label">H-Earth Status Mount</div>
+        <section class="stage" aria-label="H-Earth orbital build status stage">
+          <div class="stage-label">Orbital Build Status</div>
           <div class="mount-shell">
             <div
               id="hEarthCanvasMount"
               role="img"
-              aria-label="H-Earth restored status mount awaiting interactive route doorway"
-              data-mount="h-earth-parent-chain-status"
-              data-route-mount="awaiting-h-earth-restored-interactive-route"
-              data-h-earth-surface-status-mount="true"
-              data-surface-authority="active-read-only"
-              data-canvas-authority="nested-child-direct-globe-redraw"
-              data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
-              data-expected-canvas-contract="H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3"
-              data-expected-canvas-renewal="H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A"
-              data-controls-authority="direct-globe-interaction-controls"
-              data-expected-controls-contract="H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2"
-              data-expected-controls-renewal="H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C"
-              data-interaction-mode="direct-globe-redraw"
-              data-card-transform="forbidden"
+              aria-label="H-Earth orbital build status mount"
+              data-mount="h-earth-orbital-build-status"
+              data-route-mount="awaiting-h-earth-canvas-index-orbital-assimilation"
+              data-build-mode="orbital-aerial"
+              data-interaction-target="planet-surface-view"
+              data-canvas-index="/assets/h-earth/h-earth/canvas/index.js"
+              data-terrain-elevation-child="/assets/h-earth/h-earth/canvas/terrain/elevation.sea-level.js"
+              data-orbital-surface="/assets/h-earth/h-earth/orbital.build.surface.js"
+              data-estate-placement-ready="false"
+              data-ground-level-ready="false"
               data-parent-mutation-authorized="false"
-              data-planet-truth-owner="parent-chain"
+              data-visual-pass-claim="false"
             ></div>
           </div>
         </section>
@@ -617,80 +614,83 @@
       <section
         id="hEarthCanvasCompositionMount"
         class="canvas-composition-mount"
-        aria-label="H-Earth direct globe canvas mount"
+        aria-label="H-Earth orbital build surface mount"
         data-h-earth-canvas-mount="true"
         data-canvas-composition-mount="h-earth"
-        data-canvas-authority="visible-composition-only"
-        data-canvas-consumer="nested-child-direct-globe-redraw"
-        data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
-        data-expected-canvas-contract="H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3"
-        data-expected-canvas-renewal="H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A"
-        data-interaction-mode="direct-globe-redraw"
-        data-card-transform="forbidden"
-        data-surface-source="parent-material-truth"
+        data-canvas-authority="canvas-index-orbital-build-surface"
+        data-canvas-index="/assets/h-earth/h-earth/canvas/index.js"
+        data-terrain-elevation-child="/assets/h-earth/h-earth/canvas/terrain/elevation.sea-level.js"
+        data-orbital-surface="/assets/h-earth/h-earth/orbital.build.surface.js"
+        data-build-mode="orbital-aerial"
+        data-interaction-target="planet-surface-view"
+        data-estate-placement-ready="false"
+        data-ground-level-ready="false"
         data-parent-mutation-authorized="false"
       ></section>
 
       <section
         id="hEarthControlsMount"
         class="controls-mount"
-        aria-label="H-Earth direct globe controls mount"
+        aria-label="H-Earth orbital controls mount"
         data-h-earth-controls-mount="true"
-        data-controls-authority="direct-globe-motion-input-only"
-        data-expected-controls-contract="H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2"
-        data-expected-controls-renewal="H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C"
-        data-interaction-target="globe-redraw"
-        data-card-transform="forbidden"
-        data-drag-authorized="route-gated"
-        data-touch-authorized="route-gated"
-        data-zoom-authorized="route-gated"
-        data-inertia-authorized="route-gated"
+        data-controls-authority="held"
+        data-orbital-controls-path="/assets/h-earth/h-earth/orbital.build.controls.js"
+        data-controls-status="held-until-orbital-surface-passes"
+        data-build-mode="orbital-aerial"
+        data-interaction-target="planet-surface-view"
+        data-estate-placement-ready="false"
+        data-ground-level-ready="false"
         data-parent-mutation-authorized="false"
       ></section>
 
       <section class="grid" aria-label="H-Earth route shell authority">
         <article class="panel">
-          <h2>Route Shell Restored</h2>
+          <h2>Canvas Index Assimilated</h2>
           <p>
-            This file belongs to H-Earth only. The Globe Split selector belongs at
-            /showroom/globe/index.html and must not occupy this route.
+            The route now expects the nested canvas receiver at
+            /assets/h-earth/h-earth/canvas/index.js instead of importing every canvas child directly.
           </p>
         </article>
 
         <article class="panel">
-          <h2>Direct Globe Interaction</h2>
+          <h2>Terrain Elevation Child</h2>
           <p>
-            Controls send yaw, pitch, and zoom to the canvas view API. The globe redraws inside the
-            canvas. The canvas card and surrounding panel must not tilt, rotate, or scale.
+            Elevation relative to sea level lives under
+            /assets/h-earth/h-earth/canvas/terrain/elevation.sea-level.js as downstream expression,
+            not parent terrain truth.
           </p>
         </article>
 
         <article class="panel">
-          <h2>Protected Separation</h2>
+          <h2>Orbital Build Surface</h2>
           <p>
-            H-Earth remains a separate experimental third-planet lane. Earth, Hearth, and Audralia
-            are not mutated.
+            H-Earth is now the planet to build on from the air first. Ground-level mode and estate
+            placement remain held.
           </p>
         </article>
       </section>
 
       <section class="panel" aria-labelledby="chain-title" style="margin-top:16px;">
-        <h2 id="chain-title">Restored H-Earth Direct-Globe Chain Order</h2>
+        <h2 id="chain-title">H-Earth Assimilated Build Chain</h2>
         <p>
-          Parent truth remains upstream. The nested canvas child redraws the globe. Controls move the
-          globe view only.
+          Parent truth remains upstream. The canvas index receives children. The orbital surface renders
+          the build planet. Controls, ground level, and estate placement stay held.
         </p>
 
         <ol class="chain-list">
-          <li><strong>HTML route shell</strong><span class="status-pill">restored file v12E</span></li>
-          <li><strong>Route doorway</strong><span class="status-pill">index.js v11</span></li>
+          <li><strong>HTML route shell</strong><span class="status-pill">current file v14B</span></li>
+          <li><strong>Route doorway</strong><span class="status-pill">index.js v14A</span></li>
           <li><strong>Kernel parent core</strong><span class="status-pill">locked</span></li>
           <li><strong>256 lattice parent-coordinate engine</strong><span class="status-pill">locked</span></li>
           <li><strong>Landmap parent mask</strong><span class="status-pill">terrain balance v2</span></li>
           <li><strong>Terrain parent relief</strong><span class="status-pill">full aspect v2</span></li>
           <li><strong>Surface parent material truth</strong><span class="status-pill">active read</span></li>
-          <li><strong>Nested canvas direct-globe redraw</strong><span class="status-pill ready">v12A expected</span></li>
-          <li><strong>Recursion-safe controls</strong><span class="status-pill ready">v12C expected</span></li>
+          <li><strong>Canvas index receiver</strong><span class="status-pill ready">v1 expected</span></li>
+          <li><strong>Terrain elevation child</strong><span class="status-pill ready">sea-level v1 expected</span></li>
+          <li><strong>Orbital build surface</strong><span class="status-pill ready">v13A expected</span></li>
+          <li><strong>Orbital controls</strong><span class="status-pill held">held</span></li>
+          <li><strong>Ground-level view</strong><span class="status-pill held">held</span></li>
+          <li><strong>Estate placement</strong><span class="status-pill held">held</span></li>
         </ol>
       </section>
 
@@ -699,71 +699,64 @@
         class="receipt-panel"
         aria-label="H-Earth public receipts"
         data-receipt-panel="h-earth"
-        data-receipt-route="H_EARTH_G1_ROUTE_SHELL_RESTORE_AFTER_SELECTOR_MISPLACEMENT_TNT_v12E"
-        data-previous-receipt-route="H_EARTH_G1_INTERACTIVE_VIEW_HTML_RECEIPT_TNT_v11"
+        data-receipt-route="H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_HTML_TNT_v14B"
+        data-required-doorway="H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_ROUTE_TNT_v14A"
         data-receipt-seed="H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1"
-        data-required-doorway="H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11"
-        data-active-chain="kernel-lattice256-landmap-terrain-surface-nested-canvas-direct-globe-controls"
-        data-expected-surface-contract="H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1"
-        data-expected-canvas-contract="H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3"
-        data-expected-canvas-renewal="H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A"
-        data-expected-controls-contract="H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2"
-        data-expected-controls-renewal="H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C"
-        data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
-        data-interaction-mode="direct-globe-redraw"
-        data-card-transform="forbidden"
-        data-controls-authority="direct-globe-motion-input-only"
-        data-drag-authorized="route-gated"
-        data-touch-authorized="route-gated"
-        data-zoom-authorized="route-gated"
-        data-inertia-authorized="route-gated"
-        data-canvas-controls-receipt-aligned="route-gated"
+        data-build-mode="orbital-aerial"
+        data-interaction-target="planet-surface-view"
+        data-canvas-index="/assets/h-earth/h-earth/canvas/index.js"
+        data-terrain-elevation-child="/assets/h-earth/h-earth/canvas/terrain/elevation.sea-level.js"
+        data-orbital-surface="/assets/h-earth/h-earth/orbital.build.surface.js"
+        data-expected-canvas-index="H_EARTH_G1_CANVAS_INDEX_CHILD_RECEIVER_TNT_v1"
+        data-expected-terrain-elevation="H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_SEA_LEVEL_CHILD_TNT_v1"
+        data-expected-orbital-surface="H_EARTH_G1_ORBITAL_BUILD_SURFACE_CANVAS_TNT_v13A"
+        data-legacy-root-canvas-import="FORBIDDEN"
+        data-legacy-controls-import="FORBIDDEN"
+        data-estate-placement-ready="false"
+        data-ground-level-ready="false"
         data-parent-mutation-authorized="false"
         data-receipt-graphic-box="FORBIDDEN"
         data-receipt-image-generation="FORBIDDEN"
         data-receipt-visual-pass-claim="FALSE"
       >
-        <code>H_EARTH_IDENTITY: separate experimental third-planet lane</code>
+        <code>H_EARTH_IDENTITY: Hybrid Earth build planet</code>
         <code>ROUTE_AUTHORITY: H-Earth route shell only</code>
-        <code>ROUTE_RECEIPT: H_EARTH_G1_ROUTE_SHELL_RESTORE_AFTER_SELECTOR_MISPLACEMENT_TNT_v12E</code>
-        <code>RESTORE_REASON: selector content was misplaced at /showroom/globe/h-earth/</code>
-        <code>REQUIRED_DOORWAY: H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11</code>
-        <code>EXPECTED_SURFACE: H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1</code>
-        <code>EXPECTED_CANVAS: H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3</code>
-        <code>EXPECTED_CANVAS_RENEWAL: H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A</code>
-        <code>EXPECTED_CONTROLS: H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2</code>
-        <code>EXPECTED_CONTROLS_RENEWAL: H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C</code>
-        <code>CANVAS_ASSET_PATH: /assets/h-earth/h-earth/canvas.alignment.v3.js</code>
-        <code>INTERACTION_MODE: direct-globe-redraw</code>
-        <code>CARD_TRANSFORM: forbidden</code>
-        <code>ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface → nested-canvas-direct-globe → recursion-safe-controls</code>
-        <code>LEGACY_CANVAS_EXECUTION: forbidden</code>
+        <code>HTML_RECEIPT: H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_HTML_TNT_v14B</code>
+        <code>REQUIRED_DOORWAY: H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_ROUTE_TNT_v14A</code>
+        <code>PLANET_BUILD_MODE: orbital-aerial</code>
+        <code>INTERACTION_TARGET: planet-surface-view</code>
+        <code>CANVAS_INDEX: /assets/h-earth/h-earth/canvas/index.js</code>
+        <code>TERRAIN_ELEVATION_CHILD: /assets/h-earth/h-earth/canvas/terrain/elevation.sea-level.js</code>
+        <code>ORBITAL_SURFACE: /assets/h-earth/h-earth/orbital.build.surface.js</code>
+        <code>EXPECTED_CANVAS_INDEX: H_EARTH_G1_CANVAS_INDEX_CHILD_RECEIVER_TNT_v1</code>
+        <code>EXPECTED_TERRAIN_ELEVATION: H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_SEA_LEVEL_CHILD_TNT_v1</code>
+        <code>EXPECTED_ORBITAL_SURFACE: H_EARTH_G1_ORBITAL_BUILD_SURFACE_CANVAS_TNT_v13A</code>
+        <code>LEGACY_ROOT_CANVAS_IMPORT: forbidden</code>
+        <code>LEGACY_CONTROLS_IMPORT: forbidden</code>
+        <code>ORBITAL_CONTROLS: held</code>
+        <code>GROUND_LEVEL_READY: false</code>
+        <code>ESTATE_PLACEMENT_READY: false</code>
         <code>PARENT_MUTATION_AUTHORIZED: false</code>
         <code>VISUAL_PASS_CLAIM: false</code>
-        <code>STATUS_TARGET: #hEarthStatusTarget</code>
-        <code>STATUS_MOUNT: #hEarthCanvasMount</code>
-        <code>CANVAS_COMPOSITION_MOUNT: #hEarthCanvasCompositionMount</code>
-        <code>CONTROLS_MOUNT: #hEarthControlsMount</code>
-        <code>SCRIPT_HANDOFF: ./index.js?v=H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11</code>
-        <code>EARTH_REFERENCE_SHELL: protected; no mutation authorized</code>
+        <code>SCRIPT_HANDOFF: ./index.js?v=H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_ROUTE_TNT_v14A</code>
       </section>
     </main>
 
     <footer class="footer">
-      H-Earth route shell restored after selector misplacement. Canvas redraws the globe directly.
-      Controls target the globe view only. Parent truth remains immutable.
+      H-Earth route assimilated to canvas index, terrain elevation child, and orbital build surface.
+      Estate placement and ground-level mode remain held.
     </footer>
   </div>
 
   <script
     id="hEarthModuleHandoff"
     type="module"
-    src="./index.js?v=H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11"
-    data-handoff="h-earth-restored-interactive-view-route"
-    data-required-next-contract="H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11"
-    data-current-html-contract="H_EARTH_G1_ROUTE_SHELL_RESTORE_AFTER_SELECTOR_MISPLACEMENT_TNT_v12E"
-    data-previous-html-contract="H_EARTH_G1_INTERACTIVE_VIEW_HTML_RECEIPT_TNT_v11"
-    data-cache-key="2026-05-11-h-earth-route-shell-restore-after-selector-misplacement-v12e"
+    src="./index.js?v=H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_ROUTE_TNT_v14A"
+    data-handoff="h-earth-canvas-index-orbital-assimilation-route"
+    data-required-next-contract="H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_ROUTE_TNT_v14A"
+    data-current-html-contract="H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_HTML_TNT_v14B"
+    data-previous-html-contract="H_EARTH_G1_ROUTE_SHELL_RESTORE_AFTER_SELECTOR_MISPLACEMENT_TNT_v12E"
+    data-cache-key="2026-05-11-h-earth-canvas-index-orbital-assimilation-v14b"
   ></script>
 </body>
 </html>

@@ -1,310 +1,808 @@
-// /showroom/globe/audralia/index.js
-// AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_ROUTE_TNT_v6
+// /showroom/globe/index.js
+// SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_ROUTE_TNT_v13
 // Full-file replacement.
-// Route orchestration only.
-// Loads: backstory → tectonics → topology → elevation → beaches → landrise → canvas.
-// Beaches remain sea level.
-// Terrain rises behind beaches.
-// No trees. No bushes. No forest canopy.
-// No generated image. No GraphicBox. No visual-pass claim.
+// Showroom projection consumer only.
+//
+// Purpose:
+// - Turn /showroom/globe/ into a planet projection TV set.
+// - Render one central selected planet projection.
+// - Render four mini spinning planet preview canvases.
+// - Use 4 planet channels × 64 states = 256 showroom projection seats.
+// - Select H-Earth by default.
+// - Keep all planet routes separate and protected.
+// - Keep card transform forbidden.
+// - Keep parent mutation forbidden.
+// - Keep visual pass claim false.
 
-(() => {
-  "use strict";
+const CONTRACT = "SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_ROUTE_TNT_v13";
+const HTML_CONTRACT = "SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_HTML_TNT_v13";
+const PAIR_CONTRACT = "SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_PAIR_TNT_v13";
+const PREVIOUS_CONTRACT = "H_EARTH_G1_SHOWROOM_GLOBE_CONSUMER_ALIGNMENT_TNT_v12D";
 
-  const CONTRACT = "AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_ROUTE_TNT_v6";
-  const RECEIPT = "AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_ROUTE_RECEIPT_v6";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G1_BEACH_TO_LAND_RISE_ROUTE_TNT_v5";
-  const VERSION = "2026-05-10.audralia-g1-raised-terrain-behind-beach-route-v6";
-  const KEY = "audralia-g1-raised-terrain-behind-beach-v6";
+const SHOWROOM_MODE = "planet-projection-tv-set";
+const DEFAULT_CHANNEL = "h-earth";
+const LATTICE_GEOMETRY = "4x64=256";
+const CARD_TRANSFORM = "forbidden";
+const PLANET_MUTATION_AUTHORIZED = false;
+const VISUAL_PASS_CLAIM = false;
 
-  const state = {
-    loaded: [],
-    failed: [],
-    mounted: false,
-    canvasFound: false,
-    controlsBound: false,
-    backstoryLoaded: false,
-    tectonicsLoaded: false,
-    topologyLoaded: false,
-    elevationLoaded: false,
-    beachesLoaded: false,
-    landriseLoaded: false,
-    canvasLoaded: false,
-    frames: 0,
-    fallback: false,
-    error: ""
+const CHANNELS = Object.freeze([
+  {
+    key: "earth",
+    index: 0,
+    name: "Earth",
+    route: "/showroom/globe/earth/",
+    role: "protected-reference-body",
+    status: "reference-route-only",
+    receipt: "EARTH_REFERENCE_BODY_PROTECTED_ROUTE",
+    tone: "reference",
+    palette: {
+      ocean: "#0d4f86",
+      land: "#4f7d4b",
+      coast: "#c7ad74",
+      relief: "#8b8878",
+      ice: "#e2f2f6",
+      glow: "#8ebeff"
+    }
+  },
+  {
+    key: "h-earth",
+    index: 1,
+    name: "H-Earth",
+    route: "/showroom/globe/h-earth/",
+    role: "active-hybrid-earth-build-planet",
+    status: "orbital-aerial-build-surface",
+    receipt: "H_EARTH_G1_ORBITAL_BUILD_SURFACE_CANVAS_TNT_v13A",
+    tone: "active-build",
+    palette: {
+      ocean: "#0b315f",
+      land: "#6f9854",
+      coast: "#d2b77b",
+      relief: "#908866",
+      ice: "#d8edf4",
+      glow: "#8ff0c3"
+    }
+  },
+  {
+    key: "hearth",
+    index: 2,
+    name: "Hearth",
+    route: "/showroom/globe/hearth/",
+    role: "separate-regression-terrain-lane",
+    status: "regression-route",
+    receipt: "HEARTH_PARENT_CHAIN_REGRESSION_LANE",
+    tone: "warm-terrain",
+    palette: {
+      ocean: "#173c56",
+      land: "#8f7144",
+      coast: "#d0a66e",
+      relief: "#a35f45",
+      ice: "#d6e6e9",
+      glow: "#f4bf60"
+    }
+  },
+  {
+    key: "audralia",
+    index: 3,
+    name: "Audralia",
+    route: "/showroom/globe/audralia/",
+    role: "constructed-world-parent-chain-lane",
+    status: "constructed-world-route",
+    receipt: "AUDRALIA_G1_PARENT_CHAIN_REGRESSION_LANE",
+    tone: "constructed-world",
+    palette: {
+      ocean: "#0f456f",
+      land: "#7fa05a",
+      coast: "#c9aa6e",
+      relief: "#8f6d54",
+      ice: "#cfe8ee",
+      glow: "#b8a6ff"
+    }
+  }
+]);
+
+const state = {
+  contract: CONTRACT,
+  htmlContract: HTML_CONTRACT,
+  pairContract: PAIR_CONTRACT,
+  previousContract: PREVIOUS_CONTRACT,
+  showroomMode: SHOWROOM_MODE,
+  defaultChannel: DEFAULT_CHANNEL,
+  activeChannel: DEFAULT_CHANNEL,
+  latticeGeometry: LATTICE_GEOMETRY,
+  totalProjectionSeats: 256,
+  channelStates: {},
+  frame: 0,
+  startedAt: new Date().toISOString(),
+  visualPassClaim: false,
+  parentMutationAuthorized: false,
+  cardTransform: "forbidden",
+  animationId: null,
+  reducedMotion: window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true
+};
+
+const nodes = {
+  projectionCanvas: null,
+  projectionCtx: null,
+  projectionStatus: null,
+  previewCanvases: new Map(),
+  cards: new Map(),
+  receiptPanel: null
+};
+
+function byId(id) {
+  return document.getElementById(id);
+}
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function round(value, places = 2) {
+  const factor = Math.pow(10, places);
+  return Math.round(Number(value) * factor) / factor;
+}
+
+function channelByKey(key) {
+  return CHANNELS.find((channel) => channel.key === key) || CHANNELS.find((channel) => channel.key === DEFAULT_CHANNEL);
+}
+
+function buildChannelStates(channel) {
+  const states = [];
+
+  for (let i = 0; i < 64; i += 1) {
+    const row = Math.floor(i / 8);
+    const col = i % 8;
+    const globalIndex = channel.index * 64 + i;
+    const latitude = 72 - row * (144 / 7);
+    const longitude = -180 + col * 45;
+    const ring = Math.floor(i / 16);
+    const quadrant = Math.floor(i / 16);
+    const wave = Math.sin((i + 1) * (channel.index + 2.17));
+    const pressure = Math.cos((i + 3) * (channel.index + 1.41));
+
+    let kind = "land";
+    let candidate = "preview";
+
+    if (channel.key === "earth") {
+      if (row < 1 || row > 6) kind = "ice";
+      else if ((col + row) % 5 === 0) kind = "land";
+      else if ((col * 2 + row) % 7 === 0) kind = "coast";
+      else kind = "ocean";
+      candidate = kind === "land" || kind === "coast" ? "reference-surface" : "reference-water";
+    }
+
+    if (channel.key === "h-earth") {
+      if (row < 1 || row > 6) kind = "ice";
+      else if ((i + channel.index) % 11 === 0) kind = "relief";
+      else if ((col + row * 2) % 6 === 0) kind = "coast";
+      else if ((col * 3 + row) % 5 === 0) kind = "land";
+      else kind = "ocean";
+      candidate = kind === "land" || kind === "coast"
+        ? "orbital-build-candidate"
+        : kind === "relief"
+          ? "held-relief"
+          : "unavailable-or-held";
+    }
+
+    if (channel.key === "hearth") {
+      if ((row + col) % 6 === 0) kind = "relief";
+      else if ((row * 2 + col) % 5 === 0) kind = "coast";
+      else if (row < 1 || row > 6) kind = "ice";
+      else if ((row + col) % 3 === 0) kind = "land";
+      else kind = "ocean";
+      candidate = "separate-regression-preview";
+    }
+
+    if (channel.key === "audralia") {
+      if (row < 1 || row > 6) kind = "ice";
+      else if ((row + col * 2) % 7 === 0) kind = "relief";
+      else if ((row + col) % 4 === 0) kind = "land";
+      else if ((row * 3 + col) % 6 === 0) kind = "coast";
+      else kind = "ocean";
+      candidate = "constructed-world-preview";
+    }
+
+    states.push({
+      channel: channel.key,
+      channelIndex: channel.index,
+      localIndex: i,
+      globalIndex,
+      row,
+      col,
+      ring,
+      quadrant,
+      latitude,
+      longitude,
+      wave,
+      pressure,
+      kind,
+      candidate
+    });
+  }
+
+  return states;
+}
+
+function buildAllStates() {
+  for (const channel of CHANNELS) {
+    state.channelStates[channel.key] = buildChannelStates(channel);
+  }
+}
+
+function hexToRgb(hex) {
+  const clean = hex.replace("#", "");
+  return {
+    r: parseInt(clean.slice(0, 2), 16),
+    g: parseInt(clean.slice(2, 4), 16),
+    b: parseInt(clean.slice(4, 6), 16)
+  };
+}
+
+function rgbToString(rgb) {
+  return `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+}
+
+function shade(hex, light) {
+  const rgb = hexToRgb(hex);
+  const out = {
+    r: clamp(Math.round(rgb.r * light + 10 * (1 - light)), 0, 255),
+    g: clamp(Math.round(rgb.g * light + 10 * (1 - light)), 0, 255),
+    b: clamp(Math.round(rgb.b * light + 10 * (1 - light)), 0, 255)
+  };
+  return rgbToString(out);
+}
+
+function colorForState(channel, projectionState) {
+  if (projectionState.kind === "ocean") return channel.palette.ocean;
+  if (projectionState.kind === "coast") return channel.palette.coast;
+  if (projectionState.kind === "relief") return channel.palette.relief;
+  if (projectionState.kind === "ice") return channel.palette.ice;
+  return channel.palette.land;
+}
+
+function setupCanvas(canvas) {
+  if (!canvas) return null;
+
+  const rect = canvas.getBoundingClientRect();
+  const cssWidth = Math.max(220, Math.floor(rect.width || canvas.clientWidth || 600));
+  const cssHeight = Math.max(220, Math.floor(rect.height || canvas.clientHeight || cssWidth));
+  const dpr = clamp(window.devicePixelRatio || 1, 1, 2);
+
+  const nextWidth = Math.floor(cssWidth * dpr);
+  const nextHeight = Math.floor(cssHeight * dpr);
+
+  if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
+    canvas.width = nextWidth;
+    canvas.height = nextHeight;
+  }
+
+  const ctx = canvas.getContext("2d", { alpha: false });
+  if (!ctx) return null;
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  return ctx;
+}
+
+function collectNodes() {
+  nodes.projectionCanvas = byId("showroomProjectionCanvas");
+  nodes.projectionCtx = setupCanvas(nodes.projectionCanvas);
+  nodes.projectionStatus = byId("projectionStatus");
+  nodes.receiptPanel = byId("globeReceiptPanel");
+
+  nodes.previewCanvases.clear();
+  document.querySelectorAll("[data-preview-canvas]").forEach((canvas) => {
+    const key = canvas.getAttribute("data-preview-canvas");
+    nodes.previewCanvases.set(key, {
+      canvas,
+      ctx: setupCanvas(canvas)
+    });
+  });
+
+  nodes.cards.clear();
+  document.querySelectorAll("[data-channel-card]").forEach((card) => {
+    const key = card.getAttribute("data-channel-card");
+    nodes.cards.set(key, card);
+    card.dataset.cardTransform = "forbidden";
+    card.style.transform = "none";
+  });
+}
+
+function clearScene(ctx, width, height, channel, isMain) {
+  const gradient = ctx.createRadialGradient(
+    width * 0.5,
+    height * 0.42,
+    width * 0.05,
+    width * 0.5,
+    height * 0.5,
+    width * 0.78
+  );
+
+  gradient.addColorStop(0, isMain ? `${channel.palette.glow}33` : `${channel.palette.glow}22`);
+  gradient.addColorStop(0.44, "#071229");
+  gradient.addColorStop(1, "#01030a");
+
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, width, height);
+}
+
+function drawStars(ctx, width, height, count) {
+  ctx.save();
+  ctx.globalAlpha = 0.58;
+
+  for (let i = 0; i < count; i += 1) {
+    const x = (Math.sin(i * 91.17) * 0.5 + 0.5) * width;
+    const y = (Math.cos(i * 49.61) * 0.5 + 0.5) * height;
+    const r = 0.45 + ((i * 7) % 11) / 18;
+
+    ctx.beginPath();
+    ctx.fillStyle = i % 11 === 0 ? "rgba(246,211,123,.72)" : "rgba(225,238,255,.58)";
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function projectCell(projectionState, radius, centerX, centerY, rotation, pitch) {
+  const lat = (Number(projectionState.latitude) * Math.PI) / 180;
+  const lon = ((Number(projectionState.longitude) + rotation) * Math.PI) / 180;
+  const pitchRad = (pitch * Math.PI) / 180;
+
+  const baseX = Math.cos(lat) * Math.sin(lon);
+  const baseY = Math.sin(lat);
+  const baseZ = Math.cos(lat) * Math.cos(lon);
+
+  const rotatedY = baseY * Math.cos(pitchRad) - baseZ * Math.sin(pitchRad);
+  const rotatedZ = baseY * Math.sin(pitchRad) + baseZ * Math.cos(pitchRad);
+  const rotatedX = baseX;
+
+  if (rotatedZ < -0.08) return null;
+
+  return {
+    x: centerX + rotatedX * radius,
+    y: centerY - rotatedY * radius * 0.98,
+    z: rotatedZ,
+    light: Math.max(0.2, Math.min(1, 0.52 + rotatedZ * 0.42 + rotatedY * 0.1 - rotatedX * 0.06))
+  };
+}
+
+function drawGlobeBase(ctx, radius, centerX, centerY, channel) {
+  ctx.save();
+
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+  ctx.clip();
+
+  const ocean = ctx.createRadialGradient(
+    centerX - radius * 0.36,
+    centerY - radius * 0.34,
+    radius * 0.08,
+    centerX,
+    centerY,
+    radius * 1.14
+  );
+
+  ocean.addColorStop(0, shade(channel.palette.ocean, 1.38));
+  ocean.addColorStop(0.42, shade(channel.palette.ocean, 0.88));
+  ocean.addColorStop(0.78, shade(channel.palette.ocean, 0.44));
+  ocean.addColorStop(1, "#020b1c");
+
+  ctx.fillStyle = ocean;
+  ctx.fillRect(centerX - radius, centerY - radius, radius * 2, radius * 2);
+
+  ctx.restore();
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+  ctx.strokeStyle = `${channel.palette.glow}66`;
+  ctx.lineWidth = Math.max(1.4, radius * 0.01);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius * 1.012, 0, Math.PI * 2);
+  ctx.strokeStyle = `${channel.palette.glow}33`;
+  ctx.lineWidth = Math.max(8, radius * 0.032);
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function drawCells(ctx, channel, cells, radius, centerX, centerY, rotation, pitch) {
+  const projected = [];
+
+  for (const cell of cells) {
+    const point = projectCell(cell, radius, centerX, centerY, rotation, pitch);
+    if (point) projected.push({ cell, point });
+  }
+
+  projected.sort((a, b) => a.point.z - b.point.z);
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius * 0.998, 0, Math.PI * 2);
+  ctx.clip();
+
+  for (const { cell, point } of projected) {
+    const baseColor = colorForState(channel, cell);
+    const color = shade(baseColor, point.light);
+    const reliefBoost = cell.kind === "relief" ? 0.02 : 0;
+    const size = radius * (0.075 + reliefBoost) * (0.72 + point.z * 0.38);
+
+    ctx.beginPath();
+
+    if (cell.kind === "ocean") {
+      ctx.globalAlpha = 0.42 + point.z * 0.25;
+      ctx.ellipse(point.x, point.y, size * 0.72, size * 0.52, 0, 0, Math.PI * 2);
+    } else if (cell.kind === "relief") {
+      ctx.globalAlpha = 0.94;
+      ctx.moveTo(point.x, point.y - size * 0.68);
+      ctx.lineTo(point.x + size * 0.66, point.y - size * 0.1);
+      ctx.lineTo(point.x + size * 0.42, point.y + size * 0.56);
+      ctx.lineTo(point.x - size * 0.46, point.y + size * 0.44);
+      ctx.lineTo(point.x - size * 0.66, point.y - size * 0.08);
+      ctx.closePath();
+    } else if (cell.kind === "ice") {
+      ctx.globalAlpha = 0.95;
+      ctx.ellipse(point.x, point.y, size * 0.60, size * 0.44, 0, 0, Math.PI * 2);
+    } else {
+      ctx.globalAlpha = 0.88;
+      ctx.ellipse(point.x, point.y, size * 0.74, size * 0.52, 0, 0, Math.PI * 2);
+    }
+
+    ctx.fillStyle = color;
+    ctx.fill();
+
+    if (cell.kind !== "ocean") {
+      ctx.globalAlpha = channel.key === "h-earth" && cell.candidate === "orbital-build-candidate" ? 0.32 : 0.16;
+      ctx.strokeStyle = channel.key === "h-earth" ? "rgba(246,211,123,.56)" : "rgba(210,218,226,.30)";
+      ctx.lineWidth = Math.max(0.7, radius * 0.0024);
+      ctx.stroke();
+    }
+  }
+
+  ctx.restore();
+}
+
+function drawLight(ctx, radius, centerX, centerY, channel) {
+  ctx.save();
+
+  const highlight = ctx.createRadialGradient(
+    centerX - radius * 0.34,
+    centerY - radius * 0.36,
+    radius * 0.08,
+    centerX,
+    centerY,
+    radius * 1.08
+  );
+
+  highlight.addColorStop(0, "rgba(255,238,184,.20)");
+  highlight.addColorStop(0.34, `${channel.palette.glow}16`);
+  highlight.addColorStop(0.72, "rgba(0,0,0,.02)");
+  highlight.addColorStop(1, "rgba(0,0,0,.52)");
+
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+  ctx.fillStyle = highlight;
+  ctx.fill();
+
+  const terminator = ctx.createLinearGradient(centerX - radius, centerY, centerX + radius, centerY);
+  terminator.addColorStop(0, "rgba(255,235,175,.05)");
+  terminator.addColorStop(0.48, "rgba(0,0,0,0)");
+  terminator.addColorStop(0.78, "rgba(0,0,0,.30)");
+  terminator.addColorStop(1, "rgba(0,0,0,.62)");
+
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+  ctx.fillStyle = terminator;
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function drawMainLabels(ctx, width, height, channel) {
+  ctx.save();
+
+  ctx.textAlign = "center";
+  ctx.fillStyle = "rgba(246,211,123,.96)";
+  ctx.font = `${Math.max(22, width * 0.031)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+  ctx.fillText(channel.name, width / 2, height * 0.075);
+
+  ctx.fillStyle = "rgba(243,227,189,.74)";
+  ctx.font = `${Math.max(13, width * 0.016)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+  ctx.fillText(channel.role, width / 2, height * 0.107);
+
+  ctx.fillStyle = "rgba(143,240,195,.76)";
+  ctx.font = `${Math.max(12, width * 0.014)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+  ctx.fillText(`Projection seats: ${channel.index * 64 + 1}–${channel.index * 64 + 64} of 256`, width / 2, height * 0.134);
+
+  ctx.restore();
+}
+
+function drawPlanet(canvas, ctx, channel, frame, isMain) {
+  if (!canvas || !ctx) return;
+
+  const width = canvas.width;
+  const height = canvas.height;
+  const min = Math.min(width, height);
+  const radius = min * (isMain ? 0.34 : 0.37);
+  const centerX = width * 0.5;
+  const centerY = height * (isMain ? 0.51 : 0.5);
+  const speed = state.reducedMotion ? 0.012 : 0.055;
+  const rotation = frame * speed * (channel.index % 2 === 0 ? 1 : -1) + channel.index * 18;
+  const pitch = channel.key === "h-earth" ? 14 : channel.key === "earth" ? 8 : channel.key === "hearth" ? -10 : 11;
+  const cells = state.channelStates[channel.key] || [];
+
+  clearScene(ctx, width, height, channel, isMain);
+  drawStars(ctx, width, height, isMain ? 160 : 36);
+  drawGlobeBase(ctx, radius, centerX, centerY, channel);
+  drawCells(ctx, channel, cells, radius, centerX, centerY, rotation, pitch);
+  drawLight(ctx, radius, centerX, centerY, channel);
+
+  if (isMain) drawMainLabels(ctx, width, height, channel);
+}
+
+function renderProjectionStatus(channel) {
+  if (!nodes.projectionStatus) return;
+
+  nodes.projectionStatus.replaceChildren();
+
+  const values = [
+    ["Channel", channel.name],
+    ["Status", channel.status],
+    ["Lattice", `${channel.index * 64 + 1}–${channel.index * 64 + 64} / 256`],
+    ["Receipt", channel.receipt],
+    ["Mutation", "forbidden"],
+    ["Visual pass", "false"]
+  ];
+
+  for (const [label, value] of values) {
+    const span = document.createElement("span");
+    const strong = document.createElement("strong");
+    const em = document.createElement("em");
+
+    strong.textContent = label;
+    em.textContent = value;
+
+    span.appendChild(strong);
+    span.appendChild(em);
+    nodes.projectionStatus.appendChild(span);
+  }
+}
+
+function renderReceipts(channel) {
+  if (!nodes.receiptPanel) return;
+
+  nodes.receiptPanel.dataset.routeReceipt = CONTRACT;
+  nodes.receiptPanel.dataset.activeChannel = channel.key;
+  nodes.receiptPanel.dataset.showroomMode = SHOWROOM_MODE;
+  nodes.receiptPanel.dataset.latticeGeometry = LATTICE_GEOMETRY;
+  nodes.receiptPanel.dataset.cardTransform = CARD_TRANSFORM;
+  nodes.receiptPanel.dataset.parentMutationAuthorized = "false";
+  nodes.receiptPanel.dataset.visualPassClaim = "false";
+
+  nodes.receiptPanel.replaceChildren(
+    codeLine(`PAIR_RECEIPT: ${PAIR_CONTRACT}`),
+    codeLine(`HTML_RECEIPT: ${HTML_CONTRACT}`),
+    codeLine(`ROUTE_RECEIPT: ${CONTRACT}`),
+    codeLine(`PREVIOUS_RECEIPT: ${PREVIOUS_CONTRACT}`),
+    codeLine(`SHOWROOM_MODE: ${SHOWROOM_MODE}`),
+    codeLine(`DEFAULT_CHANNEL: ${DEFAULT_CHANNEL}`),
+    codeLine(`ACTIVE_CHANNEL: ${channel.key}`),
+    codeLine(`ACTIVE_CHANNEL_NAME: ${channel.name}`),
+    codeLine(`ACTIVE_CHANNEL_ROUTE: ${channel.route}`),
+    codeLine(`ACTIVE_CHANNEL_RECEIPT: ${channel.receipt}`),
+    codeLine(`LATTICE_GEOMETRY: ${LATTICE_GEOMETRY}`),
+    codeLine(`TOTAL_PROJECTION_SEATS: 256`),
+    codeLine(`EARTH_PROJECTION_SEATS: 1-64`),
+    codeLine(`H_EARTH_PROJECTION_SEATS: 65-128`),
+    codeLine(`HEARTH_PROJECTION_SEATS: 129-192`),
+    codeLine(`AUDRALIA_PROJECTION_SEATS: 193-256`),
+    codeLine(`CENTRAL_PROJECTION_CANVAS: active`),
+    codeLine(`MINI_PREVIEW_CANVASES: earth,h-earth,hearth,audralia`),
+    codeLine(`CARD_TRANSFORM: forbidden`),
+    codeLine(`PARENT_MUTATION_AUTHORIZED: false`),
+    codeLine(`EARTH_MUTATION_AUTHORIZED: false`),
+    codeLine(`H_EARTH_MUTATION_AUTHORIZED: false`),
+    codeLine(`HEARTH_MUTATION_AUTHORIZED: false`),
+    codeLine(`AUDRALIA_MUTATION_AUTHORIZED: false`),
+    codeLine(`VISUAL_PASS_CLAIM: false`),
+    codeLine(`GRAPHIC_BOX: false`),
+    codeLine(`GENERATED_IMAGE: false`)
+  );
+}
+
+function codeLine(text) {
+  const code = document.createElement("code");
+  code.textContent = text;
+  return code;
+}
+
+function stampDocument(channel) {
+  const root = document.documentElement;
+
+  root.dataset.routeReceipt = CONTRACT;
+  root.dataset.htmlReceipt = HTML_CONTRACT;
+  root.dataset.pairReceipt = PAIR_CONTRACT;
+  root.dataset.previousReceipt = PREVIOUS_CONTRACT;
+  root.dataset.showroomMode = SHOWROOM_MODE;
+  root.dataset.defaultChannel = DEFAULT_CHANNEL;
+  root.dataset.activeChannel = channel.key;
+  root.dataset.activeChannelName = channel.name;
+  root.dataset.activeChannelRoute = channel.route;
+  root.dataset.activeChannelReceipt = channel.receipt;
+  root.dataset.latticeGeometry = LATTICE_GEOMETRY;
+  root.dataset.totalProjectionSeats = "256";
+  root.dataset.cardTransform = CARD_TRANSFORM;
+  root.dataset.parentMutationAuthorized = "false";
+  root.dataset.earthMutationAuthorized = "false";
+  root.dataset.hEarthMutationAuthorized = "false";
+  root.dataset.hearthMutationAuthorized = "false";
+  root.dataset.audraliaMutationAuthorized = "false";
+  root.dataset.visualPassClaim = "false";
+  root.dataset.graphicBox = "false";
+  root.dataset.generatedImage = "false";
+}
+
+function updateCards(channel) {
+  for (const [key, card] of nodes.cards.entries()) {
+    const selected = key === channel.key;
+    card.setAttribute("aria-selected", String(selected));
+    card.dataset.activeProjection = String(selected);
+    card.dataset.cardTransform = "forbidden";
+    card.style.transform = "none";
+  }
+}
+
+function selectChannel(key) {
+  const channel = channelByKey(key);
+  state.activeChannel = channel.key;
+
+  stampDocument(channel);
+  updateCards(channel);
+  renderProjectionStatus(channel);
+  renderReceipts(channel);
+
+  drawPlanet(nodes.projectionCanvas, nodes.projectionCtx, channel, state.frame, true);
+}
+
+function wireEvents() {
+  document.querySelectorAll("[data-select-channel]").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      selectChannel(button.getAttribute("data-select-channel"));
+    });
+  });
+
+  document.querySelectorAll("[data-channel-card]").forEach((card) => {
+    card.addEventListener("click", (event) => {
+      if (event.target.closest("a")) return;
+      selectChannel(card.getAttribute("data-channel-card"));
+    });
+
+    card.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      selectChannel(card.getAttribute("data-channel-card"));
+    });
+  });
+
+  window.addEventListener("resize", () => {
+    collectNodes();
+    selectChannel(state.activeChannel);
+  });
+}
+
+function drawFrame() {
+  state.frame += 1;
+
+  const active = channelByKey(state.activeChannel);
+  drawPlanet(nodes.projectionCanvas, nodes.projectionCtx, active, state.frame, true);
+
+  for (const channel of CHANNELS) {
+    const preview = nodes.previewCanvases.get(channel.key);
+    if (!preview) continue;
+    drawPlanet(preview.canvas, preview.ctx, channel, state.frame + channel.index * 20, false);
+  }
+
+  if (!state.reducedMotion) {
+    state.animationId = window.requestAnimationFrame(drawFrame);
+  }
+}
+
+function exposeApi() {
+  const api = {
+    contract: CONTRACT,
+    receipt: CONTRACT,
+    htmlContract: HTML_CONTRACT,
+    pairContract: PAIR_CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
+    showroomMode: SHOWROOM_MODE,
+    defaultChannel: DEFAULT_CHANNEL,
+    latticeGeometry: LATTICE_GEOMETRY,
+    channels: CHANNELS.map((channel) => ({ ...channel })),
+    getStatus: getShowroomGlobeProjectionStatus,
+    status: getShowroomGlobeProjectionStatus,
+    getShowroomGlobeProjectionStatus,
+    selectChannel,
+    project: selectChannel
   };
 
-  window.__AUDRALIA_ACTIVE_ROUTE_CONTRACT__ = CONTRACT;
-  window.__AUDRALIA_ACTIVE_ROUTE_FILE__ = "/showroom/globe/audralia/index.js";
+  window.DGBShowroomGlobeProjection = api;
+  window.ShowroomGlobeProjection = api;
+  window.SHOWROOM_GLOBE_TV_SET = api;
+  window.SHOWROOM_GLOBE_TV_SET_RECEIPT = CONTRACT;
+}
 
-  function status(value) {
-    const node =
-      document.getElementById("audralia-route-status") ||
-      document.querySelector("[data-audralia-route-status]") ||
-      document.getElementById("route-status") ||
-      document.querySelector("[data-route-status]");
+function getShowroomGlobeProjectionStatus() {
+  const channel = channelByKey(state.activeChannel);
 
-    document.documentElement.dataset.audraliaRouteContract = CONTRACT;
-    document.documentElement.dataset.audraliaRouteReceipt = RECEIPT;
-    document.documentElement.dataset.audraliaRoutePreviousContract = PREVIOUS_CONTRACT;
-    document.documentElement.dataset.audraliaRouteVersion = VERSION;
-    document.documentElement.dataset.audraliaActiveRouteFile = "/showroom/globe/audralia/index.js";
-    document.documentElement.dataset.audraliaGeneration = "1";
-    document.documentElement.dataset.audraliaParentChainAligned = "true";
-    document.documentElement.dataset.audraliaG1Baseline = "raised-terrain-behind-beach-stabilizing";
-    document.documentElement.dataset.audraliaG2Calibration = "held";
+  return {
+    contract: CONTRACT,
+    receipt: CONTRACT,
+    htmlContract: HTML_CONTRACT,
+    pairContract: PAIR_CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
+    showroomMode: SHOWROOM_MODE,
+    defaultChannel: DEFAULT_CHANNEL,
+    activeChannel: channel.key,
+    activeChannelName: channel.name,
+    activeChannelRoute: channel.route,
+    activeChannelReceipt: channel.receipt,
+    latticeGeometry: LATTICE_GEOMETRY,
+    totalProjectionSeats: 256,
+    channelCount: CHANNELS.length,
+    statesPerChannel: 64,
+    centralProjectionCanvas: Boolean(nodes.projectionCanvas),
+    previewCanvases: Array.from(nodes.previewCanvases.keys()),
+    cardTransform: CARD_TRANSFORM,
+    parentMutationAuthorized: PLANET_MUTATION_AUTHORIZED,
+    earthMutationAuthorized: false,
+    hEarthMutationAuthorized: false,
+    hearthMutationAuthorized: false,
+    audraliaMutationAuthorized: false,
+    visualPassClaim: VISUAL_PASS_CLAIM,
+    graphicBox: false,
+    generatedImage: false,
+    startedAt: state.startedAt
+  };
+}
 
-    document.documentElement.dataset.audraliaBackstoryLoaded = String(state.backstoryLoaded);
-    document.documentElement.dataset.audraliaTectonicsLoaded = String(state.tectonicsLoaded);
-    document.documentElement.dataset.audraliaTopologyLoaded = String(state.topologyLoaded);
-    document.documentElement.dataset.audraliaElevationLoaded = String(state.elevationLoaded);
-    document.documentElement.dataset.audraliaBeachesLoaded = String(state.beachesLoaded);
-    document.documentElement.dataset.audraliaLandriseLoaded = String(state.landriseLoaded);
-    document.documentElement.dataset.audraliaCanvasLoaded = String(state.canvasLoaded);
+function boot() {
+  buildAllStates();
+  collectNodes();
+  wireEvents();
 
-    document.documentElement.dataset.audraliaMounted = String(state.mounted);
-    document.documentElement.dataset.audraliaCanvasFound = String(state.canvasFound);
-    document.documentElement.dataset.audraliaControlsBound = String(state.controlsBound);
-    document.documentElement.dataset.audraliaBeachRemainsSeaLevel = "true";
-    document.documentElement.dataset.audraliaRaisedTerrainBehindBeach = "true";
-    document.documentElement.dataset.audraliaTerrainAboveSeaLevel = "true";
-    document.documentElement.dataset.audraliaOceanDrivenHomeWorld = "true";
-    document.documentElement.dataset.audraliaNotAustralia = "true";
-    document.documentElement.dataset.audraliaNotHearth = "true";
-    document.documentElement.dataset.audraliaEarthClone = "false";
-    document.documentElement.dataset.audraliaNoTrees = "true";
-    document.documentElement.dataset.audraliaNoBushes = "true";
-    document.documentElement.dataset.audraliaNoForestCanopy = "true";
-    document.documentElement.dataset.generatedImage = "false";
-    document.documentElement.dataset.graphicBox = "false";
-    document.documentElement.dataset.visualPassClaimed = "false";
+  const channel = channelByKey(DEFAULT_CHANNEL);
+  stampDocument(channel);
+  updateCards(channel);
+  renderProjectionStatus(channel);
+  renderReceipts(channel);
+  exposeApi();
 
-    if (node) {
-      node.textContent = [
-        "Audralia G1 raised-terrain-behind-beach route.",
-        `Status ${value}`,
-        `Route ${CONTRACT}`,
-        `Receipt ${RECEIPT}`,
-        `Previous ${PREVIOUS_CONTRACT}`,
-        `Version ${VERSION}`,
-        "Parent order backstory → tectonics → topology → elevation → beaches → landrise → canvas",
-        `Loaded ${state.loaded.join(",") || "none"}`,
-        `Failed ${state.failed.join(",") || "none"}`,
-        `Backstory loaded ${state.backstoryLoaded}`,
-        `Tectonics loaded ${state.tectonicsLoaded}`,
-        `Topology loaded ${state.topologyLoaded}`,
-        `Elevation loaded ${state.elevationLoaded}`,
-        `Beaches loaded ${state.beachesLoaded}`,
-        `Landrise loaded ${state.landriseLoaded}`,
-        `Canvas loaded ${state.canvasLoaded}`,
-        `Mounted ${state.mounted}`,
-        `Canvas found ${state.canvasFound}`,
-        `Controls bound ${state.controlsBound}`,
-        `Fallback ${state.fallback}`,
-        `Frames ${state.frames}`,
-        "Beach remains sea level true",
-        "Raised terrain behind beach true",
-        "Terrain above sea level true",
-        "No trees true",
-        "No bushes true",
-        "No forest canopy true",
-        "Generated image false",
-        "GraphicBox false",
-        "Visual pass claimed false",
-        state.error ? `Error ${state.error}` : ""
-      ].filter(Boolean).join("\n");
-    }
+  drawFrame();
+
+  if (state.reducedMotion) {
+    drawFrame();
   }
+}
 
-  function ensureMount() {
-    let mount =
-      document.getElementById("audraliaCanvasMount") ||
-      document.getElementById("audralia-canvas-mount") ||
-      document.querySelector("[data-audralia-canvas-mount]") ||
-      document.querySelector("[data-canvas-mount='audralia']");
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", boot, { once: true });
+} else {
+  boot();
+}
 
-    if (!mount) {
-      const main = document.getElementById("audralia-main") || document.querySelector("main") || document.body;
-      mount = document.createElement("section");
-      mount.id = "audraliaCanvasMount";
-      mount.dataset.audraliaCanvasMount = "true";
-      mount.style.position = "relative";
-      mount.style.width = "min(520px, 100%)";
-      mount.style.aspectRatio = "1 / 1";
-      mount.style.minHeight = "320px";
-      mount.style.margin = "18px auto";
-      mount.style.overflow = "hidden";
-      mount.style.borderRadius = "32px";
-      mount.style.border = "1px solid rgba(231,188,105,.34)";
-      mount.style.background = "radial-gradient(circle at 50% 50%, rgba(39,117,155,.25), rgba(3,9,20,.96) 72%)";
-      mount.style.touchAction = "none";
-      mount.style.userSelect = "none";
-      main.appendChild(mount);
-    }
-
-    mount.dataset.audraliaRouteContract = CONTRACT;
-    mount.dataset.audraliaRaisedTerrainBehindBeach = "true";
-    mount.dataset.audraliaTerrainAboveSeaLevel = "true";
-    mount.style.touchAction = "none";
-    mount.style.userSelect = "none";
-
-    return mount;
-  }
-
-  function loadScript(role, path, validate) {
-    return new Promise((resolve) => {
-      const existing = document.querySelector(`script[data-audralia-file-role="${role}"]`);
-      if (existing) existing.remove();
-
-      const script = document.createElement("script");
-      script.src = `${path}?v=${KEY}-${Date.now()}`;
-      script.defer = true;
-      script.dataset.audraliaFile = "true";
-      script.dataset.audraliaFileRole = role;
-      script.dataset.audraliaRouteContract = CONTRACT;
-
-      script.onload = () => {
-        let ok = false;
-        try {
-          ok = validate();
-        } catch (_) {
-          ok = false;
-        }
-
-        if (ok) state.loaded.push(role);
-        else state.failed.push(`${role}:invalid`);
-
-        status(`checked-${role}`);
-        resolve(ok);
-      };
-
-      script.onerror = () => {
-        state.failed.push(`${role}:load-error`);
-        status(`failed-${role}`);
-        resolve(false);
-      };
-
-      document.head.appendChild(script);
-    });
-  }
-
-  function bootCanvas(mount) {
-    if (!window.AUDRALIA_CANVAS || typeof window.AUDRALIA_CANVAS.mount !== "function") return false;
-
-    const api = window.AUDRALIA_CANVAS.mount(mount, {
-      routeContract: CONTRACT,
-      routeReceipt: RECEIPT,
-      generation: 1,
-      baseline: "raised-terrain-behind-beach-stabilizing",
-      beachesActive: true,
-      landriseActive: true,
-      beachRemainsSeaLevel: true,
-      raisedTerrainBehindBeach: true,
-      terrainAboveSeaLevel: true,
-      onStatus: (value, info = {}) => {
-        state.frames = info.frames || state.frames;
-        state.mounted = Boolean(info.mounted);
-        state.canvasFound = Boolean(info.canvasFound);
-        state.controlsBound = Boolean(info.controlsBound);
-        state.fallback = false;
-        status(`canvas-${value}`);
-      }
-    });
-
-    state.mounted = Boolean(api && api.canvas);
-    state.canvasFound = Boolean(api && api.canvas);
-    state.controlsBound = Boolean(api && api.controlsBound);
-    state.fallback = false;
-
-    status("ready");
-    return state.mounted;
-  }
-
-  function protectedFallback(mount) {
-    let fallback = mount.querySelector("[data-audralia-parent-chain-fallback]");
-
-    if (!fallback) {
-      fallback = document.createElement("div");
-      fallback.dataset.audraliaParentChainFallback = "true";
-      fallback.style.position = "absolute";
-      fallback.style.inset = "0";
-      fallback.style.display = "grid";
-      fallback.style.placeItems = "center";
-      fallback.style.padding = "18px";
-      fallback.style.color = "rgba(238,246,255,.78)";
-      fallback.style.textAlign = "center";
-      fallback.style.fontWeight = "800";
-      fallback.textContent = "Audralia G1 raised terrain loaded, but canvas authority failed. Visible fallback protected.";
-      mount.appendChild(fallback);
-    }
-
-    state.fallback = true;
-    state.mounted = true;
-    state.canvasFound = false;
-    state.controlsBound = false;
-    status("fallback");
-  }
-
-  async function boot() {
-    const mount = ensureMount();
-    status("booting");
-
-    state.backstoryLoaded = await loadScript(
-      "backstory",
-      "/assets/audralia/audralia.backstory.js",
-      () => Boolean(window.AUDRALIA_BACKSTORY?.sampleIdentity)
-    );
-
-    state.tectonicsLoaded = await loadScript(
-      "tectonics",
-      "/assets/audralia/audralia.tectonics.js",
-      () => Boolean(window.AUDRALIA_TECTONICS?.sampleTectonics)
-    );
-
-    state.topologyLoaded = await loadScript(
-      "topology",
-      "/assets/audralia/audralia.topology.js",
-      () => Boolean(window.AUDRALIA_TOPOLOGY?.sampleTopology)
-    );
-
-    state.elevationLoaded = await loadScript(
-      "elevation",
-      "/assets/audralia/audralia.elevation.js",
-      () => Boolean(window.AUDRALIA_ELEVATION?.sampleElevation)
-    );
-
-    state.beachesLoaded = await loadScript(
-      "beaches",
-      "/assets/audralia/audralia.beaches.js",
-      () => Boolean(window.AUDRALIA_BEACHES?.sampleBeach)
-    );
-
-    state.landriseLoaded = await loadScript(
-      "landrise",
-      "/assets/audralia/audralia.landrise.js",
-      () => Boolean(window.AUDRALIA_LANDRISE?.sampleLandRise)
-    );
-
-    state.canvasLoaded = await loadScript(
-      "canvas",
-      "/assets/audralia/audralia.canvas.js",
-      () => Boolean(window.AUDRALIA_CANVAS?.mount)
-    );
-
-    try {
-      if (state.canvasLoaded && bootCanvas(mount)) return;
-    } catch (error) {
-      state.failed.push("canvas:mount-error");
-      state.error = error?.message || String(error);
-    }
-
-    protectedFallback(mount);
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot, { once: true });
-  } else {
-    boot();
-  }
-})();
+export {
+  CONTRACT,
+  HTML_CONTRACT,
+  PAIR_CONTRACT,
+  PREVIOUS_CONTRACT,
+  SHOWROOM_MODE,
+  DEFAULT_CHANNEL,
+  LATTICE_GEOMETRY,
+  CHANNELS,
+  getShowroomGlobeProjectionStatus
+};

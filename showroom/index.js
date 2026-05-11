@@ -8,10 +8,9 @@
 // - Import renewed canvas child from /assets/h-earth/h-earth/canvas.alignment.v3.js.
 // - Preserve parent chain and controls authority.
 // - Do not mutate parent truth.
-// - Do not rewrite canvas, controls, kernel, lattice, landmap, terrain, or surface.
 
 const CONTRACT = "H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_ROUTE_TNT_v10B";
-const PRIOR_CONTRACT = "H_EARTH_G1_CANVAS_ASSET_PATH_RENEWAL_ROUTE_TNT_v10";
+const PRIOR_CONTRACT = "H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9";
 const PRIOR_HTML_CONTRACT = "H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_HTML_TNT_v9";
 const SEED_PACKET = "H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1";
 const ROUTE = "/showroom/globe/h-earth/";
@@ -54,12 +53,6 @@ const CONTROLS_MODULE = Object.freeze({
 });
 
 const state = {
-  contract: CONTRACT,
-  priorContract: PRIOR_CONTRACT,
-  priorHtmlContract: PRIOR_HTML_CONTRACT,
-  seedPacket: SEED_PACKET,
-  route: ROUTE,
-  cacheKey: CACHE_KEY,
   parentChainStatus: "top-level-executed",
   canvasStatus: "held",
   controlsStatus: "held",

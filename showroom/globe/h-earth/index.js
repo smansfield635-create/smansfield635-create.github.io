@@ -1,39 +1,31 @@
 // /showroom/globe/h-earth/index.js
-// H_EARTH_G1_TERRAIN_ONLY_ROUTE_DOORWAY_TNT_v2
+// H_EARTH_G1_TERRAIN_BALANCE_ROUTE_DOORWAY_TNT_v3
 // Full-file replacement.
 // Route doorway authority only.
 //
 // Purpose:
-// - Replace stale parent-core pending doorway read.
-// - Import only the authorized terrain-only parent chain.
-// - Instantiate kernel → lattice256 → landmap → terrain.
-// - Publish visible terrain-only receipts.
+// - Force the H-Earth route to consume the renewed landmap/terrain balance files.
+// - Publish the actual imported module contracts.
+// - Preserve terrain-only scope.
 // - Keep surface, canvas, controls, weather, atmosphere, and life held.
-//
-// Owns:
-// - route boot
-// - terrain-only module import sequence
-// - status bridge
-// - public route receipts
-// - terrain-chain readiness publication
-//
-// Does not own:
-// - planet truth
-// - land/water truth
-// - terrain truth
-// - surface material
-// - canvas paint
-// - controls
-// - animation math
 
-const CONTRACT = "H_EARTH_G1_TERRAIN_ONLY_ROUTE_DOORWAY_TNT_v2";
-const PRIOR_CONTRACT = "H_EARTH_G1_ROUTE_DOORWAY_TNT_v1";
+const CONTRACT = "H_EARTH_G1_TERRAIN_BALANCE_ROUTE_DOORWAY_TNT_v3";
+const PRIOR_CONTRACT = "H_EARTH_G1_TERRAIN_ONLY_ROUTE_DOORWAY_TNT_v2";
 const SEED_PACKET = "H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1";
 const TERRAIN_ONLY_CHAIN = "H_EARTH_G1_COMPLETE_TERRAIN_ONLY_PARENT_CHAIN_TNT_v1";
 const ROUTE = "/showroom/globe/h-earth/";
 const PLANET = "H-Earth";
 const GENERATION = "G1";
-const CACHE_KEY = "2026-05-11-h-earth-terrain-only-chain-v2";
+
+const URL_CACHE = new URLSearchParams(window.location.search).get("v") || "terrain-balance-full-aspect-v2";
+const CACHE_KEY = `2026-05-11-h-earth-terrain-balance-full-aspect-v2-${URL_CACHE}`;
+
+const EXPECTED_CONTRACTS = Object.freeze({
+  kernel: "H_EARTH_G1_TERRAIN_ONLY_KERNEL_TNT_v1",
+  lattice256: "H_EARTH_G1_TERRAIN_ONLY_LATTICE256_TNT_v1",
+  landmap: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_LANDMAP_TNT_v2",
+  terrain: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_TERRAIN_TNT_v2"
+});
 
 const ACTIVE_MODULES = Object.freeze([
   {
@@ -96,6 +88,7 @@ const state = {
   terrainChainStatus: "pending",
   loadedCount: 0,
   failedCount: 0,
+  staleContractCount: 0,
   activeModules: {},
   heldModules: {},
   instances: {},
@@ -130,6 +123,14 @@ function safeError(error) {
   return String(error);
 }
 
+function moduleUrl(path) {
+  return `${path}?v=${encodeURIComponent(CACHE_KEY)}`;
+}
+
+function getImportedContract(imported, instance) {
+  return imported?.CONTRACT || instance?.contract || "contract-not-exported";
+}
+
 function stampDocument() {
   const root = document.documentElement;
 
@@ -158,12 +159,14 @@ function publishStatus(message, lines = []) {
   target.dataset.previousRouteDoorwayContract = PRIOR_CONTRACT;
   target.dataset.terrainOnlyChain = TERRAIN_ONLY_CHAIN;
   target.dataset.parentCoreChain = state.terrainChainStatus;
+  target.dataset.cacheKey = CACHE_KEY;
 
   target.replaceChildren(
     codeLine(`ROUTE_DOORWAY_RECEIPT: ${CONTRACT}`),
     codeLine(`PREVIOUS_DOORWAY: ${PRIOR_CONTRACT}`),
     codeLine(`SEED_PACKET: ${SEED_PACKET}`),
     codeLine(`TERRAIN_ONLY_CHAIN: ${TERRAIN_ONLY_CHAIN}`),
+    codeLine(`CACHE_KEY: ${CACHE_KEY}`),
     codeLine(`STATUS: ${message}`),
     ...lines.map(codeLine)
   );
@@ -179,6 +182,8 @@ function publishReceiptPanel() {
   panel.dataset.terrainChainStatus = state.terrainChainStatus;
   panel.dataset.loadedModules = String(state.loadedCount);
   panel.dataset.failedModules = String(state.failedCount);
+  panel.dataset.staleContractCount = String(state.staleContractCount);
+  panel.dataset.cacheKey = CACHE_KEY;
   panel.dataset.surface = "held";
   panel.dataset.canvas = "held";
   panel.dataset.controls = "held";
@@ -186,8 +191,11 @@ function publishReceiptPanel() {
   const activeLines = ACTIVE_MODULES.map((entry) => {
     const record = state.activeModules[entry.key];
     const status = record?.status || "pending";
+    const expected = EXPECTED_CONTRACTS[entry.key];
+    const actual = record?.actualContract || "pending";
+    const stale = expected && actual !== "pending" && actual !== expected ? " · STALE_CONTRACT" : "";
     const error = record?.error ? ` · ${record.error}` : "";
-    return `${entry.key.toUpperCase()}: ${status} · ${entry.path}${error}`;
+    return `${entry.key.toUpperCase()}: ${status} · expected=${expected} · actual=${actual}${stale} · ${entry.path}${error}`;
   });
 
   const heldLines = HELD_MODULES.map((entry) => {
@@ -195,18 +203,24 @@ function publishReceiptPanel() {
   });
 
   const terrain = state.instances.terrain;
-  const summary = terrain?.summary;
+  const landmap = state.instances.landmap;
+  const terrainSummary = terrain?.summary;
+  const landSummary = landmap?.summary;
 
-  const terrainLines = summary
+  const proofLines = terrainSummary && landSummary
     ? [
-        `TERRAIN_TOTAL_CELLS: ${summary.totalCells}`,
-        `LAND_TERRAIN_CELLS: ${summary.landTerrainCells}`,
-        `OCEAN_FLOOR_TERRAIN_CELLS: ${summary.oceanFloorTerrainCells}`,
-        `TERRAIN_ASPECTS: ${summary.populatedTerrainAspectCount}/${summary.terrainAspectCount}`,
-        `EVERY_CELL_ASSIGNED_TERRAIN: ${String(summary.everyCellAssignedTerrain)}`,
-        `SURFACE_HELD: ${String(summary.surfaceHeld)}`,
-        `CANVAS_HELD: ${String(summary.canvasHeld)}`,
-        `CONTROLS_HELD: ${String(summary.controlsHeld)}`
+        `LAND_RATIO: ${landSummary.landRatio}`,
+        `OCEAN_RATIO: ${landSummary.oceanRatio}`,
+        `TERRAIN_TOTAL_CELLS: ${terrainSummary.totalCells}`,
+        `LAND_TERRAIN_CELLS: ${terrainSummary.landTerrainCells}`,
+        `OCEAN_FLOOR_TERRAIN_CELLS: ${terrainSummary.oceanFloorTerrainCells}`,
+        `TERRAIN_ASPECTS: ${terrainSummary.populatedTerrainAspectCount}/${terrainSummary.terrainAspectCount}`,
+        `FULL_ASPECT_DISPOSITION: ${String(terrainSummary.fullAspectDisposition)}`,
+        `MISSING_TERRAIN_ASPECTS: ${(terrainSummary.missingTerrainAspects || []).join(" | ") || "none"}`,
+        `EVERY_CELL_ASSIGNED_TERRAIN: ${String(terrainSummary.everyCellAssignedTerrain)}`,
+        `SURFACE_HELD: ${String(terrainSummary.surfaceHeld)}`,
+        `CANVAS_HELD: ${String(terrainSummary.canvasHeld)}`,
+        `CONTROLS_HELD: ${String(terrainSummary.controlsHeld)}`
       ]
     : ["TERRAIN_SUMMARY: pending"];
 
@@ -217,12 +231,13 @@ function publishReceiptPanel() {
     codeLine(`PARENT_CORE_CHAIN_STATUS: ${state.terrainChainStatus}`),
     codeLine(`LOADED_ACTIVE_MODULES: ${state.loadedCount}`),
     codeLine(`FAILED_ACTIVE_MODULES: ${state.failedCount}`),
+    codeLine(`STALE_CONTRACTS: ${state.staleContractCount}`),
     codeLine(`GRAPHIC_BOX: FORBIDDEN`),
     codeLine(`IMAGE_GENERATION: FORBIDDEN`),
     codeLine(`VISUAL_PASS_CLAIM: FALSE`),
     ...activeLines.map(codeLine),
     ...heldLines.map(codeLine),
-    ...terrainLines.map(codeLine)
+    ...proofLines.map(codeLine)
   );
 }
 
@@ -233,6 +248,7 @@ function renderMountMessage(title, bodyLines = []) {
   mount.dataset.routeMount = "terrain-only-status";
   mount.dataset.routeDoorwayContract = CONTRACT;
   mount.dataset.terrainOnlyChain = TERRAIN_ONLY_CHAIN;
+  mount.dataset.cacheKey = CACHE_KEY;
   mount.dataset.canvasAuthority = "held-outside-terrain-only-scope";
   mount.dataset.planetTruthOwner = "terrain-parent-chain";
 
@@ -241,7 +257,7 @@ function renderMountMessage(title, bodyLines = []) {
   shell.style.position = "absolute";
   shell.style.left = "50%";
   shell.style.top = "50%";
-  shell.style.width = "min(88%, 420px)";
+  shell.style.width = "min(88%, 430px)";
   shell.style.transform = "translate(-50%, -50%)";
   shell.style.padding = "16px";
   shell.style.border = "1px solid rgba(143, 240, 195, 0.34)";
@@ -276,10 +292,6 @@ function renderMountMessage(title, bodyLines = []) {
   mount.replaceChildren(shell);
 }
 
-function moduleUrl(path) {
-  return `${path}?v=${encodeURIComponent(CACHE_KEY)}`;
-}
-
 async function importModule(entry) {
   const url = moduleUrl(entry.path);
 
@@ -292,6 +304,7 @@ async function importModule(entry) {
         status: "loaded-export-missing",
         path: entry.path,
         url,
+        actualContract: imported?.CONTRACT || "unknown",
         error
       };
       state.failedCount += 1;
@@ -304,8 +317,10 @@ async function importModule(entry) {
       path: entry.path,
       url,
       requiredExport: entry.requiredExport,
+      actualContract: imported.CONTRACT || "contract-not-exported",
       module: imported
     };
+
     state.loadedCount += 1;
     return imported;
   } catch (error) {
@@ -315,6 +330,7 @@ async function importModule(entry) {
       path: entry.path,
       url,
       requiredExport: entry.requiredExport,
+      actualContract: "import-failed",
       error: message
     };
     state.failedCount += 1;
@@ -336,7 +352,7 @@ async function loadActiveModules() {
   for (const entry of ACTIVE_MODULES) {
     publishStatus(`loading ${entry.key}`, [
       `CURRENT_MODULE: ${entry.path}`,
-      `CACHE_KEY: ${CACHE_KEY}`
+      `IMPORT_URL: ${moduleUrl(entry.path)}`
     ]);
     publishReceiptPanel();
 
@@ -348,13 +364,12 @@ async function loadActiveModules() {
       publishStatus(`${entry.key} import failed`, [
         `FAILED_MODULE: ${entry.path}`,
         `IMPORT_URL: ${moduleUrl(entry.path)}`,
-        `ERROR: ${state.activeModules[entry.key]?.error || "unknown"}`,
-        `DIRECT_TEST: ${entry.path}`
+        `ERROR: ${state.activeModules[entry.key]?.error || "unknown"}`
       ]);
       publishReceiptPanel();
       renderMountMessage("Terrain chain held", [
         `${entry.key} did not import`,
-        "Check the direct asset URL and filename"
+        "Check direct asset URL and filename"
       ]);
       return false;
     }
@@ -378,12 +393,12 @@ function createInstances() {
     });
 
     state.instances.kernel = kernel;
+    state.activeModules.kernel.actualContract = getImportedContract(kernelModule, kernel);
 
-    const lattice256 = latticeModule.createHEarthLattice256({
-      kernel
-    });
+    const lattice256 = latticeModule.createHEarthLattice256({ kernel });
 
     state.instances.lattice256 = lattice256;
+    state.activeModules.lattice256.actualContract = getImportedContract(latticeModule, lattice256);
 
     const landmap = landmapModule.createHEarthLandmap({
       kernel,
@@ -391,6 +406,7 @@ function createInstances() {
     });
 
     state.instances.landmap = landmap;
+    state.activeModules.landmap.actualContract = getImportedContract(landmapModule, landmap);
 
     const terrain = terrainModule.createHEarthTerrain({
       kernel,
@@ -399,6 +415,11 @@ function createInstances() {
     });
 
     state.instances.terrain = terrain;
+    state.activeModules.terrain.actualContract = getImportedContract(terrainModule, terrain);
+
+    state.staleContractCount = ACTIVE_MODULES.filter((entry) => {
+      return state.activeModules[entry.key]?.actualContract !== EXPECTED_CONTRACTS[entry.key];
+    }).length;
 
     return true;
   } catch (error) {
@@ -426,7 +447,7 @@ function terrainAspectPreview(terrain) {
   const names = Object.entries(seats)
     .filter(([, entries]) => Array.isArray(entries) && entries.length > 0)
     .map(([name]) => name)
-    .slice(0, 8);
+    .slice(0, 10);
 
   return names.length ? names.join(" · ") : "pending";
 }
@@ -434,25 +455,42 @@ function terrainAspectPreview(terrain) {
 function publishTerrainSuccess() {
   const terrain = state.instances.terrain;
   const landmap = state.instances.landmap;
-  const summary = terrain.summary;
+  const terrainSummary = terrain.summary;
   const landSummary = landmap.summary;
 
-  state.terrainChainStatus = "terrain-only-parent-chain-loaded";
+  const expectedBalance =
+    landSummary.landRatio >= 0.3 &&
+    landSummary.landRatio <= 0.42 &&
+    landSummary.oceanRatio >= 0.58 &&
+    landSummary.oceanRatio <= 0.7;
+
+  const fullDisposition = terrainSummary.fullAspectDisposition === true;
+
+  state.terrainChainStatus =
+    state.staleContractCount > 0
+      ? "terrain-chain-loaded-but-stale-contracts-detected"
+      : expectedBalance && fullDisposition
+        ? "terrain-balance-full-aspect-disposition-loaded"
+        : "terrain-chain-loaded-but-balance-or-aspects-held";
+
   document.documentElement.dataset.parentCoreChainStatus = state.terrainChainStatus;
   document.documentElement.dataset.terrainOnlyLoaded = "true";
   document.documentElement.dataset.surface = "held";
   document.documentElement.dataset.canvas = "held";
   document.documentElement.dataset.controls = "held";
 
-  publishStatus("terrain-only parent chain loaded; surface, canvas, and controls held", [
-    `KERNEL: loaded`,
-    `LATTICE256: loaded`,
-    `LANDMAP: loaded`,
-    `TERRAIN: loaded`,
+  publishStatus(state.terrainChainStatus, [
+    `KERNEL: loaded · ${state.activeModules.kernel.actualContract}`,
+    `LATTICE256: loaded · ${state.activeModules.lattice256.actualContract}`,
+    `LANDMAP: loaded · ${state.activeModules.landmap.actualContract}`,
+    `TERRAIN: loaded · ${state.activeModules.terrain.actualContract}`,
+    `STALE_CONTRACTS: ${state.staleContractCount}`,
     `LAND_RATIO: ${landSummary.landRatio}`,
     `OCEAN_RATIO: ${landSummary.oceanRatio}`,
-    `TERRAIN_CELLS: ${summary.totalCells}`,
-    `TERRAIN_ASPECTS_POPULATED: ${summary.populatedTerrainAspectCount}/${summary.terrainAspectCount}`,
+    `TERRAIN_CELLS: ${terrainSummary.totalCells}`,
+    `TERRAIN_ASPECTS_POPULATED: ${terrainSummary.populatedTerrainAspectCount}/${terrainSummary.terrainAspectCount}`,
+    `FULL_ASPECT_DISPOSITION: ${String(terrainSummary.fullAspectDisposition)}`,
+    `MISSING_TERRAIN_ASPECTS: ${(terrainSummary.missingTerrainAspects || []).join(" | ") || "none"}`,
     `SURFACE: held-outside-terrain-only-scope`,
     `CANVAS: held-outside-terrain-only-scope`,
     `CONTROLS: held-outside-terrain-only-scope`
@@ -460,13 +498,17 @@ function publishTerrainSuccess() {
 
   publishReceiptPanel();
 
-  renderMountMessage("Terrain chain loaded", [
-    `Cells: ${summary.totalCells}`,
-    `Land terrain: ${summary.landTerrainCells}`,
-    `Ocean floor terrain: ${summary.oceanFloorTerrainCells}`,
-    `Aspects: ${summary.populatedTerrainAspectCount}/${summary.terrainAspectCount}`,
-    `Preview: ${terrainAspectPreview(terrain)}`
-  ]);
+  renderMountMessage(
+    state.staleContractCount > 0 ? "Stale contracts detected" : "Terrain balance loaded",
+    [
+      `Land ratio: ${landSummary.landRatio}`,
+      `Ocean ratio: ${landSummary.oceanRatio}`,
+      `Cells: ${terrainSummary.totalCells}`,
+      `Aspects: ${terrainSummary.populatedTerrainAspectCount}/${terrainSummary.terrainAspectCount}`,
+      `Missing: ${(terrainSummary.missingTerrainAspects || []).join(", ") || "none"}`,
+      `Preview: ${terrainAspectPreview(terrain)}`
+    ]
+  );
 }
 
 async function boot() {
@@ -474,16 +516,16 @@ async function boot() {
   setHeldModules();
 
   state.routeDoorway = "active";
-  state.terrainChainStatus = "terrain-only-chain-checking";
+  state.terrainChainStatus = "terrain-balance-chain-checking";
   document.documentElement.dataset.parentCoreChainStatus = state.terrainChainStatus;
 
-  publishStatus("terrain-only route doorway active; loading parent chain", [
-    `CACHE_KEY: ${CACHE_KEY}`,
+  publishStatus("terrain-balance route doorway active; loading renewed parent chain", [
     `ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain`,
-    `HELD_CHAIN: surface → canvas → controls`
+    `HELD_CHAIN: surface → canvas → controls`,
+    `CACHE_KEY: ${CACHE_KEY}`
   ]);
   publishReceiptPanel();
-  renderMountMessage("Loading terrain chain", [
+  renderMountMessage("Loading terrain balance chain", [
     "kernel → lattice256 → landmap → terrain",
     "surface/canvas/controls held"
   ]);
@@ -511,5 +553,6 @@ export {
   ROUTE,
   ACTIVE_MODULES,
   HELD_MODULES,
-  CACHE_KEY
+  CACHE_KEY,
+  EXPECTED_CONTRACTS
 };

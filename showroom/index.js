@@ -1,789 +1,601 @@
-// /showroom/globe/h-earth/index.js
-// H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_ROUTE_TNT_v10B
+// /showroom/globe/index.js
+// SHOWROOM_GLOBE_DISPLAY_CASE_TOUCH_INSPECTION_ROUTE_TNT_v21
 // Full-file replacement.
-// Route doorway authority only.
+// Globe Showcase display-case route only.
 //
 // Purpose:
-// - Align route import with the nested H-Earth asset precinct.
-// - Import renewed canvas child from /assets/h-earth/h-earth/canvas.alignment.v3.js.
-// - Preserve parent chain and controls authority.
-// - Do not mutate parent truth.
+// - Fix blank display-case canvas.
+// - Make the display case the inspection preview layer.
+// - Add finger drag / touch yaw-pitch test on the selected planet.
+// - Keep cards stationary.
+// - Keep full inspection route private.
+// - Keep diagnostics backstage.
+// - Keep parent mutation forbidden.
 
-const CONTRACT = "H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_ROUTE_TNT_v10B";
-const PRIOR_CONTRACT = "H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9";
-const PRIOR_HTML_CONTRACT = "H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_HTML_TNT_v9";
-const SEED_PACKET = "H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1";
-const ROUTE = "/showroom/globe/h-earth/";
+const CONTRACT = "SHOWROOM_GLOBE_DISPLAY_CASE_TOUCH_INSPECTION_ROUTE_TNT_v21";
+const HTML_CONTRACT = "SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_HTML_TNT_v20B";
+const PAIR_CONTRACT = "SHOWROOM_COVER_GLOBE_SHOWCASE_DISPLAY_CASE_PAIR_TNT_v20";
+const PREVIOUS_CONTRACT = "SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_ROUTE_TNT_v20C";
 
-const URL_CACHE =
-  new URLSearchParams(window.location.search).get("v") ||
-  "nested-canvas-asset-path-alignment-route-v10b";
+const SHOWROOM_MODE = "showcase-bookcase-display-case";
+const DEFAULT_DISPLAY = "h-earth";
+const CARD_TRANSFORM = "forbidden";
 
-const CACHE_KEY = `2026-05-11-h-earth-nested-canvas-asset-path-alignment-route-v10b-${URL_CACHE}`;
-
-const EXPECTED_CONTRACTS = Object.freeze({
-  kernel: "H_EARTH_G1_TERRAIN_ONLY_KERNEL_TNT_v1",
-  lattice256: "H_EARTH_G1_TERRAIN_ONLY_LATTICE256_TNT_v1",
-  landmap: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_LANDMAP_TNT_v2",
-  terrain: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_TERRAIN_TNT_v2",
-  surface: "H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1",
-  canvas: "H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3",
-  controls: "H_EARTH_G1_CONTROLS_MOTION_INPUT_AUTHORITY_TNT_v1"
-});
-
-const ACTIVE_MODULES = Object.freeze([
-  { key: "kernel", path: "/assets/h-earth/h-earth.kernel.js", requiredExport: "createHEarthKernel" },
-  { key: "lattice256", path: "/assets/h-earth/h-earth.lattice256.js", requiredExport: "createHEarthLattice256" },
-  { key: "landmap", path: "/assets/h-earth/h-earth.landmap.js", requiredExport: "createHEarthLandmap" },
-  { key: "terrain", path: "/assets/h-earth/h-earth.terrain.js", requiredExport: "createHEarthTerrain" },
-  { key: "surface", path: "/assets/h-earth/h-earth.surface.js", requiredExport: "createHEarthSurface" }
+const WORLDS = Object.freeze([
+  {
+    key: "earth",
+    name: "Earth",
+    route: "/showroom/globe/earth/",
+    label: "Protected reference body.",
+    layer: "reference",
+    palette: { ocean:"#0d4f86", land:"#4f7d4b", coast:"#c7ad74", relief:"#8b8878", ice:"#e2f2f6", glow:"#8ebeff" }
+  },
+  {
+    key: "h-earth",
+    name: "H-Earth",
+    route: "/showroom/globe/h-earth/",
+    label: "Hybrid Earth. Active orbital/aerial build planet.",
+    layer: "active-build",
+    palette: { ocean:"#0b315f", land:"#6f9854", coast:"#d2b77b", relief:"#908866", ice:"#d8edf4", glow:"#8ff0c3" }
+  },
+  {
+    key: "hearth",
+    name: "Hearth",
+    route: "/showroom/globe/hearth/",
+    label: "Separate terrain lane.",
+    layer: "regression",
+    palette: { ocean:"#173c56", land:"#8f7144", coast:"#d0a66e", relief:"#a35f45", ice:"#d6e6e9", glow:"#f4bf60" }
+  },
+  {
+    key: "audralia",
+    name: "Audralia",
+    route: "/showroom/globe/audralia/",
+    label: "Constructed-world lane.",
+    layer: "constructed-world",
+    palette: { ocean:"#0f456f", land:"#7fa05a", coast:"#c9aa6e", relief:"#8f6d54", ice:"#cfe8ee", glow:"#b8a6ff" }
+  }
 ]);
 
-const CANVAS_MODULE = Object.freeze({
-  key: "canvas",
-  path: "/assets/h-earth/h-earth/canvas.alignment.v3.js",
-  requiredExport: "bootHEarthCanvas",
-  refreshExport: "refreshHEarthCanvasControlsStatus"
-});
-
-const CONTROLS_MODULE = Object.freeze({
-  key: "controls",
-  path: "/assets/h-earth/h-earth.controls.js",
-  requiredExport: "bootHEarthControls"
-});
+const MATERIALS = Object.freeze([
+  { lat:58, lon:-130, rx:.22, ry:.07, kind:"ice" },
+  { lat:42, lon:-92, rx:.23, ry:.10, kind:"land" },
+  { lat:21, lon:-62, rx:.17, ry:.08, kind:"coast" },
+  { lat:8, lon:-18, rx:.20, ry:.11, kind:"land" },
+  { lat:-12, lon:28, rx:.19, ry:.09, kind:"relief" },
+  { lat:-26, lon:74, rx:.18, ry:.08, kind:"land" },
+  { lat:-46, lon:118, rx:.22, ry:.08, kind:"coast" },
+  { lat:31, lon:146, rx:.17, ry:.07, kind:"relief" },
+  { lat:-62, lon:-18, rx:.25, ry:.06, kind:"ice" },
+  { lat:4, lon:-154, rx:.10, ry:.04, kind:"island" },
+  { lat:-34, lon:-132, rx:.11, ry:.04, kind:"island" }
+]);
 
 const state = {
-  parentChainStatus: "top-level-executed",
-  canvasStatus: "held",
-  controlsStatus: "held",
-  canvasPaintAuthorized: false,
-  controlsAuthorized: false,
-  motionAuthorized: false,
-  inputAuthorized: false,
-  canvasControlsReceiptAligned: false,
-  loadedCount: 0,
-  failedCount: 0,
-  staleContractCount: 0,
-  activeModules: {},
-  instances: {},
-  canvasImportedModule: null,
-  canvasModule: {
-    status: "held-before-surface-readiness",
-    path: CANVAS_MODULE.path,
-    actualContract: "pending"
-  },
-  controlsModule: {
-    status: "held-before-canvas-proof",
-    path: CONTROLS_MODULE.path,
-    actualContract: "pending"
-  },
-  canvasRuntimeStatus: null,
-  controlsRuntimeStatus: null,
-  errors: []
+  activeWorld: DEFAULT_DISPLAY,
+  yaw: -22,
+  pitch: 8,
+  zoom: 1,
+  autoSpin: true,
+  dragging: false,
+  dragStartX: 0,
+  dragStartY: 0,
+  dragStartYaw: 0,
+  dragStartPitch: 0,
+  pointerId: null,
+  frame: 0,
+  lastFrameAt: 0,
+  active: true,
+  reducedMotion: window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true,
+  dpr: Math.min(window.devicePixelRatio || 1, 1.5),
+  animationId: null,
+  resizeTimer: 0
+};
+
+const nodes = {
+  displayCanvas: null,
+  displayCtx: null,
+  displayTitle: null,
+  displayCopy: null,
+  displayMeta: null,
+  inspectSelected: null,
+  cards: new Map(),
+  previews: new Map()
 };
 
 function byId(id) {
   return document.getElementById(id);
 }
 
-function codeLine(text) {
-  const code = document.createElement("code");
-  code.textContent = text;
-  return code;
+function worldByKey(key) {
+  return WORLDS.find((world) => world.key === key) || WORLDS.find((world) => world.key === DEFAULT_DISPLAY);
 }
 
-function safeError(error) {
-  if (!error) return "unknown error";
-  if (error instanceof Error) return `${error.name}: ${error.message}`;
-  return String(error);
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
 }
 
-function moduleUrl(path) {
-  return `${path}?v=${encodeURIComponent(CACHE_KEY)}`;
+function setupCanvas(canvas, fallback = 600) {
+  if (!canvas) return null;
+
+  const rect = canvas.getBoundingClientRect();
+  const cssWidth = Math.max(180, Math.floor(rect.width || canvas.clientWidth || fallback));
+  const cssHeight = Math.max(180, Math.floor(rect.height || canvas.clientHeight || cssWidth));
+  const width = Math.floor(cssWidth * state.dpr);
+  const height = Math.floor(cssHeight * state.dpr);
+
+  if (canvas.width !== width || canvas.height !== height) {
+    canvas.width = width;
+    canvas.height = height;
+  }
+
+  canvas.style.transform = "none";
+  canvas.style.touchAction = "none";
+  canvas.dataset.cardTransform = "forbidden";
+
+  const ctx = canvas.getContext("2d", { alpha: false });
+  if (!ctx) return null;
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  return ctx;
 }
 
-function getImportedContract(imported, instance) {
-  return imported?.CONTRACT || instance?.contract || "contract-not-exported";
-}
+function collectNodes() {
+  nodes.displayCanvas = byId("displayCanvas");
+  nodes.displayCtx = setupCanvas(nodes.displayCanvas, 720);
+  nodes.displayTitle = byId("displayTitle");
+  nodes.displayCopy = byId("displayCopy");
+  nodes.displayMeta = byId("displayMeta");
+  nodes.inspectSelected = byId("inspectSelected");
 
-function getImportedCanvasContract(imported, status) {
-  return (
-    imported?.H_EARTH_CANVAS_CONTRACT ||
-    imported?.default?.contract ||
-    status?.contract ||
-    status?.receipt ||
-    "contract-not-exported"
-  );
-}
-
-function getImportedControlsContract(imported, status) {
-  return (
-    imported?.H_EARTH_CONTROLS_CONTRACT ||
-    imported?.default?.contract ||
-    status?.contract ||
-    status?.receipt ||
-    "contract-not-exported"
-  );
-}
-
-function statusTarget() {
-  return byId("hEarthStatusTarget");
-}
-
-function receiptPanel() {
-  return byId("hEarthReceiptPanel");
-}
-
-function mountTarget() {
-  return byId("hEarthCanvasMount");
-}
-
-function stampDocument() {
-  const root = document.documentElement;
-
-  root.dataset.routeDoorwayTopLevelExecuted = "true";
-  root.dataset.routeDoorwayReceipt = CONTRACT;
-  root.dataset.routeDoorwayContract = CONTRACT;
-  root.dataset.previousRouteDoorwayContract = PRIOR_CONTRACT;
-  root.dataset.previousHtmlContract = PRIOR_HTML_CONTRACT;
-  root.dataset.hEarthSeedPacket = SEED_PACKET;
-  root.dataset.parentCoreChainStatus = state.parentChainStatus;
-  root.dataset.cacheKey = CACHE_KEY;
-  root.dataset.surface = "active-read-only";
-  root.dataset.canvas = state.canvasStatus;
-  root.dataset.canvasAssetPath = CANVAS_MODULE.path;
-  root.dataset.controls = state.controlsStatus;
-  root.dataset.canvasPaintAuthorized = String(state.canvasPaintAuthorized);
-  root.dataset.controlsAuthorized = String(state.controlsAuthorized);
-  root.dataset.motionAuthorized = String(state.motionAuthorized);
-  root.dataset.inputAuthorized = String(state.inputAuthorized);
-  root.dataset.canvasControlsReceiptAligned = String(state.canvasControlsReceiptAligned);
-  root.dataset.parentMutationAuthorized = "false";
-  root.dataset.graphicBox = "forbidden";
-  root.dataset.imageGeneration = "forbidden";
-  root.dataset.visualPassClaim = "false";
-  root.dataset.australiaTerminology = "forbidden";
-}
-
-function publishStatus(message, lines = []) {
-  const target = statusTarget();
-  if (!target) return;
-
-  target.dataset.currentStatus = message;
-  target.dataset.routeDoorwayTopLevelExecuted = "true";
-  target.dataset.routeDoorway = "active";
-  target.dataset.routeDoorwayContract = CONTRACT;
-  target.dataset.previousRouteDoorwayContract = PRIOR_CONTRACT;
-  target.dataset.parentCoreChain = state.parentChainStatus;
-  target.dataset.surface = "active-read-only";
-  target.dataset.canvas = state.canvasStatus;
-  target.dataset.canvasAssetPath = CANVAS_MODULE.path;
-  target.dataset.controls = state.controlsStatus;
-  target.dataset.canvasPaintAuthorized = String(state.canvasPaintAuthorized);
-  target.dataset.controlsAuthorized = String(state.controlsAuthorized);
-  target.dataset.motionAuthorized = String(state.motionAuthorized);
-  target.dataset.inputAuthorized = String(state.inputAuthorized);
-  target.dataset.canvasControlsReceiptAligned = String(state.canvasControlsReceiptAligned);
-  target.dataset.cacheKey = CACHE_KEY;
-
-  target.replaceChildren(
-    codeLine(`ROUTE_DOORWAY_TOPLEVEL_EXECUTED: true`),
-    codeLine(`ROUTE_DOORWAY_RECEIPT: ${CONTRACT}`),
-    codeLine(`PREVIOUS_DOORWAY: ${PRIOR_CONTRACT}`),
-    codeLine(`PREVIOUS_HTML: ${PRIOR_HTML_CONTRACT}`),
-    codeLine(`SEED_PACKET: ${SEED_PACKET}`),
-    codeLine(`CACHE_KEY: ${CACHE_KEY}`),
-    codeLine(`STATUS: ${message}`),
-    ...lines.map(codeLine)
-  );
-}
-
-function publishReceiptPanel() {
-  const panel = receiptPanel();
-  if (!panel) return;
-
-  const terrain = state.instances.terrain;
-  const landmap = state.instances.landmap;
-  const surface = state.instances.surface;
-  const terrainSummary = terrain?.summary;
-  const landSummary = landmap?.summary;
-  const surfaceSummary = surface?.summary;
-  const canvas = state.canvasRuntimeStatus;
-  const controls = state.controlsRuntimeStatus;
-
-  const activeLines = ACTIVE_MODULES.map((entry) => {
-    const record = state.activeModules[entry.key];
-    const status = record?.status || "pending";
-    const expected = EXPECTED_CONTRACTS[entry.key];
-    const actual = record?.actualContract || "pending";
-    const stale = actual !== "pending" && actual !== expected ? " · STALE_CONTRACT" : "";
-    const error = record?.error ? ` · ${record.error}` : "";
-    return `${entry.key.toUpperCase()}: ${status} · expected=${expected} · actual=${actual}${stale} · ${entry.path}${error}`;
+  nodes.cards.clear();
+  document.querySelectorAll("[data-world-card]").forEach((card) => {
+    const key = card.getAttribute("data-world-card");
+    nodes.cards.set(key, card);
+    card.dataset.cardTransform = "forbidden";
+    card.style.transform = "none";
   });
 
-  const proofLines = terrainSummary && landSummary && surfaceSummary
-    ? [
-        `LAND_RATIO: ${landSummary.landRatio}`,
-        `OCEAN_RATIO: ${landSummary.oceanRatio}`,
-        `TERRAIN_TOTAL_CELLS: ${terrainSummary.totalCells}`,
-        `TERRAIN_ASPECTS: ${terrainSummary.populatedTerrainAspectCount}/${terrainSummary.terrainAspectCount}`,
-        `FULL_ASPECT_DISPOSITION: ${String(terrainSummary.fullAspectDisposition)}`,
-        `SURFACE_TOTAL_CELLS: ${surfaceSummary.totalCells}`,
-        `SURFACE_MATERIAL_CLASSES: ${surfaceSummary.materialClassCount}/${surfaceSummary.requiredMaterialClassCount}`,
-        `SURFACE_PARENT_READY: ${String(surfaceSummary.surfaceParentReady)}`,
-        `DOWNSTREAM_CANVAS_MAY_READ_SURFACE: ${String(surfaceSummary.downstreamCanvasMayReadSurface)}`,
-        `CANVAS_ASSET_PATH: ${CANVAS_MODULE.path}`,
-        `CANVAS_RECEIPT: ${state.canvasModule.actualContract}`,
-        `CANVAS_RENDER_STATUS: ${canvas?.renderStatus || "pending"}`,
-        `CANVAS_CELLS_RESOLVED: ${canvas?.cellsResolved ?? "pending"}`,
-        `CANVAS_CELLS_PAINTED: ${canvas?.cellsPainted ?? "pending"}`,
-        `CANVAS_NONBLANK_PIXEL_RATIO: ${canvas?.nonBlankPixelRatio ?? "pending"}`,
-        `CANVAS_CONTROLS_RECEIPT_ALIGNED: ${String(state.canvasControlsReceiptAligned)}`,
-        `CANVAS_PANEL_CONTROLS_STATUS: ${canvas?.controlsStatus || "pending"}`,
-        `CONTROLS_RECEIPT: ${state.controlsModule.actualContract}`,
-        `CONTROLS_STATUS: ${controls?.status || "pending"}`,
-        `CONTROLS_AUTHORIZED: ${String(state.controlsAuthorized)}`,
-        `MOTION_AUTHORIZED: ${String(state.motionAuthorized)}`,
-        `INPUT_AUTHORIZED: ${String(state.inputAuthorized)}`,
-        `PARENT_MUTATION_AUTHORIZED: false`
-      ]
-    : ["PARENT_CHAIN_SUMMARY: pending"];
-
-  panel.replaceChildren(
-    codeLine(`H_EARTH_IDENTITY: separate experimental third-planet lane`),
-    codeLine(`ROUTE_AUTHORITY: doorway only`),
-    codeLine(`ROUTE_DOORWAY_TOPLEVEL_EXECUTED: true`),
-    codeLine(`ROUTE_DOORWAY_RECEIPT: ${CONTRACT}`),
-    codeLine(`PARENT_CHAIN_STATUS: ${state.parentChainStatus}`),
-    codeLine(`LOADED_ACTIVE_PARENT_MODULES: ${state.loadedCount}`),
-    codeLine(`FAILED_ACTIVE_PARENT_MODULES: ${state.failedCount}`),
-    codeLine(`STALE_CONTRACTS: ${state.staleContractCount}`),
-    codeLine(`SURFACE: ACTIVE_READ_ONLY`),
-    codeLine(`CANVAS: ${state.canvasStatus.toUpperCase()}`),
-    codeLine(`CONTROLS: ${state.controlsStatus.toUpperCase()}`),
-    codeLine(`CANVAS_ASSET_PATH: ${CANVAS_MODULE.path}`),
-    codeLine(`CANVAS_CONTROLS_RECEIPT_ALIGNED: ${String(state.canvasControlsReceiptAligned)}`),
-    codeLine(`GRAPHIC_BOX: FORBIDDEN`),
-    codeLine(`IMAGE_GENERATION: FORBIDDEN`),
-    codeLine(`VISUAL_PASS_CLAIM: FALSE`),
-    ...activeLines.map(codeLine),
-    codeLine(`CANVAS: ${state.canvasModule.status} · expected=${EXPECTED_CONTRACTS.canvas} · actual=${state.canvasModule.actualContract} · ${CANVAS_MODULE.path}`),
-    codeLine(`CONTROLS: ${state.controlsModule.status} · expected=${EXPECTED_CONTRACTS.controls} · actual=${state.controlsModule.actualContract} · ${CONTROLS_MODULE.path}`),
-    ...proofLines.map(codeLine)
-  );
+  nodes.previews.clear();
+  document.querySelectorAll("[data-preview-canvas]").forEach((canvas) => {
+    const key = canvas.getAttribute("data-preview-canvas");
+    nodes.previews.set(key, { canvas, ctx: setupCanvas(canvas, 220) });
+  });
 }
 
-function renderMountMessage(title, bodyLines = []) {
-  const mount = mountTarget();
-  if (!mount) return;
+function stampDocument(world) {
+  const root = document.documentElement;
 
-  mount.dataset.routeMount = "nested-canvas-asset-path-alignment-status";
-  mount.dataset.routeDoorwayContract = CONTRACT;
-  mount.dataset.routeDoorwayTopLevelExecuted = "true";
-  mount.dataset.cacheKey = CACHE_KEY;
-  mount.dataset.surfaceAuthority = "active-read-only";
-  mount.dataset.canvasAuthority = state.canvasStatus;
-  mount.dataset.canvasAssetPath = CANVAS_MODULE.path;
-  mount.dataset.controlsAuthority = state.controlsStatus;
-  mount.dataset.canvasControlsReceiptAligned = String(state.canvasControlsReceiptAligned);
-  mount.dataset.planetTruthOwner = "parent-chain";
-
-  const shell = document.createElement("div");
-  shell.setAttribute("aria-live", "polite");
-  shell.style.position = "absolute";
-  shell.style.left = "50%";
-  shell.style.top = "50%";
-  shell.style.width = "min(88%, 460px)";
-  shell.style.transform = "translate(-50%, -50%)";
-  shell.style.padding = "16px";
-  shell.style.border = "1px solid rgba(143, 240, 195, 0.34)";
-  shell.style.borderRadius = "24px";
-  shell.style.background = "rgba(5, 9, 18, 0.80)";
-  shell.style.color = "#f6ead2";
-  shell.style.textAlign = "center";
-  shell.style.font = "700 0.9rem Inter, system-ui, sans-serif";
-  shell.style.letterSpacing = "0.02em";
-  shell.style.boxShadow = "0 20px 60px rgba(0,0,0,.35)";
-
-  const heading = document.createElement("div");
-  heading.textContent = title;
-  heading.style.color = "#8ff0c3";
-  heading.style.fontWeight = "900";
-  heading.style.textTransform = "uppercase";
-  heading.style.letterSpacing = "0.08em";
-  heading.style.marginBottom = bodyLines.length ? "10px" : "0";
-  shell.appendChild(heading);
-
-  for (const line of bodyLines) {
-    const item = document.createElement("div");
-    item.textContent = line;
-    item.style.color = "#b9c1cf";
-    item.style.fontWeight = "700";
-    item.style.lineHeight = "1.45";
-    item.style.marginTop = "4px";
-    shell.appendChild(item);
-  }
-
-  mount.replaceChildren(shell);
+  root.dataset.routeReceipt = CONTRACT;
+  root.dataset.htmlReceipt = HTML_CONTRACT;
+  root.dataset.pairReceipt = PAIR_CONTRACT;
+  root.dataset.previousRouteReceipt = PREVIOUS_CONTRACT;
+  root.dataset.showroomMode = SHOWROOM_MODE;
+  root.dataset.activeDisplay = world.key;
+  root.dataset.activeInspectionRoute = world.route;
+  root.dataset.displayCaseLayer = "touch-drag-inspection-preview";
+  root.dataset.touchDragInspection = "true";
+  root.dataset.cardTransform = CARD_TRANSFORM;
+  root.dataset.parentMutationAuthorized = "false";
+  root.dataset.visibleDiagnostics = "false";
+  root.dataset.generatedImage = "false";
+  root.dataset.graphicBox = "false";
+  root.dataset.visualPassClaim = "false";
 }
 
-async function importModule(entry) {
-  const url = moduleUrl(entry.path);
-
-  try {
-    const imported = await import(url);
-
-    if (!imported || typeof imported[entry.requiredExport] !== "function") {
-      const error = `required export missing: ${entry.requiredExport}`;
-      state.activeModules[entry.key] = {
-        status: "loaded-export-missing",
-        path: entry.path,
-        url,
-        actualContract: imported?.CONTRACT || "unknown",
-        error
-      };
-      state.failedCount += 1;
-      state.errors.push(`${entry.key}: ${error}`);
-      return null;
-    }
-
-    state.activeModules[entry.key] = {
-      status: "loaded",
-      path: entry.path,
-      url,
-      actualContract: imported.CONTRACT || "contract-not-exported",
-      module: imported
-    };
-
-    state.loadedCount += 1;
-    return imported;
-  } catch (error) {
-    const message = safeError(error);
-
-    state.activeModules[entry.key] = {
-      status: "not-available-or-import-failed",
-      path: entry.path,
-      url,
-      actualContract: "import-failed",
-      error: message
-    };
-
-    state.failedCount += 1;
-    state.errors.push(`${entry.key}: ${message}`);
-    return null;
-  }
+function metaBlock(label, value) {
+  const span = document.createElement("span");
+  const strong = document.createElement("strong");
+  strong.textContent = label;
+  span.appendChild(strong);
+  span.append(value);
+  return span;
 }
 
-async function loadParentModules() {
-  for (const entry of ACTIVE_MODULES) {
-    state.parentChainStatus = `loading-${entry.key}`;
-    stampDocument();
-    publishStatus(`loading ${entry.key}`, [
-      `CURRENT_MODULE: ${entry.path}`,
-      `IMPORT_URL: ${moduleUrl(entry.path)}`
-    ]);
-    publishReceiptPanel();
+function updateDisplay(world) {
+  if (nodes.displayTitle) nodes.displayTitle.textContent = world.name;
+  if (nodes.displayCopy) nodes.displayCopy.textContent = world.label;
+  if (nodes.inspectSelected) nodes.inspectSelected.href = world.route;
 
-    const imported = await importModule(entry);
-
-    if (!imported) {
-      state.parentChainStatus = `${entry.key}-failed`;
-      stampDocument();
-      publishStatus(`${entry.key} import failed`, [
-        `FAILED_MODULE: ${entry.path}`,
-        `ERROR: ${state.activeModules[entry.key]?.error || "unknown"}`
-      ]);
-      publishReceiptPanel();
-      return false;
-    }
-  }
-
-  return true;
-}
-
-function createInstances() {
-  try {
-    const kernelModule = state.activeModules.kernel.module;
-    const latticeModule = state.activeModules.lattice256.module;
-    const landmapModule = state.activeModules.landmap.module;
-    const terrainModule = state.activeModules.terrain.module;
-    const surfaceModule = state.activeModules.surface.module;
-
-    const kernel = kernelModule.createHEarthKernel({
-      doorwayContract: CONTRACT,
-      priorDoorwayContract: PRIOR_CONTRACT,
-      priorHtmlContract: PRIOR_HTML_CONTRACT,
-      route: ROUTE,
-      nestedCanvasAssetPathAlignment: true,
-      mutationAuthorized: false,
-      controlsAuthorized: false,
-      motionAuthorized: false,
-      inputAuthorized: false
-    });
-
-    const lattice256 = latticeModule.createHEarthLattice256({ kernel });
-    const landmap = landmapModule.createHEarthLandmap({ kernel, lattice256 });
-    const terrain = terrainModule.createHEarthTerrain({ kernel, lattice256, landmap });
-    const surface = surfaceModule.createHEarthSurface({ kernel, lattice256, landmap, terrain });
-
-    state.instances = { kernel, lattice256, landmap, terrain, surface };
-
-    state.activeModules.kernel.actualContract = getImportedContract(kernelModule, kernel);
-    state.activeModules.lattice256.actualContract = getImportedContract(latticeModule, lattice256);
-    state.activeModules.landmap.actualContract = getImportedContract(landmapModule, landmap);
-    state.activeModules.terrain.actualContract = getImportedContract(terrainModule, terrain);
-    state.activeModules.surface.actualContract = getImportedContract(surfaceModule, surface);
-
-    state.staleContractCount = ACTIVE_MODULES.filter((entry) => {
-      return state.activeModules[entry.key].actualContract !== EXPECTED_CONTRACTS[entry.key];
-    }).length;
-
-    return true;
-  } catch (error) {
-    const message = safeError(error);
-    state.parentChainStatus = "module-loaded-instance-create-failed";
-    state.errors.push(`instance-create: ${message}`);
-    stampDocument();
-    publishStatus("modules loaded but instance creation failed", [`ERROR: ${message}`]);
-    publishReceiptPanel();
-    return false;
-  }
-}
-
-function surfaceAllowsCanvas() {
-  const terrain = state.instances.terrain;
-  const landmap = state.instances.landmap;
-  const surface = state.instances.surface;
-
-  const terrainSummary = terrain.summary;
-  const landSummary = landmap.summary;
-  const surfaceSummary = surface.summary;
-
-  const expectedBalance =
-    landSummary.landRatio >= 0.3 &&
-    landSummary.landRatio <= 0.42 &&
-    landSummary.oceanRatio >= 0.58 &&
-    landSummary.oceanRatio <= 0.7;
-
-  return (
-    expectedBalance &&
-    terrainSummary.fullAspectDisposition === true &&
-    surfaceSummary.surfaceParentReady === true &&
-    surfaceSummary.downstreamCanvasMayReadSurface === true &&
-    state.staleContractCount === 0
-  );
-}
-
-function canvasProofPasses(status) {
-  return (
-    status?.contract === EXPECTED_CONTRACTS.canvas &&
-    status?.parentSurfaceReady === true &&
-    status?.downstreamCanvasMayReadSurface === true &&
-    status?.cellsResolved === 256 &&
-    Number(status?.cellsPainted) > 0 &&
-    status?.renderStatus === "visible-composition-painted-from-surface-instance" &&
-    Number(status?.nonBlankPixelRatio) > 0
-  );
-}
-
-async function importCanvasModule() {
-  const url = moduleUrl(CANVAS_MODULE.path);
-
-  state.canvasStatus = "loading";
-  state.canvasModule = {
-    status: "loading",
-    path: CANVAS_MODULE.path,
-    url,
-    actualContract: "pending"
-  };
-
-  stampDocument();
-  publishStatus("surface parent passed; loading nested canvas asset path", [
-    `CANVAS_ASSET_PATH: ${CANVAS_MODULE.path}`,
-    `EXPECTED_CANVAS: ${EXPECTED_CONTRACTS.canvas}`,
-    `CONTROLS: held`
-  ]);
-  publishReceiptPanel();
-
-  try {
-    window.H_EARTH_ROUTE_PARENT_INSTANCES = state.instances;
-
-    const imported = await import(url);
-    state.canvasImportedModule = imported;
-
-    if (!imported || typeof imported[CANVAS_MODULE.requiredExport] !== "function") {
-      throw new Error(`required export missing: ${CANVAS_MODULE.requiredExport}`);
-    }
-
-    const canvasStatus = await imported.bootHEarthCanvas({
-      instances: state.instances,
-      parentInstances: state.instances,
-      routeDoorwayContract: CONTRACT,
-      priorRouteDoorwayContract: PRIOR_CONTRACT,
-      priorHtmlContract: PRIOR_HTML_CONTRACT,
-      readOnly: true,
-      mutationAuthorized: false,
-      controlsAuthorized: false,
-      motionAuthorized: false,
-      inputAuthorized: false
-    });
-
-    state.canvasRuntimeStatus = canvasStatus || null;
-
-    const actualContract = getImportedCanvasContract(imported, canvasStatus);
-    const staleCanvas = actualContract !== EXPECTED_CONTRACTS.canvas;
-    const canvasReady = !staleCanvas && canvasProofPasses(canvasStatus);
-
-    state.canvasModule = {
-      status: staleCanvas ? "loaded-stale-contract" : "loaded",
-      path: CANVAS_MODULE.path,
-      url,
-      actualContract
-    };
-
-    state.canvasStatus = canvasReady ? "active-visible-composition" : "loaded-consumption-held";
-    state.canvasPaintAuthorized = canvasReady;
-
-    if (staleCanvas) state.staleContractCount += 1;
-
-    stampDocument();
-    publishStatus(canvasReady ? "nested canvas asset proof passed; controls eligible" : "nested canvas asset loaded but controls held", [
-      `CANVAS_ASSET_PATH: ${CANVAS_MODULE.path}`,
-      `CANVAS: loaded · ${actualContract}`,
-      `EXPECTED_CANVAS: ${EXPECTED_CONTRACTS.canvas}`,
-      `CANVAS_STALE_CONTRACT: ${String(staleCanvas)}`,
-      `CANVAS_RENDER_STATUS: ${canvasStatus?.renderStatus || "pending"}`,
-      `CANVAS_CELLS_RESOLVED: ${canvasStatus?.cellsResolved ?? "pending"}`,
-      `CANVAS_CELLS_PAINTED: ${canvasStatus?.cellsPainted ?? "pending"}`,
-      `CANVAS_NONBLANK_PIXEL_RATIO: ${canvasStatus?.nonBlankPixelRatio ?? "pending"}`,
-      `CONTROLS_AUTHORIZED: false`
-    ]);
-    publishReceiptPanel();
-
-    return canvasReady;
-  } catch (error) {
-    const message = safeError(error);
-    state.canvasStatus = "failed";
-    state.canvasModule = {
-      status: "import-or-boot-failed",
-      path: CANVAS_MODULE.path,
-      url,
-      actualContract: "import-or-boot-failed",
-      error: message
-    };
-    state.errors.push(`canvas: ${message}`);
-    stampDocument();
-    publishStatus("nested canvas asset path failed", [
-      `CANVAS_ASSET_PATH: ${CANVAS_MODULE.path}`,
-      `ERROR: ${message}`,
-      `CONTROLS: held`
-    ]);
-    publishReceiptPanel();
-    return false;
-  }
-}
-
-async function importControlsModule() {
-  const url = moduleUrl(CONTROLS_MODULE.path);
-
-  state.controlsStatus = "loading";
-  state.controlsModule = {
-    status: "loading",
-    path: CONTROLS_MODULE.path,
-    url,
-    actualContract: "pending"
-  };
-
-  stampDocument();
-  publishStatus("nested canvas proof passed; loading controls motion/input authority", [
-    `CONTROLS_MODULE: ${CONTROLS_MODULE.path}`,
-    `EXPECTED_CONTROLS: ${EXPECTED_CONTRACTS.controls}`,
-    `PARENT_MUTATION_AUTHORIZED: false`
-  ]);
-  publishReceiptPanel();
-
-  try {
-    const imported = await import(url);
-
-    if (!imported || typeof imported[CONTROLS_MODULE.requiredExport] !== "function") {
-      throw new Error(`required export missing: ${CONTROLS_MODULE.requiredExport}`);
-    }
-
-    const controlsStatus = await imported.bootHEarthControls({
-      canvasStatus: state.canvasRuntimeStatus,
-      routeDoorwayContract: CONTRACT,
-      readOnly: true,
-      parentMutationAuthorized: false
-    });
-
-    state.controlsRuntimeStatus = controlsStatus || null;
-
-    const actualContract = getImportedControlsContract(imported, controlsStatus);
-    const staleControls = actualContract !== EXPECTED_CONTRACTS.controls;
-
-    const controlsReady =
-      !staleControls &&
-      controlsStatus?.controlsAuthorized === true &&
-      controlsStatus?.motionAuthorized === true &&
-      controlsStatus?.inputAuthorized === true &&
-      controlsStatus?.parentMutationAuthorized === false;
-
-    state.controlsModule = {
-      status: staleControls ? "loaded-stale-contract" : "loaded",
-      path: CONTROLS_MODULE.path,
-      url,
-      actualContract
-    };
-
-    state.controlsStatus = controlsReady ? "active-motion-input-authority" : "loaded-held";
-    state.controlsAuthorized = controlsReady;
-    state.motionAuthorized = controlsReady;
-    state.inputAuthorized = controlsReady;
-
-    if (staleControls) state.staleContractCount += 1;
-
-    if (
-      controlsReady &&
-      state.canvasImportedModule &&
-      typeof state.canvasImportedModule.refreshHEarthCanvasControlsStatus === "function"
-    ) {
-      state.canvasRuntimeStatus =
-        state.canvasImportedModule.refreshHEarthCanvasControlsStatus(controlsStatus);
-    }
-
-    state.canvasControlsReceiptAligned =
-      state.canvasRuntimeStatus?.canvasControlsReceiptAligned === true &&
-      state.canvasRuntimeStatus?.controlsStatus === "active-motion-input-authority";
-
-    state.parentChainStatus = controlsReady && state.canvasControlsReceiptAligned
-      ? "nested-canvas-asset-path-alignment-controls-active"
-      : controlsReady
-        ? "controls-active-but-nested-canvas-alignment-held"
-        : "controls-loaded-but-held";
-
-    stampDocument();
-
-    publishStatus(state.parentChainStatus, [
-      `CANVAS_ASSET_PATH: ${CANVAS_MODULE.path}`,
-      `CANVAS_RECEIPT: ${state.canvasModule.actualContract}`,
-      `CONTROLS: loaded · ${actualContract}`,
-      `EXPECTED_CONTROLS: ${EXPECTED_CONTRACTS.controls}`,
-      `CONTROLS_STALE_CONTRACT: ${String(staleControls)}`,
-      `CONTROLS_STATUS: ${controlsStatus?.status || "pending"}`,
-      `CONTROLS_AUTHORIZED: ${String(state.controlsAuthorized)}`,
-      `MOTION_AUTHORIZED: ${String(state.motionAuthorized)}`,
-      `INPUT_AUTHORIZED: ${String(state.inputAuthorized)}`,
-      `CANVAS_CONTROLS_RECEIPT_ALIGNED: ${String(state.canvasControlsReceiptAligned)}`,
-      `CANVAS_PANEL_CONTROLS_STATUS: ${state.canvasRuntimeStatus?.controlsStatus || "pending"}`,
-      `PARENT_MUTATION_AUTHORIZED: false`,
-      `VISUAL_PASS_CLAIM: false`
-    ]);
-
-    publishReceiptPanel();
-
-    renderMountMessage(
-      state.canvasControlsReceiptAligned ? "Nested asset aligned" : "Controls active",
-      [
-        `Canvas asset: ${CANVAS_MODULE.path}`,
-        `Canvas receipt: ${state.canvasModule.actualContract}`,
-        `Controls: ${controlsStatus?.status || "pending"}`,
-        `Canvas controls aligned: ${String(state.canvasControlsReceiptAligned)}`,
-        `Parent mutation: forbidden`
-      ]
+  if (nodes.displayMeta) {
+    nodes.displayMeta.replaceChildren(
+      metaBlock("Layer", "Display case"),
+      metaBlock("Selection", world.name),
+      metaBlock("Touch test", "Drag planet")
     );
+  }
 
-    return controlsReady;
-  } catch (error) {
-    const message = safeError(error);
+  for (const [key, card] of nodes.cards.entries()) {
+    card.setAttribute("aria-selected", String(key === world.key));
+    card.dataset.activeDisplay = String(key === world.key);
+    card.style.transform = "none";
+  }
 
-    state.controlsStatus = "failed";
-    state.controlsModule = {
-      status: "import-or-boot-failed",
-      path: CONTROLS_MODULE.path,
-      url,
-      actualContract: "import-or-boot-failed",
-      error: message
-    };
+  stampDocument(world);
+}
 
-    state.errors.push(`controls: ${message}`);
-    state.parentChainStatus = "nested-canvas-asset-path-alignment-controls-failed";
+function selectWorld(key) {
+  const world = worldByKey(key);
+  state.activeWorld = world.key;
+  state.yaw = world.key === "h-earth" ? -22 : 0;
+  state.pitch = world.key === "hearth" ? -8 : 8;
+  state.zoom = 1;
+  updateDisplay(world);
+  drawNow();
+}
 
-    stampDocument();
-    publishStatus("nested canvas asset aligned but controls failed", [
-      `ERROR: ${message}`,
-      `PARENT_MUTATION_AUTHORIZED: false`
-    ]);
-    publishReceiptPanel();
-    return false;
+function colorFor(world, kind) {
+  if (kind === "ice") return world.palette.ice;
+  if (kind === "relief") return world.palette.relief;
+  if (kind === "coast") return world.palette.coast;
+  if (kind === "island") return world.palette.land;
+  return world.palette.land;
+}
+
+function shade(hex, light) {
+  const clean = hex.replace("#", "");
+  const r = parseInt(clean.slice(0, 2), 16);
+  const g = parseInt(clean.slice(2, 4), 16);
+  const b = parseInt(clean.slice(4, 6), 16);
+
+  return `rgb(${[
+    clamp(Math.round(r * light + 10 * (1 - light)), 0, 255),
+    clamp(Math.round(g * light + 10 * (1 - light)), 0, 255),
+    clamp(Math.round(b * light + 10 * (1 - light)), 0, 255)
+  ].join(",")})`;
+}
+
+function project(latDeg, lonDeg, radius, cx, cy, yawDeg, pitchDeg) {
+  const lat = (latDeg * Math.PI) / 180;
+  const lon = ((lonDeg + yawDeg) * Math.PI) / 180;
+  const pitch = (pitchDeg * Math.PI) / 180;
+
+  const x0 = Math.cos(lat) * Math.sin(lon);
+  const y0 = Math.sin(lat);
+  const z0 = Math.cos(lat) * Math.cos(lon);
+
+  const y = y0 * Math.cos(pitch) - z0 * Math.sin(pitch);
+  const z = y0 * Math.sin(pitch) + z0 * Math.cos(pitch);
+  const x = x0;
+
+  if (z < -0.08) return null;
+
+  return {
+    x: cx + x * radius,
+    y: cy - y * radius * 0.98,
+    z,
+    light: clamp(0.52 + z * 0.42 + y * 0.10 - x * 0.06, 0.22, 1)
+  };
+}
+
+function clearScene(ctx, width, height, world, compact) {
+  const bg = ctx.createRadialGradient(width * .5, height * .46, width * .04, width * .5, height * .5, width * .78);
+  bg.addColorStop(0, `${world.palette.glow}55`);
+  bg.addColorStop(.40, "#07152b");
+  bg.addColorStop(1, "#01030a");
+
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, width, height);
+
+  ctx.save();
+  ctx.globalAlpha = compact ? .42 : .58;
+
+  const count = compact ? 34 : 110;
+
+  for (let i = 0; i < count; i += 1) {
+    const x = (Math.sin(i * 91.17) * .5 + .5) * width;
+    const y = (Math.cos(i * 49.61) * .5 + .5) * height;
+    const r = compact ? .8 : .65 + ((i * 7) % 11) / 15;
+
+    ctx.beginPath();
+    ctx.fillStyle = i % 10 === 0 ? "rgba(246,211,123,.70)" : "rgba(225,238,255,.56)";
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function drawGlobe(ctx, world, width, height, yaw, pitch, zoom, compact) {
+  const baseRadius = Math.min(width, height) * (compact ? .33 : .35);
+  const radius = baseRadius * clamp(zoom, .78, 1.55);
+  const cx = width * .5;
+  const cy = height * (compact ? .5 : .52);
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.clip();
+
+  const ocean = ctx.createRadialGradient(cx - radius * .32, cy - radius * .35, radius * .08, cx, cy, radius * 1.15);
+  ocean.addColorStop(0, shade(world.palette.ocean, 1.4));
+  ocean.addColorStop(.36, world.palette.ocean);
+  ocean.addColorStop(.74, shade(world.palette.ocean, .52));
+  ocean.addColorStop(1, "#020b1c");
+
+  ctx.fillStyle = ocean;
+  ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+  ctx.restore();
+
+  const projected = [];
+
+  for (const item of MATERIALS) {
+    const point = project(item.lat, item.lon + WORLDS.indexOf(world) * 14, radius, cx, cy, yaw, pitch);
+    if (!point) continue;
+    projected.push({ item, point });
+  }
+
+  projected.sort((a, b) => a.point.z - b.point.z);
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius * .997, 0, Math.PI * 2);
+  ctx.clip();
+
+  for (const { item, point } of projected) {
+    const sizeX = radius * item.rx * (.75 + point.z * .35);
+    const sizeY = radius * item.ry * (.75 + point.z * .35);
+    const fill = shade(colorFor(world, item.kind), point.light);
+
+    ctx.beginPath();
+
+    if (item.kind === "relief") {
+      ctx.moveTo(point.x, point.y - sizeY * 1.15);
+      ctx.lineTo(point.x + sizeX, point.y - sizeY * .18);
+      ctx.lineTo(point.x + sizeX * .55, point.y + sizeY);
+      ctx.lineTo(point.x - sizeX * .62, point.y + sizeY * .72);
+      ctx.lineTo(point.x - sizeX, point.y - sizeY * .12);
+      ctx.closePath();
+    } else {
+      ctx.ellipse(point.x, point.y, sizeX, sizeY, .12, 0, Math.PI * 2);
+    }
+
+    ctx.globalAlpha = item.kind === "ice" ? .94 : .88;
+    ctx.fillStyle = fill;
+    ctx.fill();
+
+    ctx.globalAlpha = .22;
+    ctx.strokeStyle = item.kind === "coast" ? "rgba(246,211,123,.62)" : "rgba(246,234,210,.32)";
+    ctx.lineWidth = Math.max(.8, radius * .0026);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+
+  ctx.save();
+  const light = ctx.createRadialGradient(cx - radius * .34, cy - radius * .36, radius * .08, cx, cy, radius * 1.08);
+  light.addColorStop(0, "rgba(255,238,184,.22)");
+  light.addColorStop(.36, `${world.palette.glow}18`);
+  light.addColorStop(1, "rgba(0,0,0,.50)");
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.fillStyle = light;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius * 1.015, 0, Math.PI * 2);
+  ctx.strokeStyle = `${world.palette.glow}55`;
+  ctx.lineWidth = Math.max(compact ? 4 : 9, radius * .035);
+  ctx.stroke();
+  ctx.restore();
+
+  if (!compact) {
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.fillStyle = "rgba(246,211,123,.94)";
+    ctx.font = `${Math.max(22, width * .032)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+    ctx.fillText(world.name, width / 2, height * .08);
+
+    ctx.fillStyle = "rgba(243,227,189,.74)";
+    ctx.font = `${Math.max(13, width * .016)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+    ctx.fillText("Drag with finger to inspect", width / 2, height * .114);
+    ctx.restore();
   }
 }
 
-async function boot() {
-  state.parentChainStatus = "route-doorway-top-level-executed";
-  stampDocument();
-
-  publishStatus("route doorway top-level executed; loading nested canvas asset path alignment chain", [
-    `CANVAS_ASSET_PATH: ${CANVAS_MODULE.path}`,
-    `CHAIN: kernel → lattice256 → landmap → terrain → surface → nested-canvas → controls`,
-    `PARENT_MUTATION_AUTHORIZED: false`
-  ]);
-  publishReceiptPanel();
-
-  renderMountMessage("Nested asset alignment active", [
-    "Top-level execution confirmed",
-    `Canvas asset: ${CANVAS_MODULE.path}`,
-    "Controls align after nested canvas proof"
-  ]);
-
-  const parentLoaded = await loadParentModules();
-  if (!parentLoaded) return;
-
-  const instancesCreated = createInstances();
-  if (!instancesCreated) return;
-
-  const canvasAllowed = surfaceAllowsCanvas();
-
-  state.parentChainStatus = canvasAllowed
-    ? "surface-parent-ready-for-nested-canvas-asset"
-    : "surface-parent-held-before-canvas";
-  state.canvasStatus = canvasAllowed ? "authorized-for-nested-canvas-import" : "held";
-  state.controlsStatus = "held";
-
-  stampDocument();
-  publishStatus(state.parentChainStatus, [
-    `SURFACE_PARENT_READY: ${String(state.instances.surface?.summary?.surfaceParentReady === true)}`,
-    `DOWNSTREAM_CANVAS_MAY_READ_SURFACE: ${String(state.instances.surface?.summary?.downstreamCanvasMayReadSurface === true)}`,
-    `CANVAS_ASSET_PATH: ${CANVAS_MODULE.path}`,
-    `CANVAS_IMPORT_AUTHORIZED: ${String(canvasAllowed)}`,
-    `CONTROLS: held`
-  ]);
-  publishReceiptPanel();
-
-  if (!canvasAllowed) return;
-
-  const canvasReady = await importCanvasModule();
-  if (!canvasReady) return;
-
-  await importControlsModule();
+function drawWorld(canvas, ctx, world, yaw, pitch, zoom, compact = false) {
+  if (!canvas || !ctx) return;
+  clearScene(ctx, canvas.width, canvas.height, world, compact);
+  drawGlobe(ctx, world, canvas.width, canvas.height, yaw, pitch, zoom, compact);
 }
 
-stampDocument();
+function drawNow() {
+  const active = worldByKey(state.activeWorld);
+  drawWorld(nodes.displayCanvas, nodes.displayCtx, active, state.yaw, state.pitch, state.zoom, false);
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", boot, { once: true });
-} else {
-  boot();
+  for (const world of WORLDS) {
+    const preview = nodes.previews.get(world.key);
+    if (!preview) continue;
+    const previewYaw = state.frame * .24 + WORLDS.indexOf(world) * 32;
+    drawWorld(preview.canvas, preview.ctx, world, previewYaw, 10, 1, true);
+  }
 }
+
+function drawFrame(timestamp = 0) {
+  if (!state.active) return;
+
+  if (!state.reducedMotion && timestamp - state.lastFrameAt < 42) {
+    state.animationId = window.requestAnimationFrame(drawFrame);
+    return;
+  }
+
+  state.lastFrameAt = timestamp;
+  state.frame += 1;
+
+  if (state.autoSpin && !state.dragging) {
+    state.yaw += .18;
+  }
+
+  drawNow();
+
+  if (!state.reducedMotion) {
+    state.animationId = window.requestAnimationFrame(drawFrame);
+  }
+}
+
+function onPointerDown(event) {
+  if (!nodes.displayCanvas) return;
+
+  state.dragging = true;
+  state.autoSpin = false;
+  state.pointerId = event.pointerId;
+  state.dragStartX = event.clientX;
+  state.dragStartY = event.clientY;
+  state.dragStartYaw = state.yaw;
+  state.dragStartPitch = state.pitch;
+
+  nodes.displayCanvas.setPointerCapture?.(event.pointerId);
+  event.preventDefault();
+}
+
+function onPointerMove(event) {
+  if (!state.dragging || event.pointerId !== state.pointerId) return;
+
+  const dx = event.clientX - state.dragStartX;
+  const dy = event.clientY - state.dragStartY;
+
+  state.yaw = state.dragStartYaw + dx * .45;
+  state.pitch = clamp(state.dragStartPitch - dy * .32, -62, 62);
+
+  drawNow();
+  event.preventDefault();
+}
+
+function onPointerUp(event) {
+  if (event.pointerId !== state.pointerId) return;
+
+  state.dragging = false;
+  state.pointerId = null;
+  nodes.displayCanvas?.releasePointerCapture?.(event.pointerId);
+  event.preventDefault();
+}
+
+function onWheel(event) {
+  state.zoom = clamp(state.zoom + (event.deltaY < 0 ? .08 : -.08), .78, 1.55);
+  state.autoSpin = false;
+  drawNow();
+  event.preventDefault();
+}
+
+function wireEvents() {
+  for (const [key, card] of nodes.cards.entries()) {
+    card.addEventListener("click", () => selectWorld(key));
+    card.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      selectWorld(key);
+    });
+  }
+
+  if (nodes.displayCanvas) {
+    nodes.displayCanvas.addEventListener("pointerdown", onPointerDown, { passive: false });
+    nodes.displayCanvas.addEventListener("pointermove", onPointerMove, { passive: false });
+    nodes.displayCanvas.addEventListener("pointerup", onPointerUp, { passive: false });
+    nodes.displayCanvas.addEventListener("pointercancel", onPointerUp, { passive: false });
+    nodes.displayCanvas.addEventListener("wheel", onWheel, { passive: false });
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    state.active = document.visibilityState !== "hidden";
+
+    if (state.active && !state.animationId) {
+      state.animationId = window.requestAnimationFrame(drawFrame);
+    }
+
+    if (!state.active && state.animationId) {
+      window.cancelAnimationFrame(state.animationId);
+      state.animationId = null;
+    }
+  }, { passive: true });
+
+  window.addEventListener("resize", () => {
+    window.clearTimeout(state.resizeTimer);
+    state.resizeTimer = window.setTimeout(() => {
+      collectNodes();
+      updateDisplay(worldByKey(state.activeWorld));
+      drawNow();
+    }, 160);
+  }, { passive: true });
+}
+
+function exposeApi() {
+  const api = {
+    contract: CONTRACT,
+    receipt: CONTRACT,
+    htmlContract: HTML_CONTRACT,
+    pairContract: PAIR_CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
+    mode: SHOWROOM_MODE,
+    selectWorld,
+    status: getShowroomGlobeShowcaseStatus,
+    getStatus: getShowroomGlobeShowcaseStatus,
+    getShowroomGlobeShowcaseStatus
+  };
+
+  window.DGBShowroomGlobeShowcase = api;
+  window.ShowroomGlobeShowcase = api;
+  window.SHOWROOM_GLOBE_SHOWCASE_RECEIPT = CONTRACT;
+}
+
+function getShowroomGlobeShowcaseStatus() {
+  const world = worldByKey(state.activeWorld);
+
+  return {
+    contract: CONTRACT,
+    receipt: CONTRACT,
+    htmlContract: HTML_CONTRACT,
+    pairContract: PAIR_CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
+    showroomMode: SHOWROOM_MODE,
+    activeDisplay: world.key,
+    activeDisplayName: world.name,
+    activeInspectionRoute: world.route,
+    displayCaseLayer: "touch-drag-inspection-preview",
+    touchDragInspection: true,
+    yaw: state.yaw,
+    pitch: state.pitch,
+    zoom: state.zoom,
+    visibleDiagnostics: false,
+    cardTransform: CARD_TRANSFORM,
+    parentMutationAuthorized: false,
+    visualPassClaim: false,
+    generatedImage: false,
+    graphicBox: false
+  };
+}
+
+function boot() {
+  collectNodes();
+  exposeApi();
+  wireEvents();
+  selectWorld(DEFAULT_DISPLAY);
+
+  state.animationId = window.requestAnimationFrame(drawFrame);
+
+  if (state.reducedMotion) {
+    drawFrame(performance.now());
+  }
+}
+
+function bootWhenReady() {
+  stampDocument(worldByKey(DEFAULT_DISPLAY));
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot, { once: true });
+  } else {
+    boot();
+  }
+}
+
+bootWhenReady();
 
 export {
   CONTRACT,
-  PRIOR_CONTRACT,
-  PRIOR_HTML_CONTRACT,
-  SEED_PACKET,
-  ROUTE,
-  ACTIVE_MODULES,
-  CANVAS_MODULE,
-  CONTROLS_MODULE,
-  CACHE_KEY,
-  EXPECTED_CONTRACTS
+  HTML_CONTRACT,
+  PAIR_CONTRACT,
+  PREVIOUS_CONTRACT,
+  SHOWROOM_MODE,
+  DEFAULT_DISPLAY,
+  WORLDS,
+  getShowroomGlobeShowcaseStatus
 };

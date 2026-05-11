@@ -1,21 +1,33 @@
 // /assets/audralia/audralia.landmap.js
-// AUDRALIA_G1_256_LATTICE_LANDMAP_CLASSIFICATION_TNT_v2
+// AUDRALIA_G1_LAYER_ONE_LANDMAP_RENEWAL_TNT_v1
 // Full-file replacement.
-// Landmap classification authority.
-// Consumes /assets/audralia/audralia.lattice256.js when present.
-// Owns accepted Audralia G1 land/water footprint classification.
-// Reclassifies inland water-looking pockets as highland / mountain / ice until hydrology is authored.
-// Converts polar fan artifacts into ice/highland.
+// Layer One authority.
+// Ocean mask first. Landmap second.
+// Owns Audralia G1 ocean-dominant mask and coordinate classification.
+// Does not render.
+// Does not create lush surface.
+// Does not authorize rivers, lakes, streams, or brooks.
 // No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G1_256_LATTICE_LANDMAP_CLASSIFICATION_TNT_v2";
-  const RECEIPT = "AUDRALIA_G1_256_LATTICE_LANDMAP_CLASSIFICATION_RECEIPT_v2";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G1_COORDINATE_LANDMAP_AUTHORITY_TNT_v1";
-  const LATTICE_CONTRACT = "AUDRALIA_G1_256_LATTICE_ATLAS_AUTHORITY_TNT_v1";
-  const VERSION = "2026-05-10.audralia-g1-256-lattice-landmap-classification-v2";
+  const CONTRACT = "AUDRALIA_G1_LAYER_ONE_LANDMAP_RENEWAL_TNT_v1";
+  const RECEIPT = "AUDRALIA_G1_LAYER_ONE_LANDMAP_RENEWAL_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G1_256_LATTICE_LANDMAP_CLASSIFICATION_TNT_v2";
+  const VERSION = "2026-05-10.audralia-g1-layer-one-landmap-renewal-v1";
+
+  const BOOK_SUMMITS = Object.freeze([
+    "Gratitude",
+    "Generosity",
+    "Dependability",
+    "Accountability",
+    "Forgiveness",
+    "Humility",
+    "Self-Control",
+    "Patience",
+    "Purity"
+  ]);
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -98,26 +110,27 @@
   }
 
   function fallbackCoordinates(u, v) {
-    const uu = wrap01(u);
-    const vv = clamp(v, 0, 1);
+    const uu = wrap01(Number.isFinite(u) ? u : 0);
+    const vv = clamp(Number.isFinite(v) ? v : 0, 0, 1);
     const longitude = uu * 360 - 180;
     const latitude = 90 - vv * 180;
+
     const row = clamp(Math.floor(vv * 16) + 1, 1, 16);
     const column = clamp(Math.floor(uu * 16) + 1, 1, 16);
     const cell256 = (row - 1) * 16 + column;
+    const cell64 = Math.floor((row - 1) / 2) * 8 + Math.floor((column - 1) / 2) + 1;
+    const cell16 = Math.floor((row - 1) / 4) * 4 + Math.floor((column - 1) / 4) + 1;
 
-    const abs = Math.abs(latitude);
+    const absLat = Math.abs(latitude);
     let band = "temperate";
-    if (abs >= 78.75) band = "polar-cap";
-    else if (abs >= 67.5) band = "polar";
-    else if (abs >= 45) band = "cold-temperate";
-    else if (abs >= 22.5) band = "temperate";
-    else if (abs >= 11.25) band = "subtropical";
+    if (absLat >= 78.75) band = "polar-cap";
+    else if (absLat >= 67.5) band = "polar";
+    else if (absLat >= 45) band = "cold-temperate";
+    else if (absLat >= 22.5) band = "temperate";
+    else if (absLat >= 11.25) band = "subtropical";
     else band = "equatorial";
 
-    const summits = ["Gratitude", "Generosity", "Dependability", "Accountability", "Forgiveness", "Humility", "Self-Control", "Patience", "Purity"];
-
-    return {
+    return Object.freeze({
       u: uu,
       v: vv,
       longitude,
@@ -126,14 +139,14 @@
       latitudeRadians: (latitude / 180) * Math.PI,
       row,
       column,
-      cell16: Math.floor((row - 1) / 4) * 4 + Math.floor((column - 1) / 4) + 1,
-      cell64: Math.floor((row - 1) / 2) * 8 + Math.floor((column - 1) / 2) + 1,
+      cell16,
+      cell64,
       cell256,
       quadrant: `${latitude >= 0 ? "N" : "S"}${longitude >= 0 ? "E" : "W"}`,
       band,
       primarySummit: "Gratitude",
-      internalSummit: summits[(cell256 - 1) % summits.length]
-    };
+      internalSummit: BOOK_SUMMITS[(cell256 - 1) % BOOK_SUMMITS.length]
+    });
   }
 
   function coordinatesFromUV(u, v) {
@@ -145,129 +158,129 @@
 
   function sampleLandmap(u, v) {
     const coord = coordinatesFromUV(u, v);
+
     const uu = coord.u;
     const vv = coord.v;
-    const latRad = coord.latitudeRadians;
-    const lonRad = coord.longitudeRadians;
-    const absLat = Math.abs(coord.latitude);
+    const lon = coord.longitudeRadians;
+    const lat = coord.latitudeRadians;
+    const absLatDegrees = Math.abs(coord.latitude);
+    const absLatUnit = absLatDegrees / 90;
 
-    const continentalMemory = fbm(uu * 0.62 + 0.11, vv * 0.56 - 0.07, 1700000, 6);
-    const mediumMass = fbm(uu * 0.92 - 0.21, vv * 0.82 + 0.14, 1700500, 6);
-    const southernMass = fbm(uu * 0.78 + 0.37, vv * 1.02 - 0.28, 1700600, 5);
-    const islandChain = ridged(uu * 2.0 - 0.13, vv * 1.55 + 0.08, 1701000, 5);
-    const brokenCoast = ridged(uu * 3.1 + 0.2, vv * 2.42 - 0.14, 1702000, 4);
-    const oceanBasin = fbm(uu * 1.06 - 0.22, vv * 0.86 + 0.15, 1703000, 5);
-    const interiorBreak = fbm(uu * 1.62 + 0.18, vv * 1.34 - 0.2, 1703500, 5);
+    const oceanBasin = fbm(uu * 0.84 - 0.23, vv * 0.72 + 0.11, 810000, 6);
+    const deepOceanBias = fbm(uu * 1.18 + 0.31, vv * 0.94 - 0.19, 810700, 5);
+    const continentalSeed = fbm(uu * 0.64 + 0.11, vv * 0.58 - 0.07, 1700000, 6);
+    const landMassSeed = fbm(uu * 0.96 - 0.21, vv * 0.86 + 0.14, 1700500, 6);
+    const southernSeed = fbm(uu * 0.82 + 0.37, vv * 1.04 - 0.28, 1700600, 5);
+    const islandChain = ridged(uu * 2.08 - 0.13, vv * 1.62 + 0.08, 1701000, 5);
+    const fracture = ridged(uu * 3.1 + 0.2, vv * 2.42 - 0.14, 1702000, 4);
+    const interiorBreak = fbm(uu * 1.72 + 0.18, vv * 1.38 - 0.2, 1703500, 5);
 
     const plateArc =
-      Math.sin(lonRad * 1.02 + Math.cos(latRad * 1.35) * 0.52) * 0.12 +
-      Math.cos(lonRad * 0.58 - Math.sin(latRad * 1.12) * 0.46) * 0.1;
+      Math.sin(lon * 1.02 + Math.cos(lat * 1.35) * 0.52) * 0.1 +
+      Math.cos(lon * 0.58 - Math.sin(lat * 1.12) * 0.46) * 0.08;
 
-    const landEligibility = ridged(uu * 1.5, vv * 1.2, 211000, 5);
-    const islandEligibility = ridged(uu * 2.6, vv * 2.0, 214000, 4);
-    const shelfPressure = ridged(uu * 2.2, vv * 1.7, 212000, 5);
-    const basinPressure = 1 - fbm(uu * 1.8, vv * 1.4, 213000, 5);
+    const shelfPressure = ridged(uu * 2.28, vv * 1.72, 212000, 5);
+    const basinPressure = 1 - fbm(uu * 1.82, vv * 1.44, 213000, 5);
     const highlandPressure = ridged(uu * 1.52, vv * 1.18, 510000, 5);
     const mountainPressure = ridged(uu * 2.4 + 0.17, vv * 1.85 - 0.09, 520000, 5);
     const icePressure = ridged(uu * 5.2 - 0.13, vv * 4.4 + 0.08, 530000, 4);
 
-    const latitudeRestraint = Math.abs(latRad) / (Math.PI / 2);
+    const polarRestraint = smoothstep(0.72, 1, absLatUnit) * 0.13;
+    const oceanDominance = oceanBasin * 0.32 + deepOceanBias * 0.2 + 0.16;
 
-    const macroLand = clamp(
-      continentalMemory * 0.3 +
-        mediumMass * 0.25 +
-        southernMass * 0.13 +
-        landEligibility * 0.42 +
-        plateArc * 0.08 -
-        oceanBasin * 0.09 -
-        latitudeRestraint * 0.03,
+    const landPotential = clamp(
+      continentalSeed * 0.27 +
+        landMassSeed * 0.25 +
+        southernSeed * 0.12 +
+        islandChain * 0.11 +
+        fracture * 0.07 +
+        plateArc +
+        0.08 -
+        oceanDominance -
+        polarRestraint,
+      0,
+      1
+    );
+
+    const islandPotential = clamp(
+      islandChain * 0.5 +
+        fracture * 0.22 +
+        landMassSeed * 0.12 -
+        deepOceanBias * 0.18 -
+        polarRestraint * 0.45,
       0,
       1
     );
 
     const separationCut = clamp(
-      smoothstep(0.62, 0.9, interiorBreak * 0.5 + oceanBasin * 0.32 + brokenCoast * 0.18) *
-        (1 - smoothstep(0.62, 0.9, macroLand + landEligibility * 0.15)),
+      smoothstep(0.62, 0.9, interiorBreak * 0.5 + deepOceanBias * 0.3 + fracture * 0.18) *
+        (1 - smoothstep(0.62, 0.9, landPotential + continentalSeed * 0.18)),
       0,
       1
     );
 
-    const landSignal = clamp(
-      macroLand * 0.92 +
-        islandEligibility * 0.08 -
-        separationCut * 0.12 -
-        0.035,
+    const exposure = clamp(
+      Math.max(landPotential, islandPotential * 0.78) - separationCut * 0.11,
       0,
       1
     );
 
-    const islandSignal = smoothstep(
-      0.52,
-      0.84,
-      islandChain * 0.5 +
-        brokenCoast * 0.24 +
-        islandEligibility * 0.22 +
-        mediumMass * 0.08 -
-        oceanBasin * 0.045
-    );
-
-    const exposure = clamp(Math.max(landSignal, islandSignal * 0.86), 0, 1);
-
-    const shelf = clamp(
-      shelfPressure * 0.5 +
-        smoothstep(0.34, 0.58, landSignal) * 0.3 +
-        islandSignal * 0.14,
-      0,
-      1
-    );
+    const validLand = exposure > 0.485;
+    const validIsland = !validLand && islandPotential > 0.62 && deepOceanBias < 0.74 && absLatDegrees < 72;
+    const provisionalLand = validLand || validIsland;
 
     const continentalContext = clamp(
-      macroLand * 0.48 +
-        landEligibility * 0.22 +
-        mediumMass * 0.14 +
-        continentalMemory * 0.12 +
-        islandSignal * 0.08,
+      landPotential * 0.48 +
+        continentalSeed * 0.18 +
+        landMassSeed * 0.16 +
+        islandPotential * 0.08,
+      0,
+      1
+    );
+
+    const shelf = clamp(
+      shelfPressure * 0.45 +
+        smoothstep(0.38, 0.56, exposure) * 0.34 +
+        islandPotential * 0.1 -
+        deepOceanBias * 0.08,
       0,
       1
     );
 
     const coastBand =
-      smoothstep(0.365, 0.49, exposure) *
-      (1 - smoothstep(0.505, 0.64, exposure));
+      smoothstep(0.425, 0.505, exposure) *
+      (1 - smoothstep(0.545, 0.69, exposure));
 
-    const beachEdge = clamp(coastBand * smoothstep(0.28, 0.78, shelf), 0, 1);
+    const beachEdge = clamp(coastBand * smoothstep(0.32, 0.82, shelf), 0, 1);
 
-    const polarZone = absLat >= 67.5;
-    const polarCap = absLat >= 78.75;
+    const polarZone = absLatDegrees >= 67.5;
+    const polarCap = absLatDegrees >= 78.75;
+    const polarIce = polarZone && (icePressure > 0.56 || polarCap) && (provisionalLand || continentalContext > 0.44);
 
-    const land = exposure > 0.405;
-    const shelfWater = !land && shelf > 0.48 && continentalContext < 0.74;
-    const seaConnectedWater = !land && continentalContext < 0.62;
-    const inlandWaterCandidate = !land && continentalContext >= 0.62;
-    const polarFanArtifact = polarZone && (icePressure > 0.48 || inlandWaterCandidate || exposure > 0.32);
+    const enclosedInlandHold =
+      !provisionalLand &&
+      continentalContext > 0.57 &&
+      deepOceanBias < 0.66 &&
+      (highlandPressure > 0.46 || mountainPressure > 0.46 || absLatDegrees > 45);
 
-    const reclassAsHighlandIce =
-      polarFanArtifact ||
-      (inlandWaterCandidate && (highlandPressure > 0.45 || mountainPressure > 0.45 || absLat > 45));
+    const iceHighland = polarIce || (enclosedInlandHold && (absLatDegrees > 45 || icePressure > 0.55));
+    const mountainHighland = !iceHighland && enclosedInlandHold;
 
-    const reclassAsMountain =
-      !reclassAsHighlandIce &&
-      inlandWaterCandidate &&
-      (mountainPressure > 0.5 || highlandPressure > 0.56);
+    const isLand = provisionalLand || iceHighland || mountainHighland;
+    const isSeaConnectedWater = !isLand && continentalContext < 0.58;
+    const isShelf = !isLand && shelf > 0.5 && isSeaConnectedWater;
+    const isBeach = !isLand && beachEdge > 0.16 && isSeaConnectedWater;
+    const isOcean = !isLand && !isShelf && !isBeach;
 
-    const isLand = land || reclassAsHighlandIce || reclassAsMountain;
-    const isBeach = !isLand && beachEdge > 0.14 && seaConnectedWater;
-    const isShelf = !isLand && !isBeach && shelfWater;
-    const isOcean = !isLand && !isBeach && !isShelf;
+    const isCoast = isLand && exposure > 0.43 && exposure < 0.62;
+    const isIsland = isLand && validIsland;
+    const isInland = isLand && !isCoast && !isIsland;
+    const isBasin = isInland && basinPressure > 0.6 && !iceHighland;
+    const isHighland = isLand && (highlandPressure > 0.63 || mountainHighland);
+    const isIceHighland = isLand && iceHighland;
+    const isPolarIce = isIceHighland && polarZone;
 
-    const isCoast = isLand && exposure > 0.36 && exposure < 0.58;
-    const isIsland = isLand && islandSignal > landSignal && islandSignal > 0.58;
-    const isInland = isLand && exposure >= 0.58;
-    const isBasin = isInland && basinPressure > 0.58 && !reclassAsHighlandIce;
-    const isHighland = isLand && (highlandPressure > 0.62 || reclassAsMountain);
-    const isIceHighland = isLand && reclassAsHighlandIce;
-    const isPolarIce = polarZone && isIceHighland;
-    const hydrologyHeld = inlandWaterCandidate || isBasin;
+    const hydrologyHeld = isBasin || enclosedInlandHold;
 
     let topology = "ocean";
     if (isPolarIce) topology = "polar";
@@ -304,14 +317,19 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
-      latticeContract: LATTICE_CONTRACT,
+      version: VERSION,
+
       ...coord,
 
       primarySummit: "Gratitude",
       internalSummit: coord.internalSummit,
 
-      landSignal,
-      islandSignal,
+      oceanMaskFirst: true,
+      layerOneLandmap: true,
+      layerTwoLushSurfaceAllowedOnlyOnValidLand: true,
+
+      landPotential,
+      islandPotential,
       exposure,
       shelf,
       beachEdge,
@@ -338,21 +356,24 @@
       isIceHighland,
       isPolarIce,
 
-      isSeaConnectedWater: seaConnectedWater || isShelf || isBeach,
-      isInlandWaterCandidate: inlandWaterCandidate,
-      reclassAsHighlandIce,
-      reclassAsMountain,
+      isSeaConnectedWater,
+      isInlandWaterCandidate: enclosedInlandHold,
+      reclassAsHighlandIce: iceHighland,
+      reclassAsMountain: mountainHighland,
       reclassAsPolarIce: isPolarIce,
       hydrologyHeld,
 
       beachEligible: isBeach || isCoast,
-      mountainEligible: isHighland || isIceHighland || isPolarIce || reclassAsMountain,
+      mountainEligible: isHighland || isIceHighland || isPolarIce || mountainHighland,
+      lushSurfaceEligible: isLand && !isOcean && !isShelf && !isBeach,
       groundcoverEligible: isLand && !isPolarIce && !isIceHighland,
       lakeEligible: false,
       riverEligible: false,
 
       stableFootprint: true,
+      oceanDominantMask: true,
       canvasOwnsFootprint: false,
+      landSurfaceCanCreateLand: false,
       beachesCanCreateLand: false,
       mountainsCanCreateLand: false,
       groundcoverCanCreateLand: false,
@@ -364,16 +385,17 @@
   }
 
   function getCellSummary(cell256) {
-    const cell = window.AUDRALIA_LATTICE256?.getCellById
-      ? window.AUDRALIA_LATTICE256.getCellById(cell256)
-      : null;
+    if (window.AUDRALIA_LATTICE256?.getCellById) {
+      const cell = window.AUDRALIA_LATTICE256.getCellById(cell256);
+      return sampleLandmap((cell.longitudeCenter + 180) / 360, (90 - cell.latitudeCenter) / 180);
+    }
 
-    const lat = cell ? cell.latitudeCenter : 0;
-    const lon = cell ? cell.longitudeCenter : 0;
-    const u = (lon + 180) / 360;
-    const v = (90 - lat) / 180;
-
-    return sampleLandmap(u, v);
+    const id = clamp(Math.floor(Number(cell256) || 1), 1, 256);
+    const row = Math.floor((id - 1) / 16) + 1;
+    const column = ((id - 1) % 16) + 1;
+    const latCenter = 90 - (row - 0.5) * 11.25;
+    const lonCenter = -180 + (column - 0.5) * 22.5;
+    return sampleLandmap((lonCenter + 180) / 360, (90 - latCenter) / 180);
   }
 
   function getStatus() {
@@ -381,9 +403,11 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
-      latticeContract: LATTICE_CONTRACT,
       version: VERSION,
-      authority: "audralia-g1-256-lattice-landmap-classification",
+      authority: "audralia-g1-layer-one-landmap-renewal",
+      layer: 1,
+      oceanMaskFirst: true,
+      ownsOceanDominantMask: true,
       ownsFootprintClassification: true,
       consumesLattice256: Boolean(window.AUDRALIA_LATTICE256?.coordinatesFromUV),
       hydrologyAuthored: false,
@@ -391,6 +415,7 @@
       inlandWaterReclassified: true,
       polarFanArtifactsReclassified: true,
       canvasOwnsFootprint: false,
+      landSurfaceCanCreateLand: false,
       beachesCanCreateLand: false,
       mountainsCanCreateLand: false,
       groundcoverCanCreateLand: false,
@@ -404,7 +429,6 @@
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
-    latticeContract: LATTICE_CONTRACT,
     version: VERSION,
     sampleLandmap,
     getCellSummary,
@@ -417,15 +441,15 @@
   document.documentElement.dataset.audraliaLandmapLoaded = "true";
   document.documentElement.dataset.audraliaLandmapContract = CONTRACT;
   document.documentElement.dataset.audraliaLandmapReceipt = RECEIPT;
-  document.documentElement.dataset.audraliaLandmapConsumesLattice256 = String(Boolean(window.AUDRALIA_LATTICE256?.coordinatesFromUV));
+  document.documentElement.dataset.audraliaLayerOneLandmapRenewal = "true";
+  document.documentElement.dataset.audraliaOceanMaskFirst = "true";
+  document.documentElement.dataset.audraliaOceanDominantMask = "true";
   document.documentElement.dataset.audraliaHydrologyAuthored = "false";
   document.documentElement.dataset.audraliaTrueWaterSeaConnectedOnly = "true";
   document.documentElement.dataset.audraliaInlandWaterReclassified = "true";
   document.documentElement.dataset.audraliaPolarFanArtifactsReclassified = "true";
   document.documentElement.dataset.audraliaCanvasOwnsFootprint = "false";
-  document.documentElement.dataset.audraliaBeachesCanCreateLand = "false";
-  document.documentElement.dataset.audraliaMountainsCanCreateLand = "false";
-  document.documentElement.dataset.audraliaGroundcoverCanCreateLand = "false";
+  document.documentElement.dataset.audraliaLandSurfaceCanCreateLand = "false";
   document.documentElement.dataset.generatedImage = "false";
   document.documentElement.dataset.graphicBox = "false";
   document.documentElement.dataset.visualPassClaimed = "false";

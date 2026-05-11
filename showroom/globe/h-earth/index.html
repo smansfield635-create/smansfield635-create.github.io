@@ -1,31 +1,55 @@
-<!-- /showroom/globe/index.html -->
+<!-- /showroom/globe/h-earth/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-globe-split"
-  data-route="/showroom/globe/"
-  data-contract="H_EARTH_G1_SHOWROOM_GLOBE_CONSUMER_ALIGNMENT_TNT_v12D"
-  data-previous-contract="GLOBE_AUTHORITY_SPLIT_SELECTOR_BASELINE"
-  data-authority="selector-consumer-only"
-  data-showroom-consumer-alignment="h-earth-direct-globe-interaction"
-  data-h-earth-route="/showroom/globe/h-earth/"
-  data-h-earth-canvas-renewal="H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A"
-  data-h-earth-controls-renewal="H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C"
-  data-h-earth-interaction-mode="direct-globe-redraw"
-  data-h-earth-card-transform="forbidden"
+  data-page="h-earth"
+  data-route="/showroom/globe/h-earth/"
+  data-planet-lane="h-earth"
+  data-planet-name="H-Earth"
+  data-planet-meaning="Hybrid Earth"
+  data-generation="G1"
+  data-seed-packet="H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1"
+  data-contract="H_EARTH_G1_ROUTE_SHELL_RESTORE_AFTER_SELECTOR_MISPLACEMENT_TNT_v12E"
+  data-route-doorway-required="H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11"
+  data-previous-contract="H_EARTH_G1_INTERACTIVE_VIEW_HTML_RECEIPT_TNT_v11"
+  data-restore-reason="showroom-selector-was-misplaced-on-h-earth-route"
+  data-authority="h-earth-route-shell-only"
+  data-parent-core-chain="kernel-lattice256-landmap-terrain-surface"
+  data-active-chain="kernel-lattice256-landmap-terrain-surface-nested-canvas-direct-globe-controls"
+  data-surface="active-read-only"
+  data-canvas="nested-child-direct-globe-redraw"
+  data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
+  data-expected-canvas-contract="H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3"
+  data-expected-canvas-renewal="H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A"
+  data-controls="direct-globe-interaction-controls"
+  data-expected-controls-contract="H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2"
+  data-expected-controls-renewal="H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C"
+  data-interaction-mode="direct-globe-redraw"
+  data-card-transform="forbidden"
+  data-drag-authorized="route-gated"
+  data-touch-authorized="route-gated"
+  data-zoom-authorized="route-gated"
+  data-inertia-authorized="route-gated"
+  data-canvas-controls-receipt-aligned="route-gated"
+  data-canvas-paint-authorized="true"
+  data-controls-authorized="route-gated"
   data-parent-mutation-authorized="false"
+  data-earth-reference-shell="protected-reference-only"
+  data-mutation-earth="forbidden"
+  data-mutation-hearth="forbidden"
+  data-mutation-audralia="forbidden"
+  data-australia-terminology="forbidden"
   data-graphic-box="forbidden"
   data-image-generation="forbidden"
   data-visual-pass-claim="false"
-  data-australia-terminology="forbidden"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Globe Split</title>
+  <title>Diamond Gate Bridge · H-Earth Interactive View</title>
   <meta
     name="description"
-    content="Globe Split is the Showroom selector for Earth, H-Earth, Hearth, and Audralia. H-Earth is aligned to direct-globe interaction: nested canvas redraw, recursion-safe controls, no card transform, and immutable parent truth."
+    content="H-Earth is the Hybrid Earth experimental third-planet lane. This restored route shell exposes the direct-globe interaction view: nested canvas redraw, recursion-safe controls, no card transform, and immutable parent truth."
   >
 
   <style>
@@ -33,7 +57,6 @@
       color-scheme: dark;
       --bg: #050812;
       --panel: rgba(10, 18, 32, 0.84);
-      --panel-strong: rgba(12, 22, 40, 0.94);
       --line: rgba(244, 191, 96, 0.28);
       --line-blue: rgba(142, 190, 255, 0.22);
       --text: #f6ead2;
@@ -41,7 +64,6 @@
       --gold: #f4bf60;
       --blue: #8ebeff;
       --green: #8ff0c3;
-      --danger: #ffb3a8;
       --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
       --radius: 24px;
       --max: 1180px;
@@ -54,7 +76,7 @@
     html {
       min-height: 100%;
       background:
-        radial-gradient(circle at 50% 0%, rgba(142, 190, 255, 0.15), transparent 34rem),
+        radial-gradient(circle at 50% 0%, rgba(142, 190, 255, 0.16), transparent 34rem),
         radial-gradient(circle at 12% 22%, rgba(244, 191, 96, 0.12), transparent 28rem),
         linear-gradient(180deg, var(--bg), #02040a 74%);
     }
@@ -74,7 +96,8 @@
       text-decoration: none;
     }
 
-    a:focus-visible {
+    a:focus-visible,
+    button:focus-visible {
       outline: 2px solid var(--gold);
       outline-offset: 4px;
     }
@@ -157,16 +180,27 @@
     }
 
     .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(340px, 1.05fr);
+      gap: 22px;
+      align-items: stretch;
       margin-top: 24px;
-      padding: clamp(22px, 4vw, 42px);
+    }
+
+    .hero-copy,
+    .stage,
+    .canvas-composition-mount,
+    .controls-mount,
+    .panel {
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background:
-        radial-gradient(circle at 80% 10%, rgba(143, 240, 195, 0.08), transparent 24rem),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent),
-        var(--panel);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent), var(--panel);
       box-shadow: var(--shadow);
       backdrop-filter: blur(18px);
+    }
+
+    .hero-copy {
+      padding: clamp(22px, 4vw, 42px);
     }
 
     .eyebrow {
@@ -185,143 +219,158 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(2.4rem, 7vw, 6rem);
-      line-height: 0.92;
-      letter-spacing: -0.07em;
+      font-size: clamp(2.7rem, 8vw, 6.8rem);
+      line-height: 0.88;
+      letter-spacing: -0.085em;
     }
 
     .lede {
-      max-width: 78ch;
+      max-width: 66ch;
       margin: 22px 0 0;
       color: var(--muted);
       font-size: clamp(1rem, 2.2vw, 1.2rem);
       line-height: 1.65;
     }
 
-    .selector-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 18px;
-    }
-
-    .body-card,
-    .receipt-panel,
-    .panel {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent), var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
-    }
-
-    .body-card {
-      display: flex;
-      flex-direction: column;
-      min-height: 100%;
-      padding: 18px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .body-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 20% 0%, rgba(244, 191, 96, 0.12), transparent 16rem),
-        radial-gradient(circle at 86% 14%, rgba(142, 190, 255, 0.10), transparent 13rem);
-      opacity: 0.72;
-    }
-
-    .body-card > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    .body-card.active {
-      border-color: rgba(143, 240, 195, 0.42);
-      background:
-        radial-gradient(circle at 22% 4%, rgba(143, 240, 195, 0.09), transparent 18rem),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent),
-        var(--panel-strong);
-    }
-
-    .body-card h2 {
-      margin: 0;
-      font-size: 1.2rem;
-      letter-spacing: 0.01em;
-    }
-
-    .body-card p {
-      margin: 12px 0 0;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .pill-row {
+    .route-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 14px;
+      gap: 10px;
+      margin-top: 26px;
     }
 
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      width: max-content;
-      max-width: 100%;
-      padding: 7px 10px;
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--muted);
-      font-size: 0.78rem;
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .pill.ready {
-      color: var(--green);
-      border-color: rgba(143, 240, 195, 0.25);
-      background: rgba(143, 240, 195, 0.07);
-    }
-
-    .pill.gold {
-      color: var(--gold);
-      border-color: rgba(244, 191, 96, 0.30);
-      background: rgba(244, 191, 96, 0.08);
-    }
-
-    .card-action {
-      display: inline-flex;
-      justify-content: center;
-      margin-top: auto;
+    .route-actions a {
       padding: 12px 14px;
       border: 1px solid var(--line);
       border-radius: 999px;
       background: rgba(244, 191, 96, 0.09);
       color: var(--text);
-      font-weight: 800;
+      font-weight: 750;
     }
 
-    .card-action.secondary {
+    .route-actions a.secondary {
       border-color: var(--line-blue);
       background: rgba(142, 190, 255, 0.07);
       color: var(--muted);
     }
 
-    .status-stack {
+    .stage {
+      position: relative;
+      min-height: clamp(430px, 60vw, 680px);
+      overflow: hidden;
+      isolation: isolate;
+      padding: 18px;
+    }
+
+    .stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(142, 190, 255, 0.14), transparent 20rem),
+        radial-gradient(circle at 50% 50%, rgba(244, 191, 96, 0.10), transparent 28rem),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+    }
+
+    .mount-shell {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 18px;
+      place-items: center;
+      width: 100%;
+      min-height: calc(clamp(430px, 60vw, 680px) - 36px);
+      border-radius: calc(var(--radius) - 10px);
+    }
+
+    #hEarthCanvasMount {
+      position: relative;
+      width: min(100%, 620px);
+      aspect-ratio: 1 / 1;
+      border: 1px solid rgba(142, 190, 255, 0.22);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 36% 24%, rgba(255, 255, 255, 0.14), transparent 13%),
+        radial-gradient(circle at 50% 50%, rgba(142, 190, 255, 0.09), transparent 46%),
+        rgba(0, 0, 0, 0.18);
+      box-shadow:
+        inset 0 0 70px rgba(0, 0, 0, 0.32),
+        0 0 90px rgba(142, 190, 255, 0.12);
+      overflow: hidden;
+    }
+
+    #hEarthCanvasMount[data-route-mount="awaiting-h-earth-restored-interactive-route"]::before {
+      content: "Awaiting restored H-Earth interactive route doorway";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(82%, 430px);
+      transform: translate(-50%, -50%);
+      padding: 13px 16px;
+      border: 1px solid rgba(244, 191, 96, 0.28);
+      border-radius: 999px;
+      background: rgba(5, 9, 18, 0.76);
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+    }
+
+    .stage-label {
+      position: absolute;
+      left: 22px;
+      top: 22px;
+      display: inline-flex;
+      padding: 8px 11px;
+      border: 1px solid rgba(143, 240, 195, 0.22);
+      border-radius: 999px;
+      background: rgba(8, 18, 30, 0.72);
+      color: var(--green);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .canvas-composition-mount,
+    .controls-mount {
+      margin-top: 16px;
+      padding: 16px;
+      min-height: 120px;
+    }
+
+    .canvas-composition-mount:empty::before {
+      content: "Direct-globe canvas mount ready. Route doorway imports /assets/h-earth/h-earth/canvas.alignment.v3.js and expects v12A renewal.";
+      display: block;
+      padding: 16px;
+      border: 1px dashed rgba(142, 190, 255, 0.22);
+      border-radius: 18px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.55;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .controls-mount:empty::before {
+      content: "Direct-globe controls mount ready. Controls expect recursion-safe v12C behavior and must not transform the card.";
+      display: block;
+      padding: 16px;
+      border: 1px dashed rgba(244, 191, 96, 0.28);
+      border-radius: 18px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.55;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
     }
 
     .panel {
       padding: 18px;
+      min-height: 100%;
     }
 
     .panel h2 {
@@ -336,10 +385,50 @@
       line-height: 1.55;
     }
 
+    .chain-list {
+      display: grid;
+      gap: 8px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .chain-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.035);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .chain-list strong {
+      color: var(--text);
+      font-weight: 760;
+    }
+
+    .status-pill {
+      min-width: max-content;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .status-pill.ready {
+      color: var(--green);
+    }
+
     .receipt-panel {
-      margin-top: 18px;
+      margin-top: 16px;
       padding: 16px;
-      border-color: rgba(143, 240, 195, 0.18);
+      border: 1px solid rgba(143, 240, 195, 0.18);
+      border-radius: 18px;
       background: rgba(143, 240, 195, 0.055);
     }
 
@@ -360,13 +449,7 @@
       text-align: center;
     }
 
-    @media (max-width: 1040px) {
-      .selector-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 760px) {
+    @media (max-width: 920px) {
       .topbar {
         align-items: flex-start;
         border-radius: 22px;
@@ -377,8 +460,11 @@
         justify-content: flex-start;
       }
 
-      .selector-grid,
-      .status-stack {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .grid {
         grid-template-columns: 1fr;
       }
     }
@@ -389,21 +475,44 @@
         padding-top: 10px;
       }
 
-      .hero,
-      .body-card,
+      .hero-copy,
       .panel,
-      .receipt-panel {
+      .stage,
+      .canvas-composition-mount,
+      .controls-mount {
         border-radius: 18px;
+      }
+
+      .stage {
+        padding: 10px;
+      }
+
+      .mount-shell {
+        min-height: 360px;
+      }
+
+      .stage-label {
+        left: 14px;
+        top: 14px;
+      }
+
+      #hEarthCanvasMount {
+        width: min(100%, 330px);
+      }
+
+      .canvas-composition-mount,
+      .controls-mount {
+        padding: 10px;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="#globe-main">Skip to globe chamber</a>
+  <a class="skip-link" href="#h-earth-main">Skip to H-Earth</a>
 
   <div class="page-shell">
-    <header class="topbar" aria-label="Globe Split route navigation">
+    <header class="topbar" aria-label="H-Earth route navigation">
       <a class="brand" href="/" aria-label="Return to Diamond Gate Bridge Compass">
         <span class="brand-mark" aria-hidden="true"></span>
         <span>Diamond Gate Bridge</span>
@@ -411,168 +520,250 @@
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/" aria-current="page">Globe</a>
-        <a href="/nine-summits/universe/">Universe</a>
-        <a href="/products/">Products</a>
+        <a href="/showroom/globe/">Globe Split</a>
+        <a href="/showroom/globe/earth/">Earth</a>
+        <a href="/showroom/globe/h-earth/" aria-current="page">H-Earth</a>
+        <a href="/showroom/globe/hearth/">Hearth</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <main id="globe-main" tabindex="-1">
-      <section class="hero" aria-labelledby="globe-title">
-        <p class="eyebrow">Standalone · Globe Authority Split</p>
-        <h1 id="globe-title">Earth, H-Earth, Hearth, and Audralia</h1>
-        <p class="lede">
-          This chamber is the Showroom selector. Earth remains the reference body. H-Earth is the
-          Hybrid Earth experimental lane and now points to direct-globe interaction: nested canvas redraw,
-          recursion-safe controls, no card transform, and immutable parent truth. Hearth and Audralia remain
-          separate planetary lanes.
-        </p>
-      </section>
+    <main id="h-earth-main" tabindex="-1">
+      <section class="hero" aria-labelledby="h-earth-title">
+        <div class="hero-copy">
+          <p class="eyebrow">H-Earth · G1 · Restored Interactive View</p>
+          <h1 id="h-earth-title">H-Earth</h1>
+          <p class="lede">
+            H-Earth means Hybrid Earth. This route shell restores the H-Earth inspection lane after
+            the Globe Split selector was misplaced here. The nested canvas child paints the visible
+            globe from <strong>/assets/h-earth/h-earth/canvas.alignment.v3.js</strong>. Controls target
+            the globe view directly by yaw, pitch, and zoom. The card frame must remain stationary.
+          </p>
 
-      <section class="selector-grid" aria-label="Globe body selector">
-        <article
-          class="body-card"
-          data-body-card="earth"
-          data-route="/showroom/globe/earth/"
-          data-authority="reference-body"
-        >
-          <div class="pill-row" aria-label="Earth status">
-            <span class="pill gold">Reference body</span>
-            <span class="pill">Protected</span>
+          <div class="route-actions" aria-label="Route actions">
+            <a href="/showroom/globe/">Return to Globe Split</a>
+            <a class="secondary" href="/showroom/globe/earth/">Inspect Earth Reference</a>
+            <a class="secondary" href="/showroom/">Return to Showroom</a>
+            <a class="secondary" href="/gauges/">Run Gauges</a>
           </div>
-          <h2>Earth</h2>
-          <p>
-            Inspect Earth through its own reference route and protected Earth file chain.
-            Earth is not mutated by H-Earth, Hearth, or Audralia.
-          </p>
-          <a class="card-action secondary" href="/showroom/globe/earth/">Inspect Earth</a>
-        </article>
 
-        <article
-          class="body-card active"
-          data-body-card="h-earth"
-          data-route="/showroom/globe/h-earth/"
-          data-authority="hybrid-experimental-third-planet"
-          data-canvas-renewal="H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A"
-          data-controls-renewal="H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C"
-          data-interaction-mode="direct-globe-redraw"
-          data-card-transform="forbidden"
-          data-parent-mutation-authorized="false"
-        >
-          <div class="pill-row" aria-label="H-Earth status">
-            <span class="pill ready">Direct globe</span>
-            <span class="pill ready">Nested canvas</span>
-            <span class="pill ready">Controls safe</span>
+          <section
+            id="hEarthStatusTarget"
+            class="receipt-panel"
+            aria-label="H-Earth route status target"
+            data-status-target="h-earth-route"
+            data-current-status="h-earth-route-shell-restored-awaiting-v11-doorway"
+            data-route-shell="restored"
+            data-route-doorway="awaiting-interactive-view-route-receipt"
+            data-parent-core-chain="kernel-lattice256-landmap-terrain-surface"
+            data-active-chain="kernel-lattice256-landmap-terrain-surface-nested-canvas-direct-globe-controls"
+            data-surface="active-read-only"
+            data-canvas="nested-child-direct-globe-redraw"
+            data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
+            data-expected-canvas-contract="H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3"
+            data-expected-canvas-renewal="H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A"
+            data-controls="direct-globe-interaction-controls"
+            data-expected-controls-contract="H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2"
+            data-expected-controls-renewal="H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C"
+            data-interaction-mode="direct-globe-redraw"
+            data-card-transform="forbidden"
+            data-parent-mutation-authorized="false"
+          >
+            <code>ROUTE_RECEIPT: H_EARTH_G1_ROUTE_SHELL_RESTORE_AFTER_SELECTOR_MISPLACEMENT_TNT_v12E</code>
+            <code>RESTORE_REASON: showroom selector content was placed on /showroom/globe/h-earth/</code>
+            <code>PREVIOUS_ROUTE_RECEIPT: H_EARTH_G1_INTERACTIVE_VIEW_HTML_RECEIPT_TNT_v11</code>
+            <code>SEED_PACKET: H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1</code>
+            <code>REQUIRED_DOORWAY: H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11</code>
+            <code>CANVAS_ASSET_PATH: /assets/h-earth/h-earth/canvas.alignment.v3.js</code>
+            <code>EXPECTED_CANVAS: H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3</code>
+            <code>EXPECTED_CANVAS_RENEWAL: H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A</code>
+            <code>EXPECTED_CONTROLS: H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2</code>
+            <code>EXPECTED_CONTROLS_RENEWAL: H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C</code>
+            <code>INTERACTION_MODE: direct-globe-redraw</code>
+            <code>CARD_TRANSFORM: forbidden</code>
+            <code>STATUS: H-Earth route shell restored; awaiting v11 doorway module</code>
+          </section>
+        </div>
+
+        <section class="stage" aria-label="H-Earth restored interactive view status stage">
+          <div class="stage-label">H-Earth Status Mount</div>
+          <div class="mount-shell">
+            <div
+              id="hEarthCanvasMount"
+              role="img"
+              aria-label="H-Earth restored status mount awaiting interactive route doorway"
+              data-mount="h-earth-parent-chain-status"
+              data-route-mount="awaiting-h-earth-restored-interactive-route"
+              data-h-earth-surface-status-mount="true"
+              data-surface-authority="active-read-only"
+              data-canvas-authority="nested-child-direct-globe-redraw"
+              data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
+              data-expected-canvas-contract="H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3"
+              data-expected-canvas-renewal="H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A"
+              data-controls-authority="direct-globe-interaction-controls"
+              data-expected-controls-contract="H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2"
+              data-expected-controls-renewal="H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C"
+              data-interaction-mode="direct-globe-redraw"
+              data-card-transform="forbidden"
+              data-parent-mutation-authorized="false"
+              data-planet-truth-owner="parent-chain"
+            ></div>
           </div>
-          <h2>H-Earth</h2>
-          <p>
-            Hybrid Earth uses the nested asset path
-            <strong>/assets/h-earth/h-earth/canvas.alignment.v3.js</strong>. The globe redraws by
-            yaw, pitch, and zoom. The rectangular card does not rotate or scale.
-          </p>
-          <a class="card-action" href="/showroom/globe/h-earth/">Inspect H-Earth</a>
-        </article>
-
-        <article
-          class="body-card"
-          data-body-card="hearth"
-          data-route="/showroom/globe/hearth/"
-          data-authority="hearth-planet-lane"
-        >
-          <div class="pill-row" aria-label="Hearth status">
-            <span class="pill">Separate lane</span>
-            <span class="pill">Held from H-Earth</span>
-          </div>
-          <h2>Hearth</h2>
-          <p>
-            Hearth remains its own planet lane. H-Earth does not mutate Hearth terrain, canvas,
-            controls, or route authority.
-          </p>
-          <a class="card-action secondary" href="/showroom/globe/hearth/">Inspect Hearth</a>
-        </article>
-
-        <article
-          class="body-card"
-          data-body-card="audralia"
-          data-route="/showroom/globe/audralia/"
-          data-authority="audralia-constructed-world"
-        >
-          <div class="pill-row" aria-label="Audralia status">
-            <span class="pill">Constructed world</span>
-            <span class="pill">Separate lane</span>
-          </div>
-          <h2>Audralia</h2>
-          <p>
-            Audralia remains the constructed-world route with separate parent, terrain, hydration,
-            and canvas authority. H-Earth does not mutate Audralia.
-          </p>
-          <a class="card-action secondary" href="/showroom/globe/audralia/">Inspect Audralia</a>
-        </article>
-      </section>
-
-      <section class="status-stack" aria-label="Globe selector authority">
-        <article class="panel">
-          <h2>Parent Route</h2>
-          <p>
-            Selector only. This page links to inspection routes and publishes consumer receipts.
-            It does not import, render, or mutate planet bodies.
-          </p>
-        </article>
-
-        <article class="panel">
-          <h2>H-Earth Consumer Alignment</h2>
-          <p>
-            The Showroom consumer now advertises v12 direct-globe interaction instead of stale v10A
-            child-canvas language. The active target is globe redraw, not card transform.
-          </p>
-        </article>
+        </section>
       </section>
 
       <section
-        id="globeReceiptPanel"
-        class="receipt-panel"
-        aria-label="Globe Split public receipts"
-        data-receipt-panel="showroom-globe"
-        data-receipt-route="H_EARTH_G1_SHOWROOM_GLOBE_CONSUMER_ALIGNMENT_TNT_v12D"
-        data-selector-authority="consumer-only"
-        data-h-earth-route="/showroom/globe/h-earth/"
-        data-h-earth-canvas-renewal="H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A"
-        data-h-earth-controls-renewal="H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C"
-        data-h-earth-interaction-mode="direct-globe-redraw"
-        data-h-earth-card-transform="forbidden"
+        id="hEarthCanvasCompositionMount"
+        class="canvas-composition-mount"
+        aria-label="H-Earth direct globe canvas mount"
+        data-h-earth-canvas-mount="true"
+        data-canvas-composition-mount="h-earth"
+        data-canvas-authority="visible-composition-only"
+        data-canvas-consumer="nested-child-direct-globe-redraw"
+        data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
+        data-expected-canvas-contract="H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3"
+        data-expected-canvas-renewal="H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A"
+        data-interaction-mode="direct-globe-redraw"
+        data-card-transform="forbidden"
+        data-surface-source="parent-material-truth"
         data-parent-mutation-authorized="false"
-        data-earth-mutation-authorized="false"
-        data-hearth-mutation-authorized="false"
-        data-audralia-mutation-authorized="false"
-        data-graphic-box="FORBIDDEN"
-        data-image-generation="FORBIDDEN"
-        data-visual-pass-claim="FALSE"
+      ></section>
+
+      <section
+        id="hEarthControlsMount"
+        class="controls-mount"
+        aria-label="H-Earth direct globe controls mount"
+        data-h-earth-controls-mount="true"
+        data-controls-authority="direct-globe-motion-input-only"
+        data-expected-controls-contract="H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2"
+        data-expected-controls-renewal="H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C"
+        data-interaction-target="globe-redraw"
+        data-card-transform="forbidden"
+        data-drag-authorized="route-gated"
+        data-touch-authorized="route-gated"
+        data-zoom-authorized="route-gated"
+        data-inertia-authorized="route-gated"
+        data-parent-mutation-authorized="false"
+      ></section>
+
+      <section class="grid" aria-label="H-Earth route shell authority">
+        <article class="panel">
+          <h2>Route Shell Restored</h2>
+          <p>
+            This file belongs to H-Earth only. The Globe Split selector belongs at
+            /showroom/globe/index.html and must not occupy this route.
+          </p>
+        </article>
+
+        <article class="panel">
+          <h2>Direct Globe Interaction</h2>
+          <p>
+            Controls send yaw, pitch, and zoom to the canvas view API. The globe redraws inside the
+            canvas. The canvas card and surrounding panel must not tilt, rotate, or scale.
+          </p>
+        </article>
+
+        <article class="panel">
+          <h2>Protected Separation</h2>
+          <p>
+            H-Earth remains a separate experimental third-planet lane. Earth, Hearth, and Audralia
+            are not mutated.
+          </p>
+        </article>
+      </section>
+
+      <section class="panel" aria-labelledby="chain-title" style="margin-top:16px;">
+        <h2 id="chain-title">Restored H-Earth Direct-Globe Chain Order</h2>
+        <p>
+          Parent truth remains upstream. The nested canvas child redraws the globe. Controls move the
+          globe view only.
+        </p>
+
+        <ol class="chain-list">
+          <li><strong>HTML route shell</strong><span class="status-pill">restored file v12E</span></li>
+          <li><strong>Route doorway</strong><span class="status-pill">index.js v11</span></li>
+          <li><strong>Kernel parent core</strong><span class="status-pill">locked</span></li>
+          <li><strong>256 lattice parent-coordinate engine</strong><span class="status-pill">locked</span></li>
+          <li><strong>Landmap parent mask</strong><span class="status-pill">terrain balance v2</span></li>
+          <li><strong>Terrain parent relief</strong><span class="status-pill">full aspect v2</span></li>
+          <li><strong>Surface parent material truth</strong><span class="status-pill">active read</span></li>
+          <li><strong>Nested canvas direct-globe redraw</strong><span class="status-pill ready">v12A expected</span></li>
+          <li><strong>Recursion-safe controls</strong><span class="status-pill ready">v12C expected</span></li>
+        </ol>
+      </section>
+
+      <section
+        id="hEarthReceiptPanel"
+        class="receipt-panel"
+        aria-label="H-Earth public receipts"
+        data-receipt-panel="h-earth"
+        data-receipt-route="H_EARTH_G1_ROUTE_SHELL_RESTORE_AFTER_SELECTOR_MISPLACEMENT_TNT_v12E"
+        data-previous-receipt-route="H_EARTH_G1_INTERACTIVE_VIEW_HTML_RECEIPT_TNT_v11"
+        data-receipt-seed="H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1"
+        data-required-doorway="H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11"
+        data-active-chain="kernel-lattice256-landmap-terrain-surface-nested-canvas-direct-globe-controls"
+        data-expected-surface-contract="H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1"
+        data-expected-canvas-contract="H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3"
+        data-expected-canvas-renewal="H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A"
+        data-expected-controls-contract="H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2"
+        data-expected-controls-renewal="H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C"
+        data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
+        data-interaction-mode="direct-globe-redraw"
+        data-card-transform="forbidden"
+        data-controls-authority="direct-globe-motion-input-only"
+        data-drag-authorized="route-gated"
+        data-touch-authorized="route-gated"
+        data-zoom-authorized="route-gated"
+        data-inertia-authorized="route-gated"
+        data-canvas-controls-receipt-aligned="route-gated"
+        data-parent-mutation-authorized="false"
+        data-receipt-graphic-box="FORBIDDEN"
+        data-receipt-image-generation="FORBIDDEN"
+        data-receipt-visual-pass-claim="FALSE"
       >
-        <code>ROUTE_RECEIPT: H_EARTH_G1_SHOWROOM_GLOBE_CONSUMER_ALIGNMENT_TNT_v12D</code>
-        <code>ROUTE_AUTHORITY: selector-consumer-only</code>
-        <code>H_EARTH_ROUTE: /showroom/globe/h-earth/</code>
-        <code>H_EARTH_CANVAS_RENEWAL: H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A</code>
-        <code>H_EARTH_CONTROLS_RENEWAL: H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C</code>
-        <code>H_EARTH_CANVAS_ASSET_PATH: /assets/h-earth/h-earth/canvas.alignment.v3.js</code>
-        <code>H_EARTH_INTERACTION_MODE: direct-globe-redraw</code>
-        <code>H_EARTH_CARD_TRANSFORM: forbidden</code>
+        <code>H_EARTH_IDENTITY: separate experimental third-planet lane</code>
+        <code>ROUTE_AUTHORITY: H-Earth route shell only</code>
+        <code>ROUTE_RECEIPT: H_EARTH_G1_ROUTE_SHELL_RESTORE_AFTER_SELECTOR_MISPLACEMENT_TNT_v12E</code>
+        <code>RESTORE_REASON: selector content was misplaced at /showroom/globe/h-earth/</code>
+        <code>REQUIRED_DOORWAY: H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11</code>
+        <code>EXPECTED_SURFACE: H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1</code>
+        <code>EXPECTED_CANVAS: H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3</code>
+        <code>EXPECTED_CANVAS_RENEWAL: H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A</code>
+        <code>EXPECTED_CONTROLS: H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2</code>
+        <code>EXPECTED_CONTROLS_RENEWAL: H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C</code>
+        <code>CANVAS_ASSET_PATH: /assets/h-earth/h-earth/canvas.alignment.v3.js</code>
+        <code>INTERACTION_MODE: direct-globe-redraw</code>
+        <code>CARD_TRANSFORM: forbidden</code>
+        <code>ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface → nested-canvas-direct-globe → recursion-safe-controls</code>
+        <code>LEGACY_CANVAS_EXECUTION: forbidden</code>
         <code>PARENT_MUTATION_AUTHORIZED: false</code>
-        <code>EARTH_MUTATION_AUTHORIZED: false</code>
-        <code>HEARTH_MUTATION_AUTHORIZED: false</code>
-        <code>AUDRALIA_MUTATION_AUTHORIZED: false</code>
-        <code>GRAPHIC_BOX: FORBIDDEN</code>
-        <code>IMAGE_GENERATION: FORBIDDEN</code>
-        <code>VISUAL_PASS_CLAIM: FALSE</code>
+        <code>VISUAL_PASS_CLAIM: false</code>
+        <code>STATUS_TARGET: #hEarthStatusTarget</code>
+        <code>STATUS_MOUNT: #hEarthCanvasMount</code>
+        <code>CANVAS_COMPOSITION_MOUNT: #hEarthCanvasCompositionMount</code>
+        <code>CONTROLS_MOUNT: #hEarthControlsMount</code>
+        <code>SCRIPT_HANDOFF: ./index.js?v=H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11</code>
+        <code>EARTH_REFERENCE_SHELL: protected; no mutation authorized</code>
       </section>
     </main>
 
     <footer class="footer">
-      Globe Split selector consumer aligned for H-Earth direct-globe interaction. Parent bodies remain separate.
+      H-Earth route shell restored after selector misplacement. Canvas redraws the globe directly.
+      Controls target the globe view only. Parent truth remains immutable.
     </footer>
   </div>
+
+  <script
+    id="hEarthModuleHandoff"
+    type="module"
+    src="./index.js?v=H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11"
+    data-handoff="h-earth-restored-interactive-view-route"
+    data-required-next-contract="H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11"
+    data-current-html-contract="H_EARTH_G1_ROUTE_SHELL_RESTORE_AFTER_SELECTOR_MISPLACEMENT_TNT_v12E"
+    data-previous-html-contract="H_EARTH_G1_INTERACTIVE_VIEW_HTML_RECEIPT_TNT_v11"
+    data-cache-key="2026-05-11-h-earth-route-shell-restore-after-selector-misplacement-v12e"
+  ></script>
 </body>
 </html>

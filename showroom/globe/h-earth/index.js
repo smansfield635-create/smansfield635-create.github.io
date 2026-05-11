@@ -1,30 +1,47 @@
 // /showroom/globe/h-earth/index.js
-// H_EARTH_G1_TERRAIN_BALANCE_ROUTE_DOORWAY_TNT_v3
+// H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4
 // Full-file replacement.
 // Route doorway authority only.
 //
 // Purpose:
-// - Force the H-Earth route to consume the renewed landmap/terrain balance files.
-// - Publish the actual imported module contracts.
-// - Preserve terrain-only scope.
-// - Keep surface, canvas, controls, weather, atmosphere, and life held.
+// - Activate surface as read-only parent material truth after terrain pass.
+// - Import kernel → lattice256 → landmap → terrain → surface.
+// - Keep canvas and controls held.
+// - Publish surface receipts without painting or motion.
+//
+// Owns:
+// - route boot
+// - parent-chain module import sequence
+// - status bridge
+// - public route receipts
+// - surface-readiness publication
+//
+// Does not own:
+// - planet truth
+// - land/water truth
+// - terrain truth
+// - material truth
+// - canvas paint
+// - controls
+// - animation math
 
-const CONTRACT = "H_EARTH_G1_TERRAIN_BALANCE_ROUTE_DOORWAY_TNT_v3";
-const PRIOR_CONTRACT = "H_EARTH_G1_TERRAIN_ONLY_ROUTE_DOORWAY_TNT_v2";
+const CONTRACT = "H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4";
+const PRIOR_CONTRACT = "H_EARTH_G1_TERRAIN_BALANCE_ROUTE_DOORWAY_TNT_v3";
 const SEED_PACKET = "H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1";
 const TERRAIN_ONLY_CHAIN = "H_EARTH_G1_COMPLETE_TERRAIN_ONLY_PARENT_CHAIN_TNT_v1";
 const ROUTE = "/showroom/globe/h-earth/";
 const PLANET = "H-Earth";
 const GENERATION = "G1";
 
-const URL_CACHE = new URLSearchParams(window.location.search).get("v") || "terrain-balance-full-aspect-v2";
-const CACHE_KEY = `2026-05-11-h-earth-terrain-balance-full-aspect-v2-${URL_CACHE}`;
+const URL_CACHE = new URLSearchParams(window.location.search).get("v") || "surface-active-read-v1";
+const CACHE_KEY = `2026-05-11-h-earth-surface-active-read-v1-${URL_CACHE}`;
 
 const EXPECTED_CONTRACTS = Object.freeze({
   kernel: "H_EARTH_G1_TERRAIN_ONLY_KERNEL_TNT_v1",
   lattice256: "H_EARTH_G1_TERRAIN_ONLY_LATTICE256_TNT_v1",
   landmap: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_LANDMAP_TNT_v2",
-  terrain: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_TERRAIN_TNT_v2"
+  terrain: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_TERRAIN_TNT_v2",
+  surface: "H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1"
 });
 
 const ACTIVE_MODULES = Object.freeze([
@@ -51,27 +68,27 @@ const ACTIVE_MODULES = Object.freeze([
     label: "Terrain parent relief",
     path: "/assets/h-earth/h-earth.terrain.js",
     requiredExport: "createHEarthTerrain"
+  },
+  {
+    key: "surface",
+    label: "Surface parent material truth",
+    path: "/assets/h-earth/h-earth.surface.js",
+    requiredExport: "createHEarthSurface"
   }
 ]);
 
 const HELD_MODULES = Object.freeze([
   {
-    key: "surface",
-    label: "Surface parent material truth",
-    path: "/assets/h-earth/h-earth.surface.js",
-    status: "held-outside-terrain-only-scope"
-  },
-  {
     key: "canvas",
     label: "Canvas visible composition",
     path: "/assets/h-earth/h-earth.canvas.js",
-    status: "held-outside-terrain-only-scope"
+    status: "held-until-surface-parent-read-passes"
   },
   {
     key: "controls",
     label: "Controls motion/input only",
     path: "/assets/h-earth/h-earth.controls.js",
-    status: "held-outside-terrain-only-scope"
+    status: "held-until-canvas-exists"
   }
 ]);
 
@@ -85,7 +102,7 @@ const state = {
   generation: GENERATION,
   cacheKey: CACHE_KEY,
   routeDoorway: "booting",
-  terrainChainStatus: "pending",
+  parentChainStatus: "pending",
   loadedCount: 0,
   failedCount: 0,
   staleContractCount: 0,
@@ -137,10 +154,9 @@ function stampDocument() {
   root.dataset.routeDoorwayContract = CONTRACT;
   root.dataset.previousRouteDoorwayContract = PRIOR_CONTRACT;
   root.dataset.hEarthSeedPacket = SEED_PACKET;
-  root.dataset.terrainOnlyChain = TERRAIN_ONLY_CHAIN;
-  root.dataset.parentCoreChainStatus = state.terrainChainStatus;
+  root.dataset.parentCoreChainStatus = state.parentChainStatus;
   root.dataset.cacheKey = CACHE_KEY;
-  root.dataset.surface = "held";
+  root.dataset.surface = "active-read-only";
   root.dataset.canvas = "held";
   root.dataset.controls = "held";
   root.dataset.graphicBox = "forbidden";
@@ -157,15 +173,16 @@ function publishStatus(message, lines = []) {
   target.dataset.routeDoorway = "active";
   target.dataset.routeDoorwayContract = CONTRACT;
   target.dataset.previousRouteDoorwayContract = PRIOR_CONTRACT;
-  target.dataset.terrainOnlyChain = TERRAIN_ONLY_CHAIN;
-  target.dataset.parentCoreChain = state.terrainChainStatus;
+  target.dataset.parentCoreChain = state.parentChainStatus;
+  target.dataset.surface = "active-read-only";
+  target.dataset.canvas = "held";
+  target.dataset.controls = "held";
   target.dataset.cacheKey = CACHE_KEY;
 
   target.replaceChildren(
     codeLine(`ROUTE_DOORWAY_RECEIPT: ${CONTRACT}`),
     codeLine(`PREVIOUS_DOORWAY: ${PRIOR_CONTRACT}`),
     codeLine(`SEED_PACKET: ${SEED_PACKET}`),
-    codeLine(`TERRAIN_ONLY_CHAIN: ${TERRAIN_ONLY_CHAIN}`),
     codeLine(`CACHE_KEY: ${CACHE_KEY}`),
     codeLine(`STATUS: ${message}`),
     ...lines.map(codeLine)
@@ -178,13 +195,12 @@ function publishReceiptPanel() {
 
   panel.dataset.receiptDoorway = CONTRACT;
   panel.dataset.previousReceiptDoorway = PRIOR_CONTRACT;
-  panel.dataset.terrainOnlyChain = TERRAIN_ONLY_CHAIN;
-  panel.dataset.terrainChainStatus = state.terrainChainStatus;
+  panel.dataset.parentChainStatus = state.parentChainStatus;
   panel.dataset.loadedModules = String(state.loadedCount);
   panel.dataset.failedModules = String(state.failedCount);
   panel.dataset.staleContractCount = String(state.staleContractCount);
   panel.dataset.cacheKey = CACHE_KEY;
-  panel.dataset.surface = "held";
+  panel.dataset.surface = "active-read-only";
   panel.dataset.canvas = "held";
   panel.dataset.controls = "held";
 
@@ -204,34 +220,46 @@ function publishReceiptPanel() {
 
   const terrain = state.instances.terrain;
   const landmap = state.instances.landmap;
+  const surface = state.instances.surface;
+
   const terrainSummary = terrain?.summary;
   const landSummary = landmap?.summary;
+  const surfaceSummary = surface?.summary;
+  const surfaceReceipt = surface?.receipts?.surface;
+  const activation = surface?.activationConditions;
 
-  const proofLines = terrainSummary && landSummary
+  const proofLines = terrainSummary && landSummary && surfaceSummary
     ? [
         `LAND_RATIO: ${landSummary.landRatio}`,
         `OCEAN_RATIO: ${landSummary.oceanRatio}`,
         `TERRAIN_TOTAL_CELLS: ${terrainSummary.totalCells}`,
-        `LAND_TERRAIN_CELLS: ${terrainSummary.landTerrainCells}`,
-        `OCEAN_FLOOR_TERRAIN_CELLS: ${terrainSummary.oceanFloorTerrainCells}`,
         `TERRAIN_ASPECTS: ${terrainSummary.populatedTerrainAspectCount}/${terrainSummary.terrainAspectCount}`,
         `FULL_ASPECT_DISPOSITION: ${String(terrainSummary.fullAspectDisposition)}`,
-        `MISSING_TERRAIN_ASPECTS: ${(terrainSummary.missingTerrainAspects || []).join(" | ") || "none"}`,
-        `EVERY_CELL_ASSIGNED_TERRAIN: ${String(terrainSummary.everyCellAssignedTerrain)}`,
-        `SURFACE_HELD: ${String(terrainSummary.surfaceHeld)}`,
-        `CANVAS_HELD: ${String(terrainSummary.canvasHeld)}`,
-        `CONTROLS_HELD: ${String(terrainSummary.controlsHeld)}`
+        `SURFACE_TOTAL_CELLS: ${surfaceSummary.totalCells}`,
+        `LAND_SURFACE_CELLS: ${surfaceSummary.landSurfaceCells}`,
+        `OCEAN_SURFACE_CELLS: ${surfaceSummary.oceanSurfaceCells}`,
+        `SURFACE_MATERIAL_CLASSES: ${surfaceSummary.materialClassCount}/${surfaceSummary.requiredMaterialClassCount}`,
+        `EVERY_CELL_ASSIGNED_SURFACE: ${String(surfaceSummary.everyCellAssignedSurface)}`,
+        `SURFACE_PARENT_READY: ${String(surfaceSummary.surfaceParentReady)}`,
+        `DOWNSTREAM_CANVAS_MAY_READ_SURFACE: ${String(surfaceSummary.downstreamCanvasMayReadSurface)}`,
+        `CANVAS_PAINT_AUTHORIZED: ${String(surfaceSummary.canvasPaintAuthorized)}`,
+        `CONTROLS_AUTHORIZED: ${String(surfaceSummary.controlsAuthorized)}`,
+        `SURFACE_RECEIPT: ${surfaceReceipt?.contract || "missing"}`,
+        `SURFACE_ACTIVATION_REASON: ${activation?.reason || "pending"}`
       ]
-    : ["TERRAIN_SUMMARY: pending"];
+    : ["SURFACE_SUMMARY: pending"];
 
   panel.replaceChildren(
     codeLine(`H_EARTH_IDENTITY: separate experimental third-planet lane`),
     codeLine(`ROUTE_AUTHORITY: doorway only`),
     codeLine(`ROUTE_DOORWAY_RECEIPT: ${CONTRACT}`),
-    codeLine(`PARENT_CORE_CHAIN_STATUS: ${state.terrainChainStatus}`),
+    codeLine(`PARENT_CHAIN_STATUS: ${state.parentChainStatus}`),
     codeLine(`LOADED_ACTIVE_MODULES: ${state.loadedCount}`),
     codeLine(`FAILED_ACTIVE_MODULES: ${state.failedCount}`),
     codeLine(`STALE_CONTRACTS: ${state.staleContractCount}`),
+    codeLine(`SURFACE: ACTIVE_READ_ONLY`),
+    codeLine(`CANVAS: HELD`),
+    codeLine(`CONTROLS: HELD`),
     codeLine(`GRAPHIC_BOX: FORBIDDEN`),
     codeLine(`IMAGE_GENERATION: FORBIDDEN`),
     codeLine(`VISUAL_PASS_CLAIM: FALSE`),
@@ -245,19 +273,20 @@ function renderMountMessage(title, bodyLines = []) {
   const mount = mountTarget();
   if (!mount) return;
 
-  mount.dataset.routeMount = "terrain-only-status";
+  mount.dataset.routeMount = "surface-active-read-status";
   mount.dataset.routeDoorwayContract = CONTRACT;
-  mount.dataset.terrainOnlyChain = TERRAIN_ONLY_CHAIN;
   mount.dataset.cacheKey = CACHE_KEY;
-  mount.dataset.canvasAuthority = "held-outside-terrain-only-scope";
-  mount.dataset.planetTruthOwner = "terrain-parent-chain";
+  mount.dataset.surfaceAuthority = "active-read-only";
+  mount.dataset.canvasAuthority = "held";
+  mount.dataset.controlsAuthority = "held";
+  mount.dataset.planetTruthOwner = "parent-chain";
 
   const shell = document.createElement("div");
   shell.setAttribute("aria-live", "polite");
   shell.style.position = "absolute";
   shell.style.left = "50%";
   shell.style.top = "50%";
-  shell.style.width = "min(88%, 430px)";
+  shell.style.width = "min(88%, 440px)";
   shell.style.transform = "translate(-50%, -50%)";
   shell.style.padding = "16px";
   shell.style.border = "1px solid rgba(143, 240, 195, 0.34)";
@@ -359,15 +388,15 @@ async function loadActiveModules() {
     const imported = await importModule(entry);
 
     if (!imported) {
-      state.terrainChainStatus = `${entry.key}-failed`;
-      document.documentElement.dataset.parentCoreChainStatus = state.terrainChainStatus;
+      state.parentChainStatus = `${entry.key}-failed`;
+      document.documentElement.dataset.parentCoreChainStatus = state.parentChainStatus;
       publishStatus(`${entry.key} import failed`, [
         `FAILED_MODULE: ${entry.path}`,
         `IMPORT_URL: ${moduleUrl(entry.path)}`,
         `ERROR: ${state.activeModules[entry.key]?.error || "unknown"}`
       ]);
       publishReceiptPanel();
-      renderMountMessage("Terrain chain held", [
+      renderMountMessage("Parent chain held", [
         `${entry.key} did not import`,
         "Check direct asset URL and filename"
       ]);
@@ -383,13 +412,14 @@ function createInstances() {
   const latticeModule = state.activeModules.lattice256?.module;
   const landmapModule = state.activeModules.landmap?.module;
   const terrainModule = state.activeModules.terrain?.module;
+  const surfaceModule = state.activeModules.surface?.module;
 
   try {
     const kernel = kernelModule.createHEarthKernel({
       doorwayContract: CONTRACT,
       priorDoorwayContract: PRIOR_CONTRACT,
       route: ROUTE,
-      terrainOnly: true
+      surfaceActiveReadOnly: true
     });
 
     state.instances.kernel = kernel;
@@ -417,6 +447,16 @@ function createInstances() {
     state.instances.terrain = terrain;
     state.activeModules.terrain.actualContract = getImportedContract(terrainModule, terrain);
 
+    const surface = surfaceModule.createHEarthSurface({
+      kernel,
+      lattice256,
+      landmap,
+      terrain
+    });
+
+    state.instances.surface = surface;
+    state.activeModules.surface.actualContract = getImportedContract(surfaceModule, surface);
+
     state.staleContractCount = ACTIVE_MODULES.filter((entry) => {
       return state.activeModules[entry.key]?.actualContract !== EXPECTED_CONTRACTS[entry.key];
     }).length;
@@ -425,15 +465,15 @@ function createInstances() {
   } catch (error) {
     const message = safeError(error);
     state.errors.push(`instance-create: ${message}`);
-    state.terrainChainStatus = "module-loaded-instance-create-failed";
-    document.documentElement.dataset.parentCoreChainStatus = state.terrainChainStatus;
+    state.parentChainStatus = "module-loaded-instance-create-failed";
+    document.documentElement.dataset.parentCoreChainStatus = state.parentChainStatus;
 
-    publishStatus("terrain modules loaded but instance creation failed", [
+    publishStatus("modules loaded but instance creation failed", [
       `ERROR: ${message}`,
       `CHECK: exported factory function signatures`
     ]);
     publishReceiptPanel();
-    renderMountMessage("Terrain instance failed", [
+    renderMountMessage("Parent instance failed", [
       "Modules loaded",
       "Factory chain did not complete"
     ]);
@@ -442,21 +482,19 @@ function createInstances() {
   }
 }
 
-function terrainAspectPreview(terrain) {
-  const seats = terrain?.dispositionaryLocations?.allAspects || {};
-  const names = Object.entries(seats)
-    .filter(([, entries]) => Array.isArray(entries) && entries.length > 0)
-    .map(([name]) => name)
-    .slice(0, 10);
-
-  return names.length ? names.join(" · ") : "pending";
+function materialPreview(surface) {
+  const classes = surface?.materialIndex?.materialClasses || [];
+  return classes.slice(0, 10).join(" · ") || "pending";
 }
 
-function publishTerrainSuccess() {
+function publishSurfaceSuccess() {
   const terrain = state.instances.terrain;
   const landmap = state.instances.landmap;
+  const surface = state.instances.surface;
+
   const terrainSummary = terrain.summary;
   const landSummary = landmap.summary;
+  const surfaceSummary = surface.summary;
 
   const expectedBalance =
     landSummary.landRatio >= 0.3 &&
@@ -464,49 +502,56 @@ function publishTerrainSuccess() {
     landSummary.oceanRatio >= 0.58 &&
     landSummary.oceanRatio <= 0.7;
 
-  const fullDisposition = terrainSummary.fullAspectDisposition === true;
+  const fullTerrainDisposition = terrainSummary.fullAspectDisposition === true;
+  const surfaceReady = surfaceSummary.surfaceParentReady === true;
+  const canvasMayReadSurface = surfaceSummary.downstreamCanvasMayReadSurface === true;
 
-  state.terrainChainStatus =
+  state.parentChainStatus =
     state.staleContractCount > 0
-      ? "terrain-chain-loaded-but-stale-contracts-detected"
-      : expectedBalance && fullDisposition
-        ? "terrain-balance-full-aspect-disposition-loaded"
-        : "terrain-chain-loaded-but-balance-or-aspects-held";
+      ? "surface-chain-loaded-but-stale-contracts-detected"
+      : expectedBalance && fullTerrainDisposition && surfaceReady && canvasMayReadSurface
+        ? "surface-parent-material-truth-active-read-loaded"
+        : "surface-chain-loaded-but-readiness-held";
 
-  document.documentElement.dataset.parentCoreChainStatus = state.terrainChainStatus;
-  document.documentElement.dataset.terrainOnlyLoaded = "true";
-  document.documentElement.dataset.surface = "held";
+  document.documentElement.dataset.parentCoreChainStatus = state.parentChainStatus;
+  document.documentElement.dataset.surfaceActiveReadOnly = "true";
   document.documentElement.dataset.canvas = "held";
   document.documentElement.dataset.controls = "held";
 
-  publishStatus(state.terrainChainStatus, [
+  publishStatus(state.parentChainStatus, [
     `KERNEL: loaded · ${state.activeModules.kernel.actualContract}`,
     `LATTICE256: loaded · ${state.activeModules.lattice256.actualContract}`,
     `LANDMAP: loaded · ${state.activeModules.landmap.actualContract}`,
     `TERRAIN: loaded · ${state.activeModules.terrain.actualContract}`,
+    `SURFACE: loaded · ${state.activeModules.surface.actualContract}`,
     `STALE_CONTRACTS: ${state.staleContractCount}`,
     `LAND_RATIO: ${landSummary.landRatio}`,
     `OCEAN_RATIO: ${landSummary.oceanRatio}`,
-    `TERRAIN_CELLS: ${terrainSummary.totalCells}`,
     `TERRAIN_ASPECTS_POPULATED: ${terrainSummary.populatedTerrainAspectCount}/${terrainSummary.terrainAspectCount}`,
     `FULL_ASPECT_DISPOSITION: ${String(terrainSummary.fullAspectDisposition)}`,
-    `MISSING_TERRAIN_ASPECTS: ${(terrainSummary.missingTerrainAspects || []).join(" | ") || "none"}`,
-    `SURFACE: held-outside-terrain-only-scope`,
-    `CANVAS: held-outside-terrain-only-scope`,
-    `CONTROLS: held-outside-terrain-only-scope`
+    `SURFACE_TOTAL_CELLS: ${surfaceSummary.totalCells}`,
+    `SURFACE_MATERIAL_CLASSES: ${surfaceSummary.materialClassCount}/${surfaceSummary.requiredMaterialClassCount}`,
+    `EVERY_CELL_ASSIGNED_SURFACE: ${String(surfaceSummary.everyCellAssignedSurface)}`,
+    `SURFACE_PARENT_READY: ${String(surfaceSummary.surfaceParentReady)}`,
+    `DOWNSTREAM_CANVAS_MAY_READ_SURFACE: ${String(surfaceSummary.downstreamCanvasMayReadSurface)}`,
+    `CANVAS_PAINT_AUTHORIZED: false`,
+    `CONTROLS_AUTHORIZED: false`
   ]);
 
   publishReceiptPanel();
 
   renderMountMessage(
-    state.staleContractCount > 0 ? "Stale contracts detected" : "Terrain balance loaded",
+    state.parentChainStatus === "surface-parent-material-truth-active-read-loaded"
+      ? "Surface parent loaded"
+      : "Surface parent held",
     [
       `Land ratio: ${landSummary.landRatio}`,
       `Ocean ratio: ${landSummary.oceanRatio}`,
-      `Cells: ${terrainSummary.totalCells}`,
-      `Aspects: ${terrainSummary.populatedTerrainAspectCount}/${terrainSummary.terrainAspectCount}`,
-      `Missing: ${(terrainSummary.missingTerrainAspects || []).join(", ") || "none"}`,
-      `Preview: ${terrainAspectPreview(terrain)}`
+      `Terrain aspects: ${terrainSummary.populatedTerrainAspectCount}/${terrainSummary.terrainAspectCount}`,
+      `Surface cells: ${surfaceSummary.totalCells}`,
+      `Materials: ${surfaceSummary.materialClassCount}/${surfaceSummary.requiredMaterialClassCount}`,
+      `Canvas may read: ${String(surfaceSummary.downstreamCanvasMayReadSurface)}`,
+      `Preview: ${materialPreview(surface)}`
     ]
   );
 }
@@ -516,18 +561,18 @@ async function boot() {
   setHeldModules();
 
   state.routeDoorway = "active";
-  state.terrainChainStatus = "terrain-balance-chain-checking";
-  document.documentElement.dataset.parentCoreChainStatus = state.terrainChainStatus;
+  state.parentChainStatus = "surface-active-read-chain-checking";
+  document.documentElement.dataset.parentCoreChainStatus = state.parentChainStatus;
 
-  publishStatus("terrain-balance route doorway active; loading renewed parent chain", [
-    `ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain`,
-    `HELD_CHAIN: surface → canvas → controls`,
+  publishStatus("surface active-read route doorway active; loading parent chain", [
+    `ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface`,
+    `HELD_CHAIN: canvas → controls`,
     `CACHE_KEY: ${CACHE_KEY}`
   ]);
   publishReceiptPanel();
-  renderMountMessage("Loading terrain balance chain", [
-    "kernel → lattice256 → landmap → terrain",
-    "surface/canvas/controls held"
+  renderMountMessage("Loading surface parent", [
+    "kernel → lattice256 → landmap → terrain → surface",
+    "canvas/controls held"
   ]);
 
   const modulesLoaded = await loadActiveModules();
@@ -536,7 +581,7 @@ async function boot() {
   const instancesCreated = createInstances();
   if (!instancesCreated) return;
 
-  publishTerrainSuccess();
+  publishSurfaceSuccess();
 }
 
 if (document.readyState === "loading") {

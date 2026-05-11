@@ -1,47 +1,55 @@
 // /showroom/globe/h-earth/index.js
-// H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4
+// H_EARTH_G1_CANVAS_ROUTE_DOORWAY_ACTIVATION_TNT_v5
 // Full-file replacement.
 // Route doorway authority only.
 //
 // Purpose:
-// - Activate surface as read-only parent material truth after terrain pass.
-// - Import kernel → lattice256 → landmap → terrain → surface.
-// - Keep canvas and controls held.
-// - Publish surface receipts without painting or motion.
+// - Preserve the passed parent chain: kernel → lattice256 → landmap → terrain → surface.
+// - Activate canvas as the first downstream visible-composition child after surface readiness.
+// - Import canvas only after surface parent material truth passes active-read requirements.
+// - Keep controls held.
+// - Publish canvas receipt, canvas status, and parent-chain receipts without motion/input authority.
 //
 // Owns:
 // - route boot
 // - parent-chain module import sequence
+// - canvas child activation handoff
 // - status bridge
 // - public route receipts
 // - surface-readiness publication
+// - canvas-activation publication
 //
 // Does not own:
 // - planet truth
 // - land/water truth
 // - terrain truth
 // - material truth
-// - canvas paint
 // - controls
 // - animation math
+// - input handling
+// - Earth mutation
+// - Hearth mutation
+// - Audralia mutation
 
-const CONTRACT = "H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4";
-const PRIOR_CONTRACT = "H_EARTH_G1_TERRAIN_BALANCE_ROUTE_DOORWAY_TNT_v3";
+const CONTRACT = "H_EARTH_G1_CANVAS_ROUTE_DOORWAY_ACTIVATION_TNT_v5";
+const PRIOR_CONTRACT = "H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4";
 const SEED_PACKET = "H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1";
 const TERRAIN_ONLY_CHAIN = "H_EARTH_G1_COMPLETE_TERRAIN_ONLY_PARENT_CHAIN_TNT_v1";
+const SURFACE_ACTIVE_READ_CHAIN = "H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4";
 const ROUTE = "/showroom/globe/h-earth/";
 const PLANET = "H-Earth";
 const GENERATION = "G1";
 
-const URL_CACHE = new URLSearchParams(window.location.search).get("v") || "surface-active-read-v1";
-const CACHE_KEY = `2026-05-11-h-earth-surface-active-read-v1-${URL_CACHE}`;
+const URL_CACHE = new URLSearchParams(window.location.search).get("v") || "canvas-route-doorway-activation-v1";
+const CACHE_KEY = `2026-05-11-h-earth-canvas-route-doorway-activation-v1-${URL_CACHE}`;
 
 const EXPECTED_CONTRACTS = Object.freeze({
   kernel: "H_EARTH_G1_TERRAIN_ONLY_KERNEL_TNT_v1",
   lattice256: "H_EARTH_G1_TERRAIN_ONLY_LATTICE256_TNT_v1",
   landmap: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_LANDMAP_TNT_v2",
   terrain: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_TERRAIN_TNT_v2",
-  surface: "H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1"
+  surface: "H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1",
+  canvas: "H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_TNT_v1"
 });
 
 const ACTIVE_MODULES = Object.freeze([
@@ -77,18 +85,19 @@ const ACTIVE_MODULES = Object.freeze([
   }
 ]);
 
+const CANVAS_MODULE = Object.freeze({
+  key: "canvas",
+  label: "Canvas visible composition",
+  path: "/assets/h-earth/h-earth.canvas.js",
+  requiredExport: "bootHEarthCanvas"
+});
+
 const HELD_MODULES = Object.freeze([
-  {
-    key: "canvas",
-    label: "Canvas visible composition",
-    path: "/assets/h-earth/h-earth.canvas.js",
-    status: "held-until-surface-parent-read-passes"
-  },
   {
     key: "controls",
     label: "Controls motion/input only",
     path: "/assets/h-earth/h-earth.controls.js",
-    status: "held-until-canvas-exists"
+    status: "held-until-canvas-visible-composition-passes"
   }
 ]);
 
@@ -97,18 +106,29 @@ const state = {
   priorContract: PRIOR_CONTRACT,
   seedPacket: SEED_PACKET,
   terrainOnlyChain: TERRAIN_ONLY_CHAIN,
+  surfaceActiveReadChain: SURFACE_ACTIVE_READ_CHAIN,
   route: ROUTE,
   planet: PLANET,
   generation: GENERATION,
   cacheKey: CACHE_KEY,
   routeDoorway: "booting",
   parentChainStatus: "pending",
+  canvasStatus: "held-until-surface-parent-read-passes",
+  canvasPaintAuthorized: false,
+  controlsAuthorized: false,
   loadedCount: 0,
   failedCount: 0,
   staleContractCount: 0,
   activeModules: {},
   heldModules: {},
+  canvasModule: {
+    status: "held-until-surface-parent-read-passes",
+    path: CANVAS_MODULE.path,
+    actualContract: "pending",
+    renderStatus: "pending"
+  },
   instances: {},
+  canvasRuntimeStatus: null,
   errors: []
 };
 
@@ -148,6 +168,23 @@ function getImportedContract(imported, instance) {
   return imported?.CONTRACT || instance?.contract || "contract-not-exported";
 }
 
+function getImportedCanvasContract(imported, status) {
+  return (
+    imported?.H_EARTH_CANVAS_CONTRACT ||
+    imported?.default?.contract ||
+    status?.contract ||
+    status?.receipt ||
+    "contract-not-exported"
+  );
+}
+
+function currentCanvasDatasetValue() {
+  if (state.canvasStatus === "active-visible-composition") return "active-visible-composition";
+  if (state.canvasStatus === "failed") return "failed";
+  if (state.canvasStatus === "loading") return "loading";
+  return "held";
+}
+
 function stampDocument() {
   const root = document.documentElement;
 
@@ -157,8 +194,10 @@ function stampDocument() {
   root.dataset.parentCoreChainStatus = state.parentChainStatus;
   root.dataset.cacheKey = CACHE_KEY;
   root.dataset.surface = "active-read-only";
-  root.dataset.canvas = "held";
+  root.dataset.canvas = currentCanvasDatasetValue();
   root.dataset.controls = "held";
+  root.dataset.canvasPaintAuthorized = String(state.canvasPaintAuthorized);
+  root.dataset.controlsAuthorized = "false";
   root.dataset.graphicBox = "forbidden";
   root.dataset.imageGeneration = "forbidden";
   root.dataset.visualPassClaim = "false";
@@ -175,8 +214,10 @@ function publishStatus(message, lines = []) {
   target.dataset.previousRouteDoorwayContract = PRIOR_CONTRACT;
   target.dataset.parentCoreChain = state.parentChainStatus;
   target.dataset.surface = "active-read-only";
-  target.dataset.canvas = "held";
+  target.dataset.canvas = currentCanvasDatasetValue();
   target.dataset.controls = "held";
+  target.dataset.canvasPaintAuthorized = String(state.canvasPaintAuthorized);
+  target.dataset.controlsAuthorized = "false";
   target.dataset.cacheKey = CACHE_KEY;
 
   target.replaceChildren(
@@ -201,8 +242,10 @@ function publishReceiptPanel() {
   panel.dataset.staleContractCount = String(state.staleContractCount);
   panel.dataset.cacheKey = CACHE_KEY;
   panel.dataset.surface = "active-read-only";
-  panel.dataset.canvas = "held";
+  panel.dataset.canvas = currentCanvasDatasetValue();
   panel.dataset.controls = "held";
+  panel.dataset.canvasPaintAuthorized = String(state.canvasPaintAuthorized);
+  panel.dataset.controlsAuthorized = "false";
 
   const activeLines = ACTIVE_MODULES.map((entry) => {
     const record = state.activeModules[entry.key];
@@ -213,6 +256,21 @@ function publishReceiptPanel() {
     const error = record?.error ? ` · ${record.error}` : "";
     return `${entry.key.toUpperCase()}: ${status} · expected=${expected} · actual=${actual}${stale} · ${entry.path}${error}`;
   });
+
+  const canvasLine = (() => {
+    const record = state.canvasModule;
+    const expected = EXPECTED_CONTRACTS.canvas;
+    const actual = record?.actualContract || "pending";
+    const stale =
+      actual !== "pending" &&
+      actual !== "held" &&
+      actual !== "import-failed" &&
+      actual !== expected
+        ? " · STALE_CONTRACT"
+        : "";
+    const error = record?.error ? ` · ${record.error}` : "";
+    return `CANVAS: ${record.status} · expected=${expected} · actual=${actual}${stale} · ${CANVAS_MODULE.path}${error}`;
+  })();
 
   const heldLines = HELD_MODULES.map((entry) => {
     return `${entry.key.toUpperCase()}: ${entry.status} · ${entry.path}`;
@@ -228,6 +286,8 @@ function publishReceiptPanel() {
   const surfaceReceipt = surface?.receipts?.surface;
   const activation = surface?.activationConditions;
 
+  const canvasRuntime = state.canvasRuntimeStatus;
+
   const proofLines = terrainSummary && landSummary && surfaceSummary
     ? [
         `LAND_RATIO: ${landSummary.landRatio}`,
@@ -242,9 +302,14 @@ function publishReceiptPanel() {
         `EVERY_CELL_ASSIGNED_SURFACE: ${String(surfaceSummary.everyCellAssignedSurface)}`,
         `SURFACE_PARENT_READY: ${String(surfaceSummary.surfaceParentReady)}`,
         `DOWNSTREAM_CANVAS_MAY_READ_SURFACE: ${String(surfaceSummary.downstreamCanvasMayReadSurface)}`,
-        `CANVAS_PAINT_AUTHORIZED: ${String(surfaceSummary.canvasPaintAuthorized)}`,
-        `CONTROLS_AUTHORIZED: ${String(surfaceSummary.controlsAuthorized)}`,
+        `ROUTE_CANVAS_PAINT_AUTHORIZED: ${String(state.canvasPaintAuthorized)}`,
+        `CONTROLS_AUTHORIZED: ${String(state.controlsAuthorized)}`,
+        `CANVAS_RENDER_STATUS: ${canvasRuntime?.renderStatus || state.canvasModule.renderStatus || "pending"}`,
+        `CANVAS_CELLS_RESOLVED: ${canvasRuntime?.cellsResolved ?? "pending"}`,
+        `CANVAS_CELLS_PAINTED: ${canvasRuntime?.cellsPainted ?? "pending"}`,
+        `CANVAS_NONBLANK_PIXEL_RATIO: ${canvasRuntime?.nonBlankPixelRatio ?? "pending"}`,
         `SURFACE_RECEIPT: ${surfaceReceipt?.contract || "missing"}`,
+        `CANVAS_RECEIPT: ${state.canvasModule.actualContract || "pending"}`,
         `SURFACE_ACTIVATION_REASON: ${activation?.reason || "pending"}`
       ]
     : ["SURFACE_SUMMARY: pending"];
@@ -254,16 +319,17 @@ function publishReceiptPanel() {
     codeLine(`ROUTE_AUTHORITY: doorway only`),
     codeLine(`ROUTE_DOORWAY_RECEIPT: ${CONTRACT}`),
     codeLine(`PARENT_CHAIN_STATUS: ${state.parentChainStatus}`),
-    codeLine(`LOADED_ACTIVE_MODULES: ${state.loadedCount}`),
-    codeLine(`FAILED_ACTIVE_MODULES: ${state.failedCount}`),
+    codeLine(`LOADED_ACTIVE_PARENT_MODULES: ${state.loadedCount}`),
+    codeLine(`FAILED_ACTIVE_PARENT_MODULES: ${state.failedCount}`),
     codeLine(`STALE_CONTRACTS: ${state.staleContractCount}`),
     codeLine(`SURFACE: ACTIVE_READ_ONLY`),
-    codeLine(`CANVAS: HELD`),
+    codeLine(`CANVAS: ${state.canvasStatus.toUpperCase()}`),
     codeLine(`CONTROLS: HELD`),
     codeLine(`GRAPHIC_BOX: FORBIDDEN`),
     codeLine(`IMAGE_GENERATION: FORBIDDEN`),
     codeLine(`VISUAL_PASS_CLAIM: FALSE`),
     ...activeLines.map(codeLine),
+    codeLine(canvasLine),
     ...heldLines.map(codeLine),
     ...proofLines.map(codeLine)
   );
@@ -273,11 +339,11 @@ function renderMountMessage(title, bodyLines = []) {
   const mount = mountTarget();
   if (!mount) return;
 
-  mount.dataset.routeMount = "surface-active-read-status";
+  mount.dataset.routeMount = "surface-and-canvas-status";
   mount.dataset.routeDoorwayContract = CONTRACT;
   mount.dataset.cacheKey = CACHE_KEY;
   mount.dataset.surfaceAuthority = "active-read-only";
-  mount.dataset.canvasAuthority = "held";
+  mount.dataset.canvasAuthority = currentCanvasDatasetValue();
   mount.dataset.controlsAuthority = "held";
   mount.dataset.planetTruthOwner = "parent-chain";
 
@@ -368,6 +434,124 @@ async function importModule(entry) {
   }
 }
 
+async function importCanvasModule() {
+  const url = moduleUrl(CANVAS_MODULE.path);
+
+  state.canvasStatus = "loading";
+  state.canvasModule = {
+    status: "loading",
+    path: CANVAS_MODULE.path,
+    url,
+    requiredExport: CANVAS_MODULE.requiredExport,
+    actualContract: "pending",
+    renderStatus: "loading"
+  };
+
+  stampDocument();
+  publishStatus("surface parent passed; loading canvas visible composition", [
+    `CANVAS_MODULE: ${CANVAS_MODULE.path}`,
+    `IMPORT_URL: ${url}`,
+    `CONTROLS: held`
+  ]);
+  publishReceiptPanel();
+
+  try {
+    const imported = await import(url);
+
+    if (!imported || typeof imported[CANVAS_MODULE.requiredExport] !== "function") {
+      const error = `required export missing: ${CANVAS_MODULE.requiredExport}`;
+      state.canvasStatus = "failed";
+      state.canvasPaintAuthorized = false;
+      state.canvasModule = {
+        status: "loaded-export-missing",
+        path: CANVAS_MODULE.path,
+        url,
+        requiredExport: CANVAS_MODULE.requiredExport,
+        actualContract: getImportedCanvasContract(imported, null),
+        renderStatus: "failed",
+        error
+      };
+      state.errors.push(`canvas: ${error}`);
+      stampDocument();
+      publishStatus("canvas import loaded but export missing", [
+        `CANVAS_MODULE: ${CANVAS_MODULE.path}`,
+        `ERROR: ${error}`,
+        `CONTROLS: held`
+      ]);
+      publishReceiptPanel();
+      return false;
+    }
+
+    const canvasStatus = await imported.bootHEarthCanvas();
+    state.canvasRuntimeStatus = canvasStatus || null;
+
+    const actualContract = getImportedCanvasContract(imported, canvasStatus);
+
+    state.canvasModule = {
+      status: "loaded",
+      path: CANVAS_MODULE.path,
+      url,
+      requiredExport: CANVAS_MODULE.requiredExport,
+      actualContract,
+      renderStatus: canvasStatus?.renderStatus || "loaded"
+    };
+
+    if (actualContract !== EXPECTED_CONTRACTS.canvas) {
+      state.staleContractCount += 1;
+    }
+
+    state.canvasStatus = "active-visible-composition";
+    state.canvasPaintAuthorized = true;
+    state.controlsAuthorized = false;
+    state.parentChainStatus =
+      state.staleContractCount > 0
+        ? "canvas-route-doorway-active-with-stale-contracts-detected"
+        : "canvas-route-doorway-active-visible-composition-loaded";
+
+    stampDocument();
+    publishStatus(state.parentChainStatus, [
+      `CANVAS: loaded · ${actualContract}`,
+      `CANVAS_RENDER_STATUS: ${canvasStatus?.renderStatus || "loaded"}`,
+      `CANVAS_CELLS_RESOLVED: ${canvasStatus?.cellsResolved ?? "pending"}`,
+      `CANVAS_CELLS_PAINTED: ${canvasStatus?.cellsPainted ?? "pending"}`,
+      `CANVAS_NONBLANK_PIXEL_RATIO: ${canvasStatus?.nonBlankPixelRatio ?? "pending"}`,
+      `CANVAS_PAINT_AUTHORIZED: true`,
+      `CONTROLS_AUTHORIZED: false`,
+      `VISUAL_PASS_CLAIM: false`
+    ]);
+    publishReceiptPanel();
+
+    return true;
+  } catch (error) {
+    const message = safeError(error);
+
+    state.canvasStatus = "failed";
+    state.canvasPaintAuthorized = false;
+    state.canvasModule = {
+      status: "import-failed",
+      path: CANVAS_MODULE.path,
+      url,
+      requiredExport: CANVAS_MODULE.requiredExport,
+      actualContract: "import-failed",
+      renderStatus: "failed",
+      error: message
+    };
+    state.errors.push(`canvas: ${message}`);
+    state.parentChainStatus = "surface-parent-loaded-but-canvas-import-failed";
+
+    stampDocument();
+    publishStatus("surface parent loaded but canvas import failed", [
+      `CANVAS_MODULE: ${CANVAS_MODULE.path}`,
+      `IMPORT_URL: ${url}`,
+      `ERROR: ${message}`,
+      `CONTROLS: held`
+    ]);
+    publishReceiptPanel();
+
+    return false;
+  }
+}
+
 function setHeldModules() {
   for (const entry of HELD_MODULES) {
     state.heldModules[entry.key] = {
@@ -419,7 +603,8 @@ function createInstances() {
       doorwayContract: CONTRACT,
       priorDoorwayContract: PRIOR_CONTRACT,
       route: ROUTE,
-      surfaceActiveReadOnly: true
+      surfaceActiveReadOnly: true,
+      canvasRouteActivation: true
     });
 
     state.instances.kernel = kernel;
@@ -506,17 +691,33 @@ function publishSurfaceSuccess() {
   const surfaceReady = surfaceSummary.surfaceParentReady === true;
   const canvasMayReadSurface = surfaceSummary.downstreamCanvasMayReadSurface === true;
 
+  const canvasActivationAllowed =
+    expectedBalance &&
+    fullTerrainDisposition &&
+    surfaceReady &&
+    canvasMayReadSurface &&
+    state.staleContractCount === 0;
+
   state.parentChainStatus =
     state.staleContractCount > 0
       ? "surface-chain-loaded-but-stale-contracts-detected"
-      : expectedBalance && fullTerrainDisposition && surfaceReady && canvasMayReadSurface
-        ? "surface-parent-material-truth-active-read-loaded"
-        : "surface-chain-loaded-but-readiness-held";
+      : canvasActivationAllowed
+        ? "surface-parent-material-truth-ready-for-canvas-route-activation"
+        : "surface-chain-loaded-but-canvas-activation-held";
+
+  state.canvasStatus = canvasActivationAllowed
+    ? "authorized-for-route-import"
+    : "held-surface-readiness-incomplete";
+
+  state.canvasPaintAuthorized = false;
+  state.controlsAuthorized = false;
 
   document.documentElement.dataset.parentCoreChainStatus = state.parentChainStatus;
   document.documentElement.dataset.surfaceActiveReadOnly = "true";
-  document.documentElement.dataset.canvas = "held";
+  document.documentElement.dataset.canvas = currentCanvasDatasetValue();
   document.documentElement.dataset.controls = "held";
+  document.documentElement.dataset.canvasPaintAuthorized = "false";
+  document.documentElement.dataset.controlsAuthorized = "false";
 
   publishStatus(state.parentChainStatus, [
     `KERNEL: loaded · ${state.activeModules.kernel.actualContract}`,
@@ -534,6 +735,7 @@ function publishSurfaceSuccess() {
     `EVERY_CELL_ASSIGNED_SURFACE: ${String(surfaceSummary.everyCellAssignedSurface)}`,
     `SURFACE_PARENT_READY: ${String(surfaceSummary.surfaceParentReady)}`,
     `DOWNSTREAM_CANVAS_MAY_READ_SURFACE: ${String(surfaceSummary.downstreamCanvasMayReadSurface)}`,
+    `CANVAS_IMPORT_AUTHORIZED: ${String(canvasActivationAllowed)}`,
     `CANVAS_PAINT_AUTHORIZED: false`,
     `CONTROLS_AUTHORIZED: false`
   ]);
@@ -541,8 +743,8 @@ function publishSurfaceSuccess() {
   publishReceiptPanel();
 
   renderMountMessage(
-    state.parentChainStatus === "surface-parent-material-truth-active-read-loaded"
-      ? "Surface parent loaded"
+    canvasActivationAllowed
+      ? "Surface parent ready"
       : "Surface parent held",
     [
       `Land ratio: ${landSummary.landRatio}`,
@@ -551,9 +753,12 @@ function publishSurfaceSuccess() {
       `Surface cells: ${surfaceSummary.totalCells}`,
       `Materials: ${surfaceSummary.materialClassCount}/${surfaceSummary.requiredMaterialClassCount}`,
       `Canvas may read: ${String(surfaceSummary.downstreamCanvasMayReadSurface)}`,
+      `Canvas import authorized: ${String(canvasActivationAllowed)}`,
       `Preview: ${materialPreview(surface)}`
     ]
   );
+
+  return canvasActivationAllowed;
 }
 
 async function boot() {
@@ -561,18 +766,20 @@ async function boot() {
   setHeldModules();
 
   state.routeDoorway = "active";
-  state.parentChainStatus = "surface-active-read-chain-checking";
+  state.parentChainStatus = "canvas-route-doorway-checking-surface-parent-chain";
   document.documentElement.dataset.parentCoreChainStatus = state.parentChainStatus;
 
-  publishStatus("surface active-read route doorway active; loading parent chain", [
+  publishStatus("canvas route doorway active; loading parent chain before canvas", [
     `ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface`,
-    `HELD_CHAIN: canvas → controls`,
+    `CANVAS_CHAIN: held until surface readiness passes`,
+    `HELD_CHAIN: controls`,
     `CACHE_KEY: ${CACHE_KEY}`
   ]);
   publishReceiptPanel();
   renderMountMessage("Loading surface parent", [
     "kernel → lattice256 → landmap → terrain → surface",
-    "canvas/controls held"
+    "canvas waits for surface readiness",
+    "controls held"
   ]);
 
   const modulesLoaded = await loadActiveModules();
@@ -581,7 +788,19 @@ async function boot() {
   const instancesCreated = createInstances();
   if (!instancesCreated) return;
 
-  publishSurfaceSuccess();
+  const canvasActivationAllowed = publishSurfaceSuccess();
+
+  if (!canvasActivationAllowed) {
+    publishStatus(state.parentChainStatus, [
+      `CANVAS: held`,
+      `REASON: surface readiness, balance, full disposition, or stale-contract gate did not pass`,
+      `CONTROLS: held`
+    ]);
+    publishReceiptPanel();
+    return;
+  }
+
+  await importCanvasModule();
 }
 
 if (document.readyState === "loading") {
@@ -595,8 +814,10 @@ export {
   PRIOR_CONTRACT,
   SEED_PACKET,
   TERRAIN_ONLY_CHAIN,
+  SURFACE_ACTIVE_READ_CHAIN,
   ROUTE,
   ACTIVE_MODULES,
+  CANVAS_MODULE,
   HELD_MODULES,
   CACHE_KEY,
   EXPECTED_CONTRACTS

@@ -1,6 +1,6 @@
 <!-- /showroom/globe/h-earth/index.html -->
-<!-- H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_SHELL_TNT_v6 -->
-<!-- Retained Gauges source marker: H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_SHELL_TNT_v4 -->
+<!-- H_EARTH_G1_CONTROLS_ACTIVE_ROUTE_SHELL_TNT_v7 -->
+<!-- Retained source markers: H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_SHELL_TNT_v4 | H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_SHELL_TNT_v6 -->
 <!doctype html>
 <html
   lang="en"
@@ -11,16 +11,16 @@
   data-planet-meaning="Hybrid Earth"
   data-generation="G1"
   data-seed-packet="H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1"
-  data-contract="H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_SHELL_TNT_v6"
-  data-route-doorway-required="H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_DOORWAY_TNT_v6"
-  data-prior-route-shell="H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_SHELL_TNT_v4"
+  data-contract="H_EARTH_G1_CONTROLS_ACTIVE_ROUTE_SHELL_TNT_v7"
+  data-route-doorway-required="H_EARTH_G1_CONTROLS_ACTIVE_ROUTE_DOORWAY_TNT_v7"
+  data-prior-route-shell="H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_SHELL_TNT_v6"
   data-authority="route-shell-only"
-  data-parent-core-chain="kernel-lattice256-landmap-terrain-surface-canvas"
-  data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas"
-  data-held-chain="controls-ground-estate"
+  data-parent-core-chain="kernel-lattice256-landmap-terrain-surface-canvas-controls"
+  data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas-controls"
+  data-held-chain="ground-estate"
   data-surface="active-read-only"
   data-canvas="active-visible-composition"
-  data-controls="held"
+  data-controls="active-motion-input"
   data-earth-reference-shell="protected-reference-only"
   data-mutation-earth="forbidden"
   data-mutation-hearth="forbidden"
@@ -36,7 +36,7 @@
   <title>Diamond Gate Bridge · H-Earth</title>
   <meta
     name="description"
-    content="H-Earth is the Hybrid Earth experimental third-planet lane. This route shell mounts the H-Earth canvas visible composition from parent-chain surface truth while controls remain held."
+    content="H-Earth is the Hybrid Earth experimental third-planet lane. This route shell mounts canvas and binds controls while ground and estate modes remain held."
   >
 
   <style>
@@ -295,8 +295,8 @@
       border-radius: 50%;
     }
 
-    #hEarthCanvasMount[data-route-mount="awaiting-canvas"]::before {
-      content: "Loading H-Earth canvas visible composition";
+    #hEarthCanvasMount[data-route-mount="awaiting-controls"]::before {
+      content: "Loading H-Earth controls";
       position: absolute;
       left: 50%;
       top: 50%;
@@ -447,11 +447,12 @@
     <main id="h-earth-main" tabindex="-1">
       <section class="hero" aria-labelledby="h-earth-title">
         <div class="hero-copy">
-          <p class="eyebrow">H-Earth · G1 · Canvas Visible Composition</p>
+          <p class="eyebrow">H-Earth · G1 · Canvas + Controls</p>
           <h1 id="h-earth-title">H-Earth</h1>
           <p class="lede">
-            H-Earth means Hybrid Earth. The parent chain now feeds the visible canvas:
-            kernel, lattice256, landmap, terrain, surface, then canvas. Controls remain held.
+            H-Earth means Hybrid Earth. The parent chain now feeds the visible canvas and controls:
+            kernel, lattice256, landmap, terrain, surface, canvas, then controls.
+            Ground and estate modes remain held.
           </p>
 
           <div class="route-actions" aria-label="Route actions">
@@ -466,32 +467,32 @@
             class="receipt-panel"
             aria-label="H-Earth route status target"
             data-status-target="h-earth-route"
-            data-current-status="canvas-route-shell-loaded-awaiting-doorway-v6"
+            data-current-status="controls-route-shell-loaded-awaiting-doorway-v7"
             data-route-shell="ready"
-            data-route-doorway="awaiting-canvas-visible-composition-index-js"
-            data-parent-core-chain="kernel-lattice256-landmap-terrain-surface-canvas"
-            data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas"
-            data-held-chain="controls-ground-estate"
+            data-route-doorway="awaiting-controls-active-index-js"
+            data-parent-core-chain="kernel-lattice256-landmap-terrain-surface-canvas-controls"
+            data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas-controls"
+            data-held-chain="ground-estate"
           >
-            <code>ROUTE_RECEIPT: H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_SHELL_TNT_v6</code>
-            <code>REQUIRED_DOORWAY: H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_DOORWAY_TNT_v6</code>
-            <code>PRIOR_ROUTE_MARKER_RETAINED: H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_SHELL_TNT_v4</code>
-            <code>STATUS: canvas route shell loaded; awaiting v6 doorway module</code>
+            <code>ROUTE_RECEIPT: H_EARTH_G1_CONTROLS_ACTIVE_ROUTE_SHELL_TNT_v7</code>
+            <code>REQUIRED_DOORWAY: H_EARTH_G1_CONTROLS_ACTIVE_ROUTE_DOORWAY_TNT_v7</code>
+            <code>PRIOR_ROUTE_MARKER_RETAINED: H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_SHELL_TNT_v6</code>
+            <code>STATUS: controls route shell loaded; awaiting v7 doorway module</code>
           </section>
         </div>
 
-        <section class="canvas-stage" aria-label="H-Earth canvas visible-composition stage">
-          <div class="stage-label">H-Earth Canvas</div>
+        <section class="canvas-stage" aria-label="H-Earth canvas and controls stage">
+          <div class="stage-label">Drag · Rotate · Zoom</div>
           <div class="mount-shell">
             <div
               id="hEarthCanvasMount"
               role="img"
-              aria-label="H-Earth visible canvas mount"
-              data-mount="h-earth-canvas-visible-composition"
-              data-route-mount="awaiting-canvas"
+              aria-label="H-Earth visible canvas mount with controls"
+              data-mount="h-earth-canvas-controls"
+              data-route-mount="awaiting-controls"
               data-surface-authority="active-read-only"
               data-canvas-authority="active-visible-composition"
-              data-controls-authority="held"
+              data-controls-authority="active-motion-input"
               data-planet-truth-owner="parent-chain"
             ></div>
           </div>
@@ -500,18 +501,18 @@
 
       <section class="grid" aria-label="H-Earth route shell authority">
         <article class="panel">
-          <h2>Canvas Owns</h2>
-          <p>Visible composition, canvas creation, frame paint, pixel proof, and render receipt.</p>
+          <h2>Controls Own</h2>
+          <p>Motion, drag, rotation request, zoom presentation, inertia, input handling, and interaction receipts.</p>
         </article>
 
         <article class="panel">
-          <h2>Canvas Does Not Own</h2>
-          <p>Land/water truth, terrain truth, surface truth, controls, drag, zoom, animation, weather, or life.</p>
+          <h2>Controls Do Not Own</h2>
+          <p>Planet truth, land/water truth, terrain, surface color, canvas paint sovereignty, weather, atmosphere, or life.</p>
         </article>
 
         <article class="panel">
           <h2>Held</h2>
-          <p>Controls, ground-level mode, and estate placement remain held until separately authorized.</p>
+          <p>Ground-level mode and estate placement remain held until separately authorized.</p>
         </article>
       </section>
 
@@ -520,40 +521,40 @@
         class="receipt-panel"
         aria-label="H-Earth public receipts"
         data-receipt-panel="h-earth"
-        data-receipt-route="H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_SHELL_TNT_v6"
-        data-required-doorway="H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_DOORWAY_TNT_v6"
-        data-prior-route-marker="H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_SHELL_TNT_v4"
-        data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas"
-        data-held-chain="controls-ground-estate"
+        data-receipt-route="H_EARTH_G1_CONTROLS_ACTIVE_ROUTE_SHELL_TNT_v7"
+        data-required-doorway="H_EARTH_G1_CONTROLS_ACTIVE_ROUTE_DOORWAY_TNT_v7"
+        data-prior-route-marker="H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_SHELL_TNT_v6"
+        data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas-controls"
+        data-held-chain="ground-estate"
         data-receipt-graphic-box="FORBIDDEN"
         data-receipt-image-generation="FORBIDDEN"
         data-receipt-visual-pass-claim="FALSE"
       >
         <code>H_EARTH_IDENTITY: separate experimental third-planet lane</code>
         <code>ROUTE_AUTHORITY: shell only</code>
-        <code>ROUTE_RECEIPT: H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_SHELL_TNT_v6</code>
-        <code>REQUIRED_DOORWAY: H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_DOORWAY_TNT_v6</code>
-        <code>ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface → canvas</code>
-        <code>HELD_CHAIN: controls → ground → estate</code>
-        <code>SCRIPT_HANDOFF: ./index.js?v=H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_DOORWAY_TNT_v6</code>
+        <code>ROUTE_RECEIPT: H_EARTH_G1_CONTROLS_ACTIVE_ROUTE_SHELL_TNT_v7</code>
+        <code>REQUIRED_DOORWAY: H_EARTH_G1_CONTROLS_ACTIVE_ROUTE_DOORWAY_TNT_v7</code>
+        <code>ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface → canvas → controls</code>
+        <code>HELD_CHAIN: ground → estate</code>
+        <code>SCRIPT_HANDOFF: ./index.js?v=H_EARTH_G1_CONTROLS_ACTIVE_ROUTE_DOORWAY_TNT_v7</code>
         <code>data-mutation-earth=&quot;forbidden&quot;</code>
       </section>
     </main>
 
     <footer class="footer">
-      H-Earth G1 canvas visible-composition route shell. Parent files establish authority.
-      Controls remain held until separately authorized.
+      H-Earth G1 controls route shell. Parent files establish authority.
+      Ground and estate remain held until separately authorized.
     </footer>
   </div>
 
   <script
     id="hEarthModuleHandoff"
     type="module"
-    src="./index.js?v=H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_DOORWAY_TNT_v6"
-    data-handoff="h-earth-canvas-visible-composition-route-doorway"
-    data-required-next-contract="H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_DOORWAY_TNT_v6"
-    data-previous-contract="H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4"
-    data-cache-key="2026-05-11-h-earth-canvas-route-shell-v6"
+    src="./index.js?v=H_EARTH_G1_CONTROLS_ACTIVE_ROUTE_DOORWAY_TNT_v7"
+    data-handoff="h-earth-controls-active-route-doorway"
+    data-required-next-contract="H_EARTH_G1_CONTROLS_ACTIVE_ROUTE_DOORWAY_TNT_v7"
+    data-previous-contract="H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_DOORWAY_TNT_v6"
+    data-cache-key="2026-05-11-h-earth-controls-route-shell-v7"
   ></script>
 </body>
 </html>

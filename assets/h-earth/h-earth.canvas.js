@@ -1,40 +1,19 @@
 // /assets/h-earth/h-earth.canvas.js
-// H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_TNT_v2
+// H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3
 // Full-file replacement.
 // Canvas child authority only.
 //
 // Purpose:
-// - Correct the failed canvas consumer bridge.
-// - Build or receive the complete read-only parent chain:
-//   kernel → lattice256 → landmap → terrain → surface.
-// - Consume the created surface parent instance.
-// - Resolve 256 assigned surface cells.
-// - Paint visible H-Earth composition from surface material truth.
-// - Keep controls, motion, drag, spin, and input authority held.
-//
-// Owns:
-// - visible composition
-// - canvas receipt
-// - canvas status
-// - surface-consumption proof
-// - nonblank pixel proof
-//
-// Does not own:
-// - kernel truth
-// - lattice truth
-// - landmap truth
-// - terrain truth
-// - surface truth
-// - controls
-// - motion
-// - input
-// - Earth mutation
-// - Hearth mutation
-// - Audralia mutation
+// - Preserve canvas parent-instance consumer proof.
+// - Preserve visible composition from surface parent truth.
+// - Align canvas panel/control receipt language with active controls authority.
+// - Read controls status from controls API after controls activation.
+// - Keep parent truth immutable.
 
-const H_EARTH_CANVAS_CONTRACT = "H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_TNT_v2";
-const H_EARTH_CANVAS_PREVIOUS_CONTRACT = "H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_TNT_v1";
+const H_EARTH_CANVAS_CONTRACT = "H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3";
+const H_EARTH_CANVAS_PREVIOUS_CONTRACT = "H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_TNT_v2";
 const H_EARTH_SURFACE_RECEIPT_EXPECTED = "H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1";
+const H_EARTH_CONTROLS_EXPECTED = "H_EARTH_G1_CONTROLS_MOTION_INPUT_AUTHORITY_TNT_v1";
 
 const H_EARTH_PARENT_EXPECTED = Object.freeze({
   kernel: "H_EARTH_G1_TERRAIN_ONLY_KERNEL_TNT_v1",
@@ -45,31 +24,11 @@ const H_EARTH_PARENT_EXPECTED = Object.freeze({
 });
 
 const H_EARTH_PARENT_MODULES = Object.freeze([
-  {
-    key: "kernel",
-    path: "/assets/h-earth/h-earth.kernel.js",
-    requiredExport: "createHEarthKernel"
-  },
-  {
-    key: "lattice256",
-    path: "/assets/h-earth/h-earth.lattice256.js",
-    requiredExport: "createHEarthLattice256"
-  },
-  {
-    key: "landmap",
-    path: "/assets/h-earth/h-earth.landmap.js",
-    requiredExport: "createHEarthLandmap"
-  },
-  {
-    key: "terrain",
-    path: "/assets/h-earth/h-earth.terrain.js",
-    requiredExport: "createHEarthTerrain"
-  },
-  {
-    key: "surface",
-    path: "/assets/h-earth/h-earth.surface.js",
-    requiredExport: "createHEarthSurface"
-  }
+  { key: "kernel", path: "/assets/h-earth/h-earth.kernel.js", requiredExport: "createHEarthKernel" },
+  { key: "lattice256", path: "/assets/h-earth/h-earth.lattice256.js", requiredExport: "createHEarthLattice256" },
+  { key: "landmap", path: "/assets/h-earth/h-earth.landmap.js", requiredExport: "createHEarthLandmap" },
+  { key: "terrain", path: "/assets/h-earth/h-earth.terrain.js", requiredExport: "createHEarthTerrain" },
+  { key: "surface", path: "/assets/h-earth/h-earth.surface.js", requiredExport: "createHEarthSurface" }
 ]);
 
 const H_EARTH_TOTAL_CELLS = 256;
@@ -79,6 +38,7 @@ const H_EARTH_CANVAS_STATE = {
   contract: H_EARTH_CANVAS_CONTRACT,
   previousContract: H_EARTH_CANVAS_PREVIOUS_CONTRACT,
   surfaceReceiptExpected: H_EARTH_SURFACE_RECEIPT_EXPECTED,
+  expectedControls: H_EARTH_CONTROLS_EXPECTED,
   routeAuthority: "none",
   canvasJurisdiction: "visible-composition-only",
   canvasPrecinct: "h-earth-canvas-composition-mount",
@@ -97,12 +57,17 @@ const H_EARTH_CANVAS_STATE = {
   oceanCells: 0,
   nonBlankPixelRatio: 0,
   renderStatus: "not-started",
+  controlsStatus: "held",
+  controlsReceipt: "pending",
   controlsAuthorized: false,
   motionAuthorized: false,
   inputAuthorized: false,
+  canvasControlsReceiptAligned: false,
+  parentMutationAuthorized: false,
   errors: [],
   bootedAt: null,
-  renderedAt: null
+  renderedAt: null,
+  controlsAlignedAt: null
 };
 
 let H_EARTH_CANVAS_BOOT_PROMISE = null;
@@ -206,7 +171,6 @@ function readContractFrom(value) {
 
 function materialFromCell(cell) {
   if (typeof cell === "string") return normalizeName(cell);
-
   if (!isObject(cell)) return "";
 
   const keys = [
@@ -253,9 +217,7 @@ function indexFromCell(cell, fallbackIndex) {
   for (const key of keys) {
     const raw = cell[key];
 
-    if (Number.isInteger(raw) && raw >= 0 && raw < H_EARTH_TOTAL_CELLS) {
-      return raw;
-    }
+    if (Number.isInteger(raw) && raw >= 0 && raw < H_EARTH_TOTAL_CELLS) return raw;
 
     if (typeof raw === "string" && /^\d+$/.test(raw)) {
       const parsed = Number(raw);
@@ -277,18 +239,11 @@ function indexFromCell(cell, fallbackIndex) {
 function kindFromMaterial(material, cell) {
   const name = normalizeName(material);
 
-  if (
-    name.includes("ocean") ||
-    name.includes("water") ||
-    name.includes("shelf") ||
-    name.includes("reef")
-  ) {
+  if (name.includes("ocean") || name.includes("water") || name.includes("shelf") || name.includes("reef")) {
     return "ocean";
   }
 
-  if (name.includes("ice") || name.includes("snow") || name.includes("glacier")) {
-    return "ice";
-  }
+  if (name.includes("ice") || name.includes("snow") || name.includes("glacier")) return "ice";
 
   if (
     name.includes("stone") ||
@@ -301,9 +256,7 @@ function kindFromMaterial(material, cell) {
     return "stone";
   }
 
-  if (name.includes("beach") || name.includes("sediment") || name.includes("coastal")) {
-    return "coast";
-  }
+  if (name.includes("beach") || name.includes("sediment") || name.includes("coastal")) return "coast";
 
   if (
     name.includes("ground") ||
@@ -364,7 +317,6 @@ function colorForMaterial(material, kind) {
 
 function toArray(value) {
   if (!value) return [];
-
   if (Array.isArray(value)) return value;
 
   if (value instanceof Map) {
@@ -558,9 +510,7 @@ async function importParentModules() {
 
       H_EARTH_CANVAS_STATE.parentReceipts[entry.key] = actual;
 
-      if (actual !== expected) {
-        H_EARTH_CANVAS_STATE.staleParentContracts += 1;
-      }
+      if (actual !== expected) H_EARTH_CANVAS_STATE.staleParentContracts += 1;
     } catch (error) {
       H_EARTH_CANVAS_STATE.parentModules[entry.key] = {
         status: "failed",
@@ -583,39 +533,19 @@ function createParentInstancesFromModules(modules) {
     priorDoorwayContract: H_EARTH_CANVAS_PREVIOUS_CONTRACT,
     route: "/showroom/globe/h-earth/",
     surfaceActiveReadOnly: true,
-    canvasParentInstanceConsumer: true,
+    canvasControlsReceiptAlignment: true,
     mutationAuthorized: false,
     controlsAuthorized: false,
-    motionAuthorized: false
+    motionAuthorized: false,
+    inputAuthorized: false
   });
 
   const lattice256 = modules.lattice256.createHEarthLattice256({ kernel });
+  const landmap = modules.landmap.createHEarthLandmap({ kernel, lattice256 });
+  const terrain = modules.terrain.createHEarthTerrain({ kernel, lattice256, landmap });
+  const surface = modules.surface.createHEarthSurface({ kernel, lattice256, landmap, terrain });
 
-  const landmap = modules.landmap.createHEarthLandmap({
-    kernel,
-    lattice256
-  });
-
-  const terrain = modules.terrain.createHEarthTerrain({
-    kernel,
-    lattice256,
-    landmap
-  });
-
-  const surface = modules.surface.createHEarthSurface({
-    kernel,
-    lattice256,
-    landmap,
-    terrain
-  });
-
-  return {
-    kernel,
-    lattice256,
-    landmap,
-    terrain,
-    surface
-  };
+  return { kernel, lattice256, landmap, terrain, surface };
 }
 
 async function resolveParentInstances(context = {}) {
@@ -634,10 +564,8 @@ async function resolveParentInstances(context = {}) {
   }
 
   H_EARTH_CANVAS_STATE.parentConsumptionMode = "canvas-reconstructed-read-only-parent-chain";
-
   const modules = await importParentModules();
   const instances = createParentInstancesFromModules(modules);
-
   H_EARTH_CANVAS_STATE.parentInstances = instances;
   return instances;
 }
@@ -648,7 +576,9 @@ function evaluateSurfaceReadiness(parentInstances, cells, candidates) {
   const surfaceReceipt = surface?.receipts?.surface?.contract || readContractFrom(surface);
 
   const assigned = cells.filter((cell) => cell.assignedSurface && cell.material).length;
-  const materialSet = new Set(cells.filter((cell) => cell.assignedSurface && cell.material).map((cell) => cell.material));
+  const materialSet = new Set(
+    cells.filter((cell) => cell.assignedSurface && cell.material).map((cell) => cell.material)
+  );
 
   const landCells = cells.filter((cell) => {
     if (!cell.assignedSurface) return false;
@@ -679,11 +609,45 @@ function evaluateSurfaceReadiness(parentInstances, cells, candidates) {
   return H_EARTH_CANVAS_STATE.parentSurfaceReady;
 }
 
+function readControlsApiStatus(providedStatus = null) {
+  const api = window.DGBHEarthControls || window.HEarthControls || window.H_EARTH_CONTROLS || null;
+  let status = providedStatus || null;
+
+  if (!status && api) {
+    if (typeof api.getHEarthControlsStatus === "function") status = api.getHEarthControlsStatus();
+    else if (typeof api.getStatus === "function") status = api.getStatus();
+    else if (typeof api.status === "function") status = api.status();
+  }
+
+  const receipt = status?.contract || status?.receipt || window.H_EARTH_CONTROLS_RECEIPT || "pending";
+  const active =
+    receipt === H_EARTH_CONTROLS_EXPECTED &&
+    status?.status === "active-motion-input-authority" &&
+    status?.controlsAuthorized === true &&
+    status?.motionAuthorized === true &&
+    status?.inputAuthorized === true &&
+    status?.parentMutationAuthorized === false;
+
+  H_EARTH_CANVAS_STATE.controlsReceipt = receipt;
+  H_EARTH_CANVAS_STATE.controlsStatus = status?.status || (api ? "loaded-held" : "held");
+  H_EARTH_CANVAS_STATE.controlsAuthorized = active;
+  H_EARTH_CANVAS_STATE.motionAuthorized = active;
+  H_EARTH_CANVAS_STATE.inputAuthorized = active;
+  H_EARTH_CANVAS_STATE.parentMutationAuthorized = false;
+  H_EARTH_CANVAS_STATE.canvasControlsReceiptAligned = active;
+
+  if (active) {
+    H_EARTH_CANVAS_STATE.controlsAlignedAt = new Date().toISOString();
+  }
+
+  return status;
+}
+
 function ensureStyle() {
-  if (document.getElementById("h-earth-canvas-consumer-style-v2")) return;
+  if (document.getElementById("h-earth-canvas-controls-alignment-style-v3")) return;
 
   const style = document.createElement("style");
-  style.id = "h-earth-canvas-consumer-style-v2";
+  style.id = "h-earth-canvas-controls-alignment-style-v3";
   style.textContent = `
     [data-h-earth-canvas-panel] {
       box-sizing: border-box;
@@ -789,7 +753,7 @@ function ensurePanel() {
   panel.innerHTML = `
     <h2 data-h-earth-canvas-title>H-Earth Canvas Visible Composition</h2>
     <p data-h-earth-canvas-copy>
-      Canvas is active as a downstream visual child. It reconstructs the read-only parent chain when route instances are not passed, then reads the created surface parent and paints visible composition only. Controls remain held.
+      Canvas is active as a downstream visible-composition child. It consumes the read-only parent chain and now aligns its controls receipt after motion/input authority activates. Parent truth remains immutable.
     </p>
     <div data-h-earth-canvas-stage>
       <canvas
@@ -808,6 +772,8 @@ function ensurePanel() {
 }
 
 function setStatus(panel) {
+  readControlsApiStatus();
+
   const target = panel.querySelector("[data-h-earth-canvas-status]");
   if (!target) return;
 
@@ -823,7 +789,10 @@ function setStatus(panel) {
     <span><strong>Land / ocean cells</strong>${H_EARTH_CANVAS_STATE.landCells} / ${H_EARTH_CANVAS_STATE.oceanCells}</span>
     <span><strong>Nonblank pixel proof</strong>${H_EARTH_CANVAS_STATE.nonBlankPixelRatio.toFixed(4)}</span>
     <span><strong>Render status</strong>${H_EARTH_CANVAS_STATE.renderStatus}</span>
-    <span><strong>Controls</strong>held</span>
+    <span><strong>Controls receipt</strong>${H_EARTH_CANVAS_STATE.controlsReceipt}</span>
+    <span><strong>Controls status</strong>${H_EARTH_CANVAS_STATE.controlsStatus}</span>
+    <span><strong>Controls aligned</strong>${String(H_EARTH_CANVAS_STATE.canvasControlsReceiptAligned)}</span>
+    <span><strong>Parent mutation</strong>forbidden</span>
   `;
 }
 
@@ -1040,11 +1009,11 @@ function drawTitle(ctx, width, height) {
   ctx.fillStyle = "rgba(246, 211, 123, 0.92)";
   ctx.font = `${Math.max(18, width * 0.026)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
   ctx.textAlign = "center";
-  ctx.fillText("H-Earth · Canvas Parent Instance Consumer", width / 2, height * 0.075);
+  ctx.fillText("H-Earth · Canvas Controls Receipt Alignment", width / 2, height * 0.075);
 
   ctx.fillStyle = "rgba(243, 227, 189, 0.72)";
   ctx.font = `${Math.max(13, width * 0.015)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
-  ctx.fillText("Surface instance consumed · Controls held · Motion held", width / 2, height * 0.108);
+  ctx.fillText("Surface instance consumed · Controls aligned when active · Parent truth immutable", width / 2, height * 0.108);
 
   ctx.restore();
 }
@@ -1089,9 +1058,7 @@ function measureNonBlank(ctx, width, height) {
 
         sampled += 1;
 
-        if (a > 0 && (r > 2 || g > 2 || b > 2)) {
-          nonBlank += 1;
-        }
+        if (a > 0 && (r > 2 || g > 2 || b > 2)) nonBlank += 1;
       }
     }
 
@@ -1127,6 +1094,16 @@ function renderComposition(canvas, cells) {
   H_EARTH_CANVAS_STATE.renderedAt = new Date().toISOString();
 }
 
+function refreshHEarthCanvasControlsStatus(controlsStatus = null) {
+  readControlsApiStatus(controlsStatus);
+
+  const panel = document.querySelector("[data-h-earth-canvas-panel]");
+  if (panel) setStatus(panel);
+
+  exposeCanvasApi();
+  return getHEarthCanvasStatus();
+}
+
 function exposeCanvasApi() {
   const api = {
     contract: H_EARTH_CANVAS_CONTRACT,
@@ -1137,9 +1114,11 @@ function exposeCanvasApi() {
     getHEarthCanvasStatus,
     boot: bootHEarthCanvas,
     bootHEarthCanvas,
-    controlsAuthorized: false,
-    motionAuthorized: false,
-    inputAuthorized: false
+    refreshControlsStatus: refreshHEarthCanvasControlsStatus,
+    refreshHEarthCanvasControlsStatus,
+    controlsAuthorized: () => H_EARTH_CANVAS_STATE.controlsAuthorized,
+    motionAuthorized: () => H_EARTH_CANVAS_STATE.motionAuthorized,
+    inputAuthorized: () => H_EARTH_CANVAS_STATE.inputAuthorized
   };
 
   window.DGBHEarthCanvas = api;
@@ -1150,8 +1129,10 @@ function exposeCanvasApi() {
   document.documentElement.dataset.hEarthCanvas = H_EARTH_CANVAS_STATE.renderStatus;
   document.documentElement.dataset.hEarthCanvasReceipt = H_EARTH_CANVAS_CONTRACT;
   document.documentElement.dataset.hEarthCanvasPreviousReceipt = H_EARTH_CANVAS_PREVIOUS_CONTRACT;
-  document.documentElement.dataset.hEarthControls = "held";
-  document.documentElement.dataset.hEarthCanvasControlsAuthorized = "false";
+  document.documentElement.dataset.hEarthCanvasControlsReceiptAligned = String(H_EARTH_CANVAS_STATE.canvasControlsReceiptAligned);
+  document.documentElement.dataset.hEarthCanvasControlsStatus = H_EARTH_CANVAS_STATE.controlsStatus;
+  document.documentElement.dataset.hEarthCanvasControlsAuthorized = String(H_EARTH_CANVAS_STATE.controlsAuthorized);
+  document.documentElement.dataset.hEarthParentMutationAuthorized = "false";
 }
 
 async function bootHEarthCanvas(context = {}) {
@@ -1159,7 +1140,7 @@ async function bootHEarthCanvas(context = {}) {
 
   H_EARTH_CANVAS_BOOT_PROMISE = (async () => {
     H_EARTH_CANVAS_STATE.bootedAt = new Date().toISOString();
-    H_EARTH_CANVAS_STATE.renderStatus = "booting-parent-instance-consumer";
+    H_EARTH_CANVAS_STATE.renderStatus = "booting-controls-receipt-alignment";
 
     const panel = ensurePanel();
     const canvas = panel.querySelector("[data-h-earth-canvas]");
@@ -1199,7 +1180,7 @@ async function bootHEarthCanvas(context = {}) {
       exposeCanvasApi();
       return getHEarthCanvasStatus();
     } catch (error) {
-      recordError("boot-parent-instance-consumer", error);
+      recordError("boot-controls-receipt-alignment", error);
 
       const ctx = canvas.getContext("2d", { alpha: false });
       if (ctx) {
@@ -1207,7 +1188,7 @@ async function bootHEarthCanvas(context = {}) {
         measureNonBlank(ctx, canvas.width, canvas.height);
       }
 
-      H_EARTH_CANVAS_STATE.renderStatus = "failed-parent-instance-consumer";
+      H_EARTH_CANVAS_STATE.renderStatus = "failed-controls-receipt-alignment";
       setStatus(panel);
       exposeCanvasApi();
       return getHEarthCanvasStatus();
@@ -1218,11 +1199,14 @@ async function bootHEarthCanvas(context = {}) {
 }
 
 function getHEarthCanvasStatus() {
+  readControlsApiStatus();
+
   return {
     contract: H_EARTH_CANVAS_CONTRACT,
     receipt: H_EARTH_CANVAS_CONTRACT,
     previousContract: H_EARTH_CANVAS_PREVIOUS_CONTRACT,
     surfaceReceiptExpected: H_EARTH_SURFACE_RECEIPT_EXPECTED,
+    expectedControls: H_EARTH_CONTROLS_EXPECTED,
     routeAuthority: H_EARTH_CANVAS_STATE.routeAuthority,
     canvasJurisdiction: H_EARTH_CANVAS_STATE.canvasJurisdiction,
     canvasPrecinct: H_EARTH_CANVAS_STATE.canvasPrecinct,
@@ -1240,14 +1224,19 @@ function getHEarthCanvasStatus() {
     oceanCells: H_EARTH_CANVAS_STATE.oceanCells,
     nonBlankPixelRatio: H_EARTH_CANVAS_STATE.nonBlankPixelRatio,
     renderStatus: H_EARTH_CANVAS_STATE.renderStatus,
-    controlsAuthorized: false,
-    motionAuthorized: false,
-    inputAuthorized: false,
+    controlsReceipt: H_EARTH_CANVAS_STATE.controlsReceipt,
+    controlsStatus: H_EARTH_CANVAS_STATE.controlsStatus,
+    controlsAuthorized: H_EARTH_CANVAS_STATE.controlsAuthorized,
+    motionAuthorized: H_EARTH_CANVAS_STATE.motionAuthorized,
+    inputAuthorized: H_EARTH_CANVAS_STATE.inputAuthorized,
+    canvasControlsReceiptAligned: H_EARTH_CANVAS_STATE.canvasControlsReceiptAligned,
+    parentMutationAuthorized: false,
     earthMutationAuthorized: false,
     hearthMutationAuthorized: false,
     audraliaMutationAuthorized: false,
     bootedAt: H_EARTH_CANVAS_STATE.bootedAt,
     renderedAt: H_EARTH_CANVAS_STATE.renderedAt,
+    controlsAlignedAt: H_EARTH_CANVAS_STATE.controlsAlignedAt,
     errors: [...H_EARTH_CANVAS_STATE.errors]
   };
 }
@@ -1266,8 +1255,10 @@ export {
   H_EARTH_CANVAS_CONTRACT,
   H_EARTH_CANVAS_PREVIOUS_CONTRACT,
   H_EARTH_SURFACE_RECEIPT_EXPECTED,
+  H_EARTH_CONTROLS_EXPECTED,
   bootHEarthCanvas,
-  getHEarthCanvasStatus
+  getHEarthCanvasStatus,
+  refreshHEarthCanvasControlsStatus
 };
 
 export default {
@@ -1279,7 +1270,6 @@ export default {
   status: getHEarthCanvasStatus,
   getStatus: getHEarthCanvasStatus,
   getHEarthCanvasStatus,
-  controlsAuthorized: false,
-  motionAuthorized: false,
-  inputAuthorized: false
+  refreshControlsStatus: refreshHEarthCanvasControlsStatus,
+  refreshHEarthCanvasControlsStatus
 };

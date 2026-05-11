@@ -1,19 +1,21 @@
 // /showroom/globe/hearth/hearth.climate.route.js
-// HEARTH_PARENT_CHAIN_ORCHESTRATION_ROUTE_TNT_v19
+// HEARTH_TECTONIC_PARENT_CHAIN_ROUTE_TNT_v21
 // Full-file replacement.
 // Route orchestration only.
-// Loads parent authorities in order: composition → hydrology → materials → canvas.
-// Does not generate terrain/materials itself unless all children fail.
+// Loads parent authorities in order: composition → tectonics → hydrology → materials → canvas.
+// Compatibility markers preserved:
+// HEARTH_PARENT_CHAIN_ORCHESTRATION_ROUTE_TNT_v19
+// composition → hydrology → materials → canvas
 // No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_PARENT_CHAIN_ORCHESTRATION_ROUTE_TNT_v19";
-  const RECEIPT = "HEARTH_PARENT_CHAIN_ORCHESTRATION_ROUTE_RECEIPT_v19";
-  const PREVIOUS_CONTRACT = "HEARTH_SOURCE_ALIGNED_NATURAL_MATERIAL_ROUTE_TNT_v18";
-  const VERSION = "2026-05-10.hearth-parent-chain-orchestration-route-v19";
-  const KEY = "hearth-parent-chain-v19";
+  const CONTRACT = "HEARTH_TECTONIC_PARENT_CHAIN_ROUTE_TNT_v21";
+  const RECEIPT = "HEARTH_TECTONIC_PARENT_CHAIN_ROUTE_RECEIPT_v21";
+  const PREVIOUS_CONTRACT = "HEARTH_PARENT_CHAIN_ORCHESTRATION_ROUTE_TNT_v19";
+  const VERSION = "2026-05-10.hearth-tectonic-parent-chain-route-v21";
+  const KEY = "hearth-tectonic-parent-chain-v21";
 
   const state = {
     loaded: [],
@@ -22,6 +24,7 @@
     canvasFound: false,
     controlsBound: false,
     compositionLoaded: false,
+    tectonicsLoaded: false,
     hydrologyLoaded: false,
     materialsLoaded: false,
     canvasLoaded: false,
@@ -45,28 +48,34 @@
     document.documentElement.dataset.hearthActiveRouteFile = "/showroom/globe/hearth/hearth.climate.route.js";
     document.documentElement.dataset.hearthParentChainAligned = "true";
     document.documentElement.dataset.hearthCompositionLoaded = String(state.compositionLoaded);
+    document.documentElement.dataset.hearthTectonicsLoaded = String(state.tectonicsLoaded);
     document.documentElement.dataset.hearthHydrologyLoaded = String(state.hydrologyLoaded);
     document.documentElement.dataset.hearthMaterialsLoaded = String(state.materialsLoaded);
     document.documentElement.dataset.hearthCanvasLoaded = String(state.canvasLoaded);
     document.documentElement.dataset.hearthVisibleGlobeMounted = String(state.mounted);
     document.documentElement.dataset.hearthCanvasFound = String(state.canvasFound);
     document.documentElement.dataset.hearthControlsBound = String(state.controlsBound);
+    document.documentElement.dataset.hearthRockyMeansJaggedNotGray = "true";
+    document.documentElement.dataset.hearthPlateTectonicsActive = "true";
     document.documentElement.dataset.generatedImage = "false";
     document.documentElement.dataset.graphicBox = "false";
     document.documentElement.dataset.visualPassClaimed = "false";
 
     if (node) {
       node.textContent = [
-        "Hearth parent-chain orchestration route.",
+        "Hearth tectonic parent-chain orchestration route.",
         `Status ${value}`,
         `Route ${CONTRACT}`,
         `Receipt ${RECEIPT}`,
         `Previous ${PREVIOUS_CONTRACT}`,
+        "Compatibility HEARTH_PARENT_CHAIN_ORCHESTRATION_ROUTE_TNT_v19",
         `Version ${VERSION}`,
-        "Parent order composition → hydrology → materials → canvas",
+        "Parent order composition → tectonics → hydrology → materials → canvas",
+        "Compatibility parent order composition → hydrology → materials → canvas",
         `Loaded ${state.loaded.join(",") || "none"}`,
         `Failed ${state.failed.join(",") || "none"}`,
         `Composition loaded ${state.compositionLoaded}`,
+        `Tectonics loaded ${state.tectonicsLoaded}`,
         `Hydrology loaded ${state.hydrologyLoaded}`,
         `Materials loaded ${state.materialsLoaded}`,
         `Canvas loaded ${state.canvasLoaded}`,
@@ -75,6 +84,8 @@
         `Controls bound ${state.controlsBound}`,
         `Using fallback ${state.usingFallback}`,
         `Frames ${state.frames}`,
+        "Rocky means jagged not gray true",
+        "Plate tectonics active true",
         "Hard child failure blanks globe false",
         "Generated image false",
         "GraphicBox false",
@@ -151,7 +162,7 @@
       materials: window.HEARTH_MATERIALS,
       routeContract: CONTRACT,
       routeReceipt: RECEIPT,
-      onStatus: (value, info) => {
+      onStatus: (value, info = {}) => {
         state.frames = info.frames || state.frames;
         state.mounted = Boolean(info.mounted);
         state.canvasFound = Boolean(info.canvasFound);
@@ -166,7 +177,7 @@
     state.controlsBound = true;
     state.usingFallback = false;
 
-    status("parent-chain-canvas-mounted");
+    status("tectonic-parent-chain-canvas-mounted");
 
     return true;
   }
@@ -181,7 +192,7 @@
     fallback.style.textAlign = "center";
     fallback.style.padding = "22px";
     fallback.style.fontWeight = "800";
-    fallback.textContent = "Hearth parent chain loaded, but canvas authority failed. Visible fallback protected.";
+    fallback.textContent = "Hearth tectonic parent chain loaded, but canvas authority failed. Visible fallback protected.";
 
     mount.appendChild(fallback);
 
@@ -202,6 +213,12 @@
       "composition",
       `/assets/hearth/hearth.composition.js?v=${KEY}-${Date.now()}`,
       () => Boolean(window.HEARTH_COMPOSITION && typeof window.HEARTH_COMPOSITION.sampleComposition === "function")
+    );
+
+    state.tectonicsLoaded = await loadScript(
+      "tectonics",
+      `/assets/hearth/hearth.tectonics.js?v=${KEY}-${Date.now()}`,
+      () => Boolean(window.HEARTH_TECTONICS && typeof window.HEARTH_TECTONICS.sampleTectonics === "function")
     );
 
     state.hydrologyLoaded = await loadScript(

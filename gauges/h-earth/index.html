@@ -4,8 +4,8 @@
   lang="en"
   data-page="gauges-h-earth"
   data-route="/gauges/h-earth/"
-  data-contract="GAUGES_H_EARTH_PARENT_CHAIN_SURFACE_READ_DIAGNOSTIC_HTML_TNT_v3"
-  data-receipt="GAUGES_H_EARTH_PARENT_CHAIN_SURFACE_READ_DIAGNOSTIC_RECEIPT_v3"
+  data-contract="GAUGES_H_EARTH_SELF_CONTAINED_PARENT_CHAIN_AUDIT_TNT_v4"
+  data-receipt="GAUGES_H_EARTH_SELF_CONTAINED_PARENT_CHAIN_AUDIT_RECEIPT_v4"
   data-read-only="true"
   data-generated-image="false"
   data-graphic-box="false"
@@ -18,7 +18,7 @@
   <title>Diamond Gate Bridge · H-Earth Gauges</title>
   <meta
     name="description"
-    content="Read-only H-Earth diagnostics for route separation, parent-chain assets, terrain balance, surface material completion, held canvas, held controls, and future work holds."
+    content="Self-contained read-only H-Earth diagnostics for route separation, parent-chain assets, terrain balance, surface material completion, held canvas, held controls, and future holds."
   >
 
   <style>
@@ -42,9 +42,7 @@
       --max: 1180px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       min-height: 100%;
@@ -127,9 +125,7 @@
       height: 18px;
       border: 1px solid var(--gold);
       transform: rotate(45deg);
-      background:
-        linear-gradient(135deg, rgba(244, 191, 96, 0.24), transparent),
-        rgba(255, 255, 255, 0.05);
+      background: linear-gradient(135deg, rgba(244, 191, 96, 0.24), transparent), rgba(255, 255, 255, 0.05);
       box-shadow: 0 0 24px rgba(244, 191, 96, 0.18);
     }
 
@@ -156,13 +152,10 @@
     }
 
     .hero,
-    .panel,
     .check-card {
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent),
-        var(--panel);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent), var(--panel);
       box-shadow: var(--shadow);
       backdrop-filter: blur(18px);
     }
@@ -281,17 +274,9 @@
       background: var(--panel-soft);
     }
 
-    .check-card[data-status="pass"] {
-      border-color: var(--line-green);
-    }
-
-    .check-card[data-status="fail"] {
-      border-color: var(--line-red);
-    }
-
-    .check-card[data-status="hold"] {
-      border-color: var(--line-blue);
-    }
+    .check-card[data-status="pass"] { border-color: var(--line-green); }
+    .check-card[data-status="fail"] { border-color: var(--line-red); }
+    .check-card[data-status="hold"] { border-color: var(--line-blue); }
 
     .check-card h3 {
       margin: 0;
@@ -415,7 +400,7 @@
 
     <main id="main" tabindex="-1">
       <section class="hero" aria-labelledby="title">
-        <p class="eyebrow">Read-only · H-Earth parent-chain diagnostics</p>
+        <p class="eyebrow">Read-only · Self-contained H-Earth diagnostics</p>
         <h1 id="title">H-Earth Gauges</h1>
         <p class="lede">
           This diagnostic room checks H-Earth routing, private-room separation, parent-chain assets,
@@ -430,26 +415,11 @@
         </div>
 
         <section class="metric-grid" aria-label="H-Earth audit metrics">
-          <article class="metric">
-            <strong id="totalCount">0</strong>
-            <span>Total checks.</span>
-          </article>
-          <article class="metric">
-            <strong id="passCount">0</strong>
-            <span>Passed.</span>
-          </article>
-          <article class="metric">
-            <strong id="holdCount">0</strong>
-            <span>Held.</span>
-          </article>
-          <article class="metric">
-            <strong id="failCount">0</strong>
-            <span>Failed.</span>
-          </article>
-          <article class="metric">
-            <strong id="readiness">0%</strong>
-            <span>Readiness.</span>
-          </article>
+          <article class="metric"><strong id="totalCount">0</strong><span>Total checks.</span></article>
+          <article class="metric"><strong id="passCount">0</strong><span>Passed.</span></article>
+          <article class="metric"><strong id="holdCount">0</strong><span>Held.</span></article>
+          <article class="metric"><strong id="failCount">0</strong><span>Failed.</span></article>
+          <article class="metric"><strong id="readiness">0%</strong><span>Readiness.</span></article>
         </section>
       </section>
 
@@ -461,10 +431,10 @@
         class="receipt-panel"
         aria-label="H-Earth Gauges receipt"
         data-receipt-panel="h-earth-gauges"
-        data-contract="GAUGES_H_EARTH_PARENT_CHAIN_SURFACE_READ_DIAGNOSTIC_HTML_TNT_v3"
+        data-contract="GAUGES_H_EARTH_SELF_CONTAINED_PARENT_CHAIN_AUDIT_TNT_v4"
       >
-        <code>GAUGES_H_EARTH_PARENT_CHAIN_SURFACE_READ_DIAGNOSTIC_HTML_TNT_v3</code>
-        <code>STATUS: waiting for audit run</code>
+        <code>GAUGES_H_EARTH_SELF_CONTAINED_PARENT_CHAIN_AUDIT_TNT_v4</code>
+        <code>STATUS: inline audit runtime loaded from HTML</code>
         <code>READ_ONLY: true</code>
         <code>GENERATED_IMAGE: false</code>
         <code>GRAPHIC_BOX: false</code>
@@ -478,10 +448,296 @@
     </footer>
   </div>
 
-  <script
-    type="module"
-    src="./index.js?v=GAUGES_H_EARTH_PARENT_CHAIN_SURFACE_READ_DIAGNOSTIC_JS_TNT_v3"
-    data-handoff="gauges-h-earth-parent-chain-surface-read-diagnostic"
-  ></script>
+  <script>
+    (() => {
+      const CONTRACT = "GAUGES_H_EARTH_SELF_CONTAINED_PARENT_CHAIN_AUDIT_TNT_v4";
+      const RECEIPT = "GAUGES_H_EARTH_SELF_CONTAINED_PARENT_CHAIN_AUDIT_RECEIPT_v4";
+      const VERSION = "2026-05-11.gauges-h-earth-self-contained-parent-chain-audit-v4";
+      const EXPECTED = Object.freeze({
+        hEarthHtml: "H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_SHELL_TNT_v4",
+        hEarthDoorway: "H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4",
+        kernel: "H_EARTH_G1_TERRAIN_ONLY_KERNEL_TNT_v1",
+        lattice256: "H_EARTH_G1_TERRAIN_ONLY_LATTICE256_TNT_v1",
+        landmap: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_LANDMAP_TNT_v2",
+        terrain: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_TERRAIN_TNT_v2",
+        surface: "H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1",
+        surfaceCompletion: "H_EARTH_G1_SURFACE_MATERIAL_COMPLETION_TNT_v2"
+      });
+
+      const MODULES = Object.freeze([
+        { key: "kernel", path: "/assets/h-earth/h-earth.kernel.js", exportName: "createHEarthKernel", expectedContract: EXPECTED.kernel },
+        { key: "lattice256", path: "/assets/h-earth/h-earth.lattice256.js", exportName: "createHEarthLattice256", expectedContract: EXPECTED.lattice256 },
+        { key: "landmap", path: "/assets/h-earth/h-earth.landmap.js", exportName: "createHEarthLandmap", expectedContract: EXPECTED.landmap },
+        { key: "terrain", path: "/assets/h-earth/h-earth.terrain.js", exportName: "createHEarthTerrain", expectedContract: EXPECTED.terrain },
+        { key: "surface", path: "/assets/h-earth/h-earth.surface.js", exportName: "createHEarthSurface", expectedContract: EXPECTED.surface }
+      ]);
+
+      const checks = [];
+      const $ = (id) => document.getElementById(id);
+      const cacheKey = () => `gauges-h-earth-inline-v4-${Date.now()}`;
+      const safeError = (error) => error instanceof Error ? `${error.name}: ${error.message}` : String(error || "unknown error");
+
+      function addCheck(status, title, detail) {
+        checks.push({ status, title, detail });
+      }
+
+      function codeLine(text) {
+        const code = document.createElement("code");
+        code.textContent = text;
+        return code;
+      }
+
+      function render() {
+        const target = $("checks");
+        if (target) {
+          target.replaceChildren(...checks.map((check) => {
+            const card = document.createElement("article");
+            card.className = "check-card";
+            card.dataset.status = check.status;
+
+            const body = document.createElement("div");
+            const h3 = document.createElement("h3");
+            h3.textContent = check.title;
+            const p = document.createElement("p");
+            p.textContent = check.detail;
+            body.append(h3, p);
+
+            const badge = document.createElement("span");
+            badge.className = `status ${check.status}`;
+            badge.textContent = check.status;
+
+            card.append(body, badge);
+            return card;
+          }));
+        }
+
+        const total = checks.length;
+        const pass = checks.filter((check) => check.status === "pass").length;
+        const hold = checks.filter((check) => check.status === "hold").length;
+        const fail = checks.filter((check) => check.status === "fail").length;
+
+        $("totalCount").textContent = String(total);
+        $("passCount").textContent = String(pass);
+        $("holdCount").textContent = String(hold);
+        $("failCount").textContent = String(fail);
+        $("readiness").textContent = total ? `${Math.round((pass / total) * 100)}%` : "0%";
+      }
+
+      function renderReceipt(instances = null) {
+        const receipt = $("receipt");
+        if (!receipt) return;
+
+        const total = checks.length;
+        const pass = checks.filter((check) => check.status === "pass").length;
+        const hold = checks.filter((check) => check.status === "hold").length;
+        const fail = checks.filter((check) => check.status === "fail").length;
+
+        const lines = [
+          `${CONTRACT} · self-contained read-only H-Earth diagnostics`,
+          `Receipt ${RECEIPT}`,
+          `Version ${VERSION}`,
+          `Total ${total}`,
+          `Passed ${pass}`,
+          `Held ${hold}`,
+          `Failed ${fail}`,
+          `Readiness ${total ? `${Math.round((pass / total) * 100)}%` : "0%"}`,
+          `Critical interpretation: ${fail === 0 ? "H-Earth diagnostics are aligned or intentionally held." : "One or more diagnostics failed."}`,
+          `Read-only true`,
+          `Generated image false`,
+          `GraphicBox false`,
+          `Visual pass claimed false`,
+          `Parent mutation authorized false`
+        ];
+
+        if (instances?.landmap?.summary) {
+          lines.push(`Land ratio ${instances.landmap.summary.landRatio}`);
+          lines.push(`Ocean ratio ${instances.landmap.summary.oceanRatio}`);
+        }
+
+        if (instances?.terrain?.summary) {
+          lines.push(`Terrain aspects ${instances.terrain.summary.populatedTerrainAspectCount}/${instances.terrain.summary.terrainAspectCount}`);
+          lines.push(`Full aspect disposition ${String(instances.terrain.summary.fullAspectDisposition)}`);
+        }
+
+        if (instances?.surface?.summary) {
+          lines.push(`Surface material classes ${instances.surface.summary.materialClassCount}/${instances.surface.summary.requiredMaterialClassCount}`);
+          lines.push(`Material coverage complete ${String(instances.surface.summary.materialCoverageComplete)}`);
+          lines.push(`Every cell assigned surface ${String(instances.surface.summary.everyCellAssignedSurface)}`);
+          lines.push(`Surface parent ready ${String(instances.surface.summary.surfaceParentReady)}`);
+          lines.push(`Downstream canvas may read surface ${String(instances.surface.summary.downstreamCanvasMayReadSurface)}`);
+          lines.push(`Canvas paint authorized ${String(instances.surface.summary.canvasPaintAuthorized)}`);
+          lines.push(`Controls authorized ${String(instances.surface.summary.controlsAuthorized)}`);
+        }
+
+        lines.push("Checks:");
+        for (const check of checks) lines.push(`${check.status.toUpperCase()} · ${check.title} · ${check.detail}`);
+        receipt.replaceChildren(...lines.map(codeLine));
+      }
+
+      async function fetchText(path) {
+        const response = await fetch(`${path}?v=${encodeURIComponent(cacheKey())}`, { cache: "no-store", credentials: "same-origin" });
+        const text = await response.text();
+        return { ok: response.ok, status: response.status, text };
+      }
+
+      async function checkFetchContains(title, path, marker) {
+        try {
+          const result = await fetchText(path);
+          if (!result.ok) {
+            addCheck("fail", title, `${path} · HTTP ${result.status}`);
+            return;
+          }
+          if (!result.text.includes(marker)) {
+            addCheck("fail", title, `${path} · missing marker ${marker}`);
+            return;
+          }
+          addCheck("pass", title, `${path} · expected marker found.`);
+        } catch (error) {
+          addCheck("fail", title, `${path} · ${safeError(error)}`);
+        }
+      }
+
+      async function importOne(entry) {
+        try {
+          const imported = await import(`${entry.path}?v=${encodeURIComponent(cacheKey())}`);
+          if (!imported || typeof imported[entry.exportName] !== "function") {
+            addCheck("fail", `Asset · ${entry.key} export`, `${entry.path} · missing ${entry.exportName}`);
+            return null;
+          }
+
+          const actual = imported.CONTRACT || "contract-not-exported";
+          if (actual !== entry.expectedContract) {
+            addCheck("fail", `Asset · ${entry.key} contract`, `${entry.path} · expected ${entry.expectedContract}, actual ${actual}`);
+            return null;
+          }
+
+          addCheck("pass", `Asset · ${entry.key} loaded`, `${entry.path} · ${actual}`);
+          return imported;
+        } catch (error) {
+          addCheck("fail", `Asset · ${entry.key} import`, `${entry.path} · ${safeError(error)}`);
+          return null;
+        }
+      }
+
+      async function importParentChain() {
+        const modules = {};
+        for (const entry of MODULES) modules[entry.key] = await importOne(entry);
+        return modules;
+      }
+
+      function createInstances(modules) {
+        if (!modules.kernel || !modules.lattice256 || !modules.landmap || !modules.terrain || !modules.surface) return null;
+
+        try {
+          const kernel = modules.kernel.createHEarthKernel({ gaugeContract: CONTRACT, readOnly: true });
+          const lattice256 = modules.lattice256.createHEarthLattice256({ kernel });
+          const landmap = modules.landmap.createHEarthLandmap({ kernel, lattice256 });
+          const terrain = modules.terrain.createHEarthTerrain({ kernel, lattice256, landmap });
+          const surface = modules.surface.createHEarthSurface({ kernel, lattice256, landmap, terrain });
+
+          addCheck("pass", "Instance · parent chain created", "kernel → lattice256 → landmap → terrain → surface instantiated read-only.");
+          return { kernel, lattice256, landmap, terrain, surface };
+        } catch (error) {
+          addCheck("fail", "Instance · parent chain creation", safeError(error));
+          return null;
+        }
+      }
+
+      function checkParentData(instances) {
+        if (!instances) return;
+
+        const { lattice256, landmap, terrain, surface } = instances;
+
+        lattice256?.cells?.length === 256
+          ? addCheck("pass", "Lattice · 256 cells", "lattice256.cells.length equals 256.")
+          : addCheck("fail", "Lattice · 256 cells", `Expected 256, actual ${lattice256?.cells?.length ?? "missing"}.`);
+
+        landmap?.summary?.landRatio === 0.3594 && landmap?.summary?.oceanRatio === 0.6406
+          ? addCheck("pass", "Landmap · balance", `LAND_RATIO ${landmap.summary.landRatio}; OCEAN_RATIO ${landmap.summary.oceanRatio}.`)
+          : addCheck("fail", "Landmap · balance", `Expected 0.3594 / 0.6406, actual ${landmap?.summary?.landRatio} / ${landmap?.summary?.oceanRatio}.`);
+
+        terrain?.summary?.everyCellAssignedTerrain === true
+          ? addCheck("pass", "Terrain · every cell assigned", "EVERY_CELL_ASSIGNED_TERRAIN true.")
+          : addCheck("fail", "Terrain · every cell assigned", "EVERY_CELL_ASSIGNED_TERRAIN not true.");
+
+        terrain?.summary?.populatedTerrainAspectCount === 29 && terrain?.summary?.terrainAspectCount === 29 && terrain?.summary?.fullAspectDisposition === true
+          ? addCheck("pass", "Terrain · full aspect disposition", "TERRAIN_ASPECTS 29/29; FULL_ASPECT_DISPOSITION true.")
+          : addCheck("fail", "Terrain · full aspect disposition", "Terrain full aspect disposition did not pass.");
+
+        surface?.summary?.everyCellAssignedSurface === true
+          ? addCheck("pass", "Surface · every cell assigned", "EVERY_CELL_ASSIGNED_SURFACE true.")
+          : addCheck("fail", "Surface · every cell assigned", "EVERY_CELL_ASSIGNED_SURFACE not true.");
+
+        surface?.summary?.materialClassCount === 29 && surface?.summary?.requiredMaterialClassCount === 29 && surface?.summary?.materialCoverageComplete === true
+          ? addCheck("pass", "Surface · material completion", "SURFACE_MATERIAL_CLASSES 29/29; MATERIAL_COVERAGE_COMPLETE true.")
+          : addCheck("fail", "Surface · material completion", `Expected 29/29 true, actual ${surface?.summary?.materialClassCount}/${surface?.summary?.requiredMaterialClassCount} ${String(surface?.summary?.materialCoverageComplete)}.`);
+
+        surface?.summary?.surfaceParentReady === true
+          ? addCheck("pass", "Surface · parent ready", "SURFACE_PARENT_READY true.")
+          : addCheck("fail", "Surface · parent ready", "SURFACE_PARENT_READY not true.");
+
+        surface?.summary?.downstreamCanvasMayReadSurface === true
+          ? addCheck("pass", "Surface · canvas may read", "DOWNSTREAM_CANVAS_MAY_READ_SURFACE true.")
+          : addCheck("fail", "Surface · canvas may read", "DOWNSTREAM_CANVAS_MAY_READ_SURFACE not true.");
+
+        surface?.summary?.canvasPaintAuthorized === false
+          ? addCheck("pass", "Safety · canvas paint unauthorized", "CANVAS_PAINT_AUTHORIZED false.")
+          : addCheck("fail", "Safety · canvas paint unauthorized", "CANVAS_PAINT_AUTHORIZED is not false.");
+
+        surface?.summary?.controlsAuthorized === false
+          ? addCheck("pass", "Safety · controls unauthorized", "CONTROLS_AUTHORIZED false.")
+          : addCheck("fail", "Safety · controls unauthorized", "CONTROLS_AUTHORIZED is not false.");
+      }
+
+      async function checkRoutesAndSources() {
+        await checkFetchContains("Route · H-Earth private room reachable", "/showroom/globe/h-earth/", EXPECTED.hEarthHtml);
+        await checkFetchContains("Route · Globe Showcase reachable", "/showroom/globe/", "h-earth");
+        await checkFetchContains("Route · H-Earth doorway v4 active", "/showroom/globe/h-earth/index.js", EXPECTED.hEarthDoorway);
+        await checkFetchContains("Safety · visual pass remains false", "/showroom/globe/h-earth/index.html", 'data-visual-pass-claim="false"');
+        await checkFetchContains("Safety · parent mutation forbidden", "/showroom/globe/h-earth/index.html", 'data-mutation-earth="forbidden"');
+        await checkFetchContains("Surface · material completion source marker", "/assets/h-earth/h-earth.surface.js", EXPECTED.surfaceCompletion);
+      }
+
+      function addHeldFutureWork() {
+        addCheck("hold", "Held · Canvas visible composition", "/assets/h-earth/h-earth.canvas.js · Held until canvas TNT is authorized.");
+        addCheck("hold", "Held · Controls motion/input", "/assets/h-earth/h-earth.controls.js · Held until canvas exists and exposes a lawful mount return.");
+        addCheck("hold", "Held · Ground level remains held", "/assets/h-earth/h-earth/ground/ · Held until orbital/aerial inspection is coherent.");
+        addCheck("hold", "Held · Estate placement remains held", "/assets/h-earth/h-earth/estate/ · Held until ground-level mode is authorized.");
+      }
+
+      async function runAudit() {
+        checks.length = 0;
+        addCheck("pass", "Gauge · inline audit runtime", "Self-contained HTML audit runtime is active.");
+        addCheck("pass", "Gauge · read-only mode", "Diagnostics only; no route, source, canvas, controls, or parent truth mutation.");
+        render();
+        renderReceipt();
+
+        await checkRoutesAndSources();
+
+        const modules = await importParentChain();
+        const instances = createInstances(modules);
+        checkParentData(instances);
+        addHeldFutureWork();
+
+        render();
+        renderReceipt(instances || null);
+      }
+
+      function boot() {
+        const button = $("runAuditButton");
+        if (button) {
+          button.addEventListener("click", runAudit);
+          button.dataset.auditBound = "true";
+        }
+        runAudit();
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", boot, { once: true });
+      } else {
+        boot();
+      }
+    })();
+  </script>
 </body>
 </html>

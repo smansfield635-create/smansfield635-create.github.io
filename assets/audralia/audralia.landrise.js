@@ -1,19 +1,19 @@
 // /assets/audralia/audralia.landrise.js
-// AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_AUTHORITY_TNT_v2
+// AUDRALIA_G1_TERRAIN_MASS_ATTACHMENT_AUTHORITY_TNT_v3
 // Full-file replacement.
 // Parent terrain-rise authority only.
 // Beaches remain sea level.
-// Raised terrain forms behind beaches.
+// Raised terrain thickens behind beaches.
 // No trees. No bushes. No forest canopy.
 // No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_AUTHORITY_TNT_v2";
-  const RECEIPT = "AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_AUTHORITY_RECEIPT_v2";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_AUTHORITY_TNT_v1";
-  const VERSION = "2026-05-10.audralia-g1-raised-terrain-behind-beach-authority-v2";
+  const CONTRACT = "AUDRALIA_G1_TERRAIN_MASS_ATTACHMENT_AUTHORITY_TNT_v3";
+  const RECEIPT = "AUDRALIA_G1_TERRAIN_MASS_ATTACHMENT_AUTHORITY_RECEIPT_v3";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_AUTHORITY_TNT_v2";
+  const VERSION = "2026-05-10.audralia-g1-terrain-mass-attachment-authority-v3";
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -102,78 +102,77 @@
     const elevation = clamp(context.elevation || 0, 0, 1);
     const beachBand = clamp(context.beachBand || 0, 0, 1);
 
-    const exposure = clamp(Math.max(landSignal, islandSignal * 0.88), 0, 1);
+    const exposure = clamp(Math.max(landSignal, islandSignal * 0.9), 0, 1);
 
-    const terrainMass = fbm(u * 1.18 + 0.19, v * 1.02 - 0.14, 810000, 6);
-    const plateauNoise = fbm(u * 1.72 - 0.17, v * 1.38 + 0.21, 811000, 5);
-    const ridgeNoise = ridged(u * 2.3 + 0.08, v * 1.86 - 0.12, 812000, 5);
-    const basinNoise = 1 - fbm(u * 2.1 - 0.09, v * 1.64 + 0.18, 813000, 5);
+    const terrainMass = fbm(u * 1.08 + 0.19, v * 0.96 - 0.14, 910000, 6);
+    const plateauNoise = fbm(u * 1.52 - 0.17, v * 1.28 + 0.21, 911000, 5);
+    const ridgeNoise = ridged(u * 2.12 + 0.08, v * 1.72 - 0.12, 912000, 5);
+    const basinNoise = 1 - fbm(u * 1.9 - 0.09, v * 1.54 + 0.18, 913000, 5);
 
     const beachEdge = clamp(
-      smoothstep(0.455, 0.545, exposure) *
-        (1 - smoothstep(0.575, 0.705, exposure)) *
-        (0.72 + ridged(u * 4.4, v * 3.4, 814000, 4) * 0.28),
+      smoothstep(0.455, 0.535, exposure) *
+        (1 - smoothstep(0.555, 0.665, exposure)) *
+        (0.72 + ridged(u * 4.4, v * 3.4, 914000, 4) * 0.28),
       0,
       1
     );
 
-    const beachAnchor = clamp(
-      beachEdge * 0.34 +
-        beachBand * 0.24 +
-        shelf * 0.18 +
-        exposure * 0.24,
+    const attachedBackshore = clamp(
+      smoothstep(0.505, 0.66, exposure) +
+        smoothstep(0.43, 0.72, terrainMass) * 0.18 +
+        smoothstep(0.45, 0.75, ridgeNoise) * 0.12,
       0,
       1
     );
 
     const terrainDrive = clamp(
-      exposure * 0.44 +
+      exposure * 0.5 +
         elevation * 0.22 +
-        terrainMass * 0.18 +
-        plateauNoise * 0.14 +
-        ridgeNoise * 0.14 +
-        shelf * 0.08 -
-        beachEdge * 0.12,
+        terrainMass * 0.2 +
+        plateauNoise * 0.16 +
+        ridgeNoise * 0.15 +
+        shelf * 0.05 -
+        beachEdge * 0.1,
       0,
       1
     );
 
     const raisedTerrain = clamp(
-      smoothstep(0.47, 0.69, terrainDrive) +
-        smoothstep(0.555, 0.735, exposure) * 0.38 +
-        smoothstep(0.58, 0.82, islandSignal) * 0.22,
+      smoothstep(0.43, 0.62, terrainDrive) +
+        smoothstep(0.515, 0.665, exposure) * 0.45 +
+        smoothstep(0.56, 0.78, islandSignal) * 0.24,
       0,
       1
     );
 
     const inlandCore = clamp(
-      smoothstep(0.52, 0.78, raisedTerrain + terrainMass * 0.18 + plateauNoise * 0.12) -
-        beachEdge * 0.14,
+      smoothstep(0.47, 0.72, raisedTerrain + terrainMass * 0.2 + plateauNoise * 0.14) -
+        beachEdge * 0.12,
       0,
       1
     );
 
     const lowland = clamp(
-      raisedTerrain * 0.32 +
-        basinNoise * 0.22 +
-        shelf * 0.08 -
-        ridgeNoise * 0.12,
+      raisedTerrain * 0.36 +
+        basinNoise * 0.24 +
+        terrainMass * 0.08 -
+        ridgeNoise * 0.1,
       0,
       1
     );
 
     const plateau = clamp(
-      inlandCore * 0.34 +
-        plateauNoise * 0.26 +
-        elevation * 0.18 +
-        terrainMass * 0.1,
+      inlandCore * 0.36 +
+        plateauNoise * 0.3 +
+        elevation * 0.16 +
+        terrainMass * 0.12,
       0,
       1
     );
 
     const ridgeBack = clamp(
       raisedTerrain * 0.24 +
-        ridgeNoise * 0.32 +
+        ridgeNoise * 0.36 +
         elevation * 0.18 +
         plateauNoise * 0.08,
       0,
@@ -182,7 +181,7 @@
 
     const terrainShadow = clamp(
       lowland * 0.22 +
-        basinNoise * 0.18 +
+        basinNoise * 0.17 +
         (1 - elevation) * 0.06 -
         plateau * 0.08,
       0,
@@ -190,10 +189,10 @@
     );
 
     const terrainHighlight = clamp(
-      ridgeBack * 0.28 +
+      ridgeBack * 0.3 +
         plateau * 0.26 +
-        raisedTerrain * 0.18 +
-        elevation * 0.14 -
+        raisedTerrain * 0.2 +
+        elevation * 0.12 -
         lowland * 0.08,
       0,
       1
@@ -205,7 +204,8 @@
       previousContract: PREVIOUS_CONTRACT,
       beachRemainsSeaLevel: true,
       beachEdge,
-      beachAnchor,
+      beachBand,
+      attachedBackshore,
       raisedTerrain,
       inlandCore,
       lowland,
@@ -213,8 +213,8 @@
       ridgeBack,
       terrainShadow,
       terrainHighlight,
-      terrainAboveSeaLevel: raisedTerrain > 0.22,
-      attachedBehindBeach: beachAnchor > 0.14 && raisedTerrain > 0.18,
+      terrainAboveSeaLevel: raisedTerrain > 0.18,
+      terrainMassAttached: attachedBackshore > 0.18 && raisedTerrain > 0.16,
       terrainMass,
       ownsRoute: false,
       ownsCanvas: false,
@@ -236,11 +236,11 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "audralia-raised-terrain-behind-beach-parent",
+      authority: "audralia-terrain-mass-attachment-parent",
       beachRemainsSeaLevel: true,
       raisedTerrainBehindBeach: true,
+      terrainMassAttached: true,
       terrainAboveSeaLevel: true,
-      strongerLandAttachment: true,
       vegetationTopologyHeld: true,
       noTrees: true,
       noBushes: true,
@@ -271,6 +271,7 @@
   document.documentElement.dataset.audraliaLandriseReceipt = RECEIPT;
   document.documentElement.dataset.audraliaBeachRemainsSeaLevel = "true";
   document.documentElement.dataset.audraliaRaisedTerrainBehindBeach = "true";
+  document.documentElement.dataset.audraliaTerrainMassAttached = "true";
   document.documentElement.dataset.audraliaTerrainAboveSeaLevel = "true";
   document.documentElement.dataset.audraliaNoTrees = "true";
   document.documentElement.dataset.audraliaNoBushes = "true";

@@ -1,14 +1,19 @@
+<!-- /showroom/globe/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-page="globe-split-habitability-index"
+  data-page="showroom-globe-split"
   data-route="/showroom/globe/"
-  data-contract="GLOBE_SPLIT_HABITABILITY_SELECTOR_HTML_TNT_v2"
-  data-total-planet-target="81"
-  data-active-constructed-templates="2"
-  data-generated-image="false"
-  data-graphic-box="false"
-  data-visual-pass-claimed="false"
+  data-contract="GLOBE_SPLIT_H_EARTH_ACCESS_BRIDGE_TNT_v1"
+  data-purpose="planet-lane-selector"
+  data-h-earth-access="enabled"
+  data-earth-reference="protected"
+  data-hearth-lane="preserved"
+  data-audralia-lane="preserved"
+  data-australia-terminology="forbidden"
+  data-graphic-box="forbidden"
+  data-image-generation="forbidden"
+  data-visual-pass-claim="false"
 >
 <head>
   <meta charset="utf-8">
@@ -16,37 +21,57 @@
   <title>Diamond Gate Bridge · Globe Split</title>
   <meta
     name="description"
-    content="Globe Split habitability selector for Earth, Hearth, and Audralia. Hearth and Audralia are habitable-forming constructed planet templates inside an 81-planet target system."
+    content="The Globe Split page routes Earth, H-Earth, Hearth, and Audralia into separate inspection lanes without merging or mutating their authorities."
   >
 
   <style>
     :root {
-      --bg: #030914;
-      --panel: rgba(7, 16, 30, 0.84);
-      --line: rgba(231, 188, 105, 0.34);
-      --gold: #e7bc69;
-      --text: #eef6ff;
-      --muted: rgba(238, 246, 255, 0.72);
-      --blue: #4fb5db;
-      --green: #8bd7a3;
-      --red: #ff8f7a;
+      color-scheme: dark;
+      --bg: #050812;
+      --panel: rgba(10, 18, 32, 0.84);
+      --panel-soft: rgba(13, 24, 42, 0.72);
+      --line: rgba(244, 191, 96, 0.28);
+      --line-blue: rgba(142, 190, 255, 0.24);
+      --line-green: rgba(143, 240, 195, 0.22);
+      --text: #f6ead2;
+      --muted: #b9c1cf;
+      --gold: #f4bf60;
+      --blue: #8ebeff;
+      --green: #8ff0c3;
+      --danger: #ffb4a7;
+      --radius: 24px;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+      --max: 1180px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html {
       min-height: 100%;
       background:
-        radial-gradient(circle at 50% 18%, rgba(39, 117, 155, 0.22), transparent 38%),
-        radial-gradient(circle at 18% 12%, rgba(231, 188, 105, 0.13), transparent 30%),
-        linear-gradient(180deg, #06101e, var(--bg) 72%);
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        radial-gradient(circle at 48% 0%, rgba(142, 190, 255, 0.18), transparent 34rem),
+        radial-gradient(circle at 12% 18%, rgba(244, 191, 96, 0.14), transparent 30rem),
+        radial-gradient(circle at 88% 22%, rgba(143, 240, 195, 0.10), transparent 26rem),
+        linear-gradient(180deg, var(--bg), #02040a 76%);
     }
 
     body {
+      min-height: 100%;
       margin: 0;
-      min-height: 100vh;
+      color: var(--text);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.035), transparent 38%),
+        radial-gradient(circle at 50% 70%, rgba(244, 191, 96, 0.055), transparent 34rem);
     }
 
     a {
@@ -59,405 +84,510 @@
       outline-offset: 4px;
     }
 
-    .skip {
+    .skip-link {
       position: absolute;
-      top: 12px;
-      left: 16px;
+      left: 1rem;
+      top: 1rem;
       z-index: 20;
-      transform: translateY(-140%);
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: var(--gold);
-      color: #06101e;
-      font-weight: 900;
-    }
-
-    .skip:focus { transform: translateY(0); }
-
-    .shell {
-      width: min(1160px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 22px 0 42px;
-    }
-
-    .topbar,
-    .nav,
-    .card,
-    .metric,
-    .receipt {
+      padding: 0.75rem 1rem;
       border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(9, 22, 41, 0.88), rgba(4, 10, 20, 0.78));
-      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.38);
-      backdrop-filter: blur(10px);
+      border-radius: 999px;
+      background: #08101d;
+      color: var(--text);
+      transform: translateY(-180%);
+      transition: transform 160ms ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .page-shell {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 48px;
     }
 
     .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
-      border-radius: 24px;
-      padding: 12px 14px;
+      gap: 18px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(5, 9, 18, 0.72);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
     }
 
     .brand {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      font-weight: 900;
+      min-width: max-content;
+      font-weight: 850;
       letter-spacing: 0.02em;
     }
 
-    .mark {
-      display: grid;
-      place-items: center;
-      width: 36px;
-      height: 36px;
-      border-radius: 12px;
-      border: 1px solid rgba(231, 188, 105, 0.46);
-      color: var(--gold);
-      background: radial-gradient(circle at 50% 36%, rgba(231, 188, 105, 0.22), rgba(7, 16, 30, 0.86));
+    .brand-mark {
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--gold);
+      transform: rotate(45deg);
+      background:
+        linear-gradient(135deg, rgba(244, 191, 96, 0.24), transparent),
+        rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 24px rgba(244, 191, 96, 0.18);
     }
 
     .nav {
       display: flex;
       flex-wrap: wrap;
+      justify-content: flex-end;
       gap: 8px;
-      border-radius: 20px;
-      padding: 8px;
     }
 
     .nav a {
-      border: 1px solid rgba(231, 188, 105, 0.24);
-      border-radius: 999px;
       padding: 8px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 999px;
       color: var(--muted);
-      font-size: 0.86rem;
+      font-size: 0.88rem;
+      background: rgba(255, 255, 255, 0.035);
     }
 
     .nav a[aria-current="page"] {
-      color: #06101e;
-      background: var(--gold);
-      font-weight: 900;
+      border-color: rgba(244, 191, 96, 0.55);
+      color: var(--gold);
+      background: rgba(244, 191, 96, 0.09);
     }
 
     .hero {
-      margin-top: 22px;
-      padding: 10px 4px 0;
+      margin-top: 24px;
+      padding: clamp(24px, 5vw, 46px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent),
+        var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
     }
 
     .eyebrow {
-      color: var(--gold);
-      font-size: 0.78rem;
-      font-weight: 900;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 10px 0 12px;
-      font-size: clamp(2.1rem, 7vw, 5.4rem);
-      line-height: 0.9;
-      letter-spacing: -0.08em;
-    }
-
-    .lede {
-      max-width: 78ch;
-      margin: 0;
-      color: var(--muted);
-      font-size: clamp(1rem, 2.4vw, 1.18rem);
-      line-height: 1.6;
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 22px;
-    }
-
-    .metric {
-      border-radius: 22px;
-      padding: 16px;
-    }
-
-    .metric strong {
-      display: block;
-      color: var(--gold);
-      font-size: clamp(1.8rem, 5vw, 3.2rem);
-      line-height: 1;
-    }
-
-    .metric span {
-      display: block;
-      margin-top: 8px;
-      color: var(--muted);
-      line-height: 1.4;
-      font-size: 0.92rem;
-    }
-
-    .selector {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 22px;
-    }
-
-    .card {
-      position: relative;
-      min-height: 300px;
-      border-radius: 26px;
-      padding: 18px;
-      overflow: hidden;
-      isolation: isolate;
-    }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: -30%;
-      z-index: -1;
-      background:
-        radial-gradient(circle at 30% 24%, rgba(231, 188, 105, 0.16), transparent 30%),
-        radial-gradient(circle at 66% 60%, rgba(79, 181, 219, 0.18), transparent 32%);
-      opacity: 0.95;
-    }
-
-    .tag {
       display: inline-flex;
-      margin-bottom: 14px;
-      padding: 6px 10px;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 18px;
+      padding: 8px 12px;
+      border: 1px solid var(--line-blue);
       border-radius: 999px;
-      border: 1px solid rgba(231, 188, 105, 0.28);
-      color: var(--gold);
-      font-size: 0.72rem;
-      font-weight: 900;
+      color: var(--blue);
+      background: rgba(142, 190, 255, 0.08);
+      font-size: 0.86rem;
+      font-weight: 800;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .tag.habitable {
-      color: var(--green);
-      border-color: rgba(139, 215, 163, 0.36);
-      background: rgba(139, 215, 163, 0.10);
-    }
-
-    .tag.reference {
-      color: var(--blue);
-      border-color: rgba(79, 181, 219, 0.38);
-      background: rgba(79, 181, 219, 0.10);
-    }
-
-    .card h2 {
-      margin: 0 0 10px;
-      font-size: 1.55rem;
-      color: var(--text);
-    }
-
-    .card p {
+    h1 {
+      max-width: 950px;
       margin: 0;
-      color: var(--muted);
-      line-height: 1.5;
-      font-size: 0.96rem;
+      font-size: clamp(2.6rem, 7vw, 6.4rem);
+      line-height: 0.92;
+      letter-spacing: -0.075em;
     }
 
-    .card a {
+    .lede {
+      max-width: 76ch;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      line-height: 1.65;
+    }
+
+    .selector-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .planet-card {
+      position: relative;
+      min-height: 360px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.085), transparent 14rem),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent),
+        var(--panel-soft);
+      box-shadow: var(--shadow);
+      isolation: isolate;
+    }
+
+    .planet-card::before {
+      content: "";
+      position: absolute;
+      inset: auto 50% 92px auto;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      transform: translateX(50%);
+      z-index: -1;
+      background:
+        radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.28), transparent 13%),
+        radial-gradient(circle at 45% 55%, rgba(142, 190, 255, 0.30), transparent 45%),
+        radial-gradient(circle at 65% 46%, rgba(244, 191, 96, 0.14), transparent 46%),
+        rgba(17, 35, 58, 0.75);
+      box-shadow:
+        inset -22px -24px 42px rgba(0, 0, 0, 0.45),
+        0 0 72px rgba(142, 190, 255, 0.14);
+    }
+
+    .planet-card[data-lane="earth"]::before {
+      background:
+        radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.30), transparent 13%),
+        radial-gradient(circle at 42% 56%, rgba(65, 145, 255, 0.42), transparent 42%),
+        radial-gradient(circle at 62% 50%, rgba(73, 180, 112, 0.28), transparent 30%),
+        rgba(17, 35, 58, 0.85);
+    }
+
+    .planet-card[data-lane="h-earth"] {
+      border-color: rgba(143, 240, 195, 0.36);
+      background:
+        radial-gradient(circle at 50% 20%, rgba(143, 240, 195, 0.11), transparent 14rem),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent),
+        rgba(10, 22, 33, 0.82);
+    }
+
+    .planet-card[data-lane="h-earth"]::before {
+      background:
+        radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.30), transparent 13%),
+        radial-gradient(circle at 40% 56%, rgba(142, 190, 255, 0.38), transparent 42%),
+        radial-gradient(circle at 63% 52%, rgba(143, 240, 195, 0.32), transparent 34%),
+        radial-gradient(circle at 54% 40%, rgba(244, 191, 96, 0.16), transparent 34%),
+        rgba(14, 40, 48, 0.86);
+      box-shadow:
+        inset -22px -24px 42px rgba(0, 0, 0, 0.46),
+        0 0 82px rgba(143, 240, 195, 0.16);
+    }
+
+    .planet-card[data-lane="hearth"]::before {
+      background:
+        radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.24), transparent 13%),
+        radial-gradient(circle at 45% 55%, rgba(244, 191, 96, 0.30), transparent 42%),
+        radial-gradient(circle at 65% 46%, rgba(190, 92, 58, 0.24), transparent 32%),
+        rgba(45, 25, 18, 0.82);
+    }
+
+    .planet-card[data-lane="audralia"]::before {
+      background:
+        radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.24), transparent 13%),
+        radial-gradient(circle at 45% 55%, rgba(51, 150, 196, 0.32), transparent 42%),
+        radial-gradient(circle at 65% 46%, rgba(80, 214, 156, 0.22), transparent 32%),
+        rgba(12, 38, 46, 0.84);
+    }
+
+    .card-top {
+      position: relative;
+      z-index: 2;
+    }
+
+    .lane-label {
+      display: inline-flex;
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(0, 0, 0, 0.22);
+      font-size: 0.76rem;
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .planet-card[data-lane="h-earth"] .lane-label {
+      border-color: rgba(143, 240, 195, 0.28);
+      color: var(--green);
+      background: rgba(143, 240, 195, 0.08);
+    }
+
+    .planet-card h2 {
+      margin: 14px 0 0;
+      font-size: clamp(1.5rem, 3vw, 2.35rem);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+    }
+
+    .planet-card p {
+      margin: 12px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.95rem;
+    }
+
+    .card-actions {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 10px;
+    }
+
+    .open-link {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 42px;
-      margin-top: 18px;
-      padding: 10px 14px;
+      min-height: 44px;
+      padding: 11px 13px;
+      border: 1px solid rgba(244, 191, 96, 0.38);
       border-radius: 999px;
-      border: 1px solid rgba(231, 188, 105, 0.38);
-      background: rgba(231, 188, 105, 0.14);
-      font-weight: 900;
+      background: rgba(244, 191, 96, 0.10);
+      color: var(--text);
+      font-weight: 850;
     }
 
-    .card a.primary {
-      color: #05101d;
-      background: var(--gold);
+    .planet-card[data-lane="h-earth"] .open-link {
+      border-color: rgba(143, 240, 195, 0.42);
+      background: rgba(143, 240, 195, 0.10);
+      color: var(--green);
     }
 
     .proof {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 18px;
+      display: block;
+      overflow-wrap: anywhere;
+      color: rgba(246, 234, 210, 0.62);
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+      font-size: 0.74rem;
+      line-height: 1.45;
     }
 
-    .proof .card {
-      min-height: 150px;
-      border-radius: 20px;
-      padding: 14px;
-    }
-
-    .proof h2 {
-      color: var(--gold);
-      font-size: 0.92rem;
-    }
-
-    .receipt {
-      margin: 16px 0 0;
-      padding: 14px;
-      overflow: auto;
+    .receipt-panel {
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid var(--line-green);
       border-radius: 18px;
-      color: rgba(238, 246, 255, 0.72);
-      font-size: 0.78rem;
-      white-space: pre-wrap;
+      background: rgba(143, 240, 195, 0.055);
     }
 
-    @media (max-width: 920px) {
-      .selector,
-      .proof,
-      .metrics {
-        grid-template-columns: 1fr;
+    .receipt-panel code {
+      display: block;
+      overflow-wrap: anywhere;
+      color: var(--green);
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+      font-size: 0.84rem;
+      line-height: 1.55;
+    }
+
+    .guard-panel {
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid rgba(255, 180, 167, 0.22);
+      border-radius: 18px;
+      background: rgba(255, 180, 167, 0.055);
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .guard-panel strong {
+      color: var(--danger);
+    }
+
+    .footer {
+      margin-top: 18px;
+      color: rgba(246, 234, 210, 0.62);
+      font-size: 0.88rem;
+      line-height: 1.55;
+      text-align: center;
+    }
+
+    @media (max-width: 1120px) {
+      .selector-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page-shell {
+        width: min(100% - 20px, var(--max));
+        padding-top: 10px;
       }
 
       .topbar {
-        align-items: stretch;
+        align-items: flex-start;
         flex-direction: column;
+        border-radius: 22px;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .hero,
+      .planet-card {
+        border-radius: 18px;
+      }
+
+      .selector-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .planet-card {
+        min-height: 330px;
+      }
+
+      .planet-card::before {
+        width: 190px;
+        height: 190px;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#globe-main">Skip to globe chamber</a>
+  <a class="skip-link" href="#globe-main">Skip to globe chamber</a>
 
-  <div class="shell">
-    <header class="topbar">
-      <a class="brand" href="/">
-        <span class="mark">G</span>
-        <span>Diamond Gate Bridge · Globe Split</span>
+  <div class="page-shell">
+    <header class="topbar" aria-label="Globe Split navigation">
+      <a class="brand" href="/" aria-label="Return to Diamond Gate Bridge Compass">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Diamond Gate Bridge</span>
       </a>
 
-      <nav class="nav" aria-label="Globe Split navigation">
+      <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/" aria-current="page">Globe</a>
-        <a href="/showroom/globe/earth/">Earth</a>
-        <a href="/showroom/globe/hearth/">Hearth</a>
-        <a href="/showroom/globe/audralia/">Audralia</a>
+        <a href="/showroom/globe/" aria-current="page">Globe Split</a>
+        <a href="/products/">Products</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <main id="globe-main">
+    <main id="globe-main" tabindex="-1">
       <section class="hero" aria-labelledby="globe-title">
-        <div class="eyebrow">Showroom Globe · Habitability Index</div>
-        <h1 id="globe-title">Habitable, Perspective Habitable, and Non-Habitable Worlds</h1>
+        <p class="eyebrow">Showroom · Globe Split · Parent Access Bridge</p>
+        <h1 id="globe-title">Earth, H-Earth, Hearth, and Audralia</h1>
         <p class="lede">
-          The Globe Split now uses habitability as the public standard. Hearth and Audralia are
-          habitable-forming constructed planets: they have coherent truth, material expression,
-          motion, controls, render, and proof, but they are not fully formed yet. The larger target is
-          81 total planets, with Hearth and Audralia serving as the first two simultaneous construction templates.
+          This chamber is the direct selector for separate planet lanes. Earth remains the protected
+          reference lane. H-Earth is the Hybrid Earth experimental third-planet lane. Hearth and Audralia
+          remain preserved as their own lanes. No lane mutates another lane.
         </p>
       </section>
 
-      <section class="metrics" aria-label="Planet build metrics">
-        <article class="metric">
-          <strong>81</strong>
-          <span>Total planned planet capacity across the larger planetary system.</span>
+      <section class="selector-grid" aria-label="Planet lane selector">
+        <article class="planet-card" data-lane="earth">
+          <div class="card-top">
+            <span class="lane-label">Reference lane</span>
+            <h2>Earth</h2>
+            <p>
+              Inspect Earth as the protected reference shell. Earth is not mutated by H-Earth,
+              Hearth, or Audralia.
+            </p>
+          </div>
+
+          <div class="card-actions">
+            <a class="open-link" href="/showroom/globe/earth/">Inspect Earth</a>
+            <code class="proof">ROUTE: /showroom/globe/earth/</code>
+          </div>
         </article>
 
-        <article class="metric">
-          <strong>2</strong>
-          <span>Constructed planet templates currently being built simultaneously: Hearth and Audralia.</span>
+        <article class="planet-card" data-lane="h-earth">
+          <div class="card-top">
+            <span class="lane-label">New experimental lane</span>
+            <h2>H-Earth</h2>
+            <p>
+              Hybrid Earth uses the current Earth shell as an experimental reference shell without
+              replacing or mutating Earth. Parent files establish authority; children refine downstream.
+            </p>
+          </div>
+
+          <div class="card-actions">
+            <a class="open-link" href="/showroom/globe/h-earth/">Open H-Earth</a>
+            <code class="proof">ROUTE: /showroom/globe/h-earth/</code>
+          </div>
         </article>
 
-        <article class="metric">
-          <strong>G1</strong>
-          <span>Current baseline: coherent and habitable-forming, not final-formed.</span>
+        <article class="planet-card" data-lane="hearth">
+          <div class="card-top">
+            <span class="lane-label">Preserved lane</span>
+            <h2>Hearth</h2>
+            <p>
+              Hearth remains its own terrain-development lane. H-Earth does not replace Hearth and
+              does not import Hearth contracts as parent truth.
+            </p>
+          </div>
+
+          <div class="card-actions">
+            <a class="open-link" href="/showroom/globe/hearth/">Inspect Hearth</a>
+            <code class="proof">ROUTE: /showroom/globe/hearth/</code>
+          </div>
         </article>
 
-        <article class="metric">
-          <strong>G2</strong>
-          <span>Next target: material definition, terrain readability, and natural formation.</span>
-        </article>
-      </section>
+        <article class="planet-card" data-lane="audralia">
+          <div class="card-top">
+            <span class="lane-label">Preserved lane</span>
+            <h2>Audralia</h2>
+            <p>
+              Audralia remains its own constructed-world lane. H-Earth does not replace Audralia and
+              does not import Audralia naming or stale contracts.
+            </p>
+          </div>
 
-      <section class="selector" aria-label="Globe body selector">
-        <article class="card">
-          <span class="tag reference">Reference Habitable</span>
-          <h2>Earth</h2>
-          <p>
-            Earth remains the real-world reference body. It is not a constructed template in this chain;
-            it is the known habitable comparison standard for motion, scale, atmosphere, water, and planetary read.
-          </p>
-          <a class="primary" href="/showroom/globe/earth/">Inspect Earth</a>
-        </article>
-
-        <article class="card">
-          <span class="tag habitable">Habitable · Forming</span>
-          <h2>Hearth</h2>
-          <p>
-            Hearth has a coherent baseline: Canvas / World Engine truth, Assets as material expression,
-            Runtime as motion, Controls as drag and spin, Render as drawing, and West/Gauges as proof.
-            It is habitable in structure, but still forming in natural detail.
-          </p>
-          <a href="/showroom/globe/hearth/">Inspect Hearth</a>
-        </article>
-
-        <article class="card">
-          <span class="tag habitable">Habitable · Forming</span>
-          <h2>Audralia</h2>
-          <p>
-            Audralia has a coherent baseline with runtime motion-only authority, five-finger terrain,
-            asset-boundary expression, canvas/render output, and route proof. It is habitable in structure,
-            but still forming in terrain, material definition, and natural readability.
-          </p>
-          <a href="/showroom/globe/audralia/">Inspect Audralia</a>
-        </article>
-      </section>
-
-      <section class="proof" aria-label="Habitability standards">
-        <article class="card">
-          <span class="tag habitable">Habitable</span>
-          <h2>Habitable Planet</h2>
-          <p>
-            A planet has separated truth, material expression, motion, controls, render, and proof. It can support
-            upward formation because the life-bearing architecture is coherent.
-          </p>
-        </article>
-
-        <article class="card">
-          <span class="tag">Perspective Habitable</span>
-          <h2>Perspective Habitable Planet</h2>
-          <p>
-            A candidate planet has some promising structure, but proof is incomplete. It may become habitable after
-            truth, assets, runtime, controls, render, and West verification align.
-          </p>
-        </article>
-
-        <article class="card">
-          <span class="tag" style="color:var(--red);border-color:rgba(255,143,122,.34);background:rgba(255,143,122,.08);">Non-Habitable</span>
-          <h2>Non-Habitable Planet</h2>
-          <p>
-            A planet is non-habitable when authority collapses, motion fails, material fields glob together, or proof
-            cannot verify the route and source chain.
-          </p>
+          <div class="card-actions">
+            <a class="open-link" href="/showroom/globe/audralia/">Inspect Audralia</a>
+            <code class="proof">ROUTE: /showroom/globe/audralia/</code>
+          </div>
         </article>
       </section>
 
-      <pre class="receipt">GLOBE_SPLIT_HABITABILITY_SELECTOR_HTML_TNT_v2
-route=/showroom/globe/
-selector_only=true
-standard=habitability
-planned_planets_total=81
-active_constructed_templates=2
-active_templates=Hearth | Audralia
-reference_body=Earth
-habitable_forming=Hearth | Audralia
-perspective_habitable=reserved-for-candidate-planets
-non_habitable=reserved-for-failed-or-unproven-planets
-hearth_current=coherent-G1-baseline + motion + asset-boundary-expression
-audralia_current=coherent-G1-baseline + runtime-motion-only + five-finger-terrain + asset-boundary-expression
-next_generation=G2-material-definition-and-natural-readability
-generated_image=false
-graphic_box=false
-visual_pass_claimed=false</pre>
+      <section
+        class="receipt-panel"
+        aria-label="Globe Split access receipts"
+        data-receipt-panel="globe-split-h-earth-access"
+        data-contract="GLOBE_SPLIT_H_EARTH_ACCESS_BRIDGE_TNT_v1"
+        data-h-earth-route="/showroom/globe/h-earth/"
+        data-earth-route="/showroom/globe/earth/"
+        data-hearth-route="/showroom/globe/hearth/"
+        data-audralia-route="/showroom/globe/audralia/"
+      >
+        <code>GLOBE_SPLIT_RECEIPT: GLOBE_SPLIT_H_EARTH_ACCESS_BRIDGE_TNT_v1</code>
+        <code>H_EARTH_ACCESS: enabled via /showroom/globe/h-earth/</code>
+        <code>EARTH_REFERENCE: protected; no mutation authorized</code>
+        <code>HEARTH_LANE: preserved</code>
+        <code>AUDRALIA_LANE: preserved</code>
+        <code>AUSTRALIA_TERMINOLOGY: forbidden</code>
+        <code>GRAPHIC_BOX: forbidden</code>
+        <code>IMAGE_GENERATION: forbidden</code>
+        <code>VISUAL_PASS_CLAIM: false</code>
+      </section>
+
+      <section class="guard-panel" aria-label="Lane separation guard">
+        <strong>Boundary guard:</strong>
+        this selector creates access only. It does not generate planet truth, does not paint canvas,
+        does not create terrain, does not control animation, and does not rewrite Gauges.
+      </section>
     </main>
+
+    <footer class="footer">
+      Showroom Globe Split. Separate lanes, direct access, no sidestream authority.
+    </footer>
   </div>
 </body>
 </html>

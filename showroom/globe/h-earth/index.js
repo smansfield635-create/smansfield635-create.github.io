@@ -1,26 +1,26 @@
 // /showroom/globe/h-earth/index.js
-// H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8
+// H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9
 // Full-file replacement.
 // Route doorway authority only.
 //
 // Purpose:
-// - Preserve doorway execution renewal proof.
-// - Preserve parent chain: kernel → lattice256 → landmap → terrain → surface.
-// - Preserve canvas parent-instance consumer.
-// - Activate controls only after canvas visible-composition proof passes.
+// - Preserve controls motion/input authority.
+// - Expect aligned canvas receipt.
+// - Refresh canvas controls status after controls activate.
+// - Publish consistent canvas/controls receipts.
 // - Keep parent truth immutable.
 
-const CONTRACT = "H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8";
-const PRIOR_CONTRACT = "H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_TNT_v7";
-const PRIOR_HTML_CONTRACT = "H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_HTML_TNT_v7";
+const CONTRACT = "H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9";
+const PRIOR_CONTRACT = "H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8";
+const PRIOR_HTML_CONTRACT = "H_EARTH_G1_CONTROLS_MOTION_INPUT_HTML_TNT_v8";
 const SEED_PACKET = "H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1";
 const ROUTE = "/showroom/globe/h-earth/";
 
 const URL_CACHE =
   new URLSearchParams(window.location.search).get("v") ||
-  "controls-motion-input-route-v8";
+  "controls-receipt-alignment-route-v9";
 
-const CACHE_KEY = `2026-05-11-h-earth-controls-motion-input-route-v8-${URL_CACHE}`;
+const CACHE_KEY = `2026-05-11-h-earth-controls-receipt-alignment-route-v9-${URL_CACHE}`;
 
 const EXPECTED_CONTRACTS = Object.freeze({
   kernel: "H_EARTH_G1_TERRAIN_ONLY_KERNEL_TNT_v1",
@@ -28,7 +28,7 @@ const EXPECTED_CONTRACTS = Object.freeze({
   landmap: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_LANDMAP_TNT_v2",
   terrain: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_TERRAIN_TNT_v2",
   surface: "H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1",
-  canvas: "H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_TNT_v2",
+  canvas: "H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3",
   controls: "H_EARTH_G1_CONTROLS_MOTION_INPUT_AUTHORITY_TNT_v1"
 });
 
@@ -43,7 +43,8 @@ const ACTIVE_MODULES = Object.freeze([
 const CANVAS_MODULE = Object.freeze({
   key: "canvas",
   path: "/assets/h-earth/h-earth.canvas.js",
-  requiredExport: "bootHEarthCanvas"
+  requiredExport: "bootHEarthCanvas",
+  refreshExport: "refreshHEarthCanvasControlsStatus"
 });
 
 const CONTROLS_MODULE = Object.freeze({
@@ -66,6 +67,7 @@ const state = {
   controlsAuthorized: false,
   motionAuthorized: false,
   inputAuthorized: false,
+  canvasControlsReceiptAligned: false,
   loadedCount: 0,
   failedCount: 0,
   staleContractCount: 0,
@@ -160,6 +162,7 @@ function stampDocument() {
   root.dataset.controlsAuthorized = String(state.controlsAuthorized);
   root.dataset.motionAuthorized = String(state.motionAuthorized);
   root.dataset.inputAuthorized = String(state.inputAuthorized);
+  root.dataset.canvasControlsReceiptAligned = String(state.canvasControlsReceiptAligned);
   root.dataset.parentMutationAuthorized = "false";
   root.dataset.graphicBox = "forbidden";
   root.dataset.imageGeneration = "forbidden";
@@ -184,6 +187,7 @@ function publishStatus(message, lines = []) {
   target.dataset.controlsAuthorized = String(state.controlsAuthorized);
   target.dataset.motionAuthorized = String(state.motionAuthorized);
   target.dataset.inputAuthorized = String(state.inputAuthorized);
+  target.dataset.canvasControlsReceiptAligned = String(state.canvasControlsReceiptAligned);
   target.dataset.cacheKey = CACHE_KEY;
 
   target.replaceChildren(
@@ -237,6 +241,8 @@ function publishReceiptPanel() {
         `CANVAS_CELLS_RESOLVED: ${canvas?.cellsResolved ?? "pending"}`,
         `CANVAS_CELLS_PAINTED: ${canvas?.cellsPainted ?? "pending"}`,
         `CANVAS_NONBLANK_PIXEL_RATIO: ${canvas?.nonBlankPixelRatio ?? "pending"}`,
+        `CANVAS_CONTROLS_RECEIPT_ALIGNED: ${String(state.canvasControlsReceiptAligned)}`,
+        `CANVAS_PANEL_CONTROLS_STATUS: ${canvas?.controlsStatus || "pending"}`,
         `CONTROLS_RECEIPT: ${state.controlsModule.actualContract}`,
         `CONTROLS_STATUS: ${controls?.status || "pending"}`,
         `CONTROLS_AUTHORIZED: ${String(state.controlsAuthorized)}`,
@@ -258,6 +264,7 @@ function publishReceiptPanel() {
     codeLine(`SURFACE: ACTIVE_READ_ONLY`),
     codeLine(`CANVAS: ${state.canvasStatus.toUpperCase()}`),
     codeLine(`CONTROLS: ${state.controlsStatus.toUpperCase()}`),
+    codeLine(`CANVAS_CONTROLS_RECEIPT_ALIGNED: ${String(state.canvasControlsReceiptAligned)}`),
     codeLine(`GRAPHIC_BOX: FORBIDDEN`),
     codeLine(`IMAGE_GENERATION: FORBIDDEN`),
     codeLine(`VISUAL_PASS_CLAIM: FALSE`),
@@ -272,13 +279,14 @@ function renderMountMessage(title, bodyLines = []) {
   const mount = mountTarget();
   if (!mount) return;
 
-  mount.dataset.routeMount = "controls-motion-input-status";
+  mount.dataset.routeMount = "controls-receipt-alignment-status";
   mount.dataset.routeDoorwayContract = CONTRACT;
   mount.dataset.routeDoorwayTopLevelExecuted = "true";
   mount.dataset.cacheKey = CACHE_KEY;
   mount.dataset.surfaceAuthority = "active-read-only";
   mount.dataset.canvasAuthority = state.canvasStatus;
   mount.dataset.controlsAuthority = state.controlsStatus;
+  mount.dataset.canvasControlsReceiptAligned = String(state.canvasControlsReceiptAligned);
   mount.dataset.planetTruthOwner = "parent-chain";
 
   const shell = document.createElement("div");
@@ -408,7 +416,7 @@ function createInstances() {
       priorHtmlContract: PRIOR_HTML_CONTRACT,
       route: ROUTE,
       surfaceActiveReadOnly: true,
-      controlsMotionInputAuthority: true,
+      controlsReceiptAlignment: true,
       mutationAuthorized: false,
       controlsAuthorized: false,
       motionAuthorized: false,
@@ -438,9 +446,7 @@ function createInstances() {
     state.parentChainStatus = "module-loaded-instance-create-failed";
     state.errors.push(`instance-create: ${message}`);
     stampDocument();
-    publishStatus("modules loaded but instance creation failed", [
-      `ERROR: ${message}`
-    ]);
+    publishStatus("modules loaded but instance creation failed", [`ERROR: ${message}`]);
     publishReceiptPanel();
     return false;
   }
@@ -494,7 +500,7 @@ async function importCanvasModule() {
   };
 
   stampDocument();
-  publishStatus("surface parent passed; loading canvas parent-instance consumer", [
+  publishStatus("surface parent passed; loading aligned canvas", [
     `CANVAS_MODULE: ${CANVAS_MODULE.path}`,
     `EXPECTED_CANVAS: ${EXPECTED_CONTRACTS.canvas}`,
     `CONTROLS: held`
@@ -567,7 +573,7 @@ async function importCanvasModule() {
     };
     state.errors.push(`canvas: ${message}`);
     stampDocument();
-    publishStatus("canvas parent-instance consumer failed", [
+    publishStatus("canvas controls receipt alignment failed", [
       `ERROR: ${message}`,
       `CONTROLS: held`
     ]);
@@ -635,9 +641,25 @@ async function importControlsModule() {
 
     if (staleControls) state.staleContractCount += 1;
 
-    state.parentChainStatus = controlsReady
-      ? "controls-motion-input-authority-active"
-      : "controls-loaded-but-held";
+    if (controlsReady) {
+      const canvasApi = window.DGBHEarthCanvas || window.HEarthCanvas || window.H_EARTH_CANVAS || null;
+
+      if (canvasApi && typeof canvasApi.refreshHEarthCanvasControlsStatus === "function") {
+        state.canvasRuntimeStatus = canvasApi.refreshHEarthCanvasControlsStatus(controlsStatus);
+      } else if (canvasApi && typeof canvasApi.refreshControlsStatus === "function") {
+        state.canvasRuntimeStatus = canvasApi.refreshControlsStatus(controlsStatus);
+      }
+    }
+
+    state.canvasControlsReceiptAligned =
+      state.canvasRuntimeStatus?.canvasControlsReceiptAligned === true &&
+      state.canvasRuntimeStatus?.controlsStatus === "active-motion-input-authority";
+
+    state.parentChainStatus = controlsReady && state.canvasControlsReceiptAligned
+      ? "controls-receipt-alignment-active"
+      : controlsReady
+        ? "controls-active-but-canvas-receipt-alignment-held"
+        : "controls-loaded-but-held";
 
     stampDocument();
 
@@ -649,6 +671,8 @@ async function importControlsModule() {
       `CONTROLS_AUTHORIZED: ${String(state.controlsAuthorized)}`,
       `MOTION_AUTHORIZED: ${String(state.motionAuthorized)}`,
       `INPUT_AUTHORIZED: ${String(state.inputAuthorized)}`,
+      `CANVAS_CONTROLS_RECEIPT_ALIGNED: ${String(state.canvasControlsReceiptAligned)}`,
+      `CANVAS_PANEL_CONTROLS_STATUS: ${state.canvasRuntimeStatus?.controlsStatus || "pending"}`,
       `PARENT_MUTATION_AUTHORIZED: false`,
       `VISUAL_PASS_CLAIM: false`
     ]);
@@ -656,11 +680,11 @@ async function importControlsModule() {
     publishReceiptPanel();
 
     renderMountMessage(
-      controlsReady ? "Controls active" : "Controls held",
+      state.canvasControlsReceiptAligned ? "Receipts aligned" : "Controls active",
       [
         `Canvas proof: ${String(canvasProofPasses(state.canvasRuntimeStatus))}`,
         `Controls: ${controlsStatus?.status || "pending"}`,
-        `Motion/input only`,
+        `Canvas controls aligned: ${String(state.canvasControlsReceiptAligned)}`,
         `Parent mutation: forbidden`
       ]
     );
@@ -679,10 +703,10 @@ async function importControlsModule() {
     };
 
     state.errors.push(`controls: ${message}`);
-    state.parentChainStatus = "controls-motion-input-authority-failed";
+    state.parentChainStatus = "controls-receipt-alignment-failed";
 
     stampDocument();
-    publishStatus("controls motion/input authority failed", [
+    publishStatus("controls receipt alignment failed", [
       `ERROR: ${message}`,
       `PARENT_MUTATION_AUTHORIZED: false`
     ]);
@@ -695,17 +719,17 @@ async function boot() {
   state.parentChainStatus = "route-doorway-top-level-executed";
   stampDocument();
 
-  publishStatus("route doorway top-level executed; loading parent chain", [
-    `AUTHORITY_STRETCH: controls motion/input`,
+  publishStatus("route doorway top-level executed; loading receipt alignment chain", [
+    `ALIGNMENT: canvas controls receipt`,
     `CHAIN: kernel → lattice256 → landmap → terrain → surface → canvas → controls`,
     `PARENT_MUTATION_AUTHORIZED: false`
   ]);
   publishReceiptPanel();
 
-  renderMountMessage("Authoritative stretch active", [
+  renderMountMessage("Receipt alignment active", [
     "Top-level execution confirmed",
     "Loading parent chain",
-    "Controls wait for canvas proof"
+    "Controls align after canvas proof"
   ]);
 
   const parentLoaded = await loadParentModules();
@@ -717,7 +741,7 @@ async function boot() {
   const canvasAllowed = surfaceAllowsCanvas();
 
   state.parentChainStatus = canvasAllowed
-    ? "surface-parent-ready-for-canvas"
+    ? "surface-parent-ready-for-aligned-canvas"
     : "surface-parent-held-before-canvas";
   state.canvasStatus = canvasAllowed ? "authorized-for-canvas-import" : "held";
   state.controlsStatus = "held";

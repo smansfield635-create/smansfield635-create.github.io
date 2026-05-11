@@ -45,6 +45,7 @@ const H_EARTH_TOTAL_CELLS = 256;
 const H_EARTH_GRID = 16;
 
 let bootPromise = null;
+let statusReadDepth = 0;
 
 const view = {
   yaw: 0,
@@ -502,6 +503,12 @@ function evaluateSurface(parentInstances, cells, candidates) {
 
   state.downstreamCanvasMayReadSurface = state.parentSurfaceReady;
 
+  document.documentElement.dataset.hEarthCanvasParentSurfaceReady = String(state.parentSurfaceReady);
+  document.documentElement.dataset.hEarthCanvasMayReadSurface = String(state.downstreamCanvasMayReadSurface);
+  document.documentElement.dataset.hEarthCanvasCellsResolved = String(state.cellsResolved);
+  document.documentElement.dataset.hEarthCanvasCellsPainted = String(state.cellsPainted);
+  document.documentElement.dataset.hEarthCanvasNonBlankPixelRatio = String(state.nonBlankPixelRatio);
+
   return state.parentSurfaceReady;
 }
 
@@ -510,13 +517,83 @@ function controlsApi() {
 }
 
 function readControlsStatus(providedStatus = null) {
-  const api = controlsApi();
-  let status = providedStatus || null;
+  if (providedStatus) {
+    const receipt = providedStatus.contract || providedStatus.receipt || "pending";
 
-  if (!status && api) {
-    if (typeof api.getHEarthControlsStatus === "function") status = api.getHEarthControlsStatus();
-    else if (typeof api.getStatus === "function") status = api.getStatus();
-    else if (typeof api.status === "function") status = api.status();
+    const active =
+      receipt === H_EARTH_EXPECTED_CONTROLS &&
+      providedStatus.status === "active-motion-input-authority" &&
+      providedStatus.controlsAuthorized === true &&
+      providedStatus.motionAuthorized === true &&
+      providedStatus.inputAuthorized === true &&
+      providedStatus.parentMutationAuthorized === false;
+
+    state.controlsReceipt = receipt;
+    state.controlsStatus = providedStatus.interactiveStatus || providedStatus.status || "pending";
+    state.controlsAuthorized = active;
+    state.motionAuthorized = active;
+    state.inputAuthorized = active;
+    state.canvasControlsReceiptAligned = active;
+    state.parentMutationAuthorized = false;
+
+    if (active) state.alignedAt = new Date().toISOString();
+
+    return providedStatus;
+  }
+
+  /*
+    Recursion guard:
+    Canvas status may be called by controls. Controls status may be called by canvas.
+    Do not enter an infinite canvas -> controls -> canvas loop.
+  */
+  if (statusReadDepth > 0) {
+    return {
+      contract: state.controlsReceipt,
+      receipt: state.controlsReceipt,
+      status: state.controlsStatus,
+      controlsAuthorized: state.controlsAuthorized,
+      motionAuthorized: state.motionAuthorized,
+      inputAuthorized: state.inputAuthorized,
+      parentMutationAuthorized: false
+    };
+  }
+
+  const api = controlsApi();
+
+  if (!api) {
+    state.controlsReceipt =
+      window.H_EARTH_CONTROLS_RECEIPT ||
+      document.documentElement.dataset.hEarthControlsReceipt ||
+      "pending";
+
+    state.controlsStatus =
+      document.documentElement.dataset.hEarthInteractiveControlsStatus ||
+      document.documentElement.dataset.hEarthControlsStatus ||
+      "pending";
+
+    state.controlsAuthorized = document.documentElement.dataset.hEarthControlsAuthorized === "true";
+    state.motionAuthorized = document.documentElement.dataset.hEarthMotionAuthorized === "true";
+    state.inputAuthorized = document.documentElement.dataset.hEarthInputAuthorized === "true";
+    state.canvasControlsReceiptAligned = state.controlsAuthorized && state.motionAuthorized && state.inputAuthorized;
+    return null;
+  }
+
+  let status = null;
+
+  try {
+    statusReadDepth += 1;
+
+    if (typeof api.getHEarthControlsStatus === "function") {
+      status = api.getHEarthControlsStatus();
+    } else if (typeof api.getStatus === "function") {
+      status = api.getStatus();
+    } else if (typeof api.status === "function") {
+      status = api.status();
+    }
+  } catch (error) {
+    recordError("read-controls-status", error);
+  } finally {
+    statusReadDepth = Math.max(0, statusReadDepth - 1);
   }
 
   const receipt = status?.contract || status?.receipt || window.H_EARTH_CONTROLS_RECEIPT || "pending";
@@ -661,7 +738,9 @@ function ensurePanel() {
   if (panel) {
     const title = panel.querySelector("[data-h-earth-canvas-title]");
     const copy = panel.querySelector("[data-h-earth-canvas-copy]");
+
     if (title) title.textContent = "H-Earth Globe Direct Interaction";
+
     if (copy) {
       copy.textContent =
         "Canvas is active as a renewed downstream child asset. Controls move the globe view directly by yaw, pitch, and zoom. The card and canvas frame remain stationary. Parent truth remains immutable.";
@@ -716,8 +795,6 @@ function statusTarget(panel) {
 }
 
 function publishPanelStatus() {
-  readControlsStatus();
-
   const panel = ensurePanel();
   const target = statusTarget(panel);
 
@@ -1027,6 +1104,20 @@ function measureNonBlank(ctx, width, height) {
   }
 }
 
+function stampCanvasDatasets() {
+  const canvas = runtime.canvas;
+  if (!canvas) return;
+
+  canvas.style.transform = "none";
+  canvas.dataset.hEarthViewMode = "direct-globe-redraw";
+  canvas.dataset.hEarthCardTransformAuthorized = "false";
+  canvas.dataset.hEarthYaw = String(round(view.yaw, 2));
+  canvas.dataset.hEarthPitch = String(round(view.pitch, 2));
+  canvas.dataset.hEarthZoom = String(round(view.zoom, 3));
+  canvas.dataset.hEarthCanvasReceipt = H_EARTH_CANVAS_CONTRACT;
+  canvas.dataset.hEarthCanvasRenewalContract = H_EARTH_CANVAS_RENEWAL_CONTRACT;
+}
+
 function renderComposition() {
   const canvas = runtime.canvas;
   const ctx = runtime.ctx;
@@ -1043,12 +1134,7 @@ function renderComposition() {
   const centerX = width * 0.5;
   const centerY = height * 0.52;
 
-  canvas.style.transform = "none";
-  canvas.dataset.hEarthViewMode = "direct-globe-redraw";
-  canvas.dataset.hEarthCardTransformAuthorized = "false";
-  canvas.dataset.hEarthYaw = String(round(view.yaw, 2));
-  canvas.dataset.hEarthPitch = String(round(view.pitch, 2));
-  canvas.dataset.hEarthZoom = String(round(view.zoom, 3));
+  stampCanvasDatasets();
 
   clearScene(ctx, width, height);
   drawStars(ctx, width, height);
@@ -1064,6 +1150,11 @@ function renderComposition() {
   state.pitch = view.pitch;
   state.zoom = view.zoom;
   state.renderedAt = new Date().toISOString();
+
+  document.documentElement.dataset.hEarthCanvasRenderStatus = state.renderStatus;
+  document.documentElement.dataset.hEarthCanvasCellsResolved = String(state.cellsResolved);
+  document.documentElement.dataset.hEarthCanvasCellsPainted = String(state.cellsPainted);
+  document.documentElement.dataset.hEarthCanvasNonBlankPixelRatio = String(state.nonBlankPixelRatio);
 }
 
 function exposeCanvasApi() {
@@ -1093,6 +1184,7 @@ function exposeCanvasApi() {
   window.HEarthCanvas = api;
   window.H_EARTH_CANVAS = api;
   window.H_EARTH_CANVAS_RECEIPT = H_EARTH_CANVAS_CONTRACT;
+  window.H_EARTH_CANVAS_RENEWAL_RECEIPT = H_EARTH_CANVAS_RENEWAL_CONTRACT;
 
   document.documentElement.dataset.hEarthCanvasReceipt = H_EARTH_CANVAS_CONTRACT;
   document.documentElement.dataset.hEarthCanvasRenewalContract = H_EARTH_CANVAS_RENEWAL_CONTRACT;
@@ -1112,7 +1204,7 @@ function exposeCanvasApi() {
 async function bootHEarthCanvas(context = {}) {
   if (bootPromise) return bootPromise;
 
-  bootPromise = (async () => {
+  bootPromise = Promise.resolve().then(() => {
     state.bootedAt = new Date().toISOString();
     state.status = "booting-direct-globe-canvas";
     state.renderStatus = "booting-direct-globe-canvas";
@@ -1172,7 +1264,7 @@ async function bootHEarthCanvas(context = {}) {
 
       return getHEarthCanvasStatus();
     }
-  })();
+  });
 
   return bootPromise;
 }

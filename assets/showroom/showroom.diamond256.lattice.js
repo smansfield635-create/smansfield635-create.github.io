@@ -1,21 +1,28 @@
 // /assets/showroom/showroom.diamond256.lattice.js
-// SHOWROOM_256_FACE_FIBONACCI_DIAMOND_LATTICE_TNT_v2
+// SHOWROOM_256_FACE_FIBONACCI_ENCLOSED_DIAMOND_CONSTRUCT_TNT_v3
 // Full-file replacement.
+// Showroom cover visual asset only.
 //
 // Purpose:
-// - Replace the flat/plate-like showroom diamond with a true rotating 3D construct.
+// - Render one single enclosed rotating diamond construct.
 // - Preserve the 256 nodal construct as 16 rings × 16 nodes.
-// - Remove the visible Fibonacci zigzag line from the design.
-// - Retain Fibonacci influence structurally through ring-phase offsets and progression rhythm,
-//   not as a drawn path.
-// - Render a volumetric faceted diamond object suitable for the Showroom cover.
-// - Keep parent mutation forbidden.
-// - Keep generated image false.
-// - Keep GraphicBox false.
-// - Keep visual pass claim false.
+// - Remove the visible zigzag line.
+// - Keep Fibonacci as internal progression geometry, not visible path decoration.
+// - Avoid the flat plate / loose-node look.
+// - Keep the object enclosed inside a clear diamond silhouette.
+//
+// Does not:
+// - use image generation
+// - use GraphicBox
+// - mutate parent truth
+// - import H-Earth terrain
+// - import gauges
+// - authorize ground level
+// - authorize manor placement
+// - claim visual pass
 
-const CONTRACT = "SHOWROOM_256_FACE_FIBONACCI_DIAMOND_LATTICE_TNT_v2";
-const PREVIOUS_CONTRACT = "SHOWROOM_256_FACE_FIBONACCI_DIAMOND_LATTICE_TNT_v1";
+const CONTRACT = "SHOWROOM_256_FACE_FIBONACCI_ENCLOSED_DIAMOND_CONSTRUCT_TNT_v3";
+const PREVIOUS_CONTRACT = "SHOWROOM_256_FACE_FIBONACCI_DIAMOND_LATTICE_TNT_v2";
 const ASSET_PATH = "/assets/showroom/showroom.diamond256.lattice.js";
 
 const TOTAL_NODES = 256;
@@ -24,31 +31,42 @@ const NODES_PER_RING = 16;
 
 const FIBONACCI_SEQUENCE = Object.freeze([1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233]);
 
-const RING_PROFILE = Object.freeze([
-  { y:  1.08, r: 0.30 }, // top table / crown
-  { y:  0.96, r: 0.44 },
-  { y:  0.82, r: 0.58 },
-  { y:  0.68, r: 0.72 },
-  { y:  0.52, r: 0.86 },
-  { y:  0.36, r: 0.98 },
-  { y:  0.18, r: 1.08 },
-  { y:  0.02, r: 1.16 }, // girdle-like maximum
-  { y: -0.08, r: 1.10 },
-  { y: -0.24, r: 0.96 },
-  { y: -0.40, r: 0.80 },
-  { y: -0.56, r: 0.64 },
+const PROFILE = Object.freeze([
+  { y: 1.00, r: 0.34 },
+  { y: 0.92, r: 0.48 },
+  { y: 0.82, r: 0.62 },
+  { y: 0.70, r: 0.76 },
+  { y: 0.56, r: 0.90 },
+  { y: 0.40, r: 1.02 },
+  { y: 0.22, r: 1.13 },
+  { y: 0.04, r: 1.22 },
+  { y: -0.08, r: 1.20 },
+  { y: -0.22, r: 1.02 },
+  { y: -0.38, r: 0.84 },
+  { y: -0.56, r: 0.66 },
   { y: -0.72, r: 0.48 },
-  { y: -0.86, r: 0.30 },
-  { y: -0.98, r: 0.16 },
-  { y: -1.10, r: 0.04 }  // culet / bottom point
+  { y: -0.88, r: 0.30 },
+  { y: -1.02, r: 0.15 },
+  { y: -1.12, r: 0.02 }
 ]);
+
+const state = {
+  canvas: null,
+  ctx: null,
+  mount: null,
+  width: 0,
+  height: 0,
+  dpr: 1,
+  yaw: 0,
+  pitch: -0.16,
+  roll: 0,
+  raf: 0,
+  active: true,
+  reducedMotion: window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true
+};
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
-}
-
-function lerp(a, b, t) {
-  return a + (b - a) * t;
 }
 
 function normalize(v) {
@@ -56,7 +74,7 @@ function normalize(v) {
   return { x: v.x / length, y: v.y / length, z: v.z / length };
 }
 
-function subtract(a, b) {
+function sub(a, b) {
   return { x: a.x - b.x, y: a.y - b.y, z: a.z - b.z };
 }
 
@@ -72,67 +90,67 @@ function dot(a, b) {
   return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-function rotatePoint(point, yaw, pitch, roll) {
+function rotate(point, yaw, pitch, roll) {
   let { x, y, z } = point;
 
-  const cosY = Math.cos(yaw);
-  const sinY = Math.sin(yaw);
-  let rx = x * cosY - z * sinY;
-  let rz = x * sinY + z * cosY;
-  x = rx;
-  z = rz;
+  const cy = Math.cos(yaw);
+  const sy = Math.sin(yaw);
+  let nx = x * cy - z * sy;
+  let nz = x * sy + z * cy;
+  x = nx;
+  z = nz;
 
-  const cosX = Math.cos(pitch);
-  const sinX = Math.sin(pitch);
-  let ry = y * cosX - z * sinX;
-  rz = y * sinX + z * cosX;
-  y = ry;
-  z = rz;
+  const cp = Math.cos(pitch);
+  const sp = Math.sin(pitch);
+  let ny = y * cp - z * sp;
+  nz = y * sp + z * cp;
+  y = ny;
+  z = nz;
 
-  const cosZ = Math.cos(roll);
-  const sinZ = Math.sin(roll);
-  rx = x * cosZ - y * sinZ;
-  ry = x * sinZ + y * cosZ;
-  x = rx;
-  y = ry;
+  const cr = Math.cos(roll);
+  const sr = Math.sin(roll);
+  nx = x * cr - y * sr;
+  ny = x * sr + y * cr;
 
-  return { x, y, z };
+  return { x: nx, y: ny, z };
 }
 
-function projectPoint(point, width, height, cameraDistance, fov) {
-  const depth = cameraDistance - point.z;
-  const scale = fov / Math.max(depth, 0.001);
+function project(point) {
+  const scaleBase = Math.min(state.width, state.height) * 0.30;
+  const distance = 5.8;
+  const perspective = distance / (distance - point.z);
 
   return {
-    x: width * 0.5 + point.x * scale,
-    y: height * 0.5 + point.y * scale,
+    x: state.width * 0.5 + point.x * scaleBase * perspective,
+    y: state.height * 0.53 + point.y * scaleBase * perspective,
     z: point.z,
-    scale
+    p: perspective
   };
 }
 
-function createNodeField() {
+function buildNodes() {
   const nodes = [];
   const step = (Math.PI * 2) / NODES_PER_RING;
 
-  for (let ringIndex = 0; ringIndex < RINGS; ringIndex += 1) {
-    const profile = RING_PROFILE[ringIndex];
-    const fib = FIBONACCI_SEQUENCE[ringIndex % FIBONACCI_SEQUENCE.length];
-    const offset = ((fib % NODES_PER_RING) / NODES_PER_RING) * Math.PI * 2 * 0.25;
+  for (let ring = 0; ring < RINGS; ring += 1) {
+    const profile = PROFILE[ring];
+    const fib = FIBONACCI_SEQUENCE[ring % FIBONACCI_SEQUENCE.length];
+    const offset = ((fib % NODES_PER_RING) / NODES_PER_RING) * step * 0.72;
 
-    for (let nodeIndex = 0; nodeIndex < NODES_PER_RING; nodeIndex += 1) {
-      const angle = nodeIndex * step + offset;
-      const ringWeight = ringIndex / (RINGS - 1);
+    for (let slot = 0; slot < NODES_PER_RING; slot += 1) {
+      const theta = slot * step + offset;
+      const crownFactor = ring <= 7 ? 1 : 0.96;
+      const pavilionFactor = ring > 7 ? 1 - ((ring - 8) / 9) * 0.06 : 1;
 
       nodes.push({
-        id: ringIndex * NODES_PER_RING + nodeIndex,
-        ringIndex,
-        nodeIndex,
-        phase: fib,
-        x: Math.cos(angle) * profile.r,
+        id: ring * NODES_PER_RING + slot,
+        ring,
+        slot,
+        fib,
+        x: Math.cos(theta) * profile.r * crownFactor,
         y: profile.y,
-        z: Math.sin(angle) * profile.r,
-        weight: ringWeight
+        z: Math.sin(theta) * profile.r * pavilionFactor,
+        isFibonacciRing: FIBONACCI_SEQUENCE.includes(ring + 1)
       });
     }
   }
@@ -140,36 +158,36 @@ function createNodeField() {
   return nodes;
 }
 
-function createFacetIndex() {
-  const triangles = [];
+function buildFacets() {
+  const facets = [];
 
   for (let ring = 0; ring < RINGS - 1; ring += 1) {
-    for (let node = 0; node < NODES_PER_RING; node += 1) {
-      const current = ring * NODES_PER_RING + node;
-      const next = ring * NODES_PER_RING + ((node + 1) % NODES_PER_RING);
-      const lower = (ring + 1) * NODES_PER_RING + node;
-      const lowerNext = (ring + 1) * NODES_PER_RING + ((node + 1) % NODES_PER_RING);
+    for (let slot = 0; slot < NODES_PER_RING; slot += 1) {
+      const a = ring * NODES_PER_RING + slot;
+      const b = ring * NODES_PER_RING + ((slot + 1) % NODES_PER_RING);
+      const c = (ring + 1) * NODES_PER_RING + slot;
+      const d = (ring + 1) * NODES_PER_RING + ((slot + 1) % NODES_PER_RING);
 
-      triangles.push([current, lower, next]);
-      triangles.push([next, lower, lowerNext]);
+      facets.push([a, c, b]);
+      facets.push([b, c, d]);
     }
   }
 
-  return triangles;
+  return facets;
 }
 
-function createEdgeIndex() {
+function buildEdges() {
   const edges = [];
 
   for (let ring = 0; ring < RINGS; ring += 1) {
-    for (let node = 0; node < NODES_PER_RING; node += 1) {
-      const current = ring * NODES_PER_RING + node;
-      const next = ring * NODES_PER_RING + ((node + 1) % NODES_PER_RING);
-      edges.push([current, next]);
+    for (let slot = 0; slot < NODES_PER_RING; slot += 1) {
+      const a = ring * NODES_PER_RING + slot;
+      const b = ring * NODES_PER_RING + ((slot + 1) % NODES_PER_RING);
+      edges.push([a, b]);
 
       if (ring < RINGS - 1) {
-        const lower = (ring + 1) * NODES_PER_RING + node;
-        edges.push([current, lower]);
+        const c = (ring + 1) * NODES_PER_RING + slot;
+        edges.push([a, c]);
       }
     }
   }
@@ -177,262 +195,361 @@ function createEdgeIndex() {
   return edges;
 }
 
-function createStars(count = 64, seed = 451) {
-  const stars = [];
-  let value = seed;
+const NODES = Object.freeze(buildNodes());
+const FACETS = Object.freeze(buildFacets());
+const EDGES = Object.freeze(buildEdges());
 
-  for (let i = 0; i < count; i += 1) {
-    value = (value * 1664525 + 1013904223) >>> 0;
-    const x = (value % 10000) / 10000;
-    value = (value * 1664525 + 1013904223) >>> 0;
-    const y = (value % 10000) / 10000;
-    value = (value * 1664525 + 1013904223) >>> 0;
-    const s = 0.8 + ((value % 1000) / 1000) * 1.8;
-    value = (value * 1664525 + 1013904223) >>> 0;
-    const a = 0.20 + ((value % 1000) / 1000) * 0.55;
-    stars.push({ x, y, s, a });
-  }
+function resize() {
+  if (!state.canvas || !state.mount) return;
 
-  return stars;
+  const rect = state.mount.getBoundingClientRect();
+  state.dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  state.width = Math.max(320, Math.floor(rect.width || 960));
+  state.height = Math.max(340, Math.floor(rect.height || Math.min(state.width * 0.78, 720)));
+
+  state.canvas.width = Math.floor(state.width * state.dpr);
+  state.canvas.height = Math.floor(state.height * state.dpr);
+  state.ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
 }
 
-function createShowroomDiamondLattice({
-  mountSelector = "[data-showroom-diamond256-mount]"
-} = {}) {
-  const mount = document.querySelector(mountSelector);
-  if (!mount) return null;
+function drawBackground() {
+  const ctx = state.ctx;
 
-  mount.innerHTML = "";
+  ctx.clearRect(0, 0, state.width, state.height);
+
+  const glow = ctx.createRadialGradient(
+    state.width * 0.5,
+    state.height * 0.50,
+    state.width * 0.03,
+    state.width * 0.5,
+    state.height * 0.52,
+    state.width * 0.58
+  );
+
+  glow.addColorStop(0, "rgba(255,255,255,0.18)");
+  glow.addColorStop(0.25, "rgba(190,220,255,0.13)");
+  glow.addColorStop(0.52, "rgba(244,191,96,0.10)");
+  glow.addColorStop(1, "rgba(0,0,0,0)");
+
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, state.width, state.height);
+
+  ctx.save();
+  ctx.globalAlpha = 0.42;
+
+  for (let i = 0; i < 76; i += 1) {
+    const x = (Math.sin(i * 91.17) * 0.5 + 0.5) * state.width;
+    const y = (Math.cos(i * 49.61) * 0.5 + 0.5) * state.height;
+    const r = 0.7 + ((i * 7) % 11) / 14;
+
+    ctx.beginPath();
+    ctx.fillStyle = i % 9 === 0 ? "rgba(244,191,96,0.66)" : "rgba(232,242,255,0.58)";
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function transformedNodes() {
+  return NODES.map((node) => {
+    const rotated = rotate(
+      {
+        x: node.x * 1.18,
+        y: node.y * 1.08,
+        z: node.z * 1.18
+      },
+      state.yaw,
+      state.pitch,
+      state.roll
+    );
+
+    const projected = project(rotated);
+
+    return {
+      ...node,
+      rx: rotated.x,
+      ry: rotated.y,
+      rz: rotated.z,
+      sx: projected.x,
+      sy: projected.y,
+      depth: projected.z,
+      perspective: projected.p
+    };
+  });
+}
+
+function drawFacets(points) {
+  const ctx = state.ctx;
+  const light = normalize({ x: -0.42, y: -0.78, z: 1.26 });
+
+  const sorted = FACETS.map((facet) => {
+    const a = points[facet[0]];
+    const b = points[facet[1]];
+    const c = points[facet[2]];
+
+    const ab = sub({ x: b.rx, y: b.ry, z: b.rz }, { x: a.rx, y: a.ry, z: a.rz });
+    const ac = sub({ x: c.rx, y: c.ry, z: c.rz }, { x: a.rx, y: a.ry, z: a.rz });
+    const normal = normalize(cross(ab, ac));
+    const brightness = clamp(dot(normal, light) * 0.72 + 0.56, 0.08, 1.12);
+    const depth = (a.depth + b.depth + c.depth) / 3;
+    const fibBias = (a.fib + b.fib + c.fib) / 3;
+
+    return { a, b, c, brightness, depth, fibBias };
+  }).sort((left, right) => left.depth - right.depth);
+
+  for (const facet of sorted) {
+    const b = facet.brightness;
+    const cool = Math.round(160 + b * 76);
+    const warm = Math.round(170 + b * 60);
+    const alpha = clamp(0.14 + b * 0.22, 0.08, 0.42);
+    const goldAlpha = clamp(0.05 + (facet.fibBias % 13) / 13 * 0.10, 0.05, 0.16);
+
+    ctx.beginPath();
+    ctx.moveTo(facet.a.sx, facet.a.sy);
+    ctx.lineTo(facet.b.sx, facet.b.sy);
+    ctx.lineTo(facet.c.sx, facet.c.sy);
+    ctx.closePath();
+
+    const fill = ctx.createLinearGradient(facet.a.sx, facet.a.sy, facet.c.sx, facet.c.sy);
+    fill.addColorStop(0, `rgba(${cool},${warm},255,${alpha})`);
+    fill.addColorStop(0.45, `rgba(255,255,255,${alpha * 0.58})`);
+    fill.addColorStop(1, `rgba(244,191,96,${goldAlpha})`);
+
+    ctx.fillStyle = fill;
+    ctx.fill();
+
+    ctx.strokeStyle = `rgba(255,235,190,${0.07 + b * 0.11})`;
+    ctx.lineWidth = 0.75;
+    ctx.stroke();
+  }
+}
+
+function drawEdges(points) {
+  const ctx = state.ctx;
+
+  ctx.save();
+
+  for (const edge of EDGES) {
+    const a = points[edge[0]];
+    const b = points[edge[1]];
+    const depth = clamp(((a.depth + b.depth) * 0.5 + 2.5) / 5.2, 0.08, 1);
+
+    ctx.beginPath();
+    ctx.strokeStyle = `rgba(255,220,150,${0.10 + depth * 0.22})`;
+    ctx.lineWidth = Math.max(0.72, 0.8 + depth * 0.55);
+    ctx.moveTo(a.sx, a.sy);
+    ctx.lineTo(b.sx, b.sy);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+function drawNodes(points) {
+  const ctx = state.ctx;
+
+  for (const node of points) {
+    const front = clamp((node.depth + 2.4) / 5.2, 0, 1);
+    const size = clamp(1.1 + front * 2.5, 1.1, 4.8);
+
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(255,210,96,${0.18 + front * 0.36})`;
+    ctx.arc(node.sx, node.sy, size + 1.1, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(255,248,216,${0.44 + front * 0.48})`;
+    ctx.arc(node.sx, node.sy, size * 0.44, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function drawEnclosure(points) {
+  const ctx = state.ctx;
+  const top = points[0];
+  const bottom = points[255];
+
+  const left = points.reduce((winner, node) => node.sx < winner.sx ? node : winner, points[0]);
+  const right = points.reduce((winner, node) => node.sx > winner.sx ? node : winner, points[0]);
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(top.sx, top.sy);
+  ctx.lineTo(right.sx, right.sy);
+  ctx.lineTo(bottom.sx, bottom.sy);
+  ctx.lineTo(left.sx, left.sy);
+  ctx.closePath();
+
+  ctx.strokeStyle = "rgba(244,191,96,0.62)";
+  ctx.lineWidth = Math.max(1.4, state.width * 0.0018);
+  ctx.shadowColor = "rgba(244,191,96,0.28)";
+  ctx.shadowBlur = 26;
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawReflection(points) {
+  const ctx = state.ctx;
+  const bottom = points[255];
+
+  const gradient = ctx.createRadialGradient(
+    bottom.sx,
+    bottom.sy + state.height * 0.08,
+    2,
+    bottom.sx,
+    bottom.sy + state.height * 0.12,
+    state.width * 0.20
+  );
+
+  gradient.addColorStop(0, "rgba(255,255,255,0.18)");
+  gradient.addColorStop(0.24, "rgba(142,190,255,0.11)");
+  gradient.addColorStop(1, "rgba(0,0,0,0)");
+
+  ctx.fillStyle = gradient;
+  ctx.beginPath();
+  ctx.ellipse(bottom.sx, bottom.sy + state.height * 0.13, state.width * 0.22, state.height * 0.045, 0, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawLabel() {
+  const ctx = state.ctx;
+
+  ctx.save();
+  ctx.textAlign = "center";
+  ctx.fillStyle = "rgba(244,191,96,0.96)";
+  ctx.font = "800 23px Inter, system-ui, sans-serif";
+  ctx.fillText("256-Face Enclosed Diamond", state.width * 0.5, 38);
+
+  ctx.fillStyle = "rgba(186,194,207,0.86)";
+  ctx.font = "500 13px Inter, system-ui, sans-serif";
+  ctx.fillText("Fibonacci geometry folded into one rotating volumetric construct", state.width * 0.5, 59);
+  ctx.restore();
+}
+
+function draw(time = 0) {
+  if (!state.active || !state.ctx) return;
+
+  if (!state.reducedMotion) {
+    state.yaw += 0.0062;
+    state.roll += 0.0007;
+  }
+
+  drawBackground();
+  const points = transformedNodes();
+
+  drawReflection(points);
+  drawFacets(points);
+  drawEdges(points);
+  drawNodes(points);
+  drawEnclosure(points);
+  drawLabel();
+
+  if (!state.reducedMotion) {
+    state.raf = window.requestAnimationFrame(draw);
+  }
+}
+
+function start(host = null) {
+  state.mount =
+    host ||
+    document.querySelector("[data-showroom-diamond256-mount]") ||
+    document.querySelector("[data-showroom-cover-diamond-mount]") ||
+    document.querySelector("main") ||
+    document.body;
+
+  if (!state.mount) return null;
+
+  state.mount.innerHTML = "";
 
   const canvas = document.createElement("canvas");
-  canvas.setAttribute("aria-label", "256-face three-dimensional diamond construct");
+  canvas.setAttribute("aria-label", "Single enclosed rotating 256-face diamond construct");
   canvas.setAttribute("role", "img");
   canvas.style.display = "block";
   canvas.style.width = "100%";
   canvas.style.height = "100%";
-  canvas.style.borderRadius = "24px";
+  canvas.style.borderRadius = "22px";
   canvas.style.background = "transparent";
 
-  mount.appendChild(canvas);
+  state.mount.appendChild(canvas);
+  state.canvas = canvas;
+  state.ctx = canvas.getContext("2d", { alpha: true });
+  state.active = true;
 
-  const context = canvas.getContext("2d", { alpha: true });
-  const nodes = createNodeField();
-  const facets = createFacetIndex();
-  const edges = createEdgeIndex();
-  const stars = createStars();
+  state.mount.dataset.contract = CONTRACT;
+  state.mount.dataset.previousContract = PREVIOUS_CONTRACT;
+  state.mount.dataset.diamondMode = "single-enclosed-three-dimensional-construct";
+  state.mount.dataset.totalNodes = String(TOTAL_NODES);
+  state.mount.dataset.rings = String(RINGS);
+  state.mount.dataset.nodesPerRing = String(NODES_PER_RING);
+  state.mount.dataset.fibonacciZigzag = "false";
+  state.mount.dataset.fibonacciGeometry = "folded-into-construct";
+  state.mount.dataset.generatedImage = "false";
+  state.mount.dataset.graphicBox = "false";
+  state.mount.dataset.parentMutationAuthorized = "false";
+  state.mount.dataset.visualPassClaim = "false";
 
-  const state = {
-    width: 0,
-    height: 0,
-    dpr: 1,
-    yaw: 0.0,
-    pitch: -0.18,
-    roll: 0.0,
-    animationId: 0,
-    lastTime: 0
-  };
+  document.documentElement.dataset.showroomCoverDiamondLattice = "256-face";
+  document.documentElement.dataset.diamondMode = "single-enclosed-three-dimensional-construct";
+  document.documentElement.dataset.fibonacciZigzag = "false";
+  document.documentElement.dataset.fibonacciGeometry = "folded-into-construct";
+  document.documentElement.dataset.generatedImage = "false";
+  document.documentElement.dataset.graphicBox = "false";
 
-  function resize() {
-    const rect = mount.getBoundingClientRect();
-    state.dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-    state.width = Math.max(320, Math.floor(rect.width || 960));
-    state.height = Math.max(320, Math.floor(rect.height || Math.min(state.width * 0.72, 720)));
+  resize();
 
-    canvas.width = Math.floor(state.width * state.dpr);
-    canvas.height = Math.floor(state.height * state.dpr);
-    context.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+  if (state.raf) window.cancelAnimationFrame(state.raf);
+
+  if (state.reducedMotion) draw(performance.now());
+  else state.raf = window.requestAnimationFrame(draw);
+
+  return getShowroomDiamond256LatticeStatus();
+}
+
+function stop() {
+  state.active = false;
+
+  if (state.raf) {
+    window.cancelAnimationFrame(state.raf);
+    state.raf = 0;
   }
+}
 
-  function drawBackground() {
-    const g = context.createRadialGradient(
-      state.width * 0.5,
-      state.height * 0.44,
-      state.width * 0.04,
-      state.width * 0.5,
-      state.height * 0.50,
-      state.width * 0.52
-    );
-    g.addColorStop(0, "rgba(255,255,255,0.16)");
-    g.addColorStop(0.16, "rgba(198,224,255,0.12)");
-    g.addColorStop(0.48, "rgba(54,94,180,0.10)");
-    g.addColorStop(0.78, "rgba(10,24,54,0.20)");
-    g.addColorStop(1, "rgba(0,0,0,0.0)");
-
-    context.fillStyle = g;
-    context.fillRect(0, 0, state.width, state.height);
-
-    for (const star of stars) {
-      context.beginPath();
-      context.fillStyle = `rgba(255,245,220,${star.a})`;
-      context.arc(star.x * state.width, star.y * state.height, star.s, 0, Math.PI * 2);
-      context.fill();
-    }
-  }
-
-  function renderFrame(time) {
-    if (!state.lastTime) state.lastTime = time;
-    const delta = Math.min(32, time - state.lastTime);
-    state.lastTime = time;
-
-    state.yaw += delta * 0.00038;
-    state.roll += delta * 0.00006;
-
-    context.clearRect(0, 0, state.width, state.height);
-    drawBackground();
-
-    const scale = Math.min(state.width, state.height) * 0.24;
-    const cameraDistance = 6.2;
-    const fov = scale * 3.2;
-
-    const light = normalize({ x: -0.4, y: -0.8, z: 1.2 });
-
-    const transformed = nodes.map((node) => {
-      const rotated = rotatePoint(
-        {
-          x: node.x * 1.12,
-          y: node.y * 1.10,
-          z: node.z * 1.12
-        },
-        state.yaw,
-        state.pitch,
-        state.roll
-      );
-
-      const projected = projectPoint(rotated, state.width, state.height, cameraDistance, fov);
-
-      return {
-        ...node,
-        rx: rotated.x,
-        ry: rotated.y,
-        rz: rotated.z,
-        sx: projected.x,
-        sy: projected.y,
-        depth: rotated.z
-      };
-    });
-
-    const sortedFacets = facets
-      .map((facet) => {
-        const a = transformed[facet[0]];
-        const b = transformed[facet[1]];
-        const c = transformed[facet[2]];
-        const avgZ = (a.depth + b.depth + c.depth) / 3;
-
-        const ab = subtract({ x: b.rx, y: b.ry, z: b.rz }, { x: a.rx, y: a.ry, z: a.rz });
-        const ac = subtract({ x: c.rx, y: c.ry, z: c.rz }, { x: a.rx, y: a.ry, z: a.rz });
-        const normal = normalize(cross(ab, ac));
-        const brightness = clamp(dot(normal, light) * 0.65 + 0.55, 0.12, 0.98);
-
-        return { a, b, c, avgZ, brightness };
-      })
-      .sort((left, right) => left.avgZ - right.avgZ);
-
-    for (const facet of sortedFacets) {
-      const { a, b, c, brightness } = facet;
-
-      const cool = Math.round(185 + brightness * 52);
-      const warm = Math.round(200 + brightness * 34);
-      const alpha = 0.11 + brightness * 0.16;
-
-      context.beginPath();
-      context.moveTo(a.sx, a.sy);
-      context.lineTo(b.sx, b.sy);
-      context.lineTo(c.sx, c.sy);
-      context.closePath();
-
-      context.fillStyle = `rgba(${cool},${warm},255,${alpha})`;
-      context.fill();
-
-      context.strokeStyle = `rgba(255,232,176,${0.06 + brightness * 0.10})`;
-      context.lineWidth = 0.8;
-      context.stroke();
-    }
-
-    context.save();
-    context.strokeStyle = "rgba(255,210,110,0.22)";
-    context.lineWidth = 1.05;
-
-    for (const edge of edges) {
-      const a = transformed[edge[0]];
-      const b = transformed[edge[1]];
-      const visibility = clamp(((a.depth + b.depth) * 0.5 + 2.4) / 4.8, 0.10, 0.92);
-
-      context.globalAlpha = 0.14 + visibility * 0.22;
-      context.beginPath();
-      context.moveTo(a.sx, a.sy);
-      context.lineTo(b.sx, b.sy);
-      context.stroke();
-    }
-    context.restore();
-
-    for (const node of transformed) {
-      const size = clamp(1.0 + (node.depth + 2.2) * 0.45, 1.2, 4.8);
-      const glow = 0.16 + clamp((node.depth + 2.2) / 5.0, 0.0, 1.0) * 0.38;
-
-      context.beginPath();
-      context.fillStyle = `rgba(255,205,95,${glow})`;
-      context.arc(node.sx, node.sy, size + 1.2, 0, Math.PI * 2);
-      context.fill();
-
-      context.beginPath();
-      context.fillStyle = "rgba(255,239,190,0.92)";
-      context.arc(node.sx, node.sy, size * 0.58, 0, Math.PI * 2);
-      context.fill();
-    }
-
-    context.save();
-    context.textAlign = "center";
-    context.fillStyle = "rgba(248,234,208,0.96)";
-    context.font = "700 24px Inter, system-ui, sans-serif";
-    context.fillText("256-Face Diamond Construct", state.width * 0.5, 38);
-    context.fillStyle = "rgba(186,194,207,0.86)";
-    context.font = "500 13px Inter, system-ui, sans-serif";
-    context.fillText("Fibonacci progression folded into the fixed 16 × 16 nodal construct", state.width * 0.5, 58);
-    context.restore();
-
-    state.animationId = window.requestAnimationFrame(renderFrame);
-  }
-
-  function start() {
-    resize();
-    state.animationId = window.requestAnimationFrame(renderFrame);
-  }
-
-  function destroy() {
-    if (state.animationId) {
-      window.cancelAnimationFrame(state.animationId);
-      state.animationId = 0;
-    }
-    window.removeEventListener("resize", resize);
-  }
-
-  window.addEventListener("resize", resize);
-
-  mount.dataset.contract = CONTRACT;
-  mount.dataset.previousContract = PREVIOUS_CONTRACT;
-  mount.dataset.totalNodes = String(TOTAL_NODES);
-  mount.dataset.rings = String(RINGS);
-  mount.dataset.nodesPerRing = String(NODES_PER_RING);
-  mount.dataset.fibonacciVisualPath = "false";
-  mount.dataset.diamondMode = "three-dimensional-construct";
-  mount.dataset.parentMutationAuthorized = "false";
-  mount.dataset.generatedImage = "false";
-  mount.dataset.graphicBox = "false";
-  mount.dataset.visualPassClaim = "false";
-
-  start();
-
+function getShowroomDiamond256LatticeStatus() {
   return {
     contract: CONTRACT,
+    receipt: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
     assetPath: ASSET_PATH,
     totalNodes: TOTAL_NODES,
     rings: RINGS,
     nodesPerRing: NODES_PER_RING,
-    destroy
+    diamondMode: "single-enclosed-three-dimensional-construct",
+    fibonacciZigzag: false,
+    fibonacciGeometry: "folded-into-construct",
+    generatedImage: false,
+    graphicBox: false,
+    parentMutationAuthorized: false,
+    visualPassClaim: false
   };
 }
 
-const handoff = createShowroomDiamondLattice();
+window.addEventListener("resize", resize, { passive: true });
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") {
+    stop();
+    return;
+  }
+
+  start(state.mount);
+}, { passive: true });
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => start(), { once: true });
+} else {
+  start();
+}
 
 export {
   CONTRACT,
@@ -441,15 +558,19 @@ export {
   TOTAL_NODES,
   RINGS,
   NODES_PER_RING,
-  createShowroomDiamondLattice
+  start,
+  stop,
+  getShowroomDiamond256LatticeStatus
 };
 
 export default {
   contract: CONTRACT,
+  receipt: CONTRACT,
   previousContract: PREVIOUS_CONTRACT,
   assetPath: ASSET_PATH,
-  totalNodes: TOTAL_NODES,
-  rings: RINGS,
-  nodesPerRing: NODES_PER_RING,
-  handoff
+  start,
+  stop,
+  status: getShowroomDiamond256LatticeStatus,
+  getStatus: getShowroomDiamond256LatticeStatus,
+  getShowroomDiamond256LatticeStatus
 };

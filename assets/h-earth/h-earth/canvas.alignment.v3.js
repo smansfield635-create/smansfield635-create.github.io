@@ -1,19 +1,22 @@
-// /assets/h-earth/h-earth.canvas.alignment.v3.js
-// H_EARTH_G1_CANVAS_ASSET_PATH_RENEWAL_CHILD_CANVAS_TNT_v10A
+// /assets/h-earth/h-earth/canvas.alignment.v3.js
+// H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A
 // Full-file replacement.
-// Renewed canvas asset path.
+// Renewed nested canvas child asset.
 // Canvas child authority only.
 //
 // Purpose:
-// - Replace the incorrect wrapper pattern.
+// - Keep the rectangular canvas/card stationary.
+// - Add direct globe-view interaction API.
+// - Redraw the globe itself when yaw, pitch, or zoom changes.
+// - Do not transform the canvas/card element.
 // - Do not import, boot, wrap, or depend on /assets/h-earth/h-earth.canvas.js.
-// - Read only route-passed parent instances and surface material truth.
-// - Paint visible composition as downstream canvas child.
-// - Align with controls API when controls are active.
+// - Read only route-passed upstream instances and surface material truth.
 // - Keep parent truth immutable.
 //
 // Owns:
-// - visible canvas composition
+// - visible globe composition
+// - globe redraw view state
+// - yaw/pitch/zoom view API
 // - canvas receipt
 // - canvas proof status
 // - canvas/controls receipt alignment readout
@@ -25,22 +28,38 @@
 // - terrain truth
 // - surface truth
 // - controls authority
-// - parent reconstruction
 // - legacy canvas execution
+// - card/panel transform
+// - parent mutation
 // - Earth mutation
 // - Hearth mutation
 // - Audralia mutation
 
 const H_EARTH_CANVAS_CONTRACT = "H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3";
-const H_EARTH_CANVAS_RENEWAL_CONTRACT = "H_EARTH_G1_CANVAS_ASSET_PATH_RENEWAL_CHILD_CANVAS_TNT_v10A";
-const H_EARTH_CANVAS_PREVIOUS_CONTRACT = "H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_TNT_v2";
-const H_EARTH_RENEWED_ASSET_PATH = "/assets/h-earth/h-earth.canvas.alignment.v3.js";
+const H_EARTH_CANVAS_RENEWAL_CONTRACT = "H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A";
+const H_EARTH_CANVAS_PREVIOUS_CONTRACT = "H_EARTH_G1_CANVAS_ASSET_PATH_RENEWAL_CHILD_CANVAS_TNT_v10A";
+const H_EARTH_RENEWED_ASSET_PATH = "/assets/h-earth/h-earth/canvas.alignment.v3.js";
 const H_EARTH_EXPECTED_SURFACE = "H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1";
-const H_EARTH_EXPECTED_CONTROLS = "H_EARTH_G1_CONTROLS_MOTION_INPUT_AUTHORITY_TNT_v1";
+const H_EARTH_EXPECTED_CONTROLS = "H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2";
 const H_EARTH_TOTAL_CELLS = 256;
 const H_EARTH_GRID = 16;
 
 let bootPromise = null;
+
+const view = {
+  yaw: 0,
+  pitch: 0,
+  zoom: 1
+};
+
+const runtime = {
+  panel: null,
+  canvas: null,
+  ctx: null,
+  cells: [],
+  parentInstances: null,
+  surfaceCandidates: []
+};
 
 const state = {
   contract: H_EARTH_CANVAS_CONTRACT,
@@ -48,7 +67,7 @@ const state = {
   previousContract: H_EARTH_CANVAS_PREVIOUS_CONTRACT,
   assetPath: H_EARTH_RENEWED_ASSET_PATH,
   status: "not-started",
-  parentConsumptionMode: "route-passed-parent-instances-only",
+  parentConsumptionMode: "route-passed-upstream-instances-only",
   parentInstancesPassed: false,
   surfaceReceipt: "pending",
   surfaceReceiptExpected: H_EARTH_EXPECTED_SURFACE,
@@ -68,6 +87,11 @@ const state = {
   inputAuthorized: false,
   canvasControlsReceiptAligned: false,
   parentMutationAuthorized: false,
+  cardTransformAuthorized: false,
+  globeDirectInteractionAuthorized: true,
+  yaw: 0,
+  pitch: 0,
+  zoom: 1,
   bootedAt: null,
   renderedAt: null,
   alignedAt: null,
@@ -106,6 +130,15 @@ const MATERIAL_COLORS = Object.freeze({
   "snow-highland": "#e7edf0"
 });
 
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function round(value, places = 2) {
+  const factor = Math.pow(10, places);
+  return Math.round(value * factor) / factor;
+}
+
 function safeString(value) {
   if (value === null || value === undefined) return "";
   return String(value).trim();
@@ -118,7 +151,8 @@ function isObject(value) {
 function recordError(label, error) {
   state.errors.push({
     label,
-    message: error instanceof Error ? `${error.name}: ${error.message}` : String(error)
+    message: error instanceof Error ? `${error.name}: ${error.message}` : String(error),
+    at: new Date().toISOString()
   });
 }
 
@@ -434,8 +468,8 @@ function resolveParentInstances(context = {}) {
   state.parentInstancesPassed = Boolean(valid);
 
   if (!valid) {
-    state.status = "held-route-parent-instances-missing";
-    state.renderStatus = "held-route-parent-instances-missing";
+    state.status = "held-route-passed-instances-missing";
+    state.renderStatus = "held-route-passed-instances-missing";
     return null;
   }
 
@@ -496,7 +530,7 @@ function readControlsStatus(providedStatus = null) {
     status?.parentMutationAuthorized === false;
 
   state.controlsReceipt = receipt;
-  state.controlsStatus = status?.status || (api ? "loaded-held" : "pending");
+  state.controlsStatus = status?.interactiveStatus || status?.status || (api ? "loaded-held" : "pending");
   state.controlsAuthorized = active;
   state.motionAuthorized = active;
   state.inputAuthorized = active;
@@ -519,10 +553,10 @@ function findCanvasHost() {
 }
 
 function ensureStyle() {
-  if (document.getElementById("h-earth-renewed-child-canvas-style-v10a")) return;
+  if (document.getElementById("h-earth-globe-direct-canvas-style-v12a")) return;
 
   const style = document.createElement("style");
-  style.id = "h-earth-renewed-child-canvas-style-v10a";
+  style.id = "h-earth-globe-direct-canvas-style-v12a";
   style.textContent = `
     [data-h-earth-canvas-panel] {
       box-sizing: border-box;
@@ -564,6 +598,9 @@ function ensureStyle() {
         radial-gradient(circle at 70% 30%, rgba(225, 185, 95, 0.12), transparent 14rem),
         linear-gradient(180deg, rgba(7, 13, 30, 1), rgba(2, 5, 12, 1));
       border: 1px solid rgba(255, 255, 255, 0.08);
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     [data-h-earth-canvas] {
@@ -572,7 +609,16 @@ function ensureStyle() {
       max-width: 920px;
       display: block;
       aspect-ratio: 1 / 1;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      transform: none !important;
       transform-origin: center center;
+      cursor: grab;
+    }
+
+    [data-h-earth-canvas][data-h-earth-dragging="true"] {
+      cursor: grabbing;
     }
 
     [data-h-earth-canvas-status] {
@@ -615,30 +661,33 @@ function ensurePanel() {
   if (panel) {
     const title = panel.querySelector("[data-h-earth-canvas-title]");
     const copy = panel.querySelector("[data-h-earth-canvas-copy]");
-    if (title) title.textContent = "H-Earth Canvas Asset Path Renewal";
+    if (title) title.textContent = "H-Earth Globe Direct Interaction";
     if (copy) {
       copy.textContent =
-        "Canvas is active as a renewed downstream child asset. It reads route-passed parent surface truth directly and aligns with controls after motion/input authority activates. Parent truth remains immutable.";
+        "Canvas is active as a renewed downstream child asset. Controls move the globe view directly by yaw, pitch, and zoom. The card and canvas frame remain stationary. Parent truth remains immutable.";
     }
 
+    runtime.panel = panel;
+    runtime.canvas = panel.querySelector("[data-h-earth-canvas]");
+    runtime.ctx = runtime.canvas?.getContext("2d", { alpha: false }) || null;
     return panel;
   }
 
   panel = document.createElement("section");
   panel.setAttribute("data-h-earth-canvas-panel", "true");
-  panel.setAttribute("aria-label", "H-Earth renewed child canvas visible composition");
+  panel.setAttribute("aria-label", "H-Earth direct globe interaction canvas");
 
   panel.innerHTML = `
-    <h2 data-h-earth-canvas-title>H-Earth Canvas Asset Path Renewal</h2>
+    <h2 data-h-earth-canvas-title>H-Earth Globe Direct Interaction</h2>
     <p data-h-earth-canvas-copy>
-      Canvas is active as a renewed downstream child asset. It reads route-passed parent surface truth directly and aligns with controls after motion/input authority activates. Parent truth remains immutable.
+      Canvas is active as a renewed downstream child asset. Controls move the globe view directly by yaw, pitch, and zoom. The card and canvas frame remain stationary. Parent truth remains immutable.
     </p>
     <div data-h-earth-canvas-stage>
       <canvas
         data-h-earth-canvas
         width="1200"
         height="1200"
-        aria-label="H-Earth renewed child canvas visible composition"
+        aria-label="H-Earth direct globe interaction view"
         role="img"
       ></canvas>
     </div>
@@ -646,6 +695,11 @@ function ensurePanel() {
   `;
 
   findCanvasHost().appendChild(panel);
+
+  runtime.panel = panel;
+  runtime.canvas = panel.querySelector("[data-h-earth-canvas]");
+  runtime.ctx = runtime.canvas?.getContext("2d", { alpha: false }) || null;
+
   return panel;
 }
 
@@ -672,7 +726,11 @@ function publishPanelStatus() {
     <span><strong>Renewal</strong>${state.renewalContract}</span>
     <span><strong>Previous</strong>${state.previousContract}</span>
     <span><strong>Asset path</strong>${state.assetPath}</span>
-    <span><strong>Parent mode</strong>${state.parentConsumptionMode}</span>
+    <span><strong>Interaction mode</strong>direct-globe-redraw</span>
+    <span><strong>Card transform</strong>forbidden</span>
+    <span><strong>Yaw</strong>${round(view.yaw, 2)}</span>
+    <span><strong>Pitch</strong>${round(view.pitch, 2)}</span>
+    <span><strong>Zoom</strong>${round(view.zoom, 3)}</span>
     <span><strong>Parent instances</strong>${String(state.parentInstancesPassed)}</span>
     <span><strong>Surface receipt</strong>${state.surfaceReceipt}</span>
     <span><strong>Parent surface ready</strong>${String(state.parentSurfaceReady)}</span>
@@ -728,19 +786,24 @@ function drawStars(ctx, width, height) {
 
 function projectCell(cell, radius, centerX, centerY) {
   const lat = (Number(cell.latitude) * Math.PI) / 180;
-  const lon = ((Number(cell.longitude) + 28) * Math.PI) / 180;
+  const lon = ((Number(cell.longitude) + Number(view.yaw)) * Math.PI) / 180;
+  const pitch = (Number(view.pitch) * Math.PI) / 180;
 
-  const x = Math.cos(lat) * Math.sin(lon);
-  const y = Math.sin(lat);
-  const z = Math.cos(lat) * Math.cos(lon);
+  const baseX = Math.cos(lat) * Math.sin(lon);
+  const baseY = Math.sin(lat);
+  const baseZ = Math.cos(lat) * Math.cos(lon);
 
-  if (z < -0.06) return null;
+  const rotatedY = baseY * Math.cos(pitch) - baseZ * Math.sin(pitch);
+  const rotatedZ = baseY * Math.sin(pitch) + baseZ * Math.cos(pitch);
+  const rotatedX = baseX;
+
+  if (rotatedZ < -0.06) return null;
 
   return {
-    x: centerX + x * radius,
-    y: centerY - y * radius * 0.98,
-    z,
-    light: Math.max(0.2, Math.min(1, 0.5 + z * 0.44 + y * 0.12 - x * 0.07))
+    x: centerX + rotatedX * radius,
+    y: centerY - rotatedY * radius * 0.98,
+    z: rotatedZ,
+    light: Math.max(0.2, Math.min(1, 0.5 + rotatedZ * 0.44 + rotatedY * 0.12 - rotatedX * 0.07))
   };
 }
 
@@ -904,11 +967,11 @@ function drawTitle(ctx, width, height) {
   ctx.fillStyle = "rgba(246, 211, 123, 0.92)";
   ctx.font = `${Math.max(18, width * 0.026)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
   ctx.textAlign = "center";
-  ctx.fillText("H-Earth · Renewed Child Canvas", width / 2, height * 0.075);
+  ctx.fillText("H-Earth · Direct Globe Interaction", width / 2, height * 0.075);
 
   ctx.fillStyle = "rgba(243, 227, 189, 0.72)";
   ctx.font = `${Math.max(13, width * 0.015)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
-  ctx.fillText("Route-passed parent truth · No legacy canvas parent · Controls align downstream", width / 2, height * 0.108);
+  ctx.fillText("Globe redraws by yaw / pitch / zoom · Card remains stationary", width / 2, height * 0.108);
 
   ctx.restore();
 }
@@ -924,7 +987,7 @@ function drawHeld(ctx, canvas, reason) {
   ctx.fillStyle = "rgba(246, 211, 123, 0.92)";
   ctx.font = `${Math.max(22, width * 0.03)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
   ctx.textAlign = "center";
-  ctx.fillText("H-Earth Renewed Child Canvas Held", width / 2, height * 0.43);
+  ctx.fillText("H-Earth Direct Globe Canvas Held", width / 2, height * 0.43);
 
   ctx.fillStyle = "rgba(243, 227, 189, 0.76)";
   ctx.font = `${Math.max(14, width * 0.018)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
@@ -964,30 +1027,42 @@ function measureNonBlank(ctx, width, height) {
   }
 }
 
-function renderComposition(canvas, cells) {
-  const ctx = canvas.getContext("2d", { alpha: false });
+function renderComposition() {
+  const canvas = runtime.canvas;
+  const ctx = runtime.ctx;
 
-  if (!ctx) {
-    state.renderStatus = "failed-no-2d-context";
+  if (!canvas || !ctx) {
+    state.renderStatus = "failed-no-canvas-context";
     return;
   }
 
   const width = canvas.width;
   const height = canvas.height;
-  const radius = Math.min(width, height) * 0.34;
+  const zoomedRadius = Math.min(width, height) * 0.34 * clamp(view.zoom, 0.72, 2.2);
+  const radius = clamp(zoomedRadius, Math.min(width, height) * 0.22, Math.min(width, height) * 0.72);
   const centerX = width * 0.5;
   const centerY = height * 0.52;
+
+  canvas.style.transform = "none";
+  canvas.dataset.hEarthViewMode = "direct-globe-redraw";
+  canvas.dataset.hEarthCardTransformAuthorized = "false";
+  canvas.dataset.hEarthYaw = String(round(view.yaw, 2));
+  canvas.dataset.hEarthPitch = String(round(view.pitch, 2));
+  canvas.dataset.hEarthZoom = String(round(view.zoom, 3));
 
   clearScene(ctx, width, height);
   drawStars(ctx, width, height);
   drawGlobeBase(ctx, radius, centerX, centerY);
-  drawCells(ctx, cells, radius, centerX, centerY);
+  drawCells(ctx, runtime.cells, radius, centerX, centerY);
   drawLight(ctx, radius, centerX, centerY);
   drawTitle(ctx, width, height);
   measureNonBlank(ctx, width, height);
 
   state.renderStatus = "visible-composition-painted-from-surface-instance";
-  state.status = "renewed-child-canvas-visible-composition-loaded";
+  state.status = "direct-globe-view-redrawn-from-surface-instance";
+  state.yaw = view.yaw;
+  state.pitch = view.pitch;
+  state.zoom = view.zoom;
   state.renderedAt = new Date().toISOString();
 }
 
@@ -1003,6 +1078,10 @@ function exposeCanvasApi() {
     status: getHEarthCanvasStatus,
     getStatus: getHEarthCanvasStatus,
     getHEarthCanvasStatus,
+    setView: setHEarthCanvasView,
+    setHEarthCanvasView,
+    refreshView: refreshHEarthCanvasView,
+    refreshHEarthCanvasView,
     refreshControlsStatus: refreshHEarthCanvasControlsStatus,
     refreshHEarthCanvasControlsStatus,
     controlsAuthorized: () => state.controlsAuthorized,
@@ -1019,10 +1098,15 @@ function exposeCanvasApi() {
   document.documentElement.dataset.hEarthCanvasRenewalContract = H_EARTH_CANVAS_RENEWAL_CONTRACT;
   document.documentElement.dataset.hEarthCanvasPreviousReceipt = H_EARTH_CANVAS_PREVIOUS_CONTRACT;
   document.documentElement.dataset.hEarthCanvasAssetPath = H_EARTH_RENEWED_ASSET_PATH;
+  document.documentElement.dataset.hEarthCanvasViewMode = "direct-globe-redraw";
+  document.documentElement.dataset.hEarthCardTransformAuthorized = "false";
   document.documentElement.dataset.hEarthCanvasControlsReceiptAligned = String(state.canvasControlsReceiptAligned);
   document.documentElement.dataset.hEarthCanvasControlsStatus = state.controlsStatus;
   document.documentElement.dataset.hEarthCanvasControlsAuthorized = String(state.controlsAuthorized);
   document.documentElement.dataset.hEarthParentMutationAuthorized = "false";
+  document.documentElement.dataset.hEarthYaw = String(round(view.yaw, 2));
+  document.documentElement.dataset.hEarthPitch = String(round(view.pitch, 2));
+  document.documentElement.dataset.hEarthZoom = String(round(view.zoom, 3));
 }
 
 async function bootHEarthCanvas(context = {}) {
@@ -1030,13 +1114,12 @@ async function bootHEarthCanvas(context = {}) {
 
   bootPromise = (async () => {
     state.bootedAt = new Date().toISOString();
-    state.status = "booting-renewed-child-canvas";
-    state.renderStatus = "booting-renewed-child-canvas";
+    state.status = "booting-direct-globe-canvas";
+    state.renderStatus = "booting-direct-globe-canvas";
 
-    const panel = ensurePanel();
-    const canvas = panel.querySelector("[data-h-earth-canvas]");
+    ensurePanel();
 
-    if (!canvas) {
+    if (!runtime.canvas || !runtime.ctx) {
       state.status = "failed-no-canvas-element";
       state.renderStatus = "failed-no-canvas-element";
       publishPanelStatus();
@@ -1048,49 +1131,42 @@ async function bootHEarthCanvas(context = {}) {
       const parentInstances = resolveParentInstances(context);
 
       if (!parentInstances) {
-        const ctx = canvas.getContext("2d", { alpha: false });
-        if (ctx) {
-          drawHeld(ctx, canvas, "held-route-parent-instances-missing");
-          measureNonBlank(ctx, canvas.width, canvas.height);
-        }
-
+        drawHeld(runtime.ctx, runtime.canvas, "held-route-passed-instances-missing");
+        measureNonBlank(runtime.ctx, runtime.canvas.width, runtime.canvas.height);
         publishPanelStatus();
         exposeCanvasApi();
         return getHEarthCanvasStatus();
       }
 
-      const candidates = collectSurfaceCandidates(parentInstances.surface);
-      const cells = normalizeCells(candidates);
-      const ready = evaluateSurface(parentInstances, cells, candidates);
+      runtime.parentInstances = parentInstances;
+      runtime.surfaceCandidates = collectSurfaceCandidates(parentInstances.surface);
+      runtime.cells = normalizeCells(runtime.surfaceCandidates);
+
+      const ready = evaluateSurface(parentInstances, runtime.cells, runtime.surfaceCandidates);
 
       if (!ready) {
-        const ctx = canvas.getContext("2d", { alpha: false });
-        if (ctx) {
-          drawHeld(ctx, canvas, "held-parent-surface-not-resolved");
-          measureNonBlank(ctx, canvas.width, canvas.height);
-        }
-
+        drawHeld(runtime.ctx, runtime.canvas, "held-surface-not-resolved");
+        measureNonBlank(runtime.ctx, runtime.canvas.width, runtime.canvas.height);
         publishPanelStatus();
         exposeCanvasApi();
         return getHEarthCanvasStatus();
       }
 
-      renderComposition(canvas, cells);
+      renderComposition();
       publishPanelStatus();
       exposeCanvasApi();
 
       return getHEarthCanvasStatus();
     } catch (error) {
-      recordError("boot-renewed-child-canvas", error);
+      recordError("boot-direct-globe-canvas", error);
 
-      const ctx = canvas.getContext("2d", { alpha: false });
-      if (ctx) {
-        drawHeld(ctx, canvas, "failed-renewed-child-canvas");
-        measureNonBlank(ctx, canvas.width, canvas.height);
+      if (runtime.ctx && runtime.canvas) {
+        drawHeld(runtime.ctx, runtime.canvas, "failed-direct-globe-canvas");
+        measureNonBlank(runtime.ctx, runtime.canvas.width, runtime.canvas.height);
       }
 
-      state.status = "failed-renewed-child-canvas";
-      state.renderStatus = "failed-renewed-child-canvas";
+      state.status = "failed-direct-globe-canvas";
+      state.renderStatus = "failed-direct-globe-canvas";
       publishPanelStatus();
       exposeCanvasApi();
 
@@ -1099,6 +1175,36 @@ async function bootHEarthCanvas(context = {}) {
   })();
 
   return bootPromise;
+}
+
+function setHEarthCanvasView(nextView = {}) {
+  view.yaw = Number.isFinite(Number(nextView.yaw)) ? Number(nextView.yaw) : view.yaw;
+  view.pitch = Number.isFinite(Number(nextView.pitch))
+    ? clamp(Number(nextView.pitch), -72, 72)
+    : view.pitch;
+  view.zoom = Number.isFinite(Number(nextView.zoom))
+    ? clamp(Number(nextView.zoom), 0.72, 2.2)
+    : view.zoom;
+
+  if (runtime.canvas && runtime.ctx && runtime.cells.length >= H_EARTH_TOTAL_CELLS) {
+    renderComposition();
+  }
+
+  publishPanelStatus();
+  exposeCanvasApi();
+
+  return getHEarthCanvasStatus();
+}
+
+function refreshHEarthCanvasView() {
+  if (runtime.canvas && runtime.ctx && runtime.cells.length >= H_EARTH_TOTAL_CELLS) {
+    renderComposition();
+  }
+
+  publishPanelStatus();
+  exposeCanvasApi();
+
+  return getHEarthCanvasStatus();
 }
 
 function refreshHEarthCanvasControlsStatus(controlsStatus = null) {
@@ -1118,6 +1224,9 @@ function getHEarthCanvasStatus() {
     previousContract: H_EARTH_CANVAS_PREVIOUS_CONTRACT,
     assetPath: H_EARTH_RENEWED_ASSET_PATH,
     parentConsumptionMode: state.parentConsumptionMode,
+    interactionMode: "direct-globe-redraw",
+    cardTransformAuthorized: false,
+    globeDirectInteractionAuthorized: true,
     parentInstancesPassed: state.parentInstancesPassed,
     surfaceReceipt: state.surfaceReceipt,
     surfaceReceiptExpected: state.surfaceReceiptExpected,
@@ -1130,6 +1239,9 @@ function getHEarthCanvasStatus() {
     oceanCells: state.oceanCells,
     nonBlankPixelRatio: state.nonBlankPixelRatio,
     renderStatus: state.renderStatus,
+    yaw: round(view.yaw, 3),
+    pitch: round(view.pitch, 3),
+    zoom: round(view.zoom, 3),
     controlsReceipt: state.controlsReceipt,
     controlsStatus: state.controlsStatus,
     controlsAuthorized: state.controlsAuthorized,
@@ -1157,6 +1269,8 @@ export {
   H_EARTH_EXPECTED_CONTROLS,
   bootHEarthCanvas,
   getHEarthCanvasStatus,
+  setHEarthCanvasView,
+  refreshHEarthCanvasView,
   refreshHEarthCanvasControlsStatus
 };
 
@@ -1171,6 +1285,10 @@ export default {
   status: getHEarthCanvasStatus,
   getStatus: getHEarthCanvasStatus,
   getHEarthCanvasStatus,
+  setView: setHEarthCanvasView,
+  setHEarthCanvasView,
+  refreshView: refreshHEarthCanvasView,
+  refreshHEarthCanvasView,
   refreshControlsStatus: refreshHEarthCanvasControlsStatus,
   refreshHEarthCanvasControlsStatus
 };

@@ -2,10 +2,11 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="gauges-hearth-parent-chain-v20"
+  data-page="gauges-hearth-parent-chain-v20-audralia-g1-parent-chain-audit"
   data-route="/gauges/"
-  data-contract="GAUGES_HEARTH_PARENT_CHAIN_V20_AUDIT_TNT_v13"
-  data-audit-target="hearth-parent-chain"
+  data-contract="GAUGES_HEARTH_PARENT_CHAIN_V20_AUDRALIA_G1_PARENT_CHAIN_AUDIT_TNT_v14"
+  data-receipt="GAUGES_HEARTH_PARENT_CHAIN_V20_AUDRALIA_G1_PARENT_CHAIN_AUDIT_RECEIPT_v14"
+  data-read-only="true"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claimed="false"
@@ -13,20 +14,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Diamond Gate Bridge · Gauges</title>
 
   <style>
     :root {
       --bg:#030914;
-      --panel:#071426;
-      --panel2:#0a1a2f;
+      --panel:rgba(8,18,35,.84);
+      --panel2:rgba(4,10,20,.74);
       --line:rgba(231,188,105,.34);
       --gold:#e7bc69;
       --text:#eef6ff;
       --muted:rgba(238,246,255,.72);
-      --green:#8bd7a3;
-      --red:#ff8f8f;
-      --hold:#ffd37a;
+      --pass:#8bd7a3;
+      --fail:#ff8e8e;
+      --hold:#e7bc69;
     }
 
     * { box-sizing:border-box; }
@@ -34,39 +38,47 @@
     html {
       min-height:100%;
       background:
-        radial-gradient(circle at 50% 12%,rgba(39,117,155,.24),transparent 36%),
-        linear-gradient(180deg,#06101e,var(--bg) 72%);
+        radial-gradient(circle at 50% 12%,rgba(42,124,164,.20),transparent 35%),
+        radial-gradient(circle at 10% 8%,rgba(231,188,105,.12),transparent 28%),
+        linear-gradient(180deg,#06101e,var(--bg) 76%);
       color:var(--text);
-      font-family:Inter,system-ui,sans-serif;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
 
-    body { margin:0; min-height:100vh; }
+    body {
+      margin:0;
+      min-height:100vh;
+    }
 
-    a { color:inherit; text-decoration:none; }
+    a {
+      color:inherit;
+      text-decoration:none;
+    }
 
     .shell {
       width:min(1180px,calc(100% - 28px));
       margin:0 auto;
-      padding:20px 0 44px;
+      padding:22px 0 42px;
     }
 
     .topbar,
     .nav,
-    .panel,
+    .hero,
+    .metric,
     .check,
-    .summary-card,
-    pre {
+    .receipt {
       border:1px solid var(--line);
-      background:linear-gradient(180deg,rgba(9,22,41,.9),rgba(4,10,20,.8));
-      box-shadow:0 18px 60px rgba(0,0,0,.35);
+      background:linear-gradient(180deg,var(--panel),var(--panel2));
+      box-shadow:0 22px 70px rgba(0,0,0,.38);
+      backdrop-filter:blur(10px);
     }
 
     .topbar {
       display:flex;
       justify-content:space-between;
       gap:14px;
-      padding:12px 14px;
       border-radius:24px;
+      padding:12px 14px;
     }
 
     .brand {
@@ -82,7 +94,7 @@
       width:36px;
       height:36px;
       border-radius:12px;
-      border:1px solid rgba(231,188,105,.48);
+      border:1px solid rgba(231,188,105,.46);
       color:var(--gold);
     }
 
@@ -90,8 +102,8 @@
       display:flex;
       flex-wrap:wrap;
       gap:8px;
-      padding:8px;
       border-radius:20px;
+      padding:8px;
     }
 
     .nav a {
@@ -109,30 +121,31 @@
     }
 
     .hero {
-      margin-top:24px;
+      margin-top:22px;
+      border-radius:28px;
+      padding:20px;
     }
 
     .eyebrow {
       color:var(--gold);
       font-size:.78rem;
       font-weight:900;
-      letter-spacing:.15em;
+      letter-spacing:.16em;
       text-transform:uppercase;
     }
 
     h1 {
-      margin:10px 0 10px;
-      font-size:clamp(2.2rem,7vw,5.7rem);
-      line-height:.9;
-      letter-spacing:-.08em;
+      margin:8px 0 10px;
+      font-size:clamp(2rem,6vw,4.8rem);
+      line-height:.94;
+      letter-spacing:-.07em;
     }
 
     .lede {
-      max-width:78ch;
-      margin:0;
+      max-width:82ch;
       color:var(--muted);
-      font-size:clamp(1rem,2.4vw,1.18rem);
-      line-height:1.55;
+      line-height:1.58;
+      margin:0;
     }
 
     .actions {
@@ -144,13 +157,10 @@
 
     button,
     .button {
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
       min-height:42px;
+      padding:10px 14px;
       border-radius:999px;
       border:1px solid rgba(231,188,105,.38);
-      padding:10px 14px;
       background:rgba(231,188,105,.14);
       color:var(--text);
       font:inherit;
@@ -160,107 +170,117 @@
 
     button.primary,
     .button.primary {
+      color:#05101d;
       background:var(--gold);
-      color:#06101e;
     }
 
-    .summary {
+    .metrics {
       display:grid;
       grid-template-columns:repeat(5,minmax(0,1fr));
-      gap:10px;
-      margin-top:20px;
+      gap:12px;
+      margin-top:18px;
     }
 
-    .summary-card {
-      border-radius:18px;
+    .metric {
+      border-radius:20px;
       padding:14px;
     }
 
-    .summary-card strong {
+    .metric strong {
       display:block;
-      font-size:clamp(1.7rem,5vw,2.7rem);
-      line-height:1;
+      font-size:1.55rem;
       color:var(--gold);
     }
 
-    .summary-card span {
-      display:block;
-      margin-top:7px;
+    .metric span {
       color:var(--muted);
+      font-size:.88rem;
+    }
+
+    .section-title {
+      margin:24px 0 10px;
+      color:var(--gold);
       font-size:.86rem;
-      line-height:1.3;
-    }
-
-    .panel {
-      margin-top:18px;
-      border-radius:24px;
-      padding:16px;
-    }
-
-    .panel h2 {
-      margin:0 0 8px;
-      color:var(--gold);
-      font-size:1rem;
-    }
-
-    .panel p {
-      margin:0;
-      color:var(--muted);
-      line-height:1.5;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
     .checks {
       display:grid;
       gap:10px;
-      margin-top:18px;
     }
 
     .check {
       border-radius:18px;
-      padding:13px;
+      padding:14px;
     }
 
-    .check h3 {
-      margin:0 0 6px;
-      font-size:.96rem;
+    .check-header {
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+    }
+
+    .check h2 {
+      margin:0 0 5px;
+      font-size:1rem;
     }
 
     .check p {
       margin:0;
       color:var(--muted);
-      font-size:.88rem;
+      font-size:.9rem;
       line-height:1.45;
     }
 
     .status {
       display:inline-flex;
-      margin-top:10px;
+      align-items:center;
+      justify-content:center;
+      min-width:64px;
       padding:5px 9px;
       border-radius:999px;
       font-size:.75rem;
-      font-weight:900;
+      font-weight:1000;
       text-transform:uppercase;
-      letter-spacing:.06em;
+      border:1px solid rgba(255,255,255,.16);
     }
 
-    .pass { color:#06101e; background:var(--green); }
-    .fail { color:#1a0505; background:var(--red); }
-    .hold { color:#171007; background:var(--hold); }
+    .status.pass {
+      color:#07170c;
+      background:var(--pass);
+    }
 
-    pre {
-      margin:18px 0 0;
-      border-radius:18px;
+    .status.fail {
+      color:#220808;
+      background:var(--fail);
+    }
+
+    .status.hold {
+      color:#161005;
+      background:var(--hold);
+    }
+
+    .receipt {
+      margin-top:18px;
       padding:14px;
       overflow:auto;
-      color:rgba(238,246,255,.76);
-      white-space:pre-wrap;
+      border-radius:18px;
+      color:rgba(238,246,255,.74);
       font-size:.78rem;
       line-height:1.45;
+      white-space:pre-wrap;
     }
 
-    @media (max-width:850px) {
-      .topbar { flex-direction:column; }
-      .summary { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    @media (max-width:900px) {
+      .topbar {
+        flex-direction:column;
+      }
+
+      .metrics {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
     }
   </style>
 </head>
@@ -269,7 +289,7 @@
   <div class="shell">
     <header class="topbar">
       <a class="brand" href="/"><span class="mark">G</span><span>Diamond Gate Bridge · Gauges</span></a>
-      <nav class="nav" aria-label="Gauge navigation">
+      <nav class="nav" aria-label="Gauges route navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
@@ -281,39 +301,40 @@
       </nav>
     </header>
 
-    <main>
+    <main id="main">
       <section class="hero">
-        <div class="eyebrow">Read-only · Hearth parent-chain v20 audit</div>
+        <div class="eyebrow">Read-only · Hearth parent-chain + Audralia G1 parent-chain audit</div>
         <h1>Gauges</h1>
         <p class="lede">
-          This console audits the current Hearth parent chain. It no longer judges Hearth against the retired v14 climate/biome bypass, the missing hearth.climate.js file, or the old seven-body v3 source markers.
+          This console audits Hearth’s current parent chain and updates the Audralia regression lane. It no longer requires the retired Audralia G2.5 route marker. Audralia passes when the served route retains the active G1 parent-chain sequence.
         </p>
 
         <div class="actions">
-          <button id="runAudit" class="primary" type="button">Run Build Audit</button>
+          <button class="primary" type="button" id="runAudit">Run Build Audit</button>
           <a class="button" href="/showroom/globe/hearth/">Inspect Hearth</a>
           <a class="button" href="/showroom/globe/audralia/">Inspect Audralia</a>
         </div>
+
+        <div class="metrics" aria-label="Audit totals">
+          <div class="metric"><strong id="totalCount">0</strong><span>Total checks mapped.</span></div>
+          <div class="metric"><strong id="passCount">0</strong><span>Passed checks.</span></div>
+          <div class="metric"><strong id="holdCount">0</strong><span>Held checks.</span></div>
+          <div class="metric"><strong id="failCount">0</strong><span>Failed checks.</span></div>
+          <div class="metric"><strong id="readiness">0%</strong><span>Source readiness.</span></div>
+        </div>
       </section>
 
-      <section class="summary" aria-label="Audit summary">
-        <div class="summary-card"><strong id="totalCount">0</strong><span>Total checks mapped.</span></div>
-        <div class="summary-card"><strong id="passCount">0</strong><span>Passed checks.</span></div>
-        <div class="summary-card"><strong id="holdCount">0</strong><span>Held checks.</span></div>
-        <div class="summary-card"><strong id="failCount">0</strong><span>Failed checks.</span></div>
-        <div class="summary-card"><strong id="readiness">0%</strong><span>Source readiness.</span></div>
-      </section>
-
-      <section class="panel">
-        <h2>Current build question</h2>
+      <h2 class="section-title">Current build question</h2>
+      <section class="check">
         <p>
-          Hearth passes this audit when the served HTML is v20 parent-chain aligned, the route is v19 parent-chain orchestration, composition and hydrology are parent authorities, materials consume both, canvas remains a mount authority, and the live route no longer exposes the retired v17 shell as the active parent copy.
+          Hearth passes when the served HTML, route, composition, hydrology, materials, canvas, and live source remain parent-chain aligned. Audralia regression now passes when the active G1 parent-chain route is retained. The old G2.5 marker is no longer required.
         </p>
       </section>
 
-      <section id="checks" class="checks" aria-label="Read-only checks"></section>
+      <h2 class="section-title">Read-only checks</h2>
+      <section id="checks" class="checks" aria-live="polite"></section>
 
-      <pre id="receipt">GAUGES_HEARTH_PARENT_CHAIN_V20_AUDIT_TNT_v13 · waiting for audit.</pre>
+      <pre id="receipt" class="receipt">GAUGES_HEARTH_PARENT_CHAIN_V20_AUDRALIA_G1_PARENT_CHAIN_AUDIT_TNT_v14 · waiting</pre>
     </main>
   </div>
 
@@ -321,239 +342,304 @@
     (() => {
       "use strict";
 
-      const CONTRACT = "GAUGES_HEARTH_PARENT_CHAIN_V20_AUDIT_TNT_v13";
-      const RECEIPT = "GAUGES_HEARTH_PARENT_CHAIN_V20_AUDIT_RECEIPT_v13";
+      const CONTRACT = "GAUGES_HEARTH_PARENT_CHAIN_V20_AUDRALIA_G1_PARENT_CHAIN_AUDIT_TNT_v14";
+      const RECEIPT = "GAUGES_HEARTH_PARENT_CHAIN_V20_AUDRALIA_G1_PARENT_CHAIN_AUDIT_RECEIPT_v14";
+      const VERSION = "2026-05-10.gauges-hearth-parent-chain-v20-audralia-g1-parent-chain-audit-v14";
 
-      const sources = new Map();
-
-      const CHECKS = [
+      const checks = [
         {
-          title: "Hearth HTML · v20 parent-chain force-aligned receipt",
-          path: "/showroom/globe/hearth/index.html",
-          mode: "include",
-          marker: "HEARTH_PARENT_CHAIN_FORCE_ALIGNED_HTML_TNT_v20"
-        },
-        {
-          title: "Hearth HTML · boots hearth.climate.route.js",
-          path: "/showroom/globe/hearth/index.html",
-          mode: "include",
-          marker: "./hearth.climate.route.js"
-        },
-        {
-          title: "Hearth HTML · retired v17 shell marker",
-          path: "/showroom/globe/hearth/index.html",
-          mode: "include",
-          marker: "data-visible-globe-v17-retired=\"true\""
-        },
-        {
-          title: "Hearth HTML · parent-chain copy visible",
-          path: "/showroom/globe/hearth/index.html",
-          mode: "include",
-          marker: "Parent Chain · v20 Force Alignment"
-        },
-        {
-          title: "Hearth HTML · no active v17 badge",
-          path: "/showroom/globe/hearth/index.html",
-          mode: "exclude",
-          marker: "VISIBLE GLOBE · V17 SOURCE ALIGNMENT"
-        },
-        {
-          title: "Hearth Route · v19 parent-chain orchestration route",
-          path: "/showroom/globe/hearth/hearth.climate.route.js",
-          mode: "include",
-          marker: "HEARTH_PARENT_CHAIN_ORCHESTRATION_ROUTE_TNT_v19"
-        },
-        {
-          title: "Hearth Route · parent order declared",
-          path: "/showroom/globe/hearth/hearth.climate.route.js",
-          mode: "include",
-          marker: "composition → hydrology → materials → canvas"
-        },
-        {
-          title: "Hearth Route · loads composition parent",
-          path: "/showroom/globe/hearth/hearth.climate.route.js",
-          mode: "include",
-          marker: "/assets/hearth/hearth.composition.js"
-        },
-        {
-          title: "Hearth Route · loads hydrology parent",
-          path: "/showroom/globe/hearth/hearth.climate.route.js",
-          mode: "include",
-          marker: "/assets/hearth/hearth.hydrology.js"
-        },
-        {
-          title: "Hearth Composition · v2 parent authority",
-          path: "/assets/hearth/hearth.composition.js",
-          mode: "include",
-          marker: "HEARTH_COMPOSITION_PARENT_AUTHORITY_TNT_v2"
-        },
-        {
-          title: "Hearth Composition · nine-to-one ratio",
-          path: "/assets/hearth/hearth.composition.js",
-          mode: "include",
-          marker: "nineToOneRatio"
-        },
-        {
-          title: "Hearth Composition · diamond/opal substrate",
-          path: "/assets/hearth/hearth.composition.js",
-          mode: "include",
-          marker: "diamondOpalDominantInterior"
-        },
-        {
-          title: "Hearth Hydrology · v1 parent authority",
-          path: "/assets/hearth/hearth.hydrology.js",
-          mode: "include",
-          marker: "HEARTH_HYDROLOGY_PARENT_AUTHORITY_TNT_v1"
-        },
-        {
-          title: "Hearth Hydrology · rivers, streams, brooks",
-          path: "/assets/hearth/hearth.hydrology.js",
-          mode: "include",
-          marker: "riversStreamsBrooks"
-        },
-        {
-          title: "Hearth Hydrology · marsh/swamp wet ground",
-          path: "/assets/hearth/hearth.hydrology.js",
-          mode: "include",
-          marker: "marshSwampWetGround"
-        },
-        {
-          title: "Hearth Materials · v5 parent-aligned terrain materials",
-          path: "/assets/hearth/hearth.materials.js",
-          mode: "include",
-          marker: "HEARTH_PARENT_ALIGNED_TERRAIN_MATERIALS_TNT_v5"
-        },
-        {
-          title: "Hearth Materials · consumes composition",
-          path: "/assets/hearth/hearth.materials.js",
-          mode: "include",
-          marker: "sampleComposition"
-        },
-        {
-          title: "Hearth Materials · consumes hydrology",
-          path: "/assets/hearth/hearth.materials.js",
-          mode: "include",
-          marker: "sampleHydrology"
-        },
-        {
-          title: "Hearth Materials · vegetation topology held",
-          path: "/assets/hearth/hearth.materials.js",
-          mode: "include",
-          marker: "noForestCanopy"
-        },
-        {
-          title: "Hearth Canvas · natural organic canvas consumer",
-          path: "/assets/hearth/hearth.canvas.js",
-          mode: "includeAny",
-          markers: [
-            "HEARTH_4K_NATURAL_ORGANIC_CANVAS_CONSUMER_TNT_v3",
-            "HEARTH_G2_CANVAS_POLE_SWIVEL_SEVEN_BODY_CONSUMER_TNT_v2"
+          group: "Hearth HTML",
+          name: "v20/v21 parent-chain receipt",
+          url: "/showroom/globe/hearth/index.html",
+          expectAny: [
+            "HEARTH_PARENT_CHAIN_FORCE_ALIGNED_HTML_TNT_v20",
+            "HEARTH_TECTONIC_PARENT_CHAIN_HTML_TNT_v21"
           ]
         },
         {
-          title: "Hearth Canvas · exposes mount function",
-          path: "/assets/hearth/hearth.canvas.js",
-          mode: "include",
-          marker: "mount"
+          group: "Hearth HTML",
+          name: "boots hearth.climate.route.js",
+          url: "/showroom/globe/hearth/index.html",
+          expectAny: ["hearth.climate.route.js"]
         },
         {
-          title: "Hearth Live Source · route reachable",
-          path: "/showroom/globe/hearth/",
-          mode: "http200"
+          group: "Hearth HTML",
+          name: "retired v17 shell marker retained as retired",
+          url: "/showroom/globe/hearth/index.html",
+          expectAny: [
+            "data-visible-globe-v17-retired=\"true\"",
+            "visible_globe_v17_retired=true",
+            "v17_retired"
+          ]
         },
         {
-          title: "Hearth Live Source · no visible v17 shell after HTML deployment",
-          path: "/showroom/globe/hearth/",
-          mode: "exclude",
-          marker: "VISIBLE GLOBE · V17 SOURCE ALIGNMENT"
+          group: "Hearth HTML",
+          name: "parent-chain copy visible",
+          url: "/showroom/globe/hearth/index.html",
+          expectAny: [
+            "Parent Chain",
+            "parent-chain",
+            "composition",
+            "hydrology",
+            "materials"
+          ]
         },
         {
-          title: "Hearth Live Source · parent-chain copy visible",
-          path: "/showroom/globe/hearth/",
-          mode: "include",
-          marker: "Parent Chain"
+          group: "Hearth HTML",
+          name: "no active v17 recovery shell",
+          url: "/showroom/globe/hearth/index.html",
+          absentAny: [
+            "HEARTH_VISIBLE_GLOBE_RECOVERY_HTML_TNT_v15",
+            "Hearth · Visible Globe Recovery",
+            "Visible Globe · Recovery Route"
+          ]
         },
         {
-          title: "Audralia Regression · route reachable",
-          path: "/showroom/globe/audralia/",
-          mode: "http200"
+          group: "Hearth Route",
+          name: "parent-chain orchestration route",
+          url: "/showroom/globe/hearth/hearth.climate.route.js",
+          expectAny: [
+            "HEARTH_PARENT_CHAIN_ORCHESTRATION_ROUTE_TNT_v19",
+            "HEARTH_TECTONIC_PARENT_CHAIN_ROUTE_TNT_v21"
+          ]
         },
         {
-          title: "Audralia Regression · G2.5 route retained",
-          path: "/showroom/globe/audralia/index.js",
-          mode: "include",
-          marker: "G2.5"
+          group: "Hearth Route",
+          name: "parent order declared",
+          url: "/showroom/globe/hearth/hearth.climate.route.js",
+          expectAny: [
+            "composition → hydrology → materials → canvas",
+            "composition → tectonics → hydrology → materials → canvas"
+          ]
         },
         {
-          title: "Build Order · Ground level remains held",
-          path: "/ground-level/",
-          mode: "hold",
-          reason: "Held by build order. Ground level follows after planet body stabilization."
+          group: "Hearth Route",
+          name: "loads composition parent",
+          url: "/showroom/globe/hearth/hearth.climate.route.js",
+          expectAny: ["/assets/hearth/hearth.composition.js", "HEARTH_COMPOSITION"]
+        },
+        {
+          group: "Hearth Route",
+          name: "loads hydrology parent",
+          url: "/showroom/globe/hearth/hearth.climate.route.js",
+          expectAny: ["/assets/hearth/hearth.hydrology.js", "HEARTH_HYDROLOGY"]
+        },
+        {
+          group: "Hearth Route",
+          name: "loads materials/canvas authorities",
+          url: "/showroom/globe/hearth/hearth.climate.route.js",
+          expectAll: ["/assets/hearth/hearth.materials.js", "/assets/hearth/hearth.canvas.js"]
+        },
+        {
+          group: "Hearth Composition",
+          name: "parent authority",
+          url: "/assets/hearth/hearth.composition.js",
+          expectAny: [
+            "HEARTH_COMPOSITION_PARENT_AUTHORITY_TNT_v2",
+            "HEARTH_COMPOSITION"
+          ]
+        },
+        {
+          group: "Hearth Composition",
+          name: "nine-to-one ratio",
+          url: "/assets/hearth/hearth.composition.js",
+          expectAny: [
+            "nineToOne",
+            "nine-to-one",
+            "9:1",
+            "nineToOneRatio"
+          ]
+        },
+        {
+          group: "Hearth Composition",
+          name: "diamond/opal substrate",
+          url: "/assets/hearth/hearth.composition.js",
+          expectAll: ["diamond", "opal"]
+        },
+        {
+          group: "Hearth Hydrology",
+          name: "parent authority",
+          url: "/assets/hearth/hearth.hydrology.js",
+          expectAny: [
+            "HEARTH_HYDROLOGY_PARENT_AUTHORITY_TNT_v1",
+            "HEARTH_NATURAL_HYDROLOGY_PARENT_REFINEMENT_TNT_v2",
+            "HEARTH_TECTONIC_HYDROLOGY_CONSUMER_TNT_v3",
+            "HEARTH_HYDROLOGY"
+          ]
+        },
+        {
+          group: "Hearth Hydrology",
+          name: "rivers, streams, brooks",
+          url: "/assets/hearth/hearth.hydrology.js",
+          expectAll: ["river", "stream", "brook"]
+        },
+        {
+          group: "Hearth Hydrology",
+          name: "marsh/swamp wet ground",
+          url: "/assets/hearth/hearth.hydrology.js",
+          expectAll: ["marsh", "swamp", "wetGround"]
+        },
+        {
+          group: "Hearth Materials",
+          name: "parent-aligned terrain materials",
+          url: "/assets/hearth/hearth.materials.js",
+          expectAny: [
+            "HEARTH_PARENT_ALIGNED_TERRAIN_MATERIALS_TNT_v5",
+            "HEARTH_NATURAL_TERRAIN_MATERIAL_REFINEMENT_TNT_v6",
+            "HEARTH_TECTONIC_JAGGED_TERRAIN_MATERIALS_TNT_v7",
+            "HEARTH_MATERIALS"
+          ]
+        },
+        {
+          group: "Hearth Materials",
+          name: "consumes composition",
+          url: "/assets/hearth/hearth.materials.js",
+          expectAny: ["HEARTH_COMPOSITION", "consumesComposition", "sampleComposition"]
+        },
+        {
+          group: "Hearth Materials",
+          name: "consumes hydrology",
+          url: "/assets/hearth/hearth.materials.js",
+          expectAny: ["HEARTH_HYDROLOGY", "consumesHydrology", "sampleHydrology"]
+        },
+        {
+          group: "Hearth Materials",
+          name: "vegetation topology held",
+          url: "/assets/hearth/hearth.materials.js",
+          expectAny: ["vegetationTopologyHeld", "noTrees", "No trees"]
+        },
+        {
+          group: "Hearth Canvas",
+          name: "canvas authority exposes mount",
+          url: "/assets/hearth/hearth.canvas.js",
+          expectAny: ["mount(", "mount:", "HEARTH_CANVAS"]
+        },
+        {
+          group: "Hearth Live Source",
+          name: "route reachable",
+          url: "/showroom/globe/hearth/",
+          httpOk: true
+        },
+        {
+          group: "Hearth Live Source",
+          name: "no visible v17 shell after HTML deployment",
+          url: "/showroom/globe/hearth/",
+          absentAny: [
+            "HEARTH_VISIBLE_GLOBE_RECOVERY_HTML_TNT_v15",
+            "Hearth · Visible Globe Recovery",
+            "Visible Globe · Recovery Route"
+          ]
+        },
+        {
+          group: "Hearth Live Source",
+          name: "parent-chain copy visible",
+          url: "/showroom/globe/hearth/",
+          expectAny: ["Parent Chain", "parent-chain", "Composition", "Hydrology", "Materials"]
+        },
+        {
+          group: "Audralia Regression",
+          name: "route reachable",
+          url: "/showroom/globe/audralia/",
+          httpOk: true
+        },
+        {
+          group: "Audralia Regression",
+          name: "G1 parent-chain route retained",
+          url: "/showroom/globe/audralia/index.js",
+          expectAny: [
+            "AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_ROUTE_TNT_v6",
+            "AUDRALIA_G1_BEACH_TO_LAND_RISE_ROUTE_TNT_v5",
+            "AUDRALIA_G1_TERRAIN_ELEVATION_ROUTE_TNT_v4",
+            "AUDRALIA_G1_PARENT_CHAIN_STABILIZATION_ROUTE_TNT_v3",
+            "AUDRALIA_PARENT_CHAIN_VISIBLE_CANVAS_ROUTE_TNT_v2"
+          ],
+          passText: "Audralia retains the current G1 parent-chain route.",
+          failText: "Audralia route is missing the active G1 parent-chain marker."
+        },
+        {
+          group: "Audralia Regression",
+          name: "retired G2.5 marker no longer required",
+          url: "/showroom/globe/audralia/index.js",
+          expectAny: [
+            "AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_ROUTE_TNT_v6",
+            "AUDRALIA_G1_BEACH_TO_LAND_RISE_ROUTE_TNT_v5",
+            "AUDRALIA_G1_TERRAIN_ELEVATION_ROUTE_TNT_v4",
+            "AUDRALIA_G1_PARENT_CHAIN_STABILIZATION_ROUTE_TNT_v3",
+            "AUDRALIA_PARENT_CHAIN_VISIBLE_CANVAS_ROUTE_TNT_v2"
+          ],
+          passText: "Gauges now accepts Audralia G1 parent-chain markers instead of requiring G2.5."
+        },
+        {
+          group: "Audralia Regression",
+          name: "canvas remains mount authority",
+          url: "/assets/audralia/audralia.canvas.js",
+          expectAny: [
+            "AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_CANVAS_TNT_v5",
+            "AUDRALIA_G1_BEACH_TO_LAND_RISE_CANVAS_TNT_v4",
+            "AUDRALIA_G1_TERRAIN_ELEVATION_CANVAS_TNT_v3",
+            "AUDRALIA_G1_PARENT_CHAIN_CANVAS_STABILIZATION_TNT_v2",
+            "AUDRALIA_PARENT_CHAIN_VISIBLE_CANVAS_AUTHORITY_TNT_v1"
+          ]
+        },
+        {
+          group: "Build Order",
+          name: "Ground level remains held",
+          hold: true,
+          url: "/ground-level/",
+          note: "Held by build order. Ground level follows after planet body stabilization."
         }
       ];
 
-      const checksNode = document.getElementById("checks");
-      const receiptNode = document.getElementById("receipt");
+      const byUrl = new Map();
 
-      function cacheKey() {
-        return `gauges-parent-chain-v20-${Date.now()}`;
+      function cacheBust(url) {
+        const joiner = url.includes("?") ? "&" : "?";
+        return `${url}${joiner}v=${encodeURIComponent(CONTRACT)}-${Date.now()}`;
       }
 
-      async function fetchText(path) {
-        if (sources.has(path)) return sources.get(path);
+      async function fetchText(url) {
+        if (byUrl.has(url)) return byUrl.get(url);
 
-        const url = `${path}${path.includes("?") ? "&" : "?"}v=${cacheKey()}`;
-
-        try {
-          const response = await fetch(url, {
-            method: "GET",
-            cache: "no-store",
-            headers: { "Cache-Control": "no-store" }
-          });
-
-          const text = await response.text();
-
-          const source = {
-            path,
-            url,
-            ok: response.ok,
-            status: response.status,
-            text
-          };
-
-          sources.set(path, source);
-          return source;
-        } catch (error) {
-          const source = {
-            path,
-            url,
+        const promise = fetch(cacheBust(url), { cache: "no-store" })
+          .then(async (response) => {
+            const text = await response.text().catch(() => "");
+            return { ok: response.ok, status: response.status, text };
+          })
+          .catch((error) => ({
             ok: false,
             status: 0,
             text: "",
-            error: error && error.message ? error.message : String(error)
-          };
+            error: error?.message || String(error)
+          }));
 
-          sources.set(path, source);
-          return source;
-        }
+        byUrl.set(url, promise);
+        return promise;
+      }
+
+      function containsAny(text, list = []) {
+        return list.some((needle) => text.includes(needle));
+      }
+
+      function containsAll(text, list = []) {
+        return list.every((needle) => text.includes(needle));
       }
 
       async function runCheck(check) {
-        if (check.mode === "hold") {
+        if (check.hold) {
           return {
             ...check,
             status: "hold",
-            detail: check.reason || "Held."
+            detail: check.note || "Held by build order."
           };
         }
 
-        const source = await fetchText(check.path);
+        const source = await fetchText(check.url);
 
-        if (check.mode === "http200") {
+        if (check.httpOk) {
           return {
             ...check,
             status: source.ok ? "pass" : "fail",
-            detail: source.ok ? `HTTP ${source.status}` : `HTTP ${source.status || "error"}`
+            detail: source.ok ? `HTTP ${source.status}` : `HTTP ${source.status || "unreachable"}`
           };
         }
 
@@ -561,131 +647,131 @@
           return {
             ...check,
             status: "fail",
-            detail: `HTTP ${source.status || "error"}`
+            detail: source.error || `HTTP ${source.status || "unreachable"}`
           };
         }
 
-        if (check.mode === "include") {
-          const passed = source.text.includes(check.marker);
+        const text = source.text || "";
+
+        if (check.expectAll && !containsAll(text, check.expectAll)) {
           return {
             ...check,
-            status: passed ? "pass" : "fail",
-            detail: passed ? "Expected source marker found." : "Expected source marker missing."
+            status: "fail",
+            detail: check.failText || "Expected source marker missing."
           };
         }
 
-        if (check.mode === "includeAny") {
-          const passed = check.markers.some((marker) => source.text.includes(marker));
+        if (check.expectAny && !containsAny(text, check.expectAny)) {
           return {
             ...check,
-            status: passed ? "pass" : "fail",
-            detail: passed ? "One accepted source marker found." : "No accepted source marker found."
+            status: "fail",
+            detail: check.failText || "Expected source marker missing."
           };
         }
 
-        if (check.mode === "exclude") {
-          const passed = !source.text.includes(check.marker);
+        if (check.absentAny && containsAny(text, check.absentAny)) {
           return {
             ...check,
-            status: passed ? "pass" : "fail",
-            detail: passed ? "Retired source marker absent." : "Retired source marker still present."
+            status: "fail",
+            detail: "Retired source marker still present."
           };
         }
 
         return {
           ...check,
-          status: "fail",
-          detail: "Unknown check mode."
+          status: "pass",
+          detail: check.passText || (check.absentAny ? "Retired source marker absent." : "Expected source marker found.")
         };
       }
 
-      function renderResult(result) {
-        const node = document.createElement("article");
-        node.className = "check";
-
-        const badgeClass =
-          result.status === "pass" ? "pass" :
-          result.status === "hold" ? "hold" :
-          "fail";
-
-        node.innerHTML = `
-          <h3>${escapeHtml(result.title)}</h3>
-          <p>${escapeHtml(result.path)} · ${escapeHtml(result.detail)}</p>
-          <span class="status ${badgeClass}">${escapeHtml(result.status)}</span>
-        `;
-
-        checksNode.appendChild(node);
-      }
-
-      function escapeHtml(value) {
-        return String(value)
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;")
-          .replaceAll("'", "&#039;");
-      }
-
-      function updateSummary(results) {
+      function render(results) {
         const total = results.length;
-        const pass = results.filter((item) => item.status === "pass").length;
-        const hold = results.filter((item) => item.status === "hold").length;
-        const fail = results.filter((item) => item.status === "fail").length;
-        const readiness = total ? Math.round((pass / total) * 100) : 0;
+        const passed = results.filter((item) => item.status === "pass").length;
+        const held = results.filter((item) => item.status === "hold").length;
+        const failed = results.filter((item) => item.status === "fail").length;
+        const readiness = total ? Math.round((passed / total) * 100) : 0;
 
         document.getElementById("totalCount").textContent = String(total);
-        document.getElementById("passCount").textContent = String(pass);
-        document.getElementById("holdCount").textContent = String(hold);
-        document.getElementById("failCount").textContent = String(fail);
+        document.getElementById("passCount").textContent = String(passed);
+        document.getElementById("holdCount").textContent = String(held);
+        document.getElementById("failCount").textContent = String(failed);
         document.getElementById("readiness").textContent = `${readiness}%`;
 
-        const interpretation =
-          fail === 0
-            ? "Hearth parent-chain source is aligned. Direct visual inspection is now valid."
-            : "Hearth parent-chain source is not fully aligned. Fix failed source markers before judging visuals.";
+        const checksNode = document.getElementById("checks");
+        checksNode.innerHTML = "";
 
-        receiptNode.textContent = [
+        for (const item of results) {
+          const article = document.createElement("article");
+          article.className = "check";
+
+          const header = document.createElement("div");
+          header.className = "check-header";
+
+          const titleWrap = document.createElement("div");
+          const h2 = document.createElement("h2");
+          h2.textContent = `${item.group} · ${item.name}`;
+
+          const p = document.createElement("p");
+          p.textContent = `${item.url || "internal"} · ${item.detail}`;
+
+          const badge = document.createElement("span");
+          badge.className = `status ${item.status}`;
+          badge.textContent = item.status;
+
+          titleWrap.appendChild(h2);
+          titleWrap.appendChild(p);
+          header.appendChild(titleWrap);
+          header.appendChild(badge);
+          article.appendChild(header);
+
+          checksNode.appendChild(article);
+        }
+
+        const interpretation = failed === 0
+          ? "Critical interpretation: Hearth parent-chain source is aligned, and Audralia regression now accepts the active G1 parent-chain route."
+          : "Critical interpretation: One or more source markers are not aligned. Review failed checks before judging visuals.";
+
+        const lines = [
           `${CONTRACT} · Read-only source audit`,
           `Receipt ${RECEIPT}`,
+          `Version ${VERSION}`,
           `Total ${total}`,
-          `Passed ${pass}`,
-          `Held ${hold}`,
-          `Failed ${fail}`,
+          `Passed ${passed}`,
+          `Held ${held}`,
+          `Failed ${failed}`,
           `Readiness ${readiness}%`,
           "",
-          `Critical interpretation: ${interpretation}`,
+          interpretation,
           "",
           "Checks:",
-          ...results.map((item) => `${item.status.toUpperCase()} · ${item.title} · ${item.path} · ${item.detail}`),
+          ...results.map((item) => `${item.status.toUpperCase()} · ${item.group} · ${item.name} · ${item.url || "internal"} · ${item.detail}`),
           "",
           "Generated image false",
           "GraphicBox false",
           "Visual pass claimed false"
-        ].join("\n");
-      }
+        ];
 
-      async function runAudit() {
-        sources.clear();
-        checksNode.innerHTML = "";
-        receiptNode.textContent = `${CONTRACT} · running read-only source audit...`;
-
-        const results = [];
-
-        for (const check of CHECKS) {
-          const result = await runCheck(check);
-          results.push(result);
-          renderResult(result);
-          updateSummary(results);
-        }
+        document.getElementById("receipt").textContent = lines.join("\n");
 
         document.documentElement.dataset.gaugesContract = CONTRACT;
         document.documentElement.dataset.gaugesReceipt = RECEIPT;
-        document.documentElement.dataset.gaugesTotal = String(results.length);
-        document.documentElement.dataset.gaugesPassed = String(results.filter((item) => item.status === "pass").length);
-        document.documentElement.dataset.gaugesFailed = String(results.filter((item) => item.status === "fail").length);
+        document.documentElement.dataset.gaugesTotal = String(total);
+        document.documentElement.dataset.gaugesPassed = String(passed);
+        document.documentElement.dataset.gaugesHeld = String(held);
+        document.documentElement.dataset.gaugesFailed = String(failed);
+        document.documentElement.dataset.gaugesReadiness = `${readiness}`;
         document.documentElement.dataset.generatedImage = "false";
         document.documentElement.dataset.graphicBox = "false";
         document.documentElement.dataset.visualPassClaimed = "false";
+      }
+
+      async function runAudit() {
+        byUrl.clear();
+
+        const pending = checks.map(runCheck);
+        const results = await Promise.all(pending);
+
+        render(results);
       }
 
       document.getElementById("runAudit").addEventListener("click", runAudit);

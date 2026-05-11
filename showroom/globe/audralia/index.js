@@ -1,20 +1,20 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_PARENT_CHAIN_VISIBLE_CANVAS_ROUTE_TNT_v2
+// AUDRALIA_G1_PARENT_CHAIN_STABILIZATION_ROUTE_TNT_v3
 // Full-file replacement.
 // Route orchestration only.
 // Loads: backstory → tectonics → topology → canvas.
-// Does not validate against stale runtime/control/terrain/asset globals.
+// Retires visible G2.5 route language at the active route layer.
 // Does not turn Audralia into Hearth.
-// No generated image. No GraphicBox. No visual-pass claim.
+// Does not generate images. Does not use GraphicBox. Does not claim visual pass.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_PARENT_CHAIN_VISIBLE_CANVAS_ROUTE_TNT_v2";
-  const RECEIPT = "AUDRALIA_PARENT_CHAIN_VISIBLE_CANVAS_ROUTE_RECEIPT_v2";
-  const PREVIOUS_CONTRACT = "AUDRALIA_PARENT_CHAIN_ALIGNMENT_ROUTE_TNT_v1";
-  const VERSION = "2026-05-10.audralia-parent-chain-visible-canvas-route-v2";
-  const KEY = "audralia-parent-chain-visible-canvas-v2";
+  const CONTRACT = "AUDRALIA_G1_PARENT_CHAIN_STABILIZATION_ROUTE_TNT_v3";
+  const RECEIPT = "AUDRALIA_G1_PARENT_CHAIN_STABILIZATION_ROUTE_RECEIPT_v3";
+  const PREVIOUS_CONTRACT = "AUDRALIA_PARENT_CHAIN_VISIBLE_CANVAS_ROUTE_TNT_v2";
+  const VERSION = "2026-05-10.audralia-g1-parent-chain-stabilization-route-v3";
+  const KEY = "audralia-g1-parent-chain-stabilization-v3";
 
   const state = {
     loaded: [],
@@ -47,6 +47,9 @@
     document.documentElement.dataset.audraliaRouteVersion = VERSION;
     document.documentElement.dataset.audraliaActiveRouteFile = "/showroom/globe/audralia/index.js";
     document.documentElement.dataset.audraliaParentChainAligned = "true";
+    document.documentElement.dataset.audraliaGeneration = "1";
+    document.documentElement.dataset.audraliaG1Baseline = "stabilizing";
+    document.documentElement.dataset.audraliaG2Calibration = "held";
     document.documentElement.dataset.audraliaBackstoryLoaded = String(state.backstoryLoaded);
     document.documentElement.dataset.audraliaTectonicsLoaded = String(state.tectonicsLoaded);
     document.documentElement.dataset.audraliaTopologyLoaded = String(state.topologyLoaded);
@@ -55,14 +58,16 @@
     document.documentElement.dataset.audraliaCanvasFound = String(state.canvasFound);
     document.documentElement.dataset.audraliaControlsBound = String(state.controlsBound);
     document.documentElement.dataset.audraliaOceanDrivenHomeWorld = "true";
+    document.documentElement.dataset.audraliaNotAustralia = "true";
     document.documentElement.dataset.audraliaNotHearth = "true";
+    document.documentElement.dataset.audraliaEarthClone = "false";
     document.documentElement.dataset.generatedImage = "false";
     document.documentElement.dataset.graphicBox = "false";
     document.documentElement.dataset.visualPassClaimed = "false";
 
     if (node) {
       node.textContent = [
-        "Audralia parent-chain visible-canvas route.",
+        "Audralia G1 parent-chain stabilization route.",
         `Status ${value}`,
         `Route ${CONTRACT}`,
         `Receipt ${RECEIPT}`,
@@ -80,7 +85,12 @@
         `Controls bound ${state.controlsBound}`,
         `Fallback ${state.fallback}`,
         `Frames ${state.frames}`,
+        "Generation 1 baseline stabilizing true",
+        "Generation 2 calibration held true",
         "Audralia identity clean ancient ocean-driven home-world true",
+        "Audralia not Australia true",
+        "Earth clone false",
+        "Hearth identity false",
         "Generated image false",
         "GraphicBox false",
         "Visual pass claimed false",
@@ -105,8 +115,7 @@
       mount = document.createElement("section");
       mount.id = "audraliaCanvasMount";
       mount.dataset.audraliaCanvasMount = "true";
-      mount.setAttribute("aria-label", "Audralia parent-chain canvas mount");
-
+      mount.setAttribute("aria-label", "Audralia Generation 1 parent-chain canvas mount");
       mount.style.position = "relative";
       mount.style.width = "min(520px, 100%)";
       mount.style.aspectRatio = "1 / 1";
@@ -133,13 +142,14 @@
 
     mount.dataset.audraliaParentChainAligned = "true";
     mount.dataset.audraliaRouteContract = CONTRACT;
+    mount.dataset.audraliaGeneration = "1";
     mount.style.touchAction = "none";
     mount.style.userSelect = "none";
 
     return mount;
   }
 
-  function loadScript(role, path, validate, required = true) {
+  function loadScript(role, path, validate) {
     return new Promise((resolve) => {
       const existing = document.querySelector(`script[data-audralia-file-role="${role}"]`);
       if (existing) existing.remove();
@@ -162,10 +172,8 @@
 
         if (ok) {
           state.loaded.push(role);
-        } else if (required) {
-          state.failed.push(`${role}:invalid`);
         } else {
-          state.loaded.push(`${role}:held`);
+          state.failed.push(`${role}:invalid`);
         }
 
         status(`checked-${role}`);
@@ -173,8 +181,7 @@
       };
 
       script.onerror = () => {
-        if (required) state.failed.push(`${role}:load-error`);
-        else state.loaded.push(`${role}:held`);
+        state.failed.push(`${role}:load-error`);
         status(`failed-${role}`);
         resolve(false);
       };
@@ -191,6 +198,9 @@
     const api = window.AUDRALIA_CANVAS.mount(mount, {
       routeContract: CONTRACT,
       routeReceipt: RECEIPT,
+      generation: 1,
+      baseline: "stabilizing",
+      landReadabilityLift: 0.12,
       onStatus: (value, info = {}) => {
         state.frames = info.frames || state.frames;
         state.mounted = Boolean(info.mounted);
@@ -225,7 +235,7 @@
       fallback.style.color = "rgba(238,246,255,.78)";
       fallback.style.textAlign = "center";
       fallback.style.fontWeight = "800";
-      fallback.textContent = "Audralia parent chain loaded, but canvas authority failed. Visible fallback protected.";
+      fallback.textContent = "Audralia G1 parent chain loaded, but canvas authority failed. Visible fallback protected.";
       mount.appendChild(fallback);
     }
 

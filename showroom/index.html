@@ -1,27 +1,34 @@
-<!-- /showroom/globe/index.html -->
+<!-- /showroom/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-globe-split"
-  data-route="/showroom/globe/"
-  data-contract="GLOBE_SPLIT_H_EARTH_ACCESS_BRIDGE_TNT_v1"
-  data-purpose="planet-lane-selector"
+  data-page="showroom"
+  data-route="/showroom/"
+  data-contract="SHOWROOM_HABITABILITY_DISPLAY_H_EARTH_ACCESS_MERGE_TNT_v1"
+  data-previous-contract="SHOWROOM_HABITABILITY_DISPLAY_HTML_TNT_v1"
+  data-purpose="planet-habitability-display-and-public-proof-room"
+  data-standard="habitability"
+  data-planned-planets-total="81"
+  data-active-constructed-templates="2"
+  data-active-templates="Hearth | Audralia"
+  data-experimental-third-lane="H-Earth"
   data-h-earth-access="enabled"
+  data-globe-split-access="enabled"
   data-earth-reference="protected"
   data-hearth-lane="preserved"
   data-audralia-lane="preserved"
   data-australia-terminology="forbidden"
-  data-graphic-box="forbidden"
-  data-image-generation="forbidden"
-  data-visual-pass-claim="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Globe Split</title>
+  <title>Diamond Gate Bridge · Showroom</title>
   <meta
     name="description"
-    content="The Globe Split page routes Earth, H-Earth, Hearth, and Audralia into separate inspection lanes without merging or mutating their authorities."
+    content="The Showroom displays the planet build by habitability while exposing direct access to Earth, H-Earth, Hearth, Audralia, Globe Split, and Gauges without merging lane authority."
   >
 
   <style>
@@ -29,18 +36,19 @@
       color-scheme: dark;
       --bg: #050812;
       --panel: rgba(10, 18, 32, 0.84);
-      --panel-soft: rgba(13, 24, 42, 0.72);
+      --panel-soft: rgba(13, 24, 42, 0.74);
       --line: rgba(244, 191, 96, 0.28);
       --line-blue: rgba(142, 190, 255, 0.24);
-      --line-green: rgba(143, 240, 195, 0.22);
+      --line-green: rgba(143, 240, 195, 0.24);
+      --line-red: rgba(255, 180, 167, 0.22);
       --text: #f6ead2;
       --muted: #b9c1cf;
       --gold: #f4bf60;
       --blue: #8ebeff;
       --green: #8ff0c3;
-      --danger: #ffb4a7;
-      --radius: 24px;
+      --red: #ffb4a7;
       --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+      --radius: 24px;
       --max: 1180px;
     }
 
@@ -51,9 +59,9 @@
     html {
       min-height: 100%;
       background:
-        radial-gradient(circle at 48% 0%, rgba(142, 190, 255, 0.18), transparent 34rem),
-        radial-gradient(circle at 12% 18%, rgba(244, 191, 96, 0.14), transparent 30rem),
-        radial-gradient(circle at 88% 22%, rgba(143, 240, 195, 0.10), transparent 26rem),
+        radial-gradient(circle at 50% 0%, rgba(142, 190, 255, 0.18), transparent 34rem),
+        radial-gradient(circle at 12% 18%, rgba(244, 191, 96, 0.13), transparent 30rem),
+        radial-gradient(circle at 88% 22%, rgba(143, 240, 195, 0.09), transparent 26rem),
         linear-gradient(180deg, var(--bg), #02040a 76%);
     }
 
@@ -165,7 +173,7 @@
 
     .hero {
       margin-top: 24px;
-      padding: clamp(24px, 5vw, 46px);
+      padding: clamp(24px, 5vw, 48px);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background:
@@ -192,32 +200,107 @@
     }
 
     h1 {
-      max-width: 950px;
+      max-width: 980px;
       margin: 0;
-      font-size: clamp(2.6rem, 7vw, 6.4rem);
+      font-size: clamp(2.7rem, 7vw, 6.5rem);
       line-height: 0.92;
       letter-spacing: -0.075em;
     }
 
     .lede {
-      max-width: 76ch;
+      max-width: 82ch;
       margin: 22px 0 0;
       color: var(--muted);
       font-size: clamp(1rem, 2vw, 1.18rem);
       line-height: 1.65;
     }
 
-    .selector-grid {
+    .primary-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .primary-actions a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 11px 14px;
+      border: 1px solid rgba(244, 191, 96, 0.40);
+      border-radius: 999px;
+      background: rgba(244, 191, 96, 0.10);
+      color: var(--text);
+      font-weight: 850;
+    }
+
+    .primary-actions a.secondary {
+      border-color: var(--line-blue);
+      background: rgba(142, 190, 255, 0.07);
+      color: var(--muted);
+    }
+
+    .metric-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
       margin-top: 18px;
     }
 
-    .planet-card {
+    .metric {
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--gold);
+      font-size: clamp(1.7rem, 4vw, 2.7rem);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .section-title {
+      margin: 26px 0 12px;
+      font-size: clamp(1.45rem, 3vw, 2.25rem);
+      letter-spacing: -0.045em;
+    }
+
+    .standard-grid,
+    .planet-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .standard-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .planet-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .proof-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card {
       position: relative;
-      min-height: 360px;
       overflow: hidden;
+      min-height: 260px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -226,21 +309,21 @@
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background:
-        radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.085), transparent 14rem),
+        radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.075), transparent 14rem),
         linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent),
         var(--panel-soft);
       box-shadow: var(--shadow);
       isolation: isolate;
     }
 
-    .planet-card::before {
+    .card::before {
       content: "";
       position: absolute;
-      inset: auto 50% 92px auto;
-      width: 220px;
-      height: 220px;
+      right: -58px;
+      bottom: -62px;
+      width: 190px;
+      height: 190px;
       border-radius: 50%;
-      transform: translateX(50%);
       z-index: -1;
       background:
         radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.28), transparent 13%),
@@ -252,23 +335,27 @@
         0 0 72px rgba(142, 190, 255, 0.14);
     }
 
-    .planet-card[data-lane="earth"]::before {
-      background:
-        radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.30), transparent 13%),
-        radial-gradient(circle at 42% 56%, rgba(65, 145, 255, 0.42), transparent 42%),
-        radial-gradient(circle at 62% 50%, rgba(73, 180, 112, 0.28), transparent 30%),
-        rgba(17, 35, 58, 0.85);
+    .card[data-status="habitable"] {
+      border-color: var(--line-green);
     }
 
-    .planet-card[data-lane="h-earth"] {
-      border-color: rgba(143, 240, 195, 0.36);
+    .card[data-status="perspective"] {
+      border-color: var(--line-blue);
+    }
+
+    .card[data-status="non-habitable"] {
+      border-color: var(--line-red);
+    }
+
+    .card[data-card="h-earth"] {
+      border-color: rgba(143, 240, 195, 0.38);
       background:
         radial-gradient(circle at 50% 20%, rgba(143, 240, 195, 0.11), transparent 14rem),
         linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent),
         rgba(10, 22, 33, 0.82);
     }
 
-    .planet-card[data-lane="h-earth"]::before {
+    .card[data-card="h-earth"]::before {
       background:
         radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.30), transparent 13%),
         radial-gradient(circle at 40% 56%, rgba(142, 190, 255, 0.38), transparent 42%),
@@ -280,7 +367,15 @@
         0 0 82px rgba(143, 240, 195, 0.16);
     }
 
-    .planet-card[data-lane="hearth"]::before {
+    .card[data-card="earth"]::before {
+      background:
+        radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.30), transparent 13%),
+        radial-gradient(circle at 42% 56%, rgba(65, 145, 255, 0.42), transparent 42%),
+        radial-gradient(circle at 62% 50%, rgba(73, 180, 112, 0.28), transparent 30%),
+        rgba(17, 35, 58, 0.85);
+    }
+
+    .card[data-card="hearth"]::before {
       background:
         radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.24), transparent 13%),
         radial-gradient(circle at 45% 55%, rgba(244, 191, 96, 0.30), transparent 42%),
@@ -288,7 +383,7 @@
         rgba(45, 25, 18, 0.82);
     }
 
-    .planet-card[data-lane="audralia"]::before {
+    .card[data-card="audralia"]::before {
       background:
         radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.24), transparent 13%),
         radial-gradient(circle at 45% 55%, rgba(51, 150, 196, 0.32), transparent 42%),
@@ -296,13 +391,9 @@
         rgba(12, 38, 46, 0.84);
     }
 
-    .card-top {
-      position: relative;
-      z-index: 2;
-    }
-
-    .lane-label {
+    .label {
       display: inline-flex;
+      width: max-content;
       padding: 7px 10px;
       border: 1px solid rgba(255, 255, 255, 0.10);
       border-radius: 999px;
@@ -314,20 +405,34 @@
       text-transform: uppercase;
     }
 
-    .planet-card[data-lane="h-earth"] .lane-label {
+    .card[data-status="habitable"] .label,
+    .card[data-card="h-earth"] .label {
       border-color: rgba(143, 240, 195, 0.28);
       color: var(--green);
       background: rgba(143, 240, 195, 0.08);
     }
 
-    .planet-card h2 {
+    .card[data-status="perspective"] .label {
+      border-color: rgba(142, 190, 255, 0.28);
+      color: var(--blue);
+      background: rgba(142, 190, 255, 0.08);
+    }
+
+    .card[data-status="non-habitable"] .label {
+      border-color: rgba(255, 180, 167, 0.28);
+      color: var(--red);
+      background: rgba(255, 180, 167, 0.07);
+    }
+
+    .card h2,
+    .card h3 {
       margin: 14px 0 0;
-      font-size: clamp(1.5rem, 3vw, 2.35rem);
-      line-height: 0.98;
+      font-size: clamp(1.35rem, 2.6vw, 2.05rem);
+      line-height: 1;
       letter-spacing: -0.045em;
     }
 
-    .planet-card p {
+    .card p {
       margin: 12px 0 0;
       color: var(--muted);
       line-height: 1.55;
@@ -335,10 +440,8 @@
     }
 
     .card-actions {
-      position: relative;
-      z-index: 2;
       display: grid;
-      gap: 10px;
+      gap: 9px;
     }
 
     .open-link {
@@ -354,7 +457,7 @@
       font-weight: 850;
     }
 
-    .planet-card[data-lane="h-earth"] .open-link {
+    .card[data-card="h-earth"] .open-link {
       border-color: rgba(143, 240, 195, 0.42);
       background: rgba(143, 240, 195, 0.10);
       color: var(--green);
@@ -397,15 +500,15 @@
     .guard-panel {
       margin-top: 16px;
       padding: 16px;
-      border: 1px solid rgba(255, 180, 167, 0.22);
+      border: 1px solid rgba(244, 191, 96, 0.22);
       border-radius: 18px;
-      background: rgba(255, 180, 167, 0.055);
+      background: rgba(244, 191, 96, 0.055);
       color: var(--muted);
       line-height: 1.55;
     }
 
     .guard-panel strong {
-      color: var(--danger);
+      color: var(--gold);
     }
 
     .footer {
@@ -417,8 +520,14 @@
     }
 
     @media (max-width: 1120px) {
-      .selector-grid {
+      .metric-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .standard-grid,
+      .planet-grid,
+      .proof-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -439,98 +548,135 @@
       }
 
       .hero,
-      .planet-card {
+      .card {
         border-radius: 18px;
       }
 
-      .selector-grid {
+      .metric-grid {
         grid-template-columns: 1fr;
-      }
-
-      .planet-card {
-        min-height: 330px;
-      }
-
-      .planet-card::before {
-        width: 190px;
-        height: 190px;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="#globe-main">Skip to globe chamber</a>
+  <a class="skip-link" href="#showroom-main">Skip to Showroom</a>
 
   <div class="page-shell">
-    <header class="topbar" aria-label="Globe Split navigation">
+    <header class="topbar" aria-label="Showroom navigation">
       <a class="brand" href="/" aria-label="Return to Diamond Gate Bridge Compass">
         <span class="brand-mark" aria-hidden="true"></span>
-        <span>Diamond Gate Bridge</span>
+        <span>Diamond Gate Bridge · Showroom</span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/" aria-current="page">Globe Split</a>
-        <a href="/products/">Products</a>
+        <a href="/showroom/" aria-current="page">Showroom</a>
+        <a href="/showroom/globe/">Globe Split</a>
+        <a href="/showroom/globe/h-earth/">H-Earth</a>
+        <a href="/showroom/globe/hearth/">Hearth</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <main id="globe-main" tabindex="-1">
-      <section class="hero" aria-labelledby="globe-title">
-        <p class="eyebrow">Showroom · Globe Split · Parent Access Bridge</p>
-        <h1 id="globe-title">Earth, H-Earth, Hearth, and Audralia</h1>
+    <main id="showroom-main" tabindex="-1">
+      <section class="hero" aria-labelledby="showroom-title">
+        <p class="eyebrow">Showroom · Habitability Display · H-Earth Access Bridge</p>
+        <h1 id="showroom-title">Planet Habitability Standard</h1>
         <p class="lede">
-          This chamber is the direct selector for separate planet lanes. Earth remains the protected
-          reference lane. H-Earth is the Hybrid Earth experimental third-planet lane. Hearth and Audralia
-          remain preserved as their own lanes. No lane mutates another lane.
+          The Showroom displays the planet build by habitability. Hearth and Audralia remain the first two
+          simultaneous constructed planet templates. Both are habitable-forming: coherent enough to build upward,
+          but not yet fully formed in terrain, atmosphere, weather, and final planetary beauty.
+          H-Earth is now added as the Hybrid Earth experimental third-planet lane, reachable from Showroom
+          without mutating Earth, Hearth, or Audralia.
         </p>
+
+        <div class="primary-actions" aria-label="Primary Showroom actions">
+          <a href="/showroom/globe/">Open Globe Split</a>
+          <a href="/showroom/globe/h-earth/">Open H-Earth</a>
+          <a class="secondary" href="/showroom/globe/hearth/">Inspect Hearth</a>
+          <a class="secondary" href="/showroom/globe/audralia/">Inspect Audralia</a>
+          <a class="secondary" href="/gauges/">Run Gauges</a>
+        </div>
+
+        <section class="metric-grid" aria-label="Showroom planet metrics">
+          <article class="metric">
+            <strong>81</strong>
+            <span>Total planned planets across the larger planetary system.</span>
+          </article>
+
+          <article class="metric">
+            <strong>2</strong>
+            <span>Constructed planet templates currently being built simultaneously.</span>
+          </article>
+
+          <article class="metric">
+            <strong>1</strong>
+            <span>Experimental third-planet lane now accessible as H-Earth.</span>
+          </article>
+
+          <article class="metric">
+            <strong>G1</strong>
+            <span>Current baseline: coherent, habitable-forming, and ready for upward generation.</span>
+          </article>
+
+          <article class="metric">
+            <strong>G2</strong>
+            <span>Next target: material definition and natural planetary readability.</span>
+          </article>
+        </section>
       </section>
 
-      <section class="selector-grid" aria-label="Planet lane selector">
-        <article class="planet-card" data-lane="earth">
-          <div class="card-top">
-            <span class="lane-label">Reference lane</span>
-            <h2>Earth</h2>
-            <p>
-              Inspect Earth as the protected reference shell. Earth is not mutated by H-Earth,
-              Hearth, or Audralia.
-            </p>
-          </div>
+      <h2 class="section-title">Habitability standard</h2>
 
-          <div class="card-actions">
-            <a class="open-link" href="/showroom/globe/earth/">Inspect Earth</a>
-            <code class="proof">ROUTE: /showroom/globe/earth/</code>
+      <section class="standard-grid" aria-label="Habitability standard cards">
+        <article class="card" data-status="habitable">
+          <div>
+            <span class="label">Habitable</span>
+            <h2>Habitable Planet</h2>
+            <p>
+              The planet has coherent truth, material expression, motion, controls, render, and proof.
+              It can support upward formation and future life-bearing systems.
+            </p>
           </div>
         </article>
 
-        <article class="planet-card" data-lane="h-earth">
-          <div class="card-top">
-            <span class="lane-label">New experimental lane</span>
-            <h2>H-Earth</h2>
+        <article class="card" data-status="perspective">
+          <div>
+            <span class="label">Perspective Habitable</span>
+            <h2>Perspective Habitable Planet</h2>
             <p>
-              Hybrid Earth uses the current Earth shell as an experimental reference shell without
-              replacing or mutating Earth. Parent files establish authority; children refine downstream.
+              The planet has promising structure but incomplete proof. It is a candidate for habitability,
+              not yet a stable habitable-forming body.
             </p>
-          </div>
-
-          <div class="card-actions">
-            <a class="open-link" href="/showroom/globe/h-earth/">Open H-Earth</a>
-            <code class="proof">ROUTE: /showroom/globe/h-earth/</code>
           </div>
         </article>
 
-        <article class="planet-card" data-lane="hearth">
-          <div class="card-top">
-            <span class="lane-label">Preserved lane</span>
-            <h2>Hearth</h2>
+        <article class="card" data-status="non-habitable">
+          <div>
+            <span class="label">Non-Habitable</span>
+            <h2>Non-Habitable Planet</h2>
             <p>
-              Hearth remains its own terrain-development lane. H-Earth does not replace Hearth and
-              does not import Hearth contracts as parent truth.
+              The planet cannot yet support upward formation because authority collapses, material fields
+              glob together, motion fails, or West proof cannot verify the source chain.
+            </p>
+          </div>
+        </article>
+      </section>
+
+      <h2 class="section-title">Active planet lanes</h2>
+
+      <section class="planet-grid" aria-label="Active planet lane cards">
+        <article class="card" data-card="hearth" data-status="habitable">
+          <div>
+            <span class="label">Habitable · Forming</span>
+            <h3>Hearth</h3>
+            <p>
+              Template one. Hearth has coherent motion, drag/spin controls, asset-boundary expression,
+              and render proof. It remains in formation toward natural material definition.
             </p>
           </div>
 
@@ -540,13 +686,13 @@
           </div>
         </article>
 
-        <article class="planet-card" data-lane="audralia">
-          <div class="card-top">
-            <span class="lane-label">Preserved lane</span>
-            <h2>Audralia</h2>
+        <article class="card" data-card="audralia" data-status="habitable">
+          <div>
+            <span class="label">Habitable · Forming</span>
+            <h3>Audralia</h3>
             <p>
-              Audralia remains its own constructed-world lane. H-Earth does not replace Audralia and
-              does not import Audralia naming or stale contracts.
+              Template two. Audralia has runtime motion-only authority, terrain formation,
+              asset-boundary expression, canvas/render output, and route proof.
             </p>
           </div>
 
@@ -555,38 +701,121 @@
             <code class="proof">ROUTE: /showroom/globe/audralia/</code>
           </div>
         </article>
+
+        <article class="card" data-card="h-earth" data-status="perspective">
+          <div>
+            <span class="label">Perspective Habitable · Experimental</span>
+            <h3>H-Earth</h3>
+            <p>
+              Hybrid Earth. H-Earth is a separate experimental third-planet lane using the current Earth
+              shell as reference only. It begins as a parent-core chain candidate until kernel, lattice,
+              landmap, terrain, surface, canvas, and controls are all visible.
+            </p>
+          </div>
+
+          <div class="card-actions">
+            <a class="open-link" href="/showroom/globe/h-earth/">Open H-Earth</a>
+            <code class="proof">ROUTE: /showroom/globe/h-earth/</code>
+          </div>
+        </article>
+      </section>
+
+      <h2 class="section-title">Template system</h2>
+
+      <section class="proof-grid" aria-label="Showroom proof route cards">
+        <article class="card">
+          <div>
+            <span class="label">Template System</span>
+            <h3>Two-at-a-Time Build Pattern</h3>
+            <p>
+              Hearth and Audralia establish the first simultaneous build template for scaling toward
+              the 81-planet target without collapsing body authority or route proof.
+            </p>
+          </div>
+        </article>
+
+        <article class="card">
+          <div>
+            <span class="label">Experimental Lane</span>
+            <h3>H-Earth Parent-Core Chain</h3>
+            <p>
+              H-Earth extends the template system as a third lane, but it does not change the count of
+              two active constructed templates until its parent-core chain proves stable.
+            </p>
+          </div>
+
+          <div class="card-actions">
+            <a class="open-link" href="/showroom/globe/h-earth/">Open H-Earth</a>
+            <code class="proof">CHAIN: kernel → lattice256 → landmap → terrain → surface → canvas → controls</code>
+          </div>
+        </article>
+
+        <article class="card">
+          <div>
+            <span class="label">Selector</span>
+            <h3>Globe Split</h3>
+            <p>
+              The Globe Split page routes Earth, H-Earth, Hearth, and Audralia into separate inspection
+              lanes without merging or mutating their authorities.
+            </p>
+          </div>
+
+          <div class="card-actions">
+            <a class="open-link" href="/showroom/globe/">Open Globe Split</a>
+            <code class="proof">ROUTE: /showroom/globe/</code>
+          </div>
+        </article>
       </section>
 
       <section
         class="receipt-panel"
-        aria-label="Globe Split access receipts"
-        data-receipt-panel="globe-split-h-earth-access"
-        data-contract="GLOBE_SPLIT_H_EARTH_ACCESS_BRIDGE_TNT_v1"
+        aria-label="Showroom habitability and H-Earth access receipts"
+        data-receipt-panel="showroom-habitability-h-earth-access"
+        data-contract="SHOWROOM_HABITABILITY_DISPLAY_H_EARTH_ACCESS_MERGE_TNT_v1"
+        data-previous-contract="SHOWROOM_HABITABILITY_DISPLAY_HTML_TNT_v1"
+        data-route="/showroom/"
+        data-standard="habitability"
+        data-planned-planets-total="81"
+        data-active-constructed-templates="2"
+        data-active-templates="Hearth | Audralia"
+        data-experimental-third-lane="H-Earth"
         data-h-earth-route="/showroom/globe/h-earth/"
+        data-globe-split-route="/showroom/globe/"
         data-earth-route="/showroom/globe/earth/"
         data-hearth-route="/showroom/globe/hearth/"
         data-audralia-route="/showroom/globe/audralia/"
       >
-        <code>GLOBE_SPLIT_RECEIPT: GLOBE_SPLIT_H_EARTH_ACCESS_BRIDGE_TNT_v1</code>
+        <code>SHOWROOM_RECEIPT: SHOWROOM_HABITABILITY_DISPLAY_H_EARTH_ACCESS_MERGE_TNT_v1</code>
+        <code>PREVIOUS_CONTRACT: SHOWROOM_HABITABILITY_DISPLAY_HTML_TNT_v1</code>
+        <code>STANDARD: habitability</code>
+        <code>PLANNED_PLANETS_TOTAL: 81</code>
+        <code>ACTIVE_CONSTRUCTED_TEMPLATES: 2</code>
+        <code>ACTIVE_TEMPLATES: Hearth | Audralia</code>
+        <code>EXPERIMENTAL_THIRD_LANE: H-Earth</code>
         <code>H_EARTH_ACCESS: enabled via /showroom/globe/h-earth/</code>
+        <code>GLOBE_SPLIT_ACCESS: enabled via /showroom/globe/</code>
         <code>EARTH_REFERENCE: protected; no mutation authorized</code>
         <code>HEARTH_LANE: preserved</code>
         <code>AUDRALIA_LANE: preserved</code>
         <code>AUSTRALIA_TERMINOLOGY: forbidden</code>
-        <code>GRAPHIC_BOX: forbidden</code>
-        <code>IMAGE_GENERATION: forbidden</code>
-        <code>VISUAL_PASS_CLAIM: false</code>
+        <code>SHOWROOM_OWNS_PLANET_RENDERING: false</code>
+        <code>GENERATED_IMAGE: false</code>
+        <code>GRAPHIC_BOX: false</code>
+        <code>VISUAL_PASS_CLAIMED: false</code>
+        <code>NEXT_GENERATION: G2-material-definition-and-natural-readability</code>
       </section>
 
-      <section class="guard-panel" aria-label="Lane separation guard">
+      <section class="guard-panel" aria-label="Showroom boundary guard">
         <strong>Boundary guard:</strong>
-        this selector creates access only. It does not generate planet truth, does not paint canvas,
-        does not create terrain, does not control animation, and does not rewrite Gauges.
+        this Showroom update preserves the habitability display and adds H-Earth access only.
+        It does not create planet truth, does not paint canvas, does not define land/water ratios,
+        does not control motion, does not rewrite Gauges, and does not mutate Earth, Hearth, or Audralia.
       </section>
     </main>
 
     <footer class="footer">
-      Showroom Globe Split. Separate lanes, direct access, no sidestream authority.
+      Showroom Habitability Display. Hearth and Audralia remain the two active constructed templates.
+      H-Earth is now accessible as the Hybrid Earth experimental third lane.
     </footer>
   </div>
 </body>

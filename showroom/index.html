@@ -2,17 +2,19 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-cover-256-face-fibonacci-diamond"
+  data-page="showroom-cover-single-enclosed-256-face-diamond"
   data-route="/showroom/"
-  data-contract="SHOWROOM_COVER_256_FACE_FIBONACCI_DIAMOND_LATTICE_HTML_TNT_v1"
-  data-previous-route-state="h-earth-route-shell-misplaced-on-showroom"
+  data-contract="SHOWROOM_COVER_SINGLE_ENCLOSED_256_FACE_DIAMOND_HTML_TNT_v3"
+  data-previous-contract="SHOWROOM_COVER_256_FACE_FIBONACCI_DIAMOND_LATTICE_HTML_TNT_v2"
   data-showroom-role="cover"
   data-showroom-cover-diamond-lattice="256-face"
+  data-diamond-mode="single-enclosed-three-dimensional-construct"
   data-lattice-count="256"
   data-lattice-geometry="16x16"
-  data-fibonacci-zigzag="true"
+  data-fibonacci-zigzag="false"
+  data-fibonacci-geometry="folded-into-construct"
   data-master-psalm-binding="MASTER_PSALM_FIBONACCI_256_CANONICAL_BINDING_v1"
-  data-required-asset-contract="SHOWROOM_256_FACE_FIBONACCI_DIAMOND_LATTICE_TNT_v1"
+  data-required-asset-contract="SHOWROOM_256_FACE_FIBONACCI_ENCLOSED_DIAMOND_CONSTRUCT_TNT_v3"
   data-next-layer="/showroom/globe/"
   data-generated-image="false"
   data-graphic-box="false"
@@ -25,7 +27,7 @@
   <title>Diamond Gate Bridge · Showroom</title>
   <meta
     name="description"
-    content="The Diamond Gate Bridge Showroom cover presents the 256-face Fibonacci diamond lattice and routes into the Globe Showcase."
+    content="The Diamond Gate Bridge Showroom cover presents a single enclosed rotating 256-face diamond construct and routes into the Globe Showcase."
   >
 
   <style>
@@ -35,7 +37,6 @@
       --panel:rgba(10,17,31,.82);
       --panel2:rgba(5,10,22,.88);
       --line:rgba(244,191,96,.32);
-      --soft-line:rgba(255,255,255,.10);
       --text:#f8ead0;
       --muted:#bac2cf;
       --gold:#f4bf60;
@@ -253,7 +254,13 @@
 
     .diamond-mount {
       width:100%;
-      min-height:clamp(340px,72vw,680px);
+      min-height:clamp(360px,72vw,700px);
+      border:1px solid rgba(142,190,255,.18);
+      border-radius:22px;
+      background:
+        radial-gradient(circle at 50% 44%,rgba(142,190,255,.10),transparent 16rem),
+        linear-gradient(180deg,rgba(7,13,30,1),rgba(2,5,12,1));
+      overflow:hidden;
     }
 
     .path-grid {
@@ -376,11 +383,12 @@
 
     <main id="showroom-main" tabindex="-1">
       <section class="hero">
-        <p class="eyebrow">Showroom Cover · 256-Face Diamond Lattice</p>
-        <h1>The cover opens with the diamond.</h1>
+        <p class="eyebrow">Showroom Cover · Single Enclosed 256-Face Diamond</p>
+        <h1>The cover opens with one diamond.</h1>
         <p class="lede">
-          The Showroom is the glamour-facing cover. Its centerpiece is now a rotating 256-face diamond lattice:
-          a fixed 16 × 16 nodal construct with a Fibonacci zigzag path moving through the field.
+          The Showroom is the glamour-facing cover. Its centerpiece is a single enclosed rotating diamond construct:
+          256 fixed nodes folded into volume, facets, enclosure, and depth. Fibonacci geometry remains structural,
+          not drawn as a visible zigzag.
         </p>
 
         <div class="actions">
@@ -392,22 +400,24 @@
 
       <section
         class="showroom-stage"
-        aria-label="Showroom 256-face Fibonacci diamond lattice"
-        data-showroom-cover-visual="256-face-fibonacci-diamond"
+        aria-label="Showroom single enclosed 256-face diamond construct"
+        data-showroom-cover-visual="single-enclosed-256-face-diamond"
         data-showroom-cover-diamond-lattice="256-face"
+        data-diamond-mode="single-enclosed-three-dimensional-construct"
         data-lattice-count="256"
         data-lattice-geometry="16x16"
-        data-fibonacci-zigzag="true"
+        data-fibonacci-zigzag="false"
+        data-fibonacci-geometry="folded-into-construct"
         data-generated-image="false"
         data-graphic-box="false"
         data-parent-mutation-authorized="false"
       >
         <div class="stage-head">
           <div>
-            <h2>256 faces. One field.</h2>
+            <h2>256 faces. One enclosed diamond.</h2>
             <p>
-              The diamond is rendered by code. The field holds 256 nodes, the Fibonacci sequence marks the progression,
-              and the lattice rotates in place as the Showroom cover object.
+              The visible object is one enclosed diamond, not a plate and not a loose path.
+              The 256 nodes form the construct. Fibonacci geometry controls internal progression without showing a zigzag line.
             </p>
           </div>
           <a class="button" href="/showroom/globe/">Open Showcase</a>
@@ -418,7 +428,9 @@
           data-showroom-diamond256-mount
           data-lattice-count="256"
           data-lattice-geometry="16x16"
-          data-fibonacci-zigzag="true"
+          data-fibonacci-zigzag="false"
+          data-fibonacci-geometry="folded-into-construct"
+          data-diamond-mode="single-enclosed-three-dimensional-construct"
           data-master-psalm-binding="MASTER_PSALM_FIBONACCI_256_CANONICAL_BINDING_v1"
         ></div>
       </section>
@@ -427,7 +439,7 @@
         <article class="path-card">
           <strong>Cover</strong>
           <h2>Showroom</h2>
-          <p>The public-facing glamour layer. It introduces the diamond without exposing diagnostic machinery.</p>
+          <p>The public-facing glamour layer. It introduces the enclosed diamond construct without exposing diagnostics.</p>
         </article>
 
         <article class="path-card">
@@ -447,27 +459,31 @@
         id="showroomReceipt"
         class="receipt"
         aria-label="Showroom cover receipt"
-        data-receipt-panel="showroom-cover-256-face-fibonacci-diamond"
-        data-html-contract="SHOWROOM_COVER_256_FACE_FIBONACCI_DIAMOND_LATTICE_HTML_TNT_v1"
-        data-required-asset-contract="SHOWROOM_256_FACE_FIBONACCI_DIAMOND_LATTICE_TNT_v1"
+        data-receipt-panel="showroom-cover-single-enclosed-256-face-diamond"
+        data-html-contract="SHOWROOM_COVER_SINGLE_ENCLOSED_256_FACE_DIAMOND_HTML_TNT_v3"
+        data-required-asset-contract="SHOWROOM_256_FACE_FIBONACCI_ENCLOSED_DIAMOND_CONSTRUCT_TNT_v3"
         data-showroom-role="cover"
         data-next-layer="/showroom/globe/"
         data-lattice-count="256"
         data-lattice-geometry="16x16"
-        data-fibonacci-zigzag="true"
+        data-fibonacci-zigzag="false"
+        data-fibonacci-geometry="folded-into-construct"
+        data-diamond-mode="single-enclosed-three-dimensional-construct"
         data-generated-image="false"
         data-graphic-box="false"
         data-parent-mutation-authorized="false"
         data-visual-pass-claim="false"
       >
-        <code>HTML_RECEIPT: SHOWROOM_COVER_256_FACE_FIBONACCI_DIAMOND_LATTICE_HTML_TNT_v1</code>
-        <code>ASSET_RECEIPT_REQUIRED: SHOWROOM_256_FACE_FIBONACCI_DIAMOND_LATTICE_TNT_v1</code>
+        <code>HTML_RECEIPT: SHOWROOM_COVER_SINGLE_ENCLOSED_256_FACE_DIAMOND_HTML_TNT_v3</code>
+        <code>ASSET_RECEIPT_REQUIRED: SHOWROOM_256_FACE_FIBONACCI_ENCLOSED_DIAMOND_CONSTRUCT_TNT_v3</code>
         <code>MASTER_PSALM_BINDING: MASTER_PSALM_FIBONACCI_256_CANONICAL_BINDING_v1</code>
         <code>SHOWROOM_ROLE: cover</code>
         <code>NEXT_LAYER: /showroom/globe/</code>
         <code>LATTICE_COUNT: 256</code>
         <code>LATTICE_GEOMETRY: 16x16</code>
-        <code>FIBONACCI_ZIGZAG: true</code>
+        <code>FIBONACCI_ZIGZAG: false</code>
+        <code>FIBONACCI_GEOMETRY: folded-into-construct</code>
+        <code>DIAMOND_MODE: single-enclosed-three-dimensional-construct</code>
         <code>GENERATED_IMAGE: false</code>
         <code>GRAPHIC_BOX: false</code>
         <code>PARENT_MUTATION_AUTHORIZED: false</code>
@@ -481,12 +497,14 @@
 
   <script
     type="module"
-    src="/assets/showroom/showroom.diamond256.lattice.js?v=SHOWROOM_256_FACE_FIBONACCI_DIAMOND_LATTICE_TNT_v1"
-    data-contract="SHOWROOM_256_FACE_FIBONACCI_DIAMOND_LATTICE_TNT_v1"
+    src="/assets/showroom/showroom.diamond256.lattice.js?v=SHOWROOM_256_FACE_FIBONACCI_ENCLOSED_DIAMOND_CONSTRUCT_TNT_v3"
+    data-contract="SHOWROOM_256_FACE_FIBONACCI_ENCLOSED_DIAMOND_CONSTRUCT_TNT_v3"
     data-mount="[data-showroom-diamond256-mount]"
     data-lattice-count="256"
     data-lattice-geometry="16x16"
-    data-fibonacci-zigzag="true"
+    data-fibonacci-zigzag="false"
+    data-fibonacci-geometry="folded-into-construct"
+    data-diamond-mode="single-enclosed-three-dimensional-construct"
     data-generated-image="false"
     data-graphic-box="false"
   ></script>

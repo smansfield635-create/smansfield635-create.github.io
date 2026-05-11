@@ -1,13 +1,23 @@
+<!-- /showroom/globe/audralia/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-page="audralia-habitable-forming-g2-calibration"
+  data-page="audralia-g1-parent-chain-baseline"
   data-route="/showroom/globe/audralia/"
-  data-contract="AUDRALIA_HABITABLE_FORMING_G2_CALIBRATION_HTML_TNT_v1"
+  data-contract="AUDRALIA_G1_PARENT_CHAIN_BASELINE_HTML_TNT_v3"
   data-body="audralia"
-  data-generation-baseline="G1-coherent-achieved"
-  data-current-phase="G2-calibration-active"
-  data-g2-passed="false"
+  data-active-route-file="/showroom/globe/audralia/index.js"
+  data-parent-chain-aligned="true"
+  data-generation="1"
+  data-g1-baseline="stabilizing"
+  data-g2-calibration="held"
+  data-backstory-authority="/assets/audralia/audralia.backstory.js"
+  data-tectonics-authority="/assets/audralia/audralia.tectonics.js"
+  data-topology-authority="/assets/audralia/audralia.topology.js"
+  data-canvas-authority="/assets/audralia/audralia.canvas.js"
+  data-audralia-not-australia="true"
+  data-earth-clone="false"
+  data-hearth-identity="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claimed="false"
@@ -15,294 +25,258 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Audralia</title>
-  <meta
-    name="description"
-    content="Audralia is a habitable-forming constructed planet with G1 coherent baseline achieved and G2 calibration active."
-  >
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Diamond Gate Bridge · Audralia G1</title>
 
   <style>
     :root {
-      --bg: #030914;
-      --panel: rgba(7, 16, 30, 0.84);
-      --line: rgba(231, 188, 105, 0.34);
-      --gold: #e7bc69;
-      --text: #eef6ff;
-      --muted: rgba(238, 246, 255, 0.72);
-      --green: #8bd7a3;
-      --blue: #68c7f0;
+      --bg:#030914;
+      --line:rgba(231,188,105,.34);
+      --gold:#e7bc69;
+      --text:#eef6ff;
+      --muted:rgba(238,246,255,.72);
+      --green:#8bd7a3;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing:border-box; }
 
     html {
-      min-height: 100%;
+      min-height:100%;
       background:
-        radial-gradient(circle at 50% 20%, rgba(39, 117, 155, 0.22), transparent 38%),
-        radial-gradient(circle at 18% 12%, rgba(231, 188, 105, 0.13), transparent 30%),
-        linear-gradient(180deg, #06101e, var(--bg) 72%);
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        radial-gradient(circle at 50% 18%,rgba(42,124,164,.22),transparent 38%),
+        radial-gradient(circle at 12% 8%,rgba(231,188,105,.12),transparent 30%),
+        linear-gradient(180deg,#06101e,var(--bg) 74%);
+      color:var(--text);
+      font-family:Inter,system-ui,sans-serif;
     }
 
     body {
-      margin: 0;
-      min-height: 100vh;
+      margin:0;
+      min-height:100vh;
     }
 
     a {
-      color: inherit;
-      text-decoration: none;
+      color:inherit;
+      text-decoration:none;
     }
-
-    a:focus-visible,
-    canvas:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 4px;
-    }
-
-    .skip {
-      position: absolute;
-      top: 12px;
-      left: 16px;
-      z-index: 20;
-      transform: translateY(-140%);
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: var(--gold);
-      color: #06101e;
-      font-weight: 900;
-    }
-
-    .skip:focus { transform: translateY(0); }
 
     .shell {
-      width: min(1120px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 22px 0 42px;
+      width:min(1120px,calc(100% - 28px));
+      margin:0 auto;
+      padding:22px 0 42px;
     }
 
     .topbar,
     .nav,
     .card,
-    #audralia-canvas-mount,
+    #audraliaCanvasMount,
     .receipt {
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(9, 22, 41, 0.88), rgba(4, 10, 20, 0.78));
-      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.38);
-      backdrop-filter: blur(10px);
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(9,22,41,.88),rgba(4,10,20,.78));
+      box-shadow:0 22px 70px rgba(0,0,0,.38);
+      backdrop-filter:blur(10px);
     }
 
     .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      border-radius: 24px;
-      padding: 12px 14px;
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      border-radius:24px;
+      padding:12px 14px;
     }
 
     .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 900;
-      letter-spacing: 0.02em;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-weight:900;
     }
 
     .mark {
-      display: grid;
-      place-items: center;
-      width: 36px;
-      height: 36px;
-      border-radius: 12px;
-      border: 1px solid rgba(231, 188, 105, 0.46);
-      color: var(--gold);
-      background: radial-gradient(circle at 50% 36%, rgba(231, 188, 105, 0.22), rgba(7, 16, 30, 0.86));
+      display:grid;
+      place-items:center;
+      width:36px;
+      height:36px;
+      border-radius:12px;
+      border:1px solid rgba(231,188,105,.46);
+      color:var(--gold);
     }
 
     .nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      border-radius: 20px;
-      padding: 8px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      border-radius:20px;
+      padding:8px;
     }
 
     .nav a {
-      border: 1px solid rgba(231, 188, 105, 0.24);
-      border-radius: 999px;
-      padding: 8px 11px;
-      color: var(--muted);
-      font-size: 0.86rem;
+      border:1px solid rgba(231,188,105,.24);
+      border-radius:999px;
+      padding:8px 11px;
+      color:var(--muted);
+      font-size:.86rem;
     }
 
     .nav a[aria-current="page"] {
-      color: #06101e;
-      background: var(--gold);
-      font-weight: 900;
+      color:#06101e;
+      background:var(--gold);
+      font-weight:900;
     }
 
     .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(320px, 520px);
-      gap: 22px;
-      align-items: center;
-      margin-top: 22px;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(320px,520px);
+      gap:22px;
+      align-items:center;
+      margin-top:22px;
     }
 
     .eyebrow {
-      color: var(--gold);
-      font-size: 0.78rem;
-      font-weight: 900;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    .badge {
-      display: inline-flex;
-      margin-top: 12px;
-      padding: 7px 11px;
-      border: 1px solid rgba(139, 215, 163, 0.34);
-      border-radius: 999px;
-      color: var(--green);
-      background: rgba(139, 215, 163, 0.08);
-      font-weight: 900;
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      color:var(--gold);
+      font-size:.78rem;
+      font-weight:900;
+      letter-spacing:.16em;
+      text-transform:uppercase;
     }
 
     h1 {
-      margin: 10px 0 12px;
-      font-size: clamp(2.2rem, 7vw, 5.8rem);
-      line-height: 0.9;
-      letter-spacing: -0.08em;
+      margin:10px 0 12px;
+      font-size:clamp(2.2rem,7vw,5.8rem);
+      line-height:.9;
+      letter-spacing:-.08em;
     }
 
     .lede {
-      max-width: 68ch;
-      margin: 0;
-      color: var(--muted);
-      font-size: clamp(1rem, 2.4vw, 1.18rem);
-      line-height: 1.6;
+      max-width:70ch;
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(1rem,2.4vw,1.18rem);
+      line-height:1.6;
+    }
+
+    .badge {
+      display:inline-flex;
+      margin-top:12px;
+      padding:7px 11px;
+      border:1px solid rgba(139,215,163,.34);
+      border-radius:999px;
+      color:var(--green);
+      background:rgba(139,215,163,.08);
+      font-weight:900;
+      font-size:.78rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
 
     .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:20px;
     }
 
     .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 42px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(231, 188, 105, 0.38);
-      background: rgba(231, 188, 105, 0.14);
-      color: var(--text);
-      font-weight: 800;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(231,188,105,.38);
+      background:rgba(231,188,105,.14);
+      color:var(--text);
+      font-weight:800;
     }
 
     .button.primary {
-      color: #05101d;
-      background: var(--gold);
+      color:#05101d;
+      background:var(--gold);
     }
 
-    #audralia-canvas-mount {
-      position: relative;
-      width: 100%;
-      min-height: 320px;
-      aspect-ratio: 1 / 1;
-      overflow: hidden;
-      isolation: isolate;
-      border-radius: 32px;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(39, 117, 155, 0.30), rgba(3, 9, 20, 0.96) 70%),
-        #02070e;
-      touch-action: none;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
+    #audraliaCanvasMount {
+      position:relative;
+      width:100%;
+      min-height:320px;
+      aspect-ratio:1/1;
+      overflow:hidden;
+      isolation:isolate;
+      border-radius:32px;
+      background:radial-gradient(circle at 50% 50%,rgba(39,117,155,.30),rgba(3,9,20,.96) 70%),#02070e;
+      touch-action:none;
+      user-select:none;
+      -webkit-user-select:none;
+      -webkit-touch-callout:none;
     }
 
-    #audralia-canvas-mount canvas,
-    #audralia-canvas-mount canvas[data-audralia-canvas="true"],
-    #audralia-canvas-mount canvas[data-audralia-canvas] {
-      position: absolute;
-      inset: 0;
-      display: block;
-      width: 100%;
-      height: 100%;
-      pointer-events: auto;
-      touch-action: none;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
-    }
-
-    #audralia-canvas-mount [data-audralia-mount-fallback][hidden] {
-      display: none !important;
+    #audraliaCanvasMount canvas {
+      position:absolute;
+      inset:0;
+      display:block;
+      width:100%;
+      height:100%;
+      pointer-events:auto;
+      touch-action:none;
+      user-select:none;
+      -webkit-user-select:none;
+      -webkit-touch-callout:none;
     }
 
     .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 22px;
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-top:22px;
     }
 
     .card {
-      border-radius: 22px;
-      padding: 14px;
-      min-height: 132px;
+      border-radius:22px;
+      padding:14px;
+      min-height:132px;
     }
 
     .card h2 {
-      margin: 0 0 8px;
-      color: var(--gold);
-      font-size: 0.92rem;
+      margin:0 0 8px;
+      color:var(--gold);
+      font-size:.92rem;
     }
 
     .card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.45;
+      margin:0;
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.45;
     }
 
     .receipt {
-      margin: 16px 0 0;
-      padding: 14px;
-      overflow: auto;
-      border-radius: 18px;
-      color: rgba(238, 246, 255, 0.72);
-      font-size: 0.78rem;
-      white-space: pre-wrap;
+      margin:16px 0 0;
+      padding:14px;
+      overflow:auto;
+      border-radius:18px;
+      color:rgba(238,246,255,.72);
+      font-size:.78rem;
+      white-space:pre-wrap;
     }
 
-    @media (max-width: 860px) {
-      .hero { grid-template-columns: 1fr; }
-      .grid { grid-template-columns: 1fr; }
-      .topbar { align-items: stretch; flex-direction: column; }
+    @media (max-width:980px) {
+      .hero,
+      .grid {
+        grid-template-columns:1fr;
+      }
+
+      .topbar {
+        flex-direction:column;
+      }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#audralia-main">Skip to Audralia</a>
-
   <div class="shell">
     <header class="topbar">
-      <a class="brand" href="/">
-        <span class="mark">A</span>
-        <span>Diamond Gate Bridge · Audralia</span>
-      </a>
-
+      <a class="brand" href="/"><span class="mark">A</span><span>Diamond Gate Bridge · Audralia</span></a>
       <nav class="nav" aria-label="Audralia route navigation">
         <a href="/">Compass</a>
         <a href="/showroom/globe/">Globe Split</a>
@@ -316,14 +290,14 @@
     <main id="audralia-main">
       <section class="hero" aria-labelledby="audralia-title">
         <div>
-          <div class="eyebrow">Audralia · Habitable Forming · G2 Calibration Active</div>
+          <div class="eyebrow">Audralia · Generation 1 Parent-Chain Baseline</div>
           <h1 id="audralia-title">Audralia</h1>
           <p class="lede">
-            Audralia has achieved a coherent Generation 1 baseline. Runtime remains motion-only.
-            Terrain, assets, canvas, route, and proof are separated. Generation 2 material and natural readability
-            calibration is active but not passed. The route now boots the G2.5 free-drag and pole-swivel controller.
+            Audralia is stabilizing as a Generation 1 ocean-dominant home-world planet. The world is clean, ancient, climate-bearing, and water-driven. Land remains restrained but readable through shelf, coast, exposed terrain, old plate memory, and small island systems.
           </p>
-          <span class="badge">Habitable · Forming</span>
+
+          <span class="badge">Generation 1 · Stabilizing</span>
+          <span class="badge" style="margin-left:8px;">Parent Chain · Active</span>
 
           <div class="actions">
             <a class="button primary" href="/showroom/globe/">Return to Globe Split</a>
@@ -334,83 +308,134 @@
         </div>
 
         <section
-          id="audralia-canvas-mount"
+          id="audraliaCanvasMount"
           data-audralia-canvas-mount="true"
-          data-audralia-generation-baseline="G1-coherent-achieved"
-          data-audralia-current-phase="G2.5-free-drag-pole-swivel"
-          data-audralia-free-drag="true"
-          data-audralia-pole-swivel="true"
-          data-audralia-runtime-motion-only="true"
-          data-audralia-assets-absorb-authority="false"
-          data-audralia-touch-action="none"
-          aria-label="Audralia habitable-forming canvas mount"
+          data-audralia-parent-chain-aligned="true"
+          data-audralia-route-file="/showroom/globe/audralia/index.js"
+          aria-label="Audralia Generation 1 parent-chain globe canvas mount"
         >
           <span data-audralia-mount-fallback="true" style="position:absolute;inset:0;display:grid;place-items:center;color:rgba(238,246,255,.68);font-weight:800;text-align:center;padding:20px;">
-            Audralia G2.5 free-drag and pole-swivel route loading.
+            Audralia Generation 1 parent-chain route loading.
           </span>
         </section>
       </section>
 
-      <section class="grid" aria-label="Audralia G2 authority chain">
+      <section class="grid" aria-label="Audralia parent chain">
         <article class="card">
-          <h2>Generation 1 Baseline</h2>
-          <p>Achieved. Audralia is structurally coherent and habitable-forming.</p>
+          <h2>Generation 1</h2>
+          <p>Visible ocean-dominant planet, restrained land, clean atmosphere, stable projection, and no real-world geography copy.</p>
         </article>
 
         <article class="card">
-          <h2>Generation 2 Calibration</h2>
-          <p>Active, not passed. Material definition and natural readability remain under calibration.</p>
+          <h2>Backstory</h2>
+          <p>Audralia is a clean ancient home-world, not Hearth, not Earth, and not a renamed real-world continent.</p>
         </article>
 
         <article class="card">
-          <h2>Runtime</h2>
-          <p>Motion-only authority. Runtime is protected and not a terrain or material owner.</p>
+          <h2>Tectonics</h2>
+          <p>Old weathered plate memory defines shelves, land exposure, ridge pressure, basins, and island eligibility.</p>
         </article>
 
         <article class="card">
-          <h2>Terrain Fingers</h2>
-          <p>Mountains, valleys, cliffs, beaches, and peninsula/bay/island/inlet articulation remain active.</p>
-        </article>
-
-        <article class="card">
-          <h2>Assets</h2>
-          <p>Assets bind, separate, define, carry, and express without absorbing authority.</p>
-        </article>
-
-        <article class="card">
-          <h2>Controls</h2>
-          <p>Free drag, spin, and north/south pole-swivel inspection are active through the G2.5 route.</p>
+          <h2>Topology</h2>
+          <p>Above-sea, below-sea, ocean depth, shelf, basin, and subterranean structure remain separated.</p>
         </article>
       </section>
 
-      <pre id="audralia-route-status" class="receipt" data-audralia-route-status="true">Audralia G2.5 free-drag and pole-swivel route preparing.</pre>
+      <pre id="audralia-route-status" class="receipt" data-audralia-route-status="true">Audralia Generation 1 parent-chain route preparing.</pre>
 
-      <pre class="receipt">AUDRALIA_HABITABLE_FORMING_G2_CALIBRATION_HTML_TNT_v1
+      <pre class="receipt">AUDRALIA_G1_PARENT_CHAIN_BASELINE_HTML_TNT_v3
 route=/showroom/globe/audralia/
-public_identity=Audralia · Habitable Forming · G2 Calibration Active
-baseline=Generation 1 coherent achieved
-current_phase=Generation 2 calibration active
-g2_passed=false
-route_controller=AUDRALIA_G2_5_FREE_DRAG_POLE_SWIVEL_ROUTE_TNT_v1
-boot_key=audralia-g2-5-free-drag-pole-swivel-route-v1
-runtime=/assets/audralia/audralia.runtime.js
-surface=/assets/audralia/audralia.surface.js
-hex_surface=/assets/audralia/audralia.hex.surface.js
-relief_surface=/assets/audralia/audralia.relief.surface.js
-terrain_fingers=/assets/audralia/audralia.terrain.fingers.js
-assets=/assets/audralia/audralia.assets.js
+active_route_file=/showroom/globe/audralia/index.js
+backstory=/assets/audralia/audralia.backstory.js
+tectonics=/assets/audralia/audralia.tectonics.js
+topology=/assets/audralia/audralia.topology.js
 canvas=/assets/audralia/audralia.canvas.js
-controls=/assets/audralia/audralia.controls.js
-runtime_motion_only=true
-assets_absorb_authority=false
-free_drag=true
-pole_swivel=true
+generation=1
+g1_baseline=stabilizing
+g2_calibration=held
+land_readability_increase=0.12
+ocean_dominant=true
+audralia_not_australia=true
+earth_clone=false
+hearth_identity=false
 generated_image=false
 graphic_box=false
 visual_pass_claimed=false</pre>
     </main>
   </div>
 
-  <script type="module" src="./index.js?v=audralia-g2-5-free-drag-pole-swivel-route-v1"></script>
+  <script>
+    (() => {
+      "use strict";
+
+      const key = `audralia-g1-parent-chain-baseline-v3-${Date.now()}`;
+
+      [
+        "__AUDRALIA_CANVAS_DISPOSE__",
+        "__AUDRALIA_ACTIVE_ROUTE_CONTRACT__",
+        "__AUDRALIA_ACTIVE_ROUTE_FILE__"
+      ].forEach((name) => {
+        try {
+          if (typeof window[name] === "function") window[name]();
+        } catch (_) {}
+
+        try {
+          window[name] = undefined;
+          delete window[name];
+        } catch (_) {}
+      });
+
+      [
+        "AUDRALIA_BACKSTORY",
+        "AUDRALIA_TECTONICS",
+        "AUDRALIA_TOPOLOGY",
+        "AUDRALIA_CANVAS"
+      ].forEach((name) => {
+        try {
+          window[name] = undefined;
+          delete window[name];
+        } catch (_) {}
+      });
+
+      document.querySelectorAll([
+        'script[src*="./index.js"]',
+        'script[src*="/showroom/globe/audralia/index.js"]',
+        'script[data-audralia-file="true"]'
+      ].join(",")).forEach((script) => script.remove());
+
+      const status = document.getElementById("audralia-route-status");
+      if (status) {
+        status.textContent = [
+          "Audralia G1 parent-chain HTML loaded.",
+          "Loading active route file.",
+          "Route /showroom/globe/audralia/index.js",
+          "Generated image false",
+          "GraphicBox false",
+          "Visual pass claimed false"
+        ].join("\n");
+      }
+
+      const script = document.createElement("script");
+      script.src = `./index.js?v=${key}`;
+      script.defer = true;
+      script.dataset.audraliaFile = "true";
+      script.dataset.audraliaFileRole = "audralia-g1-parent-chain-route-v3";
+
+      script.onerror = () => {
+        if (status) {
+          status.textContent = [
+            "Audralia G1 parent-chain route failed to load.",
+            `Route ${script.src}`,
+            "Generated image false",
+            "GraphicBox false",
+            "Visual pass claimed false"
+          ].join("\n");
+        }
+      };
+
+      document.head.appendChild(script);
+    })();
+  </script>
 </body>
 </html>

@@ -1,23 +1,24 @@
 // /assets/audralia/audralia.beaches.js
-// AUDRALIA_G1_BASELINE_BEACH_AUTHORITY_TNT_v2
+// AUDRALIA_G1_THIN_COASTAL_BEACH_RESTRAINT_BEACH_AUTHORITY_TNT_v3
 // Full-file replacement.
 // Beach authority only.
 // Purpose:
 // - Preserve accepted Audralia G1 visible-landmass baseline.
-// - Add readable beaches without changing land/water footprint.
-// - Beaches remain sea-level edge material.
-// - Raised terrain remains owned by landrise/topology/canvas.
-// - Adds sand beaches, wet beaches, tidal flats, coastal shelves, deltas, lagoons, and beach breaks.
+// - Beaches are thin coastal-edge material only.
+// - Beaches cannot create land.
+// - Beaches cannot recolor interior plains.
+// - Beaches cannot create rectangles.
+// - Beaches cannot override the accepted land/water footprint.
 // - No trees. No bushes. No forest canopy.
 // - No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G1_BASELINE_BEACH_AUTHORITY_TNT_v2";
-  const RECEIPT = "AUDRALIA_G1_BASELINE_BEACH_AUTHORITY_RECEIPT_v2";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G1_BEACH_TO_LAND_RISE_BEACH_AUTHORITY_TNT_v1";
-  const VERSION = "2026-05-10.audralia-g1-baseline-beach-authority-v2";
+  const CONTRACT = "AUDRALIA_G1_THIN_COASTAL_BEACH_RESTRAINT_BEACH_AUTHORITY_TNT_v3";
+  const RECEIPT = "AUDRALIA_G1_THIN_COASTAL_BEACH_RESTRAINT_BEACH_AUTHORITY_RECEIPT_v3";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G1_BASELINE_BEACH_AUTHORITY_TNT_v2";
+  const VERSION = "2026-05-10.audralia-g1-thin-coastal-beach-restraint-authority-v3";
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -104,101 +105,98 @@
     const islandSignal = clamp(context.islandSignal || 0, 0, 1);
     const shelf = clamp(context.shelf || 0, 0, 1);
     const elevation = clamp(context.elevation || 0, 0, 1);
-    const isLand = Boolean(context.isLand);
 
-    const exposure = clamp(
-      Math.max(
-        landSignal,
-        islandSignal * 0.88,
-        isLand ? 0.5 : 0
-      ),
-      0,
-      1
-    );
+    const exposure = clamp(Math.max(landSignal, islandSignal * 0.88), 0, 1);
 
-    const coastNoise = ridged(u * 5.7 + 0.12, v * 4.3 - 0.18, 1810000, 5);
-    const sandNoise = fbm(u * 3.2 - 0.08, v * 2.5 + 0.14, 1811000, 5);
-    const wetNoise = fbm(u * 2.6 + 0.19, v * 2.2 - 0.11, 1812000, 4);
-    const lagoonNoise = ridged(u * 4.8 - 0.21, v * 3.6 + 0.09, 1813000, 4);
-    const deltaNoise = ridged(u * 7.4 + 0.04, v * 5.8 - 0.16, 1814000, 4);
+    const coastNoise = ridged(u * 7.2 + 0.12, v * 5.4 - 0.18, 1910000, 5);
+    const sandNoise = fbm(u * 5.8 - 0.08, v * 4.4 + 0.14, 1911000, 5);
+    const wetNoise = fbm(u * 4.8 + 0.19, v * 3.9 - 0.11, 1912000, 4);
+    const lagoonNoise = ridged(u * 6.4 - 0.21, v * 4.9 + 0.09, 1913000, 4);
+    const deltaNoise = ridged(u * 9.6 + 0.04, v * 7.2 - 0.16, 1914000, 4);
+
+    const coastThreshold = smoothstep(0.365, 0.49, exposure) * (1 - smoothstep(0.505, 0.64, exposure));
+    const shelfGate = smoothstep(0.28, 0.78, shelf);
+    const elevationGate = 1 - smoothstep(0.48, 0.82, elevation);
 
     const beachBand = clamp(
-      smoothstep(0.36, 0.49, exposure) *
-        (1 - smoothstep(0.61, 0.76, exposure)) *
-        (0.72 + coastNoise * 0.28),
+      coastThreshold *
+        (0.34 + shelfGate * 0.66) *
+        (0.76 + coastNoise * 0.24) *
+        elevationGate,
       0,
       1
     );
 
     const beachSand = clamp(
       beachBand *
-        (0.68 + sandNoise * 0.28) *
-        (1 - smoothstep(0.72, 0.96, elevation) * 0.35),
+        (0.58 + sandNoise * 0.28 + coastNoise * 0.1) *
+        (1 - smoothstep(0.62, 0.9, elevation) * 0.45),
       0,
       1
     );
 
     const wetBeach = clamp(
       beachBand *
-        smoothstep(0.36, 0.82, shelf + wetNoise * 0.28) *
-        (1 - smoothstep(0.7, 0.92, elevation)),
+        smoothstep(0.42, 0.82, shelf + wetNoise * 0.22) *
+        (1 - smoothstep(0.56, 0.82, elevation)),
       0,
       1
     );
 
     const tidalFlat = clamp(
       beachBand *
-        smoothstep(0.48, 0.86, shelf + lagoonNoise * 0.18) *
-        (1 - smoothstep(0.64, 0.9, exposure)),
+        smoothstep(0.5, 0.86, shelf + lagoonNoise * 0.12) *
+        (1 - smoothstep(0.5, 0.66, exposure)),
       0,
       1
     );
 
     const coastalShelf = clamp(
-      smoothstep(0.42, 0.88, shelf) *
-        smoothstep(0.24, 0.72, coastNoise + islandSignal * 0.12) *
-        (1 - smoothstep(0.74, 0.94, elevation)),
+      smoothstep(0.5, 0.88, shelf) *
+        coastThreshold *
+        (0.42 + coastNoise * 0.28) *
+        (1 - smoothstep(0.58, 0.86, elevation)),
       0,
       1
     );
 
     const lagoon = clamp(
       beachBand *
-        smoothstep(0.6, 0.9, lagoonNoise * 0.55 + shelf * 0.32 + islandSignal * 0.12) *
-        (1 - smoothstep(0.58, 0.78, exposure)),
+        smoothstep(0.68, 0.92, lagoonNoise * 0.58 + shelf * 0.26 + islandSignal * 0.08) *
+        (1 - smoothstep(0.49, 0.62, exposure)),
       0,
       1
     );
 
     const delta = clamp(
       beachBand *
-        smoothstep(0.68, 0.92, deltaNoise * 0.62 + wetNoise * 0.22 + shelf * 0.12) *
-        smoothstep(0.42, 0.78, landSignal + islandSignal * 0.22),
+        smoothstep(0.72, 0.94, deltaNoise * 0.62 + wetNoise * 0.18 + shelf * 0.1) *
+        smoothstep(0.35, 0.58, landSignal + islandSignal * 0.16),
       0,
       1
     );
 
     const beachBreak = clamp(
       beachBand *
-        smoothstep(0.62, 0.9, coastNoise * 0.64 + deltaNoise * 0.22) *
-        (1 - smoothstep(0.68, 0.9, elevation)),
+        smoothstep(0.68, 0.92, coastNoise * 0.68 + deltaNoise * 0.18) *
+        (1 - smoothstep(0.58, 0.82, elevation)),
       0,
       1
     );
 
     const duneRise = clamp(
       beachSand *
-        smoothstep(0.5, 0.86, sandNoise * 0.58 + exposure * 0.24) *
-        (1 - wetBeach * 0.62) *
-        (1 - tidalFlat * 0.48),
+        smoothstep(0.58, 0.88, sandNoise * 0.62 + exposure * 0.18) *
+        (1 - wetBeach * 0.66) *
+        (1 - tidalFlat * 0.52),
       0,
       1
     );
 
     const coastalWetland = clamp(
       beachBand *
-        smoothstep(0.52, 0.84, wetNoise * 0.42 + shelf * 0.24 + tidalFlat * 0.22) *
-        (1 - smoothstep(0.62, 0.86, elevation)),
+        smoothstep(0.58, 0.86, wetNoise * 0.44 + shelf * 0.22 + tidalFlat * 0.18) *
+        (1 - smoothstep(0.55, 0.78, elevation)),
       0,
       1
     );
@@ -217,8 +215,12 @@
       beachBreak,
       duneRise,
       coastalWetland,
+      thinCoastalEdgeOnly: true,
       beachRemainsSeaLevel: true,
       preservesLandWaterFootprint: true,
+      canCreateLand: false,
+      recolorsInteriorLand: false,
+      createsRectangles: false,
       ownsLandShape: false,
       ownsLandrise: false,
       ownsTerrain: false,
@@ -239,7 +241,7 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "audralia-g1-baseline-beach-authority",
+      authority: "audralia-g1-thin-coastal-beach-restraint-authority",
       beaches: true,
       sandBeaches: true,
       wetBeaches: true,
@@ -248,8 +250,12 @@
       lagoons: true,
       deltas: true,
       beachBreaks: true,
+      thinCoastalEdgeOnly: true,
       beachRemainsSeaLevel: true,
       preservesLandWaterFootprint: true,
+      canCreateLand: false,
+      recolorsInteriorLand: false,
+      createsRectangles: false,
       ownsLandShape: false,
       ownsLandrise: false,
       ownsCanvas: false,
@@ -277,6 +283,7 @@
   document.documentElement.dataset.audraliaBeachesLoaded = "true";
   document.documentElement.dataset.audraliaBeachesContract = CONTRACT;
   document.documentElement.dataset.audraliaBeachesReceipt = RECEIPT;
+  document.documentElement.dataset.audraliaThinCoastalEdgeOnly = "true";
   document.documentElement.dataset.audraliaSandBeaches = "true";
   document.documentElement.dataset.audraliaWetBeaches = "true";
   document.documentElement.dataset.audraliaTidalFlats = "true";
@@ -286,6 +293,9 @@
   document.documentElement.dataset.audraliaBeachBreaks = "true";
   document.documentElement.dataset.audraliaBeachRemainsSeaLevel = "true";
   document.documentElement.dataset.audraliaPreservesLandWaterFootprint = "true";
+  document.documentElement.dataset.audraliaBeachCanCreateLand = "false";
+  document.documentElement.dataset.audraliaBeachRecolorsInteriorLand = "false";
+  document.documentElement.dataset.audraliaBeachCreatesRectangles = "false";
   document.documentElement.dataset.audraliaTrees = "false";
   document.documentElement.dataset.audraliaBushes = "false";
   document.documentElement.dataset.audraliaForestCanopy = "false";

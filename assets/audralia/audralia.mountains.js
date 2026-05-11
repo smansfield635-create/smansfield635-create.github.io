@@ -1,20 +1,23 @@
 // /assets/audralia/audralia.mountains.js
-// AUDRALIA_G1_HIGH_MOUNTAIN_RANGE_COMMUNITY_AUTHORITY_TNT_v1
-// New file.
+// AUDRALIA_G1_RESTRAINT_DESTRIPING_MOUNTAIN_AUTHORITY_TNT_v2
+// Full-file replacement.
 // Mountain authority only.
 // Purpose:
-// - Add high mountains, beautiful mountain ranges, foothills, passes, terraces, and mountain communities.
+// - Keep high mountains and beautiful ranges.
+// - Remove longitude-strip / scanline behavior.
+// - Make ranges follow restrained ridge fields.
+// - Make communities tiny clustered points, not bands.
 // - Mountains consume terrain/landrise; they do not create land from ocean.
-// - Communities appear only as small mountain-settlement signals near foothills, passes, and sheltered basins.
 // - No trees. No bushes. No forest canopy.
 // - No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G1_HIGH_MOUNTAIN_RANGE_COMMUNITY_AUTHORITY_TNT_v1";
-  const RECEIPT = "AUDRALIA_G1_HIGH_MOUNTAIN_RANGE_COMMUNITY_AUTHORITY_RECEIPT_v1";
-  const VERSION = "2026-05-10.audralia-g1-high-mountain-range-community-authority-v1";
+  const CONTRACT = "AUDRALIA_G1_RESTRAINT_DESTRIPING_MOUNTAIN_AUTHORITY_TNT_v2";
+  const RECEIPT = "AUDRALIA_G1_RESTRAINT_DESTRIPING_MOUNTAIN_AUTHORITY_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G1_HIGH_MOUNTAIN_RANGE_COMMUNITY_AUTHORITY_TNT_v1";
+  const VERSION = "2026-05-10.audralia-g1-restraint-destriping-mountain-authority-v2";
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -96,6 +99,27 @@
     return total / Math.max(0.000001, norm);
   }
 
+  function clusteredPoint(u, v, seed, cells) {
+    const s = Math.max(4, cells);
+    const x = wrap01(u) * s;
+    const y = clamp(v, 0, 1) * s;
+
+    const xi = Math.floor(x);
+    const yi = Math.floor(y);
+    const fx = x - xi;
+    const fy = y - yi;
+
+    const hx = hash(xi, yi, seed);
+    const hy = hash(xi, yi, seed + 97);
+    const eligibility = hash(xi, yi, seed + 193);
+
+    const dx = fx - (0.25 + hx * 0.5);
+    const dy = fy - (0.25 + hy * 0.5);
+    const d = Math.sqrt(dx * dx + dy * dy);
+
+    return eligibility > 0.92 ? smoothstep(0.085, 0.0, d) : 0;
+  }
+
   function sampleMountains(u, v, context = {}) {
     const landrise = context.landrise || {};
     const elevation = context.elevation || {};
@@ -108,56 +132,58 @@
     const plateau = clamp(landrise.plateau || elevation.highland || 0, 0, 1);
     const lowland = clamp(landrise.lowland || 0, 0, 1);
     const beachEdge = clamp(landrise.beachEdge || context.beachEdge || 0, 0, 1);
+    const oceanCut = clamp(landrise.oceanCut || 0, 0, 1);
 
-    const longRange = ridged(u * 1.72 + 0.11, v * 1.21 - 0.07, 1011000, 6);
-    const crossRange = ridged(u * 3.15 - 0.18, v * 2.22 + 0.14, 1012000, 5);
-    const peakField = ridged(u * 5.2 + 0.04, v * 4.1 - 0.12, 1013000, 5);
-    const fracture = ridged(u * 8.8 - 0.09, v * 6.4 + 0.17, 1014000, 4);
-    const weathering = fbm(u * 2.6 + 0.2, v * 2.1 - 0.11, 1015000, 5);
-    const valleyCut = 1 - ridged(u * 4.0 - 0.12, v * 3.1 + 0.08, 1016000, 4);
-    const communityGrid = noise(u * 22.0, v * 18.0, 24, 1017000);
-    const terraceGrid = ridged(u * 14.0 + 0.05, v * 10.0 - 0.09, 1018000, 3);
+    const diagonalRangeA = ridged(u * 1.35 + v * 0.42 + 0.11, v * 1.08 - u * 0.22 - 0.07, 1510000, 6);
+    const diagonalRangeB = ridged(u * 1.1 - v * 0.36 - 0.18, v * 1.34 + u * 0.25 + 0.14, 1511000, 5);
+    const localPeak = ridged(u * 3.8 + 0.04, v * 3.0 - 0.12, 1512000, 5);
+    const fracture = ridged(u * 5.6 - 0.09, v * 4.5 + 0.17, 1513000, 4);
+    const weathering = fbm(u * 1.8 + 0.2, v * 1.55 - 0.11, 1514000, 5);
+    const valleyCut = 1 - ridged(u * 2.6 - 0.12, v * 2.2 + 0.08, 1515000, 4);
+    const terraceTexture = fbm(u * 4.4 + 0.05, v * 3.7 - 0.09, 1516000, 4);
+    const communityDot = clusteredPoint(u, v, 1517000, 22);
 
     const gratitudeWeight = clamp(summit.primaryWeight || 0.62, 0, 1);
-    const purityLift = summit.internalSummit === "Purity" ? 0.08 : 0;
-    const patienceLift = summit.internalSummit === "Patience" ? 0.06 : 0;
-    const humilityLowering = summit.internalSummit === "Humility" ? 0.05 : 0;
+    const purityLift = summit.internalSummit === "Purity" ? 0.05 : 0;
+    const patienceLift = summit.internalSummit === "Patience" ? 0.04 : 0;
+    const humilityLowering = summit.internalSummit === "Humility" ? 0.04 : 0;
 
     const mountainEligibility = clamp(
-      terrainMass * 0.34 +
-        inlandCore * 0.24 +
+      terrainMass * 0.3 +
+        inlandCore * 0.22 +
         ridgeBack * 0.24 +
-        plateau * 0.18 +
-        exposure * 0.14 -
-        beachEdge * 0.2 -
-        lowland * 0.08,
+        plateau * 0.15 +
+        exposure * 0.1 -
+        beachEdge * 0.18 -
+        lowland * 0.1 -
+        oceanCut * 0.22,
       0,
       1
     );
 
     const rangeSpine = clamp(
-      smoothstep(0.54, 0.82, longRange * 0.48 + ridgeBack * 0.32 + mountainEligibility * 0.28) *
-        smoothstep(0.16, 0.86, terrainMass),
+      smoothstep(0.6, 0.86, diagonalRangeA * 0.4 + ridgeBack * 0.3 + mountainEligibility * 0.22 + diagonalRangeB * 0.1) *
+        smoothstep(0.28, 0.86, terrainMass),
       0,
       1
     );
 
     const secondaryRange = clamp(
-      smoothstep(0.58, 0.84, crossRange * 0.48 + plateau * 0.24 + mountainEligibility * 0.24) *
-        smoothstep(0.18, 0.82, terrainMass),
+      smoothstep(0.64, 0.88, diagonalRangeB * 0.42 + plateau * 0.2 + mountainEligibility * 0.2) *
+        smoothstep(0.3, 0.82, terrainMass),
       0,
       1
     );
 
     const peak = clamp(
-      smoothstep(0.66, 0.91, peakField * 0.44 + rangeSpine * 0.34 + secondaryRange * 0.18 + elevation.elevation * 0.12) *
-        smoothstep(0.28, 0.78, inlandCore + terrainMass * 0.24),
+      smoothstep(0.72, 0.93, localPeak * 0.36 + rangeSpine * 0.32 + secondaryRange * 0.18 + elevation.elevation * 0.1) *
+        smoothstep(0.36, 0.82, inlandCore + terrainMass * 0.18),
       0,
       1
     );
 
     const highMountain = clamp(
-      smoothstep(0.58, 0.86, rangeSpine * 0.42 + secondaryRange * 0.28 + peak * 0.32 + mountainEligibility * 0.22) +
+      smoothstep(0.64, 0.88, rangeSpine * 0.38 + secondaryRange * 0.22 + peak * 0.32 + mountainEligibility * 0.2) +
         purityLift +
         patienceLift -
         humilityLowering,
@@ -166,48 +192,49 @@
     );
 
     const snowCap = clamp(
-      smoothstep(0.62, 0.9, highMountain * 0.62 + peak * 0.34 + gratitudeWeight * 0.08) *
-        (0.68 + weathering * 0.22),
+      smoothstep(0.7, 0.92, highMountain * 0.58 + peak * 0.36 + gratitudeWeight * 0.04) *
+        (0.62 + weathering * 0.18),
       0,
       1
     );
 
     const cliffFace = clamp(
-      smoothstep(0.6, 0.9, fracture * 0.42 + peak * 0.24 + rangeSpine * 0.24) *
-        smoothstep(0.2, 0.8, terrainMass),
+      smoothstep(0.64, 0.9, fracture * 0.36 + peak * 0.24 + rangeSpine * 0.2) *
+        smoothstep(0.26, 0.82, terrainMass),
       0,
       1
     );
 
     const foothills = clamp(
-      smoothstep(0.28, 0.62, mountainEligibility + plateau * 0.16) *
-        (1 - smoothstep(0.58, 0.92, highMountain)) *
-        smoothstep(0.16, 0.78, terrainMass),
+      smoothstep(0.34, 0.66, mountainEligibility + plateau * 0.12) *
+        (1 - smoothstep(0.62, 0.92, highMountain)) *
+        smoothstep(0.24, 0.78, terrainMass),
       0,
       1
     );
 
     const mountainPass = clamp(
-      smoothstep(0.44, 0.7, valleyCut * 0.44 + rangeSpine * 0.26 + secondaryRange * 0.18) *
-        smoothstep(0.2, 0.8, terrainMass) *
-        (1 - peak * 0.42),
+      smoothstep(0.52, 0.78, valleyCut * 0.38 + rangeSpine * 0.22 + secondaryRange * 0.14) *
+        smoothstep(0.28, 0.82, terrainMass) *
+        (1 - peak * 0.5),
       0,
       1
     );
 
     const terrace = clamp(
-      smoothstep(0.56, 0.82, terraceGrid * 0.42 + foothills * 0.34 + mountainPass * 0.2) *
-        smoothstep(0.16, 0.74, terrainMass),
+      smoothstep(0.62, 0.84, terraceTexture * 0.36 + foothills * 0.32 + mountainPass * 0.18) *
+        smoothstep(0.24, 0.76, terrainMass) *
+        (1 - highMountain * 0.44),
       0,
       1
     );
 
     const community = clamp(
-      smoothstep(0.84, 0.965, communityGrid) *
-        smoothstep(0.34, 0.8, foothills + mountainPass * 0.45 + terrace * 0.24) *
-        (1 - snowCap * 0.72) *
-        (1 - peak * 0.62) *
-        smoothstep(0.22, 0.82, terrainMass),
+      communityDot *
+        smoothstep(0.38, 0.82, foothills + mountainPass * 0.38 + terrace * 0.2) *
+        (1 - snowCap * 0.88) *
+        (1 - peak * 0.76) *
+        smoothstep(0.26, 0.82, terrainMass),
       0,
       1
     );
@@ -215,6 +242,7 @@
     return Object.freeze({
       contract: CONTRACT,
       receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
       highMountain,
       rangeSpine,
       secondaryRange,
@@ -229,6 +257,9 @@
       terrainMassRequired: true,
       beachRemainsSeaLevel: true,
       noOceanMountains: true,
+      destripingActive: true,
+      scanlineMountains: false,
+      scanlineCommunities: false,
       noTrees: true,
       noBushes: true,
       noForestCanopy: true,
@@ -247,14 +278,18 @@
     return Object.freeze({
       contract: CONTRACT,
       receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "audralia-high-mountain-range-community-authority",
+      authority: "audralia-restraint-destriping-mountain-authority",
       highMountains: true,
       mountainRanges: true,
       mountainCommunities: true,
       terrainMassRequired: true,
       beachRemainsSeaLevel: true,
       noOceanMountains: true,
+      destripingActive: true,
+      scanlineMountains: false,
+      scanlineCommunities: false,
       noTrees: true,
       noBushes: true,
       noForestCanopy: true,
@@ -267,6 +302,7 @@
   window.AUDRALIA_MOUNTAINS = Object.freeze({
     contract: CONTRACT,
     receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
     sampleMountains,
     getStatus
@@ -280,6 +316,9 @@
   document.documentElement.dataset.audraliaHighMountains = "true";
   document.documentElement.dataset.audraliaMountainRanges = "true";
   document.documentElement.dataset.audraliaMountainCommunities = "true";
+  document.documentElement.dataset.audraliaDestripingActive = "true";
+  document.documentElement.dataset.audraliaScanlineMountains = "false";
+  document.documentElement.dataset.audraliaScanlineCommunities = "false";
   document.documentElement.dataset.audraliaNoTrees = "true";
   document.documentElement.dataset.audraliaNoBushes = "true";
   document.documentElement.dataset.audraliaNoForestCanopy = "true";

@@ -1,28 +1,30 @@
 // /showroom/globe/index.js
-// SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_ROUTE_TNT_v13
+// SHOWROOM_GLOBE_TV_SET_PRIVATE_INSPECT_NAVIGATION_ROUTE_TNT_v13A
 // Full-file replacement.
 // Showroom projection consumer only.
 //
 // Purpose:
-// - Turn /showroom/globe/ into a planet projection TV set.
-// - Render one central selected planet projection.
-// - Render four mini spinning planet preview canvases.
-// - Use 4 planet channels × 64 states = 256 showroom projection seats.
-// - Select H-Earth by default.
-// - Keep all planet routes separate and protected.
-// - Keep card transform forbidden.
+// - Preserve the Showroom TV set.
+// - Keep H-Earth projected by default.
+// - Keep mini planet previews spinning.
+// - Separate Project behavior from Inspect behavior.
+// - Project = change central showroom screen.
+// - Inspect = navigate to the planet private route.
+// - Prevent card click handlers from hijacking Inspect links.
 // - Keep parent mutation forbidden.
+// - Keep card transform forbidden.
 // - Keep visual pass claim false.
 
-const CONTRACT = "SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_ROUTE_TNT_v13";
+const CONTRACT = "SHOWROOM_GLOBE_TV_SET_PRIVATE_INSPECT_NAVIGATION_ROUTE_TNT_v13A";
+const PREVIOUS_CONTRACT = "SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_ROUTE_TNT_v13";
 const HTML_CONTRACT = "SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_HTML_TNT_v13";
 const PAIR_CONTRACT = "SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_PAIR_TNT_v13";
-const PREVIOUS_CONTRACT = "H_EARTH_G1_SHOWROOM_GLOBE_CONSUMER_ALIGNMENT_TNT_v12D";
 
 const SHOWROOM_MODE = "planet-projection-tv-set";
 const DEFAULT_CHANNEL = "h-earth";
 const LATTICE_GEOMETRY = "4x64=256";
 const CARD_TRANSFORM = "forbidden";
+const PRIVATE_INSPECT_NAVIGATION = "enabled";
 const PLANET_MUTATION_AUTHORIZED = false;
 const VISUAL_PASS_CLAIM = false;
 
@@ -103,9 +105,9 @@ const CHANNELS = Object.freeze([
 
 const state = {
   contract: CONTRACT,
+  previousContract: PREVIOUS_CONTRACT,
   htmlContract: HTML_CONTRACT,
   pairContract: PAIR_CONTRACT,
-  previousContract: PREVIOUS_CONTRACT,
   showroomMode: SHOWROOM_MODE,
   defaultChannel: DEFAULT_CHANNEL,
   activeChannel: DEFAULT_CHANNEL,
@@ -117,6 +119,7 @@ const state = {
   visualPassClaim: false,
   parentMutationAuthorized: false,
   cardTransform: "forbidden",
+  privateInspectNavigation: PRIVATE_INSPECT_NAVIGATION,
   animationId: null,
   reducedMotion: window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true
 };
@@ -138,13 +141,14 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function round(value, places = 2) {
-  const factor = Math.pow(10, places);
-  return Math.round(Number(value) * factor) / factor;
-}
-
 function channelByKey(key) {
   return CHANNELS.find((channel) => channel.key === key) || CHANNELS.find((channel) => channel.key === DEFAULT_CHANNEL);
+}
+
+function codeLine(text) {
+  const code = document.createElement("code");
+  code.textContent = text;
+  return code;
 }
 
 function buildChannelStates(channel) {
@@ -156,10 +160,6 @@ function buildChannelStates(channel) {
     const globalIndex = channel.index * 64 + i;
     const latitude = 72 - row * (144 / 7);
     const longitude = -180 + col * 45;
-    const ring = Math.floor(i / 16);
-    const quadrant = Math.floor(i / 16);
-    const wave = Math.sin((i + 1) * (channel.index + 2.17));
-    const pressure = Math.cos((i + 3) * (channel.index + 1.41));
 
     let kind = "land";
     let candidate = "preview";
@@ -210,12 +210,8 @@ function buildChannelStates(channel) {
       globalIndex,
       row,
       col,
-      ring,
-      quadrant,
       latitude,
       longitude,
-      wave,
-      pressure,
       kind,
       candidate
     });
@@ -245,12 +241,11 @@ function rgbToString(rgb) {
 
 function shade(hex, light) {
   const rgb = hexToRgb(hex);
-  const out = {
+  return rgbToString({
     r: clamp(Math.round(rgb.r * light + 10 * (1 - light)), 0, 255),
     g: clamp(Math.round(rgb.g * light + 10 * (1 - light)), 0, 255),
     b: clamp(Math.round(rgb.b * light + 10 * (1 - light)), 0, 255)
-  };
-  return rgbToString(out);
+  });
 }
 
 function colorForState(channel, projectionState) {
@@ -281,6 +276,9 @@ function setupCanvas(canvas) {
   if (!ctx) return null;
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
+  canvas.style.transform = "none";
+  canvas.dataset.cardTransform = "forbidden";
+
   return ctx;
 }
 
@@ -575,6 +573,8 @@ function renderReceipts(channel) {
   if (!nodes.receiptPanel) return;
 
   nodes.receiptPanel.dataset.routeReceipt = CONTRACT;
+  nodes.receiptPanel.dataset.previousRouteReceipt = PREVIOUS_CONTRACT;
+  nodes.receiptPanel.dataset.privateInspectNavigation = PRIVATE_INSPECT_NAVIGATION;
   nodes.receiptPanel.dataset.activeChannel = channel.key;
   nodes.receiptPanel.dataset.showroomMode = SHOWROOM_MODE;
   nodes.receiptPanel.dataset.latticeGeometry = LATTICE_GEOMETRY;
@@ -586,19 +586,22 @@ function renderReceipts(channel) {
     codeLine(`PAIR_RECEIPT: ${PAIR_CONTRACT}`),
     codeLine(`HTML_RECEIPT: ${HTML_CONTRACT}`),
     codeLine(`ROUTE_RECEIPT: ${CONTRACT}`),
-    codeLine(`PREVIOUS_RECEIPT: ${PREVIOUS_CONTRACT}`),
+    codeLine(`PREVIOUS_ROUTE_RECEIPT: ${PREVIOUS_CONTRACT}`),
     codeLine(`SHOWROOM_MODE: ${SHOWROOM_MODE}`),
     codeLine(`DEFAULT_CHANNEL: ${DEFAULT_CHANNEL}`),
     codeLine(`ACTIVE_CHANNEL: ${channel.key}`),
     codeLine(`ACTIVE_CHANNEL_NAME: ${channel.name}`),
     codeLine(`ACTIVE_CHANNEL_ROUTE: ${channel.route}`),
     codeLine(`ACTIVE_CHANNEL_RECEIPT: ${channel.receipt}`),
+    codeLine(`PRIVATE_INSPECT_NAVIGATION: ${PRIVATE_INSPECT_NAVIGATION}`),
+    codeLine(`PROJECT_ACTION: showroom-screen-only`),
+    codeLine(`INSPECT_ACTION: private-route-navigation`),
+    codeLine(`EARTH_PRIVATE_ROUTE: /showroom/globe/earth/`),
+    codeLine(`H_EARTH_PRIVATE_ROUTE: /showroom/globe/h-earth/`),
+    codeLine(`HEARTH_PRIVATE_ROUTE: /showroom/globe/hearth/`),
+    codeLine(`AUDRALIA_PRIVATE_ROUTE: /showroom/globe/audralia/`),
     codeLine(`LATTICE_GEOMETRY: ${LATTICE_GEOMETRY}`),
     codeLine(`TOTAL_PROJECTION_SEATS: 256`),
-    codeLine(`EARTH_PROJECTION_SEATS: 1-64`),
-    codeLine(`H_EARTH_PROJECTION_SEATS: 65-128`),
-    codeLine(`HEARTH_PROJECTION_SEATS: 129-192`),
-    codeLine(`AUDRALIA_PROJECTION_SEATS: 193-256`),
     codeLine(`CENTRAL_PROJECTION_CANVAS: active`),
     codeLine(`MINI_PREVIEW_CANVASES: earth,h-earth,hearth,audralia`),
     codeLine(`CARD_TRANSFORM: forbidden`),
@@ -613,25 +616,22 @@ function renderReceipts(channel) {
   );
 }
 
-function codeLine(text) {
-  const code = document.createElement("code");
-  code.textContent = text;
-  return code;
-}
-
 function stampDocument(channel) {
   const root = document.documentElement;
 
   root.dataset.routeReceipt = CONTRACT;
+  root.dataset.previousRouteReceipt = PREVIOUS_CONTRACT;
   root.dataset.htmlReceipt = HTML_CONTRACT;
   root.dataset.pairReceipt = PAIR_CONTRACT;
-  root.dataset.previousReceipt = PREVIOUS_CONTRACT;
   root.dataset.showroomMode = SHOWROOM_MODE;
   root.dataset.defaultChannel = DEFAULT_CHANNEL;
   root.dataset.activeChannel = channel.key;
   root.dataset.activeChannelName = channel.name;
   root.dataset.activeChannelRoute = channel.route;
   root.dataset.activeChannelReceipt = channel.receipt;
+  root.dataset.privateInspectNavigation = PRIVATE_INSPECT_NAVIGATION;
+  root.dataset.projectAction = "showroom-screen-only";
+  root.dataset.inspectAction = "private-route-navigation";
   root.dataset.latticeGeometry = LATTICE_GEOMETRY;
   root.dataset.totalProjectionSeats = "256";
   root.dataset.cardTransform = CARD_TRANSFORM;
@@ -667,8 +667,39 @@ function selectChannel(key) {
   drawPlanet(nodes.projectionCanvas, nodes.projectionCtx, channel, state.frame, true);
 }
 
+function navigateToPrivateRoute(key) {
+  const channel = channelByKey(key);
+  window.location.assign(channel.route);
+}
+
+function isPrivateInspectTarget(eventTarget) {
+  return Boolean(eventTarget.closest("[data-inspect-route], a[href]"));
+}
+
 function wireEvents() {
+  document.querySelectorAll("[data-inspect-route]").forEach((anchor) => {
+    const routeKey = anchor.getAttribute("data-inspect-route");
+    const channel = channelByKey(routeKey);
+
+    anchor.setAttribute("href", channel.route);
+    anchor.dataset.privateInspectNavigation = "enabled";
+    anchor.dataset.inspectAction = "private-route-navigation";
+
+    anchor.addEventListener("click", (event) => {
+      event.stopPropagation();
+
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button === 1) {
+        return;
+      }
+
+      event.preventDefault();
+      navigateToPrivateRoute(routeKey);
+    }, { capture: true });
+  });
+
   document.querySelectorAll("[data-select-channel]").forEach((button) => {
+    button.dataset.projectAction = "showroom-screen-only";
+
     button.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
@@ -678,12 +709,13 @@ function wireEvents() {
 
   document.querySelectorAll("[data-channel-card]").forEach((card) => {
     card.addEventListener("click", (event) => {
-      if (event.target.closest("a")) return;
+      if (isPrivateInspectTarget(event.target)) return;
       selectChannel(card.getAttribute("data-channel-card"));
     });
 
     card.addEventListener("keydown", (event) => {
       if (event.key !== "Enter" && event.key !== " ") return;
+      if (isPrivateInspectTarget(event.target)) return;
       event.preventDefault();
       selectChannel(card.getAttribute("data-channel-card"));
     });
@@ -712,45 +744,24 @@ function drawFrame() {
   }
 }
 
-function exposeApi() {
-  const api = {
-    contract: CONTRACT,
-    receipt: CONTRACT,
-    htmlContract: HTML_CONTRACT,
-    pairContract: PAIR_CONTRACT,
-    previousContract: PREVIOUS_CONTRACT,
-    showroomMode: SHOWROOM_MODE,
-    defaultChannel: DEFAULT_CHANNEL,
-    latticeGeometry: LATTICE_GEOMETRY,
-    channels: CHANNELS.map((channel) => ({ ...channel })),
-    getStatus: getShowroomGlobeProjectionStatus,
-    status: getShowroomGlobeProjectionStatus,
-    getShowroomGlobeProjectionStatus,
-    selectChannel,
-    project: selectChannel
-  };
-
-  window.DGBShowroomGlobeProjection = api;
-  window.ShowroomGlobeProjection = api;
-  window.SHOWROOM_GLOBE_TV_SET = api;
-  window.SHOWROOM_GLOBE_TV_SET_RECEIPT = CONTRACT;
-}
-
 function getShowroomGlobeProjectionStatus() {
   const channel = channelByKey(state.activeChannel);
 
   return {
     contract: CONTRACT,
     receipt: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
     htmlContract: HTML_CONTRACT,
     pairContract: PAIR_CONTRACT,
-    previousContract: PREVIOUS_CONTRACT,
     showroomMode: SHOWROOM_MODE,
     defaultChannel: DEFAULT_CHANNEL,
     activeChannel: channel.key,
     activeChannelName: channel.name,
     activeChannelRoute: channel.route,
     activeChannelReceipt: channel.receipt,
+    privateInspectNavigation: PRIVATE_INSPECT_NAVIGATION,
+    projectAction: "showroom-screen-only",
+    inspectAction: "private-route-navigation",
     latticeGeometry: LATTICE_GEOMETRY,
     totalProjectionSeats: 256,
     channelCount: CHANNELS.length,
@@ -768,6 +779,33 @@ function getShowroomGlobeProjectionStatus() {
     generatedImage: false,
     startedAt: state.startedAt
   };
+}
+
+function exposeApi() {
+  const api = {
+    contract: CONTRACT,
+    receipt: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
+    htmlContract: HTML_CONTRACT,
+    pairContract: PAIR_CONTRACT,
+    showroomMode: SHOWROOM_MODE,
+    defaultChannel: DEFAULT_CHANNEL,
+    latticeGeometry: LATTICE_GEOMETRY,
+    privateInspectNavigation: PRIVATE_INSPECT_NAVIGATION,
+    channels: CHANNELS.map((channel) => ({ ...channel })),
+    getStatus: getShowroomGlobeProjectionStatus,
+    status: getShowroomGlobeProjectionStatus,
+    getShowroomGlobeProjectionStatus,
+    selectChannel,
+    project: selectChannel,
+    inspect: navigateToPrivateRoute,
+    navigateToPrivateRoute
+  };
+
+  window.DGBShowroomGlobeProjection = api;
+  window.ShowroomGlobeProjection = api;
+  window.SHOWROOM_GLOBE_TV_SET = api;
+  window.SHOWROOM_GLOBE_TV_SET_RECEIPT = CONTRACT;
 }
 
 function boot() {
@@ -797,12 +835,13 @@ if (document.readyState === "loading") {
 
 export {
   CONTRACT,
+  PREVIOUS_CONTRACT,
   HTML_CONTRACT,
   PAIR_CONTRACT,
-  PREVIOUS_CONTRACT,
   SHOWROOM_MODE,
   DEFAULT_CHANNEL,
   LATTICE_GEOMETRY,
+  PRIVATE_INSPECT_NAVIGATION,
   CHANNELS,
   getShowroomGlobeProjectionStatus
 };

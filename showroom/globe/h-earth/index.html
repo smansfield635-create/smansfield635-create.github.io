@@ -9,18 +9,19 @@
   data-planet-meaning="Hybrid Earth"
   data-generation="G1"
   data-seed-packet="H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1"
-  data-contract="H_EARTH_G1_CONTROLS_MOTION_INPUT_HTML_TNT_v8"
-  data-route-doorway-required="H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8"
-  data-previous-contract="H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_HTML_TNT_v7"
-  data-previous-doorway="H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_TNT_v7"
+  data-contract="H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_HTML_TNT_v9"
+  data-route-doorway-required="H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9"
+  data-previous-contract="H_EARTH_G1_CONTROLS_MOTION_INPUT_HTML_TNT_v8"
+  data-previous-doorway="H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8"
   data-authority="route-shell-only"
   data-parent-core-chain="kernel-lattice256-landmap-terrain-surface"
   data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas-controls"
   data-surface="active-read-only"
   data-canvas="active-visible-composition"
-  data-controls="motion-input-route-gated"
+  data-controls="active-motion-input-authority"
+  data-canvas-controls-receipt-aligned="route-gated"
   data-canvas-paint-authorized="true"
-  data-controls-authorized="route-gated"
+  data-controls-authorized="true"
   data-parent-mutation-authorized="false"
   data-earth-reference-shell="protected-reference-only"
   data-mutation-earth="forbidden"
@@ -37,7 +38,7 @@
   <title>Diamond Gate Bridge · H-Earth</title>
   <meta
     name="description"
-    content="H-Earth is the Hybrid Earth experimental third-planet lane. This shell activates controls as motion/input authority only after canvas visible-composition proof passes. Parent truth remains immutable."
+    content="H-Earth is the Hybrid Earth experimental third-planet lane. This shell aligns canvas and controls receipts after controls activate as downstream motion/input authority. Parent truth remains immutable."
   >
 
   <style>
@@ -275,8 +276,8 @@
       overflow: hidden;
     }
 
-    #hEarthCanvasMount[data-route-mount="awaiting-controls-motion-input"]::before {
-      content: "Awaiting H-Earth controls motion/input authority";
+    #hEarthCanvasMount[data-route-mount="awaiting-controls-receipt-alignment"]::before {
+      content: "Awaiting H-Earth controls receipt alignment";
       position: absolute;
       left: 50%;
       top: 50%;
@@ -328,7 +329,7 @@
     }
 
     .controls-mount:empty::before {
-      content: "Controls mount ready. Route doorway will activate motion/input after canvas proof passes.";
+      content: "Controls mount ready. Route doorway will align controls receipt after canvas proof passes.";
       display: block;
       padding: 16px;
       border: 1px dashed rgba(244, 191, 96, 0.28);
@@ -487,11 +488,12 @@
     <main id="h-earth-main" tabindex="-1">
       <section class="hero" aria-labelledby="h-earth-title">
         <div class="hero-copy">
-          <p class="eyebrow">H-Earth · G1 · Controls Motion/Input Authority</p>
+          <p class="eyebrow">H-Earth · G1 · Controls Receipt Alignment</p>
           <h1 id="h-earth-title">H-Earth</h1>
           <p class="lede">
-            H-Earth means Hybrid Earth. The parent chain and canvas proof have passed. This shell
-            stretches authority into controls as motion/input only. Parent truth remains immutable.
+            H-Earth means Hybrid Earth. Canvas and controls are now aligned at the receipt layer.
+            Controls are active as downstream motion/input authority after canvas proof passes.
+            Parent truth remains immutable.
           </p>
 
           <div class="route-actions" aria-label="Route actions">
@@ -506,37 +508,39 @@
             class="receipt-panel"
             aria-label="H-Earth route status target"
             data-status-target="h-earth-route"
-            data-current-status="controls-motion-input-html-loaded-awaiting-v8-doorway"
+            data-current-status="controls-receipt-alignment-html-loaded-awaiting-v9-doorway"
             data-route-shell="ready"
-            data-route-doorway="awaiting-controls-motion-input-route"
+            data-route-doorway="awaiting-controls-receipt-alignment-route"
             data-parent-core-chain="kernel-lattice256-landmap-terrain-surface"
             data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas-controls"
             data-surface="active-read-only"
             data-canvas="active-visible-composition"
-            data-controls="motion-input-route-gated"
+            data-controls="active-motion-input-authority"
+            data-canvas-controls-receipt-aligned="route-gated"
             data-parent-mutation-authorized="false"
           >
-            <code>ROUTE_RECEIPT: H_EARTH_G1_CONTROLS_MOTION_INPUT_HTML_TNT_v8</code>
-            <code>PREVIOUS_ROUTE_RECEIPT: H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_HTML_TNT_v7</code>
+            <code>ROUTE_RECEIPT: H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_HTML_TNT_v9</code>
+            <code>PREVIOUS_ROUTE_RECEIPT: H_EARTH_G1_CONTROLS_MOTION_INPUT_HTML_TNT_v8</code>
             <code>SEED_PACKET: H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1</code>
-            <code>REQUIRED_DOORWAY: H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8</code>
-            <code>STATUS: controls motion/input HTML loaded; awaiting v8 doorway module</code>
+            <code>REQUIRED_DOORWAY: H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9</code>
+            <code>STATUS: controls receipt alignment HTML loaded; awaiting v9 doorway module</code>
           </section>
         </div>
 
-        <section class="stage" aria-label="H-Earth controls and parent-chain status stage">
-          <div class="stage-label">Controls Status Mount</div>
+        <section class="stage" aria-label="H-Earth controls receipt alignment and parent-chain status stage">
+          <div class="stage-label">Receipt Alignment Mount</div>
           <div class="mount-shell">
             <div
               id="hEarthCanvasMount"
               role="img"
-              aria-label="H-Earth status mount awaiting controls motion input authority"
+              aria-label="H-Earth status mount awaiting controls receipt alignment"
               data-mount="h-earth-parent-chain-status"
-              data-route-mount="awaiting-controls-motion-input"
+              data-route-mount="awaiting-controls-receipt-alignment"
               data-h-earth-surface-status-mount="true"
               data-surface-authority="active-read-only"
               data-canvas-authority="active-visible-composition"
-              data-controls-authority="motion-input-route-gated"
+              data-controls-authority="active-motion-input-authority"
+              data-canvas-controls-receipt-aligned="route-gated"
               data-parent-mutation-authorized="false"
               data-planet-truth-owner="parent-chain"
             ></div>
@@ -547,12 +551,13 @@
       <section
         id="hEarthCanvasCompositionMount"
         class="canvas-composition-mount"
-        aria-label="H-Earth canvas parent-instance consumer visible-composition mount"
+        aria-label="H-Earth canvas controls receipt alignment visible-composition mount"
         data-h-earth-canvas-mount="true"
         data-canvas-composition-mount="h-earth"
         data-canvas-authority="visible-composition-only"
-        data-canvas-consumer="parent-instance-consumer"
+        data-canvas-consumer="controls-receipt-alignment"
         data-surface-source="parent-material-truth"
+        data-controls-authority="active-motion-input-authority"
       ></section>
 
       <section
@@ -574,10 +579,10 @@
         </article>
 
         <article class="panel">
-          <h2>Controls Authority</h2>
+          <h2>Controls Receipt Alignment</h2>
           <p>
-            Controls own motion/input only. They may move the visible canvas layer but may not alter
-            kernel, lattice, landmap, terrain, surface, or material truth.
+            Canvas now reports controls as active when the controls API reports active motion/input authority.
+            Parent truth remains immutable.
           </p>
         </article>
 
@@ -591,22 +596,22 @@
       </section>
 
       <section class="panel" aria-labelledby="chain-title" style="margin-top:16px;">
-        <h2 id="chain-title">Authoritative Stretch Chain Order</h2>
+        <h2 id="chain-title">Controls Receipt Alignment Chain Order</h2>
         <p>
-          Controls are downstream from canvas visible-composition proof. Parent truth remains upstream
-          and immutable.
+          Canvas and controls receipts are aligned downstream from canvas visible-composition proof.
+          Parent truth remains upstream and immutable.
         </p>
 
         <ol class="chain-list">
-          <li><strong>HTML route shell</strong><span class="status-pill">current file v8</span></li>
-          <li><strong>Route doorway</strong><span class="status-pill">index.js v8</span></li>
+          <li><strong>HTML route shell</strong><span class="status-pill">current file v9</span></li>
+          <li><strong>Route doorway</strong><span class="status-pill">index.js v9</span></li>
           <li><strong>Kernel parent core</strong><span class="status-pill">locked</span></li>
           <li><strong>256 lattice parent-coordinate engine</strong><span class="status-pill">locked</span></li>
           <li><strong>Landmap parent mask</strong><span class="status-pill">terrain balance v2</span></li>
           <li><strong>Terrain parent relief</strong><span class="status-pill">full aspect v2</span></li>
           <li><strong>Surface parent material truth</strong><span class="status-pill">active read</span></li>
-          <li><strong>Canvas parent-instance consumer</strong><span class="status-pill ready">proof passed</span></li>
-          <li><strong>Controls motion/input only</strong><span class="status-pill ready">route-gated</span></li>
+          <li><strong>Canvas controls receipt alignment</strong><span class="status-pill ready">aligned</span></li>
+          <li><strong>Controls motion/input only</strong><span class="status-pill ready">active</span></li>
         </ol>
       </section>
 
@@ -615,14 +620,15 @@
         class="receipt-panel"
         aria-label="H-Earth public receipts"
         data-receipt-panel="h-earth"
-        data-receipt-route="H_EARTH_G1_CONTROLS_MOTION_INPUT_HTML_TNT_v8"
-        data-previous-receipt-route="H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_HTML_TNT_v7"
+        data-receipt-route="H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_HTML_TNT_v9"
+        data-previous-receipt-route="H_EARTH_G1_CONTROLS_MOTION_INPUT_HTML_TNT_v8"
         data-receipt-seed="H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1"
-        data-required-doorway="H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8"
+        data-required-doorway="H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9"
         data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas-controls"
         data-expected-surface-contract="H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1"
-        data-expected-canvas-contract="H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_TNT_v2"
+        data-expected-canvas-contract="H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3"
         data-expected-controls-contract="H_EARTH_G1_CONTROLS_MOTION_INPUT_AUTHORITY_TNT_v1"
+        data-canvas-controls-receipt-aligned="route-gated"
         data-parent-mutation-authorized="false"
         data-receipt-graphic-box="FORBIDDEN"
         data-receipt-image-generation="FORBIDDEN"
@@ -630,24 +636,25 @@
       >
         <code>H_EARTH_IDENTITY: separate experimental third-planet lane</code>
         <code>ROUTE_AUTHORITY: shell only</code>
-        <code>ROUTE_RECEIPT: H_EARTH_G1_CONTROLS_MOTION_INPUT_HTML_TNT_v8</code>
-        <code>REQUIRED_DOORWAY: H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8</code>
+        <code>ROUTE_RECEIPT: H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_HTML_TNT_v9</code>
+        <code>REQUIRED_DOORWAY: H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9</code>
         <code>EXPECTED_SURFACE: H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1</code>
-        <code>EXPECTED_CANVAS: H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_TNT_v2</code>
+        <code>EXPECTED_CANVAS: H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3</code>
         <code>EXPECTED_CONTROLS: H_EARTH_G1_CONTROLS_MOTION_INPUT_AUTHORITY_TNT_v1</code>
         <code>ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface → canvas → controls</code>
+        <code>CANVAS_CONTROLS_RECEIPT_ALIGNED: route-gated</code>
         <code>PARENT_MUTATION_AUTHORIZED: false</code>
         <code>STATUS_TARGET: #hEarthStatusTarget</code>
         <code>PARENT_CHAIN_STATUS_MOUNT: #hEarthCanvasMount</code>
         <code>CANVAS_COMPOSITION_MOUNT: #hEarthCanvasCompositionMount</code>
         <code>CONTROLS_MOUNT: #hEarthControlsMount</code>
-        <code>SCRIPT_HANDOFF: ./index.js?v=H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8</code>
+        <code>SCRIPT_HANDOFF: ./index.js?v=H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9</code>
         <code>EARTH_REFERENCE_SHELL: protected; no mutation authorized</code>
       </section>
     </main>
 
     <footer class="footer">
-      H-Earth G1 controls motion/input shell. Controls are downstream only.
+      H-Earth G1 controls receipt alignment shell. Controls are active downstream motion/input authority.
       Parent truth remains immutable. Visual pass claim remains false until owner visual confirmation.
     </footer>
   </div>
@@ -655,11 +662,11 @@
   <script
     id="hEarthModuleHandoff"
     type="module"
-    src="./index.js?v=H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8"
-    data-handoff="h-earth-controls-motion-input-route"
-    data-required-next-contract="H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8"
-    data-previous-contract="H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_TNT_v7"
-    data-cache-key="2026-05-11-h-earth-controls-motion-input-html-v8"
+    src="./index.js?v=H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9"
+    data-handoff="h-earth-controls-receipt-alignment-route"
+    data-required-next-contract="H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9"
+    data-previous-contract="H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8"
+    data-cache-key="2026-05-11-h-earth-controls-receipt-alignment-html-v9"
   ></script>
 </body>
 </html>

@@ -59,7 +59,9 @@
       --max: 1180px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html {
       min-height: 100%;
@@ -79,7 +81,10 @@
         radial-gradient(circle at 82% 12%, rgba(143, 240, 195, 0.08), transparent 24rem);
     }
 
-    a { color: inherit; text-decoration: none; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
     a:focus-visible {
       outline: 2px solid var(--gold);
@@ -100,7 +105,9 @@
       transition: transform 160ms ease;
     }
 
-    .skip-link:focus { transform: translateY(0); }
+    .skip-link:focus {
+      transform: translateY(0);
+    }
 
     .page-shell {
       width: min(var(--max), calc(100% - 32px));
@@ -181,7 +188,9 @@
       backdrop-filter: blur(18px);
     }
 
-    .hero-copy { padding: clamp(22px, 4vw, 42px); }
+    .hero-copy {
+      padding: clamp(22px, 4vw, 42px);
+    }
 
     .eyebrow {
       display: inline-flex;
@@ -400,8 +409,13 @@
       text-transform: uppercase;
     }
 
-    .status-pill.ready { color: var(--green); }
-    .status-pill.held { color: var(--muted); }
+    .status-pill.ready {
+      color: var(--green);
+    }
+
+    .status-pill.held {
+      color: var(--muted);
+    }
 
     .receipt-panel {
       margin-top: 16px;
@@ -435,9 +449,17 @@
         flex-direction: column;
       }
 
-      .nav { justify-content: flex-start; }
-      .hero { grid-template-columns: 1fr; }
-      .grid { grid-template-columns: 1fr; }
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 560px) {
@@ -454,12 +476,27 @@
         border-radius: 18px;
       }
 
-      .stage { padding: 10px; }
-      .mount-shell { min-height: 360px; }
-      .stage-label { left: 14px; top: 14px; }
-      #hEarthCanvasMount { width: min(100%, 330px); }
+      .stage {
+        padding: 10px;
+      }
+
+      .mount-shell {
+        min-height: 360px;
+      }
+
+      .stage-label {
+        left: 14px;
+        top: 14px;
+      }
+
+      #hEarthCanvasMount {
+        width: min(100%, 330px);
+      }
+
       .canvas-composition-mount,
-      .controls-mount { padding: 10px; }
+      .controls-mount {
+        padding: 10px;
+      }
     }
   </style>
 </head>

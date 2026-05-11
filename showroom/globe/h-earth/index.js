@@ -1,26 +1,52 @@
 // /showroom/globe/h-earth/index.js
-// H_EARTH_G1_ROUTE_SOURCE_MARKER_ALIGNMENT_TNT_v5
-// Required source marker retained for Gauges: H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4
+// H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_DOORWAY_TNT_v5
 // Full-file replacement.
 // Route doorway authority only.
+//
+// Purpose:
+// - Import kernel → lattice256 → landmap → terrain → surface → canvas.
+// - Mount H-Earth canvas visible composition into #hEarthCanvasMount.
+// - Keep controls held.
+// - Preserve all parent truth boundaries.
+// - Keep visual pass claim false until Gauges verifies canvas route.
+//
+// Owns:
+// - route boot
+// - parent-chain module import sequence
+// - canvas mount call
+// - status bridge
+// - public route receipts
+//
+// Does not own:
+// - land/water truth
+// - terrain truth
+// - surface material truth
+// - controls
+// - drag
+// - zoom
+// - animation clock
+// - weather
+// - atmosphere
+// - life systems
 
-const CONTRACT = "H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4";
+const CONTRACT = "H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_DOORWAY_TNT_v5";
+const PRIOR_CONTRACT = "H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4";
 const ALIGNMENT_CONTRACT = "H_EARTH_G1_ROUTE_SOURCE_MARKER_ALIGNMENT_TNT_v5";
-const PRIOR_CONTRACT = "H_EARTH_G1_TERRAIN_BALANCE_ROUTE_DOORWAY_TNT_v3";
 const SEED_PACKET = "H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1";
 const ROUTE = "/showroom/globe/h-earth/";
 const PLANET = "H-Earth";
 const GENERATION = "G1";
 
-const URL_CACHE = new URLSearchParams(window.location.search).get("v") || "route-source-marker-alignment-v5";
-const CACHE_KEY = `2026-05-11-h-earth-route-source-marker-alignment-v5-${URL_CACHE}`;
+const URL_CACHE = new URLSearchParams(window.location.search).get("v") || "canvas-visible-composition-v1";
+const CACHE_KEY = `2026-05-11-h-earth-canvas-visible-composition-v1-${URL_CACHE}`;
 
 const EXPECTED_CONTRACTS = Object.freeze({
   kernel: "H_EARTH_G1_TERRAIN_ONLY_KERNEL_TNT_v1",
   lattice256: "H_EARTH_G1_TERRAIN_ONLY_LATTICE256_TNT_v1",
   landmap: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_LANDMAP_TNT_v2",
   terrain: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_TERRAIN_TNT_v2",
-  surface: "H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1"
+  surface: "H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1",
+  canvas: "H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_TNT_v1"
 });
 
 const ACTIVE_MODULES = Object.freeze([
@@ -48,26 +74,36 @@ const ACTIVE_MODULES = Object.freeze([
     key: "surface",
     path: "/assets/h-earth/h-earth.surface.js",
     requiredExport: "createHEarthSurface"
+  },
+  {
+    key: "canvas",
+    path: "/assets/h-earth/h-earth.canvas.js",
+    requiredExport: "createHEarthCanvas"
   }
 ]);
 
 const HELD_MODULES = Object.freeze([
   {
-    key: "canvas",
-    path: "/assets/h-earth/h-earth.canvas.js",
-    status: "held-until-canvas-tnt-authorized"
-  },
-  {
     key: "controls",
     path: "/assets/h-earth/h-earth.controls.js",
-    status: "held-until-canvas-exists"
+    status: "held-until-canvas-route-proof-passes"
+  },
+  {
+    key: "ground",
+    path: "/assets/h-earth/h-earth/ground/",
+    status: "held-until-orbital-aerial-inspection-is-coherent"
+  },
+  {
+    key: "estate",
+    path: "/assets/h-earth/h-earth/estate/",
+    status: "held-until-ground-level-mode-is-authorized"
   }
 ]);
 
 const state = {
   contract: CONTRACT,
-  alignmentContract: ALIGNMENT_CONTRACT,
   priorContract: PRIOR_CONTRACT,
+  alignmentContract: ALIGNMENT_CONTRACT,
   seedPacket: SEED_PACKET,
   route: ROUTE,
   planet: PLANET,
@@ -79,6 +115,7 @@ const state = {
   staleContractCount: 0,
   activeModules: {},
   instances: {},
+  canvasResult: null,
   errors: []
 };
 
@@ -122,13 +159,13 @@ function stampDocument() {
   const root = document.documentElement;
 
   root.dataset.routeDoorwayContract = CONTRACT;
-  root.dataset.alignmentContract = ALIGNMENT_CONTRACT;
   root.dataset.previousRouteDoorwayContract = PRIOR_CONTRACT;
+  root.dataset.alignmentContract = ALIGNMENT_CONTRACT;
   root.dataset.hEarthSeedPacket = SEED_PACKET;
   root.dataset.parentCoreChainStatus = state.parentChainStatus;
   root.dataset.cacheKey = CACHE_KEY;
   root.dataset.surface = "active-read-only";
-  root.dataset.canvas = "held";
+  root.dataset.canvas = "active-visible-composition";
   root.dataset.controls = "held";
   root.dataset.graphicBox = "forbidden";
   root.dataset.imageGeneration = "forbidden";
@@ -144,18 +181,18 @@ function publishStatus(message, lines = []) {
   target.dataset.currentStatus = message;
   target.dataset.routeDoorway = "active";
   target.dataset.routeDoorwayContract = CONTRACT;
-  target.dataset.alignmentContract = ALIGNMENT_CONTRACT;
   target.dataset.previousRouteDoorwayContract = PRIOR_CONTRACT;
+  target.dataset.alignmentContract = ALIGNMENT_CONTRACT;
   target.dataset.parentCoreChain = state.parentChainStatus;
   target.dataset.surface = "active-read-only";
-  target.dataset.canvas = "held";
+  target.dataset.canvas = "active-visible-composition";
   target.dataset.controls = "held";
   target.dataset.cacheKey = CACHE_KEY;
 
   target.replaceChildren(
     codeLine(`ROUTE_DOORWAY_RECEIPT: ${CONTRACT}`),
-    codeLine(`ALIGNMENT_RECEIPT: ${ALIGNMENT_CONTRACT}`),
     codeLine(`PREVIOUS_DOORWAY: ${PRIOR_CONTRACT}`),
+    codeLine(`ALIGNMENT_RECEIPT: ${ALIGNMENT_CONTRACT}`),
     codeLine(`SEED_PACKET: ${SEED_PACKET}`),
     codeLine(`CACHE_KEY: ${CACHE_KEY}`),
     codeLine(`STATUS: ${message}`),
@@ -184,11 +221,13 @@ function publishReceiptPanel() {
   const landmap = state.instances.landmap;
   const terrain = state.instances.terrain;
   const surface = state.instances.surface;
+  const canvasAuthority = state.instances.canvas;
+  const canvasReceipt = canvasAuthority?.getCanvasReceipt?.() || state.canvasResult?.receipt || null;
+  const pixelProof = state.canvasResult?.pixelProof || canvasReceipt?.pixelProof || null;
 
   const landSummary = landmap?.summary;
   const terrainSummary = terrain?.summary;
   const surfaceSummary = surface?.summary;
-  const surfaceReceipt = surface?.receipts?.surface;
 
   const proofLines = landSummary && terrainSummary && surfaceSummary
     ? [
@@ -198,41 +237,47 @@ function publishReceiptPanel() {
         `TERRAIN_ASPECTS: ${terrainSummary.populatedTerrainAspectCount}/${terrainSummary.terrainAspectCount}`,
         `FULL_ASPECT_DISPOSITION: ${String(terrainSummary.fullAspectDisposition)}`,
         `SURFACE_TOTAL_CELLS: ${surfaceSummary.totalCells}`,
-        `LAND_SURFACE_CELLS: ${surfaceSummary.landSurfaceCells}`,
-        `OCEAN_SURFACE_CELLS: ${surfaceSummary.oceanSurfaceCells}`,
         `SURFACE_MATERIAL_CLASSES: ${surfaceSummary.materialClassCount}/${surfaceSummary.requiredMaterialClassCount}`,
         `MATERIAL_COVERAGE_COMPLETE: ${String(surfaceSummary.materialCoverageComplete)}`,
         `EVERY_CELL_ASSIGNED_SURFACE: ${String(surfaceSummary.everyCellAssignedSurface)}`,
         `SURFACE_PARENT_READY: ${String(surfaceSummary.surfaceParentReady)}`,
         `DOWNSTREAM_CANVAS_MAY_READ_SURFACE: ${String(surfaceSummary.downstreamCanvasMayReadSurface)}`,
-        `CANVAS_PAINT_AUTHORIZED: ${String(surfaceSummary.canvasPaintAuthorized)}`,
-        `CONTROLS_AUTHORIZED: ${String(surfaceSummary.controlsAuthorized)}`,
-        `SURFACE_RECEIPT: ${surfaceReceipt?.contract || "missing"}`,
-        `SURFACE_MATERIAL_COMPLETION: ${surfaceReceipt?.materialCompletionContract || "missing"}`
+        `CANVAS_RENDERED: ${String(Boolean(state.canvasResult?.rendered))}`,
+        `CANVAS_RECEIPT: ${canvasReceipt?.contract || "missing"}`,
+        `PIXEL_PROOF_AVAILABLE: ${String(Boolean(pixelProof?.available))}`,
+        `NON_BLANK_RATIO: ${pixelProof?.nonBlankRatio ?? "pending"}`,
+        `WATER_LIKE_RATIO: ${pixelProof?.waterLikeRatio ?? "pending"}`,
+        `LAND_LIKE_RATIO: ${pixelProof?.landLikeRatio ?? "pending"}`,
+        `POLAR_LIKE_RATIO: ${pixelProof?.polarLikeRatio ?? "pending"}`,
+        `VISUAL_PASS_CLAIMED: false`,
+        `CONTROLS_AUTHORIZED: false`
       ]
-    : ["SURFACE_SUMMARY: pending"];
+    : ["CANVAS_SUMMARY: pending"];
 
   panel.dataset.receiptDoorway = CONTRACT;
+  panel.dataset.previousReceiptDoorway = PRIOR_CONTRACT;
   panel.dataset.alignmentReceipt = ALIGNMENT_CONTRACT;
   panel.dataset.parentChainStatus = state.parentChainStatus;
   panel.dataset.loadedModules = String(state.loadedCount);
   panel.dataset.failedModules = String(state.failedCount);
   panel.dataset.staleContractCount = String(state.staleContractCount);
   panel.dataset.surface = "active-read-only";
-  panel.dataset.canvas = "held";
+  panel.dataset.canvas = "active-visible-composition";
   panel.dataset.controls = "held";
+  panel.dataset.visualPassClaim = "false";
 
   panel.replaceChildren(
     codeLine(`H_EARTH_IDENTITY: separate experimental third-planet lane`),
     codeLine(`ROUTE_AUTHORITY: doorway only`),
     codeLine(`ROUTE_DOORWAY_RECEIPT: ${CONTRACT}`),
+    codeLine(`PREVIOUS_DOORWAY: ${PRIOR_CONTRACT}`),
     codeLine(`ALIGNMENT_RECEIPT: ${ALIGNMENT_CONTRACT}`),
     codeLine(`PARENT_CHAIN_STATUS: ${state.parentChainStatus}`),
     codeLine(`LOADED_ACTIVE_MODULES: ${state.loadedCount}`),
     codeLine(`FAILED_ACTIVE_MODULES: ${state.failedCount}`),
     codeLine(`STALE_CONTRACTS: ${state.staleContractCount}`),
     codeLine(`SURFACE: ACTIVE_READ_ONLY`),
-    codeLine(`CANVAS: HELD`),
+    codeLine(`CANVAS: ACTIVE_VISIBLE_COMPOSITION`),
     codeLine(`CONTROLS: HELD`),
     codeLine(`GRAPHIC_BOX: FORBIDDEN`),
     codeLine(`IMAGE_GENERATION: FORBIDDEN`),
@@ -242,59 +287,6 @@ function publishReceiptPanel() {
     ...heldLines.map(codeLine),
     ...proofLines.map(codeLine)
   );
-}
-
-function renderMountMessage(title, bodyLines = []) {
-  const mount = mountTarget();
-  if (!mount) return;
-
-  mount.dataset.routeMount = "surface-active-read-status";
-  mount.dataset.routeDoorwayContract = CONTRACT;
-  mount.dataset.alignmentContract = ALIGNMENT_CONTRACT;
-  mount.dataset.cacheKey = CACHE_KEY;
-  mount.dataset.surfaceAuthority = "active-read-only";
-  mount.dataset.canvasAuthority = "held";
-  mount.dataset.controlsAuthority = "held";
-  mount.dataset.planetTruthOwner = "parent-chain";
-
-  const shell = document.createElement("div");
-  shell.setAttribute("aria-live", "polite");
-  shell.style.position = "absolute";
-  shell.style.left = "50%";
-  shell.style.top = "50%";
-  shell.style.width = "min(88%, 440px)";
-  shell.style.transform = "translate(-50%, -50%)";
-  shell.style.padding = "16px";
-  shell.style.border = "1px solid rgba(143, 240, 195, 0.34)";
-  shell.style.borderRadius = "24px";
-  shell.style.background = "rgba(5, 9, 18, 0.80)";
-  shell.style.color = "#f6ead2";
-  shell.style.textAlign = "center";
-  shell.style.font = "700 0.9rem Inter, system-ui, sans-serif";
-  shell.style.letterSpacing = "0.02em";
-  shell.style.boxShadow = "0 20px 60px rgba(0,0,0,.35)";
-
-  const heading = document.createElement("div");
-  heading.textContent = title;
-  heading.style.color = "#8ff0c3";
-  heading.style.fontWeight = "900";
-  heading.style.textTransform = "uppercase";
-  heading.style.letterSpacing = "0.08em";
-  heading.style.marginBottom = bodyLines.length ? "10px" : "0";
-
-  shell.appendChild(heading);
-
-  for (const line of bodyLines) {
-    const item = document.createElement("div");
-    item.textContent = line;
-    item.style.color = "#b9c1cf";
-    item.style.fontWeight = "700";
-    item.style.lineHeight = "1.45";
-    item.style.marginTop = "4px";
-    shell.appendChild(item);
-  }
-
-  mount.replaceChildren(shell);
 }
 
 async function importModule(entry) {
@@ -363,10 +355,6 @@ async function loadActiveModules() {
         `ERROR: ${state.activeModules[entry.key]?.error || "unknown"}`
       ]);
       publishReceiptPanel();
-      renderMountMessage("Parent chain held", [
-        `${entry.key} did not import`,
-        "Check direct asset URL and filename"
-      ]);
       return false;
     }
   }
@@ -380,14 +368,15 @@ function createInstances() {
   const landmapModule = state.activeModules.landmap?.module;
   const terrainModule = state.activeModules.terrain?.module;
   const surfaceModule = state.activeModules.surface?.module;
+  const canvasModule = state.activeModules.canvas?.module;
 
   try {
     const kernel = kernelModule.createHEarthKernel({
       doorwayContract: CONTRACT,
-      alignmentContract: ALIGNMENT_CONTRACT,
       priorDoorwayContract: PRIOR_CONTRACT,
+      alignmentContract: ALIGNMENT_CONTRACT,
       route: ROUTE,
-      surfaceActiveReadOnly: true
+      canvasVisibleComposition: true
     });
 
     state.instances.kernel = kernel;
@@ -409,6 +398,19 @@ function createInstances() {
     state.instances.surface = surface;
     state.activeModules.surface.actualContract = getImportedContract(surfaceModule, surface);
 
+    const canvas = canvasModule.createHEarthCanvas({
+      kernel,
+      lattice256,
+      landmap,
+      terrain,
+      surface,
+      document,
+      window
+    });
+
+    state.instances.canvas = canvas;
+    state.activeModules.canvas.actualContract = getImportedContract(canvasModule, canvas);
+
     state.staleContractCount = ACTIVE_MODULES.filter((entry) => {
       return state.activeModules[entry.key]?.actualContract !== EXPECTED_CONTRACTS[entry.key];
     }).length;
@@ -425,50 +427,92 @@ function createInstances() {
       `CHECK: exported factory function signatures`
     ]);
     publishReceiptPanel();
-    renderMountMessage("Parent instance failed", [
-      "Modules loaded",
-      "Factory chain did not complete"
-    ]);
-
     return false;
   }
 }
 
-function materialPreview(surface) {
-  const classes = surface?.materialIndex?.materialClasses || [];
-  return classes.slice(0, 10).join(" · ") || "pending";
+function mountCanvas() {
+  const mount = mountTarget();
+  const canvasAuthority = state.instances.canvas;
+
+  if (!mount) {
+    state.parentChainStatus = "canvas-mount-missing";
+    publishStatus("canvas mount missing", [
+      `MOUNT_ID: hEarthCanvasMount`,
+      `CANVAS: not-rendered`
+    ]);
+    publishReceiptPanel();
+    return false;
+  }
+
+  if (!canvasAuthority || typeof canvasAuthority.renderInto !== "function") {
+    state.parentChainStatus = "canvas-authority-missing-render-into";
+    publishStatus("canvas authority missing renderInto", [
+      `CANVAS: not-rendered`
+    ]);
+    publishReceiptPanel();
+    return false;
+  }
+
+  try {
+    state.canvasResult = canvasAuthority.renderInto(mount, {
+      size: mount.clientWidth || 620,
+      rotationRadians: -0.3141592654,
+      tiltRadians: -0.1396263402,
+      document,
+      window
+    });
+
+    return state.canvasResult?.rendered === true;
+  } catch (error) {
+    const message = safeError(error);
+    state.errors.push(`canvas-render: ${message}`);
+    state.parentChainStatus = "canvas-render-failed";
+    publishStatus("canvas render failed", [
+      `ERROR: ${message}`
+    ]);
+    publishReceiptPanel();
+    return false;
+  }
 }
 
-function publishSurfaceSuccess() {
-  const terrain = state.instances.terrain;
+function publishCanvasSuccess() {
   const landmap = state.instances.landmap;
+  const terrain = state.instances.terrain;
   const surface = state.instances.surface;
+  const canvasAuthority = state.instances.canvas;
+  const canvasReceipt = canvasAuthority?.getCanvasReceipt?.() || state.canvasResult?.receipt || null;
+  const pixelProof = state.canvasResult?.pixelProof || canvasReceipt?.pixelProof || null;
 
-  const terrainSummary = terrain.summary;
   const landSummary = landmap.summary;
+  const terrainSummary = terrain.summary;
   const surfaceSummary = surface.summary;
 
-  const expectedBalance =
+  const parentReady =
     landSummary.landRatio >= 0.3 &&
     landSummary.landRatio <= 0.42 &&
-    landSummary.oceanRatio >= 0.58 &&
-    landSummary.oceanRatio <= 0.7;
+    terrainSummary.fullAspectDisposition === true &&
+    surfaceSummary.surfaceParentReady === true &&
+    surfaceSummary.downstreamCanvasMayReadSurface === true;
 
-  const fullTerrainDisposition = terrainSummary.fullAspectDisposition === true;
-  const surfaceReady = surfaceSummary.surfaceParentReady === true;
-  const canvasMayReadSurface = surfaceSummary.downstreamCanvasMayReadSurface === true;
+  const canvasRendered =
+    state.canvasResult?.rendered === true &&
+    canvasReceipt?.contract === EXPECTED_CONTRACTS.canvas &&
+    pixelProof?.available === true &&
+    Number(pixelProof.nonBlankRatio) > 0.12;
 
   state.parentChainStatus =
     state.staleContractCount > 0
-      ? "surface-chain-loaded-but-stale-contracts-detected"
-      : expectedBalance && fullTerrainDisposition && surfaceReady && canvasMayReadSurface
-        ? "surface-parent-material-truth-active-read-loaded"
-        : "surface-chain-loaded-but-readiness-held";
+      ? "canvas-chain-loaded-but-stale-contracts-detected"
+      : parentReady && canvasRendered
+        ? "canvas-visible-composition-mounted"
+        : "canvas-chain-loaded-but-render-proof-held";
 
   document.documentElement.dataset.parentCoreChainStatus = state.parentChainStatus;
-  document.documentElement.dataset.surfaceActiveReadOnly = "true";
-  document.documentElement.dataset.canvas = "held";
+  document.documentElement.dataset.surface = "active-read-only";
+  document.documentElement.dataset.canvas = "active-visible-composition";
   document.documentElement.dataset.controls = "held";
+  document.documentElement.dataset.visualPassClaim = "false";
   document.documentElement.dataset.mutationEarth = "forbidden";
 
   publishStatus(state.parentChainStatus, [
@@ -477,55 +521,37 @@ function publishSurfaceSuccess() {
     `LANDMAP: loaded · ${state.activeModules.landmap.actualContract}`,
     `TERRAIN: loaded · ${state.activeModules.terrain.actualContract}`,
     `SURFACE: loaded · ${state.activeModules.surface.actualContract}`,
+    `CANVAS: loaded · ${state.activeModules.canvas.actualContract}`,
     `STALE_CONTRACTS: ${state.staleContractCount}`,
     `LAND_RATIO: ${landSummary.landRatio}`,
     `OCEAN_RATIO: ${landSummary.oceanRatio}`,
     `TERRAIN_ASPECTS_POPULATED: ${terrainSummary.populatedTerrainAspectCount}/${terrainSummary.terrainAspectCount}`,
-    `FULL_ASPECT_DISPOSITION: ${String(terrainSummary.fullAspectDisposition)}`,
-    `SURFACE_TOTAL_CELLS: ${surfaceSummary.totalCells}`,
     `SURFACE_MATERIAL_CLASSES: ${surfaceSummary.materialClassCount}/${surfaceSummary.requiredMaterialClassCount}`,
-    `MATERIAL_COVERAGE_COMPLETE: ${String(surfaceSummary.materialCoverageComplete)}`,
-    `EVERY_CELL_ASSIGNED_SURFACE: ${String(surfaceSummary.everyCellAssignedSurface)}`,
-    `SURFACE_PARENT_READY: ${String(surfaceSummary.surfaceParentReady)}`,
-    `DOWNSTREAM_CANVAS_MAY_READ_SURFACE: ${String(surfaceSummary.downstreamCanvasMayReadSurface)}`,
-    `CANVAS_PAINT_AUTHORIZED: false`,
+    `CANVAS_RENDERED: ${String(Boolean(state.canvasResult?.rendered))}`,
+    `PIXEL_PROOF_AVAILABLE: ${String(Boolean(pixelProof?.available))}`,
+    `NON_BLANK_RATIO: ${pixelProof?.nonBlankRatio ?? "pending"}`,
+    `WATER_LIKE_RATIO: ${pixelProof?.waterLikeRatio ?? "pending"}`,
+    `LAND_LIKE_RATIO: ${pixelProof?.landLikeRatio ?? "pending"}`,
+    `POLAR_LIKE_RATIO: ${pixelProof?.polarLikeRatio ?? "pending"}`,
+    `VISUAL_PASS_CLAIMED: false`,
     `CONTROLS_AUTHORIZED: false`
   ]);
 
   publishReceiptPanel();
-
-  renderMountMessage(
-    state.parentChainStatus === "surface-parent-material-truth-active-read-loaded"
-      ? "Surface parent loaded"
-      : "Surface parent held",
-    [
-      `Land ratio: ${landSummary.landRatio}`,
-      `Ocean ratio: ${landSummary.oceanRatio}`,
-      `Terrain aspects: ${terrainSummary.populatedTerrainAspectCount}/${terrainSummary.terrainAspectCount}`,
-      `Surface cells: ${surfaceSummary.totalCells}`,
-      `Materials: ${surfaceSummary.materialClassCount}/${surfaceSummary.requiredMaterialClassCount}`,
-      `Canvas may read: ${String(surfaceSummary.downstreamCanvasMayReadSurface)}`,
-      `Preview: ${materialPreview(surface)}`
-    ]
-  );
 }
 
 async function boot() {
   stampDocument();
 
-  state.parentChainStatus = "surface-active-read-chain-checking";
+  state.parentChainStatus = "canvas-visible-composition-chain-checking";
   document.documentElement.dataset.parentCoreChainStatus = state.parentChainStatus;
 
-  publishStatus("surface active-read route doorway active; loading parent chain", [
-    `ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface`,
-    `HELD_CHAIN: canvas → controls`,
+  publishStatus("canvas visible-composition route doorway active; loading parent chain", [
+    `ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface → canvas`,
+    `HELD_CHAIN: controls → ground → estate`,
     `CACHE_KEY: ${CACHE_KEY}`
   ]);
   publishReceiptPanel();
-  renderMountMessage("Loading surface parent", [
-    "kernel → lattice256 → landmap → terrain → surface",
-    "canvas/controls held"
-  ]);
 
   const modulesLoaded = await loadActiveModules();
   if (!modulesLoaded) return;
@@ -533,7 +559,13 @@ async function boot() {
   const instancesCreated = createInstances();
   if (!instancesCreated) return;
 
-  publishSurfaceSuccess();
+  const canvasMounted = mountCanvas();
+  if (!canvasMounted) {
+    publishReceiptPanel();
+    return;
+  }
+
+  publishCanvasSuccess();
 }
 
 if (document.readyState === "loading") {
@@ -544,8 +576,8 @@ if (document.readyState === "loading") {
 
 export {
   CONTRACT,
-  ALIGNMENT_CONTRACT,
   PRIOR_CONTRACT,
+  ALIGNMENT_CONTRACT,
   SEED_PACKET,
   ROUTE,
   ACTIVE_MODULES,

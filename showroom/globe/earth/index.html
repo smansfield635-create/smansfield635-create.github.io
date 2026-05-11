@@ -1,424 +1,456 @@
-<!-- /showroom/globe/earth/index.html -->
+<!-- /showroom/globe/hearth/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-route="/showroom/globe/earth/"
-  data-page="earth"
-  data-contract="EARTH_NASA_JPG_SCROLL_UNLOCK_TNT_v1"
-  data-role="earth-route-shell"
-  data-route-controller="/showroom/globe/earth/index.js"
-  data-image-mode="nasa-jpg"
-  data-scroll-authority="body"
+  data-page="hearth-tectonic-parent-chain"
+  data-route="/showroom/globe/hearth/"
+  data-contract="HEARTH_TECTONIC_PARENT_CHAIN_HTML_TNT_v21"
+  data-body="hearth"
+  data-active-route-file="/showroom/globe/hearth/hearth.climate.route.js"
+  data-parent-chain-aligned="true"
+  data-tectonics-authority="/assets/hearth/hearth.tectonics.js"
+  data-composition-authority="/assets/hearth/hearth.composition.js"
+  data-hydrology-authority="/assets/hearth/hearth.hydrology.js"
+  data-materials-authority="/assets/hearth/hearth.materials.js"
+  data-canvas-authority="/assets/hearth/hearth.canvas.js"
+  data-target-land-ratio="0.30"
+  data-earth-reference-land-ratio="0.29"
+  data-rocky-means-jagged-not-gray="true"
+  data-plate-tectonics-active="true"
+  data-visible-globe-v17-retired="true"
   data-generated-image="false"
   data-graphic-box="false"
-  data-procedural-placeholder="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Earth</title>
-  <meta
-    name="description"
-    content="Earth inspection route restored to NASA JPG demo mode with explicit mobile scroll authority."
-  >
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Diamond Gate Bridge · Hearth Tectonic Parent Chain</title>
 
   <style>
     :root {
-      --bg0: #030913;
-      --line: rgba(135, 177, 211, 0.24);
-      --line2: rgba(135, 177, 211, 0.36);
-      --text: rgba(246, 241, 229, 0.97);
-      --muted: rgba(226, 219, 204, 0.70);
-      --gold: #ffe879;
-      --gold2: #ffd95f;
-      color-scheme: dark;
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --bg:#030914;
+      --line:rgba(231,188,105,.34);
+      --gold:#e7bc69;
+      --text:#eef6ff;
+      --muted:rgba(238,246,255,.72);
+      --green:#8bd7a3;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing:border-box; }
 
     html {
-      min-height: 100%;
-      margin: 0;
-      background: var(--bg0);
-      overflow-x: hidden;
-      overflow-y: auto;
-      touch-action: pan-y;
-      -webkit-overflow-scrolling: touch;
+      min-height:100%;
+      background:
+        radial-gradient(circle at 50% 20%,rgba(39,117,155,.22),transparent 38%),
+        radial-gradient(circle at 18% 12%,rgba(231,188,105,.13),transparent 30%),
+        linear-gradient(180deg,#06101e,var(--bg) 72%);
+      color:var(--text);
+      font-family:Inter,system-ui,sans-serif;
     }
 
     body {
-      min-height: 100%;
-      margin: 0;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 16% 10%, rgba(69, 119, 165, 0.24), transparent 24rem),
-        radial-gradient(circle at 78% 3%, rgba(55, 96, 143, 0.13), transparent 22rem),
-        linear-gradient(180deg, #0a1830 0%, #061120 55%, #03070d 100%);
-      overflow-x: hidden;
-      overflow-y: auto;
-      touch-action: pan-y;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior-y: auto;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.08) 0 1px, transparent 2px),
-        radial-gradient(circle at 62% 14%, rgba(255, 255, 255, 0.07) 0 1px, transparent 2px),
-        radial-gradient(circle at 72% 38%, rgba(255, 255, 255, 0.05) 0 1px, transparent 2px);
-      opacity: 0.42;
+      margin:0;
+      min-height:100vh;
     }
 
     a {
-      color: inherit;
-      text-decoration: none;
+      color:inherit;
+      text-decoration:none;
     }
 
-    button,
-    a {
-      touch-action: manipulation;
-      pointer-events: auto;
+    .shell {
+      width:min(1120px,calc(100% - 28px));
+      margin:0 auto;
+      padding:22px 0 42px;
     }
 
-    .skip-link {
-      position: fixed;
-      top: 12px;
-      left: 12px;
-      z-index: 20;
-      transform: translateY(-160%);
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: var(--gold);
-      color: #07101f;
-      font-weight: 900;
+    .topbar,
+    .nav,
+    .card,
+    #hearthCanvasMount,
+    .receipt {
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(9,22,41,.88),rgba(4,10,20,.78));
+      box-shadow:0 22px 70px rgba(0,0,0,.38);
+      backdrop-filter:blur(10px);
     }
 
-    .skip-link:focus {
-      transform: translateY(0);
-      outline: none;
+    .topbar {
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      border-radius:24px;
+      padding:12px 14px;
     }
 
-    .page {
-      position: relative;
-      z-index: 1;
-      width: min(100%, 980px);
-      margin: 0 auto;
-      padding: 24px clamp(18px, 4vw, 34px) 80px;
-      touch-action: pan-y;
+    .brand {
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-weight:900;
     }
 
-    .masthead {
-      display: grid;
-      grid-template-columns: 112px 1fr;
-      gap: 22px;
-      align-items: center;
-      margin-bottom: 22px;
-    }
-
-    .brand-orb {
-      width: 112px;
-      aspect-ratio: 1 / 1;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      color: var(--gold);
-      font-size: 30px;
-      font-weight: 1000;
-      background:
-        radial-gradient(circle at 34% 28%, rgba(180, 214, 238, 0.42), transparent 0 14%),
-        radial-gradient(circle at 50% 52%, rgba(14, 33, 58, 0.92), rgba(4, 10, 20, 0.98) 72%);
-      border: 1px solid rgba(137, 181, 221, 0.25);
-      box-shadow:
-        inset 0 0 28px rgba(122, 188, 244, 0.10),
-        0 20px 48px rgba(0, 0, 0, 0.34);
-    }
-
-    .brand-kicker {
-      margin: 0 0 2px;
-      color: var(--muted);
-      font-size: clamp(18px, 3vw, 23px);
-      font-weight: 900;
-      letter-spacing: 0.21em;
-      text-transform: uppercase;
-    }
-
-    .brand-title {
-      margin: 0;
-      font-size: clamp(30px, 6vw, 48px);
-      line-height: 0.96;
-      font-weight: 1000;
-      letter-spacing: -0.07em;
+    .mark {
+      display:grid;
+      place-items:center;
+      width:36px;
+      height:36px;
+      border-radius:12px;
+      border:1px solid rgba(231,188,105,.46);
+      color:var(--gold);
     }
 
     .nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      align-items: center;
-      margin: 18px 0 40px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      border-radius:20px;
+      padding:8px;
     }
 
     .nav a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 64px;
-      padding: 0 28px;
-      border-radius: 999px;
-      border: 1px solid rgba(143, 183, 219, 0.24);
-      background: rgba(18, 34, 57, 0.72);
-      color: rgba(247, 243, 233, 0.95);
-      font-size: clamp(20px, 4.4vw, 26px);
-      font-weight: 1000;
-      letter-spacing: -0.05em;
+      border:1px solid rgba(231,188,105,.24);
+      border-radius:999px;
+      padding:8px 11px;
+      color:var(--muted);
+      font-size:.86rem;
     }
 
     .nav a[aria-current="page"] {
-      color: #08101d;
-      background:
-        radial-gradient(circle at 46% 34%, #fff6a8, var(--gold2) 66%, #d8a934 100%);
-      border-color: rgba(255, 234, 124, 0.88);
+      color:#06101e;
+      background:var(--gold);
+      font-weight:900;
     }
 
-    .earth-card {
-      position: relative;
-      padding: clamp(26px, 5vw, 38px);
-      border-radius: 32px;
-      border: 1px solid var(--line);
-      background:
-        linear-gradient(180deg, rgba(8, 18, 33, 0.94), rgba(5, 12, 24, 0.96)),
-        radial-gradient(circle at 50% 0%, rgba(66, 116, 158, 0.18), transparent 40rem);
-      box-shadow:
-        inset 0 0 34px rgba(120, 180, 236, 0.04),
-        0 28px 80px rgba(0, 0, 0, 0.42);
-      overflow: hidden;
-      touch-action: pan-y;
+    .hero {
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(320px,520px);
+      gap:22px;
+      align-items:center;
+      margin-top:22px;
     }
 
-    .earth-copy {
-      margin-bottom: 22px;
+    .eyebrow {
+      color:var(--gold);
+      font-size:.78rem;
+      font-weight:900;
+      letter-spacing:.16em;
+      text-transform:uppercase;
     }
 
-    .earth-copy h1 {
-      margin: 0 0 18px;
-      font-size: clamp(40px, 8vw, 58px);
-      line-height: 0.9;
-      font-weight: 1000;
-      letter-spacing: -0.09em;
+    h1 {
+      margin:10px 0 12px;
+      font-size:clamp(2.2rem,7vw,5.8rem);
+      line-height:.9;
+      letter-spacing:-.08em;
     }
 
-    .earth-copy p {
-      margin: 0;
-      color: var(--muted);
-      font-size: clamp(18px, 4.4vw, 25px);
-      font-weight: 1000;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
+    .lede {
+      max-width:68ch;
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(1rem,2.4vw,1.18rem);
+      line-height:1.6;
     }
 
-    #earthImageMount {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      min-height: 280px;
-      margin: 0 auto;
-      border-radius: 28px;
-      overflow: hidden;
-      border: 1px solid var(--line2);
-      background:
-        radial-gradient(circle at 50% 45%, rgba(43, 82, 111, 0.24), transparent 46%),
-        linear-gradient(180deg, rgba(20, 42, 66, 0.72), rgba(9, 20, 36, 0.88));
-      box-shadow:
-        inset 0 0 42px rgba(113, 174, 224, 0.08),
-        0 22px 56px rgba(0, 0, 0, 0.30);
-      isolation: isolate;
-      touch-action: pan-y;
+    .badge {
+      display:inline-flex;
+      margin-top:12px;
+      padding:7px 11px;
+      border:1px solid rgba(139,215,163,.34);
+      border-radius:999px;
+      color:var(--green);
+      background:rgba(139,215,163,.08);
+      font-weight:900;
+      font-size:.78rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
 
-    .earth-nasa-stage {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(38, 92, 141, 0.22), transparent 47%),
-        #020710;
-      pointer-events: none;
-      touch-action: pan-y;
+    .actions {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:20px;
     }
 
-    .earth-nasa-stage::before,
-    .earth-nasa-stage::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
+    .button {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(231,188,105,.38);
+      background:rgba(231,188,105,.14);
+      color:var(--text);
+      font-weight:800;
     }
 
-    .earth-nasa-stage::before {
-      width: 86%;
-      height: 86%;
-      border: 1px solid rgba(116, 207, 255, 0.30);
-      box-shadow:
-        0 0 20px rgba(84, 172, 236, 0.24),
-        inset 0 0 34px rgba(84, 172, 236, 0.08);
+    .button.primary {
+      color:#05101d;
+      background:var(--gold);
     }
 
-    .earth-nasa-stage::after {
-      width: 94%;
-      height: 94%;
-      border: 1px solid rgba(91, 174, 236, 0.12);
-      box-shadow: 0 0 42px rgba(84, 172, 236, 0.12);
+    #hearthCanvasMount {
+      position:relative;
+      width:100%;
+      min-height:320px;
+      aspect-ratio:1/1;
+      overflow:hidden;
+      isolation:isolate;
+      border-radius:32px;
+      background:radial-gradient(circle at 50% 50%,rgba(39,117,155,.30),rgba(3,9,20,.96) 70%),#02070e;
+      touch-action:none;
+      user-select:none;
+      -webkit-user-select:none;
+      -webkit-touch-callout:none;
     }
 
-    .earth-nasa-img {
-      position: relative;
-      z-index: 2;
-      display: block;
-      width: min(84%, 620px);
-      height: auto;
-      border-radius: 50%;
-      pointer-events: none;
-      user-select: none;
-      -webkit-user-drag: none;
-      touch-action: pan-y;
-      filter:
-        saturate(1.08)
-        contrast(1.06)
-        brightness(0.96)
-        drop-shadow(0 0 30px rgba(88, 184, 255, 0.22));
-      animation: earthReferenceFloat 14s ease-in-out infinite;
+    #hearthCanvasMount canvas {
+      position:absolute;
+      inset:0;
+      display:block;
+      width:100%;
+      height:100%;
+      pointer-events:auto;
+      touch-action:none;
+      user-select:none;
+      -webkit-user-select:none;
+      -webkit-touch-callout:none;
     }
 
-    .earth-source {
-      margin-top: 16px;
-      color: rgba(226, 219, 204, 0.58);
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      text-align: center;
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-top:22px;
     }
 
-    @keyframes earthReferenceFloat {
-      0%, 100% { transform: scale(1) translateY(0); }
-      50% { transform: scale(1.012) translateY(-1.5%); }
+    .card {
+      border-radius:22px;
+      padding:14px;
+      min-height:132px;
     }
 
-    @media (max-width: 720px) {
-      .page {
-        padding-left: 22px;
-        padding-right: 22px;
-        padding-bottom: 92px;
+    .card h2 {
+      margin:0 0 8px;
+      color:var(--gold);
+      font-size:.92rem;
+    }
+
+    .card p {
+      margin:0;
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.45;
+    }
+
+    .receipt {
+      margin:16px 0 0;
+      padding:14px;
+      overflow:auto;
+      border-radius:18px;
+      color:rgba(238,246,255,.72);
+      font-size:.78rem;
+      white-space:pre-wrap;
+    }
+
+    @media (max-width:980px) {
+      .hero,
+      .grid {
+        grid-template-columns:1fr;
       }
 
-      .masthead {
-        grid-template-columns: 112px 1fr;
-      }
-
-      .nav {
-        gap: 14px;
-        margin-bottom: 40px;
-      }
-
-      .nav a {
-        min-height: 64px;
-        padding: 0 24px;
-      }
-
-      .earth-card {
-        padding: 32px 24px;
-        border-radius: 30px;
-      }
-
-      #earthImageMount {
-        border-radius: 26px;
-      }
-    }
-
-    @media (max-width: 430px) {
-      .brand-kicker { font-size: 18px; }
-      .brand-title { font-size: 32px; }
-
-      .nav a {
-        min-height: 62px;
-        padding: 0 22px;
-        font-size: 22px;
-      }
-
-      .earth-copy h1 { font-size: 42px; }
-      .earth-copy p { font-size: 18px; }
-
-      .earth-nasa-img {
-        width: 86%;
+      .topbar {
+        flex-direction:column;
       }
     }
   </style>
-
-  <script>
-    document.documentElement.dataset.earthRouteShell = "EARTH_NASA_JPG_SCROLL_UNLOCK_TNT_v1";
-    document.documentElement.dataset.earthImageMount = "earthImageMount";
-    document.documentElement.dataset.earthController = "/showroom/globe/earth/index.js";
-    document.documentElement.dataset.earthImageMode = "nasa-jpg";
-    document.documentElement.dataset.scrollAuthority = "body-pan-y";
-  </script>
-
-  <script src="./index.js?v=earth-nasa-jpg-scroll-unlock-v1" defer></script>
 </head>
 
 <body>
-  <a class="skip-link" href="#earth-main">Skip to Earth</a>
-
-  <div class="page">
-    <header class="masthead" aria-label="Diamond Gate Bridge Earth header">
-      <a class="brand-orb" href="/showroom/globe/earth/" aria-label="Earth route">E</a>
-
-      <div>
-        <p class="brand-kicker">Diamond Gate Bridge</p>
-        <p class="brand-title">Earth</p>
-      </div>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/"><span class="mark">H</span><span>Diamond Gate Bridge · Hearth</span></a>
+      <nav class="nav" aria-label="Hearth route navigation">
+        <a href="/">Compass</a>
+        <a href="/showroom/globe/">Globe Split</a>
+        <a href="/showroom/globe/earth/">Earth</a>
+        <a href="/showroom/globe/hearth/" aria-current="page">Hearth</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
     </header>
 
-    <nav class="nav" aria-label="Primary Earth navigation">
-      <a href="/">Compass</a>
-      <a href="/showroom/globe/">Globe Split</a>
-      <a href="/showroom/globe/earth/" aria-current="page">Earth</a>
-      <a href="/showroom/globe/hearth/">Hearth</a>
-      <a href="/showroom/globe/audralia/">Audralia</a>
-      <a href="/gauges/">Gauges</a>
-    </nav>
+    <main id="hearth-main">
+      <section class="hero" aria-labelledby="hearth-title">
+        <div>
+          <div class="eyebrow">Hearth · Tectonic Parent Chain</div>
+          <h1 id="hearth-title">Hearth</h1>
+          <p class="lede">
+            Hearth now routes through a tectonic parent chain. Rocky means jagged, not gray: plate stress, uplift ridges, fractured coastlines, collapsed basins, hydrology, mineral substrate, and surface materials stay separated while the planet remains visible.
+          </p>
 
-    <main id="earth-main" class="earth-card">
-      <section class="earth-copy" aria-labelledby="earth-title">
-        <h1 id="earth-title">Earth</h1>
-        <p>NASA Reference JPG</p>
+          <span class="badge">Parent Chain · v21 Tectonics</span>
+          <span class="badge" style="margin-left:8px;">Parent Chain · v20 Force Alignment</span>
+
+          <div class="actions">
+            <a class="button primary" href="/showroom/globe/">Return to Globe Split</a>
+            <a class="button" href="/showroom/globe/audralia/">Inspect Audralia</a>
+            <a class="button" href="/gauges/">Run Gauges</a>
+          </div>
+        </div>
+
+        <section
+          id="hearthCanvasMount"
+          data-hearth-canvas-mount="true"
+          data-hearth-parent-chain-aligned="true"
+          data-hearth-route-file="/showroom/globe/hearth/hearth.climate.route.js"
+          aria-label="Hearth tectonic parent-chain globe canvas mount"
+        >
+          <span data-hearth-mount-fallback="true" style="position:absolute;inset:0;display:grid;place-items:center;color:rgba(238,246,255,.68);font-weight:800;text-align:center;padding:20px;">
+            Hearth tectonic parent-chain route loading.
+          </span>
+        </section>
       </section>
 
-      <section
-        id="earthImageMount"
-        data-earth-image-mount
-        data-render="earth"
-        data-planet="earth"
-        data-body="earth"
-        data-contract="EARTH_NASA_JPG_SCROLL_UNLOCK_TNT_v1"
-        data-image-mode="nasa-jpg"
-        data-touch-policy="pan-y"
-        aria-label="NASA Blue Marble Earth image mount"
-      ></section>
+      <section class="grid" aria-label="Hearth parent chain">
+        <article class="card">
+          <h2>Tectonics</h2>
+          <p>Plate stress, uplift ridges, fault pressure, cliff cuts, island breaks, and jagged coast behavior define the exposed land.</p>
+        </article>
 
-      <p class="earth-source">NASA Blue Marble 2002 · JPG reference demo</p>
+        <article class="card">
+          <h2>Composition</h2>
+          <p>Diamond, opal, marble, slate, granite, gold, platinum, and silver remain substrate authority.</p>
+        </article>
+
+        <article class="card">
+          <h2>Hydrology</h2>
+          <p>Inland lakes, rivers, streams, brooks, marshes, swamps, shelves, and wet basins follow tectonic scars.</p>
+        </article>
+
+        <article class="card">
+          <h2>Materials</h2>
+          <p>Grass, dirt, mud, rock, mountain stone, cliffs, snow, ice, and water render as terrain surface only.</p>
+        </article>
+      </section>
+
+      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth tectonic parent-chain route preparing.</pre>
+
+      <pre class="receipt">HEARTH_TECTONIC_PARENT_CHAIN_HTML_TNT_v21
+route=/showroom/globe/hearth/
+active_route_file=/showroom/globe/hearth/hearth.climate.route.js
+tectonics=/assets/hearth/hearth.tectonics.js
+composition=/assets/hearth/hearth.composition.js
+hydrology=/assets/hearth/hearth.hydrology.js
+materials=/assets/hearth/hearth.materials.js
+canvas=/assets/hearth/hearth.canvas.js
+compatibility_marker=HEARTH_PARENT_CHAIN_FORCE_ALIGNED_HTML_TNT_v20
+target_land_ratio=0.30
+earth_reference_land_ratio=0.29
+rocky_means_jagged_not_gray=true
+plate_tectonics_active=true
+vegetation_topology=held
+trees=false
+bushes=false
+forest_canopy=false
+generated_image=false
+graphic_box=false
+visual_pass_claimed=false</pre>
     </main>
   </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const key = `hearth-tectonic-parent-chain-v21-${Date.now()}`;
+
+      [
+        "__HEARTH_G4_ROUTE_DISPOSE__",
+        "__HEARTH_HABITABLE_FORMING_ROUTE_DISPOSE__",
+        "__HEARTH_CONTROLS_DISPOSE__",
+        "__HEARTH_CANVAS_DISPOSE__",
+        "__HEARTH_VISIBLE_RECOVERY_DISPOSE__"
+      ].forEach((name) => {
+        try {
+          if (typeof window[name] === "function") window[name]();
+        } catch (_) {}
+
+        try {
+          window[name] = undefined;
+          delete window[name];
+        } catch (_) {}
+      });
+
+      [
+        "HEARTH_RUNTIME",
+        "HEARTH_CONTROLS",
+        "HEARTH_TERRAIN_EXTENSION",
+        "HEARTH_ELEVATION",
+        "HEARTH_CLIMATE",
+        "HEARTH_TECTONICS",
+        "HEARTH_COMPOSITION",
+        "HEARTH_HYDROLOGY",
+        "HEARTH_MATERIALS",
+        "HEARTH_ASSETS",
+        "HEARTH_CANVAS",
+        "__HEARTH_ACTIVE_ROUTE_FILE__",
+        "__HEARTH_ACTIVE_ROUTE_CONTRACT__"
+      ].forEach((name) => {
+        try {
+          window[name] = undefined;
+          delete window[name];
+        } catch (_) {}
+      });
+
+      document.querySelectorAll([
+        'script[src*="./index.js"]',
+        'script[src*="/showroom/globe/hearth/index.js"]',
+        'script[src*="hearth.visible.recovery"]',
+        'script[src*="hearth.climate.route.js"]',
+        'script[data-hearth-file="true"]'
+      ].join(",")).forEach((script) => script.remove());
+
+      const status = document.getElementById("hearth-route-status");
+      if (status) {
+        status.textContent = [
+          "Hearth tectonic parent-chain HTML loaded.",
+          "Rocky means jagged, not gray.",
+          "Loading active route file.",
+          "Route /showroom/globe/hearth/hearth.climate.route.js",
+          "Generated image false",
+          "GraphicBox false",
+          "Visual pass claimed false"
+        ].join("\n");
+      }
+
+      const script = document.createElement("script");
+      script.src = `./hearth.climate.route.js?v=${key}`;
+      script.defer = true;
+      script.dataset.hearthFile = "true";
+      script.dataset.hearthFileRole = "tectonic-parent-chain-route-v21";
+
+      script.onerror = () => {
+        if (status) {
+          status.textContent = [
+            "Hearth tectonic parent-chain route failed to load.",
+            `Route ${script.src}`,
+            "Generated image false",
+            "GraphicBox false",
+            "Visual pass claimed false"
+          ].join("\n");
+        }
+      };
+
+      document.head.appendChild(script);
+    })();
+  </script>
 </body>
 </html>

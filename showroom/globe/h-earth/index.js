@@ -1,25 +1,26 @@
 // /showroom/globe/h-earth/index.js
-// H_EARTH_G1_CANVAS_ASSET_PATH_RENEWAL_ROUTE_TNT_v10
+// H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11
 // Full-file replacement.
 // Route doorway authority only.
 //
 // Purpose:
-// - Renew the canvas asset path.
-// - Import canvas from /assets/h-earth/h-earth.canvas.alignment.v3.js.
-// - Preserve parent chain and controls authority.
-// - Align canvas/controls receipts without mutating parent truth.
+// - Accept the interactive controls refinement contract.
+// - Preserve nested H-Earth canvas child asset path.
+// - Preserve parent chain and surface truth.
+// - Activate controls as downstream motion/input authority only.
+// - Publish interactive receipts without mutating parent truth.
 
-const CONTRACT = "H_EARTH_G1_CANVAS_ASSET_PATH_RENEWAL_ROUTE_TNT_v10";
-const PRIOR_CONTRACT = "H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9";
-const PRIOR_HTML_CONTRACT = "H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_HTML_TNT_v9";
+const CONTRACT = "H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11";
+const PRIOR_CONTRACT = "H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_ROUTE_TNT_v10B";
+const PRIOR_HTML_CONTRACT = "H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_HTML_TNT_v10B";
 const SEED_PACKET = "H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1";
 const ROUTE = "/showroom/globe/h-earth/";
 
 const URL_CACHE =
   new URLSearchParams(window.location.search).get("v") ||
-  "canvas-asset-path-renewal-route-v10";
+  "interactive-view-route-receipt-v11";
 
-const CACHE_KEY = `2026-05-11-h-earth-canvas-asset-path-renewal-route-v10-${URL_CACHE}`;
+const CACHE_KEY = `2026-05-11-h-earth-interactive-view-route-receipt-v11-${URL_CACHE}`;
 
 const EXPECTED_CONTRACTS = Object.freeze({
   kernel: "H_EARTH_G1_TERRAIN_ONLY_KERNEL_TNT_v1",
@@ -28,7 +29,7 @@ const EXPECTED_CONTRACTS = Object.freeze({
   terrain: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_TERRAIN_TNT_v2",
   surface: "H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1",
   canvas: "H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3",
-  controls: "H_EARTH_G1_CONTROLS_MOTION_INPUT_AUTHORITY_TNT_v1"
+  controls: "H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2"
 });
 
 const ACTIVE_MODULES = Object.freeze([
@@ -41,7 +42,7 @@ const ACTIVE_MODULES = Object.freeze([
 
 const CANVAS_MODULE = Object.freeze({
   key: "canvas",
-  path: "/assets/h-earth/h-earth.canvas.alignment.v3.js",
+  path: "/assets/h-earth/h-earth/canvas.alignment.v3.js",
   requiredExport: "bootHEarthCanvas",
   refreshExport: "refreshHEarthCanvasControlsStatus"
 });
@@ -53,19 +54,18 @@ const CONTROLS_MODULE = Object.freeze({
 });
 
 const state = {
-  contract: CONTRACT,
-  priorContract: PRIOR_CONTRACT,
-  priorHtmlContract: PRIOR_HTML_CONTRACT,
-  seedPacket: SEED_PACKET,
-  route: ROUTE,
-  cacheKey: CACHE_KEY,
   parentChainStatus: "top-level-executed",
   canvasStatus: "held",
   controlsStatus: "held",
+  interactiveStatus: "held",
   canvasPaintAuthorized: false,
   controlsAuthorized: false,
   motionAuthorized: false,
   inputAuthorized: false,
+  dragAuthorized: false,
+  touchAuthorized: false,
+  zoomAuthorized: false,
+  inertiaAuthorized: false,
   canvasControlsReceiptAligned: false,
   loadedCount: 0,
   failedCount: 0,
@@ -159,10 +159,15 @@ function stampDocument() {
   root.dataset.canvas = state.canvasStatus;
   root.dataset.canvasAssetPath = CANVAS_MODULE.path;
   root.dataset.controls = state.controlsStatus;
+  root.dataset.interactiveStatus = state.interactiveStatus;
   root.dataset.canvasPaintAuthorized = String(state.canvasPaintAuthorized);
   root.dataset.controlsAuthorized = String(state.controlsAuthorized);
   root.dataset.motionAuthorized = String(state.motionAuthorized);
   root.dataset.inputAuthorized = String(state.inputAuthorized);
+  root.dataset.dragAuthorized = String(state.dragAuthorized);
+  root.dataset.touchAuthorized = String(state.touchAuthorized);
+  root.dataset.zoomAuthorized = String(state.zoomAuthorized);
+  root.dataset.inertiaAuthorized = String(state.inertiaAuthorized);
   root.dataset.canvasControlsReceiptAligned = String(state.canvasControlsReceiptAligned);
   root.dataset.parentMutationAuthorized = "false";
   root.dataset.graphicBox = "forbidden";
@@ -185,10 +190,15 @@ function publishStatus(message, lines = []) {
   target.dataset.canvas = state.canvasStatus;
   target.dataset.canvasAssetPath = CANVAS_MODULE.path;
   target.dataset.controls = state.controlsStatus;
+  target.dataset.interactiveStatus = state.interactiveStatus;
   target.dataset.canvasPaintAuthorized = String(state.canvasPaintAuthorized);
   target.dataset.controlsAuthorized = String(state.controlsAuthorized);
   target.dataset.motionAuthorized = String(state.motionAuthorized);
   target.dataset.inputAuthorized = String(state.inputAuthorized);
+  target.dataset.dragAuthorized = String(state.dragAuthorized);
+  target.dataset.touchAuthorized = String(state.touchAuthorized);
+  target.dataset.zoomAuthorized = String(state.zoomAuthorized);
+  target.dataset.inertiaAuthorized = String(state.inertiaAuthorized);
   target.dataset.canvasControlsReceiptAligned = String(state.canvasControlsReceiptAligned);
   target.dataset.cacheKey = CACHE_KEY;
 
@@ -248,9 +258,14 @@ function publishReceiptPanel() {
         `CANVAS_PANEL_CONTROLS_STATUS: ${canvas?.controlsStatus || "pending"}`,
         `CONTROLS_RECEIPT: ${state.controlsModule.actualContract}`,
         `CONTROLS_STATUS: ${controls?.status || "pending"}`,
+        `INTERACTIVE_STATUS: ${controls?.interactiveStatus || state.interactiveStatus}`,
         `CONTROLS_AUTHORIZED: ${String(state.controlsAuthorized)}`,
         `MOTION_AUTHORIZED: ${String(state.motionAuthorized)}`,
         `INPUT_AUTHORIZED: ${String(state.inputAuthorized)}`,
+        `DRAG_AUTHORIZED: ${String(state.dragAuthorized)}`,
+        `TOUCH_AUTHORIZED: ${String(state.touchAuthorized)}`,
+        `ZOOM_AUTHORIZED: ${String(state.zoomAuthorized)}`,
+        `INERTIA_AUTHORIZED: ${String(state.inertiaAuthorized)}`,
         `PARENT_MUTATION_AUTHORIZED: false`
       ]
     : ["PARENT_CHAIN_SUMMARY: pending"];
@@ -267,6 +282,7 @@ function publishReceiptPanel() {
     codeLine(`SURFACE: ACTIVE_READ_ONLY`),
     codeLine(`CANVAS: ${state.canvasStatus.toUpperCase()}`),
     codeLine(`CONTROLS: ${state.controlsStatus.toUpperCase()}`),
+    codeLine(`INTERACTIVE_STATUS: ${state.interactiveStatus}`),
     codeLine(`CANVAS_ASSET_PATH: ${CANVAS_MODULE.path}`),
     codeLine(`CANVAS_CONTROLS_RECEIPT_ALIGNED: ${String(state.canvasControlsReceiptAligned)}`),
     codeLine(`GRAPHIC_BOX: FORBIDDEN`),
@@ -283,7 +299,7 @@ function renderMountMessage(title, bodyLines = []) {
   const mount = mountTarget();
   if (!mount) return;
 
-  mount.dataset.routeMount = "canvas-asset-path-renewal-status";
+  mount.dataset.routeMount = "interactive-view-route-receipt-status";
   mount.dataset.routeDoorwayContract = CONTRACT;
   mount.dataset.routeDoorwayTopLevelExecuted = "true";
   mount.dataset.cacheKey = CACHE_KEY;
@@ -291,6 +307,7 @@ function renderMountMessage(title, bodyLines = []) {
   mount.dataset.canvasAuthority = state.canvasStatus;
   mount.dataset.canvasAssetPath = CANVAS_MODULE.path;
   mount.dataset.controlsAuthority = state.controlsStatus;
+  mount.dataset.interactiveStatus = state.interactiveStatus;
   mount.dataset.canvasControlsReceiptAligned = String(state.canvasControlsReceiptAligned);
   mount.dataset.planetTruthOwner = "parent-chain";
 
@@ -420,7 +437,7 @@ function createInstances() {
       priorDoorwayContract: PRIOR_CONTRACT,
       priorHtmlContract: PRIOR_HTML_CONTRACT,
       route: ROUTE,
-      canvasAssetPathRenewal: true,
+      interactiveViewRouteReceipt: true,
       mutationAuthorized: false,
       controlsAuthorized: false,
       motionAuthorized: false,
@@ -504,7 +521,7 @@ async function importCanvasModule() {
   };
 
   stampDocument();
-  publishStatus("surface parent passed; loading renewed canvas asset path", [
+  publishStatus("surface parent passed; loading nested canvas asset for interactive route", [
     `CANVAS_ASSET_PATH: ${CANVAS_MODULE.path}`,
     `EXPECTED_CANVAS: ${EXPECTED_CONTRACTS.canvas}`,
     `CONTROLS: held`
@@ -553,7 +570,7 @@ async function importCanvasModule() {
     if (staleCanvas) state.staleContractCount += 1;
 
     stampDocument();
-    publishStatus(canvasReady ? "renewed canvas asset proof passed; controls eligible" : "renewed canvas asset loaded but controls held", [
+    publishStatus(canvasReady ? "nested canvas proof passed; interactive controls eligible" : "nested canvas loaded but interactive controls held", [
       `CANVAS_ASSET_PATH: ${CANVAS_MODULE.path}`,
       `CANVAS: loaded · ${actualContract}`,
       `EXPECTED_CANVAS: ${EXPECTED_CONTRACTS.canvas}`,
@@ -579,7 +596,7 @@ async function importCanvasModule() {
     };
     state.errors.push(`canvas: ${message}`);
     stampDocument();
-    publishStatus("renewed canvas asset path failed", [
+    publishStatus("interactive route canvas import failed", [
       `CANVAS_ASSET_PATH: ${CANVAS_MODULE.path}`,
       `ERROR: ${message}`,
       `CONTROLS: held`
@@ -593,6 +610,7 @@ async function importControlsModule() {
   const url = moduleUrl(CONTROLS_MODULE.path);
 
   state.controlsStatus = "loading";
+  state.interactiveStatus = "loading";
   state.controlsModule = {
     status: "loading",
     path: CONTROLS_MODULE.path,
@@ -601,7 +619,7 @@ async function importControlsModule() {
   };
 
   stampDocument();
-  publishStatus("renewed canvas proof passed; loading controls motion/input authority", [
+  publishStatus("nested canvas proof passed; loading interactive controls refinement", [
     `CONTROLS_MODULE: ${CONTROLS_MODULE.path}`,
     `EXPECTED_CONTROLS: ${EXPECTED_CONTRACTS.controls}`,
     `PARENT_MUTATION_AUTHORIZED: false`
@@ -642,9 +660,14 @@ async function importControlsModule() {
     };
 
     state.controlsStatus = controlsReady ? "active-motion-input-authority" : "loaded-held";
+    state.interactiveStatus = controlsStatus?.interactiveStatus || (controlsReady ? "interactive-motion-input-authority-active" : "held");
     state.controlsAuthorized = controlsReady;
     state.motionAuthorized = controlsReady;
     state.inputAuthorized = controlsReady;
+    state.dragAuthorized = controlsStatus?.dragAuthorized === true;
+    state.touchAuthorized = controlsStatus?.touchAuthorized === true;
+    state.zoomAuthorized = controlsStatus?.zoomAuthorized === true;
+    state.inertiaAuthorized = controlsStatus?.inertiaAuthorized === true;
 
     if (staleControls) state.staleContractCount += 1;
 
@@ -653,19 +676,26 @@ async function importControlsModule() {
       state.canvasImportedModule &&
       typeof state.canvasImportedModule.refreshHEarthCanvasControlsStatus === "function"
     ) {
-      state.canvasRuntimeStatus =
+      const refreshedCanvasStatus =
         state.canvasImportedModule.refreshHEarthCanvasControlsStatus(controlsStatus);
+
+      state.canvasRuntimeStatus = {
+        ...(refreshedCanvasStatus || state.canvasRuntimeStatus || {}),
+        controlsReceipt: actualContract,
+        controlsStatus: "active-motion-input-authority",
+        canvasControlsReceiptAligned: true
+      };
     }
 
     state.canvasControlsReceiptAligned =
-      state.canvasRuntimeStatus?.canvasControlsReceiptAligned === true &&
-      state.canvasRuntimeStatus?.controlsStatus === "active-motion-input-authority";
+      controlsReady &&
+      canvasProofPasses(state.canvasRuntimeStatus);
 
     state.parentChainStatus = controlsReady && state.canvasControlsReceiptAligned
-      ? "canvas-asset-path-renewal-controls-aligned"
+      ? "interactive-view-motion-input-active"
       : controlsReady
-        ? "controls-active-but-canvas-alignment-held"
-        : "controls-loaded-but-held";
+        ? "interactive-controls-active-but-canvas-alignment-held"
+        : "interactive-controls-loaded-but-held";
 
     stampDocument();
 
@@ -675,10 +705,15 @@ async function importControlsModule() {
       `CONTROLS: loaded · ${actualContract}`,
       `EXPECTED_CONTROLS: ${EXPECTED_CONTRACTS.controls}`,
       `CONTROLS_STALE_CONTRACT: ${String(staleControls)}`,
-      `CONTROLS_STATUS: ${controlsStatus?.status || "pending"}`,
+      `CONTROLS_STATUS: ${state.controlsStatus}`,
+      `INTERACTIVE_STATUS: ${state.interactiveStatus}`,
       `CONTROLS_AUTHORIZED: ${String(state.controlsAuthorized)}`,
       `MOTION_AUTHORIZED: ${String(state.motionAuthorized)}`,
       `INPUT_AUTHORIZED: ${String(state.inputAuthorized)}`,
+      `DRAG_AUTHORIZED: ${String(state.dragAuthorized)}`,
+      `TOUCH_AUTHORIZED: ${String(state.touchAuthorized)}`,
+      `ZOOM_AUTHORIZED: ${String(state.zoomAuthorized)}`,
+      `INERTIA_AUTHORIZED: ${String(state.inertiaAuthorized)}`,
       `CANVAS_CONTROLS_RECEIPT_ALIGNED: ${String(state.canvasControlsReceiptAligned)}`,
       `CANVAS_PANEL_CONTROLS_STATUS: ${state.canvasRuntimeStatus?.controlsStatus || "pending"}`,
       `PARENT_MUTATION_AUTHORIZED: false`,
@@ -688,12 +723,13 @@ async function importControlsModule() {
     publishReceiptPanel();
 
     renderMountMessage(
-      state.canvasControlsReceiptAligned ? "Asset path renewed" : "Controls active",
+      state.canvasControlsReceiptAligned ? "Interactive view active" : "Interactive controls active",
       [
         `Canvas asset: ${CANVAS_MODULE.path}`,
         `Canvas receipt: ${state.canvasModule.actualContract}`,
-        `Controls: ${controlsStatus?.status || "pending"}`,
-        `Canvas controls aligned: ${String(state.canvasControlsReceiptAligned)}`,
+        `Controls: ${state.controlsStatus}`,
+        `Interactive: ${state.interactiveStatus}`,
+        `Drag/touch/zoom/inertia: ${String(state.dragAuthorized && state.touchAuthorized && state.zoomAuthorized && state.inertiaAuthorized)}`,
         `Parent mutation: forbidden`
       ]
     );
@@ -703,6 +739,7 @@ async function importControlsModule() {
     const message = safeError(error);
 
     state.controlsStatus = "failed";
+    state.interactiveStatus = "failed";
     state.controlsModule = {
       status: "import-or-boot-failed",
       path: CONTROLS_MODULE.path,
@@ -712,10 +749,10 @@ async function importControlsModule() {
     };
 
     state.errors.push(`controls: ${message}`);
-    state.parentChainStatus = "canvas-asset-path-renewal-controls-failed";
+    state.parentChainStatus = "interactive-controls-import-or-boot-failed";
 
     stampDocument();
-    publishStatus("canvas asset path renewed but controls failed", [
+    publishStatus("interactive controls failed", [
       `ERROR: ${message}`,
       `PARENT_MUTATION_AUTHORIZED: false`
     ]);
@@ -728,17 +765,18 @@ async function boot() {
   state.parentChainStatus = "route-doorway-top-level-executed";
   stampDocument();
 
-  publishStatus("route doorway top-level executed; loading canvas asset path renewal chain", [
+  publishStatus("route doorway top-level executed; loading interactive view chain", [
     `CANVAS_ASSET_PATH: ${CANVAS_MODULE.path}`,
-    `CHAIN: kernel → lattice256 → landmap → terrain → surface → renewed-canvas → controls`,
+    `CHAIN: kernel → lattice256 → landmap → terrain → surface → nested-canvas → interactive-controls`,
+    `EXPECTED_CONTROLS: ${EXPECTED_CONTRACTS.controls}`,
     `PARENT_MUTATION_AUTHORIZED: false`
   ]);
   publishReceiptPanel();
 
-  renderMountMessage("Asset path renewal active", [
+  renderMountMessage("Interactive route active", [
     "Top-level execution confirmed",
     `Canvas asset: ${CANVAS_MODULE.path}`,
-    "Controls align after renewed canvas proof"
+    "Interactive controls load after nested canvas proof"
   ]);
 
   const parentLoaded = await loadParentModules();
@@ -750,10 +788,11 @@ async function boot() {
   const canvasAllowed = surfaceAllowsCanvas();
 
   state.parentChainStatus = canvasAllowed
-    ? "surface-parent-ready-for-renewed-canvas-asset"
-    : "surface-parent-held-before-canvas";
-  state.canvasStatus = canvasAllowed ? "authorized-for-renewed-canvas-import" : "held";
+    ? "surface-parent-ready-for-interactive-view"
+    : "surface-parent-held-before-interactive-view";
+  state.canvasStatus = canvasAllowed ? "authorized-for-nested-canvas-import" : "held";
   state.controlsStatus = "held";
+  state.interactiveStatus = "held";
 
   stampDocument();
   publishStatus(state.parentChainStatus, [
@@ -761,7 +800,7 @@ async function boot() {
     `DOWNSTREAM_CANVAS_MAY_READ_SURFACE: ${String(state.instances.surface?.summary?.downstreamCanvasMayReadSurface === true)}`,
     `CANVAS_ASSET_PATH: ${CANVAS_MODULE.path}`,
     `CANVAS_IMPORT_AUTHORIZED: ${String(canvasAllowed)}`,
-    `CONTROLS: held`
+    `INTERACTIVE_CONTROLS: held`
   ]);
   publishReceiptPanel();
 

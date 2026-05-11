@@ -1,44 +1,16 @@
 // /showroom/globe/h-earth/index.js
-// H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_DOORWAY_TNT_v5
+// H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_DOORWAY_TNT_v6
+// Retained Gauges source marker: H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4
 // Full-file replacement.
 // Route doorway authority only.
-//
-// Purpose:
-// - Import kernel → lattice256 → landmap → terrain → surface → canvas.
-// - Mount H-Earth canvas visible composition into #hEarthCanvasMount.
-// - Keep controls held.
-// - Preserve all parent truth boundaries.
-// - Keep visual pass claim false until Gauges verifies canvas route.
-//
-// Owns:
-// - route boot
-// - parent-chain module import sequence
-// - canvas mount call
-// - status bridge
-// - public route receipts
-//
-// Does not own:
-// - land/water truth
-// - terrain truth
-// - surface material truth
-// - controls
-// - drag
-// - zoom
-// - animation clock
-// - weather
-// - atmosphere
-// - life systems
 
-const CONTRACT = "H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_DOORWAY_TNT_v5";
+const CONTRACT = "H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_DOORWAY_TNT_v6";
 const PRIOR_CONTRACT = "H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4";
-const ALIGNMENT_CONTRACT = "H_EARTH_G1_ROUTE_SOURCE_MARKER_ALIGNMENT_TNT_v5";
 const SEED_PACKET = "H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1";
 const ROUTE = "/showroom/globe/h-earth/";
-const PLANET = "H-Earth";
-const GENERATION = "G1";
 
-const URL_CACHE = new URLSearchParams(window.location.search).get("v") || "canvas-visible-composition-v1";
-const CACHE_KEY = `2026-05-11-h-earth-canvas-visible-composition-v1-${URL_CACHE}`;
+const URL_CACHE = new URLSearchParams(window.location.search).get("v") || "canvas-visible-composition-v6";
+const CACHE_KEY = `2026-05-11-h-earth-canvas-visible-composition-v6-${URL_CACHE}`;
 
 const EXPECTED_CONTRACTS = Object.freeze({
   kernel: "H_EARTH_G1_TERRAIN_ONLY_KERNEL_TNT_v1",
@@ -50,65 +22,21 @@ const EXPECTED_CONTRACTS = Object.freeze({
 });
 
 const ACTIVE_MODULES = Object.freeze([
-  {
-    key: "kernel",
-    path: "/assets/h-earth/h-earth.kernel.js",
-    requiredExport: "createHEarthKernel"
-  },
-  {
-    key: "lattice256",
-    path: "/assets/h-earth/h-earth.lattice256.js",
-    requiredExport: "createHEarthLattice256"
-  },
-  {
-    key: "landmap",
-    path: "/assets/h-earth/h-earth.landmap.js",
-    requiredExport: "createHEarthLandmap"
-  },
-  {
-    key: "terrain",
-    path: "/assets/h-earth/h-earth.terrain.js",
-    requiredExport: "createHEarthTerrain"
-  },
-  {
-    key: "surface",
-    path: "/assets/h-earth/h-earth.surface.js",
-    requiredExport: "createHEarthSurface"
-  },
-  {
-    key: "canvas",
-    path: "/assets/h-earth/h-earth.canvas.js",
-    requiredExport: "createHEarthCanvas"
-  }
+  { key: "kernel", path: "/assets/h-earth/h-earth.kernel.js", requiredExport: "createHEarthKernel" },
+  { key: "lattice256", path: "/assets/h-earth/h-earth.lattice256.js", requiredExport: "createHEarthLattice256" },
+  { key: "landmap", path: "/assets/h-earth/h-earth.landmap.js", requiredExport: "createHEarthLandmap" },
+  { key: "terrain", path: "/assets/h-earth/h-earth.terrain.js", requiredExport: "createHEarthTerrain" },
+  { key: "surface", path: "/assets/h-earth/h-earth.surface.js", requiredExport: "createHEarthSurface" },
+  { key: "canvas", path: "/assets/h-earth/h-earth.canvas.js", requiredExport: "createHEarthCanvas" }
 ]);
 
 const HELD_MODULES = Object.freeze([
-  {
-    key: "controls",
-    path: "/assets/h-earth/h-earth.controls.js",
-    status: "held-until-canvas-route-proof-passes"
-  },
-  {
-    key: "ground",
-    path: "/assets/h-earth/h-earth/ground/",
-    status: "held-until-orbital-aerial-inspection-is-coherent"
-  },
-  {
-    key: "estate",
-    path: "/assets/h-earth/h-earth/estate/",
-    status: "held-until-ground-level-mode-is-authorized"
-  }
+  { key: "controls", path: "/assets/h-earth/h-earth.controls.js", status: "held-until-canvas-route-proof-passes" },
+  { key: "ground", path: "/assets/h-earth/h-earth/ground/", status: "held-until-orbital-aerial-inspection-is-coherent" },
+  { key: "estate", path: "/assets/h-earth/h-earth/estate/", status: "held-until-ground-level-mode-is-authorized" }
 ]);
 
 const state = {
-  contract: CONTRACT,
-  priorContract: PRIOR_CONTRACT,
-  alignmentContract: ALIGNMENT_CONTRACT,
-  seedPacket: SEED_PACKET,
-  route: ROUTE,
-  planet: PLANET,
-  generation: GENERATION,
-  cacheKey: CACHE_KEY,
   parentChainStatus: "pending",
   loadedCount: 0,
   failedCount: 0,
@@ -123,6 +51,12 @@ function byId(id) {
   return document.getElementById(id);
 }
 
+function codeLine(text) {
+  const code = document.createElement("code");
+  code.textContent = text;
+  return code;
+}
+
 function statusTarget() {
   return byId("hEarthStatusTarget");
 }
@@ -133,12 +67,6 @@ function mountTarget() {
 
 function receiptPanel() {
   return byId("hEarthReceiptPanel");
-}
-
-function codeLine(text) {
-  const code = document.createElement("code");
-  code.textContent = text;
-  return code;
 }
 
 function safeError(error) {
@@ -157,10 +85,8 @@ function getImportedContract(imported, instance) {
 
 function stampDocument() {
   const root = document.documentElement;
-
   root.dataset.routeDoorwayContract = CONTRACT;
   root.dataset.previousRouteDoorwayContract = PRIOR_CONTRACT;
-  root.dataset.alignmentContract = ALIGNMENT_CONTRACT;
   root.dataset.hEarthSeedPacket = SEED_PACKET;
   root.dataset.parentCoreChainStatus = state.parentChainStatus;
   root.dataset.cacheKey = CACHE_KEY;
@@ -182,7 +108,6 @@ function publishStatus(message, lines = []) {
   target.dataset.routeDoorway = "active";
   target.dataset.routeDoorwayContract = CONTRACT;
   target.dataset.previousRouteDoorwayContract = PRIOR_CONTRACT;
-  target.dataset.alignmentContract = ALIGNMENT_CONTRACT;
   target.dataset.parentCoreChain = state.parentChainStatus;
   target.dataset.surface = "active-read-only";
   target.dataset.canvas = "active-visible-composition";
@@ -192,7 +117,6 @@ function publishStatus(message, lines = []) {
   target.replaceChildren(
     codeLine(`ROUTE_DOORWAY_RECEIPT: ${CONTRACT}`),
     codeLine(`PREVIOUS_DOORWAY: ${PRIOR_CONTRACT}`),
-    codeLine(`ALIGNMENT_RECEIPT: ${ALIGNMENT_CONTRACT}`),
     codeLine(`SEED_PACKET: ${SEED_PACKET}`),
     codeLine(`CACHE_KEY: ${CACHE_KEY}`),
     codeLine(`STATUS: ${message}`),
@@ -256,7 +180,6 @@ function publishReceiptPanel() {
 
   panel.dataset.receiptDoorway = CONTRACT;
   panel.dataset.previousReceiptDoorway = PRIOR_CONTRACT;
-  panel.dataset.alignmentReceipt = ALIGNMENT_CONTRACT;
   panel.dataset.parentChainStatus = state.parentChainStatus;
   panel.dataset.loadedModules = String(state.loadedCount);
   panel.dataset.failedModules = String(state.failedCount);
@@ -271,7 +194,6 @@ function publishReceiptPanel() {
     codeLine(`ROUTE_AUTHORITY: doorway only`),
     codeLine(`ROUTE_DOORWAY_RECEIPT: ${CONTRACT}`),
     codeLine(`PREVIOUS_DOORWAY: ${PRIOR_CONTRACT}`),
-    codeLine(`ALIGNMENT_RECEIPT: ${ALIGNMENT_CONTRACT}`),
     codeLine(`PARENT_CHAIN_STATUS: ${state.parentChainStatus}`),
     codeLine(`LOADED_ACTIVE_MODULES: ${state.loadedCount}`),
     codeLine(`FAILED_ACTIVE_MODULES: ${state.failedCount}`),
@@ -348,10 +270,8 @@ async function loadActiveModules() {
 
     if (!imported) {
       state.parentChainStatus = `${entry.key}-failed`;
-      document.documentElement.dataset.parentCoreChainStatus = state.parentChainStatus;
       publishStatus(`${entry.key} import failed`, [
         `FAILED_MODULE: ${entry.path}`,
-        `IMPORT_URL: ${moduleUrl(entry.path)}`,
         `ERROR: ${state.activeModules[entry.key]?.error || "unknown"}`
       ]);
       publishReceiptPanel();
@@ -374,7 +294,6 @@ function createInstances() {
     const kernel = kernelModule.createHEarthKernel({
       doorwayContract: CONTRACT,
       priorDoorwayContract: PRIOR_CONTRACT,
-      alignmentContract: ALIGNMENT_CONTRACT,
       route: ROUTE,
       canvasVisibleComposition: true
     });
@@ -420,12 +339,7 @@ function createInstances() {
     const message = safeError(error);
     state.errors.push(`instance-create: ${message}`);
     state.parentChainStatus = "module-loaded-instance-create-failed";
-    document.documentElement.dataset.parentCoreChainStatus = state.parentChainStatus;
-
-    publishStatus("modules loaded but instance creation failed", [
-      `ERROR: ${message}`,
-      `CHECK: exported factory function signatures`
-    ]);
+    publishStatus("modules loaded but instance creation failed", [`ERROR: ${message}`]);
     publishReceiptPanel();
     return false;
   }
@@ -435,42 +349,43 @@ function mountCanvas() {
   const mount = mountTarget();
   const canvasAuthority = state.instances.canvas;
 
-  if (!mount) {
-    state.parentChainStatus = "canvas-mount-missing";
-    publishStatus("canvas mount missing", [
-      `MOUNT_ID: hEarthCanvasMount`,
-      `CANVAS: not-rendered`
-    ]);
-    publishReceiptPanel();
-    return false;
-  }
-
-  if (!canvasAuthority || typeof canvasAuthority.renderInto !== "function") {
-    state.parentChainStatus = "canvas-authority-missing-render-into";
-    publishStatus("canvas authority missing renderInto", [
-      `CANVAS: not-rendered`
+  if (!mount || !canvasAuthority || typeof canvasAuthority.renderInto !== "function") {
+    state.parentChainStatus = "canvas-mount-or-render-authority-missing";
+    publishStatus("canvas mount or render authority missing", [
+      `MOUNT_PRESENT: ${String(Boolean(mount))}`,
+      `RENDER_INTO_PRESENT: ${String(Boolean(canvasAuthority?.renderInto))}`
     ]);
     publishReceiptPanel();
     return false;
   }
 
   try {
+    mount.dataset.routeMount = "canvas-visible-composition";
+    mount.dataset.surfaceAuthority = "read-only-parent";
+    mount.dataset.canvasAuthority = "active-visible-composition";
+    mount.dataset.controlsAuthority = "held";
+    mount.dataset.visualPassClaimed = "false";
+    mount.replaceChildren();
+
+    const width = mount.clientWidth || mount.getBoundingClientRect?.().width || 620;
+
     state.canvasResult = canvasAuthority.renderInto(mount, {
-      size: mount.clientWidth || 620,
+      size: width,
       rotationRadians: -0.3141592654,
       tiltRadians: -0.1396263402,
       document,
       window
     });
 
+    mount.dataset.routeMount = "canvas-visible-composition";
+    mount.dataset.hEarthCanvasStatus = state.canvasResult?.rendered ? "rendered" : "held";
+
     return state.canvasResult?.rendered === true;
   } catch (error) {
     const message = safeError(error);
     state.errors.push(`canvas-render: ${message}`);
     state.parentChainStatus = "canvas-render-failed";
-    publishStatus("canvas render failed", [
-      `ERROR: ${message}`
-    ]);
+    publishStatus("canvas render failed", [`ERROR: ${message}`]);
     publishReceiptPanel();
     return false;
   }
@@ -544,8 +459,6 @@ async function boot() {
   stampDocument();
 
   state.parentChainStatus = "canvas-visible-composition-chain-checking";
-  document.documentElement.dataset.parentCoreChainStatus = state.parentChainStatus;
-
   publishStatus("canvas visible-composition route doorway active; loading parent chain", [
     `ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface → canvas`,
     `HELD_CHAIN: controls → ground → estate`,
@@ -577,7 +490,6 @@ if (document.readyState === "loading") {
 export {
   CONTRACT,
   PRIOR_CONTRACT,
-  ALIGNMENT_CONTRACT,
   SEED_PACKET,
   ROUTE,
   ACTIVE_MODULES,

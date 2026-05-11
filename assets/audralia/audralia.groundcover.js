@@ -1,18 +1,21 @@
 // /assets/audralia/audralia.groundcover.js
-// AUDRALIA_G1_PLAINS_DESERTS_MARSHES_GROUNDCOVER_AUTHORITY_TNT_v1
-// New file.
+// AUDRALIA_G1_RESTRAINT_DESTRIPING_GROUNDCOVER_AUTHORITY_TNT_v2
+// Full-file replacement.
 // Groundcover authority only.
-// Adds plains, deserts, marshes, wet flats, dry basins, mineral flats, and grassland ground color.
-// Does not create trees, bushes, forest canopy, or full vegetation topology.
-// Does not own route, canvas, runtime, controls, mountains, beaches, landrise, or terrain base.
-// No generated image. No GraphicBox. No visual-pass claim.
+// Purpose:
+// - Separate plains, deserts, marshes, wet flats, grasslands, dry basins, and mineral flats.
+// - Remove scanline behavior.
+// - Keep groundcover subdued and natural.
+// - Does not create trees, bushes, forest canopy, or full vegetation topology.
+// - No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G1_PLAINS_DESERTS_MARSHES_GROUNDCOVER_AUTHORITY_TNT_v1";
-  const RECEIPT = "AUDRALIA_G1_PLAINS_DESERTS_MARSHES_GROUNDCOVER_AUTHORITY_RECEIPT_v1";
-  const VERSION = "2026-05-10.audralia-g1-plains-deserts-marshes-groundcover-authority-v1";
+  const CONTRACT = "AUDRALIA_G1_RESTRAINT_DESTRIPING_GROUNDCOVER_AUTHORITY_TNT_v2";
+  const RECEIPT = "AUDRALIA_G1_RESTRAINT_DESTRIPING_GROUNDCOVER_AUTHORITY_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G1_PLAINS_DESERTS_MARSHES_GROUNDCOVER_AUTHORITY_TNT_v1";
+  const VERSION = "2026-05-10.audralia-g1-restraint-destriping-groundcover-authority-v2";
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -114,136 +117,156 @@
     const basin = clamp(elevation.basin || 0, 0, 1);
     const highMountain = clamp(mountains.highMountain || 0, 0, 1);
     const foothills = clamp(mountains.foothills || 0, 0, 1);
-    const mountainPass = clamp(mountains.mountainPass || 0, 0, 1);
+    const oceanCut = clamp(landrise.oceanCut || 0, 0, 1);
 
-    const heat =
-      clamp(1 - latitudeAbs * 0.82, 0, 1) * 0.62 +
-      fbm(u * 1.18 + 0.22, v * 1.08 - 0.14, 1111000, 5) * 0.38;
+    const broadField = fbm(u * 0.72 + 0.21, v * 0.68 - 0.16, 1410000, 6);
+    const moistureField = fbm(u * 1.35 - 0.19, v * 1.08 + 0.12, 1411000, 5);
+    const drynessField = fbm(u * 1.22 + 0.11, v * 0.96 - 0.08, 1412000, 5);
+    const basinField = ridged(u * 1.8 - 0.04, v * 1.42 + 0.18, 1413000, 5);
+    const mineralField = fbm(u * 3.2 + 0.07, v * 2.7 - 0.14, 1414000, 4);
 
-    const moisture =
-      fbm(u * 1.6 - 0.19, v * 1.3 + 0.12, 1112000, 5) * 0.42 +
-      shelf * 0.14 +
-      basin * 0.18 +
-      lowland * 0.16 +
-      mountainPass * 0.06 -
-      highMountain * 0.12;
+    const heat = clamp(
+      (1 - latitudeAbs * 0.8) * 0.58 +
+        drynessField * 0.32 +
+        broadField * 0.1,
+      0,
+      1
+    );
 
-    const dryness =
-      clamp(
-        heat * 0.46 +
-          (1 - moisture) * 0.42 +
-          plateau * 0.12 +
-          fbm(u * 2.2, v * 1.9, 1113000, 4) * 0.12 -
-          shelf * 0.12 -
-          beachEdge * 0.18,
-        0,
-        1
-      );
+    const moisture = clamp(
+      moistureField * 0.42 +
+        shelf * 0.14 +
+        basin * 0.17 +
+        lowland * 0.16 +
+        broadField * 0.08 -
+        highMountain * 0.14 -
+        oceanCut * 0.05,
+      0,
+      1
+    );
 
-    const wetness =
-      clamp(
-        moisture * 0.54 +
-          basin * 0.24 +
-          lowland * 0.18 +
-          shelf * 0.12 -
-          heat * 0.1 -
-          highMountain * 0.18,
-        0,
-        1
-      );
+    const dryness = clamp(
+      heat * 0.4 +
+        (1 - moisture) * 0.38 +
+        plateau * 0.12 +
+        drynessField * 0.12 -
+        shelf * 0.11 -
+        beachEdge * 0.18,
+      0,
+      1
+    );
 
-    const flatness =
-      clamp(
-        lowland * 0.34 +
-          plateau * 0.22 +
-          (1 - highMountain) * 0.24 +
-          (1 - foothills) * 0.1 +
-          fbm(u * 1.1, v * 1.1, 1114000, 4) * 0.12,
-        0,
-        1
-      );
+    const wetness = clamp(
+      moisture * 0.52 +
+        basin * 0.24 +
+        lowland * 0.17 +
+        shelf * 0.1 -
+        heat * 0.1 -
+        highMountain * 0.18,
+      0,
+      1
+    );
+
+    const flatness = clamp(
+      lowland * 0.32 +
+        plateau * 0.18 +
+        (1 - highMountain) * 0.22 +
+        (1 - foothills) * 0.08 +
+        broadField * 0.12 -
+        oceanCut * 0.08,
+      0,
+      1
+    );
 
     const plains = clamp(
-      smoothstep(0.34, 0.76, flatness + terrainMass * 0.16) *
-        smoothstep(0.18, 0.84, terrainMass) *
-        (1 - smoothstep(0.58, 0.92, dryness)) *
-        (1 - highMountain * 0.72),
+      smoothstep(0.42, 0.78, flatness + terrainMass * 0.12 + broadField * 0.08) *
+        smoothstep(0.22, 0.76, terrainMass) *
+        (1 - smoothstep(0.62, 0.9, dryness)) *
+        (1 - highMountain * 0.74) *
+        (1 - oceanCut * 0.48),
       0,
       1
     );
 
-    const desert = clamp(
-      smoothstep(0.55, 0.88, dryness) *
-        smoothstep(0.18, 0.82, terrainMass) *
-        (1 - wetness * 0.58) *
+    const deserts = clamp(
+      smoothstep(0.6, 0.88, dryness) *
+        smoothstep(0.24, 0.82, terrainMass) *
+        (1 - wetness * 0.62) *
         (1 - beachEdge * 0.5) *
-        (1 - highMountain * 0.48),
+        (1 - highMountain * 0.5) *
+        (0.72 + drynessField * 0.2),
       0,
       1
     );
 
-    const marsh = clamp(
-      smoothstep(0.52, 0.86, wetness) *
-        smoothstep(0.22, 0.78, lowland + basin * 0.24) *
+    const marshes = clamp(
+      smoothstep(0.56, 0.86, wetness) *
+        smoothstep(0.26, 0.76, lowland + basin * 0.22 + shelf * 0.08) *
         (1 - highMountain * 0.92) *
-        (1 - plateau * 0.36) *
-        smoothstep(0.16, 0.72, terrainMass),
+        (1 - plateau * 0.38) *
+        smoothstep(0.18, 0.72, terrainMass) *
+        (1 - oceanCut * 0.3),
       0,
       1
     );
 
-    const wetFlat = clamp(
-      smoothstep(0.46, 0.8, shelf + basin * 0.22 + lowland * 0.18) *
-        smoothstep(0.12, 0.7, terrainMass) *
-        (1 - highMountain * 0.85),
+    const wetFlats = clamp(
+      smoothstep(0.5, 0.82, shelf + basin * 0.2 + lowland * 0.16) *
+        smoothstep(0.16, 0.7, terrainMass) *
+        (1 - highMountain * 0.86) *
+        (1 - oceanCut * 0.36),
       0,
       1
     );
 
     const grassland = clamp(
-      smoothstep(0.36, 0.78, plains + moisture * 0.18) *
-        (1 - desert * 0.64) *
-        (1 - marsh * 0.46) *
-        (1 - highMountain * 0.54),
+      smoothstep(0.42, 0.78, plains + moisture * 0.16 + broadField * 0.08) *
+        (1 - deserts * 0.64) *
+        (1 - marshes * 0.46) *
+        (1 - highMountain * 0.56),
       0,
       1
     );
 
-    const dryBasin = clamp(
-      smoothstep(0.52, 0.86, basin + dryness * 0.24) *
-        (1 - marsh * 0.56) *
-        smoothstep(0.18, 0.78, terrainMass),
+    const dryBasins = clamp(
+      smoothstep(0.56, 0.86, basinField * 0.28 + basin * 0.42 + dryness * 0.2) *
+        (1 - marshes * 0.56) *
+        smoothstep(0.22, 0.78, terrainMass),
       0,
       1
     );
 
-    const mineralFlat = clamp(
-      smoothstep(0.7, 0.94, dryness * 0.48 + basin * 0.28 + fbm(u * 5.2, v * 4.7, 1115000, 4) * 0.24) *
-        smoothstep(0.16, 0.8, terrainMass) *
-        (1 - highMountain * 0.6),
+    const mineralFlats = clamp(
+      smoothstep(0.72, 0.94, dryness * 0.38 + basin * 0.24 + mineralField * 0.28) *
+        smoothstep(0.2, 0.78, terrainMass) *
+        (1 - highMountain * 0.6) *
+        (1 - marshes * 0.5),
       0,
       1
     );
 
-    const gratitudePlain = summit.primarySummit === "Gratitude" ? plains * 0.08 + marsh * 0.05 : 0;
+    const gratitudePlain = summit.primarySummit === "Gratitude" ? plains * 0.05 + marshes * 0.035 : 0;
 
     return Object.freeze({
       contract: CONTRACT,
       receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
       plains: clamp(plains + gratitudePlain, 0, 1),
-      deserts: desert,
-      marshes: marsh,
-      wetFlats: wetFlat,
+      deserts,
+      marshes,
+      wetFlats,
       grassland,
-      dryBasins: dryBasin,
-      mineralFlats: mineralFlat,
-      groundMoisture: clamp(moisture, 0, 1),
-      groundHeat: clamp(heat, 0, 1),
+      dryBasins,
+      mineralFlats,
+      groundMoisture: moisture,
+      groundHeat: heat,
       groundDryness: dryness,
       basicVegetationOnly: true,
       trees: false,
       bushes: false,
       forestCanopy: false,
+      destripingActive: true,
+      scanlineGroundcover: false,
       ownsRoute: false,
       ownsCanvas: false,
       ownsRuntime: false,
@@ -260,8 +283,9 @@
     return Object.freeze({
       contract: CONTRACT,
       receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "audralia-plains-deserts-marshes-groundcover-authority",
+      authority: "audralia-restraint-destriping-groundcover-authority",
       plains: true,
       deserts: true,
       marshes: true,
@@ -271,6 +295,8 @@
       trees: false,
       bushes: false,
       forestCanopy: false,
+      destripingActive: true,
+      scanlineGroundcover: false,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
@@ -280,6 +306,7 @@
   window.AUDRALIA_GROUNDCOVER = Object.freeze({
     contract: CONTRACT,
     receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
     sampleGroundcover,
     getStatus
@@ -294,6 +321,8 @@
   document.documentElement.dataset.audraliaDeserts = "true";
   document.documentElement.dataset.audraliaMarshes = "true";
   document.documentElement.dataset.audraliaBasicVegetationOnly = "true";
+  document.documentElement.dataset.audraliaDestripingActive = "true";
+  document.documentElement.dataset.audraliaScanlineGroundcover = "false";
   document.documentElement.dataset.audraliaTrees = "false";
   document.documentElement.dataset.audraliaBushes = "false";
   document.documentElement.dataset.audraliaForestCanopy = "false";

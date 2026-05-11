@@ -4,15 +4,26 @@
   lang="en"
   data-page="showroom-globe-showcase-bookcase"
   data-route="/showroom/globe/"
-  data-contract="SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_HTML_TNT_v20B"
+  data-contract="SHOWROOM_GLOBE_LEAP_RENDER_CONSUMPTION_HTML_ALIGNMENT_TNT_v21A"
   data-pair-contract="SHOWROOM_COVER_GLOBE_SHOWCASE_DISPLAY_CASE_PAIR_TNT_v20"
-  data-previous-contract="SHOWROOM_GLOBE_TV_SET_PLANET_PROJECTION_HTML_TNT_v13"
+  data-previous-contract="SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_HTML_TNT_v20B"
+  data-required-route-contract="H_EARTH_LEAP_RENDER_CONSUMPTION_TNT_v1"
   data-showroom-mode="showcase-bookcase-display-case"
   data-cover-route="/showroom/"
   data-default-display="h-earth"
   data-display-case-layer="true"
   data-full-inspection-layer="planet-private-routes"
   data-card-transform="forbidden"
+  data-definitive-land-state-required="true"
+  data-land-state-classification-required="true"
+  data-elevation-sea-level-bound="true"
+  data-terrain-detail-consumption-required="true"
+  data-ground-level-ready="false"
+  data-manor-placement-ready="false"
+  data-estate-placement-ready="false"
+  data-ground-level-hold-reason="definitive-land-state-required"
+  data-manor-placement-hold-reason="lawful-build-candidate-terrain-required"
+  data-estate-placement-hold-reason="lawful-build-candidate-terrain-required"
   data-parent-mutation-authorized="false"
   data-earth-mutation-authorized="false"
   data-h-earth-mutation-authorized="false"
@@ -358,6 +369,7 @@
       aspect-ratio:1/1;
       border-radius:999px;
       transform:none !important;
+      touch-action:none;
     }
 
     .display-meta {
@@ -519,6 +531,16 @@
         data-display-case-layer="true"
         data-default-display="h-earth"
         data-card-transform="forbidden"
+        data-definitive-land-state-required="true"
+        data-land-state-classification-required="true"
+        data-elevation-sea-level-bound="true"
+        data-terrain-detail-consumption-required="true"
+        data-ground-level-ready="false"
+        data-manor-placement-ready="false"
+        data-estate-placement-ready="false"
+        data-ground-level-hold-reason="definitive-land-state-required"
+        data-manor-placement-hold-reason="lawful-build-candidate-terrain-required"
+        data-estate-placement-hold-reason="lawful-build-candidate-terrain-required"
         data-parent-mutation-authorized="false"
       >
         <section class="bookcase" aria-label="World bookcase">
@@ -551,7 +573,7 @@
             <div class="tag-row">
               <span class="tag green">Active</span>
               <span class="tag gold">Build</span>
-              <span class="tag">Orbital first</span>
+              <span class="tag">Land-state gate</span>
             </div>
           </article>
 
@@ -610,7 +632,7 @@
           <div class="display-meta" id="displayMeta" aria-live="polite">
             <span><strong>Layer</strong>Display case</span>
             <span><strong>Selection</strong>H-Earth</span>
-            <span><strong>Inspection</strong>Private route</span>
+            <span><strong>Land/state</strong>Definitive orbital read required</span>
           </div>
 
           <div class="display-actions">
@@ -625,27 +647,42 @@
         id="globeShowcaseReceipt"
         class="receipt"
         aria-label="Globe showcase route receipt"
-        data-receipt-panel="showroom-globe-showcase-bookcase"
-        data-html-contract="SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_HTML_TNT_v20B"
-        data-required-route-contract="SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_ROUTE_TNT_v20C"
+        data-receipt-panel="showroom-globe-leap-render-consumption"
+        data-html-contract="SHOWROOM_GLOBE_LEAP_RENDER_CONSUMPTION_HTML_ALIGNMENT_TNT_v21A"
+        data-required-route-contract="H_EARTH_LEAP_RENDER_CONSUMPTION_TNT_v1"
         data-pair-contract="SHOWROOM_COVER_GLOBE_SHOWCASE_DISPLAY_CASE_PAIR_TNT_v20"
         data-showroom-mode="showcase-bookcase-display-case"
         data-default-display="h-earth"
         data-full-inspection-layer="planet-private-routes"
         data-card-transform="forbidden"
+        data-definitive-land-state-required="true"
+        data-land-state-classification-required="true"
+        data-elevation-sea-level-bound="true"
+        data-terrain-detail-consumption-required="true"
+        data-ground-level-ready="false"
+        data-manor-placement-ready="false"
+        data-estate-placement-ready="false"
+        data-ground-level-hold-reason="definitive-land-state-required"
+        data-manor-placement-hold-reason="lawful-build-candidate-terrain-required"
+        data-estate-placement-hold-reason="lawful-build-candidate-terrain-required"
         data-parent-mutation-authorized="false"
         data-visible-diagnostics="false"
         data-generated-image="false"
         data-graphic-box="false"
         data-visual-pass-claim="false"
       >
-        <code>HTML_RECEIPT: SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_HTML_TNT_v20B</code>
+        <code>HTML_RECEIPT: SHOWROOM_GLOBE_LEAP_RENDER_CONSUMPTION_HTML_ALIGNMENT_TNT_v21A</code>
         <code>PAIR_RECEIPT: SHOWROOM_COVER_GLOBE_SHOWCASE_DISPLAY_CASE_PAIR_TNT_v20</code>
-        <code>REQUIRED_ROUTE: SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_ROUTE_TNT_v20C</code>
+        <code>REQUIRED_ROUTE: H_EARTH_LEAP_RENDER_CONSUMPTION_TNT_v1</code>
         <code>SHOWROOM_MODE: showcase-bookcase-display-case</code>
         <code>DEFAULT_DISPLAY: h-earth</code>
         <code>FULL_INSPECTION_LAYER: planet-private-routes</code>
         <code>CARD_TRANSFORM: forbidden</code>
+        <code>DEFINITIVE_LAND_STATE_REQUIRED: true</code>
+        <code>TERRAIN_DETAIL_CONSUMPTION_REQUIRED: true</code>
+        <code>GROUND_LEVEL_READY: false</code>
+        <code>MANOR_PLACEMENT_READY: false</code>
+        <code>ESTATE_PLACEMENT_READY: false</code>
         <code>PARENT_MUTATION_AUTHORIZED: false</code>
       </section>
     </main>
@@ -658,10 +695,10 @@
   <script
     id="globeShowcaseHandoff"
     type="module"
-    src="./index.js?v=SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_ROUTE_TNT_v20C"
-    data-handoff="showroom-globe-showcase-bookcase-display-case"
-    data-required-route-contract="SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_ROUTE_TNT_v20C"
-    data-html-contract="SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_HTML_TNT_v20B"
+    src="./index.js?v=H_EARTH_LEAP_RENDER_CONSUMPTION_TNT_v1"
+    data-handoff="showroom-globe-leap-render-consumption"
+    data-required-route-contract="H_EARTH_LEAP_RENDER_CONSUMPTION_TNT_v1"
+    data-html-contract="SHOWROOM_GLOBE_LEAP_RENDER_CONSUMPTION_HTML_ALIGNMENT_TNT_v21A"
     data-pair-contract="SHOWROOM_COVER_GLOBE_SHOWCASE_DISPLAY_CASE_PAIR_TNT_v20"
   ></script>
 </body>

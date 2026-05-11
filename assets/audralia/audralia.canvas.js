@@ -1,38 +1,38 @@
 // /assets/audralia/audralia.canvas.js
-// AUDRALIA_PARENT_CHAIN_VISIBLE_CANVAS_AUTHORITY_TNT_v1
+// AUDRALIA_G1_PARENT_CHAIN_CANVAS_STABILIZATION_TNT_v2
 // Full-file replacement.
 // Canvas authority only.
 // Purpose:
-// - Expose window.AUDRALIA_CANVAS.mount.
-// - Render Audralia as a clean, ancient, ocean-driven, climate-bearing home-world planet.
-// - Consume AUDRALIA_BACKSTORY, AUDRALIA_TECTONICS, and AUDRALIA_TOPOLOGY when available.
-// - Preserve drag, spin, and pole-swivel inspection locally.
-// Not Hearth. Not Earth clone. Not a real-world geography copy.
+// - Stabilize Audralia as a Generation 1 ocean-dominant home-world planet.
+// - Increase visible land/shelf/coast readability by roughly 10–15%.
+// - Preserve clean ancient ocean-world identity.
+// - Not Hearth. Not Earth clone. Not Australia.
 // No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_PARENT_CHAIN_VISIBLE_CANVAS_AUTHORITY_TNT_v1";
-  const RECEIPT = "AUDRALIA_PARENT_CHAIN_VISIBLE_CANVAS_AUTHORITY_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_CANVAS_PARENT_CONTRACT_CHILD_ACTIVATION_TNT_v13";
-  const VERSION = "2026-05-10.audralia-parent-chain-visible-canvas-v1";
+  const CONTRACT = "AUDRALIA_G1_PARENT_CHAIN_CANVAS_STABILIZATION_TNT_v2";
+  const RECEIPT = "AUDRALIA_G1_PARENT_CHAIN_CANVAS_STABILIZATION_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "AUDRALIA_PARENT_CHAIN_VISIBLE_CANVAS_AUTHORITY_TNT_v1";
+  const VERSION = "2026-05-10.audralia-g1-parent-chain-canvas-stabilization-v2";
 
   const TAU = Math.PI * 2;
 
   const COLORS = Object.freeze({
     space: [2, 7, 18],
     deepOcean: [4, 20, 46],
-    ocean: [6, 55, 93],
-    shelf: [18, 103, 128],
-    shallow: [45, 138, 142],
-    coast: [143, 164, 118],
-    wetLand: [58, 118, 82],
-    land: [102, 138, 82],
-    dryLand: [155, 137, 84],
-    highland: [121, 126, 98],
-    oldStone: [116, 116, 108],
-    ridge: [139, 137, 126],
+    ocean: [6, 56, 96],
+    oceanBlue: [8, 70, 112],
+    shelf: [20, 108, 132],
+    shallow: [48, 143, 146],
+    coast: [145, 166, 118],
+    wetLand: [61, 122, 84],
+    land: [107, 142, 84],
+    dryLand: [158, 141, 86],
+    highland: [123, 128, 100],
+    oldStone: [118, 118, 110],
+    ridge: [140, 139, 127],
     polar: [204, 222, 222],
     cloud: [230, 238, 238],
     atmosphere: [86, 157, 194]
@@ -203,21 +203,34 @@
     const latitudeAbs = Math.abs(latitude) / (Math.PI / 2);
 
     const landSignal = clamp(
-      topology.landEligibility * 0.46 +
-        tectonics.exposedLandPressure * 0.24 +
-        oldPlateNoise * 0.2 +
-        continentArc * 0.12 +
-        topology.islandEligibility * 0.08 -
-        backstory.oceanBias * 0.24 -
-        latitudeAbs * 0.04,
+      topology.landEligibility * 0.5 +
+        tectonics.exposedLandPressure * 0.27 +
+        oldPlateNoise * 0.23 +
+        continentArc * 0.13 +
+        topology.islandEligibility * 0.1 -
+        backstory.oceanBias * 0.205 -
+        latitudeAbs * 0.035,
       0,
       1
     );
 
-    const islandSignal = smoothstep(0.61, 0.89, shelfNoise * 0.6 + brokenEdge * 0.26 + topology.islandEligibility * 0.22);
-    const mainLand = landSignal > 0.55;
-    const islandLand = !mainLand && islandSignal > 0.68 && topology.shelf > 0.44;
+    const islandSignal = smoothstep(
+      0.58,
+      0.87,
+      shelfNoise * 0.6 + brokenEdge * 0.26 + topology.islandEligibility * 0.24
+    );
+
+    const mainLand = landSignal > 0.515;
+    const islandLand = !mainLand && islandSignal > 0.64 && topology.shelf > 0.39;
     const isLand = mainLand || islandLand;
+
+    const shelf = clamp(
+      topology.shelf * 0.55 +
+        smoothstep(0.43, 0.59, landSignal) * 0.28 +
+        islandSignal * 0.14,
+      0,
+      1
+    );
 
     return {
       isLand,
@@ -225,6 +238,7 @@
       islandLand,
       landSignal,
       islandSignal,
+      shelf,
       backstory,
       tectonics,
       topology
@@ -238,37 +252,43 @@
     const climateMoisture = clamp(
       fbm(u * 1.4 - 0.14, v * 1.2 + 0.09, 441000, 5) * 0.52 +
         shape.topology.basin * 0.18 +
-        shape.topology.shelf * 0.08 -
+        shape.shelf * 0.08 -
         latitudeAbs * 0.12,
       0,
       1
     );
 
     if (!shape.isLand) {
-      let water = mix(COLORS.deepOcean, COLORS.ocean, smoothstep(0.22, 0.86, 1 - shape.topology.belowSeaDepth + fbm(u, v, 450000, 4) * 0.26));
-      water = mix(water, COLORS.shelf, smoothstep(0.54, 0.88, shape.topology.shelf) * 0.42);
-      water = mix(water, COLORS.shallow, shape.islandSignal * 0.12);
+      let water = mix(
+        COLORS.deepOcean,
+        COLORS.ocean,
+        smoothstep(0.22, 0.86, 1 - shape.topology.belowSeaDepth + fbm(u, v, 450000, 4) * 0.26)
+      );
+
+      water = mix(water, COLORS.oceanBlue, smoothstep(0.32, 0.74, 1 - shape.topology.belowSeaDepth) * 0.16);
+      water = mix(water, COLORS.shelf, smoothstep(0.48, 0.86, shape.shelf) * 0.48);
+      water = mix(water, COLORS.shallow, shape.islandSignal * 0.15);
       return shade(water, (fbm(u * 2.0, v * 1.7, 451000, 4) - 0.5) * 6);
     }
 
     const dry = clamp((1 - climateMoisture) * 0.72 + latitudeAbs * 0.08, 0, 1);
     const high = clamp(relief * 0.56 + shape.tectonics.oldRidgePressure * 0.34, 0, 1);
-    const coast = smoothstep(0.5, 0.62, shape.landSignal) * (1 - smoothstep(0.62, 0.78, shape.landSignal));
+    const coast = smoothstep(0.48, 0.61, shape.landSignal) * (1 - smoothstep(0.64, 0.8, shape.landSignal));
 
     let land = COLORS.land;
 
-    land = mix(land, COLORS.wetLand, climateMoisture * 0.42);
-    land = mix(land, COLORS.dryLand, dry * 0.38);
-    land = mix(land, COLORS.highland, high * 0.26);
-    land = mix(land, COLORS.oldStone, high * shape.tectonics.weatheredEdgePressure * 0.22);
+    land = mix(land, COLORS.wetLand, climateMoisture * 0.44);
+    land = mix(land, COLORS.dryLand, dry * 0.36);
+    land = mix(land, COLORS.highland, high * 0.27);
+    land = mix(land, COLORS.oldStone, high * shape.tectonics.weatheredEdgePressure * 0.2);
     land = mix(land, COLORS.ridge, smoothstep(0.62, 0.9, high) * 0.22);
-    land = mix(land, COLORS.coast, coast * 0.16);
+    land = mix(land, COLORS.coast, coast * 0.2);
     land = mix(land, COLORS.polar, smoothstep(0.72, 0.96, latitudeAbs + high * 0.14) * 0.34);
 
     const grain = (fbm(u * 3.4 + 0.15, v * 2.7 - 0.11, 460000, 4) - 0.5) * 10;
     const ridgeShade = smoothstep(0.6, 0.9, high) * 10 - shape.topology.basin * 5;
 
-    return shade(land, grain + ridgeShade - 3);
+    return shade(land, grain + ridgeShade - 2);
   }
 
   function buildTexture(width, height) {
@@ -299,14 +319,7 @@
 
     ctx.putImageData(image, 0, 0);
 
-    return {
-      canvas,
-      ctx,
-      image,
-      data,
-      width,
-      height
-    };
+    return { canvas, ctx, image, data, width, height };
   }
 
   function textureSample(texture, u, v) {
@@ -333,7 +346,13 @@
     canvas.dataset.audraliaParentChainCanvas = "true";
     canvas.dataset.audraliaCanvasContract = CONTRACT;
     canvas.dataset.audraliaCanvasReceipt = RECEIPT;
+    canvas.dataset.audraliaGeneration = "1";
+    canvas.dataset.audraliaG1Baseline = "stabilizing";
+    canvas.dataset.audraliaCanvasLandReadabilityLift = "0.12";
     canvas.dataset.audraliaOceanDrivenHomeWorld = "true";
+    canvas.dataset.audraliaNotAustralia = "true";
+    canvas.dataset.audraliaEarthClone = "false";
+    canvas.dataset.audraliaHearthIdentity = "false";
     canvas.dataset.generatedImage = "false";
     canvas.dataset.graphicBox = "false";
     canvas.dataset.visualPassClaimed = "false";
@@ -445,7 +464,7 @@
             continue;
           }
 
-          let z = Math.sqrt(1 - rr);
+          const z = Math.sqrt(1 - rr);
           let sx = px;
           let sy = py;
           let sz = z;
@@ -467,11 +486,11 @@
 
           const lightAmount = clamp(wx * light[0] + sy * light[1] + z * light[2], 0, 1);
           const limb = smoothstep(0.0, 0.16, z);
-          const shadeAmount = -36 + lightAmount * 54;
+          const shadeAmount = -34 + lightAmount * 56;
 
           color = shade(color, shadeAmount);
           color = mix(COLORS.atmosphere, color, limb);
-          color = mix(color, COLORS.cloud, smoothstep(0.72, 0.95, fbm(u * 2.2 + state.spin * 0.02, v * 1.7, 470000, 3)) * 0.08);
+          color = mix(color, COLORS.cloud, smoothstep(0.74, 0.96, fbm(u * 2.2 + state.spin * 0.02, v * 1.7, 470000, 3)) * 0.07);
 
           data[index] = color[0];
           data[index + 1] = color[1];
@@ -521,7 +540,13 @@
     document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
     document.documentElement.dataset.audraliaCanvasReceipt = RECEIPT;
     document.documentElement.dataset.audraliaCanvasMounted = "true";
+    document.documentElement.dataset.audraliaGeneration = "1";
+    document.documentElement.dataset.audraliaG1Baseline = "stabilizing";
+    document.documentElement.dataset.audraliaLandReadabilityLift = "0.12";
     document.documentElement.dataset.audraliaOceanDrivenHomeWorld = "true";
+    document.documentElement.dataset.audraliaNotAustralia = "true";
+    document.documentElement.dataset.audraliaEarthClone = "false";
+    document.documentElement.dataset.audraliaHearthIdentity = "false";
     document.documentElement.dataset.generatedImage = "false";
     document.documentElement.dataset.graphicBox = "false";
     document.documentElement.dataset.visualPassClaimed = "false";
@@ -542,10 +567,14 @@
       version: VERSION,
       authority: "audralia-canvas",
       exposesMount: true,
+      generation: 1,
+      baseline: "stabilizing",
+      landReadabilityLift: 0.12,
       consumesBackstory: Boolean(window.AUDRALIA_BACKSTORY),
       consumesTectonics: Boolean(window.AUDRALIA_TECTONICS),
       consumesTopology: Boolean(window.AUDRALIA_TOPOLOGY),
       oceanDrivenHomeWorld: true,
+      audraliaNotAustralia: true,
       earthClone: false,
       hearthIdentity: false,
       generatedImage: false,
@@ -569,6 +598,9 @@
   document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
   document.documentElement.dataset.audraliaCanvasReceipt = RECEIPT;
   document.documentElement.dataset.audraliaCanvasExposesMount = "true";
+  document.documentElement.dataset.audraliaGeneration = "1";
+  document.documentElement.dataset.audraliaG1Baseline = "stabilizing";
+  document.documentElement.dataset.audraliaNotAustralia = "true";
   document.documentElement.dataset.generatedImage = "false";
   document.documentElement.dataset.graphicBox = "false";
   document.documentElement.dataset.visualPassClaimed = "false";

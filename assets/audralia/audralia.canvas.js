@@ -1,8 +1,10 @@
 // /assets/audralia/audralia.canvas.js
-// AUDRALIA_G1_VISIBLE_LANDMASS_RESTORE_CANVAS_TNT_v12
+// AUDRALIA_G1_THIN_COASTAL_BEACH_RESTRAINT_CANVAS_TNT_v14
 // Full-file replacement.
 // Canvas authority only.
 // Compatibility markers:
+// AUDRALIA_G1_VISIBLE_LANDMASS_RESTORE_CANVAS_TNT_v12
+// AUDRALIA_G1_BEACH_EXPRESSION_CANVAS_TNT_v13
 // AUDRALIA_G1_BALANCED_LANDMASS_RESTORE_CANVAS_TNT_v11
 // AUDRALIA_G1_RESTRAINT_DESTRIPING_CANVAS_TNT_v10
 // AUDRALIA_G1_PLAINS_DESERTS_MARSHES_CANVAS_TNT_v9
@@ -12,23 +14,25 @@
 // AUDRALIA_G1_TERRAIN_ELEVATION_CANVAS_TNT_v3
 //
 // Purpose:
-// - Correct the water-world over-restraint.
-// - Restore visible medium and large landmasses, not only islands.
-// - Target a visibly readable ocean-dominant planet, not a few scattered beaches.
-// - Keep ocean majority, but let land be substantial enough for terrain, plains, deserts, marshes, mountains, and communities to express.
-// - Preserve beaches attached to raised terrain.
-// - Prevent the prior green-shell overexpansion.
-// - Prevent vertical scanline artifacts.
+// - Restore accepted v12 visible-landmass footprint.
+// - Reject broad v13 beach reclassification.
+// - Beaches are thin coastal-edge material only.
+// - Do not redraw continents.
+// - Do not expand land.
+// - Do not recolor interior plains as beach.
+// - Do not create rectangular tan fields.
+// - Keep ocean dominant.
 // - No trees. No bushes. No forest canopy.
 // - No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G1_VISIBLE_LANDMASS_RESTORE_CANVAS_TNT_v12";
-  const RECEIPT = "AUDRALIA_G1_VISIBLE_LANDMASS_RESTORE_CANVAS_RECEIPT_v12";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G1_BALANCED_LANDMASS_RESTORE_CANVAS_TNT_v11";
-  const VERSION = "2026-05-10.audralia-g1-visible-landmass-restore-canvas-v12";
+  const CONTRACT = "AUDRALIA_G1_THIN_COASTAL_BEACH_RESTRAINT_CANVAS_TNT_v14";
+  const RECEIPT = "AUDRALIA_G1_THIN_COASTAL_BEACH_RESTRAINT_CANVAS_RECEIPT_v14";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G1_BEACH_EXPRESSION_CANVAS_TNT_v13";
+  const RESTORED_BASELINE = "AUDRALIA_G1_VISIBLE_LANDMASS_RESTORE_CANVAS_TNT_v12";
+  const VERSION = "2026-05-10.audralia-g1-thin-coastal-beach-restraint-canvas-v14";
   const TAU = Math.PI * 2;
 
   const COLORS = Object.freeze({
@@ -37,9 +41,11 @@
     oceanBlue: [8, 73, 116],
     shelf: [20, 106, 132],
     shallow: [48, 143, 146],
-    beach: [198, 181, 124],
-    wetBeach: [151, 154, 112],
-    tidalFlat: [114, 137, 104],
+    lagoon: [63, 158, 159],
+    beach: [202, 186, 128],
+    dryBeach: [213, 195, 138],
+    wetBeach: [156, 157, 116],
+    tidalFlat: [118, 137, 108],
     raisedLand: [90, 127, 76],
     grassland: [77, 122, 72],
     plains: [128, 142, 87],
@@ -318,15 +324,22 @@
     }
 
     const beachEdge =
-      smoothstep(0.38, 0.485, shape.exposure) *
-      (1 - smoothstep(0.565, 0.72, shape.exposure));
+      smoothstep(0.365, 0.49, shape.exposure) *
+      (1 - smoothstep(0.505, 0.64, shape.exposure)) *
+      smoothstep(0.28, 0.78, shape.shelf);
 
     return {
       beachBand: beachEdge,
-      beachSand: beachEdge * 0.82,
-      tidalFlat: beachEdge * 0.24,
-      coastalWetland: 0.08,
-      duneRise: beachEdge * 0.18
+      beachSand: beachEdge * 0.68,
+      wetBeach: beachEdge * 0.26,
+      tidalFlat: beachEdge * 0.18,
+      coastalShelf: shape.shelf * beachEdge,
+      lagoon: beachEdge * 0.04,
+      delta: beachEdge * 0.04,
+      beachBreak: beachEdge * 0.12,
+      coastalWetland: beachEdge * 0.05,
+      duneRise: beachEdge * 0.12,
+      thinCoastalEdgeOnly: true
     };
   }
 
@@ -350,7 +363,7 @@
         plateau: clamp((delegated.plateau || 0) * 1.08 + smoothstep(0.5, 0.7, shape.exposure) * 0.07, 0, 1),
         ridgeBack: clamp((delegated.ridgeBack || 0) * 1.06 + smoothstep(0.54, 0.76, shape.exposure) * 0.05, 0, 1),
         terrainAboveSeaLevel: shape.exposure > 0.415 || (delegated.raisedTerrain || 0) > 0.12,
-        terrainMassAttached: shape.exposure > 0.405 || (delegated.terrainMassAttached === true)
+        terrainMassAttached: shape.exposure > 0.405 || delegated.terrainMassAttached === true
       };
     }
 
@@ -467,10 +480,6 @@
 
     const latitudeAbs = Math.abs(latitude) / (Math.PI / 2);
 
-    const beachEdge =
-      smoothstep(0.38, 0.485, shape.exposure) *
-      (1 - smoothstep(0.565, 0.72, shape.exposure));
-
     const forcedTerrain =
       shape.exposure > 0.405 ||
       landrise.terrainAboveSeaLevel ||
@@ -478,12 +487,16 @@
 
     const beachOnly =
       !forcedTerrain &&
-      (beachEdge > 0.1 || beach.beachBand > 0.12);
+      beach.beachBand > 0.14 &&
+      shape.exposure > 0.35 &&
+      shape.exposure < 0.57;
 
     const tidalOnly =
       !forcedTerrain &&
       !beachOnly &&
-      beach.tidalFlat > 0.12;
+      beach.tidalFlat > 0.16 &&
+      shape.exposure > 0.32 &&
+      shape.exposure < 0.52;
 
     if (!forcedTerrain && !beachOnly && !tidalOnly) {
       let water = mix(
@@ -493,8 +506,9 @@
       );
 
       water = mix(water, COLORS.oceanBlue, smoothstep(0.32, 0.74, 1 - shape.topology.belowSeaDepth) * 0.16);
-      water = mix(water, COLORS.shelf, smoothstep(0.5, 0.88, shape.shelf) * 0.38);
+      water = mix(water, COLORS.shelf, smoothstep(0.5, 0.88, shape.shelf) * 0.34);
       water = mix(water, COLORS.shallow, shape.islandSignal * 0.1);
+      water = mix(water, COLORS.lagoon, beach.coastalShelf * 0.08 + beach.lagoon * 0.14);
       water = mix(water, COLORS.deepOcean, elevation.oceanDepthRelief * 0.1);
 
       return shade(
@@ -508,15 +522,18 @@
     if (beachOnly || tidalOnly) {
       let sand = COLORS.beach;
 
-      sand = mix(sand, COLORS.wetBeach, beach.tidalFlat * 0.36);
-      sand = mix(sand, COLORS.tidalFlat, beach.coastalWetland * 0.2);
-      sand = mix(sand, COLORS.shallow, tidalOnly ? 0.14 : 0.03);
+      sand = mix(sand, COLORS.dryBeach, beach.beachSand * 0.28);
+      sand = mix(sand, COLORS.wetBeach, beach.wetBeach * 0.34);
+      sand = mix(sand, COLORS.tidalFlat, beach.tidalFlat * 0.28);
+      sand = mix(sand, COLORS.lagoon, beach.lagoon * 0.14);
+      sand = mix(sand, COLORS.shallow, tidalOnly ? 0.1 : 0.02);
 
       return shade(
         sand,
-        (fbm(u * 3.2, v * 2.7, 650000, 4) - 0.5) * 7 +
-          (beach.duneRise || 0) * 4 -
-          beach.tidalFlat * 4
+        (fbm(u * 5.6, v * 4.7, 650000, 4) - 0.5) * 5 +
+          (beach.duneRise || 0) * 2 -
+          beach.tidalFlat * 3 +
+          beach.beachBreak
       );
     }
 
@@ -536,13 +553,30 @@
     land = mix(land, COLORS.stone, mountains.highMountain * 0.26);
     land = mix(land, COLORS.cliff, mountains.cliffFace * 0.2);
     land = mix(land, COLORS.darkStone, mountains.peak * 0.12);
-    land = mix(land, COLORS.beach, beachEdge * 0.06);
+
+    const interiorCoastLimit =
+      beach.beachBand *
+      smoothstep(0.36, 0.49, shape.exposure) *
+      (1 - smoothstep(0.52, 0.66, shape.exposure));
+
+    land = mix(land, COLORS.beach, interiorCoastLimit * 0.075);
+    land = mix(land, COLORS.dryBeach, beach.beachSand * interiorCoastLimit * 0.08);
+    land = mix(land, COLORS.wetBeach, beach.wetBeach * interiorCoastLimit * 0.07);
+    land = mix(land, COLORS.tidalFlat, beach.tidalFlat * interiorCoastLimit * 0.06);
+    land = mix(land, COLORS.marsh, beach.coastalWetland * interiorCoastLimit * 0.08);
+
     land = mix(land, COLORS.snow, mountains.snowCap * 0.45);
     land = mix(land, COLORS.ice, smoothstep(0.75, 0.97, latitudeAbs + elevation.elevation * 0.1) * 0.14);
     land = mix(land, COLORS.terrace, mountains.terrace * 0.1);
     land = mix(land, COLORS.community, mountains.community * 0.72);
 
     const grain = (fbm(u * 2.4 + 0.15, v * 2.0 - 0.11, 460000, 4) - 0.5) * 7;
+    const beachRelief =
+      interiorCoastLimit * 2 +
+      beach.duneRise * interiorCoastLimit * 2 -
+      beach.wetBeach * interiorCoastLimit -
+      beach.tidalFlat * interiorCoastLimit * 2;
+
     const mountainRelief =
       mountains.highMountain * 14 +
       mountains.peak * 12 +
@@ -554,7 +588,8 @@
       landrise.terrainShadow * 10 +
       elevation.reliefHighlight * 4 -
       elevation.reliefShadow * 4 +
-      mountainRelief;
+      mountainRelief +
+      beachRelief;
 
     return shade(land, grain + reliefLight - 4);
   }
@@ -607,15 +642,26 @@
     canvas.dataset.audraliaCanvasContract = CONTRACT;
     canvas.dataset.audraliaCanvasReceipt = RECEIPT;
     canvas.dataset.audraliaGeneration = "1";
-    canvas.dataset.audraliaG1Baseline = "visible-landmass-restore-ocean-dominant-stabilizing";
+    canvas.dataset.audraliaG1Baseline = "visible-landmass-thin-coastal-beach-restraint";
+    canvas.dataset.audraliaRestoredBaseline = RESTORED_BASELINE;
+    canvas.dataset.audraliaRejectedPreviousBeachOverreach = "true";
+    canvas.dataset.audraliaThinCoastalBeachExpression = "true";
+    canvas.dataset.audraliaPreserveLandWaterFootprint = "true";
+    canvas.dataset.audraliaBeachCanCreateLand = "false";
+    canvas.dataset.audraliaBeachRecolorsInteriorLand = "false";
+    canvas.dataset.audraliaBeachCreatesRectangles = "false";
+    canvas.dataset.audraliaSandBeaches = "true";
+    canvas.dataset.audraliaWetBeaches = "true";
+    canvas.dataset.audraliaTidalFlats = "true";
+    canvas.dataset.audraliaCoastalShelves = "true";
+    canvas.dataset.audraliaLagoons = "true";
+    canvas.dataset.audraliaDeltas = "true";
+    canvas.dataset.audraliaBeachBreaks = "true";
     canvas.dataset.audraliaPrimarySummit = "Gratitude";
     canvas.dataset.audraliaNineWithinNine = "true";
     canvas.dataset.audraliaBookSummitLaw = "true";
     canvas.dataset.audraliaVisibleLandmassRestore = "true";
     canvas.dataset.audraliaSubstantialLandVisible = "true";
-    canvas.dataset.audraliaWaterWorldCorrection = "true";
-    canvas.dataset.audraliaMediumLandBodies = "true";
-    canvas.dataset.audraliaLargeLandBodies = "true";
     canvas.dataset.audraliaOceanDominantStillTrue = "true";
     canvas.dataset.audraliaDestripingActive = "true";
     canvas.dataset.audraliaScanlineArtifacts = "false";
@@ -623,12 +669,6 @@
     canvas.dataset.audraliaRaisedTerrainBehindBeach = "true";
     canvas.dataset.audraliaTerrainMassAttached = "true";
     canvas.dataset.audraliaTerrainAboveSeaLevel = "true";
-    canvas.dataset.audraliaHighMountains = "true";
-    canvas.dataset.audraliaMountainRanges = "true";
-    canvas.dataset.audraliaMountainCommunities = "true";
-    canvas.dataset.audraliaPlains = "true";
-    canvas.dataset.audraliaDeserts = "true";
-    canvas.dataset.audraliaMarshes = "true";
     canvas.dataset.audraliaTrees = "false";
     canvas.dataset.audraliaBushes = "false";
     canvas.dataset.audraliaForestCanopy = "false";
@@ -818,18 +858,15 @@
     document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
     document.documentElement.dataset.audraliaCanvasReceipt = RECEIPT;
     document.documentElement.dataset.audraliaCanvasMounted = "true";
+    document.documentElement.dataset.audraliaRestoredBaseline = RESTORED_BASELINE;
+    document.documentElement.dataset.audraliaRejectedPreviousBeachOverreach = "true";
+    document.documentElement.dataset.audraliaThinCoastalBeachExpression = "true";
+    document.documentElement.dataset.audraliaPreserveLandWaterFootprint = "true";
+    document.documentElement.dataset.audraliaBeachCanCreateLand = "false";
+    document.documentElement.dataset.audraliaBeachRecolorsInteriorLand = "false";
+    document.documentElement.dataset.audraliaBeachCreatesRectangles = "false";
     document.documentElement.dataset.audraliaVisibleLandmassRestore = "true";
-    document.documentElement.dataset.audraliaSubstantialLandVisible = "true";
-    document.documentElement.dataset.audraliaWaterWorldCorrection = "true";
-    document.documentElement.dataset.audraliaMediumLandBodies = "true";
-    document.documentElement.dataset.audraliaLargeLandBodies = "true";
     document.documentElement.dataset.audraliaOceanDominantStillTrue = "true";
-    document.documentElement.dataset.audraliaDestripingActive = "true";
-    document.documentElement.dataset.audraliaScanlineArtifacts = "false";
-    document.documentElement.dataset.audraliaBeachRemainsSeaLevel = "true";
-    document.documentElement.dataset.audraliaRaisedTerrainBehindBeach = "true";
-    document.documentElement.dataset.audraliaTerrainMassAttached = "true";
-    document.documentElement.dataset.audraliaTerrainAboveSeaLevel = "true";
     document.documentElement.dataset.generatedImage = "false";
     document.documentElement.dataset.graphicBox = "false";
     document.documentElement.dataset.visualPassClaimed = "false";
@@ -842,10 +879,25 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
+      restoredBaseline: RESTORED_BASELINE,
       version: VERSION,
       authority: "audralia-canvas",
       generation: 1,
-      baseline: "visible-landmass-restore-ocean-dominant-stabilizing",
+      baseline: "visible-landmass-thin-coastal-beach-restraint",
+      rejectedPreviousBeachOverreach: true,
+      thinCoastalBeachExpression: true,
+      preservesLandWaterFootprint: true,
+      beachCanCreateLand: false,
+      beachRecolorsInteriorLand: false,
+      beachCreatesRectangles: false,
+      sandBeaches: true,
+      wetBeaches: true,
+      tidalFlats: true,
+      coastalShelves: true,
+      lagoons: true,
+      deltas: true,
+      beachBreaks: true,
+      consumesBeaches: Boolean(window.AUDRALIA_BEACHES),
       consumesSummits: Boolean(window.AUDRALIA_SUMMITS),
       consumesMountains: Boolean(window.AUDRALIA_MOUNTAINS),
       consumesGroundcover: Boolean(window.AUDRALIA_GROUNDCOVER),
@@ -855,9 +907,6 @@
       bookSummitLaw: true,
       visibleLandmassRestore: true,
       substantialLandVisible: true,
-      waterWorldCorrection: true,
-      mediumLandBodies: true,
-      largeLandBodies: true,
       oceanDominantStillTrue: true,
       destripingActive: true,
       scanlineArtifacts: false,
@@ -865,12 +914,6 @@
       raisedTerrainBehindBeach: true,
       terrainMassAttached: true,
       terrainAboveSeaLevel: true,
-      highMountains: true,
-      mountainRanges: true,
-      mountainCommunities: true,
-      plains: true,
-      deserts: true,
-      marshes: true,
       trees: false,
       bushes: false,
       forestCanopy: false,
@@ -884,6 +927,7 @@
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
+    restoredBaseline: RESTORED_BASELINE,
     version: VERSION,
     mount,
     getStatus

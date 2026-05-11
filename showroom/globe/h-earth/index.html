@@ -1,25 +1,21 @@
-<!-- /showroom/globe/index.html -->
+<!-- /showroom/globe/h-earth/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-globe-selector"
-  data-route="/showroom/globe/"
-  data-contract="H_EARTH_G1_SHOWROOM_GLOBE_CONSUMER_ALIGNMENT_TNT_v12D"
-  data-receipt="H_EARTH_G1_SHOWROOM_GLOBE_CONSUMER_ALIGNMENT_RECEIPT_v12D"
-  data-authority="selector-consumer-only"
-  data-h-earth-route="/showroom/globe/h-earth/"
-  data-h-earth-canvas-renewal="H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A"
-  data-h-earth-controls-renewal="H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C"
-  data-h-earth-active-route="H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_ROUTE_TNT_v14A"
-  data-h-earth-active-html="H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_HTML_TNT_v14B"
-  data-h-earth-canvas-index="H_EARTH_G1_CANVAS_INDEX_CHILD_RECEIVER_TNT_v1"
-  data-h-earth-terrain-elevation="H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_SEA_LEVEL_CHILD_TNT_v1"
-  data-h-earth-orbital-surface="H_EARTH_G1_ORBITAL_BUILD_SURFACE_CANVAS_TNT_v13A"
-  data-h-earth-canvas-asset-path="/assets/h-earth/h-earth/canvas/index.js"
-  data-h-earth-terrain-elevation-path="/assets/h-earth/h-earth/canvas/terrain/elevation.sea-level.js"
-  data-h-earth-orbital-surface-path="/assets/h-earth/h-earth/orbital.build.surface.js"
-  data-h-earth-interaction-mode="orbital-build-surface"
-  data-h-earth-card-transform="forbidden"
+  data-page="h-earth-private-orbital-build-room"
+  data-route="/showroom/globe/h-earth/"
+  data-contract="H_EARTH_G1_PRIVATE_ORBITAL_BUILD_ROOM_RESTORE_HTML_TNT_v15"
+  data-pair-contract="H_EARTH_G1_PRIVATE_ORBITAL_BUILD_ROOM_RESTORE_PAIR_TNT_v15"
+  data-previous-contract="H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_HTML_TNT_v10B"
+  data-seed-packet="H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1"
+  data-h-earth-identity="separate-experimental-third-planet-lane"
+  data-h-earth-room="private-orbital-aerial-build-room"
+  data-build-mode="orbital-aerial-first"
+  data-canvas-index="H_EARTH_G1_CANVAS_INDEX_CHILD_RECEIVER_TNT_v1"
+  data-terrain-elevation-child="H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_SEA_LEVEL_CHILD_TNT_v1"
+  data-orbital-surface="H_EARTH_G1_ORBITAL_BUILD_SURFACE_CANVAS_TNT_v13A"
+  data-ground-level-ready="false"
+  data-estate-placement-ready="false"
   data-parent-mutation-authorized="false"
   data-earth-mutation-authorized="false"
   data-hearth-mutation-authorized="false"
@@ -31,344 +27,363 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Globe Split</title>
+  <title>Diamond Gate Bridge · H-Earth</title>
   <meta
     name="description"
-    content="The Globe Split selector routes to Earth, H-Earth, Hearth, and Audralia. It is selector-only and does not render, import, or mutate planetary bodies."
+    content="H-Earth private orbital/aerial build room. H-Earth is the Hybrid Earth build planet, prepared from orbital view first before ground-level estate placement."
   >
 
   <style>
     :root {
       color-scheme: dark;
-      --bg: #050812;
-      --panel: rgba(10, 18, 32, 0.84);
-      --panel2: rgba(5, 10, 22, 0.82);
-      --line: rgba(244, 191, 96, 0.30);
-      --line-blue: rgba(142, 190, 255, 0.22);
-      --text: #f6ead2;
-      --muted: #b8c0ce;
-      --gold: #f4bf60;
-      --blue: #8ebeff;
-      --green: #8ff0c3;
-      --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
-      --radius: 24px;
-      --max: 1180px;
+      --bg:#050812;
+      --panel:rgba(10,18,32,.84);
+      --panel2:rgba(5,10,22,.88);
+      --line:rgba(244,191,96,.30);
+      --line-blue:rgba(142,190,255,.22);
+      --text:#f6ead2;
+      --muted:#b8c0ce;
+      --gold:#f4bf60;
+      --blue:#8ebeff;
+      --green:#8ff0c3;
+      --red:#ff9b9b;
+      --shadow:0 24px 70px rgba(0,0,0,.42);
+      --radius:24px;
+      --max:1180px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing:border-box; }
 
     html {
-      min-height: 100%;
+      min-height:100%;
       background:
-        radial-gradient(circle at 48% 4%, rgba(142, 190, 255, 0.18), transparent 34rem),
-        radial-gradient(circle at 14% 18%, rgba(244, 191, 96, 0.12), transparent 28rem),
-        radial-gradient(circle at 86% 20%, rgba(143, 240, 195, 0.08), transparent 26rem),
-        linear-gradient(180deg, var(--bg), #02040a 74%);
+        radial-gradient(circle at 48% 4%,rgba(142,190,255,.18),transparent 34rem),
+        radial-gradient(circle at 14% 18%,rgba(244,191,96,.12),transparent 28rem),
+        radial-gradient(circle at 86% 20%,rgba(143,240,195,.08),transparent 26rem),
+        linear-gradient(180deg,var(--bg),#02040a 74%);
     }
 
     body {
-      min-height: 100%;
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
+      min-height:100%;
+      margin:0;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);
       background:
-        linear-gradient(145deg, rgba(255, 255, 255, 0.035), transparent 38%),
-        radial-gradient(circle at 82% 12%, rgba(143, 240, 195, 0.08), transparent 24rem);
+        linear-gradient(145deg,rgba(255,255,255,.035),transparent 38%),
+        radial-gradient(circle at 82% 12%,rgba(143,240,195,.08),transparent 24rem);
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color:inherit; text-decoration:none; }
 
-    a:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 4px;
+    a:focus-visible,
+    button:focus-visible {
+      outline:2px solid var(--gold);
+      outline-offset:4px;
     }
 
     .skip-link {
-      position: absolute;
-      left: 1rem;
-      top: 1rem;
-      z-index: 30;
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: #08101d;
-      color: var(--text);
-      transform: translateY(-180%);
-      transition: transform 160ms ease;
+      position:absolute;
+      left:1rem;
+      top:1rem;
+      z-index:30;
+      padding:.75rem 1rem;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:#08101d;
+      color:var(--text);
+      transform:translateY(-180%);
+      transition:transform 160ms ease;
     }
 
-    .skip-link:focus {
-      transform: translateY(0);
-    }
+    .skip-link:focus { transform:translateY(0); }
 
-    .page-shell {
-      width: min(var(--max), calc(100% - 32px));
-      margin: 0 auto;
-      padding: 24px 0 46px;
+    .shell {
+      width:min(var(--max),calc(100% - 32px));
+      margin:0 auto;
+      padding:24px 0 46px;
     }
 
     .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 14px 16px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(5, 9, 18, 0.72);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      padding:14px 16px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(5,9,18,.72);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(16px);
     }
 
     .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      min-width: max-content;
-      font-weight: 800;
-      letter-spacing: 0.02em;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      min-width:max-content;
+      font-weight:800;
+      letter-spacing:.02em;
     }
 
     .brand-mark {
-      width: 18px;
-      height: 18px;
-      border: 1px solid var(--gold);
-      transform: rotate(45deg);
-      background: linear-gradient(135deg, rgba(244, 191, 96, 0.22), transparent), rgba(255, 255, 255, 0.04);
-      box-shadow: 0 0 24px rgba(244, 191, 96, 0.18);
+      width:18px;
+      height:18px;
+      border:1px solid var(--gold);
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,rgba(244,191,96,.22),transparent),rgba(255,255,255,.04);
+      box-shadow:0 0 24px rgba(244,191,96,.18);
     }
 
     .nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 8px;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:8px;
     }
 
     .nav a {
-      padding: 8px 11px;
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      border-radius: 999px;
-      color: var(--muted);
-      font-size: 0.88rem;
-      background: rgba(255, 255, 255, 0.035);
+      padding:8px 11px;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:999px;
+      color:var(--muted);
+      font-size:.88rem;
+      background:rgba(255,255,255,.035);
     }
 
     .nav a[aria-current="page"] {
-      border-color: rgba(244, 191, 96, 0.52);
-      color: var(--gold);
-      background: rgba(244, 191, 96, 0.09);
+      border-color:rgba(244,191,96,.52);
+      color:var(--gold);
+      background:rgba(244,191,96,.09);
     }
 
     .hero,
-    .planet-card,
+    .status-card,
+    .orbital-stage,
     .panel,
     .receipt-panel {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent), var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:linear-gradient(180deg,rgba(255,255,255,.055),transparent),var(--panel);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(18px);
     }
 
     .hero {
-      margin-top: 24px;
-      padding: clamp(22px, 4vw, 42px);
+      margin-top:24px;
+      padding:clamp(22px,4vw,42px);
     }
 
     .eyebrow {
-      display: inline-flex;
-      margin: 0 0 18px;
-      padding: 8px 12px;
-      border: 1px solid var(--line-blue);
-      border-radius: 999px;
-      color: var(--blue);
-      background: rgba(142, 190, 255, 0.08);
-      font-size: 0.86rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      display:inline-flex;
+      margin:0 0 18px;
+      padding:8px 12px;
+      border:1px solid var(--line-blue);
+      border-radius:999px;
+      color:var(--blue);
+      background:rgba(142,190,255,.08);
+      font-size:.86rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
 
     h1 {
-      margin: 0;
-      font-size: clamp(2.4rem, 7vw, 5.8rem);
-      line-height: 0.9;
-      letter-spacing: -0.075em;
+      margin:0;
+      font-size:clamp(2.4rem,7vw,5.8rem);
+      line-height:.9;
+      letter-spacing:-.075em;
     }
 
     .lede {
-      max-width: 84ch;
-      margin: 22px 0 0;
-      color: var(--muted);
-      font-size: clamp(1rem, 2.2vw, 1.16rem);
-      line-height: 1.65;
+      max-width:88ch;
+      margin:22px 0 0;
+      color:var(--muted);
+      font-size:clamp(1rem,2.2vw,1.16rem);
+      line-height:1.65;
     }
 
-    .planet-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 18px;
+    .actions {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:20px;
     }
 
-    .planet-card {
-      display: flex;
-      flex-direction: column;
-      min-height: 100%;
-      padding: 18px;
+    .button {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:10px 14px;
+      border:1px solid rgba(244,191,96,.32);
+      border-radius:999px;
+      background:rgba(244,191,96,.09);
+      color:var(--text);
+      font-weight:850;
     }
 
-    .planet-kicker {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      margin-bottom: 12px;
+    .button.primary {
+      color:#06101d;
+      background:var(--gold);
     }
 
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      min-height: 25px;
-      padding: 5px 8px;
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      border-radius: 999px;
-      color: var(--muted);
-      background: rgba(255, 255, 255, 0.04);
-      font-size: 0.74rem;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+    .status-grid {
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-top:18px;
     }
 
-    .tag.gold {
-      color: var(--gold);
-      border-color: rgba(244, 191, 96, 0.34);
-      background: rgba(244, 191, 96, 0.08);
+    .status-card {
+      padding:14px;
+      min-height:112px;
     }
 
-    .tag.green {
-      color: var(--green);
-      border-color: rgba(143, 240, 195, 0.30);
-      background: rgba(143, 240, 195, 0.07);
+    .status-card strong {
+      display:block;
+      margin-bottom:7px;
+      color:var(--gold);
+      font-size:.78rem;
+      letter-spacing:.09em;
+      text-transform:uppercase;
     }
 
-    .planet-card h2 {
-      margin: 0 0 10px;
-      font-size: clamp(1.35rem, 3vw, 2rem);
-      letter-spacing: -0.04em;
+    .status-card span {
+      display:block;
+      color:var(--muted);
+      line-height:1.42;
+      overflow-wrap:anywhere;
     }
 
-    .planet-card p {
-      flex: 1;
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.55;
+    .orbital-stage {
+      position:relative;
+      margin-top:18px;
+      padding:16px;
+      min-height:clamp(420px,72vw,760px);
+      overflow:hidden;
     }
 
-    .planet-card a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: max-content;
-      margin-top: 18px;
-      padding: 11px 14px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(244, 191, 96, 0.09);
-      color: var(--text);
-      font-weight: 800;
+    .mount {
+      position:relative;
+      min-height:clamp(390px,68vw,720px);
+      border:1px solid rgba(142,190,255,.18);
+      border-radius:calc(var(--radius) - 8px);
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 48% 42%,rgba(40,95,140,.18),transparent 15rem),
+        radial-gradient(circle at 70% 30%,rgba(225,185,95,.12),transparent 14rem),
+        linear-gradient(180deg,rgba(7,13,30,1),rgba(2,5,12,1));
+      touch-action:none;
+    }
+
+    .mount-label {
+      position:absolute;
+      left:16px;
+      top:16px;
+      z-index:3;
+      padding:7px 10px;
+      border:1px solid rgba(244,191,96,.30);
+      border-radius:999px;
+      color:var(--gold);
+      background:rgba(5,9,18,.72);
+      font-size:.74rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
 
     .panel {
-      margin-top: 16px;
-      padding: 18px;
+      margin-top:16px;
+      padding:18px;
     }
 
     .panel h2 {
-      margin: 0 0 10px;
-      font-size: 1rem;
-      letter-spacing: 0.02em;
+      margin:0 0 10px;
+      font-size:1rem;
+      letter-spacing:.02em;
     }
 
-    .panel p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.55;
+    .panel p,
+    .panel li {
+      color:var(--muted);
+      line-height:1.55;
+    }
+
+    .panel p { margin:0; }
+
+    .panel ul {
+      margin:0;
+      padding-left:1.1rem;
     }
 
     .receipt-panel {
-      margin-top: 16px;
-      padding: 16px;
-      border-color: rgba(143, 240, 195, 0.18);
-      background: rgba(143, 240, 195, 0.055);
+      margin-top:16px;
+      padding:16px;
+      border-color:rgba(143,240,195,.18);
+      background:rgba(143,240,195,.055);
     }
 
     .receipt-panel code {
-      display: block;
-      overflow-wrap: anywhere;
-      color: var(--green);
-      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-      font-size: 0.84rem;
-      line-height: 1.55;
+      display:block;
+      overflow-wrap:anywhere;
+      color:var(--green);
+      font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+      font-size:.84rem;
+      line-height:1.55;
     }
 
     .footer {
-      margin-top: 18px;
-      color: rgba(246, 234, 210, 0.62);
-      font-size: 0.88rem;
-      line-height: 1.55;
-      text-align: center;
+      margin-top:18px;
+      color:rgba(246,234,210,.62);
+      font-size:.88rem;
+      line-height:1.55;
+      text-align:center;
     }
 
-    @media (max-width: 1020px) {
-      .planet-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 760px) {
+    @media (max-width:900px) {
       .topbar {
-        align-items: flex-start;
-        border-radius: 22px;
-        flex-direction: column;
+        align-items:flex-start;
+        border-radius:22px;
+        flex-direction:column;
       }
 
-      .nav {
-        justify-content: flex-start;
-      }
+      .nav { justify-content:flex-start; }
 
-      .planet-grid {
-        grid-template-columns: 1fr;
+      .status-grid {
+        grid-template-columns:repeat(2,minmax(0,1fr));
       }
     }
 
-    @media (max-width: 560px) {
-      .page-shell {
-        width: min(100% - 20px, var(--max));
-        padding-top: 10px;
+    @media (max-width:560px) {
+      .shell {
+        width:min(100% - 20px,var(--max));
+        padding-top:10px;
       }
 
       .hero,
-      .planet-card,
+      .status-card,
+      .orbital-stage,
       .panel,
       .receipt-panel {
-        border-radius: 18px;
+        border-radius:18px;
+      }
+
+      .status-grid {
+        grid-template-columns:1fr;
+      }
+
+      .orbital-stage {
+        padding:10px;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="#globe-main">Skip to globe chamber</a>
+  <a class="skip-link" href="/showroom/globe/h-earth/#h-earth-main">Skip to H-Earth</a>
 
-  <div class="page-shell">
-    <header class="topbar" aria-label="Globe Split route navigation">
+  <div class="shell">
+    <header class="topbar" aria-label="H-Earth route navigation">
       <a class="brand" href="/" aria-label="Return to Diamond Gate Bridge Compass">
         <span class="brand-mark" aria-hidden="true"></span>
         <span>Diamond Gate Bridge</span>
@@ -376,152 +391,137 @@
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/" aria-current="page">Globe</a>
-        <a href="/nine-summits/universe/">Universe</a>
-        <a href="/products/">Products</a>
+        <a href="/showroom/globe/">Globe Split</a>
+        <a href="/showroom/globe/earth/">Earth</a>
+        <a href="/showroom/globe/h-earth/" aria-current="page">H-Earth</a>
+        <a href="/showroom/globe/hearth/">Hearth</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
         <a href="/gauges/">Triple G</a>
       </nav>
     </header>
 
-    <main id="globe-main" tabindex="-1">
+    <main id="h-earth-main" tabindex="-1">
       <section class="hero">
-        <p class="eyebrow">Standalone · Globe Authority Split</p>
-        <h1>Earth, H-Earth, Hearth, and Audralia</h1>
+        <p class="eyebrow">H-Earth · G1 · Private Orbital Build Room</p>
+        <h1>H-Earth</h1>
         <p class="lede">
-          This chamber is the Showroom selector. Earth remains the protected reference body. H-Earth is
-          the Hybrid Earth build planet and now points to the orbital/aerial build sequence: canvas index,
-          terrain elevation child, and orbital build surface. Hearth and Audralia remain separate planetary
-          lanes. This selector does not import, render, or mutate planet bodies.
+          H-Earth means Hybrid Earth. This is the private H-Earth build room, separate from the Showroom TV set.
+          The build proceeds from orbital/aerial view first. The canvas index receives child layers, terrain elevation
+          relative to sea level lives under the canvas terrain child, and the orbital build surface renders the planet
+          before ground-level estate placement is authorized.
         </p>
+
+        <div class="actions">
+          <a class="button primary" href="/showroom/globe/">Return to Showroom TV Set</a>
+          <a class="button" href="/showroom/globe/earth/">Inspect Earth Reference</a>
+          <a class="button" href="/gauges/">Run Triple G</a>
+        </div>
       </section>
 
-      <section class="planet-grid" aria-label="Planet inspection routes">
-        <article class="planet-card">
-          <div class="planet-kicker">
-            <span class="tag gold">Reference body</span>
-            <span class="tag">Protected</span>
-          </div>
-          <h2>Earth</h2>
-          <p>
-            Inspect Earth through its own reference route and protected Earth file chain. Earth is not
-            mutated by H-Earth, Hearth, or Audralia.
-          </p>
-          <a href="/showroom/globe/earth/">Inspect Earth</a>
-        </article>
+      <section class="status-grid" aria-label="H-Earth private room status">
+        <div class="status-card">
+          <strong>Build mode</strong>
+          <span>orbital-aerial-first</span>
+        </div>
+        <div class="status-card">
+          <strong>Canvas index</strong>
+          <span>/assets/h-earth/h-earth/canvas/index.js</span>
+        </div>
+        <div class="status-card">
+          <strong>Terrain elevation</strong>
+          <span>/assets/h-earth/h-earth/canvas/terrain/elevation.sea-level.js</span>
+        </div>
+        <div class="status-card">
+          <strong>Estate placement</strong>
+          <span>held until ground-level mode is authorized</span>
+        </div>
+      </section>
 
-        <article class="planet-card">
-          <div class="planet-kicker">
-            <span class="tag green">Build planet</span>
-            <span class="tag gold">Orbital first</span>
-            <span class="tag">Canvas index</span>
-          </div>
-          <h2>H-Earth</h2>
-          <p>
-            Hybrid Earth uses the nested canvas index and terrain elevation child before the orbital
-            build surface. The active target is planet-surface construction from the air before ground-level
-            estate placement.
-          </p>
-          <a href="/showroom/globe/h-earth/">Inspect H-Earth</a>
-        </article>
-
-        <article class="planet-card">
-          <div class="planet-kicker">
-            <span class="tag">Separate lane</span>
-            <span class="tag">Held from H-Earth</span>
-          </div>
-          <h2>Hearth</h2>
-          <p>
-            Hearth remains its own planet lane. H-Earth does not mutate Hearth terrain, canvas, controls,
-            route authority, or parent-chain truth.
-          </p>
-          <a href="/showroom/globe/hearth/">Inspect Hearth</a>
-        </article>
-
-        <article class="planet-card">
-          <div class="planet-kicker">
-            <span class="tag">Constructed world</span>
-            <span class="tag">Separate lane</span>
-          </div>
-          <h2>Audralia</h2>
-          <p>
-            Audralia remains the constructed-world route with separate parent, terrain, hydration, and
-            canvas authority. H-Earth does not mutate Audralia.
-          </p>
-          <a href="/showroom/globe/audralia/">Inspect Audralia</a>
-        </article>
+      <section class="orbital-stage" aria-label="H-Earth orbital build surface">
+        <div class="mount-label">Private H-Earth Screen</div>
+        <div
+          id="hEarthCanvasCompositionMount"
+          class="mount"
+          data-h-earth-canvas-mount="true"
+          data-h-earth-private-room-mount="true"
+          data-orbital-surface-target="true"
+          data-ground-level-ready="false"
+          data-estate-placement-ready="false"
+          data-parent-mutation-authorized="false"
+        ></div>
       </section>
 
       <section class="panel">
-        <h2>Parent Route</h2>
+        <h2>Private Room Scope</h2>
         <p>
-          Selector only. This page links to inspection routes and publishes consumer receipts. It does not
-          import, render, animate, or mutate planet bodies.
+          This route owns only the private H-Earth inspection shell and script handoff. Parent truth remains upstream.
+          The orbital surface may render from route-passed parent instances and canvas child output. Ground-level view
+          and estate placement remain held.
         </p>
       </section>
 
       <section class="panel">
-        <h2>H-Earth Consumer Alignment</h2>
-        <p>
-          The Showroom consumer advertises the current H-Earth orbital build chain. Active target:
-          canvas index receiver, terrain elevation sea-level child, orbital build surface, and later
-          orbital controls. Ground-level mode and estate placement remain held.
-        </p>
+        <h2>Current Chain</h2>
+        <ul>
+          <li>Kernel parent core.</li>
+          <li>256 lattice parent-coordinate engine.</li>
+          <li>Landmap parent mask.</li>
+          <li>Terrain parent relief.</li>
+          <li>Surface parent material truth.</li>
+          <li>Canvas index child receiver.</li>
+          <li>Terrain elevation sea-level child.</li>
+          <li>Orbital build surface.</li>
+          <li>Ground-level estate placement held.</li>
+        </ul>
       </section>
 
       <section
-        id="globeReceiptPanel"
+        id="hEarthReceiptPanel"
         class="receipt-panel"
-        aria-label="Globe Split public receipts"
-        data-receipt-panel="showroom-globe"
-        data-route-receipt="H_EARTH_G1_SHOWROOM_GLOBE_CONSUMER_ALIGNMENT_TNT_v12D"
-        data-route-authority="selector-consumer-only"
-        data-h-earth-route="/showroom/globe/h-earth/"
-        data-h-earth-active-route="H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_ROUTE_TNT_v14A"
-        data-h-earth-active-html="H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_HTML_TNT_v14B"
-        data-h-earth-canvas-index="H_EARTH_G1_CANVAS_INDEX_CHILD_RECEIVER_TNT_v1"
-        data-h-earth-terrain-elevation="H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_SEA_LEVEL_CHILD_TNT_v1"
-        data-h-earth-orbital-surface="H_EARTH_G1_ORBITAL_BUILD_SURFACE_CANVAS_TNT_v13A"
-        data-h-earth-interaction-mode="orbital-build-surface"
-        data-h-earth-card-transform="forbidden"
+        aria-label="H-Earth private orbital room receipts"
+        data-receipt-panel="h-earth-private-orbital-room"
+        data-html-contract="H_EARTH_G1_PRIVATE_ORBITAL_BUILD_ROOM_RESTORE_HTML_TNT_v15"
+        data-required-route-contract="H_EARTH_G1_PRIVATE_ORBITAL_BUILD_ROOM_RESTORE_ROUTE_TNT_v15"
+        data-pair-contract="H_EARTH_G1_PRIVATE_ORBITAL_BUILD_ROOM_RESTORE_PAIR_TNT_v15"
+        data-build-mode="orbital-aerial-first"
+        data-canvas-index="H_EARTH_G1_CANVAS_INDEX_CHILD_RECEIVER_TNT_v1"
+        data-terrain-elevation-child="H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_SEA_LEVEL_CHILD_TNT_v1"
+        data-orbital-surface="H_EARTH_G1_ORBITAL_BUILD_SURFACE_CANVAS_TNT_v13A"
+        data-ground-level-ready="false"
+        data-estate-placement-ready="false"
         data-parent-mutation-authorized="false"
-        data-earth-mutation-authorized="false"
-        data-hearth-mutation-authorized="false"
-        data-audralia-mutation-authorized="false"
-        data-graphic-box="FORBIDDEN"
-        data-image-generation="FORBIDDEN"
-        data-visual-pass-claim="FALSE"
+        data-visual-pass-claim="false"
       >
-        <code>ROUTE_RECEIPT: H_EARTH_G1_SHOWROOM_GLOBE_CONSUMER_ALIGNMENT_TNT_v12D</code>
-        <code>ROUTE_AUTHORITY: selector-consumer-only</code>
-        <code>H_EARTH_ROUTE: /showroom/globe/h-earth/</code>
-        <code>H_EARTH_ACTIVE_HTML: H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_HTML_TNT_v14B</code>
-        <code>H_EARTH_ACTIVE_ROUTE: H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_ROUTE_TNT_v14A</code>
-        <code>H_EARTH_CANVAS_INDEX: H_EARTH_G1_CANVAS_INDEX_CHILD_RECEIVER_TNT_v1</code>
-        <code>H_EARTH_TERRAIN_ELEVATION: H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_SEA_LEVEL_CHILD_TNT_v1</code>
-        <code>H_EARTH_ORBITAL_SURFACE: H_EARTH_G1_ORBITAL_BUILD_SURFACE_CANVAS_TNT_v13A</code>
-        <code>H_EARTH_CANVAS_ASSET_PATH: /assets/h-earth/h-earth/canvas/index.js</code>
-        <code>H_EARTH_TERRAIN_ELEVATION_PATH: /assets/h-earth/h-earth/canvas/terrain/elevation.sea-level.js</code>
-        <code>H_EARTH_ORBITAL_SURFACE_PATH: /assets/h-earth/h-earth/orbital.build.surface.js</code>
-        <code>H_EARTH_INTERACTION_MODE: orbital-build-surface</code>
-        <code>H_EARTH_CARD_TRANSFORM: forbidden</code>
+        <code>PAIR_RECEIPT: H_EARTH_G1_PRIVATE_ORBITAL_BUILD_ROOM_RESTORE_PAIR_TNT_v15</code>
+        <code>HTML_RECEIPT: H_EARTH_G1_PRIVATE_ORBITAL_BUILD_ROOM_RESTORE_HTML_TNT_v15</code>
+        <code>REQUIRED_ROUTE: H_EARTH_G1_PRIVATE_ORBITAL_BUILD_ROOM_RESTORE_ROUTE_TNT_v15</code>
+        <code>PREVIOUS_RECEIPT: H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_HTML_TNT_v10B</code>
+        <code>BUILD_MODE: orbital-aerial-first</code>
+        <code>CANVAS_INDEX_PATH: /assets/h-earth/h-earth/canvas/index.js</code>
+        <code>TERRAIN_ELEVATION_PATH: /assets/h-earth/h-earth/canvas/terrain/elevation.sea-level.js</code>
+        <code>ORBITAL_SURFACE_PATH: /assets/h-earth/h-earth/orbital.build.surface.js</code>
         <code>GROUND_LEVEL_READY: false</code>
         <code>ESTATE_PLACEMENT_READY: false</code>
         <code>PARENT_MUTATION_AUTHORIZED: false</code>
-        <code>EARTH_MUTATION_AUTHORIZED: false</code>
-        <code>HEARTH_MUTATION_AUTHORIZED: false</code>
-        <code>AUDRALIA_MUTATION_AUTHORIZED: false</code>
-        <code>GRAPHIC_BOX: FORBIDDEN</code>
-        <code>IMAGE_GENERATION: FORBIDDEN</code>
-        <code>VISUAL_PASS_CLAIM: FALSE</code>
+        <code>VISUAL_PASS_CLAIM: false</code>
+        <code>SCRIPT_HANDOFF: ./index.js?v=H_EARTH_G1_PRIVATE_ORBITAL_BUILD_ROOM_RESTORE_ROUTE_TNT_v15</code>
       </section>
     </main>
 
     <footer class="footer">
-      Globe Split selector consumer aligned for H-Earth orbital build surface. Parent bodies remain separate.
+      H-Earth private orbital build room restored. Showroom projection remains separate.
     </footer>
   </div>
+
+  <script
+    id="hEarthPrivateOrbitalRoomHandoff"
+    type="module"
+    src="./index.js?v=H_EARTH_G1_PRIVATE_ORBITAL_BUILD_ROOM_RESTORE_ROUTE_TNT_v15"
+    data-handoff="h-earth-private-orbital-build-room"
+    data-required-route-contract="H_EARTH_G1_PRIVATE_ORBITAL_BUILD_ROOM_RESTORE_ROUTE_TNT_v15"
+    data-html-contract="H_EARTH_G1_PRIVATE_ORBITAL_BUILD_ROOM_RESTORE_HTML_TNT_v15"
+    data-pair-contract="H_EARTH_G1_PRIVATE_ORBITAL_BUILD_ROOM_RESTORE_PAIR_TNT_v15"
+  ></script>
 </body>
 </html>

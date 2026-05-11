@@ -1,29 +1,31 @@
 // /assets/audralia/audralia.canvas.js
-// AUDRALIA_G1_RESTRAINT_DESTRIPING_CANVAS_TNT_v10
+// AUDRALIA_G1_BALANCED_LANDMASS_RESTORE_CANVAS_TNT_v11
 // Full-file replacement.
 // Canvas authority only.
 // Compatibility markers:
+// AUDRALIA_G1_RESTRAINT_DESTRIPING_CANVAS_TNT_v10
 // AUDRALIA_G1_PLAINS_DESERTS_MARSHES_CANVAS_TNT_v9
 // AUDRALIA_G1_HIGH_MOUNTAIN_RANGE_COMMUNITY_CANVAS_TNT_v8
 // AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_CANVAS_TNT_v5
 // AUDRALIA_G1_BEACH_TO_LAND_RISE_CANVAS_TNT_v4
 // AUDRALIA_G1_TERRAIN_ELEVATION_CANVAS_TNT_v3
 // Purpose:
+// - Restore medium land bodies after over-restraint.
+// - Keep ocean-dominant G1.
 // - Preserve beaches attached to land.
-// - Reduce overexpanded landmass.
-// - Restore ocean-dominant G1.
-// - Remove vertical scanlines.
-// - Separate plains, deserts, marshes, mountains, beaches, and raised terrain.
+// - Preserve islands and coastal complexity.
+// - Keep plains, deserts, marshes, mountains, and communities restrained.
+// - Prevent vertical scanlines from returning.
 // - No trees. No bushes. No forest canopy.
 // - No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G1_RESTRAINT_DESTRIPING_CANVAS_TNT_v10";
-  const RECEIPT = "AUDRALIA_G1_RESTRAINT_DESTRIPING_CANVAS_RECEIPT_v10";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G1_PLAINS_DESERTS_MARSHES_CANVAS_TNT_v9";
-  const VERSION = "2026-05-10.audralia-g1-restraint-destriping-canvas-v10";
+  const CONTRACT = "AUDRALIA_G1_BALANCED_LANDMASS_RESTORE_CANVAS_TNT_v11";
+  const RECEIPT = "AUDRALIA_G1_BALANCED_LANDMASS_RESTORE_CANVAS_RECEIPT_v11";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G1_RESTRAINT_DESTRIPING_CANVAS_TNT_v10";
+  const VERSION = "2026-05-10.audralia-g1-balanced-landmass-restore-canvas-v11";
   const TAU = Math.PI * 2;
 
   const COLORS = Object.freeze({
@@ -201,44 +203,47 @@
     const latitudeAbs = Math.abs(latitude) / (Math.PI / 2);
 
     const broadOldPlate = fbm(u * 0.72 + 0.11, v * 0.64 - 0.07, 430000, 6);
-    const islandChain = ridged(u * 2.05 - 0.13, v * 1.62 + 0.08, 431000, 5);
-    const brokenEdge = ridged(u * 3.25 + 0.2, v * 2.55 - 0.14, 432000, 4);
-    const oceanBasin = fbm(u * 1.14 - 0.22, v * 0.92 + 0.15, 433000, 5);
+    const mediumMass = fbm(u * 0.98 - 0.21, v * 0.88 + 0.14, 430500, 6);
+    const islandChain = ridged(u * 2.02 - 0.13, v * 1.58 + 0.08, 431000, 5);
+    const brokenEdge = ridged(u * 3.15 + 0.2, v * 2.48 - 0.14, 432000, 4);
+    const oceanBasin = fbm(u * 1.12 - 0.22, v * 0.9 + 0.15, 433000, 5);
     const plateArc =
-      Math.sin(longitude * 1.12 + Math.cos(latitude * 1.5) * 0.48) * 0.13 +
-      Math.cos(longitude * 0.62 - Math.sin(latitude * 1.2) * 0.5) * 0.1;
+      Math.sin(longitude * 1.08 + Math.cos(latitude * 1.45) * 0.48) * 0.13 +
+      Math.cos(longitude * 0.62 - Math.sin(latitude * 1.16) * 0.5) * 0.1;
 
     const landSignal = clamp(
-      topology.landEligibility * 0.42 +
-        tectonics.exposedLandPressure * 0.22 +
-        broadOldPlate * 0.2 +
+      topology.landEligibility * 0.45 +
+        tectonics.exposedLandPressure * 0.23 +
+        broadOldPlate * 0.19 +
+        mediumMass * 0.1 +
         topology.islandEligibility * 0.11 +
-        plateArc * 0.1 -
-        oceanBasin * 0.12 -
-        0.14 -
-        latitudeAbs * 0.035,
+        plateArc * 0.095 -
+        oceanBasin * 0.095 -
+        0.122 -
+        latitudeAbs * 0.033,
       0,
       1
     );
 
     const islandSignal = smoothstep(
-      0.58,
-      0.87,
+      0.565,
+      0.865,
       islandChain * 0.54 +
-        brokenEdge * 0.24 +
-        topology.islandEligibility * 0.22 -
-        oceanBasin * 0.06
+        brokenEdge * 0.23 +
+        topology.islandEligibility * 0.23 +
+        mediumMass * 0.06 -
+        oceanBasin * 0.055
     );
 
     const shelf = clamp(
       topology.shelf * 0.5 +
-        smoothstep(0.42, 0.62, landSignal) * 0.28 +
-        islandSignal * 0.14,
+        smoothstep(0.4, 0.6, landSignal) * 0.29 +
+        islandSignal * 0.145,
       0,
       1
     );
 
-    const exposure = clamp(Math.max(landSignal, islandSignal * 0.82), 0, 1);
+    const exposure = clamp(Math.max(landSignal, islandSignal * 0.84), 0, 1);
 
     return { tectonics, topology, landSignal, islandSignal, shelf, exposure };
   }
@@ -248,7 +253,7 @@
       return window.AUDRALIA_ELEVATION.sampleElevation(u, v, {
         longitude,
         latitude,
-        isLand: shape.exposure > 0.48,
+        isLand: shape.exposure > 0.46,
         landSignal: shape.landSignal,
         shelf: shape.shelf
       });
@@ -273,7 +278,7 @@
       return window.AUDRALIA_BEACHES.sampleBeach(u, v, {
         longitude,
         latitude,
-        isLand: shape.exposure > 0.48,
+        isLand: shape.exposure > 0.46,
         landSignal: shape.landSignal,
         islandSignal: shape.islandSignal,
         shelf: shape.shelf,
@@ -282,8 +287,8 @@
     }
 
     const beachEdge =
-      smoothstep(0.46, 0.555, shape.exposure) *
-      (1 - smoothstep(0.59, 0.725, shape.exposure));
+      smoothstep(0.44, 0.535, shape.exposure) *
+      (1 - smoothstep(0.585, 0.735, shape.exposure));
 
     return {
       beachBand: beachEdge,
@@ -309,19 +314,20 @@
 
     const exposure = shape.exposure;
     const beachEdge =
-      smoothstep(0.46, 0.555, exposure) *
-      (1 - smoothstep(0.59, 0.725, exposure));
+      smoothstep(0.44, 0.535, exposure) *
+      (1 - smoothstep(0.585, 0.735, exposure));
 
     const terrainDrive =
-      exposure * 0.46 +
+      exposure * 0.5 +
       elevation.elevation * 0.18 +
-      fbm(u * 0.88, v * 0.72, 1310000, 6) * 0.15 +
-      ridged(u * 1.85, v * 1.42, 1315000, 5) * 0.13 -
-      beachEdge * 0.08;
+      fbm(u * 0.86, v * 0.74, 1610000, 6) * 0.13 +
+      fbm(u * 1.05, v * 0.92, 1610500, 6) * 0.12 +
+      ridged(u * 1.74, v * 1.36, 1615000, 5) * 0.12 -
+      beachEdge * 0.075;
 
     const raisedTerrain = clamp(
-      smoothstep(0.46, 0.68, terrainDrive) +
-        smoothstep(0.56, 0.72, exposure) * 0.34,
+      smoothstep(0.43, 0.65, terrainDrive) +
+        smoothstep(0.525, 0.705, exposure) * 0.36,
       0,
       1
     );
@@ -337,8 +343,8 @@
       ridgeBack: raisedTerrain * 0.2 + elevation.ridge * 0.18,
       terrainShadow: elevation.reliefShadow * 0.2,
       terrainHighlight: elevation.reliefHighlight * 0.2 + raisedTerrain * 0.16,
-      terrainAboveSeaLevel: raisedTerrain > 0.18,
-      terrainMassAttached: raisedTerrain > 0.15
+      terrainAboveSeaLevel: raisedTerrain > 0.16,
+      terrainMassAttached: raisedTerrain > 0.135
     };
   }
 
@@ -419,17 +425,17 @@
     const latitudeAbs = Math.abs(latitude) / (Math.PI / 2);
 
     const beachEdge =
-      smoothstep(0.46, 0.555, shape.exposure) *
-      (1 - smoothstep(0.59, 0.725, shape.exposure));
+      smoothstep(0.44, 0.535, shape.exposure) *
+      (1 - smoothstep(0.585, 0.735, shape.exposure));
 
     const forcedTerrain =
-      shape.exposure > 0.56 ||
+      shape.exposure > 0.525 ||
       landrise.terrainAboveSeaLevel ||
-      landrise.raisedTerrain > 0.18;
+      landrise.raisedTerrain > 0.16;
 
     const beachOnly =
       !forcedTerrain &&
-      (beachEdge > 0.12 || beach.beachBand > 0.14);
+      (beachEdge > 0.115 || beach.beachBand > 0.14);
 
     const tidalOnly =
       !forcedTerrain &&
@@ -558,7 +564,7 @@
     canvas.dataset.audraliaCanvasContract = CONTRACT;
     canvas.dataset.audraliaCanvasReceipt = RECEIPT;
     canvas.dataset.audraliaGeneration = "1";
-    canvas.dataset.audraliaG1Baseline = "restraint-destriping-ocean-dominant-stabilizing";
+    canvas.dataset.audraliaG1Baseline = "balanced-landmass-restore-ocean-dominant-stabilizing";
     canvas.dataset.audraliaPrimarySummit = "Gratitude";
     canvas.dataset.audraliaNineWithinNine = "true";
     canvas.dataset.audraliaBookSummitLaw = "true";
@@ -568,6 +574,9 @@
     canvas.dataset.audraliaPlains = "true";
     canvas.dataset.audraliaDeserts = "true";
     canvas.dataset.audraliaMarshes = "true";
+    canvas.dataset.audraliaBalancedLandmassRestore = "true";
+    canvas.dataset.audraliaRestoreFromOverRestraint = "true";
+    canvas.dataset.audraliaMediumLandBodies = "true";
     canvas.dataset.audraliaReduceOverexpandedLandmass = "true";
     canvas.dataset.audraliaOceanDominantStillTrue = "true";
     canvas.dataset.audraliaDestripingActive = "true";
@@ -773,6 +782,9 @@
     document.documentElement.dataset.audraliaPlains = "true";
     document.documentElement.dataset.audraliaDeserts = "true";
     document.documentElement.dataset.audraliaMarshes = "true";
+    document.documentElement.dataset.audraliaBalancedLandmassRestore = "true";
+    document.documentElement.dataset.audraliaRestoreFromOverRestraint = "true";
+    document.documentElement.dataset.audraliaMediumLandBodies = "true";
     document.documentElement.dataset.audraliaReduceOverexpandedLandmass = "true";
     document.documentElement.dataset.audraliaOceanDominantStillTrue = "true";
     document.documentElement.dataset.audraliaDestripingActive = "true";
@@ -796,7 +808,7 @@
       version: VERSION,
       authority: "audralia-canvas",
       generation: 1,
-      baseline: "restraint-destriping-ocean-dominant-stabilizing",
+      baseline: "balanced-landmass-restore-ocean-dominant-stabilizing",
       consumesSummits: Boolean(window.AUDRALIA_SUMMITS),
       consumesMountains: Boolean(window.AUDRALIA_MOUNTAINS),
       consumesGroundcover: Boolean(window.AUDRALIA_GROUNDCOVER),
@@ -810,6 +822,9 @@
       plains: true,
       deserts: true,
       marshes: true,
+      balancedLandmassRestore: true,
+      restoreFromOverRestraint: true,
+      mediumLandBodies: true,
       reduceOverexpandedLandmass: true,
       oceanDominantStillTrue: true,
       destripingActive: true,

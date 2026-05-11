@@ -1,25 +1,22 @@
 // /assets/audralia/audralia.canvas.js
-// AUDRALIA_G1_COORDINATE_LANDMAP_CANVAS_CONSUMER_TNT_v15
+// AUDRALIA_G1_256_LATTICE_ATLAS_CANVAS_CONSUMER_TNT_v16
 // Full-file replacement.
-// Canvas authority only.
-// Purpose:
-// - Dynamically loads /assets/audralia/audralia.landmap.js if route has not loaded it.
-// - Consumes landmap as footprint truth.
-// - Canvas renders; it does not invent landmass.
-// - Pointer/drag inspection exposes longitude, latitude, quadrant, band, cell16, cell64, cell256, and terrain class.
-// - Preserves accepted G1 visible-landmass footprint.
-// - Keeps thin coastal beaches restrained.
-// - No trees. No bushes. No forest canopy.
-// - No generated image. No GraphicBox. No visual-pass claim.
+// Canvas renderer only.
+// Dynamically loads lattice256.js and landmap.js.
+// Renders only landmap classifications.
+// Does not invent footprint.
+// Exposes live longitude/latitude/cell terrain readout.
+// No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G1_COORDINATE_LANDMAP_CANVAS_CONSUMER_TNT_v15";
-  const RECEIPT = "AUDRALIA_G1_COORDINATE_LANDMAP_CANVAS_CONSUMER_RECEIPT_v15";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G1_THIN_COASTAL_BEACH_RESTRAINT_CANVAS_TNT_v14";
-  const LANDMAP_CONTRACT = "AUDRALIA_G1_COORDINATE_LANDMAP_AUTHORITY_TNT_v1";
-  const VERSION = "2026-05-10.audralia-g1-coordinate-landmap-canvas-consumer-v15";
+  const CONTRACT = "AUDRALIA_G1_256_LATTICE_ATLAS_CANVAS_CONSUMER_TNT_v16";
+  const RECEIPT = "AUDRALIA_G1_256_LATTICE_ATLAS_CANVAS_CONSUMER_RECEIPT_v16";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G1_COORDINATE_LANDMAP_CANVAS_CONSUMER_TNT_v15";
+  const LATTICE_CONTRACT = "AUDRALIA_G1_256_LATTICE_ATLAS_AUTHORITY_TNT_v1";
+  const LANDMAP_CONTRACT = "AUDRALIA_G1_256_LATTICE_LANDMAP_CLASSIFICATION_TNT_v2";
+  const VERSION = "2026-05-10.audralia-g1-256-lattice-atlas-canvas-consumer-v16";
   const TAU = Math.PI * 2;
 
   const COLORS = Object.freeze({
@@ -30,14 +27,16 @@
     beach: [202, 186, 128],
     wetBeach: [156, 157, 116],
     land: [90, 127, 76],
-    grassland: [77, 122, 72],
     plains: [128, 142, 87],
     desert: [174, 148, 90],
     marsh: [50, 101, 78],
     basin: [66, 108, 70],
-    highland: [134, 132, 119],
-    ridge: [118, 118, 112],
+    highland: [128, 128, 116],
+    mountain: [112, 112, 108],
+    darkMountain: [76, 78, 76],
+    ice: [190, 220, 225],
     snow: [218, 232, 226],
+    polarIce: [218, 235, 235],
     atmosphere: [86, 157, 194],
     cloud: [230, 238, 238]
   });
@@ -126,117 +125,117 @@
     return total / Math.max(0.000001, norm);
   }
 
-  function ensureLandmap() {
-    if (window.AUDRALIA_LANDMAP?.sampleLandmap) return Promise.resolve(true);
+  function loadScriptOnce(src, flag) {
+    if (document.documentElement.dataset[flag] === "true") return Promise.resolve(true);
 
     return new Promise((resolve) => {
-      const existing = document.querySelector("script[data-audralia-landmap-loader='true']");
+      const existing = document.querySelector(`script[data-loader-flag="${flag}"]`);
       if (existing) {
-        existing.addEventListener("load", () => resolve(Boolean(window.AUDRALIA_LANDMAP?.sampleLandmap)), { once: true });
+        existing.addEventListener("load", () => resolve(true), { once: true });
         existing.addEventListener("error", () => resolve(false), { once: true });
         return;
       }
 
       const script = document.createElement("script");
-      script.src = `/assets/audralia/audralia.landmap.js?v=audralia-landmap-v1-${Date.now()}`;
+      script.src = `${src}?v=audralia-256-atlas-${Date.now()}`;
       script.defer = true;
-      script.dataset.audraliaLandmapLoader = "true";
-      script.dataset.audraliaCanvasContract = CONTRACT;
-
-      script.onload = () => resolve(Boolean(window.AUDRALIA_LANDMAP?.sampleLandmap));
+      script.dataset.loaderFlag = flag;
+      script.onload = () => resolve(true);
       script.onerror = () => resolve(false);
-
       document.head.appendChild(script);
     });
   }
 
-  function fallbackLandmap(u, v) {
-    const longitude = u * 360 - 180;
-    const latitude = 90 - v * 180;
-    const base = fbm(u * 0.62 + 0.11, v * 0.56 - 0.07, 1700000, 6);
-    const mass = fbm(u * 0.92 - 0.21, v * 0.82 + 0.14, 1700500, 6);
-    const islands = fbm(u * 2.0 - 0.13, v * 1.55 + 0.08, 1701000, 5);
-    const exposure = clamp(base * 0.52 + mass * 0.38 + islands * 0.1 - 0.2, 0, 1);
-    const isLand = exposure > 0.405;
-    const shelf = clamp(exposure + islands * 0.18, 0, 1);
-    const beachEdge = smoothstep(0.365, 0.49, exposure) * (1 - smoothstep(0.505, 0.64, exposure));
+  async function ensureAtlas() {
+    if (!window.AUDRALIA_LATTICE256?.coordinatesFromUV) {
+      await loadScriptOnce("/assets/audralia/audralia.lattice256.js", "audraliaLattice256Loaded");
+    }
 
+    if (!window.AUDRALIA_LANDMAP?.sampleLandmap) {
+      await loadScriptOnce("/assets/audralia/audralia.landmap.js", "audraliaLandmapLoaded");
+    }
+
+    return Boolean(window.AUDRALIA_LANDMAP?.sampleLandmap);
+  }
+
+  function fallbackMap(u, v) {
     return {
       u,
       v,
-      longitude,
-      latitude,
-      longitudeRadians: (longitude / 180) * Math.PI,
-      latitudeRadians: (latitude / 180) * Math.PI,
-      quadrant: `${latitude >= 0 ? "N" : "S"}${longitude >= 0 ? "E" : "W"}`,
-      band: Math.abs(latitude) < 8 ? "equatorial" : Math.abs(latitude) < 23.5 ? "subtropical" : Math.abs(latitude) < 45 ? "temperate" : "polar",
-      cell16: 1,
-      cell64: 1,
+      longitude: u * 360 - 180,
+      latitude: 90 - v * 180,
       cell256: 1,
+      cell64: 1,
+      cell16: 1,
+      quadrant: "NE",
+      band: "temperate",
       primarySummit: "Gratitude",
       internalSummit: "Gratitude",
-      exposure,
-      shelf,
-      beachEdge,
-      isLand,
-      isOcean: !isLand && shelf < 0.48,
-      isShelf: !isLand && shelf >= 0.48,
-      isBeach: !isLand && beachEdge > 0.14,
-      isCoast: exposure > 0.36 && exposure < 0.58,
-      isIsland: false,
-      isInland: isLand && exposure >= 0.58,
-      isBasin: false,
-      isHighland: false,
-      terrainClass: isLand ? "inland" : shelf >= 0.48 ? "shelf" : "ocean"
+      terrainClass: "ocean",
+      topology: "ocean",
+      elevation: "sea",
+      isOcean: true,
+      isLand: false,
+      isShelf: false,
+      isBeach: false,
+      isPolarIce: false,
+      hydrologyHeld: false
     };
   }
 
   function sampleMap(u, v) {
     if (window.AUDRALIA_LANDMAP?.sampleLandmap) return window.AUDRALIA_LANDMAP.sampleLandmap(u, v);
-    return fallbackLandmap(u, v);
+    return fallbackMap(u, v);
   }
 
   function surfaceColor(map) {
     const u = map.u;
     const v = map.v;
-
     const grain = (fbm(u * 2.4 + 0.15, v * 2.0 - 0.11, 460000, 4) - 0.5) * 7;
     const moisture = fbm(u * 1.35 - 0.19, v * 1.08 + 0.12, 1411000, 5);
     const dryness = fbm(u * 1.22 + 0.11, v * 0.96 - 0.08, 1412000, 5);
-    const ridge = fbm(u * 1.52, v * 1.18, 510000, 5);
-    const cloudShadow = fbm(u * 1.5, v * 1.25, 470000, 3);
+    const relief = fbm(u * 1.52, v * 1.18, 510000, 5);
 
-    if (map.isOcean) {
-      let water = mix(COLORS.deepOcean, COLORS.ocean, smoothstep(0.2, 0.9, map.shelf + cloudShadow * 0.08));
-      return shade(water, grain * 0.35 - 3);
+    if (map.terrainClass === "ocean") {
+      return shade(mix(COLORS.deepOcean, COLORS.ocean, smoothstep(0.2, 0.9, map.shelf || 0.25)), grain * 0.3 - 3);
     }
 
-    if (map.isShelf) {
-      let shelf = mix(COLORS.ocean, COLORS.shelf, smoothstep(0.42, 0.9, map.shelf));
-      shelf = mix(shelf, COLORS.shallow, map.beachEdge * 0.18);
-      return shade(shelf, grain * 0.3 + 2);
+    if (map.terrainClass === "shelf") {
+      return shade(mix(COLORS.ocean, COLORS.shelf, smoothstep(0.42, 0.9, map.shelf || 0.5)), grain * 0.25 + 2);
     }
 
-    if (map.isBeach) {
-      let beach = mix(COLORS.beach, COLORS.wetBeach, smoothstep(0.42, 0.88, map.shelf));
-      beach = mix(beach, COLORS.shallow, map.beachEdge * 0.1);
-      return shade(beach, grain * 0.45 + 2);
+    if (map.terrainClass === "beach") {
+      return shade(mix(COLORS.beach, COLORS.wetBeach, smoothstep(0.42, 0.88, map.shelf || 0.4)), grain * 0.45 + 2);
+    }
+
+    if (map.terrainClass === "polar-ice") {
+      return shade(mix(COLORS.polarIce, COLORS.snow, smoothstep(0.34, 0.9, map.icePressure || relief)), grain * 0.25 + 6);
+    }
+
+    if (map.terrainClass === "ice-highland") {
+      let ice = mix(COLORS.ice, COLORS.snow, smoothstep(0.42, 0.88, map.icePressure || relief));
+      ice = mix(ice, COLORS.mountain, smoothstep(0.5, 0.9, map.mountainPressure || relief) * 0.28);
+      return shade(ice, grain * 0.35 + 5);
+    }
+
+    if (map.terrainClass === "mountain-highland") {
+      let mountain = mix(COLORS.highland, COLORS.mountain, smoothstep(0.46, 0.9, map.mountainPressure || relief));
+      mountain = mix(mountain, COLORS.snow, smoothstep(0.72, 0.94, map.icePressure || relief) * 0.24);
+      return shade(mountain, grain + relief * 10 - 3);
     }
 
     let land = COLORS.land;
 
-    if (map.isBasin) land = mix(land, COLORS.basin, 0.38);
-    if (map.isHighland) land = mix(land, COLORS.highland, 0.42);
-    if (map.isCoast) land = mix(land, COLORS.beach, map.beachEdge * 0.09);
+    if (map.terrainClass === "basin-highland") land = mix(land, COLORS.basin, 0.42);
+    if (map.terrainClass === "coast") land = mix(land, COLORS.beach, (map.beachEdge || 0) * 0.12);
+    if (map.terrainClass === "island") land = mix(land, COLORS.plains, 0.16);
 
-    land = mix(land, COLORS.grassland, moisture * 0.2);
-    land = mix(land, COLORS.plains, smoothstep(0.36, 0.76, moisture) * 0.16);
-    land = mix(land, COLORS.desert, smoothstep(0.62, 0.9, dryness) * 0.16);
-    land = mix(land, COLORS.marsh, map.isBasin ? moisture * 0.18 : 0);
-    land = mix(land, COLORS.ridge, smoothstep(0.58, 0.86, ridge) * 0.18);
-    land = mix(land, COLORS.snow, map.isHighland ? smoothstep(0.78, 0.94, ridge) * 0.22 : 0);
+    land = mix(land, COLORS.plains, smoothstep(0.38, 0.76, moisture) * 0.18);
+    land = mix(land, COLORS.desert, smoothstep(0.62, 0.9, dryness) * 0.14);
+    land = mix(land, COLORS.marsh, map.terrainClass === "basin-highland" ? moisture * 0.18 : 0);
+    land = mix(land, COLORS.highland, smoothstep(0.58, 0.86, relief) * 0.16);
 
-    return shade(land, grain + ridge * 8 - 4);
+    return shade(land, grain + relief * 6 - 4);
   }
 
   function buildTexture(width, height) {
@@ -279,12 +278,15 @@
     const mount = mountNode && mountNode.nodeType === 1 ? mountNode : document.body;
 
     mount.querySelectorAll("canvas[data-audralia-parent-chain-canvas='true']").forEach((node) => node.remove());
+    mount.querySelectorAll("[data-audralia-coordinate-readout='true']").forEach((node) => node.remove());
 
     const canvas = document.createElement("canvas");
     canvas.dataset.audraliaParentChainCanvas = "true";
     canvas.dataset.audraliaCanvasContract = CONTRACT;
     canvas.dataset.audraliaCanvasReceipt = RECEIPT;
+    canvas.dataset.audraliaLatticeContract = LATTICE_CONTRACT;
     canvas.dataset.audraliaLandmapContract = LANDMAP_CONTRACT;
+    canvas.dataset.audraliaCanvasConsumesLattice256 = "true";
     canvas.dataset.audraliaCanvasConsumesLandmap = "true";
     canvas.dataset.audraliaCanvasOwnsFootprint = "false";
     canvas.dataset.audraliaCoordinateInspection = "true";
@@ -315,9 +317,9 @@
     readout.style.background = "rgba(3,9,20,.68)";
     readout.style.color = "rgba(238,246,255,.88)";
     readout.style.font = "600 11px/1.35 system-ui, sans-serif";
+    readout.style.whiteSpace = "pre-line";
     readout.style.pointerEvents = "none";
-    readout.style.maxWidth = "86%";
-    readout.textContent = "Audralia coordinate map loading…";
+    readout.textContent = "Audralia 256 atlas loading…";
     mount.appendChild(readout);
 
     const ctx = canvas.getContext("2d", { alpha: true });
@@ -391,14 +393,18 @@
 
       readout.textContent = [
         `lat ${map.latitude.toFixed(2)} · lon ${map.longitude.toFixed(2)}`,
-        `cell ${map.cell256}/256 · ${map.quadrant} · ${map.band}`,
-        `${map.terrainClass} · Gratitude → ${map.internalSummit}`
+        `cell ${map.cell256}/256 · cell64 ${map.cell64} · cell16 ${map.cell16}`,
+        `${map.quadrant} · ${map.band}`,
+        `${map.terrainClass} · ${map.topology} · ${map.elevation}`,
+        `Gratitude → ${map.internalSummit}`
       ].join("\n");
 
       document.documentElement.dataset.audraliaLastLatitude = String(map.latitude.toFixed(4));
       document.documentElement.dataset.audraliaLastLongitude = String(map.longitude.toFixed(4));
       document.documentElement.dataset.audraliaLastCell256 = String(map.cell256);
       document.documentElement.dataset.audraliaLastTerrainClass = map.terrainClass;
+      document.documentElement.dataset.audraliaLastTopology = map.topology;
+      document.documentElement.dataset.audraliaLastElevation = map.elevation;
       document.documentElement.dataset.audraliaLastInternalSummit = map.internalSummit;
     }
 
@@ -523,6 +529,7 @@
           canvasFound: true,
           controlsBound: true,
           frames: state.frames,
+          lattice256Loaded: Boolean(window.AUDRALIA_LATTICE256?.coordinatesFromUV),
           landmapLoaded: Boolean(window.AUDRALIA_LANDMAP?.sampleLandmap)
         });
       }
@@ -538,16 +545,17 @@
     canvas.addEventListener("pointerup", pointerUp);
     canvas.addEventListener("pointercancel", pointerUp);
 
-    ensureLandmap().then(() => {
+    ensureAtlas().then(() => {
       texture = buildTexture(1024, 512);
       state.ready = true;
-      const center = sampleMap(0.5, 0.5);
-      updateReadout(center);
+      updateReadout(sampleMap(0.5, 0.5));
 
       document.documentElement.dataset.audraliaCanvasLoaded = "true";
       document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
       document.documentElement.dataset.audraliaCanvasReceipt = RECEIPT;
+      document.documentElement.dataset.audraliaLattice256Loaded = String(Boolean(window.AUDRALIA_LATTICE256?.coordinatesFromUV));
       document.documentElement.dataset.audraliaLandmapLoaded = String(Boolean(window.AUDRALIA_LANDMAP?.sampleLandmap));
+      document.documentElement.dataset.audraliaCanvasConsumesLattice256 = "true";
       document.documentElement.dataset.audraliaCanvasConsumesLandmap = "true";
       document.documentElement.dataset.audraliaCanvasOwnsFootprint = "false";
       document.documentElement.dataset.audraliaCoordinateInspection = "true";
@@ -579,20 +587,15 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
+      latticeContract: LATTICE_CONTRACT,
       landmapContract: LANDMAP_CONTRACT,
       version: VERSION,
-      authority: "audralia-canvas",
+      authority: "audralia-canvas-renderer",
+      consumesLattice256: Boolean(window.AUDRALIA_LATTICE256?.coordinatesFromUV),
       consumesLandmap: Boolean(window.AUDRALIA_LANDMAP?.sampleLandmap),
       canvasOwnsFootprint: false,
       coordinateInspection: true,
-      longitudeLatitudeSystem: true,
-      cell16: true,
-      cell64: true,
-      cell256: true,
-      primarySummit: "Gratitude",
-      trees: false,
-      bushes: false,
-      forestCanopy: false,
+      hydrologyAuthored: false,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
@@ -603,6 +606,7 @@
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
+    latticeContract: LATTICE_CONTRACT,
     landmapContract: LANDMAP_CONTRACT,
     version: VERSION,
     mount,
@@ -615,6 +619,7 @@
   document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
   document.documentElement.dataset.audraliaCanvasReceipt = RECEIPT;
   document.documentElement.dataset.audraliaCanvasExposesMount = "true";
+  document.documentElement.dataset.audraliaCanvasConsumesLattice256 = "true";
   document.documentElement.dataset.audraliaCanvasConsumesLandmap = "true";
   document.documentElement.dataset.audraliaCanvasOwnsFootprint = "false";
   document.documentElement.dataset.audraliaCoordinateInspection = "true";

@@ -1,19 +1,20 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_G1_TERRAIN_ELEVATION_ROUTE_TNT_v4
+// AUDRALIA_G1_BEACH_TO_LAND_RISE_ROUTE_TNT_v5
 // Full-file replacement.
 // Route orchestration only.
-// Loads: backstory → tectonics → topology → elevation → canvas.
+// Loads: backstory → tectonics → topology → elevation → beaches → canvas.
+// Converts sea-level strips into beach/coast authority and lets raised land attach behind them.
 // Does not turn Audralia into Hearth.
 // Does not generate images. Does not use GraphicBox. Does not claim visual pass.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G1_TERRAIN_ELEVATION_ROUTE_TNT_v4";
-  const RECEIPT = "AUDRALIA_G1_TERRAIN_ELEVATION_ROUTE_RECEIPT_v4";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G1_PARENT_CHAIN_STABILIZATION_ROUTE_TNT_v3";
-  const VERSION = "2026-05-10.audralia-g1-terrain-elevation-route-v4";
-  const KEY = "audralia-g1-terrain-elevation-v4";
+  const CONTRACT = "AUDRALIA_G1_BEACH_TO_LAND_RISE_ROUTE_TNT_v5";
+  const RECEIPT = "AUDRALIA_G1_BEACH_TO_LAND_RISE_ROUTE_RECEIPT_v5";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G1_TERRAIN_ELEVATION_ROUTE_TNT_v4";
+  const VERSION = "2026-05-10.audralia-g1-beach-to-land-rise-route-v5";
+  const KEY = "audralia-g1-beach-to-land-rise-v5";
 
   const state = {
     loaded: [],
@@ -25,6 +26,7 @@
     tectonicsLoaded: false,
     topologyLoaded: false,
     elevationLoaded: false,
+    beachesLoaded: false,
     canvasLoaded: false,
     frames: 0,
     fallback: false,
@@ -48,12 +50,13 @@
     document.documentElement.dataset.audraliaActiveRouteFile = "/showroom/globe/audralia/index.js";
     document.documentElement.dataset.audraliaParentChainAligned = "true";
     document.documentElement.dataset.audraliaGeneration = "1";
-    document.documentElement.dataset.audraliaG1Baseline = "terrain-elevation-stabilizing";
+    document.documentElement.dataset.audraliaG1Baseline = "beach-to-land-rise-stabilizing";
     document.documentElement.dataset.audraliaG2Calibration = "held";
     document.documentElement.dataset.audraliaBackstoryLoaded = String(state.backstoryLoaded);
     document.documentElement.dataset.audraliaTectonicsLoaded = String(state.tectonicsLoaded);
     document.documentElement.dataset.audraliaTopologyLoaded = String(state.topologyLoaded);
     document.documentElement.dataset.audraliaElevationLoaded = String(state.elevationLoaded);
+    document.documentElement.dataset.audraliaBeachesLoaded = String(state.beachesLoaded);
     document.documentElement.dataset.audraliaCanvasLoaded = String(state.canvasLoaded);
     document.documentElement.dataset.audraliaMounted = String(state.mounted);
     document.documentElement.dataset.audraliaCanvasFound = String(state.canvasFound);
@@ -62,7 +65,9 @@
     document.documentElement.dataset.audraliaNotAustralia = "true";
     document.documentElement.dataset.audraliaNotHearth = "true";
     document.documentElement.dataset.audraliaEarthClone = "false";
-    document.documentElement.dataset.audraliaTerrainElevationActive = "true";
+    document.documentElement.dataset.audraliaSeaLevelStripsBecomeBeach = "true";
+    document.documentElement.dataset.audraliaRaisedLandBehindBeach = "true";
+    document.documentElement.dataset.audraliaLandAttachActive = "true";
     document.documentElement.dataset.audraliaNoTrees = "true";
     document.documentElement.dataset.audraliaNoBushes = "true";
     document.documentElement.dataset.audraliaNoForestCanopy = "true";
@@ -72,26 +77,30 @@
 
     if (node) {
       node.textContent = [
-        "Audralia G1 terrain-elevation route.",
+        "Audralia G1 beach-to-land-rise route.",
         `Status ${value}`,
         `Route ${CONTRACT}`,
         `Receipt ${RECEIPT}`,
         `Previous ${PREVIOUS_CONTRACT}`,
         `Version ${VERSION}`,
-        "Parent order backstory → tectonics → topology → elevation → canvas",
+        "Parent order backstory → tectonics → topology → elevation → beaches → canvas",
         `Loaded ${state.loaded.join(",") || "none"}`,
         `Failed ${state.failed.join(",") || "none"}`,
         `Backstory loaded ${state.backstoryLoaded}`,
         `Tectonics loaded ${state.tectonicsLoaded}`,
         `Topology loaded ${state.topologyLoaded}`,
         `Elevation loaded ${state.elevationLoaded}`,
+        `Beaches loaded ${state.beachesLoaded}`,
         `Canvas loaded ${state.canvasLoaded}`,
         `Mounted ${state.mounted}`,
         `Canvas found ${state.canvasFound}`,
         `Controls bound ${state.controlsBound}`,
         `Fallback ${state.fallback}`,
         `Frames ${state.frames}`,
-        "Generation 1 terrain elevation stabilizing true",
+        "Sea-level strips become beach true",
+        "Raised land behind beach true",
+        "Land attach active true",
+        "Generation 1 beach-to-land-rise stabilizing true",
         "Generation 2 calibration held true",
         "Audralia identity clean ancient ocean-driven home-world true",
         "Audralia not Australia true",
@@ -124,7 +133,7 @@
       mount = document.createElement("section");
       mount.id = "audraliaCanvasMount";
       mount.dataset.audraliaCanvasMount = "true";
-      mount.setAttribute("aria-label", "Audralia Generation 1 terrain elevation canvas mount");
+      mount.setAttribute("aria-label", "Audralia Generation 1 beach-to-land-rise canvas mount");
       mount.style.position = "relative";
       mount.style.width = "min(520px, 100%)";
       mount.style.aspectRatio = "1 / 1";
@@ -152,7 +161,9 @@
     mount.dataset.audraliaParentChainAligned = "true";
     mount.dataset.audraliaRouteContract = CONTRACT;
     mount.dataset.audraliaGeneration = "1";
-    mount.dataset.audraliaTerrainElevationActive = "true";
+    mount.dataset.audraliaSeaLevelStripsBecomeBeach = "true";
+    mount.dataset.audraliaRaisedLandBehindBeach = "true";
+    mount.dataset.audraliaLandAttachActive = "true";
     mount.style.touchAction = "none";
     mount.style.userSelect = "none";
 
@@ -209,9 +220,12 @@
       routeContract: CONTRACT,
       routeReceipt: RECEIPT,
       generation: 1,
-      baseline: "terrain-elevation-stabilizing",
+      baseline: "beach-to-land-rise-stabilizing",
       landReadabilityLift: 0.12,
       elevationActive: true,
+      beachesActive: true,
+      seaLevelStripsBecomeBeach: true,
+      raisedLandBehindBeach: true,
       onStatus: (value, info = {}) => {
         state.frames = info.frames || state.frames;
         state.mounted = Boolean(info.mounted);
@@ -246,7 +260,7 @@
       fallback.style.color = "rgba(238,246,255,.78)";
       fallback.style.textAlign = "center";
       fallback.style.fontWeight = "800";
-      fallback.textContent = "Audralia G1 terrain elevation loaded, but canvas authority failed. Visible fallback protected.";
+      fallback.textContent = "Audralia G1 beach-to-land-rise loaded, but canvas authority failed. Visible fallback protected.";
       mount.appendChild(fallback);
     }
 
@@ -284,6 +298,12 @@
       "elevation",
       "/assets/audralia/audralia.elevation.js",
       () => Boolean(window.AUDRALIA_ELEVATION && typeof window.AUDRALIA_ELEVATION.sampleElevation === "function")
+    );
+
+    state.beachesLoaded = await loadScript(
+      "beaches",
+      "/assets/audralia/audralia.beaches.js",
+      () => Boolean(window.AUDRALIA_BEACHES && typeof window.AUDRALIA_BEACHES.sampleBeach === "function")
     );
 
     state.canvasLoaded = await loadScript(

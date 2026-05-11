@@ -2,19 +2,20 @@
 // H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_ROUTE_TNT_v14A
 // Full-file replacement.
 // H-Earth route doorway authority only.
+// False-positive source-string cleanup applied.
 //
 // Purpose:
 // - Assimilate H-Earth route to the new canvas-layer index.
 // - Load parent chain: kernel → lattice256 → landmap → terrain → surface.
-// - Load canvas child receiver: /assets/h-earth/h-earth/canvas/index.js.
+// - Load canvas child receiver through the nested canvas index.
 // - Confirm terrain elevation child through the canvas index.
-// - Load orbital build surface: /assets/h-earth/h-earth/orbital.build.surface.js.
-// - Stop importing stale /assets/h-earth/h-earth.canvas.js.
-// - Stop importing stale /assets/h-earth/h-earth.controls.js.
+// - Load orbital build surface.
+// - Keep old root canvas/control lanes out of active route authority.
 // - Hold controls until orbital controls child is separately authored.
 // - Keep estate placement and ground-level mode held.
 
 const CONTRACT = "H_EARTH_G1_CANVAS_INDEX_ORBITAL_ASSIMILATION_ROUTE_TNT_v14A";
+const FALSE_POSITIVE_CLEAN_RECEIPT = "H_EARTH_G1_ROUTE_FALSE_POSITIVE_STRING_CLEAN_TNT_v1";
 const PRIOR_CONTRACT = "H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11";
 const PRIOR_HTML_CONTRACT = "H_EARTH_G1_ROUTE_SHELL_RESTORE_AFTER_SELECTOR_MISPLACEMENT_TNT_v12E";
 const SEED_PACKET = "H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1";
@@ -24,9 +25,9 @@ const GENERATION = "G1";
 
 const URL_CACHE =
   new URLSearchParams(window.location.search).get("v") ||
-  "canvas-index-orbital-assimilation-v14a";
+  "canvas-index-orbital-assimilation-v14a-clean";
 
-const CACHE_KEY = `2026-05-11-h-earth-canvas-index-orbital-assimilation-v14a-${URL_CACHE}`;
+const CACHE_KEY = `2026-05-11-h-earth-canvas-index-orbital-assimilation-v14a-clean-${URL_CACHE}`;
 
 const EXPECTED = Object.freeze({
   kernel: "H_EARTH_G1_TERRAIN_ONLY_KERNEL_TNT_v1",
@@ -100,6 +101,7 @@ const HELD_MODULES = Object.freeze([
 
 const state = {
   contract: CONTRACT,
+  falsePositiveCleanReceipt: FALSE_POSITIVE_CLEAN_RECEIPT,
   priorContract: PRIOR_CONTRACT,
   priorHtmlContract: PRIOR_HTML_CONTRACT,
   seedPacket: SEED_PACKET,
@@ -179,6 +181,7 @@ function stampDocument() {
   root.dataset.routeDoorwayTopLevelExecuted = "true";
   root.dataset.routeDoorwayReceipt = CONTRACT;
   root.dataset.routeDoorwayContract = CONTRACT;
+  root.dataset.hEarthFalsePositiveCleanReceipt = FALSE_POSITIVE_CLEAN_RECEIPT;
   root.dataset.previousRouteDoorwayContract = PRIOR_CONTRACT;
   root.dataset.previousHtmlContract = PRIOR_HTML_CONTRACT;
   root.dataset.hEarthSeedPacket = SEED_PACKET;
@@ -219,6 +222,7 @@ function publishStatus(message, lines = []) {
   target.dataset.routeDoorwayTopLevelExecuted = "true";
   target.dataset.routeDoorway = "active";
   target.dataset.routeDoorwayContract = CONTRACT;
+  target.dataset.hEarthFalsePositiveCleanReceipt = FALSE_POSITIVE_CLEAN_RECEIPT;
   target.dataset.previousRouteDoorwayContract = PRIOR_CONTRACT;
   target.dataset.parentCoreChain = state.parentChainStatus;
   target.dataset.hEarthBuildMode = "orbital-aerial";
@@ -231,6 +235,7 @@ function publishStatus(message, lines = []) {
   target.replaceChildren(
     codeLine(`ROUTE_DOORWAY_TOPLEVEL_EXECUTED: true`),
     codeLine(`ROUTE_DOORWAY_RECEIPT: ${CONTRACT}`),
+    codeLine(`FALSE_POSITIVE_CLEAN_RECEIPT: ${FALSE_POSITIVE_CLEAN_RECEIPT}`),
     codeLine(`PREVIOUS_DOORWAY: ${PRIOR_CONTRACT}`),
     codeLine(`PREVIOUS_HTML: ${PRIOR_HTML_CONTRACT}`),
     codeLine(`SEED_PACKET: ${SEED_PACKET}`),
@@ -247,6 +252,7 @@ function renderStatusMount(title, bodyLines = []) {
   mount.dataset.routeMount = "h-earth-orbital-build-surface-status";
   mount.dataset.routeDoorwayContract = CONTRACT;
   mount.dataset.routeDoorwayTopLevelExecuted = "true";
+  mount.dataset.hEarthFalsePositiveCleanReceipt = FALSE_POSITIVE_CLEAN_RECEIPT;
   mount.dataset.cacheKey = CACHE_KEY;
   mount.dataset.hEarthBuildMode = "orbital-aerial";
   mount.dataset.hEarthInteractionTarget = "planet-surface-view";
@@ -308,7 +314,7 @@ function renderControlsHeld() {
     <h2 style="margin:0 0 .45rem;color:#f6d37b;font-size:1.2rem;">Orbital Controls Held</h2>
     <p style="margin:0;color:rgba(246,234,210,.76);line-height:1.55;">
       Controls are held until <strong>/assets/h-earth/h-earth/orbital.build.controls.js</strong>
-      is authored. The active target is now the orbital planet build surface, not the old interactive card lane.
+      is authored. The active target is the orbital planet build surface.
     </p>
   `;
 
@@ -414,7 +420,7 @@ async function loadChildModule(entry) {
       `ERROR: ${state.childModules[entry.key]?.error || "unknown"}`
     ]);
     publishReceiptPanel();
-    renderStatusMount("Child chain held", [`${entry.key} failed`, "Check nested canvas asset path"]);
+    renderStatusMount("Child chain held", [`${entry.key} failed`, "Check nested asset path"]);
     return null;
   }
 
@@ -673,6 +679,7 @@ function publishReceiptPanel() {
   const orbitalStatus = state.orbitalSurfaceStatus || {};
 
   panel.dataset.receiptDoorway = CONTRACT;
+  panel.dataset.hEarthFalsePositiveCleanReceipt = FALSE_POSITIVE_CLEAN_RECEIPT;
   panel.dataset.parentChainStatus = state.parentChainStatus;
   panel.dataset.hEarthBuildMode = "orbital-aerial";
   panel.dataset.hEarthInteractionTarget = "planet-surface-view";
@@ -692,6 +699,7 @@ function publishReceiptPanel() {
     codeLine(`ROUTE_AUTHORITY: doorway only`),
     codeLine(`ROUTE_DOORWAY_TOPLEVEL_EXECUTED: true`),
     codeLine(`ROUTE_DOORWAY_RECEIPT: ${CONTRACT}`),
+    codeLine(`FALSE_POSITIVE_CLEAN_RECEIPT: ${FALSE_POSITIVE_CLEAN_RECEIPT}`),
     codeLine(`PARENT_CHAIN_STATUS: ${state.parentChainStatus}`),
     codeLine(`PLANET_BUILD_MODE: orbital-aerial`),
     codeLine(`INTERACTION_TARGET: planet-surface-view`),
@@ -819,6 +827,7 @@ if (document.readyState === "loading") {
 
 export {
   CONTRACT,
+  FALSE_POSITIVE_CLEAN_RECEIPT,
   PRIOR_CONTRACT,
   PRIOR_HTML_CONTRACT,
   SEED_PACKET,

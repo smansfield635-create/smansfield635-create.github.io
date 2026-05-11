@@ -9,19 +9,25 @@
   data-planet-meaning="Hybrid Earth"
   data-generation="G1"
   data-seed-packet="H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1"
-  data-contract="H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_HTML_TNT_v9"
-  data-route-doorway-required="H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9"
-  data-previous-contract="H_EARTH_G1_CONTROLS_MOTION_INPUT_HTML_TNT_v8"
-  data-previous-doorway="H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8"
+  data-contract="H_EARTH_G1_INTERACTIVE_VIEW_HTML_RECEIPT_TNT_v11"
+  data-route-doorway-required="H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11"
+  data-previous-contract="H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_HTML_TNT_v10B"
+  data-previous-doorway="H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_ROUTE_TNT_v10B"
   data-authority="route-shell-only"
   data-parent-core-chain="kernel-lattice256-landmap-terrain-surface"
-  data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas-controls"
+  data-active-chain="kernel-lattice256-landmap-terrain-surface-nested-canvas-interactive-controls"
   data-surface="active-read-only"
-  data-canvas="active-visible-composition"
-  data-controls="active-motion-input-authority"
+  data-canvas="nested-child-asset-alignment"
+  data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
+  data-controls="interactive-motion-input-authority"
+  data-expected-controls-contract="H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2"
+  data-drag-authorized="route-gated"
+  data-touch-authorized="route-gated"
+  data-zoom-authorized="route-gated"
+  data-inertia-authorized="route-gated"
   data-canvas-controls-receipt-aligned="route-gated"
   data-canvas-paint-authorized="true"
-  data-controls-authorized="true"
+  data-controls-authorized="route-gated"
   data-parent-mutation-authorized="false"
   data-earth-reference-shell="protected-reference-only"
   data-mutation-earth="forbidden"
@@ -35,10 +41,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · H-Earth</title>
+  <title>Diamond Gate Bridge · H-Earth Interactive View</title>
   <meta
     name="description"
-    content="H-Earth is the Hybrid Earth experimental third-planet lane. This shell aligns canvas and controls receipts after controls activate as downstream motion/input authority. Parent truth remains immutable."
+    content="H-Earth is the Hybrid Earth experimental third-planet lane. This shell exposes the interactive view receipt layer: nested canvas child asset, downstream drag, touch, zoom, reset, and inertia controls, with parent truth immutable."
   >
 
   <style>
@@ -58,7 +64,9 @@
       --max: 1180px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html {
       min-height: 100%;
@@ -78,9 +86,13 @@
         radial-gradient(circle at 82% 12%, rgba(143, 240, 195, 0.08), transparent 24rem);
     }
 
-    a { color: inherit; text-decoration: none; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-    a:focus-visible {
+    a:focus-visible,
+    button:focus-visible {
       outline: 2px solid var(--gold);
       outline-offset: 4px;
     }
@@ -99,7 +111,9 @@
       transition: transform 160ms ease;
     }
 
-    .skip-link:focus { transform: translateY(0); }
+    .skip-link:focus {
+      transform: translateY(0);
+    }
 
     .page-shell {
       width: min(var(--max), calc(100% - 32px));
@@ -180,7 +194,9 @@
       backdrop-filter: blur(18px);
     }
 
-    .hero-copy { padding: clamp(22px, 4vw, 42px); }
+    .hero-copy {
+      padding: clamp(22px, 4vw, 42px);
+    }
 
     .eyebrow {
       display: inline-flex;
@@ -204,7 +220,7 @@
     }
 
     .lede {
-      max-width: 64ch;
+      max-width: 66ch;
       margin: 22px 0 0;
       color: var(--muted);
       font-size: clamp(1rem, 2.2vw, 1.2rem);
@@ -276,12 +292,12 @@
       overflow: hidden;
     }
 
-    #hEarthCanvasMount[data-route-mount="awaiting-controls-receipt-alignment"]::before {
-      content: "Awaiting H-Earth controls receipt alignment";
+    #hEarthCanvasMount[data-route-mount="awaiting-interactive-view-route-receipt"]::before {
+      content: "Awaiting H-Earth interactive view route receipt";
       position: absolute;
       left: 50%;
       top: 50%;
-      width: min(82%, 420px);
+      width: min(82%, 430px);
       transform: translate(-50%, -50%);
       padding: 13px 16px;
       border: 1px solid rgba(244, 191, 96, 0.28);
@@ -317,7 +333,7 @@
     }
 
     .canvas-composition-mount:empty::before {
-      content: "Canvas composition mount ready.";
+      content: "Nested canvas child asset mount ready. Route doorway will import /assets/h-earth/h-earth/canvas.alignment.v3.js.";
       display: block;
       padding: 16px;
       border: 1px dashed rgba(142, 190, 255, 0.22);
@@ -329,7 +345,7 @@
     }
 
     .controls-mount:empty::before {
-      content: "Controls mount ready. Route doorway will align controls receipt after canvas proof passes.";
+      content: "Interactive controls mount ready. Controls load after nested canvas proof and own drag, touch, zoom, reset, and inertia only.";
       display: block;
       padding: 16px;
       border: 1px dashed rgba(244, 191, 96, 0.28);
@@ -399,8 +415,13 @@
       text-transform: uppercase;
     }
 
-    .status-pill.ready { color: var(--green); }
-    .status-pill.held { color: var(--muted); }
+    .status-pill.ready {
+      color: var(--green);
+    }
+
+    .status-pill.held {
+      color: var(--muted);
+    }
 
     .receipt-panel {
       margin-top: 16px;
@@ -434,9 +455,17 @@
         flex-direction: column;
       }
 
-      .nav { justify-content: flex-start; }
-      .hero { grid-template-columns: 1fr; }
-      .grid { grid-template-columns: 1fr; }
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 560px) {
@@ -453,12 +482,27 @@
         border-radius: 18px;
       }
 
-      .stage { padding: 10px; }
-      .mount-shell { min-height: 360px; }
-      .stage-label { left: 14px; top: 14px; }
-      #hEarthCanvasMount { width: min(100%, 330px); }
+      .stage {
+        padding: 10px;
+      }
+
+      .mount-shell {
+        min-height: 360px;
+      }
+
+      .stage-label {
+        left: 14px;
+        top: 14px;
+      }
+
+      #hEarthCanvasMount {
+        width: min(100%, 330px);
+      }
+
       .canvas-composition-mount,
-      .controls-mount { padding: 10px; }
+      .controls-mount {
+        padding: 10px;
+      }
     }
   </style>
 </head>
@@ -488,12 +532,13 @@
     <main id="h-earth-main" tabindex="-1">
       <section class="hero" aria-labelledby="h-earth-title">
         <div class="hero-copy">
-          <p class="eyebrow">H-Earth · G1 · Controls Receipt Alignment</p>
+          <p class="eyebrow">H-Earth · G1 · Interactive View</p>
           <h1 id="h-earth-title">H-Earth</h1>
           <p class="lede">
-            H-Earth means Hybrid Earth. Canvas and controls are now aligned at the receipt layer.
-            Controls are active as downstream motion/input authority after canvas proof passes.
-            Parent truth remains immutable.
+            H-Earth means Hybrid Earth. The interactive route keeps parent truth upstream and immutable.
+            The nested canvas child paints the visible composition from
+            <strong>/assets/h-earth/h-earth/canvas.alignment.v3.js</strong>.
+            Interactive controls own drag, touch, zoom, reset, and inertia as downstream motion/input only.
           </p>
 
           <div class="route-actions" aria-label="Route actions">
@@ -508,38 +553,53 @@
             class="receipt-panel"
             aria-label="H-Earth route status target"
             data-status-target="h-earth-route"
-            data-current-status="controls-receipt-alignment-html-loaded-awaiting-v9-doorway"
+            data-current-status="interactive-view-html-loaded-awaiting-v11-doorway"
             data-route-shell="ready"
-            data-route-doorway="awaiting-controls-receipt-alignment-route"
+            data-route-doorway="awaiting-interactive-view-route-receipt"
             data-parent-core-chain="kernel-lattice256-landmap-terrain-surface"
-            data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas-controls"
+            data-active-chain="kernel-lattice256-landmap-terrain-surface-nested-canvas-interactive-controls"
             data-surface="active-read-only"
-            data-canvas="active-visible-composition"
-            data-controls="active-motion-input-authority"
+            data-canvas="nested-child-asset-alignment"
+            data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
+            data-controls="interactive-motion-input-authority"
+            data-expected-controls-contract="H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2"
+            data-drag-authorized="route-gated"
+            data-touch-authorized="route-gated"
+            data-zoom-authorized="route-gated"
+            data-inertia-authorized="route-gated"
             data-canvas-controls-receipt-aligned="route-gated"
             data-parent-mutation-authorized="false"
           >
-            <code>ROUTE_RECEIPT: H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_HTML_TNT_v9</code>
-            <code>PREVIOUS_ROUTE_RECEIPT: H_EARTH_G1_CONTROLS_MOTION_INPUT_HTML_TNT_v8</code>
+            <code>ROUTE_RECEIPT: H_EARTH_G1_INTERACTIVE_VIEW_HTML_RECEIPT_TNT_v11</code>
+            <code>PREVIOUS_ROUTE_RECEIPT: H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_HTML_TNT_v10B</code>
             <code>SEED_PACKET: H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1</code>
-            <code>REQUIRED_DOORWAY: H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9</code>
-            <code>STATUS: controls receipt alignment HTML loaded; awaiting v9 doorway module</code>
+            <code>REQUIRED_DOORWAY: H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11</code>
+            <code>CANVAS_ASSET_PATH: /assets/h-earth/h-earth/canvas.alignment.v3.js</code>
+            <code>EXPECTED_CANVAS: H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3</code>
+            <code>EXPECTED_CONTROLS: H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2</code>
+            <code>STATUS: interactive view HTML loaded; awaiting v11 doorway module</code>
           </section>
         </div>
 
-        <section class="stage" aria-label="H-Earth controls receipt alignment and parent-chain status stage">
-          <div class="stage-label">Receipt Alignment Mount</div>
+        <section class="stage" aria-label="H-Earth interactive view status stage">
+          <div class="stage-label">Interactive View Status Mount</div>
           <div class="mount-shell">
             <div
               id="hEarthCanvasMount"
               role="img"
-              aria-label="H-Earth status mount awaiting controls receipt alignment"
+              aria-label="H-Earth status mount awaiting interactive view route receipt"
               data-mount="h-earth-parent-chain-status"
-              data-route-mount="awaiting-controls-receipt-alignment"
+              data-route-mount="awaiting-interactive-view-route-receipt"
               data-h-earth-surface-status-mount="true"
               data-surface-authority="active-read-only"
-              data-canvas-authority="active-visible-composition"
-              data-controls-authority="active-motion-input-authority"
+              data-canvas-authority="nested-child-asset-alignment"
+              data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
+              data-controls-authority="interactive-motion-input-authority"
+              data-expected-controls-contract="H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2"
+              data-drag-authorized="route-gated"
+              data-touch-authorized="route-gated"
+              data-zoom-authorized="route-gated"
+              data-inertia-authorized="route-gated"
               data-canvas-controls-receipt-aligned="route-gated"
               data-parent-mutation-authorized="false"
               data-planet-truth-owner="parent-chain"
@@ -551,21 +611,28 @@
       <section
         id="hEarthCanvasCompositionMount"
         class="canvas-composition-mount"
-        aria-label="H-Earth canvas controls receipt alignment visible-composition mount"
+        aria-label="H-Earth nested child canvas visible-composition mount"
         data-h-earth-canvas-mount="true"
         data-canvas-composition-mount="h-earth"
         data-canvas-authority="visible-composition-only"
-        data-canvas-consumer="controls-receipt-alignment"
+        data-canvas-consumer="nested-child-asset"
+        data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
         data-surface-source="parent-material-truth"
-        data-controls-authority="active-motion-input-authority"
+        data-controls-authority="interactive-motion-input-authority"
+        data-parent-mutation-authorized="false"
       ></section>
 
       <section
         id="hEarthControlsMount"
         class="controls-mount"
-        aria-label="H-Earth controls motion input mount"
+        aria-label="H-Earth interactive controls mount"
         data-h-earth-controls-mount="true"
-        data-controls-authority="motion-input-only"
+        data-controls-authority="interactive-motion-input-only"
+        data-expected-controls-contract="H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2"
+        data-drag-authorized="route-gated"
+        data-touch-authorized="route-gated"
+        data-zoom-authorized="route-gated"
+        data-inertia-authorized="route-gated"
         data-parent-mutation-authorized="false"
       ></section>
 
@@ -573,16 +640,16 @@
         <article class="panel">
           <h2>Route Shell Owns</h2>
           <p>
-            Navigation, status target, parent-chain status mount, canvas mount, controls mount,
+            Navigation, status target, status mount, canvas mount, controls mount,
             script handoff, and receipt exposure. It does not generate planet truth.
           </p>
         </article>
 
         <article class="panel">
-          <h2>Controls Receipt Alignment</h2>
+          <h2>Interactive Controls</h2>
           <p>
-            Canvas now reports controls as active when the controls API reports active motion/input authority.
-            Parent truth remains immutable.
+            Controls own drag, touch, zoom, reset, and inertia for the visible canvas layer only.
+            They do not alter kernel, lattice, landmap, terrain, surface, or material truth.
           </p>
         </article>
 
@@ -596,22 +663,22 @@
       </section>
 
       <section class="panel" aria-labelledby="chain-title" style="margin-top:16px;">
-        <h2 id="chain-title">Controls Receipt Alignment Chain Order</h2>
+        <h2 id="chain-title">Interactive View Chain Order</h2>
         <p>
-          Canvas and controls receipts are aligned downstream from canvas visible-composition proof.
-          Parent truth remains upstream and immutable.
+          Parent truth remains upstream. Nested canvas paints visible composition. Interactive controls move
+          the visible layer downstream only.
         </p>
 
         <ol class="chain-list">
-          <li><strong>HTML route shell</strong><span class="status-pill">current file v9</span></li>
-          <li><strong>Route doorway</strong><span class="status-pill">index.js v9</span></li>
+          <li><strong>HTML route shell</strong><span class="status-pill">current file v11</span></li>
+          <li><strong>Route doorway</strong><span class="status-pill">index.js v11</span></li>
           <li><strong>Kernel parent core</strong><span class="status-pill">locked</span></li>
           <li><strong>256 lattice parent-coordinate engine</strong><span class="status-pill">locked</span></li>
           <li><strong>Landmap parent mask</strong><span class="status-pill">terrain balance v2</span></li>
           <li><strong>Terrain parent relief</strong><span class="status-pill">full aspect v2</span></li>
           <li><strong>Surface parent material truth</strong><span class="status-pill">active read</span></li>
-          <li><strong>Canvas controls receipt alignment</strong><span class="status-pill ready">aligned</span></li>
-          <li><strong>Controls motion/input only</strong><span class="status-pill ready">active</span></li>
+          <li><strong>Nested canvas child asset</strong><span class="status-pill ready">path aligned</span></li>
+          <li><strong>Interactive controls</strong><span class="status-pill ready">drag/touch/zoom/inertia</span></li>
         </ol>
       </section>
 
@@ -620,14 +687,20 @@
         class="receipt-panel"
         aria-label="H-Earth public receipts"
         data-receipt-panel="h-earth"
-        data-receipt-route="H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_HTML_TNT_v9"
-        data-previous-receipt-route="H_EARTH_G1_CONTROLS_MOTION_INPUT_HTML_TNT_v8"
+        data-receipt-route="H_EARTH_G1_INTERACTIVE_VIEW_HTML_RECEIPT_TNT_v11"
+        data-previous-receipt-route="H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_HTML_TNT_v10B"
         data-receipt-seed="H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1"
-        data-required-doorway="H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9"
-        data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas-controls"
+        data-required-doorway="H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11"
+        data-active-chain="kernel-lattice256-landmap-terrain-surface-nested-canvas-interactive-controls"
         data-expected-surface-contract="H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1"
         data-expected-canvas-contract="H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3"
-        data-expected-controls-contract="H_EARTH_G1_CONTROLS_MOTION_INPUT_AUTHORITY_TNT_v1"
+        data-expected-controls-contract="H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2"
+        data-canvas-asset-path="/assets/h-earth/h-earth/canvas.alignment.v3.js"
+        data-controls-authority="interactive-motion-input-only"
+        data-drag-authorized="route-gated"
+        data-touch-authorized="route-gated"
+        data-zoom-authorized="route-gated"
+        data-inertia-authorized="route-gated"
         data-canvas-controls-receipt-aligned="route-gated"
         data-parent-mutation-authorized="false"
         data-receipt-graphic-box="FORBIDDEN"
@@ -636,25 +709,28 @@
       >
         <code>H_EARTH_IDENTITY: separate experimental third-planet lane</code>
         <code>ROUTE_AUTHORITY: shell only</code>
-        <code>ROUTE_RECEIPT: H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_HTML_TNT_v9</code>
-        <code>REQUIRED_DOORWAY: H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9</code>
+        <code>ROUTE_RECEIPT: H_EARTH_G1_INTERACTIVE_VIEW_HTML_RECEIPT_TNT_v11</code>
+        <code>REQUIRED_DOORWAY: H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11</code>
         <code>EXPECTED_SURFACE: H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1</code>
         <code>EXPECTED_CANVAS: H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3</code>
-        <code>EXPECTED_CONTROLS: H_EARTH_G1_CONTROLS_MOTION_INPUT_AUTHORITY_TNT_v1</code>
-        <code>ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface → canvas → controls</code>
-        <code>CANVAS_CONTROLS_RECEIPT_ALIGNED: route-gated</code>
+        <code>EXPECTED_CONTROLS: H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2</code>
+        <code>CANVAS_ASSET_PATH: /assets/h-earth/h-earth/canvas.alignment.v3.js</code>
+        <code>ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface → nested-canvas-child → interactive-controls</code>
+        <code>INTERACTIVE_SCOPE: drag → touch → zoom → reset → inertia</code>
+        <code>LEGACY_CANVAS_EXECUTION: forbidden</code>
         <code>PARENT_MUTATION_AUTHORIZED: false</code>
+        <code>VISUAL_PASS_CLAIM: false</code>
         <code>STATUS_TARGET: #hEarthStatusTarget</code>
-        <code>PARENT_CHAIN_STATUS_MOUNT: #hEarthCanvasMount</code>
+        <code>STATUS_MOUNT: #hEarthCanvasMount</code>
         <code>CANVAS_COMPOSITION_MOUNT: #hEarthCanvasCompositionMount</code>
         <code>CONTROLS_MOUNT: #hEarthControlsMount</code>
-        <code>SCRIPT_HANDOFF: ./index.js?v=H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9</code>
+        <code>SCRIPT_HANDOFF: ./index.js?v=H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11</code>
         <code>EARTH_REFERENCE_SHELL: protected; no mutation authorized</code>
       </section>
     </main>
 
     <footer class="footer">
-      H-Earth G1 controls receipt alignment shell. Controls are active downstream motion/input authority.
+      H-Earth G1 interactive view shell. Canvas is a downstream child asset. Controls own motion/input only.
       Parent truth remains immutable. Visual pass claim remains false until owner visual confirmation.
     </footer>
   </div>
@@ -662,11 +738,11 @@
   <script
     id="hEarthModuleHandoff"
     type="module"
-    src="./index.js?v=H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9"
-    data-handoff="h-earth-controls-receipt-alignment-route"
-    data-required-next-contract="H_EARTH_G1_CONTROLS_RECEIPT_ALIGNMENT_ROUTE_TNT_v9"
-    data-previous-contract="H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8"
-    data-cache-key="2026-05-11-h-earth-controls-receipt-alignment-html-v9"
+    src="./index.js?v=H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11"
+    data-handoff="h-earth-interactive-view-route"
+    data-required-next-contract="H_EARTH_G1_INTERACTIVE_VIEW_ROUTE_RECEIPT_TNT_v11"
+    data-previous-contract="H_EARTH_G1_NESTED_CANVAS_ASSET_PATH_ALIGNMENT_ROUTE_TNT_v10B"
+    data-cache-key="2026-05-11-h-earth-interactive-view-html-v11"
   ></script>
 </body>
 </html>

@@ -1,53 +1,38 @@
 // /showroom/globe/index.js
-// H_EARTH_LEAP_RENDER_CONSUMPTION_TNT_v1
+// SHOWROOM_GLOBE_INSPECTION_HEAVY_H_EARTH_DISPLAY_CASE_TNT_v1
 // Full-file replacement.
-// Globe Showcase display-case renderer only.
-//
-// LEAP:
-// - Learn: the gap is renderer consumption, not parent truth or gauges.
-// - Evidence: elevation.sea-level.js and detail.js exist as terrain children.
-// - Assemble: consume those children inside the active H-Earth display renderer.
-// - Progress: render H-Earth with definitive land/state/elevation/detail influence.
+// Globe Showcase route only.
 //
 // Purpose:
-// - Keep /showroom/globe/ as showcase/bookcase/display-case layer.
-// - Keep H-Earth as default display-case selection.
-// - Preserve touch-drag inspection.
-// - Consume H-Earth terrain elevation child.
-// - Consume H-Earth terrain detail child.
-// - Improve visible terrain definition without parent mutation.
-// - Keep ground level, manor placement, and estate placement held.
+// - Keep /showroom/globe/ as the Showcase / Bookcase / Display Case layer.
+// - Make the selected H-Earth display inspection-heavy instead of preview-only.
+// - Load the actual H-Earth visual canvas asset into the display case.
+// - Allow finger drag / pointer drag / wheel zoom on the displayed H-Earth figure.
+// - Keep H-Earth full private route available as "Open Full Inspection".
+// - Keep diagnostics backstage.
+// - Do not mutate H-Earth parent truth.
+// - Do not touch gauges.
+// - Do not use image generation.
+// - Do not use GraphicBox.
 
-import {
-  createHEarthCanvasTerrainElevation,
-  sampleElevationForTerrainDetail,
-  getHEarthCanvasTerrainElevationStatus
-} from "/assets/h-earth/h-earth/canvas/terrain/elevation.sea-level.js";
-
-import {
-  createHEarthCanvasTerrainDetail,
-  sampleTerrainDetail,
-  getHEarthCanvasTerrainDetailStatus
-} from "/assets/h-earth/h-earth/canvas/terrain/detail.js";
-
-const CONTRACT = "H_EARTH_LEAP_RENDER_CONSUMPTION_TNT_v1";
-const PREVIOUS_CONTRACT = "SHOWROOM_GLOBE_DISPLAY_CASE_TOUCH_INSPECTION_ROUTE_TNT_v21";
-const HTML_CONTRACT = "SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_HTML_TNT_v20B";
-const PAIR_CONTRACT = "SHOWROOM_COVER_GLOBE_SHOWCASE_DISPLAY_CASE_PAIR_TNT_v20";
-
-const TERRAIN_ELEVATION_CONTRACT =
-  "H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_SEA_LEVEL_DETAIL_BINDING_CHILD_TNT_v2";
-const TERRAIN_DETAIL_CONTRACT =
-  "H_EARTH_G1_CANVAS_TERRAIN_DETAIL_CHILD_TNT_v1";
+const CONTRACT = "SHOWROOM_GLOBE_INSPECTION_HEAVY_H_EARTH_DISPLAY_CASE_TNT_v1";
+const PREVIOUS_CONTRACT = "H_EARTH_LEAP_RENDER_CONSUMPTION_TNT_v1";
+const HTML_EXPECTED = "SHOWROOM_GLOBE_LEAP_RENDER_CONSUMPTION_HTML_ALIGNMENT_TNT_v21A";
 
 const SHOWROOM_MODE = "showcase-bookcase-display-case";
+const DISPLAY_CASE_MODE = "inspection-heavy";
 const DEFAULT_DISPLAY = "h-earth";
 const CARD_TRANSFORM = "forbidden";
+
+const H_EARTH_CANVAS_PATH = "/assets/h-earth/h-earth/canvas.alignment.v3.js";
+const H_EARTH_CANVAS_EXPECTED = "H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3";
+const H_EARTH_VISUAL_RENEWAL_EXPECTED = "H_EARTH_ORBITAL_VISUAL_DEFINITION_CONSUMER_TNT_v1";
 
 const DEFINITIVE_LAND_STATE_REQUIRED = true;
 const LAND_STATE_CLASSIFICATION_REQUIRED = true;
 const ELEVATION_SEA_LEVEL_BOUND = true;
 const TERRAIN_DETAIL_CONSUMPTION_ACTIVE = true;
+const ORBITAL_AERIAL_DEFINITION_ACTIVE = true;
 
 const GROUND_LEVEL_READY = false;
 const MANOR_PLACEMENT_READY = false;
@@ -121,195 +106,45 @@ const WORLDS = Object.freeze([
   }
 ]);
 
-const BASE_REGIONS = Object.freeze([
-  {
-    index: 9,
-    lat: 58,
-    lon: -130,
-    rx: 0.22,
-    ry: 0.07,
-    kind: "ice",
-    material: "glacier-ice"
-  },
-  {
-    index: 38,
-    lat: 42,
-    lon: -92,
-    rx: 0.23,
-    ry: 0.10,
-    kind: "land",
-    material: "forest-ground"
-  },
-  {
-    index: 61,
-    lat: 21,
-    lon: -62,
-    rx: 0.17,
-    ry: 0.08,
-    kind: "coast",
-    material: "beach-sediment"
-  },
-  {
-    index: 86,
-    lat: 8,
-    lon: -18,
-    rx: 0.20,
-    ry: 0.11,
-    kind: "land",
-    material: "lowland-ground"
-  },
-  {
-    index: 104,
-    lat: -12,
-    lon: 28,
-    rx: 0.19,
-    ry: 0.09,
-    kind: "relief",
-    material: "highland-ground"
-  },
-  {
-    index: 121,
-    lat: -26,
-    lon: 74,
-    rx: 0.18,
-    ry: 0.08,
-    kind: "land",
-    material: "grassland-ground"
-  },
-  {
-    index: 144,
-    lat: -46,
-    lon: 118,
-    rx: 0.22,
-    ry: 0.08,
-    kind: "coast",
-    material: "coastal-shelf-ground"
-  },
-  {
-    index: 73,
-    lat: 31,
-    lon: 146,
-    rx: 0.17,
-    ry: 0.07,
-    kind: "relief",
-    material: "ridge-ground"
-  },
-  {
-    index: 218,
-    lat: -62,
-    lon: -18,
-    rx: 0.25,
-    ry: 0.06,
-    kind: "ice",
-    material: "ice-cap"
-  },
-  {
-    index: 96,
-    lat: 4,
-    lon: -154,
-    rx: 0.10,
-    ry: 0.04,
-    kind: "island",
-    material: "island-ground"
-  },
-  {
-    index: 176,
-    lat: -34,
-    lon: -132,
-    rx: 0.11,
-    ry: 0.04,
-    kind: "island",
-    material: "archipelago-ground"
-  },
-  {
-    index: 33,
-    lat: 48,
-    lon: 24,
-    rx: 0.13,
-    ry: 0.05,
-    kind: "relief",
-    material: "mountain-stone"
-  },
-  {
-    index: 118,
-    lat: -21,
-    lon: -88,
-    rx: 0.15,
-    ry: 0.06,
-    kind: "land",
-    material: "valley-ground"
-  },
-  {
-    index: 130,
-    lat: -8,
-    lon: 164,
-    rx: 0.13,
-    ry: 0.05,
-    kind: "coast",
-    material: "coastal-stone"
-  }
-]);
-
-const H_EARTH_OCEAN_SAMPLES = Object.freeze([
-  {
-    index: 0,
-    lat: 68,
-    lon: -20,
-    material: "deep-ocean",
-    kind: "ocean"
-  },
-  {
-    index: 18,
-    lat: 50,
-    lon: 64,
-    material: "open-ocean",
-    kind: "ocean"
-  },
-  {
-    index: 80,
-    lat: 12,
-    lon: -126,
-    material: "coastal-shelf-water",
-    kind: "ocean"
-  },
-  {
-    index: 147,
-    lat: -28,
-    lon: 22,
-    material: "basin-mouth-water",
-    kind: "ocean"
-  },
-  {
-    index: 242,
-    lat: -72,
-    lon: 112,
-    material: "abyssal-ocean",
-    kind: "ocean"
-  }
+const PREVIEW_REGIONS = Object.freeze([
+  { lat: 58, lon: -130, rx: 0.22, ry: 0.07, kind: "ice" },
+  { lat: 42, lon: -92, rx: 0.23, ry: 0.10, kind: "land" },
+  { lat: 21, lon: -62, rx: 0.17, ry: 0.08, kind: "coast" },
+  { lat: 8, lon: -18, rx: 0.20, ry: 0.11, kind: "land" },
+  { lat: -12, lon: 28, rx: 0.19, ry: 0.09, kind: "relief" },
+  { lat: -26, lon: 74, rx: 0.18, ry: 0.08, kind: "land" },
+  { lat: -46, lon: 118, rx: 0.22, ry: 0.08, kind: "coast" },
+  { lat: 31, lon: 146, rx: 0.17, ry: 0.07, kind: "relief" },
+  { lat: -62, lon: -18, rx: 0.25, ry: 0.06, kind: "ice" }
 ]);
 
 const state = {
   activeWorld: DEFAULT_DISPLAY,
-  yaw: -22,
-  pitch: 8,
-  zoom: 1,
-  autoSpin: true,
+  previewFrame: 0,
+  previewRaf: 0,
+  active: true,
+  reducedMotion: window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true,
+  dpr: Math.min(window.devicePixelRatio || 1, 1.5),
+
+  hEarthModule: null,
+  hEarthLoaded: false,
+  hEarthLoading: false,
+  hEarthLoadError: null,
+
   dragging: false,
+  pointerId: null,
   dragStartX: 0,
   dragStartY: 0,
   dragStartYaw: 0,
   dragStartPitch: 0,
-  pointerId: null,
-  frame: 0,
-  lastFrameAt: 0,
-  active: true,
-  reducedMotion: window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true,
-  dpr: Math.min(window.devicePixelRatio || 1, 1.5),
-  animationId: null,
-  resizeTimer: 0
+
+  hEarthYaw: -18,
+  hEarthPitch: 8,
+  hEarthZoom: 1
 };
 
 const nodes = {
+  displayWindow: null,
   displayCanvas: null,
   displayCtx: null,
   displayTitle: null,
@@ -317,31 +152,141 @@ const nodes = {
   displayMeta: null,
   inspectSelected: null,
   cards: new Map(),
-  previews: new Map()
-};
-
-const hEarthTerrainCache = {
-  elevation: null,
-  detail: null,
-  elevationStatus: null,
-  detailStatus: null,
-  regions: [],
-  oceanSamples: [],
-  samples: new Map(),
-  ready: false,
-  error: null
+  previews: new Map(),
+  hEarthShell: null,
+  hEarthMount: null
 };
 
 function byId(id) {
   return document.getElementById(id);
 }
 
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
 function worldByKey(key) {
   return WORLDS.find((world) => world.key === key) || WORLDS.find((world) => world.key === DEFAULT_DISPLAY);
 }
 
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
+function ensureInspectionStyles() {
+  if (document.getElementById("showroom-globe-inspection-heavy-style-v1")) return;
+
+  const style = document.createElement("style");
+  style.id = "showroom-globe-inspection-heavy-style-v1";
+  style.textContent = `
+    html[data-globe-showcase-inspection-heavy="true"] {
+      --inspection-glow: rgba(143, 240, 195, 0.24);
+    }
+
+    [data-showroom-h-earth-inspection-shell] {
+      width: 100%;
+      height: 100%;
+      min-height: clamp(420px, 84vw, 760px);
+      display: grid;
+      place-items: stretch;
+      position: relative;
+      overflow: hidden;
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 50% 44%, rgba(143, 240, 195, 0.10), transparent 18rem),
+        radial-gradient(circle at 52% 52%, rgba(142, 190, 255, 0.13), transparent 20rem),
+        linear-gradient(180deg, rgba(7, 13, 30, 1), rgba(2, 5, 12, 1));
+      touch-action: none;
+    }
+
+    [data-showroom-h-earth-inspection-mount] {
+      width: 100%;
+      min-height: clamp(420px, 84vw, 760px);
+      display: grid;
+      place-items: stretch;
+      touch-action: none;
+    }
+
+    [data-showroom-h-earth-inspection-mount] [data-h-earth-canvas-panel] {
+      width: 100%;
+      height: 100%;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    [data-showroom-h-earth-inspection-mount] [data-h-earth-canvas-title],
+    [data-showroom-h-earth-inspection-mount] [data-h-earth-canvas-copy],
+    [data-showroom-h-earth-inspection-mount] [data-h-earth-canvas-status] {
+      display: none !important;
+    }
+
+    [data-showroom-h-earth-inspection-mount] [data-h-earth-canvas-stage] {
+      width: 100% !important;
+      min-height: clamp(420px, 84vw, 760px) !important;
+      border: 0 !important;
+      border-radius: 22px !important;
+      background:
+        radial-gradient(circle at 50% 44%, rgba(143, 240, 195, 0.09), transparent 18rem),
+        radial-gradient(circle at 50% 50%, rgba(142, 190, 255, 0.12), transparent 20rem),
+        linear-gradient(180deg, rgba(7, 13, 30, 1), rgba(2, 5, 12, 1)) !important;
+      touch-action: none !important;
+    }
+
+    [data-showroom-h-earth-inspection-mount] [data-h-earth-canvas] {
+      width: 100% !important;
+      max-width: 1040px !important;
+      margin: auto !important;
+      display: block !important;
+      touch-action: none !important;
+    }
+
+    [data-showroom-inspection-hint] {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 7px 11px;
+      border: 1px solid rgba(143, 240, 195, 0.34);
+      border-radius: 999px;
+      color: #8ff0c3;
+      background: rgba(4, 9, 18, 0.72);
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      pointer-events: none;
+      backdrop-filter: blur(12px);
+    }
+
+    [data-showroom-inspection-error] {
+      display: grid;
+      place-items: center;
+      min-height: clamp(420px, 84vw, 760px);
+      padding: 1.5rem;
+      color: #f8ead0;
+      text-align: center;
+      background:
+        radial-gradient(circle at 50% 44%, rgba(244, 191, 96, 0.12), transparent 18rem),
+        linear-gradient(180deg, rgba(7, 13, 30, 1), rgba(2, 5, 12, 1));
+      border-radius: 22px;
+    }
+
+    [data-showroom-inspection-error] strong {
+      display: block;
+      color: #f4bf60;
+      font-size: clamp(1.2rem, 4vw, 2rem);
+      margin-bottom: 0.5rem;
+    }
+
+    [data-display-case-canvas][hidden] {
+      display: none !important;
+    }
+  `;
+
+  document.head.appendChild(style);
 }
 
 function setupCanvas(canvas, fallback = 600) {
@@ -370,8 +315,16 @@ function setupCanvas(canvas, fallback = 600) {
 }
 
 function collectNodes() {
-  nodes.displayCanvas = byId("displayCanvas");
+  ensureInspectionStyles();
+
+  nodes.displayWindow =
+    document.querySelector(".display-window") ||
+    document.querySelector("[data-display-window]") ||
+    byId("displayWindow");
+
+  nodes.displayCanvas = byId("displayCanvas") || document.querySelector("[data-display-case-canvas]");
   nodes.displayCtx = setupCanvas(nodes.displayCanvas, 720);
+
   nodes.displayTitle = byId("displayTitle");
   nodes.displayCopy = byId("displayCopy");
   nodes.displayMeta = byId("displayMeta");
@@ -396,20 +349,26 @@ function stampDocument(world) {
   const root = document.documentElement;
 
   root.dataset.routeReceipt = CONTRACT;
-  root.dataset.htmlReceipt = HTML_CONTRACT;
-  root.dataset.pairReceipt = PAIR_CONTRACT;
   root.dataset.previousRouteReceipt = PREVIOUS_CONTRACT;
+  root.dataset.htmlExpected = HTML_EXPECTED;
   root.dataset.showroomMode = SHOWROOM_MODE;
+  root.dataset.displayCaseMode = DISPLAY_CASE_MODE;
+  root.dataset.globeShowcaseInspectionHeavy = "true";
   root.dataset.activeDisplay = world.key;
   root.dataset.activeInspectionRoute = world.route;
-  root.dataset.displayCaseLayer = "touch-drag-inspection-preview";
   root.dataset.touchDragInspection = "true";
   root.dataset.cardTransform = CARD_TRANSFORM;
+
+  root.dataset.hEarthCanvasExpected = H_EARTH_CANVAS_EXPECTED;
+  root.dataset.hEarthVisualRenewalExpected = H_EARTH_VISUAL_RENEWAL_EXPECTED;
+  root.dataset.hEarthCanvasLoaded = String(state.hEarthLoaded);
+  root.dataset.hEarthCanvasLoadError = state.hEarthLoadError || "";
 
   root.dataset.definitiveLandStateRequired = String(DEFINITIVE_LAND_STATE_REQUIRED);
   root.dataset.landStateClassificationRequired = String(LAND_STATE_CLASSIFICATION_REQUIRED);
   root.dataset.elevationSeaLevelBound = String(ELEVATION_SEA_LEVEL_BOUND);
   root.dataset.terrainDetailConsumptionActive = String(TERRAIN_DETAIL_CONSUMPTION_ACTIVE);
+  root.dataset.orbitalAerialDefinitionActive = String(ORBITAL_AERIAL_DEFINITION_ACTIVE);
 
   root.dataset.groundLevelReady = String(GROUND_LEVEL_READY);
   root.dataset.manorPlacementReady = String(MANOR_PLACEMENT_READY);
@@ -417,10 +376,6 @@ function stampDocument(world) {
   root.dataset.groundLevelHoldReason = GROUND_LEVEL_HOLD_REASON;
   root.dataset.manorPlacementHoldReason = MANOR_PLACEMENT_HOLD_REASON;
   root.dataset.estatePlacementHoldReason = ESTATE_PLACEMENT_HOLD_REASON;
-
-  root.dataset.terrainElevationContract = TERRAIN_ELEVATION_CONTRACT;
-  root.dataset.terrainDetailContract = TERRAIN_DETAIL_CONTRACT;
-  root.dataset.terrainDetailCacheReady = String(hEarthTerrainCache.ready);
 
   root.dataset.parentMutationAuthorized = String(PARENT_MUTATION_AUTHORIZED);
   root.dataset.visibleDiagnostics = "false";
@@ -446,10 +401,9 @@ function updateDisplay(world) {
   if (nodes.displayMeta) {
     if (world.key === "h-earth") {
       nodes.displayMeta.replaceChildren(
-        metaBlock("Layer", "Display case"),
-        metaBlock("Selection", world.name),
-        metaBlock("Land/state gate", "Definitive orbital read required"),
-        metaBlock("Terrain detail", hEarthTerrainCache.ready ? "Child consumption active" : "Child consumption pending")
+        metaBlock("Layer", "Inspection-heavy display case"),
+        metaBlock("Touch", "Drag / rotate / zoom"),
+        metaBlock("Source", state.hEarthLoaded ? "Actual H-Earth canvas" : "Loading H-Earth canvas")
       );
     } else {
       nodes.displayMeta.replaceChildren(
@@ -469,49 +423,254 @@ function updateDisplay(world) {
   stampDocument(world);
 }
 
+function clearDisplayWindow() {
+  if (!nodes.displayWindow) return;
+
+  if (nodes.hEarthShell && nodes.hEarthShell.parentElement === nodes.displayWindow) {
+    nodes.hEarthShell.remove();
+  }
+
+  if (nodes.displayCanvas && !nodes.displayCanvas.parentElement) {
+    nodes.displayWindow.appendChild(nodes.displayCanvas);
+  }
+
+  if (nodes.displayCanvas) {
+    nodes.displayCanvas.hidden = false;
+  }
+}
+
+function ensureHEarthInspectionMount() {
+  if (!nodes.displayWindow) return null;
+
+  if (nodes.hEarthShell && nodes.hEarthMount) return nodes.hEarthMount;
+
+  if (nodes.displayCanvas) {
+    nodes.displayCanvas.hidden = true;
+  }
+
+  nodes.hEarthShell = document.createElement("section");
+  nodes.hEarthShell.setAttribute("data-showroom-h-earth-inspection-shell", "true");
+  nodes.hEarthShell.setAttribute("aria-label", "H-Earth inspection-heavy display case");
+  nodes.hEarthShell.dataset.contract = CONTRACT;
+  nodes.hEarthShell.dataset.hEarthCanvasExpected = H_EARTH_CANVAS_EXPECTED;
+  nodes.hEarthShell.dataset.hEarthVisualRenewalExpected = H_EARTH_VISUAL_RENEWAL_EXPECTED;
+  nodes.hEarthShell.dataset.parentMutationAuthorized = "false";
+  nodes.hEarthShell.dataset.generatedImage = "false";
+  nodes.hEarthShell.dataset.graphicBox = "false";
+  nodes.hEarthShell.dataset.visualPassClaim = "false";
+
+  const hint = document.createElement("div");
+  hint.setAttribute("data-showroom-inspection-hint", "true");
+  hint.textContent = "Drag · Rotate · Zoom";
+
+  nodes.hEarthMount = document.createElement("div");
+  nodes.hEarthMount.setAttribute("data-showroom-h-earth-inspection-mount", "true");
+  nodes.hEarthMount.setAttribute("data-h-earth-canvas-mount", "true");
+  nodes.hEarthMount.dataset.parentMutationAuthorized = "false";
+  nodes.hEarthMount.dataset.visibleDiagnostics = "false";
+
+  nodes.hEarthShell.appendChild(hint);
+  nodes.hEarthShell.appendChild(nodes.hEarthMount);
+
+  nodes.displayWindow.replaceChildren(nodes.hEarthShell);
+
+  return nodes.hEarthMount;
+}
+
+function showInspectionError(message) {
+  if (!nodes.displayWindow) return;
+
+  const error = document.createElement("section");
+  error.setAttribute("data-showroom-inspection-error", "true");
+  error.innerHTML = `
+    <div>
+      <strong>H-Earth inspection canvas did not load.</strong>
+      <span>${message}</span>
+    </div>
+  `;
+
+  nodes.displayWindow.replaceChildren(error);
+}
+
+async function loadHEarthInspectionCanvas() {
+  if (state.hEarthLoaded) return state.hEarthModule;
+  if (state.hEarthLoading) return state.hEarthModule;
+
+  const mount = ensureHEarthInspectionMount();
+  if (!mount) return null;
+
+  state.hEarthLoading = true;
+  state.hEarthLoadError = null;
+
+  try {
+    const module = await import(`${H_EARTH_CANVAS_PATH}?v=${encodeURIComponent(H_EARTH_VISUAL_RENEWAL_EXPECTED)}-showcase-inspection-heavy`);
+
+    state.hEarthModule = module;
+
+    if (typeof module.bootHEarthCanvas === "function") {
+      await module.bootHEarthCanvas({
+        route: "/showroom/globe/",
+        showcaseInspectionHeavy: true,
+        parentMutationAuthorized: false,
+        visibleDiagnostics: false
+      });
+    }
+
+    state.hEarthLoaded = true;
+    state.hEarthLoading = false;
+
+    const status = readHEarthStatus();
+    if (status) {
+      state.hEarthYaw = Number.isFinite(Number(status.yaw)) ? Number(status.yaw) : state.hEarthYaw;
+      state.hEarthPitch = Number.isFinite(Number(status.pitch)) ? Number(status.pitch) : state.hEarthPitch;
+      state.hEarthZoom = Number.isFinite(Number(status.zoom)) ? Number(status.zoom) : state.hEarthZoom;
+    }
+
+    wireHEarthInspectionControls();
+    updateDisplay(worldByKey("h-earth"));
+    return module;
+  } catch (error) {
+    state.hEarthLoading = false;
+    state.hEarthLoaded = false;
+    state.hEarthLoadError = error instanceof Error ? error.message : String(error);
+
+    showInspectionError(state.hEarthLoadError);
+    updateDisplay(worldByKey("h-earth"));
+    return null;
+  }
+}
+
+function readHEarthApi() {
+  return (
+    window.DGBHEarthCanvas ||
+    window.HEarthCanvas ||
+    window.H_EARTH_CANVAS ||
+    state.hEarthModule?.default ||
+    null
+  );
+}
+
+function readHEarthStatus() {
+  const api = readHEarthApi();
+
+  try {
+    if (api && typeof api.getHEarthCanvasStatus === "function") return api.getHEarthCanvasStatus();
+    if (api && typeof api.getStatus === "function") return api.getStatus();
+    if (api && typeof api.status === "function") return api.status();
+  } catch {
+    return null;
+  }
+
+  return null;
+}
+
+function setHEarthView() {
+  const api = readHEarthApi();
+
+  if (api && typeof api.setHEarthCanvasView === "function") {
+    api.setHEarthCanvasView({
+      yaw: state.hEarthYaw,
+      pitch: state.hEarthPitch,
+      zoom: state.hEarthZoom
+    });
+    return;
+  }
+
+  if (api && typeof api.setView === "function") {
+    api.setView({
+      yaw: state.hEarthYaw,
+      pitch: state.hEarthPitch,
+      zoom: state.hEarthZoom
+    });
+  }
+}
+
+function wireHEarthInspectionControls() {
+  const target =
+    nodes.hEarthMount?.querySelector("[data-h-earth-canvas-stage]") ||
+    nodes.hEarthMount?.querySelector("[data-h-earth-canvas]") ||
+    nodes.hEarthMount;
+
+  if (!target || target.dataset.showroomFingerInspectionBound === "true") return;
+
+  target.dataset.showroomFingerInspectionBound = "true";
+  target.style.touchAction = "none";
+
+  target.addEventListener("pointerdown", (event) => {
+    state.dragging = true;
+    state.pointerId = event.pointerId;
+    state.dragStartX = event.clientX;
+    state.dragStartY = event.clientY;
+    state.dragStartYaw = state.hEarthYaw;
+    state.dragStartPitch = state.hEarthPitch;
+
+    target.setPointerCapture?.(event.pointerId);
+    event.preventDefault();
+  }, { passive: false });
+
+  target.addEventListener("pointermove", (event) => {
+    if (!state.dragging || event.pointerId !== state.pointerId) return;
+
+    const dx = event.clientX - state.dragStartX;
+    const dy = event.clientY - state.dragStartY;
+
+    state.hEarthYaw = state.dragStartYaw + dx * 0.42;
+    state.hEarthPitch = clamp(state.dragStartPitch - dy * 0.30, -64, 64);
+
+    setHEarthView();
+    event.preventDefault();
+  }, { passive: false });
+
+  const finish = (event) => {
+    if (event.pointerId !== state.pointerId) return;
+
+    state.dragging = false;
+    state.pointerId = null;
+    target.releasePointerCapture?.(event.pointerId);
+    event.preventDefault();
+  };
+
+  target.addEventListener("pointerup", finish, { passive: false });
+  target.addEventListener("pointercancel", finish, { passive: false });
+
+  target.addEventListener("wheel", (event) => {
+    state.hEarthZoom = clamp(state.hEarthZoom + (event.deltaY < 0 ? 0.08 : -0.08), 0.78, 1.55);
+    setHEarthView();
+    event.preventDefault();
+  }, { passive: false });
+}
+
 function selectWorld(key) {
   const world = worldByKey(key);
   state.activeWorld = world.key;
-  state.yaw = world.key === "h-earth" ? -22 : 0;
-  state.pitch = world.key === "hearth" ? -8 : 8;
-  state.zoom = 1;
   updateDisplay(world);
-  drawNow();
-}
 
-function normalizeKind(kind) {
-  const text = String(kind || "").toLowerCase();
-  if (text === "island") return "land";
-  if (text === "relief") return "relief";
-  if (text === "coast") return "coast";
-  if (text === "ice") return "ice";
-  if (text === "ocean") return "ocean";
-  return "land";
+  if (world.key === "h-earth") {
+    loadHEarthInspectionCanvas();
+    return;
+  }
+
+  clearDisplayWindow();
+  drawDisplayPreview(world);
 }
 
 function colorFor(world, kind) {
-  const normalized = normalizeKind(kind);
-  if (normalized === "ice") return world.palette.ice;
-  if (normalized === "relief") return world.palette.relief;
-  if (normalized === "coast") return world.palette.coast;
-  if (normalized === "ocean") return world.palette.ocean;
+  if (kind === "ice") return world.palette.ice;
+  if (kind === "relief") return world.palette.relief;
+  if (kind === "coast") return world.palette.coast;
   return world.palette.land;
 }
 
-function shade(hex, light, detail = null) {
+function shade(hex, light) {
   const clean = hex.replace("#", "");
   const r = parseInt(clean.slice(0, 2), 16);
   const g = parseInt(clean.slice(2, 4), 16);
   const b = parseInt(clean.slice(4, 6), 16);
 
-  const lift = detail ? Number(detail.colorLift || 0) : 0;
-  const darken = detail ? Number(detail.colorDarken || 0) : 0;
-  const adjustedLight = clamp(light + lift - darken, 0.10, 1.45);
-
   return `rgb(${[
-    clamp(Math.round(r * adjustedLight + 10 * (1 - adjustedLight)), 0, 255),
-    clamp(Math.round(g * adjustedLight + 10 * (1 - adjustedLight)), 0, 255),
-    clamp(Math.round(b * adjustedLight + 10 * (1 - adjustedLight)), 0, 255)
+    clamp(Math.round(r * light + 10 * (1 - light)), 0, 255),
+    clamp(Math.round(g * light + 10 * (1 - light)), 0, 255),
+    clamp(Math.round(b * light + 10 * (1 - light)), 0, 255)
   ].join(",")})`;
 }
 
@@ -536,109 +695,6 @@ function project(latDeg, lonDeg, radius, cx, cy, yawDeg, pitchDeg) {
     z,
     light: clamp(0.52 + z * 0.42 + y * 0.10 - x * 0.06, 0.22, 1)
   };
-}
-
-function createDetailInput(region, elevationCell, zoom) {
-  return {
-    index: region.index,
-    row: Math.floor(region.index / 16),
-    col: region.index % 16,
-    latitude: region.lat,
-    longitude: region.lon,
-    kind: region.kind,
-    material: region.material,
-    terrainAspect: elevationCell?.terrainAspect || region.material,
-    elevation: typeof elevationCell?.elevationMeters === "number"
-      ? clamp(elevationCell.elevationMeters / 5500, -1, 1)
-      : undefined,
-    elevationRelativeToSeaLevel: typeof elevationCell?.elevationMeters === "number"
-      ? clamp(elevationCell.elevationMeters / 5500, -1, 1)
-      : undefined,
-    distanceToCoast: region.kind === "coast"
-      ? 0.04
-      : region.kind === "ocean"
-        ? 0.38
-        : region.kind === "island"
-          ? 0.12
-          : 0.46,
-    zoom,
-    seed: "h-earth-leap-render-consumption"
-  };
-}
-
-function initializeHEarthTerrainCache() {
-  if (hEarthTerrainCache.ready || hEarthTerrainCache.error) return hEarthTerrainCache;
-
-  try {
-    const elevation = createHEarthCanvasTerrainElevation();
-    const detail = createHEarthCanvasTerrainDetail({
-      detailScale: 1.25,
-      zoom: 1,
-      coastHardening: 1.25,
-      ridgeStrength: 1.18,
-      valleyStrength: 1.12,
-      oceanDepthStrength: 1.22,
-      iceSoftness: 1.08,
-      lowlandBreakup: 1.18,
-      mountainRelief: 1.2
-    });
-
-    hEarthTerrainCache.elevation = elevation;
-    hEarthTerrainCache.detail = detail;
-    hEarthTerrainCache.elevationStatus = getHEarthCanvasTerrainElevationStatus();
-    hEarthTerrainCache.detailStatus = getHEarthCanvasTerrainDetailStatus();
-
-    hEarthTerrainCache.regions = BASE_REGIONS.map((region) => {
-      const elevationCell =
-        typeof elevation.sampleElevationForTerrainDetail === "function"
-          ? elevation.sampleElevationForTerrainDetail(region.index)
-          : sampleElevationForTerrainDetail(region.index);
-
-      const detailInput = createDetailInput(region, elevationCell, 1);
-
-      const sample =
-        typeof detail.sampleTerrainDetail === "function"
-          ? detail.sampleTerrainDetail(detailInput)
-          : sampleTerrainDetail(detailInput);
-
-      hEarthTerrainCache.samples.set(region.index, sample);
-
-      return {
-        ...region,
-        elevationCell,
-        detail: sample
-      };
-    });
-
-    hEarthTerrainCache.oceanSamples = H_EARTH_OCEAN_SAMPLES.map((region) => {
-      const elevationCell =
-        typeof elevation.sampleElevationForTerrainDetail === "function"
-          ? elevation.sampleElevationForTerrainDetail(region.index)
-          : sampleElevationForTerrainDetail(region.index);
-
-      const detailInput = createDetailInput(region, elevationCell, 1);
-
-      const sample =
-        typeof detail.sampleTerrainDetail === "function"
-          ? detail.sampleTerrainDetail(detailInput)
-          : sampleTerrainDetail(detailInput);
-
-      hEarthTerrainCache.samples.set(`ocean-${region.index}`, sample);
-
-      return {
-        ...region,
-        elevationCell,
-        detail: sample
-      };
-    });
-
-    hEarthTerrainCache.ready = true;
-  } catch (error) {
-    hEarthTerrainCache.error = error instanceof Error ? error.message : String(error);
-    hEarthTerrainCache.ready = false;
-  }
-
-  return hEarthTerrainCache;
 }
 
 function clearScene(ctx, width, height, world, compact) {
@@ -669,87 +725,17 @@ function clearScene(ctx, width, height, world, compact) {
   ctx.restore();
 }
 
-function drawHEarthOceanDepth(ctx, width, height, radius, cx, cy, yaw, pitch) {
-  if (!hEarthTerrainCache.ready) return;
+function drawPreviewGlobe(ctx, canvas, world, yaw, pitch, zoom, compact = false) {
+  if (!canvas || !ctx) return;
 
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius * 0.996, 0, Math.PI * 2);
-  ctx.clip();
-
-  for (const sample of hEarthTerrainCache.oceanSamples) {
-    const point = project(sample.lat, sample.lon, radius, cx, cy, yaw, pitch);
-    if (!point) continue;
-
-    const depth = Number(sample.detail?.oceanDepthHint || 0);
-    const shadow = Number(sample.detail?.shadowAlpha || 0);
-    const size = radius * (0.16 + depth * 0.16) * (0.70 + point.z * 0.32);
-
-    ctx.beginPath();
-    ctx.globalAlpha = clamp(0.08 + depth * 0.18 + shadow * 0.08, 0.04, 0.28);
-    ctx.fillStyle = "rgba(1, 10, 28, 0.88)";
-    ctx.ellipse(point.x, point.y, size * 1.25, size * 0.64, 0.08, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  ctx.restore();
-}
-
-function drawDetailTexture(ctx, point, radius, region, compact) {
-  if (!region.detail || compact) return;
-
-  const detail = region.detail;
-  const grain = Number(detail.grain || 0);
-  const ridge = Number(detail.ridge || 0);
-  const valley = Number(detail.valley || 0);
-  const coast = Number(detail.coastHardness || 0);
-  const micro = Number(detail.microVariation?.breakup || detail.microVariation || 0);
-  const detailScale = Number(detail.detailScale || 1);
-
-  const size = radius * 0.018 * clamp(detailScale, 0.75, 1.8) * (0.65 + point.z * 0.36);
-  const count = Math.max(2, Math.min(7, Math.round(2 + grain * 3 + ridge * 2 + coast * 2)));
-
-  ctx.save();
-  ctx.globalAlpha = clamp(0.05 + grain * 0.05 + ridge * 0.06 + coast * 0.08, 0.04, 0.23);
-  ctx.strokeStyle = region.kind === "coast"
-    ? "rgba(255, 229, 157, 0.72)"
-    : region.kind === "relief"
-      ? "rgba(255, 242, 205, 0.52)"
-      : region.kind === "ice"
-        ? "rgba(232, 250, 255, 0.50)"
-        : "rgba(255, 235, 180, 0.34)";
-  ctx.lineWidth = Math.max(0.7, radius * 0.002);
-
-  for (let i = 0; i < count; i += 1) {
-    const offset = (i - count / 2) * size * 1.6;
-    const bend = Math.sin((region.index + i) * 1.17 + micro * 4) * size * 0.7;
-
-    ctx.beginPath();
-    ctx.moveTo(point.x - size * 1.8, point.y + offset * 0.42 + bend);
-    ctx.quadraticCurveTo(point.x, point.y + offset * 0.18 - bend, point.x + size * 1.8, point.y + offset * 0.42 + bend * 0.4);
-    ctx.stroke();
-  }
-
-  if (valley > 0.18) {
-    ctx.globalAlpha = clamp(0.04 + valley * 0.08, 0.03, 0.16);
-    ctx.strokeStyle = "rgba(0, 0, 0, 0.62)";
-    ctx.beginPath();
-    ctx.moveTo(point.x - size * 2.2, point.y + size * 1.2);
-    ctx.quadraticCurveTo(point.x, point.y + size * 2.2, point.x + size * 2.2, point.y + size * 0.9);
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function drawGlobe(ctx, world, width, height, yaw, pitch, zoom, compact) {
-  const isHEarth = world.key === "h-earth";
-  const terrain = isHEarth ? initializeHEarthTerrainCache() : null;
-
+  const width = canvas.width;
+  const height = canvas.height;
   const baseRadius = Math.min(width, height) * (compact ? 0.33 : 0.35);
   const radius = baseRadius * clamp(zoom, 0.78, 1.55);
   const cx = width * 0.5;
   const cy = height * (compact ? 0.5 : 0.52);
+
+  clearScene(ctx, width, height, world, compact);
 
   ctx.save();
   ctx.beginPath();
@@ -757,24 +743,19 @@ function drawGlobe(ctx, world, width, height, yaw, pitch, zoom, compact) {
   ctx.clip();
 
   const ocean = ctx.createRadialGradient(cx - radius * 0.32, cy - radius * 0.35, radius * 0.08, cx, cy, radius * 1.15);
-  ocean.addColorStop(0, shade(world.palette.ocean, isHEarth ? 1.48 : 1.4));
+  ocean.addColorStop(0, shade(world.palette.ocean, 1.4));
   ocean.addColorStop(0.36, world.palette.ocean);
-  ocean.addColorStop(0.74, shade(world.palette.ocean, isHEarth ? 0.46 : 0.52));
+  ocean.addColorStop(0.74, shade(world.palette.ocean, 0.52));
   ocean.addColorStop(1, "#020b1c");
 
   ctx.fillStyle = ocean;
   ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
   ctx.restore();
 
-  if (isHEarth) {
-    drawHEarthOceanDepth(ctx, width, height, radius, cx, cy, yaw, pitch);
-  }
-
-  const sourceRegions = isHEarth && terrain?.ready ? terrain.regions : BASE_REGIONS;
   const projected = [];
 
-  for (const item of sourceRegions) {
-    const adjustedLon = item.lon + (isHEarth ? 0 : WORLDS.indexOf(world) * 14);
+  for (const item of PREVIEW_REGIONS) {
+    const adjustedLon = item.lon + WORLDS.indexOf(world) * 14;
     const point = project(item.lat, adjustedLon, radius, cx, cy, yaw, pitch);
     if (!point) continue;
     projected.push({ item, point });
@@ -788,65 +769,30 @@ function drawGlobe(ctx, world, width, height, yaw, pitch, zoom, compact) {
   ctx.clip();
 
   for (const { item, point } of projected) {
-    const detail = isHEarth ? item.detail : null;
-
-    const ridge = Number(detail?.ridge || 0);
-    const valley = Number(detail?.valley || 0);
-    const coastHardness = Number(detail?.coastHardness || 0);
-    const iceSoftness = Number(detail?.iceSoftness || 0);
-    const opacityLift = detail ? Number(detail.highlightAlpha || 0) : 0;
-
-    const detailScale = detail ? clamp(Number(detail.detailScale || 1), 0.72, 1.72) : 1;
-    const sizeX = radius * item.rx * (0.75 + point.z * 0.35) * (isHEarth ? 0.94 + detailScale * 0.08 : 1);
-    const sizeY = radius * item.ry * (0.75 + point.z * 0.35) * (isHEarth ? 0.94 + detailScale * 0.06 : 1);
+    const sizeX = radius * item.rx * (0.75 + point.z * 0.35);
+    const sizeY = radius * item.ry * (0.75 + point.z * 0.35);
 
     ctx.beginPath();
 
     if (item.kind === "relief") {
-      const peakLift = isHEarth ? 1 + ridge * 0.22 : 1;
-      ctx.moveTo(point.x, point.y - sizeY * 1.15 * peakLift);
+      ctx.moveTo(point.x, point.y - sizeY * 1.15);
       ctx.lineTo(point.x + sizeX, point.y - sizeY * 0.18);
       ctx.lineTo(point.x + sizeX * 0.55, point.y + sizeY);
-      ctx.lineTo(point.x - sizeX * 0.62, point.y + sizeY * (0.72 + valley * 0.12));
+      ctx.lineTo(point.x - sizeX * 0.62, point.y + sizeY * 0.72);
       ctx.lineTo(point.x - sizeX, point.y - sizeY * 0.12);
       ctx.closePath();
     } else {
-      const rotation = isHEarth ? 0.12 + Number(detail?.slopeShade || 0) * 0.24 : 0.12;
-      ctx.ellipse(point.x, point.y, sizeX, sizeY, rotation, 0, Math.PI * 2);
+      ctx.ellipse(point.x, point.y, sizeX, sizeY, 0.12, 0, Math.PI * 2);
     }
 
-    const baseAlpha =
-      item.kind === "ice"
-        ? 0.90 + iceSoftness * 0.04
-        : item.kind === "coast"
-          ? 0.84 + coastHardness * 0.08
-          : item.kind === "relief"
-            ? 0.86 + ridge * 0.08
-            : 0.84 + opacityLift * 0.15;
-
-    ctx.globalAlpha = clamp(baseAlpha, 0.72, 0.97);
-    ctx.fillStyle = shade(colorFor(world, item.kind), point.light, detail);
+    ctx.globalAlpha = item.kind === "ice" ? 0.90 : item.kind === "coast" ? 0.84 : 0.82;
+    ctx.fillStyle = shade(colorFor(world, item.kind), point.light);
     ctx.fill();
 
-    ctx.globalAlpha = isHEarth
-      ? clamp(0.18 + ridge * 0.18 + coastHardness * 0.24 + valley * 0.08, 0.12, 0.48)
-      : 0.22;
-
-    ctx.strokeStyle =
-      item.kind === "coast"
-        ? "rgba(246,211,123,.72)"
-        : item.kind === "relief"
-          ? "rgba(255,238,190,.48)"
-          : item.kind === "ice"
-            ? "rgba(232,250,255,.52)"
-            : "rgba(246,234,210,.32)";
-
-    ctx.lineWidth = Math.max(0.8, radius * (isHEarth ? 0.0026 + ridge * 0.0018 + coastHardness * 0.002 : 0.0026));
+    ctx.globalAlpha = 0.22;
+    ctx.strokeStyle = item.kind === "coast" ? "rgba(246,211,123,.72)" : "rgba(246,234,210,.32)";
+    ctx.lineWidth = Math.max(0.8, radius * 0.0026);
     ctx.stroke();
-
-    if (isHEarth) {
-      drawDetailTexture(ctx, point, radius, item, compact);
-    }
   }
 
   ctx.restore();
@@ -878,105 +824,47 @@ function drawGlobe(ctx, world, width, height, yaw, pitch, zoom, compact) {
 
     ctx.fillStyle = "rgba(243,227,189,.74)";
     ctx.font = `${Math.max(13, width * 0.016)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
-    ctx.fillText(
-      isHEarth
-        ? "Terrain children consumed · drag to inspect"
-        : "Drag with finger to inspect",
-      width / 2,
-      height * 0.114
-    );
+    ctx.fillText("Open full inspection for the private route", width / 2, height * 0.114);
     ctx.restore();
   }
 }
 
-function drawWorld(canvas, ctx, world, yaw, pitch, zoom, compact = false) {
-  if (!canvas || !ctx) return;
+function drawDisplayPreview(world) {
+  if (!nodes.displayCanvas) return;
 
-  clearScene(ctx, canvas.width, canvas.height, world, compact);
-  drawGlobe(ctx, world, canvas.width, canvas.height, yaw, pitch, zoom, compact);
+  nodes.displayCtx = setupCanvas(nodes.displayCanvas, 720);
+  drawPreviewGlobe(nodes.displayCtx, nodes.displayCanvas, world, 22, 8, 1, false);
 }
 
-function drawNow() {
-  const active = worldByKey(state.activeWorld);
-  drawWorld(nodes.displayCanvas, nodes.displayCtx, active, state.yaw, state.pitch, state.zoom, false);
-
+function drawPreviewCards() {
   for (const world of WORLDS) {
     const preview = nodes.previews.get(world.key);
     if (!preview) continue;
-    const previewYaw = state.frame * 0.24 + WORLDS.indexOf(world) * 32;
-    drawWorld(preview.canvas, preview.ctx, world, previewYaw, 10, 1, true);
+
+    const previewYaw = state.previewFrame * 0.24 + WORLDS.indexOf(world) * 32;
+    drawPreviewGlobe(preview.ctx, preview.canvas, world, previewYaw, 10, 1, true);
   }
 }
 
-function drawFrame(timestamp = 0) {
+function previewLoop() {
   if (!state.active) return;
 
-  if (!state.reducedMotion && timestamp - state.lastFrameAt < 42) {
-    state.animationId = window.requestAnimationFrame(drawFrame);
-    return;
-  }
-
-  state.lastFrameAt = timestamp;
-  state.frame += 1;
-
-  if (state.autoSpin && !state.dragging) {
-    state.yaw += 0.18;
-  }
-
-  drawNow();
+  state.previewFrame += 1;
+  drawPreviewCards();
 
   if (!state.reducedMotion) {
-    state.animationId = window.requestAnimationFrame(drawFrame);
+    state.previewRaf = window.requestAnimationFrame(previewLoop);
   }
-}
-
-function onPointerDown(event) {
-  if (!nodes.displayCanvas) return;
-
-  state.dragging = true;
-  state.autoSpin = false;
-  state.pointerId = event.pointerId;
-  state.dragStartX = event.clientX;
-  state.dragStartY = event.clientY;
-  state.dragStartYaw = state.yaw;
-  state.dragStartPitch = state.pitch;
-
-  nodes.displayCanvas.setPointerCapture?.(event.pointerId);
-  event.preventDefault();
-}
-
-function onPointerMove(event) {
-  if (!state.dragging || event.pointerId !== state.pointerId) return;
-
-  const dx = event.clientX - state.dragStartX;
-  const dy = event.clientY - state.dragStartY;
-
-  state.yaw = state.dragStartYaw + dx * 0.45;
-  state.pitch = clamp(state.dragStartPitch - dy * 0.32, -62, 62);
-
-  drawNow();
-  event.preventDefault();
-}
-
-function onPointerUp(event) {
-  if (event.pointerId !== state.pointerId) return;
-
-  state.dragging = false;
-  state.pointerId = null;
-  nodes.displayCanvas?.releasePointerCapture?.(event.pointerId);
-  event.preventDefault();
-}
-
-function onWheel(event) {
-  state.zoom = clamp(state.zoom + (event.deltaY < 0 ? 0.08 : -0.08), 0.78, 1.55);
-  state.autoSpin = false;
-  drawNow();
-  event.preventDefault();
 }
 
 function wireEvents() {
   for (const [key, card] of nodes.cards.entries()) {
+    if (card.dataset.showroomCardBound === "true") continue;
+
+    card.dataset.showroomCardBound = "true";
+
     card.addEventListener("click", () => selectWorld(key));
+
     card.addEventListener("keydown", (event) => {
       if (event.key !== "Enter" && event.key !== " ") return;
       event.preventDefault();
@@ -984,85 +872,61 @@ function wireEvents() {
     });
   }
 
-  if (nodes.displayCanvas) {
-    nodes.displayCanvas.addEventListener("pointerdown", onPointerDown, { passive: false });
-    nodes.displayCanvas.addEventListener("pointermove", onPointerMove, { passive: false });
-    nodes.displayCanvas.addEventListener("pointerup", onPointerUp, { passive: false });
-    nodes.displayCanvas.addEventListener("pointercancel", onPointerUp, { passive: false });
-    nodes.displayCanvas.addEventListener("wheel", onWheel, { passive: false });
-  }
-
   document.addEventListener("visibilitychange", () => {
     state.active = document.visibilityState !== "hidden";
 
-    if (state.active && !state.animationId) {
-      state.animationId = window.requestAnimationFrame(drawFrame);
+    if (state.active && !state.previewRaf) {
+      state.previewRaf = window.requestAnimationFrame(previewLoop);
     }
 
-    if (!state.active && state.animationId) {
-      window.cancelAnimationFrame(state.animationId);
-      state.animationId = null;
+    if (!state.active && state.previewRaf) {
+      window.cancelAnimationFrame(state.previewRaf);
+      state.previewRaf = 0;
     }
   }, { passive: true });
 
   window.addEventListener("resize", () => {
-    window.clearTimeout(state.resizeTimer);
-    state.resizeTimer = window.setTimeout(() => {
-      collectNodes();
-      updateDisplay(worldByKey(state.activeWorld));
-      drawNow();
-    }, 160);
+    collectNodes();
+    drawPreviewCards();
+
+    if (state.activeWorld !== "h-earth") {
+      drawDisplayPreview(worldByKey(state.activeWorld));
+    }
   }, { passive: true });
-}
-
-function exposeApi() {
-  const api = {
-    contract: CONTRACT,
-    receipt: CONTRACT,
-    htmlContract: HTML_CONTRACT,
-    pairContract: PAIR_CONTRACT,
-    previousContract: PREVIOUS_CONTRACT,
-    mode: SHOWROOM_MODE,
-    selectWorld,
-    status: getShowroomGlobeShowcaseStatus,
-    getStatus: getShowroomGlobeShowcaseStatus,
-    getShowroomGlobeShowcaseStatus
-  };
-
-  window.DGBShowroomGlobeShowcase = api;
-  window.ShowroomGlobeShowcase = api;
-  window.SHOWROOM_GLOBE_SHOWCASE_RECEIPT = CONTRACT;
 }
 
 function getShowroomGlobeShowcaseStatus() {
   const world = worldByKey(state.activeWorld);
+  const hEarthStatus = readHEarthStatus();
 
   return {
     contract: CONTRACT,
     receipt: CONTRACT,
-    htmlContract: HTML_CONTRACT,
-    pairContract: PAIR_CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
+    htmlExpected: HTML_EXPECTED,
     showroomMode: SHOWROOM_MODE,
+    displayCaseMode: DISPLAY_CASE_MODE,
     activeDisplay: world.key,
     activeDisplayName: world.name,
     activeInspectionRoute: world.route,
-    displayCaseLayer: "touch-drag-inspection-preview",
     touchDragInspection: true,
-    yaw: state.yaw,
-    pitch: state.pitch,
-    zoom: state.zoom,
+    hEarthCanvasPath: H_EARTH_CANVAS_PATH,
+    hEarthCanvasExpected: H_EARTH_CANVAS_EXPECTED,
+    hEarthVisualRenewalExpected: H_EARTH_VISUAL_RENEWAL_EXPECTED,
+    hEarthLoaded: state.hEarthLoaded,
+    hEarthLoading: state.hEarthLoading,
+    hEarthLoadError: state.hEarthLoadError,
+    hEarthStatus,
+
+    yaw: state.hEarthYaw,
+    pitch: state.hEarthPitch,
+    zoom: state.hEarthZoom,
 
     definitiveLandStateRequired: DEFINITIVE_LAND_STATE_REQUIRED,
     landStateClassificationRequired: LAND_STATE_CLASSIFICATION_REQUIRED,
     elevationSeaLevelBound: ELEVATION_SEA_LEVEL_BOUND,
     terrainDetailConsumptionActive: TERRAIN_DETAIL_CONSUMPTION_ACTIVE,
-    terrainElevationContract: TERRAIN_ELEVATION_CONTRACT,
-    terrainDetailContract: TERRAIN_DETAIL_CONTRACT,
-    terrainDetailCacheReady: hEarthTerrainCache.ready,
-    terrainDetailCacheError: hEarthTerrainCache.error,
-    terrainElevationStatus: hEarthTerrainCache.elevationStatus,
-    terrainDetailStatus: hEarthTerrainCache.detailStatus,
+    orbitalAerialDefinitionActive: ORBITAL_AERIAL_DEFINITION_ACTIVE,
 
     groundLevelReady: GROUND_LEVEL_READY,
     manorPlacementReady: MANOR_PLACEMENT_READY,
@@ -1080,17 +944,37 @@ function getShowroomGlobeShowcaseStatus() {
   };
 }
 
+function exposeApi() {
+  const api = {
+    contract: CONTRACT,
+    receipt: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
+    mode: SHOWROOM_MODE,
+    displayCaseMode: DISPLAY_CASE_MODE,
+    selectWorld,
+    status: getShowroomGlobeShowcaseStatus,
+    getStatus: getShowroomGlobeShowcaseStatus,
+    getShowroomGlobeShowcaseStatus
+  };
+
+  window.DGBShowroomGlobeShowcase = api;
+  window.ShowroomGlobeShowcase = api;
+  window.SHOWROOM_GLOBE_SHOWCASE_RECEIPT = CONTRACT;
+}
+
 function boot() {
-  initializeHEarthTerrainCache();
   collectNodes();
   exposeApi();
   wireEvents();
+  drawPreviewCards();
   selectWorld(DEFAULT_DISPLAY);
 
-  state.animationId = window.requestAnimationFrame(drawFrame);
+  if (state.previewRaf) window.cancelAnimationFrame(state.previewRaf);
 
   if (state.reducedMotion) {
-    drawFrame(performance.now());
+    previewLoop();
+  } else {
+    state.previewRaf = window.requestAnimationFrame(previewLoop);
   }
 }
 
@@ -1104,24 +988,35 @@ if (document.readyState === "loading") {
 
 export {
   CONTRACT,
-  HTML_CONTRACT,
-  PAIR_CONTRACT,
   PREVIOUS_CONTRACT,
-  TERRAIN_ELEVATION_CONTRACT,
-  TERRAIN_DETAIL_CONTRACT,
+  HTML_EXPECTED,
   SHOWROOM_MODE,
+  DISPLAY_CASE_MODE,
   DEFAULT_DISPLAY,
-  WORLDS,
+  H_EARTH_CANVAS_PATH,
+  H_EARTH_CANVAS_EXPECTED,
+  H_EARTH_VISUAL_RENEWAL_EXPECTED,
   DEFINITIVE_LAND_STATE_REQUIRED,
   LAND_STATE_CLASSIFICATION_REQUIRED,
   ELEVATION_SEA_LEVEL_BOUND,
   TERRAIN_DETAIL_CONSUMPTION_ACTIVE,
+  ORBITAL_AERIAL_DEFINITION_ACTIVE,
   GROUND_LEVEL_READY,
   MANOR_PLACEMENT_READY,
   ESTATE_PLACEMENT_READY,
   PARENT_MUTATION_AUTHORIZED,
-  GROUND_LEVEL_HOLD_REASON,
-  MANOR_PLACEMENT_HOLD_REASON,
-  ESTATE_PLACEMENT_HOLD_REASON,
+  selectWorld,
+  getShowroomGlobeShowcaseStatus
+};
+
+export default {
+  contract: CONTRACT,
+  receipt: CONTRACT,
+  previousContract: PREVIOUS_CONTRACT,
+  mode: SHOWROOM_MODE,
+  displayCaseMode: DISPLAY_CASE_MODE,
+  selectWorld,
+  status: getShowroomGlobeShowcaseStatus,
+  getStatus: getShowroomGlobeShowcaseStatus,
   getShowroomGlobeShowcaseStatus
 };

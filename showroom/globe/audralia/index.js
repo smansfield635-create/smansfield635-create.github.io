@@ -1,20 +1,39 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_G1_BEACH_TO_LAND_RISE_ROUTE_TNT_v5
+// AUDRALIA_GRATITUDE_PLAINS_DESERTS_MARSHES_ROUTE_TNT_v10
 // Full-file replacement.
 // Route orchestration only.
-// Loads: backstory → tectonics → topology → elevation → beaches → canvas.
-// Converts sea-level strips into beach/coast authority and lets raised land attach behind them.
-// Does not turn Audralia into Hearth.
-// Does not generate images. Does not use GraphicBox. Does not claim visual pass.
+// Loads: backstory → summits → tectonics → topology → elevation → beaches → landrise → mountains → groundcover → canvas.
+// Adds plains, deserts, marshes, and more attached landmass.
+// Compatibility markers:
+// AUDRALIA_GRATITUDE_MOUNTAIN_RANGE_COMMUNITY_ROUTE_TNT_v9
+// AUDRALIA_GRATITUDE_PRIMARY_SUMMIT_ROUTE_TNT_v8
+// AUDRALIA_G1_TERRAIN_MASS_ATTACHMENT_ROUTE_TNT_v7
+// AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_ROUTE_TNT_v6
+// AUDRALIA_G1_BEACH_TO_LAND_RISE_ROUTE_TNT_v5
+// No trees. No bushes. No forest canopy.
+// No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G1_BEACH_TO_LAND_RISE_ROUTE_TNT_v5";
-  const RECEIPT = "AUDRALIA_G1_BEACH_TO_LAND_RISE_ROUTE_RECEIPT_v5";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G1_TERRAIN_ELEVATION_ROUTE_TNT_v4";
-  const VERSION = "2026-05-10.audralia-g1-beach-to-land-rise-route-v5";
-  const KEY = "audralia-g1-beach-to-land-rise-v5";
+  const CONTRACT = "AUDRALIA_GRATITUDE_PLAINS_DESERTS_MARSHES_ROUTE_TNT_v10";
+  const RECEIPT = "AUDRALIA_GRATITUDE_PLAINS_DESERTS_MARSHES_ROUTE_RECEIPT_v10";
+  const PREVIOUS_CONTRACT = "AUDRALIA_GRATITUDE_MOUNTAIN_RANGE_COMMUNITY_ROUTE_TNT_v9";
+  const VERSION = "2026-05-10.audralia-gratitude-plains-deserts-marshes-route-v10";
+  const KEY = "audralia-gratitude-plains-deserts-marshes-v10";
+
+  const files = [
+    ["backstory", "/assets/audralia/audralia.backstory.js", () => window.AUDRALIA_BACKSTORY && typeof window.AUDRALIA_BACKSTORY.sampleIdentity === "function"],
+    ["summits", "/assets/audralia/audralia.summits.js", () => window.AUDRALIA_SUMMITS && typeof window.AUDRALIA_SUMMITS.sampleSummit === "function"],
+    ["tectonics", "/assets/audralia/audralia.tectonics.js", () => window.AUDRALIA_TECTONICS && typeof window.AUDRALIA_TECTONICS.sampleTectonics === "function"],
+    ["topology", "/assets/audralia/audralia.topology.js", () => window.AUDRALIA_TOPOLOGY && typeof window.AUDRALIA_TOPOLOGY.sampleTopology === "function"],
+    ["elevation", "/assets/audralia/audralia.elevation.js", () => window.AUDRALIA_ELEVATION && typeof window.AUDRALIA_ELEVATION.sampleElevation === "function"],
+    ["beaches", "/assets/audralia/audralia.beaches.js", () => window.AUDRALIA_BEACHES && typeof window.AUDRALIA_BEACHES.sampleBeach === "function"],
+    ["landrise", "/assets/audralia/audralia.landrise.js", () => window.AUDRALIA_LANDRISE && typeof window.AUDRALIA_LANDRISE.sampleLandRise === "function"],
+    ["mountains", "/assets/audralia/audralia.mountains.js", () => window.AUDRALIA_MOUNTAINS && typeof window.AUDRALIA_MOUNTAINS.sampleMountains === "function"],
+    ["groundcover", "/assets/audralia/audralia.groundcover.js", () => window.AUDRALIA_GROUNDCOVER && typeof window.AUDRALIA_GROUNDCOVER.sampleGroundcover === "function"],
+    ["canvas", "/assets/audralia/audralia.canvas.js", () => window.AUDRALIA_CANVAS && typeof window.AUDRALIA_CANVAS.mount === "function"]
+  ];
 
   const state = {
     loaded: [],
@@ -22,12 +41,6 @@
     mounted: false,
     canvasFound: false,
     controlsBound: false,
-    backstoryLoaded: false,
-    tectonicsLoaded: false,
-    topologyLoaded: false,
-    elevationLoaded: false,
-    beachesLoaded: false,
-    canvasLoaded: false,
     frames: 0,
     fallback: false,
     error: ""
@@ -36,79 +49,99 @@
   window.__AUDRALIA_ACTIVE_ROUTE_CONTRACT__ = CONTRACT;
   window.__AUDRALIA_ACTIVE_ROUTE_FILE__ = "/showroom/globe/audralia/index.js";
 
+  function setDataset() {
+    document.documentElement.dataset.audraliaRouteContract = CONTRACT;
+    document.documentElement.dataset.audraliaRouteReceipt = RECEIPT;
+    document.documentElement.dataset.audraliaRoutePreviousContract = PREVIOUS_CONTRACT;
+    document.documentElement.dataset.audraliaRouteVersion = VERSION;
+    document.documentElement.dataset.audraliaActiveRouteFile = "/showroom/globe/audralia/index.js";
+    document.documentElement.dataset.audraliaGeneration = "1";
+    document.documentElement.dataset.audraliaParentChainAligned = "true";
+    document.documentElement.dataset.audraliaG1Baseline = "gratitude-plains-deserts-marshes-more-landmass-stabilizing";
+    document.documentElement.dataset.audraliaG2Calibration = "held";
+
+    for (const [role] of files) {
+      document.documentElement.dataset[`audralia${role[0].toUpperCase()}${role.slice(1)}Loaded`] = String(state.loaded.includes(role));
+    }
+
+    document.documentElement.dataset.audraliaPrimarySummit = "Gratitude";
+    document.documentElement.dataset.audraliaNineWithinNine = "true";
+    document.documentElement.dataset.audraliaBookSummitLaw = "true";
+    document.documentElement.dataset.audraliaHighMountains = "true";
+    document.documentElement.dataset.audraliaMountainRanges = "true";
+    document.documentElement.dataset.audraliaMountainCommunities = "true";
+    document.documentElement.dataset.audraliaPlains = "true";
+    document.documentElement.dataset.audraliaDeserts = "true";
+    document.documentElement.dataset.audraliaMarshes = "true";
+    document.documentElement.dataset.audraliaMoreLandmass = "true";
+    document.documentElement.dataset.audraliaGenericSummitPlaceholder = "false";
+    document.documentElement.dataset.audraliaMounted = String(state.mounted);
+    document.documentElement.dataset.audraliaCanvasFound = String(state.canvasFound);
+    document.documentElement.dataset.audraliaControlsBound = String(state.controlsBound);
+    document.documentElement.dataset.audraliaBeachRemainsSeaLevel = "true";
+    document.documentElement.dataset.audraliaRaisedTerrainBehindBeach = "true";
+    document.documentElement.dataset.audraliaTerrainMassAttached = "true";
+    document.documentElement.dataset.audraliaTerrainAboveSeaLevel = "true";
+    document.documentElement.dataset.audraliaOceanDrivenHomeWorld = "true";
+    document.documentElement.dataset.audraliaNotAustralia = "true";
+    document.documentElement.dataset.audraliaNotHearth = "true";
+    document.documentElement.dataset.audraliaEarthClone = "false";
+    document.documentElement.dataset.audraliaTrees = "false";
+    document.documentElement.dataset.audraliaBushes = "false";
+    document.documentElement.dataset.audraliaForestCanopy = "false";
+    document.documentElement.dataset.generatedImage = "false";
+    document.documentElement.dataset.graphicBox = "false";
+    document.documentElement.dataset.visualPassClaimed = "false";
+  }
+
   function status(value) {
+    setDataset();
+
     const node =
       document.getElementById("audralia-route-status") ||
       document.querySelector("[data-audralia-route-status]") ||
       document.getElementById("route-status") ||
       document.querySelector("[data-route-status]");
 
-    document.documentElement.dataset.audraliaRouteContract = CONTRACT;
-    document.documentElement.dataset.audraliaRouteReceipt = RECEIPT;
-    document.documentElement.dataset.audraliaRoutePreviousContract = PREVIOUS_CONTRACT;
-    document.documentElement.dataset.audraliaRouteVersion = VERSION;
-    document.documentElement.dataset.audraliaActiveRouteFile = "/showroom/globe/audralia/index.js";
-    document.documentElement.dataset.audraliaParentChainAligned = "true";
-    document.documentElement.dataset.audraliaGeneration = "1";
-    document.documentElement.dataset.audraliaG1Baseline = "beach-to-land-rise-stabilizing";
-    document.documentElement.dataset.audraliaG2Calibration = "held";
-    document.documentElement.dataset.audraliaBackstoryLoaded = String(state.backstoryLoaded);
-    document.documentElement.dataset.audraliaTectonicsLoaded = String(state.tectonicsLoaded);
-    document.documentElement.dataset.audraliaTopologyLoaded = String(state.topologyLoaded);
-    document.documentElement.dataset.audraliaElevationLoaded = String(state.elevationLoaded);
-    document.documentElement.dataset.audraliaBeachesLoaded = String(state.beachesLoaded);
-    document.documentElement.dataset.audraliaCanvasLoaded = String(state.canvasLoaded);
-    document.documentElement.dataset.audraliaMounted = String(state.mounted);
-    document.documentElement.dataset.audraliaCanvasFound = String(state.canvasFound);
-    document.documentElement.dataset.audraliaControlsBound = String(state.controlsBound);
-    document.documentElement.dataset.audraliaOceanDrivenHomeWorld = "true";
-    document.documentElement.dataset.audraliaNotAustralia = "true";
-    document.documentElement.dataset.audraliaNotHearth = "true";
-    document.documentElement.dataset.audraliaEarthClone = "false";
-    document.documentElement.dataset.audraliaSeaLevelStripsBecomeBeach = "true";
-    document.documentElement.dataset.audraliaRaisedLandBehindBeach = "true";
-    document.documentElement.dataset.audraliaLandAttachActive = "true";
-    document.documentElement.dataset.audraliaNoTrees = "true";
-    document.documentElement.dataset.audraliaNoBushes = "true";
-    document.documentElement.dataset.audraliaNoForestCanopy = "true";
-    document.documentElement.dataset.generatedImage = "false";
-    document.documentElement.dataset.graphicBox = "false";
-    document.documentElement.dataset.visualPassClaimed = "false";
-
     if (node) {
       node.textContent = [
-        "Audralia G1 beach-to-land-rise route.",
+        "Audralia Gratitude plains/deserts/marshes route.",
         `Status ${value}`,
         `Route ${CONTRACT}`,
         `Receipt ${RECEIPT}`,
         `Previous ${PREVIOUS_CONTRACT}`,
         `Version ${VERSION}`,
-        "Parent order backstory → tectonics → topology → elevation → beaches → canvas",
+        "Compatibility AUDRALIA_GRATITUDE_MOUNTAIN_RANGE_COMMUNITY_ROUTE_TNT_v9",
+        "Compatibility AUDRALIA_GRATITUDE_PRIMARY_SUMMIT_ROUTE_TNT_v8",
+        "Compatibility AUDRALIA_G1_TERRAIN_MASS_ATTACHMENT_ROUTE_TNT_v7",
+        "Compatibility AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_ROUTE_TNT_v6",
+        "Compatibility AUDRALIA_G1_BEACH_TO_LAND_RISE_ROUTE_TNT_v5",
+        "Parent order backstory → summits → tectonics → topology → elevation → beaches → landrise → mountains → groundcover → canvas",
+        "Primary Summit Gratitude",
+        "Internal Summits Gratitude, Generosity, Dependability, Accountability, Forgiveness, Humility, Self-Control, Patience, Purity",
+        "High mountains true",
+        "Mountain ranges true",
+        "Mountain communities true",
+        "Plains true",
+        "Deserts true",
+        "Marshes true",
+        "More landmass true",
+        "Nine within nine true",
+        "Book summit law true",
         `Loaded ${state.loaded.join(",") || "none"}`,
         `Failed ${state.failed.join(",") || "none"}`,
-        `Backstory loaded ${state.backstoryLoaded}`,
-        `Tectonics loaded ${state.tectonicsLoaded}`,
-        `Topology loaded ${state.topologyLoaded}`,
-        `Elevation loaded ${state.elevationLoaded}`,
-        `Beaches loaded ${state.beachesLoaded}`,
-        `Canvas loaded ${state.canvasLoaded}`,
         `Mounted ${state.mounted}`,
         `Canvas found ${state.canvasFound}`,
         `Controls bound ${state.controlsBound}`,
         `Fallback ${state.fallback}`,
         `Frames ${state.frames}`,
-        "Sea-level strips become beach true",
-        "Raised land behind beach true",
-        "Land attach active true",
-        "Generation 1 beach-to-land-rise stabilizing true",
-        "Generation 2 calibration held true",
-        "Audralia identity clean ancient ocean-driven home-world true",
-        "Audralia not Australia true",
-        "Earth clone false",
-        "Hearth identity false",
-        "No trees true",
-        "No bushes true",
-        "No forest canopy true",
+        "Beach remains sea level true",
+        "Raised terrain behind beach true",
+        "Terrain mass attached true",
+        "Terrain above sea level true",
+        "Trees false",
+        "Bushes false",
+        "Forest canopy false",
         "Generated image false",
         "GraphicBox false",
         "Visual pass claimed false",
@@ -125,15 +158,12 @@
       document.querySelector("[data-canvas-mount='audralia']");
 
     if (!mount) {
-      const main =
-        document.getElementById("audralia-main") ||
-        document.querySelector("main") ||
-        document.body;
+      const main = document.getElementById("audralia-main") || document.querySelector("main") || document.body;
 
       mount = document.createElement("section");
       mount.id = "audraliaCanvasMount";
       mount.dataset.audraliaCanvasMount = "true";
-      mount.setAttribute("aria-label", "Audralia Generation 1 beach-to-land-rise canvas mount");
+      mount.setAttribute("aria-label", "Audralia Gratitude plains deserts marshes canvas mount");
       mount.style.position = "relative";
       mount.style.width = "min(520px, 100%)";
       mount.style.aspectRatio = "1 / 1";
@@ -146,24 +176,24 @@
       mount.style.touchAction = "none";
       mount.style.userSelect = "none";
 
-      const firstReceipt =
-        document.getElementById("audralia-route-status") ||
-        document.querySelector("[data-audralia-route-status]") ||
-        document.querySelector("pre");
-
-      if (firstReceipt && firstReceipt.parentElement) {
-        firstReceipt.parentElement.insertBefore(mount, firstReceipt);
-      } else {
-        main.appendChild(mount);
-      }
+      main.appendChild(mount);
     }
 
-    mount.dataset.audraliaParentChainAligned = "true";
     mount.dataset.audraliaRouteContract = CONTRACT;
-    mount.dataset.audraliaGeneration = "1";
-    mount.dataset.audraliaSeaLevelStripsBecomeBeach = "true";
-    mount.dataset.audraliaRaisedLandBehindBeach = "true";
-    mount.dataset.audraliaLandAttachActive = "true";
+    mount.dataset.audraliaPrimarySummit = "Gratitude";
+    mount.dataset.audraliaNineWithinNine = "true";
+    mount.dataset.audraliaBookSummitLaw = "true";
+    mount.dataset.audraliaHighMountains = "true";
+    mount.dataset.audraliaMountainRanges = "true";
+    mount.dataset.audraliaMountainCommunities = "true";
+    mount.dataset.audraliaPlains = "true";
+    mount.dataset.audraliaDeserts = "true";
+    mount.dataset.audraliaMarshes = "true";
+    mount.dataset.audraliaMoreLandmass = "true";
+    mount.dataset.audraliaBeachRemainsSeaLevel = "true";
+    mount.dataset.audraliaRaisedTerrainBehindBeach = "true";
+    mount.dataset.audraliaTerrainMassAttached = "true";
+    mount.dataset.audraliaTerrainAboveSeaLevel = "true";
     mount.style.touchAction = "none";
     mount.style.userSelect = "none";
 
@@ -172,8 +202,7 @@
 
   function loadScript(role, path, validate) {
     return new Promise((resolve) => {
-      const existing = document.querySelector(`script[data-audralia-file-role="${role}"]`);
-      if (existing) existing.remove();
+      document.querySelectorAll(`script[data-audralia-file-role="${role}"]`).forEach((node) => node.remove());
 
       const script = document.createElement("script");
       script.src = `${path}?v=${KEY}-${Date.now()}`;
@@ -186,16 +215,13 @@
         let ok = false;
 
         try {
-          ok = validate();
+          ok = Boolean(validate());
         } catch (_) {
           ok = false;
         }
 
-        if (ok) {
-          state.loaded.push(role);
-        } else {
-          state.failed.push(`${role}:invalid`);
-        }
+        if (ok) state.loaded.push(role);
+        else state.failed.push(`${role}:invalid`);
 
         status(`checked-${role}`);
         resolve(ok);
@@ -212,20 +238,29 @@
   }
 
   function bootCanvas(mount) {
-    if (!window.AUDRALIA_CANVAS || typeof window.AUDRALIA_CANVAS.mount !== "function") {
-      return false;
-    }
+    if (!window.AUDRALIA_CANVAS || typeof window.AUDRALIA_CANVAS.mount !== "function") return false;
 
     const api = window.AUDRALIA_CANVAS.mount(mount, {
       routeContract: CONTRACT,
       routeReceipt: RECEIPT,
       generation: 1,
-      baseline: "beach-to-land-rise-stabilizing",
-      landReadabilityLift: 0.12,
-      elevationActive: true,
+      baseline: "gratitude-plains-deserts-marshes-more-landmass-stabilizing",
+      primarySummit: "Gratitude",
+      nineWithinNine: true,
+      bookSummitLaw: true,
+      summitsActive: true,
+      mountainsActive: true,
+      groundcoverActive: true,
+      plainsActive: true,
+      desertsActive: true,
+      marshesActive: true,
+      moreLandmassActive: true,
       beachesActive: true,
-      seaLevelStripsBecomeBeach: true,
-      raisedLandBehindBeach: true,
+      landriseActive: true,
+      beachRemainsSeaLevel: true,
+      raisedTerrainBehindBeach: true,
+      terrainMassAttached: true,
+      terrainAboveSeaLevel: true,
       onStatus: (value, info = {}) => {
         state.frames = info.frames || state.frames;
         state.mounted = Boolean(info.mounted);
@@ -242,7 +277,6 @@
     state.fallback = false;
 
     status("ready");
-
     return state.mounted;
   }
 
@@ -260,7 +294,7 @@
       fallback.style.color = "rgba(238,246,255,.78)";
       fallback.style.textAlign = "center";
       fallback.style.fontWeight = "800";
-      fallback.textContent = "Audralia G1 beach-to-land-rise loaded, but canvas authority failed. Visible fallback protected.";
+      fallback.textContent = "Audralia plains, deserts, marshes, and more landmass route loaded, but canvas authority failed. Visible fallback protected.";
       mount.appendChild(fallback);
     }
 
@@ -273,47 +307,14 @@
 
   async function boot() {
     const mount = ensureMount();
-
     status("booting");
 
-    state.backstoryLoaded = await loadScript(
-      "backstory",
-      "/assets/audralia/audralia.backstory.js",
-      () => Boolean(window.AUDRALIA_BACKSTORY && typeof window.AUDRALIA_BACKSTORY.sampleIdentity === "function")
-    );
-
-    state.tectonicsLoaded = await loadScript(
-      "tectonics",
-      "/assets/audralia/audralia.tectonics.js",
-      () => Boolean(window.AUDRALIA_TECTONICS && typeof window.AUDRALIA_TECTONICS.sampleTectonics === "function")
-    );
-
-    state.topologyLoaded = await loadScript(
-      "topology",
-      "/assets/audralia/audralia.topology.js",
-      () => Boolean(window.AUDRALIA_TOPOLOGY && typeof window.AUDRALIA_TOPOLOGY.sampleTopology === "function")
-    );
-
-    state.elevationLoaded = await loadScript(
-      "elevation",
-      "/assets/audralia/audralia.elevation.js",
-      () => Boolean(window.AUDRALIA_ELEVATION && typeof window.AUDRALIA_ELEVATION.sampleElevation === "function")
-    );
-
-    state.beachesLoaded = await loadScript(
-      "beaches",
-      "/assets/audralia/audralia.beaches.js",
-      () => Boolean(window.AUDRALIA_BEACHES && typeof window.AUDRALIA_BEACHES.sampleBeach === "function")
-    );
-
-    state.canvasLoaded = await loadScript(
-      "canvas",
-      "/assets/audralia/audralia.canvas.js",
-      () => Boolean(window.AUDRALIA_CANVAS && typeof window.AUDRALIA_CANVAS.mount === "function")
-    );
+    for (const [role, path, validate] of files) {
+      await loadScript(role, path, validate);
+    }
 
     try {
-      if (state.canvasLoaded && bootCanvas(mount)) return;
+      if (state.loaded.includes("canvas") && bootCanvas(mount)) return;
     } catch (error) {
       state.failed.push("canvas:mount-error");
       state.error = error?.message || String(error);

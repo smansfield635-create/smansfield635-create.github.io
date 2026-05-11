@@ -9,11 +9,11 @@
   data-planet-meaning="Hybrid Earth"
   data-generation="G1"
   data-seed-packet="H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1"
-  data-contract="H_EARTH_G1_TERRAIN_ONLY_ROUTE_SHELL_TNT_v2"
-  data-route-doorway-required="H_EARTH_G1_TERRAIN_ONLY_ROUTE_DOORWAY_TNT_v2"
-  data-previous-contract="H_EARTH_G1_ROUTE_SHELL_TNT_v1"
+  data-contract="H_EARTH_G1_TERRAIN_BALANCE_ROUTE_SHELL_TNT_v3"
+  data-route-doorway-required="H_EARTH_G1_TERRAIN_BALANCE_ROUTE_DOORWAY_TNT_v3"
+  data-previous-contract="H_EARTH_G1_TERRAIN_ONLY_ROUTE_SHELL_TNT_v2"
   data-authority="route-shell-only"
-  data-parent-core-chain="terrain-only"
+  data-parent-core-chain="terrain-balance-full-aspect-disposition"
   data-active-terrain-chain="kernel-lattice256-landmap-terrain"
   data-held-chain="surface-canvas-controls"
   data-earth-reference-shell="protected-reference-only"
@@ -31,7 +31,7 @@
   <title>Diamond Gate Bridge · H-Earth</title>
   <meta
     name="description"
-    content="H-Earth is the Hybrid Earth experimental third-planet lane. This route shell exposes navigation, terrain-chain status, mount, handoff, and receipts while terrain truth is loaded from kernel, lattice256, landmap, and terrain parent files."
+    content="H-Earth is the Hybrid Earth experimental third-planet lane. This route shell exposes navigation, terrain-balance status, mount, handoff, and receipts while terrain truth is loaded from kernel, lattice256, landmap, and terrain parent files."
   >
 
   <style>
@@ -304,12 +304,12 @@
       overflow: hidden;
     }
 
-    #hEarthCanvasMount[data-route-mount="awaiting-terrain-chain"]::before {
-      content: "Awaiting H-Earth terrain-only parent chain";
+    #hEarthCanvasMount[data-route-mount="awaiting-terrain-balance-chain"]::before {
+      content: "Awaiting H-Earth terrain-balance parent chain";
       position: absolute;
       left: 50%;
       top: 50%;
-      width: min(82%, 340px);
+      width: min(82%, 360px);
       transform: translate(-50%, -50%);
       padding: 13px 16px;
       border: 1px solid rgba(244, 191, 96, 0.28);
@@ -514,11 +514,11 @@
     <main id="h-earth-main" tabindex="-1">
       <section class="hero" aria-labelledby="h-earth-title">
         <div class="hero-copy">
-          <p class="eyebrow">H-Earth · G1 · Terrain-Only Parent Chain</p>
+          <p class="eyebrow">H-Earth · G1 · Terrain Balance + Full Aspect Disposition</p>
           <h1 id="h-earth-title">H-Earth</h1>
           <p class="lede">
             H-Earth means Hybrid Earth. This is a separate experimental third-planet lane.
-            The route shell exposes navigation, terrain-chain status, mount, handoff, and receipts only.
+            The route shell exposes navigation, terrain-balance status, mount, handoff, and receipts only.
             Terrain truth must come from kernel, lattice256, landmap, and terrain parent files.
           </p>
 
@@ -534,30 +534,30 @@
             class="receipt-panel"
             aria-label="H-Earth route status target"
             data-status-target="h-earth-route"
-            data-current-status="terrain-route-shell-loaded-awaiting-doorway"
+            data-current-status="terrain-balance-route-shell-loaded-awaiting-doorway"
             data-route-shell="ready"
-            data-route-doorway="awaiting-terrain-only-index-js"
-            data-parent-core-chain="terrain-only"
+            data-route-doorway="awaiting-terrain-balance-index-js"
+            data-parent-core-chain="terrain-balance-full-aspect-disposition"
             data-active-chain="kernel-lattice256-landmap-terrain"
             data-held-chain="surface-canvas-controls"
           >
-            <code>ROUTE_RECEIPT: H_EARTH_G1_TERRAIN_ONLY_ROUTE_SHELL_TNT_v2</code>
-            <code>PREVIOUS_ROUTE_RECEIPT: H_EARTH_G1_ROUTE_SHELL_TNT_v1</code>
+            <code>ROUTE_RECEIPT: H_EARTH_G1_TERRAIN_BALANCE_ROUTE_SHELL_TNT_v3</code>
+            <code>PREVIOUS_ROUTE_RECEIPT: H_EARTH_G1_TERRAIN_ONLY_ROUTE_SHELL_TNT_v2</code>
             <code>SEED_PACKET: H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1</code>
-            <code>REQUIRED_DOORWAY: H_EARTH_G1_TERRAIN_ONLY_ROUTE_DOORWAY_TNT_v2</code>
-            <code>STATUS: terrain route shell loaded; awaiting terrain-only doorway module</code>
+            <code>REQUIRED_DOORWAY: H_EARTH_G1_TERRAIN_BALANCE_ROUTE_DOORWAY_TNT_v3</code>
+            <code>STATUS: terrain-balance route shell loaded; awaiting v3 doorway module</code>
           </section>
         </div>
 
-        <section class="terrain-stage" aria-label="H-Earth terrain status stage">
-          <div class="stage-label">Terrain Status Mount</div>
+        <section class="terrain-stage" aria-label="H-Earth terrain balance status stage">
+          <div class="stage-label">Terrain Balance Status Mount</div>
           <div class="mount-shell">
             <div
               id="hEarthCanvasMount"
               role="img"
-              aria-label="H-Earth terrain status mount awaiting terrain-only parent-chain authority"
-              data-mount="h-earth-terrain-status"
-              data-route-mount="awaiting-terrain-chain"
+              aria-label="H-Earth terrain balance status mount awaiting terrain-balance parent-chain authority"
+              data-mount="h-earth-terrain-balance-status"
+              data-route-mount="awaiting-terrain-balance-chain"
               data-canvas-authority="held-outside-terrain-only-scope"
               data-controls-authority="held-outside-terrain-only-scope"
               data-planet-truth-owner="terrain-parent-chain"
@@ -570,16 +570,16 @@
         <article class="panel">
           <h2>Route Shell Owns</h2>
           <p>
-            Navigation, status target, terrain status mount, script handoff, and receipt exposure.
+            Navigation, status target, terrain balance status mount, script handoff, and receipt exposure.
             It does not generate planet truth.
           </p>
         </article>
 
         <article class="panel">
-          <h2>Terrain-Only Scope</h2>
+          <h2>Terrain Balance Scope</h2>
           <p>
-            Active chain is kernel, lattice256, landmap, and terrain. Surface, canvas, and controls
-            remain held outside this pass.
+            Active chain is kernel, lattice256, landmap, and terrain. Landmap and terrain must prove balance
+            and full aspect disposition before surface, canvas, or controls activate.
           </p>
         </article>
 
@@ -593,19 +593,19 @@
       </section>
 
       <section class="panel" aria-labelledby="chain-title" style="margin-top:16px;">
-        <h2 id="chain-title">Terrain-Only Parent Chain Order</h2>
+        <h2 id="chain-title">Terrain-Balance Parent Chain Order</h2>
         <p>
           The route displays this order only. Each downstream module must keep its own job
           and may not create sidestream truth.
         </p>
 
         <ol class="chain-list">
-          <li><strong>HTML route shell</strong><span class="status-pill">current file</span></li>
-          <li><strong>Route doorway</strong><span class="status-pill">index.js v2</span></li>
-          <li><strong>Kernel parent core</strong><span class="status-pill">active terrain chain</span></li>
-          <li><strong>256 lattice parent-coordinate engine</strong><span class="status-pill">active terrain chain</span></li>
-          <li><strong>Landmap parent mask</strong><span class="status-pill">active terrain chain</span></li>
-          <li><strong>Terrain parent relief</strong><span class="status-pill">active terrain chain</span></li>
+          <li><strong>HTML route shell</strong><span class="status-pill">current file v3</span></li>
+          <li><strong>Route doorway</strong><span class="status-pill">index.js v3</span></li>
+          <li><strong>Kernel parent core</strong><span class="status-pill">locked</span></li>
+          <li><strong>256 lattice parent-coordinate engine</strong><span class="status-pill">locked</span></li>
+          <li><strong>Landmap parent mask</strong><span class="status-pill">terrain balance v2</span></li>
+          <li><strong>Terrain parent relief</strong><span class="status-pill">full aspect v2</span></li>
           <li><strong>Surface parent material truth</strong><span class="status-pill held">held</span></li>
           <li><strong>Canvas visible composition</strong><span class="status-pill held">held</span></li>
           <li><strong>Controls motion/input only</strong><span class="status-pill held">held</span></li>
@@ -617,31 +617,35 @@
         class="receipt-panel"
         aria-label="H-Earth public receipts"
         data-receipt-panel="h-earth"
-        data-receipt-route="H_EARTH_G1_TERRAIN_ONLY_ROUTE_SHELL_TNT_v2"
-        data-previous-receipt-route="H_EARTH_G1_ROUTE_SHELL_TNT_v1"
+        data-receipt-route="H_EARTH_G1_TERRAIN_BALANCE_ROUTE_SHELL_TNT_v3"
+        data-previous-receipt-route="H_EARTH_G1_TERRAIN_ONLY_ROUTE_SHELL_TNT_v2"
         data-receipt-seed="H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1"
-        data-required-doorway="H_EARTH_G1_TERRAIN_ONLY_ROUTE_DOORWAY_TNT_v2"
+        data-required-doorway="H_EARTH_G1_TERRAIN_BALANCE_ROUTE_DOORWAY_TNT_v3"
         data-active-chain="kernel-lattice256-landmap-terrain"
         data-held-chain="surface-canvas-controls"
+        data-expected-landmap-contract="H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_LANDMAP_TNT_v2"
+        data-expected-terrain-contract="H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_TERRAIN_TNT_v2"
         data-receipt-graphic-box="FORBIDDEN"
         data-receipt-image-generation="FORBIDDEN"
         data-receipt-visual-pass-claim="FALSE"
       >
         <code>H_EARTH_IDENTITY: separate experimental third-planet lane</code>
         <code>ROUTE_AUTHORITY: shell only</code>
-        <code>ROUTE_RECEIPT: H_EARTH_G1_TERRAIN_ONLY_ROUTE_SHELL_TNT_v2</code>
-        <code>REQUIRED_DOORWAY: H_EARTH_G1_TERRAIN_ONLY_ROUTE_DOORWAY_TNT_v2</code>
+        <code>ROUTE_RECEIPT: H_EARTH_G1_TERRAIN_BALANCE_ROUTE_SHELL_TNT_v3</code>
+        <code>REQUIRED_DOORWAY: H_EARTH_G1_TERRAIN_BALANCE_ROUTE_DOORWAY_TNT_v3</code>
+        <code>EXPECTED_LANDMAP: H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_LANDMAP_TNT_v2</code>
+        <code>EXPECTED_TERRAIN: H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_TERRAIN_TNT_v2</code>
         <code>ACTIVE_TERRAIN_CHAIN: kernel → lattice256 → landmap → terrain</code>
         <code>HELD_CHAIN: surface → canvas → controls</code>
         <code>STATUS_TARGET: #hEarthStatusTarget</code>
-        <code>TERRAIN_STATUS_MOUNT: #hEarthCanvasMount</code>
-        <code>SCRIPT_HANDOFF: ./index.js?v=H_EARTH_G1_TERRAIN_ONLY_ROUTE_DOORWAY_TNT_v2</code>
+        <code>TERRAIN_BALANCE_STATUS_MOUNT: #hEarthCanvasMount</code>
+        <code>SCRIPT_HANDOFF: ./index.js?v=H_EARTH_G1_TERRAIN_BALANCE_ROUTE_DOORWAY_TNT_v3</code>
         <code>EARTH_REFERENCE_SHELL: protected; no mutation authorized</code>
       </section>
     </main>
 
     <footer class="footer">
-      H-Earth G1 terrain-only route shell. Parent files establish authority.
+      H-Earth G1 terrain-balance route shell. Parent files establish authority.
       Surface, canvas, and controls remain held until separately authorized.
     </footer>
   </div>
@@ -649,11 +653,11 @@
   <script
     id="hEarthModuleHandoff"
     type="module"
-    src="./index.js?v=H_EARTH_G1_TERRAIN_ONLY_ROUTE_DOORWAY_TNT_v2"
-    data-handoff="h-earth-terrain-only-route-doorway"
-    data-required-next-contract="H_EARTH_G1_TERRAIN_ONLY_ROUTE_DOORWAY_TNT_v2"
-    data-previous-contract="H_EARTH_G1_ROUTE_DOORWAY_TNT_v1"
-    data-cache-key="2026-05-11-h-earth-terrain-only-route-shell-v2"
+    src="./index.js?v=H_EARTH_G1_TERRAIN_BALANCE_ROUTE_DOORWAY_TNT_v3"
+    data-handoff="h-earth-terrain-balance-route-doorway"
+    data-required-next-contract="H_EARTH_G1_TERRAIN_BALANCE_ROUTE_DOORWAY_TNT_v3"
+    data-previous-contract="H_EARTH_G1_TERRAIN_ONLY_ROUTE_DOORWAY_TNT_v2"
+    data-cache-key="2026-05-11-h-earth-terrain-balance-route-shell-v3"
   ></script>
 </body>
 </html>

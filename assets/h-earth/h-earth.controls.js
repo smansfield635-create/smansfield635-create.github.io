@@ -1,871 +1,489 @@
 // /assets/h-earth/h-earth.controls.js
-// H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C
+// H_EARTH_G1_CONTROLS_MOTION_INPUT_TNT_v1
 // Full-file replacement.
-// Controls authority only.
+// Controls motion/input authority only.
 //
 // Purpose:
-// - Break recursive status loop between canvas and controls.
-// - Preserve route-accepted controls contract.
-// - Send yaw, pitch, and zoom to canvas view API when available.
-// - Never transform the canvas/card element.
-// - Keep parent truth immutable.
+// - Bind drag, rotation, zoom, and inertia to the already-mounted H-Earth canvas.
+// - Consume canvas authority without redefining planet truth.
+// - Request canvas repaint through canvasAuthority.paintFrame only.
+// - Preserve kernel, lattice, landmap, terrain, surface, and canvas truth boundaries.
 //
 // Owns:
-// - pointer input
-// - touch input
-// - wheel input
-// - zoom buttons
-// - reset button
-// - inertial globe-view motion
-// - yaw/pitch/zoom control state
-// - controls receipt
+// - motion
+// - drag
+// - rotation request
+// - zoom presentation
+// - inertia
+// - input handling
+// - interaction receipts
 //
 // Does not own:
-// - kernel truth
-// - lattice truth
-// - landmap truth
-// - terrain truth
-// - surface truth
-// - canvas pixel truth
-// - material assignment
-// - canvas/card CSS transform
-// - parent mutation
-// - Earth mutation
-// - Hearth mutation
-// - Audralia mutation
+// - planet truth
+// - land/water classification
+// - terrain
+// - surface color
+// - canvas paint sovereignty
+// - route boot
+// - weather
+// - atmosphere
+// - life systems
 
-const H_EARTH_CONTROLS_CONTRACT = "H_EARTH_G1_INTERACTIVE_CONTROLS_REFINEMENT_TNT_v2";
-const H_EARTH_CONTROLS_RENEWAL_CONTRACT = "H_EARTH_G1_GLOBE_DIRECT_CONTROLS_RECURSION_BREAK_TNT_v12C";
-const H_EARTH_CONTROLS_PREVIOUS_CONTRACT = "H_EARTH_G1_GLOBE_DIRECT_CONTROLS_TNT_v12B";
-const H_EARTH_EXPECTED_CANVAS = "H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3";
-const H_EARTH_EXPECTED_CANVAS_RENEWAL = "H_EARTH_G1_GLOBE_DIRECT_CANVAS_VIEW_BRIDGE_TNT_v12A";
+const CONTRACT = "H_EARTH_G1_CONTROLS_MOTION_INPUT_TNT_v1";
+const REQUIRED_PARENT = "canvas";
+const REQUIRED_CANVAS_CONTRACT = "H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_TNT_v1";
+const SEED_PACKET = "H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1";
+const VERSION = "2026-05-11.h-earth.g1.controls-motion-input-v1";
 
-const CONTROL_LIMITS = Object.freeze({
-  minZoom: 0.72,
-  maxZoom: 2.2,
-  zoomStep: 0.12,
-  pitchMin: -72,
-  pitchMax: 72,
-  yawVelocityLimit: 8,
-  pitchVelocityLimit: 5,
-  dragSensitivity: 0.32,
-  inertiaDecay: 0.91,
-  inertiaStopThreshold: 0.015
-});
-
-const state = {
-  contract: H_EARTH_CONTROLS_CONTRACT,
-  renewalContract: H_EARTH_CONTROLS_RENEWAL_CONTRACT,
-  previousContract: H_EARTH_CONTROLS_PREVIOUS_CONTRACT,
-
-  status: "active-motion-input-authority",
-  interactiveStatus: "direct-globe-interaction-active",
-
-  controlsAuthorized: true,
-  motionAuthorized: true,
-  inputAuthorized: true,
-  dragAuthorized: true,
-  touchAuthorized: true,
-  zoomAuthorized: true,
-  inertiaAuthorized: true,
-
-  parentMutationAuthorized: false,
-  cardTransformAuthorized: false,
-  globeDirectInteractionAuthorized: true,
-  visualPassClaim: false,
-
-  canvasReceipt: "pending",
-  canvasRenewalReceipt: "pending",
-  canvasRenderStatus: "pending",
-  canvasInteractionMode: "pending",
-  canvasProofPassed: false,
-  canvasApiReady: false,
-  canvasStatusSource: "route-context-or-window-only",
-
-  yaw: 0,
-  pitch: 0,
+const DEFAULTS = Object.freeze({
+  rotationRadians: -0.3141592654,
+  tiltRadians: -0.1396263402,
   zoom: 1,
-  velocityYaw: 0,
-  velocityPitch: 0,
-
-  isDragging: false,
-  activePointerId: null,
-  lastX: 0,
-  lastY: 0,
-
-  rafId: null,
-  bootedAt: null,
-  updatedAt: null,
-  errors: []
-};
-
-let controlsApi = null;
-let lastRouteCanvasStatus = null;
-let bootPromise = null;
+  minZoom: 0.86,
+  maxZoom: 1.42,
+  dragSensitivity: 0.0068,
+  tiltSensitivity: 0.0034,
+  wheelSensitivity: 0.0012,
+  inertiaDecay: 0.925,
+  minVelocity: 0.00008
+});
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function round(value, places = 2) {
-  const factor = Math.pow(10, places);
+function round(value, places = 6) {
+  const factor = 10 ** places;
   return Math.round(value * factor) / factor;
 }
 
-function safeError(error) {
-  if (!error) return "unknown error";
-  if (error instanceof Error) return `${error.name}: ${error.message}`;
-  return String(error);
+function freezeDeep(value) {
+  if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;
+  Object.freeze(value);
+  for (const key of Object.keys(value)) freezeDeep(value[key]);
+  return value;
 }
 
-function recordError(label, error) {
-  state.errors.push({
-    label,
-    message: safeError(error),
-    at: new Date().toISOString()
+function safeNumber(value, fallback) {
+  return Number.isFinite(Number(value)) ? Number(value) : fallback;
+}
+
+function validateCanvas(canvasAuthority) {
+  const failures = [];
+
+  if (!canvasAuthority) failures.push("canvas-authority-missing");
+  if (canvasAuthority && canvasAuthority.contract !== REQUIRED_CANVAS_CONTRACT) {
+    failures.push(`canvas-contract-mismatch:${canvasAuthority.contract || "missing"}`);
+  }
+  if (canvasAuthority && typeof canvasAuthority.paintFrame !== "function") failures.push("canvas-paintFrame-missing");
+  if (canvasAuthority && typeof canvasAuthority.getCanvasReceipt !== "function") failures.push("canvas-receipt-reader-missing");
+
+  const receipt = canvasAuthority?.getCanvasReceipt?.() || canvasAuthority?.receipts?.canvas || null;
+
+  if (!receipt || receipt.contract !== REQUIRED_CANVAS_CONTRACT) {
+    failures.push(`canvas-receipt-mismatch:${receipt?.contract || "missing"}`);
+  }
+
+  if (receipt && receipt.controlsAuthorized !== false) {
+    failures.push("canvas-receipt-incorrectly-authorizes-controls");
+  }
+
+  return freezeDeep({
+    passed: failures.length === 0,
+    failures,
+    parentContract: canvasAuthority?.contract || "missing",
+    parentReceipt: receipt || null
   });
 }
 
-function canvasApi() {
-  return window.DGBHEarthCanvas || window.HEarthCanvas || window.H_EARTH_CANVAS || null;
+function getDocument(context) {
+  return context.document || globalThis.document || null;
 }
 
-function findControlsMount() {
-  return (
-    document.querySelector("[data-h-earth-controls-mount]") ||
-    document.getElementById("hEarthControlsMount") ||
-    document.getElementById("h-earth-main") ||
-    document.querySelector("main") ||
-    document.body
-  );
+function getWindow(context) {
+  return context.window || globalThis.window || null;
 }
 
-function findCanvasElement() {
-  return (
-    document.querySelector("[data-h-earth-canvas]") ||
-    document.querySelector("#hEarthCanvasCompositionMount canvas") ||
-    document.querySelector("[data-h-earth-canvas-mount] canvas") ||
-    document.querySelector("canvas[aria-label*='H-Earth']") ||
-    document.querySelector("canvas")
-  );
+function resolveElement(target, context) {
+  if (!target) return null;
+  if (typeof target !== "string") return target;
+
+  const doc = getDocument(context);
+  return doc ? doc.querySelector(target) : null;
 }
 
-function findCanvasStage(canvas) {
-  if (!canvas) return null;
-
-  return (
-    canvas.closest("[data-h-earth-canvas-stage]") ||
-    canvas.closest("[data-h-earth-canvas-panel]") ||
-    canvas.parentElement
-  );
+function findCanvasElement(canvasAuthority, mount) {
+  return canvasAuthority?.state?.canvas || mount?.querySelector?.("canvas") || null;
 }
 
-function readCanvasStatus(context = {}) {
-  const provided = context.canvasStatus || lastRouteCanvasStatus || null;
-  const api = canvasApi();
+function createReceipt(state, canvasValidation) {
+  return freezeDeep({
+    contract: CONTRACT,
+    seedPacket: SEED_PACKET,
+    requiredParent: REQUIRED_PARENT,
+    requiredCanvasContract: REQUIRED_CANVAS_CONTRACT,
+    parentCanvasContract: canvasValidation.parentContract,
+    controlsBound: state.bound,
+    controlsActive: state.active,
+    dragEnabled: state.dragEnabled,
+    zoomEnabled: state.zoomEnabled,
+    inertiaEnabled: state.inertiaEnabled,
+    rotationRadians: round(state.rotationRadians),
+    tiltRadians: round(state.tiltRadians),
+    zoom: round(state.zoom),
+    canvasPaintSovereignty: false,
+    planetTruthOwned: false,
+    surfaceTruthOwned: false,
+    terrainTruthOwned: false,
+    visualPassClaimed: false,
+    generatedImage: false,
+    graphicBox: false,
+    groundModeAuthorized: false,
+    estateModeAuthorized: false
+  });
+}
 
-  /*
-    Recursion break:
-    Do not call api.getHEarthCanvasStatus(), api.getStatus(), or api.status()
-    from controls status code. Some canvas files read controls status while
-    reporting their own status. Calling back into canvas here creates:
-    controls -> canvas -> controls -> canvas -> RangeError.
-  */
+export function createHEarthControls(context = {}) {
+  const canvasAuthority = context.canvasAuthority || context.canvas || null;
+  const canvasValidation = validateCanvas(canvasAuthority);
 
-  const status = provided || null;
+  const state = {
+    bound: false,
+    active: false,
+    disposed: false,
+    dragging: false,
+    dragEnabled: true,
+    zoomEnabled: true,
+    inertiaEnabled: true,
+    pointerId: null,
+    lastX: 0,
+    lastY: 0,
+    rotationRadians: safeNumber(context.rotationRadians, DEFAULTS.rotationRadians),
+    tiltRadians: safeNumber(context.tiltRadians, DEFAULTS.tiltRadians),
+    zoom: safeNumber(context.zoom, DEFAULTS.zoom),
+    velocityX: 0,
+    velocityY: 0,
+    frameId: 0,
+    mount: null,
+    canvasElement: null,
+    receipt: null,
+    errors: []
+  };
 
-  state.canvasReceipt =
-    status?.contract ||
-    status?.receipt ||
-    window.H_EARTH_CANVAS_RECEIPT ||
-    document.documentElement.dataset.hEarthCanvasReceipt ||
-    "pending";
+  function applyZoom() {
+    if (!state.canvasElement) return;
 
-  state.canvasRenewalReceipt =
-    status?.renewalContract ||
-    status?.renewalReceipt ||
-    window.H_EARTH_CANVAS_RENEWAL_RECEIPT ||
-    document.documentElement.dataset.hEarthCanvasRenewalContract ||
-    "pending";
+    state.canvasElement.style.transformOrigin = "50% 50%";
+    state.canvasElement.style.transform = `scale(${state.zoom})`;
+    state.canvasElement.dataset.hEarthZoom = String(round(state.zoom));
+  }
 
-  state.canvasRenderStatus =
-    status?.renderStatus ||
-    document.documentElement.dataset.hEarthCanvasRenderStatus ||
-    "pending";
+  function paint(reason = "controls-motion") {
+    if (!canvasValidation.passed) {
+      state.errors.push(`paint-blocked:${canvasValidation.failures.join("|")}`);
+      return freezeDeep({
+        painted: false,
+        reason: "canvas-parent-not-ready",
+        failures: canvasValidation.failures
+      });
+    }
 
-  state.canvasInteractionMode =
-    status?.interactionMode ||
-    document.documentElement.dataset.hEarthCanvasViewMode ||
-    "pending";
+    const result = canvasAuthority.paintFrame({
+      rotationRadians: state.rotationRadians,
+      tiltRadians: state.tiltRadians,
+      reason
+    });
 
-  state.canvasApiReady =
-    Boolean(api) &&
-    (typeof api.setHEarthCanvasView === "function" || typeof api.setView === "function");
+    applyZoom();
 
-  state.canvasProofPassed =
-    state.canvasReceipt === H_EARTH_EXPECTED_CANVAS &&
-    (
-      status?.parentSurfaceReady === true ||
-      document.documentElement.dataset.hEarthCanvasParentSurfaceReady === "true"
-    ) &&
-    (
-      status?.downstreamCanvasMayReadSurface === true ||
-      document.documentElement.dataset.hEarthCanvasMayReadSurface === "true"
-    ) &&
-    (
-      Number(status?.cellsResolved) === 256 ||
-      document.documentElement.dataset.hEarthCanvasCellsResolved === "256"
-    ) &&
-    (
-      Number(status?.cellsPainted) > 0 ||
-      Number(document.documentElement.dataset.hEarthCanvasCellsPainted || 0) > 0
-    ) &&
-    (
-      Number(status?.nonBlankPixelRatio) > 0 ||
-      Number(document.documentElement.dataset.hEarthCanvasNonBlankPixelRatio || 0) > 0
+    state.receipt = createReceipt(state, canvasValidation);
+
+    return freezeDeep({
+      painted: Boolean(result?.painted),
+      reason,
+      canvasResult: result,
+      controlsReceipt: state.receipt
+    });
+  }
+
+  function tick() {
+    state.frameId = 0;
+
+    if (state.disposed || !state.active) return;
+
+    const moving =
+      Math.abs(state.velocityX) > DEFAULTS.minVelocity ||
+      Math.abs(state.velocityY) > DEFAULTS.minVelocity;
+
+    if (!state.dragging && moving) {
+      state.rotationRadians += state.velocityX;
+      state.tiltRadians = clamp(state.tiltRadians + state.velocityY, -0.78, 0.78);
+
+      state.velocityX *= DEFAULTS.inertiaDecay;
+      state.velocityY *= DEFAULTS.inertiaDecay;
+
+      paint("controls-inertia");
+      requestNextFrame();
+    }
+  }
+
+  function requestNextFrame() {
+    if (state.frameId || state.disposed) return;
+
+    const win = getWindow(context);
+    const raf = win?.requestAnimationFrame || globalThis.requestAnimationFrame;
+
+    if (typeof raf === "function") {
+      state.frameId = raf(tick);
+    }
+  }
+
+  function cancelFrame() {
+    if (!state.frameId) return;
+
+    const win = getWindow(context);
+    const caf = win?.cancelAnimationFrame || globalThis.cancelAnimationFrame;
+
+    if (typeof caf === "function") caf(state.frameId);
+    state.frameId = 0;
+  }
+
+  function onPointerDown(event) {
+    if (!state.dragEnabled || state.disposed) return;
+
+    state.dragging = true;
+    state.pointerId = event.pointerId;
+    state.lastX = event.clientX;
+    state.lastY = event.clientY;
+    state.velocityX = 0;
+    state.velocityY = 0;
+
+    state.canvasElement?.setPointerCapture?.(event.pointerId);
+    state.canvasElement.style.cursor = "grabbing";
+
+    event.preventDefault();
+  }
+
+  function onPointerMove(event) {
+    if (!state.dragging || state.pointerId !== event.pointerId || state.disposed) return;
+
+    const dx = event.clientX - state.lastX;
+    const dy = event.clientY - state.lastY;
+
+    state.lastX = event.clientX;
+    state.lastY = event.clientY;
+
+    const vx = dx * DEFAULTS.dragSensitivity;
+    const vy = -dy * DEFAULTS.tiltSensitivity;
+
+    state.rotationRadians += vx;
+    state.tiltRadians = clamp(state.tiltRadians + vy, -0.78, 0.78);
+    state.velocityX = vx;
+    state.velocityY = vy;
+
+    paint("controls-drag");
+    event.preventDefault();
+  }
+
+  function endDrag(event) {
+    if (!state.dragging || state.pointerId !== event.pointerId) return;
+
+    state.dragging = false;
+    state.pointerId = null;
+
+    if (state.canvasElement) state.canvasElement.style.cursor = "grab";
+
+    requestNextFrame();
+    event.preventDefault();
+  }
+
+  function onWheel(event) {
+    if (!state.zoomEnabled || state.disposed) return;
+
+    const nextZoom = clamp(
+      state.zoom - event.deltaY * DEFAULTS.wheelSensitivity,
+      DEFAULTS.minZoom,
+      DEFAULTS.maxZoom
     );
 
+    if (Math.abs(nextZoom - state.zoom) < 0.0001) return;
+
+    state.zoom = nextZoom;
+    applyZoom();
+    state.receipt = createReceipt(state, canvasValidation);
+
+    event.preventDefault();
+  }
+
+  function bindTo(target, options = {}) {
+    const mount = resolveElement(target, { ...context, ...options });
+
+    if (!mount) {
+      state.errors.push("mount-missing");
+      state.receipt = createReceipt(state, canvasValidation);
+      return freezeDeep({
+        bound: false,
+        reason: "mount-missing",
+        receipt: state.receipt
+      });
+    }
+
+    if (!canvasValidation.passed) {
+      state.receipt = createReceipt(state, canvasValidation);
+      return freezeDeep({
+        bound: false,
+        reason: "canvas-parent-not-ready",
+        failures: canvasValidation.failures,
+        receipt: state.receipt
+      });
+    }
+
+    const canvasElement = findCanvasElement(canvasAuthority, mount);
+
+    if (!canvasElement) {
+      state.errors.push("canvas-element-missing");
+      state.receipt = createReceipt(state, canvasValidation);
+      return freezeDeep({
+        bound: false,
+        reason: "canvas-element-missing",
+        receipt: state.receipt
+      });
+    }
+
+    state.mount = mount;
+    state.canvasElement = canvasElement;
+    state.bound = true;
+    state.active = true;
+    state.disposed = false;
+
+    mount.dataset.hEarthControlsStatus = "bound";
+    mount.dataset.hEarthControlsContract = CONTRACT;
+    mount.dataset.controlsAuthority = "motion-input-only";
+    mount.dataset.canvasAuthority = "visible-composition";
+    mount.dataset.visualPassClaimed = "false";
+
+    canvasElement.dataset.hEarthControls = "bound";
+    canvasElement.dataset.hEarthControlsContract = CONTRACT;
+    canvasElement.style.cursor = "grab";
+    canvasElement.style.touchAction = "none";
+
+    canvasElement.addEventListener("pointerdown", onPointerDown, { passive: false });
+    canvasElement.addEventListener("pointermove", onPointerMove, { passive: false });
+    canvasElement.addEventListener("pointerup", endDrag, { passive: false });
+    canvasElement.addEventListener("pointercancel", endDrag, { passive: false });
+    canvasElement.addEventListener("wheel", onWheel, { passive: false });
+
+    applyZoom();
+    paint("controls-bind-initial");
+
+    state.receipt = createReceipt(state, canvasValidation);
+
+    return freezeDeep({
+      bound: true,
+      contract: CONTRACT,
+      receipt: state.receipt
+    });
+  }
+
+  function dispose() {
+    cancelFrame();
+
+    if (state.canvasElement) {
+      state.canvasElement.removeEventListener("pointerdown", onPointerDown);
+      state.canvasElement.removeEventListener("pointermove", onPointerMove);
+      state.canvasElement.removeEventListener("pointerup", endDrag);
+      state.canvasElement.removeEventListener("pointercancel", endDrag);
+      state.canvasElement.removeEventListener("wheel", onWheel);
+      state.canvasElement.style.cursor = "";
+      state.canvasElement.style.touchAction = "";
+      delete state.canvasElement.dataset.hEarthControls;
+      delete state.canvasElement.dataset.hEarthControlsContract;
+    }
+
+    if (state.mount) {
+      state.mount.dataset.hEarthControlsStatus = "disposed";
+    }
+
+    state.active = false;
+    state.bound = false;
+    state.disposed = true;
+    state.receipt = createReceipt(state, canvasValidation);
+
+    return freezeDeep({
+      disposed: true,
+      receipt: state.receipt
+    });
+  }
+
+  function setRotation(rotationRadians, tiltRadians = state.tiltRadians) {
+    state.rotationRadians = safeNumber(rotationRadians, state.rotationRadians);
+    state.tiltRadians = clamp(safeNumber(tiltRadians, state.tiltRadians), -0.78, 0.78);
+    return paint("controls-set-rotation");
+  }
+
+  function setZoom(zoom) {
+    state.zoom = clamp(safeNumber(zoom, state.zoom), DEFAULTS.minZoom, DEFAULTS.maxZoom);
+    applyZoom();
+    state.receipt = createReceipt(state, canvasValidation);
+
+    return freezeDeep({
+      zoom: state.zoom,
+      receipt: state.receipt
+    });
+  }
+
+  function getControlsReceipt() {
+    state.receipt = createReceipt(state, canvasValidation);
+    return state.receipt;
+  }
+
   return {
-    canvasReceipt: state.canvasReceipt,
-    canvasRenewalReceipt: state.canvasRenewalReceipt,
-    canvasRenderStatus: state.canvasRenderStatus,
-    canvasInteractionMode: state.canvasInteractionMode,
-    canvasApiReady: state.canvasApiReady,
-    canvasProofPassed: state.canvasProofPassed
-  };
-}
-
-function ensureStyle() {
-  if (document.getElementById("h-earth-globe-direct-controls-style-v12c")) return;
-
-  const style = document.createElement("style");
-  style.id = "h-earth-globe-direct-controls-style-v12c";
-  style.textContent = `
-    [data-h-earth-controls-panel] {
-      box-sizing: border-box;
-      width: 100%;
-      margin: 0;
-      padding: 1rem;
-      border: 1px solid rgba(244, 191, 96, 0.32);
-      border-radius: 1.25rem;
-      background:
-        radial-gradient(circle at 16% 0%, rgba(244, 191, 96, 0.11), transparent 28rem),
-        linear-gradient(180deg, rgba(8, 16, 34, 0.94), rgba(4, 8, 18, 0.98));
-      color: #f6ead2;
-      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.34);
-    }
-
-    [data-h-earth-controls-title] {
-      margin: 0 0 0.35rem;
-      color: #f6d37b;
-      font-size: clamp(1.15rem, 3.6vw, 1.7rem);
-      line-height: 1.1;
-      letter-spacing: 0.02em;
-    }
-
-    [data-h-earth-controls-copy] {
-      margin: 0 0 0.9rem;
-      max-width: 78ch;
-      color: rgba(246, 234, 210, 0.78);
-      line-height: 1.55;
-    }
-
-    [data-h-earth-controls-actions] {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.55rem;
-      margin: 0.9rem 0;
-    }
-
-    [data-h-earth-controls-actions] button {
-      appearance: none;
-      border: 1px solid rgba(244, 191, 96, 0.34);
-      border-radius: 999px;
-      background: rgba(244, 191, 96, 0.10);
-      color: #f6ead2;
-      padding: 0.68rem 0.9rem;
-      font: 800 0.88rem system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-    }
-
-    [data-h-earth-controls-actions] button:hover {
-      background: rgba(244, 191, 96, 0.16);
-    }
-
-    [data-h-earth-controls-actions] button:focus-visible {
-      outline: 2px solid #f4bf60;
-      outline-offset: 3px;
-    }
-
-    [data-h-earth-controls-readout] {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 0.6rem;
-      margin-top: 0.9rem;
-    }
-
-    [data-h-earth-controls-readout] span {
-      display: block;
-      padding: 0.65rem 0.75rem;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 0.78rem;
-      background: rgba(255, 255, 255, 0.052);
-      color: rgba(246, 234, 210, 0.86);
-      font-size: 0.9rem;
-      line-height: 1.35;
-      overflow-wrap: anywhere;
-    }
-
-    [data-h-earth-controls-readout] strong {
-      display: block;
-      margin-bottom: 0.15rem;
-      color: #8ff0c3;
-      font-size: 0.74rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    [data-h-earth-canvas],
-    [data-h-earth-canvas-stage] {
-      touch-action: none;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    [data-h-earth-canvas] {
-      cursor: grab;
-      transform: none !important;
-      transform-origin: center center;
-    }
-
-    [data-h-earth-canvas][data-h-earth-dragging="true"] {
-      cursor: grabbing;
-    }
-  `;
-
-  document.head.appendChild(style);
-}
-
-function ensurePanel() {
-  ensureStyle();
-
-  let panel = document.querySelector("[data-h-earth-controls-panel]");
-
-  if (panel) {
-    const title = panel.querySelector("[data-h-earth-controls-title]");
-    const copy = panel.querySelector("[data-h-earth-controls-copy]");
-
-    if (title) title.textContent = "H-Earth Direct Globe Controls";
-
-    if (copy) {
-      copy.textContent =
-        "Controls target the globe view directly and do not transform the canvas/card. Drag or touch the globe to change yaw and pitch. Use wheel or buttons to zoom. Parent truth remains immutable.";
-    }
-
-    return panel;
-  }
-
-  panel = document.createElement("section");
-  panel.setAttribute("data-h-earth-controls-panel", "true");
-  panel.setAttribute("aria-label", "H-Earth direct globe controls");
-
-  panel.innerHTML = `
-    <h2 data-h-earth-controls-title>H-Earth Direct Globe Controls</h2>
-    <p data-h-earth-controls-copy>
-      Controls target the globe view directly and do not transform the canvas/card. Drag or touch the globe to change yaw and pitch. Use wheel or buttons to zoom. Parent truth remains immutable.
-    </p>
-    <div data-h-earth-controls-actions aria-label="H-Earth direct globe control actions">
-      <button type="button" data-h-earth-control="zoom-in">Zoom In</button>
-      <button type="button" data-h-earth-control="zoom-out">Zoom Out</button>
-      <button type="button" data-h-earth-control="reset">Reset</button>
-    </div>
-    <div data-h-earth-controls-readout aria-live="polite"></div>
-  `;
-
-  findControlsMount().replaceChildren(panel);
-  return panel;
-}
-
-function readoutTarget() {
-  return document.querySelector("[data-h-earth-controls-readout]");
-}
-
-function publishReadout() {
-  const target = readoutTarget();
-  if (!target) return;
-
-  target.innerHTML = `
-    <span><strong>Contract</strong>${state.contract}</span>
-    <span><strong>Renewal</strong>${state.renewalContract}</span>
-    <span><strong>Previous</strong>${state.previousContract}</span>
-    <span><strong>Status</strong>${state.status}</span>
-    <span><strong>Interactive</strong>${state.interactiveStatus}</span>
-    <span><strong>Canvas</strong>${state.canvasReceipt}</span>
-    <span><strong>Canvas renewal</strong>${state.canvasRenewalReceipt}</span>
-    <span><strong>Canvas API</strong>${String(state.canvasApiReady)}</span>
-    <span><strong>Canvas proof</strong>${String(state.canvasProofPassed)}</span>
-    <span><strong>Interaction target</strong>globe-redraw</span>
-    <span><strong>Card transform</strong>forbidden</span>
-    <span><strong>Drag</strong>${String(state.dragAuthorized)}</span>
-    <span><strong>Touch</strong>${String(state.touchAuthorized)}</span>
-    <span><strong>Zoom</strong>${String(state.zoomAuthorized)}</span>
-    <span><strong>Inertia</strong>${String(state.inertiaAuthorized)}</span>
-    <span><strong>Yaw</strong>${round(state.yaw, 2)}</span>
-    <span><strong>Pitch</strong>${round(state.pitch, 2)}</span>
-    <span><strong>Zoom</strong>${round(state.zoom, 3)}</span>
-    <span><strong>Parent mutation</strong>forbidden</span>
-  `;
-}
-
-function stampDocument() {
-  const root = document.documentElement;
-
-  root.dataset.hEarthControlsReceipt = H_EARTH_CONTROLS_CONTRACT;
-  root.dataset.hEarthControlsRenewalContract = H_EARTH_CONTROLS_RENEWAL_CONTRACT;
-  root.dataset.hEarthControlsPreviousReceipt = H_EARTH_CONTROLS_PREVIOUS_CONTRACT;
-  root.dataset.hEarthControlsStatus = state.status;
-  root.dataset.hEarthInteractiveControlsStatus = state.interactiveStatus;
-  root.dataset.hEarthInteractionTarget = "globe-redraw";
-  root.dataset.hEarthCardTransformAuthorized = "false";
-  root.dataset.hEarthGlobeDirectInteractionAuthorized = "true";
-  root.dataset.hEarthDragAuthorized = String(state.dragAuthorized);
-  root.dataset.hEarthTouchAuthorized = String(state.touchAuthorized);
-  root.dataset.hEarthZoomAuthorized = String(state.zoomAuthorized);
-  root.dataset.hEarthInertiaAuthorized = String(state.inertiaAuthorized);
-  root.dataset.hEarthControlsAuthorized = String(state.controlsAuthorized);
-  root.dataset.hEarthMotionAuthorized = String(state.motionAuthorized);
-  root.dataset.hEarthInputAuthorized = String(state.inputAuthorized);
-  root.dataset.hEarthParentMutationAuthorized = "false";
-  root.dataset.hEarthVisualPassClaim = "false";
-  root.dataset.hEarthYaw = String(round(state.yaw, 2));
-  root.dataset.hEarthPitch = String(round(state.pitch, 2));
-  root.dataset.hEarthZoom = String(round(state.zoom, 3));
-}
-
-function publish(context = {}) {
-  readCanvasStatus(context);
-  publishReadout();
-  stampDocument();
-}
-
-function sendViewToCanvas() {
-  const api = canvasApi();
-
-  state.canvasApiReady =
-    Boolean(api) &&
-    (typeof api.setHEarthCanvasView === "function" || typeof api.setView === "function");
-
-  if (!state.canvasApiReady) {
-    state.interactiveStatus = "direct-globe-interaction-active-canvas-view-api-missing";
-    publish();
-    return null;
-  }
-
-  let status = null;
-
-  try {
-    const payload = {
-      yaw: state.yaw,
-      pitch: state.pitch,
-      zoom: state.zoom
-    };
-
-    if (typeof api.setHEarthCanvasView === "function") {
-      status = api.setHEarthCanvasView(payload);
-    } else if (typeof api.setView === "function") {
-      status = api.setView(payload);
-    }
-
-    if (status) lastRouteCanvasStatus = status;
-
-    state.interactiveStatus = "direct-globe-interaction-active";
-    state.updatedAt = new Date().toISOString();
-  } catch (error) {
-    recordError("send-view-to-canvas", error);
-    state.interactiveStatus = "direct-globe-interaction-active-canvas-view-send-failed";
-  }
-
-  publish({ canvasStatus: status || lastRouteCanvasStatus });
-  return status;
-}
-
-function cancelInertia() {
-  if (state.rafId !== null) {
-    cancelAnimationFrame(state.rafId);
-    state.rafId = null;
-  }
-}
-
-function inertiaTick() {
-  state.yaw += state.velocityYaw;
-  state.pitch = clamp(
-    state.pitch + state.velocityPitch,
-    CONTROL_LIMITS.pitchMin,
-    CONTROL_LIMITS.pitchMax
-  );
-
-  state.velocityYaw *= CONTROL_LIMITS.inertiaDecay;
-  state.velocityPitch *= CONTROL_LIMITS.inertiaDecay;
-
-  sendViewToCanvas();
-
-  const stillMoving =
-    Math.abs(state.velocityYaw) > CONTROL_LIMITS.inertiaStopThreshold ||
-    Math.abs(state.velocityPitch) > CONTROL_LIMITS.inertiaStopThreshold;
-
-  if (stillMoving && !state.isDragging) {
-    state.rafId = requestAnimationFrame(inertiaTick);
-  } else {
-    state.velocityYaw = 0;
-    state.velocityPitch = 0;
-    state.rafId = null;
-    sendViewToCanvas();
-  }
-}
-
-function startInertia() {
-  if (!state.inertiaAuthorized) return;
-
-  cancelInertia();
-
-  const moving =
-    Math.abs(state.velocityYaw) > CONTROL_LIMITS.inertiaStopThreshold ||
-    Math.abs(state.velocityPitch) > CONTROL_LIMITS.inertiaStopThreshold;
-
-  if (moving) state.rafId = requestAnimationFrame(inertiaTick);
-}
-
-function setZoom(nextZoom) {
-  state.zoom = clamp(nextZoom, CONTROL_LIMITS.minZoom, CONTROL_LIMITS.maxZoom);
-  sendViewToCanvas();
-}
-
-function resetView() {
-  cancelInertia();
-
-  state.yaw = 0;
-  state.pitch = 0;
-  state.zoom = 1;
-  state.velocityYaw = 0;
-  state.velocityPitch = 0;
-  state.isDragging = false;
-  state.activePointerId = null;
-
-  const canvas = findCanvasElement();
-  if (canvas) {
-    canvas.dataset.hEarthDragging = "false";
-    canvas.style.transform = "none";
-  }
-
-  sendViewToCanvas();
-}
-
-function onPointerDown(event) {
-  const canvas = findCanvasElement();
-  if (!canvas || !state.inputAuthorized) return;
-
-  cancelInertia();
-
-  state.isDragging = true;
-  state.activePointerId = event.pointerId;
-  state.lastX = event.clientX;
-  state.lastY = event.clientY;
-  state.velocityYaw = 0;
-  state.velocityPitch = 0;
-
-  canvas.dataset.hEarthDragging = "true";
-  canvas.style.transform = "none";
-
-  try {
-    canvas.setPointerCapture(event.pointerId);
-  } catch (error) {
-    recordError("pointer-capture", error);
-  }
-
-  event.preventDefault();
-  publish();
-}
-
-function onPointerMove(event) {
-  if (!state.isDragging || event.pointerId !== state.activePointerId) return;
-
-  const dx = event.clientX - state.lastX;
-  const dy = event.clientY - state.lastY;
-
-  state.lastX = event.clientX;
-  state.lastY = event.clientY;
-
-  const yawDelta = dx * CONTROL_LIMITS.dragSensitivity;
-  const pitchDelta = -dy * CONTROL_LIMITS.dragSensitivity;
-
-  state.yaw += yawDelta;
-  state.pitch = clamp(
-    state.pitch + pitchDelta,
-    CONTROL_LIMITS.pitchMin,
-    CONTROL_LIMITS.pitchMax
-  );
-
-  state.velocityYaw = clamp(
-    yawDelta * 0.18,
-    -CONTROL_LIMITS.yawVelocityLimit,
-    CONTROL_LIMITS.yawVelocityLimit
-  );
-
-  state.velocityPitch = clamp(
-    pitchDelta * 0.16,
-    -CONTROL_LIMITS.pitchVelocityLimit,
-    CONTROL_LIMITS.pitchVelocityLimit
-  );
-
-  event.preventDefault();
-  sendViewToCanvas();
-}
-
-function onPointerUp(event) {
-  if (event.pointerId !== state.activePointerId) return;
-
-  const canvas = findCanvasElement();
-
-  if (canvas) {
-    canvas.dataset.hEarthDragging = "false";
-    canvas.style.transform = "none";
-
-    try {
-      canvas.releasePointerCapture(event.pointerId);
-    } catch (error) {
-      recordError("pointer-release", error);
-    }
-  }
-
-  state.isDragging = false;
-  state.activePointerId = null;
-
-  event.preventDefault();
-  sendViewToCanvas();
-  startInertia();
-}
-
-function onWheel(event) {
-  if (!state.zoomAuthorized) return;
-
-  const direction = event.deltaY > 0 ? -1 : 1;
-  const nextZoom = state.zoom + direction * CONTROL_LIMITS.zoomStep;
-
-  event.preventDefault();
-  setZoom(nextZoom);
-}
-
-function bindCanvasInput() {
-  const canvas = findCanvasElement();
-  const stage = findCanvasStage(canvas);
-
-  if (!canvas) {
-    recordError("bind-canvas-input", "no H-Earth canvas found");
-    return false;
-  }
-
-  const inputTarget = stage || canvas;
-
-  canvas.dataset.hEarthInteractiveControlsBound = H_EARTH_CONTROLS_RENEWAL_CONTRACT;
-  canvas.dataset.hEarthInteractionTarget = "globe-redraw";
-  canvas.dataset.hEarthCardTransformAuthorized = "false";
-  canvas.style.transform = "none";
-
-  inputTarget.dataset.hEarthInteractiveControlsBound = H_EARTH_CONTROLS_RENEWAL_CONTRACT;
-  inputTarget.dataset.hEarthInteractionTarget = "globe-redraw";
-
-  canvas.addEventListener("pointerdown", onPointerDown, { passive: false });
-  canvas.addEventListener("pointermove", onPointerMove, { passive: false });
-  canvas.addEventListener("pointerup", onPointerUp, { passive: false });
-  canvas.addEventListener("pointercancel", onPointerUp, { passive: false });
-
-  canvas.addEventListener("lostpointercapture", () => {
-    state.isDragging = false;
-    state.activePointerId = null;
-    canvas.dataset.hEarthDragging = "false";
-    canvas.style.transform = "none";
-    publish();
-  });
-
-  inputTarget.addEventListener("wheel", onWheel, { passive: false });
-
-  return true;
-}
-
-function bindButtons() {
-  const panel = ensurePanel();
-
-  const zoomIn = panel.querySelector('[data-h-earth-control="zoom-in"]');
-  const zoomOut = panel.querySelector('[data-h-earth-control="zoom-out"]');
-  const reset = panel.querySelector('[data-h-earth-control="reset"]');
-
-  if (zoomIn) {
-    zoomIn.addEventListener("click", () => {
-      cancelInertia();
-      setZoom(state.zoom + CONTROL_LIMITS.zoomStep);
-    });
-  }
-
-  if (zoomOut) {
-    zoomOut.addEventListener("click", () => {
-      cancelInertia();
-      setZoom(state.zoom - CONTROL_LIMITS.zoomStep);
-    });
-  }
-
-  if (reset) reset.addEventListener("click", resetView);
-}
-
-function exposeControlsApi() {
-  controlsApi = {
-    contract: H_EARTH_CONTROLS_CONTRACT,
-    renewalContract: H_EARTH_CONTROLS_RENEWAL_CONTRACT,
-    receipt: H_EARTH_CONTROLS_CONTRACT,
-    previousContract: H_EARTH_CONTROLS_PREVIOUS_CONTRACT,
-    status: getHEarthControlsStatus,
-    getStatus: getHEarthControlsStatus,
-    getHEarthControlsStatus,
-    boot: bootHEarthControls,
-    bootHEarthControls,
-    reset: resetView,
-    resetView,
+    contract: CONTRACT,
+    requiredParent: REQUIRED_PARENT,
+    requiredCanvasContract: REQUIRED_CANVAS_CONTRACT,
+    seedPacket: SEED_PACKET,
+    version: VERSION,
+    planet: "H-Earth",
+    generation: "G1",
+    parentReceipt: canvasValidation.parentReceipt,
+    owns: [
+      "motion",
+      "drag",
+      "rotation-request",
+      "zoom-presentation",
+      "inertia",
+      "input-handling",
+      "interaction-receipts"
+    ],
+    doesNotOwn: [
+      "planet-truth",
+      "land-water-classification",
+      "terrain",
+      "surface-color",
+      "canvas-paint-sovereignty",
+      "route-boot",
+      "weather",
+      "atmosphere",
+      "life-systems"
+    ],
+    canvasValidation,
+    state,
+    bindTo,
+    dispose,
+    setRotation,
     setZoom,
-    getYaw: () => state.yaw,
-    getPitch: () => state.pitch,
-    getZoom: () => state.zoom
-  };
-
-  window.DGBHEarthControls = controlsApi;
-  window.HEarthControls = controlsApi;
-  window.H_EARTH_CONTROLS = controlsApi;
-  window.H_EARTH_CONTROLS_RECEIPT = H_EARTH_CONTROLS_CONTRACT;
-  window.H_EARTH_CONTROLS_RENEWAL_RECEIPT = H_EARTH_CONTROLS_RENEWAL_CONTRACT;
-
-  stampDocument();
-}
-
-async function bootHEarthControls(context = {}) {
-  if (bootPromise) return bootPromise;
-
-  bootPromise = Promise.resolve().then(() => {
-    state.bootedAt = state.bootedAt || new Date().toISOString();
-
-    if (context.canvasStatus) lastRouteCanvasStatus = context.canvasStatus;
-
-    exposeControlsApi();
-    ensurePanel();
-    readCanvasStatus(context);
-
-    const inputBound = bindCanvasInput();
-
-    bindButtons();
-
-    state.controlsAuthorized = true;
-    state.motionAuthorized = true;
-    state.inputAuthorized = true;
-    state.dragAuthorized = true;
-    state.touchAuthorized = true;
-    state.zoomAuthorized = true;
-    state.inertiaAuthorized = true;
-    state.parentMutationAuthorized = false;
-    state.cardTransformAuthorized = false;
-    state.globeDirectInteractionAuthorized = true;
-    state.visualPassClaim = false;
-    state.status = "active-motion-input-authority";
-
-    if (!state.canvasApiReady) {
-      state.interactiveStatus = "direct-globe-interaction-active-canvas-view-api-missing";
-    } else if (!inputBound) {
-      state.interactiveStatus = "direct-globe-interaction-active-no-canvas-target";
-    } else {
-      state.interactiveStatus = "direct-globe-interaction-active";
-    }
-
-    sendViewToCanvas();
-    publish(context);
-    exposeControlsApi();
-
-    return getHEarthControlsStatus();
-  });
-
-  return bootPromise;
-}
-
-function getHEarthControlsStatus() {
-  /*
-    Recursion break:
-    This function must never call canvas.getStatus().
-    It returns controls truth from local state only.
-  */
-
-  return {
-    contract: H_EARTH_CONTROLS_CONTRACT,
-    renewalContract: H_EARTH_CONTROLS_RENEWAL_CONTRACT,
-    receipt: H_EARTH_CONTROLS_CONTRACT,
-    previousContract: H_EARTH_CONTROLS_PREVIOUS_CONTRACT,
-
-    status: "active-motion-input-authority",
-    interactiveStatus: state.interactiveStatus,
-    interactionTarget: "globe-redraw",
-    cardTransformAuthorized: false,
-    globeDirectInteractionAuthorized: true,
-
-    controlsAuthorized: true,
-    motionAuthorized: true,
-    inputAuthorized: true,
-    dragAuthorized: state.dragAuthorized,
-    touchAuthorized: state.touchAuthorized,
-    zoomAuthorized: state.zoomAuthorized,
-    inertiaAuthorized: state.inertiaAuthorized,
-
-    yaw: round(state.yaw, 3),
-    pitch: round(state.pitch, 3),
-    zoom: round(state.zoom, 3),
-    velocityYaw: round(state.velocityYaw, 4),
-    velocityPitch: round(state.velocityPitch, 4),
-    isDragging: state.isDragging,
-
-    canvasReceipt: state.canvasReceipt,
-    canvasRenewalReceipt: state.canvasRenewalReceipt,
-    canvasApiReady: state.canvasApiReady,
-    canvasProofPassed: state.canvasProofPassed,
-    canvasRenderStatus: state.canvasRenderStatus,
-    canvasInteractionMode: state.canvasInteractionMode,
-    canvasStatusSource: state.canvasStatusSource,
-
-    parentMutationAuthorized: false,
-    visualPassClaim: false,
-    earthMutationAuthorized: false,
-    hearthMutationAuthorized: false,
-    audraliaMutationAuthorized: false,
-
-    bootedAt: state.bootedAt,
-    updatedAt: state.updatedAt,
-    errors: [...state.errors]
+    paint,
+    getControlsReceipt
   };
 }
-
-exposeControlsApi();
 
 export {
-  H_EARTH_CONTROLS_CONTRACT,
-  H_EARTH_CONTROLS_RENEWAL_CONTRACT,
-  H_EARTH_CONTROLS_PREVIOUS_CONTRACT,
-  H_EARTH_EXPECTED_CANVAS,
-  H_EARTH_EXPECTED_CANVAS_RENEWAL,
-  bootHEarthControls,
-  getHEarthControlsStatus
+  CONTRACT,
+  REQUIRED_PARENT,
+  REQUIRED_CANVAS_CONTRACT,
+  SEED_PACKET,
+  VERSION,
+  DEFAULTS
 };
 
-export default {
-  contract: H_EARTH_CONTROLS_CONTRACT,
-  renewalContract: H_EARTH_CONTROLS_RENEWAL_CONTRACT,
-  receipt: H_EARTH_CONTROLS_CONTRACT,
-  previousContract: H_EARTH_CONTROLS_PREVIOUS_CONTRACT,
-  boot: bootHEarthControls,
-  bootHEarthControls,
-  status: getHEarthControlsStatus,
-  getStatus: getHEarthControlsStatus,
-  getHEarthControlsStatus
-};
+export default createHEarthControls;

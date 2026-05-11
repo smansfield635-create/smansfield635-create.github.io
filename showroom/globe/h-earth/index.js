@@ -1,28 +1,28 @@
 // /showroom/globe/h-earth/index.js
-// H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_ROUTE_TNT_v6
+// H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_TNT_v7
 // Full-file replacement.
 // Route doorway authority only.
 //
 // Purpose:
-// - Preserve passed parent chain: kernel → lattice256 → landmap → terrain → surface.
-// - Expect the corrected canvas consumer contract:
-//   H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_TNT_v2.
-// - Import canvas after surface readiness passes.
-// - Pass the created parent instances directly into canvas boot.
+// - Renew route doorway execution proof.
+// - Stamp top-level execution before parent-chain imports.
+// - Preserve parent chain: kernel → lattice256 → landmap → terrain → surface.
+// - Import corrected canvas parent-instance consumer after surface readiness.
 // - Keep controls held.
 
-const CONTRACT = "H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_ROUTE_TNT_v6";
-const PRIOR_CONTRACT = "H_EARTH_G1_CANVAS_ROUTE_DOORWAY_ACTIVATION_TNT_v5";
-const PRIOR_SURFACE_CONTRACT = "H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4";
+const CONTRACT = "H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_TNT_v7";
+const PRIOR_CONTRACT = "H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_ROUTE_TNT_v6";
+const PRIOR_HTML_CONTRACT = "H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_HTML_TNT_v6";
 const SEED_PACKET = "H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1";
-const TERRAIN_ONLY_CHAIN = "H_EARTH_G1_COMPLETE_TERRAIN_ONLY_PARENT_CHAIN_TNT_v1";
-const SURFACE_ACTIVE_READ_CHAIN = "H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4";
 const ROUTE = "/showroom/globe/h-earth/";
 const PLANET = "H-Earth";
 const GENERATION = "G1";
 
-const URL_CACHE = new URLSearchParams(window.location.search).get("v") || "canvas-parent-instance-consumer-route-v1";
-const CACHE_KEY = `2026-05-11-h-earth-canvas-parent-instance-consumer-route-v1-${URL_CACHE}`;
+const URL_CACHE =
+  new URLSearchParams(window.location.search).get("v") ||
+  "route-doorway-execution-renewal-v7";
+
+const CACHE_KEY = `2026-05-11-h-earth-route-doorway-execution-renewal-v7-${URL_CACHE}`;
 
 const EXPECTED_CONTRACTS = Object.freeze({
   kernel: "H_EARTH_G1_TERRAIN_ONLY_KERNEL_TNT_v1",
@@ -36,31 +36,26 @@ const EXPECTED_CONTRACTS = Object.freeze({
 const ACTIVE_MODULES = Object.freeze([
   {
     key: "kernel",
-    label: "Kernel parent core",
     path: "/assets/h-earth/h-earth.kernel.js",
     requiredExport: "createHEarthKernel"
   },
   {
     key: "lattice256",
-    label: "256 lattice parent-coordinate engine",
     path: "/assets/h-earth/h-earth.lattice256.js",
     requiredExport: "createHEarthLattice256"
   },
   {
     key: "landmap",
-    label: "Landmap parent mask",
     path: "/assets/h-earth/h-earth.landmap.js",
     requiredExport: "createHEarthLandmap"
   },
   {
     key: "terrain",
-    label: "Terrain parent relief",
     path: "/assets/h-earth/h-earth.terrain.js",
     requiredExport: "createHEarthTerrain"
   },
   {
     key: "surface",
-    label: "Surface parent material truth",
     path: "/assets/h-earth/h-earth.surface.js",
     requiredExport: "createHEarthSurface"
   }
@@ -68,7 +63,6 @@ const ACTIVE_MODULES = Object.freeze([
 
 const CANVAS_MODULE = Object.freeze({
   key: "canvas",
-  label: "Canvas parent-instance consumer",
   path: "/assets/h-earth/h-earth.canvas.js",
   requiredExport: "bootHEarthCanvas"
 });
@@ -76,7 +70,6 @@ const CANVAS_MODULE = Object.freeze({
 const HELD_MODULES = Object.freeze([
   {
     key: "controls",
-    label: "Controls motion/input only",
     path: "/assets/h-earth/h-earth.controls.js",
     status: "held-until-canvas-visible-composition-passes"
   }
@@ -85,17 +78,15 @@ const HELD_MODULES = Object.freeze([
 const state = {
   contract: CONTRACT,
   priorContract: PRIOR_CONTRACT,
-  priorSurfaceContract: PRIOR_SURFACE_CONTRACT,
+  priorHtmlContract: PRIOR_HTML_CONTRACT,
   seedPacket: SEED_PACKET,
-  terrainOnlyChain: TERRAIN_ONLY_CHAIN,
-  surfaceActiveReadChain: SURFACE_ACTIVE_READ_CHAIN,
   route: ROUTE,
   planet: PLANET,
   generation: GENERATION,
   cacheKey: CACHE_KEY,
-  routeDoorway: "booting",
-  parentChainStatus: "pending",
-  canvasStatus: "held-until-surface-parent-read-passes",
+  routeDoorwayTopLevelExecuted: true,
+  parentChainStatus: "top-level-executed",
+  canvasStatus: "held",
   canvasPaintAuthorized: false,
   controlsAuthorized: false,
   loadedCount: 0,
@@ -103,31 +94,19 @@ const state = {
   staleContractCount: 0,
   activeModules: {},
   heldModules: {},
+  instances: {},
   canvasModule: {
-    status: "held-until-surface-parent-read-passes",
+    status: "held-before-surface-readiness",
     path: CANVAS_MODULE.path,
     actualContract: "pending",
     renderStatus: "pending"
   },
-  instances: {},
   canvasRuntimeStatus: null,
   errors: []
 };
 
 function byId(id) {
   return document.getElementById(id);
-}
-
-function statusTarget() {
-  return byId("hEarthStatusTarget");
-}
-
-function mountTarget() {
-  return byId("hEarthCanvasMount");
-}
-
-function receiptPanel() {
-  return byId("hEarthReceiptPanel");
 }
 
 function codeLine(text) {
@@ -146,34 +125,23 @@ function moduleUrl(path) {
   return `${path}?v=${encodeURIComponent(CACHE_KEY)}`;
 }
 
-function getImportedContract(imported, instance) {
-  return imported?.CONTRACT || instance?.contract || "contract-not-exported";
-}
-
-function getImportedCanvasContract(imported, status) {
-  return (
-    imported?.H_EARTH_CANVAS_CONTRACT ||
-    imported?.default?.contract ||
-    status?.contract ||
-    status?.receipt ||
-    "contract-not-exported"
-  );
-}
-
 function currentCanvasDatasetValue() {
   if (state.canvasStatus === "active-visible-composition") return "active-visible-composition";
   if (state.canvasStatus === "failed") return "failed";
   if (state.canvasStatus === "loading") return "loading";
   if (state.canvasStatus === "stale-contract") return "stale-contract";
+  if (state.canvasStatus === "loaded-consumption-held") return "loaded-consumption-held";
   return "held";
 }
 
 function stampDocument() {
   const root = document.documentElement;
 
+  root.dataset.routeDoorwayTopLevelExecuted = "true";
+  root.dataset.routeDoorwayReceipt = CONTRACT;
   root.dataset.routeDoorwayContract = CONTRACT;
   root.dataset.previousRouteDoorwayContract = PRIOR_CONTRACT;
-  root.dataset.previousSurfaceDoorwayContract = PRIOR_SURFACE_CONTRACT;
+  root.dataset.previousHtmlContract = PRIOR_HTML_CONTRACT;
   root.dataset.hEarthSeedPacket = SEED_PACKET;
   root.dataset.parentCoreChainStatus = state.parentChainStatus;
   root.dataset.cacheKey = CACHE_KEY;
@@ -188,15 +156,27 @@ function stampDocument() {
   root.dataset.australiaTerminology = "forbidden";
 }
 
+function statusTarget() {
+  return byId("hEarthStatusTarget");
+}
+
+function receiptPanel() {
+  return byId("hEarthReceiptPanel");
+}
+
+function mountTarget() {
+  return byId("hEarthCanvasMount");
+}
+
 function publishStatus(message, lines = []) {
   const target = statusTarget();
   if (!target) return;
 
   target.dataset.currentStatus = message;
+  target.dataset.routeDoorwayTopLevelExecuted = "true";
   target.dataset.routeDoorway = "active";
   target.dataset.routeDoorwayContract = CONTRACT;
   target.dataset.previousRouteDoorwayContract = PRIOR_CONTRACT;
-  target.dataset.previousSurfaceDoorwayContract = PRIOR_SURFACE_CONTRACT;
   target.dataset.parentCoreChain = state.parentChainStatus;
   target.dataset.surface = "active-read-only";
   target.dataset.canvas = currentCanvasDatasetValue();
@@ -206,9 +186,10 @@ function publishStatus(message, lines = []) {
   target.dataset.cacheKey = CACHE_KEY;
 
   target.replaceChildren(
+    codeLine(`ROUTE_DOORWAY_TOPLEVEL_EXECUTED: true`),
     codeLine(`ROUTE_DOORWAY_RECEIPT: ${CONTRACT}`),
     codeLine(`PREVIOUS_DOORWAY: ${PRIOR_CONTRACT}`),
-    codeLine(`PREVIOUS_SURFACE_DOORWAY: ${PRIOR_SURFACE_CONTRACT}`),
+    codeLine(`PREVIOUS_HTML: ${PRIOR_HTML_CONTRACT}`),
     codeLine(`SEED_PACKET: ${SEED_PACKET}`),
     codeLine(`CACHE_KEY: ${CACHE_KEY}`),
     codeLine(`STATUS: ${message}`),
@@ -216,56 +197,15 @@ function publishStatus(message, lines = []) {
   );
 }
 
-function renderMountMessage(title, bodyLines = []) {
-  const mount = mountTarget();
-  if (!mount) return;
+function publishTopLevelExecution() {
+  state.parentChainStatus = "route-doorway-top-level-executed";
+  stampDocument();
 
-  mount.dataset.routeMount = "surface-and-canvas-status";
-  mount.dataset.routeDoorwayContract = CONTRACT;
-  mount.dataset.cacheKey = CACHE_KEY;
-  mount.dataset.surfaceAuthority = "active-read-only";
-  mount.dataset.canvasAuthority = currentCanvasDatasetValue();
-  mount.dataset.controlsAuthority = "held";
-  mount.dataset.planetTruthOwner = "parent-chain";
-
-  const shell = document.createElement("div");
-  shell.setAttribute("aria-live", "polite");
-  shell.style.position = "absolute";
-  shell.style.left = "50%";
-  shell.style.top = "50%";
-  shell.style.width = "min(88%, 440px)";
-  shell.style.transform = "translate(-50%, -50%)";
-  shell.style.padding = "16px";
-  shell.style.border = "1px solid rgba(143, 240, 195, 0.34)";
-  shell.style.borderRadius = "24px";
-  shell.style.background = "rgba(5, 9, 18, 0.80)";
-  shell.style.color = "#f6ead2";
-  shell.style.textAlign = "center";
-  shell.style.font = "700 0.9rem Inter, system-ui, sans-serif";
-  shell.style.letterSpacing = "0.02em";
-  shell.style.boxShadow = "0 20px 60px rgba(0,0,0,.35)";
-
-  const heading = document.createElement("div");
-  heading.textContent = title;
-  heading.style.color = "#8ff0c3";
-  heading.style.fontWeight = "900";
-  heading.style.textTransform = "uppercase";
-  heading.style.letterSpacing = "0.08em";
-  heading.style.marginBottom = bodyLines.length ? "10px" : "0";
-
-  shell.appendChild(heading);
-
-  for (const line of bodyLines) {
-    const item = document.createElement("div");
-    item.textContent = line;
-    item.style.color = "#b9c1cf";
-    item.style.fontWeight = "700";
-    item.style.lineHeight = "1.45";
-    item.style.marginTop = "4px";
-    shell.appendChild(item);
-  }
-
-  mount.replaceChildren(shell);
+  publishStatus("route doorway top-level executed; parent chain not loaded yet", [
+    `EXECUTION_RENEWAL: active`,
+    `NEXT_CHAIN: kernel → lattice256 → landmap → terrain → surface → canvas`,
+    `CONTROLS: held`
+  ]);
 }
 
 function publishReceiptPanel() {
@@ -274,8 +214,9 @@ function publishReceiptPanel() {
 
   panel.dataset.receiptDoorway = CONTRACT;
   panel.dataset.previousReceiptDoorway = PRIOR_CONTRACT;
-  panel.dataset.previousSurfaceReceiptDoorway = PRIOR_SURFACE_CONTRACT;
+  panel.dataset.previousHtmlContract = PRIOR_HTML_CONTRACT;
   panel.dataset.parentChainStatus = state.parentChainStatus;
+  panel.dataset.routeDoorwayTopLevelExecuted = "true";
   panel.dataset.loadedModules = String(state.loadedCount);
   panel.dataset.failedModules = String(state.failedCount);
   panel.dataset.staleContractCount = String(state.staleContractCount);
@@ -307,7 +248,8 @@ function publishReceiptPanel() {
       ? " · STALE_CONTRACT"
       : "";
   const canvasError = canvasRecord?.error ? ` · ${canvasRecord.error}` : "";
-  const canvasLine = `CANVAS: ${canvasRecord.status} · expected=${canvasExpected} · actual=${canvasActual}${canvasStale} · ${CANVAS_MODULE.path}${canvasError}`;
+  const canvasLine =
+    `CANVAS: ${canvasRecord.status} · expected=${canvasExpected} · actual=${canvasActual}${canvasStale} · ${CANVAS_MODULE.path}${canvasError}`;
 
   const heldLines = HELD_MODULES.map((entry) => {
     return `${entry.key.toUpperCase()}: ${entry.status} · ${entry.path}`;
@@ -316,12 +258,9 @@ function publishReceiptPanel() {
   const terrain = state.instances.terrain;
   const landmap = state.instances.landmap;
   const surface = state.instances.surface;
-
   const terrainSummary = terrain?.summary;
   const landSummary = landmap?.summary;
   const surfaceSummary = surface?.summary;
-  const surfaceReceipt = surface?.receipts?.surface;
-  const activation = surface?.activationConditions;
   const canvasRuntime = state.canvasRuntimeStatus;
 
   const proofLines = terrainSummary && landSummary && surfaceSummary
@@ -339,7 +278,7 @@ function publishReceiptPanel() {
         `SURFACE_PARENT_READY: ${String(surfaceSummary.surfaceParentReady)}`,
         `DOWNSTREAM_CANVAS_MAY_READ_SURFACE: ${String(surfaceSummary.downstreamCanvasMayReadSurface)}`,
         `ROUTE_CANVAS_PAINT_AUTHORIZED: ${String(state.canvasPaintAuthorized)}`,
-        `CONTROLS_AUTHORIZED: ${String(state.controlsAuthorized)}`,
+        `CONTROLS_AUTHORIZED: false`,
         `CANVAS_CONSUMPTION_MODE: ${canvasRuntime?.parentConsumptionMode || "pending"}`,
         `CANVAS_RENDER_STATUS: ${canvasRuntime?.renderStatus || state.canvasModule.renderStatus || "pending"}`,
         `CANVAS_PARENT_SURFACE_READY: ${canvasRuntime?.parentSurfaceReady ?? "pending"}`,
@@ -347,17 +286,16 @@ function publishReceiptPanel() {
         `CANVAS_CELLS_RESOLVED: ${canvasRuntime?.cellsResolved ?? "pending"}`,
         `CANVAS_CELLS_PAINTED: ${canvasRuntime?.cellsPainted ?? "pending"}`,
         `CANVAS_MATERIAL_CLASSES: ${canvasRuntime?.surfaceMaterialClasses ?? "pending"}`,
-        `CANVAS_LAND_OCEAN_CELLS: ${canvasRuntime ? `${canvasRuntime.landCells} / ${canvasRuntime.oceanCells}` : "pending"}`,
         `CANVAS_NONBLANK_PIXEL_RATIO: ${canvasRuntime?.nonBlankPixelRatio ?? "pending"}`,
-        `SURFACE_RECEIPT: ${surfaceReceipt?.contract || "missing"}`,
-        `CANVAS_RECEIPT: ${state.canvasModule.actualContract || "pending"}`,
-        `SURFACE_ACTIVATION_REASON: ${activation?.reason || "pending"}`
+        `SURFACE_RECEIPT: ${surface?.receipts?.surface?.contract || "missing"}`,
+        `CANVAS_RECEIPT: ${state.canvasModule.actualContract || "pending"}`
       ]
-    : ["SURFACE_SUMMARY: pending"];
+    : ["PARENT_CHAIN_SUMMARY: pending"];
 
   panel.replaceChildren(
     codeLine(`H_EARTH_IDENTITY: separate experimental third-planet lane`),
     codeLine(`ROUTE_AUTHORITY: doorway only`),
+    codeLine(`ROUTE_DOORWAY_TOPLEVEL_EXECUTED: true`),
     codeLine(`ROUTE_DOORWAY_RECEIPT: ${CONTRACT}`),
     codeLine(`PARENT_CHAIN_STATUS: ${state.parentChainStatus}`),
     codeLine(`LOADED_ACTIVE_PARENT_MODULES: ${state.loadedCount}`),
@@ -373,6 +311,72 @@ function publishReceiptPanel() {
     codeLine(canvasLine),
     ...heldLines.map(codeLine),
     ...proofLines.map(codeLine)
+  );
+}
+
+function renderMountMessage(title, bodyLines = []) {
+  const mount = mountTarget();
+  if (!mount) return;
+
+  mount.dataset.routeMount = "doorway-renewal-surface-and-canvas-status";
+  mount.dataset.routeDoorwayContract = CONTRACT;
+  mount.dataset.routeDoorwayTopLevelExecuted = "true";
+  mount.dataset.cacheKey = CACHE_KEY;
+  mount.dataset.surfaceAuthority = "active-read-only";
+  mount.dataset.canvasAuthority = currentCanvasDatasetValue();
+  mount.dataset.controlsAuthority = "held";
+  mount.dataset.planetTruthOwner = "parent-chain";
+
+  const shell = document.createElement("div");
+  shell.setAttribute("aria-live", "polite");
+  shell.style.position = "absolute";
+  shell.style.left = "50%";
+  shell.style.top = "50%";
+  shell.style.width = "min(88%, 460px)";
+  shell.style.transform = "translate(-50%, -50%)";
+  shell.style.padding = "16px";
+  shell.style.border = "1px solid rgba(143, 240, 195, 0.34)";
+  shell.style.borderRadius = "24px";
+  shell.style.background = "rgba(5, 9, 18, 0.80)";
+  shell.style.color = "#f6ead2";
+  shell.style.textAlign = "center";
+  shell.style.font = "700 0.9rem Inter, system-ui, sans-serif";
+  shell.style.letterSpacing = "0.02em";
+  shell.style.boxShadow = "0 20px 60px rgba(0,0,0,.35)";
+
+  const heading = document.createElement("div");
+  heading.textContent = title;
+  heading.style.color = "#8ff0c3";
+  heading.style.fontWeight = "900";
+  heading.style.textTransform = "uppercase";
+  heading.style.letterSpacing = "0.08em";
+  heading.style.marginBottom = bodyLines.length ? "10px" : "0";
+  shell.appendChild(heading);
+
+  for (const line of bodyLines) {
+    const item = document.createElement("div");
+    item.textContent = line;
+    item.style.color = "#b9c1cf";
+    item.style.fontWeight = "700";
+    item.style.lineHeight = "1.45";
+    item.style.marginTop = "4px";
+    shell.appendChild(item);
+  }
+
+  mount.replaceChildren(shell);
+}
+
+function getImportedContract(imported, instance) {
+  return imported?.CONTRACT || instance?.contract || "contract-not-exported";
+}
+
+function getImportedCanvasContract(imported, status) {
+  return (
+    imported?.H_EARTH_CANVAS_CONTRACT ||
+    imported?.default?.contract ||
+    status?.contract ||
+    status?.receipt ||
+    "contract-not-exported"
   );
 }
 
@@ -425,6 +429,8 @@ async function importModule(entry) {
 
 async function loadActiveModules() {
   for (const entry of ACTIVE_MODULES) {
+    state.parentChainStatus = `loading-${entry.key}`;
+    stampDocument();
     publishStatus(`loading ${entry.key}`, [
       `CURRENT_MODULE: ${entry.path}`,
       `IMPORT_URL: ${moduleUrl(entry.path)}`
@@ -435,7 +441,7 @@ async function loadActiveModules() {
 
     if (!imported) {
       state.parentChainStatus = `${entry.key}-failed`;
-      document.documentElement.dataset.parentCoreChainStatus = state.parentChainStatus;
+      stampDocument();
       publishStatus(`${entry.key} import failed`, [
         `FAILED_MODULE: ${entry.path}`,
         `IMPORT_URL: ${moduleUrl(entry.path)}`,
@@ -473,10 +479,11 @@ function createInstances() {
     const kernel = kernelModule.createHEarthKernel({
       doorwayContract: CONTRACT,
       priorDoorwayContract: PRIOR_CONTRACT,
-      priorSurfaceDoorwayContract: PRIOR_SURFACE_CONTRACT,
+      priorHtmlContract: PRIOR_HTML_CONTRACT,
       route: ROUTE,
       surfaceActiveReadOnly: true,
       canvasParentInstanceConsumer: true,
+      routeDoorwayExecutionRenewal: true,
       mutationAuthorized: false,
       controlsAuthorized: false,
       motionAuthorized: false,
@@ -511,8 +518,7 @@ function createInstances() {
     const message = safeError(error);
     state.errors.push(`instance-create: ${message}`);
     state.parentChainStatus = "module-loaded-instance-create-failed";
-    document.documentElement.dataset.parentCoreChainStatus = state.parentChainStatus;
-
+    stampDocument();
     publishStatus("modules loaded but instance creation failed", [
       `ERROR: ${message}`,
       `CHECK: exported factory function signatures`
@@ -572,12 +578,7 @@ function publishSurfaceSuccess() {
   state.canvasPaintAuthorized = false;
   state.controlsAuthorized = false;
 
-  document.documentElement.dataset.parentCoreChainStatus = state.parentChainStatus;
-  document.documentElement.dataset.surfaceActiveReadOnly = "true";
-  document.documentElement.dataset.canvas = currentCanvasDatasetValue();
-  document.documentElement.dataset.controls = "held";
-  document.documentElement.dataset.canvasPaintAuthorized = "false";
-  document.documentElement.dataset.controlsAuthorized = "false";
+  stampDocument();
 
   publishStatus(state.parentChainStatus, [
     `KERNEL: loaded · ${state.activeModules.kernel.actualContract}`,
@@ -637,7 +638,7 @@ async function importCanvasModule() {
   };
 
   stampDocument();
-  publishStatus("surface parent passed; loading corrected canvas parent-instance consumer", [
+  publishStatus("surface parent passed; loading canvas parent-instance consumer", [
     `CANVAS_MODULE: ${CANVAS_MODULE.path}`,
     `EXPECTED_CANVAS: ${EXPECTED_CONTRACTS.canvas}`,
     `IMPORT_URL: ${url}`,
@@ -647,6 +648,20 @@ async function importCanvasModule() {
   publishReceiptPanel();
 
   try {
+    window.H_EARTH_ROUTE_PARENT_INSTANCES = state.instances;
+    window.H_EARTH_ROUTE_PARENT_INSTANCE_CONTEXT = {
+      instances: state.instances,
+      parentInstances: state.instances,
+      routeDoorwayContract: CONTRACT,
+      priorRouteDoorwayContract: PRIOR_CONTRACT,
+      priorHtmlContract: PRIOR_HTML_CONTRACT,
+      readOnly: true,
+      mutationAuthorized: false,
+      controlsAuthorized: false,
+      motionAuthorized: false,
+      inputAuthorized: false
+    };
+
     const imported = await import(url);
 
     if (!imported || typeof imported[CANVAS_MODULE.requiredExport] !== "function") {
@@ -678,7 +693,7 @@ async function importCanvasModule() {
       parentInstances: state.instances,
       routeDoorwayContract: CONTRACT,
       priorRouteDoorwayContract: PRIOR_CONTRACT,
-      surfaceRouteDoorwayContract: PRIOR_SURFACE_CONTRACT,
+      priorHtmlContract: PRIOR_HTML_CONTRACT,
       readOnly: true,
       mutationAuthorized: false,
       controlsAuthorized: false,
@@ -705,7 +720,7 @@ async function importCanvasModule() {
       state.staleContractCount += 1;
       state.canvasStatus = "stale-contract";
       state.canvasPaintAuthorized = false;
-      state.parentChainStatus = "canvas-parent-instance-consumer-route-loaded-stale-canvas-contract";
+      state.parentChainStatus = "route-renewed-but-stale-canvas-contract-served";
     } else {
       const canvasReady =
         canvasStatus?.parentSurfaceReady === true &&
@@ -716,13 +731,13 @@ async function importCanvasModule() {
       state.canvasStatus = canvasReady ? "active-visible-composition" : "loaded-consumption-held";
       state.canvasPaintAuthorized = canvasReady;
       state.parentChainStatus = canvasReady
-        ? "canvas-parent-instance-consumer-visible-composition-loaded"
-        : "canvas-parent-instance-consumer-loaded-but-surface-consumption-held";
+        ? "route-doorway-renewed-canvas-visible-composition-loaded"
+        : "route-doorway-renewed-canvas-loaded-but-surface-consumption-held";
     }
 
     state.controlsAuthorized = false;
-
     stampDocument();
+
     publishStatus(state.parentChainStatus, [
       `CANVAS: loaded · ${actualContract}`,
       `EXPECTED_CANVAS: ${EXPECTED_CONTRACTS.canvas}`,
@@ -739,8 +754,8 @@ async function importCanvasModule() {
       `CONTROLS_AUTHORIZED: false`,
       `VISUAL_PASS_CLAIM: false`
     ]);
-    publishReceiptPanel();
 
+    publishReceiptPanel();
     return !staleCanvas;
   } catch (error) {
     const message = safeError(error);
@@ -757,10 +772,10 @@ async function importCanvasModule() {
       error: message
     };
     state.errors.push(`canvas: ${message}`);
-    state.parentChainStatus = "surface-parent-loaded-but-canvas-parent-instance-consumer-failed";
+    state.parentChainStatus = "route-doorway-renewed-but-canvas-parent-instance-consumer-failed";
 
     stampDocument();
-    publishStatus("surface parent loaded but canvas parent-instance consumer failed", [
+    publishStatus("route renewed but canvas parent-instance consumer failed", [
       `CANVAS_MODULE: ${CANVAS_MODULE.path}`,
       `IMPORT_URL: ${url}`,
       `ERROR: ${message}`,
@@ -773,25 +788,14 @@ async function importCanvasModule() {
 }
 
 async function boot() {
-  stampDocument();
+  publishTopLevelExecution();
+  publishReceiptPanel();
   setHeldModules();
 
-  state.routeDoorway = "active";
-  state.parentChainStatus = "canvas-parent-instance-consumer-route-checking-surface-parent-chain";
-  document.documentElement.dataset.parentCoreChainStatus = state.parentChainStatus;
-
-  publishStatus("canvas parent-instance consumer route active; loading parent chain before canvas", [
-    `ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface`,
-    `CANVAS_CHAIN: parent-instance consumer after surface readiness`,
-    `HELD_CHAIN: controls`,
-    `CACHE_KEY: ${CACHE_KEY}`
-  ]);
-  publishReceiptPanel();
-
-  renderMountMessage("Loading surface parent", [
-    "kernel → lattice256 → landmap → terrain → surface",
-    "canvas waits for surface readiness",
-    "controls held"
+  renderMountMessage("Route doorway renewed", [
+    "Top-level execution confirmed",
+    "Loading parent chain",
+    "Controls held"
   ]);
 
   const modulesLoaded = await loadActiveModules();
@@ -815,6 +819,8 @@ async function boot() {
   await importCanvasModule();
 }
 
+stampDocument();
+
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", boot, { once: true });
 } else {
@@ -824,10 +830,8 @@ if (document.readyState === "loading") {
 export {
   CONTRACT,
   PRIOR_CONTRACT,
-  PRIOR_SURFACE_CONTRACT,
+  PRIOR_HTML_CONTRACT,
   SEED_PACKET,
-  TERRAIN_ONLY_CHAIN,
-  SURFACE_ACTIVE_READ_CHAIN,
   ROUTE,
   ACTIVE_MODULES,
   CANVAS_MODULE,

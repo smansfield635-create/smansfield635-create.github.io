@@ -1,608 +1,575 @@
 // /assets/audralia/audralia.canvas.js
-// AUDRALIA_G2_5_CANVAS_POLE_SWIVEL_CONSUMER_TNT_v1
+// AUDRALIA_PARENT_CHAIN_VISIBLE_CANVAS_AUTHORITY_TNT_v1
 // Full-file replacement.
-// Canvas remains draw/consume authority only.
-// New delta: consumes inspectionTiltRadians / poleSwivelRadians supplied by controls.
-// Runtime remains motion-only.
-// Controls own drag, spin, and pole swivel.
+// Canvas authority only.
+// Purpose:
+// - Expose window.AUDRALIA_CANVAS.mount.
+// - Render Audralia as a clean, ancient, ocean-driven, climate-bearing home-world planet.
+// - Consume AUDRALIA_BACKSTORY, AUDRALIA_TECTONICS, and AUDRALIA_TOPOLOGY when available.
+// - Preserve drag, spin, and pole-swivel inspection locally.
+// Not Hearth. Not Earth clone. Not a real-world geography copy.
+// No generated image. No GraphicBox. No visual-pass claim.
 
-import * as AudraliaAssets from "./audralia.assets.js";
+(() => {
+  "use strict";
 
-const CONTRACT = "AUDRALIA_G2_5_CANVAS_POLE_SWIVEL_CONSUMER_TNT_v1";
-const RECEIPT = "AUDRALIA_G2_5_CANVAS_POLE_SWIVEL_CONSUMER_RECEIPT";
-const PREVIOUS_CONTRACT = "AUDRALIA_V18_CANVAS_ASSET_BOUNDARY_CONSUMER_TNT_v1";
-const AXIS_TILT_DEGREES = 23.44;
-const TAU = Math.PI * 2;
+  const CONTRACT = "AUDRALIA_PARENT_CHAIN_VISIBLE_CANVAS_AUTHORITY_TNT_v1";
+  const RECEIPT = "AUDRALIA_PARENT_CHAIN_VISIBLE_CANVAS_AUTHORITY_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_CANVAS_PARENT_CONTRACT_CHILD_ACTIVATION_TNT_v13";
+  const VERSION = "2026-05-10.audralia-parent-chain-visible-canvas-v1";
 
-const instances = new WeakMap();
+  const TAU = Math.PI * 2;
 
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
-}
+  const COLORS = Object.freeze({
+    space: [2, 7, 18],
+    deepOcean: [4, 20, 46],
+    ocean: [6, 55, 93],
+    shelf: [18, 103, 128],
+    shallow: [45, 138, 142],
+    coast: [143, 164, 118],
+    wetLand: [58, 118, 82],
+    land: [102, 138, 82],
+    dryLand: [155, 137, 84],
+    highland: [121, 126, 98],
+    oldStone: [116, 116, 108],
+    ridge: [139, 137, 126],
+    polar: [204, 222, 222],
+    cloud: [230, 238, 238],
+    atmosphere: [86, 157, 194]
+  });
 
-function isMobile() {
-  return window.innerWidth <= 760 || (window.matchMedia && window.matchMedia("(pointer: coarse)").matches);
-}
-
-function mat4Multiply(a, b) {
-  const out = new Float32Array(16);
-
-  for (let row = 0; row < 4; row += 1) {
-    for (let col = 0; col < 4; col += 1) {
-      out[col * 4 + row] =
-        a[0 * 4 + row] * b[col * 4 + 0] +
-        a[1 * 4 + row] * b[col * 4 + 1] +
-        a[2 * 4 + row] * b[col * 4 + 2] +
-        a[3 * 4 + row] * b[col * 4 + 3];
-    }
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
   }
 
-  return out;
-}
-
-function mat4RotateX(rad) {
-  const c = Math.cos(rad);
-  const s = Math.sin(rad);
-
-  return new Float32Array([
-    1, 0, 0, 0,
-    0, c, s, 0,
-    0, -s, c, 0,
-    0, 0, 0, 1
-  ]);
-}
-
-function mat4RotateY(rad) {
-  const c = Math.cos(rad);
-  const s = Math.sin(rad);
-
-  return new Float32Array([
-    c, 0, -s, 0,
-    0, 1, 0, 0,
-    s, 0, c, 0,
-    0, 0, 0, 1
-  ]);
-}
-
-function mat4RotateZ(rad) {
-  const c = Math.cos(rad);
-  const s = Math.sin(rad);
-
-  return new Float32Array([
-    c, s, 0, 0,
-    -s, c, 0, 0,
-    0, 0, 1, 0,
-    0, 0, 0, 1
-  ]);
-}
-
-function mat4Scale(s) {
-  return new Float32Array([
-    s, 0, 0, 0,
-    0, s, 0, 0,
-    0, 0, s, 0,
-    0, 0, 0, 1
-  ]);
-}
-
-function mat4Translate(x, y, z) {
-  return new Float32Array([
-    1, 0, 0, 0,
-    0, 1, 0, 0,
-    0, 0, 1, 0,
-    x, y, z, 1
-  ]);
-}
-
-function mat4Ortho(left, right, bottom, top, near, far) {
-  return new Float32Array([
-    2 / (right - left), 0, 0, 0,
-    0, 2 / (top - bottom), 0, 0,
-    0, 0, -2 / (far - near), 0,
-    -(right + left) / (right - left),
-    -(top + bottom) / (top - bottom),
-    -(far + near) / (far - near),
-    1
-  ]);
-}
-
-function compileShader(gl, type, source) {
-  const shader = gl.createShader(type);
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
-
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    const info = gl.getShaderInfoLog(shader) || "shader compile failed";
-    gl.deleteShader(shader);
-    throw new Error(`${CONTRACT}: ${info}`);
+  function lerp(a, b, t) {
+    return a + (b - a) * clamp(t, 0, 1);
   }
 
-  return shader;
-}
-
-function createProgram(gl, vertexSource, fragmentSource) {
-  const program = gl.createProgram();
-  const vertex = compileShader(gl, gl.VERTEX_SHADER, vertexSource);
-  const fragment = compileShader(gl, gl.FRAGMENT_SHADER, fragmentSource);
-
-  gl.attachShader(program, vertex);
-  gl.attachShader(program, fragment);
-  gl.linkProgram(program);
-  gl.deleteShader(vertex);
-  gl.deleteShader(fragment);
-
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    const info = gl.getProgramInfoLog(program) || "program link failed";
-    gl.deleteProgram(program);
-    throw new Error(`${CONTRACT}: ${info}`);
+  function smoothstep(edge0, edge1, x) {
+    const t = clamp((x - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
+    return t * t * (3 - 2 * t);
   }
 
-  return program;
-}
-
-function createSphere(latSegments, lonSegments) {
-  const positions = [];
-  const normals = [];
-  const uvs = [];
-  const indices = [];
-
-  for (let lat = 0; lat <= latSegments; lat += 1) {
-    const v = lat / latSegments;
-    const theta = v * Math.PI;
-    const sinTheta = Math.sin(theta);
-    const cosTheta = Math.cos(theta);
-
-    for (let lon = 0; lon <= lonSegments; lon += 1) {
-      const u = lon / lonSegments;
-      const phi = u * TAU;
-      const x = Math.sin(phi) * sinTheta;
-      const y = cosTheta;
-      const z = Math.cos(phi) * sinTheta;
-
-      positions.push(x, y, z);
-      normals.push(x, y, z);
-      uvs.push(u, v);
-    }
+  function mix(a, b, t) {
+    const k = clamp(t, 0, 1);
+    return [
+      Math.round(lerp(a[0], b[0], k)),
+      Math.round(lerp(a[1], b[1], k)),
+      Math.round(lerp(a[2], b[2], k))
+    ];
   }
 
-  const row = lonSegments + 1;
-
-  for (let lat = 0; lat < latSegments; lat += 1) {
-    for (let lon = 0; lon < lonSegments; lon += 1) {
-      const a = lat * row + lon;
-      const b = a + row;
-
-      indices.push(a, b, a + 1);
-      indices.push(b, b + 1, a + 1);
-    }
+  function shade(color, amount) {
+    return [
+      clamp(Math.round(color[0] + amount), 0, 255),
+      clamp(Math.round(color[1] + amount), 0, 255),
+      clamp(Math.round(color[2] + amount), 0, 255)
+    ];
   }
 
-  return {
-    positions: new Float32Array(positions),
-    normals: new Float32Array(normals),
-    uvs: new Float32Array(uvs),
-    indices: new Uint16Array(indices)
-  };
-}
-
-function ensureCanvas(mount) {
-  let canvas = mount.querySelector("canvas[data-audralia-canvas='true']");
-
-  if (!canvas) {
-    canvas = document.createElement("canvas");
-    canvas.dataset.audraliaCanvas = "true";
-    mount.appendChild(canvas);
+  function wrap01(value) {
+    return ((value % 1) + 1) % 1;
   }
 
-  canvas.dataset.audraliaCanvas = "true";
-  canvas.dataset.audraliaCanvasReceipt = RECEIPT;
-  canvas.dataset.audraliaCanvasContract = CONTRACT;
-  canvas.dataset.audraliaPreviousCanvasContract = PREVIOUS_CONTRACT;
-  canvas.dataset.audraliaPoleSwivelConsumer = "true";
-  canvas.dataset.audraliaAssetsBoundaryExpression = "true";
-  canvas.dataset.audraliaAssetsAbsorbAuthority = "false";
-  canvas.dataset.generatedImage = "false";
-  canvas.dataset.graphicBox = "false";
-  canvas.dataset.visualPassClaimed = "false";
-  canvas.tabIndex = 0;
-  canvas.style.position = "absolute";
-  canvas.style.inset = "0";
-  canvas.style.width = "100%";
-  canvas.style.height = "100%";
-  canvas.style.pointerEvents = "auto";
-  canvas.style.touchAction = "none";
-  canvas.style.userSelect = "none";
-
-  return canvas;
-}
-
-function readRuntimeState(runtime, fallbackStart) {
-  const sampled =
-    runtime?.sampleMotionState?.() ||
-    runtime?.sampleRuntimeMotion?.() ||
-    runtime?.sampleRuntimeState?.() ||
-    runtime?.sampleAudraliaRuntime?.() ||
-    runtime?.getMotionState?.() ||
-    runtime?.getStatus?.()?.motion ||
-    runtime?.getStatus?.() ||
-    window.__AUDRALIA_RUNTIME_STATUS__ ||
-    {};
-
-  const elapsed = Math.max(0, (performance.now() - fallbackStart) / 1000);
-
-  const rotationRadians =
-    Number.isFinite(sampled.rotationRadians) ? sampled.rotationRadians :
-    Number.isFinite(sampled.rotationRad) ? sampled.rotationRad :
-    Number.isFinite(sampled.angleRadians) ? sampled.angleRadians :
-    Number.isFinite(sampled.orbitRadians) ? sampled.orbitRadians :
-    elapsed * 0.05;
-
-  const axisTiltRadians =
-    Number.isFinite(sampled.axisTiltRadians) ? sampled.axisTiltRadians :
-    Number.isFinite(sampled.axialTiltRad) ? sampled.axialTiltRad :
-    AXIS_TILT_DEGREES * Math.PI / 180;
-
-  const inspectionTiltRadians =
-    Number.isFinite(sampled.inspectionTiltRadians) ? sampled.inspectionTiltRadians :
-    Number.isFinite(sampled.poleSwivelRadians) ? sampled.poleSwivelRadians :
-    0;
-
-  return {
-    rotationRadians,
-    axisTiltRadians,
-    inspectionTiltRadians,
-    poleSwivelRadians: inspectionTiltRadians,
-    waterPhase:
-      Number.isFinite(sampled.waterPhase) ? sampled.waterPhase :
-      Number.isFinite(sampled.oceanPhaseRad) ? sampled.oceanPhaseRad :
-      elapsed * 0.16,
-    atmospherePhase:
-      Number.isFinite(sampled.atmospherePhase) ? sampled.atmospherePhase :
-      Number.isFinite(sampled.atmosphericPhaseRad) ? sampled.atmosphericPhaseRad :
-      elapsed * 0.09,
-    frame: Number.isFinite(sampled.frame) ? sampled.frame : Math.floor(elapsed * 60)
-  };
-}
-
-class AudraliaCanvasController {
-  constructor(mount, options = {}) {
-    this.mount = mount;
-    this.runtime = options.runtime || options.runtimeMotion || null;
-    this.assets = options.assets || AudraliaAssets;
-    this.canvas = ensureCanvas(mount);
-    this.mobile = isMobile();
-    this.destroyed = false;
-    this.startedAt = performance.now();
-    this.raf = 0;
-    this.resizeObserver = null;
-
-    this.gl = this.canvas.getContext("webgl", {
-      alpha: true,
-      antialias: true,
-      depth: true,
-      premultipliedAlpha: false,
-      preserveDrawingBuffer: false,
-      powerPreference: "high-performance"
-    });
-
-    if (!this.gl) {
-      throw new Error(`${CONTRACT}: WebGL unavailable.`);
-    }
-
-    this.resize = this.resize.bind(this);
-    this.loop = this.loop.bind(this);
-
-    this.initGL();
-    this.install();
-    this.resize();
-    this.start();
-    this.stamp("mounted");
+  function hash(x, y, seed) {
+    let h = Math.imul(x ^ 0x9e3779b9, 0x85ebca6b);
+    h ^= Math.imul(y ^ seed ^ 0xc2b2ae35, 0x27d4eb2f);
+    h ^= h >>> 15;
+    h = Math.imul(h, 0x85ebca6b);
+    h ^= h >>> 13;
+    h = Math.imul(h, 0xc2b2ae35);
+    h ^= h >>> 16;
+    return (h >>> 0) / 4294967295;
   }
 
-  initGL() {
-    const gl = this.gl;
+  function noise(u, v, scale, seed) {
+    const s = Math.max(1, Math.floor(scale));
+    const x = wrap01(u) * s;
+    const y = clamp(v, 0, 1) * s;
 
-    const vertexSource = `
-      attribute vec3 aPosition;
-      attribute vec3 aNormal;
-      attribute vec2 aUV;
-      uniform mat4 uModel;
-      uniform mat4 uView;
-      uniform mat4 uProjection;
-      varying vec3 vNormal;
-      varying vec2 vUV;
+    const x0 = Math.floor(x);
+    const y0 = Math.floor(y);
+    const x1 = x0 + 1;
+    const y1 = y0 + 1;
 
-      void main() {
-        vec4 worldPosition = uModel * vec4(aPosition, 1.0);
-        vNormal = normalize((uModel * vec4(aNormal, 0.0)).xyz);
-        vUV = aUV;
-        gl_Position = uProjection * uView * worldPosition;
-      }
-    `;
+    const xf = x - x0;
+    const yf = y - y0;
+    const sx = xf * xf * (3 - 2 * xf);
+    const sy = yf * yf * (3 - 2 * yf);
 
-    const fragmentSource = `
-      precision mediump float;
-      uniform sampler2D uTexture;
-      uniform vec3 uLightDirection;
-      uniform vec3 uViewDirection;
-      uniform float uWaterPhase;
-      uniform float uAtmospherePhase;
-      varying vec3 vNormal;
-      varying vec2 vUV;
-
-      void main() {
-        vec3 normal = normalize(vNormal);
-        vec3 base = texture2D(uTexture, vUV).rgb;
-        float light = max(dot(normal, normalize(uLightDirection)), 0.0);
-        float terminator = smoothstep(-0.25, 0.78, dot(normal, normalize(uLightDirection)));
-        float rim = pow(1.0 - max(dot(normal, normalize(uViewDirection)), 0.0), 2.15);
-        float plasma = 0.5 + 0.5 * sin(uAtmospherePhase + vUV.y * 6.28318);
-        float waterMotion = sin(vUV.x * 18.0 + uWaterPhase) * 0.004;
-        vec3 living = base + vec3(0.0, waterMotion, waterMotion * 1.35);
-        vec3 night = vec3(0.012, 0.028, 0.06);
-        vec3 color = mix(night, living * (0.40 + light * 0.70), terminator);
-        color += vec3(0.22, 0.58, 0.78) * rim * (0.20 + plasma * 0.08);
-        gl_FragColor = vec4(color, 1.0);
-      }
-    `;
-
-    this.program = createProgram(gl, vertexSource, fragmentSource);
-    gl.useProgram(this.program);
-
-    this.loc = {
-      aPosition: gl.getAttribLocation(this.program, "aPosition"),
-      aNormal: gl.getAttribLocation(this.program, "aNormal"),
-      aUV: gl.getAttribLocation(this.program, "aUV"),
-      uModel: gl.getUniformLocation(this.program, "uModel"),
-      uView: gl.getUniformLocation(this.program, "uView"),
-      uProjection: gl.getUniformLocation(this.program, "uProjection"),
-      uTexture: gl.getUniformLocation(this.program, "uTexture"),
-      uLightDirection: gl.getUniformLocation(this.program, "uLightDirection"),
-      uViewDirection: gl.getUniformLocation(this.program, "uViewDirection"),
-      uWaterPhase: gl.getUniformLocation(this.program, "uWaterPhase"),
-      uAtmospherePhase: gl.getUniformLocation(this.program, "uAtmospherePhase")
-    };
-
-    const mesh = createSphere(this.mobile ? 48 : 64, this.mobile ? 96 : 128);
-    this.indexCount = mesh.indices.length;
-
-    this.positionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, mesh.positions, gl.STATIC_DRAW);
-
-    this.normalBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, mesh.normals, gl.STATIC_DRAW);
-
-    this.uvBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.uvBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, mesh.uvs, gl.STATIC_DRAW);
-
-    this.indexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, mesh.indices, gl.STATIC_DRAW);
-
-    const textureCanvas =
-      this.assets?.createAudraliaAssetTexture?.() ||
-      this.assets?.createTextureCanvas?.() ||
-      AudraliaAssets.createAudraliaAssetTexture();
-
-    this.texture = gl.createTexture();
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, this.texture);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textureCanvas);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-
-    gl.enable(gl.DEPTH_TEST);
-    gl.depthFunc(gl.LEQUAL);
-    gl.disable(gl.CULL_FACE);
-    gl.clearColor(0, 0, 0, 0);
-
-    gl.uniform1i(this.loc.uTexture, 0);
-    gl.uniform3f(this.loc.uLightDirection, -0.42, 0.36, 0.84);
-    gl.uniform3f(this.loc.uViewDirection, 0, 0, 1);
-  }
-
-  install() {
-    this.resizeObserver = typeof ResizeObserver !== "undefined" ? new ResizeObserver(this.resize) : null;
-
-    if (this.resizeObserver) {
-      this.resizeObserver.observe(this.mount);
-    } else {
-      window.addEventListener("resize", this.resize, { passive: true });
-    }
-  }
-
-  resize() {
-    if (this.destroyed) return;
-
-    const rect = this.mount.getBoundingClientRect();
-    const cssSize = Math.max(320, Math.floor(rect.width || this.mount.clientWidth || 560));
-    const dpr = clamp(window.devicePixelRatio || 1, 1, this.mobile ? 1.5 : 1.85);
-    const physical = Math.max(320, Math.min(this.mobile ? 760 : 1100, Math.round(cssSize * dpr)));
-
-    if (this.canvas.width !== physical || this.canvas.height !== physical) {
-      this.canvas.width = physical;
-      this.canvas.height = physical;
-      this.canvas.style.height = `${cssSize}px`;
-      this.gl.viewport(0, 0, physical, physical);
-      this.projection = mat4Ortho(-1.08, 1.08, -1.08, 1.08, 0.1, 10);
-      this.view = mat4Translate(0, 0, -2.7);
-    }
-  }
-
-  model(state) {
-    return mat4Multiply(
-      mat4RotateX(state.inspectionTiltRadians || 0),
-      mat4Multiply(
-        mat4RotateZ(-state.axisTiltRadians),
-        mat4Multiply(mat4RotateY(state.rotationRadians), mat4Scale(0.91))
-      )
+    return lerp(
+      lerp(hash(((x0 % s) + s) % s, y0, seed), hash(((x1 % s) + s) % s, y0, seed), sx),
+      lerp(hash(((x0 % s) + s) % s, y1, seed), hash(((x1 % s) + s) % s, y1, seed), sx),
+      sy
     );
   }
 
-  draw(state) {
-    const gl = this.gl;
+  function fbm(u, v, seed, octaves = 5) {
+    let total = 0;
+    let norm = 0;
+    let amp = 0.58;
+    let scale = 3.5;
 
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    gl.useProgram(this.program);
+    for (let i = 0; i < octaves; i += 1) {
+      total += noise(u, v, scale, seed + i * 131) * amp;
+      norm += amp;
+      amp *= 0.52;
+      scale *= 2;
+    }
 
-    gl.uniformMatrix4fv(this.loc.uModel, false, this.model(state));
-    gl.uniformMatrix4fv(this.loc.uView, false, this.view || mat4Translate(0, 0, -2.7));
-    gl.uniformMatrix4fv(this.loc.uProjection, false, this.projection || mat4Ortho(-1.08, 1.08, -1.08, 1.08, 0.1, 10));
-    gl.uniform1f(this.loc.uWaterPhase, state.waterPhase || 0);
-    gl.uniform1f(this.loc.uAtmospherePhase, state.atmospherePhase || 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
-    gl.enableVertexAttribArray(this.loc.aPosition);
-    gl.vertexAttribPointer(this.loc.aPosition, 3, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
-    gl.enableVertexAttribArray(this.loc.aNormal);
-    gl.vertexAttribPointer(this.loc.aNormal, 3, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.uvBuffer);
-    gl.enableVertexAttribArray(this.loc.aUV);
-    gl.vertexAttribPointer(this.loc.aUV, 2, gl.FLOAT, false, 0, 0);
-
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, this.texture);
-
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-    gl.drawElements(gl.TRIANGLES, this.indexCount, gl.UNSIGNED_SHORT, 0);
-
-    this.canvas.dataset.audraliaRuntimeFrame = String(state.frame || 0);
-    this.canvas.dataset.audraliaRotationRadians = Number(state.rotationRadians || 0).toFixed(5);
-    this.canvas.dataset.audraliaInspectionTiltRadians = Number(state.inspectionTiltRadians || 0).toFixed(5);
+    return total / Math.max(0.000001, norm);
   }
 
-  loop() {
-    if (this.destroyed) return;
+  function ridged(u, v, seed, octaves = 5) {
+    let total = 0;
+    let norm = 0;
+    let amp = 0.62;
+    let scale = 6.5;
 
-    this.draw(readRuntimeState(this.runtime, this.startedAt));
-    this.raf = requestAnimationFrame(this.loop);
+    for (let i = 0; i < octaves; i += 1) {
+      const n = noise(u, v, scale, seed + i * 97);
+      total += (1 - Math.abs(n * 2 - 1)) * amp;
+      norm += amp;
+      amp *= 0.52;
+      scale *= 2;
+    }
+
+    return total / Math.max(0.000001, norm);
   }
 
-  start() {
-    if (this.raf) return;
-    this.raf = requestAnimationFrame(this.loop);
+  function sampleBackstory(u, v, longitude, latitude) {
+    if (window.AUDRALIA_BACKSTORY && typeof window.AUDRALIA_BACKSTORY.sampleIdentity === "function") {
+      return window.AUDRALIA_BACKSTORY.sampleIdentity(u, v, { longitude, latitude });
+    }
+
+    return {
+      oceanBias: 0.7,
+      weatheredAge: 1,
+      cleanClimate: 1,
+      homeWorldSignal: 0.8
+    };
   }
 
-  stamp(status) {
-    const canvasStatus = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      routeConsumesAssets: true,
-      consumesPoleSwivelControls: true,
-      assetsBoundaryExpression: true,
-      assetsAbsorbAuthority: false,
-      runtimeMotionOnly: true,
-      generatedImage: false,
-      graphicBox: false,
-      visualPassClaimed: false,
-      status
+  function sampleTectonics(u, v, longitude, latitude) {
+    if (window.AUDRALIA_TECTONICS && typeof window.AUDRALIA_TECTONICS.sampleTectonics === "function") {
+      return window.AUDRALIA_TECTONICS.sampleTectonics(u, v, { longitude, latitude });
+    }
+
+    const ridge = ridged(u * 1.5, v * 1.2, 211000, 5);
+    const basin = 1 - fbm(u * 1.8, v * 1.4, 213000, 5);
+
+    return {
+      exposedLandPressure: clamp(ridge * 0.42 + fbm(u, v, 210000, 5) * 0.22 - basin * 0.12, 0, 1),
+      shelfPressure: clamp(ridged(u * 2.2, v * 1.7, 212000, 5), 0, 1),
+      basinPressure: clamp(basin, 0, 1),
+      oldRidgePressure: ridge,
+      islandPressure: clamp(ridged(u * 2.6, v * 2.0, 214000, 4), 0, 1),
+      weatheredEdgePressure: clamp(fbm(u * 2.4, v * 2.0, 215000, 4), 0, 1),
+      oceanPressure: 0.72
+    };
+  }
+
+  function sampleTopology(u, v, longitude, latitude) {
+    if (window.AUDRALIA_TOPOLOGY && typeof window.AUDRALIA_TOPOLOGY.sampleTopology === "function") {
+      return window.AUDRALIA_TOPOLOGY.sampleTopology(u, v, { longitude, latitude });
+    }
+
+    const tectonics = sampleTectonics(u, v, longitude, latitude);
+
+    return {
+      landEligibility: tectonics.exposedLandPressure,
+      islandEligibility: tectonics.islandPressure,
+      shelf: tectonics.shelfPressure,
+      basin: tectonics.basinPressure,
+      belowSeaDepth: tectonics.oceanPressure,
+      aboveSeaPressure: tectonics.exposedLandPressure,
+      subterraneanDepth: 0.45
+    };
+  }
+
+  function landShape(u, v, longitude, latitude) {
+    const backstory = sampleBackstory(u, v, longitude, latitude);
+    const tectonics = sampleTectonics(u, v, longitude, latitude);
+    const topology = sampleTopology(u, v, longitude, latitude);
+
+    const continentArc =
+      Math.sin((longitude * 1.35) + Math.cos(latitude * 1.7) * 0.55) * 0.22 +
+      Math.cos((longitude * 0.74) - Math.sin(latitude * 1.4) * 0.6) * 0.18;
+
+    const oldPlateNoise = fbm(u * 0.9 + 0.11, v * 0.88 - 0.07, 430000, 6);
+    const shelfNoise = ridged(u * 1.8 - 0.13, v * 1.45 + 0.08, 431000, 5);
+    const brokenEdge = ridged(u * 3.2 + 0.2, v * 2.6 - 0.14, 432000, 4);
+    const latitudeAbs = Math.abs(latitude) / (Math.PI / 2);
+
+    const landSignal = clamp(
+      topology.landEligibility * 0.46 +
+        tectonics.exposedLandPressure * 0.24 +
+        oldPlateNoise * 0.2 +
+        continentArc * 0.12 +
+        topology.islandEligibility * 0.08 -
+        backstory.oceanBias * 0.24 -
+        latitudeAbs * 0.04,
+      0,
+      1
+    );
+
+    const islandSignal = smoothstep(0.61, 0.89, shelfNoise * 0.6 + brokenEdge * 0.26 + topology.islandEligibility * 0.22);
+    const mainLand = landSignal > 0.55;
+    const islandLand = !mainLand && islandSignal > 0.68 && topology.shelf > 0.44;
+    const isLand = mainLand || islandLand;
+
+    return {
+      isLand,
+      mainLand,
+      islandLand,
+      landSignal,
+      islandSignal,
+      backstory,
+      tectonics,
+      topology
+    };
+  }
+
+  function surfaceColor(u, v, longitude, latitude) {
+    const shape = landShape(u, v, longitude, latitude);
+    const latitudeAbs = Math.abs(latitude) / (Math.PI / 2);
+    const relief = ridged(u * 2.15 + 0.08, v * 1.62 - 0.05, 440000, 5);
+    const climateMoisture = clamp(
+      fbm(u * 1.4 - 0.14, v * 1.2 + 0.09, 441000, 5) * 0.52 +
+        shape.topology.basin * 0.18 +
+        shape.topology.shelf * 0.08 -
+        latitudeAbs * 0.12,
+      0,
+      1
+    );
+
+    if (!shape.isLand) {
+      let water = mix(COLORS.deepOcean, COLORS.ocean, smoothstep(0.22, 0.86, 1 - shape.topology.belowSeaDepth + fbm(u, v, 450000, 4) * 0.26));
+      water = mix(water, COLORS.shelf, smoothstep(0.54, 0.88, shape.topology.shelf) * 0.42);
+      water = mix(water, COLORS.shallow, shape.islandSignal * 0.12);
+      return shade(water, (fbm(u * 2.0, v * 1.7, 451000, 4) - 0.5) * 6);
+    }
+
+    const dry = clamp((1 - climateMoisture) * 0.72 + latitudeAbs * 0.08, 0, 1);
+    const high = clamp(relief * 0.56 + shape.tectonics.oldRidgePressure * 0.34, 0, 1);
+    const coast = smoothstep(0.5, 0.62, shape.landSignal) * (1 - smoothstep(0.62, 0.78, shape.landSignal));
+
+    let land = COLORS.land;
+
+    land = mix(land, COLORS.wetLand, climateMoisture * 0.42);
+    land = mix(land, COLORS.dryLand, dry * 0.38);
+    land = mix(land, COLORS.highland, high * 0.26);
+    land = mix(land, COLORS.oldStone, high * shape.tectonics.weatheredEdgePressure * 0.22);
+    land = mix(land, COLORS.ridge, smoothstep(0.62, 0.9, high) * 0.22);
+    land = mix(land, COLORS.coast, coast * 0.16);
+    land = mix(land, COLORS.polar, smoothstep(0.72, 0.96, latitudeAbs + high * 0.14) * 0.34);
+
+    const grain = (fbm(u * 3.4 + 0.15, v * 2.7 - 0.11, 460000, 4) - 0.5) * 10;
+    const ridgeShade = smoothstep(0.6, 0.9, high) * 10 - shape.topology.basin * 5;
+
+    return shade(land, grain + ridgeShade - 3);
+  }
+
+  function buildTexture(width, height) {
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+
+    const ctx = canvas.getContext("2d", { alpha: false });
+    const image = ctx.createImageData(width, height);
+    const data = image.data;
+
+    for (let y = 0; y < height; y += 1) {
+      const v = y / Math.max(1, height - 1);
+      const latitude = (0.5 - v) * Math.PI;
+
+      for (let x = 0; x < width; x += 1) {
+        const u = x / width;
+        const longitude = (u - 0.5) * TAU;
+        const color = surfaceColor(u, v, longitude, latitude);
+        const index = (y * width + x) * 4;
+
+        data[index] = color[0];
+        data[index + 1] = color[1];
+        data[index + 2] = color[2];
+        data[index + 3] = 255;
+      }
+    }
+
+    ctx.putImageData(image, 0, 0);
+
+    return {
+      canvas,
+      ctx,
+      image,
+      data,
+      width,
+      height
+    };
+  }
+
+  function textureSample(texture, u, v) {
+    const x = Math.floor(wrap01(u) * texture.width) % texture.width;
+    const y = clamp(Math.floor(clamp(v, 0, 1) * (texture.height - 1)), 0, texture.height - 1);
+    const index = (y * texture.width + x) * 4;
+
+    return [
+      texture.data[index],
+      texture.data[index + 1],
+      texture.data[index + 2]
+    ];
+  }
+
+  function mount(mountNode, options = {}) {
+    const mount =
+      mountNode && mountNode.nodeType === 1
+        ? mountNode
+        : document.body;
+
+    mount.querySelectorAll("canvas[data-audralia-parent-chain-canvas='true']").forEach((node) => node.remove());
+
+    const canvas = document.createElement("canvas");
+    canvas.dataset.audraliaParentChainCanvas = "true";
+    canvas.dataset.audraliaCanvasContract = CONTRACT;
+    canvas.dataset.audraliaCanvasReceipt = RECEIPT;
+    canvas.dataset.audraliaOceanDrivenHomeWorld = "true";
+    canvas.dataset.generatedImage = "false";
+    canvas.dataset.graphicBox = "false";
+    canvas.dataset.visualPassClaimed = "false";
+
+    canvas.style.position = "absolute";
+    canvas.style.inset = "0";
+    canvas.style.display = "block";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.touchAction = "none";
+    canvas.style.userSelect = "none";
+
+    mount.style.position = mount.style.position || "relative";
+    mount.style.overflow = "hidden";
+    mount.style.touchAction = "none";
+    mount.appendChild(canvas);
+
+    const ctx = canvas.getContext("2d", { alpha: true });
+    const texture = buildTexture(1024, 512);
+
+    const state = {
+      disposed: false,
+      dragging: false,
+      lastX: 0,
+      lastY: 0,
+      spin: -0.4,
+      tilt: -0.08,
+      velocity: 0.0024,
+      frames: 0,
+      lastRender: 0
     };
 
-    window.__AUDRALIA_CANVAS_STATUS__ = canvasStatus;
-    window.AUDRALIA_CANVAS_STATUS = canvasStatus;
+    function resize() {
+      const rect = mount.getBoundingClientRect();
+      const size = Math.max(280, Math.min(620, Math.floor(Math.min(rect.width || 420, rect.height || rect.width || 420))));
+      const dpr = Math.min(1.35, window.devicePixelRatio || 1);
+
+      canvas.width = Math.floor(size * dpr);
+      canvas.height = Math.floor(size * dpr);
+    }
+
+    function pointerDown(event) {
+      state.dragging = true;
+      state.lastX = event.clientX || event.touches?.[0]?.clientX || 0;
+      state.lastY = event.clientY || event.touches?.[0]?.clientY || 0;
+      canvas.setPointerCapture?.(event.pointerId);
+    }
+
+    function pointerMove(event) {
+      if (!state.dragging) return;
+
+      const x = event.clientX || event.touches?.[0]?.clientX || 0;
+      const y = event.clientY || event.touches?.[0]?.clientY || 0;
+      const dx = x - state.lastX;
+      const dy = y - state.lastY;
+
+      state.spin += dx * 0.008;
+      state.tilt = clamp(state.tilt + dy * 0.006, -1.15, 1.15);
+      state.lastX = x;
+      state.lastY = y;
+    }
+
+    function pointerUp(event) {
+      state.dragging = false;
+      canvas.releasePointerCapture?.(event.pointerId);
+    }
+
+    function render(now) {
+      if (state.disposed) return;
+
+      if (!state.dragging) state.spin += state.velocity;
+
+      if (now - state.lastRender < 30) {
+        requestAnimationFrame(render);
+        return;
+      }
+
+      state.lastRender = now;
+      state.frames += 1;
+
+      const width = canvas.width;
+      const height = canvas.height;
+      const cx = width * 0.5;
+      const cy = height * 0.5;
+      const radius = Math.min(width, height) * 0.44;
+      const image = ctx.createImageData(width, height);
+      const data = image.data;
+
+      const cosSpin = Math.cos(state.spin);
+      const sinSpin = Math.sin(state.spin);
+      const cosTilt = Math.cos(state.tilt);
+      const sinTilt = Math.sin(state.tilt);
+
+      const light = [-0.45, -0.28, 0.84];
+
+      for (let y = 0; y < height; y += 1) {
+        const py = (y - cy) / radius;
+
+        for (let x = 0; x < width; x += 1) {
+          const px = (x - cx) / radius;
+          const rr = px * px + py * py;
+          const index = (y * width + x) * 4;
+
+          if (rr > 1) {
+            data[index] = 0;
+            data[index + 1] = 0;
+            data[index + 2] = 0;
+            data[index + 3] = 0;
+            continue;
+          }
+
+          let z = Math.sqrt(1 - rr);
+          let sx = px;
+          let sy = py;
+          let sz = z;
+
+          const ty = sy * cosTilt - sz * sinTilt;
+          const tz = sy * sinTilt + sz * cosTilt;
+
+          sy = ty;
+          sz = tz;
+
+          const wx = sx * cosSpin - sz * sinSpin;
+          const wz = sx * sinSpin + sz * cosSpin;
+
+          const longitude = Math.atan2(wz, wx);
+          const latitude = Math.asin(clamp(sy, -1, 1));
+          const u = longitude / TAU + 0.5;
+          const v = 0.5 - latitude / Math.PI;
+          let color = textureSample(texture, u, v);
+
+          const lightAmount = clamp(wx * light[0] + sy * light[1] + z * light[2], 0, 1);
+          const limb = smoothstep(0.0, 0.16, z);
+          const shadeAmount = -36 + lightAmount * 54;
+
+          color = shade(color, shadeAmount);
+          color = mix(COLORS.atmosphere, color, limb);
+          color = mix(color, COLORS.cloud, smoothstep(0.72, 0.95, fbm(u * 2.2 + state.spin * 0.02, v * 1.7, 470000, 3)) * 0.08);
+
+          data[index] = color[0];
+          data[index + 1] = color[1];
+          data[index + 2] = color[2];
+          data[index + 3] = Math.round(255 * smoothstep(0.0, 0.025, 1 - rr));
+        }
+      }
+
+      ctx.clearRect(0, 0, width, height);
+      ctx.putImageData(image, 0, 0);
+
+      if (typeof options.onStatus === "function") {
+        options.onStatus("rendering", {
+          mounted: true,
+          canvasFound: true,
+          controlsBound: true,
+          frames: state.frames
+        });
+      }
+
+      requestAnimationFrame(render);
+    }
+
+    resize();
+
+    window.addEventListener("resize", resize);
+    canvas.addEventListener("pointerdown", pointerDown);
+    canvas.addEventListener("pointermove", pointerMove);
+    canvas.addEventListener("pointerup", pointerUp);
+    canvas.addEventListener("pointercancel", pointerUp);
+
+    requestAnimationFrame(render);
+
+    function dispose() {
+      state.disposed = true;
+      window.removeEventListener("resize", resize);
+      canvas.removeEventListener("pointerdown", pointerDown);
+      canvas.removeEventListener("pointermove", pointerMove);
+      canvas.removeEventListener("pointerup", pointerUp);
+      canvas.removeEventListener("pointercancel", pointerUp);
+      canvas.remove();
+    }
+
+    window.__AUDRALIA_CANVAS_DISPOSE__ = dispose;
 
     document.documentElement.dataset.audraliaCanvasLoaded = "true";
     document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
     document.documentElement.dataset.audraliaCanvasReceipt = RECEIPT;
-    document.documentElement.dataset.audraliaPoleSwivelConsumer = "true";
-    document.documentElement.dataset.audraliaAssetsBoundaryExpression = "true";
-    document.documentElement.dataset.audraliaAssetsAbsorbAuthority = "false";
+    document.documentElement.dataset.audraliaCanvasMounted = "true";
+    document.documentElement.dataset.audraliaOceanDrivenHomeWorld = "true";
     document.documentElement.dataset.generatedImage = "false";
     document.documentElement.dataset.graphicBox = "false";
     document.documentElement.dataset.visualPassClaimed = "false";
+
+    return {
+      canvas,
+      controlsBound: true,
+      dispose,
+      getStatus
+    };
   }
 
-  destroy() {
-    this.destroyed = true;
-
-    if (this.raf) {
-      cancelAnimationFrame(this.raf);
-      this.raf = 0;
-    }
-
-    if (this.resizeObserver) {
-      this.resizeObserver.disconnect();
-      this.resizeObserver = null;
-    } else {
-      window.removeEventListener("resize", this.resize);
-    }
-
-    instances.delete(this.mount);
-    this.stamp("disposed");
-  }
-}
-
-function resolveMount(target) {
-  if (typeof target === "string") return document.querySelector(target);
-  if (target instanceof Element) return target;
-  return document.querySelector("#audralia-canvas-mount, [data-audralia-canvas-mount]");
-}
-
-function mountAudraliaCanvas(target, options = {}) {
-  const mount = resolveMount(target);
-
-  if (!mount) {
-    throw new Error(`${CONTRACT}: canonical mount not found.`);
+  function getStatus() {
+    return Object.freeze({
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      version: VERSION,
+      authority: "audralia-canvas",
+      exposesMount: true,
+      consumesBackstory: Boolean(window.AUDRALIA_BACKSTORY),
+      consumesTectonics: Boolean(window.AUDRALIA_TECTONICS),
+      consumesTopology: Boolean(window.AUDRALIA_TOPOLOGY),
+      oceanDrivenHomeWorld: true,
+      earthClone: false,
+      hearthIdentity: false,
+      generatedImage: false,
+      graphicBox: false,
+      visualPassClaimed: false
+    });
   }
 
-  if (instances.has(mount)) {
-    instances.get(mount).destroy();
-  }
-
-  const controller = new AudraliaCanvasController(mount, options);
-  instances.set(mount, controller);
-  window.__AUDRALIA_CANVAS_DISPOSE__ = () => controller.destroy();
-
-  return controller;
-}
-
-function getAudraliaCanvasStatus() {
-  return Object.freeze({
+  window.AUDRALIA_CANVAS = Object.freeze({
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
-    consumesPoleSwivelControls: true,
-    assetsBoundaryExpression: true,
-    assetsAbsorbAuthority: false,
-    runtimeMotionOnly: true,
-    generatedImage: false,
-    graphicBox: false,
-    visualPassClaimed: false
+    version: VERSION,
+    mount,
+    getStatus
   });
-}
 
-if (typeof window !== "undefined") {
-  window.mountAudraliaCanvas = mountAudraliaCanvas;
-  window.renderAudraliaCanvas = mountAudraliaCanvas;
-  window.__AUDRALIA_CANVAS_STATUS__ = getAudraliaCanvasStatus();
-}
+  window.AUDRALIA_CANVAS_RECEIPT = getStatus();
 
-export {
-  CONTRACT,
-  RECEIPT,
-  PREVIOUS_CONTRACT,
-  mountAudraliaCanvas,
-  mountAudraliaCanvas as renderAudraliaCanvas,
-  mountAudraliaCanvas as bootAudraliaCanvas,
-  mountAudraliaCanvas as createAudraliaCanvas,
-  mountAudraliaCanvas as initAudraliaCanvas,
-  mountAudraliaCanvas as mount,
-  getAudraliaCanvasStatus
-};
-
-export default {
-  mountAudraliaCanvas,
-  renderAudraliaCanvas: mountAudraliaCanvas,
-  mount: mountAudraliaCanvas,
-  getAudraliaCanvasStatus
-};
+  document.documentElement.dataset.audraliaCanvasLoaded = "true";
+  document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
+  document.documentElement.dataset.audraliaCanvasReceipt = RECEIPT;
+  document.documentElement.dataset.audraliaCanvasExposesMount = "true";
+  document.documentElement.dataset.generatedImage = "false";
+  document.documentElement.dataset.graphicBox = "false";
+  document.documentElement.dataset.visualPassClaimed = "false";
+})();

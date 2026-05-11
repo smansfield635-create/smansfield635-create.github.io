@@ -1,24 +1,34 @@
 <!-- /showroom/globe/h-earth/index.html -->
+<!-- H_EARTH_G1_ROUTE_SOURCE_MARKER_ALIGNMENT_TNT_v5 -->
+<!-- Required source marker retained for Gauges: H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_SHELL_TNT_v4 -->
 <!doctype html>
 <html
   lang="en"
-  data-page="h-earth-private-glamour-surface"
+  data-page="h-earth"
   data-route="/showroom/globe/h-earth/"
-  data-contract="H_EARTH_PRIVATE_ROOM_GLAMOUR_SURFACE_SIMPLIFICATION_HTML_TNT_v18A"
-  data-pair-contract="H_EARTH_PRIVATE_ROOM_GLAMOUR_SURFACE_SIMPLIFICATION_PAIR_TNT_v18"
-  data-previous-contract="H_EARTH_G1_RUNTIME_GOVERNED_PRIVATE_ROOM_ROUTE_TNT_v16B"
-  data-h-earth-room="private-orbital-aerial-build-room"
-  data-build-mode="orbital-aerial-first"
-  data-visible-diagnostics="false"
-  data-diagnostics-route="/gauges/h-earth/"
-  data-ground-level-ready="false"
-  data-estate-placement-ready="false"
-  data-parent-mutation-authorized="false"
-  data-earth-mutation-authorized="false"
-  data-hearth-mutation-authorized="false"
-  data-audralia-mutation-authorized="false"
-  data-generated-image="false"
-  data-graphic-box="false"
+  data-planet-lane="h-earth"
+  data-planet-name="H-Earth"
+  data-planet-meaning="Hybrid Earth"
+  data-generation="G1"
+  data-seed-packet="H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1"
+  data-contract="H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_SHELL_TNT_v4"
+  data-alignment-contract="H_EARTH_G1_ROUTE_SOURCE_MARKER_ALIGNMENT_TNT_v5"
+  data-route-doorway-required="H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4"
+  data-previous-contract="H_EARTH_G1_TERRAIN_BALANCE_ROUTE_SHELL_TNT_v3"
+  data-authority="route-shell-only"
+  data-parent-core-chain="kernel-lattice256-landmap-terrain-surface"
+  data-active-chain="kernel-lattice256-landmap-terrain-surface"
+  data-held-chain="canvas-controls"
+  data-surface="active-read-only"
+  data-canvas="held"
+  data-controls="held"
+  data-earth-reference-shell="protected-reference-only"
+  data-mutation-earth="forbidden"
+  data-mutation-hearth="forbidden"
+  data-mutation-audralia="forbidden"
+  data-australia-terminology="forbidden"
+  data-graphic-box="forbidden"
+  data-image-generation="forbidden"
   data-visual-pass-claim="false"
 >
 <head>
@@ -27,359 +37,447 @@
   <title>Diamond Gate Bridge · H-Earth</title>
   <meta
     name="description"
-    content="H-Earth private orbital/aerial build room. A clean planet-facing room for building the Hybrid Earth from above before ground-level estate placement."
+    content="H-Earth is the Hybrid Earth experimental third-planet lane. This route shell exposes navigation, surface active-read status, mount, handoff, and receipts while parent truth is loaded from kernel, lattice256, landmap, terrain, and surface files."
   >
 
   <style>
     :root {
       color-scheme: dark;
-      --bg:#040711;
-      --panel:rgba(9,17,31,.84);
-      --panel2:rgba(5,10,22,.88);
-      --line:rgba(244,191,96,.30);
-      --soft-line:rgba(255,255,255,.09);
-      --line-blue:rgba(142,190,255,.24);
-      --text:#f7ead0;
-      --muted:#bac2cf;
-      --gold:#f4bf60;
-      --blue:#8ebeff;
-      --green:#8ff0c3;
-      --shadow:0 24px 70px rgba(0,0,0,.42);
-      --radius:24px;
-      --max:1180px;
+      --bg: #050812;
+      --panel: rgba(10, 18, 32, 0.84);
+      --line: rgba(244, 191, 96, 0.28);
+      --line-blue: rgba(142, 190, 255, 0.22);
+      --text: #f6ead2;
+      --muted: #b8c0ce;
+      --gold: #f4bf60;
+      --blue: #8ebeff;
+      --green: #8ff0c3;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+      --radius: 24px;
+      --max: 1180px;
     }
 
-    * { box-sizing:border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html {
-      min-height:100%;
+      min-height: 100%;
       background:
-        radial-gradient(circle at 48% 4%,rgba(142,190,255,.18),transparent 34rem),
-        radial-gradient(circle at 14% 18%,rgba(244,191,96,.12),transparent 28rem),
-        radial-gradient(circle at 88% 18%,rgba(143,240,195,.08),transparent 28rem),
-        linear-gradient(180deg,var(--bg),#02040a 76%);
+        radial-gradient(circle at 50% 0%, rgba(142, 190, 255, 0.16), transparent 34rem),
+        radial-gradient(circle at 12% 22%, rgba(244, 191, 96, 0.12), transparent 28rem),
+        linear-gradient(180deg, var(--bg), #02040a 74%);
     }
 
     body {
-      min-height:100%;
-      margin:0;
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      color:var(--text);
+      min-height: 100%;
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
       background:
-        linear-gradient(145deg,rgba(255,255,255,.035),transparent 42%),
-        radial-gradient(circle at 82% 14%,rgba(143,240,195,.08),transparent 24rem);
+        linear-gradient(145deg, rgba(255, 255, 255, 0.035), transparent 38%),
+        radial-gradient(circle at 82% 12%, rgba(143, 240, 195, 0.08), transparent 24rem);
     }
 
-    a { color:inherit; text-decoration:none; }
-
-    a:focus-visible,
-    button:focus-visible {
-      outline:2px solid var(--gold);
-      outline-offset:4px;
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    button { font:inherit; }
+    a:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
+    }
 
     .skip-link {
-      position:absolute;
-      left:1rem;
-      top:1rem;
-      z-index:30;
-      padding:.75rem 1rem;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:#08101d;
-      color:var(--text);
-      transform:translateY(-180%);
-      transition:transform 160ms ease;
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      z-index: 30;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #08101d;
+      color: var(--text);
+      transform: translateY(-180%);
+      transition: transform 160ms ease;
     }
 
-    .skip-link:focus { transform:translateY(0); }
+    .skip-link:focus {
+      transform: translateY(0);
+    }
 
-    .shell {
-      width:min(var(--max),calc(100% - 32px));
-      margin:0 auto;
-      padding:24px 0 46px;
+    .page-shell {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 46px;
     }
 
     .topbar {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:18px;
-      padding:14px 16px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(5,9,18,.72);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(16px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(5, 9, 18, 0.72);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
     }
 
     .brand {
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      min-width:max-content;
-      font-weight:850;
-      letter-spacing:.02em;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: max-content;
+      font-weight: 800;
+      letter-spacing: 0.02em;
     }
 
     .brand-mark {
-      width:18px;
-      height:18px;
-      border:1px solid var(--gold);
-      transform:rotate(45deg);
-      background:linear-gradient(135deg,rgba(244,191,96,.22),transparent),rgba(255,255,255,.04);
-      box-shadow:0 0 24px rgba(244,191,96,.18);
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--gold);
+      transform: rotate(45deg);
+      background: linear-gradient(135deg, rgba(244, 191, 96, 0.22), transparent), rgba(255, 255, 255, 0.04);
+      box-shadow: 0 0 24px rgba(244, 191, 96, 0.18);
     }
 
     .nav {
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:8px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
     }
 
     .nav a {
-      padding:8px 11px;
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:999px;
-      color:var(--muted);
-      font-size:.88rem;
-      background:rgba(255,255,255,.035);
+      padding: 8px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      background: rgba(255, 255, 255, 0.035);
     }
 
     .nav a[aria-current="page"] {
-      border-color:rgba(244,191,96,.52);
-      color:var(--gold);
-      background:rgba(244,191,96,.09);
-    }
-
-    .hero,
-    .stage-shell,
-    .status-card,
-    .panel {
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      background:linear-gradient(180deg,rgba(255,255,255,.055),transparent),var(--panel);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(18px);
+      border-color: rgba(244, 191, 96, 0.52);
+      color: var(--gold);
+      background: rgba(244, 191, 96, 0.09);
     }
 
     .hero {
-      margin-top:24px;
-      padding:clamp(22px,4vw,42px);
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(340px, 1.05fr);
+      gap: 22px;
+      align-items: stretch;
+      margin-top: 24px;
+    }
+
+    .hero-copy,
+    .surface-stage,
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent), var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .hero-copy {
+      padding: clamp(22px, 4vw, 42px);
     }
 
     .eyebrow {
-      display:inline-flex;
-      margin:0 0 18px;
-      padding:8px 12px;
-      border:1px solid var(--line-blue);
-      border-radius:999px;
-      color:var(--blue);
-      background:rgba(142,190,255,.08);
-      font-size:.86rem;
-      font-weight:850;
-      letter-spacing:.08em;
-      text-transform:uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 18px;
+      padding: 8px 12px;
+      border: 1px solid var(--line-blue);
+      border-radius: 999px;
+      color: var(--blue);
+      background: rgba(142, 190, 255, 0.08);
+      font-size: 0.86rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     h1 {
-      margin:0;
-      font-size:clamp(2.5rem,7vw,5.9rem);
-      line-height:.9;
-      letter-spacing:-.075em;
+      margin: 0;
+      font-size: clamp(2.7rem, 8vw, 6.8rem);
+      line-height: 0.88;
+      letter-spacing: -0.085em;
     }
 
     .lede {
-      max-width:86ch;
-      margin:22px 0 0;
-      color:var(--muted);
-      font-size:clamp(1rem,2.2vw,1.16rem);
-      line-height:1.65;
+      max-width: 64ch;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      line-height: 1.65;
     }
 
-    .actions {
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:20px;
+    .route-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
     }
 
-    .button,
-    .actions button {
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:42px;
-      padding:10px 14px;
-      border:1px solid rgba(244,191,96,.32);
-      border-radius:999px;
-      background:rgba(244,191,96,.09);
-      color:var(--text);
-      font-weight:850;
-      cursor:pointer;
+    .route-actions a {
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(244, 191, 96, 0.09);
+      color: var(--text);
+      font-weight: 750;
     }
 
-    .button.primary {
-      color:#06101d;
-      background:var(--gold);
+    .route-actions a.secondary {
+      border-color: var(--line-blue);
+      background: rgba(142, 190, 255, 0.07);
+      color: var(--muted);
     }
 
-    .stage-shell {
-      margin-top:18px;
-      padding:16px;
-      overflow:hidden;
+    .surface-stage {
+      position: relative;
+      min-height: clamp(430px, 60vw, 680px);
+      overflow: hidden;
+      isolation: isolate;
+      padding: 18px;
     }
 
-    .stage {
-      position:relative;
-      display:grid;
-      place-items:center;
-      min-height:clamp(420px,72vw,760px);
-      border:1px solid rgba(142,190,255,.18);
-      border-radius:calc(var(--radius) - 8px);
-      overflow:hidden;
+    .surface-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
       background:
-        radial-gradient(circle at 48% 42%,rgba(40,95,140,.18),transparent 15rem),
-        radial-gradient(circle at 70% 30%,rgba(225,185,95,.12),transparent 14rem),
-        linear-gradient(180deg,rgba(7,13,30,1),rgba(2,5,12,1));
-      touch-action:none;
+        radial-gradient(circle at 50% 42%, rgba(142, 190, 255, 0.14), transparent 20rem),
+        radial-gradient(circle at 50% 50%, rgba(244, 191, 96, 0.10), transparent 28rem),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+    }
+
+    .surface-stage::after {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      z-index: -1;
+      border: 1px solid rgba(244, 191, 96, 0.20);
+      border-radius: calc(var(--radius) - 6px);
+      background:
+        linear-gradient(90deg, rgba(244, 191, 96, 0.06), transparent 20%, transparent 80%, rgba(142, 190, 255, 0.06)),
+        rgba(0, 0, 0, 0.16);
+      pointer-events: none;
+    }
+
+    .mount-shell {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      min-height: calc(clamp(430px, 60vw, 680px) - 36px);
+      border-radius: calc(var(--radius) - 10px);
+    }
+
+    #hEarthCanvasMount {
+      position: relative;
+      width: min(100%, 620px);
+      aspect-ratio: 1 / 1;
+      border: 1px solid rgba(142, 190, 255, 0.22);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 36% 24%, rgba(255, 255, 255, 0.14), transparent 13%),
+        radial-gradient(circle at 50% 50%, rgba(142, 190, 255, 0.09), transparent 46%),
+        rgba(0, 0, 0, 0.18);
+      box-shadow:
+        inset 0 0 70px rgba(0, 0, 0, 0.32),
+        0 0 90px rgba(142, 190, 255, 0.12);
+      overflow: hidden;
+    }
+
+    #hEarthCanvasMount[data-route-mount="awaiting-surface-parent"]::before {
+      content: "Awaiting H-Earth surface parent active-read chain";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(82%, 380px);
+      transform: translate(-50%, -50%);
+      padding: 13px 16px;
+      border: 1px solid rgba(244, 191, 96, 0.28);
+      border-radius: 999px;
+      background: rgba(5, 9, 18, 0.76);
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
     }
 
     .stage-label {
-      position:absolute;
-      left:16px;
-      top:16px;
-      z-index:3;
-      padding:7px 10px;
-      border:1px solid rgba(244,191,96,.30);
-      border-radius:999px;
-      color:var(--gold);
-      background:rgba(5,9,18,.72);
-      font-size:.74rem;
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
+      position: absolute;
+      left: 22px;
+      top: 22px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 11px;
+      border: 1px solid rgba(143, 240, 195, 0.22);
+      border-radius: 999px;
+      background: rgba(8, 18, 30, 0.72);
+      color: var(--green);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    #hEarthOrbitalCanvas {
-      width:min(92%,760px);
-      aspect-ratio:1/1;
-      display:block;
-      border-radius:999px;
-      transform:none !important;
-    }
-
-    .overlay-status {
-      position:absolute;
-      left:16px;
-      right:16px;
-      bottom:16px;
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:8px;
-      z-index:3;
-    }
-
-    .overlay-status span,
-    .status-card {
-      padding:12px;
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:16px;
-      background:rgba(5,9,18,.70);
-      color:var(--muted);
-      line-height:1.38;
-      overflow-wrap:anywhere;
-    }
-
-    .overlay-status strong,
-    .status-card strong {
-      display:block;
-      color:var(--gold);
-      font-size:.72rem;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      margin-bottom:4px;
-    }
-
-    .status-grid {
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      margin-top:16px;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
     }
 
     .panel {
-      margin-top:16px;
-      padding:18px;
+      padding: 18px;
+      min-height: 100%;
     }
 
     .panel h2 {
-      margin:0 0 10px;
-      font-size:1rem;
-      letter-spacing:.02em;
+      margin: 0 0 10px;
+      font-size: 1rem;
+      letter-spacing: 0.02em;
     }
 
     .panel p {
-      margin:0;
-      color:var(--muted);
-      line-height:1.55;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .chain-list {
+      display: grid;
+      gap: 8px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .chain-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.035);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .chain-list strong {
+      color: var(--text);
+      font-weight: 760;
+    }
+
+    .status-pill {
+      min-width: max-content;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .status-pill.held {
+      color: var(--muted);
+    }
+
+    .receipt-panel {
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid rgba(143, 240, 195, 0.18);
+      border-radius: 18px;
+      background: rgba(143, 240, 195, 0.055);
+    }
+
+    .receipt-panel code {
+      display: block;
+      overflow-wrap: anywhere;
+      color: var(--green);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.84rem;
+      line-height: 1.55;
     }
 
     .footer {
-      margin-top:18px;
-      color:rgba(246,234,210,.62);
-      font-size:.88rem;
-      line-height:1.55;
-      text-align:center;
+      margin-top: 18px;
+      color: rgba(246, 234, 210, 0.62);
+      font-size: 0.88rem;
+      line-height: 1.55;
+      text-align: center;
     }
 
-    [hidden] { display:none !important; }
-
-    @media (max-width:900px) {
+    @media (max-width: 920px) {
       .topbar {
-        align-items:flex-start;
-        border-radius:22px;
-        flex-direction:column;
+        align-items: flex-start;
+        border-radius: 22px;
+        flex-direction: column;
       }
 
-      .nav { justify-content:flex-start; }
-
-      .status-grid,
-      .overlay-status {
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-    }
-
-    @media (max-width:560px) {
-      .shell {
-        width:min(100% - 20px,var(--max));
-        padding-top:10px;
+      .nav {
+        justify-content: flex-start;
       }
 
       .hero,
-      .stage-shell,
-      .status-card,
-      .panel {
-        border-radius:18px;
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page-shell {
+        width: min(100% - 20px, var(--max));
+        padding-top: 10px;
       }
 
-      .stage-shell { padding:10px; }
+      .hero-copy,
+      .panel,
+      .surface-stage {
+        border-radius: 18px;
+      }
 
-      .status-grid,
-      .overlay-status {
-        grid-template-columns:1fr;
+      .surface-stage {
+        padding: 10px;
+      }
+
+      .surface-stage::after {
+        inset: 10px;
+        border-radius: 14px;
+      }
+
+      .mount-shell {
+        min-height: 360px;
+      }
+
+      .stage-label {
+        left: 14px;
+        top: 14px;
+      }
+
+      #hEarthCanvasMount {
+        width: min(100%, 330px);
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="/showroom/globe/h-earth/#h-earth-main">Skip to H-Earth</a>
+  <a class="skip-link" href="#h-earth-main">Skip to H-Earth</a>
 
-  <div class="shell">
+  <div class="page-shell">
     <header class="topbar" aria-label="H-Earth route navigation">
       <a class="brand" href="/" aria-label="Return to Diamond Gate Bridge Compass">
         <span class="brand-mark" aria-hidden="true"></span>
@@ -394,117 +492,159 @@
         <a href="/showroom/globe/h-earth/" aria-current="page">H-Earth</a>
         <a href="/showroom/globe/hearth/">Hearth</a>
         <a href="/showroom/globe/audralia/">Audralia</a>
-        <a href="/gauges/">Triple G</a>
+        <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
     <main id="h-earth-main" tabindex="-1">
-      <section class="hero">
-        <p class="eyebrow">H-Earth · Private Orbital Build Room</p>
-        <h1>H-Earth</h1>
-        <p class="lede">
-          H-Earth means Hybrid Earth. This private room is the clean orbital/aerial build surface for the planet.
-          The page stays visual-first. Diagnostics and raw receipts have moved backstage to H-Earth Gauges.
-        </p>
+      <section class="hero" aria-labelledby="h-earth-title">
+        <div class="hero-copy">
+          <p class="eyebrow">H-Earth · G1 · Surface Parent Active Read</p>
+          <h1 id="h-earth-title">H-Earth</h1>
+          <p class="lede">
+            H-Earth means Hybrid Earth. This route shell loads kernel, lattice256, landmap,
+            terrain, and surface. Surface is active as read-only parent material truth.
+            Canvas and controls remain held.
+          </p>
 
-        <div class="actions">
-          <a class="button primary" href="/showroom/globe/">Return to Showroom TV Set</a>
-          <a class="button" href="/gauges/h-earth/">Open H-Earth Gauges</a>
-          <a class="button" href="/gauges/">Run Triple G</a>
-        </div>
-      </section>
-
-      <section class="stage-shell" aria-label="H-Earth orbital build surface">
-        <div
-          id="hEarthCanvasCompositionMount"
-          class="stage"
-          data-h-earth-canvas-mount="true"
-          data-h-earth-private-room-mount="true"
-          data-orbital-surface-target="true"
-          data-visible-diagnostics="false"
-          data-ground-level-ready="false"
-          data-estate-placement-ready="false"
-          data-parent-mutation-authorized="false"
-        >
-          <div class="stage-label">Private H-Earth Screen</div>
-
-          <canvas
-            id="hEarthOrbitalCanvas"
-            width="1000"
-            height="1000"
-            aria-label="H-Earth orbital build surface"
-            role="img"
-            data-h-earth-orbital-canvas="true"
-          ></canvas>
-
-          <div id="hEarthStageStatus" class="overlay-status" aria-live="polite">
-            <span><strong>Mode</strong>Orbital / aerial first</span>
-            <span><strong>Ground level</strong>Held</span>
-            <span><strong>Estate</strong>Held</span>
-            <span><strong>Mutation</strong>Forbidden</span>
+          <div class="route-actions" aria-label="Route actions">
+            <a href="/showroom/globe/">Return to Globe Split</a>
+            <a class="secondary" href="/showroom/globe/earth/">Inspect Earth Reference</a>
+            <a class="secondary" href="/showroom/">Return to Showroom</a>
+            <a class="secondary" href="/gauges/h-earth/">Run H-Earth Gauges</a>
           </div>
+
+          <section
+            id="hEarthStatusTarget"
+            class="receipt-panel"
+            aria-label="H-Earth route status target"
+            data-status-target="h-earth-route"
+            data-current-status="surface-route-shell-loaded-awaiting-doorway-v4"
+            data-route-shell="ready"
+            data-route-doorway="awaiting-surface-active-read-index-js"
+            data-parent-core-chain="kernel-lattice256-landmap-terrain-surface"
+            data-active-chain="kernel-lattice256-landmap-terrain-surface"
+            data-held-chain="canvas-controls"
+          >
+            <code>ROUTE_RECEIPT: H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_SHELL_TNT_v4</code>
+            <code>ALIGNMENT_RECEIPT: H_EARTH_G1_ROUTE_SOURCE_MARKER_ALIGNMENT_TNT_v5</code>
+            <code>PREVIOUS_ROUTE_RECEIPT: H_EARTH_G1_TERRAIN_BALANCE_ROUTE_SHELL_TNT_v3</code>
+            <code>SEED_PACKET: H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1</code>
+            <code>REQUIRED_DOORWAY: H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4</code>
+            <code>STATUS: surface active-read route shell loaded; awaiting v4 doorway module</code>
+          </section>
         </div>
+
+        <section class="surface-stage" aria-label="H-Earth surface active-read status stage">
+          <div class="stage-label">Surface Status Mount</div>
+          <div class="mount-shell">
+            <div
+              id="hEarthCanvasMount"
+              role="img"
+              aria-label="H-Earth surface status mount awaiting surface active-read parent-chain authority"
+              data-mount="h-earth-surface-status"
+              data-route-mount="awaiting-surface-parent"
+              data-surface-authority="active-read-only"
+              data-canvas-authority="held"
+              data-controls-authority="held"
+              data-planet-truth-owner="parent-chain"
+            ></div>
+          </div>
+        </section>
       </section>
 
-      <section class="status-grid" aria-label="H-Earth simple status">
-        <div class="status-card">
-          <strong>Build surface</strong>
-          <span>Orbital view active.</span>
-        </div>
-        <div class="status-card">
-          <strong>Ground level</strong>
-          <span>Held until authorized.</span>
-        </div>
-        <div class="status-card">
-          <strong>Estate placement</strong>
-          <span>Held until ground-level mode is ready.</span>
-        </div>
-        <div class="status-card">
-          <strong>Diagnostics</strong>
-          <span>Moved to /gauges/h-earth/.</span>
-        </div>
+      <section class="grid" aria-label="H-Earth route shell authority">
+        <article class="panel">
+          <h2>Route Shell Owns</h2>
+          <p>
+            Navigation, status target, surface status mount, script handoff, and receipt exposure.
+            It does not generate planet truth.
+          </p>
+        </article>
+
+        <article class="panel">
+          <h2>Surface Active Read</h2>
+          <p>
+            Surface translates completed terrain into parent material truth. It does not paint canvas
+            and does not control motion.
+          </p>
+        </article>
+
+        <article class="panel">
+          <h2>Protected Separation</h2>
+          <p>
+            H-Earth may reference the current Earth shell experimentally, but it does not mutate Earth,
+            Hearth, or Audralia.
+          </p>
+        </article>
       </section>
 
-      <section class="panel">
-        <h2>Room Scope</h2>
+      <section class="panel" aria-labelledby="chain-title" style="margin-top:16px;">
+        <h2 id="chain-title">Surface Active-Read Parent Chain Order</h2>
         <p>
-          This room is for seeing and building H-Earth from above. It does not display raw runtime receipts,
-          canvas dumps, control dumps, or parent-chain module walls. Those belong in Gauges.
+          Surface may read terrain and publish material truth. Canvas and controls remain held.
         </p>
+
+        <ol class="chain-list">
+          <li><strong>HTML route shell</strong><span class="status-pill">source-aligned v5</span></li>
+          <li><strong>Route doorway</strong><span class="status-pill">index.js v4</span></li>
+          <li><strong>Kernel parent core</strong><span class="status-pill">locked</span></li>
+          <li><strong>256 lattice parent-coordinate engine</strong><span class="status-pill">locked</span></li>
+          <li><strong>Landmap parent mask</strong><span class="status-pill">terrain balance v2</span></li>
+          <li><strong>Terrain parent relief</strong><span class="status-pill">full aspect v2</span></li>
+          <li><strong>Surface parent material truth</strong><span class="status-pill">active read</span></li>
+          <li><strong>Canvas visible composition</strong><span class="status-pill held">held</span></li>
+          <li><strong>Controls motion/input only</strong><span class="status-pill held">held</span></li>
+        </ol>
       </section>
 
       <section
-        id="hEarthAuditMarkers"
-        hidden
-        aria-hidden="true"
-        data-receipt-panel="hidden-h-earth-private-room-markers"
-        data-html-contract="H_EARTH_PRIVATE_ROOM_GLAMOUR_SURFACE_SIMPLIFICATION_HTML_TNT_v18A"
-        data-required-route-contract="H_EARTH_PRIVATE_ROOM_GLAMOUR_SURFACE_SIMPLIFICATION_ROUTE_TNT_v18B"
-        data-pair-contract="H_EARTH_PRIVATE_ROOM_GLAMOUR_SURFACE_SIMPLIFICATION_PAIR_TNT_v18"
-        data-previous-contract="H_EARTH_G1_RUNTIME_GOVERNED_PRIVATE_ROOM_ROUTE_TNT_v16B"
-        data-visible-diagnostics="false"
-        data-diagnostics-route="/gauges/h-earth/"
-        data-build-mode="orbital-aerial-first"
-        data-ground-level-ready="false"
-        data-estate-placement-ready="false"
-        data-parent-mutation-authorized="false"
-        data-visual-pass-claim="false"
-      ></section>
+        id="hEarthReceiptPanel"
+        class="receipt-panel"
+        aria-label="H-Earth public receipts"
+        data-receipt-panel="h-earth"
+        data-receipt-route="H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_SHELL_TNT_v4"
+        data-alignment-receipt="H_EARTH_G1_ROUTE_SOURCE_MARKER_ALIGNMENT_TNT_v5"
+        data-previous-receipt-route="H_EARTH_G1_TERRAIN_BALANCE_ROUTE_SHELL_TNT_v3"
+        data-receipt-seed="H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1"
+        data-required-doorway="H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4"
+        data-active-chain="kernel-lattice256-landmap-terrain-surface"
+        data-held-chain="canvas-controls"
+        data-expected-surface-contract="H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1"
+        data-receipt-graphic-box="FORBIDDEN"
+        data-receipt-image-generation="FORBIDDEN"
+        data-receipt-visual-pass-claim="FALSE"
+      >
+        <code>H_EARTH_IDENTITY: separate experimental third-planet lane</code>
+        <code>ROUTE_AUTHORITY: shell only</code>
+        <code>ROUTE_RECEIPT: H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_SHELL_TNT_v4</code>
+        <code>ALIGNMENT_RECEIPT: H_EARTH_G1_ROUTE_SOURCE_MARKER_ALIGNMENT_TNT_v5</code>
+        <code>REQUIRED_DOORWAY: H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4</code>
+        <code>EXPECTED_SURFACE: H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1</code>
+        <code>ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface</code>
+        <code>HELD_CHAIN: canvas → controls</code>
+        <code>STATUS_TARGET: #hEarthStatusTarget</code>
+        <code>SURFACE_STATUS_MOUNT: #hEarthCanvasMount</code>
+        <code>SCRIPT_HANDOFF: ./index.js?v=H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4</code>
+        <code>EARTH_REFERENCE_SHELL: protected; no mutation authorized</code>
+        <code>data-mutation-earth=&quot;forbidden&quot;</code>
+      </section>
     </main>
 
     <footer class="footer">
-      H-Earth private room. Stage-facing surface only. Gauges hold the machinery.
+      H-Earth G1 surface active-read route shell. Parent files establish authority.
+      Canvas and controls remain held until separately authorized.
     </footer>
   </div>
 
   <script
-    id="hEarthGlamourSurfaceHandoff"
+    id="hEarthModuleHandoff"
     type="module"
-    src="./index.js?v=H_EARTH_PRIVATE_ROOM_GLAMOUR_SURFACE_SIMPLIFICATION_ROUTE_TNT_v18B"
-    data-handoff="h-earth-private-glamour-surface"
-    data-required-route-contract="H_EARTH_PRIVATE_ROOM_GLAMOUR_SURFACE_SIMPLIFICATION_ROUTE_TNT_v18B"
-    data-html-contract="H_EARTH_PRIVATE_ROOM_GLAMOUR_SURFACE_SIMPLIFICATION_HTML_TNT_v18A"
-    data-pair-contract="H_EARTH_PRIVATE_ROOM_GLAMOUR_SURFACE_SIMPLIFICATION_PAIR_TNT_v18"
+    src="./index.js?v=H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4"
+    data-handoff="h-earth-surface-active-read-route-doorway"
+    data-required-next-contract="H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4"
+    data-previous-contract="H_EARTH_G1_TERRAIN_BALANCE_ROUTE_DOORWAY_TNT_v3"
+    data-cache-key="2026-05-11-h-earth-route-source-marker-alignment-v5"
   ></script>
 </body>
 </html>

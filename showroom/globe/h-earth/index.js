@@ -1,16 +1,19 @@
 // /showroom/globe/h-earth/index.js
+// H_EARTH_G1_CONTROLS_ACTIVE_ROUTE_DOORWAY_TNT_v7
+// Retained Gauges source markers:
+// H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4
 // H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_DOORWAY_TNT_v6
-// Retained Gauges source marker: H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4
 // Full-file replacement.
 // Route doorway authority only.
 
-const CONTRACT = "H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_DOORWAY_TNT_v6";
-const PRIOR_CONTRACT = "H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4";
+const CONTRACT = "H_EARTH_G1_CONTROLS_ACTIVE_ROUTE_DOORWAY_TNT_v7";
+const PRIOR_CONTRACT = "H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_ROUTE_DOORWAY_TNT_v6";
+const SURFACE_MARKER = "H_EARTH_G1_SURFACE_ACTIVE_READ_ROUTE_DOORWAY_TNT_v4";
 const SEED_PACKET = "H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1";
 const ROUTE = "/showroom/globe/h-earth/";
 
-const URL_CACHE = new URLSearchParams(window.location.search).get("v") || "canvas-visible-composition-v6";
-const CACHE_KEY = `2026-05-11-h-earth-canvas-visible-composition-v6-${URL_CACHE}`;
+const URL_CACHE = new URLSearchParams(window.location.search).get("v") || "controls-active-v1";
+const CACHE_KEY = `2026-05-11-h-earth-controls-active-v1-${URL_CACHE}`;
 
 const EXPECTED_CONTRACTS = Object.freeze({
   kernel: "H_EARTH_G1_TERRAIN_ONLY_KERNEL_TNT_v1",
@@ -18,7 +21,8 @@ const EXPECTED_CONTRACTS = Object.freeze({
   landmap: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_LANDMAP_TNT_v2",
   terrain: "H_EARTH_G1_TERRAIN_BALANCE_AND_FULL_ASPECT_DISPOSITION_TERRAIN_TNT_v2",
   surface: "H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1",
-  canvas: "H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_TNT_v1"
+  canvas: "H_EARTH_G1_CANVAS_VISIBLE_COMPOSITION_TNT_v1",
+  controls: "H_EARTH_G1_CONTROLS_MOTION_INPUT_TNT_v1"
 });
 
 const ACTIVE_MODULES = Object.freeze([
@@ -27,11 +31,11 @@ const ACTIVE_MODULES = Object.freeze([
   { key: "landmap", path: "/assets/h-earth/h-earth.landmap.js", requiredExport: "createHEarthLandmap" },
   { key: "terrain", path: "/assets/h-earth/h-earth.terrain.js", requiredExport: "createHEarthTerrain" },
   { key: "surface", path: "/assets/h-earth/h-earth.surface.js", requiredExport: "createHEarthSurface" },
-  { key: "canvas", path: "/assets/h-earth/h-earth.canvas.js", requiredExport: "createHEarthCanvas" }
+  { key: "canvas", path: "/assets/h-earth/h-earth.canvas.js", requiredExport: "createHEarthCanvas" },
+  { key: "controls", path: "/assets/h-earth/h-earth.controls.js", requiredExport: "createHEarthControls" }
 ]);
 
 const HELD_MODULES = Object.freeze([
-  { key: "controls", path: "/assets/h-earth/h-earth.controls.js", status: "held-until-canvas-route-proof-passes" },
   { key: "ground", path: "/assets/h-earth/h-earth/ground/", status: "held-until-orbital-aerial-inspection-is-coherent" },
   { key: "estate", path: "/assets/h-earth/h-earth/estate/", status: "held-until-ground-level-mode-is-authorized" }
 ]);
@@ -44,6 +48,7 @@ const state = {
   activeModules: {},
   instances: {},
   canvasResult: null,
+  controlsResult: null,
   errors: []
 };
 
@@ -87,12 +92,13 @@ function stampDocument() {
   const root = document.documentElement;
   root.dataset.routeDoorwayContract = CONTRACT;
   root.dataset.previousRouteDoorwayContract = PRIOR_CONTRACT;
+  root.dataset.surfaceMarker = SURFACE_MARKER;
   root.dataset.hEarthSeedPacket = SEED_PACKET;
   root.dataset.parentCoreChainStatus = state.parentChainStatus;
   root.dataset.cacheKey = CACHE_KEY;
   root.dataset.surface = "active-read-only";
   root.dataset.canvas = "active-visible-composition";
-  root.dataset.controls = "held";
+  root.dataset.controls = "active-motion-input";
   root.dataset.graphicBox = "forbidden";
   root.dataset.imageGeneration = "forbidden";
   root.dataset.visualPassClaim = "false";
@@ -111,12 +117,13 @@ function publishStatus(message, lines = []) {
   target.dataset.parentCoreChain = state.parentChainStatus;
   target.dataset.surface = "active-read-only";
   target.dataset.canvas = "active-visible-composition";
-  target.dataset.controls = "held";
+  target.dataset.controls = "active-motion-input";
   target.dataset.cacheKey = CACHE_KEY;
 
   target.replaceChildren(
     codeLine(`ROUTE_DOORWAY_RECEIPT: ${CONTRACT}`),
     codeLine(`PREVIOUS_DOORWAY: ${PRIOR_CONTRACT}`),
+    codeLine(`SURFACE_MARKER_RETAINED: ${SURFACE_MARKER}`),
     codeLine(`SEED_PACKET: ${SEED_PACKET}`),
     codeLine(`CACHE_KEY: ${CACHE_KEY}`),
     codeLine(`STATUS: ${message}`),
@@ -146,7 +153,10 @@ function publishReceiptPanel() {
   const terrain = state.instances.terrain;
   const surface = state.instances.surface;
   const canvasAuthority = state.instances.canvas;
+  const controlsAuthority = state.instances.controls;
+
   const canvasReceipt = canvasAuthority?.getCanvasReceipt?.() || state.canvasResult?.receipt || null;
+  const controlsReceipt = controlsAuthority?.getControlsReceipt?.() || state.controlsResult?.receipt || null;
   const pixelProof = state.canvasResult?.pixelProof || canvasReceipt?.pixelProof || null;
 
   const landSummary = landmap?.summary;
@@ -163,9 +173,6 @@ function publishReceiptPanel() {
         `SURFACE_TOTAL_CELLS: ${surfaceSummary.totalCells}`,
         `SURFACE_MATERIAL_CLASSES: ${surfaceSummary.materialClassCount}/${surfaceSummary.requiredMaterialClassCount}`,
         `MATERIAL_COVERAGE_COMPLETE: ${String(surfaceSummary.materialCoverageComplete)}`,
-        `EVERY_CELL_ASSIGNED_SURFACE: ${String(surfaceSummary.everyCellAssignedSurface)}`,
-        `SURFACE_PARENT_READY: ${String(surfaceSummary.surfaceParentReady)}`,
-        `DOWNSTREAM_CANVAS_MAY_READ_SURFACE: ${String(surfaceSummary.downstreamCanvasMayReadSurface)}`,
         `CANVAS_RENDERED: ${String(Boolean(state.canvasResult?.rendered))}`,
         `CANVAS_RECEIPT: ${canvasReceipt?.contract || "missing"}`,
         `PIXEL_PROOF_AVAILABLE: ${String(Boolean(pixelProof?.available))}`,
@@ -173,10 +180,16 @@ function publishReceiptPanel() {
         `WATER_LIKE_RATIO: ${pixelProof?.waterLikeRatio ?? "pending"}`,
         `LAND_LIKE_RATIO: ${pixelProof?.landLikeRatio ?? "pending"}`,
         `POLAR_LIKE_RATIO: ${pixelProof?.polarLikeRatio ?? "pending"}`,
+        `CONTROLS_BOUND: ${String(Boolean(state.controlsResult?.bound))}`,
+        `CONTROLS_RECEIPT: ${controlsReceipt?.contract || "missing"}`,
+        `ROTATION_RADIANS: ${controlsReceipt?.rotationRadians ?? "pending"}`,
+        `TILT_RADIANS: ${controlsReceipt?.tiltRadians ?? "pending"}`,
+        `ZOOM: ${controlsReceipt?.zoom ?? "pending"}`,
         `VISUAL_PASS_CLAIMED: false`,
-        `CONTROLS_AUTHORIZED: false`
+        `GROUND_AUTHORIZED: false`,
+        `ESTATE_AUTHORIZED: false`
       ]
-    : ["CANVAS_SUMMARY: pending"];
+    : ["CONTROLS_SUMMARY: pending"];
 
   panel.dataset.receiptDoorway = CONTRACT;
   panel.dataset.previousReceiptDoorway = PRIOR_CONTRACT;
@@ -186,7 +199,7 @@ function publishReceiptPanel() {
   panel.dataset.staleContractCount = String(state.staleContractCount);
   panel.dataset.surface = "active-read-only";
   panel.dataset.canvas = "active-visible-composition";
-  panel.dataset.controls = "held";
+  panel.dataset.controls = "active-motion-input";
   panel.dataset.visualPassClaim = "false";
 
   panel.replaceChildren(
@@ -200,7 +213,7 @@ function publishReceiptPanel() {
     codeLine(`STALE_CONTRACTS: ${state.staleContractCount}`),
     codeLine(`SURFACE: ACTIVE_READ_ONLY`),
     codeLine(`CANVAS: ACTIVE_VISIBLE_COMPOSITION`),
-    codeLine(`CONTROLS: HELD`),
+    codeLine(`CONTROLS: ACTIVE_MOTION_INPUT`),
     codeLine(`GRAPHIC_BOX: FORBIDDEN`),
     codeLine(`IMAGE_GENERATION: FORBIDDEN`),
     codeLine(`VISUAL_PASS_CLAIM: FALSE`),
@@ -289,13 +302,14 @@ function createInstances() {
   const terrainModule = state.activeModules.terrain?.module;
   const surfaceModule = state.activeModules.surface?.module;
   const canvasModule = state.activeModules.canvas?.module;
+  const controlsModule = state.activeModules.controls?.module;
 
   try {
     const kernel = kernelModule.createHEarthKernel({
       doorwayContract: CONTRACT,
       priorDoorwayContract: PRIOR_CONTRACT,
       route: ROUTE,
-      canvasVisibleComposition: true
+      controlsActive: true
     });
 
     state.instances.kernel = kernel;
@@ -330,6 +344,20 @@ function createInstances() {
     state.instances.canvas = canvas;
     state.activeModules.canvas.actualContract = getImportedContract(canvasModule, canvas);
 
+    const controls = controlsModule.createHEarthControls({
+      kernel,
+      lattice256,
+      landmap,
+      terrain,
+      surface,
+      canvasAuthority: canvas,
+      document,
+      window
+    });
+
+    state.instances.controls = controls;
+    state.activeModules.controls.actualContract = getImportedContract(controlsModule, controls);
+
     state.staleContractCount = ACTIVE_MODULES.filter((entry) => {
       return state.activeModules[entry.key]?.actualContract !== EXPECTED_CONTRACTS[entry.key];
     }).length;
@@ -345,9 +373,10 @@ function createInstances() {
   }
 }
 
-function mountCanvas() {
+function mountCanvasAndControls() {
   const mount = mountTarget();
   const canvasAuthority = state.instances.canvas;
+  const controlsAuthority = state.instances.controls;
 
   if (!mount || !canvasAuthority || typeof canvasAuthority.renderInto !== "function") {
     state.parentChainStatus = "canvas-mount-or-render-authority-missing";
@@ -363,7 +392,7 @@ function mountCanvas() {
     mount.dataset.routeMount = "canvas-visible-composition";
     mount.dataset.surfaceAuthority = "read-only-parent";
     mount.dataset.canvasAuthority = "active-visible-composition";
-    mount.dataset.controlsAuthority = "held";
+    mount.dataset.controlsAuthority = "binding";
     mount.dataset.visualPassClaimed = "false";
     mount.replaceChildren();
 
@@ -377,26 +406,54 @@ function mountCanvas() {
       window
     });
 
-    mount.dataset.routeMount = "canvas-visible-composition";
-    mount.dataset.hEarthCanvasStatus = state.canvasResult?.rendered ? "rendered" : "held";
+    if (state.canvasResult?.rendered !== true) {
+      state.parentChainStatus = "canvas-render-held";
+      publishStatus("canvas render held", [
+        `CANVAS_RENDERED: false`
+      ]);
+      publishReceiptPanel();
+      return false;
+    }
 
-    return state.canvasResult?.rendered === true;
+    if (!controlsAuthority || typeof controlsAuthority.bindTo !== "function") {
+      state.parentChainStatus = "controls-authority-missing-bindTo";
+      publishStatus("controls authority missing bindTo", [
+        `CONTROLS_BOUND: false`
+      ]);
+      publishReceiptPanel();
+      return false;
+    }
+
+    state.controlsResult = controlsAuthority.bindTo(mount, {
+      document,
+      window
+    });
+
+    mount.dataset.routeMount = "canvas-with-controls";
+    mount.dataset.hEarthCanvasStatus = "rendered";
+    mount.dataset.hEarthControlsStatus = state.controlsResult?.bound ? "bound" : "held";
+    mount.dataset.controlsAuthority = state.controlsResult?.bound ? "active-motion-input" : "held";
+
+    return state.controlsResult?.bound === true;
   } catch (error) {
     const message = safeError(error);
-    state.errors.push(`canvas-render: ${message}`);
-    state.parentChainStatus = "canvas-render-failed";
-    publishStatus("canvas render failed", [`ERROR: ${message}`]);
+    state.errors.push(`controls-bind: ${message}`);
+    state.parentChainStatus = "controls-bind-failed";
+    publishStatus("controls bind failed", [`ERROR: ${message}`]);
     publishReceiptPanel();
     return false;
   }
 }
 
-function publishCanvasSuccess() {
+function publishControlsSuccess() {
   const landmap = state.instances.landmap;
   const terrain = state.instances.terrain;
   const surface = state.instances.surface;
   const canvasAuthority = state.instances.canvas;
+  const controlsAuthority = state.instances.controls;
+
   const canvasReceipt = canvasAuthority?.getCanvasReceipt?.() || state.canvasResult?.receipt || null;
+  const controlsReceipt = controlsAuthority?.getControlsReceipt?.() || state.controlsResult?.receipt || null;
   const pixelProof = state.canvasResult?.pixelProof || canvasReceipt?.pixelProof || null;
 
   const landSummary = landmap.summary;
@@ -416,17 +473,21 @@ function publishCanvasSuccess() {
     pixelProof?.available === true &&
     Number(pixelProof.nonBlankRatio) > 0.12;
 
+  const controlsBound =
+    state.controlsResult?.bound === true &&
+    controlsReceipt?.contract === EXPECTED_CONTRACTS.controls;
+
   state.parentChainStatus =
     state.staleContractCount > 0
-      ? "canvas-chain-loaded-but-stale-contracts-detected"
-      : parentReady && canvasRendered
-        ? "canvas-visible-composition-mounted"
-        : "canvas-chain-loaded-but-render-proof-held";
+      ? "controls-chain-loaded-but-stale-contracts-detected"
+      : parentReady && canvasRendered && controlsBound
+        ? "controls-motion-input-bound"
+        : "controls-chain-loaded-but-proof-held";
 
   document.documentElement.dataset.parentCoreChainStatus = state.parentChainStatus;
   document.documentElement.dataset.surface = "active-read-only";
   document.documentElement.dataset.canvas = "active-visible-composition";
-  document.documentElement.dataset.controls = "held";
+  document.documentElement.dataset.controls = "active-motion-input";
   document.documentElement.dataset.visualPassClaim = "false";
   document.documentElement.dataset.mutationEarth = "forbidden";
 
@@ -437,6 +498,7 @@ function publishCanvasSuccess() {
     `TERRAIN: loaded · ${state.activeModules.terrain.actualContract}`,
     `SURFACE: loaded · ${state.activeModules.surface.actualContract}`,
     `CANVAS: loaded · ${state.activeModules.canvas.actualContract}`,
+    `CONTROLS: loaded · ${state.activeModules.controls.actualContract}`,
     `STALE_CONTRACTS: ${state.staleContractCount}`,
     `LAND_RATIO: ${landSummary.landRatio}`,
     `OCEAN_RATIO: ${landSummary.oceanRatio}`,
@@ -448,8 +510,13 @@ function publishCanvasSuccess() {
     `WATER_LIKE_RATIO: ${pixelProof?.waterLikeRatio ?? "pending"}`,
     `LAND_LIKE_RATIO: ${pixelProof?.landLikeRatio ?? "pending"}`,
     `POLAR_LIKE_RATIO: ${pixelProof?.polarLikeRatio ?? "pending"}`,
+    `CONTROLS_BOUND: ${String(Boolean(state.controlsResult?.bound))}`,
+    `ROTATION_RADIANS: ${controlsReceipt?.rotationRadians ?? "pending"}`,
+    `TILT_RADIANS: ${controlsReceipt?.tiltRadians ?? "pending"}`,
+    `ZOOM: ${controlsReceipt?.zoom ?? "pending"}`,
     `VISUAL_PASS_CLAIMED: false`,
-    `CONTROLS_AUTHORIZED: false`
+    `GROUND_AUTHORIZED: false`,
+    `ESTATE_AUTHORIZED: false`
   ]);
 
   publishReceiptPanel();
@@ -458,10 +525,10 @@ function publishCanvasSuccess() {
 async function boot() {
   stampDocument();
 
-  state.parentChainStatus = "canvas-visible-composition-chain-checking";
-  publishStatus("canvas visible-composition route doorway active; loading parent chain", [
-    `ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface → canvas`,
-    `HELD_CHAIN: controls → ground → estate`,
+  state.parentChainStatus = "controls-active-chain-checking";
+  publishStatus("controls route doorway active; loading parent chain", [
+    `ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface → canvas → controls`,
+    `HELD_CHAIN: ground → estate`,
     `CACHE_KEY: ${CACHE_KEY}`
   ]);
   publishReceiptPanel();
@@ -472,13 +539,13 @@ async function boot() {
   const instancesCreated = createInstances();
   if (!instancesCreated) return;
 
-  const canvasMounted = mountCanvas();
-  if (!canvasMounted) {
+  const bound = mountCanvasAndControls();
+  if (!bound) {
     publishReceiptPanel();
     return;
   }
 
-  publishCanvasSuccess();
+  publishControlsSuccess();
 }
 
 if (document.readyState === "loading") {
@@ -490,6 +557,7 @@ if (document.readyState === "loading") {
 export {
   CONTRACT,
   PRIOR_CONTRACT,
+  SURFACE_MARKER,
   SEED_PACKET,
   ROUTE,
   ACTIVE_MODULES,

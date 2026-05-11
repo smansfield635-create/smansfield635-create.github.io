@@ -1,12 +1,13 @@
 // /assets/h-earth/h-earth/canvas/terrain/elevation.sea-level.js
-// H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_SEA_LEVEL_CHILD_TNT_v1
+// H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_SEA_LEVEL_DETAIL_BINDING_CHILD_TNT_v2
 // Full-file replacement.
-// H-Earth canvas terrain elevation child only.
+// H-Earth canvas terrain elevation / sea-level child only.
 //
 // Purpose:
-// - Express H-Earth terrain elevation relative to sea level.
-// - Classify above-sea, near-sea, and below-sea surface expression.
-// - Provide render/build-inspection elevation data to orbital and future ground-level views.
+// - Preserve elevation relative to sea level.
+// - Preserve below-sea, near-sea, and above-sea classification.
+// - Preserve build-grade and ground-level candidate classification.
+// - Bind this elevation child downstream to the terrain-detail child.
 // - Keep canonical terrain truth upstream in parent terrain/surface.
 // - Keep estate placement held.
 // - Keep ground-level mode held.
@@ -18,6 +19,7 @@
 // - build-grade classification
 // - ground-level candidate classification
 // - elevation child receipts
+// - terrain-detail binding compatibility
 //
 // Does not own:
 // - kernel truth
@@ -25,6 +27,7 @@
 // - landmap truth
 // - terrain truth
 // - surface truth
+// - terrain-detail rendering
 // - estate placement
 // - ground-level scene
 // - buildings
@@ -35,9 +38,13 @@
 // - GraphicBox
 // - visual pass claim
 
-const CONTRACT = "H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_SEA_LEVEL_CHILD_TNT_v1";
-const PREWRITE = "H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_CHILD_PREWRITE_v1";
+const CONTRACT = "H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_SEA_LEVEL_DETAIL_BINDING_CHILD_TNT_v2";
+const PREVIOUS_CONTRACT = "H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_SEA_LEVEL_CHILD_TNT_v1";
+const PREWRITE = "H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_DETAIL_BINDING_PREWRITE_v1";
+const ORIGINAL_PREWRITE = "H_EARTH_G1_CANVAS_TERRAIN_ELEVATION_CHILD_PREWRITE_v1";
+const DETAIL_BINDING_CONTRACT = "H_EARTH_G1_CANVAS_TERRAIN_DETAIL_CHILD_TNT_v1";
 const ASSET_PATH = "/assets/h-earth/h-earth/canvas/terrain/elevation.sea-level.js";
+const DETAIL_CHILD_PATH = "/assets/h-earth/h-earth/canvas/terrain/detail.js";
 
 const TOTAL_CELLS = 256;
 const GRID = 16;
@@ -186,6 +193,8 @@ const BUILD_GRADE_META = Object.freeze({
     held: true
   }
 });
+
+let lastInstance = null;
 
 function isObject(value) {
   return value !== null && typeof value === "object";
@@ -531,9 +540,13 @@ function resolveElevationCell(index, material, terrainAspect, sourceCell = {}) {
     groundLevelCandidate: gradeMeta.groundLevelCandidate,
     held: gradeMeta.held,
 
+    terrainDetailBindingContract: DETAIL_BINDING_CONTRACT,
+    terrainDetailReadyForConsumption: true,
+
     estatePlacementReady: false,
     groundLevelReady: false,
-    parentMutationAuthorized: false
+    parentMutationAuthorized: false,
+    truthMutationAuthorized: false
   };
 }
 
@@ -647,9 +660,14 @@ function summarize(cells, parentReceipts) {
     materialClasses,
     buildGradeClasses,
 
+    terrainDetailBindingContract: DETAIL_BINDING_CONTRACT,
+    terrainDetailBindingReady: true,
+    terrainDetailChildPath: DETAIL_CHILD_PATH,
+
     estatePlacementReady: false,
     groundLevelReady: false,
     parentMutationAuthorized: false,
+    truthMutationAuthorized: false,
     visualPassClaim: false,
     elevationChildReady
   };
@@ -657,6 +675,11 @@ function summarize(cells, parentReceipts) {
 
 function cloneCell(cell) {
   return { ...cell };
+}
+
+function createFallbackCell(index = 0) {
+  const safeIndex = Math.max(0, Math.min(TOTAL_CELLS - 1, Number.isInteger(index) ? index : 0));
+  return resolveElevationCell(safeIndex, "unknown", "unknown", {});
 }
 
 function createHEarthCanvasTerrainElevation({
@@ -687,7 +710,9 @@ function createHEarthCanvasTerrainElevation({
       groundLevelCandidateClass: cell.groundLevelCandidateClass,
       estateCandidate: cell.estateCandidate,
       groundLevelCandidate: cell.groundLevelCandidate,
-      held: cell.held
+      held: cell.held,
+      terrainDetailBindingContract: DETAIL_BINDING_CONTRACT,
+      terrainDetailReadyForConsumption: true
     };
     return index;
   }, {});
@@ -695,9 +720,14 @@ function createHEarthCanvasTerrainElevation({
   const receipts = {
     elevation: {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       prewrite: PREWRITE,
+      originalPrewrite: ORIGINAL_PREWRITE,
       assetPath: ASSET_PATH,
+      terrainDetailBindingContract: DETAIL_BINDING_CONTRACT,
+      terrainDetailChildPath: DETAIL_CHILD_PATH,
       parentMutationAuthorized: false,
+      truthMutationAuthorized: false,
       estatePlacementReady: false,
       groundLevelReady: false,
       visualPassClaim: false
@@ -707,10 +737,15 @@ function createHEarthCanvasTerrainElevation({
     candidateSources
   };
 
-  return {
+  const instance = {
     contract: CONTRACT,
+    receipt: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
     prewrite: PREWRITE,
+    originalPrewrite: ORIGINAL_PREWRITE,
     assetPath: ASSET_PATH,
+    terrainDetailBindingContract: DETAIL_BINDING_CONTRACT,
+    terrainDetailChildPath: DETAIL_CHILD_PATH,
     parentReceipts,
     summary,
     cells: cells.map(cloneCell),
@@ -745,26 +780,125 @@ function createHEarthCanvasTerrainElevation({
         estateCandidate: cell.estateCandidate,
         groundLevelCandidate: cell.groundLevelCandidate,
         held: cell.held,
+        terrainDetailBindingContract: DETAIL_BINDING_CONTRACT,
+        terrainDetailReadyForConsumption: true,
         estatePlacementReady: false,
         groundLevelReady: false,
-        parentMutationAuthorized: false
+        parentMutationAuthorized: false,
+        truthMutationAuthorized: false
       };
+    },
+
+    sampleElevationForTerrainDetail(index) {
+      const numericIndex = Number(index);
+      if (!Number.isInteger(numericIndex) || numericIndex < 0 || numericIndex >= TOTAL_CELLS) {
+        return cloneCell(createFallbackCell(0));
+      }
+
+      return cloneCell(cells[numericIndex]);
+    },
+
+    getStatus() {
+      return getHEarthCanvasTerrainElevationStatus();
+    },
+
+    getHEarthCanvasTerrainElevationStatus() {
+      return getHEarthCanvasTerrainElevationStatus();
     }
+  };
+
+  lastInstance = instance;
+
+  return instance;
+}
+
+function sampleElevationForTerrainDetail(index = 0) {
+  if (lastInstance && typeof lastInstance.sampleElevationForTerrainDetail === "function") {
+    return lastInstance.sampleElevationForTerrainDetail(index);
+  }
+
+  return cloneCell(createFallbackCell(Number(index) || 0));
+}
+
+function getHEarthCanvasTerrainElevationStatus() {
+  return {
+    contract: CONTRACT,
+    receipt: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
+    prewrite: PREWRITE,
+    originalPrewrite: ORIGINAL_PREWRITE,
+    assetPath: ASSET_PATH,
+    terrainDetailBindingContract: DETAIL_BINDING_CONTRACT,
+    terrainDetailChildPath: DETAIL_CHILD_PATH,
+    totalCells: TOTAL_CELLS,
+    grid: GRID,
+    seaLevelDatum: SEA_LEVEL_DATUM,
+    expectedParentReceipts: EXPECTED_PARENT_RECEIPTS,
+    requiredExports: [
+      "createHEarthCanvasTerrainElevation",
+      "sampleElevationForTerrainDetail",
+      "getHEarthCanvasTerrainElevationStatus"
+    ],
+    owns: [
+      "sea-level-datum-expression",
+      "below-sea-depth-expression",
+      "above-sea-elevation-expression",
+      "build-grade-classification",
+      "ground-level-candidate-classification",
+      "terrain-detail-binding-compatibility"
+    ],
+    doesNotOwn: [
+      "kernel-truth",
+      "lattice-truth",
+      "landmap-truth",
+      "terrain-truth",
+      "surface-truth",
+      "terrain-detail-rendering",
+      "estate-placement",
+      "ground-level-scene",
+      "buildings",
+      "roads",
+      "parent-mutation"
+    ],
+    elevationChildReady: true,
+    terrainDetailBindingReady: true,
+    parentMutationAuthorized: false,
+    truthMutationAuthorized: false,
+    estatePlacementReady: false,
+    groundLevelReady: false,
+    generatedImage: false,
+    graphicBox: false,
+    visualPassClaim: false
   };
 }
 
 export {
   CONTRACT,
+  PREVIOUS_CONTRACT,
   PREWRITE,
+  ORIGINAL_PREWRITE,
+  DETAIL_BINDING_CONTRACT,
   ASSET_PATH,
+  DETAIL_CHILD_PATH,
   SEA_LEVEL_DATUM,
   EXPECTED_PARENT_RECEIPTS,
-  createHEarthCanvasTerrainElevation
+  createHEarthCanvasTerrainElevation,
+  sampleElevationForTerrainDetail,
+  getHEarthCanvasTerrainElevationStatus
 };
 
 export default {
   contract: CONTRACT,
+  receipt: CONTRACT,
+  previousContract: PREVIOUS_CONTRACT,
   prewrite: PREWRITE,
+  originalPrewrite: ORIGINAL_PREWRITE,
+  detailBindingContract: DETAIL_BINDING_CONTRACT,
   assetPath: ASSET_PATH,
-  createHEarthCanvasTerrainElevation
+  detailChildPath: DETAIL_CHILD_PATH,
+  createHEarthCanvasTerrainElevation,
+  sampleElevationForTerrainDetail,
+  status: getHEarthCanvasTerrainElevationStatus,
+  getStatus: getHEarthCanvasTerrainElevationStatus,
+  getHEarthCanvasTerrainElevationStatus
 };

@@ -1,6 +1,6 @@
 // /assets/h-earth/h-earth.canvas.alignment.v3.js
 // H_EARTH_G1_CANVAS_CONTROLS_RECEIPT_ALIGNMENT_TNT_v3
-// Full-file replacement.
+// Full-file replacement. 
 // Renewed canvas asset path.
 // Canvas child authority only.
 //

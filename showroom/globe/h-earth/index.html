@@ -9,19 +9,19 @@
   data-planet-meaning="Hybrid Earth"
   data-generation="G1"
   data-seed-packet="H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1"
-  data-contract="H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_HTML_TNT_v7"
-  data-route-doorway-required="H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_TNT_v7"
-  data-previous-contract="H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_HTML_TNT_v6"
-  data-previous-doorway="H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_ROUTE_TNT_v6"
+  data-contract="H_EARTH_G1_CONTROLS_MOTION_INPUT_HTML_TNT_v8"
+  data-route-doorway-required="H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8"
+  data-previous-contract="H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_HTML_TNT_v7"
+  data-previous-doorway="H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_TNT_v7"
   data-authority="route-shell-only"
   data-parent-core-chain="kernel-lattice256-landmap-terrain-surface"
-  data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas"
-  data-held-chain="controls"
+  data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas-controls"
   data-surface="active-read-only"
-  data-canvas="route-doorway-renewal-gated"
-  data-controls="held"
-  data-canvas-paint-authorized="route-gated"
-  data-controls-authorized="false"
+  data-canvas="active-visible-composition"
+  data-controls="motion-input-route-gated"
+  data-canvas-paint-authorized="true"
+  data-controls-authorized="route-gated"
+  data-parent-mutation-authorized="false"
   data-earth-reference-shell="protected-reference-only"
   data-mutation-earth="forbidden"
   data-mutation-hearth="forbidden"
@@ -37,7 +37,7 @@
   <title>Diamond Gate Bridge · H-Earth</title>
   <meta
     name="description"
-    content="H-Earth is the Hybrid Earth experimental third-planet lane. This route shell renews route doorway execution proof, exposes parent-chain status, canvas parent-instance consumer mount, handoff, and receipts. Controls remain held."
+    content="H-Earth is the Hybrid Earth experimental third-planet lane. This shell activates controls as motion/input authority only after canvas visible-composition proof passes. Parent truth remains immutable."
   >
 
   <style>
@@ -57,9 +57,7 @@
       --max: 1180px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       min-height: 100%;
@@ -79,10 +77,7 @@
         radial-gradient(circle at 82% 12%, rgba(143, 240, 195, 0.08), transparent 24rem);
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
     a:focus-visible {
       outline: 2px solid var(--gold);
@@ -103,9 +98,7 @@
       transition: transform 160ms ease;
     }
 
-    .skip-link:focus {
-      transform: translateY(0);
-    }
+    .skip-link:focus { transform: translateY(0); }
 
     .page-shell {
       width: min(var(--max), calc(100% - 32px));
@@ -175,8 +168,9 @@
     }
 
     .hero-copy,
-    .surface-stage,
+    .stage,
     .canvas-composition-mount,
+    .controls-mount,
     .panel {
       border: 1px solid var(--line);
       border-radius: var(--radius);
@@ -185,14 +179,10 @@
       backdrop-filter: blur(18px);
     }
 
-    .hero-copy {
-      padding: clamp(22px, 4vw, 42px);
-    }
+    .hero-copy { padding: clamp(22px, 4vw, 42px); }
 
     .eyebrow {
       display: inline-flex;
-      align-items: center;
-      gap: 9px;
       margin: 0 0 18px;
       padding: 8px 12px;
       border: 1px solid var(--line-blue);
@@ -242,7 +232,7 @@
       color: var(--muted);
     }
 
-    .surface-stage {
+    .stage {
       position: relative;
       min-height: clamp(430px, 60vw, 680px);
       overflow: hidden;
@@ -250,7 +240,7 @@
       padding: 18px;
     }
 
-    .surface-stage::before {
+    .stage::before {
       content: "";
       position: absolute;
       inset: 0;
@@ -259,19 +249,6 @@
         radial-gradient(circle at 50% 42%, rgba(142, 190, 255, 0.14), transparent 20rem),
         radial-gradient(circle at 50% 50%, rgba(244, 191, 96, 0.10), transparent 28rem),
         linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
-    }
-
-    .surface-stage::after {
-      content: "";
-      position: absolute;
-      inset: 18px;
-      z-index: -1;
-      border: 1px solid rgba(244, 191, 96, 0.20);
-      border-radius: calc(var(--radius) - 6px);
-      background:
-        linear-gradient(90deg, rgba(244, 191, 96, 0.06), transparent 20%, transparent 80%, rgba(142, 190, 255, 0.06)),
-        rgba(0, 0, 0, 0.16);
-      pointer-events: none;
     }
 
     .mount-shell {
@@ -298,8 +275,8 @@
       overflow: hidden;
     }
 
-    #hEarthCanvasMount[data-route-mount="awaiting-doorway-execution-renewal"]::before {
-      content: "Awaiting H-Earth route doorway execution renewal";
+    #hEarthCanvasMount[data-route-mount="awaiting-controls-motion-input"]::before {
+      content: "Awaiting H-Earth controls motion/input authority";
       position: absolute;
       left: 50%;
       top: 50%;
@@ -320,8 +297,6 @@
       left: 22px;
       top: 22px;
       display: inline-flex;
-      align-items: center;
-      gap: 8px;
       padding: 8px 11px;
       border: 1px solid rgba(143, 240, 195, 0.22);
       border-radius: 999px;
@@ -333,17 +308,30 @@
       text-transform: uppercase;
     }
 
-    .canvas-composition-mount {
+    .canvas-composition-mount,
+    .controls-mount {
       margin-top: 16px;
       padding: 16px;
       min-height: 120px;
     }
 
     .canvas-composition-mount:empty::before {
-      content: "Canvas parent-instance consumer mount ready. Route doorway renewal will inject canvas after surface parent readiness passes.";
+      content: "Canvas composition mount ready.";
       display: block;
       padding: 16px;
       border: 1px dashed rgba(142, 190, 255, 0.22);
+      border-radius: 18px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.55;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .controls-mount:empty::before {
+      content: "Controls mount ready. Route doorway will activate motion/input after canvas proof passes.";
+      display: block;
+      padding: 16px;
+      border: 1px dashed rgba(244, 191, 96, 0.28);
       border-radius: 18px;
       color: var(--muted);
       text-align: center;
@@ -410,13 +398,8 @@
       text-transform: uppercase;
     }
 
-    .status-pill.ready {
-      color: var(--green);
-    }
-
-    .status-pill.held {
-      color: var(--muted);
-    }
+    .status-pill.ready { color: var(--green); }
+    .status-pill.held { color: var(--muted); }
 
     .receipt-panel {
       margin-top: 16px;
@@ -450,17 +433,9 @@
         flex-direction: column;
       }
 
-      .nav {
-        justify-content: flex-start;
-      }
-
-      .hero {
-        grid-template-columns: 1fr;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
+      .nav { justify-content: flex-start; }
+      .hero { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 560px) {
@@ -471,36 +446,18 @@
 
       .hero-copy,
       .panel,
-      .surface-stage,
-      .canvas-composition-mount {
+      .stage,
+      .canvas-composition-mount,
+      .controls-mount {
         border-radius: 18px;
       }
 
-      .surface-stage {
-        padding: 10px;
-      }
-
-      .surface-stage::after {
-        inset: 10px;
-        border-radius: 14px;
-      }
-
-      .mount-shell {
-        min-height: 360px;
-      }
-
-      .stage-label {
-        left: 14px;
-        top: 14px;
-      }
-
-      #hEarthCanvasMount {
-        width: min(100%, 330px);
-      }
-
-      .canvas-composition-mount {
-        padding: 10px;
-      }
+      .stage { padding: 10px; }
+      .mount-shell { min-height: 360px; }
+      .stage-label { left: 14px; top: 14px; }
+      #hEarthCanvasMount { width: min(100%, 330px); }
+      .canvas-composition-mount,
+      .controls-mount { padding: 10px; }
     }
   </style>
 </head>
@@ -530,13 +487,11 @@
     <main id="h-earth-main" tabindex="-1">
       <section class="hero" aria-labelledby="h-earth-title">
         <div class="hero-copy">
-          <p class="eyebrow">H-Earth · G1 · Doorway Execution Renewal</p>
+          <p class="eyebrow">H-Earth · G1 · Controls Motion/Input Authority</p>
           <h1 id="h-earth-title">H-Earth</h1>
           <p class="lede">
-            H-Earth means Hybrid Earth. This route shell now requires a renewed doorway execution
-            proof before the parent chain proceeds. The route doorway must stamp top-level execution,
-            then load kernel, lattice256, landmap, terrain, surface, and the canvas parent-instance
-            consumer. Controls remain held.
+            H-Earth means Hybrid Earth. The parent chain and canvas proof have passed. This shell
+            stretches authority into controls as motion/input only. Parent truth remains immutable.
           </p>
 
           <div class="route-actions" aria-label="Route actions">
@@ -551,38 +506,38 @@
             class="receipt-panel"
             aria-label="H-Earth route status target"
             data-status-target="h-earth-route"
-            data-current-status="doorway-execution-renewal-html-loaded-awaiting-v7-doorway"
+            data-current-status="controls-motion-input-html-loaded-awaiting-v8-doorway"
             data-route-shell="ready"
-            data-route-doorway="awaiting-route-doorway-execution-renewal"
+            data-route-doorway="awaiting-controls-motion-input-route"
             data-parent-core-chain="kernel-lattice256-landmap-terrain-surface"
-            data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas"
-            data-held-chain="controls"
+            data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas-controls"
             data-surface="active-read-only"
-            data-canvas="route-doorway-renewal-gated"
-            data-controls="held"
+            data-canvas="active-visible-composition"
+            data-controls="motion-input-route-gated"
+            data-parent-mutation-authorized="false"
           >
-            <code>ROUTE_RECEIPT: H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_HTML_TNT_v7</code>
-            <code>PREVIOUS_ROUTE_RECEIPT: H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_HTML_TNT_v6</code>
+            <code>ROUTE_RECEIPT: H_EARTH_G1_CONTROLS_MOTION_INPUT_HTML_TNT_v8</code>
+            <code>PREVIOUS_ROUTE_RECEIPT: H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_HTML_TNT_v7</code>
             <code>SEED_PACKET: H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1</code>
-            <code>REQUIRED_DOORWAY: H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_TNT_v7</code>
-            <code>ROUTE_DOORWAY_TOPLEVEL_EXECUTED: false</code>
-            <code>STATUS: doorway execution renewal HTML loaded; awaiting v7 doorway module</code>
+            <code>REQUIRED_DOORWAY: H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8</code>
+            <code>STATUS: controls motion/input HTML loaded; awaiting v8 doorway module</code>
           </section>
         </div>
 
-        <section class="surface-stage" aria-label="H-Earth route doorway renewal and parent-chain status stage">
-          <div class="stage-label">Doorway Renewal Status Mount</div>
+        <section class="stage" aria-label="H-Earth controls and parent-chain status stage">
+          <div class="stage-label">Controls Status Mount</div>
           <div class="mount-shell">
             <div
               id="hEarthCanvasMount"
               role="img"
-              aria-label="H-Earth parent-chain status mount awaiting route doorway execution renewal"
+              aria-label="H-Earth status mount awaiting controls motion input authority"
               data-mount="h-earth-parent-chain-status"
-              data-route-mount="awaiting-doorway-execution-renewal"
+              data-route-mount="awaiting-controls-motion-input"
               data-h-earth-surface-status-mount="true"
               data-surface-authority="active-read-only"
-              data-canvas-authority="route-doorway-renewal-gated"
-              data-controls-authority="held"
+              data-canvas-authority="active-visible-composition"
+              data-controls-authority="motion-input-route-gated"
+              data-parent-mutation-authorized="false"
               data-planet-truth-owner="parent-chain"
             ></div>
           </div>
@@ -598,53 +553,60 @@
         data-canvas-authority="visible-composition-only"
         data-canvas-consumer="parent-instance-consumer"
         data-surface-source="parent-material-truth"
-        data-controls-authority="held"
+      ></section>
+
+      <section
+        id="hEarthControlsMount"
+        class="controls-mount"
+        aria-label="H-Earth controls motion input mount"
+        data-h-earth-controls-mount="true"
+        data-controls-authority="motion-input-only"
+        data-parent-mutation-authorized="false"
       ></section>
 
       <section class="grid" aria-label="H-Earth route shell authority">
         <article class="panel">
           <h2>Route Shell Owns</h2>
           <p>
-            Navigation, status target, parent-chain status mount, canvas composition mount,
+            Navigation, status target, parent-chain status mount, canvas mount, controls mount,
             script handoff, and receipt exposure. It does not generate planet truth.
           </p>
         </article>
 
         <article class="panel">
-          <h2>Doorway Execution Renewal</h2>
+          <h2>Controls Authority</h2>
           <p>
-            The doorway must stamp top-level execution before importing parent files. If this page
-            remains on the static awaiting line, the script handoff did not execute.
+            Controls own motion/input only. They may move the visible canvas layer but may not alter
+            kernel, lattice, landmap, terrain, surface, or material truth.
           </p>
         </article>
 
         <article class="panel">
           <h2>Protected Separation</h2>
           <p>
-            H-Earth may reference the current Earth shell experimentally, but it does not mutate Earth,
-            Hearth, or Audralia.
+            H-Earth remains a separate experimental third-planet lane. Earth, Hearth, and Audralia
+            are not mutated.
           </p>
         </article>
       </section>
 
       <section class="panel" aria-labelledby="chain-title" style="margin-top:16px;">
-        <h2 id="chain-title">Doorway Execution Renewal Chain Order</h2>
+        <h2 id="chain-title">Authoritative Stretch Chain Order</h2>
         <p>
-          The route doorway must execute first. Then the parent chain may load. Canvas remains a downstream
-          visible-composition child. Controls remain held.
+          Controls are downstream from canvas visible-composition proof. Parent truth remains upstream
+          and immutable.
         </p>
 
         <ol class="chain-list">
-          <li><strong>HTML route shell</strong><span class="status-pill">current file v7</span></li>
-          <li><strong>Route doorway top-level stamp</strong><span class="status-pill ready">required</span></li>
-          <li><strong>Route doorway</strong><span class="status-pill">index.js v7</span></li>
+          <li><strong>HTML route shell</strong><span class="status-pill">current file v8</span></li>
+          <li><strong>Route doorway</strong><span class="status-pill">index.js v8</span></li>
           <li><strong>Kernel parent core</strong><span class="status-pill">locked</span></li>
           <li><strong>256 lattice parent-coordinate engine</strong><span class="status-pill">locked</span></li>
           <li><strong>Landmap parent mask</strong><span class="status-pill">terrain balance v2</span></li>
           <li><strong>Terrain parent relief</strong><span class="status-pill">full aspect v2</span></li>
           <li><strong>Surface parent material truth</strong><span class="status-pill">active read</span></li>
-          <li><strong>Canvas parent-instance consumer</strong><span class="status-pill">route-gated</span></li>
-          <li><strong>Controls motion/input only</strong><span class="status-pill held">held</span></li>
+          <li><strong>Canvas parent-instance consumer</strong><span class="status-pill ready">proof passed</span></li>
+          <li><strong>Controls motion/input only</strong><span class="status-pill ready">route-gated</span></li>
         </ol>
       </section>
 
@@ -653,49 +615,51 @@
         class="receipt-panel"
         aria-label="H-Earth public receipts"
         data-receipt-panel="h-earth"
-        data-receipt-route="H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_HTML_TNT_v7"
-        data-previous-receipt-route="H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_HTML_TNT_v6"
+        data-receipt-route="H_EARTH_G1_CONTROLS_MOTION_INPUT_HTML_TNT_v8"
+        data-previous-receipt-route="H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_HTML_TNT_v7"
         data-receipt-seed="H_EARTH_G1_PARENT_CORE_CHAIN_SEED_PACKET_v1"
-        data-required-doorway="H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_TNT_v7"
-        data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas"
-        data-held-chain="controls"
+        data-required-doorway="H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8"
+        data-active-chain="kernel-lattice256-landmap-terrain-surface-canvas-controls"
         data-expected-surface-contract="H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1"
         data-expected-canvas-contract="H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_TNT_v2"
+        data-expected-controls-contract="H_EARTH_G1_CONTROLS_MOTION_INPUT_AUTHORITY_TNT_v1"
+        data-parent-mutation-authorized="false"
         data-receipt-graphic-box="FORBIDDEN"
         data-receipt-image-generation="FORBIDDEN"
         data-receipt-visual-pass-claim="FALSE"
       >
         <code>H_EARTH_IDENTITY: separate experimental third-planet lane</code>
         <code>ROUTE_AUTHORITY: shell only</code>
-        <code>ROUTE_RECEIPT: H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_HTML_TNT_v7</code>
-        <code>REQUIRED_DOORWAY: H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_TNT_v7</code>
-        <code>ROUTE_DOORWAY_TOPLEVEL_EXECUTED: false</code>
+        <code>ROUTE_RECEIPT: H_EARTH_G1_CONTROLS_MOTION_INPUT_HTML_TNT_v8</code>
+        <code>REQUIRED_DOORWAY: H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8</code>
         <code>EXPECTED_SURFACE: H_EARTH_G1_SURFACE_PARENT_MATERIAL_TRUTH_TNT_v1</code>
         <code>EXPECTED_CANVAS: H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_TNT_v2</code>
-        <code>ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface → canvas</code>
-        <code>HELD_CHAIN: controls</code>
+        <code>EXPECTED_CONTROLS: H_EARTH_G1_CONTROLS_MOTION_INPUT_AUTHORITY_TNT_v1</code>
+        <code>ACTIVE_CHAIN: kernel → lattice256 → landmap → terrain → surface → canvas → controls</code>
+        <code>PARENT_MUTATION_AUTHORIZED: false</code>
         <code>STATUS_TARGET: #hEarthStatusTarget</code>
         <code>PARENT_CHAIN_STATUS_MOUNT: #hEarthCanvasMount</code>
         <code>CANVAS_COMPOSITION_MOUNT: #hEarthCanvasCompositionMount</code>
-        <code>SCRIPT_HANDOFF: ./index.js?v=H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_TNT_v7</code>
+        <code>CONTROLS_MOUNT: #hEarthControlsMount</code>
+        <code>SCRIPT_HANDOFF: ./index.js?v=H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8</code>
         <code>EARTH_REFERENCE_SHELL: protected; no mutation authorized</code>
       </section>
     </main>
 
     <footer class="footer">
-      H-Earth G1 doorway execution renewal shell. The route doorway must stamp top-level execution
-      before parent-chain imports. Canvas paints visible composition only. Controls remain held.
+      H-Earth G1 controls motion/input shell. Controls are downstream only.
+      Parent truth remains immutable. Visual pass claim remains false until owner visual confirmation.
     </footer>
   </div>
 
   <script
     id="hEarthModuleHandoff"
     type="module"
-    src="./index.js?v=H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_TNT_v7"
-    data-handoff="h-earth-route-doorway-execution-renewal"
-    data-required-next-contract="H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_TNT_v7"
-    data-previous-contract="H_EARTH_G1_CANVAS_PARENT_INSTANCE_CONSUMER_ROUTE_TNT_v6"
-    data-cache-key="2026-05-11-h-earth-route-doorway-execution-renewal-html-v7"
+    src="./index.js?v=H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8"
+    data-handoff="h-earth-controls-motion-input-route"
+    data-required-next-contract="H_EARTH_G1_CONTROLS_MOTION_INPUT_ROUTE_TNT_v8"
+    data-previous-contract="H_EARTH_G1_ROUTE_DOORWAY_EXECUTION_RENEWAL_TNT_v7"
+    data-cache-key="2026-05-11-h-earth-controls-motion-input-html-v8"
   ></script>
 </body>
 </html>

@@ -1,469 +1,321 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_G2_5_FREE_DRAG_POLE_SWIVEL_ROUTE_TNT_v1
+// AUDRALIA_PARENT_CHAIN_ALIGNMENT_ROUTE_TNT_v1
 // Full-file replacement.
-// Correct repair file for no-drag condition.
-// Route imports controls, creates controlled runtime proxy, mounts canvas with that proxy,
-// then binds controls to the actual canvas.
-// Runtime remains motion-only.
-// Controls own drag, spin, and pole swivel.
-// Canvas remains draw/consume authority.
-// No GraphicBox. No generated image. No visual-pass claim.
+// Route orchestration only.
+// Loads new parent authorities first:
+// backstory → tectonics → topology
+// Then loads existing active chain safely:
+// runtime → controls → terrain → assets → canvas
+// Does not turn Audralia into Hearth.
+// Does not generate images. Does not use GraphicBox. Does not claim visual pass.
 
-const ROUTE_CONTRACT = "AUDRALIA_G2_5_FREE_DRAG_POLE_SWIVEL_ROUTE_TNT_v1";
-const ROUTE_RECEIPT = "AUDRALIA_G2_5_FREE_DRAG_POLE_SWIVEL_ROUTE_RECEIPT";
-const PREVIOUS_ROUTE_CONTRACT = "AUDRALIA_G2_4_ASSET_AND_ROUTE_EXPECTATION_ALIGNMENT_ROUTE_TNT_v1";
-const CACHE_KEY = "audralia-g2-5-free-drag-pole-swivel-route-v1";
+(() => {
+  "use strict";
 
-const PATHS = Object.freeze({
-  runtime: "/assets/audralia/audralia.runtime.js",
-  controls: "/assets/audralia/audralia.controls.js",
-  surface: "/assets/audralia/audralia.surface.js",
-  hexSurface: "/assets/audralia/audralia.hex.surface.js",
-  reliefSurface: "/assets/audralia/audralia.relief.surface.js",
-  terrainFingers: "/assets/audralia/audralia.terrain.fingers.js",
-  assets: "/assets/audralia/audralia.assets.js",
-  canvas: "/assets/audralia/audralia.canvas.js"
-});
+  const CONTRACT = "AUDRALIA_PARENT_CHAIN_ALIGNMENT_ROUTE_TNT_v1";
+  const RECEIPT = "AUDRALIA_PARENT_CHAIN_ALIGNMENT_ROUTE_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_FREE_DRAG_POLE_SWIVEL_ROUTE_CONTROLLER_TNT_v1";
+  const VERSION = "2026-05-10.audralia-parent-chain-alignment-route-v1";
+  const KEY = "audralia-parent-chain-alignment-v1";
 
-const EXPECTED = Object.freeze({
-  runtime: "AUDRALIA_RUNTIME_MOTION_ONLY_NO_VISUAL_SOVEREIGNTY_CONTRACT_v1",
-  controls: "AUDRALIA_G2_5_FREE_DRAG_AND_POLE_SWIVEL_CONTROL_TNT_v1",
-  terrainFingers: "AUDRALIA_G2_4_TERRAIN_FORMATION_DELTA_TNT_v1",
-  assets: "AUDRALIA_G2_4_ASSET_FORMATION_MATERIAL_DELTA_TNT_v1",
-  canvas: "AUDRALIA_V18_CANVAS_ASSET_BOUNDARY_CONSUMER_TNT_v1"
-});
+  const state = {
+    loaded: [],
+    failed: [],
+    mounted: false,
+    canvasFound: false,
+    controlsBound: false,
+    backstoryLoaded: false,
+    tectonicsLoaded: false,
+    topologyLoaded: false,
+    runtimeLoaded: false,
+    controlsLoaded: false,
+    terrainLoaded: false,
+    assetsLoaded: false,
+    canvasLoaded: false,
+    frames: 0,
+    fallback: false,
+    error: ""
+  };
 
-const ROUTE_STATE = {
-  ok: false,
-  contract: ROUTE_CONTRACT,
-  receipt: ROUTE_RECEIPT,
-  previousRouteContract: PREVIOUS_ROUTE_CONTRACT,
-  cacheKey: CACHE_KEY,
-  imported: {},
-  contracts: {},
-  receipts: {},
-  mountFound: false,
-  canvasFound: false,
-  canvasMounted: false,
-  controlsLoaded: false,
-  controlsBound: false,
-  freeDrag: true,
-  poleSwivel: true,
-  physicalAxisDeg: 23.44,
-  runtimeMotionOnly: true,
-  visualPassClaimed: false,
-  generatedImage: false,
-  graphicBox: false,
-  errors: [],
-  warnings: []
-};
+  window.__AUDRALIA_ACTIVE_ROUTE_CONTRACT__ = CONTRACT;
+  window.__AUDRALIA_ACTIVE_ROUTE_FILE__ = "/showroom/globe/audralia/index.js";
 
-function $(selector) {
-  return document.querySelector(selector);
-}
+  function status(value) {
+    const node =
+      document.getElementById("audralia-route-status") ||
+      document.querySelector("[data-audralia-route-status]") ||
+      document.getElementById("route-status") ||
+      document.querySelector("[data-route-status]");
 
-function resolveMount() {
-  return (
-    $("#audralia-canvas-mount") ||
-    $("[data-audralia-canvas-mount]") ||
-    $("#audralia-mount") ||
-    $("[data-audralia-render-mount]")
-  );
-}
+    document.documentElement.dataset.audraliaRouteContract = CONTRACT;
+    document.documentElement.dataset.audraliaRouteReceipt = RECEIPT;
+    document.documentElement.dataset.audraliaRoutePreviousContract = PREVIOUS_CONTRACT;
+    document.documentElement.dataset.audraliaRouteVersion = VERSION;
+    document.documentElement.dataset.audraliaActiveRouteFile = "/showroom/globe/audralia/index.js";
+    document.documentElement.dataset.audraliaParentChainAligned = "true";
+    document.documentElement.dataset.audraliaBackstoryLoaded = String(state.backstoryLoaded);
+    document.documentElement.dataset.audraliaTectonicsLoaded = String(state.tectonicsLoaded);
+    document.documentElement.dataset.audraliaTopologyLoaded = String(state.topologyLoaded);
+    document.documentElement.dataset.audraliaRuntimeLoaded = String(state.runtimeLoaded);
+    document.documentElement.dataset.audraliaControlsLoaded = String(state.controlsLoaded);
+    document.documentElement.dataset.audraliaTerrainLoaded = String(state.terrainLoaded);
+    document.documentElement.dataset.audraliaAssetsLoaded = String(state.assetsLoaded);
+    document.documentElement.dataset.audraliaCanvasLoaded = String(state.canvasLoaded);
+    document.documentElement.dataset.audraliaMounted = String(state.mounted);
+    document.documentElement.dataset.audraliaCanvasFound = String(state.canvasFound);
+    document.documentElement.dataset.audraliaControlsBound = String(state.controlsBound);
+    document.documentElement.dataset.audraliaOceanDrivenHomeWorld = "true";
+    document.documentElement.dataset.audraliaNotHearth = "true";
+    document.documentElement.dataset.generatedImage = "false";
+    document.documentElement.dataset.graphicBox = "false";
+    document.documentElement.dataset.visualPassClaimed = "false";
 
-function resolveStatusNode() {
-  return (
-    $("#audralia-route-status") ||
-    $("[data-audralia-route-status]") ||
-    $("#audralia-status") ||
-    $("[data-route-status]")
-  );
-}
-
-function resolveCanvas() {
-  const mount = resolveMount();
-
-  return (
-    document.querySelector("canvas[data-audralia-canvas='true']") ||
-    document.querySelector("canvas[data-audralia-canvas]") ||
-    (mount && mount.querySelector("canvas"))
-  );
-}
-
-function text(value) {
-  return value === null || value === undefined ? "" : String(value).trim();
-}
-
-function firstText(...values) {
-  for (const value of values) {
-    const next = text(value);
-    if (next) return next;
-  }
-
-  return "";
-}
-
-function safe(fn, fallback = null) {
-  try {
-    return typeof fn === "function" ? fn() : fallback;
-  } catch (error) {
-    ROUTE_STATE.errors.push(String(error?.message || error || "safe-call-failed"));
-    return fallback;
-  }
-}
-
-function moduleStatus(module) {
-  return (
-    safe(() => module.getStatus && module.getStatus(), null) ||
-    safe(() => module.getAudraliaCanvasStatus && module.getAudraliaCanvasStatus(), null) ||
-    safe(() => module.getAudraliaAssetsStatus && module.getAudraliaAssetsStatus(), null) ||
-    safe(() => module.getAudraliaTerrainFingerStatus && module.getAudraliaTerrainFingerStatus(), null) ||
-    safe(() => module.getAudraliaControlsStatus && module.getAudraliaControlsStatus(), null) ||
-    module.AUDRALIA_CONTROLS_STATUS ||
-    module.AUDRALIA_ASSETS_STATUS ||
-    module.AUDRALIA_TERRAIN_FINGERS_STATUS ||
-    {}
-  );
-}
-
-function moduleContract(module, fallback) {
-  const status = moduleStatus(module);
-
-  return firstText(
-    module.CONTRACT,
-    status.contract,
-    module.default && module.default.contract,
-    fallback
-  );
-}
-
-function moduleReceipt(module, fallback) {
-  const status = moduleStatus(module);
-
-  return firstText(
-    module.RECEIPT,
-    status.receipt,
-    module.AUDRALIA_RUNTIME_RECEIPT_VALUE,
-    module.AUDRALIA_CONTROLS_RECEIPT_VALUE,
-    module.AUDRALIA_ASSETS_RECEIPT_VALUE,
-    module.AUDRALIA_TERRAIN_FINGERS_RECEIPT_VALUE,
-    module.default && module.default.receipt,
-    fallback
-  );
-}
-
-function checkExpected(label, module) {
-  const contract = moduleContract(module, EXPECTED[label] || label);
-  const receipt = moduleReceipt(module, contract);
-
-  ROUTE_STATE.contracts[label] = contract;
-  ROUTE_STATE.receipts[label] = receipt;
-
-  const expected = EXPECTED[label];
-
-  if (expected && contract && !contract.includes(expected)) {
-    if (label === "controls" || label === "terrainFingers" || label === "assets" || label === "canvas") {
-      ROUTE_STATE.warnings.push(`${label} contract mismatch: expected ${expected}, got ${contract}`);
+    if (node) {
+      node.textContent = [
+        "Audralia parent-chain alignment route.",
+        `Status ${value}`,
+        `Route ${CONTRACT}`,
+        `Receipt ${RECEIPT}`,
+        `Previous ${PREVIOUS_CONTRACT}`,
+        `Version ${VERSION}`,
+        "Parent order backstory → tectonics → topology → runtime → controls → terrain → assets → canvas",
+        `Loaded ${state.loaded.join(",") || "none"}`,
+        `Failed ${state.failed.join(",") || "none"}`,
+        `Backstory loaded ${state.backstoryLoaded}`,
+        `Tectonics loaded ${state.tectonicsLoaded}`,
+        `Topology loaded ${state.topologyLoaded}`,
+        `Runtime loaded ${state.runtimeLoaded}`,
+        `Controls loaded ${state.controlsLoaded}`,
+        `Terrain loaded ${state.terrainLoaded}`,
+        `Assets loaded ${state.assetsLoaded}`,
+        `Canvas loaded ${state.canvasLoaded}`,
+        `Mounted ${state.mounted}`,
+        `Canvas found ${state.canvasFound}`,
+        `Controls bound ${state.controlsBound}`,
+        `Fallback ${state.fallback}`,
+        `Frames ${state.frames}`,
+        "Audralia identity clean ancient ocean-driven home-world true",
+        "Generated image false",
+        "GraphicBox false",
+        "Visual pass claimed false",
+        state.error ? `Error ${state.error}` : ""
+      ].filter(Boolean).join("\n");
     }
   }
 
-  return { contract, receipt };
-}
+  function loadScript(role, path, validate, required = true) {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = `${path}?v=${KEY}-${Date.now()}`;
+      script.defer = true;
+      script.dataset.audraliaFile = "true";
+      script.dataset.audraliaFileRole = role;
+      script.dataset.audraliaRouteContract = CONTRACT;
 
-function publish(status = "") {
-  ROUTE_STATE.mountFound = Boolean(resolveMount());
-  ROUTE_STATE.canvasFound = Boolean(resolveCanvas());
+      script.onload = () => {
+        let ok = false;
 
-  document.documentElement.dataset.audraliaRouteContract = ROUTE_CONTRACT;
-  document.documentElement.dataset.audraliaRouteReceipt = ROUTE_RECEIPT;
-  document.documentElement.dataset.audraliaRoutePreviousContract = PREVIOUS_ROUTE_CONTRACT;
-  document.documentElement.dataset.audraliaRouteStatus = status || "checking";
-  document.documentElement.dataset.audraliaCacheKey = CACHE_KEY;
-  document.documentElement.dataset.audraliaFreeDrag = "true";
-  document.documentElement.dataset.audraliaPoleSwivel = "true";
-  document.documentElement.dataset.audraliaPhysicalAxisDeg = "23.44";
-  document.documentElement.dataset.audraliaControlsLoaded = String(ROUTE_STATE.controlsLoaded);
-  document.documentElement.dataset.audraliaControlsBound = String(ROUTE_STATE.controlsBound);
-  document.documentElement.dataset.audraliaRuntimeMotionOnly = "true";
-  document.documentElement.dataset.generatedImage = "false";
-  document.documentElement.dataset.graphicBox = "false";
-  document.documentElement.dataset.visualPassClaimed = "false";
+        try {
+          ok = validate();
+        } catch (_) {
+          ok = false;
+        }
 
-  window.AUDRALIA_ROUTE_STATUS = ROUTE_STATE;
-  window.__AUDRALIA_ROUTE_STATUS__ = ROUTE_STATE;
-  window.AUDRALIA_ROUTE_CONTRACT = ROUTE_CONTRACT;
-  window.AUDRALIA_ROUTE_RECEIPT = ROUTE_RECEIPT;
+        if (ok) {
+          state.loaded.push(role);
+        } else {
+          state.failed.push(`${role}:invalid`);
+        }
 
-  writeStatus(status);
-}
+        status(`checked-${role}`);
+        resolve(ok);
+      };
 
-function writeStatus(status = "") {
-  const node = resolveStatusNode();
-  if (!node) return;
+      script.onerror = () => {
+        if (required) state.failed.push(`${role}:load-error`);
+        else state.loaded.push(`${role}:held`);
+        status(`failed-${role}`);
+        resolve(false);
+      };
 
-  const lines = [
-    ROUTE_STATE.ok
-      ? "Audralia free drag and pole swivel route ready."
-      : "Audralia free drag and pole swivel route preparing.",
-    `Status ${status || "checking"}`,
-    `Route ${ROUTE_CONTRACT}`,
-    `Receipt ${ROUTE_RECEIPT}`,
-    `Previous ${PREVIOUS_ROUTE_CONTRACT}`,
-    `Cache Key ${CACHE_KEY}`,
-    `Runtime ${ROUTE_STATE.contracts.runtime || EXPECTED.runtime}`,
-    `Controls ${ROUTE_STATE.contracts.controls || EXPECTED.controls}`,
-    `Terrain ${ROUTE_STATE.contracts.terrainFingers || EXPECTED.terrainFingers}`,
-    `Assets ${ROUTE_STATE.contracts.assets || EXPECTED.assets}`,
-    `Canvas ${ROUTE_STATE.contracts.canvas || EXPECTED.canvas}`,
-    `Mount found ${ROUTE_STATE.mountFound}`,
-    `Canvas mounted ${ROUTE_STATE.canvasMounted}`,
-    `Canvas found ${ROUTE_STATE.canvasFound}`,
-    `Controls loaded ${ROUTE_STATE.controlsLoaded}`,
-    `Controls bound ${ROUTE_STATE.controlsBound}`,
-    `Free drag true`,
-    `Pole swivel true`,
-    `Physical axis 23.44deg`,
-    `Runtime motion-only true`,
-    `GraphicBox false`,
-    `Generated image false`,
-    `Visual pass claimed false`
-  ];
-
-  if (ROUTE_STATE.warnings.length) {
-    lines.push(`Warnings ${ROUTE_STATE.warnings.slice(-4).join(" | ")}`);
+      document.head.appendChild(script);
+    });
   }
 
-  if (ROUTE_STATE.errors.length) {
-    lines.push(`Errors ${ROUTE_STATE.errors.slice(-4).join(" | ")}`);
+  function findMount() {
+    return (
+      document.getElementById("audraliaCanvasMount") ||
+      document.getElementById("audralia-canvas-mount") ||
+      document.querySelector("[data-audralia-canvas-mount]") ||
+      document.querySelector("[data-canvas-mount='audralia']") ||
+      document.querySelector("canvas")?.parentElement ||
+      document.getElementById("audralia-main") ||
+      document.querySelector("main") ||
+      document.body
+    );
   }
 
-  node.textContent = lines.join("\n");
-}
+  function findCanvas(mount) {
+    return (
+      document.getElementById("audraliaCanvas") ||
+      document.getElementById("audralia-canvas") ||
+      mount.querySelector("canvas") ||
+      document.querySelector("canvas")
+    );
+  }
 
-async function importModule(label, required = true) {
-  const path = PATHS[label];
+  function tryMountKnownCanvas(mount) {
+    const candidates = [
+      ["AUDRALIA_CANVAS.mount", () => window.AUDRALIA_CANVAS?.mount?.(mount, { routeContract: CONTRACT, routeReceipt: RECEIPT })],
+      ["AUDRALIA_CANVAS.init", () => window.AUDRALIA_CANVAS?.init?.(mount, { routeContract: CONTRACT, routeReceipt: RECEIPT })],
+      ["AUDRALIA_CANVAS.render", () => window.AUDRALIA_CANVAS?.render?.(mount, { routeContract: CONTRACT, routeReceipt: RECEIPT })],
+      ["AudraliaCanvas.mount", () => window.AudraliaCanvas?.mount?.(mount, { routeContract: CONTRACT, routeReceipt: RECEIPT })],
+      ["mountAudraliaCanvas", () => window.mountAudraliaCanvas?.(mount, { routeContract: CONTRACT, routeReceipt: RECEIPT })],
+      ["renderAudralia", () => window.renderAudralia?.(mount, { routeContract: CONTRACT, routeReceipt: RECEIPT })]
+    ];
 
-  try {
-    const module = await import(`${path}?v=${encodeURIComponent(CACHE_KEY)}&route=${encodeURIComponent(ROUTE_CONTRACT)}&role=${encodeURIComponent(label)}`);
+    for (const [name, fn] of candidates) {
+      try {
+        const result = fn();
+        if (result) {
+          state.loaded.push(`mount:${name}`);
+          return result;
+        }
+      } catch (error) {
+        state.failed.push(`mount:${name}`);
+        state.error = error?.message || String(error);
+      }
+    }
 
-    ROUTE_STATE.imported[label] = true;
-    checkExpected(label, module);
-    publish(`imported-${label}`);
-    return module;
-  } catch (error) {
-    ROUTE_STATE.imported[label] = false;
-    ROUTE_STATE.errors.push(`${label} import failed: ${String(error?.message || error || "unknown")}`);
-    publish(`failed-${label}`);
-
-    if (required) throw error;
     return null;
   }
-}
 
-function chooseMountFunction(canvasModule) {
-  return (
-    canvasModule.mountAudraliaCanvas ||
-    canvasModule.renderAudraliaCanvas ||
-    canvasModule.bootAudraliaCanvas ||
-    canvasModule.createAudraliaCanvas ||
-    canvasModule.initAudraliaCanvas ||
-    canvasModule.mountAudralia ||
-    canvasModule.renderAudralia ||
-    canvasModule.mount ||
-    canvasModule.render ||
-    canvasModule.init ||
-    canvasModule.default?.mountAudraliaCanvas ||
-    canvasModule.default?.renderAudraliaCanvas ||
-    canvasModule.default?.mount ||
-    canvasModule.default?.render ||
-    canvasModule.default?.init ||
-    window.mountAudraliaCanvas ||
-    window.renderAudraliaCanvas
-  );
-}
+  function bindControls(canvas, mount) {
+    const candidates = [
+      ["AUDRALIA_CONTROLS.bind", () => window.AUDRALIA_CONTROLS?.bind?.(canvas, { mount, routeContract: CONTRACT })],
+      ["AUDRALIA_CONTROLS.mount", () => window.AUDRALIA_CONTROLS?.mount?.(canvas, { mount, routeContract: CONTRACT })],
+      ["AUDRALIA_CONTROLS.attach", () => window.AUDRALIA_CONTROLS?.attach?.(canvas, { mount, routeContract: CONTRACT })],
+      ["AudraliaControls.bind", () => window.AudraliaControls?.bind?.(canvas, { mount, routeContract: CONTRACT })],
+      ["bindAudraliaControls", () => window.bindAudraliaControls?.(canvas, { mount, routeContract: CONTRACT })]
+    ];
 
-async function waitForCanvas(timeoutMs = 8000) {
-  const started = performance.now();
-
-  return new Promise((resolve) => {
-    const check = () => {
-      const canvas = resolveCanvas();
-
-      if (canvas) {
-        resolve(canvas);
-        return;
-      }
-
-      if (performance.now() - started >= timeoutMs) {
-        resolve(null);
-        return;
-      }
-
-      requestAnimationFrame(check);
-    };
-
-    check();
-  });
-}
-
-function clearFallback() {
-  const canvas = resolveCanvas();
-  const fallback = document.querySelector("[data-audralia-mount-fallback]");
-
-  if (canvas && fallback) {
-    fallback.textContent = "";
-    fallback.hidden = true;
-  }
-}
-
-function createControlsAPI(controlsModule, runtimeModule) {
-  const creator =
-    controlsModule.createAudraliaControls ||
-    controlsModule.createControls ||
-    controlsModule.default?.createAudraliaControls ||
-    controlsModule.default?.createControls ||
-    window.AUDRALIA_CONTROLS?.createAudraliaControls ||
-    window.AUDRALIA_CONTROLS?.createControls;
-
-  if (typeof creator !== "function") {
-    throw new Error("Audralia controls module imported but did not expose createAudraliaControls.");
-  }
-
-  return creator({
-    runtime: runtimeModule,
-    lockDelayMs: 2600,
-    rotateSensitivity: 0.0125,
-    poleSensitivity: 0.0105,
-    yawDamping: 1.55,
-    poleDamping: 2.35,
-    poleReturn: 3.6
-  });
-}
-
-async function boot() {
-  publish("booting");
-
-  const mount = resolveMount();
-
-  if (!mount) {
-    ROUTE_STATE.errors.push("Canonical Audralia mount not found.");
-    publish("missing-mount");
-    return ROUTE_STATE;
-  }
-
-  mount.dataset.audraliaFreeDrag = "true";
-  mount.dataset.audraliaPoleSwivel = "true";
-  mount.dataset.audraliaPhysicalAxisDeg = "23.44";
-  mount.dataset.audraliaRuntimeMotionOnly = "true";
-  mount.style.touchAction = "none";
-  mount.style.userSelect = "none";
-  mount.style.webkitUserSelect = "none";
-  mount.style.webkitTouchCallout = "none";
-
-  try {
-    const [
-      runtimeModule,
-      controlsModule,
-      surfaceModule,
-      hexSurfaceModule,
-      reliefSurfaceModule,
-      terrainFingersModule,
-      assetsModule,
-      canvasModule
-    ] = await Promise.all([
-      importModule("runtime", false),
-      importModule("controls", true),
-      importModule("surface", false),
-      importModule("hexSurface", false),
-      importModule("reliefSurface", false),
-      importModule("terrainFingers", true),
-      importModule("assets", true),
-      importModule("canvas", true)
-    ]);
-
-    const controls = createControlsAPI(controlsModule, runtimeModule);
-    ROUTE_STATE.controlsLoaded = true;
-
-    const mountFunction = chooseMountFunction(canvasModule);
-
-    if (typeof mountFunction !== "function") {
-      throw new Error("Canvas authority imported, but no mount function was found.");
+    for (const [name, fn] of candidates) {
+      try {
+        const result = fn();
+        if (result !== false) {
+          state.loaded.push(`controls:${name}`);
+          return true;
+        }
+      } catch (_) {}
     }
 
-    const controller = mountFunction(mount, {
-      routeReceipt: ROUTE_RECEIPT,
-      routeContract: ROUTE_CONTRACT,
-      cacheKey: CACHE_KEY,
-      runtime: controls,
-      runtimeMotion: controls,
-      controls,
-      surface: surfaceModule,
-      hexSurface: hexSurfaceModule,
-      reliefSurface: reliefSurfaceModule,
-      terrainFingers: terrainFingersModule,
-      assets: assetsModule,
-      freeDrag: true,
-      poleSwivel: true,
-      physicalAxisDeg: 23.44,
-      generatedImage: false,
-      graphicBox: false,
-      visualPassClaimed: false
-    });
-
-    ROUTE_STATE.canvasMounted = Boolean(controller) || true;
-
-    const canvas = await waitForCanvas();
-
-    if (!canvas) {
-      throw new Error("Canvas mount returned, but no Audralia canvas appeared.");
-    }
-
-    ROUTE_STATE.canvasFound = true;
-
-    canvas.dataset.audraliaCanvas = "true";
-    canvas.dataset.audraliaFreeDrag = "true";
-    canvas.dataset.audraliaPoleSwivel = "true";
-    canvas.dataset.audraliaPhysicalAxisDeg = "23.44";
-    canvas.style.pointerEvents = "auto";
-    canvas.style.touchAction = "none";
-    canvas.style.userSelect = "none";
-    canvas.style.webkitUserSelect = "none";
-    canvas.style.webkitTouchCallout = "none";
-
-    if (typeof controls.bind !== "function") {
-      throw new Error("Audralia controls object exists but has no bind method.");
-    }
-
-    controls.bind(canvas, { mount });
-    ROUTE_STATE.controlsBound = true;
-
-    clearFallback();
-
-    ROUTE_STATE.ok = true;
-    publish("ready");
-  } catch (error) {
-    ROUTE_STATE.ok = false;
-    ROUTE_STATE.errors.push(String(error?.message || error || "boot failed"));
-    publish("failed");
+    return false;
   }
 
-  return ROUTE_STATE;
-}
+  function protectedFallback(mount) {
+    let fallback = mount.querySelector("[data-audralia-parent-chain-fallback]");
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", boot, { once: true });
-} else {
-  boot();
-}
+    if (!fallback) {
+      fallback = document.createElement("div");
+      fallback.dataset.audraliaParentChainFallback = "true";
+      fallback.style.border = "1px solid rgba(231,188,105,.34)";
+      fallback.style.borderRadius = "18px";
+      fallback.style.padding = "14px";
+      fallback.style.margin = "12px 0";
+      fallback.style.color = "rgba(238,246,255,.78)";
+      fallback.style.background = "rgba(4,10,20,.72)";
+      fallback.textContent = "Audralia parent chain loaded. Existing canvas mount was not exposed through a known adapter. Visual fallback protected; no generated image, no GraphicBox.";
+      mount.appendChild(fallback);
+    }
 
-export {
-  ROUTE_CONTRACT,
-  ROUTE_RECEIPT,
-  PREVIOUS_ROUTE_CONTRACT,
-  CACHE_KEY,
-  ROUTE_STATE,
-  boot,
-  publish
-};
+    state.fallback = true;
+    state.mounted = true;
+    state.canvasFound = Boolean(findCanvas(mount));
+    state.controlsBound = false;
+  }
 
-export default boot;
+  async function boot() {
+    status("booting");
+
+    state.backstoryLoaded = await loadScript(
+      "backstory",
+      "/assets/audralia/audralia.backstory.js",
+      () => Boolean(window.AUDRALIA_BACKSTORY && typeof window.AUDRALIA_BACKSTORY.sampleIdentity === "function")
+    );
+
+    state.tectonicsLoaded = await loadScript(
+      "tectonics",
+      "/assets/audralia/audralia.tectonics.js",
+      () => Boolean(window.AUDRALIA_TECTONICS && typeof window.AUDRALIA_TECTONICS.sampleTectonics === "function")
+    );
+
+    state.topologyLoaded = await loadScript(
+      "topology",
+      "/assets/audralia/audralia.topology.js",
+      () => Boolean(window.AUDRALIA_TOPOLOGY && typeof window.AUDRALIA_TOPOLOGY.sampleTopology === "function")
+    );
+
+    state.runtimeLoaded = await loadScript(
+      "runtime",
+      "/assets/audralia/audralia.runtime.js",
+      () => Boolean(window.AUDRALIA_RUNTIME || window.AudraliaRuntime || window.audraliaRuntime),
+      false
+    );
+
+    state.controlsLoaded = await loadScript(
+      "controls",
+      "/assets/audralia/audralia.controls.js",
+      () => Boolean(window.AUDRALIA_CONTROLS || window.AudraliaControls || window.bindAudraliaControls),
+      false
+    );
+
+    state.terrainLoaded = await loadScript(
+      "terrain",
+      "/assets/audralia/audralia.terrain.fingers.js",
+      () => Boolean(window.AUDRALIA_TERRAIN || window.AUDRALIA_TERRAIN_FINGERS || window.AudraliaTerrain),
+      false
+    );
+
+    state.assetsLoaded = await loadScript(
+      "assets",
+      "/assets/audralia/audralia.assets.js",
+      () => Boolean(window.AUDRALIA_ASSETS || window.AudraliaAssets || window.audraliaAssets),
+      false
+    );
+
+    state.canvasLoaded = await loadScript(
+      "canvas",
+      "/assets/audralia/audralia.canvas.js",
+      () => Boolean(window.AUDRALIA_CANVAS || window.AudraliaCanvas || window.mountAudraliaCanvas || window.renderAudralia),
+      false
+    );
+
+    const mount = findMount();
+    const mounted = tryMountKnownCanvas(mount);
+    const canvas = findCanvas(mount);
+
+    state.mounted = Boolean(mounted || canvas);
+    state.canvasFound = Boolean(canvas || mounted?.canvas);
+
+    if (canvas) {
+      state.controlsBound = bindControls(canvas, mount);
+      canvas.dataset.audraliaParentChainAligned = "true";
+      canvas.dataset.audraliaRouteContract = CONTRACT;
+      canvas.dataset.generatedImage = "false";
+      canvas.dataset.graphicBox = "false";
+      canvas.dataset.visualPassClaimed = "false";
+    }
+
+    if (!state.mounted) {
+      protectedFallback(mount);
+    }
+
+    status(state.mounted ? "ready" : "held");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot, { once: true });
+  } else {
+    boot();
+  }
+})();

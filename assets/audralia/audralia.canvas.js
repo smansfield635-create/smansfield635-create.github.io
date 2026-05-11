@@ -1,23 +1,24 @@
 // /assets/audralia/audralia.canvas.js
-// AUDRALIA_G1_HIGH_MOUNTAIN_RANGE_COMMUNITY_CANVAS_TNT_v8
+// AUDRALIA_G1_PLAINS_DESERTS_MARSHES_CANVAS_TNT_v9
 // Full-file replacement.
 // Canvas authority only.
 // Compatibility markers:
+// AUDRALIA_G1_HIGH_MOUNTAIN_RANGE_COMMUNITY_CANVAS_TNT_v8
 // AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_CANVAS_TNT_v5
 // AUDRALIA_G1_BEACH_TO_LAND_RISE_CANVAS_TNT_v4
 // AUDRALIA_G1_TERRAIN_ELEVATION_CANVAS_TNT_v3
+// Adds plains, deserts, marshes, wet flats, grassland, and more attached landmass.
 // Beaches remain sea level.
-// Raised terrain carries high mountains, beautiful ranges, terraces, passes, and small mountain communities.
 // No trees. No bushes. No forest canopy.
 // No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G1_HIGH_MOUNTAIN_RANGE_COMMUNITY_CANVAS_TNT_v8";
-  const RECEIPT = "AUDRALIA_G1_HIGH_MOUNTAIN_RANGE_COMMUNITY_CANVAS_RECEIPT_v8";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G1_TERRAIN_MASS_ATTACHMENT_CANVAS_TNT_v7";
-  const VERSION = "2026-05-10.audralia-g1-high-mountain-range-community-canvas-v8";
+  const CONTRACT = "AUDRALIA_G1_PLAINS_DESERTS_MARSHES_CANVAS_TNT_v9";
+  const RECEIPT = "AUDRALIA_G1_PLAINS_DESERTS_MARSHES_CANVAS_RECEIPT_v9";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G1_HIGH_MOUNTAIN_RANGE_COMMUNITY_CANVAS_TNT_v8";
+  const VERSION = "2026-05-10.audralia-g1-plains-deserts-marshes-canvas-v9";
   const TAU = Math.PI * 2;
 
   const COLORS = Object.freeze({
@@ -30,6 +31,13 @@
     wetBeach: [151, 154, 112],
     tidalFlat: [114, 137, 104],
     raisedLand: [94, 136, 80],
+    grassland: [80, 130, 76],
+    plains: [132, 146, 88],
+    desert: [177, 151, 91],
+    dryBasin: [148, 128, 88],
+    marsh: [56, 109, 82],
+    wetFlat: [72, 124, 111],
+    mineralFlat: [177, 169, 130],
     lowland: [70, 116, 72],
     plateau: [124, 143, 91],
     foothill: [112, 132, 86],
@@ -42,7 +50,6 @@
     community: [207, 172, 96],
     terrace: [156, 138, 90],
     basin: [68, 95, 68],
-    polar: [204, 222, 222],
     cloud: [230, 238, 238],
     atmosphere: [86, 157, 194]
   });
@@ -189,40 +196,42 @@
 
     const latitudeAbs = Math.abs(latitude) / (Math.PI / 2);
     const continentArc =
-      Math.sin((longitude * 1.35) + Math.cos(latitude * 1.7) * 0.55) * 0.22 +
-      Math.cos((longitude * 0.74) - Math.sin(latitude * 1.4) * 0.6) * 0.18;
+      Math.sin(longitude * 1.35 + Math.cos(latitude * 1.7) * 0.55) * 0.22 +
+      Math.cos(longitude * 0.74 - Math.sin(latitude * 1.4) * 0.6) * 0.18;
 
     const oldPlateNoise = fbm(u * 0.9 + 0.11, v * 0.88 - 0.07, 430000, 6);
     const shelfNoise = ridged(u * 1.8 - 0.13, v * 1.45 + 0.08, 431000, 5);
     const brokenEdge = ridged(u * 3.2 + 0.2, v * 2.6 - 0.14, 432000, 4);
+    const landBridge = fbm(u * 0.74 - 0.22, v * 0.68 + 0.15, 433000, 5);
 
     const landSignal = clamp(
-      topology.landEligibility * 0.5 +
-        tectonics.exposedLandPressure * 0.27 +
-        oldPlateNoise * 0.23 +
-        continentArc * 0.13 +
-        topology.islandEligibility * 0.1 -
-        0.145 -
-        latitudeAbs * 0.035,
+      topology.landEligibility * 0.48 +
+        tectonics.exposedLandPressure * 0.25 +
+        oldPlateNoise * 0.22 +
+        landBridge * 0.16 +
+        continentArc * 0.12 +
+        topology.islandEligibility * 0.12 -
+        0.105 -
+        latitudeAbs * 0.032,
       0,
       1
     );
 
     const islandSignal = smoothstep(
-      0.58,
-      0.87,
-      shelfNoise * 0.6 + brokenEdge * 0.26 + topology.islandEligibility * 0.24
+      0.54,
+      0.86,
+      shelfNoise * 0.58 + brokenEdge * 0.25 + topology.islandEligibility * 0.24
     );
 
     const shelf = clamp(
-      topology.shelf * 0.55 +
-        smoothstep(0.43, 0.59, landSignal) * 0.28 +
-        islandSignal * 0.14,
+      topology.shelf * 0.53 +
+        smoothstep(0.39, 0.58, landSignal) * 0.3 +
+        islandSignal * 0.16,
       0,
       1
     );
 
-    const exposure = clamp(Math.max(landSignal, islandSignal * 0.9), 0, 1);
+    const exposure = clamp(Math.max(landSignal, islandSignal * 0.92), 0, 1);
 
     return { tectonics, topology, landSignal, islandSignal, shelf, exposure };
   }
@@ -232,7 +241,7 @@
       return window.AUDRALIA_ELEVATION.sampleElevation(u, v, {
         longitude,
         latitude,
-        isLand: shape.exposure > 0.48,
+        isLand: shape.exposure > 0.43,
         landSignal: shape.landSignal,
         shelf: shape.shelf
       });
@@ -257,7 +266,7 @@
       return window.AUDRALIA_BEACHES.sampleBeach(u, v, {
         longitude,
         latitude,
-        isLand: shape.exposure > 0.48,
+        isLand: shape.exposure > 0.43,
         landSignal: shape.landSignal,
         islandSignal: shape.islandSignal,
         shelf: shape.shelf,
@@ -266,8 +275,8 @@
     }
 
     const beachEdge =
-      smoothstep(0.455, 0.535, shape.exposure) *
-      (1 - smoothstep(0.555, 0.665, shape.exposure));
+      smoothstep(0.42, 0.515, shape.exposure) *
+      (1 - smoothstep(0.555, 0.69, shape.exposure));
 
     return {
       beachBand: beachEdge,
@@ -293,19 +302,19 @@
 
     const exposure = shape.exposure;
     const beachEdge =
-      smoothstep(0.455, 0.535, exposure) *
-      (1 - smoothstep(0.555, 0.665, exposure));
+      smoothstep(0.42, 0.515, exposure) *
+      (1 - smoothstep(0.555, 0.69, exposure));
 
     const terrainDrive =
-      exposure * 0.5 +
-      elevation.elevation * 0.22 +
-      fbm(u * 1.08, v * 0.96, 910000, 6) * 0.2 +
-      ridged(u * 2.12, v * 1.72, 912000, 5) * 0.15 -
-      beachEdge * 0.1;
+      exposure * 0.52 +
+      elevation.elevation * 0.2 +
+      fbm(u * 1.02, v * 0.92, 1210000, 6) * 0.2 +
+      ridged(u * 2.02, v * 1.62, 1212000, 5) * 0.13 -
+      beachEdge * 0.08;
 
     const raisedTerrain = clamp(
-      smoothstep(0.43, 0.62, terrainDrive) +
-        smoothstep(0.515, 0.665, exposure) * 0.45,
+      smoothstep(0.39, 0.59, terrainDrive) +
+        smoothstep(0.475, 0.635, exposure) * 0.44,
       0,
       1
     );
@@ -314,14 +323,14 @@
       beachRemainsSeaLevel: true,
       beachEdge,
       raisedTerrain,
-      inlandCore: Math.max(0, raisedTerrain - beachEdge * 0.12),
-      lowland: raisedTerrain * 0.36 + elevation.basin * 0.16,
+      inlandCore: Math.max(0, raisedTerrain - beachEdge * 0.1),
+      lowland: raisedTerrain * 0.38 + elevation.basin * 0.16,
       plateau: raisedTerrain * 0.36 + elevation.highland * 0.2,
       ridgeBack: raisedTerrain * 0.24 + elevation.ridge * 0.2,
       terrainShadow: elevation.reliefShadow * 0.22,
       terrainHighlight: elevation.reliefHighlight * 0.22 + raisedTerrain * 0.18,
-      terrainAboveSeaLevel: raisedTerrain > 0.18,
-      terrainMassAttached: raisedTerrain > 0.16
+      terrainAboveSeaLevel: raisedTerrain > 0.14,
+      terrainMassAttached: raisedTerrain > 0.13
     };
   }
 
@@ -360,6 +369,36 @@
     };
   }
 
+  function sampleGroundcover(u, v, longitude, latitude, shape, elevation, beach, landrise, mountains, summit) {
+    if (window.AUDRALIA_GROUNDCOVER?.sampleGroundcover) {
+      return window.AUDRALIA_GROUNDCOVER.sampleGroundcover(u, v, {
+        longitude,
+        latitude,
+        shape,
+        elevation,
+        beach,
+        landrise,
+        mountains,
+        summit,
+        exposure: shape.exposure,
+        shelf: shape.shelf,
+        beachEdge: beach.beachBand
+      });
+    }
+
+    return {
+      plains: landrise.lowland * 0.5,
+      deserts: landrise.plateau * 0.3,
+      marshes: landrise.lowland * shape.shelf * 0.35,
+      wetFlats: shape.shelf * 0.25,
+      grassland: landrise.lowland * 0.35,
+      dryBasins: elevation.basin * 0.2,
+      mineralFlats: 0.08,
+      groundMoisture: 0.5,
+      groundDryness: 0.35
+    };
+  }
+
   function surfaceColor(u, v, longitude, latitude) {
     const summit = sampleSummit(u, v, longitude, latitude);
     const shape = landShape(u, v, longitude, latitude);
@@ -367,36 +406,27 @@
     const beach = sampleBeach(u, v, longitude, latitude, shape, elevation);
     const landrise = sampleLandRise(u, v, longitude, latitude, shape, elevation, beach);
     const mountains = sampleMountains(u, v, longitude, latitude, shape, elevation, beach, landrise, summit);
+    const ground = sampleGroundcover(u, v, longitude, latitude, shape, elevation, beach, landrise, mountains, summit);
 
     const latitudeAbs = Math.abs(latitude) / (Math.PI / 2);
 
     const beachEdge =
-      smoothstep(0.455, 0.535, shape.exposure) *
-      (1 - smoothstep(0.555, 0.665, shape.exposure));
+      smoothstep(0.42, 0.515, shape.exposure) *
+      (1 - smoothstep(0.555, 0.69, shape.exposure));
 
     const forcedTerrain =
-      shape.exposure > 0.555 ||
+      shape.exposure > 0.49 ||
       landrise.terrainAboveSeaLevel ||
-      landrise.raisedTerrain > 0.18;
+      landrise.raisedTerrain > 0.14;
 
     const beachOnly =
       !forcedTerrain &&
-      (beachEdge > 0.12 || beach.beachBand > 0.16);
+      (beachEdge > 0.1 || beach.beachBand > 0.14);
 
     const tidalOnly =
       !forcedTerrain &&
       !beachOnly &&
-      beach.tidalFlat > 0.14;
-
-    const moisture = clamp(
-      fbm(u * 1.4 - 0.14, v * 1.2 + 0.09, 441000, 5) * 0.52 +
-        shape.topology.basin * 0.18 +
-        shape.shelf * 0.08 +
-        beach.coastalWetland * 0.12 -
-        latitudeAbs * 0.12,
-      0,
-      1
-    );
+      beach.tidalFlat > 0.12;
 
     if (!forcedTerrain && !beachOnly && !tidalOnly) {
       let water = mix(
@@ -435,35 +465,41 @@
 
     let land = COLORS.raisedLand;
 
-    land = mix(land, COLORS.lowland, landrise.lowland * 0.24 + moisture * 0.14);
-    land = mix(land, COLORS.plateau, landrise.plateau * 0.28);
-    land = mix(land, COLORS.foothill, mountains.foothills * 0.28);
-    land = mix(land, COLORS.ridge, landrise.ridgeBack * 0.22 + mountains.rangeSpine * 0.28);
-    land = mix(land, COLORS.stone, mountains.highMountain * 0.34);
-    land = mix(land, COLORS.cliff, mountains.cliffFace * 0.3);
-    land = mix(land, COLORS.darkStone, mountains.peak * 0.22);
-    land = mix(land, COLORS.basin, elevation.basin * 0.1);
-    land = mix(land, COLORS.beach, beachEdge * 0.08);
-    land = mix(land, COLORS.snow, mountains.snowCap * 0.58);
-    land = mix(land, COLORS.ice, smoothstep(0.72, 0.96, latitudeAbs + elevation.elevation * 0.14) * 0.2);
-    land = mix(land, COLORS.terrace, mountains.terrace * 0.18);
-    land = mix(land, COLORS.community, mountains.community * 0.9);
+    land = mix(land, COLORS.grassland, ground.grassland * 0.42);
+    land = mix(land, COLORS.plains, ground.plains * 0.52);
+    land = mix(land, COLORS.desert, ground.deserts * 0.62);
+    land = mix(land, COLORS.marsh, ground.marshes * 0.58);
+    land = mix(land, COLORS.wetFlat, ground.wetFlats * 0.34);
+    land = mix(land, COLORS.dryBasin, ground.dryBasins * 0.34);
+    land = mix(land, COLORS.mineralFlat, ground.mineralFlats * 0.28);
+    land = mix(land, COLORS.lowland, landrise.lowland * 0.18);
+    land = mix(land, COLORS.plateau, landrise.plateau * 0.22);
+    land = mix(land, COLORS.foothill, mountains.foothills * 0.24);
+    land = mix(land, COLORS.ridge, landrise.ridgeBack * 0.18 + mountains.rangeSpine * 0.24);
+    land = mix(land, COLORS.stone, mountains.highMountain * 0.3);
+    land = mix(land, COLORS.cliff, mountains.cliffFace * 0.24);
+    land = mix(land, COLORS.darkStone, mountains.peak * 0.16);
+    land = mix(land, COLORS.beach, beachEdge * 0.07);
+    land = mix(land, COLORS.snow, mountains.snowCap * 0.52);
+    land = mix(land, COLORS.ice, smoothstep(0.72, 0.96, latitudeAbs + elevation.elevation * 0.14) * 0.18);
+    land = mix(land, COLORS.terrace, mountains.terrace * 0.16);
+    land = mix(land, COLORS.community, mountains.community * 0.86);
 
     const grain = (fbm(u * 3.4 + 0.15, v * 2.7 - 0.11, 460000, 4) - 0.5) * 9;
     const mountainRelief =
-      mountains.highMountain * 24 +
-      mountains.peak * 18 +
-      mountains.snowCap * 18 -
-      mountains.cliffFace * 10;
+      mountains.highMountain * 20 +
+      mountains.peak * 15 +
+      mountains.snowCap * 14 -
+      mountains.cliffFace * 8;
 
     const reliefLight =
-      landrise.terrainHighlight * 15 -
-      landrise.terrainShadow * 13 +
-      elevation.reliefHighlight * 6 -
-      elevation.reliefShadow * 6 +
+      landrise.terrainHighlight * 14 -
+      landrise.terrainShadow * 12 +
+      elevation.reliefHighlight * 5 -
+      elevation.reliefShadow * 5 +
       mountainRelief;
 
-    return shade(land, grain + reliefLight - 6);
+    return shade(land, grain + reliefLight - 5);
   }
 
   function buildTexture(width, height) {
@@ -514,20 +550,24 @@
     canvas.dataset.audraliaCanvasContract = CONTRACT;
     canvas.dataset.audraliaCanvasReceipt = RECEIPT;
     canvas.dataset.audraliaGeneration = "1";
-    canvas.dataset.audraliaG1Baseline = "high-mountain-range-community-stabilizing";
+    canvas.dataset.audraliaG1Baseline = "plains-deserts-marshes-more-landmass-stabilizing";
     canvas.dataset.audraliaPrimarySummit = "Gratitude";
     canvas.dataset.audraliaNineWithinNine = "true";
     canvas.dataset.audraliaBookSummitLaw = "true";
     canvas.dataset.audraliaHighMountains = "true";
     canvas.dataset.audraliaMountainRanges = "true";
     canvas.dataset.audraliaMountainCommunities = "true";
+    canvas.dataset.audraliaPlains = "true";
+    canvas.dataset.audraliaDeserts = "true";
+    canvas.dataset.audraliaMarshes = "true";
+    canvas.dataset.audraliaMoreLandmass = "true";
     canvas.dataset.audraliaBeachRemainsSeaLevel = "true";
     canvas.dataset.audraliaRaisedTerrainBehindBeach = "true";
     canvas.dataset.audraliaTerrainMassAttached = "true";
     canvas.dataset.audraliaTerrainAboveSeaLevel = "true";
-    canvas.dataset.audraliaNoTrees = "true";
-    canvas.dataset.audraliaNoBushes = "true";
-    canvas.dataset.audraliaNoForestCanopy = "true";
+    canvas.dataset.audraliaTrees = "false";
+    canvas.dataset.audraliaBushes = "false";
+    canvas.dataset.audraliaForestCanopy = "false";
     canvas.dataset.generatedImage = "false";
     canvas.dataset.graphicBox = "false";
     canvas.dataset.visualPassClaimed = "false";
@@ -619,7 +659,6 @@
       const sinSpin = Math.sin(state.spin);
       const cosTilt = Math.cos(state.tilt);
       const sinTilt = Math.sin(state.tilt);
-
       const light = [-0.45, -0.28, 0.84];
 
       for (let y = 0; y < height; y += 1) {
@@ -665,7 +704,7 @@
 
           color = shade(color, shadeAmount);
           color = mix(COLORS.atmosphere, color, limb);
-          color = mix(color, COLORS.cloud, smoothstep(0.79, 0.98, fbm(u * 2.2 + state.spin * 0.02, v * 1.7, 470000, 3)) * 0.035);
+          color = mix(color, COLORS.cloud, smoothstep(0.8, 0.98, fbm(u * 2.2 + state.spin * 0.02, v * 1.7, 470000, 3)) * 0.032);
 
           data[index] = color[0];
           data[index + 1] = color[1];
@@ -720,6 +759,10 @@
     document.documentElement.dataset.audraliaHighMountains = "true";
     document.documentElement.dataset.audraliaMountainRanges = "true";
     document.documentElement.dataset.audraliaMountainCommunities = "true";
+    document.documentElement.dataset.audraliaPlains = "true";
+    document.documentElement.dataset.audraliaDeserts = "true";
+    document.documentElement.dataset.audraliaMarshes = "true";
+    document.documentElement.dataset.audraliaMoreLandmass = "true";
     document.documentElement.dataset.audraliaBeachRemainsSeaLevel = "true";
     document.documentElement.dataset.audraliaRaisedTerrainBehindBeach = "true";
     document.documentElement.dataset.audraliaTerrainMassAttached = "true";
@@ -739,9 +782,10 @@
       version: VERSION,
       authority: "audralia-canvas",
       generation: 1,
-      baseline: "high-mountain-range-community-stabilizing",
+      baseline: "plains-deserts-marshes-more-landmass-stabilizing",
       consumesSummits: Boolean(window.AUDRALIA_SUMMITS),
       consumesMountains: Boolean(window.AUDRALIA_MOUNTAINS),
+      consumesGroundcover: Boolean(window.AUDRALIA_GROUNDCOVER),
       consumesLandrise: Boolean(window.AUDRALIA_LANDRISE),
       primarySummit: "Gratitude",
       nineWithinNine: true,
@@ -749,13 +793,17 @@
       highMountains: true,
       mountainRanges: true,
       mountainCommunities: true,
+      plains: true,
+      deserts: true,
+      marshes: true,
+      moreLandmass: true,
       beachRemainsSeaLevel: true,
       raisedTerrainBehindBeach: true,
       terrainMassAttached: true,
       terrainAboveSeaLevel: true,
-      noTrees: true,
-      noBushes: true,
-      noForestCanopy: true,
+      trees: false,
+      bushes: false,
+      forestCanopy: false,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false

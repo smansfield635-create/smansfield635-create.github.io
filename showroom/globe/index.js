@@ -1,247 +1,306 @@
-// /showroom/globe/hearth/index.js
-// HEARTH_G4_AUTHORITY_REASSIGNMENT_AND_MOTION_ROUTE_CONTROLLER_TNT_v2
+// /showroom/globe/audralia/index.js
+// AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_ROUTE_TNT_v6
+// Full-file replacement.
+// Route orchestration only.
+// Loads: backstory → tectonics → topology → elevation → beaches → landrise → canvas.
+// Beaches remain sea level.
+// Terrain rises behind beaches.
+// No trees. No bushes. No forest canopy.
+// No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G4_AUTHORITY_REASSIGNMENT_AND_MOTION_ROUTE_CONTROLLER_TNT_v2";
-  const RECEIPT = "HEARTH_G4_ROUTE_MOTION_CHAIN_RECEIPT";
-  const KEY = "hearth-g4-motion-chain-v2";
-
-  const FILES = [
-    { role: "runtime", src: `/assets/hearth/hearth.runtime.js?v=${KEY}`, global: "HEARTH_RUNTIME", required: true },
-    { role: "controls", src: `/assets/hearth/hearth.controls.js?v=${KEY}`, global: "HEARTH_CONTROLS", required: true },
-    { role: "canvas", src: `/assets/hearth/hearth.canvas.js?v=${KEY}`, global: "HEARTH_CANVAS", required: true }
-  ];
+  const CONTRACT = "AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_ROUTE_TNT_v6";
+  const RECEIPT = "AUDRALIA_G1_RAISED_TERRAIN_BEHIND_BEACH_ROUTE_RECEIPT_v6";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G1_BEACH_TO_LAND_RISE_ROUTE_TNT_v5";
+  const VERSION = "2026-05-10.audralia-g1-raised-terrain-behind-beach-route-v6";
+  const KEY = "audralia-g1-raised-terrain-behind-beach-v6";
 
   const state = {
     loaded: [],
     failed: [],
-    mounted: false
+    mounted: false,
+    canvasFound: false,
+    controlsBound: false,
+    backstoryLoaded: false,
+    tectonicsLoaded: false,
+    topologyLoaded: false,
+    elevationLoaded: false,
+    beachesLoaded: false,
+    landriseLoaded: false,
+    canvasLoaded: false,
+    frames: 0,
+    fallback: false,
+    error: ""
   };
 
-  function stamp(status) {
-    document.documentElement.dataset.hearthRouteControllerLoaded = "true";
-    document.documentElement.dataset.hearthRouteControllerContract = CONTRACT;
-    document.documentElement.dataset.hearthRouteControllerReceipt = RECEIPT;
-    document.documentElement.dataset.hearthRouteControllerStatus = status;
-    document.documentElement.dataset.hearthGeneration = "G4";
-    document.documentElement.dataset.hearthProcess = "deduced-reassigned-renewed";
-    document.documentElement.dataset.hearthRuntime = "south-star-motion-authority";
-    document.documentElement.dataset.hearthControls = "drag-spin-finger-sensitivity";
-    document.documentElement.dataset.hearthCanvasWorldEngine = "truth-substrate";
-    document.documentElement.dataset.hearthRender = "drawing-authority";
-    document.documentElement.dataset.hearthAssets = "material-expression-plasma";
-    document.documentElement.dataset.hearthAxisTiltDegrees = "23.44";
-    document.documentElement.dataset.hearthLoadedFiles = state.loaded.join(",") || "none";
-    document.documentElement.dataset.hearthFailedFiles = state.failed.join(",") || "none";
-    document.documentElement.dataset.hearthGeneratedImage = "false";
-    document.documentElement.dataset.hearthGraphicBox = "false";
-    document.documentElement.dataset.hearthVisualPassClaimed = "false";
+  window.__AUDRALIA_ACTIVE_ROUTE_CONTRACT__ = CONTRACT;
+  window.__AUDRALIA_ACTIVE_ROUTE_FILE__ = "/showroom/globe/audralia/index.js";
 
-    window.HEARTH_G4_ROUTE_RECEIPT = Object.freeze({
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      status,
-      generation: "G4",
-      process: "deduced-reassigned-renewed",
-      g4Job: "motion-authority-renewal",
-      g5Job: "clouds-weather-living-atmosphere",
-      loaded: state.loaded.slice(),
-      failed: state.failed.slice(),
-      mounted: state.mounted,
-      generatedImage: false,
-      graphicBox: false,
-      visualPassClaimed: false
-    });
-  }
+  function status(value) {
+    const node =
+      document.getElementById("audralia-route-status") ||
+      document.querySelector("[data-audralia-route-status]") ||
+      document.getElementById("route-status") ||
+      document.querySelector("[data-route-status]");
 
-  function disposePrior() {
-    [
-      "__HEARTH_G4_ROUTE_DISPOSE__",
-      "__HEARTH_CONTROLS_DISPOSE__",
-      "__HEARTH_CANVAS_DISPOSE__",
-      "__HEARTH_RUNTIME_DISPOSE__",
-      "__HEARTH_CANVAS_AUTHORITY_DISPOSE__",
-      "__HEARTH_CANVAS_ADAPTIVE_RUNTIME_SELF_HEAL_DISPOSE__",
-      "__HEARTH_CANVAS_ADAPTIVE_RUNTIME_DISPOSE__"
-    ].forEach((name) => {
-      if (typeof window[name] === "function") {
-        try { window[name](); } catch (_) {}
-      }
-      try { window[name] = null; } catch (_) {}
-    });
-  }
+    document.documentElement.dataset.audraliaRouteContract = CONTRACT;
+    document.documentElement.dataset.audraliaRouteReceipt = RECEIPT;
+    document.documentElement.dataset.audraliaRoutePreviousContract = PREVIOUS_CONTRACT;
+    document.documentElement.dataset.audraliaRouteVersion = VERSION;
+    document.documentElement.dataset.audraliaActiveRouteFile = "/showroom/globe/audralia/index.js";
+    document.documentElement.dataset.audraliaGeneration = "1";
+    document.documentElement.dataset.audraliaParentChainAligned = "true";
+    document.documentElement.dataset.audraliaG1Baseline = "raised-terrain-behind-beach-stabilizing";
+    document.documentElement.dataset.audraliaG2Calibration = "held";
 
-  function removePriorScripts() {
-    document.querySelectorAll([
-      'script[src*="/assets/hearth/hearth.runtime.js"]',
-      'script[src*="/assets/hearth/hearth.controls.js"]',
-      'script[src*="/assets/hearth/hearth.canvas.js"]',
-      'script[data-hearth-g4-motion-file="true"]'
-    ].join(",")).forEach((script) => script.remove());
+    document.documentElement.dataset.audraliaBackstoryLoaded = String(state.backstoryLoaded);
+    document.documentElement.dataset.audraliaTectonicsLoaded = String(state.tectonicsLoaded);
+    document.documentElement.dataset.audraliaTopologyLoaded = String(state.topologyLoaded);
+    document.documentElement.dataset.audraliaElevationLoaded = String(state.elevationLoaded);
+    document.documentElement.dataset.audraliaBeachesLoaded = String(state.beachesLoaded);
+    document.documentElement.dataset.audraliaLandriseLoaded = String(state.landriseLoaded);
+    document.documentElement.dataset.audraliaCanvasLoaded = String(state.canvasLoaded);
+
+    document.documentElement.dataset.audraliaMounted = String(state.mounted);
+    document.documentElement.dataset.audraliaCanvasFound = String(state.canvasFound);
+    document.documentElement.dataset.audraliaControlsBound = String(state.controlsBound);
+    document.documentElement.dataset.audraliaBeachRemainsSeaLevel = "true";
+    document.documentElement.dataset.audraliaRaisedTerrainBehindBeach = "true";
+    document.documentElement.dataset.audraliaTerrainAboveSeaLevel = "true";
+    document.documentElement.dataset.audraliaOceanDrivenHomeWorld = "true";
+    document.documentElement.dataset.audraliaNotAustralia = "true";
+    document.documentElement.dataset.audraliaNotHearth = "true";
+    document.documentElement.dataset.audraliaEarthClone = "false";
+    document.documentElement.dataset.audraliaNoTrees = "true";
+    document.documentElement.dataset.audraliaNoBushes = "true";
+    document.documentElement.dataset.audraliaNoForestCanopy = "true";
+    document.documentElement.dataset.generatedImage = "false";
+    document.documentElement.dataset.graphicBox = "false";
+    document.documentElement.dataset.visualPassClaimed = "false";
+
+    if (node) {
+      node.textContent = [
+        "Audralia G1 raised-terrain-behind-beach route.",
+        `Status ${value}`,
+        `Route ${CONTRACT}`,
+        `Receipt ${RECEIPT}`,
+        `Previous ${PREVIOUS_CONTRACT}`,
+        `Version ${VERSION}`,
+        "Parent order backstory → tectonics → topology → elevation → beaches → landrise → canvas",
+        `Loaded ${state.loaded.join(",") || "none"}`,
+        `Failed ${state.failed.join(",") || "none"}`,
+        `Backstory loaded ${state.backstoryLoaded}`,
+        `Tectonics loaded ${state.tectonicsLoaded}`,
+        `Topology loaded ${state.topologyLoaded}`,
+        `Elevation loaded ${state.elevationLoaded}`,
+        `Beaches loaded ${state.beachesLoaded}`,
+        `Landrise loaded ${state.landriseLoaded}`,
+        `Canvas loaded ${state.canvasLoaded}`,
+        `Mounted ${state.mounted}`,
+        `Canvas found ${state.canvasFound}`,
+        `Controls bound ${state.controlsBound}`,
+        `Fallback ${state.fallback}`,
+        `Frames ${state.frames}`,
+        "Beach remains sea level true",
+        "Raised terrain behind beach true",
+        "Terrain above sea level true",
+        "No trees true",
+        "No bushes true",
+        "No forest canopy true",
+        "Generated image false",
+        "GraphicBox false",
+        "Visual pass claimed false",
+        state.error ? `Error ${state.error}` : ""
+      ].filter(Boolean).join("\n");
+    }
   }
 
   function ensureMount() {
-    let mount = document.getElementById("hearthCanvasMount");
+    let mount =
+      document.getElementById("audraliaCanvasMount") ||
+      document.getElementById("audralia-canvas-mount") ||
+      document.querySelector("[data-audralia-canvas-mount]") ||
+      document.querySelector("[data-canvas-mount='audralia']");
 
     if (!mount) {
+      const main = document.getElementById("audralia-main") || document.querySelector("main") || document.body;
       mount = document.createElement("section");
-      mount.id = "hearthCanvasMount";
-      mount.dataset.hearthCanvasMount = "true";
-      const parent = document.getElementById("hearth-main") || document.querySelector("main") || document.body;
-      parent.appendChild(mount);
+      mount.id = "audraliaCanvasMount";
+      mount.dataset.audraliaCanvasMount = "true";
+      mount.style.position = "relative";
+      mount.style.width = "min(520px, 100%)";
+      mount.style.aspectRatio = "1 / 1";
+      mount.style.minHeight = "320px";
+      mount.style.margin = "18px auto";
+      mount.style.overflow = "hidden";
+      mount.style.borderRadius = "32px";
+      mount.style.border = "1px solid rgba(231,188,105,.34)";
+      mount.style.background = "radial-gradient(circle at 50% 50%, rgba(39,117,155,.25), rgba(3,9,20,.96) 72%)";
+      mount.style.touchAction = "none";
+      mount.style.userSelect = "none";
+      main.appendChild(mount);
     }
 
-    mount.dataset.hearthCanvasMount = "true";
-    mount.dataset.hearthGeneration = "G4";
-    mount.dataset.hearthRuntime = "south-star-motion-authority";
-    mount.dataset.hearthControls = "drag-spin-finger-sensitivity";
-    mount.dataset.hearthCanvasWorldEngine = "truth-substrate";
-    mount.dataset.hearthRender = "drawing-authority";
-    mount.dataset.hearthPointerEventsBlocked = "false";
-    mount.dataset.hearthTouchAction = "none";
-    mount.dataset.hearthRequiredFailure = "false";
-    mount.dataset.hearthRouteErrorMessage = "";
+    mount.dataset.audraliaRouteContract = CONTRACT;
+    mount.dataset.audraliaRaisedTerrainBehindBeach = "true";
+    mount.dataset.audraliaTerrainAboveSeaLevel = "true";
+    mount.style.touchAction = "none";
+    mount.style.userSelect = "none";
 
     return mount;
   }
 
-  function installStyle() {
-    const prior = document.getElementById("hearth-g4-motion-style");
-    if (prior) prior.remove();
-
-    const style = document.createElement("style");
-    style.id = "hearth-g4-motion-style";
-    style.textContent = `
-      #hearthCanvasMount {
-        position: relative;
-        width: 100%;
-        min-height: 320px;
-        aspect-ratio: 1 / 1;
-        overflow: hidden;
-        isolation: isolate;
-        border-radius: 32px;
-        touch-action: none !important;
-        user-select: none !important;
-        -webkit-user-select: none !important;
-        -webkit-touch-callout: none !important;
-        background: radial-gradient(circle at 50% 50%, rgba(39,117,155,.26), rgba(3,9,20,.96) 70%);
-      }
-
-      #hearthCanvasMount canvas[data-hearth-canvas="true"] {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        display: block;
-        pointer-events: auto !important;
-        touch-action: none !important;
-        user-select: none !important;
-        -webkit-user-select: none !important;
-        -webkit-touch-callout: none !important;
-      }
-
-      #hearthCanvasMount[data-hearth-required-failure="true"]::after {
-        content: attr(data-hearth-route-error-message);
-        position: absolute;
-        left: 18px;
-        right: 18px;
-        bottom: 18px;
-        z-index: 10;
-        padding: 14px 16px;
-        border: 1px solid rgba(231,188,105,.58);
-        border-radius: 18px;
-        background: rgba(4,10,20,.94);
-        color: #e7bc69;
-        font: 800 14px/1.4 system-ui, sans-serif;
-      }
-    `;
-    document.head.appendChild(style);
-  }
-
-  function loadFile(file) {
-    return new Promise((resolve, reject) => {
-      if (window[file.global]) {
-        state.loaded.push(file.role);
-        resolve(file);
-        return;
-      }
+  function loadScript(role, path, validate) {
+    return new Promise((resolve) => {
+      const existing = document.querySelector(`script[data-audralia-file-role="${role}"]`);
+      if (existing) existing.remove();
 
       const script = document.createElement("script");
-      script.src = file.src;
+      script.src = `${path}?v=${KEY}-${Date.now()}`;
       script.defer = true;
-      script.dataset.hearthG4MotionFile = "true";
-      script.dataset.hearthFileRole = file.role;
-      script.dataset.contract = CONTRACT;
+      script.dataset.audraliaFile = "true";
+      script.dataset.audraliaFileRole = role;
+      script.dataset.audraliaRouteContract = CONTRACT;
 
       script.onload = () => {
-        state.loaded.push(file.role);
-        stamp(`loaded-${file.role}`);
-        resolve(file);
+        let ok = false;
+        try {
+          ok = validate();
+        } catch (_) {
+          ok = false;
+        }
+
+        if (ok) state.loaded.push(role);
+        else state.failed.push(`${role}:invalid`);
+
+        status(`checked-${role}`);
+        resolve(ok);
       };
 
       script.onerror = () => {
-        state.failed.push(file.role);
-        stamp(`failed-${file.role}`);
-        reject(new Error(`Required Hearth G4 script failed: ${file.role} ${file.src}`));
+        state.failed.push(`${role}:load-error`);
+        status(`failed-${role}`);
+        resolve(false);
       };
 
       document.head.appendChild(script);
     });
   }
 
-  async function boot() {
-    const mount = ensureMount();
+  function bootCanvas(mount) {
+    if (!window.AUDRALIA_CANVAS || typeof window.AUDRALIA_CANVAS.mount !== "function") return false;
 
-    stamp("booting");
-    disposePrior();
-    removePriorScripts();
-    installStyle();
-
-    try {
-      for (const file of FILES) {
-        await loadFile(file);
+    const api = window.AUDRALIA_CANVAS.mount(mount, {
+      routeContract: CONTRACT,
+      routeReceipt: RECEIPT,
+      generation: 1,
+      baseline: "raised-terrain-behind-beach-stabilizing",
+      beachesActive: true,
+      landriseActive: true,
+      beachRemainsSeaLevel: true,
+      raisedTerrainBehindBeach: true,
+      terrainAboveSeaLevel: true,
+      onStatus: (value, info = {}) => {
+        state.frames = info.frames || state.frames;
+        state.mounted = Boolean(info.mounted);
+        state.canvasFound = Boolean(info.canvasFound);
+        state.controlsBound = Boolean(info.controlsBound);
+        state.fallback = false;
+        status(`canvas-${value}`);
       }
+    });
 
-      if (!window.HEARTH_RUNTIME || !window.HEARTH_CONTROLS || !window.HEARTH_CANVAS) {
-        throw new Error("Hearth G4 globals missing after file load.");
-      }
+    state.mounted = Boolean(api && api.canvas);
+    state.canvasFound = Boolean(api && api.canvas);
+    state.controlsBound = Boolean(api && api.controlsBound);
+    state.fallback = false;
 
-      const runtime = window.HEARTH_RUNTIME;
-      const renderer = window.HEARTH_CANVAS.mount(mount, { runtime });
-      const canvas = renderer.canvas;
-
-      window.HEARTH_CONTROLS.bind(canvas, runtime, {
-        mount,
-        dragRadiansPerScreen: Math.PI * 2.1,
-        maxSpinVelocity: 11,
-        wheelSensitivity: 0.003
-      });
-
-      runtime.start();
-
-      state.mounted = true;
-      mount.dataset.hearthRequiredFailure = "false";
-      mount.dataset.hearthRouteErrorMessage = "";
-      document.body.dataset.hearthRouteReady = "true";
-      document.documentElement.dataset.hearthG4MotionReady = "true";
-
-      stamp("ready");
-    } catch (error) {
-      mount.dataset.hearthRequiredFailure = "true";
-      mount.dataset.hearthRouteErrorMessage = error && error.message ? error.message : String(error);
-      document.body.dataset.hearthRouteReady = "false";
-      document.documentElement.dataset.hearthG4MotionReady = "false";
-      stamp("failed");
-    }
+    status("ready");
+    return state.mounted;
   }
 
-  window.__HEARTH_G4_ROUTE_DISPOSE__ = () => {
-    if (typeof window.__HEARTH_CONTROLS_DISPOSE__ === "function") window.__HEARTH_CONTROLS_DISPOSE__();
-    if (typeof window.__HEARTH_CANVAS_DISPOSE__ === "function") window.__HEARTH_CANVAS_DISPOSE__();
-    if (typeof window.__HEARTH_RUNTIME_DISPOSE__ === "function") window.__HEARTH_RUNTIME_DISPOSE__();
-  };
+  function protectedFallback(mount) {
+    let fallback = mount.querySelector("[data-audralia-parent-chain-fallback]");
+
+    if (!fallback) {
+      fallback = document.createElement("div");
+      fallback.dataset.audraliaParentChainFallback = "true";
+      fallback.style.position = "absolute";
+      fallback.style.inset = "0";
+      fallback.style.display = "grid";
+      fallback.style.placeItems = "center";
+      fallback.style.padding = "18px";
+      fallback.style.color = "rgba(238,246,255,.78)";
+      fallback.style.textAlign = "center";
+      fallback.style.fontWeight = "800";
+      fallback.textContent = "Audralia G1 raised terrain loaded, but canvas authority failed. Visible fallback protected.";
+      mount.appendChild(fallback);
+    }
+
+    state.fallback = true;
+    state.mounted = true;
+    state.canvasFound = false;
+    state.controlsBound = false;
+    status("fallback");
+  }
+
+  async function boot() {
+    const mount = ensureMount();
+    status("booting");
+
+    state.backstoryLoaded = await loadScript(
+      "backstory",
+      "/assets/audralia/audralia.backstory.js",
+      () => Boolean(window.AUDRALIA_BACKSTORY?.sampleIdentity)
+    );
+
+    state.tectonicsLoaded = await loadScript(
+      "tectonics",
+      "/assets/audralia/audralia.tectonics.js",
+      () => Boolean(window.AUDRALIA_TECTONICS?.sampleTectonics)
+    );
+
+    state.topologyLoaded = await loadScript(
+      "topology",
+      "/assets/audralia/audralia.topology.js",
+      () => Boolean(window.AUDRALIA_TOPOLOGY?.sampleTopology)
+    );
+
+    state.elevationLoaded = await loadScript(
+      "elevation",
+      "/assets/audralia/audralia.elevation.js",
+      () => Boolean(window.AUDRALIA_ELEVATION?.sampleElevation)
+    );
+
+    state.beachesLoaded = await loadScript(
+      "beaches",
+      "/assets/audralia/audralia.beaches.js",
+      () => Boolean(window.AUDRALIA_BEACHES?.sampleBeach)
+    );
+
+    state.landriseLoaded = await loadScript(
+      "landrise",
+      "/assets/audralia/audralia.landrise.js",
+      () => Boolean(window.AUDRALIA_LANDRISE?.sampleLandRise)
+    );
+
+    state.canvasLoaded = await loadScript(
+      "canvas",
+      "/assets/audralia/audralia.canvas.js",
+      () => Boolean(window.AUDRALIA_CANVAS?.mount)
+    );
+
+    try {
+      if (state.canvasLoaded && bootCanvas(mount)) return;
+    } catch (error) {
+      state.failed.push("canvas:mount-error");
+      state.error = error?.message || String(error);
+    }
+
+    protectedFallback(mount);
+  }
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot, { once: true });

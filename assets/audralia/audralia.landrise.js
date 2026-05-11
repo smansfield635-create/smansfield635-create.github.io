@@ -1,11 +1,15 @@
 // /assets/audralia/audralia.landrise.js
-// AUDRALIA_G1_RESTRAINT_DESTRIPING_LANDRISE_AUTHORITY_TNT_v5
+// AUDRALIA_G1_BALANCED_LANDMASS_RESTORE_LANDRISE_AUTHORITY_TNT_v6
 // Full-file replacement.
 // Parent terrain-rise authority only.
 // Purpose:
+// - Restore a middle calibration after over-restraint.
+// - Increase raised land by roughly 12–18%, not 30–40%.
 // - Preserve beach-to-land attachment.
-// - Reduce landmass back toward ocean-dominant G1.
-// - Break broad land sheets into restrained land bodies, islands, shelves, and raised terrain pockets.
+// - Preserve ocean-dominant G1.
+// - Preserve islands and coastal complexity.
+// - Prevent broad green-shell overexpansion.
+// - Prevent vertical striping.
 // - Beaches remain sea level.
 // - No trees. No bushes. No forest canopy.
 // - No generated image. No GraphicBox. No visual-pass claim.
@@ -13,10 +17,10 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G1_RESTRAINT_DESTRIPING_LANDRISE_AUTHORITY_TNT_v5";
-  const RECEIPT = "AUDRALIA_G1_RESTRAINT_DESTRIPING_LANDRISE_AUTHORITY_RECEIPT_v5";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G1_MORE_LANDMASS_TERRAIN_ATTACHMENT_AUTHORITY_TNT_v4";
-  const VERSION = "2026-05-10.audralia-g1-restraint-destriping-landrise-authority-v5";
+  const CONTRACT = "AUDRALIA_G1_BALANCED_LANDMASS_RESTORE_LANDRISE_AUTHORITY_TNT_v6";
+  const RECEIPT = "AUDRALIA_G1_BALANCED_LANDMASS_RESTORE_LANDRISE_AUTHORITY_RECEIPT_v6";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G1_RESTRAINT_DESTRIPING_LANDRISE_AUTHORITY_TNT_v5";
+  const VERSION = "2026-05-10.audralia-g1-balanced-landmass-restore-landrise-authority-v6";
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -108,119 +112,126 @@
     const latitude = Number.isFinite(context.latitude) ? context.latitude : (0.5 - v) * Math.PI;
     const latitudeAbs = Math.abs(latitude) / (Math.PI / 2);
 
-    const oldPlate = fbm(u * 0.88 + 0.17, v * 0.72 - 0.11, 1310000, 6);
-    const islandBreak = ridged(u * 2.85 + 0.13, v * 2.25 - 0.19, 1311000, 5);
-    const coastFracture = ridged(u * 5.4 - 0.07, v * 4.25 + 0.09, 1312000, 4);
-    const basinNoise = 1 - fbm(u * 1.72 - 0.09, v * 1.36 + 0.18, 1313000, 5);
-    const plateauNoise = fbm(u * 1.18 - 0.17, v * 1.04 + 0.21, 1314000, 5);
-    const ridgeNoise = ridged(u * 1.85 + 0.08, v * 1.42 - 0.12, 1315000, 5);
+    const oldPlate = fbm(u * 0.86 + 0.17, v * 0.74 - 0.11, 1610000, 6);
+    const mediumMass = fbm(u * 1.05 - 0.23, v * 0.92 + 0.16, 1610500, 6);
+    const islandBreak = ridged(u * 2.75 + 0.13, v * 2.18 - 0.19, 1611000, 5);
+    const coastFracture = ridged(u * 5.15 - 0.07, v * 4.05 + 0.09, 1612000, 4);
+    const basinNoise = 1 - fbm(u * 1.62 - 0.09, v * 1.28 + 0.18, 1613000, 5);
+    const plateauNoise = fbm(u * 1.14 - 0.17, v * 1.02 + 0.21, 1614000, 5);
+    const ridgeNoise = ridged(u * 1.74 + 0.08, v * 1.36 - 0.12, 1615000, 5);
+    const separation = fbm(u * 1.44 + 0.29, v * 1.18 - 0.31, 1616000, 5);
 
     const exposure = clamp(
       Math.max(
-        landSignal * 0.92 + oldPlate * 0.08,
-        islandSignal * 0.78 + islandBreak * 0.12
+        landSignal * 0.98 + oldPlate * 0.1 + mediumMass * 0.07,
+        islandSignal * 0.86 + islandBreak * 0.14
       ) -
-        latitudeAbs * 0.025,
+        latitudeAbs * 0.024,
       0,
       1
     );
 
     const oceanCut = clamp(
-      smoothstep(0.55, 0.83, basinNoise * 0.48 + coastFracture * 0.34 + shelf * 0.12) *
-        (1 - smoothstep(0.62, 0.9, elevation + ridgeNoise * 0.24)),
+      smoothstep(0.58, 0.86, basinNoise * 0.42 + coastFracture * 0.28 + shelf * 0.08 + separation * 0.12) *
+        (1 - smoothstep(0.64, 0.92, elevation + ridgeNoise * 0.23 + mediumMass * 0.08)),
       0,
       1
     );
 
-    const restrainedExposure = clamp(
-      exposure * 0.78 +
-        islandSignal * 0.1 +
-        oldPlate * 0.08 -
-        oceanCut * 0.22,
+    const balancedExposure = clamp(
+      exposure * 0.88 +
+        islandSignal * 0.12 +
+        oldPlate * 0.09 +
+        mediumMass * 0.08 -
+        oceanCut * 0.18,
       0,
       1
     );
 
     const beachEdge = clamp(
-      smoothstep(0.46, 0.555, restrainedExposure) *
-        (1 - smoothstep(0.59, 0.725, restrainedExposure)) *
+      smoothstep(0.44, 0.535, balancedExposure) *
+        (1 - smoothstep(0.585, 0.735, balancedExposure)) *
         (0.7 + coastFracture * 0.3),
       0,
       1
     );
 
     const attachedBackshore = clamp(
-      smoothstep(0.535, 0.71, restrainedExposure) +
-        smoothstep(0.48, 0.72, oldPlate) * 0.12 +
-        smoothstep(0.52, 0.78, ridgeNoise) * 0.08 -
-        oceanCut * 0.16,
+      smoothstep(0.505, 0.69, balancedExposure) +
+        smoothstep(0.46, 0.72, oldPlate) * 0.13 +
+        smoothstep(0.48, 0.75, mediumMass) * 0.11 +
+        smoothstep(0.5, 0.78, ridgeNoise) * 0.08 -
+        oceanCut * 0.13,
       0,
       1
     );
 
     const terrainDrive = clamp(
-      restrainedExposure * 0.46 +
+      balancedExposure * 0.5 +
         elevation * 0.18 +
-        oldPlate * 0.15 +
-        plateauNoise * 0.13 +
-        ridgeNoise * 0.13 +
-        shelf * 0.04 -
-        beachEdge * 0.08 -
-        oceanCut * 0.16,
+        oldPlate * 0.13 +
+        mediumMass * 0.12 +
+        plateauNoise * 0.11 +
+        ridgeNoise * 0.12 +
+        shelf * 0.035 -
+        beachEdge * 0.075 -
+        oceanCut * 0.13,
       0,
       1
     );
 
     const raisedTerrain = clamp(
-      smoothstep(0.46, 0.68, terrainDrive) +
-        smoothstep(0.56, 0.72, restrainedExposure) * 0.34 +
-        smoothstep(0.62, 0.82, islandSignal) * 0.18 -
-        oceanCut * 0.18,
+      smoothstep(0.43, 0.65, terrainDrive) +
+        smoothstep(0.525, 0.705, balancedExposure) * 0.36 +
+        smoothstep(0.58, 0.8, islandSignal) * 0.18 -
+        oceanCut * 0.13,
       0,
       1
     );
 
     const inlandCore = clamp(
-      smoothstep(0.5, 0.76, raisedTerrain + oldPlate * 0.17 + plateauNoise * 0.11) -
+      smoothstep(0.47, 0.74, raisedTerrain + oldPlate * 0.15 + mediumMass * 0.12 + plateauNoise * 0.1) -
         beachEdge * 0.08 -
-        oceanCut * 0.12,
+        oceanCut * 0.1,
       0,
       1
     );
 
     const lowland = clamp(
       raisedTerrain * 0.34 +
-        basinNoise * 0.18 +
-        oldPlate * 0.08 -
-        ridgeNoise * 0.09 -
-        oceanCut * 0.08,
+        basinNoise * 0.16 +
+        oldPlate * 0.08 +
+        mediumMass * 0.05 -
+        ridgeNoise * 0.08 -
+        oceanCut * 0.07,
       0,
       1
     );
 
     const plateau = clamp(
-      inlandCore * 0.32 +
-        plateauNoise * 0.24 +
+      inlandCore * 0.31 +
+        plateauNoise * 0.23 +
         elevation * 0.13 +
-        oldPlate * 0.1 -
-        oceanCut * 0.08,
+        oldPlate * 0.08 +
+        mediumMass * 0.06 -
+        oceanCut * 0.07,
       0,
       1
     );
 
     const ridgeBack = clamp(
-      raisedTerrain * 0.2 +
-        ridgeNoise * 0.3 +
+      raisedTerrain * 0.19 +
+        ridgeNoise * 0.29 +
         elevation * 0.14 +
         plateauNoise * 0.06 -
-        oceanCut * 0.05,
+        oceanCut * 0.045,
       0,
       1
     );
 
     const terrainShadow = clamp(
       lowland * 0.2 +
-        basinNoise * 0.14 +
+        basinNoise * 0.13 +
         (1 - elevation) * 0.05 -
         plateau * 0.06,
       0,
@@ -229,7 +240,7 @@
 
     const terrainHighlight = clamp(
       ridgeBack * 0.26 +
-        plateau * 0.22 +
+        plateau * 0.21 +
         raisedTerrain * 0.16 +
         elevation * 0.1 -
         lowland * 0.06,
@@ -245,7 +256,7 @@
       beachEdge,
       beachBand,
       oceanCut,
-      restrainedExposure,
+      balancedExposure,
       attachedBackshore,
       raisedTerrain,
       inlandCore,
@@ -254,9 +265,10 @@
       ridgeBack,
       terrainShadow,
       terrainHighlight,
-      terrainAboveSeaLevel: raisedTerrain > 0.18,
-      terrainMassAttached: attachedBackshore > 0.16 && raisedTerrain > 0.15,
+      terrainAboveSeaLevel: raisedTerrain > 0.16,
+      terrainMassAttached: attachedBackshore > 0.15 && raisedTerrain > 0.135,
       terrainMass: oldPlate,
+      mediumLandBodies: true,
       ownsRoute: false,
       ownsCanvas: false,
       ownsRuntime: false,
@@ -264,6 +276,8 @@
       ownsVegetation: false,
       oceanDominantStillTrue: true,
       reduceOverexpandedLandmass: true,
+      restoreFromOverRestraint: true,
+      balancedLandmassRestore: true,
       destripingActive: true,
       noTrees: true,
       noBushes: true,
@@ -280,12 +294,15 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "audralia-restraint-destriping-landrise-parent",
+      authority: "audralia-balanced-landmass-restore-landrise-parent",
       beachRemainsSeaLevel: true,
       raisedTerrainBehindBeach: true,
       terrainMassAttached: true,
       terrainAboveSeaLevel: true,
+      mediumLandBodies: true,
       reduceOverexpandedLandmass: true,
+      restoreFromOverRestraint: true,
+      balancedLandmassRestore: true,
       oceanDominantStillTrue: true,
       destripingActive: true,
       vegetationTopologyHeld: true,
@@ -316,7 +333,20 @@
   document.documentElement.dataset.audraliaLandriseLoaded = "true";
   document.documentElement.dataset.audraliaLandriseContract = CONTRACT;
   document.documentElement.dataset.audraliaLandriseReceipt = RECEIPT;
+  document.documentElement.dataset.audraliaBalancedLandmassRestore = "true";
+  document.documentElement.dataset.audraliaRestoreFromOverRestraint = "true";
+  document.documentElement.dataset.audraliaMediumLandBodies = "true";
   document.documentElement.dataset.audraliaReduceOverexpandedLandmass = "true";
   document.documentElement.dataset.audraliaOceanDominantStillTrue = "true";
   document.documentElement.dataset.audraliaDestripingActive = "true";
   document.documentElement.dataset.audraliaBeachRemainsSeaLevel = "true";
+  document.documentElement.dataset.audraliaRaisedTerrainBehindBeach = "true";
+  document.documentElement.dataset.audraliaTerrainMassAttached = "true";
+  document.documentElement.dataset.audraliaTerrainAboveSeaLevel = "true";
+  document.documentElement.dataset.audraliaNoTrees = "true";
+  document.documentElement.dataset.audraliaNoBushes = "true";
+  document.documentElement.dataset.audraliaNoForestCanopy = "true";
+  document.documentElement.dataset.generatedImage = "false";
+  document.documentElement.dataset.graphicBox = "false";
+  document.documentElement.dataset.visualPassClaimed = "false";
+})();

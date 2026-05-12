@@ -2,15 +2,16 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="compass-default-round-floating-lattice-diamonds"
+  data-page="compass-round-scenery-lattice-diamond-gate"
   data-route="/"
-  data-contract="COMPASS_DEFAULT_ROUND_FLOATING_LATTICE_DIAMONDS_TNT_v13"
+  data-contract="COMPASS_ROUND_SCENERY_LATTICE_DIAMOND_GATE_TNT_v13"
   data-previous-contract="COMPASS_DEFAULT_ROUND_LATTICE_DIAMOND_GATE_TNT_v12"
   data-compass-mode="world-is-round-default"
   data-default-lens="round"
+  data-selected-lens="round"
+  data-single-click="change-scenery"
+  data-double-click="navigate"
   data-options="floating-lattice-diamonds"
-  data-bubbles="replaced"
-  data-floating-diamonds="true"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claim="false"
@@ -21,7 +22,7 @@
   <title>Diamond Gate Bridge · Compass</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Compass: World Is Round by default, with Flat, Round, and Globe presented as floating lattice diamonds."
+    content="Diamond Gate Bridge Compass: World Is Round by default. Single click changes the full scenery; double click opens the selected page."
   >
 
   <style>
@@ -39,6 +40,10 @@
       --shadow:0 26px 82px rgba(0,0,0,.44);
       --max:1220px;
       --facet:polygon(0 18px,18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px));
+      --diamond:polygon(50% 0,100% 50%,50% 100%,0 50%);
+      --scene-a:rgba(143,240,195,.14);
+      --scene-b:rgba(244,191,96,.12);
+      --scene-c:rgba(142,190,255,.14);
     }
 
     * { box-sizing:border-box; }
@@ -58,18 +63,45 @@
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at 50% 44%,rgba(142,190,255,.11),transparent 38rem),
+        radial-gradient(circle at 50% 46%,var(--scene-c),transparent 38rem),
         linear-gradient(145deg,rgba(255,255,255,.035),transparent 42%),
-        radial-gradient(circle at 52% 62%,rgba(244,191,96,.08),transparent 34rem);
+        radial-gradient(circle at 52% 62%,var(--scene-b),transparent 34rem);
       overflow-x:hidden;
+      transition:background 420ms ease;
+    }
+
+    body[data-lens="flat"] {
+      --scene-a:rgba(142,190,255,.09);
+      --scene-b:rgba(244,191,96,.08);
+      --scene-c:rgba(255,255,255,.055);
+    }
+
+    body[data-lens="round"] {
+      --scene-a:rgba(143,240,195,.14);
+      --scene-b:rgba(244,191,96,.12);
+      --scene-c:rgba(142,190,255,.14);
+    }
+
+    body[data-lens="globe"] {
+      --scene-a:rgba(190,170,255,.16);
+      --scene-b:rgba(142,190,255,.14);
+      --scene-c:rgba(244,191,96,.10);
     }
 
     a { color:inherit; text-decoration:none; }
 
     a:focus-visible,
+    button:focus-visible,
     [tabindex]:focus-visible {
       outline:2px solid var(--gold);
-      outline-offset:6px;
+      outline-offset:4px;
+    }
+
+    button {
+      font:inherit;
+      color:inherit;
+      border:0;
+      cursor:pointer;
     }
 
     .skip-link {
@@ -128,9 +160,7 @@
       height:18px;
       border:1px solid var(--gold);
       transform:rotate(45deg);
-      background:
-        linear-gradient(135deg,rgba(244,191,96,.28),transparent 52%),
-        rgba(255,255,255,.05);
+      background:linear-gradient(135deg,rgba(244,191,96,.24),transparent),rgba(255,255,255,.04);
       box-shadow:0 0 24px rgba(244,191,96,.18);
     }
 
@@ -138,40 +168,25 @@
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
-      gap:10px;
+      gap:8px;
     }
 
     .nav a {
-      width:54px;
-      height:54px;
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(255,255,255,.11);
+      padding:8px 11px;
+      border:1px solid rgba(255,255,255,.09);
       color:var(--muted);
+      font-size:.88rem;
       background:
-        radial-gradient(circle at 30% 25%,rgba(255,255,255,.18),transparent 18%),
-        linear-gradient(135deg,rgba(142,190,255,.12),transparent 48%),
+        linear-gradient(135deg,rgba(255,255,255,.07),transparent 45%),
         rgba(255,255,255,.032);
-      transform:rotate(45deg);
-      box-shadow:0 14px 28px rgba(0,0,0,.22);
-    }
-
-    .nav a span {
-      transform:rotate(-45deg);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      text-align:center;
-      line-height:1;
+      clip-path:polygon(0 9px,9px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 9px),calc(100% - 9px) 100%,9px 100%,0 calc(100% - 9px));
     }
 
     .nav a[aria-current="page"] {
-      border-color:rgba(244,191,96,.58);
+      border-color:rgba(244,191,96,.54);
       color:var(--gold);
       background:
-        radial-gradient(circle at 30% 25%,rgba(255,255,255,.24),transparent 18%),
-        linear-gradient(135deg,rgba(244,191,96,.22),transparent 52%),
+        linear-gradient(135deg,rgba(244,191,96,.16),transparent 50%),
         rgba(244,191,96,.08);
     }
 
@@ -221,59 +236,75 @@
     .round-stage {
       position:relative;
       margin-top:18px;
-      min-height:clamp(680px,74vw,900px);
-      padding:clamp(20px,4vw,44px);
+      min-height:clamp(680px,74vw,920px);
+      padding:clamp(18px,4vw,44px);
       overflow:hidden;
       background:
-        radial-gradient(circle at 50% 46%,rgba(143,240,195,.10),transparent 14rem),
-        radial-gradient(circle at 50% 50%,rgba(244,191,96,.12),transparent 23rem),
-        radial-gradient(circle at 50% 50%,rgba(142,190,255,.12),transparent 34rem),
+        radial-gradient(circle at 50% 47%,var(--scene-a),transparent 15rem),
+        radial-gradient(circle at 50% 50%,var(--scene-b),transparent 24rem),
+        radial-gradient(circle at 50% 50%,var(--scene-c),transparent 36rem),
         linear-gradient(180deg,rgba(255,255,255,.045),transparent),
         var(--panel2);
+      transition:background 420ms ease;
+      perspective:1200px;
     }
 
-    .round-world {
+    .scene-space {
       position:relative;
-      min-height:clamp(580px,62vw,760px);
-      display:grid;
-      place-items:center;
+      min-height:clamp(590px,62vw,760px);
+      transform-style:preserve-3d;
     }
 
-    .orbit {
+    .depth-plane {
       position:absolute;
-      border:1px solid rgba(142,190,255,.14);
+      left:50%;
+      top:50%;
+      width:min(88vw,860px);
+      aspect-ratio:1/1;
+      transform:translate(-50%,-50%) rotateX(62deg) rotateZ(-18deg);
+      border:1px solid rgba(142,190,255,.18);
       border-radius:50%;
       box-shadow:
-        0 0 50px rgba(142,190,255,.06),
-        inset 0 0 46px rgba(244,191,96,.035);
+        0 0 70px rgba(142,190,255,.07),
+        inset 0 0 66px rgba(244,191,96,.045);
       pointer-events:none;
     }
 
-    .orbit.one { inset:7%; }
-    .orbit.two { inset:17%; border-color:rgba(244,191,96,.14); }
-    .orbit.three { inset:29%; border-color:rgba(143,240,195,.13); }
+    .depth-plane.two {
+      width:min(72vw,690px);
+      transform:translate(-50%,-50%) rotateX(58deg) rotateZ(22deg) translateZ(-80px);
+      border-color:rgba(244,191,96,.16);
+    }
+
+    .depth-plane.three {
+      width:min(52vw,520px);
+      transform:translate(-50%,-50%) rotateX(54deg) rotateZ(48deg) translateZ(70px);
+      border-color:rgba(143,240,195,.16);
+    }
 
     .round-core {
       position:absolute;
       left:50%;
-      top:50%;
-      width:min(46vw,430px);
+      top:47%;
+      width:min(48vw,430px);
       min-width:260px;
       aspect-ratio:1/1;
-      transform:translate(-50%,-50%);
+      transform:translate(-50%,-50%) rotateX(10deg) translateZ(90px);
       display:grid;
       place-items:center;
       border:1px solid rgba(244,191,96,.32);
       border-radius:50%;
       background:
-        radial-gradient(circle at 34% 25%,rgba(255,255,255,.32),transparent 12%),
-        radial-gradient(circle at 50% 50%,rgba(244,191,96,.18),transparent 46%),
-        radial-gradient(circle at 50% 50%,rgba(142,190,255,.15),transparent 66%),
-        rgba(4,10,22,.82);
+        radial-gradient(circle at 34% 25%,rgba(255,255,255,.34),transparent 12%),
+        radial-gradient(circle at 50% 50%,var(--scene-b),transparent 46%),
+        radial-gradient(circle at 50% 50%,var(--scene-c),transparent 66%),
+        rgba(4,10,22,.86);
       box-shadow:
-        0 0 72px rgba(244,191,96,.14),
-        inset 0 0 58px rgba(255,255,255,.07);
+        0 34px 90px rgba(0,0,0,.40),
+        0 0 80px rgba(244,191,96,.15),
+        inset 0 0 64px rgba(255,255,255,.075);
       overflow:hidden;
+      transition:background 420ms ease, box-shadow 420ms ease;
     }
 
     .round-core::before {
@@ -302,7 +333,7 @@
     .core-copy {
       position:relative;
       z-index:2;
-      width:min(78%,270px);
+      width:min(78%,280px);
       text-align:center;
     }
 
@@ -317,98 +348,105 @@
 
     .core-copy span {
       display:block;
-      font-size:clamp(1.9rem,4.5vw,3.6rem);
+      font-size:clamp(1.85rem,4.5vw,3.6rem);
       line-height:.88;
       letter-spacing:-.07em;
       font-weight:950;
     }
 
-    .floating-diamonds {
+    .scenery-note {
+      position:absolute;
+      left:50%;
+      top:calc(47% + min(25vw,230px));
+      transform:translateX(-50%) translateZ(120px);
+      width:min(92%,680px);
+      text-align:center;
+      color:var(--muted);
+      font-size:clamp(.98rem,2vw,1.08rem);
+      line-height:1.55;
+      z-index:3;
+    }
+
+    .diamond-options {
       position:absolute;
       inset:0;
+      transform-style:preserve-3d;
       pointer-events:none;
     }
 
-    .float-diamond {
+    .lattice-diamond {
       position:absolute;
       left:50%;
       top:50%;
-      width:clamp(150px,18vw,232px);
+      width:clamp(148px,18vw,230px);
       aspect-ratio:1/1;
+      display:grid;
+      place-items:center;
       pointer-events:auto;
       transform:
         translate(-50%,-50%)
         rotate(var(--angle))
         translateX(var(--radius))
-        rotate(45deg);
-      border:1px solid rgba(244,191,96,.36);
+        rotate(45deg)
+        rotateX(16deg)
+        translateZ(var(--depth));
+      border:1px solid rgba(244,191,96,.34);
+      clip-path:var(--diamond);
       background:
-        radial-gradient(circle at 28% 22%,rgba(255,255,255,.24),transparent 18%),
-        linear-gradient(135deg,rgba(244,191,96,.18),transparent 46%),
-        linear-gradient(315deg,rgba(142,190,255,.15),transparent 46%),
-        rgba(6,13,27,.88);
+        radial-gradient(circle at 34% 24%,rgba(255,255,255,.22),transparent 15%),
+        linear-gradient(135deg,rgba(244,191,96,.17),transparent 47%),
+        linear-gradient(315deg,rgba(142,190,255,.13),transparent 45%),
+        rgba(6,13,27,.86);
       box-shadow:
-        0 26px 62px rgba(0,0,0,.34),
+        0 30px 58px rgba(0,0,0,.38),
         0 0 38px rgba(244,191,96,.08),
-        inset 0 0 42px rgba(255,255,255,.055);
-      transition:transform 260ms ease, border-color 260ms ease, background 260ms ease, box-shadow 260ms ease;
+        inset 0 0 36px rgba(255,255,255,.055);
+      transition:transform 260ms ease, border-color 260ms ease, background 260ms ease, opacity 260ms ease;
+      touch-action:manipulation;
     }
 
-    .float-diamond::before,
-    .float-diamond::after {
+    .lattice-diamond::before,
+    .lattice-diamond::after {
       content:"";
       position:absolute;
       pointer-events:none;
+      clip-path:var(--diamond);
     }
 
-    .float-diamond::before {
-      inset:10%;
+    .lattice-diamond::before {
+      inset:12%;
       border:1px solid rgba(255,255,255,.14);
-      background:
-        linear-gradient(90deg,transparent 49%,rgba(255,255,255,.11) 50%,transparent 51%),
-        linear-gradient(0deg,transparent 49%,rgba(255,255,255,.08) 50%,transparent 51%);
     }
 
-    .float-diamond::after {
-      inset:24%;
-      border:1px solid rgba(143,240,195,.16);
-      box-shadow:inset 0 0 20px rgba(142,190,255,.06);
+    .lattice-diamond::after {
+      inset:25%;
+      border:1px solid rgba(143,240,195,.14);
+      background:rgba(255,255,255,.018);
     }
 
-    .float-diamond:hover,
-    .float-diamond:focus-within {
-      border-color:rgba(143,240,195,.58);
+    .lattice-diamond:hover,
+    .lattice-diamond:focus-visible,
+    .lattice-diamond.active {
+      border-color:rgba(143,240,195,.56);
       background:
-        radial-gradient(circle at 28% 22%,rgba(255,255,255,.30),transparent 18%),
-        linear-gradient(135deg,rgba(143,240,195,.22),transparent 46%),
-        linear-gradient(315deg,rgba(244,191,96,.15),transparent 46%),
+        radial-gradient(circle at 34% 24%,rgba(255,255,255,.30),transparent 15%),
+        linear-gradient(135deg,rgba(143,240,195,.20),transparent 47%),
+        linear-gradient(315deg,rgba(244,191,96,.14),transparent 45%),
         rgba(6,13,27,.94);
-      box-shadow:
-        0 30px 76px rgba(0,0,0,.38),
-        0 0 48px rgba(143,240,195,.14),
-        inset 0 0 46px rgba(255,255,255,.07);
-      transform:
-        translate(-50%,-50%)
-        rotate(var(--angle))
-        translateX(calc(var(--radius) + 10px))
-        rotate(45deg);
     }
 
-    .float-diamond.active {
-      border-color:rgba(143,240,195,.62);
+    .lattice-diamond.active {
       box-shadow:
-        0 28px 70px rgba(0,0,0,.36),
-        0 0 52px rgba(143,240,195,.16),
-        inset 0 0 46px rgba(255,255,255,.075);
+        0 36px 72px rgba(0,0,0,.42),
+        0 0 50px rgba(143,240,195,.16),
+        inset 0 0 42px rgba(255,255,255,.075);
     }
 
     .diamond-inner {
-      position:absolute;
-      inset:16%;
-      display:grid;
-      place-items:center;
+      width:74%;
       transform:rotate(-45deg);
       text-align:center;
+      position:relative;
       z-index:2;
     }
 
@@ -424,77 +462,88 @@
 
     .diamond-inner h2 {
       margin:0;
-      font-size:clamp(1.22rem,2.45vw,1.82rem);
-      line-height:.94;
+      font-size:clamp(1.14rem,2.4vw,1.75rem);
+      line-height:.95;
       letter-spacing:-.05em;
     }
 
     .diamond-inner p {
       margin:8px 0 0;
       color:var(--muted);
-      font-size:.82rem;
-      line-height:1.38;
+      font-size:.80rem;
+      line-height:1.34;
     }
 
-    .diamond-inner a {
+    .diamond-inner .open-cue {
       display:inline-flex;
       margin-top:10px;
       color:var(--gold);
-      font-size:.82rem;
+      font-size:.76rem;
+      line-height:1.2;
       font-weight:950;
     }
 
-    .float-diamond.flat { --angle:210deg; --radius:min(34vw,350px); }
-    .float-diamond.round { --angle:330deg; --radius:min(34vw,350px); }
-    .float-diamond.globe { --angle:90deg; --radius:min(30vw,315px); }
+    .lattice-diamond.flat { --angle:210deg; --radius:min(34vw,350px); --depth:20px; }
+    .lattice-diamond.round { --angle:330deg; --radius:min(34vw,350px); --depth:120px; }
+    .lattice-diamond.globe { --angle:90deg; --radius:min(30vw,315px); --depth:60px; }
 
-    .route-diamonds {
+    .quick-routes {
       position:absolute;
       left:50%;
       bottom:clamp(18px,4vw,42px);
-      width:min(94%,820px);
-      transform:translateX(-50%);
+      transform:translateX(-50%) translateZ(140px);
       display:flex;
       flex-wrap:wrap;
       justify-content:center;
-      gap:22px;
+      gap:14px;
+      width:min(94%,760px);
       pointer-events:auto;
     }
 
-    .route-diamond {
-      width:88px;
-      height:88px;
+    .floating-diamond-action {
+      position:relative;
+      width:clamp(92px,12vw,132px);
+      aspect-ratio:1/1;
       display:grid;
       place-items:center;
       border:1px solid rgba(244,191,96,.34);
+      clip-path:var(--diamond);
       background:
-        radial-gradient(circle at 28% 22%,rgba(255,255,255,.20),transparent 18%),
-        linear-gradient(135deg,rgba(244,191,96,.16),transparent 48%),
-        rgba(6,13,27,.86);
-      transform:rotate(45deg);
+        radial-gradient(circle at 34% 24%,rgba(255,255,255,.24),transparent 15%),
+        linear-gradient(135deg,rgba(244,191,96,.18),transparent 47%),
+        linear-gradient(315deg,rgba(142,190,255,.12),transparent 45%),
+        rgba(5,11,23,.82);
       box-shadow:
-        0 18px 38px rgba(0,0,0,.30),
-        inset 0 0 28px rgba(255,255,255,.05);
+        0 24px 52px rgba(0,0,0,.30),
+        inset 0 0 34px rgba(255,255,255,.06);
+      transition:transform 180ms ease, border-color 180ms ease;
     }
 
-    .route-diamond span {
-      transform:rotate(-45deg);
-      color:var(--gold);
-      font-weight:950;
-      font-size:.76rem;
-      line-height:1;
-      text-align:center;
+    .floating-diamond-action:hover,
+    .floating-diamond-action:focus-visible {
+      transform:translateY(-4px) scale(1.025);
+      border-color:rgba(143,240,195,.54);
     }
 
-    .route-diamond.primary {
+    .floating-diamond-action.primary {
+      border-color:rgba(244,191,96,.62);
       background:
-        radial-gradient(circle at 28% 22%,rgba(255,255,255,.32),transparent 18%),
-        linear-gradient(135deg,rgba(244,191,96,.34),transparent 50%),
+        radial-gradient(circle at 34% 24%,rgba(255,255,255,.46),transparent 15%),
+        linear-gradient(135deg,rgba(255,255,255,.34),transparent 48%),
+        linear-gradient(315deg,rgba(244,191,96,.20),transparent 45%),
         var(--gold);
+      color:#06101d;
     }
 
-    .route-diamond.primary span {
-      color:#06101d;
+    .floating-diamond-action span {
+      position:relative;
+      z-index:2;
+      width:66%;
+      text-align:center;
+      font-size:.78rem;
+      line-height:1.12;
+      font-weight:950;
+      letter-spacing:-.02em;
     }
 
     .status-strip {
@@ -524,9 +573,7 @@
       font-size:.92rem;
     }
 
-    .receipt {
-      display:none;
-    }
+    .receipt { display:none; }
 
     .footer {
       margin-top:18px;
@@ -537,38 +584,22 @@
     }
 
     @media (prefers-reduced-motion:no-preference) {
-      .orbit {
-        animation:orbit-pulse 9s ease-in-out infinite;
+      .depth-plane {
+        animation:plane-drift 18s ease-in-out infinite;
       }
 
       .round-core {
         animation:core-breathe 6s ease-in-out infinite;
       }
 
-      .float-diamond {
-        animation:floating-diamond 7s ease-in-out infinite;
-      }
-
-      .float-diamond.round { animation-delay:-1.4s; }
-      .float-diamond.globe { animation-delay:-2.8s; }
-
-      @keyframes orbit-pulse {
-        0%,100% { opacity:.72; filter:brightness(1); }
+      @keyframes plane-drift {
+        0%,100% { opacity:.62; filter:brightness(1); }
         50% { opacity:1; filter:brightness(1.18); }
       }
 
       @keyframes core-breathe {
-        0%,100% { box-shadow:0 0 72px rgba(244,191,96,.14), inset 0 0 58px rgba(255,255,255,.07); }
-        50% { box-shadow:0 0 96px rgba(143,240,195,.18), inset 0 0 70px rgba(255,255,255,.09); }
-      }
-
-      @keyframes floating-diamond {
-        0%,100% {
-          filter:brightness(1);
-        }
-        50% {
-          filter:brightness(1.14);
-        }
+        0%,100% { box-shadow:0 34px 90px rgba(0,0,0,.40),0 0 80px rgba(244,191,96,.15),inset 0 0 64px rgba(255,255,255,.075); }
+        50% { box-shadow:0 40px 100px rgba(0,0,0,.44),0 0 98px rgba(143,240,195,.18),inset 0 0 72px rgba(255,255,255,.095); }
       }
     }
 
@@ -577,25 +608,27 @@
         min-height:auto;
       }
 
-      .round-world {
+      .scene-space {
         min-height:auto;
-        display:block;
+        display:grid;
+        gap:14px;
+        transform-style:flat;
       }
 
-      .orbit,
+      .depth-plane {
+        display:none;
+      }
+
       .round-core,
-      .floating-diamonds,
-      .route-diamonds {
+      .scenery-note,
+      .diamond-options,
+      .quick-routes {
         position:relative;
-        inset:auto;
         left:auto;
         top:auto;
         bottom:auto;
+        inset:auto;
         transform:none;
-      }
-
-      .orbit {
-        display:none;
       }
 
       .round-core {
@@ -605,31 +638,48 @@
         min-height:260px;
         border-radius:0;
         clip-path:var(--facet);
-        margin-bottom:18px;
       }
 
-      .floating-diamonds {
+      .scenery-note {
+        width:auto;
+        text-align:left;
+        padding:0 4px;
+      }
+
+      .diamond-options {
         display:grid;
         grid-template-columns:1fr;
-        gap:18px;
+        gap:14px;
         pointer-events:auto;
       }
 
-      .float-diamond,
-      .float-diamond:hover,
-      .float-diamond:focus-within {
+      .lattice-diamond,
+      .lattice-diamond:hover,
+      .lattice-diamond:focus-visible,
+      .lattice-diamond.active {
         position:relative;
         left:auto;
         top:auto;
-        width:min(74vw,340px);
-        margin:0 auto;
-        aspect-ratio:1/1;
-        transform:rotate(45deg);
+        width:100%;
+        aspect-ratio:auto;
+        min-height:172px;
+        transform:none;
+        clip-path:var(--facet);
       }
 
-      .route-diamonds {
-        margin-top:28px;
+      .lattice-diamond::before,
+      .lattice-diamond::after {
+        clip-path:var(--facet);
+      }
+
+      .diamond-inner {
+        transform:none;
+        width:min(88%,520px);
+      }
+
+      .quick-routes {
         display:flex;
+        margin-top:2px;
       }
     }
 
@@ -641,16 +691,6 @@
 
       .nav {
         justify-content:flex-start;
-        gap:12px;
-      }
-
-      .nav a {
-        width:48px;
-        height:48px;
-      }
-
-      .nav a span {
-        font-size:.60rem;
       }
     }
 
@@ -660,33 +700,19 @@
         padding-top:10px;
       }
 
-      .hero {
-        padding:22px;
-      }
-
+      .hero,
       .round-stage {
-        padding:14px;
+        padding:18px;
       }
 
-      .float-diamond,
-      .float-diamond:hover,
-      .float-diamond:focus-within {
-        width:min(76vw,290px);
-      }
-
-      .route-diamond {
-        width:74px;
-        height:74px;
-      }
-
-      .route-diamond span {
-        font-size:.66rem;
+      .floating-diamond-action {
+        width:108px;
       }
     }
   </style>
 </head>
 
-<body>
+<body data-lens="round">
   <a class="skip-link" href="/#compass-main">Skip to Compass</a>
 
   <div class="shell">
@@ -697,14 +723,16 @@
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
-        <a href="/" aria-current="page"><span>Compass</span></a>
-        <a href="/door/"><span>Door</span></a>
-        <a href="/home/"><span>Home</span></a>
-        <a href="/explore/"><span>Manor</span></a>
-        <a href="/nine-summits/universe/"><span>Universe</span></a>
-        <a href="/products/"><span>Products</span></a>
-        <a href="/showroom/"><span>Showroom</span></a>
-        <a href="/gauges/"><span>Triple G</span></a>
+        <a href="/" aria-current="page">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/explore/">Manor</a>
+        <a href="/nine-summits-of-love/">Book</a>
+        <a href="/nine-summits/universe/">Universe</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/frontier/">Frontier</a>
+        <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
@@ -713,108 +741,107 @@
         <p class="crystal-label">Compass · World Is Round default</p>
         <h1>Pressure is the door.</h1>
         <p class="lede">
-          The default view is round. The estate is not a flat menu; it is a field with depth, motion, and entry points.
-          Choose the lens from the floating lattice diamonds and move through the gate.
+          Single click a floating lattice diamond to change the entire scenery. Double click the same diamond to open its route.
+          The default view is Round: depth first, motion second, navigation third.
         </p>
       </section>
 
       <section
         class="round-stage"
-        aria-label="World Is Round default Compass with floating lattice diamond options"
+        aria-label="World Is Round Compass with scenery-changing lattice diamonds"
         data-round-world-default="true"
-        data-floating-diamonds="true"
-        data-bubbles="replaced"
+        data-lattice-diamond-options="true"
+        data-single-click="change-scenery"
+        data-double-click="navigate"
       >
-        <div class="round-world">
-          <div class="orbit one" aria-hidden="true"></div>
-          <div class="orbit two" aria-hidden="true"></div>
-          <div class="orbit three" aria-hidden="true"></div>
+        <div class="scene-space">
+          <div class="depth-plane one" aria-hidden="true"></div>
+          <div class="depth-plane two" aria-hidden="true"></div>
+          <div class="depth-plane three" aria-hidden="true"></div>
 
-          <div class="round-core">
+          <div class="round-core" id="sceneCore">
             <div class="core-copy">
-              <strong>Default Lens</strong>
-              <span>World Is Round</span>
+              <strong id="sceneKicker">Default Lens</strong>
+              <span id="sceneTitle">World Is Round</span>
             </div>
           </div>
 
-          <div class="floating-diamonds" aria-label="Compass lens options">
-            <article class="float-diamond flat" data-lens="flat">
-              <div class="diamond-inner">
-                <span>
-                  <span class="index">Lens One</span>
-                  <h2>Flat</h2>
-                  <p>Architectural map. Home stays home.</p>
-                  <a href="/">See Flat</a>
-                </span>
-              </div>
-            </article>
+          <p class="scenery-note" id="sceneCopy">
+            The Compass is a living field. Routes sit in depth around the center, and the estate is entered as a world rather than a flat menu.
+          </p>
 
-            <article class="float-diamond round active" data-lens="round">
-              <div class="diamond-inner">
-                <span>
-                  <span class="index">Lens Two · Default</span>
-                  <h2>Round</h2>
-                  <p>The Compass as a living field.</p>
-                  <a href="/?lens=round">Enter Round</a>
-                </span>
-              </div>
-            </article>
+          <div class="diamond-options" aria-label="Compass lens options">
+            <button class="lattice-diamond flat" type="button" data-lens-option="flat" data-route="/" aria-pressed="false">
+              <span class="diamond-inner">
+                <span class="index">Lens One</span>
+                <span class="option-title">Flat</span>
+                <span class="option-copy">Architectural map. Home stays home.</span>
+                <span class="open-cue">Double click to open</span>
+              </span>
+            </button>
 
-            <article class="float-diamond globe" data-lens="globe">
-              <div class="diamond-inner">
-                <span>
-                  <span class="index">Lens Three</span>
-                  <h2>Globe</h2>
-                  <p>Universe-scale jump.</p>
-                  <a href="/nine-summits/universe/">Open Universe</a>
-                </span>
-              </div>
-            </article>
+            <button class="lattice-diamond round active" type="button" data-lens-option="round" data-route="/?lens=round" aria-pressed="true">
+              <span class="diamond-inner">
+                <span class="index">Lens Two · Default</span>
+                <span class="option-title">Round</span>
+                <span class="option-copy">The Compass as a living field.</span>
+                <span class="open-cue">Double click to open</span>
+              </span>
+            </button>
+
+            <button class="lattice-diamond globe" type="button" data-lens-option="globe" data-route="/nine-summits/universe/" aria-pressed="false">
+              <span class="diamond-inner">
+                <span class="index">Lens Three</span>
+                <span class="option-title">Globe</span>
+                <span class="option-copy">Universe-scale jump.</span>
+                <span class="open-cue">Double click to open</span>
+              </span>
+            </button>
           </div>
 
-          <div class="route-diamonds" aria-label="Primary estate routes">
-            <a class="route-diamond primary" href="/?lens=round"><span>Round</span></a>
-            <a class="route-diamond" href="/showroom/"><span>Showroom</span></a>
-            <a class="route-diamond" href="/products/"><span>Products</span></a>
-            <a class="route-diamond" href="/gauges/"><span>Triple G</span></a>
+          <div class="quick-routes" aria-label="Primary estate routes">
+            <a class="floating-diamond-action primary" href="/?lens=round">
+              <span>Round</span>
+            </a>
+            <a class="floating-diamond-action" href="/showroom/">
+              <span>Showroom</span>
+            </a>
+            <a class="floating-diamond-action" href="/products/">
+              <span>Products</span>
+            </a>
+            <a class="floating-diamond-action" href="/gauges/">
+              <span>Triple G</span>
+            </a>
           </div>
         </div>
       </section>
 
-      <section
-        class="status-strip"
-        aria-label="Compass status"
-        data-compass-status="world-is-round-floating-diamonds-active"
-      >
+      <section class="status-strip" aria-label="Compass status" data-compass-status="round-scenery-lattice-diamond-active">
         <strong>Compass status</strong>
-        <span>World Is Round is the default · bubbles replaced by floating lattice diamonds · route law preserved.</span>
+        <span id="statusText">Round scenery active · single click changes scenery · double click opens the selected route.</span>
       </section>
 
       <section
         id="compassReceipt"
         class="receipt"
         aria-label="Compass receipt"
-        data-receipt-panel="compass-default-round-floating-lattice-diamonds"
-        data-html-contract="COMPASS_DEFAULT_ROUND_FLOATING_LATTICE_DIAMONDS_TNT_v13"
+        data-receipt-panel="compass-round-scenery-lattice-diamond-gate"
+        data-html-contract="COMPASS_ROUND_SCENERY_LATTICE_DIAMOND_GATE_TNT_v13"
         data-previous-contract="COMPASS_DEFAULT_ROUND_LATTICE_DIAMOND_GATE_TNT_v12"
         data-default-lens="round"
+        data-single-click="change-scenery"
+        data-double-click="navigate"
         data-options="floating-lattice-diamonds"
-        data-bubbles="replaced"
-        data-flat-lens-route="/"
-        data-round-lens-route="/?lens=round"
-        data-globe-lens-route="/nine-summits/universe/"
         data-generated-image="false"
         data-graphic-box="false"
         data-visual-pass-claim="false"
       >
-        <code>HTML_RECEIPT: COMPASS_DEFAULT_ROUND_FLOATING_LATTICE_DIAMONDS_TNT_v13</code>
+        <code>HTML_RECEIPT: COMPASS_ROUND_SCENERY_LATTICE_DIAMOND_GATE_TNT_v13</code>
         <code>PREVIOUS_CONTRACT: COMPASS_DEFAULT_ROUND_LATTICE_DIAMOND_GATE_TNT_v12</code>
+        <code>SINGLE_CLICK: change scenery</code>
+        <code>DOUBLE_CLICK: navigate</code>
         <code>DEFAULT_LENS: round</code>
         <code>OPTIONS: floating-lattice-diamonds</code>
-        <code>BUBBLES: replaced</code>
-        <code>FLAT_LENS_ROUTE: /</code>
-        <code>ROUND_LENS_ROUTE: /?lens=round</code>
-        <code>GLOBE_LENS_ROUTE: /nine-summits/universe/</code>
         <code>GENERATED_IMAGE: false</code>
         <code>GRAPHIC_BOX: false</code>
         <code>VISUAL_PASS_CLAIM: false</code>
@@ -825,5 +852,124 @@
       Compass → Door → Home → Showroom → Universe.
     </footer>
   </div>
+
+  <script>
+    (() => {
+      const CONTRACT = "COMPASS_ROUND_SCENERY_LATTICE_DIAMOND_GATE_TNT_v13";
+
+      const scenes = {
+        flat: {
+          title: "World Is Flat",
+          kicker: "Lens One",
+          copy: "Flat scenery active. The estate reads as an architectural map: measured, planar, and controlled before the Door opens.",
+          status: "Flat scenery active · single click changes scenery · double click keeps the visitor on the Compass home route.",
+          bg: "flat"
+        },
+        round: {
+          title: "World Is Round",
+          kicker: "Default Lens",
+          copy: "Round scenery active. The Compass is a living field: routes sit in depth around the center, and the estate is entered as a world rather than a flat menu.",
+          status: "Round scenery active · single click changes scenery · double click opens the Round Compass route.",
+          bg: "round"
+        },
+        globe: {
+          title: "World Is a Globe",
+          kicker: "Lens Three",
+          copy: "Globe scenery active. The view expands from estate-scale navigation into universe-scale orientation.",
+          status: "Globe scenery active · single click changes scenery · double click opens the Nine Summits Universe.",
+          bg: "globe"
+        }
+      };
+
+      const root = document.documentElement;
+      const body = document.body;
+      const title = document.getElementById("sceneTitle");
+      const kicker = document.getElementById("sceneKicker");
+      const copy = document.getElementById("sceneCopy");
+      const status = document.getElementById("statusText");
+      const options = Array.from(document.querySelectorAll("[data-lens-option]"));
+
+      let selected = "round";
+      let lastTap = { lens: "", time: 0 };
+
+      function selectLens(lens) {
+        const scene = scenes[lens] || scenes.round;
+        selected = lens;
+
+        body.dataset.lens = scene.bg;
+        root.dataset.selectedLens = lens;
+
+        if (title) title.textContent = scene.title;
+        if (kicker) kicker.textContent = scene.kicker;
+        if (copy) copy.textContent = scene.copy;
+        if (status) status.textContent = scene.status;
+
+        options.forEach((button) => {
+          const active = button.dataset.lensOption === lens;
+          button.classList.toggle("active", active);
+          button.setAttribute("aria-pressed", String(active));
+        });
+      }
+
+      function navigate(button) {
+        const route = button.dataset.route || "/";
+        window.location.href = route;
+      }
+
+      options.forEach((button) => {
+        button.addEventListener("click", (event) => {
+          event.preventDefault();
+
+          const lens = button.dataset.lensOption || "round";
+          const now = Date.now();
+          const isTouchDoubleTap = lastTap.lens === lens && now - lastTap.time < 340;
+
+          if (isTouchDoubleTap) {
+            navigate(button);
+            return;
+          }
+
+          lastTap = { lens, time: now };
+          selectLens(lens);
+        });
+
+        button.addEventListener("dblclick", (event) => {
+          event.preventDefault();
+          navigate(button);
+        });
+
+        button.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            selectLens(button.dataset.lensOption || "round");
+          }
+
+          if ((event.key === "Enter" && event.shiftKey) || event.key === " ") {
+            event.preventDefault();
+            navigate(button);
+          }
+        });
+      });
+
+      window.DGBCompass = {
+        contract: CONTRACT,
+        receipt: CONTRACT,
+        selectLens,
+        getStatus() {
+          return {
+            contract: CONTRACT,
+            selectedLens: selected,
+            singleClick: "change-scenery",
+            doubleClick: "navigate",
+            generatedImage: false,
+            graphicBox: false,
+            visualPassClaim: false
+          };
+        }
+      };
+
+      selectLens("round");
+    })();
+  </script>
 </body>
 </html>

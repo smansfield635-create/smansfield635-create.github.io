@@ -1,40 +1,46 @@
-<!-- /index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-page="compass-preface-doors"
   data-route="/"
-  data-contract="COMPASS_PREFACE_DOORS_HTML_TNT_v4"
-  data-required-renderer="COMPASS_PREFACE_DOORS_JS_TNT_v4"
-  data-standard="cutting-edge-frontier-tech-only"
-  data-default-context="round"
+  data-page="compass"
+  data-contract="COMPASS_INDEX_CUT_GEM_PREFACE_RENEWAL_TNT_v1"
+  data-model="cut-gem-preface-gate"
+  data-default-lens="round"
+  data-flat-route="/flat/"
+  data-round-route="/products/"
+  data-universe-route="/showroom/"
   data-generated-image="false"
   data-graphic-box="false"
-  data-visual-pass-claim="false"
+  data-public-copy-clean="true"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Compass</title>
+
+  <title>Compass · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Compass: choose the map, the movement, or the world."
+    content="Diamond Gate Bridge Compass: choose Flat for investigation, Round for product movement, or Universe for the Showroom display world."
   >
 
   <style>
     :root {
       color-scheme: dark;
-      --bg:#020611;
-      --panel:rgba(7,14,29,.86);
-      --panel-2:rgba(3,8,19,.94);
-      --line:rgba(244,191,96,.34);
-      --text:#f8ead0;
-      --muted:#bac2cf;
-      --gold:#f4bf60;
-      --blue:#8ebeff;
+      --bg:#02040b;
+      --ink:#fff4d8;
+      --muted:rgba(230,238,255,.78);
+      --faint:rgba(230,238,255,.52);
+      --gold:#f3c86f;
+      --gold2:#ffe8a3;
+      --blue:#8dd8ff;
       --green:#8ff0c3;
-      --shadow:0 28px 90px rgba(0,0,0,.46);
-      --max:1220px;
+      --violet:#beaaff;
+      --panel:rgba(9,15,31,.86);
+      --line:rgba(184,205,255,.18);
+      --line-gold:rgba(243,200,111,.34);
+      --shadow:0 32px 110px rgba(0,0,0,.48);
+      --max:1180px;
+      --gem-cut:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
       --facet:polygon(0 18px,18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px));
       --facet-small:polygon(0 10px,10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px));
     }
@@ -42,262 +48,879 @@
     * { box-sizing:border-box; }
 
     html {
+      min-width:320px;
       min-height:100%;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(142,190,255,.18),transparent 34rem),
-        radial-gradient(circle at 13% 18%,rgba(244,191,96,.12),transparent 30rem),
-        radial-gradient(circle at 88% 20%,rgba(143,240,195,.09),transparent 30rem),
-        linear-gradient(180deg,var(--bg),#01030a 78%);
+      background:var(--bg);
+      scroll-behavior:smooth;
+      overflow-x:hidden;
     }
 
     body {
-      min-height:100%;
       margin:0;
+      min-width:320px;
+      min-height:100vh;
+      color:var(--ink);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      color:var(--text);
-      background:
-        linear-gradient(145deg,rgba(255,255,255,.035),transparent 42%),
-        radial-gradient(circle at 50% 58%,rgba(244,191,96,.07),transparent 36rem);
+      line-height:1.5;
       overflow-x:hidden;
+      background:
+        radial-gradient(circle at 50% -8%,rgba(243,200,111,.20),transparent 28rem),
+        radial-gradient(circle at 12% 18%,rgba(36,120,255,.19),transparent 28rem),
+        radial-gradient(circle at 88% 30%,rgba(141,216,255,.14),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(190,170,255,.12),transparent 34rem),
+        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
+    }
+
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background-image:
+        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
+      background-size:220px 260px,54px 54px,54px 54px;
+      opacity:.22;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
 
     a { color:inherit; text-decoration:none; }
 
+    button {
+      font:inherit;
+      color:inherit;
+      border:0;
+      cursor:pointer;
+    }
+
     a:focus-visible,
-    canvas:focus-visible,
+    button:focus-visible,
     [tabindex]:focus-visible {
       outline:2px solid var(--gold);
       outline-offset:4px;
     }
 
-    .skip-link {
+    .skip {
       position:absolute;
-      left:1rem;
-      top:1rem;
-      z-index:30;
+      left:-999px;
+      top:8px;
+      z-index:50;
       padding:.75rem 1rem;
-      border:1px solid var(--line);
-      background:#08101d;
-      color:var(--text);
-      transform:translateY(-180%);
-      transition:transform 160ms ease;
-      clip-path:var(--facet-small);
+      border-radius:999px;
+      color:#05070d;
+      background:var(--gold);
+      font-weight:950;
     }
 
-    .skip-link:focus { transform:translateY(0); }
+    .skip:focus { left:8px; }
 
     .shell {
-      width:min(var(--max),calc(100% - 32px));
+      position:relative;
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
       margin:0 auto;
-      padding:24px 0 42px;
-    }
-
-    .topbar,
-    .hero,
-    .field-panel {
-      border:1px solid var(--line);
-      background:linear-gradient(180deg,rgba(255,255,255,.055),transparent),var(--panel);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(18px);
-      clip-path:var(--facet);
+      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
     }
 
     .topbar {
-      display:flex;
+      display:grid;
+      grid-template-columns:auto 1fr;
       align-items:center;
-      justify-content:space-between;
       gap:18px;
-      padding:14px 18px;
-      background:rgba(5,9,18,.74);
+      padding:12px 0 18px;
     }
 
     .brand {
-      display:inline-flex;
+      display:grid;
+      grid-template-columns:auto 1fr;
       align-items:center;
-      gap:10px;
-      min-width:max-content;
-      font-weight:950;
-      letter-spacing:.02em;
+      gap:.9rem;
+      min-width:260px;
     }
 
     .brand-mark {
-      width:18px;
-      height:18px;
-      border:1px solid var(--gold);
+      width:4.2rem;
+      height:4.2rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(243,200,111,.44);
       transform:rotate(45deg);
+      clip-path:var(--gem-cut);
       background:
-        linear-gradient(135deg,rgba(244,191,96,.24),transparent),
-        rgba(255,255,255,.04);
-      box-shadow:0 0 24px rgba(244,191,96,.18);
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(36,120,255,.18),rgba(1,15,60,.56),rgba(243,200,111,.18),rgba(255,255,255,.28)),
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.30),transparent 42%),
+        linear-gradient(145deg,rgba(9,44,112,.95),rgba(5,8,20,.98));
+      box-shadow:
+        0 0 2rem rgba(36,120,255,.28),
+        0 1.2rem 2.8rem rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.16);
+    }
+
+    .brand-mark span {
+      transform:rotate(-45deg);
+      font-weight:950;
+      letter-spacing:.04em;
+      color:rgba(255,244,216,.98);
+      text-shadow:0 2px 10px rgba(0,0,0,.85);
+    }
+
+    .brand-copy {
+      display:grid;
+      gap:.18rem;
+    }
+
+    .brand-copy strong {
+      font-size:clamp(1.08rem,3vw,1.7rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+
+    .brand-copy span {
+      color:var(--muted);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
     }
 
     .nav {
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
-      gap:8px;
+      gap:.48rem;
     }
 
     .nav a {
-      padding:8px 11px;
-      border:1px solid rgba(255,255,255,.09);
-      color:var(--muted);
-      font-size:.88rem;
-      background:
-        linear-gradient(135deg,rgba(255,255,255,.07),transparent 45%),
-        rgba(255,255,255,.032);
-      clip-path:var(--facet-small);
+      min-height:2.25rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
+      padding:.5rem .74rem;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
     .nav a[aria-current="page"] {
-      border-color:rgba(244,191,96,.54);
-      color:var(--gold);
+      border-color:rgba(243,200,111,.88);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .panel {
+      border:1px solid var(--line);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        linear-gradient(135deg,rgba(244,191,96,.16),transparent 50%),
-        rgba(244,191,96,.08);
+        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(36,120,255,.14),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+        var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
     }
 
     .hero {
-      margin-top:24px;
-      padding:clamp(24px,5vw,56px);
-      background:
-        radial-gradient(circle at 18% 12%,rgba(244,191,96,.12),transparent 18rem),
-        radial-gradient(circle at 84% 24%,rgba(143,240,195,.10),transparent 24rem),
-        linear-gradient(180deg,rgba(255,255,255,.055),transparent),
-        var(--panel);
+      position:relative;
+      min-height:clamp(22rem,40vw,32rem);
+      display:grid;
+      align-content:center;
+      gap:1rem;
+      padding:clamp(1.45rem,5vw,3.4rem);
+      margin-top:.6rem;
+      isolation:isolate;
     }
 
-    .label {
-      display:inline-flex;
-      width:fit-content;
-      margin:0 0 18px;
-      padding:8px 12px;
-      border:1px solid rgba(142,190,255,.26);
-      color:var(--blue);
+    .hero::before {
+      content:"";
+      position:absolute;
+      right:clamp(1rem,6vw,5.5rem);
+      top:50%;
+      z-index:0;
+      width:clamp(9rem,25vw,18rem);
+      height:clamp(9rem,25vw,18rem);
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:2.9rem;
+      transform:translateY(-50%) rotate(45deg);
       background:
-        linear-gradient(135deg,rgba(142,190,255,.14),transparent 56%),
-        rgba(142,190,255,.055);
-      font-size:.82rem;
+        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
+        radial-gradient(circle at 50% 72%,rgba(36,120,255,.18),transparent 62%),
+        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      animation:anchorPulse 8s ease-in-out infinite;
+      pointer-events:none;
+      opacity:.52;
+    }
+
+    @keyframes anchorPulse {
+      0%,100% { opacity:.42; filter:brightness(.95); }
+      50% { opacity:.58; filter:brightness(1.1); }
+    }
+
+    .kicker {
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.58rem;
+      padding:.58rem .95rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(230,238,255,.86);
+      background:rgba(255,255,255,.04);
+      font-size:.72rem;
       font-weight:950;
-      letter-spacing:.10em;
+      letter-spacing:.14em;
       text-transform:uppercase;
-      clip-path:var(--facet-small);
+      position:relative;
+      z-index:2;
+    }
+
+    .kicker::before {
+      content:"";
+      width:.72rem;
+      height:.72rem;
+      border-radius:.18rem;
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
     }
 
     h1 {
       margin:0;
-      max-width:980px;
-      font-size:clamp(3rem,7vw,6.4rem);
-      line-height:.86;
-      letter-spacing:-.085em;
-    }
-
-    .lede {
-      max-width:84ch;
-      margin:22px 0 0;
-      color:var(--muted);
-      font-size:clamp(1.03rem,2.2vw,1.18rem);
-      line-height:1.65;
-    }
-
-    .field-panel {
-      margin-top:18px;
-      padding:clamp(8px,2.2vw,18px);
-      background:
-        radial-gradient(circle at 50% 44%,rgba(143,240,195,.10),transparent 17rem),
-        radial-gradient(circle at 50% 48%,rgba(244,191,96,.10),transparent 26rem),
-        radial-gradient(circle at 50% 52%,rgba(142,190,255,.11),transparent 36rem),
-        linear-gradient(180deg,rgba(255,255,255,.045),transparent),
-        var(--panel-2);
-    }
-
-    .field-mount {
+      max-width:950px;
+      font-size:clamp(3.1rem,10vw,7rem);
+      line-height:.84;
+      letter-spacing:-.105em;
+      text-wrap:balance;
       position:relative;
-      width:100%;
-      min-height:clamp(620px,80vw,940px);
-      border:1px solid rgba(142,190,255,.18);
-      background:
-        radial-gradient(circle at 50% 45%,rgba(142,190,255,.09),transparent 24rem),
-        linear-gradient(180deg,rgba(7,13,30,1),rgba(2,5,12,1));
-      box-shadow:
-        inset 0 0 66px rgba(143,240,195,.08),
-        0 24px 70px rgba(0,0,0,.34);
-      clip-path:var(--facet);
+      z-index:2;
+    }
+
+    h2 {
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.45rem,4.7vw,2.65rem);
+      line-height:.98;
+      letter-spacing:-.07em;
+      text-wrap:balance;
+      position:relative;
+      z-index:2;
+    }
+
+    p {
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(.98rem,2.7vw,1.16rem);
+      line-height:1.55;
+    }
+
+    .lead {
+      max-width:900px;
+      position:relative;
+      z-index:2;
+    }
+
+    .quote {
+      max-width:900px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.92);
+      background:rgba(243,200,111,.065);
+      font-weight:850;
+      position:relative;
+      z-index:2;
+    }
+
+    .actions {
+      display:flex;
+      flex-wrap:wrap;
+      gap:.62rem;
+      margin-top:.2rem;
+      position:relative;
+      z-index:2;
+    }
+
+    .button {
+      min-height:2.65rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      padding:.65rem 1rem;
+      background:rgba(255,255,255,.045);
+      color:rgba(241,246,255,.88);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.62);
+      outline:none;
+    }
+
+    .button.gold {
+      border-color:rgba(243,200,111,.9);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+    }
+
+    .button.green {
+      border-color:rgba(143,240,195,.42);
+      color:var(--green);
+      background:rgba(143,240,195,.07);
+    }
+
+    .section {
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
+      display:grid;
+      gap:1.05rem;
+    }
+
+    .compass-stage {
+      position:relative;
+      min-height:clamp(38rem,72vw,54rem);
+      display:grid;
+      place-items:center;
       overflow:hidden;
-      contain:layout paint style;
-      touch-action:none;
+      isolation:isolate;
+      border:1px solid rgba(184,205,255,.13);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      background:
+        radial-gradient(circle at 50% 44%,rgba(36,120,255,.15),transparent 20rem),
+        linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.92));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    #compassPrefaceCanvas {
-      display:block;
-      width:100%;
-      height:clamp(620px,80vw,940px);
-      touch-action:none;
-      user-select:none;
-      -webkit-user-select:none;
-      -webkit-touch-callout:none;
-    }
-
-    .fallback {
+    .compass-stage::before,
+    .compass-stage::after {
+      content:"";
       position:absolute;
       left:50%;
       top:50%;
-      width:min(88%,620px);
+      border-radius:50%;
       transform:translate(-50%,-50%);
-      padding:18px;
-      border:1px solid rgba(244,191,96,.28);
-      background:rgba(5,10,20,.82);
-      color:var(--muted);
-      text-align:center;
-      line-height:1.55;
-      clip-path:var(--facet);
       pointer-events:none;
     }
 
-    .fallback strong {
-      display:block;
-      margin-bottom:8px;
-      color:var(--gold);
+    .compass-stage::before {
+      width:min(82%,36rem);
+      height:min(82%,36rem);
+      border:1px solid rgba(243,200,111,.08);
+      box-shadow:0 0 3rem rgba(36,120,255,.12);
     }
 
-    .renderer-loaded .fallback { display:none; }
+    .compass-stage::after {
+      width:min(54%,23rem);
+      height:min(54%,23rem);
+      border:1px solid rgba(36,120,255,.17);
+    }
 
-    @media (max-width:760px) {
+    .scene-field {
+      position:absolute;
+      inset:clamp(1rem,4vw,2.2rem);
+      z-index:1;
+      display:grid;
+      place-items:center;
+      pointer-events:none;
+    }
+
+    .scene-board {
+      position:absolute;
+      inset:10% 8%;
+      opacity:0;
+      transform:scale(.98);
+      transition:opacity .35s ease,transform .35s ease;
+    }
+
+    .scene-board[data-scene="flat"] {
+      background:
+        linear-gradient(rgba(141,216,255,.055) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.055) 1px,transparent 1px);
+      background-size:42px 42px;
+      border:1px solid rgba(141,216,255,.14);
+      clip-path:var(--facet);
+    }
+
+    .scene-board[data-scene="flat"]::before,
+    .scene-board[data-scene="flat"]::after {
+      content:"";
+      position:absolute;
+      inset:14%;
+      border:1px solid rgba(243,200,111,.12);
+      clip-path:var(--facet);
+    }
+
+    .scene-board[data-scene="flat"]::after {
+      inset:32% 20%;
+      border-color:rgba(141,216,255,.13);
+    }
+
+    .scene-board[data-scene="round"] {
+      border-radius:50%;
+      border:1px solid rgba(243,200,111,.10);
+      box-shadow:
+        inset 0 0 80px rgba(36,120,255,.08),
+        0 0 60px rgba(36,120,255,.12);
+    }
+
+    .scene-board[data-scene="round"]::before,
+    .scene-board[data-scene="round"]::after {
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      border:1px solid rgba(141,216,255,.12);
+    }
+
+    .scene-board[data-scene="round"]::before {
+      width:88%;
+      height:44%;
+    }
+
+    .scene-board[data-scene="round"]::after {
+      width:54%;
+      height:82%;
+    }
+
+    .scene-board[data-scene="universe"] {
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(9,16,36,.98) 0 22%,rgba(36,120,255,.18) 23% 34%,transparent 35%),
+        radial-gradient(circle at 50% 50%,rgba(190,170,255,.20),transparent 44%);
+      box-shadow:
+        0 0 80px rgba(190,170,255,.16),
+        inset 0 0 90px rgba(0,0,0,.54);
+    }
+
+    .scene-board[data-scene="universe"]::before {
+      content:"";
+      position:absolute;
+      inset:6%;
+      border-radius:50%;
+      border:1px solid rgba(141,216,255,.13);
+      box-shadow:0 0 55px rgba(141,216,255,.08);
+    }
+
+    html[data-compass-lens="flat"] .scene-board[data-scene="flat"],
+    html[data-compass-lens="round"] .scene-board[data-scene="round"],
+    html[data-compass-lens="universe"] .scene-board[data-scene="universe"] {
+      opacity:1;
+      transform:scale(1);
+    }
+
+    .active-title {
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:2;
+      width:min(76%,32rem);
+      transform:translate(-50%,-50%);
+      text-align:center;
+      display:grid;
+      gap:.42rem;
+      pointer-events:none;
+    }
+
+    .active-title .small {
+      color:var(--gold);
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+
+    .active-title strong {
+      color:var(--ink);
+      font-size:clamp(1.9rem,5vw,3.6rem);
+      line-height:.9;
+      letter-spacing:-.08em;
+      text-shadow:0 3px 24px rgba(0,0,0,.7);
+    }
+
+    .active-title span {
+      color:rgba(230,238,255,.78);
+      font-weight:850;
+      font-size:clamp(.86rem,2.4vw,1.02rem);
+    }
+
+    .gem-rail {
+      position:absolute;
+      inset:0;
+      z-index:4;
+      pointer-events:none;
+    }
+
+    .compass-gem {
+      position:absolute;
+      display:grid;
+      place-items:center;
+      width:clamp(6.4rem,18vw,9.2rem);
+      height:clamp(6.4rem,18vw,9.2rem);
+      border:1px solid rgba(141,216,255,.50);
+      border-radius:0;
+      clip-path:var(--gem-cut);
+      pointer-events:auto;
+      color:rgba(255,244,216,.96);
+      background:
+        linear-gradient(35deg,transparent 0 19%,rgba(255,255,255,.34) 20% 22%,transparent 23% 100%),
+        linear-gradient(145deg,rgba(255,255,255,.25),transparent 18%,rgba(4,38,128,.30) 44%,transparent 68%),
+        conic-gradient(from 45deg at 50% 50%,
+          rgba(255,255,255,.30) 0deg,
+          rgba(35,142,255,.30) 36deg,
+          rgba(2,18,76,.56) 72deg,
+          rgba(102,194,255,.27) 108deg,
+          rgba(4,31,116,.64) 144deg,
+          rgba(255,255,255,.20) 180deg,
+          rgba(2,18,76,.68) 216deg,
+          rgba(58,154,255,.30) 252deg,
+          rgba(1,12,54,.72) 288deg,
+          rgba(160,222,255,.27) 324deg,
+          rgba(255,255,255,.30) 360deg),
+        radial-gradient(circle at 32% 20%,rgba(255,255,255,.70),rgba(150,220,255,.18) 22%,transparent 38%),
+        radial-gradient(circle at 76% 80%,rgba(1,9,42,.76),transparent 52%),
+        linear-gradient(145deg,rgba(91,188,255,.99),rgba(17,88,218,.98) 42%,rgba(1,24,92,.99) 100%);
+      box-shadow:
+        0 18px 36px rgba(2,16,64,.42),
+        0 0 32px rgba(36,120,255,.34),
+        inset 0 1px 0 rgba(255,255,255,.32),
+        inset 0 -14px 28px rgba(1,9,42,.34);
+      transform:translate(-50%,-50%) rotate(45deg);
+      transition:filter .18s ease,box-shadow .18s ease,scale .18s ease,border-color .18s ease;
+      isolation:isolate;
+    }
+
+    .compass-gem[data-lens="flat"] {
+      left:22%;
+      top:52%;
+    }
+
+    .compass-gem[data-lens="round"] {
+      left:50%;
+      top:22%;
+    }
+
+    .compass-gem[data-lens="universe"] {
+      left:78%;
+      top:52%;
+    }
+
+    .compass-gem::before {
+      content:"";
+      position:absolute;
+      inset:5%;
+      clip-path:polygon(50% 0%,75% 12%,100% 36%,80% 54%,89% 78%,50% 100%,11% 78%,20% 54%,0% 36%,25% 12%);
+      background:
+        linear-gradient(90deg,transparent 0 48%,rgba(255,255,255,.24) 49% 51%,transparent 52% 100%),
+        linear-gradient(0deg,transparent 0 48%,rgba(255,255,255,.16) 49% 51%,transparent 52% 100%),
+        linear-gradient(27deg,transparent 0 32%,rgba(255,255,255,.21) 33% 35%,transparent 36% 100%),
+        linear-gradient(153deg,transparent 0 31%,rgba(255,255,255,.18) 32% 34%,transparent 35% 100%),
+        linear-gradient(118deg,transparent 0 42%,rgba(112,199,255,.18) 43% 45%,transparent 46% 100%),
+        linear-gradient(242deg,transparent 0 58%,rgba(255,232,163,.13) 59% 61%,transparent 62% 100%),
+        radial-gradient(circle at 36% 23%,rgba(255,255,255,.32),transparent 26%),
+        conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,.20),rgba(8,68,180,.12),rgba(255,255,255,.12),rgba(1,16,72,.24),rgba(255,255,255,.17));
+      opacity:.96;
+      pointer-events:none;
+      mix-blend-mode:screen;
+    }
+
+    .compass-gem::after {
+      content:"";
+      position:absolute;
+      inset:0;
+      clip-path:var(--gem-cut);
+      background:
+        linear-gradient(115deg,transparent 0 33%,rgba(255,255,255,.34) 34% 36%,transparent 37% 100%),
+        linear-gradient(25deg,transparent 0 58%,rgba(255,232,163,.20) 59% 61%,transparent 62% 100%),
+        linear-gradient(82deg,transparent 0 47%,rgba(141,216,255,.22) 48% 49%,transparent 50% 100%),
+        radial-gradient(circle at 70% 24%,rgba(255,255,255,.20),transparent 20%);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.10),
+        inset 0 -20px 28px rgba(1,9,42,.24);
+      pointer-events:none;
+      mix-blend-mode:screen;
+    }
+
+    .gem-label {
+      position:relative;
+      z-index:3;
+      display:grid;
+      place-items:center;
+      gap:.12rem;
+      transform:rotate(-45deg);
+      text-align:center;
+      padding:.4rem;
+      text-shadow:
+        0 2px 12px rgba(0,0,0,.92),
+        0 0 10px rgba(0,28,90,.78),
+        0 0 2px rgba(255,255,255,.42);
+    }
+
+    .gem-label b {
+      font-size:clamp(.76rem,2.7vw,1rem);
+      font-weight:950;
+      letter-spacing:.02em;
+      line-height:.92;
+      text-transform:uppercase;
+    }
+
+    .gem-label span {
+      color:rgba(230,238,255,.78);
+      font-size:clamp(.46rem,1.8vw,.58rem);
+      font-weight:950;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    .compass-gem:hover,
+    .compass-gem:focus-visible,
+    .compass-gem[aria-pressed="true"] {
+      border-color:rgba(243,200,111,.74);
+      filter:brightness(1.10) saturate(1.16) contrast(1.05);
+      box-shadow:
+        0 23px 44px rgba(2,16,64,.50),
+        0 0 42px rgba(36,120,255,.42),
+        0 0 18px rgba(243,200,111,.15),
+        inset 0 1px 0 rgba(255,255,255,.35),
+        inset 0 -14px 28px rgba(1,9,42,.34);
+      scale:1.035;
+    }
+
+    .scene-copy {
+      position:absolute;
+      left:50%;
+      bottom:clamp(1.2rem,4vw,2.4rem);
+      z-index:5;
+      width:min(88%,42rem);
+      transform:translateX(-50%);
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,200,111,.18);
+      background:rgba(3,8,20,.72);
+      color:rgba(255,244,216,.88);
+      clip-path:var(--facet);
+      display:grid;
+      gap:.45rem;
+      text-align:center;
+      pointer-events:none;
+    }
+
+    .scene-copy strong {
+      color:var(--gold);
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .scene-copy span {
+      color:rgba(230,238,255,.82);
+      font-size:.96rem;
+      line-height:1.35;
+      font-weight:800;
+    }
+
+    .path-grid {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.85rem;
+    }
+
+    .path-card {
+      display:grid;
+      gap:.6rem;
+      min-height:13rem;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(36,120,255,.10),transparent 60%),
+        rgba(255,255,255,.035);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .path-card:hover,
+    .path-card:focus-visible {
+      transform:translateY(-3px);
+      border-color:rgba(243,200,111,.46);
+      outline:none;
+    }
+
+    .path-card b {
+      color:var(--gold);
+      font-size:.68rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .path-card strong {
+      color:rgba(255,244,216,.98);
+      font-size:1.15rem;
+      line-height:1.1;
+    }
+
+    .path-card span {
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.42;
+    }
+
+    .open-path {
+      margin-top:auto;
+      color:rgba(230,238,255,.88);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    footer {
+      padding:1.35rem 0 .5rem;
+      color:var(--faint);
+      text-align:center;
+      font-size:.76rem;
+    }
+
+    @media (max-width:980px) {
       .topbar {
-        align-items:flex-start;
-        flex-direction:column;
+        grid-template-columns:1fr;
+        align-items:start;
       }
 
       .nav { justify-content:flex-start; }
+      .path-grid { grid-template-columns:1fr; }
     }
 
-    @media (max-width:560px) {
-      .shell {
-        width:min(100% - 20px,var(--max));
-        padding-top:10px;
+    @media (max-width:720px) {
+      .shell { width:min(100% - 22px,var(--max)); }
+      h1 { font-size:clamp(3rem,17vw,5rem); }
+
+      .hero {
+        min-height:26rem;
+        padding:1rem;
       }
 
-      .hero { padding:22px; }
+      .actions {
+        display:grid;
+      }
 
-      .field-panel { padding:8px; }
+      .button {
+        width:100%;
+      }
 
-      .field-mount,
-      #compassPrefaceCanvas {
-        min-height:590px;
-        height:590px;
+      .compass-stage {
+        min-height:35rem;
+      }
+
+      .compass-gem {
+        width:5.5rem;
+        height:5.5rem;
+      }
+
+      .compass-gem[data-lens="flat"] {
+        left:20%;
+        top:48%;
+      }
+
+      .compass-gem[data-lens="round"] {
+        left:50%;
+        top:20%;
+      }
+
+      .compass-gem[data-lens="universe"] {
+        left:80%;
+        top:48%;
+      }
+
+      .active-title {
+        top:56%;
+        width:82%;
+      }
+
+      .active-title strong {
+        font-size:clamp(1.65rem,9vw,2.4rem);
+      }
+
+      .scene-copy {
+        bottom:1.05rem;
+        width:92%;
+      }
+
+      .scene-copy span {
+        font-size:.84rem;
+      }
+    }
+
+    @media (max-width:460px) {
+      .compass-stage {
+        min-height:33rem;
+      }
+
+      .compass-gem {
+        width:4.7rem;
+        height:4.7rem;
+      }
+
+      .gem-label b {
+        font-size:.62rem;
+      }
+
+      .gem-label span {
+        font-size:.40rem;
+      }
+
+      .active-title {
+        top:55%;
+      }
+
+      .active-title .small {
+        font-size:.62rem;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="/#compass-main">Skip to Compass</a>
+  <a class="skip" href="#main">Skip to Compass</a>
 
   <div class="shell">
-    <header class="topbar" aria-label="Compass navigation">
-      <a class="brand" href="/" aria-label="Return to Diamond Gate Bridge Compass">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span>Diamond Gate Bridge</span>
+    <header class="topbar" aria-label="Compass header">
+      <a class="brand" href="/">
+        <span class="brand-mark"><span>DG</span></span>
+        <span class="brand-copy">
+          <span>Diamond Gate Bridge</span>
+          <strong>Compass · Preface Gate</strong>
+        </span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
@@ -305,57 +928,114 @@
         <a href="/flat/">Flat</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
+        <a href="/showroom/globe/">Globe</a>
+        <a href="/laws/">Laws</a>
         <a href="/gauges/">Triple G</a>
       </nav>
     </header>
 
-    <main id="compass-main" tabindex="-1">
-      <section class="hero" aria-label="Compass introduction">
-        <p class="label">Compass · Three Entry Prefaces</p>
-        <h1>Pressure is the door.</h1>
-        <p class="lede">
-          Before you enter the estate, choose how you want to see the world. Some people need the map first.
-          Some people need the movement. Some people need the whole world before the pieces make sense.
+    <main id="main">
+      <section class="panel hero" aria-labelledby="page-title">
+        <div class="kicker">Three doors · one Compass</div>
+        <h1 id="page-title">Pressure is the door.</h1>
+
+        <p class="lead">
+          The first choice is not about decoration. It is about how you want to enter the estate: investigate the map, move through the product wing, or open the display world.
         </p>
+
+        <div class="quote">
+          Choose the lens first. Flat opens investigation. Round opens movement. Universe opens the Showroom.
+        </div>
+
+        <div class="actions">
+          <a class="button gold" id="primaryRoute" href="/products/">Open Round</a>
+          <a class="button" href="/flat/">Investigate Flat</a>
+          <a class="button" href="/showroom/">Open Showroom</a>
+          <a class="button green" href="/gauges/">Run Triple G</a>
+        </div>
       </section>
 
-      <section
-        class="field-panel"
-        aria-label="Compass preface field"
-        data-frontier-context-renderer="true"
-        data-single-click="preview-entry"
-        data-double-click="open-entry"
-      >
-        <div id="compassPrefaceMount" class="field-mount">
-          <canvas
-            id="compassPrefaceCanvas"
-            width="1200"
-            height="940"
-            tabindex="0"
-            role="img"
-            aria-label="Compass preface with Flat investigation, Round revolving pages, and Universe showroom entry."
-            data-compass-preface-canvas="true"
-          ></canvas>
+      <section class="panel section" aria-labelledby="compass-title">
+        <div class="kicker">Cut-gem preface gate</div>
+        <h2 id="compass-title">Three cut gemstones choose three different kinds of entry.</h2>
 
-          <div class="fallback" aria-live="polite">
-            <strong>The Compass renderer did not load.</strong>
-            Use the navigation links above to enter Flat, Products, or Showroom.
+        <div class="compass-stage" aria-label="Compass cut-gem preface selector">
+          <div class="scene-field" aria-hidden="true">
+            <div class="scene-board" data-scene="flat"></div>
+            <div class="scene-board" data-scene="round"></div>
+            <div class="scene-board" data-scene="universe"></div>
+          </div>
+
+          <div class="active-title" aria-live="polite">
+            <span class="small" id="activeLensKicker">Default Lens</span>
+            <strong id="activeLensTitle">World Is Round</strong>
+            <span id="activeLensSubtitle">Movement, products, and revolving page logic.</span>
+          </div>
+
+          <div class="gem-rail" aria-label="Compass lens controls">
+            <button class="compass-gem" type="button" data-lens="flat" aria-pressed="false">
+              <span class="gem-label">
+                <b>Flat</b>
+                <span>Map</span>
+              </span>
+            </button>
+
+            <button class="compass-gem" type="button" data-lens="round" aria-pressed="true">
+              <span class="gem-label">
+                <b>Round</b>
+                <span>Products</span>
+              </span>
+            </button>
+
+            <button class="compass-gem" type="button" data-lens="universe" aria-pressed="false">
+              <span class="gem-label">
+                <b>Universe</b>
+                <span>Showroom</span>
+              </span>
+            </button>
+          </div>
+
+          <div class="scene-copy">
+            <strong id="sceneRule">Single tap changes the lens · double tap opens the route</strong>
+            <span id="sceneText">Round is the movement path: the message turns into usable product doors.</span>
           </div>
         </div>
       </section>
+
+      <section class="panel section" aria-labelledby="paths-title">
+        <div class="kicker">Compass paths</div>
+        <h2 id="paths-title">The three entries stay distinct.</h2>
+
+        <div class="path-grid">
+          <a class="path-card" href="/flat/">
+            <b>Flat</b>
+            <strong>Investigate the map.</strong>
+            <span>Flat keeps the field direct, measured, and two-dimensional. Use it when the visitor needs orientation before motion.</span>
+            <span class="open-path">Open Flat</span>
+          </a>
+
+          <a class="path-card" href="/products/">
+            <b>Round</b>
+            <strong>Move through the product wing.</strong>
+            <span>Round opens the revolving page logic: one message, clear doors, and usable product movement.</span>
+            <span class="open-path">Open Products</span>
+          </a>
+
+          <a class="path-card" href="/showroom/">
+            <b>Universe</b>
+            <strong>Open the display world.</strong>
+            <span>Universe moves into the Showroom, where the object can hold the room before the deeper globe layer opens.</span>
+            <span class="open-path">Open Showroom</span>
+          </a>
+        </div>
+      </section>
     </main>
+
+    <footer>
+      Compass · Flat investigation · Round products · Universe showroom.
+    </footer>
   </div>
 
-  <script
-    id="compassPrefaceRenderer"
-    type="module"
-    src="./index.js?v=COMPASS_PREFACE_DOORS_JS_TNT_v4"
-    data-handoff="compass-preface-doors"
-    data-html-contract="COMPASS_PREFACE_DOORS_HTML_TNT_v4"
-    data-required-renderer="COMPASS_PREFACE_DOORS_JS_TNT_v4"
-    data-default-context="round"
-  ></script>
+  <script type="module" src="/index.js?v=compass-cut-gem-preface-v1"></script>
 </body>
 </html>

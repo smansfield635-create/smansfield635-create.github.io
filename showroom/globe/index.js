@@ -1,15 +1,16 @@
 // /showroom/globe/index.js
-// SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_FIBONACCI_RUNTIME_TNT_v3A
+// SHOWROOM_GLOBE_RUNTIME_BUDGET_STABILIZATION_TNT_v4
 // Full-file replacement.
-// TNT-only repair for v3 parse failure.
-// Removes the invalid dead loop that prevented all canvases from rendering.
+// Self-contained Showcase renderer only.
+// Budget fix: cached 256-node field, no import storm, no preview render loop on mobile,
+// batched drag rendering, capped DPR, reduced filters, and single-active-planet redraw.
 
-const CONTRACT = "SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_FIBONACCI_RUNTIME_TNT_v3A";
-const PREVIOUS_CONTRACT = "SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_FIBONACCI_RUNTIME_TNT_v3";
+const CONTRACT = "SHOWROOM_GLOBE_RUNTIME_BUDGET_STABILIZATION_TNT_v4";
+const PREVIOUS_CONTRACT = "SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_FIBONACCI_RUNTIME_TNT_v3A";
 const HTML_EXPECTED = "SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_INSPECTION_DISPLAY_HTML_TNT_v1";
 
 const SHOWROOM_MODE = "showcase-bookcase-display-case";
-const DISPLAY_CASE_MODE = "self-contained-inspection-heavy-fibonacci-runtime";
+const DISPLAY_CASE_MODE = "budget-stable-self-contained-inspection";
 const DEFAULT_DISPLAY = "h-earth";
 
 const TOTAL_CELLS = 256;
@@ -20,10 +21,14 @@ const PARENT_MUTATION_AUTHORIZED = false;
 const GENERATED_IMAGE = false;
 const GRAPHIC_BOX = false;
 const VISUAL_PASS_CLAIM = false;
-
 const GROUND_LEVEL_READY = false;
 const MANOR_PLACEMENT_READY = false;
 const ESTATE_PLACEMENT_READY = false;
+
+const IS_MOBILE_BUDGET = window.matchMedia?.("(max-width: 760px)")?.matches === true;
+const DPR_CAP = IS_MOBILE_BUDGET ? 1 : Math.min(window.devicePixelRatio || 1, 1.25);
+const PREVIEW_ANIMATION_ENABLED = !IS_MOBILE_BUDGET && window.matchMedia?.("(prefers-reduced-motion: no-preference)")?.matches === true;
+const PREVIEW_FRAME_MS = 850;
 
 const WORLDS = Object.freeze([
   {
@@ -40,8 +45,8 @@ const WORLDS = Object.freeze([
     coast: "#d1b579",
     relief: "#8f8b7e",
     ice: "#e6f5f8",
-    cloud: "rgba(235,248,255,0.26)",
-    glow: "rgba(142,190,255,0.34)",
+    cloud: "rgba(235,248,255,0.22)",
+    glow: "rgba(142,190,255,0.30)",
     landBias: 0.46
   },
   {
@@ -58,8 +63,8 @@ const WORLDS = Object.freeze([
     coast: "#d7bd7d",
     relief: "#9a8f69",
     ice: "#d9f0f5",
-    cloud: "rgba(235,248,255,0.24)",
-    glow: "rgba(143,240,195,0.34)",
+    cloud: "rgba(235,248,255,0.21)",
+    glow: "rgba(143,240,195,0.30)",
     landBias: 0.54
   },
   {
@@ -76,8 +81,8 @@ const WORLDS = Object.freeze([
     coast: "#d0a66e",
     relief: "#aa5f45",
     ice: "#d6e6e9",
-    cloud: "rgba(245,235,210,0.20)",
-    glow: "rgba(244,191,96,0.30)",
+    cloud: "rgba(245,235,210,0.18)",
+    glow: "rgba(244,191,96,0.26)",
     landBias: 0.50
   },
   {
@@ -94,8 +99,8 @@ const WORLDS = Object.freeze([
     coast: "#c9aa6e",
     relief: "#8f6d54",
     ice: "#cfe8ee",
-    cloud: "rgba(235,242,255,0.22)",
-    glow: "rgba(184,166,255,0.30)",
+    cloud: "rgba(235,242,255,0.19)",
+    glow: "rgba(184,166,255,0.26)",
     landBias: 0.48
   }
 ]);
@@ -112,10 +117,13 @@ const state = {
   dragStartY: 0,
   dragStartYaw: 0,
   dragStartPitch: 0,
-  raf: 0,
+  displayRaf: 0,
+  previewRaf: 0,
+  lastPreviewAt: 0,
   active: true,
-  dpr: Math.min(window.devicePixelRatio || 1, 1.6),
-  reducedMotion: window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true
+  booted: false,
+  displayCellsProjected: 0,
+  dpr: DPR_CAP
 };
 
 const nodes = {
@@ -128,6 +136,11 @@ const nodes = {
   inspectSelected: null,
   cards: new Map(),
   previews: new Map()
+};
+
+const cache = {
+  cellsByWorld: new Map(),
+  previewRenderedKeys: new Set()
 };
 
 function clamp(value, min, max) {
@@ -156,22 +169,7 @@ function fibonacciForCell(index) {
     next,
     ratio: value / next,
     phase: ((value % GRID) / GRID) * Math.PI * 2,
-    drift: ((next % GRID) / GRID) * Math.PI * 2,
     density: clamp(value / 233, 0.004, 1)
-  };
-}
-
-function fibonacciRingOffset(row, col, world) {
-  const rowFib = FIBONACCI_SEQUENCE[row % FIBONACCI_SEQUENCE.length];
-  const colFib = FIBONACCI_SEQUENCE[col % FIBONACCI_SEQUENCE.length];
-  const combined = rowFib + colFib + world.seed;
-
-  return {
-    rowFib,
-    colFib,
-    combined,
-    harmonic: Math.sin(combined * 0.0618),
-    fold: Math.cos((rowFib * colFib + world.seed) * 0.017)
   };
 }
 
@@ -179,8 +177,8 @@ function setupCanvas(canvas, fallbackSize = 720) {
   if (!canvas) return null;
 
   const rect = canvas.getBoundingClientRect();
-  const cssWidth = Math.max(180, Math.floor(rect.width || canvas.clientWidth || fallbackSize));
-  const cssHeight = Math.max(180, Math.floor(rect.height || canvas.clientHeight || cssWidth));
+  const cssWidth = Math.max(160, Math.floor(rect.width || canvas.clientWidth || fallbackSize));
+  const cssHeight = Math.max(160, Math.floor(rect.height || canvas.clientHeight || cssWidth));
   const width = Math.floor(cssWidth * state.dpr);
   const height = Math.floor(cssHeight * state.dpr);
 
@@ -196,18 +194,19 @@ function setupCanvas(canvas, fallbackSize = 720) {
 }
 
 function ensureStyle() {
-  if (document.getElementById("showroom-globe-fibonacci-runtime-style-v3a")) return;
+  if (document.getElementById("showroom-globe-budget-stabilization-style-v4")) return;
 
   const style = document.createElement("style");
-  style.id = "showroom-globe-fibonacci-runtime-style-v3a";
+  style.id = "showroom-globe-budget-stabilization-style-v4";
   style.textContent = `
-    html[data-globe-showcase-fibonacci-runtime="true"] {
+    html[data-globe-showcase-budget-stable="true"] {
       --display-case-glow: rgba(143, 240, 195, 0.22);
     }
 
     .display-window,
     [data-display-window] {
       touch-action: none !important;
+      contain: layout paint style;
     }
 
     [data-display-case-canvas],
@@ -221,10 +220,16 @@ function ensureStyle() {
       touch-action: none !important;
       transform: none !important;
       border-radius: 22px;
+      contain: strict;
+    }
+
+    [data-preview-canvas] {
+      contain: strict;
     }
 
     [data-world-card] {
       transform: none !important;
+      contain: layout paint style;
     }
   `;
 
@@ -245,7 +250,7 @@ function collectNodes() {
     nodes.displayWindow.replaceChildren(nodes.displayCanvas);
   }
 
-  nodes.displayContext = setupCanvas(nodes.displayCanvas, 880);
+  nodes.displayContext = setupCanvas(nodes.displayCanvas, IS_MOBILE_BUDGET ? 640 : 880);
   nodes.displayTitle = byId("displayTitle");
   nodes.displayCopy = byId("displayCopy");
   nodes.displayMeta = byId("displayMeta");
@@ -265,45 +270,37 @@ function collectNodes() {
     if (!key) return;
     nodes.previews.set(key, {
       canvas,
-      context: setupCanvas(canvas, 220)
+      context: setupCanvas(canvas, 180)
     });
   });
 }
 
 function cellKind(world, index, row, col, latitude, longitude) {
   const fib = fibonacciForCell(index);
-  const ring = fibonacciRingOffset(row, col, world);
   const latWave = Math.sin((latitude / 90) * Math.PI);
   const lonWaveA = Math.sin(((longitude + world.seed * 0.31) / 180) * Math.PI * 2.0 + fib.phase * 0.31);
-  const lonWaveB = Math.cos(((longitude - world.seed * 0.17) / 180) * Math.PI * 3.0 + fib.drift * 0.22);
-  const diagonal = Math.sin(row * 0.74 + col * 0.52 + world.seed * 0.011 + ring.harmonic);
-  const continentalArc = Math.cos((row - 8) * 0.48 + Math.sin(col * 0.62 + world.seed * 0.007 + ring.fold));
-  const fibonacciFold = Math.sin((row * fib.ratio + col * fib.density) * Math.PI + ring.harmonic);
+  const lonWaveB = Math.cos(((longitude - world.seed * 0.17) / 180) * Math.PI * 3.0 + fib.phase * 0.18);
+  const diagonal = Math.sin(row * 0.74 + col * 0.52 + world.seed * 0.011);
+  const continentalArc = Math.cos((row - 8) * 0.48 + Math.sin(col * 0.62 + world.seed * 0.007));
+  const fibonacciFold = Math.sin((row * fib.ratio + col * fib.density) * Math.PI);
   const noise = hashUnit(index, world.seed);
 
   const landSignal =
-    lonWaveA * 0.35 +
-    lonWaveB * 0.22 +
-    diagonal * 0.17 +
+    lonWaveA * 0.34 +
+    lonWaveB * 0.20 +
+    diagonal * 0.16 +
     continentalArc * 0.25 +
-    fibonacciFold * 0.18 +
+    fibonacciFold * 0.17 +
     latWave * 0.10 +
-    (noise - 0.5) * 0.30;
+    (noise - 0.5) * 0.26;
 
-  if (latitude > 67 || latitude < -66) {
-    return noise > 0.34 ? "ice" : "ocean";
-  }
-
+  if (latitude > 67 || latitude < -66) return noise > 0.34 ? "ice" : "ocean";
   if (landSignal > world.landBias + 0.30) {
     if (noise + fib.density * 0.16 > 0.72) return "relief";
     if (noise < 0.23) return "forest";
     return "land";
   }
-
-  if (landSignal > world.landBias + 0.08) {
-    return noise > 0.38 ? "coast" : "shelf";
-  }
-
+  if (landSignal > world.landBias + 0.08) return noise > 0.38 ? "coast" : "shelf";
   if (landSignal > world.landBias - 0.05) return "shelf";
   if (noise < 0.18 + fib.density * 0.04) return "deep-ocean";
 
@@ -311,6 +308,8 @@ function cellKind(world, index, row, col, latitude, longitude) {
 }
 
 function buildWorldCells(world) {
+  if (cache.cellsByWorld.has(world.key)) return cache.cellsByWorld.get(world.key);
+
   const cells = [];
 
   for (let index = 0; index < TOTAL_CELLS; index += 1) {
@@ -319,7 +318,6 @@ function buildWorldCells(world) {
     const latitude = 90 - ((row + 0.5) / GRID) * 180;
     const longitude = -180 + ((col + 0.5) / GRID) * 360;
     const fibonacci = fibonacciForCell(index);
-    const fibonacciRing = fibonacciRingOffset(row, col, world);
     const kind = cellKind(world, index, row, col, latitude, longitude);
     const noiseA = hashUnit(index, world.seed + 61);
     const noiseB = hashUnit(index, world.seed + 97);
@@ -337,13 +335,13 @@ function buildWorldCells(world) {
       depth = 25 + noiseA * 150;
       elevation = -depth;
     } else if (kind === "coast") {
-      elevation = 2 + noiseA * 58 + fibonacciRing.harmonic * 6;
+      elevation = 2 + noiseA * 58;
     } else if (kind === "relief") {
       elevation = 900 + noiseA * 3600 + fibonacci.density * 480;
     } else if (kind === "ice") {
       elevation = 1200 + noiseA * 3200 + fibonacci.ratio * 320;
     } else if (kind === "forest") {
-      elevation = 40 + noiseA * 680 + fibonacciRing.fold * 40;
+      elevation = 40 + noiseA * 680;
     } else {
       elevation = 20 + noiseA * 520 + fibonacci.density * 80;
     }
@@ -359,11 +357,11 @@ function buildWorldCells(world) {
       depth,
       noiseA,
       noiseB,
-      fibonacci,
-      fibonacciRing
+      fibonacci
     });
   }
 
+  cache.cellsByWorld.set(world.key, cells);
   return cells;
 }
 
@@ -383,6 +381,7 @@ function rgb(value) {
 function shade(hex, light, lift = 0, darken = 0) {
   const base = hexToRgb(hex);
   const adjusted = clamp(light + lift - darken, 0.12, 1.45);
+
   return rgb({
     r: base.r * adjusted + 8 * (1 - adjusted),
     g: base.g * adjusted + 9 * (1 - adjusted),
@@ -411,14 +410,15 @@ function clearScene(context, width, height, world) {
   context.fillRect(0, 0, width, height);
 
   context.save();
-  context.globalAlpha = 0.44;
+  context.globalAlpha = IS_MOBILE_BUDGET ? 0.28 : 0.38;
 
-  for (let i = 0; i < 88; i += 1) {
+  const starCount = IS_MOBILE_BUDGET ? 42 : 72;
+  for (let i = 0; i < starCount; i += 1) {
     const x = (Math.sin(i * 91.17) * 0.5 + 0.5) * width;
     const y = (Math.cos(i * 49.61) * 0.5 + 0.5) * height;
-    const radius = 0.55 + ((i * 7) % 11) / 18;
+    const radius = 0.5 + ((i * 7) % 11) / 22;
     context.beginPath();
-    context.fillStyle = i % 13 === 0 ? "rgba(246,211,123,.52)" : "rgba(225,238,255,.44)";
+    context.fillStyle = i % 13 === 0 ? "rgba(246,211,123,.46)" : "rgba(225,238,255,.38)";
     context.arc(x, y, radius, 0, Math.PI * 2);
     context.fill();
   }
@@ -458,9 +458,9 @@ function drawGlobeBase(context, world, radius, centerX, centerY, zoom) {
   context.clip();
 
   const ocean = context.createRadialGradient(centerX - r * 0.34, centerY - r * 0.34, r * 0.08, centerX, centerY, r * 1.16);
-  ocean.addColorStop(0, shade(world.oceanLight, 1.34));
-  ocean.addColorStop(0.32, world.oceanBase);
-  ocean.addColorStop(0.70, shade(world.oceanDeep, 0.70));
+  ocean.addColorStop(0, shade(world.oceanLight, 1.32));
+  ocean.addColorStop(0.35, world.oceanBase);
+  ocean.addColorStop(0.74, shade(world.oceanDeep, 0.70));
   ocean.addColorStop(1, "#020b1c");
 
   context.fillStyle = ocean;
@@ -470,20 +470,21 @@ function drawGlobeBase(context, world, radius, centerX, centerY, zoom) {
   context.save();
   context.beginPath();
   context.arc(centerX, centerY, r, 0, Math.PI * 2);
-  context.strokeStyle = "rgba(183,222,240,.28)";
-  context.lineWidth = Math.max(2, radius * 0.011);
+  context.strokeStyle = "rgba(183,222,240,.24)";
+  context.lineWidth = Math.max(2, radius * 0.010);
   context.stroke();
 
   context.beginPath();
   context.arc(centerX, centerY, r * 1.014, 0, Math.PI * 2);
   context.strokeStyle = world.glow;
-  context.lineWidth = Math.max(9, radius * 0.034);
+  context.lineWidth = Math.max(8, radius * 0.030);
   context.stroke();
   context.restore();
 }
 
-function drawSoftBlob(context, x, y, rx, ry, rotation, fillStyle, alpha, wobbleSeed) {
-  const points = 10;
+function drawBlob(context, x, y, rx, ry, rotation, fillStyle, alpha, seed, budgetLevel) {
+  const points = budgetLevel === "preview" || IS_MOBILE_BUDGET ? 7 : 10;
+
   context.save();
   context.globalAlpha = alpha;
   context.fillStyle = fillStyle;
@@ -491,7 +492,7 @@ function drawSoftBlob(context, x, y, rx, ry, rotation, fillStyle, alpha, wobbleS
 
   for (let i = 0; i <= points; i += 1) {
     const t = (i / points) * Math.PI * 2;
-    const wobble = 0.82 + hashUnit(i, wobbleSeed) * 0.34;
+    const wobble = 0.86 + hashUnit(i, seed) * 0.26;
     const localX = Math.cos(t) * rx * wobble;
     const localY = Math.sin(t) * ry * wobble;
     const px = x + localX * Math.cos(rotation) - localY * Math.sin(rotation);
@@ -505,107 +506,82 @@ function drawSoftBlob(context, x, y, rx, ry, rotation, fillStyle, alpha, wobbleS
   context.restore();
 }
 
-function drawOceanDepth(context, projected, radius) {
-  context.save();
-  context.filter = "blur(1.2px)";
-
-  for (const { cell, point } of projected) {
-    if (cell.kind !== "deep-ocean" && cell.kind !== "ocean" && cell.kind !== "shelf") continue;
-
-    const depthRatio = clamp(cell.depth / 6400, 0.04, 1);
-    const fibDepth = cell.fibonacci?.density || 0.1;
-    const size = radius * (0.08 + depthRatio * 0.08 + fibDepth * 0.012) * (0.68 + point.z * 0.36);
-
-    context.globalAlpha = cell.kind === "shelf" ? 0.08 : 0.12 + depthRatio * 0.18;
-    context.fillStyle = cell.kind === "deep-ocean" ? "rgba(0,5,20,0.88)" : "rgba(2,18,45,0.62)";
-    context.beginPath();
-    context.ellipse(point.x, point.y, size * 1.45, size * 0.82, cell.noiseA * Math.PI, 0, Math.PI * 2);
-    context.fill();
-  }
-
-  context.filter = "none";
-  context.restore();
-}
-
-function drawSurfaceLayer(context, world, projected, radius, zoom, centerX, centerY) {
+function drawSurface(context, world, projected, radius, zoom, centerX, centerY, budgetLevel) {
   context.save();
   context.beginPath();
   context.arc(centerX, centerY, radius * zoom * 0.998, 0, Math.PI * 2);
   context.clip();
 
-  drawOceanDepth(context, projected, radius);
-  context.filter = "blur(0.55px)";
-
   let painted = 0;
 
   for (const { cell, point } of projected) {
+    if (budgetLevel === "preview" && cell.index % 2 !== 0) continue;
+
     const baseColor = colorForCell(world, cell);
-    const elevationLift = clamp(cell.elevation / 5400, -0.18, 0.26);
+    const elevationLift = clamp(cell.elevation / 5400, -0.18, 0.25);
     const depthDarken = cell.depth > 0 ? clamp(cell.depth / 6400, 0, 1) * 0.16 : 0;
-    const fibonacciLift = (cell.fibonacci?.density || 0) * 0.03;
-    const light = point.light + elevationLift + fibonacciLift;
-    const color = shade(baseColor, light, 0, depthDarken);
+    const fibonacciLift = (cell.fibonacci?.density || 0) * 0.025;
+    const color = shade(baseColor, point.light + elevationLift + fibonacciLift, 0, depthDarken);
 
     const frontScale = 0.72 + point.z * 0.40;
-    const fibStretch = 0.94 + (cell.fibonacci?.ratio || 0.5) * 0.18;
-    let sizeX = radius * 0.095 * frontScale * zoom * fibStretch;
-    let sizeY = radius * 0.055 * frontScale * zoom * (1.02 - (cell.fibonacci?.density || 0) * 0.08);
-    let alpha = 0.22;
+    const fibStretch = 0.94 + (cell.fibonacci?.ratio || 0.5) * 0.16;
+    let sizeX = radius * 0.094 * frontScale * zoom * fibStretch;
+    let sizeY = radius * 0.055 * frontScale * zoom;
+    let alpha = 0.18;
 
     if (cell.kind === "deep-ocean") {
       sizeX *= 1.15;
       sizeY *= 0.80;
-      alpha = 0.15;
+      alpha = budgetLevel === "preview" ? 0.11 : 0.13;
     } else if (cell.kind === "ocean") {
       sizeX *= 1.05;
       sizeY *= 0.76;
-      alpha = 0.17;
+      alpha = budgetLevel === "preview" ? 0.12 : 0.15;
     } else if (cell.kind === "shelf") {
       sizeX *= 1.16;
       sizeY *= 0.82;
-      alpha = 0.25;
+      alpha = 0.24;
     } else if (cell.kind === "coast") {
-      sizeX *= 1.22;
+      sizeX *= 1.24;
       sizeY *= 0.76;
-      alpha = 0.58;
+      alpha = 0.56;
     } else if (cell.kind === "relief") {
-      sizeX *= 1.00;
+      sizeX *= 1.02;
       sizeY *= 0.84;
-      alpha = 0.78;
+      alpha = 0.76;
     } else if (cell.kind === "ice") {
       sizeX *= 1.10;
       sizeY *= 0.70;
-      alpha = 0.78;
+      alpha = 0.76;
     } else {
       sizeX *= 1.16;
       sizeY *= 0.82;
-      alpha = cell.kind === "forest" ? 0.72 : 0.68;
+      alpha = cell.kind === "forest" ? 0.70 : 0.66;
     }
 
-    const rotation = (cell.noiseA - 0.5) * 0.9 + (cell.fibonacci?.phase || 0) * 0.08;
-
-    drawSoftBlob(
+    drawBlob(
       context,
       point.x,
       point.y,
       sizeX,
       sizeY,
-      rotation,
+      (cell.noiseA - 0.5) * 0.9 + (cell.fibonacci?.phase || 0) * 0.06,
       color,
-      clamp(alpha + point.z * 0.08, 0.10, 0.88),
-      cell.index + world.seed + (cell.fibonacci?.value || 0)
+      clamp(alpha + point.z * 0.08, 0.08, 0.86),
+      cell.index + world.seed + (cell.fibonacci?.value || 0),
+      budgetLevel
     );
 
     painted += 1;
   }
 
-  context.filter = "none";
   context.restore();
-
   return painted;
 }
 
-function drawCoastlines(context, projected, radius, zoom, centerX, centerY) {
+function drawCoastlines(context, projected, radius, zoom, centerX, centerY, budgetLevel) {
+  if (budgetLevel === "preview") return;
+
   context.save();
   context.beginPath();
   context.arc(centerX, centerY, radius * zoom * 0.998, 0, Math.PI * 2);
@@ -613,19 +589,21 @@ function drawCoastlines(context, projected, radius, zoom, centerX, centerY) {
   context.lineCap = "round";
   context.lineJoin = "round";
 
+  const step = IS_MOBILE_BUDGET ? 2 : 1;
+
   for (const { cell, point } of projected) {
     if (cell.kind !== "coast" && cell.kind !== "shelf") continue;
+    if (step > 1 && cell.index % step !== 0) continue;
 
     const frontScale = 0.72 + point.z * 0.40;
-    const fibLength = 0.85 + (cell.fibonacci?.ratio || 0.5) * 0.55;
     const size = radius * 0.070 * frontScale * zoom;
-    const arc = Math.PI * (0.65 + cell.noiseA * 0.70) * fibLength;
-    const start = cell.noiseB * Math.PI * 2 + (cell.fibonacci?.phase || 0) * 0.12;
+    const arc = Math.PI * (0.65 + cell.noiseA * 0.70) * (0.85 + (cell.fibonacci?.ratio || 0.5) * 0.50);
+    const start = cell.noiseB * Math.PI * 2 + (cell.fibonacci?.phase || 0) * 0.10;
 
     context.beginPath();
-    context.strokeStyle = cell.kind === "coast" ? "rgba(255,230,160,0.62)" : "rgba(130,230,220,0.34)";
-    context.globalAlpha = cell.kind === "coast" ? 0.52 : 0.28;
-    context.lineWidth = Math.max(1.0, radius * 0.0032);
+    context.strokeStyle = cell.kind === "coast" ? "rgba(255,230,160,0.56)" : "rgba(130,230,220,0.28)";
+    context.globalAlpha = cell.kind === "coast" ? 0.46 : 0.24;
+    context.lineWidth = Math.max(1.0, radius * 0.0028);
     context.ellipse(point.x, point.y, size * 1.26, size * 0.66, cell.noiseA * 1.6, start, start + arc);
     context.stroke();
   }
@@ -633,7 +611,9 @@ function drawCoastlines(context, projected, radius, zoom, centerX, centerY) {
   context.restore();
 }
 
-function drawReliefAndTerrain(context, projected, radius, zoom, centerX, centerY) {
+function drawRelief(context, projected, radius, zoom, centerX, centerY, budgetLevel) {
+  if (budgetLevel === "preview") return;
+
   context.save();
   context.beginPath();
   context.arc(centerX, centerY, radius * zoom * 0.998, 0, Math.PI * 2);
@@ -641,15 +621,16 @@ function drawReliefAndTerrain(context, projected, radius, zoom, centerX, centerY
 
   for (const { cell, point } of projected) {
     if (cell.kind !== "relief" && cell.kind !== "forest" && cell.kind !== "land") continue;
+    if (IS_MOBILE_BUDGET && cell.kind !== "relief" && cell.index % 3 !== 0) continue;
 
     const frontScale = 0.72 + point.z * 0.40;
     const size = radius * 0.052 * frontScale * zoom;
-    const lineCount = cell.kind === "relief" ? 4 : 2;
+    const lineCount = IS_MOBILE_BUDGET ? 1 : cell.kind === "relief" ? 3 : 1;
 
     context.save();
-    context.globalAlpha = cell.kind === "relief" ? 0.26 : 0.11;
-    context.strokeStyle = cell.kind === "relief" ? "rgba(255,245,210,0.68)" : "rgba(35,70,38,0.62)";
-    context.lineWidth = Math.max(0.8, radius * 0.0017);
+    context.globalAlpha = cell.kind === "relief" ? 0.22 : 0.08;
+    context.strokeStyle = cell.kind === "relief" ? "rgba(255,245,210,0.58)" : "rgba(35,70,38,0.48)";
+    context.lineWidth = Math.max(0.8, radius * 0.0015);
 
     for (let i = 0; i < lineCount; i += 1) {
       const offset = (i - lineCount / 2) * size * 0.32;
@@ -666,32 +647,32 @@ function drawReliefAndTerrain(context, projected, radius, zoom, centerX, centerY
   context.restore();
 }
 
-function drawClouds(context, world, radius, centerX, centerY, yaw, pitch, zoom, compact) {
-  if (compact) return;
+function drawClouds(context, world, radius, centerX, centerY, yaw, pitch, zoom, budgetLevel) {
+  if (budgetLevel === "preview") return;
 
   context.save();
   context.beginPath();
   context.arc(centerX, centerY, radius * zoom * 1.002, 0, Math.PI * 2);
   context.clip();
-  context.filter = "blur(2px)";
-  context.globalAlpha = 0.54;
+  context.globalAlpha = IS_MOBILE_BUDGET ? 0.34 : 0.45;
 
-  for (let i = 0; i < 16; i += 1) {
+  const cloudCount = IS_MOBILE_BUDGET ? 6 : 11;
+
+  for (let i = 0; i < cloudCount; i += 1) {
     const fib = FIBONACCI_SEQUENCE[i % FIBONACCI_SEQUENCE.length];
-    const lat = -58 + i * 7.9 + Math.sin(i * 1.7 + world.seed + fib * 0.0618) * 8;
-    const lon = -180 + i * 28 + Math.cos(i * 1.3 + world.seed + fib * 0.0382) * 24;
-    const pseudoCell = { latitude: lat, longitude: lon, index: i, kind: "cloud" };
-    const point = projectCell(pseudoCell, radius, centerX, centerY, yaw + 12, pitch, zoom);
+    const lat = -52 + i * 9.4 + Math.sin(i * 1.7 + world.seed + fib * 0.0618) * 7;
+    const lon = -180 + i * 33 + Math.cos(i * 1.3 + world.seed + fib * 0.0382) * 22;
+    const point = projectCell({ latitude: lat, longitude: lon, index: i }, radius, centerX, centerY, yaw + 12, pitch, zoom);
     if (!point) continue;
 
-    const size = radius * (0.050 + hashUnit(i, world.seed + 881) * 0.048) * (0.74 + point.z * 0.32);
+    const size = radius * (0.045 + hashUnit(i, world.seed + 881) * 0.040) * (0.74 + point.z * 0.32);
     context.fillStyle = world.cloud;
     context.beginPath();
     context.ellipse(
       point.x,
       point.y,
-      size * (1.8 + hashUnit(i, world.seed + 2)),
-      size * (0.45 + hashUnit(i, world.seed + 3) * 0.34),
+      size * (1.7 + hashUnit(i, world.seed + 2)),
+      size * (0.45 + hashUnit(i, world.seed + 3) * 0.30),
       hashUnit(i, world.seed + 4) * Math.PI,
       0,
       Math.PI * 2
@@ -699,7 +680,6 @@ function drawClouds(context, world, radius, centerX, centerY, yaw, pitch, zoom, 
     context.fill();
   }
 
-  context.filter = "none";
   context.restore();
 }
 
@@ -709,7 +689,7 @@ function drawAtmosphere(context, world, radius, centerX, centerY, zoom) {
   context.save();
 
   const highlight = context.createRadialGradient(centerX - r * 0.34, centerY - r * 0.36, r * 0.08, centerX, centerY, r * 1.08);
-  highlight.addColorStop(0, "rgba(255,238,184,.24)");
+  highlight.addColorStop(0, "rgba(255,238,184,.22)");
   highlight.addColorStop(0.34, world.glow);
   highlight.addColorStop(0.74, "rgba(0,0,0,.02)");
   highlight.addColorStop(1, "rgba(0,0,0,.54)");
@@ -720,7 +700,7 @@ function drawAtmosphere(context, world, radius, centerX, centerY, zoom) {
   context.fill();
 
   const terminator = context.createLinearGradient(centerX - r, centerY, centerX + r, centerY);
-  terminator.addColorStop(0, "rgba(255,235,175,.05)");
+  terminator.addColorStop(0, "rgba(255,235,175,.04)");
   terminator.addColorStop(0.45, "rgba(0,0,0,0)");
   terminator.addColorStop(0.78, "rgba(0,0,0,.34)");
   terminator.addColorStop(1, "rgba(0,0,0,.64)");
@@ -733,14 +713,14 @@ function drawAtmosphere(context, world, radius, centerX, centerY, zoom) {
   context.beginPath();
   context.arc(centerX, centerY, r * 1.018, 0, Math.PI * 2);
   context.strokeStyle = world.glow;
-  context.lineWidth = Math.max(10, radius * 0.030);
+  context.lineWidth = Math.max(8, radius * 0.026);
   context.stroke();
 
   context.restore();
 }
 
-function drawTitle(context, width, height, world, compact) {
-  if (compact) return;
+function drawTitle(context, width, height, world, budgetLevel) {
+  if (budgetLevel === "preview") return;
 
   context.save();
   context.fillStyle = "rgba(246,211,123,.94)";
@@ -748,20 +728,20 @@ function drawTitle(context, width, height, world, compact) {
   context.textAlign = "center";
   context.fillText(world.name, width / 2, height * 0.075);
 
-  context.fillStyle = "rgba(243,227,189,.74)";
+  context.fillStyle = "rgba(243,227,189,.72)";
   context.font = `${Math.max(13, width * 0.016)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
-  context.fillText("Fibonacci runtime · 256 under hood · drag to inspect", width / 2, height * 0.108);
+  context.fillText("Budget-stable runtime · 256 + Fibonacci under hood", width / 2, height * 0.108);
   context.restore();
 }
 
-function renderPlanet(canvas, context, world, view, compact = false) {
+function renderPlanet(canvas, context, world, view, budgetLevel = "display") {
   if (!canvas || !context || !world) return 0;
 
   const width = canvas.width;
   const height = canvas.height;
-  const radius = Math.min(width, height) * (compact ? 0.34 : 0.35);
+  const radius = Math.min(width, height) * (budgetLevel === "preview" ? 0.34 : 0.35);
   const centerX = width * 0.5;
-  const centerY = height * (compact ? 0.50 : 0.52);
+  const centerY = height * (budgetLevel === "preview" ? 0.50 : 0.52);
   const zoom = clamp(view.zoom || 1, 0.78, 1.58);
   const yaw = view.yaw || 0;
   const pitch = view.pitch || 0;
@@ -778,12 +758,12 @@ function renderPlanet(canvas, context, world, view, compact = false) {
 
   clearScene(context, width, height, world);
   drawGlobeBase(context, world, radius, centerX, centerY, zoom);
-  const painted = drawSurfaceLayer(context, world, projected, radius, zoom, centerX, centerY);
-  drawCoastlines(context, projected, radius, zoom, centerX, centerY);
-  drawReliefAndTerrain(context, projected, radius, zoom, centerX, centerY);
-  drawClouds(context, world, radius, centerX, centerY, yaw, pitch, zoom, compact);
+  const painted = drawSurface(context, world, projected, radius, zoom, centerX, centerY, budgetLevel);
+  drawCoastlines(context, projected, radius, zoom, centerX, centerY, budgetLevel);
+  drawRelief(context, projected, radius, zoom, centerX, centerY, budgetLevel);
+  drawClouds(context, world, radius, centerX, centerY, yaw, pitch, zoom, budgetLevel);
   drawAtmosphere(context, world, radius, centerX, centerY, zoom);
-  drawTitle(context, width, height, world, compact);
+  drawTitle(context, width, height, world, budgetLevel);
 
   return painted;
 }
@@ -806,8 +786,8 @@ function updateDisplayMeta(world, painted) {
     nodes.displayMeta.replaceChildren(
       metaBlock("Layer", "Inspection-heavy display case"),
       metaBlock("Touch", "Drag / rotate / zoom"),
-      metaBlock("Runtime", "256 + Fibonacci"),
-      metaBlock("Field", `${painted} projected · nodes hidden`)
+      metaBlock("Runtime", IS_MOBILE_BUDGET ? "Budget stable · mobile" : "Budget stable"),
+      metaBlock("Field", `${painted} projected · 256 cached`)
     );
   }
 
@@ -819,9 +799,9 @@ function updateDisplayMeta(world, painted) {
   }
 }
 
-function renderDisplay() {
+function renderDisplayNow() {
   const world = worldByKey(state.activeWorldKey);
-  nodes.displayContext = setupCanvas(nodes.displayCanvas, 880);
+  nodes.displayContext = setupCanvas(nodes.displayCanvas, IS_MOBILE_BUDGET ? 640 : 880);
 
   const painted = renderPlanet(
     nodes.displayCanvas,
@@ -832,31 +812,42 @@ function renderDisplay() {
       pitch: state.pitch,
       zoom: state.zoom
     },
-    false
+    "display"
   );
 
+  state.displayCellsProjected = painted;
   updateDisplayMeta(world, painted);
   stampDocument(world, painted);
   return painted;
 }
 
-function renderPreviews() {
+function requestDisplayRender() {
+  if (state.displayRaf) return;
+
+  state.displayRaf = window.requestAnimationFrame(() => {
+    state.displayRaf = 0;
+    renderDisplayNow();
+  });
+}
+
+function renderPreviewsOnce(yaw = 0) {
   for (const world of WORLDS) {
     const preview = nodes.previews.get(world.key);
     if (!preview?.canvas || !preview?.context) continue;
 
-    preview.context = setupCanvas(preview.canvas, 220);
+    preview.context = setupCanvas(preview.canvas, 180);
     renderPlanet(
       preview.canvas,
       preview.context,
       world,
       {
-        yaw: state.previewYaw + WORLDS.indexOf(world) * 34,
+        yaw: yaw + WORLDS.indexOf(world) * 34,
         pitch: 9,
         zoom: 1
       },
-      true
+      "preview"
     );
+    cache.previewRenderedKeys.add(world.key);
   }
 }
 
@@ -866,19 +857,15 @@ function selectWorld(key) {
   state.yaw = -18;
   state.pitch = 8;
   state.zoom = 1;
-  renderDisplay();
+  requestDisplayRender();
 }
 
 function wireCards() {
   for (const [key, card] of nodes.cards.entries()) {
-    if (card.dataset.showroomFibonacciRuntimeBound === "true") continue;
+    if (card.dataset.showroomBudgetStableBound === "true") continue;
 
-    card.dataset.showroomFibonacciRuntimeBound = "true";
-
-    card.addEventListener("click", () => {
-      selectWorld(key);
-    });
-
+    card.dataset.showroomBudgetStableBound = "true";
+    card.addEventListener("click", () => selectWorld(key));
     card.addEventListener("keydown", (event) => {
       if (event.key !== "Enter" && event.key !== " ") return;
       event.preventDefault();
@@ -889,9 +876,9 @@ function wireCards() {
 
 function wireDisplayDrag() {
   const target = nodes.displayCanvas || nodes.displayWindow;
-  if (!target || target.dataset.showroomFibonacciRuntimeDragBound === "true") return;
+  if (!target || target.dataset.showroomBudgetStableDragBound === "true") return;
 
-  target.dataset.showroomFibonacciRuntimeDragBound = "true";
+  target.dataset.showroomBudgetStableDragBound = "true";
   target.style.touchAction = "none";
 
   target.addEventListener("pointerdown", (event) => {
@@ -912,7 +899,7 @@ function wireDisplayDrag() {
     const dy = event.clientY - state.dragStartY;
     state.yaw = state.dragStartYaw + dx * 0.42;
     state.pitch = clamp(state.dragStartPitch - dy * 0.30, -64, 64);
-    renderDisplay();
+    requestDisplayRender();
     event.preventDefault();
   }, { passive: false });
 
@@ -929,23 +916,21 @@ function wireDisplayDrag() {
 
   target.addEventListener("wheel", (event) => {
     state.zoom = clamp(state.zoom + (event.deltaY < 0 ? 0.08 : -0.08), 0.78, 1.58);
-    renderDisplay();
+    requestDisplayRender();
     event.preventDefault();
   }, { passive: false });
 }
 
-function animationLoop() {
-  if (!state.active) return;
+function previewLoop(timestamp) {
+  if (!state.active || !PREVIEW_ANIMATION_ENABLED) return;
 
-  if (!state.reducedMotion) {
-    state.previewYaw += 0.30;
+  if (timestamp - state.lastPreviewAt >= PREVIEW_FRAME_MS) {
+    state.lastPreviewAt = timestamp;
+    state.previewYaw += 4;
+    renderPreviewsOnce(state.previewYaw);
   }
 
-  renderPreviews();
-
-  if (!state.reducedMotion) {
-    state.raf = window.requestAnimationFrame(animationLoop);
-  }
+  state.previewRaf = window.requestAnimationFrame(previewLoop);
 }
 
 function stampDocument(world, painted = 0) {
@@ -956,7 +941,7 @@ function stampDocument(world, painted = 0) {
   root.dataset.htmlExpected = HTML_EXPECTED;
   root.dataset.showroomMode = SHOWROOM_MODE;
   root.dataset.displayCaseMode = DISPLAY_CASE_MODE;
-  root.dataset.globeShowcaseFibonacciRuntime = "true";
+  root.dataset.globeShowcaseBudgetStable = "true";
   root.dataset.activeDisplay = world.key;
   root.dataset.activeInspectionRoute = world.route;
   root.dataset.touchDragInspection = "true";
@@ -967,12 +952,12 @@ function stampDocument(world, painted = 0) {
   root.dataset.fibonacciSequence = FIBONACCI_SEQUENCE.join(",");
   root.dataset.fibonacciVisibleZigzag = "false";
   root.dataset.visibleDotPatternReduced = "true";
-  root.dataset.explicitNodeOverlayReduced = "true";
-  root.dataset.landmassDefinitionIncreased = "true";
-  root.dataset.coastlineShapingIncreased = "true";
-  root.dataset.oceanDepthIncreased = "true";
-  root.dataset.terrainContrastIncreased = "true";
-  root.dataset.cloudAtmosphereSoftnessIncreased = "true";
+  root.dataset.importedHEarthCanvasDependency = "false";
+  root.dataset.cellFieldCached = "true";
+  root.dataset.previewAnimationEnabled = String(PREVIEW_ANIMATION_ENABLED);
+  root.dataset.previewFrameMs = String(PREVIEW_FRAME_MS);
+  root.dataset.mobileBudget = String(IS_MOBILE_BUDGET);
+  root.dataset.dprCap = String(DPR_CAP);
   root.dataset.displayCellsProjected = String(painted);
   root.dataset.groundLevelReady = String(GROUND_LEVEL_READY);
   root.dataset.manorPlacementReady = String(MANOR_PLACEMENT_READY);
@@ -1006,14 +991,13 @@ function getShowroomGlobeShowcaseStatus() {
     fibonacciRuntimeBound: true,
     fibonacciSequence: [...FIBONACCI_SEQUENCE],
     fibonacciVisibleZigzag: false,
-    fibonacciUse: "internal landmass, coastline, elevation, depth, cloud rhythm, and terrain-detail progression",
-    visibleDotPatternReduced: true,
-    explicitNodeOverlayReduced: true,
-    landmassDefinitionIncreased: true,
-    coastlineShapingIncreased: true,
-    oceanDepthIncreased: true,
-    terrainContrastIncreased: true,
-    cloudAtmosphereSoftnessIncreased: true,
+    cellFieldCached: true,
+    previewAnimationEnabled: PREVIEW_ANIMATION_ENABLED,
+    previewFrameMs: PREVIEW_FRAME_MS,
+    mobileBudget: IS_MOBILE_BUDGET,
+    dprCap: DPR_CAP,
+    dprActive: state.dpr,
+    displayCellsProjected: state.displayCellsProjected,
     yaw: state.yaw,
     pitch: state.pitch,
     zoom: state.zoom,
@@ -1033,7 +1017,8 @@ function exposeApi() {
     receipt: CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
     selectWorld,
-    renderDisplay,
+    renderDisplay: renderDisplayNow,
+    requestDisplayRender,
     status: getShowroomGlobeShowcaseStatus,
     getStatus: getShowroomGlobeShowcaseStatus,
     getShowroomGlobeShowcaseStatus
@@ -1049,35 +1034,40 @@ function boot() {
   exposeApi();
   wireCards();
   wireDisplayDrag();
-  renderPreviews();
+
+  for (const world of WORLDS) buildWorldCells(world);
+
+  renderPreviewsOnce(0);
   selectWorld(DEFAULT_DISPLAY);
+  state.booted = true;
 
-  if (state.raf) window.cancelAnimationFrame(state.raf);
-
-  if (state.reducedMotion) {
-    animationLoop();
-  } else {
-    state.raf = window.requestAnimationFrame(animationLoop);
+  if (PREVIEW_ANIMATION_ENABLED) {
+    if (state.previewRaf) window.cancelAnimationFrame(state.previewRaf);
+    state.previewRaf = window.requestAnimationFrame(previewLoop);
   }
 }
 
 window.addEventListener("resize", () => {
-  collectNodes();
-  renderPreviews();
-  renderDisplay();
-  wireDisplayDrag();
+  window.clearTimeout(window.__showroomGlobeResizeTimer);
+  window.__showroomGlobeResizeTimer = window.setTimeout(() => {
+    collectNodes();
+    cache.previewRenderedKeys.clear();
+    renderPreviewsOnce(state.previewYaw);
+    requestDisplayRender();
+    wireDisplayDrag();
+  }, 180);
 }, { passive: true });
 
 document.addEventListener("visibilitychange", () => {
   state.active = document.visibilityState !== "hidden";
 
-  if (!state.active && state.raf) {
-    window.cancelAnimationFrame(state.raf);
-    state.raf = 0;
+  if (!state.active && state.previewRaf) {
+    window.cancelAnimationFrame(state.previewRaf);
+    state.previewRaf = 0;
   }
 
-  if (state.active && !state.raf) {
-    state.raf = window.requestAnimationFrame(animationLoop);
+  if (state.active && PREVIEW_ANIMATION_ENABLED && !state.previewRaf) {
+    state.previewRaf = window.requestAnimationFrame(previewLoop);
   }
 }, { passive: true });
 
@@ -1104,7 +1094,8 @@ export {
   GRAPHIC_BOX,
   VISUAL_PASS_CLAIM,
   selectWorld,
-  renderDisplay,
+  renderDisplayNow as renderDisplay,
+  requestDisplayRender,
   getShowroomGlobeShowcaseStatus
 };
 
@@ -1113,7 +1104,8 @@ export default {
   receipt: CONTRACT,
   previousContract: PREVIOUS_CONTRACT,
   selectWorld,
-  renderDisplay,
+  renderDisplay: renderDisplayNow,
+  requestDisplayRender,
   status: getShowroomGlobeShowcaseStatus,
   getStatus: getShowroomGlobeShowcaseStatus,
   getShowroomGlobeShowcaseStatus

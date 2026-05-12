@@ -1,26 +1,26 @@
 // /showroom/index.js
-// SHOWROOM_COVER_FIXED_TABLE_CROWN_256_FACE_DIAMOND_TNT_v4
+// SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5
 // Full-file replacement.
 //
 // Purpose:
-// - Replace parachute/dome crown with a real diamond crown profile.
-// - Add a flat table and angular crown facets.
-// - Make the crown come down through the middle instead of rounding over.
-// - Keep the structure fuller and less thin.
-// - Keep size fixed.
-// - Allow motion only.
-// - Preserve 256-face construct.
+// - Stop the diamond from collapsing into an edge-on thin profile.
+// - Solidify one fixed crown-cut diamond form.
+// - Preserve fixed structure size.
+// - Allow motion only through internal facet phase, light travel, shimmer, and controlled rotational impression.
+// - Build a real diamond silhouette: flat table, sloped crown, girdle, pavilion, culet.
+// - Make the diamond sparkle like a real diamond.
+// - Keep 256-face construct under the hood.
 // - Preserve Fibonacci geometry as internal facet rhythm.
+// - Keep crystal faces dominant.
 // - Keep yellow line prominence reduced.
-// - Keep subtle nodal glints only.
 // - Render by code only.
 // - No generated image.
 // - No GraphicBox.
 // - No visible diagnostics.
 // - No visual pass claim.
 
-const CONTRACT = "SHOWROOM_COVER_FIXED_TABLE_CROWN_256_FACE_DIAMOND_TNT_v4";
-const PREVIOUS_CONTRACT = "SHOWROOM_COVER_FIXED_CROWN_CUT_256_FACE_DIAMOND_TNT_v3";
+const CONTRACT = "SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5";
+const PREVIOUS_CONTRACT = "SHOWROOM_COVER_ROUND_CROWN_CUT_FIXED_256_FACE_DIAMOND_TNT_v4";
 const ROUTE = "/showroom/";
 
 const TOTAL_FACES = 256;
@@ -36,6 +36,8 @@ const DIAGNOSTICS_VISIBLE = false;
 const STRUCTURE_SIZE_LOCKED = true;
 const MOTION_ONLY = true;
 const SCALE_LOCK = 1;
+const SILHOUETTE_LOCKED = true;
+const EDGE_ON_COLLAPSE_ALLOWED = false;
 
 const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
@@ -48,16 +50,17 @@ const state = {
   host: null,
   stage: null,
 
-  yaw: -18,
-  pitch: -5,
-  roll: 0,
+  motionPhase: 0,
+  lightPhase: 0,
+  dragPhase: 0,
+  pitchBias: 0,
 
   dragging: false,
   pointerId: null,
   dragStartX: 0,
   dragStartY: 0,
-  dragStartYaw: 0,
-  dragStartPitch: 0,
+  dragStartPhase: 0,
+  dragStartPitchBias: 0,
 
   raf: 0,
   lastFrameAt: 0,
@@ -69,6 +72,11 @@ let geometry = null;
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
+}
+
+function hashUnit(index, salt = 0) {
+  const x = Math.sin((index + 1) * 12.9898 + salt * 78.233) * 43758.5453;
+  return x - Math.floor(x);
 }
 
 function fibonacciForFace(index) {
@@ -86,19 +94,17 @@ function fibonacciForFace(index) {
 
 function ringProfile() {
   return [
-    // Real crown-cut profile.
-    // The first two rings define the flat table.
-    // The crown then angles down to the girdle instead of forming a rounded dome.
     // Eight bands × 32 sectors = 256 faces.
-    { y: -0.455, rx: 0.34, rz: 0.056, phase: 0.00, role: "table-center" },
-    { y: -0.455, rx: 0.52, rz: 0.092, phase: 0.00, role: "table-edge" },
-    { y: -0.365, rx: 0.74, rz: 0.156, phase: 0.04, role: "star-crown" },
-    { y: -0.230, rx: 1.00, rz: 0.250, phase: 0.00, role: "main-crown" },
-    { y: -0.055, rx: 1.18, rz: 0.325, phase: 0.04, role: "girdle" },
-    { y:  0.185, rx: 0.90, rz: 0.248, phase: 0.00, role: "upper-pavilion" },
-    { y:  0.430, rx: 0.53, rz: 0.146, phase: 0.04, role: "lower-pavilion" },
-    { y:  0.630, rx: 0.20, rz: 0.054, phase: 0.00, role: "near-culet" },
-    { y:  0.755, rx: 0.020, rz: 0.006, phase: 0.00, role: "culet" }
+    // Silhouette is fixed so the diamond cannot collapse into a side profile.
+    { y: -0.60, rx: 0.36, role: "flat-table" },
+    { y: -0.54, rx: 0.52, role: "star-crown" },
+    { y: -0.43, rx: 0.74, role: "upper-crown" },
+    { y: -0.25, rx: 0.98, role: "main-crown" },
+    { y: -0.06, rx: 1.10, role: "girdle" },
+    { y:  0.20, rx: 0.86, role: "upper-pavilion" },
+    { y:  0.46, rx: 0.56, role: "lower-pavilion" },
+    { y:  0.68, rx: 0.22, role: "near-culet" },
+    { y:  0.82, rx: 0.025, role: "culet" }
   ];
 }
 
@@ -113,20 +119,17 @@ function buildGeometry() {
 
     for (let sector = 0; sector < SECTORS; sector += 1) {
       const fib = fibonacciForFace(ring * SECTORS + sector);
-      const theta = (sector / SECTORS) * Math.PI * 2 + profile.phase + fib.phase * 0.008;
-
-      const isTable = profile.role === "table-center" || profile.role === "table-edge";
-      const isCrown = profile.role === "star-crown" || profile.role === "main-crown";
-      const pulse = isTable ? 0.002 : isCrown ? 0.006 : 0.014;
-      const radiusPulse = 0.998 + Math.sin(theta * 8 + fib.value * 0.0618) * pulse;
+      const theta = (sector / SECTORS) * Math.PI * 2;
+      const facetPulse = 0.996 + Math.sin(theta * 8 + fib.value * 0.0618) * 0.004;
 
       vertices.push({
         ring,
         sector,
         role: profile.role,
-        x: Math.cos(theta) * profile.rx * radiusPulse,
+        theta,
+        x: Math.cos(theta) * profile.rx * facetPulse,
         y: profile.y,
-        z: Math.sin(theta) * profile.rz * radiusPulse,
+        z: Math.sin(theta),
         fib
       });
     }
@@ -225,9 +228,14 @@ function ensureStage(host) {
 
   stage.dataset.contract = CONTRACT;
   stage.dataset.totalFaces = String(TOTAL_FACES);
-  stage.dataset.tableCrown = "true";
-  stage.dataset.parachuteTop = "false";
-  stage.dataset.crownCenterComesDown = "true";
+  stage.dataset.solidForm = "true";
+  stage.dataset.silhouetteLocked = "true";
+  stage.dataset.edgeOnCollapseAllowed = "false";
+  stage.dataset.rounderDiamond = "true";
+  stage.dataset.flatTable = "true";
+  stage.dataset.crownTop = "true";
+  stage.dataset.crownAppearance = "real-diamond-cut";
+  stage.dataset.sparkle = "active";
   stage.dataset.structureSizeLocked = "true";
   stage.dataset.motionOnly = "true";
   stage.dataset.zoomManipulation = "false";
@@ -252,7 +260,7 @@ function ensureCanvas(stage) {
   }
 
   canvas.setAttribute("data-showroom-crystal-diamond-canvas", "true");
-  canvas.setAttribute("aria-label", "Fixed-size table-crown crystallized 256-face rotating diamond");
+  canvas.setAttribute("aria-label", "Solid fixed-size crown-cut sparkling 256-face diamond");
   canvas.setAttribute("role", "img");
   canvas.style.display = "block";
   canvas.style.width = "100%";
@@ -265,10 +273,10 @@ function ensureCanvas(stage) {
 }
 
 function ensureStyle() {
-  if (document.getElementById("showroom-fixed-table-crown-diamond-style-v4")) return;
+  if (document.getElementById("showroom-solid-crown-sparkle-diamond-style-v5")) return;
 
   const style = document.createElement("style");
-  style.id = "showroom-fixed-table-crown-diamond-style-v4";
+  style.id = "showroom-solid-crown-sparkle-diamond-style-v5";
   style.textContent = `
     [data-showroom-crystal-diamond-stage] {
       width: 100%;
@@ -280,8 +288,8 @@ function ensureStyle() {
       border: 1px solid rgba(142, 190, 255, 0.18);
       border-radius: 28px;
       background:
-        radial-gradient(circle at 50% 54%, rgba(210, 235, 255, 0.13), transparent 19rem),
-        radial-gradient(circle at 50% 44%, rgba(244, 191, 96, 0.06), transparent 21rem),
+        radial-gradient(circle at 50% 54%, rgba(210, 235, 255, 0.14), transparent 19rem),
+        radial-gradient(circle at 50% 44%, rgba(244, 191, 96, 0.055), transparent 21rem),
         linear-gradient(180deg, rgba(7, 13, 30, 1), rgba(2, 5, 12, 1));
       box-shadow:
         inset 0 0 54px rgba(143, 240, 195, 0.08),
@@ -291,7 +299,7 @@ function ensureStyle() {
     }
 
     [data-showroom-crystal-diamond-stage]::before {
-      content: "FIXED TABLE CROWN · 256 FACES";
+      content: "SOLID CROWN CUT · SPARKLING";
       position: absolute;
       top: 16px;
       left: 16px;
@@ -300,11 +308,11 @@ function ensureStyle() {
       display: inline-flex;
       align-items: center;
       padding: 7px 11px;
-      border: 1px solid rgba(244, 191, 96, 0.24);
+      border: 1px solid rgba(244, 191, 96, 0.22);
       border-radius: 999px;
       background: rgba(4, 9, 18, 0.70);
       color: #f4bf60;
-      font: 900 0.74rem Inter, ui-sans-serif, system-ui, sans-serif;
+      font: 900 0.72rem Inter, ui-sans-serif, system-ui, sans-serif;
       letter-spacing: 0.10em;
       pointer-events: none;
       backdrop-filter: blur(12px);
@@ -331,7 +339,7 @@ function ensureStyle() {
       [data-showroom-crystal-diamond-stage]::before {
         top: 12px;
         left: 12px;
-        font-size: 0.66rem;
+        font-size: 0.62rem;
       }
     }
   `;
@@ -347,7 +355,7 @@ function updateNearbyCopy(host) {
   });
 
   if (targetHeading) {
-    targetHeading.textContent = "Fixed Table-Crown 256-Face Crystal Diamond";
+    targetHeading.textContent = "Solid Crown-Cut 256-Face Sparkling Diamond";
   }
 
   const paragraphs = Array.from(host.querySelectorAll("p"));
@@ -358,7 +366,7 @@ function updateNearbyCopy(host) {
 
   if (targetParagraph) {
     targetParagraph.textContent =
-      "The visible object is one fixed table-crown crystal diamond. The top is angular and faceted rather than rounded like a parachute. The structure is set; interaction only rotates the object.";
+      "The visible object is one solid crown-cut crystal diamond. The silhouette is fixed so the form cannot collapse into an edge profile. Motion changes rotation, light, sparkle, and internal refraction only.";
   }
 }
 
@@ -380,46 +388,20 @@ function sizeCanvas() {
   state.context = state.canvas.getContext("2d", { alpha: false });
 }
 
-function rotatePoint(point, yawDeg, pitchDeg, rollDeg) {
-  const yaw = (yawDeg * Math.PI) / 180;
-  const pitch = (pitchDeg * Math.PI) / 180;
-  const roll = (rollDeg * Math.PI) / 180;
-
-  let x = point.x;
-  let y = point.y;
-  let z = point.z;
-
-  const cosY = Math.cos(yaw);
-  const sinY = Math.sin(yaw);
-  const x1 = x * cosY + z * sinY;
-  const z1 = -x * sinY + z * cosY;
-  x = x1;
-  z = z1;
-
-  const cosP = Math.cos(pitch);
-  const sinP = Math.sin(pitch);
-  const y1 = y * cosP - z * sinP;
-  const z2 = y * sinP + z * cosP;
-  y = y1;
-  z = z2;
-
-  const cosR = Math.cos(roll);
-  const sinR = Math.sin(roll);
-  const x2 = x * cosR - y * sinR;
-  const y2 = x * sinR + y * cosR;
-
-  return { x: x2, y: y2, z };
-}
-
-function project(point, width, height, scale) {
-  const focal = 3.30;
-  const perspective = focal / (focal - point.z);
+function projectSilhouette(vertex, width, height, scale) {
+  const wobble = Math.sin(vertex.theta + state.motionPhase) * 0.026;
+  const breathing = 1 + wobble * (vertex.role.includes("pavilion") ? 0.55 : 0.28);
+  const pitchOffset = state.pitchBias * 0.0038;
 
   return {
-    x: width * 0.5 + point.x * scale * perspective,
-    y: height * 0.535 + point.y * scale * perspective,
-    z: point.z,
-    perspective
+    x: width * 0.5 + vertex.x * scale * breathing,
+    y: height * 0.545 + (vertex.y + pitchOffset * Math.sin(vertex.theta)) * scale,
+    z: Math.cos(vertex.theta + state.motionPhase) * 0.36 + Math.sin(vertex.ring * 0.8) * 0.08,
+    theta: vertex.theta,
+    ring: vertex.ring,
+    sector: vertex.sector,
+    role: vertex.role,
+    fib: vertex.fib
   };
 }
 
@@ -466,7 +448,7 @@ function drawBackground(context, width, height) {
     const radius = 0.55 + ((i * 7) % 11) / 22;
 
     context.beginPath();
-    context.fillStyle = i % 11 === 0 ? "rgba(244,191,96,0.38)" : "rgba(225,238,255,0.40)";
+    context.fillStyle = i % 11 === 0 ? "rgba(244,191,96,0.36)" : "rgba(225,238,255,0.40)";
     context.arc(x, y, radius, 0, Math.PI * 2);
     context.fill();
   }
@@ -479,16 +461,16 @@ function drawCaustic(context, width, height, scale) {
 
   const cx = width * 0.5;
   const cy = height * 0.82;
-  const radius = scale * 0.55;
+  const radius = scale * 0.52;
 
   const glow = context.createRadialGradient(cx, cy, radius * 0.05, cx, cy, radius);
   glow.addColorStop(0, "rgba(225,248,255,0.22)");
-  glow.addColorStop(0.28, "rgba(244,191,96,0.08)");
+  glow.addColorStop(0.28, "rgba(244,191,96,0.07)");
   glow.addColorStop(1, "rgba(244,191,96,0)");
 
   context.fillStyle = glow;
   context.beginPath();
-  context.ellipse(cx, cy, radius * 1.15, radius * 0.13, 0, 0, Math.PI * 2);
+  context.ellipse(cx, cy, radius * 1.12, radius * 0.12, 0, 0, Math.PI * 2);
   context.fill();
 
   context.restore();
@@ -504,27 +486,29 @@ function facetLight(face, points) {
     { x: 0, y: 0, z: 0 }
   );
 
-  const tableBoost = face.role === "table-center" || face.role === "table-edge" ? 0.16 : 0;
+  const tableBoost = face.role === "flat-table" ? 0.24 : 0;
   const crownBoost =
     face.role === "star-crown" ||
+    face.role === "upper-crown" ||
     face.role === "main-crown"
-      ? 0.13
+      ? 0.16
       : 0;
-  const pavilionBoost = face.role.includes("pavilion") ? 0.06 : 0;
-  const bandBias = 1 - Math.abs(face.ring - 3.0) / 5;
+  const pavilionBoost = face.role.includes("pavilion") ? 0.07 : 0;
+  const bandBias = 1 - Math.abs(face.ring - 3.1) / 5;
   const fib = face.fib;
+  const sparkleWave = Math.sin(face.sector * 0.92 + fib.phase + state.lightPhase) * 0.16;
 
   return clamp(
-    0.35 +
-      center.z * 0.40 +
-      bandBias * 0.11 +
+    0.36 +
+      center.z * 0.34 +
+      bandBias * 0.10 +
       tableBoost +
       crownBoost +
       pavilionBoost +
-      Math.sin(face.sector * 0.92 + fib.phase + state.yaw * 0.032) * 0.10 +
-      fib.density * 0.045,
+      sparkleWave +
+      fib.density * 0.040,
     0.08,
-    1.20
+    1.24
   );
 }
 
@@ -534,17 +518,17 @@ function drawFacet(context, face, points, light) {
   const bounds = polygonBounds(points);
   const fib = face.fib;
 
-  const alpha = clamp(0.32 + light * 0.50 + fib.density * 0.035, 0.22, 0.90);
+  const alpha = clamp(0.34 + light * 0.50 + fib.density * 0.030, 0.24, 0.92);
   const warm = face.role === "girdle"
-    ? clamp(0.030 + fib.ratio * 0.035, 0.025, 0.075)
-    : clamp(0.010 + fib.ratio * 0.020, 0.010, 0.052);
-  const icy = clamp(0.45 + light * 0.35, 0.30, 0.84);
-  const shadow = clamp(0.10 + (1 - light) * 0.30, 0.06, 0.34);
+    ? clamp(0.018 + fib.ratio * 0.022, 0.014, 0.052)
+    : clamp(0.006 + fib.ratio * 0.012, 0.006, 0.034);
+  const icy = clamp(0.48 + light * 0.36, 0.34, 0.88);
+  const shadow = clamp(0.08 + (1 - light) * 0.26, 0.045, 0.30);
 
   const gradient = context.createLinearGradient(bounds.minX, bounds.minY, bounds.maxX, bounds.maxY);
-  gradient.addColorStop(0, `rgba(255,255,255,${clamp(0.20 + light * 0.35, 0.12, 0.60)})`);
-  gradient.addColorStop(0.24, `rgba(210,238,255,${icy})`);
-  gradient.addColorStop(0.50, `rgba(112,150,212,${clamp(0.16 + light * 0.17, 0.10, 0.36)})`);
+  gradient.addColorStop(0, `rgba(255,255,255,${clamp(0.24 + light * 0.36, 0.14, 0.64)})`);
+  gradient.addColorStop(0.23, `rgba(215,244,255,${icy})`);
+  gradient.addColorStop(0.48, `rgba(112,150,212,${clamp(0.15 + light * 0.16, 0.10, 0.34)})`);
   gradient.addColorStop(0.72, `rgba(12,25,48,${shadow})`);
   gradient.addColorStop(1, `rgba(244,191,96,${warm})`);
 
@@ -562,10 +546,76 @@ function drawFacet(context, face, points, light) {
   context.globalAlpha = alpha;
   context.fill();
 
-  context.globalAlpha = clamp(0.11 + light * 0.17, 0.08, 0.28);
-  context.strokeStyle = light > 0.72 ? "rgba(255,255,255,0.60)" : "rgba(202,224,255,0.28)";
-  context.lineWidth = light > 0.76 ? 0.88 * DPR : 0.44 * DPR;
+  context.globalAlpha = clamp(0.09 + light * 0.15, 0.07, 0.24);
+  context.strokeStyle = light > 0.74 ? "rgba(255,255,255,0.56)" : "rgba(202,224,255,0.24)";
+  context.lineWidth = light > 0.78 ? 0.78 * DPR : 0.36 * DPR;
   context.stroke();
+
+  context.restore();
+}
+
+function drawTablePlane(context, ringsProjected) {
+  const table = ringsProjected.get(0);
+  if (!table || table.length < 3) return;
+
+  context.save();
+  context.globalCompositeOperation = "lighter";
+
+  const bounds = polygonBounds(table);
+  const gradient = context.createLinearGradient(bounds.minX, bounds.minY, bounds.maxX, bounds.maxY);
+  gradient.addColorStop(0, "rgba(255,255,255,0.62)");
+  gradient.addColorStop(0.34, "rgba(220,245,255,0.38)");
+  gradient.addColorStop(0.70, "rgba(114,150,205,0.16)");
+  gradient.addColorStop(1, "rgba(255,255,255,0.46)");
+
+  context.beginPath();
+
+  for (let i = 0; i < table.length; i += 1) {
+    const point = table[i];
+    if (i === 0) context.moveTo(point.x, point.y);
+    else context.lineTo(point.x, point.y);
+  }
+
+  context.closePath();
+  context.fillStyle = gradient;
+  context.globalAlpha = 0.54;
+  context.fill();
+
+  context.strokeStyle = "rgba(255,255,255,0.78)";
+  context.lineWidth = Math.max(1.0, 1.12 * DPR);
+  context.globalAlpha = 0.72;
+  context.stroke();
+
+  context.restore();
+}
+
+function drawCrownFacetCuts(context, ringsProjected) {
+  const table = ringsProjected.get(0);
+  const crown = ringsProjected.get(2);
+  const main = ringsProjected.get(3);
+  const girdle = ringsProjected.get(4);
+
+  if (!table || !crown || !main || !girdle) return;
+
+  context.save();
+  context.globalCompositeOperation = "lighter";
+  context.lineCap = "round";
+
+  for (let sector = 0; sector < SECTORS; sector += MOBILE ? 4 : 2) {
+    const t = table[sector];
+    const c = crown[(sector + 1) % SECTORS];
+    const m = main[(sector + 2) % SECTORS];
+    const g = girdle[(sector + 3) % SECTORS];
+
+    context.strokeStyle = "rgba(235,248,255,0.17)";
+    context.lineWidth = Math.max(0.44, 0.50 * DPR);
+    context.beginPath();
+    context.moveTo(t.x, t.y);
+    context.lineTo(c.x, c.y);
+    context.lineTo(m.x, m.y);
+    context.lineTo(g.x, g.y);
+    context.stroke();
+  }
 
   context.restore();
 }
@@ -576,18 +626,18 @@ function drawCrystalFaceEdges(context, faces) {
   context.lineCap = "round";
   context.lineJoin = "round";
 
-  const stride = MOBILE ? 4 : 3;
+  const stride = MOBILE ? 5 : 4;
 
   for (let i = 0; i < faces.length; i += stride) {
     const item = faces[i];
-    if (item.depth < -0.16) continue;
+    if (item.depth < -0.18) continue;
 
     const points = item.points;
     const light = item.light;
-    const alpha = clamp(0.035 + light * 0.10, 0.025, 0.15);
+    const alpha = clamp(0.026 + light * 0.072, 0.018, 0.12);
 
     context.strokeStyle = `rgba(226,244,255,${alpha})`;
-    context.lineWidth = Math.max(0.42, DPR * 0.52);
+    context.lineWidth = Math.max(0.34, DPR * 0.44);
 
     context.beginPath();
     context.moveTo(points[0].x, points[0].y);
@@ -608,7 +658,7 @@ function drawOuterCutLines(context, ringsProjected) {
   context.globalCompositeOperation = "lighter";
   context.lineCap = "round";
 
-  const importantRings = [0, 1, 2, 4, 8];
+  const importantRings = [0, 1, 3, 4, 8];
 
   for (const ring of importantRings) {
     const points = ringsProjected.get(ring);
@@ -624,14 +674,17 @@ function drawOuterCutLines(context, ringsProjected) {
 
     context.closePath();
 
-    if (ring === 0 || ring === 1) {
-      context.strokeStyle = "rgba(255,255,255,0.62)";
-      context.lineWidth = Math.max(0.85, 1.00 * DPR);
+    if (ring === 0) {
+      context.strokeStyle = "rgba(255,255,255,0.72)";
+      context.lineWidth = Math.max(0.95, 1.08 * DPR);
+    } else if (ring === 1 || ring === 3) {
+      context.strokeStyle = "rgba(235,248,255,0.42)";
+      context.lineWidth = Math.max(0.90, 1.00 * DPR);
     } else if (ring === 4) {
       context.strokeStyle = "rgba(225,243,255,0.36)";
-      context.lineWidth = Math.max(1.0, 1.10 * DPR);
+      context.lineWidth = Math.max(1.0, 1.08 * DPR);
     } else {
-      context.strokeStyle = "rgba(244,191,96,0.18)";
+      context.strokeStyle = "rgba(244,191,96,0.16)";
       context.lineWidth = Math.max(0.70, 0.76 * DPR);
     }
 
@@ -641,59 +694,69 @@ function drawOuterCutLines(context, ringsProjected) {
   context.restore();
 }
 
-function drawNodeGlints(context, projectedVertices, time) {
+function drawPrismaticFlashes(context, projectedVertices, time) {
   context.save();
   context.globalCompositeOperation = "lighter";
 
-  const stride = MOBILE ? 23 : 17;
+  const flashCount = MOBILE ? 7 : 12;
 
-  for (let i = 0; i < projectedVertices.length; i += stride) {
-    const vertex = projectedVertices[i];
-    if (vertex.z < -0.04) continue;
+  for (let i = 0; i < flashCount; i += 1) {
+    const seed = i * 19 + Math.floor(state.lightPhase * 8);
+    const index = (seed * 17 + i * 29) % projectedVertices.length;
+    const vertex = projectedVertices[index];
+    if (!vertex || vertex.z < -0.08) continue;
 
-    const pulse = 0.5 + Math.sin(time * 0.003 + i * 0.73) * 0.5;
-    const alpha = clamp(0.06 + pulse * 0.20 + vertex.z * 0.08, 0.04, 0.32);
-    const size = (MOBILE ? 1.45 : 1.85) * DPR * (0.72 + pulse * 0.36);
+    const pulse = 0.5 + Math.sin(time * 0.006 + i * 2.13) * 0.5;
+    const size = (MOBILE ? 8 : 11) * DPR * (0.70 + pulse * 0.75);
+    const hue = i % 4;
+    const color =
+      hue === 0 ? "255,255,255" :
+      hue === 1 ? "162,220,255" :
+      hue === 2 ? "244,191,96" :
+      "190,170,255";
+
+    const alpha = clamp(0.16 + pulse * 0.42 + vertex.z * 0.12, 0.10, 0.72);
+
+    context.strokeStyle = `rgba(${color},${alpha})`;
+    context.lineWidth = Math.max(0.8, DPR * 0.9);
+    context.lineCap = "round";
 
     context.beginPath();
-    context.fillStyle = i % 7 === 0 ? `rgba(244,191,96,${alpha})` : `rgba(255,255,255,${alpha})`;
-    context.arc(vertex.x, vertex.y, size, 0, Math.PI * 2);
-    context.fill();
+    context.moveTo(vertex.x - size, vertex.y);
+    context.lineTo(vertex.x + size, vertex.y);
+    context.moveTo(vertex.x, vertex.y - size);
+    context.lineTo(vertex.x, vertex.y + size);
+    context.stroke();
+
+    if (!MOBILE && i % 2 === 0) {
+      context.beginPath();
+      context.moveTo(vertex.x - size * 0.55, vertex.y - size * 0.55);
+      context.lineTo(vertex.x + size * 0.55, vertex.y + size * 0.55);
+      context.moveTo(vertex.x + size * 0.55, vertex.y - size * 0.55);
+      context.lineTo(vertex.x - size * 0.55, vertex.y + size * 0.55);
+      context.stroke();
+    }
   }
 
   context.restore();
 }
 
-function drawPrimaryGlints(context, width, height, scale, time) {
-  const pulse = 0.5 + Math.sin(time * 0.003) * 0.5;
-  const glints = [
-    { x: width * 0.50 + Math.sin(state.yaw * 0.025) * scale * 0.05, y: height * 0.335, s: 0.030, a: 0.58 },
-    { x: width * 0.31, y: height * 0.48, s: 0.019, a: 0.32 },
-    { x: width * 0.70, y: height * 0.48, s: 0.019, a: 0.32 },
-    { x: width * 0.50, y: height * 0.79, s: 0.020, a: 0.32 }
-  ];
-
+function drawSoftSparkleDust(context, width, height, time) {
   context.save();
   context.globalCompositeOperation = "lighter";
-  context.lineCap = "round";
 
-  for (const glint of glints) {
-    const size = scale * glint.s * (0.76 + pulse * 0.20);
-    const alpha = glint.a + pulse * 0.12;
+  const count = MOBILE ? 22 : 36;
 
-    context.strokeStyle = `rgba(255,255,255,${alpha})`;
-    context.lineWidth = Math.max(0.72, DPR * 0.82);
-
-    context.beginPath();
-    context.moveTo(glint.x - size, glint.y);
-    context.lineTo(glint.x + size, glint.y);
-    context.moveTo(glint.x, glint.y - size);
-    context.lineTo(glint.x, glint.y + size);
-    context.stroke();
+  for (let i = 0; i < count; i += 1) {
+    const x = width * (0.22 + hashUnit(i, 17) * 0.56);
+    const y = height * (0.24 + hashUnit(i, 31) * 0.56);
+    const pulse = 0.5 + Math.sin(time * 0.004 + i * 1.47) * 0.5;
+    const alpha = 0.025 + pulse * 0.10;
+    const radius = (0.8 + hashUnit(i, 44) * 1.8) * DPR;
 
     context.beginPath();
-    context.fillStyle = `rgba(244,191,96,${alpha * 0.28})`;
-    context.arc(glint.x, glint.y, size * 0.10, 0, Math.PI * 2);
+    context.fillStyle = i % 5 === 0 ? `rgba(244,191,96,${alpha})` : `rgba(235,248,255,${alpha})`;
+    context.arc(x, y, radius, 0, Math.PI * 2);
     context.fill();
   }
 
@@ -707,23 +770,14 @@ function render(time = 0) {
   const context = state.context;
   const width = canvas.width;
   const height = canvas.height;
-  const scale = Math.min(width, height) * 0.365 * SCALE_LOCK;
+  const scale = Math.min(width, height) * 0.345 * SCALE_LOCK;
   const model = buildGeometry();
 
   drawBackground(context, width, height);
+  drawSoftSparkleDust(context, width, height, time);
   drawCaustic(context, width, height, scale);
 
-  const projectedVertices = model.vertices.map((vertex) => {
-    const rotated = rotatePoint(vertex, state.yaw, state.pitch, state.roll);
-
-    return {
-      ...project(rotated, width, height, scale),
-      source: vertex,
-      ring: vertex.ring,
-      sector: vertex.sector,
-      role: vertex.role
-    };
-  });
+  const projectedVertices = model.vertices.map((vertex) => projectSilhouette(vertex, width, height, scale));
 
   const ringsProjected = new Map();
 
@@ -752,10 +806,11 @@ function render(time = 0) {
     drawFacet(context, item.face, item.points, item.light);
   }
 
+  drawTablePlane(context, ringsProjected);
+  drawCrownFacetCuts(context, ringsProjected);
   drawCrystalFaceEdges(context, projectedFaces);
   drawOuterCutLines(context, ringsProjected);
-  drawNodeGlints(context, projectedVertices, time);
-  drawPrimaryGlints(context, width, height, scale, time);
+  drawPrismaticFlashes(context, projectedVertices, time);
 
   context.restore();
 
@@ -770,9 +825,9 @@ function requestFrame(time = 0) {
   if (elapsed >= FRAME_MS) {
     state.lastFrameAt = time;
 
-    if (!state.dragging && !REDUCED_MOTION) {
-      state.yaw += MOBILE ? 0.20 : 0.30;
-      state.roll = Math.sin(time * 0.00034) * 1.6;
+    if (!REDUCED_MOTION) {
+      state.motionPhase += MOBILE ? 0.006 : 0.009;
+      state.lightPhase += MOBILE ? 0.036 : 0.052;
     }
 
     render(time);
@@ -783,17 +838,17 @@ function requestFrame(time = 0) {
 
 function wireInteraction() {
   const canvas = state.canvas;
-  if (!canvas || canvas.dataset.fixedTableCrownDiamondInteractionBound === "true") return;
+  if (!canvas || canvas.dataset.solidCrownSparkleDiamondInteractionBound === "true") return;
 
-  canvas.dataset.fixedTableCrownDiamondInteractionBound = "true";
+  canvas.dataset.solidCrownSparkleDiamondInteractionBound = "true";
 
   canvas.addEventListener("pointerdown", (event) => {
     state.dragging = true;
     state.pointerId = event.pointerId;
     state.dragStartX = event.clientX;
     state.dragStartY = event.clientY;
-    state.dragStartYaw = state.yaw;
-    state.dragStartPitch = state.pitch;
+    state.dragStartPhase = state.motionPhase;
+    state.dragStartPitchBias = state.pitchBias;
     canvas.setPointerCapture?.(event.pointerId);
     event.preventDefault();
   }, { passive: false });
@@ -804,8 +859,9 @@ function wireInteraction() {
     const dx = event.clientX - state.dragStartX;
     const dy = event.clientY - state.dragStartY;
 
-    state.yaw = state.dragStartYaw + dx * 0.34;
-    state.pitch = clamp(state.dragStartPitch - dy * 0.16, -20, 16);
+    state.motionPhase = state.dragStartPhase + dx * 0.009;
+    state.lightPhase += dx * 0.003;
+    state.pitchBias = clamp(state.dragStartPitchBias - dy * 0.18, -18, 18);
 
     render(performance.now());
     event.preventDefault();
@@ -824,7 +880,6 @@ function wireInteraction() {
   canvas.addEventListener("pointercancel", finish, { passive: false });
 
   canvas.addEventListener("wheel", (event) => {
-    // Structure size is locked. Motion only.
     event.preventDefault();
   }, { passive: false });
 }
@@ -836,9 +891,14 @@ function stampDocument() {
   root.dataset.showroomDiamondPreviousReceipt = PREVIOUS_CONTRACT;
   root.dataset.showroomDiamondRoute = ROUTE;
   root.dataset.showroomDiamondCrystallized = "true";
-  root.dataset.showroomDiamondTableCrown = "true";
-  root.dataset.showroomDiamondParachuteTop = "false";
-  root.dataset.showroomDiamondCrownCenterComesDown = "true";
+  root.dataset.showroomDiamondSolidForm = "true";
+  root.dataset.showroomDiamondSilhouetteLocked = "true";
+  root.dataset.showroomDiamondEdgeOnCollapseAllowed = "false";
+  root.dataset.showroomDiamondRounder = "true";
+  root.dataset.showroomDiamondFlatTable = "true";
+  root.dataset.showroomDiamondCrownTop = "true";
+  root.dataset.showroomDiamondSparkle = "active";
+  root.dataset.showroomDiamondCrownAppearance = "real-diamond-cut";
   root.dataset.showroomDiamondFaces = String(TOTAL_FACES);
   root.dataset.showroomDiamondStructureSizeLocked = "true";
   root.dataset.showroomDiamondScaleLock = String(SCALE_LOCK);
@@ -865,9 +925,14 @@ function getShowroomDiamondStatus() {
     previousContract: PREVIOUS_CONTRACT,
     route: ROUTE,
     crystallized: true,
-    tableCrown: true,
-    parachuteTop: false,
-    crownCenterComesDown: true,
+    solidForm: true,
+    silhouetteLocked: SILHOUETTE_LOCKED,
+    edgeOnCollapseAllowed: EDGE_ON_COLLAPSE_ALLOWED,
+    rounder: true,
+    flatTable: true,
+    crownTop: true,
+    sparkle: "active",
+    crownAppearance: "real-diamond-cut",
     totalFaces: TOTAL_FACES,
     rings: RINGS,
     sectors: SECTORS,
@@ -886,8 +951,8 @@ function getShowroomDiamondStatus() {
     diagnosticsVisible: DIAGNOSTICS_VISIBLE,
     mobile: MOBILE,
     dprCap: DPR,
-    yaw: state.yaw,
-    pitch: state.pitch,
+    motionPhase: state.motionPhase,
+    lightPhase: state.lightPhase,
     booted: state.booted
   };
 }
@@ -972,6 +1037,8 @@ export {
   STRUCTURE_SIZE_LOCKED,
   MOTION_ONLY,
   SCALE_LOCK,
+  SILHOUETTE_LOCKED,
+  EDGE_ON_COLLAPSE_ALLOWED,
   GENERATED_IMAGE,
   GRAPHIC_BOX,
   VISUAL_PASS_CLAIM,

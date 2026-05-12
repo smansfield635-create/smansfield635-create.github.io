@@ -2,32 +2,11 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-cover-ted-talk-natural-diamond"
+  data-page="showroom-public-display-world"
   data-route="/showroom/"
-  data-contract="SHOWROOM_COVER_TED_TALK_NATURAL_DIAMOND_HTML_TNT_v6"
-  data-required-runtime-contract="SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5"
-  data-previous-contract="SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5B"
-  data-showroom-role="public-facing-glamour-cover"
-  data-diamond-object="natural-solid-crown-cut-sparkling-256-face-diamond"
-  data-single-explanation="true"
-  data-self-explanation-reduced="true"
-  data-diamond-mount-required="true"
-  data-natural-diamond-appearance="true"
-  data-solid-form="true"
-  data-silhouette-locked="true"
-  data-edge-on-collapse-allowed="false"
-  data-flat-table="true"
-  data-crown-top="true"
-  data-real-diamond-cut="true"
-  data-sparkle="active"
-  data-face-defined-edges="true"
-  data-yellow-line-prominence="reduced"
-  data-visible-nodes="subtle"
-  data-fibonacci-geometry="internal"
-  data-structure-size-locked="true"
-  data-motion-only="true"
-  data-zoom-manipulation="false"
-  data-showroom-diagnostics-visible="false"
+  data-contract="SHOWROOM_AND_GLOBE_PUBLIC_RECEIPT_SPILLOVER_CLEANUP_TNT_v1"
+  data-standard="frontier-display-world"
+  data-public-copy-clean="true"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claim="false"
@@ -38,25 +17,27 @@
   <title>Diamond Gate Bridge · Showroom</title>
   <meta
     name="description"
-    content="A TED Talk-style Showroom entrance: pressure becomes clarity, the diamond becomes the invitation, and the visitor moves from cover into the Globe Showcase."
+    content="The Diamond Gate Bridge Showroom is the public display world: presentation, proof, and possibility."
   >
 
   <style>
     :root {
       color-scheme: dark;
-      --bg:#030713;
-      --panel:rgba(10,17,31,.82);
-      --panel2:rgba(5,10,22,.88);
+      --bg:#020611;
+      --panel:rgba(7,14,29,.86);
+      --panel2:rgba(3,8,19,.94);
       --line:rgba(244,191,96,.34);
-      --soft-line:rgba(255,255,255,.10);
+      --line-soft:rgba(255,255,255,.10);
       --text:#f8ead0;
       --muted:#bac2cf;
       --gold:#f4bf60;
-      --green:#8ff0c3;
       --blue:#8ebeff;
-      --shadow:0 26px 82px rgba(0,0,0,.44);
-      --radius:28px;
+      --green:#8ff0c3;
+      --violet:#beaaff;
+      --shadow:0 28px 90px rgba(0,0,0,.46);
       --max:1220px;
+      --facet:polygon(0 18px,18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px));
+      --facet-small:polygon(0 10px,10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px));
     }
 
     * { box-sizing:border-box; }
@@ -64,9 +45,9 @@
     html {
       min-height:100%;
       background:
-        radial-gradient(circle at 50% 4%,rgba(142,190,255,.18),transparent 34rem),
-        radial-gradient(circle at 12% 20%,rgba(244,191,96,.12),transparent 30rem),
-        radial-gradient(circle at 88% 24%,rgba(143,240,195,.08),transparent 28rem),
+        radial-gradient(circle at 50% 0%,rgba(142,190,255,.18),transparent 34rem),
+        radial-gradient(circle at 15% 18%,rgba(244,191,96,.12),transparent 30rem),
+        radial-gradient(circle at 86% 24%,rgba(190,170,255,.12),transparent 32rem),
         linear-gradient(180deg,var(--bg),#01030a 78%);
     }
 
@@ -77,7 +58,8 @@
       color:var(--text);
       background:
         linear-gradient(145deg,rgba(255,255,255,.035),transparent 42%),
-        radial-gradient(circle at 52% 62%,rgba(244,191,96,.08),transparent 34rem);
+        radial-gradient(circle at 50% 58%,rgba(244,191,96,.07),transparent 36rem);
+      overflow-x:hidden;
     }
 
     a { color:inherit; text-decoration:none; }
@@ -95,11 +77,11 @@
       z-index:30;
       padding:.75rem 1rem;
       border:1px solid var(--line);
-      border-radius:999px;
       background:#08101d;
       color:var(--text);
       transform:translateY(-180%);
       transition:transform 160ms ease;
+      clip-path:var(--facet-small);
     }
 
     .skip-link:focus { transform:translateY(0); }
@@ -112,12 +94,14 @@
 
     .topbar,
     .hero,
-    .diamond-panel {
+    .display-case,
+    .card,
+    .next {
       border:1px solid var(--line);
-      border-radius:var(--radius);
       background:linear-gradient(180deg,rgba(255,255,255,.055),transparent),var(--panel);
       box-shadow:var(--shadow);
       backdrop-filter:blur(18px);
+      clip-path:var(--facet);
     }
 
     .topbar {
@@ -125,9 +109,8 @@
       align-items:center;
       justify-content:space-between;
       gap:18px;
-      padding:14px 16px;
-      border-radius:999px;
-      background:rgba(5,9,18,.72);
+      padding:14px 18px;
+      background:rgba(5,9,18,.74);
     }
 
     .brand {
@@ -135,7 +118,7 @@
       align-items:center;
       gap:10px;
       min-width:max-content;
-      font-weight:900;
+      font-weight:950;
       letter-spacing:.02em;
     }
 
@@ -144,7 +127,7 @@
       height:18px;
       border:1px solid var(--gold);
       transform:rotate(45deg);
-      background:linear-gradient(135deg,rgba(244,191,96,.22),transparent),rgba(255,255,255,.04);
+      background:linear-gradient(135deg,rgba(244,191,96,.24),transparent),rgba(255,255,255,.04);
       box-shadow:0 0 24px rgba(244,191,96,.18);
     }
 
@@ -158,36 +141,41 @@
     .nav a {
       padding:8px 11px;
       border:1px solid rgba(255,255,255,.09);
-      border-radius:999px;
       color:var(--muted);
       font-size:.88rem;
-      background:rgba(255,255,255,.035);
+      background:rgba(255,255,255,.032);
+      clip-path:var(--facet-small);
     }
 
     .nav a[aria-current="page"] {
-      border-color:rgba(244,191,96,.52);
+      border-color:rgba(244,191,96,.54);
       color:var(--gold);
-      background:rgba(244,191,96,.09);
+      background:rgba(244,191,96,.08);
     }
 
     .hero {
       margin-top:24px;
-      padding:clamp(24px,5vw,54px);
+      padding:clamp(24px,5vw,56px);
+      background:
+        radial-gradient(circle at 22% 10%,rgba(244,191,96,.14),transparent 20rem),
+        radial-gradient(circle at 78% 18%,rgba(190,170,255,.12),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.055),transparent),
+        var(--panel);
     }
 
-    .eyebrow {
+    .label {
       display:inline-flex;
       width:fit-content;
       margin:0 0 18px;
       padding:8px 12px;
-      border:1px solid rgba(142,190,255,.24);
-      border-radius:999px;
+      border:1px solid rgba(142,190,255,.26);
       color:var(--blue);
-      background:rgba(142,190,255,.08);
-      font-size:.86rem;
-      font-weight:900;
-      letter-spacing:.08em;
+      background:rgba(142,190,255,.055);
+      font-size:.82rem;
+      font-weight:950;
+      letter-spacing:.10em;
       text-transform:uppercase;
+      clip-path:var(--facet-small);
     }
 
     h1 {
@@ -199,110 +187,248 @@
     }
 
     .lede {
-      max-width:78ch;
-      margin:24px 0 0;
+      max-width:84ch;
+      margin:22px 0 0;
       color:var(--muted);
-      font-size:clamp(1.05rem,2.35vw,1.22rem);
-      line-height:1.7;
+      font-size:clamp(1.03rem,2.2vw,1.18rem);
+      line-height:1.65;
     }
 
-    .hero-actions {
+    .actions {
       display:flex;
       flex-wrap:wrap;
       gap:10px;
       margin-top:26px;
     }
 
-    .button {
+    .action {
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      min-height:46px;
-      padding:11px 16px;
+      min-height:44px;
+      padding:11px 15px;
       border:1px solid rgba(244,191,96,.32);
-      border-radius:999px;
-      background:rgba(244,191,96,.09);
-      color:var(--text);
-      font-weight:900;
+      background:rgba(244,191,96,.08);
+      color:var(--gold);
+      font-weight:950;
+      clip-path:var(--facet-small);
     }
 
-    .button.primary {
-      color:#06101d;
+    .action.primary {
       background:var(--gold);
+      color:#06101d;
     }
 
-    .button.green {
-      border-color:rgba(143,240,195,.32);
-      background:rgba(143,240,195,.08);
-      color:var(--green);
-    }
-
-    .diamond-panel {
+    .display-case {
       margin-top:18px;
-      padding:clamp(14px,3vw,28px);
+      padding:clamp(20px,4vw,38px);
       background:
-        radial-gradient(circle at 50% 22%,rgba(244,191,96,.06),transparent 21rem),
-        radial-gradient(circle at 50% 62%,rgba(142,190,255,.12),transparent 28rem),
-        linear-gradient(180deg,rgba(255,255,255,.055),transparent),
+        radial-gradient(circle at 50% 36%,rgba(244,191,96,.13),transparent 18rem),
+        radial-gradient(circle at 50% 50%,rgba(190,170,255,.13),transparent 32rem),
+        linear-gradient(180deg,rgba(255,255,255,.05),transparent),
         var(--panel2);
-    }
-
-    .diamond-mount-wrap {
-      position:relative;
-      min-width:0;
-    }
-
-    [data-showroom-diamond-mount] {
-      width:100%;
-      min-height:clamp(390px,62vw,760px);
-      border:1px solid rgba(142,190,255,.18);
-      border-radius:28px;
       overflow:hidden;
-      background:
-        radial-gradient(circle at 50% 54%,rgba(210,235,255,.14),transparent 19rem),
-        radial-gradient(circle at 50% 44%,rgba(244,191,96,.055),transparent 21rem),
-        linear-gradient(180deg,rgba(7,13,30,1),rgba(2,5,12,1));
-      box-shadow:
-        inset 0 0 54px rgba(143,240,195,.08),
-        0 24px 70px rgba(0,0,0,.34);
-      contain:layout paint style;
-      touch-action:none;
+    }
+
+    .case-grid {
+      display:grid;
+      grid-template-columns:minmax(0,1.05fr) minmax(300px,.95fr);
+      gap:clamp(18px,4vw,42px);
+      align-items:center;
+    }
+
+    .diamond-stage {
+      position:relative;
+      min-height:clamp(320px,44vw,520px);
       display:grid;
       place-items:center;
+      isolation:isolate;
     }
 
-    .fallback-diamond-note {
-      display:none;
-      min-height:0;
-      height:0;
-      overflow:hidden;
-      visibility:hidden;
+    .diamond-stage::before {
+      content:"";
+      position:absolute;
+      inset:8%;
+      border:1px solid rgba(244,191,96,.16);
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(244,191,96,.08),transparent 42%),
+        radial-gradient(circle at 50% 50%,rgba(190,170,255,.10),transparent 60%);
+      filter:blur(.2px);
+      z-index:-2;
     }
 
-    [data-showroom-crystal-diamond-stage] {
-      margin:0 !important;
+    .diamond-stage::after {
+      content:"";
+      position:absolute;
+      width:86%;
+      height:32%;
+      bottom:10%;
+      background:radial-gradient(ellipse at center,rgba(0,0,0,.44),transparent 70%);
+      filter:blur(18px);
+      z-index:-1;
     }
 
-    [data-showroom-crystal-diamond-canvas] {
-      margin:0 auto !important;
+    .diamond {
+      position:relative;
+      width:min(58vw,360px);
+      aspect-ratio:1 / .92;
+      transform-style:preserve-3d;
+      animation:diamondFloat 9s ease-in-out infinite;
     }
 
-    .receipt {
-      display:none;
+    .diamond .crown,
+    .diamond .body {
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      background:
+        linear-gradient(135deg,rgba(255,255,255,.62),rgba(190,170,255,.18) 28%,rgba(8,20,46,.86) 68%,rgba(244,191,96,.18)),
+        radial-gradient(circle at 32% 18%,rgba(255,255,255,.44),transparent 18%);
+      border:1px solid rgba(244,191,96,.46);
+      box-shadow:
+        inset 0 0 34px rgba(255,255,255,.10),
+        inset 0 -28px 44px rgba(0,0,0,.30),
+        0 0 70px rgba(190,170,255,.18);
     }
 
-    .footer {
+    .diamond .crown {
+      top:0;
+      width:76%;
+      height:32%;
+      clip-path:polygon(18% 0,82% 0,100% 100%,0 100%);
+    }
+
+    .diamond .body {
+      top:31%;
+      width:92%;
+      height:68%;
+      clip-path:polygon(0 0,100% 0,50% 100%);
+    }
+
+    .facet {
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(64deg,transparent 0 43%,rgba(255,255,255,.30) 44%,transparent 46%),
+        linear-gradient(116deg,transparent 0 48%,rgba(244,191,96,.22) 49%,transparent 52%),
+        linear-gradient(180deg,rgba(255,255,255,.18),transparent 36%),
+        linear-gradient(90deg,transparent 0 32%,rgba(255,255,255,.12) 33%,transparent 34%,transparent 65%,rgba(255,255,255,.11) 66%,transparent 67%);
+      mix-blend-mode:screen;
+    }
+
+    .glint {
+      position:absolute;
+      width:16%;
+      aspect-ratio:1;
+      right:18%;
+      top:18%;
+      background:
+        linear-gradient(90deg,transparent 44%,rgba(255,255,255,.88) 50%,transparent 56%),
+        linear-gradient(0deg,transparent 44%,rgba(255,255,255,.88) 50%,transparent 56%);
+      opacity:.72;
+      filter:drop-shadow(0 0 10px rgba(255,255,255,.45));
+      animation:glintPulse 2.8s ease-in-out infinite;
+    }
+
+    .copy h2 {
+      margin:0;
+      font-size:clamp(2rem,4vw,4.3rem);
+      line-height:.9;
+      letter-spacing:-.07em;
+    }
+
+    .copy p {
+      margin:16px 0 0;
+      color:var(--muted);
+      line-height:1.62;
+      max-width:64ch;
+    }
+
+    .card-grid {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
       margin-top:18px;
-      color:rgba(246,234,210,.62);
-      font-size:.88rem;
-      line-height:1.55;
-      text-align:center;
+    }
+
+    .card {
+      padding:18px;
+      background:
+        linear-gradient(135deg,rgba(255,255,255,.06),transparent 48%),
+        rgba(6,13,27,.78);
+      box-shadow:none;
+    }
+
+    .card strong {
+      display:block;
+      color:var(--green);
+      font-size:.74rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+      margin-bottom:10px;
+    }
+
+    .card h3 {
+      margin:0;
+      font-size:1.32rem;
+      letter-spacing:-.04em;
+    }
+
+    .card p {
+      margin:10px 0 0;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    .next {
+      margin-top:18px;
+      padding:clamp(20px,4vw,34px);
+      background:
+        radial-gradient(circle at 20% 10%,rgba(143,240,195,.12),transparent 18rem),
+        linear-gradient(180deg,rgba(255,255,255,.055),transparent),
+        rgba(5,12,22,.90);
+    }
+
+    .next h2 {
+      margin:0;
+      font-size:clamp(2rem,4vw,3.8rem);
+      line-height:.92;
+      letter-spacing:-.065em;
+    }
+
+    .next p {
+      margin:14px 0 0;
+      max-width:82ch;
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    @keyframes diamondFloat {
+      0%,100% { transform:translateY(0) rotateX(0deg) rotateY(-5deg); }
+      50% { transform:translateY(-12px) rotateX(2deg) rotateY(7deg); }
+    }
+
+    @keyframes glintPulse {
+      0%,100% { opacity:.25; transform:scale(.82) rotate(0deg); }
+      48% { opacity:.92; transform:scale(1.05) rotate(8deg); }
+    }
+
+    @media (max-width:920px) {
+      .case-grid,
+      .card-grid {
+        grid-template-columns:1fr;
+      }
+
+      .diamond-stage {
+        min-height:360px;
+      }
     }
 
     @media (max-width:760px) {
       .topbar {
         align-items:flex-start;
-        border-radius:22px;
         flex-direction:column;
       }
 
@@ -318,182 +444,116 @@
       }
 
       .hero,
-      .diamond-panel {
-        border-radius:18px;
+      .display-case,
+      .card,
+      .next {
+        clip-path:polygon(0 14px,14px 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px));
       }
 
-      [data-showroom-diamond-mount] {
-        min-height:clamp(360px,88vw,620px);
-        border-radius:20px;
+      .hero {
+        padding:22px;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      .diamond,
+      .glint {
+        animation:none;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="/showroom/#showroom-main">Skip to Showroom</a>
+  <a class="skip-link" href="/showroom/#main">Skip to Showroom</a>
 
   <div class="shell">
     <header class="topbar" aria-label="Showroom navigation">
-      <a class="brand" href="/" aria-label="Return to Diamond Gate Bridge Compass">
+      <a class="brand" href="/" aria-label="Return to Compass">
         <span class="brand-mark" aria-hidden="true"></span>
         <span>Diamond Gate Bridge</span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/showroom/" aria-current="page">Showroom</a>
-        <a href="/showroom/globe/">Globe Showcase</a>
+        <a href="/flat/">Flat</a>
         <a href="/products/">Products</a>
+        <a href="/showroom/" aria-current="page">Showroom</a>
+        <a href="/showroom/globe/">Globe</a>
         <a href="/gauges/">Triple G</a>
       </nav>
     </header>
 
-    <main id="showroom-main" tabindex="-1">
+    <main id="main" tabindex="-1">
       <section class="hero">
-        <p class="eyebrow">Public cover · glamour layer</p>
-        <h1>Pressure becomes something you can finally see.</h1>
+        <p class="label">Showroom · Display World</p>
+        <h1>Now open the case.</h1>
         <p class="lede">
-          A diamond does not become clear because pressure disappears. It becomes clear because pressure is organized.
-          This is the entrance: one object, one invitation, one first look at the worlds waiting behind the glass.
+          The Showroom is where the estate becomes visible as a larger world. It is not just navigation.
+          It is presentation, proof, and possibility.
         </p>
 
-        <div class="hero-actions">
-          <a class="button primary" href="/showroom/globe/">Enter Globe Showcase</a>
-          <a class="button" href="/products/">View Product Wing</a>
-          <a class="button green" href="/gauges/">Open Triple G</a>
+        <div class="actions">
+          <a class="action primary" href="/showroom/globe/">Enter Globe Showcase</a>
+          <a class="action" href="/">Return to Compass</a>
+          <a class="action" href="/products/">Review Products</a>
+          <a class="action" href="/gauges/">Run Triple G</a>
         </div>
       </section>
 
-      <section
-        class="diamond-panel"
-        aria-label="Natural solid crown-cut sparkling 256-face diamond cover object"
-        data-showroom-diamond-panel="true"
-        data-diamond-object="natural-solid-crown-cut-sparkling-256-face-diamond"
-        data-256-face-construct="true"
-        data-natural-diamond-appearance="true"
-        data-solid-form="true"
-        data-silhouette-locked="true"
-        data-edge-on-collapse-allowed="false"
-        data-flat-table="true"
-        data-crown-top="true"
-        data-real-diamond-cut="true"
-        data-sparkle="active"
-        data-structure-size-locked="true"
-        data-motion-only="true"
-        data-zoom-manipulation="false"
-        data-face-defined-edges="true"
-        data-yellow-line-prominence="reduced"
-        data-visible-nodes="subtle"
-        data-fibonacci-geometry="internal"
-        data-generated-image="false"
-        data-graphic-box="false"
-      >
-        <div class="diamond-mount-wrap">
-          <div
-            id="showroomDiamondMount"
-            data-showroom-diamond-mount="true"
-            data-showroom-crystal-diamond-stage-required="true"
-            data-contract-required="SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5"
-            data-previous-runtime-contract="SHOWROOM_COVER_ROUND_CROWN_CUT_FIXED_256_FACE_DIAMOND_TNT_v4"
-            data-diamond-object="natural-solid-crown-cut-sparkling-256-face-diamond"
-            data-natural-diamond-appearance="true"
-            data-solid-form="true"
-            data-silhouette-locked="true"
-            data-edge-on-collapse-allowed="false"
-            data-flat-table="true"
-            data-crown-top="true"
-            data-real-diamond-cut="true"
-            data-sparkle="active"
-            data-structure-size-locked="true"
-            data-motion-only="true"
-            data-zoom-manipulation="false"
-            data-face-defined-edges="true"
-            data-yellow-line-prominence="reduced"
-            data-visible-nodes="subtle"
-            data-fibonacci-geometry="internal"
-            data-generated-image="false"
-            data-graphic-box="false"
-            aria-label="Natural solid crown-cut sparkling 256-face diamond mount"
-          >
-            <div class="fallback-diamond-note">
-              <span>
-                <strong>Solid Crown-Cut 256-Face Sparkling Diamond</strong>
-                Runtime mount ready. The diamond is rendered by code from /showroom/index.js.
-              </span>
+      <section class="display-case" aria-label="Showroom display object">
+        <div class="case-grid">
+          <div class="diamond-stage" aria-hidden="true">
+            <div class="diamond">
+              <div class="crown"><span class="facet"></span></div>
+              <div class="body"><span class="facet"></span></div>
+              <span class="glint"></span>
             </div>
+          </div>
+
+          <div class="copy">
+            <p class="label">Presentation Layer</p>
+            <h2>The object has to hold the room.</h2>
+            <p>
+              A display world should feel inspectable before it explains itself. The diamond marks the standard:
+              clear form, visible depth, restrained motion, and a route forward into the globe showcase.
+            </p>
           </div>
         </div>
       </section>
 
-      <section
-        id="showroomReceipt"
-        class="receipt"
-        aria-label="Showroom route receipt"
-        data-receipt-panel="showroom-cover-ted-talk-natural-diamond"
-        data-html-contract="SHOWROOM_COVER_TED_TALK_NATURAL_DIAMOND_HTML_TNT_v6"
-        data-required-runtime-contract="SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5"
-        data-previous-html-contract="SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5B"
-        data-single-explanation="true"
-        data-self-explanation-reduced="true"
-        data-visible-route-cards="false"
-        data-visible-diamond-copy="false"
-        data-diamond-mount-present="true"
-        data-diamond-object="natural-solid-crown-cut-sparkling-256-face-diamond"
-        data-natural-diamond-appearance="true"
-        data-solid-form="true"
-        data-silhouette-locked="true"
-        data-edge-on-collapse-allowed="false"
-        data-sparkle="active"
-        data-face-construct="256"
-        data-structure-size-locked="true"
-        data-motion-only="true"
-        data-generated-image="false"
-        data-graphic-box="false"
-        data-visual-pass-claim="false"
-      >
-        <code>HTML_RECEIPT: SHOWROOM_COVER_TED_TALK_NATURAL_DIAMOND_HTML_TNT_v6</code>
-        <code>REQUIRED_RUNTIME: SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5</code>
-        <code>PREVIOUS_HTML: SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5B</code>
-        <code>SINGLE_EXPLANATION: true</code>
-        <code>SELF_EXPLANATION_REDUCED: true</code>
-        <code>VISIBLE_ROUTE_CARDS: false</code>
-        <code>VISIBLE_DIAMOND_COPY: false</code>
-        <code>DIAMOND_OBJECT: natural-solid-crown-cut-sparkling-256-face-diamond</code>
-        <code>GENERATED_IMAGE: false</code>
-        <code>GRAPHIC_BOX: false</code>
-        <code>VISIBLE_DIAGNOSTICS: false</code>
-        <code>VISUAL_PASS_CLAIM: false</code>
+      <section class="card-grid" aria-label="Showroom standards">
+        <article class="card">
+          <strong>Display</strong>
+          <h3>One object leads.</h3>
+          <p>The page should not scatter attention before the visitor understands where they are.</p>
+        </article>
+
+        <article class="card">
+          <strong>Proof</strong>
+          <h3>The route is inspectable.</h3>
+          <p>The Showroom leads to the Globe Showcase without waking private world engines on this page.</p>
+        </article>
+
+        <article class="card">
+          <strong>Possibility</strong>
+          <h3>The world opens next.</h3>
+          <p>The Showroom introduces the larger display field, then sends the visitor into the Globe lane.</p>
+        </article>
+      </section>
+
+      <section class="next" aria-label="Next move">
+        <p class="label">Next</p>
+        <h2>Enter the Globe Showcase.</h2>
+        <p>
+          The Showroom is the cover. The Globe Showcase is the display-case index where worlds can be inspected without turning the public page into a heavy private renderer.
+        </p>
+        <div class="actions">
+          <a class="action primary" href="/showroom/globe/">Open Globe Showcase</a>
+          <a class="action" href="/gauges/">Check Triple G</a>
+        </div>
       </section>
     </main>
-
-    <footer class="footer">
-      Cover → Globe Showcase → Private Inspection.
-    </footer>
   </div>
-
-  <script
-    id="showroomNaturalSolidCrownSparkleDiamondRuntime"
-    type="module"
-    src="./index.js?v=SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5"
-    data-handoff="showroom-cover-ted-talk-natural-diamond"
-    data-html-contract="SHOWROOM_COVER_TED_TALK_NATURAL_DIAMOND_HTML_TNT_v6"
-    data-required-runtime-contract="SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5"
-    data-previous-runtime-contract="SHOWROOM_COVER_ROUND_CROWN_CUT_FIXED_256_FACE_DIAMOND_TNT_v4"
-    data-diamond-object="natural-solid-crown-cut-sparkling-256-face-diamond"
-    data-single-explanation="true"
-    data-self-explanation-reduced="true"
-    data-natural-diamond-appearance="true"
-    data-solid-form="true"
-    data-silhouette-locked="true"
-    data-edge-on-collapse-allowed="false"
-    data-sparkle="active"
-    data-structure-size-locked="true"
-    data-motion-only="true"
-    data-generated-image="false"
-    data-graphic-box="false"
-  ></script>
 </body>
 </html>

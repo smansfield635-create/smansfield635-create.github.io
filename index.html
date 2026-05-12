@@ -2,15 +2,18 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="compass-round-field-3d-renderer"
+  data-page="compass-round-field-depth-object-reduction"
   data-route="/"
-  data-contract="COMPASS_ROUND_FIELD_3D_RENDERER_HTML_TNT_v1"
-  data-required-renderer="COMPASS_ROUND_FIELD_3D_RENDERER_JS_TNT_v1"
-  data-previous-contract="COMPASS_ROUND_SCENERY_LATTICE_DIAMOND_GATE_TNT_v13"
+  data-contract="COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_HTML_TNT_v2"
+  data-required-renderer="COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_JS_TNT_v2"
+  data-previous-contract="COMPASS_ROUND_FIELD_3D_RENDERER_HTML_TNT_v1"
   data-compass-mode="rendered-round-field"
   data-default-lens="round"
   data-single-click="change-scenery"
   data-double-click="navigate"
+  data-visible-status-block="false"
+  data-in-canvas-instruction-strip="false"
+  data-in-canvas-center-title="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claim="false"
@@ -21,7 +24,7 @@
   <title>Diamond Gate Bridge · Compass</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Compass: a rendered Round Field where floating diamond objects change scenery on single click and open routes on double click."
+    content="Diamond Gate Bridge Compass: a rendered Round Field with dimensional sphere depth, floating diamond objects, scenery selection, and route entry."
   >
 
   <style>
@@ -31,11 +34,9 @@
       --panel:rgba(7,14,29,.84);
       --panel2:rgba(3,8,19,.92);
       --line:rgba(244,191,96,.34);
-      --line-blue:rgba(142,190,255,.26);
       --text:#f8ead0;
       --muted:#bac2cf;
       --gold:#f4bf60;
-      --green:#8ff0c3;
       --blue:#8ebeff;
       --shadow:0 26px 82px rgba(0,0,0,.44);
       --max:1220px;
@@ -93,13 +94,12 @@
     .shell {
       width:min(var(--max),calc(100% - 32px));
       margin:0 auto;
-      padding:24px 0 48px;
+      padding:24px 0 42px;
     }
 
     .topbar,
     .hero,
-    .renderer-panel,
-    .status-strip {
+    .renderer-panel {
       border:1px solid var(--line);
       background:linear-gradient(180deg,rgba(255,255,255,.055),transparent),var(--panel);
       box-shadow:var(--shadow);
@@ -196,16 +196,16 @@
     }
 
     .lede {
-      max-width:80ch;
-      margin:24px 0 0;
+      max-width:78ch;
+      margin:22px 0 0;
       color:var(--muted);
-      font-size:clamp(1.05rem,2.35vw,1.22rem);
-      line-height:1.7;
+      font-size:clamp(1.03rem,2.2vw,1.18rem);
+      line-height:1.65;
     }
 
     .renderer-panel {
       margin-top:18px;
-      padding:clamp(10px,2.6vw,22px);
+      padding:clamp(8px,2.2vw,18px);
       background:
         radial-gradient(circle at 50% 44%,rgba(143,240,195,.10),transparent 17rem),
         radial-gradient(circle at 50% 48%,rgba(244,191,96,.10),transparent 26rem),
@@ -217,7 +217,7 @@
     .canvas-mount {
       position:relative;
       width:100%;
-      min-height:clamp(560px,76vw,900px);
+      min-height:clamp(600px,78vw,920px);
       border:1px solid rgba(142,190,255,.18);
       background:
         radial-gradient(circle at 50% 45%,rgba(142,190,255,.09),transparent 24rem),
@@ -234,7 +234,7 @@
     #compassRoundFieldCanvas {
       display:block;
       width:100%;
-      height:clamp(560px,76vw,900px);
+      height:clamp(600px,78vw,920px);
       touch-action:none;
       user-select:none;
       -webkit-user-select:none;
@@ -267,33 +267,6 @@
       display:none;
     }
 
-    .status-strip {
-      margin-top:18px;
-      padding:14px 16px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px 14px;
-      align-items:center;
-      justify-content:space-between;
-      background:
-        linear-gradient(135deg,rgba(143,240,195,.10),transparent 46%),
-        rgba(5,12,22,.86);
-      border-color:rgba(143,240,195,.24);
-    }
-
-    .status-strip strong {
-      color:var(--green);
-      font-size:.78rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .status-strip span {
-      color:var(--muted);
-      line-height:1.45;
-      font-size:.92rem;
-    }
-
     .assistive-links,
     .receipt {
       position:absolute;
@@ -305,14 +278,6 @@
       clip:rect(0,0,0,0);
       white-space:nowrap;
       border:0;
-    }
-
-    .footer {
-      margin-top:18px;
-      color:rgba(246,234,210,.62);
-      font-size:.88rem;
-      line-height:1.55;
-      text-align:center;
     }
 
     @media (max-width:760px) {
@@ -342,8 +307,8 @@
 
       .canvas-mount,
       #compassRoundFieldCanvas {
-        min-height:520px;
-        height:520px;
+        min-height:560px;
+        height:560px;
       }
     }
   </style>
@@ -378,7 +343,7 @@
         <p class="crystal-label">Compass · Rendered Round Field</p>
         <h1>Pressure is the door.</h1>
         <p class="lede">
-          The default view is Round. The Compass is a dimensional field: choose a floating diamond once to change the scenery, or twice to open the route.
+          The default view is Round. Choose a floating diamond once to change the scenery, or twice to open the route.
         </p>
       </section>
 
@@ -388,12 +353,15 @@
         data-rendered-round-field="true"
         data-single-click="change-scenery"
         data-double-click="navigate"
+        data-visible-status-block="false"
+        data-in-canvas-instruction-strip="false"
+        data-in-canvas-center-title="false"
       >
         <div id="compassRoundFieldMount" class="canvas-mount">
           <canvas
             id="compassRoundFieldCanvas"
             width="1200"
-            height="900"
+            height="920"
             tabindex="0"
             role="img"
             aria-label="Rendered Round Compass field. Single click a floating diamond to change scenery. Double click to open its route."
@@ -407,15 +375,6 @@
         </div>
       </section>
 
-      <section
-        class="status-strip"
-        aria-label="Compass status"
-        data-compass-status="round-field-renderer-active"
-      >
-        <strong>Compass status</strong>
-        <span id="compassStatusText">Round renderer ready · single click changes scenery · double click opens route.</span>
-      </section>
-
       <nav class="assistive-links" aria-label="Fallback lens routes">
         <a href="/">Flat</a>
         <a href="/?lens=round">Round</a>
@@ -426,44 +385,49 @@
         id="compassReceipt"
         class="receipt"
         aria-label="Compass receipt"
-        data-receipt-panel="compass-round-field-3d-renderer"
-        data-html-contract="COMPASS_ROUND_FIELD_3D_RENDERER_HTML_TNT_v1"
-        data-required-renderer="COMPASS_ROUND_FIELD_3D_RENDERER_JS_TNT_v1"
-        data-previous-contract="COMPASS_ROUND_SCENERY_LATTICE_DIAMOND_GATE_TNT_v13"
+        data-receipt-panel="compass-round-field-depth-object-reduction"
+        data-html-contract="COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_HTML_TNT_v2"
+        data-required-renderer="COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_JS_TNT_v2"
+        data-previous-contract="COMPASS_ROUND_FIELD_3D_RENDERER_HTML_TNT_v1"
         data-default-lens="round"
         data-single-click="change-scenery"
         data-double-click="navigate"
-        data-renderer-type="2d-canvas-projection"
+        data-renderer-type="2d-canvas-depth-projection"
+        data-visible-status-block="false"
+        data-in-canvas-instruction-strip="false"
+        data-in-canvas-center-title="false"
         data-generated-image="false"
         data-graphic-box="false"
         data-visual-pass-claim="false"
       >
-        <code>HTML_RECEIPT: COMPASS_ROUND_FIELD_3D_RENDERER_HTML_TNT_v1</code>
-        <code>REQUIRED_RENDERER: COMPASS_ROUND_FIELD_3D_RENDERER_JS_TNT_v1</code>
+        <code>HTML_RECEIPT: COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_HTML_TNT_v2</code>
+        <code>REQUIRED_RENDERER: COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_JS_TNT_v2</code>
         <code>DEFAULT_LENS: round</code>
         <code>SINGLE_CLICK: change-scenery</code>
         <code>DOUBLE_CLICK: navigate</code>
+        <code>VISIBLE_STATUS_BLOCK: false</code>
+        <code>IN_CANVAS_INSTRUCTION_STRIP: false</code>
+        <code>IN_CANVAS_CENTER_TITLE: false</code>
         <code>GENERATED_IMAGE: false</code>
         <code>GRAPHIC_BOX: false</code>
         <code>VISUAL_PASS_CLAIM: false</code>
       </section>
     </main>
-
-    <footer class="footer">
-      Compass → Door → Home → Showroom → Universe.
-    </footer>
   </div>
 
   <script
     id="compassRoundFieldRenderer"
     type="module"
-    src="./index.js?v=COMPASS_ROUND_FIELD_3D_RENDERER_JS_TNT_v1"
-    data-handoff="compass-round-field-3d-renderer"
-    data-html-contract="COMPASS_ROUND_FIELD_3D_RENDERER_HTML_TNT_v1"
-    data-required-renderer="COMPASS_ROUND_FIELD_3D_RENDERER_JS_TNT_v1"
+    src="./index.js?v=COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_JS_TNT_v2"
+    data-handoff="compass-round-field-depth-object-reduction"
+    data-html-contract="COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_HTML_TNT_v2"
+    data-required-renderer="COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_JS_TNT_v2"
     data-default-lens="round"
     data-single-click="change-scenery"
     data-double-click="navigate"
+    data-visible-status-block="false"
+    data-in-canvas-instruction-strip="false"
+    data-in-canvas-center-title="false"
     data-generated-image="false"
     data-graphic-box="false"
   ></script>

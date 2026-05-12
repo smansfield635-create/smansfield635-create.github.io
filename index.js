@@ -1,23 +1,22 @@
 // /index.js
-// COMPASS_ROUND_FIELD_3D_RENDERER_JS_TNT_v1
+// COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_JS_TNT_v2
 // Full-file replacement.
 //
 // Purpose:
-// - Render the Compass default as a dimensional Round Field.
-// - Replace flat CSS diamond/card appearance with canvas-rendered floating diamond objects.
-// - Single click/tap changes full scenery.
-// - Double click/double tap opens the selected route.
-// - Preserve route law.
-// - Use low-budget 2D canvas projection.
+// - Remove redundant visible status/copy from Compass.
+// - Remove in-canvas instruction strip.
+// - Remove large center title from sphere.
+// - Make Round read as a dimensional object-field, not a labeled 2D HUD.
+// - Preserve single click = scenery change.
+// - Preserve double click / double tap = route open.
 // - No generated images.
 // - No GraphicBox.
-// - No external image assets.
 // - No private renderers.
 // - No visual pass claim.
 
-const CONTRACT = "COMPASS_ROUND_FIELD_3D_RENDERER_JS_TNT_v1";
-const HTML_CONTRACT = "COMPASS_ROUND_FIELD_3D_RENDERER_HTML_TNT_v1";
-const PREVIOUS_CONTRACT = "COMPASS_ROUND_SCENERY_LATTICE_DIAMOND_GATE_TNT_v13";
+const CONTRACT = "COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_JS_TNT_v2";
+const HTML_CONTRACT = "COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_HTML_TNT_v2";
+const PREVIOUS_CONTRACT = "COMPASS_ROUND_FIELD_3D_RENDERER_JS_TNT_v1";
 const ROUTE = "/";
 
 const GENERATED_IMAGE = false;
@@ -33,84 +32,74 @@ const FRAME_MS = MOBILE ? 58 : 42;
 const SCENES = Object.freeze({
   flat: {
     key: "flat",
-    title: "World Is Flat",
-    kicker: "Lens One",
     route: "/",
-    status: "Flat scenery active · single click changes scenery · double click opens Compass home.",
-    copy: "Architectural map state. The field becomes measured, planar, and controlled before the Door opens.",
     palette: {
       bg0: "#040713",
       bg1: "#071225",
-      bg2: "#10172a",
-      auraA: "rgba(142,190,255,.12)",
-      auraB: "rgba(244,191,96,.08)",
-      auraC: "rgba(255,255,255,.06)",
-      sphereA: "#18243a",
-      sphereB: "#0c1730",
-      sphereC: "#030713",
-      grid: "rgba(142,190,255,.20)",
+      bg2: "#111827",
+      auraA: "rgba(142,190,255,.10)",
+      auraB: "rgba(244,191,96,.07)",
+      sphereA: "#1a2537",
+      sphereB: "#0b1629",
+      sphereC: "#02050c",
+      grid: "rgba(142,190,255,.18)",
       accent: "#8ebeff",
       active: "#f4bf60",
-      glow: "rgba(142,190,255,.26)"
+      glow: "rgba(142,190,255,.24)"
     },
-    gridTilt: 0.35,
-    depth: 0.38,
-    fieldScale: 0.92,
-    starDensity: 0.35
+    depth: 0.34,
+    gridTilt: 0.34,
+    sphereScale: 0.88,
+    orbitalSpread: 0.82,
+    starDensity: 0.30
   },
+
   round: {
     key: "round",
-    title: "World Is Round",
-    kicker: "Default Lens",
     route: "/?lens=round",
-    status: "Round scenery active · single click changes scenery · double click opens Round Compass.",
-    copy: "The Compass is a living field. Routes sit in depth around the center, and the estate is entered as a world rather than a flat menu.",
     palette: {
       bg0: "#030713",
       bg1: "#07152d",
       bg2: "#10213f",
-      auraA: "rgba(143,240,195,.15)",
-      auraB: "rgba(244,191,96,.13)",
-      auraC: "rgba(142,190,255,.14)",
-      sphereA: "#12324a",
-      sphereB: "#0b1e36",
-      sphereC: "#02050d",
+      auraA: "rgba(143,240,195,.16)",
+      auraB: "rgba(244,191,96,.11)",
+      sphereA: "#12314a",
+      sphereB: "#0a1d36",
+      sphereC: "#01040c",
       grid: "rgba(143,240,195,.22)",
       accent: "#8ff0c3",
       active: "#f4bf60",
-      glow: "rgba(143,240,195,.30)"
+      glow: "rgba(143,240,195,.32)"
     },
-    gridTilt: 0.64,
-    depth: 0.88,
-    fieldScale: 1.00,
-    starDensity: 0.50
+    depth: 1.04,
+    gridTilt: 0.72,
+    sphereScale: 1.08,
+    orbitalSpread: 1.00,
+    starDensity: 0.46
   },
+
   globe: {
     key: "globe",
-    title: "World Is a Globe",
-    kicker: "Lens Three",
     route: "/nine-summits/universe/",
-    status: "Globe scenery active · single click changes scenery · double click opens Nine Summits Universe.",
-    copy: "Universe-scale orientation. The field expands beyond the estate into the wider world architecture.",
     palette: {
       bg0: "#030512",
       bg1: "#0c1032",
       bg2: "#20133f",
       auraA: "rgba(190,170,255,.17)",
-      auraB: "rgba(142,190,255,.15)",
-      auraC: "rgba(244,191,96,.10)",
+      auraB: "rgba(142,190,255,.14)",
       sphereA: "#22245b",
-      sphereB: "#11183d",
-      sphereC: "#030512",
+      sphereB: "#10183c",
+      sphereC: "#02030b",
       grid: "rgba(190,170,255,.22)",
       accent: "#beaaff",
       active: "#f4bf60",
-      glow: "rgba(190,170,255,.30)"
+      glow: "rgba(190,170,255,.32)"
     },
-    gridTilt: 0.74,
-    depth: 1.05,
-    fieldScale: 1.08,
-    starDensity: 0.68
+    depth: 1.18,
+    gridTilt: 0.80,
+    sphereScale: 1.14,
+    orbitalSpread: 1.10,
+    starDensity: 0.66
   }
 });
 
@@ -118,31 +107,31 @@ const DIAMONDS = Object.freeze([
   {
     key: "flat",
     label: "Flat",
-    sublabel: "Map",
     route: "/",
-    baseAngle: Math.PI * 1.12,
-    orbitRadius: 0.37,
-    z: -0.10,
+    baseAngle: Math.PI * 1.16,
+    orbitRadius: 0.48,
+    phaseSpeed: 0.78,
+    zBias: -0.10,
     seed: 11
   },
   {
     key: "round",
     label: "Round",
-    sublabel: "Field",
     route: "/?lens=round",
     baseAngle: Math.PI * 1.88,
-    orbitRadius: 0.36,
-    z: 0.30,
+    orbitRadius: 0.48,
+    phaseSpeed: 0.84,
+    zBias: 0.20,
     seed: 29
   },
   {
     key: "globe",
     label: "Globe",
-    sublabel: "Universe",
     route: "/nine-summits/universe/",
-    baseAngle: Math.PI * 0.50,
-    orbitRadius: 0.31,
-    z: 0.08,
+    baseAngle: Math.PI * 0.48,
+    orbitRadius: 0.42,
+    phaseSpeed: 0.70,
+    zBias: 0.02,
     seed: 43
   }
 ]);
@@ -155,12 +144,9 @@ const state = {
   canvas: null,
   context: null,
   mount: null,
-  statusText: null,
 
   width: 0,
   height: 0,
-  cssWidth: 0,
-  cssHeight: 0,
 
   active: true,
   visible: true,
@@ -187,10 +173,6 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function lerp(a, b, t) {
-  return a + (b - a) * t;
-}
-
 function hash(seed, index, salt = 0) {
   const x = Math.sin((seed + 1) * 91.17 + (index + 1) * 12.9898 + salt * 78.233) * 43758.5453;
   return x - Math.floor(x);
@@ -210,7 +192,7 @@ function sizeCanvas() {
 
   const rect = canvas.getBoundingClientRect();
   const cssWidth = Math.max(320, Math.floor(rect.width || canvas.clientWidth || 960));
-  const cssHeight = Math.max(420, Math.floor(rect.height || canvas.clientHeight || 720));
+  const cssHeight = Math.max(500, Math.floor(rect.height || canvas.clientHeight || 720));
 
   const width = Math.floor(cssWidth * DPR);
   const height = Math.floor(cssHeight * DPR);
@@ -222,8 +204,6 @@ function sizeCanvas() {
     canvas.height = height;
   }
 
-  state.cssWidth = cssWidth;
-  state.cssHeight = cssHeight;
   state.width = width;
   state.height = height;
   state.context = canvas.getContext("2d", { alpha: false });
@@ -240,11 +220,11 @@ function clearField(ctx, width, height, activeScene) {
     width * 0.04,
     width * 0.50,
     height * 0.52,
-    Math.max(width, height) * 0.72
+    Math.max(width, height) * 0.75
   );
 
   bg.addColorStop(0, p.bg2);
-  bg.addColorStop(0.38, p.bg1);
+  bg.addColorStop(0.40, p.bg1);
   bg.addColorStop(1, p.bg0);
 
   ctx.fillStyle = bg;
@@ -253,15 +233,15 @@ function clearField(ctx, width, height, activeScene) {
   ctx.save();
   ctx.globalCompositeOperation = "lighter";
 
-  const aura1 = ctx.createRadialGradient(width * 0.50, height * 0.45, 0, width * 0.50, height * 0.45, width * 0.46);
+  const aura1 = ctx.createRadialGradient(width * 0.50, height * 0.46, 0, width * 0.50, height * 0.46, width * 0.52);
   aura1.addColorStop(0, p.auraA);
-  aura1.addColorStop(0.58, p.auraB);
+  aura1.addColorStop(0.52, p.auraB);
   aura1.addColorStop(1, "rgba(0,0,0,0)");
   ctx.fillStyle = aura1;
   ctx.fillRect(0, 0, width, height);
 
-  const aura2 = ctx.createRadialGradient(width * 0.68, height * 0.30, 0, width * 0.68, height * 0.30, width * 0.42);
-  aura2.addColorStop(0, p.auraC);
+  const aura2 = ctx.createRadialGradient(width * 0.62, height * 0.24, 0, width * 0.62, height * 0.24, width * 0.36);
+  aura2.addColorStop(0, "rgba(255,255,255,.08)");
   aura2.addColorStop(1, "rgba(0,0,0,0)");
   ctx.fillStyle = aura2;
   ctx.fillRect(0, 0, width, height);
@@ -270,8 +250,7 @@ function clearField(ctx, width, height, activeScene) {
 }
 
 function drawStars(ctx, width, height, activeScene) {
-  const density = activeScene.starDensity;
-  const count = MOBILE ? Math.floor(56 * density) : Math.floor(110 * density);
+  const count = MOBILE ? Math.floor(54 * activeScene.starDensity) : Math.floor(112 * activeScene.starDensity);
 
   ctx.save();
   ctx.globalCompositeOperation = "lighter";
@@ -281,7 +260,7 @@ function drawStars(ctx, width, height, activeScene) {
     const y = hash(13, i, 2) * height;
     const pulse = 0.5 + Math.sin(state.lightPhase * 0.8 + i * 0.47) * 0.5;
     const radius = (0.45 + hash(13, i, 3) * 1.35) * DPR;
-    const alpha = 0.18 + pulse * 0.32;
+    const alpha = 0.16 + pulse * 0.34;
 
     ctx.beginPath();
     ctx.fillStyle = i % 11 === 0
@@ -294,30 +273,42 @@ function drawStars(ctx, width, height, activeScene) {
   ctx.restore();
 }
 
-function drawFieldPlanes(ctx, width, height, activeScene) {
-  const cx = width * 0.5;
-  const cy = height * 0.54;
-  const base = Math.min(width, height) * 0.40 * activeScene.fieldScale;
+function sphereSpec(activeScene) {
+  const min = Math.min(state.width, state.height);
+  const radius = min * (MOBILE ? 0.245 : 0.285) * activeScene.sphereScale;
+
+  return {
+    x: state.width * 0.50,
+    y: state.height * (MOBILE ? 0.45 : 0.455),
+    r: radius
+  };
+}
+
+function drawDepthField(ctx, activeScene, sphere) {
+  const p = activeScene.palette;
+  const cx = sphere.x;
+  const cy = sphere.y + sphere.r * 0.12;
+  const base = sphere.r * 1.92 * activeScene.orbitalSpread;
 
   ctx.save();
   ctx.globalCompositeOperation = "lighter";
-  ctx.lineWidth = Math.max(0.8, 1.0 * DPR);
+  ctx.strokeStyle = p.grid;
+  ctx.lineWidth = Math.max(0.8, DPR);
 
   const rings = [
-    { r: 1.18, a: 0.16, y: 0.24 },
-    { r: 0.88, a: 0.22, y: 0.15 },
-    { r: 0.58, a: 0.24, y: 0.07 },
-    { r: 0.34, a: 0.20, y: 0.00 }
+    { r: 1.35, alpha: 0.14, y: 0.18 },
+    { r: 1.04, alpha: 0.18, y: 0.10 },
+    { r: 0.72, alpha: 0.20, y: 0.04 },
+    { r: 0.46, alpha: 0.16, y: 0.00 }
   ];
 
   for (const ring of rings) {
     ctx.save();
-    ctx.translate(cx, cy + base * ring.y);
+    ctx.translate(cx, cy + sphere.r * ring.y);
     ctx.scale(1, activeScene.gridTilt);
-    ctx.rotate(Math.sin(state.phase * 0.28) * 0.03);
-    ctx.strokeStyle = activeScene.palette.grid;
-    ctx.globalAlpha = ring.a;
+    ctx.rotate(Math.sin(state.phase * 0.24) * 0.028);
 
+    ctx.globalAlpha = ring.alpha;
     ctx.beginPath();
     ctx.ellipse(0, 0, base * ring.r, base * ring.r, 0, 0, Math.PI * 2);
     ctx.stroke();
@@ -325,245 +316,208 @@ function drawFieldPlanes(ctx, width, height, activeScene) {
     ctx.restore();
   }
 
-  const spokeCount = MOBILE ? 10 : 16;
-  ctx.strokeStyle = activeScene.palette.grid;
-  ctx.globalAlpha = 0.13;
-
-  for (let i = 0; i < spokeCount; i += 1) {
-    const a = (i / spokeCount) * Math.PI * 2 + state.phase * 0.08;
-    const x0 = cx + Math.cos(a) * base * 0.18;
-    const y0 = cy + Math.sin(a) * base * 0.18 * activeScene.gridTilt;
-    const x1 = cx + Math.cos(a) * base * 1.18;
-    const y1 = cy + Math.sin(a) * base * 1.18 * activeScene.gridTilt;
-
-    ctx.beginPath();
-    ctx.moveTo(x0, y0);
-    ctx.lineTo(x1, y1);
-    ctx.stroke();
-  }
-
   ctx.restore();
 }
 
-function drawCentralSphere(ctx, width, height, activeScene) {
-  const cx = width * 0.5;
-  const cy = height * 0.48;
-  const radius = Math.min(width, height) * (MOBILE ? 0.205 : 0.225) * activeScene.fieldScale;
+function projectDiamond(item, activeScene, sphere) {
+  const angle = item.baseAngle + state.phase * item.phaseSpeed + state.dragPhase;
+  const orbit = sphere.r * 1.72 * item.orbitRadius * activeScene.orbitalSpread;
+
+  const rawX = Math.cos(angle) * orbit * 1.55;
+  const rawY = Math.sin(angle) * orbit * activeScene.gridTilt;
+
+  const orbitalZ = Math.sin(angle + 0.34) * 0.82;
+  const selectedBoost = item.key === state.selected ? 0.36 : 0;
+  const hoverBoost = item.key === state.hover ? 0.16 : 0;
+  const z = item.zBias + orbitalZ + selectedBoost + hoverBoost;
+
+  const focal = 2.6;
+  const perspective = focal / (focal - z * activeScene.depth * 0.52);
+
+  const x = sphere.x + rawX * perspective;
+  const y = sphere.y + rawY * perspective;
+
+  const baseSize = sphere.r * (MOBILE ? 0.34 : 0.29);
+  const size = baseSize * clamp(perspective, 0.62, 1.38) * (item.key === state.selected ? 1.13 : 1);
+
+  const distanceFromCenter = Math.hypot(x - sphere.x, y - sphere.y);
+  const behindSphere = z < 0 && distanceFromCenter < sphere.r * 1.02;
+  const farSide = z < 0;
+
+  return {
+    ...item,
+    x,
+    y,
+    z,
+    size,
+    perspective,
+    selected: item.key === state.selected,
+    hover: item.key === state.hover,
+    behindSphere,
+    farSide,
+    distanceFromCenter
+  };
+}
+
+function getDiamonds(activeScene, sphere) {
+  return DIAMONDS
+    .map((item) => projectDiamond(item, activeScene, sphere))
+    .sort((a, b) => a.z - b.z);
+}
+
+function drawSphere(ctx, activeScene, sphere) {
   const p = activeScene.palette;
+  const { x: cx, y: cy, r } = sphere;
 
   ctx.save();
 
   ctx.globalCompositeOperation = "lighter";
-  const glow = ctx.createRadialGradient(cx, cy, radius * 0.72, cx, cy, radius * 1.72);
-  glow.addColorStop(0, "rgba(255,255,255,0)");
-  glow.addColorStop(0.50, p.glow);
-  glow.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = glow;
+  const atmosphere = ctx.createRadialGradient(cx, cy, r * 0.86, cx, cy, r * 1.72);
+  atmosphere.addColorStop(0, "rgba(255,255,255,0)");
+  atmosphere.addColorStop(0.50, p.glow);
+  atmosphere.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = atmosphere;
   ctx.beginPath();
-  ctx.arc(cx, cy, radius * 1.72, 0, Math.PI * 2);
+  ctx.arc(cx, cy, r * 1.72, 0, Math.PI * 2);
   ctx.fill();
 
   ctx.globalCompositeOperation = "source-over";
 
-  const sphere = ctx.createRadialGradient(
-    cx - radius * 0.36,
-    cy - radius * 0.42,
-    radius * 0.05,
+  const body = ctx.createRadialGradient(
+    cx - r * 0.38,
+    cy - r * 0.42,
+    r * 0.06,
     cx,
     cy,
-    radius * 1.12
+    r * 1.12
   );
 
-  sphere.addColorStop(0, "rgba(255,255,255,.82)");
-  sphere.addColorStop(0.08, p.sphereA);
-  sphere.addColorStop(0.46, p.sphereB);
-  sphere.addColorStop(0.84, p.sphereC);
-  sphere.addColorStop(1, "#01030a");
+  body.addColorStop(0, "rgba(255,255,255,.78)");
+  body.addColorStop(0.08, p.sphereA);
+  body.addColorStop(0.42, p.sphereB);
+  body.addColorStop(0.84, p.sphereC);
+  body.addColorStop(1, "#01030a");
 
-  ctx.fillStyle = sphere;
+  ctx.fillStyle = body;
   ctx.beginPath();
-  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
   ctx.fill();
 
+  ctx.save();
   ctx.clip();
-
-  drawSphereGrid(ctx, cx, cy, radius, activeScene);
+  drawSphereCurvature(ctx, activeScene, sphere);
 
   const terminator = ctx.createRadialGradient(
-    cx + radius * 0.48 + Math.sin(state.phase) * radius * 0.08,
-    cy + radius * 0.04,
-    radius * 0.06,
-    cx + radius * 0.50,
+    cx + r * 0.46 + Math.sin(state.phase) * r * 0.08,
+    cy + r * 0.04,
+    r * 0.06,
+    cx + r * 0.50,
     cy,
-    radius * 1.12
+    r * 1.12
   );
 
   terminator.addColorStop(0, "rgba(0,0,0,0)");
-  terminator.addColorStop(0.45, "rgba(0,0,0,.18)");
-  terminator.addColorStop(0.82, "rgba(0,0,0,.66)");
-  terminator.addColorStop(1, "rgba(0,0,0,.88)");
+  terminator.addColorStop(0.46, "rgba(0,0,0,.18)");
+  terminator.addColorStop(0.82, "rgba(0,0,0,.68)");
+  terminator.addColorStop(1, "rgba(0,0,0,.92)");
 
   ctx.fillStyle = terminator;
-  ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+  ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
+  drawInnerLight(ctx, activeScene, sphere);
   ctx.restore();
 
-  ctx.save();
   ctx.globalCompositeOperation = "lighter";
   ctx.strokeStyle = p.accent;
-  ctx.globalAlpha = 0.38;
-  ctx.lineWidth = Math.max(1.2, radius * 0.018);
+  ctx.globalAlpha = 0.40;
+  ctx.lineWidth = Math.max(1.2, r * 0.012);
   ctx.beginPath();
-  ctx.arc(cx, cy, radius * 1.006, 0, Math.PI * 2);
+  ctx.arc(cx, cy, r * 1.006, 0, Math.PI * 2);
   ctx.stroke();
-  ctx.restore();
 
-  drawSphereLabel(ctx, cx, cy, radius, activeScene);
+  ctx.globalAlpha = 0.20;
+  ctx.lineWidth = Math.max(2, r * 0.025);
+  ctx.beginPath();
+  ctx.arc(cx, cy, r * 1.025, Math.PI * 1.06, Math.PI * 1.86);
+  ctx.stroke();
+
+  ctx.restore();
 }
 
-function drawSphereGrid(ctx, cx, cy, radius, activeScene) {
+function drawSphereCurvature(ctx, activeScene, sphere) {
   const p = activeScene.palette;
+  const { x: cx, y: cy, r } = sphere;
 
   ctx.save();
   ctx.globalCompositeOperation = "screen";
   ctx.strokeStyle = p.grid;
-  ctx.lineWidth = Math.max(0.5, radius * 0.006);
-  ctx.globalAlpha = activeScene.key === "flat" ? 0.18 : 0.30;
+  ctx.lineWidth = Math.max(0.5, r * 0.004);
+  ctx.globalAlpha = activeScene.key === "flat" ? 0.16 : 0.30;
 
-  const latitudeCount = activeScene.key === "flat" ? 5 : 7;
+  const latitudeCount = activeScene.key === "flat" ? 5 : 9;
   for (let i = 1; i < latitudeCount; i += 1) {
     const t = (i / latitudeCount) * 2 - 1;
-    const y = cy + t * radius * 0.72;
-    const w = radius * Math.sqrt(Math.max(0, 1 - t * t)) * 0.98;
-    const h = radius * 0.15 * (1 - Math.abs(t) * 0.35);
+    const y = cy + t * r * 0.72;
+    const w = r * Math.sqrt(Math.max(0, 1 - t * t)) * 0.98;
+    const h = r * 0.13 * (1 - Math.abs(t) * 0.30);
 
     ctx.beginPath();
     ctx.ellipse(cx, y, w, h, 0, 0, Math.PI * 2);
     ctx.stroke();
   }
 
-  const longitudeCount = activeScene.key === "flat" ? 5 : 8;
+  const longitudeCount = activeScene.key === "flat" ? 5 : 10;
   for (let i = 0; i < longitudeCount; i += 1) {
-    const a = (i / longitudeCount) * Math.PI + state.phase * 0.10;
+    const a = (i / longitudeCount) * Math.PI + state.phase * 0.12;
     const squash = Math.abs(Math.cos(a)) * 0.96;
 
     ctx.beginPath();
-    ctx.ellipse(cx, cy, radius * squash, radius * 0.98, 0, 0, Math.PI * 2);
+    ctx.ellipse(cx, cy, r * squash, r * 0.98, 0, 0, Math.PI * 2);
     ctx.stroke();
   }
 
   ctx.restore();
 }
 
-function drawSphereLabel(ctx, cx, cy, radius, activeScene) {
+function drawInnerLight(ctx, activeScene, sphere) {
+  const { x: cx, y: cy, r } = sphere;
+
   ctx.save();
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
+  ctx.globalCompositeOperation = "lighter";
 
-  ctx.fillStyle = "rgba(4,9,18,.62)";
-  ctx.strokeStyle = "rgba(244,191,96,.22)";
-  ctx.lineWidth = Math.max(1, DPR);
+  const light = ctx.createRadialGradient(
+    cx - r * 0.34,
+    cy - r * 0.36,
+    r * 0.02,
+    cx - r * 0.34,
+    cy - r * 0.36,
+    r * 0.52
+  );
 
-  const boxW = radius * 1.32;
-  const boxH = radius * 0.42;
-  const x = cx - boxW * 0.5;
-  const y = cy + radius * 0.08 - boxH * 0.5;
+  light.addColorStop(0, "rgba(255,255,255,.24)");
+  light.addColorStop(1, "rgba(255,255,255,0)");
 
-  drawFacetBox(ctx, x, y, boxW, boxH, radius * 0.08);
+  ctx.fillStyle = light;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
   ctx.fill();
-  ctx.stroke();
-
-  ctx.fillStyle = activeScene.palette.active;
-  ctx.font = `${Math.max(10, radius * 0.075)}px Inter, system-ui, sans-serif`;
-  ctx.letterSpacing = "0.12em";
-  ctx.fillText(activeScene.kicker.toUpperCase(), cx, cy - radius * 0.01);
-
-  ctx.fillStyle = "#f8ead0";
-  ctx.font = `900 ${Math.max(18, radius * 0.15)}px Inter, system-ui, sans-serif`;
-  ctx.fillText(activeScene.title, cx, cy + radius * 0.16);
 
   ctx.restore();
 }
 
-function drawFacetBox(ctx, x, y, w, h, cut) {
-  ctx.beginPath();
-  ctx.moveTo(x + cut, y);
-  ctx.lineTo(x + w - cut, y);
-  ctx.lineTo(x + w, y + cut);
-  ctx.lineTo(x + w, y + h - cut);
-  ctx.lineTo(x + w - cut, y + h);
-  ctx.lineTo(x + cut, y + h);
-  ctx.lineTo(x, y + h - cut);
-  ctx.lineTo(x, y + cut);
-  ctx.closePath();
-}
-
-function projectPoint(x, y, z, activeScene) {
-  const width = state.width;
-  const height = state.height;
-  const cx = width * 0.5;
-  const cy = height * 0.50;
-  const focal = 2.7;
-  const depth = activeScene.depth;
-
-  const perspective = focal / (focal - z * depth);
-  const screenX = cx + x * perspective;
-  const screenY = cy + y * perspective;
-
-  return {
-    x: screenX,
-    y: screenY,
-    scale: perspective,
-    z
-  };
-}
-
-function diamondPositions(activeScene) {
-  const width = state.width;
-  const height = state.height;
-  const min = Math.min(width, height);
-  const positions = [];
-
-  for (const item of DIAMONDS) {
-    const selected = item.key === state.selected;
-    const hover = item.key === state.hover;
-    const angle = item.baseAngle + state.phase * (activeScene.key === "flat" ? 0.04 : 0.18) + state.dragPhase;
-    const radius = min * item.orbitRadius * activeScene.fieldScale;
-    const x = Math.cos(angle) * radius;
-    const y = Math.sin(angle) * radius * (activeScene.key === "flat" ? 0.40 : 0.62);
-    const z = item.z + Math.sin(angle + item.seed) * 0.20 + (selected ? 0.28 : 0) + (hover ? 0.08 : 0);
-
-    const projected = projectPoint(x, y, z, activeScene);
-    const baseSize = min * (MOBILE ? 0.145 : 0.125);
-    const size = baseSize * clamp(projected.scale, 0.78, 1.32) * (selected ? 1.14 : 1);
-
-    positions.push({
-      ...item,
-      selected,
-      hover,
-      x: projected.x,
-      y: projected.y,
-      z,
-      scale: projected.scale,
-      size,
-      depthSort: z
-    });
-  }
-
-  return positions.sort((a, b) => a.depthSort - b.depthSort);
-}
-
 function drawDiamondShadow(ctx, diamond) {
+  if (diamond.behindSphere) return;
+
   ctx.save();
-  ctx.globalAlpha = clamp(0.20 + diamond.z * 0.18, 0.12, 0.38);
-  ctx.fillStyle = "rgba(0,0,0,.72)";
+  ctx.globalAlpha = clamp(0.18 + diamond.z * 0.10, 0.08, 0.30);
+  ctx.fillStyle = "rgba(0,0,0,.74)";
   ctx.filter = `blur(${Math.max(4, diamond.size * 0.055)}px)`;
 
   ctx.beginPath();
   ctx.ellipse(
     diamond.x,
-    diamond.y + diamond.size * 0.64,
-    diamond.size * 0.42,
+    diamond.y + diamond.size * 0.58,
+    diamond.size * 0.40,
     diamond.size * 0.10,
     0,
     0,
@@ -584,17 +538,24 @@ function drawFloatingDiamond(ctx, diamond, activeScene) {
 
   ctx.save();
 
+  let alpha = 1;
+  if (diamond.farSide) alpha = 0.44;
+  if (diamond.behindSphere) alpha = 0.18;
+
+  ctx.globalAlpha = alpha;
+
   const glow = diamond.selected || diamond.hover ? 1 : 0;
-  if (glow) {
+  if (glow && !diamond.behindSphere) {
+    ctx.save();
     ctx.globalCompositeOperation = "lighter";
-    const g = ctx.createRadialGradient(cx, cy, half * 0.28, cx, cy, half * 1.16);
+    const g = ctx.createRadialGradient(cx, cy, half * 0.22, cx, cy, half * 1.26);
     g.addColorStop(0, diamond.selected ? activeScene.palette.glow : "rgba(255,255,255,.10)");
     g.addColorStop(1, "rgba(0,0,0,0)");
     ctx.fillStyle = g;
     ctx.beginPath();
     ctx.arc(cx, cy, half * 1.28, 0, Math.PI * 2);
     ctx.fill();
-    ctx.globalCompositeOperation = "source-over";
+    ctx.restore();
   }
 
   const top = { x: cx, y: cy - half };
@@ -611,11 +572,11 @@ function drawFloatingDiamond(ctx, diamond, activeScene) {
   ctx.closePath();
 
   const body = ctx.createLinearGradient(cx - half, cy - half, cx + half, cy + half);
-  body.addColorStop(0, "rgba(255,255,255,.44)");
-  body.addColorStop(0.18, diamond.selected ? "rgba(143,240,195,.28)" : "rgba(142,190,255,.20)");
-  body.addColorStop(0.45, "rgba(12,27,52,.88)");
-  body.addColorStop(0.74, "rgba(244,191,96,.16)");
-  body.addColorStop(1, "rgba(4,9,18,.92)");
+  body.addColorStop(0, "rgba(255,255,255,.42)");
+  body.addColorStop(0.18, diamond.selected ? "rgba(143,240,195,.30)" : "rgba(142,190,255,.18)");
+  body.addColorStop(0.46, "rgba(12,27,52,.86)");
+  body.addColorStop(0.74, "rgba(244,191,96,.13)");
+  body.addColorStop(1, "rgba(4,9,18,.94)");
 
   ctx.fillStyle = body;
   ctx.fill();
@@ -623,12 +584,12 @@ function drawFloatingDiamond(ctx, diamond, activeScene) {
   ctx.save();
   ctx.clip();
 
-  drawDiamondFacet(ctx, top, center, left, "rgba(255,255,255,.22)", "rgba(142,190,255,.04)");
-  drawDiamondFacet(ctx, top, right, center, "rgba(255,255,255,.18)", "rgba(244,191,96,.05)");
-  drawDiamondFacet(ctx, center, right, bottom, "rgba(143,240,195,.11)", "rgba(5,9,18,.22)");
-  drawDiamondFacet(ctx, left, center, bottom, "rgba(142,190,255,.12)", "rgba(5,9,18,.28)");
+  drawFacet(ctx, top, center, left, "rgba(255,255,255,.22)", "rgba(142,190,255,.04)");
+  drawFacet(ctx, top, right, center, "rgba(255,255,255,.17)", "rgba(244,191,96,.05)");
+  drawFacet(ctx, center, right, bottom, "rgba(143,240,195,.10)", "rgba(5,9,18,.26)");
+  drawFacet(ctx, left, center, bottom, "rgba(142,190,255,.11)", "rgba(5,9,18,.30)");
 
-  ctx.strokeStyle = "rgba(255,255,255,.18)";
+  ctx.strokeStyle = "rgba(255,255,255,.16)";
   ctx.lineWidth = Math.max(0.7, DPR);
   ctx.beginPath();
   ctx.moveTo(top.x, top.y);
@@ -638,7 +599,7 @@ function drawFloatingDiamond(ctx, diamond, activeScene) {
   ctx.stroke();
 
   const inner = half * 0.46;
-  ctx.strokeStyle = diamond.selected ? "rgba(143,240,195,.30)" : "rgba(255,255,255,.14)";
+  ctx.strokeStyle = diamond.selected ? "rgba(143,240,195,.34)" : "rgba(255,255,255,.14)";
   ctx.lineWidth = Math.max(0.6, DPR * 0.8);
   ctx.beginPath();
   ctx.moveTo(cx, cy - inner);
@@ -652,7 +613,7 @@ function drawFloatingDiamond(ctx, diamond, activeScene) {
 
   ctx.restore();
 
-  ctx.strokeStyle = diamond.selected ? "rgba(143,240,195,.72)" : "rgba(244,191,96,.42)";
+  ctx.strokeStyle = diamond.selected ? "rgba(143,240,195,.76)" : "rgba(244,191,96,.42)";
   ctx.lineWidth = diamond.selected ? Math.max(1.5, DPR * 1.4) : Math.max(1, DPR);
   ctx.beginPath();
   ctx.moveTo(top.x, top.y);
@@ -662,21 +623,25 @@ function drawFloatingDiamond(ctx, diamond, activeScene) {
   ctx.closePath();
   ctx.stroke();
 
-  drawDiamondText(ctx, diamond, activeScene, cx, cy, half);
+  if (!diamond.behindSphere) {
+    drawDiamondText(ctx, diamond, activeScene, cx, cy, half);
+  }
 
   ctx.restore();
 
-  state.hitRegions.push({
-    key: diamond.key,
-    route: diamond.route,
-    x: cx,
-    y: cy,
-    radius: half * 0.92,
-    diamond
-  });
+  if (!diamond.behindSphere) {
+    state.hitRegions.push({
+      key: diamond.key,
+      route: diamond.route,
+      x: cx,
+      y: cy,
+      radius: half * 0.92,
+      diamond
+    });
+  }
 }
 
-function drawDiamondFacet(ctx, a, b, c, colorA, colorB) {
+function drawFacet(ctx, a, b, c, colorA, colorB) {
   const g = ctx.createLinearGradient(a.x, a.y, c.x, c.y);
   g.addColorStop(0, colorA);
   g.addColorStop(1, colorB);
@@ -726,121 +691,57 @@ function drawDiamondText(ctx, diamond, activeScene, cx, cy, half) {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
-  const labelSize = clamp(half * 0.23, 13 * DPR, 24 * DPR);
-  const subSize = clamp(half * 0.115, 9 * DPR, 13 * DPR);
+  const labelSize = clamp(half * 0.28, 14 * DPR, 27 * DPR);
 
   ctx.fillStyle = diamond.selected ? activeScene.palette.active : "#f8ead0";
   ctx.font = `900 ${labelSize}px Inter, system-ui, sans-serif`;
-  ctx.fillText(diamond.label, cx, cy - half * 0.06);
-
-  ctx.fillStyle = diamond.selected ? "rgba(143,240,195,.86)" : "rgba(186,194,207,.86)";
-  ctx.font = `800 ${subSize}px Inter, system-ui, sans-serif`;
-  ctx.fillText(diamond.sublabel.toUpperCase(), cx, cy + half * 0.20);
-
-  if (!MOBILE && diamond.selected) {
-    ctx.fillStyle = "rgba(244,191,96,.78)";
-    ctx.font = `800 ${subSize * 0.86}px Inter, system-ui, sans-serif`;
-    ctx.fillText("double click to open", cx, cy + half * 0.38);
-  }
+  ctx.fillText(diamond.label, cx, cy);
 
   ctx.restore();
-}
-
-function drawSceneCopy(ctx, width, height, activeScene) {
-  const y = height * (MOBILE ? 0.88 : 0.86);
-  const maxW = width * 0.78;
-  const x = width * 0.5;
-
-  ctx.save();
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-
-  const boxW = Math.min(width * 0.86, 820 * DPR);
-  const boxH = MOBILE ? 84 * DPR : 92 * DPR;
-  const boxX = x - boxW * 0.5;
-  const boxY = y - boxH * 0.5;
-
-  ctx.fillStyle = "rgba(4,9,18,.58)";
-  ctx.strokeStyle = "rgba(244,191,96,.18)";
-  ctx.lineWidth = Math.max(1, DPR);
-  drawFacetBox(ctx, boxX, boxY, boxW, boxH, 16 * DPR);
-  ctx.fill();
-  ctx.stroke();
-
-  ctx.fillStyle = activeScene.palette.active;
-  ctx.font = `900 ${MOBILE ? 11 * DPR : 12 * DPR}px Inter, system-ui, sans-serif`;
-  ctx.fillText("SINGLE CLICK CHANGES SCENERY · DOUBLE CLICK OPENS ROUTE", x, boxY + boxH * 0.28);
-
-  ctx.fillStyle = "rgba(248,234,208,.82)";
-  ctx.font = `700 ${MOBILE ? 13 * DPR : 15 * DPR}px Inter, system-ui, sans-serif`;
-  wrapText(ctx, activeScene.copy, x, boxY + boxH * 0.58, maxW, MOBILE ? 17 * DPR : 20 * DPR, 2);
-
-  ctx.restore();
-}
-
-function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3) {
-  const words = String(text).split(/\s+/);
-  const lines = [];
-  let line = "";
-
-  for (const word of words) {
-    const test = line ? `${line} ${word}` : word;
-    if (ctx.measureText(test).width > maxWidth && line) {
-      lines.push(line);
-      line = word;
-      if (lines.length >= maxLines) break;
-    } else {
-      line = test;
-    }
-  }
-
-  if (line && lines.length < maxLines) lines.push(line);
-
-  const startY = y - ((lines.length - 1) * lineHeight) / 2;
-  lines.forEach((item, index) => {
-    ctx.fillText(item, x, startY + index * lineHeight);
-  });
 }
 
 function render(time = 0) {
   if (!state.context || !state.canvas) return;
 
   const ctx = state.context;
-  const width = state.width;
-  const height = state.height;
   const activeScene = scene();
+  const sphere = sphereSpec(activeScene);
 
   state.hitRegions = [];
 
-  clearField(ctx, width, height, activeScene);
-  drawStars(ctx, width, height, activeScene);
-  drawFieldPlanes(ctx, width, height, activeScene);
-  drawCentralSphere(ctx, width, height, activeScene);
+  clearField(ctx, state.width, state.height, activeScene);
+  drawStars(ctx, state.width, state.height, activeScene);
+  drawDepthField(ctx, activeScene, sphere);
 
-  const diamonds = diamondPositions(activeScene);
-  for (const diamond of diamonds) {
+  const diamonds = getDiamonds(activeScene, sphere);
+
+  for (const diamond of diamonds.filter((item) => item.z < 0)) {
     drawFloatingDiamond(ctx, diamond, activeScene);
   }
 
-  drawForegroundLight(ctx, width, height, activeScene, time);
-  drawSceneCopy(ctx, width, height, activeScene);
+  drawSphere(ctx, activeScene, sphere);
 
+  for (const diamond of diamonds.filter((item) => item.z >= 0)) {
+    drawFloatingDiamond(ctx, diamond, activeScene);
+  }
+
+  drawForegroundLight(ctx, activeScene, time);
   stampDocument();
 }
 
-function drawForegroundLight(ctx, width, height, activeScene, time) {
+function drawForegroundLight(ctx, activeScene, time) {
   ctx.save();
   ctx.globalCompositeOperation = "lighter";
 
-  const sweepX = width * (0.18 + (0.5 + Math.sin(time * 0.00045) * 0.5) * 0.64);
-  const gradient = ctx.createLinearGradient(sweepX - width * 0.18, 0, sweepX + width * 0.18, height);
+  const sweepX = state.width * (0.14 + (0.5 + Math.sin(time * 0.00045) * 0.5) * 0.72);
+  const gradient = ctx.createLinearGradient(sweepX - state.width * 0.20, 0, sweepX + state.width * 0.20, state.height);
   gradient.addColorStop(0, "rgba(255,255,255,0)");
   gradient.addColorStop(0.48, activeScene.palette.glow);
   gradient.addColorStop(1, "rgba(255,255,255,0)");
 
-  ctx.globalAlpha = MOBILE ? 0.10 : 0.16;
+  ctx.globalAlpha = MOBILE ? 0.08 : 0.13;
   ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, width, height);
+  ctx.fillRect(0, 0, state.width, state.height);
 
   ctx.restore();
 }
@@ -867,14 +768,9 @@ function hitTest(point) {
 
 function selectScene(key) {
   if (!SCENES[key]) key = "round";
+
   state.selected = key;
   state.keyboardFocus = key;
-
-  const activeScene = scene();
-
-  if (state.statusText) {
-    state.statusText.textContent = activeScene.status;
-  }
 
   document.body.dataset.lens = key;
   document.documentElement.dataset.selectedLens = key;
@@ -1124,9 +1020,12 @@ function stampDocument() {
   root.dataset.selectedLens = state.selected;
   root.dataset.singleClick = "change-scenery";
   root.dataset.doubleClick = "navigate";
-  root.dataset.rendererType = "2d-canvas-projection";
+  root.dataset.rendererType = "2d-canvas-depth-projection";
   root.dataset.roundFieldRendered = "true";
   root.dataset.floatingDiamondsRendered = "true";
+  root.dataset.visibleStatusBlock = "false";
+  root.dataset.inCanvasInstructionStrip = "false";
+  root.dataset.inCanvasCenterTitle = "false";
   root.dataset.privateRenderersLoaded = String(PRIVATE_RENDERERS_LOADED);
   root.dataset.generatedImage = String(GENERATED_IMAGE);
   root.dataset.graphicBox = String(GRAPHIC_BOX);
@@ -1147,9 +1046,12 @@ function getCompassRoundFieldStatus() {
     defaultLens: "round",
     singleClick: "change-scenery",
     doubleClick: "navigate",
-    rendererType: "2d-canvas-projection",
+    rendererType: "2d-canvas-depth-projection",
     floatingDiamondsRendered: true,
     roundFieldRendered: true,
+    visibleStatusBlock: false,
+    inCanvasInstructionStrip: false,
+    inCanvasCenterTitle: false,
     privateRenderersLoaded: PRIVATE_RENDERERS_LOADED,
     generatedImage: GENERATED_IMAGE,
     graphicBox: GRAPHIC_BOX,
@@ -1184,7 +1086,6 @@ function exposeApi() {
 function boot() {
   state.canvas = byId("compassRoundFieldCanvas");
   state.mount = byId("compassRoundFieldMount");
-  state.statusText = byId("compassStatusText");
 
   if (!state.canvas || !state.mount) return;
 

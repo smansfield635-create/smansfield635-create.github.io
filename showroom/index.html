@@ -4,6 +4,7 @@
   data-page="showroom-crown-cut-256-lattice"
   data-route="/showroom/"
   data-model="fixed-crown-cut-256-lattice"
+  data-inspection-controls="finger-rotate"
   data-public-copy-clean="true"
   data-generated-image="false"
   data-graphic-box="false"
@@ -256,6 +257,10 @@
       box-shadow:
         inset 0 0 80px rgba(142,190,255,.05),
         inset 0 0 130px rgba(0,0,0,.44);
+      touch-action:none;
+      user-select:none;
+      -webkit-user-select:none;
+      -webkit-touch-callout:none;
     }
 
     .display-case::before {
@@ -284,6 +289,24 @@
       letter-spacing:.12em;
       text-transform:uppercase;
       clip-path:var(--facet-small);
+      pointer-events:none;
+    }
+
+    .inspect-cue {
+      position:absolute;
+      right:16px;
+      bottom:16px;
+      z-index:4;
+      max-width:min(330px,calc(100% - 32px));
+      padding:10px 13px;
+      border:1px solid rgba(142,190,255,.22);
+      background:rgba(4,8,18,.68);
+      color:rgba(247,236,212,.74);
+      font-size:.82rem;
+      font-weight:800;
+      line-height:1.35;
+      clip-path:var(--facet-small);
+      pointer-events:none;
     }
 
     canvas {
@@ -292,7 +315,14 @@
       height:clamp(450px,62vw,760px);
       position:relative;
       z-index:1;
+      touch-action:none;
+      user-select:none;
+      -webkit-user-select:none;
+      -webkit-touch-callout:none;
+      cursor:grab;
     }
+
+    canvas:active { cursor:grabbing; }
 
     .cards {
       display:grid;
@@ -372,6 +402,17 @@
       }
 
       canvas { height:490px; }
+
+      .case-label {
+        max-width:calc(100% - 32px);
+        font-size:.78rem;
+      }
+
+      .inspect-cue {
+        left:16px;
+        right:16px;
+        max-width:none;
+      }
     }
   </style>
 </head>
@@ -401,7 +442,7 @@
         <p class="eyebrow">Presentation Layer</p>
         <h1>The object has to hold the room.</h1>
         <p class="lede">
-          The Showroom is the public cover. It should present one strong object first: a fixed crown-cut 256-lattice diamond with governed light, refractive motion, and a structure that does not collapse.
+          The Showroom is the public cover. It presents one strong object first: a fixed crown-cut 256-lattice diamond with governed light, refractive motion, and finger inspection.
         </p>
 
         <div class="actions">
@@ -414,12 +455,14 @@
 
       <section class="panel showcase" aria-label="Crown-cut 256-lattice diamond display">
         <div class="display-case">
-          <div class="case-label">Crown Cut · 256 Lattice · Fixed Form</div>
+          <div class="case-label">Crown Cut · 256 Lattice · Finger Inspect</div>
           <canvas
             id="showroomDiamondCanvas"
+            tabindex="0"
             role="img"
-            aria-label="A fixed crown-cut 256-lattice diamond with physically governed light and sparkle."
+            aria-label="A fixed crown-cut 256-lattice diamond that can be rotated by touch or pointer drag."
           ></canvas>
+          <div class="inspect-cue">Drag to rotate. Release to inspect with momentum. Double tap to reset.</div>
         </div>
       </section>
 
@@ -431,9 +474,9 @@
         </article>
 
         <article class="card">
-          <strong>Motion Law</strong>
-          <h3>Structure fixed, light alive.</h3>
-          <p>The geometry stays set. Motion only moves rotation, light, sparkle, and refractive rhythm.</p>
+          <strong>Inspection Law</strong>
+          <h3>Structure fixed, camera alive.</h3>
+          <p>Your finger changes the viewing angle. The diamond does not resize, collapse, or morph.</p>
         </article>
 
         <article class="card">
@@ -458,6 +501,6 @@
     </main>
   </div>
 
-  <script type="module" src="/showroom/index.js?v=crown-cut-256-lattice"></script>
+  <script type="module" src="/showroom/index.js?v=crown-cut-256-lattice-inspectable"></script>
 </body>
 </html>

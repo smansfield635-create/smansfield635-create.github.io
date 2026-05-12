@@ -1,15 +1,16 @@
 // /showroom/index.js
-// SHOWROOM_COVER_FIXED_CROWN_CUT_256_FACE_DIAMOND_TNT_v3
+// SHOWROOM_COVER_FIXED_TABLE_CROWN_256_FACE_DIAMOND_TNT_v4
 // Full-file replacement.
 //
 // Purpose:
-// - Increase crown-cut appearance.
-// - Lock the visible structure size.
-// - Allow motion only: drag rotates yaw/pitch; idle rotation continues.
-// - Remove zoom manipulation.
-// - Preserve 256-face construct under the hood.
+// - Replace parachute/dome crown with a real diamond crown profile.
+// - Add a flat table and angular crown facets.
+// - Make the crown come down through the middle instead of rounding over.
+// - Keep the structure fuller and less thin.
+// - Keep size fixed.
+// - Allow motion only.
+// - Preserve 256-face construct.
 // - Preserve Fibonacci geometry as internal facet rhythm.
-// - Keep crystal faces as the dominant visual structure.
 // - Keep yellow line prominence reduced.
 // - Keep subtle nodal glints only.
 // - Render by code only.
@@ -18,8 +19,8 @@
 // - No visible diagnostics.
 // - No visual pass claim.
 
-const CONTRACT = "SHOWROOM_COVER_FIXED_CROWN_CUT_256_FACE_DIAMOND_TNT_v3";
-const PREVIOUS_CONTRACT = "SHOWROOM_COVER_CROWN_CRYSTAL_256_FACE_DIAMOND_TNT_v2";
+const CONTRACT = "SHOWROOM_COVER_FIXED_TABLE_CROWN_256_FACE_DIAMOND_TNT_v4";
+const PREVIOUS_CONTRACT = "SHOWROOM_COVER_FIXED_CROWN_CUT_256_FACE_DIAMOND_TNT_v3";
 const ROUTE = "/showroom/";
 
 const TOTAL_FACES = 256;
@@ -48,7 +49,7 @@ const state = {
   stage: null,
 
   yaw: -18,
-  pitch: -4,
+  pitch: -5,
   roll: 0,
 
   dragging: false,
@@ -85,16 +86,19 @@ function fibonacciForFace(index) {
 
 function ringProfile() {
   return [
-    // Stronger crown/table silhouette. Eight bands × 32 sectors = 256 faces.
-    { y: -0.52, rx: 0.40, rz: 0.070, phase: 0.00, role: "table" },
-    { y: -0.47, rx: 0.58, rz: 0.105, phase: 0.04, role: "star-crown" },
-    { y: -0.37, rx: 0.78, rz: 0.165, phase: 0.00, role: "upper-crown" },
-    { y: -0.22, rx: 1.03, rz: 0.250, phase: 0.06, role: "main-crown" },
-    { y: -0.05, rx: 1.16, rz: 0.315, phase: 0.00, role: "girdle" },
-    { y:  0.18, rx: 0.86, rz: 0.235, phase: 0.06, role: "upper-pavilion" },
-    { y:  0.42, rx: 0.50, rz: 0.135, phase: 0.00, role: "lower-pavilion" },
-    { y:  0.62, rx: 0.19, rz: 0.050, phase: 0.04, role: "near-culet" },
-    { y:  0.74, rx: 0.020, rz: 0.006, phase: 0.00, role: "culet" }
+    // Real crown-cut profile.
+    // The first two rings define the flat table.
+    // The crown then angles down to the girdle instead of forming a rounded dome.
+    // Eight bands × 32 sectors = 256 faces.
+    { y: -0.455, rx: 0.34, rz: 0.056, phase: 0.00, role: "table-center" },
+    { y: -0.455, rx: 0.52, rz: 0.092, phase: 0.00, role: "table-edge" },
+    { y: -0.365, rx: 0.74, rz: 0.156, phase: 0.04, role: "star-crown" },
+    { y: -0.230, rx: 1.00, rz: 0.250, phase: 0.00, role: "main-crown" },
+    { y: -0.055, rx: 1.18, rz: 0.325, phase: 0.04, role: "girdle" },
+    { y:  0.185, rx: 0.90, rz: 0.248, phase: 0.00, role: "upper-pavilion" },
+    { y:  0.430, rx: 0.53, rz: 0.146, phase: 0.04, role: "lower-pavilion" },
+    { y:  0.630, rx: 0.20, rz: 0.054, phase: 0.00, role: "near-culet" },
+    { y:  0.755, rx: 0.020, rz: 0.006, phase: 0.00, role: "culet" }
   ];
 }
 
@@ -109,9 +113,12 @@ function buildGeometry() {
 
     for (let sector = 0; sector < SECTORS; sector += 1) {
       const fib = fibonacciForFace(ring * SECTORS + sector);
-      const theta = (sector / SECTORS) * Math.PI * 2 + profile.phase + fib.phase * 0.010;
-      const crownPulse = profile.role.includes("crown") || profile.role === "table" ? 0.006 : 0.014;
-      const radiusPulse = 0.996 + Math.sin(theta * 8 + fib.value * 0.0618) * crownPulse;
+      const theta = (sector / SECTORS) * Math.PI * 2 + profile.phase + fib.phase * 0.008;
+
+      const isTable = profile.role === "table-center" || profile.role === "table-edge";
+      const isCrown = profile.role === "star-crown" || profile.role === "main-crown";
+      const pulse = isTable ? 0.002 : isCrown ? 0.006 : 0.014;
+      const radiusPulse = 0.998 + Math.sin(theta * 8 + fib.value * 0.0618) * pulse;
 
       vertices.push({
         ring,
@@ -218,8 +225,9 @@ function ensureStage(host) {
 
   stage.dataset.contract = CONTRACT;
   stage.dataset.totalFaces = String(TOTAL_FACES);
-  stage.dataset.crownTop = "true";
-  stage.dataset.crownAppearance = "increased";
+  stage.dataset.tableCrown = "true";
+  stage.dataset.parachuteTop = "false";
+  stage.dataset.crownCenterComesDown = "true";
   stage.dataset.structureSizeLocked = "true";
   stage.dataset.motionOnly = "true";
   stage.dataset.zoomManipulation = "false";
@@ -244,7 +252,7 @@ function ensureCanvas(stage) {
   }
 
   canvas.setAttribute("data-showroom-crystal-diamond-canvas", "true");
-  canvas.setAttribute("aria-label", "Fixed-size crown-cut crystallized 256-face rotating diamond");
+  canvas.setAttribute("aria-label", "Fixed-size table-crown crystallized 256-face rotating diamond");
   canvas.setAttribute("role", "img");
   canvas.style.display = "block";
   canvas.style.width = "100%";
@@ -257,10 +265,10 @@ function ensureCanvas(stage) {
 }
 
 function ensureStyle() {
-  if (document.getElementById("showroom-fixed-crown-cut-diamond-style-v3")) return;
+  if (document.getElementById("showroom-fixed-table-crown-diamond-style-v4")) return;
 
   const style = document.createElement("style");
-  style.id = "showroom-fixed-crown-cut-diamond-style-v3";
+  style.id = "showroom-fixed-table-crown-diamond-style-v4";
   style.textContent = `
     [data-showroom-crystal-diamond-stage] {
       width: 100%;
@@ -283,7 +291,7 @@ function ensureStyle() {
     }
 
     [data-showroom-crystal-diamond-stage]::before {
-      content: "FIXED CROWN CUT · 256 FACES";
+      content: "FIXED TABLE CROWN · 256 FACES";
       position: absolute;
       top: 16px;
       left: 16px;
@@ -339,7 +347,7 @@ function updateNearbyCopy(host) {
   });
 
   if (targetHeading) {
-    targetHeading.textContent = "Fixed Crown-Cut 256-Face Crystal Diamond";
+    targetHeading.textContent = "Fixed Table-Crown 256-Face Crystal Diamond";
   }
 
   const paragraphs = Array.from(host.querySelectorAll("p"));
@@ -350,7 +358,7 @@ function updateNearbyCopy(host) {
 
   if (targetParagraph) {
     targetParagraph.textContent =
-      "The visible object is one fixed crown-cut crystal diamond. The structure is set. The 256 faces define the body, Fibonacci geometry controls the internal facet rhythm, and interaction may only move the object through rotation.";
+      "The visible object is one fixed table-crown crystal diamond. The top is angular and faceted rather than rounded like a parachute. The structure is set; interaction only rotates the object.";
   }
 }
 
@@ -404,12 +412,12 @@ function rotatePoint(point, yawDeg, pitchDeg, rollDeg) {
 }
 
 function project(point, width, height, scale) {
-  const focal = 3.28;
+  const focal = 3.30;
   const perspective = focal / (focal - point.z);
 
   return {
     x: width * 0.5 + point.x * scale * perspective,
-    y: height * 0.53 + point.y * scale * perspective,
+    y: height * 0.535 + point.y * scale * perspective,
     z: point.z,
     perspective
   };
@@ -496,10 +504,9 @@ function facetLight(face, points) {
     { x: 0, y: 0, z: 0 }
   );
 
-  const tableBoost = face.role === "table" ? 0.18 : 0;
+  const tableBoost = face.role === "table-center" || face.role === "table-edge" ? 0.16 : 0;
   const crownBoost =
     face.role === "star-crown" ||
-    face.role === "upper-crown" ||
     face.role === "main-crown"
       ? 0.13
       : 0;
@@ -601,7 +608,7 @@ function drawOuterCutLines(context, ringsProjected) {
   context.globalCompositeOperation = "lighter";
   context.lineCap = "round";
 
-  const importantRings = [0, 1, 3, 4, 8];
+  const importantRings = [0, 1, 2, 4, 8];
 
   for (const ring of importantRings) {
     const points = ringsProjected.get(ring);
@@ -618,14 +625,14 @@ function drawOuterCutLines(context, ringsProjected) {
     context.closePath();
 
     if (ring === 0 || ring === 1) {
-      context.strokeStyle = "rgba(255,255,255,0.60)";
+      context.strokeStyle = "rgba(255,255,255,0.62)";
       context.lineWidth = Math.max(0.85, 1.00 * DPR);
-    } else if (ring === 3 || ring === 4) {
+    } else if (ring === 4) {
       context.strokeStyle = "rgba(225,243,255,0.36)";
       context.lineWidth = Math.max(1.0, 1.10 * DPR);
     } else {
-      context.strokeStyle = "rgba(244,191,96,0.20)";
-      context.lineWidth = Math.max(0.75, 0.80 * DPR);
+      context.strokeStyle = "rgba(244,191,96,0.18)";
+      context.lineWidth = Math.max(0.70, 0.76 * DPR);
     }
 
     context.stroke();
@@ -638,18 +645,18 @@ function drawNodeGlints(context, projectedVertices, time) {
   context.save();
   context.globalCompositeOperation = "lighter";
 
-  const stride = MOBILE ? 21 : 15;
+  const stride = MOBILE ? 23 : 17;
 
   for (let i = 0; i < projectedVertices.length; i += stride) {
     const vertex = projectedVertices[i];
     if (vertex.z < -0.04) continue;
 
     const pulse = 0.5 + Math.sin(time * 0.003 + i * 0.73) * 0.5;
-    const alpha = clamp(0.08 + pulse * 0.24 + vertex.z * 0.10, 0.05, 0.38);
-    const size = (MOBILE ? 1.65 : 2.1) * DPR * (0.72 + pulse * 0.40);
+    const alpha = clamp(0.06 + pulse * 0.20 + vertex.z * 0.08, 0.04, 0.32);
+    const size = (MOBILE ? 1.45 : 1.85) * DPR * (0.72 + pulse * 0.36);
 
     context.beginPath();
-    context.fillStyle = i % 6 === 0 ? `rgba(244,191,96,${alpha})` : `rgba(255,255,255,${alpha})`;
+    context.fillStyle = i % 7 === 0 ? `rgba(244,191,96,${alpha})` : `rgba(255,255,255,${alpha})`;
     context.arc(vertex.x, vertex.y, size, 0, Math.PI * 2);
     context.fill();
   }
@@ -660,10 +667,10 @@ function drawNodeGlints(context, projectedVertices, time) {
 function drawPrimaryGlints(context, width, height, scale, time) {
   const pulse = 0.5 + Math.sin(time * 0.003) * 0.5;
   const glints = [
-    { x: width * 0.50 + Math.sin(state.yaw * 0.025) * scale * 0.05, y: height * 0.315, s: 0.034, a: 0.62 },
-    { x: width * 0.31, y: height * 0.47, s: 0.020, a: 0.34 },
-    { x: width * 0.70, y: height * 0.47, s: 0.020, a: 0.34 },
-    { x: width * 0.50, y: height * 0.78, s: 0.022, a: 0.35 }
+    { x: width * 0.50 + Math.sin(state.yaw * 0.025) * scale * 0.05, y: height * 0.335, s: 0.030, a: 0.58 },
+    { x: width * 0.31, y: height * 0.48, s: 0.019, a: 0.32 },
+    { x: width * 0.70, y: height * 0.48, s: 0.019, a: 0.32 },
+    { x: width * 0.50, y: height * 0.79, s: 0.020, a: 0.32 }
   ];
 
   context.save();
@@ -685,7 +692,7 @@ function drawPrimaryGlints(context, width, height, scale, time) {
     context.stroke();
 
     context.beginPath();
-    context.fillStyle = `rgba(244,191,96,${alpha * 0.32})`;
+    context.fillStyle = `rgba(244,191,96,${alpha * 0.28})`;
     context.arc(glint.x, glint.y, size * 0.10, 0, Math.PI * 2);
     context.fill();
   }
@@ -700,7 +707,7 @@ function render(time = 0) {
   const context = state.context;
   const width = canvas.width;
   const height = canvas.height;
-  const scale = Math.min(width, height) * 0.355 * SCALE_LOCK;
+  const scale = Math.min(width, height) * 0.365 * SCALE_LOCK;
   const model = buildGeometry();
 
   drawBackground(context, width, height);
@@ -765,7 +772,7 @@ function requestFrame(time = 0) {
 
     if (!state.dragging && !REDUCED_MOTION) {
       state.yaw += MOBILE ? 0.20 : 0.30;
-      state.roll = Math.sin(time * 0.00034) * 1.8;
+      state.roll = Math.sin(time * 0.00034) * 1.6;
     }
 
     render(time);
@@ -776,9 +783,9 @@ function requestFrame(time = 0) {
 
 function wireInteraction() {
   const canvas = state.canvas;
-  if (!canvas || canvas.dataset.fixedCrownDiamondInteractionBound === "true") return;
+  if (!canvas || canvas.dataset.fixedTableCrownDiamondInteractionBound === "true") return;
 
-  canvas.dataset.fixedCrownDiamondInteractionBound = "true";
+  canvas.dataset.fixedTableCrownDiamondInteractionBound = "true";
 
   canvas.addEventListener("pointerdown", (event) => {
     state.dragging = true;
@@ -817,7 +824,7 @@ function wireInteraction() {
   canvas.addEventListener("pointercancel", finish, { passive: false });
 
   canvas.addEventListener("wheel", (event) => {
-    // Size is structurally locked. Wheel input is absorbed so the object cannot be zoomed.
+    // Structure size is locked. Motion only.
     event.preventDefault();
   }, { passive: false });
 }
@@ -829,8 +836,9 @@ function stampDocument() {
   root.dataset.showroomDiamondPreviousReceipt = PREVIOUS_CONTRACT;
   root.dataset.showroomDiamondRoute = ROUTE;
   root.dataset.showroomDiamondCrystallized = "true";
-  root.dataset.showroomDiamondCrownTop = "true";
-  root.dataset.showroomDiamondCrownAppearance = "increased";
+  root.dataset.showroomDiamondTableCrown = "true";
+  root.dataset.showroomDiamondParachuteTop = "false";
+  root.dataset.showroomDiamondCrownCenterComesDown = "true";
   root.dataset.showroomDiamondFaces = String(TOTAL_FACES);
   root.dataset.showroomDiamondStructureSizeLocked = "true";
   root.dataset.showroomDiamondScaleLock = String(SCALE_LOCK);
@@ -857,8 +865,9 @@ function getShowroomDiamondStatus() {
     previousContract: PREVIOUS_CONTRACT,
     route: ROUTE,
     crystallized: true,
-    crownTop: true,
-    crownAppearance: "increased",
+    tableCrown: true,
+    parachuteTop: false,
+    crownCenterComesDown: true,
     totalFaces: TOTAL_FACES,
     rings: RINGS,
     sectors: SECTORS,

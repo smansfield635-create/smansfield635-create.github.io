@@ -2,34 +2,22 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-globe-showcase-bookcase"
+  data-page="showroom-globe-self-contained-planet-inspection"
   data-route="/showroom/globe/"
-  data-contract="SHOWROOM_GLOBE_LEAP_RENDER_CONSUMPTION_HTML_ALIGNMENT_TNT_v21A"
-  data-pair-contract="SHOWROOM_COVER_GLOBE_SHOWCASE_DISPLAY_CASE_PAIR_TNT_v20"
-  data-previous-contract="SHOWROOM_GLOBE_SHOWCASE_BOOKCASE_DISPLAY_CASE_HTML_TNT_v20B"
-  data-required-route-contract="H_EARTH_LEAP_RENDER_CONSUMPTION_TNT_v1"
+  data-contract="SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_INSPECTION_DISPLAY_HTML_TNT_v1"
+  data-previous-contract="SHOWROOM_GLOBE_LEAP_RENDER_CONSUMPTION_HTML_ALIGNMENT_TNT_v21A"
+  data-required-route-contract="SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_INSPECTION_DISPLAY_TNT_v1"
   data-showroom-mode="showcase-bookcase-display-case"
-  data-cover-route="/showroom/"
+  data-display-case-mode="self-contained-inspection-heavy"
   data-default-display="h-earth"
-  data-display-case-layer="true"
-  data-full-inspection-layer="planet-private-routes"
+  data-touch-drag-inspection="true"
+  data-actual-planet-figure-visible="true"
   data-card-transform="forbidden"
-  data-definitive-land-state-required="true"
-  data-land-state-classification-required="true"
-  data-elevation-sea-level-bound="true"
-  data-terrain-detail-consumption-required="true"
+  data-visible-diagnostics="false"
+  data-parent-mutation-authorized="false"
   data-ground-level-ready="false"
   data-manor-placement-ready="false"
   data-estate-placement-ready="false"
-  data-ground-level-hold-reason="definitive-land-state-required"
-  data-manor-placement-hold-reason="lawful-build-candidate-terrain-required"
-  data-estate-placement-hold-reason="lawful-build-candidate-terrain-required"
-  data-parent-mutation-authorized="false"
-  data-earth-mutation-authorized="false"
-  data-h-earth-mutation-authorized="false"
-  data-hearth-mutation-authorized="false"
-  data-audralia-mutation-authorized="false"
-  data-visible-diagnostics="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claim="false"
@@ -40,7 +28,7 @@
   <title>Diamond Gate Bridge · Globe Showcase</title>
   <meta
     name="description"
-    content="The Globe Showcase is the visual bookcase and display-case layer for Earth, H-Earth, Hearth, and Audralia."
+    content="The Globe Showcase is the bookcase and display-case layer for inspecting Earth, H-Earth, Hearth, and Audralia."
   >
 
   <style>
@@ -50,6 +38,7 @@
       --panel:rgba(10,17,31,.82);
       --panel2:rgba(5,10,22,.88);
       --line:rgba(244,191,96,.32);
+      --line2:rgba(143,240,195,.28);
       --soft-line:rgba(255,255,255,.10);
       --text:#f8ead0;
       --muted:#bac2cf;
@@ -85,12 +74,17 @@
     a { color:inherit; text-decoration:none; }
 
     a:focus-visible,
-    button:focus-visible {
+    button:focus-visible,
+    [tabindex]:focus-visible {
       outline:2px solid var(--gold);
       outline-offset:4px;
     }
 
-    button { font:inherit; cursor:pointer; }
+    button {
+      font:inherit;
+      cursor:pointer;
+      color:inherit;
+    }
 
     .skip-link {
       position:absolute;
@@ -114,17 +108,27 @@
       padding:24px 0 48px;
     }
 
+    .topbar,
+    .hero,
+    .showcase,
+    .display-case,
+    .world-card,
+    .receipt {
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:linear-gradient(180deg,rgba(255,255,255,.055),transparent),var(--panel);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(18px);
+    }
+
     .topbar {
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:18px;
       padding:14px 16px;
-      border:1px solid var(--line);
       border-radius:999px;
       background:rgba(5,9,18,.72);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(16px);
     }
 
     .brand {
@@ -167,18 +171,6 @@
       background:rgba(244,191,96,.09);
     }
 
-    .hero,
-    .showcase,
-    .display-case,
-    .world-card,
-    .receipt {
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      background:linear-gradient(180deg,rgba(255,255,255,.055),transparent),var(--panel);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(18px);
-    }
-
     .hero {
       margin-top:24px;
       padding:clamp(22px,4vw,42px);
@@ -219,8 +211,9 @@
       margin-top:18px;
       padding:18px;
       display:grid;
-      grid-template-columns:minmax(0,.92fr) minmax(320px,1.08fr);
+      grid-template-columns:minmax(0,.88fr) minmax(340px,1.12fr);
       gap:18px;
+      align-items:start;
     }
 
     .bookcase {
@@ -236,22 +229,27 @@
       transform:none !important;
       box-shadow:none;
       background:linear-gradient(180deg,rgba(255,255,255,.055),transparent),rgba(7,13,27,.74);
+      transition:border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
     }
 
     .world-card[aria-selected="true"] {
-      border-color:rgba(143,240,195,.54);
-      box-shadow:0 0 0 1px rgba(143,240,195,.14), 0 18px 48px rgba(0,0,0,.28);
+      border-color:rgba(143,240,195,.58);
+      box-shadow:0 0 0 1px rgba(143,240,195,.14),0 18px 48px rgba(0,0,0,.28);
+      background:
+        radial-gradient(circle at 18% 12%,rgba(143,240,195,.10),transparent 13rem),
+        linear-gradient(180deg,rgba(255,255,255,.065),transparent),
+        rgba(7,13,27,.80);
     }
 
     .world-head {
       display:grid;
-      grid-template-columns:86px minmax(0,1fr);
+      grid-template-columns:92px minmax(0,1fr);
       gap:12px;
       align-items:center;
     }
 
     .preview-case {
-      width:86px;
+      width:92px;
       aspect-ratio:1/1;
       display:grid;
       place-items:center;
@@ -268,6 +266,7 @@
       height:100%;
       display:block;
       transform:none !important;
+      touch-action:none;
     }
 
     .world-card h2 {
@@ -319,13 +318,14 @@
     }
 
     .display-case {
-      min-height:640px;
+      min-height:760px;
       padding:16px;
       display:grid;
-      grid-template-rows:auto 1fr auto;
+      grid-template-rows:auto minmax(460px,1fr) auto auto;
       gap:14px;
       background:
         radial-gradient(circle at 50% 18%,rgba(244,191,96,.12),transparent 22rem),
+        radial-gradient(circle at 50% 52%,rgba(143,240,195,.08),transparent 24rem),
         linear-gradient(180deg,rgba(255,255,255,.055),transparent),
         var(--panel2);
     }
@@ -354,27 +354,53 @@
       position:relative;
       display:grid;
       place-items:center;
-      min-height:420px;
+      min-height:clamp(460px,78vw,760px);
       border:1px solid rgba(142,190,255,.18);
       border-radius:22px;
       background:
         radial-gradient(circle at 50% 44%,rgba(142,190,255,.12),transparent 16rem),
         linear-gradient(180deg,rgba(7,13,30,1),rgba(2,5,12,1));
       overflow:hidden;
+      touch-action:none;
+    }
+
+    .display-window::before {
+      content:"Drag · Rotate · Zoom";
+      position:absolute;
+      top:16px;
+      left:16px;
+      z-index:3;
+      display:inline-flex;
+      align-items:center;
+      min-height:32px;
+      padding:7px 11px;
+      border:1px solid rgba(143,240,195,.34);
+      border-radius:999px;
+      color:var(--green);
+      background:rgba(4,9,18,.72);
+      font-size:.76rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      pointer-events:none;
+      backdrop-filter:blur(12px);
     }
 
     #displayCanvas {
       display:block;
-      width:min(94%,720px);
+      width:min(100%,1040px);
+      max-width:1040px;
+      height:auto;
       aspect-ratio:1/1;
-      border-radius:999px;
+      margin:auto;
+      border-radius:22px;
       transform:none !important;
       touch-action:none;
     }
 
     .display-meta {
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-columns:repeat(4,minmax(0,1fr));
       gap:8px;
     }
 
@@ -491,6 +517,22 @@
       .showcase {
         padding:10px;
       }
+
+      .display-case {
+        padding:10px;
+      }
+
+      .display-window {
+        min-height:clamp(390px,88vw,620px);
+      }
+
+      .world-head {
+        grid-template-columns:86px minmax(0,1fr);
+      }
+
+      .preview-case {
+        width:86px;
+      }
     }
   </style>
 </head>
@@ -516,31 +558,26 @@
 
     <main id="globe-main" tabindex="-1">
       <section class="hero">
-        <p class="eyebrow">Showcase / Bookcase · Display Case</p>
+        <p class="eyebrow">Showcase / Bookcase · Inspection Display Case</p>
         <h1>Choose the world from the case.</h1>
         <p class="lede">
-          The Globe Showcase is the organized collection. Select a world from the bookcase to place it in the display case.
-          Then open the full inspection view when you are ready to enter that planet’s private room.
+          The Globe Showcase is the organized bookcase and display-case layer. Select a world to inspect the actual
+          planet figure directly on this page. Drag the display with your finger to rotate the planet before opening
+          the full private inspection room.
         </p>
       </section>
 
       <section
         class="showcase"
-        aria-label="World showcase bookcase and display case"
+        aria-label="World showcase bookcase and inspection display case"
         data-showroom-globe-showcase="true"
         data-display-case-layer="true"
+        data-display-case-mode="self-contained-inspection-heavy"
         data-default-display="h-earth"
+        data-touch-drag-inspection="true"
+        data-actual-planet-figure-visible="true"
         data-card-transform="forbidden"
-        data-definitive-land-state-required="true"
-        data-land-state-classification-required="true"
-        data-elevation-sea-level-bound="true"
-        data-terrain-detail-consumption-required="true"
-        data-ground-level-ready="false"
-        data-manor-placement-ready="false"
-        data-estate-placement-ready="false"
-        data-ground-level-hold-reason="definitive-land-state-required"
-        data-manor-placement-hold-reason="lawful-build-candidate-terrain-required"
-        data-estate-placement-hold-reason="lawful-build-candidate-terrain-required"
+        data-visible-diagnostics="false"
         data-parent-mutation-authorized="false"
       >
         <section class="bookcase" aria-label="World bookcase">
@@ -567,7 +604,7 @@
               </div>
               <div>
                 <h2>H-Earth</h2>
-                <p>Hybrid Earth. Active build planet.</p>
+                <p>Hybrid Earth. Active orbital/aerial build planet.</p>
               </div>
             </div>
             <div class="tag-row">
@@ -610,7 +647,7 @@
           </article>
         </section>
 
-        <section class="display-case" aria-label="Selected world display case">
+        <section class="display-case" aria-label="Selected world inspection display case">
           <div class="display-header">
             <div>
               <h2 id="displayTitle">H-Earth</h2>
@@ -618,21 +655,29 @@
             </div>
           </div>
 
-          <div class="display-window">
+          <div
+            class="display-window"
+            id="displayWindow"
+            data-display-window="true"
+            data-touch-drag-inspection="true"
+            data-actual-planet-figure-visible="true"
+          >
             <canvas
               id="displayCanvas"
-              width="1000"
-              height="1000"
-              aria-label="Selected world display"
+              width="1200"
+              height="1200"
+              aria-label="Selected world inspection display"
               role="img"
               data-display-case-canvas="true"
+              data-touch-drag-inspection="true"
             ></canvas>
           </div>
 
           <div class="display-meta" id="displayMeta" aria-live="polite">
-            <span><strong>Layer</strong>Display case</span>
-            <span><strong>Selection</strong>H-Earth</span>
-            <span><strong>Land/state</strong>Definitive orbital read required</span>
+            <span><strong>Layer</strong>Inspection-heavy display case</span>
+            <span><strong>Touch</strong>Drag / rotate / zoom</span>
+            <span><strong>Source</strong>Showcase planet renderer</span>
+            <span><strong>Cells</strong>256 field</span>
           </div>
 
           <div class="display-actions">
@@ -647,59 +692,65 @@
         id="globeShowcaseReceipt"
         class="receipt"
         aria-label="Globe showcase route receipt"
-        data-receipt-panel="showroom-globe-leap-render-consumption"
-        data-html-contract="SHOWROOM_GLOBE_LEAP_RENDER_CONSUMPTION_HTML_ALIGNMENT_TNT_v21A"
-        data-required-route-contract="H_EARTH_LEAP_RENDER_CONSUMPTION_TNT_v1"
-        data-pair-contract="SHOWROOM_COVER_GLOBE_SHOWCASE_DISPLAY_CASE_PAIR_TNT_v20"
+        data-receipt-panel="showroom-globe-self-contained-planet-inspection"
+        data-html-contract="SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_INSPECTION_DISPLAY_HTML_TNT_v1"
+        data-required-route-contract="SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_INSPECTION_DISPLAY_TNT_v1"
+        data-previous-html-contract="SHOWROOM_GLOBE_LEAP_RENDER_CONSUMPTION_HTML_ALIGNMENT_TNT_v21A"
         data-showroom-mode="showcase-bookcase-display-case"
+        data-display-case-mode="self-contained-inspection-heavy"
         data-default-display="h-earth"
+        data-touch-drag-inspection="true"
+        data-actual-planet-figure-visible="true"
         data-full-inspection-layer="planet-private-routes"
         data-card-transform="forbidden"
-        data-definitive-land-state-required="true"
-        data-land-state-classification-required="true"
-        data-elevation-sea-level-bound="true"
-        data-terrain-detail-consumption-required="true"
+        data-visible-diagnostics="false"
+        data-parent-mutation-authorized="false"
         data-ground-level-ready="false"
         data-manor-placement-ready="false"
         data-estate-placement-ready="false"
-        data-ground-level-hold-reason="definitive-land-state-required"
-        data-manor-placement-hold-reason="lawful-build-candidate-terrain-required"
-        data-estate-placement-hold-reason="lawful-build-candidate-terrain-required"
-        data-parent-mutation-authorized="false"
-        data-visible-diagnostics="false"
         data-generated-image="false"
         data-graphic-box="false"
         data-visual-pass-claim="false"
       >
-        <code>HTML_RECEIPT: SHOWROOM_GLOBE_LEAP_RENDER_CONSUMPTION_HTML_ALIGNMENT_TNT_v21A</code>
-        <code>PAIR_RECEIPT: SHOWROOM_COVER_GLOBE_SHOWCASE_DISPLAY_CASE_PAIR_TNT_v20</code>
-        <code>REQUIRED_ROUTE: H_EARTH_LEAP_RENDER_CONSUMPTION_TNT_v1</code>
+        <code>HTML_RECEIPT: SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_INSPECTION_DISPLAY_HTML_TNT_v1</code>
+        <code>REQUIRED_ROUTE: SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_INSPECTION_DISPLAY_TNT_v1</code>
         <code>SHOWROOM_MODE: showcase-bookcase-display-case</code>
+        <code>DISPLAY_CASE_MODE: self-contained-inspection-heavy</code>
         <code>DEFAULT_DISPLAY: h-earth</code>
+        <code>TOUCH_DRAG_INSPECTION: true</code>
+        <code>ACTUAL_PLANET_FIGURE_VISIBLE: true</code>
         <code>FULL_INSPECTION_LAYER: planet-private-routes</code>
         <code>CARD_TRANSFORM: forbidden</code>
-        <code>DEFINITIVE_LAND_STATE_REQUIRED: true</code>
-        <code>TERRAIN_DETAIL_CONSUMPTION_REQUIRED: true</code>
+        <code>VISIBLE_DIAGNOSTICS: false</code>
         <code>GROUND_LEVEL_READY: false</code>
         <code>MANOR_PLACEMENT_READY: false</code>
         <code>ESTATE_PLACEMENT_READY: false</code>
         <code>PARENT_MUTATION_AUTHORIZED: false</code>
+        <code>GENERATED_IMAGE: false</code>
+        <code>GRAPHIC_BOX: false</code>
+        <code>VISUAL_PASS_CLAIM: false</code>
       </section>
     </main>
 
     <footer class="footer">
-      Cover → Showcase / Bookcase → Display Case → Full Inspection.
+      Cover → Showcase / Bookcase → Inspection Display Case → Full Inspection.
     </footer>
   </div>
 
   <script
     id="globeShowcaseHandoff"
     type="module"
-    src="./index.js?v=H_EARTH_LEAP_RENDER_CONSUMPTION_TNT_v1"
-    data-handoff="showroom-globe-leap-render-consumption"
-    data-required-route-contract="H_EARTH_LEAP_RENDER_CONSUMPTION_TNT_v1"
-    data-html-contract="SHOWROOM_GLOBE_LEAP_RENDER_CONSUMPTION_HTML_ALIGNMENT_TNT_v21A"
-    data-pair-contract="SHOWROOM_COVER_GLOBE_SHOWCASE_DISPLAY_CASE_PAIR_TNT_v20"
+    src="./index.js?v=SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_INSPECTION_DISPLAY_TNT_v1"
+    data-handoff="showroom-globe-self-contained-planet-inspection"
+    data-required-route-contract="SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_INSPECTION_DISPLAY_TNT_v1"
+    data-html-contract="SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_INSPECTION_DISPLAY_HTML_TNT_v1"
+    data-display-case-mode="self-contained-inspection-heavy"
+    data-touch-drag-inspection="true"
+    data-actual-planet-figure-visible="true"
+    data-visible-diagnostics="false"
+    data-parent-mutation-authorized="false"
+    data-generated-image="false"
+    data-graphic-box="false"
   ></script>
 </body>
 </html>

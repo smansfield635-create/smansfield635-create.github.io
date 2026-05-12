@@ -2,18 +2,15 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="compass-default-round-lattice-diamond-gate"
+  data-page="compass-default-round-floating-lattice-diamonds"
   data-route="/"
-  data-contract="COMPASS_DEFAULT_ROUND_LATTICE_DIAMOND_GATE_TNT_v12"
-  data-previous-contract="COMPASS_ROUND_WORLD_CUTTING_EDGE_ORBIT_GATE_TNT_v11"
+  data-contract="COMPASS_DEFAULT_ROUND_FLOATING_LATTICE_DIAMONDS_TNT_v13"
+  data-previous-contract="COMPASS_DEFAULT_ROUND_LATTICE_DIAMOND_GATE_TNT_v12"
   data-compass-mode="world-is-round-default"
   data-default-lens="round"
-  data-primary-lens="round"
-  data-options="lattice-diamonds"
-  data-flat-lens-route="/"
-  data-round-lens-route="/?lens=round"
-  data-globe-lens-route="/nine-summits/universe/"
-  data-showroom-crystal-language="mirrored"
+  data-options="floating-lattice-diamonds"
+  data-bubbles="replaced"
+  data-floating-diamonds="true"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claim="false"
@@ -24,7 +21,7 @@
   <title>Diamond Gate Bridge · Compass</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Compass: World Is Round by default, with Flat, Round, and Globe presented as lattice diamond options."
+    content="Diamond Gate Bridge Compass: World Is Round by default, with Flat, Round, and Globe presented as floating lattice diamonds."
   >
 
   <style>
@@ -34,8 +31,6 @@
       --panel:rgba(8,15,30,.82);
       --panel2:rgba(4,9,21,.90);
       --line:rgba(244,191,96,.34);
-      --line-blue:rgba(142,190,255,.28);
-      --line-green:rgba(143,240,195,.24);
       --text:#f8ead0;
       --muted:#bac2cf;
       --gold:#f4bf60;
@@ -63,7 +58,7 @@
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at 50% 46%,rgba(142,190,255,.11),transparent 38rem),
+        radial-gradient(circle at 50% 44%,rgba(142,190,255,.11),transparent 38rem),
         linear-gradient(145deg,rgba(255,255,255,.035),transparent 42%),
         radial-gradient(circle at 52% 62%,rgba(244,191,96,.08),transparent 34rem);
       overflow-x:hidden;
@@ -74,7 +69,7 @@
     a:focus-visible,
     [tabindex]:focus-visible {
       outline:2px solid var(--gold);
-      outline-offset:4px;
+      outline-offset:6px;
     }
 
     .skip-link {
@@ -133,7 +128,9 @@
       height:18px;
       border:1px solid var(--gold);
       transform:rotate(45deg);
-      background:linear-gradient(135deg,rgba(244,191,96,.24),transparent),rgba(255,255,255,.04);
+      background:
+        linear-gradient(135deg,rgba(244,191,96,.28),transparent 52%),
+        rgba(255,255,255,.05);
       box-shadow:0 0 24px rgba(244,191,96,.18);
     }
 
@@ -141,25 +138,40 @@
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
-      gap:8px;
+      gap:10px;
     }
 
     .nav a {
-      padding:8px 11px;
-      border:1px solid rgba(255,255,255,.09);
+      width:54px;
+      height:54px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,255,255,.11);
       color:var(--muted);
-      font-size:.88rem;
       background:
-        linear-gradient(135deg,rgba(255,255,255,.07),transparent 45%),
+        radial-gradient(circle at 30% 25%,rgba(255,255,255,.18),transparent 18%),
+        linear-gradient(135deg,rgba(142,190,255,.12),transparent 48%),
         rgba(255,255,255,.032);
-      clip-path:polygon(0 9px,9px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 9px),calc(100% - 9px) 100%,9px 100%,0 calc(100% - 9px));
+      transform:rotate(45deg);
+      box-shadow:0 14px 28px rgba(0,0,0,.22);
+    }
+
+    .nav a span {
+      transform:rotate(-45deg);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      text-align:center;
+      line-height:1;
     }
 
     .nav a[aria-current="page"] {
-      border-color:rgba(244,191,96,.54);
+      border-color:rgba(244,191,96,.58);
       color:var(--gold);
       background:
-        linear-gradient(135deg,rgba(244,191,96,.16),transparent 50%),
+        radial-gradient(circle at 30% 25%,rgba(255,255,255,.24),transparent 18%),
+        linear-gradient(135deg,rgba(244,191,96,.22),transparent 52%),
         rgba(244,191,96,.08);
     }
 
@@ -209,7 +221,7 @@
     .round-stage {
       position:relative;
       margin-top:18px;
-      min-height:clamp(640px,72vw,860px);
+      min-height:clamp(680px,74vw,900px);
       padding:clamp(20px,4vw,44px);
       overflow:hidden;
       background:
@@ -222,29 +234,30 @@
 
     .round-world {
       position:relative;
-      min-height:clamp(540px,60vw,720px);
+      min-height:clamp(580px,62vw,760px);
       display:grid;
       place-items:center;
     }
 
-    .round-orbit {
+    .orbit {
       position:absolute;
-      inset:7%;
       border:1px solid rgba(142,190,255,.14);
       border-radius:50%;
       box-shadow:
         0 0 50px rgba(142,190,255,.06),
         inset 0 0 46px rgba(244,191,96,.035);
+      pointer-events:none;
     }
 
-    .round-orbit.two { inset:16%; border-color:rgba(244,191,96,.14); }
-    .round-orbit.three { inset:27%; border-color:rgba(143,240,195,.13); }
+    .orbit.one { inset:7%; }
+    .orbit.two { inset:17%; border-color:rgba(244,191,96,.14); }
+    .orbit.three { inset:29%; border-color:rgba(143,240,195,.13); }
 
     .round-core {
       position:absolute;
       left:50%;
       top:50%;
-      width:min(48vw,430px);
+      width:min(46vw,430px);
       min-width:260px;
       aspect-ratio:1/1;
       transform:translate(-50%,-50%);
@@ -310,64 +323,70 @@
       font-weight:950;
     }
 
-    .diamond-options {
+    .floating-diamonds {
       position:absolute;
       inset:0;
       pointer-events:none;
     }
 
-    .lattice-diamond {
+    .float-diamond {
       position:absolute;
       left:50%;
       top:50%;
-      width:clamp(148px,18vw,230px);
+      width:clamp(150px,18vw,232px);
       aspect-ratio:1/1;
-      display:grid;
-      place-items:center;
       pointer-events:auto;
       transform:
         translate(-50%,-50%)
         rotate(var(--angle))
         translateX(var(--radius))
         rotate(45deg);
-      border:1px solid rgba(244,191,96,.34);
+      border:1px solid rgba(244,191,96,.36);
       background:
-        radial-gradient(circle at 30% 25%,rgba(255,255,255,.20),transparent 18%),
-        linear-gradient(135deg,rgba(244,191,96,.17),transparent 48%),
-        linear-gradient(315deg,rgba(142,190,255,.13),transparent 45%),
-        rgba(6,13,27,.86);
+        radial-gradient(circle at 28% 22%,rgba(255,255,255,.24),transparent 18%),
+        linear-gradient(135deg,rgba(244,191,96,.18),transparent 46%),
+        linear-gradient(315deg,rgba(142,190,255,.15),transparent 46%),
+        rgba(6,13,27,.88);
       box-shadow:
-        0 22px 52px rgba(0,0,0,.32),
-        inset 0 0 36px rgba(255,255,255,.055);
-      transition:transform 260ms ease, border-color 260ms ease, background 260ms ease;
+        0 26px 62px rgba(0,0,0,.34),
+        0 0 38px rgba(244,191,96,.08),
+        inset 0 0 42px rgba(255,255,255,.055);
+      transition:transform 260ms ease, border-color 260ms ease, background 260ms ease, box-shadow 260ms ease;
     }
 
-    .lattice-diamond::before,
-    .lattice-diamond::after {
+    .float-diamond::before,
+    .float-diamond::after {
       content:"";
       position:absolute;
-      inset:13%;
-      border:1px solid rgba(255,255,255,.14);
       pointer-events:none;
     }
 
-    .lattice-diamond::before {
-      transform:rotate(0deg);
-    }
-
-    .lattice-diamond::after {
-      inset:24%;
-      border-color:rgba(143,240,195,.16);
-    }
-
-    .lattice-diamond:hover,
-    .lattice-diamond:focus-within {
-      border-color:rgba(143,240,195,.52);
+    .float-diamond::before {
+      inset:10%;
+      border:1px solid rgba(255,255,255,.14);
       background:
-        radial-gradient(circle at 30% 25%,rgba(255,255,255,.26),transparent 18%),
-        linear-gradient(135deg,rgba(143,240,195,.20),transparent 48%),
-        linear-gradient(315deg,rgba(244,191,96,.14),transparent 45%),
-        rgba(6,13,27,.92);
+        linear-gradient(90deg,transparent 49%,rgba(255,255,255,.11) 50%,transparent 51%),
+        linear-gradient(0deg,transparent 49%,rgba(255,255,255,.08) 50%,transparent 51%);
+    }
+
+    .float-diamond::after {
+      inset:24%;
+      border:1px solid rgba(143,240,195,.16);
+      box-shadow:inset 0 0 20px rgba(142,190,255,.06);
+    }
+
+    .float-diamond:hover,
+    .float-diamond:focus-within {
+      border-color:rgba(143,240,195,.58);
+      background:
+        radial-gradient(circle at 28% 22%,rgba(255,255,255,.30),transparent 18%),
+        linear-gradient(135deg,rgba(143,240,195,.22),transparent 46%),
+        linear-gradient(315deg,rgba(244,191,96,.15),transparent 46%),
+        rgba(6,13,27,.94);
+      box-shadow:
+        0 30px 76px rgba(0,0,0,.38),
+        0 0 48px rgba(143,240,195,.14),
+        inset 0 0 46px rgba(255,255,255,.07);
       transform:
         translate(-50%,-50%)
         rotate(var(--angle))
@@ -375,26 +394,28 @@
         rotate(45deg);
     }
 
-    .lattice-diamond.active {
-      border-color:rgba(143,240,195,.58);
+    .float-diamond.active {
+      border-color:rgba(143,240,195,.62);
       box-shadow:
-        0 26px 62px rgba(0,0,0,.34),
-        0 0 40px rgba(143,240,195,.12),
-        inset 0 0 38px rgba(255,255,255,.07);
+        0 28px 70px rgba(0,0,0,.36),
+        0 0 52px rgba(143,240,195,.16),
+        inset 0 0 46px rgba(255,255,255,.075);
     }
 
     .diamond-inner {
-      width:76%;
+      position:absolute;
+      inset:16%;
+      display:grid;
+      place-items:center;
       transform:rotate(-45deg);
       text-align:center;
-      position:relative;
       z-index:2;
     }
 
     .diamond-inner .index {
       display:block;
       color:var(--gold);
-      font-size:.66rem;
+      font-size:.64rem;
       font-weight:950;
       letter-spacing:.13em;
       text-transform:uppercase;
@@ -403,8 +424,8 @@
 
     .diamond-inner h2 {
       margin:0;
-      font-size:clamp(1.18rem,2.4vw,1.75rem);
-      line-height:.95;
+      font-size:clamp(1.22rem,2.45vw,1.82rem);
+      line-height:.94;
       letter-spacing:-.05em;
     }
 
@@ -423,42 +444,56 @@
       font-weight:950;
     }
 
-    .lattice-diamond.flat { --angle:210deg; --radius:min(34vw,350px); }
-    .lattice-diamond.round { --angle:330deg; --radius:min(34vw,350px); }
-    .lattice-diamond.globe { --angle:90deg; --radius:min(30vw,315px); }
+    .float-diamond.flat { --angle:210deg; --radius:min(34vw,350px); }
+    .float-diamond.round { --angle:330deg; --radius:min(34vw,350px); }
+    .float-diamond.globe { --angle:90deg; --radius:min(30vw,315px); }
 
-    .quick-routes {
+    .route-diamonds {
       position:absolute;
       left:50%;
       bottom:clamp(18px,4vw,42px);
+      width:min(94%,820px);
       transform:translateX(-50%);
       display:flex;
       flex-wrap:wrap;
       justify-content:center;
-      gap:10px;
-      width:min(94%,760px);
+      gap:22px;
+      pointer-events:auto;
     }
 
-    .crystal-action {
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:fit-content;
-      min-height:44px;
-      padding:11px 15px;
-      border:1px solid rgba(244,191,96,.32);
+    .route-diamond {
+      width:88px;
+      height:88px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(244,191,96,.34);
       background:
-        linear-gradient(135deg,rgba(244,191,96,.18),transparent 52%),
-        rgba(244,191,96,.08);
+        radial-gradient(circle at 28% 22%,rgba(255,255,255,.20),transparent 18%),
+        linear-gradient(135deg,rgba(244,191,96,.16),transparent 48%),
+        rgba(6,13,27,.86);
+      transform:rotate(45deg);
+      box-shadow:
+        0 18px 38px rgba(0,0,0,.30),
+        inset 0 0 28px rgba(255,255,255,.05);
+    }
+
+    .route-diamond span {
+      transform:rotate(-45deg);
       color:var(--gold);
       font-weight:950;
-      clip-path:polygon(0 11px,11px 0,calc(100% - 11px) 0,100% 11px,100% calc(100% - 11px),calc(100% - 11px) 100%,11px 100%,0 calc(100% - 11px));
+      font-size:.76rem;
+      line-height:1;
+      text-align:center;
     }
 
-    .crystal-action.primary {
+    .route-diamond.primary {
       background:
-        linear-gradient(135deg,rgba(255,255,255,.34),transparent 50%),
+        radial-gradient(circle at 28% 22%,rgba(255,255,255,.32),transparent 18%),
+        linear-gradient(135deg,rgba(244,191,96,.34),transparent 50%),
         var(--gold);
+    }
+
+    .route-diamond.primary span {
       color:#06101d;
     }
 
@@ -502,13 +537,20 @@
     }
 
     @media (prefers-reduced-motion:no-preference) {
-      .round-orbit {
+      .orbit {
         animation:orbit-pulse 9s ease-in-out infinite;
       }
 
       .round-core {
         animation:core-breathe 6s ease-in-out infinite;
       }
+
+      .float-diamond {
+        animation:floating-diamond 7s ease-in-out infinite;
+      }
+
+      .float-diamond.round { animation-delay:-1.4s; }
+      .float-diamond.globe { animation-delay:-2.8s; }
 
       @keyframes orbit-pulse {
         0%,100% { opacity:.72; filter:brightness(1); }
@@ -518,6 +560,15 @@
       @keyframes core-breathe {
         0%,100% { box-shadow:0 0 72px rgba(244,191,96,.14), inset 0 0 58px rgba(255,255,255,.07); }
         50% { box-shadow:0 0 96px rgba(143,240,195,.18), inset 0 0 70px rgba(255,255,255,.09); }
+      }
+
+      @keyframes floating-diamond {
+        0%,100% {
+          filter:brightness(1);
+        }
+        50% {
+          filter:brightness(1.14);
+        }
       }
     }
 
@@ -531,10 +582,10 @@
         display:block;
       }
 
-      .round-orbit,
+      .orbit,
       .round-core,
-      .diamond-options,
-      .quick-routes {
+      .floating-diamonds,
+      .route-diamonds {
         position:relative;
         inset:auto;
         left:auto;
@@ -543,7 +594,7 @@
         transform:none;
       }
 
-      .round-orbit {
+      .orbit {
         display:none;
       }
 
@@ -554,49 +605,31 @@
         min-height:260px;
         border-radius:0;
         clip-path:var(--facet);
-        margin-bottom:14px;
+        margin-bottom:18px;
       }
 
-      .diamond-options {
+      .floating-diamonds {
         display:grid;
         grid-template-columns:1fr;
-        gap:12px;
+        gap:18px;
         pointer-events:auto;
       }
 
-      .lattice-diamond,
-      .lattice-diamond:hover,
-      .lattice-diamond:focus-within {
+      .float-diamond,
+      .float-diamond:hover,
+      .float-diamond:focus-within {
         position:relative;
         left:auto;
         top:auto;
-        width:100%;
-        aspect-ratio:auto;
-        min-height:160px;
-        transform:none;
-        clip-path:var(--facet);
+        width:min(74vw,340px);
+        margin:0 auto;
+        aspect-ratio:1/1;
+        transform:rotate(45deg);
       }
 
-      .lattice-diamond::before,
-      .lattice-diamond::after {
-        transform:none;
-        clip-path:var(--facet);
-      }
-
-      .diamond-inner {
-        transform:none;
-        width:min(88%,520px);
-      }
-
-      .quick-routes {
-        margin-top:14px;
+      .route-diamonds {
+        margin-top:28px;
         display:flex;
-      }
-    }
-
-    @media (min-width:981px) {
-      .quick-routes {
-        pointer-events:auto;
       }
     }
 
@@ -608,6 +641,16 @@
 
       .nav {
         justify-content:flex-start;
+        gap:12px;
+      }
+
+      .nav a {
+        width:48px;
+        height:48px;
+      }
+
+      .nav a span {
+        font-size:.60rem;
       }
     }
 
@@ -624,6 +667,21 @@
       .round-stage {
         padding:14px;
       }
+
+      .float-diamond,
+      .float-diamond:hover,
+      .float-diamond:focus-within {
+        width:min(76vw,290px);
+      }
+
+      .route-diamond {
+        width:74px;
+        height:74px;
+      }
+
+      .route-diamond span {
+        font-size:.66rem;
+      }
     }
   </style>
 </head>
@@ -639,16 +697,14 @@
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
-        <a href="/" aria-current="page">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/explore/">Manor</a>
-        <a href="/nine-summits-of-love/">Book</a>
-        <a href="/nine-summits/universe/">Universe</a>
-        <a href="/products/">Products</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/frontier/">Frontier</a>
-        <a href="/gauges/">Gauges</a>
+        <a href="/" aria-current="page"><span>Compass</span></a>
+        <a href="/door/"><span>Door</span></a>
+        <a href="/home/"><span>Home</span></a>
+        <a href="/explore/"><span>Manor</span></a>
+        <a href="/nine-summits/universe/"><span>Universe</span></a>
+        <a href="/products/"><span>Products</span></a>
+        <a href="/showroom/"><span>Showroom</span></a>
+        <a href="/gauges/"><span>Triple G</span></a>
       </nav>
     </header>
 
@@ -658,20 +714,21 @@
         <h1>Pressure is the door.</h1>
         <p class="lede">
           The default view is round. The estate is not a flat menu; it is a field with depth, motion, and entry points.
-          Choose the lens from the lattice diamonds and move through the gate.
+          Choose the lens from the floating lattice diamonds and move through the gate.
         </p>
       </section>
 
       <section
         class="round-stage"
-        aria-label="World Is Round default Compass with lattice diamond options"
+        aria-label="World Is Round default Compass with floating lattice diamond options"
         data-round-world-default="true"
-        data-lattice-diamond-options="true"
+        data-floating-diamonds="true"
+        data-bubbles="replaced"
       >
         <div class="round-world">
-          <div class="round-orbit one" aria-hidden="true"></div>
-          <div class="round-orbit two" aria-hidden="true"></div>
-          <div class="round-orbit three" aria-hidden="true"></div>
+          <div class="orbit one" aria-hidden="true"></div>
+          <div class="orbit two" aria-hidden="true"></div>
+          <div class="orbit three" aria-hidden="true"></div>
 
           <div class="round-core">
             <div class="core-copy">
@@ -680,40 +737,46 @@
             </div>
           </div>
 
-          <div class="diamond-options" aria-label="Compass lens options">
-            <article class="lattice-diamond flat" data-lens="flat">
+          <div class="floating-diamonds" aria-label="Compass lens options">
+            <article class="float-diamond flat" data-lens="flat">
               <div class="diamond-inner">
-                <span class="index">Lens One</span>
-                <h2>Flat</h2>
-                <p>Architectural map. Home stays home.</p>
-                <a href="/">See Flat</a>
+                <span>
+                  <span class="index">Lens One</span>
+                  <h2>Flat</h2>
+                  <p>Architectural map. Home stays home.</p>
+                  <a href="/">See Flat</a>
+                </span>
               </div>
             </article>
 
-            <article class="lattice-diamond round active" data-lens="round">
+            <article class="float-diamond round active" data-lens="round">
               <div class="diamond-inner">
-                <span class="index">Lens Two · Default</span>
-                <h2>Round</h2>
-                <p>The Compass as a living field.</p>
-                <a href="/?lens=round">Enter Round</a>
+                <span>
+                  <span class="index">Lens Two · Default</span>
+                  <h2>Round</h2>
+                  <p>The Compass as a living field.</p>
+                  <a href="/?lens=round">Enter Round</a>
+                </span>
               </div>
             </article>
 
-            <article class="lattice-diamond globe" data-lens="globe">
+            <article class="float-diamond globe" data-lens="globe">
               <div class="diamond-inner">
-                <span class="index">Lens Three</span>
-                <h2>Globe</h2>
-                <p>Universe-scale jump.</p>
-                <a href="/nine-summits/universe/">Open Universe</a>
+                <span>
+                  <span class="index">Lens Three</span>
+                  <h2>Globe</h2>
+                  <p>Universe-scale jump.</p>
+                  <a href="/nine-summits/universe/">Open Universe</a>
+                </span>
               </div>
             </article>
           </div>
 
-          <div class="quick-routes" aria-label="Primary estate routes">
-            <a class="crystal-action primary" href="/?lens=round">Enter Round Compass</a>
-            <a class="crystal-action" href="/showroom/">Open Showroom</a>
-            <a class="crystal-action" href="/products/">View Products</a>
-            <a class="crystal-action" href="/gauges/">Open Triple G</a>
+          <div class="route-diamonds" aria-label="Primary estate routes">
+            <a class="route-diamond primary" href="/?lens=round"><span>Round</span></a>
+            <a class="route-diamond" href="/showroom/"><span>Showroom</span></a>
+            <a class="route-diamond" href="/products/"><span>Products</span></a>
+            <a class="route-diamond" href="/gauges/"><span>Triple G</span></a>
           </div>
         </div>
       </section>
@@ -721,23 +784,22 @@
       <section
         class="status-strip"
         aria-label="Compass status"
-        data-compass-status="world-is-round-default-active"
+        data-compass-status="world-is-round-floating-diamonds-active"
       >
         <strong>Compass status</strong>
-        <span>World Is Round is the default · Flat, Round, and Globe are lattice diamond options · Showroom crystal language mirrored.</span>
+        <span>World Is Round is the default · bubbles replaced by floating lattice diamonds · route law preserved.</span>
       </section>
 
       <section
         id="compassReceipt"
         class="receipt"
         aria-label="Compass receipt"
-        data-receipt-panel="compass-default-round-lattice-diamond-gate"
-        data-html-contract="COMPASS_DEFAULT_ROUND_LATTICE_DIAMOND_GATE_TNT_v12"
-        data-previous-contract="COMPASS_ROUND_WORLD_CUTTING_EDGE_ORBIT_GATE_TNT_v11"
+        data-receipt-panel="compass-default-round-floating-lattice-diamonds"
+        data-html-contract="COMPASS_DEFAULT_ROUND_FLOATING_LATTICE_DIAMONDS_TNT_v13"
+        data-previous-contract="COMPASS_DEFAULT_ROUND_LATTICE_DIAMOND_GATE_TNT_v12"
         data-default-lens="round"
-        data-primary-lens="round"
-        data-options="lattice-diamonds"
-        data-showroom-crystal-language="mirrored"
+        data-options="floating-lattice-diamonds"
+        data-bubbles="replaced"
         data-flat-lens-route="/"
         data-round-lens-route="/?lens=round"
         data-globe-lens-route="/nine-summits/universe/"
@@ -745,11 +807,11 @@
         data-graphic-box="false"
         data-visual-pass-claim="false"
       >
-        <code>HTML_RECEIPT: COMPASS_DEFAULT_ROUND_LATTICE_DIAMOND_GATE_TNT_v12</code>
-        <code>PREVIOUS_CONTRACT: COMPASS_ROUND_WORLD_CUTTING_EDGE_ORBIT_GATE_TNT_v11</code>
+        <code>HTML_RECEIPT: COMPASS_DEFAULT_ROUND_FLOATING_LATTICE_DIAMONDS_TNT_v13</code>
+        <code>PREVIOUS_CONTRACT: COMPASS_DEFAULT_ROUND_LATTICE_DIAMOND_GATE_TNT_v12</code>
         <code>DEFAULT_LENS: round</code>
-        <code>OPTIONS: lattice-diamonds</code>
-        <code>SHOWROOM_CRYSTAL_LANGUAGE: mirrored</code>
+        <code>OPTIONS: floating-lattice-diamonds</code>
+        <code>BUBBLES: replaced</code>
         <code>FLAT_LENS_ROUTE: /</code>
         <code>ROUND_LENS_ROUTE: /?lens=round</code>
         <code>GLOBE_LENS_ROUTE: /nine-summits/universe/</code>

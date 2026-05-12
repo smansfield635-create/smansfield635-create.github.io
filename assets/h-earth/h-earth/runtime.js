@@ -1,5 +1,5 @@
 // /assets/h-earth/h-earth/runtime.js
-// H_EARTH_G1_PERFORMANCE_RUNTIME_GOVERNOR_TNT_v16A
+// H_EARTH_G1_FIBONACCI_NODAL_RUNTIME_GOVERNOR_TNT_v17
 // Full-file replacement.
 // H-Earth runtime governor only.
 //
@@ -13,6 +13,10 @@
 // - Keep parent truth immutable.
 // - Let route doorway stay thin.
 // - Let canvas/orbital engines render through a governed boot sequence.
+// - Bind the 256 nodal construct into runtime context.
+// - Bind Fibonacci progression into runtime context without replacing parent truth.
+// - Pass Fibonacci nodal context downstream to canvas/orbital children.
+// - Keep Fibonacci internal unless a child explicitly chooses to express it lawfully.
 //
 // Owns:
 // - runtime boot order
@@ -23,6 +27,8 @@
 // - resize scheduling
 // - visibility pause state
 // - runtime status API
+// - 256 nodal runtime context
+// - Fibonacci runtime progression context
 //
 // Does not own:
 // - kernel truth
@@ -37,15 +43,43 @@
 // - GraphicBox
 // - visual pass claim
 
-const CONTRACT = "H_EARTH_G1_PERFORMANCE_RUNTIME_GOVERNOR_TNT_v16A";
-const PAIR_CONTRACT = "H_EARTH_G1_PERFORMANCE_RUNTIME_GOVERNOR_PAIR_TNT_v16";
+const CONTRACT = "H_EARTH_G1_FIBONACCI_NODAL_RUNTIME_GOVERNOR_TNT_v17";
+const PREVIOUS_CONTRACT = "H_EARTH_G1_PERFORMANCE_RUNTIME_GOVERNOR_TNT_v16A";
+const PAIR_CONTRACT = "H_EARTH_G1_FIBONACCI_NODAL_RUNTIME_GOVERNOR_PAIR_TNT_v17";
 const ROUTE_CONTRACT_EXPECTED = "H_EARTH_G1_RUNTIME_GOVERNED_PRIVATE_ROOM_ROUTE_TNT_v16B";
 const PREVIOUS_RUNTIMELESS_ROUTE = "H_EARTH_G1_PRIVATE_ORBITAL_BUILD_ROOM_RESTORE_ROUTE_TNT_v15";
+
 const PLANET = "H-Earth";
 const ROUTE = "/showroom/globe/h-earth/";
 const BUILD_MODE = "orbital-aerial-first";
 
-const CACHE_KEY = "2026-05-11-h-earth-runtime-governor-v16a";
+const CACHE_KEY = "2026-05-11-h-earth-fibonacci-nodal-runtime-governor-v17";
+
+const TOTAL_NODES = 256;
+const GRID = 16;
+const FIBONACCI_SEQUENCE = Object.freeze([1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233]);
+
+const MASTER_PSALM_RECEIPT = "MASTER_PSALM_FIBONACCI_256_CANONICAL_BINDING_RECEIPT_v1";
+const MASTER_PSALM_CONTRACT = "MASTER_PSALM_FIBONACCI_256_CANONICAL_BINDING_v1";
+
+const NODAL_CONSTRUCT = Object.freeze({
+  nodeCount: TOTAL_NODES,
+  grid,
+  gridLabel: "16x16",
+  fixedField: true,
+  parentTruthPreserved: true,
+  fibonacciReplacesField: false,
+  fibonacciVisibleZigzag: false,
+  fibonacciSequence: FIBONACCI_SEQUENCE
+});
+
+const LEAP_PROTOCOL = Object.freeze({
+  contract: "LEAP_PROTOCOL",
+  learn: "Name the actual gap.",
+  evidence: "Confirm the controlling facts.",
+  assemble: "Build the admissible solution chain.",
+  progress: "Execute only the next lawful move."
+});
 
 const EXPECTED = Object.freeze({
   kernel: "H_EARTH_G1_TERRAIN_ONLY_KERNEL_TNT_v1",
@@ -111,16 +145,19 @@ const governor = {
   importCache: new Map(),
   resizeTimer: 0,
   receiptTimer: 0,
+  guardsInstalled: false,
   visibilityPaused: document.visibilityState === "hidden",
   reducedMotion: window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true,
   maxDevicePixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
   mount: null,
   receiptPanel: null,
-  routeContext: null
+  routeContext: null,
+  fibonacciNodalContext: null
 };
 
 const state = {
   contract: CONTRACT,
+  previousContract: PREVIOUS_CONTRACT,
   pairContract: PAIR_CONTRACT,
   expectedRouteContract: ROUTE_CONTRACT_EXPECTED,
   previousRuntimelessRoute: PREVIOUS_RUNTIMELESS_ROUTE,
@@ -128,6 +165,16 @@ const state = {
   planet: PLANET,
   buildMode: BUILD_MODE,
   cacheKey: CACHE_KEY,
+
+  masterPsalmContract: MASTER_PSALM_CONTRACT,
+  masterPsalmReceipt: MASTER_PSALM_RECEIPT,
+  leapProtocol: LEAP_PROTOCOL,
+
+  nodalConstructBound: true,
+  fibonacciRuntimeBound: true,
+  fibonacciSequence: FIBONACCI_SEQUENCE,
+  fibonacciVisibleZigzag: false,
+  fibonacciReplacesField: false,
 
   status: "not-started",
   booted: false,
@@ -205,6 +252,10 @@ function codeLine(text) {
   return code;
 }
 
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
 function resolveMount(context = {}) {
   return (
     context.mount ||
@@ -225,10 +276,90 @@ function resolveReceiptPanel(context = {}) {
   );
 }
 
+function fibonacciForNode(index) {
+  const normalized = ((Number(index) % TOTAL_NODES) + TOTAL_NODES) % TOTAL_NODES;
+  const row = Math.floor(normalized / GRID);
+  const col = normalized % GRID;
+  const value = FIBONACCI_SEQUENCE[normalized % FIBONACCI_SEQUENCE.length];
+  const next = FIBONACCI_SEQUENCE[(normalized + 1) % FIBONACCI_SEQUENCE.length];
+  const rowFib = FIBONACCI_SEQUENCE[row % FIBONACCI_SEQUENCE.length];
+  const colFib = FIBONACCI_SEQUENCE[col % FIBONACCI_SEQUENCE.length];
+
+  return {
+    index: normalized,
+    row,
+    col,
+    value,
+    next,
+    rowFib,
+    colFib,
+    ratio: value / next,
+    density: clamp(value / 233, 0.004, 1),
+    phase: ((value % GRID) / GRID) * Math.PI * 2,
+    drift: ((next % GRID) / GRID) * Math.PI * 2,
+    harmonic: Math.sin((value + rowFib + colFib) * 0.0618),
+    fold: Math.cos((value * rowFib + colFib) * 0.017),
+    visibleZigzag: false,
+    replacesParentTruth: false
+  };
+}
+
+function createFibonacciNodalContext() {
+  const nodes = [];
+
+  for (let index = 0; index < TOTAL_NODES; index += 1) {
+    nodes.push(fibonacciForNode(index));
+  }
+
+  const checksum = nodes.reduce((sum, node) => {
+    return sum + node.value + node.rowFib + node.colFib + Math.round(node.density * 1000);
+  }, 0);
+
+  return Object.freeze({
+    contract: CONTRACT,
+    masterPsalmContract: MASTER_PSALM_CONTRACT,
+    masterPsalmReceipt: MASTER_PSALM_RECEIPT,
+    nodeCount: TOTAL_NODES,
+    grid: GRID,
+    gridLabel: `${GRID}x${GRID}`,
+    sequence: FIBONACCI_SEQUENCE,
+    nodes: Object.freeze(nodes),
+    checksum,
+    fixedField: true,
+    parentTruthPreserved: true,
+    parentMutationAuthorized: false,
+    fibonacciRuntimeBound: true,
+    fibonacciReplacesField: false,
+    fibonacciVisibleZigzag: false,
+    runtimeUse: "internal traversal rhythm, elevation rhythm, coastline rhythm, detail-density priority, and lawful refinement order",
+    leapProtocol: LEAP_PROTOCOL,
+
+    getNode(index) {
+      const numericIndex = Number(index);
+      if (!Number.isInteger(numericIndex)) return null;
+      return nodes[((numericIndex % TOTAL_NODES) + TOTAL_NODES) % TOTAL_NODES];
+    },
+
+    getSequence() {
+      return [...FIBONACCI_SEQUENCE];
+    }
+  });
+}
+
+function getFibonacciNodalContext() {
+  if (!governor.fibonacciNodalContext) {
+    governor.fibonacciNodalContext = createFibonacciNodalContext();
+  }
+
+  return governor.fibonacciNodalContext;
+}
+
 function stampDocument() {
   const root = document.documentElement;
+  const fibonacciContext = getFibonacciNodalContext();
 
   root.dataset.hEarthRuntimeReceipt = CONTRACT;
+  root.dataset.hEarthRuntimePreviousReceipt = PREVIOUS_CONTRACT;
   root.dataset.hEarthRuntimePairReceipt = PAIR_CONTRACT;
   root.dataset.hEarthRuntimeStatus = state.status;
   root.dataset.hEarthRuntimeCacheKey = CACHE_KEY;
@@ -237,12 +368,26 @@ function stampDocument() {
   root.dataset.hEarthRuntimeReducedMotion = String(governor.reducedMotion);
   root.dataset.hEarthRuntimeDprCap = String(governor.maxDevicePixelRatio);
 
+  root.dataset.hEarthMasterPsalmContract = MASTER_PSALM_CONTRACT;
+  root.dataset.hEarthMasterPsalmReceipt = MASTER_PSALM_RECEIPT;
+  root.dataset.hEarthLeapProtocol = "Learn-Evidence-Assemble-Progress";
+
   root.dataset.hEarthBuildMode = BUILD_MODE;
   root.dataset.hEarthPrivateRoom = "true";
   root.dataset.hEarthParentChainReady = String(state.parentChainReady);
   root.dataset.hEarthCanvasIndexReady = String(state.canvasIndexReady);
   root.dataset.hEarthTerrainElevationReady = String(state.terrainElevationReady);
   root.dataset.hEarthOrbitalSurfaceReady = String(state.orbitalSurfaceReady);
+
+  root.dataset.hEarthNodalConstructBound = "true";
+  root.dataset.hEarthNodalConstructNodeCount = String(TOTAL_NODES);
+  root.dataset.hEarthNodalConstructGrid = `${GRID}x${GRID}`;
+  root.dataset.hEarthFibonacciRuntimeBound = "true";
+  root.dataset.hEarthFibonacciSequence = FIBONACCI_SEQUENCE.join(",");
+  root.dataset.hEarthFibonacciChecksum = String(fibonacciContext.checksum);
+  root.dataset.hEarthFibonacciVisibleZigzag = "false";
+  root.dataset.hEarthFibonacciReplacesField = "false";
+
   root.dataset.hEarthGroundLevelReady = "false";
   root.dataset.hEarthEstatePlacementReady = "false";
   root.dataset.hEarthParentMutationAuthorized = "false";
@@ -257,6 +402,8 @@ function mountMessage(title, lines = []) {
 
   mount.dataset.hEarthRuntimeReceipt = CONTRACT;
   mount.dataset.hEarthRuntimeStatus = state.status;
+  mount.dataset.hEarthNodalConstructBound = "true";
+  mount.dataset.hEarthFibonacciRuntimeBound = "true";
   mount.dataset.hEarthParentMutationAuthorized = "false";
   mount.dataset.hEarthGroundLevelReady = "false";
   mount.dataset.hEarthEstatePlacementReady = "false";
@@ -312,9 +459,33 @@ function scheduleReceiptPublish() {
   }, 80);
 }
 
+function parentSummaryLines() {
+  const landmap = state.parentInstances.landmap;
+  const terrain = state.parentInstances.terrain;
+  const surface = state.parentInstances.surface;
+
+  const landSummary = landmap?.summary || {};
+  const terrainSummary = terrain?.summary || {};
+  const surfaceSummary = surface?.summary || {};
+
+  return [
+    `LAND_RATIO: ${landSummary.landRatio ?? "pending"}`,
+    `OCEAN_RATIO: ${landSummary.oceanRatio ?? "pending"}`,
+    `TERRAIN_TOTAL_CELLS: ${terrainSummary.totalCells ?? "pending"}`,
+    `TERRAIN_ASPECTS: ${terrainSummary.populatedTerrainAspectCount ?? "pending"}/${terrainSummary.terrainAspectCount ?? "pending"}`,
+    `FULL_ASPECT_DISPOSITION: ${String(terrainSummary.fullAspectDisposition ?? false)}`,
+    `SURFACE_TOTAL_CELLS: ${surfaceSummary.totalCells ?? "pending"}`,
+    `SURFACE_MATERIAL_CLASSES: ${surfaceSummary.materialClassCount ?? "pending"}/${surfaceSummary.requiredMaterialClassCount ?? "pending"}`,
+    `SURFACE_PARENT_READY: ${String(surfaceSummary.surfaceParentReady ?? false)}`,
+    `DOWNSTREAM_CANVAS_MAY_READ_SURFACE: ${String(surfaceSummary.downstreamCanvasMayReadSurface ?? false)}`
+  ];
+}
+
 function publishReceiptPanel() {
   const panel = governor.receiptPanel;
   if (!panel) return;
+
+  const fibonacciContext = getFibonacciNodalContext();
 
   const parentLines = MODULES.parent.map((entry) => {
     const record = state.parentModules[entry.key];
@@ -341,6 +512,7 @@ function publishReceiptPanel() {
   const orbitalStatus = state.orbitalSurfaceStatus || {};
 
   panel.dataset.hEarthRuntimeReceipt = CONTRACT;
+  panel.dataset.hEarthRuntimePreviousReceipt = PREVIOUS_CONTRACT;
   panel.dataset.hEarthRuntimePairReceipt = PAIR_CONTRACT;
   panel.dataset.hEarthRuntimeStatus = state.status;
   panel.dataset.hEarthRuntimeBooted = String(state.booted);
@@ -349,6 +521,9 @@ function publishReceiptPanel() {
   panel.dataset.hEarthCanvasIndexReady = String(state.canvasIndexReady);
   panel.dataset.hEarthTerrainElevationReady = String(state.terrainElevationReady);
   panel.dataset.hEarthOrbitalSurfaceReady = String(state.orbitalSurfaceReady);
+  panel.dataset.hEarthNodalConstructBound = "true";
+  panel.dataset.hEarthFibonacciRuntimeBound = "true";
+  panel.dataset.hEarthFibonacciChecksum = String(fibonacciContext.checksum);
   panel.dataset.hEarthGroundLevelReady = "false";
   panel.dataset.hEarthEstatePlacementReady = "false";
   panel.dataset.hEarthParentMutationAuthorized = "false";
@@ -356,7 +531,11 @@ function publishReceiptPanel() {
 
   panel.replaceChildren(
     codeLine(`RUNTIME_RECEIPT: ${CONTRACT}`),
+    codeLine(`PREVIOUS_RUNTIME_RECEIPT: ${PREVIOUS_CONTRACT}`),
     codeLine(`PAIR_RECEIPT: ${PAIR_CONTRACT}`),
+    codeLine(`MASTER_PSALM_CONTRACT: ${MASTER_PSALM_CONTRACT}`),
+    codeLine(`MASTER_PSALM_RECEIPT: ${MASTER_PSALM_RECEIPT}`),
+    codeLine(`LEAP_PROTOCOL: Learn · Evidence · Assemble · Progress`),
     codeLine(`EXPECTED_ROUTE: ${ROUTE_CONTRACT_EXPECTED}`),
     codeLine(`PREVIOUS_RUNTIMELESS_ROUTE: ${PREVIOUS_RUNTIMELESS_ROUTE}`),
     codeLine(`ROUTE: ${ROUTE}`),
@@ -368,6 +547,14 @@ function publishReceiptPanel() {
     codeLine(`RUNTIME_PAUSED: ${String(governor.visibilityPaused)}`),
     codeLine(`RUNTIME_REDUCED_MOTION: ${String(governor.reducedMotion)}`),
     codeLine(`RUNTIME_DPR_CAP: ${String(governor.maxDevicePixelRatio)}`),
+    codeLine(`NODAL_CONSTRUCT_BOUND: true`),
+    codeLine(`NODAL_CONSTRUCT_GRID: ${GRID}x${GRID}`),
+    codeLine(`NODAL_CONSTRUCT_NODE_COUNT: ${TOTAL_NODES}`),
+    codeLine(`FIBONACCI_RUNTIME_BOUND: true`),
+    codeLine(`FIBONACCI_SEQUENCE: ${FIBONACCI_SEQUENCE.join(",")}`),
+    codeLine(`FIBONACCI_CHECKSUM: ${fibonacciContext.checksum}`),
+    codeLine(`FIBONACCI_VISIBLE_ZIGZAG: false`),
+    codeLine(`FIBONACCI_REPLACES_FIELD: false`),
     codeLine(`IMPORT_CACHE_SIZE: ${governor.importCache.size}`),
     codeLine(`LOADED_PARENT_MODULES: ${state.loadedParentModules}`),
     codeLine(`FAILED_PARENT_MODULES: ${state.failedParentModules}`),
@@ -396,28 +583,6 @@ function publishReceiptPanel() {
   );
 }
 
-function parentSummaryLines() {
-  const landmap = state.parentInstances.landmap;
-  const terrain = state.parentInstances.terrain;
-  const surface = state.parentInstances.surface;
-
-  const landSummary = landmap?.summary || {};
-  const terrainSummary = terrain?.summary || {};
-  const surfaceSummary = surface?.summary || {};
-
-  return [
-    `LAND_RATIO: ${landSummary.landRatio ?? "pending"}`,
-    `OCEAN_RATIO: ${landSummary.oceanRatio ?? "pending"}`,
-    `TERRAIN_TOTAL_CELLS: ${terrainSummary.totalCells ?? "pending"}`,
-    `TERRAIN_ASPECTS: ${terrainSummary.populatedTerrainAspectCount ?? "pending"}/${terrainSummary.terrainAspectCount ?? "pending"}`,
-    `FULL_ASPECT_DISPOSITION: ${String(terrainSummary.fullAspectDisposition ?? false)}`,
-    `SURFACE_TOTAL_CELLS: ${surfaceSummary.totalCells ?? "pending"}`,
-    `SURFACE_MATERIAL_CLASSES: ${surfaceSummary.materialClassCount ?? "pending"}/${surfaceSummary.requiredMaterialClassCount ?? "pending"}`,
-    `SURFACE_PARENT_READY: ${String(surfaceSummary.surfaceParentReady ?? false)}`,
-    `DOWNSTREAM_CANVAS_MAY_READ_SURFACE: ${String(surfaceSummary.downstreamCanvasMayReadSurface ?? false)}`
-  ];
-}
-
 async function importOnce(entry) {
   const url = stableModuleUrl(entry.path);
 
@@ -425,14 +590,13 @@ async function importOnce(entry) {
     return governor.importCache.get(url);
   }
 
-  const promise = import(url)
-    .then((imported) => {
-      if (!imported || typeof imported[entry.requiredExport] !== "function") {
-        throw new Error(`required export missing: ${entry.requiredExport}`);
-      }
+  const promise = import(url).then((imported) => {
+    if (!imported || typeof imported[entry.requiredExport] !== "function") {
+      throw new Error(`required export missing: ${entry.requiredExport}`);
+    }
 
-      return imported;
-    });
+    return imported;
+  });
 
   governor.importCache.set(url, promise);
   return promise;
@@ -498,37 +662,63 @@ async function loadParentModules() {
   return true;
 }
 
+function createRuntimeContext() {
+  const fibonacciNodalContext = getFibonacciNodalContext();
+
+  return {
+    runtimeContract: CONTRACT,
+    previousRuntimeContract: PREVIOUS_CONTRACT,
+    pairContract: PAIR_CONTRACT,
+    masterPsalmContract: MASTER_PSALM_CONTRACT,
+    masterPsalmReceipt: MASTER_PSALM_RECEIPT,
+    leapProtocol: LEAP_PROTOCOL,
+
+    doorwayContract: ROUTE_CONTRACT_EXPECTED,
+    routeDoorwayContract: ROUTE_CONTRACT_EXPECTED,
+    priorDoorwayContract: PREVIOUS_RUNTIMELESS_ROUTE,
+    priorRouteDoorwayContract: PREVIOUS_RUNTIMELESS_ROUTE,
+
+    route: ROUTE,
+    planet: PLANET,
+    privateRoom: true,
+    buildMode: BUILD_MODE,
+    runtimeGoverned: true,
+
+    nodalConstruct: NODAL_CONSTRUCT,
+    fibonacciNodalContext,
+    fibonacciRuntimeBound: true,
+    fibonacciSequence: FIBONACCI_SEQUENCE,
+    fibonacciVisibleZigzag: false,
+    fibonacciReplacesField: false,
+
+    canvasIndexChildReceiver: true,
+    orbitalBuildSurface: true,
+
+    groundLevelReady: false,
+    estatePlacementReady: false,
+    mutationAuthorized: false,
+    parentMutationAuthorized: false,
+    controlsAuthorized: false,
+    motionAuthorized: false,
+    inputAuthorized: false
+  };
+}
+
 function createParentInstances() {
   try {
+    const runtimeContext = createRuntimeContext();
+
     const kernelModule = state.parentModules.kernel.module;
     const latticeModule = state.parentModules.lattice256.module;
     const landmapModule = state.parentModules.landmap.module;
     const terrainModule = state.parentModules.terrain.module;
     const surfaceModule = state.parentModules.surface.module;
 
-    const kernel = kernelModule.createHEarthKernel({
-      runtimeContract: CONTRACT,
-      doorwayContract: ROUTE_CONTRACT_EXPECTED,
-      priorDoorwayContract: PREVIOUS_RUNTIMELESS_ROUTE,
-      route: ROUTE,
-      planet: PLANET,
-      privateRoom: true,
-      buildMode: BUILD_MODE,
-      runtimeGoverned: true,
-      canvasIndexChildReceiver: true,
-      orbitalBuildSurface: true,
-      groundLevelReady: false,
-      estatePlacementReady: false,
-      mutationAuthorized: false,
-      controlsAuthorized: false,
-      motionAuthorized: false,
-      inputAuthorized: false
-    });
-
-    const lattice256 = latticeModule.createHEarthLattice256({ kernel });
-    const landmap = landmapModule.createHEarthLandmap({ kernel, lattice256 });
-    const terrain = terrainModule.createHEarthTerrain({ kernel, lattice256, landmap });
-    const surface = surfaceModule.createHEarthSurface({ kernel, lattice256, landmap, terrain });
+    const kernel = kernelModule.createHEarthKernel(runtimeContext);
+    const lattice256 = latticeModule.createHEarthLattice256({ kernel, ...runtimeContext });
+    const landmap = landmapModule.createHEarthLandmap({ kernel, lattice256, ...runtimeContext });
+    const terrain = terrainModule.createHEarthTerrain({ kernel, lattice256, landmap, ...runtimeContext });
+    const surface = surfaceModule.createHEarthSurface({ kernel, lattice256, landmap, terrain, ...runtimeContext });
 
     state.parentInstances = {
       kernel,
@@ -540,22 +730,12 @@ function createParentInstances() {
 
     window.H_EARTH_ROUTE_PARENT_INSTANCES = state.parentInstances;
     window.H_EARTH_RUNTIME_PARENT_INSTANCES = state.parentInstances;
+    window.H_EARTH_FIBONACCI_NODAL_CONTEXT = getFibonacciNodalContext();
     window.H_EARTH_ROUTE_PARENT_INSTANCE_CONTEXT = {
       instances: state.parentInstances,
       parentInstances: state.parentInstances,
-      runtimeContract: CONTRACT,
-      routeDoorwayContract: ROUTE_CONTRACT_EXPECTED,
-      priorRouteDoorwayContract: PREVIOUS_RUNTIMELESS_ROUTE,
-      privateRoom: true,
-      buildMode: BUILD_MODE,
-      readOnly: true,
-      runtimeGoverned: true,
-      groundLevelReady: false,
-      estatePlacementReady: false,
-      mutationAuthorized: false,
-      controlsAuthorized: false,
-      motionAuthorized: false,
-      inputAuthorized: false
+      ...runtimeContext,
+      readOnly: true
     };
 
     state.parentChainReady = true;
@@ -594,19 +774,13 @@ async function activateCanvasIndex() {
   state.loadedChildModules += 1;
 
   try {
+    const runtimeContext = createRuntimeContext();
+
     const layer = imported.createHEarthCanvasLayer({
       instances: state.parentInstances,
       parentInstances: state.parentInstances,
-      runtimeContract: CONTRACT,
-      routeDoorwayContract: ROUTE_CONTRACT_EXPECTED,
-      priorRouteDoorwayContract: PREVIOUS_RUNTIMELESS_ROUTE,
-      privateRoom: true,
-      buildMode: BUILD_MODE,
-      readOnly: true,
-      runtimeGoverned: true,
-      mutationAuthorized: false,
-      groundLevelReady: false,
-      estatePlacementReady: false
+      ...runtimeContext,
+      readOnly: true
     });
 
     state.canvasLayer = layer;
@@ -674,23 +848,17 @@ async function activateOrbitalSurface() {
   state.loadedChildModules += 1;
 
   try {
+    const runtimeContext = createRuntimeContext();
+
     const status = await imported.bootHEarthOrbitalBuildSurface({
       instances: state.parentInstances,
       parentInstances: state.parentInstances,
       canvasLayer: state.canvasLayer,
-      runtimeContract: CONTRACT,
-      routeDoorwayContract: ROUTE_CONTRACT_EXPECTED,
-      priorRouteDoorwayContract: PREVIOUS_RUNTIMELESS_ROUTE,
-      privateRoom: true,
-      buildMode: BUILD_MODE,
       interactionTarget: "planet-surface-view",
       readOnly: true,
-      runtimeGoverned: true,
       maxDevicePixelRatio: governor.maxDevicePixelRatio,
       reducedMotion: governor.reducedMotion,
-      mutationAuthorized: false,
-      groundLevelReady: false,
-      estatePlacementReady: false
+      ...runtimeContext
     });
 
     state.orbitalSurfaceStatus =
@@ -760,6 +928,9 @@ function handleResize() {
 }
 
 function installGuards() {
+  if (governor.guardsInstalled) return;
+
+  governor.guardsInstalled = true;
   document.addEventListener("visibilitychange", handleVisibilityChange, { passive: true });
   window.addEventListener("resize", handleResize, { passive: true });
 }
@@ -771,6 +942,7 @@ async function bootHEarthRuntime(context = {}) {
     governor.routeContext = context;
     governor.mount = resolveMount(context);
     governor.receiptPanel = resolveReceiptPanel(context);
+    governor.fibonacciNodalContext = createFibonacciNodalContext();
 
     state.bootStartedAt = new Date().toISOString();
     state.status = "runtime-booting";
@@ -781,9 +953,9 @@ async function bootHEarthRuntime(context = {}) {
     scheduleReceiptPublish();
 
     mountMessage("Runtime governor active", [
-      "boot sequence locked",
+      "256 nodal field locked",
+      "Fibonacci runtime bound",
       "imports cached",
-      "render pressure governed",
       "parent mutation forbidden"
     ]);
 
@@ -818,10 +990,12 @@ function getHEarthRuntimeStatus() {
   const canvasStatus = state.canvasLayerStatus;
   const canvasSummary = canvasStatus?.summary || state.canvasLayer?.summary || {};
   const orbitalStatus = state.orbitalSurfaceStatus || {};
+  const fibonacciContext = getFibonacciNodalContext();
 
   return {
     contract: CONTRACT,
     receipt: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
     pairContract: PAIR_CONTRACT,
     expectedRouteContract: ROUTE_CONTRACT_EXPECTED,
     previousRuntimelessRoute: PREVIOUS_RUNTIMELESS_ROUTE,
@@ -829,6 +1003,10 @@ function getHEarthRuntimeStatus() {
     planet: PLANET,
     buildMode: BUILD_MODE,
     cacheKey: CACHE_KEY,
+
+    masterPsalmContract: MASTER_PSALM_CONTRACT,
+    masterPsalmReceipt: MASTER_PSALM_RECEIPT,
+    leapProtocol: LEAP_PROTOCOL,
 
     status: state.status,
     booted: state.booted,
@@ -850,6 +1028,21 @@ function getHEarthRuntimeStatus() {
     canvasIndexReady: state.canvasIndexReady,
     terrainElevationReady: state.terrainElevationReady,
     orbitalSurfaceReady: state.orbitalSurfaceReady,
+
+    nodalConstructBound: true,
+    nodalConstruct: {
+      nodeCount: TOTAL_NODES,
+      grid: `${GRID}x${GRID}`,
+      fixedField: true,
+      parentTruthPreserved: true
+    },
+
+    fibonacciRuntimeBound: true,
+    fibonacciSequence: [...FIBONACCI_SEQUENCE],
+    fibonacciChecksum: fibonacciContext.checksum,
+    fibonacciVisibleZigzag: false,
+    fibonacciReplacesField: false,
+    fibonacciUse: fibonacciContext.runtimeUse,
 
     canvasIndexReceipt: state.canvasLayer?.contract || "pending",
     terrainElevationReceipt:
@@ -878,43 +1071,63 @@ function exposeApi() {
   const api = {
     contract: CONTRACT,
     receipt: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
     pairContract: PAIR_CONTRACT,
+
     boot: bootHEarthRuntime,
     bootHEarthRuntime,
+
     status: getHEarthRuntimeStatus,
     getStatus: getHEarthRuntimeStatus,
-    getHEarthRuntimeStatus
+    getHEarthRuntimeStatus,
+
+    getFibonacciNodalContext,
+    fibonacciForNode
   };
 
   window.DGBHEarthRuntime = api;
   window.HEarthRuntime = api;
   window.H_EARTH_RUNTIME = api;
   window.H_EARTH_RUNTIME_RECEIPT = CONTRACT;
+  window.H_EARTH_FIBONACCI_NODAL_CONTEXT = getFibonacciNodalContext();
 }
 
 exposeApi();
 
 export {
   CONTRACT,
+  PREVIOUS_CONTRACT,
   PAIR_CONTRACT,
   ROUTE_CONTRACT_EXPECTED,
   PREVIOUS_RUNTIMELESS_ROUTE,
   ROUTE,
   BUILD_MODE,
   CACHE_KEY,
+  TOTAL_NODES,
+  GRID,
+  FIBONACCI_SEQUENCE,
+  MASTER_PSALM_CONTRACT,
+  MASTER_PSALM_RECEIPT,
+  LEAP_PROTOCOL,
+  NODAL_CONSTRUCT,
   EXPECTED,
   MODULES,
   bootHEarthRuntime,
-  getHEarthRuntimeStatus
+  getHEarthRuntimeStatus,
+  getFibonacciNodalContext,
+  fibonacciForNode
 };
 
 export default {
   contract: CONTRACT,
   receipt: CONTRACT,
+  previousContract: PREVIOUS_CONTRACT,
   pairContract: PAIR_CONTRACT,
   boot: bootHEarthRuntime,
   bootHEarthRuntime,
   status: getHEarthRuntimeStatus,
   getStatus: getHEarthRuntimeStatus,
-  getHEarthRuntimeStatus
+  getHEarthRuntimeStatus,
+  getFibonacciNodalContext,
+  fibonacciForNode
 };

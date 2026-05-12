@@ -2,11 +2,13 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="triple-g-live-frontier-audit"
+  data-page="triple-g-live-audit-false-positive-repair"
   data-route="/gauges/"
-  data-contract="TRIPLE_G_LIVE_FRONTIER_AUDIT_TNT_v3"
+  data-contract="TRIPLE_G_LIVE_AUDIT_FALSE_POSITIVE_REPAIR_TNT_v4"
   data-standard="cutting-edge-frontier-tech-only"
   data-audit-mode="live-client-side"
+  data-false-positive-repair="true"
+  data-script-signal-counting="false"
   data-receipts-copyable="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -27,7 +29,6 @@
       --bg:#020611;
       --panel:rgba(7,14,29,.86);
       --panel2:rgba(3,8,19,.94);
-      --glass:rgba(255,255,255,.045);
       --line:rgba(244,191,96,.34);
       --line-soft:rgba(255,255,255,.10);
       --text:#f8ead0;
@@ -79,6 +80,11 @@
       color:inherit;
       border:0;
       cursor:pointer;
+    }
+
+    button:disabled {
+      cursor:wait;
+      opacity:.72;
     }
 
     .skip-link {
@@ -587,7 +593,7 @@
         <p class="label">Triple G · Live Frontier Audit</p>
         <h1>The board reads the site.</h1>
         <p class="lede">
-          Triple G now audits the live routes instead of holding yesterday’s ledger. It checks reachability, context alignment, visible receipt spillover, route intent, and frontier readiness every time the audit runs.
+          Triple G audits the live routes without counting script dictionaries as evidence. It reads public text, structural markers, route intent, and frontier readiness from the current deployed pages.
         </p>
 
         <div class="actions">
@@ -633,9 +639,9 @@
           </article>
 
           <article class="standard-card">
-            <strong>Object truth</strong>
-            <h3>Show what the page claims.</h3>
-            <p>Labels do not replace proof. Motion does not replace context.</p>
+            <strong>False-positive repair</strong>
+            <h3>Scripts are not evidence.</h3>
+            <p>Audit dictionaries inside JavaScript are excluded from route classification.</p>
           </article>
 
           <article class="standard-card">
@@ -646,8 +652,8 @@
 
           <article class="standard-card">
             <strong>Receipt containment</strong>
-            <h3>Receipts are not public copy.</h3>
-            <p>Audit markers may exist as data, but public text stays clean.</p>
+            <h3>Public text stays clean.</h3>
+            <p>Receipt spillover is checked against visible text, not script dictionaries.</p>
           </article>
         </div>
       </section>
@@ -655,7 +661,7 @@
       <section class="panel" aria-label="Live route ledger">
         <div class="section-head">
           <h2>Live Route Ledger</h2>
-          <p>Default view shows critical routes. The audit recalculates from the current served pages.</p>
+          <p>Default view shows critical routes. The audit recalculates from public text and structural markers.</p>
         </div>
 
         <div class="route-toolbar" aria-label="Ledger filters">
@@ -731,7 +737,7 @@
 
   <script>
     (() => {
-      const CONTRACT = "TRIPLE_G_LIVE_FRONTIER_AUDIT_TNT_v3";
+      const CONTRACT = "TRIPLE_G_LIVE_AUDIT_FALSE_POSITIVE_REPAIR_TNT_v4";
 
       const routes = [
         {
@@ -741,7 +747,7 @@
           emphasis: "critical",
           expected: "transitional",
           required: ["COMPASS_PREFACE_DOORS", "/flat/", "/products/", "/showroom/"],
-          frontierSignals: ["compass-preface-doors", "Compass · Three Entry Prefaces"],
+          frontierSignals: ["compass-preface-doors", "Compass · Three Entry Prefaces", "map, movement, or world"],
           legacySignals: ["COMPASS_THREE_CONTEXT_FRONTIER", "COMPASS_ROUND_FIELD", "same scene"]
         },
         {
@@ -751,7 +757,7 @@
           emphasis: "critical",
           expected: "transitional",
           required: ["Flat Investigation", "two-dimensional", "Start with the map"],
-          frontierSignals: ["Map Before Motion", "FLAT_INVESTIGATION"],
+          frontierSignals: ["Map Before Motion", "FLAT_INVESTIGATION", "two-dimensional investigation"],
           legacySignals: []
         },
         {
@@ -801,7 +807,7 @@
           emphasis: "critical",
           expected: "frontier",
           required: ["Triple G", "Live Frontier Audit"],
-          frontierSignals: ["live-client-side", "The board reads the site"],
+          frontierSignals: ["false-positive repair", "Scripts are not evidence", "The board reads the site"],
           legacySignals: ["0 goals", "0 gauges", "0 gaps"]
         },
         {
@@ -964,19 +970,56 @@
         }).finally(() => window.clearTimeout(timer));
       }
 
-      function cleanVisibleText(doc) {
+      function cloneWithoutNonPublicNodes(doc) {
         const clone = doc.cloneNode(true);
-        clone.querySelectorAll("script,style,noscript,template,svg").forEach((node) => node.remove());
+        clone
+          .querySelectorAll("script,style,noscript,template,svg,canvas,[hidden],[aria-hidden='true'],.data-only")
+          .forEach((node) => node.remove());
+        return clone;
+      }
+
+      function visibleTextFrom(doc) {
+        const clone = cloneWithoutNonPublicNodes(doc);
         return (clone.body?.textContent || "").replace(/\s+/g, " ").trim();
       }
 
+      function structuralMarkerTextFrom(doc) {
+        const clone = doc.cloneNode(true);
+        clone
+          .querySelectorAll("script,style,noscript,template,svg")
+          .forEach((node) => node.remove());
+
+        const values = [];
+        const elements = Array.from(clone.querySelectorAll("*"));
+
+        for (const element of elements) {
+          for (const attribute of Array.from(element.attributes || [])) {
+            if (
+              attribute.name.startsWith("data-") ||
+              attribute.name === "id" ||
+              attribute.name === "class" ||
+              attribute.name === "href" ||
+              attribute.name === "aria-label" ||
+              attribute.name === "title"
+            ) {
+              values.push(attribute.value);
+            }
+          }
+        }
+
+        return values.join(" ").replace(/\s+/g, " ").trim();
+      }
+
       function includesAny(haystack, needles) {
-        return needles.some((needle) => haystack.toLowerCase().includes(String(needle).toLowerCase()));
+        const low = haystack.toLowerCase();
+        return needles.some((needle) => low.includes(String(needle).toLowerCase()));
       }
 
       function countMatches(haystack, needles) {
+        const low = haystack.toLowerCase();
+
         return needles.reduce((count, needle) => {
-          return count + (haystack.toLowerCase().includes(String(needle).toLowerCase()) ? 1 : 0);
+          return count + (low.includes(String(needle).toLowerCase()) ? 1 : 0);
         }, 0);
       }
 
@@ -990,15 +1033,15 @@
       }
 
       function classifyRoute(route, payload) {
-        const html = payload.html || "";
         const doc = payload.doc;
-        const visibleText = doc ? cleanVisibleText(doc) : "";
-        const scan = `${html} ${visibleText}`;
+        const visibleText = doc ? visibleTextFrom(doc) : "";
+        const structuralMarkers = doc ? structuralMarkerTextFrom(doc) : "";
+        const auditScan = `${visibleText} ${structuralMarkers}`;
 
-        const requiredCount = countMatches(scan, route.required || []);
+        const requiredCount = countMatches(auditScan, route.required || []);
         const requiredTotal = route.required?.length || 0;
-        const frontierCount = countMatches(scan, route.frontierSignals || []);
-        const legacyCount = countMatches(scan, route.legacySignals || []);
+        const frontierCount = countMatches(auditScan, route.frontierSignals || []);
+        const legacyCount = countMatches(auditScan, route.legacySignals || []);
 
         const visibleReceiptSpill =
           /\bHTML_RECEIPT\b|\bRUNTIME_RECEIPT\b|\bPAIR_RECEIPT\b|\bRECEIPT:\b/i.test(visibleText);
@@ -1007,26 +1050,25 @@
 
         evidence.push(`HTTP ${payload.httpStatus}`);
         evidence.push(`${requiredCount}/${requiredTotal} required marker(s) found`);
+        evidence.push("script text excluded from signal matching");
 
         if (frontierCount > 0) evidence.push(`${frontierCount} frontier signal(s) found`);
         if (legacyCount > 0) evidence.push(`${legacyCount} legacy signal(s) found`);
         if (visibleReceiptSpill) evidence.push("visible receipt spillover detected");
         if (!visibleReceiptSpill) evidence.push("no visible receipt spillover detected");
 
-        let status = "transitional";
-        let finding = "Reachable and active, but still needs verification before frontier pass.";
-
         if (!payload.ok) {
-          status = "unreachable";
-          finding = "Route did not return a successful live response.";
           return {
             ...route,
-            status,
-            finding,
+            status: "unreachable",
+            finding: "Route did not return a successful live response.",
             tags: [route.role, "unreachable"],
             evidence
           };
         }
+
+        let status = "transitional";
+        let finding = "Reachable and active, but still needs verification before frontier pass.";
 
         if (route.expected === "hold") {
           status = "hold";
@@ -1038,10 +1080,10 @@
             : "Known legacy route is reachable and may be ready for renewal review.";
         } else if (route.route === "/") {
           const compassUpdated =
-            includesAny(scan, ["COMPASS_PREFACE_DOORS", "compass-preface-doors"]) &&
-            includesAny(scan, ["/flat/"]) &&
-            includesAny(scan, ["/products/"]) &&
-            includesAny(scan, ["/showroom/"]);
+            includesAny(auditScan, ["COMPASS_PREFACE_DOORS", "compass-preface-doors", "Compass · Three Entry Prefaces"]) &&
+            includesAny(auditScan, ["/flat/"]) &&
+            includesAny(auditScan, ["/products/"]) &&
+            includesAny(auditScan, ["/showroom/"]);
 
           status = compassUpdated && !visibleReceiptSpill ? "transitional" : "legacy";
           finding = compassUpdated
@@ -1092,7 +1134,6 @@
           return classifyRoute(route, {
             ok: response.ok,
             httpStatus: response.status,
-            html,
             doc
           });
         } catch (error) {
@@ -1157,7 +1198,7 @@
 
           const evidence = document.createElement("div");
           evidence.className = "evidence";
-          item.evidence.slice(0, 5).forEach((line) => {
+          item.evidence.slice(0, 6).forEach((line) => {
             const span = document.createElement("span");
             span.textContent = line;
             evidence.appendChild(span);
@@ -1222,6 +1263,8 @@
       function updateNextMove() {
         const compass = auditResults.find((item) => item.route === "/");
         const flat = auditResults.find((item) => item.route === "/flat/");
+        const showroom = auditResults.find((item) => item.route === "/showroom/");
+        const globeShowcase = auditResults.find((item) => item.route === "/showroom/globe/");
         const nutrition = auditResults.find((item) => item.route === "/products/nutrition/");
         const hEarthGauges = auditResults.find((item) => item.route === "/gauges/h-earth/");
         const unreachable = auditResults.find((item) => item.status === "unreachable");
@@ -1248,6 +1291,12 @@
         if (receiptSpill) {
           els.nextMoveTitle.textContent = "Contain public receipt spillover.";
           els.nextMoveText.textContent = `${receiptSpill.title} still appears to expose audit machinery in public text. Clean that route before promoting it.`;
+          return;
+        }
+
+        if (showroom?.status === "transitional" || globeShowcase?.status === "transitional") {
+          els.nextMoveTitle.textContent = "Clean the Showroom lane.";
+          els.nextMoveText.textContent = "Showroom and Globe Showcase are the Universe-entry standards. Remove public receipt spillover and preserve the display-world object language.";
           return;
         }
 
@@ -1319,6 +1368,8 @@
           return {
             contract: CONTRACT,
             auditMode: "live-client-side",
+            falsePositiveRepair: true,
+            scriptSignalCounting: false,
             routes: auditResults.length,
             counts: counts(),
             generatedImage: false,
@@ -1335,6 +1386,8 @@
 
       document.documentElement.dataset.tripleGReceipt = CONTRACT;
       document.documentElement.dataset.auditMode = "live-client-side";
+      document.documentElement.dataset.falsePositiveRepair = "true";
+      document.documentElement.dataset.scriptSignalCounting = "false";
       document.documentElement.dataset.generatedImage = "false";
       document.documentElement.dataset.graphicBox = "false";
       document.documentElement.dataset.visualPassClaim = "false";

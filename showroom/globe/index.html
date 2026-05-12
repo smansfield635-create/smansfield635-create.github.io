@@ -1,13 +1,11 @@
-<!-- /showroom/globe/index.html -->
+<!-- /showroom/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-page="globe-showcase-public-display-case"
-  data-route="/showroom/globe/"
-  data-contract="SHOWROOM_AND_GLOBE_PUBLIC_RECEIPT_SPILLOVER_CLEANUP_TNT_v1"
-  data-standard="frontier-display-case"
+  data-page="showroom-natural-diamond-restored"
+  data-route="/showroom/"
+  data-standard="frontier-display-world"
   data-public-copy-clean="true"
-  data-private-engines-asleep="true"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claim="false"
@@ -15,10 +13,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Globe Showcase</title>
+  <title>Diamond Gate Bridge · Showroom</title>
   <meta
     name="description"
-    content="The Globe Showcase is the public display-case index for inspectable worlds."
+    content="The Diamond Gate Bridge Showroom is the public display world: presentation, proof, and possibility."
   >
 
   <style>
@@ -34,7 +32,6 @@
       --gold:#f4bf60;
       --blue:#8ebeff;
       --green:#8ff0c3;
-      --violet:#beaaff;
       --shadow:0 28px 90px rgba(0,0,0,.46);
       --max:1220px;
       --facet:polygon(0 18px,18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px));
@@ -47,8 +44,8 @@
       min-height:100%;
       background:
         radial-gradient(circle at 50% 0%,rgba(142,190,255,.18),transparent 34rem),
-        radial-gradient(circle at 12% 20%,rgba(244,191,96,.11),transparent 30rem),
-        radial-gradient(circle at 88% 22%,rgba(190,170,255,.13),transparent 34rem),
+        radial-gradient(circle at 15% 18%,rgba(244,191,96,.12),transparent 30rem),
+        radial-gradient(circle at 86% 24%,rgba(190,170,255,.12),transparent 32rem),
         linear-gradient(180deg,var(--bg),#01030a 78%);
     }
 
@@ -59,13 +56,14 @@
       color:var(--text);
       background:
         linear-gradient(145deg,rgba(255,255,255,.035),transparent 42%),
-        radial-gradient(circle at 50% 58%,rgba(142,190,255,.08),transparent 36rem);
+        radial-gradient(circle at 50% 58%,rgba(244,191,96,.07),transparent 36rem);
       overflow-x:hidden;
     }
 
     a { color:inherit; text-decoration:none; }
 
     a:focus-visible,
+    canvas:focus-visible,
     [tabindex]:focus-visible {
       outline:2px solid var(--gold);
       outline-offset:4px;
@@ -95,8 +93,8 @@
 
     .topbar,
     .hero,
-    .case,
-    .world-card,
+    .showcase-frame,
+    .card,
     .next {
       border:1px solid var(--line);
       background:linear-gradient(180deg,rgba(255,255,255,.055),transparent),var(--panel);
@@ -158,8 +156,8 @@
       margin-top:24px;
       padding:clamp(24px,5vw,56px);
       background:
-        radial-gradient(circle at 18% 12%,rgba(244,191,96,.12),transparent 18rem),
-        radial-gradient(circle at 84% 24%,rgba(190,170,255,.12),transparent 30rem),
+        radial-gradient(circle at 22% 10%,rgba(244,191,96,.14),transparent 20rem),
+        radial-gradient(circle at 78% 18%,rgba(190,170,255,.12),transparent 28rem),
         linear-gradient(180deg,rgba(255,255,255,.055),transparent),
         var(--panel);
     }
@@ -188,7 +186,7 @@
     }
 
     .lede {
-      max-width:86ch;
+      max-width:84ch;
       margin:22px 0 0;
       color:var(--muted);
       font-size:clamp(1.03rem,2.2vw,1.18rem);
@@ -220,106 +218,70 @@
       color:#06101d;
     }
 
-    .case {
+    .showcase-frame {
       margin-top:18px;
-      padding:clamp(18px,3vw,30px);
+      padding:clamp(14px,2.4vw,24px);
       background:
-        radial-gradient(circle at 50% 34%,rgba(190,170,255,.13),transparent 22rem),
-        radial-gradient(circle at 50% 52%,rgba(142,190,255,.10),transparent 34rem),
+        radial-gradient(circle at 50% 38%,rgba(244,191,96,.09),transparent 18rem),
+        radial-gradient(circle at 50% 52%,rgba(142,190,255,.11),transparent 34rem),
         linear-gradient(180deg,rgba(255,255,255,.045),transparent),
         var(--panel2);
+      overflow:hidden;
     }
 
-    .case-head {
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:18px;
-      margin-bottom:18px;
+    .diamond-mount {
+      position:relative;
+      width:100%;
+      min-height:clamp(390px,62vw,680px);
+      border:1px solid rgba(142,190,255,.20);
+      border-radius:28px;
+      background:
+        radial-gradient(circle at 50% 44%,rgba(142,190,255,.10),transparent 28rem),
+        linear-gradient(180deg,rgba(5,12,30,.96),rgba(1,4,12,.98));
+      box-shadow:
+        inset 0 0 70px rgba(142,190,255,.07),
+        inset 0 0 130px rgba(0,0,0,.42);
+      overflow:hidden;
+      contain:layout paint style;
     }
 
-    .case-head h2 {
-      margin:0;
-      font-size:clamp(2rem,4vw,3.8rem);
-      line-height:.92;
-      letter-spacing:-.065em;
+    #showroomDiamondCanvas {
+      display:block;
+      width:100%;
+      height:clamp(390px,62vw,680px);
+      user-select:none;
+      -webkit-user-select:none;
     }
 
-    .case-head p {
-      margin:0;
-      max-width:60ch;
+    .fallback {
+      position:absolute;
+      inset:auto 18px 18px;
+      padding:13px 14px;
+      border:1px solid rgba(244,191,96,.28);
+      background:rgba(5,10,20,.82);
       color:var(--muted);
-      line-height:1.55;
+      clip-path:var(--facet-small);
+      pointer-events:none;
     }
 
-    .world-grid {
+    .diamond-loaded .fallback { display:none; }
+
+    .card-grid {
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
       gap:12px;
+      margin-top:18px;
     }
 
-    .world-card {
-      position:relative;
-      min-height:300px;
+    .card {
       padding:18px;
-      overflow:hidden;
       background:
-        radial-gradient(circle at 50% 22%,rgba(255,255,255,.09),transparent 12rem),
         linear-gradient(135deg,rgba(255,255,255,.06),transparent 48%),
         rgba(6,13,27,.78);
       box-shadow:none;
     }
 
-    .world-card::before {
-      content:"";
-      display:block;
-      width:min(46vw,148px);
-      aspect-ratio:1;
-      margin:6px auto 18px;
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 32% 24%,rgba(255,255,255,.78),transparent 12%),
-        radial-gradient(circle at 36% 32%,var(--planet-light),transparent 28%),
-        radial-gradient(circle at 58% 62%,var(--planet-deep),#020611 72%);
-      border:1px solid rgba(244,191,96,.28);
-      box-shadow:
-        inset -24px -20px 34px rgba(0,0,0,.42),
-        0 0 42px var(--planet-glow);
-    }
-
-    .world-card::after {
-      content:"";
-      position:absolute;
-      left:50%;
-      top:52px;
-      width:min(44vw,180px);
-      height:min(13vw,50px);
-      transform:translateX(-50%) rotate(-10deg);
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:50%;
-      opacity:.55;
-      pointer-events:none;
-    }
-
-    .world-card[data-world="earth"] {
-      --planet-light:rgba(142,190,255,.82);
-      --planet-deep:#0b315f;
-      --planet-glow:rgba(142,190,255,.24);
-    }
-
-    .world-card[data-world="hearth"] {
-      --planet-light:rgba(143,240,195,.72);
-      --planet-deep:#173a2f;
-      --planet-glow:rgba(143,240,195,.22);
-    }
-
-    .world-card[data-world="audralia"] {
-      --planet-light:rgba(190,170,255,.72);
-      --planet-deep:#2b195d;
-      --planet-glow:rgba(190,170,255,.22);
-    }
-
-    .world-card strong {
+    .card strong {
       display:block;
       color:var(--green);
       font-size:.74rem;
@@ -328,20 +290,16 @@
       margin-bottom:10px;
     }
 
-    .world-card h3 {
+    .card h3 {
       margin:0;
-      font-size:1.45rem;
+      font-size:1.32rem;
       letter-spacing:-.04em;
     }
 
-    .world-card p {
+    .card p {
       margin:10px 0 0;
       color:var(--muted);
       line-height:1.5;
-    }
-
-    .world-card .action {
-      margin-top:14px;
     }
 
     .next {
@@ -367,14 +325,9 @@
       line-height:1.6;
     }
 
-    @media (max-width:980px) {
-      .world-grid {
+    @media (max-width:920px) {
+      .card-grid {
         grid-template-columns:1fr;
-      }
-
-      .case-head {
-        align-items:flex-start;
-        flex-direction:column;
       }
     }
 
@@ -396,8 +349,8 @@
       }
 
       .hero,
-      .case,
-      .world-card,
+      .showcase-frame,
+      .card,
       .next {
         clip-path:polygon(0 14px,14px 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px));
       }
@@ -405,15 +358,28 @@
       .hero {
         padding:22px;
       }
+
+      .showcase-frame {
+        padding:8px;
+      }
+
+      .diamond-mount {
+        min-height:420px;
+        border-radius:20px;
+      }
+
+      #showroomDiamondCanvas {
+        height:420px;
+      }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="/showroom/globe/#main">Skip to Globe Showcase</a>
+  <a class="skip-link" href="/showroom/#main">Skip to Showroom</a>
 
   <div class="shell">
-    <header class="topbar" aria-label="Globe Showcase navigation">
+    <header class="topbar" aria-label="Showroom navigation">
       <a class="brand" href="/" aria-label="Return to Compass">
         <span class="brand-mark" aria-hidden="true"></span>
         <span>Diamond Gate Bridge</span>
@@ -421,77 +387,84 @@
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/" aria-current="page">Globe</a>
+        <a href="/flat/">Flat</a>
         <a href="/products/">Products</a>
+        <a href="/showroom/" aria-current="page">Showroom</a>
+        <a href="/showroom/globe/">Globe</a>
         <a href="/gauges/">Triple G</a>
       </nav>
     </header>
 
     <main id="main" tabindex="-1">
       <section class="hero">
-        <p class="label">Globe Showcase · Display Case</p>
-        <h1>Inspect the worlds without waking the engines.</h1>
+        <p class="label">Showroom · Public Cover</p>
+        <h1>The Showroom opens the case.</h1>
         <p class="lede">
-          The Globe Showcase is the public display-case index. It gives each world a clear inspection path while keeping private render chains asleep until the visitor enters a dedicated room.
+          The Showroom is the public-facing glamour layer. It gives the visitor one strong object first, then opens into the Globe Showcase where the worlds sit behind the glass.
         </p>
 
         <div class="actions">
-          <a class="action primary" href="/showroom/globe/h-earth/">Inspect H-Earth</a>
-          <a class="action" href="/showroom/">Return to Showroom</a>
-          <a class="action" href="/nine-summits/universe/">Open Universe</a>
+          <a class="action primary" href="/showroom/globe/">Enter Globe Showcase</a>
+          <a class="action" href="/">Return to Compass</a>
+          <a class="action" href="/products/">Review Products</a>
           <a class="action" href="/gauges/">Run Triple G</a>
         </div>
       </section>
 
-      <section class="case" aria-label="Inspectable world display case">
-        <div class="case-head">
-          <div>
-            <p class="label">Public Index</p>
-            <h2>Display first. Heavy engines later.</h2>
+      <section class="showcase-frame" aria-label="Natural diamond display">
+        <div id="showroomDiamondMount" class="diamond-mount">
+          <canvas
+            id="showroomDiamondCanvas"
+            width="1200"
+            height="720"
+            role="img"
+            aria-label="A natural-looking solid crown-cut sparkling diamond inside the Showroom display case."
+            data-showroom-diamond-canvas="true"
+          ></canvas>
+          <div class="fallback">
+            Natural crown-cut diamond display. Enter the Globe Showcase to inspect the worlds.
           </div>
-          <p>
-            This page is intentionally light. It shows the available inspection rooms and keeps deep terrain, canvas,
-            and private world engines out of the public selector.
-          </p>
         </div>
+      </section>
 
-        <div class="world-grid">
-          <article class="world-card" data-world="earth">
-            <strong>Reference Body</strong>
-            <h3>Earth</h3>
-            <p>Use Earth as the baseline reference lane, not as the constructed-world frontier.</p>
-            <a class="action" href="/showroom/globe/earth/">Inspect Earth</a>
-          </article>
+      <section class="card-grid" aria-label="Showroom standards">
+        <article class="card">
+          <strong>Cover</strong>
+          <h3>One object leads.</h3>
+          <p>The Showroom should not scatter attention before the visitor understands the room.</p>
+        </article>
 
-          <article class="world-card" data-world="hearth">
-            <strong>Private Room</strong>
-            <h3>H-Earth</h3>
-            <p>Enter the dedicated inspection room for the current private-world route.</p>
-            <a class="action primary" href="/showroom/globe/h-earth/">Inspect H-Earth</a>
-          </article>
+        <article class="card">
+          <strong>Showcase</strong>
+          <h3>The worlds wait behind the glass.</h3>
+          <p>The next layer opens the display case without waking private engines on the cover page.</p>
+        </article>
 
-          <article class="world-card" data-world="audralia">
-            <strong>Constructed World</strong>
-            <h3>Audralia</h3>
-            <p>Inspect the constructed-world lane separately from Earth and other planet rooms.</p>
-            <a class="action" href="/showroom/globe/audralia/">Inspect Audralia</a>
-          </article>
-        </div>
+        <article class="card">
+          <strong>Standard</strong>
+          <h3>Natural form, restrained motion.</h3>
+          <p>The diamond returns to the solid crown-cut visual standard instead of a flat CSS substitute.</p>
+        </article>
       </section>
 
       <section class="next" aria-label="Next move">
         <p class="label">Next</p>
-        <h2>The display case stays light.</h2>
+        <h2>Enter the Globe Showcase.</h2>
         <p>
-          The Showcase should remain a selector and proof surface. Each world can become heavier only after the visitor enters that world’s own inspection room.
+          The Showroom is the cover. The Globe Showcase is the display-case index where worlds can be inspected without turning the public page into a heavy private renderer.
         </p>
         <div class="actions">
-          <a class="action primary" href="/showroom/globe/h-earth/">Enter H-Earth</a>
+          <a class="action primary" href="/showroom/globe/">Open Globe Showcase</a>
           <a class="action" href="/gauges/">Check Triple G</a>
         </div>
       </section>
     </main>
   </div>
+
+  <script
+    type="module"
+    src="./index.js?v=SHOWROOM_NATURAL_DIAMOND_RESTORE_TNT_v2"
+    data-renderer="showroom-natural-diamond"
+  ></script>
 </body>
 </html>

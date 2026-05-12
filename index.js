@@ -1,20 +1,18 @@
 // /index.js
-// COMPASS_LEGACY_FRONTIER_MARRIAGE_JS_TNT_v2
+// COMPASS_LEGACY_FRONTIER_MARRIAGE_JS_TNT_v3
 // Full-file replacement.
 // Root Compass renderer only.
 //
-// v2 correction:
-// - Straightens Flat context.
-// - Centers the architectural board.
-// - Prevents title and route labels from clipping.
-// - Makes the Flat board read as organized, intentional, and measured.
-// - Preserves Round / Globe context split.
-// - No receipts.
-// - No GraphicBox.
-// - No generated images.
+// v3 correction:
+// - Forces new renderer version through index.html.
+// - Makes Flat context visibly organized.
+// - Removes oversized clipped Flat title.
+// - Uses a clear 2x3 grid with equal spacing.
+// - Shortens route labels.
+// - Keeps Round and Globe intact.
 
-const CONTRACT = "COMPASS_LEGACY_FRONTIER_MARRIAGE_JS_TNT_v2";
-const HTML_CONTRACT = "COMPASS_LEGACY_FRONTIER_MARRIAGE_HTML_TNT_v1";
+const CONTRACT = "COMPASS_LEGACY_FRONTIER_MARRIAGE_JS_TNT_v3";
+const HTML_CONTRACT = "COMPASS_LEGACY_FRONTIER_MARRIAGE_HTML_TNT_v3";
 
 const GENERATED_IMAGE = false;
 const GRAPHIC_BOX = false;
@@ -80,12 +78,12 @@ const CONTEXT_SELECTORS = Object.freeze([
 ]);
 
 const FLAT_ROUTES = Object.freeze([
-  { label: "Door", route: "/door/" },
-  { label: "Home", route: "/home/" },
-  { label: "Showroom", route: "/showroom/" },
-  { label: "Products", route: "/products/" },
-  { label: "Universe", route: "/nine-summits/universe/" },
-  { label: "Triple G", route: "/gauges/" }
+  { label: "Door", route: "/door/", short: "Door" },
+  { label: "Home", route: "/home/", short: "Home" },
+  { label: "Showroom", route: "/showroom/", short: "Showroom" },
+  { label: "Products", route: "/products/", short: "Products" },
+  { label: "Universe", route: "/nine-summits/universe/", short: "Universe" },
+  { label: "Triple G", route: "/gauges/", short: "Triple G" }
 ]);
 
 const ROUND_ROUTES = Object.freeze([
@@ -111,14 +109,11 @@ const state = {
   context: "round",
   focusedRoute: null,
   hoverKey: null,
-
   canvas: null,
   ctx: null,
   mount: null,
-
   width: 0,
   height: 0,
-
   active: true,
   visible: true,
   phase: 0,
@@ -126,13 +121,11 @@ const state = {
   dragPhase: 0,
   lastFrameAt: 0,
   raf: 0,
-
   dragging: false,
   pointerId: null,
   pointerStartX: 0,
   pointerStartY: 0,
   dragPhaseStart: 0,
-
   hitRegions: [],
   lastTap: { key: "", time: 0 }
 };
@@ -180,8 +173,8 @@ function render(time = 0) {
   drawContextSelectors(ctx, context);
 
   if (state.context === "flat") drawFlatContext(ctx, context);
-  if (state.context === "round") drawRoundContext(ctx, context, time);
-  if (state.context === "globe") drawGlobeContext(ctx, context, time);
+  if (state.context === "round") drawRoundContext(ctx, context);
+  if (state.context === "globe") drawGlobeContext(ctx, context);
 
   drawSubtleCue(ctx);
   stampDocument();
@@ -207,22 +200,20 @@ function drawBackground(ctx, context) {
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, width, height);
 
-  drawStarDust(ctx, context, state.context === "flat" ? 28 : 92);
+  drawStarDust(ctx, state.context === "flat" ? 18 : 92);
 
   ctx.save();
   ctx.globalCompositeOperation = "lighter";
-
   const aura = ctx.createRadialGradient(width * 0.5, height * 0.48, 0, width * 0.5, height * 0.48, width * 0.60);
   aura.addColorStop(0, p.glow);
   aura.addColorStop(0.50, "rgba(244,191,96,.055)");
   aura.addColorStop(1, "rgba(0,0,0,0)");
   ctx.fillStyle = aura;
   ctx.fillRect(0, 0, width, height);
-
   ctx.restore();
 }
 
-function drawStarDust(ctx, context, countBase) {
+function drawStarDust(ctx, countBase) {
   const count = MOBILE ? Math.floor(countBase * 0.58) : countBase;
 
   ctx.save();
@@ -248,7 +239,7 @@ function drawStarDust(ctx, context, countBase) {
 
 function drawContextSelectors(ctx, context) {
   const width = state.width;
-  const y = state.height * (MOBILE ? 0.085 : 0.090);
+  const y = state.height * 0.085;
   const gap = Math.min(width * 0.22, 252 * DPR);
   const startX = width * 0.5 - gap;
   const size = Math.min(width, state.height) * (MOBILE ? 0.074 : 0.062);
@@ -285,7 +276,7 @@ function drawContextSelectors(ctx, context) {
 function drawFlatContext(ctx, context) {
   const layout = getFlatLayout();
 
-  drawFlatGrid(ctx, context, layout);
+  drawFlatBoard(ctx, context, layout);
   drawFlatHeading(ctx, context, layout);
   drawFlatRoutes(ctx, context, layout);
 }
@@ -294,32 +285,26 @@ function getFlatLayout() {
   const width = state.width;
   const height = state.height;
 
-  const marginX = width * (MOBILE ? 0.075 : 0.11);
-  const boardX = marginX;
-  const boardW = width - marginX * 2;
+  const boardW = width * 0.84;
+  const boardH = height * 0.56;
+  const boardX = (width - boardW) * 0.5;
+  const boardY = height * 0.235;
 
-  const boardY = height * (MOBILE ? 0.235 : 0.225);
-  const boardH = height * (MOBILE ? 0.555 : 0.565);
-
-  const titleY = boardY - height * 0.050;
-  const subtitleY = boardY - height * 0.012;
-
-  const innerPadX = boardW * (MOBILE ? 0.070 : 0.075);
-  const innerPadY = boardH * 0.185;
-
-  const availableW = boardW - innerPadX * 2;
-  const availableH = boardH - innerPadY * 1.58;
+  const headerH = boardH * 0.18;
+  const routeAreaY = boardY + headerH;
+  const routeAreaH = boardH - headerH - boardH * 0.08;
 
   const cols = 3;
   const rows = 2;
-  const gapX = availableW * (MOBILE ? 0.065 : 0.075);
-  const gapY = availableH * 0.180;
+  const padX = boardW * 0.075;
+  const gapX = boardW * 0.055;
+  const gapY = routeAreaH * 0.18;
 
-  const cardW = (availableW - gapX * (cols - 1)) / cols;
-  const cardH = Math.min(boardH * 0.185, (availableH - gapY) / rows);
+  const cardW = (boardW - padX * 2 - gapX * 2) / 3;
+  const cardH = Math.min(routeAreaH * 0.35, 92 * DPR);
 
-  const gridStartX = boardX + innerPadX;
-  const gridStartY = boardY + innerPadY;
+  const startX = boardX + padX;
+  const startY = routeAreaY + routeAreaH * 0.10;
 
   return {
     width,
@@ -328,69 +313,21 @@ function getFlatLayout() {
     boardY,
     boardW,
     boardH,
-    titleY,
-    subtitleY,
-    gridStartX,
-    gridStartY,
+    headerH,
     cols,
     rows,
+    startX,
+    startY,
+    cardW,
+    cardH,
     gapX,
     gapY,
-    cardW,
-    cardH
+    titleY: boardY + headerH * 0.34,
+    subtitleY: boardY + headerH * 0.68
   };
 }
 
-function drawFlatHeading(ctx, context, layout) {
-  const titleSize = clamp(layout.boardW * 0.058, 24 * DPR, MOBILE ? 35 * DPR : 52 * DPR);
-  const subtitleSize = clamp(layout.boardW * 0.024, 11 * DPR, 18 * DPR);
-
-  ctx.save();
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-
-  ctx.fillStyle = "rgba(248,234,208,.94)";
-  ctx.font = `950 ${titleSize}px Inter, system-ui, sans-serif`;
-  fitText(ctx, "Architectural Route Board", layout.width * 0.5, layout.titleY, layout.boardW * 0.92);
-
-  ctx.fillStyle = "rgba(186,194,207,.84)";
-  ctx.font = `800 ${subtitleSize}px Inter, system-ui, sans-serif`;
-  fitText(ctx, "No center object · direct route selection", layout.width * 0.5, layout.subtitleY, layout.boardW * 0.82);
-
-  ctx.restore();
-}
-
-function drawFlatRoutes(ctx, context, layout) {
-  FLAT_ROUTES.forEach((item, index) => {
-    const col = index % layout.cols;
-    const row = Math.floor(index / layout.cols);
-
-    const x = layout.gridStartX + col * (layout.cardW + layout.gapX) + layout.cardW * 0.5;
-    const y = layout.gridStartY + row * (layout.cardH + layout.gapY) + layout.cardH * 0.5;
-
-    const active = state.focusedRoute === item.route;
-
-    drawRoutePlate(ctx, x, y, layout.cardW, layout.cardH, item.label, routeShortLabel(item.route), active, context.palette);
-
-    state.hitRegions.push({
-      key: `route:${item.route}`,
-      type: "route",
-      route: item.route,
-      label: item.label,
-      x,
-      y,
-      radius: Math.max(layout.cardW, layout.cardH) * 0.55
-    });
-  });
-}
-
-function routeShortLabel(route) {
-  if (route === "/nine-summits/universe/") return "Universe";
-  if (route === "/gauges/") return "Triple G";
-  return route.replaceAll("/", "") || "Compass";
-}
-
-function drawFlatGrid(ctx, context, layout) {
+function drawFlatBoard(ctx, context, layout) {
   const { boardX, boardY, boardW, boardH } = layout;
 
   ctx.save();
@@ -407,23 +344,27 @@ function drawFlatGrid(ctx, context, layout) {
   wash.addColorStop(0.58, "rgba(142,190,255,.035)");
   wash.addColorStop(1, "rgba(0,0,0,0)");
 
+  ctx.fillStyle = "rgba(3,9,22,.42)";
+  facetPath(ctx, boardX, boardY, boardW, boardH, 24 * DPR);
+  ctx.fill();
+
   ctx.fillStyle = wash;
   ctx.fillRect(boardX, boardY, boardW, boardH);
 
   ctx.strokeStyle = context.palette.line;
   ctx.lineWidth = Math.max(0.7, DPR);
-  ctx.globalAlpha = 0.44;
+  ctx.globalAlpha = 0.34;
 
-  for (let i = 0; i <= 8; i += 1) {
-    const x = boardX + (boardW * i) / 8;
+  for (let i = 0; i <= 6; i += 1) {
+    const x = boardX + (boardW * i) / 6;
     ctx.beginPath();
     ctx.moveTo(x, boardY);
     ctx.lineTo(x, boardY + boardH);
     ctx.stroke();
   }
 
-  for (let i = 0; i <= 6; i += 1) {
-    const y = boardY + (boardH * i) / 6;
+  for (let i = 0; i <= 5; i += 1) {
+    const y = boardY + (boardH * i) / 5;
     ctx.beginPath();
     ctx.moveTo(boardX, y);
     ctx.lineTo(boardX + boardW, y);
@@ -431,7 +372,7 @@ function drawFlatGrid(ctx, context, layout) {
   }
 
   ctx.globalAlpha = 1;
-  ctx.strokeStyle = "rgba(244,191,96,.34)";
+  ctx.strokeStyle = "rgba(244,191,96,.36)";
   ctx.lineWidth = Math.max(1.2, DPR * 1.2);
   facetPath(ctx, boardX, boardY, boardW, boardH, 24 * DPR);
   ctx.stroke();
@@ -439,7 +380,50 @@ function drawFlatGrid(ctx, context, layout) {
   ctx.restore();
 }
 
-function drawRoundContext(ctx, context, time) {
+function drawFlatHeading(ctx, context, layout) {
+  ctx.save();
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  const titleSize = clamp(layout.boardW * 0.050, 24 * DPR, MOBILE ? 32 * DPR : 48 * DPR);
+  const subtitleSize = clamp(layout.boardW * 0.023, 11 * DPR, 18 * DPR);
+
+  ctx.fillStyle = "rgba(248,234,208,.94)";
+  ctx.font = `950 ${titleSize}px Inter, system-ui, sans-serif`;
+  fitText(ctx, "Architectural Route Board", layout.width * 0.5, layout.titleY, layout.boardW * 0.84);
+
+  ctx.fillStyle = "rgba(186,194,207,.84)";
+  ctx.font = `800 ${subtitleSize}px Inter, system-ui, sans-serif`;
+  fitText(ctx, "Direct route selection", layout.width * 0.5, layout.subtitleY, layout.boardW * 0.74);
+
+  ctx.restore();
+}
+
+function drawFlatRoutes(ctx, context, layout) {
+  FLAT_ROUTES.forEach((item, index) => {
+    const col = index % layout.cols;
+    const row = Math.floor(index / layout.cols);
+
+    const x = layout.startX + col * (layout.cardW + layout.gapX) + layout.cardW * 0.5;
+    const y = layout.startY + row * (layout.cardH + layout.gapY) + layout.cardH * 0.5;
+
+    const active = state.focusedRoute === item.route;
+
+    drawRoutePlate(ctx, x, y, layout.cardW, layout.cardH, item.label, item.short, active, context.palette);
+
+    state.hitRegions.push({
+      key: `route:${item.route}`,
+      type: "route",
+      route: item.route,
+      label: item.label,
+      x,
+      y,
+      radius: Math.max(layout.cardW, layout.cardH) * 0.55
+    });
+  });
+}
+
+function drawRoundContext(ctx, context) {
   const field = estateFieldSpec();
 
   drawLegacyAtmosphericVessel(ctx, context, field);
@@ -632,7 +616,7 @@ function drawRoundNode(ctx, context, node, field, farSide) {
   }
 }
 
-function drawGlobeContext(ctx, context, time) {
+function drawGlobeContext(ctx, context) {
   const cx = state.width * 0.5;
   const cy = state.height * 0.50;
   const min = Math.min(state.width, state.height);
@@ -772,25 +756,14 @@ function drawRoutePlate(ctx, x, y, w, h, label, routeLabel, active, palette) {
   ctx.fill();
   ctx.stroke();
 
-  drawText(ctx, label, x, y - h * 0.08, clamp(w * 0.120, 14 * DPR, 23 * DPR), active ? palette.active : "#f8ead0", 900);
-  drawText(ctx, routeLabel, x, y + h * 0.23, clamp(w * 0.052, 8 * DPR, 12 * DPR), "rgba(186,194,207,.78)", 750);
+  drawText(ctx, label, x, y - h * 0.10, clamp(w * 0.118, 13 * DPR, 21 * DPR), active ? palette.active : "#f8ead0", 900);
+  drawText(ctx, routeLabel, x, y + h * 0.23, clamp(w * 0.054, 8 * DPR, 12 * DPR), "rgba(186,194,207,.78)", 750);
 
   ctx.restore();
 }
 
 function drawCrystalDiamond(ctx, spec) {
-  const {
-    x,
-    y,
-    size,
-    label,
-    active,
-    hover,
-    palette,
-    seed,
-    compact
-  } = spec;
-
+  const { x, y, size, label, active, hover, palette, seed, compact } = spec;
   const half = size * 0.5;
   const crown = half * 0.30;
   const girdle = half * 0.58;
@@ -965,14 +938,15 @@ function fitText(ctx, text, x, y, maxWidth) {
   }
 
   const originalFont = ctx.font;
-  const parts = originalFont.match(/^(\d+(?:\.\d+)?)px\s+(.+)$/);
-  if (!parts) {
+  const match = originalFont.match(/^(\d+(?:\.\d+)?)px\s+(.+)$/);
+
+  if (!match) {
     ctx.fillText(text, x, y, maxWidth);
     return;
   }
 
-  let size = Number(parts[1]);
-  const family = parts[2];
+  let size = Number(match[1]);
+  const family = match[2];
 
   while (size > 10 * DPR) {
     ctx.font = `${size}px ${family}`;
@@ -992,7 +966,7 @@ function drawSubtleCue(ctx) {
   ctx.textBaseline = "middle";
   ctx.fillStyle = "rgba(186,194,207,.70)";
   ctx.font = `800 ${MOBILE ? 11 * DPR : 12 * DPR}px Inter, system-ui, sans-serif`;
-  ctx.fillText("Single click changes focus · double click opens route", state.width * 0.5, y);
+  ctx.fillText("Single click focuses · double click opens", state.width * 0.5, y);
   ctx.restore();
 }
 
@@ -1025,9 +999,7 @@ function hitTest(point) {
     const dx = point.x - region.x;
     const dy = point.y - region.y;
 
-    if (Math.hypot(dx, dy) <= region.radius) {
-      return region;
-    }
+    if (Math.hypot(dx, dy) <= region.radius) return region;
   }
 
   return null;
@@ -1056,11 +1028,7 @@ function handleTap(region) {
 
   if (isDouble) {
     const route = region.type === "context" ? CONTEXTS[region.context]?.route : region.route;
-
-    if (route) {
-      window.location.href = route;
-    }
-
+    if (route) window.location.href = route;
     return;
   }
 
@@ -1087,7 +1055,7 @@ function wirePointer() {
 
     canvas.setPointerCapture?.(event.pointerId);
     event.preventDefault();
-  }, { passive: false });
+  }, { passive:false });
 
   canvas.addEventListener("pointermove", (event) => {
     const hit = hitTest(canvasPoint(event));
@@ -1100,7 +1068,7 @@ function wirePointer() {
 
     render(performance.now());
     event.preventDefault();
-  }, { passive: false });
+  }, { passive:false });
 
   canvas.addEventListener("pointerup", (event) => {
     if (event.pointerId !== state.pointerId) return;
@@ -1114,12 +1082,10 @@ function wirePointer() {
     state.pointerId = null;
     canvas.releasePointerCapture?.(event.pointerId);
 
-    if (hit && wasTap) {
-      handleTap(hit);
-    }
+    if (hit && wasTap) handleTap(hit);
 
     event.preventDefault();
-  }, { passive: false });
+  }, { passive:false });
 
   canvas.addEventListener("pointercancel", (event) => {
     state.dragging = false;
@@ -1127,12 +1093,12 @@ function wirePointer() {
     state.hoverKey = null;
     canvas.releasePointerCapture?.(event.pointerId);
     render(performance.now());
-  }, { passive: false });
+  }, { passive:false });
 
   canvas.addEventListener("pointerleave", () => {
     state.hoverKey = null;
     render(performance.now());
-  }, { passive: true });
+  }, { passive:true });
 
   canvas.addEventListener("dblclick", (event) => {
     const hit = hitTest(canvasPoint(event));
@@ -1147,7 +1113,7 @@ function wirePointer() {
     }
 
     event.preventDefault();
-  }, { passive: false });
+  }, { passive:false });
 }
 
 function wireKeyboard() {
@@ -1208,28 +1174,18 @@ function wireKeyboard() {
 function installVisibility() {
   document.addEventListener("visibilitychange", () => {
     state.active = document.visibilityState !== "hidden";
-
-    if (state.active) {
-      startLoop();
-    } else {
-      stopLoop();
-    }
-
+    if (state.active) startLoop();
+    else stopLoop();
     stampDocument();
-  }, { passive: true });
+  }, { passive:true });
 
   if ("IntersectionObserver" in window && state.mount) {
     const observer = new IntersectionObserver((entries) => {
       state.visible = entries[0]?.isIntersecting !== false;
-
-      if (state.visible) {
-        startLoop();
-      } else {
-        stopLoop();
-      }
-
+      if (state.visible) startLoop();
+      else stopLoop();
       stampDocument();
-    }, { threshold: 0.05 });
+    }, { threshold:0.05 });
 
     observer.observe(state.mount);
   }
@@ -1242,12 +1198,11 @@ function installResize() {
       sizeCanvas();
       render(performance.now());
     }, 160);
-  }, { passive: true });
+  }, { passive:true });
 }
 
 function startLoop() {
   if (state.raf || !state.active || !state.visible) return;
-
   state.lastFrameAt = 0;
   state.raf = window.requestAnimationFrame(frame);
 }
@@ -1281,7 +1236,6 @@ function frame(time = 0) {
 
 function stampDocument() {
   const root = document.documentElement;
-
   root.dataset.compassRenderer = CONTRACT;
   root.dataset.compassHtml = HTML_CONTRACT;
   root.dataset.currentContext = state.context;
@@ -1338,7 +1292,7 @@ function boot() {
 }
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", boot, { once: true });
+  document.addEventListener("DOMContentLoaded", boot, { once:true });
 } else {
   boot();
 }

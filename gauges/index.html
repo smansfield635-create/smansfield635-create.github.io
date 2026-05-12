@@ -2,16 +2,16 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="triple-g-site-ledger-audit"
+  data-page="triple-g-frontier-tech-standard-ledger"
   data-route="/gauges/"
-  data-contract="TRIPLE_G_SITE_LEDGER_AUDIT_TNT_v1"
-  data-previous-contract="GAUGES_TRIPLE_G_ZERO_STATE"
+  data-contract="TRIPLE_G_FRONTIER_TECH_STANDARD_LEDGER_TNT_v2"
+  data-previous-contract="TRIPLE_G_SITE_LEDGER_AUDIT_TNT_v1"
   data-gauge-type="site-ledger"
-  data-goals="true"
-  data-gauges="true"
-  data-gaps="true"
-  data-next-move-required="true"
+  data-standard="cutting-edge-frontier-tech-only"
+  data-receipts-copyable="false"
+  data-public-density="reduced"
   data-legacy-frontier-ledger="true"
+  data-next-move-required="true"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claim="false"
@@ -22,15 +22,16 @@
   <title>Diamond Gate Bridge · Triple G</title>
   <meta
     name="description"
-    content="Triple G measures Goals, Gauges, and Gaps across Diamond Gate Bridge, separating legacy debt from transitional work and frontier standards."
+    content="Triple G is the Diamond Gate Bridge frontier-control board for Goals, Gauges, and Gaps. It separates legacy debt from cutting-edge frontier standards."
   >
 
   <style>
     :root {
       color-scheme: dark;
-      --bg:#030713;
-      --panel:rgba(8,15,30,.84);
-      --panel2:rgba(4,9,21,.92);
+      --bg:#020611;
+      --panel:rgba(7,14,29,.86);
+      --panel2:rgba(3,8,19,.94);
+      --glass:rgba(255,255,255,.045);
       --line:rgba(244,191,96,.34);
       --line-soft:rgba(255,255,255,.10);
       --text:#f8ead0;
@@ -40,9 +41,10 @@
       --blue:#8ebeff;
       --red:#ff9f8f;
       --violet:#beaaff;
-      --shadow:0 26px 82px rgba(0,0,0,.44);
+      --shadow:0 28px 90px rgba(0,0,0,.46);
       --max:1220px;
       --facet:polygon(0 18px,18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px));
+      --facet-small:polygon(0 10px,10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px));
     }
 
     * { box-sizing:border-box; }
@@ -50,9 +52,9 @@
     html {
       min-height:100%;
       background:
-        radial-gradient(circle at 50% 4%,rgba(142,190,255,.18),transparent 34rem),
-        radial-gradient(circle at 12% 20%,rgba(244,191,96,.12),transparent 30rem),
-        radial-gradient(circle at 88% 24%,rgba(143,240,195,.08),transparent 28rem),
+        radial-gradient(circle at 50% 0%,rgba(142,190,255,.18),transparent 34rem),
+        radial-gradient(circle at 13% 18%,rgba(244,191,96,.12),transparent 30rem),
+        radial-gradient(circle at 88% 20%,rgba(143,240,195,.09),transparent 30rem),
         linear-gradient(180deg,var(--bg),#01030a 78%);
     }
 
@@ -63,7 +65,7 @@
       color:var(--text);
       background:
         linear-gradient(145deg,rgba(255,255,255,.035),transparent 42%),
-        radial-gradient(circle at 52% 62%,rgba(244,191,96,.08),transparent 34rem);
+        radial-gradient(circle at 50% 58%,rgba(244,191,96,.07),transparent 36rem);
       overflow-x:hidden;
     }
 
@@ -94,7 +96,7 @@
       color:var(--text);
       transform:translateY(-180%);
       transition:transform 160ms ease;
-      clip-path:var(--facet);
+      clip-path:var(--facet-small);
     }
 
     .skip-link:focus { transform:translateY(0); }
@@ -110,7 +112,8 @@
     .panel,
     .metric,
     .route-card,
-    .next-move {
+    .next-move,
+    .standard-card {
       border:1px solid var(--line);
       background:linear-gradient(180deg,rgba(255,255,255,.055),transparent),var(--panel);
       box-shadow:var(--shadow);
@@ -160,7 +163,7 @@
       background:
         linear-gradient(135deg,rgba(255,255,255,.07),transparent 45%),
         rgba(255,255,255,.032);
-      clip-path:polygon(0 9px,9px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 9px),calc(100% - 9px) 100%,9px 100%,0 calc(100% - 9px));
+      clip-path:var(--facet-small);
     }
 
     .nav a[aria-current="page"] {
@@ -173,10 +176,10 @@
 
     .hero {
       margin-top:24px;
-      padding:clamp(24px,5vw,54px);
+      padding:clamp(24px,5vw,56px);
       background:
-        radial-gradient(circle at 18% 12%,rgba(244,191,96,.11),transparent 18rem),
-        radial-gradient(circle at 84% 28%,rgba(142,190,255,.10),transparent 24rem),
+        radial-gradient(circle at 18% 12%,rgba(244,191,96,.12),transparent 18rem),
+        radial-gradient(circle at 84% 24%,rgba(143,240,195,.10),transparent 24rem),
         linear-gradient(180deg,rgba(255,255,255,.055),transparent),
         var(--panel);
     }
@@ -195,7 +198,7 @@
       font-weight:950;
       letter-spacing:.10em;
       text-transform:uppercase;
-      clip-path:polygon(0 9px,9px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 9px),calc(100% - 9px) 100%,9px 100%,0 calc(100% - 9px));
+      clip-path:var(--facet-small);
     }
 
     h1 {
@@ -207,7 +210,7 @@
     }
 
     .lede {
-      max-width:84ch;
+      max-width:86ch;
       margin:22px 0 0;
       color:var(--muted);
       font-size:clamp(1.03rem,2.2vw,1.18rem);
@@ -233,7 +236,7 @@
         rgba(244,191,96,.08);
       color:var(--gold);
       font-weight:950;
-      clip-path:polygon(0 11px,11px 0,calc(100% - 11px) 0,100% 11px,100% calc(100% - 11px),calc(100% - 11px) 100%,11px 100%,0 calc(100% - 11px));
+      clip-path:var(--facet-small);
     }
 
     .action.primary {
@@ -253,9 +256,9 @@
     .metric {
       padding:18px;
       background:
-        radial-gradient(circle at 20% 10%,rgba(244,191,96,.08),transparent 12rem),
+        radial-gradient(circle at 18% 12%,rgba(244,191,96,.08),transparent 12rem),
         linear-gradient(180deg,rgba(255,255,255,.05),transparent),
-        rgba(7,13,27,.76);
+        rgba(7,13,27,.78);
       box-shadow:none;
     }
 
@@ -308,42 +311,43 @@
     }
 
     .section-head p {
-      max-width:58ch;
+      max-width:60ch;
       margin:0;
       color:var(--muted);
       line-height:1.55;
     }
 
-    .quad-grid {
+    .standard-grid {
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:12px;
     }
 
-    .quad-card {
-      min-height:170px;
+    .standard-card {
+      min-height:178px;
       padding:16px;
-      border:1px solid var(--line-soft);
-      background:rgba(255,255,255,.035);
-      clip-path:polygon(0 14px,14px 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px));
+      box-shadow:none;
+      background:
+        linear-gradient(135deg,rgba(255,255,255,.06),transparent 48%),
+        rgba(6,13,27,.78);
     }
 
-    .quad-card strong {
+    .standard-card strong {
       display:block;
-      color:var(--gold);
-      font-size:.78rem;
+      color:var(--green);
+      font-size:.74rem;
       letter-spacing:.13em;
       text-transform:uppercase;
       margin-bottom:10px;
     }
 
-    .quad-card h3 {
+    .standard-card h3 {
       margin:0;
-      font-size:1.35rem;
+      font-size:1.34rem;
       letter-spacing:-.04em;
     }
 
-    .quad-card p {
+    .standard-card p {
       margin:10px 0 0;
       color:var(--muted);
       line-height:1.5;
@@ -364,7 +368,7 @@
       background:rgba(255,255,255,.04);
       font-weight:850;
       letter-spacing:.02em;
-      clip-path:polygon(0 9px,9px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 9px),calc(100% - 9px) 100%,9px 100%,0 calc(100% - 9px));
+      clip-path:var(--facet-small);
     }
 
     .filter-button[aria-pressed="true"] {
@@ -385,6 +389,14 @@
       background:
         linear-gradient(135deg,rgba(255,255,255,.06),transparent 48%),
         rgba(6,13,27,.78);
+    }
+
+    .route-card[data-emphasis="critical"] {
+      border-color:rgba(255,159,143,.38);
+      background:
+        radial-gradient(circle at 12% 0%,rgba(255,159,143,.09),transparent 12rem),
+        linear-gradient(135deg,rgba(255,255,255,.06),transparent 48%),
+        rgba(6,13,27,.84);
     }
 
     .route-top {
@@ -432,26 +444,19 @@
       line-height:1.52;
     }
 
-    .route-meta {
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-      margin-top:12px;
+    .route-tags {
+      margin:12px 0 0;
+      color:rgba(248,234,208,.72);
+      font-size:.78rem;
+      font-weight:850;
+      letter-spacing:.02em;
+      text-transform:uppercase;
+      line-height:1.45;
     }
 
-    .chip {
-      display:inline-flex;
-      min-height:24px;
-      align-items:center;
-      padding:5px 7px;
-      border:1px solid rgba(255,255,255,.08);
-      color:rgba(248,234,208,.76);
-      background:rgba(255,255,255,.035);
-      font-size:.70rem;
-      font-weight:850;
-      letter-spacing:.03em;
-      text-transform:uppercase;
-      clip-path:polygon(0 6px,6px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px));
+    .route-tags strong {
+      color:var(--gold);
+      font-weight:950;
     }
 
     .list {
@@ -466,7 +471,7 @@
       background:rgba(255,255,255,.035);
       color:var(--muted);
       line-height:1.5;
-      clip-path:polygon(0 12px,12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px));
+      clip-path:var(--facet-small);
     }
 
     .list-item strong {
@@ -491,27 +496,19 @@
     }
 
     .next-move p {
-      max-width:82ch;
+      max-width:84ch;
       margin:16px 0 0;
       color:var(--muted);
       line-height:1.62;
     }
 
-    .receipt {
-      position:absolute;
-      width:1px;
-      height:1px;
-      padding:0;
-      margin:-1px;
-      overflow:hidden;
-      clip:rect(0,0,0,0);
-      white-space:nowrap;
-      border:0;
+    .data-only {
+      display:none !important;
     }
 
     @media (max-width:980px) {
       .grid-3,
-      .quad-grid,
+      .standard-grid,
       .route-ledger {
         grid-template-columns:1fr;
       }
@@ -543,7 +540,8 @@
       .panel,
       .metric,
       .route-card,
-      .next-move {
+      .next-move,
+      .standard-card {
         clip-path:polygon(0 14px,14px 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px));
       }
 
@@ -577,16 +575,17 @@
 
     <main id="main" tabindex="-1">
       <section class="hero">
-        <p class="label">Triple G · Goals · Gauges · Gaps</p>
-        <h1>Separate legacy from frontier.</h1>
+        <p class="label">Triple G · Frontier Tech Standard</p>
+        <h1>Legacy stops here.</h1>
         <p class="lede">
-          Triple G is the audit board. It classifies every major route as Legacy, Transitional, Frontier, or Hold before more animation work is authorized.
+          Triple G is the control board. The site standard is now cutting-edge and frontier only: clean public pages, governed renderers, contained receipts, low runtime budget, and context-first architecture.
         </p>
 
         <div class="actions">
-          <button class="action primary" type="button" id="runAudit">Run Ledger Audit</button>
-          <a class="action" href="/showroom/">Open Showroom</a>
-          <a class="action" href="/">Open Compass</a>
+          <button class="action primary" type="button" id="runAudit">Run Frontier Audit</button>
+          <a class="action" href="/showroom/">Showroom Standard</a>
+          <a class="action" href="/laws/">Laws Standard</a>
+          <a class="action" href="/">Compass Blocker</a>
         </div>
       </section>
 
@@ -594,51 +593,84 @@
         <article class="metric">
           <strong>Goals</strong>
           <span class="number" id="goalCount">3</span>
-          <span>Clarify route context, protect runtime budget, and move frontier standards into the right files.</span>
+          <span>Cut legacy, protect budget, and move only frontier-ready standards forward.</span>
         </article>
 
         <article class="metric">
           <strong>Gauges</strong>
           <span class="number" id="gaugeCount">4</span>
-          <span>Legacy, Transitional, Frontier, and Hold classifications are active.</span>
+          <span>Legacy, Transitional, Frontier, and Hold remain measured as control states.</span>
         </article>
 
         <article class="metric">
           <strong>Gaps</strong>
           <span class="number" id="gapCount">0</span>
-          <span id="gapText">Run the ledger audit to calculate current gaps.</span>
+          <span id="gapText">Run the frontier audit to calculate current blockers.</span>
         </article>
+      </section>
+
+      <section class="panel" aria-label="Cutting-edge frontier standard">
+        <div class="section-head">
+          <h2>Frontier Standard</h2>
+          <p>This is the new build rule. Pages do not move forward by adding complexity; they move forward by proving structure, visual truth, and runtime discipline.</p>
+        </div>
+
+        <div class="standard-grid">
+          <article class="standard-card">
+            <strong>Context first</strong>
+            <h3>Flat, Round, Globe are different worlds.</h3>
+            <p>They are not the same animation with different size, color, or speed.</p>
+          </article>
+
+          <article class="standard-card">
+            <strong>Object truth</strong>
+            <h3>Render what the page claims.</h3>
+            <p>No fake 3D, no labels standing in for visual proof, no decorative overload.</p>
+          </article>
+
+          <article class="standard-card">
+            <strong>Budget law</strong>
+            <h3>Public pages stay light.</h3>
+            <p>Private engines do not wake on public selectors. Render loops are governed.</p>
+          </article>
+
+          <article class="standard-card">
+            <strong>Receipt containment</strong>
+            <h3>Receipts are data, not public copy.</h3>
+            <p>Public-facing pages should not spill raw implementation text into the user experience.</p>
+          </article>
+        </div>
       </section>
 
       <section class="panel" aria-label="Quad-A audit">
         <div class="section-head">
           <h2>Quad-A Audit</h2>
-          <p>The current result is execution-control only. It does not claim visual pass for any page.</p>
+          <p>Execution-control status only. No visual pass is claimed for any route from this page.</p>
         </div>
 
-        <div class="quad-grid">
-          <article class="quad-card">
+        <div class="standard-grid">
+          <article class="standard-card">
             <strong>A1 · Admissibility</strong>
             <h3>Pass</h3>
-            <p>A full-site audit is necessary before more motion or renderer work is added.</p>
+            <p>The full-site audit is necessary because the animation thread is degrading without context separation.</p>
           </article>
 
-          <article class="quad-card">
+          <article class="standard-card">
             <strong>A2 · Authority</strong>
             <h3>Partial fail</h3>
-            <p>Several routes still expose machinery or receipts publicly instead of handing truth to Triple G.</p>
+            <p>Several pages still expose machinery publicly. Triple G must absorb control-board truth.</p>
           </article>
 
-          <article class="quad-card">
+          <article class="standard-card">
             <strong>A3 · Alignment</strong>
             <h3>Partial fail</h3>
-            <p>Fibonacci must govern progression and density, not force every visible object to expose 256 pieces.</p>
+            <p>Fibonacci governs progression inside the 256 field; it is not a command to overload every visual control.</p>
           </article>
 
-          <article class="quad-card">
+          <article class="standard-card">
             <strong>A4 · Assembly</strong>
             <h3>Held</h3>
-            <p>Compass animation remains held until the site ledger distinguishes context, route law, and frontier standard.</p>
+            <p>Compass remains held until Flat, Round, and Globe are rebuilt as distinct contexts.</p>
           </article>
         </div>
       </section>
@@ -646,11 +678,12 @@
       <section class="panel" aria-label="Site ledger">
         <div class="section-head">
           <h2>Site Ledger</h2>
-          <p>This is a served-route audit ledger. It separates public route condition from future visual ambition.</p>
+          <p>Default view shows critical blockers and frontier candidates. Use filters to inspect the full route ledger.</p>
         </div>
 
         <div class="route-toolbar" aria-label="Ledger filters">
-          <button class="filter-button" type="button" data-filter="all" aria-pressed="true">All</button>
+          <button class="filter-button" type="button" data-filter="critical" aria-pressed="true">Critical</button>
+          <button class="filter-button" type="button" data-filter="all" aria-pressed="false">All</button>
           <button class="filter-button" type="button" data-filter="legacy" aria-pressed="false">Legacy</button>
           <button class="filter-button" type="button" data-filter="transitional" aria-pressed="false">Transitional</button>
           <button class="filter-button" type="button" data-filter="frontier" aria-pressed="false">Frontier</button>
@@ -660,29 +693,29 @@
         <div id="routeLedger" class="route-ledger" aria-live="polite"></div>
       </section>
 
-      <section class="panel" aria-label="Legacy debt and frontier standards">
+      <section class="panel" aria-label="Debt and frontier count">
         <div class="section-head">
           <h2>Debt and Standards</h2>
-          <p>The audit separates what should be retired from what should become the model.</p>
+          <p>Legacy debt is not the future standard. Transitional routes are held until they prove frontier behavior.</p>
         </div>
 
         <div class="grid-3">
           <article class="metric">
             <strong>Legacy debt</strong>
             <span class="number" id="legacyCount">0</span>
-            <span>Routes or patterns that block frontier motion.</span>
+            <span>Routes or patterns blocking frontier motion.</span>
           </article>
 
           <article class="metric">
             <strong>Transitional</strong>
             <span class="number" id="transitionalCount">0</span>
-            <span>Routes with good structure but incomplete proof or visible machinery.</span>
+            <span>Good structure, incomplete proof, visible machinery, or runtime risk.</span>
           </article>
 
           <article class="metric">
             <strong>Frontier candidates</strong>
             <span class="number" id="frontierCount">0</span>
-            <span>Routes that can become standards after receipt containment and visual proof.</span>
+            <span>Routes that can become standards after proof and receipt containment.</span>
           </article>
         </div>
 
@@ -692,74 +725,125 @@
       <section class="panel" aria-label="PSALM Fibonacci alignment">
         <div class="section-head">
           <h2>PSALM / Fibonacci Alignment</h2>
-          <p>Fibonacci remains a governance rhythm under PSALM and inside the 256 field. It is not a demand to overload every visual object.</p>
+          <p>Fibonacci remains a governance rhythm under PSALM and inside the 256 field. It must improve order, not worsen animation.</p>
         </div>
 
         <div class="list">
           <div class="list-item"><strong>Correct use:</strong> progression rhythm, refinement order, traversal sequence, density priority, and lawful unfolding.</div>
-          <div class="list-item"><strong>Incorrect use:</strong> forcing every visible control to show 256 pieces, adding decorative complexity, or making animation heavier than the route context requires.</div>
-          <div class="list-item"><strong>Compass correction:</strong> Flat, Round, and Globe must become different contexts, not the same animation with changed size and color.</div>
+          <div class="list-item"><strong>Incorrect use:</strong> forcing every visible control to expose 256 pieces, adding decorative complexity, or making public renderers heavier.</div>
+          <div class="list-item"><strong>Compass correction:</strong> Flat, Round, and Globe must be rebuilt as different contexts: route board, estate-centered compass field, and universe-scale expansion.</div>
         </div>
       </section>
 
       <section class="next-move" aria-label="Next Move">
         <p class="label">Next Move</p>
-        <h2>Lock the ledger before the next renderer.</h2>
+        <h2>Rebuild Compass by context, not by decoration.</h2>
         <p>
-          The next lawful move is to use this Triple G ledger as the control board, then rebuild Compass as three distinct contexts:
-          Flat as a direct architectural route board, Round as an estate-centered compass field, and Globe as universe-scale expansion.
+          The next lawful move is a Compass three-context rebuild. Flat becomes a direct architectural route board with no center object.
+          Round becomes an estate-centered dimensional compass field. Globe becomes a universe-scale expansion field. The old approach—same scene with different styling—is legacy.
         </p>
         <div class="actions">
           <a class="action primary" href="/">Return to Compass</a>
+          <a class="action" href="/showroom/">Review Showroom</a>
           <a class="action" href="/laws/">Review Laws</a>
-          <a class="action" href="/showroom/">Review Showroom Standard</a>
         </div>
       </section>
 
       <section
         id="tripleGReceipt"
-        class="receipt"
-        aria-label="Triple G receipt"
-        data-receipt-panel="triple-g-site-ledger-audit"
-        data-html-contract="TRIPLE_G_SITE_LEDGER_AUDIT_TNT_v1"
-        data-gauge-type="site-ledger"
+        class="data-only"
+        aria-hidden="true"
+        data-receipt-panel="triple-g-frontier-tech-standard-ledger"
+        data-html-contract="TRIPLE_G_FRONTIER_TECH_STANDARD_LEDGER_TNT_v2"
+        data-previous-contract="TRIPLE_G_SITE_LEDGER_AUDIT_TNT_v1"
+        data-standard="cutting-edge-frontier-tech-only"
+        data-receipts-copyable="false"
+        data-public-density="reduced"
         data-goals="true"
         data-gauges="true"
         data-gaps="true"
         data-next-move-required="true"
-        data-legacy-frontier-ledger="true"
         data-generated-image="false"
         data-graphic-box="false"
         data-visual-pass-claim="false"
-      >
-        <code>HTML_RECEIPT: TRIPLE_G_SITE_LEDGER_AUDIT_TNT_v1</code>
-        <code>GOALS: true</code>
-        <code>GAUGES: true</code>
-        <code>GAPS: true</code>
-        <code>NEXT_MOVE_REQUIRED: true</code>
-        <code>GENERATED_IMAGE: false</code>
-        <code>GRAPHIC_BOX: false</code>
-        <code>VISUAL_PASS_CLAIM: false</code>
-      </section>
+      ></section>
     </main>
   </div>
 
   <script>
     (() => {
-      const CONTRACT = "TRIPLE_G_SITE_LEDGER_AUDIT_TNT_v1";
+      const CONTRACT = "TRIPLE_G_FRONTIER_TECH_STANDARD_LEDGER_TNT_v2";
 
       const ledger = [
         {
           route: "/",
           title: "Compass",
           status: "legacy",
-          finding: "Homepage is the controlling blocker. It currently needs context separation before more animation is added.",
+          emphasis: "critical",
+          finding: "Controlling blocker. Rebuild by context: Flat route board, Round estate compass, Globe universe field.",
           tags: ["renderer risk", "context drift", "priority"]
+        },
+        {
+          route: "/gauges/",
+          title: "Triple G",
+          status: "frontier",
+          emphasis: "critical",
+          finding: "Control board. This page now defines the cutting-edge frontier tech standard and ledger authority.",
+          tags: ["audit board", "control", "frontier standard"]
+        },
+        {
+          route: "/showroom/",
+          title: "Showroom",
+          status: "frontier",
+          emphasis: "critical",
+          finding: "Best visual frontier candidate. The diamond object standard should influence future visual truth.",
+          tags: ["visual standard", "diamond object", "frontier candidate"]
+        },
+        {
+          route: "/showroom/globe/",
+          title: "Globe Showcase",
+          status: "frontier",
+          emphasis: "critical",
+          finding: "Best runtime-budget standard. Public showcase stays light while private engines stay asleep.",
+          tags: ["budget standard", "display case", "frontier candidate"]
+        },
+        {
+          route: "/laws/",
+          title: "Laws",
+          status: "frontier",
+          emphasis: "critical",
+          finding: "Best governance standard. Proof, scope, route, runtime, and visual-claim law are structurally useful.",
+          tags: ["governance", "proof", "frontier candidate"]
+        },
+        {
+          route: "/products/nutrition/",
+          title: "Nutrition",
+          status: "legacy",
+          emphasis: "critical",
+          finding: "Older shared-shell debt and stale navigation risk. Renew before treating as frontier product route.",
+          tags: ["product", "stale nav", "legacy debt"]
+        },
+        {
+          route: "/showroom/globe/earth/",
+          title: "Earth",
+          status: "legacy",
+          emphasis: "standard",
+          finding: "Reference-only lane. Useful as a baseline, not a frontier world page.",
+          tags: ["reference", "baseline"]
+        },
+        {
+          route: "/gauges/h-earth/",
+          title: "H-Earth Gauges",
+          status: "hold",
+          emphasis: "critical",
+          finding: "Dedicated diagnostics route exists, but it should be renewed after this site-level ledger is locked.",
+          tags: ["diagnostics", "hold"]
         },
         {
           route: "/door/",
           title: "Door",
           status: "transitional",
+          emphasis: "standard",
           finding: "Route law is structurally clear, but older orbit/diamond legacy and public machinery should be contained.",
           tags: ["threshold", "route law"]
         },
@@ -767,34 +851,23 @@
           route: "/home/",
           title: "Home",
           status: "transitional",
-          finding: "Good receiver role and house identity. Still needs receipt containment and stronger frontier visual standard.",
+          emphasis: "standard",
+          finding: "Good receiver role and house identity. Needs receipt containment and stronger frontier visual standard.",
           tags: ["receiver", "house"]
         },
         {
           route: "/products/",
           title: "Products",
           status: "transitional",
+          emphasis: "standard",
           finding: "Product wing structure is coherent. Legacy animated field patterns should not drive future product UI.",
           tags: ["product wing", "shared shell"]
-        },
-        {
-          route: "/showroom/",
-          title: "Showroom",
-          status: "frontier",
-          finding: "Best visual frontier candidate. The diamond object standard is strong, but runtime/fallback language must stay contained.",
-          tags: ["visual standard", "diamond object"]
-        },
-        {
-          route: "/showroom/globe/",
-          title: "Globe Showcase",
-          status: "frontier",
-          finding: "Best runtime-budget standard. Public showcase should use low-budget portraits while private engines stay asleep.",
-          tags: ["budget standard", "display case"]
         },
         {
           route: "/showroom/globe/h-earth/",
           title: "H-Earth",
           status: "transitional",
+          emphasis: "standard",
           finding: "Good stage/backstage separation. Needs stable visual proof before ground-level or estate placement opens.",
           tags: ["private room", "inspection"]
         },
@@ -802,6 +875,7 @@
           route: "/showroom/globe/hearth/",
           title: "Hearth",
           status: "transitional",
+          emphasis: "standard",
           finding: "Strong terrain baseline direction, but runtime risk and exposed machinery remain debt.",
           tags: ["terrain", "runtime risk"]
         },
@@ -809,34 +883,15 @@
           route: "/showroom/globe/audralia/",
           title: "Audralia",
           status: "transitional",
+          emphasis: "standard",
           finding: "Constructed-world identity is protected. Heavy chain exposure and runtime load need containment.",
           tags: ["constructed world", "separate"]
-        },
-        {
-          route: "/showroom/globe/earth/",
-          title: "Earth",
-          status: "legacy",
-          finding: "Reference-only lane. Useful as a baseline, not a frontier world page.",
-          tags: ["reference", "baseline"]
-        },
-        {
-          route: "/gauges/",
-          title: "Triple G",
-          status: "frontier",
-          finding: "This page becomes the audit board in this TNT. It must remain the control layer for next moves.",
-          tags: ["audit board", "control"]
-        },
-        {
-          route: "/gauges/h-earth/",
-          title: "H-Earth Gauges",
-          status: "hold",
-          finding: "Dedicated diagnostics route exists, but it should be renewed after this site-level ledger is locked.",
-          tags: ["diagnostics", "hold"]
         },
         {
           route: "/nine-summits/",
           title: "Nine Summits",
           status: "transitional",
+          emphasis: "standard",
           finding: "Lane split is useful, but rotating diamond/orbit legacy should not become the future standard.",
           tags: ["summits", "content"]
         },
@@ -844,6 +899,7 @@
           route: "/nine-summits/universe/",
           title: "Universe",
           status: "transitional",
+          emphasis: "standard",
           finding: "Strong context layer. Needs less instrument-panel exposure and more universe-scale visual truth.",
           tags: ["universe", "context"]
         },
@@ -851,6 +907,7 @@
           route: "/nine-summits-of-love/",
           title: "Nine Summits of Love",
           status: "transitional",
+          emphasis: "standard",
           finding: "Content lane is strong. Public copy should stay clean while receipts move backstage.",
           tags: ["book", "seminar"]
         },
@@ -858,6 +915,7 @@
           route: "/explore/",
           title: "Explore / Manor",
           status: "transitional",
+          emphasis: "standard",
           finding: "Useful route-map role. Current visual system carries older motion patterns.",
           tags: ["manor", "route map"]
         },
@@ -865,20 +923,15 @@
           route: "/frontier/",
           title: "Frontier",
           status: "transitional",
+          emphasis: "standard",
           finding: "Clear edge role. The page should define frontier standard rather than inherit legacy diamonds.",
           tags: ["frontier", "edge"]
-        },
-        {
-          route: "/laws/",
-          title: "Laws",
-          status: "frontier",
-          finding: "Best governance standard candidate. It already defines proof, runtime, visual-claim, receipt, and scope law.",
-          tags: ["governance", "proof"]
         },
         {
           route: "/about-this-underdog/",
           title: "About This Underdog",
           status: "transitional",
+          emphasis: "standard",
           finding: "Content role is strong. Public profile machinery should be kept clean.",
           tags: ["voice", "origin"]
         },
@@ -886,6 +939,7 @@
           route: "/meet-sean-mansfield/",
           title: "Meet Sean Mansfield",
           status: "transitional",
+          emphasis: "standard",
           finding: "Personal-profile split is useful. Receipt and route proof should remain backstage.",
           tags: ["profile", "public"]
         },
@@ -893,13 +947,15 @@
           route: "/products/archcoin/",
           title: "ARCHCOIN",
           status: "transitional",
-          finding: "Strong product concept. Must preserve ARCHCOIN spelling and avoid shared-shell visual debt.",
+          emphasis: "standard",
+          finding: "Strong product concept. Preserve ARCHCOIN spelling and avoid shared-shell visual debt.",
           tags: ["product", "ARCHCOIN"]
         },
         {
           route: "/products/five-flags/",
           title: "Five Flags",
           status: "transitional",
+          emphasis: "standard",
           finding: "Product role is coherent. Needs product-specific visual standard rather than generic orbit shell.",
           tags: ["product", "game"]
         },
@@ -907,6 +963,7 @@
           route: "/products/on-your-side-ai/",
           title: "AAI",
           status: "transitional",
+          emphasis: "standard",
           finding: "Product lane is valid. Needs clean public positioning and diagnostic separation.",
           tags: ["product", "AAI"]
         },
@@ -914,30 +971,18 @@
           route: "/products/education/",
           title: "Education",
           status: "transitional",
+          emphasis: "standard",
           finding: "Education lane is structurally valid. Needs dedicated product identity.",
           tags: ["product", "learning"]
-        },
-        {
-          route: "/products/nutrition/",
-          title: "Nutrition",
-          status: "legacy",
-          finding: "Older shared-shell debt and stale navigation risk. Needs renewal before it can be a frontier product route.",
-          tags: ["product", "stale nav"]
         }
       ];
 
-      const goals = [
-        "Separate legacy, transitional, frontier, and hold states.",
-        "Use Fibonacci as governance, not visible overload.",
-        "Rebuild Compass only after context distinction is locked."
-      ];
-
       const debtItems = [
-        "Public receipt spillover belongs in Triple G or route-specific gauges, not stage-facing page copy.",
-        "Flat, Round, and Globe must not be the same scene with different scale/color/depth.",
-        "Compass renderer work is held until the three-context model is accepted.",
-        "Bubbles, pills, generic cards, and CSS-only fake 3D are legacy UI patterns.",
-        "Private renderers must not wake on public selector pages."
+        "Compass is the controlling blocker until Flat, Round, and Globe become distinct contexts.",
+        "Public receipt spillover must remain contained as data, not visible or copyable content.",
+        "Fibonacci governs sequence and density; it must not overload public controls with visible complexity.",
+        "Bubbles, pills, generic cards, and CSS-only fake 3D are legacy patterns.",
+        "Private renderers must stay asleep on public selector pages."
       ];
 
       const routeLedger = document.getElementById("routeLedger");
@@ -950,7 +995,7 @@
       const debtList = document.getElementById("debtList");
       const runAudit = document.getElementById("runAudit");
 
-      let activeFilter = "all";
+      let activeFilter = "critical";
 
       function classifyCounts() {
         return ledger.reduce((acc, item) => {
@@ -967,20 +1012,24 @@
         return status;
       }
 
-      function renderLedger() {
-        const visible = activeFilter === "all"
-          ? ledger
-          : ledger.filter((item) => item.status === activeFilter);
+      function visibleRoutes() {
+        if (activeFilter === "critical") return ledger.filter((item) => item.emphasis === "critical");
+        if (activeFilter === "all") return ledger;
+        return ledger.filter((item) => item.status === activeFilter);
+      }
 
-        routeLedger.replaceChildren(...visible.map((item) => {
+      function renderLedger() {
+        routeLedger.replaceChildren(...visibleRoutes().map((item) => {
           const article = document.createElement("article");
           article.className = "route-card";
           article.dataset.status = item.status;
+          article.dataset.emphasis = item.emphasis;
 
           const top = document.createElement("div");
           top.className = "route-top";
 
           const titleWrap = document.createElement("div");
+
           const h3 = document.createElement("h3");
           h3.textContent = item.title;
 
@@ -996,19 +1045,14 @@
 
           top.append(titleWrap, status);
 
-          const p = document.createElement("p");
-          p.textContent = item.finding;
+          const finding = document.createElement("p");
+          finding.textContent = item.finding;
 
-          const meta = document.createElement("div");
-          meta.className = "route-meta";
-          item.tags.forEach((tag) => {
-            const chip = document.createElement("span");
-            chip.className = "chip";
-            chip.textContent = tag;
-            meta.appendChild(chip);
-          });
+          const tags = document.createElement("p");
+          tags.className = "route-tags";
+          tags.innerHTML = `<strong>Tags:</strong> ${item.tags.join(" · ")}`;
 
-          article.append(top, p, meta);
+          article.append(top, finding, tags);
           return article;
         }));
       }
@@ -1031,7 +1075,7 @@
         const gaps = legacy + hold;
 
         gapCount.textContent = String(gaps);
-        gapText.textContent = `${legacy} legacy blocker/debt route(s) and ${hold} held route(s) require control before frontier motion.`;
+        gapText.textContent = `${legacy} legacy debt route(s) and ${hold} held route(s) require control before frontier motion.`;
         legacyCount.textContent = String(legacy);
         transitionalCount.textContent = String(transitional);
         frontierCount.textContent = String(frontier);
@@ -1052,14 +1096,14 @@
       }
 
       buttons.forEach((button) => {
-        button.addEventListener("click", () => setFilter(button.dataset.filter || "all"));
+        button.addEventListener("click", () => setFilter(button.dataset.filter || "critical"));
       });
 
       runAudit?.addEventListener("click", () => {
         updateMetrics();
         renderLedger();
         renderDebt();
-        runAudit.textContent = "Ledger Audit Complete";
+        runAudit.textContent = "Frontier Audit Complete";
         document.documentElement.dataset.auditRan = "true";
         document.documentElement.dataset.auditCompletedAt = new Date().toISOString();
       });
@@ -1067,8 +1111,8 @@
       window.DGBTripleG = {
         contract: CONTRACT,
         ledger,
-        goals,
         debtItems,
+        standard: "cutting-edge-frontier-tech-only",
         run() {
           updateMetrics();
           renderLedger();
@@ -1078,9 +1122,11 @@
         status() {
           return {
             contract: CONTRACT,
-            goals: goals.length,
+            standard: "cutting-edge-frontier-tech-only",
             routes: ledger.length,
             counts: classifyCounts(),
+            receiptsCopyable: false,
+            publicDensity: "reduced",
             generatedImage: false,
             graphicBox: false,
             visualPassClaim: false
@@ -1093,6 +1139,9 @@
       renderDebt();
 
       document.documentElement.dataset.tripleGReceipt = CONTRACT;
+      document.documentElement.dataset.standard = "cutting-edge-frontier-tech-only";
+      document.documentElement.dataset.receiptsCopyable = "false";
+      document.documentElement.dataset.publicDensity = "reduced";
       document.documentElement.dataset.generatedImage = "false";
       document.documentElement.dataset.graphicBox = "false";
       document.documentElement.dataset.visualPassClaim = "false";

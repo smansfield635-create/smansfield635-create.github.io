@@ -1,643 +1,726 @@
 // /showroom/globe/index.js
-// SHOWROOM_GLOBE_LOW_BUDGET_PLANET_PORTRAIT_ROUTE_TNT_v1
-// Full-file replacement.
-//
-// Purpose:
-// - Rebuild Globe Showcase from scratch after overwrite.
-// - Show the best coded portraits of Earth, H-Earth, Hearth, and Audralia.
-// - Keep private planet renderers asleep.
-// - Avoid runtime budget absorption.
-// - Render one selected display canvas plus small static thumbnail canvases.
-// - Cap DPR.
-// - Pause when hidden or offscreen.
-// - No generated image.
-// - No GraphicBox.
-// - No visual pass claim.
+// Globe Showcase public 256-cell portrait index.
+// Structure: 16 longitude sectors x 16 latitude bands = 256 public portrait cells.
+// Interaction: drag rotates the selected portrait. Selector changes context. Private engines stay asleep.
 
-const CONTRACT = "SHOWROOM_GLOBE_LOW_BUDGET_PLANET_PORTRAIT_ROUTE_TNT_v1";
-const HTML_CONTRACT = "SHOWROOM_GLOBE_LOW_BUDGET_PLANET_PORTRAIT_HTML_TNT_v1";
-const ROUTE = "/showroom/globe/";
+const MODEL_NAME = "globe-showcase-public-256-portrait-index";
 
-const GENERATED_IMAGE = false;
-const GRAPHIC_BOX = false;
-const VISUAL_PASS_CLAIM = false;
-const PRIVATE_RENDERERS_LOADED = false;
-
-const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
-const DPR = MOBILE ? 1 : Math.min(window.devicePixelRatio || 1, 1.35);
-const FRAME_MS = MOBILE ? 66 : 48;
+const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
+const DPR = Math.min(window.devicePixelRatio || 1, MOBILE ? 1.25 : 1.65);
+const FRAME_MS = MOBILE ? 58 : 42;
+
+const DEFAULT_YAW = -0.64;
+const DEFAULT_PITCH = -0.24;
+const MIN_PITCH = -1.05;
+const MAX_PITCH = 0.72;
+
+const LAT_BANDS = 16;
+const LON_SECTORS = 16;
+const CELL_COUNT = LAT_BANDS * LON_SECTORS;
 
 const WORLDS = Object.freeze({
   earth: {
     key: "earth",
     title: "Earth",
-    copy: "Reference body. Blue marble restraint without private renderer load.",
+    subtitle: "Reference Body",
     route: "/showroom/globe/earth/",
-    badge: "Earth · reference portrait",
-    palette: {
-      oceanA: "#0b3d78",
-      oceanB: "#126ba0",
-      oceanC: "#071d46",
-      landA: "#6fa66c",
-      landB: "#d1c691",
-      landC: "#edf3df",
-      cloud: "rgba(242,248,255,.72)",
-      atmosphere: "rgba(118,184,255,.36)",
-      glow: "rgba(142,190,255,.26)"
-    },
-    landRatio: 0.32,
-    cloudRatio: 0.42,
-    relief: 0.30,
-    seed: 11
+    palette: "earth",
+    primary: [34, 126, 172],
+    secondary: [60, 148, 85],
+    glow: "rgba(142,190,255,0.22)"
   },
-  "h-earth": {
-    key: "h-earth",
+  hEarth: {
+    key: "hEarth",
     title: "H-Earth",
-    copy: "Hybrid build planet. Land-state candidates visible without opening the private renderer.",
+    subtitle: "Hybrid Earth",
     route: "/showroom/globe/h-earth/",
-    badge: "H-Earth · active build portrait",
-    palette: {
-      oceanA: "#07385c",
-      oceanB: "#1a7c91",
-      oceanC: "#04182b",
-      landA: "#8ca76a",
-      landB: "#b8b979",
-      landC: "#d8e7cf",
-      cloud: "rgba(231,246,255,.54)",
-      atmosphere: "rgba(143,240,195,.36)",
-      glow: "rgba(143,240,195,.20)"
-    },
-    landRatio: 0.22,
-    cloudRatio: 0.24,
-    relief: 0.42,
-    seed: 29
-  },
-  hearth: {
-    key: "hearth",
-    title: "Hearth",
-    copy: "Warm terrain lane. Relief, stone pressure, and mineral surface without runtime storm.",
-    route: "/showroom/globe/hearth/",
-    badge: "Hearth · terrain portrait",
-    palette: {
-      oceanA: "#1d3039",
-      oceanB: "#34525e",
-      oceanC: "#0b1419",
-      landA: "#9b6041",
-      landB: "#d09a62",
-      landC: "#f0c98a",
-      cloud: "rgba(255,231,196,.34)",
-      atmosphere: "rgba(244,191,96,.25)",
-      glow: "rgba(244,191,96,.18)"
-    },
-    landRatio: 0.52,
-    cloudRatio: 0.13,
-    relief: 0.74,
-    seed: 43
+    palette: "hEarth",
+    primary: [62, 142, 92],
+    secondary: [42, 132, 142],
+    glow: "rgba(143,240,195,0.22)"
   },
   audralia: {
     key: "audralia",
     title: "Audralia",
-    copy: "Constructed world. Separate identity, never Earth and never Australia.",
+    subtitle: "Constructed World",
     route: "/showroom/globe/audralia/",
-    badge: "Audralia · constructed portrait",
-    palette: {
-      oceanA: "#14225c",
-      oceanB: "#2c6f9a",
-      oceanC: "#090b2d",
-      landA: "#7fb49a",
-      landB: "#b7a1d6",
-      landC: "#e2d6ff",
-      cloud: "rgba(226,215,255,.38)",
-      atmosphere: "rgba(190,170,255,.32)",
-      glow: "rgba(190,170,255,.20)"
-    },
-    landRatio: 0.36,
-    cloudRatio: 0.18,
-    relief: 0.56,
-    seed: 71
+    palette: "audralia",
+    primary: [170, 135, 82],
+    secondary: [54, 112, 142],
+    glow: "rgba(190,170,255,0.22)"
   }
 });
 
 const state = {
-  selected: "h-earth",
-  displayCanvas: null,
-  displayContext: null,
-  displayWindow: null,
-  title: null,
-  copy: null,
-  badge: null,
-  inspect: null,
-  meta: null,
-  cards: [],
-  previewCanvases: [],
-  active: true,
-  visible: true,
+  canvas: null,
+  ctx: null,
+  width: 0,
+  height: 0,
   raf: 0,
-  lastFrameAt: 0,
-  phase: 0,
-  dragPhase: 0,
+  lastFrame: 0,
+  visible: true,
+  active: true,
+  time: 0,
+  stars: [],
+  worldKey: "hEarth",
+
+  yaw: DEFAULT_YAW,
+  pitch: DEFAULT_PITCH,
+  targetYaw: DEFAULT_YAW,
+  targetPitch: DEFAULT_PITCH,
+  velocityYaw: 0,
+  velocityPitch: 0,
+  interacted: false,
+
   dragging: false,
   pointerId: null,
-  dragStartX: 0,
-  dragStartPhase: 0,
-  renderedPreviews: false
+  startX: 0,
+  startY: 0,
+  lastX: 0,
+  lastY: 0,
+  lastPointerTime: 0,
+  tapStartTime: 0,
+  lastTapAt: 0
 };
+
+function $(id) {
+  return document.getElementById(id);
+}
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function byId(id) {
-  return document.getElementById(id);
+function fract(value) {
+  return value - Math.floor(value);
 }
 
-function hash(seed, index, salt = 0) {
-  const x = Math.sin((seed + 1) * 97.13 + (index + 1) * 12.9898 + salt * 78.233) * 43758.5453;
-  return x - Math.floor(x);
+function hash(a, b = 0, c = 0) {
+  return fract(Math.sin(a * 127.1 + b * 311.7 + c * 74.7) * 43758.5453123);
 }
 
-function pickWorld(key) {
-  return WORLDS[key] || WORLDS["h-earth"];
+function normalize(v) {
+  const length = Math.hypot(v.x, v.y, v.z) || 1;
+  return { x: v.x / length, y: v.y / length, z: v.z / length };
 }
 
-function sizeCanvas(canvas, square = true) {
-  const rect = canvas.getBoundingClientRect();
-  const cssWidth = Math.max(96, Math.floor(rect.width || canvas.clientWidth || canvas.width || 320));
-  const cssHeight = square ? cssWidth : Math.max(96, Math.floor(rect.height || canvas.clientHeight || cssWidth));
+function dot(a, b) {
+  return a.x * b.x + a.y * b.y + a.z * b.z;
+}
 
-  const width = Math.floor(cssWidth * DPR);
-  const height = Math.floor(cssHeight * DPR);
+function subtract(a, b) {
+  return { x: a.x - b.x, y: a.y - b.y, z: a.z - b.z };
+}
 
-  if (canvas.width !== width || canvas.height !== height) {
-    canvas.width = width;
-    canvas.height = height;
-  }
-
+function cross(a, b) {
   return {
-    width,
-    height,
-    context: canvas.getContext("2d", { alpha: false })
+    x: a.y * b.z - a.z * b.y,
+    y: a.z * b.x - a.x * b.z,
+    z: a.x * b.y - a.y * b.x
   };
 }
 
-function clearCanvas(context, width, height) {
-  const bg = context.createRadialGradient(
-    width * 0.50,
-    height * 0.42,
-    width * 0.04,
-    width * 0.50,
-    height * 0.54,
-    width * 0.76
-  );
-
-  bg.addColorStop(0, "#10203d");
-  bg.addColorStop(0.44, "#071226");
-  bg.addColorStop(1, "#01030a");
-
-  context.fillStyle = bg;
-  context.fillRect(0, 0, width, height);
+function rotateY(p, angle) {
+  const c = Math.cos(angle);
+  const s = Math.sin(angle);
+  return {
+    x: p.x * c + p.z * s,
+    y: p.y,
+    z: -p.x * s + p.z * c
+  };
 }
 
-function drawStars(context, width, height, seed, density) {
-  context.save();
-  context.globalAlpha = density;
+function rotateX(p, angle) {
+  const c = Math.cos(angle);
+  const s = Math.sin(angle);
+  return {
+    x: p.x,
+    y: p.y * c - p.z * s,
+    z: p.y * s + p.z * c
+  };
+}
 
-  const count = MOBILE ? 34 : 62;
+function project(p, view) {
+  return {
+    x: view.cx + p.x * view.scale,
+    y: view.cy - p.y * view.scale,
+    z: p.z
+  };
+}
 
-  for (let i = 0; i < count; i += 1) {
-    const x = hash(seed, i, 2) * width;
-    const y = hash(seed, i, 3) * height;
-    const radius = (0.55 + hash(seed, i, 4) * 1.3) * DPR;
+function sizeCanvas() {
+  const rect = state.canvas.getBoundingClientRect();
+  const cssWidth = Math.max(320, Math.round(rect.width));
+  const cssHeight = Math.max(480, Math.round(rect.height));
 
-    context.beginPath();
-    context.fillStyle = i % 12 === 0 ? "rgba(244,191,96,.48)" : "rgba(225,238,255,.46)";
-    context.arc(x, y, radius, 0, Math.PI * 2);
-    context.fill();
+  state.canvas.width = Math.round(cssWidth * DPR);
+  state.canvas.height = Math.round(cssHeight * DPR);
+  state.canvas.style.width = `${cssWidth}px`;
+  state.canvas.style.height = `${cssHeight}px`;
+
+  state.width = state.canvas.width;
+  state.height = state.canvas.height;
+  state.ctx = state.canvas.getContext("2d", { alpha: false, desynchronized: true });
+
+  createStars(MOBILE ? 58 : 120);
+}
+
+function createStars(count) {
+  state.stars = Array.from({ length: count }, (_, index) => ({
+    x: hash(index, 1),
+    y: hash(index, 2),
+    r: 0.45 + hash(index, 3) * 1.9,
+    a: 0.10 + hash(index, 4) * 0.36,
+    p: hash(index, 5) * Math.PI * 2
+  }));
+}
+
+function makePoint(lat, lon) {
+  const cosLat = Math.cos(lat);
+  return {
+    x: cosLat * Math.cos(lon),
+    y: Math.sin(lat),
+    z: cosLat * Math.sin(lon)
+  };
+}
+
+function terrainNoise(lat, lon, band, sector, worldKey) {
+  const worldShift = worldKey === "earth" ? 0.35 : worldKey === "audralia" ? 1.55 : 0.85;
+  const n1 = Math.sin(lon * 2.1 + worldShift + Math.sin(lat * 3.0) * 1.4);
+  const n2 = Math.cos(lon * 3.7 - lat * 2.2 - worldShift * 0.7);
+  const n3 = Math.sin(lon * 6.0 + band * 0.47 + sector * 0.21 + worldShift);
+  const n4 = Math.cos((lon + lat) * 4.1 + sector * 0.37 - worldShift);
+  return n1 * 0.38 + n2 * 0.28 + n3 * 0.20 + n4 * 0.14;
+}
+
+function sampleCell(latMid, lonMid, band, sector, worldKey) {
+  const polar = Math.abs(latMid) / (Math.PI / 2);
+  const noise = terrainNoise(latMid, lonMid, band, sector, worldKey);
+
+  if (worldKey === "audralia") {
+    const islandCore =
+      Math.sin(lonMid * 1.18 - 0.6) * 0.30 +
+      Math.cos(lonMid * 2.25 + latMid * 1.05) * 0.24 +
+      Math.sin(latMid * 1.7 - 0.3) * 0.12;
+
+    const elevation = noise * 0.76 + islandCore - 0.19 + polar * 0.04;
+
+    return {
+      elevation,
+      ice: polar > 0.88,
+      coast: Math.abs(elevation) < 0.15,
+      water: elevation < 0.03 && polar < 0.88,
+      shelf: elevation >= -0.20 && elevation < 0.03,
+      mountain: elevation > 0.48,
+      highland: elevation > 0.25,
+      dry: elevation > 0.10,
+      polar
+    };
   }
 
-  context.restore();
-}
+  if (worldKey === "earth") {
+    const continentBias =
+      Math.sin(lonMid * 1.55 + 0.4) * 0.24 +
+      Math.cos(lonMid * 2.8 - latMid * 1.25) * 0.21 +
+      Math.sin(latMid * 2.45) * 0.10;
 
-function sphereGradient(context, cx, cy, radius, world) {
-  const p = world.palette;
-  const gradient = context.createRadialGradient(
-    cx - radius * 0.34,
-    cy - radius * 0.38,
-    radius * 0.08,
-    cx,
-    cy,
-    radius * 1.05
-  );
+    const elevation = noise + continentBias - 0.10 + polar * 0.08;
 
-  gradient.addColorStop(0, p.oceanB);
-  gradient.addColorStop(0.38, p.oceanA);
-  gradient.addColorStop(0.78, p.oceanC);
-  gradient.addColorStop(1, "#01040d");
-
-  return gradient;
-}
-
-function drawAtmosphere(context, cx, cy, radius, world) {
-  const p = world.palette;
-
-  context.save();
-  context.globalCompositeOperation = "lighter";
-
-  const glow = context.createRadialGradient(cx, cy, radius * 0.76, cx, cy, radius * 1.22);
-  glow.addColorStop(0, "rgba(255,255,255,0)");
-  glow.addColorStop(0.62, p.atmosphere);
-  glow.addColorStop(1, "rgba(255,255,255,0)");
-
-  context.fillStyle = glow;
-  context.beginPath();
-  context.arc(cx, cy, radius * 1.18, 0, Math.PI * 2);
-  context.fill();
-
-  context.strokeStyle = p.atmosphere;
-  context.lineWidth = Math.max(1, radius * 0.018);
-  context.globalAlpha = 0.62;
-  context.beginPath();
-  context.arc(cx, cy, radius * 1.006, 0, Math.PI * 2);
-  context.stroke();
-
-  context.restore();
-}
-
-function drawTerminator(context, cx, cy, radius, phase, thumbnail) {
-  context.save();
-  context.globalCompositeOperation = "multiply";
-
-  const offset = Math.sin(phase) * radius * 0.18;
-  const darkness = context.createRadialGradient(
-    cx + radius * 0.52 + offset,
-    cy + radius * 0.04,
-    radius * 0.10,
-    cx + radius * 0.56 + offset,
-    cy + radius * 0.04,
-    radius * 1.12
-  );
-
-  darkness.addColorStop(0, "rgba(0,0,0,0)");
-  darkness.addColorStop(0.42, "rgba(0,0,0,.20)");
-  darkness.addColorStop(0.78, "rgba(0,0,0,.72)");
-  darkness.addColorStop(1, "rgba(0,0,0,.92)");
-
-  context.fillStyle = darkness;
-  context.beginPath();
-  context.arc(cx, cy, radius, 0, Math.PI * 2);
-  context.fill();
-
-  context.restore();
-
-  if (!thumbnail) {
-    context.save();
-    context.globalCompositeOperation = "lighter";
-    const shine = context.createRadialGradient(
-      cx - radius * 0.35,
-      cy - radius * 0.38,
-      radius * 0.02,
-      cx - radius * 0.35,
-      cy - radius * 0.38,
-      radius * 0.50
-    );
-    shine.addColorStop(0, "rgba(255,255,255,.26)");
-    shine.addColorStop(1, "rgba(255,255,255,0)");
-    context.fillStyle = shine;
-    context.beginPath();
-    context.arc(cx, cy, radius, 0, Math.PI * 2);
-    context.fill();
-    context.restore();
-  }
-}
-
-function drawLandBlob(context, cx, cy, radius, world, index, phase, scaleBias = 1) {
-  const seed = world.seed;
-  const p = world.palette;
-
-  const baseAngle = hash(seed, index, 10) * Math.PI * 2 + phase * (0.35 + hash(seed, index, 18) * 0.25);
-  const latitude = (hash(seed, index, 11) - 0.5) * 1.25;
-  const distance = hash(seed, index, 12) * radius * 0.54;
-
-  const x = cx + Math.cos(baseAngle) * distance;
-  const y = cy + latitude * radius * 0.50 + Math.sin(baseAngle * 0.7) * radius * 0.08;
-  const blobRadius = radius * (0.08 + hash(seed, index, 13) * 0.17) * scaleBias;
-
-  const polarCut = ((x - cx) ** 2 + (y - cy) ** 2) ** 0.5;
-  if (polarCut > radius * 0.88) return;
-
-  const points = 9 + Math.floor(hash(seed, index, 14) * 7);
-
-  context.beginPath();
-
-  for (let i = 0; i <= points; i += 1) {
-    const t = (i / points) * Math.PI * 2;
-    const jag = 0.70 + hash(seed, index * 19 + i, 15) * 0.60;
-    const sx = x + Math.cos(t) * blobRadius * jag * (1.15 + world.relief * 0.22);
-    const sy = y + Math.sin(t) * blobRadius * jag * (0.52 + hash(seed, index, 16) * 0.46);
-
-    if (i === 0) context.moveTo(sx, sy);
-    else context.lineTo(sx, sy);
+    return {
+      elevation,
+      ice: polar > 0.80,
+      coast: Math.abs(elevation) < 0.13,
+      water: elevation < -0.05 && polar < 0.80,
+      shelf: elevation >= -0.22 && elevation < -0.05,
+      mountain: elevation > 0.48,
+      highland: elevation > 0.24,
+      dry: elevation > 0.35,
+      polar
+    };
   }
 
-  context.closePath();
+  const continentBias =
+    Math.sin(lonMid * 1.35 + 0.7) * 0.24 +
+    Math.cos(lonMid * 2.4 - latMid * 1.15) * 0.20 +
+    Math.sin(latMid * 2.8) * 0.14;
 
-  const land = context.createLinearGradient(x - blobRadius, y - blobRadius, x + blobRadius, y + blobRadius);
-  land.addColorStop(0, p.landC);
-  land.addColorStop(0.36, p.landB);
-  land.addColorStop(1, p.landA);
+  const elevation = noise + continentBias - 0.08 + polar * 0.10;
 
-  context.fillStyle = land;
-  context.globalAlpha = 0.74 + world.relief * 0.18;
-  context.fill();
-
-  context.globalAlpha = 0.18 + world.relief * 0.18;
-  context.strokeStyle = "rgba(255,255,255,.42)";
-  context.lineWidth = Math.max(0.6, radius * 0.004);
-  context.stroke();
+  return {
+    elevation,
+    ice: polar > 0.78,
+    coast: Math.abs(elevation) < 0.13,
+    water: elevation < -0.04 && polar < 0.78,
+    shelf: elevation >= -0.22 && elevation < -0.04,
+    mountain: elevation > 0.46,
+    highland: elevation > 0.24,
+    dry: elevation > 0.38,
+    polar
+  };
 }
 
-function drawTerrainDetails(context, cx, cy, radius, world, phase, thumbnail) {
-  if (thumbnail) return;
+function buildMesh(view) {
+  const rings = [];
 
-  context.save();
-  context.globalCompositeOperation = "screen";
+  for (let latIndex = 0; latIndex <= LAT_BANDS; latIndex += 1) {
+    const v = latIndex / LAT_BANDS;
+    const lat = -Math.PI / 2 + v * Math.PI;
+    rings[latIndex] = [];
 
-  const count = world.key === "earth" ? 18 : world.key === "h-earth" ? 26 : world.key === "hearth" ? 38 : 30;
+    for (let lonIndex = 0; lonIndex <= LON_SECTORS; lonIndex += 1) {
+      const u = lonIndex / LON_SECTORS;
+      const lon = -Math.PI + u * Math.PI * 2;
 
-  for (let i = 0; i < count; i += 1) {
-    const angle = hash(world.seed, i, 40) * Math.PI * 2 + phase * 0.22;
-    const d = hash(world.seed, i, 41) * radius * 0.72;
-    const x = cx + Math.cos(angle) * d;
-    const y = cy + (hash(world.seed, i, 42) - 0.5) * radius * 1.08;
+      const base = makePoint(lat, lon);
+      let rotated = rotateY(base, view.yaw);
+      rotated = rotateX(rotated, view.pitch);
 
-    if ((x - cx) ** 2 + (y - cy) ** 2 > radius ** 2 * 0.86) continue;
-
-    const len = radius * (0.025 + hash(world.seed, i, 43) * 0.09);
-    const a = angle + Math.PI * 0.5;
-
-    context.strokeStyle =
-      world.key === "hearth"
-        ? "rgba(255,216,148,.22)"
-        : world.key === "audralia"
-          ? "rgba(214,200,255,.20)"
-          : "rgba(230,248,255,.18)";
-
-    context.lineWidth = Math.max(0.5, radius * 0.004);
-    context.beginPath();
-    context.moveTo(x - Math.cos(a) * len, y - Math.sin(a) * len);
-    context.lineTo(x + Math.cos(a) * len, y + Math.sin(a) * len);
-    context.stroke();
-  }
-
-  context.restore();
-}
-
-function drawClouds(context, cx, cy, radius, world, phase, thumbnail) {
-  const p = world.palette;
-  const count = thumbnail ? 8 : Math.floor(18 + world.cloudRatio * 28);
-
-  context.save();
-  context.globalCompositeOperation = "screen";
-  context.fillStyle = p.cloud;
-  context.strokeStyle = p.cloud;
-
-  for (let i = 0; i < count; i += 1) {
-    const angle = hash(world.seed, i, 70) * Math.PI * 2 + phase * (0.55 + hash(world.seed, i, 77) * 0.12);
-    const lat = (hash(world.seed, i, 71) - 0.5) * radius * 1.12;
-    const d = hash(world.seed, i, 72) * radius * 0.54;
-    const x = cx + Math.cos(angle) * d;
-    const y = cy + lat;
-
-    if ((x - cx) ** 2 + (y - cy) ** 2 > radius ** 2 * 0.86) continue;
-
-    const w = radius * (0.05 + hash(world.seed, i, 73) * 0.13);
-    const h = radius * (0.010 + hash(world.seed, i, 74) * 0.028);
-
-    context.globalAlpha = thumbnail ? 0.28 : 0.22 + world.cloudRatio * 0.30;
-    context.beginPath();
-    context.ellipse(x, y, w, h, angle * 0.4, 0, Math.PI * 2);
-    context.fill();
-  }
-
-  context.restore();
-}
-
-function drawHexHint(context, cx, cy, radius, world, phase, thumbnail) {
-  if (thumbnail || world.key !== "h-earth") return;
-
-  context.save();
-  context.globalCompositeOperation = "screen";
-  context.globalAlpha = 0.10;
-  context.strokeStyle = "rgba(143,240,195,.32)";
-  context.lineWidth = Math.max(0.4, radius * 0.002);
-
-  const step = radius * 0.18;
-
-  for (let y = -radius * 0.72; y <= radius * 0.72; y += step) {
-    for (let x = -radius * 0.72; x <= radius * 0.72; x += step) {
-      const px = cx + x + Math.sin(phase + y * 0.01) * radius * 0.012;
-      const py = cy + y;
-      if ((px - cx) ** 2 + (py - cy) ** 2 > radius ** 2 * 0.74) continue;
-
-      context.beginPath();
-      for (let i = 0; i < 6; i += 1) {
-        const a = Math.PI / 6 + i * Math.PI / 3;
-        const hx = px + Math.cos(a) * step * 0.22;
-        const hy = py + Math.sin(a) * step * 0.22;
-        if (i === 0) context.moveTo(hx, hy);
-        else context.lineTo(hx, hy);
-      }
-      context.closePath();
-      context.stroke();
+      rings[latIndex][lonIndex] = {
+        local: base,
+        world: rotated,
+        screen: project(rotated, view),
+        lat,
+        lon
+      };
     }
   }
 
-  context.restore();
+  return rings;
 }
 
-function drawPlanet(context, width, height, world, options = {}) {
-  const thumbnail = options.thumbnail === true;
-  const phase = options.phase || 0;
+function createCells(mesh, worldKey) {
+  const cells = [];
+  const lightAngle = state.time * 0.00042;
 
-  clearCanvas(context, width, height);
-  drawStars(context, width, height, world.seed, thumbnail ? 0.30 : 0.42);
-
-  const cx = width * 0.5;
-  const cy = height * (thumbnail ? 0.50 : 0.52);
-  const radius = Math.min(width, height) * (thumbnail ? 0.34 : 0.365);
-
-  drawAtmosphere(context, cx, cy, radius, world);
-
-  context.save();
-  context.beginPath();
-  context.arc(cx, cy, radius, 0, Math.PI * 2);
-  context.clip();
-
-  context.fillStyle = sphereGradient(context, cx, cy, radius, world);
-  context.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
-
-  const landCount = thumbnail
-    ? Math.floor(4 + world.landRatio * 8)
-    : Math.floor(10 + world.landRatio * 34);
-
-  for (let i = 0; i < landCount; i += 1) {
-    drawLandBlob(context, cx, cy, radius, world, i, phase, thumbnail ? 0.82 : 1);
-  }
-
-  drawTerrainDetails(context, cx, cy, radius, world, phase, thumbnail);
-  drawHexHint(context, cx, cy, radius, world, phase, thumbnail);
-  drawClouds(context, cx, cy, radius, world, phase, thumbnail);
-  drawTerminator(context, cx, cy, radius, phase, thumbnail);
-
-  context.restore();
-
-  context.save();
-  context.globalCompositeOperation = "lighter";
-  context.globalAlpha = thumbnail ? 0.24 : 0.36;
-
-  const rim = context.createRadialGradient(cx, cy, radius * 0.76, cx, cy, radius * 1.08);
-  rim.addColorStop(0, "rgba(255,255,255,0)");
-  rim.addColorStop(0.80, world.palette.glow);
-  rim.addColorStop(1, "rgba(255,255,255,0)");
-
-  context.fillStyle = rim;
-  context.beginPath();
-  context.arc(cx, cy, radius * 1.08, 0, Math.PI * 2);
-  context.fill();
-
-  context.restore();
-
-  context.save();
-  context.strokeStyle = "rgba(255,255,255,.12)";
-  context.lineWidth = Math.max(1, radius * 0.010);
-  context.beginPath();
-  context.arc(cx, cy, radius, 0, Math.PI * 2);
-  context.stroke();
-  context.restore();
-}
-
-function renderPreviews() {
-  if (state.renderedPreviews) return;
-
-  state.previewCanvases.forEach((canvas) => {
-    const key = canvas.dataset.previewCanvas;
-    const world = pickWorld(key);
-    const sized = sizeCanvas(canvas, true);
-    drawPlanet(sized.context, sized.width, sized.height, world, {
-      thumbnail: true,
-      phase: hash(world.seed, 1, 101) * Math.PI * 2
-    });
+  const light = normalize({
+    x: Math.cos(lightAngle) * 0.72,
+    y: 0.54,
+    z: Math.sin(lightAngle) * 0.72 + 0.28
   });
 
-  state.renderedPreviews = true;
-}
+  const rimLight = normalize({ x: -0.52, y: 0.28, z: 0.86 });
+  const viewDir = normalize({ x: 0, y: 0, z: 1 });
 
-function updateSelection(key, pushFocus = false) {
-  const world = pickWorld(key);
-  state.selected = world.key;
+  for (let band = 0; band < LAT_BANDS; band += 1) {
+    for (let sector = 0; sector < LON_SECTORS; sector += 1) {
+      const p00 = mesh[band][sector];
+      const p01 = mesh[band][sector + 1];
+      const p11 = mesh[band + 1][sector + 1];
+      const p10 = mesh[band + 1][sector];
 
-  state.cards.forEach((card) => {
-    const selected = card.dataset.worldCard === world.key;
-    card.setAttribute("aria-selected", String(selected));
-  });
+      const avgWorld = normalize({
+        x: (p00.world.x + p01.world.x + p11.world.x + p10.world.x) / 4,
+        y: (p00.world.y + p01.world.y + p11.world.y + p10.world.y) / 4,
+        z: (p00.world.z + p01.world.z + p11.world.z + p10.world.z) / 4
+      });
 
-  if (state.title) state.title.textContent = world.title;
-  if (state.copy) state.copy.textContent = world.copy;
-  if (state.badge) state.badge.textContent = world.badge;
-  if (state.inspect) state.inspect.href = world.route;
+      if (avgWorld.z < -0.06) continue;
 
-  if (state.meta) {
-    state.meta.innerHTML = `
-      <span><strong>Layer</strong>Showcase portrait</span>
-      <span><strong>Runtime</strong>Low budget</span>
-      <span><strong>Private engines</strong>Sleeping</span>
-    `;
+      const latMid = (p00.lat + p10.lat) / 2;
+      const lonMid = (p00.lon + p01.lon) / 2;
+      const terrain = sampleCell(latMid, lonMid, band, sector, worldKey);
+
+      const e1 = subtract(p01.world, p00.world);
+      const e2 = subtract(p10.world, p00.world);
+      const faceNormal = normalize(cross(e1, e2));
+      const normal = dot(faceNormal, avgWorld) < 0
+        ? { x: -faceNormal.x, y: -faceNormal.y, z: -faceNormal.z }
+        : faceNormal;
+
+      const diffuse = clamp(dot(avgWorld, light), 0, 1);
+      const rim = Math.pow(clamp(1 - Math.abs(dot(avgWorld, viewDir)), 0, 1), 2.2);
+      const secondary = clamp(dot(avgWorld, rimLight), 0, 1);
+
+      cells.push({
+        points: [p00.screen, p01.screen, p11.screen, p10.screen],
+        depth: avgWorld.z,
+        band,
+        sector,
+        terrain,
+        diffuse,
+        rim,
+        secondary,
+        worldKey
+      });
+    }
   }
 
-  document.documentElement.dataset.showroomGlobeSelected = world.key;
-  document.documentElement.dataset.privateRenderersLoaded = "false";
+  return cells.sort((a, b) => a.depth - b.depth);
+}
 
-  renderDisplay(performance.now());
+function colorForCell(cell) {
+  const t = cell.terrain;
+  const world = WORLDS[cell.worldKey];
+  const light = 0.34 + cell.diffuse * 0.52 + cell.secondary * 0.10 + cell.rim * 0.18;
 
-  if (pushFocus && state.displayWindow) {
-    state.displayWindow.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  let r;
+  let g;
+  let b;
+
+  if (t.ice) {
+    r = 166; g = 208; b = 236;
+  } else if (t.water) {
+    if (t.shelf) {
+      r = world.secondary[0] + 8;
+      g = world.secondary[1] + 30;
+      b = world.secondary[2] + 28;
+    } else {
+      r = Math.max(4, world.secondary[0] * 0.20);
+      g = Math.max(24, world.secondary[1] * 0.36);
+      b = Math.max(68, world.secondary[2] * 0.72);
+    }
+  } else if (t.coast) {
+    r = 186; g = 168; b = 101;
+  } else if (t.mountain) {
+    r = 148; g = 132; b = 112;
+  } else if (t.highland) {
+    r = world.primary[0] + 24;
+    g = world.primary[1] + 10;
+    b = world.primary[2] - 4;
+  } else if (t.dry) {
+    r = 152; g = 124; b = 78;
+  } else {
+    r = world.primary[0];
+    g = world.primary[1];
+    b = world.primary[2];
   }
+
+  const elevationWarmth = clamp(t.elevation, -0.5, 0.65);
+  r += elevationWarmth * 24;
+  g += elevationWarmth * 12;
+  b += t.water ? 20 : -elevationWarmth * 8;
+
+  r = Math.round(clamp(r * light, 0, 255));
+  g = Math.round(clamp(g * light, 0, 255));
+  b = Math.round(clamp(b * light, 0, 255));
+
+  const alpha = clamp(0.78 + cell.diffuse * 0.16 + cell.rim * 0.06, 0.72, 0.98);
+
+  return `rgba(${r},${g},${b},${alpha})`;
 }
 
-function renderDisplay(time = 0) {
-  if (!state.displayCanvas) return;
+function drawBackground(ctx, width, height) {
+  const world = WORLDS[state.worldKey];
 
-  const sized = sizeCanvas(state.displayCanvas, true);
-  state.displayContext = sized.context;
+  const bg = ctx.createRadialGradient(width * 0.5, height * 0.42, 0, width * 0.5, height * 0.52, Math.max(width, height) * 0.82);
+  bg.addColorStop(0, "#13264a");
+  bg.addColorStop(0.30, "#091832");
+  bg.addColorStop(0.68, "#041021");
+  bg.addColorStop(1, "#01040c");
 
-  const world = pickWorld(state.selected);
-  drawPlanet(sized.context, sized.width, sized.height, world, {
-    thumbnail: false,
-    phase: state.phase + state.dragPhase
-  });
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, width, height);
+
+  const halo = ctx.createRadialGradient(width * 0.5, height * 0.49, 0, width * 0.5, height * 0.49, width * 0.39);
+  halo.addColorStop(0, world.glow);
+  halo.addColorStop(0.38, "rgba(142,190,255,0.075)");
+  halo.addColorStop(1, "rgba(0,0,0,0)");
+
+  ctx.fillStyle = halo;
+  ctx.beginPath();
+  ctx.ellipse(width * 0.5, height * 0.50, width * 0.34, height * 0.31, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  const vignette = ctx.createRadialGradient(width * 0.5, height * 0.5, width * 0.20, width * 0.5, height * 0.5, width * 0.74);
+  vignette.addColorStop(0, "rgba(0,0,0,0)");
+  vignette.addColorStop(1, "rgba(0,0,0,0.48)");
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, width, height);
+
+  drawStars(ctx, width, height);
 }
 
-function frame(time = 0) {
+function drawStars(ctx, width, height) {
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  for (const star of state.stars) {
+    const pulse = REDUCED_MOTION ? 0.55 : 0.55 + Math.sin(state.time * 0.001 + star.p) * 0.45;
+    const alpha = star.a * pulse;
+    const x = star.x * width;
+    const y = star.y * height;
+    const radius = star.r * DPR;
+
+    ctx.fillStyle = `rgba(235,242,255,${alpha})`;
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    if (star.r > 1.35) {
+      ctx.strokeStyle = `rgba(255,255,255,${alpha * 0.44})`;
+      ctx.lineWidth = Math.max(0.6, DPR * 0.55);
+      ctx.beginPath();
+      ctx.moveTo(x - 3.2 * DPR, y);
+      ctx.lineTo(x + 3.2 * DPR, y);
+      ctx.moveTo(x, y - 3.2 * DPR);
+      ctx.lineTo(x, y + 3.2 * DPR);
+      ctx.stroke();
+    }
+  }
+
+  ctx.restore();
+}
+
+function drawPlanet(ctx, width, height) {
+  const scale = Math.min(width * 0.34, height * 0.37);
+
+  const view = {
+    cx: width * 0.50,
+    cy: height * 0.49,
+    scale,
+    yaw: state.yaw,
+    pitch: state.pitch
+  };
+
+  drawPlanetShadow(ctx, view);
+
+  const mesh = buildMesh(view);
+  const cells = createCells(mesh, state.worldKey);
+
+  ctx.save();
+
+  for (const cell of cells) {
+    const pts = cell.points;
+
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    ctx.lineTo(pts[1].x, pts[1].y);
+    ctx.lineTo(pts[2].x, pts[2].y);
+    ctx.lineTo(pts[3].x, pts[3].y);
+    ctx.closePath();
+
+    ctx.fillStyle = colorForCell(cell);
+    ctx.fill();
+
+    ctx.strokeStyle = `rgba(230,244,255,${0.035 + cell.rim * 0.11})`;
+    ctx.lineWidth = Math.max(0.35, DPR * 0.38);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+
+  drawAtmosphere(ctx, view);
+  drawOrbitLines(ctx, view);
+  drawWorldTitle(ctx, width, height);
+  drawCue(ctx, width, height);
+
+  document.documentElement.dataset.globeShowcaseModel = MODEL_NAME;
+  document.documentElement.dataset.selectedWorld = state.worldKey;
+  document.documentElement.dataset.portraitCellCount = String(CELL_COUNT);
+  document.documentElement.dataset.privateEnginesAsleep = "true";
+}
+
+function drawPlanetShadow(ctx, view) {
+  const world = WORLDS[state.worldKey];
+
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  const y = view.cy + view.scale * 1.05;
+  const glow = ctx.createRadialGradient(view.cx, y, 0, view.cx, y, view.scale * 0.66);
+  glow.addColorStop(0, world.glow);
+  glow.addColorStop(0.38, "rgba(80,120,180,0.10)");
+  glow.addColorStop(1, "rgba(0,0,0,0)");
+
+  ctx.fillStyle = glow;
+  ctx.beginPath();
+  ctx.ellipse(view.cx, y, view.scale * 0.58, view.scale * 0.13, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function drawAtmosphere(ctx, view) {
+  const world = WORLDS[state.worldKey];
+
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  const outer = ctx.createRadialGradient(view.cx, view.cy, view.scale * 0.76, view.cx, view.cy, view.scale * 1.12);
+  outer.addColorStop(0, "rgba(0,0,0,0)");
+  outer.addColorStop(0.72, "rgba(142,190,255,0.10)");
+  outer.addColorStop(1, world.glow);
+
+  ctx.fillStyle = outer;
+  ctx.beginPath();
+  ctx.arc(view.cx, view.cy, view.scale * 1.10, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = "rgba(210,240,255,0.24)";
+  ctx.lineWidth = Math.max(1, DPR * 1.1);
+  ctx.beginPath();
+  ctx.arc(view.cx, view.cy, view.scale * 1.005, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function drawOrbitLines(ctx, view) {
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  ctx.strokeStyle = "rgba(244,191,96,0.10)";
+  ctx.lineWidth = Math.max(0.7, DPR * 0.75);
+
+  ctx.beginPath();
+  ctx.ellipse(view.cx, view.cy, view.scale * 1.52, view.scale * 0.35, -0.12, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.strokeStyle = "rgba(142,190,255,0.08)";
+  ctx.beginPath();
+  ctx.ellipse(view.cx, view.cy, view.scale * 1.34, view.scale * 0.53, 0.28, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function drawWorldTitle(ctx, width, height) {
+  const world = WORLDS[state.worldKey];
+
+  ctx.save();
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  ctx.fillStyle = "rgba(244,191,96,0.92)";
+  ctx.font = `950 ${Math.max(18 * DPR, width * 0.038)}px Inter, system-ui, sans-serif`;
+  ctx.fillText(world.title, width * 0.5, height * 0.165);
+
+  ctx.fillStyle = "rgba(186,197,212,0.72)";
+  ctx.font = `850 ${Math.max(11 * DPR, width * 0.014)}px Inter, system-ui, sans-serif`;
+  ctx.fillText(`${world.subtitle} · 256-cell public portrait`, width * 0.5, height * 0.205);
+
+  ctx.restore();
+}
+
+function drawCue(ctx, width, height) {
+  ctx.save();
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillStyle = "rgba(186,197,212,0.60)";
+  ctx.font = `800 ${Math.max(11 * DPR, width * 0.013)}px Inter, system-ui, sans-serif`;
+  ctx.fillText("Drag to inspect · Select a world · Open room for private engine", width * 0.5, height * 0.90);
+  ctx.restore();
+}
+
+function render() {
+  const ctx = state.ctx;
+  if (!ctx) return;
+
+  drawBackground(ctx, state.width, state.height);
+  drawPlanet(ctx, state.width, state.height);
+}
+
+function updateInspectionMotion() {
+  if (!state.dragging) {
+    if (!state.interacted && !REDUCED_MOTION) {
+      state.targetYaw += 0.0010;
+    }
+
+    state.targetYaw += state.velocityYaw;
+    state.targetPitch = clamp(state.targetPitch + state.velocityPitch, MIN_PITCH, MAX_PITCH);
+
+    state.velocityYaw *= 0.925;
+    state.velocityPitch *= 0.905;
+
+    if (Math.abs(state.velocityYaw) < 0.00008) state.velocityYaw = 0;
+    if (Math.abs(state.velocityPitch) < 0.00008) state.velocityPitch = 0;
+  }
+
+  state.yaw += (state.targetYaw - state.yaw) * 0.22;
+  state.pitch += (state.targetPitch - state.pitch) * 0.22;
+  state.pitch = clamp(state.pitch, MIN_PITCH, MAX_PITCH);
+}
+
+function frame(now) {
   if (!state.active || !state.visible) {
     state.raf = 0;
     return;
   }
 
-  const elapsed = time - state.lastFrameAt;
-
-  if (elapsed >= FRAME_MS) {
-    state.lastFrameAt = time;
-
-    if (!REDUCED_MOTION && !state.dragging) {
-      state.phase += MOBILE ? 0.008 : 0.012;
-    }
-
-    renderDisplay(time);
+  if (!state.lastFrame || now - state.lastFrame >= FRAME_MS) {
+    state.lastFrame = now;
+    state.time = now;
+    updateInspectionMotion();
+    render();
   }
 
   state.raf = window.requestAnimationFrame(frame);
 }
 
 function startLoop() {
-  if (state.raf || !state.active || !state.visible) return;
-  state.lastFrameAt = 0;
+  if (state.raf) return;
   state.raf = window.requestAnimationFrame(frame);
 }
 
 function stopLoop() {
-  if (state.raf) {
-    window.cancelAnimationFrame(state.raf);
-    state.raf = 0;
+  if (!state.raf) return;
+  window.cancelAnimationFrame(state.raf);
+  state.raf = 0;
+}
+
+function resetInspection() {
+  state.targetYaw = DEFAULT_YAW;
+  state.targetPitch = DEFAULT_PITCH;
+  state.velocityYaw = 0;
+  state.velocityPitch = 0;
+  state.interacted = false;
+}
+
+function setWorld(worldKey) {
+  if (!WORLDS[worldKey]) return;
+
+  state.worldKey = worldKey;
+  resetInspection();
+  updateControls();
+  render();
+}
+
+function updateControls() {
+  const world = WORLDS[state.worldKey];
+
+  document.querySelectorAll("[data-world]").forEach((button) => {
+    button.setAttribute("aria-pressed", String(button.dataset.world === state.worldKey));
+  });
+
+  const link = $("activeWorldLink");
+  if (link) {
+    link.href = world.route;
+    link.textContent = `Open ${world.title}`;
   }
 }
 
-function wireCards() {
-  state.cards.forEach((card) => {
-    card.addEventListener("click", () => {
-      updateSelection(card.dataset.worldCard || "h-earth", true);
-    });
-
-    card.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        updateSelection(card.dataset.worldCard || "h-earth", true);
-      }
+function installWorldControls() {
+  document.querySelectorAll("[data-world]").forEach((button) => {
+    button.addEventListener("click", () => {
+      setWorld(button.dataset.world);
     });
   });
 }
 
-function wireDisplayInteraction() {
-  const canvas = state.displayCanvas;
-  if (!canvas || canvas.dataset.lowBudgetGlobeInteractionBound === "true") return;
+function installPointerInspection() {
+  const canvas = state.canvas;
+  if (!canvas) return;
 
-  canvas.dataset.lowBudgetGlobeInteractionBound = "true";
+  canvas.style.touchAction = "none";
+
+  canvas.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+  });
 
   canvas.addEventListener("pointerdown", (event) => {
     state.dragging = true;
     state.pointerId = event.pointerId;
-    state.dragStartX = event.clientX;
-    state.dragStartPhase = state.dragPhase;
+    state.startX = event.clientX;
+    state.startY = event.clientY;
+    state.lastX = event.clientX;
+    state.lastY = event.clientY;
+    state.lastPointerTime = performance.now();
+    state.tapStartTime = performance.now();
+    state.velocityYaw = 0;
+    state.velocityPitch = 0;
+    state.interacted = true;
+
     canvas.setPointerCapture?.(event.pointerId);
     event.preventDefault();
   }, { passive: false });
@@ -645,142 +728,153 @@ function wireDisplayInteraction() {
   canvas.addEventListener("pointermove", (event) => {
     if (!state.dragging || event.pointerId !== state.pointerId) return;
 
-    const dx = event.clientX - state.dragStartX;
-    state.dragPhase = state.dragStartPhase + dx * 0.008;
+    const now = performance.now();
+    const dt = Math.max(12, now - state.lastPointerTime);
+    const dx = event.clientX - state.lastX;
+    const dy = event.clientY - state.lastY;
 
-    renderDisplay(performance.now());
+    const yawDelta = dx * 0.0085;
+    const pitchDelta = dy * 0.0065;
+
+    state.targetYaw += yawDelta;
+    state.targetPitch = clamp(state.targetPitch + pitchDelta, MIN_PITCH, MAX_PITCH);
+
+    state.velocityYaw = clamp((yawDelta / dt) * 18, -0.045, 0.045);
+    state.velocityPitch = clamp((pitchDelta / dt) * 14, -0.030, 0.030);
+
+    state.lastX = event.clientX;
+    state.lastY = event.clientY;
+    state.lastPointerTime = now;
+
     event.preventDefault();
   }, { passive: false });
 
-  const finish = (event) => {
+  canvas.addEventListener("pointerup", (event) => {
     if (event.pointerId !== state.pointerId) return;
+
+    const now = performance.now();
+    const travel = Math.hypot(event.clientX - state.startX, event.clientY - state.startY);
+    const tapDuration = now - state.tapStartTime;
+    const isTap = travel < 10 && tapDuration < 260;
+    const isDoubleTap = isTap && now - state.lastTapAt < 340;
+
+    if (isDoubleTap) {
+      resetInspection();
+      state.lastTapAt = 0;
+    } else if (isTap) {
+      state.lastTapAt = now;
+    }
+
+    state.dragging = false;
+    state.pointerId = null;
+
+    canvas.releasePointerCapture?.(event.pointerId);
+    event.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener("pointercancel", (event) => {
     state.dragging = false;
     state.pointerId = null;
     canvas.releasePointerCapture?.(event.pointerId);
     event.preventDefault();
-  };
-
-  canvas.addEventListener("pointerup", finish, { passive: false });
-  canvas.addEventListener("pointercancel", finish, { passive: false });
-
-  canvas.addEventListener("wheel", (event) => {
-    event.preventDefault();
   }, { passive: false });
+
+  canvas.addEventListener("keydown", (event) => {
+    const step = event.shiftKey ? 0.16 : 0.075;
+
+    if (event.key === "ArrowLeft") {
+      state.interacted = true;
+      state.targetYaw -= step;
+      event.preventDefault();
+    } else if (event.key === "ArrowRight") {
+      state.interacted = true;
+      state.targetYaw += step;
+      event.preventDefault();
+    } else if (event.key === "ArrowUp") {
+      state.interacted = true;
+      state.targetPitch = clamp(state.targetPitch + step, MIN_PITCH, MAX_PITCH);
+      event.preventDefault();
+    } else if (event.key === "ArrowDown") {
+      state.interacted = true;
+      state.targetPitch = clamp(state.targetPitch - step, MIN_PITCH, MAX_PITCH);
+      event.preventDefault();
+    } else if (event.key === "Home" || event.key === "0") {
+      resetInspection();
+      event.preventDefault();
+    }
+  });
 }
 
 function installVisibility() {
   document.addEventListener("visibilitychange", () => {
     state.active = document.visibilityState !== "hidden";
-
     if (state.active) startLoop();
     else stopLoop();
-
-    stampDocument();
   }, { passive: true });
 
-  if ("IntersectionObserver" in window && state.displayWindow) {
+  if ("IntersectionObserver" in window && state.canvas) {
     const observer = new IntersectionObserver((entries) => {
-      const entry = entries[0];
-      state.visible = entry?.isIntersecting !== false;
-
+      state.visible = entries[0]?.isIntersecting !== false;
       if (state.visible) startLoop();
       else stopLoop();
+    }, { threshold: 0.05 });
 
-      stampDocument();
-    }, { threshold: 0.08 });
-
-    observer.observe(state.displayWindow);
+    observer.observe(state.canvas);
   }
 }
 
 function installResize() {
+  let timer = 0;
+
   window.addEventListener("resize", () => {
-    window.clearTimeout(window.__globeShowcaseResizeTimer);
-    window.__globeShowcaseResizeTimer = window.setTimeout(() => {
-      state.renderedPreviews = false;
-      renderPreviews();
-      renderDisplay(performance.now());
-    }, 180);
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => {
+      sizeCanvas();
+      render();
+    }, 120);
   }, { passive: true });
 }
 
-function stampDocument() {
-  const root = document.documentElement;
-
-  root.dataset.showroomGlobeRouteReceipt = CONTRACT;
-  root.dataset.showroomGlobeHtmlReceipt = HTML_CONTRACT;
-  root.dataset.showroomGlobeRoute = ROUTE;
-  root.dataset.showroomGlobeSelected = state.selected;
-  root.dataset.showroomGlobeLowBudgetPortraits = "true";
-  root.dataset.showroomGlobePrivateRenderersLoaded = String(PRIVATE_RENDERERS_LOADED);
-  root.dataset.showroomGlobeDprCap = String(DPR);
-  root.dataset.showroomGlobeActive = String(state.active);
-  root.dataset.showroomGlobeVisible = String(state.visible);
-  root.dataset.generatedImage = String(GENERATED_IMAGE);
-  root.dataset.graphicBox = String(GRAPHIC_BOX);
-  root.dataset.visualPassClaim = String(VISUAL_PASS_CLAIM);
-}
-
-function getShowroomGlobeStatus() {
-  return {
-    contract: CONTRACT,
-    receipt: CONTRACT,
-    htmlContract: HTML_CONTRACT,
-    route: ROUTE,
-    selected: state.selected,
-    worlds: Object.keys(WORLDS),
-    lowBudgetPortraits: true,
-    privateRenderersLoaded: PRIVATE_RENDERERS_LOADED,
-    generatedImage: GENERATED_IMAGE,
-    graphicBox: GRAPHIC_BOX,
-    visualPassClaim: VISUAL_PASS_CLAIM,
-    dprCap: DPR,
-    active: state.active,
-    visible: state.visible,
-    phase: state.phase,
-    dragPhase: state.dragPhase
-  };
-}
-
-function exposeApi() {
-  const api = {
-    contract: CONTRACT,
-    receipt: CONTRACT,
-    htmlContract: HTML_CONTRACT,
-    route: ROUTE,
-    select: updateSelection,
-    render: renderDisplay,
-    status: getShowroomGlobeStatus,
-    getStatus: getShowroomGlobeStatus,
-    getShowroomGlobeStatus
-  };
-
-  window.DGBShowroomGlobe = api;
-  window.ShowroomGlobe = api;
-  window.SHOWROOM_GLOBE_RECEIPT = CONTRACT;
-}
-
 function boot() {
-  state.displayCanvas = byId("displayCanvas");
-  state.displayWindow = byId("displayWindow");
-  state.title = byId("displayTitle");
-  state.copy = byId("displayCopy");
-  state.badge = byId("displayBadge");
-  state.inspect = byId("inspectSelected");
-  state.meta = byId("displayMeta");
-  state.cards = Array.from(document.querySelectorAll("[data-world-card]"));
-  state.previewCanvases = Array.from(document.querySelectorAll("[data-preview-canvas]"));
+  state.canvas = $("globeShowcaseCanvas");
+  if (!state.canvas) return;
 
-  renderPreviews();
-  wireCards();
-  wireDisplayInteraction();
+  sizeCanvas();
+  installWorldControls();
+  installPointerInspection();
   installVisibility();
   installResize();
-  exposeApi();
-  stampDocument();
-
-  updateSelection("h-earth", false);
+  updateControls();
+  render();
   startLoop();
+
+  window.DGBGlobeShowcase = {
+    model: MODEL_NAME,
+    cellCount: CELL_COUNT,
+    latBands: LAT_BANDS,
+    lonSectors: LON_SECTORS,
+    privateEnginesAsleep: true,
+    fixedStructure: true,
+    inspectable: true,
+    generatedImage: false,
+    graphicBox: false,
+    setWorld,
+    reset: resetInspection,
+    status() {
+      return {
+        model: MODEL_NAME,
+        selectedWorld: state.worldKey,
+        cellCount: CELL_COUNT,
+        latBands: LAT_BANDS,
+        lonSectors: LON_SECTORS,
+        privateEnginesAsleep: true,
+        fixedStructure: true,
+        inspectable: true,
+        yaw: state.yaw,
+        pitch: state.pitch
+      };
+    }
+  };
 }
 
 if (document.readyState === "loading") {
@@ -789,28 +883,9 @@ if (document.readyState === "loading") {
   boot();
 }
 
-export {
-  CONTRACT,
-  HTML_CONTRACT,
-  ROUTE,
-  WORLDS,
-  GENERATED_IMAGE,
-  GRAPHIC_BOX,
-  VISUAL_PASS_CLAIM,
-  PRIVATE_RENDERERS_LOADED,
-  updateSelection,
-  renderDisplay,
-  getShowroomGlobeStatus
-};
-
 export default {
-  contract: CONTRACT,
-  receipt: CONTRACT,
-  htmlContract: HTML_CONTRACT,
-  route: ROUTE,
-  select: updateSelection,
-  render: renderDisplay,
-  status: getShowroomGlobeStatus,
-  getStatus: getShowroomGlobeStatus,
-  getShowroomGlobeStatus
+  model: MODEL_NAME,
+  cellCount: CELL_COUNT,
+  privateEnginesAsleep: true,
+  inspectable: true
 };

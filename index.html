@@ -3,8 +3,8 @@
   lang="en"
   data-route="/"
   data-page="compass"
-  data-contract="COMPASS_INDEX_CUT_GEM_PREFACE_RENEWAL_TNT_v1"
-  data-model="cut-gem-preface-gate"
+  data-contract="COMPASS_INDEX_CUT_GEM_PREFACE_AXIS_RENEWAL_TNT_v2"
+  data-model="cut-gem-preface-gate-axis"
   data-default-lens="round"
   data-flat-route="/flat/"
   data-round-route="/products/"
@@ -532,7 +532,7 @@
     .active-title {
       position:absolute;
       left:50%;
-      top:50%;
+      top:54%;
       z-index:2;
       width:min(76%,32rem);
       transform:translate(-50%,-50%);
@@ -568,6 +568,36 @@
       position:absolute;
       inset:0;
       z-index:4;
+      pointer-events:none;
+      perspective:900px;
+    }
+
+    .gem-rail::before {
+      content:"";
+      position:absolute;
+      left:50%;
+      top:24%;
+      width:min(78%,36rem);
+      height:min(28%,10.5rem);
+      transform:translate(-50%,-50%) rotateX(64deg);
+      border:1px solid rgba(243,200,111,.14);
+      border-radius:50%;
+      box-shadow:
+        0 0 38px rgba(36,120,255,.12),
+        inset 0 0 30px rgba(141,216,255,.045);
+      pointer-events:none;
+    }
+
+    .gem-rail::after {
+      content:"";
+      position:absolute;
+      left:50%;
+      top:24%;
+      width:min(54%,24rem);
+      height:min(18%,7rem);
+      transform:translate(-50%,-50%) rotateX(64deg);
+      border:1px solid rgba(141,216,255,.11);
+      border-radius:50%;
       pointer-events:none;
     }
 
@@ -605,24 +635,38 @@
         0 0 32px rgba(36,120,255,.34),
         inset 0 1px 0 rgba(255,255,255,.32),
         inset 0 -14px 28px rgba(1,9,42,.34);
-      transform:translate(-50%,-50%) rotate(45deg);
+      transform:translate(-50%,-50%) rotate(45deg) rotateX(8deg) rotateY(-10deg);
       transition:filter .18s ease,box-shadow .18s ease,scale .18s ease,border-color .18s ease;
+      animation:compassGemAxisTurn 7.5s ease-in-out infinite;
       isolation:isolate;
     }
 
     .compass-gem[data-lens="flat"] {
-      left:22%;
-      top:52%;
+      left:28%;
+      top:23%;
+      animation-delay:-1.1s;
     }
 
     .compass-gem[data-lens="round"] {
       left:50%;
-      top:22%;
+      top:15%;
+      animation-delay:-3.6s;
     }
 
     .compass-gem[data-lens="universe"] {
-      left:78%;
-      top:52%;
+      left:72%;
+      top:23%;
+      animation-delay:-5.2s;
+    }
+
+    @keyframes compassGemAxisTurn {
+      0%,100% {
+        transform:translate(-50%,-50%) rotate(45deg) rotateX(8deg) rotateY(-10deg) translateY(0);
+      }
+
+      50% {
+        transform:translate(-50%,-50%) rotate(53deg) rotateX(12deg) rotateY(12deg) translateY(-6px);
+      }
     }
 
     .compass-gem::before {
@@ -831,24 +875,36 @@
         min-height:35rem;
       }
 
+      .gem-rail::before {
+        top:18%;
+        width:88%;
+        height:8.5rem;
+      }
+
+      .gem-rail::after {
+        top:18%;
+        width:62%;
+        height:5.8rem;
+      }
+
       .compass-gem {
-        width:5.5rem;
-        height:5.5rem;
+        width:4.95rem;
+        height:4.95rem;
       }
 
       .compass-gem[data-lens="flat"] {
-        left:20%;
-        top:48%;
+        left:23%;
+        top:18%;
       }
 
       .compass-gem[data-lens="round"] {
         left:50%;
-        top:20%;
+        top:11%;
       }
 
       .compass-gem[data-lens="universe"] {
-        left:80%;
-        top:48%;
+        left:77%;
+        top:18%;
       }
 
       .active-title {
@@ -875,17 +931,44 @@
         min-height:33rem;
       }
 
+      .gem-rail::before {
+        top:17%;
+        width:92%;
+        height:7.8rem;
+      }
+
+      .gem-rail::after {
+        top:17%;
+        width:66%;
+        height:5rem;
+      }
+
       .compass-gem {
-        width:4.7rem;
-        height:4.7rem;
+        width:4.15rem;
+        height:4.15rem;
+      }
+
+      .compass-gem[data-lens="flat"] {
+        left:22%;
+        top:18%;
+      }
+
+      .compass-gem[data-lens="round"] {
+        left:50%;
+        top:11%;
+      }
+
+      .compass-gem[data-lens="universe"] {
+        left:78%;
+        top:18%;
       }
 
       .gem-label b {
-        font-size:.62rem;
+        font-size:.58rem;
       }
 
       .gem-label span {
-        font-size:.40rem;
+        font-size:.36rem;
       }
 
       .active-title {
@@ -1036,6 +1119,6 @@
     </footer>
   </div>
 
-  <script type="module" src="/index.js?v=compass-cut-gem-preface-v1"></script>
+  <script type="module" src="/index.js?v=compass-cut-gem-preface-axis-v2"></script>
 </body>
 </html>

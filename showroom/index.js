@@ -1,31 +1,52 @@
 // /showroom/index.js
-// SHOWROOM_NATURAL_DIAMOND_RESTORE_TNT_v2
+// Fixed crown-cut 256-lattice diamond renderer.
 // Full-file replacement.
-// Restores the natural crown-cut canvas diamond.
-// Public page stays clean. No image generation. No GraphicBox.
+// No generated image. No CSS diamond substitute. No public receipt spillover.
 
-const CONTRACT = "SHOWROOM_NATURAL_DIAMOND_RESTORE_TNT_v2";
+const MODEL_NAME = "fixed-crown-cut-256-lattice";
 
-const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
-const DPR = MOBILE ? 1 : Math.min(window.devicePixelRatio || 1, 1.35);
-const FRAME_MS = MOBILE ? 66 : 42;
+const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
+const DPR = Math.min(window.devicePixelRatio || 1, MOBILE ? 1.25 : 1.65);
+const FRAME_MS = MOBILE ? 58 : 42;
 
 const state = {
   canvas: null,
   ctx: null,
-  mount: null,
   width: 0,
   height: 0,
-  active: true,
-  visible: true,
   raf: 0,
-  phase: 0,
-  sparkle: 0,
-  lastFrame: 0
+  lastFrame: 0,
+  visible: true,
+  active: true,
+  time: 0,
+  stars: []
 };
 
-function byId(id) {
+const RINGS = Object.freeze([
+  { y: 0.58, r: 0.22, twist: 0.00 },
+  { y: 0.56, r: 0.30, twist: 0.50 },
+  { y: 0.52, r: 0.39, twist: 0.00 },
+  { y: 0.46, r: 0.50, twist: 0.50 },
+  { y: 0.39, r: 0.61, twist: 0.00 },
+  { y: 0.31, r: 0.73, twist: 0.50 },
+  { y: 0.23, r: 0.86, twist: 0.00 },
+  { y: 0.15, r: 0.97, twist: 0.50 },
+  { y: 0.07, r: 1.03, twist: 0.00 },
+  { y: -0.03, r: 1.00, twist: 0.50 },
+  { y: -0.13, r: 0.86, twist: 0.00 },
+  { y: -0.24, r: 0.70, twist: 0.50 },
+  { y: -0.36, r: 0.54, twist: 0.00 },
+  { y: -0.48, r: 0.38, twist: 0.50 },
+  { y: -0.59, r: 0.24, twist: 0.00 },
+  { y: -0.68, r: 0.12, twist: 0.50 },
+  { y: -0.74, r: 0.00, twist: 0.00 }
+]);
+
+const SECTORS = 16;
+const FACE_COUNT = 256;
+
+function $(id) {
   return document.getElementById(id);
 }
 
@@ -33,465 +54,575 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function hash(seed, index, salt = 0) {
-  const x = Math.sin((seed + 1) * 91.17 + (index + 1) * 12.9898 + salt * 78.233) * 43758.5453;
-  return x - Math.floor(x);
+function fract(value) {
+  return value - Math.floor(value);
+}
+
+function hash(a, b = 0, c = 0) {
+  return fract(Math.sin(a * 127.1 + b * 311.7 + c * 74.7) * 43758.5453123);
+}
+
+function normalize(v) {
+  const length = Math.hypot(v.x, v.y, v.z) || 1;
+  return { x: v.x / length, y: v.y / length, z: v.z / length };
+}
+
+function subtract(a, b) {
+  return { x: a.x - b.x, y: a.y - b.y, z: a.z - b.z };
+}
+
+function cross(a, b) {
+  return {
+    x: a.y * b.z - a.z * b.y,
+    y: a.z * b.x - a.x * b.z,
+    z: a.x * b.y - a.y * b.x
+  };
+}
+
+function dot(a, b) {
+  return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
+function add(a, b) {
+  return { x: a.x + b.x, y: a.y + b.y, z: a.z + b.z };
+}
+
+function rotateY(p, angle) {
+  const c = Math.cos(angle);
+  const s = Math.sin(angle);
+  return {
+    x: p.x * c + p.z * s,
+    y: p.y,
+    z: -p.x * s + p.z * c
+  };
+}
+
+function rotateX(p, angle) {
+  const c = Math.cos(angle);
+  const s = Math.sin(angle);
+  return {
+    x: p.x,
+    y: p.y * c - p.z * s,
+    z: p.y * s + p.z * c
+  };
+}
+
+function project(p, view) {
+  const depth = view.camera - p.z;
+  const perspective = view.camera / Math.max(0.32, depth);
+
+  return {
+    x: view.cx + p.x * view.scale * perspective,
+    y: view.cy - p.y * view.scale * perspective,
+    z: p.z,
+    perspective
+  };
 }
 
 function sizeCanvas() {
-  if (!state.canvas) return;
-
   const rect = state.canvas.getBoundingClientRect();
-  const cssWidth = Math.max(320, Math.floor(rect.width || state.canvas.clientWidth || 960));
-  const cssHeight = Math.max(360, Math.floor(rect.height || state.canvas.clientHeight || 560));
+  const cssWidth = Math.max(320, Math.round(rect.width));
+  const cssHeight = Math.max(450, Math.round(rect.height));
 
-  state.canvas.width = Math.floor(cssWidth * DPR);
-  state.canvas.height = Math.floor(cssHeight * DPR);
+  state.canvas.width = Math.round(cssWidth * DPR);
+  state.canvas.height = Math.round(cssHeight * DPR);
+  state.canvas.style.width = `${cssWidth}px`;
+  state.canvas.style.height = `${cssHeight}px`;
+
   state.width = state.canvas.width;
   state.height = state.canvas.height;
-  state.ctx = state.canvas.getContext("2d", { alpha: false });
+  state.ctx = state.canvas.getContext("2d", { alpha: false, desynchronized: true });
+
+  createStars(MOBILE ? 48 : 92);
 }
 
-function render() {
-  if (!state.ctx) return;
-
-  const ctx = state.ctx;
-  const w = state.width;
-  const h = state.height;
-
-  drawDisplayBackground(ctx, w, h);
-  drawStageLabel(ctx, w, h);
-  drawCrownCutDiamond(ctx, w, h);
-  drawRouteCue(ctx, w, h);
-
-  document.documentElement.dataset.showroomRenderer = CONTRACT;
-  document.documentElement.dataset.publicCopyClean = "true";
-  document.documentElement.dataset.generatedImage = "false";
-  document.documentElement.dataset.graphicBox = "false";
+function createStars(count) {
+  state.stars = Array.from({ length: count }, (_, index) => ({
+    x: hash(index, 1),
+    y: hash(index, 2),
+    r: 0.45 + hash(index, 3) * 1.7,
+    a: 0.10 + hash(index, 4) * 0.36,
+    p: hash(index, 5) * Math.PI * 2
+  }));
 }
 
-function drawDisplayBackground(ctx, w, h) {
-  const bg = ctx.createRadialGradient(w * 0.5, h * 0.40, 0, w * 0.5, h * 0.48, Math.max(w, h) * 0.72);
-  bg.addColorStop(0, "#12213f");
-  bg.addColorStop(0.42, "#071226");
+function drawBackground(ctx, width, height) {
+  const bg = ctx.createRadialGradient(
+    width * 0.5,
+    height * 0.42,
+    0,
+    width * 0.5,
+    height * 0.52,
+    Math.max(width, height) * 0.82
+  );
+
+  bg.addColorStop(0, "#13264a");
+  bg.addColorStop(0.30, "#091832");
+  bg.addColorStop(0.68, "#041021");
   bg.addColorStop(1, "#01040c");
 
   ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, w, h);
+  ctx.fillRect(0, 0, width, height);
 
-  ctx.save();
+  const halo = ctx.createRadialGradient(
+    width * 0.5,
+    height * 0.48,
+    0,
+    width * 0.5,
+    height * 0.48,
+    width * 0.40
+  );
 
-  const glass = ctx.createLinearGradient(0, 0, w, h);
-  glass.addColorStop(0, "rgba(255,255,255,.055)");
-  glass.addColorStop(0.26, "rgba(255,255,255,0)");
-  glass.addColorStop(0.56, "rgba(142,190,255,.055)");
-  glass.addColorStop(1, "rgba(0,0,0,.16)");
-  ctx.fillStyle = glass;
-  ctx.fillRect(0, 0, w, h);
+  halo.addColorStop(0, "rgba(142,190,255,0.20)");
+  halo.addColorStop(0.38, "rgba(244,191,96,0.065)");
+  halo.addColorStop(1, "rgba(0,0,0,0)");
 
-  ctx.globalCompositeOperation = "lighter";
-
-  const glow = ctx.createRadialGradient(w * 0.50, h * 0.53, 0, w * 0.50, h * 0.53, w * 0.42);
-  glow.addColorStop(0, "rgba(142,190,255,.16)");
-  glow.addColorStop(0.34, "rgba(244,191,96,.08)");
-  glow.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = glow;
+  ctx.fillStyle = halo;
   ctx.beginPath();
-  ctx.ellipse(w * 0.5, h * 0.53, w * 0.40, h * 0.38, 0, 0, Math.PI * 2);
+  ctx.ellipse(width * 0.5, height * 0.50, width * 0.34, height * 0.31, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  drawStars(ctx, w, h);
+  const vignette = ctx.createRadialGradient(
+    width * 0.5,
+    height * 0.5,
+    width * 0.20,
+    width * 0.5,
+    height * 0.5,
+    width * 0.74
+  );
+
+  vignette.addColorStop(0, "rgba(0,0,0,0)");
+  vignette.addColorStop(1, "rgba(0,0,0,0.48)");
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, width, height);
+
+  drawStars(ctx, width, height);
+}
+
+function drawStars(ctx, width, height) {
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  for (const star of state.stars) {
+    const pulse = REDUCED_MOTION ? 0.55 : 0.55 + Math.sin(state.time * 0.001 + star.p) * 0.45;
+    const alpha = star.a * pulse;
+    const x = star.x * width;
+    const y = star.y * height;
+    const radius = star.r * DPR;
+
+    ctx.fillStyle = `rgba(235,242,255,${alpha})`;
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    if (star.r > 1.35) {
+      ctx.strokeStyle = `rgba(255,255,255,${alpha * 0.44})`;
+      ctx.lineWidth = Math.max(0.6, DPR * 0.55);
+      ctx.beginPath();
+      ctx.moveTo(x - 3.2 * DPR, y);
+      ctx.lineTo(x + 3.2 * DPR, y);
+      ctx.moveTo(x, y - 3.2 * DPR);
+      ctx.lineTo(x, y + 3.2 * DPR);
+      ctx.stroke();
+    }
+  }
 
   ctx.restore();
 }
 
-function drawStars(ctx, w, h) {
-  const count = MOBILE ? 34 : 72;
+function buildMesh(view) {
+  const screen = [];
+  const world = [];
 
-  for (let i = 0; i < count; i += 1) {
-    const x = hash(13, i, 1) * w;
-    const y = hash(13, i, 2) * h;
-    const pulse = 0.5 + Math.sin(state.sparkle * 0.85 + i * 0.77) * 0.5;
-    const r = (0.45 + hash(13, i, 3) * 1.45) * DPR;
+  for (let ringIndex = 0; ringIndex < RINGS.length; ringIndex += 1) {
+    screen[ringIndex] = [];
+    world[ringIndex] = [];
 
-    ctx.fillStyle = i % 10 === 0
-      ? `rgba(244,191,96,${0.16 + pulse * 0.28})`
-      : `rgba(226,238,255,${0.13 + pulse * 0.24})`;
+    const ring = RINGS[ringIndex];
 
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.fill();
+    for (let sector = 0; sector < SECTORS; sector += 1) {
+      const angle = ((sector + ring.twist) / SECTORS) * Math.PI * 2;
+
+      const local = {
+        x: Math.cos(angle) * ring.r,
+        y: ring.y,
+        z: Math.sin(angle) * ring.r
+      };
+
+      let moved = rotateY(local, view.yaw);
+      moved = rotateX(moved, view.pitch);
+
+      world[ringIndex][sector] = moved;
+      screen[ringIndex][sector] = project(moved, view);
+    }
   }
+
+  return { screen, world };
 }
 
-function drawStageLabel(ctx, w, h) {
-  const x = w * 0.08;
-  const y = h * 0.080;
-  const labelW = Math.min(w * 0.52, 520 * DPR);
-  const labelH = 62 * DPR;
-  const cut = 23 * DPR;
+function colorForFace(face, light, secondaryLight, viewDir) {
+  const diffuse = clamp(dot(face.normal, light), 0, 1);
+  const secondary = clamp(dot(face.normal, secondaryLight), 0, 1);
+  const halfVector = normalize(add(light, viewDir));
+  const specular = Math.pow(clamp(dot(face.normal, halfVector), 0, 1), 22);
+  const fresnel = Math.pow(1 - clamp(Math.abs(dot(face.normal, viewDir)), 0, 1), 2.4);
+  const rear = clamp((face.depth + 1.15) / 2.3, 0, 1);
 
+  const cool = diffuse * 0.56 + secondary * 0.22 + specular * 0.92 + fresnel * 0.26;
+  const glass = 0.20 + face.band * 0.16 + rear * 0.10;
+
+  const r = Math.round(23 + cool * 186 + specular * 42 + glass * 38);
+  const g = Math.round(39 + cool * 184 + specular * 45 + glass * 36);
+  const b = Math.round(70 + cool * 205 + specular * 50 + glass * 48);
+  const a = clamp(0.20 + diffuse * 0.22 + secondary * 0.10 + specular * 0.24 + fresnel * 0.12 + rear * 0.08, 0.18, 0.84);
+
+  return {
+    fill: `rgba(${r},${g},${b},${a})`,
+    edge: `rgba(242,248,255,${clamp(0.045 + diffuse * 0.13 + specular * 0.22 + fresnel * 0.08, 0.045, 0.34)})`,
+    specular,
+    diffuse,
+    fresnel
+  };
+}
+
+function createFaces(mesh, view) {
+  const faces = [];
+  const yawLight = state.time * 0.00055;
+
+  const light = normalize({
+    x: Math.cos(yawLight) * 0.72,
+    y: 0.76,
+    z: Math.sin(yawLight) * 0.55 + 0.32
+  });
+
+  const secondaryLight = normalize({
+    x: -0.62,
+    y: 0.42,
+    z: 0.68
+  });
+
+  const viewDir = normalize({ x: 0, y: 0, z: 1 });
+
+  for (let ring = 0; ring < RINGS.length - 1; ring += 1) {
+    for (let sector = 0; sector < SECTORS; sector += 1) {
+      const next = (sector + 1) % SECTORS;
+
+      const p00 = mesh.screen[ring][sector];
+      const p01 = mesh.screen[ring][next];
+      const p11 = mesh.screen[ring + 1][next];
+      const p10 = mesh.screen[ring + 1][sector];
+
+      const w00 = mesh.world[ring][sector];
+      const w01 = mesh.world[ring][next];
+      const w10 = mesh.world[ring + 1][sector];
+
+      const e1 = subtract(w01, w00);
+      const e2 = subtract(w10, w00);
+      const normal = normalize(cross(e1, e2));
+
+      const depth =
+        (mesh.world[ring][sector].z +
+          mesh.world[ring][next].z +
+          mesh.world[ring + 1][next].z +
+          mesh.world[ring + 1][sector].z) / 4;
+
+      const face = {
+        points: [p00, p01, p11, p10],
+        normal,
+        depth,
+        band: ring / (RINGS.length - 2),
+        ring,
+        sector
+      };
+
+      faces.push({
+        ...face,
+        ...colorForFace(face, light, secondaryLight, viewDir)
+      });
+    }
+  }
+
+  return faces.sort((a, b) => a.depth - b.depth);
+}
+
+function drawDiamond(ctx, width, height) {
+  const view = {
+    cx: width * 0.50,
+    cy: height * 0.545,
+    scale: Math.min(width * 0.43, height * 0.52),
+    yaw: REDUCED_MOTION ? -0.54 : -0.54 + Math.sin(state.time * 0.00038) * 0.20,
+    pitch: REDUCED_MOTION ? -0.17 : -0.17 + Math.cos(state.time * 0.00027) * 0.018,
+    camera: 4.65
+  };
+
+  const mesh = buildMesh(view);
+  const faces = createFaces(mesh, view);
+
+  drawBaseReflection(ctx, view);
+  drawFaces(ctx, faces);
+  drawLatticeRings(ctx, mesh, view);
+  drawCrownTable(ctx, mesh, view);
+  drawInternalRefraction(ctx, mesh, view);
+  drawSparkles(ctx, mesh, view);
+
+  document.documentElement.dataset.showroomModel = MODEL_NAME;
+  document.documentElement.dataset.faceCount = String(FACE_COUNT);
+}
+
+function drawBaseReflection(ctx, view) {
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  const y = view.cy + view.scale * 0.80;
+  const glow = ctx.createRadialGradient(view.cx, y, 0, view.cx, y, view.scale * 0.48);
+  glow.addColorStop(0, "rgba(255,218,150,0.18)");
+  glow.addColorStop(0.38, "rgba(80,120,180,0.10)");
+  glow.addColorStop(1, "rgba(0,0,0,0)");
+
+  ctx.fillStyle = glow;
+  ctx.beginPath();
+  ctx.ellipse(view.cx, y, view.scale * 0.38, view.scale * 0.095, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function drawFaces(ctx, faces) {
   ctx.save();
 
-  ctx.fillStyle = "rgba(3,8,18,.72)";
-  ctx.strokeStyle = "rgba(244,191,96,.34)";
-  ctx.lineWidth = Math.max(1, DPR);
+  for (const face of faces) {
+    const pts = face.points;
 
-  facetPath(ctx, x, y, labelW, labelH, cut);
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    ctx.lineTo(pts[1].x, pts[1].y);
+    ctx.lineTo(pts[2].x, pts[2].y);
+    ctx.lineTo(pts[3].x, pts[3].y);
+    ctx.closePath();
+
+    const gradient = ctx.createLinearGradient(pts[0].x, pts[0].y, pts[2].x, pts[2].y);
+    gradient.addColorStop(0, face.fill);
+    gradient.addColorStop(0.52, brightenFace(face.fill, face.specular));
+    gradient.addColorStop(1, face.fill);
+
+    ctx.fillStyle = gradient;
+    ctx.fill();
+
+    ctx.strokeStyle = face.edge;
+    ctx.lineWidth = Math.max(0.42, DPR * 0.46);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+function brightenFace(fill, specular) {
+  const alpha = clamp(0.04 + specular * 0.20, 0.04, 0.26);
+  return `rgba(255,255,255,${alpha})`;
+}
+
+function drawLatticeRings(ctx, mesh, view) {
+  const ringIndices = [0, 2, 4, 6, 8, 9, 11, 13, 15, 16];
+
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  for (const ringIndex of ringIndices) {
+    const ring = mesh.screen[ringIndex];
+    const isGirdle = ringIndex === 8 || ringIndex === 9;
+    const isTable = ringIndex === 0;
+
+    ctx.beginPath();
+
+    for (let i = 0; i < ring.length; i += 1) {
+      const p = ring[i];
+      if (i === 0) ctx.moveTo(p.x, p.y);
+      else ctx.lineTo(p.x, p.y);
+    }
+
+    ctx.closePath();
+    ctx.strokeStyle = isGirdle
+      ? "rgba(255,255,255,0.28)"
+      : isTable
+        ? "rgba(255,255,255,0.24)"
+        : "rgba(225,238,255,0.115)";
+
+    ctx.lineWidth = Math.max(0.75, DPR * (isGirdle ? 1.25 : 0.75));
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+function drawCrownTable(ctx, mesh, view) {
+  const ring = mesh.screen[0];
+  const centerWorld = rotateX(rotateY({ x: 0, y: RINGS[0].y + 0.01, z: 0 }, view.yaw), view.pitch);
+  const center = project(centerWorld, view);
+
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  const tableGradient = ctx.createRadialGradient(
+    center.x - view.scale * 0.06,
+    center.y - view.scale * 0.03,
+    0,
+    center.x,
+    center.y,
+    view.scale * 0.32
+  );
+
+  tableGradient.addColorStop(0, "rgba(255,255,255,0.32)");
+  tableGradient.addColorStop(0.45, "rgba(170,205,255,0.12)");
+  tableGradient.addColorStop(1, "rgba(0,0,0,0)");
+
+  ctx.beginPath();
+
+  for (let i = 0; i < ring.length; i += 1) {
+    const p = ring[i];
+    if (i === 0) ctx.moveTo(p.x, p.y);
+    else ctx.lineTo(p.x, p.y);
+  }
+
+  ctx.closePath();
+  ctx.fillStyle = tableGradient;
   ctx.fill();
+
+  ctx.strokeStyle = "rgba(255,255,255,0.30)";
+  ctx.lineWidth = Math.max(1, DPR * 1.1);
   ctx.stroke();
 
-  ctx.fillStyle = "#f4bf60";
-  ctx.font = `950 ${clamp(w * 0.021, 13 * DPR, 24 * DPR)}px Inter, system-ui, sans-serif`;
-  ctx.textAlign = "left";
-  ctx.textBaseline = "middle";
-  ctx.letterSpacing = "0.08em";
-  ctx.fillText("SOLID CROWN CUT · SPARKLING", x + 28 * DPR, y + labelH * 0.53);
-
   ctx.restore();
 }
 
-function drawCrownCutDiamond(ctx, w, h) {
-  const cx = w * 0.50;
-  const cy = h * 0.535;
-  const scale = Math.min(w * 0.82, h * 1.04);
-  const diamondW = scale * (MOBILE ? 0.86 : 0.82);
-  const diamondH = diamondW * 0.47;
-
-  const breathe = REDUCED_MOTION ? 0 : Math.sin(state.phase * 0.55) * 0.012;
-  const tilt = REDUCED_MOTION ? 0 : Math.sin(state.phase * 0.38) * 0.020;
-
-  const topY = cy - diamondH * (0.45 + breathe);
-  const tableY = cy - diamondH * 0.36;
-  const crownY = cy - diamondH * 0.20;
-  const girdleY = cy;
-  const pavilionY = cy + diamondH * 0.48;
-  const culetY = cy + diamondH * 0.66;
-
-  const leftX = cx - diamondW * 0.50;
-  const rightX = cx + diamondW * 0.50;
-  const upperLeftX = cx - diamondW * 0.38;
-  const upperRightX = cx + diamondW * 0.38;
-  const tableLeftX = cx - diamondW * 0.20;
-  const tableRightX = cx + diamondW * 0.20;
-
-  ctx.save();
-
-  ctx.translate(cx, cy);
-  ctx.transform(1, tilt, -tilt * 0.25, 1, 0, 0);
-  ctx.translate(-cx, -cy);
-
-  drawDiamondShadow(ctx, cx, culetY + diamondH * 0.11, diamondW, diamondH);
-
-  const polygon = [
-    [tableLeftX, tableY],
-    [tableRightX, tableY],
-    [upperRightX, topY + diamondH * 0.20],
-    [rightX, girdleY],
-    [cx, culetY],
-    [leftX, girdleY],
-    [upperLeftX, topY + diamondH * 0.20]
+function drawInternalRefraction(ctx, mesh, view) {
+  const paths = [
+    [mesh.screen[0][1], mesh.screen[6][4], mesh.screen[15][8]],
+    [mesh.screen[1][13], mesh.screen[7][15], mesh.screen[14][2]],
+    [mesh.screen[0][6], mesh.screen[8][6], mesh.screen[16][6]],
+    [mesh.screen[3][10], mesh.screen[9][12], mesh.screen[15][13]]
   ];
 
   ctx.save();
-  ctx.beginPath();
-  polygon.forEach(([x, y], index) => {
-    if (index === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  });
-  ctx.closePath();
-  ctx.clip();
-
-  drawDiamondBody(ctx, w, h, cx, cy, diamondW, diamondH, leftX, rightX, topY, girdleY, culetY);
-  drawFacetBands(ctx, cx, diamondW, diamondH, topY, tableY, crownY, girdleY, pavilionY, culetY);
-  drawCrownFacets(ctx, cx, diamondW, tableLeftX, tableRightX, upperLeftX, upperRightX, leftX, rightX, tableY, topY, crownY, girdleY);
-  drawPavilionFacets(ctx, cx, diamondW, leftX, rightX, girdleY, pavilionY, culetY);
-  drawInternalPrisms(ctx, cx, cy, diamondW, diamondH, leftX, rightX, topY, culetY);
-
-  ctx.restore();
-
-  drawDiamondOutline(ctx, polygon, tableLeftX, tableRightX, upperLeftX, upperRightX, leftX, rightX, cx, topY, tableY, crownY, girdleY, pavilionY, culetY);
-  drawSparkles(ctx, cx, cy, diamondW, diamondH, topY, girdleY, culetY);
-
-  ctx.restore();
-}
-
-function drawDiamondShadow(ctx, cx, y, diamondW, diamondH) {
-  ctx.save();
-  ctx.fillStyle = "rgba(0,0,0,.46)";
-  ctx.filter = `blur(${Math.max(12, diamondW * 0.035)}px)`;
-  ctx.beginPath();
-  ctx.ellipse(cx, y, diamondW * 0.20, diamondH * 0.055, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  const glow = ctx.createRadialGradient(cx, y, 0, cx, y, diamondW * 0.20);
-  glow.addColorStop(0, "rgba(244,191,96,.20)");
-  glow.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.filter = "none";
-  ctx.globalCompositeOperation = "lighter";
-  ctx.fillStyle = glow;
-  ctx.beginPath();
-  ctx.ellipse(cx, y, diamondW * 0.22, diamondH * 0.06, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-}
-
-function drawDiamondBody(ctx, w, h, cx, cy, diamondW, diamondH, leftX, rightX, topY, girdleY, culetY) {
-  const body = ctx.createLinearGradient(leftX, topY, rightX, culetY);
-  body.addColorStop(0, "rgba(255,255,255,.38)");
-  body.addColorStop(0.11, "rgba(189,207,235,.28)");
-  body.addColorStop(0.32, "rgba(77,94,137,.58)");
-  body.addColorStop(0.52, "rgba(24,40,82,.74)");
-  body.addColorStop(0.76, "rgba(88,112,158,.34)");
-  body.addColorStop(1, "rgba(8,15,34,.88)");
-
-  ctx.fillStyle = body;
-  ctx.fillRect(leftX - 8, topY - 8, diamondW + 16, diamondH * 1.30);
-
-  const topFlash = ctx.createRadialGradient(cx - diamondW * 0.26, topY + diamondH * 0.12, 0, cx - diamondW * 0.16, topY + diamondH * 0.22, diamondW * 0.46);
-  topFlash.addColorStop(0, "rgba(255,255,255,.30)");
-  topFlash.addColorStop(0.28, "rgba(142,190,255,.16)");
-  topFlash.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = topFlash;
-  ctx.fillRect(leftX, topY, diamondW, diamondH);
-
-  const deep = ctx.createRadialGradient(cx + diamondW * 0.14, girdleY + diamondH * 0.12, 0, cx + diamondW * 0.10, girdleY + diamondH * 0.16, diamondW * 0.48);
-  deep.addColorStop(0, "rgba(1,5,15,.40)");
-  deep.addColorStop(0.46, "rgba(3,8,26,.22)");
-  deep.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = deep;
-  ctx.fillRect(leftX, topY, diamondW, diamondH * 1.2);
-}
-
-function drawFacetBands(ctx, cx, diamondW, diamondH, topY, tableY, crownY, girdleY, pavilionY, culetY) {
-  const bands = [
-    { y: tableY, spread: 0.22, alpha: 0.46, width: 2.3 },
-    { y: crownY, spread: 0.42, alpha: 0.34, width: 2.0 },
-    { y: girdleY, spread: 0.50, alpha: 0.62, width: 2.7 },
-    { y: pavilionY, spread: 0.25, alpha: 0.24, width: 1.7 }
-  ];
-
-  ctx.save();
-  ctx.globalCompositeOperation = "lighter";
-
-  bands.forEach((band) => {
-    const gradient = ctx.createLinearGradient(cx - diamondW * band.spread, band.y, cx + diamondW * band.spread, band.y);
-    gradient.addColorStop(0, `rgba(255,255,255,0)`);
-    gradient.addColorStop(0.18, `rgba(142,190,255,${band.alpha * 0.40})`);
-    gradient.addColorStop(0.50, `rgba(255,255,255,${band.alpha})`);
-    gradient.addColorStop(0.82, `rgba(142,190,255,${band.alpha * 0.40})`);
-    gradient.addColorStop(1, `rgba(255,255,255,0)`);
-
-    ctx.strokeStyle = gradient;
-    ctx.lineWidth = Math.max(1, band.width * DPR);
-    ctx.beginPath();
-    ctx.moveTo(cx - diamondW * band.spread, band.y);
-    ctx.lineTo(cx + diamondW * band.spread, band.y);
-    ctx.stroke();
-  });
-
-  ctx.restore();
-}
-
-function drawCrownFacets(ctx, cx, diamondW, tableLeftX, tableRightX, upperLeftX, upperRightX, leftX, rightX, tableY, topY, crownY, girdleY) {
-  const ribs = 18;
-
-  ctx.save();
-
-  for (let i = 0; i <= ribs; i += 1) {
-    const t = i / ribs;
-    const xTop = tableLeftX + (tableRightX - tableLeftX) * t;
-    const xBottom = leftX + (rightX - leftX) * t;
-    const alpha = 0.05 + Math.abs(0.5 - t) * 0.12;
-
-    ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
-    ctx.lineWidth = Math.max(0.55, DPR * 0.62);
-    ctx.beginPath();
-    ctx.moveTo(xTop, tableY);
-    ctx.lineTo(xBottom, girdleY);
-    ctx.stroke();
-  }
-
-  const groups = [
-    [tableLeftX, tableY, upperLeftX, topY + (crownY - topY) * 0.34, leftX, girdleY, "rgba(255,255,255,.08)"],
-    [tableRightX, tableY, upperRightX, topY + (crownY - topY) * 0.34, rightX, girdleY, "rgba(255,255,255,.06)"],
-    [tableLeftX, tableY, cx, crownY, tableRightX, tableY, "rgba(255,255,255,.11)"],
-    [leftX, girdleY, cx, crownY, rightX, girdleY, "rgba(142,190,255,.08)"]
-  ];
-
-  groups.forEach(([ax, ay, bx, by, cx2, cy2, color]) => {
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.moveTo(ax, ay);
-    ctx.lineTo(bx, by);
-    ctx.lineTo(cx2, cy2);
-    ctx.closePath();
-    ctx.fill();
-  });
-
-  ctx.restore();
-}
-
-function drawPavilionFacets(ctx, cx, diamondW, leftX, rightX, girdleY, pavilionY, culetY) {
-  const ribs = 24;
-
-  ctx.save();
-
-  for (let i = 0; i <= ribs; i += 1) {
-    const t = i / ribs;
-    const x = leftX + (rightX - leftX) * t;
-    const alpha = 0.05 + Math.abs(0.5 - t) * 0.10;
-
-    ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
-    ctx.lineWidth = Math.max(0.55, DPR * 0.58);
-    ctx.beginPath();
-    ctx.moveTo(x, girdleY);
-    ctx.lineTo(cx, culetY);
-    ctx.stroke();
-  }
-
-  for (let i = 0; i < 9; i += 1) {
-    const t0 = i / 9;
-    const t1 = (i + 1) / 9;
-    const x0 = leftX + diamondW * t0;
-    const x1 = leftX + diamondW * t1;
-    const mid = (t0 + t1) * 0.5;
-    const alpha = 0.035 + (1 - Math.abs(0.5 - mid) * 2) * 0.08;
-
-    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
-    ctx.beginPath();
-    ctx.moveTo(x0, girdleY);
-    ctx.lineTo(x1, girdleY);
-    ctx.lineTo(cx, culetY);
-    ctx.closePath();
-    ctx.fill();
-  }
-
-  ctx.restore();
-}
-
-function drawInternalPrisms(ctx, cx, cy, diamondW, diamondH, leftX, rightX, topY, culetY) {
-  ctx.save();
-  ctx.globalCompositeOperation = "lighter";
+  ctx.globalCompositeOperation = "screen";
   ctx.lineCap = "round";
 
-  const flashes = [
-    { x0: leftX + diamondW * 0.10, y0: topY + diamondH * 0.24, x1: cx - diamondW * 0.03, y1: culetY - diamondH * 0.02, a: 0.18, w: 4.0 },
-    { x0: cx - diamondW * 0.27, y0: topY + diamondH * 0.05, x1: cx + diamondW * 0.10, y1: culetY - diamondH * 0.18, a: 0.15, w: 3.0 },
-    { x0: cx + diamondW * 0.24, y0: topY + diamondH * 0.16, x1: cx + diamondW * 0.18, y1: culetY - diamondH * 0.10, a: 0.17, w: 3.4 },
-    { x0: cx - diamondW * 0.04, y0: topY + diamondH * 0.02, x1: cx - diamondW * 0.04, y1: culetY - diamondH * 0.08, a: 0.12, w: 2.4 }
-  ];
+  for (let i = 0; i < paths.length; i += 1) {
+    const points = paths[i];
+    const pulse = REDUCED_MOTION ? 0.55 : 0.48 + Math.sin(state.time * 0.00135 + i * 1.37) * 0.32;
 
-  flashes.forEach((flash, index) => {
-    const pulse = 0.65 + Math.sin(state.sparkle * 1.6 + index * 1.2) * 0.35;
-    const gradient = ctx.createLinearGradient(flash.x0, flash.y0, flash.x1, flash.y1);
+    const gradient = ctx.createLinearGradient(points[0].x, points[0].y, points[2].x, points[2].y);
     gradient.addColorStop(0, "rgba(255,255,255,0)");
-    gradient.addColorStop(0.42, `rgba(255,255,255,${flash.a * pulse})`);
-    gradient.addColorStop(0.52, `rgba(244,191,96,${flash.a * 0.50 * pulse})`);
+    gradient.addColorStop(0.30, `rgba(255,255,255,${0.14 * pulse})`);
+    gradient.addColorStop(0.55, `rgba(244,191,96,${0.10 * pulse})`);
     gradient.addColorStop(1, "rgba(255,255,255,0)");
 
     ctx.strokeStyle = gradient;
-    ctx.lineWidth = Math.max(1, flash.w * DPR);
+    ctx.lineWidth = Math.max(1.2, DPR * (i === 2 ? 1.45 : 2.4));
+
     ctx.beginPath();
-    ctx.moveTo(flash.x0, flash.y0);
-    ctx.lineTo(flash.x1, flash.y1);
+    ctx.moveTo(points[0].x, points[0].y);
+    ctx.lineTo(points[1].x, points[1].y);
+    ctx.lineTo(points[2].x, points[2].y);
     ctx.stroke();
-  });
+  }
 
   ctx.restore();
 }
 
-function drawDiamondOutline(ctx, polygon, tableLeftX, tableRightX, upperLeftX, upperRightX, leftX, rightX, cx, topY, tableY, crownY, girdleY, pavilionY, culetY) {
-  ctx.save();
-  ctx.globalCompositeOperation = "lighter";
-
-  ctx.strokeStyle = "rgba(255,255,255,.36)";
-  ctx.lineWidth = Math.max(1.1, DPR * 1.2);
-
-  ctx.beginPath();
-  polygon.forEach(([x, y], index) => {
-    if (index === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  });
-  ctx.closePath();
-  ctx.stroke();
-
-  ctx.strokeStyle = "rgba(244,191,96,.20)";
-  ctx.lineWidth = Math.max(0.8, DPR);
-  ctx.beginPath();
-  ctx.moveTo(leftX, girdleY);
-  ctx.lineTo(rightX, girdleY);
-  ctx.moveTo(tableLeftX, tableY);
-  ctx.lineTo(tableRightX, tableY);
-  ctx.moveTo(cx, tableY);
-  ctx.lineTo(cx, culetY);
-  ctx.stroke();
-
-  ctx.restore();
-}
-
-function drawSparkles(ctx, cx, cy, diamondW, diamondH, topY, girdleY, culetY) {
-  const points = [
-    { x: cx + diamondW * 0.20, y: topY + diamondH * 0.23, s: 1.10, phase: 0.2 },
-    { x: cx - diamondW * 0.26, y: girdleY - diamondH * 0.10, s: 0.72, phase: 1.4 },
-    { x: cx + diamondW * 0.02, y: culetY - diamondH * 0.14, s: 0.88, phase: 2.2 },
-    { x: cx - diamondW * 0.03, y: topY + diamondH * 0.02, s: 0.60, phase: 3.1 },
-    { x: cx + diamondW * 0.33, y: girdleY + diamondH * 0.01, s: 0.54, phase: 3.8 }
+function drawSparkles(ctx, mesh, view) {
+  const sparklePoints = [
+    mesh.screen[0][0],
+    mesh.screen[1][4],
+    mesh.screen[4][2],
+    mesh.screen[5][13],
+    mesh.screen[8][7],
+    mesh.screen[9][11],
+    mesh.screen[11][4],
+    mesh.screen[13][9],
+    mesh.screen[15][5],
+    project(rotateX(rotateY({ x: 1.05, y: 0.18, z: 0.08 }, view.yaw), view.pitch), view),
+    project(rotateX(rotateY({ x: -0.96, y: 0.10, z: 0.18 }, view.yaw), view.pitch), view)
   ];
 
   ctx.save();
-  ctx.globalCompositeOperation = "lighter";
+  ctx.globalCompositeOperation = "screen";
+  ctx.lineCap = "round";
 
-  points.forEach((point) => {
-    const pulse = REDUCED_MOTION ? 0.55 : 0.30 + Math.max(0, Math.sin(state.sparkle * 1.35 + point.phase)) * 0.70;
-    const len = diamondW * 0.030 * point.s * pulse;
+  for (let i = 0; i < sparklePoints.length; i += 1) {
+    const p = sparklePoints[i];
+    const pulse = REDUCED_MOTION
+      ? (i % 2 === 0 ? 0.60 : 0.36)
+      : Math.max(0.14, 0.46 + Math.sin(state.time * 0.0018 + i * 0.91) * 0.54);
 
-    ctx.strokeStyle = `rgba(255,255,255,${0.28 + pulse * 0.52})`;
-    ctx.lineWidth = Math.max(0.9, DPR * 1.0);
-    ctx.lineCap = "round";
+    const size = (3.8 + (i % 4) * 1.6) * DPR * pulse;
+
+    ctx.strokeStyle = `rgba(255,255,255,${0.25 + pulse * 0.58})`;
+    ctx.lineWidth = Math.max(0.85, DPR * 0.95);
 
     ctx.beginPath();
-    ctx.moveTo(point.x - len, point.y);
-    ctx.lineTo(point.x + len, point.y);
-    ctx.moveTo(point.x, point.y - len);
-    ctx.lineTo(point.x, point.y + len);
+    ctx.moveTo(p.x - size, p.y);
+    ctx.lineTo(p.x + size, p.y);
+    ctx.moveTo(p.x, p.y - size);
+    ctx.lineTo(p.x, p.y + size);
     ctx.stroke();
 
-    ctx.strokeStyle = `rgba(244,191,96,${0.12 + pulse * 0.22})`;
+    ctx.strokeStyle = `rgba(244,191,96,${0.10 + pulse * 0.18})`;
     ctx.beginPath();
-    ctx.moveTo(point.x - len * 0.62, point.y - len * 0.62);
-    ctx.lineTo(point.x + len * 0.62, point.y + len * 0.62);
-    ctx.moveTo(point.x + len * 0.62, point.y - len * 0.62);
-    ctx.lineTo(point.x - len * 0.62, point.y + len * 0.62);
+    ctx.moveTo(p.x - size * 0.62, p.y - size * 0.62);
+    ctx.lineTo(p.x + size * 0.62, p.y + size * 0.62);
+    ctx.moveTo(p.x + size * 0.62, p.y - size * 0.62);
+    ctx.lineTo(p.x - size * 0.62, p.y + size * 0.62);
     ctx.stroke();
-  });
+  }
 
   ctx.restore();
 }
 
-function drawRouteCue(ctx, w, h) {
+function drawBottomCue(ctx, width, height) {
   ctx.save();
-
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillStyle = "rgba(186,194,207,.66)";
-  ctx.font = `850 ${clamp(w * 0.021, 13 * DPR, 22 * DPR)}px Inter, system-ui, sans-serif`;
-  ctx.fillText("Cover → Globe Showcase → Private Inspection.", w * 0.5, h * 0.925);
-
+  ctx.fillStyle = "rgba(186,197,212,0.60)";
+  ctx.font = `800 ${Math.max(12 * DPR, width * 0.015)}px Inter, system-ui, sans-serif`;
+  ctx.fillText("Cover → Globe Showcase → Private Inspection", width * 0.5, height * 0.94);
   ctx.restore();
 }
 
-function facetPath(ctx, x, y, w, h, cut) {
-  ctx.beginPath();
-  ctx.moveTo(x + cut, y);
-  ctx.lineTo(x + w - cut, y);
-  ctx.lineTo(x + w, y + cut);
-  ctx.lineTo(x + w, y + h - cut);
-  ctx.lineTo(x + w - cut, y + h);
-  ctx.lineTo(x + cut, y + h);
-  ctx.lineTo(x, y + h - cut);
-  ctx.lineTo(x, y + cut);
-  ctx.closePath();
+function render() {
+  const ctx = state.ctx;
+  if (!ctx) return;
+
+  const { width, height } = state;
+
+  drawBackground(ctx, width, height);
+  drawDiamond(ctx, width, height);
+  drawBottomCue(ctx, width, height);
+}
+
+function frame(now) {
+  if (!state.active || !state.visible) {
+    state.raf = 0;
+    return;
+  }
+
+  if (!state.lastFrame || now - state.lastFrame >= FRAME_MS) {
+    state.lastFrame = now;
+    state.time = now;
+    render();
+  }
+
+  state.raf = window.requestAnimationFrame(frame);
+}
+
+function startLoop() {
+  if (state.raf) return;
+  state.raf = window.requestAnimationFrame(frame);
+}
+
+function stopLoop() {
+  if (!state.raf) return;
+  window.cancelAnimationFrame(state.raf);
+  state.raf = 0;
 }
 
 function installVisibility() {
@@ -501,67 +632,32 @@ function installVisibility() {
     else stopLoop();
   }, { passive: true });
 
-  if ("IntersectionObserver" in window && state.mount) {
+  if ("IntersectionObserver" in window && state.canvas) {
     const observer = new IntersectionObserver((entries) => {
       state.visible = entries[0]?.isIntersecting !== false;
       if (state.visible) startLoop();
       else stopLoop();
     }, { threshold: 0.05 });
 
-    observer.observe(state.mount);
+    observer.observe(state.canvas);
   }
 }
 
 function installResize() {
+  let timer = 0;
+
   window.addEventListener("resize", () => {
-    window.clearTimeout(window.__showroomDiamondResizeTimer);
-    window.__showroomDiamondResizeTimer = window.setTimeout(() => {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => {
       sizeCanvas();
       render();
-    }, 140);
+    }, 120);
   }, { passive: true });
 }
 
-function frame(time = 0) {
-  if (!state.active || !state.visible) {
-    state.raf = 0;
-    return;
-  }
-
-  if (time - state.lastFrame >= FRAME_MS) {
-    state.lastFrame = time;
-
-    if (!REDUCED_MOTION) {
-      state.phase += MOBILE ? 0.010 : 0.014;
-      state.sparkle += MOBILE ? 0.030 : 0.045;
-    }
-
-    render();
-  }
-
-  state.raf = window.requestAnimationFrame(frame);
-}
-
-function startLoop() {
-  if (state.raf || !state.active || !state.visible) return;
-  state.lastFrame = 0;
-  state.raf = window.requestAnimationFrame(frame);
-}
-
-function stopLoop() {
-  if (state.raf) {
-    window.cancelAnimationFrame(state.raf);
-    state.raf = 0;
-  }
-}
-
 function boot() {
-  state.canvas = byId("showroomDiamondCanvas");
-  state.mount = byId("showroomDiamondMount");
-
-  if (!state.canvas || !state.mount) return;
-
-  state.mount.classList.add("diamond-loaded");
+  state.canvas = $("showroomDiamondCanvas");
+  if (!state.canvas) return;
 
   sizeCanvas();
   installVisibility();
@@ -570,14 +666,18 @@ function boot() {
   startLoop();
 
   window.DGBShowroomDiamond = {
-    contract: CONTRACT,
+    model: MODEL_NAME,
+    faceCount: FACE_COUNT,
+    fixedStructure: true,
+    generatedImage: false,
+    graphicBox: false,
     status() {
       return {
-        contract: CONTRACT,
-        generatedImage: false,
-        graphicBox: false,
-        publicCopyClean: true,
-        canvas: true
+        model: MODEL_NAME,
+        faceCount: FACE_COUNT,
+        rings: RINGS.length,
+        sectors: SECTORS,
+        fixedStructure: true
       };
     }
   };
@@ -590,5 +690,6 @@ if (document.readyState === "loading") {
 }
 
 export default {
-  contract: CONTRACT
+  model: MODEL_NAME,
+  faceCount: FACE_COUNT
 };

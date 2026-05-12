@@ -1,24 +1,11 @@
 // /showroom/globe/index.js
-// SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_FIBONACCI_RUNTIME_TNT_v3
+// SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_FIBONACCI_RUNTIME_TNT_v3A
 // Full-file replacement.
-//
-// Purpose:
-// - Preserve /showroom/globe/ as the self-contained inspection-heavy display case.
-// - Keep inspectable planet, drag / rotate / zoom, and private route handoff.
-// - Keep the 256 nodal construct under the hood.
-// - Bind Fibonacci sequence into runtime geometry without drawing a visible zigzag.
-// - Reduce visible dot/node overlay.
-// - Increase landmass definition, coastline shaping, ocean depth, terrain contrast,
-//   and cloud/atmosphere softness.
-// - Keep diagnostics backstage.
-// - Do not import H-Earth canvas.
-// - Do not mutate parent truth.
-// - Do not use image generation.
-// - Do not use GraphicBox.
-// - Do not claim visual pass.
+// TNT-only repair for v3 parse failure.
+// Removes the invalid dead loop that prevented all canvases from rendering.
 
-const CONTRACT = "SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_FIBONACCI_RUNTIME_TNT_v3";
-const PREVIOUS_CONTRACT = "SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_SURFACE_REFINEMENT_TNT_v2";
+const CONTRACT = "SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_FIBONACCI_RUNTIME_TNT_v3A";
+const PREVIOUS_CONTRACT = "SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_FIBONACCI_RUNTIME_TNT_v3";
 const HTML_EXPECTED = "SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_INSPECTION_DISPLAY_HTML_TNT_v1";
 
 const SHOWROOM_MODE = "showcase-bookcase-display-case";
@@ -119,14 +106,12 @@ const state = {
   pitch: 8,
   zoom: 1,
   previewYaw: 0,
-
   dragging: false,
   pointerId: null,
   dragStartX: 0,
   dragStartY: 0,
   dragStartYaw: 0,
   dragStartPitch: 0,
-
   raf: 0,
   active: true,
   dpr: Math.min(window.devicePixelRatio || 1, 1.6),
@@ -163,16 +148,16 @@ function hashUnit(index, salt = 0) {
 }
 
 function fibonacciForCell(index) {
-  const fib = FIBONACCI_SEQUENCE[index % FIBONACCI_SEQUENCE.length];
+  const value = FIBONACCI_SEQUENCE[index % FIBONACCI_SEQUENCE.length];
   const next = FIBONACCI_SEQUENCE[(index + 1) % FIBONACCI_SEQUENCE.length];
 
   return {
-    value: fib,
+    value,
     next,
-    ratio: fib / next,
-    phase: ((fib % GRID) / GRID) * Math.PI * 2,
+    ratio: value / next,
+    phase: ((value % GRID) / GRID) * Math.PI * 2,
     drift: ((next % GRID) / GRID) * Math.PI * 2,
-    density: clamp(fib / 233, 0.004, 1)
+    density: clamp(value / 233, 0.004, 1)
   };
 }
 
@@ -196,7 +181,6 @@ function setupCanvas(canvas, fallbackSize = 720) {
   const rect = canvas.getBoundingClientRect();
   const cssWidth = Math.max(180, Math.floor(rect.width || canvas.clientWidth || fallbackSize));
   const cssHeight = Math.max(180, Math.floor(rect.height || canvas.clientHeight || cssWidth));
-
   const width = Math.floor(cssWidth * state.dpr);
   const height = Math.floor(cssHeight * state.dpr);
 
@@ -212,10 +196,10 @@ function setupCanvas(canvas, fallbackSize = 720) {
 }
 
 function ensureStyle() {
-  if (document.getElementById("showroom-globe-fibonacci-runtime-style-v3")) return;
+  if (document.getElementById("showroom-globe-fibonacci-runtime-style-v3a")) return;
 
   const style = document.createElement("style");
-  style.id = "showroom-globe-fibonacci-runtime-style-v3";
+  style.id = "showroom-globe-fibonacci-runtime-style-v3a";
   style.textContent = `
     html[data-globe-showcase-fibonacci-runtime="true"] {
       --display-case-glow: rgba(143, 240, 195, 0.22);
@@ -262,7 +246,6 @@ function collectNodes() {
   }
 
   nodes.displayContext = setupCanvas(nodes.displayCanvas, 880);
-
   nodes.displayTitle = byId("displayTitle");
   nodes.displayCopy = byId("displayCopy");
   nodes.displayMeta = byId("displayMeta");
@@ -272,7 +255,6 @@ function collectNodes() {
   document.querySelectorAll("[data-world-card]").forEach((card) => {
     const key = card.getAttribute("data-world-card");
     if (!key) return;
-
     card.style.transform = "none";
     nodes.cards.set(key, card);
   });
@@ -281,7 +263,6 @@ function collectNodes() {
   document.querySelectorAll("[data-preview-canvas]").forEach((canvas) => {
     const key = canvas.getAttribute("data-preview-canvas");
     if (!key) return;
-
     nodes.previews.set(key, {
       canvas,
       context: setupCanvas(canvas, 220)
@@ -292,7 +273,6 @@ function collectNodes() {
 function cellKind(world, index, row, col, latitude, longitude) {
   const fib = fibonacciForCell(index);
   const ring = fibonacciRingOffset(row, col, world);
-
   const latWave = Math.sin((latitude / 90) * Math.PI);
   const lonWaveA = Math.sin(((longitude + world.seed * 0.31) / 180) * Math.PI * 2.0 + fib.phase * 0.31);
   const lonWaveB = Math.cos(((longitude - world.seed * 0.17) / 180) * Math.PI * 3.0 + fib.drift * 0.22);
@@ -324,10 +304,7 @@ function cellKind(world, index, row, col, latitude, longitude) {
     return noise > 0.38 ? "coast" : "shelf";
   }
 
-  if (landSignal > world.landBias - 0.05) {
-    return "shelf";
-  }
-
+  if (landSignal > world.landBias - 0.05) return "shelf";
   if (noise < 0.18 + fib.density * 0.04) return "deep-ocean";
 
   return "ocean";
@@ -341,8 +318,8 @@ function buildWorldCells(world) {
     const col = index % GRID;
     const latitude = 90 - ((row + 0.5) / GRID) * 180;
     const longitude = -180 + ((col + 0.5) / GRID) * 360;
-    const fib = fibonacciForCell(index);
-    const ring = fibonacciRingOffset(row, col, world);
+    const fibonacci = fibonacciForCell(index);
+    const fibonacciRing = fibonacciRingOffset(row, col, world);
     const kind = cellKind(world, index, row, col, latitude, longitude);
     const noiseA = hashUnit(index, world.seed + 61);
     const noiseB = hashUnit(index, world.seed + 97);
@@ -351,24 +328,24 @@ function buildWorldCells(world) {
     let depth = 0;
 
     if (kind === "deep-ocean") {
-      depth = 2600 + noiseA * 3400 + fib.density * 400;
+      depth = 2600 + noiseA * 3400 + fibonacci.density * 400;
       elevation = -depth;
     } else if (kind === "ocean") {
-      depth = 650 + noiseA * 2100 + fib.ratio * 280;
+      depth = 650 + noiseA * 2100 + fibonacci.ratio * 280;
       elevation = -depth;
     } else if (kind === "shelf") {
       depth = 25 + noiseA * 150;
       elevation = -depth;
     } else if (kind === "coast") {
-      elevation = 2 + noiseA * 58 + ring.harmonic * 6;
+      elevation = 2 + noiseA * 58 + fibonacciRing.harmonic * 6;
     } else if (kind === "relief") {
-      elevation = 900 + noiseA * 3600 + fib.density * 480;
+      elevation = 900 + noiseA * 3600 + fibonacci.density * 480;
     } else if (kind === "ice") {
-      elevation = 1200 + noiseA * 3200 + fib.ratio * 320;
+      elevation = 1200 + noiseA * 3200 + fibonacci.ratio * 320;
     } else if (kind === "forest") {
-      elevation = 40 + noiseA * 680 + ring.fold * 40;
+      elevation = 40 + noiseA * 680 + fibonacciRing.fold * 40;
     } else {
-      elevation = 20 + noiseA * 520 + fib.density * 80;
+      elevation = 20 + noiseA * 520 + fibonacci.density * 80;
     }
 
     cells.push({
@@ -382,8 +359,8 @@ function buildWorldCells(world) {
       depth,
       noiseA,
       noiseB,
-      fibonacci: fib,
-      fibonacciRing: ring
+      fibonacci,
+      fibonacciRing
     });
   }
 
@@ -406,7 +383,6 @@ function rgb(value) {
 function shade(hex, light, lift = 0, darken = 0) {
   const base = hexToRgb(hex);
   const adjusted = clamp(light + lift - darken, 0.12, 1.45);
-
   return rgb({
     r: base.r * adjusted + 8 * (1 - adjusted),
     g: base.g * adjusted + 9 * (1 - adjusted),
@@ -426,15 +402,7 @@ function colorForCell(world, cell) {
 }
 
 function clearScene(context, width, height, world) {
-  const gradient = context.createRadialGradient(
-    width * 0.5,
-    height * 0.44,
-    width * 0.04,
-    width * 0.5,
-    height * 0.5,
-    width * 0.78
-  );
-
+  const gradient = context.createRadialGradient(width * 0.5, height * 0.44, width * 0.04, width * 0.5, height * 0.5, width * 0.78);
   gradient.addColorStop(0, world.glow);
   gradient.addColorStop(0.42, "#07152b");
   gradient.addColorStop(1, "#01030a");
@@ -449,7 +417,6 @@ function clearScene(context, width, height, world) {
     const x = (Math.sin(i * 91.17) * 0.5 + 0.5) * width;
     const y = (Math.cos(i * 49.61) * 0.5 + 0.5) * height;
     const radius = 0.55 + ((i * 7) % 11) / 18;
-
     context.beginPath();
     context.fillStyle = i % 13 === 0 ? "rgba(246,211,123,.52)" : "rgba(225,238,255,.44)";
     context.arc(x, y, radius, 0, Math.PI * 2);
@@ -486,20 +453,11 @@ function drawGlobeBase(context, world, radius, centerX, centerY, zoom) {
   const r = radius * zoom;
 
   context.save();
-
   context.beginPath();
   context.arc(centerX, centerY, r, 0, Math.PI * 2);
   context.clip();
 
-  const ocean = context.createRadialGradient(
-    centerX - r * 0.34,
-    centerY - r * 0.34,
-    r * 0.08,
-    centerX,
-    centerY,
-    r * 1.16
-  );
-
+  const ocean = context.createRadialGradient(centerX - r * 0.34, centerY - r * 0.34, r * 0.08, centerX, centerY, r * 1.16);
   ocean.addColorStop(0, shade(world.oceanLight, 1.34));
   ocean.addColorStop(0.32, world.oceanBase);
   ocean.addColorStop(0.70, shade(world.oceanDeep, 0.70));
@@ -507,11 +465,9 @@ function drawGlobeBase(context, world, radius, centerX, centerY, zoom) {
 
   context.fillStyle = ocean;
   context.fillRect(centerX - r * 1.2, centerY - r * 1.2, r * 2.4, r * 2.4);
-
   context.restore();
 
   context.save();
-
   context.beginPath();
   context.arc(centerX, centerY, r, 0, Math.PI * 2);
   context.strokeStyle = "rgba(183,222,240,.28)";
@@ -523,13 +479,11 @@ function drawGlobeBase(context, world, radius, centerX, centerY, zoom) {
   context.strokeStyle = world.glow;
   context.lineWidth = Math.max(9, radius * 0.034);
   context.stroke();
-
   context.restore();
 }
 
 function drawSoftBlob(context, x, y, rx, ry, rotation, fillStyle, alpha, wobbleSeed) {
   const points = 10;
-
   context.save();
   context.globalAlpha = alpha;
   context.fillStyle = fillStyle;
@@ -542,7 +496,6 @@ function drawSoftBlob(context, x, y, rx, ry, rotation, fillStyle, alpha, wobbleS
     const localY = Math.sin(t) * ry * wobble;
     const px = x + localX * Math.cos(rotation) - localY * Math.sin(rotation);
     const py = y + localX * Math.sin(rotation) + localY * Math.cos(rotation);
-
     if (i === 0) context.moveTo(px, py);
     else context.lineTo(px, py);
   }
@@ -565,7 +518,6 @@ function drawOceanDepth(context, projected, radius) {
 
     context.globalAlpha = cell.kind === "shelf" ? 0.08 : 0.12 + depthRatio * 0.18;
     context.fillStyle = cell.kind === "deep-ocean" ? "rgba(0,5,20,0.88)" : "rgba(2,18,45,0.62)";
-
     context.beginPath();
     context.ellipse(point.x, point.y, size * 1.45, size * 0.82, cell.noiseA * Math.PI, 0, Math.PI * 2);
     context.fill();
@@ -575,49 +527,19 @@ function drawOceanDepth(context, projected, radius) {
   context.restore();
 }
 
-function drawSurfaceMasses(context, projected, radius, zoom) {
+function drawSurfaceLayer(context, world, projected, radius, zoom, centerX, centerY) {
   context.save();
-
   context.beginPath();
-  const centerX = context.canvas.width * 0.5;
-  const centerY = context.canvas.height * 0.52;
   context.arc(centerX, centerY, radius * zoom * 0.998, 0, Math.PI * 2);
   context.clip();
 
   drawOceanDepth(context, projected, radius);
-
-  context.filter = "blur(0.6px)";
-
-  let painted = 0;
-
-  for (const { cell, point, world }) {
-    void world;
-  }
-
-  context.filter = "none";
-  context.restore();
-
-  return painted;
-}
-
-function drawSurfaceLayer(context, world, projected, radius, zoom) {
-  context.save();
-
-  context.beginPath();
-  const centerX = context.canvas.width * 0.5;
-  const centerY = context.canvas.height * 0.52;
-  context.arc(centerX, centerY, radius * zoom * 0.998, 0, Math.PI * 2);
-  context.clip();
-
-  drawOceanDepth(context, projected, radius);
-
   context.filter = "blur(0.55px)";
 
   let painted = 0;
 
   for (const { cell, point } of projected) {
     const baseColor = colorForCell(world, cell);
-
     const elevationLift = clamp(cell.elevation / 5400, -0.18, 0.26);
     const depthDarken = cell.depth > 0 ? clamp(cell.depth / 6400, 0, 1) * 0.16 : 0;
     const fibonacciLift = (cell.fibonacci?.density || 0) * 0.03;
@@ -683,15 +605,11 @@ function drawSurfaceLayer(context, world, projected, radius, zoom) {
   return painted;
 }
 
-function drawCoastlines(context, projected, radius, zoom) {
+function drawCoastlines(context, projected, radius, zoom, centerX, centerY) {
   context.save();
-
   context.beginPath();
-  const centerX = context.canvas.width * 0.5;
-  const centerY = context.canvas.height * 0.52;
   context.arc(centerX, centerY, radius * zoom * 0.998, 0, Math.PI * 2);
   context.clip();
-
   context.lineCap = "round";
   context.lineJoin = "round";
 
@@ -705,9 +623,7 @@ function drawCoastlines(context, projected, radius, zoom) {
     const start = cell.noiseB * Math.PI * 2 + (cell.fibonacci?.phase || 0) * 0.12;
 
     context.beginPath();
-    context.strokeStyle = cell.kind === "coast"
-      ? "rgba(255,230,160,0.62)"
-      : "rgba(130,230,220,0.34)";
+    context.strokeStyle = cell.kind === "coast" ? "rgba(255,230,160,0.62)" : "rgba(130,230,220,0.34)";
     context.globalAlpha = cell.kind === "coast" ? 0.52 : 0.28;
     context.lineWidth = Math.max(1.0, radius * 0.0032);
     context.ellipse(point.x, point.y, size * 1.26, size * 0.66, cell.noiseA * 1.6, start, start + arc);
@@ -717,12 +633,9 @@ function drawCoastlines(context, projected, radius, zoom) {
   context.restore();
 }
 
-function drawReliefAndTerrain(context, projected, radius, zoom) {
+function drawReliefAndTerrain(context, projected, radius, zoom, centerX, centerY) {
   context.save();
-
   context.beginPath();
-  const centerX = context.canvas.width * 0.5;
-  const centerY = context.canvas.height * 0.52;
   context.arc(centerX, centerY, radius * zoom * 0.998, 0, Math.PI * 2);
   context.clip();
 
@@ -735,23 +648,15 @@ function drawReliefAndTerrain(context, projected, radius, zoom) {
 
     context.save();
     context.globalAlpha = cell.kind === "relief" ? 0.26 : 0.11;
-    context.strokeStyle = cell.kind === "relief"
-      ? "rgba(255,245,210,0.68)"
-      : "rgba(35,70,38,0.62)";
+    context.strokeStyle = cell.kind === "relief" ? "rgba(255,245,210,0.68)" : "rgba(35,70,38,0.62)";
     context.lineWidth = Math.max(0.8, radius * 0.0017);
 
     for (let i = 0; i < lineCount; i += 1) {
       const offset = (i - lineCount / 2) * size * 0.32;
       const bend = Math.sin((cell.index + i) * 0.91 + (cell.fibonacci?.phase || 0)) * size * 0.24;
-
       context.beginPath();
       context.moveTo(point.x - size * 0.9, point.y + offset + bend);
-      context.quadraticCurveTo(
-        point.x,
-        point.y + offset - bend,
-        point.x + size * 0.9,
-        point.y + offset + bend * 0.5
-      );
+      context.quadraticCurveTo(point.x, point.y + offset - bend, point.x + size * 0.9, point.y + offset + bend * 0.5);
       context.stroke();
     }
 
@@ -765,11 +670,9 @@ function drawClouds(context, world, radius, centerX, centerY, yaw, pitch, zoom, 
   if (compact) return;
 
   context.save();
-
   context.beginPath();
   context.arc(centerX, centerY, radius * zoom * 1.002, 0, Math.PI * 2);
   context.clip();
-
   context.filter = "blur(2px)";
   context.globalAlpha = 0.54;
 
@@ -782,7 +685,6 @@ function drawClouds(context, world, radius, centerX, centerY, yaw, pitch, zoom, 
     if (!point) continue;
 
     const size = radius * (0.050 + hashUnit(i, world.seed + 881) * 0.048) * (0.74 + point.z * 0.32);
-
     context.fillStyle = world.cloud;
     context.beginPath();
     context.ellipse(
@@ -806,15 +708,7 @@ function drawAtmosphere(context, world, radius, centerX, centerY, zoom) {
 
   context.save();
 
-  const highlight = context.createRadialGradient(
-    centerX - r * 0.34,
-    centerY - r * 0.36,
-    r * 0.08,
-    centerX,
-    centerY,
-    r * 1.08
-  );
-
+  const highlight = context.createRadialGradient(centerX - r * 0.34, centerY - r * 0.36, r * 0.08, centerX, centerY, r * 1.08);
   highlight.addColorStop(0, "rgba(255,238,184,.24)");
   highlight.addColorStop(0.34, world.glow);
   highlight.addColorStop(0.74, "rgba(0,0,0,.02)");
@@ -849,7 +743,6 @@ function drawTitle(context, width, height, world, compact) {
   if (compact) return;
 
   context.save();
-
   context.fillStyle = "rgba(246,211,123,.94)";
   context.font = `${Math.max(22, width * 0.034)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
   context.textAlign = "center";
@@ -858,7 +751,6 @@ function drawTitle(context, width, height, world, compact) {
   context.fillStyle = "rgba(243,227,189,.74)";
   context.font = `${Math.max(13, width * 0.016)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
   context.fillText("Fibonacci runtime · 256 under hood · drag to inspect", width / 2, height * 0.108);
-
   context.restore();
 }
 
@@ -873,7 +765,6 @@ function renderPlanet(canvas, context, world, view, compact = false) {
   const zoom = clamp(view.zoom || 1, 0.78, 1.58);
   const yaw = view.yaw || 0;
   const pitch = view.pitch || 0;
-
   const cells = buildWorldCells(world);
   const projected = [];
 
@@ -887,11 +778,9 @@ function renderPlanet(canvas, context, world, view, compact = false) {
 
   clearScene(context, width, height, world);
   drawGlobeBase(context, world, radius, centerX, centerY, zoom);
-
-  const painted = drawSurfaceLayer(context, world, projected, radius, zoom);
-
-  drawCoastlines(context, projected, radius, zoom);
-  drawReliefAndTerrain(context, projected, radius, zoom);
+  const painted = drawSurfaceLayer(context, world, projected, radius, zoom, centerX, centerY);
+  drawCoastlines(context, projected, radius, zoom, centerX, centerY);
+  drawReliefAndTerrain(context, projected, radius, zoom, centerX, centerY);
   drawClouds(context, world, radius, centerX, centerY, yaw, pitch, zoom, compact);
   drawAtmosphere(context, world, radius, centerX, centerY, zoom);
   drawTitle(context, width, height, world, compact);
@@ -902,11 +791,9 @@ function renderPlanet(canvas, context, world, view, compact = false) {
 function metaBlock(label, value) {
   const span = document.createElement("span");
   const strong = document.createElement("strong");
-
   strong.textContent = label;
   span.appendChild(strong);
   span.append(value);
-
   return span;
 }
 
@@ -934,7 +821,6 @@ function updateDisplayMeta(world, painted) {
 
 function renderDisplay() {
   const world = worldByKey(state.activeWorldKey);
-
   nodes.displayContext = setupCanvas(nodes.displayCanvas, 880);
 
   const painted = renderPlanet(
@@ -951,7 +837,6 @@ function renderDisplay() {
 
   updateDisplayMeta(world, painted);
   stampDocument(world, painted);
-
   return painted;
 }
 
@@ -961,7 +846,6 @@ function renderPreviews() {
     if (!preview?.canvas || !preview?.context) continue;
 
     preview.context = setupCanvas(preview.canvas, 220);
-
     renderPlanet(
       preview.canvas,
       preview.context,
@@ -978,12 +862,10 @@ function renderPreviews() {
 
 function selectWorld(key) {
   const world = worldByKey(key);
-
   state.activeWorldKey = world.key;
   state.yaw = -18;
   state.pitch = 8;
   state.zoom = 1;
-
   renderDisplay();
 }
 
@@ -1019,7 +901,6 @@ function wireDisplayDrag() {
     state.dragStartY = event.clientY;
     state.dragStartYaw = state.yaw;
     state.dragStartPitch = state.pitch;
-
     target.setPointerCapture?.(event.pointerId);
     event.preventDefault();
   }, { passive: false });
@@ -1029,17 +910,14 @@ function wireDisplayDrag() {
 
     const dx = event.clientX - state.dragStartX;
     const dy = event.clientY - state.dragStartY;
-
     state.yaw = state.dragStartYaw + dx * 0.42;
     state.pitch = clamp(state.dragStartPitch - dy * 0.30, -64, 64);
-
     renderDisplay();
     event.preventDefault();
   }, { passive: false });
 
   const finish = (event) => {
     if (event.pointerId !== state.pointerId) return;
-
     state.dragging = false;
     state.pointerId = null;
     target.releasePointerCapture?.(event.pointerId);
@@ -1083,7 +961,6 @@ function stampDocument(world, painted = 0) {
   root.dataset.activeInspectionRoute = world.route;
   root.dataset.touchDragInspection = "true";
   root.dataset.actualPlanetFigureVisible = "true";
-
   root.dataset.totalCells = String(TOTAL_CELLS);
   root.dataset.grid = `${GRID}x${GRID}`;
   root.dataset.fibonacciRuntimeBound = "true";
@@ -1097,11 +974,9 @@ function stampDocument(world, painted = 0) {
   root.dataset.terrainContrastIncreased = "true";
   root.dataset.cloudAtmosphereSoftnessIncreased = "true";
   root.dataset.displayCellsProjected = String(painted);
-
   root.dataset.groundLevelReady = String(GROUND_LEVEL_READY);
   root.dataset.manorPlacementReady = String(MANOR_PLACEMENT_READY);
   root.dataset.estatePlacementReady = String(ESTATE_PLACEMENT_READY);
-
   root.dataset.parentMutationAuthorized = String(PARENT_MUTATION_AUTHORIZED);
   root.dataset.visibleDiagnostics = "false";
   root.dataset.generatedImage = String(GENERATED_IMAGE);
@@ -1117,27 +992,21 @@ function getShowroomGlobeShowcaseStatus() {
     receipt: CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
     htmlExpected: HTML_EXPECTED,
-
     showroomMode: SHOWROOM_MODE,
     displayCaseMode: DISPLAY_CASE_MODE,
-
     activeDisplay: world.key,
     activeDisplayName: world.name,
     activeInspectionRoute: world.route,
-
     actualPlanetFigureVisible: true,
     selfContainedRenderer: true,
     importedHEarthCanvasDependency: false,
     touchDragInspection: true,
-
     totalCells: TOTAL_CELLS,
     grid: `${GRID}x${GRID}`,
-
     fibonacciRuntimeBound: true,
     fibonacciSequence: [...FIBONACCI_SEQUENCE],
     fibonacciVisibleZigzag: false,
     fibonacciUse: "internal landmass, coastline, elevation, depth, cloud rhythm, and terrain-detail progression",
-
     visibleDotPatternReduced: true,
     explicitNodeOverlayReduced: true,
     landmassDefinitionIncreased: true,
@@ -1145,15 +1014,12 @@ function getShowroomGlobeShowcaseStatus() {
     oceanDepthIncreased: true,
     terrainContrastIncreased: true,
     cloudAtmosphereSoftnessIncreased: true,
-
     yaw: state.yaw,
     pitch: state.pitch,
     zoom: state.zoom,
-
     groundLevelReady: GROUND_LEVEL_READY,
     manorPlacementReady: MANOR_PLACEMENT_READY,
     estatePlacementReady: ESTATE_PLACEMENT_READY,
-
     parentMutationAuthorized: PARENT_MUTATION_AUTHORIZED,
     generatedImage: GENERATED_IMAGE,
     graphicBox: GRAPHIC_BOX,

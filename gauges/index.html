@@ -2,16 +2,12 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="triple-g-frontier-tech-standard-ledger"
+  data-page="triple-g-live-frontier-audit"
   data-route="/gauges/"
-  data-contract="TRIPLE_G_FRONTIER_TECH_STANDARD_LEDGER_TNT_v2"
-  data-previous-contract="TRIPLE_G_SITE_LEDGER_AUDIT_TNT_v1"
-  data-gauge-type="site-ledger"
+  data-contract="TRIPLE_G_LIVE_FRONTIER_AUDIT_TNT_v3"
   data-standard="cutting-edge-frontier-tech-only"
+  data-audit-mode="live-client-side"
   data-receipts-copyable="false"
-  data-public-density="reduced"
-  data-legacy-frontier-ledger="true"
-  data-next-move-required="true"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claim="false"
@@ -22,7 +18,7 @@
   <title>Diamond Gate Bridge · Triple G</title>
   <meta
     name="description"
-    content="Triple G is the Diamond Gate Bridge frontier-control board for Goals, Gauges, and Gaps. It separates legacy debt from cutting-edge frontier standards."
+    content="Triple G is the live Diamond Gate Bridge audit board for Goals, Gauges, Gaps, legacy debt, frontier readiness, and next moves."
   >
 
   <style>
@@ -311,7 +307,7 @@
     }
 
     .section-head p {
-      max-width:60ch;
+      max-width:62ch;
       margin:0;
       color:var(--muted);
       line-height:1.55;
@@ -437,6 +433,7 @@
     .status.transitional { color:var(--gold); border-color:rgba(244,191,96,.36); background:rgba(244,191,96,.08); }
     .status.frontier { color:var(--green); border-color:rgba(143,240,195,.36); background:rgba(143,240,195,.08); }
     .status.hold { color:var(--violet); border-color:rgba(190,170,255,.36); background:rgba(190,170,255,.08); }
+    .status.unreachable { color:#ffcf8f; border-color:rgba(255,207,143,.36); background:rgba(255,207,143,.08); }
 
     .route-card p {
       margin:12px 0 0;
@@ -457,6 +454,23 @@
     .route-tags strong {
       color:var(--gold);
       font-weight:950;
+    }
+
+    .evidence {
+      margin-top:12px;
+      display:grid;
+      gap:6px;
+      color:rgba(248,234,208,.70);
+      font-size:.78rem;
+      line-height:1.4;
+    }
+
+    .evidence span {
+      display:block;
+      padding:7px 8px;
+      border:1px solid rgba(255,255,255,.07);
+      background:rgba(255,255,255,.028);
+      clip-path:var(--facet-small);
     }
 
     .list {
@@ -500,10 +514,6 @@
       margin:16px 0 0;
       color:var(--muted);
       line-height:1.62;
-    }
-
-    .data-only {
-      display:none !important;
     }
 
     @media (max-width:980px) {
@@ -564,28 +574,28 @@
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
+        <a href="/flat/">Flat</a>
+        <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Globe</a>
-        <a href="/products/">Products</a>
         <a href="/gauges/" aria-current="page">Triple G</a>
       </nav>
     </header>
 
     <main id="main" tabindex="-1">
       <section class="hero">
-        <p class="label">Triple G · Frontier Tech Standard</p>
-        <h1>Legacy stops here.</h1>
+        <p class="label">Triple G · Live Frontier Audit</p>
+        <h1>The board reads the site.</h1>
         <p class="lede">
-          Triple G is the control board. The site standard is now cutting-edge and frontier only: clean public pages, governed renderers, contained receipts, low runtime budget, and context-first architecture.
+          Triple G now audits the live routes instead of holding yesterday’s ledger. It checks reachability, context alignment, visible receipt spillover, route intent, and frontier readiness every time the audit runs.
         </p>
 
         <div class="actions">
-          <button class="action primary" type="button" id="runAudit">Run Frontier Audit</button>
-          <a class="action" href="/showroom/">Showroom Standard</a>
-          <a class="action" href="/laws/">Laws Standard</a>
-          <a class="action" href="/">Compass Blocker</a>
+          <button class="action primary" type="button" id="runAudit">Run Live Audit</button>
+          <a class="action" href="/">Compass</a>
+          <a class="action" href="/flat/">Flat</a>
+          <a class="action" href="/products/">Products</a>
+          <a class="action" href="/showroom/">Showroom</a>
         </div>
       </section>
 
@@ -593,433 +603,526 @@
         <article class="metric">
           <strong>Goals</strong>
           <span class="number" id="goalCount">3</span>
-          <span>Cut legacy, protect budget, and move only frontier-ready standards forward.</span>
+          <span>Context, budget, and frontier readiness stay under live review.</span>
         </article>
 
         <article class="metric">
-          <strong>Gauges</strong>
-          <span class="number" id="gaugeCount">4</span>
-          <span>Legacy, Transitional, Frontier, and Hold remain measured as control states.</span>
+          <strong>Routes read</strong>
+          <span class="number" id="routeCount">0</span>
+          <span id="routeText">Waiting for live audit.</span>
         </article>
 
         <article class="metric">
           <strong>Gaps</strong>
           <span class="number" id="gapCount">0</span>
-          <span id="gapText">Run the frontier audit to calculate current blockers.</span>
+          <span id="gapText">Waiting for live audit.</span>
         </article>
       </section>
 
-      <section class="panel" aria-label="Cutting-edge frontier standard">
+      <section class="panel" aria-label="Current standard">
         <div class="section-head">
-          <h2>Frontier Standard</h2>
-          <p>This is the new build rule. Pages do not move forward by adding complexity; they move forward by proving structure, visual truth, and runtime discipline.</p>
+          <h2>Current Standard</h2>
+          <p>The standard updates around what the live pages actually prove, not what an older contract claimed.</p>
         </div>
 
         <div class="standard-grid">
           <article class="standard-card">
-            <strong>Context first</strong>
-            <h3>Flat, Round, Globe are different worlds.</h3>
-            <p>They are not the same animation with different size, color, or speed.</p>
+            <strong>Compass</strong>
+            <h3>Preface doors.</h3>
+            <p>Flat goes to investigation, Round goes to products, Universe goes to showroom.</p>
           </article>
 
           <article class="standard-card">
             <strong>Object truth</strong>
-            <h3>Render what the page claims.</h3>
-            <p>No fake 3D, no labels standing in for visual proof, no decorative overload.</p>
+            <h3>Show what the page claims.</h3>
+            <p>Labels do not replace proof. Motion does not replace context.</p>
           </article>
 
           <article class="standard-card">
             <strong>Budget law</strong>
             <h3>Public pages stay light.</h3>
-            <p>Private engines do not wake on public selectors. Render loops are governed.</p>
+            <p>Selector pages should not wake private engines or heavy child chains.</p>
           </article>
 
           <article class="standard-card">
             <strong>Receipt containment</strong>
-            <h3>Receipts are data, not public copy.</h3>
-            <p>Public-facing pages should not spill raw implementation text into the user experience.</p>
+            <h3>Receipts are not public copy.</h3>
+            <p>Audit markers may exist as data, but public text stays clean.</p>
           </article>
         </div>
       </section>
 
-      <section class="panel" aria-label="Quad-A audit">
+      <section class="panel" aria-label="Live route ledger">
         <div class="section-head">
-          <h2>Quad-A Audit</h2>
-          <p>Execution-control status only. No visual pass is claimed for any route from this page.</p>
-        </div>
-
-        <div class="standard-grid">
-          <article class="standard-card">
-            <strong>A1 · Admissibility</strong>
-            <h3>Pass</h3>
-            <p>The full-site audit is necessary because the animation thread is degrading without context separation.</p>
-          </article>
-
-          <article class="standard-card">
-            <strong>A2 · Authority</strong>
-            <h3>Partial fail</h3>
-            <p>Several pages still expose machinery publicly. Triple G must absorb control-board truth.</p>
-          </article>
-
-          <article class="standard-card">
-            <strong>A3 · Alignment</strong>
-            <h3>Partial fail</h3>
-            <p>Fibonacci governs progression inside the 256 field; it is not a command to overload every visual control.</p>
-          </article>
-
-          <article class="standard-card">
-            <strong>A4 · Assembly</strong>
-            <h3>Held</h3>
-            <p>Compass remains held until Flat, Round, and Globe are rebuilt as distinct contexts.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel" aria-label="Site ledger">
-        <div class="section-head">
-          <h2>Site Ledger</h2>
-          <p>Default view shows critical blockers and frontier candidates. Use filters to inspect the full route ledger.</p>
+          <h2>Live Route Ledger</h2>
+          <p>Default view shows critical routes. The audit recalculates from the current served pages.</p>
         </div>
 
         <div class="route-toolbar" aria-label="Ledger filters">
           <button class="filter-button" type="button" data-filter="critical" aria-pressed="true">Critical</button>
           <button class="filter-button" type="button" data-filter="all" aria-pressed="false">All</button>
-          <button class="filter-button" type="button" data-filter="legacy" aria-pressed="false">Legacy</button>
-          <button class="filter-button" type="button" data-filter="transitional" aria-pressed="false">Transitional</button>
           <button class="filter-button" type="button" data-filter="frontier" aria-pressed="false">Frontier</button>
+          <button class="filter-button" type="button" data-filter="transitional" aria-pressed="false">Transitional</button>
+          <button class="filter-button" type="button" data-filter="legacy" aria-pressed="false">Legacy</button>
           <button class="filter-button" type="button" data-filter="hold" aria-pressed="false">Hold</button>
+          <button class="filter-button" type="button" data-filter="unreachable" aria-pressed="false">Unreachable</button>
         </div>
 
         <div id="routeLedger" class="route-ledger" aria-live="polite"></div>
       </section>
 
-      <section class="panel" aria-label="Debt and frontier count">
+      <section class="panel" aria-label="Audit counts">
         <div class="section-head">
-          <h2>Debt and Standards</h2>
-          <p>Legacy debt is not the future standard. Transitional routes are held until they prove frontier behavior.</p>
+          <h2>Counts</h2>
+          <p>These counts change when live pages change.</p>
         </div>
 
         <div class="grid-3">
           <article class="metric">
-            <strong>Legacy debt</strong>
-            <span class="number" id="legacyCount">0</span>
-            <span>Routes or patterns blocking frontier motion.</span>
+            <strong>Frontier</strong>
+            <span class="number" id="frontierCount">0</span>
+            <span>Routes currently meeting or approaching the frontier standard.</span>
           </article>
 
           <article class="metric">
             <strong>Transitional</strong>
             <span class="number" id="transitionalCount">0</span>
-            <span>Good structure, incomplete proof, visible machinery, or runtime risk.</span>
+            <span>Routes that are live but still need proof, cleanup, or verification.</span>
           </article>
 
           <article class="metric">
-            <strong>Frontier candidates</strong>
-            <span class="number" id="frontierCount">0</span>
-            <span>Routes that can become standards after proof and receipt containment.</span>
+            <strong>Legacy / held</strong>
+            <span class="number" id="legacyHoldCount">0</span>
+            <span>Routes with known debt, hold status, or failed reachability.</span>
           </article>
         </div>
 
-        <div class="list" id="debtList"></div>
+        <div class="list" id="gapList"></div>
       </section>
 
       <section class="panel" aria-label="PSALM Fibonacci alignment">
         <div class="section-head">
           <h2>PSALM / Fibonacci Alignment</h2>
-          <p>Fibonacci remains a governance rhythm under PSALM and inside the 256 field. It must improve order, not worsen animation.</p>
+          <p>Fibonacci remains governance rhythm, not visible overload.</p>
         </div>
 
         <div class="list">
           <div class="list-item"><strong>Correct use:</strong> progression rhythm, refinement order, traversal sequence, density priority, and lawful unfolding.</div>
-          <div class="list-item"><strong>Incorrect use:</strong> forcing every visible control to expose 256 pieces, adding decorative complexity, or making public renderers heavier.</div>
-          <div class="list-item"><strong>Compass correction:</strong> Flat, Round, and Globe must be rebuilt as different contexts: route board, estate-centered compass field, and universe-scale expansion.</div>
+          <div class="list-item"><strong>Incorrect use:</strong> forcing public controls to expose 256 pieces, adding decorative complexity, or making renderers heavier than the context requires.</div>
+          <div class="list-item"><strong>Current correction:</strong> Compass is now an entry preface: map, movement, or world.</div>
         </div>
       </section>
 
       <section class="next-move" aria-label="Next Move">
         <p class="label">Next Move</p>
-        <h2>Rebuild Compass by context, not by decoration.</h2>
-        <p>
-          The next lawful move is a Compass three-context rebuild. Flat becomes a direct architectural route board with no center object.
-          Round becomes an estate-centered dimensional compass field. Globe becomes a universe-scale expansion field. The old approach—same scene with different styling—is legacy.
+        <h2 id="nextMoveTitle">Run the live audit.</h2>
+        <p id="nextMoveText">
+          Triple G will read the current route state, then calculate the controlling next move.
         </p>
         <div class="actions">
           <a class="action primary" href="/">Return to Compass</a>
-          <a class="action" href="/showroom/">Review Showroom</a>
-          <a class="action" href="/laws/">Review Laws</a>
+          <a class="action" href="/flat/">Review Flat</a>
+          <a class="action" href="/products/">Review Round</a>
+          <a class="action" href="/showroom/">Review Universe</a>
         </div>
       </section>
-
-      <section
-        id="tripleGReceipt"
-        class="data-only"
-        aria-hidden="true"
-        data-receipt-panel="triple-g-frontier-tech-standard-ledger"
-        data-html-contract="TRIPLE_G_FRONTIER_TECH_STANDARD_LEDGER_TNT_v2"
-        data-previous-contract="TRIPLE_G_SITE_LEDGER_AUDIT_TNT_v1"
-        data-standard="cutting-edge-frontier-tech-only"
-        data-receipts-copyable="false"
-        data-public-density="reduced"
-        data-goals="true"
-        data-gauges="true"
-        data-gaps="true"
-        data-next-move-required="true"
-        data-generated-image="false"
-        data-graphic-box="false"
-        data-visual-pass-claim="false"
-      ></section>
     </main>
   </div>
 
   <script>
     (() => {
-      const CONTRACT = "TRIPLE_G_FRONTIER_TECH_STANDARD_LEDGER_TNT_v2";
+      const CONTRACT = "TRIPLE_G_LIVE_FRONTIER_AUDIT_TNT_v3";
 
-      const ledger = [
+      const routes = [
         {
           route: "/",
-          title: "Compass",
-          status: "legacy",
+          title: "Compass Preface Doors",
+          role: "entry-preface",
           emphasis: "critical",
-          finding: "Controlling blocker. Rebuild by context: Flat route board, Round estate compass, Globe universe field.",
-          tags: ["renderer risk", "context drift", "priority"]
+          expected: "transitional",
+          required: ["COMPASS_PREFACE_DOORS", "/flat/", "/products/", "/showroom/"],
+          frontierSignals: ["compass-preface-doors", "Compass · Three Entry Prefaces"],
+          legacySignals: ["COMPASS_THREE_CONTEXT_FRONTIER", "COMPASS_ROUND_FIELD", "same scene"]
         },
         {
-          route: "/gauges/",
-          title: "Triple G",
-          status: "frontier",
+          route: "/flat/",
+          title: "Flat Investigation",
+          role: "two-dimensional-investigation",
           emphasis: "critical",
-          finding: "Control board. This page now defines the cutting-edge frontier tech standard and ledger authority.",
-          tags: ["audit board", "control", "frontier standard"]
+          expected: "transitional",
+          required: ["Flat Investigation", "two-dimensional", "Start with the map"],
+          frontierSignals: ["Map Before Motion", "FLAT_INVESTIGATION"],
+          legacySignals: []
+        },
+        {
+          route: "/products/",
+          title: "Round / Products",
+          role: "revolving-pages",
+          emphasis: "critical",
+          expected: "transitional",
+          required: ["Products"],
+          frontierSignals: ["ARCHCOIN", "AAI", "Five Flags", "Education"],
+          legacySignals: ["Earth G1"]
         },
         {
           route: "/showroom/",
-          title: "Showroom",
-          status: "frontier",
+          title: "Universe / Showroom",
+          role: "display-world",
           emphasis: "critical",
-          finding: "Best visual frontier candidate. The diamond object standard should influence future visual truth.",
-          tags: ["visual standard", "diamond object", "frontier candidate"]
+          expected: "frontier",
+          required: ["Showroom"],
+          frontierSignals: ["diamond", "display", "showcase", "object"],
+          legacySignals: ["bubble"]
         },
         {
           route: "/showroom/globe/",
           title: "Globe Showcase",
-          status: "frontier",
+          role: "display-case",
           emphasis: "critical",
-          finding: "Best runtime-budget standard. Public showcase stays light while private engines stay asleep.",
-          tags: ["budget standard", "display case", "frontier candidate"]
+          expected: "frontier",
+          required: ["Globe", "Showcase"],
+          frontierSignals: ["display case", "private engines", "low-budget"],
+          legacySignals: []
         },
         {
           route: "/laws/",
           title: "Laws",
-          status: "frontier",
+          role: "governance-standard",
           emphasis: "critical",
-          finding: "Best governance standard. Proof, scope, route, runtime, and visual-claim law are structurally useful.",
-          tags: ["governance", "proof", "frontier candidate"]
+          expected: "frontier",
+          required: ["Laws"],
+          frontierSignals: ["proof", "runtime", "scope", "visual"],
+          legacySignals: []
         },
         {
-          route: "/products/nutrition/",
-          title: "Nutrition",
-          status: "legacy",
+          route: "/gauges/",
+          title: "Triple G",
+          role: "control-board",
           emphasis: "critical",
-          finding: "Older shared-shell debt and stale navigation risk. Renew before treating as frontier product route.",
-          tags: ["product", "stale nav", "legacy debt"]
-        },
-        {
-          route: "/showroom/globe/earth/",
-          title: "Earth",
-          status: "legacy",
-          emphasis: "standard",
-          finding: "Reference-only lane. Useful as a baseline, not a frontier world page.",
-          tags: ["reference", "baseline"]
-        },
-        {
-          route: "/gauges/h-earth/",
-          title: "H-Earth Gauges",
-          status: "hold",
-          emphasis: "critical",
-          finding: "Dedicated diagnostics route exists, but it should be renewed after this site-level ledger is locked.",
-          tags: ["diagnostics", "hold"]
+          expected: "frontier",
+          required: ["Triple G", "Live Frontier Audit"],
+          frontierSignals: ["live-client-side", "The board reads the site"],
+          legacySignals: ["0 goals", "0 gauges", "0 gaps"]
         },
         {
           route: "/door/",
           title: "Door",
-          status: "transitional",
+          role: "threshold",
           emphasis: "standard",
-          finding: "Route law is structurally clear, but older orbit/diamond legacy and public machinery should be contained.",
-          tags: ["threshold", "route law"]
+          expected: "transitional",
+          required: ["Door"],
+          frontierSignals: ["threshold", "route"],
+          legacySignals: ["bubble"]
         },
         {
           route: "/home/",
           title: "Home",
-          status: "transitional",
+          role: "receiver",
           emphasis: "standard",
-          finding: "Good receiver role and house identity. Needs receipt containment and stronger frontier visual standard.",
-          tags: ["receiver", "house"]
-        },
-        {
-          route: "/products/",
-          title: "Products",
-          status: "transitional",
-          emphasis: "standard",
-          finding: "Product wing structure is coherent. Legacy animated field patterns should not drive future product UI.",
-          tags: ["product wing", "shared shell"]
-        },
-        {
-          route: "/showroom/globe/h-earth/",
-          title: "H-Earth",
-          status: "transitional",
-          emphasis: "standard",
-          finding: "Good stage/backstage separation. Needs stable visual proof before ground-level or estate placement opens.",
-          tags: ["private room", "inspection"]
-        },
-        {
-          route: "/showroom/globe/hearth/",
-          title: "Hearth",
-          status: "transitional",
-          emphasis: "standard",
-          finding: "Strong terrain baseline direction, but runtime risk and exposed machinery remain debt.",
-          tags: ["terrain", "runtime risk"]
-        },
-        {
-          route: "/showroom/globe/audralia/",
-          title: "Audralia",
-          status: "transitional",
-          emphasis: "standard",
-          finding: "Constructed-world identity is protected. Heavy chain exposure and runtime load need containment.",
-          tags: ["constructed world", "separate"]
-        },
-        {
-          route: "/nine-summits/",
-          title: "Nine Summits",
-          status: "transitional",
-          emphasis: "standard",
-          finding: "Lane split is useful, but rotating diamond/orbit legacy should not become the future standard.",
-          tags: ["summits", "content"]
-        },
-        {
-          route: "/nine-summits/universe/",
-          title: "Universe",
-          status: "transitional",
-          emphasis: "standard",
-          finding: "Strong context layer. Needs less instrument-panel exposure and more universe-scale visual truth.",
-          tags: ["universe", "context"]
-        },
-        {
-          route: "/nine-summits-of-love/",
-          title: "Nine Summits of Love",
-          status: "transitional",
-          emphasis: "standard",
-          finding: "Content lane is strong. Public copy should stay clean while receipts move backstage.",
-          tags: ["book", "seminar"]
+          expected: "transitional",
+          required: ["Home"],
+          frontierSignals: ["receiver", "estate", "house"],
+          legacySignals: []
         },
         {
           route: "/explore/",
           title: "Explore / Manor",
-          status: "transitional",
+          role: "route-map",
           emphasis: "standard",
-          finding: "Useful route-map role. Current visual system carries older motion patterns.",
-          tags: ["manor", "route map"]
+          expected: "transitional",
+          required: ["Explore"],
+          frontierSignals: ["Manor", "map", "route"],
+          legacySignals: ["Earth G1"]
         },
         {
           route: "/frontier/",
           title: "Frontier",
-          status: "transitional",
+          role: "edge",
           emphasis: "standard",
-          finding: "Clear edge role. The page should define frontier standard rather than inherit legacy diamonds.",
-          tags: ["frontier", "edge"]
+          expected: "transitional",
+          required: ["Frontier"],
+          frontierSignals: ["edge", "frontier"],
+          legacySignals: []
         },
         {
-          route: "/about-this-underdog/",
-          title: "About This Underdog",
-          status: "transitional",
+          route: "/nine-summits/universe/",
+          title: "Nine Summits Universe",
+          role: "universe",
           emphasis: "standard",
-          finding: "Content role is strong. Public profile machinery should be kept clean.",
-          tags: ["voice", "origin"]
+          expected: "transitional",
+          required: ["Universe"],
+          frontierSignals: ["Nine Summits", "universe"],
+          legacySignals: []
         },
         {
-          route: "/meet-sean-mansfield/",
-          title: "Meet Sean Mansfield",
-          status: "transitional",
+          route: "/nine-summits-of-love/",
+          title: "Nine Summits of Love",
+          role: "book",
           emphasis: "standard",
-          finding: "Personal-profile split is useful. Receipt and route proof should remain backstage.",
-          tags: ["profile", "public"]
+          expected: "transitional",
+          required: ["Nine Summits"],
+          frontierSignals: ["256", "Human Potential"],
+          legacySignals: []
         },
         {
           route: "/products/archcoin/",
           title: "ARCHCOIN",
-          status: "transitional",
+          role: "product",
           emphasis: "standard",
-          finding: "Strong product concept. Preserve ARCHCOIN spelling and avoid shared-shell visual debt.",
-          tags: ["product", "ARCHCOIN"]
-        },
-        {
-          route: "/products/five-flags/",
-          title: "Five Flags",
-          status: "transitional",
-          emphasis: "standard",
-          finding: "Product role is coherent. Needs product-specific visual standard rather than generic orbit shell.",
-          tags: ["product", "game"]
+          expected: "transitional",
+          required: ["ARCHCOIN"],
+          frontierSignals: ["ARCHCOIN"],
+          legacySignals: ["ARCoin"]
         },
         {
           route: "/products/on-your-side-ai/",
           title: "AAI",
-          status: "transitional",
+          role: "product",
           emphasis: "standard",
-          finding: "Product lane is valid. Needs clean public positioning and diagnostic separation.",
-          tags: ["product", "AAI"]
+          expected: "transitional",
+          required: ["AAI"],
+          frontierSignals: ["On Your Side"],
+          legacySignals: []
+        },
+        {
+          route: "/products/five-flags/",
+          title: "Five Flags",
+          role: "product",
+          emphasis: "standard",
+          expected: "transitional",
+          required: ["Five Flags"],
+          frontierSignals: ["Flags"],
+          legacySignals: []
         },
         {
           route: "/products/education/",
           title: "Education",
-          status: "transitional",
+          role: "product",
           emphasis: "standard",
-          finding: "Education lane is structurally valid. Needs dedicated product identity.",
-          tags: ["product", "learning"]
+          expected: "transitional",
+          required: ["Education"],
+          frontierSignals: ["learning", "ESL"],
+          legacySignals: []
+        },
+        {
+          route: "/products/nutrition/",
+          title: "Nutrition",
+          role: "legacy-product-watch",
+          emphasis: "critical",
+          expected: "legacy",
+          required: ["Nutrition"],
+          frontierSignals: [],
+          legacySignals: ["Earth G1", "shared shell", "stale"]
+        },
+        {
+          route: "/gauges/h-earth/",
+          title: "H-Earth Gauges",
+          role: "diagnostic-room",
+          emphasis: "critical",
+          expected: "hold",
+          required: ["H-Earth"],
+          frontierSignals: ["diagnostics", "checks"],
+          legacySignals: ["0 checks", "0%"]
         }
       ];
 
-      const debtItems = [
-        "Compass is the controlling blocker until Flat, Round, and Globe become distinct contexts.",
-        "Public receipt spillover must remain contained as data, not visible or copyable content.",
-        "Fibonacci governs sequence and density; it must not overload public controls with visible complexity.",
-        "Bubbles, pills, generic cards, and CSS-only fake 3D are legacy patterns.",
-        "Private renderers must stay asleep on public selector pages."
-      ];
+      const els = {
+        runAudit: document.getElementById("runAudit"),
+        routeLedger: document.getElementById("routeLedger"),
+        routeCount: document.getElementById("routeCount"),
+        routeText: document.getElementById("routeText"),
+        gapCount: document.getElementById("gapCount"),
+        gapText: document.getElementById("gapText"),
+        frontierCount: document.getElementById("frontierCount"),
+        transitionalCount: document.getElementById("transitionalCount"),
+        legacyHoldCount: document.getElementById("legacyHoldCount"),
+        gapList: document.getElementById("gapList"),
+        nextMoveTitle: document.getElementById("nextMoveTitle"),
+        nextMoveText: document.getElementById("nextMoveText")
+      };
 
-      const routeLedger = document.getElementById("routeLedger");
       const buttons = Array.from(document.querySelectorAll("[data-filter]"));
-      const gapCount = document.getElementById("gapCount");
-      const gapText = document.getElementById("gapText");
-      const legacyCount = document.getElementById("legacyCount");
-      const transitionalCount = document.getElementById("transitionalCount");
-      const frontierCount = document.getElementById("frontierCount");
-      const debtList = document.getElementById("debtList");
-      const runAudit = document.getElementById("runAudit");
 
       let activeFilter = "critical";
+      let auditResults = routes.map((route) => ({
+        ...route,
+        status: "hold",
+        finding: "Waiting for live audit.",
+        tags: [route.role, "not yet read"],
+        evidence: []
+      }));
 
-      function classifyCounts() {
-        return ledger.reduce((acc, item) => {
+      function timeoutFetch(url, options = {}, timeout = 6000) {
+        const controller = new AbortController();
+        const timer = window.setTimeout(() => controller.abort(), timeout);
+
+        return fetch(url, {
+          ...options,
+          signal: controller.signal,
+          cache: "no-store",
+          credentials: "same-origin"
+        }).finally(() => window.clearTimeout(timer));
+      }
+
+      function cleanVisibleText(doc) {
+        const clone = doc.cloneNode(true);
+        clone.querySelectorAll("script,style,noscript,template,svg").forEach((node) => node.remove());
+        return (clone.body?.textContent || "").replace(/\s+/g, " ").trim();
+      }
+
+      function includesAny(haystack, needles) {
+        return needles.some((needle) => haystack.toLowerCase().includes(String(needle).toLowerCase()));
+      }
+
+      function countMatches(haystack, needles) {
+        return needles.reduce((count, needle) => {
+          return count + (haystack.toLowerCase().includes(String(needle).toLowerCase()) ? 1 : 0);
+        }, 0);
+      }
+
+      function statusLabel(status) {
+        if (status === "frontier") return "Frontier";
+        if (status === "transitional") return "Transitional";
+        if (status === "legacy") return "Legacy";
+        if (status === "hold") return "Hold";
+        if (status === "unreachable") return "Unreachable";
+        return status;
+      }
+
+      function classifyRoute(route, payload) {
+        const html = payload.html || "";
+        const doc = payload.doc;
+        const visibleText = doc ? cleanVisibleText(doc) : "";
+        const scan = `${html} ${visibleText}`;
+
+        const requiredCount = countMatches(scan, route.required || []);
+        const requiredTotal = route.required?.length || 0;
+        const frontierCount = countMatches(scan, route.frontierSignals || []);
+        const legacyCount = countMatches(scan, route.legacySignals || []);
+
+        const visibleReceiptSpill =
+          /\bHTML_RECEIPT\b|\bRUNTIME_RECEIPT\b|\bPAIR_RECEIPT\b|\bRECEIPT:\b/i.test(visibleText);
+
+        const evidence = [];
+
+        evidence.push(`HTTP ${payload.httpStatus}`);
+        evidence.push(`${requiredCount}/${requiredTotal} required marker(s) found`);
+
+        if (frontierCount > 0) evidence.push(`${frontierCount} frontier signal(s) found`);
+        if (legacyCount > 0) evidence.push(`${legacyCount} legacy signal(s) found`);
+        if (visibleReceiptSpill) evidence.push("visible receipt spillover detected");
+        if (!visibleReceiptSpill) evidence.push("no visible receipt spillover detected");
+
+        let status = "transitional";
+        let finding = "Reachable and active, but still needs verification before frontier pass.";
+
+        if (!payload.ok) {
+          status = "unreachable";
+          finding = "Route did not return a successful live response.";
+          return {
+            ...route,
+            status,
+            finding,
+            tags: [route.role, "unreachable"],
+            evidence
+          };
+        }
+
+        if (route.expected === "hold") {
+          status = "hold";
+          finding = "Diagnostics lane remains held until its parent route is verified.";
+        } else if (route.expected === "legacy") {
+          status = legacyCount > 0 || visibleReceiptSpill ? "legacy" : "transitional";
+          finding = status === "legacy"
+            ? "Known debt remains present in the served page."
+            : "Known legacy route is reachable and may be ready for renewal review.";
+        } else if (route.route === "/") {
+          const compassUpdated =
+            includesAny(scan, ["COMPASS_PREFACE_DOORS", "compass-preface-doors"]) &&
+            includesAny(scan, ["/flat/"]) &&
+            includesAny(scan, ["/products/"]) &&
+            includesAny(scan, ["/showroom/"]);
+
+          status = compassUpdated && !visibleReceiptSpill ? "transitional" : "legacy";
+          finding = compassUpdated
+            ? "Compass has moved from blocker to preface-door transition. Visual and route behavior still require verification."
+            : "Compass is still missing the preface-door route law.";
+        } else if (route.expected === "frontier") {
+          const canBeFrontier =
+            requiredCount >= Math.max(1, Math.ceil(requiredTotal * 0.5)) &&
+            frontierCount > 0 &&
+            !visibleReceiptSpill &&
+            legacyCount === 0;
+
+          status = canBeFrontier ? "frontier" : "transitional";
+          finding = canBeFrontier
+            ? "Live page currently supports the frontier standard."
+            : "Frontier candidate is reachable but still has incomplete proof, weak signals, or cleanup debt.";
+        } else {
+          const healthyTransition =
+            requiredCount >= Math.max(1, Math.ceil(requiredTotal * 0.5)) &&
+            !visibleReceiptSpill;
+
+          status = healthyTransition ? "transitional" : "legacy";
+          finding = healthyTransition
+            ? "Route is live and usable, but not yet frontier-passed."
+            : "Route is reachable but still carries visible debt or missing expected markers.";
+        }
+
+        if (visibleReceiptSpill && status === "frontier") {
+          status = "transitional";
+          finding = "Frontier candidate downgraded because public receipt text is still present.";
+        }
+
+        return {
+          ...route,
+          status,
+          finding,
+          tags: [route.role, route.expected, status],
+          evidence
+        };
+      }
+
+      async function auditRoute(route) {
+        try {
+          const response = await timeoutFetch(route.route);
+          const html = await response.text();
+          const doc = new DOMParser().parseFromString(html, "text/html");
+
+          return classifyRoute(route, {
+            ok: response.ok,
+            httpStatus: response.status,
+            html,
+            doc
+          });
+        } catch (error) {
+          return {
+            ...route,
+            status: "unreachable",
+            finding: error?.name === "AbortError"
+              ? "Route request timed out."
+              : "Route could not be fetched by the live audit.",
+            tags: [route.role, "unreachable"],
+            evidence: [error?.message || "fetch failed"]
+          };
+        }
+      }
+
+      function counts() {
+        return auditResults.reduce((acc, item) => {
           acc[item.status] = (acc[item.status] || 0) + 1;
           return acc;
         }, {});
       }
 
-      function statusLabel(status) {
-        if (status === "legacy") return "Legacy";
-        if (status === "transitional") return "Transitional";
-        if (status === "frontier") return "Frontier";
-        if (status === "hold") return "Hold";
-        return status;
-      }
-
       function visibleRoutes() {
-        if (activeFilter === "critical") return ledger.filter((item) => item.emphasis === "critical");
-        if (activeFilter === "all") return ledger;
-        return ledger.filter((item) => item.status === activeFilter);
+        if (activeFilter === "critical") return auditResults.filter((item) => item.emphasis === "critical");
+        if (activeFilter === "all") return auditResults;
+        return auditResults.filter((item) => item.status === activeFilter);
       }
 
       function renderLedger() {
-        routeLedger.replaceChildren(...visibleRoutes().map((item) => {
+        els.routeLedger.replaceChildren(...visibleRoutes().map((item) => {
           const article = document.createElement("article");
           article.className = "route-card";
           article.dataset.status = item.status;
@@ -1050,41 +1153,118 @@
 
           const tags = document.createElement("p");
           tags.className = "route-tags";
-          tags.innerHTML = `<strong>Tags:</strong> ${item.tags.join(" · ")}`;
+          tags.innerHTML = `<strong>Tags:</strong> ${item.tags.map(escapeHtml).join(" · ")}`;
 
-          article.append(top, finding, tags);
+          const evidence = document.createElement("div");
+          evidence.className = "evidence";
+          item.evidence.slice(0, 5).forEach((line) => {
+            const span = document.createElement("span");
+            span.textContent = line;
+            evidence.appendChild(span);
+          });
+
+          article.append(top, finding, tags, evidence);
           return article;
         }));
       }
 
-      function renderDebt() {
-        debtList.replaceChildren(...debtItems.map((item) => {
-          const div = document.createElement("div");
-          div.className = "list-item";
-          div.textContent = item;
-          return div;
+      function renderGaps() {
+        const gaps = auditResults.filter((item) => {
+          return item.status === "legacy" || item.status === "hold" || item.status === "unreachable";
+        });
+
+        if (!gaps.length) {
+          els.gapList.replaceChildren(listItem("No blocking legacy, held, or unreachable route currently detected by the live audit."));
+          return;
+        }
+
+        els.gapList.replaceChildren(...gaps.map((gap) => {
+          return listItem(`${gap.title}: ${gap.finding}`);
         }));
       }
 
+      function listItem(text) {
+        const item = document.createElement("div");
+        item.className = "list-item";
+        item.textContent = text;
+        return item;
+      }
+
       function updateMetrics() {
-        const counts = classifyCounts();
-        const legacy = counts.legacy || 0;
-        const transitional = counts.transitional || 0;
-        const frontier = counts.frontier || 0;
-        const hold = counts.hold || 0;
-        const gaps = legacy + hold;
+        const c = counts();
+        const frontier = c.frontier || 0;
+        const transitional = c.transitional || 0;
+        const legacy = c.legacy || 0;
+        const hold = c.hold || 0;
+        const unreachable = c.unreachable || 0;
+        const gapTotal = legacy + hold + unreachable;
 
-        gapCount.textContent = String(gaps);
-        gapText.textContent = `${legacy} legacy debt route(s) and ${hold} held route(s) require control before frontier motion.`;
-        legacyCount.textContent = String(legacy);
-        transitionalCount.textContent = String(transitional);
-        frontierCount.textContent = String(frontier);
+        els.routeCount.textContent = String(auditResults.length);
+        els.routeText.textContent = `${frontier} frontier · ${transitional} transitional · ${gapTotal} gap route(s).`;
 
-        document.documentElement.dataset.legacyCount = String(legacy);
-        document.documentElement.dataset.transitionalCount = String(transitional);
+        els.gapCount.textContent = String(gapTotal);
+        els.gapText.textContent = gapTotal
+          ? `${legacy} legacy · ${hold} hold · ${unreachable} unreachable.`
+          : "No live blocking gaps detected.";
+
+        els.frontierCount.textContent = String(frontier);
+        els.transitionalCount.textContent = String(transitional);
+        els.legacyHoldCount.textContent = String(gapTotal);
+
         document.documentElement.dataset.frontierCount = String(frontier);
+        document.documentElement.dataset.transitionalCount = String(transitional);
+        document.documentElement.dataset.legacyCount = String(legacy);
         document.documentElement.dataset.holdCount = String(hold);
-        document.documentElement.dataset.gapCount = String(gaps);
+        document.documentElement.dataset.unreachableCount = String(unreachable);
+        document.documentElement.dataset.gapCount = String(gapTotal);
+      }
+
+      function updateNextMove() {
+        const compass = auditResults.find((item) => item.route === "/");
+        const flat = auditResults.find((item) => item.route === "/flat/");
+        const nutrition = auditResults.find((item) => item.route === "/products/nutrition/");
+        const hEarthGauges = auditResults.find((item) => item.route === "/gauges/h-earth/");
+        const unreachable = auditResults.find((item) => item.status === "unreachable");
+        const receiptSpill = auditResults.find((item) => item.evidence.some((line) => line.includes("visible receipt spillover detected")));
+
+        if (unreachable) {
+          els.nextMoveTitle.textContent = "Repair unreachable route first.";
+          els.nextMoveText.textContent = `${unreachable.title} could not be read by Triple G. Verify the deployed path before writing new visual code.`;
+          return;
+        }
+
+        if (flat?.status === "unreachable" || flat?.status === "legacy") {
+          els.nextMoveTitle.textContent = "Stabilize Flat Investigation.";
+          els.nextMoveText.textContent = "Flat is now part of the Compass preface law. It must remain reachable, readable, and two-dimensional before the Round and Universe entries can be trusted.";
+          return;
+        }
+
+        if (compass?.status === "transitional") {
+          els.nextMoveTitle.textContent = "Verify Compass Preface Doors.";
+          els.nextMoveText.textContent = "Confirm the live Compass opens Flat to /flat/, Round to /products/, and Universe to /showroom/. After visual verification, Triple G can promote Compass from transitional to frontier candidate.";
+          return;
+        }
+
+        if (receiptSpill) {
+          els.nextMoveTitle.textContent = "Contain public receipt spillover.";
+          els.nextMoveText.textContent = `${receiptSpill.title} still appears to expose audit machinery in public text. Clean that route before promoting it.`;
+          return;
+        }
+
+        if (nutrition?.status === "legacy") {
+          els.nextMoveTitle.textContent = "Renew the Nutrition route.";
+          els.nextMoveText.textContent = "Nutrition remains the clearest known product-route debt. Renew it after Compass preface verification is complete.";
+          return;
+        }
+
+        if (hEarthGauges?.status === "hold") {
+          els.nextMoveTitle.textContent = "Renew H-Earth Gauges.";
+          els.nextMoveText.textContent = "The site-level ledger is live. The H-Earth diagnostics route can be renewed after current Compass and public-route verification.";
+          return;
+        }
+
+        els.nextMoveTitle.textContent = "Advance the next frontier candidate.";
+        els.nextMoveText.textContent = "No critical live blocker is currently dominating the audit. Choose the next route from the transitional ledger and upgrade it under the frontier standard.";
       }
 
       function setFilter(filter) {
@@ -1095,38 +1275,52 @@
         renderLedger();
       }
 
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      async function runAudit() {
+        els.runAudit.textContent = "Reading Live Routes...";
+        els.runAudit.disabled = true;
+
+        auditResults = await Promise.all(routes.map(auditRoute));
+
+        updateMetrics();
+        renderLedger();
+        renderGaps();
+        updateNextMove();
+
+        els.runAudit.textContent = "Live Audit Complete";
+        els.runAudit.disabled = false;
+
+        document.documentElement.dataset.auditRan = "true";
+        document.documentElement.dataset.auditCompletedAt = new Date().toISOString();
+      }
+
       buttons.forEach((button) => {
         button.addEventListener("click", () => setFilter(button.dataset.filter || "critical"));
       });
 
-      runAudit?.addEventListener("click", () => {
-        updateMetrics();
-        renderLedger();
-        renderDebt();
-        runAudit.textContent = "Frontier Audit Complete";
-        document.documentElement.dataset.auditRan = "true";
-        document.documentElement.dataset.auditCompletedAt = new Date().toISOString();
-      });
+      els.runAudit.addEventListener("click", runAudit);
 
       window.DGBTripleG = {
         contract: CONTRACT,
-        ledger,
-        debtItems,
-        standard: "cutting-edge-frontier-tech-only",
-        run() {
-          updateMetrics();
-          renderLedger();
-          renderDebt();
-          return this.status();
+        routes,
+        getResults() {
+          return auditResults.slice();
         },
+        runAudit,
         status() {
           return {
             contract: CONTRACT,
-            standard: "cutting-edge-frontier-tech-only",
-            routes: ledger.length,
-            counts: classifyCounts(),
-            receiptsCopyable: false,
-            publicDensity: "reduced",
+            auditMode: "live-client-side",
+            routes: auditResults.length,
+            counts: counts(),
             generatedImage: false,
             graphicBox: false,
             visualPassClaim: false
@@ -1136,15 +1330,16 @@
 
       updateMetrics();
       renderLedger();
-      renderDebt();
+      renderGaps();
+      updateNextMove();
 
       document.documentElement.dataset.tripleGReceipt = CONTRACT;
-      document.documentElement.dataset.standard = "cutting-edge-frontier-tech-only";
-      document.documentElement.dataset.receiptsCopyable = "false";
-      document.documentElement.dataset.publicDensity = "reduced";
+      document.documentElement.dataset.auditMode = "live-client-side";
       document.documentElement.dataset.generatedImage = "false";
       document.documentElement.dataset.graphicBox = "false";
       document.documentElement.dataset.visualPassClaim = "false";
+
+      window.setTimeout(runAudit, 300);
     })();
   </script>
 </body>

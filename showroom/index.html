@@ -1,24 +1,27 @@
+Destination file:
+
+/showroom/index.html
+
 <!-- /showroom/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-cover-single-enclosed-256-face-diamond"
+  data-page="showroom-cover-crown-crystal-256-face-diamond"
   data-route="/showroom/"
-  data-contract="SHOWROOM_COVER_SINGLE_ENCLOSED_256_FACE_DIAMOND_HTML_TNT_v3"
-  data-previous-contract="SHOWROOM_COVER_256_FACE_FIBONACCI_DIAMOND_LATTICE_HTML_TNT_v2"
-  data-showroom-role="cover"
-  data-showroom-cover-diamond-lattice="256-face"
-  data-diamond-mode="single-enclosed-three-dimensional-construct"
-  data-lattice-count="256"
-  data-lattice-geometry="16x16"
-  data-fibonacci-zigzag="false"
-  data-fibonacci-geometry="folded-into-construct"
-  data-master-psalm-binding="MASTER_PSALM_FIBONACCI_256_CANONICAL_BINDING_v1"
-  data-required-asset-contract="SHOWROOM_256_FACE_FIBONACCI_ENCLOSED_DIAMOND_CONSTRUCT_TNT_v3"
-  data-next-layer="/showroom/globe/"
+  data-contract="SHOWROOM_COVER_CROWN_CRYSTAL_256_FACE_DIAMOND_HTML_TNT_v2"
+  data-required-runtime-contract="SHOWROOM_COVER_CROWN_CRYSTAL_256_FACE_DIAMOND_TNT_v2"
+  data-previous-contract="SHOWROOM_COVER_CRYSTALLIZED_256_FACE_DIAMOND_HTML_TNT_v1"
+  data-showroom-role="public-facing-glamour-cover"
+  data-diamond-object="crown-cut-crystallized-256-face-diamond"
+  data-diamond-mount-required="true"
+  data-crown-top="true"
+  data-face-defined-edges="true"
+  data-yellow-line-prominence="reduced"
+  data-visible-nodes="subtle"
+  data-fibonacci-geometry="internal"
+  data-showroom-diagnostics-visible="false"
   data-generated-image="false"
   data-graphic-box="false"
-  data-parent-mutation-authorized="false"
   data-visual-pass-claim="false"
 >
 <head>
@@ -27,7 +30,7 @@
   <title>Diamond Gate Bridge · Showroom</title>
   <meta
     name="description"
-    content="The Diamond Gate Bridge Showroom cover presents a single enclosed rotating 256-face diamond construct and routes into the Globe Showcase."
+    content="The Showroom is the public-facing glamour cover for Diamond Gate Bridge. It introduces the crown-cut crystallized 256-face diamond construct and opens into the Globe Showcase."
   >
 
   <style>
@@ -36,12 +39,13 @@
       --bg:#030713;
       --panel:rgba(10,17,31,.82);
       --panel2:rgba(5,10,22,.88);
-      --line:rgba(244,191,96,.32);
+      --line:rgba(244,191,96,.34);
+      --soft-line:rgba(255,255,255,.10);
       --text:#f8ead0;
       --muted:#bac2cf;
       --gold:#f4bf60;
-      --blue:#8ebeff;
       --green:#8ff0c3;
+      --blue:#8ebeff;
       --shadow:0 26px 82px rgba(0,0,0,.44);
       --radius:28px;
       --max:1220px;
@@ -71,7 +75,7 @@
     a { color:inherit; text-decoration:none; }
 
     a:focus-visible,
-    button:focus-visible {
+    [tabindex]:focus-visible {
       outline:2px solid var(--gold);
       outline-offset:4px;
     }
@@ -100,8 +104,8 @@
 
     .topbar,
     .hero,
-    .showroom-stage,
-    .path-card,
+    .diamond-panel,
+    .route-card,
     .receipt {
       border:1px solid var(--line);
       border-radius:var(--radius);
@@ -182,33 +186,34 @@
 
     h1 {
       margin:0;
-      max-width:980px;
-      font-size:clamp(2.8rem,7vw,6.4rem);
+      max-width:940px;
+      font-size:clamp(2.8rem,7vw,6.2rem);
       line-height:.86;
       letter-spacing:-.08em;
     }
 
     .lede {
-      max-width:86ch;
+      max-width:84ch;
       margin:22px 0 0;
       color:var(--muted);
       font-size:clamp(1rem,2.2vw,1.16rem);
       line-height:1.65;
     }
 
-    .actions {
+    .hero-actions,
+    .display-actions {
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      margin-top:22px;
+      margin-top:24px;
     }
 
     .button {
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      min-height:42px;
-      padding:10px 14px;
+      min-height:46px;
+      padding:11px 16px;
       border:1px solid rgba(244,191,96,.32);
       border-radius:999px;
       background:rgba(244,191,96,.09);
@@ -221,81 +226,133 @@
       background:var(--gold);
     }
 
-    .showroom-stage {
+    .button.green {
+      border-color:rgba(143,240,195,.32);
+      background:rgba(143,240,195,.08);
+      color:var(--green);
+    }
+
+    .diamond-panel {
       margin-top:18px;
-      padding:18px;
+      padding:clamp(16px,3vw,28px);
       background:
-        radial-gradient(circle at 50% 18%,rgba(244,191,96,.14),transparent 26rem),
+        radial-gradient(circle at 50% 22%,rgba(244,191,96,.08),transparent 21rem),
+        radial-gradient(circle at 50% 62%,rgba(142,190,255,.11),transparent 28rem),
         linear-gradient(180deg,rgba(255,255,255,.055),transparent),
         var(--panel2);
     }
 
-    .stage-head {
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
+    .diamond-copy {
+      display:grid;
+      grid-template-columns:minmax(0,.86fr) minmax(320px,1.14fr);
       gap:18px;
-      margin-bottom:14px;
+      align-items:start;
     }
 
-    .stage-head h2 {
-      margin:0 0 6px;
-      font-size:clamp(1.7rem,4vw,3rem);
-      line-height:.96;
-      letter-spacing:-.055em;
+    .diamond-text {
+      padding:4px 0 0;
     }
 
-    .stage-head p {
+    .diamond-text h2 {
       margin:0;
-      max-width:72ch;
+      max-width:720px;
+      font-size:clamp(2.2rem,5vw,4.8rem);
+      line-height:.90;
+      letter-spacing:-.065em;
+    }
+
+    .diamond-text p {
+      margin:16px 0 0;
+      color:var(--muted);
+      font-size:clamp(1rem,2.1vw,1.12rem);
+      line-height:1.62;
+    }
+
+    .diamond-mount-wrap {
+      position:relative;
+      min-width:0;
+    }
+
+    [data-showroom-diamond-mount] {
+      width:100%;
+      min-height:clamp(390px,62vw,760px);
+      border:1px solid rgba(142,190,255,.18);
+      border-radius:28px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 54%,rgba(210,235,255,.13),transparent 19rem),
+        radial-gradient(circle at 50% 44%,rgba(244,191,96,.07),transparent 21rem),
+        linear-gradient(180deg,rgba(7,13,30,1),rgba(2,5,12,1));
+      box-shadow:
+        inset 0 0 54px rgba(143,240,195,.08),
+        0 24px 70px rgba(0,0,0,.34);
+      contain:layout paint style;
+      touch-action:none;
+    }
+
+    .fallback-diamond-note {
+      min-height:clamp(390px,62vw,760px);
+      display:grid;
+      place-items:center;
+      padding:24px;
+      text-align:center;
+      color:var(--muted);
+    }
+
+    .fallback-diamond-note strong {
+      display:block;
+      margin-bottom:8px;
+      color:var(--gold);
+      font-size:clamp(1.3rem,3vw,2rem);
+    }
+
+    .route-grid {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+      margin-top:18px;
+    }
+
+    .route-card {
+      padding:18px;
+      background:
+        radial-gradient(circle at 20% 10%,rgba(244,191,96,.08),transparent 12rem),
+        linear-gradient(180deg,rgba(255,255,255,.05),transparent),
+        rgba(7,13,27,.76);
+      box-shadow:none;
+    }
+
+    .route-card .label {
+      display:block;
+      margin-bottom:10px;
+      color:var(--gold);
+      font-size:.82rem;
+      font-weight:900;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .route-card h2 {
+      margin:0;
+      font-size:clamp(1.4rem,3vw,2.1rem);
+      letter-spacing:-.045em;
+    }
+
+    .route-card p {
+      margin:10px 0 0;
       color:var(--muted);
       line-height:1.55;
     }
 
-    .diamond-mount {
-      width:100%;
-      min-height:clamp(360px,72vw,700px);
-      border:1px solid rgba(142,190,255,.18);
-      border-radius:22px;
-      background:
-        radial-gradient(circle at 50% 44%,rgba(142,190,255,.10),transparent 16rem),
-        linear-gradient(180deg,rgba(7,13,30,1),rgba(2,5,12,1));
-      overflow:hidden;
-    }
-
-    .path-grid {
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-      margin-top:18px;
-    }
-
-    .path-card {
-      padding:16px;
-      box-shadow:none;
-      background:linear-gradient(180deg,rgba(255,255,255,.05),transparent),rgba(7,13,27,.74);
-    }
-
-    .path-card strong {
-      display:block;
+    .route-card a {
+      display:inline-flex;
+      margin-top:16px;
+      padding:9px 12px;
+      border:1px solid rgba(244,191,96,.28);
+      border-radius:999px;
       color:var(--gold);
-      font-size:.78rem;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      margin-bottom:8px;
-    }
-
-    .path-card h2 {
-      margin:0 0 8px;
-      font-size:1.2rem;
-      letter-spacing:-.03em;
-    }
-
-    .path-card p {
-      margin:0;
-      color:var(--muted);
-      line-height:1.48;
-      font-size:.92rem;
+      font-weight:900;
+      background:rgba(244,191,96,.07);
     }
 
     .receipt {
@@ -322,21 +379,25 @@
       text-align:center;
     }
 
-    @media (max-width:900px) {
+    @media (max-width:980px) {
+      .diamond-copy {
+        grid-template-columns:1fr;
+      }
+
+      .route-grid {
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:760px) {
       .topbar {
         align-items:flex-start;
         border-radius:22px;
         flex-direction:column;
       }
 
-      .nav { justify-content:flex-start; }
-
-      .stage-head {
-        flex-direction:column;
-      }
-
-      .path-grid {
-        grid-template-columns:1fr;
+      .nav {
+        justify-content:flex-start;
       }
     }
 
@@ -347,14 +408,16 @@
       }
 
       .hero,
-      .showroom-stage,
-      .path-card,
+      .diamond-panel,
+      .route-card,
       .receipt {
         border-radius:18px;
       }
 
-      .showroom-stage {
-        padding:10px;
+      [data-showroom-diamond-mount],
+      .fallback-diamond-note {
+        min-height:clamp(360px,88vw,620px);
+        border-radius:20px;
       }
     }
   </style>
@@ -383,128 +446,163 @@
 
     <main id="showroom-main" tabindex="-1">
       <section class="hero">
-        <p class="eyebrow">Showroom Cover · Single Enclosed 256-Face Diamond</p>
-        <h1>The cover opens with one diamond.</h1>
+        <p class="eyebrow">Public cover · glamour layer</p>
+        <h1>The Showroom opens the case.</h1>
         <p class="lede">
-          The Showroom is the glamour-facing cover. Its centerpiece is a single enclosed rotating diamond construct:
-          256 fixed nodes folded into volume, facets, enclosure, and depth. Fibonacci geometry remains structural,
-          not drawn as a visible zigzag.
+          The Showroom is the public-facing glamour layer. It introduces the crown-cut crystal diamond,
+          then opens into the Globe Showcase where the worlds sit like objects in a curated bookcase and display case.
         </p>
 
-        <div class="actions">
+        <div class="hero-actions">
           <a class="button primary" href="/showroom/globe/">Enter Globe Showcase</a>
-          <a class="button" href="/showroom/globe/h-earth/">Inspect H-Earth</a>
-          <a class="button" href="/gauges/">Run Triple G</a>
+          <a class="button" href="/products/">View Product Wing</a>
+          <a class="button green" href="/gauges/">Open Triple G</a>
         </div>
       </section>
 
       <section
-        class="showroom-stage"
-        aria-label="Showroom single enclosed 256-face diamond construct"
-        data-showroom-cover-visual="single-enclosed-256-face-diamond"
-        data-showroom-cover-diamond-lattice="256-face"
-        data-diamond-mode="single-enclosed-three-dimensional-construct"
-        data-lattice-count="256"
-        data-lattice-geometry="16x16"
-        data-fibonacci-zigzag="false"
-        data-fibonacci-geometry="folded-into-construct"
+        class="diamond-panel"
+        aria-label="Crown-cut crystallized 256-face diamond cover object"
+        data-showroom-diamond-panel="true"
+        data-diamond-object="crown-cut-crystallized-256-face-diamond"
+        data-256-face-construct="true"
+        data-crown-top="true"
+        data-face-defined-edges="true"
+        data-yellow-line-prominence="reduced"
+        data-visible-nodes="subtle"
+        data-fibonacci-geometry="internal"
         data-generated-image="false"
         data-graphic-box="false"
-        data-parent-mutation-authorized="false"
       >
-        <div class="stage-head">
-          <div>
-            <h2>256 faces. One enclosed diamond.</h2>
+        <div class="diamond-copy">
+          <div class="diamond-text">
+            <p class="eyebrow">Crown cut · 256 faces · one crystallized field</p>
+            <h2>Crown-Cut 256-Face Crystal Diamond</h2>
             <p>
-              The visible object is one enclosed diamond, not a plate and not a loose path.
-              The 256 nodes form the construct. Fibonacci geometry controls internal progression without showing a zigzag line.
+              The visible object is one crown-topped crystallized diamond. The 256 faces define the body,
+              while Fibonacci geometry controls the internal facet rhythm without exposing a loud wireframe,
+              a yellow-line mesh, or a zigzag path.
             </p>
-          </div>
-          <a class="button" href="/showroom/globe/">Open Showcase</a>
-        </div>
 
-        <div
-          class="diamond-mount"
-          data-showroom-diamond256-mount
-          data-lattice-count="256"
-          data-lattice-geometry="16x16"
-          data-fibonacci-zigzag="false"
-          data-fibonacci-geometry="folded-into-construct"
-          data-diamond-mode="single-enclosed-three-dimensional-construct"
-          data-master-psalm-binding="MASTER_PSALM_FIBONACCI_256_CANONICAL_BINDING_v1"
-        ></div>
+            <div class="display-actions">
+              <a class="button primary" href="/showroom/globe/">Open Showcase</a>
+              <a class="button" href="/showroom/globe/h-earth/">Inspect H-Earth</a>
+            </div>
+          </div>
+
+          <div class="diamond-mount-wrap">
+            <div
+              id="showroomDiamondMount"
+              data-showroom-diamond-mount="true"
+              data-showroom-crystal-diamond-stage-required="true"
+              data-contract-required="SHOWROOM_COVER_CROWN_CRYSTAL_256_FACE_DIAMOND_TNT_v2"
+              data-previous-runtime-contract="SHOWROOM_COVER_CRYSTALLIZED_256_FACE_DIAMOND_TNT_v1"
+              data-diamond-object="crown-cut-crystallized-256-face-diamond"
+              data-crown-top="true"
+              data-face-defined-edges="true"
+              data-yellow-line-prominence="reduced"
+              data-visible-nodes="subtle"
+              data-fibonacci-geometry="internal"
+              data-generated-image="false"
+              data-graphic-box="false"
+              aria-label="Crown-cut crystallized 256-face rotating diamond mount"
+            >
+              <div class="fallback-diamond-note">
+                <span>
+                  <strong>Crown-Cut 256-Face Crystal Diamond</strong>
+                  Runtime mount ready. The diamond is rendered by code from /showroom/index.js.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <section class="path-grid" aria-label="Showroom path explanation">
-        <article class="path-card">
-          <strong>Cover</strong>
+      <section class="route-grid" aria-label="Showroom route structure">
+        <article class="route-card">
+          <span class="label">Cover</span>
           <h2>Showroom</h2>
-          <p>The public-facing glamour layer. It introduces the enclosed diamond construct without exposing diagnostics.</p>
+          <p>
+            The public-facing glamour layer. It introduces the crown-cut crystal diamond without exposing diagnostics.
+          </p>
+          <a href="/showroom/">Stay on cover</a>
         </article>
 
-        <article class="path-card">
-          <strong>Showcase</strong>
+        <article class="route-card">
+          <span class="label">Showcase</span>
           <h2>Globe Showcase</h2>
-          <p>The bookcase and display-case layer for Earth, H-Earth, Hearth, and Audralia.</p>
+          <p>
+            The bookcase and display-case layer. Worlds can be selected, viewed, and opened into private inspection rooms.
+          </p>
+          <a href="/showroom/globe/">Open Showcase</a>
         </article>
 
-        <article class="path-card">
-          <strong>Inspection</strong>
-          <h2>Private Planet Rooms</h2>
-          <p>Each planet opens into its own inspection room. H-Earth remains the active orbital build planet.</p>
+        <article class="route-card">
+          <span class="label">Inspection</span>
+          <h2>H-Earth</h2>
+          <p>
+            The private orbital/aerial inspection room. Ground level and estate placement remain held until land and state are definitive.
+          </p>
+          <a href="/showroom/globe/h-earth/">Inspect H-Earth</a>
         </article>
       </section>
 
       <section
         id="showroomReceipt"
         class="receipt"
-        aria-label="Showroom cover receipt"
-        data-receipt-panel="showroom-cover-single-enclosed-256-face-diamond"
-        data-html-contract="SHOWROOM_COVER_SINGLE_ENCLOSED_256_FACE_DIAMOND_HTML_TNT_v3"
-        data-required-asset-contract="SHOWROOM_256_FACE_FIBONACCI_ENCLOSED_DIAMOND_CONSTRUCT_TNT_v3"
-        data-showroom-role="cover"
-        data-next-layer="/showroom/globe/"
-        data-lattice-count="256"
-        data-lattice-geometry="16x16"
-        data-fibonacci-zigzag="false"
-        data-fibonacci-geometry="folded-into-construct"
-        data-diamond-mode="single-enclosed-three-dimensional-construct"
+        aria-label="Showroom route receipt"
+        data-receipt-panel="showroom-cover-crown-crystal-256-face-diamond"
+        data-html-contract="SHOWROOM_COVER_CROWN_CRYSTAL_256_FACE_DIAMOND_HTML_TNT_v2"
+        data-required-runtime-contract="SHOWROOM_COVER_CROWN_CRYSTAL_256_FACE_DIAMOND_TNT_v2"
+        data-previous-html-contract="SHOWROOM_COVER_CRYSTALLIZED_256_FACE_DIAMOND_HTML_TNT_v1"
+        data-diamond-mount-present="true"
+        data-diamond-object="crown-cut-crystallized-256-face-diamond"
+        data-crown-top="true"
+        data-face-defined-edges="true"
+        data-yellow-line-prominence="reduced"
+        data-visible-nodes="subtle"
+        data-fibonacci-geometry="internal"
         data-generated-image="false"
         data-graphic-box="false"
-        data-parent-mutation-authorized="false"
         data-visual-pass-claim="false"
       >
-        <code>HTML_RECEIPT: SHOWROOM_COVER_SINGLE_ENCLOSED_256_FACE_DIAMOND_HTML_TNT_v3</code>
-        <code>ASSET_RECEIPT_REQUIRED: SHOWROOM_256_FACE_FIBONACCI_ENCLOSED_DIAMOND_CONSTRUCT_TNT_v3</code>
-        <code>MASTER_PSALM_BINDING: MASTER_PSALM_FIBONACCI_256_CANONICAL_BINDING_v1</code>
-        <code>SHOWROOM_ROLE: cover</code>
-        <code>NEXT_LAYER: /showroom/globe/</code>
-        <code>LATTICE_COUNT: 256</code>
-        <code>LATTICE_GEOMETRY: 16x16</code>
-        <code>FIBONACCI_ZIGZAG: false</code>
-        <code>FIBONACCI_GEOMETRY: folded-into-construct</code>
-        <code>DIAMOND_MODE: single-enclosed-three-dimensional-construct</code>
+        <code>HTML_RECEIPT: SHOWROOM_COVER_CROWN_CRYSTAL_256_FACE_DIAMOND_HTML_TNT_v2</code>
+        <code>REQUIRED_RUNTIME: SHOWROOM_COVER_CROWN_CRYSTAL_256_FACE_DIAMOND_TNT_v2</code>
+        <code>PREVIOUS_RUNTIME: SHOWROOM_COVER_CRYSTALLIZED_256_FACE_DIAMOND_TNT_v1</code>
+        <code>DIAMOND_OBJECT: crown-cut-crystallized-256-face-diamond</code>
+        <code>DIAMOND_MOUNT: data-showroom-diamond-mount=true</code>
+        <code>CROWN_TOP: true</code>
+        <code>FACE_CONSTRUCT: 256</code>
+        <code>FACE_DEFINED_EDGES: true</code>
+        <code>YELLOW_LINE_PROMINENCE: reduced</code>
+        <code>VISIBLE_NODES: subtle</code>
+        <code>FIBONACCI_GEOMETRY: internal</code>
         <code>GENERATED_IMAGE: false</code>
         <code>GRAPHIC_BOX: false</code>
-        <code>PARENT_MUTATION_AUTHORIZED: false</code>
+        <code>VISIBLE_DIAGNOSTICS: false</code>
+        <code>VISUAL_PASS_CLAIM: false</code>
       </section>
     </main>
 
     <footer class="footer">
-      Cover → Globe Showcase → Display Case → Full Inspection.
+      Cover → Globe Showcase → Private Inspection.
     </footer>
   </div>
 
   <script
+    id="showroomCrownCrystalDiamondRuntime"
     type="module"
-    src="/assets/showroom/showroom.diamond256.lattice.js?v=SHOWROOM_256_FACE_FIBONACCI_ENCLOSED_DIAMOND_CONSTRUCT_TNT_v3"
-    data-contract="SHOWROOM_256_FACE_FIBONACCI_ENCLOSED_DIAMOND_CONSTRUCT_TNT_v3"
-    data-mount="[data-showroom-diamond256-mount]"
-    data-lattice-count="256"
-    data-lattice-geometry="16x16"
-    data-fibonacci-zigzag="false"
-    data-fibonacci-geometry="folded-into-construct"
-    data-diamond-mode="single-enclosed-three-dimensional-construct"
+    src="./index.js?v=SHOWROOM_COVER_CROWN_CRYSTAL_256_FACE_DIAMOND_TNT_v2"
+    data-handoff="showroom-cover-crown-crystal-256-face-diamond"
+    data-html-contract="SHOWROOM_COVER_CROWN_CRYSTAL_256_FACE_DIAMOND_HTML_TNT_v2"
+    data-required-runtime-contract="SHOWROOM_COVER_CROWN_CRYSTAL_256_FACE_DIAMOND_TNT_v2"
+    data-previous-runtime-contract="SHOWROOM_COVER_CRYSTALLIZED_256_FACE_DIAMOND_TNT_v1"
+    data-diamond-object="crown-cut-crystallized-256-face-diamond"
+    data-crown-top="true"
+    data-face-defined-edges="true"
+    data-yellow-line-prominence="reduced"
+    data-visible-nodes="subtle"
+    data-fibonacci-geometry="internal"
     data-generated-image="false"
     data-graphic-box="false"
   ></script>

@@ -3,12 +3,12 @@
   lang="en"
   data-route="/products/"
   data-page="products"
-  data-version="G1-V5"
-  data-contract="PRODUCTS_LOCAL_8_POINT_AXIAL_SAPPHIRE_ORBIT_TNT_v1"
-  data-renews="PRODUCTS_LOCAL_8_POINT_AXIAL_DIAMOND_ORBIT_TNT_v4"
+  data-version="G1-V6"
+  data-contract="PRODUCTS_LOCAL_8_POINT_AXIAL_CUT_SAPPHIRE_ORBIT_TNT_v2"
+  data-renews="PRODUCTS_LOCAL_8_POINT_AXIAL_SAPPHIRE_ORBIT_TNT_v1"
   data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
   data-animation-standard="LOCAL_8_DIAMOND_AXIAL_ORBIT_STANDARD_v1"
-  data-material-renewal="sapphire-gemstone"
+  data-material-renewal="cut-sapphire-gemstone"
   data-status="active"
   data-role="product-wing"
   data-heavy-runtime-loaded="false"
@@ -24,7 +24,7 @@
   <title>Products · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Products is the product wing of Diamond Gate Bridge: one message, eight clear doors, one axial sapphire orbit."
+    content="Products is the product wing of Diamond Gate Bridge: one message, eight clear doors, one axial cut-sapphire orbit."
   >
 
   <style>
@@ -46,6 +46,7 @@
       --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
       --orbit-duration:48s;
+      --gem-cut:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
     }
 
     *{box-sizing:border-box}
@@ -497,19 +498,32 @@
       width:5.45rem;
       height:5.45rem;
       margin:-2.725rem 0 0 -2.725rem;
-      border:1px solid rgba(141,216,255,.38);
-      border-radius:1.18rem 1.42rem 1.10rem 1.52rem;
+      border:1px solid rgba(141,216,255,.48);
+      border-radius:0;
+      clip-path:var(--gem-cut);
       background:
-        linear-gradient(42deg,transparent 0 18%,rgba(255,255,255,.20) 19% 22%,transparent 23% 100%),
-        linear-gradient(134deg,rgba(255,255,255,.30),transparent 18%,rgba(14,67,166,.35) 45%,transparent 72%),
-        radial-gradient(circle at 30% 20%,rgba(255,255,255,.56),rgba(155,220,255,.16) 23%,transparent 40%),
-        radial-gradient(circle at 72% 78%,rgba(1,13,48,.54),transparent 52%),
-        linear-gradient(145deg,rgba(79,174,255,.98),rgba(20,91,220,.96) 42%,rgba(3,28,96,.98) 100%);
+        linear-gradient(35deg,transparent 0 19%,rgba(255,255,255,.30) 20% 22%,transparent 23% 100%),
+        linear-gradient(145deg,rgba(255,255,255,.24),transparent 18%,rgba(4,38,128,.28) 44%,transparent 68%),
+        conic-gradient(from 45deg at 50% 50%,
+          rgba(255,255,255,.28) 0deg,
+          rgba(35,142,255,.28) 36deg,
+          rgba(2,18,76,.52) 72deg,
+          rgba(102,194,255,.24) 108deg,
+          rgba(4,31,116,.60) 144deg,
+          rgba(255,255,255,.18) 180deg,
+          rgba(2,18,76,.64) 216deg,
+          rgba(58,154,255,.28) 252deg,
+          rgba(1,12,54,.68) 288deg,
+          rgba(160,222,255,.24) 324deg,
+          rgba(255,255,255,.28) 360deg),
+        radial-gradient(circle at 32% 20%,rgba(255,255,255,.66),rgba(150,220,255,.18) 22%,transparent 38%),
+        radial-gradient(circle at 76% 80%,rgba(1,9,42,.72),transparent 52%),
+        linear-gradient(145deg,rgba(91,188,255,.98),rgba(17,88,218,.98) 42%,rgba(1,24,92,.99) 100%);
       box-shadow:
-        0 16px 34px rgba(2,16,64,.38),
-        0 0 30px rgba(36,120,255,.28),
-        inset 0 1px 0 rgba(255,255,255,.26),
-        inset 0 -14px 26px rgba(1,9,42,.30);
+        0 18px 36px rgba(2,16,64,.42),
+        0 0 32px rgba(36,120,255,.34),
+        inset 0 1px 0 rgba(255,255,255,.32),
+        inset 0 -14px 28px rgba(1,9,42,.34);
       transform:
         rotate(var(--angle))
         translateY(var(--radius))
@@ -524,30 +538,38 @@
     .product-node::before{
       content:"";
       position:absolute;
-      inset:8%;
-      border-radius:1.00rem 1.22rem 1rem 1.28rem;
+      inset:5%;
+      clip-path:polygon(50% 0%,75% 12%,100% 36%,80% 54%,89% 78%,50% 100%,11% 78%,20% 54%,0% 36%,25% 12%);
       background:
-        linear-gradient(90deg,transparent 0 47%,rgba(255,255,255,.16) 48% 51%,transparent 52% 100%),
-        linear-gradient(0deg,transparent 0 47%,rgba(255,255,255,.12) 48% 51%,transparent 52% 100%),
-        linear-gradient(135deg,rgba(255,255,255,.23),transparent 52%),
-        radial-gradient(circle at 34% 24%,rgba(255,255,255,.26),transparent 30%);
-      clip-path:polygon(50% 0,86% 15%,100% 50%,85% 86%,50% 100%,15% 86%,0 50%,14% 15%);
-      opacity:.82;
+        linear-gradient(90deg,transparent 0 48%,rgba(255,255,255,.20) 49% 51%,transparent 52% 100%),
+        linear-gradient(0deg,transparent 0 48%,rgba(255,255,255,.14) 49% 51%,transparent 52% 100%),
+        linear-gradient(27deg,transparent 0 32%,rgba(255,255,255,.18) 33% 35%,transparent 36% 100%),
+        linear-gradient(153deg,transparent 0 31%,rgba(255,255,255,.15) 32% 34%,transparent 35% 100%),
+        radial-gradient(circle at 36% 23%,rgba(255,255,255,.30),transparent 26%),
+        conic-gradient(from 0deg at 50% 50%,
+          rgba(255,255,255,.18),
+          rgba(8,68,180,.10),
+          rgba(255,255,255,.10),
+          rgba(1,16,72,.22),
+          rgba(255,255,255,.16));
+      opacity:.92;
       pointer-events:none;
       transform:translateZ(1px);
+      mix-blend-mode:screen;
     }
 
     .product-node::after{
       content:"";
       position:absolute;
       inset:0;
-      border-radius:inherit;
+      clip-path:var(--gem-cut);
       background:
-        linear-gradient(115deg,transparent 0 34%,rgba(255,255,255,.20) 35% 37%,transparent 38% 100%),
-        linear-gradient(25deg,transparent 0 58%,rgba(255,232,163,.16) 59% 61%,transparent 62% 100%);
+        linear-gradient(115deg,transparent 0 33%,rgba(255,255,255,.30) 34% 36%,transparent 37% 100%),
+        linear-gradient(25deg,transparent 0 58%,rgba(255,232,163,.18) 59% 61%,transparent 62% 100%),
+        radial-gradient(circle at 70% 24%,rgba(255,255,255,.18),transparent 20%);
       box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.07),
-        inset 0 -20px 26px rgba(1,9,42,.20);
+        inset 0 0 0 1px rgba(255,255,255,.10),
+        inset 0 -20px 28px rgba(1,9,42,.24);
       pointer-events:none;
       mix-blend-mode:screen;
     }
@@ -555,14 +577,14 @@
     .product-node:hover,
     .product-node:focus{
       outline:none;
-      border-color:rgba(243,200,111,.72);
+      border-color:rgba(243,200,111,.74);
       box-shadow:
-        0 22px 42px rgba(2,16,64,.46),
-        0 0 38px rgba(36,120,255,.36),
-        0 0 18px rgba(243,200,111,.14),
-        inset 0 1px 0 rgba(255,255,255,.30),
-        inset 0 -14px 26px rgba(1,9,42,.30);
-      filter:brightness(1.08) saturate(1.12);
+        0 23px 44px rgba(2,16,64,.50),
+        0 0 42px rgba(36,120,255,.42),
+        0 0 18px rgba(243,200,111,.15),
+        inset 0 1px 0 rgba(255,255,255,.35),
+        inset 0 -14px 28px rgba(1,9,42,.34);
+      filter:brightness(1.10) saturate(1.16) contrast(1.05);
     }
 
     .product-label-shell{
@@ -588,7 +610,7 @@
       letter-spacing:.07em;
       line-height:1.1;
       text-transform:uppercase;
-      text-shadow:0 2px 12px rgba(0,0,0,.88);
+      text-shadow:0 2px 12px rgba(0,0,0,.90),0 0 10px rgba(0,28,90,.72);
       animation:productsTextUpright var(--orbit-duration) linear infinite;
     }
 
@@ -850,10 +872,10 @@
       </section>
 
       <section class="panel section" aria-labelledby="field-title">
-        <div class="kicker">Eight-sapphire axial orbit</div>
-        <h2 id="field-title">Eight sapphires sit on one circular path around one usable message.</h2>
+        <div class="kicker">Eight cut-sapphire axial orbit</div>
+        <h2 id="field-title">Eight cut sapphires sit on one circular path around one usable message.</h2>
 
-        <div class="products-stage" aria-label="Animated Products eight-sapphire axial orbit">
+        <div class="products-stage" aria-label="Animated Products eight-cut-sapphire axial orbit">
           <div class="products-anchor" aria-hidden="true">
             <span>Products<br>One Message<br>Eight Doors</span>
           </div>
@@ -991,7 +1013,7 @@
     </main>
 
     <footer>
-      Products · One message · Eight sapphire doors.
+      Products · One message · Eight cut-sapphire doors.
     </footer>
   </div>
 </body>

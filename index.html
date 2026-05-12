@@ -2,15 +2,12 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="compass-three-context-frontier-index"
+  data-page="compass-legacy-frontier-marriage"
   data-route="/"
-  data-contract="COMPASS_THREE_CONTEXT_FRONTIER_INDEX_HTML_TNT_v1"
-  data-required-renderer="COMPASS_THREE_CONTEXT_FRONTIER_INDEX_JS_TNT_v1"
+  data-contract="COMPASS_LEGACY_FRONTIER_MARRIAGE_HTML_TNT_v1"
+  data-required-renderer="COMPASS_LEGACY_FRONTIER_MARRIAGE_JS_TNT_v1"
   data-standard="cutting-edge-frontier-tech-only"
   data-default-context="round"
-  data-flat-context="architectural-route-board"
-  data-round-context="estate-centered-compass-field"
-  data-globe-context="universe-scale-expansion-field"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claim="false"
@@ -21,278 +18,307 @@
   <title>Diamond Gate Bridge · Compass</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Compass: Flat, Round, and Globe as three distinct frontier contexts."
+    content="Diamond Gate Bridge Compass: Flat, Round, and Globe as three distinct frontier entry contexts."
   >
 
   <style>
     :root {
       color-scheme: dark;
-      --bg:#020611;
-      --panel:rgba(7,14,29,.86);
-      --line:rgba(244,191,96,.34);
-      --text:#f8ead0;
-      --muted:#bac2cf;
-      --gold:#f4bf60;
-      --blue:#8ebeff;
-      --green:#8ff0c3;
-      --shadow:0 28px 90px rgba(0,0,0,.46);
-      --max:1220px;
-      --facet:polygon(0 18px,18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px));
-      --facet-small:polygon(0 10px,10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px));
+      --bg: #020611;
+      --panel: rgba(7, 14, 29, .86);
+      --panel-2: rgba(3, 8, 19, .94);
+      --line: rgba(244, 191, 96, .34);
+      --line-soft: rgba(255, 255, 255, .10);
+      --text: #f8ead0;
+      --muted: #bac2cf;
+      --gold: #f4bf60;
+      --blue: #8ebeff;
+      --green: #8ff0c3;
+      --shadow: 0 28px 90px rgba(0, 0, 0, .46);
+      --max: 1220px;
+      --facet: polygon(
+        0 18px,
+        18px 0,
+        calc(100% - 18px) 0,
+        100% 18px,
+        100% calc(100% - 18px),
+        calc(100% - 18px) 100%,
+        18px 100%,
+        0 calc(100% - 18px)
+      );
+      --facet-small: polygon(
+        0 10px,
+        10px 0,
+        calc(100% - 10px) 0,
+        100% 10px,
+        100% calc(100% - 10px),
+        calc(100% - 10px) 100%,
+        10px 100%,
+        0 calc(100% - 10px)
+      );
     }
 
-    * { box-sizing:border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html {
-      min-height:100%;
+      min-height: 100%;
       background:
-        radial-gradient(circle at 50% 0%,rgba(142,190,255,.18),transparent 34rem),
-        radial-gradient(circle at 13% 18%,rgba(244,191,96,.12),transparent 30rem),
-        radial-gradient(circle at 88% 20%,rgba(143,240,195,.09),transparent 30rem),
-        linear-gradient(180deg,var(--bg),#01030a 78%);
+        radial-gradient(circle at 50% 0%, rgba(142, 190, 255, .18), transparent 34rem),
+        radial-gradient(circle at 13% 18%, rgba(244, 191, 96, .12), transparent 30rem),
+        radial-gradient(circle at 88% 20%, rgba(143, 240, 195, .09), transparent 30rem),
+        linear-gradient(180deg, var(--bg), #01030a 78%);
     }
 
     body {
-      min-height:100%;
-      margin:0;
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      color:var(--text);
+      min-height: 100%;
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
       background:
-        linear-gradient(145deg,rgba(255,255,255,.035),transparent 42%),
-        radial-gradient(circle at 50% 58%,rgba(244,191,96,.07),transparent 36rem);
-      overflow-x:hidden;
+        linear-gradient(145deg, rgba(255, 255, 255, .035), transparent 42%),
+        radial-gradient(circle at 50% 58%, rgba(244, 191, 96, .07), transparent 36rem);
+      overflow-x: hidden;
     }
 
-    a { color:inherit; text-decoration:none; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
     a:focus-visible,
     canvas:focus-visible,
     [tabindex]:focus-visible {
-      outline:2px solid var(--gold);
-      outline-offset:4px;
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
     }
 
     .skip-link {
-      position:absolute;
-      left:1rem;
-      top:1rem;
-      z-index:30;
-      padding:.75rem 1rem;
-      border:1px solid var(--line);
-      background:#08101d;
-      color:var(--text);
-      transform:translateY(-180%);
-      transition:transform 160ms ease;
-      clip-path:var(--facet-small);
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      z-index: 30;
+      padding: .75rem 1rem;
+      border: 1px solid var(--line);
+      background: #08101d;
+      color: var(--text);
+      transform: translateY(-180%);
+      transition: transform 160ms ease;
+      clip-path: var(--facet-small);
     }
 
-    .skip-link:focus { transform:translateY(0); }
+    .skip-link:focus {
+      transform: translateY(0);
+    }
 
     .shell {
-      width:min(var(--max),calc(100% - 32px));
-      margin:0 auto;
-      padding:24px 0 42px;
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 42px;
     }
 
     .topbar,
     .hero,
     .field-panel {
-      border:1px solid var(--line);
-      background:linear-gradient(180deg,rgba(255,255,255,.055),transparent),var(--panel);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(18px);
-      clip-path:var(--facet);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.055), transparent), var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      clip-path: var(--facet);
     }
 
     .topbar {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:18px;
-      padding:14px 18px;
-      background:rgba(5,9,18,.74);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 18px;
+      background: rgba(5, 9, 18, .74);
     }
 
     .brand {
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      min-width:max-content;
-      font-weight:950;
-      letter-spacing:.02em;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: max-content;
+      font-weight: 950;
+      letter-spacing: .02em;
     }
 
     .brand-mark {
-      width:18px;
-      height:18px;
-      border:1px solid var(--gold);
-      transform:rotate(45deg);
-      background:linear-gradient(135deg,rgba(244,191,96,.24),transparent),rgba(255,255,255,.04);
-      box-shadow:0 0 24px rgba(244,191,96,.18);
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--gold);
+      transform: rotate(45deg);
+      background:
+        linear-gradient(135deg, rgba(244, 191, 96, .24), transparent),
+        rgba(255, 255, 255, .04);
+      box-shadow: 0 0 24px rgba(244, 191, 96, .18);
     }
 
     .nav {
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:8px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
     }
 
     .nav a {
-      padding:8px 11px;
-      border:1px solid rgba(255,255,255,.09);
-      color:var(--muted);
-      font-size:.88rem;
+      padding: 8px 11px;
+      border: 1px solid rgba(255, 255, 255, .09);
+      color: var(--muted);
+      font-size: .88rem;
       background:
-        linear-gradient(135deg,rgba(255,255,255,.07),transparent 45%),
-        rgba(255,255,255,.032);
-      clip-path:var(--facet-small);
+        linear-gradient(135deg, rgba(255, 255, 255, .07), transparent 45%),
+        rgba(255, 255, 255, .032);
+      clip-path: var(--facet-small);
     }
 
     .nav a[aria-current="page"] {
-      border-color:rgba(244,191,96,.54);
-      color:var(--gold);
+      border-color: rgba(244, 191, 96, .54);
+      color: var(--gold);
       background:
-        linear-gradient(135deg,rgba(244,191,96,.16),transparent 50%),
-        rgba(244,191,96,.08);
+        linear-gradient(135deg, rgba(244, 191, 96, .16), transparent 50%),
+        rgba(244, 191, 96, .08);
     }
 
     .hero {
-      margin-top:24px;
-      padding:clamp(24px,5vw,56px);
+      margin-top: 24px;
+      padding: clamp(24px, 5vw, 56px);
       background:
-        radial-gradient(circle at 18% 12%,rgba(244,191,96,.12),transparent 18rem),
-        radial-gradient(circle at 84% 24%,rgba(143,240,195,.10),transparent 24rem),
-        linear-gradient(180deg,rgba(255,255,255,.055),transparent),
+        radial-gradient(circle at 18% 12%, rgba(244, 191, 96, .12), transparent 18rem),
+        radial-gradient(circle at 84% 24%, rgba(143, 240, 195, .10), transparent 24rem),
+        linear-gradient(180deg, rgba(255,255,255,.055), transparent),
         var(--panel);
     }
 
     .label {
-      display:inline-flex;
-      width:fit-content;
-      margin:0 0 18px;
-      padding:8px 12px;
-      border:1px solid rgba(142,190,255,.26);
-      color:var(--blue);
+      display: inline-flex;
+      width: fit-content;
+      margin: 0 0 18px;
+      padding: 8px 12px;
+      border: 1px solid rgba(142, 190, 255, .26);
+      color: var(--blue);
       background:
-        linear-gradient(135deg,rgba(142,190,255,.14),transparent 56%),
-        rgba(142,190,255,.055);
-      font-size:.82rem;
-      font-weight:950;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      clip-path:var(--facet-small);
+        linear-gradient(135deg, rgba(142, 190, 255, .14), transparent 56%),
+        rgba(142, 190, 255, .055);
+      font-size: .82rem;
+      font-weight: 950;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      clip-path: var(--facet-small);
     }
 
     h1 {
-      margin:0;
-      max-width:980px;
-      font-size:clamp(3rem,7vw,6.4rem);
-      line-height:.86;
-      letter-spacing:-.085em;
+      margin: 0;
+      max-width: 980px;
+      font-size: clamp(3rem, 7vw, 6.4rem);
+      line-height: .86;
+      letter-spacing: -.085em;
     }
 
     .lede {
-      max-width:84ch;
-      margin:22px 0 0;
-      color:var(--muted);
-      font-size:clamp(1.03rem,2.2vw,1.18rem);
-      line-height:1.65;
+      max-width: 84ch;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.03rem, 2.2vw, 1.18rem);
+      line-height: 1.65;
     }
 
     .field-panel {
-      margin-top:18px;
-      padding:clamp(8px,2.2vw,18px);
+      margin-top: 18px;
+      padding: clamp(8px, 2.2vw, 18px);
       background:
-        radial-gradient(circle at 50% 44%,rgba(143,240,195,.10),transparent 17rem),
-        radial-gradient(circle at 50% 48%,rgba(244,191,96,.10),transparent 26rem),
-        radial-gradient(circle at 50% 52%,rgba(142,190,255,.11),transparent 36rem),
-        linear-gradient(180deg,rgba(255,255,255,.045),transparent),
-        rgba(3,8,19,.94);
+        radial-gradient(circle at 50% 44%, rgba(143, 240, 195, .10), transparent 17rem),
+        radial-gradient(circle at 50% 48%, rgba(244, 191, 96, .10), transparent 26rem),
+        radial-gradient(circle at 50% 52%, rgba(142, 190, 255, .11), transparent 36rem),
+        linear-gradient(180deg, rgba(255,255,255,.045), transparent),
+        var(--panel-2);
     }
 
     .field-mount {
-      position:relative;
-      width:100%;
-      min-height:clamp(620px,80vw,940px);
-      border:1px solid rgba(142,190,255,.18);
+      position: relative;
+      width: 100%;
+      min-height: clamp(620px, 80vw, 940px);
+      border: 1px solid rgba(142, 190, 255, .18);
       background:
-        radial-gradient(circle at 50% 45%,rgba(142,190,255,.09),transparent 24rem),
-        linear-gradient(180deg,rgba(7,13,30,1),rgba(2,5,12,1));
+        radial-gradient(circle at 50% 45%, rgba(142, 190, 255, .09), transparent 24rem),
+        linear-gradient(180deg, rgba(7, 13, 30, 1), rgba(2, 5, 12, 1));
       box-shadow:
-        inset 0 0 66px rgba(143,240,195,.08),
-        0 24px 70px rgba(0,0,0,.34);
-      clip-path:var(--facet);
-      overflow:hidden;
-      contain:layout paint style;
-      touch-action:none;
+        inset 0 0 66px rgba(143, 240, 195, .08),
+        0 24px 70px rgba(0, 0, 0, .34);
+      clip-path: var(--facet);
+      overflow: hidden;
+      contain: layout paint style;
+      touch-action: none;
     }
 
-    #compassFrontierCanvas {
-      display:block;
-      width:100%;
-      height:clamp(620px,80vw,940px);
-      touch-action:none;
-      user-select:none;
-      -webkit-user-select:none;
-      -webkit-touch-callout:none;
+    #compassMarriageCanvas {
+      display: block;
+      width: 100%;
+      height: clamp(620px, 80vw, 940px);
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
     }
 
     .fallback {
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:min(88%,620px);
-      transform:translate(-50%,-50%);
-      padding:18px;
-      border:1px solid rgba(244,191,96,.28);
-      background:rgba(5,10,20,.82);
-      color:var(--muted);
-      text-align:center;
-      line-height:1.55;
-      clip-path:var(--facet);
-      pointer-events:none;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(88%, 620px);
+      transform: translate(-50%, -50%);
+      padding: 18px;
+      border: 1px solid rgba(244, 191, 96, .28);
+      background: rgba(5, 10, 20, .82);
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.55;
+      clip-path: var(--facet);
+      pointer-events: none;
     }
 
     .fallback strong {
-      display:block;
-      margin-bottom:8px;
-      color:var(--gold);
+      display: block;
+      margin-bottom: 8px;
+      color: var(--gold);
     }
 
     .renderer-loaded .fallback {
-      display:none;
+      display: none;
     }
 
-    @media (max-width:760px) {
+    @media (max-width: 760px) {
       .topbar {
-        align-items:flex-start;
-        flex-direction:column;
+        align-items: flex-start;
+        flex-direction: column;
       }
 
       .nav {
-        justify-content:flex-start;
+        justify-content: flex-start;
       }
     }
 
-    @media (max-width:560px) {
+    @media (max-width: 560px) {
       .shell {
-        width:min(100% - 20px,var(--max));
-        padding-top:10px;
+        width: min(100% - 20px, var(--max));
+        padding-top: 10px;
       }
 
       .hero {
-        padding:22px;
+        padding: 22px;
       }
 
       .field-panel {
-        padding:8px;
+        padding: 8px;
       }
 
       .field-mount,
-      #compassFrontierCanvas {
-        min-height:590px;
-        height:590px;
+      #compassMarriageCanvas {
+        min-height: 590px;
+        height: 590px;
       }
     }
   </style>
@@ -324,33 +350,33 @@
 
     <main id="compass-main" tabindex="-1">
       <section class="hero" aria-label="Compass introduction">
-        <p class="label">Compass · Three Context Frontier</p>
+        <p class="label">Compass · Legacy Field / Frontier Objects</p>
         <h1>Pressure is the door.</h1>
         <p class="lede">
-          Flat, Round, and Globe are different worlds. Choose once to change the context. Choose twice to enter the route.
+          Flat, Round, and Globe are three different ways to enter the estate. Choose once to change the field. Choose twice to enter the route.
         </p>
       </section>
 
       <section
         class="field-panel"
-        aria-label="Three-context Compass renderer"
+        aria-label="Compass field"
         data-frontier-context-renderer="true"
-        data-single-click="change-context"
+        data-single-click="change-context-or-focus"
         data-double-click="navigate"
       >
-        <div id="compassFrontierMount" class="field-mount">
+        <div id="compassMarriageMount" class="field-mount">
           <canvas
-            id="compassFrontierCanvas"
+            id="compassMarriageCanvas"
             width="1200"
             height="940"
             tabindex="0"
             role="img"
-            aria-label="Compass with three distinct contexts: Flat route board, Round estate field, and Globe universe field."
-            data-compass-frontier-canvas="true"
+            aria-label="Compass with Flat route board, Round estate orbital field, and Globe universe field."
+            data-compass-marriage-canvas="true"
           ></canvas>
 
           <div class="fallback" aria-live="polite">
-            <strong>The frontier Compass renderer did not load.</strong>
+            <strong>The Compass renderer did not load.</strong>
             Use the navigation links above to reach the site routes.
           </div>
         </div>
@@ -359,12 +385,12 @@
   </div>
 
   <script
-    id="compassFrontierRenderer"
+    id="compassMarriageRenderer"
     type="module"
-    src="./index.js?v=COMPASS_THREE_CONTEXT_FRONTIER_INDEX_JS_TNT_v1"
-    data-handoff="compass-three-context-frontier"
-    data-html-contract="COMPASS_THREE_CONTEXT_FRONTIER_INDEX_HTML_TNT_v1"
-    data-required-renderer="COMPASS_THREE_CONTEXT_FRONTIER_INDEX_JS_TNT_v1"
+    src="./index.js?v=COMPASS_LEGACY_FRONTIER_MARRIAGE_JS_TNT_v1"
+    data-handoff="compass-legacy-frontier-marriage"
+    data-html-contract="COMPASS_LEGACY_FRONTIER_MARRIAGE_HTML_TNT_v1"
+    data-required-renderer="COMPASS_LEGACY_FRONTIER_MARRIAGE_JS_TNT_v1"
     data-default-context="round"
   ></script>
 </body>

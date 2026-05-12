@@ -2,13 +2,15 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-cover-natural-solid-crown-sparkle-256-face-diamond"
+  data-page="showroom-cover-ted-talk-natural-diamond"
   data-route="/showroom/"
-  data-contract="SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5B"
+  data-contract="SHOWROOM_COVER_TED_TALK_NATURAL_DIAMOND_HTML_TNT_v6"
   data-required-runtime-contract="SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5"
-  data-previous-contract="SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5"
+  data-previous-contract="SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5B"
   data-showroom-role="public-facing-glamour-cover"
   data-diamond-object="natural-solid-crown-cut-sparkling-256-face-diamond"
+  data-single-explanation="true"
+  data-self-explanation-reduced="true"
   data-diamond-mount-required="true"
   data-natural-diamond-appearance="true"
   data-solid-form="true"
@@ -36,7 +38,7 @@
   <title>Diamond Gate Bridge · Showroom</title>
   <meta
     name="description"
-    content="The Showroom is the public-facing glamour cover for Diamond Gate Bridge. It introduces a natural-looking solid crown-cut sparkling 256-face diamond and opens into the Globe Showcase."
+    content="A TED Talk-style Showroom entrance: pressure becomes clarity, the diamond becomes the invitation, and the visitor moves from cover into the Globe Showcase."
   >
 
   <style>
@@ -110,9 +112,7 @@
 
     .topbar,
     .hero,
-    .diamond-panel,
-    .route-card,
-    .receipt {
+    .diamond-panel {
       border:1px solid var(--line);
       border-radius:var(--radius);
       background:linear-gradient(180deg,rgba(255,255,255,.055),transparent),var(--panel);
@@ -172,7 +172,7 @@
 
     .hero {
       margin-top:24px;
-      padding:clamp(22px,4vw,42px);
+      padding:clamp(24px,5vw,54px);
     }
 
     .eyebrow {
@@ -192,26 +192,25 @@
 
     h1 {
       margin:0;
-      max-width:940px;
-      font-size:clamp(2.8rem,7vw,6.2rem);
+      max-width:980px;
+      font-size:clamp(3rem,7vw,6.4rem);
       line-height:.86;
-      letter-spacing:-.08em;
+      letter-spacing:-.085em;
     }
 
     .lede {
-      max-width:84ch;
-      margin:22px 0 0;
+      max-width:78ch;
+      margin:24px 0 0;
       color:var(--muted);
-      font-size:clamp(1rem,2.2vw,1.16rem);
-      line-height:1.65;
+      font-size:clamp(1.05rem,2.35vw,1.22rem);
+      line-height:1.7;
     }
 
-    .hero-actions,
-    .display-actions {
+    .hero-actions {
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      margin-top:24px;
+      margin-top:26px;
     }
 
     .button {
@@ -240,44 +239,17 @@
 
     .diamond-panel {
       margin-top:18px;
-      padding:clamp(16px,3vw,28px);
+      padding:clamp(14px,3vw,28px);
       background:
-        radial-gradient(circle at 50% 22%,rgba(244,191,96,.07),transparent 21rem),
+        radial-gradient(circle at 50% 22%,rgba(244,191,96,.06),transparent 21rem),
         radial-gradient(circle at 50% 62%,rgba(142,190,255,.12),transparent 28rem),
         linear-gradient(180deg,rgba(255,255,255,.055),transparent),
         var(--panel2);
     }
 
-    .diamond-copy {
-      display:grid;
-      grid-template-columns:minmax(0,.86fr) minmax(320px,1.14fr);
-      gap:18px;
-      align-items:start;
-    }
-
-    .diamond-text {
-      padding:4px 0 0;
-    }
-
-    .diamond-text h2 {
-      margin:0;
-      max-width:720px;
-      font-size:clamp(2.2rem,5vw,4.8rem);
-      line-height:.90;
-      letter-spacing:-.065em;
-    }
-
-    .diamond-text p {
-      margin:16px 0 0;
-      color:var(--muted);
-      font-size:clamp(1rem,2.1vw,1.12rem);
-      line-height:1.62;
-    }
-
     .diamond-mount-wrap {
       position:relative;
       min-width:0;
-      margin-top:14px;
     }
 
     [data-showroom-diamond-mount] {
@@ -315,69 +287,8 @@
       margin:0 auto !important;
     }
 
-    .route-grid {
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:14px;
-      margin-top:18px;
-    }
-
-    .route-card {
-      padding:18px;
-      background:
-        radial-gradient(circle at 20% 10%,rgba(244,191,96,.08),transparent 12rem),
-        linear-gradient(180deg,rgba(255,255,255,.05),transparent),
-        rgba(7,13,27,.76);
-      box-shadow:none;
-    }
-
-    .route-card .label {
-      display:block;
-      margin-bottom:10px;
-      color:var(--gold);
-      font-size:.82rem;
-      font-weight:900;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
-
-    .route-card h2 {
-      margin:0;
-      font-size:clamp(1.4rem,3vw,2.1rem);
-      letter-spacing:-.045em;
-    }
-
-    .route-card p {
-      margin:10px 0 0;
-      color:var(--muted);
-      line-height:1.55;
-    }
-
-    .route-card a {
-      display:inline-flex;
-      margin-top:16px;
-      padding:9px 12px;
-      border:1px solid rgba(244,191,96,.28);
-      border-radius:999px;
-      color:var(--gold);
-      font-weight:900;
-      background:rgba(244,191,96,.07);
-    }
-
     .receipt {
-      margin-top:18px;
-      padding:16px;
-      border-color:rgba(143,240,195,.18);
-      background:rgba(143,240,195,.055);
-    }
-
-    .receipt code {
-      display:block;
-      overflow-wrap:anywhere;
-      color:var(--green);
-      font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
-      font-size:.84rem;
-      line-height:1.55;
+      display:none;
     }
 
     .footer {
@@ -386,20 +297,6 @@
       font-size:.88rem;
       line-height:1.55;
       text-align:center;
-    }
-
-    @media (max-width:980px) {
-      .diamond-copy {
-        grid-template-columns:1fr;
-      }
-
-      .route-grid {
-        grid-template-columns:1fr;
-      }
-
-      .diamond-mount-wrap {
-        margin-top:12px;
-      }
     }
 
     @media (max-width:760px) {
@@ -421,19 +318,13 @@
       }
 
       .hero,
-      .diamond-panel,
-      .route-card,
-      .receipt {
+      .diamond-panel {
         border-radius:18px;
       }
 
       [data-showroom-diamond-mount] {
         min-height:clamp(360px,88vw,620px);
         border-radius:20px;
-      }
-
-      .diamond-mount-wrap {
-        margin-top:10px;
       }
     }
   </style>
@@ -463,10 +354,10 @@
     <main id="showroom-main" tabindex="-1">
       <section class="hero">
         <p class="eyebrow">Public cover · glamour layer</p>
-        <h1>The Showroom opens the case.</h1>
+        <h1>Pressure becomes something you can finally see.</h1>
         <p class="lede">
-          The Showroom is the public-facing glamour layer. It introduces the natural-looking solid crown-cut diamond,
-          then opens into the Globe Showcase where the worlds sit like objects in a curated bookcase and display case.
+          A diamond does not become clear because pressure disappears. It becomes clear because pressure is organized.
+          This is the entrance: one object, one invitation, one first look at the worlds waiting behind the glass.
         </p>
 
         <div class="hero-actions">
@@ -500,131 +391,77 @@
         data-generated-image="false"
         data-graphic-box="false"
       >
-        <div class="diamond-copy">
-          <div class="diamond-text">
-            <p class="eyebrow">Natural diamond · solid crown cut · 256 faces</p>
-            <h2>Solid Crown-Cut 256-Face Sparkling Diamond</h2>
-            <p>
-              The visible object is one natural-looking crown-cut diamond. The outside form stays solid,
-              while motion moves light, refraction, sparkle, and internal facet rhythm across the fixed 256-face structure.
-            </p>
-
-            <div class="display-actions">
-              <a class="button primary" href="/showroom/globe/">Open Showcase</a>
-              <a class="button" href="/showroom/globe/h-earth/">Inspect H-Earth</a>
-            </div>
-          </div>
-
-          <div class="diamond-mount-wrap">
-            <div
-              id="showroomDiamondMount"
-              data-showroom-diamond-mount="true"
-              data-showroom-crystal-diamond-stage-required="true"
-              data-contract-required="SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5"
-              data-previous-runtime-contract="SHOWROOM_COVER_ROUND_CROWN_CUT_FIXED_256_FACE_DIAMOND_TNT_v4"
-              data-diamond-object="natural-solid-crown-cut-sparkling-256-face-diamond"
-              data-natural-diamond-appearance="true"
-              data-solid-form="true"
-              data-silhouette-locked="true"
-              data-edge-on-collapse-allowed="false"
-              data-flat-table="true"
-              data-crown-top="true"
-              data-real-diamond-cut="true"
-              data-sparkle="active"
-              data-structure-size-locked="true"
-              data-motion-only="true"
-              data-zoom-manipulation="false"
-              data-face-defined-edges="true"
-              data-yellow-line-prominence="reduced"
-              data-visible-nodes="subtle"
-              data-fibonacci-geometry="internal"
-              data-generated-image="false"
-              data-graphic-box="false"
-              aria-label="Natural solid crown-cut sparkling 256-face diamond mount"
-            >
-              <div class="fallback-diamond-note">
-                <span>
-                  <strong>Solid Crown-Cut 256-Face Sparkling Diamond</strong>
-                  Runtime mount ready. The diamond is rendered by code from /showroom/index.js.
-                </span>
-              </div>
+        <div class="diamond-mount-wrap">
+          <div
+            id="showroomDiamondMount"
+            data-showroom-diamond-mount="true"
+            data-showroom-crystal-diamond-stage-required="true"
+            data-contract-required="SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5"
+            data-previous-runtime-contract="SHOWROOM_COVER_ROUND_CROWN_CUT_FIXED_256_FACE_DIAMOND_TNT_v4"
+            data-diamond-object="natural-solid-crown-cut-sparkling-256-face-diamond"
+            data-natural-diamond-appearance="true"
+            data-solid-form="true"
+            data-silhouette-locked="true"
+            data-edge-on-collapse-allowed="false"
+            data-flat-table="true"
+            data-crown-top="true"
+            data-real-diamond-cut="true"
+            data-sparkle="active"
+            data-structure-size-locked="true"
+            data-motion-only="true"
+            data-zoom-manipulation="false"
+            data-face-defined-edges="true"
+            data-yellow-line-prominence="reduced"
+            data-visible-nodes="subtle"
+            data-fibonacci-geometry="internal"
+            data-generated-image="false"
+            data-graphic-box="false"
+            aria-label="Natural solid crown-cut sparkling 256-face diamond mount"
+          >
+            <div class="fallback-diamond-note">
+              <span>
+                <strong>Solid Crown-Cut 256-Face Sparkling Diamond</strong>
+                Runtime mount ready. The diamond is rendered by code from /showroom/index.js.
+              </span>
             </div>
           </div>
         </div>
-      </section>
-
-      <section class="route-grid" aria-label="Showroom route structure">
-        <article class="route-card">
-          <span class="label">Cover</span>
-          <h2>Showroom</h2>
-          <p>
-            The public-facing glamour layer. It introduces the natural crown-cut diamond without exposing diagnostics.
-          </p>
-          <a href="/showroom/">Stay on cover</a>
-        </article>
-
-        <article class="route-card">
-          <span class="label">Showcase</span>
-          <h2>Globe Showcase</h2>
-          <p>
-            The bookcase and display-case layer. Worlds can be selected, viewed, and opened into private inspection rooms.
-          </p>
-          <a href="/showroom/globe/">Open Showcase</a>
-        </article>
-
-        <article class="route-card">
-          <span class="label">Inspection</span>
-          <h2>H-Earth</h2>
-          <p>
-            The private orbital/aerial inspection room. Ground level and estate placement remain held until land and state are definitive.
-          </p>
-          <a href="/showroom/globe/h-earth/">Inspect H-Earth</a>
-        </article>
       </section>
 
       <section
         id="showroomReceipt"
         class="receipt"
         aria-label="Showroom route receipt"
-        data-receipt-panel="showroom-cover-natural-solid-crown-sparkle-diamond"
-        data-html-contract="SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5B"
+        data-receipt-panel="showroom-cover-ted-talk-natural-diamond"
+        data-html-contract="SHOWROOM_COVER_TED_TALK_NATURAL_DIAMOND_HTML_TNT_v6"
         data-required-runtime-contract="SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5"
-        data-previous-html-contract="SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5"
+        data-previous-html-contract="SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5B"
+        data-single-explanation="true"
+        data-self-explanation-reduced="true"
+        data-visible-route-cards="false"
+        data-visible-diamond-copy="false"
         data-diamond-mount-present="true"
         data-diamond-object="natural-solid-crown-cut-sparkling-256-face-diamond"
         data-natural-diamond-appearance="true"
         data-solid-form="true"
         data-silhouette-locked="true"
         data-edge-on-collapse-allowed="false"
-        data-flat-table="true"
-        data-crown-top="true"
-        data-real-diamond-cut="true"
         data-sparkle="active"
+        data-face-construct="256"
         data-structure-size-locked="true"
         data-motion-only="true"
-        data-zoom-manipulation="false"
-        data-face-defined-edges="true"
-        data-yellow-line-prominence="reduced"
-        data-visible-nodes="subtle"
-        data-fibonacci-geometry="internal"
         data-generated-image="false"
         data-graphic-box="false"
         data-visual-pass-claim="false"
       >
-        <code>HTML_RECEIPT: SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5B</code>
+        <code>HTML_RECEIPT: SHOWROOM_COVER_TED_TALK_NATURAL_DIAMOND_HTML_TNT_v6</code>
         <code>REQUIRED_RUNTIME: SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5</code>
-        <code>PREVIOUS_HTML: SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5</code>
-        <code>LAYOUT_RENEWAL: fallback mount message made non-spatial</code>
+        <code>PREVIOUS_HTML: SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5B</code>
+        <code>SINGLE_EXPLANATION: true</code>
+        <code>SELF_EXPLANATION_REDUCED: true</code>
+        <code>VISIBLE_ROUTE_CARDS: false</code>
+        <code>VISIBLE_DIAMOND_COPY: false</code>
         <code>DIAMOND_OBJECT: natural-solid-crown-cut-sparkling-256-face-diamond</code>
-        <code>DIAMOND_MOUNT: data-showroom-diamond-mount=true</code>
-        <code>NATURAL_DIAMOND_APPEARANCE: true</code>
-        <code>SOLID_FORM: true</code>
-        <code>SILHOUETTE_LOCKED: true</code>
-        <code>EDGE_ON_COLLAPSE_ALLOWED: false</code>
-        <code>SPARKLE: active</code>
-        <code>FACE_CONSTRUCT: 256</code>
-        <code>STRUCTURE_SIZE_LOCKED: true</code>
-        <code>MOTION_ONLY: true</code>
         <code>GENERATED_IMAGE: false</code>
         <code>GRAPHIC_BOX: false</code>
         <code>VISIBLE_DIAGNOSTICS: false</code>
@@ -641,26 +478,20 @@
     id="showroomNaturalSolidCrownSparkleDiamondRuntime"
     type="module"
     src="./index.js?v=SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5"
-    data-handoff="showroom-cover-natural-solid-crown-sparkle-diamond"
-    data-html-contract="SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5B"
+    data-handoff="showroom-cover-ted-talk-natural-diamond"
+    data-html-contract="SHOWROOM_COVER_TED_TALK_NATURAL_DIAMOND_HTML_TNT_v6"
     data-required-runtime-contract="SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5"
     data-previous-runtime-contract="SHOWROOM_COVER_ROUND_CROWN_CUT_FIXED_256_FACE_DIAMOND_TNT_v4"
     data-diamond-object="natural-solid-crown-cut-sparkling-256-face-diamond"
+    data-single-explanation="true"
+    data-self-explanation-reduced="true"
     data-natural-diamond-appearance="true"
     data-solid-form="true"
     data-silhouette-locked="true"
     data-edge-on-collapse-allowed="false"
-    data-flat-table="true"
-    data-crown-top="true"
-    data-real-diamond-cut="true"
     data-sparkle="active"
     data-structure-size-locked="true"
     data-motion-only="true"
-    data-zoom-manipulation="false"
-    data-face-defined-edges="true"
-    data-yellow-line-prominence="reduced"
-    data-visible-nodes="subtle"
-    data-fibonacci-geometry="internal"
     data-generated-image="false"
     data-graphic-box="false"
   ></script>

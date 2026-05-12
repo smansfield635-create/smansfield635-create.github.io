@@ -2,10 +2,10 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="compass-legacy-frontier-marriage"
+  data-page="compass-preface-doors"
   data-route="/"
-  data-contract="COMPASS_LEGACY_FRONTIER_MARRIAGE_HTML_TNT_v3"
-  data-required-renderer="COMPASS_LEGACY_FRONTIER_MARRIAGE_JS_TNT_v3"
+  data-contract="COMPASS_PREFACE_DOORS_HTML_TNT_v4"
+  data-required-renderer="COMPASS_PREFACE_DOORS_JS_TNT_v4"
   data-standard="cutting-edge-frontier-tech-only"
   data-default-context="round"
   data-generated-image="false"
@@ -18,7 +18,7 @@
   <title>Diamond Gate Bridge · Compass</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Compass: Flat, Round, and Globe as three distinct frontier entry contexts."
+    content="Diamond Gate Bridge Compass: choose the map, the movement, or the world."
   >
 
   <style>
@@ -32,6 +32,7 @@
       --muted:#bac2cf;
       --gold:#f4bf60;
       --blue:#8ebeff;
+      --green:#8ff0c3;
       --shadow:0 28px 90px rgba(0,0,0,.46);
       --max:1220px;
       --facet:polygon(0 18px,18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px));
@@ -227,7 +228,7 @@
       touch-action:none;
     }
 
-    #compassMarriageCanvas {
+    #compassPrefaceCanvas {
       display:block;
       width:100%;
       height:clamp(620px,80vw,940px);
@@ -281,7 +282,7 @@
       .field-panel { padding:8px; }
 
       .field-mount,
-      #compassMarriageCanvas {
+      #compassPrefaceCanvas {
         min-height:590px;
         height:590px;
       }
@@ -301,48 +302,46 @@
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="/" aria-current="page">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/explore/">Manor</a>
-        <a href="/nine-summits-of-love/">Book</a>
-        <a href="/nine-summits/universe/">Universe</a>
+        <a href="/flat/">Flat</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/frontier/">Frontier</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
         <a href="/gauges/">Triple G</a>
       </nav>
     </header>
 
     <main id="compass-main" tabindex="-1">
       <section class="hero" aria-label="Compass introduction">
-        <p class="label">Compass · Legacy Field / Frontier Objects</p>
+        <p class="label">Compass · Three Entry Prefaces</p>
         <h1>Pressure is the door.</h1>
         <p class="lede">
-          Flat, Round, and Globe are three different ways to enter the estate. Choose once to change the field. Choose twice to enter the route.
+          Before you enter the estate, choose how you want to see the world. Some people need the map first.
+          Some people need the movement. Some people need the whole world before the pieces make sense.
         </p>
       </section>
 
       <section
         class="field-panel"
-        aria-label="Compass field"
+        aria-label="Compass preface field"
         data-frontier-context-renderer="true"
-        data-single-click="change-context-or-focus"
-        data-double-click="navigate"
+        data-single-click="preview-entry"
+        data-double-click="open-entry"
       >
-        <div id="compassMarriageMount" class="field-mount">
+        <div id="compassPrefaceMount" class="field-mount">
           <canvas
-            id="compassMarriageCanvas"
+            id="compassPrefaceCanvas"
             width="1200"
             height="940"
             tabindex="0"
             role="img"
-            aria-label="Compass with Flat route board, Round estate orbital field, and Globe universe field."
-            data-compass-marriage-canvas="true"
+            aria-label="Compass preface with Flat investigation, Round revolving pages, and Universe showroom entry."
+            data-compass-preface-canvas="true"
           ></canvas>
 
           <div class="fallback" aria-live="polite">
             <strong>The Compass renderer did not load.</strong>
-            Use the navigation links above to reach the site routes.
+            Use the navigation links above to enter Flat, Products, or Showroom.
           </div>
         </div>
       </section>
@@ -350,12 +349,12 @@
   </div>
 
   <script
-    id="compassMarriageRenderer"
+    id="compassPrefaceRenderer"
     type="module"
-    src="./index.js?v=COMPASS_LEGACY_FRONTIER_MARRIAGE_JS_TNT_v3"
-    data-handoff="compass-legacy-frontier-marriage"
-    data-html-contract="COMPASS_LEGACY_FRONTIER_MARRIAGE_HTML_TNT_v3"
-    data-required-renderer="COMPASS_LEGACY_FRONTIER_MARRIAGE_JS_TNT_v3"
+    src="./index.js?v=COMPASS_PREFACE_DOORS_JS_TNT_v4"
+    data-handoff="compass-preface-doors"
+    data-html-contract="COMPASS_PREFACE_DOORS_HTML_TNT_v4"
+    data-required-renderer="COMPASS_PREFACE_DOORS_JS_TNT_v4"
     data-default-context="round"
   ></script>
 </body>

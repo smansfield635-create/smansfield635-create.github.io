@@ -1,33 +1,33 @@
 // /showroom/globe/index.js
-// SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_SURFACE_REFINEMENT_TNT_v2
+// SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_FIBONACCI_RUNTIME_TNT_v3
 // Full-file replacement.
 //
 // Purpose:
-// - Keep the /showroom/globe/ page inspection-heavy.
-// - Preserve drag / rotate / zoom.
-// - Preserve the 256 field under the hood.
-// - Preserve self-contained Showcase renderer.
-// - Reduce visible node/dot pattern.
-// - Reduce explicit system-overlay read.
+// - Preserve /showroom/globe/ as the self-contained inspection-heavy display case.
+// - Keep inspectable planet, drag / rotate / zoom, and private route handoff.
+// - Keep the 256 nodal construct under the hood.
+// - Bind Fibonacci sequence into runtime geometry without drawing a visible zigzag.
+// - Reduce visible dot/node overlay.
 // - Increase landmass definition, coastline shaping, ocean depth, terrain contrast,
 //   and cloud/atmosphere softness.
 // - Keep diagnostics backstage.
-// - Do not import the H-Earth canvas module.
+// - Do not import H-Earth canvas.
 // - Do not mutate parent truth.
 // - Do not use image generation.
 // - Do not use GraphicBox.
 // - Do not claim visual pass.
 
-const CONTRACT = "SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_SURFACE_REFINEMENT_TNT_v2";
-const PREVIOUS_CONTRACT = "SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_INSPECTION_DISPLAY_TNT_v1";
+const CONTRACT = "SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_FIBONACCI_RUNTIME_TNT_v3";
+const PREVIOUS_CONTRACT = "SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_SURFACE_REFINEMENT_TNT_v2";
 const HTML_EXPECTED = "SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_INSPECTION_DISPLAY_HTML_TNT_v1";
 
 const SHOWROOM_MODE = "showcase-bookcase-display-case";
-const DISPLAY_CASE_MODE = "self-contained-inspection-heavy-surface-refined";
+const DISPLAY_CASE_MODE = "self-contained-inspection-heavy-fibonacci-runtime";
 const DEFAULT_DISPLAY = "h-earth";
 
 const TOTAL_CELLS = 256;
 const GRID = 16;
+const FIBONACCI_SEQUENCE = Object.freeze([1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233]);
 
 const PARENT_MUTATION_AUTHORIZED = false;
 const GENERATED_IMAGE = false;
@@ -149,17 +149,45 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function worldByKey(key) {
-  return WORLDS.find((world) => world.key === key) || WORLDS.find((world) => world.key === DEFAULT_DISPLAY);
-}
-
 function byId(id) {
   return document.getElementById(id);
+}
+
+function worldByKey(key) {
+  return WORLDS.find((world) => world.key === key) || WORLDS.find((world) => world.key === DEFAULT_DISPLAY);
 }
 
 function hashUnit(index, salt = 0) {
   const x = Math.sin((index + 1) * 12.9898 + salt * 78.233) * 43758.5453;
   return x - Math.floor(x);
+}
+
+function fibonacciForCell(index) {
+  const fib = FIBONACCI_SEQUENCE[index % FIBONACCI_SEQUENCE.length];
+  const next = FIBONACCI_SEQUENCE[(index + 1) % FIBONACCI_SEQUENCE.length];
+
+  return {
+    value: fib,
+    next,
+    ratio: fib / next,
+    phase: ((fib % GRID) / GRID) * Math.PI * 2,
+    drift: ((next % GRID) / GRID) * Math.PI * 2,
+    density: clamp(fib / 233, 0.004, 1)
+  };
+}
+
+function fibonacciRingOffset(row, col, world) {
+  const rowFib = FIBONACCI_SEQUENCE[row % FIBONACCI_SEQUENCE.length];
+  const colFib = FIBONACCI_SEQUENCE[col % FIBONACCI_SEQUENCE.length];
+  const combined = rowFib + colFib + world.seed;
+
+  return {
+    rowFib,
+    colFib,
+    combined,
+    harmonic: Math.sin(combined * 0.0618),
+    fold: Math.cos((rowFib * colFib + world.seed) * 0.017)
+  };
 }
 
 function setupCanvas(canvas, fallbackSize = 720) {
@@ -184,12 +212,12 @@ function setupCanvas(canvas, fallbackSize = 720) {
 }
 
 function ensureStyle() {
-  if (document.getElementById("showroom-globe-surface-refinement-style-v2")) return;
+  if (document.getElementById("showroom-globe-fibonacci-runtime-style-v3")) return;
 
   const style = document.createElement("style");
-  style.id = "showroom-globe-surface-refinement-style-v2";
+  style.id = "showroom-globe-fibonacci-runtime-style-v3";
   style.textContent = `
-    html[data-globe-showcase-surface-refined="true"] {
+    html[data-globe-showcase-fibonacci-runtime="true"] {
       --display-case-glow: rgba(143, 240, 195, 0.22);
     }
 
@@ -262,40 +290,45 @@ function collectNodes() {
 }
 
 function cellKind(world, index, row, col, latitude, longitude) {
+  const fib = fibonacciForCell(index);
+  const ring = fibonacciRingOffset(row, col, world);
+
   const latWave = Math.sin((latitude / 90) * Math.PI);
-  const lonWaveA = Math.sin(((longitude + world.seed * 0.31) / 180) * Math.PI * 2.0);
-  const lonWaveB = Math.cos(((longitude - world.seed * 0.17) / 180) * Math.PI * 3.0);
-  const diagonal = Math.sin(row * 0.74 + col * 0.52 + world.seed * 0.011);
-  const continentalArc = Math.cos((row - 8) * 0.48 + Math.sin(col * 0.62 + world.seed * 0.007));
+  const lonWaveA = Math.sin(((longitude + world.seed * 0.31) / 180) * Math.PI * 2.0 + fib.phase * 0.31);
+  const lonWaveB = Math.cos(((longitude - world.seed * 0.17) / 180) * Math.PI * 3.0 + fib.drift * 0.22);
+  const diagonal = Math.sin(row * 0.74 + col * 0.52 + world.seed * 0.011 + ring.harmonic);
+  const continentalArc = Math.cos((row - 8) * 0.48 + Math.sin(col * 0.62 + world.seed * 0.007 + ring.fold));
+  const fibonacciFold = Math.sin((row * fib.ratio + col * fib.density) * Math.PI + ring.harmonic);
   const noise = hashUnit(index, world.seed);
 
   const landSignal =
-    lonWaveA * 0.40 +
-    lonWaveB * 0.24 +
-    diagonal * 0.18 +
-    continentalArc * 0.28 +
-    latWave * 0.12 +
-    (noise - 0.5) * 0.38;
+    lonWaveA * 0.35 +
+    lonWaveB * 0.22 +
+    diagonal * 0.17 +
+    continentalArc * 0.25 +
+    fibonacciFold * 0.18 +
+    latWave * 0.10 +
+    (noise - 0.5) * 0.30;
 
   if (latitude > 67 || latitude < -66) {
     return noise > 0.34 ? "ice" : "ocean";
   }
 
   if (landSignal > world.landBias + 0.30) {
-    if (noise > 0.70) return "relief";
-    if (noise < 0.24) return "forest";
+    if (noise + fib.density * 0.16 > 0.72) return "relief";
+    if (noise < 0.23) return "forest";
     return "land";
   }
 
   if (landSignal > world.landBias + 0.08) {
-    return noise > 0.40 ? "coast" : "shelf";
+    return noise > 0.38 ? "coast" : "shelf";
   }
 
   if (landSignal > world.landBias - 0.05) {
     return "shelf";
   }
 
-  if (noise < 0.18) return "deep-ocean";
+  if (noise < 0.18 + fib.density * 0.04) return "deep-ocean";
 
   return "ocean";
 }
@@ -308,6 +341,8 @@ function buildWorldCells(world) {
     const col = index % GRID;
     const latitude = 90 - ((row + 0.5) / GRID) * 180;
     const longitude = -180 + ((col + 0.5) / GRID) * 360;
+    const fib = fibonacciForCell(index);
+    const ring = fibonacciRingOffset(row, col, world);
     const kind = cellKind(world, index, row, col, latitude, longitude);
     const noiseA = hashUnit(index, world.seed + 61);
     const noiseB = hashUnit(index, world.seed + 97);
@@ -316,24 +351,24 @@ function buildWorldCells(world) {
     let depth = 0;
 
     if (kind === "deep-ocean") {
-      depth = 2600 + noiseA * 3400;
+      depth = 2600 + noiseA * 3400 + fib.density * 400;
       elevation = -depth;
     } else if (kind === "ocean") {
-      depth = 650 + noiseA * 2100;
+      depth = 650 + noiseA * 2100 + fib.ratio * 280;
       elevation = -depth;
     } else if (kind === "shelf") {
       depth = 25 + noiseA * 150;
       elevation = -depth;
     } else if (kind === "coast") {
-      elevation = 2 + noiseA * 58;
+      elevation = 2 + noiseA * 58 + ring.harmonic * 6;
     } else if (kind === "relief") {
-      elevation = 900 + noiseA * 3600;
+      elevation = 900 + noiseA * 3600 + fib.density * 480;
     } else if (kind === "ice") {
-      elevation = 1200 + noiseA * 3200;
+      elevation = 1200 + noiseA * 3200 + fib.ratio * 320;
     } else if (kind === "forest") {
-      elevation = 40 + noiseA * 680;
+      elevation = 40 + noiseA * 680 + ring.fold * 40;
     } else {
-      elevation = 20 + noiseA * 520;
+      elevation = 20 + noiseA * 520 + fib.density * 80;
     }
 
     cells.push({
@@ -346,7 +381,9 @@ function buildWorldCells(world) {
       elevation,
       depth,
       noiseA,
-      noiseB
+      noiseB,
+      fibonacci: fib,
+      fibonacciRing: ring
     });
   }
 
@@ -406,15 +443,15 @@ function clearScene(context, width, height, world) {
   context.fillRect(0, 0, width, height);
 
   context.save();
-  context.globalAlpha = 0.48;
+  context.globalAlpha = 0.44;
 
-  for (let i = 0; i < 92; i += 1) {
+  for (let i = 0; i < 88; i += 1) {
     const x = (Math.sin(i * 91.17) * 0.5 + 0.5) * width;
     const y = (Math.cos(i * 49.61) * 0.5 + 0.5) * height;
     const radius = 0.55 + ((i * 7) % 11) / 18;
 
     context.beginPath();
-    context.fillStyle = i % 10 === 0 ? "rgba(246,211,123,.58)" : "rgba(225,238,255,.48)";
+    context.fillStyle = i % 13 === 0 ? "rgba(246,211,123,.52)" : "rgba(225,238,255,.44)";
     context.arc(x, y, radius, 0, Math.PI * 2);
     context.fill();
   }
@@ -515,15 +552,16 @@ function drawSoftBlob(context, x, y, rx, ry, rotation, fillStyle, alpha, wobbleS
   context.restore();
 }
 
-function drawOceanDepth(context, world, projected, radius) {
+function drawOceanDepth(context, projected, radius) {
   context.save();
   context.filter = "blur(1.2px)";
 
   for (const { cell, point } of projected) {
     if (cell.kind !== "deep-ocean" && cell.kind !== "ocean" && cell.kind !== "shelf") continue;
 
-    const depthRatio = clamp(cell.depth / 6000, 0.04, 1);
-    const size = radius * (0.08 + depthRatio * 0.08) * (0.68 + point.z * 0.36);
+    const depthRatio = clamp(cell.depth / 6400, 0.04, 1);
+    const fibDepth = cell.fibonacci?.density || 0.1;
+    const size = radius * (0.08 + depthRatio * 0.08 + fibDepth * 0.012) * (0.68 + point.z * 0.36);
 
     context.globalAlpha = cell.kind === "shelf" ? 0.08 : 0.12 + depthRatio * 0.18;
     context.fillStyle = cell.kind === "deep-ocean" ? "rgba(0,5,20,0.88)" : "rgba(2,18,45,0.62)";
@@ -537,7 +575,7 @@ function drawOceanDepth(context, world, projected, radius) {
   context.restore();
 }
 
-function drawSurfaceMasses(context, world, projected, radius, zoom) {
+function drawSurfaceMasses(context, projected, radius, zoom) {
   context.save();
 
   context.beginPath();
@@ -546,23 +584,50 @@ function drawSurfaceMasses(context, world, projected, radius, zoom) {
   context.arc(centerX, centerY, radius * zoom * 0.998, 0, Math.PI * 2);
   context.clip();
 
-  drawOceanDepth(context, world, projected, radius);
+  drawOceanDepth(context, projected, radius);
 
   context.filter = "blur(0.6px)";
+
+  let painted = 0;
+
+  for (const { cell, point, world }) {
+    void world;
+  }
+
+  context.filter = "none";
+  context.restore();
+
+  return painted;
+}
+
+function drawSurfaceLayer(context, world, projected, radius, zoom) {
+  context.save();
+
+  context.beginPath();
+  const centerX = context.canvas.width * 0.5;
+  const centerY = context.canvas.height * 0.52;
+  context.arc(centerX, centerY, radius * zoom * 0.998, 0, Math.PI * 2);
+  context.clip();
+
+  drawOceanDepth(context, projected, radius);
+
+  context.filter = "blur(0.55px)";
 
   let painted = 0;
 
   for (const { cell, point } of projected) {
     const baseColor = colorForCell(world, cell);
 
-    const elevationLift = clamp(cell.elevation / 5200, -0.18, 0.26);
-    const depthDarken = cell.depth > 0 ? clamp(cell.depth / 6200, 0, 1) * 0.16 : 0;
-    const light = point.light + elevationLift;
+    const elevationLift = clamp(cell.elevation / 5400, -0.18, 0.26);
+    const depthDarken = cell.depth > 0 ? clamp(cell.depth / 6400, 0, 1) * 0.16 : 0;
+    const fibonacciLift = (cell.fibonacci?.density || 0) * 0.03;
+    const light = point.light + elevationLift + fibonacciLift;
     const color = shade(baseColor, light, 0, depthDarken);
 
     const frontScale = 0.72 + point.z * 0.40;
-    let sizeX = radius * 0.095 * frontScale * zoom;
-    let sizeY = radius * 0.055 * frontScale * zoom;
+    const fibStretch = 0.94 + (cell.fibonacci?.ratio || 0.5) * 0.18;
+    let sizeX = radius * 0.095 * frontScale * zoom * fibStretch;
+    let sizeY = radius * 0.055 * frontScale * zoom * (1.02 - (cell.fibonacci?.density || 0) * 0.08);
     let alpha = 0.22;
 
     if (cell.kind === "deep-ocean") {
@@ -576,7 +641,7 @@ function drawSurfaceMasses(context, world, projected, radius, zoom) {
     } else if (cell.kind === "shelf") {
       sizeX *= 1.16;
       sizeY *= 0.82;
-      alpha = 0.26;
+      alpha = 0.25;
     } else if (cell.kind === "coast") {
       sizeX *= 1.22;
       sizeY *= 0.76;
@@ -595,7 +660,7 @@ function drawSurfaceMasses(context, world, projected, radius, zoom) {
       alpha = cell.kind === "forest" ? 0.72 : 0.68;
     }
 
-    const rotation = (cell.noiseA - 0.5) * 0.9;
+    const rotation = (cell.noiseA - 0.5) * 0.9 + (cell.fibonacci?.phase || 0) * 0.08;
 
     drawSoftBlob(
       context,
@@ -606,7 +671,7 @@ function drawSurfaceMasses(context, world, projected, radius, zoom) {
       rotation,
       color,
       clamp(alpha + point.z * 0.08, 0.10, 0.88),
-      cell.index + world.seed
+      cell.index + world.seed + (cell.fibonacci?.value || 0)
     );
 
     painted += 1;
@@ -618,7 +683,7 @@ function drawSurfaceMasses(context, world, projected, radius, zoom) {
   return painted;
 }
 
-function drawCoastlines(context, world, projected, radius, zoom) {
+function drawCoastlines(context, projected, radius, zoom) {
   context.save();
 
   context.beginPath();
@@ -634,9 +699,10 @@ function drawCoastlines(context, world, projected, radius, zoom) {
     if (cell.kind !== "coast" && cell.kind !== "shelf") continue;
 
     const frontScale = 0.72 + point.z * 0.40;
+    const fibLength = 0.85 + (cell.fibonacci?.ratio || 0.5) * 0.55;
     const size = radius * 0.070 * frontScale * zoom;
-    const arc = Math.PI * (0.75 + cell.noiseA * 0.74);
-    const start = cell.noiseB * Math.PI * 2;
+    const arc = Math.PI * (0.65 + cell.noiseA * 0.70) * fibLength;
+    const start = cell.noiseB * Math.PI * 2 + (cell.fibonacci?.phase || 0) * 0.12;
 
     context.beginPath();
     context.strokeStyle = cell.kind === "coast"
@@ -651,7 +717,7 @@ function drawCoastlines(context, world, projected, radius, zoom) {
   context.restore();
 }
 
-function drawReliefAndTerrain(context, world, projected, radius, zoom) {
+function drawReliefAndTerrain(context, projected, radius, zoom) {
   context.save();
 
   context.beginPath();
@@ -676,7 +742,7 @@ function drawReliefAndTerrain(context, world, projected, radius, zoom) {
 
     for (let i = 0; i < lineCount; i += 1) {
       const offset = (i - lineCount / 2) * size * 0.32;
-      const bend = Math.sin((cell.index + i) * 0.91) * size * 0.24;
+      const bend = Math.sin((cell.index + i) * 0.91 + (cell.fibonacci?.phase || 0)) * size * 0.24;
 
       context.beginPath();
       context.moveTo(point.x - size * 0.9, point.y + offset + bend);
@@ -705,11 +771,12 @@ function drawClouds(context, world, radius, centerX, centerY, yaw, pitch, zoom, 
   context.clip();
 
   context.filter = "blur(2px)";
-  context.globalAlpha = 0.55;
+  context.globalAlpha = 0.54;
 
   for (let i = 0; i < 16; i += 1) {
-    const lat = -58 + i * 7.9 + Math.sin(i * 1.7 + world.seed) * 8;
-    const lon = -180 + i * 28 + Math.cos(i * 1.3 + world.seed) * 24;
+    const fib = FIBONACCI_SEQUENCE[i % FIBONACCI_SEQUENCE.length];
+    const lat = -58 + i * 7.9 + Math.sin(i * 1.7 + world.seed + fib * 0.0618) * 8;
+    const lon = -180 + i * 28 + Math.cos(i * 1.3 + world.seed + fib * 0.0382) * 24;
     const pseudoCell = { latitude: lat, longitude: lon, index: i, kind: "cloud" };
     const point = projectCell(pseudoCell, radius, centerX, centerY, yaw + 12, pitch, zoom);
     if (!point) continue;
@@ -790,7 +857,7 @@ function drawTitle(context, width, height, world, compact) {
 
   context.fillStyle = "rgba(243,227,189,.74)";
   context.font = `${Math.max(13, width * 0.016)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
-  context.fillText("Inspection display · drag to rotate", width / 2, height * 0.108);
+  context.fillText("Fibonacci runtime · 256 under hood · drag to inspect", width / 2, height * 0.108);
 
   context.restore();
 }
@@ -821,10 +888,10 @@ function renderPlanet(canvas, context, world, view, compact = false) {
   clearScene(context, width, height, world);
   drawGlobeBase(context, world, radius, centerX, centerY, zoom);
 
-  const painted = drawSurfaceMasses(context, world, projected, radius, zoom);
+  const painted = drawSurfaceLayer(context, world, projected, radius, zoom);
 
-  drawCoastlines(context, world, projected, radius, zoom);
-  drawReliefAndTerrain(context, world, projected, radius, zoom);
+  drawCoastlines(context, projected, radius, zoom);
+  drawReliefAndTerrain(context, projected, radius, zoom);
   drawClouds(context, world, radius, centerX, centerY, yaw, pitch, zoom, compact);
   drawAtmosphere(context, world, radius, centerX, centerY, zoom);
   drawTitle(context, width, height, world, compact);
@@ -852,8 +919,8 @@ function updateDisplayMeta(world, painted) {
     nodes.displayMeta.replaceChildren(
       metaBlock("Layer", "Inspection-heavy display case"),
       metaBlock("Touch", "Drag / rotate / zoom"),
-      metaBlock("Source", "Self-contained surface renderer"),
-      metaBlock("Field", `256 under hood · ${painted} projected`)
+      metaBlock("Runtime", "256 + Fibonacci"),
+      metaBlock("Field", `${painted} projected · nodes hidden`)
     );
   }
 
@@ -922,9 +989,9 @@ function selectWorld(key) {
 
 function wireCards() {
   for (const [key, card] of nodes.cards.entries()) {
-    if (card.dataset.showroomSurfaceRefinedBound === "true") continue;
+    if (card.dataset.showroomFibonacciRuntimeBound === "true") continue;
 
-    card.dataset.showroomSurfaceRefinedBound = "true";
+    card.dataset.showroomFibonacciRuntimeBound = "true";
 
     card.addEventListener("click", () => {
       selectWorld(key);
@@ -940,9 +1007,9 @@ function wireCards() {
 
 function wireDisplayDrag() {
   const target = nodes.displayCanvas || nodes.displayWindow;
-  if (!target || target.dataset.showroomSurfaceRefinedDragBound === "true") return;
+  if (!target || target.dataset.showroomFibonacciRuntimeDragBound === "true") return;
 
-  target.dataset.showroomSurfaceRefinedDragBound = "true";
+  target.dataset.showroomFibonacciRuntimeDragBound = "true";
   target.style.touchAction = "none";
 
   target.addEventListener("pointerdown", (event) => {
@@ -1011,11 +1078,17 @@ function stampDocument(world, painted = 0) {
   root.dataset.htmlExpected = HTML_EXPECTED;
   root.dataset.showroomMode = SHOWROOM_MODE;
   root.dataset.displayCaseMode = DISPLAY_CASE_MODE;
-  root.dataset.globeShowcaseSurfaceRefined = "true";
+  root.dataset.globeShowcaseFibonacciRuntime = "true";
   root.dataset.activeDisplay = world.key;
   root.dataset.activeInspectionRoute = world.route;
   root.dataset.touchDragInspection = "true";
   root.dataset.actualPlanetFigureVisible = "true";
+
+  root.dataset.totalCells = String(TOTAL_CELLS);
+  root.dataset.grid = `${GRID}x${GRID}`;
+  root.dataset.fibonacciRuntimeBound = "true";
+  root.dataset.fibonacciSequence = FIBONACCI_SEQUENCE.join(",");
+  root.dataset.fibonacciVisibleZigzag = "false";
   root.dataset.visibleDotPatternReduced = "true";
   root.dataset.explicitNodeOverlayReduced = "true";
   root.dataset.landmassDefinitionIncreased = "true";
@@ -1024,7 +1097,6 @@ function stampDocument(world, painted = 0) {
   root.dataset.terrainContrastIncreased = "true";
   root.dataset.cloudAtmosphereSoftnessIncreased = "true";
   root.dataset.displayCellsProjected = String(painted);
-  root.dataset.totalCells = String(TOTAL_CELLS);
 
   root.dataset.groundLevelReady = String(GROUND_LEVEL_READY);
   root.dataset.manorPlacementReady = String(MANOR_PLACEMENT_READY);
@@ -1058,6 +1130,14 @@ function getShowroomGlobeShowcaseStatus() {
     importedHEarthCanvasDependency: false,
     touchDragInspection: true,
 
+    totalCells: TOTAL_CELLS,
+    grid: `${GRID}x${GRID}`,
+
+    fibonacciRuntimeBound: true,
+    fibonacciSequence: [...FIBONACCI_SEQUENCE],
+    fibonacciVisibleZigzag: false,
+    fibonacciUse: "internal landmass, coastline, elevation, depth, cloud rhythm, and terrain-detail progression",
+
     visibleDotPatternReduced: true,
     explicitNodeOverlayReduced: true,
     landmassDefinitionIncreased: true,
@@ -1065,9 +1145,6 @@ function getShowroomGlobeShowcaseStatus() {
     oceanDepthIncreased: true,
     terrainContrastIncreased: true,
     cloudAtmosphereSoftnessIncreased: true,
-
-    totalCells: TOTAL_CELLS,
-    grid: `${GRID}x${GRID}`,
 
     yaw: state.yaw,
     pitch: state.pitch,
@@ -1155,6 +1232,7 @@ export {
   DEFAULT_DISPLAY,
   TOTAL_CELLS,
   GRID,
+  FIBONACCI_SEQUENCE,
   PARENT_MUTATION_AUTHORIZED,
   GENERATED_IMAGE,
   GRAPHIC_BOX,

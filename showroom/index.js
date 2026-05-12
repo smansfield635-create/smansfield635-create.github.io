@@ -1,14 +1,20 @@
 // /showroom/index.js
-// Fixed crown-cut 256-lattice diamond renderer.
+// Fixed crown-cut 256-lattice diamond renderer with finger inspection.
 // Full-file replacement.
+// Structure is fixed. Pointer/touch controls rotate the viewing angle only.
 // No generated image. No CSS diamond substitute. No public receipt spillover.
 
-const MODEL_NAME = "fixed-crown-cut-256-lattice";
+const MODEL_NAME = "fixed-crown-cut-256-lattice-inspectable";
 
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
 const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
 const DPR = Math.min(window.devicePixelRatio || 1, MOBILE ? 1.25 : 1.65);
 const FRAME_MS = MOBILE ? 58 : 42;
+
+const DEFAULT_YAW = -0.54;
+const DEFAULT_PITCH = -0.17;
+const MIN_PITCH = -0.62;
+const MAX_PITCH = 0.28;
 
 const state = {
   canvas: null,
@@ -20,7 +26,25 @@ const state = {
   visible: true,
   active: true,
   time: 0,
-  stars: []
+  stars: [],
+
+  yaw: DEFAULT_YAW,
+  pitch: DEFAULT_PITCH,
+  targetYaw: DEFAULT_YAW,
+  targetPitch: DEFAULT_PITCH,
+  velocityYaw: 0,
+  velocityPitch: 0,
+  interacted: false,
+
+  dragging: false,
+  pointerId: null,
+  startX: 0,
+  startY: 0,
+  lastX: 0,
+  lastY: 0,
+  lastPointerTime: 0,
+  tapStartTime: 0,
+  lastTapAt: 0
 };
 
 const RINGS = Object.freeze([
@@ -285,7 +309,7 @@ function colorForFace(face, light, secondaryLight, viewDir) {
   };
 }
 
-function createFaces(mesh, view) {
+function createFaces(mesh) {
   const faces = [];
   const yawLight = state.time * 0.00055;
 
@@ -350,23 +374,24 @@ function drawDiamond(ctx, width, height) {
     cx: width * 0.50,
     cy: height * 0.545,
     scale: Math.min(width * 0.43, height * 0.52),
-    yaw: REDUCED_MOTION ? -0.54 : -0.54 + Math.sin(state.time * 0.00038) * 0.20,
-    pitch: REDUCED_MOTION ? -0.17 : -0.17 + Math.cos(state.time * 0.00027) * 0.018,
+    yaw: state.yaw,
+    pitch: state.pitch,
     camera: 4.65
   };
 
   const mesh = buildMesh(view);
-  const faces = createFaces(mesh, view);
+  const faces = createFaces(mesh);
 
   drawBaseReflection(ctx, view);
   drawFaces(ctx, faces);
-  drawLatticeRings(ctx, mesh, view);
+  drawLatticeRings(ctx, mesh);
   drawCrownTable(ctx, mesh, view);
-  drawInternalRefraction(ctx, mesh, view);
+  drawInternalRefraction(ctx, mesh);
   drawSparkles(ctx, mesh, view);
 
   document.documentElement.dataset.showroomModel = MODEL_NAME;
   document.documentElement.dataset.faceCount = String(FACE_COUNT);
+  document.documentElement.dataset.inspectable = "true";
 }
 
 function drawBaseReflection(ctx, view) {
@@ -402,7 +427,7 @@ function drawFaces(ctx, faces) {
 
     const gradient = ctx.createLinearGradient(pts[0].x, pts[0].y, pts[2].x, pts[2].y);
     gradient.addColorStop(0, face.fill);
-    gradient.addColorStop(0.52, brightenFace(face.fill, face.specular));
+    gradient.addColorStop(0.52, brightenFace(face.specular));
     gradient.addColorStop(1, face.fill);
 
     ctx.fillStyle = gradient;
@@ -416,12 +441,12 @@ function drawFaces(ctx, faces) {
   ctx.restore();
 }
 
-function brightenFace(fill, specular) {
+function brightenFace(specular) {
   const alpha = clamp(0.04 + specular * 0.20, 0.04, 0.26);
   return `rgba(255,255,255,${alpha})`;
 }
 
-function drawLatticeRings(ctx, mesh, view) {
+function drawLatticeRings(ctx, mesh) {
   const ringIndices = [0, 2, 4, 6, 8, 9, 11, 13, 15, 16];
 
   ctx.save();
@@ -494,7 +519,7 @@ function drawCrownTable(ctx, mesh, view) {
   ctx.restore();
 }
 
-function drawInternalRefraction(ctx, mesh, view) {
+function drawInternalRefraction(ctx, mesh) {
   const paths = [
     [mesh.screen[0][1], mesh.screen[6][4], mesh.screen[15][8]],
     [mesh.screen[1][13], mesh.screen[7][15], mesh.screen[14][2]],
@@ -584,7 +609,7 @@ function drawBottomCue(ctx, width, height) {
   ctx.textBaseline = "middle";
   ctx.fillStyle = "rgba(186,197,212,0.60)";
   ctx.font = `800 ${Math.max(12 * DPR, width * 0.015)}px Inter, system-ui, sans-serif`;
-  ctx.fillText("Cover → Globe Showcase → Private Inspection", width * 0.5, height * 0.94);
+  ctx.fillText("Drag to inspect · Double tap to reset · Structure remains fixed", width * 0.5, height * 0.94);
   ctx.restore();
 }
 
@@ -599,6 +624,27 @@ function render() {
   drawBottomCue(ctx, width, height);
 }
 
+function updateInspectionMotion() {
+  if (!state.dragging) {
+    if (!state.interacted && !REDUCED_MOTION) {
+      state.targetYaw += 0.0012;
+    }
+
+    state.targetYaw += state.velocityYaw;
+    state.targetPitch = clamp(state.targetPitch + state.velocityPitch, MIN_PITCH, MAX_PITCH);
+
+    state.velocityYaw *= 0.925;
+    state.velocityPitch *= 0.905;
+
+    if (Math.abs(state.velocityYaw) < 0.00008) state.velocityYaw = 0;
+    if (Math.abs(state.velocityPitch) < 0.00008) state.velocityPitch = 0;
+  }
+
+  state.yaw += (state.targetYaw - state.yaw) * 0.22;
+  state.pitch += (state.targetPitch - state.pitch) * 0.22;
+  state.pitch = clamp(state.pitch, MIN_PITCH, MAX_PITCH);
+}
+
 function frame(now) {
   if (!state.active || !state.visible) {
     state.raf = 0;
@@ -608,6 +654,7 @@ function frame(now) {
   if (!state.lastFrame || now - state.lastFrame >= FRAME_MS) {
     state.lastFrame = now;
     state.time = now;
+    updateInspectionMotion();
     render();
   }
 
@@ -623,6 +670,121 @@ function stopLoop() {
   if (!state.raf) return;
   window.cancelAnimationFrame(state.raf);
   state.raf = 0;
+}
+
+function resetInspection() {
+  state.targetYaw = DEFAULT_YAW;
+  state.targetPitch = DEFAULT_PITCH;
+  state.velocityYaw = 0;
+  state.velocityPitch = 0;
+  state.interacted = false;
+}
+
+function installPointerInspection() {
+  const canvas = state.canvas;
+  if (!canvas) return;
+
+  canvas.style.touchAction = "none";
+
+  canvas.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+  });
+
+  canvas.addEventListener("pointerdown", (event) => {
+    state.dragging = true;
+    state.pointerId = event.pointerId;
+    state.startX = event.clientX;
+    state.startY = event.clientY;
+    state.lastX = event.clientX;
+    state.lastY = event.clientY;
+    state.lastPointerTime = performance.now();
+    state.tapStartTime = performance.now();
+    state.velocityYaw = 0;
+    state.velocityPitch = 0;
+    state.interacted = true;
+
+    canvas.setPointerCapture?.(event.pointerId);
+    event.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener("pointermove", (event) => {
+    if (!state.dragging || event.pointerId !== state.pointerId) return;
+
+    const now = performance.now();
+    const dt = Math.max(12, now - state.lastPointerTime);
+    const dx = event.clientX - state.lastX;
+    const dy = event.clientY - state.lastY;
+
+    const yawDelta = dx * 0.0085;
+    const pitchDelta = dy * 0.0065;
+
+    state.targetYaw += yawDelta;
+    state.targetPitch = clamp(state.targetPitch + pitchDelta, MIN_PITCH, MAX_PITCH);
+
+    state.velocityYaw = clamp((yawDelta / dt) * 18, -0.045, 0.045);
+    state.velocityPitch = clamp((pitchDelta / dt) * 14, -0.030, 0.030);
+
+    state.lastX = event.clientX;
+    state.lastY = event.clientY;
+    state.lastPointerTime = now;
+
+    event.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener("pointerup", (event) => {
+    if (event.pointerId !== state.pointerId) return;
+
+    const now = performance.now();
+    const travel = Math.hypot(event.clientX - state.startX, event.clientY - state.startY);
+    const tapDuration = now - state.tapStartTime;
+    const isTap = travel < 10 && tapDuration < 260;
+    const isDoubleTap = isTap && now - state.lastTapAt < 340;
+
+    if (isDoubleTap) {
+      resetInspection();
+      state.lastTapAt = 0;
+    } else if (isTap) {
+      state.lastTapAt = now;
+    }
+
+    state.dragging = false;
+    state.pointerId = null;
+
+    canvas.releasePointerCapture?.(event.pointerId);
+    event.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener("pointercancel", (event) => {
+    state.dragging = false;
+    state.pointerId = null;
+    canvas.releasePointerCapture?.(event.pointerId);
+    event.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener("keydown", (event) => {
+    const step = event.shiftKey ? 0.16 : 0.075;
+
+    if (event.key === "ArrowLeft") {
+      state.interacted = true;
+      state.targetYaw -= step;
+      event.preventDefault();
+    } else if (event.key === "ArrowRight") {
+      state.interacted = true;
+      state.targetYaw += step;
+      event.preventDefault();
+    } else if (event.key === "ArrowUp") {
+      state.interacted = true;
+      state.targetPitch = clamp(state.targetPitch - step, MIN_PITCH, MAX_PITCH);
+      event.preventDefault();
+    } else if (event.key === "ArrowDown") {
+      state.interacted = true;
+      state.targetPitch = clamp(state.targetPitch + step, MIN_PITCH, MAX_PITCH);
+      event.preventDefault();
+    } else if (event.key === "Home" || event.key === "0") {
+      resetInspection();
+      event.preventDefault();
+    }
+  });
 }
 
 function installVisibility() {
@@ -660,6 +822,7 @@ function boot() {
   if (!state.canvas) return;
 
   sizeCanvas();
+  installPointerInspection();
   installVisibility();
   installResize();
   render();
@@ -669,15 +832,20 @@ function boot() {
     model: MODEL_NAME,
     faceCount: FACE_COUNT,
     fixedStructure: true,
+    inspectable: true,
     generatedImage: false,
     graphicBox: false,
+    reset: resetInspection,
     status() {
       return {
         model: MODEL_NAME,
         faceCount: FACE_COUNT,
         rings: RINGS.length,
         sectors: SECTORS,
-        fixedStructure: true
+        fixedStructure: true,
+        inspectable: true,
+        yaw: state.yaw,
+        pitch: state.pitch
       };
     }
   };
@@ -691,5 +859,6 @@ if (document.readyState === "loading") {
 
 export default {
   model: MODEL_NAME,
-  faceCount: FACE_COUNT
+  faceCount: FACE_COUNT,
+  inspectable: true
 };

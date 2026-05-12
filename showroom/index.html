@@ -4,9 +4,9 @@
   lang="en"
   data-page="showroom-cover-natural-solid-crown-sparkle-256-face-diamond"
   data-route="/showroom/"
-  data-contract="SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5"
+  data-contract="SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5B"
   data-required-runtime-contract="SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5"
-  data-previous-contract="SHOWROOM_COVER_CROWN_CRYSTAL_256_FACE_DIAMOND_HTML_TNT_v2"
+  data-previous-contract="SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5"
   data-showroom-role="public-facing-glamour-cover"
   data-diamond-object="natural-solid-crown-cut-sparkling-256-face-diamond"
   data-diamond-mount-required="true"
@@ -277,6 +277,7 @@
     .diamond-mount-wrap {
       position:relative;
       min-width:0;
+      margin-top:14px;
     }
 
     [data-showroom-diamond-mount] {
@@ -294,22 +295,24 @@
         0 24px 70px rgba(0,0,0,.34);
       contain:layout paint style;
       touch-action:none;
+      display:grid;
+      place-items:center;
     }
 
     .fallback-diamond-note {
-      min-height:clamp(390px,62vw,760px);
-      display:grid;
-      place-items:center;
-      padding:24px;
-      text-align:center;
-      color:var(--muted);
+      display:none;
+      min-height:0;
+      height:0;
+      overflow:hidden;
+      visibility:hidden;
     }
 
-    .fallback-diamond-note strong {
-      display:block;
-      margin-bottom:8px;
-      color:var(--gold);
-      font-size:clamp(1.3rem,3vw,2rem);
+    [data-showroom-crystal-diamond-stage] {
+      margin:0 !important;
+    }
+
+    [data-showroom-crystal-diamond-canvas] {
+      margin:0 auto !important;
     }
 
     .route-grid {
@@ -393,6 +396,10 @@
       .route-grid {
         grid-template-columns:1fr;
       }
+
+      .diamond-mount-wrap {
+        margin-top:12px;
+      }
     }
 
     @media (max-width:760px) {
@@ -420,10 +427,13 @@
         border-radius:18px;
       }
 
-      [data-showroom-diamond-mount],
-      .fallback-diamond-note {
+      [data-showroom-diamond-mount] {
         min-height:clamp(360px,88vw,620px);
         border-radius:20px;
+      }
+
+      .diamond-mount-wrap {
+        margin-top:10px;
       }
     }
   </style>
@@ -577,9 +587,9 @@
         class="receipt"
         aria-label="Showroom route receipt"
         data-receipt-panel="showroom-cover-natural-solid-crown-sparkle-diamond"
-        data-html-contract="SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5"
+        data-html-contract="SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5B"
         data-required-runtime-contract="SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5"
-        data-previous-html-contract="SHOWROOM_COVER_CROWN_CRYSTAL_256_FACE_DIAMOND_HTML_TNT_v2"
+        data-previous-html-contract="SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5"
         data-diamond-mount-present="true"
         data-diamond-object="natural-solid-crown-cut-sparkling-256-face-diamond"
         data-natural-diamond-appearance="true"
@@ -601,27 +611,20 @@
         data-graphic-box="false"
         data-visual-pass-claim="false"
       >
-        <code>HTML_RECEIPT: SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5</code>
+        <code>HTML_RECEIPT: SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5B</code>
         <code>REQUIRED_RUNTIME: SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5</code>
-        <code>PREVIOUS_RUNTIME: SHOWROOM_COVER_ROUND_CROWN_CUT_FIXED_256_FACE_DIAMOND_TNT_v4</code>
+        <code>PREVIOUS_HTML: SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5</code>
+        <code>LAYOUT_RENEWAL: fallback mount message made non-spatial</code>
         <code>DIAMOND_OBJECT: natural-solid-crown-cut-sparkling-256-face-diamond</code>
         <code>DIAMOND_MOUNT: data-showroom-diamond-mount=true</code>
         <code>NATURAL_DIAMOND_APPEARANCE: true</code>
         <code>SOLID_FORM: true</code>
         <code>SILHOUETTE_LOCKED: true</code>
         <code>EDGE_ON_COLLAPSE_ALLOWED: false</code>
-        <code>FLAT_TABLE: true</code>
-        <code>CROWN_TOP: true</code>
-        <code>REAL_DIAMOND_CUT: true</code>
         <code>SPARKLE: active</code>
         <code>FACE_CONSTRUCT: 256</code>
         <code>STRUCTURE_SIZE_LOCKED: true</code>
         <code>MOTION_ONLY: true</code>
-        <code>ZOOM_MANIPULATION: false</code>
-        <code>FACE_DEFINED_EDGES: true</code>
-        <code>YELLOW_LINE_PROMINENCE: reduced</code>
-        <code>VISIBLE_NODES: subtle</code>
-        <code>FIBONACCI_GEOMETRY: internal</code>
         <code>GENERATED_IMAGE: false</code>
         <code>GRAPHIC_BOX: false</code>
         <code>VISIBLE_DIAGNOSTICS: false</code>
@@ -639,7 +642,7 @@
     type="module"
     src="./index.js?v=SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5"
     data-handoff="showroom-cover-natural-solid-crown-sparkle-diamond"
-    data-html-contract="SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5"
+    data-html-contract="SHOWROOM_COVER_NATURAL_SOLID_CROWN_SPARKLE_DIAMOND_HTML_TNT_v5B"
     data-required-runtime-contract="SHOWROOM_COVER_SOLID_CROWN_SPARKLE_256_FACE_DIAMOND_TNT_v5"
     data-previous-runtime-contract="SHOWROOM_COVER_ROUND_CROWN_CUT_FIXED_256_FACE_DIAMOND_TNT_v4"
     data-diamond-object="natural-solid-crown-cut-sparkling-256-face-diamond"

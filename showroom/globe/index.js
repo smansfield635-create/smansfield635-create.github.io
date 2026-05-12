@@ -1,26 +1,29 @@
 // /showroom/globe/index.js
-// SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_INSPECTION_DISPLAY_TNT_v1
+// SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_SURFACE_REFINEMENT_TNT_v2
 // Full-file replacement.
 //
 // Purpose:
-// - Restore actual visible planet figures on /showroom/globe/.
-// - Render Earth, H-Earth, Hearth, and Audralia directly in the Showcase display case.
-// - Remove dependency on imported H-Earth canvas module for this page.
-// - Remove the "Identifier 'ctx' has already been declared" import failure from the Showcase path.
-// - Make the display case inspection-heavy: drag with finger/mouse to rotate, wheel to zoom where available.
-// - Keep full private planet routes available through Open Full Inspection.
+// - Keep the /showroom/globe/ page inspection-heavy.
+// - Preserve drag / rotate / zoom.
+// - Preserve the 256 field under the hood.
+// - Preserve self-contained Showcase renderer.
+// - Reduce visible node/dot pattern.
+// - Reduce explicit system-overlay read.
+// - Increase landmass definition, coastline shaping, ocean depth, terrain contrast,
+//   and cloud/atmosphere softness.
 // - Keep diagnostics backstage.
-// - Do not mutate H-Earth parent truth.
+// - Do not import the H-Earth canvas module.
+// - Do not mutate parent truth.
 // - Do not use image generation.
 // - Do not use GraphicBox.
 // - Do not claim visual pass.
 
-const CONTRACT = "SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_INSPECTION_DISPLAY_TNT_v1";
-const PREVIOUS_CONTRACT = "SHOWROOM_GLOBE_INSPECTION_HEAVY_H_EARTH_DISPLAY_CASE_TNT_v1";
-const HTML_EXPECTED = "SHOWROOM_GLOBE_LEAP_RENDER_CONSUMPTION_HTML_ALIGNMENT_TNT_v21A";
+const CONTRACT = "SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_SURFACE_REFINEMENT_TNT_v2";
+const PREVIOUS_CONTRACT = "SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_INSPECTION_DISPLAY_TNT_v1";
+const HTML_EXPECTED = "SHOWROOM_GLOBE_SELF_CONTAINED_PLANET_INSPECTION_DISPLAY_HTML_TNT_v1";
 
 const SHOWROOM_MODE = "showcase-bookcase-display-case";
-const DISPLAY_CASE_MODE = "self-contained-inspection-heavy";
+const DISPLAY_CASE_MODE = "self-contained-inspection-heavy-surface-refined";
 const DEFAULT_DISPLAY = "h-earth";
 
 const TOTAL_CELLS = 256;
@@ -41,7 +44,6 @@ const WORLDS = Object.freeze([
     name: "Earth",
     route: "/showroom/globe/earth/",
     label: "Protected reference body.",
-    tags: ["REFERENCE", "PROTECTED"],
     seed: 101,
     oceanBase: "#0c4b82",
     oceanDeep: "#031226",
@@ -51,6 +53,7 @@ const WORLDS = Object.freeze([
     coast: "#d1b579",
     relief: "#8f8b7e",
     ice: "#e6f5f8",
+    cloud: "rgba(235,248,255,0.26)",
     glow: "rgba(142,190,255,0.34)",
     landBias: 0.46
   },
@@ -59,7 +62,6 @@ const WORLDS = Object.freeze([
     name: "H-Earth",
     route: "/showroom/globe/h-earth/",
     label: "Hybrid Earth. Active orbital/aerial build planet.",
-    tags: ["ACTIVE", "BUILD", "LAND-STATE GATE"],
     seed: 256,
     oceanBase: "#0a3764",
     oceanDeep: "#020d22",
@@ -69,6 +71,7 @@ const WORLDS = Object.freeze([
     coast: "#d7bd7d",
     relief: "#9a8f69",
     ice: "#d9f0f5",
+    cloud: "rgba(235,248,255,0.24)",
     glow: "rgba(143,240,195,0.34)",
     landBias: 0.54
   },
@@ -77,7 +80,6 @@ const WORLDS = Object.freeze([
     name: "Hearth",
     route: "/showroom/globe/hearth/",
     label: "Separate terrain lane.",
-    tags: ["SEPARATE", "REGRESSION"],
     seed: 377,
     oceanBase: "#173c56",
     oceanDeep: "#06111d",
@@ -87,6 +89,7 @@ const WORLDS = Object.freeze([
     coast: "#d0a66e",
     relief: "#aa5f45",
     ice: "#d6e6e9",
+    cloud: "rgba(245,235,210,0.20)",
     glow: "rgba(244,191,96,0.30)",
     landBias: 0.50
   },
@@ -95,7 +98,6 @@ const WORLDS = Object.freeze([
     name: "Audralia",
     route: "/showroom/globe/audralia/",
     label: "Constructed-world lane.",
-    tags: ["CONSTRUCTED", "SEPARATE"],
     seed: 610,
     oceanBase: "#0f456f",
     oceanDeep: "#041225",
@@ -105,6 +107,7 @@ const WORLDS = Object.freeze([
     coast: "#c9aa6e",
     relief: "#8f6d54",
     ice: "#cfe8ee",
+    cloud: "rgba(235,242,255,0.22)",
     glow: "rgba(184,166,255,0.30)",
     landBias: 0.48
   }
@@ -116,12 +119,14 @@ const state = {
   pitch: 8,
   zoom: 1,
   previewYaw: 0,
+
   dragging: false,
   pointerId: null,
   dragStartX: 0,
   dragStartY: 0,
   dragStartYaw: 0,
   dragStartPitch: 0,
+
   raf: 0,
   active: true,
   dpr: Math.min(window.devicePixelRatio || 1, 1.6),
@@ -144,12 +149,12 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function byId(id) {
-  return document.getElementById(id);
-}
-
 function worldByKey(key) {
   return WORLDS.find((world) => world.key === key) || WORLDS.find((world) => world.key === DEFAULT_DISPLAY);
+}
+
+function byId(id) {
+  return document.getElementById(id);
 }
 
 function hashUnit(index, salt = 0) {
@@ -179,12 +184,12 @@ function setupCanvas(canvas, fallbackSize = 720) {
 }
 
 function ensureStyle() {
-  if (document.getElementById("showroom-globe-self-contained-inspection-style-v1")) return;
+  if (document.getElementById("showroom-globe-surface-refinement-style-v2")) return;
 
   const style = document.createElement("style");
-  style.id = "showroom-globe-self-contained-inspection-style-v1";
+  style.id = "showroom-globe-surface-refinement-style-v2";
   style.textContent = `
-    html[data-globe-showcase-self-contained-inspection="true"] {
+    html[data-globe-showcase-surface-refined="true"] {
       --display-case-glow: rgba(143, 240, 195, 0.22);
     }
 
@@ -206,80 +211,12 @@ function ensureStyle() {
       border-radius: 22px;
     }
 
-    [data-showroom-inspection-hint] {
-      position: absolute;
-      left: 16px;
-      top: 16px;
-      z-index: 4;
-      display: inline-flex;
-      align-items: center;
-      min-height: 32px;
-      padding: 7px 11px;
-      border: 1px solid rgba(143, 240, 195, 0.34);
-      border-radius: 999px;
-      color: #8ff0c3;
-      background: rgba(4, 9, 18, 0.72);
-      font-size: 0.76rem;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      pointer-events: none;
-      backdrop-filter: blur(12px);
-    }
-
     [data-world-card] {
       transform: none !important;
     }
   `;
 
   document.head.appendChild(style);
-}
-
-function ensureDisplayCanvas() {
-  if (!nodes.displayWindow) return null;
-
-  let canvas = byId("displayCanvas") || document.querySelector("[data-display-case-canvas]");
-
-  if (!canvas || !nodes.displayWindow.contains(canvas)) {
-    nodes.displayWindow.replaceChildren();
-
-    const hint = document.createElement("div");
-    hint.setAttribute("data-showroom-inspection-hint", "true");
-    hint.textContent = "Drag · Rotate · Zoom";
-
-    canvas = document.createElement("canvas");
-    canvas.id = "displayCanvas";
-    canvas.setAttribute("data-display-case-canvas", "true");
-    canvas.setAttribute("aria-label", "Selected world inspection display");
-    canvas.setAttribute("role", "img");
-
-    nodes.displayWindow.appendChild(hint);
-    nodes.displayWindow.appendChild(canvas);
-  } else {
-    const oldError = nodes.displayWindow.querySelector("[data-showroom-inspection-error]");
-    const oldShell = nodes.displayWindow.querySelector("[data-showroom-h-earth-inspection-shell]");
-
-    if (oldError) oldError.remove();
-    if (oldShell) oldShell.remove();
-
-    canvas.hidden = false;
-
-    if (!nodes.displayWindow.querySelector("[data-showroom-inspection-hint]")) {
-      const hint = document.createElement("div");
-      hint.setAttribute("data-showroom-inspection-hint", "true");
-      hint.textContent = "Drag · Rotate · Zoom";
-      nodes.displayWindow.prepend(hint);
-    }
-
-    if (!nodes.displayWindow.contains(canvas)) {
-      nodes.displayWindow.appendChild(canvas);
-    }
-  }
-
-  nodes.displayCanvas = canvas;
-  nodes.displayContext = setupCanvas(canvas, 880);
-
-  return canvas;
 }
 
 function collectNodes() {
@@ -290,7 +227,13 @@ function collectNodes() {
     document.querySelector("[data-display-window]") ||
     byId("displayWindow");
 
-  ensureDisplayCanvas();
+  nodes.displayCanvas = byId("displayCanvas") || document.querySelector("[data-display-case-canvas]");
+
+  if (nodes.displayWindow && nodes.displayCanvas && !nodes.displayWindow.contains(nodes.displayCanvas)) {
+    nodes.displayWindow.replaceChildren(nodes.displayCanvas);
+  }
+
+  nodes.displayContext = setupCanvas(nodes.displayCanvas, 880);
 
   nodes.displayTitle = byId("displayTitle");
   nodes.displayCopy = byId("displayCopy");
@@ -322,15 +265,17 @@ function cellKind(world, index, row, col, latitude, longitude) {
   const latWave = Math.sin((latitude / 90) * Math.PI);
   const lonWaveA = Math.sin(((longitude + world.seed * 0.31) / 180) * Math.PI * 2.0);
   const lonWaveB = Math.cos(((longitude - world.seed * 0.17) / 180) * Math.PI * 3.0);
-  const diagonal = Math.sin((row * 0.74 + col * 0.52 + world.seed * 0.011));
+  const diagonal = Math.sin(row * 0.74 + col * 0.52 + world.seed * 0.011);
+  const continentalArc = Math.cos((row - 8) * 0.48 + Math.sin(col * 0.62 + world.seed * 0.007));
   const noise = hashUnit(index, world.seed);
 
   const landSignal =
-    lonWaveA * 0.46 +
-    lonWaveB * 0.26 +
-    diagonal * 0.22 +
-    latWave * 0.18 +
-    (noise - 0.5) * 0.54;
+    lonWaveA * 0.40 +
+    lonWaveB * 0.24 +
+    diagonal * 0.18 +
+    continentalArc * 0.28 +
+    latWave * 0.12 +
+    (noise - 0.5) * 0.38;
 
   if (latitude > 67 || latitude < -66) {
     return noise > 0.34 ? "ice" : "ocean";
@@ -338,15 +283,15 @@ function cellKind(world, index, row, col, latitude, longitude) {
 
   if (landSignal > world.landBias + 0.30) {
     if (noise > 0.70) return "relief";
-    if (noise < 0.22) return "forest";
+    if (noise < 0.24) return "forest";
     return "land";
   }
 
   if (landSignal > world.landBias + 0.08) {
-    return noise > 0.45 ? "coast" : "shelf";
+    return noise > 0.40 ? "coast" : "shelf";
   }
 
-  if (landSignal > world.landBias - 0.04) {
+  if (landSignal > world.landBias - 0.05) {
     return "shelf";
   }
 
@@ -371,24 +316,24 @@ function buildWorldCells(world) {
     let depth = 0;
 
     if (kind === "deep-ocean") {
-      depth = 2400 + noiseA * 3200;
+      depth = 2600 + noiseA * 3400;
       elevation = -depth;
     } else if (kind === "ocean") {
-      depth = 500 + noiseA * 1900;
+      depth = 650 + noiseA * 2100;
       elevation = -depth;
     } else if (kind === "shelf") {
-      depth = 30 + noiseA * 160;
+      depth = 25 + noiseA * 150;
       elevation = -depth;
     } else if (kind === "coast") {
-      elevation = 2 + noiseA * 52;
+      elevation = 2 + noiseA * 58;
     } else if (kind === "relief") {
       elevation = 900 + noiseA * 3600;
     } else if (kind === "ice") {
       elevation = 1200 + noiseA * 3200;
     } else if (kind === "forest") {
-      elevation = 40 + noiseA * 620;
+      elevation = 40 + noiseA * 680;
     } else {
-      elevation = 20 + noiseA * 480;
+      elevation = 20 + noiseA * 520;
     }
 
     cells.push({
@@ -461,15 +406,15 @@ function clearScene(context, width, height, world) {
   context.fillRect(0, 0, width, height);
 
   context.save();
-  context.globalAlpha = 0.58;
+  context.globalAlpha = 0.48;
 
-  for (let i = 0; i < 120; i += 1) {
+  for (let i = 0; i < 92; i += 1) {
     const x = (Math.sin(i * 91.17) * 0.5 + 0.5) * width;
     const y = (Math.cos(i * 49.61) * 0.5 + 0.5) * height;
-    const radius = 0.65 + ((i * 7) % 11) / 15;
+    const radius = 0.55 + ((i * 7) % 11) / 18;
 
     context.beginPath();
-    context.fillStyle = i % 10 === 0 ? "rgba(246,211,123,.70)" : "rgba(225,238,255,.56)";
+    context.fillStyle = i % 10 === 0 ? "rgba(246,211,123,.58)" : "rgba(225,238,255,.48)";
     context.arc(x, y, radius, 0, Math.PI * 2);
     context.fill();
   }
@@ -490,7 +435,7 @@ function projectCell(cell, radius, centerX, centerY, yaw, pitch, zoom) {
   const z = y0 * Math.sin(pitchRad) + z0 * Math.cos(pitchRad);
   const x = x0;
 
-  if (z < -0.08) return null;
+  if (z < -0.10) return null;
 
   return {
     x: centerX + x * radius * zoom,
@@ -500,7 +445,7 @@ function projectCell(cell, radius, centerX, centerY, yaw, pitch, zoom) {
   };
 }
 
-function drawGlobeBase(context, width, height, world, radius, centerX, centerY, zoom) {
+function drawGlobeBase(context, world, radius, centerX, centerY, zoom) {
   const r = radius * zoom;
 
   context.save();
@@ -518,7 +463,7 @@ function drawGlobeBase(context, width, height, world, radius, centerX, centerY, 
     r * 1.16
   );
 
-  ocean.addColorStop(0, shade(world.oceanLight, 1.32));
+  ocean.addColorStop(0, shade(world.oceanLight, 1.34));
   ocean.addColorStop(0.32, world.oceanBase);
   ocean.addColorStop(0.70, shade(world.oceanDeep, 0.70));
   ocean.addColorStop(1, "#020b1c");
@@ -532,8 +477,8 @@ function drawGlobeBase(context, width, height, world, radius, centerX, centerY, 
 
   context.beginPath();
   context.arc(centerX, centerY, r, 0, Math.PI * 2);
-  context.strokeStyle = "rgba(183,222,240,.30)";
-  context.lineWidth = Math.max(2, radius * 0.012);
+  context.strokeStyle = "rgba(183,222,240,.28)";
+  context.lineWidth = Math.max(2, radius * 0.011);
   context.stroke();
 
   context.beginPath();
@@ -545,133 +490,248 @@ function drawGlobeBase(context, width, height, world, radius, centerX, centerY, 
   context.restore();
 }
 
-function drawCellTexture(context, world, cell, point, radius, size) {
-  const grain = 0.25 + cell.noiseA * 0.50;
-  const ridge = cell.kind === "relief" ? 0.55 + cell.noiseB * 0.38 : cell.elevation > 800 ? 0.20 + cell.noiseB * 0.22 : 0.08;
-  const coast = cell.kind === "coast" || cell.kind === "shelf" ? 0.60 + cell.noiseA * 0.28 : 0;
-  const count = Math.max(2, Math.min(8, Math.round(2 + grain * 4 + ridge * 3 + coast * 2)));
-  const strokeSize = size * (0.16 + grain * 0.18);
+function drawSoftBlob(context, x, y, rx, ry, rotation, fillStyle, alpha, wobbleSeed) {
+  const points = 10;
 
   context.save();
+  context.globalAlpha = alpha;
+  context.fillStyle = fillStyle;
+  context.beginPath();
 
-  if (cell.kind === "deep-ocean" || cell.kind === "ocean" || cell.kind === "shelf") {
-    context.globalAlpha = clamp(0.04 + Math.abs(cell.depth) / 5600 * 0.11, 0.03, 0.16);
-    context.strokeStyle = "rgba(160,230,255,.42)";
-  } else if (cell.kind === "coast") {
-    context.globalAlpha = clamp(0.14 + coast * 0.22, 0.12, 0.38);
-    context.strokeStyle = "rgba(255,232,160,.74)";
-  } else if (cell.kind === "relief") {
-    context.globalAlpha = clamp(0.12 + ridge * 0.24, 0.10, 0.40);
-    context.strokeStyle = "rgba(255,242,205,.62)";
-  } else if (cell.kind === "ice") {
-    context.globalAlpha = 0.19;
-    context.strokeStyle = "rgba(235,250,255,.70)";
-  } else {
-    context.globalAlpha = clamp(0.08 + grain * 0.10, 0.06, 0.22);
-    context.strokeStyle = "rgba(255,235,180,.40)";
+  for (let i = 0; i <= points; i += 1) {
+    const t = (i / points) * Math.PI * 2;
+    const wobble = 0.82 + hashUnit(i, wobbleSeed) * 0.34;
+    const localX = Math.cos(t) * rx * wobble;
+    const localY = Math.sin(t) * ry * wobble;
+    const px = x + localX * Math.cos(rotation) - localY * Math.sin(rotation);
+    const py = y + localX * Math.sin(rotation) + localY * Math.cos(rotation);
+
+    if (i === 0) context.moveTo(px, py);
+    else context.lineTo(px, py);
   }
 
-  context.lineWidth = Math.max(0.7, radius * 0.0016);
+  context.closePath();
+  context.fill();
+  context.restore();
+}
 
-  for (let i = 0; i < count; i += 1) {
-    const offset = (i - count / 2) * strokeSize * 1.35;
-    const bend = Math.sin((cell.index + i + world.seed) * 1.17) * strokeSize * 0.72;
-    const length = strokeSize * (2.2 + ridge * 2.0);
+function drawOceanDepth(context, world, projected, radius) {
+  context.save();
+  context.filter = "blur(1.2px)";
+
+  for (const { cell, point } of projected) {
+    if (cell.kind !== "deep-ocean" && cell.kind !== "ocean" && cell.kind !== "shelf") continue;
+
+    const depthRatio = clamp(cell.depth / 6000, 0.04, 1);
+    const size = radius * (0.08 + depthRatio * 0.08) * (0.68 + point.z * 0.36);
+
+    context.globalAlpha = cell.kind === "shelf" ? 0.08 : 0.12 + depthRatio * 0.18;
+    context.fillStyle = cell.kind === "deep-ocean" ? "rgba(0,5,20,0.88)" : "rgba(2,18,45,0.62)";
 
     context.beginPath();
-    context.moveTo(point.x - length * 0.5, point.y + offset * 0.26 + bend);
-    context.quadraticCurveTo(
+    context.ellipse(point.x, point.y, size * 1.45, size * 0.82, cell.noiseA * Math.PI, 0, Math.PI * 2);
+    context.fill();
+  }
+
+  context.filter = "none";
+  context.restore();
+}
+
+function drawSurfaceMasses(context, world, projected, radius, zoom) {
+  context.save();
+
+  context.beginPath();
+  const centerX = context.canvas.width * 0.5;
+  const centerY = context.canvas.height * 0.52;
+  context.arc(centerX, centerY, radius * zoom * 0.998, 0, Math.PI * 2);
+  context.clip();
+
+  drawOceanDepth(context, world, projected, radius);
+
+  context.filter = "blur(0.6px)";
+
+  let painted = 0;
+
+  for (const { cell, point } of projected) {
+    const baseColor = colorForCell(world, cell);
+
+    const elevationLift = clamp(cell.elevation / 5200, -0.18, 0.26);
+    const depthDarken = cell.depth > 0 ? clamp(cell.depth / 6200, 0, 1) * 0.16 : 0;
+    const light = point.light + elevationLift;
+    const color = shade(baseColor, light, 0, depthDarken);
+
+    const frontScale = 0.72 + point.z * 0.40;
+    let sizeX = radius * 0.095 * frontScale * zoom;
+    let sizeY = radius * 0.055 * frontScale * zoom;
+    let alpha = 0.22;
+
+    if (cell.kind === "deep-ocean") {
+      sizeX *= 1.15;
+      sizeY *= 0.80;
+      alpha = 0.15;
+    } else if (cell.kind === "ocean") {
+      sizeX *= 1.05;
+      sizeY *= 0.76;
+      alpha = 0.17;
+    } else if (cell.kind === "shelf") {
+      sizeX *= 1.16;
+      sizeY *= 0.82;
+      alpha = 0.26;
+    } else if (cell.kind === "coast") {
+      sizeX *= 1.22;
+      sizeY *= 0.76;
+      alpha = 0.58;
+    } else if (cell.kind === "relief") {
+      sizeX *= 1.00;
+      sizeY *= 0.84;
+      alpha = 0.78;
+    } else if (cell.kind === "ice") {
+      sizeX *= 1.10;
+      sizeY *= 0.70;
+      alpha = 0.78;
+    } else {
+      sizeX *= 1.16;
+      sizeY *= 0.82;
+      alpha = cell.kind === "forest" ? 0.72 : 0.68;
+    }
+
+    const rotation = (cell.noiseA - 0.5) * 0.9;
+
+    drawSoftBlob(
+      context,
       point.x,
-      point.y + offset * 0.10 - bend,
-      point.x + length * 0.5,
-      point.y + offset * 0.26 + bend * 0.4
+      point.y,
+      sizeX,
+      sizeY,
+      rotation,
+      color,
+      clamp(alpha + point.z * 0.08, 0.10, 0.88),
+      cell.index + world.seed
     );
+
+    painted += 1;
+  }
+
+  context.filter = "none";
+  context.restore();
+
+  return painted;
+}
+
+function drawCoastlines(context, world, projected, radius, zoom) {
+  context.save();
+
+  context.beginPath();
+  const centerX = context.canvas.width * 0.5;
+  const centerY = context.canvas.height * 0.52;
+  context.arc(centerX, centerY, radius * zoom * 0.998, 0, Math.PI * 2);
+  context.clip();
+
+  context.lineCap = "round";
+  context.lineJoin = "round";
+
+  for (const { cell, point } of projected) {
+    if (cell.kind !== "coast" && cell.kind !== "shelf") continue;
+
+    const frontScale = 0.72 + point.z * 0.40;
+    const size = radius * 0.070 * frontScale * zoom;
+    const arc = Math.PI * (0.75 + cell.noiseA * 0.74);
+    const start = cell.noiseB * Math.PI * 2;
+
+    context.beginPath();
+    context.strokeStyle = cell.kind === "coast"
+      ? "rgba(255,230,160,0.62)"
+      : "rgba(130,230,220,0.34)";
+    context.globalAlpha = cell.kind === "coast" ? 0.52 : 0.28;
+    context.lineWidth = Math.max(1.0, radius * 0.0032);
+    context.ellipse(point.x, point.y, size * 1.26, size * 0.66, cell.noiseA * 1.6, start, start + arc);
     context.stroke();
   }
 
   context.restore();
 }
 
-function drawCells(context, world, cells, radius, centerX, centerY, yaw, pitch, zoom) {
-  const projected = [];
+function drawReliefAndTerrain(context, world, projected, radius, zoom) {
+  context.save();
 
-  for (const cell of cells) {
-    const point = projectCell(cell, radius, centerX, centerY, yaw, pitch, zoom);
-    if (!point) continue;
+  context.beginPath();
+  const centerX = context.canvas.width * 0.5;
+  const centerY = context.canvas.height * 0.52;
+  context.arc(centerX, centerY, radius * zoom * 0.998, 0, Math.PI * 2);
+  context.clip();
 
-    projected.push({ cell, point });
+  for (const { cell, point } of projected) {
+    if (cell.kind !== "relief" && cell.kind !== "forest" && cell.kind !== "land") continue;
+
+    const frontScale = 0.72 + point.z * 0.40;
+    const size = radius * 0.052 * frontScale * zoom;
+    const lineCount = cell.kind === "relief" ? 4 : 2;
+
+    context.save();
+    context.globalAlpha = cell.kind === "relief" ? 0.26 : 0.11;
+    context.strokeStyle = cell.kind === "relief"
+      ? "rgba(255,245,210,0.68)"
+      : "rgba(35,70,38,0.62)";
+    context.lineWidth = Math.max(0.8, radius * 0.0017);
+
+    for (let i = 0; i < lineCount; i += 1) {
+      const offset = (i - lineCount / 2) * size * 0.32;
+      const bend = Math.sin((cell.index + i) * 0.91) * size * 0.24;
+
+      context.beginPath();
+      context.moveTo(point.x - size * 0.9, point.y + offset + bend);
+      context.quadraticCurveTo(
+        point.x,
+        point.y + offset - bend,
+        point.x + size * 0.9,
+        point.y + offset + bend * 0.5
+      );
+      context.stroke();
+    }
+
+    context.restore();
   }
 
-  projected.sort((a, b) => a.point.z - b.point.z);
+  context.restore();
+}
+
+function drawClouds(context, world, radius, centerX, centerY, yaw, pitch, zoom, compact) {
+  if (compact) return;
 
   context.save();
 
   context.beginPath();
-  context.arc(centerX, centerY, radius * zoom * 0.998, 0, Math.PI * 2);
+  context.arc(centerX, centerY, radius * zoom * 1.002, 0, Math.PI * 2);
   context.clip();
 
-  let painted = 0;
+  context.filter = "blur(2px)";
+  context.globalAlpha = 0.55;
 
-  for (const { cell, point } of projected) {
-    const baseSize = radius * 0.066 * (0.72 + point.z * 0.38) * zoom;
-    const color = colorForCell(world, cell);
-    const elevationLift = clamp(cell.elevation / 5000, -0.2, 0.24);
-    const depthDarken = cell.depth > 0 ? clamp(cell.depth / 5600, 0, 1) * 0.18 : 0;
-    const light = point.light + elevationLift;
+  for (let i = 0; i < 16; i += 1) {
+    const lat = -58 + i * 7.9 + Math.sin(i * 1.7 + world.seed) * 8;
+    const lon = -180 + i * 28 + Math.cos(i * 1.3 + world.seed) * 24;
+    const pseudoCell = { latitude: lat, longitude: lon, index: i, kind: "cloud" };
+    const point = projectCell(pseudoCell, radius, centerX, centerY, yaw + 12, pitch, zoom);
+    if (!point) continue;
 
+    const size = radius * (0.050 + hashUnit(i, world.seed + 881) * 0.048) * (0.74 + point.z * 0.32);
+
+    context.fillStyle = world.cloud;
     context.beginPath();
-
-    if (cell.kind === "relief") {
-      context.globalAlpha = 0.89;
-      context.moveTo(point.x, point.y - baseSize * 0.80);
-      context.lineTo(point.x + baseSize * 0.72, point.y - baseSize * 0.18);
-      context.lineTo(point.x + baseSize * 0.50, point.y + baseSize * 0.60);
-      context.lineTo(point.x - baseSize * 0.54, point.y + baseSize * 0.50);
-      context.lineTo(point.x - baseSize * 0.74, point.y - baseSize * 0.14);
-      context.closePath();
-    } else if (cell.kind === "coast" || cell.kind === "shelf") {
-      context.globalAlpha = cell.kind === "coast" ? 0.86 : 0.45;
-      context.ellipse(point.x, point.y, baseSize * 0.80, baseSize * 0.48, 0.10, 0, Math.PI * 2);
-    } else if (cell.kind === "ice") {
-      context.globalAlpha = 0.92;
-      context.ellipse(point.x, point.y, baseSize * 0.68, baseSize * 0.50, 0.04, 0, Math.PI * 2);
-    } else if (cell.kind === "deep-ocean" || cell.kind === "ocean") {
-      context.globalAlpha = cell.kind === "deep-ocean" ? 0.44 : 0.48;
-      context.ellipse(point.x, point.y, baseSize * 0.74, baseSize * 0.52, 0.02, 0, Math.PI * 2);
-    } else {
-      context.globalAlpha = 0.83;
-      context.ellipse(point.x, point.y, baseSize * 0.74, baseSize * 0.52, 0.08, 0, Math.PI * 2);
-    }
-
-    context.fillStyle = shade(color, light, 0, depthDarken);
+    context.ellipse(
+      point.x,
+      point.y,
+      size * (1.8 + hashUnit(i, world.seed + 2)),
+      size * (0.45 + hashUnit(i, world.seed + 3) * 0.34),
+      hashUnit(i, world.seed + 4) * Math.PI,
+      0,
+      Math.PI * 2
+    );
     context.fill();
-
-    if (cell.kind !== "deep-ocean" && cell.kind !== "ocean") {
-      context.globalAlpha = cell.kind === "coast"
-        ? 0.50
-        : cell.kind === "relief"
-          ? 0.42
-          : cell.kind === "ice"
-            ? 0.36
-            : 0.20;
-
-      context.strokeStyle = cell.kind === "coast" || cell.kind === "shelf"
-        ? "rgba(255,235,170,.74)"
-        : cell.kind === "ice"
-          ? "rgba(240,252,255,.58)"
-          : "rgba(255,236,178,.35)";
-
-      context.lineWidth = Math.max(0.7, radius * 0.0025);
-      context.stroke();
-    }
-
-    drawCellTexture(context, world, cell, point, radius, baseSize);
-    painted += 1;
   }
 
+  context.filter = "none";
   context.restore();
-
-  return painted;
 }
 
 function drawAtmosphere(context, world, radius, centerX, centerY, zoom) {
@@ -689,7 +749,7 @@ function drawAtmosphere(context, world, radius, centerX, centerY, zoom) {
   );
 
   highlight.addColorStop(0, "rgba(255,238,184,.24)");
-  highlight.addColorStop(0.34, `${world.glow}`);
+  highlight.addColorStop(0.34, world.glow);
   highlight.addColorStop(0.74, "rgba(0,0,0,.02)");
   highlight.addColorStop(1, "rgba(0,0,0,.54)");
 
@@ -744,12 +804,28 @@ function renderPlanet(canvas, context, world, view, compact = false) {
   const centerX = width * 0.5;
   const centerY = height * (compact ? 0.50 : 0.52);
   const zoom = clamp(view.zoom || 1, 0.78, 1.58);
+  const yaw = view.yaw || 0;
+  const pitch = view.pitch || 0;
 
   const cells = buildWorldCells(world);
+  const projected = [];
+
+  for (const cell of cells) {
+    const point = projectCell(cell, radius, centerX, centerY, yaw, pitch, zoom);
+    if (!point) continue;
+    projected.push({ cell, point });
+  }
+
+  projected.sort((a, b) => a.point.z - b.point.z);
 
   clearScene(context, width, height, world);
-  drawGlobeBase(context, width, height, world, radius, centerX, centerY, zoom);
-  const painted = drawCells(context, world, cells, radius, centerX, centerY, view.yaw || 0, view.pitch || 0, zoom);
+  drawGlobeBase(context, world, radius, centerX, centerY, zoom);
+
+  const painted = drawSurfaceMasses(context, world, projected, radius, zoom);
+
+  drawCoastlines(context, world, projected, radius, zoom);
+  drawReliefAndTerrain(context, world, projected, radius, zoom);
+  drawClouds(context, world, radius, centerX, centerY, yaw, pitch, zoom, compact);
   drawAtmosphere(context, world, radius, centerX, centerY, zoom);
   drawTitle(context, width, height, world, compact);
 
@@ -759,9 +835,11 @@ function renderPlanet(canvas, context, world, view, compact = false) {
 function metaBlock(label, value) {
   const span = document.createElement("span");
   const strong = document.createElement("strong");
+
   strong.textContent = label;
   span.appendChild(strong);
   span.append(value);
+
   return span;
 }
 
@@ -774,8 +852,8 @@ function updateDisplayMeta(world, painted) {
     nodes.displayMeta.replaceChildren(
       metaBlock("Layer", "Inspection-heavy display case"),
       metaBlock("Touch", "Drag / rotate / zoom"),
-      metaBlock("Source", "Showcase planet renderer"),
-      metaBlock("Cells", `${painted}/${TOTAL_CELLS} visible-pass candidate`)
+      metaBlock("Source", "Self-contained surface renderer"),
+      metaBlock("Field", `256 under hood · ${painted} projected`)
     );
   }
 
@@ -790,9 +868,7 @@ function updateDisplayMeta(world, painted) {
 function renderDisplay() {
   const world = worldByKey(state.activeWorldKey);
 
-  if (!nodes.displayCanvas || !nodes.displayContext) {
-    ensureDisplayCanvas();
-  }
+  nodes.displayContext = setupCanvas(nodes.displayCanvas, 880);
 
   const painted = renderPlanet(
     nodes.displayCanvas,
@@ -817,7 +893,7 @@ function renderPreviews() {
     const preview = nodes.previews.get(world.key);
     if (!preview?.canvas || !preview?.context) continue;
 
-    setupCanvas(preview.canvas, 220);
+    preview.context = setupCanvas(preview.canvas, 220);
 
     renderPlanet(
       preview.canvas,
@@ -846,9 +922,9 @@ function selectWorld(key) {
 
 function wireCards() {
   for (const [key, card] of nodes.cards.entries()) {
-    if (card.dataset.showroomSelfContainedBound === "true") continue;
+    if (card.dataset.showroomSurfaceRefinedBound === "true") continue;
 
-    card.dataset.showroomSelfContainedBound = "true";
+    card.dataset.showroomSurfaceRefinedBound = "true";
 
     card.addEventListener("click", () => {
       selectWorld(key);
@@ -864,9 +940,9 @@ function wireCards() {
 
 function wireDisplayDrag() {
   const target = nodes.displayCanvas || nodes.displayWindow;
-  if (!target || target.dataset.showroomSelfContainedDragBound === "true") return;
+  if (!target || target.dataset.showroomSurfaceRefinedDragBound === "true") return;
 
-  target.dataset.showroomSelfContainedDragBound = "true";
+  target.dataset.showroomSurfaceRefinedDragBound = "true";
   target.style.touchAction = "none";
 
   target.addEventListener("pointerdown", (event) => {
@@ -917,7 +993,7 @@ function animationLoop() {
   if (!state.active) return;
 
   if (!state.reducedMotion) {
-    state.previewYaw += 0.32;
+    state.previewYaw += 0.30;
   }
 
   renderPreviews();
@@ -935,12 +1011,19 @@ function stampDocument(world, painted = 0) {
   root.dataset.htmlExpected = HTML_EXPECTED;
   root.dataset.showroomMode = SHOWROOM_MODE;
   root.dataset.displayCaseMode = DISPLAY_CASE_MODE;
-  root.dataset.globeShowcaseSelfContainedInspection = "true";
+  root.dataset.globeShowcaseSurfaceRefined = "true";
   root.dataset.activeDisplay = world.key;
   root.dataset.activeInspectionRoute = world.route;
   root.dataset.touchDragInspection = "true";
   root.dataset.actualPlanetFigureVisible = "true";
-  root.dataset.displayCellsPainted = String(painted);
+  root.dataset.visibleDotPatternReduced = "true";
+  root.dataset.explicitNodeOverlayReduced = "true";
+  root.dataset.landmassDefinitionIncreased = "true";
+  root.dataset.coastlineShapingIncreased = "true";
+  root.dataset.oceanDepthIncreased = "true";
+  root.dataset.terrainContrastIncreased = "true";
+  root.dataset.cloudAtmosphereSoftnessIncreased = "true";
+  root.dataset.displayCellsProjected = String(painted);
   root.dataset.totalCells = String(TOTAL_CELLS);
 
   root.dataset.groundLevelReady = String(GROUND_LEVEL_READY);
@@ -974,6 +1057,14 @@ function getShowroomGlobeShowcaseStatus() {
     selfContainedRenderer: true,
     importedHEarthCanvasDependency: false,
     touchDragInspection: true,
+
+    visibleDotPatternReduced: true,
+    explicitNodeOverlayReduced: true,
+    landmassDefinitionIncreased: true,
+    coastlineShapingIncreased: true,
+    oceanDepthIncreased: true,
+    terrainContrastIncreased: true,
+    cloudAtmosphereSoftnessIncreased: true,
 
     totalCells: TOTAL_CELLS,
     grid: `${GRID}x${GRID}`,

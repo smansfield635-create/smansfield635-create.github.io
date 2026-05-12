@@ -2,1063 +2,530 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="compass-three-lens-flat-home-round-orbit-globe-universe"
+  data-page="compass-crystal-three-lens-gate"
   data-route="/"
-  data-contract="COMPASS_THREE_LENS_FLAT_HOME_ROUND_ORBIT_GLOBE_UNIVERSE_TNT_v9"
-  data-previous-contract="COMPASS_THREE_LENS_FLAT_ROUND_GLOBE_GATE_TNT_v8"
-  data-runtime-contract="COMPASS_THREE_LENS_RUNTIME_TNT_v4"
-  data-route-js-contract="COMPASS_THREE_LENS_ROUTE_ONLY_JS_TNT_v5"
-  data-room="compass"
-  data-role="three-lens-public-command-gate"
-  data-theme="violet-purple-primary-gold-border-black-gold-inlay"
-  data-flat-authority="/"
-  data-round-authority="/?lens=round"
-  data-globe-authority="/nine-summits/universe/"
-  data-round-background-authority="/assets/dgb-interplanetary-background.js"
-  data-heavy-runtime-loaded="false"
+  data-contract="COMPASS_CRYSTAL_THREE_LENS_GATE_TNT_v10"
+  data-previous-contract="COMPASS_THREE_LENS_FLAT_HOME_ROUND_ORBIT_GLOBE_UNIVERSE_TNT_v9"
+  data-compass-mode="three-lens-gate"
+  data-flat-lens-route="/"
+  data-round-lens-route="/?lens=round"
+  data-globe-lens-route="/nine-summits/universe/"
+  data-crystal-ui="true"
   data-generated-image="false"
   data-graphic-box="false"
-  data-streaming="false"
-  data-visual-pass-claimed="false"
+  data-visual-pass-claim="false"
 >
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-
-  <title>Compass · Diamond Gate Bridge</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Diamond Gate Bridge · Compass</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Compass: choose Flat, Round, or Globe. Flat stays on the homepage as a two-dimensional map, Round opens the animated Compass orbit, and Globe opens the Nine Summits Universe."
-  />
-
-  <script src="/index.runtime.js?v=COMPASS_THREE_LENS_RUNTIME_TNT_v4" defer></script>
-  <script src="/index.js?v=COMPASS_THREE_LENS_ROUTE_ONLY_JS_TNT_v5" defer></script>
+    content="Diamond Gate Bridge Compass: a crystal three-lens gate where Flat stays home, Round opens the orbiting Compass, and Globe jumps to the Nine Summits Universe."
+  >
 
   <style>
     :root {
-      --stage: min(100%, 1180px);
-      --black: #020104;
-      --black-2: #050208;
-      --black-3: #090511;
-      --violet: #8b5cf6;
-      --violet-2: #a78bfa;
-      --purple: #5b21b6;
-      --purple-2: #c4b5fd;
-      --gold: #f4c95d;
-      --gold-2: #ffe8a8;
-      --text: #fff8e8;
-      --muted: rgba(255,247,226,0.74);
-      --faint: rgba(255,247,226,0.48);
-      --line: rgba(196,181,253,0.22);
-      --line-gold: rgba(255,232,168,0.34);
-      --panel: rgba(3,2,5,0.84);
-      --inner-orbit-duration: 38s;
-      --outer-orbit-duration: 58s;
+      color-scheme: dark;
+      --bg:#030713;
+      --panel:rgba(8,15,30,.82);
+      --panel2:rgba(4,9,21,.90);
+      --line:rgba(244,191,96,.34);
+      --line-blue:rgba(142,190,255,.28);
+      --line-green:rgba(143,240,195,.24);
+      --text:#f8ead0;
+      --muted:#bac2cf;
+      --gold:#f4bf60;
+      --green:#8ff0c3;
+      --blue:#8ebeff;
+      --shadow:0 26px 82px rgba(0,0,0,.44);
+      --max:1220px;
+      --facet:polygon(0 18px,18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px));
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing:border-box; }
 
-    html,
-    body {
-      width: 100%;
-      margin: 0;
-      overflow-x: hidden;
+    html {
+      min-height:100%;
       background:
-        radial-gradient(circle at 50% 7%, rgba(139,92,246,0.22), transparent 25rem),
-        radial-gradient(circle at 82% 44%, rgba(244,201,93,0.12), transparent 34rem),
-        linear-gradient(180deg, #09050d, #030205 64%, #000);
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        radial-gradient(circle at 50% 3%,rgba(142,190,255,.18),transparent 34rem),
+        radial-gradient(circle at 12% 20%,rgba(244,191,96,.12),transparent 30rem),
+        radial-gradient(circle at 88% 24%,rgba(143,240,195,.08),transparent 28rem),
+        linear-gradient(180deg,var(--bg),#01030a 78%);
     }
 
     body {
-      min-height: 100svh;
-    }
-
-    body[data-active-lens="flat"],
-    body[data-active-lens="gate"] {
+      min-height:100%;
+      margin:0;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);
       background:
-        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.16), transparent 24rem),
-        radial-gradient(circle at 80% 38%, rgba(244,201,93,0.09), transparent 34rem),
-        linear-gradient(180deg, #07040b, #020104 66%, #000);
+        linear-gradient(145deg,rgba(255,255,255,.035),transparent 42%),
+        radial-gradient(circle at 52% 62%,rgba(244,191,96,.08),transparent 34rem);
     }
 
-    body[data-active-lens="flat"] .dgb-interplanetary-bg,
-    body[data-active-lens="gate"] .dgb-interplanetary-bg {
-      display: none !important;
-    }
+    a { color:inherit; text-decoration:none; }
 
-    a {
-      color: inherit;
-      text-decoration: none;
+    a:focus-visible,
+    [tabindex]:focus-visible {
+      outline:2px solid var(--gold);
+      outline-offset:4px;
     }
 
     .skip-link {
-      position: absolute;
-      left: 1rem;
-      top: -4rem;
-      z-index: 50;
-      border: 1px solid var(--line-gold);
-      border-radius: 999px;
-      background: #050208;
-      padding: 0.7rem 1rem;
-      color: var(--text);
-      font-weight: 900;
+      position:absolute;
+      left:1rem;
+      top:1rem;
+      z-index:30;
+      padding:.75rem 1rem;
+      border:1px solid var(--line);
+      background:#08101d;
+      color:var(--text);
+      transform:translateY(-180%);
+      transition:transform 160ms ease;
+      clip-path:var(--facet);
     }
 
-    .skip-link:focus { top: 1rem; }
+    .skip-link:focus { transform:translateY(0); }
 
     .shell {
-      position: relative;
-      z-index: 2;
-      width: var(--stage);
-      margin: 0 auto;
-      padding: max(1rem, env(safe-area-inset-top)) clamp(0.85rem, 3vw, 2rem)
-        max(1.5rem, env(safe-area-inset-bottom));
+      width:min(var(--max),calc(100% - 32px));
+      margin:0 auto;
+      padding:24px 0 48px;
+    }
+
+    .topbar,
+    .hero,
+    .lens-panel,
+    .status-strip {
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.055),transparent),var(--panel);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(18px);
+      clip-path:var(--facet);
     }
 
     .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 0.75rem 0 1rem;
-      background: linear-gradient(180deg, rgba(9,5,13,0.96), rgba(9,5,13,0));
-      backdrop-filter: blur(14px);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      padding:14px 18px;
+      background:rgba(5,9,18,.74);
     }
 
     .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.65rem;
-      min-width: max-content;
-      font-weight: 950;
-      letter-spacing: 0.03em;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      min-width:max-content;
+      font-weight:950;
+      letter-spacing:.02em;
     }
 
     .brand-mark {
-      display: grid;
-      place-items: center;
-      width: 2.35rem;
-      height: 2.35rem;
-      border: 1px solid rgba(255,232,168,0.38);
-      border-radius: 0.82rem;
-      background:
-        radial-gradient(circle at 35% 25%, rgba(255,255,255,0.35), transparent 32%),
-        linear-gradient(135deg, rgba(139,92,246,0.42), rgba(244,201,93,0.20));
-      color: var(--gold-2);
-      box-shadow:
-        0 0 1.2rem rgba(139,92,246,0.16),
-        0 0 1.3rem rgba(244,201,93,0.10);
-      transform: rotate(45deg);
-    }
-
-    .brand-mark span {
-      display: block;
-      transform: rotate(-45deg);
-      font-size: 0.72rem;
-      font-weight: 950;
+      width:18px;
+      height:18px;
+      border:1px solid var(--gold);
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,rgba(244,191,96,.24),transparent),rgba(255,255,255,.04);
+      box-shadow:0 0 24px rgba(244,191,96,.18);
     }
 
     .nav {
-      display: flex;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-      gap: 0.42rem;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:8px;
     }
 
-    .nav a,
-    .pill {
-      min-height: 2.12rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(196,181,253,0.20);
-      border-radius: 999px;
-      padding: 0.48rem 0.72rem;
-      color: var(--muted);
+    .nav a {
+      position:relative;
+      padding:8px 11px;
+      border:1px solid rgba(255,255,255,.09);
+      color:var(--muted);
+      font-size:.88rem;
       background:
-        linear-gradient(180deg, rgba(139,92,246,0.08), rgba(244,201,93,0.025)),
-        rgba(0,0,0,0.36);
-      font-size: 0.78rem;
-      font-weight: 850;
-      line-height: 1;
-      white-space: nowrap;
-      box-shadow:
-        inset 0 0 0 1px rgba(244,201,93,0.035),
-        0 0 1rem rgba(139,92,246,0.06);
+        linear-gradient(135deg,rgba(255,255,255,.07),transparent 45%),
+        rgba(255,255,255,.032);
+      clip-path:polygon(0 9px,9px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 9px),calc(100% - 9px) 100%,9px 100%,0 calc(100% - 9px));
     }
 
-    .nav a:hover,
-    .nav a:focus-visible,
-    .pill:hover,
-    .pill:focus-visible {
-      border-color: rgba(255,232,168,0.58);
-      color: var(--text);
-      box-shadow:
-        0 0 1rem rgba(244,201,93,0.16),
-        0 0 1.8rem rgba(139,92,246,0.14);
-      outline: none;
+    .nav a[aria-current="page"] {
+      border-color:rgba(244,191,96,.54);
+      color:var(--gold);
+      background:
+        linear-gradient(135deg,rgba(244,191,96,.16),transparent 50%),
+        rgba(244,191,96,.08);
     }
 
     .hero {
-      display: grid;
-      gap: 1rem;
-      padding: clamp(1.5rem, 5vw, 3.5rem) 0 clamp(1rem, 3vw, 1.5rem);
-      text-align: center;
+      margin-top:24px;
+      padding:clamp(24px,5vw,54px);
+      background:
+        radial-gradient(circle at 18% 12%,rgba(244,191,96,.11),transparent 18rem),
+        radial-gradient(circle at 84% 28%,rgba(142,190,255,.10),transparent 24rem),
+        linear-gradient(180deg,rgba(255,255,255,.055),transparent),
+        var(--panel);
     }
 
-    body[data-active-lens="flat"] .gate-only,
-    body[data-active-lens="round"] .gate-only {
-      display: none !important;
-    }
-
-    .eyebrow {
-      margin: 0;
-      color: var(--gold-2);
-      font-size: clamp(0.72rem, 2.5vw, 0.84rem);
-      font-weight: 950;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      text-shadow:
-        0 0 1rem rgba(244,201,93,0.34),
-        0 0 1.4rem rgba(139,92,246,0.28);
+    .crystal-label {
+      display:inline-flex;
+      width:fit-content;
+      margin:0 0 18px;
+      padding:8px 12px;
+      border:1px solid rgba(142,190,255,.26);
+      color:var(--blue);
+      background:
+        linear-gradient(135deg,rgba(142,190,255,.14),transparent 56%),
+        rgba(142,190,255,.055);
+      font-size:.82rem;
+      font-weight:950;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      clip-path:polygon(0 9px,9px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 9px),calc(100% - 9px) 100%,9px 100%,0 calc(100% - 9px));
     }
 
     h1 {
-      width: min(100%, 980px);
-      margin: 0 auto;
-      font-size: clamp(3rem, 10vw, 7.2rem);
-      line-height: 0.88;
-      letter-spacing: -0.082em;
-      text-wrap: balance;
+      margin:0;
+      max-width:980px;
+      font-size:clamp(3rem,7vw,6.4rem);
+      line-height:.86;
+      letter-spacing:-.085em;
     }
 
-    .subtitle {
-      width: min(100%, 760px);
-      margin: 0 auto;
-      color: var(--muted);
-      font-size: clamp(1.05rem, 3.4vw, 1.42rem);
-      line-height: 1.42;
-      font-weight: 700;
-      text-wrap: balance;
+    .lede {
+      max-width:78ch;
+      margin:24px 0 0;
+      color:var(--muted);
+      font-size:clamp(1.05rem,2.35vw,1.22rem);
+      line-height:1.7;
     }
 
-    .lens-gate {
-      width: min(100%, 1040px);
-      margin: clamp(1rem, 3vw, 1.5rem) auto 0;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: clamp(0.75rem, 2.2vw, 1rem);
+    .lens-grid {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:16px;
+      margin-top:18px;
     }
 
-    .lens-card {
-      min-height: 16rem;
-      display: grid;
-      align-content: space-between;
-      gap: 1rem;
-      padding: clamp(1rem, 3vw, 1.25rem);
-      border: 1px solid rgba(255,232,168,0.26);
-      border-radius: clamp(1.15rem, 3vw, 1.6rem);
+    .lens-panel {
+      position:relative;
+      min-height:310px;
+      padding:22px;
+      overflow:hidden;
       background:
-        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.14), transparent 38%),
-        radial-gradient(circle at 50% 100%, rgba(244,201,93,0.09), transparent 44%),
-        linear-gradient(180deg, rgba(139,92,246,0.050), rgba(244,201,93,0.018)),
-        rgba(0,0,0,0.78);
-      box-shadow:
-        0 0 2rem rgba(139,92,246,0.12),
-        0 0 2.8rem rgba(244,201,93,0.07),
-        0 24px 72px rgba(0,0,0,0.28),
-        inset 0 1px 0 rgba(255,232,168,0.08);
-      overflow: hidden;
-      position: relative;
+        radial-gradient(circle at 50% 0%,rgba(244,191,96,.10),transparent 15rem),
+        linear-gradient(145deg,rgba(255,255,255,.07),transparent 45%),
+        var(--panel2);
     }
 
-    .lens-card::before {
-      content: "";
-      position: absolute;
-      width: 7rem;
-      height: 7rem;
-      right: -2.5rem;
-      top: -2.5rem;
-      border: 1px solid rgba(196,181,253,0.18);
-      opacity: 0.76;
-      pointer-events: none;
-    }
-
-    .lens-card[data-lens="flat"]::before {
-      border-radius: 0.9rem;
-      transform: rotate(0deg);
-      box-shadow: 0 0 1.6rem rgba(244,201,93,0.10);
-    }
-
-    .lens-card[data-lens="round"]::before {
-      border-radius: 50%;
-      box-shadow: 0 0 2rem rgba(139,92,246,0.14);
-    }
-
-    .lens-card[data-lens="globe"]::before {
-      border-radius: 50%;
+    .lens-panel::before {
+      content:"";
+      position:absolute;
+      inset:1px;
+      pointer-events:none;
       background:
-        radial-gradient(circle at 35% 30%, rgba(255,255,255,0.14), transparent 18%),
-        radial-gradient(circle at 58% 55%, rgba(139,92,246,0.16), transparent 54%);
-      box-shadow:
-        0 0 2rem rgba(139,92,246,0.14),
-        inset 0 0 1.5rem rgba(244,201,93,0.06);
+        linear-gradient(135deg,rgba(255,255,255,.16),transparent 28%),
+        linear-gradient(315deg,rgba(142,190,255,.10),transparent 34%),
+        radial-gradient(circle at 80% 10%,rgba(255,255,255,.12),transparent 9rem);
+      clip-path:var(--facet);
+      opacity:.8;
     }
 
-    .lens-top {
-      display: grid;
-      gap: 0.45rem;
-      position: relative;
-      z-index: 1;
+    .lens-panel::after {
+      content:"";
+      position:absolute;
+      right:-46px;
+      bottom:-46px;
+      width:150px;
+      height:150px;
+      border:1px solid rgba(244,191,96,.22);
+      transform:rotate(45deg);
+      background:rgba(244,191,96,.035);
+      box-shadow:0 0 34px rgba(244,191,96,.06);
+      pointer-events:none;
     }
 
-    .lens-kicker {
-      color: var(--gold-2);
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
+    .lens-content {
+      position:relative;
+      z-index:1;
+      min-height:266px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:18px;
     }
 
-    .lens-card h2,
-    .active-panel h2 {
-      margin: 0;
-      font-size: clamp(1.5rem, 4.8vw, 2.4rem);
-      line-height: 0.96;
-      letter-spacing: -0.055em;
-      text-wrap: balance;
+    .lens-index {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      color:var(--gold);
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
     }
 
-    .lens-card p,
-    .active-panel p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.94rem;
-      line-height: 1.46;
-    }
-
-    .lens-button,
-    .button {
-      min-height: 2.8rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(255,232,168,0.96);
-      border-radius: 999px;
-      padding: 0.72rem 1rem;
-      color: #090604;
+    .lens-cut {
+      width:42px;
+      height:42px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(244,191,96,.36);
       background:
-        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.58), transparent 38%),
-        linear-gradient(135deg, #fff3c4, #f4c95d 44%, #a78bfa 78%, #6d28d9);
-      box-shadow:
-        0 0 0.9rem rgba(255,232,168,0.54),
-        0 0 2.6rem rgba(244,201,93,0.30),
-        0 0 3.4rem rgba(139,92,246,0.18),
-        0 1rem 2.5rem rgba(244,201,93,0.16);
-      font-weight: 950;
-      line-height: 1;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      position: relative;
-      z-index: 1;
-      cursor: pointer;
+        linear-gradient(135deg,rgba(244,191,96,.18),transparent),
+        rgba(255,255,255,.035);
+      color:var(--gold);
+      transform:rotate(45deg);
     }
 
-    .button.secondary,
-    .lens-button.secondary {
-      border-color: rgba(255,232,168,0.42);
-      color: var(--text);
+    .lens-cut span {
+      transform:rotate(-45deg);
+      font-size:.92rem;
+    }
+
+    .lens-panel h2 {
+      margin:0;
+      font-size:clamp(1.65rem,3.4vw,2.7rem);
+      line-height:.96;
+      letter-spacing:-.055em;
+    }
+
+    .lens-panel p {
+      margin:12px 0 0;
+      color:var(--muted);
+      line-height:1.58;
+    }
+
+    .crystal-action {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:fit-content;
+      min-height:44px;
+      padding:11px 15px;
+      border:1px solid rgba(244,191,96,.32);
       background:
-        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.16), transparent 42%),
-        linear-gradient(180deg, rgba(139,92,246,0.10), rgba(244,201,93,0.030)),
-        rgba(0,0,0,0.72);
-      box-shadow:
-        0 0 0.75rem rgba(139,92,246,0.18),
-        0 0 1.9rem rgba(244,201,93,0.10);
+        linear-gradient(135deg,rgba(244,191,96,.18),transparent 52%),
+        rgba(244,191,96,.08);
+      color:var(--gold);
+      font-weight:950;
+      clip-path:polygon(0 11px,11px 0,calc(100% - 11px) 0,100% 11px,100% calc(100% - 11px),calc(100% - 11px) 100%,11px 100%,0 calc(100% - 11px));
     }
 
-    .lens-button::after {
-      content: " →";
-    }
-
-    .active-panel {
-      display: none;
-      width: min(100%, 1040px);
-      margin: clamp(1rem, 3vw, 1.5rem) auto 0;
-      border: 1px solid rgba(255,232,168,0.24);
-      border-radius: clamp(1.15rem, 3vw, 1.6rem);
+    .crystal-action.primary {
       background:
-        radial-gradient(circle at 50% 0%, rgba(139,92,246,0.10), transparent 34%),
-        linear-gradient(180deg, rgba(139,92,246,0.055), rgba(244,201,93,0.018)),
-        rgba(0,0,0,0.82);
-      box-shadow:
-        0 0 2rem rgba(139,92,246,0.10),
-        0 0 2.8rem rgba(244,201,93,0.07),
-        0 24px 72px rgba(0,0,0,0.28);
-      padding: clamp(1rem, 3vw, 1.35rem);
+        linear-gradient(135deg,rgba(255,255,255,.34),transparent 50%),
+        var(--gold);
+      color:#06101d;
     }
 
-    body[data-active-lens="flat"] .flat-panel,
-    body[data-active-lens="round"] .round-panel {
-      display: block;
-    }
-
-    .panel-head {
-      display: grid;
-      gap: 0.45rem;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-
-    .panel-actions {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.65rem;
-      margin-top: 1rem;
-    }
-
-    .flat-map {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.7rem;
-      margin-top: 1rem;
-    }
-
-    .flat-cell {
-      min-height: 6.3rem;
-      display: grid;
-      align-content: center;
-      gap: 0.35rem;
-      border: 1px solid rgba(255,232,168,0.22);
-      border-radius: 1rem;
-      padding: 0.85rem;
+    .status-strip {
+      margin-top:18px;
+      padding:14px 16px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px 14px;
+      align-items:center;
+      justify-content:space-between;
       background:
-        linear-gradient(180deg, rgba(139,92,246,0.06), rgba(244,201,93,0.018)),
-        rgba(0,0,0,0.54);
-      text-align: left;
+        linear-gradient(135deg,rgba(143,240,195,.10),transparent 46%),
+        rgba(5,12,22,.86);
+      border-color:rgba(143,240,195,.24);
     }
 
-    .flat-cell strong {
-      color: var(--gold-2);
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
+    .status-strip strong {
+      color:var(--green);
+      font-size:.78rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
-    .flat-cell span {
-      color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.34;
+    .status-strip span {
+      color:var(--muted);
+      line-height:1.45;
+      font-size:.92rem;
     }
 
-    .flat-cell a {
-      color: var(--text);
-      font-weight: 900;
+    .receipt {
+      display:none;
     }
 
-    .round-preview {
-      width: min(100%, 740px);
-      margin: 0 auto;
-      display: grid;
-      place-items: center;
+    .footer {
+      margin-top:18px;
+      color:rgba(246,234,210,.62);
+      font-size:.88rem;
+      line-height:1.55;
+      text-align:center;
     }
 
-    .compass-card {
-      position: relative;
-      width: min(100%, 30rem);
-      aspect-ratio: 1 / 1;
-      border: 1px solid rgba(255,232,168,0.24);
-      border-radius: 2rem;
-      background:
-        radial-gradient(circle at 50% 12%, rgba(139,92,246,0.20), transparent 44%),
-        radial-gradient(circle at 50% 62%, rgba(244,201,93,0.10), transparent 48%),
-        linear-gradient(180deg, rgba(10,6,15,0.94), rgba(0,0,0,0.86));
-      box-shadow:
-        inset 0 0 0 1px rgba(255,232,168,0.06),
-        0 0 2.8rem rgba(139,92,246,0.14),
-        0 0 2.8rem rgba(244,201,93,0.08),
-        0 26px 80px rgba(0,0,0,0.42);
-      overflow: hidden;
-      isolation: isolate;
-    }
-
-    .center-anchor {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      z-index: 0;
-      display: grid;
-      place-items: center;
-      width: 8.3rem;
-      height: 8.3rem;
-      transform: translate(-50%, -50%) rotate(45deg);
-      border: 1px solid rgba(255,232,168,0.20);
-      border-radius: 1.45rem;
-      background:
-        radial-gradient(circle at 35% 28%, rgba(255,255,255,0.16), transparent 31%),
-        linear-gradient(135deg, rgba(139,92,246,0.42), rgba(244,201,93,0.12));
-      box-shadow:
-        0 0 70px rgba(139,92,246,0.22),
-        0 0 44px rgba(244,201,93,0.08),
-        inset 0 0 26px rgba(255,255,255,0.04);
-      opacity: 0.56;
-      pointer-events: none;
-      animation: anchorPulse 7s ease-in-out infinite;
-    }
-
-    .center-anchor span {
-      transform: rotate(-45deg);
-      color: rgba(255,248,232,0.90);
-      text-align: center;
-      font-size: 0.62rem;
-      font-weight: 900;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      line-height: 1.2;
-    }
-
-    .orbit-ring {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      border-radius: 999px;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-    }
-
-    .orbit-ring.inner {
-      width: 9rem;
-      height: 9rem;
-      z-index: 2;
-      animation: orbitClockwise var(--inner-orbit-duration) linear infinite;
-    }
-
-    .orbit-ring.outer {
-      width: 25rem;
-      height: 25rem;
-      z-index: 4;
-      animation: orbitCounter var(--outer-orbit-duration) linear infinite;
-    }
-
-    .diamond-node {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      width: 4.25rem;
-      height: 4.25rem;
-      margin: -2.125rem 0 0 -2.125rem;
-      border: 1px solid rgba(255,232,168,0.26);
-      border-radius: 1.15rem;
-      background:
-        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.34), rgba(255,255,255,0.08) 24%, transparent 42%),
-        radial-gradient(circle at 72% 78%, rgba(139,92,246,0.34), transparent 48%),
-        linear-gradient(145deg, rgba(167,139,250,0.98), rgba(91,33,182,0.94) 52%, rgba(20,8,40,0.96) 100%);
-      box-shadow:
-        0 16px 34px rgba(39,18,116,0.34),
-        0 0 26px rgba(139,92,246,0.24),
-        0 0 22px rgba(244,201,93,0.10),
-        inset 0 1px 0 rgba(255,255,255,0.20);
-      transform:
-        rotate(var(--angle))
-        translateY(var(--radius))
-        rotate(calc(-1 * var(--angle)))
-        rotate(45deg);
-      pointer-events: auto;
-    }
-
-    .orbit-ring.inner .diamond-node { --radius: -4rem; }
-
-    .orbit-ring.outer .diamond-node {
-      --radius: -12.1rem;
-      width: 3.6rem;
-      height: 3.6rem;
-      margin: -1.8rem 0 0 -1.8rem;
-    }
-
-    .diamond-node:hover,
-    .diamond-node:focus-visible {
-      outline: none;
-      border-color: rgba(255,232,168,0.78);
-      box-shadow:
-        0 22px 42px rgba(39,18,116,0.42),
-        0 0 34px rgba(139,92,246,0.32),
-        0 0 30px rgba(244,201,93,0.18);
-    }
-
-    .diamond-label-shell {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100%;
-      padding: 0.24rem;
-      transform: rotate(-45deg);
-      text-align: center;
-    }
-
-    .diamond-label-text {
-      display: block;
-      max-width: 3.2rem;
-      color: var(--text);
-      text-align: center;
-      font-size: 0.48rem;
-      font-weight: 900;
-      letter-spacing: 0.07em;
-      line-height: 1.08;
-      text-transform: uppercase;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.8);
-    }
-
-    .orbit-ring.inner .diamond-label-text {
-      animation: keepTextUprightInner var(--inner-orbit-duration) linear infinite;
-    }
-
-    .orbit-ring.outer .diamond-label-text {
-      animation: keepTextUprightOuter var(--outer-orbit-duration) linear infinite;
-    }
-
-    .status-card {
-      width: min(100%, 920px);
-      margin: 1rem auto 0;
-      border: 1px solid rgba(255,232,168,0.20);
-      border-radius: 1.15rem;
-      background: rgba(3,2,5,0.64);
-      padding: 1rem 1.15rem;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .status-card strong { color: var(--gold-2); }
-
-    .route-receipt,
-    [data-route-receipt],
-    [data-contract-receipt],
-    [data-debug-receipt] {
-      display: none !important;
-      visibility: hidden !important;
-      overflow: hidden !important;
-      width: 0 !important;
-      height: 0 !important;
-      max-width: 0 !important;
-      max-height: 0 !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      border: 0 !important;
-      opacity: 0 !important;
-      pointer-events: none !important;
-      position: absolute !important;
-      inset: auto !important;
-      clip-path: inset(50%) !important;
-      white-space: nowrap !important;
-    }
-
-    footer {
-      padding: 1.5rem 0 0.5rem;
-      color: var(--faint);
-      font-size: 0.78rem;
-      text-align: center;
-    }
-
-    @keyframes anchorPulse {
-      0%, 100% {
-        transform: translate(-50%, -50%) rotate(45deg) scale(0.98);
-        opacity: 0.48;
+    @media (max-width:980px) {
+      .lens-grid {
+        grid-template-columns:1fr;
       }
 
-      50% {
-        transform: translate(-50%, -50%) rotate(45deg) scale(1.02);
-        opacity: 0.62;
+      .lens-panel {
+        min-height:auto;
+      }
+
+      .lens-content {
+        min-height:auto;
       }
     }
 
-    @keyframes orbitClockwise {
-      to { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-
-    @keyframes orbitCounter {
-      to { transform: translate(-50%, -50%) rotate(-360deg); }
-    }
-
-    @keyframes keepTextUprightInner {
-      to { transform: rotate(-360deg); }
-    }
-
-    @keyframes keepTextUprightOuter {
-      to { transform: rotate(360deg); }
-    }
-
-    @media (max-width: 920px) {
+    @media (max-width:760px) {
       .topbar {
-        align-items: flex-start;
-        flex-direction: column;
+        align-items:flex-start;
+        flex-direction:column;
       }
 
       .nav {
-        width: 100%;
-        justify-content: flex-start;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        padding-bottom: 0.2rem;
-      }
-
-      .lens-gate {
-        grid-template-columns: 1fr;
-      }
-
-      .lens-card {
-        min-height: 12rem;
-      }
-
-      .flat-map {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .compass-card {
-        width: min(100%, 22rem);
-      }
-
-      .orbit-ring.inner {
-        width: 7.8rem;
-        height: 7.8rem;
-      }
-
-      .orbit-ring.outer {
-        width: 18.5rem;
-        height: 18.5rem;
-      }
-
-      .diamond-node {
-        width: 3.8rem;
-        height: 3.8rem;
-        margin: -1.9rem 0 0 -1.9rem;
-      }
-
-      .orbit-ring.inner .diamond-node { --radius: -3.35rem; }
-
-      .orbit-ring.outer .diamond-node {
-        --radius: -8.75rem;
-        width: 3rem;
-        height: 3rem;
-        margin: -1.5rem 0 0 -1.5rem;
-      }
-
-      .diamond-label-text {
-        max-width: 2.6rem;
-        font-size: 0.40rem;
-        letter-spacing: 0.04em;
+        justify-content:flex-start;
       }
     }
 
-    @media (max-width: 540px) {
+    @media (max-width:560px) {
       .shell {
-        padding-left: 0.65rem;
-        padding-right: 0.65rem;
+        width:min(100% - 20px,var(--max));
+        padding-top:10px;
       }
 
-      h1 {
-        font-size: clamp(2.8rem, 16vw, 4.6rem);
+      .hero {
+        padding:22px;
       }
 
-      .flat-map {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
+      .lens-panel {
+        padding:18px;
       }
     }
   </style>
 </head>
 
-<body
-  data-room="compass"
-  data-route="/"
-  data-contract="COMPASS_THREE_LENS_FLAT_HOME_ROUND_ORBIT_GLOBE_UNIVERSE_TNT_v9"
-  data-active-lens="gate"
-  data-generated-image="false"
-  data-graphic-box="false"
-  data-visual-pass-claimed="false"
->
-  <a class="skip-link" href="#compass-main">Skip to Compass</a>
+<body>
+  <a class="skip-link" href="/#compass-main">Skip to Compass</a>
 
   <div class="shell">
-    <header class="topbar" aria-label="Primary site navigation">
-      <a class="brand" href="/" aria-label="Diamond Gate Bridge Compass">
-        <span class="brand-mark" aria-hidden="true"><span>DG</span></span>
+    <header class="topbar" aria-label="Compass navigation">
+      <a class="brand" href="/" aria-label="Return to Diamond Gate Bridge Compass">
+        <span class="brand-mark" aria-hidden="true"></span>
         <span>Diamond Gate Bridge</span>
       </a>
 
-      <nav class="nav" aria-label="Main navigation">
-        <a href="/">Compass</a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/" aria-current="page">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
         <a href="/explore/">Manor</a>
-        <a href="/nine-summits-of-love/" data-no-view-carry="true">Book</a>
-        <a href="/nine-summits/universe/" data-no-view-carry="true">Universe</a>
+        <a href="/nine-summits-of-love/">Book</a>
+        <a href="/nine-summits/universe/">Universe</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/frontier/">Frontier</a>
-        <a href="/gauges/" data-no-view-carry="true">Gauges</a>
+        <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <main id="compass-main">
-      <section class="hero gate-only" aria-labelledby="compass-title">
-        <p class="eyebrow">Compass · Three-Lens Gate</p>
-        <h1 id="compass-title">Pressure is the door.</h1>
-        <p class="subtitle">
-          Choose the lens first. Flat stays on the homepage. Round opens the original rotating Compass. Globe jumps to the Nine Summits Universe.
+    <main id="compass-main" tabindex="-1">
+      <section class="hero" aria-label="Compass introduction">
+        <p class="crystal-label">Compass · Three-Lens Gate</p>
+        <h1>Pressure is the door.</h1>
+        <p class="lede">
+          The entrance begins with perspective. Flat gives the architectural map. Round restores the original orbiting Compass.
+          Globe opens the universe-scale field. Choose the lens before crossing the threshold.
         </p>
       </section>
 
-      <section class="lens-gate gate-only" aria-label="World lens choices">
-        <article class="lens-card" data-lens="flat">
-          <div class="lens-top">
-            <span class="lens-kicker">Lens One</span>
-            <h2>The World Is Flat</h2>
-            <p>A strictly two-dimensional homepage map. It stays on Compass and does not enter Door.</p>
+      <section class="lens-grid" aria-label="Compass lenses">
+        <article class="lens-panel" data-lens="flat" data-route="/">
+          <div class="lens-content">
+            <div>
+              <div class="lens-index">
+                <span>Lens One</span>
+                <span class="lens-cut" aria-hidden="true"><span>F</span></span>
+              </div>
+              <h2>The World Is Flat</h2>
+              <p>
+                The flat lens keeps the visitor on the homepage. It reads as a two-dimensional site map before the Door opens.
+              </p>
+            </div>
+            <a class="crystal-action primary" href="/">See Flat</a>
           </div>
-          <a class="lens-button" href="/" data-lens-link="flat">See Flat</a>
         </article>
 
-        <article class="lens-card" data-lens="round">
-          <div class="lens-top">
-            <span class="lens-kicker">Lens Two</span>
-            <h2>The World Is Round</h2>
-            <p>The original rotating Compass lens: orbiting route items, spinning field, and animated background.</p>
+        <article class="lens-panel" data-lens="round" data-route="/?lens=round">
+          <div class="lens-content">
+            <div>
+              <div class="lens-index">
+                <span>Lens Two</span>
+                <span class="lens-cut" aria-hidden="true"><span>R</span></span>
+              </div>
+              <h2>The World Is Round</h2>
+              <p>
+                The round lens opens the rotating Compass: orbiting route items, a moving field, and the original directional read.
+              </p>
+            </div>
+            <a class="crystal-action" href="/?lens=round">See Round</a>
           </div>
-          <a class="lens-button" href="/?lens=round" data-lens-link="round">See Round</a>
         </article>
 
-        <article class="lens-card" data-lens="globe">
-          <div class="lens-top">
-            <span class="lens-kicker">Lens Three</span>
-            <h2>The World Is a Globe</h2>
-            <p>A universe-scale jump. Globe belongs to the Nine Summits Universe page.</p>
+        <article class="lens-panel" data-lens="globe" data-route="/nine-summits/universe/">
+          <div class="lens-content">
+            <div>
+              <div class="lens-index">
+                <span>Lens Three</span>
+                <span class="lens-cut" aria-hidden="true"><span>G</span></span>
+              </div>
+              <h2>The World Is a Globe</h2>
+              <p>
+                The globe lens jumps to the Nine Summits Universe, where Compass scale gives way to the wider world-field.
+              </p>
+            </div>
+            <a class="crystal-action" href="/nine-summits/universe/">Open Universe</a>
           </div>
-          <a class="lens-button" href="/nine-summits/universe/" data-lens-link="globe" data-no-view-carry="true">Open Universe</a>
         </article>
       </section>
 
-      <section class="active-panel flat-panel" aria-labelledby="flat-title">
-        <div class="panel-head">
-          <p class="eyebrow">Compass Lens · Flat</p>
-          <h2 id="flat-title">The World Is Flat</h2>
-          <p>
-            This is the two-dimensional homepage format: readable, linear, non-orbital, and map-like. It stays on Compass.
-          </p>
-        </div>
-
-        <div class="flat-map" aria-label="Flat two-dimensional homepage map">
-          <div class="flat-cell">
-            <strong>1 · Compass</strong>
-            <span><a href="/">Orientation root</a></span>
-          </div>
-          <div class="flat-cell">
-            <strong>2 · Door</strong>
-            <span><a href="/door/">Entry point</a></span>
-          </div>
-          <div class="flat-cell">
-            <strong>3 · Home</strong>
-            <span><a href="/home/">Receiver layer</a></span>
-          </div>
-          <div class="flat-cell">
-            <strong>4 · Manor</strong>
-            <span><a href="/explore/">Estate map</a></span>
-          </div>
-          <div class="flat-cell">
-            <strong>5 · Laws</strong>
-            <span><a href="/laws/">Boundary rules</a></span>
-          </div>
-          <div class="flat-cell">
-            <strong>6 · Book</strong>
-            <span><a href="/nine-summits-of-love/" data-no-view-carry="true">Human climb</a></span>
-          </div>
-          <div class="flat-cell">
-            <strong>7 · Products</strong>
-            <span><a href="/products/">Use layer</a></span>
-          </div>
-          <div class="flat-cell">
-            <strong>8 · Showroom</strong>
-            <span><a href="/showroom/">Proof atrium</a></span>
-          </div>
-          <div class="flat-cell">
-            <strong>9 · Frontier</strong>
-            <span><a href="/frontier/">Expansion edge</a></span>
-          </div>
-          <div class="flat-cell">
-            <strong>10 · Gauges</strong>
-            <span><a href="/gauges/" data-no-view-carry="true">Source proof</a></span>
-          </div>
-          <div class="flat-cell">
-            <strong>11 · Audralia</strong>
-            <span><a href="/showroom/globe/audralia/" data-no-view-carry="true">Planet route</a></span>
-          </div>
-          <div class="flat-cell">
-            <strong>12 · Universe</strong>
-            <span><a href="/nine-summits/universe/" data-no-view-carry="true">Globe scale</a></span>
-          </div>
-        </div>
-
-        <div class="panel-actions">
-          <a class="button" href="/">Flat Homepage</a>
-          <a class="button secondary" href="/" data-lens-reset="true">Choose Another Lens</a>
-        </div>
+      <section
+        class="status-strip"
+        aria-label="Compass status"
+        data-compass-status="three-lens-gate-active"
+      >
+        <strong>Compass status</strong>
+        <span>Three-lens gate active · Flat stays home · Round opens orbit · Globe jumps to Nine Summits Universe.</span>
       </section>
 
-      <section class="active-panel round-panel" aria-labelledby="round-title">
-        <div class="panel-head">
-          <p class="eyebrow">Compass Lens · Round</p>
-          <h2 id="round-title">The World Is Round</h2>
-          <p>
-            This is the rotating Compass lens. The interplanetary axis moves behind the room while the Compass orbit remains in front.
-          </p>
-        </div>
-
-        <div class="round-preview" aria-label="Round world rotating Compass preview">
-          <div class="compass-card" data-round-preview="true">
-            <div class="center-anchor" aria-hidden="true">
-              <span>Compass<br />Round<br />Lens</span>
-            </div>
-
-            <div class="orbit-ring inner">
-              <a class="diamond-node" style="--angle: 0deg" href="/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Compass</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 90deg" href="/door/?view=round">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Door</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 180deg" href="/home/?view=round">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Home</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 270deg" href="/explore/?view=round">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Manor</b></span>
-              </a>
-            </div>
-
-            <div class="orbit-ring outer">
-              <a class="diamond-node" style="--angle: 0deg" href="/laws/?view=round">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Laws</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 22.5deg" href="/nine-summits/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Nine</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 45deg" href="/nine-summits-of-love/" data-no-view-carry="true">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Book</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 67.5deg" href="/nine-summits/universe/" data-no-view-carry="true">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Universe</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 90deg" href="/products/?view=round">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Products</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 112.5deg" href="/showroom/?view=round">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Show</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 135deg" href="/frontier/?view=round">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Frontier</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 157.5deg" href="/gauges/" data-no-view-carry="true">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Gauges</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 180deg" href="/about-this-underdog/?view=round">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Under</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 202.5deg" href="/meet-sean-mansfield/?view=round">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Sean</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 225deg" href="/showroom/globe/audralia/" data-no-view-carry="true">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Audralia</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 247.5deg" href="/products/five-flags/?view=round">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Flags</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 270deg" href="/door/?view=round">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Entry</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 292.5deg" href="/home/?view=round">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Receive</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 315deg" href="/explore/?view=round">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Map</b></span>
-              </a>
-              <a class="diamond-node" style="--angle: 337.5deg" href="/gauges/" data-no-view-carry="true">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Proof</b></span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel-actions">
-          <a class="button" href="/door/?view=round">Cross Door in Round</a>
-          <a class="button secondary" href="/products/?view=round">Products Node</a>
-          <a class="button secondary" href="/" data-lens-reset="true">Choose Another Lens</a>
-        </div>
+      <section
+        id="compassReceipt"
+        class="receipt"
+        aria-label="Compass receipt"
+        data-receipt-panel="compass-crystal-three-lens-gate"
+        data-html-contract="COMPASS_CRYSTAL_THREE_LENS_GATE_TNT_v10"
+        data-previous-contract="COMPASS_THREE_LENS_FLAT_HOME_ROUND_ORBIT_GLOBE_UNIVERSE_TNT_v9"
+        data-crystal-ui="true"
+        data-flat-lens-route="/"
+        data-round-lens-route="/?lens=round"
+        data-globe-lens-route="/nine-summits/universe/"
+        data-generated-image="false"
+        data-graphic-box="false"
+        data-visual-pass-claim="false"
+      >
+        <code>HTML_RECEIPT: COMPASS_CRYSTAL_THREE_LENS_GATE_TNT_v10</code>
+        <code>PREVIOUS_CONTRACT: COMPASS_THREE_LENS_FLAT_HOME_ROUND_ORBIT_GLOBE_UNIVERSE_TNT_v9</code>
+        <code>CRYSTAL_UI: true</code>
+        <code>FLAT_LENS_ROUTE: /</code>
+        <code>ROUND_LENS_ROUTE: /?lens=round</code>
+        <code>GLOBE_LENS_ROUTE: /nine-summits/universe/</code>
+        <code>GENERATED_IMAGE: false</code>
+        <code>GRAPHIC_BOX: false</code>
+        <code>VISUAL_PASS_CLAIM: false</code>
       </section>
-
-      <aside class="status-card" aria-label="Compass status" data-compass-status>
-        <strong>Compass status:</strong>
-        Three-lens gate active · Flat stays on homepage · Round opens original Compass orbit · Globe jumps to Nine Summits Universe.
-      </aside>
-
-      <template id="route-receipt" data-route-receipt>
-COMPASS_THREE_LENS_FLAT_HOME_ROUND_ORBIT_GLOBE_UNIVERSE_TNT_v9
-previous_contract=COMPASS_THREE_LENS_FLAT_ROUND_GLOBE_GATE_TNT_v8
-route=/
-page=compass
-room=compass
-role=three_lens_public_command_gate
-message=flat_home_round_compass_globe_universe
-lens_gate=front_page
-lens_1=world_is_flat
-lens_1_behavior=in_page_2d_homepage_only
-lens_1_route=/
-lens_2=world_is_round
-lens_2_behavior=original_compass_orbit_with_rotating_items_and_interplanetary_background
-lens_2_route=/?lens=round
-lens_3=world_is_a_globe
-lens_3_behavior=jump_to_nine_summits_universe
-lens_3_route=/nine-summits/universe/
-flat_does_not_enter_door=true
-round_compass_orbit=true
-products_is_round_node=true
-products_is_not_round_authority=true
-universe_owns_globe_scale=true
-compass_owns=lens_presentation,flat_2d_homepage_map,round_orbit_preview
-compass_does_not_own=planet_rendering,canvas_creation,gauges_logic,graphicbox,image_generation,visual_pass_claim
-flat_background=static_no_interplanetary_axis
-round_background=/assets/dgb-interplanetary-background.js
-globe_background=not_on_compass
-heavy_runtime_loaded=false
-render_files_touched=false
-instrument_touched=false
-gauges_logic_touched=false
-generated_image=false
-graphic_box=false
-streaming=false
-visual_pass_claimed=false
-      </template>
     </main>
 
-    <footer>
-      COMPASS_THREE_LENS_FLAT_HOME_ROUND_ORBIT_GLOBE_UNIVERSE_TNT_v9 · Compass · Flat Home / Round Orbit / Globe Universe.
+    <footer class="footer">
+      Compass → Door → Home → Showroom → Universe.
     </footer>
   </div>
 </body>

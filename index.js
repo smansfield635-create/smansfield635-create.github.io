@@ -1,9 +1,19 @@
 // /index.js
-// COMPASS_LEGACY_FRONTIER_MARRIAGE_JS_TNT_v1
+// COMPASS_LEGACY_FRONTIER_MARRIAGE_JS_TNT_v2
 // Full-file replacement.
 // Root Compass renderer only.
+//
+// v2 correction:
+// - Straightens Flat context.
+// - Centers the architectural board.
+// - Prevents title and route labels from clipping.
+// - Makes the Flat board read as organized, intentional, and measured.
+// - Preserves Round / Globe context split.
+// - No receipts.
+// - No GraphicBox.
+// - No generated images.
 
-const CONTRACT = "COMPASS_LEGACY_FRONTIER_MARRIAGE_JS_TNT_v1";
+const CONTRACT = "COMPASS_LEGACY_FRONTIER_MARRIAGE_JS_TNT_v2";
 const HTML_CONTRACT = "COMPASS_LEGACY_FRONTIER_MARRIAGE_HTML_TNT_v1";
 
 const GENERATED_IMAGE = false;
@@ -70,12 +80,12 @@ const CONTEXT_SELECTORS = Object.freeze([
 ]);
 
 const FLAT_ROUTES = Object.freeze([
-  { label: "Door", route: "/door/", x: 0.18, y: 0.31 },
-  { label: "Home", route: "/home/", x: 0.42, y: 0.31 },
-  { label: "Showroom", route: "/showroom/", x: 0.66, y: 0.31 },
-  { label: "Products", route: "/products/", x: 0.30, y: 0.58 },
-  { label: "Universe", route: "/nine-summits/universe/", x: 0.54, y: 0.58 },
-  { label: "Triple G", route: "/gauges/", x: 0.78, y: 0.58 }
+  { label: "Door", route: "/door/" },
+  { label: "Home", route: "/home/" },
+  { label: "Showroom", route: "/showroom/" },
+  { label: "Products", route: "/products/" },
+  { label: "Universe", route: "/nine-summits/universe/" },
+  { label: "Triple G", route: "/gauges/" }
 ]);
 
 const ROUND_ROUTES = Object.freeze([
@@ -197,7 +207,7 @@ function drawBackground(ctx, context) {
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, width, height);
 
-  drawStarDust(ctx, context, state.context === "flat" ? 34 : 92);
+  drawStarDust(ctx, context, state.context === "flat" ? 28 : 92);
 
   ctx.save();
   ctx.globalCompositeOperation = "lighter";
@@ -238,10 +248,10 @@ function drawStarDust(ctx, context, countBase) {
 
 function drawContextSelectors(ctx, context) {
   const width = state.width;
-  const y = state.height * 0.095;
-  const gap = Math.min(width * 0.23, 260 * DPR);
+  const y = state.height * (MOBILE ? 0.085 : 0.090);
+  const gap = Math.min(width * 0.22, 252 * DPR);
   const startX = width * 0.5 - gap;
-  const size = Math.min(width, state.height) * (MOBILE ? 0.084 : 0.066);
+  const size = Math.min(width, state.height) * (MOBILE ? 0.074 : 0.062);
 
   CONTEXT_SELECTORS.forEach((item, index) => {
     const x = startX + gap * index;
@@ -251,7 +261,7 @@ function drawContextSelectors(ctx, context) {
     drawCrystalDiamond(ctx, {
       x,
       y,
-      size: active ? size * 1.18 : size,
+      size: active ? size * 1.16 : size,
       label: item.label,
       active,
       hover,
@@ -267,36 +277,100 @@ function drawContextSelectors(ctx, context) {
       route: item.route,
       x,
       y,
-      radius: size * 0.75
+      radius: size * 0.80
     });
   });
 }
 
 function drawFlatContext(ctx, context) {
-  drawFlatGrid(ctx, context);
+  const layout = getFlatLayout();
+
+  drawFlatGrid(ctx, context, layout);
+  drawFlatHeading(ctx, context, layout);
+  drawFlatRoutes(ctx, context, layout);
+}
+
+function getFlatLayout() {
+  const width = state.width;
+  const height = state.height;
+
+  const marginX = width * (MOBILE ? 0.075 : 0.11);
+  const boardX = marginX;
+  const boardW = width - marginX * 2;
+
+  const boardY = height * (MOBILE ? 0.235 : 0.225);
+  const boardH = height * (MOBILE ? 0.555 : 0.565);
+
+  const titleY = boardY - height * 0.050;
+  const subtitleY = boardY - height * 0.012;
+
+  const innerPadX = boardW * (MOBILE ? 0.070 : 0.075);
+  const innerPadY = boardH * 0.185;
+
+  const availableW = boardW - innerPadX * 2;
+  const availableH = boardH - innerPadY * 1.58;
+
+  const cols = 3;
+  const rows = 2;
+  const gapX = availableW * (MOBILE ? 0.065 : 0.075);
+  const gapY = availableH * 0.180;
+
+  const cardW = (availableW - gapX * (cols - 1)) / cols;
+  const cardH = Math.min(boardH * 0.185, (availableH - gapY) / rows);
+
+  const gridStartX = boardX + innerPadX;
+  const gridStartY = boardY + innerPadY;
+
+  return {
+    width,
+    height,
+    boardX,
+    boardY,
+    boardW,
+    boardH,
+    titleY,
+    subtitleY,
+    gridStartX,
+    gridStartY,
+    cols,
+    rows,
+    gapX,
+    gapY,
+    cardW,
+    cardH
+  };
+}
+
+function drawFlatHeading(ctx, context, layout) {
+  const titleSize = clamp(layout.boardW * 0.058, 24 * DPR, MOBILE ? 35 * DPR : 52 * DPR);
+  const subtitleSize = clamp(layout.boardW * 0.024, 11 * DPR, 18 * DPR);
 
   ctx.save();
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
-  ctx.fillStyle = "rgba(248,234,208,.92)";
-  ctx.font = `900 ${clamp(state.width * 0.044, 30 * DPR, 56 * DPR)}px Inter, system-ui, sans-serif`;
-  ctx.fillText("Architectural Route Board", state.width * 0.5, state.height * 0.225);
+  ctx.fillStyle = "rgba(248,234,208,.94)";
+  ctx.font = `950 ${titleSize}px Inter, system-ui, sans-serif`;
+  fitText(ctx, "Architectural Route Board", layout.width * 0.5, layout.titleY, layout.boardW * 0.92);
 
   ctx.fillStyle = "rgba(186,194,207,.84)";
-  ctx.font = `750 ${clamp(state.width * 0.015, 12 * DPR, 17 * DPR)}px Inter, system-ui, sans-serif`;
-  ctx.fillText("No center object. Direct route selection.", state.width * 0.5, state.height * 0.274);
+  ctx.font = `800 ${subtitleSize}px Inter, system-ui, sans-serif`;
+  fitText(ctx, "No center object · direct route selection", layout.width * 0.5, layout.subtitleY, layout.boardW * 0.82);
 
   ctx.restore();
+}
 
-  FLAT_ROUTES.forEach((item) => {
-    const x = state.width * item.x;
-    const y = state.height * item.y;
-    const w = Math.min(state.width * 0.205, 230 * DPR);
-    const h = Math.min(state.height * 0.125, 118 * DPR);
+function drawFlatRoutes(ctx, context, layout) {
+  FLAT_ROUTES.forEach((item, index) => {
+    const col = index % layout.cols;
+    const row = Math.floor(index / layout.cols);
+
+    const x = layout.gridStartX + col * (layout.cardW + layout.gapX) + layout.cardW * 0.5;
+    const y = layout.gridStartY + row * (layout.cardH + layout.gapY) + layout.cardH * 0.5;
+
     const active = state.focusedRoute === item.route;
 
-    drawRoutePlate(ctx, x, y, w, h, item.label, item.route, active, context.palette);
+    drawRoutePlate(ctx, x, y, layout.cardW, layout.cardH, item.label, routeShortLabel(item.route), active, context.palette);
 
     state.hitRegions.push({
       key: `route:${item.route}`,
@@ -305,41 +379,61 @@ function drawFlatContext(ctx, context) {
       label: item.label,
       x,
       y,
-      radius: Math.max(w, h) * 0.58
+      radius: Math.max(layout.cardW, layout.cardH) * 0.55
     });
   });
 }
 
-function drawFlatGrid(ctx, context) {
-  const left = state.width * 0.10;
-  const right = state.width * 0.90;
-  const top = state.height * 0.18;
-  const bottom = state.height * 0.80;
+function routeShortLabel(route) {
+  if (route === "/nine-summits/universe/") return "Universe";
+  if (route === "/gauges/") return "Triple G";
+  return route.replaceAll("/", "") || "Compass";
+}
+
+function drawFlatGrid(ctx, context, layout) {
+  const { boardX, boardY, boardW, boardH } = layout;
 
   ctx.save();
+
+  const wash = ctx.createRadialGradient(
+    boardX + boardW * 0.5,
+    boardY + boardH * 0.54,
+    boardW * 0.04,
+    boardX + boardW * 0.5,
+    boardY + boardH * 0.54,
+    boardW * 0.68
+  );
+  wash.addColorStop(0, "rgba(142,190,255,.105)");
+  wash.addColorStop(0.58, "rgba(142,190,255,.035)");
+  wash.addColorStop(1, "rgba(0,0,0,0)");
+
+  ctx.fillStyle = wash;
+  ctx.fillRect(boardX, boardY, boardW, boardH);
+
   ctx.strokeStyle = context.palette.line;
   ctx.lineWidth = Math.max(0.7, DPR);
   ctx.globalAlpha = 0.44;
 
   for (let i = 0; i <= 8; i += 1) {
-    const x = left + ((right - left) * i) / 8;
+    const x = boardX + (boardW * i) / 8;
     ctx.beginPath();
-    ctx.moveTo(x, top);
-    ctx.lineTo(x, bottom);
+    ctx.moveTo(x, boardY);
+    ctx.lineTo(x, boardY + boardH);
     ctx.stroke();
   }
 
-  for (let i = 0; i <= 5; i += 1) {
-    const y = top + ((bottom - top) * i) / 5;
+  for (let i = 0; i <= 6; i += 1) {
+    const y = boardY + (boardH * i) / 6;
     ctx.beginPath();
-    ctx.moveTo(left, y);
-    ctx.lineTo(right, y);
+    ctx.moveTo(boardX, y);
+    ctx.lineTo(boardX + boardW, y);
     ctx.stroke();
   }
 
-  ctx.strokeStyle = "rgba(244,191,96,.38)";
+  ctx.globalAlpha = 1;
+  ctx.strokeStyle = "rgba(244,191,96,.34)";
   ctx.lineWidth = Math.max(1.2, DPR * 1.2);
-  facetPath(ctx, left, top, right - left, bottom - top, 24 * DPR);
+  facetPath(ctx, boardX, boardY, boardW, boardH, 24 * DPR);
   ctx.stroke();
 
   ctx.restore();
@@ -356,9 +450,7 @@ function drawRoundContext(ctx, context, time) {
     .sort((a, b) => a.z - b.z);
 
   nodes.filter((node) => node.z < 0).forEach((node) => drawRoundNode(ctx, context, node, field, true));
-
   drawEstateAnchor(ctx, context, field);
-
   nodes.filter((node) => node.z >= 0).forEach((node) => drawRoundNode(ctx, context, node, field, false));
 }
 
@@ -375,10 +467,9 @@ function estateFieldSpec() {
 }
 
 function drawLegacyAtmosphericVessel(ctx, context, field) {
-  ctx.save();
-
   const { x, y, r } = field;
 
+  ctx.save();
   ctx.globalCompositeOperation = "lighter";
 
   const outer = ctx.createRadialGradient(x, y, r * 0.20, x, y, r * 2.15);
@@ -481,15 +572,8 @@ function drawEstateAnchor(ctx, context, field) {
   }
   ctx.restore();
 
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillStyle = "rgba(186,194,207,.68)";
-  ctx.font = `900 ${clamp(r * 0.105, 14 * DPR, 22 * DPR)}px Inter, system-ui, sans-serif`;
-  ctx.fillText("ESTATE", x, y - r * 0.11);
-
-  ctx.fillStyle = context.palette.active;
-  ctx.font = `950 ${clamp(r * 0.145, 20 * DPR, 32 * DPR)}px Inter, system-ui, sans-serif`;
-  ctx.fillText("COMPASS", x, y + r * 0.08);
+  drawText(ctx, "ESTATE", x, y - r * 0.11, clamp(r * 0.105, 14 * DPR, 22 * DPR), "rgba(186,194,207,.68)", 900);
+  drawText(ctx, "COMPASS", x, y + r * 0.08, clamp(r * 0.145, 20 * DPR, 32 * DPR), context.palette.active, 950);
 
   ctx.restore();
 }
@@ -597,19 +681,8 @@ function drawUniverseCore(ctx, context, cx, cy, r) {
 
   ctx.restore();
 
-  ctx.save();
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-
-  ctx.fillStyle = "rgba(248,234,208,.92)";
-  ctx.font = `950 ${clamp(state.width * 0.038, 30 * DPR, 54 * DPR)}px Inter, system-ui, sans-serif`;
-  ctx.fillText("Universe Field", cx, cy - r * 0.08);
-
-  ctx.fillStyle = "rgba(186,194,207,.82)";
-  ctx.font = `750 ${clamp(state.width * 0.015, 13 * DPR, 18 * DPR)}px Inter, system-ui, sans-serif`;
-  ctx.fillText("Expansion beyond the estate", cx, cy + r * 0.16);
-
-  ctx.restore();
+  drawText(ctx, "Universe Field", cx, cy - r * 0.08, clamp(state.width * 0.038, 30 * DPR, 54 * DPR), "rgba(248,234,208,.92)", 950);
+  drawText(ctx, "Expansion beyond the estate", cx, cy + r * 0.16, clamp(state.width * 0.015, 13 * DPR, 18 * DPR), "rgba(186,194,207,.82)", 750);
 }
 
 function projectGlobeBody(item, index, cx, cy, r) {
@@ -688,19 +761,19 @@ function drawPlanetCrystal(ctx, context, body) {
   }
 }
 
-function drawRoutePlate(ctx, x, y, w, h, label, route, active, palette) {
+function drawRoutePlate(ctx, x, y, w, h, label, routeLabel, active, palette) {
   ctx.save();
 
   ctx.fillStyle = active ? "rgba(143,240,195,.13)" : "rgba(255,255,255,.045)";
   ctx.strokeStyle = active ? "rgba(143,240,195,.55)" : "rgba(244,191,96,.28)";
   ctx.lineWidth = Math.max(1, DPR);
 
-  facetPath(ctx, x - w * 0.5, y - h * 0.5, w, h, 14 * DPR);
+  facetPath(ctx, x - w * 0.5, y - h * 0.5, w, h, Math.min(14 * DPR, w * 0.12));
   ctx.fill();
   ctx.stroke();
 
-  drawText(ctx, label, x, y - h * 0.08, clamp(w * 0.12, 15 * DPR, 24 * DPR), active ? palette.active : "#f8ead0", 900);
-  drawText(ctx, route, x, y + h * 0.22, clamp(w * 0.052, 9 * DPR, 13 * DPR), "rgba(186,194,207,.78)", 750);
+  drawText(ctx, label, x, y - h * 0.08, clamp(w * 0.120, 14 * DPR, 23 * DPR), active ? palette.active : "#f8ead0", 900);
+  drawText(ctx, routeLabel, x, y + h * 0.23, clamp(w * 0.052, 8 * DPR, 12 * DPR), "rgba(186,194,207,.78)", 750);
 
   ctx.restore();
 }
@@ -826,7 +899,7 @@ function drawCrystalDiamond(ctx, spec) {
   ctx.stroke();
 
   const fontSize = compact
-    ? clamp(size * 0.145, 10 * DPR, 18 * DPR)
+    ? clamp(size * 0.135, 9 * DPR, 17 * DPR)
     : clamp(size * 0.125, 10 * DPR, 18 * DPR);
 
   drawText(ctx, label, x, y + (compact ? 0 : half * 0.03), fontSize, active ? palette.active : "#f8ead0", 900);
@@ -883,6 +956,32 @@ function drawText(ctx, text, x, y, size, color, weight = 850) {
   ctx.font = `${weight} ${size}px Inter, system-ui, sans-serif`;
   ctx.fillText(text, x, y);
   ctx.restore();
+}
+
+function fitText(ctx, text, x, y, maxWidth) {
+  if (ctx.measureText(text).width <= maxWidth) {
+    ctx.fillText(text, x, y);
+    return;
+  }
+
+  const originalFont = ctx.font;
+  const parts = originalFont.match(/^(\d+(?:\.\d+)?)px\s+(.+)$/);
+  if (!parts) {
+    ctx.fillText(text, x, y, maxWidth);
+    return;
+  }
+
+  let size = Number(parts[1]);
+  const family = parts[2];
+
+  while (size > 10 * DPR) {
+    ctx.font = `${size}px ${family}`;
+    if (ctx.measureText(text).width <= maxWidth) break;
+    size -= 1 * DPR;
+  }
+
+  ctx.fillText(text, x, y);
+  ctx.font = originalFont;
 }
 
 function drawSubtleCue(ctx) {

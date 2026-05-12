@@ -2,15 +2,16 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="compass-round-field-depth-object-reduction"
+  data-page="compass-round-field-mini-256-diamond-renderer"
   data-route="/"
-  data-contract="COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_HTML_TNT_v2"
-  data-required-renderer="COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_JS_TNT_v2"
-  data-previous-contract="COMPASS_ROUND_FIELD_3D_RENDERER_HTML_TNT_v1"
+  data-contract="COMPASS_ROUND_FIELD_MINI_256_DIAMOND_RENDERER_HTML_TNT_v3"
+  data-required-renderer="COMPASS_ROUND_FIELD_MINI_256_DIAMOND_RENDERER_JS_TNT_v3"
+  data-previous-contract="COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_HTML_TNT_v2"
   data-compass-mode="rendered-round-field"
   data-default-lens="round"
   data-single-click="change-scenery"
   data-double-click="navigate"
+  data-mini-diamond-faces="256"
   data-visible-status-block="false"
   data-in-canvas-instruction-strip="false"
   data-in-canvas-center-title="false"
@@ -24,7 +25,7 @@
   <title>Diamond Gate Bridge · Compass</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Compass: a rendered Round Field with dimensional sphere depth, floating diamond objects, scenery selection, and route entry."
+    content="Diamond Gate Bridge Compass: a rendered Round Field with miniature 256-facet diamond route objects."
   >
 
   <style>
@@ -217,7 +218,7 @@
     .canvas-mount {
       position:relative;
       width:100%;
-      min-height:clamp(600px,78vw,920px);
+      min-height:clamp(620px,78vw,940px);
       border:1px solid rgba(142,190,255,.18);
       background:
         radial-gradient(circle at 50% 45%,rgba(142,190,255,.09),transparent 24rem),
@@ -234,7 +235,7 @@
     #compassRoundFieldCanvas {
       display:block;
       width:100%;
-      height:clamp(600px,78vw,920px);
+      height:clamp(620px,78vw,940px);
       touch-action:none;
       user-select:none;
       -webkit-user-select:none;
@@ -307,8 +308,8 @@
 
       .canvas-mount,
       #compassRoundFieldCanvas {
-        min-height:560px;
-        height:560px;
+        min-height:580px;
+        height:580px;
       }
     }
   </style>
@@ -340,7 +341,7 @@
 
     <main id="compass-main" tabindex="-1">
       <section class="hero" aria-label="Compass introduction">
-        <p class="crystal-label">Compass · Rendered Round Field</p>
+        <p class="crystal-label">Compass · Round Field</p>
         <h1>Pressure is the door.</h1>
         <p class="lede">
           The default view is Round. Choose a floating diamond once to change the scenery, or twice to open the route.
@@ -351,6 +352,7 @@
         class="renderer-panel"
         aria-label="Rendered Round Compass field"
         data-rendered-round-field="true"
+        data-mini-diamond-faces="256"
         data-single-click="change-scenery"
         data-double-click="navigate"
         data-visible-status-block="false"
@@ -361,10 +363,10 @@
           <canvas
             id="compassRoundFieldCanvas"
             width="1200"
-            height="920"
+            height="940"
             tabindex="0"
             role="img"
-            aria-label="Rendered Round Compass field. Single click a floating diamond to change scenery. Double click to open its route."
+            aria-label="Rendered Round Compass field with miniature 256-facet diamond route objects."
             data-compass-round-field-canvas="true"
           ></canvas>
 
@@ -385,14 +387,15 @@
         id="compassReceipt"
         class="receipt"
         aria-label="Compass receipt"
-        data-receipt-panel="compass-round-field-depth-object-reduction"
-        data-html-contract="COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_HTML_TNT_v2"
-        data-required-renderer="COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_JS_TNT_v2"
-        data-previous-contract="COMPASS_ROUND_FIELD_3D_RENDERER_HTML_TNT_v1"
+        data-receipt-panel="compass-round-field-mini-256-diamond-renderer"
+        data-html-contract="COMPASS_ROUND_FIELD_MINI_256_DIAMOND_RENDERER_HTML_TNT_v3"
+        data-required-renderer="COMPASS_ROUND_FIELD_MINI_256_DIAMOND_RENDERER_JS_TNT_v3"
+        data-previous-contract="COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_HTML_TNT_v2"
         data-default-lens="round"
         data-single-click="change-scenery"
         data-double-click="navigate"
         data-renderer-type="2d-canvas-depth-projection"
+        data-mini-diamond-faces="256"
         data-visible-status-block="false"
         data-in-canvas-instruction-strip="false"
         data-in-canvas-center-title="false"
@@ -400,14 +403,9 @@
         data-graphic-box="false"
         data-visual-pass-claim="false"
       >
-        <code>HTML_RECEIPT: COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_HTML_TNT_v2</code>
-        <code>REQUIRED_RENDERER: COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_JS_TNT_v2</code>
-        <code>DEFAULT_LENS: round</code>
-        <code>SINGLE_CLICK: change-scenery</code>
-        <code>DOUBLE_CLICK: navigate</code>
-        <code>VISIBLE_STATUS_BLOCK: false</code>
-        <code>IN_CANVAS_INSTRUCTION_STRIP: false</code>
-        <code>IN_CANVAS_CENTER_TITLE: false</code>
+        <code>HTML_RECEIPT: COMPASS_ROUND_FIELD_MINI_256_DIAMOND_RENDERER_HTML_TNT_v3</code>
+        <code>REQUIRED_RENDERER: COMPASS_ROUND_FIELD_MINI_256_DIAMOND_RENDERER_JS_TNT_v3</code>
+        <code>MINI_DIAMOND_FACES: 256</code>
         <code>GENERATED_IMAGE: false</code>
         <code>GRAPHIC_BOX: false</code>
         <code>VISUAL_PASS_CLAIM: false</code>
@@ -418,16 +416,14 @@
   <script
     id="compassRoundFieldRenderer"
     type="module"
-    src="./index.js?v=COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_JS_TNT_v2"
-    data-handoff="compass-round-field-depth-object-reduction"
-    data-html-contract="COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_HTML_TNT_v2"
-    data-required-renderer="COMPASS_ROUND_FIELD_DEPTH_OBJECT_REDUCTION_JS_TNT_v2"
+    src="./index.js?v=COMPASS_ROUND_FIELD_MINI_256_DIAMOND_RENDERER_JS_TNT_v3"
+    data-handoff="compass-round-field-mini-256-diamond-renderer"
+    data-html-contract="COMPASS_ROUND_FIELD_MINI_256_DIAMOND_RENDERER_HTML_TNT_v3"
+    data-required-renderer="COMPASS_ROUND_FIELD_MINI_256_DIAMOND_RENDERER_JS_TNT_v3"
     data-default-lens="round"
     data-single-click="change-scenery"
     data-double-click="navigate"
-    data-visible-status-block="false"
-    data-in-canvas-instruction-strip="false"
-    data-in-canvas-center-title="false"
+    data-mini-diamond-faces="256"
     data-generated-image="false"
     data-graphic-box="false"
   ></script>

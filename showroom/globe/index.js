@@ -1,9 +1,9 @@
 // /showroom/globe/index.js
 // Globe Showcase public 256-cell portrait index.
-// Structure: 16 longitude sectors x 16 latitude bands = 256 public portrait cells.
-// Interaction: drag rotates the selected portrait. Selector changes context. Private engines stay asleep.
+// H-Earth definition renewal: sharper land/water separation, coastal shelves, ridge hints, valley bands,
+// and cell-local contour strokes while keeping the public selector lightweight.
 
-const MODEL_NAME = "globe-showcase-public-256-portrait-index";
+const MODEL_NAME = "globe-showcase-public-256-portrait-index-h-earth-definition-v1";
 
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
 const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
@@ -38,7 +38,7 @@ const WORLDS = Object.freeze({
     palette: "hEarth",
     primary: [62, 142, 92],
     secondary: [42, 132, 142],
-    glow: "rgba(143,240,195,0.22)"
+    glow: "rgba(143,240,195,0.24)"
   },
   audralia: {
     key: "audralia",
@@ -194,70 +194,71 @@ function terrainNoise(lat, lon, band, sector, worldKey) {
   return n1 * 0.38 + n2 * 0.28 + n3 * 0.20 + n4 * 0.14;
 }
 
+function makeTerrainPayload({ elevation, polar, latMid, lonMid, band, sector, worldKey }) {
+  const detail = hash(band, sector, worldKey.length);
+  const ridgeField = Math.sin(lonMid * 5.2 + band * 0.48) + Math.cos(latMid * 7.4 - sector * 0.29);
+  const ridge = elevation > 0.30 && ridgeField > 0.42;
+  const valley = elevation > 0.08 && elevation < 0.32 && ridgeField < -0.55;
+  const ice = polar > (worldKey === "audralia" ? 0.88 : worldKey === "earth" ? 0.80 : 0.76);
+  const coast = Math.abs(elevation) < (worldKey === "hEarth" ? 0.15 : 0.13);
+  const water = elevation < (worldKey === "audralia" ? 0.03 : worldKey === "earth" ? -0.05 : -0.035) && !ice;
+  const shelf = water && elevation > (worldKey === "hEarth" ? -0.25 : -0.22);
+  const mountain = elevation > (worldKey === "hEarth" ? 0.43 : 0.48) && !ice;
+  const highland = elevation > (worldKey === "hEarth" ? 0.22 : 0.24) && !ice;
+  const dry = elevation > (worldKey === "audralia" ? 0.10 : 0.36) && !ice && !water;
+  const lake = !water && !ice && worldKey === "hEarth" && elevation > 0.03 && elevation < 0.18 && detail > 0.78;
+
+  return {
+    elevation,
+    ice,
+    coast,
+    water,
+    shelf,
+    mountain,
+    highland,
+    dry,
+    ridge,
+    valley,
+    lake,
+    polar,
+    detail,
+    ridgeField
+  };
+}
+
 function sampleCell(latMid, lonMid, band, sector, worldKey) {
   const polar = Math.abs(latMid) / (Math.PI / 2);
   const noise = terrainNoise(latMid, lonMid, band, sector, worldKey);
+
+  if (worldKey === "hEarth") {
+    const westContinent = Math.cos(lonMid * 1.20 + latMid * 0.45 - 0.55) * 0.30;
+    const eastOceanGate = Math.sin(lonMid * 1.85 - latMid * 0.70 + 1.0) * -0.20;
+    const equatorLift = Math.cos(latMid * 2.0) * 0.12;
+    const mountainRing = Math.sin(lonMid * 3.1 + 0.8) * Math.cos(latMid * 2.6 - 0.4) * 0.18;
+    const valleyCut = Math.cos(lonMid * 4.8 - latMid * 3.2 + 0.7) * 0.10;
+    const shelfBias = Math.sin(lonMid * 2.7 + latMid * 1.4) * 0.08;
+    const elevation = noise * 0.72 + westContinent + eastOceanGate + equatorLift + mountainRing + valleyCut + shelfBias - 0.10 + polar * 0.08;
+
+    return makeTerrainPayload({ elevation, polar, latMid, lonMid, band, sector, worldKey });
+  }
 
   if (worldKey === "audralia") {
     const islandCore =
       Math.sin(lonMid * 1.18 - 0.6) * 0.30 +
       Math.cos(lonMid * 2.25 + latMid * 1.05) * 0.24 +
       Math.sin(latMid * 1.7 - 0.3) * 0.12;
-
     const elevation = noise * 0.76 + islandCore - 0.19 + polar * 0.04;
 
-    return {
-      elevation,
-      ice: polar > 0.88,
-      coast: Math.abs(elevation) < 0.15,
-      water: elevation < 0.03 && polar < 0.88,
-      shelf: elevation >= -0.20 && elevation < 0.03,
-      mountain: elevation > 0.48,
-      highland: elevation > 0.25,
-      dry: elevation > 0.10,
-      polar
-    };
-  }
-
-  if (worldKey === "earth") {
-    const continentBias =
-      Math.sin(lonMid * 1.55 + 0.4) * 0.24 +
-      Math.cos(lonMid * 2.8 - latMid * 1.25) * 0.21 +
-      Math.sin(latMid * 2.45) * 0.10;
-
-    const elevation = noise + continentBias - 0.10 + polar * 0.08;
-
-    return {
-      elevation,
-      ice: polar > 0.80,
-      coast: Math.abs(elevation) < 0.13,
-      water: elevation < -0.05 && polar < 0.80,
-      shelf: elevation >= -0.22 && elevation < -0.05,
-      mountain: elevation > 0.48,
-      highland: elevation > 0.24,
-      dry: elevation > 0.35,
-      polar
-    };
+    return makeTerrainPayload({ elevation, polar, latMid, lonMid, band, sector, worldKey });
   }
 
   const continentBias =
-    Math.sin(lonMid * 1.35 + 0.7) * 0.24 +
-    Math.cos(lonMid * 2.4 - latMid * 1.15) * 0.20 +
-    Math.sin(latMid * 2.8) * 0.14;
+    Math.sin(lonMid * 1.55 + 0.4) * 0.24 +
+    Math.cos(lonMid * 2.8 - latMid * 1.25) * 0.21 +
+    Math.sin(latMid * 2.45) * 0.10;
 
-  const elevation = noise + continentBias - 0.08 + polar * 0.10;
-
-  return {
-    elevation,
-    ice: polar > 0.78,
-    coast: Math.abs(elevation) < 0.13,
-    water: elevation < -0.04 && polar < 0.78,
-    shelf: elevation >= -0.22 && elevation < -0.04,
-    mountain: elevation > 0.46,
-    highland: elevation > 0.24,
-    dry: elevation > 0.38,
-    polar
-  };
+  const elevation = noise + continentBias - 0.10 + polar * 0.08;
+  return makeTerrainPayload({ elevation, polar, latMid, lonMid, band, sector, worldKey });
 }
 
 function buildMesh(view) {
@@ -341,6 +342,7 @@ function createCells(mesh, worldKey) {
         diffuse,
         rim,
         secondary,
+        normal,
         worldKey
       });
     }
@@ -352,34 +354,42 @@ function createCells(mesh, worldKey) {
 function colorForCell(cell) {
   const t = cell.terrain;
   const world = WORLDS[cell.worldKey];
-  const light = 0.34 + cell.diffuse * 0.52 + cell.secondary * 0.10 + cell.rim * 0.18;
+  const light = 0.33 + cell.diffuse * 0.54 + cell.secondary * 0.10 + cell.rim * 0.20;
 
   let r;
   let g;
   let b;
 
   if (t.ice) {
-    r = 166; g = 208; b = 236;
+    r = 170; g = 213; b = 238;
+  } else if (t.lake) {
+    r = 28; g = 116; b = 130;
   } else if (t.water) {
     if (t.shelf) {
-      r = world.secondary[0] + 8;
-      g = world.secondary[1] + 30;
-      b = world.secondary[2] + 28;
+      r = world.secondary[0] + 18;
+      g = world.secondary[1] + 38;
+      b = world.secondary[2] + 30;
     } else {
-      r = Math.max(4, world.secondary[0] * 0.20);
-      g = Math.max(24, world.secondary[1] * 0.36);
-      b = Math.max(68, world.secondary[2] * 0.72);
+      r = Math.max(4, world.secondary[0] * 0.18);
+      g = Math.max(22, world.secondary[1] * 0.32);
+      b = Math.max(72, world.secondary[2] * 0.76);
     }
   } else if (t.coast) {
-    r = 186; g = 168; b = 101;
+    r = cell.worldKey === "hEarth" ? 196 : 186;
+    g = cell.worldKey === "hEarth" ? 176 : 168;
+    b = cell.worldKey === "hEarth" ? 112 : 101;
   } else if (t.mountain) {
-    r = 148; g = 132; b = 112;
+    r = 150; g = 136; b = 118;
   } else if (t.highland) {
     r = world.primary[0] + 24;
-    g = world.primary[1] + 10;
-    b = world.primary[2] - 4;
+    g = world.primary[1] + 14;
+    b = world.primary[2] - 2;
+  } else if (t.valley) {
+    r = Math.max(24, world.primary[0] - 12);
+    g = world.primary[1] + 20;
+    b = Math.max(44, world.primary[2] - 18);
   } else if (t.dry) {
-    r = 152; g = 124; b = 78;
+    r = 156; g = 128; b = 82;
   } else {
     r = world.primary[0];
     g = world.primary[1];
@@ -387,15 +397,17 @@ function colorForCell(cell) {
   }
 
   const elevationWarmth = clamp(t.elevation, -0.5, 0.65);
-  r += elevationWarmth * 24;
-  g += elevationWarmth * 12;
-  b += t.water ? 20 : -elevationWarmth * 8;
+  const detailShift = (t.detail - 0.5) * (cell.worldKey === "hEarth" ? 22 : 14);
+
+  r += elevationWarmth * 24 + detailShift;
+  g += elevationWarmth * 12 + detailShift * 0.35;
+  b += t.water ? 20 : -elevationWarmth * 8 - detailShift * 0.22;
 
   r = Math.round(clamp(r * light, 0, 255));
   g = Math.round(clamp(g * light, 0, 255));
   b = Math.round(clamp(b * light, 0, 255));
 
-  const alpha = clamp(0.78 + cell.diffuse * 0.16 + cell.rim * 0.06, 0.72, 0.98);
+  const alpha = clamp(0.79 + cell.diffuse * 0.15 + cell.rim * 0.06, 0.73, 0.98);
 
   return `rgba(${r},${g},${b},${alpha})`;
 }
@@ -462,6 +474,86 @@ function drawStars(ctx, width, height) {
   ctx.restore();
 }
 
+function pathCell(ctx, points) {
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  ctx.lineTo(points[1].x, points[1].y);
+  ctx.lineTo(points[2].x, points[2].y);
+  ctx.lineTo(points[3].x, points[3].y);
+  ctx.closePath();
+}
+
+function drawCellDetail(ctx, cell) {
+  const t = cell.terrain;
+  const pts = cell.points;
+  const depthAlpha = clamp(0.25 + cell.depth * 0.65, 0.12, 0.86);
+
+  ctx.save();
+  pathCell(ctx, pts);
+  ctx.clip();
+
+  const midLeft = {
+    x: (pts[0].x + pts[3].x) / 2,
+    y: (pts[0].y + pts[3].y) / 2
+  };
+  const midRight = {
+    x: (pts[1].x + pts[2].x) / 2,
+    y: (pts[1].y + pts[2].y) / 2
+  };
+  const topMid = {
+    x: (pts[0].x + pts[1].x) / 2,
+    y: (pts[0].y + pts[1].y) / 2
+  };
+  const bottomMid = {
+    x: (pts[2].x + pts[3].x) / 2,
+    y: (pts[2].y + pts[3].y) / 2
+  };
+
+  if (cell.worldKey === "hEarth") {
+    if (t.coast || t.shelf || t.lake) {
+      ctx.strokeStyle = `rgba(205,232,210,${0.15 * depthAlpha})`;
+      ctx.lineWidth = Math.max(0.8, DPR * 0.75);
+      ctx.beginPath();
+      ctx.moveTo(midLeft.x, midLeft.y);
+      ctx.bezierCurveTo(topMid.x, topMid.y, bottomMid.x, bottomMid.y, midRight.x, midRight.y);
+      ctx.stroke();
+    }
+
+    if (t.mountain || t.ridge) {
+      ctx.strokeStyle = `rgba(236,230,207,${0.22 * depthAlpha})`;
+      ctx.lineWidth = Math.max(0.65, DPR * 0.62);
+      ctx.beginPath();
+      ctx.moveTo(pts[3].x * 0.55 + pts[0].x * 0.45, pts[3].y * 0.55 + pts[0].y * 0.45);
+      ctx.lineTo(pts[1].x * 0.64 + pts[2].x * 0.36, pts[1].y * 0.64 + pts[2].y * 0.36);
+      ctx.moveTo(pts[0].x * 0.58 + pts[1].x * 0.42, pts[0].y * 0.58 + pts[1].y * 0.42);
+      ctx.lineTo(pts[3].x * 0.36 + pts[2].x * 0.64, pts[3].y * 0.36 + pts[2].y * 0.64);
+      ctx.stroke();
+    }
+
+    if (t.valley && !t.water) {
+      ctx.strokeStyle = `rgba(20,70,55,${0.22 * depthAlpha})`;
+      ctx.lineWidth = Math.max(0.7, DPR * 0.66);
+      ctx.beginPath();
+      ctx.moveTo(topMid.x, topMid.y);
+      ctx.bezierCurveTo(pts[0].x, pts[0].y, pts[2].x, pts[2].y, bottomMid.x, bottomMid.y);
+      ctx.stroke();
+    }
+
+    if (t.water && !t.shelf) {
+      ctx.strokeStyle = `rgba(120,194,228,${0.10 * depthAlpha})`;
+      ctx.lineWidth = Math.max(0.5, DPR * 0.50);
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y * 0.64 + pts[3].y * 0.36);
+      ctx.lineTo(pts[1].x, pts[1].y * 0.64 + pts[2].y * 0.36);
+      ctx.moveTo(pts[0].x * 0.42 + pts[3].x * 0.58, pts[0].y * 0.42 + pts[3].y * 0.58);
+      ctx.lineTo(pts[1].x * 0.42 + pts[2].x * 0.58, pts[1].y * 0.42 + pts[2].y * 0.58);
+      ctx.stroke();
+    }
+  }
+
+  ctx.restore();
+}
+
 function drawPlanet(ctx, width, height) {
   const scale = Math.min(width * 0.34, height * 0.37);
 
@@ -481,25 +573,21 @@ function drawPlanet(ctx, width, height) {
   ctx.save();
 
   for (const cell of cells) {
-    const pts = cell.points;
-
-    ctx.beginPath();
-    ctx.moveTo(pts[0].x, pts[0].y);
-    ctx.lineTo(pts[1].x, pts[1].y);
-    ctx.lineTo(pts[2].x, pts[2].y);
-    ctx.lineTo(pts[3].x, pts[3].y);
-    ctx.closePath();
-
+    pathCell(ctx, cell.points);
     ctx.fillStyle = colorForCell(cell);
     ctx.fill();
 
-    ctx.strokeStyle = `rgba(230,244,255,${0.035 + cell.rim * 0.11})`;
+    const gridAlpha = cell.worldKey === "hEarth" ? 0.055 : 0.040;
+    ctx.strokeStyle = `rgba(230,244,255,${gridAlpha + cell.rim * 0.12})`;
     ctx.lineWidth = Math.max(0.35, DPR * 0.38);
     ctx.stroke();
+
+    drawCellDetail(ctx, cell);
   }
 
   ctx.restore();
 
+  drawLatLongDefinition(ctx, view);
   drawAtmosphere(ctx, view);
   drawOrbitLines(ctx, view);
   drawWorldTitle(ctx, width, height);
@@ -509,6 +597,40 @@ function drawPlanet(ctx, width, height) {
   document.documentElement.dataset.selectedWorld = state.worldKey;
   document.documentElement.dataset.portraitCellCount = String(CELL_COUNT);
   document.documentElement.dataset.privateEnginesAsleep = "true";
+  document.documentElement.dataset.hEarthDefinition = state.worldKey === "hEarth" ? "terrain-coast-ridge-valley-v1" : "inactive";
+}
+
+function drawLatLongDefinition(ctx, view) {
+  if (state.worldKey !== "hEarth") return;
+
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+  ctx.strokeStyle = "rgba(210,238,255,0.075)";
+  ctx.lineWidth = Math.max(0.5, DPR * 0.55);
+
+  for (let i = 1; i < 4; i += 1) {
+    const w = view.scale * (0.36 + i * 0.18);
+    const h = view.scale * (0.94 - i * 0.08);
+    ctx.beginPath();
+    ctx.ellipse(view.cx, view.cy, w, h, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  for (let i = -2; i <= 2; i += 1) {
+    ctx.beginPath();
+    ctx.ellipse(
+      view.cx,
+      view.cy + i * view.scale * 0.18,
+      view.scale * Math.sqrt(Math.max(0.18, 1 - Math.abs(i) * 0.16)),
+      view.scale * 0.18,
+      0,
+      0,
+      Math.PI * 2
+    );
+    ctx.stroke();
+  }
+
+  ctx.restore();
 }
 
 function drawPlanetShadow(ctx, view) {
@@ -858,6 +980,7 @@ function boot() {
     inspectable: true,
     generatedImage: false,
     graphicBox: false,
+    hEarthDefinition: "terrain-coast-ridge-valley-v1",
     setWorld,
     reset: resetInspection,
     status() {
@@ -870,6 +993,7 @@ function boot() {
         privateEnginesAsleep: true,
         fixedStructure: true,
         inspectable: true,
+        hEarthDefinition: state.worldKey === "hEarth" ? "terrain-coast-ridge-valley-v1" : "inactive",
         yaw: state.yaw,
         pitch: state.pitch
       };
@@ -887,5 +1011,6 @@ export default {
   model: MODEL_NAME,
   cellCount: CELL_COUNT,
   privateEnginesAsleep: true,
-  inspectable: true
+  inspectable: true,
+  hEarthDefinition: "terrain-coast-ridge-valley-v1"
 };

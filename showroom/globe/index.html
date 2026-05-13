@@ -3,9 +3,9 @@
   lang="en"
   data-route="/showroom/globe/"
   data-page="showroom-globe"
-  data-version="SHOWROOM_GLOBE_CINEMATIC_MATERIAL_ASSET_HTML_TNT_v1"
+  data-version="SHOWROOM_GLOBE_RUNTIME_GLIDE_CONTROL_HTML_TNT_v1"
   data-source-authority="html-shell-loads-local-index-js"
-  data-import-version="cinematic-material-asset-v1"
+  data-import-version="runtime-glide-control-v1"
   data-public-selector="true"
   data-private-engines-asleep="true"
   data-generated-image="false"
@@ -21,11 +21,13 @@
   <title>Globe Showcase · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The Globe Showcase is the public selector for Earth, H-Earth, and Audralia. It loads the cinematic dry planet material renderer while private map engines stay in their own rooms."
+    content="The Globe Showcase is the public selector for Earth, H-Earth, and Audralia. It loads the cinematic dry planet material renderer with runtime glide controls while private map engines stay in their own rooms."
   >
 
-  <link rel="modulepreload" href="/showroom/globe/index.js?v=cinematic-material-asset-v1">
+  <link rel="modulepreload" href="/showroom/globe/index.js?v=runtime-glide-control-v1">
   <link rel="modulepreload" href="/assets/showroom.globe.cinematic.material.js?v=cinematic-material-asset-v1">
+  <link rel="modulepreload" href="/assets/showroom.globe.runtime.js?v=runtime-glide-control-v1">
+  <link rel="modulepreload" href="/assets/showroom.globe.controls.js?v=runtime-glide-control-v1">
 
   <style>
     :root{
@@ -470,25 +472,6 @@
       line-height:1.45;
     }
 
-    [data-route-receipt],
-    [data-contract-receipt],
-    [data-debug-receipt],
-    .receipt,
-    .route-receipt{
-      display:none!important;
-      visibility:hidden!important;
-      width:0!important;
-      height:0!important;
-      max-width:0!important;
-      max-height:0!important;
-      overflow:hidden!important;
-      opacity:0!important;
-      pointer-events:none!important;
-      position:absolute!important;
-      clip-path:inset(50%)!important;
-      white-space:nowrap!important;
-    }
-
     footer{
       padding:1.35rem 0 .5rem;
       color:var(--soft);
@@ -497,11 +480,7 @@
     }
 
     @media (max-width:980px){
-      .topbar{
-        grid-template-columns:1fr;
-        align-items:start;
-      }
-
+      .topbar{grid-template-columns:1fr;align-items:start}
       .nav{justify-content:flex-start}
       .info-grid{grid-template-columns:1fr}
     }
@@ -509,44 +488,18 @@
     @media (max-width:720px){
       .shell{width:min(100% - 22px,var(--max))}
       h1{font-size:clamp(3rem,17vw,5rem)}
-
-      .hero{
-        min-height:23rem;
-        padding:1rem;
-      }
-
-      .actions{
-        display:grid;
-      }
-
-      .button{
-        width:100%;
-      }
-
-      .stage-label{
-        font-size:.68rem;
-        letter-spacing:.16em;
-      }
-
-      .world-controls{
-        justify-content:flex-start;
-      }
-
+      .hero{min-height:23rem;padding:1rem}
+      .actions{display:grid}
+      .button{width:100%}
+      .stage-label{font-size:.68rem;letter-spacing:.16em}
+      .world-controls{justify-content:flex-start}
       .world-controls button,
-      .world-controls a{
-        flex:1 1 30%;
-        padding:.58rem .62rem;
-      }
-
-      .world-controls a{
-        flex-basis:100%;
-      }
+      .world-controls a{flex:1 1 30%;padding:.58rem .62rem}
+      .world-controls a{flex-basis:100%}
     }
 
     @media (prefers-reduced-motion:reduce){
-      *,
-      *::before,
-      *::after{
+      *,*::before,*::after{
         scroll-behavior:auto!important;
         animation-duration:.01ms!important;
         animation-iteration-count:1!important;
@@ -557,7 +510,7 @@
 
   <script>
     (() => {
-      const cacheKey = "cinematic-material-asset-v1";
+      const cacheKey = "runtime-glide-control-v1";
       document.documentElement.dataset.cacheKey = cacheKey;
 
       try {
@@ -617,7 +570,7 @@
         <h1 id="page-title">The globe is the object.</h1>
 
         <p class="lead">
-          This page loads the local Globe Showcase controller and the dedicated cinematic dry planet material renderer. Maps, water systems, landmasses, terrain history, and child engines belong inside the private world rooms.
+          This page loads the local Globe Showcase controller, the cinematic dry planet material renderer, and a runtime glide controller. Maps, water systems, landmasses, terrain history, and child engines belong inside the private world rooms.
         </p>
 
         <div class="actions">
@@ -629,7 +582,7 @@
 
       <section class="panel section" aria-labelledby="showcase-title">
         <div class="showcase-card">
-          <div class="stage-label">Source authority · local index.js · cinematic material asset · private engines asleep</div>
+          <div class="stage-label">Source authority · local index.js · cinematic material asset · runtime glide control</div>
 
           <h2 id="showcase-title">Clean globe, not public map construction.</h2>
 
@@ -650,49 +603,35 @@
           </div>
 
           <p>
-            Drag to inspect the public globe. Select a world to compare the object identity. Open the world room for private map and terrain work.
+            Drag to inspect the public globe. Use the runtime controls to switch auto/hold, detail pressure, and glide feel.
           </p>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="standard-title">
-        <div class="kicker">Display case</div>
-        <h2 id="standard-title">The public page carries the object. The asset carries the material.</h2>
+        <div class="kicker">Runtime standard</div>
+        <h2 id="standard-title">The material stays locked. The runtime now carries the motion.</h2>
 
         <div class="info-grid">
           <div class="info-card">
-            <b>Public index</b>
-            <strong>Globe object only.</strong>
-            <span>The selector owns rotation, lighting, atmosphere, and route entry. It does not own maps.</span>
+            <b>Runtime</b>
+            <strong>Glide, damping, and pacing.</strong>
+            <span>The runtime file owns drag, inertia, auto-spin, frame pacing, and reduced-motion behavior.</span>
           </div>
 
           <div class="info-card">
-            <b>Renderer asset</b>
-            <strong>Planet material lives downstream.</strong>
-            <span>The cinematic material file renders dry crust, basins, cliffs, canyons, shadows, and atmospheric rim without a false meridian.</span>
+            <b>Renderer</b>
+            <strong>Planet material remains downstream.</strong>
+            <span>The cinematic material file keeps dry crust, basins, cliffs, canyons, shadows, and atmospheric rim.</span>
           </div>
 
           <div class="info-card">
-            <b>Private worlds</b>
-            <strong>Terrain depth stays private.</strong>
-            <span>H-Earth, Earth, and Audralia route rooms carry their own geography and deeper construction later.</span>
+            <b>Controls</b>
+            <strong>Small public panel.</strong>
+            <span>Auto/Hold, Detail, Glide, and Reset are separated from the planet material.</span>
           </div>
         </div>
       </section>
-
-      <template
-        id="route-receipt"
-        data-route-receipt
-        data-contract="SHOWROOM_GLOBE_CINEMATIC_MATERIAL_ASSET_HTML_TNT_v1"
-        data-route="/showroom/globe/"
-        data-import="/showroom/globe/index.js?v=cinematic-material-asset-v1"
-        data-asset="/assets/showroom.globe.cinematic.material.js?v=cinematic-material-asset-v1"
-        data-mount="globeShowcaseCanvas"
-        data-public-selector="true"
-        data-private-engines-asleep="true"
-        data-generated-image="false"
-        data-graphic-box="false"
-      ></template>
     </main>
 
     <footer>
@@ -700,6 +639,6 @@
     </footer>
   </div>
 
-  <script type="module" src="/showroom/globe/index.js?v=cinematic-material-asset-v1"></script>
+  <script type="module" src="/showroom/globe/index.js?v=runtime-glide-control-v1"></script>
 </body>
 </html>

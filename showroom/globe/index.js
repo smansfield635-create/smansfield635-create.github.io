@@ -1,12 +1,11 @@
 // /showroom/globe/index.js
 // TNT FULL-FILE REPLACEMENT
-// H_EARTH_PARENT_MACRO_SILHOUETTE_TNT_v1
+// H_EARTH_CHILD_TERRAIN_REFINEMENT_TRIAL_TNT_v1
 // Role: lightweight public Globe Showcase selector.
-// Change: H-Earth parent macro silhouette now uses organic tectonic pressure fields,
-// subtractive ocean cuts, warped coastlines, peninsulas, bays, shelves, and island chains.
-// Constraint: no child-256 visible fabric, no private engines, no GraphicBox, no image generation.
+// Change: H-Earth now uses parent macro silhouette plus optional child terrain refinement.
+// Constraint: if child file fails, this page still renders the parent baseline.
 
-const MODEL_NAME = "globe-showcase-h-earth-parent-macro-silhouette-v1";
+const MODEL_NAME = "globe-showcase-h-earth-child-terrain-refinement-trial-v1";
 
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
 const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
@@ -30,12 +29,24 @@ const TOTAL_CHILD_FIELDS = CELL_COUNT * CHILD_HEX_COUNT;
 const PORTRAIT_LAT_STEPS = MOBILE ? 66 : 82;
 const PORTRAIT_LON_STEPS = MOBILE ? 132 : 164;
 
+const H_EARTH_TERRAIN_CHILD_URL = "/assets/h-earth/h-earth.terrain.js?v=child-terrain-refinement-trial-v1";
+
+const terrainChild = {
+  ready: false,
+  failed: false,
+  model: "parent-only",
+  refine(sample) {
+    return sample;
+  }
+};
+
 const H_EARTH_PUBLIC_MODEL = Object.freeze({
   parentCells: CELL_COUNT,
   childFieldsPerParent: CHILD_HEX_COUNT,
   totalChildFields: TOTAL_CHILD_FIELDS,
-  publicMode: "stable organic parent macro silhouette",
+  publicMode: "stable parent silhouette with child terrain trial",
   privateModelPath: "/showroom/globe/h-earth/",
+  childTerrainPath: "/assets/h-earth/h-earth.terrain.js",
   assetAuthority: Object.freeze([
     "/assets/h-earth/h-earth.kernel.js",
     "/assets/h-earth/h-earth.lattice256.js",
@@ -323,7 +334,7 @@ function createStars(count) {
   }));
 }
 
-function finishTerrain(worldKey, lat, lon, elevation, ridge, moisture, freshwater = false) {
+function finishTerrain(worldKey, lat, lon, elevation, ridge, moisture, freshwater = false, childTerrainMeta = null) {
   const polar = Math.abs(lat) / (Math.PI / 2);
   const iceThreshold = worldKey === "audralia" ? 0.93 : 0.885;
   const iceFade = smoothstep(iceThreshold - 0.06, iceThreshold + 0.03, polar);
@@ -339,6 +350,9 @@ function finishTerrain(worldKey, lat, lon, elevation, ridge, moisture, freshwate
   const dry = !water && !isIce && moisture < 0.34 && elevation > 0.04;
 
   return {
+    worldKey,
+    lat,
+    lon,
     elevation,
     polar,
     ice: isIce,
@@ -354,7 +368,9 @@ function finishTerrain(worldKey, lat, lon, elevation, ridge, moisture, freshwate
     dry,
     ridge,
     moisture,
-    detail: clamp((fbm2D(lon * 3.1 + 2, lat * 2.7 - 1, 199) + 1) * 0.5, 0, 1)
+    detail: clamp((fbm2D(lon * 3.1 + 2, lat * 2.7 - 1, 199) + 1) * 0.5, 0, 1),
+    childTerrainModel: childTerrainMeta?.childTerrainModel || "inactive",
+    childTerrainActive: childTerrainMeta?.childTerrainActive === true
   };
 }
 
@@ -389,7 +405,7 @@ function sampleEarth(lat, lon) {
   return finishTerrain("earth", lat, lon, elevation, ridge, moisture);
 }
 
-function sampleHEarth(lat, lon) {
+function makeHEarthParentSample(lat, lon) {
   const globalWarp = warp2D(lon * 0.55, lat * 0.62, 701, 0.42, 0.28);
   const fineWarp = warp2D(lon * 1.22, lat * 1.08, 702, 0.16, 0.12);
 
@@ -464,8 +480,7 @@ function sampleHEarth(lat, lon) {
     ribbonField(y, x, -0.54, 0.84, 0.82, 0.16, 0.24, 1.7) * 0.18 +
     ribbonField(y, x, -0.74, -0.68, 0.72, 0.15, -0.20, -1.5) * 0.14;
 
-  const polarOceanPressure =
-    smoothstep(1.08, 1.48, Math.abs(lat)) * 0.12;
+  const polarOceanPressure = smoothstep(1.08, 1.48, Math.abs(lat)) * 0.12;
 
   const oceanCut =
     westOceanChannel +
@@ -524,7 +539,32 @@ function sampleHEarth(lat, lon) {
 
   const freshwater = elevation > 0.045 && lakeField > 0.70 && moisture > 0.42;
 
-  return finishTerrain("hEarth", lat, lon, elevation, ridge, moisture, freshwater);
+  return {
+    worldKey: "hEarth",
+    lat,
+    lon,
+    elevation,
+    ridge,
+    moisture,
+    freshwater,
+    parentTerrainModel: "h-earth-parent-macro-silhouette-v1"
+  };
+}
+
+function sampleHEarth(lat, lon) {
+  const parentSample = makeHEarthParentSample(lat, lon);
+  const refined = terrainChild.refine(parentSample);
+
+  return finishTerrain(
+    "hEarth",
+    lat,
+    lon,
+    refined.elevation,
+    refined.ridge,
+    refined.moisture,
+    refined.freshwater,
+    refined
+  );
 }
 
 function sampleAudralia(lat, lon) {
@@ -877,7 +917,12 @@ function drawWorldTitle(ctx, width, height) {
 
   ctx.fillStyle = "rgba(186,197,212,0.72)";
   ctx.font = `850 ${Math.max(11 * DPR, width * 0.014)}px Inter, system-ui, sans-serif`;
-  ctx.fillText(`${world.subtitle} · parent macro silhouette`, width * 0.5, height * 0.205);
+
+  const subtitle = world.key === "hEarth" && terrainChild.ready
+    ? `${world.subtitle} · child terrain trial`
+    : `${world.subtitle} · parent macro silhouette`;
+
+  ctx.fillText(subtitle, width * 0.5, height * 0.205);
 
   ctx.restore();
 }
@@ -915,6 +960,8 @@ function drawPlanet(ctx, width, height) {
   document.documentElement.dataset.selectedWorld = state.worldKey;
   document.documentElement.dataset.publicPortraitBaseline = "stable";
   document.documentElement.dataset.hEarthSilhouette = "parent-macro-organic";
+  document.documentElement.dataset.hEarthChildTerrain = terrainChild.ready ? terrainChild.model : "inactive";
+  document.documentElement.dataset.hEarthChildTerrainFailed = String(terrainChild.failed);
   document.documentElement.dataset.privateEnginesAsleep = "true";
   document.documentElement.dataset.parentCellCount = String(CELL_COUNT);
   document.documentElement.dataset.childFieldsPerParent = String(CHILD_HEX_COUNT);
@@ -1152,6 +1199,37 @@ function installResize() {
   }, { passive: true });
 }
 
+async function loadHEarthTerrainChild() {
+  try {
+    const module = await import(H_EARTH_TERRAIN_CHILD_URL);
+
+    if (typeof module.refineHEarthTerrain !== "function") {
+      throw new Error("refineHEarthTerrain export missing");
+    }
+
+    terrainChild.refine = module.refineHEarthTerrain;
+    terrainChild.ready = true;
+    terrainChild.failed = false;
+
+    if (typeof module.getHEarthTerrainTrialStatus === "function") {
+      const status = module.getHEarthTerrainTrialStatus();
+      terrainChild.model = status?.model || "h-earth-child-terrain-refinement-trial-v1";
+    } else {
+      terrainChild.model = "h-earth-child-terrain-refinement-trial-v1";
+    }
+
+    document.documentElement.dataset.hEarthChildTerrain = terrainChild.model;
+    render();
+  } catch (error) {
+    terrainChild.ready = false;
+    terrainChild.failed = true;
+    terrainChild.model = "child-load-failed-parent-fallback";
+    document.documentElement.dataset.hEarthChildTerrain = "inactive";
+    document.documentElement.dataset.hEarthChildTerrainFailed = "true";
+    render();
+  }
+}
+
 function boot() {
   state.canvas = $("globeShowcaseCanvas");
   if (!state.canvas) return;
@@ -1164,6 +1242,7 @@ function boot() {
   updateControls();
   render();
   startLoop();
+  loadHEarthTerrainChild();
 
   window.DGBGlobeShowcase = {
     model: MODEL_NAME,
@@ -1184,6 +1263,8 @@ function boot() {
         selectedWorld: state.worldKey,
         publicPortraitBaseline: true,
         hEarthSilhouette: "parent-macro-organic",
+        hEarthChildTerrain: terrainChild.ready ? terrainChild.model : "inactive",
+        hEarthChildTerrainFailed: terrainChild.failed,
         privateEnginesAsleep: true,
         parentCellCount: CELL_COUNT,
         childFieldsPerParent: CHILD_HEX_COUNT,

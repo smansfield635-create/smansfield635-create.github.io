@@ -1,11 +1,14 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-globe-mobile-stage-layout-governor"
+  data-page="showroom-globe-cinematic-material-restoration"
   data-route="/showroom/globe/"
-  data-contract="SHOWROOM_GLOBE_MOBILE_STAGE_LAYOUT_GOVERNOR_TNT_v5"
+  data-contract="SHOWROOM_GLOBE_CINEMATIC_MATERIAL_RESTORATION_TNT_v7"
+  data-previous-contract="SHOWROOM_GLOBE_MOBILE_STAGE_LAYOUT_GOVERNOR_TNT_v5"
   data-role="globe-system-gateway-selector"
   data-gateway-authority="true"
+  data-cinematic-material-restored="true"
+  data-procedural-blob-primary="false"
   data-earth-record="false"
   data-h-earth-record="false"
   data-audralia-record="false"
@@ -41,10 +44,7 @@
       --muted: rgba(238,244,255,0.64);
       --faint: rgba(238,244,255,0.44);
       --gold: #f4cf83;
-      --gold-2: #ffe8a6;
       --mint: #a7f3c6;
-      --blue: #8bc8ff;
-      --violet: #c8a7ff;
       color-scheme: dark;
     }
 
@@ -444,9 +444,7 @@
 
       .nav { justify-content: flex-start; }
 
-      .standard-grid {
-        grid-template-columns: 1fr;
-      }
+      .standard-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 520px) {
@@ -472,13 +470,9 @@
         padding: 0 8px;
       }
 
-      .planet-reset {
-        min-height: 48px;
-      }
+      .planet-reset { min-height: 48px; }
 
-      .planet-tabs {
-        gap: 6px;
-      }
+      .planet-tabs { gap: 6px; }
     }
   </style>
 </head>
@@ -506,10 +500,10 @@
 
     <main id="globe-main">
       <section class="hero">
-        <p class="eyebrow">Globe Showcase · gateway selector</p>
+        <p class="eyebrow">Globe Showcase · cinematic material restored</p>
         <h1>Choose the world body you meant to open.</h1>
         <p class="lede">
-          Globe Showcase is the public three-body selector for Earth, H-Earth, and Audralia. This page owns the shared visual scale. Earth is a child page, not the gateway.
+          Globe Showcase is the public three-body selector for Earth, H-Earth, and Audralia. Cinematic material is the primary visible globe skin; procedural material is fallback only.
         </p>
 
         <div class="actions">
@@ -520,8 +514,8 @@
       </section>
 
       <section class="selector-shell" aria-label="Three-body Globe Showcase selector">
-        <p class="selector-title">Source authority · three bodies · shared visual scale</p>
-        <h2 class="selector-headline">One gateway. Three child pages. No Earth override.</h2>
+        <p class="selector-title">Source authority · three bodies · cinematic material</p>
+        <h2 class="selector-headline">One gateway. Three child pages. Solid cinematic globes.</h2>
 
         <div
           id="planet-stage"
@@ -531,6 +525,7 @@
           data-selected-body="earth"
           data-diamond-instrument="false"
           data-mobile-stage-layout-governor="true"
+          data-cinematic-material-restored="true"
           aria-label="Interactive Globe Showcase selector"
         >
           <canvas class="planet-canvas" data-globe-selector-canvas></canvas>
@@ -545,7 +540,7 @@
 
           <div class="planet-title">
             <strong data-body-title>Earth</strong>
-            <span data-body-subtitle>Reference Body · public selector runtime</span>
+            <span data-body-subtitle>Reference Body · cinematic selector material</span>
           </div>
 
           <div class="planet-tabs" role="tablist" aria-label="Choose globe page">
@@ -557,12 +552,12 @@
           <a class="planet-open" href="/showroom/globe/earth/" data-open-body>Open Earth</a>
 
           <div class="planet-instruction">
-            Drag to inspect the public globe selector. Release for momentum. Double tap to reset.
+            Drag to inspect the solid globe. Release for momentum. Double tap to reset.
           </div>
         </div>
 
         <p class="cache-proof">
-          HTML cache key: SHOWROOM_GLOBE_MOBILE_STAGE_LAYOUT_GOVERNOR_TNT_v5
+          HTML cache key: SHOWROOM_GLOBE_CINEMATIC_MATERIAL_RESTORATION_TNT_v7
         </p>
       </section>
 
@@ -575,9 +570,9 @@
         </article>
 
         <article class="standard-card">
-          <h2>Visual scale standard</h2>
+          <h2>Material standard</h2>
           <p>
-            Shared public comparison belongs here. Individual body routes do not compete with the gateway.
+            Cinematic image material is primary. The procedural renderer is fallback only, not the visible identity.
           </p>
         </article>
 
@@ -591,17 +586,17 @@
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Globe Showcase · Three-body gateway selector.
+      Diamond Gate Bridge · Globe Showcase · Cinematic Material Gateway.
     </footer>
   </div>
 
   <script>
-    window.DGB_SHOWROOM_GLOBE_HTML_CACHE_KEY = "SHOWROOM_GLOBE_MOBILE_STAGE_LAYOUT_GOVERNOR_TNT_v5";
-    window.DGB_SHOWROOM_GLOBE_JS_CACHE_KEY = "SHOWROOM_GLOBE_MOBILE_STAGE_LAYOUT_GOVERNOR_TNT_v5";
+    window.DGB_SHOWROOM_GLOBE_HTML_CACHE_KEY = "SHOWROOM_GLOBE_CINEMATIC_MATERIAL_RESTORATION_TNT_v7";
+    window.DGB_SHOWROOM_GLOBE_JS_CACHE_KEY = "SHOWROOM_GLOBE_CINEMATIC_MATERIAL_RESTORATION_TNT_v7";
   </script>
   <script
     type="module"
-    src="/showroom/globe/index.js?v=SHOWROOM_GLOBE_MOBILE_STAGE_LAYOUT_GOVERNOR_TNT_v5"
+    src="/showroom/globe/index.js?v=SHOWROOM_GLOBE_CINEMATIC_MATERIAL_RESTORATION_TNT_v7"
   ></script>
 </body>
 </html>

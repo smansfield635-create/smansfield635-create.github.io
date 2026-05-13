@@ -1,11 +1,10 @@
 <!doctype html>
 <html
   lang="en"
-  class="dgb-h-earth-live-world"
-  data-page="h-earth-live-world-render"
+  data-page="h-earth-live-world-failsafe-shell"
   data-route="/showroom/globe/h-earth/"
-  data-contract="H_EARTH_LIVE_AUTHORITY_LIVE_WORLD_BINDING_TNT_v5"
-  data-renderer="live-procedural-4k-world"
+  data-contract="H_EARTH_LIVE_WORLD_FAILSAFE_HTML_SHELL_TNT_v6"
+  data-renderer="live-procedural-world"
   data-static-image-dependency="false"
   data-png-dependency="false"
   data-water-behind-manor="true"
@@ -15,18 +14,404 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <title>Western Golden Shelf · Live World Ground Render</title>
+  <meta
+    name="description"
+    content="H-Earth Western Golden Shelf live procedural ground render with the Manor on the shelf, water behind it, wildlife, wind, water motion, and final architecture held."
+  >
+
+  <style>
+    :root {
+      --bg: #030812;
+      --bg2: #061020;
+      --panel: rgba(7,15,31,.94);
+      --soft: rgba(255,255,255,.055);
+      --line: rgba(244,207,131,.22);
+      --line2: rgba(255,255,255,.12);
+      --text: rgba(238,244,255,.94);
+      --muted: rgba(238,244,255,.66);
+      --faint: rgba(238,244,255,.46);
+      --gold: #f4cf83;
+      --mint: #a7f3c6;
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+      background:
+        radial-gradient(circle at 50% -8%, rgba(78,119,171,.26), transparent 38%),
+        radial-gradient(circle at 12% 18%, rgba(244,207,131,.12), transparent 30%),
+        radial-gradient(circle at 84% 30%, rgba(167,243,198,.09), transparent 34%),
+        linear-gradient(180deg, var(--bg2), var(--bg) 54%, #02050b) !important;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    a { color: inherit; }
+
+    .page {
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 58px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 0 22px;
+    }
+
+    .brand {
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: .02em;
+    }
+
+    .nav,
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .nav a,
+    .button {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line2);
+      border-radius: 999px;
+      padding: 0 13px;
+      color: rgba(238,244,255,.84);
+      text-decoration: none;
+      background: rgba(255,255,255,.04);
+      font-size: .82rem;
+      font-weight: 850;
+    }
+
+    .nav a[aria-current="page"],
+    .button.primary {
+      color: #06101c;
+      background: linear-gradient(135deg, var(--mint), #78d8ac);
+      border-color: rgba(167,243,198,.64);
+    }
+
+    .button.gold {
+      color: #150d03;
+      background: linear-gradient(135deg, #fff0b8, var(--gold) 48%, #c48a38);
+    }
+
+    .hero,
+    .panel,
+    .card,
+    .standard-card {
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 76% 28%, rgba(139,200,255,.12), transparent 32%),
+        linear-gradient(180deg, rgba(8,17,34,.95), rgba(4,9,20,.96));
+      box-shadow: 0 24px 70px rgba(0,0,0,.28);
+      overflow: hidden;
+    }
+
+    .hero { padding: clamp(24px, 5vw, 46px); }
+    .panel { padding: clamp(18px, 3vw, 28px); margin-top: 16px; }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      color: var(--gold);
+      line-height: 1.05;
+    }
+
+    h1 {
+      max-width: 980px;
+      font-size: clamp(2.1rem, 7vw, 5rem);
+      line-height: .94;
+      letter-spacing: -.07em;
+    }
+
+    h2 {
+      font-size: clamp(1.45rem, 4vw, 2.15rem);
+      letter-spacing: -.045em;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font: 900 .78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    .lede,
+    p {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .lede {
+      max-width: 900px;
+      margin: 22px 0 0;
+      font-size: clamp(1.02rem, 2.5vw, 1.28rem);
+    }
+
+    .actions { margin-top: 26px; }
+
+    .transition,
+    .gate-panel,
+    .placement-unlock,
+    .fallback-note {
+      margin-top: 16px;
+      padding: 18px;
+      border: 1px solid rgba(167,243,198,.20);
+      border-radius: 24px;
+      background: rgba(5,38,34,.24);
+      color: var(--mint);
+      font-weight: 900;
+      line-height: 1.5;
+    }
+
+    .summary,
+    .standard-grid,
+    .placement-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .summary {
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      margin: 16px 0;
+    }
+
+    .standard-grid {
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      margin-top: 16px;
+    }
+
+    .summary div,
+    .card,
+    .standard-card,
+    .placement-list div {
+      border: 1px solid var(--line2);
+      border-radius: 18px;
+      padding: 14px;
+      background: var(--soft);
+    }
+
+    .summary strong,
+    .placement-list strong {
+      display: block;
+      color: var(--gold);
+      font-size: 1.05rem;
+      margin-top: 6px;
+      overflow-wrap: anywhere;
+    }
+
+    .summary strong {
+      font-size: 1.18rem;
+      margin-top: 0;
+    }
+
+    .summary span,
+    .placement-list span {
+      display: block;
+      color: var(--faint);
+      font-size: .74rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .ground-placement-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(260px, .55fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .manor-ground-viewport {
+      width: 100%;
+      min-height: clamp(540px, 96vw, 880px);
+      border: 1px solid rgba(244,207,131,.20);
+      border-radius: 26px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 55% 25%, rgba(244,207,131,.10), transparent 40%),
+        linear-gradient(180deg, #13243a, #06101d 58%, #02060b);
+      box-shadow: 0 30px 90px rgba(0,0,0,.36);
+    }
+
+    .manor-ground-viewport canvas {
+      display: block;
+      width: 100%;
+      height: clamp(540px, 96vw, 880px);
+    }
+
+    .render-status {
+      margin-top: 10px;
+      color: var(--faint);
+      font: 850 .78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .gate-label {
+      display: inline-flex;
+      border-radius: 999px;
+      color: #06101c;
+      background: var(--gold);
+      font: 950 .78rem/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: .08em;
+      padding: 7px 10px;
+      margin-bottom: 8px;
+    }
+
+    .footer {
+      margin-top: 20px;
+      padding: 20px 0 0;
+      color: var(--faint);
+      font-size: .82rem;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .ground-placement-grid { grid-template-columns: 1fr; }
+      .summary { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .standard-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .page { width: min(100% - 18px, 1180px); }
+      .hero, .panel { border-radius: 24px; }
+      .manor-ground-viewport canvas { height: 620px; }
+    }
+  </style>
 </head>
 
-<body class="dgb-h-earth-live-world">
+<body>
+  <div class="page">
+    <header class="topbar">
+      <a class="brand" href="/showroom/">◆ Diamond Gate Bridge</a>
+      <nav class="nav">
+        <a href="/">Compass</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/">Globe</a>
+        <a href="/showroom/globe/earth/">ZIONTS</a>
+        <a href="/showroom/globe/h-earth/" aria-current="page">H-Earth</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
+        <a href="/gauges/">Triple G</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <p class="eyebrow">Western Golden Shelf · Live World Failsafe Shell</p>
+        <h1>The Manor is now placed on a living shelf. Water moves behind it.</h1>
+        <p class="lede">
+          This page now carries its visible shell in HTML. JavaScript enhances the live world, but the route no longer collapses to a white page if the renderer fails.
+        </p>
+
+        <div class="actions">
+          <a class="button primary" href="#manor-ground-render">View Live World</a>
+          <a class="button gold" href="/showroom/globe/">Return to Globe Selector</a>
+          <a class="button" href="/showroom/">Return to Showroom</a>
+        </div>
+
+        <div class="transition">
+          Static image rejected. Script-only shell rejected. Failsafe visible shell restored. Live procedural renderer remains the target.
+        </div>
+
+        <div class="summary">
+          <div><strong>VISIBLE HTML</strong><span>Failsafe shell</span></div>
+          <div><strong>NO PNG</strong><span>Static dependency</span></div>
+          <div><strong>LIVE WORLD</strong><span>Renderer target</span></div>
+          <div><strong>HOLD</strong><span>Final architecture</span></div>
+        </div>
+
+        <div class="gate-panel">
+          <span class="gate-label">FAILSAFE SHELL ACTIVE</span>
+          <p>The canvas mount exists before JavaScript runs. The live renderer may enhance it; it may not be required for the page to exist.</p>
+        </div>
+      </section>
+
+      <section id="manor-ground-render" class="panel">
+        <p class="eyebrow">Ground-level render · living environment</p>
+        <h2>Inland shelf view toward the western waterline</h2>
+
+        <div class="ground-placement-grid">
+          <div>
+            <div class="manor-ground-viewport">
+              <canvas data-manor-ground-canvas aria-label="Live procedural Western Golden Shelf Manor world"></canvas>
+            </div>
+            <div class="render-status" data-render-status>Renderer booting. HTML shell is already visible.</div>
+          </div>
+
+          <article class="card">
+            <h3>Live render authority</h3>
+            <p>The renderer generates a living environment instead of displaying a static image.</p>
+
+            <div class="placement-list">
+              <div><span>Renderer</span><strong>Live procedural world</strong></div>
+              <div><span>Motion</span><strong>Ocean, shoreline, grass, haze, wildlife</strong></div>
+              <div><span>Camera</span><strong>Inland / highland side</strong></div>
+              <div><span>Facing</span><strong>West-southwest</strong></div>
+              <div><span>Water</span><strong>Behind the Manor</strong></div>
+              <div><span>Static image source</span><strong>Rejected</strong></div>
+              <div><span>Final architecture</span><strong>HOLD</strong></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="placement-unlock">
+          <p>Next development may refine the living ground around and within the Manor zone without returning to a static picture.</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <p class="eyebrow">Placement split</p>
+        <h2>Live environment active; final buildout remains held</h2>
+
+        <div class="standard-grid">
+          <article class="standard-card"><h3>Authorized</h3><p>Live Western Golden Shelf environment and controlled Manor placement.</p></article>
+          <article class="standard-card"><h3>Next</h3><p>Terraces, gardens, paths, shoreline, drainage, wildlife, and protected edge logic.</p></article>
+          <article class="standard-card"><h3>Still held</h3><p>Final architecture, roads, city systems, and final Diamond Gate Bridge object.</p></article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">Diamond Gate Bridge · H-Earth · Western Golden Shelf Live World Failsafe Shell.</footer>
+  </div>
+
+  <noscript>
+    <div class="page">
+      <section class="fallback-note">
+        JavaScript is unavailable, so the live world cannot animate. The page shell is still intentionally visible.
+      </section>
+    </div>
+  </noscript>
+
   <script>
-    window.DGB_H_EARTH_HTML_CACHE_KEY = "H_EARTH_LIVE_AUTHORITY_LIVE_WORLD_BINDING_TNT_v5";
-    window.DGB_H_EARTH_JS_CACHE_KEY = "H_EARTH_LIVE_AUTHORITY_LIVE_WORLD_BINDING_TNT_v5";
+    window.DGB_H_EARTH_HTML_CACHE_KEY = "H_EARTH_LIVE_WORLD_FAILSAFE_HTML_SHELL_TNT_v6";
+    window.DGB_H_EARTH_JS_CACHE_KEY = "H_EARTH_LIVE_WORLD_FAILSAFE_HTML_SHELL_TNT_v6";
     window.DGB_H_EARTH_GROUND_RENDER_CACHE_KEY = "H_EARTH_WESTERN_GOLDEN_SHELF_LIVE_WORLD_RENDER_TNT_v5";
   </script>
   <script
     type="module"
-    src="/showroom/globe/h-earth/index.js?v=H_EARTH_LIVE_AUTHORITY_LIVE_WORLD_BINDING_TNT_v5"
+    src="/showroom/globe/h-earth/index.js?v=H_EARTH_LIVE_WORLD_FAILSAFE_HTML_SHELL_TNT_v6"
   ></script>
 </body>
 </html>

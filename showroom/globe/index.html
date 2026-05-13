@@ -3,8 +3,9 @@
   lang="en"
   data-route="/showroom/globe/"
   data-page="showroom-globe"
-  data-version="PUBLIC_ORGANIC_BASELINE_CACHE_REPAIR_v1"
-  data-public-portrait-baseline="true"
+  data-version="SHOWROOM_GLOBE_SOURCE_AUTHORITY_REPAIR_TNT_v1"
+  data-source-authority="html-shell-loads-local-index-js"
+  data-public-selector="true"
   data-private-engines-asleep="true"
   data-generated-image="false"
   data-graphic-box="false"
@@ -19,10 +20,10 @@
   <title>Globe Showcase · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The Globe Showcase is the public display case for Earth, H-Earth, and Audralia. It shows stable lightweight portraits before opening private inspection rooms."
+    content="The Globe Showcase is the public selector for Earth, H-Earth, and Audralia. The public route shows a clean inspectable globe while private map engines stay in their own rooms."
   >
 
-  <link rel="modulepreload" href="/showroom/globe/index.js?v=public-organic-baseline-20260512-01">
+  <link rel="modulepreload" href="/showroom/globe/index.js?v=clean-sublevel-source-authority-v1">
 
   <style>
     :root{
@@ -35,9 +36,7 @@
       --gold2:#ffe8a6;
       --mint:#9ef2c4;
       --panel:rgba(8,15,30,.88);
-      --panel2:rgba(13,24,44,.82);
       --line:rgba(196,214,255,.16);
-      --line2:rgba(244,201,111,.22);
       --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
     }
@@ -213,7 +212,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(21rem,36vw,30rem);
+      min-height:clamp(19rem,34vw,28rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -253,7 +252,7 @@
     h1{
       margin:0;
       max-width:950px;
-      font-size:clamp(3rem,9vw,6.6rem);
+      font-size:clamp(3rem,9vw,6.4rem);
       line-height:.86;
       letter-spacing:-.095em;
       text-wrap:balance;
@@ -438,7 +437,7 @@
     }
 
     .info-card{
-      min-height:10rem;
+      min-height:9rem;
       display:grid;
       align-content:start;
       gap:.55rem;
@@ -469,6 +468,25 @@
       line-height:1.45;
     }
 
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt],
+    .receipt,
+    .route-receipt{
+      display:none!important;
+      visibility:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      overflow:hidden!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
+    }
+
     footer{
       padding:1.35rem 0 .5rem;
       color:var(--soft);
@@ -491,7 +509,7 @@
       h1{font-size:clamp(3rem,17vw,5rem)}
 
       .hero{
-        min-height:24rem;
+        min-height:23rem;
         padding:1rem;
       }
 
@@ -537,10 +555,10 @@
 
   <script>
     (() => {
-      const cacheKey = "public-organic-baseline-20260512-01";
+      const cacheKey = "clean-sublevel-source-authority-v1";
+      document.documentElement.dataset.cacheKey = cacheKey;
 
       try {
-        document.documentElement.dataset.cacheKey = cacheKey;
         sessionStorage.setItem("dgb-globe-cache-key", cacheKey);
       } catch (_) {}
 
@@ -556,7 +574,7 @@
         caches.keys()
           .then((keys) => {
             keys
-              .filter((key) => /diamond|dgb|globe|showroom|runtime|assets/i.test(key))
+              .filter((key) => /diamond|dgb|globe|showroom|runtime|assets|earth|hearth|audralia/i.test(key))
               .forEach((key) => caches.delete(key));
           })
           .catch(() => {});
@@ -592,11 +610,11 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Public display case</div>
-        <h1 id="page-title">Worlds stay light before inspection.</h1>
+        <div class="kicker">Public selector</div>
+        <h1 id="page-title">The globe is the object.</h1>
 
         <p class="lead">
-          The Globe Showcase is the public display case. It uses stable lightweight portraits so the visitor can compare Earth, H-Earth, and Audralia before entering a private inspection room.
+          This page now loads the local Globe Showcase renderer directly. It shows a clean inspectable globe only. Maps, landmasses, water systems, terrain history, and child engines belong inside the private world rooms.
         </p>
 
         <div class="actions">
@@ -608,16 +626,16 @@
 
       <section class="panel section" aria-labelledby="showcase-title">
         <div class="showcase-card">
-          <div class="stage-label">Display case · 256 portrait index · private engines asleep</div>
+          <div class="stage-label">Source authority · local index.js · private engines asleep</div>
 
-          <h2 id="showcase-title">Stable portraits, not private construction.</h2>
+          <h2 id="showcase-title">Clean globe, not public map construction.</h2>
 
-          <div class="globe-wrap" aria-label="Interactive public globe portrait selector">
+          <div class="globe-wrap" aria-label="Interactive clean globe selector">
             <canvas
               id="globeShowcaseCanvas"
               tabindex="0"
               role="img"
-              aria-label="Interactive rotating public portrait of Earth, H-Earth, and Audralia"
+              aria-label="Interactive clean globe selector for Earth, H-Earth, and Audralia"
             ></canvas>
 
             <div class="world-controls" aria-label="World selector">
@@ -629,42 +647,55 @@
           </div>
 
           <p>
-            Drag to inspect the public portrait. Select a world to compare the surface. Open the world room when the visitor is ready for the deeper private engine.
+            Drag to inspect the public globe. Select a world to compare the object identity. Open the world room for private map and terrain work.
           </p>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="standard-title">
         <div class="kicker">Display case</div>
-        <h2 id="standard-title">The public page stays stable.</h2>
+        <h2 id="standard-title">The public page stops carrying terrain.</h2>
 
         <div class="info-grid">
           <div class="info-card">
-            <b>Public selector</b>
-            <strong>Lightweight portraits only.</strong>
-            <span>The page shows clean rotating portraits. It does not wake the private terrain chains.</span>
+            <b>Public index</b>
+            <strong>Globe object only.</strong>
+            <span>The selector owns rotation, lighting, atmosphere, and route entry. It does not own maps.</span>
           </div>
 
           <div class="info-card">
-            <b>H-Earth path</b>
-            <strong>Deeper work belongs in the private room.</strong>
-            <span>The full H-Earth model belongs under the H-Earth inspection route and its asset chain.</span>
+            <b>Private worlds</b>
+            <strong>Terrain moves downstream.</strong>
+            <span>H-Earth, Earth, and Audralia route rooms carry their own geography and model depth.</span>
           </div>
 
           <div class="info-card">
-            <b>256 preserved</b>
-            <strong>The model capacity remains under the hood.</strong>
-            <span>The public portrait can reference the 256 field without visually exposing construction fabric.</span>
+            <b>Source authority</b>
+            <strong>This shell imports the local renderer.</strong>
+            <span>The canvas mount is #globeShowcaseCanvas and the module path is /showroom/globe/index.js.</span>
           </div>
         </div>
       </section>
+
+      <template
+        id="route-receipt"
+        data-route-receipt
+        data-contract="SHOWROOM_GLOBE_SOURCE_AUTHORITY_REPAIR_TNT_v1"
+        data-route="/showroom/globe/"
+        data-import="/showroom/globe/index.js?v=clean-sublevel-source-authority-v1"
+        data-mount="globeShowcaseCanvas"
+        data-public-selector="true"
+        data-private-engines-asleep="true"
+        data-generated-image="false"
+        data-graphic-box="false"
+      ></template>
     </main>
 
     <footer>
-      Diamond Gate Bridge · Globe Showcase · Public portrait baseline.
+      Diamond Gate Bridge · Globe Showcase · Public selector.
     </footer>
   </div>
 
-  <script type="module" src="/showroom/globe/index.js?v=public-organic-baseline-20260512-01"></script>
+  <script type="module" src="/showroom/globe/index.js?v=clean-sublevel-source-authority-v1"></script>
 </body>
 </html>

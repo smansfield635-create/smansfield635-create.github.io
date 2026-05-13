@@ -1,47 +1,109 @@
 // /showroom/globe/h-earth/index.js
 // TNT FULL-FILE REPLACEMENT
-// H_EARTH_HEX_SUBSTRATE_LIVE_CONDUCTOR_TNT_v1
-// Owns: H-Earth child-route conductor with guaranteed base render and live hex substrate enhancement.
-// Does not mutate /showroom/globe/.
+// H_EARTH_HEX_MODULE_LEDGER_CONDUCTOR_RENEWAL_v1
+// Target: /showroom/globe/h-earth/index.js
+// Scope: diagnostic conductor + module ledger + synchronized cache proof only.
+// No parent Globe edits. No visual expansion. No new art logic.
 
-const CONTRACT = "H_EARTH_HEX_SUBSTRATE_LIVE_CONDUCTOR_TNT_v1";
+const CONTRACT = "H_EARTH_HEX_MODULE_LEDGER_CONDUCTOR_RENEWAL_v1";
+const GENERATION = "H_EARTH_HEX_MODULE_LEDGER_CONDUCTOR_RENEWAL_v1";
+const ROUTE = "/showroom/globe/h-earth/";
+const PARENT_BASELINE = "/showroom/globe/";
 
-const MODULE_PATHS = Object.freeze({
-  scene: "/assets/world/environment/scene.js?v=H_EARTH_HEX_SUBSTRATE_LIVE_v1",
-  profile: "/assets/h-earth/h-earth.environment.profile.js?v=H_EARTH_HEX_SUBSTRATE_LIVE_v1"
-});
+const MODULES = Object.freeze([
+  {
+    key: "profile",
+    label: "Shared Profile",
+    path: "/assets/world/environment/profile.js",
+    requiredExports: ["createEnvironmentProfile", "resolveEnvironmentCell"]
+  },
+  {
+    key: "hexfield",
+    label: "Hexfield Substrate",
+    path: "/assets/world/environment/hexfield.js",
+    requiredExports: ["createHexField"]
+  },
+  {
+    key: "climate",
+    label: "Climate",
+    path: "/assets/world/environment/climate.js",
+    requiredExports: ["drawClimateLayer", "drawBirdsAndAir", "drawAtmosphereComposite"]
+  },
+  {
+    key: "water",
+    label: "Water / Shimmer Protocol",
+    path: "/assets/world/environment/water.js",
+    requiredExports: ["drawWaterLayer", "drawFoamAndTideEdge", "SHIMMER_PROTOCOL"]
+  },
+  {
+    key: "terrain",
+    label: "Terrain",
+    path: "/assets/world/environment/terrain.js",
+    requiredExports: ["drawDistantTerrainLayer", "drawShorelineTerrainLayer", "drawGroundTerrainLayer"]
+  },
+  {
+    key: "foliage",
+    label: "Foliage",
+    path: "/assets/world/environment/foliage.js",
+    requiredExports: ["drawFoliageLayer"]
+  },
+  {
+    key: "structure",
+    label: "Structure",
+    path: "/assets/world/environment/structure.js",
+    requiredExports: ["drawStructureLayer"]
+  },
+  {
+    key: "scene",
+    label: "Scene Compositor",
+    path: "/assets/world/environment/scene.js",
+    requiredExports: ["createGroundEnvironmentScene"]
+  },
+  {
+    key: "hEarthProfile",
+    label: "H-Earth Profile",
+    path: "/assets/h-earth/h-earth.environment.profile.js",
+    requiredExports: ["getHEarthWesternGoldenShelfProfile"]
+  }
+]);
 
 const state = {
   canvas: null,
   ctx: null,
-  raf: 0,
+  ledgerRoot: null,
+  statusNode: null,
+  fallbackRaf: 0,
   startedAt: performance.now(),
-  lastFrame: 0,
-  targetFrameMs: 50,
   mode: "booting",
+  moduleResults: new Map(),
+  importedModules: new Map(),
   scene: null,
-  bootError: null,
-  moduleDebt: [],
-  receipt: null
+  receipt: null,
+  firstFailure: null
 };
 
+function withGeneration(path) {
+  return `${path}?v=${encodeURIComponent(GENERATION)}`;
+}
+
 function setStatus(text) {
-  const node = document.querySelector("[data-render-status]");
-  if (node) node.textContent = text;
+  if (state.statusNode) state.statusNode.textContent = text;
 }
 
 function markDocument(extra = {}) {
   const markers = {
-    page: "h-earth-hex-substrate-ground-engine",
-    route: "/showroom/globe/h-earth/",
+    page: "h-earth-hex-module-ledger-conductor",
+    route: ROUTE,
     contract: CONTRACT,
-    parentBaseline: "/showroom/globe/",
+    generation: GENERATION,
+    parentBaseline: PARENT_BASELINE,
     parentMutation: "false",
     groundLevel: "true",
-    reusableEnvironmentEngine: "true",
-    hexSubstrate: "live",
-    staticImageSource: "false",
-    shimmerProtocol: "active",
+    reusableEnvironmentEngine: "diagnostic",
+    hexSubstrate: state.mode === "enhanced" ? "live" : "not-yet-live",
+    shimmerProtocol: state.mode === "enhanced" ? "active" : "pending",
+    fallbackDemoted: "true",
+    visualExpansion: "false",
     mode: state.mode,
     ...extra
   };
@@ -52,11 +114,203 @@ function markDocument(extra = {}) {
   });
 }
 
+function createLedgerRoot() {
+  const existing = document.querySelector("[data-module-ledger]");
+  if (existing) {
+    state.ledgerRoot = existing;
+    return existing;
+  }
+
+  const root = document.createElement("section");
+  root.dataset.moduleLedger = "true";
+  root.style.marginTop = "14px";
+  root.style.padding = "14px";
+  root.style.border = "1px solid rgba(244,207,131,.22)";
+  root.style.borderRadius = "18px";
+  root.style.background = "rgba(255,255,255,.045)";
+  root.style.color = "rgba(238,244,255,.86)";
+  root.style.font = "800 12px/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
+
+  const anchor =
+    document.querySelector("[data-render-status]") ||
+    document.querySelector(".render-status") ||
+    document.querySelector("#ground-world") ||
+    document.body;
+
+  if (anchor && anchor.parentNode) {
+    anchor.parentNode.insertBefore(root, anchor.nextSibling);
+  } else {
+    document.body.appendChild(root);
+  }
+
+  state.ledgerRoot = root;
+  return root;
+}
+
+function renderLedger() {
+  const root = state.ledgerRoot || createLedgerRoot();
+
+  const rows = MODULES.map((mod) => {
+    const result = state.moduleResults.get(mod.key) || {
+      status: "pending",
+      fetchOk: false,
+      rawJavaScript: false,
+      importOk: false,
+      exportOk: false,
+      message: "pending"
+    };
+
+    const color =
+      result.status === "pass" ? "#a7f3c6" :
+      result.status === "fail" ? "#ffb4a8" :
+      "#f4cf83";
+
+    return `
+      <div style="border-top:1px solid rgba(255,255,255,.10);padding:8px 0;">
+        <div style="display:flex;gap:8px;justify-content:space-between;align-items:flex-start;">
+          <strong style="color:${color};">${mod.label}</strong>
+          <span style="color:${color};text-transform:uppercase;">${escapeHtml(result.status)}</span>
+        </div>
+        <div style="color:rgba(238,244,255,.62);word-break:break-all;">${escapeHtml(withGeneration(mod.path))}</div>
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:6px;">
+          <span>URL: ${result.fetchOk ? "PASS" : "—"}</span>
+          <span>JS: ${result.rawJavaScript ? "PASS" : "—"}</span>
+          <span>Import: ${result.importOk ? "PASS" : "—"}</span>
+          <span>Exports: ${result.exportOk ? "PASS" : "—"}</span>
+        </div>
+        <div style="color:rgba(238,244,255,.56);margin-top:4px;">${escapeHtml(result.message || "")}</div>
+      </div>
+    `;
+  }).join("");
+
+  root.innerHTML = `
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:flex-start;">
+      <div>
+        <div style="color:#f4cf83;font-weight:950;letter-spacing:.06em;text-transform:uppercase;">Hex Module Ledger</div>
+        <div style="color:rgba(238,244,255,.58);">Generation: ${escapeHtml(GENERATION)}</div>
+      </div>
+      <div style="color:${state.mode === "enhanced" ? "#a7f3c6" : "#f4cf83"};text-transform:uppercase;">
+        ${escapeHtml(state.mode)}
+      </div>
+    </div>
+    ${rows}
+  `;
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function isLikelyJavaScript(contentType, text) {
+  const type = String(contentType || "").toLowerCase();
+  const body = String(text || "").trim().toLowerCase();
+
+  if (body.startsWith("<!doctype html") || body.startsWith("<html") || body.includes("<body")) return false;
+  if (type.includes("javascript") || type.includes("ecmascript") || type.includes("text/plain")) return true;
+
+  return (
+    body.includes("export ") ||
+    body.includes("const ") ||
+    body.includes("function ") ||
+    body.includes("import ")
+  );
+}
+
+async function proveModule(mod) {
+  const url = withGeneration(mod.path);
+  const result = {
+    key: mod.key,
+    label: mod.label,
+    path: mod.path,
+    url,
+    generation: GENERATION,
+    status: "pending",
+    fetchOk: false,
+    rawJavaScript: false,
+    importOk: false,
+    exportOk: false,
+    contentType: "",
+    requiredExports: [...mod.requiredExports],
+    missingExports: [],
+    message: "pending"
+  };
+
+  state.moduleResults.set(mod.key, result);
+  renderLedger();
+
+  try {
+    const response = await fetch(url, { cache: "no-store" });
+    result.fetchOk = response.ok;
+    result.contentType = response.headers.get("content-type") || "";
+
+    const text = await response.text();
+    result.rawJavaScript = response.ok && isLikelyJavaScript(result.contentType, text);
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    if (!result.rawJavaScript) {
+      throw new Error(`Not raw JavaScript. content-type=${result.contentType || "unknown"}`);
+    }
+
+    const imported = await import(url);
+    result.importOk = true;
+
+    result.missingExports = mod.requiredExports.filter((name) => !(name in imported));
+    result.exportOk = result.missingExports.length === 0;
+
+    if (!result.exportOk) {
+      throw new Error(`Missing exports: ${result.missingExports.join(", ")}`);
+    }
+
+    result.status = "pass";
+    result.message = "reachable, raw JavaScript, import succeeded, exports present";
+    state.importedModules.set(mod.key, imported);
+  } catch (error) {
+    result.status = "fail";
+    result.message = error?.message || "module proof failed";
+
+    if (!state.firstFailure) state.firstFailure = result;
+  }
+
+  state.moduleResults.set(mod.key, result);
+  renderLedger();
+  return result;
+}
+
+async function runModuleLedger() {
+  setStatus("Module ledger running. Proving reusable engine files.");
+  markDocument({ moduleLedger: "running" });
+
+  for (const mod of MODULES) {
+    const result = await proveModule(mod);
+    if (result.status === "fail") {
+      setStatus(`Diagnostic fallback active. First failed module: ${mod.path} — ${result.message}`);
+      markDocument({
+        moduleLedger: "failed",
+        firstFailedModule: mod.path,
+        firstFailedMessage: result.message
+      });
+      return false;
+    }
+  }
+
+  setStatus("Module ledger passed. Attaching live hex substrate.");
+  markDocument({ moduleLedger: "passed" });
+  return true;
+}
+
 function resizeCanvas() {
   const box = state.canvas.getBoundingClientRect();
-  const dpr = Math.min(window.devicePixelRatio || 1, 1.4);
-  const width = Math.max(900, Math.floor((box.width || 980) * dpr));
-  const height = Math.max(1180, Math.floor((box.height || 1200) * dpr));
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.2);
+  const width = Math.max(720, Math.floor((box.width || 900) * dpr));
+  const height = Math.max(880, Math.floor((box.height || 1000) * dpr));
 
   if (state.canvas.width !== width || state.canvas.height !== height) {
     state.canvas.width = width;
@@ -66,15 +320,8 @@ function resizeCanvas() {
   return { width, height };
 }
 
-function drawBaseFrame(time = performance.now()) {
+function drawDiagnosticFallback(time = performance.now()) {
   if (!state.ctx || !state.canvas || state.mode === "enhanced") return;
-
-  if (time - state.lastFrame < state.targetFrameMs) {
-    state.raf = requestAnimationFrame(drawBaseFrame);
-    return;
-  }
-
-  state.lastFrame = time;
 
   const { width: w, height: h } = resizeCanvas();
   const t = (time - state.startedAt) / 1000;
@@ -82,190 +329,182 @@ function drawBaseFrame(time = performance.now()) {
 
   ctx.clearRect(0, 0, w, h);
 
-  const sky = ctx.createLinearGradient(0, 0, 0, h);
-  sky.addColorStop(0, "rgb(78,108,132)");
-  sky.addColorStop(0.22, "rgb(163,178,174)");
-  sky.addColorStop(0.42, "rgb(224,203,162)");
-  sky.addColorStop(0.62, "rgb(90,102,73)");
-  sky.addColorStop(1, "rgb(28,48,39)");
-  ctx.fillStyle = sky;
+  const bg = ctx.createLinearGradient(0, 0, 0, h);
+  bg.addColorStop(0, "rgb(29,47,62)");
+  bg.addColorStop(0.42, "rgb(52,72,72)");
+  bg.addColorStop(0.58, "rgb(43,66,64)");
+  bg.addColorStop(1, "rgb(20,31,28)");
+  ctx.fillStyle = bg;
   ctx.fillRect(0, 0, w, h);
 
-  const sun = ctx.createRadialGradient(w * 0.80, h * 0.13, 0, w * 0.80, h * 0.13, w * 0.62);
-  sun.addColorStop(0, "rgba(255,245,207,.62)");
-  sun.addColorStop(0.26, "rgba(255,224,156,.34)");
-  sun.addColorStop(1, "rgba(255,205,125,0)");
-  ctx.fillStyle = sun;
-  ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = "rgba(244,207,131,.12)";
+  ctx.fillRect(0, h * 0.36, w, h * 0.20);
 
-  const oceanTop = h * 0.35;
-  const oceanBottom = h * 0.588;
-  const ocean = ctx.createLinearGradient(0, oceanTop, 0, oceanBottom);
-  ocean.addColorStop(0, "rgb(94,150,155)");
-  ocean.addColorStop(0.52, "rgb(42,106,136)");
-  ocean.addColorStop(1, "rgb(13,61,93)");
-  ctx.fillStyle = ocean;
-  ctx.fillRect(0, oceanTop, w, oceanBottom - oceanTop);
+  ctx.fillStyle = "rgba(32,92,118,.52)";
+  ctx.fillRect(0, h * 0.38, w, h * 0.17);
 
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
-  for (let i = 0; i < 140; i += 1) {
-    const x = w * (0.44 + ((Math.sin(i * 17.11) * 43758.54) % 1 + 1) % 1 * 0.50);
-    const y = h * (0.39 + ((Math.sin(i * 19.77) * 43758.54) % 1 + 1) % 1 * 0.15);
-    const pulse = Math.max(0, Math.sin(t * 1.28 + i * 0.61));
-    ctx.globalAlpha = 0.03 + pulse * 0.12;
-    ctx.fillStyle = "rgba(255,238,187,.68)";
+  ctx.fillStyle = "rgba(74,96,58,.52)";
+  ctx.fillRect(0, h * 0.55, w, h * 0.45);
+
+  ctx.strokeStyle = "rgba(255,238,187,.20)";
+  ctx.lineWidth = Math.max(1, w * 0.001);
+  for (let i = 0; i < 18; i += 1) {
+    const y = h * (0.40 + i * 0.007);
     ctx.beginPath();
-    ctx.ellipse(x, y, w * 0.003, h * 0.00075, -0.14, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.moveTo(0, y + Math.sin(t + i) * 2);
+    ctx.lineTo(w, y + Math.cos(t + i) * 2);
+    ctx.stroke();
   }
-  ctx.restore();
 
-  const groundTop = h * 0.558;
-  const ground = ctx.createLinearGradient(0, groundTop, 0, h);
-  ground.addColorStop(0, "rgb(148,137,77)");
-  ground.addColorStop(0.38, "rgb(62,89,56)");
-  ground.addColorStop(1, "rgb(17,31,26)");
-  ctx.fillStyle = ground;
-  ctx.beginPath();
-  ctx.moveTo(0, groundTop);
-  for (let i = 0; i <= 100; i += 1) {
-    const x = (i / 100) * w;
-    const y = groundTop + Math.sin(i * 0.43) * h * 0.010 + Math.sin(i * 1.27) * h * 0.006;
-    ctx.lineTo(x, y);
-  }
-  ctx.lineTo(w, h);
-  ctx.lineTo(0, h);
-  ctx.closePath();
-  ctx.fill();
+  ctx.fillStyle = "rgba(0,0,0,.46)";
+  ctx.fillRect(w * 0.08, h * 0.08, w * 0.84, h * 0.145);
 
-  ctx.fillStyle = "rgba(180,148,88,.84)";
-  ctx.strokeStyle = "rgba(238,207,143,.42)";
-  ctx.lineWidth = Math.max(1, w * 0.0012);
-  const mx = w * 0.50;
-  const my = h * 0.615;
-  const mw = w * 0.37;
-  const mh = h * 0.15;
-  ctx.fillRect(mx - mw * 0.5, my - mh, mw, mh);
-  ctx.strokeRect(mx - mw * 0.5, my - mh, mw, mh);
-  ctx.fillStyle = "rgb(45,39,36)";
-  ctx.beginPath();
-  ctx.moveTo(mx - mw * 0.56, my - mh);
-  ctx.lineTo(mx, my - mh * 1.55);
-  ctx.lineTo(mx + mw * 0.56, my - mh);
-  ctx.closePath();
-  ctx.fill();
+  ctx.fillStyle = "rgba(255,236,185,.96)";
+  ctx.font = `900 ${Math.max(16, w * 0.028)}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
+  ctx.textAlign = "center";
+  ctx.fillText("DIAGNOSTIC FALLBACK — NOT BASELINE", w * 0.50, h * 0.145);
+
+  ctx.fillStyle = "rgba(238,244,255,.74)";
+  ctx.font = `800 ${Math.max(12, w * 0.017)}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
+  ctx.fillText("Module ledger is controlling. Visual expansion is held.", w * 0.50, h * 0.185);
 
   state.receipt = Object.freeze({
     contract: CONTRACT,
-    route: "/showroom/globe/h-earth/",
-    mode: state.mode,
+    generation: GENERATION,
+    route: ROUTE,
+    parentBaseline: PARENT_BASELINE,
     parentMutation: false,
+    mode: state.mode,
     rendered: true,
-    hexSubstrate: "pending-enhancement",
-    moduleDebt: [...state.moduleDebt]
+    fallbackDemoted: true,
+    visualExpansion: false,
+    firstFailure: state.firstFailure,
+    modules: Object.fromEntries(state.moduleResults)
   });
 
-  state.raf = requestAnimationFrame(drawBaseFrame);
+  state.fallbackRaf = requestAnimationFrame(drawDiagnosticFallback);
 }
 
-function startBaseRenderer() {
-  state.mode = "base";
-  setStatus("Base ground renderer active. Loading live hex substrate.");
-  markDocument({ rendered: "true", mode: state.mode, hexSubstrate: "pending" });
-  cancelAnimationFrame(state.raf);
-  state.raf = requestAnimationFrame(drawBaseFrame);
+function startDiagnosticFallback() {
+  state.mode = "diagnostic-fallback";
+  setStatus("Diagnostic fallback active. Module ledger running.");
+  markDocument({
+    rendered: "true",
+    mode: state.mode,
+    fallbackDemoted: "true",
+    visualExpansion: "false"
+  });
+
+  cancelAnimationFrame(state.fallbackRaf);
+  state.fallbackRaf = requestAnimationFrame(drawDiagnosticFallback);
 }
 
-async function attachHexScene() {
-  try {
-    const [sceneModule, profileModule] = await Promise.all([
-      import(MODULE_PATHS.scene),
-      import(MODULE_PATHS.profile)
-    ]);
+async function attachEnhancedScene() {
+  const sceneModule = state.importedModules.get("scene");
+  const profileModule = state.importedModules.get("hEarthProfile");
 
-    if (typeof sceneModule.createGroundEnvironmentScene !== "function") {
-      throw new Error("scene.js missing createGroundEnvironmentScene export.");
-    }
+  const profile = profileModule.getHEarthWesternGoldenShelfProfile();
+  const scene = sceneModule.createGroundEnvironmentScene(state.canvas, profile, {
+    targetFrameMs: 50,
+    maxDpr: 1.75,
+    minWidth: 960,
+    minHeight: 1180
+  });
 
-    if (typeof profileModule.getHEarthWesternGoldenShelfProfile !== "function") {
-      throw new Error("h-earth.environment.profile.js missing getHEarthWesternGoldenShelfProfile export.");
-    }
+  cancelAnimationFrame(state.fallbackRaf);
 
-    const profile = profileModule.getHEarthWesternGoldenShelfProfile();
+  state.scene = scene.start();
+  state.mode = "enhanced";
 
-    const scene = sceneModule.createGroundEnvironmentScene(state.canvas, profile, {
-      targetFrameMs: 50,
-      maxDpr: 1.75,
-      minWidth: 960,
-      minHeight: 1180
-    });
+  setStatus("Reusable ground environment engine active. Hex substrate live. Shimmer Protocol active.");
+  markDocument({
+    rendered: "true",
+    mode: state.mode,
+    moduleLedger: "passed",
+    hexSubstrate: "live",
+    shimmerProtocol: "active",
+    sceneEngine: "active"
+  });
 
-    cancelAnimationFrame(state.raf);
-    state.scene = scene.start();
-    state.mode = "enhanced";
+  state.receipt = Object.freeze({
+    contract: CONTRACT,
+    generation: GENERATION,
+    route: ROUTE,
+    parentBaseline: PARENT_BASELINE,
+    parentMutation: false,
+    mode: state.mode,
+    rendered: true,
+    fallbackDemoted: true,
+    visualExpansion: false,
+    moduleLedger: Object.fromEntries(state.moduleResults),
+    scene: state.scene.status()
+  });
 
-    setStatus("Reusable ground environment engine active. Hex substrate live. Shimmer Protocol active.");
-    markDocument({
-      rendered: "true",
-      mode: state.mode,
-      sceneEngine: "active",
-      hexSubstrate: "live",
-      moduleDebt: state.moduleDebt.length ? state.moduleDebt.join(",") : "none"
-    });
-  } catch (error) {
-    const message = error?.message || "Hex substrate module chain failed.";
-    state.moduleDebt.push(message);
-    state.mode = "base";
-    setStatus(`Base renderer active. Hex substrate debt: ${message}`);
-    markDocument({
-      rendered: "true",
-      mode: state.mode,
-      sceneEngine: "deferred",
-      hexSubstrate: "deferred",
-      moduleDebt: state.moduleDebt.join(" | ")
-    });
-  }
+  renderLedger();
 }
 
-function init() {
-  markDocument({ boot: "started" });
-
+async function init() {
+  state.statusNode = document.querySelector("[data-render-status]");
   state.canvas = document.querySelector("[data-h-earth-ground-canvas]");
 
+  markDocument({ boot: "started" });
+  createLedgerRoot();
+  renderLedger();
+
   if (!state.canvas) {
-    state.bootError = "Ground canvas missing.";
-    setStatus(state.bootError);
-    markDocument({ rendered: "false", error: state.bootError });
+    state.mode = "failed";
+    setStatus("Ground canvas missing. Module ledger cannot attach.");
+    markDocument({ rendered: "false", error: "ground-canvas-missing" });
+    renderLedger();
     return;
   }
 
   state.ctx = state.canvas.getContext("2d", { alpha: false });
 
   if (!state.ctx) {
-    state.bootError = "Ground canvas 2D context unavailable.";
-    setStatus(state.bootError);
-    markDocument({ rendered: "false", error: state.bootError });
+    state.mode = "failed";
+    setStatus("Ground canvas 2D context unavailable.");
+    markDocument({ rendered: "false", error: "canvas-2d-context-unavailable" });
+    renderLedger();
     return;
   }
 
-  startBaseRenderer();
-  void attachHexScene();
+  startDiagnosticFallback();
+
+  const ledgerPassed = await runModuleLedger();
+
+  if (ledgerPassed) {
+    try {
+      await attachEnhancedScene();
+    } catch (error) {
+      state.mode = "diagnostic-fallback";
+      const message = error?.message || "enhanced scene attach failed";
+      setStatus(`Diagnostic fallback active. Enhanced attach failed: ${message}`);
+      markDocument({
+        rendered: "true",
+        mode: state.mode,
+        moduleLedger: "passed",
+        sceneEngine: "attach-failed",
+        attachError: message
+      });
+    }
+  }
 
   window.DGBHEarthGround = Object.freeze({
     status() {
       return Object.freeze({
         contract: CONTRACT,
-        route: "/showroom/globe/h-earth/",
-        parentBaseline: "/showroom/globe/",
+        generation: GENERATION,
+        route: ROUTE,
+        parentBaseline: PARENT_BASELINE,
         parentMutation: false,
-        reusableEnvironmentEngine: true,
-        staticImageSource: false,
-        shimmerProtocol: true,
-        hexSubstrate: state.mode === "enhanced" ? "live" : "pending-or-deferred",
         mode: state.mode,
-        bootError: state.bootError,
-        moduleDebt: [...state.moduleDebt],
+        fallbackDemoted: true,
+        visualExpansion: false,
+        hexSubstrate: state.mode === "enhanced" ? "live" : "not-yet-live",
+        shimmerProtocol: state.mode === "enhanced",
+        firstFailure: state.firstFailure,
+        moduleLedger: Object.fromEntries(state.moduleResults),
         scene: state.scene?.status?.() || null,
         receipt: state.receipt
       });

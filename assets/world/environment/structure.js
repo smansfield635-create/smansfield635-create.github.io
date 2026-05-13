@@ -1,13 +1,17 @@
 // /assets/world/environment/structure.js
 // TNT FULL-FILE REPLACEMENT
-// REUSABLE_PLANETARY_STRUCTURE_TNT_v1
-// Owns: Manor/building placement, scale, silhouette, windows, light, shadow, and terrain integration.
+// H_EARTH_HEX_VISUAL_DEFINITION_EXPANSION_STRUCTURE_TNT_v1
+// Owns: Manor massing, scale, rooflines, windows, light, shadow, terrain integration.
+// Consumes: shared hexfield substrate through frame.hexfield.
 
-export const ENVIRONMENT_STRUCTURE_VERSION = "reusable-planetary-structure-v1";
+export const ENVIRONMENT_STRUCTURE_VERSION =
+  "h-earth-hex-visual-definition-expansion-structure-v1";
+
+const TAU = Math.PI * 2;
 
 export function drawStructureLayer(ctx, profile, cell, frame) {
   if (!profile.structure.enabled) return;
-  if (profile.structure.type === "manor") drawManor(ctx, profile, frame);
+  if (profile.structure.type === "manor") drawManor(ctx, profile, cell, frame);
 }
 
 function roundedRect(ctx, x, y, w, h, r) {
@@ -31,66 +35,75 @@ function roundedRect(ctx, x, y, w, h, r) {
   ctx.quadraticCurveTo(x, y, x + radius, y);
 }
 
-function drawManor(ctx, profile, frame) {
-  const { width: w, height: h } = frame;
+function drawManor(ctx, profile, cell, frame) {
+  const { width: w, height: h, hexfield, time: t } = frame;
   const s = profile.structure;
   const palette = s.palette;
 
   const cx = w * s.x;
   const baseY = h * s.baseY;
-  const width = w * s.width;
-  const height = h * s.height;
-  const bodyTop = baseY - height * 0.58;
+
+  const width = w * s.width * 0.82;
+  const height = h * s.height * 0.86;
+  const bodyTop = baseY - height * 0.56;
   const bodyH = height * 0.55;
 
   ctx.save();
 
-  const contact = ctx.createRadialGradient(cx, baseY + h * 0.025, 0, cx, baseY + h * 0.040, width * 0.86);
-  contact.addColorStop(0, "rgba(0,0,0,.48)");
-  contact.addColorStop(0.63, "rgba(0,0,0,.18)");
+  drawGroundContact(ctx, cx, baseY, width, h);
+  drawManorBody(ctx, cx, bodyTop, baseY, bodyH, width, palette, w);
+  drawRoofs(ctx, cx, bodyTop, bodyH, width, height, palette);
+  drawPortico(ctx, cx, bodyTop, baseY, bodyH, width, palette);
+  drawWindows(ctx, cx, bodyTop, bodyH, baseY, width, palette);
+  drawManorLightBleed(ctx, cx, bodyTop, baseY, width, h);
+
+  ctx.restore();
+}
+
+function drawGroundContact(ctx, cx, baseY, width, h) {
+  const contact = ctx.createRadialGradient(cx, baseY + h * 0.024, 0, cx, baseY + h * 0.040, width * 0.95);
+  contact.addColorStop(0, "rgba(0,0,0,.50)");
+  contact.addColorStop(0.55, "rgba(0,0,0,.20)");
   contact.addColorStop(1, "rgba(0,0,0,0)");
   ctx.fillStyle = contact;
   ctx.beginPath();
-  ctx.ellipse(cx, baseY + h * 0.032, width * 0.86, h * 0.048, 0, 0, Math.PI * 2);
+  ctx.ellipse(cx, baseY + h * 0.032, width * 0.88, h * 0.045, 0, 0, TAU);
   ctx.fill();
+}
 
-  const wall = ctx.createLinearGradient(cx - width * 0.57, bodyTop, cx + width * 0.56, baseY);
+function drawManorBody(ctx, cx, bodyTop, baseY, bodyH, width, palette, canvasWidth) {
+  const wall = ctx.createLinearGradient(cx - width * 0.62, bodyTop, cx + width * 0.58, baseY);
   wall.addColorStop(0, `rgb(${palette.wallDark.join(",")})`);
   wall.addColorStop(0.25, `rgb(${palette.wallMid.join(",")})`);
-  wall.addColorStop(0.49, `rgb(${palette.wallLit.join(",")})`);
-  wall.addColorStop(0.73, `rgb(${palette.wallMid[0] * 0.72},${palette.wallMid[1] * 0.70},${palette.wallMid[2] * 0.70})`);
+  wall.addColorStop(0.48, `rgb(${palette.wallLit.join(",")})`);
+  wall.addColorStop(0.72, `rgb(${Math.round(palette.wallMid[0] * 0.72)},${Math.round(palette.wallMid[1] * 0.70)},${Math.round(palette.wallMid[2] * 0.70)})`);
   wall.addColorStop(1, `rgb(${palette.shadow.join(",")})`);
 
   ctx.fillStyle = wall;
-  ctx.strokeStyle = "rgba(238,207,143,.42)";
-  ctx.lineWidth = Math.max(1, w * 0.00125);
+  ctx.strokeStyle = "rgba(238,207,143,.38)";
+  ctx.lineWidth = Math.max(1, canvasWidth * 0.00105);
 
-  function rect(x, y, rw, rh, r = Math.max(2, w * 0.004)) {
+  function block(x, y, rw, rh, r = Math.max(2, canvasWidth * 0.0032)) {
     roundedRect(ctx, x, y, rw, rh, r);
     ctx.fill();
     ctx.stroke();
   }
 
-  rect(cx - width * 0.31, bodyTop + bodyH * 0.16, width * 0.62, bodyH * 0.86);
-  rect(cx - width * 0.17, bodyTop - bodyH * 0.02, width * 0.34, bodyH * 1.06);
-  rect(cx - width * 0.525, bodyTop + bodyH * 0.32, width * 0.23, bodyH * 0.70);
-  rect(cx + width * 0.295, bodyTop + bodyH * 0.32, width * 0.23, bodyH * 0.70);
-
-  drawRoofs(ctx, cx, bodyTop, bodyH, width, height, palette);
-  drawWindows(ctx, cx, bodyTop, bodyH, baseY, width, palette);
-
-  ctx.restore();
+  block(cx - width * 0.27, bodyTop + bodyH * 0.12, width * 0.54, bodyH * 0.92);
+  block(cx - width * 0.13, bodyTop - bodyH * 0.02, width * 0.26, bodyH * 1.06);
+  block(cx - width * 0.55, bodyTop + bodyH * 0.34, width * 0.28, bodyH * 0.70);
+  block(cx + width * 0.27, bodyTop + bodyH * 0.34, width * 0.28, bodyH * 0.70);
 }
 
 function drawRoofs(ctx, cx, bodyTop, bodyH, width, height, palette) {
   ctx.fillStyle = `rgb(${palette.roof.join(",")})`;
-  ctx.strokeStyle = "rgba(245,218,164,.36)";
+  ctx.strokeStyle = "rgba(245,218,164,.38)";
 
   const roofs = [
-    [[cx - width * 0.36, bodyTop + bodyH * 0.16], [cx, bodyTop - height * 0.23], [cx + width * 0.36, bodyTop + bodyH * 0.16]],
-    [[cx - width * 0.18, bodyTop - bodyH * 0.02], [cx, bodyTop - height * 0.30], [cx + width * 0.18, bodyTop - bodyH * 0.02]],
-    [[cx - width * 0.56, bodyTop + bodyH * 0.32], [cx - width * 0.405, bodyTop + bodyH * 0.10], [cx - width * 0.250, bodyTop + bodyH * 0.32]],
-    [[cx + width * 0.250, bodyTop + bodyH * 0.32], [cx + width * 0.405, bodyTop + bodyH * 0.10], [cx + width * 0.56, bodyTop + bodyH * 0.32]]
+    [[cx - width * 0.35, bodyTop + bodyH * 0.12], [cx, bodyTop - height * 0.25], [cx + width * 0.35, bodyTop + bodyH * 0.12]],
+    [[cx - width * 0.16, bodyTop - bodyH * 0.02], [cx, bodyTop - height * 0.32], [cx + width * 0.16, bodyTop - bodyH * 0.02]],
+    [[cx - width * 0.59, bodyTop + bodyH * 0.34], [cx - width * 0.41, bodyTop + bodyH * 0.11], [cx - width * 0.23, bodyTop + bodyH * 0.34]],
+    [[cx + width * 0.23, bodyTop + bodyH * 0.34], [cx + width * 0.41, bodyTop + bodyH * 0.11], [cx + width * 0.59, bodyTop + bodyH * 0.34]]
   ];
 
   roofs.forEach((points) => {
@@ -102,6 +115,38 @@ function drawRoofs(ctx, cx, bodyTop, bodyH, width, height, palette) {
     ctx.fill();
     ctx.stroke();
   });
+
+  ctx.strokeStyle = "rgba(255,231,173,.22)";
+  ctx.beginPath();
+  ctx.moveTo(cx - width * 0.28, bodyTop + bodyH * 0.105);
+  ctx.lineTo(cx + width * 0.28, bodyTop + bodyH * 0.105);
+  ctx.stroke();
+}
+
+function drawPortico(ctx, cx, bodyTop, baseY, bodyH, width, palette) {
+  const y = baseY - bodyH * 0.22;
+  const porticoW = width * 0.145;
+  const porticoH = bodyH * 0.24;
+
+  ctx.fillStyle = "rgba(32,28,24,.92)";
+  roundedRect(ctx, cx - porticoW * 0.50, y, porticoW, porticoH, 4);
+  ctx.fill();
+
+  ctx.strokeStyle = "rgba(255,225,160,.36)";
+  ctx.lineWidth = Math.max(1, width * 0.003);
+  ctx.beginPath();
+  ctx.moveTo(cx - porticoW * 0.65, y);
+  ctx.lineTo(cx, y - porticoH * 0.45);
+  ctx.lineTo(cx + porticoW * 0.65, y);
+  ctx.stroke();
+
+  ctx.strokeStyle = "rgba(255,225,160,.30)";
+  for (let i = -1; i <= 1; i += 1) {
+    ctx.beginPath();
+    ctx.moveTo(cx + i * porticoW * 0.28, y);
+    ctx.lineTo(cx + i * porticoW * 0.28, y + porticoH);
+    ctx.stroke();
+  }
 }
 
 function drawWindows(ctx, cx, bodyTop, bodyH, baseY, width, palette) {
@@ -110,17 +155,27 @@ function drawWindows(ctx, cx, bodyTop, bodyH, baseY, width, palette) {
   for (let floor = 0; floor < 3; floor += 1) {
     const y = bodyTop + bodyH * (0.28 + floor * 0.21);
 
-    for (let i = -5; i <= 5; i += 1) {
-      if (Math.abs(i) === 5 && floor === 0) continue;
+    for (let i = -6; i <= 6; i += 1) {
+      if (Math.abs(i) === 6 && floor === 0) continue;
       if (i === 0 && floor > 0) continue;
+      if (Math.abs(i) === 4 && floor === 2) continue;
 
-      const x = cx + i * width * 0.052;
-      roundedRect(ctx, x - width * 0.0105, y, width * 0.021, bodyH * 0.080, 2);
+      const x = cx + i * width * 0.042;
+      roundedRect(ctx, x - width * 0.0075, y, width * 0.015, bodyH * 0.072, 2);
       ctx.fill();
     }
   }
 
-  ctx.fillStyle = "rgba(18,14,13,.92)";
-  roundedRect(ctx, cx - width * 0.033, baseY - bodyH * 0.25, width * 0.066, bodyH * 0.25, 4);
+  ctx.fillStyle = "rgba(18,14,13,.94)";
+  roundedRect(ctx, cx - width * 0.024, baseY - bodyH * 0.24, width * 0.048, bodyH * 0.24, 4);
   ctx.fill();
+}
+
+function drawManorLightBleed(ctx, cx, bodyTop, baseY, width, h) {
+  const glow = ctx.createRadialGradient(cx, bodyTop + h * 0.10, 0, cx, bodyTop + h * 0.13, width * 0.72);
+  glow.addColorStop(0, "rgba(255,210,128,.105)");
+  glow.addColorStop(0.55, "rgba(255,210,128,.030)");
+  glow.addColorStop(1, "rgba(255,210,128,0)");
+  ctx.fillStyle = glow;
+  ctx.fillRect(cx - width * 0.80, bodyTop - h * 0.04, width * 1.60, baseY - bodyTop + h * 0.08);
 }

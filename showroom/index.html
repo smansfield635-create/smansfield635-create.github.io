@@ -3,10 +3,11 @@
   lang="en"
   data-page="showroom-locked-crown-cut-diamond"
   data-route="/showroom/"
-  data-contract="SHOWROOM_LOCKED_CROWN_CUT_256_LATTICE_RESTORE_TNT_v1"
+  data-contract="SHOWROOM_HTML_CACHE_BUST_DIAMOND_SCRIPT_BIND_TNT_v7"
   data-role="showroom-cover-object"
   data-diamond-lock="CROWN_CUT_256_LATTICE_FIXED_FORM"
   data-touch-glide-diamond="true"
+  data-js-cache-key="SHOWROOM_DIAMOND_ROUND_BRILLIANT_SOLID_SHAPE_TNT_v6"
   data-earth-record="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -15,6 +16,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <title>Showroom · Diamond Gate Bridge</title>
   <meta
     name="description"
@@ -291,6 +297,14 @@
       line-height: 1.55;
     }
 
+    .cache-proof {
+      margin-top: 14px;
+      color: rgba(238,244,255,0.42);
+      font: 800 0.68rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+    }
+
     .footer {
       margin-top: 20px;
       padding: 20px 0 0;
@@ -341,7 +355,7 @@
         <p class="eyebrow">Showroom · locked cover object</p>
         <h1>The Diamond holds the room.</h1>
         <p class="lede">
-          The Showroom is restored to the locked Crown Cut 256 Lattice Diamond. Earth belongs under the Globe route, not here.
+          The Showroom holds the locked Crown Cut 256 Lattice Diamond. Touch inspection rotates the camera around a fixed solid crystal; it does not mutate the Diamond shape.
         </p>
 
         <div class="actions">
@@ -362,12 +376,14 @@
           data-showroom-diamond-stage
           data-diamond-lock="CROWN_CUT_256_LATTICE_FIXED_FORM"
           data-touch-glide="true"
+          data-inspection-control="camera-view-rotation"
+          data-geometry-mutable-by-touch="false"
           aria-label="Touchable Crown Cut 256 Lattice Diamond"
         >
           <canvas class="diamond-canvas" data-showroom-diamond-canvas></canvas>
           <div class="diamond-route">Cover → Globe Showcase → Private Inspection</div>
           <div class="diamond-instruction">
-            Drag to rotate. Release to inspect with momentum. Double tap to reset.
+            Drag to inspect the fixed crystal. Release for momentum. Double tap to reset.
           </div>
         </div>
 
@@ -375,7 +391,10 @@
           <p class="label">Object truth</p>
           <h2>Render the real claim.</h2>
           <p>
-            The page shows a crown-cut lattice diamond, not a flat icon standing in for one. Its structure remains fixed while touch controls rotate the view.
+            This is a solid crown-cut lattice diamond. The crystal form remains fixed while touch controls rotate the inspection view.
+          </p>
+          <p class="cache-proof">
+            HTML cache key: SHOWROOM_HTML_CACHE_BUST_DIAMOND_SCRIPT_BIND_TNT_v7
           </p>
         </article>
       </section>
@@ -386,6 +405,13 @@
     </footer>
   </div>
 
-  <script type="module" src="/showroom/index.js"></script>
+  <script>
+    window.DGB_SHOWROOM_HTML_CACHE_KEY = "SHOWROOM_HTML_CACHE_BUST_DIAMOND_SCRIPT_BIND_TNT_v7";
+    window.DGB_SHOWROOM_JS_CACHE_KEY = "SHOWROOM_DIAMOND_ROUND_BRILLIANT_SOLID_SHAPE_TNT_v6";
+  </script>
+  <script
+    type="module"
+    src="/showroom/index.js?v=SHOWROOM_DIAMOND_ROUND_BRILLIANT_SOLID_SHAPE_TNT_v6"
+  ></script>
 </body>
 </html>

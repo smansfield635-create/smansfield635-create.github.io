@@ -1,129 +1,128 @@
+const FIBONACCI_SEQUENCE = Object.freeze([1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233]);
+const RUNTIME_FIELD_SIZE = 256;
+const TAU = Math.PI * 2;
+const PHI = (1 + Math.sqrt(5)) / 2;
+const MAX_DPR = 1.5;
+
 const GLOBE_SELECTOR_STATE = Object.freeze({
-  contract: "SHOWROOM_GLOBE_SCREENSHOT_BASELINE_REBUILD_TNT_v8",
-  previousContract: "SHOWROOM_GLOBE_CINEMATIC_MATERIAL_RESTORATION_TNT_v7",
+  contract: "SHOWROOM_GLOBE_SATELLITE_PLANETARY_VIEW_RENEWAL_TNT_v9",
+  previousContract: "SHOWROOM_GLOBE_SCREENSHOT_BASELINE_REBUILD_TNT_v8",
   route: "/showroom/globe/",
   role: "globe-system-gateway-selector",
   gatewayAuthority: true,
   visualScaleAuthority: true,
-  diamondInstrument: false,
-  runtimeStabilized: true,
-  mobileStageLayoutGovernor: true,
-  protectedVerticalBands: true,
-  cinematicMaterialRestored: true,
-  screenshotBaselineRebuild: true,
-  proceduralBlobPrimary: false,
+  satellitePlanetaryView: true,
+  contractRenewal: true,
+  fibonacciRuntime: true,
+  lattice256Runtime: true,
+  runtimeFieldSize: RUNTIME_FIELD_SIZE,
+  fibonacciSequence: FIBONACCI_SEQUENCE,
+  runtimeMotionLaw: "fibonacci-within-256-lattice",
+  materialSource: "satellite-planetary-view:v9",
   opaqueGlobeBody: true,
-  stripSamplingRenderer: false,
-  blockTileLandRender: false,
-  materialSource: "screenshot-baseline-rebuild:v8",
+  cartoonFallbackPrimary: false,
+  verticalSplitDominant: false,
+  twoSeasonRead: false,
+  groundLevelBuildActive: false,
+  diamondInstrument: false,
+  publicReceiptsVisible: false,
+  generatedImage: false,
+  graphicBox: false,
+  heavyRuntimeLoaded: false,
   childRoutes: Object.freeze({
     earth: "/showroom/globe/earth/",
     "h-earth": "/showroom/globe/h-earth/",
     audralia: "/showroom/globe/audralia/"
-  }),
-  publicReceiptsVisible: false,
-  generatedImage: false,
-  graphicBox: false,
-  heavyRuntimeLoaded: false
+  })
 });
 
 const BODY_CONFIG = Object.freeze({
   earth: Object.freeze({
     key: "earth",
     title: "Earth",
-    subtitle: "Reference Body · cinematic orbital baseline",
+    subtitle: "Reference Body · satellite planetary view",
     openText: "Open Earth",
     href: "/showroom/globe/earth/",
     palette: Object.freeze({
-      space: [3, 8, 18],
-      core: [13, 52, 86],
-      core2: [24, 92, 134],
-      deep: [4, 18, 44],
-      land: [112, 128, 88],
-      land2: [164, 150, 101],
-      high: [218, 214, 174],
-      scar: [19, 44, 46],
-      glow: [112, 184, 244],
-      shell: [190, 225, 255],
-      water: [30, 134, 168]
+      ocean: [20, 96, 146],
+      ocean2: [14, 68, 118],
+      deep: [5, 20, 52],
+      shelf: [72, 156, 178],
+      land: [110, 128, 84],
+      land2: [166, 154, 104],
+      high: [218, 210, 166],
+      ice: [226, 238, 240],
+      cloud: [238, 246, 255],
+      glow: [126, 194, 246]
     }),
-    features: Object.freeze({
-      basins: 34,
-      ridges: 28,
-      craters: 30,
-      scars: 16,
-      glints: 7
-    })
+    satellites: Object.freeze([
+      { lat: 0.18, lon: -1.94, rx: 0.42, ry: 0.72, seed: 11, tone: "land" },
+      { lat: -0.52, lon: -1.35, rx: 0.26, ry: 0.46, seed: 12, tone: "land" },
+      { lat: 0.30, lon: 0.18, rx: 0.54, ry: 0.52, seed: 13, tone: "land" },
+      { lat: -0.28, lon: 0.78, rx: 0.32, ry: 0.34, seed: 14, tone: "land" },
+      { lat: 0.73, lon: -0.45, rx: 0.64, ry: 0.14, seed: 15, tone: "ice" }
+    ])
   }),
 
   "h-earth": Object.freeze({
     key: "h-earth",
     title: "H-Earth",
-    subtitle: "Hybrid Earth · cinematic inspection gateway",
+    subtitle: "Hybrid Earth · satellite planetary view",
     openText: "Open H-Earth",
     href: "/showroom/globe/h-earth/",
     palette: Object.freeze({
-      space: [3, 8, 18],
-      core: [13, 70, 68],
-      core2: [70, 136, 112],
-      deep: [4, 30, 34],
-      land: [154, 137, 74],
-      land2: [202, 170, 84],
-      high: [236, 214, 138],
-      scar: [18, 50, 42],
-      glow: [153, 238, 190],
-      shell: [206, 255, 226],
-      water: [58, 170, 150]
+      ocean: [38, 122, 116],
+      ocean2: [22, 86, 96],
+      deep: [4, 32, 42],
+      shelf: [80, 170, 150],
+      land: [145, 132, 78],
+      land2: [196, 168, 86],
+      high: [236, 214, 142],
+      ice: [218, 238, 226],
+      cloud: [226, 248, 238],
+      glow: [152, 236, 190]
     }),
-    features: Object.freeze({
-      basins: 42,
-      ridges: 34,
-      craters: 38,
-      scars: 24,
-      glints: 9
-    })
+    satellites: Object.freeze([
+      { lat: 0.08, lon: -1.62, rx: 0.56, ry: 0.74, seed: 31, tone: "land" },
+      { lat: -0.36, lon: -0.60, rx: 0.38, ry: 0.50, seed: 32, tone: "land" },
+      { lat: 0.28, lon: 0.76, rx: 0.50, ry: 0.54, seed: 33, tone: "land" },
+      { lat: -0.56, lon: 1.48, rx: 0.30, ry: 0.28, seed: 34, tone: "land" },
+      { lat: 0.69, lon: 2.10, rx: 0.44, ry: 0.18, seed: 35, tone: "land" }
+    ])
   }),
 
   audralia: Object.freeze({
     key: "audralia",
     title: "Audralia",
-    subtitle: "Constructed World · cinematic selector material",
+    subtitle: "Constructed World · satellite planetary view",
     openText: "Open Audralia",
     href: "/showroom/globe/audralia/",
     palette: Object.freeze({
-      space: [3, 8, 18],
-      core: [56, 40, 82],
-      core2: [126, 84, 112],
-      deep: [16, 11, 36],
-      land: [137, 91, 82],
-      land2: [184, 126, 104],
-      high: [226, 168, 142],
-      scar: [42, 24, 56],
-      glow: [198, 160, 250],
-      shell: [232, 220, 255],
-      water: [92, 102, 156]
+      ocean: [72, 76, 126],
+      ocean2: [46, 48, 94],
+      deep: [13, 12, 42],
+      shelf: [108, 110, 154],
+      land: [134, 91, 82],
+      land2: [182, 122, 100],
+      high: [226, 166, 138],
+      ice: [220, 214, 238],
+      cloud: [232, 226, 255],
+      glow: [198, 160, 250]
     }),
-    features: Object.freeze({
-      basins: 46,
-      ridges: 38,
-      craters: 42,
-      scars: 30,
-      glints: 8
-    })
+    satellites: Object.freeze([
+      { lat: -0.02, lon: -1.18, rx: 0.64, ry: 0.68, seed: 51, tone: "land" },
+      { lat: 0.40, lon: 0.56, rx: 0.40, ry: 0.36, seed: 52, tone: "land" },
+      { lat: -0.46, lon: 1.34, rx: 0.34, ry: 0.28, seed: 53, tone: "land" },
+      { lat: 0.76, lon: -2.26, rx: 0.40, ry: 0.16, seed: 54, tone: "land" }
+    ])
   })
 });
-
-const TAU = Math.PI * 2;
-const PHI = (1 + Math.sqrt(5)) / 2;
-const MAX_DPR = 1.5;
-const FRAME_BUCKETS = 96;
-const PITCH_BUCKETS = 17;
 
 const state = {
   body: "earth",
   mode: "auto",
-  yaw: 0.24,
-  pitch: -0.08,
+  yaw: 0.18,
+  pitch: -0.06,
   velocityYaw: 0,
   velocityPitch: 0,
   dragging: false,
@@ -136,8 +135,10 @@ const state = {
   width: 0,
   height: 0,
   needsRender: true,
-  materialCache: Object.create(null),
-  frameCache: Object.create(null)
+  materials: Object.create(null),
+  frames: Object.create(null),
+  runtimeAddress: 0,
+  fibonacciBand: 8
 };
 
 function clamp(value, min, max) {
@@ -164,11 +165,10 @@ function seededSigned(index, salt) {
   return seededUnit(index, salt) * 2 - 1;
 }
 
-function makeCanvas(width, height, alpha = true) {
+function makeCanvas(width, height) {
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
-  canvas.dataset.alpha = alpha ? "true" : "false";
   return canvas;
 }
 
@@ -191,7 +191,6 @@ function resizeCanvas(canvas) {
 function getLayoutMetrics(width, height) {
   const cssWidth = width / state.dpr;
   const isMobile = cssWidth <= 560;
-
   const topBand = isMobile ? 188 * state.dpr : 176 * state.dpr;
   const bottomBand = isMobile ? 214 * state.dpr : 198 * state.dpr;
   const available = Math.max(220 * state.dpr, height - topBand - bottomBand);
@@ -211,212 +210,171 @@ function getLayoutMetrics(width, height) {
   });
 }
 
-function buildMaterial(bodyKey) {
-  if (state.materialCache[bodyKey]) return state.materialCache[bodyKey];
-
-  const config = BODY_CONFIG[bodyKey] || BODY_CONFIG.earth;
-  const features = [];
-
-  let id = 0;
-
-  for (let i = 0; i < config.features.basins; i += 1) {
-    features.push(Object.freeze({
-      type: "basin",
-      id: id++,
-      lat: seededSigned(i, bodyKey.length + 10) * 1.12,
-      lon: seededSigned(i, bodyKey.length + 11) * Math.PI,
-      size: 0.070 + seededUnit(i, bodyKey.length + 12) * 0.155,
-      stretch: 0.62 + seededUnit(i, bodyKey.length + 13) * 0.86,
-      angle: seededUnit(i, bodyKey.length + 14) * TAU,
-      tone: seededUnit(i, bodyKey.length + 15)
-    }));
-  }
-
-  for (let i = 0; i < config.features.craters; i += 1) {
-    features.push(Object.freeze({
-      type: "crater",
-      id: id++,
-      lat: seededSigned(i, bodyKey.length + 30) * 1.06,
-      lon: seededSigned(i, bodyKey.length + 31) * Math.PI,
-      size: 0.026 + seededUnit(i, bodyKey.length + 32) * 0.072,
-      stretch: 0.76 + seededUnit(i, bodyKey.length + 33) * 0.50,
-      angle: seededUnit(i, bodyKey.length + 34) * TAU,
-      tone: seededUnit(i, bodyKey.length + 35)
-    }));
-  }
-
-  for (let i = 0; i < config.features.ridges; i += 1) {
-    const points = [];
-    const lat = seededSigned(i, bodyKey.length + 50) * 1.04;
-    const lon = seededSigned(i, bodyKey.length + 51) * Math.PI;
-    const length = 0.18 + seededUnit(i, bodyKey.length + 52) * 0.42;
-    const bend = seededSigned(i, bodyKey.length + 53) * 0.16;
-
-    for (let j = 0; j < 9; j += 1) {
-      const t = j / 8;
-      points.push(Object.freeze({
-        lat: clamp(lat + (t - 0.5) * length + Math.sin(t * Math.PI) * bend, -1.38, 1.38),
-        lon: lon + (t - 0.5) * length * (0.70 + seededUnit(i, bodyKey.length + 54) * 0.60)
-      }));
-    }
-
-    features.push(Object.freeze({
-      type: "ridge",
-      id: id++,
-      points: Object.freeze(points),
-      width: 0.005 + seededUnit(i, bodyKey.length + 55) * 0.010,
-      tone: seededUnit(i, bodyKey.length + 56)
-    }));
-  }
-
-  for (let i = 0; i < config.features.scars; i += 1) {
-    const points = [];
-    const lat = seededSigned(i, bodyKey.length + 70) * 1.00;
-    const lon = seededSigned(i, bodyKey.length + 71) * Math.PI;
-    const length = 0.34 + seededUnit(i, bodyKey.length + 72) * 0.60;
-    const bend = seededSigned(i, bodyKey.length + 73) * 0.22;
-
-    for (let j = 0; j < 12; j += 1) {
-      const t = j / 11;
-      points.push(Object.freeze({
-        lat: clamp(lat + (t - 0.5) * length * 0.55 + Math.sin(t * Math.PI) * bend, -1.34, 1.34),
-        lon: lon + (t - 0.5) * length
-      }));
-    }
-
-    features.push(Object.freeze({
-      type: "scar",
-      id: id++,
-      points: Object.freeze(points),
-      width: 0.006 + seededUnit(i, bodyKey.length + 74) * 0.014,
-      tone: seededUnit(i, bodyKey.length + 75)
-    }));
-  }
-
-  for (let i = 0; i < config.features.glints; i += 1) {
-    features.push(Object.freeze({
-      type: "glint",
-      id: id++,
-      lat: seededSigned(i, bodyKey.length + 90) * 0.94,
-      lon: seededSigned(i, bodyKey.length + 91) * Math.PI,
-      size: 0.018 + seededUnit(i, bodyKey.length + 92) * 0.034,
-      tone: seededUnit(i, bodyKey.length + 93)
-    }));
-  }
-
-  const material = Object.freeze({
-    key: bodyKey,
-    source: `screenshot-baseline-rebuild:v8:${bodyKey}`,
-    features: Object.freeze(features)
-  });
-
-  state.materialCache[bodyKey] = material;
-  return material;
+function resolveRuntimeAddress() {
+  const bodyIndex = Object.keys(BODY_CONFIG).indexOf(state.body);
+  const yawBucket = Math.round((((state.yaw % TAU) + TAU) % TAU) / TAU * 64) % 64;
+  const pitchBucket = Math.round(((state.pitch + 0.6) / 1.2) * 15);
+  const modeBucket = state.mode === "stable" ? 0 : state.mode === "soft" ? 1 : 2;
+  state.runtimeAddress = (bodyIndex * 64 + yawBucket + pitchBucket * 4 + modeBucket) % RUNTIME_FIELD_SIZE;
+  return state.runtimeAddress;
 }
 
-function spherePoint(lat, lon, yaw, pitch) {
-  const adjustedLon = lon + yaw;
-  const cosLat = Math.cos(lat);
+function fibonacciBandForMode() {
+  if (state.mode === "stable") return 1;
+  if (state.mode === "soft") return 21;
+  return 13;
+}
 
-  const x = Math.cos(adjustedLon) * cosLat;
-  const y = Math.sin(lat);
-  const z = Math.sin(adjustedLon) * cosLat;
+function buildMaterial(bodyKey) {
+  if (state.materials[bodyKey]) return state.materials[bodyKey];
 
-  const cp = Math.cos(pitch);
-  const sp = Math.sin(pitch);
+  const config = BODY_CONFIG[bodyKey] || BODY_CONFIG.earth;
+  const material = {
+    key: bodyKey,
+    source: `satellite-planetary-view:v9:${bodyKey}`,
+    surface: [],
+    clouds: [],
+    ridges: []
+  };
 
-  const y2 = y * cp - z * sp;
-  const z2 = y * sp + z * cp;
+  for (const form of config.satellites) {
+    material.surface.push(Object.freeze(form));
+  }
 
-  return { x, y: y2, z: z2 };
+  for (let i = 0; i < 26; i += 1) {
+    material.clouds.push(Object.freeze({
+      lat: seededSigned(i, bodyKey.length + 100) * 0.88,
+      lon: seededSigned(i, bodyKey.length + 101) * Math.PI,
+      rx: 0.08 + seededUnit(i, bodyKey.length + 102) * 0.16,
+      ry: 0.012 + seededUnit(i, bodyKey.length + 103) * 0.030,
+      angle: seededUnit(i, bodyKey.length + 104) * TAU,
+      alpha: 0.035 + seededUnit(i, bodyKey.length + 105) * 0.055
+    }));
+  }
+
+  for (let i = 0; i < 30; i += 1) {
+    const points = [];
+    const baseLat = seededSigned(i, bodyKey.length + 200) * 0.94;
+    const baseLon = seededSigned(i, bodyKey.length + 201) * Math.PI;
+    const length = 0.16 + seededUnit(i, bodyKey.length + 202) * 0.34;
+    const bend = seededSigned(i, bodyKey.length + 203) * 0.10;
+
+    for (let j = 0; j < 8; j += 1) {
+      const t = j / 7;
+      points.push(Object.freeze({
+        lat: clamp(baseLat + (t - 0.5) * length * 0.58 + Math.sin(t * Math.PI) * bend, -1.35, 1.35),
+        lon: baseLon + (t - 0.5) * length
+      }));
+    }
+
+    material.ridges.push(Object.freeze({
+      points: Object.freeze(points),
+      alpha: 0.08 + seededUnit(i, bodyKey.length + 204) * 0.10,
+      width: 0.003 + seededUnit(i, bodyKey.length + 205) * 0.006
+    }));
+  }
+
+  state.materials[bodyKey] = Object.freeze({
+    key: material.key,
+    source: material.source,
+    surface: Object.freeze(material.surface),
+    clouds: Object.freeze(material.clouds),
+    ridges: Object.freeze(material.ridges)
+  });
+
+  return state.materials[bodyKey];
 }
 
 function project(lat, lon, yaw, pitch, cx, cy, radius) {
-  const p = spherePoint(lat, lon, yaw, pitch);
-  const visible = p.z > -0.16;
-  const depth = clamp((p.z + 1) * 0.5, 0, 1);
-  const perspective = 0.90 + depth * 0.16;
+  const adjustedLon = lon + yaw;
+  const cosLat = Math.cos(lat);
+  const x0 = Math.cos(adjustedLon) * cosLat;
+  const y0 = Math.sin(lat);
+  const z0 = Math.sin(adjustedLon) * cosLat;
+
+  const cp = Math.cos(pitch);
+  const sp = Math.sin(pitch);
+  const y1 = y0 * cp - z0 * sp;
+  const z1 = y0 * sp + z0 * cp;
+
+  const visible = z1 > -0.12;
+  const depth = clamp((z1 + 1) * 0.5, 0, 1);
+  const perspective = 0.94 + depth * 0.10;
 
   return Object.freeze({
-    x: cx + p.x * radius * perspective,
-    y: cy - p.y * radius * perspective,
-    z: p.z,
+    x: cx + x0 * radius * perspective,
+    y: cy - y1 * radius * perspective,
+    z: z1,
     depth,
-    visible,
-    perspective
+    visible
   });
+}
+
+function frameBucket(value, count) {
+  return ((Math.round((((value % TAU) + TAU) % TAU) / TAU * count) % count) + count) % count;
 }
 
 function getFrameKey(bodyKey, radius, yaw, pitch) {
-  const radiusBucket = Math.round(radius / 12) * 12;
-  const yawBucket = ((Math.round((((yaw % TAU) + TAU) % TAU) / TAU * FRAME_BUCKETS) % FRAME_BUCKETS) + FRAME_BUCKETS) % FRAME_BUCKETS;
-  const pitchBucket = Math.round(((clamp(pitch, -0.60, 0.60) + 0.60) / 1.20) * (PITCH_BUCKETS - 1));
-  return `${bodyKey}:${radiusBucket}:${yawBucket}:${pitchBucket}`;
+  const fibonacciBand = fibonacciBandForMode();
+  const yawBuckets = state.mode === "stable" ? 34 : state.mode === "soft" ? 89 : 55;
+  const pitchBuckets = 13;
+  const radiusBucket = Math.round(radius / 10) * 10;
+  const yawBucket = frameBucket(yaw, yawBuckets);
+  const pitchBucket = Math.round(((clamp(pitch, -0.60, 0.60) + 0.60) / 1.20) * (pitchBuckets - 1));
+  return `${bodyKey}:${radiusBucket}:${yawBuckets}:${yawBucket}:${pitchBucket}:${fibonacciBand}`;
 }
 
-function getBucketPose(yaw, pitch) {
-  const yawBucket = ((Math.round((((yaw % TAU) + TAU) % TAU) / TAU * FRAME_BUCKETS) % FRAME_BUCKETS) + FRAME_BUCKETS) % FRAME_BUCKETS;
-  const pitchBucket = Math.round(((clamp(pitch, -0.60, 0.60) + 0.60) / 1.20) * (PITCH_BUCKETS - 1));
+function bucketPose(yaw, pitch) {
+  const yawBuckets = state.mode === "stable" ? 34 : state.mode === "soft" ? 89 : 55;
+  const pitchBuckets = 13;
+  const yawBucket = frameBucket(yaw, yawBuckets);
+  const pitchBucket = Math.round(((clamp(pitch, -0.60, 0.60) + 0.60) / 1.20) * (pitchBuckets - 1));
 
   return Object.freeze({
-    yaw: (yawBucket / FRAME_BUCKETS) * TAU,
-    pitch: (pitchBucket / (PITCH_BUCKETS - 1)) * 1.20 - 0.60
+    yaw: (yawBucket / yawBuckets) * TAU,
+    pitch: (pitchBucket / (pitchBuckets - 1)) * 1.20 - 0.60
   });
 }
 
-function getCinematicFrame(bodyKey, radius, yaw, pitch) {
+function getFrame(bodyKey, radius, yaw, pitch) {
   const key = getFrameKey(bodyKey, radius, yaw, pitch);
+  if (state.frames[key]) return state.frames[key];
 
-  if (state.frameCache[key]) return state.frameCache[key];
-
-  const frame = buildCinematicFrame(bodyKey, radius, yaw, pitch);
-  state.frameCache[key] = frame;
-  trimFrameCache(bodyKey);
+  const frame = buildFrame(bodyKey, radius, yaw, pitch);
+  state.frames[key] = frame;
+  trimFrames();
   return frame;
 }
 
-function trimFrameCache(bodyKey) {
-  const keys = Object.keys(state.frameCache);
-  if (keys.length <= 42) return;
+function trimFrames() {
+  const keys = Object.keys(state.frames);
+  if (keys.length <= 55) return;
 
-  let removed = 0;
-
-  for (const key of keys) {
-    if (!key.startsWith(`${bodyKey}:`) && removed < 8) {
-      delete state.frameCache[key];
-      removed += 1;
-    }
-  }
-
-  if (Object.keys(state.frameCache).length > 52) {
-    const remaining = Object.keys(state.frameCache);
-    for (let i = 0; i < remaining.length - 52; i += 1) {
-      delete state.frameCache[remaining[i]];
-    }
+  for (let i = 0; i < keys.length - 55; i += 1) {
+    delete state.frames[keys[i]];
   }
 }
 
-function buildCinematicFrame(bodyKey, radius, yaw, pitch) {
+function buildFrame(bodyKey, radius, yaw, pitch) {
   const config = BODY_CONFIG[bodyKey] || BODY_CONFIG.earth;
   const material = buildMaterial(bodyKey);
-  const pose = getBucketPose(yaw, pitch);
+  const pose = bucketPose(yaw, pitch);
   const pad = Math.ceil(radius * 0.28);
   const size = Math.ceil(radius * 2 + pad * 2);
-  const canvas = makeCanvas(size, size, true);
+  const canvas = makeCanvas(size, size);
   const ctx = canvas.getContext("2d", { alpha: true });
-
   const cx = size * 0.5;
   const cy = size * 0.5;
 
-  drawOuterAura(ctx, config, cx, cy, radius);
-  drawOpaqueSphereBase(ctx, config, cx, cy, radius);
-  drawCinematicSurface(ctx, config, material, cx, cy, radius, pose.yaw, pose.pitch);
-  drawHydrationShell(ctx, config, cx, cy, radius);
-  drawAtmosphere(ctx, config, cx, cy, radius);
+  drawOuterRim(ctx, config, cx, cy, radius);
+  drawOpaquePlanet(ctx, config, cx, cy, radius);
+  drawSatelliteSurface(ctx, config, material, cx, cy, radius, pose.yaw, pose.pitch);
+  drawUnifiedSatelliteClouds(ctx, config, material, cx, cy, radius, pose.yaw, pose.pitch);
+  drawSatelliteLighting(ctx, config, cx, cy, radius);
+  drawAtmosphericRim(ctx, config, cx, cy, radius);
 
   return Object.freeze({
-    key: `${bodyKey}:${Math.round(radius)}:${pose.yaw.toFixed(3)}:${pose.pitch.toFixed(3)}`,
-    source: `screenshot-baseline-rebuild:v8:${bodyKey}`,
+    source: `satellite-planetary-view:v9:${bodyKey}`,
     canvas,
     size,
     radius,
@@ -424,346 +382,208 @@ function buildCinematicFrame(bodyKey, radius, yaw, pitch) {
   });
 }
 
-function drawOuterAura(ctx, config, cx, cy, radius) {
-  const g = ctx.createRadialGradient(cx, cy, radius * 0.76, cx, cy, radius * 1.42);
-  g.addColorStop(0.00, "rgba(255,255,255,0)");
-  g.addColorStop(0.48, rgb(config.palette.glow, 0.08));
-  g.addColorStop(0.78, rgb(config.palette.glow, 0.18));
-  g.addColorStop(1.00, "rgba(255,255,255,0)");
+function drawOuterRim(ctx, config, cx, cy, radius) {
+  const glow = ctx.createRadialGradient(cx, cy, radius * 0.85, cx, cy, radius * 1.34);
+  glow.addColorStop(0.00, "rgba(255,255,255,0)");
+  glow.addColorStop(0.66, rgb(config.palette.glow, 0.13));
+  glow.addColorStop(1.00, "rgba(255,255,255,0)");
 
   ctx.save();
   ctx.globalCompositeOperation = "screen";
-  ctx.fillStyle = g;
+  ctx.fillStyle = glow;
   ctx.beginPath();
-  ctx.arc(cx, cy, radius * 1.44, 0, TAU);
+  ctx.arc(cx, cy, radius * 1.34, 0, TAU);
   ctx.fill();
   ctx.restore();
 }
 
-function drawOpaqueSphereBase(ctx, config, cx, cy, radius) {
+function drawOpaquePlanet(ctx, config, cx, cy, radius) {
   ctx.save();
   ctx.beginPath();
   ctx.arc(cx, cy, radius, 0, TAU);
   ctx.clip();
 
-  const base = ctx.createRadialGradient(
-    cx - radius * 0.36,
-    cy - radius * 0.42,
-    radius * 0.05,
-    cx + radius * 0.14,
-    cy + radius * 0.12,
-    radius * 1.16
-  );
-
-  base.addColorStop(0.00, rgb(mixColor(config.palette.core2, [255,255,255], 0.12), 1));
-  base.addColorStop(0.28, rgb(config.palette.core2, 1));
-  base.addColorStop(0.58, rgb(config.palette.core, 1));
-  base.addColorStop(0.82, rgb(mixColor(config.palette.core, config.palette.deep, 0.55), 1));
+  const base = ctx.createRadialGradient(cx, cy, radius * 0.05, cx, cy, radius * 1.04);
+  base.addColorStop(0.00, rgb(config.palette.ocean, 1));
+  base.addColorStop(0.45, rgb(mixColor(config.palette.ocean, config.palette.ocean2, 0.36), 1));
+  base.addColorStop(0.76, rgb(config.palette.ocean2, 1));
   base.addColorStop(1.00, rgb(config.palette.deep, 1));
 
   ctx.fillStyle = base;
   ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-  const meridian = ctx.createLinearGradient(cx - radius, cy, cx + radius, cy);
-  meridian.addColorStop(0.00, "rgba(255,255,255,0.03)");
-  meridian.addColorStop(0.35, "rgba(255,255,255,0.00)");
-  meridian.addColorStop(0.70, "rgba(0,0,0,0.08)");
-  meridian.addColorStop(1.00, "rgba(0,0,0,0.30)");
-  ctx.fillStyle = meridian;
-  ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+  for (let i = 0; i < 22; i += 1) {
+    const angle = seededUnit(i, config.key.length + 310) * TAU;
+    const distance = seededUnit(i, config.key.length + 311) * radius * 0.88;
+    const x = cx + Math.cos(angle) * distance;
+    const y = cy + Math.sin(angle) * distance;
+    const r = radius * (0.04 + seededUnit(i, config.key.length + 312) * 0.12);
+    const patch = ctx.createRadialGradient(x, y, 0, x, y, r);
+    patch.addColorStop(0, rgb(config.palette.shelf, 0.18));
+    patch.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = patch;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, TAU);
+    ctx.fill();
+  }
 
   ctx.restore();
 }
 
-function drawCinematicSurface(ctx, config, material, cx, cy, radius, yaw, pitch) {
+function drawSatelliteSurface(ctx, config, material, cx, cy, radius, yaw, pitch) {
   ctx.save();
   ctx.beginPath();
   ctx.arc(cx, cy, radius, 0, TAU);
   ctx.clip();
 
-  drawBasins(ctx, config, material, cx, cy, radius, yaw, pitch);
-  drawRidges(ctx, config, material, cx, cy, radius, yaw, pitch);
-  drawScars(ctx, config, material, cx, cy, radius, yaw, pitch);
-  drawCraters(ctx, config, material, cx, cy, radius, yaw, pitch);
-  drawSurfaceMist(ctx, config, material, cx, cy, radius, yaw, pitch);
-  drawGlintsOnSurface(ctx, config, material, cx, cy, radius, yaw, pitch);
-  drawFinalSphereLighting(ctx, config, cx, cy, radius);
+  for (const form of material.surface) {
+    const p = project(form.lat, form.lon, yaw, pitch, cx, cy, radius);
+    if (!p.visible) continue;
+
+    const visible = clamp((p.z + 0.12) / 1.12, 0, 1);
+    const rx = form.rx * radius * (0.70 + p.depth * 0.22);
+    const ry = form.ry * radius * (0.60 + p.depth * 0.18);
+    const colorA = form.tone === "ice" ? config.palette.ice : config.palette.land;
+    const colorB = form.tone === "ice" ? config.palette.cloud : config.palette.land2;
+    const colorC = form.tone === "ice" ? config.palette.ice : config.palette.high;
+
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate((form.seed * 0.37 + yaw * 0.05) % TAU);
+
+    const land = ctx.createRadialGradient(-rx * 0.18, -ry * 0.26, Math.max(3, rx * 0.06), 0, 0, Math.max(rx, ry));
+    land.addColorStop(0.00, rgb(mixColor(colorB, colorC, 0.28), 0.86 * visible));
+    land.addColorStop(0.45, rgb(colorA, 0.82 * visible));
+    land.addColorStop(0.82, rgb(mixColor(colorA, config.palette.deep, 0.28), 0.76 * visible));
+    land.addColorStop(1.00, "rgba(255,255,255,0)");
+
+    ctx.fillStyle = land;
+    drawOrganicEllipse(ctx, rx, ry, form.seed);
+    ctx.fill();
+
+    ctx.strokeStyle = rgb(config.palette.shelf, 0.20 * visible);
+    ctx.lineWidth = Math.max(0.7, radius * 0.0028);
+    drawOrganicEllipse(ctx, rx * 0.98, ry * 0.98, form.seed);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  drawSatelliteRidges(ctx, config, material, cx, cy, radius, yaw, pitch);
 
   ctx.restore();
 }
 
-function drawBasins(ctx, config, material, cx, cy, radius, yaw, pitch) {
-  const basins = material.features.filter((feature) => feature.type === "basin");
-
-  for (const basin of basins) {
-    const p = project(basin.lat, basin.lon, yaw, pitch, cx, cy, radius);
-    if (!p.visible) continue;
-
-    const visibleAlpha = clamp((p.z + 0.16) / 1.16, 0, 1);
-    const size = basin.size * radius * (0.76 + p.depth * 0.42);
-    const stretch = basin.stretch;
-
-    ctx.save();
-    ctx.globalCompositeOperation = "source-over";
-    ctx.translate(p.x, p.y);
-    ctx.rotate(basin.angle + yaw * 0.12);
-    ctx.scale(stretch, 1);
-
-    const basinColor = mixColor(config.palette.land, config.palette.land2, basin.tone * 0.55);
-    const g = ctx.createRadialGradient(0, 0, size * 0.08, 0, 0, size);
-    g.addColorStop(0.00, rgb(mixColor(basinColor, config.palette.high, 0.24), 0.74 * visibleAlpha));
-    g.addColorStop(0.38, rgb(basinColor, 0.66 * visibleAlpha));
-    g.addColorStop(0.82, rgb(mixColor(basinColor, config.palette.deep, 0.34), 0.58 * visibleAlpha));
-    g.addColorStop(1.00, rgb(config.palette.deep, 0.12 * visibleAlpha));
-
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.ellipse(0, 0, size, size * 0.58, 0, 0, TAU);
-    ctx.fill();
-
-    ctx.strokeStyle = rgb(config.palette.high, 0.10 * visibleAlpha);
-    ctx.lineWidth = Math.max(0.7, radius * 0.003);
-    ctx.beginPath();
-    ctx.ellipse(0, 0, size * 0.92, size * 0.52, 0, 0, TAU);
-    ctx.stroke();
-
-    ctx.restore();
+function drawOrganicEllipse(ctx, rx, ry, seed) {
+  ctx.beginPath();
+  for (let i = 0; i <= 80; i += 1) {
+    const t = (i / 80) * TAU;
+    const wobble = 1
+      + 0.10 * Math.sin(t * 3 + seed * 0.29)
+      + 0.06 * Math.cos(t * 5 - seed * 0.17)
+      + 0.035 * Math.sin(t * 8 + seed * 0.11);
+    const x = Math.cos(t) * rx * wobble;
+    const y = Math.sin(t) * ry * wobble;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
   }
+  ctx.closePath();
 }
 
-function drawCraters(ctx, config, material, cx, cy, radius, yaw, pitch) {
-  const craters = material.features.filter((feature) => feature.type === "crater");
-
-  for (const crater of craters) {
-    const p = project(crater.lat, crater.lon, yaw, pitch, cx, cy, radius);
-    if (!p.visible) continue;
-
-    const visibleAlpha = clamp((p.z + 0.16) / 1.16, 0, 1);
-    const size = crater.size * radius * (0.78 + p.depth * 0.38);
-
-    ctx.save();
-    ctx.translate(p.x, p.y);
-    ctx.rotate(crater.angle);
-    ctx.scale(crater.stretch, 1);
-
-    const g = ctx.createRadialGradient(0, 0, size * 0.06, 0, 0, size);
-    g.addColorStop(0.00, rgb(config.palette.deep, 0.34 * visibleAlpha));
-    g.addColorStop(0.48, rgb(config.palette.scar, 0.22 * visibleAlpha));
-    g.addColorStop(0.62, rgb(config.palette.high, 0.16 * visibleAlpha));
-    g.addColorStop(1.00, "rgba(255,255,255,0)");
-
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.ellipse(0, 0, size, size * 0.70, 0, 0, TAU);
-    ctx.fill();
-
-    ctx.strokeStyle = rgb(config.palette.high, 0.12 * visibleAlpha);
-    ctx.lineWidth = Math.max(0.55, radius * 0.0024);
-    ctx.beginPath();
-    ctx.ellipse(0, 0, size * 0.72, size * 0.48, 0, 0, TAU);
-    ctx.stroke();
-
-    ctx.restore();
-  }
-}
-
-function drawRidges(ctx, config, material, cx, cy, radius, yaw, pitch) {
-  const ridges = material.features.filter((feature) => feature.type === "ridge");
-
+function drawSatelliteRidges(ctx, config, material, cx, cy, radius, yaw, pitch) {
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
-  for (const ridge of ridges) {
-    const points = ridge.points
-      .map((point) => project(point.lat, point.lon, yaw, pitch, cx, cy, radius))
-      .filter((point) => point.visible);
-
+  for (const ridge of material.ridges) {
+    const points = ridge.points.map((point) => project(point.lat, point.lon, yaw, pitch, cx, cy, radius)).filter((point) => point.visible);
     if (points.length < 3) continue;
 
-    const avgDepth = points.reduce((sum, point) => sum + point.depth, 0) / points.length;
-    const alpha = 0.055 + avgDepth * 0.10;
-
-    ctx.strokeStyle = rgb(config.palette.high, alpha);
-    ctx.lineWidth = Math.max(0.6, radius * ridge.width);
-    ctx.beginPath();
-
-    points.forEach((point, index) => {
-      if (index === 0) ctx.moveTo(point.x, point.y);
-      else ctx.lineTo(point.x, point.y);
-    });
-
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function drawScars(ctx, config, material, cx, cy, radius, yaw, pitch) {
-  const scars = material.features.filter((feature) => feature.type === "scar");
-
-  ctx.save();
-
-  for (const scar of scars) {
-    const points = scar.points
-      .map((point) => project(point.lat, point.lon, yaw, pitch, cx, cy, radius))
-      .filter((point) => point.visible);
-
-    if (points.length < 3) continue;
-
-    const avgDepth = points.reduce((sum, point) => sum + point.depth, 0) / points.length;
-    const alpha = 0.18 + avgDepth * 0.24;
-
-    ctx.strokeStyle = rgb(config.palette.scar, alpha);
-    ctx.lineWidth = Math.max(1.2, radius * scar.width);
+    const depth = points.reduce((sum, point) => sum + point.depth, 0) / points.length;
+    ctx.strokeStyle = rgb(config.palette.high, ridge.alpha * depth);
+    ctx.lineWidth = Math.max(0.55, radius * ridge.width);
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
-
     ctx.beginPath();
+
     points.forEach((point, index) => {
       if (index === 0) ctx.moveTo(point.x, point.y);
       else ctx.lineTo(point.x, point.y);
     });
-    ctx.stroke();
 
-    ctx.globalCompositeOperation = "screen";
-    ctx.strokeStyle = rgb(config.palette.glow, alpha * 0.16);
-    ctx.lineWidth = Math.max(0.45, radius * scar.width * 0.28);
     ctx.stroke();
-    ctx.globalCompositeOperation = "source-over";
   }
 
   ctx.restore();
 }
 
-function drawSurfaceMist(ctx, config, material, cx, cy, radius, yaw, pitch) {
+function drawUnifiedSatelliteClouds(ctx, config, material, cx, cy, radius, yaw, pitch) {
   ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, TAU);
+  ctx.clip();
   ctx.globalCompositeOperation = "screen";
 
-  for (let i = 0; i < 18; i += 1) {
-    const lat = seededSigned(i, config.key.length + 190) * 0.88;
-    const lon = seededSigned(i, config.key.length + 191) * Math.PI;
-    const p = project(lat, lon, yaw, pitch, cx, cy, radius);
-
+  for (const cloud of material.clouds) {
+    const p = project(cloud.lat, cloud.lon, yaw, pitch, cx, cy, radius);
     if (!p.visible) continue;
 
-    const width = radius * (0.09 + seededUnit(i, config.key.length + 192) * 0.18);
-    const height = radius * (0.010 + seededUnit(i, config.key.length + 193) * 0.025);
-    const alpha = 0.020 + seededUnit(i, config.key.length + 194) * 0.040;
+    const visible = clamp((p.z + 0.12) / 1.12, 0, 1);
+    const rx = cloud.rx * radius;
+    const ry = cloud.ry * radius;
 
-    const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, width);
-    g.addColorStop(0, rgb(config.palette.shell, alpha * p.depth));
-    g.addColorStop(0.62, rgb(config.palette.shell, alpha * 0.32 * p.depth));
-    g.addColorStop(1, "rgba(255,255,255,0)");
-
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(cloud.angle);
+    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, rx);
+    g.addColorStop(0.00, rgb(config.palette.cloud, cloud.alpha * visible));
+    g.addColorStop(0.55, rgb(config.palette.cloud, cloud.alpha * 0.26 * visible));
+    g.addColorStop(1.00, "rgba(255,255,255,0)");
     ctx.fillStyle = g;
     ctx.beginPath();
-    ctx.ellipse(p.x, p.y, width, height, seededUnit(i, config.key.length + 195) * TAU, 0, TAU);
+    ctx.ellipse(0, 0, rx, ry, 0, 0, TAU);
     ctx.fill();
+    ctx.restore();
   }
 
   ctx.restore();
 }
 
-function drawGlintsOnSurface(ctx, config, material, cx, cy, radius, yaw, pitch) {
-  const glints = material.features.filter((feature) => feature.type === "glint");
-
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
-
-  for (const glint of glints) {
-    const p = project(glint.lat, glint.lon, yaw, pitch, cx, cy, radius);
-    if (!p.visible || p.depth < 0.38) continue;
-
-    const size = glint.size * radius;
-    const alpha = 0.05 + p.depth * 0.11;
-
-    ctx.strokeStyle = rgb(config.palette.shell, alpha);
-    ctx.lineWidth = Math.max(0.5, radius * 0.0015);
-    ctx.beginPath();
-    ctx.moveTo(p.x - size, p.y);
-    ctx.lineTo(p.x + size, p.y);
-    ctx.moveTo(p.x, p.y - size);
-    ctx.lineTo(p.x, p.y + size);
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function drawHydrationShell(ctx, config, cx, cy, radius) {
+function drawSatelliteLighting(ctx, config, cx, cy, radius) {
   ctx.save();
   ctx.beginPath();
   ctx.arc(cx, cy, radius, 0, TAU);
   ctx.clip();
 
-  const glass = ctx.createRadialGradient(
-    cx - radius * 0.36,
-    cy - radius * 0.42,
-    radius * 0.05,
-    cx,
-    cy,
-    radius * 1.10
-  );
-
-  glass.addColorStop(0.00, "rgba(255,255,255,0.18)");
-  glass.addColorStop(0.24, "rgba(255,255,255,0.036)");
-  glass.addColorStop(0.55, "rgba(255,255,255,0.000)");
-  glass.addColorStop(0.82, "rgba(0,0,0,0.10)");
-  glass.addColorStop(1.00, "rgba(0,0,0,0.36)");
-
-  ctx.fillStyle = glass;
+  const light = ctx.createRadialGradient(cx - radius * 0.22, cy - radius * 0.24, radius * 0.05, cx, cy, radius * 1.08);
+  light.addColorStop(0.00, "rgba(255,255,255,0.13)");
+  light.addColorStop(0.36, "rgba(255,255,255,0.024)");
+  light.addColorStop(0.76, "rgba(0,0,0,0.10)");
+  light.addColorStop(1.00, "rgba(0,0,0,0.34)");
+  ctx.fillStyle = light;
   ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
   ctx.restore();
 }
 
-function drawFinalSphereLighting(ctx, config, cx, cy, radius) {
-  const vignette = ctx.createRadialGradient(
-    cx - radius * 0.34,
-    cy - radius * 0.42,
-    radius * 0.05,
-    cx + radius * 0.12,
-    cy + radius * 0.10,
-    radius * 1.18
-  );
-
-  vignette.addColorStop(0.00, "rgba(255,255,255,0.12)");
-  vignette.addColorStop(0.34, "rgba(255,255,255,0.018)");
-  vignette.addColorStop(0.72, "rgba(0,0,0,0.14)");
-  vignette.addColorStop(1.00, "rgba(0,0,0,0.50)");
-
-  ctx.fillStyle = vignette;
-  ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
-
-  const terminator = ctx.createLinearGradient(cx - radius, cy, cx + radius, cy);
-  terminator.addColorStop(0.00, "rgba(0,0,0,0.00)");
-  terminator.addColorStop(0.50, "rgba(0,0,0,0.00)");
-  terminator.addColorStop(1.00, "rgba(0,0,0,0.24)");
-
-  ctx.fillStyle = terminator;
-  ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
-}
-
-function drawAtmosphere(ctx, config, cx, cy, radius) {
+function drawAtmosphericRim(ctx, config, cx, cy, radius) {
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
-  const limb = ctx.createRadialGradient(cx, cy, radius * 0.82, cx, cy, radius * 1.18);
-  limb.addColorStop(0.00, "rgba(255,255,255,0)");
-  limb.addColorStop(0.52, rgb(config.palette.glow, 0.05));
-  limb.addColorStop(0.74, rgb(config.palette.glow, 0.18));
-  limb.addColorStop(0.88, rgb(config.palette.shell, 0.22));
-  limb.addColorStop(1.00, "rgba(255,255,255,0)");
+  const rim = ctx.createRadialGradient(cx, cy, radius * 0.86, cx, cy, radius * 1.10);
+  rim.addColorStop(0.00, "rgba(255,255,255,0)");
+  rim.addColorStop(0.58, rgb(config.palette.glow, 0.09));
+  rim.addColorStop(0.82, rgb(config.palette.cloud, 0.18));
+  rim.addColorStop(1.00, "rgba(255,255,255,0)");
 
-  ctx.fillStyle = limb;
+  ctx.fillStyle = rim;
   ctx.beginPath();
-  ctx.arc(cx, cy, radius * 1.16, 0, TAU);
+  ctx.arc(cx, cy, radius * 1.10, 0, TAU);
   ctx.fill();
 
-  ctx.strokeStyle = rgb(config.palette.shell, 0.26);
-  ctx.lineWidth = Math.max(1, radius * 0.006);
+  ctx.strokeStyle = rgb(config.palette.cloud, 0.20);
+  ctx.lineWidth = Math.max(1, radius * 0.0048);
   ctx.beginPath();
-  ctx.arc(cx, cy, radius * 1.006, 0, TAU);
+  ctx.arc(cx, cy, radius * 1.003, 0, TAU);
   ctx.stroke();
 
   ctx.restore();
@@ -778,32 +598,34 @@ function drawStageBackground(ctx, width, height, config) {
   ctx.fillRect(0, 0, width, height);
 
   const metrics = getLayoutMetrics(width, height);
-  const cx = metrics.globeCenterX;
-  const cy = metrics.globeCenterY;
-  const radius = metrics.radius;
-
-  const halo = ctx.createRadialGradient(cx, cy, radius * 0.20, cx, cy, radius * 2.05);
-  halo.addColorStop(0.00, rgb(config.palette.glow, 0.12));
-  halo.addColorStop(0.40, rgb(config.palette.glow, 0.052));
-  halo.addColorStop(1.00, "rgba(0,0,0,0)");
-
+  const halo = ctx.createRadialGradient(
+    metrics.globeCenterX,
+    metrics.globeCenterY,
+    metrics.radius * 0.24,
+    metrics.globeCenterX,
+    metrics.globeCenterY,
+    metrics.radius * 2.04
+  );
+  halo.addColorStop(0, rgb(config.palette.glow, 0.10));
+  halo.addColorStop(0.42, rgb(config.palette.glow, 0.045));
+  halo.addColorStop(1, "rgba(0,0,0,0)");
   ctx.fillStyle = halo;
   ctx.fillRect(0, 0, width, height);
 
-  drawStars(ctx, width, height, config);
+  drawStars(ctx, width, height);
 }
 
-function drawStars(ctx, width, height, config) {
+function drawStars(ctx, width, height) {
   ctx.save();
 
-  for (let i = 0; i < 48; i += 1) {
+  for (let i = 0; i < 44; i += 1) {
     const x = seededUnit(i, 1) * width;
     const y = seededUnit(i, 2) * height;
-    const alpha = 0.05 + seededUnit(i, 3) * 0.14;
-    const size = i % 13 === 0 ? 5.5 : i % 5 === 0 ? 2.7 : 1.0;
+    const alpha = 0.045 + seededUnit(i, 3) * 0.13;
+    const size = i % 13 === 0 ? 5.2 : i % 5 === 0 ? 2.5 : 1;
 
     ctx.strokeStyle = `rgba(235,244,255,${alpha})`;
-    ctx.lineWidth = Math.max(1, width * 0.0008);
+    ctx.lineWidth = Math.max(1, width * 0.00075);
     ctx.beginPath();
     ctx.moveTo(x - size, y);
     ctx.lineTo(x + size, y);
@@ -815,41 +637,15 @@ function drawStars(ctx, width, height, config) {
   ctx.restore();
 }
 
-function drawGroundShadow(ctx, ctxWidth, ctxHeight, config) {
-  const metrics = getLayoutMetrics(ctxWidth, ctxHeight);
-  const radius = metrics.radius;
-  const cx = metrics.globeCenterX;
-  const cy = metrics.globeCenterY;
-
-  const shadow = ctx.createRadialGradient(
-    cx,
-    cy + radius * 1.08,
-    radius * 0.04,
-    cx,
-    cy + radius * 1.08,
-    radius * 0.50
-  );
-
-  shadow.addColorStop(0, rgb(config.palette.glow, 0.11));
-  shadow.addColorStop(0.46, "rgba(82,109,146,0.09)");
-  shadow.addColorStop(1, "rgba(0,0,0,0)");
-
-  ctx.fillStyle = shadow;
-  ctx.beginPath();
-  ctx.ellipse(cx, cy + radius * 1.08, radius * 0.44, radius * 0.08, 0, 0, TAU);
-  ctx.fill();
-}
-
 function render(canvas, ctx) {
   const config = BODY_CONFIG[state.body] || BODY_CONFIG.earth;
   const width = canvas.width;
   const height = canvas.height;
   const metrics = getLayoutMetrics(width, height);
-  const frame = getCinematicFrame(state.body, metrics.radius, state.yaw, state.pitch);
+  const frame = getFrame(state.body, metrics.radius, state.yaw, state.pitch);
 
   ctx.clearRect(0, 0, width, height);
   drawStageBackground(ctx, width, height, config);
-  drawGroundShadow(ctx, width, height, config);
 
   const x = metrics.globeCenterX - frame.size * 0.5;
   const y = metrics.globeCenterY - frame.size * 0.5;
@@ -861,6 +657,8 @@ function render(canvas, ctx) {
 
 function updateMotion(dt) {
   let changed = false;
+  const fibonacciBand = fibonacciBandForMode();
+  state.fibonacciBand = fibonacciBand;
 
   if (!state.dragging) {
     const priorYaw = state.yaw;
@@ -869,21 +667,23 @@ function updateMotion(dt) {
     state.yaw += state.velocityYaw;
     state.pitch = clamp(state.pitch + state.velocityPitch, -0.60, 0.60);
 
-    const damping = state.mode === "soft" ? 0.958 : 0.940;
-    const applied = Math.pow(damping, dt * 60);
+    const decayBase = state.mode === "soft" ? 0.986 : state.mode === "stable" ? 0.972 : 0.978;
+    const fibonacciDecay = Math.pow(decayBase, (dt * 60) / Math.max(1, fibonacciBand / 8));
 
-    state.velocityYaw *= applied;
-    state.velocityPitch *= applied;
+    state.velocityYaw *= fibonacciDecay;
+    state.velocityPitch *= fibonacciDecay;
 
     if (Math.abs(state.velocityYaw) < 0.00008) state.velocityYaw = 0;
     if (Math.abs(state.velocityPitch) < 0.00008) state.velocityPitch = 0;
 
     if (state.mode === "auto" && state.velocityYaw === 0 && state.velocityPitch === 0) {
-      state.yaw += dt * 0.030;
+      state.yaw += dt * (1 / 34);
     }
 
     changed = changed || Math.abs(priorYaw - state.yaw) > 0.00001 || Math.abs(priorPitch - state.pitch) > 0.00001;
   }
+
+  resolveRuntimeAddress();
 
   if (changed) state.needsRender = true;
 }
@@ -926,11 +726,13 @@ function bindPointer(stage) {
     state.pointerX = event.clientX;
     state.pointerY = event.clientY;
 
-    state.yaw += dx * 0.0062;
-    state.pitch = clamp(state.pitch - dy * 0.0042, -0.60, 0.60);
+    const sensitivity = state.mode === "stable" ? 0.0048 : 0.0062;
+
+    state.yaw += dx * sensitivity;
+    state.pitch = clamp(state.pitch - dy * 0.0040, -0.60, 0.60);
 
     state.velocityYaw = dx * 0.0018;
-    state.velocityPitch = -dy * 0.0012;
+    state.velocityPitch = -dy * 0.0011;
     state.needsRender = true;
   }, { passive: true });
 
@@ -947,8 +749,8 @@ function bindPointer(stage) {
 }
 
 function resetView() {
-  state.yaw = 0.24;
-  state.pitch = -0.08;
+  state.yaw = 0.18;
+  state.pitch = -0.06;
   state.velocityYaw = 0;
   state.velocityPitch = 0;
   state.needsRender = true;
@@ -993,30 +795,28 @@ function setMode(mode) {
 }
 
 function markRoute() {
-  const root = document.documentElement.dataset;
-  const body = document.body.dataset;
-
   const markers = {
-    globeGatewayStatus: "screenshot-baseline-rebuilt",
+    globeGatewayStatus: "satellite-planetary-view-renewed",
     globeGatewayAuthority: "true",
     visualScaleAuthority: "true",
-    runtimeStabilized: "true",
-    mobileStageLayoutGovernor: "true",
-    protectedVerticalBands: "true",
-    cinematicMaterialRestored: "true",
-    screenshotBaselineRebuild: "true",
-    proceduralBlobPrimary: "false",
+    satellitePlanetaryView: "true",
+    contractRenewal: "true",
+    fibonacciRuntime: "true",
+    lattice256Runtime: "true",
+    runtimeFieldSize: "256",
+    runtimeMotionLaw: "fibonacci-within-256-lattice",
+    materialSource: "satellite-planetary-view:v9",
     opaqueGlobeBody: "true",
-    stripSamplingRenderer: "false",
-    blockTileLandRender: "false",
-    diamondInstrument: "false",
-    earthRecord: "false",
-    materialSource: "screenshot-baseline-rebuild:v8"
+    cartoonFallbackPrimary: "false",
+    verticalSplitDominant: "false",
+    twoSeasonRead: "false",
+    groundLevelBuildActive: "false",
+    diamondInstrument: "false"
   };
 
   Object.entries(markers).forEach(([key, value]) => {
-    root[key] = value;
-    body[key] = value;
+    document.documentElement.dataset[key] = value;
+    document.body.dataset[key] = value;
   });
 }
 
@@ -1052,7 +852,7 @@ function warmMaterials() {
 function warmInitialFrames(canvas) {
   const metrics = getLayoutMetrics(canvas.width || 390, canvas.height || 700);
   Object.keys(BODY_CONFIG).forEach((key) => {
-    getCinematicFrame(key, metrics.radius || 150, 0.24, -0.08);
+    getFrame(key, metrics.radius || 150, 0.18, -0.06);
   });
 }
 
@@ -1084,26 +884,35 @@ function initGlobeSelector() {
   window.DGBGlobeSelector = Object.freeze({
     ...GLOBE_SELECTOR_STATE,
     status() {
+      resolveRuntimeAddress();
+
       return Object.freeze({
         ...GLOBE_SELECTOR_STATE,
         ready: true,
         selectedBody: state.body,
         mode: state.mode,
-        gatewayAuthority: true,
-        earthStandingInGateway: false,
-        diamondMountedHere: false,
-        runtimeStabilized: true,
-        mobileStageLayoutGovernor: true,
-        protectedVerticalBands: true,
-        cinematicMaterialRestored: true,
-        screenshotBaselineRebuild: true,
-        proceduralBlobPrimary: false,
+        yaw: state.yaw,
+        pitch: state.pitch,
+        runtimeAddress: state.runtimeAddress,
+        fibonacciBand: state.fibonacciBand,
+        frameCacheSize: Object.keys(state.frames).length,
+        materialCacheKeys: Object.freeze(Object.keys(state.materials)),
+        materialSource: "satellite-planetary-view:v9",
+        currentMaterialSource: `satellite-planetary-view:v9:${state.body}`,
+        satellitePlanetaryView: true,
+        contractRenewal: true,
+        fibonacciRuntime: true,
+        lattice256Runtime: true,
+        runtimeFieldSize: RUNTIME_FIELD_SIZE,
+        fibonacciSequence: FIBONACCI_SEQUENCE,
+        runtimeMotionLaw: "fibonacci-within-256-lattice",
         opaqueGlobeBody: true,
-        stripSamplingRenderer: false,
-        blockTileLandRender: false,
-        materialSource: `screenshot-baseline-rebuild:v8:${state.body}`,
-        cacheKeys: Object.freeze(Object.keys(state.materialCache)),
-        frameCacheSize: Object.keys(state.frameCache).length
+        cartoonFallbackPrimary: false,
+        verticalSplitDominant: false,
+        twoSeasonRead: false,
+        groundLevelBuildActive: false,
+        diamondMountedHere: false,
+        earthStandingInGateway: false
       });
     }
   });

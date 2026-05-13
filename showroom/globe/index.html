@@ -1,14 +1,15 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-globe-gateway"
+  data-page="showroom-globe-three-body-gateway-selector"
   data-route="/showroom/globe/"
-  data-contract="SHOWROOM_GLOBE_GATEWAY_RESTORATION_TNT_v1"
-  data-role="globe-system-gateway"
+  data-contract="SHOWROOM_GLOBE_THREE_BODY_GATEWAY_SELECTOR_TNT_v1"
+  data-role="globe-system-gateway-selector"
   data-gateway-authority="true"
   data-earth-record="false"
   data-h-earth-record="false"
   data-audralia-record="false"
+  data-diamond-instrument="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-heavy-runtime-loaded="false"
@@ -17,40 +18,43 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <title>Globe Showcase · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Globe Showcase is the gateway to the showroom globe pages: Earth, H-Earth, and Audralia."
+    content="Globe Showcase is the public three-body selector for Earth, H-Earth, and Audralia."
   >
 
   <style>
     :root {
       --bg: #030812;
       --panel: rgba(7, 15, 31, 0.88);
-      --panel-2: rgba(11, 23, 44, 0.78);
+      --panel-2: rgba(11, 23, 44, 0.76);
       --line: rgba(244, 207, 131, 0.18);
-      --line-soft: rgba(255, 255, 255, 0.10);
-      --text: rgba(238, 244, 255, 0.94);
-      --muted: rgba(238, 244, 255, 0.64);
-      --faint: rgba(238, 244, 255, 0.45);
+      --line-soft: rgba(255,255,255,0.10);
+      --text: rgba(238,244,255,0.94);
+      --muted: rgba(238,244,255,0.64);
+      --faint: rgba(238,244,255,0.44);
       --gold: #f4cf83;
+      --gold-2: #ffe8a6;
       --mint: #a7f3c6;
       --blue: #8bc8ff;
       --violet: #c8a7ff;
-      --shadow: rgba(0, 0, 0, 0.38);
       color-scheme: dark;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       min-height: 100%;
       background:
-        radial-gradient(circle at 50% -10%, rgba(78, 119, 171, 0.26), transparent 38%),
-        radial-gradient(circle at 14% 18%, rgba(244, 207, 131, 0.10), transparent 32%),
-        radial-gradient(circle at 82% 28%, rgba(167, 243, 198, 0.08), transparent 34%),
+        radial-gradient(circle at 50% -10%, rgba(78,119,171,0.26), transparent 38%),
+        radial-gradient(circle at 12% 22%, rgba(244,207,131,0.10), transparent 32%),
+        radial-gradient(circle at 82% 28%, rgba(167,243,198,0.08), transparent 34%),
         linear-gradient(180deg, #061020 0%, var(--bg) 48%, #02050b 100%);
     }
 
@@ -62,9 +66,7 @@
       letter-spacing: -0.015em;
     }
 
-    a {
-      color: inherit;
-    }
+    a { color: inherit; }
 
     .skip {
       position: absolute;
@@ -80,9 +82,7 @@
       text-decoration: none;
     }
 
-    .skip:focus {
-      transform: translateY(0);
-    }
+    .skip:focus { transform: translateY(0); }
 
     .page {
       width: min(1120px, calc(100% - 28px));
@@ -114,12 +114,9 @@
       place-items: center;
       width: 34px;
       height: 34px;
-      border: 1px solid rgba(244, 207, 131, 0.44);
+      border: 1px solid rgba(244,207,131,0.44);
       border-radius: 10px;
-      background:
-        linear-gradient(135deg, rgba(244, 207, 131, 0.20), rgba(167, 243, 198, 0.08)),
-        rgba(244, 207, 131, 0.08);
-      box-shadow: inset 0 0 18px rgba(244, 207, 131, 0.10);
+      background: rgba(244,207,131,0.08);
     }
 
     .nav {
@@ -130,7 +127,8 @@
     }
 
     .nav a,
-    .button {
+    .button,
+    .planet-tab {
       min-height: 38px;
       display: inline-flex;
       align-items: center;
@@ -138,25 +136,27 @@
       border: 1px solid var(--line-soft);
       border-radius: 999px;
       padding: 0 13px;
-      color: rgba(238, 244, 255, 0.82);
+      color: rgba(238,244,255,0.82);
       text-decoration: none;
-      background: rgba(255, 255, 255, 0.035);
+      background: rgba(255,255,255,0.035);
       font-size: 0.82rem;
       font-weight: 850;
       letter-spacing: 0.02em;
+      cursor: pointer;
     }
 
     .nav a[aria-current="page"],
-    .button.primary {
+    .button.primary,
+    .planet-tab[aria-selected="true"] {
       color: #06101c;
       background: linear-gradient(135deg, var(--mint), #78d8ac);
-      border-color: rgba(167, 243, 198, 0.62);
+      border-color: rgba(167,243,198,0.62);
     }
 
     .button.gold {
-      color: #130c02;
+      color: #150d03;
       background: linear-gradient(135deg, #fff0b8, var(--gold) 48%, #c48a38);
-      border-color: rgba(244, 207, 131, 0.72);
+      border-color: rgba(244,207,131,0.72);
     }
 
     .hero {
@@ -164,10 +164,10 @@
       border-radius: 34px;
       padding: clamp(24px, 5vw, 46px);
       background:
-        radial-gradient(circle at 76% 28%, rgba(139, 200, 255, 0.13), transparent 32%),
-        radial-gradient(circle at 18% 20%, rgba(244, 207, 131, 0.12), transparent 30%),
-        linear-gradient(180deg, rgba(8, 17, 34, 0.94), rgba(4, 9, 20, 0.94));
-      box-shadow: 0 30px 90px var(--shadow);
+        radial-gradient(circle at 76% 28%, rgba(139,200,255,0.13), transparent 32%),
+        radial-gradient(circle at 18% 20%, rgba(244,207,131,0.12), transparent 30%),
+        linear-gradient(180deg, rgba(8,17,34,0.94), rgba(4,9,20,0.94));
+      box-shadow: 0 30px 90px rgba(0,0,0,0.38);
       overflow: hidden;
     }
 
@@ -180,15 +180,15 @@
     }
 
     h1 {
-      max-width: 930px;
+      max-width: 920px;
       margin: 0;
-      font-size: clamp(2.2rem, 8vw, 5.4rem);
+      font-size: clamp(2.25rem, 8vw, 5.6rem);
       line-height: 0.92;
       letter-spacing: -0.075em;
     }
 
     .lede {
-      max-width: 900px;
+      max-width: 880px;
       margin: 22px 0 0;
       color: var(--muted);
       font-size: clamp(1.02rem, 2.6vw, 1.34rem);
@@ -202,127 +202,186 @@
       margin-top: 26px;
     }
 
-    .gateway {
+    .selector-shell {
       margin-top: 16px;
-      border: 1px solid rgba(244, 207, 131, 0.16);
+      border: 1px solid rgba(244,207,131,0.20);
       border-radius: 34px;
       padding: clamp(18px, 3.8vw, 32px);
       background:
-        radial-gradient(circle at 50% 34%, rgba(96, 145, 190, 0.13), transparent 42%),
-        linear-gradient(180deg, rgba(8, 17, 34, 0.88), rgba(4, 9, 20, 0.92));
+        radial-gradient(circle at 50% 34%, rgba(96,145,190,0.13), transparent 42%),
+        linear-gradient(180deg, rgba(8,17,34,0.90), rgba(4,9,20,0.94));
+      box-shadow: 0 28px 90px rgba(0,0,0,0.32);
     }
 
-    .gateway-title {
+    .selector-title {
       margin: 0 0 14px;
       color: var(--gold);
       font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       letter-spacing: 0.20em;
       text-transform: uppercase;
-      text-align: center;
     }
 
-    .gateway-headline {
+    .selector-headline {
       max-width: 840px;
-      margin: 0 auto 22px;
+      margin: 0 0 20px;
       color: var(--gold);
-      text-align: center;
       font-size: clamp(1.85rem, 6vw, 3.3rem);
       line-height: 1.02;
       letter-spacing: -0.07em;
     }
 
-    .body-grid {
+    .planet-stage {
+      position: relative;
+      min-height: clamp(560px, 92vw, 780px);
+      border: 1px solid rgba(244,207,131,0.18);
+      border-radius: 30px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 74%, rgba(244,207,131,0.10), transparent 24%),
+        radial-gradient(circle at 50% 36%, rgba(92,132,172,0.14), transparent 42%),
+        linear-gradient(180deg, rgba(4,11,24,0.92), rgba(2,7,16,0.96));
+      touch-action: none;
+      user-select: none;
+    }
+
+    .planet-canvas {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    .planet-ui {
+      position: absolute;
+      inset: 18px 18px auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      z-index: 2;
+    }
+
+    .planet-reset {
+      position: absolute;
+      left: 18px;
+      top: 66px;
+      z-index: 2;
+    }
+
+    .planet-title {
+      position: absolute;
+      left: 50%;
+      top: 92px;
+      transform: translateX(-50%);
+      width: min(calc(100% - 44px), 620px);
+      text-align: center;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .planet-title strong {
+      display: block;
+      color: var(--gold);
+      font-size: clamp(1.35rem, 4.5vw, 2.1rem);
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+    }
+
+    .planet-title span {
+      display: block;
+      margin-top: 8px;
+      color: rgba(238,244,255,0.58);
+      font-size: clamp(0.82rem, 2.8vw, 1.02rem);
+      font-weight: 850;
+      line-height: 1.25;
+    }
+
+    .planet-tabs {
+      position: absolute;
+      left: clamp(14px, 4vw, 36px);
+      right: clamp(14px, 4vw, 36px);
+      bottom: clamp(116px, 21vw, 150px);
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .planet-tab {
+      border-radius: 0;
+      min-height: 54px;
+      font-size: clamp(0.88rem, 3.2vw, 1.05rem);
+      clip-path: polygon(10% 0, 90% 0, 100% 22%, 100% 78%, 90% 100%, 10% 100%, 0 78%, 0 22%);
+    }
+
+    .planet-open {
+      position: absolute;
+      left: clamp(16px, 4vw, 36px);
+      right: clamp(16px, 4vw, 36px);
+      bottom: clamp(58px, 10vw, 82px);
+      z-index: 2;
+      border: 1px solid rgba(167,243,198,0.24);
+      border-radius: 0;
+      padding: 12px 16px;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      color: var(--mint);
+      text-decoration: none;
+      font-size: clamp(0.98rem, 3.4vw, 1.15rem);
+      font-weight: 950;
+      background: rgba(8,42,37,0.42);
+      clip-path: polygon(8% 0, 92% 0, 100% 34%, 100% 66%, 92% 100%, 8% 100%, 0 66%, 0 34%);
+    }
+
+    .planet-instruction {
+      position: absolute;
+      left: clamp(16px, 4vw, 36px);
+      right: clamp(16px, 4vw, 36px);
+      bottom: 14px;
+      color: rgba(238,244,255,0.54);
+      font-size: clamp(0.82rem, 2.6vw, 0.95rem);
+      font-weight: 800;
+      line-height: 1.35;
+      text-align: center;
+    }
+
+    .standard-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
+      margin-top: 16px;
     }
 
-    .body-card {
-      position: relative;
-      overflow: hidden;
+    .standard-card {
       border: 1px solid var(--line-soft);
-      border-radius: 26px;
-      padding: 20px;
-      background:
-        radial-gradient(circle at 50% 20%, rgba(244, 207, 131, 0.08), transparent 34%),
-        var(--panel-2);
-      text-decoration: none;
-      min-height: 260px;
-      display: grid;
-      align-content: space-between;
+      border-radius: 24px;
+      padding: 18px;
+      background: var(--panel-2);
     }
 
-    .body-card::before {
-      content: "";
-      display: block;
-      width: min(72%, 190px);
-      aspect-ratio: 1 / 1;
-      margin: 0 auto 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      box-shadow:
-        inset -22px -24px 46px rgba(0, 0, 0, 0.42),
-        inset 18px 16px 38px rgba(255, 255, 255, 0.09),
-        0 0 46px rgba(139, 200, 255, 0.10);
-    }
-
-    .body-card.earth::before {
-      background:
-        radial-gradient(circle at 35% 32%, rgba(210, 222, 179, 0.70), transparent 18%),
-        radial-gradient(circle at 60% 42%, rgba(125, 152, 95, 0.72), transparent 20%),
-        linear-gradient(135deg, rgba(32, 92, 126, 0.96), rgba(7, 34, 64, 0.98));
-    }
-
-    .body-card.h-earth::before {
-      background:
-        radial-gradient(circle at 32% 36%, rgba(197, 174, 104, 0.72), transparent 24%),
-        radial-gradient(circle at 55% 50%, rgba(82, 126, 113, 0.76), transparent 32%),
-        linear-gradient(135deg, rgba(31, 86, 103, 0.95), rgba(7, 30, 55, 0.98));
-    }
-
-    .body-card.audralia::before {
-      background:
-        radial-gradient(circle at 45% 36%, rgba(164, 132, 111, 0.72), transparent 24%),
-        radial-gradient(circle at 62% 56%, rgba(68, 82, 104, 0.72), transparent 30%),
-        linear-gradient(135deg, rgba(74, 59, 102, 0.96), rgba(15, 18, 44, 0.98));
-    }
-
-    .body-card strong {
-      display: block;
+    .standard-card h2 {
+      margin: 0 0 8px;
       color: var(--gold);
-      font-size: clamp(1.25rem, 3vw, 1.75rem);
-      letter-spacing: -0.04em;
+      font-size: clamp(1.05rem, 2.8vw, 1.35rem);
+      line-height: 1.1;
+      letter-spacing: -0.035em;
     }
 
-    .body-card span {
-      display: block;
-      margin-top: 8px;
+    .standard-card p {
+      margin: 0;
       color: var(--muted);
-      line-height: 1.45;
+      line-height: 1.5;
       font-size: 0.94rem;
     }
 
-    .body-pill {
-      width: fit-content;
-      margin-top: 16px;
-      border: 1px solid rgba(244, 207, 131, 0.20);
-      border-radius: 999px;
-      padding: 8px 11px;
-      color: rgba(238, 244, 255, 0.78);
-      font: 850 0.72rem/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing: 0.08em;
+    .cache-proof {
+      margin-top: 14px;
+      color: rgba(238,244,255,0.42);
+      font: 800 0.68rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: 0.10em;
       text-transform: uppercase;
-    }
-
-    .route-note {
-      margin-top: 16px;
-      border: 1px solid rgba(167, 243, 198, 0.22);
-      border-radius: 24px;
-      padding: 18px;
-      background: rgba(8, 42, 37, 0.42);
-      color: rgba(167, 243, 198, 0.94);
-      font-weight: 850;
-      line-height: 1.45;
     }
 
     .footer {
@@ -339,27 +398,24 @@
         flex-direction: column;
       }
 
-      .nav {
-        justify-content: flex-start;
-      }
+      .nav { justify-content: flex-start; }
 
-      .body-grid {
+      .standard-grid {
         grid-template-columns: 1fr;
       }
     }
 
     @media (max-width: 520px) {
-      .page {
-        width: min(100% - 18px, 1120px);
-      }
+      .page { width: min(100% - 18px, 1120px); }
 
       .hero,
-      .gateway {
+      .selector-shell,
+      .planet-stage {
         border-radius: 24px;
       }
 
-      .body-card {
-        min-height: 230px;
+      .planet-tabs {
+        gap: 6px;
       }
     }
   </style>
@@ -388,60 +444,101 @@
 
     <main id="globe-main">
       <section class="hero">
-        <p class="eyebrow">Globe Showcase · Gateway</p>
-        <h1>This is the entrance to the showroom globe pages.</h1>
+        <p class="eyebrow">Globe Showcase · gateway selector</p>
+        <h1>Choose the world body you meant to open.</h1>
         <p class="lede">
-          Globe Showcase is the gateway and selector for Earth, H-Earth, and Audralia. Earth is no longer allowed to stand in the entrance path.
+          Globe Showcase is the public three-body selector for Earth, H-Earth, and Audralia. This page owns the shared visual scale. Earth is a child page, not the gateway.
         </p>
 
         <div class="actions">
-          <a class="button primary" href="#globe-gateway">Choose a Globe Page</a>
+          <a class="button primary" href="#planet-stage">Inspect Selector</a>
           <a class="button gold" href="/showroom/">Return to Showroom Diamond</a>
           <a class="button" href="/gauges/">Run Triple G</a>
         </div>
       </section>
 
-      <section id="globe-gateway" class="gateway" aria-label="Globe page gateway">
-        <p class="gateway-title">Gateway authority · three routes · no Earth override</p>
-        <h2 class="gateway-headline">Choose the page you meant to open.</h2>
+      <section class="selector-shell" aria-label="Three-body Globe Showcase selector">
+        <p class="selector-title">Source authority · three bodies · shared visual scale</p>
+        <h2 class="selector-headline">One gateway. Three child pages. No Earth override.</h2>
 
-        <div class="body-grid">
-          <a class="body-card earth" href="/showroom/globe/earth/">
-            <div>
-              <strong>Earth</strong>
-              <span>Real-world reference body. Earth is a subordinate record page, not the gateway.</span>
-            </div>
-            <span class="body-pill">Reference body</span>
-          </a>
+        <div
+          id="planet-stage"
+          class="planet-stage"
+          data-globe-selector-stage
+          data-globe-gateway-authority="true"
+          data-selected-body="earth"
+          data-diamond-instrument="false"
+          aria-label="Interactive Globe Showcase selector"
+        >
+          <canvas class="planet-canvas" data-globe-selector-canvas></canvas>
 
-          <a class="body-card h-earth" href="/showroom/globe/h-earth/">
-            <div>
-              <strong>H-Earth</strong>
-              <span>Hybrid/private build body. Open this route for deeper inspection and construction state.</span>
-            </div>
-            <span class="body-pill">Private inspection</span>
-          </a>
+          <div class="planet-ui" role="toolbar" aria-label="Globe selector controls">
+            <button class="planet-tab" type="button" data-mode="auto">Auto</button>
+            <button class="planet-tab" type="button" data-mode="stable">Detail: Stable</button>
+            <button class="planet-tab" type="button" data-mode="soft">Glide: Soft</button>
+          </div>
 
-          <a class="body-card audralia" href="/showroom/globe/audralia/">
-            <div>
-              <strong>Audralia</strong>
-              <span>Generation 1 constructed world. Separate identity, separate route, no Earth override.</span>
-            </div>
-            <span class="body-pill">Constructed world</span>
-          </a>
+          <button class="planet-tab planet-reset" type="button" data-reset-view>Reset</button>
+
+          <div class="planet-title">
+            <strong data-body-title>Earth</strong>
+            <span data-body-subtitle>Reference Body · public selector runtime</span>
+          </div>
+
+          <div class="planet-tabs" role="tablist" aria-label="Choose globe page">
+            <button class="planet-tab" type="button" data-body="earth" aria-selected="true">Earth</button>
+            <button class="planet-tab" type="button" data-body="h-earth" aria-selected="false">H-Earth</button>
+            <button class="planet-tab" type="button" data-body="audralia" aria-selected="false">Audralia</button>
+          </div>
+
+          <a class="planet-open" href="/showroom/globe/earth/" data-open-body>Open Earth</a>
+
+          <div class="planet-instruction">
+            Drag to inspect the public globe selector. Release for momentum. Double tap to reset.
+          </div>
         </div>
 
-        <div class="route-note">
-          Route authority restored: `/showroom/globe/` is the gateway. Earth, H-Earth, and Audralia are child pages beneath it.
-        </div>
+        <p class="cache-proof">
+          HTML cache key: SHOWROOM_GLOBE_THREE_BODY_GATEWAY_SELECTOR_TNT_v1
+        </p>
+      </section>
+
+      <section class="standard-grid" aria-label="Globe Showcase standards">
+        <article class="standard-card">
+          <h2>Gateway standard</h2>
+          <p>
+            The Globe page is the selector. Earth, H-Earth, and Audralia remain child pages beneath it.
+          </p>
+        </article>
+
+        <article class="standard-card">
+          <h2>Visual scale standard</h2>
+          <p>
+            Shared public comparison belongs here. Individual body routes do not compete with the gateway.
+          </p>
+        </article>
+
+        <article class="standard-card">
+          <h2>Boundary standard</h2>
+          <p>
+            The Showroom Diamond stays on the Showroom route. The Globe page does not mount the Diamond instrument.
+          </p>
+        </article>
       </section>
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Globe Showcase gateway.
+      Diamond Gate Bridge · Globe Showcase · Three-body gateway selector.
     </footer>
   </div>
 
-  <script type="module" src="/showroom/globe/index.js"></script>
+  <script>
+    window.DGB_SHOWROOM_GLOBE_HTML_CACHE_KEY = "SHOWROOM_GLOBE_THREE_BODY_GATEWAY_SELECTOR_TNT_v1";
+    window.DGB_SHOWROOM_GLOBE_JS_CACHE_KEY = "SHOWROOM_GLOBE_THREE_BODY_GATEWAY_SELECTOR_TNT_v1";
+  </script>
+  <script
+    type="module"
+    src="/showroom/globe/index.js?v=SHOWROOM_GLOBE_THREE_BODY_GATEWAY_SELECTOR_TNT_v1"
+  ></script>
 </body>
 </html>

@@ -1,53 +1,56 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="triple-g-precision-audit-board"
+  data-page="triple-g-showroom-globe-runtime-route-audit"
   data-route="/gauges/"
-  data-contract="TRIPLE_G_PRECISION_AUDIT_BOARD_TNT_v2"
-  data-role="read-only-live-site-audit"
+  data-contract="TRIPLE_G_SHOWROOM_GLOBE_RUNTIME_ROUTE_AUDIT_TNT_v1"
+  data-role="route-runtime-canvas-audit"
+  data-live-audit="true"
+  data-showroom-globe-audit="true"
+  data-private-engine-execution="false"
   data-generated-image="false"
   data-graphic-box="false"
-  data-heavy-runtime-loaded="false"
-  data-public-receipts-visible="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Triple G</title>
+
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <title>Triple G · Showroom Globe Audit</title>
   <meta
     name="description"
-    content="Triple G reads live Diamond Gate Bridge routes, separates route identity failure from receipt spillover and audit-rule mismatch, and names the next lawful move."
+    content="Triple G audits Showroom, Globe Showcase, route identity, cache alignment, runtime stability, canvas proof, and current gaps."
   >
 
   <style>
     :root {
       --bg: #030812;
-      --panel: rgba(8, 16, 32, 0.86);
-      --panel-2: rgba(12, 24, 45, 0.72);
+      --panel: rgba(7, 15, 31, 0.88);
+      --panel-2: rgba(11, 23, 44, 0.76);
       --line: rgba(244, 207, 131, 0.18);
-      --line-soft: rgba(255, 255, 255, 0.10);
-      --text: rgba(238, 244, 255, 0.92);
-      --muted: rgba(238, 244, 255, 0.64);
-      --faint: rgba(238, 244, 255, 0.44);
+      --line-soft: rgba(255,255,255,0.10);
+      --text: rgba(238,244,255,0.94);
+      --muted: rgba(238,244,255,0.64);
+      --faint: rgba(238,244,255,0.44);
       --gold: #f4cf83;
       --mint: #a7f3c6;
-      --amber: #f0aa5f;
-      --red: #ff8c8c;
+      --red: #ff8b8b;
+      --amber: #f4cf83;
       --blue: #8bc8ff;
-      --violet: #c8a7ff;
-      --shadow: rgba(0, 0, 0, 0.38);
       color-scheme: dark;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       min-height: 100%;
       background:
-        radial-gradient(circle at 50% -10%, rgba(89, 129, 174, 0.24), transparent 38%),
-        radial-gradient(circle at 10% 22%, rgba(244, 207, 131, 0.10), transparent 34%),
+        radial-gradient(circle at 50% -10%, rgba(78,119,171,0.26), transparent 38%),
+        radial-gradient(circle at 12% 22%, rgba(244,207,131,0.10), transparent 32%),
+        radial-gradient(circle at 82% 28%, rgba(167,243,198,0.08), transparent 34%),
         linear-gradient(180deg, #061020 0%, var(--bg) 48%, #02050b 100%);
     }
 
@@ -59,9 +62,7 @@
       letter-spacing: -0.015em;
     }
 
-    a {
-      color: inherit;
-    }
+    a { color: inherit; }
 
     .skip {
       position: absolute;
@@ -69,7 +70,7 @@
       top: 12px;
       transform: translateY(-160%);
       background: var(--mint);
-      color: #05111c;
+      color: #06101c;
       padding: 10px 14px;
       border-radius: 999px;
       z-index: 20;
@@ -77,9 +78,7 @@
       text-decoration: none;
     }
 
-    .skip:focus {
-      transform: translateY(0);
-    }
+    .skip:focus { transform: translateY(0); }
 
     .page {
       width: min(1180px, calc(100% - 28px));
@@ -106,23 +105,24 @@
       text-transform: uppercase;
     }
 
-    .mark {
+    .brand-mark {
       display: inline-grid;
       place-items: center;
       width: 34px;
       height: 34px;
-      border: 1px solid rgba(244, 207, 131, 0.44);
+      border: 1px solid rgba(244,207,131,0.44);
       border-radius: 10px;
-      background: rgba(244, 207, 131, 0.08);
-      box-shadow: inset 0 0 20px rgba(244, 207, 131, 0.08);
+      background: rgba(244,207,131,0.08);
     }
 
-    .nav {
+    .nav,
+    .actions {
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-end;
       gap: 8px;
     }
+
+    .nav { justify-content: flex-end; }
 
     .nav a,
     .button {
@@ -133,41 +133,53 @@
       border: 1px solid var(--line-soft);
       border-radius: 999px;
       padding: 0 13px;
-      color: rgba(238, 244, 255, 0.80);
+      color: rgba(238,244,255,0.82);
       text-decoration: none;
-      background: rgba(255, 255, 255, 0.035);
+      background: rgba(255,255,255,0.035);
       font-size: 0.82rem;
       font-weight: 850;
       letter-spacing: 0.02em;
       cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
     }
 
     .nav a[aria-current="page"],
     .button.primary {
       color: #06101c;
-      background: linear-gradient(135deg, var(--mint), #79dbac);
-      border-color: rgba(167, 243, 198, 0.62);
+      background: linear-gradient(135deg, var(--mint), #78d8ac);
+      border-color: rgba(167,243,198,0.62);
     }
 
-    .button:disabled {
-      opacity: 0.62;
-      cursor: progress;
+    .button.gold {
+      color: #150d03;
+      background: linear-gradient(135deg, #fff0b8, var(--gold) 48%, #c48a38);
+      border-color: rgba(244,207,131,0.72);
+    }
+
+    .hero,
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 76% 28%, rgba(139,200,255,0.13), transparent 32%),
+        radial-gradient(circle at 18% 20%, rgba(244,207,131,0.12), transparent 30%),
+        linear-gradient(180deg, rgba(8,17,34,0.94), rgba(4,9,20,0.94));
+      box-shadow: 0 30px 90px rgba(0,0,0,0.38);
+      overflow: hidden;
     }
 
     .hero {
-      position: relative;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 34px;
       padding: clamp(24px, 5vw, 46px);
-      background:
-        radial-gradient(circle at 76% 22%, rgba(167, 243, 198, 0.10), transparent 30%),
-        radial-gradient(circle at 12% 10%, rgba(244, 207, 131, 0.12), transparent 32%),
-        linear-gradient(180deg, rgba(9, 17, 34, 0.94), rgba(5, 10, 21, 0.92));
-      box-shadow: 0 30px 90px var(--shadow);
     }
 
-    .eyebrow {
+    .panel {
+      margin-top: 16px;
+      padding: clamp(18px, 3.8vw, 32px);
+    }
+
+    .eyebrow,
+    .panel-title {
       margin: 0 0 14px;
       color: var(--gold);
       font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -178,228 +190,160 @@
     h1 {
       max-width: 920px;
       margin: 0;
-      color: var(--text);
-      font-size: clamp(2.2rem, 8vw, 5.4rem);
+      font-size: clamp(2.25rem, 8vw, 5.4rem);
       line-height: 0.92;
       letter-spacing: -0.075em;
     }
 
     .lede {
-      max-width: 890px;
+      max-width: 900px;
       margin: 22px 0 0;
       color: var(--muted);
       font-size: clamp(1.02rem, 2.6vw, 1.34rem);
       line-height: 1.55;
     }
 
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 26px;
-    }
+    .actions { margin-top: 26px; }
 
-    .dashboard {
+    .score-grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 12px;
       margin-top: 18px;
     }
 
-    .metric {
+    .score {
       border: 1px solid var(--line-soft);
       border-radius: 22px;
-      padding: 18px;
-      background: rgba(255, 255, 255, 0.035);
+      padding: 16px;
+      background: rgba(11,23,44,0.58);
     }
 
-    .metric strong {
+    .score strong {
       display: block;
+      font-size: clamp(1.85rem, 5vw, 3rem);
+      line-height: 0.95;
       color: var(--gold);
-      font-size: clamp(1.8rem, 5vw, 3.4rem);
-      line-height: 0.92;
       letter-spacing: -0.06em;
     }
 
-    .metric span {
+    .score span {
       display: block;
-      margin-top: 10px;
+      margin-top: 8px;
       color: var(--muted);
-      font-size: 0.86rem;
-      font-weight: 850;
+      font-weight: 800;
       line-height: 1.25;
+      font-size: 0.84rem;
     }
 
-    .grid {
+    .grid-2 {
       display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 16px;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 14px;
       margin-top: 16px;
     }
 
-    .card {
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      padding: clamp(18px, 3vw, 26px);
-      background: var(--panel);
-      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.22);
+    .mini-card {
+      border: 1px solid var(--line-soft);
+      border-radius: 24px;
+      padding: 18px;
+      background: rgba(11,23,44,0.58);
     }
 
-    .card h2 {
-      margin: 0 0 14px;
+    .mini-card h2,
+    .mini-card h3 {
+      margin: 0 0 10px;
       color: var(--gold);
-      font-size: clamp(1.15rem, 3vw, 1.65rem);
-      line-height: 1.08;
-      letter-spacing: -0.045em;
+      font-size: clamp(1.08rem, 2.8vw, 1.45rem);
+      line-height: 1.1;
+      letter-spacing: -0.035em;
     }
 
-    .card p {
+    .mini-card p {
       margin: 0;
       color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .stack {
-      display: grid;
-      gap: 12px;
-    }
-
-    .goal,
-    .gap,
-    .next,
-    .route-row {
-      border: 1px solid var(--line-soft);
-      border-radius: 20px;
-      padding: 14px;
-      background: var(--panel-2);
-    }
-
-    .goal b,
-    .gap b,
-    .next b {
-      display: block;
-      margin-bottom: 6px;
-      color: rgba(238, 244, 255, 0.94);
-      font-size: 0.96rem;
-    }
-
-    .goal span,
-    .gap span,
-    .next span {
-      display: block;
-      color: var(--muted);
-      line-height: 1.45;
-      font-size: 0.92rem;
-    }
-
-    .goal[data-state="pass"] {
-      border-color: rgba(167, 243, 198, 0.22);
-    }
-
-    .gap[data-severity="fail"] {
-      border-color: rgba(255, 140, 140, 0.32);
-    }
-
-    .gap[data-severity="hold"] {
-      border-color: rgba(240, 170, 95, 0.32);
-    }
-
-    .gap[data-severity="review"] {
-      border-color: rgba(200, 167, 255, 0.32);
+      line-height: 1.5;
     }
 
     .ledger {
       display: grid;
       gap: 10px;
+      margin-top: 14px;
     }
 
-    .route-row {
+    .row {
       display: grid;
-      grid-template-columns: 150px 112px 152px 1fr;
-      gap: 12px;
+      grid-template-columns: 138px 92px 1fr;
+      gap: 10px;
       align-items: start;
+      border: 1px solid var(--line-soft);
+      border-radius: 18px;
+      padding: 12px;
+      background: rgba(2,7,16,0.38);
     }
 
-    .route-path {
-      color: var(--gold);
-      font: 850 0.82rem/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      overflow-wrap: anywhere;
+    .route {
+      color: rgba(238,244,255,0.86);
+      font: 850 0.82rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      word-break: break-word;
     }
 
-    .badge {
+    .status {
       display: inline-flex;
-      align-items: center;
       justify-content: center;
-      min-height: 28px;
+      align-items: center;
+      min-height: 30px;
       border-radius: 999px;
       padding: 0 10px;
-      width: fit-content;
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.08em;
+      font: 900 0.72rem/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      border: 1px solid var(--line-soft);
     }
 
-    .badge.pass {
-      color: #06101c;
-      background: var(--mint);
-      border-color: rgba(167, 243, 198, 0.72);
-    }
+    .pass { color: #07140d; background: var(--mint); }
+    .fail { color: #210707; background: var(--red); }
+    .hold { color: #1c1303; background: var(--amber); }
+    .review { color: #06101c; background: var(--blue); }
+    .pending { color: rgba(238,244,255,0.62); background: rgba(255,255,255,0.08); }
 
-    .badge.hold {
-      color: #170d03;
-      background: var(--amber);
-      border-color: rgba(240, 170, 95, 0.72);
-    }
-
-    .badge.fail {
-      color: #230808;
-      background: var(--red);
-      border-color: rgba(255, 140, 140, 0.72);
-    }
-
-    .badge.review {
-      color: #11071f;
-      background: var(--violet);
-      border-color: rgba(200, 167, 255, 0.72);
-    }
-
-    .badge.checking {
-      color: rgba(238, 244, 255, 0.78);
-      background: rgba(255, 255, 255, 0.045);
-    }
-
-    .class-pill {
-      color: rgba(238, 244, 255, 0.76);
-      background: rgba(255, 255, 255, 0.04);
-      border-color: var(--line-soft);
-    }
-
-    .route-note {
+    .detail {
       color: var(--muted);
-      font-size: 0.9rem;
+      line-height: 1.45;
+      font-size: 0.92rem;
+    }
+
+    .detail strong {
+      color: rgba(238,244,255,0.90);
+    }
+
+    .evidence {
+      margin-top: 6px;
+      color: var(--faint);
+      font: 760 0.72rem/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      word-break: break-word;
+    }
+
+    .gap-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .gap {
+      border-left: 3px solid var(--gold);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: rgba(244,207,131,0.06);
+      color: var(--muted);
       line-height: 1.45;
     }
 
-    .route-note small {
-      display: block;
-      margin-top: 6px;
-      color: var(--faint);
-      font: 750 0.74rem/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      overflow-wrap: anywhere;
-    }
+    .gap strong { color: rgba(238,244,255,0.92); }
 
-    .divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(244, 207, 131, 0.24), transparent);
-      margin: 18px 0;
-    }
-
-    .fine {
+    .small {
       color: var(--faint);
       font-size: 0.82rem;
-      line-height: 1.5;
+      line-height: 1.45;
     }
 
     .footer {
@@ -410,40 +354,48 @@
       text-align: center;
     }
 
-    @media (max-width: 980px) {
-      .dashboard,
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .route-row {
-        grid-template-columns: 1fr;
-      }
+    iframe.audit-frame {
+      position: fixed;
+      width: 390px;
+      height: 740px;
+      left: -10000px;
+      top: 0;
+      border: 0;
+      visibility: hidden;
+      pointer-events: none;
     }
 
-    @media (max-width: 880px) {
+    @media (max-width: 920px) {
       .topbar {
         align-items: flex-start;
         flex-direction: column;
       }
 
-      .nav {
-        justify-content: flex-start;
+      .nav { justify-content: flex-start; }
+
+      .score-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .row {
+        grid-template-columns: 1fr;
       }
     }
 
     @media (max-width: 520px) {
-      .page {
-        width: min(100% - 18px, 1180px);
-      }
+      .page { width: min(100% - 18px, 1180px); }
 
       .hero,
-      .card {
-        border-radius: 22px;
+      .panel {
+        border-radius: 24px;
       }
 
-      .metric {
-        border-radius: 18px;
+      .score-grid {
+        grid-template-columns: 1fr 1fr;
       }
     }
   </style>
@@ -454,9 +406,9 @@
 
   <div class="page">
     <header class="topbar" aria-label="Diamond Gate Bridge navigation">
-      <a class="brand" href="/">
-        <span class="mark" aria-hidden="true">G</span>
-        <span>Diamond Gate Bridge</span>
+      <a class="brand" href="/gauges/" aria-current="page">
+        <span class="brand-mark" aria-hidden="true">G</span>
+        <span>Diamond Gate Bridge · Triple G</span>
       </a>
 
       <nav class="nav" aria-label="Primary">
@@ -471,580 +423,634 @@
 
     <main id="main">
       <section class="hero">
-        <p class="eyebrow">Triple G · precision audit · route truth</p>
-        <h1>The board separates page failure from audit mismatch.</h1>
+        <p class="eyebrow">Triple G · Showroom Globe Runtime Route Audit</p>
+        <h1>The board separates route truth from render instability.</h1>
         <p class="lede">
-          Triple G now distinguishes actual route identity failure, public receipt spillover, route proof holds, and audit-rule mismatch. The board reads the live public pages without executing private planet engines.
+          This audit reads live public routes, deployed source keys, visible route identity, Globe selector runtime posture, canvas proof, mobile layout governance, and flicker risk. It does not execute private planet engines.
         </p>
 
-        <div class="hero-actions">
+        <div class="actions">
           <button class="button primary" type="button" data-run-audit>Run Live Audit</button>
-          <a class="button" href="/showroom/globe/h-earth/">Open H-Earth</a>
-          <a class="button" href="/gauges/h-earth/">Open H-Earth Gauges</a>
+          <a class="button gold" href="/showroom/globe/">Open Globe</a>
+          <a class="button" href="/showroom/">Open Showroom</a>
         </div>
 
-        <section class="dashboard" aria-label="Audit counts">
-          <div class="metric">
-            <strong data-count="routes">9</strong>
-            <span>Routes under live review</span>
-          </div>
-          <div class="metric">
-            <strong data-count="pass">0</strong>
-            <span>Passing</span>
-          </div>
-          <div class="metric">
-            <strong data-count="hold">0</strong>
-            <span>Held / transitional</span>
-          </div>
-          <div class="metric">
-            <strong data-count="fail">0</strong>
-            <span>Hard gaps</span>
-          </div>
-          <div class="metric">
-            <strong data-count="review">0</strong>
-            <span>Audit-rule reviews</span>
-          </div>
-        </section>
+        <div class="score-grid" aria-label="Audit score summary">
+          <div class="score"><strong data-count="total">0</strong><span>Checks run</span></div>
+          <div class="score"><strong data-count="pass">0</strong><span>Passing</span></div>
+          <div class="score"><strong data-count="hold">0</strong><span>Held</span></div>
+          <div class="score"><strong data-count="fail">0</strong><span>Failing</span></div>
+          <div class="score"><strong data-count="review">0</strong><span>Review</span></div>
+        </div>
       </section>
 
-      <section class="grid" aria-label="Current target and state">
-        <article class="card">
-          <h2>What we are trying to accomplish</h2>
-          <div class="stack">
-            <div class="goal" data-state="pass">
-              <b>Public pages stay light.</b>
-              <span>Compass, Flat, Products, Showroom, and Globe Showcase must explain the estate without waking private render chains.</span>
-            </div>
-            <div class="goal" data-state="pass">
-              <b>Globe Showcase stays a display-case index.</b>
-              <span>Earth, H-Earth, and Audralia can be compared publicly, but full planet construction belongs in private inspection routes.</span>
-            </div>
-            <div class="goal" data-state="pass">
-              <b>H-Earth remains the private orbital build surface.</b>
-              <span>H-Earth should show a stage-facing hydrated spherical object. Raw machinery belongs in H-Earth Gauges.</span>
-            </div>
-            <div class="goal" data-state="pass">
-              <b>Triple G separates the failure class.</b>
-              <span>Route identity failure, visible receipt spillover, proof hold, and audit mismatch must not collapse into one generic fail.</span>
-            </div>
-          </div>
-        </article>
+      <section class="panel">
+        <p class="panel-title">What this audit is looking for</p>
 
-        <article class="card">
-          <h2>Where we are</h2>
-          <div class="stack">
-            <div class="next">
-              <b>Triple G activation passed.</b>
-              <span>The board now fetches live routes and computes route counts instead of reporting zero activity.</span>
-            </div>
-            <div class="next">
-              <b>Precision is the current bottleneck.</b>
-              <span>The board must not classify Showroom or Globe as failed merely because an exact phrase changed.</span>
-            </div>
-            <div class="next">
-              <b>Earth identity is the likely hard break.</b>
-              <span>Earth fails only when the title, H1, route marker, or route body is carrying Hearth authority.</span>
-            </div>
-            <div class="next">
-              <b>Audralia is strict by design.</b>
-              <span>Any visible Australia language remains a hard fail; Audralia must stay its own constructed world.</span>
-            </div>
-          </div>
-        </article>
+        <div class="grid-2">
+          <article class="mini-card">
+            <h2>Route truth</h2>
+            <p>
+              Showroom must serve the Diamond cover object. Globe Showcase must serve the gateway selector. Earth, H-Earth, and Audralia must remain child pages.
+            </p>
+          </article>
+
+          <article class="mini-card">
+            <h2>Runtime truth</h2>
+            <p>
+              Globe runtime should use cached surface data, controlled motion, stable canvas redraw, protected mobile bands, and no frame-generated private engine behavior.
+            </p>
+          </article>
+        </div>
       </section>
 
-      <section class="grid" aria-label="Gaps and next move">
-        <article class="card">
-          <h2>Known gap classes</h2>
-          <div class="stack">
-            <div class="gap" data-severity="fail">
-              <b>Route identity failure.</b>
-              <span>The wrong page or wrong body is served from a route. Example: Earth URL serving Hearth route authority.</span>
-            </div>
-            <div class="gap" data-severity="hold">
-              <b>Visible receipt spillover.</b>
-              <span>The route is probably functioning, but visitor-facing text still exposes contract names, source markers, or build-language spillover.</span>
-            </div>
-            <div class="gap" data-severity="hold">
-              <b>Route proof hold.</b>
-              <span>The page framing is acceptable, but the board cannot yet see live route-readable proof for the active canvas, hydration, runtime, or gauge state.</span>
-            </div>
-            <div class="gap" data-severity="review">
-              <b>Audit-rule mismatch.</b>
-              <span>The page may be coherent, but the audit rule needs broader route-family detection instead of exact phrase dependency.</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <h2>Next lawful move after this board</h2>
-          <div class="stack">
-            <div class="next">
-              <b>If Earth remains fail: renew Earth route identity.</b>
-              <span>Earth must be Earth before it can serve as the reference body against H-Earth and Audralia.</span>
-            </div>
-            <div class="next">
-              <b>If H-Earth remains hold: add route-readable render proof.</b>
-              <span>The page should expose non-public, non-spillover proof that the hydrated spherical canvas contract is mounted.</span>
-            </div>
-            <div class="next">
-              <b>If H-Earth Gauges remains hold: make it calculate.</b>
-              <span>The backstage gauge page must report nonzero checks for route, canvas, hydration, runtime, and held future work.</span>
-            </div>
-            <div class="next">
-              <b>If review appears: adjust audit rules, not pages.</b>
-              <span>Review means the board lacked enough evidence to fail the page fairly.</span>
-            </div>
-          </div>
-        </article>
-      </section>
-
-      <section class="card" style="margin-top:16px;" aria-label="Live route ledger">
-        <h2>Live Route Ledger</h2>
-        <p>
-          The audit fetches same-origin public pages, reads visible body text, checks title and H1 identity, scans route markers when present, and classifies the gap type. It does not execute private render engines.
-        </p>
-
-        <div class="divider"></div>
-
-        <div class="ledger" data-ledger>
-          <div class="route-row">
-            <div class="route-path">waiting</div>
-            <div><span class="badge checking">Ready</span></div>
-            <div><span class="badge class-pill">pending</span></div>
-            <div class="route-note">Press Run Live Audit to read current deployed routes.</div>
+      <section class="panel">
+        <p class="panel-title">Live Route Ledger</p>
+        <div class="small">
+          Reads same-origin public pages with a cache-busting query. Script, style, template, and noscript text are removed before visible-text checks.
+        </div>
+        <div class="ledger" data-route-ledger>
+          <div class="row">
+            <div class="route">waiting</div>
+            <div><span class="status pending">pending</span></div>
+            <div class="detail">Run the audit.</div>
           </div>
         </div>
+      </section>
 
-        <p class="fine" style="margin-top:16px;">
-          Precision rule: a route fails only when the wrong identity, wrong authority, or unavailable route is proven. A route holds when it needs proof or cleanup. A route reviews when the audit rule cannot classify fairly from current public text.
-        </p>
+      <section class="panel">
+        <p class="panel-title">Source + Runtime Ledger</p>
+        <div class="small">
+          Reads deployed JavaScript and probes the public Globe canvas inside a hidden same-origin frame.
+        </div>
+        <div class="ledger" data-runtime-ledger>
+          <div class="row">
+            <div class="route">waiting</div>
+            <div><span class="status pending">pending</span></div>
+            <div class="detail">Run the audit.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <p class="panel-title">Gap Board</p>
+        <div class="gap-list" data-gap-board>
+          <div class="gap"><strong>Waiting.</strong> Run Live Audit to classify the current gap.</div>
+        </div>
       </section>
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Triple G · precision audit board.
+      Diamond Gate Bridge · Triple G · Showroom Globe Runtime Route Audit.
     </footer>
   </div>
 
   <script>
-    (() => {
-      const ROUTES = [
-        {
-          path: "/",
-          label: "Compass",
-          family: "core-entry",
-          positiveAny: ["Compass", "Diamond Gate Bridge", "Pressure is the door", "Door", "Home"],
-          holdSignals: ["renderer did not load", "failed to load renderer", "fallback"],
-          receiptSignals: ["TNT_v", "visual_pass_claimed=false", "data-contract="],
-          pass: "Compass route is reachable and reads as the entry surface.",
-          hold: "Compass route is reachable, but fallback or visible build-state language remains.",
-          fail: "Compass route is unavailable or missing its entry identity.",
-          review: "Compass route is reachable, but public text did not give enough route evidence."
-        },
-        {
-          path: "/flat/",
-          label: "Flat",
-          family: "public-view",
-          positiveAny: ["Flat", "map", "two-dimensional", "architectural", "investigation"],
-          holdSignals: [],
-          receiptSignals: ["TNT_v", "visual_pass_claimed=false", "data-contract="],
-          pass: "Flat route is reachable and reads as the map/investigation view.",
-          hold: "Flat route is reachable, but visible build-state language remains.",
-          fail: "Flat route is unavailable.",
-          review: "Flat route is reachable, but route-family language was too thin to classify as pass."
-        },
-        {
-          path: "/products/",
-          label: "Products",
-          family: "public-products",
-          positiveAny: ["Products", "ARCHCOIN", "Five Flags", "On Your Side", "Education", "Nutrition", "Eight Doors", "message becomes usable"],
-          holdSignals: [],
-          receiptSignals: ["PRODUCTS_", "TNT_v", "visual_pass_claimed=false", "route=/products/", "data-contract="],
-          pass: "Products route is reachable and visitor-facing text is contained.",
-          hold: "Products route is reachable, but visible receipt-style source text remains.",
-          fail: "Products route is unavailable.",
-          review: "Products route is reachable, but product-family language was too thin to classify as pass."
-        },
-        {
-          path: "/showroom/",
-          label: "Showroom",
-          family: "public-showroom",
-          positiveAny: ["Showroom", "case", "proof", "Globe", "showcase", "display"],
-          holdSignals: [],
-          receiptSignals: ["SHOWROOM_", "TNT_v", "visual_pass_claimed=false", "data-contract="],
-          pass: "Showroom route is reachable and reads as the public proof/display room.",
-          hold: "Showroom route is reachable, but visible receipt-style source text remains.",
-          fail: "Showroom route is unavailable.",
-          review: "Showroom route is reachable, but audit evidence is too thin; this is likely an audit-rule mismatch, not a route break."
-        },
-        {
-          path: "/showroom/globe/",
-          label: "Globe Showcase",
-          family: "public-globe-index",
-          positiveAny: ["Globe", "Earth", "H-Earth", "Audralia", "Showcase", "inspection", "selector"],
-          holdSignals: [],
-          receiptSignals: ["GLOBE_", "TNT_v", "visual_pass_claimed=false", "data-contract="],
-          pass: "Globe Showcase is reachable and reads as a public planet/body selector.",
-          hold: "Globe Showcase is reachable, but visible receipt-style source text remains.",
-          fail: "Globe Showcase route is unavailable.",
-          review: "Globe Showcase is reachable, but exact public wording changed; audit rule requires review instead of fail."
-        },
-        {
-          path: "/showroom/globe/earth/",
-          label: "Earth",
-          family: "reference-body",
-          positiveAny: ["Earth", "Reference Body", "Blue Marble", "NASA", "real-world"],
-          wrongTitleAny: ["Hearth"],
-          wrongH1Any: ["Hearth"],
-          wrongRouteAny: ["route=/showroom/globe/hearth/", "data-route=\"/showroom/globe/hearth/\"", "Hearth · Tectonic Parent Chain", "Hearth now routes"],
-          holdSignals: [],
-          receiptSignals: ["EARTH_", "TNT_v", "visual_pass_claimed=false", "data-contract="],
-          pass: "Earth route reads as the Earth reference body.",
-          hold: "Earth route is reachable, but visible receipt-style source text remains.",
-          fail: "Earth route identity failure: Hearth authority appears in title, H1, route marker, or body identity.",
-          review: "Earth route is reachable, but Earth reference-body proof is not clear enough yet."
-        },
-        {
-          path: "/showroom/globe/h-earth/",
-          label: "H-Earth",
-          family: "private-orbital-build",
-          positiveAny: ["H-Earth", "Private Orbital", "orbital", "Diagnostics Backstage", "ground level", "estate"],
-          proofAny: [
-            "H_EARTH_SPHERE_PROJECTION_AND_HYDRATION_CLIP_RENEWAL_TNT_v1",
-            "hydrated spherical",
-            "hydrated sphere",
-            "Fibonacci runtime",
-            "water clipped inside sphere",
-            "h-earth.canvas",
-            "h-earth.hydration"
-          ],
-          holdSignals: ["ground level held", "estate held", "Diagnostics Backstage"],
-          receiptSignals: ["raw runtime receipts", "canvas dump", "control dump"],
-          pass: "H-Earth is framed correctly and exposes route-readable hydrated sphere proof.",
-          hold: "H-Earth is framed correctly, but route-readable hydrated sphere proof is still held or incomplete.",
-          fail: "H-Earth route is unavailable or missing its private orbital build identity.",
-          review: "H-Earth is reachable, but the audit cannot separate page text from render proof yet."
-        },
-        {
-          path: "/showroom/globe/audralia/",
-          label: "Audralia",
-          family: "constructed-body",
-          positiveAny: ["Audralia", "Generation 1", "ocean-dominant", "constructed world", "not Earth", "not Hearth"],
-          hardForbiddenAny: ["Australia"],
-          holdSignals: [],
-          receiptSignals: ["AUDRALIA_", "TNT_v", "visual_pass_claimed=false", "route=/showroom/globe/audralia/", "data-contract="],
-          pass: "Audralia route identity is clean and visitor-facing text is contained.",
-          hold: "Audralia identity is coherent, but visible route-preparing/source text remains.",
-          fail: "Audralia route is contaminated by forbidden Australia language or is unavailable.",
-          review: "Audralia is reachable, but constructed-world proof is not clear enough yet."
-        },
-        {
-          path: "/gauges/h-earth/",
-          label: "H-Earth Gauges",
-          family: "private-diagnostic",
-          positiveAny: ["H-Earth Gauges", "Read-only", "H-Earth", "Gauges"],
-          activeAny: ["Total checks", "Passed", "Held", "Failed", "Readiness"],
-          zeroHoldAny: ["0 Total checks", "0%Readiness", "0 Passed", "waiting"],
-          receiptSignals: [],
-          pass: "H-Earth Gauges is reachable and appears to be reporting active diagnostics.",
-          hold: "H-Earth Gauges exists but still appears to be waiting or reporting zero checks.",
-          fail: "H-Earth Gauges route is unavailable or missing its diagnostic identity.",
-          review: "H-Earth Gauges is reachable, but active diagnostic metrics could not be read fairly."
-        }
-      ];
+    const AUDIT_CONTRACT = "TRIPLE_G_SHOWROOM_GLOBE_RUNTIME_ROUTE_AUDIT_TNT_v1";
 
-      const state = {
-        results: []
+    const ROUTES = [
+      {
+        path: "/",
+        label: "Compass",
+        expect: ["Compass", "Diamond Gate Bridge"],
+        reject: []
+      },
+      {
+        path: "/flat/",
+        label: "Flat",
+        expect: ["Flat"],
+        reject: []
+      },
+      {
+        path: "/products/",
+        label: "Products",
+        expect: ["Products"],
+        reject: ["<html", "data-contract="]
+      },
+      {
+        path: "/showroom/",
+        label: "Showroom Diamond",
+        expect: ["Diamond", "Showroom"],
+        reject: ["Earth is the real-world reference body", "Globe Showcase · Gateway", "Reference body · Blue Marble"]
+      },
+      {
+        path: "/showroom/globe/",
+        label: "Globe Showcase Gateway",
+        expect: ["Globe Showcase", "gateway"],
+        reject: ["Earth is the real-world reference body", "Reference body · Blue Marble"]
+      },
+      {
+        path: "/showroom/globe/earth/",
+        label: "Earth Child Page",
+        expect: ["Earth", "reference"],
+        reject: ["Hearth", "Choose the world body you meant to open"]
+      },
+      {
+        path: "/showroom/globe/h-earth/",
+        label: "H-Earth Child Page",
+        expect: ["H-Earth"],
+        reject: ["Earth is the real-world reference body"]
+      },
+      {
+        path: "/showroom/globe/audralia/",
+        label: "Audralia Child Page",
+        expect: ["Audralia"],
+        reject: [/Austral(?:ia|ian)/i, "Earth is the real-world reference body"]
+      },
+      {
+        path: "/gauges/",
+        label: "Triple G",
+        expect: ["Triple G"],
+        reject: ["Waiting for live audit", "Live Frontier Audit"]
+      }
+    ];
+
+    const SCRIPT_CHECKS = [
+      {
+        path: "/showroom/index.js",
+        label: "Showroom JS",
+        expect: ["SHOWROOM_DIAMOND", "CROWN_CUT_256_LATTICE_FIXED_FORM"],
+        reject: ["Earth is the real-world reference body"]
+      },
+      {
+        path: "/showroom/globe/index.js",
+        label: "Globe JS",
+        expect: [
+          "SHOWROOM_GLOBE_MOBILE_STAGE_LAYOUT_GOVERNOR_TNT_v5",
+          "surfaceCache",
+          "getLayoutMetrics",
+          "mobileStageLayoutGovernor",
+          "requestAnimationFrame"
+        ],
+        reject: ["blockTileLandRender: true", "GraphicBox", "generatedImage: true"]
+      }
+    ];
+
+    const results = [];
+
+    function stamp() {
+      return String(Date.now()) + "-" + Math.random().toString(16).slice(2);
+    }
+
+    function cacheBustUrl(path) {
+      const joiner = path.includes("?") ? "&" : "?";
+      return `${path}${joiner}triple_g_audit=${stamp()}`;
+    }
+
+    async function fetchText(path) {
+      const response = await fetch(cacheBustUrl(path), {
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-cache",
+          "Pragma": "no-cache"
+        }
+      });
+
+      const text = await response.text();
+
+      return {
+        ok: response.ok,
+        status: response.status,
+        url: response.url,
+        text
       };
+    }
 
-      const ledger = document.querySelector("[data-ledger]");
-      const runButton = document.querySelector("[data-run-audit]");
-      const countRoutes = document.querySelector('[data-count="routes"]');
-      const countPass = document.querySelector('[data-count="pass"]');
-      const countHold = document.querySelector('[data-count="hold"]');
-      const countFail = document.querySelector('[data-count="fail"]');
-      const countReview = document.querySelector('[data-count="review"]');
+    function parseHtml(text) {
+      return new DOMParser().parseFromString(text, "text/html");
+    }
 
-      function normalize(value) {
-        return String(value || "").replace(/\s+/g, " ").trim();
+    function visibleText(doc) {
+      const clone = doc.body ? doc.body.cloneNode(true) : document.createElement("body");
+      clone.querySelectorAll("script, style, template, noscript, svg").forEach((node) => node.remove());
+      return (clone.textContent || "").replace(/\s+/g, " ").trim();
+    }
+
+    function titleText(doc) {
+      return (doc.querySelector("title")?.textContent || "").trim();
+    }
+
+    function h1Text(doc) {
+      return (doc.querySelector("h1")?.textContent || "").trim();
+    }
+
+    function hasNeedle(haystack, needle) {
+      if (needle instanceof RegExp) return needle.test(haystack);
+      return haystack.toLowerCase().includes(String(needle).toLowerCase());
+    }
+
+    function evidenceSnippet(text, needles) {
+      for (const needle of needles) {
+        if (needle instanceof RegExp) {
+          const match = text.match(needle);
+          if (match) return match[0];
+          continue;
+        }
+
+        const lower = text.toLowerCase();
+        const query = String(needle).toLowerCase();
+        const index = lower.indexOf(query);
+
+        if (index >= 0) {
+          return text.slice(Math.max(0, index - 54), Math.min(text.length, index + query.length + 80));
+        }
       }
 
-      function lower(value) {
-        return normalize(value).toLowerCase();
+      return text.slice(0, 160);
+    }
+
+    function addResult(group, path, label, status, message, evidence) {
+      results.push({ group, path, label, status, message, evidence });
+    }
+
+    function classifyRoute(route, fetched) {
+      if (!fetched.ok) {
+        addResult("route", route.path, route.label, "fail", `${route.label} is not reachable.`, `HTTP ${fetched.status}`);
+        return;
       }
 
-      function includesAny(haystack, needles) {
-        const target = lower(haystack);
-        return (needles || []).some((needle) => target.includes(lower(needle)));
+      const doc = parseHtml(fetched.text);
+      const combined = [
+        titleText(doc),
+        h1Text(doc),
+        visibleText(doc),
+        doc.documentElement?.outerHTML?.slice(0, 2800) || ""
+      ].join(" ");
+
+      const rejectHit = route.reject.find((needle) => hasNeedle(combined, needle));
+      if (rejectHit) {
+        addResult(
+          "route",
+          route.path,
+          route.label,
+          "fail",
+          `${route.label} is carrying forbidden or wrong-route language.`,
+          evidenceSnippet(combined, [rejectHit])
+        );
+        return;
       }
 
-      function includesAll(haystack, needles) {
-        const target = lower(haystack);
-        return (needles || []).every((needle) => target.includes(lower(needle)));
+      const found = route.expect.filter((needle) => hasNeedle(combined, needle));
+
+      if (found.length === route.expect.length) {
+        addResult(
+          "route",
+          route.path,
+          route.label,
+          "pass",
+          `${route.label} visible identity is aligned.`,
+          evidenceSnippet(combined, route.expect)
+        );
+        return;
       }
 
-      function extractRouteDocument(html) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        const title = normalize(doc.querySelector("title")?.textContent || "");
-        const h1 = normalize(doc.querySelector("h1")?.textContent || "");
-        const bodyRoute = normalize(doc.body?.getAttribute("data-route") || doc.documentElement?.getAttribute("data-route") || "");
-        const bodyPage = normalize(doc.body?.getAttribute("data-page") || doc.documentElement?.getAttribute("data-page") || "");
-        const htmlLower = lower(html);
-
-        doc.querySelectorAll("script, style, template, svg, noscript").forEach((node) => node.remove());
-
-        const visibleText = normalize(doc.body ? doc.body.innerText : doc.documentElement.innerText || "");
-        const identityText = normalize([title, h1, bodyRoute, bodyPage].join(" "));
-        const fullPublicText = normalize([identityText, visibleText].join(" "));
-
-        return {
-          title,
-          h1,
-          bodyRoute,
-          bodyPage,
-          visibleText,
-          identityText,
-          fullPublicText,
-          htmlLower
-        };
+      if (found.length > 0) {
+        addResult(
+          "route",
+          route.path,
+          route.label,
+          "hold",
+          `${route.label} is reachable but missing one or more expected route markers.`,
+          `found: ${found.join(", ")}`
+        );
+        return;
       }
 
-      function classify(route, routeDoc, ok, httpStatus) {
-        if (!ok) {
-          return {
-            path: route.path,
-            label: route.label,
-            status: "fail",
-            className: "unavailable-route",
-            note: "Route fetch failed or returned HTTP " + httpStatus + ".",
-            evidence: "fetch-status"
-          };
-        }
+      addResult(
+        "route",
+        route.path,
+        route.label,
+        "review",
+        `${route.label} is reachable, but this audit cannot classify its visible identity from current text.`,
+        evidenceSnippet(combined, route.expect)
+      );
+    }
 
-        const text = routeDoc.fullPublicText;
-        const visible = routeDoc.visibleText;
-        const titleAndH1 = normalize([routeDoc.title, routeDoc.h1].join(" "));
-        const routeMarkers = normalize([routeDoc.bodyRoute, routeDoc.bodyPage, routeDoc.identityText].join(" "));
-
-        const hardForbiddenHit = includesAny(visible, route.hardForbiddenAny || []);
-        const wrongTitleHit = includesAny(routeDoc.title, route.wrongTitleAny || []);
-        const wrongH1Hit = includesAny(routeDoc.h1, route.wrongH1Any || []);
-        const wrongRouteHit = includesAny(routeMarkers + " " + visible, route.wrongRouteAny || []);
-
-        if (hardForbiddenHit || wrongTitleHit || wrongH1Hit || wrongRouteHit) {
-          return {
-            path: route.path,
-            label: route.label,
-            status: "fail",
-            className: "route-identity-failure",
-            note: route.fail,
-            evidence: hardForbiddenHit ? "forbidden-visible-language" : wrongTitleHit ? "wrong-title" : wrongH1Hit ? "wrong-h1" : "wrong-route-authority"
-          };
-        }
-
-        const positiveHit = includesAny(text, route.positiveAny || []);
-        const receiptHit = includesAny(visible, route.receiptSignals || []);
-        const holdHit = includesAny(visible, route.holdSignals || []);
-        const proofRequired = Array.isArray(route.proofAny) && route.proofAny.length > 0;
-        const proofHit = proofRequired ? includesAny(text, route.proofAny) : true;
-        const activeRequired = Array.isArray(route.activeAny) && route.activeAny.length > 0;
-        const activeHit = activeRequired ? includesAny(text, route.activeAny) : true;
-        const zeroHoldHit = includesAny(visible, route.zeroHoldAny || []);
-
-        if (!positiveHit) {
-          return {
-            path: route.path,
-            label: route.label,
-            status: "review",
-            className: "audit-rule-mismatch",
-            note: route.review,
-            evidence: "weak-positive-route-family-signal"
-          };
-        }
-
-        if (receiptHit) {
-          return {
-            path: route.path,
-            label: route.label,
-            status: "hold",
-            className: "visible-receipt-spillover",
-            note: route.hold,
-            evidence: "visible-source-or-contract-language"
-          };
-        }
-
-        if (zeroHoldHit) {
-          return {
-            path: route.path,
-            label: route.label,
-            status: "hold",
-            className: "inactive-gauge-hold",
-            note: route.hold,
-            evidence: "zero-or-waiting-diagnostics"
-          };
-        }
-
-        if (!proofHit) {
-          return {
-            path: route.path,
-            label: route.label,
-            status: "hold",
-            className: "route-proof-hold",
-            note: route.hold,
-            evidence: "missing-route-readable-render-proof"
-          };
-        }
-
-        if (!activeHit) {
-          return {
-            path: route.path,
-            label: route.label,
-            status: "review",
-            className: "audit-rule-mismatch",
-            note: route.review,
-            evidence: "metrics-not-readable"
-          };
-        }
-
-        if (holdHit) {
-          return {
-            path: route.path,
-            label: route.label,
-            status: "hold",
-            className: "declared-transitional-hold",
-            note: route.hold,
-            evidence: "visible-hold-language"
-          };
-        }
-
-        return {
-          path: route.path,
-          label: route.label,
-          status: "pass",
-          className: "visible-route-proof",
-          note: route.pass,
-          evidence: normalize([routeDoc.title, routeDoc.h1].filter(Boolean).join(" · ")) || "public-text"
-        };
+    function classifyScript(script, fetched) {
+      if (!fetched.ok) {
+        addResult("runtime", script.path, script.label, "fail", `${script.label} is not reachable.`, `HTTP ${fetched.status}`);
+        return;
       }
 
-      function renderLedger() {
-        ledger.innerHTML = "";
+      const text = fetched.text || "";
+      const rejectHit = script.reject.find((needle) => hasNeedle(text, needle));
 
-        state.results.forEach((result) => {
-          const row = document.createElement("div");
-          row.className = "route-row";
+      if (rejectHit) {
+        addResult(
+          "runtime",
+          script.path,
+          script.label,
+          "fail",
+          `${script.label} contains forbidden or stale source markers.`,
+          evidenceSnippet(text, [rejectHit])
+        );
+        return;
+      }
 
-          const path = document.createElement("div");
-          path.className = "route-path";
-          path.textContent = result.path;
+      const found = script.expect.filter((needle) => hasNeedle(text, needle));
 
-          const badgeBox = document.createElement("div");
-          const badge = document.createElement("span");
-          badge.className = "badge " + result.status;
-          badge.textContent = result.status;
-          badgeBox.appendChild(badge);
+      if (found.length === script.expect.length) {
+        addResult(
+          "runtime",
+          script.path,
+          script.label,
+          "pass",
+          `${script.label} contains the expected runtime contract markers.`,
+          `found: ${found.join(", ")}`
+        );
+        return;
+      }
 
-          const classBox = document.createElement("div");
-          const classBadge = document.createElement("span");
-          classBadge.className = "badge class-pill";
-          classBadge.textContent = result.className || "pending";
-          classBox.appendChild(classBadge);
+      addResult(
+        "runtime",
+        script.path,
+        script.label,
+        "hold",
+        `${script.label} is reachable but missing runtime markers.`,
+        `found: ${found.join(", ") || "none"}`
+      );
+    }
 
-          const note = document.createElement("div");
-          note.className = "route-note";
-          note.textContent = result.label + " · " + result.note;
+    async function probeGlobeCanvas() {
+      const iframe = document.createElement("iframe");
+      iframe.className = "audit-frame";
+      iframe.src = cacheBustUrl("/showroom/globe/");
+      iframe.setAttribute("aria-hidden", "true");
+      document.body.appendChild(iframe);
 
-          const evidence = document.createElement("small");
-          evidence.textContent = "evidence: " + result.evidence;
-          note.appendChild(evidence);
-
-          row.appendChild(path);
-          row.appendChild(badgeBox);
-          row.appendChild(classBox);
-          row.appendChild(note);
-          ledger.appendChild(row);
+      try {
+        await new Promise((resolve, reject) => {
+          const timer = window.setTimeout(() => reject(new Error("iframe timeout")), 9000);
+          iframe.addEventListener("load", () => {
+            window.clearTimeout(timer);
+            resolve();
+          }, { once: true });
         });
 
-        const pass = state.results.filter((item) => item.status === "pass").length;
-        const hold = state.results.filter((item) => item.status === "hold").length;
-        const fail = state.results.filter((item) => item.status === "fail").length;
-        const review = state.results.filter((item) => item.status === "review").length;
+        await delay(900);
 
-        countRoutes.textContent = String(state.results.length || ROUTES.length);
-        countPass.textContent = String(pass);
-        countHold.textContent = String(hold);
-        countFail.textContent = String(fail);
-        countReview.textContent = String(review);
+        const doc = iframe.contentDocument;
+        const win = iframe.contentWindow;
+
+        if (!doc || !win) {
+          addResult("runtime", "iframe:/showroom/globe/", "Globe Canvas Probe", "hold", "The Globe frame loaded but could not be inspected.", "contentDocument unavailable");
+          return;
+        }
+
+        const stable = doc.querySelector("[data-mode='stable']");
+        if (stable) stable.click();
+
+        await delay(700);
+
+        const canvas = doc.querySelector("[data-globe-selector-canvas]");
+        const stage = doc.querySelector("[data-globe-selector-stage]");
+
+        if (!canvas || !stage) {
+          addResult("runtime", "iframe:/showroom/globe/", "Globe Canvas Probe", "fail", "The Globe page does not expose the expected stage and canvas selectors.", "missing data-globe-selector-stage or data-globe-selector-canvas");
+          return;
+        }
+
+        const first = sampleCanvas(canvas);
+        await delay(850);
+        const second = sampleCanvas(canvas);
+
+        if (!first.ok || !second.ok) {
+          addResult("runtime", "iframe:/showroom/globe/", "Globe Canvas Probe", "hold", "Canvas exists but pixel proof could not be sampled.", first.error || second.error || "unknown sampling error");
+          return;
+        }
+
+        const delta = frameDelta(first.samples, second.samples);
+        const nonblank = Math.max(first.nonblankRatio, second.nonblankRatio);
+
+        if (nonblank < 0.04) {
+          addResult("runtime", "iframe:/showroom/globe/", "Globe Canvas Probe", "fail", "The Globe canvas appears blank or nearly blank.", `nonblank ratio: ${nonblank.toFixed(4)}`);
+          return;
+        }
+
+        if (delta > 0.12) {
+          addResult("runtime", "iframe:/showroom/globe/", "Globe Canvas Probe", "fail", "Stable-mode canvas is changing too much between frames. Flicker risk is high.", `stable delta: ${delta.toFixed(4)} · nonblank: ${nonblank.toFixed(4)}`);
+          return;
+        }
+
+        if (delta > 0.055) {
+          addResult("runtime", "iframe:/showroom/globe/", "Globe Canvas Probe", "hold", "Canvas is live, but stable-mode frame delta is still elevated.", `stable delta: ${delta.toFixed(4)} · nonblank: ${nonblank.toFixed(4)}`);
+          return;
+        }
+
+        addResult("runtime", "iframe:/showroom/globe/", "Globe Canvas Probe", "pass", "Canvas is mounted, nonblank, and stable-mode frame delta is controlled.", `stable delta: ${delta.toFixed(4)} · nonblank: ${nonblank.toFixed(4)}`);
+      } catch (error) {
+        addResult("runtime", "iframe:/showroom/globe/", "Globe Canvas Probe", "hold", "The Globe canvas probe could not complete.", error.message || String(error));
+      } finally {
+        iframe.remove();
+      }
+    }
+
+    function delay(ms) {
+      return new Promise((resolve) => window.setTimeout(resolve, ms));
+    }
+
+    function sampleCanvas(canvas) {
+      try {
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+        if (!ctx) return { ok: false, error: "2d context unavailable" };
+
+        const width = canvas.width;
+        const height = canvas.height;
+        if (!width || !height) return { ok: false, error: "canvas has zero size" };
+
+        const stepX = Math.max(10, Math.floor(width / 48));
+        const stepY = Math.max(10, Math.floor(height / 48));
+        const samples = [];
+        let nonblank = 0;
+        let total = 0;
+
+        for (let y = 0; y < height; y += stepY) {
+          for (let x = 0; x < width; x += stepX) {
+            const data = ctx.getImageData(x, y, 1, 1).data;
+            const value = data[0] + data[1] + data[2] + data[3];
+            samples.push(value);
+            if (data[3] > 8 && data[0] + data[1] + data[2] > 24) nonblank += 1;
+            total += 1;
+          }
+        }
+
+        return {
+          ok: true,
+          samples,
+          nonblankRatio: nonblank / Math.max(1, total)
+        };
+      } catch (error) {
+        return { ok: false, error: error.message || String(error) };
+      }
+    }
+
+    function frameDelta(a, b) {
+      const length = Math.min(a.length, b.length);
+      if (!length) return 1;
+
+      let sum = 0;
+      for (let i = 0; i < length; i += 1) {
+        sum += Math.abs(a[i] - b[i]) / 1020;
       }
 
-      async function auditRoute(route) {
+      return sum / length;
+    }
+
+    function statusClass(status) {
+      if (status === "pass") return "pass";
+      if (status === "fail") return "fail";
+      if (status === "hold") return "hold";
+      if (status === "review") return "review";
+      return "pending";
+    }
+
+    function renderLedger(selector, group) {
+      const container = document.querySelector(selector);
+      const subset = results.filter((result) => result.group === group);
+
+      if (!container) return;
+
+      if (!subset.length) {
+        container.innerHTML = `
+          <div class="row">
+            <div class="route">none</div>
+            <div><span class="status pending">pending</span></div>
+            <div class="detail">No checks completed.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = subset.map((result) => `
+        <div class="row">
+          <div class="route">${escapeHtml(result.path)}</div>
+          <div><span class="status ${statusClass(result.status)}">${escapeHtml(result.status)}</span></div>
+          <div class="detail">
+            <strong>${escapeHtml(result.label)}</strong> · ${escapeHtml(result.message)}
+            <div class="evidence">evidence: ${escapeHtml(result.evidence || "none")}</div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderCounts() {
+      const counts = {
+        total: results.length,
+        pass: results.filter((r) => r.status === "pass").length,
+        hold: results.filter((r) => r.status === "hold").length,
+        fail: results.filter((r) => r.status === "fail").length,
+        review: results.filter((r) => r.status === "review").length
+      };
+
+      Object.entries(counts).forEach(([key, value]) => {
+        const node = document.querySelector(`[data-count="${key}"]`);
+        if (node) node.textContent = String(value);
+      });
+    }
+
+    function renderGapBoard() {
+      const board = document.querySelector("[data-gap-board]");
+      if (!board) return;
+
+      const gaps = [];
+
+      const showroomFail = results.find((r) => r.path === "/showroom/" && r.status !== "pass");
+      const globeFail = results.find((r) => r.path === "/showroom/globe/" && r.status !== "pass");
+      const jsHold = results.find((r) => r.path === "/showroom/globe/index.js" && r.status !== "pass");
+      const canvas = results.find((r) => r.label === "Globe Canvas Probe" && r.status !== "pass");
+      const audralia = results.find((r) => r.path === "/showroom/globe/audralia/" && r.status !== "pass");
+
+      if (showroomFail) {
+        gaps.push(["Showroom route identity", "Showroom is not proving the Diamond cover object consistently. Re-deploy /showroom/index.html and /showroom/index.js with a new cache key."]);
+      }
+
+      if (globeFail) {
+        gaps.push(["Globe gateway identity", "Globe Showcase is not proving gateway authority consistently. Re-deploy /showroom/globe/index.html with a new cache key before visual tuning."]);
+      }
+
+      if (jsHold) {
+        gaps.push(["Globe runtime source", "The deployed Globe script is missing one or more runtime-stabilization markers. Re-issue /showroom/globe/index.js and bump the HTML script query."]);
+      }
+
+      if (canvas) {
+        gaps.push(["Canvas flicker or proof hold", "The public Globe canvas is mounted but not yet stable enough under the probe. Next correction should throttle clouds/effects and render static planet material to an offscreen cache."]);
+      }
+
+      if (audralia) {
+        gaps.push(["Audralia identity", "Audralia route identity is not clean under live text audit. Correct this before using the three-body selector as a public comparison surface."]);
+      }
+
+      if (!gaps.length) {
+        gaps.push(["No hard gap from this run", "Routes, deployed markers, and canvas proof are currently aligned. Next work may target visual quality rather than route/runtime emergency repair."]);
+      }
+
+      board.innerHTML = gaps.map(([title, message]) => `
+        <div class="gap"><strong>${escapeHtml(title)}.</strong> ${escapeHtml(message)}</div>
+      `).join("");
+    }
+
+    function renderAll() {
+      renderLedger("[data-route-ledger]", "route");
+      renderLedger("[data-runtime-ledger]", "runtime");
+      renderCounts();
+      renderGapBoard();
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    async function runAudit() {
+      results.length = 0;
+      addResult("route", "audit", "Audit Runtime", "hold", "Live audit is running.", AUDIT_CONTRACT);
+      renderAll();
+
+      results.length = 0;
+
+      for (const route of ROUTES) {
         try {
-          const response = await fetch(route.path, {
-            cache: "no-store",
-            credentials: "same-origin",
-            headers: {
-              "Accept": "text/html"
-            }
-          });
-
-          const html = await response.text();
-          const routeDoc = extractRouteDocument(html);
-          return classify(route, routeDoc, response.ok, response.status);
+          classifyRoute(route, await fetchText(route.path));
         } catch (error) {
-          return {
-            path: route.path,
-            label: route.label,
-            status: "fail",
-            className: "fetch-error",
-            note: "Fetch error: " + (error && error.message ? error.message : "unknown error"),
-            evidence: "fetch-error"
-          };
-        }
-      }
-
-      async function runAudit() {
-        runButton.disabled = true;
-        runButton.textContent = "Reading Live Routes";
-
-        state.results = ROUTES.map((route) => ({
-          path: route.path,
-          label: route.label,
-          status: "checking",
-          className: "pending",
-          note: "Waiting for fetch.",
-          evidence: "pending"
-        }));
-        renderLedger();
-
-        const results = [];
-        for (const route of ROUTES) {
-          const result = await auditRoute(route);
-          results.push(result);
-          state.results = results.concat(
-            ROUTES.slice(results.length).map((pending) => ({
-              path: pending.path,
-              label: pending.label,
-              status: "checking",
-              className: "pending",
-              note: "Waiting for fetch.",
-              evidence: "pending"
-            }))
-          );
-          renderLedger();
+          addResult("route", route.path, route.label, "hold", `${route.label} fetch could not complete.`, error.message || String(error));
         }
 
-        state.results = results;
-        renderLedger();
-
-        runButton.disabled = false;
-        runButton.textContent = "Run Live Audit";
+        renderAll();
       }
 
-      runButton?.addEventListener("click", runAudit);
-      countRoutes.textContent = String(ROUTES.length);
-    })();
+      for (const script of SCRIPT_CHECKS) {
+        try {
+          classifyScript(script, await fetchText(script.path));
+        } catch (error) {
+          addResult("runtime", script.path, script.label, "hold", `${script.label} fetch could not complete.`, error.message || String(error));
+        }
+
+        renderAll();
+      }
+
+      await probeGlobeCanvas();
+      renderAll();
+    }
+
+    function init() {
+      const button = document.querySelector("[data-run-audit]");
+      if (button) button.addEventListener("click", runAudit);
+
+      document.documentElement.dataset.auditContract = AUDIT_CONTRACT;
+      document.body.dataset.auditContract = AUDIT_CONTRACT;
+
+      runAudit();
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init, { once: true });
+    } else {
+      init();
+    }
   </script>
 </body>
 </html>

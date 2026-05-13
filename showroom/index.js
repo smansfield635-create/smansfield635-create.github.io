@@ -1,8 +1,9 @@
 const SHOWROOM_DIAMOND_STATE = Object.freeze({
-  contract: "SHOWROOM_CROWN_CUT_256_LATTICE_RENDER_RESTORE_TNT_v2",
+  contract: "SHOWROOM_CRYSTAL_CLARITY_DIAMOND_RENDER_TNT_v3",
   route: "/showroom/",
   role: "showroom-cover-object",
   diamondLock: "CROWN_CUT_256_LATTICE_FIXED_FORM",
+  crystalClarity: true,
   touchGlide: true,
   earthRecord: false,
   generatedImage: false,
@@ -72,8 +73,8 @@ function rotatePoint(point) {
 
 function projectPoint(point, width, height, scale) {
   const rotated = rotatePoint(point);
-  const camera = 4.2;
-  const perspective = camera / (camera - rotated[2] * 0.72);
+  const camera = 4.35;
+  const perspective = camera / (camera - rotated[2] * 0.74);
 
   return {
     x: width * 0.5 + rotated[0] * scale * perspective,
@@ -100,72 +101,37 @@ function makeRing(radiusX, y, radiusZ, offset = 0, ripple = 0) {
 }
 
 function buildCrownCutDiamond() {
-  const table = makeRing(0.54, -0.62, 0.15, TAU / 64, 0.018);
-  const crown = makeRing(0.86, -0.40, 0.24, 0, 0.020);
-  const girdleTop = makeRing(1.32, -0.02, 0.38, TAU / 64, 0.022);
-  const girdleBottom = makeRing(1.24, 0.18, 0.35, 0, 0.018);
-  const pavilion = makeRing(0.48, 0.64, 0.14, TAU / 64, 0.015);
+  const table = makeRing(0.50, -0.66, 0.14, TAU / 64, 0.012);
+  const crown = makeRing(0.82, -0.42, 0.24, 0, 0.015);
+  const girdleTop = makeRing(1.32, -0.02, 0.39, TAU / 64, 0.018);
+  const girdleBottom = makeRing(1.24, 0.18, 0.36, 0, 0.014);
+  const pavilion = makeRing(0.42, 0.66, 0.13, TAU / 64, 0.010);
 
-  const tableCenter = [0, -0.68, 0];
-  const culet = [0, 0.98, 0];
+  const tableCenter = [0, -0.72, 0];
+  const culet = [0, 1.04, 0];
 
   const faces = [];
 
   faces.push({
     type: "table",
     points: table.slice(),
-    tone: 1.08
+    tone: 1.22
   });
 
   for (let i = 0; i < SEGMENTS; i += 1) {
     const n = (i + 1) % SEGMENTS;
 
-    faces.push({
-      type: "star",
-      points: [tableCenter, table[i], table[n]],
-      tone: 1.18
-    });
-
-    faces.push({
-      type: "upper-crown",
-      points: [table[i], crown[i], crown[n], table[n]],
-      tone: 1.05
-    });
-
-    faces.push({
-      type: "lower-crown",
-      points: [crown[i], girdleTop[i], girdleTop[n], crown[n]],
-      tone: 0.96
-    });
-
-    faces.push({
-      type: "girdle",
-      points: [girdleTop[i], girdleBottom[i], girdleBottom[n], girdleTop[n]],
-      tone: 0.76
-    });
-
-    faces.push({
-      type: "pavilion-upper",
-      points: [girdleBottom[i], pavilion[i], pavilion[n], girdleBottom[n]],
-      tone: 0.86
-    });
-
-    faces.push({
-      type: "pavilion-lower",
-      points: [pavilion[i], culet, pavilion[n]],
-      tone: 0.82
-    });
+    faces.push({ type: "star", points: [tableCenter, table[i], table[n]], tone: 1.22 });
+    faces.push({ type: "upper-crown", points: [table[i], crown[i], crown[n], table[n]], tone: 1.10 });
+    faces.push({ type: "lower-crown", points: [crown[i], girdleTop[i], girdleTop[n], crown[n]], tone: 1.00 });
+    faces.push({ type: "girdle", points: [girdleTop[i], girdleBottom[i], girdleBottom[n], girdleTop[n]], tone: 0.82 });
+    faces.push({ type: "pavilion-upper", points: [girdleBottom[i], pavilion[i], pavilion[n], girdleBottom[n]], tone: 0.92 });
+    faces.push({ type: "pavilion-lower", points: [pavilion[i], culet, pavilion[n]], tone: 0.90 });
   }
 
   return Object.freeze({
     faces,
-    rings: Object.freeze({
-      table,
-      crown,
-      girdleTop,
-      girdleBottom,
-      pavilion
-    }),
+    rings: Object.freeze({ table, crown, girdleTop, girdleBottom, pavilion }),
     culet,
     tableCenter
   });
@@ -189,39 +155,46 @@ function faceNormal(face) {
 
 function colorForFace(face, index) {
   const normal = faceNormal(face);
-  const light = normalize3([-0.42, -0.76, 0.92]);
-  const sideLight = normalize3([0.82, -0.24, 0.44]);
-  const front = clamp((normal[2] + 1) * 0.5, 0, 1);
-  const diffuse = Math.abs(dot3(normal, light));
-  const side = Math.max(0, dot3(normal, sideLight));
-  const glint = 0.5 + 0.5 * Math.sin(index * PHI + state.rotationY * 2.6);
+  const light = normalize3([-0.44, -0.78, 0.96]);
+  const rimLight = normalize3([0.76, -0.16, 0.52]);
+  const underLight = normalize3([-0.12, 0.88, 0.32]);
 
-  const shade = clamp(
-    0.22 + diffuse * 0.48 + side * 0.20 + front * 0.18 + glint * 0.10,
-    0.18,
+  const front = clamp((normal[2] + 1) * 0.5, 0, 1);
+  const diffuse = Math.max(0, dot3(normal, light));
+  const rim = Math.max(0, dot3(normal, rimLight));
+  const under = Math.max(0, dot3(normal, underLight));
+  const glint = 0.5 + 0.5 * Math.sin(index * PHI + state.rotationY * 3.1);
+
+  const clarity = clamp(
+    0.20 + diffuse * 0.42 + rim * 0.28 + under * 0.10 + front * 0.12 + glint * 0.10,
+    0.16,
     1.0
   ) * face.tone;
 
-  const r = Math.round(92 + shade * 116);
-  const g = Math.round(112 + shade * 112);
-  const b = Math.round(142 + shade * 104);
+  const blue = clamp(clarity, 0, 1);
+  const gold = clamp(glint * rim * 1.2, 0, 1);
+
+  const r = Math.round(150 + blue * 86 + gold * 28);
+  const g = Math.round(180 + blue * 62 + gold * 18);
+  const b = Math.round(215 + blue * 38);
 
   const alphaByType = {
-    table: 0.48,
-    star: 0.40,
-    "upper-crown": 0.42,
-    "lower-crown": 0.38,
-    girdle: 0.30,
-    "pavilion-upper": 0.34,
-    "pavilion-lower": 0.36
+    table: 0.28,
+    star: 0.24,
+    "upper-crown": 0.25,
+    "lower-crown": 0.23,
+    girdle: 0.18,
+    "pavilion-upper": 0.22,
+    "pavilion-lower": 0.24
   };
 
-  const alpha = clamp((alphaByType[face.type] || 0.36) + shade * 0.16, 0.24, 0.66);
-  const stroke = clamp(0.14 + shade * 0.30, 0.12, 0.48);
+  const alpha = clamp((alphaByType[face.type] || 0.22) + clarity * 0.14, 0.16, 0.44);
+  const stroke = clamp(0.26 + clarity * 0.42, 0.24, 0.74);
 
   return {
     fill: `rgba(${r}, ${g}, ${b}, ${alpha})`,
-    stroke: `rgba(232, 242, 255, ${stroke})`
+    stroke: `rgba(246, 252, 255, ${stroke})`,
+    shine: `rgba(255, 244, 198, ${clamp(gold * 0.42, 0.04, 0.28)})`
   };
 }
 
@@ -241,22 +214,23 @@ function resizeCanvas(canvas) {
 
 function drawBackground(ctx, width, height) {
   const bg = ctx.createLinearGradient(0, 0, 0, height);
-  bg.addColorStop(0, "rgba(4, 11, 24, 0.96)");
-  bg.addColorStop(0.52, "rgba(7, 18, 36, 0.96)");
-  bg.addColorStop(1, "rgba(2, 7, 16, 0.98)");
+  bg.addColorStop(0, "rgba(3, 9, 21, 0.98)");
+  bg.addColorStop(0.50, "rgba(5, 15, 32, 0.98)");
+  bg.addColorStop(1, "rgba(2, 6, 14, 1)");
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, width, height);
 
   const glow = ctx.createRadialGradient(
     width * 0.5,
-    height * 0.48,
+    height * 0.49,
     width * 0.04,
     width * 0.5,
-    height * 0.50,
-    width * 0.52
+    height * 0.52,
+    width * 0.46
   );
-  glow.addColorStop(0, "rgba(202, 224, 255, 0.12)");
-  glow.addColorStop(0.44, "rgba(116, 149, 191, 0.09)");
+  glow.addColorStop(0, "rgba(205, 232, 255, 0.18)");
+  glow.addColorStop(0.38, "rgba(122, 174, 220, 0.10)");
+  glow.addColorStop(0.72, "rgba(244, 207, 131, 0.05)");
   glow.addColorStop(1, "rgba(0, 0, 0, 0)");
   ctx.fillStyle = glow;
   ctx.fillRect(0, 0, width, height);
@@ -269,10 +243,10 @@ function seededUnit(index, salt) {
 function drawStars(ctx, width, height) {
   ctx.save();
 
-  for (let i = 0; i < 56; i += 1) {
+  for (let i = 0; i < 54; i += 1) {
     const x = seededUnit(i, 1) * width;
     const y = seededUnit(i, 2) * height;
-    const alpha = 0.10 + seededUnit(i, 3) * 0.24;
+    const alpha = 0.08 + seededUnit(i, 3) * 0.22;
     const size = i % 11 === 0 ? 7 : i % 5 === 0 ? 3.5 : 1.4;
 
     ctx.strokeStyle = `rgba(235, 244, 255, ${alpha})`;
@@ -301,55 +275,93 @@ function drawFace(ctx, face, index, width, height, scale) {
 
   ctx.fillStyle = color.fill;
   ctx.strokeStyle = color.stroke;
-  ctx.lineWidth = Math.max(0.7, width * 0.00125);
+  ctx.lineWidth = Math.max(0.8, width * 0.00135);
   ctx.fill();
   ctx.stroke();
+
+  if (face.type === "table" || face.type === "star" || face.type === "upper-crown") {
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+    ctx.fillStyle = color.shine;
+    ctx.fill();
+    ctx.restore();
+  }
 }
 
-function drawEdge(ctx, a, b, width, height, scale, alpha = 0.26) {
+function drawEdge(ctx, a, b, width, height, scale, alpha = 0.32, lineScale = 1) {
   const pa = projectPoint(a, width, height, scale);
   const pb = projectPoint(b, width, height, scale);
 
-  ctx.strokeStyle = `rgba(235, 244, 255, ${alpha})`;
-  ctx.lineWidth = Math.max(0.7, width * 0.001);
+  ctx.strokeStyle = `rgba(248, 253, 255, ${alpha})`;
+  ctx.lineWidth = Math.max(0.75, width * 0.00105 * lineScale);
   ctx.beginPath();
   ctx.moveTo(pa.x, pa.y);
   ctx.lineTo(pb.x, pb.y);
   ctx.stroke();
 }
 
-function drawRing(ctx, ring, width, height, scale, alpha = 0.26) {
+function drawRing(ctx, ring, width, height, scale, alpha = 0.34) {
   for (let i = 0; i < ring.length; i += 1) {
-    drawEdge(ctx, ring[i], ring[(i + 1) % ring.length], width, height, scale, alpha);
+    drawEdge(ctx, ring[i], ring[(i + 1) % ring.length], width, height, scale, alpha, 1.12);
   }
 }
 
 function drawLattice(ctx, width, height, scale) {
   ctx.save();
+  ctx.globalCompositeOperation = "screen";
 
-  drawRing(ctx, diamond.rings.table, width, height, scale, 0.34);
-  drawRing(ctx, diamond.rings.crown, width, height, scale, 0.28);
-  drawRing(ctx, diamond.rings.girdleTop, width, height, scale, 0.30);
-  drawRing(ctx, diamond.rings.girdleBottom, width, height, scale, 0.22);
-  drawRing(ctx, diamond.rings.pavilion, width, height, scale, 0.20);
+  drawRing(ctx, diamond.rings.table, width, height, scale, 0.58);
+  drawRing(ctx, diamond.rings.crown, width, height, scale, 0.45);
+  drawRing(ctx, diamond.rings.girdleTop, width, height, scale, 0.50);
+  drawRing(ctx, diamond.rings.girdleBottom, width, height, scale, 0.34);
+  drawRing(ctx, diamond.rings.pavilion, width, height, scale, 0.34);
 
   for (let i = 0; i < SEGMENTS; i += 2) {
-    drawEdge(ctx, diamond.rings.table[i], diamond.rings.girdleTop[i], width, height, scale, 0.22);
-    drawEdge(ctx, diamond.rings.girdleBottom[i], diamond.culet, width, height, scale, 0.20);
+    drawEdge(ctx, diamond.rings.table[i], diamond.rings.girdleTop[i], width, height, scale, 0.36);
+    drawEdge(ctx, diamond.rings.girdleBottom[i], diamond.culet, width, height, scale, 0.34);
   }
 
   for (let i = 1; i < SEGMENTS; i += 4) {
-    drawEdge(ctx, diamond.rings.crown[i], diamond.rings.pavilion[(i + 3) % SEGMENTS], width, height, scale, 0.13);
+    drawEdge(ctx, diamond.rings.crown[i], diamond.rings.pavilion[(i + 3) % SEGMENTS], width, height, scale, 0.20);
   }
+
+  ctx.restore();
+}
+
+function drawPrismCuts(ctx, width, height, scale) {
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  const cuts = [
+    [diamond.rings.table[2], diamond.rings.girdleBottom[10], "rgba(190, 230, 255, 0.20)"],
+    [diamond.rings.table[7], diamond.rings.pavilion[17], "rgba(255, 238, 180, 0.18)"],
+    [diamond.rings.crown[13], diamond.rings.girdleTop[25], "rgba(205, 255, 245, 0.16)"],
+    [diamond.rings.girdleTop[4], diamond.rings.pavilion[28], "rgba(255, 255, 255, 0.15)"],
+    [diamond.rings.crown[21], diamond.rings.girdleBottom[31], "rgba(170, 210, 255, 0.18)"]
+  ];
+
+  cuts.forEach(([a, b, color], index) => {
+    const pa = projectPoint(a, width, height, scale);
+    const pb = projectPoint(b, width, height, scale);
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = Math.max(0.9, width * (0.0011 + index * 0.00008));
+    ctx.beginPath();
+    ctx.moveTo(pa.x, pa.y);
+    ctx.lineTo(pb.x, pb.y);
+    ctx.stroke();
+  });
 
   ctx.restore();
 }
 
 function drawGlints(ctx, width, height, scale) {
   ctx.save();
+  ctx.globalCompositeOperation = "screen";
 
   const candidates = [
     diamond.rings.table[3],
+    diamond.rings.table[10],
     diamond.rings.crown[6],
     diamond.rings.girdleTop[10],
     diamond.rings.girdleTop[19],
@@ -359,10 +371,10 @@ function drawGlints(ctx, width, height, scale) {
 
   candidates.forEach((point, index) => {
     const projected = projectPoint(point, width, height, scale);
-    const pulse = 0.45 + 0.55 * Math.sin(performance.now() * 0.0013 + index * PHI);
-    const size = (5 + index * 0.9) * state.dpr;
+    const pulse = 0.45 + 0.55 * Math.sin(performance.now() * 0.0016 + index * PHI);
+    const size = (5 + index * 0.85) * state.dpr;
 
-    ctx.strokeStyle = `rgba(255, 255, 255, ${0.18 + pulse * 0.34})`;
+    ctx.strokeStyle = `rgba(255, 255, 255, ${0.20 + pulse * 0.46})`;
     ctx.lineWidth = Math.max(1, width * 0.001);
     ctx.beginPath();
     ctx.moveTo(projected.x - size, projected.y);
@@ -370,24 +382,30 @@ function drawGlints(ctx, width, height, scale) {
     ctx.moveTo(projected.x, projected.y - size);
     ctx.lineTo(projected.x, projected.y + size);
     ctx.stroke();
+
+    ctx.fillStyle = `rgba(255, 244, 198, ${0.04 + pulse * 0.11})`;
+    ctx.beginPath();
+    ctx.arc(projected.x, projected.y, size * 0.52, 0, TAU);
+    ctx.fill();
   });
 
   ctx.restore();
 }
 
 function drawDiamond(ctx, width, height) {
-  const scale = Math.min(width, height) * 0.355;
+  const scale = Math.min(width, height) * 0.365;
 
   const aura = ctx.createRadialGradient(
     width * 0.5,
     height * 0.50,
-    scale * 0.12,
+    scale * 0.10,
     width * 0.5,
     height * 0.54,
-    scale * 1.62
+    scale * 1.64
   );
-  aura.addColorStop(0, "rgba(244, 207, 131, 0.18)");
-  aura.addColorStop(0.38, "rgba(126, 157, 205, 0.13)");
+  aura.addColorStop(0, "rgba(220, 242, 255, 0.24)");
+  aura.addColorStop(0.34, "rgba(138, 188, 238, 0.13)");
+  aura.addColorStop(0.58, "rgba(255, 231, 172, 0.06)");
   aura.addColorStop(1, "rgba(0, 0, 0, 0)");
   ctx.fillStyle = aura;
   ctx.fillRect(0, 0, width, height);
@@ -400,19 +418,20 @@ function drawDiamond(ctx, width, height) {
     drawFace(ctx, item.face, item.index, width, height, scale);
   });
 
+  drawPrismCuts(ctx, width, height, scale);
   drawLattice(ctx, width, height, scale);
   drawGlints(ctx, width, height, scale);
 
   const shadow = ctx.createRadialGradient(
     width * 0.5,
     height * 0.72,
-    scale * 0.06,
+    scale * 0.05,
     width * 0.5,
     height * 0.72,
-    scale * 0.50
+    scale * 0.48
   );
-  shadow.addColorStop(0, "rgba(244, 207, 131, 0.15)");
-  shadow.addColorStop(0.48, "rgba(88, 116, 153, 0.13)");
+  shadow.addColorStop(0, "rgba(244, 207, 131, 0.12)");
+  shadow.addColorStop(0.42, "rgba(88, 116, 153, 0.12)");
   shadow.addColorStop(1, "rgba(0, 0, 0, 0)");
   ctx.fillStyle = shadow;
   ctx.beginPath();
@@ -509,13 +528,15 @@ function resetDiamond() {
 }
 
 function markRoute() {
-  document.documentElement.dataset.showroomStatus = "locked-diamond-render-restored";
+  document.documentElement.dataset.showroomStatus = "crystal-diamond-render-restored";
   document.documentElement.dataset.diamondLock = "CROWN_CUT_256_LATTICE_FIXED_FORM";
+  document.documentElement.dataset.crystalClarity = "true";
   document.documentElement.dataset.touchGlideDiamond = "true";
   document.documentElement.dataset.earthRecord = "false";
 
-  document.body.dataset.showroomStatus = "locked-diamond-render-restored";
+  document.body.dataset.showroomStatus = "crystal-diamond-render-restored";
   document.body.dataset.diamondLock = "CROWN_CUT_256_LATTICE_FIXED_FORM";
+  document.body.dataset.crystalClarity = "true";
   document.body.dataset.touchGlideDiamond = "true";
   document.body.dataset.earthRecord = "false";
 }
@@ -561,6 +582,7 @@ function initShowroomDiamond() {
         fixedForm: true,
         crownCut: true,
         lattice256: true,
+        crystalClarity: true,
         momentum: true,
         doubleTapReset: true
       });

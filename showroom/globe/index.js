@@ -1,8 +1,14 @@
 import {
   PLANET_MATERIAL_VERSION,
   PLANET_HYDRATION_VERSION,
+  PLANET_VEGETATION_VERSION,
   createCinematicPlanetMaterialRenderer
-} from "/assets/showroom.globe.cinematic.material.js?v=cinematic-material-v2";
+} from "/assets/showroom.globe.cinematic.material.js?v=cinematic-material-v13";
+
+import {
+  VEGETATION_HABITABILITY_VERSION,
+  createVegetationHabitabilityLayer
+} from "/assets/showroom.globe.vegetation.js?v=vegetation-habitability-v13";
 
 const FIBONACCI_SEQUENCE = Object.freeze([1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233]);
 const RUNTIME_FIELD_SIZE = 256;
@@ -10,27 +16,40 @@ const TAU = Math.PI * 2;
 const MAX_DPR = 1.5;
 
 const GLOBE_SELECTOR_STATE = Object.freeze({
-  contract: "SHOWROOM_GLOBE_CINEMATIC_CONNECTION_AND_EXPRESSION_ALIGNMENT_TNT_v12",
-  previousContract: "SHOWROOM_GLOBE_CINEMATIC_MATERIAL_CONNECTION_REBIND_TNT_v11",
+  contract: "SHOWROOM_GLOBE_ZIONTS_BEACH_VEGETATION_40B_HABITABILITY_TNT_v13",
+  previousContract: "SHOWROOM_GLOBE_CINEMATIC_CONNECTION_AND_EXPRESSION_ALIGNMENT_TNT_v12",
   route: "/showroom/globe/",
   role: "globe-system-gateway-selector",
   gatewayAuthority: true,
   visualScaleAuthority: true,
+
+  ziontsPrimaryBody: true,
+  earthLabelActive: false,
+  ancientLivingWorld: true,
+  fortyBillionYearBaseline: true,
+  beachesActive: true,
+  vegetationActive: true,
+  habitabilityActive: true,
+
   cinematicMaterialConnected: true,
   hydrationFileConnected: true,
-  expressionAligned: true,
+  vegetationLayerConnected: true,
   materialFirstExpression: true,
   hydrationSecondary: true,
   physicalGraphicMaterial: true,
   materialAsset: true,
   hydrationFile: true,
+
   fibonacciRuntime: true,
   lattice256Runtime: true,
   runtimeFieldSize: RUNTIME_FIELD_SIZE,
   fibonacciSequence: FIBONACCI_SEQUENCE,
   runtimeMotionLaw: "fibonacci-within-256-lattice",
+
   materialSource: PLANET_MATERIAL_VERSION,
   hydrationVersion: PLANET_HYDRATION_VERSION,
+  vegetationVersion: PLANET_VEGETATION_VERSION || VEGETATION_HABITABILITY_VERSION,
+
   proceduralReplacementActive: false,
   opaqueGlobeBody: true,
   cartoonFallbackPrimary: false,
@@ -43,8 +62,9 @@ const GLOBE_SELECTOR_STATE = Object.freeze({
   generatedImage: false,
   graphicBox: false,
   heavyRuntimeLoaded: false,
+
   childRoutes: Object.freeze({
-    earth: "/showroom/globe/earth/",
+    zionts: "/showroom/globe/earth/",
     "h-earth": "/showroom/globe/h-earth/",
     audralia: "/showroom/globe/audralia/"
   })
@@ -53,12 +73,13 @@ const GLOBE_SELECTOR_STATE = Object.freeze({
 const BODY_CONFIG = Object.freeze({
   earth: Object.freeze({
     key: "earth",
-    title: "Earth",
-    subtitle: "Reference Body · material-led hydrated runtime",
-    openText: "Open Earth",
+    publicKey: "zionts",
+    title: "ZIONTS",
+    subtitle: "Ancient Living World · material-led hydrated runtime",
+    openText: "Open ZIONTS",
     href: "/showroom/globe/earth/",
     seed: 1207,
-    anchor: "EARTH_HYDRATED_OBJECT",
+    anchor: "ZIONTS_ANCIENT_LIVING_WORLD",
 
     stoneLow: Object.freeze([34, 74, 78]),
     stoneMid: Object.freeze([92, 116, 104]),
@@ -74,6 +95,14 @@ const BODY_CONFIG = Object.freeze({
     water: Object.freeze([26, 102, 126]),
     shelf: Object.freeze([70, 142, 146]),
 
+    beach: Object.freeze([222, 196, 132]),
+    beachWhite: Object.freeze([236, 228, 202]),
+    beachBlack: Object.freeze([76, 66, 58]),
+    vegetation: Object.freeze([52, 128, 78]),
+    oldGrowth: Object.freeze([32, 86, 58]),
+    wetland: Object.freeze([42, 112, 96]),
+    reef: Object.freeze([92, 174, 158]),
+
     waterBias: 0.34,
     shellStrength: 0.22,
     wetness: 0.42,
@@ -82,8 +111,19 @@ const BODY_CONFIG = Object.freeze({
     materialPriority: 0.78,
     hydrationPriority: 0.22,
 
+    lifeProfile: Object.freeze({
+      beachStrength: 0.52,
+      vegetationStrength: 0.42,
+      wetlandStrength: 0.34,
+      oldGrowthStrength: 0.30,
+      reefStrength: 0.22,
+      alienLifeBias: 0,
+      desertLifeBias: 0.08,
+      blackSandBias: 0.08
+    }),
+
     hydration: Object.freeze({
-      world: "earth",
+      world: "zionts",
       waterBias: 0.34,
       shellStrength: 0.22,
       wetness: 0.42,
@@ -96,12 +136,13 @@ const BODY_CONFIG = Object.freeze({
 
   "h-earth": Object.freeze({
     key: "h-earth",
+    publicKey: "h-earth",
     title: "H-Earth",
-    subtitle: "Hybrid Earth · physical dry material",
+    subtitle: "Hybrid Ancient Living World · physical dry material",
     openText: "Open H-Earth",
     href: "/showroom/globe/h-earth/",
     seed: 2331,
-    anchor: "H_EARTH_PHYSICAL_DRY_MATERIAL",
+    anchor: "H_EARTH_HYBRID_ANCIENT_LIVING_WORLD",
 
     stoneLow: Object.freeze([78, 72, 50]),
     stoneMid: Object.freeze([146, 126, 78]),
@@ -117,6 +158,14 @@ const BODY_CONFIG = Object.freeze({
     water: Object.freeze([44, 112, 102]),
     shelf: Object.freeze([82, 148, 126]),
 
+    beach: Object.freeze([218, 196, 130]),
+    beachWhite: Object.freeze([232, 222, 188]),
+    beachBlack: Object.freeze([70, 64, 50]),
+    vegetation: Object.freeze([74, 132, 70]),
+    oldGrowth: Object.freeze([48, 92, 52]),
+    wetland: Object.freeze([54, 118, 86]),
+    reef: Object.freeze([94, 158, 126]),
+
     waterBias: 0.10,
     shellStrength: 0.14,
     wetness: 0.18,
@@ -124,6 +173,17 @@ const BODY_CONFIG = Object.freeze({
     goldReflection: 0.42,
     materialPriority: 0.88,
     hydrationPriority: 0.12,
+
+    lifeProfile: Object.freeze({
+      beachStrength: 0.46,
+      vegetationStrength: 0.54,
+      wetlandStrength: 0.32,
+      oldGrowthStrength: 0.38,
+      reefStrength: 0.16,
+      alienLifeBias: 0.04,
+      desertLifeBias: 0.34,
+      blackSandBias: 0.10
+    }),
 
     hydration: Object.freeze({
       world: "h-earth",
@@ -139,12 +199,13 @@ const BODY_CONFIG = Object.freeze({
 
   audralia: Object.freeze({
     key: "audralia",
+    publicKey: "audralia",
     title: "Audralia",
-    subtitle: "Constructed World · physical material",
+    subtitle: "Ancient Constructed Living World · physical material",
     openText: "Open Audralia",
     href: "/showroom/globe/audralia/",
     seed: 3779,
-    anchor: "AUDRALIA_CONSTRUCTED_MATERIAL",
+    anchor: "AUDRALIA_ANCIENT_CONSTRUCTED_LIVING_WORLD",
 
     stoneLow: Object.freeze([74, 48, 80]),
     stoneMid: Object.freeze([132, 78, 96]),
@@ -160,6 +221,16 @@ const BODY_CONFIG = Object.freeze({
     water: Object.freeze([78, 86, 132]),
     shelf: Object.freeze([104, 102, 148]),
 
+    beach: Object.freeze([210, 172, 126]),
+    beachWhite: Object.freeze([228, 218, 202]),
+    beachBlack: Object.freeze([54, 42, 66]),
+    vegetation: Object.freeze([42, 138, 118]),
+    oldGrowth: Object.freeze([30, 92, 84]),
+    wetland: Object.freeze([56, 122, 122]),
+    reef: Object.freeze([104, 164, 170]),
+    alienVegetation: Object.freeze([48, 164, 142]),
+    desertVegetation: Object.freeze([120, 116, 82]),
+
     waterBias: 0.16,
     shellStrength: 0.18,
     wetness: 0.24,
@@ -167,6 +238,17 @@ const BODY_CONFIG = Object.freeze({
     goldReflection: 0.20,
     materialPriority: 0.84,
     hydrationPriority: 0.16,
+
+    lifeProfile: Object.freeze({
+      beachStrength: 0.50,
+      vegetationStrength: 0.46,
+      wetlandStrength: 0.28,
+      oldGrowthStrength: 0.34,
+      reefStrength: 0.24,
+      alienLifeBias: 0.46,
+      desertLifeBias: 0.18,
+      blackSandBias: 0.30
+    }),
 
     hydration: Object.freeze({
       world: "audralia",
@@ -201,6 +283,7 @@ const state = {
   runtimeAddress: 0,
   fibonacciBand: 8,
   renderer: null,
+  vegetationLayer: null,
   renderQuality: "settled"
 };
 
@@ -229,6 +312,10 @@ function resizeCanvas(canvas) {
     state.height = height;
     state.dpr = dpr;
     state.renderer = createCinematicPlanetMaterialRenderer({
+      mobile: width / dpr <= 560,
+      dpr
+    });
+    state.vegetationLayer = createVegetationHabitabilityLayer({
       mobile: width / dpr <= 560,
       dpr
     });
@@ -360,6 +447,13 @@ function render(canvas, ctx) {
 
   if (!state.renderer) {
     state.renderer = createCinematicPlanetMaterialRenderer({
+      mobile: metrics.isMobile,
+      dpr: state.dpr
+    });
+  }
+
+  if (!state.vegetationLayer) {
+    state.vegetationLayer = createVegetationHabitabilityLayer({
       mobile: metrics.isMobile,
       dpr: state.dpr
     });
@@ -528,23 +622,37 @@ function setMode(mode) {
 
 function markRoute() {
   const markers = {
-    globeGatewayStatus: "cinematic-connection-expression-aligned",
+    globeGatewayStatus: "zionts-beach-vegetation-40b-habitability",
     globeGatewayAuthority: "true",
     visualScaleAuthority: "true",
+
+    ziontsPrimaryBody: "true",
+    earthLabelActive: "false",
+    ancientLivingWorld: "true",
+    fortyBillionYearBaseline: "true",
+    beachesActive: "true",
+    vegetationActive: "true",
+    habitabilityActive: "true",
+
     cinematicMaterialConnected: "true",
     hydrationFileConnected: "true",
+    vegetationLayerConnected: "true",
     expressionAligned: "true",
     materialFirstExpression: "true",
     hydrationSecondary: "true",
     physicalGraphicMaterial: "true",
     materialAsset: "true",
     hydrationFile: "true",
+
     fibonacciRuntime: "true",
     lattice256Runtime: "true",
     runtimeFieldSize: "256",
     runtimeMotionLaw: "fibonacci-within-256-lattice",
+
     materialSource: PLANET_MATERIAL_VERSION,
     hydrationVersion: PLANET_HYDRATION_VERSION,
+    vegetationVersion: PLANET_VEGETATION_VERSION || VEGETATION_HABITABILITY_VERSION,
+
     proceduralReplacementActive: "false",
     opaqueGlobeBody: "true",
     cartoonFallbackPrimary: "false",
@@ -569,7 +677,7 @@ function protectGatewayIdentity() {
 
   const h1 = document.querySelector("h1");
   if (h1 && /Earth is the real-world reference body/i.test(h1.textContent || "")) {
-    h1.textContent = "Clean globe, hydrated object, not public map construction.";
+    h1.textContent = "ZIONTS, H-Earth, and Audralia are ancient living worlds.";
   }
 }
 
@@ -618,31 +726,46 @@ function initGlobeSelector() {
         ...GLOBE_SELECTOR_STATE,
         ready: true,
         selectedBody: state.body,
+        selectedPublicBody: BODY_CONFIG[state.body]?.title || "UNKNOWN",
         mode: state.mode,
         yaw: state.yaw,
         pitch: state.pitch,
         renderQuality: state.renderQuality,
         runtimeAddress: state.runtimeAddress,
         fibonacciBand: state.fibonacciBand,
+
         materialSource: PLANET_MATERIAL_VERSION,
         hydrationVersion: PLANET_HYDRATION_VERSION,
+        vegetationVersion: PLANET_VEGETATION_VERSION || VEGETATION_HABITABILITY_VERSION,
+
         currentAnchor: BODY_CONFIG[state.body]?.anchor || "UNKNOWN",
         currentMaterialPriority: BODY_CONFIG[state.body]?.materialPriority,
         currentHydrationPriority: BODY_CONFIG[state.body]?.hydrationPriority,
+
+        ziontsPrimaryBody: true,
+        earthLabelActive: false,
+        ancientLivingWorld: true,
+        fortyBillionYearBaseline: true,
+        beachesActive: true,
+        vegetationActive: true,
+        habitabilityActive: true,
+
         cinematicMaterialConnected: true,
         hydrationFileConnected: true,
-        expressionAligned: true,
+        vegetationLayerConnected: true,
         materialFirstExpression: true,
         hydrationSecondary: true,
         physicalGraphicMaterial: true,
         materialAsset: true,
         hydrationFile: true,
         proceduralReplacementActive: false,
+
         fibonacciRuntime: true,
         lattice256Runtime: true,
         runtimeFieldSize: RUNTIME_FIELD_SIZE,
         fibonacciSequence: FIBONACCI_SEQUENCE,
         runtimeMotionLaw: "fibonacci-within-256-lattice",
+
         opaqueGlobeBody: true,
         cartoonFallbackPrimary: false,
         splitSeasonGlobe: false,

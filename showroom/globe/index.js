@@ -1,11 +1,11 @@
 // /showroom/globe/index.js
 // TNT FULL-FILE REPLACEMENT
-// SHOWROOM_GLOBE_SATELLITE_SELECTOR_HARD_RESTORE_TNT_v4
+// SHOWROOM_GLOBE_SATELLITE_MATERIAL_RECONNECT_TNT_v5
 // Parent /showroom/globe/ only.
-// Satellite graphics only.
-// Forbidden here: ground view, Manor, Western Golden Shelf, ground engine, child-route mutation.
+// Reconnects restored cinematic satellite material renderer.
+// No ground view. No Manor. No Western Golden Shelf. No child-route mutation.
 
-const CONTRACT = "SHOWROOM_GLOBE_SATELLITE_SELECTOR_HARD_RESTORE_TNT_v4";
+const CONTRACT = "SHOWROOM_GLOBE_SATELLITE_MATERIAL_RECONNECT_TNT_v5";
 const TAU = Math.PI * 2;
 
 const BODIES = Object.freeze({
@@ -16,12 +16,17 @@ const BODIES = Object.freeze({
     copy: "Ancient living reference body. Satellite planetary selector view only.",
     route: "/showroom/globe/earth/",
     seed: 1401,
-    water: [22, 82, 117],
-    shallow: [62, 140, 154],
-    land: [172, 158, 94],
-    high: [226, 204, 136],
-    dark: [18, 33, 42],
-    atmosphere: [110, 178, 205]
+    seaLevel: 0.118,
+    stoneLow: [74, 91, 67],
+    stoneMid: [145, 137, 92],
+    stoneHigh: [217, 199, 137],
+    stoneDeep: [40, 54, 49],
+    sediment: [180, 156, 96],
+    exposed: [224, 207, 151],
+    ridge: [238, 221, 160],
+    scar: [44, 38, 34],
+    shadow: [14, 22, 29],
+    atmosphere: [108, 176, 205]
   },
   "h-earth": {
     key: "h-earth",
@@ -30,12 +35,17 @@ const BODIES = Object.freeze({
     copy: "Hybrid ancient living world. Satellite selector view only from this parent page.",
     route: "/showroom/globe/h-earth/",
     seed: 2402,
-    water: [38, 111, 118],
-    shallow: [76, 150, 133],
-    land: [188, 166, 92],
-    high: [229, 207, 132],
-    dark: [34, 30, 28],
-    atmosphere: [116, 195, 171]
+    seaLevel: 0.095,
+    stoneLow: [82, 88, 63],
+    stoneMid: [159, 147, 86],
+    stoneHigh: [229, 207, 132],
+    stoneDeep: [47, 59, 50],
+    sediment: [192, 168, 99],
+    exposed: [231, 211, 145],
+    ridge: [242, 226, 167],
+    scar: [42, 34, 29],
+    shadow: [18, 24, 24],
+    atmosphere: [116, 194, 171]
   },
   audralia: {
     key: "audralia",
@@ -44,11 +54,16 @@ const BODIES = Object.freeze({
     copy: "Ancient constructed living world. Audralia is its own constructed body and is not Australia.",
     route: "/showroom/globe/audralia/",
     seed: 3403,
-    water: [42, 62, 109],
-    shallow: [86, 86, 136],
-    land: [174, 105, 132],
-    high: [224, 164, 179],
-    dark: [30, 23, 34],
+    seaLevel: 0.084,
+    stoneLow: [72, 60, 86],
+    stoneMid: [148, 94, 126],
+    stoneHigh: [221, 164, 182],
+    stoneDeep: [43, 35, 60],
+    sediment: [179, 118, 148],
+    exposed: [225, 174, 190],
+    ridge: [238, 196, 209],
+    scar: [37, 25, 39],
+    shadow: [18, 15, 29],
     atmosphere: [136, 106, 205]
   }
 });
@@ -57,6 +72,7 @@ const state = {
   body: "zionts",
   canvas: null,
   ctx: null,
+  renderer: null,
   raf: 0,
   startedAt: performance.now(),
   yaw: 0.18,
@@ -68,34 +84,21 @@ const state = {
   auto: true,
   detail: "stable",
   glide: "soft",
-  lastTap: 0
+  quality: "settled",
+  settleUntil: 0,
+  lastTap: 0,
+  materialError: null
 };
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function lerp(a, b, t) {
-  return a + (b - a) * clamp(t, 0, 1);
-}
-
 function seed(index, salt = 0) {
   return ((Math.sin(index * 12.9898 + salt * 78.233) * 43758.5453123) % 1 + 1) % 1;
 }
 
-function mix(a, b, t) {
-  return [
-    lerp(a[0], b[0], t),
-    lerp(a[1], b[1], t),
-    lerp(a[2], b[2], t)
-  ];
-}
-
-function rgba(c, a = 1) {
-  return `rgba(${Math.round(c[0])},${Math.round(c[1])},${Math.round(c[2])},${a})`;
-}
-
-function markDocument() {
+function markDocument(extra = {}) {
   const markers = {
     page: "showroom-globe-satellite-selector",
     route: "/showroom/globe/",
@@ -106,7 +109,8 @@ function markDocument() {
     manorPlacement: "false",
     westernGoldenShelf: "false",
     selectedBody: state.body,
-    renderedBy: "satellite-canvas-runtime"
+    renderedBy: "cinematic-satellite-material-runtime",
+    ...extra
   };
 
   Object.entries(markers).forEach(([key, value]) => {
@@ -165,7 +169,7 @@ function resizeCanvas() {
     state.canvas.height = height;
   }
 
-  return { width, height };
+  return { width, height, dpr };
 }
 
 function drawBackground(ctx, width, height, time) {
@@ -189,19 +193,16 @@ function drawBackground(ctx, width, height, time) {
   }
 }
 
-function drawPlanet(ctx, width, height, time) {
+function drawEmergencyMaterialFallback(ctx, width, height, time) {
   const body = BODIES[state.body];
-
   const cx = width * 0.5;
   const cy = height * 0.47;
   const radius = Math.min(width, height) * 0.305;
   const yaw = state.yaw + time * 0.016;
-  const pitch = state.pitch;
 
   const outer = ctx.createRadialGradient(cx, cy, radius * 0.70, cx, cy, radius * 1.34);
   outer.addColorStop(0, "rgba(0,0,0,0)");
-  outer.addColorStop(0.62, rgba(body.atmosphere, 0.11));
-  outer.addColorStop(0.82, rgba(body.atmosphere, 0.30));
+  outer.addColorStop(0.82, `rgba(${body.atmosphere[0]},${body.atmosphere[1]},${body.atmosphere[2]},0.30)`);
   outer.addColorStop(1, "rgba(0,0,0,0)");
   ctx.fillStyle = outer;
   ctx.beginPath();
@@ -214,70 +215,34 @@ function drawPlanet(ctx, width, height, time) {
   ctx.clip();
 
   const ocean = ctx.createRadialGradient(cx - radius * 0.28, cy - radius * 0.30, radius * 0.10, cx, cy, radius * 1.08);
-  ocean.addColorStop(0, rgba(mix(body.shallow, [255, 255, 255], 0.10), 1));
-  ocean.addColorStop(0.45, rgba(body.water, 1));
-  ocean.addColorStop(1, rgba(mix(body.dark, body.water, 0.30), 1));
+  ocean.addColorStop(0, "rgba(70,140,154,1)");
+  ocean.addColorStop(0.45, "rgba(24,86,118,1)");
+  ocean.addColorStop(1, "rgba(14,32,42,1)");
   ctx.fillStyle = ocean;
   ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-  const landCount = state.detail === "high" ? 34 : 24;
-
-  for (let i = 0; i < landCount; i += 1) {
+  for (let i = 0; i < 30; i += 1) {
     const local = body.seed + i * 19;
     const a = yaw + i * 0.63 + seed(local, 2) * 0.92;
     const orbit = 0.15 + seed(local, 3) * 0.78;
 
     const x = cx + Math.sin(a) * radius * orbit;
-    const y = cy + Math.cos(a * 0.74 + pitch) * radius * (0.12 + seed(local, 4) * 0.66);
+    const y = cy + Math.cos(a * 0.74 + state.pitch) * radius * (0.12 + seed(local, 4) * 0.66);
 
-    const nx = (x - cx) / radius;
-    const ny = (y - cy) / radius;
-    const edge = Math.hypot(nx, ny);
-    if (edge > 1.04) continue;
-
-    const rx = radius * (0.050 + seed(local, 5) * 0.175);
-    const ry = radius * (0.024 + seed(local, 6) * 0.090);
+    const rx = radius * (0.05 + seed(local, 5) * 0.175);
+    const ry = radius * (0.024 + seed(local, 6) * 0.09);
     const rot = a * 0.42 + seed(local, 7);
 
-    const alpha = clamp(0.82 - Math.max(0, edge - 0.54) * 1.35, 0.10, 0.82);
-
     const land = ctx.createRadialGradient(x - rx * 0.18, y - ry * 0.28, 0, x, y, Math.max(rx, ry));
-    land.addColorStop(0, rgba(body.high, alpha * 0.68));
-    land.addColorStop(0.52, rgba(body.land, alpha));
-    land.addColorStop(1, rgba(mix(body.land, body.dark, 0.42), alpha * 0.58));
+    land.addColorStop(0, `rgba(${body.stoneHigh[0]},${body.stoneHigh[1]},${body.stoneHigh[2]},0.62)`);
+    land.addColorStop(0.52, `rgba(${body.stoneMid[0]},${body.stoneMid[1]},${body.stoneMid[2]},0.80)`);
+    land.addColorStop(1, `rgba(${body.shadow[0]},${body.shadow[1]},${body.shadow[2]},0.42)`);
 
     ctx.fillStyle = land;
     ctx.beginPath();
     ctx.ellipse(x, y, rx, ry, rot, 0, TAU);
     ctx.fill();
-
-    ctx.strokeStyle = rgba(mix(body.dark, body.land, 0.24), alpha * 0.22);
-    ctx.lineWidth = Math.max(0.8, radius * 0.0036);
-    ctx.beginPath();
-    ctx.ellipse(x, y, rx * 0.72, ry * 0.52, rot + 0.35, 0, TAU);
-    ctx.stroke();
   }
-
-  for (let i = 0; i < 15; i += 1) {
-    const local = body.seed + 900 + i * 31;
-    const a = yaw * 0.9 + i * 0.78;
-    const x = cx + Math.sin(a) * radius * (0.20 + seed(local, 1) * 0.72);
-    const y = cy + Math.cos(a * 0.88) * radius * (0.10 + seed(local, 2) * 0.58);
-    const rx = radius * (0.08 + seed(local, 3) * 0.20);
-    const ry = radius * (0.012 + seed(local, 4) * 0.034);
-
-    ctx.fillStyle = "rgba(238,244,255,0.075)";
-    ctx.beginPath();
-    ctx.ellipse(x, y, rx, ry, a * 0.21, 0, TAU);
-    ctx.fill();
-  }
-
-  const highlight = ctx.createRadialGradient(cx - radius * 0.30, cy - radius * 0.34, 0, cx - radius * 0.18, cy - radius * 0.22, radius * 1.18);
-  highlight.addColorStop(0, "rgba(255,255,255,0.18)");
-  highlight.addColorStop(0.32, "rgba(255,255,255,0.06)");
-  highlight.addColorStop(1, "rgba(255,255,255,0)");
-  ctx.fillStyle = highlight;
-  ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
   const shadow = ctx.createLinearGradient(cx - radius, cy, cx + radius, cy);
   shadow.addColorStop(0, "rgba(0,0,0,0.18)");
@@ -287,28 +252,14 @@ function drawPlanet(ctx, width, height, time) {
   ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
   ctx.restore();
-
-  ctx.strokeStyle = rgba(body.atmosphere, 0.44);
-  ctx.lineWidth = Math.max(1, width * 0.0015);
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius, 0, TAU);
-  ctx.stroke();
-
-  const innerGlow = ctx.createRadialGradient(cx, cy, radius * 0.78, cx, cy, radius * 1.03);
-  innerGlow.addColorStop(0, "rgba(0,0,0,0)");
-  innerGlow.addColorStop(0.78, "rgba(255,255,255,0)");
-  innerGlow.addColorStop(1, rgba(body.atmosphere, 0.18));
-  ctx.fillStyle = innerGlow;
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius * 1.02, 0, TAU);
-  ctx.fill();
 }
 
 function drawFrame(time = performance.now()) {
   if (!state.ctx || !state.canvas) return;
 
-  const { width, height } = resizeCanvas();
+  const { width, height, dpr } = resizeCanvas();
   const t = (time - state.startedAt) / 1000;
+  const body = BODIES[state.body];
 
   if (state.auto && !state.dragging) {
     state.yaw += state.velocity;
@@ -320,14 +271,43 @@ function drawFrame(time = performance.now()) {
     state.velocity += 0.00005;
   }
 
-  state.ctx.clearRect(0, 0, width, height);
-  drawBackground(state.ctx, width, height, t);
-  drawPlanet(state.ctx, width, height, t);
+  if (state.dragging) {
+    state.quality = "motion";
+  } else if (performance.now() < state.settleUntil) {
+    state.quality = "settling";
+  } else {
+    state.quality = "settled";
+  }
+
+  const ctx = state.ctx;
+  ctx.clearRect(0, 0, width, height);
+  drawBackground(ctx, width, height, t);
+
+  const scale = Math.min(width, height) * 0.305;
+
+  if (state.renderer) {
+    state.renderer.drawPlanet(ctx, {
+      cx: width * 0.5,
+      cy: height * 0.47,
+      scale,
+      yaw: state.yaw,
+      pitch: state.pitch,
+      quality: state.quality,
+      detail: state.detail,
+      dpr
+    }, body);
+  } else {
+    drawEmergencyMaterialFallback(ctx, width, height, t);
+  }
 
   window.DGBShowroomGlobeReceipt = Object.freeze({
     contract: CONTRACT,
     route: "/showroom/globe/",
     selectedBody: state.body,
+    quality: state.quality,
+    detail: state.detail,
+    materialRenderer: state.renderer?.version || "fallback",
+    materialError: state.materialError,
     groundView: false,
     groundEngine: false,
     manorPlacement: false,
@@ -347,6 +327,7 @@ function selectBody(key) {
   state.yaw = 0.18;
   state.pitch = -0.06;
   state.velocity = 0.004;
+  state.settleUntil = performance.now() + 640;
 
   updateCopy();
 }
@@ -369,6 +350,7 @@ function bindControls() {
     detail.addEventListener("click", () => {
       state.detail = state.detail === "stable" ? "high" : "stable";
       detail.textContent = `Detail: ${state.detail}`;
+      state.settleUntil = performance.now() + 720;
     });
   }
 
@@ -387,6 +369,7 @@ function bindControls() {
       state.pitch = -0.06;
       state.velocity = 0.004;
       state.auto = true;
+      state.settleUntil = performance.now() + 720;
       auto?.classList.add("active");
     });
   }
@@ -406,6 +389,7 @@ function bindControls() {
       state.yaw = 0.18;
       state.pitch = -0.06;
       state.velocity = 0.004;
+      state.settleUntil = performance.now() + 720;
     }
     state.lastTap = now;
   });
@@ -426,19 +410,49 @@ function bindControls() {
 
   canvas.addEventListener("pointerup", (event) => {
     state.dragging = false;
+    state.settleUntil = performance.now() + 640;
     canvas.releasePointerCapture?.(event.pointerId);
   });
 
   canvas.addEventListener("pointercancel", () => {
     state.dragging = false;
+    state.settleUntil = performance.now() + 640;
   });
 }
 
-function init() {
+async function bootRenderer() {
+  try {
+    const mod = await import("/assets/showroom.globe.cinematic.material.js?v=SHOWROOM_GLOBE_SATELLITE_CINEMATIC_MATERIAL_RECONNECT_TNT_v5");
+
+    if (!mod?.createCinematicPlanetMaterialRenderer) {
+      throw new Error("createCinematicPlanetMaterialRenderer export missing.");
+    }
+
+    state.renderer = mod.createCinematicPlanetMaterialRenderer({
+      mobile: window.matchMedia?.("(max-width: 760px)")?.matches === true,
+      dpr: Math.min(window.devicePixelRatio || 1, 1.85)
+    });
+
+    markDocument({
+      materialRenderer: state.renderer.version,
+      hydrationRenderer: state.renderer.hydrationVersion
+    });
+  } catch (error) {
+    state.materialError = error?.message || "material renderer import failed";
+    state.renderer = null;
+    markDocument({
+      materialRenderer: "fallback",
+      materialError: state.materialError
+    });
+  }
+}
+
+async function init() {
   state.canvas = resolveCanvas();
 
   if (!state.canvas) {
-    markDocument();
+    markDocument({ rendered: "false", error: "No satellite globe canvas found" });
+
     window.DGBShowroomGlobe = Object.freeze({
       status() {
         return Object.freeze({
@@ -451,6 +465,7 @@ function init() {
         });
       }
     });
+
     return;
   }
 
@@ -459,6 +474,8 @@ function init() {
   markDocument();
   updateCopy();
   bindControls();
+
+  await bootRenderer();
 
   window.DGBShowroomGlobe = Object.freeze({
     status() {
@@ -472,6 +489,8 @@ function init() {
         westernGoldenShelf: false,
         canvasFound: Boolean(state.canvas),
         contextFound: Boolean(state.ctx),
+        materialRenderer: state.renderer?.version || "fallback",
+        materialError: state.materialError,
         receipt: window.DGBShowroomGlobeReceipt || null
       });
     }

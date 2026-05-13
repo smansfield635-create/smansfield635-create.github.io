@@ -1,29 +1,28 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="h-earth-self-contained-live-world"
+  data-page="h-earth-ground-level-child-route"
   data-route="/showroom/globe/h-earth/"
-  data-contract="H_EARTH_LIVE_WORLD_SELF_CONTAINED_RENDERER_TNT_v8"
-  data-renderer="self-contained-live-world"
-  data-static-image-dependency="false"
-  data-png-dependency="false"
+  data-contract="H_EARTH_CHILD_GROUND_LEVEL_DESCENT_TNT_v1"
+  data-parent-baseline="/showroom/globe/"
+  data-parent-mutation="false"
+  data-ground-level="true"
+  data-static-image-source="false"
   data-water-behind-manor="true"
-  data-camera-facing="west-southwest"
-  data-final-architecture-authorized="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-
-  <title>Western Golden Shelf · Self-Contained Live World</title>
+  <title>H-Earth · Western Golden Shelf</title>
+  <meta
+    name="description"
+    content="H-Earth child route for Western Golden Shelf ground-level descent. Parent Globe selector remains locked."
+  >
 
   <style>
     :root {
       --bg:#030812;
-      --bg2:#061020;
+      --bg2:#071225;
       --line:rgba(244,207,131,.22);
       --line2:rgba(255,255,255,.12);
       --text:rgba(238,244,255,.94);
@@ -40,9 +39,12 @@
       min-height:100%;
       margin:0;
       background:
-        radial-gradient(circle at 50% -8%, rgba(78,119,171,.26), transparent 38%),
-        radial-gradient(circle at 12% 18%, rgba(244,207,131,.12), transparent 30%),
-        linear-gradient(180deg, var(--bg2), var(--bg) 54%, #02050b) !important;
+        linear-gradient(90deg, rgba(244,207,131,.045) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(244,207,131,.025) 1px, transparent 1px),
+        radial-gradient(circle at 50% -8%, rgba(78,119,171,.25), transparent 38%),
+        radial-gradient(circle at 12% 18%, rgba(244,207,131,.11), transparent 30%),
+        linear-gradient(180deg, var(--bg2), var(--bg) 54%, #02050b);
+      background-size:58px 58px,58px 58px,auto,auto,auto;
       color:var(--text);
       font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -71,13 +73,15 @@
       letter-spacing:.02em;
     }
 
-    .nav, .actions {
+    .nav,
+    .actions {
       display:flex;
       flex-wrap:wrap;
       gap:8px;
     }
 
-    .nav a, .button {
+    .nav a,
+    .button {
       min-height:38px;
       display:inline-flex;
       align-items:center;
@@ -104,7 +108,9 @@
       background:linear-gradient(135deg, #fff0b8, var(--gold) 48%, #c48a38);
     }
 
-    .hero, .panel, .card, .standard-card {
+    .hero,
+    .panel,
+    .card {
       border:1px solid var(--line);
       border-radius:34px;
       background:
@@ -117,24 +123,6 @@
     .hero { padding:clamp(24px,5vw,46px); }
     .panel { padding:clamp(18px,3vw,28px); margin-top:16px; }
 
-    h1, h2, h3 {
-      margin:0;
-      color:var(--gold);
-      line-height:1.05;
-    }
-
-    h1 {
-      max-width:980px;
-      font-size:clamp(2.1rem,7vw,5rem);
-      line-height:.94;
-      letter-spacing:-.07em;
-    }
-
-    h2 {
-      font-size:clamp(1.45rem,4vw,2.15rem);
-      letter-spacing:-.045em;
-    }
-
     .eyebrow {
       margin:0 0 14px;
       color:var(--gold);
@@ -143,7 +131,26 @@
       text-transform:uppercase;
     }
 
-    .lede, p {
+    h1, h2, h3 {
+      margin:0;
+      color:var(--gold);
+      line-height:1.05;
+    }
+
+    h1 {
+      max-width:980px;
+      font-size:clamp(2.35rem,7vw,5.2rem);
+      line-height:.93;
+      letter-spacing:-.075em;
+    }
+
+    h2 {
+      font-size:clamp(1.55rem,4.5vw,2.4rem);
+      letter-spacing:-.045em;
+    }
+
+    .lede,
+    p {
       color:var(--muted);
       line-height:1.55;
     }
@@ -156,7 +163,7 @@
 
     .actions { margin-top:26px; }
 
-    .transition, .gate-panel, .placement-unlock {
+    .lock-line {
       margin-top:16px;
       padding:18px;
       border:1px solid rgba(167,243,198,.20);
@@ -167,42 +174,52 @@
       line-height:1.5;
     }
 
-    .summary, .standard-grid, .placement-list {
+    .ground-grid {
       display:grid;
-      gap:14px;
-    }
-
-    .summary {
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      margin:16px 0;
-    }
-
-    .standard-grid {
-      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-columns:minmax(0,1.45fr) minmax(260px,.55fr);
+      gap:16px;
       margin-top:16px;
     }
 
-    .summary div, .card, .standard-card, .placement-list div {
+    .ground-stage {
+      width:100%;
+      min-height:clamp(560px,96vw,880px);
+      border:1px solid rgba(244,207,131,.18);
+      border-radius:28px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 22%, rgba(244,207,131,.12), transparent 38%),
+        linear-gradient(180deg, #13243a, #06101d 58%, #02060b);
+      box-shadow:0 30px 90px rgba(0,0,0,.36);
+    }
+
+    .ground-stage canvas {
+      display:block;
+      width:100%;
+      height:clamp(560px,96vw,880px);
+      touch-action:none;
+    }
+
+    .card {
+      padding:18px;
+      background:rgba(255,255,255,.055);
+      box-shadow:none;
+    }
+
+    .status-list {
+      display:grid;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .status-list div {
       border:1px solid var(--line2);
       border-radius:18px;
       padding:14px;
-      background:rgba(255,255,255,.055);
+      background:rgba(255,255,255,.045);
     }
 
-    .summary strong, .placement-list strong {
-      display:block;
-      color:var(--gold);
-      font-size:1.05rem;
-      margin-top:6px;
-      overflow-wrap:anywhere;
-    }
-
-    .summary strong {
-      font-size:1.18rem;
-      margin-top:0;
-    }
-
-    .summary span, .placement-list span {
+    .status-list span {
       display:block;
       color:var(--faint);
       font-size:.74rem;
@@ -211,46 +228,17 @@
       letter-spacing:.08em;
     }
 
-    .ground-placement-grid {
-      display:grid;
-      grid-template-columns:minmax(0,1.45fr) minmax(260px,.55fr);
-      gap:16px;
-      margin-top:16px;
-    }
-
-    .manor-ground-viewport {
-      width:100%;
-      min-height:clamp(540px,96vw,880px);
-      border:1px solid rgba(244,207,131,.20);
-      border-radius:26px;
-      overflow:hidden;
-      background:
-        radial-gradient(circle at 55% 25%, rgba(244,207,131,.10), transparent 40%),
-        linear-gradient(180deg,#13243a,#06101d 58%,#02060b);
-      box-shadow:0 30px 90px rgba(0,0,0,.36);
-    }
-
-    .manor-ground-viewport canvas {
+    .status-list strong {
       display:block;
-      width:100%;
-      height:clamp(540px,96vw,880px);
+      color:var(--gold);
+      margin-top:6px;
+      overflow-wrap:anywhere;
     }
 
     .render-status {
       margin-top:10px;
       color:var(--faint);
       font:850 .78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    }
-
-    .gate-label {
-      display:inline-flex;
-      border-radius:999px;
-      color:#06101c;
-      background:var(--gold);
-      font:950 .78rem/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing:.08em;
-      padding:7px 10px;
-      margin-bottom:8px;
     }
 
     .footer {
@@ -263,15 +251,13 @@
 
     @media (max-width:900px) {
       .topbar { align-items:flex-start; flex-direction:column; }
-      .ground-placement-grid { grid-template-columns:1fr; }
-      .summary { grid-template-columns:repeat(2,minmax(0,1fr)); }
-      .standard-grid { grid-template-columns:1fr; }
+      .ground-grid { grid-template-columns:1fr; }
     }
 
     @media (max-width:560px) {
       .page { width:min(100% - 18px,1180px); }
       .hero, .panel { border-radius:24px; }
-      .manor-ground-viewport canvas { height:620px; }
+      .ground-stage canvas { height:640px; }
     }
   </style>
 </head>
@@ -293,90 +279,61 @@
 
     <main id="main">
       <section class="hero">
-        <p class="eyebrow">Western Golden Shelf · Self-Contained Live World</p>
-        <h1>The Manor is now placed on a living shelf. Water moves behind it.</h1>
+        <p class="eyebrow">H-Earth · Western Golden Shelf</p>
+        <h1>Ground-level descent begins here, below the locked Globe parent.</h1>
         <p class="lede">
-          The route no longer depends on external render imports. The H-Earth script directly owns the live water, wind, wildlife, atmospheric depth, terrain, and Manor ground placement.
+          The parent satellite selector remains locked. This child route now carries the ground-level Western Golden Shelf environment: water behind the Manor, wind through vegetation, shoreline motion, wildlife, and golden-hour atmospheric depth.
         </p>
 
         <div class="actions">
-          <a class="button primary" href="#manor-ground-render">View Live World</a>
-          <a class="button gold" href="/showroom/globe/">Return to Globe Selector</a>
+          <a class="button primary" href="#ground-world">View Ground World</a>
+          <a class="button gold" href="/showroom/globe/">Return to Locked Globe Parent</a>
           <a class="button" href="/showroom/">Return to Showroom</a>
         </div>
 
-        <div class="transition">
-          Static image rejected. External import dependency removed. Self-contained live renderer active.
-        </div>
-
-        <div class="summary">
-          <div><strong>SELF-CONTAINED</strong><span>Renderer authority</span></div>
-          <div><strong>NO PNG</strong><span>Static dependency</span></div>
-          <div><strong>LIVE WORLD</strong><span>Wind + water + wildlife</span></div>
-          <div><strong>HOLD</strong><span>Final architecture</span></div>
-        </div>
-
-        <div class="gate-panel">
-          <span class="gate-label">SELF-CONTAINED RENDERER ACTIVE</span>
-          <p>The accepted image remains the visual compass. The live renderer is the engine.</p>
+        <div class="lock-line">
+          Parent baseline protected: `/showroom/globe/` is not mutated by this ground-level route.
         </div>
       </section>
 
-      <section id="manor-ground-render" class="panel">
-        <p class="eyebrow">Ground-level render · living environment</p>
+      <section id="ground-world" class="panel">
+        <p class="eyebrow">Child route · live ground environment</p>
         <h2>Inland shelf view toward the western waterline</h2>
 
-        <div class="ground-placement-grid">
+        <div class="ground-grid">
           <div>
-            <div class="manor-ground-viewport">
-              <canvas data-manor-ground-canvas aria-label="Self-contained live Western Golden Shelf Manor world"></canvas>
+            <div class="ground-stage">
+              <canvas data-h-earth-ground-canvas aria-label="H-Earth Western Golden Shelf live ground world"></canvas>
             </div>
-            <div class="render-status" data-render-status>Self-contained renderer booting.</div>
+            <div class="render-status" data-render-status>Ground renderer booting.</div>
           </div>
 
           <article class="card">
-            <h3>Live render authority</h3>
-            <p>The route-local script now renders the living environment directly.</p>
+            <h3>Ground authority</h3>
+            <p>
+              This route is the controlled descent from satellite view into the Western Golden Shelf. The render is live and procedural, not a static picture.
+            </p>
 
-            <div class="placement-list">
-              <div><span>Renderer</span><strong>Self-contained live world</strong></div>
-              <div><span>Motion</span><strong>Ocean, shoreline, grass, haze, birds, wildlife</strong></div>
+            <div class="status-list">
+              <div><span>Route</span><strong>/showroom/globe/h-earth/</strong></div>
+              <div><span>Parent lock</span><strong>/showroom/globe/ preserved</strong></div>
               <div><span>Camera</span><strong>Inland / highland side</strong></div>
               <div><span>Facing</span><strong>West-southwest</strong></div>
               <div><span>Water</span><strong>Behind the Manor</strong></div>
-              <div><span>External import</span><strong>Not required</strong></div>
-              <div><span>Final architecture</span><strong>HOLD</strong></div>
+              <div><span>Render source</span><strong>Live procedural</strong></div>
+              <div><span>Final buildout</span><strong>Still held</strong></div>
             </div>
           </article>
-        </div>
-
-        <div class="placement-unlock">
-          <p>Next development may refine the living ground around and within the Manor zone without returning to a static picture or primitive proof drawing.</p>
-        </div>
-      </section>
-
-      <section class="panel">
-        <p class="eyebrow">Placement split</p>
-        <h2>Live environment active; final buildout remains held</h2>
-
-        <div class="standard-grid">
-          <article class="standard-card"><h3>Authorized</h3><p>Live Western Golden Shelf environment and controlled Manor placement.</p></article>
-          <article class="standard-card"><h3>Next</h3><p>Terraces, gardens, paths, shoreline, drainage, wildlife, and protected edge logic.</p></article>
-          <article class="standard-card"><h3>Still held</h3><p>Final architecture, roads, city systems, and final Diamond Gate Bridge object.</p></article>
         </div>
       </section>
     </main>
 
-    <footer class="footer">Diamond Gate Bridge · H-Earth · Western Golden Shelf Self-Contained Live World.</footer>
+    <footer class="footer">Diamond Gate Bridge · H-Earth · Western Golden Shelf child route.</footer>
   </div>
 
   <script>
-    window.DGB_H_EARTH_HTML_CACHE_KEY = "H_EARTH_LIVE_WORLD_SELF_CONTAINED_RENDERER_TNT_v8";
-    window.DGB_H_EARTH_JS_CACHE_KEY = "H_EARTH_LIVE_WORLD_SELF_CONTAINED_RENDERER_TNT_v8";
+    window.DGB_H_EARTH_GROUND_KEY = "H_EARTH_CHILD_GROUND_LEVEL_DESCENT_TNT_v1";
   </script>
-  <script
-    type="module"
-    src="/showroom/globe/h-earth/index.js?v=H_EARTH_LIVE_WORLD_SELF_CONTAINED_RENDERER_TNT_v8"
-  ></script>
+  <script type="module" src="/showroom/globe/h-earth/index.js?v=H_EARTH_CHILD_GROUND_LEVEL_DESCENT_TNT_v1"></script>
 </body>
 </html>

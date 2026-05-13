@@ -1,7 +1,6 @@
 /* /assets/h-earth/h-earth.route.skin.css */
-/* H_EARTH_EXTERNAL_SKIN_AUTHORITY_RECOVERY_TNT_v3 */
+/* H_EARTH_WESTERN_GOLDEN_SHELF_MANOR_GROUND_PLACEMENT_TNT_v1 */
 /* Owns: external Diamond Gate skin authority for /showroom/globe/h-earth/. */
-/* Does not own: scouting logic, scoring logic, Manor placement, Estate placement, or bridge placement. */
 
 :root {
   --h-bg: #030812;
@@ -154,7 +153,8 @@ a {
 .metric,
 .summary div,
 .terrain-readout,
-.hold-box {
+.hold-box,
+.ground-placement-card {
   border: 1px solid var(--h-line);
   background:
     radial-gradient(circle at 76% 28%, rgba(139, 200, 255, 0.12), transparent 32%),
@@ -310,7 +310,8 @@ li {
 }
 
 .transition,
-.gate-panel {
+.gate-panel,
+.placement-unlock {
   margin-top: 16px;
   padding: 18px;
   border: 1px solid rgba(167, 243, 198, 0.20);
@@ -321,12 +322,14 @@ li {
   line-height: 1.5;
 }
 
-.gate-panel {
+.gate-panel,
+.placement-unlock {
   border-color: rgba(244, 207, 131, 0.26);
   color: var(--h-text);
 }
 
-.gate-panel p {
+.gate-panel p,
+.placement-unlock p {
   margin: 0;
   color: var(--h-muted);
 }
@@ -442,7 +445,8 @@ li {
   background: var(--h-danger);
 }
 
-.viewport {
+.viewport,
+.manor-ground-viewport {
   width: 100%;
   min-height: 330px;
   border: 1px solid rgba(244, 207, 131, 0.20);
@@ -452,10 +456,20 @@ li {
   margin-bottom: 16px;
 }
 
-.viewport canvas {
+.viewport canvas,
+.manor-ground-viewport canvas {
   display: block;
   width: 100%;
   height: 360px;
+}
+
+.manor-ground-viewport {
+  min-height: clamp(420px, 64vw, 590px);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.36);
+}
+
+.manor-ground-viewport canvas {
+  height: clamp(420px, 64vw, 590px);
 }
 
 .selected-heading {
@@ -542,6 +556,59 @@ li {
   padding-left: 18px;
 }
 
+.ground-placement-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.55fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.ground-placement-card {
+  border-color: var(--h-line2);
+  border-radius: 24px;
+  padding: 18px;
+  background: var(--h-panel2);
+  box-shadow: none;
+}
+
+.ground-placement-card h3 {
+  margin: 0 0 8px;
+}
+
+.ground-placement-card p {
+  margin: 0;
+  color: var(--h-muted);
+  line-height: 1.5;
+}
+
+.placement-list {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 0;
+}
+
+.placement-list div {
+  border: 1px solid var(--h-line2);
+  border-radius: 16px;
+  padding: 12px;
+  background: var(--h-soft);
+}
+
+.placement-list span {
+  display: block;
+  color: var(--h-faint);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.placement-list strong {
+  display: block;
+  margin-top: 5px;
+  color: var(--h-text);
+}
+
 .footer {
   margin-top: 20px;
   padding: 20px 0 0;
@@ -560,7 +627,8 @@ li {
     justify-content: flex-start;
   }
 
-  .grid {
+  .grid,
+  .ground-placement-grid {
     grid-template-columns: 1fr;
   }
 
@@ -592,6 +660,10 @@ li {
 
   .viewport canvas {
     height: 310px;
+  }
+
+  .manor-ground-viewport canvas {
+    height: 430px;
   }
 
   .selected-heading {

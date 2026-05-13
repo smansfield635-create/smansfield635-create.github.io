@@ -1,326 +1,322 @@
 // /showroom/globe/h-earth/index.js
 // TNT FULL-FILE REPLACEMENT
-// H_EARTH_LIVE_AUTHORITY_LIVE_WORLD_BINDING_TNT_v5
-// Owns: live H-Earth route authority and binding to live procedural Western Golden Shelf world render.
-// No PNG. No static picture. No primitive symbolic fallback.
+// H_EARTH_LIVE_WORLD_FAILSAFE_HTML_SHELL_TNT_v6
+// Owns: enhancement-only live-world boot for the H-Earth visible HTML shell.
+// Rule: never replace the full body; never cause white-page collapse.
 
-const CONTRACT = "H_EARTH_LIVE_AUTHORITY_LIVE_WORLD_BINDING_TNT_v5";
+const CONTRACT = "H_EARTH_LIVE_WORLD_FAILSAFE_HTML_SHELL_TNT_v6";
 const GROUND_RENDER_CACHE_KEY = "H_EARTH_WESTERN_GOLDEN_SHELF_LIVE_WORLD_RENDER_TNT_v5";
 
-function installStyle() {
-  let style = document.getElementById("h-earth-live-authority-style");
-
-  if (!style) {
-    style = document.createElement("style");
-    style.id = "h-earth-live-authority-style";
-    document.head.appendChild(style);
-  }
-
-  style.textContent = `
-    html, body {
-      min-height: 100%;
-      margin: 0;
-      background: linear-gradient(180deg, #061020, #030812 54%, #02050b) !important;
-      color: rgba(238,244,255,.94) !important;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
-    }
-
-    * { box-sizing: border-box; }
-
-    .page {
-      width: min(1180px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 22px 0 58px;
-    }
-
-    .topbar, .nav, .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .topbar {
-      justify-content: space-between;
-      padding: 12px 0 22px;
-    }
-
-    .brand, .nav a, .button {
-      color: inherit;
-      text-decoration: none;
-      font-weight: 850;
-    }
-
-    .brand {
-      color: #f4cf83;
-      text-transform: uppercase;
-      letter-spacing: .02em;
-    }
-
-    .nav a, .button {
-      min-height: 38px;
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 999px;
-      padding: 0 13px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255,255,255,.04);
-      font-size: .82rem;
-    }
-
-    .nav a[aria-current="page"], .button.primary {
-      color: #06101c;
-      background: linear-gradient(135deg, #a7f3c6, #78d8ac);
-    }
-
-    .button.gold {
-      color: #150d03;
-      background: linear-gradient(135deg, #fff0b8, #f4cf83 48%, #c48a38);
-    }
-
-    .hero, .panel, .card, .standard-card {
-      border: 1px solid rgba(244,207,131,.22);
-      border-radius: 34px;
-      background:
-        radial-gradient(circle at 76% 28%, rgba(139,200,255,.12), transparent 32%),
-        linear-gradient(180deg, rgba(8,17,34,.95), rgba(4,9,20,.96));
-      box-shadow: 0 24px 70px rgba(0,0,0,.28);
-      overflow: hidden;
-    }
-
-    .hero { padding: clamp(24px, 5vw, 46px); }
-    .panel { padding: clamp(18px, 3vw, 28px); margin-top: 16px; }
-
-    h1, h2, h3 {
-      color: #f4cf83;
-      margin: 0;
-      line-height: 1.05;
-    }
-
-    h1 {
-      max-width: 980px;
-      font-size: clamp(2.1rem, 7vw, 5rem);
-      line-height: .94;
-      letter-spacing: -.07em;
-    }
-
-    h2 {
-      font-size: clamp(1.45rem, 4vw, 2.15rem);
-      letter-spacing: -.045em;
-    }
-
-    .eyebrow {
-      margin: 0 0 14px;
-      color: #f4cf83;
-      font: 900 .78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing: .22em;
-      text-transform: uppercase;
-    }
-
-    .lede, p {
-      color: rgba(238,244,255,.66);
-      line-height: 1.55;
-    }
-
-    .lede {
-      max-width: 900px;
-      margin: 22px 0 0;
-      font-size: clamp(1.02rem, 2.5vw, 1.28rem);
-    }
-
-    .actions { margin-top: 26px; }
-
-    .transition, .gate-panel, .placement-unlock {
-      margin-top: 16px;
-      padding: 18px;
-      border: 1px solid rgba(167,243,198,.20);
-      border-radius: 24px;
-      background: rgba(5,38,34,.24);
-      color: #a7f3c6;
-      font-weight: 900;
-      line-height: 1.5;
-    }
-
-    .summary, .standard-grid, .placement-list {
-      display: grid;
-      gap: 14px;
-    }
-
-    .summary {
-      grid-template-columns: repeat(4, minmax(0,1fr));
-      margin: 16px 0;
-    }
-
-    .standard-grid {
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      margin-top: 16px;
-    }
-
-    .summary div, .card, .standard-card, .placement-list div {
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 18px;
-      padding: 14px;
-      background: rgba(255,255,255,.055);
-    }
-
-    .summary strong, .placement-list strong {
-      display: block;
-      color: #f4cf83;
-      font-size: 1.05rem;
-      margin-top: 6px;
-      overflow-wrap: anywhere;
-    }
-
-    .summary strong {
-      font-size: 1.18rem;
-      margin-top: 0;
-    }
-
-    .summary span, .placement-list span {
-      display: block;
-      color: rgba(238,244,255,.46);
-      font-size: .74rem;
-      font-weight: 850;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-
-    .ground-placement-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.45fr) minmax(260px, .55fr);
-      gap: 16px;
-      margin-top: 16px;
-    }
-
-    .manor-ground-viewport {
-      width: 100%;
-      min-height: clamp(540px, 96vw, 880px);
-      border: 1px solid rgba(244,207,131,.20);
-      border-radius: 26px;
-      overflow: hidden;
-      background: #06101d;
-      box-shadow: 0 30px 90px rgba(0,0,0,.36);
-    }
-
-    .manor-ground-viewport canvas {
-      display: block;
-      width: 100%;
-      height: clamp(540px, 96vw, 880px);
-    }
-
-    .gate-label {
-      display: inline-flex;
-      border-radius: 999px;
-      color: #06101c;
-      background: #f4cf83;
-      font: 950 .78rem/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing: .08em;
-      padding: 7px 10px;
-      margin-bottom: 8px;
-    }
-
-    .footer {
-      margin-top: 20px;
-      padding: 20px 0 0;
-      color: rgba(238,244,255,.46);
-      font-size: .82rem;
-      text-align: center;
-    }
-
-    @media (max-width: 900px) {
-      .topbar { align-items: flex-start; flex-direction: column; }
-      .ground-placement-grid { grid-template-columns: 1fr; }
-      .summary { grid-template-columns: repeat(2, minmax(0,1fr)); }
-      .standard-grid { grid-template-columns: 1fr; }
-    }
-  `;
+function setStatus(text) {
+  const node = document.querySelector("[data-render-status]");
+  if (node) node.textContent = text;
 }
 
-function setDocumentAuthority() {
-  document.documentElement.className = "dgb-h-earth-live-world";
-  document.body.className = "dgb-h-earth-live-world";
-
+function markDocument(extra = {}) {
   const markers = {
-    page: "h-earth-live-world-render",
+    page: "h-earth-live-world-failsafe-shell",
     route: "/showroom/globe/h-earth/",
     contract: CONTRACT,
-    selectedRegion: "western-golden-shelf",
-    manorGroundPlacementAuthorized: "true",
-    waterBehindManor: "true",
-    cameraFacing: "west-southwest",
-    renderer: "live-procedural-4k-world",
+    renderer: "live-procedural-world",
     staticImageDependency: "false",
     pngDependency: "false",
-    finalArchitectureAuthorized: "false"
+    waterBehindManor: "true",
+    cameraFacing: "west-southwest",
+    finalArchitectureAuthorized: "false",
+    ...extra
   };
 
   Object.entries(markers).forEach(([key, value]) => {
-    document.documentElement.dataset[key] = value;
-    document.body.dataset[key] = value;
+    document.documentElement.dataset[key] = String(value);
+    document.body.dataset[key] = String(value);
   });
-
-  document.title = "Western Golden Shelf · Live World Ground Render";
 }
 
-function canonicalBody() {
-  return `
-    <div class="page">
-      <header class="topbar">
-        <a class="brand" href="/showroom/">◆ Diamond Gate Bridge</a>
-        <nav class="nav">
-          <a href="/">Compass</a>
-          <a href="/showroom/">Showroom</a>
-          <a href="/showroom/globe/">Globe</a>
-          <a href="/showroom/globe/earth/">ZIONTS</a>
-          <a href="/showroom/globe/h-earth/" aria-current="page">H-Earth</a>
-          <a href="/showroom/globe/audralia/">Audralia</a>
-          <a href="/gauges/">Triple G</a>
-        </nav>
-      </header>
+function seed(index, salt = 0) {
+  return ((Math.sin(index * 12.9898 + salt * 78.233) * 43758.5453123) % 1 + 1) % 1;
+}
 
-      <main id="main">
-        <section class="hero">
-          <p class="eyebrow">Western Golden Shelf · Live World Render</p>
-          <h1>The Manor is now placed on a living shelf. Water moves behind it.</h1>
-          <p class="lede">
-            This is no longer a static image or a diagram. The Western Golden Shelf is rendered as a live procedural environment with ocean motion, wind-reactive vegetation, atmospheric shimmer, wildlife movement, golden-hour light, and the Manor physically placed on the shelf.
-          </p>
+function drawFailsafeLiveWorld(canvas, time = performance.now() / 1000) {
+  const ctx = canvas?.getContext?.("2d", { alpha: false });
+  if (!canvas || !ctx) return null;
 
-          <div class="actions">
-            <a class="button primary" href="#manor-ground-render">View Live World</a>
-            <a class="button gold" href="/showroom/globe/">Return to Globe Selector</a>
-            <a class="button" href="/showroom/">Return to Showroom</a>
-          </div>
+  const box = canvas.getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  const w = Math.max(720, Math.floor((box.width || 900) * dpr));
+  const h = Math.max(900, Math.floor((box.height || 1120) * dpr));
 
-          <div class="transition">
-            Visual baseline preserved as direction. Static PNG rejected. Live world renderer active.
-          </div>
+  if (canvas.width !== w || canvas.height !== h) {
+    canvas.width = w;
+    canvas.height = h;
+  }
 
-          <div class="summary">
-            <div><strong>LIVE WORLD</strong><span>Render class</span></div>
-            <div><strong>NO PNG</strong><span>Static dependency</span></div>
-            <div><strong>WIND + WATER</strong><span>Motion layer</span></div>
-            <div><strong>HOLD</strong><span>Final architecture</span></div>
-          </div>
+  ctx.clearRect(0, 0, w, h);
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
 
-          <div class="gate-panel">
-            <span class="gate-label">LIVE ENVIRONMENT ACTIVE</span>
-            <p>The accepted image remains the compass. The renderer is the engine. The world must breathe.</p>
-          </div>
-        </section>
+  const sky = ctx.createLinearGradient(0, 0, 0, h);
+  sky.addColorStop(0, "rgb(104,128,145)");
+  sky.addColorStop(0.25, "rgb(183,187,175)");
+  sky.addColorStop(0.48, "rgb(218,197,158)");
+  sky.addColorStop(0.78, "rgb(86,112,101)");
+  sky.addColorStop(1, "rgb(35,54,44)");
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, w, h);
 
-        <section id="manor-ground-render" class="panel">
-          <p class="eyebrow">Ground-level render · living environment</p>
-          <h2>Inland shelf view toward the western waterline</h2>
+  const sun = ctx.createRadialGradient(w * .78, h * .14, 0, w * .78, h * .14, w * .58);
+  sun.addColorStop(0, "rgba(255,238,194,.48)");
+  sun.addColorStop(.22, "rgba(255,221,151,.28)");
+  sun.addColorStop(1, "rgba(255,205,125,0)");
+  ctx.fillStyle = sun;
+  ctx.fillRect(0, 0, w, h);
 
-          <div class="ground-placement-grid">
-            <div class="manor-ground-viewport">
-              <canvas data-manor-ground-canvas aria-label="Live procedural Western Golden Shelf Manor world"></canvas>
-            </div>
+  ctx.fillStyle = "rgba(22,32,34,.58)";
+  for (const island of [[.10,.36,.06,.04],[.62,.35,.05,.03],[.86,.34,.06,.04]]) {
+    const [cx, cy, sx, sy] = island;
+    ctx.beginPath();
+    ctx.moveTo(w*(cx-sx), h*cy);
+    ctx.lineTo(w*(cx-sx*.4), h*(cy-sy*.5));
+    ctx.lineTo(w*cx, h*(cy-sy));
+    ctx.lineTo(w*(cx+sx*.5), h*(cy-sy*.25));
+    ctx.lineTo(w*(cx+sx), h*cy);
+    ctx.closePath();
+    ctx.fill();
+  }
 
-            <article class="card">
-              <h3>Live render authority</h3>
-              <p>The renderer now generates a live world instead of displaying a static image.</p>
-              <div class="placement-list">
-                <div><span>Renderer
+  const waterTop = h * .365;
+  const waterBottom = h * .585;
+  const ocean = ctx.createLinearGradient(0, waterTop, 0, waterBottom);
+  ocean.addColorStop(0, "rgba(79,130,139,.98)");
+  ocean.addColorStop(.45, "rgba(43,103,128,.97)");
+  ocean.addColorStop(1, "rgba(19,68,94,.98)");
+  ctx.fillStyle = ocean;
+  ctx.fillRect(0, waterTop, w, waterBottom - waterTop);
+
+  ctx.strokeStyle = "rgba(255,236,178,.20)";
+  ctx.lineWidth = Math.max(1, w * .001);
+  for (let j = 0; j < 24; j += 1) {
+    const y = waterTop + h * .025 + j * h * .007;
+    ctx.globalAlpha = Math.max(.035, .16 - j * .004);
+    ctx.beginPath();
+    for (let i = 0; i <= 72; i += 1) {
+      const x = (i / 72) * w;
+      const wave = Math.sin(i * .92 + j * .5 + time * .9) * h * .0022;
+      if (i === 0) ctx.moveTo(x, y + wave);
+      else ctx.lineTo(x, y + wave);
+    }
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
+  const landTop = h * .555;
+  const ground = ctx.createLinearGradient(0, landTop, 0, h);
+  ground.addColorStop(0, "rgb(137,126,70)");
+  ground.addColorStop(.35, "rgb(75,95,58)");
+  ground.addColorStop(.72, "rgb(36,57,40)");
+  ground.addColorStop(1, "rgb(19,31,26)");
+  ctx.fillStyle = ground;
+  ctx.beginPath();
+  ctx.moveTo(0, landTop);
+  for (let i = 0; i <= 80; i += 1) {
+    const x = (i / 80) * w;
+    const y = landTop + Math.sin(i * .47) * h * .011 + Math.sin(i * 1.3) * h * .006;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(w, h);
+  ctx.lineTo(0, h);
+  ctx.closePath();
+  ctx.fill();
+
+  drawFailsafeManor(ctx, w, h);
+  drawFailsafeVegetation(ctx, w, h, time);
+  drawFailsafeWildlife(ctx, w, h, time);
+
+  const haze = ctx.createLinearGradient(0, h * .34, 0, h * .63);
+  haze.addColorStop(0, "rgba(255,244,219,.06)");
+  haze.addColorStop(.45, "rgba(255,235,186,.08)");
+  haze.addColorStop(1, "rgba(255,235,186,0)");
+  ctx.fillStyle = haze;
+  ctx.fillRect(0, h * .32, w, h * .34);
+
+  return {
+    contract: CONTRACT,
+    renderer: "failsafe-live-world",
+    rendered: true,
+    staticImageDependency: false,
+    waterBehindManor: true
+  };
+}
+
+function drawFailsafeManor(ctx, w, h) {
+  const cx = w * .5;
+  const baseY = h * .615;
+  const width = w * .4;
+  const height = h * .2;
+  const bodyTop = baseY - height * .58;
+  const bodyH = height * .55;
+
+  const wall = ctx.createLinearGradient(cx - width * .55, bodyTop, cx + width * .55, baseY);
+  wall.addColorStop(0, "rgb(71,63,52)");
+  wall.addColorStop(.45, "rgb(180,146,88)");
+  wall.addColorStop(1, "rgb(40,36,34)");
+  ctx.fillStyle = wall;
+  ctx.strokeStyle = "rgba(235,203,137,.38)";
+  ctx.lineWidth = Math.max(1, w * .0014);
+
+  function rect(x, y, rw, rh) {
+    ctx.beginPath();
+    ctx.roundRect(x, y, rw, rh, Math.max(2, w * .004));
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  rect(cx - width * .31, bodyTop + bodyH * .16, width * .62, bodyH * .86);
+  rect(cx - width * .16, bodyTop - bodyH * .02, width * .32, bodyH * 1.06);
+  rect(cx - width * .51, bodyTop + bodyH * .32, width * .22, bodyH * .70);
+  rect(cx + width * .29, bodyTop + bodyH * .32, width * .22, bodyH * .70);
+
+  ctx.fillStyle = "rgb(48,39,35)";
+  for (const roof of [
+    [[cx-width*.36,bodyTop+bodyH*.16],[cx,bodyTop-height*.22],[cx+width*.36,bodyTop+bodyH*.16]],
+    [[cx-width*.18,bodyTop-bodyH*.02],[cx,bodyTop-height*.29],[cx+width*.18,bodyTop-bodyH*.02]]
+  ]) {
+    ctx.beginPath();
+    ctx.moveTo(roof[0][0], roof[0][1]);
+    ctx.lineTo(roof[1][0], roof[1][1]);
+    ctx.lineTo(roof[2][0], roof[2][1]);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = "rgba(255,214,137,.78)";
+  for (let floor = 0; floor < 3; floor += 1) {
+    const y = bodyTop + bodyH * (.28 + floor * .21);
+    for (let i = -4; i <= 4; i += 1) {
+      if (i === 0 && floor > 0) continue;
+      const x = cx + i * width * .065;
+      ctx.beginPath();
+      ctx.roundRect(x - width*.012, y, width*.024, bodyH*.082, 2);
+      ctx.fill();
+    }
+  }
+}
+
+function drawFailsafeVegetation(ctx, w, h, time) {
+  for (let i = 0; i < 120; i += 1) {
+    const x = seed(i, 110) * w;
+    const y = h * (.58 + seed(i, 111) * .38);
+    const scale = h * (.004 + seed(i, 112) * .014);
+    const sway = Math.sin(time * .75 + i * .7) * scale * .7;
+
+    ctx.fillStyle = seed(i, 114) > .45 ? "rgba(73,133,75,.30)" : "rgba(166,172,94,.24)";
+    ctx.beginPath();
+    ctx.ellipse(x + sway, y, scale * 2.2, scale * .55, seed(i, 115), 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function drawFailsafeWildlife(ctx, w, h, time) {
+  ctx.strokeStyle = "rgba(21,29,31,.46)";
+  ctx.lineWidth = Math.max(1, w * .001);
+  for (let i = 0; i < 7; i += 1) {
+    const x = ((seed(i, 210) + ((time * .025) % 1) * (.06 + seed(i, 211) * .05)) % 1) * w;
+    const y = h * (.12 + seed(i, 212) * .17);
+    const s = w * (.004 + seed(i, 213) * .004);
+    const flap = Math.sin(time * 2.2 + i) * s * .35;
+    ctx.beginPath();
+    ctx.moveTo(x - s, y);
+    ctx.quadraticCurveTo(x - s*.5, y - s*.5 - flap, x, y);
+    ctx.quadraticCurveTo(x + s*.5, y - s*.5 + flap, x + s, y);
+    ctx.stroke();
+  }
+}
+
+async function startRenderer() {
+  const canvas = document.querySelector("[data-manor-ground-canvas]");
+  if (!canvas) {
+    setStatus("Canvas mount missing. HTML shell remains visible.");
+    return null;
+  }
+
+  try {
+    const mod = await import(`/assets/h-earth/h-earth.western-golden-shelf.ground.render.js?v=${GROUND_RENDER_CACHE_KEY}`);
+
+    if (mod?.createWesternGoldenShelfGroundRenderer) {
+      const renderer = mod.createWesternGoldenShelfGroundRenderer(canvas, {
+        dpr: Math.min(window.devicePixelRatio || 1, 2),
+        targetFrameMs: 50
+      }).start();
+
+      setStatus("Live procedural renderer active.");
+      markDocument({ rendererActive: "true", fallbackRenderer: "false" });
+      return renderer;
+    }
+
+    throw new Error("createWesternGoldenShelfGroundRenderer export missing.");
+  } catch (error) {
+    setStatus(`Module renderer unavailable. Failsafe live renderer active. ${error?.message || ""}`);
+    markDocument({ rendererActive: "true", fallbackRenderer: "true" });
+
+    let raf = 0;
+    let lastReceipt = null;
+
+    function draw(time) {
+      lastReceipt = drawFailsafeLiveWorld(canvas, time / 1000);
+      raf = requestAnimationFrame(draw);
+    }
+
+    raf = requestAnimationFrame(draw);
+
+    return {
+      status() {
+        return {
+          contract: CONTRACT,
+          renderer: "failsafe-live-world",
+          running: Boolean(raf),
+          lastReceipt
+        };
+      }
+    };
+  }
+}
+
+async function init() {
+  markDocument({ boot: "started" });
+
+  let renderer = null;
+  let error = null;
+
+  try {
+    renderer = await startRenderer();
+  } catch (err) {
+    error = err?.message || "Unexpected renderer boot failure.";
+    setStatus(`Renderer boot failed. HTML shell remains visible. ${error}`);
+    markDocument({ rendererActive: "false", bootError: error });
+  }
+
+  window.DGBHEarthGroundScout = Object.freeze({
+    status() {
+      return Object.freeze({
+        contract: CONTRACT,
+        route: "/showroom/globe/h-earth/",
+        renderer: renderer?.status?.() || null,
+        bootError: error,
+        htmlShellVisible: true,
+        staticImageDependency: false,
+        pngDependency: false,
+        waterBehindManor: true,
+        cameraFacing: "west-southwest",
+        finalArchitectureAuthorized: false
+      });
+    }
+  });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init, { once: true });
+} else {
+  init();
+}
+
+export default init;

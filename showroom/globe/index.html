@@ -3,9 +3,9 @@
   lang="en"
   data-route="/showroom/globe/"
   data-page="showroom-globe"
-  data-version="SHOWROOM_GLOBE_RUNTIME_GLIDE_CONTROL_HTML_TNT_v1"
+  data-version="SHOWROOM_GLOBE_FIBONACCI_RUNTIME_HTML_TNT_v1"
   data-source-authority="html-shell-loads-local-index-js"
-  data-import-version="runtime-glide-control-v1"
+  data-import-version="fibonacci-runtime-v1"
   data-public-selector="true"
   data-private-engines-asleep="true"
   data-generated-image="false"
@@ -21,12 +21,12 @@
   <title>Globe Showcase · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The Globe Showcase is the public selector for Earth, H-Earth, and Audralia. It loads the cinematic dry planet material renderer with runtime glide controls while private map engines stay in their own rooms."
+    content="The Globe Showcase is the public selector for Earth, H-Earth, and Audralia. It loads the cinematic dry planet material renderer with Fibonacci runtime glide controls while private map engines stay in their own rooms."
   >
 
-  <link rel="modulepreload" href="/showroom/globe/index.js?v=runtime-glide-control-v1">
-  <link rel="modulepreload" href="/assets/showroom.globe.cinematic.material.js?v=cinematic-material-asset-v1">
-  <link rel="modulepreload" href="/assets/showroom.globe.runtime.js?v=runtime-glide-control-v1">
+  <link rel="modulepreload" href="/showroom/globe/index.js?v=fibonacci-runtime-v1">
+  <link rel="modulepreload" href="/assets/showroom.globe.cinematic.material.js?v=fibonacci-runtime-v1">
+  <link rel="modulepreload" href="/assets/showroom.globe.runtime.js?v=fibonacci-runtime-v1">
   <link rel="modulepreload" href="/assets/showroom.globe.controls.js?v=runtime-glide-control-v1">
 
   <style>
@@ -510,7 +510,7 @@
 
   <script>
     (() => {
-      const cacheKey = "runtime-glide-control-v1";
+      const cacheKey = "fibonacci-runtime-v1";
       document.documentElement.dataset.cacheKey = cacheKey;
 
       try {
@@ -570,7 +570,7 @@
         <h1 id="page-title">The globe is the object.</h1>
 
         <p class="lead">
-          This page loads the local Globe Showcase controller, the cinematic dry planet material renderer, and a runtime glide controller. Maps, water systems, landmasses, terrain history, and child engines belong inside the private world rooms.
+          This page loads the local Globe Showcase controller, the cinematic dry planet material renderer, and a Fibonacci runtime glide controller. Maps, water systems, landmasses, terrain history, and child engines belong inside the private world rooms.
         </p>
 
         <div class="actions">
@@ -582,7 +582,7 @@
 
       <section class="panel section" aria-labelledby="showcase-title">
         <div class="showcase-card">
-          <div class="stage-label">Source authority · local index.js · cinematic material asset · runtime glide control</div>
+          <div class="stage-label">Source authority · local index.js · cinematic material asset · Fibonacci runtime</div>
 
           <h2 id="showcase-title">Clean globe, not public map construction.</h2>
 
@@ -603,32 +603,32 @@
           </div>
 
           <p>
-            Drag to inspect the public globe. Use the runtime controls to switch auto/hold, detail pressure, and glide feel.
+            Drag to inspect the public globe. The runtime uses Fibonacci frame pacing: faster while dragging, lighter while settling, and quieter while idle.
           </p>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="standard-title">
         <div class="kicker">Runtime standard</div>
-        <h2 id="standard-title">The material stays locked. The runtime now carries the motion.</h2>
+        <h2 id="standard-title">The material stays locked. Motion gets the fast lane.</h2>
 
         <div class="info-grid">
           <div class="info-card">
-            <b>Runtime</b>
-            <strong>Glide, damping, and pacing.</strong>
-            <span>The runtime file owns drag, inertia, auto-spin, frame pacing, and reduced-motion behavior.</span>
+            <b>Motion</b>
+            <strong>Drag is prioritized.</strong>
+            <span>Finger movement uses lower render pressure and direct yaw/pitch response first.</span>
           </div>
 
           <div class="info-card">
-            <b>Renderer</b>
-            <strong>Planet material remains downstream.</strong>
-            <span>The cinematic material file keeps dry crust, basins, cliffs, canyons, shadows, and atmospheric rim.</span>
+            <b>Fibonacci</b>
+            <strong>13 → 21 → 34 → 55 → 89 → 144.</strong>
+            <span>The runtime paces movement, settling, stable frames, and idle pressure through the Fibonacci ladder.</span>
           </div>
 
           <div class="info-card">
-            <b>Controls</b>
-            <strong>Small public panel.</strong>
-            <span>Auto/Hold, Detail, Glide, and Reset are separated from the planet material.</span>
+            <b>Refinement</b>
+            <strong>Detail returns after motion.</strong>
+            <span>The planet renders cheaply while moving and refines when the globe settles.</span>
           </div>
         </div>
       </section>
@@ -639,6 +639,6 @@
     </footer>
   </div>
 
-  <script type="module" src="/showroom/globe/index.js?v=runtime-glide-control-v1"></script>
+  <script type="module" src="/showroom/globe/index.js?v=fibonacci-runtime-v1"></script>
 </body>
 </html>

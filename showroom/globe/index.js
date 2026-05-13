@@ -1,38 +1,46 @@
 // /showroom/globe/index.js
-// Public Globe Showcase stable baseline.
-// Organic landmass portrait repair.
-// Role: lightweight public selector and portrait display case.
-// This file renders continuous organic planetary portraits.
-// It does not expose child-256 fabric, parent-cell screens, or private construction machinery.
+// TNT FULL-FILE REPLACEMENT
+// H_EARTH_PARENT_MACRO_SILHOUETTE_TNT_v1
+// Role: lightweight public Globe Showcase selector.
+// Change: H-Earth parent macro silhouette now uses organic tectonic pressure fields,
+// subtractive ocean cuts, warped coastlines, peninsulas, bays, shelves, and island chains.
+// Constraint: no child-256 visible fabric, no private engines, no GraphicBox, no image generation.
 
-const MODEL_NAME = "globe-showcase-public-organic-portrait-baseline-v2";
+const MODEL_NAME = "globe-showcase-h-earth-parent-macro-silhouette-v1";
 
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
 const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
 const DPR = Math.min(window.devicePixelRatio || 1, MOBILE ? 1.25 : 1.65);
-const FRAME_MS = MOBILE ? 76 : 56;
+const FRAME_MS = MOBILE ? 64 : 48;
 
-const DEFAULT_YAW = -0.62;
-const DEFAULT_PITCH = -0.22;
-const MIN_PITCH = -1.05;
+const DEFAULT_YAW = -0.66;
+const DEFAULT_PITCH = -0.18;
+const MIN_PITCH = -1.04;
 const MAX_PITCH = 0.74;
 
-const PARENT_256_COUNT = 256;
-const CHILD_256_PER_PARENT = 256;
-const TOTAL_CHILD_FIELDS = PARENT_256_COUNT * CHILD_256_PER_PARENT;
+const LAT_BANDS = 16;
+const LON_SECTORS = 16;
+const CELL_COUNT = LAT_BANDS * LON_SECTORS;
+
+const CHILD_HEX_ROWS = 16;
+const CHILD_HEX_COLS = 16;
+const CHILD_HEX_COUNT = CHILD_HEX_ROWS * CHILD_HEX_COLS;
+const TOTAL_CHILD_FIELDS = CELL_COUNT * CHILD_HEX_COUNT;
+
+const PORTRAIT_LAT_STEPS = MOBILE ? 66 : 82;
+const PORTRAIT_LON_STEPS = MOBILE ? 132 : 164;
 
 const H_EARTH_PUBLIC_MODEL = Object.freeze({
-  parentCells: PARENT_256_COUNT,
-  childFieldsPerParent: CHILD_256_PER_PARENT,
+  parentCells: CELL_COUNT,
+  childFieldsPerParent: CHILD_HEX_COUNT,
   totalChildFields: TOTAL_CHILD_FIELDS,
-  publicMode: "organic macro portrait",
-  visibleChildFabric: false,
+  publicMode: "stable organic parent macro silhouette",
   privateModelPath: "/showroom/globe/h-earth/",
   assetAuthority: Object.freeze([
     "/assets/h-earth/h-earth.kernel.js",
     "/assets/h-earth/h-earth.lattice256.js",
     "/assets/h-earth/h-earth.landmap.js",
-    "/assets/h-earth/h-earth.tectonics.js",
+    "/assets/h-earth/h-earth.terrain.js",
     "/assets/h-earth/h-earth.surface.js",
     "/assets/h-earth/h-earth.canvas.js",
     "/assets/h-earth/h-earth.controls.js"
@@ -45,13 +53,14 @@ const WORLDS = Object.freeze({
     title: "Earth",
     subtitle: "Reference Body",
     route: "/showroom/globe/earth/",
-    ocean: [28, 98, 160],
-    deep: [8, 34, 92],
-    land: [62, 136, 84],
-    forest: [38, 116, 72],
-    highland: [134, 130, 100],
-    coast: [206, 188, 122],
-    ice: [190, 226, 244],
+    ocean: [30, 102, 164],
+    deep: [10, 42, 92],
+    land: [70, 145, 88],
+    lowland: [66, 136, 82],
+    highland: [132, 126, 96],
+    coast: [201, 186, 126],
+    freshwater: [86, 168, 204],
+    ice: [192, 230, 244],
     glow: "rgba(142,190,255,0.22)"
   },
   hEarth: {
@@ -59,27 +68,29 @@ const WORLDS = Object.freeze({
     title: "H-Earth",
     subtitle: "Hybrid Earth",
     route: "/showroom/globe/h-earth/",
-    ocean: [32, 112, 154],
-    deep: [7, 34, 104],
-    land: [56, 140, 84],
-    forest: [34, 118, 74],
-    highland: [126, 138, 106],
-    coast: [214, 194, 130],
-    ice: [184, 224, 242],
-    glow: "rgba(143,240,195,0.24)"
+    ocean: [33, 112, 166],
+    deep: [7, 36, 96],
+    land: [78, 154, 96],
+    lowland: [68, 142, 88],
+    highland: [136, 136, 102],
+    coast: [211, 194, 132],
+    freshwater: [96, 182, 212],
+    ice: [188, 224, 240],
+    glow: "rgba(143,240,195,0.22)"
   },
   audralia: {
     key: "audralia",
     title: "Audralia",
     subtitle: "Constructed World",
     route: "/showroom/globe/audralia/",
-    ocean: [38, 106, 146],
-    deep: [10, 38, 94],
-    land: [142, 128, 82],
-    forest: [78, 132, 84],
-    highland: [174, 148, 102],
-    coast: [222, 194, 128],
-    ice: [186, 220, 234],
+    ocean: [38, 110, 150],
+    deep: [10, 40, 94],
+    land: [140, 128, 82],
+    lowland: [132, 120, 76],
+    highland: [168, 148, 100],
+    coast: [221, 196, 132],
+    freshwater: [102, 174, 206],
+    ice: [190, 226, 236],
     glow: "rgba(190,170,255,0.22)"
   }
 });
@@ -87,8 +98,6 @@ const WORLDS = Object.freeze({
 const state = {
   canvas: null,
   ctx: null,
-  surfaceCanvas: null,
-  surfaceCtx: null,
   width: 0,
   height: 0,
   raf: 0,
@@ -159,13 +168,13 @@ function valueNoise2D(x, y, seed = 0) {
   return lerp(lerp(n00, n10, sx), lerp(n01, n11, sx), sy) * 2 - 1;
 }
 
-function fbm2D(x, y, seed = 0) {
+function fbm2D(x, y, seed = 0, octaves = 4) {
   let value = 0;
   let amplitude = 0.52;
   let frequency = 1;
   let total = 0;
 
-  for (let octave = 0; octave < 5; octave += 1) {
+  for (let octave = 0; octave < octaves; octave += 1) {
     value += valueNoise2D(x * frequency, y * frequency, seed + octave * 23) * amplitude;
     total += amplitude;
     amplitude *= 0.5;
@@ -175,14 +184,20 @@ function fbm2D(x, y, seed = 0) {
   return value / total;
 }
 
+function ridge2D(x, y, seed = 0) {
+  return 1 - Math.abs(fbm2D(x, y, seed, 4));
+}
+
+function warp2D(x, y, seed = 0, amountX = 0.25, amountY = 0.18) {
+  return {
+    x: x + fbm2D(x * 0.7 + 13.1, y * 0.7 - 9.4, seed + 1, 3) * amountX,
+    y: y + fbm2D(x * 0.7 - 6.2, y * 0.7 + 11.7, seed + 2, 3) * amountY
+  };
+}
+
 function normalize(v) {
   const length = Math.hypot(v.x, v.y, v.z) || 1;
-
-  return {
-    x: v.x / length,
-    y: v.y / length,
-    z: v.z / length
-  };
+  return { x: v.x / length, y: v.y / length, z: v.z / length };
 }
 
 function dot(a, b) {
@@ -211,29 +226,74 @@ function rotateX(p, angle) {
   };
 }
 
-function inverseRotateViewToLocal(p, yaw, pitch) {
-  const unPitch = rotateX(p, -pitch);
-  return rotateY(unPitch, -yaw);
+function makePoint(lat, lon) {
+  const cosLat = Math.cos(lat);
+  return {
+    x: cosLat * Math.cos(lon),
+    y: Math.sin(lat),
+    z: cosLat * Math.sin(lon)
+  };
+}
+
+function project(p, view) {
+  return {
+    x: view.cx + p.x * view.scale,
+    y: view.cy - p.y * view.scale,
+    z: p.z
+  };
+}
+
+function wrapLonDelta(lon, center) {
+  return Math.atan2(Math.sin(lon - center), Math.cos(lon - center));
+}
+
+function orientedPlateField(lat, lon, centerLat, centerLon, latRadius, lonRadius, angle, skew = 0) {
+  const x = wrapLonDelta(lon, centerLon);
+  const y = lat - centerLat;
+
+  const c = Math.cos(angle);
+  const s = Math.sin(angle);
+
+  const xr = x * c - y * s;
+  const yr = x * s + y * c;
+
+  const bend = Math.sin((yr + skew) * 2.2) * 0.09 + Math.sin((xr - skew) * 1.7) * 0.04;
+  const nx = (xr + bend) / lonRadius;
+  const ny = yr / latRadius;
+
+  const d = Math.sqrt(nx * nx + ny * ny);
+  return 1 - d;
+}
+
+function ribbonField(lat, lon, centerLat, centerLon, length, width, angle, phase = 0) {
+  const x = wrapLonDelta(lon, centerLon);
+  const y = lat - centerLat;
+
+  const c = Math.cos(angle);
+  const s = Math.sin(angle);
+
+  const xr = x * c - y * s;
+  const yr = x * s + y * c;
+
+  const curved = yr + Math.sin(xr * 2.6 + phase) * 0.075 + Math.sin(xr * 5.1 - phase) * 0.028;
+  const along = Math.abs(xr) / length;
+  const across = Math.abs(curved) / width;
+
+  return 1 - Math.max(along * 0.72, across);
+}
+
+function gaussianDistance(lat, lon, centerLat, centerLon, latWidth, lonWidth) {
+  const dLat = (lat - centerLat) / latWidth;
+  const dLon = wrapLonDelta(lon, centerLon) / lonWidth;
+  return Math.exp(-(dLat * dLat + dLon * dLon));
 }
 
 function mixColor(a, b, t) {
-  const m = clamp(t, 0, 1);
-
   return [
-    Math.round(lerp(a[0], b[0], m)),
-    Math.round(lerp(a[1], b[1], m)),
-    Math.round(lerp(a[2], b[2], m))
+    Math.round(lerp(a[0], b[0], t)),
+    Math.round(lerp(a[1], b[1], t)),
+    Math.round(lerp(a[2], b[2], t))
   ];
-}
-
-function colorToString(c, alpha = 1) {
-  const r = Math.round(clamp(c[0], 0, 255));
-  const g = Math.round(clamp(c[1], 0, 255));
-  const b = Math.round(clamp(c[2], 0, 255));
-
-  return alpha >= 1
-    ? `rgb(${r},${g},${b})`
-    : `rgba(${r},${g},${b},${alpha})`;
 }
 
 function sizeCanvas() {
@@ -250,14 +310,6 @@ function sizeCanvas() {
   state.height = state.canvas.height;
   state.ctx = state.canvas.getContext("2d", { alpha: false, desynchronized: true });
 
-  if (!state.surfaceCanvas) {
-    state.surfaceCanvas = document.createElement("canvas");
-    state.surfaceCtx = state.surfaceCanvas.getContext("2d", {
-      alpha: true,
-      willReadFrequently: false
-    });
-  }
-
   createStars(MOBILE ? 56 : 118);
 }
 
@@ -271,266 +323,320 @@ function createStars(count) {
   }));
 }
 
-function gaussianDistance(lat, lon, centerLat, centerLon, latWidth, lonWidth) {
-  const dLat = (lat - centerLat) / latWidth;
-  const dLon = Math.atan2(Math.sin(lon - centerLon), Math.cos(lon - centerLon)) / lonWidth;
-  return Math.exp(-(dLat * dLat + dLon * dLon));
-}
-
-function applyDomainWarp(lat, lon, worldKey) {
-  const seed = worldKey === "earth" ? 10 : worldKey === "audralia" ? 70 : 40;
-
-  const warpLon =
-    fbm2D(lon * 0.58 + 2.1, lat * 0.52 - 1.7, seed + 1) * 0.34 +
-    fbm2D(lon * 1.12 - 5.0, lat * 0.92 + 3.2, seed + 2) * 0.13;
-
-  const warpLat =
-    fbm2D(lon * 0.48 - 1.8, lat * 0.66 + 2.4, seed + 3) * 0.20 +
-    fbm2D(lon * 1.30 + 4.4, lat * 1.04 - 2.2, seed + 4) * 0.08;
-
-  return {
-    lat: clamp(lat + warpLat, -Math.PI / 2, Math.PI / 2),
-    lon: lon + warpLon
-  };
-}
-
-function largestMask(masks) {
-  return masks.reduce((best, item) => item.score > best.score ? item : best, masks[0]);
-}
-
-function sampleEarthOrganic(lat, lon) {
-  const warped = applyDomainWarp(lat, lon, "earth");
-  const pLat = warped.lat;
-  const pLon = warped.lon;
-
-  const masks = [
-    { name: "western-continent", score: gaussianDistance(pLat, pLon, 0.36, -1.92, 0.80, 0.76) },
-    { name: "south-west-continent", score: gaussianDistance(pLat, pLon, -0.46, -1.52, 0.58, 0.56) * 0.84 },
-    { name: "eastern-continent", score: gaussianDistance(pLat, pLon, 0.28, 0.54, 0.74, 0.84) },
-    { name: "south-east-continent", score: gaussianDistance(pLat, pLon, -0.34, 1.06, 0.60, 0.58) * 0.76 },
-    { name: "southern-ice-land", score: gaussianDistance(pLat, pLon, -1.18, 0.0, 0.22, 2.9) * 0.88 },
-    { name: "island-field", score: gaussianDistance(pLat, pLon, -0.20, 2.36, 0.32, 0.36) * 0.58 }
-  ];
-
-  const land = largestMask(masks);
-  const globalNoise =
-    fbm2D(pLon * 0.95 + 8, pLat * 0.95 + 4, 11) * 0.100 +
-    fbm2D(pLon * 2.10 - 1, pLat * 1.75 + 6, 12) * 0.040;
-
-  return classifyOrganicTerrain({
-    signed: land.score + globalNoise - 0.42,
-    lat,
-    lon,
-    worldKey: "earth",
-    landName: land.name
-  });
-}
-
-function sampleHEarthOrganic(lat, lon) {
-  const warped = applyDomainWarp(lat, lon, "hEarth");
-  const pLat = warped.lat;
-  const pLon = warped.lon;
-
-  const westContinent =
-    gaussianDistance(pLat, pLon, 0.16, -2.02, 0.78, 0.98) +
-    gaussianDistance(pLat, pLon, -0.22, -1.50, 0.54, 0.66) * 0.62;
-
-  const eastContinent =
-    gaussianDistance(pLat, pLon, 0.18, 1.50, 0.80, 0.94) +
-    gaussianDistance(pLat, pLon, -0.10, 2.22, 0.50, 0.64) * 0.56;
-
-  const northernHighland =
-    gaussianDistance(pLat, pLon, 0.72, -0.20, 0.48, 1.06) +
-    gaussianDistance(pLat, pLon, 0.56, 0.56, 0.36, 0.60) * 0.50;
-
-  const southernShelf =
-    gaussianDistance(pLat, pLon, -0.70, 0.15, 0.48, 1.14) +
-    gaussianDistance(pLat, pLon, -0.52, -0.58, 0.34, 0.60) * 0.44;
-
-  const equatorialChain =
-    gaussianDistance(pLat, pLon, 0.00, -0.62, 0.22, 0.50) * 0.78 +
-    gaussianDistance(pLat, pLon, 0.08, 0.12, 0.20, 0.44) * 0.78 +
-    gaussianDistance(pLat, pLon, -0.08, 0.82, 0.22, 0.46) * 0.78;
-
-  const northCrown = gaussianDistance(pLat, pLon, 1.34, 0.0, 0.24, 3.2) * 0.66;
-  const southCrown = gaussianDistance(pLat, pLon, -1.34, 0.0, 0.24, 3.2) * 0.66;
-
-  const masks = [
-    { name: "western-primary-continent", score: westContinent },
-    { name: "eastern-primary-continent", score: eastContinent },
-    { name: "northern-highland-continent", score: northernHighland },
-    { name: "southern-shelf-continent", score: southernShelf },
-    { name: "equatorial-island-chain", score: equatorialChain },
-    { name: "north-polar-landmass", score: northCrown },
-    { name: "south-polar-landmass", score: southCrown }
-  ];
-
-  const land = largestMask(masks);
-
-  const longWave =
-    fbm2D(pLon * 0.72 + 14, pLat * 0.78 - 3, 41) * 0.090 +
-    fbm2D(pLon * 1.75 - 2, pLat * 1.45 + 5, 83) * 0.044;
-
-  const coastlineBreak =
-    Math.sin(pLon * 2.18 + Math.sin(pLat * 2.4) * 0.84) * 0.032 +
-    Math.cos(pLon * 3.40 - pLat * 2.10) * 0.022;
-
-  const centralRift =
-    gaussianDistance(pLat, pLon, 0.02, 0.0, 0.34, 0.46) * 0.15;
-
-  const westDeepOcean = smoothstep(-2.30, -3.05, pLon) * 0.17;
-  const eastDeepOcean = smoothstep(2.30, 3.05, pLon) * 0.17;
-  const southernOcean = smoothstep(-0.86, -1.42, pLat) * 0.11;
-
-  const signed =
-    land.score +
-    longWave +
-    coastlineBreak -
-    centralRift -
-    westDeepOcean -
-    eastDeepOcean -
-    southernOcean -
-    0.43;
-
-  return classifyOrganicTerrain({
-    signed,
-    lat,
-    lon,
-    worldKey: "hEarth",
-    landName: land.name
-  });
-}
-
-function sampleAudraliaOrganic(lat, lon) {
-  const warped = applyDomainWarp(lat, lon, "audralia");
-  const pLat = warped.lat;
-  const pLon = warped.lon;
-
-  const masks = [
-    {
-      name: "main-archipelago",
-      score:
-        gaussianDistance(pLat, pLon, 0.16, -0.72, 0.60, 0.94) +
-        gaussianDistance(pLat, pLon, -0.22, 0.34, 0.50, 0.80) * 0.84
-    },
-    { name: "eastern-high-islands", score: gaussianDistance(pLat, pLon, 0.42, 1.26, 0.36, 0.52) * 0.58 },
-    { name: "southern-shelf-land", score: gaussianDistance(pLat, pLon, -0.78, -0.34, 0.34, 0.96) * 0.70 },
-    {
-      name: "island-trail",
-      score:
-        gaussianDistance(pLat, pLon, 0.00, 1.72, 0.19, 0.35) +
-        gaussianDistance(pLat, pLon, -0.18, 2.18, 0.18, 0.32) * 0.74 +
-        gaussianDistance(pLat, pLon, 0.24, 2.58, 0.16, 0.28) * 0.56
-    }
-  ];
-
-  const land = largestMask(masks);
-
-  const noise =
-    fbm2D(pLon * 0.88 + 2, pLat * 0.98 + 13, 71) * 0.105 +
-    fbm2D(pLon * 2.20 - 9, pLat * 1.70 + 4, 91) * 0.044;
-
-  const signed = land.score + noise - 0.48;
-
-  return classifyOrganicTerrain({
-    signed,
-    lat,
-    lon,
-    worldKey: "audralia",
-    landName: land.name
-  });
-}
-
-function classifyOrganicTerrain({ signed, lat, lon, worldKey, landName }) {
+function finishTerrain(worldKey, lat, lon, elevation, ridge, moisture, freshwater = false) {
   const polar = Math.abs(lat) / (Math.PI / 2);
-  const iceThreshold = worldKey === "audralia" ? 0.93 : 0.89;
-  const iceFade = smoothstep(iceThreshold - 0.055, iceThreshold + 0.030, polar);
+  const iceThreshold = worldKey === "audralia" ? 0.93 : 0.885;
+  const iceFade = smoothstep(iceThreshold - 0.06, iceThreshold + 0.03, polar);
   const isIce = iceFade > 0.40;
 
-  const coastPressure = 1 - clamp(Math.abs(signed) / 0.105, 0, 1);
-  const isLand = signed > 0 || isIce;
-  const isCoast = !isIce && coastPressure > 0.50;
-  const isBeach = !isIce && coastPressure > 0.72 && signed > -0.035 && signed < 0.070;
-  const isShelf = !isLand && signed > -0.18;
-  const isSea = !isLand && signed > -0.34;
-
-  const ridgeField =
-    fbm2D(lon * 2.4 + 12, lat * 2.6 - 8, 131) * 0.65 +
-    Math.sin(lon * 3.2 + lat * 1.4) * 0.22;
-
-  const moisture =
-    fbm2D(lon * 1.35 - 3, lat * 1.18 + 9, 151) * 0.5 +
-    fbm2D(lon * 2.6 + 5, lat * 2.1 - 4, 152) * 0.25;
-
-  const mountain = isLand && !isIce && signed > 0.22 && ridgeField > 0.12;
-  const highland = isLand && !isIce && (signed > 0.16 || mountain);
-  const dry = isLand && !isIce && signed > 0.08 && moisture < -0.10;
-  const forest = isLand && !isIce && !dry && moisture > -0.08;
+  const seaLevel = 0;
+  const water = (elevation < seaLevel || freshwater) && !isIce;
+  const coast = !isIce && Math.abs(elevation - seaLevel) < 0.055;
+  const shelf = water && elevation > -0.11 && !freshwater;
+  const sea = water && elevation <= -0.11 && elevation > -0.30 && !freshwater;
+  const mountain = !water && !isIce && elevation > 0.17 && ridge > 0.58;
+  const highland = !water && !isIce && (elevation > 0.11 || mountain);
+  const dry = !water && !isIce && moisture < 0.34 && elevation > 0.04;
 
   return {
-    signed,
+    elevation,
     polar,
     ice: isIce,
     iceFade,
-    land: isLand,
-    water: !isLand,
-    coast: isCoast,
-    beach: isBeach,
-    shelf: isShelf,
-    sea: isSea,
+    land: !water || isIce,
+    water,
+    freshwater,
+    coast,
+    shelf,
+    sea,
     mountain,
     highland,
     dry,
-    forest,
-    landName,
-    detail: clamp((fbm2D(lon * 4.0, lat * 3.2, 191) + 1) / 2, 0, 1),
-    moisture: clamp((moisture + 1) / 2, 0, 1)
+    ridge,
+    moisture,
+    detail: clamp((fbm2D(lon * 3.1 + 2, lat * 2.7 - 1, 199) + 1) * 0.5, 0, 1)
   };
 }
 
-function sampleTerrain(lat, lon, worldKey) {
-  if (worldKey === "earth") return sampleEarthOrganic(lat, lon);
-  if (worldKey === "audralia") return sampleAudraliaOrganic(lat, lon);
-  return sampleHEarthOrganic(lat, lon);
+function sampleEarth(lat, lon) {
+  const w = warp2D(lon * 0.82, lat * 0.86, 301, 0.20, 0.15);
+  const macro = fbm2D(w.x * 0.80, w.y * 0.92, 302, 4) * 0.34;
+  const detail = fbm2D(w.x * 1.70, w.y * 1.45, 303, 3) * 0.10;
+
+  const americas =
+    gaussianDistance(lat, lon, 0.28, -1.90, 0.78, 0.76) +
+    gaussianDistance(lat, lon, -0.36, -1.40, 0.55, 0.52) * 0.84;
+
+  const euroAfrica =
+    gaussianDistance(lat, lon, 0.32, 0.35, 0.74, 0.72) +
+    gaussianDistance(lat, lon, -0.12, 0.58, 0.62, 0.66) * 0.82;
+
+  const asia =
+    gaussianDistance(lat, lon, 0.36, 1.48, 0.62, 0.72) +
+    gaussianDistance(lat, lon, 0.10, 2.10, 0.40, 0.48) * 0.52;
+
+  const australia = gaussianDistance(lat, lon, -0.38, 2.30, 0.26, 0.28) * 0.52;
+  const antarctica = gaussianDistance(lat, lon, -1.20, 0.0, 0.22, 3.2) * 0.76;
+
+  const oceanCuts =
+    gaussianDistance(lat, lon, 0.05, -0.80, 0.46, 0.36) * 0.18 +
+    gaussianDistance(lat, lon, 0.18, 2.70, 0.26, 0.24) * 0.12;
+
+  const elevation = Math.max(americas, euroAfrica, asia, australia, antarctica) * 0.72 + macro + detail - 0.38 - oceanCuts;
+  const ridge = ridge2D(w.x * 1.8 - 2, w.y * 1.8 + 1, 304);
+  const moisture = clamp((fbm2D(w.x * 1.1 + 5, w.y * 1.1 - 3, 305, 3) + 1) * 0.5, 0, 1);
+
+  return finishTerrain("earth", lat, lon, elevation, ridge, moisture);
 }
 
-function terrainColor(terrain, world, light, rim) {
+function sampleHEarth(lat, lon) {
+  const globalWarp = warp2D(lon * 0.55, lat * 0.62, 701, 0.42, 0.28);
+  const fineWarp = warp2D(lon * 1.22, lat * 1.08, 702, 0.16, 0.12);
+
+  const x = globalWarp.x;
+  const y = globalWarp.y;
+
+  const westPlate =
+    orientedPlateField(y, x, 0.12, -1.78, 0.74, 1.04, -0.22, 0.30) * 0.70 +
+    orientedPlateField(y, x, -0.32, -1.34, 0.46, 0.72, 0.40, -0.18) * 0.34 +
+    ribbonField(y, x, 0.48, -1.36, 0.86, 0.18, 0.18, 1.1) * 0.20;
+
+  const eastPlate =
+    orientedPlateField(y, x, 0.04, 1.48, 0.80, 0.98, 0.30, -0.12) * 0.72 +
+    orientedPlateField(y, x, 0.38, 0.96, 0.44, 0.62, -0.50, 0.24) * 0.30 +
+    orientedPlateField(y, x, -0.30, 2.08, 0.40, 0.52, 0.48, 0.08) * 0.22;
+
+  const northShield =
+    orientedPlateField(y, x, 0.72, -0.12, 0.36, 1.05, 0.05, 0.12) * 0.54 +
+    ribbonField(y, x, 0.60, 0.58, 0.62, 0.16, -0.42, 2.2) * 0.26;
+
+  const southShelf =
+    orientedPlateField(y, x, -0.66, 0.20, 0.42, 1.12, -0.12, -0.16) * 0.50 +
+    ribbonField(y, x, -0.50, -0.46, 0.84, 0.15, 0.34, -1.3) * 0.22;
+
+  const centerIslands =
+    ribbonField(y, x, 0.02, -0.54, 0.46, 0.12, 0.03, 0.2) * 0.36 +
+    ribbonField(y, x, 0.02, 0.10, 0.38, 0.10, -0.10, 1.4) * 0.30 +
+    ribbonField(y, x, -0.06, 0.70, 0.34, 0.11, 0.16, 2.4) * 0.24;
+
+  const northCrown = ribbonField(y, x, 1.28, -0.15, 2.40, 0.16, 0.00, 0.0) * 0.18;
+  const southCrown = ribbonField(y, x, -1.28, 0.22, 2.20, 0.15, 0.00, 1.0) * 0.16;
+
+  const continentPressure = Math.max(
+    westPlate,
+    eastPlate,
+    northShield,
+    southShelf,
+    centerIslands,
+    northCrown,
+    southCrown
+  );
+
+  const continentalSpine =
+    ridge2D(fineWarp.x * 1.20 - 3.0, fineWarp.y * 1.12 + 4.0, 703) * 0.13 +
+    ridge2D(fineWarp.x * 2.00 + 1.4, fineWarp.y * 1.86 - 2.8, 704) * 0.07;
+
+  const broadOrganicPressure =
+    fbm2D(x * 0.58 + 9.0, y * 0.70 - 4.0, 705, 4) * 0.24 +
+    fbm2D(x * 1.14 - 2.0, y * 1.08 + 7.0, 706, 3) * 0.11;
+
+  const coastlineErosion =
+    fbm2D(fineWarp.x * 2.15 + 12.0, fineWarp.y * 2.04 - 8.0, 707, 4) * 0.070 +
+    fbm2D(fineWarp.x * 4.20 - 5.0, fineWarp.y * 3.80 + 2.0, 708, 3) * 0.028;
+
+  const westOceanChannel =
+    ribbonField(y, x, 0.02, -2.74, 1.42, 0.28, 0.12, 1.2) * 0.36 +
+    ribbonField(y, x, -0.46, -2.30, 0.62, 0.18, -0.30, -0.8) * 0.20;
+
+  const eastOceanChannel =
+    ribbonField(y, x, 0.00, 2.72, 1.46, 0.29, -0.10, -1.1) * 0.36 +
+    ribbonField(y, x, 0.38, 2.26, 0.54, 0.17, 0.34, 0.7) * 0.18;
+
+  const centralRift =
+    ribbonField(y, x, 0.02, 0.20, 1.02, 0.14, 0.10, 0.9) * 0.22 +
+    ribbonField(y, x, -0.20, 0.88, 0.54, 0.12, -0.22, 2.4) * 0.15;
+
+  const northernSeaCut =
+    ribbonField(y, x, 0.54, -0.36, 0.74, 0.14, -0.18, 0.6) * 0.16 +
+    ribbonField(y, x, 0.42, 1.10, 0.46, 0.12, 0.42, -2.0) * 0.12;
+
+  const southernSeaCut =
+    ribbonField(y, x, -0.54, 0.84, 0.82, 0.16, 0.24, 1.7) * 0.18 +
+    ribbonField(y, x, -0.74, -0.68, 0.72, 0.15, -0.20, -1.5) * 0.14;
+
+  const polarOceanPressure =
+    smoothstep(1.08, 1.48, Math.abs(lat)) * 0.12;
+
+  const oceanCut =
+    westOceanChannel +
+    eastOceanChannel +
+    centralRift +
+    northernSeaCut +
+    southernSeaCut +
+    polarOceanPressure;
+
+  let elevation =
+    continentPressure +
+    broadOrganicPressure +
+    continentalSpine * 0.62 +
+    coastlineErosion -
+    oceanCut -
+    0.335;
+
+  const peninsulaWest =
+    ribbonField(y, x, -0.08, -2.02, 0.48, 0.10, 0.62, 2.1) * 0.16 +
+    ribbonField(y, x, 0.30, -1.00, 0.40, 0.09, -0.58, 0.8) * 0.12;
+
+  const peninsulaEast =
+    ribbonField(y, x, 0.18, 2.05, 0.44, 0.10, -0.60, 1.9) * 0.14 +
+    ribbonField(y, x, -0.18, 1.20, 0.36, 0.09, 0.70, -0.7) * 0.10;
+
+  const bayBiteWest =
+    gaussianDistance(fineWarp.y, fineWarp.x, 0.10, -1.92, 0.18, 0.18) * 0.10 +
+    gaussianDistance(fineWarp.y, fineWarp.x, -0.38, -1.02, 0.16, 0.22) * 0.12;
+
+  const bayBiteEast =
+    gaussianDistance(fineWarp.y, fineWarp.x, 0.30, 1.48, 0.17, 0.22) * 0.12 +
+    gaussianDistance(fineWarp.y, fineWarp.x, -0.46, 1.66, 0.18, 0.22) * 0.10;
+
+  elevation += peninsulaWest + peninsulaEast - bayBiteWest - bayBiteEast;
+
+  const islandChain =
+    ribbonField(y, x, 0.04, -0.18, 0.84, 0.055, 0.02, 0.6) * 0.12 +
+    ribbonField(y, x, -0.18, 1.24, 0.58, 0.055, 0.28, 2.2) * 0.10;
+
+  const brokenIslandNoise = fbm2D(fineWarp.x * 5.7, fineWarp.y * 5.2, 709, 3);
+  if (brokenIslandNoise > 0.24) {
+    elevation += islandChain;
+  }
+
+  const moisture = clamp((fbm2D(fineWarp.x * 1.08 - 3, fineWarp.y * 1.02 + 2, 710, 3) + 1) * 0.5, 0, 1);
+
+  const ridge =
+    ridge2D(fineWarp.x * 1.55 + 8, fineWarp.y * 1.66 - 4, 711) * 0.60 +
+    ridge2D(fineWarp.x * 2.70 - 6, fineWarp.y * 2.60 + 9, 712) * 0.24;
+
+  const lakeField =
+    gaussianDistance(fineWarp.y, fineWarp.x, 0.16, -1.44, 0.09, 0.12) +
+    gaussianDistance(fineWarp.y, fineWarp.x, 0.10, 1.74, 0.10, 0.13) +
+    gaussianDistance(fineWarp.y, fineWarp.x, -0.20, 0.78, 0.11, 0.14) +
+    gaussianDistance(fineWarp.y, fineWarp.x, -0.30, -0.28, 0.10, 0.15);
+
+  const freshwater = elevation > 0.045 && lakeField > 0.70 && moisture > 0.42;
+
+  return finishTerrain("hEarth", lat, lon, elevation, ridge, moisture, freshwater);
+}
+
+function sampleAudralia(lat, lon) {
+  const w = warp2D(lon * 0.78, lat * 0.82, 501, 0.26, 0.16);
+  const macro =
+    fbm2D(w.x * 0.88 + 2, w.y * 0.94 - 3, 502, 4) * 0.24 +
+    fbm2D(w.x * 1.82 - 4, w.y * 1.58 + 2, 503, 3) * 0.08;
+
+  const archipelago =
+    gaussianDistance(lat, lon, 0.12, -0.82, 0.54, 0.84) +
+    gaussianDistance(lat, lon, -0.18, 0.16, 0.44, 0.68) * 0.84 +
+    gaussianDistance(lat, lon, 0.38, 1.12, 0.30, 0.44) * 0.58;
+
+  const southernLand = gaussianDistance(lat, lon, -0.78, -0.22, 0.28, 0.84) * 0.66;
+
+  const islandTrail =
+    gaussianDistance(lat, lon, 0.02, 1.72, 0.16, 0.28) +
+    gaussianDistance(lat, lon, -0.16, 2.18, 0.16, 0.24) * 0.74 +
+    gaussianDistance(lat, lon, 0.24, 2.56, 0.14, 0.22) * 0.54;
+
+  const elevation = Math.max(archipelago, southernLand, islandTrail) * 0.72 + macro - 0.38;
+  const ridge = ridge2D(w.x * 1.6, w.y * 1.7, 504);
+  const moisture = clamp((fbm2D(w.x * 1.1 + 1, w.y * 1.15 - 2, 505, 3) + 1) * 0.5, 0, 1);
+
+  return finishTerrain("audralia", lat, lon, elevation, ridge, moisture);
+}
+
+function sampleTerrain(lat, lon, worldKey) {
+  if (worldKey === "earth") return sampleEarth(lat, lon);
+  if (worldKey === "audralia") return sampleAudralia(lat, lon);
+  return sampleHEarth(lat, lon);
+}
+
+function colorForTerrain(terrain, world, light, rim) {
   let base;
 
   if (terrain.ice) {
     base = mixColor(world.ice, [255, 255, 255], terrain.iceFade * 0.26);
+  } else if (terrain.freshwater) {
+    base = mixColor(world.freshwater, world.ocean, 0.18);
   } else if (terrain.water) {
     if (terrain.shelf) {
       base = mixColor(world.ocean, world.coast, 0.18);
     } else if (terrain.sea) {
-      base = mixColor(world.deep, world.ocean, 0.62);
+      base = mixColor(world.deep, world.ocean, 0.48);
     } else {
       base = world.deep;
     }
-  } else if (terrain.beach) {
-    base = mixColor(world.coast, world.land, 0.14);
   } else if (terrain.coast) {
-    base = mixColor(world.coast, world.land, 0.34);
+    base = mixColor(world.coast, world.lowland, terrain.elevation > 0 ? 0.28 : 0.08);
   } else if (terrain.mountain) {
-    base = mixColor(world.highland, [198, 186, 148], 0.30);
+    base = mixColor(world.highland, [194, 182, 150], 0.28);
   } else if (terrain.highland) {
-    base = mixColor(world.land, world.highland, 0.42);
+    base = mixColor(world.land, world.highland, 0.38);
   } else if (terrain.dry) {
-    base = mixColor(world.land, world.coast, 0.22);
-  } else if (terrain.forest) {
-    base = mixColor(world.land, world.forest, 0.42);
+    base = mixColor(world.land, world.coast, 0.16);
   } else {
     base = world.land;
   }
 
-  const texture = (terrain.detail - 0.5) * (terrain.water ? 4 : 8);
-  const shade = clamp(light + rim * 0.10, 0.15, 1.17);
+  const texture = (terrain.detail - 0.5) * (terrain.water ? 5 : 8);
+  const shade = clamp(light + rim * 0.10, 0.16, 1.16);
 
-  return [
-    clamp((base[0] + texture) * shade, 0, 255),
-    clamp((base[1] + texture * 0.55) * shade, 0, 255),
-    clamp((base[2] + (terrain.water ? 8 : -texture * 0.16)) * shade, 0, 255)
-  ];
+  const r = Math.round(clamp((base[0] + texture) * shade, 0, 255));
+  const g = Math.round(clamp((base[1] + texture * 0.62) * shade, 0, 255));
+  const b = Math.round(clamp((base[2] + (terrain.water ? 8 : -texture * 0.14)) * shade, 0, 255));
+
+  return `rgb(${r},${g},${b})`;
+}
+
+function colorWithAlpha(rgb, alpha) {
+  if (alpha >= 0.995) return rgb;
+  const parts = rgb.match(/\d+/g);
+  if (!parts || parts.length < 3) return rgb;
+  return `rgba(${parts[0]},${parts[1]},${parts[2]},${alpha})`;
+}
+
+function makeSurfacePatch(lat0, lat1, lon0, lon1, view) {
+  const p00 = rotateX(rotateY(makePoint(lat0, lon0), view.yaw), view.pitch);
+  const p01 = rotateX(rotateY(makePoint(lat0, lon1), view.yaw), view.pitch);
+  const p11 = rotateX(rotateY(makePoint(lat1, lon1), view.yaw), view.pitch);
+  const p10 = rotateX(rotateY(makePoint(lat1, lon0), view.yaw), view.pitch);
+
+  const avg = normalize({
+    x: (p00.x + p01.x + p11.x + p10.x) * 0.25,
+    y: (p00.y + p01.y + p11.y + p10.y) * 0.25,
+    z: (p00.z + p01.z + p11.z + p10.z) * 0.25
+  });
+
+  if (avg.z < -0.04) return null;
+
+  return {
+    points: [
+      project(p00, view),
+      project(p01, view),
+      project(p11, view),
+      project(p10, view)
+    ],
+    normal: avg,
+    depth: avg.z,
+    lat: (lat0 + lat1) * 0.5,
+    lon: (lon0 + lon1) * 0.5
+  };
+}
+
+function pathPatch(ctx, points) {
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  ctx.lineTo(points[1].x, points[1].y);
+  ctx.lineTo(points[2].x, points[2].y);
+  ctx.lineTo(points[3].x, points[3].y);
+  ctx.closePath();
 }
 
 function drawBackground(ctx, width, height) {
@@ -641,75 +747,10 @@ function drawGlobeShadow(ctx, view) {
   ctx.restore();
 }
 
-function drawOrganicSphereTexture(view) {
-  const res = MOBILE
-    ? clamp(Math.round(view.scale * 1.42), 300, 440)
-    : clamp(Math.round(view.scale * 1.64), 420, 640);
-
-  const size = Math.round(res);
-  const canvas = state.surfaceCanvas;
-  const ctx = state.surfaceCtx;
-
-  if (canvas.width !== size || canvas.height !== size) {
-    canvas.width = size;
-    canvas.height = size;
-  }
-
-  const image = ctx.createImageData(size, size);
-  const data = image.data;
-  const world = WORLDS[state.worldKey];
-
-  const light = normalize({ x: -0.34, y: 0.54, z: 0.82 });
-  const half = size * 0.5;
-  const radius = size * 0.485;
-  const radiusSq = radius * radius;
-
-  for (let y = 0; y < size; y += 1) {
-    const py = (half - y) / radius;
-
-    for (let x = 0; x < size; x += 1) {
-      const px = (x - half) / radius;
-      const dSq = px * px + py * py;
-      const index = (y * size + x) * 4;
-
-      if (dSq > 1) {
-        data[index + 3] = 0;
-        continue;
-      }
-
-      const pz = Math.sqrt(1 - dSq);
-      const viewNormal = normalize({ x: px, y: py, z: pz });
-      const local = inverseRotateViewToLocal(viewNormal, view.yaw, view.pitch);
-
-      const lat = Math.asin(clamp(local.y, -1, 1));
-      const lon = Math.atan2(local.z, local.x);
-      const terrain = sampleTerrain(lat, lon, state.worldKey);
-
-      const diffuse = clamp(dot(viewNormal, light), 0, 1);
-      const rim = Math.pow(clamp(1 - pz, 0, 1), 2.25);
-      const shade = 0.31 + diffuse * 0.68 + rim * 0.08;
-
-      let color = terrainColor(terrain, world, shade, rim);
-
-      const atmosphereSoften = smoothstep(0.78, 1.00, Math.sqrt(dSq));
-      const edgeBlue = terrain.water ? [92, 172, 210] : [140, 196, 190];
-      color = mixColor(color, edgeBlue, atmosphereSoften * 0.12);
-
-      const night = smoothstep(0.12, -0.08, diffuse);
-      color = mixColor(color, [3, 10, 28], night * 0.54);
-
-      data[index] = color[0];
-      data[index + 1] = color[1];
-      data[index + 2] = color[2];
-      data[index + 3] = 255;
-    }
-  }
-
-  ctx.putImageData(image, 0, 0);
-}
-
 function drawSphereBase(ctx, view) {
   const world = WORLDS[state.worldKey];
+
+  ctx.save();
 
   const ocean = ctx.createRadialGradient(
     view.cx - view.scale * 0.22,
@@ -720,34 +761,62 @@ function drawSphereBase(ctx, view) {
     view.scale * 1.08
   );
 
-  ocean.addColorStop(0, colorToString(mixColor(world.ocean, [255, 255, 255], 0.16)));
-  ocean.addColorStop(0.52, colorToString(world.ocean));
-  ocean.addColorStop(1, colorToString(world.deep));
+  ocean.addColorStop(0, `rgb(${world.ocean[0] + 28},${world.ocean[1] + 28},${world.ocean[2] + 32})`);
+  ocean.addColorStop(0.52, `rgb(${world.ocean[0]},${world.ocean[1]},${world.ocean[2]})`);
+  ocean.addColorStop(1, `rgb(${world.deep[0]},${world.deep[1]},${world.deep[2]})`);
 
   ctx.fillStyle = ocean;
   ctx.beginPath();
   ctx.arc(view.cx, view.cy, view.scale, 0, Math.PI * 2);
   ctx.fill();
+
+  ctx.restore();
 }
 
-function drawOrganicSurface(ctx, view) {
-  drawOrganicSphereTexture(view);
+function drawSurface(ctx, view) {
+  const world = WORLDS[state.worldKey];
+  const light = normalize({ x: -0.28, y: 0.54, z: 0.92 });
+  const patches = [];
+
+  for (let latIndex = 0; latIndex < PORTRAIT_LAT_STEPS; latIndex += 1) {
+    const lat0 = -Math.PI / 2 + (latIndex / PORTRAIT_LAT_STEPS) * Math.PI;
+    const lat1 = -Math.PI / 2 + ((latIndex + 1) / PORTRAIT_LAT_STEPS) * Math.PI;
+
+    for (let lonIndex = 0; lonIndex < PORTRAIT_LON_STEPS; lonIndex += 1) {
+      const lon0 = -Math.PI + (lonIndex / PORTRAIT_LON_STEPS) * Math.PI * 2;
+      const lon1 = -Math.PI + ((lonIndex + 1) / PORTRAIT_LON_STEPS) * Math.PI * 2;
+      const patch = makeSurfacePatch(lat0, lat1, lon0, lon1, view);
+      if (patch) patches.push(patch);
+    }
+  }
+
+  patches.sort((a, b) => a.depth - b.depth);
 
   ctx.save();
-  ctx.imageSmoothingEnabled = true;
-  ctx.imageSmoothingQuality = "high";
-
   ctx.beginPath();
   ctx.arc(view.cx, view.cy, view.scale * 1.002, 0, Math.PI * 2);
   ctx.clip();
 
-  ctx.drawImage(
-    state.surfaceCanvas,
-    view.cx - view.scale,
-    view.cy - view.scale,
-    view.scale * 2,
-    view.scale * 2
-  );
+  for (const patch of patches) {
+    const terrain = sampleTerrain(patch.lat, patch.lon, state.worldKey);
+
+    if (terrain.water && !terrain.shelf && !terrain.sea && !terrain.freshwater && !terrain.ice) {
+      continue;
+    }
+
+    const diffuse = clamp(dot(patch.normal, light), 0, 1);
+    const rim = Math.pow(clamp(1 - Math.abs(patch.normal.z), 0, 1), 2.0);
+    const lightValue = 0.34 + diffuse * 0.62 + rim * 0.06;
+
+    let alpha = 0.92;
+    if (terrain.water) alpha = terrain.freshwater ? 0.88 : terrain.shelf ? 0.50 : 0.28;
+    if (terrain.coast) alpha = Math.max(alpha, 0.64);
+    if (terrain.ice) alpha = 0.78;
+
+    pathPatch(ctx, patch.points);
+    ctx.fillStyle = colorWithAlpha(colorForTerrain(terrain, world, lightValue, rim), alpha);
+    ctx.fill();
+  }
 
   ctx.restore();
 }
@@ -758,9 +827,9 @@ function drawAtmosphere(ctx, view) {
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
-  const outer = ctx.createRadialGradient(view.cx, view.cy, view.scale * 0.72, view.cx, view.cy, view.scale * 1.13);
+  const outer = ctx.createRadialGradient(view.cx, view.cy, view.scale * 0.76, view.cx, view.cy, view.scale * 1.13);
   outer.addColorStop(0, "rgba(0,0,0,0)");
-  outer.addColorStop(0.68, "rgba(142,190,255,0.10)");
+  outer.addColorStop(0.72, "rgba(142,190,255,0.10)");
   outer.addColorStop(1, world.glow);
 
   ctx.fillStyle = outer;
@@ -769,7 +838,7 @@ function drawAtmosphere(ctx, view) {
   ctx.fill();
 
   ctx.strokeStyle = "rgba(210,240,255,0.23)";
-  ctx.lineWidth = Math.max(1, DPR * 1.08);
+  ctx.lineWidth = Math.max(1, DPR * 1.1);
   ctx.beginPath();
   ctx.arc(view.cx, view.cy, view.scale * 1.006, 0, Math.PI * 2);
   ctx.stroke();
@@ -783,7 +852,6 @@ function drawOrbitLines(ctx, view) {
 
   ctx.strokeStyle = "rgba(244,191,96,0.10)";
   ctx.lineWidth = Math.max(0.7, DPR * 0.75);
-
   ctx.beginPath();
   ctx.ellipse(view.cx, view.cy, view.scale * 1.52, view.scale * 0.35, -0.12, 0, Math.PI * 2);
   ctx.stroke();
@@ -809,7 +877,7 @@ function drawWorldTitle(ctx, width, height) {
 
   ctx.fillStyle = "rgba(186,197,212,0.72)";
   ctx.font = `850 ${Math.max(11 * DPR, width * 0.014)}px Inter, system-ui, sans-serif`;
-  ctx.fillText(`${world.subtitle} · organic public portrait`, width * 0.5, height * 0.205);
+  ctx.fillText(`${world.subtitle} · parent macro silhouette`, width * 0.5, height * 0.205);
 
   ctx.restore();
 }
@@ -837,7 +905,7 @@ function drawPlanet(ctx, width, height) {
 
   drawGlobeShadow(ctx, view);
   drawSphereBase(ctx, view);
-  drawOrganicSurface(ctx, view);
+  drawSurface(ctx, view);
   drawAtmosphere(ctx, view);
   drawOrbitLines(ctx, view);
   drawWorldTitle(ctx, width, height);
@@ -845,11 +913,11 @@ function drawPlanet(ctx, width, height) {
 
   document.documentElement.dataset.globeShowcaseModel = MODEL_NAME;
   document.documentElement.dataset.selectedWorld = state.worldKey;
-  document.documentElement.dataset.publicPortraitBaseline = "organic";
+  document.documentElement.dataset.publicPortraitBaseline = "stable";
+  document.documentElement.dataset.hEarthSilhouette = "parent-macro-organic";
   document.documentElement.dataset.privateEnginesAsleep = "true";
-  document.documentElement.dataset.visibleChildFabric = "false";
-  document.documentElement.dataset.parentCellCount = String(PARENT_256_COUNT);
-  document.documentElement.dataset.childFieldsPerParent = String(CHILD_256_PER_PARENT);
+  document.documentElement.dataset.parentCellCount = String(CELL_COUNT);
+  document.documentElement.dataset.childFieldsPerParent = String(CHILD_HEX_COUNT);
   document.documentElement.dataset.totalChildFields = String(TOTAL_CHILD_FIELDS);
 }
 
@@ -864,7 +932,7 @@ function render() {
 function updateInspectionMotion() {
   if (!state.dragging) {
     if (!state.interacted && !REDUCED_MOTION) {
-      state.targetYaw += 0.0010;
+      state.targetYaw += 0.00095;
     }
 
     state.targetYaw += state.velocityYaw;
@@ -919,7 +987,6 @@ function resetInspection() {
 
 function setWorld(worldKey) {
   if (!WORLDS[worldKey]) return;
-
   state.worldKey = worldKey;
   resetInspection();
   updateControls();
@@ -1101,14 +1168,12 @@ function boot() {
   window.DGBGlobeShowcase = {
     model: MODEL_NAME,
     publicPortraitBaseline: true,
-    organicPortrait: true,
-    visibleChildFabric: false,
     privateEnginesAsleep: true,
     generatedImage: false,
     graphicBox: false,
     worlds: Object.keys(WORLDS),
-    parentCellCount: PARENT_256_COUNT,
-    childFieldsPerParent: CHILD_256_PER_PARENT,
+    parentCellCount: CELL_COUNT,
+    childFieldsPerParent: CHILD_HEX_COUNT,
     totalChildFields: TOTAL_CHILD_FIELDS,
     hEarthPublicModel: H_EARTH_PUBLIC_MODEL,
     setWorld,
@@ -1118,11 +1183,10 @@ function boot() {
         model: MODEL_NAME,
         selectedWorld: state.worldKey,
         publicPortraitBaseline: true,
-        organicPortrait: true,
-        visibleChildFabric: false,
+        hEarthSilhouette: "parent-macro-organic",
         privateEnginesAsleep: true,
-        parentCellCount: PARENT_256_COUNT,
-        childFieldsPerParent: CHILD_256_PER_PARENT,
+        parentCellCount: CELL_COUNT,
+        childFieldsPerParent: CHILD_HEX_COUNT,
         totalChildFields: TOTAL_CHILD_FIELDS,
         hEarthPrivateModelPath: H_EARTH_PUBLIC_MODEL.privateModelPath,
         yaw: state.yaw,
@@ -1141,11 +1205,9 @@ if (document.readyState === "loading") {
 export default {
   model: MODEL_NAME,
   publicPortraitBaseline: true,
-  organicPortrait: true,
-  visibleChildFabric: false,
   privateEnginesAsleep: true,
-  parentCellCount: PARENT_256_COUNT,
-  childFieldsPerParent: CHILD_256_PER_PARENT,
+  parentCellCount: CELL_COUNT,
+  childFieldsPerParent: CHILD_HEX_COUNT,
   totalChildFields: TOTAL_CHILD_FIELDS,
   hEarthPublicModel: H_EARTH_PUBLIC_MODEL
 };

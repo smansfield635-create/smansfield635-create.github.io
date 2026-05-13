@@ -1,5 +1,5 @@
 const SHOWROOM_DIAMOND_STATE = Object.freeze({
-  contract: "SHOWROOM_LOCKED_CROWN_CUT_256_LATTICE_RESTORE_TNT_v1",
+  contract: "SHOWROOM_CROWN_CUT_256_LATTICE_RENDER_RESTORE_TNT_v2",
   route: "/showroom/",
   role: "showroom-cover-object",
   diamondLock: "CROWN_CUT_256_LATTICE_FIXED_FORM",
@@ -12,10 +12,11 @@ const SHOWROOM_DIAMOND_STATE = Object.freeze({
 
 const TAU = Math.PI * 2;
 const PHI = (1 + Math.sqrt(5)) / 2;
+const SEGMENTS = 32;
 
 const state = {
-  rotationX: -0.22,
-  rotationY: 0.34,
+  rotationX: -0.34,
+  rotationY: 0.42,
   velocityX: 0,
   velocityY: 0,
   dragging: false,
@@ -24,8 +25,6 @@ const state = {
   lastTap: 0,
   lastTime: 0,
   raf: 0,
-  width: 0,
-  height: 0,
   dpr: 1
 };
 
@@ -33,17 +32,489 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function lerp(a, b, t) {
-  return a + (b - a) * t;
+function normalize3(vector) {
+  const length = Math.hypot(vector[0], vector[1], vector[2]) || 1;
+  return [vector[0] / length, vector[1] / length, vector[2] / length];
+}
+
+function subtract3(a, b) {
+  return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+}
+
+function cross3(a, b) {
+  return [
+    a[1] * b[2] - a[2] * b[1],
+    a[2] * b[0] - a[0] * b[2],
+    a[0] * b[1] - a[1] * b[0]
+  ];
+}
+
+function dot3(a, b) {
+  return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+}
+
+function rotatePoint(point) {
+  let [x, y, z] = point;
+
+  const cx = Math.cos(state.rotationX);
+  const sx = Math.sin(state.rotationX);
+  const cy = Math.cos(state.rotationY);
+  const sy = Math.sin(state.rotationY);
+
+  const y1 = y * cx - z * sx;
+  const z1 = y * sx + z * cx;
+
+  const x2 = x * cy + z1 * sy;
+  const z2 = -x * sy + z1 * cy;
+
+  return [x2, y1, z2];
+}
+
+function projectPoint(point, width, height, scale) {
+  const rotated = rotatePoint(point);
+  const camera = 4.2;
+  const perspective = camera / (camera - rotated[2] * 0.72);
+
+  return {
+    x: width * 0.5 + rotated[0] * scale * perspective,
+    y: height * 0.47 + rotated[1] * scale * perspective,
+    z: rotated[2],
+    raw: rotated
+  };
+}
+
+function makeRing(radiusX, y, radiusZ, offset = 0, ripple = 0) {
+  const ring = [];
+
+  for (let i = 0; i < SEGMENTS; i += 1) {
+    const angle = (i / SEGMENTS) * TAU + offset;
+    const r = 1 + ripple * Math.sin(i * PHI * 2.0);
+    ring.push([
+      Math.cos(angle) * radiusX * r,
+      y,
+      Math.sin(angle) * radiusZ * r
+    ]);
+  }
+
+  return ring;
+}
+
+function buildCrownCutDiamond() {
+  const table = makeRing(0.54, -0.62, 0.15, TAU / 64, 0.018);
+  const crown = makeRing(0.86, -0.40, 0.24, 0, 0.020);
+  const girdleTop = makeRing(1.32, -0.02, 0.38, TAU / 64, 0.022);
+  const girdleBottom = makeRing(1.24, 0.18, 0.35, 0, 0.018);
+  const pavilion = makeRing(0.48, 0.64, 0.14, TAU / 64, 0.015);
+
+  const tableCenter = [0, -0.68, 0];
+  const culet = [0, 0.98, 0];
+
+  const faces = [];
+
+  faces.push({
+    type: "table",
+    points: table.slice(),
+    tone: 1.08
+  });
+
+  for (let i = 0; i < SEGMENTS; i += 1) {
+    const n = (i + 1) % SEGMENTS;
+
+    faces.push({
+      type: "star",
+      points: [tableCenter, table[i], table[n]],
+      tone: 1.18
+    });
+
+    faces.push({
+      type: "upper-crown",
+      points: [table[i], crown[i], crown[n], table[n]],
+      tone: 1.05
+    });
+
+    faces.push({
+      type: "lower-crown",
+      points: [crown[i], girdleTop[i], girdleTop[n], crown[n]],
+      tone: 0.96
+    });
+
+    faces.push({
+      type: "girdle",
+      points: [girdleTop[i], girdleBottom[i], girdleBottom[n], girdleTop[n]],
+      tone: 0.76
+    });
+
+    faces.push({
+      type: "pavilion-upper",
+      points: [girdleBottom[i], pavilion[i], pavilion[n], girdleBottom[n]],
+      tone: 0.86
+    });
+
+    faces.push({
+      type: "pavilion-lower",
+      points: [pavilion[i], culet, pavilion[n]],
+      tone: 0.82
+    });
+  }
+
+  return Object.freeze({
+    faces,
+    rings: Object.freeze({
+      table,
+      crown,
+      girdleTop,
+      girdleBottom,
+      pavilion
+    }),
+    culet,
+    tableCenter
+  });
+}
+
+const diamond = buildCrownCutDiamond();
+
+function faceDepth(face) {
+  return face.points.reduce((sum, point) => sum + rotatePoint(point)[2], 0) / face.points.length;
+}
+
+function faceNormal(face) {
+  if (face.points.length < 3) return [0, 0, 1];
+
+  const a = rotatePoint(face.points[0]);
+  const b = rotatePoint(face.points[1]);
+  const c = rotatePoint(face.points[2]);
+
+  return normalize3(cross3(subtract3(b, a), subtract3(c, a)));
+}
+
+function colorForFace(face, index) {
+  const normal = faceNormal(face);
+  const light = normalize3([-0.42, -0.76, 0.92]);
+  const sideLight = normalize3([0.82, -0.24, 0.44]);
+  const front = clamp((normal[2] + 1) * 0.5, 0, 1);
+  const diffuse = Math.abs(dot3(normal, light));
+  const side = Math.max(0, dot3(normal, sideLight));
+  const glint = 0.5 + 0.5 * Math.sin(index * PHI + state.rotationY * 2.6);
+
+  const shade = clamp(
+    0.22 + diffuse * 0.48 + side * 0.20 + front * 0.18 + glint * 0.10,
+    0.18,
+    1.0
+  ) * face.tone;
+
+  const r = Math.round(92 + shade * 116);
+  const g = Math.round(112 + shade * 112);
+  const b = Math.round(142 + shade * 104);
+
+  const alphaByType = {
+    table: 0.48,
+    star: 0.40,
+    "upper-crown": 0.42,
+    "lower-crown": 0.38,
+    girdle: 0.30,
+    "pavilion-upper": 0.34,
+    "pavilion-lower": 0.36
+  };
+
+  const alpha = clamp((alphaByType[face.type] || 0.36) + shade * 0.16, 0.24, 0.66);
+  const stroke = clamp(0.14 + shade * 0.30, 0.12, 0.48);
+
+  return {
+    fill: `rgba(${r}, ${g}, ${b}, ${alpha})`,
+    stroke: `rgba(232, 242, 255, ${stroke})`
+  };
+}
+
+function resizeCanvas(canvas) {
+  const box = canvas.getBoundingClientRect();
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const width = Math.max(320, Math.floor(box.width * dpr));
+  const height = Math.max(500, Math.floor(box.height * dpr));
+
+  if (canvas.width !== width || canvas.height !== height) {
+    canvas.width = width;
+    canvas.height = height;
+  }
+
+  state.dpr = dpr;
+}
+
+function drawBackground(ctx, width, height) {
+  const bg = ctx.createLinearGradient(0, 0, 0, height);
+  bg.addColorStop(0, "rgba(4, 11, 24, 0.96)");
+  bg.addColorStop(0.52, "rgba(7, 18, 36, 0.96)");
+  bg.addColorStop(1, "rgba(2, 7, 16, 0.98)");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, width, height);
+
+  const glow = ctx.createRadialGradient(
+    width * 0.5,
+    height * 0.48,
+    width * 0.04,
+    width * 0.5,
+    height * 0.50,
+    width * 0.52
+  );
+  glow.addColorStop(0, "rgba(202, 224, 255, 0.12)");
+  glow.addColorStop(0.44, "rgba(116, 149, 191, 0.09)");
+  glow.addColorStop(1, "rgba(0, 0, 0, 0)");
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, width, height);
+}
+
+function seededUnit(index, salt) {
+  return ((Math.sin(index * 12.9898 + salt * 78.233) * 43758.5453) % 1 + 1) % 1;
+}
+
+function drawStars(ctx, width, height) {
+  ctx.save();
+
+  for (let i = 0; i < 56; i += 1) {
+    const x = seededUnit(i, 1) * width;
+    const y = seededUnit(i, 2) * height;
+    const alpha = 0.10 + seededUnit(i, 3) * 0.24;
+    const size = i % 11 === 0 ? 7 : i % 5 === 0 ? 3.5 : 1.4;
+
+    ctx.strokeStyle = `rgba(235, 244, 255, ${alpha})`;
+    ctx.lineWidth = Math.max(1, width * 0.001);
+    ctx.beginPath();
+    ctx.moveTo(x - size, y);
+    ctx.lineTo(x + size, y);
+    ctx.moveTo(x, y - size);
+    ctx.lineTo(x, y + size);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+function drawFace(ctx, face, index, width, height, scale) {
+  const points = face.points.map((point) => projectPoint(point, width, height, scale));
+  const color = colorForFace(face, index);
+
+  ctx.beginPath();
+  points.forEach((point, pointIndex) => {
+    if (pointIndex === 0) ctx.moveTo(point.x, point.y);
+    else ctx.lineTo(point.x, point.y);
+  });
+  ctx.closePath();
+
+  ctx.fillStyle = color.fill;
+  ctx.strokeStyle = color.stroke;
+  ctx.lineWidth = Math.max(0.7, width * 0.00125);
+  ctx.fill();
+  ctx.stroke();
+}
+
+function drawEdge(ctx, a, b, width, height, scale, alpha = 0.26) {
+  const pa = projectPoint(a, width, height, scale);
+  const pb = projectPoint(b, width, height, scale);
+
+  ctx.strokeStyle = `rgba(235, 244, 255, ${alpha})`;
+  ctx.lineWidth = Math.max(0.7, width * 0.001);
+  ctx.beginPath();
+  ctx.moveTo(pa.x, pa.y);
+  ctx.lineTo(pb.x, pb.y);
+  ctx.stroke();
+}
+
+function drawRing(ctx, ring, width, height, scale, alpha = 0.26) {
+  for (let i = 0; i < ring.length; i += 1) {
+    drawEdge(ctx, ring[i], ring[(i + 1) % ring.length], width, height, scale, alpha);
+  }
+}
+
+function drawLattice(ctx, width, height, scale) {
+  ctx.save();
+
+  drawRing(ctx, diamond.rings.table, width, height, scale, 0.34);
+  drawRing(ctx, diamond.rings.crown, width, height, scale, 0.28);
+  drawRing(ctx, diamond.rings.girdleTop, width, height, scale, 0.30);
+  drawRing(ctx, diamond.rings.girdleBottom, width, height, scale, 0.22);
+  drawRing(ctx, diamond.rings.pavilion, width, height, scale, 0.20);
+
+  for (let i = 0; i < SEGMENTS; i += 2) {
+    drawEdge(ctx, diamond.rings.table[i], diamond.rings.girdleTop[i], width, height, scale, 0.22);
+    drawEdge(ctx, diamond.rings.girdleBottom[i], diamond.culet, width, height, scale, 0.20);
+  }
+
+  for (let i = 1; i < SEGMENTS; i += 4) {
+    drawEdge(ctx, diamond.rings.crown[i], diamond.rings.pavilion[(i + 3) % SEGMENTS], width, height, scale, 0.13);
+  }
+
+  ctx.restore();
+}
+
+function drawGlints(ctx, width, height, scale) {
+  ctx.save();
+
+  const candidates = [
+    diamond.rings.table[3],
+    diamond.rings.crown[6],
+    diamond.rings.girdleTop[10],
+    diamond.rings.girdleTop[19],
+    diamond.rings.pavilion[25],
+    diamond.rings.crown[28]
+  ];
+
+  candidates.forEach((point, index) => {
+    const projected = projectPoint(point, width, height, scale);
+    const pulse = 0.45 + 0.55 * Math.sin(performance.now() * 0.0013 + index * PHI);
+    const size = (5 + index * 0.9) * state.dpr;
+
+    ctx.strokeStyle = `rgba(255, 255, 255, ${0.18 + pulse * 0.34})`;
+    ctx.lineWidth = Math.max(1, width * 0.001);
+    ctx.beginPath();
+    ctx.moveTo(projected.x - size, projected.y);
+    ctx.lineTo(projected.x + size, projected.y);
+    ctx.moveTo(projected.x, projected.y - size);
+    ctx.lineTo(projected.x, projected.y + size);
+    ctx.stroke();
+  });
+
+  ctx.restore();
+}
+
+function drawDiamond(ctx, width, height) {
+  const scale = Math.min(width, height) * 0.355;
+
+  const aura = ctx.createRadialGradient(
+    width * 0.5,
+    height * 0.50,
+    scale * 0.12,
+    width * 0.5,
+    height * 0.54,
+    scale * 1.62
+  );
+  aura.addColorStop(0, "rgba(244, 207, 131, 0.18)");
+  aura.addColorStop(0.38, "rgba(126, 157, 205, 0.13)");
+  aura.addColorStop(1, "rgba(0, 0, 0, 0)");
+  ctx.fillStyle = aura;
+  ctx.fillRect(0, 0, width, height);
+
+  const sortedFaces = diamond.faces
+    .map((face, index) => ({ face, index, depth: faceDepth(face) }))
+    .sort((a, b) => a.depth - b.depth);
+
+  sortedFaces.forEach((item) => {
+    drawFace(ctx, item.face, item.index, width, height, scale);
+  });
+
+  drawLattice(ctx, width, height, scale);
+  drawGlints(ctx, width, height, scale);
+
+  const shadow = ctx.createRadialGradient(
+    width * 0.5,
+    height * 0.72,
+    scale * 0.06,
+    width * 0.5,
+    height * 0.72,
+    scale * 0.50
+  );
+  shadow.addColorStop(0, "rgba(244, 207, 131, 0.15)");
+  shadow.addColorStop(0.48, "rgba(88, 116, 153, 0.13)");
+  shadow.addColorStop(1, "rgba(0, 0, 0, 0)");
+  ctx.fillStyle = shadow;
+  ctx.beginPath();
+  ctx.ellipse(width * 0.5, height * 0.72, scale * 0.58, scale * 0.10, 0, 0, TAU);
+  ctx.fill();
+}
+
+function render(canvas, ctx) {
+  const width = canvas.width;
+  const height = canvas.height;
+
+  ctx.clearRect(0, 0, width, height);
+  drawBackground(ctx, width, height);
+  drawStars(ctx, width, height);
+  drawDiamond(ctx, width, height);
+}
+
+function step(time, canvas, ctx) {
+  const dt = state.lastTime ? clamp((time - state.lastTime) / 1000, 0, 0.05) : 0;
+  state.lastTime = time;
+
+  resizeCanvas(canvas);
+
+  if (!state.dragging) {
+    state.rotationY += state.velocityY;
+    state.rotationX = clamp(state.rotationX + state.velocityX, -0.82, 0.62);
+
+    const damping = Math.pow(0.948, dt * 60);
+    state.velocityY *= damping;
+    state.velocityX *= damping;
+
+    if (Math.abs(state.velocityY) < 0.00008) state.velocityY = 0;
+    if (Math.abs(state.velocityX) < 0.00008) state.velocityX = 0;
+
+    if (state.velocityX === 0 && state.velocityY === 0) {
+      state.rotationY += dt * 0.026;
+    }
+  }
+
+  render(canvas, ctx);
+  state.raf = requestAnimationFrame((next) => step(next, canvas, ctx));
+}
+
+function bindPointer(stage) {
+  stage.addEventListener("pointerdown", (event) => {
+    const now = performance.now();
+
+    if (now - state.lastTap < 320) {
+      resetDiamond();
+    }
+
+    state.lastTap = now;
+    state.dragging = true;
+    state.pointerX = event.clientX;
+    state.pointerY = event.clientY;
+    state.velocityX = 0;
+    state.velocityY = 0;
+
+    stage.setPointerCapture?.(event.pointerId);
+  });
+
+  stage.addEventListener("pointermove", (event) => {
+    if (!state.dragging) return;
+
+    const dx = event.clientX - state.pointerX;
+    const dy = event.clientY - state.pointerY;
+
+    state.pointerX = event.clientX;
+    state.pointerY = event.clientY;
+
+    state.rotationY += dx * 0.0064;
+    state.rotationX = clamp(state.rotationX - dy * 0.0049, -0.82, 0.62);
+
+    state.velocityY = dx * 0.0019;
+    state.velocityX = -dy * 0.00125;
+  }, { passive: true });
+
+  const release = (event) => {
+    if (!state.dragging) return;
+    state.dragging = false;
+    stage.releasePointerCapture?.(event.pointerId);
+  };
+
+  stage.addEventListener("pointerup", release);
+  stage.addEventListener("pointercancel", release);
+  stage.addEventListener("pointerleave", release);
+}
+
+function resetDiamond() {
+  state.rotationX = -0.34;
+  state.rotationY = 0.42;
+  state.velocityX = 0;
+  state.velocityY = 0;
 }
 
 function markRoute() {
-  document.documentElement.dataset.showroomStatus = "locked-diamond-restored";
+  document.documentElement.dataset.showroomStatus = "locked-diamond-render-restored";
   document.documentElement.dataset.diamondLock = "CROWN_CUT_256_LATTICE_FIXED_FORM";
   document.documentElement.dataset.touchGlideDiamond = "true";
   document.documentElement.dataset.earthRecord = "false";
 
-  document.body.dataset.showroomStatus = "locked-diamond-restored";
+  document.body.dataset.showroomStatus = "locked-diamond-render-restored";
   document.body.dataset.diamondLock = "CROWN_CUT_256_LATTICE_FIXED_FORM";
   document.body.dataset.touchGlideDiamond = "true";
   document.body.dataset.earthRecord = "false";
@@ -61,275 +532,21 @@ function protectIdentity() {
   }
 }
 
-function project(point, width, height, scale) {
-  const [x, y, z] = rotate(point);
-  const perspective = 1 / (1 + z * 0.24);
-  return {
-    x: width * 0.5 + x * scale * perspective,
-    y: height * 0.49 + y * scale * perspective,
-    z,
-    p: perspective
-  };
-}
-
-function rotate(point) {
-  let [x, y, z] = point;
-
-  const cx = Math.cos(state.rotationX);
-  const sx = Math.sin(state.rotationX);
-  const cy = Math.cos(state.rotationY);
-  const sy = Math.sin(state.rotationY);
-
-  const y1 = y * cx - z * sx;
-  const z1 = y * sx + z * cx;
-
-  const x2 = x * cy + z1 * sy;
-  const z2 = -x * sy + z1 * cy;
-
-  return [x2, y1, z2];
-}
-
-function diamondMesh() {
-  const crown = [];
-  const girdleTop = [];
-  const girdleBottom = [];
-
-  const crownCount = 32;
-  for (let i = 0; i < crownCount; i += 1) {
-    const a = (i / crownCount) * TAU;
-    const ripple = 1 + 0.035 * Math.sin(i * PHI);
-    girdleTop.push([Math.cos(a) * 1.38 * ripple, -0.02 + 0.035 * Math.sin(i * 3), Math.sin(a) * 0.40 * ripple]);
-    girdleBottom.push([Math.cos(a) * 1.28 * ripple, 0.28 + 0.028 * Math.sin(i * 2), Math.sin(a) * 0.36 * ripple]);
-    crown.push([Math.cos(a) * 0.82 * ripple, -0.42 + 0.025 * Math.sin(i * 5), Math.sin(a) * 0.24 * ripple]);
-  }
-
-  const top = [0, -0.56, 0];
-  const pavilion = [0, 0.82, 0];
-
-  const faces = [];
-  for (let i = 0; i < crownCount; i += 1) {
-    const n = (i + 1) % crownCount;
-    faces.push([top, crown[i], crown[n]]);
-    faces.push([crown[i], girdleTop[i], girdleTop[n], crown[n]]);
-    faces.push([girdleTop[i], girdleBottom[i], girdleBottom[n], girdleTop[n]]);
-    faces.push([girdleBottom[i], pavilion, girdleBottom[n]]);
-  }
-
-  return { faces, top, pavilion, crown, girdleTop, girdleBottom };
-}
-
-const mesh = diamondMesh();
-
-function faceDepth(face) {
-  return face.reduce((sum, point) => sum + rotate(point)[2], 0) / face.length;
-}
-
-function faceTone(face, index) {
-  const depth = faceDepth(face);
-  const glint = 0.5 + 0.5 * Math.sin(index * PHI + state.rotationY * 2.1);
-  const base = clamp(0.38 + depth * 0.16 + glint * 0.18, 0.18, 0.86);
-  return {
-    fill: `rgba(${Math.round(116 + base * 96)}, ${Math.round(132 + base * 84)}, ${Math.round(156 + base * 72)}, ${0.30 + base * 0.28})`,
-    stroke: `rgba(219, 232, 248, ${0.12 + base * 0.26})`
-  };
-}
-
-function drawStars(ctx, width, height) {
-  ctx.save();
-  for (let i = 0; i < 44; i += 1) {
-    const x = ((Math.sin(i * 12.9898) * 43758.5453) % 1 + 1) % 1;
-    const y = ((Math.sin(i * 78.233) * 24634.6345) % 1 + 1) % 1;
-    const px = x * width;
-    const py = y * height;
-    const alpha = 0.16 + 0.18 * (((i * 13) % 17) / 17);
-    const size = i % 9 === 0 ? 6 : i % 5 === 0 ? 3 : 1.5;
-
-    ctx.strokeStyle = `rgba(235,244,255,${alpha})`;
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(px - size, py);
-    ctx.lineTo(px + size, py);
-    ctx.moveTo(px, py - size);
-    ctx.lineTo(px, py + size);
-    ctx.stroke();
-  }
-  ctx.restore();
-}
-
-function drawDiamond(ctx, width, height) {
-  const scale = Math.min(width, height) * 0.285;
-
-  const glow = ctx.createRadialGradient(width * 0.5, height * 0.55, scale * 0.2, width * 0.5, height * 0.58, scale * 2.0);
-  glow.addColorStop(0, "rgba(244,207,131,0.16)");
-  glow.addColorStop(0.48, "rgba(117,151,194,0.08)");
-  glow.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = glow;
-  ctx.fillRect(0, 0, width, height);
-
-  const sorted = mesh.faces
-    .map((face, index) => ({ face, index, depth: faceDepth(face) }))
-    .sort((a, b) => a.depth - b.depth);
-
-  for (const item of sorted) {
-    const points = item.face.map((point) => project(point, width, height, scale));
-    const tone = faceTone(item.face, item.index);
-
-    ctx.beginPath();
-    points.forEach((point, idx) => {
-      if (idx === 0) ctx.moveTo(point.x, point.y);
-      else ctx.lineTo(point.x, point.y);
-    });
-    ctx.closePath();
-    ctx.fillStyle = tone.fill;
-    ctx.strokeStyle = tone.stroke;
-    ctx.lineWidth = Math.max(0.75, width * 0.0014);
-    ctx.fill();
-    ctx.stroke();
-  }
-
-  ctx.save();
-  ctx.globalAlpha = 0.40;
-  ctx.strokeStyle = "rgba(235,244,255,0.24)";
-  ctx.lineWidth = Math.max(1, width * 0.0012);
-
-  for (let i = 0; i < mesh.girdleTop.length; i += 2) {
-    const a = project(mesh.girdleTop[i], width, height, scale);
-    const b = project(mesh.girdleBottom[(i + 9) % mesh.girdleBottom.length], width, height, scale);
-    ctx.beginPath();
-    ctx.moveTo(a.x, a.y);
-    ctx.lineTo(b.x, b.y);
-    ctx.stroke();
-  }
-  ctx.restore();
-
-  const shadow = ctx.createRadialGradient(width * 0.5, height * 0.74, scale * 0.05, width * 0.5, height * 0.74, scale * 0.55);
-  shadow.addColorStop(0, "rgba(244,207,131,0.16)");
-  shadow.addColorStop(0.55, "rgba(80,105,140,0.12)");
-  shadow.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = shadow;
-  ctx.beginPath();
-  ctx.ellipse(width * 0.5, height * 0.74, scale * 0.54, scale * 0.10, 0, 0, TAU);
-  ctx.fill();
-}
-
-function render(canvas, ctx) {
-  const width = canvas.width;
-  const height = canvas.height;
-
-  ctx.clearRect(0, 0, width, height);
-
-  const bg = ctx.createLinearGradient(0, 0, 0, height);
-  bg.addColorStop(0, "rgba(4,11,24,0.94)");
-  bg.addColorStop(0.55, "rgba(6,16,32,0.96)");
-  bg.addColorStop(1, "rgba(2,7,16,0.98)");
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, width, height);
-
-  drawStars(ctx, width, height);
-  drawDiamond(ctx, width, height);
-}
-
-function resize(canvas, ctx) {
-  const box = canvas.getBoundingClientRect();
-  const dpr = Math.min(2, window.devicePixelRatio || 1);
-  const width = Math.max(320, Math.floor(box.width * dpr));
-  const height = Math.max(480, Math.floor(box.height * dpr));
-
-  if (canvas.width !== width || canvas.height !== height) {
-    canvas.width = width;
-    canvas.height = height;
-    state.width = width;
-    state.height = height;
-    state.dpr = dpr;
-    render(canvas, ctx);
-  }
-}
-
-function step(time, canvas, ctx) {
-  const dt = state.lastTime ? clamp((time - state.lastTime) / 1000, 0, 0.05) : 0;
-  state.lastTime = time;
-
-  resize(canvas, ctx);
-
-  if (!state.dragging) {
-    state.rotationY += state.velocityY;
-    state.rotationX = clamp(state.rotationX + state.velocityX, -0.72, 0.72);
-
-    const damping = Math.pow(0.945, dt * 60);
-    state.velocityY *= damping;
-    state.velocityX *= damping;
-
-    if (Math.abs(state.velocityY) < 0.00008) state.velocityY = 0;
-    if (Math.abs(state.velocityX) < 0.00008) state.velocityX = 0;
-  }
-
-  render(canvas, ctx);
-  state.raf = requestAnimationFrame((next) => step(next, canvas, ctx));
-}
-
-function bindPointer(stage) {
-  stage.addEventListener("pointerdown", (event) => {
-    const now = performance.now();
-    if (now - state.lastTap < 320) {
-      resetDiamond();
-    }
-    state.lastTap = now;
-
-    state.dragging = true;
-    state.pointerX = event.clientX;
-    state.pointerY = event.clientY;
-    state.velocityX = 0;
-    state.velocityY = 0;
-    stage.setPointerCapture?.(event.pointerId);
-  });
-
-  stage.addEventListener("pointermove", (event) => {
-    if (!state.dragging) return;
-
-    const dx = event.clientX - state.pointerX;
-    const dy = event.clientY - state.pointerY;
-
-    state.pointerX = event.clientX;
-    state.pointerY = event.clientY;
-
-    state.rotationY += dx * 0.0062;
-    state.rotationX = clamp(state.rotationX - dy * 0.0048, -0.72, 0.72);
-
-    state.velocityY = dx * 0.0019;
-    state.velocityX = -dy * 0.0013;
-  }, { passive: true });
-
-  const release = (event) => {
-    if (!state.dragging) return;
-    state.dragging = false;
-    stage.releasePointerCapture?.(event.pointerId);
-  };
-
-  stage.addEventListener("pointerup", release);
-  stage.addEventListener("pointercancel", release);
-  stage.addEventListener("pointerleave", release);
-}
-
-function resetDiamond() {
-  state.rotationX = -0.22;
-  state.rotationY = 0.34;
-  state.velocityX = 0;
-  state.velocityY = 0;
-}
-
 function initShowroomDiamond() {
   markRoute();
   protectIdentity();
 
   const stage = document.querySelector("[data-showroom-diamond-stage]");
   const canvas = document.querySelector("[data-showroom-diamond-canvas]");
+
   if (!stage || !canvas) return null;
 
   const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
   if (!ctx) return null;
 
   bindPointer(stage);
-  resize(canvas, ctx);
+  resizeCanvas(canvas);
+  render(canvas, ctx);
 
   if (!state.raf) {
     state.raf = requestAnimationFrame((time) => step(time, canvas, ctx));
@@ -342,6 +559,8 @@ function initShowroomDiamond() {
         ...SHOWROOM_DIAMOND_STATE,
         ready: true,
         fixedForm: true,
+        crownCut: true,
+        lattice256: true,
         momentum: true,
         doubleTapReset: true
       });

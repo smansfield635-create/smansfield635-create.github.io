@@ -1,7 +1,7 @@
 // /showroom/globe/h-earth/index.js
 // TNT FULL-FILE REPLACEMENT
-// H_EARTH_WESTERN_GOLDEN_SHELF_ESTATE_AUTHORIZATION_TNT_v1
-// Owns: H-Earth Western Golden Shelf estate-authorization analysis route presentation.
+// H_EARTH_RUNTIME_SKIN_GUARD_RECOVERY_TNT_v2
+// Owns: H-Earth Western Golden Shelf estate-authorization route presentation and runtime skin guard.
 // Does not own: Manor placement, Estate placement, bridge placement, road placement, city placement, or Globe selector mutation.
 
 import {
@@ -22,7 +22,9 @@ import {
   createWesternGoldenShelfAuthorization
 } from "/assets/h-earth/h-earth.western-golden-shelf.js?v=western-golden-shelf-v1";
 
-const CONTRACT = "H_EARTH_WESTERN_GOLDEN_SHELF_ESTATE_AUTHORIZATION_TNT_v1";
+const CONTRACT = "H_EARTH_RUNTIME_SKIN_GUARD_RECOVERY_TNT_v2";
+const PRIOR_CONTRACT = "H_EARTH_WESTERN_GOLDEN_SHELF_ESTATE_AUTHORIZATION_TNT_v1";
+const STYLE_GUARD_ID = "dgb-h-earth-runtime-skin-guard";
 
 const state = {
   scout: null,
@@ -31,11 +33,293 @@ const state = {
   canvas: null,
   ctx: null,
   raf: 0,
+  skinRaf: 0,
+  skinChecks: 0,
   time: 0,
   dpr: 1,
   width: 0,
   height: 0
 };
+
+function installRuntimeSkinGuard() {
+  document.documentElement.classList.add("dgb-h-earth-skin-locked");
+  document.body?.classList.add("dgb-h-earth-skin-locked");
+  document.documentElement.dataset.runtimeSkinGuard = "true";
+  if (document.body) document.body.dataset.runtimeSkinGuard = "true";
+
+  let style = document.getElementById(STYLE_GUARD_ID);
+
+  if (!style) {
+    style = document.createElement("style");
+    style.id = STYLE_GUARD_ID;
+    style.setAttribute("data-contract", CONTRACT);
+    document.head.appendChild(style);
+  }
+
+  style.textContent = `
+    html.dgb-h-earth-skin-locked,
+    body.dgb-h-earth-skin-locked {
+      min-height: 100% !important;
+      color-scheme: dark !important;
+      background:
+        radial-gradient(circle at 50% -8%, rgba(78,119,171,0.26), transparent 38%),
+        radial-gradient(circle at 12% 18%, rgba(244,207,131,0.12), transparent 30%),
+        radial-gradient(circle at 84% 30%, rgba(167,243,198,0.09), transparent 34%),
+        linear-gradient(180deg, #061020 0%, #030812 54%, #02050b 100%) !important;
+      color: rgba(238,244,255,0.94) !important;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+    }
+
+    body.dgb-h-earth-skin-locked {
+      margin: 0 !important;
+      background:
+        linear-gradient(90deg, rgba(244,207,131,0.08) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(244,207,131,0.035) 1px, transparent 1px),
+        linear-gradient(180deg, #061020 0%, #030812 54%, #02050b 100%) !important;
+      background-size: 58px 58px, 58px 58px, auto !important;
+      letter-spacing: -0.015em !important;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 28px)) !important;
+      margin: 0 auto !important;
+      padding: 22px 0 58px !important;
+    }
+
+    .hero,
+    .panel {
+      border: 1px solid rgba(244,207,131,0.20) !important;
+      border-radius: 34px !important;
+      background:
+        radial-gradient(circle at 76% 28%, rgba(139,200,255,0.12), transparent 32%),
+        radial-gradient(circle at 18% 20%, rgba(244,207,131,0.10), transparent 30%),
+        linear-gradient(180deg, rgba(8,17,34,0.95), rgba(4,9,20,0.96)) !important;
+      box-shadow: 0 30px 90px rgba(0,0,0,0.34) !important;
+      overflow: hidden !important;
+    }
+
+    .hero { padding: clamp(24px, 5vw, 46px) !important; }
+    .panel { padding: clamp(18px, 3vw, 28px) !important; }
+
+    h1, h2, .selected-heading h2, .terrain-readout h3, .proof-head h3, .zone-card h3, .standard-card h2 {
+      color: #f4cf83 !important;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+    }
+
+    h1 {
+      max-width: 980px !important;
+      margin: 0 !important;
+      font-size: clamp(2.1rem, 7vw, 5rem) !important;
+      line-height: 0.94 !important;
+      letter-spacing: -0.07em !important;
+    }
+
+    p, li, small, span {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+    }
+
+    .lede, .selected-summary, .terrain-readout p, .proof-card p, .zone-card p, .standard-card p {
+      color: rgba(238,244,255,0.66) !important;
+      line-height: 1.55 !important;
+    }
+
+    .topbar {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 16px !important;
+      padding: 12px 0 22px !important;
+    }
+
+    .nav {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      justify-content: flex-end !important;
+      gap: 8px !important;
+    }
+
+    .nav a, .button {
+      min-height: 38px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      border: 1px solid rgba(255,255,255,0.11) !important;
+      border-radius: 999px !important;
+      padding: 0 13px !important;
+      color: rgba(238,244,255,0.84) !important;
+      text-decoration: none !important;
+      background: rgba(255,255,255,0.04) !important;
+      font-size: 0.82rem !important;
+      font-weight: 850 !important;
+      letter-spacing: 0.02em !important;
+    }
+
+    .nav a[aria-current="page"], .button.primary {
+      color: #06101c !important;
+      background: linear-gradient(135deg, #a7f3c6, #78d8ac) !important;
+      border-color: rgba(167,243,198,0.64) !important;
+    }
+
+    .button.gold {
+      color: #150d03 !important;
+      background: linear-gradient(135deg, #fff0b8, #f4cf83 48%, #c48a38) !important;
+      border-color: rgba(244,207,131,0.74) !important;
+    }
+
+    .summary, .metric-grid, .proof-grid, .zone-grid, .orientation-grid, .standard-grid {
+      display: grid !important;
+      gap: 14px !important;
+    }
+
+    .summary { grid-template-columns: repeat(4, minmax(0,1fr)) !important; margin: 16px 0 !important; }
+    .metric-grid { grid-template-columns: repeat(3, minmax(0,1fr)) !important; margin: 14px 0 !important; }
+    .proof-grid, .zone-grid, .orientation-grid, .standard-grid { grid-template-columns: repeat(3, minmax(0,1fr)) !important; margin-top: 16px !important; }
+
+    .summary div, .metric, .terrain-readout, .hold-box, .proof-card, .zone-card, .standard-card, .orientation-grid div {
+      border: 1px solid rgba(255,255,255,0.11) !important;
+      border-radius: 18px !important;
+      padding: 14px !important;
+      background: rgba(255,255,255,0.045) !important;
+      color: rgba(238,244,255,0.94) !important;
+    }
+
+    .proof-card, .zone-card, .standard-card, .orientation-grid div {
+      border-radius: 24px !important;
+      padding: 18px !important;
+      background: rgba(11,23,44,0.80) !important;
+    }
+
+    .grid {
+      display: grid !important;
+      grid-template-columns: minmax(280px,0.85fr) minmax(0,1.35fr) !important;
+      gap: 16px !important;
+      margin-top: 16px !important;
+    }
+
+    .region-list {
+      display: grid !important;
+      gap: 10px !important;
+      max-height: 720px !important;
+      overflow: auto !important;
+      padding-right: 3px !important;
+      margin-top: 18px !important;
+    }
+
+    .region-card {
+      width: 100% !important;
+      border: 1px solid rgba(255,255,255,0.11) !important;
+      border-radius: 20px !important;
+      padding: 14px !important;
+      color: rgba(238,244,255,0.94) !important;
+      background: rgba(255,255,255,0.04) !important;
+      text-align: left !important;
+      cursor: pointer !important;
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      font-family: Inter, ui-sans-serif, system-ui !important;
+    }
+
+    .region-card.is-selected, .region-card.is-primary {
+      border-color: rgba(167,243,198,0.64) !important;
+      background: rgba(167,243,198,0.10) !important;
+    }
+
+    .viewport {
+      width: 100% !important;
+      min-height: 330px !important;
+      border: 1px solid rgba(244,207,131,0.20) !important;
+      border-radius: 26px !important;
+      overflow: hidden !important;
+      background: #06101d !important;
+      margin-bottom: 16px !important;
+    }
+
+    .viewport canvas {
+      display: block !important;
+      width: 100% !important;
+      height: 360px !important;
+    }
+
+    .grade-pill, .gate-label {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      border-radius: 999px !important;
+      color: #06101c !important;
+      font-weight: 950 !important;
+      background: #f4cf83 !important;
+    }
+
+    .grade-a { background: #a7f3c6 !important; }
+    .grade-b { background: #f4cf83 !important; }
+    .grade-c { background: #9db7ff !important; }
+    .grade-d { background: #ff9f9f !important; }
+
+    @media (max-width: 900px) {
+      .topbar { align-items: flex-start !important; flex-direction: column !important; }
+      .nav { justify-content: flex-start !important; }
+      .grid { grid-template-columns: 1fr !important; }
+      .summary { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+      .proof-grid, .zone-grid, .orientation-grid, .standard-grid { grid-template-columns: 1fr !important; }
+    }
+
+    @media (max-width: 560px) {
+      .page { width: min(100% - 18px, 1180px) !important; }
+      .hero, .panel { border-radius: 24px !important; }
+      .metric-grid { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+      .viewport canvas { height: 310px !important; }
+      .selected-heading { flex-direction: column !important; }
+    }
+  `;
+}
+
+function enforceRuntimeSkin() {
+  installRuntimeSkinGuard();
+
+  const body = document.body;
+  const html = document.documentElement;
+
+  if (!body || !html) return;
+
+  body.style.backgroundColor = "#030812";
+  body.style.color = "rgba(238,244,255,0.94)";
+  body.style.fontFamily = 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+
+  html.style.backgroundColor = "#030812";
+  html.style.color = "rgba(238,244,255,0.94)";
+}
+
+function startSkinWatchdog() {
+  const tick = () => {
+    state.skinChecks += 1;
+
+    const body = document.body;
+    const html = document.documentElement;
+    const computed = body ? window.getComputedStyle(body) : null;
+    const bg = computed?.backgroundColor || "";
+    const font = computed?.fontFamily || "";
+
+    const whiteFallback =
+      bg.includes("255, 255, 255") ||
+      bg === "white" ||
+      font.toLowerCase().includes("times") ||
+      !document.getElementById(STYLE_GUARD_ID) ||
+      !html.classList.contains("dgb-h-earth-skin-locked") ||
+      !body?.classList.contains("dgb-h-earth-skin-locked");
+
+    if (whiteFallback || state.skinChecks < 40) {
+      enforceRuntimeSkin();
+    }
+
+    if (state.skinChecks < 240) {
+      state.skinRaf = requestAnimationFrame(tick);
+    }
+  };
+
+  if (!state.skinRaf) {
+    state.skinRaf = requestAnimationFrame(tick);
+  }
+}
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -56,7 +340,9 @@ function formatPercent(value) {
 function setMarkers() {
   const markers = {
     contract: CONTRACT,
+    priorContract: PRIOR_CONTRACT,
     route: "/showroom/globe/h-earth/",
+    runtimeSkinGuard: "true",
     selectedRegion: "western-golden-shelf",
     westernGoldenShelfSelected: "true",
     estateAuthorizationAnalysis: "true",
@@ -269,6 +555,7 @@ function selectRegion(regionId) {
   state.selectedRegionId = regionId;
   renderRegionCards();
   renderSelectedRegion();
+  enforceRuntimeSkin();
 }
 
 function resizeCanvas() {
@@ -422,6 +709,8 @@ function tick(time) {
 }
 
 function initHEarthGroundScout() {
+  enforceRuntimeSkin();
+  startSkinWatchdog();
   setMarkers();
 
   state.scout = createHEarthGroundScout();
@@ -435,6 +724,8 @@ function initHEarthGroundScout() {
   renderSelectedRegion();
   renderAuthorizationProof();
 
+  enforceRuntimeSkin();
+
   if (!state.raf && state.canvas && state.ctx) {
     state.raf = requestAnimationFrame(tick);
   }
@@ -443,8 +734,11 @@ function initHEarthGroundScout() {
     status() {
       return Object.freeze({
         contract: CONTRACT,
+        priorContract: PRIOR_CONTRACT,
         target: "H-Earth",
         route: "/showroom/globe/h-earth/",
+        runtimeSkinGuard: true,
+        skinGuardStyleMounted: Boolean(document.getElementById(STYLE_GUARD_ID)),
         selectedRegion: "Western Golden Shelf",
         selectedRegionKey: "western-golden-shelf",
         westernGoldenShelfSelected: true,
@@ -494,6 +788,8 @@ function initHEarthGroundScout() {
 
   return window.DGBHEarthGroundScout;
 }
+
+enforceRuntimeSkin();
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initHEarthGroundScout, { once: true });

@@ -1,11 +1,12 @@
 const GLOBE_SELECTOR_STATE = Object.freeze({
-  contract: "SHOWROOM_GLOBE_SELECTOR_SMOOTH_SURFACE_RENDER_TNT_v2",
+  contract: "SHOWROOM_GLOBE_SELECTOR_SURFACE_DEFINITION_TNT_v3",
   route: "/showroom/globe/",
   role: "globe-system-gateway-selector",
   gatewayAuthority: true,
   visualScaleAuthority: true,
   diamondInstrument: false,
   smoothSurfaceRender: true,
+  surfaceDefinition: true,
   blockTileLandRender: false,
   childRoutes: Object.freeze({
     earth: "/showroom/globe/earth/",
@@ -25,45 +26,63 @@ const BODY_CONFIG = Object.freeze({
     subtitle: "Reference Body · public selector runtime",
     openText: "Open Earth",
     href: "/showroom/globe/earth/",
-    water: [31, 101, 142],
-    shelf: [70, 144, 164],
+    water: [31, 103, 145],
+    shelf: [79, 160, 178],
     deep: [7, 29, 61],
-    land: [163, 153, 106],
-    land2: [105, 136, 93],
-    terrain: [190, 181, 132],
+    land: [165, 156, 108],
+    land2: [103, 138, 94],
+    terrain: [201, 192, 142],
+    coast: [205, 218, 168],
+    cloud: [232, 244, 255],
     glow: [139, 200, 255],
     label: "Reference Body",
     continents: Object.freeze([
-      { lat: 0.22, lon: -1.92, rx: 0.50, ry: 0.94, seed: 11, twist: -0.32 },
-      { lat: -0.54, lon: -1.35, rx: 0.34, ry: 0.56, seed: 12, twist: 0.18 },
-      { lat: 0.34, lon: 0.28, rx: 0.58, ry: 0.70, seed: 13, twist: 0.28 },
-      { lat: -0.28, lon: 0.72, rx: 0.42, ry: 0.44, seed: 14, twist: -0.14 },
-      { lat: -0.72, lon: 2.08, rx: 0.28, ry: 0.22, seed: 15, twist: 0.44 },
-      { lat: 0.74, lon: -0.44, rx: 0.72, ry: 0.22, seed: 16, twist: 0.08 }
+      { lat: 0.18, lon: -1.96, rx: 0.46, ry: 0.86, seed: 11, twist: -0.32, edge: 0.18 },
+      { lat: -0.54, lon: -1.36, rx: 0.30, ry: 0.50, seed: 12, twist: 0.18, edge: 0.22 },
+      { lat: 0.33, lon: 0.22, rx: 0.54, ry: 0.62, seed: 13, twist: 0.28, edge: 0.20 },
+      { lat: -0.28, lon: 0.74, rx: 0.37, ry: 0.39, seed: 14, twist: -0.14, edge: 0.20 },
+      { lat: -0.72, lon: 2.08, rx: 0.22, ry: 0.18, seed: 15, twist: 0.44, edge: 0.24 },
+      { lat: 0.75, lon: -0.44, rx: 0.66, ry: 0.18, seed: 16, twist: 0.08, edge: 0.16 }
+    ]),
+    islands: Object.freeze([
+      { lat: -0.10, lon: 1.36, rx: 0.10, ry: 0.08, seed: 81, twist: 0.2 },
+      { lat: -0.34, lon: 1.62, rx: 0.08, ry: 0.06, seed: 82, twist: -0.4 },
+      { lat: 0.18, lon: 2.26, rx: 0.09, ry: 0.05, seed: 83, twist: 0.1 },
+      { lat: -0.86, lon: -0.14, rx: 0.18, ry: 0.05, seed: 84, twist: 0.0 }
     ])
   }),
+
   "h-earth": Object.freeze({
     key: "h-earth",
     title: "H-Earth",
     subtitle: "Hybrid Earth · private inspection gateway",
     openText: "Open H-Earth",
     href: "/showroom/globe/h-earth/",
-    water: [40, 112, 126],
-    shelf: [73, 158, 152],
+    water: [40, 114, 128],
+    shelf: [78, 168, 158],
     deep: [8, 34, 58],
-    land: [195, 170, 92],
-    land2: [82, 132, 112],
-    terrain: [218, 196, 124],
+    land: [198, 172, 92],
+    land2: [82, 135, 113],
+    terrain: [224, 202, 128],
+    coast: [216, 226, 164],
+    cloud: [226, 248, 238],
     glow: [167, 243, 198],
     label: "Hybrid Earth",
     continents: Object.freeze([
-      { lat: 0.10, lon: -1.65, rx: 0.64, ry: 0.92, seed: 31, twist: -0.24 },
-      { lat: -0.38, lon: -0.62, rx: 0.44, ry: 0.62, seed: 32, twist: 0.36 },
-      { lat: 0.30, lon: 0.76, rx: 0.58, ry: 0.66, seed: 33, twist: -0.16 },
-      { lat: -0.58, lon: 1.54, rx: 0.36, ry: 0.34, seed: 34, twist: 0.18 },
-      { lat: 0.70, lon: 2.14, rx: 0.52, ry: 0.24, seed: 35, twist: -0.06 }
+      { lat: 0.10, lon: -1.65, rx: 0.58, ry: 0.84, seed: 31, twist: -0.24, edge: 0.22 },
+      { lat: -0.38, lon: -0.62, rx: 0.40, ry: 0.56, seed: 32, twist: 0.36, edge: 0.18 },
+      { lat: 0.30, lon: 0.76, rx: 0.52, ry: 0.60, seed: 33, twist: -0.16, edge: 0.20 },
+      { lat: -0.58, lon: 1.54, rx: 0.32, ry: 0.30, seed: 34, twist: 0.18, edge: 0.20 },
+      { lat: 0.70, lon: 2.14, rx: 0.48, ry: 0.20, seed: 35, twist: -0.06, edge: 0.16 }
+    ]),
+    islands: Object.freeze([
+      { lat: 0.04, lon: 1.68, rx: 0.12, ry: 0.08, seed: 91, twist: 0.4 },
+      { lat: -0.20, lon: 1.90, rx: 0.09, ry: 0.06, seed: 92, twist: -0.2 },
+      { lat: 0.52, lon: -2.20, rx: 0.14, ry: 0.07, seed: 93, twist: 0.1 },
+      { lat: -0.78, lon: 0.42, rx: 0.16, ry: 0.05, seed: 94, twist: 0.0 }
     ])
   }),
+
   audralia: Object.freeze({
     key: "audralia",
     title: "Audralia",
@@ -71,18 +90,26 @@ const BODY_CONFIG = Object.freeze({
     openText: "Open Audralia",
     href: "/showroom/globe/audralia/",
     water: [58, 67, 104],
-    shelf: [88, 94, 132],
+    shelf: [96, 102, 142],
     deep: [12, 16, 43],
-    land: [158, 120, 100],
-    land2: [91, 74, 108],
-    terrain: [188, 146, 124],
+    land: [164, 123, 102],
+    land2: [92, 74, 108],
+    terrain: [194, 148, 126],
+    coast: [213, 184, 166],
+    cloud: [232, 226, 255],
     glow: [200, 167, 255],
     label: "Constructed World",
     continents: Object.freeze([
-      { lat: -0.02, lon: -1.18, rx: 0.74, ry: 0.82, seed: 51, twist: 0.22 },
-      { lat: 0.42, lon: 0.56, rx: 0.48, ry: 0.44, seed: 52, twist: -0.34 },
-      { lat: -0.48, lon: 1.36, rx: 0.40, ry: 0.34, seed: 53, twist: 0.28 },
-      { lat: 0.78, lon: -2.28, rx: 0.46, ry: 0.20, seed: 54, twist: 0.10 }
+      { lat: -0.02, lon: -1.18, rx: 0.68, ry: 0.76, seed: 51, twist: 0.22, edge: 0.22 },
+      { lat: 0.42, lon: 0.56, rx: 0.42, ry: 0.39, seed: 52, twist: -0.34, edge: 0.26 },
+      { lat: -0.48, lon: 1.36, rx: 0.36, ry: 0.30, seed: 53, twist: 0.28, edge: 0.20 },
+      { lat: 0.78, lon: -2.28, rx: 0.42, ry: 0.18, seed: 54, twist: 0.10, edge: 0.16 }
+    ]),
+    islands: Object.freeze([
+      { lat: 0.02, lon: 1.84, rx: 0.12, ry: 0.08, seed: 101, twist: 0.2 },
+      { lat: -0.22, lon: 2.12, rx: 0.09, ry: 0.06, seed: 102, twist: -0.3 },
+      { lat: 0.48, lon: -2.86, rx: 0.13, ry: 0.06, seed: 103, twist: 0.1 },
+      { lat: -0.82, lon: -0.28, rx: 0.18, ry: 0.05, seed: 104, twist: 0.0 }
     ])
   })
 });
@@ -229,15 +256,17 @@ function projectPoint(point, cx, cy) {
   };
 }
 
-function makeBlobPoints(blob, radius, cx, cy, sampleCount = 88) {
-  const raw = [];
+function makeBlobPoints(blob, radius, cx, cy, sampleCount = 112) {
+  const points = [];
 
   for (let i = 0; i < sampleCount; i += 1) {
     const t = (i / sampleCount) * TAU;
-    const wobbleA = 1 + 0.16 * Math.sin(t * 3 + blob.seed * 0.41);
-    const wobbleB = 1 + 0.09 * Math.cos(t * 5 - blob.seed * 0.27);
-    const notch = 1 - 0.08 * Math.max(0, Math.sin(t * 2.0 + blob.seed));
-    const r = wobbleA * wobbleB * notch;
+    const edge = blob.edge || 0.18;
+    const wobbleA = 1 + edge * Math.sin(t * 3 + blob.seed * 0.41);
+    const wobbleB = 1 + edge * 0.56 * Math.cos(t * 5 - blob.seed * 0.27);
+    const wobbleC = 1 + edge * 0.34 * Math.sin(t * 7 + blob.seed * 0.13);
+    const notch = 1 - edge * 0.42 * Math.max(0, Math.sin(t * 2.0 + blob.seed));
+    const r = wobbleA * wobbleB * wobbleC * notch;
 
     const localX = Math.cos(t) * blob.rx * r;
     const localY = Math.sin(t) * blob.ry * r;
@@ -254,10 +283,10 @@ function makeBlobPoints(blob, radius, cx, cy, sampleCount = 88) {
     const globe = globePoint(lat, lon, radius);
     const projected = projectPoint(globe, cx, cy);
 
-    raw.push(projected);
+    points.push(projected);
   }
 
-  return raw;
+  return points;
 }
 
 function visibleRatio(points, radius) {
@@ -290,25 +319,27 @@ function drawSmoothPath(ctx, points) {
 }
 
 function drawLandBlob(ctx, blob, radius, cx, cy, config, layer) {
-  const points = makeBlobPoints(blob, radius, cx, cy, layer === "terrain" ? 56 : 96);
+  const sampleCount = layer === "terrain" ? 68 : 112;
+  const points = makeBlobPoints(blob, radius, cx, cy, sampleCount);
   const ratio = visibleRatio(points, radius);
 
-  if (ratio < 0.22) return;
+  if (ratio < 0.20) return;
 
   const front = clamp(ratio, 0, 1);
-  const light = clamp(0.42 + front * 0.42 + Math.sin(blob.seed + state.phase * 0.15) * 0.04, 0.30, 0.92);
+  const light = clamp(0.46 + front * 0.40 + Math.sin(blob.seed + state.phase * 0.12) * 0.03, 0.34, 0.94);
   const landColor = mixColor(config.land2, config.land, light);
-  const terrainColor = mixColor(config.land, config.terrain, 0.48);
+  const terrainColor = mixColor(config.land, config.terrain, 0.52);
 
   ctx.save();
 
   if (layer === "shelf") {
-    ctx.globalAlpha = 0.34 * front;
-    ctx.shadowColor = rgb(config.shelf, 0.42);
-    ctx.shadowBlur = radius * 0.035;
-    ctx.fillStyle = rgb(config.shelf, 0.24);
-    ctx.strokeStyle = rgb(config.shelf, 0.38);
-    ctx.lineWidth = Math.max(1.2, radius * 0.010);
+    ctx.globalCompositeOperation = "screen";
+    ctx.globalAlpha = 0.72 * front;
+    ctx.shadowColor = rgb(config.shelf, 0.34);
+    ctx.shadowBlur = radius * 0.026;
+    ctx.fillStyle = rgb(config.shelf, 0.16);
+    ctx.strokeStyle = rgb(mixColor(config.shelf, [255, 255, 255], 0.20), 0.34);
+    ctx.lineWidth = Math.max(1.1, radius * 0.009);
     drawSmoothPath(ctx, points);
     ctx.fill();
     ctx.stroke();
@@ -318,10 +349,18 @@ function drawLandBlob(ctx, blob, radius, cx, cy, config, layer) {
 
   if (layer === "terrain") {
     ctx.globalCompositeOperation = "soft-light";
-    ctx.globalAlpha = 0.28 * front;
-    ctx.fillStyle = rgb(terrainColor, 0.34);
+    ctx.globalAlpha = 0.34 * front;
+    ctx.fillStyle = rgb(terrainColor, 0.42);
     drawSmoothPath(ctx, points);
     ctx.fill();
+
+    ctx.globalCompositeOperation = "screen";
+    ctx.globalAlpha = 0.20 * front;
+    ctx.strokeStyle = rgb(config.terrain, 0.28);
+    ctx.lineWidth = Math.max(0.8, radius * 0.0038);
+    drawSmoothPath(ctx, points);
+    ctx.stroke();
+
     ctx.restore();
     return;
   }
@@ -335,16 +374,16 @@ function drawLandBlob(ctx, blob, radius, cx, cy, config, layer) {
     radius * 1.15
   );
 
-  gradient.addColorStop(0, rgb(mixColor(landColor, [245, 236, 180], 0.22), 0.88 * front));
-  gradient.addColorStop(0.48, rgb(landColor, 0.78 * front));
-  gradient.addColorStop(1, rgb(mixColor(landColor, config.deep, 0.36), 0.66 * front));
+  gradient.addColorStop(0, rgb(mixColor(landColor, [246, 238, 188], 0.24), 0.92 * front));
+  gradient.addColorStop(0.46, rgb(landColor, 0.84 * front));
+  gradient.addColorStop(0.82, rgb(mixColor(landColor, config.deep, 0.26), 0.78 * front));
+  gradient.addColorStop(1, rgb(mixColor(landColor, config.deep, 0.44), 0.70 * front));
 
-  ctx.globalAlpha = 0.96;
-  ctx.shadowColor = "rgba(0,0,0,0.18)";
-  ctx.shadowBlur = radius * 0.010;
+  ctx.shadowColor = "rgba(0,0,0,0.16)";
+  ctx.shadowBlur = radius * 0.008;
   ctx.fillStyle = gradient;
-  ctx.strokeStyle = rgb(mixColor(config.shelf, [255, 255, 255], 0.18), 0.28 * front);
-  ctx.lineWidth = Math.max(0.8, radius * 0.0048);
+  ctx.strokeStyle = rgb(config.coast, 0.44 * front);
+  ctx.lineWidth = Math.max(0.9, radius * 0.0048);
 
   drawSmoothPath(ctx, points);
   ctx.fill();
@@ -353,15 +392,46 @@ function drawLandBlob(ctx, blob, radius, cx, cy, config, layer) {
   ctx.restore();
 }
 
+function drawCoastBreaks(ctx, blob, radius, cx, cy, config) {
+  const points = makeBlobPoints(blob, radius, cx, cy, 72);
+  const ratio = visibleRatio(points, radius);
+
+  if (ratio < 0.22) return;
+
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+  ctx.strokeStyle = rgb(config.coast, 0.18 * ratio);
+  ctx.lineWidth = Math.max(0.7, radius * 0.0028);
+
+  for (let i = 0; i < points.length; i += 9) {
+    const a = points[i];
+    const b = points[(i + 3) % points.length];
+
+    if (a.z < -radius * 0.08 || b.z < -radius * 0.08) continue;
+
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.quadraticCurveTo(
+      (a.x + b.x) * 0.5 + Math.sin(i + blob.seed) * radius * 0.015,
+      (a.y + b.y) * 0.5 + Math.cos(i + blob.seed) * radius * 0.015,
+      b.x,
+      b.y
+    );
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
 function drawSurfaceVeins(ctx, radius, cx, cy, config) {
   ctx.save();
   ctx.globalCompositeOperation = "soft-light";
 
-  for (let i = 0; i < 15; i += 1) {
+  for (let i = 0; i < 18; i += 1) {
     const lat = -0.9 + seededUnit(i, config.key.length) * 1.8;
     const lon = -Math.PI + seededUnit(i, config.key.length + 4) * TAU;
-    const length = 0.18 + seededUnit(i, 9) * 0.34;
-    const bend = -0.12 + seededUnit(i, 10) * 0.24;
+    const length = 0.16 + seededUnit(i, 9) * 0.30;
+    const bend = -0.10 + seededUnit(i, 10) * 0.20;
 
     const points = [];
 
@@ -372,14 +442,15 @@ function drawSurfaceVeins(ctx, radius, cx, cy, config) {
         lon + (t - 0.5) * length * 0.75,
         radius
       );
+
       const projected = projectPoint(p, cx, cy);
       if (projected.z > -radius * 0.08) points.push(projected);
     }
 
     if (points.length < 4) continue;
 
-    ctx.strokeStyle = rgb(config.terrain, 0.12);
-    ctx.lineWidth = Math.max(0.8, radius * 0.003);
+    ctx.strokeStyle = rgb(config.terrain, 0.14);
+    ctx.lineWidth = Math.max(0.75, radius * 0.0028);
     ctx.beginPath();
 
     points.forEach((point, index) => {
@@ -397,16 +468,16 @@ function drawOceanTexture(ctx, radius, cx, cy, config) {
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
-  for (let i = 0; i < 18; i += 1) {
+  for (let i = 0; i < 24; i += 1) {
     const lat = -1.0 + seededUnit(i, 21) * 2.0;
     const lon = -Math.PI + seededUnit(i, 22) * TAU;
     const p = projectPoint(globePoint(lat, lon, radius), cx, cy);
 
     if (p.z < -radius * 0.05) continue;
 
-    const size = radius * (0.035 + seededUnit(i, 23) * 0.07);
+    const size = radius * (0.025 + seededUnit(i, 23) * 0.065);
     const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size);
-    g.addColorStop(0, rgb(config.shelf, 0.10));
+    g.addColorStop(0, rgb(config.shelf, 0.095));
     g.addColorStop(1, "rgba(255,255,255,0)");
 
     ctx.fillStyle = g;
@@ -418,10 +489,48 @@ function drawOceanTexture(ctx, radius, cx, cy, config) {
   ctx.restore();
 }
 
+function drawCloudLayer(ctx, radius, cx, cy, config) {
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+  ctx.globalAlpha = 0.38;
+
+  for (let i = 0; i < 14; i += 1) {
+    const lat = -0.72 + seededUnit(i, config.key.length + 31) * 1.44;
+    const lon = -Math.PI + seededUnit(i, config.key.length + 32) * TAU + state.phase * 0.035;
+    const p = projectPoint(globePoint(lat, lon, radius), cx, cy);
+
+    if (p.z < -radius * 0.02) continue;
+
+    const cloudWidth = radius * (0.10 + seededUnit(i, 33) * 0.18);
+    const cloudHeight = radius * (0.018 + seededUnit(i, 34) * 0.040);
+    const alpha = 0.06 + seededUnit(i, 35) * 0.12;
+
+    const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, cloudWidth);
+    gradient.addColorStop(0, rgb(config.cloud, alpha));
+    gradient.addColorStop(0.58, rgb(config.cloud, alpha * 0.34));
+    gradient.addColorStop(1, "rgba(255,255,255,0)");
+
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.ellipse(
+      p.x,
+      p.y,
+      cloudWidth,
+      cloudHeight,
+      Math.sin(i + state.phase * 0.12) * 0.5,
+      0,
+      TAU
+    );
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
 function drawGlobeGrid(ctx, cx, cy, radius) {
   ctx.save();
-  ctx.strokeStyle = "rgba(235,244,255,0.035)";
-  ctx.lineWidth = Math.max(0.55, radius * 0.0022);
+  ctx.strokeStyle = "rgba(235,244,255,0.026)";
+  ctx.lineWidth = Math.max(0.45, radius * 0.0019);
 
   for (let lat = -60; lat <= 60; lat += 30) {
     const r = Math.cos((lat * Math.PI) / 180) * radius;
@@ -467,9 +576,10 @@ function drawGlobeSurface(ctx, width, height, config) {
     cy,
     radius * 1.14
   );
+
   ocean.addColorStop(0, rgb(mixColor(config.water, [255, 255, 255], 0.25), 1));
-  ocean.addColorStop(0.46, rgb(config.water, 1));
-  ocean.addColorStop(0.78, rgb(mixColor(config.water, config.deep, 0.42), 1));
+  ocean.addColorStop(0.42, rgb(config.water, 1));
+  ocean.addColorStop(0.74, rgb(mixColor(config.water, config.deep, 0.40), 1));
   ocean.addColorStop(1, rgb(config.deep, 1));
 
   ctx.fillStyle = ocean;
@@ -481,15 +591,29 @@ function drawGlobeSurface(ctx, width, height, config) {
     drawLandBlob(ctx, blob, radius, cx, cy, config, "shelf");
   }
 
+  for (const island of config.islands) {
+    drawLandBlob(ctx, island, radius, cx, cy, config, "shelf");
+  }
+
   for (const blob of config.continents) {
     drawLandBlob(ctx, blob, radius, cx, cy, config, "land");
   }
 
+  for (const island of config.islands) {
+    drawLandBlob(ctx, island, radius, cx, cy, config, "land");
+  }
+
   for (const blob of config.continents) {
     drawLandBlob(ctx, blob, radius, cx, cy, config, "terrain");
+    drawCoastBreaks(ctx, blob, radius, cx, cy, config);
+  }
+
+  for (const island of config.islands) {
+    drawCoastBreaks(ctx, island, radius, cx, cy, config);
   }
 
   drawSurfaceVeins(ctx, radius, cx, cy, config);
+  drawCloudLayer(ctx, radius, cx, cy, config);
   drawGlobeGrid(ctx, cx, cy, radius);
 
   const shade = ctx.createRadialGradient(
@@ -500,9 +624,10 @@ function drawGlobeSurface(ctx, width, height, config) {
     cy + radius * 0.08,
     radius * 1.22
   );
+
   shade.addColorStop(0, "rgba(255,255,255,0.18)");
   shade.addColorStop(0.42, "rgba(255,255,255,0.030)");
-  shade.addColorStop(0.76, "rgba(0,0,0,0.15)");
+  shade.addColorStop(0.76, "rgba(0,0,0,0.14)");
   shade.addColorStop(1, "rgba(0,0,0,0.50)");
 
   ctx.fillStyle = shade;
@@ -512,7 +637,7 @@ function drawGlobeSurface(ctx, width, height, config) {
 
   ctx.save();
 
-  ctx.strokeStyle = rgb(config.glow, 0.28);
+  ctx.strokeStyle = rgb(config.glow, 0.30);
   ctx.lineWidth = Math.max(1.2, width * 0.0015);
   ctx.beginPath();
   ctx.arc(cx, cy, radius, 0, TAU);
@@ -520,7 +645,7 @@ function drawGlobeSurface(ctx, width, height, config) {
 
   const rim = ctx.createRadialGradient(cx, cy, radius * 0.92, cx, cy, radius * 1.10);
   rim.addColorStop(0, "rgba(255,255,255,0)");
-  rim.addColorStop(0.66, rgb(config.glow, 0.16));
+  rim.addColorStop(0.66, rgb(config.glow, 0.17));
   rim.addColorStop(1, "rgba(255,255,255,0)");
 
   ctx.fillStyle = rim;
@@ -699,18 +824,20 @@ function setMode(mode) {
 }
 
 function markRoute() {
-  document.documentElement.dataset.globeGatewayStatus = "smooth-surface-selector-active";
+  document.documentElement.dataset.globeGatewayStatus = "surface-definition-selector-active";
   document.documentElement.dataset.globeGatewayAuthority = "true";
   document.documentElement.dataset.visualScaleAuthority = "true";
   document.documentElement.dataset.smoothSurfaceRender = "true";
+  document.documentElement.dataset.surfaceDefinition = "true";
   document.documentElement.dataset.blockTileLandRender = "false";
   document.documentElement.dataset.diamondInstrument = "false";
   document.documentElement.dataset.earthRecord = "false";
 
-  document.body.dataset.globeGatewayStatus = "smooth-surface-selector-active";
+  document.body.dataset.globeGatewayStatus = "surface-definition-selector-active";
   document.body.dataset.globeGatewayAuthority = "true";
   document.body.dataset.visualScaleAuthority = "true";
   document.body.dataset.smoothSurfaceRender = "true";
+  document.body.dataset.surfaceDefinition = "true";
   document.body.dataset.blockTileLandRender = "false";
   document.body.dataset.diamondInstrument = "false";
   document.body.dataset.earthRecord = "false";
@@ -776,6 +903,7 @@ function initGlobeSelector() {
         earthStandingInGateway: false,
         diamondMountedHere: false,
         smoothSurfaceRender: true,
+        surfaceDefinition: true,
         blockTileLandRender: false
       });
     }

@@ -1,8 +1,8 @@
 // /showroom/globe/h-earth/index.js
 // TNT FULL-FILE REPLACEMENT
-// H_EARTH_RUNTIME_SKIN_GUARD_RECOVERY_TNT_v2
-// Owns: H-Earth Western Golden Shelf estate-authorization route presentation and runtime skin guard.
-// Does not own: Manor placement, Estate placement, bridge placement, road placement, city placement, or Globe selector mutation.
+// H_EARTH_WESTERN_GOLDEN_SHELF_MANOR_GROUND_PLACEMENT_TNT_v1
+// Owns: H-Earth Western Golden Shelf route presentation, authorization proof, and controlled Manor ground placement render.
+// Does not own: final architecture, final Estate buildout, Diamond Gate Bridge final object, roads, or city.
 
 import {
   H_EARTH_GROUND_SCOUT_VERSION,
@@ -22,304 +22,34 @@ import {
   createWesternGoldenShelfAuthorization
 } from "/assets/h-earth/h-earth.western-golden-shelf.js?v=western-golden-shelf-v1";
 
-const CONTRACT = "H_EARTH_RUNTIME_SKIN_GUARD_RECOVERY_TNT_v2";
-const PRIOR_CONTRACT = "H_EARTH_WESTERN_GOLDEN_SHELF_ESTATE_AUTHORIZATION_TNT_v1";
-const STYLE_GUARD_ID = "dgb-h-earth-runtime-skin-guard";
+import {
+  H_EARTH_MANOR_SPEC_VERSION,
+  getRichManorPlacementSpec
+} from "/assets/h-earth/h-earth.manor.spec.js?v=h-earth-manor-spec-placement-adapter-v1";
+
+import {
+  H_EARTH_WESTERN_GOLDEN_SHELF_GROUND_RENDER_VERSION,
+  H_EARTH_WESTERN_GOLDEN_SHELF_GROUND_RENDER_CONTRACT,
+  createWesternGoldenShelfGroundRenderer
+} from "/assets/h-earth/h-earth.western-golden-shelf.ground.render.js?v=h-earth-ground-render-v1";
+
+const CONTRACT = "H_EARTH_WESTERN_GOLDEN_SHELF_MANOR_GROUND_PLACEMENT_TNT_v1";
 
 const state = {
   scout: null,
   authorization: null,
+  manorSpec: null,
   selectedRegionId: "HE-R01",
   canvas: null,
   ctx: null,
+  groundCanvas: null,
+  groundRenderer: null,
   raf: 0,
-  skinRaf: 0,
-  skinChecks: 0,
   time: 0,
   dpr: 1,
   width: 0,
   height: 0
 };
-
-function installRuntimeSkinGuard() {
-  document.documentElement.classList.add("dgb-h-earth-skin-locked");
-  document.body?.classList.add("dgb-h-earth-skin-locked");
-  document.documentElement.dataset.runtimeSkinGuard = "true";
-  if (document.body) document.body.dataset.runtimeSkinGuard = "true";
-
-  let style = document.getElementById(STYLE_GUARD_ID);
-
-  if (!style) {
-    style = document.createElement("style");
-    style.id = STYLE_GUARD_ID;
-    style.setAttribute("data-contract", CONTRACT);
-    document.head.appendChild(style);
-  }
-
-  style.textContent = `
-    html.dgb-h-earth-skin-locked,
-    body.dgb-h-earth-skin-locked {
-      min-height: 100% !important;
-      color-scheme: dark !important;
-      background:
-        radial-gradient(circle at 50% -8%, rgba(78,119,171,0.26), transparent 38%),
-        radial-gradient(circle at 12% 18%, rgba(244,207,131,0.12), transparent 30%),
-        radial-gradient(circle at 84% 30%, rgba(167,243,198,0.09), transparent 34%),
-        linear-gradient(180deg, #061020 0%, #030812 54%, #02050b 100%) !important;
-      color: rgba(238,244,255,0.94) !important;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
-    }
-
-    body.dgb-h-earth-skin-locked {
-      margin: 0 !important;
-      background:
-        linear-gradient(90deg, rgba(244,207,131,0.08) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(244,207,131,0.035) 1px, transparent 1px),
-        linear-gradient(180deg, #061020 0%, #030812 54%, #02050b 100%) !important;
-      background-size: 58px 58px, 58px 58px, auto !important;
-      letter-spacing: -0.015em !important;
-    }
-
-    .page {
-      width: min(1180px, calc(100% - 28px)) !important;
-      margin: 0 auto !important;
-      padding: 22px 0 58px !important;
-    }
-
-    .hero,
-    .panel {
-      border: 1px solid rgba(244,207,131,0.20) !important;
-      border-radius: 34px !important;
-      background:
-        radial-gradient(circle at 76% 28%, rgba(139,200,255,0.12), transparent 32%),
-        radial-gradient(circle at 18% 20%, rgba(244,207,131,0.10), transparent 30%),
-        linear-gradient(180deg, rgba(8,17,34,0.95), rgba(4,9,20,0.96)) !important;
-      box-shadow: 0 30px 90px rgba(0,0,0,0.34) !important;
-      overflow: hidden !important;
-    }
-
-    .hero { padding: clamp(24px, 5vw, 46px) !important; }
-    .panel { padding: clamp(18px, 3vw, 28px) !important; }
-
-    h1, h2, .selected-heading h2, .terrain-readout h3, .proof-head h3, .zone-card h3, .standard-card h2 {
-      color: #f4cf83 !important;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
-    }
-
-    h1 {
-      max-width: 980px !important;
-      margin: 0 !important;
-      font-size: clamp(2.1rem, 7vw, 5rem) !important;
-      line-height: 0.94 !important;
-      letter-spacing: -0.07em !important;
-    }
-
-    p, li, small, span {
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
-    }
-
-    .lede, .selected-summary, .terrain-readout p, .proof-card p, .zone-card p, .standard-card p {
-      color: rgba(238,244,255,0.66) !important;
-      line-height: 1.55 !important;
-    }
-
-    .topbar {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 16px !important;
-      padding: 12px 0 22px !important;
-    }
-
-    .nav {
-      display: flex !important;
-      flex-wrap: wrap !important;
-      justify-content: flex-end !important;
-      gap: 8px !important;
-    }
-
-    .nav a, .button {
-      min-height: 38px !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      border: 1px solid rgba(255,255,255,0.11) !important;
-      border-radius: 999px !important;
-      padding: 0 13px !important;
-      color: rgba(238,244,255,0.84) !important;
-      text-decoration: none !important;
-      background: rgba(255,255,255,0.04) !important;
-      font-size: 0.82rem !important;
-      font-weight: 850 !important;
-      letter-spacing: 0.02em !important;
-    }
-
-    .nav a[aria-current="page"], .button.primary {
-      color: #06101c !important;
-      background: linear-gradient(135deg, #a7f3c6, #78d8ac) !important;
-      border-color: rgba(167,243,198,0.64) !important;
-    }
-
-    .button.gold {
-      color: #150d03 !important;
-      background: linear-gradient(135deg, #fff0b8, #f4cf83 48%, #c48a38) !important;
-      border-color: rgba(244,207,131,0.74) !important;
-    }
-
-    .summary, .metric-grid, .proof-grid, .zone-grid, .orientation-grid, .standard-grid {
-      display: grid !important;
-      gap: 14px !important;
-    }
-
-    .summary { grid-template-columns: repeat(4, minmax(0,1fr)) !important; margin: 16px 0 !important; }
-    .metric-grid { grid-template-columns: repeat(3, minmax(0,1fr)) !important; margin: 14px 0 !important; }
-    .proof-grid, .zone-grid, .orientation-grid, .standard-grid { grid-template-columns: repeat(3, minmax(0,1fr)) !important; margin-top: 16px !important; }
-
-    .summary div, .metric, .terrain-readout, .hold-box, .proof-card, .zone-card, .standard-card, .orientation-grid div {
-      border: 1px solid rgba(255,255,255,0.11) !important;
-      border-radius: 18px !important;
-      padding: 14px !important;
-      background: rgba(255,255,255,0.045) !important;
-      color: rgba(238,244,255,0.94) !important;
-    }
-
-    .proof-card, .zone-card, .standard-card, .orientation-grid div {
-      border-radius: 24px !important;
-      padding: 18px !important;
-      background: rgba(11,23,44,0.80) !important;
-    }
-
-    .grid {
-      display: grid !important;
-      grid-template-columns: minmax(280px,0.85fr) minmax(0,1.35fr) !important;
-      gap: 16px !important;
-      margin-top: 16px !important;
-    }
-
-    .region-list {
-      display: grid !important;
-      gap: 10px !important;
-      max-height: 720px !important;
-      overflow: auto !important;
-      padding-right: 3px !important;
-      margin-top: 18px !important;
-    }
-
-    .region-card {
-      width: 100% !important;
-      border: 1px solid rgba(255,255,255,0.11) !important;
-      border-radius: 20px !important;
-      padding: 14px !important;
-      color: rgba(238,244,255,0.94) !important;
-      background: rgba(255,255,255,0.04) !important;
-      text-align: left !important;
-      cursor: pointer !important;
-      appearance: none !important;
-      -webkit-appearance: none !important;
-      font-family: Inter, ui-sans-serif, system-ui !important;
-    }
-
-    .region-card.is-selected, .region-card.is-primary {
-      border-color: rgba(167,243,198,0.64) !important;
-      background: rgba(167,243,198,0.10) !important;
-    }
-
-    .viewport {
-      width: 100% !important;
-      min-height: 330px !important;
-      border: 1px solid rgba(244,207,131,0.20) !important;
-      border-radius: 26px !important;
-      overflow: hidden !important;
-      background: #06101d !important;
-      margin-bottom: 16px !important;
-    }
-
-    .viewport canvas {
-      display: block !important;
-      width: 100% !important;
-      height: 360px !important;
-    }
-
-    .grade-pill, .gate-label {
-      display: inline-flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      border-radius: 999px !important;
-      color: #06101c !important;
-      font-weight: 950 !important;
-      background: #f4cf83 !important;
-    }
-
-    .grade-a { background: #a7f3c6 !important; }
-    .grade-b { background: #f4cf83 !important; }
-    .grade-c { background: #9db7ff !important; }
-    .grade-d { background: #ff9f9f !important; }
-
-    @media (max-width: 900px) {
-      .topbar { align-items: flex-start !important; flex-direction: column !important; }
-      .nav { justify-content: flex-start !important; }
-      .grid { grid-template-columns: 1fr !important; }
-      .summary { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
-      .proof-grid, .zone-grid, .orientation-grid, .standard-grid { grid-template-columns: 1fr !important; }
-    }
-
-    @media (max-width: 560px) {
-      .page { width: min(100% - 18px, 1180px) !important; }
-      .hero, .panel { border-radius: 24px !important; }
-      .metric-grid { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
-      .viewport canvas { height: 310px !important; }
-      .selected-heading { flex-direction: column !important; }
-    }
-  `;
-}
-
-function enforceRuntimeSkin() {
-  installRuntimeSkinGuard();
-
-  const body = document.body;
-  const html = document.documentElement;
-
-  if (!body || !html) return;
-
-  body.style.backgroundColor = "#030812";
-  body.style.color = "rgba(238,244,255,0.94)";
-  body.style.fontFamily = 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-
-  html.style.backgroundColor = "#030812";
-  html.style.color = "rgba(238,244,255,0.94)";
-}
-
-function startSkinWatchdog() {
-  const tick = () => {
-    state.skinChecks += 1;
-
-    const body = document.body;
-    const html = document.documentElement;
-    const computed = body ? window.getComputedStyle(body) : null;
-    const bg = computed?.backgroundColor || "";
-    const font = computed?.fontFamily || "";
-
-    const whiteFallback =
-      bg.includes("255, 255, 255") ||
-      bg === "white" ||
-      font.toLowerCase().includes("times") ||
-      !document.getElementById(STYLE_GUARD_ID) ||
-      !html.classList.contains("dgb-h-earth-skin-locked") ||
-      !body?.classList.contains("dgb-h-earth-skin-locked");
-
-    if (whiteFallback || state.skinChecks < 40) {
-      enforceRuntimeSkin();
-    }
-
-    if (state.skinChecks < 240) {
-      state.skinRaf = requestAnimationFrame(tick);
-    }
-  };
-
-  if (!state.skinRaf) {
-    state.skinRaf = requestAnimationFrame(tick);
-  }
-}
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -340,15 +70,18 @@ function formatPercent(value) {
 function setMarkers() {
   const markers = {
     contract: CONTRACT,
-    priorContract: PRIOR_CONTRACT,
     route: "/showroom/globe/h-earth/",
-    runtimeSkinGuard: "true",
     selectedRegion: "western-golden-shelf",
     westernGoldenShelfSelected: "true",
     estateAuthorizationAnalysis: "true",
+    manorGroundPlacementAuthorized: "true",
+    controlledManorPlacement: "true",
+    waterBehindManor: "true",
+    cameraFacing: "west-southwest",
+    groundRenderActive: "true",
+
     groundLevelScouting: "true",
     buildCandidateAnalysis: "true",
-
     terrainStabilityProof: "true",
     elevationLogicProof: "true",
     waterRelationshipProof: "true",
@@ -356,9 +89,9 @@ function setMarkers() {
     boundaryLogicProof: "true",
     orientationLogicProof: "true",
 
-    manorPlacementAuthorized: "false",
-    estatePlacementAuthorized: "false",
-    bridgePlacementAuthorized: "false",
+    finalManorArchitectureAuthorized: "false",
+    estateFinalizationAuthorized: "false",
+    bridgeFinalizationAuthorized: "false",
     roadPlacementAuthorized: "false",
     cityPlacementAuthorized: "false",
     finalArchitectureAuthorized: "false",
@@ -456,10 +189,10 @@ function renderSelectedRegion() {
     </div>
 
     <div class="hold-box">
-      <strong>Placement hold remains active</strong>
-      <span>Manor placement: HOLD</span>
-      <span>Estate placement: HOLD</span>
-      <span>Diamond Gate Bridge placement: HOLD</span>
+      <strong>Placement status updated</strong>
+      <span>Controlled Manor ground placement: AUTHORIZED</span>
+      <span>Final Manor architecture: HOLD</span>
+      <span>Final Estate / Diamond Gate Bridge: HOLD</span>
     </div>
   `;
 
@@ -476,8 +209,8 @@ function renderSummary() {
     summaryMount.innerHTML = `
       <div><strong>${authorization.proofSummary.passCount}</strong><span>Proof passes</span></div>
       <div><strong>${formatPercent(authorization.proofSummary.averageScore)}</strong><span>Proof score</span></div>
-      <div><strong>${scout.summary.primaryCandidates}</strong><span>A candidates</span></div>
-      <div><strong>${authorization.authorizationGate}</strong><span>Authorization gate</span></div>
+      <div><strong>AUTHORIZED</strong><span>Manor ground placement</span></div>
+      <div><strong>WATER BEHIND</strong><span>View contract</span></div>
     `;
   }
 
@@ -517,10 +250,11 @@ function renderAuthorizationProof() {
 
   if (gateMount) {
     gateMount.innerHTML = `
-      <span class="gate-label">${authorization.authorizationGate}</span>
+      <span class="gate-label">CONTROLLED MANOR GROUND PLACEMENT AUTHORIZED</span>
       <p>
-        Western Golden Shelf is ${authorization.authorizedForNextPlanning ? "eligible for the next planning packet" : "not yet eligible for next planning"}.
-        This still does not place the Manor, Estate, or Diamond Gate Bridge.
+        Western Golden Shelf has moved beyond candidate analysis into controlled Manor ground placement.
+        The view is landward/eastern shelf looking west-southwest, with the water behind the Manor.
+        Final Manor architecture, full Estate finalization, roads, city, and Diamond Gate Bridge final object remain held.
       </p>
     `;
   }
@@ -538,24 +272,50 @@ function renderAuthorizationProof() {
 
   if (orientationMount) {
     const o = authorization.site.orientation;
+    const manor = state.manorSpec?.placement?.viewRule;
+
     orientationMount.innerHTML = `
       <div class="orientation-grid">
         <div><span>Facing</span><strong>${o.likelyFacingDirection}</strong></div>
         <div><span>View axis</span><strong>${o.viewAxis}</strong></div>
-        <div><span>Water axis</span><strong>${o.waterAxis}</strong></div>
-        <div><span>Sun/light</span><strong>${o.sunLightAxis}</strong></div>
+        <div><span>Water axis</span><strong>Behind the Manor</strong></div>
+        <div><span>Camera</span><strong>${manor?.cameraSide || "landward / eastern highland side"}</strong></div>
         <div><span>Arrival</span><strong>${o.arrivalAxis}</strong></div>
-        <div><span>Bridge direction</span><strong>${o.bridgeDirection}</strong></div>
+        <div><span>Placement</span><strong>Controlled Manor ground placement authorized</strong></div>
       </div>
     `;
   }
+}
+
+function renderGroundPlacementInfo() {
+  const mount = qs("[data-ground-placement-info]");
+  if (!mount || !state.manorSpec) return;
+
+  const spec = state.manorSpec;
+
+  mount.innerHTML = `
+    <article class="ground-placement-card">
+      <h3>Placement authority</h3>
+      <p>The existing Rich Manor definition is mounted onto Western Golden Shelf. This adapter does not redefine room count, acreage, vault, or internal structure.</p>
+
+      <div class="placement-list">
+        <div><span>Target</span><strong>${spec.placement.selectedRegion}, ${spec.placement.targetPlanet}</strong></div>
+        <div><span>Camera</span><strong>${spec.placement.viewRule.cameraSide}</strong></div>
+        <div><span>Facing</span><strong>${spec.placement.viewRule.cameraFacing}</strong></div>
+        <div><span>Water relationship</span><strong>Water behind the Manor</strong></div>
+        <div><span>Estate acres</span><strong>${spec.knownCanon.estateAcres}</strong></div>
+        <div><span>Floors</span><strong>${spec.knownCanon.floors}</strong></div>
+        <div><span>Vault</span><strong>Preserved below ground</strong></div>
+        <div><span>Final architecture</span><strong>HOLD</strong></div>
+      </div>
+    </article>
+  `;
 }
 
 function selectRegion(regionId) {
   state.selectedRegionId = regionId;
   renderRegionCards();
   renderSelectedRegion();
-  enforceRuntimeSkin();
 }
 
 function resizeCanvas() {
@@ -708,13 +468,22 @@ function tick(time) {
   state.raf = requestAnimationFrame(tick);
 }
 
+function initGroundRenderer() {
+  state.groundCanvas = qs("[data-manor-ground-canvas]");
+
+  if (state.groundCanvas) {
+    state.groundRenderer = createWesternGoldenShelfGroundRenderer(state.groundCanvas, {
+      dpr: Math.min(window.devicePixelRatio || 1, 1.5)
+    }).start();
+  }
+}
+
 function initHEarthGroundScout() {
-  enforceRuntimeSkin();
-  startSkinWatchdog();
   setMarkers();
 
   state.scout = createHEarthGroundScout();
   state.authorization = createWesternGoldenShelfAuthorization();
+  state.manorSpec = getRichManorPlacementSpec();
   state.selectedRegionId = "HE-R01";
   state.canvas = qs("[data-ground-scout-canvas]");
   state.ctx = state.canvas?.getContext("2d", { alpha: false }) || null;
@@ -723,8 +492,8 @@ function initHEarthGroundScout() {
   renderRegionCards();
   renderSelectedRegion();
   renderAuthorizationProof();
-
-  enforceRuntimeSkin();
+  renderGroundPlacementInfo();
+  initGroundRenderer();
 
   if (!state.raf && state.canvas && state.ctx) {
     state.raf = requestAnimationFrame(tick);
@@ -734,15 +503,18 @@ function initHEarthGroundScout() {
     status() {
       return Object.freeze({
         contract: CONTRACT,
-        priorContract: PRIOR_CONTRACT,
         target: "H-Earth",
         route: "/showroom/globe/h-earth/",
-        runtimeSkinGuard: true,
-        skinGuardStyleMounted: Boolean(document.getElementById(STYLE_GUARD_ID)),
         selectedRegion: "Western Golden Shelf",
         selectedRegionKey: "western-golden-shelf",
         westernGoldenShelfSelected: true,
         estateAuthorizationAnalysis: true,
+
+        manorGroundPlacementAuthorized: true,
+        controlledManorPlacement: true,
+        waterBehindManor: true,
+        cameraFacing: "west-southwest",
+        groundRenderActive: Boolean(state.groundRenderer),
 
         groundLevelScouting: true,
         buildCandidateAnalysis: true,
@@ -753,43 +525,42 @@ function initHEarthGroundScout() {
         boundaryLogicProof: true,
         orientationLogicProof: true,
 
-        manorPlacementAuthorized: false,
-        estatePlacementAuthorized: false,
-        bridgePlacementAuthorized: false,
+        finalManorArchitectureAuthorized: false,
+        estateFinalizationAuthorized: false,
+        bridgeFinalizationAuthorized: false,
         roadPlacementAuthorized: false,
         cityPlacementAuthorized: false,
         finalArchitectureAuthorized: false,
 
-        authorizationGate: state.authorization?.authorizationGate || "HELD",
-        authorizedForNextPlanning: state.authorization?.authorizedForNextPlanning === true,
+        authorizationGate: "CONTROLLED_MANOR_GROUND_PLACEMENT_AUTHORIZED",
+        authorizedForNextPlanning: true,
 
         orbitalBaselinePreserved: true,
         globeSelectorMutated: false,
         mapFlattening: false,
-        transitionPath: "H-Earth orbital baseline → Western Golden Shelf regional candidate → terrain/elevation proof → water relationship proof → arrival/bridge direction proof → estate boundary logic → Manor placement authorization",
+        transitionPath: "H-Earth orbital baseline → Western Golden Shelf candidate → controlled Manor ground placement → ground development around and within → later Estate/Bridge finalization",
 
         scoutVersion: H_EARTH_GROUND_SCOUT_VERSION,
         classifierVersion: H_EARTH_TERRAIN_CLASSIFIER_VERSION,
         westernGoldenShelfVersion: H_EARTH_WESTERN_GOLDEN_SHELF_VERSION,
         westernGoldenShelfContract: H_EARTH_WESTERN_GOLDEN_SHELF_CONTRACT,
+        manorSpecVersion: H_EARTH_MANOR_SPEC_VERSION,
+        groundRenderVersion: H_EARTH_WESTERN_GOLDEN_SHELF_GROUND_RENDER_VERSION,
+        groundRenderContract: H_EARTH_WESTERN_GOLDEN_SHELF_GROUND_RENDER_CONTRACT,
 
         regionCount: state.scout?.summary.totalRegions || 0,
-        primaryCandidates: state.scout?.summary.primaryCandidates || 0,
-        supportCandidates: state.scout?.summary.supportCandidates || 0,
-        noBuildRegions: state.scout?.summary.noBuildRegions || 0,
         selectedRegionId: state.selectedRegionId,
         bestCandidate: state.authorization?.selectedRegion || "Western Golden Shelf",
         proofSummary: state.authorization?.proofSummary || null,
         terrainClasses: Object.keys(TERRAIN_CLASSES),
-        buildCandidateGrades: Object.keys(BUILD_CANDIDATE_GRADES)
+        buildCandidateGrades: Object.keys(BUILD_CANDIDATE_GRADES),
+        groundRendererStatus: state.groundRenderer?.status?.() || null
       });
     }
   });
 
   return window.DGBHEarthGroundScout;
 }
-
-enforceRuntimeSkin();
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initHEarthGroundScout, { once: true });

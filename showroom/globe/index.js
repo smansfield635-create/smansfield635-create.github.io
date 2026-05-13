@@ -1,26 +1,31 @@
 // /showroom/globe/index.js
 // TNT FULL-FILE REPLACEMENT
-// SHOWROOM_GLOBE_CINEMATIC_MATERIAL_ASSET_CONTROLLER_TNT_v1
+// SHOWROOM_GLOBE_RUNTIME_GLIDE_CONTROL_CONTROLLER_TNT_v1
 // Role: public Globe Showcase controller.
-// Renderer authority moved to /assets/showroom.globe.cinematic.material.js.
-// Contract: actual continuous dry planet render; no schoolroom-globe meridian.
+// Material remains delegated to /assets/showroom.globe.cinematic.material.js.
+// Runtime delegated to /assets/showroom.globe.runtime.js.
+// Controls delegated to /assets/showroom.globe.controls.js.
 
 import {
   PLANET_MATERIAL_VERSION,
   createCinematicPlanetMaterialRenderer
 } from "/assets/showroom.globe.cinematic.material.js?v=cinematic-material-asset-v1";
 
-const MODEL_NAME = "showroom-globe-cinematic-material-asset-controller-v1";
+import {
+  GLOBE_RUNTIME_VERSION,
+  createGlobeRuntime
+} from "/assets/showroom.globe.runtime.js?v=runtime-glide-control-v1";
+
+import {
+  GLOBE_CONTROLS_VERSION,
+  createGlobeControls
+} from "/assets/showroom.globe.controls.js?v=runtime-glide-control-v1";
+
+const MODEL_NAME = "showroom-globe-runtime-glide-control-controller-v1";
 
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
 const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
 const DPR = Math.min(window.devicePixelRatio || 1, MOBILE ? 1.35 : 1.75);
-const FRAME_MS = MOBILE ? 132 : 96;
-
-const DEFAULT_YAW = -0.74;
-const DEFAULT_PITCH = -0.20;
-const MIN_PITCH = -1.04;
-const MAX_PITCH = 0.74;
 
 const LAT_BANDS = 16;
 const LON_SECTORS = 16;
@@ -92,36 +97,28 @@ const renderer = createCinematicPlanetMaterialRenderer({
   dpr: DPR
 });
 
+const runtime = createGlobeRuntime({
+  mobile: MOBILE,
+  reducedMotion: REDUCED_MOTION,
+  autoSpin: true,
+  detail: "stable",
+  glide: "soft",
+  yaw: -0.74,
+  pitch: -0.20
+});
+
 const state = {
   canvas: null,
   ctx: null,
   width: 0,
   height: 0,
   raf: 0,
-  lastFrame: 0,
-  visible: true,
   active: true,
+  visible: true,
   time: 0,
   stars: [],
   worldKey: "hEarth",
-
-  yaw: DEFAULT_YAW,
-  pitch: DEFAULT_PITCH,
-  targetYaw: DEFAULT_YAW,
-  targetPitch: DEFAULT_PITCH,
-  velocityYaw: 0,
-  velocityPitch: 0,
-  interacted: false,
-
-  dragging: false,
-  pointerId: null,
-  startX: 0,
-  startY: 0,
-  lastX: 0,
-  lastY: 0,
-  lastPointerTime: 0,
-  tapStartTime: 0,
-  lastTapAt: 0
+  controls: null
 };
 
 function $(id) {
@@ -132,13 +129,9 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function hash(seed, a = 0, b = 0) {
-  return (Math.sin(seed * 12.9898 + a * 78.233 + b * 37.719) * 43758.5453123) % 1;
-}
-
 function positiveHash(seed, a = 0, b = 0) {
-  const value = hash(seed, a, b);
-  return value < 0 ? value + 1 : value;
+  const value = Math.sin(seed * 12.9898 + a * 78.233 + b * 37.719) * 43758.5453123;
+  return value - Math.floor(value);
 }
 
 function sizeCanvas() {
@@ -310,30 +303,37 @@ function drawWorldTitle(ctx, width, height) {
 
   ctx.fillStyle = "rgba(186,197,212,0.74)";
   ctx.font = `850 ${Math.max(11 * DPR, width * 0.014)}px Inter, system-ui, sans-serif`;
-  ctx.fillText(`${world.subtitle} · cinematic material renderer`, width * 0.5, height * 0.195);
+  ctx.fillText(`${world.subtitle} · runtime glide control`, width * 0.5, height * 0.195);
 
   ctx.restore();
 }
 
 function drawCue(ctx, width, height) {
+  const runtimeState = runtime.getState();
+
   ctx.save();
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillStyle = "rgba(186,197,212,0.60)";
   ctx.font = `800 ${Math.max(11 * DPR, width * 0.013)}px Inter, system-ui, sans-serif`;
-  ctx.fillText("Drag to inspect · Asset-rendered dry planet · Open private world room", width * 0.5, height * 0.90);
+  ctx.fillText(
+    `Drag to inspect · ${runtimeState.glide} glide · ${runtimeState.detail} detail · Open private world room`,
+    width * 0.5,
+    height * 0.90
+  );
   ctx.restore();
 }
 
-function drawPlanet(ctx, width, height) {
+function drawPlanet(ctx, width, height, runtimeView) {
   const scale = Math.min(width * 0.42, height * 0.44);
 
   const view = {
     cx: width * 0.50,
     cy: height * 0.515,
     scale,
-    yaw: state.yaw,
-    pitch: state.pitch
+    yaw: runtimeView.yaw,
+    pitch: runtimeView.pitch,
+    quality: runtimeView.quality
   };
 
   drawGlobeShadow(ctx, view);
@@ -344,8 +344,11 @@ function drawPlanet(ctx, width, height) {
 
   document.documentElement.dataset.globeShowcaseModel = MODEL_NAME;
   document.documentElement.dataset.planetMaterialRenderer = PLANET_MATERIAL_VERSION;
+  document.documentElement.dataset.globeRuntime = GLOBE_RUNTIME_VERSION;
+  document.documentElement.dataset.globeControls = GLOBE_CONTROLS_VERSION;
   document.documentElement.dataset.selectedWorld = state.worldKey;
-  document.documentElement.dataset.publicPortraitBaseline = "cinematic-material-asset-renderer";
+  document.documentElement.dataset.publicPortraitBaseline = "runtime-glide-controlled-cinematic-material";
+  document.documentElement.dataset.runtimeQuality = runtimeView.quality;
   document.documentElement.dataset.privateEnginesAsleep = "true";
   document.documentElement.dataset.mapExpression = "false";
   document.documentElement.dataset.waterExpression = "false";
@@ -365,31 +368,10 @@ function drawPlanet(ctx, width, height) {
   document.documentElement.dataset.totalChildFields = String(TOTAL_CHILD_FIELDS);
 }
 
-function render() {
+function render(runtimeView = runtime.getState()) {
   if (!state.ctx) return;
   drawBackground(state.ctx, state.width, state.height);
-  drawPlanet(state.ctx, state.width, state.height);
-}
-
-function updateInspectionMotion() {
-  if (!state.dragging) {
-    if (!state.interacted && !REDUCED_MOTION) {
-      state.targetYaw += 0.00068;
-    }
-
-    state.targetYaw += state.velocityYaw;
-    state.targetPitch = clamp(state.targetPitch + state.velocityPitch, MIN_PITCH, MAX_PITCH);
-
-    state.velocityYaw *= 0.925;
-    state.velocityPitch *= 0.905;
-
-    if (Math.abs(state.velocityYaw) < 0.00008) state.velocityYaw = 0;
-    if (Math.abs(state.velocityPitch) < 0.00008) state.velocityPitch = 0;
-  }
-
-  state.yaw += (state.targetYaw - state.yaw) * 0.22;
-  state.pitch += (state.targetPitch - state.pitch) * 0.22;
-  state.pitch = clamp(state.pitch, MIN_PITCH, MAX_PITCH);
+  drawPlanet(state.ctx, state.width, state.height, runtimeView);
 }
 
 function frame(now) {
@@ -398,11 +380,11 @@ function frame(now) {
     return;
   }
 
-  if (!state.lastFrame || now - state.lastFrame >= FRAME_MS) {
-    state.lastFrame = now;
-    state.time = now;
-    updateInspectionMotion();
-    render();
+  state.time = now;
+  const runtimeView = runtime.update(now);
+
+  if (runtime.shouldRender(now)) {
+    render(runtimeView);
   }
 
   state.raf = window.requestAnimationFrame(frame);
@@ -419,20 +401,13 @@ function stopLoop() {
   state.raf = 0;
 }
 
-function resetInspection() {
-  state.targetYaw = DEFAULT_YAW;
-  state.targetPitch = DEFAULT_PITCH;
-  state.velocityYaw = 0;
-  state.velocityPitch = 0;
-  state.interacted = false;
-}
-
 function setWorld(worldKey) {
   if (!WORLDS[worldKey]) return;
   state.worldKey = worldKey;
-  resetInspection();
+  runtime.reset();
   updateControls();
   render();
+  runtime.forceRender();
 }
 
 function updateControls() {
@@ -452,112 +427,6 @@ function updateControls() {
 function installWorldControls() {
   document.querySelectorAll("[data-world]").forEach((button) => {
     button.addEventListener("click", () => setWorld(button.dataset.world));
-  });
-}
-
-function installPointerInspection() {
-  const canvas = state.canvas;
-  if (!canvas) return;
-
-  canvas.style.touchAction = "none";
-
-  canvas.addEventListener("contextmenu", (event) => {
-    event.preventDefault();
-  });
-
-  canvas.addEventListener("pointerdown", (event) => {
-    state.dragging = true;
-    state.pointerId = event.pointerId;
-    state.startX = event.clientX;
-    state.startY = event.clientY;
-    state.lastX = event.clientX;
-    state.lastY = event.clientY;
-    state.lastPointerTime = performance.now();
-    state.tapStartTime = performance.now();
-    state.velocityYaw = 0;
-    state.velocityPitch = 0;
-    state.interacted = true;
-
-    canvas.setPointerCapture?.(event.pointerId);
-    event.preventDefault();
-  }, { passive: false });
-
-  canvas.addEventListener("pointermove", (event) => {
-    if (!state.dragging || event.pointerId !== state.pointerId) return;
-
-    const now = performance.now();
-    const dt = Math.max(12, now - state.lastPointerTime);
-    const dx = event.clientX - state.lastX;
-    const dy = event.clientY - state.lastY;
-
-    const yawDelta = dx * 0.0085;
-    const pitchDelta = dy * 0.0065;
-
-    state.targetYaw += yawDelta;
-    state.targetPitch = clamp(state.targetPitch + pitchDelta, MIN_PITCH, MAX_PITCH);
-
-    state.velocityYaw = clamp((yawDelta / dt) * 18, -0.045, 0.045);
-    state.velocityPitch = clamp((pitchDelta / dt) * 14, -0.030, 0.030);
-
-    state.lastX = event.clientX;
-    state.lastY = event.clientY;
-    state.lastPointerTime = now;
-
-    event.preventDefault();
-  }, { passive: false });
-
-  canvas.addEventListener("pointerup", (event) => {
-    if (event.pointerId !== state.pointerId) return;
-
-    const now = performance.now();
-    const travel = Math.hypot(event.clientX - state.startX, event.clientY - state.startY);
-    const tapDuration = now - state.tapStartTime;
-    const isTap = travel < 10 && tapDuration < 260;
-    const isDoubleTap = isTap && now - state.lastTapAt < 340;
-
-    if (isDoubleTap) {
-      resetInspection();
-      state.lastTapAt = 0;
-    } else if (isTap) {
-      state.lastTapAt = now;
-    }
-
-    state.dragging = false;
-    state.pointerId = null;
-    canvas.releasePointerCapture?.(event.pointerId);
-    event.preventDefault();
-  }, { passive: false });
-
-  canvas.addEventListener("pointercancel", (event) => {
-    state.dragging = false;
-    state.pointerId = null;
-    canvas.releasePointerCapture?.(event.pointerId);
-    event.preventDefault();
-  }, { passive: false });
-
-  canvas.addEventListener("keydown", (event) => {
-    const step = event.shiftKey ? 0.16 : 0.075;
-
-    if (event.key === "ArrowLeft") {
-      state.interacted = true;
-      state.targetYaw -= step;
-      event.preventDefault();
-    } else if (event.key === "ArrowRight") {
-      state.interacted = true;
-      state.targetYaw += step;
-      event.preventDefault();
-    } else if (event.key === "ArrowUp") {
-      state.interacted = true;
-      state.targetPitch = clamp(state.targetPitch + step, MIN_PITCH, MAX_PITCH);
-      event.preventDefault();
-    } else if (event.key === "ArrowDown") {
-      state.interacted = true;
-      state.targetPitch = clamp(state.targetPitch - step, MIN_PITCH, MAX_PITCH);
-      event.preventDefault();
-    } else if (event.key === "Home" || event.key === "0") {
-      resetInspection();
-      event.preventDefault();
-    }
   });
 }
 
@@ -587,8 +456,26 @@ function installResize() {
     timer = window.setTimeout(() => {
       sizeCanvas();
       render();
+      runtime.forceRender();
     }, 120);
   }, { passive: true });
+}
+
+function installRuntimeControls() {
+  const wrap = state.canvas.closest(".globe-wrap");
+
+  state.controls = createGlobeControls({
+    mount: wrap,
+    runtime,
+    onChange() {
+      runtime.forceRender();
+      render();
+    },
+    onReset() {
+      runtime.forceRender();
+      render();
+    }
+  });
 }
 
 function boot() {
@@ -596,8 +483,9 @@ function boot() {
   if (!state.canvas) return;
 
   sizeCanvas();
+  runtime.bindCanvas(state.canvas);
   installWorldControls();
-  installPointerInspection();
+  installRuntimeControls();
   installVisibility();
   installResize();
   updateControls();
@@ -607,7 +495,9 @@ function boot() {
   window.DGBGlobeShowcase = {
     model: MODEL_NAME,
     planetMaterialRenderer: PLANET_MATERIAL_VERSION,
-    publicPortraitBaseline: "cinematic-material-asset-renderer",
+    globeRuntime: GLOBE_RUNTIME_VERSION,
+    globeControls: GLOBE_CONTROLS_VERSION,
+    publicPortraitBaseline: "runtime-glide-controlled-cinematic-material",
     privateEnginesAsleep: true,
     generatedImage: false,
     graphicBox: false,
@@ -629,13 +519,18 @@ function boot() {
     childFieldsPerParent: CHILD_HEX_COUNT,
     totalChildFields: TOTAL_CHILD_FIELDS,
     setWorld,
-    reset: resetInspection,
+    reset: runtime.reset,
+    runtime,
+    controls: state.controls,
     status() {
       return {
         model: MODEL_NAME,
         planetMaterialRenderer: PLANET_MATERIAL_VERSION,
+        globeRuntime: GLOBE_RUNTIME_VERSION,
+        globeControls: GLOBE_CONTROLS_VERSION,
         selectedWorld: state.worldKey,
-        publicPortraitBaseline: "cinematic-material-asset-renderer",
+        runtime: runtime.getState(),
+        publicPortraitBaseline: "runtime-glide-controlled-cinematic-material",
         privateEnginesAsleep: true,
         generatedImage: false,
         graphicBox: false,
@@ -654,9 +549,7 @@ function boot() {
         polygonPatchSurface: false,
         parentCellCount: CELL_COUNT,
         childFieldsPerParent: CHILD_HEX_COUNT,
-        totalChildFields: TOTAL_CHILD_FIELDS,
-        yaw: state.yaw,
-        pitch: state.pitch
+        totalChildFields: TOTAL_CHILD_FIELDS
       };
     }
   };
@@ -671,7 +564,9 @@ if (document.readyState === "loading") {
 export default {
   model: MODEL_NAME,
   planetMaterialRenderer: PLANET_MATERIAL_VERSION,
-  publicPortraitBaseline: "cinematic-material-asset-renderer",
+  globeRuntime: GLOBE_RUNTIME_VERSION,
+  globeControls: GLOBE_CONTROLS_VERSION,
+  publicPortraitBaseline: "runtime-glide-controlled-cinematic-material",
   privateEnginesAsleep: true,
   generatedImage: false,
   graphicBox: false,

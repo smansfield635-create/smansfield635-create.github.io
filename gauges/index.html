@@ -3,7 +3,7 @@
   lang="en"
   data-page="triple-g-showroom-globe-runtime-route-audit"
   data-route="/gauges/"
-  data-contract="TRIPLE_G_SHOWROOM_GLOBE_RUNTIME_ROUTE_AUDIT_TNT_v1"
+  data-contract="TRIPLE_G_AUDIT_RULE_CORRECTION_FALSE_FAILURE_SUPPRESSION_TNT_v2"
   data-role="route-runtime-canvas-audit"
   data-live-audit="true"
   data-showroom-globe-audit="true"
@@ -29,7 +29,6 @@
     :root {
       --bg: #030812;
       --panel: rgba(7, 15, 31, 0.88);
-      --panel-2: rgba(11, 23, 44, 0.76);
       --line: rgba(244, 207, 131, 0.18);
       --line-soft: rgba(255,255,255,0.10);
       --text: rgba(238,244,255,0.94);
@@ -169,9 +168,7 @@
       overflow: hidden;
     }
 
-    .hero {
-      padding: clamp(24px, 5vw, 46px);
-    }
+    .hero { padding: clamp(24px, 5vw, 46px); }
 
     .panel {
       margin-top: 16px;
@@ -250,8 +247,7 @@
       background: rgba(11,23,44,0.58);
     }
 
-    .mini-card h2,
-    .mini-card h3 {
+    .mini-card h2 {
       margin: 0 0 10px;
       color: var(--gold);
       font-size: clamp(1.08rem, 2.8vw, 1.45rem);
@@ -312,9 +308,7 @@
       font-size: 0.92rem;
     }
 
-    .detail strong {
-      color: rgba(238,244,255,0.90);
-    }
+    .detail strong { color: rgba(238,244,255,0.90); }
 
     .evidence {
       margin-top: 6px;
@@ -377,10 +371,7 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .grid-2 {
-        grid-template-columns: 1fr;
-      }
-
+      .grid-2,
       .row {
         grid-template-columns: 1fr;
       }
@@ -423,10 +414,10 @@
 
     <main id="main">
       <section class="hero">
-        <p class="eyebrow">Triple G · Showroom Globe Runtime Route Audit</p>
-        <h1>The board separates route truth from render instability.</h1>
+        <p class="eyebrow">Triple G · audit rule correction</p>
+        <h1>The board now separates visible failure from safe source guards.</h1>
         <p class="lede">
-          This audit reads live public routes, deployed source keys, visible route identity, Globe selector runtime posture, canvas proof, mobile layout governance, and flicker risk. It does not execute private planet engines.
+          This audit reads live public route identity, deployed source markers, Globe runtime posture, canvas proof, and flicker risk. It no longer fails safe defensive source strings, false markers, or non-visible HTML attributes.
         </p>
 
         <div class="actions">
@@ -451,14 +442,14 @@
           <article class="mini-card">
             <h2>Route truth</h2>
             <p>
-              Showroom must serve the Diamond cover object. Globe Showcase must serve the gateway selector. Earth, H-Earth, and Audralia must remain child pages.
+              Route checks read visible body text only. Data attributes, HTML source markers, and defensive cleanup strings do not count as visitor-facing failure.
             </p>
           </article>
 
           <article class="mini-card">
             <h2>Runtime truth</h2>
             <p>
-              Globe runtime should use cached surface data, controlled motion, stable canvas redraw, protected mobile bands, and no frame-generated private engine behavior.
+              Source checks verify required contract markers and fail only on active wrong-state markers, such as true forbidden flags or missing runtime governors.
             </p>
           </article>
         </div>
@@ -467,7 +458,7 @@
       <section class="panel">
         <p class="panel-title">Live Route Ledger</p>
         <div class="small">
-          Reads same-origin public pages with a cache-busting query. Script, style, template, and noscript text are removed before visible-text checks.
+          Reads same-origin public pages with a cache-busting query. Script, style, template, noscript, svg text, and raw source attributes are excluded from route identity checks.
         </div>
         <div class="ledger" data-route-ledger>
           <div class="row">
@@ -481,7 +472,7 @@
       <section class="panel">
         <p class="panel-title">Source + Runtime Ledger</p>
         <div class="small">
-          Reads deployed JavaScript and probes the public Globe canvas inside a hidden same-origin frame.
+          Reads deployed JavaScript and probes the public Globe canvas inside a hidden same-origin frame. Safe guard strings are allowed when they are defensive, not active route identity.
         </div>
         <div class="ledger" data-runtime-ledger>
           <div class="row">
@@ -501,67 +492,74 @@
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Triple G · Showroom Globe Runtime Route Audit.
+      Diamond Gate Bridge · Triple G · Audit Rule Correction.
     </footer>
   </div>
 
   <script>
-    const AUDIT_CONTRACT = "TRIPLE_G_SHOWROOM_GLOBE_RUNTIME_ROUTE_AUDIT_TNT_v1";
+    const AUDIT_CONTRACT = "TRIPLE_G_AUDIT_RULE_CORRECTION_FALSE_FAILURE_SUPPRESSION_TNT_v2";
 
     const ROUTES = [
       {
         path: "/",
         label: "Compass",
-        expect: ["Compass", "Diamond Gate Bridge"],
-        reject: []
+        expectVisible: ["Compass", "Diamond Gate Bridge"],
+        rejectVisible: []
       },
       {
         path: "/flat/",
         label: "Flat",
-        expect: ["Flat"],
-        reject: []
+        expectVisible: ["Flat"],
+        rejectVisible: []
       },
       {
         path: "/products/",
         label: "Products",
-        expect: ["Products"],
-        reject: ["<html", "data-contract="]
+        expectVisible: ["Products"],
+        rejectVisible: []
       },
       {
         path: "/showroom/",
         label: "Showroom Diamond",
-        expect: ["Diamond", "Showroom"],
-        reject: ["Earth is the real-world reference body", "Globe Showcase · Gateway", "Reference body · Blue Marble"]
+        expectVisible: ["Diamond", "Showroom"],
+        rejectVisible: [
+          "Earth is the real-world reference body",
+          "Globe Showcase · Gateway",
+          "Reference body · Blue Marble"
+        ]
       },
       {
         path: "/showroom/globe/",
         label: "Globe Showcase Gateway",
-        expect: ["Globe Showcase", "gateway"],
-        reject: ["Earth is the real-world reference body", "Reference body · Blue Marble"]
+        expectVisible: ["Globe Showcase", "gateway"],
+        rejectVisible: [
+          "Earth is the real-world reference body",
+          "Reference body · Blue Marble"
+        ]
       },
       {
         path: "/showroom/globe/earth/",
         label: "Earth Child Page",
-        expect: ["Earth", "reference"],
-        reject: ["Hearth", "Choose the world body you meant to open"]
+        expectVisible: ["Earth", "reference"],
+        rejectVisible: ["Hearth", "Choose the world body you meant to open"]
       },
       {
         path: "/showroom/globe/h-earth/",
         label: "H-Earth Child Page",
-        expect: ["H-Earth"],
-        reject: ["Earth is the real-world reference body"]
+        expectVisible: ["H-Earth"],
+        rejectVisible: ["Earth is the real-world reference body"]
       },
       {
         path: "/showroom/globe/audralia/",
         label: "Audralia Child Page",
-        expect: ["Audralia"],
-        reject: [/Austral(?:ia|ian)/i, "Earth is the real-world reference body"]
+        expectVisible: ["Audralia"],
+        rejectVisible: [/Austral(?:ia|ian)/i, "Earth is the real-world reference body"]
       },
       {
         path: "/gauges/",
         label: "Triple G",
-        expect: ["Triple G"],
-        reject: ["Waiting for live audit", "Live Frontier Audit"]
+        expectVisible: ["Triple G"],
+        rejectVisible: ["Waiting for live audit", "Live Frontier Audit"]
       }
     ];
 
@@ -569,20 +567,29 @@
       {
         path: "/showroom/index.js",
         label: "Showroom JS",
-        expect: ["SHOWROOM_DIAMOND", "CROWN_CUT_256_LATTICE_FIXED_FORM"],
-        reject: ["Earth is the real-world reference body"]
+        expectSource: ["SHOWROOM_DIAMOND", "CROWN_CUT_256_LATTICE_FIXED_FORM"],
+        rejectSource: [
+          /earthRecord\s*:\s*true/i,
+          /generatedImage\s*:\s*true/i,
+          /graphicBox\s*:\s*true/i
+        ]
       },
       {
         path: "/showroom/globe/index.js",
         label: "Globe JS",
-        expect: [
+        expectSource: [
           "SHOWROOM_GLOBE_MOBILE_STAGE_LAYOUT_GOVERNOR_TNT_v5",
           "surfaceCache",
           "getLayoutMetrics",
           "mobileStageLayoutGovernor",
           "requestAnimationFrame"
         ],
-        reject: ["blockTileLandRender: true", "GraphicBox", "generatedImage: true"]
+        rejectSource: [
+          /blockTileLandRender\s*:\s*true/i,
+          /generatedImage\s*:\s*true/i,
+          /graphicBox\s*:\s*true/i,
+          /diamondInstrument\s*:\s*true/i
+        ]
       }
     ];
 
@@ -622,7 +629,7 @@
 
     function visibleText(doc) {
       const clone = doc.body ? doc.body.cloneNode(true) : document.createElement("body");
-      clone.querySelectorAll("script, style, template, noscript, svg").forEach((node) => node.remove());
+      clone.querySelectorAll("script, style, template, noscript, svg, canvas").forEach((node) => node.remove());
       return (clone.textContent || "").replace(/\s+/g, " ").trim();
     }
 
@@ -670,36 +677,35 @@
       }
 
       const doc = parseHtml(fetched.text);
-      const combined = [
+      const routeText = [
         titleText(doc),
         h1Text(doc),
-        visibleText(doc),
-        doc.documentElement?.outerHTML?.slice(0, 2800) || ""
+        visibleText(doc)
       ].join(" ");
 
-      const rejectHit = route.reject.find((needle) => hasNeedle(combined, needle));
+      const rejectHit = route.rejectVisible.find((needle) => hasNeedle(routeText, needle));
       if (rejectHit) {
         addResult(
           "route",
           route.path,
           route.label,
           "fail",
-          `${route.label} is carrying forbidden or wrong-route language.`,
-          evidenceSnippet(combined, [rejectHit])
+          `${route.label} is carrying forbidden visible wrong-route language.`,
+          evidenceSnippet(routeText, [rejectHit])
         );
         return;
       }
 
-      const found = route.expect.filter((needle) => hasNeedle(combined, needle));
+      const found = route.expectVisible.filter((needle) => hasNeedle(routeText, needle));
 
-      if (found.length === route.expect.length) {
+      if (found.length === route.expectVisible.length) {
         addResult(
           "route",
           route.path,
           route.label,
           "pass",
           `${route.label} visible identity is aligned.`,
-          evidenceSnippet(combined, route.expect)
+          evidenceSnippet(routeText, route.expectVisible)
         );
         return;
       }
@@ -710,7 +716,7 @@
           route.path,
           route.label,
           "hold",
-          `${route.label} is reachable but missing one or more expected route markers.`,
+          `${route.label} is reachable but missing one or more expected visible route markers.`,
           `found: ${found.join(", ")}`
         );
         return;
@@ -722,7 +728,7 @@
         route.label,
         "review",
         `${route.label} is reachable, but this audit cannot classify its visible identity from current text.`,
-        evidenceSnippet(combined, route.expect)
+        evidenceSnippet(routeText, route.expectVisible)
       );
     }
 
@@ -733,7 +739,7 @@
       }
 
       const text = fetched.text || "";
-      const rejectHit = script.reject.find((needle) => hasNeedle(text, needle));
+      const rejectHit = script.rejectSource.find((needle) => hasNeedle(text, needle));
 
       if (rejectHit) {
         addResult(
@@ -741,15 +747,15 @@
           script.path,
           script.label,
           "fail",
-          `${script.label} contains forbidden or stale source markers.`,
+          `${script.label} contains an active forbidden source marker.`,
           evidenceSnippet(text, [rejectHit])
         );
         return;
       }
 
-      const found = script.expect.filter((needle) => hasNeedle(text, needle));
+      const found = script.expectSource.filter((needle) => hasNeedle(text, needle));
 
-      if (found.length === script.expect.length) {
+      if (found.length === script.expectSource.length) {
         addResult(
           "runtime",
           script.path,
@@ -956,7 +962,8 @@
 
       const showroomFail = results.find((r) => r.path === "/showroom/" && r.status !== "pass");
       const globeFail = results.find((r) => r.path === "/showroom/globe/" && r.status !== "pass");
-      const jsHold = results.find((r) => r.path === "/showroom/globe/index.js" && r.status !== "pass");
+      const globeJs = results.find((r) => r.path === "/showroom/globe/index.js" && r.status !== "pass");
+      const showroomJs = results.find((r) => r.path === "/showroom/index.js" && r.status !== "pass");
       const canvas = results.find((r) => r.label === "Globe Canvas Probe" && r.status !== "pass");
       const audralia = results.find((r) => r.path === "/showroom/globe/audralia/" && r.status !== "pass");
 
@@ -968,8 +975,12 @@
         gaps.push(["Globe gateway identity", "Globe Showcase is not proving gateway authority consistently. Re-deploy /showroom/globe/index.html with a new cache key before visual tuning."]);
       }
 
-      if (jsHold) {
-        gaps.push(["Globe runtime source", "The deployed Globe script is missing one or more runtime-stabilization markers. Re-issue /showroom/globe/index.js and bump the HTML script query."]);
+      if (showroomJs) {
+        gaps.push(["Showroom source marker", "Showroom route is visible-pass, but the deployed source is missing one or more expected Diamond markers. This is a source-marker hold, not route contamination."]);
+      }
+
+      if (globeJs) {
+        gaps.push(["Globe runtime source", "The deployed Globe script is missing one or more runtime-stabilization markers or contains an active forbidden true-state marker. Re-issue /showroom/globe/index.js and bump the HTML script query."]);
       }
 
       if (canvas) {
@@ -981,7 +992,7 @@
       }
 
       if (!gaps.length) {
-        gaps.push(["No hard gap from this run", "Routes, deployed markers, and canvas proof are currently aligned. Next work may target visual quality rather than route/runtime emergency repair."]);
+        gaps.push(["Audit clear for route/runtime", "Routes, deployed markers, and canvas proof are currently aligned. Remaining work is visual quality, not route/runtime emergency repair."]);
       }
 
       board.innerHTML = gaps.map(([title, message]) => `

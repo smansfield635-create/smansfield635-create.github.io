@@ -1,11 +1,19 @@
 // /assets/showroom.globe.cinematic.material.js
 // TNT FULL-FILE REPLACEMENT
-// SHOWROOM_GLOBE_FIBONACCI_ADAPTIVE_MATERIAL_RENDERER_TNT_v1
-// Owns: continuous dry planet material rendering.
+// SHOWROOM_GLOBE_HYDRATED_ADAPTIVE_MATERIAL_RENDERER_TNT_v1
+// Owns: continuous planet material rendering.
+// Uses: /assets/showroom.globe.hydration.js for public hydration authority.
 // Runtime contract: render cheap during motion, refine after settling.
 // No privileged longitude, no prime meridian, no schoolroom-globe partition.
 
-export const PLANET_MATERIAL_VERSION = "showroom-globe-fibonacci-adaptive-material-renderer-v1";
+import {
+  SHOWROOM_GLOBE_HYDRATION_VERSION,
+  sampleHydration,
+  blendHydration
+} from "/assets/showroom.globe.hydration.js?v=hydration-v1";
+
+export const PLANET_MATERIAL_VERSION = "showroom-globe-hydrated-adaptive-material-renderer-v1";
+export const PLANET_HYDRATION_VERSION = SHOWROOM_GLOBE_HYDRATION_VERSION;
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -263,6 +271,7 @@ function qualityProfile(view = {}) {
       scars: false,
       caverns: false,
       micro: false,
+      hydration: true,
       strength: 0.25
     };
   }
@@ -277,6 +286,7 @@ function qualityProfile(view = {}) {
       scars: false,
       caverns: true,
       micro: false,
+      hydration: true,
       strength: 0.38
     };
   }
@@ -290,6 +300,7 @@ function qualityProfile(view = {}) {
     scars: true,
     caverns: true,
     micro: true,
+    hydration: true,
     strength: detail === "high" ? 0.58 : 0.48
   };
 }
@@ -445,7 +456,7 @@ function materialColor(material, world) {
   ];
 }
 
-function shadePixel({ viewNormal, bumpViewNormal, material, world, lightView }) {
+function shadePixel({ viewNormal, bumpViewNormal, material, hydration, world, lightView }) {
   const sphereDiffuse = clamp(dot(viewNormal, lightView), 0, 1);
   const reliefDiffuse = clamp(dot(bumpViewNormal, lightView), 0, 1);
   const z = clamp(viewNormal.z, 0, 1);
@@ -472,11 +483,20 @@ function shadePixel({ viewNormal, bumpViewNormal, material, world, lightView }) 
   const sunFlash = clamp((reliefDiffuse - 0.73) * 0.42, 0, 0.24);
   const rimGlow = rim * 0.12;
 
-  const color = [
+  let color = [
     clamp(base[0] * shade + world.ridge[0] * sunFlash + world.atmosphere[0] * rimGlow, 0, 255),
     clamp(base[1] * shade + world.ridge[1] * sunFlash + world.atmosphere[1] * rimGlow, 0, 255),
     clamp(base[2] * shade + world.ridge[2] * sunFlash + world.atmosphere[2] * rimGlow, 0, 255)
   ];
+
+  if (hydration?.water > 0.01) {
+    color = blendHydration(color, hydration, reliefDiffuse * terminator, rim);
+
+    const specular = Math.pow(clamp(reliefDiffuse, 0, 1), 18) * hydration.water * 42;
+    color[0] = clamp(color[0] + specular, 0, 255);
+    color[1] = clamp(color[1] + specular * 1.06, 0, 255);
+    color[2] = clamp(color[2] + specular * 1.22, 0, 255);
+  }
 
   const warmKey = smoothstep(-1, 0.18, -viewNormal.x) * smoothstep(-0.48, 0.82, viewNormal.y);
   color[0] = clamp(color[0] + warmKey * 13, 0, 255);
@@ -603,6 +623,7 @@ export function createCinematicPlanetMaterialRenderer(options = {}) {
         const viewNormal = normalize({ x: nx, y: ny, z });
         const objectPoint = inverseViewPoint(viewNormal, view.yaw, view.pitch);
         const material = sampleMaterial(objectPoint, world, features, profile);
+        const hydration = sampleHydration(objectPoint, material, world, { quality: profile.quality });
         const objectBumpNormal = sampleNormal(objectPoint, world, features, profile);
         const viewBumpNormal = viewPointFromObject(objectBumpNormal, view.yaw, view.pitch);
 
@@ -610,6 +631,7 @@ export function createCinematicPlanetMaterialRenderer(options = {}) {
           viewNormal,
           bumpViewNormal: viewBumpNormal,
           material,
+          hydration,
           world,
           lightView
         });
@@ -638,6 +660,7 @@ export function createCinematicPlanetMaterialRenderer(options = {}) {
 
   return {
     version: PLANET_MATERIAL_VERSION,
+    hydrationVersion: PLANET_HYDRATION_VERSION,
     drawPlanet
   };
 }

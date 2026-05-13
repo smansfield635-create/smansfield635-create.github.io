@@ -1,15 +1,27 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="h-earth-ground-level-scouting"
+  data-page="h-earth-western-golden-shelf-estate-authorization"
   data-route="/showroom/globe/h-earth/"
-  data-contract="H_EARTH_GROUND_LEVEL_SCOUTING_AND_BUILD_CANDIDATE_TNT_v1"
+  data-contract="H_EARTH_WESTERN_GOLDEN_SHELF_ESTATE_AUTHORIZATION_TNT_v1"
   data-target="h-earth"
+  data-selected-region="western-golden-shelf"
+  data-western-golden-shelf-selected="true"
+  data-estate-authorization-analysis="true"
   data-ground-level-scouting="true"
   data-build-candidate-analysis="true"
+  data-terrain-stability-proof="true"
+  data-elevation-logic-proof="true"
+  data-water-relationship-proof="true"
+  data-arrival-direction-proof="true"
+  data-boundary-logic-proof="true"
+  data-orientation-logic-proof="true"
   data-manor-placement-authorized="false"
   data-estate-placement-authorized="false"
   data-bridge-placement-authorized="false"
+  data-road-placement-authorized="false"
+  data-city-placement-authorized="false"
+  data-final-architecture-authorized="false"
   data-orbital-baseline-preserved="true"
   data-globe-selector-mutated="false"
   data-map-flattening="false"
@@ -20,10 +32,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>H-Earth Ground-Level Scouting · Diamond Gate Bridge</title>
+  <title>Western Golden Shelf · H-Earth Estate Authorization</title>
   <meta
     name="description"
-    content="H-Earth ground-level scouting identifies regional terrain and build-candidate zones before any Manor, Estate, or Diamond Gate Bridge placement is authorized."
+    content="Western Golden Shelf estate-authorization analysis for H-Earth. Terrain, elevation, water, arrival, boundary, and orientation proof before Manor, Estate, or Diamond Gate Bridge placement."
   >
 
   <style>
@@ -40,6 +52,7 @@
       --mint: #a7f3c6;
       --blue: #9db7ff;
       --danger: #ff9f9f;
+      --review: #f4cf83;
       color-scheme: dark;
     }
 
@@ -191,7 +204,7 @@
     }
 
     .lede {
-      max-width: 880px;
+      max-width: 900px;
       margin: 22px 0 0;
       color: var(--muted);
       font-size: clamp(1.02rem, 2.5vw, 1.28rem);
@@ -222,8 +235,9 @@
     .summary strong {
       display: block;
       color: var(--gold);
-      font-size: 1.5rem;
-      line-height: 1;
+      font-size: 1.25rem;
+      line-height: 1.1;
+      overflow-wrap: anywhere;
     }
 
     .summary span {
@@ -234,7 +248,8 @@
       font-weight: 800;
     }
 
-    .transition {
+    .transition,
+    .gate-panel {
       margin-top: 16px;
       padding: 18px;
       border: 1px solid rgba(167,243,198,0.18);
@@ -243,6 +258,22 @@
       color: var(--mint);
       font-weight: 900;
       line-height: 1.5;
+    }
+
+    .gate-panel {
+      border-color: rgba(244,207,131,0.24);
+      color: var(--text);
+    }
+
+    .gate-label {
+      display: inline-flex;
+      margin-bottom: 8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #150d03;
+      font: 950 0.78rem/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: 0.08em;
     }
 
     .grid {
@@ -277,7 +308,8 @@
       -webkit-appearance: none;
     }
 
-    .region-card.is-selected {
+    .region-card.is-selected,
+    .region-card.is-primary {
       border-color: rgba(167,243,198,0.62);
       background: rgba(167,243,198,0.10);
     }
@@ -388,7 +420,8 @@
       background: rgba(255,255,255,0.035);
     }
 
-    .metric span {
+    .metric span,
+    .orientation-grid span {
       display: block;
       color: var(--faint);
       font-size: 0.74rem;
@@ -397,11 +430,13 @@
       letter-spacing: 0.08em;
     }
 
-    .metric strong {
+    .metric strong,
+    .orientation-grid strong {
       display: block;
       margin-top: 6px;
       color: var(--text);
-      font-size: 1.18rem;
+      font-size: 1.05rem;
+      line-height: 1.3;
     }
 
     .terrain-readout,
@@ -439,6 +474,9 @@
       font-weight: 850;
     }
 
+    .proof-grid,
+    .zone-grid,
+    .orientation-grid,
     .standard-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -446,26 +484,97 @@
       margin-top: 16px;
     }
 
-    .standard-card {
+    .proof-card,
+    .zone-card,
+    .standard-card,
+    .orientation-grid div {
       border: 1px solid var(--line-soft);
       border-radius: 24px;
       padding: 18px;
       background: var(--panel-2);
     }
 
+    .proof-card.proof-pass {
+      border-color: rgba(167,243,198,0.36);
+    }
+
+    .proof-card.proof-review {
+      border-color: rgba(244,207,131,0.36);
+    }
+
+    .proof-card.proof-fail {
+      border-color: rgba(255,159,159,0.38);
+    }
+
+    .proof-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .proof-head h3,
+    .zone-card h3,
     .standard-card h2 {
       margin: 0 0 8px;
       color: var(--gold);
-      font-size: clamp(1.05rem, 2.8vw, 1.35rem);
+      font-size: clamp(1.02rem, 2.5vw, 1.26rem);
       line-height: 1.1;
       letter-spacing: -0.035em;
     }
 
+    .proof-head span {
+      border-radius: 999px;
+      padding: 5px 8px;
+      color: #06101c;
+      background: var(--mint);
+      font: 950 0.70rem/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .proof-review .proof-head span {
+      background: var(--review);
+    }
+
+    .proof-fail .proof-head span {
+      background: var(--danger);
+    }
+
+    .proof-card p,
+    .zone-card p,
     .standard-card p {
       margin: 0;
       color: var(--muted);
       line-height: 1.5;
       font-size: 0.94rem;
+    }
+
+    .proof-score {
+      margin: 12px 0;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .proof-score strong {
+      color: var(--mint);
+      font-size: 1.35rem;
+    }
+
+    .proof-score span,
+    .zone-card small {
+      color: var(--faint);
+      font-weight: 850;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .proof-card ul {
+      margin: 12px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 0.88rem;
     }
 
     .footer {
@@ -485,6 +594,9 @@
       .nav { justify-content: flex-start; }
       .grid { grid-template-columns: 1fr; }
       .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .proof-grid,
+      .zone-grid,
+      .orientation-grid,
       .standard-grid { grid-template-columns: 1fr; }
     }
 
@@ -499,7 +611,7 @@
 </head>
 
 <body>
-  <a class="skip" href="#main">Skip to H-Earth scouting</a>
+  <a class="skip" href="#main">Skip to Western Golden Shelf authorization</a>
 
   <div class="page">
     <header class="topbar" aria-label="Diamond Gate Bridge navigation">
@@ -521,31 +633,33 @@
 
     <main id="main">
       <section class="hero">
-        <p class="eyebrow">H-Earth Ground-Level Scouting</p>
-        <h1>Build-candidate analysis only. Manor and Estate placement held.</h1>
+        <p class="eyebrow">Western Golden Shelf · Estate-Authorization Analysis</p>
+        <h1>Western Golden Shelf is selected. Placement remains held until proof completes.</h1>
         <p class="lede">
-          H-Earth is the first descent target. This page scouts regional terrain, classifies buildability, and identifies candidate zones before any Manor, Estate, or Diamond Gate Bridge placement can be authorized.
+          H-Earth has moved from general scouting into selected-region estate-authorization analysis. This page evaluates terrain stability, elevation logic, water relationship, arrival direction, estate boundary logic, and orientation logic before any Manor, Estate, or Diamond Gate Bridge placement can be unlocked.
         </p>
 
         <div class="actions">
-          <a class="button primary" href="#scouting-board">Open Scouting Board</a>
+          <a class="button primary" href="#authorization-board">Open Authorization Board</a>
           <a class="button gold" href="/showroom/globe/">Return to Globe Selector</a>
           <a class="button" href="/showroom/">Return to Showroom</a>
         </div>
 
         <div class="transition">
-          Orbital → regional → terrain → build-candidate → estate authorization
+          H-Earth orbital baseline → Western Golden Shelf regional candidate → terrain/elevation proof → water relationship proof → arrival/bridge direction proof → estate boundary logic → Manor placement authorization
         </div>
 
-        <div class="summary" data-scout-summary aria-label="H-Earth scouting summary"></div>
+        <div class="summary" data-scout-summary aria-label="Western Golden Shelf authorization summary"></div>
+
+        <div class="gate-panel" data-authorization-gate aria-label="Authorization gate status"></div>
       </section>
 
-      <section id="scouting-board" class="grid" aria-label="H-Earth ground-level scouting board">
+      <section id="authorization-board" class="grid" aria-label="Western Golden Shelf authorization board">
         <aside class="panel">
-          <p class="eyebrow compact">Regional scouting</p>
-          <h2>Candidate regions</h2>
+          <p class="eyebrow compact">Regional control</p>
+          <h2>Selected build-candidate region</h2>
           <p class="lede" style="font-size:0.98rem;margin-top:10px;">
-            Select a region to inspect its terrain class, buildability score, water relationship, and placement hold status.
+            Western Golden Shelf is now the controlling candidate. Other regions remain visible as context, but this pass evaluates the selected shelf.
           </p>
           <div class="region-list" data-region-list></div>
         </aside>
@@ -553,39 +667,57 @@
         <section class="panel">
           <p class="eyebrow compact">Scouting viewport</p>
           <div class="viewport">
-            <canvas data-ground-scout-canvas aria-label="H-Earth scouting viewport"></canvas>
+            <canvas data-ground-scout-canvas aria-label="Western Golden Shelf scouting viewport"></canvas>
           </div>
 
           <div data-selected-region></div>
         </section>
       </section>
 
-      <section class="standard-grid" aria-label="Ground-level scouting standards">
+      <section class="panel" style="margin-top:16px;" aria-label="Western Golden Shelf proof areas">
+        <p class="eyebrow compact">Authorization proof areas</p>
+        <h2>Terrain, elevation, water, arrival, boundary, and orientation proof</h2>
+        <div class="proof-grid" data-western-proof-list></div>
+      </section>
+
+      <section class="panel" style="margin-top:16px;" aria-label="Estate boundary logic">
+        <p class="eyebrow compact">Estate boundary logic</p>
+        <h2>Boundary zones defined without placement</h2>
+        <div class="zone-grid" data-boundary-logic></div>
+      </section>
+
+      <section class="panel" style="margin-top:16px;" aria-label="Manor orientation logic">
+        <p class="eyebrow compact">Orientation logic only</p>
+        <h2>Future Manor-facing logic without Manor placement</h2>
+        <div data-orientation-logic></div>
+      </section>
+
+      <section class="standard-grid" aria-label="Estate authorization standards">
         <article class="standard-card">
-          <h2>Current best candidate</h2>
-          <p><span data-best-candidate>Calculating</span>. This is scouting evidence only, not Estate authorization.</p>
+          <h2>Selected candidate</h2>
+          <p><span data-best-candidate>Western Golden Shelf</span> is selected for authorization analysis. This is still not Estate placement.</p>
         </article>
 
         <article class="standard-card">
           <h2>Placement lock</h2>
-          <p>Manor, Estate, and Diamond Gate Bridge placement remain held until a future authorization packet unlocks them.</p>
+          <p>Manor, Estate, Diamond Gate Bridge, roads, cities, and final architecture remain held.</p>
         </article>
 
         <article class="standard-card">
-          <h2>No map flattening</h2>
-          <p>This is a ground-level scouting viewport and region board, not a flattened political or public map.</p>
+          <h2>Next eligibility</h2>
+          <p>The next packet may unlock Manor placement planning, Estate boundary sketching, and bridge approach planning only if the gate authorizes next planning.</p>
         </article>
       </section>
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · H-Earth Ground-Level Scouting · Build-Candidate Analysis Only.
+      Diamond Gate Bridge · H-Earth · Western Golden Shelf Estate-Authorization Analysis.
     </footer>
   </div>
 
   <script
     type="module"
-    src="/showroom/globe/h-earth/index.js?v=H_EARTH_GROUND_LEVEL_SCOUTING_AND_BUILD_CANDIDATE_TNT_v1"
+    src="/showroom/globe/h-earth/index.js?v=H_EARTH_WESTERN_GOLDEN_SHELF_ESTATE_AUTHORIZATION_TNT_v1"
   ></script>
 </body>
 </html>

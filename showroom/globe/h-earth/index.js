@@ -1,572 +1,776 @@
 // /showroom/globe/h-earth/index.js
 // TNT FULL-FILE REPLACEMENT
-// H_EARTH_WESTERN_GOLDEN_SHELF_MANOR_GROUND_PLACEMENT_TNT_v1
-// Owns: H-Earth Western Golden Shelf route presentation, authorization proof, and controlled Manor ground placement render.
-// Does not own: final architecture, final Estate buildout, Diamond Gate Bridge final object, roads, or city.
+// H_EARTH_LIVE_ROUTE_AUTHORITY_TAKEOVER_TNT_v2
+// Owns: live route source authority takeover for /showroom/globe/h-earth/.
+// Purpose: if stale HTML is still being served but this JS loads, rebuild the route into the canonical Manor ground-placement page.
+// Does not own: final architecture, final Estate buildout, final bridge object, roads, or city.
 
-import {
-  H_EARTH_GROUND_SCOUT_VERSION,
-  createHEarthGroundScout,
-  gradeBuildCandidateRegion
-} from "/assets/h-earth/h-earth.ground.scout.js?v=h-earth-ground-scout-v1";
+const CONTRACT = "H_EARTH_LIVE_ROUTE_AUTHORITY_TAKEOVER_TNT_v2";
 
-import {
-  H_EARTH_TERRAIN_CLASSIFIER_VERSION,
-  TERRAIN_CLASSES,
-  BUILD_CANDIDATE_GRADES
-} from "/assets/h-earth/h-earth.terrain.classifier.js?v=h-earth-terrain-classifier-v1";
+const FALLBACK_STATUS = Object.freeze({
+  contract: CONTRACT,
+  target: "H-Earth",
+  route: "/showroom/globe/h-earth/",
+  liveAuthority: true,
+  selectedRegion: "Western Golden Shelf",
+  selectedRegionKey: "western-golden-shelf",
+  manorGroundPlacementAuthorized: true,
+  controlledManorPlacement: true,
+  waterBehindManor: true,
+  cameraFacing: "west-southwest",
+  finalManorArchitectureAuthorized: false,
+  estateFinalizationAuthorized: false,
+  bridgeFinalizationAuthorized: false,
+  roadPlacementAuthorized: false,
+  cityPlacementAuthorized: false,
+  finalArchitectureAuthorized: false
+});
 
-import {
-  H_EARTH_WESTERN_GOLDEN_SHELF_VERSION,
-  H_EARTH_WESTERN_GOLDEN_SHELF_CONTRACT,
-  createWesternGoldenShelfAuthorization
-} from "/assets/h-earth/h-earth.western-golden-shelf.js?v=western-golden-shelf-v1";
+const CSS = `
+  :root {
+    --h-bg: #030812;
+    --h-bg2: #061020;
+    --h-panel: rgba(7,15,31,.94);
+    --h-panel2: rgba(11,23,44,.82);
+    --h-soft: rgba(255,255,255,.055);
+    --h-line: rgba(244,207,131,.22);
+    --h-line2: rgba(255,255,255,.12);
+    --h-text: rgba(238,244,255,.94);
+    --h-muted: rgba(238,244,255,.66);
+    --h-faint: rgba(238,244,255,.46);
+    --h-gold: #f4cf83;
+    --h-mint: #a7f3c6;
+    --h-blue: #9db7ff;
+    --h-danger: #ff9f9f;
+    color-scheme: dark;
+  }
 
-import {
-  H_EARTH_MANOR_SPEC_VERSION,
-  getRichManorPlacementSpec
-} from "/assets/h-earth/h-earth.manor.spec.js?v=h-earth-manor-spec-placement-adapter-v1";
+  * { box-sizing: border-box; }
 
-import {
-  H_EARTH_WESTERN_GOLDEN_SHELF_GROUND_RENDER_VERSION,
-  H_EARTH_WESTERN_GOLDEN_SHELF_GROUND_RENDER_CONTRACT,
-  createWesternGoldenShelfGroundRenderer
-} from "/assets/h-earth/h-earth.western-golden-shelf.ground.render.js?v=h-earth-ground-render-v1";
+  html,
+  body {
+    min-height: 100%;
+    margin: 0;
+    background:
+      radial-gradient(circle at 50% -8%, rgba(78,119,171,.26), transparent 38%),
+      radial-gradient(circle at 12% 18%, rgba(244,207,131,.12), transparent 30%),
+      radial-gradient(circle at 84% 30%, rgba(167,243,198,.09), transparent 34%),
+      linear-gradient(180deg, var(--h-bg2), var(--h-bg) 54%, #02050b) !important;
+    color: var(--h-text) !important;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+    letter-spacing: -.015em;
+  }
 
-const CONTRACT = "H_EARTH_WESTERN_GOLDEN_SHELF_MANOR_GROUND_PLACEMENT_TNT_v1";
+  body {
+    background:
+      linear-gradient(90deg, rgba(244,207,131,.08) 1px, transparent 1px),
+      linear-gradient(180deg, rgba(244,207,131,.035) 1px, transparent 1px),
+      linear-gradient(180deg, var(--h-bg2), var(--h-bg) 54%, #02050b) !important;
+    background-size: 58px 58px, 58px 58px, auto !important;
+  }
 
-const state = {
-  scout: null,
-  authorization: null,
-  manorSpec: null,
-  selectedRegionId: "HE-R01",
-  canvas: null,
-  ctx: null,
-  groundCanvas: null,
-  groundRenderer: null,
-  raf: 0,
-  time: 0,
-  dpr: 1,
-  width: 0,
-  height: 0
-};
+  a { color: inherit; }
 
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
-}
+  .page {
+    width: min(1180px, calc(100% - 28px));
+    margin: 0 auto;
+    padding: 22px 0 58px;
+  }
 
-function qs(selector, root = document) {
-  return root.querySelector(selector);
-}
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0 22px;
+  }
 
-function qsa(selector, root = document) {
-  return Array.from(root.querySelectorAll(selector));
-}
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--h-gold);
+    text-decoration: none;
+    font-weight: 950;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+  }
 
-function formatPercent(value) {
-  return `${Math.round(clamp(value, 0, 1) * 100)}%`;
-}
+  .brand-mark {
+    display: inline-grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(244,207,131,.46);
+    border-radius: 10px;
+    background: rgba(244,207,131,.08);
+  }
 
-function setMarkers() {
+  .nav,
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .nav { justify-content: flex-end; }
+
+  .nav a,
+  .button {
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--h-line2);
+    border-radius: 999px;
+    padding: 0 13px;
+    color: rgba(238,244,255,.84);
+    text-decoration: none;
+    background: rgba(255,255,255,.04);
+    font-size: .82rem;
+    font-weight: 850;
+    letter-spacing: .02em;
+  }
+
+  .nav a[aria-current="page"],
+  .button.primary {
+    color: #06101c;
+    background: linear-gradient(135deg, var(--h-mint), #78d8ac);
+    border-color: rgba(167,243,198,.64);
+  }
+
+  .button.gold {
+    color: #150d03;
+    background: linear-gradient(135deg, #fff0b8, var(--h-gold) 48%, #c48a38);
+    border-color: rgba(244,207,131,.74);
+  }
+
+  .hero,
+  .panel,
+  .card,
+  .metric,
+  .proof-card,
+  .zone-card,
+  .standard-card {
+    border: 1px solid var(--h-line);
+    background:
+      radial-gradient(circle at 76% 28%, rgba(139,200,255,.12), transparent 32%),
+      linear-gradient(180deg, rgba(8,17,34,.95), rgba(4,9,20,.96));
+    box-shadow: 0 24px 70px rgba(0,0,0,.28);
+  }
+
+  .hero,
+  .panel {
+    border-radius: 34px;
+    overflow: hidden;
+  }
+
+  .hero { padding: clamp(24px, 5vw, 46px); }
+  .panel { padding: clamp(18px, 3vw, 28px); margin-top: 16px; }
+
+  h1,
+  h2,
+  h3 {
+    color: var(--h-gold);
+    margin: 0;
+    line-height: 1.05;
+  }
+
+  h1 {
+    max-width: 980px;
+    font-size: clamp(2.1rem, 7vw, 5rem);
+    line-height: .94;
+    letter-spacing: -.07em;
+  }
+
+  h2 {
+    font-size: clamp(1.45rem, 4vw, 2.15rem);
+    letter-spacing: -.045em;
+  }
+
+  .eyebrow {
+    margin: 0 0 14px;
+    color: var(--h-gold);
+    font: 900 .78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .eyebrow.compact {
+    margin-bottom: 8px;
+    font-size: .70rem;
+    letter-spacing: .18em;
+  }
+
+  .lede,
+  p,
+  li {
+    color: var(--h-muted);
+    line-height: 1.55;
+  }
+
+  .lede {
+    max-width: 900px;
+    margin: 22px 0 0;
+    font-size: clamp(1.02rem, 2.5vw, 1.28rem);
+  }
+
+  .actions { margin-top: 26px; }
+
+  .transition,
+  .gate-panel,
+  .placement-unlock {
+    margin-top: 16px;
+    padding: 18px;
+    border: 1px solid rgba(167,243,198,.20);
+    border-radius: 24px;
+    background: rgba(5,38,34,.24);
+    color: var(--h-mint);
+    font-weight: 900;
+    line-height: 1.5;
+  }
+
+  .gate-panel,
+  .placement-unlock {
+    border-color: rgba(244,207,131,.26);
+    color: var(--h-text);
+  }
+
+  .summary,
+  .metric-grid,
+  .proof-grid,
+  .zone-grid,
+  .standard-grid,
+  .placement-list {
+    display: grid;
+    gap: 14px;
+  }
+
+  .summary {
+    grid-template-columns: repeat(4, minmax(0,1fr));
+    margin: 16px 0;
+  }
+
+  .metric-grid {
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    margin: 14px 0;
+  }
+
+  .proof-grid,
+  .zone-grid,
+  .standard-grid {
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    margin-top: 16px;
+  }
+
+  .summary div,
+  .metric,
+  .card,
+  .proof-card,
+  .zone-card,
+  .standard-card,
+  .placement-list div {
+    border-color: var(--h-line2);
+    border-radius: 18px;
+    padding: 14px;
+    background: var(--h-soft);
+    box-shadow: none;
+  }
+
+  .proof-card,
+  .zone-card,
+  .standard-card {
+    border-radius: 24px;
+    padding: 18px;
+    background: var(--h-panel2);
+  }
+
+  .summary strong,
+  .metric strong,
+  .placement-list strong {
+    display: block;
+    color: var(--h-text);
+    font-size: 1.05rem;
+    line-height: 1.3;
+    margin-top: 6px;
+    overflow-wrap: anywhere;
+  }
+
+  .summary strong {
+    color: var(--h-gold);
+    font-size: 1.18rem;
+    margin-top: 0;
+  }
+
+  .summary span,
+  .metric span,
+  .placement-list span {
+    display: block;
+    color: var(--h-faint);
+    font-size: .74rem;
+    font-weight: 850;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+
+  .ground-placement-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(260px, .55fr);
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .manor-ground-viewport {
+    width: 100%;
+    min-height: clamp(420px, 64vw, 590px);
+    border: 1px solid rgba(244,207,131,.20);
+    border-radius: 26px;
+    overflow: hidden;
+    background: #06101d;
+    box-shadow: 0 30px 90px rgba(0,0,0,.36);
+  }
+
+  .manor-ground-viewport canvas {
+    display: block;
+    width: 100%;
+    height: clamp(420px, 64vw, 590px);
+  }
+
+  .gate-label,
+  .grade-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    color: #06101c;
+    background: var(--h-gold);
+    font: 950 .78rem/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    letter-spacing: .08em;
+    padding: 7px 10px;
+    margin-bottom: 8px;
+  }
+
+  .footer {
+    margin-top: 20px;
+    padding: 20px 0 0;
+    color: var(--h-faint);
+    font-size: .82rem;
+    text-align: center;
+  }
+
+  @media (max-width: 900px) {
+    .topbar { align-items: flex-start; flex-direction: column; }
+    .nav { justify-content: flex-start; }
+    .ground-placement-grid { grid-template-columns: 1fr; }
+    .summary { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .proof-grid, .zone-grid, .standard-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 560px) {
+    .page { width: min(100% - 18px, 1180px); }
+    .hero, .panel { border-radius: 24px; }
+    .metric-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .manor-ground-viewport canvas { height: 430px; }
+  }
+`;
+
+function setDocumentAuthority() {
+  document.documentElement.className = "dgb-h-earth-live-authority";
+  document.body.className = "dgb-h-earth-live-authority";
+
   const markers = {
-    contract: CONTRACT,
+    page: "h-earth-live-route-authority-takeover",
     route: "/showroom/globe/h-earth/",
+    contract: CONTRACT,
+    target: "h-earth",
+    liveAuthority: "true",
     selectedRegion: "western-golden-shelf",
     westernGoldenShelfSelected: "true",
-    estateAuthorizationAnalysis: "true",
     manorGroundPlacementAuthorized: "true",
     controlledManorPlacement: "true",
     waterBehindManor: "true",
     cameraFacing: "west-southwest",
     groundRenderActive: "true",
-
-    groundLevelScouting: "true",
-    buildCandidateAnalysis: "true",
-    terrainStabilityProof: "true",
-    elevationLogicProof: "true",
-    waterRelationshipProof: "true",
-    arrivalDirectionProof: "true",
-    boundaryLogicProof: "true",
-    orientationLogicProof: "true",
-
-    finalManorArchitectureAuthorized: "false",
-    estateFinalizationAuthorized: "false",
-    bridgeFinalizationAuthorized: "false",
-    roadPlacementAuthorized: "false",
-    cityPlacementAuthorized: "false",
     finalArchitectureAuthorized: "false",
-
-    orbitalBaselinePreserved: "true",
     globeSelectorMutated: "false",
-    mapFlattening: "false",
-    target: "h-earth"
+    mapFlattening: "false"
   };
 
   Object.entries(markers).forEach(([key, value]) => {
     document.documentElement.dataset[key] = value;
     document.body.dataset[key] = value;
   });
+
+  document.title = "Western Golden Shelf · Manor Ground Placement";
 }
 
-function gradeClass(gradeKey) {
-  if (gradeKey === "A") return "grade-a";
-  if (gradeKey === "B") return "grade-b";
-  if (gradeKey === "C") return "grade-c";
-  return "grade-d";
+function installStyle() {
+  let style = document.getElementById("h-earth-live-authority-style");
+
+  if (!style) {
+    style = document.createElement("style");
+    style.id = "h-earth-live-authority-style";
+    style.dataset.contract = CONTRACT;
+    document.head.appendChild(style);
+  }
+
+  style.textContent = CSS;
 }
 
-function proofClass(status) {
-  if (status === "PASS") return "proof-pass";
-  if (status === "REVIEW") return "proof-review";
-  return "proof-fail";
-}
+function canonicalBody() {
+  return `
+    <div class="page">
+      <header class="topbar" aria-label="Diamond Gate Bridge navigation">
+        <a class="brand" href="/showroom/">
+          <span class="brand-mark" aria-hidden="true">◆</span>
+          <span>Diamond Gate Bridge</span>
+        </a>
 
-function renderRegionCards() {
-  const mount = qs("[data-region-list]");
-  if (!mount || !state.scout) return;
+        <nav class="nav" aria-label="Primary">
+          <a href="/">Compass</a>
+          <a href="/showroom/">Showroom</a>
+          <a href="/showroom/globe/">Globe</a>
+          <a href="/showroom/globe/earth/">ZIONTS</a>
+          <a href="/showroom/globe/h-earth/" aria-current="page">H-Earth</a>
+          <a href="/showroom/globe/audralia/">Audralia</a>
+          <a href="/gauges/">Triple G</a>
+        </nav>
+      </header>
 
-  mount.innerHTML = state.scout.regions.map((region) => {
-    const selected = region.id === state.selectedRegionId;
-    const grade = region.buildability.grade.key;
-    const lockedPrimary = region.id === "HE-R01";
+      <main id="main">
+        <section class="hero">
+          <p class="eyebrow">Western Golden Shelf · Live Route Authority</p>
+          <h1>The Manor is now placed on the shelf. Water remains behind it.</h1>
+          <p class="lede">
+            This route is now under live source authority. The already-defined Rich Manor is mounted onto the Western Golden Shelf ground plane. The camera is on the landward eastern shelf looking west-southwest, with the waterline behind the Manor. Final architecture, Estate finalization, roads, city systems, and the final Diamond Gate Bridge object remain held.
+          </p>
 
-    return `
-      <button
-        class="region-card ${selected ? "is-selected" : ""} ${lockedPrimary ? "is-primary" : ""}"
-        type="button"
-        data-region-card="${region.id}"
-        aria-pressed="${selected ? "true" : "false"}"
-      >
-        <span class="region-topline">
-          <span>${region.id}${lockedPrimary ? " · SELECTED" : ""}</span>
-          <span class="grade-pill ${gradeClass(grade)}">${grade}</span>
-        </span>
-        <strong>${region.name}</strong>
-        <span>${region.terrainClass.label}</span>
-        <small>${region.summary}</small>
-      </button>
-    `;
-  }).join("");
+          <div class="actions">
+            <a class="button primary" href="#manor-ground-render">View Ground Render</a>
+            <a class="button gold" href="/showroom/globe/">Return to Globe Selector</a>
+            <a class="button" href="/showroom/">Return to Showroom</a>
+          </div>
 
-  qsa("[data-region-card]").forEach((button) => {
-    button.addEventListener("click", () => selectRegion(button.dataset.regionCard));
-  });
-}
+          <div class="transition">
+            H-Earth orbital baseline → Western Golden Shelf candidate → controlled Manor ground placement → develop the ground around and within → later Estate / Bridge finalization.
+          </div>
 
-function renderSelectedRegion() {
-  const region = state.scout?.regions.find((item) => item.id === state.selectedRegionId) || state.scout?.bestCandidate;
-  const mount = qs("[data-selected-region]");
-  if (!mount || !region) return;
+          <div class="summary">
+            <div><strong>AUTHORIZED</strong><span>Manor ground placement</span></div>
+            <div><strong>WATER BEHIND</strong><span>View contract</span></div>
+            <div><strong>WEST-SOUTHWEST</strong><span>Camera facing</span></div>
+            <div><strong>HOLD</strong><span>Final architecture</span></div>
+          </div>
 
-  const grade = gradeBuildCandidateRegion(region);
-  const buildability = region.buildability;
+          <div class="gate-panel">
+            <span class="gate-label">LIVE ROUTE AUTHORITY ACTIVE</span>
+            <p>
+              The page shell is being asserted by /showroom/globe/h-earth/index.js. If an older HTML file tries to serve this route, this script takes authority and restores the Manor ground-placement expression.
+            </p>
+          </div>
+        </section>
 
-  mount.innerHTML = `
-    <div class="selected-heading">
-      <div>
-        <p class="eyebrow compact">Selected scouting region</p>
-        <h2>${region.name}</h2>
-      </div>
-      <span class="grade-pill ${gradeClass(grade.grade)}">${BUILD_CANDIDATE_GRADES[grade.grade]?.label || "D — No-build"}</span>
+        <section id="manor-ground-render" class="panel" aria-label="Western Golden Shelf Manor ground render">
+          <p class="eyebrow compact">Ground-level render · water behind Manor</p>
+          <h2>Landward shelf view toward the western waterline</h2>
+
+          <div class="ground-placement-grid">
+            <div class="manor-ground-viewport">
+              <canvas data-manor-ground-canvas aria-label="Code-rendered Western Golden Shelf Manor ground placement"></canvas>
+            </div>
+
+            <article class="card">
+              <h3>Placement authority</h3>
+              <p>The existing Rich Manor definition is mounted onto Western Golden Shelf. This live authority pass does not redefine room count, acreage, vault, or internal structure.</p>
+
+              <div class="placement-list">
+                <div><span>Target</span><strong>Western Golden Shelf, H-Earth</strong></div>
+                <div><span>Camera</span><strong>Landward / eastern highland side</strong></div>
+                <div><span>Facing</span><strong>West-southwest</strong></div>
+                <div><span>Water relationship</span><strong>Water behind the Manor</strong></div>
+                <div><span>Estate acres</span><strong>256</strong></div>
+                <div><span>Floors</span><strong>4</strong></div>
+                <div><span>Vault</span><strong>Preserved below ground</strong></div>
+                <div><span>Final architecture</span><strong>HOLD</strong></div>
+              </div>
+            </article>
+          </div>
+
+          <div class="placement-unlock">
+            <p>
+              Controlled Manor ground placement is authorized. Ground development around and within the Manor zone may proceed after this view is visually accepted.
+            </p>
+          </div>
+        </section>
+
+        <section class="panel" aria-label="Placement split">
+          <p class="eyebrow compact">Placement split</p>
+          <h2>What is unlocked and what remains held</h2>
+
+          <div class="standard-grid">
+            <article class="standard-card">
+              <h3>Authorized</h3>
+              <p>Controlled Manor ground placement on Western Golden Shelf with water behind the Manor.</p>
+            </article>
+
+            <article class="standard-card">
+              <h3>Next development</h3>
+              <p>Ground around and within the Manor zone: terraces, courtyards, paths, drainage, gardens, and protected edge logic.</p>
+            </article>
+
+            <article class="standard-card">
+              <h3>Still held</h3>
+              <p>Final architecture, final Estate buildout, roads, city systems, and final Diamond Gate Bridge object.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        Diamond Gate Bridge · H-Earth · Western Golden Shelf Live Route Authority Takeover.
+      </footer>
     </div>
-
-    <p class="selected-summary">${region.summary}</p>
-
-    <div class="metric-grid">
-      <div class="metric"><span>Buildability</span><strong>${formatPercent(buildability.score)}</strong></div>
-      <div class="metric"><span>Stability</span><strong>${formatPercent(buildability.stability)}</strong></div>
-      <div class="metric"><span>Water access</span><strong>${formatPercent(buildability.waterAccess)}</strong></div>
-      <div class="metric"><span>Expansion room</span><strong>${formatPercent(buildability.expansionRoom)}</strong></div>
-      <div class="metric"><span>Bridge approach</span><strong>${formatPercent(buildability.bridgeApproach)}</strong></div>
-      <div class="metric"><span>Wet risk</span><strong>${formatPercent(buildability.wetFoundationRisk)}</strong></div>
-    </div>
-
-    <div class="terrain-readout">
-      <h3>${region.terrainClass.label}</h3>
-      <p>${region.terrainClass.description}</p>
-      <p><strong>Horizon:</strong> ${region.horizon}</p>
-      <p><strong>Arrival read:</strong> ${region.arrivalRead}</p>
-    </div>
-
-    <div class="hold-box">
-      <strong>Placement status updated</strong>
-      <span>Controlled Manor ground placement: AUTHORIZED</span>
-      <span>Final Manor architecture: HOLD</span>
-      <span>Final Estate / Diamond Gate Bridge: HOLD</span>
-    </div>
-  `;
-
-  drawScoutViewport(region);
-}
-
-function renderSummary() {
-  const scout = state.scout;
-  const authorization = state.authorization;
-  if (!scout || !authorization) return;
-
-  const summaryMount = qs("[data-scout-summary]");
-  if (summaryMount) {
-    summaryMount.innerHTML = `
-      <div><strong>${authorization.proofSummary.passCount}</strong><span>Proof passes</span></div>
-      <div><strong>${formatPercent(authorization.proofSummary.averageScore)}</strong><span>Proof score</span></div>
-      <div><strong>AUTHORIZED</strong><span>Manor ground placement</span></div>
-      <div><strong>WATER BEHIND</strong><span>View contract</span></div>
-    `;
-  }
-
-  const bestMount = qs("[data-best-candidate]");
-  if (bestMount) {
-    bestMount.textContent = authorization.selectedRegion;
-  }
-}
-
-function renderAuthorizationProof() {
-  const authorization = state.authorization;
-  const proofMount = qs("[data-western-proof-list]");
-  const gateMount = qs("[data-authorization-gate]");
-  const boundaryMount = qs("[data-boundary-logic]");
-  const orientationMount = qs("[data-orientation-logic]");
-
-  if (!authorization) return;
-
-  if (proofMount) {
-    proofMount.innerHTML = authorization.proofAreas.map((area) => `
-      <article class="proof-card ${proofClass(area.status)}">
-        <div class="proof-head">
-          <h3>${area.title}</h3>
-          <span>${area.status}</span>
-        </div>
-        <p>${area.summary}</p>
-        <div class="proof-score">
-          <strong>${formatPercent(area.score)}</strong>
-          <span>proof score</span>
-        </div>
-        <ul>
-          ${area.findings.map((finding) => `<li>${finding}</li>`).join("")}
-        </ul>
-      </article>
-    `).join("");
-  }
-
-  if (gateMount) {
-    gateMount.innerHTML = `
-      <span class="gate-label">CONTROLLED MANOR GROUND PLACEMENT AUTHORIZED</span>
-      <p>
-        Western Golden Shelf has moved beyond candidate analysis into controlled Manor ground placement.
-        The view is landward/eastern shelf looking west-southwest, with the water behind the Manor.
-        Final Manor architecture, full Estate finalization, roads, city, and Diamond Gate Bridge final object remain held.
-      </p>
-    `;
-  }
-
-  if (boundaryMount) {
-    const zones = authorization.site.zones;
-    boundaryMount.innerHTML = Object.values(zones).map((zone) => `
-      <article class="zone-card">
-        <h3>${zone.label}</h3>
-        <p>${zone.description}</p>
-        <small>${zone.role}</small>
-      </article>
-    `).join("");
-  }
-
-  if (orientationMount) {
-    const o = authorization.site.orientation;
-    const manor = state.manorSpec?.placement?.viewRule;
-
-    orientationMount.innerHTML = `
-      <div class="orientation-grid">
-        <div><span>Facing</span><strong>${o.likelyFacingDirection}</strong></div>
-        <div><span>View axis</span><strong>${o.viewAxis}</strong></div>
-        <div><span>Water axis</span><strong>Behind the Manor</strong></div>
-        <div><span>Camera</span><strong>${manor?.cameraSide || "landward / eastern highland side"}</strong></div>
-        <div><span>Arrival</span><strong>${o.arrivalAxis}</strong></div>
-        <div><span>Placement</span><strong>Controlled Manor ground placement authorized</strong></div>
-      </div>
-    `;
-  }
-}
-
-function renderGroundPlacementInfo() {
-  const mount = qs("[data-ground-placement-info]");
-  if (!mount || !state.manorSpec) return;
-
-  const spec = state.manorSpec;
-
-  mount.innerHTML = `
-    <article class="ground-placement-card">
-      <h3>Placement authority</h3>
-      <p>The existing Rich Manor definition is mounted onto Western Golden Shelf. This adapter does not redefine room count, acreage, vault, or internal structure.</p>
-
-      <div class="placement-list">
-        <div><span>Target</span><strong>${spec.placement.selectedRegion}, ${spec.placement.targetPlanet}</strong></div>
-        <div><span>Camera</span><strong>${spec.placement.viewRule.cameraSide}</strong></div>
-        <div><span>Facing</span><strong>${spec.placement.viewRule.cameraFacing}</strong></div>
-        <div><span>Water relationship</span><strong>Water behind the Manor</strong></div>
-        <div><span>Estate acres</span><strong>${spec.knownCanon.estateAcres}</strong></div>
-        <div><span>Floors</span><strong>${spec.knownCanon.floors}</strong></div>
-        <div><span>Vault</span><strong>Preserved below ground</strong></div>
-        <div><span>Final architecture</span><strong>HOLD</strong></div>
-      </div>
-    </article>
   `;
 }
 
-function selectRegion(regionId) {
-  state.selectedRegionId = regionId;
-  renderRegionCards();
-  renderSelectedRegion();
+function takeLiveAuthority() {
+  setDocumentAuthority();
+  installStyle();
+
+  const h1 = document.querySelector("h1");
+  const correctH1 = h1 && /The Manor is now placed on the shelf/i.test(h1.textContent || "");
+  const hasCanvas = Boolean(document.querySelector("[data-manor-ground-canvas]"));
+
+  if (!correctH1 || !hasCanvas || document.documentElement.dataset.contract !== CONTRACT) {
+    document.body.innerHTML = canonicalBody();
+    setDocumentAuthority();
+    installStyle();
+  }
 }
 
-function resizeCanvas() {
-  const canvas = state.canvas;
+function drawFallbackGround(canvas, time = performance.now() / 1000) {
   if (!canvas) return;
+
+  const ctx = canvas.getContext("2d", { alpha: false });
+  if (!ctx) return;
 
   const box = canvas.getBoundingClientRect();
   const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-  const width = Math.max(320, Math.floor(box.width * dpr));
-  const height = Math.max(260, Math.floor(box.height * dpr));
+  const w = Math.max(320, Math.floor((box.width || 900) * dpr));
+  const h = Math.max(420, Math.floor((box.height || 560) * dpr));
 
-  if (canvas.width !== width || canvas.height !== height) {
-    canvas.width = width;
-    canvas.height = height;
-    state.width = width;
-    state.height = height;
-    state.dpr = dpr;
+  if (canvas.width !== w || canvas.height !== h) {
+    canvas.width = w;
+    canvas.height = h;
   }
-}
 
-function drawScoutViewport(region) {
-  const canvas = state.canvas;
-  const ctx = state.ctx;
-  if (!canvas || !ctx || !region) return;
+  ctx.clearRect(0, 0, w, h);
 
-  resizeCanvas();
-
-  const width = state.width;
-  const height = state.height;
-  const sample = region.sample;
-  const grade = region.buildability.grade.key;
-
-  ctx.clearRect(0, 0, width, height);
-
-  const sky = ctx.createLinearGradient(0, 0, 0, height * 0.62);
-  sky.addColorStop(0, "rgba(5,13,28,1)");
-  sky.addColorStop(0.58, "rgba(19,40,58,1)");
-  sky.addColorStop(1, "rgba(34,55,54,1)");
+  const sky = ctx.createLinearGradient(0, 0, 0, h * 0.64);
+  sky.addColorStop(0, "rgba(5,12,28,1)");
+  sky.addColorStop(0.42, "rgba(28,44,68,1)");
+  sky.addColorStop(0.78, "rgba(116,86,56,1)");
+  sky.addColorStop(1, "rgba(156,112,66,1)");
   ctx.fillStyle = sky;
-  ctx.fillRect(0, 0, width, height);
+  ctx.fillRect(0, 0, w, h);
 
-  const horizonY = height * (0.42 + sample.elevation * 0.10 - sample.relief * 0.06);
-  const ridgeAmp = height * (0.04 + sample.relief * 0.10);
-  const slope = (sample.slope - 0.5) * height * 0.18;
+  const glow = ctx.createRadialGradient(w * 0.63, h * 0.28, 0, w * 0.63, h * 0.30, w * 0.52);
+  glow.addColorStop(0, "rgba(255,224,146,.32)");
+  glow.addColorStop(0.22, "rgba(244,207,131,.16)");
+  glow.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, w, h);
 
-  ctx.fillStyle = "rgba(8,14,18,0.88)";
+  ctx.fillStyle = "rgba(11,22,27,.72)";
   ctx.beginPath();
-  ctx.moveTo(0, horizonY + slope * 0.3);
-
+  ctx.moveTo(0, h * 0.47);
   for (let i = 0; i <= 24; i += 1) {
-    const x = (i / 24) * width;
-    const wave =
-      Math.sin(i * 0.9 + region.id.length) * ridgeAmp * 0.55 +
-      Math.sin(i * 1.7) * ridgeAmp * 0.22;
-    ctx.lineTo(x, horizonY + wave + (i / 24 - 0.5) * slope);
-  }
-
-  ctx.lineTo(width, height);
-  ctx.lineTo(0, height);
-  ctx.closePath();
-  ctx.fill();
-
-  const land = ctx.createLinearGradient(0, horizonY, 0, height);
-  land.addColorStop(0, "rgba(148,124,70,0.92)");
-  land.addColorStop(0.52, "rgba(64,84,60,0.94)");
-  land.addColorStop(1, "rgba(18,26,24,1)");
-  ctx.fillStyle = land;
-  ctx.beginPath();
-  ctx.moveTo(0, height * 0.62);
-
-  for (let i = 0; i <= 18; i += 1) {
-    const x = (i / 18) * width;
-    const y = height * (0.58 + i * 0.006) + Math.sin(i * 1.22) * height * 0.025 + slope * 0.16;
+    const x = (i / 24) * w;
+    const y = h * 0.47 - Math.sin(i * 0.8) * h * 0.035 - Math.sin(i * 1.9) * h * 0.018;
     ctx.lineTo(x, y);
   }
-
-  ctx.lineTo(width, height);
-  ctx.lineTo(0, height);
+  ctx.lineTo(w, h * 0.58);
+  ctx.lineTo(0, h * 0.58);
   ctx.closePath();
   ctx.fill();
 
-  if (sample.waterAccess > 0.38) {
-    const waterY = height * (0.72 - sample.coast * 0.10);
-    const water = ctx.createLinearGradient(0, waterY, width, height);
-    water.addColorStop(0, "rgba(44,107,104,0.16)");
-    water.addColorStop(0.5, "rgba(79,148,134,0.30)");
-    water.addColorStop(1, "rgba(22,58,74,0.24)");
+  const waterTop = h * 0.455;
+  const waterBottom = h * 0.655;
+  const water = ctx.createLinearGradient(0, waterTop, 0, waterBottom);
+  water.addColorStop(0, "rgba(54,115,126,.92)");
+  water.addColorStop(0.42, "rgba(30,83,104,.88)");
+  water.addColorStop(1, "rgba(12,38,62,.82)");
+  ctx.fillStyle = water;
+  ctx.beginPath();
+  ctx.moveTo(0, waterTop);
+  for (let i = 0; i <= 40; i += 1) {
+    const x = (i / 40) * w;
+    const y = waterTop + Math.sin(i * 0.55 + time * 0.52) * h * 0.005;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(w, waterBottom);
+  ctx.lineTo(0, waterBottom);
+  ctx.closePath();
+  ctx.fill();
 
-    ctx.fillStyle = water;
+  ctx.strokeStyle = "rgba(244,207,131,.28)";
+  ctx.lineWidth = Math.max(1, w * 0.0012);
+  for (let j = 0; j < 8; j += 1) {
+    const y = h * (0.51 + j * 0.018);
     ctx.beginPath();
-    ctx.moveTo(0, waterY);
-
-    for (let i = 0; i <= 16; i += 1) {
-      const x = (i / 16) * width;
-      const y = waterY + Math.sin(i * 1.8 + state.time) * height * 0.014;
-      ctx.lineTo(x, y);
+    for (let i = 0; i <= 32; i += 1) {
+      const x = (i / 32) * w;
+      const wave = Math.sin(i * 1.4 + j * 0.7 + time * 0.9) * h * 0.003;
+      if (i === 0) ctx.moveTo(x, y + wave);
+      else ctx.lineTo(x, y + wave);
     }
-
-    ctx.lineTo(width, height);
-    ctx.lineTo(0, height);
-    ctx.closePath();
-    ctx.fill();
+    ctx.stroke();
   }
 
-  if (sample.vegetation > 0.34) {
-    ctx.fillStyle = "rgba(89,147,86,0.20)";
-    for (let i = 0; i < 28; i += 1) {
-      const x = ((i * 73) % 100) / 100 * width;
-      const y = height * (0.58 + ((i * 37) % 38) / 100);
-      const r = height * (0.010 + ((i * 11) % 9) / 1000) * sample.vegetation;
+  const land = ctx.createLinearGradient(0, h * 0.60, 0, h);
+  land.addColorStop(0, "rgba(146,122,68,.96)");
+  land.addColorStop(0.42, "rgba(72,88,60,.97)");
+  land.addColorStop(1, "rgba(11,18,18,1)");
+  ctx.fillStyle = land;
+  ctx.beginPath();
+  ctx.moveTo(0, h * 0.60);
+  for (let i = 0; i <= 30; i += 1) {
+    const x = (i / 30) * w;
+    const y = h * 0.60 + Math.sin(i * 0.9) * h * 0.012 + (i / 30 - 0.5) * h * 0.026;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(w, h);
+  ctx.lineTo(0, h);
+  ctx.closePath();
+  ctx.fill();
+
+  const cx = w * 0.50;
+  const baseY = h * 0.672;
+  const width = w * 0.34;
+  const height = h * 0.205;
+
+  ctx.fillStyle = "rgba(0,0,0,.42)";
+  ctx.beginPath();
+  ctx.ellipse(cx, baseY + h * 0.035, width * 0.74, h * 0.045, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  const bodyTop = baseY - height * 0.58;
+  const bodyH = height * 0.52;
+  const body = ctx.createLinearGradient(cx - width * 0.5, bodyTop, cx + width * 0.5, baseY);
+  body.addColorStop(0, "rgba(70,55,40,.98)");
+  body.addColorStop(0.40, "rgba(162,129,76,.98)");
+  body.addColorStop(0.72, "rgba(104,80,54,.98)");
+  body.addColorStop(1, "rgba(39,31,28,.98)");
+
+  ctx.fillStyle = body;
+  ctx.strokeStyle = "rgba(244,207,131,.46)";
+  ctx.lineWidth = Math.max(1.4, w * 0.0016);
+
+  function rect(x, y, rw, rh) {
+    ctx.beginPath();
+    ctx.roundRect(x, y, rw, rh, Math.max(2, w * 0.004));
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  rect(cx - width * 0.36, bodyTop + bodyH * 0.16, width * 0.72, bodyH * 0.82);
+  rect(cx - width * 0.16, bodyTop - bodyH * 0.06, width * 0.32, bodyH * 1.05);
+  rect(cx - width * 0.50, bodyTop + bodyH * 0.31, width * 0.18, bodyH * 0.64);
+  rect(cx + width * 0.32, bodyTop + bodyH * 0.31, width * 0.18, bodyH * 0.64);
+
+  ctx.fillStyle = "rgba(27,22,24,1)";
+  function roof(points) {
+    ctx.beginPath();
+    ctx.moveTo(points[0][0], points[0][1]);
+    for (let i = 1; i < points.length; i += 1) ctx.lineTo(points[i][0], points[i][1]);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  roof([[cx - width * 0.41, bodyTop + bodyH * 0.18], [cx, bodyTop - height * 0.20], [cx + width * 0.41, bodyTop + bodyH * 0.18]]);
+  roof([[cx - width * 0.19, bodyTop - bodyH * 0.04], [cx, bodyTop - height * 0.28], [cx + width * 0.19, bodyTop - bodyH * 0.04]]);
+  roof([[cx - width * 0.55, bodyTop + bodyH * 0.31], [cx - width * 0.41, bodyTop + bodyH * 0.09], [cx - width * 0.27, bodyTop + bodyH * 0.31]]);
+  roof([[cx + width * 0.27, bodyTop + bodyH * 0.31], [cx + width * 0.41, bodyTop + bodyH * 0.09], [cx + width * 0.55, bodyTop + bodyH * 0.31]]);
+
+  ctx.fillStyle = "rgba(244,207,131,.72)";
+  for (let floor = 0; floor < 4; floor += 1) {
+    const y = bodyTop + bodyH * (0.25 + floor * 0.18);
+    for (let i = -3; i <= 3; i += 1) {
+      if (i === 0 && floor > 1) continue;
+      const x = cx + i * width * 0.085;
       ctx.beginPath();
-      ctx.ellipse(x, y, r * 2.2, r, 0, 0, Math.PI * 2);
+      ctx.roundRect(x - width * 0.016, y, width * 0.032, bodyH * 0.075, 2);
       ctx.fill();
     }
   }
 
-  const candidateColor =
-    grade === "A" ? "rgba(167,243,198,0.92)" :
-    grade === "B" ? "rgba(244,207,131,0.86)" :
-    grade === "C" ? "rgba(160,190,255,0.72)" :
-    "rgba(255,125,125,0.68)";
-
-  ctx.strokeStyle = candidateColor;
-  ctx.lineWidth = Math.max(1.5, state.dpr * 1.6);
-  ctx.setLineDash([8 * state.dpr, 8 * state.dpr]);
-  ctx.beginPath();
-  ctx.ellipse(
-    width * 0.50,
-    height * 0.69,
-    width * (0.18 + sample.expansionRoom * 0.08),
-    height * (0.045 + (1 - sample.slope) * 0.025),
-    -0.08 + sample.slope * 0.18,
-    0,
-    Math.PI * 2
-  );
-  ctx.stroke();
-  ctx.setLineDash([]);
-
-  ctx.fillStyle = "rgba(238,244,255,0.70)";
-  ctx.font = `${Math.max(12, 12 * state.dpr)}px ui-monospace, SFMono-Regular, Menlo, monospace`;
-  ctx.fillText(`${region.id} · ${region.terrainClass.label} · Grade ${grade}`, 18 * state.dpr, height - 22 * state.dpr);
+  ctx.fillStyle = "rgba(238,244,255,.76)";
+  ctx.font = `${Math.max(11, w * 0.013)}px ui-monospace, SFMono-Regular, Menlo, monospace`;
+  ctx.fillText("RICH MANOR · EXISTING SPEC PLACED", cx - width * 0.34, baseY + h * 0.058);
+  ctx.fillStyle = "rgba(167,243,198,.70)";
+  ctx.fillText("water behind · vault preserved below ground", cx - width * 0.32, baseY + h * 0.083);
 }
 
-function tick(time) {
-  state.time = time / 1000;
-  const region = state.scout?.regions.find((item) => item.id === state.selectedRegionId) || state.scout?.bestCandidate;
+async function startGroundRender() {
+  const canvas = document.querySelector("[data-manor-ground-canvas]");
+  if (!canvas) return null;
 
-  if (region) drawScoutViewport(region);
+  try {
+    const mod = await import("/assets/h-earth/h-earth.western-golden-shelf.ground.render.js?v=H_EARTH_LIVE_ROUTE_AUTHORITY_TAKEOVER_TNT_v2");
 
-  state.raf = requestAnimationFrame(tick);
-}
-
-function initGroundRenderer() {
-  state.groundCanvas = qs("[data-manor-ground-canvas]");
-
-  if (state.groundCanvas) {
-    state.groundRenderer = createWesternGoldenShelfGroundRenderer(state.groundCanvas, {
-      dpr: Math.min(window.devicePixelRatio || 1, 1.5)
-    }).start();
+    if (mod?.createWesternGoldenShelfGroundRenderer) {
+      return mod.createWesternGoldenShelfGroundRenderer(canvas, {
+        dpr: Math.min(window.devicePixelRatio || 1, 1.5)
+      }).start();
+    }
+  } catch (_error) {
+    // Fallback renderer remains valid for source-authority recovery.
   }
+
+  let raf = 0;
+
+  function draw(time) {
+    drawFallbackGround(canvas, time / 1000);
+    raf = requestAnimationFrame(draw);
+  }
+
+  raf = requestAnimationFrame(draw);
+
+  return Object.freeze({
+    status() {
+      return Object.freeze({
+        contract: CONTRACT,
+        fallbackGroundRenderer: true,
+        running: Boolean(raf),
+        waterBehindManor: true,
+        cameraFacing: "west-southwest"
+      });
+    }
+  });
 }
 
-function initHEarthGroundScout() {
-  setMarkers();
-
-  state.scout = createHEarthGroundScout();
-  state.authorization = createWesternGoldenShelfAuthorization();
-  state.manorSpec = getRichManorPlacementSpec();
-  state.selectedRegionId = "HE-R01";
-  state.canvas = qs("[data-ground-scout-canvas]");
-  state.ctx = state.canvas?.getContext("2d", { alpha: false }) || null;
-
-  renderSummary();
-  renderRegionCards();
-  renderSelectedRegion();
-  renderAuthorizationProof();
-  renderGroundPlacementInfo();
-  initGroundRenderer();
-
-  if (!state.raf && state.canvas && state.ctx) {
-    state.raf = requestAnimationFrame(tick);
-  }
+async function init() {
+  takeLiveAuthority();
+  const groundRenderer = await startGroundRender();
 
   window.DGBHEarthGroundScout = Object.freeze({
     status() {
       return Object.freeze({
-        contract: CONTRACT,
-        target: "H-Earth",
-        route: "/showroom/globe/h-earth/",
-        selectedRegion: "Western Golden Shelf",
-        selectedRegionKey: "western-golden-shelf",
-        westernGoldenShelfSelected: true,
-        estateAuthorizationAnalysis: true,
-
-        manorGroundPlacementAuthorized: true,
-        controlledManorPlacement: true,
-        waterBehindManor: true,
-        cameraFacing: "west-southwest",
-        groundRenderActive: Boolean(state.groundRenderer),
-
-        groundLevelScouting: true,
-        buildCandidateAnalysis: true,
-        terrainStabilityProof: true,
-        elevationLogicProof: true,
-        waterRelationshipProof: true,
-        arrivalDirectionProof: true,
-        boundaryLogicProof: true,
-        orientationLogicProof: true,
-
-        finalManorArchitectureAuthorized: false,
-        estateFinalizationAuthorized: false,
-        bridgeFinalizationAuthorized: false,
-        roadPlacementAuthorized: false,
-        cityPlacementAuthorized: false,
-        finalArchitectureAuthorized: false,
-
-        authorizationGate: "CONTROLLED_MANOR_GROUND_PLACEMENT_AUTHORIZED",
-        authorizedForNextPlanning: true,
-
-        orbitalBaselinePreserved: true,
-        globeSelectorMutated: false,
-        mapFlattening: false,
-        transitionPath: "H-Earth orbital baseline → Western Golden Shelf candidate → controlled Manor ground placement → ground development around and within → later Estate/Bridge finalization",
-
-        scoutVersion: H_EARTH_GROUND_SCOUT_VERSION,
-        classifierVersion: H_EARTH_TERRAIN_CLASSIFIER_VERSION,
-        westernGoldenShelfVersion: H_EARTH_WESTERN_GOLDEN_SHELF_VERSION,
-        westernGoldenShelfContract: H_EARTH_WESTERN_GOLDEN_SHELF_CONTRACT,
-        manorSpecVersion: H_EARTH_MANOR_SPEC_VERSION,
-        groundRenderVersion: H_EARTH_WESTERN_GOLDEN_SHELF_GROUND_RENDER_VERSION,
-        groundRenderContract: H_EARTH_WESTERN_GOLDEN_SHELF_GROUND_RENDER_CONTRACT,
-
-        regionCount: state.scout?.summary.totalRegions || 0,
-        selectedRegionId: state.selectedRegionId,
-        bestCandidate: state.authorization?.selectedRegion || "Western Golden Shelf",
-        proofSummary: state.authorization?.proofSummary || null,
-        terrainClasses: Object.keys(TERRAIN_CLASSES),
-        buildCandidateGrades: Object.keys(BUILD_CANDIDATE_GRADES),
-        groundRendererStatus: state.groundRenderer?.status?.() || null
+        ...FALLBACK_STATUS,
+        groundRendererStatus: groundRenderer?.status?.() || null,
+        liveAuthorityStyleMounted: Boolean(document.getElementById("h-earth-live-authority-style")),
+        h1: document.querySelector("h1")?.textContent || "",
+        expectedH1: "The Manor is now placed on the shelf. Water remains behind it."
       });
     }
   });
-
-  return window.DGBHEarthGroundScout;
 }
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initHEarthGroundScout, { once: true });
+  document.addEventListener("DOMContentLoaded", init, { once: true });
 } else {
-  initHEarthGroundScout();
+  init();
 }
 
-export { initHEarthGroundScout };
-export default initHEarthGroundScout;
+export default init;

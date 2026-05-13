@@ -3,7 +3,7 @@ import {
   PLANET_HYDRATION_VERSION,
   PLANET_VEGETATION_VERSION,
   createCinematicPlanetMaterialRenderer
-} from "/assets/showroom.globe.cinematic.material.js?v=cinematic-material-v13";
+} from "/assets/showroom.globe.cinematic.material.js?v=cinematic-material-v14";
 
 import {
   VEGETATION_HABITABILITY_VERSION,
@@ -13,11 +13,12 @@ import {
 const FIBONACCI_SEQUENCE = Object.freeze([1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233]);
 const RUNTIME_FIELD_SIZE = 256;
 const TAU = Math.PI * 2;
-const MAX_DPR = 1.5;
+const MAX_DPR = 1.25;
+const CONTRACT = "SHOWROOM_GLOBE_RUNTIME_GOVERNOR_MOBILE_PERFORMANCE_TNT_v15";
 
 const GLOBE_SELECTOR_STATE = Object.freeze({
-  contract: "SHOWROOM_GLOBE_ZIONTS_BEACH_VEGETATION_40B_HABITABILITY_TNT_v13",
-  previousContract: "SHOWROOM_GLOBE_CINEMATIC_CONNECTION_AND_EXPRESSION_ALIGNMENT_TNT_v12",
+  contract: CONTRACT,
+  previousContract: "SHOWROOM_GLOBE_ZIONTS_OCEAN_MOTION_SPARKLE_TNT_v14",
   route: "/showroom/globe/",
   role: "globe-system-gateway-selector",
   gatewayAuthority: true,
@@ -30,10 +31,19 @@ const GLOBE_SELECTOR_STATE = Object.freeze({
   beachesActive: true,
   vegetationActive: true,
   habitabilityActive: true,
+  oceanMotionActive: true,
+  oceanSparkleActive: true,
+  lightReflectionActive: true,
 
   cinematicMaterialConnected: true,
   hydrationFileConnected: true,
   vegetationLayerConnected: true,
+  runtimeGovernorActive: true,
+  mobilePerformanceGovernor: true,
+  switchRenderStaging: true,
+  dragRenderThrottle: true,
+  oceanCadenceGovernor: true,
+
   materialFirstExpression: true,
   hydrationSecondary: true,
   physicalGraphicMaterial: true,
@@ -75,7 +85,7 @@ const BODY_CONFIG = Object.freeze({
     key: "earth",
     publicKey: "zionts",
     title: "ZIONTS",
-    subtitle: "Ancient Living World · material-led hydrated runtime",
+    subtitle: "Ancient Living World · ocean motion · light reflection",
     openText: "Open ZIONTS",
     href: "/showroom/globe/earth/",
     seed: 1207,
@@ -111,6 +121,15 @@ const BODY_CONFIG = Object.freeze({
     materialPriority: 0.78,
     hydrationPriority: 0.22,
 
+    oceanMotion: Object.freeze({
+      active: true,
+      sparkle: true,
+      reflectionStrength: 0.46,
+      waveStrength: 0.34,
+      glintStrength: 0.40,
+      motionSpeed: 0.72
+    }),
+
     lifeProfile: Object.freeze({
       beachStrength: 0.52,
       vegetationStrength: 0.42,
@@ -138,7 +157,7 @@ const BODY_CONFIG = Object.freeze({
     key: "h-earth",
     publicKey: "h-earth",
     title: "H-Earth",
-    subtitle: "Hybrid Ancient Living World · physical dry material",
+    subtitle: "Hybrid Ancient Living World · reflective water systems",
     openText: "Open H-Earth",
     href: "/showroom/globe/h-earth/",
     seed: 2331,
@@ -174,6 +193,15 @@ const BODY_CONFIG = Object.freeze({
     materialPriority: 0.88,
     hydrationPriority: 0.12,
 
+    oceanMotion: Object.freeze({
+      active: true,
+      sparkle: true,
+      reflectionStrength: 0.36,
+      waveStrength: 0.24,
+      glintStrength: 0.30,
+      motionSpeed: 0.58
+    }),
+
     lifeProfile: Object.freeze({
       beachStrength: 0.46,
       vegetationStrength: 0.54,
@@ -201,7 +229,7 @@ const BODY_CONFIG = Object.freeze({
     key: "audralia",
     publicKey: "audralia",
     title: "Audralia",
-    subtitle: "Ancient Constructed Living World · physical material",
+    subtitle: "Ancient Constructed Living World · opal ocean reflection",
     openText: "Open Audralia",
     href: "/showroom/globe/audralia/",
     seed: 3779,
@@ -239,6 +267,15 @@ const BODY_CONFIG = Object.freeze({
     materialPriority: 0.84,
     hydrationPriority: 0.16,
 
+    oceanMotion: Object.freeze({
+      active: true,
+      sparkle: true,
+      reflectionStrength: 0.42,
+      waveStrength: 0.28,
+      glintStrength: 0.38,
+      motionSpeed: 0.64
+    }),
+
     lifeProfile: Object.freeze({
       beachStrength: 0.50,
       vegetationStrength: 0.46,
@@ -274,8 +311,19 @@ const state = {
   pointerX: 0,
   pointerY: 0,
   lastTap: 0,
+
   lastTime: 0,
+  lastRenderTime: 0,
+  lastOceanFrame: 0,
+  oceanTime: 0,
   raf: 0,
+
+  forceMotionUntil: 0,
+  forceSettlingUntil: 0,
+  refineAt: 0,
+  detailAt: 0,
+  immediateRender: true,
+
   dpr: 1,
   width: 0,
   height: 0,
@@ -284,11 +332,15 @@ const state = {
   fibonacciBand: 8,
   renderer: null,
   vegetationLayer: null,
-  renderQuality: "settled"
+  renderQuality: "motion"
 };
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
+}
+
+function nowMs() {
+  return performance.now();
 }
 
 function rgb(values, alpha = 1) {
@@ -297,6 +349,11 @@ function rgb(values, alpha = 1) {
 
 function seededUnit(index, salt) {
   return ((Math.sin(index * 12.9898 + salt * 78.233) * 43758.5453) % 1 + 1) % 1;
+}
+
+function requestRender(immediate = false) {
+  state.needsRender = true;
+  if (immediate) state.immediateRender = true;
 }
 
 function resizeCanvas(canvas) {
@@ -319,7 +376,13 @@ function resizeCanvas(canvas) {
       mobile: width / dpr <= 560,
       dpr
     });
-    state.needsRender = true;
+
+    const now = nowMs();
+    state.forceMotionUntil = now + 220;
+    state.forceSettlingUntil = now + 760;
+    state.refineAt = now + 260;
+    state.detailAt = now + 820;
+    requestRender(true);
   }
 }
 
@@ -351,6 +414,22 @@ function fibonacciBandForMode() {
   return 13;
 }
 
+function oceanFrameCadence() {
+  if (state.dragging) return 1 / 5;
+  if (state.mode === "stable") return 1 / 13;
+  return 1 / 21;
+}
+
+function minimumRenderIntervalMs() {
+  const quality = getRenderQuality();
+
+  if (state.dragging) return 1000 / 18;
+  if (quality === "motion") return 1000 / 21;
+  if (quality === "settling") return 1000 / 13;
+  if (state.mode === "stable") return 1000 / 8;
+  return 1000 / 13;
+}
+
 function resolveRuntimeAddress() {
   const bodyIndex = Object.keys(BODY_CONFIG).indexOf(state.body);
   const yawBucket = Math.round((((state.yaw % TAU) + TAU) % TAU) / TAU * 64) % 64;
@@ -361,14 +440,17 @@ function resolveRuntimeAddress() {
 }
 
 function getRenderQuality() {
+  const now = nowMs();
   const motion = Math.abs(state.velocityYaw) + Math.abs(state.velocityPitch);
 
-  if (state.dragging || motion > 0.018) return "motion";
-  if (motion > 0.0025) return "settling";
+  if (state.dragging || now < state.forceMotionUntil || motion > 0.018) return "motion";
+  if (now < state.forceSettlingUntil || motion > 0.0025) return "settling";
   return "settled";
 }
 
 function getRenderDetail() {
+  if (state.dragging) return "stable";
+  if (nowMs() < state.detailAt) return "stable";
   if (state.mode === "stable") return "high";
   return "stable";
 }
@@ -439,7 +521,7 @@ function drawGroundGlow(ctx, width, height, world) {
   ctx.fill();
 }
 
-function render(canvas, ctx) {
+function render(canvas, ctx, timestamp = nowMs()) {
   const world = BODY_CONFIG[state.body] || BODY_CONFIG.earth;
   const width = canvas.width;
   const height = canvas.height;
@@ -472,16 +554,27 @@ function render(canvas, ctx) {
     yaw: state.yaw,
     pitch: state.pitch,
     quality: state.renderQuality,
-    detail: getRenderDetail()
+    detail: getRenderDetail(),
+    time: state.oceanTime,
+    oceanMotion: true,
+    oceanSparkle: !state.dragging,
+    lightReflection: true
   }, world);
 
   state.needsRender = false;
+  state.immediateRender = false;
+  state.lastRenderTime = timestamp;
 }
 
-function updateMotion(dt) {
+function updateMotion(dt, timestamp) {
   let changed = false;
   const fibonacciBand = fibonacciBandForMode();
   state.fibonacciBand = fibonacciBand;
+
+  const world = BODY_CONFIG[state.body] || BODY_CONFIG.earth;
+  const oceanSpeed = world.oceanMotion?.motionSpeed || 0.6;
+
+  state.oceanTime += dt * oceanSpeed;
 
   if (!state.dragging) {
     const priorYaw = state.yaw;
@@ -506,12 +599,29 @@ function updateMotion(dt) {
     changed = changed || Math.abs(priorYaw - state.yaw) > 0.00001 || Math.abs(priorPitch - state.pitch) > 0.00001;
   }
 
+  state.lastOceanFrame += dt;
+
+  if (world.oceanMotion?.active && state.lastOceanFrame >= oceanFrameCadence()) {
+    state.lastOceanFrame = 0;
+    requestRender(false);
+  }
+
+  if (state.refineAt && timestamp >= state.refineAt) {
+    state.refineAt = 0;
+    requestRender(false);
+  }
+
+  if (state.detailAt && timestamp >= state.detailAt) {
+    state.detailAt = 0;
+    requestRender(false);
+  }
+
   resolveRuntimeAddress();
 
-  if (changed) state.needsRender = true;
+  if (changed) requestRender(false);
 
   if (state.renderQuality !== getRenderQuality()) {
-    state.needsRender = true;
+    requestRender(false);
   }
 }
 
@@ -520,18 +630,23 @@ function step(time, canvas, ctx) {
   state.lastTime = time;
 
   resizeCanvas(canvas);
-  updateMotion(dt);
+  updateMotion(dt, time);
 
-  if (state.needsRender) render(canvas, ctx);
+  const elapsed = time - state.lastRenderTime;
+  const canRender = state.immediateRender || elapsed >= minimumRenderIntervalMs();
+
+  if (state.needsRender && canRender) {
+    render(canvas, ctx, time);
+  }
 
   state.raf = requestAnimationFrame((next) => step(next, canvas, ctx));
 }
 
 function bindPointer(stage) {
   stage.addEventListener("pointerdown", (event) => {
-    const now = performance.now();
+    const now = nowMs();
 
-    if (now - state.lastTap < 320) resetView();
+    if (now - state.lastTap < 320) resetView(true);
 
     state.lastTap = now;
     state.dragging = true;
@@ -539,7 +654,9 @@ function bindPointer(stage) {
     state.pointerY = event.clientY;
     state.velocityYaw = 0;
     state.velocityPitch = 0;
-    state.needsRender = true;
+    state.forceMotionUntil = now + 220;
+    state.forceSettlingUntil = now + 520;
+    requestRender(true);
 
     stage.setPointerCapture?.(event.pointerId);
   });
@@ -560,13 +677,21 @@ function bindPointer(stage) {
 
     state.velocityYaw = dx * 0.0018;
     state.velocityPitch = -dy * 0.0011;
-    state.needsRender = true;
+    state.forceMotionUntil = nowMs() + 160;
+
+    requestRender(false);
   }, { passive: true });
 
   const release = (event) => {
     if (!state.dragging) return;
+
+    const now = nowMs();
     state.dragging = false;
-    state.needsRender = true;
+    state.forceSettlingUntil = now + 420;
+    state.refineAt = now + 180;
+    state.detailAt = now + 560;
+    requestRender(true);
+
     stage.releasePointerCapture?.(event.pointerId);
   };
 
@@ -575,19 +700,51 @@ function bindPointer(stage) {
   stage.addEventListener("pointerleave", release);
 }
 
-function resetView() {
+function resetView(immediate = true) {
+  const now = nowMs();
+
   state.yaw = 0.16;
   state.pitch = -0.06;
   state.velocityYaw = 0;
   state.velocityPitch = 0;
-  state.needsRender = true;
+  state.forceMotionUntil = now + 180;
+  state.forceSettlingUntil = now + 540;
+  state.refineAt = now + 220;
+  state.detailAt = now + 620;
+  requestRender(immediate);
+}
+
+function forcePublicLabels() {
+  document.querySelectorAll("[data-body='earth']").forEach((button) => {
+    button.textContent = "ZIONTS";
+  });
+
+  document.querySelectorAll("a[href='/showroom/globe/earth/']").forEach((link) => {
+    const text = (link.textContent || "").trim();
+
+    if (text === "Earth" || text === "Open Earth") {
+      link.textContent = text === "Open Earth" ? "Open ZIONTS" : "ZIONTS";
+    }
+  });
+}
+
+function stageSwitchRender() {
+  const now = nowMs();
+
+  state.forceMotionUntil = now + 300;
+  state.forceSettlingUntil = now + 900;
+  state.refineAt = now + 260;
+  state.detailAt = now + 860;
+  state.lastOceanFrame = 0;
+  requestRender(true);
 }
 
 function setBody(bodyKey) {
   if (!BODY_CONFIG[bodyKey]) return;
 
   state.body = bodyKey;
-  resetView();
+  resetView(false);
+  stageSwitchRender();
 
   const world = BODY_CONFIG[bodyKey];
 
@@ -609,20 +766,29 @@ function setBody(bodyKey) {
     open.href = world.href;
     open.textContent = world.openText;
   }
+
+  forcePublicLabels();
 }
 
 function setMode(mode) {
   state.mode = mode;
-  state.needsRender = true;
+
+  const now = nowMs();
+  state.forceMotionUntil = now + 160;
+  state.forceSettlingUntil = now + 520;
+  state.refineAt = now + 220;
+  state.detailAt = now + 680;
 
   document.querySelectorAll("[data-mode]").forEach((button) => {
     button.setAttribute("aria-selected", button.dataset.mode === mode ? "true" : "false");
   });
+
+  requestRender(true);
 }
 
 function markRoute() {
   const markers = {
-    globeGatewayStatus: "zionts-beach-vegetation-40b-habitability",
+    globeGatewayStatus: "runtime-governor-mobile-performance",
     globeGatewayAuthority: "true",
     visualScaleAuthority: "true",
 
@@ -633,6 +799,15 @@ function markRoute() {
     beachesActive: "true",
     vegetationActive: "true",
     habitabilityActive: "true",
+    oceanMotionActive: "true",
+    oceanSparkleActive: "true",
+    lightReflectionActive: "true",
+
+    runtimeGovernorActive: "true",
+    mobilePerformanceGovernor: "true",
+    switchRenderStaging: "true",
+    dragRenderThrottle: "true",
+    oceanCadenceGovernor: "true",
 
     cinematicMaterialConnected: "true",
     hydrationFileConnected: "true",
@@ -679,6 +854,8 @@ function protectGatewayIdentity() {
   if (h1 && /Earth is the real-world reference body/i.test(h1.textContent || "")) {
     h1.textContent = "ZIONTS, H-Earth, and Audralia are ancient living worlds.";
   }
+
+  forcePublicLabels();
 }
 
 function bindControls() {
@@ -691,7 +868,7 @@ function bindControls() {
   });
 
   const reset = document.querySelector("[data-reset-view]");
-  if (reset) reset.addEventListener("click", resetView);
+  if (reset) reset.addEventListener("click", () => resetView(true));
 }
 
 function initGlobeSelector() {
@@ -711,7 +888,7 @@ function initGlobeSelector() {
   setBody("earth");
   setMode("auto");
   resizeCanvas(canvas);
-  render(canvas, ctx);
+  render(canvas, ctx, nowMs());
 
   if (!state.raf) {
     state.raf = requestAnimationFrame((time) => step(time, canvas, ctx));
@@ -730,9 +907,17 @@ function initGlobeSelector() {
         mode: state.mode,
         yaw: state.yaw,
         pitch: state.pitch,
+        oceanTime: state.oceanTime,
         renderQuality: state.renderQuality,
         runtimeAddress: state.runtimeAddress,
         fibonacciBand: state.fibonacciBand,
+        dpr: state.dpr,
+        lastRenderTime: state.lastRenderTime,
+        runtimeGovernorActive: true,
+        mobilePerformanceGovernor: true,
+        switchRenderStaging: true,
+        dragRenderThrottle: true,
+        oceanCadenceGovernor: true,
 
         materialSource: PLANET_MATERIAL_VERSION,
         hydrationVersion: PLANET_HYDRATION_VERSION,
@@ -749,6 +934,9 @@ function initGlobeSelector() {
         beachesActive: true,
         vegetationActive: true,
         habitabilityActive: true,
+        oceanMotionActive: true,
+        oceanSparkleActive: true,
+        lightReflectionActive: true,
 
         cinematicMaterialConnected: true,
         hydrationFileConnected: true,

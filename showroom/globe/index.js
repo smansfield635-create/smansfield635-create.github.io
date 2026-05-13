@@ -1,9 +1,10 @@
 // /showroom/globe/index.js
 // Globe Showcase public 256-cell portrait index.
-// H-Earth definition renewal: sharper land/water separation, coastal shelves, ridge hints, valley bands,
-// and cell-local contour strokes while keeping the public selector lightweight.
+// H-Earth geography dimension v1: fixed feature counts, deterministic 256-cell assignment,
+// public-weight rendering of land bodies, oceans, seas, lakes, shelves, coastline, beaches,
+// ridges, valleys, and polar zones.
 
-const MODEL_NAME = "globe-showcase-public-256-portrait-index-h-earth-definition-v1";
+const MODEL_NAME = "globe-showcase-h-earth-geography-dimension-v1";
 
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
 const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
@@ -18,6 +19,66 @@ const MAX_PITCH = 0.72;
 const LAT_BANDS = 16;
 const LON_SECTORS = 16;
 const CELL_COUNT = LAT_BANDS * LON_SECTORS;
+
+const H_EARTH_GEOGRAPHY = Object.freeze({
+  field: {
+    latBands: 16,
+    lonSectors: 16,
+    totalCells: 256
+  },
+  landBodies: Object.freeze([
+    "North Polar Landmass",
+    "South Polar Landmass",
+    "Western Primary Continent",
+    "Eastern Primary Continent",
+    "Northern Highland Continent",
+    "Southern Shelf Continent",
+    "Equatorial Island Chain"
+  ]),
+  oceans: Object.freeze([
+    "West Deep Ocean",
+    "East Deep Ocean",
+    "Southern Circumpolar Ocean"
+  ]),
+  seas: Object.freeze([
+    "Northwest Sea",
+    "North Gate Sea",
+    "Northeast Sea",
+    "West Shelf Sea",
+    "East Shelf Sea",
+    "Equatorial Passage Sea",
+    "Southwest Sea",
+    "Southeast Sea"
+  ]),
+  lakes: 16,
+  coastlineSegments: 64,
+  beaches: 32,
+  shelves: 32,
+  mountainRidges: 16,
+  valleyBasins: 16,
+  polarCaps: Object.freeze(["North Polar Cap", "South Polar Cap"])
+});
+
+const H_EARTH_LAKE_SEATS = Object.freeze([
+  [11, 3], [10, 4], [9, 2], [8, 5],
+  [11, 11], [10, 12], [8, 10], [7, 13],
+  [12, 7], [13, 8], [6, 7], [5, 8],
+  [9, 6], [9, 9], [7, 4], [6, 11]
+]);
+
+const H_EARTH_RIDGE_SEATS = Object.freeze([
+  [11, 2], [10, 3], [9, 4], [8, 5],
+  [12, 10], [11, 11], [10, 12], [9, 13],
+  [13, 6], [12, 7], [11, 8], [10, 9],
+  [4, 4], [5, 5], [4, 11], [5, 10]
+]);
+
+const H_EARTH_VALLEY_SEATS = Object.freeze([
+  [8, 2], [7, 3], [6, 4], [9, 5],
+  [8, 11], [7, 12], [6, 13], [9, 10],
+  [11, 6], [10, 7], [9, 8], [8, 9],
+  [5, 6], [5, 9], [6, 6], [6, 9]
+]);
 
 const WORLDS = Object.freeze({
   earth: {
@@ -194,32 +255,134 @@ function terrainNoise(lat, lon, band, sector, worldKey) {
   return n1 * 0.38 + n2 * 0.28 + n3 * 0.20 + n4 * 0.14;
 }
 
+function seatIndex(seats, band, sector) {
+  for (let index = 0; index < seats.length; index += 1) {
+    const seat = seats[index];
+    if (seat[0] === band && seat[1] === sector) return index;
+  }
+  return -1;
+}
+
+function gaussianDistance(lat, lon, centerLat, centerLon, latWidth, lonWidth) {
+  const dLat = (lat - centerLat) / latWidth;
+  const dLon = Math.atan2(Math.sin(lon - centerLon), Math.cos(lon - centerLon)) / lonWidth;
+  return Math.exp(-(dLat * dLat + dLon * dLon));
+}
+
+function getOceanName(sector, band) {
+  if (band <= 3) return H_EARTH_GEOGRAPHY.oceans[2];
+  return sector < 8 ? H_EARTH_GEOGRAPHY.oceans[0] : H_EARTH_GEOGRAPHY.oceans[1];
+}
+
+function getSeaName(sector, band) {
+  if (band >= 12 && sector < 5) return H_EARTH_GEOGRAPHY.seas[0];
+  if (band >= 12 && sector < 11) return H_EARTH_GEOGRAPHY.seas[1];
+  if (band >= 12) return H_EARTH_GEOGRAPHY.seas[2];
+  if (sector < 4) return H_EARTH_GEOGRAPHY.seas[3];
+  if (sector > 11) return H_EARTH_GEOGRAPHY.seas[4];
+  if (band >= 6 && band <= 10) return H_EARTH_GEOGRAPHY.seas[5];
+  if (sector < 8) return H_EARTH_GEOGRAPHY.seas[6];
+  return H_EARTH_GEOGRAPHY.seas[7];
+}
+
+function classifyHEarthCell(latMid, lonMid, band, sector) {
+  const polar = Math.abs(latMid) / (Math.PI / 2);
+  const detail = hash(band, sector, 31);
+  const south = latMid < 0;
+
+  const masks = [
+    { name: "North Polar Landmass", score: band >= 14 ? 1.15 : gaussianDistance(latMid, lonMid, 1.33, 0.0, 0.28, 3.2) },
+    { name: "South Polar Landmass", score: band <= 1 ? 1.15 : gaussianDistance(latMid, lonMid, -1.33, 0.0, 0.28, 3.2) },
+    { name: "Western Primary Continent", score: gaussianDistance(latMid, lonMid, 0.16, -2.02, 0.72, 0.92) + gaussianDistance(latMid, lonMid, -0.24, -1.52, 0.52, 0.62) * 0.62 },
+    { name: "Eastern Primary Continent", score: gaussianDistance(latMid, lonMid, 0.18, 1.55, 0.76, 0.88) + gaussianDistance(latMid, lonMid, -0.10, 2.25, 0.46, 0.62) * 0.55 },
+    { name: "Northern Highland Continent", score: gaussianDistance(latMid, lonMid, 0.76, -0.25, 0.46, 0.96) + gaussianDistance(latMid, lonMid, 0.58, 0.55, 0.34, 0.58) * 0.52 },
+    { name: "Southern Shelf Continent", score: gaussianDistance(latMid, lonMid, -0.72, 0.18, 0.44, 1.05) + gaussianDistance(latMid, lonMid, -0.52, -0.55, 0.32, 0.52) * 0.44 },
+    { name: "Equatorial Island Chain", score: gaussianDistance(latMid, lonMid, 0.00, -0.60, 0.23, 0.48) + gaussianDistance(latMid, lonMid, 0.08, 0.12, 0.22, 0.42) + gaussianDistance(latMid, lonMid, -0.08, 0.82, 0.24, 0.45) }
+  ];
+
+  const winner = masks.reduce((best, item) => item.score > best.score ? item : best, masks[0]);
+  const landScore = winner.score + terrainNoise(latMid, lonMid, band, sector, "hEarth") * 0.10;
+  const lakeIndex = seatIndex(H_EARTH_LAKE_SEATS, band, sector);
+  const ridgeIndex = seatIndex(H_EARTH_RIDGE_SEATS, band, sector);
+  const valleyIndex = seatIndex(H_EARTH_VALLEY_SEATS, band, sector);
+
+  const isPolarCap = band === 0 || band === 15;
+  const isPolarLand = winner.name === "North Polar Landmass" || winner.name === "South Polar Landmass";
+  const isIslandChain = winner.name === "Equatorial Island Chain";
+  const islandThreshold = isIslandChain ? 0.52 : 0.42;
+  const isLand = isPolarLand || landScore > islandThreshold || lakeIndex >= 0;
+  const coastBand = Math.abs(landScore - islandThreshold);
+  const isCoast = isLand && !isPolarCap && coastBand < 0.12;
+  const isShelf = !isLand && coastBand < 0.17;
+  const sea = !isLand && (isShelf || coastBand < 0.25);
+  const water = !isLand;
+  const beachSegment = isCoast && ((band * 16 + sector) % 2 === 0);
+
+  const elevation = clamp(
+    (landScore - islandThreshold) * 1.25 +
+    (ridgeIndex >= 0 ? 0.42 : 0) -
+    (valleyIndex >= 0 ? 0.22 : 0) +
+    (isPolarCap ? 0.10 : 0),
+    -0.65,
+    0.90
+  );
+
+  return {
+    geographyModel: "h-earth-dimension-v1",
+    elevation,
+    polar,
+    detail,
+    landBody: isLand ? winner.name : null,
+    ocean: water && !sea ? getOceanName(sector, band) : null,
+    sea: water && sea ? getSeaName(sector, band) : null,
+    lake: lakeIndex >= 0 ? `Major Lake ${String(lakeIndex + 1).padStart(2, "0")}` : null,
+    coastlineSegment: isCoast ? ((band * 16 + sector) % H_EARTH_GEOGRAPHY.coastlineSegments) + 1 : null,
+    beach: beachSegment ? `Beach ${String(((band * 16 + sector) % H_EARTH_GEOGRAPHY.beaches) + 1).padStart(2, "0")}` : null,
+    shelf: isShelf ? `Shelf Zone ${String(((band * 16 + sector) % H_EARTH_GEOGRAPHY.shelves) + 1).padStart(2, "0")}` : null,
+    ridge: ridgeIndex >= 0 ? `Ridge ${String(ridgeIndex + 1).padStart(2, "0")}` : null,
+    valley: valleyIndex >= 0 ? `Valley Basin ${String(valleyIndex + 1).padStart(2, "0")}` : null,
+    polarCap: isPolarCap ? (south ? H_EARTH_GEOGRAPHY.polarCaps[1] : H_EARTH_GEOGRAPHY.polarCaps[0]) : null,
+    ice: isPolarCap || (polar > 0.86 && isLand),
+    coast: isCoast,
+    water,
+    shelfZone: isShelf,
+    seaZone: sea,
+    mountain: ridgeIndex >= 0 || (isLand && elevation > 0.45 && detail > 0.35),
+    highland: isLand && elevation > 0.24,
+    valleyZone: valleyIndex >= 0,
+    lakeZone: lakeIndex >= 0,
+    dry: isLand && !isCoast && !isPolarCap && elevation > 0.18 && detail > 0.55,
+    ridgeField: Math.sin(lonMid * 4.4 + band * 0.51) + Math.cos(latMid * 6.2 - sector * 0.31)
+  };
+}
+
 function makeTerrainPayload({ elevation, polar, latMid, lonMid, band, sector, worldKey }) {
   const detail = hash(band, sector, worldKey.length);
   const ridgeField = Math.sin(lonMid * 5.2 + band * 0.48) + Math.cos(latMid * 7.4 - sector * 0.29);
   const ridge = elevation > 0.30 && ridgeField > 0.42;
   const valley = elevation > 0.08 && elevation < 0.32 && ridgeField < -0.55;
-  const ice = polar > (worldKey === "audralia" ? 0.88 : worldKey === "earth" ? 0.80 : 0.76);
-  const coast = Math.abs(elevation) < (worldKey === "hEarth" ? 0.15 : 0.13);
-  const water = elevation < (worldKey === "audralia" ? 0.03 : worldKey === "earth" ? -0.05 : -0.035) && !ice;
-  const shelf = water && elevation > (worldKey === "hEarth" ? -0.25 : -0.22);
-  const mountain = elevation > (worldKey === "hEarth" ? 0.43 : 0.48) && !ice;
-  const highland = elevation > (worldKey === "hEarth" ? 0.22 : 0.24) && !ice;
-  const dry = elevation > (worldKey === "audralia" ? 0.10 : 0.36) && !ice && !water;
-  const lake = !water && !ice && worldKey === "hEarth" && elevation > 0.03 && elevation < 0.18 && detail > 0.78;
+  const ice = polar > (worldKey === "audralia" ? 0.88 : 0.80);
+  const coast = Math.abs(elevation) < 0.13;
+  const water = elevation < (worldKey === "audralia" ? 0.03 : -0.05) && !ice;
+  const shelf = water && elevation > -0.22;
+  const mountain = elevation > 0.48 && !ice;
+  const highland = elevation > 0.24 && !ice;
+  const dry = elevation > (worldKey === "audralia" ? 0.10 : 0.35) && !ice && !water;
 
   return {
+    geographyModel: `${worldKey}-generic-portrait`,
     elevation,
     ice,
     coast,
     water,
-    shelf,
+    shelfZone: shelf,
+    seaZone: shelf,
     mountain,
     highland,
     dry,
     ridge,
     valley,
-    lake,
+    lakeZone: false,
     polar,
     detail,
     ridgeField
@@ -227,20 +390,12 @@ function makeTerrainPayload({ elevation, polar, latMid, lonMid, band, sector, wo
 }
 
 function sampleCell(latMid, lonMid, band, sector, worldKey) {
+  if (worldKey === "hEarth") {
+    return classifyHEarthCell(latMid, lonMid, band, sector);
+  }
+
   const polar = Math.abs(latMid) / (Math.PI / 2);
   const noise = terrainNoise(latMid, lonMid, band, sector, worldKey);
-
-  if (worldKey === "hEarth") {
-    const westContinent = Math.cos(lonMid * 1.20 + latMid * 0.45 - 0.55) * 0.30;
-    const eastOceanGate = Math.sin(lonMid * 1.85 - latMid * 0.70 + 1.0) * -0.20;
-    const equatorLift = Math.cos(latMid * 2.0) * 0.12;
-    const mountainRing = Math.sin(lonMid * 3.1 + 0.8) * Math.cos(latMid * 2.6 - 0.4) * 0.18;
-    const valleyCut = Math.cos(lonMid * 4.8 - latMid * 3.2 + 0.7) * 0.10;
-    const shelfBias = Math.sin(lonMid * 2.7 + latMid * 1.4) * 0.08;
-    const elevation = noise * 0.72 + westContinent + eastOceanGate + equatorLift + mountainRing + valleyCut + shelfBias - 0.10 + polar * 0.08;
-
-    return makeTerrainPayload({ elevation, polar, latMid, lonMid, band, sector, worldKey });
-  }
 
   if (worldKey === "audralia") {
     const islandCore =
@@ -360,12 +515,38 @@ function colorForCell(cell) {
   let g;
   let b;
 
-  if (t.ice) {
+  if (cell.worldKey === "hEarth") {
+    if (t.ice || t.polarCap) {
+      r = 182; g = 220; b = 238;
+    } else if (t.lakeZone) {
+      r = 28; g = 128; b = 154;
+    } else if (t.water) {
+      if (t.shelfZone) {
+        r = 62; g = 154; b = 168;
+      } else if (t.seaZone) {
+        r = 24; g = 96; b = 146;
+      } else {
+        r = 8; g = 38; b = 104;
+      }
+    } else if (t.beach) {
+      r = 218; g = 194; b = 122;
+    } else if (t.coast) {
+      r = 190; g = 168; b = 108;
+    } else if (t.mountain) {
+      r = 142; g = 132; b = 122;
+    } else if (t.highland) {
+      r = 72; g = 144; b = 82;
+    } else if (t.valleyZone) {
+      r = 42; g = 128; b = 78;
+    } else if (t.dry) {
+      r = 156; g = 132; b = 84;
+    } else {
+      r = 50; g = 136; b = 84;
+    }
+  } else if (t.ice) {
     r = 170; g = 213; b = 238;
-  } else if (t.lake) {
-    r = 28; g = 116; b = 130;
   } else if (t.water) {
-    if (t.shelf) {
+    if (t.shelfZone) {
       r = world.secondary[0] + 18;
       g = world.secondary[1] + 38;
       b = world.secondary[2] + 30;
@@ -375,9 +556,7 @@ function colorForCell(cell) {
       b = Math.max(72, world.secondary[2] * 0.76);
     }
   } else if (t.coast) {
-    r = cell.worldKey === "hEarth" ? 196 : 186;
-    g = cell.worldKey === "hEarth" ? 176 : 168;
-    b = cell.worldKey === "hEarth" ? 112 : 101;
+    r = 186; g = 168; b = 101;
   } else if (t.mountain) {
     r = 150; g = 136; b = 118;
   } else if (t.highland) {
@@ -397,11 +576,11 @@ function colorForCell(cell) {
   }
 
   const elevationWarmth = clamp(t.elevation, -0.5, 0.65);
-  const detailShift = (t.detail - 0.5) * (cell.worldKey === "hEarth" ? 22 : 14);
+  const detailShift = (t.detail - 0.5) * (cell.worldKey === "hEarth" ? 20 : 14);
 
-  r += elevationWarmth * 24 + detailShift;
-  g += elevationWarmth * 12 + detailShift * 0.35;
-  b += t.water ? 20 : -elevationWarmth * 8 - detailShift * 0.22;
+  r += elevationWarmth * 22 + detailShift;
+  g += elevationWarmth * 10 + detailShift * 0.35;
+  b += t.water ? 18 : -elevationWarmth * 7 - detailShift * 0.22;
 
   r = Math.round(clamp(r * light, 0, 255));
   g = Math.round(clamp(g * light, 0, 255));
@@ -510,8 +689,8 @@ function drawCellDetail(ctx, cell) {
   };
 
   if (cell.worldKey === "hEarth") {
-    if (t.coast || t.shelf || t.lake) {
-      ctx.strokeStyle = `rgba(205,232,210,${0.15 * depthAlpha})`;
+    if (t.coastlineSegment || t.shelfZone || t.lakeZone || t.beach) {
+      ctx.strokeStyle = `rgba(226,238,210,${0.18 * depthAlpha})`;
       ctx.lineWidth = Math.max(0.8, DPR * 0.75);
       ctx.beginPath();
       ctx.moveTo(midLeft.x, midLeft.y);
@@ -519,8 +698,17 @@ function drawCellDetail(ctx, cell) {
       ctx.stroke();
     }
 
-    if (t.mountain || t.ridge) {
-      ctx.strokeStyle = `rgba(236,230,207,${0.22 * depthAlpha})`;
+    if (t.beach) {
+      ctx.strokeStyle = `rgba(255,232,163,${0.22 * depthAlpha})`;
+      ctx.lineWidth = Math.max(0.7, DPR * 0.68);
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x * 0.62 + pts[3].x * 0.38, pts[0].y * 0.62 + pts[3].y * 0.38);
+      ctx.lineTo(pts[1].x * 0.62 + pts[2].x * 0.38, pts[1].y * 0.62 + pts[2].y * 0.38);
+      ctx.stroke();
+    }
+
+    if (t.ridge || t.mountain) {
+      ctx.strokeStyle = `rgba(236,230,207,${0.25 * depthAlpha})`;
       ctx.lineWidth = Math.max(0.65, DPR * 0.62);
       ctx.beginPath();
       ctx.moveTo(pts[3].x * 0.55 + pts[0].x * 0.45, pts[3].y * 0.55 + pts[0].y * 0.45);
@@ -530,8 +718,8 @@ function drawCellDetail(ctx, cell) {
       ctx.stroke();
     }
 
-    if (t.valley && !t.water) {
-      ctx.strokeStyle = `rgba(20,70,55,${0.22 * depthAlpha})`;
+    if (t.valley || t.valleyZone) {
+      ctx.strokeStyle = `rgba(20,70,55,${0.24 * depthAlpha})`;
       ctx.lineWidth = Math.max(0.7, DPR * 0.66);
       ctx.beginPath();
       ctx.moveTo(topMid.x, topMid.y);
@@ -539,8 +727,8 @@ function drawCellDetail(ctx, cell) {
       ctx.stroke();
     }
 
-    if (t.water && !t.shelf) {
-      ctx.strokeStyle = `rgba(120,194,228,${0.10 * depthAlpha})`;
+    if (t.water && !t.shelfZone) {
+      ctx.strokeStyle = `rgba(120,194,228,${0.11 * depthAlpha})`;
       ctx.lineWidth = Math.max(0.5, DPR * 0.50);
       ctx.beginPath();
       ctx.moveTo(pts[0].x, pts[0].y * 0.64 + pts[3].y * 0.36);
@@ -577,7 +765,7 @@ function drawPlanet(ctx, width, height) {
     ctx.fillStyle = colorForCell(cell);
     ctx.fill();
 
-    const gridAlpha = cell.worldKey === "hEarth" ? 0.055 : 0.040;
+    const gridAlpha = cell.worldKey === "hEarth" ? 0.062 : 0.040;
     ctx.strokeStyle = `rgba(230,244,255,${gridAlpha + cell.rim * 0.12})`;
     ctx.lineWidth = Math.max(0.35, DPR * 0.38);
     ctx.stroke();
@@ -597,7 +785,7 @@ function drawPlanet(ctx, width, height) {
   document.documentElement.dataset.selectedWorld = state.worldKey;
   document.documentElement.dataset.portraitCellCount = String(CELL_COUNT);
   document.documentElement.dataset.privateEnginesAsleep = "true";
-  document.documentElement.dataset.hEarthDefinition = state.worldKey === "hEarth" ? "terrain-coast-ridge-valley-v1" : "inactive";
+  document.documentElement.dataset.hEarthGeography = state.worldKey === "hEarth" ? "dimension-v1" : "inactive";
 }
 
 function drawLatLongDefinition(ctx, view) {
@@ -980,7 +1168,7 @@ function boot() {
     inspectable: true,
     generatedImage: false,
     graphicBox: false,
-    hEarthDefinition: "terrain-coast-ridge-valley-v1",
+    hEarthGeography: H_EARTH_GEOGRAPHY,
     setWorld,
     reset: resetInspection,
     status() {
@@ -993,7 +1181,8 @@ function boot() {
         privateEnginesAsleep: true,
         fixedStructure: true,
         inspectable: true,
-        hEarthDefinition: state.worldKey === "hEarth" ? "terrain-coast-ridge-valley-v1" : "inactive",
+        hEarthGeography: state.worldKey === "hEarth" ? "dimension-v1" : "inactive",
+        hEarthCounts: H_EARTH_GEOGRAPHY,
         yaw: state.yaw,
         pitch: state.pitch
       };
@@ -1012,5 +1201,5 @@ export default {
   cellCount: CELL_COUNT,
   privateEnginesAsleep: true,
   inspectable: true,
-  hEarthDefinition: "terrain-coast-ridge-valley-v1"
+  hEarthGeography: H_EARTH_GEOGRAPHY
 };

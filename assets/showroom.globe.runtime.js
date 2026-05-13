@@ -1,10 +1,12 @@
 // /assets/showroom.globe.runtime.js
-// TNT NEW FILE
-// SHOWROOM_GLOBE_RUNTIME_GLIDE_CONTROL_TNT_v1
-// Owns: drag, glide, inertia, damping, auto-spin, frame pacing, motion/settled state.
+// TNT FULL-FILE REPLACEMENT
+// SHOWROOM_GLOBE_FIBONACCI_RUNTIME_GLIDE_TNT_v1
+// Owns: Fibonacci-paced drag, glide, inertia, damping, auto-spin, frame pacing.
 // Does not own: planet material, geography, water, mountains, private engines.
 
-export const GLOBE_RUNTIME_VERSION = "showroom-globe-runtime-glide-control-v1";
+export const GLOBE_RUNTIME_VERSION = "showroom-globe-fibonacci-runtime-glide-v1";
+
+const FIB = Object.freeze([13, 21, 34, 55, 89, 144, 233]);
 
 const DEFAULTS = Object.freeze({
   yaw: -0.74,
@@ -26,45 +28,43 @@ function nowMs() {
   return performance.now();
 }
 
-function getFrameInterval({ mobile, detail, dragging, settling }) {
-  if (detail === "high") {
-    if (dragging || settling) return mobile ? 42 : 33;
-    return mobile ? 72 : 58;
-  }
-
-  if (dragging || settling) return mobile ? 58 : 48;
-  return mobile ? 110 : 86;
+function getFrameInterval({ mobile, detail, dragging, settling, booting }) {
+  if (booting) return FIB[1];
+  if (dragging) return mobile ? FIB[1] : FIB[0];
+  if (settling) return mobile ? FIB[2] : FIB[1];
+  if (detail === "high") return mobile ? FIB[4] : FIB[2];
+  return mobile ? FIB[5] : FIB[3];
 }
 
 function getGlideProfile(glide) {
   if (glide === "firm") {
     return {
-      follow: 0.30,
-      velocityRetainYaw: 0.88,
-      velocityRetainPitch: 0.84,
-      yawMultiplier: 0.0094,
-      pitchMultiplier: 0.0072,
-      velocityScaleYaw: 19,
-      velocityScalePitch: 15
+      follow: 0.56,
+      directFinger: 0.92,
+      velocityRetainYaw: 0.82,
+      velocityRetainPitch: 0.78,
+      yawMultiplier: 0.0128,
+      pitchMultiplier: 0.0094,
+      velocityScaleYaw: 23,
+      velocityScalePitch: 18
     };
   }
 
   return {
-    follow: 0.20,
-    velocityRetainYaw: 0.935,
-    velocityRetainPitch: 0.91,
-    yawMultiplier: 0.0077,
-    pitchMultiplier: 0.0059,
-    velocityScaleYaw: 16,
-    velocityScalePitch: 12
+    follow: 0.42,
+    directFinger: 0.76,
+    velocityRetainYaw: 0.88,
+    velocityRetainPitch: 0.84,
+    yawMultiplier: 0.0104,
+    pitchMultiplier: 0.0078,
+    velocityScaleYaw: 20,
+    velocityScalePitch: 15
   };
 }
 
 export function createGlobeRuntime(options = {}) {
-  const config = {
-    ...DEFAULTS,
-    ...options
-  };
+  const config = { ...DEFAULTS, ...options };
+  const bootUntil = nowMs() + FIB[6];
 
   const state = {
     yaw: config.yaw,
@@ -118,11 +118,18 @@ export function createGlobeRuntime(options = {}) {
     state.forceRender = true;
   }
 
+  function isBooting(time = nowMs()) {
+    return time < bootUntil;
+  }
+
   function isSettling(time = nowMs()) {
-    return time - state.lastMotionAt < 900 || Math.abs(state.velocityYaw) > 0.00008 || Math.abs(state.velocityPitch) > 0.00008;
+    return time - state.lastMotionAt < FIB[5] * 7 ||
+      Math.abs(state.velocityYaw) > 0.00006 ||
+      Math.abs(state.velocityPitch) > 0.00006;
   }
 
   function getQuality(time = nowMs()) {
+    if (isBooting(time)) return "motion";
     if (state.dragging) return "motion";
     if (isSettling(time)) return "settling";
     return "settled";
@@ -133,21 +140,17 @@ export function createGlobeRuntime(options = {}) {
 
     if (!state.dragging) {
       if (state.autoSpin && !config.reducedMotion) {
-        state.targetYaw += state.detail === "high" ? 0.00062 : 0.00048;
+        state.targetYaw += state.detail === "high" ? 0.00055 : 0.00034;
       }
 
       state.targetYaw += state.velocityYaw;
-      state.targetPitch = clamp(
-        state.targetPitch + state.velocityPitch,
-        config.minPitch,
-        config.maxPitch
-      );
+      state.targetPitch = clamp(state.targetPitch + state.velocityPitch, config.minPitch, config.maxPitch);
 
       state.velocityYaw *= profile.velocityRetainYaw;
       state.velocityPitch *= profile.velocityRetainPitch;
 
-      if (Math.abs(state.velocityYaw) < 0.000055) state.velocityYaw = 0;
-      if (Math.abs(state.velocityPitch) < 0.000055) state.velocityPitch = 0;
+      if (Math.abs(state.velocityYaw) < 0.00004) state.velocityYaw = 0;
+      if (Math.abs(state.velocityPitch) < 0.00004) state.velocityPitch = 0;
     }
 
     const priorYaw = state.yaw;
@@ -157,15 +160,21 @@ export function createGlobeRuntime(options = {}) {
     state.pitch += (state.targetPitch - state.pitch) * profile.follow;
     state.pitch = clamp(state.pitch, config.minPitch, config.maxPitch);
 
-    const moved = Math.abs(state.yaw - priorYaw) > 0.00002 || Math.abs(state.pitch - priorPitch) > 0.00002;
+    const moved =
+      Math.abs(state.yaw - priorYaw) > 0.000012 ||
+      Math.abs(state.pitch - priorPitch) > 0.000012;
+
     if (moved) state.lastMotionAt = time;
 
     return {
       yaw: state.yaw,
       pitch: state.pitch,
       quality: getQuality(time),
+      detail: state.detail,
+      glide: state.glide,
       dragging: state.dragging,
       settling: isSettling(time),
+      booting: isBooting(time),
       moved
     };
   }
@@ -181,7 +190,8 @@ export function createGlobeRuntime(options = {}) {
       mobile: config.mobile,
       detail: state.detail,
       dragging: state.dragging,
-      settling: isSettling(time)
+      settling: isSettling(time),
+      booting: isBooting(time)
     });
 
     if (time - state.lastRenderAt >= interval) {
@@ -193,6 +203,8 @@ export function createGlobeRuntime(options = {}) {
   }
 
   function getState() {
+    const time = nowMs();
+
     return {
       yaw: state.yaw,
       pitch: state.pitch,
@@ -202,8 +214,10 @@ export function createGlobeRuntime(options = {}) {
       detail: state.detail,
       glide: state.glide,
       dragging: state.dragging,
-      settling: isSettling(),
-      quality: getQuality()
+      settling: isSettling(time),
+      booting: isBooting(time),
+      quality: getQuality(time),
+      fibonacciPacing: true
     };
   }
 
@@ -217,8 +231,6 @@ export function createGlobeRuntime(options = {}) {
     });
 
     canvas.addEventListener("pointerdown", (event) => {
-      const profile = getGlideProfile(state.glide);
-
       state.dragging = true;
       state.pointerId = event.pointerId;
       state.startX = event.clientX;
@@ -232,7 +244,6 @@ export function createGlobeRuntime(options = {}) {
       state.interacted = true;
       state.forceRender = true;
 
-      void profile;
       markMotion();
       canvas.setPointerCapture?.(event.pointerId);
       event.preventDefault();
@@ -243,7 +254,7 @@ export function createGlobeRuntime(options = {}) {
 
       const profile = getGlideProfile(state.glide);
       const time = nowMs();
-      const dt = Math.max(12, time - state.lastPointerTime);
+      const dt = Math.max(FIB[0], time - state.lastPointerTime);
       const dx = event.clientX - state.lastX;
       const dy = event.clientY - state.lastY;
 
@@ -251,14 +262,13 @@ export function createGlobeRuntime(options = {}) {
       const pitchDelta = dy * profile.pitchMultiplier;
 
       state.targetYaw += yawDelta;
-      state.targetPitch = clamp(
-        state.targetPitch + pitchDelta,
-        config.minPitch,
-        config.maxPitch
-      );
+      state.targetPitch = clamp(state.targetPitch + pitchDelta, config.minPitch, config.maxPitch);
 
-      state.velocityYaw = clamp((yawDelta / dt) * profile.velocityScaleYaw, -0.046, 0.046);
-      state.velocityPitch = clamp((pitchDelta / dt) * profile.velocityScalePitch, -0.032, 0.032);
+      state.yaw += yawDelta * profile.directFinger;
+      state.pitch = clamp(state.pitch + pitchDelta * profile.directFinger, config.minPitch, config.maxPitch);
+
+      state.velocityYaw = clamp((yawDelta / dt) * profile.velocityScaleYaw, -0.052, 0.052);
+      state.velocityPitch = clamp((pitchDelta / dt) * profile.velocityScalePitch, -0.036, 0.036);
 
       state.lastX = event.clientX;
       state.lastY = event.clientY;
@@ -305,21 +315,25 @@ export function createGlobeRuntime(options = {}) {
 
       if (event.key === "ArrowLeft") {
         state.targetYaw -= step;
+        state.yaw -= step * 0.7;
         state.interacted = true;
         markMotion();
         event.preventDefault();
       } else if (event.key === "ArrowRight") {
         state.targetYaw += step;
+        state.yaw += step * 0.7;
         state.interacted = true;
         markMotion();
         event.preventDefault();
       } else if (event.key === "ArrowUp") {
         state.targetPitch = clamp(state.targetPitch + step, config.minPitch, config.maxPitch);
+        state.pitch = clamp(state.pitch + step * 0.7, config.minPitch, config.maxPitch);
         state.interacted = true;
         markMotion();
         event.preventDefault();
       } else if (event.key === "ArrowDown") {
         state.targetPitch = clamp(state.targetPitch - step, config.minPitch, config.maxPitch);
+        state.pitch = clamp(state.pitch - step * 0.7, config.minPitch, config.maxPitch);
         state.interacted = true;
         markMotion();
         event.preventDefault();
@@ -332,6 +346,7 @@ export function createGlobeRuntime(options = {}) {
 
   return {
     version: GLOBE_RUNTIME_VERSION,
+    fibonacci: FIB,
     bindCanvas,
     update,
     shouldRender,

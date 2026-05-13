@@ -1,12 +1,12 @@
 const GLOBE_SELECTOR_STATE = Object.freeze({
-  contract: "SHOWROOM_GLOBE_SELECTOR_SURFACE_DEFINITION_TNT_v3",
+  contract: "SHOWROOM_GLOBE_SELECTOR_RUNTIME_STABILIZATION_TNT_v4",
   route: "/showroom/globe/",
   role: "globe-system-gateway-selector",
   gatewayAuthority: true,
   visualScaleAuthority: true,
   diamondInstrument: false,
-  smoothSurfaceRender: true,
-  surfaceDefinition: true,
+  runtimeStabilized: true,
+  surfaceCacheEnabled: true,
   blockTileLandRender: false,
   childRoutes: Object.freeze({
     earth: "/showroom/globe/earth/",
@@ -114,6 +114,10 @@ const BODY_CONFIG = Object.freeze({
   })
 });
 
+const TAU = Math.PI * 2;
+const PHI = (1 + Math.sqrt(5)) / 2;
+const MAX_DPR = 1.5;
+
 const state = {
   body: "earth",
   mode: "auto",
@@ -128,11 +132,13 @@ const state = {
   lastTime: 0,
   phase: 0,
   raf: 0,
-  dpr: 1
+  dpr: 1,
+  width: 0,
+  height: 0,
+  needsRender: true,
+  surfaceCache: Object.create(null),
+  activeCache: null
 };
-
-const TAU = Math.PI * 2;
-const PHI = (1 + Math.sqrt(5)) / 2;
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -156,16 +162,217 @@ function seededUnit(index, salt) {
 
 function resizeCanvas(canvas) {
   const box = canvas.getBoundingClientRect();
-  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const dpr = Math.min(MAX_DPR, window.devicePixelRatio || 1);
   const width = Math.max(320, Math.floor(box.width * dpr));
   const height = Math.max(520, Math.floor(box.height * dpr));
 
   if (canvas.width !== width || canvas.height !== height) {
     canvas.width = width;
     canvas.height = height;
+    state.width = width;
+    state.height = height;
+    state.dpr = dpr;
+    state.needsRender = true;
+  }
+}
+
+function makeBlobSamples(blob, sampleCount) {
+  const points = [];
+  const edge = blob.edge || 0.18;
+  const twist = blob.twist || 0;
+
+  for (let i = 0; i < sampleCount; i += 1) {
+    const t = (i / sampleCount) * TAU;
+    const wobbleA = 1 + edge * Math.sin(t * 3 + blob.seed * 0.41);
+    const wobbleB = 1 + edge * 0.56 * Math.cos(t * 5 - blob.seed * 0.27);
+    const wobbleC = 1 + edge * 0.34 * Math.sin(t * 7 + blob.seed * 0.13);
+    const notch = 1 - edge * 0.42 * Math.max(0, Math.sin(t * 2.0 + blob.seed));
+    const r = wobbleA * wobbleB * wobbleC * notch;
+
+    const localX = Math.cos(t) * blob.rx * r;
+    const localY = Math.sin(t) * blob.ry * r;
+
+    const lat = clamp(
+      blob.lat + localX * Math.sin(twist) + localY * Math.cos(twist),
+      -1.42,
+      1.42
+    );
+
+    const lon = blob.lon + localX * Math.cos(twist) - localY * Math.sin(twist);
+
+    points.push(Object.freeze({ lat, lon }));
   }
 
-  state.dpr = dpr;
+  return Object.freeze(points);
+}
+
+function makeVeinSamples(config) {
+  const veins = [];
+
+  for (let i = 0; i < 18; i += 1) {
+    const lat = -0.9 + seededUnit(i, config.key.length) * 1.8;
+    const lon = -Math.PI + seededUnit(i, config.key.length + 4) * TAU;
+    const length = 0.16 + seededUnit(i, 9) * 0.30;
+    const bend = -0.10 + seededUnit(i, 10) * 0.20;
+    const points = [];
+
+    for (let j = 0; j < 10; j += 1) {
+      const t = j / 9;
+      points.push(Object.freeze({
+        lat: clamp(lat + (t - 0.5) * length + Math.sin(t * Math.PI) * bend, -1.42, 1.42),
+        lon: lon + (t - 0.5) * length * 0.75
+      }));
+    }
+
+    veins.push(Object.freeze(points));
+  }
+
+  return Object.freeze(veins);
+}
+
+function makeOceanSamples(config) {
+  const samples = [];
+
+  for (let i = 0; i < 24; i += 1) {
+    samples.push(Object.freeze({
+      lat: -1.0 + seededUnit(i, 21) * 2.0,
+      lon: -Math.PI + seededUnit(i, 22) * TAU,
+      sizeSeed: 0.025 + seededUnit(i, 23) * 0.065
+    }));
+  }
+
+  return Object.freeze(samples);
+}
+
+function makeCloudSamples(config) {
+  const samples = [];
+
+  for (let i = 0; i < 14; i += 1) {
+    samples.push(Object.freeze({
+      lat: -0.72 + seededUnit(i, config.key.length + 31) * 1.44,
+      lon: -Math.PI + seededUnit(i, config.key.length + 32) * TAU,
+      widthSeed: 0.10 + seededUnit(i, 33) * 0.18,
+      heightSeed: 0.018 + seededUnit(i, 34) * 0.040,
+      alphaSeed: 0.06 + seededUnit(i, 35) * 0.12,
+      phaseSeed: i * PHI
+    }));
+  }
+
+  return Object.freeze(samples);
+}
+
+function buildSurfaceCacheForBody(config) {
+  const continents = config.continents.map((blob) => Object.freeze({
+    source: blob,
+    shelf: makeBlobSamples(blob, 96),
+    land: makeBlobSamples(blob, 112),
+    terrain: makeBlobSamples(blob, 68),
+    coast: makeBlobSamples(blob, 72)
+  }));
+
+  const islands = config.islands.map((blob) => Object.freeze({
+    source: blob,
+    shelf: makeBlobSamples(blob, 72),
+    land: makeBlobSamples(blob, 72),
+    terrain: makeBlobSamples(blob, 48),
+    coast: makeBlobSamples(blob, 48)
+  }));
+
+  return Object.freeze({
+    key: config.key,
+    continents: Object.freeze(continents),
+    islands: Object.freeze(islands),
+    veins: makeVeinSamples(config),
+    ocean: makeOceanSamples(config),
+    clouds: makeCloudSamples(config)
+  });
+}
+
+function getSurfaceCache(bodyKey) {
+  if (!state.surfaceCache[bodyKey]) {
+    state.surfaceCache[bodyKey] = buildSurfaceCacheForBody(BODY_CONFIG[bodyKey]);
+  }
+
+  return state.surfaceCache[bodyKey];
+}
+
+function activateSurfaceCache(bodyKey) {
+  state.activeCache = getSurfaceCache(bodyKey);
+  state.needsRender = true;
+}
+
+function globePoint(lat, lon, radius) {
+  const cosLat = Math.cos(lat);
+  return {
+    x: Math.cos(lon) * cosLat * radius,
+    y: Math.sin(lat) * radius,
+    z: Math.sin(lon) * cosLat * radius,
+    lat,
+    lon
+  };
+}
+
+function rotatePoint(point) {
+  const cy = Math.cos(state.yaw);
+  const sy = Math.sin(state.yaw);
+  const cp = Math.cos(state.pitch);
+  const sp = Math.sin(state.pitch);
+
+  const x1 = point.x * cy + point.z * sy;
+  const z1 = -point.x * sy + point.z * cy;
+
+  const y2 = point.y * cp - z1 * sp;
+  const z2 = point.y * sp + z1 * cp;
+
+  return { x: x1, y: y2, z: z2, lat: point.lat, lon: point.lon };
+}
+
+function projectPoint(point, cx, cy) {
+  const rotated = rotatePoint(point);
+  const camera = 3.5;
+  const perspective = camera / (camera - rotated.z * 0.0028);
+
+  return {
+    x: cx + rotated.x * perspective,
+    y: cy + rotated.y * perspective,
+    z: rotated.z,
+    p: perspective,
+    lat: point.lat,
+    lon: point.lon
+  };
+}
+
+function projectSample(sample, radius, cx, cy, lonOffset = 0) {
+  return projectPoint(globePoint(sample.lat, sample.lon + lonOffset, radius), cx, cy);
+}
+
+function visibleRatio(points, radius) {
+  let visible = 0;
+
+  for (const point of points) {
+    if (point.z > -radius * 0.13) visible += 1;
+  }
+
+  return visible / Math.max(1, points.length);
+}
+
+function drawSmoothPath(ctx, points) {
+  if (!points.length) return;
+
+  ctx.beginPath();
+
+  const first = points[0];
+  ctx.moveTo(first.x, first.y);
+
+  for (let i = 0; i < points.length; i += 1) {
+    const current = points[i];
+    const next = points[(i + 1) % points.length];
+    const midX = (current.x + next.x) * 0.5;
+    const midY = (current.y + next.y) * 0.5;
+    ctx.quadraticCurveTo(current.x, current.y, midX, midY);
+  }
+
+  ctx.closePath();
 }
 
 function drawBackground(ctx, width, height, config) {
@@ -215,118 +422,15 @@ function drawStars(ctx, width, height) {
   ctx.restore();
 }
 
-function globePoint(lat, lon, radius) {
-  const cosLat = Math.cos(lat);
-  return {
-    x: Math.cos(lon) * cosLat * radius,
-    y: Math.sin(lat) * radius,
-    z: Math.sin(lon) * cosLat * radius,
-    lat,
-    lon
-  };
-}
-
-function rotatePoint(point) {
-  const cy = Math.cos(state.yaw);
-  const sy = Math.sin(state.yaw);
-  const cp = Math.cos(state.pitch);
-  const sp = Math.sin(state.pitch);
-
-  const x1 = point.x * cy + point.z * sy;
-  const z1 = -point.x * sy + point.z * cy;
-
-  const y2 = point.y * cp - z1 * sp;
-  const z2 = point.y * sp + z1 * cp;
-
-  return { x: x1, y: y2, z: z2, lat: point.lat, lon: point.lon };
-}
-
-function projectPoint(point, cx, cy) {
-  const rotated = rotatePoint(point);
-  const camera = 3.5;
-  const perspective = camera / (camera - rotated.z * 0.0028);
-
-  return {
-    x: cx + rotated.x * perspective,
-    y: cy + rotated.y * perspective,
-    z: rotated.z,
-    p: perspective,
-    lat: point.lat,
-    lon: point.lon
-  };
-}
-
-function makeBlobPoints(blob, radius, cx, cy, sampleCount = 112) {
-  const points = [];
-
-  for (let i = 0; i < sampleCount; i += 1) {
-    const t = (i / sampleCount) * TAU;
-    const edge = blob.edge || 0.18;
-    const wobbleA = 1 + edge * Math.sin(t * 3 + blob.seed * 0.41);
-    const wobbleB = 1 + edge * 0.56 * Math.cos(t * 5 - blob.seed * 0.27);
-    const wobbleC = 1 + edge * 0.34 * Math.sin(t * 7 + blob.seed * 0.13);
-    const notch = 1 - edge * 0.42 * Math.max(0, Math.sin(t * 2.0 + blob.seed));
-    const r = wobbleA * wobbleB * wobbleC * notch;
-
-    const localX = Math.cos(t) * blob.rx * r;
-    const localY = Math.sin(t) * blob.ry * r;
-    const twist = blob.twist || 0;
-
-    const lat = clamp(
-      blob.lat + localX * Math.sin(twist) + localY * Math.cos(twist),
-      -1.42,
-      1.42
-    );
-
-    const lon = blob.lon + localX * Math.cos(twist) - localY * Math.sin(twist);
-
-    const globe = globePoint(lat, lon, radius);
-    const projected = projectPoint(globe, cx, cy);
-
-    points.push(projected);
-  }
-
-  return points;
-}
-
-function visibleRatio(points, radius) {
-  let visible = 0;
-
-  for (const point of points) {
-    if (point.z > -radius * 0.13) visible += 1;
-  }
-
-  return visible / Math.max(1, points.length);
-}
-
-function drawSmoothPath(ctx, points) {
-  if (!points.length) return;
-
-  ctx.beginPath();
-
-  const first = points[0];
-  ctx.moveTo(first.x, first.y);
-
-  for (let i = 0; i < points.length; i += 1) {
-    const current = points[i];
-    const next = points[(i + 1) % points.length];
-    const midX = (current.x + next.x) * 0.5;
-    const midY = (current.y + next.y) * 0.5;
-    ctx.quadraticCurveTo(current.x, current.y, midX, midY);
-  }
-
-  ctx.closePath();
-}
-
-function drawLandBlob(ctx, blob, radius, cx, cy, config, layer) {
-  const sampleCount = layer === "terrain" ? 68 : 112;
-  const points = makeBlobPoints(blob, radius, cx, cy, sampleCount);
-  const ratio = visibleRatio(points, radius);
+function drawLandShape(ctx, shape, radius, cx, cy, config, layer) {
+  const samples = shape[layer];
+  const projected = samples.map((sample) => projectSample(sample, radius, cx, cy));
+  const ratio = visibleRatio(projected, radius);
 
   if (ratio < 0.20) return;
 
   const front = clamp(ratio, 0, 1);
-  const light = clamp(0.46 + front * 0.40 + Math.sin(blob.seed + state.phase * 0.12) * 0.03, 0.34, 0.94);
+  const light = clamp(0.46 + front * 0.40 + Math.sin(shape.source.seed + state.phase * 0.12) * 0.03, 0.34, 0.94);
   const landColor = mixColor(config.land2, config.land, light);
   const terrainColor = mixColor(config.land, config.terrain, 0.52);
 
@@ -334,13 +438,13 @@ function drawLandBlob(ctx, blob, radius, cx, cy, config, layer) {
 
   if (layer === "shelf") {
     ctx.globalCompositeOperation = "screen";
-    ctx.globalAlpha = 0.72 * front;
-    ctx.shadowColor = rgb(config.shelf, 0.34);
-    ctx.shadowBlur = radius * 0.026;
-    ctx.fillStyle = rgb(config.shelf, 0.16);
-    ctx.strokeStyle = rgb(mixColor(config.shelf, [255, 255, 255], 0.20), 0.34);
-    ctx.lineWidth = Math.max(1.1, radius * 0.009);
-    drawSmoothPath(ctx, points);
+    ctx.globalAlpha = 0.68 * front;
+    ctx.shadowColor = rgb(config.shelf, 0.30);
+    ctx.shadowBlur = radius * 0.020;
+    ctx.fillStyle = rgb(config.shelf, 0.14);
+    ctx.strokeStyle = rgb(mixColor(config.shelf, [255, 255, 255], 0.20), 0.30);
+    ctx.lineWidth = Math.max(1.0, radius * 0.007);
+    drawSmoothPath(ctx, projected);
     ctx.fill();
     ctx.stroke();
     ctx.restore();
@@ -349,16 +453,16 @@ function drawLandBlob(ctx, blob, radius, cx, cy, config, layer) {
 
   if (layer === "terrain") {
     ctx.globalCompositeOperation = "soft-light";
-    ctx.globalAlpha = 0.34 * front;
-    ctx.fillStyle = rgb(terrainColor, 0.42);
-    drawSmoothPath(ctx, points);
+    ctx.globalAlpha = 0.30 * front;
+    ctx.fillStyle = rgb(terrainColor, 0.38);
+    drawSmoothPath(ctx, projected);
     ctx.fill();
 
     ctx.globalCompositeOperation = "screen";
-    ctx.globalAlpha = 0.20 * front;
-    ctx.strokeStyle = rgb(config.terrain, 0.28);
-    ctx.lineWidth = Math.max(0.8, radius * 0.0038);
-    drawSmoothPath(ctx, points);
+    ctx.globalAlpha = 0.16 * front;
+    ctx.strokeStyle = rgb(config.terrain, 0.22);
+    ctx.lineWidth = Math.max(0.7, radius * 0.0032);
+    drawSmoothPath(ctx, projected);
     ctx.stroke();
 
     ctx.restore();
@@ -374,34 +478,34 @@ function drawLandBlob(ctx, blob, radius, cx, cy, config, layer) {
     radius * 1.15
   );
 
-  gradient.addColorStop(0, rgb(mixColor(landColor, [246, 238, 188], 0.24), 0.92 * front));
-  gradient.addColorStop(0.46, rgb(landColor, 0.84 * front));
-  gradient.addColorStop(0.82, rgb(mixColor(landColor, config.deep, 0.26), 0.78 * front));
-  gradient.addColorStop(1, rgb(mixColor(landColor, config.deep, 0.44), 0.70 * front));
+  gradient.addColorStop(0, rgb(mixColor(landColor, [246, 238, 188], 0.24), 0.90 * front));
+  gradient.addColorStop(0.46, rgb(landColor, 0.82 * front));
+  gradient.addColorStop(0.82, rgb(mixColor(landColor, config.deep, 0.26), 0.76 * front));
+  gradient.addColorStop(1, rgb(mixColor(landColor, config.deep, 0.44), 0.68 * front));
 
-  ctx.shadowColor = "rgba(0,0,0,0.16)";
-  ctx.shadowBlur = radius * 0.008;
+  ctx.shadowColor = "rgba(0,0,0,0.14)";
+  ctx.shadowBlur = radius * 0.006;
   ctx.fillStyle = gradient;
-  ctx.strokeStyle = rgb(config.coast, 0.44 * front);
-  ctx.lineWidth = Math.max(0.9, radius * 0.0048);
+  ctx.strokeStyle = rgb(config.coast, 0.40 * front);
+  ctx.lineWidth = Math.max(0.8, radius * 0.0042);
 
-  drawSmoothPath(ctx, points);
+  drawSmoothPath(ctx, projected);
   ctx.fill();
   ctx.stroke();
 
   ctx.restore();
 }
 
-function drawCoastBreaks(ctx, blob, radius, cx, cy, config) {
-  const points = makeBlobPoints(blob, radius, cx, cy, 72);
+function drawCoastBreaks(ctx, shape, radius, cx, cy, config) {
+  const points = shape.coast.map((sample) => projectSample(sample, radius, cx, cy));
   const ratio = visibleRatio(points, radius);
 
   if (ratio < 0.22) return;
 
   ctx.save();
   ctx.globalCompositeOperation = "screen";
-  ctx.strokeStyle = rgb(config.coast, 0.18 * ratio);
-  ctx.lineWidth = Math.max(0.7, radius * 0.0028);
+  ctx.strokeStyle = rgb(config.coast, 0.16 * ratio);
+  ctx.lineWidth = Math.max(0.7, radius * 0.0024);
 
   for (let i = 0; i < points.length; i += 9) {
     const a = points[i];
@@ -412,8 +516,8 @@ function drawCoastBreaks(ctx, blob, radius, cx, cy, config) {
     ctx.beginPath();
     ctx.moveTo(a.x, a.y);
     ctx.quadraticCurveTo(
-      (a.x + b.x) * 0.5 + Math.sin(i + blob.seed) * radius * 0.015,
-      (a.y + b.y) * 0.5 + Math.cos(i + blob.seed) * radius * 0.015,
+      (a.x + b.x) * 0.5 + Math.sin(i + shape.source.seed) * radius * 0.015,
+      (a.y + b.y) * 0.5 + Math.cos(i + shape.source.seed) * radius * 0.015,
       b.x,
       b.y
     );
@@ -423,34 +527,45 @@ function drawCoastBreaks(ctx, blob, radius, cx, cy, config) {
   ctx.restore();
 }
 
-function drawSurfaceVeins(ctx, radius, cx, cy, config) {
+function drawOceanTexture(ctx, radius, cx, cy, config, cache) {
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  for (const sample of cache.ocean) {
+    const p = projectSample(sample, radius, cx, cy);
+
+    if (p.z < -radius * 0.05) continue;
+
+    const size = radius * sample.sizeSeed;
+    const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size);
+    g.addColorStop(0, rgb(config.shelf, 0.085));
+    g.addColorStop(1, "rgba(255,255,255,0)");
+
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, size, 0, TAU);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function drawSurfaceVeins(ctx, radius, cx, cy, config, cache) {
   ctx.save();
   ctx.globalCompositeOperation = "soft-light";
 
-  for (let i = 0; i < 18; i += 1) {
-    const lat = -0.9 + seededUnit(i, config.key.length) * 1.8;
-    const lon = -Math.PI + seededUnit(i, config.key.length + 4) * TAU;
-    const length = 0.16 + seededUnit(i, 9) * 0.30;
-    const bend = -0.10 + seededUnit(i, 10) * 0.20;
-
+  for (const vein of cache.veins) {
     const points = [];
 
-    for (let j = 0; j < 10; j += 1) {
-      const t = j / 9;
-      const p = globePoint(
-        clamp(lat + (t - 0.5) * length + Math.sin(t * Math.PI) * bend, -1.42, 1.42),
-        lon + (t - 0.5) * length * 0.75,
-        radius
-      );
-
-      const projected = projectPoint(p, cx, cy);
+    for (const sample of vein) {
+      const projected = projectSample(sample, radius, cx, cy);
       if (projected.z > -radius * 0.08) points.push(projected);
     }
 
     if (points.length < 4) continue;
 
-    ctx.strokeStyle = rgb(config.terrain, 0.14);
-    ctx.lineWidth = Math.max(0.75, radius * 0.0028);
+    ctx.strokeStyle = rgb(config.terrain, 0.12);
+    ctx.lineWidth = Math.max(0.65, radius * 0.0024);
     ctx.beginPath();
 
     points.forEach((point, index) => {
@@ -464,46 +579,21 @@ function drawSurfaceVeins(ctx, radius, cx, cy, config) {
   ctx.restore();
 }
 
-function drawOceanTexture(ctx, radius, cx, cy, config) {
+function drawCloudLayer(ctx, radius, cx, cy, config, cache) {
   ctx.save();
   ctx.globalCompositeOperation = "screen";
+  ctx.globalAlpha = 0.32;
 
-  for (let i = 0; i < 24; i += 1) {
-    const lat = -1.0 + seededUnit(i, 21) * 2.0;
-    const lon = -Math.PI + seededUnit(i, 22) * TAU;
-    const p = projectPoint(globePoint(lat, lon, radius), cx, cy);
+  const cloudShift = state.mode === "stable" ? 0 : state.phase * 0.028;
 
-    if (p.z < -radius * 0.05) continue;
-
-    const size = radius * (0.025 + seededUnit(i, 23) * 0.065);
-    const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size);
-    g.addColorStop(0, rgb(config.shelf, 0.095));
-    g.addColorStop(1, "rgba(255,255,255,0)");
-
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, size, 0, TAU);
-    ctx.fill();
-  }
-
-  ctx.restore();
-}
-
-function drawCloudLayer(ctx, radius, cx, cy, config) {
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
-  ctx.globalAlpha = 0.38;
-
-  for (let i = 0; i < 14; i += 1) {
-    const lat = -0.72 + seededUnit(i, config.key.length + 31) * 1.44;
-    const lon = -Math.PI + seededUnit(i, config.key.length + 32) * TAU + state.phase * 0.035;
-    const p = projectPoint(globePoint(lat, lon, radius), cx, cy);
+  for (const cloud of cache.clouds) {
+    const p = projectSample(cloud, radius, cx, cy, cloudShift);
 
     if (p.z < -radius * 0.02) continue;
 
-    const cloudWidth = radius * (0.10 + seededUnit(i, 33) * 0.18);
-    const cloudHeight = radius * (0.018 + seededUnit(i, 34) * 0.040);
-    const alpha = 0.06 + seededUnit(i, 35) * 0.12;
+    const cloudWidth = radius * cloud.widthSeed;
+    const cloudHeight = radius * cloud.heightSeed;
+    const alpha = cloud.alphaSeed;
 
     const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, cloudWidth);
     gradient.addColorStop(0, rgb(config.cloud, alpha));
@@ -517,7 +607,7 @@ function drawCloudLayer(ctx, radius, cx, cy, config) {
       p.y,
       cloudWidth,
       cloudHeight,
-      Math.sin(i + state.phase * 0.12) * 0.5,
+      Math.sin(cloud.phaseSeed + state.phase * 0.10) * 0.5,
       0,
       TAU
     );
@@ -529,8 +619,8 @@ function drawCloudLayer(ctx, radius, cx, cy, config) {
 
 function drawGlobeGrid(ctx, cx, cy, radius) {
   ctx.save();
-  ctx.strokeStyle = "rgba(235,244,255,0.026)";
-  ctx.lineWidth = Math.max(0.45, radius * 0.0019);
+  ctx.strokeStyle = "rgba(235,244,255,0.022)";
+  ctx.lineWidth = Math.max(0.42, radius * 0.0018);
 
   for (let lat = -60; lat <= 60; lat += 30) {
     const r = Math.cos((lat * Math.PI) / 180) * radius;
@@ -550,7 +640,7 @@ function drawGlobeGrid(ctx, cx, cy, radius) {
   ctx.restore();
 }
 
-function drawGlobeSurface(ctx, width, height, config) {
+function drawGlobeSurface(ctx, width, height, config, cache) {
   const radius = Math.min(width * 0.385, height * 0.315);
   const cx = width * 0.5;
   const cy = height * 0.43;
@@ -585,35 +675,23 @@ function drawGlobeSurface(ctx, width, height, config) {
   ctx.fillStyle = ocean;
   ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-  drawOceanTexture(ctx, radius, cx, cy, config);
+  drawOceanTexture(ctx, radius, cx, cy, config, cache);
 
-  for (const blob of config.continents) {
-    drawLandBlob(ctx, blob, radius, cx, cy, config, "shelf");
+  for (const shape of cache.continents) drawLandShape(ctx, shape, radius, cx, cy, config, "shelf");
+  for (const shape of cache.islands) drawLandShape(ctx, shape, radius, cx, cy, config, "shelf");
+
+  for (const shape of cache.continents) drawLandShape(ctx, shape, radius, cx, cy, config, "land");
+  for (const shape of cache.islands) drawLandShape(ctx, shape, radius, cx, cy, config, "land");
+
+  for (const shape of cache.continents) {
+    drawLandShape(ctx, shape, radius, cx, cy, config, "terrain");
+    drawCoastBreaks(ctx, shape, radius, cx, cy, config);
   }
 
-  for (const island of config.islands) {
-    drawLandBlob(ctx, island, radius, cx, cy, config, "shelf");
-  }
+  for (const shape of cache.islands) drawCoastBreaks(ctx, shape, radius, cx, cy, config);
 
-  for (const blob of config.continents) {
-    drawLandBlob(ctx, blob, radius, cx, cy, config, "land");
-  }
-
-  for (const island of config.islands) {
-    drawLandBlob(ctx, island, radius, cx, cy, config, "land");
-  }
-
-  for (const blob of config.continents) {
-    drawLandBlob(ctx, blob, radius, cx, cy, config, "terrain");
-    drawCoastBreaks(ctx, blob, radius, cx, cy, config);
-  }
-
-  for (const island of config.islands) {
-    drawCoastBreaks(ctx, island, radius, cx, cy, config);
-  }
-
-  drawSurfaceVeins(ctx, radius, cx, cy, config);
-  drawCloudLayer(ctx, radius, cx, cy, config);
+  drawSurfaceVeins(ctx, radius, cx, cy, config, cache);
+  drawCloudLayer(ctx, radius, cx, cy, config, cache);
   drawGlobeGrid(ctx, cx, cy, radius);
 
   const shade = ctx.createRadialGradient(
@@ -698,24 +776,26 @@ function drawGlints(ctx, width, height, config) {
 
 function render(canvas, ctx) {
   const config = BODY_CONFIG[state.body] || BODY_CONFIG.earth;
+  const cache = state.activeCache || getSurfaceCache(state.body);
   const width = canvas.width;
   const height = canvas.height;
 
   ctx.clearRect(0, 0, width, height);
   drawBackground(ctx, width, height, config);
   drawStars(ctx, width, height);
-  drawGlobeSurface(ctx, width, height, config);
+  drawGlobeSurface(ctx, width, height, config, cache);
   drawGlints(ctx, width, height, config);
+
+  state.needsRender = false;
 }
 
-function step(time, canvas, ctx) {
-  const dt = state.lastTime ? clamp((time - state.lastTime) / 1000, 0, 0.05) : 0;
-  state.lastTime = time;
-
-  resizeCanvas(canvas);
-  state.phase += dt;
+function updateMotion(dt) {
+  let changed = false;
 
   if (!state.dragging) {
+    const priorYaw = state.yaw;
+    const priorPitch = state.pitch;
+
     state.yaw += state.velocityYaw;
     state.pitch = clamp(state.pitch + state.velocityPitch, -0.60, 0.60);
 
@@ -731,9 +811,29 @@ function step(time, canvas, ctx) {
     if (state.mode === "auto" && state.velocityYaw === 0 && state.velocityPitch === 0) {
       state.yaw += dt * 0.050;
     }
+
+    changed = changed || Math.abs(priorYaw - state.yaw) > 0.00001 || Math.abs(priorPitch - state.pitch) > 0.00001;
   }
 
-  render(canvas, ctx);
+  if (state.mode !== "stable") {
+    state.phase += dt;
+    changed = true;
+  }
+
+  if (changed) state.needsRender = true;
+}
+
+function step(time, canvas, ctx) {
+  const dt = state.lastTime ? clamp((time - state.lastTime) / 1000, 0, 0.05) : 0;
+  state.lastTime = time;
+
+  resizeCanvas(canvas);
+  updateMotion(dt);
+
+  if (state.needsRender) {
+    render(canvas, ctx);
+  }
+
   state.raf = requestAnimationFrame((next) => step(next, canvas, ctx));
 }
 
@@ -749,6 +849,7 @@ function bindPointer(stage) {
     state.pointerY = event.clientY;
     state.velocityYaw = 0;
     state.velocityPitch = 0;
+    state.needsRender = true;
 
     stage.setPointerCapture?.(event.pointerId);
   });
@@ -767,11 +868,13 @@ function bindPointer(stage) {
 
     state.velocityYaw = dx * 0.0018;
     state.velocityPitch = -dy * 0.0012;
+    state.needsRender = true;
   }, { passive: true });
 
   const release = (event) => {
     if (!state.dragging) return;
     state.dragging = false;
+    state.needsRender = true;
     stage.releasePointerCapture?.(event.pointerId);
   };
 
@@ -785,12 +888,14 @@ function resetView() {
   state.pitch = -0.10;
   state.velocityYaw = 0;
   state.velocityPitch = 0;
+  state.needsRender = true;
 }
 
 function setBody(bodyKey) {
   if (!BODY_CONFIG[bodyKey]) return;
 
   state.body = bodyKey;
+  activateSurfaceCache(bodyKey);
   resetView();
 
   const config = BODY_CONFIG[bodyKey];
@@ -817,6 +922,7 @@ function setBody(bodyKey) {
 
 function setMode(mode) {
   state.mode = mode;
+  state.needsRender = true;
 
   document.querySelectorAll("[data-mode]").forEach((button) => {
     button.setAttribute("aria-selected", button.dataset.mode === mode ? "true" : "false");
@@ -824,20 +930,20 @@ function setMode(mode) {
 }
 
 function markRoute() {
-  document.documentElement.dataset.globeGatewayStatus = "surface-definition-selector-active";
+  document.documentElement.dataset.globeGatewayStatus = "runtime-stabilized-selector-active";
   document.documentElement.dataset.globeGatewayAuthority = "true";
   document.documentElement.dataset.visualScaleAuthority = "true";
-  document.documentElement.dataset.smoothSurfaceRender = "true";
-  document.documentElement.dataset.surfaceDefinition = "true";
+  document.documentElement.dataset.runtimeStabilized = "true";
+  document.documentElement.dataset.surfaceCacheEnabled = "true";
   document.documentElement.dataset.blockTileLandRender = "false";
   document.documentElement.dataset.diamondInstrument = "false";
   document.documentElement.dataset.earthRecord = "false";
 
-  document.body.dataset.globeGatewayStatus = "surface-definition-selector-active";
+  document.body.dataset.globeGatewayStatus = "runtime-stabilized-selector-active";
   document.body.dataset.globeGatewayAuthority = "true";
   document.body.dataset.visualScaleAuthority = "true";
-  document.body.dataset.smoothSurfaceRender = "true";
-  document.body.dataset.surfaceDefinition = "true";
+  document.body.dataset.runtimeStabilized = "true";
+  document.body.dataset.surfaceCacheEnabled = "true";
   document.body.dataset.blockTileLandRender = "false";
   document.body.dataset.diamondInstrument = "false";
   document.body.dataset.earthRecord = "false";
@@ -868,9 +974,16 @@ function bindControls() {
   if (reset) reset.addEventListener("click", resetView);
 }
 
+function warmSurfaceCaches() {
+  Object.keys(BODY_CONFIG).forEach((key) => {
+    getSurfaceCache(key);
+  });
+}
+
 function initGlobeSelector() {
   markRoute();
   protectGatewayIdentity();
+  warmSurfaceCaches();
 
   const stage = document.querySelector("[data-globe-selector-stage]");
   const canvas = document.querySelector("[data-globe-selector-canvas]");
@@ -902,9 +1015,9 @@ function initGlobeSelector() {
         gatewayAuthority: true,
         earthStandingInGateway: false,
         diamondMountedHere: false,
-        smoothSurfaceRender: true,
-        surfaceDefinition: true,
-        blockTileLandRender: false
+        runtimeStabilized: true,
+        surfaceCacheEnabled: true,
+        cacheKeys: Object.freeze(Object.keys(state.surfaceCache))
       });
     }
   });

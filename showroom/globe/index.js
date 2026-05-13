@@ -1,14 +1,16 @@
 // /showroom/globe/index.js
 // TNT FULL-FILE REPLACEMENT
-// SHOWROOM_GLOBE_FIBONACCI_RUNTIME_CONTROLLER_TNT_v1
+// SHOWROOM_GLOBE_HYDRATED_FIBONACCI_RUNTIME_CONTROLLER_TNT_v1
 // Role: public Globe Showcase controller.
 // Runtime follows Fibonacci pacing.
 // Material renderer uses adaptive Fibonacci quality.
+// Hydration authority lives in /assets/showroom.globe.hydration.js.
 
 import {
   PLANET_MATERIAL_VERSION,
+  PLANET_HYDRATION_VERSION,
   createCinematicPlanetMaterialRenderer
-} from "/assets/showroom.globe.cinematic.material.js?v=fibonacci-runtime-v1";
+} from "/assets/showroom.globe.cinematic.material.js?v=hydration-v1";
 
 import {
   GLOBE_RUNTIME_VERSION,
@@ -20,7 +22,7 @@ import {
   createGlobeControls
 } from "/assets/showroom.globe.controls.js?v=runtime-glide-control-v1";
 
-const MODEL_NAME = "showroom-globe-fibonacci-runtime-controller-v1";
+const MODEL_NAME = "showroom-globe-hydrated-fibonacci-runtime-controller-v1";
 
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
 const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
@@ -298,7 +300,7 @@ function drawWorldTitle(ctx, width, height) {
 
   ctx.fillStyle = "rgba(186,197,212,0.74)";
   ctx.font = `850 ${Math.max(11 * DPR, width * 0.014)}px Inter, system-ui, sans-serif`;
-  ctx.fillText(`${world.subtitle} · Fibonacci runtime`, width * 0.5, height * 0.195);
+  ctx.fillText(`${world.subtitle} · hydrated Fibonacci runtime`, width * 0.5, height * 0.195);
 
   ctx.restore();
 }
@@ -312,7 +314,7 @@ function drawCue(ctx, width, height) {
   ctx.fillStyle = "rgba(186,197,212,0.60)";
   ctx.font = `800 ${Math.max(11 * DPR, width * 0.013)}px Inter, system-ui, sans-serif`;
   ctx.fillText(
-    `Drag to inspect · ${runtimeState.quality} · ${runtimeState.glide} glide · ${runtimeState.detail} detail`,
+    `Drag to inspect · ${runtimeState.quality} · water active · ${runtimeState.glide} glide`,
     width * 0.5,
     height * 0.90
   );
@@ -340,18 +342,20 @@ function drawPlanet(ctx, width, height, runtimeView) {
 
   document.documentElement.dataset.globeShowcaseModel = MODEL_NAME;
   document.documentElement.dataset.planetMaterialRenderer = PLANET_MATERIAL_VERSION;
+  document.documentElement.dataset.planetHydrationRenderer = PLANET_HYDRATION_VERSION;
   document.documentElement.dataset.globeRuntime = GLOBE_RUNTIME_VERSION;
   document.documentElement.dataset.globeControls = GLOBE_CONTROLS_VERSION;
   document.documentElement.dataset.selectedWorld = state.worldKey;
-  document.documentElement.dataset.publicPortraitBaseline = "fibonacci-runtime-cinematic-material";
+  document.documentElement.dataset.publicPortraitBaseline = "hydrated-fibonacci-runtime-cinematic-material";
   document.documentElement.dataset.runtimeQuality = runtimeView.quality;
   document.documentElement.dataset.runtimeDetail = runtimeView.detail;
   document.documentElement.dataset.runtimeGlide = runtimeView.glide;
   document.documentElement.dataset.fibonacciPacing = "true";
-  document.documentElement.dataset.privateEnginesAsleep = "true";
+  document.documentElement.dataset.hydrationExpression = "true";
+  document.documentElement.dataset.waterExpression = "true";
   document.documentElement.dataset.mapExpression = "false";
-  document.documentElement.dataset.waterExpression = "false";
   document.documentElement.dataset.landmassExpression = "false";
+  document.documentElement.dataset.privateEnginesAsleep = "true";
   document.documentElement.dataset.childTerrainImport = "false";
   document.documentElement.dataset.mountainSystem = "false";
   document.documentElement.dataset.planetShader = "true";
@@ -495,15 +499,17 @@ function boot() {
   window.DGBGlobeShowcase = {
     model: MODEL_NAME,
     planetMaterialRenderer: PLANET_MATERIAL_VERSION,
+    planetHydrationRenderer: PLANET_HYDRATION_VERSION,
     globeRuntime: GLOBE_RUNTIME_VERSION,
     globeControls: GLOBE_CONTROLS_VERSION,
-    publicPortraitBaseline: "fibonacci-runtime-cinematic-material",
+    publicPortraitBaseline: "hydrated-fibonacci-runtime-cinematic-material",
     fibonacciPacing: true,
+    hydrationExpression: true,
+    waterExpression: true,
     privateEnginesAsleep: true,
     generatedImage: false,
     graphicBox: false,
     mapExpression: false,
-    waterExpression: false,
     landmassExpression: false,
     childTerrainImport: false,
     mountainSystem: false,
@@ -527,17 +533,19 @@ function boot() {
       return {
         model: MODEL_NAME,
         planetMaterialRenderer: PLANET_MATERIAL_VERSION,
+        planetHydrationRenderer: PLANET_HYDRATION_VERSION,
         globeRuntime: GLOBE_RUNTIME_VERSION,
         globeControls: GLOBE_CONTROLS_VERSION,
         selectedWorld: state.worldKey,
         runtime: runtime.getState(),
-        publicPortraitBaseline: "fibonacci-runtime-cinematic-material",
+        publicPortraitBaseline: "hydrated-fibonacci-runtime-cinematic-material",
         fibonacciPacing: true,
+        hydrationExpression: true,
+        waterExpression: true,
         privateEnginesAsleep: true,
         generatedImage: false,
         graphicBox: false,
         mapExpression: false,
-        waterExpression: false,
         landmassExpression: false,
         childTerrainImport: false,
         mountainSystem: false,
@@ -566,15 +574,17 @@ if (document.readyState === "loading") {
 export default {
   model: MODEL_NAME,
   planetMaterialRenderer: PLANET_MATERIAL_VERSION,
+  planetHydrationRenderer: PLANET_HYDRATION_VERSION,
   globeRuntime: GLOBE_RUNTIME_VERSION,
   globeControls: GLOBE_CONTROLS_VERSION,
-  publicPortraitBaseline: "fibonacci-runtime-cinematic-material",
+  publicPortraitBaseline: "hydrated-fibonacci-runtime-cinematic-material",
   fibonacciPacing: true,
+  hydrationExpression: true,
+  waterExpression: true,
   privateEnginesAsleep: true,
   generatedImage: false,
   graphicBox: false,
   mapExpression: false,
-  waterExpression: false,
   landmassExpression: false,
   childTerrainImport: false,
   mountainSystem: false,

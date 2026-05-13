@@ -1,54 +1,50 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="earth-reference-body"
-  data-route="/showroom/globe/earth/"
-  data-contract="EARTH_ROUTE_IDENTITY_RENEWAL_TNT_v1"
-  data-role="reference-body"
-  data-body="earth"
-  data-world-type="real-world-reference"
+  data-page="showroom-locked-crown-cut-diamond"
+  data-route="/showroom/"
+  data-contract="SHOWROOM_LOCKED_CROWN_CUT_256_LATTICE_RESTORE_TNT_v1"
+  data-role="showroom-cover-object"
+  data-diamond-lock="CROWN_CUT_256_LATTICE_FIXED_FORM"
+  data-touch-glide-diamond="true"
+  data-earth-record="false"
   data-generated-image="false"
   data-graphic-box="false"
-  data-heavy-runtime-loaded="false"
   data-public-receipts-visible="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Earth · Diamond Gate Bridge</title>
+  <title>Showroom · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Earth is the real-world reference body for the Diamond Gate Bridge globe system, held apart from constructed worlds and private build rooms."
+    content="The Showroom holds the locked Crown Cut 256 Lattice Diamond: a fixed-form touch-glide cover object for Diamond Gate Bridge."
   >
 
   <style>
     :root {
-      --bg: #030814;
-      --panel: rgba(7, 16, 32, 0.84);
-      --panel-2: rgba(12, 26, 48, 0.72);
+      --bg: #030812;
+      --panel: rgba(7, 15, 31, 0.88);
+      --panel-2: rgba(11, 23, 44, 0.76);
       --line: rgba(244, 207, 131, 0.18);
-      --line-soft: rgba(255, 255, 255, 0.10);
-      --text: rgba(238, 244, 255, 0.94);
-      --muted: rgba(238, 244, 255, 0.64);
-      --faint: rgba(238, 244, 255, 0.46);
+      --line-soft: rgba(255,255,255,0.10);
+      --text: rgba(238,244,255,0.94);
+      --muted: rgba(238,244,255,0.64);
+      --faint: rgba(238,244,255,0.44);
       --gold: #f4cf83;
+      --gold-2: #ffe8a6;
       --mint: #a7f3c6;
-      --blue: #8bc8ff;
-      --earth-water: #1b5f89;
-      --earth-land: #8c9d6f;
       color-scheme: dark;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       min-height: 100%;
       background:
-        radial-gradient(circle at 50% -10%, rgba(75, 139, 191, 0.26), transparent 36%),
-        radial-gradient(circle at 18% 20%, rgba(244, 207, 131, 0.09), transparent 32%),
-        linear-gradient(180deg, #061124 0%, var(--bg) 54%, #02050b 100%);
+        radial-gradient(circle at 50% -10%, rgba(78,119,171,0.26), transparent 38%),
+        radial-gradient(circle at 12% 22%, rgba(244,207,131,0.10), transparent 32%),
+        linear-gradient(180deg, #061020 0%, var(--bg) 48%, #02050b 100%);
     }
 
     body {
@@ -59,9 +55,7 @@
       letter-spacing: -0.015em;
     }
 
-    a {
-      color: inherit;
-    }
+    a { color: inherit; }
 
     .skip {
       position: absolute;
@@ -77,9 +71,7 @@
       text-decoration: none;
     }
 
-    .skip:focus {
-      transform: translateY(0);
-    }
+    .skip:focus { transform: translateY(0); }
 
     .page {
       width: min(1120px, calc(100% - 28px));
@@ -106,14 +98,14 @@
       text-transform: uppercase;
     }
 
-    .mark {
+    .brand-mark {
       display: inline-grid;
       place-items: center;
       width: 34px;
       height: 34px;
-      border: 1px solid rgba(244, 207, 131, 0.44);
+      border: 1px solid rgba(244,207,131,0.44);
       border-radius: 10px;
-      background: rgba(244, 207, 131, 0.08);
+      background: rgba(244,207,131,0.08);
     }
 
     .nav {
@@ -132,9 +124,9 @@
       border: 1px solid var(--line-soft);
       border-radius: 999px;
       padding: 0 13px;
-      color: rgba(238, 244, 255, 0.82);
+      color: rgba(238,244,255,0.82);
       text-decoration: none;
-      background: rgba(255, 255, 255, 0.035);
+      background: rgba(255,255,255,0.035);
       font-size: 0.82rem;
       font-weight: 850;
       letter-spacing: 0.02em;
@@ -144,20 +136,25 @@
     .button.primary {
       color: #06101c;
       background: linear-gradient(135deg, var(--mint), #78d8ac);
-      border-color: rgba(167, 243, 198, 0.62);
+      border-color: rgba(167,243,198,0.62);
+    }
+
+    .button.gold {
+      color: #150d03;
+      background: linear-gradient(135deg, #fff0b8, var(--gold) 48%, #c48a38);
+      border-color: rgba(244,207,131,0.72);
     }
 
     .hero {
-      position: relative;
-      overflow: hidden;
       border: 1px solid var(--line);
       border-radius: 34px;
       padding: clamp(24px, 5vw, 46px);
       background:
-        radial-gradient(circle at 76% 28%, rgba(139, 200, 255, 0.14), transparent 32%),
-        radial-gradient(circle at 22% 18%, rgba(167, 243, 198, 0.09), transparent 30%),
-        linear-gradient(180deg, rgba(9, 18, 36, 0.94), rgba(5, 10, 21, 0.92));
-      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.36);
+        radial-gradient(circle at 76% 28%, rgba(139,200,255,0.13), transparent 32%),
+        radial-gradient(circle at 18% 20%, rgba(244,207,131,0.12), transparent 30%),
+        linear-gradient(180deg, rgba(8,17,34,0.94), rgba(4,9,20,0.94));
+      box-shadow: 0 30px 90px rgba(0,0,0,0.38);
+      overflow: hidden;
     }
 
     .eyebrow {
@@ -171,13 +168,13 @@
     h1 {
       max-width: 920px;
       margin: 0;
-      font-size: clamp(2.2rem, 8vw, 5.4rem);
+      font-size: clamp(2.25rem, 8vw, 5.6rem);
       line-height: 0.92;
       letter-spacing: -0.075em;
     }
 
     .lede {
-      max-width: 850px;
+      max-width: 880px;
       margin: 22px 0 0;
       color: var(--muted);
       font-size: clamp(1.02rem, 2.6vw, 1.34rem);
@@ -191,130 +188,107 @@
       margin-top: 26px;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 0.92fr 1.08fr;
-      gap: 16px;
+    .diamond-shell {
       margin-top: 16px;
+      border: 1px solid rgba(244,207,131,0.20);
+      border-radius: 34px;
+      padding: clamp(18px, 3.8vw, 32px);
+      background:
+        radial-gradient(circle at 50% 34%, rgba(96,145,190,0.13), transparent 42%),
+        linear-gradient(180deg, rgba(8,17,34,0.90), rgba(4,9,20,0.94));
+      box-shadow: 0 28px 90px rgba(0,0,0,0.32);
     }
 
-    .card {
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      padding: clamp(18px, 3vw, 26px);
-      background: var(--panel);
-      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.22);
-    }
-
-    .card h2 {
+    .diamond-title {
       margin: 0 0 14px;
       color: var(--gold);
-      font-size: clamp(1.15rem, 3vw, 1.65rem);
-      line-height: 1.08;
-      letter-spacing: -0.045em;
+      font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
     }
 
-    .card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .earth-frame {
+    .diamond-stage {
       position: relative;
-      width: min(100%, 520px);
-      aspect-ratio: 1 / 1;
-      margin: 0 auto;
-      display: grid;
-      place-items: center;
-      border-radius: 999px;
-      background:
-        radial-gradient(circle at 38% 30%, rgba(255, 255, 255, 0.18), transparent 18%),
-        radial-gradient(circle at 44% 42%, rgba(27, 95, 137, 0.96), rgba(9, 42, 72, 0.98) 58%, rgba(2, 10, 22, 1) 100%);
-      box-shadow:
-        inset -32px -34px 80px rgba(0, 0, 0, 0.42),
-        inset 20px 18px 50px rgba(255, 255, 255, 0.08),
-        0 0 70px rgba(75, 139, 191, 0.24);
+      min-height: clamp(520px, 82vw, 760px);
+      border: 1px solid rgba(244,207,131,0.18);
+      border-radius: 30px;
       overflow: hidden;
-    }
-
-    .earth-frame::before {
-      content: "";
-      position: absolute;
-      inset: 9%;
-      border-radius: 45% 55% 48% 52%;
       background:
-        radial-gradient(circle at 22% 34%, rgba(140, 157, 111, 0.92), transparent 22%),
-        radial-gradient(circle at 54% 24%, rgba(118, 145, 94, 0.88), transparent 20%),
-        radial-gradient(circle at 64% 58%, rgba(150, 134, 88, 0.78), transparent 17%),
-        radial-gradient(circle at 38% 68%, rgba(118, 145, 94, 0.75), transparent 16%);
-      filter: blur(0.2px);
-      opacity: 0.92;
-      transform: rotate(-13deg);
+        radial-gradient(circle at 50% 74%, rgba(244,207,131,0.10), transparent 24%),
+        radial-gradient(circle at 50% 36%, rgba(92,132,172,0.14), transparent 42%),
+        linear-gradient(180deg, rgba(4,11,24,0.92), rgba(2,7,16,0.96));
+      touch-action: none;
+      user-select: none;
     }
 
-    .earth-frame::after {
-      content: "";
+    .diamond-canvas {
       position: absolute;
       inset: 0;
-      border-radius: inherit;
-      background:
-        radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.22), transparent 22%),
-        linear-gradient(120deg, rgba(255, 255, 255, 0.12), transparent 36%, rgba(0, 0, 0, 0.30) 100%);
-      pointer-events: none;
-    }
-
-    .earth-label {
-      position: relative;
-      z-index: 2;
-      align-self: end;
-      margin-bottom: 34px;
-      border: 1px solid rgba(244, 207, 131, 0.24);
-      border-radius: 999px;
-      padding: 9px 14px;
-      background: rgba(3, 8, 18, 0.58);
-      color: rgba(238, 244, 255, 0.86);
-      font: 850 0.78rem/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      backdrop-filter: blur(12px);
-    }
-
-    .stack {
-      display: grid;
-      gap: 12px;
-    }
-
-    .item {
-      border: 1px solid var(--line-soft);
-      border-radius: 20px;
-      padding: 14px;
-      background: var(--panel-2);
-    }
-
-    .item b {
       display: block;
-      margin-bottom: 6px;
-      color: rgba(238, 244, 255, 0.94);
-      font-size: 0.96rem;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
     }
 
-    .item span {
-      display: block;
-      color: var(--muted);
-      line-height: 1.45;
-      font-size: 0.92rem;
-    }
-
-    .status {
-      margin-top: 16px;
-      border: 1px solid rgba(167, 243, 198, 0.22);
-      border-radius: 24px;
-      padding: 18px;
-      background: rgba(8, 42, 37, 0.42);
-      color: rgba(167, 243, 198, 0.94);
+    .diamond-instruction {
+      position: absolute;
+      left: clamp(16px, 4vw, 36px);
+      right: clamp(16px, 4vw, 36px);
+      bottom: clamp(16px, 4vw, 34px);
+      border-top: 1px solid rgba(255,255,255,0.12);
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      padding: 14px 10px;
+      color: rgba(238,244,255,0.80);
       font-weight: 850;
-      line-height: 1.45;
+      line-height: 1.35;
+      font-size: clamp(0.98rem, 3.8vw, 1.32rem);
+      background: rgba(3,8,18,0.34);
+      backdrop-filter: blur(6px);
+    }
+
+    .diamond-route {
+      position: absolute;
+      left: 50%;
+      bottom: clamp(92px, 18vw, 128px);
+      transform: translateX(-50%);
+      width: min(calc(100% - 44px), 560px);
+      text-align: center;
+      color: rgba(238,244,255,0.68);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      line-height: 1.25;
+    }
+
+    .object-card {
+      margin-top: 16px;
+      border-left: 1px solid rgba(244,207,131,0.22);
+      border-right: 1px solid rgba(244,207,131,0.12);
+      padding: 22px 18px;
+      background: rgba(7,15,31,0.62);
+    }
+
+    .object-card .label {
+      margin: 0 0 14px;
+      color: var(--mint);
+      font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+    }
+
+    .object-card h2 {
+      margin: 0;
+      color: rgba(238,244,255,0.94);
+      font-size: clamp(1.55rem, 5vw, 2.5rem);
+      line-height: 1.02;
+      letter-spacing: -0.06em;
+    }
+
+    .object-card p {
+      max-width: 760px;
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.8vw, 1.22rem);
+      line-height: 1.55;
     }
 
     .footer {
@@ -331,106 +305,87 @@
         flex-direction: column;
       }
 
-      .nav {
-        justify-content: flex-start;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
+      .nav { justify-content: flex-start; }
     }
 
     @media (max-width: 520px) {
-      .page {
-        width: min(100% - 18px, 1120px);
-      }
-
+      .page { width: min(100% - 18px, 1120px); }
       .hero,
-      .card {
-        border-radius: 22px;
-      }
+      .diamond-shell,
+      .diamond-stage { border-radius: 24px; }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#earth-main">Skip to Earth</a>
+  <a class="skip" href="#showroom-main">Skip to Showroom</a>
 
   <div class="page">
     <header class="topbar" aria-label="Diamond Gate Bridge navigation">
-      <a class="brand" href="/">
-        <span class="mark" aria-hidden="true">E</span>
+      <a class="brand" href="/showroom/" aria-current="page">
+        <span class="brand-mark" aria-hidden="true">◆</span>
         <span>Diamond Gate Bridge</span>
       </a>
 
       <nav class="nav" aria-label="Primary">
         <a href="/">Compass</a>
-        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/" aria-current="page">Showroom</a>
         <a href="/showroom/globe/">Globe</a>
-        <a href="/showroom/globe/earth/" aria-current="page">Earth</a>
-        <a href="/showroom/globe/h-earth/">H-Earth</a>
-        <a href="/showroom/globe/audralia/">Audralia</a>
+        <a href="/products/">Products</a>
         <a href="/gauges/">Triple G</a>
       </nav>
     </header>
 
-    <main id="earth-main">
+    <main id="showroom-main">
       <section class="hero">
-        <p class="eyebrow">Earth · Reference Body · Blue Marble</p>
-        <h1>Earth is the real-world reference body.</h1>
+        <p class="eyebrow">Showroom · locked cover object</p>
+        <h1>The Diamond holds the room.</h1>
         <p class="lede">
-          This route holds Earth as the NASA Blue Marble reference standard for the globe system. Earth is not a constructed world, not a private terrain build room, and not a substitute for any other body.
+          The Showroom is restored to the locked Crown Cut 256 Lattice Diamond. Earth belongs under the Globe route, not here.
         </p>
 
         <div class="actions">
-          <a class="button primary" href="/showroom/globe/">Return to Globe Showcase</a>
-          <a class="button" href="/showroom/globe/h-earth/">Open H-Earth</a>
-          <a class="button" href="/showroom/globe/audralia/">Open Audralia</a>
+          <a class="button primary" href="#diamond-stage">Touch the Diamond</a>
+          <a class="button gold" href="/showroom/globe/">Enter Globe Showcase</a>
+          <a class="button" href="/">Return to Compass</a>
+          <a class="button" href="/products/">Review Products</a>
           <a class="button" href="/gauges/">Run Triple G</a>
         </div>
       </section>
 
-      <section class="grid" aria-label="Earth reference route">
-        <article class="card">
-          <h2>Reference body</h2>
-          <div class="earth-frame" role="img" aria-label="Stylized Earth reference globe">
-            <span class="earth-label">Earth · real-world reference</span>
-          </div>
-        </article>
+      <section class="diamond-shell" aria-label="Locked Crown Cut 256 Lattice Diamond">
+        <p class="diamond-title">Crown cut · 256 lattice · fixed form</p>
 
-        <article class="card">
-          <h2>Route authority</h2>
-          <div class="stack">
-            <div class="item">
-              <b>Earth is the baseline reference.</b>
-              <span>The route exists to compare constructed bodies against a familiar real-world planet standard.</span>
-            </div>
-            <div class="item">
-              <b>Blue Marble language is intentional.</b>
-              <span>NASA Blue Marble remains the public reference phrase for Earth’s visual identity and real-world anchor.</span>
-            </div>
-            <div class="item">
-              <b>Constructed worlds stay separate.</b>
-              <span>H-Earth and Audralia may be inspected from the Globe Showcase, but they do not overwrite this Earth reference route.</span>
-            </div>
-            <div class="item">
-              <b>Public route stays light.</b>
-              <span>This page identifies Earth cleanly without exposing private engine contracts, build packets, or route-preparing text.</span>
-            </div>
+        <div
+          id="diamond-stage"
+          class="diamond-stage"
+          data-showroom-diamond-stage
+          data-diamond-lock="CROWN_CUT_256_LATTICE_FIXED_FORM"
+          data-touch-glide="true"
+          aria-label="Touchable Crown Cut 256 Lattice Diamond"
+        >
+          <canvas class="diamond-canvas" data-showroom-diamond-canvas></canvas>
+          <div class="diamond-route">Cover → Globe Showcase → Private Inspection</div>
+          <div class="diamond-instruction">
+            Drag to rotate. Release to inspect with momentum. Double tap to reset.
           </div>
+        </div>
 
-          <div class="status">
-            Earth route identity is renewed: title, heading, route markers, and visible copy all identify Earth as the real-world reference body.
-          </div>
+        <article class="object-card">
+          <p class="label">Object truth</p>
+          <h2>Render the real claim.</h2>
+          <p>
+            The page shows a crown-cut lattice diamond, not a flat icon standing in for one. Its structure remains fixed while touch controls rotate the view.
+          </p>
         </article>
       </section>
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Earth reference body.
+      Diamond Gate Bridge · Showroom · Crown Cut 256 Lattice Diamond.
     </footer>
   </div>
 
-  <script type="module" src="/showroom/globe/earth/index.js"></script>
+  <script type="module" src="/showroom/index.js"></script>
 </body>
 </html>

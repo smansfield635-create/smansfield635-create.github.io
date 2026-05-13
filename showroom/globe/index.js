@@ -1,5 +1,5 @@
 const GLOBE_SELECTOR_STATE = Object.freeze({
-  contract: "SHOWROOM_GLOBE_VISUAL_MATERIAL_UPGRADE_TNT_v6",
+  contract: "SHOWROOM_GLOBE_CINEMATIC_MATERIAL_RESTORATION_TNT_v7",
   previousContract: "SHOWROOM_GLOBE_MOBILE_STAGE_LAYOUT_GOVERNOR_TNT_v5",
   route: "/showroom/globe/",
   role: "globe-system-gateway-selector",
@@ -10,7 +10,9 @@ const GLOBE_SELECTOR_STATE = Object.freeze({
   surfaceCacheEnabled: true,
   mobileStageLayoutGovernor: true,
   protectedVerticalBands: true,
-  visualMaterialUpgrade: true,
+  cinematicMaterialRestored: true,
+  proceduralBlobPrimary: false,
+  opaqueGlobeBody: true,
   blockTileLandRender: false,
   childRoutes: Object.freeze({
     earth: "/showroom/globe/earth/",
@@ -27,120 +29,110 @@ const BODY_CONFIG = Object.freeze({
   earth: Object.freeze({
     key: "earth",
     title: "Earth",
-    subtitle: "Reference Body · public selector runtime",
+    subtitle: "Reference Body · cinematic selector material",
     openText: "Open Earth",
     href: "/showroom/globe/earth/",
-    water: [27, 92, 138],
-    shelf: [61, 144, 170],
-    deep: [5, 22, 52],
-    polar: [224, 237, 238],
-    land: [150, 148, 104],
-    land2: [82, 124, 88],
-    terrain: [190, 178, 126],
-    highland: [210, 199, 154],
-    coast: [184, 205, 154],
-    cloud: [232, 244, 255],
-    glow: [125, 190, 245],
-    label: "Reference Body",
-    material: Object.freeze({
-      oceanContrast: 0.52,
-      coastStrength: 0.46,
-      landOpacity: 0.78,
-      cloudOpacity: 0.20,
-      atmosphere: 0.30
-    }),
-    continents: Object.freeze([
-      { lat: 0.18, lon: -1.96, rx: 0.46, ry: 0.86, seed: 11, twist: -0.32, edge: 0.20 },
-      { lat: -0.54, lon: -1.36, rx: 0.30, ry: 0.50, seed: 12, twist: 0.18, edge: 0.24 },
-      { lat: 0.33, lon: 0.22, rx: 0.54, ry: 0.62, seed: 13, twist: 0.28, edge: 0.22 },
-      { lat: -0.28, lon: 0.74, rx: 0.37, ry: 0.39, seed: 14, twist: -0.14, edge: 0.22 },
-      { lat: -0.72, lon: 2.08, rx: 0.22, ry: 0.18, seed: 15, twist: 0.44, edge: 0.24 },
-      { lat: 0.75, lon: -0.44, rx: 0.66, ry: 0.18, seed: 16, twist: 0.08, edge: 0.18 }
+    materialKind: "reference-cinematic",
+    ocean: [18, 82, 132],
+    oceanDeep: [3, 18, 48],
+    shelf: [55, 142, 174],
+    land: [146, 148, 102],
+    landDark: [72, 110, 78],
+    landBright: [207, 197, 147],
+    highland: [222, 214, 180],
+    ice: [230, 240, 242],
+    cloud: [238, 248, 255],
+    glow: [112, 184, 244],
+    imageCandidates: Object.freeze([
+      "/assets/showroom/globe/earth-cinematic.webp",
+      "/assets/showroom/globe/earth.webp",
+      "/assets/showroom/globe/earth.jpg",
+      "/assets/earth/earth-cinematic.webp",
+      "/assets/earth/earth-blue-marble.webp",
+      "/assets/earth/earth-blue-marble.jpg",
+      "/assets/earth/earth_material.jpg",
+      "/assets/earth/earth.jpg",
+      "/assets/earth/earth.png"
     ]),
-    islands: Object.freeze([
-      { lat: -0.10, lon: 1.36, rx: 0.10, ry: 0.08, seed: 81, twist: 0.2, edge: 0.24 },
-      { lat: -0.34, lon: 1.62, rx: 0.08, ry: 0.06, seed: 82, twist: -0.4, edge: 0.26 },
-      { lat: 0.18, lon: 2.26, rx: 0.09, ry: 0.05, seed: 83, twist: 0.1, edge: 0.22 },
-      { lat: -0.86, lon: -0.14, rx: 0.18, ry: 0.05, seed: 84, twist: 0.0, edge: 0.16 }
+    landforms: Object.freeze([
+      { lat: 0.22, lon: -1.92, rx: 0.44, ry: 0.78, seed: 11, twist: -0.34, edge: 0.18 },
+      { lat: -0.52, lon: -1.34, rx: 0.28, ry: 0.48, seed: 12, twist: 0.18, edge: 0.22 },
+      { lat: 0.34, lon: 0.24, rx: 0.52, ry: 0.58, seed: 13, twist: 0.28, edge: 0.20 },
+      { lat: -0.28, lon: 0.78, rx: 0.34, ry: 0.34, seed: 14, twist: -0.14, edge: 0.20 },
+      { lat: -0.74, lon: 2.08, rx: 0.22, ry: 0.16, seed: 15, twist: 0.44, edge: 0.22 },
+      { lat: 0.76, lon: -0.44, rx: 0.64, ry: 0.16, seed: 16, twist: 0.08, edge: 0.14 }
     ])
   }),
 
   "h-earth": Object.freeze({
     key: "h-earth",
     title: "H-Earth",
-    subtitle: "Hybrid Earth · private inspection gateway",
+    subtitle: "Hybrid Earth · cinematic inspection gateway",
     openText: "Open H-Earth",
     href: "/showroom/globe/h-earth/",
-    water: [34, 104, 120],
+    materialKind: "hybrid-cinematic",
+    ocean: [25, 96, 112],
+    oceanDeep: [5, 28, 52],
     shelf: [70, 160, 150],
-    deep: [6, 30, 54],
-    polar: [221, 238, 226],
-    land: [185, 158, 88],
-    land2: [72, 126, 106],
-    terrain: [220, 196, 126],
-    highland: [234, 217, 162],
-    coast: [206, 224, 158],
+    land: [184, 158, 82],
+    landDark: [66, 118, 102],
+    landBright: [224, 204, 132],
+    highland: [238, 221, 168],
+    ice: [222, 240, 226],
     cloud: [226, 248, 238],
-    glow: [154, 236, 190],
-    label: "Hybrid Earth",
-    material: Object.freeze({
-      oceanContrast: 0.58,
-      coastStrength: 0.50,
-      landOpacity: 0.80,
-      cloudOpacity: 0.18,
-      atmosphere: 0.32
-    }),
-    continents: Object.freeze([
-      { lat: 0.10, lon: -1.65, rx: 0.58, ry: 0.84, seed: 31, twist: -0.24, edge: 0.24 },
-      { lat: -0.38, lon: -0.62, rx: 0.40, ry: 0.56, seed: 32, twist: 0.36, edge: 0.20 },
-      { lat: 0.30, lon: 0.76, rx: 0.52, ry: 0.60, seed: 33, twist: -0.16, edge: 0.22 },
-      { lat: -0.58, lon: 1.54, rx: 0.32, ry: 0.30, seed: 34, twist: 0.18, edge: 0.22 },
-      { lat: 0.70, lon: 2.14, rx: 0.48, ry: 0.20, seed: 35, twist: -0.06, edge: 0.18 }
+    glow: [150, 238, 190],
+    imageCandidates: Object.freeze([
+      "/assets/showroom/globe/h-earth-cinematic.webp",
+      "/assets/showroom/globe/h-earth.webp",
+      "/assets/showroom/globe/h-earth.jpg",
+      "/assets/h-earth/h-earth-cinematic.webp",
+      "/assets/h-earth/h-earth.material.webp",
+      "/assets/h-earth/h-earth.jpg",
+      "/assets/h-earth/h-earth.png",
+      "/assets/hearth/hearth-cinematic.webp",
+      "/assets/hearth/hearth.jpg",
+      "/assets/hearth/hearth.png"
     ]),
-    islands: Object.freeze([
-      { lat: 0.04, lon: 1.68, rx: 0.12, ry: 0.08, seed: 91, twist: 0.4, edge: 0.24 },
-      { lat: -0.20, lon: 1.90, rx: 0.09, ry: 0.06, seed: 92, twist: -0.2, edge: 0.26 },
-      { lat: 0.52, lon: -2.20, rx: 0.14, ry: 0.07, seed: 93, twist: 0.1, edge: 0.20 },
-      { lat: -0.78, lon: 0.42, rx: 0.16, ry: 0.05, seed: 94, twist: 0.0, edge: 0.18 }
+    landforms: Object.freeze([
+      { lat: 0.10, lon: -1.65, rx: 0.56, ry: 0.80, seed: 31, twist: -0.24, edge: 0.24 },
+      { lat: -0.38, lon: -0.62, rx: 0.38, ry: 0.52, seed: 32, twist: 0.36, edge: 0.20 },
+      { lat: 0.30, lon: 0.76, rx: 0.50, ry: 0.56, seed: 33, twist: -0.16, edge: 0.22 },
+      { lat: -0.58, lon: 1.54, rx: 0.30, ry: 0.28, seed: 34, twist: 0.18, edge: 0.22 },
+      { lat: 0.70, lon: 2.14, rx: 0.44, ry: 0.18, seed: 35, twist: -0.06, edge: 0.16 }
     ])
   }),
 
   audralia: Object.freeze({
     key: "audralia",
     title: "Audralia",
-    subtitle: "Constructed World · public selector runtime",
+    subtitle: "Constructed World · cinematic selector material",
     openText: "Open Audralia",
     href: "/showroom/globe/audralia/",
-    water: [54, 60, 96],
-    shelf: [95, 101, 138],
-    deep: [11, 14, 42],
-    polar: [220, 214, 238],
+    materialKind: "constructed-cinematic",
+    ocean: [50, 58, 96],
+    oceanDeep: [10, 13, 40],
+    shelf: [96, 102, 142],
     land: [154, 112, 94],
-    land2: [82, 66, 102],
-    terrain: [190, 140, 120],
-    highland: [218, 170, 148],
-    coast: [210, 180, 162],
+    landDark: [78, 62, 98],
+    landBright: [214, 168, 144],
+    highland: [232, 188, 164],
+    ice: [218, 212, 238],
     cloud: [232, 226, 255],
-    glow: [194, 160, 248],
-    label: "Constructed World",
-    material: Object.freeze({
-      oceanContrast: 0.62,
-      coastStrength: 0.54,
-      landOpacity: 0.82,
-      cloudOpacity: 0.16,
-      atmosphere: 0.34
-    }),
-    continents: Object.freeze([
-      { lat: -0.02, lon: -1.18, rx: 0.68, ry: 0.76, seed: 51, twist: 0.22, edge: 0.24 },
-      { lat: 0.42, lon: 0.56, rx: 0.42, ry: 0.39, seed: 52, twist: -0.34, edge: 0.28 },
-      { lat: -0.48, lon: 1.36, rx: 0.36, ry: 0.30, seed: 53, twist: 0.28, edge: 0.22 },
-      { lat: 0.78, lon: -2.28, rx: 0.42, ry: 0.18, seed: 54, twist: 0.10, edge: 0.18 }
+    glow: [196, 158, 250],
+    imageCandidates: Object.freeze([
+      "/assets/showroom/globe/audralia-cinematic.webp",
+      "/assets/showroom/globe/audralia.webp",
+      "/assets/showroom/globe/audralia.jpg",
+      "/assets/audralia/audralia-cinematic.webp",
+      "/assets/audralia/audralia.material.webp",
+      "/assets/audralia/audralia.jpg",
+      "/assets/audralia/audralia.png"
     ]),
-    islands: Object.freeze([
-      { lat: 0.02, lon: 1.84, rx: 0.12, ry: 0.08, seed: 101, twist: 0.2, edge: 0.24 },
-      { lat: -0.22, lon: 2.12, rx: 0.09, ry: 0.06, seed: 102, twist: -0.3, edge: 0.26 },
-      { lat: 0.48, lon: -2.86, rx: 0.13, ry: 0.06, seed: 103, twist: 0.1, edge: 0.22 },
-      { lat: -0.82, lon: -0.28, rx: 0.18, ry: 0.05, seed: 104, twist: 0.0, edge: 0.18 }
+    landforms: Object.freeze([
+      { lat: -0.02, lon: -1.18, rx: 0.66, ry: 0.72, seed: 51, twist: 0.22, edge: 0.24 },
+      { lat: 0.42, lon: 0.56, rx: 0.40, ry: 0.36, seed: 52, twist: -0.34, edge: 0.28 },
+      { lat: -0.48, lon: 1.36, rx: 0.34, ry: 0.28, seed: 53, twist: 0.28, edge: 0.22 },
+      { lat: 0.78, lon: -2.28, rx: 0.40, ry: 0.16, seed: 54, twist: 0.10, edge: 0.18 }
     ])
   })
 });
@@ -148,6 +140,8 @@ const BODY_CONFIG = Object.freeze({
 const TAU = Math.PI * 2;
 const PHI = (1 + Math.sqrt(5)) / 2;
 const MAX_DPR = 1.5;
+const MATERIAL_W = 1600;
+const MATERIAL_H = 800;
 
 const state = {
   body: "earth",
@@ -161,14 +155,13 @@ const state = {
   pointerY: 0,
   lastTap: 0,
   lastTime: 0,
-  phase: 0,
   raf: 0,
   dpr: 1,
   width: 0,
   height: 0,
   needsRender: true,
-  surfaceCache: Object.create(null),
-  activeCache: null
+  materialCache: Object.create(null),
+  activeMaterial: null
 };
 
 function clamp(value, min, max) {
@@ -210,7 +203,6 @@ function resizeCanvas(canvas) {
 function getLayoutMetrics(width, height) {
   const cssWidth = width / state.dpr;
   const isMobile = cssWidth <= 560;
-
   const topBand = isMobile ? 188 * state.dpr : 176 * state.dpr;
   const bottomBand = isMobile ? 214 * state.dpr : 198 * state.dpr;
   const available = Math.max(220 * state.dpr, height - topBand - bottomBand);
@@ -230,241 +222,365 @@ function getLayoutMetrics(width, height) {
   });
 }
 
-function makeBlobSamples(blob, sampleCount) {
-  const points = [];
-  const edge = blob.edge || 0.20;
-  const twist = blob.twist || 0;
-
-  for (let i = 0; i < sampleCount; i += 1) {
-    const t = (i / sampleCount) * TAU;
-    const wobbleA = 1 + edge * Math.sin(t * 3 + blob.seed * 0.41);
-    const wobbleB = 1 + edge * 0.56 * Math.cos(t * 5 - blob.seed * 0.27);
-    const wobbleC = 1 + edge * 0.34 * Math.sin(t * 7 + blob.seed * 0.13);
-    const notch = 1 - edge * 0.42 * Math.max(0, Math.sin(t * 2.0 + blob.seed));
-    const r = wobbleA * wobbleB * wobbleC * notch;
-
-    const localX = Math.cos(t) * blob.rx * r;
-    const localY = Math.sin(t) * blob.ry * r;
-
-    const lat = clamp(
-      blob.lat + localX * Math.sin(twist) + localY * Math.cos(twist),
-      -1.42,
-      1.42
-    );
-
-    const lon = blob.lon + localX * Math.cos(twist) - localY * Math.sin(twist);
-
-    points.push(Object.freeze({ lat, lon }));
-  }
-
-  return Object.freeze(points);
+function materialCanvas() {
+  const canvas = document.createElement("canvas");
+  canvas.width = MATERIAL_W;
+  canvas.height = MATERIAL_H;
+  return canvas;
 }
 
-function makeVeinSamples(config) {
-  const veins = [];
-
-  for (let i = 0; i < 20; i += 1) {
-    const lat = -0.95 + seededUnit(i, config.key.length) * 1.9;
-    const lon = -Math.PI + seededUnit(i, config.key.length + 4) * TAU;
-    const length = 0.14 + seededUnit(i, 9) * 0.26;
-    const bend = -0.08 + seededUnit(i, 10) * 0.16;
-    const points = [];
-
-    for (let j = 0; j < 9; j += 1) {
-      const t = j / 8;
-      points.push(Object.freeze({
-        lat: clamp(lat + (t - 0.5) * length + Math.sin(t * Math.PI) * bend, -1.42, 1.42),
-        lon: lon + (t - 0.5) * length * 0.75
-      }));
-    }
-
-    veins.push(Object.freeze(points));
-  }
-
-  return Object.freeze(veins);
+function lonToX(lon) {
+  return ((lon + Math.PI) / TAU) * MATERIAL_W;
 }
 
-function makeOceanSamples(config) {
-  const samples = [];
-
-  for (let i = 0; i < 30; i += 1) {
-    samples.push(Object.freeze({
-      lat: -1.05 + seededUnit(i, 21) * 2.10,
-      lon: -Math.PI + seededUnit(i, 22) * TAU,
-      sizeSeed: 0.020 + seededUnit(i, 23) * 0.052,
-      alphaSeed: 0.035 + seededUnit(i, 24) * 0.050
-    }));
-  }
-
-  return Object.freeze(samples);
+function latToY(lat) {
+  return (0.5 - lat / Math.PI) * MATERIAL_H;
 }
 
-function makeCloudSamples(config) {
-  const samples = [];
-
-  for (let i = 0; i < 12; i += 1) {
-    samples.push(Object.freeze({
-      lat: -0.72 + seededUnit(i, config.key.length + 31) * 1.44,
-      lon: -Math.PI + seededUnit(i, config.key.length + 32) * TAU,
-      widthSeed: 0.08 + seededUnit(i, 33) * 0.16,
-      heightSeed: 0.012 + seededUnit(i, 34) * 0.026,
-      alphaSeed: 0.035 + seededUnit(i, 35) * 0.070,
-      phaseSeed: i * PHI
-    }));
-  }
-
-  return Object.freeze(samples);
-}
-
-function makePolarSamples(config) {
-  return Object.freeze([
-    Object.freeze({ lat: 1.24, lon: 0, rx: 0.70, ry: 0.12, seed: 301, twist: 0.0, edge: 0.10 }),
-    Object.freeze({ lat: -1.24, lon: 0, rx: 0.58, ry: 0.10, seed: 302, twist: 0.0, edge: 0.10 })
-  ]);
-}
-
-function buildSurfaceCacheForBody(config) {
-  const continents = config.continents.map((blob) => Object.freeze({
-    source: blob,
-    shelf: makeBlobSamples(blob, 104),
-    land: makeBlobSamples(blob, 122),
-    terrain: makeBlobSamples(blob, 72),
-    coast: makeBlobSamples(blob, 84)
-  }));
-
-  const islands = config.islands.map((blob) => Object.freeze({
-    source: blob,
-    shelf: makeBlobSamples(blob, 76),
-    land: makeBlobSamples(blob, 76),
-    terrain: makeBlobSamples(blob, 48),
-    coast: makeBlobSamples(blob, 52)
-  }));
-
-  const polar = makePolarSamples(config).map((blob) => Object.freeze({
-    source: blob,
-    shelf: makeBlobSamples(blob, 72),
-    land: makeBlobSamples(blob, 72),
-    terrain: makeBlobSamples(blob, 48),
-    coast: makeBlobSamples(blob, 48)
-  }));
-
-  return Object.freeze({
-    key: config.key,
-    continents: Object.freeze(continents),
-    islands: Object.freeze(islands),
-    polar,
-    veins: makeVeinSamples(config),
-    ocean: makeOceanSamples(config),
-    clouds: makeCloudSamples(config)
-  });
-}
-
-function getSurfaceCache(bodyKey) {
-  if (!state.surfaceCache[bodyKey]) {
-    state.surfaceCache[bodyKey] = buildSurfaceCacheForBody(BODY_CONFIG[bodyKey]);
-  }
-
-  return state.surfaceCache[bodyKey];
-}
-
-function activateSurfaceCache(bodyKey) {
-  state.activeCache = getSurfaceCache(bodyKey);
-  state.needsRender = true;
-}
-
-function globePoint(lat, lon, radius) {
-  const cosLat = Math.cos(lat);
-  return {
-    x: Math.cos(lon) * cosLat * radius,
-    y: Math.sin(lat) * radius,
-    z: Math.sin(lon) * cosLat * radius,
-    lat,
-    lon
-  };
-}
-
-function rotatePoint(point) {
-  const cy = Math.cos(state.yaw);
-  const sy = Math.sin(state.yaw);
-  const cp = Math.cos(state.pitch);
-  const sp = Math.sin(state.pitch);
-
-  const x1 = point.x * cy + point.z * sy;
-  const z1 = -point.x * sy + point.z * cy;
-
-  const y2 = point.y * cp - z1 * sp;
-  const z2 = point.y * sp + z1 * cp;
-
-  return { x: x1, y: y2, z: z2, lat: point.lat, lon: point.lon };
-}
-
-function projectPoint(point, cx, cy) {
-  const rotated = rotatePoint(point);
-  const camera = 3.5;
-  const perspective = camera / (camera - rotated.z * 0.0028);
-
-  return {
-    x: cx + rotated.x * perspective,
-    y: cy + rotated.y * perspective,
-    z: rotated.z,
-    p: perspective,
-    lat: point.lat,
-    lon: point.lon
-  };
-}
-
-function projectSample(sample, radius, cx, cy, lonOffset = 0) {
-  return projectPoint(globePoint(sample.lat, sample.lon + lonOffset, radius), cx, cy);
-}
-
-function visibleRatio(points, radius) {
-  let visible = 0;
-
-  for (const point of points) {
-    if (point.z > -radius * 0.13) visible += 1;
-  }
-
-  return visible / Math.max(1, points.length);
-}
-
-function drawSmoothPath(ctx, points) {
-  if (!points.length) return;
-
+function makeBlobPath(ctx, cx, cy, rx, ry, seed, edge, twist = 0, samples = 96) {
   ctx.beginPath();
 
-  const first = points[0];
-  ctx.moveTo(first.x, first.y);
+  for (let i = 0; i <= samples; i += 1) {
+    const t = (i / samples) * TAU;
+    const wobbleA = 1 + edge * Math.sin(t * 3 + seed * 0.41);
+    const wobbleB = 1 + edge * 0.55 * Math.cos(t * 5 - seed * 0.27);
+    const wobbleC = 1 + edge * 0.34 * Math.sin(t * 7 + seed * 0.13);
+    const notch = 1 - edge * 0.40 * Math.max(0, Math.sin(t * 2.0 + seed));
+    const r = wobbleA * wobbleB * wobbleC * notch;
 
-  for (let i = 0; i < points.length; i += 1) {
-    const current = points[i];
-    const next = points[(i + 1) % points.length];
-    const midX = (current.x + next.x) * 0.5;
-    const midY = (current.y + next.y) * 0.5;
-    ctx.quadraticCurveTo(current.x, current.y, midX, midY);
+    const localX = Math.cos(t) * rx * r;
+    const localY = Math.sin(t) * ry * r;
+
+    const x = cx + localX * Math.cos(twist) - localY * Math.sin(twist);
+    const y = cy + localX * Math.sin(twist) + localY * Math.cos(twist);
+
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
   }
 
   ctx.closePath();
 }
 
+function drawWrappedBlob(ctx, form, config, layer) {
+  const centerX = lonToX(form.lon);
+  const centerY = latToY(form.lat);
+  const rx = form.rx * (MATERIAL_W / TAU);
+  const ry = form.ry * (MATERIAL_H / Math.PI);
+  const copies = [0];
+
+  if (centerX - rx < 0) copies.push(MATERIAL_W);
+  if (centerX + rx > MATERIAL_W) copies.push(-MATERIAL_W);
+
+  for (const offset of copies) {
+    const x = centerX + offset;
+
+    if (layer === "shelf") {
+      ctx.save();
+      makeBlobPath(ctx, x, centerY, rx * 1.08, ry * 1.08, form.seed, form.edge * 0.78, form.twist);
+      ctx.fillStyle = rgb(config.shelf, 0.52);
+      ctx.shadowColor = rgb(config.shelf, 0.34);
+      ctx.shadowBlur = 18;
+      ctx.fill();
+      ctx.restore();
+      continue;
+    }
+
+    if (layer === "land") {
+      ctx.save();
+      makeBlobPath(ctx, x, centerY, rx, ry, form.seed, form.edge, form.twist);
+
+      const gradient = ctx.createRadialGradient(
+        x - rx * 0.22,
+        centerY - ry * 0.34,
+        Math.max(10, rx * 0.08),
+        x,
+        centerY,
+        Math.max(rx, ry) * 1.20
+      );
+
+      gradient.addColorStop(0, rgb(config.landBright, 1));
+      gradient.addColorStop(0.40, rgb(config.land, 1));
+      gradient.addColorStop(0.78, rgb(mixColor(config.land, config.landDark, 0.45), 1));
+      gradient.addColorStop(1, rgb(config.landDark, 1));
+
+      ctx.fillStyle = gradient;
+      ctx.strokeStyle = rgb(config.coast || config.shelf, 0.70);
+      ctx.lineWidth = 3.4;
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+      continue;
+    }
+
+    if (layer === "terrain") {
+      ctx.save();
+      makeBlobPath(ctx, x, centerY, rx * 0.64, ry * 0.58, form.seed + 19, form.edge * 0.55, form.twist + 0.4);
+      ctx.globalCompositeOperation = "soft-light";
+      ctx.fillStyle = rgb(config.highland, 0.46);
+      ctx.fill();
+
+      ctx.globalCompositeOperation = "screen";
+      ctx.strokeStyle = rgb(config.highland, 0.18);
+      ctx.lineWidth = 1.6;
+
+      for (let i = 0; i < 6; i += 1) {
+        const y = centerY + (i - 2.5) * ry * 0.15;
+        ctx.beginPath();
+        ctx.moveTo(x - rx * 0.34, y);
+        ctx.bezierCurveTo(
+          x - rx * 0.10,
+          y - ry * 0.10,
+          x + rx * 0.12,
+          y + ry * 0.10,
+          x + rx * 0.36,
+          y - ry * 0.02
+        );
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+  }
+}
+
+function drawCinematicFallbackMaterial(config) {
+  const canvas = materialCanvas();
+  const ctx = canvas.getContext("2d", { alpha: false });
+
+  const ocean = ctx.createLinearGradient(0, 0, MATERIAL_W, MATERIAL_H);
+  ocean.addColorStop(0, rgb(mixColor(config.ocean, config.shelf, 0.26), 1));
+  ocean.addColorStop(0.32, rgb(config.ocean, 1));
+  ocean.addColorStop(0.70, rgb(mixColor(config.ocean, config.oceanDeep, 0.50), 1));
+  ocean.addColorStop(1, rgb(config.oceanDeep, 1));
+  ctx.fillStyle = ocean;
+  ctx.fillRect(0, 0, MATERIAL_W, MATERIAL_H);
+
+  for (let i = 0; i < 90; i += 1) {
+    const x = seededUnit(i, config.key.length + 80) * MATERIAL_W;
+    const y = seededUnit(i, config.key.length + 81) * MATERIAL_H;
+    const r = 20 + seededUnit(i, config.key.length + 82) * 70;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0, rgb(config.shelf, 0.16));
+    g.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, TAU);
+    ctx.fill();
+  }
+
+  for (const form of config.landforms) drawWrappedBlob(ctx, form, config, "shelf");
+  for (const form of config.landforms) drawWrappedBlob(ctx, form, config, "land");
+  for (const form of config.landforms) drawWrappedBlob(ctx, form, config, "terrain");
+
+  drawPolarBand(ctx, config, 0);
+  drawPolarBand(ctx, config, MATERIAL_H);
+
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+  ctx.strokeStyle = rgb(config.shelf, 0.08);
+  ctx.lineWidth = 2;
+
+  for (let i = 0; i < 24; i += 1) {
+    const y = MATERIAL_H * (0.18 + seededUnit(i, config.key.length + 150) * 0.64);
+    const x0 = seededUnit(i, config.key.length + 151) * MATERIAL_W;
+    const length = 180 + seededUnit(i, config.key.length + 152) * 280;
+
+    ctx.beginPath();
+    ctx.moveTo(x0, y);
+    ctx.bezierCurveTo(
+      x0 + length * 0.28,
+      y - 24,
+      x0 + length * 0.70,
+      y + 24,
+      x0 + length,
+      y
+    );
+    ctx.stroke();
+  }
+
+  ctx.restore();
+
+  drawStaticCloudMaterial(ctx, config);
+  drawMaterialVignette(ctx, config);
+
+  return Object.freeze({
+    key: config.key,
+    source: "fallback-cinematic-material",
+    canvas,
+    image: canvas,
+    width: MATERIAL_W,
+    height: MATERIAL_H,
+    ready: true
+  });
+}
+
+function drawPolarBand(ctx, config, yEdge) {
+  const y = yEdge === 0 ? 0 : MATERIAL_H;
+  const height = MATERIAL_H * 0.10;
+  const gradient = ctx.createLinearGradient(0, yEdge === 0 ? 0 : MATERIAL_H - height, 0, yEdge === 0 ? height : MATERIAL_H);
+
+  if (yEdge === 0) {
+    gradient.addColorStop(0, rgb(config.ice, 0.96));
+    gradient.addColorStop(1, rgb(config.ice, 0));
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, MATERIAL_W, height);
+  } else {
+    gradient.addColorStop(0, rgb(config.ice, 0));
+    gradient.addColorStop(1, rgb(config.ice, 0.96));
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, MATERIAL_H - height, MATERIAL_W, height);
+  }
+
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+  ctx.fillStyle = rgb(config.ice, 0.20);
+
+  for (let i = 0; i < 20; i += 1) {
+    const x = seededUnit(i, y + config.key.length) * MATERIAL_W;
+    const w = 80 + seededUnit(i, y + 10) * 200;
+    const h = 12 + seededUnit(i, y + 11) * 34;
+    const yy = yEdge === 0
+      ? seededUnit(i, y + 12) * height
+      : MATERIAL_H - seededUnit(i, y + 12) * height;
+
+    ctx.beginPath();
+    ctx.ellipse(x, yy, w, h, seededUnit(i, y + 13) * 0.8, 0, TAU);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function drawStaticCloudMaterial(ctx, config) {
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  for (let i = 0; i < 42; i += 1) {
+    const x = seededUnit(i, config.key.length + 300) * MATERIAL_W;
+    const y = MATERIAL_H * (0.18 + seededUnit(i, config.key.length + 301) * 0.64);
+    const w = 80 + seededUnit(i, config.key.length + 302) * 210;
+    const h = 10 + seededUnit(i, config.key.length + 303) * 26;
+    const alpha = 0.035 + seededUnit(i, config.key.length + 304) * 0.070;
+
+    const g = ctx.createRadialGradient(x, y, 0, x, y, w);
+    g.addColorStop(0, rgb(config.cloud, alpha));
+    g.addColorStop(0.48, rgb(config.cloud, alpha * 0.42));
+    g.addColorStop(1, "rgba(255,255,255,0)");
+
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.ellipse(x, y, w, h, seededUnit(i, config.key.length + 305) * 0.8, 0, TAU);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function drawMaterialVignette(ctx, config) {
+  ctx.save();
+  ctx.globalCompositeOperation = "multiply";
+
+  const top = ctx.createLinearGradient(0, 0, 0, MATERIAL_H);
+  top.addColorStop(0, "rgba(0,0,0,0.22)");
+  top.addColorStop(0.18, "rgba(0,0,0,0)");
+  top.addColorStop(0.82, "rgba(0,0,0,0)");
+  top.addColorStop(1, "rgba(0,0,0,0.20)");
+
+  ctx.fillStyle = top;
+  ctx.fillRect(0, 0, MATERIAL_W, MATERIAL_H);
+
+  ctx.restore();
+}
+
+function getMaterial(bodyKey) {
+  if (!state.materialCache[bodyKey]) {
+    const config = BODY_CONFIG[bodyKey] || BODY_CONFIG.earth;
+    state.materialCache[bodyKey] = drawCinematicFallbackMaterial(config);
+    loadImageMaterial(config);
+  }
+
+  return state.materialCache[bodyKey];
+}
+
+function activateMaterial(bodyKey) {
+  state.activeMaterial = getMaterial(bodyKey);
+  state.needsRender = true;
+}
+
+function loadImageMaterial(config) {
+  if (!config.imageCandidates || !config.imageCandidates.length) return;
+  if (state.materialCache[config.key]?.source?.startsWith("image:")) return;
+
+  const candidates = Array.from(config.imageCandidates);
+  let index = 0;
+
+  const tryNext = () => {
+    if (index >= candidates.length) return;
+
+    const src = candidates[index];
+    index += 1;
+
+    const image = new Image();
+    image.decoding = "async";
+    image.loading = "eager";
+
+    image.onload = () => {
+      state.materialCache[config.key] = Object.freeze({
+        key: config.key,
+        source: `image:${src}`,
+        image,
+        width: image.naturalWidth || image.width,
+        height: image.naturalHeight || image.height,
+        ready: true
+      });
+
+      if (state.body === config.key) {
+        state.activeMaterial = state.materialCache[config.key];
+        state.needsRender = true;
+      }
+
+      markMaterialSource(config.key, src);
+    };
+
+    image.onerror = tryNext;
+    image.src = `${src}${src.includes("?") ? "&" : "?"}material_restore=v7`;
+  };
+
+  tryNext();
+}
+
+function markMaterialSource(bodyKey, source) {
+  const safeKey = bodyKey.replace(/[^a-z0-9-]/gi, "");
+  document.documentElement.dataset[`materialSource${toDatasetName(safeKey)}`] = source;
+  document.body.dataset[`materialSource${toDatasetName(safeKey)}`] = source;
+}
+
+function toDatasetName(value) {
+  return value
+    .split("-")
+    .map((part) => part ? part[0].toUpperCase() + part.slice(1) : "")
+    .join("");
+}
+
 function drawBackground(ctx, width, height, config) {
   const bg = ctx.createLinearGradient(0, 0, 0, height);
-  bg.addColorStop(0, "rgba(3, 10, 22, 0.97)");
+  bg.addColorStop(0, "rgba(3, 10, 22, 0.98)");
   bg.addColorStop(0.52, "rgba(7, 18, 36, 0.98)");
-  bg.addColorStop(1, "rgba(2, 7, 16, 1)");
+  bg.addColorStop(1, "rgba(1, 5, 13, 1)");
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, width, height);
 
   const halo = ctx.createRadialGradient(
     width * 0.5,
     height * 0.43,
-    width * 0.04,
+    width * 0.035,
     width * 0.5,
     height * 0.45,
     width * 0.56
   );
 
-  halo.addColorStop(0, rgb(config.glow, 0.12));
-  halo.addColorStop(0.42, rgb(config.glow, 0.060));
+  halo.addColorStop(0, rgb(config.glow, 0.13));
+  halo.addColorStop(0.42, rgb(config.glow, 0.052));
   halo.addColorStop(1, "rgba(0,0,0,0)");
 
   ctx.fillStyle = halo;
@@ -474,14 +590,14 @@ function drawBackground(ctx, width, height, config) {
 function drawStars(ctx, width, height) {
   ctx.save();
 
-  for (let i = 0; i < 52; i += 1) {
+  for (let i = 0; i < 48; i += 1) {
     const x = seededUnit(i, 1) * width;
     const y = seededUnit(i, 2) * height;
-    const alpha = 0.06 + seededUnit(i, 3) * 0.16;
-    const size = i % 13 === 0 ? 6 : i % 5 === 0 ? 3 : 1.1;
+    const alpha = 0.05 + seededUnit(i, 3) * 0.14;
+    const size = i % 13 === 0 ? 5.5 : i % 5 === 0 ? 2.7 : 1.0;
 
     ctx.strokeStyle = `rgba(235,244,255,${alpha})`;
-    ctx.lineWidth = Math.max(1, width * 0.0009);
+    ctx.lineWidth = Math.max(1, width * 0.0008);
     ctx.beginPath();
     ctx.moveTo(x - size, y);
     ctx.lineTo(x + size, y);
@@ -493,375 +609,143 @@ function drawStars(ctx, width, height) {
   ctx.restore();
 }
 
-function drawLandShape(ctx, shape, radius, cx, cy, config, layer, overrideColor = null) {
-  const samples = shape[layer];
-  const projected = samples.map((sample) => projectSample(sample, radius, cx, cy));
-  const ratio = visibleRatio(projected, radius);
+function drawWrappedImageStrip(ctx, image, sx, sy, sw, sh, dx, dy, dw, dh) {
+  const iw = image.naturalWidth || image.width;
+  const start = ((sx % iw) + iw) % iw;
 
-  if (ratio < 0.20) return;
-
-  const front = clamp(ratio, 0, 1);
-  const light = clamp(0.48 + front * 0.36 + Math.sin(shape.source.seed + state.phase * 0.08) * 0.018, 0.36, 0.92);
-  const landColor = overrideColor || mixColor(config.land2, config.land, light);
-  const terrainColor = overrideColor || mixColor(config.land, config.highland, 0.52);
-  const material = config.material || {};
-
-  ctx.save();
-
-  if (layer === "shelf") {
-    ctx.globalCompositeOperation = "screen";
-    ctx.globalAlpha = (0.52 + (material.coastStrength || 0.45) * 0.22) * front;
-    ctx.shadowColor = rgb(config.shelf, 0.18);
-    ctx.shadowBlur = radius * 0.012;
-    ctx.fillStyle = rgb(config.shelf, 0.10);
-    ctx.strokeStyle = rgb(mixColor(config.shelf, [255, 255, 255], 0.16), 0.24);
-    ctx.lineWidth = Math.max(0.85, radius * 0.0052);
-    drawSmoothPath(ctx, projected);
-    ctx.fill();
-    ctx.stroke();
-    ctx.restore();
+  if (start + sw <= iw) {
+    ctx.drawImage(image, start, sy, sw, sh, dx, dy, dw, dh);
     return;
   }
 
-  if (layer === "terrain") {
-    ctx.globalCompositeOperation = "soft-light";
-    ctx.globalAlpha = 0.26 * front;
-    ctx.fillStyle = rgb(terrainColor, 0.34);
-    drawSmoothPath(ctx, projected);
-    ctx.fill();
+  const first = iw - start;
+  const firstRatio = first / sw;
+  ctx.drawImage(image, start, sy, first, sh, dx, dy, dw * firstRatio, dh);
 
-    ctx.globalCompositeOperation = "screen";
-    ctx.globalAlpha = 0.12 * front;
-    ctx.strokeStyle = rgb(config.highland, 0.18);
-    ctx.lineWidth = Math.max(0.62, radius * 0.0024);
-    drawSmoothPath(ctx, projected);
-    ctx.stroke();
-
-    ctx.restore();
-    return;
-  }
-
-  const gradient = ctx.createRadialGradient(
-    cx - radius * 0.30,
-    cy - radius * 0.36,
-    radius * 0.04,
-    cx,
-    cy,
-    radius * 1.08
-  );
-
-  const landOpacity = material.landOpacity || 0.78;
-
-  gradient.addColorStop(0, rgb(mixColor(landColor, [246, 238, 188], 0.16), landOpacity * front));
-  gradient.addColorStop(0.42, rgb(landColor, (landOpacity - 0.06) * front));
-  gradient.addColorStop(0.76, rgb(mixColor(landColor, config.deep, 0.22), (landOpacity - 0.09) * front));
-  gradient.addColorStop(1, rgb(mixColor(landColor, config.deep, 0.38), (landOpacity - 0.13) * front));
-
-  ctx.shadowColor = "rgba(0,0,0,0.10)";
-  ctx.shadowBlur = radius * 0.004;
-  ctx.fillStyle = gradient;
-  ctx.strokeStyle = rgb(config.coast, (material.coastStrength || 0.45) * 0.70 * front);
-  ctx.lineWidth = Math.max(0.75, radius * 0.0036);
-
-  drawSmoothPath(ctx, projected);
-  ctx.fill();
-  ctx.stroke();
-
-  ctx.restore();
+  const second = sw - first;
+  ctx.drawImage(image, 0, sy, second, sh, dx + dw * firstRatio, dy, dw * (1 - firstRatio), dh);
 }
 
-function drawCoastBreaks(ctx, shape, radius, cx, cy, config) {
-  const points = shape.coast.map((sample) => projectSample(sample, radius, cx, cy));
-  const ratio = visibleRatio(points, radius);
-
-  if (ratio < 0.22) return;
-
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
-  ctx.strokeStyle = rgb(config.coast, 0.12 * ratio);
-  ctx.lineWidth = Math.max(0.55, radius * 0.0019);
-
-  for (let i = 0; i < points.length; i += 10) {
-    const a = points[i];
-    const b = points[(i + 3) % points.length];
-
-    if (a.z < -radius * 0.08 || b.z < -radius * 0.08) continue;
-
-    ctx.beginPath();
-    ctx.moveTo(a.x, a.y);
-    ctx.quadraticCurveTo(
-      (a.x + b.x) * 0.5 + Math.sin(i + shape.source.seed) * radius * 0.010,
-      (a.y + b.y) * 0.5 + Math.cos(i + shape.source.seed) * radius * 0.010,
-      b.x,
-      b.y
-    );
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function drawOceanTexture(ctx, radius, cx, cy, config, cache) {
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
-
-  for (const sample of cache.ocean) {
-    const p = projectSample(sample, radius, cx, cy);
-
-    if (p.z < -radius * 0.05) continue;
-
-    const size = radius * sample.sizeSeed;
-    const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size);
-    g.addColorStop(0, rgb(config.shelf, sample.alphaSeed));
-    g.addColorStop(1, "rgba(255,255,255,0)");
-
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, size, 0, TAU);
-    ctx.fill();
-  }
-
-  ctx.restore();
-}
-
-function drawOceanCurrentLines(ctx, radius, cx, cy, config) {
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
-  ctx.strokeStyle = rgb(config.shelf, 0.055);
-  ctx.lineWidth = Math.max(0.45, radius * 0.0013);
-
-  for (let i = 0; i < 9; i += 1) {
-    const lat = -0.72 + i * 0.18;
-    const start = -1.65 + seededUnit(i, 44) * 0.42;
-    const points = [];
-
-    for (let j = 0; j < 18; j += 1) {
-      const t = j / 17;
-      const sample = {
-        lat: lat + Math.sin(t * TAU + i) * 0.035,
-        lon: start + t * 1.50
-      };
-
-      const projected = projectSample(sample, radius, cx, cy);
-      if (projected.z > -radius * 0.03) points.push(projected);
-    }
-
-    if (points.length < 5) continue;
-
-    ctx.beginPath();
-    points.forEach((point, index) => {
-      if (index === 0) ctx.moveTo(point.x, point.y);
-      else ctx.lineTo(point.x, point.y);
-    });
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function drawSurfaceVeins(ctx, radius, cx, cy, config, cache) {
-  ctx.save();
-  ctx.globalCompositeOperation = "soft-light";
-
-  for (const vein of cache.veins) {
-    const points = [];
-
-    for (const sample of vein) {
-      const projected = projectSample(sample, radius, cx, cy);
-      if (projected.z > -radius * 0.08) points.push(projected);
-    }
-
-    if (points.length < 4) continue;
-
-    ctx.strokeStyle = rgb(config.highland, 0.10);
-    ctx.lineWidth = Math.max(0.52, radius * 0.0018);
-    ctx.beginPath();
-
-    points.forEach((point, index) => {
-      if (index === 0) ctx.moveTo(point.x, point.y);
-      else ctx.lineTo(point.x, point.y);
-    });
-
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function drawCloudLayer(ctx, radius, cx, cy, config, cache) {
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
-  ctx.globalAlpha = config.material.cloudOpacity || 0.18;
-
-  const cloudShift = state.mode === "stable" ? 0 : state.phase * 0.018;
-
-  for (const cloud of cache.clouds) {
-    const p = projectSample(cloud, radius, cx, cy, cloudShift);
-
-    if (p.z < -radius * 0.02) continue;
-
-    const cloudWidth = radius * cloud.widthSeed;
-    const cloudHeight = radius * cloud.heightSeed;
-    const alpha = cloud.alphaSeed;
-
-    const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, cloudWidth);
-    gradient.addColorStop(0, rgb(config.cloud, alpha));
-    gradient.addColorStop(0.46, rgb(config.cloud, alpha * 0.28));
-    gradient.addColorStop(1, "rgba(255,255,255,0)");
-
-    ctx.fillStyle = gradient;
-    ctx.beginPath();
-    ctx.ellipse(
-      p.x,
-      p.y,
-      cloudWidth,
-      cloudHeight,
-      Math.sin(cloud.phaseSeed + state.phase * 0.06) * 0.44,
-      0,
-      TAU
-    );
-    ctx.fill();
-  }
-
-  ctx.restore();
-}
-
-function drawAtmosphere(ctx, width, height, config, radius, cx, cy) {
-  const material = config.material || {};
-
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
-
-  const limb = ctx.createRadialGradient(cx, cy, radius * 0.78, cx, cy, radius * 1.16);
-  limb.addColorStop(0, "rgba(255,255,255,0)");
-  limb.addColorStop(0.62, rgb(config.glow, (material.atmosphere || 0.30) * 0.32));
-  limb.addColorStop(0.82, rgb(config.glow, (material.atmosphere || 0.30) * 0.60));
-  limb.addColorStop(1, "rgba(255,255,255,0)");
-
-  ctx.fillStyle = limb;
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius * 1.13, 0, TAU);
-  ctx.fill();
-
-  ctx.restore();
-
-  ctx.save();
-  ctx.strokeStyle = rgb(config.glow, 0.26);
-  ctx.lineWidth = Math.max(1.0, width * 0.00115);
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius, 0, TAU);
-  ctx.stroke();
-  ctx.restore();
-}
-
-function drawGlobeGrid(ctx, cx, cy, radius) {
-  ctx.save();
-  ctx.strokeStyle = "rgba(235,244,255,0.014)";
-  ctx.lineWidth = Math.max(0.35, radius * 0.0014);
-
-  for (let lat = -60; lat <= 60; lat += 30) {
-    const r = Math.cos((lat * Math.PI) / 180) * radius;
-    const y = Math.sin((lat * Math.PI) / 180) * radius;
-
-    ctx.beginPath();
-    ctx.ellipse(cx, cy + y, r, r * 0.14, 0, 0, TAU);
-    ctx.stroke();
-  }
-
-  for (let i = 0; i < 6; i += 1) {
-    ctx.beginPath();
-    ctx.ellipse(cx, cy, radius * 0.18, radius, (i / 6) * Math.PI, 0, TAU);
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function drawGlobeSurface(ctx, width, height, config, cache) {
+function drawCinematicGlobeBody(ctx, width, height, config, material) {
   const metrics = getLayoutMetrics(width, height);
   const radius = metrics.radius;
   const cx = metrics.globeCenterX;
   const cy = metrics.globeCenterY;
-  const material = config.material || {};
+  const image = material.image;
+  const iw = image.naturalWidth || image.width;
+  const ih = image.naturalHeight || image.height;
 
   ctx.save();
 
-  const aura = ctx.createRadialGradient(cx, cy, radius * 0.18, cx, cy, radius * 1.50);
+  const aura = ctx.createRadialGradient(cx, cy, radius * 0.18, cx, cy, radius * 1.54);
   aura.addColorStop(0, rgb(config.glow, 0.080));
   aura.addColorStop(0.52, rgb(config.glow, 0.040));
   aura.addColorStop(1, "rgba(0,0,0,0)");
   ctx.fillStyle = aura;
   ctx.fillRect(0, 0, width, height);
 
+  ctx.save();
   ctx.beginPath();
   ctx.arc(cx, cy, radius, 0, TAU);
   ctx.clip();
 
-  const ocean = ctx.createRadialGradient(
-    cx - radius * 0.34,
-    cy - radius * 0.40,
-    radius * 0.05,
-    cx + radius * 0.06,
-    cy + radius * 0.04,
-    radius * 1.18
-  );
-
-  ocean.addColorStop(0, rgb(mixColor(config.water, [255, 255, 255], 0.18), 1));
-  ocean.addColorStop(0.30, rgb(config.water, 1));
-  ocean.addColorStop(0.62, rgb(mixColor(config.water, config.deep, material.oceanContrast || 0.52), 1));
-  ocean.addColorStop(1, rgb(config.deep, 1));
-
-  ctx.fillStyle = ocean;
+  ctx.fillStyle = rgb(config.oceanDeep, 1);
   ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-  drawOceanTexture(ctx, radius, cx, cy, config, cache);
-  drawOceanCurrentLines(ctx, radius, cx, cy, config);
+  const yawOffset = ((state.yaw / TAU) % 1 + 1) % 1;
+  const pitchOffset = clamp(state.pitch / Math.PI, -0.18, 0.18);
+  const srcSpan = iw * 0.50;
+  const srcX = yawOffset * iw;
+  const rowStep = Math.max(1, Math.floor(1.15 * state.dpr));
 
-  for (const shape of cache.continents) drawLandShape(ctx, shape, radius, cx, cy, config, "shelf");
-  for (const shape of cache.islands) drawLandShape(ctx, shape, radius, cx, cy, config, "shelf");
+  for (let y = -radius; y <= radius; y += rowStep) {
+    const dy = y;
+    const normalizedY = dy / radius;
+    const half = Math.sqrt(Math.max(0, 1 - normalizedY * normalizedY)) * radius;
 
-  for (const shape of cache.continents) drawLandShape(ctx, shape, radius, cx, cy, config, "land");
-  for (const shape of cache.islands) drawLandShape(ctx, shape, radius, cx, cy, config, "land");
+    if (half <= 0.5) continue;
 
-  for (const shape of cache.polar) {
-    drawLandShape(ctx, shape, radius, cx, cy, config, "land", config.polar);
+    const destY = cy + dy;
+    const destX = cx - half;
+    const destW = half * 2;
+    const destH = rowStep + 0.65;
+
+    const v = clamp(0.5 + normalizedY * 0.5 + pitchOffset, 0.001, 0.999);
+    const sy = clamp(v * ih, 0, ih - 2);
+    const sh = Math.max(1, (rowStep / Math.max(1, radius * 2)) * ih * 1.7);
+
+    drawWrappedImageStrip(ctx, image, srcX, sy, srcSpan, sh, destX, destY, destW, destH);
   }
 
-  for (const shape of cache.continents) {
-    drawLandShape(ctx, shape, radius, cx, cy, config, "terrain");
-    drawCoastBreaks(ctx, shape, radius, cx, cy, config);
-  }
-
-  for (const shape of cache.islands) drawCoastBreaks(ctx, shape, radius, cx, cy, config);
-
-  drawSurfaceVeins(ctx, radius, cx, cy, config, cache);
-  drawCloudLayer(ctx, radius, cx, cy, config, cache);
-  drawGlobeGrid(ctx, cx, cy, radius);
-
-  const shade = ctx.createRadialGradient(
+  const highlight = ctx.createRadialGradient(
     cx - radius * 0.38,
-    cy - radius * 0.43,
-    radius * 0.08,
-    cx + radius * 0.16,
-    cy + radius * 0.10,
-    radius * 1.24
+    cy - radius * 0.42,
+    radius * 0.05,
+    cx + radius * 0.02,
+    cy + radius * 0.02,
+    radius * 1.08
   );
 
-  shade.addColorStop(0, "rgba(255,255,255,0.16)");
-  shade.addColorStop(0.36, "rgba(255,255,255,0.024)");
-  shade.addColorStop(0.74, "rgba(0,0,0,0.18)");
-  shade.addColorStop(1, "rgba(0,0,0,0.58)");
+  highlight.addColorStop(0, "rgba(255,255,255,0.20)");
+  highlight.addColorStop(0.34, "rgba(255,255,255,0.045)");
+  highlight.addColorStop(0.64, "rgba(0,0,0,0.06)");
+  highlight.addColorStop(1, "rgba(0,0,0,0.55)");
+  ctx.fillStyle = highlight;
+  ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-  ctx.fillStyle = shade;
+  const terminator = ctx.createLinearGradient(cx - radius, cy, cx + radius, cy);
+  terminator.addColorStop(0, "rgba(0,0,0,0.04)");
+  terminator.addColorStop(0.58, "rgba(0,0,0,0.00)");
+  terminator.addColorStop(1, "rgba(0,0,0,0.28)");
+  ctx.fillStyle = terminator;
   ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
   ctx.restore();
 
   drawAtmosphere(ctx, width, height, config, radius, cx, cy);
+  drawGroundShadow(ctx, config, radius, cx, cy);
 
-  const shadow = ctx.createRadialGradient(cx, cy + radius * 1.08, radius * 0.04, cx, cy + radius * 1.08, radius * 0.48);
-  shadow.addColorStop(0, rgb(config.glow, 0.11));
-  shadow.addColorStop(0.46, "rgba(82,109,146,0.10)");
+  ctx.restore();
+}
+
+function drawAtmosphere(ctx, width, height, config, radius, cx, cy) {
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  const limb = ctx.createRadialGradient(cx, cy, radius * 0.78, cx, cy, radius * 1.18);
+  limb.addColorStop(0, "rgba(255,255,255,0)");
+  limb.addColorStop(0.64, rgb(config.glow, 0.12));
+  limb.addColorStop(0.82, rgb(config.glow, 0.26));
+  limb.addColorStop(1, "rgba(255,255,255,0)");
+
+  ctx.fillStyle = limb;
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius * 1.14, 0, TAU);
+  ctx.fill();
+
+  ctx.restore();
+
+  ctx.save();
+  ctx.strokeStyle = rgb(config.glow, 0.30);
+  ctx.lineWidth = Math.max(1.05, width * 0.00115);
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, TAU);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawGroundShadow(ctx, config, radius, cx, cy) {
+  const shadow = ctx.createRadialGradient(
+    cx,
+    cy + radius * 1.08,
+    radius * 0.04,
+    cx,
+    cy + radius * 1.08,
+    radius * 0.48
+  );
+
+  shadow.addColorStop(0, rgb(config.glow, 0.10));
+  shadow.addColorStop(0.46, "rgba(82,109,146,0.09)");
   shadow.addColorStop(1, "rgba(0,0,0,0)");
 
   ctx.fillStyle = shadow;
@@ -877,18 +761,17 @@ function drawGlints(ctx, width, height, config) {
   const cy = metrics.globeCenterY;
 
   const points = [
-    [cx - radius * 0.56, cy - radius * 0.23, 7],
-    [cx + radius * 0.46, cy - radius * 0.15, 5],
-    [cx - radius * 0.04, cy - radius * 0.80, 4]
+    [cx - radius * 0.54, cy - radius * 0.25, 5.5],
+    [cx + radius * 0.45, cy - radius * 0.14, 4.2],
+    [cx - radius * 0.03, cy - radius * 0.80, 3.4]
   ];
 
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
-  points.forEach(([x, y, size], index) => {
-    const pulse = 0.50 + 0.50 * Math.sin(state.phase * 1.20 + index * PHI);
-    ctx.strokeStyle = `rgba(255,255,255,${0.18 * pulse})`;
-    ctx.lineWidth = Math.max(0.8, width * 0.0008);
+  points.forEach(([x, y, size]) => {
+    ctx.strokeStyle = "rgba(255,255,255,0.11)";
+    ctx.lineWidth = Math.max(0.7, width * 0.00075);
     ctx.beginPath();
     ctx.moveTo(x - size * state.dpr, y);
     ctx.lineTo(x + size * state.dpr, y);
@@ -902,14 +785,14 @@ function drawGlints(ctx, width, height, config) {
 
 function render(canvas, ctx) {
   const config = BODY_CONFIG[state.body] || BODY_CONFIG.earth;
-  const cache = state.activeCache || getSurfaceCache(state.body);
+  const material = state.activeMaterial || getMaterial(state.body);
   const width = canvas.width;
   const height = canvas.height;
 
   ctx.clearRect(0, 0, width, height);
   drawBackground(ctx, width, height, config);
   drawStars(ctx, width, height);
-  drawGlobeSurface(ctx, width, height, config, cache);
+  drawCinematicGlobeBody(ctx, width, height, config, material);
   drawGlints(ctx, width, height, config);
 
   state.needsRender = false;
@@ -935,15 +818,10 @@ function updateMotion(dt) {
     if (Math.abs(state.velocityPitch) < 0.00008) state.velocityPitch = 0;
 
     if (state.mode === "auto" && state.velocityYaw === 0 && state.velocityPitch === 0) {
-      state.yaw += dt * 0.042;
+      state.yaw += dt * 0.038;
     }
 
     changed = changed || Math.abs(priorYaw - state.yaw) > 0.00001 || Math.abs(priorPitch - state.pitch) > 0.00001;
-  }
-
-  if (state.mode !== "stable") {
-    state.phase += dt;
-    changed = true;
   }
 
   if (changed) state.needsRender = true;
@@ -1019,7 +897,7 @@ function setBody(bodyKey) {
   if (!BODY_CONFIG[bodyKey]) return;
 
   state.body = bodyKey;
-  activateSurfaceCache(bodyKey);
+  activateMaterial(bodyKey);
   resetView();
 
   const config = BODY_CONFIG[bodyKey];
@@ -1054,26 +932,30 @@ function setMode(mode) {
 }
 
 function markRoute() {
-  document.documentElement.dataset.globeGatewayStatus = "visual-material-upgraded";
+  document.documentElement.dataset.globeGatewayStatus = "cinematic-material-restored";
   document.documentElement.dataset.globeGatewayAuthority = "true";
   document.documentElement.dataset.visualScaleAuthority = "true";
   document.documentElement.dataset.runtimeStabilized = "true";
   document.documentElement.dataset.surfaceCacheEnabled = "true";
   document.documentElement.dataset.mobileStageLayoutGovernor = "true";
   document.documentElement.dataset.protectedVerticalBands = "true";
-  document.documentElement.dataset.visualMaterialUpgrade = "true";
+  document.documentElement.dataset.cinematicMaterialRestored = "true";
+  document.documentElement.dataset.proceduralBlobPrimary = "false";
+  document.documentElement.dataset.opaqueGlobeBody = "true";
   document.documentElement.dataset.blockTileLandRender = "false";
   document.documentElement.dataset.diamondInstrument = "false";
   document.documentElement.dataset.earthRecord = "false";
 
-  document.body.dataset.globeGatewayStatus = "visual-material-upgraded";
+  document.body.dataset.globeGatewayStatus = "cinematic-material-restored";
   document.body.dataset.globeGatewayAuthority = "true";
   document.body.dataset.visualScaleAuthority = "true";
   document.body.dataset.runtimeStabilized = "true";
   document.body.dataset.surfaceCacheEnabled = "true";
   document.body.dataset.mobileStageLayoutGovernor = "true";
   document.body.dataset.protectedVerticalBands = "true";
-  document.body.dataset.visualMaterialUpgrade = "true";
+  document.body.dataset.cinematicMaterialRestored = "true";
+  document.body.dataset.proceduralBlobPrimary = "false";
+  document.body.dataset.opaqueGlobeBody = "true";
   document.body.dataset.blockTileLandRender = "false";
   document.body.dataset.diamondInstrument = "false";
   document.body.dataset.earthRecord = "false";
@@ -1104,23 +986,23 @@ function bindControls() {
   if (reset) reset.addEventListener("click", resetView);
 }
 
-function warmSurfaceCaches() {
+function warmMaterials() {
   Object.keys(BODY_CONFIG).forEach((key) => {
-    getSurfaceCache(key);
+    getMaterial(key);
   });
 }
 
 function initGlobeSelector() {
   markRoute();
   protectGatewayIdentity();
-  warmSurfaceCaches();
+  warmMaterials();
 
   const stage = document.querySelector("[data-globe-selector-stage]");
   const canvas = document.querySelector("[data-globe-selector-canvas]");
 
   if (!stage || !canvas) return null;
 
-  const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
+  const ctx = canvas.getContext("2d", { alpha: false, desynchronized: true });
   if (!ctx) return null;
 
   bindControls();
@@ -1137,6 +1019,8 @@ function initGlobeSelector() {
   window.DGBGlobeSelector = Object.freeze({
     ...GLOBE_SELECTOR_STATE,
     status() {
+      const material = state.activeMaterial || getMaterial(state.body);
+
       return Object.freeze({
         ...GLOBE_SELECTOR_STATE,
         ready: true,
@@ -1149,8 +1033,10 @@ function initGlobeSelector() {
         surfaceCacheEnabled: true,
         mobileStageLayoutGovernor: true,
         protectedVerticalBands: true,
-        visualMaterialUpgrade: true,
-        cacheKeys: Object.freeze(Object.keys(state.surfaceCache))
+        cinematicMaterialRestored: true,
+        opaqueGlobeBody: true,
+        materialSource: material.source,
+        cacheKeys: Object.freeze(Object.keys(state.materialCache))
       });
     }
   });

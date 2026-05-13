@@ -1,18 +1,14 @@
-<!-- /gauges/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-page="triple-g-live-audit-false-positive-repair"
+  data-page="triple-g-live-state-and-gap-board"
   data-route="/gauges/"
-  data-contract="TRIPLE_G_LIVE_AUDIT_FALSE_POSITIVE_REPAIR_TNT_v4"
-  data-standard="cutting-edge-frontier-tech-only"
-  data-audit-mode="live-client-side"
-  data-false-positive-repair="true"
-  data-script-signal-counting="false"
-  data-receipts-copyable="false"
+  data-contract="TRIPLE_G_LIVE_STATE_AND_GAP_BOARD_TNT_v1"
+  data-role="read-only-live-site-audit"
   data-generated-image="false"
   data-graphic-box="false"
-  data-visual-pass-claim="false"
+  data-heavy-runtime-loaded="false"
+  data-public-receipts-visible="false"
 >
 <head>
   <meta charset="utf-8">
@@ -20,565 +16,426 @@
   <title>Diamond Gate Bridge · Triple G</title>
   <meta
     name="description"
-    content="Triple G is the live Diamond Gate Bridge audit board for Goals, Gauges, Gaps, legacy debt, frontier readiness, and next moves."
+    content="Triple G reads the live Diamond Gate Bridge routes, names the current state, identifies gaps, and points to the next lawful move without waking private render engines."
   >
 
   <style>
     :root {
+      --bg: #030812;
+      --panel: rgba(8, 16, 32, 0.86);
+      --panel-2: rgba(12, 24, 45, 0.72);
+      --line: rgba(244, 207, 131, 0.18);
+      --line-soft: rgba(255, 255, 255, 0.10);
+      --text: rgba(238, 244, 255, 0.92);
+      --muted: rgba(238, 244, 255, 0.64);
+      --faint: rgba(238, 244, 255, 0.44);
+      --gold: #f4cf83;
+      --mint: #a7f3c6;
+      --amber: #f0aa5f;
+      --red: #ff8c8c;
+      --blue: #8bc8ff;
+      --shadow: rgba(0, 0, 0, 0.38);
       color-scheme: dark;
-      --bg:#020611;
-      --panel:rgba(7,14,29,.86);
-      --panel2:rgba(3,8,19,.94);
-      --line:rgba(244,191,96,.34);
-      --line-soft:rgba(255,255,255,.10);
-      --text:#f8ead0;
-      --muted:#bac2cf;
-      --gold:#f4bf60;
-      --green:#8ff0c3;
-      --blue:#8ebeff;
-      --red:#ff9f8f;
-      --violet:#beaaff;
-      --shadow:0 28px 90px rgba(0,0,0,.46);
-      --max:1220px;
-      --facet:polygon(0 18px,18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px));
-      --facet-small:polygon(0 10px,10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px));
     }
 
-    * { box-sizing:border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html {
-      min-height:100%;
+      min-height: 100%;
       background:
-        radial-gradient(circle at 50% 0%,rgba(142,190,255,.18),transparent 34rem),
-        radial-gradient(circle at 13% 18%,rgba(244,191,96,.12),transparent 30rem),
-        radial-gradient(circle at 88% 20%,rgba(143,240,195,.09),transparent 30rem),
-        linear-gradient(180deg,var(--bg),#01030a 78%);
+        radial-gradient(circle at 50% -10%, rgba(89, 129, 174, 0.24), transparent 38%),
+        radial-gradient(circle at 10% 22%, rgba(244, 207, 131, 0.10), transparent 34%),
+        linear-gradient(180deg, #061020 0%, var(--bg) 48%, #02050b 100%);
     }
 
     body {
-      min-height:100%;
-      margin:0;
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      color:var(--text);
-      background:
-        linear-gradient(145deg,rgba(255,255,255,.035),transparent 42%),
-        radial-gradient(circle at 50% 58%,rgba(244,191,96,.07),transparent 36rem);
-      overflow-x:hidden;
+      margin: 0;
+      min-height: 100%;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: -0.015em;
     }
 
-    a { color:inherit; text-decoration:none; }
-
-    a:focus-visible,
-    button:focus-visible,
-    [tabindex]:focus-visible {
-      outline:2px solid var(--gold);
-      outline-offset:4px;
+    a {
+      color: inherit;
     }
 
-    button {
-      font:inherit;
-      color:inherit;
-      border:0;
-      cursor:pointer;
+    .skip {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      transform: translateY(-160%);
+      background: var(--mint);
+      color: #05111c;
+      padding: 10px 14px;
+      border-radius: 999px;
+      z-index: 20;
+      font-weight: 900;
+      text-decoration: none;
     }
 
-    button:disabled {
-      cursor:wait;
-      opacity:.72;
+    .skip:focus {
+      transform: translateY(0);
     }
 
-    .skip-link {
-      position:absolute;
-      left:1rem;
-      top:1rem;
-      z-index:30;
-      padding:.75rem 1rem;
-      border:1px solid var(--line);
-      background:#08101d;
-      color:var(--text);
-      transform:translateY(-180%);
-      transition:transform 160ms ease;
-      clip-path:var(--facet-small);
-    }
-
-    .skip-link:focus { transform:translateY(0); }
-
-    .shell {
-      width:min(var(--max),calc(100% - 32px));
-      margin:0 auto;
-      padding:24px 0 48px;
-    }
-
-    .topbar,
-    .hero,
-    .panel,
-    .metric,
-    .route-card,
-    .next-move,
-    .standard-card {
-      border:1px solid var(--line);
-      background:linear-gradient(180deg,rgba(255,255,255,.055),transparent),var(--panel);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(18px);
-      clip-path:var(--facet);
+    .page {
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 54px;
     }
 
     .topbar {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:18px;
-      padding:14px 18px;
-      background:rgba(5,9,18,.74);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 0 22px;
     }
 
     .brand {
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      min-width:max-content;
-      font-weight:950;
-      letter-spacing:.02em;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 950;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
     }
 
-    .brand-mark {
-      width:18px;
-      height:18px;
-      border:1px solid var(--gold);
-      transform:rotate(45deg);
-      background:linear-gradient(135deg,rgba(244,191,96,.24),transparent),rgba(255,255,255,.04);
-      box-shadow:0 0 24px rgba(244,191,96,.18);
+    .mark {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(244, 207, 131, 0.44);
+      border-radius: 10px;
+      background: rgba(244, 207, 131, 0.08);
+      box-shadow: inset 0 0 20px rgba(244, 207, 131, 0.08);
     }
 
     .nav {
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:8px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
     }
 
-    .nav a {
-      padding:8px 11px;
-      border:1px solid rgba(255,255,255,.09);
-      color:var(--muted);
-      font-size:.88rem;
-      background:
-        linear-gradient(135deg,rgba(255,255,255,.07),transparent 45%),
-        rgba(255,255,255,.032);
-      clip-path:var(--facet-small);
+    .nav a,
+    .button {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      padding: 0 13px;
+      color: rgba(238, 244, 255, 0.80);
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.035);
+      font-size: 0.82rem;
+      font-weight: 850;
+      letter-spacing: 0.02em;
+      cursor: pointer;
     }
 
-    .nav a[aria-current="page"] {
-      border-color:rgba(244,191,96,.54);
-      color:var(--gold);
-      background:
-        linear-gradient(135deg,rgba(244,191,96,.16),transparent 50%),
-        rgba(244,191,96,.08);
+    .nav a[aria-current="page"],
+    .button.primary {
+      color: #06101c;
+      background: linear-gradient(135deg, var(--mint), #79dbac);
+      border-color: rgba(167, 243, 198, 0.62);
     }
 
     .hero {
-      margin-top:24px;
-      padding:clamp(24px,5vw,56px);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      padding: clamp(24px, 5vw, 46px);
       background:
-        radial-gradient(circle at 18% 12%,rgba(244,191,96,.12),transparent 18rem),
-        radial-gradient(circle at 84% 24%,rgba(143,240,195,.10),transparent 24rem),
-        linear-gradient(180deg,rgba(255,255,255,.055),transparent),
-        var(--panel);
+        radial-gradient(circle at 76% 22%, rgba(167, 243, 198, 0.10), transparent 30%),
+        radial-gradient(circle at 12% 10%, rgba(244, 207, 131, 0.12), transparent 32%),
+        linear-gradient(180deg, rgba(9, 17, 34, 0.94), rgba(5, 10, 21, 0.92));
+      box-shadow: 0 30px 90px var(--shadow);
     }
 
-    .label {
-      display:inline-flex;
-      width:fit-content;
-      margin:0 0 18px;
-      padding:8px 12px;
-      border:1px solid rgba(142,190,255,.26);
-      color:var(--blue);
-      background:
-        linear-gradient(135deg,rgba(142,190,255,.14),transparent 56%),
-        rgba(142,190,255,.055);
-      font-size:.82rem;
-      font-weight:950;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      clip-path:var(--facet-small);
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
     }
 
     h1 {
-      margin:0;
-      max-width:980px;
-      font-size:clamp(3rem,7vw,6.4rem);
-      line-height:.86;
-      letter-spacing:-.085em;
+      max-width: 860px;
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(2.2rem, 8vw, 5.4rem);
+      line-height: 0.92;
+      letter-spacing: -0.075em;
     }
 
     .lede {
-      max-width:86ch;
-      margin:22px 0 0;
-      color:var(--muted);
-      font-size:clamp(1.03rem,2.2vw,1.18rem);
-      line-height:1.65;
+      max-width: 850px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 2.6vw, 1.34rem);
+      line-height: 1.55;
     }
 
-    .actions {
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:26px;
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
     }
 
-    .action {
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:44px;
-      padding:11px 15px;
-      border:1px solid rgba(244,191,96,.32);
-      background:
-        linear-gradient(135deg,rgba(244,191,96,.18),transparent 52%),
-        rgba(244,191,96,.08);
-      color:var(--gold);
-      font-weight:950;
-      clip-path:var(--facet-small);
-    }
-
-    .action.primary {
-      background:
-        linear-gradient(135deg,rgba(255,255,255,.34),transparent 50%),
-        var(--gold);
-      color:#06101d;
-    }
-
-    .grid-3 {
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:14px;
-      margin-top:18px;
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
     }
 
     .metric {
-      padding:18px;
-      background:
-        radial-gradient(circle at 18% 12%,rgba(244,191,96,.08),transparent 12rem),
-        linear-gradient(180deg,rgba(255,255,255,.05),transparent),
-        rgba(7,13,27,.78);
-      box-shadow:none;
+      border: 1px solid var(--line-soft);
+      border-radius: 22px;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.035);
     }
 
     .metric strong {
-      display:block;
-      color:var(--gold);
-      font-size:.74rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      margin-bottom:10px;
+      display: block;
+      color: var(--gold);
+      font-size: clamp(1.8rem, 5vw, 3.4rem);
+      line-height: 0.92;
+      letter-spacing: -0.06em;
     }
 
-    .metric .number {
-      display:block;
-      font-size:clamp(2.2rem,5vw,4rem);
-      line-height:.9;
-      font-weight:950;
-      letter-spacing:-.08em;
+    .metric span {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 850;
+      line-height: 1.25;
     }
 
-    .metric span:last-child {
-      display:block;
-      margin-top:8px;
-      color:var(--muted);
-      line-height:1.45;
+    .grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 16px;
+      margin-top: 16px;
     }
 
-    .panel {
-      margin-top:18px;
-      padding:clamp(18px,3vw,28px);
-      background:
-        radial-gradient(circle at 50% 18%,rgba(244,191,96,.08),transparent 20rem),
-        linear-gradient(180deg,rgba(255,255,255,.045),transparent),
-        var(--panel2);
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: clamp(18px, 3vw, 26px);
+      background: var(--panel);
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.22);
     }
 
-    .section-head {
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:18px;
-      margin-bottom:16px;
+    .card h2 {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font-size: clamp(1.15rem, 3vw, 1.65rem);
+      line-height: 1.08;
+      letter-spacing: -0.045em;
     }
 
-    .section-head h2 {
-      margin:0;
-      font-size:clamp(2rem,4vw,3.7rem);
-      line-height:.92;
-      letter-spacing:-.065em;
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
     }
 
-    .section-head p {
-      max-width:62ch;
-      margin:0;
-      color:var(--muted);
-      line-height:1.55;
+    .stack {
+      display: grid;
+      gap: 12px;
     }
 
-    .standard-grid {
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
+    .goal,
+    .gap,
+    .next,
+    .route-row {
+      border: 1px solid var(--line-soft);
+      border-radius: 20px;
+      padding: 14px;
+      background: var(--panel-2);
     }
 
-    .standard-card {
-      min-height:178px;
-      padding:16px;
-      box-shadow:none;
-      background:
-        linear-gradient(135deg,rgba(255,255,255,.06),transparent 48%),
-        rgba(6,13,27,.78);
+    .goal b,
+    .gap b,
+    .next b {
+      display: block;
+      margin-bottom: 6px;
+      color: rgba(238, 244, 255, 0.94);
+      font-size: 0.96rem;
     }
 
-    .standard-card strong {
-      display:block;
-      color:var(--green);
-      font-size:.74rem;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-      margin-bottom:10px;
+    .goal span,
+    .gap span,
+    .next span {
+      display: block;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 0.92rem;
     }
 
-    .standard-card h3 {
-      margin:0;
-      font-size:1.34rem;
-      letter-spacing:-.04em;
+    .goal[data-state="pass"] {
+      border-color: rgba(167, 243, 198, 0.22);
     }
 
-    .standard-card p {
-      margin:10px 0 0;
-      color:var(--muted);
-      line-height:1.5;
+    .gap[data-severity="fail"] {
+      border-color: rgba(255, 140, 140, 0.32);
     }
 
-    .route-toolbar {
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin:0 0 16px;
+    .gap[data-severity="hold"] {
+      border-color: rgba(240, 170, 95, 0.32);
     }
 
-    .filter-button {
-      min-height:38px;
-      padding:9px 12px;
-      border:1px solid var(--line-soft);
-      color:var(--muted);
-      background:rgba(255,255,255,.04);
-      font-weight:850;
-      letter-spacing:.02em;
-      clip-path:var(--facet-small);
+    .ledger {
+      display: grid;
+      gap: 10px;
     }
 
-    .filter-button[aria-pressed="true"] {
-      border-color:rgba(143,240,195,.42);
-      color:var(--green);
-      background:rgba(143,240,195,.08);
+    .route-row {
+      display: grid;
+      grid-template-columns: 150px 110px 1fr;
+      gap: 12px;
+      align-items: start;
     }
 
-    .route-ledger {
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:12px;
+    .route-path {
+      color: var(--gold);
+      font: 850 0.82rem/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      overflow-wrap: anywhere;
     }
 
-    .route-card {
-      padding:16px;
-      box-shadow:none;
-      background:
-        linear-gradient(135deg,rgba(255,255,255,.06),transparent 48%),
-        rgba(6,13,27,.78);
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 28px;
+      border-radius: 999px;
+      padding: 0 10px;
+      width: fit-content;
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid var(--line-soft);
     }
 
-    .route-card[data-emphasis="critical"] {
-      border-color:rgba(255,159,143,.38);
-      background:
-        radial-gradient(circle at 12% 0%,rgba(255,159,143,.09),transparent 12rem),
-        linear-gradient(135deg,rgba(255,255,255,.06),transparent 48%),
-        rgba(6,13,27,.84);
+    .badge.pass {
+      color: #06101c;
+      background: var(--mint);
+      border-color: rgba(167, 243, 198, 0.72);
     }
 
-    .route-top {
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
+    .badge.hold {
+      color: #170d03;
+      background: var(--amber);
+      border-color: rgba(240, 170, 95, 0.72);
     }
 
-    .route-card h3 {
-      margin:0;
-      font-size:1.18rem;
-      letter-spacing:-.035em;
+    .badge.fail {
+      color: #230808;
+      background: var(--red);
+      border-color: rgba(255, 140, 140, 0.72);
     }
 
-    .route-card a {
-      color:var(--blue);
-      font-size:.82rem;
-      font-weight:900;
-      overflow-wrap:anywhere;
+    .badge.checking {
+      color: rgba(238, 244, 255, 0.78);
+      background: rgba(255, 255, 255, 0.045);
     }
 
-    .status {
-      display:inline-flex;
-      align-items:center;
-      min-height:26px;
-      padding:5px 8px;
-      border:1px solid var(--line-soft);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      white-space:nowrap;
-      clip-path:polygon(0 7px,7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px));
+    .route-note {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
     }
 
-    .status.legacy { color:var(--red); border-color:rgba(255,159,143,.36); background:rgba(255,159,143,.08); }
-    .status.transitional { color:var(--gold); border-color:rgba(244,191,96,.36); background:rgba(244,191,96,.08); }
-    .status.frontier { color:var(--green); border-color:rgba(143,240,195,.36); background:rgba(143,240,195,.08); }
-    .status.hold { color:var(--violet); border-color:rgba(190,170,255,.36); background:rgba(190,170,255,.08); }
-    .status.unreachable { color:#ffcf8f; border-color:rgba(255,207,143,.36); background:rgba(255,207,143,.08); }
-
-    .route-card p {
-      margin:12px 0 0;
-      color:var(--muted);
-      line-height:1.52;
+    .route-note small {
+      display: block;
+      margin-top: 6px;
+      color: var(--faint);
+      font: 750 0.74rem/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      overflow-wrap: anywhere;
     }
 
-    .route-tags {
-      margin:12px 0 0;
-      color:rgba(248,234,208,.72);
-      font-size:.78rem;
-      font-weight:850;
-      letter-spacing:.02em;
-      text-transform:uppercase;
-      line-height:1.45;
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(244, 207, 131, 0.24), transparent);
+      margin: 18px 0;
     }
 
-    .route-tags strong {
-      color:var(--gold);
-      font-weight:950;
+    .fine {
+      color: var(--faint);
+      font-size: 0.82rem;
+      line-height: 1.5;
     }
 
-    .evidence {
-      margin-top:12px;
-      display:grid;
-      gap:6px;
-      color:rgba(248,234,208,.70);
-      font-size:.78rem;
-      line-height:1.4;
+    .footer {
+      margin-top: 20px;
+      padding: 20px 0 0;
+      color: var(--faint);
+      font-size: 0.82rem;
+      text-align: center;
     }
 
-    .evidence span {
-      display:block;
-      padding:7px 8px;
-      border:1px solid rgba(255,255,255,.07);
-      background:rgba(255,255,255,.028);
-      clip-path:var(--facet-small);
-    }
-
-    .list {
-      display:grid;
-      gap:10px;
-      margin-top:14px;
-    }
-
-    .list-item {
-      padding:13px 14px;
-      border:1px solid var(--line-soft);
-      background:rgba(255,255,255,.035);
-      color:var(--muted);
-      line-height:1.5;
-      clip-path:var(--facet-small);
-    }
-
-    .list-item strong {
-      color:var(--gold);
-    }
-
-    .next-move {
-      margin-top:18px;
-      padding:clamp(20px,4vw,34px);
-      border-color:rgba(143,240,195,.32);
-      background:
-        radial-gradient(circle at 20% 10%,rgba(143,240,195,.12),transparent 18rem),
-        linear-gradient(180deg,rgba(255,255,255,.055),transparent),
-        rgba(5,12,22,.90);
-    }
-
-    .next-move h2 {
-      margin:0;
-      font-size:clamp(2.2rem,5vw,4.8rem);
-      line-height:.90;
-      letter-spacing:-.075em;
-    }
-
-    .next-move p {
-      max-width:84ch;
-      margin:16px 0 0;
-      color:var(--muted);
-      line-height:1.62;
-    }
-
-    @media (max-width:980px) {
-      .grid-3,
-      .standard-grid,
-      .route-ledger {
-        grid-template-columns:1fr;
-      }
-
-      .section-head {
-        align-items:flex-start;
-        flex-direction:column;
-      }
-    }
-
-    @media (max-width:760px) {
+    @media (max-width: 880px) {
       .topbar {
-        align-items:flex-start;
-        flex-direction:column;
+        align-items: flex-start;
+        flex-direction: column;
       }
 
       .nav {
-        justify-content:flex-start;
+        justify-content: flex-start;
+      }
+
+      .dashboard,
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .route-row {
+        grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width:560px) {
-      .shell {
-        width:min(100% - 20px,var(--max));
-        padding-top:10px;
+    @media (max-width: 520px) {
+      .page {
+        width: min(100% - 18px, 1180px);
       }
 
       .hero,
-      .panel,
-      .metric,
-      .route-card,
-      .next-move,
-      .standard-card {
-        clip-path:polygon(0 14px,14px 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px));
+      .card {
+        border-radius: 22px;
       }
 
-      .hero {
-        padding:22px;
+      .metric {
+        border-radius: 18px;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="/gauges/#main">Skip to Triple G</a>
+  <a class="skip" href="#main">Skip to Triple G</a>
 
-  <div class="shell">
-    <header class="topbar" aria-label="Triple G navigation">
-      <a class="brand" href="/" aria-label="Return to Diamond Gate Bridge Compass">
-        <span class="brand-mark" aria-hidden="true"></span>
+  <div class="page">
+    <header class="topbar" aria-label="Diamond Gate Bridge navigation">
+      <a class="brand" href="/">
+        <span class="mark" aria-hidden="true">G</span>
         <span>Diamond Gate Bridge</span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
+      <nav class="nav" aria-label="Primary">
         <a href="/">Compass</a>
         <a href="/flat/">Flat</a>
         <a href="/products/">Products</a>
@@ -588,811 +445,433 @@
       </nav>
     </header>
 
-    <main id="main" tabindex="-1">
+    <main id="main">
       <section class="hero">
-        <p class="label">Triple G · Live Frontier Audit</p>
-        <h1>The board reads the site.</h1>
+        <p class="eyebrow">Triple G · live state · gap board</p>
+        <h1>The board reads where the site actually is.</h1>
         <p class="lede">
-          Triple G audits the live routes without counting script dictionaries as evidence. It reads public text, structural markers, route intent, and frontier readiness from the current deployed pages.
+          Triple G audits the live public routes, names the current working state, separates proven conditions from held conditions, and identifies the next lawful move without waking private planet engines.
         </p>
 
-        <div class="actions">
-          <button class="action primary" type="button" id="runAudit">Run Live Audit</button>
-          <a class="action" href="/">Compass</a>
-          <a class="action" href="/flat/">Flat</a>
-          <a class="action" href="/products/">Products</a>
-          <a class="action" href="/showroom/">Showroom</a>
+        <div class="hero-actions">
+          <button class="button primary" type="button" data-run-audit>Run Live Audit</button>
+          <a class="button" href="/showroom/globe/h-earth/">Open H-Earth</a>
+          <a class="button" href="/gauges/h-earth/">Open H-Earth Gauges</a>
         </div>
+
+        <section class="dashboard" aria-label="Audit counts">
+          <div class="metric">
+            <strong data-count="routes">9</strong>
+            <span>Routes under live review</span>
+          </div>
+          <div class="metric">
+            <strong data-count="pass">0</strong>
+            <span>Currently passing</span>
+          </div>
+          <div class="metric">
+            <strong data-count="hold">0</strong>
+            <span>Held / transitional</span>
+          </div>
+          <div class="metric">
+            <strong data-count="fail">0</strong>
+            <span>Hard gaps</span>
+          </div>
+        </section>
       </section>
 
-      <section class="grid-3" aria-label="Triple G summary">
-        <article class="metric">
-          <strong>Goals</strong>
-          <span class="number" id="goalCount">3</span>
-          <span>Context, budget, and frontier readiness stay under live review.</span>
+      <section class="grid" aria-label="Current target and state">
+        <article class="card">
+          <h2>What we are trying to accomplish</h2>
+          <div class="stack">
+            <div class="goal" data-state="pass">
+              <b>Public pages stay light.</b>
+              <span>Compass, Flat, Products, Showroom, and Globe Showcase must explain the estate without waking private render chains.</span>
+            </div>
+            <div class="goal" data-state="pass">
+              <b>Globe Showcase stays a display-case index.</b>
+              <span>Earth, H-Earth, and Audralia can be compared publicly, but full planet construction belongs in private inspection routes.</span>
+            </div>
+            <div class="goal" data-state="pass">
+              <b>H-Earth remains the private orbital build surface.</b>
+              <span>H-Earth should show a stage-facing hydrated spherical object. Raw machinery belongs in H-Earth Gauges.</span>
+            </div>
+            <div class="goal" data-state="pass">
+              <b>Triple G names proof, hold, and failure.</b>
+              <span>The audit must read the live route state, not old expectations, script dictionaries, or hidden receipt claims.</span>
+            </div>
+          </div>
         </article>
 
-        <article class="metric">
-          <strong>Routes read</strong>
-          <span class="number" id="routeCount">0</span>
-          <span id="routeText">Waiting for live audit.</span>
+        <article class="card">
+          <h2>Where we are</h2>
+          <div class="stack">
+            <div class="next">
+              <b>Globe Showcase is structurally correct.</b>
+              <span>It is a lightweight public selector and does not claim to own the private planet engines.</span>
+            </div>
+            <div class="next">
+              <b>H-Earth is correctly framed.</b>
+              <span>The room says orbital/aerial first, ground level held, estate held, and diagnostics backstage.</span>
+            </div>
+            <div class="next">
+              <b>Audralia identity is guarded.</b>
+              <span>Audralia is named as its own constructed world and not a real-world continent substitute.</span>
+            </div>
+            <div class="next">
+              <b>Live gauges are not yet authoritative.</b>
+              <span>Triple G and H-Earth Gauges need active route scoring instead of static waiting counts.</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="grid" aria-label="Gaps and next move">
+        <article class="card">
+          <h2>Known gaps</h2>
+          <div class="stack">
+            <div class="gap" data-severity="fail">
+              <b>Earth route identity failure.</b>
+              <span>The Earth inspection URL must not serve Hearth title/copy/route state. Earth needs its own clean reference-body route.</span>
+            </div>
+            <div class="gap" data-severity="hold">
+              <b>Visible receipt spillover.</b>
+              <span>Products, Earth, and Audralia still expose route-preparing or contract-like source text in public reading space.</span>
+            </div>
+            <div class="gap" data-severity="hold">
+              <b>H-Earth render proof is not visible to Triple G yet.</b>
+              <span>The H-Earth page is framed correctly, but the audit still needs route-readable proof that the hydrated sphere/canvas contract is active.</span>
+            </div>
+            <div class="gap" data-severity="hold">
+              <b>H-Earth Gauges reports zero checks.</b>
+              <span>The backstage room exists, but it must calculate H-Earth route, canvas, hydration, runtime, and gap state.</span>
+            </div>
+          </div>
         </article>
 
-        <article class="metric">
-          <strong>Gaps</strong>
-          <span class="number" id="gapCount">0</span>
-          <span id="gapText">Waiting for live audit.</span>
+        <article class="card">
+          <h2>Next lawful move</h2>
+          <div class="stack">
+            <div class="next">
+              <b>First: repair the public audit board.</b>
+              <span>This file makes Triple G name the current route state and calculate gaps from live text.</span>
+            </div>
+            <div class="next">
+              <b>Second: renew Earth route identity.</b>
+              <span>Earth must become Earth again before it can be used as a clean reference against H-Earth and Audralia.</span>
+            </div>
+            <div class="next">
+              <b>Third: make H-Earth Gauges active.</b>
+              <span>H-Earth Gauges should read H-Earth route proof, hydration contract, runtime posture, canvas mount, and held future work.</span>
+            </div>
+            <div class="next">
+              <b>Fourth: remove public receipt spillover.</b>
+              <span>Public pages may carry hidden data attributes, but visible contract blocks should not be part of the visitor-facing read.</span>
+            </div>
+          </div>
         </article>
       </section>
 
-      <section class="panel" aria-label="Current standard">
-        <div class="section-head">
-          <h2>Current Standard</h2>
-          <p>The standard updates around what the live pages actually prove, not what an older contract claimed.</p>
-        </div>
-
-        <div class="standard-grid">
-          <article class="standard-card">
-            <strong>Compass</strong>
-            <h3>Preface doors.</h3>
-            <p>Flat goes to investigation, Round goes to products, Universe goes to showroom.</p>
-          </article>
-
-          <article class="standard-card">
-            <strong>False-positive repair</strong>
-            <h3>Scripts are not evidence.</h3>
-            <p>Audit dictionaries inside JavaScript are excluded from route classification.</p>
-          </article>
-
-          <article class="standard-card">
-            <strong>Budget law</strong>
-            <h3>Public pages stay light.</h3>
-            <p>Selector pages should not wake private engines or heavy child chains.</p>
-          </article>
-
-          <article class="standard-card">
-            <strong>Receipt containment</strong>
-            <h3>Public text stays clean.</h3>
-            <p>Receipt spillover is checked against visible text, not script dictionaries.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel" aria-label="Live route ledger">
-        <div class="section-head">
-          <h2>Live Route Ledger</h2>
-          <p>Default view shows critical routes. The audit recalculates from public text and structural markers.</p>
-        </div>
-
-        <div class="route-toolbar" aria-label="Ledger filters">
-          <button class="filter-button" type="button" data-filter="critical" aria-pressed="true">Critical</button>
-          <button class="filter-button" type="button" data-filter="all" aria-pressed="false">All</button>
-          <button class="filter-button" type="button" data-filter="frontier" aria-pressed="false">Frontier</button>
-          <button class="filter-button" type="button" data-filter="transitional" aria-pressed="false">Transitional</button>
-          <button class="filter-button" type="button" data-filter="legacy" aria-pressed="false">Legacy</button>
-          <button class="filter-button" type="button" data-filter="hold" aria-pressed="false">Hold</button>
-          <button class="filter-button" type="button" data-filter="unreachable" aria-pressed="false">Unreachable</button>
-        </div>
-
-        <div id="routeLedger" class="route-ledger" aria-live="polite"></div>
-      </section>
-
-      <section class="panel" aria-label="Audit counts">
-        <div class="section-head">
-          <h2>Counts</h2>
-          <p>These counts change when live pages change.</p>
-        </div>
-
-        <div class="grid-3">
-          <article class="metric">
-            <strong>Frontier</strong>
-            <span class="number" id="frontierCount">0</span>
-            <span>Routes currently meeting or approaching the frontier standard.</span>
-          </article>
-
-          <article class="metric">
-            <strong>Transitional</strong>
-            <span class="number" id="transitionalCount">0</span>
-            <span>Routes that are live but still need proof, cleanup, or verification.</span>
-          </article>
-
-          <article class="metric">
-            <strong>Legacy / held</strong>
-            <span class="number" id="legacyHoldCount">0</span>
-            <span>Routes with known debt, hold status, or failed reachability.</span>
-          </article>
-        </div>
-
-        <div class="list" id="gapList"></div>
-      </section>
-
-      <section class="panel" aria-label="PSALM Fibonacci alignment">
-        <div class="section-head">
-          <h2>PSALM / Fibonacci Alignment</h2>
-          <p>Fibonacci remains governance rhythm, not visible overload.</p>
-        </div>
-
-        <div class="list">
-          <div class="list-item"><strong>Correct use:</strong> progression rhythm, refinement order, traversal sequence, density priority, and lawful unfolding.</div>
-          <div class="list-item"><strong>Incorrect use:</strong> forcing public controls to expose 256 pieces, adding decorative complexity, or making renderers heavier than the context requires.</div>
-          <div class="list-item"><strong>Current correction:</strong> Compass is now an entry preface: map, movement, or world.</div>
-        </div>
-      </section>
-
-      <section class="next-move" aria-label="Next Move">
-        <p class="label">Next Move</p>
-        <h2 id="nextMoveTitle">Run the live audit.</h2>
-        <p id="nextMoveText">
-          Triple G will read the current route state, then calculate the controlling next move.
+      <section class="card" style="margin-top:16px;" aria-label="Live route ledger">
+        <h2>Live Route Ledger</h2>
+        <p>
+          The audit fetches same-origin public pages, removes script/style/template text, and scores visible route language. It does not execute private render engines.
         </p>
-        <div class="actions">
-          <a class="action primary" href="/">Return to Compass</a>
-          <a class="action" href="/flat/">Review Flat</a>
-          <a class="action" href="/products/">Review Round</a>
-          <a class="action" href="/showroom/">Review Universe</a>
+
+        <div class="divider"></div>
+
+        <div class="ledger" data-ledger>
+          <div class="route-row">
+            <div class="route-path">waiting</div>
+            <div><span class="badge checking">Ready</span></div>
+            <div class="route-note">Press Run Live Audit to read current deployed routes.</div>
+          </div>
         </div>
+
+        <p class="fine" style="margin-top:16px;">
+          Reading standard: public text and structural route intent count. Script dictionaries, hidden contracts, and visual claims without route proof do not count as pass evidence.
+        </p>
       </section>
     </main>
+
+    <footer class="footer">
+      Diamond Gate Bridge · Triple G · live state and gap board.
+    </footer>
   </div>
 
   <script>
     (() => {
-      const CONTRACT = "TRIPLE_G_LIVE_AUDIT_FALSE_POSITIVE_REPAIR_TNT_v4";
-
-      const routes = [
+      const ROUTES = [
         {
-          route: "/",
-          title: "Compass Preface Doors",
-          role: "entry-preface",
-          emphasis: "critical",
-          expected: "transitional",
-          required: ["COMPASS_PREFACE_DOORS", "/flat/", "/products/", "/showroom/"],
-          frontierSignals: ["compass-preface-doors", "Compass · Three Entry Prefaces", "map, movement, or world"],
-          legacySignals: ["COMPASS_THREE_CONTEXT_FRONTIER", "COMPASS_ROUND_FIELD", "same scene"]
+          path: "/",
+          label: "Compass",
+          require: ["Pressure is the door"],
+          failIf: ["renderer did not load"],
+          holdIf: ["renderer did not load"],
+          pass: "Compass entry preface is present.",
+          hold: "Compass page exists, but renderer fallback text is visible.",
+          fail: "Compass entry preface is missing or unavailable."
         },
         {
-          route: "/flat/",
-          title: "Flat Investigation",
-          role: "two-dimensional-investigation",
-          emphasis: "critical",
-          expected: "transitional",
-          required: ["Flat Investigation", "two-dimensional", "Start with the map"],
-          frontierSignals: ["Map Before Motion", "FLAT_INVESTIGATION", "two-dimensional investigation"],
-          legacySignals: []
+          path: "/flat/",
+          label: "Flat",
+          require: ["Start with the map", "two-dimensional investigation"],
+          failIf: [],
+          holdIf: [],
+          pass: "Flat investigation layer is readable.",
+          hold: "Flat is reachable but missing one expected signal.",
+          fail: "Flat route is unavailable or unclassifiable."
         },
         {
-          route: "/products/",
-          title: "Round / Products",
-          role: "revolving-pages",
-          emphasis: "critical",
-          expected: "transitional",
-          required: ["Products"],
-          frontierSignals: ["ARCHCOIN", "AAI", "Five Flags", "Education"],
-          legacySignals: ["Earth G1"]
+          path: "/products/",
+          label: "Products",
+          require: ["The message becomes usable here", "Eight Doors"],
+          failIf: [],
+          holdIf: ["TNT_v", "route=/products/", "visual_pass_claimed=false"],
+          pass: "Products route is readable without visible receipt spillover.",
+          hold: "Products route is readable, but visible receipt-style source text remains.",
+          fail: "Products route is unavailable or missing its core message."
         },
         {
-          route: "/showroom/",
-          title: "Universe / Showroom",
-          role: "display-world",
-          emphasis: "critical",
-          expected: "frontier",
-          required: ["Showroom"],
-          frontierSignals: ["diamond", "display", "showcase", "object"],
-          legacySignals: ["bubble"]
+          path: "/showroom/",
+          label: "Showroom",
+          require: ["Now open the case", "Globe Showcase"],
+          failIf: [],
+          holdIf: [],
+          pass: "Showroom correctly points into the Globe Showcase.",
+          hold: "Showroom is reachable but missing one expected signal.",
+          fail: "Showroom route is unavailable or unclassifiable."
         },
         {
-          route: "/showroom/globe/",
-          title: "Globe Showcase",
-          role: "display-case",
-          emphasis: "critical",
-          expected: "frontier",
-          required: ["Globe", "Showcase"],
-          frontierSignals: ["display case", "private engines", "low-budget"],
-          legacySignals: []
+          path: "/showroom/globe/",
+          label: "Globe Showcase",
+          require: ["public display case", "stable lightweight portraits", "private engines asleep"],
+          failIf: [],
+          holdIf: [],
+          pass: "Globe Showcase is correctly light and public.",
+          hold: "Globe Showcase is reachable but missing one expected signal.",
+          fail: "Globe Showcase is unavailable or not acting as display-case index."
         },
         {
-          route: "/laws/",
-          title: "Laws",
-          role: "governance-standard",
-          emphasis: "critical",
-          expected: "frontier",
-          required: ["Laws"],
-          frontierSignals: ["proof", "runtime", "scope", "visual"],
-          legacySignals: []
+          path: "/showroom/globe/earth/",
+          label: "Earth",
+          require: ["Earth"],
+          failIf: ["Hearth · Tectonic Parent Chain", "Hearth now routes", "route=/showroom/globe/hearth/"],
+          holdIf: ["TNT_v", "route=", "visual_pass_claimed=false"],
+          pass: "Earth route reads as Earth reference-body surface.",
+          hold: "Earth route is reachable but still exposes backend/source-facing text.",
+          fail: "Earth route identity failure: Hearth content appears on the Earth URL."
         },
         {
-          route: "/gauges/",
-          title: "Triple G",
-          role: "control-board",
-          emphasis: "critical",
-          expected: "frontier",
-          required: ["Triple G", "Live Frontier Audit"],
-          frontierSignals: ["false-positive repair", "Scripts are not evidence", "The board reads the site"],
-          legacySignals: ["0 goals", "0 gauges", "0 gaps"]
+          path: "/showroom/globe/h-earth/",
+          label: "H-Earth",
+          require: ["H-Earth", "Private Orbital Build Room", "Diagnostics Backstage"],
+          failIf: [],
+          holdIf: ["raw runtime receipts", "canvas dumps", "control dumps"],
+          proofAny: ["hydrated", "sphere", "canvas", "Fibonacci runtime"],
+          pass: "H-Earth route is private, orbital, and route-readable with render proof.",
+          hold: "H-Earth is framed correctly, but Triple G still needs route-readable hydrated sphere proof.",
+          fail: "H-Earth private room is unavailable or missing its core scope."
         },
         {
-          route: "/door/",
-          title: "Door",
-          role: "threshold",
-          emphasis: "standard",
-          expected: "transitional",
-          required: ["Door"],
-          frontierSignals: ["threshold", "route"],
-          legacySignals: ["bubble"]
+          path: "/showroom/globe/audralia/",
+          label: "Audralia",
+          require: ["Audralia", "Generation 1", "ocean-dominant", "not a renamed real-world continent"],
+          failIf: ["Australia"],
+          holdIf: ["AUDRALIA_", "route=/showroom/globe/audralia/", "visual_pass_claimed=false"],
+          pass: "Audralia identity is clean and public text is contained.",
+          hold: "Audralia identity is coherent, but visible route-preparing/source text remains.",
+          fail: "Audralia route is unavailable or contaminated by wrong-world language."
         },
         {
-          route: "/home/",
-          title: "Home",
-          role: "receiver",
-          emphasis: "standard",
-          expected: "transitional",
-          required: ["Home"],
-          frontierSignals: ["receiver", "estate", "house"],
-          legacySignals: []
-        },
-        {
-          route: "/explore/",
-          title: "Explore / Manor",
-          role: "route-map",
-          emphasis: "standard",
-          expected: "transitional",
-          required: ["Explore"],
-          frontierSignals: ["Manor", "map", "route"],
-          legacySignals: ["Earth G1"]
-        },
-        {
-          route: "/frontier/",
-          title: "Frontier",
-          role: "edge",
-          emphasis: "standard",
-          expected: "transitional",
-          required: ["Frontier"],
-          frontierSignals: ["edge", "frontier"],
-          legacySignals: []
-        },
-        {
-          route: "/nine-summits/universe/",
-          title: "Nine Summits Universe",
-          role: "universe",
-          emphasis: "standard",
-          expected: "transitional",
-          required: ["Universe"],
-          frontierSignals: ["Nine Summits", "universe"],
-          legacySignals: []
-        },
-        {
-          route: "/nine-summits-of-love/",
-          title: "Nine Summits of Love",
-          role: "book",
-          emphasis: "standard",
-          expected: "transitional",
-          required: ["Nine Summits"],
-          frontierSignals: ["256", "Human Potential"],
-          legacySignals: []
-        },
-        {
-          route: "/products/archcoin/",
-          title: "ARCHCOIN",
-          role: "product",
-          emphasis: "standard",
-          expected: "transitional",
-          required: ["ARCHCOIN"],
-          frontierSignals: ["ARCHCOIN"],
-          legacySignals: ["ARCoin"]
-        },
-        {
-          route: "/products/on-your-side-ai/",
-          title: "AAI",
-          role: "product",
-          emphasis: "standard",
-          expected: "transitional",
-          required: ["AAI"],
-          frontierSignals: ["On Your Side"],
-          legacySignals: []
-        },
-        {
-          route: "/products/five-flags/",
-          title: "Five Flags",
-          role: "product",
-          emphasis: "standard",
-          expected: "transitional",
-          required: ["Five Flags"],
-          frontierSignals: ["Flags"],
-          legacySignals: []
-        },
-        {
-          route: "/products/education/",
-          title: "Education",
-          role: "product",
-          emphasis: "standard",
-          expected: "transitional",
-          required: ["Education"],
-          frontierSignals: ["learning", "ESL"],
-          legacySignals: []
-        },
-        {
-          route: "/products/nutrition/",
-          title: "Nutrition",
-          role: "legacy-product-watch",
-          emphasis: "critical",
-          expected: "legacy",
-          required: ["Nutrition"],
-          frontierSignals: [],
-          legacySignals: ["Earth G1", "shared shell", "stale"]
-        },
-        {
-          route: "/gauges/h-earth/",
-          title: "H-Earth Gauges",
-          role: "diagnostic-room",
-          emphasis: "critical",
-          expected: "hold",
-          required: ["H-Earth"],
-          frontierSignals: ["diagnostics", "checks"],
-          legacySignals: ["0 checks", "0%"]
+          path: "/gauges/h-earth/",
+          label: "H-Earth Gauges",
+          require: ["H-Earth Gauges", "Read-only"],
+          failIf: [],
+          holdIf: ["0 Total checks", "0%Readiness", "waiting"],
+          pass: "H-Earth Gauges is active and reporting nonzero checks.",
+          hold: "H-Earth Gauges exists but is still waiting with zero checks.",
+          fail: "H-Earth Gauges route is unavailable or missing its diagnostic identity."
         }
       ];
 
-      const els = {
-        runAudit: document.getElementById("runAudit"),
-        routeLedger: document.getElementById("routeLedger"),
-        routeCount: document.getElementById("routeCount"),
-        routeText: document.getElementById("routeText"),
-        gapCount: document.getElementById("gapCount"),
-        gapText: document.getElementById("gapText"),
-        frontierCount: document.getElementById("frontierCount"),
-        transitionalCount: document.getElementById("transitionalCount"),
-        legacyHoldCount: document.getElementById("legacyHoldCount"),
-        gapList: document.getElementById("gapList"),
-        nextMoveTitle: document.getElementById("nextMoveTitle"),
-        nextMoveText: document.getElementById("nextMoveText")
+      const state = {
+        results: []
       };
 
-      const buttons = Array.from(document.querySelectorAll("[data-filter]"));
+      const ledger = document.querySelector("[data-ledger]");
+      const runButton = document.querySelector("[data-run-audit]");
+      const countRoutes = document.querySelector('[data-count="routes"]');
+      const countPass = document.querySelector('[data-count="pass"]');
+      const countHold = document.querySelector('[data-count="hold"]');
+      const countFail = document.querySelector('[data-count="fail"]');
 
-      let activeFilter = "critical";
-      let auditResults = routes.map((route) => ({
-        ...route,
-        status: "hold",
-        finding: "Waiting for live audit.",
-        tags: [route.role, "not yet read"],
-        evidence: []
-      }));
-
-      function timeoutFetch(url, options = {}, timeout = 6000) {
-        const controller = new AbortController();
-        const timer = window.setTimeout(() => controller.abort(), timeout);
-
-        return fetch(url, {
-          ...options,
-          signal: controller.signal,
-          cache: "no-store",
-          credentials: "same-origin"
-        }).finally(() => window.clearTimeout(timer));
+      function cleanVisibleText(html) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        doc.querySelectorAll("script, style, template, svg, noscript").forEach((node) => node.remove());
+        return (doc.body ? doc.body.innerText : doc.documentElement.innerText || "")
+          .replace(/\s+/g, " ")
+          .trim();
       }
 
-      function cloneWithoutNonPublicNodes(doc) {
-        const clone = doc.cloneNode(true);
-        clone
-          .querySelectorAll("script,style,noscript,template,svg,canvas,[hidden],[aria-hidden='true'],.data-only")
-          .forEach((node) => node.remove());
-        return clone;
+      function hasAll(text, list) {
+        return list.every((item) => text.toLowerCase().includes(String(item).toLowerCase()));
       }
 
-      function visibleTextFrom(doc) {
-        const clone = cloneWithoutNonPublicNodes(doc);
-        return (clone.body?.textContent || "").replace(/\s+/g, " ").trim();
+      function hasAny(text, list) {
+        return list.some((item) => text.toLowerCase().includes(String(item).toLowerCase()));
       }
 
-      function structuralMarkerTextFrom(doc) {
-        const clone = doc.cloneNode(true);
-        clone
-          .querySelectorAll("script,style,noscript,template,svg")
-          .forEach((node) => node.remove());
-
-        const values = [];
-        const elements = Array.from(clone.querySelectorAll("*"));
-
-        for (const element of elements) {
-          for (const attribute of Array.from(element.attributes || [])) {
-            if (
-              attribute.name.startsWith("data-") ||
-              attribute.name === "id" ||
-              attribute.name === "class" ||
-              attribute.name === "href" ||
-              attribute.name === "aria-label" ||
-              attribute.name === "title"
-            ) {
-              values.push(attribute.value);
-            }
-          }
-        }
-
-        return values.join(" ").replace(/\s+/g, " ").trim();
-      }
-
-      function includesAny(haystack, needles) {
-        const low = haystack.toLowerCase();
-        return needles.some((needle) => low.includes(String(needle).toLowerCase()));
-      }
-
-      function countMatches(haystack, needles) {
-        const low = haystack.toLowerCase();
-
-        return needles.reduce((count, needle) => {
-          return count + (low.includes(String(needle).toLowerCase()) ? 1 : 0);
-        }, 0);
-      }
-
-      function statusLabel(status) {
-        if (status === "frontier") return "Frontier";
-        if (status === "transitional") return "Transitional";
-        if (status === "legacy") return "Legacy";
-        if (status === "hold") return "Hold";
-        if (status === "unreachable") return "Unreachable";
-        return status;
-      }
-
-      function classifyRoute(route, payload) {
-        const doc = payload.doc;
-        const visibleText = doc ? visibleTextFrom(doc) : "";
-        const structuralMarkers = doc ? structuralMarkerTextFrom(doc) : "";
-        const auditScan = `${visibleText} ${structuralMarkers}`;
-
-        const requiredCount = countMatches(auditScan, route.required || []);
-        const requiredTotal = route.required?.length || 0;
-        const frontierCount = countMatches(auditScan, route.frontierSignals || []);
-        const legacyCount = countMatches(auditScan, route.legacySignals || []);
-
-        const visibleReceiptSpill =
-          /\bHTML_RECEIPT\b|\bRUNTIME_RECEIPT\b|\bPAIR_RECEIPT\b|\bRECEIPT:\b/i.test(visibleText);
-
-        const evidence = [];
-
-        evidence.push(`HTTP ${payload.httpStatus}`);
-        evidence.push(`${requiredCount}/${requiredTotal} required marker(s) found`);
-        evidence.push("script text excluded from signal matching");
-
-        if (frontierCount > 0) evidence.push(`${frontierCount} frontier signal(s) found`);
-        if (legacyCount > 0) evidence.push(`${legacyCount} legacy signal(s) found`);
-        if (visibleReceiptSpill) evidence.push("visible receipt spillover detected");
-        if (!visibleReceiptSpill) evidence.push("no visible receipt spillover detected");
-
-        if (!payload.ok) {
+      function classify(route, text, ok) {
+        if (!ok) {
           return {
-            ...route,
-            status: "unreachable",
-            finding: "Route did not return a successful live response.",
-            tags: [route.role, "unreachable"],
-            evidence
+            path: route.path,
+            label: route.label,
+            status: "fail",
+            note: "Route fetch failed or returned a non-OK response.",
+            evidence: "fetch"
           };
         }
 
-        let status = "transitional";
-        let finding = "Reachable and active, but still needs verification before frontier pass.";
+        const requiredPresent = hasAll(text, route.require || []);
+        const failHit = hasAny(text, route.failIf || []);
+        const holdHit = hasAny(text, route.holdIf || []);
+        const proofAny = route.proofAny || [];
+        const proofMissing = proofAny.length ? !hasAny(text, proofAny) : false;
 
-        if (route.expected === "hold") {
-          status = "hold";
-          finding = "Diagnostics lane remains held until its parent route is verified.";
-        } else if (route.expected === "legacy") {
-          status = legacyCount > 0 || visibleReceiptSpill ? "legacy" : "transitional";
-          finding = status === "legacy"
-            ? "Known debt remains present in the served page."
-            : "Known legacy route is reachable and may be ready for renewal review.";
-        } else if (route.route === "/") {
-          const compassUpdated =
-            includesAny(auditScan, ["COMPASS_PREFACE_DOORS", "compass-preface-doors", "Compass · Three Entry Prefaces"]) &&
-            includesAny(auditScan, ["/flat/"]) &&
-            includesAny(auditScan, ["/products/"]) &&
-            includesAny(auditScan, ["/showroom/"]);
-
-          status = compassUpdated && !visibleReceiptSpill ? "transitional" : "legacy";
-          finding = compassUpdated
-            ? "Compass has moved from blocker to preface-door transition. Visual and route behavior still require verification."
-            : "Compass is still missing the preface-door route law.";
-        } else if (route.expected === "frontier") {
-          const canBeFrontier =
-            requiredCount >= Math.max(1, Math.ceil(requiredTotal * 0.5)) &&
-            frontierCount > 0 &&
-            !visibleReceiptSpill &&
-            legacyCount === 0;
-
-          status = canBeFrontier ? "frontier" : "transitional";
-          finding = canBeFrontier
-            ? "Live page currently supports the frontier standard."
-            : "Frontier candidate is reachable but still has incomplete proof, weak signals, or cleanup debt.";
-        } else {
-          const healthyTransition =
-            requiredCount >= Math.max(1, Math.ceil(requiredTotal * 0.5)) &&
-            !visibleReceiptSpill;
-
-          status = healthyTransition ? "transitional" : "legacy";
-          finding = healthyTransition
-            ? "Route is live and usable, but not yet frontier-passed."
-            : "Route is reachable but still carries visible debt or missing expected markers.";
+        if (!requiredPresent || failHit) {
+          return {
+            path: route.path,
+            label: route.label,
+            status: "fail",
+            note: route.fail,
+            evidence: failHit ? "wrong-route-language" : "missing-required-language"
+          };
         }
 
-        if (visibleReceiptSpill && status === "frontier") {
-          status = "transitional";
-          finding = "Frontier candidate downgraded because public receipt text is still present.";
+        if (holdHit || proofMissing) {
+          return {
+            path: route.path,
+            label: route.label,
+            status: "hold",
+            note: route.hold,
+            evidence: holdHit ? "visible-hold-signal" : "proof-not-visible"
+          };
         }
 
         return {
-          ...route,
-          status,
-          finding,
-          tags: [route.role, route.expected, status],
-          evidence
+          path: route.path,
+          label: route.label,
+          status: "pass",
+          note: route.pass,
+          evidence: "visible-route-proof"
         };
+      }
+
+      function renderLedger() {
+        ledger.innerHTML = "";
+
+        state.results.forEach((result) => {
+          const row = document.createElement("div");
+          row.className = "route-row";
+
+          const path = document.createElement("div");
+          path.className = "route-path";
+          path.textContent = result.path;
+
+          const badgeBox = document.createElement("div");
+          const badge = document.createElement("span");
+          badge.className = "badge " + result.status;
+          badge.textContent = result.status;
+          badgeBox.appendChild(badge);
+
+          const note = document.createElement("div");
+          note.className = "route-note";
+          note.textContent = result.label + " · " + result.note;
+
+          const evidence = document.createElement("small");
+          evidence.textContent = "evidence: " + result.evidence;
+          note.appendChild(evidence);
+
+          row.appendChild(path);
+          row.appendChild(badgeBox);
+          row.appendChild(note);
+          ledger.appendChild(row);
+        });
+
+        const pass = state.results.filter((item) => item.status === "pass").length;
+        const hold = state.results.filter((item) => item.status === "hold").length;
+        const fail = state.results.filter((item) => item.status === "fail").length;
+
+        countRoutes.textContent = String(state.results.length || ROUTES.length);
+        countPass.textContent = String(pass);
+        countHold.textContent = String(hold);
+        countFail.textContent = String(fail);
       }
 
       async function auditRoute(route) {
         try {
-          const response = await timeoutFetch(route.route);
-          const html = await response.text();
-          const doc = new DOMParser().parseFromString(html, "text/html");
-
-          return classifyRoute(route, {
-            ok: response.ok,
-            httpStatus: response.status,
-            doc
+          const response = await fetch(route.path, {
+            cache: "no-store",
+            credentials: "same-origin",
+            headers: {
+              "Accept": "text/html"
+            }
           });
+
+          const html = await response.text();
+          const text = cleanVisibleText(html);
+          return classify(route, text, response.ok);
         } catch (error) {
           return {
-            ...route,
-            status: "unreachable",
-            finding: error?.name === "AbortError"
-              ? "Route request timed out."
-              : "Route could not be fetched by the live audit.",
-            tags: [route.role, "unreachable"],
-            evidence: [error?.message || "fetch failed"]
+            path: route.path,
+            label: route.label,
+            status: "fail",
+            note: "Fetch error: " + (error && error.message ? error.message : "unknown error"),
+            evidence: "fetch-error"
           };
         }
-      }
-
-      function counts() {
-        return auditResults.reduce((acc, item) => {
-          acc[item.status] = (acc[item.status] || 0) + 1;
-          return acc;
-        }, {});
-      }
-
-      function visibleRoutes() {
-        if (activeFilter === "critical") return auditResults.filter((item) => item.emphasis === "critical");
-        if (activeFilter === "all") return auditResults;
-        return auditResults.filter((item) => item.status === activeFilter);
-      }
-
-      function renderLedger() {
-        els.routeLedger.replaceChildren(...visibleRoutes().map((item) => {
-          const article = document.createElement("article");
-          article.className = "route-card";
-          article.dataset.status = item.status;
-          article.dataset.emphasis = item.emphasis;
-
-          const top = document.createElement("div");
-          top.className = "route-top";
-
-          const titleWrap = document.createElement("div");
-
-          const h3 = document.createElement("h3");
-          h3.textContent = item.title;
-
-          const link = document.createElement("a");
-          link.href = item.route;
-          link.textContent = item.route;
-
-          titleWrap.append(h3, link);
-
-          const status = document.createElement("span");
-          status.className = `status ${item.status}`;
-          status.textContent = statusLabel(item.status);
-
-          top.append(titleWrap, status);
-
-          const finding = document.createElement("p");
-          finding.textContent = item.finding;
-
-          const tags = document.createElement("p");
-          tags.className = "route-tags";
-          tags.innerHTML = `<strong>Tags:</strong> ${item.tags.map(escapeHtml).join(" · ")}`;
-
-          const evidence = document.createElement("div");
-          evidence.className = "evidence";
-          item.evidence.slice(0, 6).forEach((line) => {
-            const span = document.createElement("span");
-            span.textContent = line;
-            evidence.appendChild(span);
-          });
-
-          article.append(top, finding, tags, evidence);
-          return article;
-        }));
-      }
-
-      function renderGaps() {
-        const gaps = auditResults.filter((item) => {
-          return item.status === "legacy" || item.status === "hold" || item.status === "unreachable";
-        });
-
-        if (!gaps.length) {
-          els.gapList.replaceChildren(listItem("No blocking legacy, held, or unreachable route currently detected by the live audit."));
-          return;
-        }
-
-        els.gapList.replaceChildren(...gaps.map((gap) => {
-          return listItem(`${gap.title}: ${gap.finding}`);
-        }));
-      }
-
-      function listItem(text) {
-        const item = document.createElement("div");
-        item.className = "list-item";
-        item.textContent = text;
-        return item;
-      }
-
-      function updateMetrics() {
-        const c = counts();
-        const frontier = c.frontier || 0;
-        const transitional = c.transitional || 0;
-        const legacy = c.legacy || 0;
-        const hold = c.hold || 0;
-        const unreachable = c.unreachable || 0;
-        const gapTotal = legacy + hold + unreachable;
-
-        els.routeCount.textContent = String(auditResults.length);
-        els.routeText.textContent = `${frontier} frontier · ${transitional} transitional · ${gapTotal} gap route(s).`;
-
-        els.gapCount.textContent = String(gapTotal);
-        els.gapText.textContent = gapTotal
-          ? `${legacy} legacy · ${hold} hold · ${unreachable} unreachable.`
-          : "No live blocking gaps detected.";
-
-        els.frontierCount.textContent = String(frontier);
-        els.transitionalCount.textContent = String(transitional);
-        els.legacyHoldCount.textContent = String(gapTotal);
-
-        document.documentElement.dataset.frontierCount = String(frontier);
-        document.documentElement.dataset.transitionalCount = String(transitional);
-        document.documentElement.dataset.legacyCount = String(legacy);
-        document.documentElement.dataset.holdCount = String(hold);
-        document.documentElement.dataset.unreachableCount = String(unreachable);
-        document.documentElement.dataset.gapCount = String(gapTotal);
-      }
-
-      function updateNextMove() {
-        const compass = auditResults.find((item) => item.route === "/");
-        const flat = auditResults.find((item) => item.route === "/flat/");
-        const showroom = auditResults.find((item) => item.route === "/showroom/");
-        const globeShowcase = auditResults.find((item) => item.route === "/showroom/globe/");
-        const nutrition = auditResults.find((item) => item.route === "/products/nutrition/");
-        const hEarthGauges = auditResults.find((item) => item.route === "/gauges/h-earth/");
-        const unreachable = auditResults.find((item) => item.status === "unreachable");
-        const receiptSpill = auditResults.find((item) => item.evidence.some((line) => line.includes("visible receipt spillover detected")));
-
-        if (unreachable) {
-          els.nextMoveTitle.textContent = "Repair unreachable route first.";
-          els.nextMoveText.textContent = `${unreachable.title} could not be read by Triple G. Verify the deployed path before writing new visual code.`;
-          return;
-        }
-
-        if (flat?.status === "unreachable" || flat?.status === "legacy") {
-          els.nextMoveTitle.textContent = "Stabilize Flat Investigation.";
-          els.nextMoveText.textContent = "Flat is now part of the Compass preface law. It must remain reachable, readable, and two-dimensional before the Round and Universe entries can be trusted.";
-          return;
-        }
-
-        if (compass?.status === "transitional") {
-          els.nextMoveTitle.textContent = "Verify Compass Preface Doors.";
-          els.nextMoveText.textContent = "Confirm the live Compass opens Flat to /flat/, Round to /products/, and Universe to /showroom/. After visual verification, Triple G can promote Compass from transitional to frontier candidate.";
-          return;
-        }
-
-        if (receiptSpill) {
-          els.nextMoveTitle.textContent = "Contain public receipt spillover.";
-          els.nextMoveText.textContent = `${receiptSpill.title} still appears to expose audit machinery in public text. Clean that route before promoting it.`;
-          return;
-        }
-
-        if (showroom?.status === "transitional" || globeShowcase?.status === "transitional") {
-          els.nextMoveTitle.textContent = "Clean the Showroom lane.";
-          els.nextMoveText.textContent = "Showroom and Globe Showcase are the Universe-entry standards. Remove public receipt spillover and preserve the display-world object language.";
-          return;
-        }
-
-        if (nutrition?.status === "legacy") {
-          els.nextMoveTitle.textContent = "Renew the Nutrition route.";
-          els.nextMoveText.textContent = "Nutrition remains the clearest known product-route debt. Renew it after Compass preface verification is complete.";
-          return;
-        }
-
-        if (hEarthGauges?.status === "hold") {
-          els.nextMoveTitle.textContent = "Renew H-Earth Gauges.";
-          els.nextMoveText.textContent = "The site-level ledger is live. The H-Earth diagnostics route can be renewed after current Compass and public-route verification.";
-          return;
-        }
-
-        els.nextMoveTitle.textContent = "Advance the next frontier candidate.";
-        els.nextMoveText.textContent = "No critical live blocker is currently dominating the audit. Choose the next route from the transitional ledger and upgrade it under the frontier standard.";
-      }
-
-      function setFilter(filter) {
-        activeFilter = filter;
-        buttons.forEach((button) => {
-          button.setAttribute("aria-pressed", String(button.dataset.filter === filter));
-        });
-        renderLedger();
-      }
-
-      function escapeHtml(value) {
-        return String(value)
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;")
-          .replaceAll("'", "&#039;");
       }
 
       async function runAudit() {
-        els.runAudit.textContent = "Reading Live Routes...";
-        els.runAudit.disabled = true;
+        runButton.disabled = true;
+        runButton.textContent = "Reading Live Routes";
 
-        auditResults = await Promise.all(routes.map(auditRoute));
-
-        updateMetrics();
+        state.results = ROUTES.map((route) => ({
+          path: route.path,
+          label: route.label,
+          status: "checking",
+          note: "Waiting for fetch.",
+          evidence: "pending"
+        }));
         renderLedger();
-        renderGaps();
-        updateNextMove();
 
-        els.runAudit.textContent = "Live Audit Complete";
-        els.runAudit.disabled = false;
+        const results = [];
+        for (const route of ROUTES) {
+          const result = await auditRoute(route);
+          results.push(result);
+          state.results = results.concat(
+            ROUTES.slice(results.length).map((pending) => ({
+              path: pending.path,
+              label: pending.label,
+              status: "checking",
+              note: "Waiting for fetch.",
+              evidence: "pending"
+            }))
+          );
+          renderLedger();
+        }
 
-        document.documentElement.dataset.auditRan = "true";
-        document.documentElement.dataset.auditCompletedAt = new Date().toISOString();
+        state.results = results;
+        renderLedger();
+
+        runButton.disabled = false;
+        runButton.textContent = "Run Live Audit";
       }
 
-      buttons.forEach((button) => {
-        button.addEventListener("click", () => setFilter(button.dataset.filter || "critical"));
-      });
+      runButton?.addEventListener("click", runAudit);
 
-      els.runAudit.addEventListener("click", runAudit);
-
-      window.DGBTripleG = {
-        contract: CONTRACT,
-        routes,
-        getResults() {
-          return auditResults.slice();
-        },
-        runAudit,
-        status() {
-          return {
-            contract: CONTRACT,
-            auditMode: "live-client-side",
-            falsePositiveRepair: true,
-            scriptSignalCounting: false,
-            routes: auditResults.length,
-            counts: counts(),
-            generatedImage: false,
-            graphicBox: false,
-            visualPassClaim: false
-          };
-        }
-      };
-
-      updateMetrics();
-      renderLedger();
-      renderGaps();
-      updateNextMove();
-
-      document.documentElement.dataset.tripleGReceipt = CONTRACT;
-      document.documentElement.dataset.auditMode = "live-client-side";
-      document.documentElement.dataset.falsePositiveRepair = "true";
-      document.documentElement.dataset.scriptSignalCounting = "false";
-      document.documentElement.dataset.generatedImage = "false";
-      document.documentElement.dataset.graphicBox = "false";
-      document.documentElement.dataset.visualPassClaim = "false";
-
-      window.setTimeout(runAudit, 300);
+      countRoutes.textContent = String(ROUTES.length);
     })();
   </script>
 </body>

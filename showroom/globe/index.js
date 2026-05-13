@@ -1,11 +1,11 @@
 // /showroom/globe/index.js
 // TNT FULL-FILE REPLACEMENT
-// SHOWROOM_GLOBE_PARENT_SELECTOR_CANVAS_RESTORE_TNT_v3
-// Scope: /showroom/globe/ parent selector only.
-// Restores the single cinematic globe selector runtime.
-// No imports. No WebGL. No child-route mutation. No H-Earth ground engine.
+// SHOWROOM_GLOBE_SATELLITE_SELECTOR_HARD_RESTORE_TNT_v4
+// Parent /showroom/globe/ only.
+// Satellite graphics only.
+// Forbidden here: ground view, Manor, Western Golden Shelf, ground engine, child-route mutation.
 
-const CONTRACT = "SHOWROOM_GLOBE_PARENT_SELECTOR_CANVAS_RESTORE_TNT_v3";
+const CONTRACT = "SHOWROOM_GLOBE_SATELLITE_SELECTOR_HARD_RESTORE_TNT_v4";
 const TAU = Math.PI * 2;
 
 const BODIES = Object.freeze({
@@ -16,23 +16,23 @@ const BODIES = Object.freeze({
     copy: "Ancient living reference body. Satellite planetary selector view only.",
     route: "/showroom/globe/earth/",
     seed: 1401,
-    water: [24, 86, 118],
-    shallow: [64, 142, 154],
-    land: [171, 158, 95],
-    high: [225, 203, 133],
-    dark: [18, 34, 42],
+    water: [22, 82, 117],
+    shallow: [62, 140, 154],
+    land: [172, 158, 94],
+    high: [226, 204, 136],
+    dark: [18, 33, 42],
     atmosphere: [110, 178, 205]
   },
   "h-earth": {
     key: "h-earth",
     label: "H-Earth",
     subtitle: "Hybrid Ancient Living World · physical dry material",
-    copy: "Hybrid ancient living world. Ground-level Western Golden Shelf work remains on the H-Earth child route only.",
+    copy: "Hybrid ancient living world. Satellite selector view only from this parent page.",
     route: "/showroom/globe/h-earth/",
     seed: 2402,
-    water: [37, 112, 118],
-    shallow: [75, 151, 134],
-    land: [187, 166, 93],
+    water: [38, 111, 118],
+    shallow: [76, 150, 133],
+    land: [188, 166, 92],
     high: [229, 207, 132],
     dark: [34, 30, 28],
     atmosphere: [116, 195, 171]
@@ -97,13 +97,16 @@ function rgba(c, a = 1) {
 
 function markDocument() {
   const markers = {
-    page: "showroom-globe-original-selector-restored",
+    page: "showroom-globe-satellite-selector",
     route: "/showroom/globe/",
     contract: CONTRACT,
     jurisdiction: "satellite-selector-only",
-    groundLevelEngine: "false",
+    groundView: "false",
+    groundEngine: "false",
+    manorPlacement: "false",
+    westernGoldenShelf: "false",
     selectedBody: state.body,
-    renderedBy: "parent-selector-canvas-runtime"
+    renderedBy: "satellite-canvas-runtime"
   };
 
   Object.entries(markers).forEach(([key, value]) => {
@@ -141,16 +144,14 @@ function updateCopy() {
 function resolveCanvas() {
   return (
     document.querySelector("[data-globe-canvas]") ||
-    document.querySelector("canvas[aria-label*='globe' i]") ||
     document.querySelector(".globe-stage canvas") ||
     document.querySelector("canvas")
   );
 }
 
 function resizeCanvas() {
-  const canvas = state.canvas;
-  const rect = canvas.getBoundingClientRect();
-  const parent = canvas.parentElement?.getBoundingClientRect?.();
+  const rect = state.canvas.getBoundingClientRect();
+  const parent = state.canvas.parentElement?.getBoundingClientRect?.();
 
   const cssWidth = rect.width || parent?.width || 640;
   const cssHeight = rect.height || parent?.height || Math.max(520, cssWidth * 0.92);
@@ -159,12 +160,12 @@ function resizeCanvas() {
   const width = Math.max(640, Math.floor(cssWidth * dpr));
   const height = Math.max(560, Math.floor(cssHeight * dpr));
 
-  if (canvas.width !== width || canvas.height !== height) {
-    canvas.width = width;
-    canvas.height = height;
+  if (state.canvas.width !== width || state.canvas.height !== height) {
+    state.canvas.width = width;
+    state.canvas.height = height;
   }
 
-  return { width, height, dpr };
+  return { width, height };
 }
 
 function drawBackground(ctx, width, height, time) {
@@ -327,8 +328,10 @@ function drawFrame(time = performance.now()) {
     contract: CONTRACT,
     route: "/showroom/globe/",
     selectedBody: state.body,
-    restoredOriginalDesign: true,
-    groundLevelEngine: false,
+    groundView: false,
+    groundEngine: false,
+    manorPlacement: false,
+    westernGoldenShelf: false,
     rendered: true,
     canvasWidth: width,
     canvasHeight: height
@@ -442,8 +445,9 @@ function init() {
           contract: CONTRACT,
           route: "/showroom/globe/",
           rendered: false,
-          error: "No globe canvas found",
-          groundLevelEngine: false
+          error: "No satellite globe canvas found",
+          groundView: false,
+          groundEngine: false
         });
       }
     });
@@ -462,8 +466,10 @@ function init() {
         contract: CONTRACT,
         route: "/showroom/globe/",
         selectedBody: state.body,
-        groundLevelEngine: false,
-        restoredOriginalDesign: true,
+        groundView: false,
+        groundEngine: false,
+        manorPlacement: false,
+        westernGoldenShelf: false,
         canvasFound: Boolean(state.canvas),
         contextFound: Boolean(state.ctx),
         receipt: window.DGBShowroomGlobeReceipt || null

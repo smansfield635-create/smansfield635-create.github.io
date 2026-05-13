@@ -1,11 +1,12 @@
 // /showroom/globe/index.js
 // TNT FULL-FILE REPLACEMENT
-// H_EARTH_CHILD_TERRAIN_REFINEMENT_TRIAL_TNT_v1
-// Role: lightweight public Globe Showcase selector.
-// Change: H-Earth now uses parent macro silhouette plus optional child terrain refinement.
-// Constraint: if child file fails, this page still renders the parent baseline.
+// SHOWROOM_GLOBE_INDEX_CLEAN_SUBLEVEL_GLOBE_TNT_v1
+// Role: public Globe Showcase selector only.
+// Visual law: clean inspectable sub-level terrain globe.
+// Removed: water, landmasses, oceans, lakes, coastlines, beaches, child terrain import, visible 256 terrain fabric.
+// Preserved: drag inspection, world selection, route entry, lighting, atmosphere, private engines asleep.
 
-const MODEL_NAME = "globe-showcase-h-earth-child-terrain-refinement-trial-v1";
+const MODEL_NAME = "showroom-globe-index-clean-sublevel-globe-v1";
 
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
 const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
@@ -26,36 +27,24 @@ const CHILD_HEX_COLS = 16;
 const CHILD_HEX_COUNT = CHILD_HEX_ROWS * CHILD_HEX_COLS;
 const TOTAL_CHILD_FIELDS = CELL_COUNT * CHILD_HEX_COUNT;
 
-const PORTRAIT_LAT_STEPS = MOBILE ? 66 : 82;
-const PORTRAIT_LON_STEPS = MOBILE ? 132 : 164;
+const PORTRAIT_LAT_STEPS = MOBILE ? 64 : 82;
+const PORTRAIT_LON_STEPS = MOBILE ? 128 : 164;
 
-const H_EARTH_TERRAIN_CHILD_URL = "/assets/h-earth/h-earth.terrain.js?v=child-terrain-refinement-trial-v1";
-
-const terrainChild = {
-  ready: false,
-  failed: false,
-  model: "parent-only",
-  refine(sample) {
-    return sample;
-  }
-};
-
-const H_EARTH_PUBLIC_MODEL = Object.freeze({
+const SUBLEVEL_MODEL = Object.freeze({
   parentCells: CELL_COUNT,
   childFieldsPerParent: CHILD_HEX_COUNT,
   totalChildFields: TOTAL_CHILD_FIELDS,
-  publicMode: "stable parent silhouette with child terrain trial",
-  privateModelPath: "/showroom/globe/h-earth/",
-  childTerrainPath: "/assets/h-earth/h-earth.terrain.js",
-  assetAuthority: Object.freeze([
-    "/assets/h-earth/h-earth.kernel.js",
-    "/assets/h-earth/h-earth.lattice256.js",
-    "/assets/h-earth/h-earth.landmap.js",
-    "/assets/h-earth/h-earth.terrain.js",
-    "/assets/h-earth/h-earth.surface.js",
-    "/assets/h-earth/h-earth.canvas.js",
-    "/assets/h-earth/h-earth.controls.js"
-  ])
+  publicMode: "clean sub-level terrain globe",
+  privateEnginesAsleep: true,
+  mapExpression: false,
+  waterExpression: false,
+  landmassExpression: false,
+  childTerrainImport: false,
+  privateModelPaths: Object.freeze({
+    earth: "/showroom/globe/earth/",
+    hEarth: "/showroom/globe/h-earth/",
+    audralia: "/showroom/globe/audralia/"
+  })
 });
 
 const WORLDS = Object.freeze({
@@ -64,14 +53,13 @@ const WORLDS = Object.freeze({
     title: "Earth",
     subtitle: "Reference Body",
     route: "/showroom/globe/earth/",
-    ocean: [30, 102, 164],
-    deep: [10, 42, 92],
-    land: [70, 145, 88],
-    lowland: [66, 136, 82],
-    highland: [132, 126, 96],
-    coast: [201, 186, 126],
-    freshwater: [86, 168, 204],
-    ice: [192, 230, 244],
+    seed: 310,
+    base: [62, 88, 112],
+    low: [26, 42, 64],
+    mid: [86, 104, 118],
+    high: [156, 148, 128],
+    ridge: [210, 206, 184],
+    fault: [180, 224, 238],
     glow: "rgba(142,190,255,0.22)"
   },
   hEarth: {
@@ -79,14 +67,13 @@ const WORLDS = Object.freeze({
     title: "H-Earth",
     subtitle: "Hybrid Earth",
     route: "/showroom/globe/h-earth/",
-    ocean: [33, 112, 166],
-    deep: [7, 36, 96],
-    land: [78, 154, 96],
-    lowland: [68, 142, 88],
-    highland: [136, 136, 102],
-    coast: [211, 194, 132],
-    freshwater: [96, 182, 212],
-    ice: [188, 224, 240],
+    seed: 710,
+    base: [66, 96, 104],
+    low: [25, 48, 64],
+    mid: [82, 120, 112],
+    high: [152, 150, 118],
+    ridge: [220, 213, 176],
+    fault: [158, 242, 196],
     glow: "rgba(143,240,195,0.22)"
   },
   audralia: {
@@ -94,14 +81,13 @@ const WORLDS = Object.freeze({
     title: "Audralia",
     subtitle: "Constructed World",
     route: "/showroom/globe/audralia/",
-    ocean: [38, 110, 150],
-    deep: [10, 40, 94],
-    land: [140, 128, 82],
-    lowland: [132, 120, 76],
-    highland: [168, 148, 100],
-    coast: [221, 196, 132],
-    freshwater: [102, 174, 206],
-    ice: [190, 226, 236],
+    seed: 910,
+    base: [84, 78, 112],
+    low: [34, 34, 72],
+    mid: [108, 96, 126],
+    high: [170, 146, 108],
+    ridge: [226, 205, 160],
+    fault: [198, 172, 255],
     glow: "rgba(190,170,255,0.22)"
   }
 });
@@ -258,24 +244,6 @@ function wrapLonDelta(lon, center) {
   return Math.atan2(Math.sin(lon - center), Math.cos(lon - center));
 }
 
-function orientedPlateField(lat, lon, centerLat, centerLon, latRadius, lonRadius, angle, skew = 0) {
-  const x = wrapLonDelta(lon, centerLon);
-  const y = lat - centerLat;
-
-  const c = Math.cos(angle);
-  const s = Math.sin(angle);
-
-  const xr = x * c - y * s;
-  const yr = x * s + y * c;
-
-  const bend = Math.sin((yr + skew) * 2.2) * 0.09 + Math.sin((xr - skew) * 1.7) * 0.04;
-  const nx = (xr + bend) / lonRadius;
-  const ny = yr / latRadius;
-
-  const d = Math.sqrt(nx * nx + ny * ny);
-  return 1 - d;
-}
-
 function ribbonField(lat, lon, centerLat, centerLon, length, width, angle, phase = 0) {
   const x = wrapLonDelta(lon, centerLon);
   const y = lat - centerLat;
@@ -286,14 +254,14 @@ function ribbonField(lat, lon, centerLat, centerLon, length, width, angle, phase
   const xr = x * c - y * s;
   const yr = x * s + y * c;
 
-  const curved = yr + Math.sin(xr * 2.6 + phase) * 0.075 + Math.sin(xr * 5.1 - phase) * 0.028;
+  const curved = yr + Math.sin(xr * 2.8 + phase) * 0.075 + Math.sin(xr * 5.6 - phase) * 0.028;
   const along = Math.abs(xr) / length;
   const across = Math.abs(curved) / width;
 
   return 1 - Math.max(along * 0.72, across);
 }
 
-function gaussianDistance(lat, lon, centerLat, centerLon, latWidth, lonWidth) {
+function basinField(lat, lon, centerLat, centerLon, latWidth, lonWidth) {
   const dLat = (lat - centerLat) / latWidth;
   const dLon = wrapLonDelta(lon, centerLon) / lonWidth;
   return Math.exp(-(dLat * dLat + dLon * dLon));
@@ -305,6 +273,10 @@ function mixColor(a, b, t) {
     Math.round(lerp(a[1], b[1], t)),
     Math.round(lerp(a[2], b[2], t))
   ];
+}
+
+function colorString(color) {
+  return `rgb(${color[0]},${color[1]},${color[2]})`;
 }
 
 function sizeCanvas() {
@@ -334,312 +306,101 @@ function createStars(count) {
   }));
 }
 
-function finishTerrain(worldKey, lat, lon, elevation, ridge, moisture, freshwater = false, childTerrainMeta = null) {
-  const polar = Math.abs(lat) / (Math.PI / 2);
-  const iceThreshold = worldKey === "audralia" ? 0.93 : 0.885;
-  const iceFade = smoothstep(iceThreshold - 0.06, iceThreshold + 0.03, polar);
-  const isIce = iceFade > 0.40;
+function sampleSublevel(lat, lon, world) {
+  const seed = world.seed;
 
-  const seaLevel = 0;
-  const water = (elevation < seaLevel || freshwater) && !isIce;
-  const coast = !isIce && Math.abs(elevation - seaLevel) < 0.055;
-  const shelf = water && elevation > -0.11 && !freshwater;
-  const sea = water && elevation <= -0.11 && elevation > -0.30 && !freshwater;
-  const mountain = !water && !isIce && elevation > 0.17 && ridge > 0.58;
-  const highland = !water && !isIce && (elevation > 0.11 || mountain);
-  const dry = !water && !isIce && moisture < 0.34 && elevation > 0.04;
+  const global = warp2D(lon * 0.62, lat * 0.68, seed + 1, 0.40, 0.28);
+  const local = warp2D(lon * 1.34, lat * 1.18, seed + 2, 0.16, 0.12);
+
+  const shellPressure =
+    fbm2D(global.x * 0.56 + 3.1, global.y * 0.64 - 4.4, seed + 10, 4) * 0.36 +
+    fbm2D(global.x * 1.15 - 7.6, global.y * 1.06 + 2.8, seed + 11, 4) * 0.18 +
+    fbm2D(local.x * 2.10 + 1.7, local.y * 1.86 - 5.9, seed + 12, 3) * 0.08;
+
+  const longRidgeA = ribbonField(global.y, global.x, 0.16, -1.22, 1.72, 0.105, -0.38, 0.4);
+  const longRidgeB = ribbonField(global.y, global.x, -0.18, 0.86, 1.50, 0.095, 0.34, 2.1);
+  const longRidgeC = ribbonField(global.y, global.x, 0.52, 0.18, 1.20, 0.090, -0.12, -1.2);
+  const longRidgeD = ribbonField(global.y, global.x, -0.58, -0.52, 1.28, 0.095, 0.24, 1.7);
+
+  const ridgeSystem =
+    Math.max(longRidgeA, longRidgeB, longRidgeC, longRidgeD, 0) * 0.30 +
+    ridge2D(local.x * 1.55 + 4.2, local.y * 1.50 - 7.2, seed + 20) * 0.18 +
+    ridge2D(local.x * 2.90 - 8.1, local.y * 2.70 + 3.8, seed + 21) * 0.08;
+
+  const basinA = basinField(global.y, global.x, 0.22, -2.08, 0.50, 0.44);
+  const basinB = basinField(global.y, global.x, -0.34, 1.74, 0.44, 0.48);
+  const basinC = basinField(global.y, global.x, 0.70, 0.64, 0.28, 0.62);
+  const basinD = basinField(global.y, global.x, -0.72, -1.08, 0.28, 0.58);
+
+  const basinPressure = Math.max(basinA, basinB, basinC, basinD) * 0.26;
+
+  const fractureA = ribbonField(global.y, global.x, 0.00, 0.20, 1.85, 0.040, 0.06, 0.7);
+  const fractureB = ribbonField(global.y, global.x, 0.36, -1.78, 0.92, 0.036, 0.42, 2.0);
+  const fractureC = ribbonField(global.y, global.x, -0.40, 1.28, 0.92, 0.038, -0.36, -0.8);
+
+  const fracture = Math.max(fractureA, fractureB, fractureC, 0);
+
+  const polarCompression = smoothstep(1.02, 1.50, Math.abs(lat)) * 0.16;
+  const equatorialPlateSpread = (1 - smoothstep(0.18, 1.10, Math.abs(lat))) * 0.08;
+
+  const elevation =
+    shellPressure +
+    ridgeSystem -
+    basinPressure -
+    fracture * 0.14 +
+    polarCompression -
+    equatorialPlateSpread;
+
+  const relief = clamp((elevation + 0.54) / 1.08, 0, 1);
+  const ridge = clamp(ridgeSystem * 1.50 + fracture * 0.28, 0, 1);
+  const basin = clamp(basinPressure * 2.4 + smoothstep(-0.38, -0.06, -elevation) * 0.30, 0, 1);
+  const fault = clamp(fracture, 0, 1);
+
+  const fine =
+    fbm2D(local.x * 4.20 + 9.0, local.y * 3.80 - 6.0, seed + 31, 3) * 0.55 +
+    ridge2D(local.x * 5.40 - 2.0, local.y * 5.00 + 8.0, seed + 32) * 0.45;
 
   return {
-    worldKey,
-    lat,
-    lon,
-    elevation,
-    polar,
-    ice: isIce,
-    iceFade,
-    land: !water || isIce,
-    water,
-    freshwater,
-    coast,
-    shelf,
-    sea,
-    mountain,
-    highland,
-    dry,
+    relief,
     ridge,
-    moisture,
-    detail: clamp((fbm2D(lon * 3.1 + 2, lat * 2.7 - 1, 199) + 1) * 0.5, 0, 1),
-    childTerrainModel: childTerrainMeta?.childTerrainModel || "inactive",
-    childTerrainActive: childTerrainMeta?.childTerrainActive === true
+    basin,
+    fault,
+    fine: clamp((fine + 1) * 0.5, 0, 1),
+    polarCompression
   };
 }
 
-function sampleEarth(lat, lon) {
-  const w = warp2D(lon * 0.82, lat * 0.86, 301, 0.20, 0.15);
-  const macro = fbm2D(w.x * 0.80, w.y * 0.92, 302, 4) * 0.34;
-  const detail = fbm2D(w.x * 1.70, w.y * 1.45, 303, 3) * 0.10;
+function colorForSublevel(sample, world, light, rim) {
+  let base = mixColor(world.low, world.base, 0.50 + sample.relief * 0.28);
 
-  const americas =
-    gaussianDistance(lat, lon, 0.28, -1.90, 0.78, 0.76) +
-    gaussianDistance(lat, lon, -0.36, -1.40, 0.55, 0.52) * 0.84;
-
-  const euroAfrica =
-    gaussianDistance(lat, lon, 0.32, 0.35, 0.74, 0.72) +
-    gaussianDistance(lat, lon, -0.12, 0.58, 0.62, 0.66) * 0.82;
-
-  const asia =
-    gaussianDistance(lat, lon, 0.36, 1.48, 0.62, 0.72) +
-    gaussianDistance(lat, lon, 0.10, 2.10, 0.40, 0.48) * 0.52;
-
-  const australia = gaussianDistance(lat, lon, -0.38, 2.30, 0.26, 0.28) * 0.52;
-  const antarctica = gaussianDistance(lat, lon, -1.20, 0.0, 0.22, 3.2) * 0.76;
-
-  const oceanCuts =
-    gaussianDistance(lat, lon, 0.05, -0.80, 0.46, 0.36) * 0.18 +
-    gaussianDistance(lat, lon, 0.18, 2.70, 0.26, 0.24) * 0.12;
-
-  const elevation = Math.max(americas, euroAfrica, asia, australia, antarctica) * 0.72 + macro + detail - 0.38 - oceanCuts;
-  const ridge = ridge2D(w.x * 1.8 - 2, w.y * 1.8 + 1, 304);
-  const moisture = clamp((fbm2D(w.x * 1.1 + 5, w.y * 1.1 - 3, 305, 3) + 1) * 0.5, 0, 1);
-
-  return finishTerrain("earth", lat, lon, elevation, ridge, moisture);
-}
-
-function makeHEarthParentSample(lat, lon) {
-  const globalWarp = warp2D(lon * 0.55, lat * 0.62, 701, 0.42, 0.28);
-  const fineWarp = warp2D(lon * 1.22, lat * 1.08, 702, 0.16, 0.12);
-
-  const x = globalWarp.x;
-  const y = globalWarp.y;
-
-  const westPlate =
-    orientedPlateField(y, x, 0.12, -1.78, 0.74, 1.04, -0.22, 0.30) * 0.70 +
-    orientedPlateField(y, x, -0.32, -1.34, 0.46, 0.72, 0.40, -0.18) * 0.34 +
-    ribbonField(y, x, 0.48, -1.36, 0.86, 0.18, 0.18, 1.1) * 0.20;
-
-  const eastPlate =
-    orientedPlateField(y, x, 0.04, 1.48, 0.80, 0.98, 0.30, -0.12) * 0.72 +
-    orientedPlateField(y, x, 0.38, 0.96, 0.44, 0.62, -0.50, 0.24) * 0.30 +
-    orientedPlateField(y, x, -0.30, 2.08, 0.40, 0.52, 0.48, 0.08) * 0.22;
-
-  const northShield =
-    orientedPlateField(y, x, 0.72, -0.12, 0.36, 1.05, 0.05, 0.12) * 0.54 +
-    ribbonField(y, x, 0.60, 0.58, 0.62, 0.16, -0.42, 2.2) * 0.26;
-
-  const southShelf =
-    orientedPlateField(y, x, -0.66, 0.20, 0.42, 1.12, -0.12, -0.16) * 0.50 +
-    ribbonField(y, x, -0.50, -0.46, 0.84, 0.15, 0.34, -1.3) * 0.22;
-
-  const centerIslands =
-    ribbonField(y, x, 0.02, -0.54, 0.46, 0.12, 0.03, 0.2) * 0.36 +
-    ribbonField(y, x, 0.02, 0.10, 0.38, 0.10, -0.10, 1.4) * 0.30 +
-    ribbonField(y, x, -0.06, 0.70, 0.34, 0.11, 0.16, 2.4) * 0.24;
-
-  const northCrown = ribbonField(y, x, 1.28, -0.15, 2.40, 0.16, 0.00, 0.0) * 0.18;
-  const southCrown = ribbonField(y, x, -1.28, 0.22, 2.20, 0.15, 0.00, 1.0) * 0.16;
-
-  const continentPressure = Math.max(
-    westPlate,
-    eastPlate,
-    northShield,
-    southShelf,
-    centerIslands,
-    northCrown,
-    southCrown
-  );
-
-  const continentalSpine =
-    ridge2D(fineWarp.x * 1.20 - 3.0, fineWarp.y * 1.12 + 4.0, 703) * 0.13 +
-    ridge2D(fineWarp.x * 2.00 + 1.4, fineWarp.y * 1.86 - 2.8, 704) * 0.07;
-
-  const broadOrganicPressure =
-    fbm2D(x * 0.58 + 9.0, y * 0.70 - 4.0, 705, 4) * 0.24 +
-    fbm2D(x * 1.14 - 2.0, y * 1.08 + 7.0, 706, 3) * 0.11;
-
-  const coastlineErosion =
-    fbm2D(fineWarp.x * 2.15 + 12.0, fineWarp.y * 2.04 - 8.0, 707, 4) * 0.070 +
-    fbm2D(fineWarp.x * 4.20 - 5.0, fineWarp.y * 3.80 + 2.0, 708, 3) * 0.028;
-
-  const westOceanChannel =
-    ribbonField(y, x, 0.02, -2.74, 1.42, 0.28, 0.12, 1.2) * 0.36 +
-    ribbonField(y, x, -0.46, -2.30, 0.62, 0.18, -0.30, -0.8) * 0.20;
-
-  const eastOceanChannel =
-    ribbonField(y, x, 0.00, 2.72, 1.46, 0.29, -0.10, -1.1) * 0.36 +
-    ribbonField(y, x, 0.38, 2.26, 0.54, 0.17, 0.34, 0.7) * 0.18;
-
-  const centralRift =
-    ribbonField(y, x, 0.02, 0.20, 1.02, 0.14, 0.10, 0.9) * 0.22 +
-    ribbonField(y, x, -0.20, 0.88, 0.54, 0.12, -0.22, 2.4) * 0.15;
-
-  const northernSeaCut =
-    ribbonField(y, x, 0.54, -0.36, 0.74, 0.14, -0.18, 0.6) * 0.16 +
-    ribbonField(y, x, 0.42, 1.10, 0.46, 0.12, 0.42, -2.0) * 0.12;
-
-  const southernSeaCut =
-    ribbonField(y, x, -0.54, 0.84, 0.82, 0.16, 0.24, 1.7) * 0.18 +
-    ribbonField(y, x, -0.74, -0.68, 0.72, 0.15, -0.20, -1.5) * 0.14;
-
-  const polarOceanPressure = smoothstep(1.08, 1.48, Math.abs(lat)) * 0.12;
-
-  const oceanCut =
-    westOceanChannel +
-    eastOceanChannel +
-    centralRift +
-    northernSeaCut +
-    southernSeaCut +
-    polarOceanPressure;
-
-  let elevation =
-    continentPressure +
-    broadOrganicPressure +
-    continentalSpine * 0.62 +
-    coastlineErosion -
-    oceanCut -
-    0.335;
-
-  const peninsulaWest =
-    ribbonField(y, x, -0.08, -2.02, 0.48, 0.10, 0.62, 2.1) * 0.16 +
-    ribbonField(y, x, 0.30, -1.00, 0.40, 0.09, -0.58, 0.8) * 0.12;
-
-  const peninsulaEast =
-    ribbonField(y, x, 0.18, 2.05, 0.44, 0.10, -0.60, 1.9) * 0.14 +
-    ribbonField(y, x, -0.18, 1.20, 0.36, 0.09, 0.70, -0.7) * 0.10;
-
-  const bayBiteWest =
-    gaussianDistance(fineWarp.y, fineWarp.x, 0.10, -1.92, 0.18, 0.18) * 0.10 +
-    gaussianDistance(fineWarp.y, fineWarp.x, -0.38, -1.02, 0.16, 0.22) * 0.12;
-
-  const bayBiteEast =
-    gaussianDistance(fineWarp.y, fineWarp.x, 0.30, 1.48, 0.17, 0.22) * 0.12 +
-    gaussianDistance(fineWarp.y, fineWarp.x, -0.46, 1.66, 0.18, 0.22) * 0.10;
-
-  elevation += peninsulaWest + peninsulaEast - bayBiteWest - bayBiteEast;
-
-  const islandChain =
-    ribbonField(y, x, 0.04, -0.18, 0.84, 0.055, 0.02, 0.6) * 0.12 +
-    ribbonField(y, x, -0.18, 1.24, 0.58, 0.055, 0.28, 2.2) * 0.10;
-
-  const brokenIslandNoise = fbm2D(fineWarp.x * 5.7, fineWarp.y * 5.2, 709, 3);
-  if (brokenIslandNoise > 0.24) {
-    elevation += islandChain;
+  if (sample.basin > 0.22) {
+    base = mixColor(base, world.low, clamp(sample.basin * 0.42, 0, 0.52));
   }
 
-  const moisture = clamp((fbm2D(fineWarp.x * 1.08 - 3, fineWarp.y * 1.02 + 2, 710, 3) + 1) * 0.5, 0, 1);
-
-  const ridge =
-    ridge2D(fineWarp.x * 1.55 + 8, fineWarp.y * 1.66 - 4, 711) * 0.60 +
-    ridge2D(fineWarp.x * 2.70 - 6, fineWarp.y * 2.60 + 9, 712) * 0.24;
-
-  const lakeField =
-    gaussianDistance(fineWarp.y, fineWarp.x, 0.16, -1.44, 0.09, 0.12) +
-    gaussianDistance(fineWarp.y, fineWarp.x, 0.10, 1.74, 0.10, 0.13) +
-    gaussianDistance(fineWarp.y, fineWarp.x, -0.20, 0.78, 0.11, 0.14) +
-    gaussianDistance(fineWarp.y, fineWarp.x, -0.30, -0.28, 0.10, 0.15);
-
-  const freshwater = elevation > 0.045 && lakeField > 0.70 && moisture > 0.42;
-
-  return {
-    worldKey: "hEarth",
-    lat,
-    lon,
-    elevation,
-    ridge,
-    moisture,
-    freshwater,
-    parentTerrainModel: "h-earth-parent-macro-silhouette-v1"
-  };
-}
-
-function sampleHEarth(lat, lon) {
-  const parentSample = makeHEarthParentSample(lat, lon);
-  const refined = terrainChild.refine(parentSample);
-
-  return finishTerrain(
-    "hEarth",
-    lat,
-    lon,
-    refined.elevation,
-    refined.ridge,
-    refined.moisture,
-    refined.freshwater,
-    refined
-  );
-}
-
-function sampleAudralia(lat, lon) {
-  const w = warp2D(lon * 0.78, lat * 0.82, 501, 0.26, 0.16);
-  const macro =
-    fbm2D(w.x * 0.88 + 2, w.y * 0.94 - 3, 502, 4) * 0.24 +
-    fbm2D(w.x * 1.82 - 4, w.y * 1.58 + 2, 503, 3) * 0.08;
-
-  const archipelago =
-    gaussianDistance(lat, lon, 0.12, -0.82, 0.54, 0.84) +
-    gaussianDistance(lat, lon, -0.18, 0.16, 0.44, 0.68) * 0.84 +
-    gaussianDistance(lat, lon, 0.38, 1.12, 0.30, 0.44) * 0.58;
-
-  const southernLand = gaussianDistance(lat, lon, -0.78, -0.22, 0.28, 0.84) * 0.66;
-
-  const islandTrail =
-    gaussianDistance(lat, lon, 0.02, 1.72, 0.16, 0.28) +
-    gaussianDistance(lat, lon, -0.16, 2.18, 0.16, 0.24) * 0.74 +
-    gaussianDistance(lat, lon, 0.24, 2.56, 0.14, 0.22) * 0.54;
-
-  const elevation = Math.max(archipelago, southernLand, islandTrail) * 0.72 + macro - 0.38;
-  const ridge = ridge2D(w.x * 1.6, w.y * 1.7, 504);
-  const moisture = clamp((fbm2D(w.x * 1.1 + 1, w.y * 1.15 - 2, 505, 3) + 1) * 0.5, 0, 1);
-
-  return finishTerrain("audralia", lat, lon, elevation, ridge, moisture);
-}
-
-function sampleTerrain(lat, lon, worldKey) {
-  if (worldKey === "earth") return sampleEarth(lat, lon);
-  if (worldKey === "audralia") return sampleAudralia(lat, lon);
-  return sampleHEarth(lat, lon);
-}
-
-function colorForTerrain(terrain, world, light, rim) {
-  let base;
-
-  if (terrain.ice) {
-    base = mixColor(world.ice, [255, 255, 255], terrain.iceFade * 0.26);
-  } else if (terrain.freshwater) {
-    base = mixColor(world.freshwater, world.ocean, 0.18);
-  } else if (terrain.water) {
-    if (terrain.shelf) {
-      base = mixColor(world.ocean, world.coast, 0.18);
-    } else if (terrain.sea) {
-      base = mixColor(world.deep, world.ocean, 0.48);
-    } else {
-      base = world.deep;
-    }
-  } else if (terrain.coast) {
-    base = mixColor(world.coast, world.lowland, terrain.elevation > 0 ? 0.28 : 0.08);
-  } else if (terrain.mountain) {
-    base = mixColor(world.highland, [194, 182, 150], 0.28);
-  } else if (terrain.highland) {
-    base = mixColor(world.land, world.highland, 0.38);
-  } else if (terrain.dry) {
-    base = mixColor(world.land, world.coast, 0.16);
-  } else {
-    base = world.land;
+  if (sample.relief > 0.56) {
+    base = mixColor(base, world.mid, clamp((sample.relief - 0.56) * 0.88, 0, 0.48));
   }
 
-  const texture = (terrain.detail - 0.5) * (terrain.water ? 5 : 8);
-  const shade = clamp(light + rim * 0.10, 0.16, 1.16);
+  if (sample.relief > 0.74 || sample.ridge > 0.54) {
+    base = mixColor(base, world.high, clamp(Math.max(sample.relief - 0.72, sample.ridge - 0.48) * 0.68, 0, 0.42));
+  }
+
+  if (sample.ridge > 0.68) {
+    base = mixColor(base, world.ridge, clamp((sample.ridge - 0.68) * 0.62, 0, 0.26));
+  }
+
+  if (sample.fault > 0.62) {
+    base = mixColor(base, world.fault, clamp((sample.fault - 0.62) * 0.50, 0, 0.16));
+  }
+
+  const texture = (sample.fine - 0.5) * 8.5;
+  const shade = clamp(light + rim * 0.13, 0.18, 1.18);
 
   const r = Math.round(clamp((base[0] + texture) * shade, 0, 255));
-  const g = Math.round(clamp((base[1] + texture * 0.62) * shade, 0, 255));
-  const b = Math.round(clamp((base[2] + (terrain.water ? 8 : -texture * 0.14)) * shade, 0, 255));
+  const g = Math.round(clamp((base[1] + texture * 0.76) * shade, 0, 255));
+  const b = Math.round(clamp((base[2] + texture * 0.58) * shade, 0, 255));
 
   return `rgb(${r},${g},${b})`;
-}
-
-function colorWithAlpha(rgb, alpha) {
-  if (alpha >= 0.995) return rgb;
-  const parts = rgb.match(/\d+/g);
-  if (!parts || parts.length < 3) return rgb;
-  return `rgba(${parts[0]},${parts[1]},${parts[2]},${alpha})`;
 }
 
 function makeSurfacePatch(lat0, lat1, lon0, lon1, view) {
@@ -792,7 +553,7 @@ function drawSphereBase(ctx, view) {
 
   ctx.save();
 
-  const ocean = ctx.createRadialGradient(
+  const base = ctx.createRadialGradient(
     view.cx - view.scale * 0.22,
     view.cy - view.scale * 0.24,
     view.scale * 0.04,
@@ -801,11 +562,14 @@ function drawSphereBase(ctx, view) {
     view.scale * 1.08
   );
 
-  ocean.addColorStop(0, `rgb(${world.ocean[0] + 28},${world.ocean[1] + 28},${world.ocean[2] + 32})`);
-  ocean.addColorStop(0.52, `rgb(${world.ocean[0]},${world.ocean[1]},${world.ocean[2]})`);
-  ocean.addColorStop(1, `rgb(${world.deep[0]},${world.deep[1]},${world.deep[2]})`);
+  const lightBase = mixColor(world.base, world.ridge, 0.12);
+  const darkBase = mixColor(world.low, [0, 0, 0], 0.16);
 
-  ctx.fillStyle = ocean;
+  base.addColorStop(0, colorString(lightBase));
+  base.addColorStop(0.54, colorString(world.base));
+  base.addColorStop(1, colorString(darkBase));
+
+  ctx.fillStyle = base;
   ctx.beginPath();
   ctx.arc(view.cx, view.cy, view.scale, 0, Math.PI * 2);
   ctx.fill();
@@ -838,24 +602,59 @@ function drawSurface(ctx, view) {
   ctx.clip();
 
   for (const patch of patches) {
-    const terrain = sampleTerrain(patch.lat, patch.lon, state.worldKey);
-
-    if (terrain.water && !terrain.shelf && !terrain.sea && !terrain.freshwater && !terrain.ice) {
-      continue;
-    }
-
+    const sample = sampleSublevel(patch.lat, patch.lon, world);
     const diffuse = clamp(dot(patch.normal, light), 0, 1);
     const rim = Math.pow(clamp(1 - Math.abs(patch.normal.z), 0, 1), 2.0);
-    const lightValue = 0.34 + diffuse * 0.62 + rim * 0.06;
-
-    let alpha = 0.92;
-    if (terrain.water) alpha = terrain.freshwater ? 0.88 : terrain.shelf ? 0.50 : 0.28;
-    if (terrain.coast) alpha = Math.max(alpha, 0.64);
-    if (terrain.ice) alpha = 0.78;
+    const lightValue = 0.36 + diffuse * 0.62 + rim * 0.06;
 
     pathPatch(ctx, patch.points);
-    ctx.fillStyle = colorWithAlpha(colorForTerrain(terrain, world, lightValue, rim), alpha);
+    ctx.fillStyle = colorForSublevel(sample, world, lightValue, rim);
     ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function drawSubtleContourLines(ctx, view) {
+  const world = WORLDS[state.worldKey];
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(view.cx, view.cy, view.scale * 1.002, 0, Math.PI * 2);
+  ctx.clip();
+
+  ctx.globalCompositeOperation = "screen";
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+
+  const count = MOBILE ? 7 : 10;
+
+  for (let i = 0; i < count; i += 1) {
+    const lat = lerp(-0.82, 0.82, i / Math.max(1, count - 1)) + Math.sin(i * 1.3) * 0.04;
+    const points = [];
+
+    for (let j = 0; j <= 72; j += 1) {
+      const u = j / 72;
+      const lon = -2.80 + u * 5.60;
+      const waveLat = lat + Math.sin(lon * 1.8 + i * 0.7) * 0.018;
+      const p = makePoint(waveLat, lon);
+      const r = rotateX(rotateY(p, view.yaw), view.pitch);
+      if (r.z > 0.04) points.push(project(r, view));
+    }
+
+    if (points.length < 3) continue;
+
+    ctx.strokeStyle = `rgba(${world.fault[0]},${world.fault[1]},${world.fault[2]},0.045)`;
+    ctx.lineWidth = Math.max(0.35, DPR * 0.32);
+
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+
+    for (let j = 1; j < points.length; j += 1) {
+      ctx.lineTo(points[j].x, points[j].y);
+    }
+
+    ctx.stroke();
   }
 
   ctx.restore();
@@ -917,12 +716,7 @@ function drawWorldTitle(ctx, width, height) {
 
   ctx.fillStyle = "rgba(186,197,212,0.72)";
   ctx.font = `850 ${Math.max(11 * DPR, width * 0.014)}px Inter, system-ui, sans-serif`;
-
-  const subtitle = world.key === "hEarth" && terrainChild.ready
-    ? `${world.subtitle} · child terrain trial`
-    : `${world.subtitle} · parent macro silhouette`;
-
-  ctx.fillText(subtitle, width * 0.5, height * 0.205);
+  ctx.fillText(`${world.subtitle} · sub-level terrain globe`, width * 0.5, height * 0.205);
 
   ctx.restore();
 }
@@ -933,7 +727,7 @@ function drawCue(ctx, width, height) {
   ctx.textBaseline = "middle";
   ctx.fillStyle = "rgba(186,197,212,0.60)";
   ctx.font = `800 ${Math.max(11 * DPR, width * 0.013)}px Inter, system-ui, sans-serif`;
-  ctx.fillText("Drag to inspect · Select a world · Open room for deeper model", width * 0.5, height * 0.90);
+  ctx.fillText("Drag to inspect · Select a world · Open room for private map", width * 0.5, height * 0.90);
   ctx.restore();
 }
 
@@ -951,6 +745,7 @@ function drawPlanet(ctx, width, height) {
   drawGlobeShadow(ctx, view);
   drawSphereBase(ctx, view);
   drawSurface(ctx, view);
+  drawSubtleContourLines(ctx, view);
   drawAtmosphere(ctx, view);
   drawOrbitLines(ctx, view);
   drawWorldTitle(ctx, width, height);
@@ -958,11 +753,12 @@ function drawPlanet(ctx, width, height) {
 
   document.documentElement.dataset.globeShowcaseModel = MODEL_NAME;
   document.documentElement.dataset.selectedWorld = state.worldKey;
-  document.documentElement.dataset.publicPortraitBaseline = "stable";
-  document.documentElement.dataset.hEarthSilhouette = "parent-macro-organic";
-  document.documentElement.dataset.hEarthChildTerrain = terrainChild.ready ? terrainChild.model : "inactive";
-  document.documentElement.dataset.hEarthChildTerrainFailed = String(terrainChild.failed);
+  document.documentElement.dataset.publicPortraitBaseline = "clean-sublevel-globe";
   document.documentElement.dataset.privateEnginesAsleep = "true";
+  document.documentElement.dataset.mapExpression = "false";
+  document.documentElement.dataset.waterExpression = "false";
+  document.documentElement.dataset.landmassExpression = "false";
+  document.documentElement.dataset.childTerrainImport = "false";
   document.documentElement.dataset.parentCellCount = String(CELL_COUNT);
   document.documentElement.dataset.childFieldsPerParent = String(CHILD_HEX_COUNT);
   document.documentElement.dataset.totalChildFields = String(TOTAL_CHILD_FIELDS);
@@ -1199,37 +995,6 @@ function installResize() {
   }, { passive: true });
 }
 
-async function loadHEarthTerrainChild() {
-  try {
-    const module = await import(H_EARTH_TERRAIN_CHILD_URL);
-
-    if (typeof module.refineHEarthTerrain !== "function") {
-      throw new Error("refineHEarthTerrain export missing");
-    }
-
-    terrainChild.refine = module.refineHEarthTerrain;
-    terrainChild.ready = true;
-    terrainChild.failed = false;
-
-    if (typeof module.getHEarthTerrainTrialStatus === "function") {
-      const status = module.getHEarthTerrainTrialStatus();
-      terrainChild.model = status?.model || "h-earth-child-terrain-refinement-trial-v1";
-    } else {
-      terrainChild.model = "h-earth-child-terrain-refinement-trial-v1";
-    }
-
-    document.documentElement.dataset.hEarthChildTerrain = terrainChild.model;
-    render();
-  } catch (error) {
-    terrainChild.ready = false;
-    terrainChild.failed = true;
-    terrainChild.model = "child-load-failed-parent-fallback";
-    document.documentElement.dataset.hEarthChildTerrain = "inactive";
-    document.documentElement.dataset.hEarthChildTerrainFailed = "true";
-    render();
-  }
-}
-
 function boot() {
   state.canvas = $("globeShowcaseCanvas");
   if (!state.canvas) return;
@@ -1242,34 +1007,39 @@ function boot() {
   updateControls();
   render();
   startLoop();
-  loadHEarthTerrainChild();
 
   window.DGBGlobeShowcase = {
     model: MODEL_NAME,
-    publicPortraitBaseline: true,
+    publicPortraitBaseline: "clean-sublevel-globe",
     privateEnginesAsleep: true,
     generatedImage: false,
     graphicBox: false,
+    mapExpression: false,
+    waterExpression: false,
+    landmassExpression: false,
+    childTerrainImport: false,
     worlds: Object.keys(WORLDS),
     parentCellCount: CELL_COUNT,
     childFieldsPerParent: CHILD_HEX_COUNT,
     totalChildFields: TOTAL_CHILD_FIELDS,
-    hEarthPublicModel: H_EARTH_PUBLIC_MODEL,
+    sublevelModel: SUBLEVEL_MODEL,
     setWorld,
     reset: resetInspection,
     status() {
       return {
         model: MODEL_NAME,
         selectedWorld: state.worldKey,
-        publicPortraitBaseline: true,
-        hEarthSilhouette: "parent-macro-organic",
-        hEarthChildTerrain: terrainChild.ready ? terrainChild.model : "inactive",
-        hEarthChildTerrainFailed: terrainChild.failed,
+        publicPortraitBaseline: "clean-sublevel-globe",
         privateEnginesAsleep: true,
+        generatedImage: false,
+        graphicBox: false,
+        mapExpression: false,
+        waterExpression: false,
+        landmassExpression: false,
+        childTerrainImport: false,
         parentCellCount: CELL_COUNT,
         childFieldsPerParent: CHILD_HEX_COUNT,
         totalChildFields: TOTAL_CHILD_FIELDS,
-        hEarthPrivateModelPath: H_EARTH_PUBLIC_MODEL.privateModelPath,
         yaw: state.yaw,
         pitch: state.pitch
       };
@@ -1285,10 +1055,16 @@ if (document.readyState === "loading") {
 
 export default {
   model: MODEL_NAME,
-  publicPortraitBaseline: true,
+  publicPortraitBaseline: "clean-sublevel-globe",
   privateEnginesAsleep: true,
+  generatedImage: false,
+  graphicBox: false,
+  mapExpression: false,
+  waterExpression: false,
+  landmassExpression: false,
+  childTerrainImport: false,
   parentCellCount: CELL_COUNT,
   childFieldsPerParent: CHILD_HEX_COUNT,
   totalChildFields: TOTAL_CHILD_FIELDS,
-  hEarthPublicModel: H_EARTH_PUBLIC_MODEL
+  sublevelModel: SUBLEVEL_MODEL
 };

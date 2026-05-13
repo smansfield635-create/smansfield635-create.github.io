@@ -1,12 +1,14 @@
 // /assets/world/environment/scene.js
 // TNT FULL-FILE REPLACEMENT
-// REUSABLE_PLANETARY_GROUND_SCENE_TNT_v1
+// REUSABLE_PLANETARY_GROUND_SCENE_HEXFIELD_TNT_v2
 // Owns: scene compositing, layer order, camera, receipts, and final visible integration.
 
 import {
   createEnvironmentProfile,
   resolveEnvironmentCell
 } from "/assets/world/environment/profile.js";
+
+import { createHexField } from "/assets/world/environment/hexfield.js";
 
 import {
   drawClimateLayer,
@@ -28,11 +30,12 @@ import {
 import { drawFoliageLayer } from "/assets/world/environment/foliage.js";
 import { drawStructureLayer } from "/assets/world/environment/structure.js";
 
-export const ENVIRONMENT_SCENE_VERSION = "reusable-planetary-ground-scene-v1";
+export const ENVIRONMENT_SCENE_VERSION = "reusable-planetary-ground-scene-hexfield-v2";
 
 export function createGroundEnvironmentScene(canvas, inputProfile, options = {}) {
   const profile = createEnvironmentProfile(inputProfile);
   const cell = resolveEnvironmentCell(profile, options.cell || profile.region.activeCell);
+  const hexfield = createHexField(profile, cell, options);
   const ctx = canvas.getContext("2d", { alpha: false });
 
   const state = {
@@ -74,7 +77,8 @@ export function createGroundEnvironmentScene(canvas, inputProfile, options = {})
       height: size.height,
       dpr: size.dpr,
       time: (time - state.startedAt) / 1000,
-      now: time
+      now: time,
+      hexfield
     };
 
     ctx.clearRect(0, 0, size.width, size.height);
@@ -94,6 +98,7 @@ export function createGroundEnvironmentScene(canvas, inputProfile, options = {})
 
     state.receipt = Object.freeze({
       sceneVersion: ENVIRONMENT_SCENE_VERSION,
+      hexfieldVersion: hexfield.version,
       planet: profile.planet.key,
       region: profile.region.key,
       cell: cell.coordinate,
@@ -101,6 +106,11 @@ export function createGroundEnvironmentScene(canvas, inputProfile, options = {})
       staticImageSource: false,
       parentMutation: false,
       rendered: true,
+      hexSubstrate: {
+        live: true,
+        scale: hexfield.scale,
+        seed: hexfield.seed
+      },
       water: {
         waves: true,
         foam: true,
@@ -144,6 +154,7 @@ export function createGroundEnvironmentScene(canvas, inputProfile, options = {})
         running: state.running,
         profile,
         cell,
+        hexfield: hexfield.status(),
         receipt: state.receipt
       });
     }

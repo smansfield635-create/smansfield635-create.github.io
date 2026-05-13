@@ -3,8 +3,9 @@
   lang="en"
   data-route="/showroom/globe/"
   data-page="showroom-globe"
-  data-version="SHOWROOM_GLOBE_SOURCE_AUTHORITY_REPAIR_TNT_v1"
+  data-version="SHOWROOM_GLOBE_CINEMATIC_MATERIAL_ASSET_HTML_TNT_v1"
   data-source-authority="html-shell-loads-local-index-js"
+  data-import-version="cinematic-material-asset-v1"
   data-public-selector="true"
   data-private-engines-asleep="true"
   data-generated-image="false"
@@ -20,10 +21,11 @@
   <title>Globe Showcase · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The Globe Showcase is the public selector for Earth, H-Earth, and Audralia. The public route shows a clean inspectable globe while private map engines stay in their own rooms."
+    content="The Globe Showcase is the public selector for Earth, H-Earth, and Audralia. It loads the cinematic dry planet material renderer while private map engines stay in their own rooms."
   >
 
-  <link rel="modulepreload" href="/showroom/globe/index.js?v=clean-sublevel-source-authority-v1">
+  <link rel="modulepreload" href="/showroom/globe/index.js?v=cinematic-material-asset-v1">
+  <link rel="modulepreload" href="/assets/showroom.globe.cinematic.material.js?v=cinematic-material-asset-v1">
 
   <style>
     :root{
@@ -555,11 +557,12 @@
 
   <script>
     (() => {
-      const cacheKey = "clean-sublevel-source-authority-v1";
+      const cacheKey = "cinematic-material-asset-v1";
       document.documentElement.dataset.cacheKey = cacheKey;
 
       try {
         sessionStorage.setItem("dgb-globe-cache-key", cacheKey);
+        localStorage.setItem("dgb-globe-cache-key", cacheKey);
       } catch (_) {}
 
       if ("serviceWorker" in navigator) {
@@ -614,7 +617,7 @@
         <h1 id="page-title">The globe is the object.</h1>
 
         <p class="lead">
-          This page now loads the local Globe Showcase renderer directly. It shows a clean inspectable globe only. Maps, landmasses, water systems, terrain history, and child engines belong inside the private world rooms.
+          This page loads the local Globe Showcase controller and the dedicated cinematic dry planet material renderer. Maps, water systems, landmasses, terrain history, and child engines belong inside the private world rooms.
         </p>
 
         <div class="actions">
@@ -626,16 +629,16 @@
 
       <section class="panel section" aria-labelledby="showcase-title">
         <div class="showcase-card">
-          <div class="stage-label">Source authority · local index.js · private engines asleep</div>
+          <div class="stage-label">Source authority · local index.js · cinematic material asset · private engines asleep</div>
 
           <h2 id="showcase-title">Clean globe, not public map construction.</h2>
 
-          <div class="globe-wrap" aria-label="Interactive clean globe selector">
+          <div class="globe-wrap" aria-label="Interactive cinematic globe selector">
             <canvas
               id="globeShowcaseCanvas"
               tabindex="0"
               role="img"
-              aria-label="Interactive clean globe selector for Earth, H-Earth, and Audralia"
+              aria-label="Interactive cinematic globe selector for Earth, H-Earth, and Audralia"
             ></canvas>
 
             <div class="world-controls" aria-label="World selector">
@@ -654,7 +657,7 @@
 
       <section class="panel section" aria-labelledby="standard-title">
         <div class="kicker">Display case</div>
-        <h2 id="standard-title">The public page stops carrying terrain.</h2>
+        <h2 id="standard-title">The public page carries the object. The asset carries the material.</h2>
 
         <div class="info-grid">
           <div class="info-card">
@@ -664,15 +667,15 @@
           </div>
 
           <div class="info-card">
-            <b>Private worlds</b>
-            <strong>Terrain moves downstream.</strong>
-            <span>H-Earth, Earth, and Audralia route rooms carry their own geography and model depth.</span>
+            <b>Renderer asset</b>
+            <strong>Planet material lives downstream.</strong>
+            <span>The cinematic material file renders dry crust, basins, cliffs, canyons, shadows, and atmospheric rim without a false meridian.</span>
           </div>
 
           <div class="info-card">
-            <b>Source authority</b>
-            <strong>This shell imports the local renderer.</strong>
-            <span>The canvas mount is #globeShowcaseCanvas and the module path is /showroom/globe/index.js.</span>
+            <b>Private worlds</b>
+            <strong>Terrain depth stays private.</strong>
+            <span>H-Earth, Earth, and Audralia route rooms carry their own geography and deeper construction later.</span>
           </div>
         </div>
       </section>
@@ -680,9 +683,10 @@
       <template
         id="route-receipt"
         data-route-receipt
-        data-contract="SHOWROOM_GLOBE_SOURCE_AUTHORITY_REPAIR_TNT_v1"
+        data-contract="SHOWROOM_GLOBE_CINEMATIC_MATERIAL_ASSET_HTML_TNT_v1"
         data-route="/showroom/globe/"
-        data-import="/showroom/globe/index.js?v=clean-sublevel-source-authority-v1"
+        data-import="/showroom/globe/index.js?v=cinematic-material-asset-v1"
+        data-asset="/assets/showroom.globe.cinematic.material.js?v=cinematic-material-asset-v1"
         data-mount="globeShowcaseCanvas"
         data-public-selector="true"
         data-private-engines-asleep="true"
@@ -696,6 +700,6 @@
     </footer>
   </div>
 
-  <script type="module" src="/showroom/globe/index.js?v=clean-sublevel-source-authority-v1"></script>
+  <script type="module" src="/showroom/globe/index.js?v=cinematic-material-asset-v1"></script>
 </body>
 </html>

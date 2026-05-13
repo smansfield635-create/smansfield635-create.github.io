@@ -1,7 +1,7 @@
 // /assets/world/environment/scene.js
 // TNT FULL-FILE REPLACEMENT
-// REUSABLE_PLANETARY_GROUND_SCENE_HEXFIELD_TNT_v2
-// Owns: scene compositing, layer order, camera, receipts, and final visible integration.
+// H_EARTH_STRUCTURE_VISIBILITY_AND_CAMERA_COMPOSITION_SCENE_RENEWAL_v1
+// Owns: scene compositing, live hex substrate, layer order, structure visibility receipt, and final integration.
 
 import {
   createEnvironmentProfile,
@@ -30,7 +30,8 @@ import {
 import { drawFoliageLayer } from "/assets/world/environment/foliage.js";
 import { drawStructureLayer } from "/assets/world/environment/structure.js";
 
-export const ENVIRONMENT_SCENE_VERSION = "reusable-planetary-ground-scene-hexfield-v2";
+export const ENVIRONMENT_SCENE_VERSION =
+  "h-earth-structure-visibility-and-camera-composition-scene-renewal-v1";
 
 export function createGroundEnvironmentScene(canvas, inputProfile, options = {}) {
   const profile = createEnvironmentProfile(inputProfile);
@@ -44,7 +45,8 @@ export function createGroundEnvironmentScene(canvas, inputProfile, options = {})
     startedAt: performance.now(),
     lastFrame: 0,
     targetFrameMs: options.targetFrameMs || 50,
-    receipt: null
+    receipt: null,
+    structureDrawn: false
   };
 
   function resizeCanvas() {
@@ -78,7 +80,13 @@ export function createGroundEnvironmentScene(canvas, inputProfile, options = {})
       dpr: size.dpr,
       time: (time - state.startedAt) / 1000,
       now: time,
-      hexfield
+      hexfield,
+      composition: {
+        anchor: "manor-midground",
+        waterBehindStructure: true,
+        camera: "inland-shelf-to-western-waterline",
+        expression: "live-hex-substrate"
+      }
     };
 
     ctx.clearRect(0, 0, size.width, size.height);
@@ -91,8 +99,12 @@ export function createGroundEnvironmentScene(canvas, inputProfile, options = {})
     drawShorelineTerrainLayer(ctx, profile, cell, frame);
     drawFoamAndTideEdge(ctx, profile, cell, frame);
     drawGroundTerrainLayer(ctx, profile, cell, frame);
-    drawStructureLayer(ctx, profile, cell, frame);
+
+    state.structureDrawn = Boolean(drawStructureLayer(ctx, profile, cell, frame));
+
+    drawProtectedStructureAtmosphere(ctx, profile, cell, frame, state.structureDrawn);
     drawFoliageLayer(ctx, profile, cell, frame);
+    drawStructureForegroundClearance(ctx, profile, frame);
     drawBirdsAndAir(ctx, profile, cell, frame);
     drawAtmosphereComposite(ctx, profile, cell, frame);
 
@@ -106,6 +118,10 @@ export function createGroundEnvironmentScene(canvas, inputProfile, options = {})
       staticImageSource: false,
       parentMutation: false,
       rendered: true,
+      compositionAnchor: "manor-midground",
+      waterBehindStructure: true,
+      structureDrawn: state.structureDrawn,
+      manorVisible: state.structureDrawn,
       hexSubstrate: {
         live: true,
         scale: hexfield.scale,
@@ -126,7 +142,9 @@ export function createGroundEnvironmentScene(canvas, inputProfile, options = {})
         "foam-tide",
         "ground-terrain",
         "structure",
+        "protected-structure-atmosphere",
         "foliage",
+        "structure-foreground-clearance",
         "wildlife",
         "atmosphere"
       ]
@@ -159,4 +177,64 @@ export function createGroundEnvironmentScene(canvas, inputProfile, options = {})
       });
     }
   });
+}
+
+function drawProtectedStructureAtmosphere(ctx, profile, cell, frame, structureDrawn) {
+  if (!structureDrawn) return;
+
+  const { width: w, height: h } = frame;
+  const cx = w * (profile.structure.x ?? 0.50);
+  const baseY = h * 0.615;
+  const manorW = w * 0.285;
+  const manorH = h * 0.145;
+
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  const glow = ctx.createRadialGradient(
+    cx,
+    baseY - manorH * 0.34,
+    0,
+    cx,
+    baseY - manorH * 0.22,
+    manorW * 0.66
+  );
+
+  glow.addColorStop(0, "rgba(255,224,154,.080)");
+  glow.addColorStop(0.42, "rgba(255,224,154,.026)");
+  glow.addColorStop(1, "rgba(255,224,154,0)");
+
+  ctx.fillStyle = glow;
+  ctx.fillRect(cx - manorW * 0.70, baseY - manorH * 1.25, manorW * 1.40, manorH * 1.55);
+
+  ctx.restore();
+}
+
+function drawStructureForegroundClearance(ctx, profile, frame) {
+  const { width: w, height: h } = frame;
+  const cx = w * (profile.structure.x ?? 0.50);
+  const baseY = h * 0.615;
+  const manorW = w * 0.285;
+
+  ctx.save();
+
+  const clearance = ctx.createRadialGradient(
+    cx,
+    baseY + h * 0.085,
+    0,
+    cx,
+    baseY + h * 0.085,
+    manorW * 0.96
+  );
+
+  clearance.addColorStop(0, "rgba(0,0,0,.10)");
+  clearance.addColorStop(0.55, "rgba(0,0,0,.035)");
+  clearance.addColorStop(1, "rgba(0,0,0,0)");
+
+  ctx.fillStyle = clearance;
+  ctx.beginPath();
+  ctx.ellipse(cx, baseY + h * 0.070, manorW * 0.86, h * 0.070, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
 }

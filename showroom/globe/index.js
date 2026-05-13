@@ -1,11 +1,11 @@
 // /showroom/globe/index.js
 // TNT FULL-FILE REPLACEMENT
-// SHOWROOM_GLOBE_SATELLITE_MATERIAL_RECONNECT_TNT_v5
+// SHOWROOM_GLOBE_PARENT_SATELLITE_HARD_RESTORE_TNT_v6
 // Parent /showroom/globe/ only.
-// Reconnects restored cinematic satellite material renderer.
-// No ground view. No Manor. No Western Golden Shelf. No child-route mutation.
+// Restores satellite graphics from prior material layer.
+// No child-route mutation.
 
-const CONTRACT = "SHOWROOM_GLOBE_SATELLITE_MATERIAL_RECONNECT_TNT_v5";
+const CONTRACT = "SHOWROOM_GLOBE_PARENT_SATELLITE_HARD_RESTORE_TNT_v6";
 const TAU = Math.PI * 2;
 
 const BODIES = Object.freeze({
@@ -103,11 +103,7 @@ function markDocument(extra = {}) {
     page: "showroom-globe-satellite-selector",
     route: "/showroom/globe/",
     contract: CONTRACT,
-    jurisdiction: "satellite-selector-only",
-    groundView: "false",
-    groundEngine: "false",
-    manorPlacement: "false",
-    westernGoldenShelf: "false",
+    jurisdiction: "parent-satellite-selector",
     selectedBody: state.body,
     renderedBy: "cinematic-satellite-material-runtime",
     ...extra
@@ -193,7 +189,7 @@ function drawBackground(ctx, width, height, time) {
   }
 }
 
-function drawEmergencyMaterialFallback(ctx, width, height, time) {
+function drawFallback(ctx, width, height, time) {
   const body = BODIES[state.body];
   const cx = width * 0.5;
   const cy = height * 0.47;
@@ -297,7 +293,7 @@ function drawFrame(time = performance.now()) {
       dpr
     }, body);
   } else {
-    drawEmergencyMaterialFallback(ctx, width, height, t);
+    drawFallback(ctx, width, height, t);
   }
 
   window.DGBShowroomGlobeReceipt = Object.freeze({
@@ -308,10 +304,6 @@ function drawFrame(time = performance.now()) {
     detail: state.detail,
     materialRenderer: state.renderer?.version || "fallback",
     materialError: state.materialError,
-    groundView: false,
-    groundEngine: false,
-    manorPlacement: false,
-    westernGoldenShelf: false,
     rendered: true,
     canvasWidth: width,
     canvasHeight: height
@@ -459,9 +451,7 @@ async function init() {
           contract: CONTRACT,
           route: "/showroom/globe/",
           rendered: false,
-          error: "No satellite globe canvas found",
-          groundView: false,
-          groundEngine: false
+          error: "No satellite globe canvas found"
         });
       }
     });
@@ -483,10 +473,6 @@ async function init() {
         contract: CONTRACT,
         route: "/showroom/globe/",
         selectedBody: state.body,
-        groundView: false,
-        groundEngine: false,
-        manorPlacement: false,
-        westernGoldenShelf: false,
         canvasFound: Boolean(state.canvas),
         contextFound: Boolean(state.ctx),
         materialRenderer: state.renderer?.version || "fallback",

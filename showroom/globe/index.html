@@ -1,28 +1,25 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="globe-parent-selector"
+  data-page="showroom-globe-original-selector-restored"
   data-route="/showroom/globe/"
-  data-contract="GLOBE_PARENT_SELECTOR_REPAIR_TNT_v1"
-  data-jurisdiction="parent-selector-only"
-  data-ground-engine-authorized="false"
-  data-child-ground-routes="h-earth-only"
+  data-contract="SHOWROOM_GLOBE_ORIGINAL_SELECTOR_RESTORE_TNT_v2"
+  data-jurisdiction="satellite-selector-only"
+  data-ground-level-engine="false"
   data-bodies="zionts,h-earth,audralia"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Globe Showcase · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Globe Showcase is the parent selector for ZIONTS, H-Earth, and Audralia. Ground-level worlds remain on their child routes."
-  >
+  <title>Showroom Globe · Three Living Bodies</title>
+  <meta name="description" content="Showroom Globe selector restored: one gateway, three living bodies, satellite planetary view only.">
 
   <style>
     :root {
       --bg:#030812;
       --bg2:#071225;
       --panel:rgba(7,15,31,.94);
+      --panel2:rgba(10,20,38,.86);
       --soft:rgba(255,255,255,.055);
       --line:rgba(244,207,131,.22);
       --line2:rgba(255,255,255,.12);
@@ -40,9 +37,12 @@
       min-height:100%;
       margin:0;
       background:
-        radial-gradient(circle at 50% -8%, rgba(78,119,171,.26), transparent 38%),
-        radial-gradient(circle at 12% 18%, rgba(244,207,131,.12), transparent 30%),
+        linear-gradient(90deg, rgba(244,207,131,.055) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(244,207,131,.03) 1px, transparent 1px),
+        radial-gradient(circle at 50% -8%, rgba(78,119,171,.24), transparent 38%),
+        radial-gradient(circle at 12% 18%, rgba(244,207,131,.11), transparent 30%),
         linear-gradient(180deg, var(--bg2), var(--bg) 54%, #02050b);
+      background-size:58px 58px,58px 58px,auto,auto,auto;
       color:var(--text);
       font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -71,17 +71,13 @@
       letter-spacing:.02em;
     }
 
-    .nav,
-    .actions,
-    .body-tabs {
+    .nav {
       display:flex;
       flex-wrap:wrap;
       gap:8px;
     }
 
-    .nav a,
-    .button,
-    .body-tab {
+    .nav a {
       min-height:38px;
       display:inline-flex;
       align-items:center;
@@ -94,25 +90,17 @@
       background:rgba(255,255,255,.04);
       font-size:.82rem;
       font-weight:850;
-      cursor:pointer;
     }
 
-    .nav a[aria-current="page"],
-    .button.primary,
-    .body-tab[aria-selected="true"] {
+    .nav a[aria-current="page"] {
       color:#06101c;
       background:linear-gradient(135deg, var(--mint), #78d8ac);
       border-color:rgba(167,243,198,.64);
     }
 
-    .button.gold {
-      color:#150d03;
-      background:linear-gradient(135deg, #fff0b8, var(--gold) 48%, #c48a38);
-    }
-
     .hero,
-    .panel,
-    .card {
+    .selector-shell,
+    .body-card {
       border:1px solid var(--line);
       border-radius:34px;
       background:
@@ -123,25 +111,6 @@
     }
 
     .hero { padding:clamp(24px,5vw,46px); }
-    .panel { padding:clamp(18px,3vw,28px); margin-top:16px; }
-
-    h1, h2, h3 {
-      margin:0;
-      color:var(--gold);
-      line-height:1.05;
-    }
-
-    h1 {
-      max-width:980px;
-      font-size:clamp(2.1rem,7vw,5rem);
-      line-height:.94;
-      letter-spacing:-.07em;
-    }
-
-    h2 {
-      font-size:clamp(1.45rem,4vw,2.15rem);
-      letter-spacing:-.045em;
-    }
 
     .eyebrow {
       margin:0 0 14px;
@@ -151,91 +120,168 @@
       text-transform:uppercase;
     }
 
-    .lede,
-    p {
-      color:var(--muted);
-      line-height:1.55;
+    h1, h2, h3 {
+      margin:0;
+      color:var(--gold);
+      line-height:1.05;
+    }
+
+    h1 {
+      max-width:980px;
+      font-size:clamp(2.7rem,8vw,5.7rem);
+      line-height:.93;
+      letter-spacing:-.075em;
     }
 
     .lede {
       max-width:900px;
       margin:22px 0 0;
+      color:var(--muted);
       font-size:clamp(1.02rem,2.5vw,1.28rem);
+      line-height:1.55;
     }
 
-    .actions { margin-top:26px; }
+    .selector-shell {
+      margin-top:18px;
+      padding:clamp(18px,3vw,28px);
+    }
 
-    .selector-grid {
-      display:grid;
-      grid-template-columns:minmax(0, 1.25fr) minmax(260px, .75fr);
-      gap:16px;
-      margin-top:16px;
+    .contract-line {
+      color:var(--gold);
+      font:900 .74rem/1.55 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      margin:0 0 18px;
+    }
+
+    .control-row {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:18px;
+    }
+
+    .hex-button {
+      min-height:56px;
+      min-width:132px;
+      border:1px solid rgba(255,255,255,.10);
+      color:rgba(238,244,255,.86);
+      background:linear-gradient(180deg, rgba(15,25,43,.92), rgba(7,14,27,.94));
+      clip-path:polygon(12% 0, 88% 0, 100% 50%, 88% 100%, 12% 100%, 0 50%);
+      font-weight:950;
+      letter-spacing:.02em;
+      cursor:pointer;
+    }
+
+    .hex-button.active {
+      color:#06101c;
+      background:linear-gradient(135deg, #b7ffd4, #87e6b5);
+      border-color:rgba(167,243,198,.72);
+    }
+
+    .planet-title {
+      text-align:center;
+      color:var(--gold);
+      font-size:clamp(1.85rem,4.8vw,3.15rem);
+      letter-spacing:-.045em;
+      margin:6px 0 6px;
+    }
+
+    .planet-subtitle {
+      text-align:center;
+      color:var(--muted);
+      font-weight:900;
+      font-size:clamp(.98rem,2.6vw,1.15rem);
+      margin:0 0 6px;
     }
 
     .globe-stage {
-      border:1px solid rgba(244,207,131,.20);
+      position:relative;
+      width:100%;
+      min-height:clamp(390px,78vw,660px);
+      border:1px solid rgba(244,207,131,.16);
       border-radius:28px;
       overflow:hidden;
       background:
-        radial-gradient(circle at 50% 30%, rgba(95,142,190,.18), transparent 46%),
+        radial-gradient(circle at 50% 32%, rgba(95,142,190,.12), transparent 46%),
         linear-gradient(180deg, #061326, #020711);
-      min-height:clamp(430px,78vw,720px);
     }
 
     .globe-stage canvas {
       display:block;
       width:100%;
-      height:clamp(430px,78vw,720px);
+      height:clamp(390px,78vw,660px);
+      touch-action:none;
     }
 
-    .body-tabs {
-      margin-top:14px;
-    }
-
-    .card {
-      padding:18px;
-      background:rgba(255,255,255,.055);
-      box-shadow:none;
-    }
-
-    .status-list {
+    .tabs {
       display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
       gap:12px;
-      margin-top:16px;
+      margin:16px 0 12px;
     }
 
-    .status-list div {
+    .tab {
+      min-height:58px;
       border:1px solid var(--line2);
-      border-radius:18px;
-      padding:14px;
-      background:rgba(255,255,255,.045);
+      clip-path:polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%);
+      background:linear-gradient(180deg, rgba(15,25,43,.92), rgba(7,14,27,.94));
+      color:rgba(238,244,255,.78);
+      font-size:clamp(.92rem,2.8vw,1.12rem);
+      font-weight:950;
+      letter-spacing:.02em;
+      cursor:pointer;
     }
 
-    .status-list span {
-      display:block;
-      color:var(--faint);
-      font-size:.74rem;
-      font-weight:850;
-      text-transform:uppercase;
-      letter-spacing:.08em;
+    .tab[aria-selected="true"] {
+      color:#06101c;
+      background:linear-gradient(135deg, #b7ffd4, #87e6b5);
+      border-color:rgba(167,243,198,.72);
     }
 
-    .status-list strong {
-      display:block;
-      color:var(--gold);
-      margin-top:6px;
-      overflow-wrap:anywhere;
-    }
-
-    .notice {
-      margin-top:16px;
-      padding:18px;
-      border:1px solid rgba(167,243,198,.20);
-      border-radius:24px;
-      background:rgba(5,38,34,.24);
+    .open-button {
+      min-height:64px;
+      width:100%;
+      border:1px solid rgba(167,243,198,.22);
+      clip-path:polygon(7% 0, 93% 0, 100% 50%, 93% 100%, 7% 100%, 0 50%);
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+      padding:0 34px;
+      background:linear-gradient(180deg, rgba(0,42,34,.94), rgba(0,25,24,.96));
       color:var(--mint);
+      text-decoration:none;
+      font-weight:950;
+      font-size:clamp(1.05rem,3.6vw,1.45rem);
+    }
+
+    .drag-note {
+      margin:16px 0 0;
+      text-align:center;
+      color:var(--muted);
       font-weight:900;
-      line-height:1.5;
+      font-size:clamp(.92rem,3vw,1.08rem);
+      line-height:1.35;
+    }
+
+    .body-card {
+      margin-top:18px;
+      padding:clamp(18px,3vw,28px);
+      background:
+        radial-gradient(circle at 80% 20%, rgba(167,243,198,.08), transparent 38%),
+        linear-gradient(180deg, rgba(11,21,39,.95), rgba(5,10,22,.96));
+    }
+
+    .body-card h2 {
+      font-size:clamp(1.6rem,4vw,2.3rem);
+      margin-bottom:14px;
+    }
+
+    .body-card p {
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(1rem,2.8vw,1.24rem);
+      line-height:1.55;
     }
 
     .footer {
@@ -248,13 +294,13 @@
 
     @media (max-width:900px) {
       .topbar { align-items:flex-start; flex-direction:column; }
-      .selector-grid { grid-template-columns:1fr; }
     }
 
     @media (max-width:560px) {
       .page { width:min(100% - 18px,1180px); }
-      .hero, .panel { border-radius:24px; }
-      .globe-stage canvas { height:520px; }
+      .hero, .selector-shell, .body-card { border-radius:24px; }
+      .tabs { gap:8px; }
+      .hex-button { min-width:124px; }
     }
   </style>
 </head>
@@ -276,70 +322,55 @@
 
     <main id="main">
       <section class="hero">
-        <p class="eyebrow">Globe Showcase · Parent Selector</p>
-        <h1>One gateway. Three planetary bodies. Satellite planetary view.</h1>
+        <p class="eyebrow">Fibonacci Runtime</p>
+        <h1>One gateway. Three living bodies. Oceans now carry light.</h1>
         <p class="lede">
-          This parent page selects the body. It does not own ground-level rendering. ZIONTS, H-Earth, and Audralia live below this route as child pages.
+          Restored satellite selector. The parent Globe page displays the three bodies only; ground-level engines remain below their child routes.
         </p>
-
-        <div class="actions">
-          <a class="button primary" href="#selector">Choose Body</a>
-          <a class="button gold" href="/showroom/">Return to Showroom</a>
-          <a class="button" href="/gauges/">Run Triple G</a>
-        </div>
-
-        <div class="notice">
-          Parent jurisdiction restored. H-Earth ground engines remain child-route only. Hearth must not overwrite ZIONTS.
-        </div>
       </section>
 
-      <section id="selector" class="panel">
-        <p class="eyebrow">Satellite selector · no ground-level engine</p>
-        <h2 data-selected-title>ZIONTS</h2>
+      <section class="selector-shell" aria-label="Showroom Globe selector">
+        <p class="contract-line">Satellite selector · no ground-level engine</p>
 
-        <div class="selector-grid">
-          <div>
-            <div class="globe-stage">
-              <canvas data-globe-selector-canvas aria-label="Satellite planetary selector"></canvas>
-            </div>
-
-            <div class="body-tabs" role="tablist" aria-label="Planetary body selector">
-              <button class="body-tab" type="button" data-body="zionts" aria-selected="true">ZIONTS</button>
-              <button class="body-tab" type="button" data-body="h-earth" aria-selected="false">H-Earth</button>
-              <button class="body-tab" type="button" data-body="audralia" aria-selected="false">Audralia</button>
-            </div>
-          </div>
-
-          <article class="card">
-            <h3 data-selected-heading>ZIONTS</h3>
-            <p data-selected-copy>
-              Ancient living reference body. Satellite planetary selector view only.
-            </p>
-
-            <div class="actions">
-              <a class="button primary" data-open-body href="/showroom/globe/earth/">Open ZIONTS</a>
-            </div>
-
-            <div class="status-list">
-              <div><span>Parent route</span><strong>/showroom/globe/</strong></div>
-              <div><span>Jurisdiction</span><strong>Selector only</strong></div>
-              <div><span>Ground engine</span><strong>Not authorized here</strong></div>
-              <div><span>Children</span><strong>ZIONTS · H-Earth · Audralia</strong></div>
-            </div>
-          </article>
+        <div class="control-row" aria-label="Runtime controls">
+          <button class="hex-button active" type="button" data-control="auto">Auto</button>
+          <button class="hex-button" type="button" data-control="detail">Detail: stable</button>
+          <button class="hex-button" type="button" data-control="glide">Glide: soft</button>
+          <button class="hex-button" type="button" data-control="reset">Reset</button>
         </div>
+
+        <h2 class="planet-title" data-body-title>ZIONTS</h2>
+        <p class="planet-subtitle" data-body-subtitle>Ancient Living World · material-led hydrated runtime</p>
+
+        <div class="globe-stage">
+          <canvas data-globe-canvas aria-label="Restored cinematic satellite body selector"></canvas>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Planetary body selector">
+          <button class="tab" type="button" data-body="zionts" aria-selected="true">ZIONTS</button>
+          <button class="tab" type="button" data-body="h-earth" aria-selected="false">H-Earth</button>
+          <button class="tab" type="button" data-body="audralia" aria-selected="false">Audralia</button>
+        </div>
+
+        <a class="open-button" data-open-body href="/showroom/globe/earth/">Open ZIONTS</a>
+
+        <p class="drag-note">Drag to inspect the public globe. Release for Fibonacci glide. Double tap to reset.</p>
+      </section>
+
+      <section class="body-card">
+        <h2 data-body-card-title>ZIONTS</h2>
+        <p data-body-card-copy>
+          Ancient living reference body. Satellite planetary selector view only.
+        </p>
       </section>
     </main>
 
-    <footer class="footer">Diamond Gate Bridge · Globe Showcase · Parent Selector restored.</footer>
+    <footer class="footer">Diamond Gate Bridge · Showroom Globe · original selector restored.</footer>
   </div>
 
   <script>
-    window.DGB_GLOBE_PARENT_CACHE_KEY = "GLOBE_PARENT_SELECTOR_REPAIR_TNT_v1";
+    window.DGB_SHOWROOM_GLOBE_RESTORE_KEY = "SHOWROOM_GLOBE_ORIGINAL_SELECTOR_RESTORE_TNT_v2";
   </script>
-  <script
-    type="module"
-    src="/showroom/globe/index.js?v=GLOBE_PARENT_SELECTOR_REPAIR_TNT_v1"
-  ></script>
+  <script type="module" src="/showroom/globe/index.js?v=SHOWROOM_GLOBE_ORIGINAL_SELECTOR_RESTORE_TNT_v2"></script>
 </body>
 </html>

@@ -1,33 +1,24 @@
 // /assets/showroom.globe.cinematic.material.js
 // TNT FULL-FILE REPLACEMENT
-// SHOWROOM_GLOBE_ZIONTS_BEACH_VEGETATION_40B_HABITABILITY_TNT_v13
-// Owns: continuous cinematic planet material rendering.
-// Uses: /assets/showroom.globe.hydration.js for public hydration authority.
-// Uses: /assets/showroom.globe.vegetation.js for beaches, vegetation, habitability, and ancient living-world expression.
-// Runtime contract: render cheap during motion, refine after settling.
-// No privileged longitude, no prime meridian, no schoolroom-globe partition.
+// SHOWROOM_GLOBE_SATELLITE_CINEMATIC_MATERIAL_RECONNECT_TNT_v5
+// Owns: restored satellite-view cinematic planet material.
+// No ground view. No Manor. No Western Golden Shelf. No privileged meridian.
 
 import {
   SHOWROOM_GLOBE_HYDRATION_VERSION,
   sampleHydration,
   blendHydration
-} from "/assets/showroom.globe.hydration.js?v=hydration-v1";
+} from "/assets/showroom.globe.hydration.js?v=SHOWROOM_GLOBE_SATELLITE_HYDRATION_AUTHORITY_TNT_v5";
 
-import {
-  VEGETATION_HABITABILITY_VERSION,
-  createVegetationHabitabilityLayer
-} from "/assets/showroom.globe.vegetation.js?v=vegetation-habitability-v13";
-
-export const PLANET_MATERIAL_VERSION = "showroom-globe-zionts-beach-vegetation-40b-habitability-v13";
+export const PLANET_MATERIAL_VERSION = "showroom-globe-satellite-cinematic-material-reconnect-v5";
 export const PLANET_HYDRATION_VERSION = SHOWROOM_GLOBE_HYDRATION_VERSION;
-export const PLANET_VEGETATION_VERSION = VEGETATION_HABITABILITY_VERSION;
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
 function lerp(a, b, t) {
-  return a + (b - a) * t;
+  return a + (b - a) * clamp(t, 0, 1);
 }
 
 function smoothstep(edge0, edge1, value) {
@@ -218,22 +209,22 @@ function makeBand(seed, family, index, widthBase, widthRange, weightBase, weight
 
 function createFeatureSet(seed) {
   return {
-    basins: Array.from({ length: 7 }, (_, i) => ({
+    basins: Array.from({ length: 8 }, (_, i) => ({
       center: seededVector(seed + 100, i),
       radius: 0.42 + hash(seed, i, 100) * 0.42,
       softness: 0.14 + hash(seed, i, 101) * 0.22,
       weight: 0.52 + hash(seed, i, 102) * 0.48
     })),
-    uplifts: Array.from({ length: 5 }, (_, i) => ({
+    uplifts: Array.from({ length: 6 }, (_, i) => ({
       center: seededVector(seed + 150, i),
       radius: 0.32 + hash(seed, i, 150) * 0.36,
       softness: 0.11 + hash(seed, i, 151) * 0.18,
       weight: 0.30 + hash(seed, i, 152) * 0.36
     })),
-    ridges: Array.from({ length: 7 }, (_, i) => makeBand(seed, 200, i, 0.045, 0.036, 0.42, 0.42)),
+    ridges: Array.from({ length: 8 }, (_, i) => makeBand(seed, 200, i, 0.045, 0.036, 0.42, 0.42)),
     canyons: Array.from({ length: 7 }, (_, i) => makeBand(seed, 300, i, 0.014, 0.020, 0.50, 0.50)),
-    channels: Array.from({ length: 9 }, (_, i) => makeBand(seed, 400, i, 0.007, 0.011, 0.38, 0.42)),
-    cliffs: Array.from({ length: 6 }, (_, i) => makeBand(seed, 500, i, 0.024, 0.024, 0.40, 0.42)),
+    channels: Array.from({ length: 10 }, (_, i) => makeBand(seed, 400, i, 0.007, 0.011, 0.38, 0.42)),
+    cliffs: Array.from({ length: 7 }, (_, i) => makeBand(seed, 500, i, 0.024, 0.024, 0.40, 0.42)),
     scars: Array.from({ length: 8 }, (_, i) => makeBand(seed, 600, i, 0.004, 0.006, 0.24, 0.38)),
     caverns: Array.from({ length: 9 }, (_, i) => ({
       center: seededVector(seed + 700, i),
@@ -279,7 +270,6 @@ function qualityProfile(view = {}) {
       caverns: false,
       micro: false,
       hydration: true,
-      vegetation: true,
       strength: 0.25
     };
   }
@@ -295,7 +285,6 @@ function qualityProfile(view = {}) {
       caverns: true,
       micro: false,
       hydration: true,
-      vegetation: true,
       strength: 0.38
     };
   }
@@ -310,7 +299,6 @@ function qualityProfile(view = {}) {
     caverns: true,
     micro: true,
     hydration: true,
-    vegetation: true,
     strength: detail === "high" ? 0.58 : 0.48
   };
 }
@@ -466,7 +454,7 @@ function materialColor(material, world) {
   ];
 }
 
-function shadePixel({ viewNormal, bumpViewNormal, material, hydration, habitability, world, lightView, vegetationLayer, profile }) {
+function shadePixel({ viewNormal, bumpViewNormal, material, hydration, world, lightView }) {
   const sphereDiffuse = clamp(dot(viewNormal, lightView), 0, 1);
   const reliefDiffuse = clamp(dot(bumpViewNormal, lightView), 0, 1);
   const z = clamp(viewNormal.z, 0, 1);
@@ -485,18 +473,13 @@ function shadePixel({ viewNormal, bumpViewNormal, material, hydration, habitabil
     material.ridges * 0.10 +
     material.scars * 0.035;
 
-  let base = materialColor(material, world);
-
-  if (vegetationLayer && habitability) {
-    base = vegetationLayer.blendVegetationHabitability(base, habitability, material, hydration, world, profile);
-  }
-
+  const base = materialColor(material, world);
   const ambient = 0.10;
   const direct = reliefDiffuse * 1.02;
   const shade = clamp((ambient + direct + edgeHighlight - occlusion) * lerp(0.17, 1, terminator), 0.055, 1.28);
 
   const sunFlash = clamp((reliefDiffuse - 0.73) * 0.42, 0, 0.24);
-  const rimGlow = rim * 0.10;
+  const rimGlow = rim * 0.12;
 
   let color = [
     clamp(base[0] * shade + world.ridge[0] * sunFlash + world.atmosphere[0] * rimGlow, 0, 255),
@@ -504,27 +487,14 @@ function shadePixel({ viewNormal, bumpViewNormal, material, hydration, habitabil
     clamp(base[2] * shade + world.ridge[2] * sunFlash + world.atmosphere[2] * rimGlow, 0, 255)
   ];
 
-  if (hydration?.water > 0.01) {
+  if (hydration?.water > 0.01 || hydration?.vegetation > 0.08) {
     color = blendHydration(color, hydration, reliefDiffuse * terminator, rim);
-
-    const hydrationPriority = clamp(world.hydrationPriority ?? 0.20, 0.05, 0.50);
-    const specular = Math.pow(clamp(reliefDiffuse, 0, 1), 18) * hydration.water * 42 * hydrationPriority;
-
-    color[0] = clamp(color[0] + specular, 0, 255);
-    color[1] = clamp(color[1] + specular * 1.06, 0, 255);
-    color[2] = clamp(color[2] + specular * 1.22, 0, 255);
   }
 
   const warmKey = smoothstep(-1, 0.18, -viewNormal.x) * smoothstep(-0.48, 0.82, viewNormal.y);
   color[0] = clamp(color[0] + warmKey * 13, 0, 255);
   color[1] = clamp(color[1] + warmKey * 10, 0, 255);
   color[2] = clamp(color[2] + warmKey * 4, 0, 255);
-
-  const ancient = clamp(habitability?.ancientHabitability ?? 0, 0, 1);
-
-  color[0] = clamp(color[0] + ancient * 2.4, 0, 255);
-  color[1] = clamp(color[1] + ancient * 2.1, 0, 255);
-  color[2] = clamp(color[2] + ancient * 0.8, 0, 255);
 
   return color;
 }
@@ -533,7 +503,6 @@ export function createCinematicPlanetMaterialRenderer(options = {}) {
   const mobile = options.mobile === true;
   const dpr = Number.isFinite(options.dpr) ? options.dpr : 1;
   const cache = new Map();
-  const vegetationLayer = createVegetationHabitabilityLayer({ mobile, dpr });
   const surface = document.createElement("canvas");
   const surfaceCtx = surface.getContext("2d", { alpha: true, willReadFrequently: false });
 
@@ -583,9 +552,9 @@ export function createCinematicPlanetMaterialRenderer(options = {}) {
     );
 
     outer.addColorStop(0, "rgba(0,0,0,0)");
-    outer.addColorStop(0.64, `rgba(${a[0]},${a[1]},${a[2]},0.060)`);
-    outer.addColorStop(0.91, `rgba(${a[0]},${a[1]},${a[2]},0.22)`);
-    outer.addColorStop(1, `rgba(${a[0]},${a[1]},${a[2]},0.035)`);
+    outer.addColorStop(0.64, `rgba(${a[0]},${a[1]},${a[2]},0.075)`);
+    outer.addColorStop(0.91, `rgba(${a[0]},${a[1]},${a[2]},0.30)`);
+    outer.addColorStop(1, `rgba(${a[0]},${a[1]},${a[2]},0.045)`);
 
     ctx.fillStyle = outer;
     ctx.beginPath();
@@ -603,17 +572,17 @@ export function createCinematicPlanetMaterialRenderer(options = {}) {
 
     limb.addColorStop(0, "rgba(255,255,255,0)");
     limb.addColorStop(0.70, "rgba(255,255,255,0)");
-    limb.addColorStop(1, `rgba(${a[0]},${a[1]},${a[2]},0.26)`);
+    limb.addColorStop(1, `rgba(${a[0]},${a[1]},${a[2]},0.34)`);
 
     ctx.fillStyle = limb;
     ctx.beginPath();
     ctx.arc(view.cx, view.cy, view.scale * 1.012, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.strokeStyle = colorWithAlpha(a, 0.26);
-    ctx.lineWidth = Math.max(1, dpr * 1.0);
+    ctx.strokeStyle = colorWithAlpha(a, 0.36);
+    ctx.lineWidth = Math.max(1, dpr * 1.2);
     ctx.beginPath();
-    ctx.arc(view.cx, view.cy, view.scale * 1.006, 0, Math.PI * 2);
+    ctx.arc(view.cx, view.cy, view.scale * 1.008, 0, Math.PI * 2);
     ctx.stroke();
 
     ctx.restore();
@@ -648,7 +617,6 @@ export function createCinematicPlanetMaterialRenderer(options = {}) {
         const objectPoint = inverseViewPoint(viewNormal, view.yaw, view.pitch);
         const material = sampleMaterial(objectPoint, world, features, profile);
         const hydration = sampleHydration(objectPoint, material, world, { quality: profile.quality });
-        const habitability = vegetationLayer.sampleHabitability(objectPoint, material, hydration, world, profile);
         const objectBumpNormal = sampleNormal(objectPoint, world, features, profile);
         const viewBumpNormal = viewPointFromObject(objectBumpNormal, view.yaw, view.pitch);
 
@@ -657,11 +625,8 @@ export function createCinematicPlanetMaterialRenderer(options = {}) {
           bumpViewNormal: viewBumpNormal,
           material,
           hydration,
-          habitability,
           world,
-          lightView,
-          vegetationLayer,
-          profile
+          lightView
         });
 
         const edgeAlpha = 1 - smoothstep(0.976, 1.0, Math.sqrt(r2));
@@ -689,12 +654,6 @@ export function createCinematicPlanetMaterialRenderer(options = {}) {
   return {
     version: PLANET_MATERIAL_VERSION,
     hydrationVersion: PLANET_HYDRATION_VERSION,
-    vegetationVersion: PLANET_VEGETATION_VERSION,
-    ancientLivingWorld: true,
-    fortyBillionYearBaseline: true,
-    beachesActive: true,
-    vegetationActive: true,
-    habitabilityActive: true,
     drawPlanet
   };
 }

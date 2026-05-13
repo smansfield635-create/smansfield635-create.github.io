@@ -1,12 +1,19 @@
+// showroom-index.js
+// TNT FULL-FILE REPLACEMENT
+// SHOWROOM_DIAMOND_REAL_DIAMOND_VISUAL_RENEWAL_TNT_v7
+// Scope: Showroom diamond renderer only.
+// Goal: make the Showroom object read as a real round brilliant diamond.
+// No generated image. No graphic box. No Earth/globe/planet language.
+
 const SHOWROOM_DIAMOND_STATE = Object.freeze({
-  contract: "SHOWROOM_DIAMOND_ROUND_BRILLIANT_SOLID_SHAPE_TNT_v6",
+  contract: "SHOWROOM_DIAMOND_REAL_DIAMOND_VISUAL_RENEWAL_TNT_v7",
   route: "/showroom/",
   role: "showroom-cover-object",
   diamondLock: "CROWN_CUT_256_LATTICE_FIXED_FORM",
   touchGlide: true,
   inspectionControl: "solid-body-camera-view",
   geometryMutableByTouch: false,
-  visualMode: "round-brilliant-crystal-clarity",
+  visualMode: "round-brilliant-real-diamond-material",
   earthRecord: false,
   generatedImage: false,
   graphicBox: false,
@@ -15,7 +22,8 @@ const SHOWROOM_DIAMOND_STATE = Object.freeze({
 
 const TAU = Math.PI * 2;
 const PHI = (1 + Math.sqrt(5)) / 2;
-const SEGMENTS = 32;
+const SEGMENTS = 64;
+const LATTICE_STATES = 256;
 
 const state = {
   yaw: 0.34,
@@ -31,11 +39,16 @@ const state = {
   lastTap: 0,
   lastTime: 0,
   raf: 0,
-  dpr: 1
+  dpr: 1,
+  canvasReady: false
 };
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
+}
+
+function lerp(a, b, t) {
+  return a + (b - a) * clamp(t, 0, 1);
 }
 
 function normalize3(vector) {
@@ -67,6 +80,14 @@ function dot3(a, b) {
   return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
+function seededUnit(index, salt) {
+  return ((Math.sin(index * 12.9898 + salt * 78.233) * 43758.5453) % 1 + 1) % 1;
+}
+
+function rgba(color, alpha) {
+  return `rgba(${Math.round(color[0])}, ${Math.round(color[1])}, ${Math.round(color[2])}, ${alpha})`;
+}
+
 function makePoint(x, y, z, ring, index, angle) {
   return Object.freeze({ x, y, z, ring, index, angle });
 }
@@ -91,44 +112,55 @@ function makeRing(name, rx, y, rz, offset = 0) {
   return Object.freeze(points);
 }
 
-function makeFace(type, points, tone) {
+function makeFace(type, points, tone, fireBias = 0) {
   return Object.freeze({
     type,
     points: Object.freeze(points.slice()),
-    tone
+    tone,
+    fireBias
   });
 }
 
 function buildImmutableDiamondModel() {
-  const table = makeRing("table", 0.40, -0.66, 0.36, TAU / 64);
-  const crown = makeRing("crown", 0.78, -0.48, 0.70, 0);
-  const girdleTop = makeRing("girdleTop", 1.20, -0.08, 1.06, TAU / 64);
-  const girdleBottom = makeRing("girdleBottom", 1.13, 0.14, 1.00, 0);
-  const pavilion = makeRing("pavilion", 0.52, 0.60, 0.46, TAU / 64);
-  const tableCenter = makePoint(0, -0.76, 0, "tableCenter", -1, 0);
-  const culet = makePoint(0, 1.12, 0, "culet", -2, 0);
+  const table = makeRing("table", 0.42, -0.72, 0.37, TAU / 128);
+  const star = makeRing("star", 0.58, -0.62, 0.52, 0);
+  const crown = makeRing("crown", 0.82, -0.42, 0.74, TAU / 128);
+  const girdleTop = makeRing("girdleTop", 1.20, -0.065, 1.07, 0);
+  const girdleBottom = makeRing("girdleBottom", 1.15, 0.13, 1.02, TAU / 128);
+  const lowerPavilion = makeRing("lowerPavilion", 0.72, 0.43, 0.64, 0);
+  const pavilion = makeRing("pavilion", 0.42, 0.78, 0.37, TAU / 128);
+  const tableCenter = makePoint(0, -0.79, 0, "tableCenter", -1, 0);
+  const culet = makePoint(0, 1.16, 0, "culet", -2, 0);
 
-  const faces = [makeFace("table", table, 1.46)];
+  const faces = [
+    makeFace("table", table, 1.62, 0.18)
+  ];
 
   for (let i = 0; i < SEGMENTS; i += 1) {
     const n = (i + 1) % SEGMENTS;
+    const fireBias = seededUnit(i, 31) * 0.46;
 
-    faces.push(makeFace("star", [tableCenter, table[i], table[n]], 1.58));
-    faces.push(makeFace("upper-crown", [table[i], crown[i], crown[n], table[n]], 1.34));
-    faces.push(makeFace("round-crown", [crown[i], girdleTop[i], girdleTop[n], crown[n]], 1.18));
-    faces.push(makeFace("girdle", [girdleTop[i], girdleBottom[i], girdleBottom[n], girdleTop[n]], 0.96));
-    faces.push(makeFace("upper-pavilion", [girdleBottom[i], pavilion[i], pavilion[n], girdleBottom[n]], 1.08));
-    faces.push(makeFace("lower-pavilion", [pavilion[i], culet, pavilion[n]], 1.24));
+    faces.push(makeFace("table-spark", [tableCenter, table[i], table[n]], 1.70, fireBias));
+    faces.push(makeFace("star", [table[i], star[i], star[n], table[n]], 1.52, fireBias + 0.08));
+    faces.push(makeFace("bezel", [star[i], crown[i], crown[n], star[n]], 1.34, fireBias + 0.18));
+    faces.push(makeFace("upper-crown", [crown[i], girdleTop[i], girdleTop[n], crown[n]], 1.15, fireBias + 0.04));
+    faces.push(makeFace("knife-girdle", [girdleTop[i], girdleBottom[i], girdleBottom[n], girdleTop[n]], 0.92, fireBias));
+    faces.push(makeFace("lower-girdle", [girdleBottom[i], lowerPavilion[i], lowerPavilion[n], girdleBottom[n]], 1.04, fireBias + 0.12));
+    faces.push(makeFace("pavilion-main", [lowerPavilion[i], pavilion[i], pavilion[n], lowerPavilion[n]], 1.20, fireBias + 0.25));
+    faces.push(makeFace("culet-ray", [pavilion[i], culet, pavilion[n]], 1.38, fireBias + 0.32));
   }
 
   return Object.freeze({
     table,
+    star,
     crown,
     girdleTop,
     girdleBottom,
+    lowerPavilion,
     pavilion,
     tableCenter,
     culet,
+    rings: Object.freeze([table, star, crown, girdleTop, girdleBottom, lowerPavilion, pavilion]),
     faces: Object.freeze(faces)
   });
 }
@@ -165,8 +197,8 @@ function rotateImmutablePoint(point) {
 }
 
 function projectRotatedPoint(rotated, width, height, scale) {
-  const camera = 4.4;
-  const perspective = camera / (camera - rotated.z * 0.72);
+  const camera = 4.5;
+  const perspective = camera / (camera - rotated.z * 0.74);
 
   return {
     x: width * 0.5 + rotated.x * scale * perspective,
@@ -184,8 +216,8 @@ function projectedPoint(point, width, height, scale) {
 function resizeCanvas(canvas) {
   const box = canvas.getBoundingClientRect();
   const dpr = Math.min(2, window.devicePixelRatio || 1);
-  const width = Math.max(320, Math.floor(box.width * dpr));
-  const height = Math.max(500, Math.floor(box.height * dpr));
+  const width = Math.max(320, Math.floor((box.width || 640) * dpr));
+  const height = Math.max(500, Math.floor((box.height || 720) * dpr));
 
   if (canvas.width !== width || canvas.height !== height) {
     canvas.width = width;
@@ -193,10 +225,6 @@ function resizeCanvas(canvas) {
   }
 
   state.dpr = dpr;
-}
-
-function seededUnit(index, salt) {
-  return ((Math.sin(index * 12.9898 + salt * 78.233) * 43758.5453) % 1 + 1) % 1;
 }
 
 function projectedFace(face, width, height, scale) {
@@ -207,6 +235,7 @@ function projectedFace(face, width, height, scale) {
   return {
     type: face.type,
     tone: face.tone,
+    fireBias: face.fireBias,
     rotated,
     projected,
     avgZ
@@ -252,100 +281,204 @@ function drawPolygon(ctx, points) {
   ctx.closePath();
 }
 
+function diamondTypeAlpha(type) {
+  return {
+    table: 0.76,
+    "table-spark": 0.66,
+    star: 0.63,
+    bezel: 0.62,
+    "upper-crown": 0.58,
+    "knife-girdle": 0.52,
+    "lower-girdle": 0.55,
+    "pavilion-main": 0.60,
+    "culet-ray": 0.65
+  }[type] || 0.58;
+}
+
 function materialForFace(ctx, face, index) {
   const center = faceCenter(face.projected);
   const normal = faceNormal(face.rotated);
 
-  const keyLight = normalize3({ x: -0.42, y: -0.84, z: 0.96 });
-  const rimLight = normalize3({ x: 0.74, y: -0.16, z: 0.64 });
-  const underLight = normalize3({ x: 0.08, y: 0.88, z: 0.34 });
+  const keyLight = normalize3({ x: -0.48, y: -0.82, z: 1.0 });
+  const sharpLight = normalize3({ x: 0.28, y: -0.42, z: 1.0 });
+  const rimLight = normalize3({ x: 0.78, y: -0.14, z: 0.58 });
+  const underLight = normalize3({ x: -0.08, y: 0.92, z: 0.34 });
 
-  const key = Math.abs(dot3(normal, keyLight));
+  const key = Math.max(0, dot3(normal, keyLight));
+  const sharp = Math.max(0, dot3(normal, sharpLight));
   const rim = Math.max(0, dot3(normal, rimLight));
   const under = Math.max(0, dot3(normal, underLight));
   const facing = clamp((normal.z + 1) / 2, 0, 1);
-  const pulse = 0.5 + 0.5 * Math.sin(index * PHI + state.sparklePhase * 1.72);
+  const edge = clamp(1 - facing, 0, 1);
 
-  const brightness = clamp(
-    (0.42 + key * 0.56 + rim * 0.36 + under * 0.18 + facing * 0.24 + pulse * 0.12) * face.tone,
-    0.34,
-    1.78
+  const facetPulse = 0.5 + 0.5 * Math.sin(index * PHI + face.fireBias * 7 + state.sparklePhase * 1.9);
+  const alternating = index % 2 === 0 ? 1 : -1;
+
+  const brilliance = clamp(
+    Math.pow(key, 1.55) * 0.92 +
+    Math.pow(sharp, 4.2) * 1.12 +
+    rim * 0.72 +
+    under * 0.22 +
+    facetPulse * 0.20,
+    0,
+    1.75
   );
 
-  const cool = clamp(0.26 + facing * 0.42 + rim * 0.22, 0.22, 0.92);
-  const fire = clamp(0.06 + pulse * 0.20 + rim * 0.10, 0.04, 0.42);
+  const shadow = clamp(
+    edge * 0.52 +
+    (1 - key) * 0.28 +
+    (alternating < 0 ? 0.13 : 0) +
+    (face.type.includes("pavilion") || face.type === "culet-ray" ? 0.18 : 0),
+    0,
+    0.92
+  );
 
-  const r = Math.round(142 + brightness * 88 + fire * 54);
-  const g = Math.round(178 + brightness * 76 + cool * 24);
-  const b = Math.round(220 + brightness * 56 + cool * 52);
+  const fire = clamp(
+    face.fireBias * 0.36 +
+    rim * 0.18 +
+    Math.pow(sharp, 3.4) * 0.26 +
+    facetPulse * 0.18,
+    0.02,
+    0.72
+  );
 
-  const alphaByType = {
-    table: 0.72,
-    star: 0.60,
-    "upper-crown": 0.64,
-    "round-crown": 0.58,
-    girdle: 0.48,
-    "upper-pavilion": 0.54,
-    "lower-pavilion": 0.60
-  };
+  const typeBoost = {
+    table: 1.16,
+    "table-spark": 1.12,
+    star: 1.02,
+    bezel: 0.98,
+    "upper-crown": 0.90,
+    "knife-girdle": 0.70,
+    "lower-girdle": 0.82,
+    "pavilion-main": 0.88,
+    "culet-ray": 1.02
+  }[face.type] || 0.88;
 
-  const alpha = clamp((alphaByType[face.type] || 0.54) + brightness * 0.10, 0.44, 0.86);
-  const strokeAlpha = clamp(0.36 + brightness * 0.36, 0.30, 0.82);
+  const brightness = clamp((brilliance * typeBoost + face.tone * 0.18) - shadow * 0.48, 0.06, 1.82);
+
+  const deepBlue = [12, 24, 48];
+  const blueGlass = [78, 135, 206];
+  const ice = [205, 232, 255];
+  const white = [255, 255, 255];
+  const goldFire = [255, 220, 142];
+
+  const darkMix = clamp(shadow * 0.82, 0, 0.94);
+  const iceMix = clamp(brightness * 0.62 + facing * 0.18, 0, 1);
+  const fireMix = clamp(fire * 0.42, 0, 0.42);
+
+  const baseA = [
+    lerp(deepBlue[0], blueGlass[0], iceMix),
+    lerp(deepBlue[1], blueGlass[1], iceMix),
+    lerp(deepBlue[2], blueGlass[2], iceMix)
+  ];
+
+  const baseB = [
+    lerp(baseA[0], ice[0], clamp(brightness * 0.48, 0, 1)),
+    lerp(baseA[1], ice[1], clamp(brightness * 0.48, 0, 1)),
+    lerp(baseA[2], ice[2], clamp(brightness * 0.48, 0, 1))
+  ];
+
+  const baseC = [
+    lerp(baseB[0], white[0], clamp(Math.pow(sharp, 5.2) + brightness * 0.12, 0, 0.64)),
+    lerp(baseB[1], white[1], clamp(Math.pow(sharp, 5.2) + brightness * 0.12, 0, 0.64)),
+    lerp(baseB[2], white[2], clamp(Math.pow(sharp, 5.2) + brightness * 0.12, 0, 0.64))
+  ];
+
+  const color = [
+    lerp(baseC[0], goldFire[0], fireMix),
+    lerp(baseC[1], goldFire[1], fireMix * 0.72),
+    lerp(baseC[2], goldFire[2], fireMix * 0.34)
+  ];
+
+  color[0] = lerp(color[0], deepBlue[0], darkMix * 0.42);
+  color[1] = lerp(color[1], deepBlue[1], darkMix * 0.38);
+  color[2] = lerp(color[2], deepBlue[2], darkMix * 0.32);
+
+  const alpha = clamp(diamondTypeAlpha(face.type) + brightness * 0.09 - shadow * 0.08, 0.38, 0.88);
+  const strokeAlpha = clamp(0.22 + brightness * 0.48 + rim * 0.20, 0.20, 0.86);
 
   const gradient = ctx.createLinearGradient(
-    center.x - 120 * state.dpr,
-    center.y - 92 * state.dpr,
-    center.x + 136 * state.dpr,
-    center.y + 106 * state.dpr
+    center.x - 150 * state.dpr,
+    center.y - 120 * state.dpr,
+    center.x + 150 * state.dpr,
+    center.y + 120 * state.dpr
   );
 
-  gradient.addColorStop(0, `rgba(255, 255, 255, ${clamp(alpha + 0.12, 0, 0.96)})`);
-  gradient.addColorStop(0.24, `rgba(${Math.min(255, r + 18)}, ${Math.min(255, g + 16)}, ${Math.min(255, b + 12)}, ${alpha})`);
-  gradient.addColorStop(0.52, `rgba(${r}, ${g}, ${b}, ${alpha * 0.90})`);
-  gradient.addColorStop(0.78, `rgba(${Math.round(r * 0.56)}, ${Math.round(g * 0.66)}, ${Math.round(b * 0.90)}, ${alpha * 0.76})`);
-  gradient.addColorStop(1, `rgba(255, 255, 255, ${alpha * 0.36})`);
+  gradient.addColorStop(0, `rgba(255,255,255,${clamp(alpha * 0.82 + sharp * 0.36, 0, 0.96)})`);
+  gradient.addColorStop(0.18, rgba([
+    lerp(color[0], 255, 0.25),
+    lerp(color[1], 255, 0.28),
+    lerp(color[2], 255, 0.34)
+  ], alpha));
+  gradient.addColorStop(0.43, rgba(color, alpha * 0.94));
+  gradient.addColorStop(0.68, rgba([
+    lerp(color[0], 20, shadow * 0.42),
+    lerp(color[1], 34, shadow * 0.42),
+    lerp(color[2], 64, shadow * 0.42)
+  ], alpha * 0.78));
+  gradient.addColorStop(0.86, `rgba(255,255,255,${alpha * clamp(sharp + rim * 0.4, 0.10, 0.44)})`);
+  gradient.addColorStop(1, rgba([8, 18, 38], alpha * 0.40));
 
   return {
     fill: gradient,
-    stroke: `rgba(244, 250, 255, ${strokeAlpha})`
+    stroke: `rgba(235, 248, 255, ${strokeAlpha})`,
+    brightness,
+    center,
+    normal
   };
 }
 
 function drawBackground(ctx, width, height) {
   const bg = ctx.createLinearGradient(0, 0, 0, height);
-  bg.addColorStop(0, "rgba(3, 10, 22, 0.97)");
-  bg.addColorStop(0.50, "rgba(7, 18, 36, 0.98)");
-  bg.addColorStop(1, "rgba(2, 7, 16, 1)");
+  bg.addColorStop(0, "rgba(1, 5, 14, 1)");
+  bg.addColorStop(0.50, "rgba(5, 15, 32, 0.99)");
+  bg.addColorStop(1, "rgba(1, 4, 10, 1)");
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, width, height);
 
   const halo = ctx.createRadialGradient(
     width * 0.5,
-    height * 0.40,
+    height * 0.39,
     width * 0.04,
     width * 0.5,
     height * 0.42,
     width * 0.60
   );
-  halo.addColorStop(0, "rgba(244, 250, 255, 0.18)");
-  halo.addColorStop(0.36, "rgba(105, 150, 206, 0.12)");
-  halo.addColorStop(0.68, "rgba(244, 207, 131, 0.045)");
+
+  halo.addColorStop(0, "rgba(244, 250, 255, 0.23)");
+  halo.addColorStop(0.28, "rgba(118, 168, 225, 0.14)");
+  halo.addColorStop(0.54, "rgba(244, 207, 131, 0.055)");
   halo.addColorStop(1, "rgba(0, 0, 0, 0)");
+
   ctx.fillStyle = halo;
+  ctx.fillRect(0, 0, width, height);
+
+  const velvet = ctx.createRadialGradient(
+    width * 0.5,
+    height * 0.52,
+    width * 0.10,
+    width * 0.5,
+    height * 0.56,
+    width * 0.78
+  );
+  velvet.addColorStop(0, "rgba(30, 45, 70, 0.08)");
+  velvet.addColorStop(0.64, "rgba(0,0,0,0)");
+  velvet.addColorStop(1, "rgba(0,0,0,0.32)");
+  ctx.fillStyle = velvet;
   ctx.fillRect(0, 0, width, height);
 }
 
 function drawStars(ctx, width, height) {
   ctx.save();
 
-  for (let i = 0; i < 64; i += 1) {
+  for (let i = 0; i < 74; i += 1) {
     const x = seededUnit(i, 1) * width;
     const y = seededUnit(i, 2) * height;
-    const alpha = 0.10 + seededUnit(i, 3) * 0.25;
-    const size = i % 13 === 0 ? 7 : i % 5 === 0 ? 3.5 : 1.3;
+    const alpha = 0.08 + seededUnit(i, 3) * 0.24;
+    const size = i % 17 === 0 ? 6.4 : i % 7 === 0 ? 3.2 : 1.2;
 
     ctx.strokeStyle = `rgba(235, 244, 255, ${alpha})`;
-    ctx.lineWidth = Math.max(1, width * 0.001);
+    ctx.lineWidth = Math.max(1, width * 0.0008);
     ctx.beginPath();
     ctx.moveTo(x - size, y);
     ctx.lineTo(x + size, y);
@@ -366,7 +499,7 @@ function drawFaces(ctx, projectedFaces, width) {
       drawPolygon(ctx, face.projected);
       ctx.fillStyle = material.fill;
       ctx.strokeStyle = material.stroke;
-      ctx.lineWidth = Math.max(0.85, width * 0.00125);
+      ctx.lineWidth = Math.max(0.65, width * 0.00092);
       ctx.fill();
       ctx.stroke();
     });
@@ -376,7 +509,7 @@ function drawRing(ctx, ring, width, height, scale, alpha, lineWidth = 1) {
   const projected = ring.map((point) => projectedPoint(point, width, height, scale));
 
   ctx.strokeStyle = `rgba(244, 250, 255, ${alpha})`;
-  ctx.lineWidth = Math.max(lineWidth, width * 0.001);
+  ctx.lineWidth = Math.max(lineWidth, width * 0.0009);
   ctx.beginPath();
 
   projected.forEach((point, index) => {
@@ -393,7 +526,7 @@ function drawLine(ctx, a, b, width, height, scale, alpha, lineWidth = 1) {
   const pb = projectedPoint(b, width, height, scale);
 
   ctx.strokeStyle = `rgba(244, 250, 255, ${alpha})`;
-  ctx.lineWidth = Math.max(lineWidth, width * 0.001);
+  ctx.lineWidth = Math.max(lineWidth, width * 0.00085);
   ctx.beginPath();
   ctx.moveTo(pa.x, pa.y);
   ctx.lineTo(pb.x, pb.y);
@@ -404,22 +537,26 @@ function drawLattice(ctx, width, height, scale) {
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
-  drawRing(ctx, DIAMOND_MODEL.table, width, height, scale, 0.66, 1.1 * state.dpr);
-  drawRing(ctx, DIAMOND_MODEL.crown, width, height, scale, 0.52, 1.0 * state.dpr);
-  drawRing(ctx, DIAMOND_MODEL.girdleTop, width, height, scale, 0.64, 1.25 * state.dpr);
-  drawRing(ctx, DIAMOND_MODEL.girdleBottom, width, height, scale, 0.44, 0.95 * state.dpr);
-  drawRing(ctx, DIAMOND_MODEL.pavilion, width, height, scale, 0.40, 0.85 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.table, width, height, scale, 0.76, 1.05 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.star, width, height, scale, 0.36, 0.72 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.crown, width, height, scale, 0.50, 0.88 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.girdleTop, width, height, scale, 0.72, 1.25 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.girdleBottom, width, height, scale, 0.46, 0.92 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.lowerPavilion, width, height, scale, 0.34, 0.72 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.pavilion, width, height, scale, 0.42, 0.80 * state.dpr);
 
-  for (let i = 0; i < SEGMENTS; i += 2) {
-    drawLine(ctx, DIAMOND_MODEL.table[i], DIAMOND_MODEL.crown[i], width, height, scale, 0.38, 0.85 * state.dpr);
-    drawLine(ctx, DIAMOND_MODEL.crown[i], DIAMOND_MODEL.girdleTop[i], width, height, scale, 0.38, 0.85 * state.dpr);
-    drawLine(ctx, DIAMOND_MODEL.girdleBottom[i], DIAMOND_MODEL.pavilion[i], width, height, scale, 0.34, 0.75 * state.dpr);
-    drawLine(ctx, DIAMOND_MODEL.pavilion[i], DIAMOND_MODEL.culet, width, height, scale, 0.38, 0.80 * state.dpr);
+  for (let i = 0; i < SEGMENTS; i += 4) {
+    drawLine(ctx, DIAMOND_MODEL.table[i], DIAMOND_MODEL.star[i], width, height, scale, 0.32, 0.70 * state.dpr);
+    drawLine(ctx, DIAMOND_MODEL.star[i], DIAMOND_MODEL.crown[i], width, height, scale, 0.30, 0.70 * state.dpr);
+    drawLine(ctx, DIAMOND_MODEL.crown[i], DIAMOND_MODEL.girdleTop[i], width, height, scale, 0.36, 0.75 * state.dpr);
+    drawLine(ctx, DIAMOND_MODEL.girdleBottom[i], DIAMOND_MODEL.lowerPavilion[i], width, height, scale, 0.30, 0.66 * state.dpr);
+    drawLine(ctx, DIAMOND_MODEL.lowerPavilion[i], DIAMOND_MODEL.pavilion[i], width, height, scale, 0.26, 0.62 * state.dpr);
+    drawLine(ctx, DIAMOND_MODEL.pavilion[i], DIAMOND_MODEL.culet, width, height, scale, 0.40, 0.74 * state.dpr);
   }
 
-  for (let i = 1; i < SEGMENTS; i += 4) {
-    drawLine(ctx, DIAMOND_MODEL.crown[i], DIAMOND_MODEL.girdleTop[(i + 5) % SEGMENTS], width, height, scale, 0.20, 0.65 * state.dpr);
-    drawLine(ctx, DIAMOND_MODEL.girdleBottom[i], DIAMOND_MODEL.pavilion[(i + 7) % SEGMENTS], width, height, scale, 0.20, 0.65 * state.dpr);
+  for (let i = 2; i < SEGMENTS; i += 8) {
+    drawLine(ctx, DIAMOND_MODEL.crown[i], DIAMOND_MODEL.girdleTop[(i + 7) % SEGMENTS], width, height, scale, 0.16, 0.55 * state.dpr);
+    drawLine(ctx, DIAMOND_MODEL.girdleBottom[i], DIAMOND_MODEL.lowerPavilion[(i + 9) % SEGMENTS], width, height, scale, 0.18, 0.55 * state.dpr);
   }
 
   ctx.restore();
@@ -430,23 +567,28 @@ function drawInternalFire(ctx, width, height, scale) {
   ctx.globalCompositeOperation = "screen";
 
   const firePairs = [
-    [DIAMOND_MODEL.girdleTop[2], DIAMOND_MODEL.pavilion[22], "rgba(105, 182, 255, 0.30)"],
-    [DIAMOND_MODEL.girdleTop[14], DIAMOND_MODEL.table[6], "rgba(255, 225, 154, 0.22)"],
-    [DIAMOND_MODEL.girdleTop[25], DIAMOND_MODEL.pavilion[8], "rgba(128, 205, 255, 0.26)"],
-    [DIAMOND_MODEL.crown[4], DIAMOND_MODEL.girdleBottom[18], "rgba(255, 255, 255, 0.26)"],
-    [DIAMOND_MODEL.crown[27], DIAMOND_MODEL.pavilion[12], "rgba(255, 201, 124, 0.20)"]
+    [DIAMOND_MODEL.girdleTop[4], DIAMOND_MODEL.lowerPavilion[43], "rgba(105, 190, 255, 0.34)", 2.5],
+    [DIAMOND_MODEL.girdleTop[20], DIAMOND_MODEL.table[9], "rgba(255, 230, 160, 0.24)", 2.0],
+    [DIAMOND_MODEL.girdleTop[47], DIAMOND_MODEL.pavilion[15], "rgba(135, 210, 255, 0.30)", 2.2],
+    [DIAMOND_MODEL.crown[8], DIAMOND_MODEL.girdleBottom[35], "rgba(255, 255, 255, 0.26)", 1.8],
+    [DIAMOND_MODEL.crown[54], DIAMOND_MODEL.lowerPavilion[24], "rgba(255, 192, 122, 0.24)", 1.8],
+    [DIAMOND_MODEL.table[34], DIAMOND_MODEL.pavilion[58], "rgba(190, 225, 255, 0.22)", 1.7],
+    [DIAMOND_MODEL.girdleBottom[11], DIAMOND_MODEL.culet, "rgba(255, 255, 255, 0.20)", 1.5]
   ];
 
-  firePairs.forEach(([a, b, color]) => {
+  firePairs.forEach(([a, b, color, thickness], index) => {
     const pa = projectedPoint(a, width, height, scale);
     const pb = projectedPoint(b, width, height, scale);
+    const pulse = 0.70 + 0.30 * Math.sin(state.sparklePhase * 1.4 + index * 1.7);
     const gradient = ctx.createLinearGradient(pa.x, pa.y, pb.x, pb.y);
     gradient.addColorStop(0, "rgba(255,255,255,0)");
-    gradient.addColorStop(0.48, color);
+    gradient.addColorStop(0.38, color.replace(/0\.\d+\)/, `${0.18 * pulse})`));
+    gradient.addColorStop(0.52, color);
+    gradient.addColorStop(0.68, color.replace(/0\.\d+\)/, `${0.14 * pulse})`));
     gradient.addColorStop(1, "rgba(255,255,255,0)");
 
     ctx.strokeStyle = gradient;
-    ctx.lineWidth = Math.max(1.4, width * 0.0022);
+    ctx.lineWidth = Math.max(1.1, width * 0.0011 * thickness);
     ctx.beginPath();
     ctx.moveTo(pa.x, pa.y);
     ctx.lineTo(pb.x, pb.y);
@@ -456,25 +598,52 @@ function drawInternalFire(ctx, width, height, scale) {
   ctx.restore();
 }
 
+function drawPrismShards(ctx, projectedFaces) {
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  projectedFaces
+    .filter((face, index) => index % 11 === 0 || face.type === "table-spark")
+    .slice(0, 48)
+    .forEach((face, index) => {
+      const center = faceCenter(face.projected);
+      const pulse = 0.5 + 0.5 * Math.sin(state.sparklePhase * 1.6 + index * PHI);
+      const alpha = 0.025 + pulse * 0.055;
+
+      const hue =
+        index % 5 === 0 ? [255, 220, 142] :
+        index % 5 === 1 ? [125, 196, 255] :
+        index % 5 === 2 ? [255, 255, 255] :
+        index % 5 === 3 ? [175, 224, 255] :
+        [255, 178, 122];
+
+      ctx.fillStyle = rgba(hue, alpha);
+      drawPolygon(ctx, face.projected);
+      ctx.fill();
+    });
+
+  ctx.restore();
+}
+
 function drawStarGlint(ctx, x, y, radius, alpha = 1) {
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
   const outer = radius * state.dpr;
-  const inner = outer * 0.34;
+  const inner = outer * 0.32;
 
-  const glow = ctx.createRadialGradient(x, y, 0, x, y, outer * 2.55);
-  glow.addColorStop(0, `rgba(255, 255, 255, ${0.72 * alpha})`);
-  glow.addColorStop(0.22, `rgba(160, 210, 255, ${0.30 * alpha})`);
-  glow.addColorStop(0.56, `rgba(244, 207, 131, ${0.10 * alpha})`);
+  const glow = ctx.createRadialGradient(x, y, 0, x, y, outer * 2.65);
+  glow.addColorStop(0, `rgba(255, 255, 255, ${0.76 * alpha})`);
+  glow.addColorStop(0.20, `rgba(160, 215, 255, ${0.32 * alpha})`);
+  glow.addColorStop(0.54, `rgba(244, 207, 131, ${0.10 * alpha})`);
   glow.addColorStop(1, "rgba(255, 255, 255, 0)");
 
   ctx.fillStyle = glow;
   ctx.beginPath();
-  ctx.arc(x, y, outer * 2.55, 0, TAU);
+  ctx.arc(x, y, outer * 2.65, 0, TAU);
   ctx.fill();
 
-  ctx.strokeStyle = `rgba(255, 255, 255, ${0.92 * alpha})`;
+  ctx.strokeStyle = `rgba(255, 255, 255, ${0.94 * alpha})`;
   ctx.lineWidth = Math.max(1, outer * 0.052);
 
   ctx.beginPath();
@@ -484,7 +653,7 @@ function drawStarGlint(ctx, x, y, radius, alpha = 1) {
   ctx.lineTo(x, y + outer);
   ctx.stroke();
 
-  ctx.strokeStyle = `rgba(190, 225, 255, ${0.54 * alpha})`;
+  ctx.strokeStyle = `rgba(190, 225, 255, ${0.58 * alpha})`;
   ctx.beginPath();
   ctx.moveTo(x - inner, y - inner);
   ctx.lineTo(x + inner, y + inner);
@@ -496,22 +665,30 @@ function drawStarGlint(ctx, x, y, radius, alpha = 1) {
 }
 
 function drawSparkles(ctx, width, height, scale) {
-  const tableTop = projectedPoint(DIAMOND_MODEL.table[8], width, height, scale);
-  const leftGirdle = projectedPoint(DIAMOND_MODEL.girdleTop[16], width, height, scale);
-  const rightGirdle = projectedPoint(DIAMOND_MODEL.girdleTop[0], width, height, scale);
-  const culet = projectedPoint(DIAMOND_MODEL.culet, width, height, scale);
-  const crown = projectedPoint(DIAMOND_MODEL.crown[5], width, height, scale);
-  const pavilion = projectedPoint(DIAMOND_MODEL.pavilion[23], width, height, scale);
+  const candidates = [
+    ...DIAMOND_MODEL.table,
+    ...DIAMOND_MODEL.star,
+    ...DIAMOND_MODEL.crown,
+    ...DIAMOND_MODEL.girdleTop,
+    ...DIAMOND_MODEL.girdleBottom,
+    ...DIAMOND_MODEL.pavilion,
+    DIAMOND_MODEL.culet
+  ].map((point, index) => {
+    const projected = projectedPoint(point, width, height, scale);
+    const pulse = 0.5 + 0.5 * Math.sin(index * PHI + state.sparklePhase * 2.1);
+    const front = clamp((projected.z + 1.20) / 2.4, 0, 1);
+    const score = pulse * 0.55 + front * 0.45 + seededUnit(index, 90) * 0.18;
+    return { projected, score, index };
+  });
 
-  const pulseA = 0.64 + 0.36 * Math.sin(state.sparklePhase * 2.1);
-  const pulseB = 0.64 + 0.36 * Math.sin(state.sparklePhase * 1.6 + 1.9);
-
-  drawStarGlint(ctx, tableTop.x, tableTop.y - 8 * state.dpr, 14, 0.92 * pulseA);
-  drawStarGlint(ctx, rightGirdle.x, rightGirdle.y, 12, 0.86 * pulseB);
-  drawStarGlint(ctx, leftGirdle.x, leftGirdle.y, 10, 0.78 * pulseA);
-  drawStarGlint(ctx, culet.x, culet.y, 12, 0.76 * pulseB);
-  drawStarGlint(ctx, crown.x, crown.y, 7, 0.56 * pulseA);
-  drawStarGlint(ctx, pavilion.x, pavilion.y, 7, 0.54 * pulseB);
+  candidates
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 8)
+    .forEach((item, rank) => {
+      const radius = rank < 2 ? 13 : rank < 5 ? 9 : 6;
+      const alpha = clamp(item.score * (rank < 3 ? 0.96 : 0.68), 0.20, 0.96);
+      drawStarGlint(ctx, item.projected.x, item.projected.y, radius, alpha);
+    });
 }
 
 function drawAuraAndShadow(ctx, width, height, scale) {
@@ -524,12 +701,12 @@ function drawAuraAndShadow(ctx, width, height, scale) {
     scale * 0.16,
     centerX,
     centerY + scale * 0.05,
-    scale * 2.22
+    scale * 2.28
   );
 
-  aura.addColorStop(0, "rgba(255, 255, 255, 0.17)");
-  aura.addColorStop(0.26, "rgba(147, 188, 235, 0.12)");
-  aura.addColorStop(0.58, "rgba(244, 207, 131, 0.050)");
+  aura.addColorStop(0, "rgba(255, 255, 255, 0.20)");
+  aura.addColorStop(0.22, "rgba(147, 188, 235, 0.13)");
+  aura.addColorStop(0.52, "rgba(244, 207, 131, 0.055)");
   aura.addColorStop(1, "rgba(0, 0, 0, 0)");
 
   ctx.fillStyle = aura;
@@ -543,23 +720,48 @@ function drawAuraAndShadow(ctx, width, height, scale) {
     scale * 0.06,
     centerX,
     culet.y + scale * 0.18,
-    scale * 0.50
+    scale * 0.56
   );
 
-  shadow.addColorStop(0, "rgba(244, 207, 131, 0.16)");
-  shadow.addColorStop(0.44, "rgba(82, 109, 146, 0.15)");
+  shadow.addColorStop(0, "rgba(244, 207, 131, 0.18)");
+  shadow.addColorStop(0.38, "rgba(82, 109, 146, 0.16)");
   shadow.addColorStop(1, "rgba(0, 0, 0, 0)");
 
   ctx.fillStyle = shadow;
   ctx.beginPath();
-  ctx.ellipse(centerX, culet.y + scale * 0.18, scale * 0.46, scale * 0.085, 0, 0, TAU);
+  ctx.ellipse(centerX, culet.y + scale * 0.18, scale * 0.50, scale * 0.088, 0, 0, TAU);
   ctx.fill();
+}
+
+function drawSilhouetteEdge(ctx, width, height, scale) {
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  drawRing(ctx, DIAMOND_MODEL.girdleTop, width, height, scale, 0.86, 1.50 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.girdleBottom, width, height, scale, 0.56, 1.05 * state.dpr);
+
+  const culet = projectedPoint(DIAMOND_MODEL.culet, width, height, scale);
+  const tableCenter = projectedPoint(DIAMOND_MODEL.tableCenter, width, height, scale);
+
+  const vertical = ctx.createLinearGradient(tableCenter.x, tableCenter.y, culet.x, culet.y);
+  vertical.addColorStop(0, "rgba(255,255,255,.20)");
+  vertical.addColorStop(0.50, "rgba(120,190,255,.12)");
+  vertical.addColorStop(1, "rgba(255,224,152,.16)");
+
+  ctx.strokeStyle = vertical;
+  ctx.lineWidth = Math.max(1, width * 0.001);
+  ctx.beginPath();
+  ctx.moveTo(tableCenter.x, tableCenter.y);
+  ctx.lineTo(culet.x, culet.y);
+  ctx.stroke();
+
+  ctx.restore();
 }
 
 function render(canvas, ctx) {
   const width = canvas.width;
   const height = canvas.height;
-  const scale = Math.min(width * 0.34, height * 0.37);
+  const scale = Math.min(width * 0.345, height * 0.372);
 
   ctx.clearRect(0, 0, width, height);
 
@@ -570,8 +772,10 @@ function render(canvas, ctx) {
   const faces = DIAMOND_MODEL.faces.map((face) => projectedFace(face, width, height, scale));
 
   drawFaces(ctx, faces, width);
+  drawPrismShards(ctx, faces);
   drawInternalFire(ctx, width, height, scale);
   drawLattice(ctx, width, height, scale);
+  drawSilhouetteEdge(ctx, width, height, scale);
   drawSparkles(ctx, width, height, scale);
 }
 
@@ -668,21 +872,27 @@ function resetDiamond() {
 }
 
 function markRoute() {
-  document.documentElement.dataset.showroomStatus = "diamond-round-brilliant-solid-shape";
-  document.documentElement.dataset.diamondLock = "CROWN_CUT_256_LATTICE_FIXED_FORM";
-  document.documentElement.dataset.touchGlideDiamond = "true";
-  document.documentElement.dataset.geometryMutableByTouch = "false";
-  document.documentElement.dataset.inspectionControl = "camera-view-rotation";
-  document.documentElement.dataset.diamondShape = "round-brilliant-solid";
-  document.documentElement.dataset.earthRecord = "false";
+  const markers = {
+    showroomStatus: "diamond-real-round-brilliant",
+    showroomContract: SHOWROOM_DIAMOND_STATE.contract,
+    diamondLock: "CROWN_CUT_256_LATTICE_FIXED_FORM",
+    touchGlideDiamond: "true",
+    geometryMutableByTouch: "false",
+    inspectionControl: "camera-view-rotation",
+    diamondShape: "round-brilliant-solid",
+    diamondMaterial: "real-diamond-visual-renewal",
+    latticeStates: String(LATTICE_STATES),
+    diamondSegments: String(SEGMENTS),
+    diamondFaceCount: String(DIAMOND_MODEL.faces.length),
+    earthRecord: "false",
+    generatedImage: "false",
+    graphicBox: "false"
+  };
 
-  document.body.dataset.showroomStatus = "diamond-round-brilliant-solid-shape";
-  document.body.dataset.diamondLock = "CROWN_CUT_256_LATTICE_FIXED_FORM";
-  document.body.dataset.touchGlideDiamond = "true";
-  document.body.dataset.geometryMutableByTouch = "false";
-  document.body.dataset.inspectionControl = "camera-view-rotation";
-  document.body.dataset.diamondShape = "round-brilliant-solid";
-  document.body.dataset.earthRecord = "false";
+  Object.entries(markers).forEach(([key, value]) => {
+    document.documentElement.dataset[key] = value;
+    if (document.body) document.body.dataset[key] = value;
+  });
 }
 
 function protectIdentity() {
@@ -713,6 +923,8 @@ function initShowroomDiamond() {
   resizeCanvas(canvas);
   render(canvas, ctx);
 
+  state.canvasReady = true;
+
   if (!state.raf) {
     state.raf = requestAnimationFrame((time) => step(time, canvas, ctx));
   }
@@ -723,16 +935,32 @@ function initShowroomDiamond() {
       return Object.freeze({
         ...SHOWROOM_DIAMOND_STATE,
         ready: true,
+        canvasReady: state.canvasReady,
         fixedForm: true,
         crownCut: true,
         roundBrilliantShape: true,
         lattice256: true,
+        latticeStates: LATTICE_STATES,
+        segmentCount: SEGMENTS,
+        faceCount: DIAMOND_MODEL.faces.length,
+        ringCount: DIAMOND_MODEL.rings.length,
         solidCrystal: true,
+        realDiamondVisualRenewal: true,
         geometryMutableByTouch: false,
         inspectionControl: "camera-view-rotation",
         sparkle: true,
+        internalFire: true,
+        refractionPaths: true,
+        hardGirdleEdge: true,
+        tableCrownPavilionHierarchy: true,
         momentum: true,
-        doubleTapReset: true
+        doubleTapReset: true,
+        yaw: state.yaw,
+        pitch: state.pitch,
+        roll: state.roll,
+        generatedImage: false,
+        graphicBox: false,
+        earthRecord: false
       });
     }
   });

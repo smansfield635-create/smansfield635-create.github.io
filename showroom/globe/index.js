@@ -1,11 +1,12 @@
 // /showroom/globe/index.js
-// Globe Showcase public 256-cell portrait index.
-// H-Earth macro surface expression coherence TNT.
-// Keeps parent 256 governance and child 256 hex substrate.
-// Corrects the exposed sample-fabric problem by rendering macro planetary surface first,
-// then using child hexes as blended refinement instead of visible dotted geometry.
+// Globe Showcase public portrait index.
+// H-Earth global 256×256 surface continuity repair.
+// Parent 256 remains authority.
+// Child 256-per-parent remains the hex substrate.
+// The visible surface now samples one continuous global planetary field,
+// so each parent rectangle acts as a window into the same planet instead of its own local screen.
 
-const MODEL_NAME = "globe-showcase-h-earth-macro-surface-expression-coherence-v1";
+const MODEL_NAME = "globe-showcase-h-earth-global-256-surface-continuity-repair-v1";
 
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
 const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
@@ -26,6 +27,9 @@ const CHILD_HEX_COLS = 16;
 const CHILD_HEX_COUNT = CHILD_HEX_ROWS * CHILD_HEX_COLS;
 const TOTAL_CHILD_FIELDS = CELL_COUNT * CHILD_HEX_COUNT;
 
+const GLOBAL_CHILD_ROWS = LAT_BANDS * CHILD_HEX_ROWS;
+const GLOBAL_CHILD_COLS = LON_SECTORS * CHILD_HEX_COLS;
+
 const H_EARTH_CENTER_CROSS = Object.freeze({
   nodes: Object.freeze([120, 121, 136, 137]),
   rowRange: Object.freeze([8, 9]),
@@ -36,8 +40,8 @@ const H_EARTH_CENTER_CROSS = Object.freeze({
 const H_EARTH_PLANETARY_HISTORY = Object.freeze({
   origin: "stabilized hybrid magnetic core",
   cause: "center-cross ignition, polar closure, crustal drift, ocean-basin opening, shelf exposure, erosion capture",
-  surfaceLaw: "planetary story governs parent nodes; child hexes express the governed story",
-  renderLaw: "macro surface first; child hex substrate blended underneath expression"
+  surfaceLaw: "parent nodes govern; child hexes sample one global planetary field",
+  renderLaw: "global field first; parent cells are windows, not independent screens"
 });
 
 const H_EARTH_NODAL_ROWS = Object.freeze([
@@ -105,7 +109,9 @@ const H_EARTH_GEOGRAPHY = Object.freeze({
     childRows: CHILD_HEX_ROWS,
     childCols: CHILD_HEX_COLS,
     childFieldsPerParent: CHILD_HEX_COUNT,
-    totalChildFields: TOTAL_CHILD_FIELDS
+    totalChildFields: TOTAL_CHILD_FIELDS,
+    globalRows: GLOBAL_CHILD_ROWS,
+    globalCols: GLOBAL_CHILD_COLS
   }),
   landBodies: Object.freeze([
     "North Polar Landmass",
@@ -231,8 +237,49 @@ function fract(value) {
   return value - Math.floor(value);
 }
 
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+
+function smoothstep(edge0, edge1, value) {
+  const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+  return t * t * (3 - 2 * t);
+}
+
 function hash(a, b = 0, c = 0) {
   return fract(Math.sin(a * 127.1 + b * 311.7 + c * 74.7) * 43758.5453123);
+}
+
+function valueNoise2D(x, y, seed = 0) {
+  const xi = Math.floor(x);
+  const yi = Math.floor(y);
+  const xf = x - xi;
+  const yf = y - yi;
+  const sx = xf * xf * (3 - 2 * xf);
+  const sy = yf * yf * (3 - 2 * yf);
+
+  const n00 = hash(xi, yi, seed);
+  const n10 = hash(xi + 1, yi, seed);
+  const n01 = hash(xi, yi + 1, seed);
+  const n11 = hash(xi + 1, yi + 1, seed);
+
+  return lerp(lerp(n00, n10, sx), lerp(n01, n11, sx), sy) * 2 - 1;
+}
+
+function fbm2D(x, y, seed = 0) {
+  let value = 0;
+  let amplitude = 0.5;
+  let frequency = 1;
+  let total = 0;
+
+  for (let octave = 0; octave < 4; octave += 1) {
+    value += valueNoise2D(x * frequency, y * frequency, seed + octave * 17) * amplitude;
+    total += amplitude;
+    amplitude *= 0.5;
+    frequency *= 2;
+  }
+
+  return value / total;
 }
 
 function normalize(v) {
@@ -428,7 +475,7 @@ function getHEarthTectonicContext(lat, lon, band, sector) {
   const row = band + 1;
   const column = sector + 1;
   const narrative = getHEarthNodalNarrative(row, column);
-  const localNoise = terrainNoise(lat, lon, band, sector, "hEarth") * 0.045;
+  const localNoise = terrainNoise(lat, lon, band, sector, "hEarth") * 0.030;
 
   return {
     ...narrative,
@@ -489,62 +536,161 @@ function getSeaName(sector, band) {
   return H_EARTH_GEOGRAPHY.seas[7];
 }
 
-function computeHEarthMasks(latMid, lonMid, context) {
+function computeHEarthGlobalLandMasks(lat, lon) {
   return [
     {
       name: "North Polar Landmass",
-      score: gaussianDistance(latMid, lonMid, 1.33, 0.0, 0.28, 3.2) + context.polarInfluence * 0.40
+      score: gaussianDistance(lat, lon, 1.33, 0.0, 0.27, 3.2)
     },
     {
       name: "South Polar Landmass",
-      score: gaussianDistance(latMid, lonMid, -1.33, 0.0, 0.28, 3.2) + context.polarInfluence * 0.40
+      score: gaussianDistance(lat, lon, -1.33, 0.0, 0.27, 3.2)
     },
     {
       name: "Western Primary Continent",
       score:
-        gaussianDistance(latMid, lonMid, 0.16, -2.02, 0.72, 0.92) +
-        gaussianDistance(latMid, lonMid, -0.24, -1.52, 0.52, 0.62) * 0.62 +
-        (context.plate.name === "Western Continental Plate" ? 0.24 : 0) +
-        context.upliftPressure * 0.12 -
-        context.oceanBasinPressure * 0.16
+        gaussianDistance(lat, lon, 0.16, -2.02, 0.72, 0.92) +
+        gaussianDistance(lat, lon, -0.24, -1.52, 0.52, 0.62) * 0.62
     },
     {
       name: "Eastern Primary Continent",
       score:
-        gaussianDistance(latMid, lonMid, 0.18, 1.55, 0.76, 0.88) +
-        gaussianDistance(latMid, lonMid, -0.10, 2.25, 0.46, 0.62) * 0.55 +
-        (context.plate.name === "Eastern Continental Plate" ? 0.26 : 0) +
-        context.upliftPressure * 0.13 -
-        context.oceanBasinPressure * 0.14
+        gaussianDistance(lat, lon, 0.18, 1.55, 0.76, 0.88) +
+        gaussianDistance(lat, lon, -0.10, 2.25, 0.46, 0.62) * 0.55
     },
     {
       name: "Northern Highland Continent",
       score:
-        gaussianDistance(latMid, lonMid, 0.76, -0.25, 0.46, 0.96) +
-        gaussianDistance(latMid, lonMid, 0.58, 0.55, 0.34, 0.58) * 0.52 +
-        (context.plate.name === "Northern Highland Plate" ? 0.30 : 0) +
-        context.collisionPressure * 0.18
+        gaussianDistance(lat, lon, 0.76, -0.25, 0.46, 0.96) +
+        gaussianDistance(lat, lon, 0.58, 0.55, 0.34, 0.58) * 0.52
     },
     {
       name: "Southern Shelf Continent",
       score:
-        gaussianDistance(latMid, lonMid, -0.72, 0.18, 0.44, 1.05) +
-        gaussianDistance(latMid, lonMid, -0.52, -0.55, 0.32, 0.52) * 0.44 +
-        (context.plate.name === "Southern Shelf Plate" ? 0.26 : 0) +
-        context.shelfPressure * 0.18 -
-        context.oceanBasinPressure * 0.08
+        gaussianDistance(lat, lon, -0.72, 0.18, 0.44, 1.05) +
+        gaussianDistance(lat, lon, -0.52, -0.55, 0.32, 0.52) * 0.44
     },
     {
       name: "Equatorial Island Chain",
       score:
-        gaussianDistance(latMid, lonMid, 0.00, -0.60, 0.23, 0.48) +
-        gaussianDistance(latMid, lonMid, 0.08, 0.12, 0.22, 0.42) +
-        gaussianDistance(latMid, lonMid, -0.08, 0.82, 0.24, 0.45) +
-        (context.plate.name === "Equatorial Chain Plate" ? 0.26 : 0) +
-        context.centerInfluence * 0.20 +
-        context.riftPressure * 0.10
+        gaussianDistance(lat, lon, 0.00, -0.60, 0.23, 0.48) +
+        gaussianDistance(lat, lon, 0.08, 0.12, 0.22, 0.42) +
+        gaussianDistance(lat, lon, -0.08, 0.82, 0.24, 0.45)
     }
   ];
+}
+
+function computeHEarthMasks(latMid, lonMid, context) {
+  const global = computeHEarthGlobalLandMasks(latMid, lonMid);
+
+  return global.map((item) => {
+    let plateBias = 0;
+
+    if (item.name === "North Polar Landmass" || item.name === "South Polar Landmass") {
+      plateBias += context.polarInfluence * 0.40;
+    }
+
+    if (item.name === "Western Primary Continent") {
+      plateBias += (context.plate.name === "Western Continental Plate" ? 0.24 : 0) + context.upliftPressure * 0.12 - context.oceanBasinPressure * 0.16;
+    }
+
+    if (item.name === "Eastern Primary Continent") {
+      plateBias += (context.plate.name === "Eastern Continental Plate" ? 0.26 : 0) + context.upliftPressure * 0.13 - context.oceanBasinPressure * 0.14;
+    }
+
+    if (item.name === "Northern Highland Continent") {
+      plateBias += (context.plate.name === "Northern Highland Plate" ? 0.30 : 0) + context.collisionPressure * 0.18;
+    }
+
+    if (item.name === "Southern Shelf Continent") {
+      plateBias += (context.plate.name === "Southern Shelf Plate" ? 0.26 : 0) + context.shelfPressure * 0.18 - context.oceanBasinPressure * 0.08;
+    }
+
+    if (item.name === "Equatorial Island Chain") {
+      plateBias += (context.plate.name === "Equatorial Chain Plate" ? 0.26 : 0) + context.centerInfluence * 0.20 + context.riftPressure * 0.10;
+    }
+
+    return {
+      name: item.name,
+      score: item.score + plateBias
+    };
+  });
+}
+
+function getGlobalChildAddress(parentBand, parentSector, childRow, childCol) {
+  const globalRow = parentBand * CHILD_HEX_ROWS + childRow;
+  const globalCol = parentSector * CHILD_HEX_COLS + childCol;
+
+  return {
+    globalRow,
+    globalCol,
+    globalU: (globalCol + 0.5) / GLOBAL_CHILD_COLS,
+    globalV: (globalRow + 0.5) / GLOBAL_CHILD_ROWS
+  };
+}
+
+function sampleHEarthGlobalSurface(childLat, childLon, globalRow, globalCol, parent, narrative) {
+  const globalU = (globalCol + 0.5) / GLOBAL_CHILD_COLS;
+  const globalV = (globalRow + 0.5) / GLOBAL_CHILD_ROWS;
+  const polar = Math.abs(childLat) / (Math.PI / 2);
+
+  const masks = computeHEarthGlobalLandMasks(childLat, childLon);
+  const winner = masks.reduce((best, item) => item.score > best.score ? item : best, masks[0]);
+
+  const globalLongWave =
+    fbm2D(globalCol * 0.030, globalRow * 0.030, 101) * 0.060 +
+    fbm2D(globalCol * 0.070, globalRow * 0.070, 203) * 0.030;
+
+  const coastlineWave =
+    Math.sin(childLon * 3.15 + Math.sin(childLat * 2.2) * 0.75) * 0.030 +
+    Math.cos(childLon * 4.45 - childLat * 2.15) * 0.020;
+
+  const centralRift =
+    Math.exp(-Math.pow((globalU - 0.50) / 0.070, 2) - Math.pow((globalV - 0.50) / 0.280, 2)) *
+    (0.10 + narrative.centerInfluence * 0.11);
+
+  const westOceanWall = smoothstep(0.22, 0.02, globalU) * 0.24;
+  const eastOceanWall = smoothstep(0.78, 0.98, globalU) * 0.24;
+  const southOceanBias = smoothstep(0.72, 0.98, globalV) * 0.15;
+  const polarCapPressure = smoothstep(1.20, 1.48, Math.abs(childLat));
+
+  const tectonicLand =
+    narrative.upliftPressure * 0.18 +
+    narrative.collisionPressure * 0.10 +
+    polarCapPressure * 0.18 -
+    narrative.oceanBasinPressure * 0.18 -
+    centralRift * 0.35 -
+    westOceanWall -
+    eastOceanWall -
+    southOceanBias;
+
+  const threshold = winner.name === "Equatorial Island Chain" ? 0.50 : 0.42;
+
+  const globalSigned =
+    winner.score +
+    globalLongWave +
+    coastlineWave +
+    tectonicLand -
+    threshold;
+
+  const parentWeight = 0.16;
+  const signed = globalSigned * (1 - parentWeight) + parent.signed * parentWeight;
+
+  return {
+    globalU,
+    globalV,
+    polar,
+    polarCapPressure,
+    winner,
+    globalSigned,
+    signed,
+    centralRift,
+    westOceanWall,
+    eastOceanWall,
+    southOceanBias,
+    globalLongWave,
+    coastlineWave
+  };
 }
 
 function classifyHEarthCell(latMid, lonMid, band, sector) {
@@ -572,7 +718,7 @@ function classifyHEarthCell(latMid, lonMid, band, sector) {
     0.72
   );
 
-  const macroNoise = terrainNoise(latMid, lonMid, band, sector, "hEarth") * 0.035;
+  const macroNoise = fbm2D(sector * 0.72, band * 0.72, 44) * 0.025;
   const tectonicCause =
     context.upliftPressure * 0.22 +
     context.collisionPressure * 0.12 -
@@ -610,7 +756,7 @@ function classifyHEarthCell(latMid, lonMid, band, sector) {
   );
 
   const terrain = {
-    geographyModel: "h-earth-parent-256-macro-expression",
+    geographyModel: "h-earth-parent-256-global-field-window",
     parentBand: band,
     parentSector: sector,
     parentAddress: band * 16 + sector,
@@ -654,6 +800,7 @@ function classifyHEarthChildHex(parentCell, row, col, localU, localV) {
   const sector = parentCell.sector;
   const parent = parentCell.terrain;
   const narrative = parent.nodalNarrative;
+  const global = getGlobalChildAddress(band, sector, row, col);
 
   const lat0 = parentCell.corners[0].lat;
   const lat1 = parentCell.corners[3].lat;
@@ -663,78 +810,84 @@ function classifyHEarthChildHex(parentCell, row, col, localU, localV) {
   const childLat = lat0 + (lat1 - lat0) * localV;
   const childLon = lon0 + (lon1 - lon0) * localU;
 
-  const centerCurve =
-    Math.sin(localU * Math.PI * 2.0 + narrative.centerInfluence * 1.6 + band * 0.21) * 0.018 +
-    Math.cos(localV * Math.PI * 2.0 - narrative.riftPressure * 1.4 + sector * 0.17) * 0.016;
+  const globalSurface = sampleHEarthGlobalSurface(
+    childLat,
+    childLon,
+    global.globalRow,
+    global.globalCol,
+    parent,
+    narrative
+  );
 
-  const tectonicWave =
-    terrainNoise(childLat, childLon, band * 16 + row, sector * 16 + col, "hEarth") * 0.030 +
-    centerCurve +
-    (hash(band * 16 + row, sector * 16 + col, 71) - 0.5) * 0.010;
-
-  const upliftShape =
-    narrative.upliftPressure * 0.030 +
-    narrative.collisionPressure * 0.024 -
-    narrative.oceanBasinPressure * 0.030 -
-    narrative.erosionPressure * 0.012 +
-    narrative.waterCapturePressure * 0.008;
-
-  const signed = parent.signed + tectonicWave + upliftShape;
-  const isPolarCap = parent.polarCap !== null;
+  const signed = globalSurface.signed;
 
   const lakeCore =
     parent.lakeZone &&
     Math.pow((localU - 0.5) / (0.31 + narrative.waterCapturePressure * 0.08), 2) +
       Math.pow((localV - 0.5) / (0.22 + narrative.erosionPressure * 0.08), 2) <
-      1.0 + (hash(band, sector, childAddress) - 0.5) * 0.12;
+      1.0 + fbm2D(global.globalCol * 0.06, global.globalRow * 0.06, 77) * 0.10;
 
-  const ridgeCurve = Math.sin(localU * Math.PI * 1.55 + parent.ridgeIndex + narrative.collisionPressure * 1.2) * 0.12;
+  const ridgeCurve =
+    Math.sin(global.globalU * Math.PI * 4.4 + parent.ridgeIndex * 0.75 + narrative.collisionPressure * 1.2) * 0.13 +
+    Math.cos(global.globalV * Math.PI * 3.2 + narrative.upliftPressure) * 0.05;
+
   const ridgeBand =
     parent.ridgeIndex >= 0 &&
     narrative.collisionPressure > 0.34 &&
-    Math.abs((localV - 0.5) - ridgeCurve) < 0.070 + narrative.upliftPressure * 0.026;
+    Math.abs((localV - 0.5) - ridgeCurve) < 0.060 + narrative.upliftPressure * 0.020;
 
-  const valleyCurve = Math.sin(localV * Math.PI * 1.45 + parent.valleyIndex + narrative.waterCapturePressure * 1.4) * 0.10;
+  const valleyCurve =
+    Math.sin(global.globalV * Math.PI * 4.0 + parent.valleyIndex * 0.66 + narrative.waterCapturePressure * 1.4) * 0.12 +
+    Math.cos(global.globalU * Math.PI * 2.8 + narrative.erosionPressure) * 0.04;
+
   const valleyBand =
     parent.valleyIndex >= 0 &&
     narrative.waterCapturePressure > 0.30 &&
-    Math.abs((localU - 0.5) + valleyCurve) < 0.072 + narrative.erosionPressure * 0.022;
+    Math.abs((localU - 0.5) + valleyCurve) < 0.062 + narrative.erosionPressure * 0.018;
+
+  const polarCapPressure = globalSurface.polarCapPressure;
+  const isPolarCap = polarCapPressure > 0.54;
+  const iceEdge = polarCapPressure > 0.38;
 
   const childIsLand = isPolarCap || signed > 0 || lakeCore;
-  const childLake = lakeCore;
+  const childLake = lakeCore && !isPolarCap;
   const childWater = !childIsLand || childLake;
-  const coastWidth = 0.026 + narrative.erosionPressure * 0.012 + narrative.shelfPressure * 0.012;
+  const coastWidth = 0.024 + narrative.erosionPressure * 0.010 + narrative.shelfPressure * 0.010;
   const childCoast = !isPolarCap && !childLake && Math.abs(signed) < coastWidth;
-  const childBeach = childCoast && signed > -0.014 && signed < 0.030 && narrative.shelfPressure > 0.40 && narrative.collisionPressure < 0.82;
-  const childShelf = !childIsLand && signed > -(0.115 + narrative.shelfPressure * 0.064);
-  const childSea = !childIsLand && (childShelf || parent.seaZone || signed > -0.245 || narrative.shelfPressure > 0.66);
+  const childBeach = childCoast && signed > -0.012 && signed < 0.026 && narrative.shelfPressure > 0.40 && narrative.collisionPressure < 0.82;
+  const childShelf = !childIsLand && signed > -(0.110 + narrative.shelfPressure * 0.058);
+  const childSea = !childIsLand && (childShelf || parent.seaZone || signed > -0.238 || narrative.shelfPressure > 0.66);
   const childOcean = !childIsLand && !childSea && !childLake;
 
   const elevation = clamp(
-    signed * 1.12 +
-    narrative.upliftPressure * 0.20 +
-    narrative.collisionPressure * 0.15 -
-    narrative.oceanBasinPressure * 0.20 -
-    narrative.erosionPressure * 0.08 +
-    (ridgeBand ? 0.30 : 0) -
-    (valleyBand ? 0.18 : 0) +
+    signed * 1.10 +
+    narrative.upliftPressure * 0.18 +
+    narrative.collisionPressure * 0.13 -
+    narrative.oceanBasinPressure * 0.18 -
+    narrative.erosionPressure * 0.06 +
+    (ridgeBand ? 0.26 : 0) -
+    (valleyBand ? 0.16 : 0) +
     (isPolarCap ? 0.10 : 0),
     -0.95,
     1.08
   );
 
   const child = {
-    geographyModel: "h-earth-child-256-hex-hidden-substrate",
+    geographyModel: "h-earth-global-256-continuity-child-hex",
     parentAddress: parent.parentAddress,
     childAddress,
+    globalRow: global.globalRow,
+    globalCol: global.globalCol,
+    globalU: global.globalU,
+    globalV: global.globalV,
     row,
     col,
     childLat,
     childLon,
     signed,
     elevation,
-    detail: hash(band * 31 + row, sector * 29 + col, 97),
-    landBody: childIsLand && !childLake ? parent.landBody : null,
+    detail: clamp((fbm2D(global.globalCol * 0.12, global.globalRow * 0.12, 97) + 1) / 2, 0, 1),
+    landBody: childIsLand && !childLake ? globalSurface.winner.name : null,
     ocean: childOcean ? parent.ocean || getOceanName(sector, band) : null,
     sea: childSea ? parent.sea || getSeaName(sector, band) : null,
     lake: childLake ? parent.lake : null,
@@ -743,8 +896,8 @@ function classifyHEarthChildHex(parentCell, row, col, localU, localV) {
     shelf: childShelf ? parent.shelf || `Shelf Zone ${String((parent.parentAddress % H_EARTH_GEOGRAPHY.shelves) + 1).padStart(2, "0")}` : null,
     ridge: ridgeBand ? parent.ridge : null,
     valley: valleyBand ? parent.valley : null,
-    polarCap: isPolarCap ? parent.polarCap : null,
-    ice: isPolarCap || parent.ice,
+    polarCap: isPolarCap ? (childLat < 0 ? H_EARTH_GEOGRAPHY.polarCaps[1] : H_EARTH_GEOGRAPHY.polarCaps[0]) : null,
+    ice: isPolarCap || iceEdge,
     coast: childCoast,
     water: childWater,
     shelfZone: childShelf,
@@ -927,8 +1080,8 @@ function terrainColorComponents(terrain, worldKey, light, rim = 0) {
     const erosion = terrain.erosionPressure || 0;
 
     if (terrain.ice || terrain.polarCap) {
-      r = 186 + collision * 14;
-      g = 224 + collision * 8;
+      r = 184 + collision * 12;
+      g = 222 + collision * 7;
       b = 240;
     } else if (terrain.lakeZone) {
       r = 30;
@@ -1010,7 +1163,7 @@ function terrainColorComponents(terrain, worldKey, light, rim = 0) {
   }
 
   const elevationWarmth = clamp(terrain.elevation, -0.5, 0.65);
-  const detailShift = (terrain.detail - 0.5) * (worldKey === "hEarth" ? 5 : 12);
+  const detailShift = (terrain.detail - 0.5) * (worldKey === "hEarth" ? 4 : 12);
   const waterBoost = terrain.water ? 14 : 0;
   const finalLight = clamp(light + rim * 0.08, 0.16, 1.12);
 
@@ -1103,7 +1256,7 @@ function pathCell(ctx, points) {
 }
 
 function pathHexSample(ctx, parentPoints, centerU, centerV, du, dv) {
-  const grow = 1.24;
+  const grow = 1.40;
   const hex = [
     bilinearScreen(parentPoints, centerU - du * 0.42 * grow, centerV),
     bilinearScreen(parentPoints, centerU - du * 0.20 * grow, centerV - dv * 0.43 * grow),
@@ -1171,7 +1324,7 @@ function drawHEarthFeatureLines(ctx, parentCell) {
   const points = parentCell.points;
   const terrain = parentCell.terrain;
   const narrative = terrain.nodalNarrative;
-  const depthAlpha = clamp(0.16 + parentCell.depth * 0.62, 0.06, 0.62);
+  const depthAlpha = clamp(0.14 + parentCell.depth * 0.56, 0.04, 0.52);
 
   ctx.save();
   pathCell(ctx, points);
@@ -1179,52 +1332,46 @@ function drawHEarthFeatureLines(ctx, parentCell) {
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
 
-  for (let i = 0; i < 2; i += 1) {
-    const u0 = 0.08 + i * 0.24 + narrative.centerInfluence * 0.04;
-    const u1 = 0.92 - i * 0.11;
-    const v = 0.38 + Math.sin((terrain.parentAddress + i) * 0.7) * 0.12;
+  if (terrain.coastlineSegment || terrain.shelfZone || terrain.beach || terrain.lakeZone) {
+    const a = bilinearScreen(points, 0.06, 0.48 + Math.sin(terrain.parentAddress * 0.13) * 0.12);
+    const b = bilinearScreen(points, 0.42, 0.46 + Math.sin(terrain.parentAddress * 0.23) * 0.10);
+    const c = bilinearScreen(points, 0.94, 0.50 + Math.cos(terrain.parentAddress * 0.17) * 0.10);
 
-    if (terrain.coastlineSegment || terrain.shelfZone || terrain.beach || terrain.lakeZone) {
-      const a = bilinearScreen(points, u0, v);
-      const b = bilinearScreen(points, 0.42, v + 0.10 * Math.sin(i + terrain.parentAddress));
-      const c = bilinearScreen(points, u1, v + 0.04 * Math.cos(i + terrain.parentAddress));
+    ctx.strokeStyle = terrain.beach
+      ? `rgba(255,232,163,${0.09 * depthAlpha})`
+      : `rgba(205,232,210,${0.08 * depthAlpha})`;
 
-      ctx.strokeStyle = terrain.beach
-        ? `rgba(255,232,163,${0.12 * depthAlpha})`
-        : `rgba(205,232,210,${0.10 * depthAlpha})`;
+    ctx.lineWidth = Math.max(0.36, DPR * 0.36);
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.quadraticCurveTo(b.x, b.y, c.x, c.y);
+    ctx.stroke();
+  }
 
-      ctx.lineWidth = Math.max(0.42, DPR * 0.42);
-      ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      ctx.quadraticCurveTo(b.x, b.y, c.x, c.y);
-      ctx.stroke();
-    }
+  if (terrain.ridge || terrain.mountain) {
+    const a = bilinearScreen(points, 0.12, 0.72);
+    const b = bilinearScreen(points, 0.52, 0.30 + narrative.collisionPressure * 0.14);
+    const c = bilinearScreen(points, 0.90, 0.62);
 
-    if (terrain.ridge || terrain.mountain) {
-      const a = bilinearScreen(points, 0.14, 0.72 - i * 0.24);
-      const b = bilinearScreen(points, 0.52, 0.30 + narrative.collisionPressure * 0.16);
-      const c = bilinearScreen(points, 0.88, 0.62 - i * 0.12);
+    ctx.strokeStyle = `rgba(236,230,207,${0.085 * depthAlpha})`;
+    ctx.lineWidth = Math.max(0.32, DPR * 0.32);
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.quadraticCurveTo(b.x, b.y, c.x, c.y);
+    ctx.stroke();
+  }
 
-      ctx.strokeStyle = `rgba(236,230,207,${0.10 * depthAlpha})`;
-      ctx.lineWidth = Math.max(0.36, DPR * 0.36);
-      ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      ctx.quadraticCurveTo(b.x, b.y, c.x, c.y);
-      ctx.stroke();
-    }
+  if (terrain.valley || terrain.valleyZone) {
+    const a = bilinearScreen(points, 0.32, 0.12);
+    const b = bilinearScreen(points, 0.48, 0.50);
+    const c = bilinearScreen(points, 0.64, 0.88);
 
-    if (terrain.valley || terrain.valleyZone) {
-      const a = bilinearScreen(points, 0.30 + i * 0.18, 0.12);
-      const b = bilinearScreen(points, 0.46 + i * 0.10, 0.50);
-      const c = bilinearScreen(points, 0.62 + i * 0.06, 0.88);
-
-      ctx.strokeStyle = `rgba(20,70,55,${0.11 * depthAlpha})`;
-      ctx.lineWidth = Math.max(0.38, DPR * 0.38);
-      ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      ctx.quadraticCurveTo(b.x, b.y, c.x, c.y);
-      ctx.stroke();
-    }
+    ctx.strokeStyle = `rgba(20,70,55,${0.09 * depthAlpha})`;
+    ctx.lineWidth = Math.max(0.32, DPR * 0.32);
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.quadraticCurveTo(b.x, b.y, c.x, c.y);
+    ctx.stroke();
   }
 
   ctx.restore();
@@ -1235,11 +1382,10 @@ function drawHEarthChildHexSurface(ctx, parentCell) {
   const du = 1 / CHILD_HEX_COLS;
   const dv = 1 / CHILD_HEX_ROWS;
   const baseLight = 0.34 + parentCell.diffuse * 0.54 + parentCell.secondary * 0.10 + parentCell.rim * 0.18;
-  const parentAlpha = clamp(0.88 + parentCell.rim * 0.08, 0.82, 0.98);
 
   ctx.save();
   pathCell(ctx, points);
-  ctx.fillStyle = colorForTerrain(parentCell.terrain, "hEarth", baseLight, parentCell.rim, parentAlpha);
+  ctx.fillStyle = colorForTerrain(parentCell.terrain, "hEarth", baseLight, parentCell.rim, 0.20);
   ctx.fill();
   ctx.restore();
 
@@ -1247,6 +1393,10 @@ function drawHEarthChildHexSurface(ctx, parentCell) {
   pathCell(ctx, points);
   ctx.clip();
   ctx.globalCompositeOperation = "source-over";
+
+  if ("filter" in ctx) {
+    ctx.filter = `blur(${Math.max(0.15, DPR * 0.18)}px)`;
+  }
 
   for (let row = 0; row < CHILD_HEX_ROWS; row += 1) {
     for (let col = 0; col < CHILD_HEX_COLS; col += 1) {
@@ -1257,17 +1407,16 @@ function drawHEarthChildHexSurface(ctx, parentCell) {
 
       const localLight =
         baseLight +
-        child.elevation * 0.038 +
-        child.ridgePressure * 0.034 -
-        (child.water ? 0.016 : 0) +
-        (hash(parentCell.band * 100 + row, parentCell.sector * 100 + col, 17) - 0.5) * 0.012;
+        child.elevation * 0.032 +
+        child.ridgePressure * 0.026 -
+        (child.water ? 0.014 : 0);
 
       const alpha =
         child.coastlineSegment || child.beachZone || child.lakeZone || child.shelfZone
-          ? 0.34
+          ? 0.54
           : child.ridge || child.valley
-            ? 0.24
-            : 0.18;
+            ? 0.42
+            : 0.34;
 
       pathHexSample(ctx, points, centerU, centerV, du, dv);
       ctx.fillStyle = colorForTerrain(child, "hEarth", clamp(localLight, 0.18, 1.10), parentCell.rim, alpha);
@@ -1275,16 +1424,13 @@ function drawHEarthChildHexSurface(ctx, parentCell) {
     }
   }
 
+  if ("filter" in ctx) {
+    ctx.filter = "none";
+  }
+
   ctx.restore();
 
   drawHEarthFeatureLines(ctx, parentCell);
-
-  ctx.save();
-  pathCell(ctx, points);
-  ctx.strokeStyle = `rgba(230,244,255,${0.006 + parentCell.rim * 0.018})`;
-  ctx.lineWidth = Math.max(0.12, DPR * 0.11);
-  ctx.stroke();
-  ctx.restore();
 }
 
 function drawPlanet(ctx, width, height) {
@@ -1335,8 +1481,10 @@ function drawPlanet(ctx, width, height) {
   document.documentElement.dataset.parentCellCount = String(CELL_COUNT);
   document.documentElement.dataset.childFieldsPerParent = String(CHILD_HEX_COUNT);
   document.documentElement.dataset.totalChildFields = String(TOTAL_CHILD_FIELDS);
+  document.documentElement.dataset.globalChildRows = String(GLOBAL_CHILD_ROWS);
+  document.documentElement.dataset.globalChildCols = String(GLOBAL_CHILD_COLS);
   document.documentElement.dataset.privateEnginesAsleep = "true";
-  document.documentElement.dataset.hEarthExpressionCoherence = state.worldKey === "hEarth" ? "macro-surface-active" : "inactive";
+  document.documentElement.dataset.hEarthGlobalContinuity = state.worldKey === "hEarth" ? "active" : "inactive";
 }
 
 function drawLatLongDefinition(ctx, view) {
@@ -1344,8 +1492,8 @@ function drawLatLongDefinition(ctx, view) {
 
   ctx.save();
   ctx.globalCompositeOperation = "screen";
-  ctx.strokeStyle = "rgba(210,238,255,0.024)";
-  ctx.lineWidth = Math.max(0.35, DPR * 0.34);
+  ctx.strokeStyle = "rgba(210,238,255,0.016)";
+  ctx.lineWidth = Math.max(0.28, DPR * 0.28);
 
   for (let i = 1; i < 4; i += 1) {
     const w = view.scale * (0.36 + i * 0.18);
@@ -1449,7 +1597,7 @@ function drawWorldTitle(ctx, width, height) {
 
   ctx.fillStyle = "rgba(186,197,212,0.72)";
   ctx.font = `850 ${Math.max(11 * DPR, width * 0.014)}px Inter, system-ui, sans-serif`;
-  ctx.fillText(`${world.subtitle} · macro surface / hidden child hex substrate`, width * 0.5, height * 0.205);
+  ctx.fillText(`${world.subtitle} · global 256×256 continuity field`, width * 0.5, height * 0.205);
 
   ctx.restore();
 }
@@ -1718,6 +1866,8 @@ function boot() {
     childHexCols: CHILD_HEX_COLS,
     childHexCount: CHILD_HEX_COUNT,
     totalChildFields: TOTAL_CHILD_FIELDS,
+    globalChildRows: GLOBAL_CHILD_ROWS,
+    globalChildCols: GLOBAL_CHILD_COLS,
     privateEnginesAsleep: true,
     fixedStructure: true,
     inspectable: true,
@@ -1736,12 +1886,14 @@ function boot() {
         parentCellCount: CELL_COUNT,
         childFieldsPerParent: CHILD_HEX_COUNT,
         totalChildFields: TOTAL_CHILD_FIELDS,
+        globalChildRows: GLOBAL_CHILD_ROWS,
+        globalChildCols: GLOBAL_CHILD_COLS,
         latBands: LAT_BANDS,
         lonSectors: LON_SECTORS,
         privateEnginesAsleep: true,
         fixedStructure: true,
         inspectable: true,
-        hEarthExpressionCoherence: state.worldKey === "hEarth" ? "macro-surface-active" : "inactive",
+        hEarthGlobalContinuity: state.worldKey === "hEarth" ? "active" : "inactive",
         hEarthPlanetaryHistory: H_EARTH_PLANETARY_HISTORY,
         hEarthCenterCross: H_EARTH_CENTER_CROSS,
         hEarthCounts: H_EARTH_GEOGRAPHY,
@@ -1763,6 +1915,8 @@ export default {
   cellCount: CELL_COUNT,
   childHexCount: CHILD_HEX_COUNT,
   totalChildFields: TOTAL_CHILD_FIELDS,
+  globalChildRows: GLOBAL_CHILD_ROWS,
+  globalChildCols: GLOBAL_CHILD_COLS,
   privateEnginesAsleep: true,
   inspectable: true,
   hEarthPlanetaryHistory: H_EARTH_PLANETARY_HISTORY,

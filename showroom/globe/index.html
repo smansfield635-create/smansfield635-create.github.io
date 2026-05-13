@@ -1,13 +1,14 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="globe-showcase-public-selector"
+  data-page="showroom-globe-gateway"
   data-route="/showroom/globe/"
-  data-contract="GLOBE_SHOWCASE_DIAMOND_DIRECT_ACCESS_RESTORE_TNT_v1"
-  data-role="public-three-body-visual-selector"
-  data-visual-scale-authority="true"
-  data-diamond-direct-access="restored"
-  data-diamond-route="/showroom/"
+  data-contract="SHOWROOM_GLOBE_GATEWAY_RESTORATION_TNT_v1"
+  data-role="globe-system-gateway"
+  data-gateway-authority="true"
+  data-earth-record="false"
+  data-h-earth-record="false"
+  data-audralia-record="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-heavy-runtime-loaded="false"
@@ -19,14 +20,14 @@
   <title>Globe Showcase · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The Globe Showcase is the public three-body visual selector for Earth, H-Earth, and Audralia, with direct access back to the Showroom diamond."
+    content="Globe Showcase is the gateway to the showroom globe pages: Earth, H-Earth, and Audralia."
   >
 
   <style>
     :root {
       --bg: #030812;
-      --panel: rgba(7, 15, 31, 0.86);
-      --panel-2: rgba(11, 23, 44, 0.76);
+      --panel: rgba(7, 15, 31, 0.88);
+      --panel-2: rgba(11, 23, 44, 0.78);
       --line: rgba(244, 207, 131, 0.18);
       --line-soft: rgba(255, 255, 255, 0.10);
       --text: rgba(238, 244, 255, 0.94);
@@ -152,12 +153,10 @@
       border-color: rgba(167, 243, 198, 0.62);
     }
 
-    .button.diamond {
-      color: #120b02;
-      background:
-        linear-gradient(135deg, #fff0b8, var(--gold) 46%, #c48a38);
+    .button.gold {
+      color: #130c02;
+      background: linear-gradient(135deg, #fff0b8, var(--gold) 48%, #c48a38);
       border-color: rgba(244, 207, 131, 0.72);
-      box-shadow: 0 0 24px rgba(244, 207, 131, 0.13);
     }
 
     .hero {
@@ -181,7 +180,7 @@
     }
 
     h1 {
-      max-width: 920px;
+      max-width: 930px;
       margin: 0;
       font-size: clamp(2.2rem, 8vw, 5.4rem);
       line-height: 0.92;
@@ -203,31 +202,7 @@
       margin-top: 26px;
     }
 
-    .diamond-return {
-      margin-top: 18px;
-      border: 1px solid rgba(244, 207, 131, 0.26);
-      border-radius: 24px;
-      padding: 16px;
-      background:
-        radial-gradient(circle at 16% 24%, rgba(244, 207, 131, 0.12), transparent 36%),
-        rgba(255, 255, 255, 0.035);
-    }
-
-    .diamond-return b {
-      display: block;
-      color: var(--gold);
-      margin-bottom: 6px;
-      font-size: 0.98rem;
-    }
-
-    .diamond-return span {
-      display: block;
-      color: var(--muted);
-      line-height: 1.45;
-      font-size: 0.94rem;
-    }
-
-    .showcase-shell {
+    .gateway {
       margin-top: 16px;
       border: 1px solid rgba(244, 207, 131, 0.16);
       border-radius: 34px;
@@ -237,7 +212,7 @@
         linear-gradient(180deg, rgba(8, 17, 34, 0.88), rgba(4, 9, 20, 0.92));
     }
 
-    .stage-title {
+    .gateway-title {
       margin: 0 0 14px;
       color: var(--gold);
       font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -246,9 +221,9 @@
       text-align: center;
     }
 
-    .stage-headline {
+    .gateway-headline {
       max-width: 840px;
-      margin: 0 auto 20px;
+      margin: 0 auto 22px;
       color: var(--gold);
       text-align: center;
       font-size: clamp(1.85rem, 6vw, 3.3rem);
@@ -256,68 +231,98 @@
       letter-spacing: -0.07em;
     }
 
-    .globe-mount {
-      min-height: 560px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 28px;
-      background:
-        radial-gradient(circle at 50% 38%, rgba(81, 132, 174, 0.20), transparent 44%),
-        linear-gradient(180deg, rgba(3, 9, 20, 0.72), rgba(2, 6, 14, 0.92));
-      overflow: hidden;
-    }
-
-    .globe-fallback {
-      min-height: 560px;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      text-align: center;
-      color: var(--muted);
-    }
-
-    .globe-fallback strong {
-      display: block;
-      color: var(--gold);
-      font-size: clamp(1.8rem, 5vw, 3.1rem);
-      line-height: 1.05;
-      letter-spacing: -0.06em;
-      margin-bottom: 8px;
-    }
-
-    .globe-fallback span {
-      display: block;
-      max-width: 560px;
-      margin: 0 auto;
-      line-height: 1.55;
-    }
-
-    .detail-grid {
+    .body-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
-      margin-top: 16px;
     }
 
-    .detail-card {
+    .body-card {
+      position: relative;
+      overflow: hidden;
       border: 1px solid var(--line-soft);
+      border-radius: 26px;
+      padding: 20px;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(244, 207, 131, 0.08), transparent 34%),
+        var(--panel-2);
+      text-decoration: none;
+      min-height: 260px;
+      display: grid;
+      align-content: space-between;
+    }
+
+    .body-card::before {
+      content: "";
+      display: block;
+      width: min(72%, 190px);
+      aspect-ratio: 1 / 1;
+      margin: 0 auto 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      box-shadow:
+        inset -22px -24px 46px rgba(0, 0, 0, 0.42),
+        inset 18px 16px 38px rgba(255, 255, 255, 0.09),
+        0 0 46px rgba(139, 200, 255, 0.10);
+    }
+
+    .body-card.earth::before {
+      background:
+        radial-gradient(circle at 35% 32%, rgba(210, 222, 179, 0.70), transparent 18%),
+        radial-gradient(circle at 60% 42%, rgba(125, 152, 95, 0.72), transparent 20%),
+        linear-gradient(135deg, rgba(32, 92, 126, 0.96), rgba(7, 34, 64, 0.98));
+    }
+
+    .body-card.h-earth::before {
+      background:
+        radial-gradient(circle at 32% 36%, rgba(197, 174, 104, 0.72), transparent 24%),
+        radial-gradient(circle at 55% 50%, rgba(82, 126, 113, 0.76), transparent 32%),
+        linear-gradient(135deg, rgba(31, 86, 103, 0.95), rgba(7, 30, 55, 0.98));
+    }
+
+    .body-card.audralia::before {
+      background:
+        radial-gradient(circle at 45% 36%, rgba(164, 132, 111, 0.72), transparent 24%),
+        radial-gradient(circle at 62% 56%, rgba(68, 82, 104, 0.72), transparent 30%),
+        linear-gradient(135deg, rgba(74, 59, 102, 0.96), rgba(15, 18, 44, 0.98));
+    }
+
+    .body-card strong {
+      display: block;
+      color: var(--gold);
+      font-size: clamp(1.25rem, 3vw, 1.75rem);
+      letter-spacing: -0.04em;
+    }
+
+    .body-card span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 0.94rem;
+    }
+
+    .body-pill {
+      width: fit-content;
+      margin-top: 16px;
+      border: 1px solid rgba(244, 207, 131, 0.20);
+      border-radius: 999px;
+      padding: 8px 11px;
+      color: rgba(238, 244, 255, 0.78);
+      font: 850 0.72rem/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .route-note {
+      margin-top: 16px;
+      border: 1px solid rgba(167, 243, 198, 0.22);
       border-radius: 24px;
       padding: 18px;
-      background: var(--panel-2);
-    }
-
-    .detail-card h2 {
-      margin: 0 0 8px;
-      color: var(--gold);
-      font-size: clamp(1.05rem, 2.8vw, 1.35rem);
-      line-height: 1.1;
-      letter-spacing: -0.035em;
-    }
-
-    .detail-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.5;
-      font-size: 0.94rem;
+      background: rgba(8, 42, 37, 0.42);
+      color: rgba(167, 243, 198, 0.94);
+      font-weight: 850;
+      line-height: 1.45;
     }
 
     .footer {
@@ -338,13 +343,8 @@
         justify-content: flex-start;
       }
 
-      .detail-grid {
+      .body-grid {
         grid-template-columns: 1fr;
-      }
-
-      .globe-mount,
-      .globe-fallback {
-        min-height: 520px;
       }
     }
 
@@ -354,13 +354,12 @@
       }
 
       .hero,
-      .showcase-shell {
+      .gateway {
         border-radius: 24px;
       }
 
-      .globe-mount,
-      .globe-fallback {
-        min-height: 500px;
+      .body-card {
+        min-height: 230px;
       }
     }
   </style>
@@ -371,98 +370,75 @@
 
   <div class="page">
     <header class="topbar" aria-label="Diamond Gate Bridge navigation">
-      <a class="brand" href="/showroom/" aria-label="Open the Showroom diamond">
+      <a class="brand" href="/showroom/">
         <span class="brand-mark" aria-hidden="true">◆</span>
         <span>Diamond Gate Bridge</span>
       </a>
 
       <nav class="nav" aria-label="Primary">
         <a href="/">Compass</a>
-        <a href="/showroom/">Diamond</a>
-        <a href="/showroom/" data-diamond-direct-link="true">Open Diamond</a>
+        <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/" aria-current="page">Globe</a>
         <a href="/showroom/globe/earth/">Earth</a>
         <a href="/showroom/globe/h-earth/">H-Earth</a>
         <a href="/showroom/globe/audralia/">Audralia</a>
-        <a href="/products/">Products</a>
         <a href="/gauges/">Triple G</a>
       </nav>
     </header>
 
     <main id="globe-main">
       <section class="hero">
-        <p class="eyebrow">Public selector</p>
-        <h1>The globe is the object.</h1>
+        <p class="eyebrow">Globe Showcase · Gateway</p>
+        <h1>This is the entrance to the showroom globe pages.</h1>
         <p class="lede">
-          This page holds the shared visual scale for Earth, H-Earth, and Audralia. The Showroom diamond remains the cover object and now has direct access from this page again.
+          Globe Showcase is the gateway and selector for Earth, H-Earth, and Audralia. Earth is no longer allowed to stand in the entrance path.
         </p>
 
         <div class="actions">
-          <a class="button diamond" href="/showroom/" data-diamond-direct-link="true">Open Diamond</a>
-          <a class="button primary" href="/showroom/globe/h-earth/">Inspect H-Earth</a>
-          <a class="button" href="/showroom/">Return to Showroom</a>
+          <a class="button primary" href="#globe-gateway">Choose a Globe Page</a>
+          <a class="button gold" href="/showroom/">Return to Showroom Diamond</a>
           <a class="button" href="/gauges/">Run Triple G</a>
         </div>
-
-        <div class="diamond-return">
-          <b>Diamond access restored.</b>
-          <span>
-            Globe Showcase owns the three-body visual comparison. The Showroom diamond remains directly reachable as the cover object, not rerouted through planet inspection.
-          </span>
-        </div>
       </section>
 
-      <section class="showcase-shell" aria-label="Globe Showcase visual selector">
-        <p class="stage-title">Source authority · material asset · hydration file · Fibonacci runtime</p>
-        <h2 class="stage-headline">Clean globe, hydrated object, not public map construction.</h2>
+      <section id="globe-gateway" class="gateway" aria-label="Globe page gateway">
+        <p class="gateway-title">Gateway authority · three routes · no Earth override</p>
+        <h2 class="gateway-headline">Choose the page you meant to open.</h2>
 
-        <div
-          id="globe-stage"
-          class="globe-mount"
-          data-globe-showcase-mount
-          data-public-globe-mount
-          data-dgb-globe-showcase
-          data-diamond-direct-access="restored"
-          data-diamond-route="/showroom/"
-          data-visual-scale-authority="/showroom/globe/"
-        >
-          <div class="globe-fallback" data-globe-fallback>
+        <div class="body-grid">
+          <a class="body-card earth" href="/showroom/globe/earth/">
             <div>
-              <strong>Earth · H-Earth · Audralia</strong>
-              <span>
-                Drag to inspect the public globe. Hydration is generated through its own object-space file, separate from private world geography.
-              </span>
+              <strong>Earth</strong>
+              <span>Real-world reference body. Earth is a subordinate record page, not the gateway.</span>
             </div>
-          </div>
+            <span class="body-pill">Reference body</span>
+          </a>
+
+          <a class="body-card h-earth" href="/showroom/globe/h-earth/">
+            <div>
+              <strong>H-Earth</strong>
+              <span>Hybrid/private build body. Open this route for deeper inspection and construction state.</span>
+            </div>
+            <span class="body-pill">Private inspection</span>
+          </a>
+
+          <a class="body-card audralia" href="/showroom/globe/audralia/">
+            <div>
+              <strong>Audralia</strong>
+              <span>Generation 1 constructed world. Separate identity, separate route, no Earth override.</span>
+            </div>
+            <span class="body-pill">Constructed world</span>
+          </a>
         </div>
-      </section>
 
-      <section class="detail-grid" aria-label="Globe Showcase standards">
-        <article class="detail-card">
-          <h2>Hydration standard</h2>
-          <p>
-            The material carries crust. The hydration file carries water. Oceans, seas, lakes, and rivers are public object hydration only.
-          </p>
-        </article>
-
-        <article class="detail-card">
-          <h2>Runtime standard</h2>
-          <p>
-            Motion keeps priority. The Fibonacci runtime keeps drag responsive while hydration refines after motion settles.
-          </p>
-        </article>
-
-        <article class="detail-card">
-          <h2>Boundary standard</h2>
-          <p>
-            No private world takeover. Full terrain history stays inside the appropriate world room. The diamond remains the Showroom cover.
-          </p>
-        </article>
+        <div class="route-note">
+          Route authority restored: `/showroom/globe/` is the gateway. Earth, H-Earth, and Audralia are child pages beneath it.
+        </div>
       </section>
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Globe Showcase · Public selector.
+      Diamond Gate Bridge · Globe Showcase gateway.
     </footer>
   </div>
 

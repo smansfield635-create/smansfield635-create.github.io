@@ -1,33 +1,29 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="h-earth-live-world-engine"
-  data-route="/showroom/globe/h-earth/"
-  data-contract="H_EARTH_WESTERN_GOLDEN_SHELF_LIVE_WORLD_ENGINE_REBASE_TNT_v9"
-  data-renderer="webgl-live-world-engine"
-  data-static-image-dependency="false"
-  data-png-dependency="false"
-  data-water-behind-manor="true"
-  data-camera-facing="west-southwest"
-  data-final-architecture-authorized="false"
+  data-page="globe-parent-selector"
+  data-route="/showroom/globe/"
+  data-contract="GLOBE_PARENT_SELECTOR_REPAIR_TNT_v1"
+  data-jurisdiction="parent-selector-only"
+  data-ground-engine-authorized="false"
+  data-child-ground-routes="h-earth-only"
+  data-bodies="zionts,h-earth,audralia"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-
-  <title>Western Golden Shelf · Live World Engine</title>
+  <title>Globe Showcase · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="H-Earth Western Golden Shelf live world engine with Manor placement, water behind the Manor, wind, wildlife, waves, atmosphere, and final architecture held."
+    content="Globe Showcase is the parent selector for ZIONTS, H-Earth, and Audralia. Ground-level worlds remain on their child routes."
   >
 
   <style>
     :root {
       --bg:#030812;
-      --bg2:#061020;
+      --bg2:#071225;
+      --panel:rgba(7,15,31,.94);
+      --soft:rgba(255,255,255,.055);
       --line:rgba(244,207,131,.22);
       --line2:rgba(255,255,255,.12);
       --text:rgba(238,244,255,.94);
@@ -46,7 +42,7 @@
       background:
         radial-gradient(circle at 50% -8%, rgba(78,119,171,.26), transparent 38%),
         radial-gradient(circle at 12% 18%, rgba(244,207,131,.12), transparent 30%),
-        linear-gradient(180deg, var(--bg2), var(--bg) 54%, #02050b) !important;
+        linear-gradient(180deg, var(--bg2), var(--bg) 54%, #02050b);
       color:var(--text);
       font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -75,13 +71,17 @@
       letter-spacing:.02em;
     }
 
-    .nav, .actions {
+    .nav,
+    .actions,
+    .body-tabs {
       display:flex;
       flex-wrap:wrap;
       gap:8px;
     }
 
-    .nav a, .button {
+    .nav a,
+    .button,
+    .body-tab {
       min-height:38px;
       display:inline-flex;
       align-items:center;
@@ -94,10 +94,12 @@
       background:rgba(255,255,255,.04);
       font-size:.82rem;
       font-weight:850;
+      cursor:pointer;
     }
 
     .nav a[aria-current="page"],
-    .button.primary {
+    .button.primary,
+    .body-tab[aria-selected="true"] {
       color:#06101c;
       background:linear-gradient(135deg, var(--mint), #78d8ac);
       border-color:rgba(167,243,198,.64);
@@ -108,7 +110,9 @@
       background:linear-gradient(135deg, #fff0b8, var(--gold) 48%, #c48a38);
     }
 
-    .hero, .panel, .card, .standard-card {
+    .hero,
+    .panel,
+    .card {
       border:1px solid var(--line);
       border-radius:34px;
       background:
@@ -147,7 +151,8 @@
       text-transform:uppercase;
     }
 
-    .lede, p {
+    .lede,
+    p {
       color:var(--muted);
       line-height:1.55;
     }
@@ -160,53 +165,53 @@
 
     .actions { margin-top:26px; }
 
-    .transition, .gate-panel, .placement-unlock {
-      margin-top:16px;
-      padding:18px;
-      border:1px solid rgba(167,243,198,.20);
-      border-radius:24px;
-      background:rgba(5,38,34,.24);
-      color:var(--mint);
-      font-weight:900;
-      line-height:1.5;
-    }
-
-    .summary, .standard-grid, .placement-list {
+    .selector-grid {
       display:grid;
-      gap:14px;
-    }
-
-    .summary {
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      margin:16px 0;
-    }
-
-    .standard-grid {
-      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-columns:minmax(0, 1.25fr) minmax(260px, .75fr);
+      gap:16px;
       margin-top:16px;
     }
 
-    .summary div, .card, .standard-card, .placement-list div {
+    .globe-stage {
+      border:1px solid rgba(244,207,131,.20);
+      border-radius:28px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 30%, rgba(95,142,190,.18), transparent 46%),
+        linear-gradient(180deg, #061326, #020711);
+      min-height:clamp(430px,78vw,720px);
+    }
+
+    .globe-stage canvas {
+      display:block;
+      width:100%;
+      height:clamp(430px,78vw,720px);
+    }
+
+    .body-tabs {
+      margin-top:14px;
+    }
+
+    .card {
+      padding:18px;
+      background:rgba(255,255,255,.055);
+      box-shadow:none;
+    }
+
+    .status-list {
+      display:grid;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .status-list div {
       border:1px solid var(--line2);
       border-radius:18px;
       padding:14px;
-      background:rgba(255,255,255,.055);
+      background:rgba(255,255,255,.045);
     }
 
-    .summary strong, .placement-list strong {
-      display:block;
-      color:var(--gold);
-      font-size:1.05rem;
-      margin-top:6px;
-      overflow-wrap:anywhere;
-    }
-
-    .summary strong {
-      font-size:1.18rem;
-      margin-top:0;
-    }
-
-    .summary span, .placement-list span {
+    .status-list span {
       display:block;
       color:var(--faint);
       font-size:.74rem;
@@ -215,46 +220,22 @@
       letter-spacing:.08em;
     }
 
-    .ground-placement-grid {
-      display:grid;
-      grid-template-columns:minmax(0,1.45fr) minmax(260px,.55fr);
-      gap:16px;
-      margin-top:16px;
-    }
-
-    .manor-ground-viewport {
-      width:100%;
-      min-height:clamp(560px,100vw,900px);
-      border:1px solid rgba(244,207,131,.20);
-      border-radius:26px;
-      overflow:hidden;
-      background:
-        radial-gradient(circle at 55% 25%, rgba(244,207,131,.10), transparent 40%),
-        linear-gradient(180deg,#13243a,#06101d 58%,#02060b);
-      box-shadow:0 30px 90px rgba(0,0,0,.36);
-    }
-
-    .manor-ground-viewport canvas {
+    .status-list strong {
       display:block;
-      width:100%;
-      height:clamp(560px,100vw,900px);
+      color:var(--gold);
+      margin-top:6px;
+      overflow-wrap:anywhere;
     }
 
-    .render-status {
-      margin-top:10px;
-      color:var(--faint);
-      font:850 .78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    }
-
-    .gate-label {
-      display:inline-flex;
-      border-radius:999px;
-      color:#06101c;
-      background:var(--gold);
-      font:950 .78rem/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing:.08em;
-      padding:7px 10px;
-      margin-bottom:8px;
+    .notice {
+      margin-top:16px;
+      padding:18px;
+      border:1px solid rgba(167,243,198,.20);
+      border-radius:24px;
+      background:rgba(5,38,34,.24);
+      color:var(--mint);
+      font-weight:900;
+      line-height:1.5;
     }
 
     .footer {
@@ -267,15 +248,13 @@
 
     @media (max-width:900px) {
       .topbar { align-items:flex-start; flex-direction:column; }
-      .ground-placement-grid { grid-template-columns:1fr; }
-      .summary { grid-template-columns:repeat(2,minmax(0,1fr)); }
-      .standard-grid { grid-template-columns:1fr; }
+      .selector-grid { grid-template-columns:1fr; }
     }
 
     @media (max-width:560px) {
       .page { width:min(100% - 18px,1180px); }
       .hero, .panel { border-radius:24px; }
-      .manor-ground-viewport canvas { height:640px; }
+      .globe-stage canvas { height:520px; }
     }
   </style>
 </head>
@@ -287,9 +266,9 @@
       <nav class="nav">
         <a href="/">Compass</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Globe</a>
+        <a href="/showroom/globe/" aria-current="page">Globe</a>
         <a href="/showroom/globe/earth/">ZIONTS</a>
-        <a href="/showroom/globe/h-earth/" aria-current="page">H-Earth</a>
+        <a href="/showroom/globe/h-earth/">H-Earth</a>
         <a href="/showroom/globe/audralia/">Audralia</a>
         <a href="/gauges/">Triple G</a>
       </nav>
@@ -297,90 +276,70 @@
 
     <main id="main">
       <section class="hero">
-        <p class="eyebrow">Western Golden Shelf · Live World Engine Rebase</p>
-        <h1>The Manor is now placed inside a live world engine. Water moves behind it.</h1>
+        <p class="eyebrow">Globe Showcase · Parent Selector</p>
+        <h1>One gateway. Three planetary bodies. Satellite planetary view.</h1>
         <p class="lede">
-          The symbolic 2D canvas renderer is retired as visual authority. This route now uses a WebGL live-world engine for atmosphere, water, terrain, light, vegetation, wildlife, and Manor placement.
+          This parent page selects the body. It does not own ground-level rendering. ZIONTS, H-Earth, and Audralia live below this route as child pages.
         </p>
 
         <div class="actions">
-          <a class="button primary" href="#manor-ground-render">View Live World Engine</a>
-          <a class="button gold" href="/showroom/globe/">Return to Globe Selector</a>
-          <a class="button" href="/showroom/">Return to Showroom</a>
+          <a class="button primary" href="#selector">Choose Body</a>
+          <a class="button gold" href="/showroom/">Return to Showroom</a>
+          <a class="button" href="/gauges/">Run Triple G</a>
         </div>
 
-        <div class="transition">
-          Accepted image remains the compass. Static image rejected. Primitive canvas authority retired. WebGL live-world engine active.
-        </div>
-
-        <div class="summary">
-          <div><strong>WEBGL ENGINE</strong><span>Render authority</span></div>
-          <div><strong>NO PNG</strong><span>Static dependency</span></div>
-          <div><strong>LIVE WORLD</strong><span>Water + wind + wildlife</span></div>
-          <div><strong>HOLD</strong><span>Final architecture</span></div>
-        </div>
-
-        <div class="gate-panel">
-          <span class="gate-label">LIVE WORLD ENGINE ACTIVE</span>
-          <p>The current job is to chase the accepted cinematic baseline through a live procedural world, not a static picture.</p>
+        <div class="notice">
+          Parent jurisdiction restored. H-Earth ground engines remain child-route only. Hearth must not overwrite ZIONTS.
         </div>
       </section>
 
-      <section id="manor-ground-render" class="panel">
-        <p class="eyebrow">Ground-level render · WebGL living environment</p>
-        <h2>Inland shelf view toward the western waterline</h2>
+      <section id="selector" class="panel">
+        <p class="eyebrow">Satellite selector · no ground-level engine</p>
+        <h2 data-selected-title>ZIONTS</h2>
 
-        <div class="ground-placement-grid">
+        <div class="selector-grid">
           <div>
-            <div class="manor-ground-viewport">
-              <canvas data-manor-ground-canvas aria-label="WebGL live Western Golden Shelf Manor world"></canvas>
+            <div class="globe-stage">
+              <canvas data-globe-selector-canvas aria-label="Satellite planetary selector"></canvas>
             </div>
-            <div class="render-status" data-render-status>Live world engine booting.</div>
+
+            <div class="body-tabs" role="tablist" aria-label="Planetary body selector">
+              <button class="body-tab" type="button" data-body="zionts" aria-selected="true">ZIONTS</button>
+              <button class="body-tab" type="button" data-body="h-earth" aria-selected="false">H-Earth</button>
+              <button class="body-tab" type="button" data-body="audralia" aria-selected="false">Audralia</button>
+            </div>
           </div>
 
           <article class="card">
-            <h3>Live render authority</h3>
-            <p>The visual authority is now a route-local WebGL world engine. The old 2D drawing remains emergency fallback only.</p>
+            <h3 data-selected-heading>ZIONTS</h3>
+            <p data-selected-copy>
+              Ancient living reference body. Satellite planetary selector view only.
+            </p>
 
-            <div class="placement-list">
-              <div><span>Renderer</span><strong>WebGL live world engine</strong></div>
-              <div><span>Motion</span><strong>Ocean, shoreline, grass, haze, birds, wildlife</strong></div>
-              <div><span>Camera</span><strong>Inland / highland side</strong></div>
-              <div><span>Facing</span><strong>West-southwest</strong></div>
-              <div><span>Water</span><strong>Behind the Manor</strong></div>
-              <div><span>External image source</span><strong>Not used</strong></div>
-              <div><span>Final architecture</span><strong>HOLD</strong></div>
+            <div class="actions">
+              <a class="button primary" data-open-body href="/showroom/globe/earth/">Open ZIONTS</a>
+            </div>
+
+            <div class="status-list">
+              <div><span>Parent route</span><strong>/showroom/globe/</strong></div>
+              <div><span>Jurisdiction</span><strong>Selector only</strong></div>
+              <div><span>Ground engine</span><strong>Not authorized here</strong></div>
+              <div><span>Children</span><strong>ZIONTS · H-Earth · Audralia</strong></div>
             </div>
           </article>
-        </div>
-
-        <div class="placement-unlock">
-          <p>Next development should refine terrain, lighting, Manor dimensionality, and vegetation inside the live engine.</p>
-        </div>
-      </section>
-
-      <section class="panel">
-        <p class="eyebrow">Placement split</p>
-        <h2>Live environment active; final buildout remains held</h2>
-
-        <div class="standard-grid">
-          <article class="standard-card"><h3>Authorized</h3><p>Live Western Golden Shelf environment and controlled Manor placement.</p></article>
-          <article class="standard-card"><h3>Next</h3><p>Terraces, gardens, paths, shoreline, drainage, wildlife, and protected edge logic.</p></article>
-          <article class="standard-card"><h3>Still held</h3><p>Final architecture, roads, city systems, and final Diamond Gate Bridge object.</p></article>
         </div>
       </section>
     </main>
 
-    <footer class="footer">Diamond Gate Bridge · H-Earth · Western Golden Shelf Live World Engine.</footer>
+    <footer class="footer">Diamond Gate Bridge · Globe Showcase · Parent Selector restored.</footer>
   </div>
 
   <script>
-    window.DGB_H_EARTH_HTML_CACHE_KEY = "H_EARTH_WESTERN_GOLDEN_SHELF_LIVE_WORLD_ENGINE_REBASE_TNT_v9";
-    window.DGB_H_EARTH_JS_CACHE_KEY = "H_EARTH_WESTERN_GOLDEN_SHELF_LIVE_WORLD_ENGINE_REBASE_TNT_v9";
+    window.DGB_GLOBE_PARENT_CACHE_KEY = "GLOBE_PARENT_SELECTOR_REPAIR_TNT_v1";
   </script>
   <script
     type="module"
-    src="/showroom/globe/h-earth/index.js?v=H_EARTH_WESTERN_GOLDEN_SHELF_LIVE_WORLD_ENGINE_REBASE_TNT_v9"
+    src="/showroom/globe/index.js?v=GLOBE_PARENT_SELECTOR_REPAIR_TNT_v1"
   ></script>
 </body>
 </html>

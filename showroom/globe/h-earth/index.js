@@ -1,20 +1,20 @@
 // /showroom/globe/index.js
 // TNT FULL-FILE REPLACEMENT
-// SHOWROOM_GLOBE_ACTUAL_PLANET_SHADER_TNT_v1
+// SHOWROOM_GLOBE_CINEMATIC_DRY_PLANET_MATERIAL_TNT_v1
 // Role: public Globe Showcase selector only.
-// Visual law: actual cinematic dry planet render.
-// Method: screen-space sphere sampling, continuous height field, pseudo-normal lighting, atmospheric rim.
-// Forbidden here: water fill, landmass map, coastlines, beaches, child imports, private engines, mountain system.
+// Standard: actual cinematic dry planet material.
+// Method: continuous sphere shader, 3D noise height field, pseudo-normal relief lighting, erosion/canyon/basin/cliff material.
+// Forbidden here: water fill, blue oceans, coastline map, school-globe grid, blocks, child imports, private engines, mountain system.
 
-const MODEL_NAME = "showroom-globe-actual-planet-shader-v1";
+const MODEL_NAME = "showroom-globe-cinematic-dry-planet-material-v1";
 
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
 const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
-const DPR = Math.min(window.devicePixelRatio || 1, MOBILE ? 1.25 : 1.7);
-const FRAME_MS = MOBILE ? 92 : 72;
+const DPR = Math.min(window.devicePixelRatio || 1, MOBILE ? 1.35 : 1.8);
+const FRAME_MS = MOBILE ? 110 : 82;
 
-const DEFAULT_YAW = -0.66;
-const DEFAULT_PITCH = -0.18;
+const DEFAULT_YAW = -0.74;
+const DEFAULT_PITCH = -0.20;
 const MIN_PITCH = -1.04;
 const MAX_PITCH = 0.74;
 
@@ -27,13 +27,13 @@ const CHILD_HEX_COLS = 16;
 const CHILD_HEX_COUNT = CHILD_HEX_ROWS * CHILD_HEX_COLS;
 const TOTAL_CHILD_FIELDS = CELL_COUNT * CHILD_HEX_COUNT;
 
-const RASTER_LIMIT = MOBILE ? 330 : 520;
+const RASTER_LIMIT = MOBILE ? 390 : 610;
 
 const SUBLEVEL_MODEL = Object.freeze({
   parentCells: CELL_COUNT,
   childFieldsPerParent: CHILD_HEX_COUNT,
   totalChildFields: TOTAL_CHILD_FIELDS,
-  publicMode: "actual dry planet shader",
+  publicMode: "cinematic dry planet material",
   privateEnginesAsleep: true,
   mapExpression: false,
   waterExpression: false,
@@ -42,6 +42,8 @@ const SUBLEVEL_MODEL = Object.freeze({
   mountainSystem: false,
   planetShader: true,
   continuousSurface: true,
+  materialRelief: true,
+  pseudoNormalLighting: true,
   polygonPatchSurface: false,
   privateModelPaths: Object.freeze({
     earth: "/showroom/globe/earth/",
@@ -57,16 +59,17 @@ const WORLDS = Object.freeze({
     subtitle: "Reference Body",
     route: "/showroom/globe/earth/",
     seed: 310,
-    crustDark: [32, 33, 35],
-    crustLow: [73, 64, 55],
-    crustMid: [129, 110, 82],
-    crustHigh: [188, 161, 110],
-    ridge: [232, 213, 168],
-    exposed: [216, 179, 116],
-    basin: [45, 42, 38],
-    fault: [205, 214, 196],
-    atmosphere: [142, 190, 255],
-    glow: "rgba(142,190,255,0.22)"
+    stoneDeep: [24, 25, 27],
+    stoneLow: [68, 61, 52],
+    stoneMid: [125, 109, 82],
+    stoneHigh: [190, 164, 114],
+    sediment: [168, 143, 100],
+    exposed: [226, 188, 122],
+    ridge: [238, 218, 174],
+    shadow: [13, 15, 18],
+    scar: [210, 214, 196],
+    atmosphere: [145, 195, 255],
+    glow: "rgba(145,195,255,0.24)"
   },
   hEarth: {
     key: "hEarth",
@@ -74,16 +77,17 @@ const WORLDS = Object.freeze({
     subtitle: "Hybrid Earth",
     route: "/showroom/globe/h-earth/",
     seed: 710,
-    crustDark: [24, 34, 31],
-    crustLow: [56, 72, 60],
-    crustMid: [112, 125, 91],
-    crustHigh: [181, 162, 105],
-    ridge: [231, 217, 162],
-    exposed: [214, 175, 104],
-    basin: [23, 31, 30],
-    fault: [158, 242, 196],
-    atmosphere: [143, 240, 195],
-    glow: "rgba(143,240,195,0.22)"
+    stoneDeep: [18, 25, 25],
+    stoneLow: [56, 68, 56],
+    stoneMid: [112, 118, 86],
+    stoneHigh: [186, 160, 103],
+    sediment: [150, 138, 94],
+    exposed: [220, 178, 106],
+    ridge: [236, 219, 162],
+    shadow: [10, 15, 17],
+    scar: [164, 234, 190],
+    atmosphere: [150, 215, 232],
+    glow: "rgba(145,215,232,0.24)"
   },
   audralia: {
     key: "audralia",
@@ -91,16 +95,17 @@ const WORLDS = Object.freeze({
     subtitle: "Constructed World",
     route: "/showroom/globe/audralia/",
     seed: 910,
-    crustDark: [36, 30, 50],
-    crustLow: [72, 60, 78],
-    crustMid: [134, 106, 92],
-    crustHigh: [190, 146, 94],
-    ridge: [235, 203, 150],
-    exposed: [223, 164, 108],
-    basin: [25, 22, 36],
-    fault: [198, 172, 255],
-    atmosphere: [190, 170, 255],
-    glow: "rgba(190,170,255,0.22)"
+    stoneDeep: [28, 23, 42],
+    stoneLow: [72, 58, 72],
+    stoneMid: [135, 105, 88],
+    stoneHigh: [194, 148, 94],
+    sediment: [164, 119, 88],
+    exposed: [230, 164, 108],
+    ridge: [238, 206, 156],
+    shadow: [15, 12, 26],
+    scar: [198, 172, 255],
+    atmosphere: [194, 178, 255],
+    glow: "rgba(194,178,255,0.24)"
   }
 });
 
@@ -162,34 +167,55 @@ function fract(value) {
   return value - Math.floor(value);
 }
 
-function hash(a, b = 0, c = 0) {
-  return fract(Math.sin(a * 127.1 + b * 311.7 + c * 74.7) * 43758.5453123);
+function hash1(a, b = 0, c = 0, d = 0) {
+  return fract(Math.sin(a * 127.1 + b * 311.7 + c * 74.7 + d * 19.19) * 43758.5453123);
 }
 
-function valueNoise2D(x, y, seed = 0) {
+function fade(t) {
+  return t * t * t * (t * (t * 6 - 15) + 10);
+}
+
+function valueNoise3D(x, y, z, seed = 0) {
   const xi = Math.floor(x);
   const yi = Math.floor(y);
+  const zi = Math.floor(z);
+
   const xf = x - xi;
   const yf = y - yi;
-  const sx = xf * xf * (3 - 2 * xf);
-  const sy = yf * yf * (3 - 2 * yf);
+  const zf = z - zi;
 
-  const n00 = hash(xi, yi, seed);
-  const n10 = hash(xi + 1, yi, seed);
-  const n01 = hash(xi, yi + 1, seed);
-  const n11 = hash(xi + 1, yi + 1, seed);
+  const u = fade(xf);
+  const v = fade(yf);
+  const w = fade(zf);
 
-  return lerp(lerp(n00, n10, sx), lerp(n01, n11, sx), sy) * 2 - 1;
+  const n000 = hash1(xi, yi, zi, seed);
+  const n100 = hash1(xi + 1, yi, zi, seed);
+  const n010 = hash1(xi, yi + 1, zi, seed);
+  const n110 = hash1(xi + 1, yi + 1, zi, seed);
+  const n001 = hash1(xi, yi, zi + 1, seed);
+  const n101 = hash1(xi + 1, yi, zi + 1, seed);
+  const n011 = hash1(xi, yi + 1, zi + 1, seed);
+  const n111 = hash1(xi + 1, yi + 1, zi + 1, seed);
+
+  const x00 = lerp(n000, n100, u);
+  const x10 = lerp(n010, n110, u);
+  const x01 = lerp(n001, n101, u);
+  const x11 = lerp(n011, n111, u);
+
+  const y0 = lerp(x00, x10, v);
+  const y1 = lerp(x01, x11, v);
+
+  return lerp(y0, y1, w) * 2 - 1;
 }
 
-function fbm2D(x, y, seed = 0, octaves = 5) {
+function fbm3D(x, y, z, seed = 0, octaves = 5) {
   let value = 0;
   let amplitude = 0.52;
   let frequency = 1;
   let total = 0;
 
   for (let octave = 0; octave < octaves; octave += 1) {
-    value += valueNoise2D(x * frequency, y * frequency, seed + octave * 29) * amplitude;
+    value += valueNoise3D(x * frequency, y * frequency, z * frequency, seed + octave * 37) * amplitude;
     total += amplitude;
     amplitude *= 0.5;
     frequency *= 2;
@@ -198,15 +224,8 @@ function fbm2D(x, y, seed = 0, octaves = 5) {
   return value / total;
 }
 
-function ridge2D(x, y, seed = 0, octaves = 4) {
-  return 1 - Math.abs(fbm2D(x, y, seed, octaves));
-}
-
-function warp2D(x, y, seed = 0, amountX = 0.25, amountY = 0.18) {
-  return {
-    x: x + fbm2D(x * 0.7 + 13.1, y * 0.7 - 9.4, seed + 1, 3) * amountX,
-    y: y + fbm2D(x * 0.7 - 6.2, y * 0.7 + 11.7, seed + 2, 3) * amountY
-  };
+function ridge3D(x, y, z, seed = 0, octaves = 4) {
+  return 1 - Math.abs(fbm3D(x, y, z, seed, octaves));
 }
 
 function normalize(v) {
@@ -269,14 +288,14 @@ function ribbonField(lat, lon, centerLat, centerLon, length, width, angle, phase
 
   const curved =
     yr +
-    Math.sin(xr * 2.8 + phase) * 0.075 +
-    Math.sin(xr * 5.6 - phase) * 0.028 +
-    Math.sin(xr * 9.0 + phase * 0.7) * 0.011;
+    Math.sin(xr * 2.7 + phase) * 0.070 +
+    Math.sin(xr * 5.9 - phase) * 0.024 +
+    Math.sin(xr * 11.0 + phase * 0.7) * 0.009;
 
   const along = Math.abs(xr) / length;
   const across = Math.abs(curved) / width;
 
-  return clamp(1 - Math.max(along * 0.72, across), 0, 1);
+  return clamp(1 - Math.max(along * 0.74, across), 0, 1);
 }
 
 function basinField(lat, lon, centerLat, centerLon, latWidth, lonWidth) {
@@ -316,310 +335,335 @@ function sizeCanvas() {
   state.height = state.canvas.height;
   state.ctx = state.canvas.getContext("2d", { alpha: false, desynchronized: true });
 
-  createStars(MOBILE ? 56 : 122);
+  createStars(MOBILE ? 56 : 126);
 }
 
 function createStars(count) {
   state.stars = Array.from({ length: count }, (_, index) => ({
-    x: hash(index, 1),
-    y: hash(index, 2),
-    r: 0.45 + hash(index, 3) * 1.85,
-    a: 0.10 + hash(index, 4) * 0.34,
-    p: hash(index, 5) * Math.PI * 2
+    x: hash1(index, 1),
+    y: hash1(index, 2),
+    r: 0.45 + hash1(index, 3) * 1.85,
+    a: 0.10 + hash1(index, 4) * 0.34,
+    p: hash1(index, 5) * Math.PI * 2
   }));
 }
 
-function sampleDryBasins(lat, lon, world) {
+function latLonFromPoint(p) {
+  return {
+    lat: Math.asin(clamp(p.y, -1, 1)),
+    lon: Math.atan2(p.z, p.x)
+  };
+}
+
+function sampleBasinNetwork(lat, lon, p, world) {
+  const seed = world.seed + 100;
+
+  const broadA = basinField(lat, lon, 0.18, -2.05, 0.56, 0.54);
+  const broadB = basinField(lat, lon, -0.34, 1.72, 0.48, 0.58);
+  const broadC = basinField(lat, lon, 0.68, 0.62, 0.32, 0.70);
+  const broadD = basinField(lat, lon, -0.70, -1.02, 0.34, 0.66);
+  const broadE = basinField(lat, lon, -0.08, 0.12, 0.42, 0.46);
+
+  const roughFloor =
+    fbm3D(p.x * 2.1 + 1.2, p.y * 2.0 - 2.7, p.z * 2.2 + 0.8, seed + 1, 4) * 0.10 +
+    ridge3D(p.x * 3.6 - 2.4, p.y * 3.2 + 1.1, p.z * 3.4 + 5.0, seed + 2, 3) * 0.06;
+
+  return clamp(Math.max(broadA, broadB, broadC, broadD, broadE) * 0.88 + roughFloor, 0, 1);
+}
+
+function sampleCanyonNetwork(lat, lon, p, world) {
   const seed = world.seed + 200;
 
-  const broadA = basinField(lat, lon, 0.18, -2.00, 0.58, 0.52);
-  const broadB = basinField(lat, lon, -0.36, 1.72, 0.50, 0.56);
-  const broadC = basinField(lat, lon, 0.72, 0.58, 0.34, 0.70);
-  const broadD = basinField(lat, lon, -0.74, -1.02, 0.34, 0.66);
-  const broadE = basinField(lat, lon, -0.10, 0.14, 0.40, 0.46);
+  const canyonA = ribbonField(lat, lon, 0.05, -0.16, 1.74, 0.030, 0.10, 0.9);
+  const canyonB = ribbonField(lat, lon, 0.42, -1.88, 0.96, 0.032, 0.44, 2.0);
+  const canyonC = ribbonField(lat, lon, -0.38, 1.30, 1.06, 0.032, -0.38, -0.8);
+  const canyonD = ribbonField(lat, lon, -0.03, 2.42, 1.30, 0.030, -0.14, 1.2);
+  const canyonE = ribbonField(lat, lon, 0.10, -2.54, 1.34, 0.031, 0.16, -1.4);
 
-  const fracturedFloor =
-    fbm2D(lon * 0.88 + 1.6, lat * 0.92 - 3.4, seed + 1, 5) * 0.12 +
-    fbm2D(lon * 1.80 - 4.4, lat * 1.52 + 2.3, seed + 2, 4) * 0.05;
+  const serration =
+    ridge3D(p.x * 6.2 - 1.4, p.y * 5.7 + 2.8, p.z * 5.9 + 3.7, seed + 1, 4) * 0.24;
 
-  return clamp(Math.max(broadA, broadB, broadC, broadD, broadE) * 0.90 + fracturedFloor, 0, 1);
+  return clamp(Math.max(canyonA, canyonB, canyonC, canyonD, canyonE, 0) * 0.90 + serration * 0.10, 0, 1);
 }
 
-function sampleDryChannels(lat, lon, world) {
+function sampleDryRiverbeds(lat, lon, p, world) {
   const seed = world.seed + 300;
 
-  const riverA = ribbonField(lat, lon, 0.34, -1.32, 1.08, 0.025, -0.48, 0.2);
-  const riverB = ribbonField(lat, lon, -0.18, 0.78, 1.18, 0.027, 0.36, 1.7);
-  const riverC = ribbonField(lat, lon, 0.54, 0.22, 0.94, 0.023, -0.12, -1.1);
-  const riverD = ribbonField(lat, lon, -0.52, -0.58, 1.02, 0.026, 0.26, 2.3);
-  const riverE = ribbonField(lat, lon, 0.08, 1.72, 0.82, 0.023, -0.58, -0.4);
+  const riverA = ribbonField(lat, lon, 0.34, -1.32, 1.08, 0.020, -0.48, 0.2);
+  const riverB = ribbonField(lat, lon, -0.18, 0.78, 1.18, 0.022, 0.36, 1.7);
+  const riverC = ribbonField(lat, lon, 0.54, 0.22, 0.94, 0.019, -0.12, -1.1);
+  const riverD = ribbonField(lat, lon, -0.52, -0.58, 1.02, 0.020, 0.26, 2.3);
+  const riverE = ribbonField(lat, lon, 0.08, 1.72, 0.82, 0.018, -0.58, -0.4);
 
-  const breakup = fbm2D(lon * 5.8 + 2.0, lat * 5.1 - 6.0, seed + 1, 4);
   const braided =
-    ridge2D(lon * 7.0 - 1.0, lat * 6.0 + 3.0, seed + 2, 3) * 0.20;
+    ridge3D(p.x * 7.5 + 0.7, p.y * 6.7 - 2.1, p.z * 7.1 + 1.9, seed + 1, 3) * 0.16;
 
-  const active = breakup > -0.40 ? 1 : 0.38;
-
-  return clamp(Math.max(riverA, riverB, riverC, riverD, riverE, 0) * active + braided * 0.22, 0, 1);
+  return clamp(Math.max(riverA, riverB, riverC, riverD, riverE, 0) + braided * 0.16, 0, 1);
 }
 
-function sampleCanyons(lat, lon, world) {
+function sampleCliffs(lat, lon, p, world) {
   const seed = world.seed + 400;
 
-  const canyonA = ribbonField(lat, lon, 0.04, -0.12, 1.74, 0.036, 0.10, 0.9);
-  const canyonB = ribbonField(lat, lon, 0.40, -1.88, 0.94, 0.035, 0.44, 2.0);
-  const canyonC = ribbonField(lat, lon, -0.38, 1.30, 1.04, 0.037, -0.38, -0.8);
-  const canyonD = ribbonField(lat, lon, -0.02, 2.42, 1.30, 0.035, -0.14, 1.2);
-  const canyonE = ribbonField(lat, lon, 0.08, -2.54, 1.34, 0.036, 0.16, -1.4);
+  const escarpA = ribbonField(lat, lon, 0.18, -1.10, 1.18, 0.042, -0.56, 0.6);
+  const escarpB = ribbonField(lat, lon, -0.30, 0.98, 1.26, 0.044, 0.48, 1.8);
+  const escarpC = ribbonField(lat, lon, 0.62, 0.08, 0.92, 0.038, -0.10, -1.0);
+  const escarpD = ribbonField(lat, lon, -0.64, -0.76, 0.96, 0.040, 0.32, 2.4);
 
-  const serration = ridge2D(lon * 5.8 - 3.0, lat * 5.3 + 7.2, seed + 1, 4);
-  return clamp(Math.max(canyonA, canyonB, canyonC, canyonD, canyonE, 0) * (0.70 + serration * 0.30), 0, 1);
+  const brokenFace =
+    ridge3D(p.x * 3.8 + 4.0, p.y * 3.4 - 2.0, p.z * 3.6 + 1.7, seed + 1, 4);
+
+  return clamp(Math.max(escarpA, escarpB, escarpC, escarpD, 0) * (0.50 + brokenFace * 0.50), 0, 1);
 }
 
-function sampleCliffPressure(lat, lon, world) {
+function sampleCaverns(lat, lon, p, world) {
   const seed = world.seed + 500;
 
-  const escarpA = ribbonField(lat, lon, 0.18, -1.08, 1.18, 0.048, -0.56, 0.6);
-  const escarpB = ribbonField(lat, lon, -0.30, 0.98, 1.26, 0.050, 0.48, 1.8);
-  const escarpC = ribbonField(lat, lon, 0.62, 0.08, 0.92, 0.045, -0.10, -1.0);
-  const escarpD = ribbonField(lat, lon, -0.64, -0.76, 0.96, 0.047, 0.32, 2.4);
+  const sinkA = basinField(lat, lon, 0.16, -1.46, 0.070, 0.105);
+  const sinkB = basinField(lat, lon, -0.18, 0.70, 0.085, 0.125);
+  const sinkC = basinField(lat, lon, 0.48, 0.34, 0.072, 0.125);
+  const sinkD = basinField(lat, lon, -0.44, -0.32, 0.082, 0.145);
+  const sinkE = basinField(lat, lon, 0.02, 1.58, 0.072, 0.120);
 
-  const brokenFace = ridge2D(lon * 3.6 + 4.0, lat * 3.3 - 2.0, seed + 1, 4);
-  return clamp(Math.max(escarpA, escarpB, escarpC, escarpD, 0) * (0.52 + brokenFace * 0.48), 0, 1);
-}
-
-function sampleCaverns(lat, lon, world) {
-  const seed = world.seed + 600;
-
-  const sinkA = basinField(lat, lon, 0.16, -1.46, 0.075, 0.105);
-  const sinkB = basinField(lat, lon, -0.18, 0.70, 0.090, 0.125);
-  const sinkC = basinField(lat, lon, 0.48, 0.34, 0.075, 0.125);
-  const sinkD = basinField(lat, lon, -0.44, -0.32, 0.085, 0.145);
-  const sinkE = basinField(lat, lon, 0.02, 1.58, 0.075, 0.120);
-
-  const porous = fbm2D(lon * 6.4 + 8.0, lat * 5.9 - 3.0, seed + 1, 4);
-  const gate = porous > 0.02 ? 1 : 0.42;
+  const porous = fbm3D(p.x * 6.4 + 8.0, p.y * 5.9 - 3.0, p.z * 6.1 + 1.2, seed + 1, 4);
+  const gate = porous > 0.02 ? 1 : 0.40;
 
   return clamp(Math.max(sinkA, sinkB, sinkC, sinkD, sinkE) * gate, 0, 1);
 }
 
-function sampleCrustalScars(lat, lon, world) {
+function sampleCrustalRidges(lat, lon, p, world) {
+  const seed = world.seed + 600;
+
+  const arcA = ribbonField(lat, lon, 0.16, -1.22, 1.72, 0.078, -0.38, 0.4);
+  const arcB = ribbonField(lat, lon, -0.18, 0.86, 1.50, 0.074, 0.34, 2.1);
+  const arcC = ribbonField(lat, lon, 0.52, 0.18, 1.20, 0.070, -0.12, -1.2);
+  const arcD = ribbonField(lat, lon, -0.58, -0.52, 1.28, 0.074, 0.24, 1.7);
+
+  const foldedStone =
+    ridge3D(p.x * 1.55 + 4.2, p.y * 1.50 - 7.2, p.z * 1.58 + 2.4, seed + 1, 4) * 0.24 +
+    ridge3D(p.x * 3.10 - 8.1, p.y * 2.90 + 3.8, p.z * 2.80 - 1.7, seed + 2, 4) * 0.12;
+
+  return clamp(Math.max(arcA, arcB, arcC, arcD, 0) * 0.34 + foldedStone, 0, 1);
+}
+
+function sampleCrustalScars(lat, lon, p, world) {
   const seed = world.seed + 700;
 
-  const scarA = ribbonField(lat, lon, 0.24, -0.74, 1.18, 0.018, 0.72, 0.3);
-  const scarB = ribbonField(lat, lon, -0.26, 1.34, 1.08, 0.018, -0.64, -1.7);
-  const scarC = ribbonField(lat, lon, 0.70, -0.12, 0.82, 0.017, 0.12, 2.8);
-  const scarD = ribbonField(lat, lon, -0.66, 0.48, 0.84, 0.017, -0.18, 1.4);
+  const scarA = ribbonField(lat, lon, 0.24, -0.74, 1.18, 0.014, 0.72, 0.3);
+  const scarB = ribbonField(lat, lon, -0.26, 1.34, 1.08, 0.014, -0.64, -1.7);
+  const scarC = ribbonField(lat, lon, 0.70, -0.12, 0.82, 0.013, 0.12, 2.8);
+  const scarD = ribbonField(lat, lon, -0.66, 0.48, 0.84, 0.013, -0.18, 1.4);
 
-  const fractured = fbm2D(lon * 7.2 - 2.0, lat * 6.4 + 4.0, seed + 1, 4);
-  return clamp(Math.max(scarA, scarB, scarC, scarD, 0) * (fractured > -0.28 ? 1 : 0.34), 0, 1);
+  const fractureGate =
+    fbm3D(p.x * 7.6 - 2.0, p.y * 6.8 + 4.0, p.z * 7.1 + 0.4, seed + 1, 4);
+
+  return clamp(Math.max(scarA, scarB, scarC, scarD, 0) * (fractureGate > -0.30 ? 1 : 0.30), 0, 1);
 }
 
-function sampleCrustalRidges(lat, lon, world) {
-  const seed = world.seed + 800;
-
-  const arcA = ribbonField(lat, lon, 0.16, -1.22, 1.72, 0.090, -0.38, 0.4);
-  const arcB = ribbonField(lat, lon, -0.18, 0.86, 1.50, 0.084, 0.34, 2.1);
-  const arcC = ribbonField(lat, lon, 0.52, 0.18, 1.20, 0.080, -0.12, -1.2);
-  const arcD = ribbonField(lat, lon, -0.58, -0.52, 1.28, 0.084, 0.24, 1.7);
-
-  const stoneFold =
-    ridge2D(lon * 1.55 + 4.2, lat * 1.50 - 7.2, seed + 1, 4) * 0.18 +
-    ridge2D(lon * 2.90 - 8.1, lat * 2.70 + 3.8, seed + 2, 4) * 0.09;
-
-  return clamp(Math.max(arcA, arcB, arcC, arcD, 0) * 0.34 + stoneFold, 0, 1);
-}
-
-function samplePlanetHeight(lat, lon, world) {
+function samplePlanetMaterialFromPoint(p, world) {
+  const { lat, lon } = latLonFromPoint(p);
   const seed = world.seed;
 
-  const global = warp2D(lon * 0.62, lat * 0.68, seed + 1, 0.40, 0.28);
-  const local = warp2D(lon * 1.34, lat * 1.18, seed + 2, 0.16, 0.12);
+  const macroWarp = {
+    x: p.x + fbm3D(p.x * 1.1, p.y * 1.1, p.z * 1.1, seed + 11, 3) * 0.11,
+    y: p.y + fbm3D(p.x * 1.1 + 4.0, p.y * 1.1 - 2.0, p.z * 1.1, seed + 12, 3) * 0.11,
+    z: p.z + fbm3D(p.x * 1.1 - 1.0, p.y * 1.1 + 5.0, p.z * 1.1 + 3.0, seed + 13, 3) * 0.11
+  };
 
-  const basePressure =
-    fbm2D(global.x * 0.52 + 3.1, global.y * 0.60 - 4.4, seed + 10, 5) * 0.34 +
-    fbm2D(global.x * 1.10 - 7.6, global.y * 1.02 + 2.8, seed + 11, 5) * 0.18 +
-    fbm2D(local.x * 2.00 + 1.7, local.y * 1.82 - 5.9, seed + 12, 4) * 0.08;
+  const macro = fbm3D(macroWarp.x * 1.20, macroWarp.y * 1.20, macroWarp.z * 1.20, seed + 20, 5);
+  const plate = ridge3D(p.x * 1.85, p.y * 1.85, p.z * 1.85, seed + 21, 5);
+  const folded = ridge3D(p.x * 4.40, p.y * 4.20, p.z * 4.30, seed + 22, 4);
+  const fine = fbm3D(p.x * 13.0, p.y * 12.5, p.z * 12.8, seed + 23, 4);
 
-  const basins = sampleDryBasins(global.y, global.x, world);
-  const channels = sampleDryChannels(global.y, global.x, world);
-  const canyons = sampleCanyons(global.y, global.x, world);
-  const cliffs = sampleCliffPressure(global.y, global.x, world);
-  const caverns = sampleCaverns(global.y, global.x, world);
-  const scars = sampleCrustalScars(global.y, global.x, world);
-  const ridges = sampleCrustalRidges(global.y, global.x, world);
+  const basins = sampleBasinNetwork(lat, lon, p, world);
+  const canyons = sampleCanyonNetwork(lat, lon, p, world);
+  const channels = sampleDryRiverbeds(lat, lon, p, world);
+  const cliffs = sampleCliffs(lat, lon, p, world);
+  const caverns = sampleCaverns(lat, lon, p, world);
+  const ridges = sampleCrustalRidges(lat, lon, p, world);
+  const scars = sampleCrustalScars(lat, lon, p, world);
 
-  const polarCompression = smoothstep(1.02, 1.50, Math.abs(lat)) * 0.13;
-  const equatorialSpread = (1 - smoothstep(0.18, 1.10, Math.abs(lat))) * 0.055;
+  const polarCompression = smoothstep(0.68, 1.0, Math.abs(p.y)) * 0.10;
+  const equatorialSag = (1 - smoothstep(0.10, 0.88, Math.abs(p.y))) * 0.050;
 
   const height =
-    basePressure +
-    ridges * 0.32 +
-    cliffs * 0.10 +
+    macro * 0.30 +
+    plate * 0.22 +
+    folded * 0.12 +
+    ridges * 0.28 +
+    cliffs * 0.11 +
     scars * 0.035 +
     polarCompression -
-    basins * 0.30 -
+    basins * 0.34 -
+    canyons * 0.32 -
     channels * 0.18 -
-    canyons * 0.28 -
-    caverns * 0.22 -
-    equatorialSpread;
-
-  return height;
-}
-
-function samplePlanetMaterial(lat, lon, world) {
-  const seed = world.seed;
-  const height = samplePlanetHeight(lat, lon, world);
-
-  const global = warp2D(lon * 0.62, lat * 0.68, seed + 1, 0.40, 0.28);
-
-  const basins = sampleDryBasins(global.y, global.x, world);
-  const channels = sampleDryChannels(global.y, global.x, world);
-  const canyons = sampleCanyons(global.y, global.x, world);
-  const cliffs = sampleCliffPressure(global.y, global.x, world);
-  const caverns = sampleCaverns(global.y, global.x, world);
-  const scars = sampleCrustalScars(global.y, global.x, world);
-  const ridges = sampleCrustalRidges(global.y, global.x, world);
-
-  const micro =
-    fbm2D(lon * 4.20 + 9.0, lat * 3.80 - 6.0, seed + 31, 4) * 0.42 +
-    ridge2D(lon * 5.40 - 2.0, lat * 5.00 + 8.0, seed + 32, 4) * 0.34 +
-    scars * 0.24;
+    caverns * 0.25 -
+    equatorialSag +
+    fine * 0.030;
 
   return {
+    lat,
+    lon,
     height,
-    relief: clamp((height + 0.62) / 1.20, 0, 1),
+    relief: clamp((height + 0.64) / 1.26, 0, 1),
+    macro,
+    plate,
+    folded,
+    fine: clamp((fine + 1) * 0.5, 0, 1),
     basins,
-    channels,
     canyons,
+    channels,
     cliffs,
     caverns,
-    scars,
     ridges,
-    micro: clamp((micro + 1) * 0.5, 0, 1)
+    scars
   };
 }
 
-function tangentVectors(lat, lon) {
-  const sinLat = Math.sin(lat);
-  const cosLat = Math.cos(lat);
-  const sinLon = Math.sin(lon);
-  const cosLon = Math.cos(lon);
-
-  return {
-    north: normalize({
-      x: -sinLat * cosLon,
-      y: cosLat,
-      z: -sinLat * sinLon
-    }),
-    east: normalize({
-      x: -sinLon,
-      y: 0,
-      z: cosLon
-    })
-  };
+function samplePlanetHeightFromPoint(p, world) {
+  return samplePlanetMaterialFromPoint(normalize(p), world).height;
 }
 
-function samplePlanetNormal(lat, lon, world, basePoint) {
-  const epsLat = 0.010;
-  const epsLon = 0.010;
+function tangentVectorsFromPoint(p) {
+  const up = Math.abs(p.y) > 0.92 ? { x: 1, y: 0, z: 0 } : { x: 0, y: 1, z: 0 };
 
-  const hN = samplePlanetHeight(lat + epsLat, lon, world);
-  const hS = samplePlanetHeight(lat - epsLat, lon, world);
-  const hE = samplePlanetHeight(lat, lon + epsLon, world);
-  const hW = samplePlanetHeight(lat, lon - epsLon, world);
+  const east = normalize({
+    x: up.y * p.z - up.z * p.y,
+    y: up.z * p.x - up.x * p.z,
+    z: up.x * p.y - up.y * p.x
+  });
 
-  const dLat = (hN - hS) / (epsLat * 2);
-  const dLon = (hE - hW) / (epsLon * 2);
+  const north = normalize({
+    x: p.y * east.z - p.z * east.y,
+    y: p.z * east.x - p.x * east.z,
+    z: p.x * east.y - p.y * east.x
+  });
 
-  const tangents = tangentVectors(lat, lon);
-  const strength = 0.34;
+  return { east, north };
+}
 
+function offsetPointOnSphere(p, tangent, amount) {
   return normalize({
-    x: basePoint.x - tangents.north.x * dLat * strength - tangents.east.x * dLon * strength,
-    y: basePoint.y - tangents.north.y * dLat * strength - tangents.east.y * dLon * strength,
-    z: basePoint.z - tangents.north.z * dLat * strength - tangents.east.z * dLon * strength
+    x: p.x + tangent.x * amount,
+    y: p.y + tangent.y * amount,
+    z: p.z + tangent.z * amount
   });
 }
 
-function materialColor(material, world) {
-  let base = mixColor(world.crustLow, world.crustMid, 0.35 + material.relief * 0.42);
+function samplePlanetNormalFromPoint(p, world) {
+  const eps = 0.010;
+  const tangents = tangentVectorsFromPoint(p);
 
-  if (material.basins > 0.22) {
-    base = mixColor(base, world.basin, clamp(material.basins * 0.58, 0, 0.66));
+  const hE = samplePlanetHeightFromPoint(offsetPointOnSphere(p, tangents.east, eps), world);
+  const hW = samplePlanetHeightFromPoint(offsetPointOnSphere(p, tangents.east, -eps), world);
+  const hN = samplePlanetHeightFromPoint(offsetPointOnSphere(p, tangents.north, eps), world);
+  const hS = samplePlanetHeightFromPoint(offsetPointOnSphere(p, tangents.north, -eps), world);
+
+  const dE = (hE - hW) / (eps * 2);
+  const dN = (hN - hS) / (eps * 2);
+  const strength = 0.42;
+
+  return normalize({
+    x: p.x - tangents.east.x * dE * strength - tangents.north.x * dN * strength,
+    y: p.y - tangents.east.y * dE * strength - tangents.north.y * dN * strength,
+    z: p.z - tangents.east.z * dE * strength - tangents.north.z * dN * strength
+  });
+}
+
+function materialBaseColor(material, world) {
+  let base = mixColor(world.stoneLow, world.stoneMid, 0.30 + material.relief * 0.48);
+
+  if (material.basins > 0.18) {
+    base = mixColor(base, world.stoneDeep, material.basins * 0.50);
+    base = mixColor(base, world.sediment, clamp((material.basins - 0.36) * 0.26, 0, 0.16));
   }
 
-  if (material.caverns > 0.28) {
-    base = mixColor(base, world.crustDark, clamp(material.caverns * 0.70, 0, 0.58));
+  if (material.caverns > 0.25) {
+    base = mixColor(base, world.shadow, material.caverns * 0.58);
   }
 
-  if (material.channels > 0.34) {
-    base = mixColor(base, world.crustDark, clamp(material.channels * 0.30, 0, 0.32));
-    base = mixColor(base, world.exposed, clamp((material.channels - 0.40) * 0.20, 0, 0.14));
+  if (material.channels > 0.32) {
+    base = mixColor(base, world.shadow, material.channels * 0.28);
+    base = mixColor(base, world.exposed, clamp((material.channels - 0.40) * 0.20, 0, 0.12));
   }
 
-  if (material.canyons > 0.34) {
-    base = mixColor(base, world.crustDark, clamp(material.canyons * 0.36, 0, 0.42));
-    base = mixColor(base, world.exposed, clamp((material.canyons - 0.36) * 0.22, 0, 0.15));
+  if (material.canyons > 0.30) {
+    base = mixColor(base, world.shadow, material.canyons * 0.42);
+    base = mixColor(base, world.exposed, clamp((material.canyons - 0.35) * 0.34, 0, 0.20));
   }
 
-  if (material.cliffs > 0.30) {
-    base = mixColor(base, world.exposed, clamp(material.cliffs * 0.46, 0, 0.36));
+  if (material.cliffs > 0.24) {
+    base = mixColor(base, world.exposed, clamp(material.cliffs * 0.50, 0, 0.42));
   }
 
-  if (material.ridges > 0.52 || material.relief > 0.70) {
-    base = mixColor(base, world.crustHigh, clamp(Math.max(material.ridges - 0.45, material.relief - 0.68) * 0.80, 0, 0.50));
+  if (material.ridges > 0.50 || material.relief > 0.72) {
+    base = mixColor(base, world.stoneHigh, clamp(Math.max(material.ridges - 0.46, material.relief - 0.68) * 0.88, 0, 0.56));
   }
 
-  if (material.ridges > 0.70) {
-    base = mixColor(base, world.ridge, clamp((material.ridges - 0.66) * 0.70, 0, 0.30));
+  if (material.ridges > 0.72) {
+    base = mixColor(base, world.ridge, clamp((material.ridges - 0.68) * 0.78, 0, 0.34));
   }
 
-  if (material.scars > 0.60) {
-    base = mixColor(base, world.fault, clamp((material.scars - 0.58) * 0.42, 0, 0.14));
+  if (material.scars > 0.62) {
+    base = mixColor(base, world.scar, clamp((material.scars - 0.60) * 0.42, 0, 0.16));
   }
 
-  const texture = (material.micro - 0.5) * 11.0;
+  const grain = (material.fine - 0.5) * 14.0 + (material.folded - 0.5) * 6.0;
 
   return [
-    clamp(base[0] + texture, 0, 255),
-    clamp(base[1] + texture * 0.78, 0, 255),
-    clamp(base[2] + texture * 0.54, 0, 255)
+    clamp(base[0] + grain, 0, 255),
+    clamp(base[1] + grain * 0.80, 0, 255),
+    clamp(base[2] + grain * 0.54, 0, 255)
   ];
 }
 
-function shadePlanetPixel({ viewNormal, bumpViewNormal, material, world, lightView }) {
-  const diffuse = clamp(dot(bumpViewNormal, lightView), 0, 1);
-  const sphereLight = clamp(dot(viewNormal, lightView), 0, 1);
+function shadePlanetPixel({ viewNormal, worldPoint, material, bumpViewNormal, world, lightView }) {
+  const sphereDiffuse = clamp(dot(viewNormal, lightView), 0, 1);
+  const terrainDiffuse = clamp(dot(bumpViewNormal, lightView), 0, 1);
   const z = clamp(viewNormal.z, 0, 1);
-  const rim = Math.pow(clamp(1 - z, 0, 1), 1.85);
 
-  const terminator = smoothstep(-0.08, 0.72, sphereLight);
-  const ambient = 0.14;
-  const direct = diffuse * 0.88;
-  const bodyShadow = lerp(0.22, 1.0, terminator);
+  const rim = Math.pow(clamp(1 - z, 0, 1), 1.75);
+  const terminator = smoothstep(-0.06, 0.72, sphereDiffuse);
 
-  const basinShadow =
-    material.basins * 0.16 +
-    material.canyons * 0.14 +
-    material.channels * 0.10 +
-    material.caverns * 0.20;
+  const occlusion =
+    material.basins * 0.18 +
+    material.canyons * 0.22 +
+    material.channels * 0.12 +
+    material.caverns * 0.26;
 
-  const reliefHighlight =
-    material.cliffs * 0.08 +
-    material.ridges * 0.06 +
-    material.scars * 0.03;
+  const reliefFlash =
+    material.cliffs * 0.12 +
+    material.ridges * 0.08 +
+    material.scars * 0.025;
 
-  const base = materialColor(material, world);
-  const shade = clamp((ambient + direct + reliefHighlight - basinShadow) * bodyShadow, 0.08, 1.18);
+  const lowSunWarmth = smoothstep(0.18, 0.72, terrainDiffuse) * 0.08;
+  const base = materialBaseColor(material, world);
 
-  const atmosphericLift = rim * 0.10;
+  const ambient = 0.12;
+  const direct = terrainDiffuse * 0.94;
+  const terminatorShade = lerp(0.18, 1.0, terminator);
+  const materialShade = clamp(ambient + direct + reliefFlash + lowSunWarmth - occlusion, 0.07, 1.25);
+  const shade = materialShade * terminatorShade;
+
+  const sunWash = clamp((terrainDiffuse - 0.72) * 0.38, 0, 0.20);
+  const rimLift = rim * 0.10;
+
   const color = [
-    clamp(base[0] * shade + world.atmosphere[0] * atmosphericLift, 0, 255),
-    clamp(base[1] * shade + world.atmosphere[1] * atmosphericLift, 0, 255),
-    clamp(base[2] * shade + world.atmosphere[2] * atmosphericLift, 0, 255)
+    clamp(base[0] * shade + world.ridge[0] * sunWash + world.atmosphere[0] * rimLift, 0, 255),
+    clamp(base[1] * shade + world.ridge[1] * sunWash + world.atmosphere[1] * rimLift, 0, 255),
+    clamp(base[2] * shade + world.ridge[2] * sunWash + world.atmosphere[2] * rimLift, 0, 255)
   ];
 
+  const nightside = 1 - terminator;
+  color[0] = clamp(color[0] - nightside * 12, 0, 255);
+  color[1] = clamp(color[1] - nightside * 16, 0, 255);
+  color[2] = clamp(color[2] - nightside * 18, 0, 255);
+
+  const leftSunBias = smoothstep(-0.95, 0.15, -viewNormal.x) * smoothstep(-0.50, 0.80, viewNormal.y);
+  color[0] = clamp(color[0] + leftSunBias * 10, 0, 255);
+  color[1] = clamp(color[1] + leftSunBias * 8, 0, 255);
+  color[2] = clamp(color[2] + leftSunBias * 3, 0, 255);
+
+  void worldPoint;
   return color;
 }
 
@@ -635,8 +679,8 @@ function drawBackground(ctx, width, height) {
     Math.max(width, height) * 0.82
   );
 
-  bg.addColorStop(0, "#13264a");
-  bg.addColorStop(0.30, "#091832");
+  bg.addColorStop(0, "#122443");
+  bg.addColorStop(0.30, "#081732");
   bg.addColorStop(0.68, "#041021");
   bg.addColorStop(1, "#01040c");
 
@@ -649,7 +693,7 @@ function drawBackground(ctx, width, height) {
     0,
     width * 0.5,
     height * 0.49,
-    width * 0.39
+    width * 0.42
   );
 
   halo.addColorStop(0, world.glow);
@@ -658,7 +702,7 @@ function drawBackground(ctx, width, height) {
 
   ctx.fillStyle = halo;
   ctx.beginPath();
-  ctx.ellipse(width * 0.5, height * 0.50, width * 0.34, height * 0.31, 0, 0, Math.PI * 2);
+  ctx.ellipse(width * 0.5, height * 0.50, width * 0.36, height * 0.33, 0, 0, Math.PI * 2);
   ctx.fill();
 
   const vignette = ctx.createRadialGradient(
@@ -667,11 +711,11 @@ function drawBackground(ctx, width, height) {
     width * 0.20,
     width * 0.5,
     height * 0.5,
-    width * 0.74
+    width * 0.78
   );
 
   vignette.addColorStop(0, "rgba(0,0,0,0)");
-  vignette.addColorStop(1, "rgba(0,0,0,0.48)");
+  vignette.addColorStop(1, "rgba(0,0,0,0.50)");
 
   ctx.fillStyle = vignette;
   ctx.fillRect(0, 0, width, height);
@@ -717,22 +761,22 @@ function drawGlobeShadow(ctx, view) {
   ctx.globalCompositeOperation = "screen";
 
   const y = view.cy + view.scale * 1.05;
-  const glow = ctx.createRadialGradient(view.cx, y, 0, view.cx, y, view.scale * 0.66);
+  const glow = ctx.createRadialGradient(view.cx, y, 0, view.cx, y, view.scale * 0.72);
 
   glow.addColorStop(0, world.glow);
-  glow.addColorStop(0.38, "rgba(80,120,180,0.10)");
+  glow.addColorStop(0.38, "rgba(80,120,180,0.12)");
   glow.addColorStop(1, "rgba(0,0,0,0)");
 
   ctx.fillStyle = glow;
   ctx.beginPath();
-  ctx.ellipse(view.cx, y, view.scale * 0.58, view.scale * 0.13, 0, 0, Math.PI * 2);
+  ctx.ellipse(view.cx, y, view.scale * 0.64, view.scale * 0.15, 0, 0, Math.PI * 2);
   ctx.fill();
 
   ctx.restore();
 }
 
 function ensureSurfaceBuffer(view) {
-  const desired = Math.max(240, Math.min(RASTER_LIMIT, Math.round(view.scale * 1.82)));
+  const desired = Math.max(260, Math.min(RASTER_LIMIT, Math.round(view.scale * 2.05)));
 
   if (!state.surfaceCanvas) {
     state.surfaceCanvas = document.createElement("canvas");
@@ -750,7 +794,7 @@ function ensureSurfaceBuffer(view) {
   }
 }
 
-function drawPlanetShaderSurface(ctx, view) {
+function drawCinematicPlanetSurface(ctx, view) {
   const world = WORLDS[state.worldKey];
   ensureSurfaceBuffer(view);
 
@@ -758,7 +802,7 @@ function drawPlanetShaderSurface(ctx, view) {
   const image = state.surfaceImage;
   const data = image.data;
 
-  const lightView = normalize({ x: -0.54, y: 0.55, z: 0.78 });
+  const lightView = normalize({ x: -0.58, y: 0.50, z: 0.76 });
 
   let ptr = 0;
 
@@ -782,22 +826,20 @@ function drawPlanetShaderSurface(ctx, view) {
       const viewNormal = normalize({ x: nx, y: ny, z });
       const worldPoint = inverseSpherePointFromView(viewNormal, view.yaw, view.pitch);
 
-      const lat = Math.asin(clamp(worldPoint.y, -1, 1));
-      const lon = Math.atan2(worldPoint.z, worldPoint.x);
-
-      const material = samplePlanetMaterial(lat, lon, world);
-      const bumpWorldNormal = samplePlanetNormal(lat, lon, world, worldPoint);
+      const material = samplePlanetMaterialFromPoint(worldPoint, world);
+      const bumpWorldNormal = samplePlanetNormalFromPoint(worldPoint, world);
       const bumpViewNormal = normalize(rotateX(rotateY(bumpWorldNormal, view.yaw), view.pitch));
 
       const color = shadePlanetPixel({
         viewNormal,
-        bumpViewNormal,
+        worldPoint,
         material,
+        bumpViewNormal,
         world,
         lightView
       });
 
-      const edgeAlpha = 1 - smoothstep(0.965, 1.0, Math.sqrt(r2));
+      const edgeAlpha = 1 - smoothstep(0.972, 1.0, Math.sqrt(r2));
       const alpha = Math.round(255 * clamp(edgeAlpha, 0, 1));
 
       data[ptr] = Math.round(color[0]);
@@ -836,41 +878,41 @@ function drawAtmosphere(ctx, view) {
     view.scale * 0.76,
     view.cx,
     view.cy,
-    view.scale * 1.18
+    view.scale * 1.20
   );
 
   outer.addColorStop(0, "rgba(0,0,0,0)");
-  outer.addColorStop(0.67, `rgba(${a[0]},${a[1]},${a[2]},0.075)`);
-  outer.addColorStop(0.92, `rgba(${a[0]},${a[1]},${a[2]},0.23)`);
-  outer.addColorStop(1, `rgba(${a[0]},${a[1]},${a[2]},0.04)`);
+  outer.addColorStop(0.66, `rgba(${a[0]},${a[1]},${a[2]},0.075)`);
+  outer.addColorStop(0.92, `rgba(${a[0]},${a[1]},${a[2]},0.25)`);
+  outer.addColorStop(1, `rgba(${a[0]},${a[1]},${a[2]},0.05)`);
 
   ctx.fillStyle = outer;
   ctx.beginPath();
-  ctx.arc(view.cx, view.cy, view.scale * 1.14, 0, Math.PI * 2);
+  ctx.arc(view.cx, view.cy, view.scale * 1.16, 0, Math.PI * 2);
   ctx.fill();
 
   const limb = ctx.createRadialGradient(
-    view.cx - view.scale * 0.12,
-    view.cy - view.scale * 0.16,
-    view.scale * 0.48,
+    view.cx - view.scale * 0.16,
+    view.cy - view.scale * 0.18,
+    view.scale * 0.44,
     view.cx,
     view.cy,
     view.scale * 1.04
   );
 
   limb.addColorStop(0, "rgba(255,255,255,0)");
-  limb.addColorStop(0.74, "rgba(255,255,255,0)");
-  limb.addColorStop(1, `rgba(${a[0]},${a[1]},${a[2]},0.26)`);
+  limb.addColorStop(0.72, "rgba(255,255,255,0)");
+  limb.addColorStop(1, `rgba(${a[0]},${a[1]},${a[2]},0.30)`);
 
   ctx.fillStyle = limb;
   ctx.beginPath();
-  ctx.arc(view.cx, view.cy, view.scale * 1.01, 0, Math.PI * 2);
+  ctx.arc(view.cx, view.cy, view.scale * 1.012, 0, Math.PI * 2);
   ctx.fill();
 
-  ctx.strokeStyle = `rgba(${a[0]},${a[1]},${a[2]},0.30)`;
-  ctx.lineWidth = Math.max(1, DPR * 1.1);
+  ctx.strokeStyle = `rgba(${a[0]},${a[1]},${a[2]},0.34)`;
+  ctx.lineWidth = Math.max(1, DPR * 1.15);
   ctx.beginPath();
-  ctx.arc(view.cx, view.cy, view.scale * 1.006, 0, Math.PI * 2);
+  ctx.arc(view.cx, view.cy, view.scale * 1.008, 0, Math.PI * 2);
   ctx.stroke();
 
   ctx.restore();
@@ -880,13 +922,13 @@ function drawOrbitLines(ctx, view) {
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
-  ctx.strokeStyle = "rgba(244,191,96,0.075)";
-  ctx.lineWidth = Math.max(0.65, DPR * 0.70);
+  ctx.strokeStyle = "rgba(244,191,96,0.060)";
+  ctx.lineWidth = Math.max(0.60, DPR * 0.65);
   ctx.beginPath();
   ctx.ellipse(view.cx, view.cy, view.scale * 1.52, view.scale * 0.35, -0.12, 0, Math.PI * 2);
   ctx.stroke();
 
-  ctx.strokeStyle = "rgba(142,190,255,0.050)";
+  ctx.strokeStyle = "rgba(142,190,255,0.044)";
   ctx.beginPath();
   ctx.ellipse(view.cx, view.cy, view.scale * 1.34, view.scale * 0.53, 0.28, 0, Math.PI * 2);
   ctx.stroke();
@@ -903,11 +945,11 @@ function drawWorldTitle(ctx, width, height) {
 
   ctx.fillStyle = "rgba(244,191,96,0.92)";
   ctx.font = `950 ${Math.max(18 * DPR, width * 0.038)}px Inter, system-ui, sans-serif`;
-  ctx.fillText(world.title, width * 0.5, height * 0.165);
+  ctx.fillText(world.title, width * 0.5, height * 0.155);
 
-  ctx.fillStyle = "rgba(186,197,212,0.72)";
+  ctx.fillStyle = "rgba(186,197,212,0.74)";
   ctx.font = `850 ${Math.max(11 * DPR, width * 0.014)}px Inter, system-ui, sans-serif`;
-  ctx.fillText(`${world.subtitle} · actual dry planet shader`, width * 0.5, height * 0.205);
+  ctx.fillText(`${world.subtitle} · cinematic dry planet material`, width * 0.5, height * 0.195);
 
   ctx.restore();
 }
@@ -918,23 +960,23 @@ function drawCue(ctx, width, height) {
   ctx.textBaseline = "middle";
   ctx.fillStyle = "rgba(186,197,212,0.60)";
   ctx.font = `800 ${Math.max(11 * DPR, width * 0.013)}px Inter, system-ui, sans-serif`;
-  ctx.fillText("Drag to inspect · Actual planet shader · Open room for private map", width * 0.5, height * 0.90);
+  ctx.fillText("Drag to inspect · Cinematic dry planet material · Open private world room", width * 0.5, height * 0.90);
   ctx.restore();
 }
 
 function drawPlanet(ctx, width, height) {
-  const scale = Math.min(width * 0.34, height * 0.37);
+  const scale = Math.min(width * 0.395, height * 0.415);
 
   const view = {
     cx: width * 0.50,
-    cy: height * 0.49,
+    cy: height * 0.505,
     scale,
     yaw: state.yaw,
     pitch: state.pitch
   };
 
   drawGlobeShadow(ctx, view);
-  drawPlanetShaderSurface(ctx, view);
+  drawCinematicPlanetSurface(ctx, view);
   drawAtmosphere(ctx, view);
   drawOrbitLines(ctx, view);
   drawWorldTitle(ctx, width, height);
@@ -942,7 +984,7 @@ function drawPlanet(ctx, width, height) {
 
   document.documentElement.dataset.globeShowcaseModel = MODEL_NAME;
   document.documentElement.dataset.selectedWorld = state.worldKey;
-  document.documentElement.dataset.publicPortraitBaseline = "actual-planet-shader";
+  document.documentElement.dataset.publicPortraitBaseline = "cinematic-dry-planet-material";
   document.documentElement.dataset.privateEnginesAsleep = "true";
   document.documentElement.dataset.mapExpression = "false";
   document.documentElement.dataset.waterExpression = "false";
@@ -950,6 +992,8 @@ function drawPlanet(ctx, width, height) {
   document.documentElement.dataset.childTerrainImport = "false";
   document.documentElement.dataset.mountainSystem = "false";
   document.documentElement.dataset.planetShader = "true";
+  document.documentElement.dataset.materialRelief = "true";
+  document.documentElement.dataset.pseudoNormalLighting = "true";
   document.documentElement.dataset.continuousSurface = "true";
   document.documentElement.dataset.polygonPatchSurface = "false";
   document.documentElement.dataset.parentCellCount = String(CELL_COUNT);
@@ -968,7 +1012,7 @@ function render() {
 function updateInspectionMotion() {
   if (!state.dragging) {
     if (!state.interacted && !REDUCED_MOTION) {
-      state.targetYaw += 0.00085;
+      state.targetYaw += 0.00078;
     }
 
     state.targetYaw += state.velocityYaw;
@@ -1205,7 +1249,7 @@ function boot() {
 
   window.DGBGlobeShowcase = {
     model: MODEL_NAME,
-    publicPortraitBaseline: "actual-planet-shader",
+    publicPortraitBaseline: "cinematic-dry-planet-material",
     privateEnginesAsleep: true,
     generatedImage: false,
     graphicBox: false,
@@ -1216,6 +1260,8 @@ function boot() {
     mountainSystem: false,
     planetShader: true,
     continuousSurface: true,
+    materialRelief: true,
+    pseudoNormalLighting: true,
     polygonPatchSurface: false,
     worlds: Object.keys(WORLDS),
     parentCellCount: CELL_COUNT,
@@ -1228,7 +1274,7 @@ function boot() {
       return {
         model: MODEL_NAME,
         selectedWorld: state.worldKey,
-        publicPortraitBaseline: "actual-planet-shader",
+        publicPortraitBaseline: "cinematic-dry-planet-material",
         privateEnginesAsleep: true,
         generatedImage: false,
         graphicBox: false,
@@ -1239,6 +1285,8 @@ function boot() {
         mountainSystem: false,
         planetShader: true,
         continuousSurface: true,
+        materialRelief: true,
+        pseudoNormalLighting: true,
         polygonPatchSurface: false,
         parentCellCount: CELL_COUNT,
         childFieldsPerParent: CHILD_HEX_COUNT,
@@ -1258,7 +1306,7 @@ if (document.readyState === "loading") {
 
 export default {
   model: MODEL_NAME,
-  publicPortraitBaseline: "actual-planet-shader",
+  publicPortraitBaseline: "cinematic-dry-planet-material",
   privateEnginesAsleep: true,
   generatedImage: false,
   graphicBox: false,
@@ -1269,6 +1317,8 @@ export default {
   mountainSystem: false,
   planetShader: true,
   continuousSurface: true,
+  materialRelief: true,
+  pseudoNormalLighting: true,
   polygonPatchSurface: false,
   parentCellCount: CELL_COUNT,
   childFieldsPerParent: CHILD_HEX_COUNT,

@@ -1,12 +1,12 @@
 // /showroom/globe/index.js
 // TNT FULL-FILE REPLACEMENT
-// SHOWROOM_GLOBE_INDEX_CLEAN_SUBLEVEL_GLOBE_TNT_v1
+// SHOWROOM_GLOBE_SUBLEVEL_CARVING_TNT_v1
 // Role: public Globe Showcase selector only.
-// Visual law: clean inspectable sub-level terrain globe.
-// Removed: water, landmasses, oceans, lakes, coastlines, beaches, child terrain import, visible 256 terrain fabric.
-// Preserved: drag inspection, world selection, route entry, lighting, atmosphere, private engines asleep.
+// Visual law: clean inspectable sub-level terrain globe with dry geological carvings.
+// Added: depth, elevation pressure, dry ocean floors, dry riverbeds, cliffs, caverns, trenches, canyon cuts, shelf depressions, crustal scars.
+// Still forbidden here: water, lakes, blue oceans, beaches, coastlines, landmass maps, mountain system, child imports, private engines.
 
-const MODEL_NAME = "showroom-globe-index-clean-sublevel-globe-v1";
+const MODEL_NAME = "showroom-globe-sublevel-carving-v1";
 
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
 const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
@@ -27,19 +27,21 @@ const CHILD_HEX_COLS = 16;
 const CHILD_HEX_COUNT = CHILD_HEX_ROWS * CHILD_HEX_COLS;
 const TOTAL_CHILD_FIELDS = CELL_COUNT * CHILD_HEX_COUNT;
 
-const PORTRAIT_LAT_STEPS = MOBILE ? 64 : 82;
-const PORTRAIT_LON_STEPS = MOBILE ? 128 : 164;
+const PORTRAIT_LAT_STEPS = MOBILE ? 70 : 90;
+const PORTRAIT_LON_STEPS = MOBILE ? 140 : 180;
 
 const SUBLEVEL_MODEL = Object.freeze({
   parentCells: CELL_COUNT,
   childFieldsPerParent: CHILD_HEX_COUNT,
   totalChildFields: TOTAL_CHILD_FIELDS,
-  publicMode: "clean sub-level terrain globe",
+  publicMode: "clean sub-level terrain globe with dry geological carvings",
   privateEnginesAsleep: true,
   mapExpression: false,
   waterExpression: false,
   landmassExpression: false,
   childTerrainImport: false,
+  mountainSystem: false,
+  carvingExpression: true,
   privateModelPaths: Object.freeze({
     earth: "/showroom/globe/earth/",
     hEarth: "/showroom/globe/h-earth/",
@@ -55,11 +57,13 @@ const WORLDS = Object.freeze({
     route: "/showroom/globe/earth/",
     seed: 310,
     base: [62, 88, 112],
-    low: [26, 42, 64],
-    mid: [86, 104, 118],
-    high: [156, 148, 128],
-    ridge: [210, 206, 184],
-    fault: [180, 224, 238],
+    low: [24, 38, 58],
+    mid: [88, 106, 120],
+    high: [154, 146, 126],
+    ridge: [214, 208, 184],
+    exposed: [205, 176, 128],
+    fault: [176, 224, 238],
+    cavern: [13, 18, 27],
     glow: "rgba(142,190,255,0.22)"
   },
   hEarth: {
@@ -69,11 +73,13 @@ const WORLDS = Object.freeze({
     route: "/showroom/globe/h-earth/",
     seed: 710,
     base: [66, 96, 104],
-    low: [25, 48, 64],
+    low: [22, 44, 58],
     mid: [82, 120, 112],
-    high: [152, 150, 118],
-    ridge: [220, 213, 176],
+    high: [154, 150, 118],
+    ridge: [224, 214, 176],
+    exposed: [208, 178, 120],
     fault: [158, 242, 196],
+    cavern: [12, 20, 24],
     glow: "rgba(143,240,195,0.22)"
   },
   audralia: {
@@ -83,11 +89,13 @@ const WORLDS = Object.freeze({
     route: "/showroom/globe/audralia/",
     seed: 910,
     base: [84, 78, 112],
-    low: [34, 34, 72],
-    mid: [108, 96, 126],
-    high: [170, 146, 108],
-    ridge: [226, 205, 160],
+    low: [32, 30, 66],
+    mid: [110, 98, 126],
+    high: [172, 148, 108],
+    ridge: [228, 206, 160],
+    exposed: [218, 170, 120],
     fault: [198, 172, 255],
+    cavern: [18, 16, 34],
     glow: "rgba(190,170,255,0.22)"
   }
 });
@@ -254,7 +262,11 @@ function ribbonField(lat, lon, centerLat, centerLon, length, width, angle, phase
   const xr = x * c - y * s;
   const yr = x * s + y * c;
 
-  const curved = yr + Math.sin(xr * 2.8 + phase) * 0.075 + Math.sin(xr * 5.6 - phase) * 0.028;
+  const curved =
+    yr +
+    Math.sin(xr * 2.8 + phase) * 0.075 +
+    Math.sin(xr * 5.6 - phase) * 0.028;
+
   const along = Math.abs(xr) / length;
   const across = Math.abs(curved) / width;
 
@@ -277,6 +289,10 @@ function mixColor(a, b, t) {
 
 function colorString(color) {
   return `rgb(${color[0]},${color[1]},${color[2]})`;
+}
+
+function colorWithAlpha(color, alpha) {
+  return `rgba(${color[0]},${color[1]},${color[2]},${alpha})`;
 }
 
 function sizeCanvas() {
@@ -306,6 +322,104 @@ function createStars(count) {
   }));
 }
 
+function sampleDryOceanBasins(lat, lon, world) {
+  const seed = world.seed + 200;
+
+  const basinA = basinField(lat, lon, 0.16, -2.06, 0.54, 0.48);
+  const basinB = basinField(lat, lon, -0.36, 1.74, 0.46, 0.52);
+  const basinC = basinField(lat, lon, 0.72, 0.62, 0.30, 0.66);
+  const basinD = basinField(lat, lon, -0.74, -1.05, 0.30, 0.62);
+  const basinE = basinField(lat, lon, -0.10, 0.14, 0.36, 0.40);
+
+  const warpedFloor =
+    fbm2D(lon * 0.88 + 1.6, lat * 0.92 - 3.4, seed + 1, 4) * 0.12 +
+    fbm2D(lon * 1.80 - 4.4, lat * 1.52 + 2.3, seed + 2, 3) * 0.05;
+
+  return clamp(Math.max(basinA, basinB, basinC, basinD, basinE) * 0.86 + warpedFloor, 0, 1);
+}
+
+function sampleDryRiverbeds(lat, lon, world) {
+  const seed = world.seed + 300;
+
+  const riverA = ribbonField(lat, lon, 0.34, -1.32, 0.96, 0.030, -0.48, 0.2);
+  const riverB = ribbonField(lat, lon, -0.18, 0.78, 1.05, 0.032, 0.36, 1.7);
+  const riverC = ribbonField(lat, lon, 0.54, 0.22, 0.82, 0.028, -0.12, -1.1);
+  const riverD = ribbonField(lat, lon, -0.52, -0.58, 0.92, 0.030, 0.26, 2.3);
+  const riverE = ribbonField(lat, lon, 0.08, 1.72, 0.72, 0.027, -0.58, -0.4);
+
+  const breakup = fbm2D(lon * 4.8 + 2.0, lat * 4.3 - 6.0, seed + 1, 3);
+  const active = breakup > -0.34 ? 1 : 0.32;
+
+  return clamp(Math.max(riverA, riverB, riverC, riverD, riverE, 0) * active, 0, 1);
+}
+
+function sampleCanyonCuts(lat, lon, world) {
+  const seed = world.seed + 400;
+
+  const canyonA = ribbonField(lat, lon, 0.04, -0.12, 1.64, 0.046, 0.10, 0.9);
+  const canyonB = ribbonField(lat, lon, 0.40, -1.88, 0.86, 0.042, 0.44, 2.0);
+  const canyonC = ribbonField(lat, lon, -0.38, 1.30, 0.96, 0.044, -0.38, -0.8);
+
+  const serration = ridge2D(lon * 5.2 - 3.0, lat * 4.9 + 7.2, seed + 1);
+  return clamp(Math.max(canyonA, canyonB, canyonC, 0) * (0.72 + serration * 0.28), 0, 1);
+}
+
+function sampleTrenches(lat, lon, world) {
+  const trenchA = ribbonField(lat, lon, -0.02, 2.42, 1.34, 0.040, -0.14, 1.2);
+  const trenchB = ribbonField(lat, lon, 0.08, -2.54, 1.38, 0.042, 0.16, -1.4);
+  const trenchC = ribbonField(lat, lon, -0.68, 0.34, 0.98, 0.040, 0.02, 2.6);
+
+  return clamp(Math.max(trenchA, trenchB, trenchC, 0), 0, 1);
+}
+
+function sampleCliffPressure(lat, lon, world) {
+  const seed = world.seed + 500;
+
+  const escarpA = ribbonField(lat, lon, 0.18, -1.08, 1.10, 0.055, -0.56, 0.6);
+  const escarpB = ribbonField(lat, lon, -0.30, 0.98, 1.18, 0.055, 0.48, 1.8);
+  const escarpC = ribbonField(lat, lon, 0.62, 0.08, 0.86, 0.050, -0.10, -1.0);
+  const escarpD = ribbonField(lat, lon, -0.64, -0.76, 0.90, 0.052, 0.32, 2.4);
+
+  const brokenFace = ridge2D(lon * 3.2 + 4.0, lat * 3.0 - 2.0, seed + 1);
+  return clamp(Math.max(escarpA, escarpB, escarpC, escarpD, 0) * (0.56 + brokenFace * 0.44), 0, 1);
+}
+
+function sampleCavernPressure(lat, lon, world) {
+  const seed = world.seed + 600;
+
+  const sinkA = basinField(lat, lon, 0.16, -1.46, 0.08, 0.12);
+  const sinkB = basinField(lat, lon, -0.18, 0.70, 0.10, 0.14);
+  const sinkC = basinField(lat, lon, 0.48, 0.34, 0.08, 0.14);
+  const sinkD = basinField(lat, lon, -0.44, -0.32, 0.09, 0.16);
+  const sinkE = basinField(lat, lon, 0.02, 1.58, 0.08, 0.13);
+
+  const porous = fbm2D(lon * 6.4 + 8.0, lat * 5.9 - 3.0, seed + 1, 3);
+  const gate = porous > 0.02 ? 1 : 0.42;
+
+  return clamp(Math.max(sinkA, sinkB, sinkC, sinkD, sinkE) * gate, 0, 1);
+}
+
+function sampleCrustalScars(lat, lon, world) {
+  const seed = world.seed + 700;
+
+  const scarA = ribbonField(lat, lon, 0.24, -0.74, 1.18, 0.026, 0.72, 0.3);
+  const scarB = ribbonField(lat, lon, -0.26, 1.34, 1.08, 0.026, -0.64, -1.7);
+  const scarC = ribbonField(lat, lon, 0.70, -0.12, 0.82, 0.024, 0.12, 2.8);
+  const scarD = ribbonField(lat, lon, -0.66, 0.48, 0.84, 0.024, -0.18, 1.4);
+
+  const fractured = fbm2D(lon * 7.0 - 2.0, lat * 6.0 + 4.0, seed + 1, 3);
+  return clamp(Math.max(scarA, scarB, scarC, scarD, 0) * (fractured > -0.25 ? 1 : 0.34), 0, 1);
+}
+
+function sampleShelfDepressions(lat, lon, world) {
+  const shelfA = ribbonField(lat, lon, 0.28, -2.22, 1.44, 0.090, 0.16, 1.0);
+  const shelfB = ribbonField(lat, lon, -0.36, 1.96, 1.34, 0.092, -0.18, -1.0);
+  const shelfC = ribbonField(lat, lon, 0.58, 0.42, 1.00, 0.078, -0.36, 2.0);
+  const shelfD = ribbonField(lat, lon, -0.62, -0.82, 1.04, 0.082, 0.30, -2.1);
+
+  return clamp(Math.max(shelfA, shelfB, shelfC, shelfD, 0), 0, 1);
+}
+
 function sampleSublevel(lat, lon, world) {
   const seed = world.seed;
 
@@ -313,9 +427,9 @@ function sampleSublevel(lat, lon, world) {
   const local = warp2D(lon * 1.34, lat * 1.18, seed + 2, 0.16, 0.12);
 
   const shellPressure =
-    fbm2D(global.x * 0.56 + 3.1, global.y * 0.64 - 4.4, seed + 10, 4) * 0.36 +
-    fbm2D(global.x * 1.15 - 7.6, global.y * 1.06 + 2.8, seed + 11, 4) * 0.18 +
-    fbm2D(local.x * 2.10 + 1.7, local.y * 1.86 - 5.9, seed + 12, 3) * 0.08;
+    fbm2D(global.x * 0.56 + 3.1, global.y * 0.64 - 4.4, seed + 10, 4) * 0.34 +
+    fbm2D(global.x * 1.15 - 7.6, global.y * 1.06 + 2.8, seed + 11, 4) * 0.17 +
+    fbm2D(local.x * 2.10 + 1.7, local.y * 1.86 - 5.9, seed + 12, 3) * 0.075;
 
   const longRidgeA = ribbonField(global.y, global.x, 0.16, -1.22, 1.72, 0.105, -0.38, 0.4);
   const longRidgeB = ribbonField(global.y, global.x, -0.18, 0.86, 1.50, 0.095, 0.34, 2.1);
@@ -323,58 +437,101 @@ function sampleSublevel(lat, lon, world) {
   const longRidgeD = ribbonField(global.y, global.x, -0.58, -0.52, 1.28, 0.095, 0.24, 1.7);
 
   const ridgeSystem =
-    Math.max(longRidgeA, longRidgeB, longRidgeC, longRidgeD, 0) * 0.30 +
-    ridge2D(local.x * 1.55 + 4.2, local.y * 1.50 - 7.2, seed + 20) * 0.18 +
-    ridge2D(local.x * 2.90 - 8.1, local.y * 2.70 + 3.8, seed + 21) * 0.08;
+    Math.max(longRidgeA, longRidgeB, longRidgeC, longRidgeD, 0) * 0.28 +
+    ridge2D(local.x * 1.55 + 4.2, local.y * 1.50 - 7.2, seed + 20) * 0.16 +
+    ridge2D(local.x * 2.90 - 8.1, local.y * 2.70 + 3.8, seed + 21) * 0.075;
 
-  const basinA = basinField(global.y, global.x, 0.22, -2.08, 0.50, 0.44);
-  const basinB = basinField(global.y, global.x, -0.34, 1.74, 0.44, 0.48);
-  const basinC = basinField(global.y, global.x, 0.70, 0.64, 0.28, 0.62);
-  const basinD = basinField(global.y, global.x, -0.72, -1.08, 0.28, 0.58);
+  const dryOceanFloor = sampleDryOceanBasins(global.y, global.x, world);
+  const dryRiverbed = sampleDryRiverbeds(global.y, global.x, world);
+  const canyon = sampleCanyonCuts(global.y, global.x, world);
+  const trench = sampleTrenches(global.y, global.x, world);
+  const cliff = sampleCliffPressure(global.y, global.x, world);
+  const cavern = sampleCavernPressure(global.y, global.x, world);
+  const scar = sampleCrustalScars(global.y, global.x, world);
+  const shelf = sampleShelfDepressions(global.y, global.x, world);
 
-  const basinPressure = Math.max(basinA, basinB, basinC, basinD) * 0.26;
+  const polarCompression = smoothstep(1.02, 1.50, Math.abs(lat)) * 0.15;
+  const equatorialPlateSpread = (1 - smoothstep(0.18, 1.10, Math.abs(lat))) * 0.065;
 
-  const fractureA = ribbonField(global.y, global.x, 0.00, 0.20, 1.85, 0.040, 0.06, 0.7);
-  const fractureB = ribbonField(global.y, global.x, 0.36, -1.78, 0.92, 0.036, 0.42, 2.0);
-  const fractureC = ribbonField(global.y, global.x, -0.40, 1.28, 0.92, 0.038, -0.36, -0.8);
+  const carvingCut =
+    dryOceanFloor * 0.24 +
+    dryRiverbed * 0.13 +
+    canyon * 0.18 +
+    trench * 0.20 +
+    cavern * 0.18 +
+    shelf * 0.12;
 
-  const fracture = Math.max(fractureA, fractureB, fractureC, 0);
-
-  const polarCompression = smoothstep(1.02, 1.50, Math.abs(lat)) * 0.16;
-  const equatorialPlateSpread = (1 - smoothstep(0.18, 1.10, Math.abs(lat))) * 0.08;
+  const uplift =
+    ridgeSystem * 0.30 +
+    cliff * 0.08 +
+    scar * 0.035 +
+    polarCompression;
 
   const elevation =
     shellPressure +
-    ridgeSystem -
-    basinPressure -
-    fracture * 0.14 +
-    polarCompression -
+    uplift -
+    carvingCut -
     equatorialPlateSpread;
 
-  const relief = clamp((elevation + 0.54) / 1.08, 0, 1);
-  const ridge = clamp(ridgeSystem * 1.50 + fracture * 0.28, 0, 1);
-  const basin = clamp(basinPressure * 2.4 + smoothstep(-0.38, -0.06, -elevation) * 0.30, 0, 1);
-  const fault = clamp(fracture, 0, 1);
+  const relief = clamp((elevation + 0.58) / 1.12, 0, 1);
+  const ridge = clamp(ridgeSystem * 1.48 + cliff * 0.44 + scar * 0.12, 0, 1);
+  const basin = clamp(dryOceanFloor * 0.92 + shelf * 0.36 + smoothstep(-0.38, -0.06, -elevation) * 0.26, 0, 1);
+  const fault = clamp(trench * 0.70 + scar * 0.48 + canyon * 0.24, 0, 1);
 
   const fine =
-    fbm2D(local.x * 4.20 + 9.0, local.y * 3.80 - 6.0, seed + 31, 3) * 0.55 +
-    ridge2D(local.x * 5.40 - 2.0, local.y * 5.00 + 8.0, seed + 32) * 0.45;
+    fbm2D(local.x * 4.20 + 9.0, local.y * 3.80 - 6.0, seed + 31, 3) * 0.42 +
+    ridge2D(local.x * 5.40 - 2.0, local.y * 5.00 + 8.0, seed + 32) * 0.34 +
+    scar * 0.24;
 
   return {
     relief,
     ridge,
     basin,
     fault,
+    trench,
+    canyon,
+    cliff,
+    cavern,
+    dryRiverbed,
+    dryOceanFloor,
+    shelf,
+    scar,
     fine: clamp((fine + 1) * 0.5, 0, 1),
     polarCompression
   };
 }
 
 function colorForSublevel(sample, world, light, rim) {
-  let base = mixColor(world.low, world.base, 0.50 + sample.relief * 0.28);
+  let base = mixColor(world.low, world.base, 0.50 + sample.relief * 0.30);
 
-  if (sample.basin > 0.22) {
-    base = mixColor(base, world.low, clamp(sample.basin * 0.42, 0, 0.52));
+  if (sample.dryOceanFloor > 0.24) {
+    base = mixColor(base, world.low, clamp(sample.dryOceanFloor * 0.54, 0, 0.62));
+  }
+
+  if (sample.shelf > 0.26) {
+    base = mixColor(base, world.mid, clamp(sample.shelf * 0.16, 0, 0.18));
+    base = mixColor(base, world.low, clamp(sample.shelf * 0.20, 0, 0.26));
+  }
+
+  if (sample.basin > 0.24) {
+    base = mixColor(base, world.low, clamp(sample.basin * 0.44, 0, 0.54));
+  }
+
+  if (sample.cavern > 0.36) {
+    base = mixColor(base, world.cavern, clamp((sample.cavern - 0.28) * 0.60, 0, 0.44));
+  }
+
+  if (sample.dryRiverbed > 0.34) {
+    base = mixColor(base, world.cavern, clamp(sample.dryRiverbed * 0.22, 0, 0.24));
+    base = mixColor(base, world.exposed, clamp((sample.dryRiverbed - 0.42) * 0.16, 0, 0.12));
+  }
+
+  if (sample.canyon > 0.34 || sample.trench > 0.34) {
+    base = mixColor(base, world.cavern, clamp(Math.max(sample.canyon, sample.trench) * 0.28, 0, 0.34));
+  }
+
+  if (sample.cliff > 0.34) {
+    base = mixColor(base, world.exposed, clamp((sample.cliff - 0.26) * 0.48, 0, 0.28));
   }
 
   if (sample.relief > 0.56) {
@@ -393,8 +550,19 @@ function colorForSublevel(sample, world, light, rim) {
     base = mixColor(base, world.fault, clamp((sample.fault - 0.62) * 0.50, 0, 0.16));
   }
 
-  const texture = (sample.fine - 0.5) * 8.5;
-  const shade = clamp(light + rim * 0.13, 0.18, 1.18);
+  const depthShadow =
+    sample.dryOceanFloor * 0.12 +
+    sample.trench * 0.12 +
+    sample.canyon * 0.08 +
+    sample.cavern * 0.16;
+
+  const highlight =
+    sample.cliff * 0.06 +
+    sample.ridge * 0.04 +
+    sample.scar * 0.03;
+
+  const texture = (sample.fine - 0.5) * 9.0;
+  const shade = clamp(light + rim * 0.14 + highlight - depthShadow, 0.12, 1.20);
 
   const r = Math.round(clamp((base[0] + texture) * shade, 0, 255));
   const g = Math.round(clamp((base[1] + texture * 0.76) * shade, 0, 255));
@@ -563,7 +731,7 @@ function drawSphereBase(ctx, view) {
   );
 
   const lightBase = mixColor(world.base, world.ridge, 0.12);
-  const darkBase = mixColor(world.low, [0, 0, 0], 0.16);
+  const darkBase = mixColor(world.low, [0, 0, 0], 0.18);
 
   base.addColorStop(0, colorString(lightBase));
   base.addColorStop(0.54, colorString(world.base));
@@ -615,7 +783,35 @@ function drawSurface(ctx, view) {
   ctx.restore();
 }
 
-function drawSubtleContourLines(ctx, view) {
+function makeProjectedPolyline(view, latFn, lonStart, lonEnd, steps = 82) {
+  const points = [];
+
+  for (let j = 0; j <= steps; j += 1) {
+    const u = j / steps;
+    const lon = lonStart + (lonEnd - lonStart) * u;
+    const lat = latFn(lon, u);
+    const p = makePoint(lat, lon);
+    const r = rotateX(rotateY(p, view.yaw), view.pitch);
+    if (r.z > 0.04) points.push(project(r, view));
+  }
+
+  return points;
+}
+
+function strokePolyline(ctx, points) {
+  if (points.length < 3) return;
+
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+
+  for (let i = 1; i < points.length; i += 1) {
+    ctx.lineTo(points[i].x, points[i].y);
+  }
+
+  ctx.stroke();
+}
+
+function drawCarvingLines(ctx, view) {
   const world = WORLDS[state.worldKey];
 
   ctx.save();
@@ -627,35 +823,86 @@ function drawSubtleContourLines(ctx, view) {
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
 
-  const count = MOBILE ? 7 : 10;
+  const contourCount = MOBILE ? 6 : 9;
 
-  for (let i = 0; i < count; i += 1) {
-    const lat = lerp(-0.82, 0.82, i / Math.max(1, count - 1)) + Math.sin(i * 1.3) * 0.04;
-    const points = [];
+  for (let i = 0; i < contourCount; i += 1) {
+    const latBase = lerp(-0.82, 0.82, i / Math.max(1, contourCount - 1)) + Math.sin(i * 1.3) * 0.04;
 
-    for (let j = 0; j <= 72; j += 1) {
-      const u = j / 72;
-      const lon = -2.80 + u * 5.60;
-      const waveLat = lat + Math.sin(lon * 1.8 + i * 0.7) * 0.018;
-      const p = makePoint(waveLat, lon);
-      const r = rotateX(rotateY(p, view.yaw), view.pitch);
-      if (r.z > 0.04) points.push(project(r, view));
-    }
+    const points = makeProjectedPolyline(
+      view,
+      (lon) => latBase + Math.sin(lon * 1.8 + i * 0.7) * 0.018,
+      -2.80,
+      2.80,
+      72
+    );
 
-    if (points.length < 3) continue;
-
-    ctx.strokeStyle = `rgba(${world.fault[0]},${world.fault[1]},${world.fault[2]},0.045)`;
-    ctx.lineWidth = Math.max(0.35, DPR * 0.32);
-
-    ctx.beginPath();
-    ctx.moveTo(points[0].x, points[0].y);
-
-    for (let j = 1; j < points.length; j += 1) {
-      ctx.lineTo(points[j].x, points[j].y);
-    }
-
-    ctx.stroke();
+    ctx.strokeStyle = colorWithAlpha(world.fault, 0.040);
+    ctx.lineWidth = Math.max(0.30, DPR * 0.30);
+    strokePolyline(ctx, points);
   }
+
+  const riverLines = [
+    { lat: 0.34, lonA: -2.18, lonB: -0.56, angle: -0.48, phase: 0.2 },
+    { lat: -0.18, lonA: 0.10, lonB: 1.70, angle: 0.36, phase: 1.7 },
+    { lat: 0.54, lonA: -0.66, lonB: 0.90, angle: -0.12, phase: -1.1 },
+    { lat: -0.52, lonA: -1.28, lonB: 0.08, angle: 0.26, phase: 2.3 }
+  ];
+
+  ctx.strokeStyle = "rgba(10,14,20,0.30)";
+  ctx.lineWidth = Math.max(0.55, DPR * 0.55);
+
+  riverLines.forEach((line, index) => {
+    const points = makeProjectedPolyline(
+      view,
+      (lon, u) => line.lat + Math.sin((u * 4.5) + line.phase) * 0.028 + Math.sin(lon * 2.2 + index) * 0.012,
+      line.lonA,
+      line.lonB,
+      64
+    );
+    strokePolyline(ctx, points);
+  });
+
+  ctx.globalCompositeOperation = "source-over";
+  ctx.strokeStyle = "rgba(235,205,154,0.075)";
+  ctx.lineWidth = Math.max(0.38, DPR * 0.36);
+
+  const cliffLines = [
+    { lat: 0.18, lonA: -1.82, lonB: -0.62, phase: 0.6 },
+    { lat: -0.30, lonA: 0.32, lonB: 1.68, phase: 1.8 },
+    { lat: 0.62, lonA: -0.50, lonB: 0.70, phase: -1.0 }
+  ];
+
+  cliffLines.forEach((line, index) => {
+    const points = makeProjectedPolyline(
+      view,
+      (lon, u) => line.lat + Math.sin(u * 5.2 + line.phase) * 0.020 + Math.sin(lon * 1.5 + index) * 0.010,
+      line.lonA,
+      line.lonB,
+      60
+    );
+    strokePolyline(ctx, points);
+  });
+
+  ctx.globalCompositeOperation = "screen";
+  ctx.strokeStyle = colorWithAlpha(world.fault, 0.055);
+  ctx.lineWidth = Math.max(0.42, DPR * 0.40);
+
+  const faultLines = [
+    { lat: 0.02, lonA: -0.88, lonB: 1.10, phase: 0.9 },
+    { lat: 0.40, lonA: -2.30, lonB: -1.18, phase: 2.0 },
+    { lat: -0.38, lonA: 0.64, lonB: 1.92, phase: -0.8 }
+  ];
+
+  faultLines.forEach((line, index) => {
+    const points = makeProjectedPolyline(
+      view,
+      (lon, u) => line.lat + Math.sin(u * 6.0 + line.phase) * 0.018 + Math.sin(lon * 2.9 + index) * 0.012,
+      line.lonA,
+      line.lonB,
+      66
+    );
+    strokePolyline(ctx, points);
+  });
 
   ctx.restore();
 }
@@ -716,7 +963,7 @@ function drawWorldTitle(ctx, width, height) {
 
   ctx.fillStyle = "rgba(186,197,212,0.72)";
   ctx.font = `850 ${Math.max(11 * DPR, width * 0.014)}px Inter, system-ui, sans-serif`;
-  ctx.fillText(`${world.subtitle} · sub-level terrain globe`, width * 0.5, height * 0.205);
+  ctx.fillText(`${world.subtitle} · dry sub-level carvings`, width * 0.5, height * 0.205);
 
   ctx.restore();
 }
@@ -727,7 +974,7 @@ function drawCue(ctx, width, height) {
   ctx.textBaseline = "middle";
   ctx.fillStyle = "rgba(186,197,212,0.60)";
   ctx.font = `800 ${Math.max(11 * DPR, width * 0.013)}px Inter, system-ui, sans-serif`;
-  ctx.fillText("Drag to inspect · Select a world · Open room for private map", width * 0.5, height * 0.90);
+  ctx.fillText("Drag to inspect · Dry carvings only · Open room for private map", width * 0.5, height * 0.90);
   ctx.restore();
 }
 
@@ -745,7 +992,7 @@ function drawPlanet(ctx, width, height) {
   drawGlobeShadow(ctx, view);
   drawSphereBase(ctx, view);
   drawSurface(ctx, view);
-  drawSubtleContourLines(ctx, view);
+  drawCarvingLines(ctx, view);
   drawAtmosphere(ctx, view);
   drawOrbitLines(ctx, view);
   drawWorldTitle(ctx, width, height);
@@ -753,12 +1000,18 @@ function drawPlanet(ctx, width, height) {
 
   document.documentElement.dataset.globeShowcaseModel = MODEL_NAME;
   document.documentElement.dataset.selectedWorld = state.worldKey;
-  document.documentElement.dataset.publicPortraitBaseline = "clean-sublevel-globe";
+  document.documentElement.dataset.publicPortraitBaseline = "sublevel-carving";
   document.documentElement.dataset.privateEnginesAsleep = "true";
   document.documentElement.dataset.mapExpression = "false";
   document.documentElement.dataset.waterExpression = "false";
   document.documentElement.dataset.landmassExpression = "false";
   document.documentElement.dataset.childTerrainImport = "false";
+  document.documentElement.dataset.mountainSystem = "false";
+  document.documentElement.dataset.carvingExpression = "true";
+  document.documentElement.dataset.dryRiverbeds = "true";
+  document.documentElement.dataset.dryOceanFloors = "true";
+  document.documentElement.dataset.cliffs = "true";
+  document.documentElement.dataset.caverns = "true";
   document.documentElement.dataset.parentCellCount = String(CELL_COUNT);
   document.documentElement.dataset.childFieldsPerParent = String(CHILD_HEX_COUNT);
   document.documentElement.dataset.totalChildFields = String(TOTAL_CHILD_FIELDS);
@@ -1010,7 +1263,7 @@ function boot() {
 
   window.DGBGlobeShowcase = {
     model: MODEL_NAME,
-    publicPortraitBaseline: "clean-sublevel-globe",
+    publicPortraitBaseline: "sublevel-carving",
     privateEnginesAsleep: true,
     generatedImage: false,
     graphicBox: false,
@@ -1018,6 +1271,8 @@ function boot() {
     waterExpression: false,
     landmassExpression: false,
     childTerrainImport: false,
+    mountainSystem: false,
+    carvingExpression: true,
     worlds: Object.keys(WORLDS),
     parentCellCount: CELL_COUNT,
     childFieldsPerParent: CHILD_HEX_COUNT,
@@ -1029,7 +1284,7 @@ function boot() {
       return {
         model: MODEL_NAME,
         selectedWorld: state.worldKey,
-        publicPortraitBaseline: "clean-sublevel-globe",
+        publicPortraitBaseline: "sublevel-carving",
         privateEnginesAsleep: true,
         generatedImage: false,
         graphicBox: false,
@@ -1037,6 +1292,12 @@ function boot() {
         waterExpression: false,
         landmassExpression: false,
         childTerrainImport: false,
+        mountainSystem: false,
+        carvingExpression: true,
+        dryRiverbeds: true,
+        dryOceanFloors: true,
+        cliffs: true,
+        caverns: true,
         parentCellCount: CELL_COUNT,
         childFieldsPerParent: CHILD_HEX_COUNT,
         totalChildFields: TOTAL_CHILD_FIELDS,
@@ -1055,7 +1316,7 @@ if (document.readyState === "loading") {
 
 export default {
   model: MODEL_NAME,
-  publicPortraitBaseline: "clean-sublevel-globe",
+  publicPortraitBaseline: "sublevel-carving",
   privateEnginesAsleep: true,
   generatedImage: false,
   graphicBox: false,
@@ -1063,6 +1324,8 @@ export default {
   waterExpression: false,
   landmassExpression: false,
   childTerrainImport: false,
+  mountainSystem: false,
+  carvingExpression: true,
   parentCellCount: CELL_COUNT,
   childFieldsPerParent: CHILD_HEX_COUNT,
   totalChildFields: TOTAL_CHILD_FIELDS,

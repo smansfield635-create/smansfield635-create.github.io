@@ -2,22 +2,26 @@
 <html
   lang="en"
   class="dgb-h-earth-skin-locked"
-  data-page="h-earth-external-skin-authority-recovery"
+  data-page="h-earth-western-golden-shelf-manor-ground-placement"
   data-route="/showroom/globe/h-earth/"
-  data-contract="H_EARTH_EXTERNAL_SKIN_AUTHORITY_RECOVERY_TNT_v3"
-  data-prior-contract="H_EARTH_RUNTIME_SKIN_GUARD_RECOVERY_TNT_v2"
+  data-contract="H_EARTH_WESTERN_GOLDEN_SHELF_MANOR_GROUND_PLACEMENT_TNT_v1"
   data-target="h-earth"
   data-external-skin-authority="true"
   data-skin-path="/assets/h-earth/h-earth.route.skin.css"
   data-selected-region="western-golden-shelf"
   data-western-golden-shelf-selected="true"
   data-estate-authorization-analysis="true"
+  data-manor-ground-placement-authorized="true"
+  data-controlled-manor-placement="true"
+  data-water-behind-manor="true"
+  data-camera-facing="west-southwest"
+  data-ground-render-active="true"
   data-ground-level-scouting="true"
   data-build-candidate-analysis="true"
   data-runtime-skin-guard="true"
-  data-manor-placement-authorized="false"
-  data-estate-placement-authorized="false"
-  data-bridge-placement-authorized="false"
+  data-final-manor-architecture-authorized="false"
+  data-estate-finalization-authorized="false"
+  data-bridge-finalization-authorized="false"
   data-road-placement-authorized="false"
   data-city-placement-authorized="false"
   data-final-architecture-authorized="false"
@@ -34,20 +38,20 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
 
-  <title>Western Golden Shelf · H-Earth Estate Authorization</title>
+  <title>Western Golden Shelf · Manor Ground Placement</title>
   <meta
     name="description"
-    content="Western Golden Shelf estate-authorization analysis for H-Earth. Terrain, elevation, water, arrival, boundary, and orientation proof before Manor, Estate, or Diamond Gate Bridge placement."
+    content="Controlled Rich Manor ground placement on the Western Golden Shelf of H-Earth, with water behind the Manor and final Estate, bridge, road, and city buildout still held."
   >
 
   <link
     rel="stylesheet"
-    href="/assets/h-earth/h-earth.route.skin.css?v=H_EARTH_EXTERNAL_SKIN_AUTHORITY_RECOVERY_TNT_v3"
+    href="/assets/h-earth/h-earth.route.skin.css?v=H_EARTH_WESTERN_GOLDEN_SHELF_MANOR_GROUND_PLACEMENT_TNT_v1"
   >
 </head>
 
 <body class="dgb-h-earth-skin-locked">
-  <a class="skip" href="#main">Skip to Western Golden Shelf authorization</a>
+  <a class="skip" href="#main">Skip to Western Golden Shelf Manor placement</a>
 
   <div class="page">
     <header class="topbar" aria-label="Diamond Gate Bridge navigation">
@@ -69,24 +73,43 @@
 
     <main id="main">
       <section class="hero">
-        <p class="eyebrow">Western Golden Shelf · Estate-Authorization Analysis</p>
-        <h1>Western Golden Shelf is selected. Placement remains held until proof completes.</h1>
+        <p class="eyebrow">Western Golden Shelf · Controlled Manor Ground Placement</p>
+        <h1>The Manor is now placed on the shelf. Water remains behind it.</h1>
         <p class="lede">
-          H-Earth has moved from general scouting into selected-region estate-authorization analysis. This page evaluates terrain stability, elevation logic, water relationship, arrival direction, estate boundary logic, and orientation logic before any Manor, Estate, or Diamond Gate Bridge placement can be unlocked.
+          The already-defined Rich Manor is mounted onto the Western Golden Shelf ground plane. The camera is on the landward eastern shelf looking west-southwest, with the waterline behind the Manor. Final architecture, Estate finalization, road systems, city systems, and Diamond Gate Bridge final object remain held.
         </p>
 
         <div class="actions">
-          <a class="button primary" href="#authorization-board">Open Authorization Board</a>
+          <a class="button primary" href="#manor-ground-render">View Ground Render</a>
           <a class="button gold" href="/showroom/globe/">Return to Globe Selector</a>
           <a class="button" href="/showroom/">Return to Showroom</a>
         </div>
 
         <div class="transition">
-          H-Earth orbital baseline → Western Golden Shelf regional candidate → terrain/elevation proof → water relationship proof → arrival/bridge direction proof → estate boundary logic → Manor placement authorization
+          H-Earth orbital baseline → Western Golden Shelf candidate → controlled Manor ground placement → develop the ground around and within → later Estate / Bridge finalization.
         </div>
 
-        <div class="summary" data-scout-summary aria-label="Western Golden Shelf authorization summary"></div>
-        <div class="gate-panel" data-authorization-gate aria-label="Authorization gate status"></div>
+        <div class="summary" data-scout-summary aria-label="Western Golden Shelf Manor placement summary"></div>
+        <div class="gate-panel" data-authorization-gate aria-label="Manor ground-placement gate status"></div>
+      </section>
+
+      <section id="manor-ground-render" class="panel" style="margin-top:16px;" aria-label="Western Golden Shelf Manor ground render">
+        <p class="eyebrow compact">Ground-level render · water behind Manor</p>
+        <h2>Landward shelf view toward the western waterline</h2>
+
+        <div class="ground-placement-grid">
+          <div class="manor-ground-viewport">
+            <canvas data-manor-ground-canvas aria-label="Code-rendered Western Golden Shelf Manor ground placement"></canvas>
+          </div>
+
+          <div data-ground-placement-info></div>
+        </div>
+
+        <div class="placement-unlock">
+          <p>
+            Controlled Manor ground placement is authorized. The visual massing uses the already-defined Rich Manor as the source object and does not redefine room count, acreage, vault, or internal structure.
+          </p>
+        </div>
       </section>
 
       <section id="authorization-board" class="grid" aria-label="Western Golden Shelf authorization board">
@@ -94,7 +117,7 @@
           <p class="eyebrow compact">Regional control</p>
           <h2>Selected build-candidate region</h2>
           <p class="lede" style="font-size:.98rem;margin-top:10px;">
-            Western Golden Shelf is now the controlling candidate. Other regions remain visible as context, but this pass evaluates the selected shelf.
+            Western Golden Shelf remains the controlling candidate. Other regions remain visible as context.
           </p>
           <div class="region-list" data-region-list></div>
         </aside>
@@ -116,47 +139,47 @@
 
       <section class="panel" style="margin-top:16px;" aria-label="Estate boundary logic">
         <p class="eyebrow compact">Estate boundary logic</p>
-        <h2>Boundary zones defined without placement</h2>
+        <h2>Boundary zones defined without final buildout</h2>
         <div class="zone-grid" data-boundary-logic></div>
       </section>
 
       <section class="panel" style="margin-top:16px;" aria-label="Manor orientation logic">
-        <p class="eyebrow compact">Orientation logic only</p>
-        <h2>Future Manor-facing logic without Manor placement</h2>
+        <p class="eyebrow compact">Orientation logic</p>
+        <h2>Water behind the Manor; camera from landward shelf</h2>
         <div data-orientation-logic></div>
       </section>
 
-      <section class="standard-grid" aria-label="Estate authorization standards">
+      <section class="standard-grid" aria-label="Manor ground placement standards">
         <article class="standard-card">
           <h2>Selected candidate</h2>
-          <p><span data-best-candidate>Western Golden Shelf</span> is selected for authorization analysis. This is still not Estate placement.</p>
+          <p><span data-best-candidate>Western Golden Shelf</span> is selected and now supports controlled Manor ground placement.</p>
         </article>
 
         <article class="standard-card">
-          <h2>Placement lock</h2>
-          <p>Manor, Estate, Diamond Gate Bridge, roads, cities, and final architecture remain held.</p>
+          <h2>Placement split</h2>
+          <p>Manor ground placement is authorized. Final architecture, full Estate finalization, roads, city, and bridge object remain held.</p>
         </article>
 
         <article class="standard-card">
-          <h2>Next eligibility</h2>
-          <p>The next packet may unlock Manor placement planning, Estate boundary sketching, and bridge approach planning only if the gate authorizes next planning.</p>
+          <h2>Next development</h2>
+          <p>The next pass may develop the ground around and within the Manor zone: terraces, paths, gardens, courtyards, drainage, and protected edges.</p>
         </article>
       </section>
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · H-Earth · Western Golden Shelf External Skin Authority Recovery.
+      Diamond Gate Bridge · H-Earth · Western Golden Shelf Manor Ground Placement.
     </footer>
   </div>
 
   <script>
-    window.DGB_H_EARTH_HTML_CACHE_KEY = "H_EARTH_EXTERNAL_SKIN_AUTHORITY_RECOVERY_TNT_v3";
-    window.DGB_H_EARTH_CSS_CACHE_KEY = "H_EARTH_EXTERNAL_SKIN_AUTHORITY_RECOVERY_TNT_v3";
-    window.DGB_H_EARTH_JS_CACHE_KEY = "H_EARTH_RUNTIME_SKIN_GUARD_RECOVERY_TNT_v2";
+    window.DGB_H_EARTH_HTML_CACHE_KEY = "H_EARTH_WESTERN_GOLDEN_SHELF_MANOR_GROUND_PLACEMENT_TNT_v1";
+    window.DGB_H_EARTH_CSS_CACHE_KEY = "H_EARTH_WESTERN_GOLDEN_SHELF_MANOR_GROUND_PLACEMENT_TNT_v1";
+    window.DGB_H_EARTH_JS_CACHE_KEY = "H_EARTH_WESTERN_GOLDEN_SHELF_MANOR_GROUND_PLACEMENT_TNT_v1";
   </script>
   <script
     type="module"
-    src="/showroom/globe/h-earth/index.js?v=H_EARTH_RUNTIME_SKIN_GUARD_RECOVERY_TNT_v2"
+    src="/showroom/globe/h-earth/index.js?v=H_EARTH_WESTERN_GOLDEN_SHELF_MANOR_GROUND_PLACEMENT_TNT_v1"
   ></script>
 </body>
 </html>

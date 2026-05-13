@@ -1,11 +1,11 @@
 // /assets/world/environment/water.js
 // TNT FULL-FILE REPLACEMENT
-// REUSABLE_PLANETARY_WATER_SHIMMER_PROTOCOL_TNT_v1
-// Owns: waves, foam, shimmer, tide, reflection, shoreline motion, and ocean depth.
+// REUSABLE_PLANETARY_WATER_HEX_SHIMMER_PROTOCOL_TNT_v2
+// Owns: waves, foam, shimmer, tide, reflection, shoreline motion, ocean depth.
 
 import { clamp, lerp, rgba, hash01 } from "/assets/world/environment/profile.js";
 
-export const ENVIRONMENT_WATER_VERSION = "reusable-planetary-water-shimmer-protocol-v1";
+export const ENVIRONMENT_WATER_VERSION = "reusable-planetary-water-hex-shimmer-protocol-v2";
 
 export const SHIMMER_PROTOCOL = Object.freeze({
   waves: "layered movement across distance",
@@ -16,7 +16,7 @@ export const SHIMMER_PROTOCOL = Object.freeze({
 });
 
 export function drawWaterLayer(ctx, profile, cell, frame) {
-  const { width: w, height: h, time: t } = frame;
+  const { width: w, height: h, time: t, hexfield } = frame;
   const water = profile.water;
   const camera = profile.camera;
   const palette = water.palette;
@@ -37,12 +37,15 @@ export function drawWaterLayer(ctx, profile, cell, frame) {
   ctx.beginPath();
   ctx.moveTo(0, top);
 
-  for (let i = 0; i <= 112; i += 1) {
-    const x = (i / 112) * w;
+  for (let i = 0; i <= 132; i += 1) {
+    const nx = i / 132;
+    const sample = hexfield?.sample(nx, camera.horizon, t);
+    const x = nx * w;
     const y =
       top +
       Math.sin(i * 0.31 + t * 0.36) * h * 0.003 * water.waveStrength +
-      Math.sin(i * 1.43 + t * 0.15) * h * 0.0018 * water.waveStrength;
+      Math.sin(i * 1.43 + t * 0.15) * h * 0.0018 * water.waveStrength +
+      (sample?.wave || 0) * h * 0.0016;
     ctx.lineTo(x, y);
   }
 
@@ -72,25 +75,27 @@ function drawReflection(ctx, profile, cell, frame, top, bottom) {
 }
 
 function drawWaveBands(ctx, profile, cell, frame, top, bottom) {
-  const { width: w, height: h, time: t } = frame;
+  const { width: w, height: h, time: t, hexfield } = frame;
   const strength = profile.water.waveStrength;
-  const foam = profile.water.foam;
 
   ctx.save();
   ctx.lineWidth = Math.max(1, w * 0.0008);
 
-  for (let j = 0; j < 44; j += 1) {
-    const y = lerp(top + h * 0.026, bottom - h * 0.020, j / 44);
-    const depth = j / 44;
-    ctx.globalAlpha = Math.max(0.030, 0.17 - j * 0.0034);
+  for (let j = 0; j < 48; j += 1) {
+    const ny = lerp(profile.camera.horizon + 0.026, profile.camera.shoreline - 0.020, j / 48);
+    const y = h * ny;
+    ctx.globalAlpha = Math.max(0.028, 0.17 - j * 0.0032);
     ctx.strokeStyle = rgba(profile.water.palette.foam, 0.16 * strength);
     ctx.beginPath();
 
-    for (let i = 0; i <= 98; i += 1) {
-      const x = (i / 98) * w;
+    for (let i = 0; i <= 110; i += 1) {
+      const nx = i / 110;
+      const sample = hexfield?.sample(nx, ny, t);
+      const x = nx * w;
       const wave =
         Math.sin(i * 0.80 + j * 0.54 + t * 0.80) * h * 0.0018 * strength +
-        Math.sin(i * 1.65 + t * 0.30) * h * 0.0011 * strength;
+        Math.sin(i * 1.65 + t * 0.30) * h * 0.0011 * strength +
+        (sample?.wave || 0) * h * 0.0013;
 
       if (i === 0) ctx.moveTo(x, y + wave);
       else ctx.lineTo(x, y + wave);
@@ -103,7 +108,7 @@ function drawWaveBands(ctx, profile, cell, frame, top, bottom) {
 }
 
 function drawShimmer(ctx, profile, cell, frame, top, bottom) {
-  const { width: w, height: h, time: t } = frame;
+  const { width: w, height: h, time: t, hexfield } = frame;
   const shimmer = profile.water.shimmer;
   const sunX = profile.climate.sunX;
   const shimmerColor = profile.water.palette.shimmer;
@@ -111,18 +116,19 @@ function drawShimmer(ctx, profile, cell, frame, top, bottom) {
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
-  for (let i = 0; i < Math.round(130 + shimmer * 80); i += 1) {
-    const x = w * (sunX - 0.36 + hash01(i, 40, 1, cell.seed) * 0.62);
-    const y = lerp(top + h * 0.04, bottom - h * 0.018, hash01(i, 41, 2, cell.seed));
-    const pulse = Math.max(0, Math.sin(t * 1.28 + i * 0.61));
-    const alpha = (0.025 + pulse * 0.13) * shimmer;
+  for (let i = 0; i < Math.round(145 + shimmer * 90); i += 1) {
+    const nx = clamp(sunX - 0.36 + hash01(i, 40, 1, cell.seed) * 0.62, 0, 1);
+    const ny = lerp(profile.camera.horizon + 0.04, profile.camera.shoreline - 0.018, hash01(i, 41, 2, cell.seed));
+    const sample = hexfield?.sample(nx, ny, t);
+    const pulse = sample?.shimmer ?? Math.max(0, Math.sin(t * 1.28 + i * 0.61));
+    const alpha = (0.025 + pulse * 0.14) * shimmer;
 
     ctx.globalAlpha = alpha;
-    ctx.fillStyle = rgba(shimmerColor, 0.70);
+    ctx.fillStyle = rgba(shimmerColor, 0.72);
     ctx.beginPath();
     ctx.ellipse(
-      x,
-      y,
+      nx * w,
+      ny * h,
       w * (0.0011 + hash01(i, 42, 3, cell.seed) * 0.0038),
       h * 0.00075,
       -0.14,
@@ -136,8 +142,8 @@ function drawShimmer(ctx, profile, cell, frame, top, bottom) {
 }
 
 export function drawFoamAndTideEdge(ctx, profile, cell, frame) {
-  const { width: w, height: h, time: t } = frame;
-  const line = h * profile.camera.shoreline;
+  const { width: w, height: h, time: t, hexfield } = frame;
+  const line = profile.camera.shoreline;
   const tide = Math.sin(t * 0.18) * h * 0.006 * profile.water.tide;
   const foamStrength = profile.water.foam;
 
@@ -145,13 +151,16 @@ export function drawFoamAndTideEdge(ctx, profile, cell, frame) {
   ctx.lineWidth = Math.max(1, w * 0.0009);
   ctx.beginPath();
 
-  for (let i = 0; i <= 112; i += 1) {
-    const x = (i / 112) * w;
+  for (let i = 0; i <= 132; i += 1) {
+    const nx = i / 132;
+    const sample = hexfield?.sample(nx, line, t);
+    const x = nx * w;
     const y =
-      line +
+      h * line +
       tide +
       Math.sin(i * 0.54 + t * 0.56) * h * 0.003 +
-      Math.sin(i * 1.80 + t * 0.22) * h * 0.0014;
+      Math.sin(i * 1.80 + t * 0.22) * h * 0.0014 +
+      (sample?.tide || 0) * h * 0.0016;
 
     if (i === 0) ctx.moveTo(x, y);
     else ctx.lineTo(x, y);

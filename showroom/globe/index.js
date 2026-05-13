@@ -1,5 +1,5 @@
 const GLOBE_SELECTOR_STATE = Object.freeze({
-  contract: "SHOWROOM_GLOBE_SELECTOR_RUNTIME_STABILIZATION_TNT_v4",
+  contract: "SHOWROOM_GLOBE_MOBILE_STAGE_LAYOUT_GOVERNOR_TNT_v5",
   route: "/showroom/globe/",
   role: "globe-system-gateway-selector",
   gatewayAuthority: true,
@@ -7,6 +7,8 @@ const GLOBE_SELECTOR_STATE = Object.freeze({
   diamondInstrument: false,
   runtimeStabilized: true,
   surfaceCacheEnabled: true,
+  mobileStageLayoutGovernor: true,
+  protectedVerticalBands: true,
   blockTileLandRender: false,
   childRoutes: Object.freeze({
     earth: "/showroom/globe/earth/",
@@ -174,6 +176,29 @@ function resizeCanvas(canvas) {
     state.dpr = dpr;
     state.needsRender = true;
   }
+}
+
+function getLayoutMetrics(width, height) {
+  const cssWidth = width / state.dpr;
+  const isMobile = cssWidth <= 560;
+
+  const topBand = isMobile ? 188 * state.dpr : 176 * state.dpr;
+  const bottomBand = isMobile ? 214 * state.dpr : 198 * state.dpr;
+  const available = Math.max(220 * state.dpr, height - topBand - bottomBand);
+
+  const radius = Math.min(
+    width * (isMobile ? 0.315 : 0.355),
+    available * (isMobile ? 0.46 : 0.50)
+  );
+
+  return Object.freeze({
+    isMobile,
+    topBand,
+    bottomBand,
+    globeCenterX: width * 0.5,
+    globeCenterY: topBand + available * 0.48,
+    radius
+  });
 }
 
 function makeBlobSamples(blob, sampleCount) {
@@ -641,9 +666,10 @@ function drawGlobeGrid(ctx, cx, cy, radius) {
 }
 
 function drawGlobeSurface(ctx, width, height, config, cache) {
-  const radius = Math.min(width * 0.385, height * 0.315);
-  const cx = width * 0.5;
-  const cy = height * 0.43;
+  const metrics = getLayoutMetrics(width, height);
+  const radius = metrics.radius;
+  const cx = metrics.globeCenterX;
+  const cy = metrics.globeCenterY;
 
   ctx.save();
 
@@ -745,9 +771,10 @@ function drawGlobeSurface(ctx, width, height, config, cache) {
 }
 
 function drawGlints(ctx, width, height, config) {
-  const radius = Math.min(width * 0.385, height * 0.315);
-  const cx = width * 0.5;
-  const cy = height * 0.43;
+  const metrics = getLayoutMetrics(width, height);
+  const radius = metrics.radius;
+  const cx = metrics.globeCenterX;
+  const cy = metrics.globeCenterY;
 
   const points = [
     [cx - radius * 0.58, cy - radius * 0.24, 9],
@@ -830,9 +857,7 @@ function step(time, canvas, ctx) {
   resizeCanvas(canvas);
   updateMotion(dt);
 
-  if (state.needsRender) {
-    render(canvas, ctx);
-  }
+  if (state.needsRender) render(canvas, ctx);
 
   state.raf = requestAnimationFrame((next) => step(next, canvas, ctx));
 }
@@ -930,20 +955,24 @@ function setMode(mode) {
 }
 
 function markRoute() {
-  document.documentElement.dataset.globeGatewayStatus = "runtime-stabilized-selector-active";
+  document.documentElement.dataset.globeGatewayStatus = "mobile-stage-layout-governed";
   document.documentElement.dataset.globeGatewayAuthority = "true";
   document.documentElement.dataset.visualScaleAuthority = "true";
   document.documentElement.dataset.runtimeStabilized = "true";
   document.documentElement.dataset.surfaceCacheEnabled = "true";
+  document.documentElement.dataset.mobileStageLayoutGovernor = "true";
+  document.documentElement.dataset.protectedVerticalBands = "true";
   document.documentElement.dataset.blockTileLandRender = "false";
   document.documentElement.dataset.diamondInstrument = "false";
   document.documentElement.dataset.earthRecord = "false";
 
-  document.body.dataset.globeGatewayStatus = "runtime-stabilized-selector-active";
+  document.body.dataset.globeGatewayStatus = "mobile-stage-layout-governed";
   document.body.dataset.globeGatewayAuthority = "true";
   document.body.dataset.visualScaleAuthority = "true";
   document.body.dataset.runtimeStabilized = "true";
   document.body.dataset.surfaceCacheEnabled = "true";
+  document.body.dataset.mobileStageLayoutGovernor = "true";
+  document.body.dataset.protectedVerticalBands = "true";
   document.body.dataset.blockTileLandRender = "false";
   document.body.dataset.diamondInstrument = "false";
   document.body.dataset.earthRecord = "false";
@@ -1017,6 +1046,8 @@ function initGlobeSelector() {
         diamondMountedHere: false,
         runtimeStabilized: true,
         surfaceCacheEnabled: true,
+        mobileStageLayoutGovernor: true,
+        protectedVerticalBands: true,
         cacheKeys: Object.freeze(Object.keys(state.surfaceCache))
       });
     }

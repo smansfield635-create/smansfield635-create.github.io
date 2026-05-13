@@ -1,15 +1,16 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-globe-three-body-gateway-selector"
+  data-page="showroom-globe-mobile-stage-layout-governor"
   data-route="/showroom/globe/"
-  data-contract="SHOWROOM_GLOBE_THREE_BODY_GATEWAY_SELECTOR_TNT_v1"
+  data-contract="SHOWROOM_GLOBE_MOBILE_STAGE_LAYOUT_GOVERNOR_TNT_v5"
   data-role="globe-system-gateway-selector"
   data-gateway-authority="true"
   data-earth-record="false"
   data-h-earth-record="false"
   data-audralia-record="false"
   data-diamond-instrument="false"
+  data-mobile-stage-layout-governor="true"
   data-generated-image="false"
   data-graphic-box="false"
   data-heavy-runtime-loaded="false"
@@ -143,6 +144,8 @@
       font-weight: 850;
       letter-spacing: 0.02em;
       cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
     }
 
     .nav a[aria-current="page"],
@@ -231,8 +234,16 @@
     }
 
     .planet-stage {
+      --stage-pad: clamp(12px, 3vw, 18px);
+      --control-top: var(--stage-pad);
+      --reset-top: clamp(68px, 12vw, 76px);
+      --title-top: clamp(118px, 18vw, 132px);
+      --tabs-bottom: clamp(118px, 18vw, 138px);
+      --open-bottom: clamp(60px, 10vw, 78px);
+      --note-bottom: 14px;
+
       position: relative;
-      min-height: clamp(560px, 92vw, 780px);
+      min-height: clamp(650px, 108vw, 790px);
       border: 1px solid rgba(244,207,131,0.18);
       border-radius: 30px;
       overflow: hidden;
@@ -242,6 +253,31 @@
         linear-gradient(180deg, rgba(4,11,24,0.92), rgba(2,7,16,0.96));
       touch-action: none;
       user-select: none;
+      isolation: isolate;
+    }
+
+    .planet-stage::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: clamp(165px, 28vw, 190px);
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(2,7,16,0.82), rgba(2,7,16,0.18), transparent);
+    }
+
+    .planet-stage::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: clamp(170px, 30vw, 210px);
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(0deg, rgba(2,7,16,0.88), rgba(2,7,16,0.20), transparent);
     }
 
     .planet-canvas {
@@ -251,32 +287,36 @@
       width: 100%;
       height: 100%;
       touch-action: none;
+      z-index: 0;
     }
 
     .planet-ui {
       position: absolute;
-      inset: 18px 18px auto;
-      display: flex;
-      flex-wrap: wrap;
+      left: var(--stage-pad);
+      right: var(--stage-pad);
+      top: var(--control-top);
+      display: grid;
+      grid-template-columns: 0.72fr 1.28fr 1fr;
       gap: 8px;
-      z-index: 2;
+      z-index: 3;
     }
 
     .planet-reset {
       position: absolute;
-      left: 18px;
-      top: 66px;
-      z-index: 2;
+      left: var(--stage-pad);
+      top: var(--reset-top);
+      z-index: 3;
+      min-width: clamp(92px, 22vw, 120px);
     }
 
     .planet-title {
       position: absolute;
       left: 50%;
-      top: 92px;
+      top: var(--title-top);
       transform: translateX(-50%);
       width: min(calc(100% - 44px), 620px);
       text-align: center;
-      z-index: 2;
+      z-index: 3;
       pointer-events: none;
     }
 
@@ -286,23 +326,25 @@
       font-size: clamp(1.35rem, 4.5vw, 2.1rem);
       letter-spacing: -0.04em;
       line-height: 1.05;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.42);
     }
 
     .planet-title span {
       display: block;
       margin-top: 8px;
-      color: rgba(238,244,255,0.58);
-      font-size: clamp(0.82rem, 2.8vw, 1.02rem);
+      color: rgba(238,244,255,0.66);
+      font-size: clamp(0.78rem, 2.6vw, 1.02rem);
       font-weight: 850;
       line-height: 1.25;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.50);
     }
 
     .planet-tabs {
       position: absolute;
       left: clamp(14px, 4vw, 36px);
       right: clamp(14px, 4vw, 36px);
-      bottom: clamp(116px, 21vw, 150px);
-      z-index: 2;
+      bottom: var(--tabs-bottom);
+      z-index: 3;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
@@ -311,16 +353,17 @@
     .planet-tab {
       border-radius: 0;
       min-height: 54px;
-      font-size: clamp(0.88rem, 3.2vw, 1.05rem);
+      font-size: clamp(0.82rem, 3vw, 1.05rem);
       clip-path: polygon(10% 0, 90% 0, 100% 22%, 100% 78%, 90% 100%, 10% 100%, 0 78%, 0 22%);
+      white-space: nowrap;
     }
 
     .planet-open {
       position: absolute;
       left: clamp(16px, 4vw, 36px);
       right: clamp(16px, 4vw, 36px);
-      bottom: clamp(58px, 10vw, 82px);
-      z-index: 2;
+      bottom: var(--open-bottom);
+      z-index: 3;
       border: 1px solid rgba(167,243,198,0.24);
       border-radius: 0;
       padding: 12px 16px;
@@ -339,9 +382,10 @@
       position: absolute;
       left: clamp(16px, 4vw, 36px);
       right: clamp(16px, 4vw, 36px);
-      bottom: 14px;
-      color: rgba(238,244,255,0.54);
-      font-size: clamp(0.82rem, 2.6vw, 0.95rem);
+      bottom: var(--note-bottom);
+      z-index: 3;
+      color: rgba(238,244,255,0.58);
+      font-size: clamp(0.78rem, 2.5vw, 0.95rem);
       font-weight: 800;
       line-height: 1.35;
       text-align: center;
@@ -414,6 +458,24 @@
         border-radius: 24px;
       }
 
+      .planet-stage {
+        min-height: clamp(640px, 138vw, 720px);
+      }
+
+      .planet-ui {
+        grid-template-columns: 0.78fr 1.38fr 1.05fr;
+        gap: 6px;
+      }
+
+      .planet-tab {
+        min-height: 50px;
+        padding: 0 8px;
+      }
+
+      .planet-reset {
+        min-height: 48px;
+      }
+
       .planet-tabs {
         gap: 6px;
       }
@@ -468,6 +530,7 @@
           data-globe-gateway-authority="true"
           data-selected-body="earth"
           data-diamond-instrument="false"
+          data-mobile-stage-layout-governor="true"
           aria-label="Interactive Globe Showcase selector"
         >
           <canvas class="planet-canvas" data-globe-selector-canvas></canvas>
@@ -499,7 +562,7 @@
         </div>
 
         <p class="cache-proof">
-          HTML cache key: SHOWROOM_GLOBE_THREE_BODY_GATEWAY_SELECTOR_TNT_v1
+          HTML cache key: SHOWROOM_GLOBE_MOBILE_STAGE_LAYOUT_GOVERNOR_TNT_v5
         </p>
       </section>
 
@@ -533,12 +596,12 @@
   </div>
 
   <script>
-    window.DGB_SHOWROOM_GLOBE_HTML_CACHE_KEY = "SHOWROOM_GLOBE_THREE_BODY_GATEWAY_SELECTOR_TNT_v1";
-    window.DGB_SHOWROOM_GLOBE_JS_CACHE_KEY = "SHOWROOM_GLOBE_THREE_BODY_GATEWAY_SELECTOR_TNT_v1";
+    window.DGB_SHOWROOM_GLOBE_HTML_CACHE_KEY = "SHOWROOM_GLOBE_MOBILE_STAGE_LAYOUT_GOVERNOR_TNT_v5";
+    window.DGB_SHOWROOM_GLOBE_JS_CACHE_KEY = "SHOWROOM_GLOBE_MOBILE_STAGE_LAYOUT_GOVERNOR_TNT_v5";
   </script>
   <script
     type="module"
-    src="/showroom/globe/index.js?v=SHOWROOM_GLOBE_THREE_BODY_GATEWAY_SELECTOR_TNT_v1"
+    src="/showroom/globe/index.js?v=SHOWROOM_GLOBE_MOBILE_STAGE_LAYOUT_GOVERNOR_TNT_v5"
   ></script>
 </body>
 </html>

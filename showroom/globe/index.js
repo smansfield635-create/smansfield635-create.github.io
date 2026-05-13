@@ -1,48 +1,52 @@
 // /showroom/globe/index.js
 // TNT FULL-FILE REPLACEMENT
-// SHOWROOM_GLOBE_SUBLEVEL_RENDER_SMOOTHING_TNT_v1
+// SHOWROOM_GLOBE_ROTATION_INVARIANT_PLANET_MATERIAL_TNT_v1
+// Contract renewal: no privileged longitude, no false prime meridian, no hemisphere partition.
 // Role: public Globe Showcase selector only.
-// Visual law: smooth inspectable sub-level globe with dry geological carvings.
-// Repair: removes visible polygon patch/grid fabric by rendering the surface as a continuous raster field.
-// Still forbidden here: water, lakes, blue oceans, beaches, coastlines, landmass maps, mountain system, child imports, private engines.
+// Visual law: continuous dry cinematic planet body.
+// Forbidden here: water fill, blue oceans, coastlines, school-globe axis, map fabric, blocks, child imports, private engines, mountain system.
 
-const MODEL_NAME = "showroom-globe-sublevel-render-smoothing-v1";
+const MODEL_NAME = "showroom-globe-rotation-invariant-planet-material-v1";
 
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
 const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
-const DPR = Math.min(window.devicePixelRatio || 1, MOBILE ? 1.25 : 1.65);
-const FRAME_MS = MOBILE ? 82 : 64;
+const DPR = Math.min(window.devicePixelRatio || 1, MOBILE ? 1.35 : 1.75);
+const FRAME_MS = MOBILE ? 118 : 88;
 
-const DEFAULT_YAW = -0.66;
-const DEFAULT_PITCH = -0.18;
+const DEFAULT_YAW = -0.74;
+const DEFAULT_PITCH = -0.2;
 const MIN_PITCH = -1.04;
 const MAX_PITCH = 0.74;
 
 const LAT_BANDS = 16;
 const LON_SECTORS = 16;
 const CELL_COUNT = LAT_BANDS * LON_SECTORS;
-
 const CHILD_HEX_ROWS = 16;
 const CHILD_HEX_COLS = 16;
 const CHILD_HEX_COUNT = CHILD_HEX_ROWS * CHILD_HEX_COLS;
 const TOTAL_CHILD_FIELDS = CELL_COUNT * CHILD_HEX_COUNT;
 
-const RASTER_LIMIT = MOBILE ? 300 : 430;
+const RASTER_LIMIT = MOBILE ? 340 : 520;
 
 const SUBLEVEL_MODEL = Object.freeze({
   parentCells: CELL_COUNT,
   childFieldsPerParent: CHILD_HEX_COUNT,
   totalChildFields: TOTAL_CHILD_FIELDS,
-  publicMode: "smooth dry sub-level carved globe",
+  publicMode: "rotation-invariant cinematic dry planet material",
   privateEnginesAsleep: true,
   mapExpression: false,
   waterExpression: false,
   landmassExpression: false,
   childTerrainImport: false,
   mountainSystem: false,
-  carvingExpression: true,
+  planetShader: true,
+  continuousSurface: true,
+  materialRelief: true,
+  pseudoNormalLighting: true,
+  privilegedLongitude: false,
+  falsePrimeMeridian: false,
+  hemispherePartition: false,
   polygonPatchSurface: false,
-  rasterSurface: true,
   privateModelPaths: Object.freeze({
     earth: "/showroom/globe/earth/",
     hEarth: "/showroom/globe/h-earth/",
@@ -57,15 +61,17 @@ const WORLDS = Object.freeze({
     subtitle: "Reference Body",
     route: "/showroom/globe/earth/",
     seed: 310,
-    base: [58, 82, 100],
-    low: [18, 30, 45],
-    mid: [88, 106, 114],
-    high: [154, 146, 126],
-    ridge: [214, 208, 184],
-    exposed: [205, 176, 128],
-    fault: [176, 224, 238],
-    cavern: [10, 14, 22],
-    glow: "rgba(142,190,255,0.22)"
+    stoneDeep: [24, 25, 27],
+    stoneLow: [68, 61, 52],
+    stoneMid: [125, 109, 82],
+    stoneHigh: [190, 164, 114],
+    sediment: [168, 143, 100],
+    exposed: [226, 188, 122],
+    ridge: [238, 218, 174],
+    shadow: [13, 15, 18],
+    scar: [210, 214, 196],
+    atmosphere: [145, 195, 255],
+    glow: "rgba(145,195,255,0.24)"
   },
   hEarth: {
     key: "hEarth",
@@ -73,15 +79,17 @@ const WORLDS = Object.freeze({
     subtitle: "Hybrid Earth",
     route: "/showroom/globe/h-earth/",
     seed: 710,
-    base: [58, 88, 92],
-    low: [16, 34, 44],
-    mid: [84, 118, 106],
-    high: [154, 150, 118],
-    ridge: [224, 214, 176],
-    exposed: [208, 178, 120],
-    fault: [158, 242, 196],
-    cavern: [9, 18, 22],
-    glow: "rgba(143,240,195,0.22)"
+    stoneDeep: [18, 25, 25],
+    stoneLow: [56, 68, 56],
+    stoneMid: [112, 118, 86],
+    stoneHigh: [186, 160, 103],
+    sediment: [150, 138, 94],
+    exposed: [220, 178, 106],
+    ridge: [236, 219, 162],
+    shadow: [10, 15, 17],
+    scar: [164, 234, 190],
+    atmosphere: [150, 215, 232],
+    glow: "rgba(145,215,232,0.24)"
   },
   audralia: {
     key: "audralia",
@@ -89,15 +97,17 @@ const WORLDS = Object.freeze({
     subtitle: "Constructed World",
     route: "/showroom/globe/audralia/",
     seed: 910,
-    base: [78, 72, 106],
-    low: [28, 26, 58],
-    mid: [110, 98, 126],
-    high: [172, 148, 108],
-    ridge: [228, 206, 160],
-    exposed: [218, 170, 120],
-    fault: [198, 172, 255],
-    cavern: [14, 12, 30],
-    glow: "rgba(190,170,255,0.22)"
+    stoneDeep: [28, 23, 42],
+    stoneLow: [72, 58, 72],
+    stoneMid: [135, 105, 88],
+    stoneHigh: [194, 148, 94],
+    sediment: [164, 119, 88],
+    exposed: [230, 164, 108],
+    ridge: [238, 206, 156],
+    shadow: [15, 12, 26],
+    scar: [198, 172, 255],
+    atmosphere: [194, 178, 255],
+    glow: "rgba(194,178,255,0.24)"
   }
 });
 
@@ -159,34 +169,55 @@ function fract(value) {
   return value - Math.floor(value);
 }
 
-function hash(a, b = 0, c = 0) {
-  return fract(Math.sin(a * 127.1 + b * 311.7 + c * 74.7) * 43758.5453123);
+function hash1(a, b = 0, c = 0, d = 0) {
+  return fract(Math.sin(a * 127.1 + b * 311.7 + c * 74.7 + d * 19.19) * 43758.5453123);
 }
 
-function valueNoise2D(x, y, seed = 0) {
+function fade(t) {
+  return t * t * t * (t * (t * 6 - 15) + 10);
+}
+
+function valueNoise3D(x, y, z, seed = 0) {
   const xi = Math.floor(x);
   const yi = Math.floor(y);
+  const zi = Math.floor(z);
+
   const xf = x - xi;
   const yf = y - yi;
-  const sx = xf * xf * (3 - 2 * xf);
-  const sy = yf * yf * (3 - 2 * yf);
+  const zf = z - zi;
 
-  const n00 = hash(xi, yi, seed);
-  const n10 = hash(xi + 1, yi, seed);
-  const n01 = hash(xi, yi + 1, seed);
-  const n11 = hash(xi + 1, yi + 1, seed);
+  const u = fade(xf);
+  const v = fade(yf);
+  const w = fade(zf);
 
-  return lerp(lerp(n00, n10, sx), lerp(n01, n11, sx), sy) * 2 - 1;
+  const n000 = hash1(xi, yi, zi, seed);
+  const n100 = hash1(xi + 1, yi, zi, seed);
+  const n010 = hash1(xi, yi + 1, zi, seed);
+  const n110 = hash1(xi + 1, yi + 1, zi, seed);
+  const n001 = hash1(xi, yi, zi + 1, seed);
+  const n101 = hash1(xi + 1, yi, zi + 1, seed);
+  const n011 = hash1(xi, yi + 1, zi + 1, seed);
+  const n111 = hash1(xi + 1, yi + 1, zi + 1, seed);
+
+  const x00 = lerp(n000, n100, u);
+  const x10 = lerp(n010, n110, u);
+  const x01 = lerp(n001, n101, u);
+  const x11 = lerp(n011, n111, u);
+
+  const y0 = lerp(x00, x10, v);
+  const y1 = lerp(x01, x11, v);
+
+  return lerp(y0, y1, w) * 2 - 1;
 }
 
-function fbm2D(x, y, seed = 0, octaves = 4) {
+function fbm3D(x, y, z, seed = 0, octaves = 5) {
   let value = 0;
   let amplitude = 0.52;
   let frequency = 1;
   let total = 0;
 
   for (let octave = 0; octave < octaves; octave += 1) {
-    value += valueNoise2D(x * frequency, y * frequency, seed + octave * 23) * amplitude;
+    value += valueNoise3D(x * frequency, y * frequency, z * frequency, seed + octave * 37) * amplitude;
     total += amplitude;
     amplitude *= 0.5;
     frequency *= 2;
@@ -195,15 +226,8 @@ function fbm2D(x, y, seed = 0, octaves = 4) {
   return value / total;
 }
 
-function ridge2D(x, y, seed = 0) {
-  return 1 - Math.abs(fbm2D(x, y, seed, 4));
-}
-
-function warp2D(x, y, seed = 0, amountX = 0.25, amountY = 0.18) {
-  return {
-    x: x + fbm2D(x * 0.7 + 13.1, y * 0.7 - 9.4, seed + 1, 3) * amountX,
-    y: y + fbm2D(x * 0.7 - 6.2, y * 0.7 + 11.7, seed + 2, 3) * amountY
-  };
+function ridge3D(x, y, z, seed = 0, octaves = 4) {
+  return 1 - Math.abs(fbm3D(x, y, z, seed, octaves));
 }
 
 function normalize(v) {
@@ -213,6 +237,14 @@ function normalize(v) {
 
 function dot(a, b) {
   return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
+function cross(a, b) {
+  return {
+    x: a.y * b.z - a.z * b.y,
+    y: a.z * b.x - a.x * b.z,
+    z: a.x * b.y - a.y * b.x
+  };
 }
 
 function rotateY(p, angle) {
@@ -241,68 +273,75 @@ function inverseSpherePointFromView(viewPoint, yaw, pitch) {
   return rotateY(rotateX(viewPoint, -pitch), -yaw);
 }
 
-function makePoint(lat, lon) {
-  const cosLat = Math.cos(lat);
-  return {
-    x: cosLat * Math.cos(lon),
-    y: Math.sin(lat),
-    z: cosLat * Math.sin(lon)
-  };
-}
-
-function project(p, view) {
-  return {
-    x: view.cx + p.x * view.scale,
-    y: view.cy - p.y * view.scale,
-    z: p.z
-  };
-}
-
-function wrapLonDelta(lon, center) {
-  return Math.atan2(Math.sin(lon - center), Math.cos(lon - center));
-}
-
-function ribbonField(lat, lon, centerLat, centerLon, length, width, angle, phase = 0) {
-  const x = wrapLonDelta(lon, centerLon);
-  const y = lat - centerLat;
-
-  const c = Math.cos(angle);
-  const s = Math.sin(angle);
-
-  const xr = x * c - y * s;
-  const yr = x * s + y * c;
-
-  const curved =
-    yr +
-    Math.sin(xr * 2.8 + phase) * 0.075 +
-    Math.sin(xr * 5.6 - phase) * 0.028;
-
-  const along = Math.abs(xr) / length;
-  const across = Math.abs(curved) / width;
-
-  return 1 - Math.max(along * 0.72, across);
-}
-
-function basinField(lat, lon, centerLat, centerLon, latWidth, lonWidth) {
-  const dLat = (lat - centerLat) / latWidth;
-  const dLon = wrapLonDelta(lon, centerLon) / lonWidth;
-  return Math.exp(-(dLat * dLat + dLon * dLon));
-}
-
 function mixColor(a, b, t) {
+  const k = clamp(t, 0, 1);
   return [
-    Math.round(lerp(a[0], b[0], t)),
-    Math.round(lerp(a[1], b[1], t)),
-    Math.round(lerp(a[2], b[2], t))
+    Math.round(lerp(a[0], b[0], k)),
+    Math.round(lerp(a[1], b[1], k)),
+    Math.round(lerp(a[2], b[2], k))
   ];
-}
-
-function colorString(color) {
-  return `rgb(${color[0]},${color[1]},${color[2]})`;
 }
 
 function colorWithAlpha(color, alpha) {
   return `rgba(${color[0]},${color[1]},${color[2]},${alpha})`;
+}
+
+function seededVector(seed, slot) {
+  return normalize({
+    x: Math.sin(seed * 0.017 + slot * 1.931),
+    y: Math.sin(seed * 0.023 + slot * 2.713),
+    z: Math.cos(seed * 0.019 + slot * 3.117)
+  });
+}
+
+function basisFromNormal(normal) {
+  const n = normalize(normal);
+  const helper = Math.abs(n.y) > 0.86 ? { x: 1, y: 0, z: 0 } : { x: 0, y: 1, z: 0 };
+  const a = normalize(cross(helper, n));
+  const b = normalize(cross(n, a));
+  return { n, a, b };
+}
+
+function sphericalCap(p, center, radius, softness) {
+  const d = dot(p, normalize(center));
+  const inner = Math.cos(radius);
+  const outer = Math.cos(radius + softness);
+  return smoothstep(outer, inner, d);
+}
+
+function objectBand(p, planeNormal, gateCenter, radius, width, phase) {
+  const basis = basisFromNormal(planeNormal);
+  const u = dot(p, basis.a);
+  const v = dot(p, basis.b);
+  const w = dot(p, basis.n);
+
+  const bend =
+    Math.sin(u * 3.1 + phase) * 0.045 +
+    Math.sin(v * 4.4 - phase) * 0.024 +
+    Math.sin((u - v) * 6.0 + phase * 0.7) * 0.010;
+
+  const across = Math.abs(w + bend);
+  const line = 1 - smoothstep(width, width * 2.35, across);
+  const gate = sphericalCap(p, gateCenter, radius, 0.28);
+
+  return clamp(line * gate, 0, 1);
+}
+
+function objectScar(p, planeNormal, gateCenter, radius, width, phase) {
+  const basis = basisFromNormal(planeNormal);
+  const u = dot(p, basis.a);
+  const v = dot(p, basis.b);
+  const w = dot(p, basis.n);
+
+  const broken =
+    Math.sin(u * 7.0 + phase) * 0.015 +
+    Math.sin(v * 8.2 - phase) * 0.012;
+
+  const across = Math.abs(w + broken);
+  const line = 1 - smoothstep(width, width * 2.15, across);
+  const gate = sphericalCap(p, gateCenter, radius, 0.16);
+
+  return clamp(line * gate, 0, 1);
 }
 
 function sizeCanvas() {
@@ -319,267 +358,336 @@ function sizeCanvas() {
   state.height = state.canvas.height;
   state.ctx = state.canvas.getContext("2d", { alpha: false, desynchronized: true });
 
-  createStars(MOBILE ? 56 : 118);
+  createStars(MOBILE ? 56 : 126);
 }
 
 function createStars(count) {
   state.stars = Array.from({ length: count }, (_, index) => ({
-    x: hash(index, 1),
-    y: hash(index, 2),
-    r: 0.45 + hash(index, 3) * 1.85,
-    a: 0.10 + hash(index, 4) * 0.34,
-    p: hash(index, 5) * Math.PI * 2
+    x: hash1(index, 1),
+    y: hash1(index, 2),
+    r: 0.45 + hash1(index, 3) * 1.85,
+    a: 0.10 + hash1(index, 4) * 0.34,
+    p: hash1(index, 5) * Math.PI * 2
   }));
 }
 
-function sampleDryOceanBasins(lat, lon, world) {
-  const seed = world.seed + 200;
-
-  const basinA = basinField(lat, lon, 0.16, -2.06, 0.54, 0.48);
-  const basinB = basinField(lat, lon, -0.36, 1.74, 0.46, 0.52);
-  const basinC = basinField(lat, lon, 0.72, 0.62, 0.30, 0.66);
-  const basinD = basinField(lat, lon, -0.74, -1.05, 0.30, 0.62);
-  const basinE = basinField(lat, lon, -0.10, 0.14, 0.36, 0.40);
-
-  const warpedFloor =
-    fbm2D(lon * 0.88 + 1.6, lat * 0.92 - 3.4, seed + 1, 4) * 0.12 +
-    fbm2D(lon * 1.80 - 4.4, lat * 1.52 + 2.3, seed + 2, 3) * 0.05;
-
-  return clamp(Math.max(basinA, basinB, basinC, basinD, basinE) * 0.86 + warpedFloor, 0, 1);
-}
-
-function sampleDryRiverbeds(lat, lon, world) {
-  const seed = world.seed + 300;
-
-  const riverA = ribbonField(lat, lon, 0.34, -1.32, 0.96, 0.030, -0.48, 0.2);
-  const riverB = ribbonField(lat, lon, -0.18, 0.78, 1.05, 0.032, 0.36, 1.7);
-  const riverC = ribbonField(lat, lon, 0.54, 0.22, 0.82, 0.028, -0.12, -1.1);
-  const riverD = ribbonField(lat, lon, -0.52, -0.58, 0.92, 0.030, 0.26, 2.3);
-  const riverE = ribbonField(lat, lon, 0.08, 1.72, 0.72, 0.027, -0.58, -0.4);
-
-  const breakup = fbm2D(lon * 4.8 + 2.0, lat * 4.3 - 6.0, seed + 1, 3);
-  const active = breakup > -0.34 ? 1 : 0.32;
-
-  return clamp(Math.max(riverA, riverB, riverC, riverD, riverE, 0) * active, 0, 1);
-}
-
-function sampleCanyonCuts(lat, lon, world) {
-  const seed = world.seed + 400;
-
-  const canyonA = ribbonField(lat, lon, 0.04, -0.12, 1.64, 0.046, 0.10, 0.9);
-  const canyonB = ribbonField(lat, lon, 0.40, -1.88, 0.86, 0.042, 0.44, 2.0);
-  const canyonC = ribbonField(lat, lon, -0.38, 1.30, 0.96, 0.044, -0.38, -0.8);
-
-  const serration = ridge2D(lon * 5.2 - 3.0, lat * 4.9 + 7.2, seed + 1);
-  return clamp(Math.max(canyonA, canyonB, canyonC, 0) * (0.72 + serration * 0.28), 0, 1);
-}
-
-function sampleTrenches(lat, lon) {
-  const trenchA = ribbonField(lat, lon, -0.02, 2.42, 1.34, 0.040, -0.14, 1.2);
-  const trenchB = ribbonField(lat, lon, 0.08, -2.54, 1.38, 0.042, 0.16, -1.4);
-  const trenchC = ribbonField(lat, lon, -0.68, 0.34, 0.98, 0.040, 0.02, 2.6);
-
-  return clamp(Math.max(trenchA, trenchB, trenchC, 0), 0, 1);
-}
-
-function sampleCliffPressure(lat, lon, world) {
-  const seed = world.seed + 500;
-
-  const escarpA = ribbonField(lat, lon, 0.18, -1.08, 1.10, 0.055, -0.56, 0.6);
-  const escarpB = ribbonField(lat, lon, -0.30, 0.98, 1.18, 0.055, 0.48, 1.8);
-  const escarpC = ribbonField(lat, lon, 0.62, 0.08, 0.86, 0.050, -0.10, -1.0);
-  const escarpD = ribbonField(lat, lon, -0.64, -0.76, 0.90, 0.052, 0.32, 2.4);
-
-  const brokenFace = ridge2D(lon * 3.2 + 4.0, lat * 3.0 - 2.0, seed + 1);
-  return clamp(Math.max(escarpA, escarpB, escarpC, escarpD, 0) * (0.56 + brokenFace * 0.44), 0, 1);
-}
-
-function sampleCavernPressure(lat, lon, world) {
-  const seed = world.seed + 600;
-
-  const sinkA = basinField(lat, lon, 0.16, -1.46, 0.08, 0.12);
-  const sinkB = basinField(lat, lon, -0.18, 0.70, 0.10, 0.14);
-  const sinkC = basinField(lat, lon, 0.48, 0.34, 0.08, 0.14);
-  const sinkD = basinField(lat, lon, -0.44, -0.32, 0.09, 0.16);
-  const sinkE = basinField(lat, lon, 0.02, 1.58, 0.08, 0.13);
-
-  const porous = fbm2D(lon * 6.4 + 8.0, lat * 5.9 - 3.0, seed + 1, 3);
-  const gate = porous > 0.02 ? 1 : 0.42;
-
-  return clamp(Math.max(sinkA, sinkB, sinkC, sinkD, sinkE) * gate, 0, 1);
-}
-
-function sampleCrustalScars(lat, lon, world) {
-  const seed = world.seed + 700;
-
-  const scarA = ribbonField(lat, lon, 0.24, -0.74, 1.18, 0.026, 0.72, 0.3);
-  const scarB = ribbonField(lat, lon, -0.26, 1.34, 1.08, 0.026, -0.64, -1.7);
-  const scarC = ribbonField(lat, lon, 0.70, -0.12, 0.82, 0.024, 0.12, 2.8);
-  const scarD = ribbonField(lat, lon, -0.66, 0.48, 0.84, 0.024, -0.18, 1.4);
-
-  const fractured = fbm2D(lon * 7.0 - 2.0, lat * 6.0 + 4.0, seed + 1, 3);
-  return clamp(Math.max(scarA, scarB, scarC, scarD, 0) * (fractured > -0.25 ? 1 : 0.34), 0, 1);
-}
-
-function sampleShelfDepressions(lat, lon) {
-  const shelfA = ribbonField(lat, lon, 0.28, -2.22, 1.44, 0.090, 0.16, 1.0);
-  const shelfB = ribbonField(lat, lon, -0.36, 1.96, 1.34, 0.092, -0.18, -1.0);
-  const shelfC = ribbonField(lat, lon, 0.58, 0.42, 1.00, 0.078, -0.36, 2.0);
-  const shelfD = ribbonField(lat, lon, -0.62, -0.82, 1.04, 0.082, 0.30, -2.1);
-
-  return clamp(Math.max(shelfA, shelfB, shelfC, shelfD, 0), 0, 1);
-}
-
-function sampleSublevel(lat, lon, world) {
+function sampleObjectBasins(p, world) {
   const seed = world.seed;
 
-  const global = warp2D(lon * 0.62, lat * 0.68, seed + 1, 0.40, 0.28);
-  const local = warp2D(lon * 1.34, lat * 1.18, seed + 2, 0.16, 0.12);
+  let basin = 0;
+  for (let i = 0; i < 6; i += 1) {
+    const center = seededVector(seed + 30, i);
+    const radius = 0.48 + hash1(seed, i, 11) * 0.30;
+    const softness = 0.18 + hash1(seed, i, 12) * 0.15;
+    const weight = 0.52 + hash1(seed, i, 13) * 0.42;
+    basin = Math.max(basin, sphericalCap(p, center, radius, softness) * weight);
+  }
 
-  const shellPressure =
-    fbm2D(global.x * 0.56 + 3.1, global.y * 0.64 - 4.4, seed + 10, 4) * 0.34 +
-    fbm2D(global.x * 1.15 - 7.6, global.y * 1.06 + 2.8, seed + 11, 4) * 0.17 +
-    fbm2D(local.x * 2.10 + 1.7, local.y * 1.86 - 5.9, seed + 12, 3) * 0.075;
+  const floorTexture =
+    fbm3D(p.x * 2.2 + 1.5, p.y * 2.0 - 2.4, p.z * 2.1 + 0.8, seed + 101, 4) * 0.10 +
+    ridge3D(p.x * 3.7 - 2.1, p.y * 3.4 + 1.4, p.z * 3.2 + 5.2, seed + 102, 3) * 0.06;
 
-  const longRidgeA = ribbonField(global.y, global.x, 0.16, -1.22, 1.72, 0.105, -0.38, 0.4);
-  const longRidgeB = ribbonField(global.y, global.x, -0.18, 0.86, 1.50, 0.095, 0.34, 2.1);
-  const longRidgeC = ribbonField(global.y, global.x, 0.52, 0.18, 1.20, 0.090, -0.12, -1.2);
-  const longRidgeD = ribbonField(global.y, global.x, -0.58, -0.52, 1.28, 0.095, 0.24, 1.7);
+  return clamp(basin + floorTexture, 0, 1);
+}
 
-  const ridgeSystem =
-    Math.max(longRidgeA, longRidgeB, longRidgeC, longRidgeD, 0) * 0.28 +
-    ridge2D(local.x * 1.55 + 4.2, local.y * 1.50 - 7.2, seed + 20) * 0.16 +
-    ridge2D(local.x * 2.90 - 8.1, local.y * 2.70 + 3.8, seed + 21) * 0.075;
+function sampleObjectRidges(p, world) {
+  const seed = world.seed;
 
-  const dryOceanFloor = sampleDryOceanBasins(global.y, global.x, world);
-  const dryRiverbed = sampleDryRiverbeds(global.y, global.x, world);
-  const canyon = sampleCanyonCuts(global.y, global.x, world);
-  const trench = sampleTrenches(global.y, global.x);
-  const cliff = sampleCliffPressure(global.y, global.x, world);
-  const cavern = sampleCavernPressure(global.y, global.x, world);
-  const scar = sampleCrustalScars(global.y, global.x, world);
-  const shelf = sampleShelfDepressions(global.y, global.x);
+  let ridge = 0;
+  for (let i = 0; i < 5; i += 1) {
+    const normal = seededVector(seed + 110, i);
+    const gate = seededVector(seed + 130, i);
+    const radius = 0.88 + hash1(seed, i, 21) * 0.48;
+    const width = 0.070 + hash1(seed, i, 22) * 0.035;
+    const phase = hash1(seed, i, 23) * Math.PI * 2;
+    ridge = Math.max(ridge, objectBand(p, normal, gate, radius, width, phase));
+  }
 
-  const polarCompression = smoothstep(1.02, 1.50, Math.abs(lat)) * 0.15;
-  const equatorialPlateSpread = (1 - smoothstep(0.18, 1.10, Math.abs(lat))) * 0.065;
+  const folded =
+    ridge3D(p.x * 1.7 + 4.2, p.y * 1.55 - 7.2, p.z * 1.62 + 2.4, seed + 121, 4) * 0.23 +
+    ridge3D(p.x * 3.0 - 8.1, p.y * 2.8 + 3.8, p.z * 2.9 - 1.7, seed + 122, 4) * 0.12;
 
-  const carvingCut =
-    dryOceanFloor * 0.24 +
-    dryRiverbed * 0.13 +
-    canyon * 0.18 +
-    trench * 0.20 +
-    cavern * 0.18 +
-    shelf * 0.12;
+  return clamp(ridge * 0.48 + folded, 0, 1);
+}
 
-  const uplift =
-    ridgeSystem * 0.30 +
-    cliff * 0.08 +
-    scar * 0.035 +
-    polarCompression;
+function sampleObjectCanyons(p, world) {
+  const seed = world.seed;
 
-  const elevation =
-    shellPressure +
-    uplift -
-    carvingCut -
-    equatorialPlateSpread;
+  let canyon = 0;
+  for (let i = 0; i < 6; i += 1) {
+    const normal = seededVector(seed + 210, i);
+    const gate = seededVector(seed + 230, i);
+    const radius = 0.74 + hash1(seed, i, 31) * 0.55;
+    const width = 0.025 + hash1(seed, i, 32) * 0.016;
+    const phase = hash1(seed, i, 33) * Math.PI * 2;
+    canyon = Math.max(canyon, objectBand(p, normal, gate, radius, width, phase));
+  }
 
-  const relief = clamp((elevation + 0.58) / 1.12, 0, 1);
-  const ridge = clamp(ridgeSystem * 1.48 + cliff * 0.44 + scar * 0.12, 0, 1);
-  const basin = clamp(dryOceanFloor * 0.92 + shelf * 0.36 + smoothstep(-0.38, -0.06, -elevation) * 0.26, 0, 1);
-  const fault = clamp(trench * 0.70 + scar * 0.48 + canyon * 0.24, 0, 1);
+  const serration =
+    ridge3D(p.x * 6.4 - 1.4, p.y * 5.8 + 2.8, p.z * 5.9 + 3.7, seed + 201, 4) * 0.18;
 
-  const fine =
-    fbm2D(local.x * 4.20 + 9.0, local.y * 3.80 - 6.0, seed + 31, 3) * 0.42 +
-    ridge2D(local.x * 5.40 - 2.0, local.y * 5.00 + 8.0, seed + 32) * 0.34 +
-    scar * 0.24;
+  return clamp(canyon * 0.90 + serration * 0.10, 0, 1);
+}
+
+function sampleObjectChannels(p, world) {
+  const seed = world.seed;
+
+  let channel = 0;
+  for (let i = 0; i < 7; i += 1) {
+    const normal = seededVector(seed + 310, i);
+    const gate = seededVector(seed + 330, i);
+    const radius = 0.62 + hash1(seed, i, 41) * 0.52;
+    const width = 0.014 + hash1(seed, i, 42) * 0.012;
+    const phase = hash1(seed, i, 43) * Math.PI * 2;
+    channel = Math.max(channel, objectBand(p, normal, gate, radius, width, phase));
+  }
+
+  const braided =
+    ridge3D(p.x * 7.5 + 0.7, p.y * 6.7 - 2.1, p.z * 7.1 + 1.9, seed + 301, 3) * 0.12;
+
+  return clamp(channel + braided * 0.14, 0, 1);
+}
+
+function sampleObjectCliffs(p, world) {
+  const seed = world.seed;
+
+  let cliff = 0;
+  for (let i = 0; i < 5; i += 1) {
+    const normal = seededVector(seed + 410, i);
+    const gate = seededVector(seed + 430, i);
+    const radius = 0.78 + hash1(seed, i, 51) * 0.50;
+    const width = 0.036 + hash1(seed, i, 52) * 0.020;
+    const phase = hash1(seed, i, 53) * Math.PI * 2;
+    cliff = Math.max(cliff, objectBand(p, normal, gate, radius, width, phase));
+  }
+
+  const broken =
+    ridge3D(p.x * 4.0 + 4.0, p.y * 3.5 - 2.0, p.z * 3.7 + 1.7, seed + 401, 4);
+
+  return clamp(cliff * (0.54 + broken * 0.46), 0, 1);
+}
+
+function sampleObjectCaverns(p, world) {
+  const seed = world.seed;
+
+  let cavern = 0;
+  for (let i = 0; i < 7; i += 1) {
+    const center = seededVector(seed + 510, i);
+    const radius = 0.075 + hash1(seed, i, 61) * 0.055;
+    const softness = 0.055 + hash1(seed, i, 62) * 0.040;
+    cavern = Math.max(cavern, sphericalCap(p, center, radius, softness));
+  }
+
+  const porous = fbm3D(p.x * 6.4 + 8.0, p.y * 5.9 - 3.0, p.z * 6.1 + 1.2, seed + 501, 4);
+  return clamp(cavern * (porous > 0.02 ? 1 : 0.40), 0, 1);
+}
+
+function sampleObjectScars(p, world) {
+  const seed = world.seed;
+
+  let scar = 0;
+  for (let i = 0; i < 7; i += 1) {
+    const normal = seededVector(seed + 610, i);
+    const gate = seededVector(seed + 630, i);
+    const radius = 0.56 + hash1(seed, i, 71) * 0.48;
+    const width = 0.009 + hash1(seed, i, 72) * 0.006;
+    const phase = hash1(seed, i, 73) * Math.PI * 2;
+    scar = Math.max(scar, objectScar(p, normal, gate, radius, width, phase));
+  }
+
+  const fractureGate =
+    fbm3D(p.x * 7.6 - 2.0, p.y * 6.8 + 4.0, p.z * 7.1 + 0.4, seed + 601, 4);
+
+  return clamp(scar * (fractureGate > -0.30 ? 1 : 0.30), 0, 1);
+}
+
+function samplePlanetMaterialFromPoint(point, world) {
+  const p = normalize(point);
+  const seed = world.seed;
+
+  const warp = normalize({
+    x: p.x + fbm3D(p.x * 1.1, p.y * 1.1, p.z * 1.1, seed + 11, 3) * 0.10,
+    y: p.y + fbm3D(p.x * 1.1 + 4.0, p.y * 1.1 - 2.0, p.z * 1.1, seed + 12, 3) * 0.10,
+    z: p.z + fbm3D(p.x * 1.1 - 1.0, p.y * 1.1 + 5.0, p.z * 1.1 + 3.0, seed + 13, 3) * 0.10
+  });
+
+  const macro = fbm3D(warp.x * 1.22, warp.y * 1.22, warp.z * 1.22, seed + 20, 5);
+  const plate = ridge3D(warp.x * 1.85, warp.y * 1.85, warp.z * 1.85, seed + 21, 5);
+  const folded = ridge3D(warp.x * 4.4, warp.y * 4.2, warp.z * 4.3, seed + 22, 4);
+  const fine = fbm3D(warp.x * 13.0, warp.y * 12.5, warp.z * 12.8, seed + 23, 4);
+
+  const basins = sampleObjectBasins(warp, world);
+  const ridges = sampleObjectRidges(warp, world);
+  const canyons = sampleObjectCanyons(warp, world);
+  const channels = sampleObjectChannels(warp, world);
+  const cliffs = sampleObjectCliffs(warp, world);
+  const caverns = sampleObjectCaverns(warp, world);
+  const scars = sampleObjectScars(warp, world);
+
+  const height =
+    macro * 0.30 +
+    plate * 0.22 +
+    folded * 0.12 +
+    ridges * 0.30 +
+    cliffs * 0.12 +
+    scars * 0.035 -
+    basins * 0.34 -
+    canyons * 0.34 -
+    channels * 0.18 -
+    caverns * 0.26 +
+    fine * 0.030;
 
   return {
-    elevation,
-    relief,
-    ridge,
-    basin,
-    fault,
-    trench,
-    canyon,
-    cliff,
-    cavern,
-    dryRiverbed,
-    dryOceanFloor,
-    shelf,
-    scar,
+    height,
+    relief: clamp((height + 0.64) / 1.26, 0, 1),
+    macro,
+    plate,
+    folded,
     fine: clamp((fine + 1) * 0.5, 0, 1),
-    polarCompression
+    basins,
+    ridges,
+    canyons,
+    channels,
+    cliffs,
+    caverns,
+    scars
   };
 }
 
-function colorForSublevel(sample, world, light, rim) {
-  let base = mixColor(world.low, world.base, 0.50 + sample.relief * 0.30);
+function samplePlanetHeightFromPoint(p, world) {
+  return samplePlanetMaterialFromPoint(p, world).height;
+}
 
-  if (sample.dryOceanFloor > 0.24) {
-    base = mixColor(base, world.low, clamp(sample.dryOceanFloor * 0.54, 0, 0.62));
+function tangentVectorsFromPoint(p) {
+  const up = Math.abs(p.y) > 0.92 ? { x: 1, y: 0, z: 0 } : { x: 0, y: 1, z: 0 };
+  const east = normalize(cross(up, p));
+  const north = normalize(cross(p, east));
+  return { east, north };
+}
+
+function offsetPointOnSphere(p, tangent, amount) {
+  return normalize({
+    x: p.x + tangent.x * amount,
+    y: p.y + tangent.y * amount,
+    z: p.z + tangent.z * amount
+  });
+}
+
+function samplePlanetNormalFromPoint(p, world) {
+  const eps = 0.010;
+  const tangents = tangentVectorsFromPoint(p);
+
+  const hE = samplePlanetHeightFromPoint(offsetPointOnSphere(p, tangents.east, eps), world);
+  const hW = samplePlanetHeightFromPoint(offsetPointOnSphere(p, tangents.east, -eps), world);
+  const hN = samplePlanetHeightFromPoint(offsetPointOnSphere(p, tangents.north, eps), world);
+  const hS = samplePlanetHeightFromPoint(offsetPointOnSphere(p, tangents.north, -eps), world);
+
+  const dE = (hE - hW) / (eps * 2);
+  const dN = (hN - hS) / (eps * 2);
+  const strength = 0.44;
+
+  return normalize({
+    x: p.x - tangents.east.x * dE * strength - tangents.north.x * dN * strength,
+    y: p.y - tangents.east.y * dE * strength - tangents.north.y * dN * strength,
+    z: p.z - tangents.east.z * dE * strength - tangents.north.z * dN * strength
+  });
+}
+
+function materialBaseColor(material, world) {
+  let base = mixColor(world.stoneLow, world.stoneMid, 0.30 + material.relief * 0.48);
+
+  if (material.basins > 0.18) {
+    base = mixColor(base, world.stoneDeep, material.basins * 0.50);
+    base = mixColor(base, world.sediment, clamp((material.basins - 0.36) * 0.26, 0, 0.16));
   }
 
-  if (sample.shelf > 0.26) {
-    base = mixColor(base, world.mid, clamp(sample.shelf * 0.16, 0, 0.18));
-    base = mixColor(base, world.low, clamp(sample.shelf * 0.20, 0, 0.26));
+  if (material.caverns > 0.25) {
+    base = mixColor(base, world.shadow, material.caverns * 0.58);
   }
 
-  if (sample.basin > 0.24) {
-    base = mixColor(base, world.low, clamp(sample.basin * 0.44, 0, 0.54));
+  if (material.channels > 0.32) {
+    base = mixColor(base, world.shadow, material.channels * 0.28);
+    base = mixColor(base, world.exposed, clamp((material.channels - 0.40) * 0.20, 0, 0.12));
   }
 
-  if (sample.cavern > 0.36) {
-    base = mixColor(base, world.cavern, clamp((sample.cavern - 0.28) * 0.60, 0, 0.44));
+  if (material.canyons > 0.30) {
+    base = mixColor(base, world.shadow, material.canyons * 0.42);
+    base = mixColor(base, world.exposed, clamp((material.canyons - 0.35) * 0.34, 0, 0.20));
   }
 
-  if (sample.dryRiverbed > 0.34) {
-    base = mixColor(base, world.cavern, clamp(sample.dryRiverbed * 0.22, 0, 0.24));
-    base = mixColor(base, world.exposed, clamp((sample.dryRiverbed - 0.42) * 0.16, 0, 0.12));
+  if (material.cliffs > 0.24) {
+    base = mixColor(base, world.exposed, clamp(material.cliffs * 0.50, 0, 0.42));
   }
 
-  if (sample.canyon > 0.34 || sample.trench > 0.34) {
-    base = mixColor(base, world.cavern, clamp(Math.max(sample.canyon, sample.trench) * 0.28, 0, 0.34));
+  if (material.ridges > 0.50 || material.relief > 0.72) {
+    base = mixColor(base, world.stoneHigh, clamp(Math.max(material.ridges - 0.46, material.relief - 0.68) * 0.88, 0, 0.56));
   }
 
-  if (sample.cliff > 0.34) {
-    base = mixColor(base, world.exposed, clamp((sample.cliff - 0.26) * 0.48, 0, 0.28));
+  if (material.ridges > 0.72) {
+    base = mixColor(base, world.ridge, clamp((material.ridges - 0.68) * 0.78, 0, 0.34));
   }
 
-  if (sample.relief > 0.56) {
-    base = mixColor(base, world.mid, clamp((sample.relief - 0.56) * 0.88, 0, 0.48));
+  if (material.scars > 0.62) {
+    base = mixColor(base, world.scar, clamp((material.scars - 0.60) * 0.42, 0, 0.16));
   }
 
-  if (sample.relief > 0.74 || sample.ridge > 0.54) {
-    base = mixColor(base, world.high, clamp(Math.max(sample.relief - 0.72, sample.ridge - 0.48) * 0.68, 0, 0.42));
-  }
+  const grain = (material.fine - 0.5) * 14.0 + (material.folded - 0.5) * 6.0;
 
-  if (sample.ridge > 0.68) {
-    base = mixColor(base, world.ridge, clamp((sample.ridge - 0.68) * 0.62, 0, 0.26));
-  }
+  return [
+    clamp(base[0] + grain, 0, 255),
+    clamp(base[1] + grain * 0.80, 0, 255),
+    clamp(base[2] + grain * 0.54, 0, 255)
+  ];
+}
 
-  if (sample.fault > 0.62) {
-    base = mixColor(base, world.fault, clamp((sample.fault - 0.62) * 0.50, 0, 0.16));
-  }
+function shadePlanetPixel({ viewNormal, material, bumpViewNormal, world, lightView }) {
+  const sphereDiffuse = clamp(dot(viewNormal, lightView), 0, 1);
+  const terrainDiffuse = clamp(dot(bumpViewNormal, lightView), 0, 1);
+  const z = clamp(viewNormal.z, 0, 1);
 
-  const depthShadow =
-    sample.dryOceanFloor * 0.12 +
-    sample.trench * 0.12 +
-    sample.canyon * 0.08 +
-    sample.cavern * 0.16;
+  const rim = Math.pow(clamp(1 - z, 0, 1), 1.75);
+  const terminator = smoothstep(-0.06, 0.72, sphereDiffuse);
 
-  const highlight =
-    sample.cliff * 0.06 +
-    sample.ridge * 0.04 +
-    sample.scar * 0.03;
+  const occlusion =
+    material.basins * 0.18 +
+    material.canyons * 0.22 +
+    material.channels * 0.12 +
+    material.caverns * 0.26;
 
-  const texture = (sample.fine - 0.5) * 9.0;
-  const shade = clamp(light + rim * 0.14 + highlight - depthShadow, 0.12, 1.20);
+  const reliefFlash =
+    material.cliffs * 0.12 +
+    material.ridges * 0.08 +
+    material.scars * 0.025;
 
-  const r = Math.round(clamp((base[0] + texture) * shade, 0, 255));
-  const g = Math.round(clamp((base[1] + texture * 0.76) * shade, 0, 255));
-  const b = Math.round(clamp((base[2] + texture * 0.58) * shade, 0, 255));
+  const lowSunWarmth = smoothstep(0.18, 0.72, terrainDiffuse) * 0.08;
+  const base = materialBaseColor(material, world);
 
-  return [r, g, b];
+  const ambient = 0.12;
+  const direct = terrainDiffuse * 0.94;
+  const terminatorShade = lerp(0.18, 1.0, terminator);
+  const materialShade = clamp(ambient + direct + reliefFlash + lowSunWarmth - occlusion, 0.07, 1.25);
+  const shade = materialShade * terminatorShade;
+
+  const sunWash = clamp((terrainDiffuse - 0.72) * 0.38, 0, 0.20);
+  const rimLift = rim * 0.10;
+
+  const color = [
+    clamp(base[0] * shade + world.ridge[0] * sunWash + world.atmosphere[0] * rimLift, 0, 255),
+    clamp(base[1] * shade + world.ridge[1] * sunWash + world.atmosphere[1] * rimLift, 0, 255),
+    clamp(base[2] * shade + world.ridge[2] * sunWash + world.atmosphere[2] * rimLift, 0, 255)
+  ];
+
+  const nightside = 1 - terminator;
+  color[0] = clamp(color[0] - nightside * 12, 0, 255);
+  color[1] = clamp(color[1] - nightside * 16, 0, 255);
+  color[2] = clamp(color[2] - nightside * 18, 0, 255);
+
+  const leftSunBias = smoothstep(-0.95, 0.15, -viewNormal.x) * smoothstep(-0.50, 0.80, viewNormal.y);
+  color[0] = clamp(color[0] + leftSunBias * 10, 0, 255);
+  color[1] = clamp(color[1] + leftSunBias * 8, 0, 255);
+  color[2] = clamp(color[2] + leftSunBias * 3, 0, 255);
+
+  return color;
 }
 
 function drawBackground(ctx, width, height) {
@@ -594,8 +702,8 @@ function drawBackground(ctx, width, height) {
     Math.max(width, height) * 0.82
   );
 
-  bg.addColorStop(0, "#13264a");
-  bg.addColorStop(0.30, "#091832");
+  bg.addColorStop(0, "#122443");
+  bg.addColorStop(0.30, "#081732");
   bg.addColorStop(0.68, "#041021");
   bg.addColorStop(1, "#01040c");
 
@@ -608,7 +716,7 @@ function drawBackground(ctx, width, height) {
     0,
     width * 0.5,
     height * 0.49,
-    width * 0.39
+    width * 0.42
   );
 
   halo.addColorStop(0, world.glow);
@@ -617,7 +725,7 @@ function drawBackground(ctx, width, height) {
 
   ctx.fillStyle = halo;
   ctx.beginPath();
-  ctx.ellipse(width * 0.5, height * 0.50, width * 0.34, height * 0.31, 0, 0, Math.PI * 2);
+  ctx.ellipse(width * 0.5, height * 0.50, width * 0.36, height * 0.33, 0, 0, Math.PI * 2);
   ctx.fill();
 
   const vignette = ctx.createRadialGradient(
@@ -626,11 +734,11 @@ function drawBackground(ctx, width, height) {
     width * 0.20,
     width * 0.5,
     height * 0.5,
-    width * 0.74
+    width * 0.78
   );
 
   vignette.addColorStop(0, "rgba(0,0,0,0)");
-  vignette.addColorStop(1, "rgba(0,0,0,0.48)");
+  vignette.addColorStop(1, "rgba(0,0,0,0.50)");
 
   ctx.fillStyle = vignette;
   ctx.fillRect(0, 0, width, height);
@@ -676,51 +784,22 @@ function drawGlobeShadow(ctx, view) {
   ctx.globalCompositeOperation = "screen";
 
   const y = view.cy + view.scale * 1.05;
-  const glow = ctx.createRadialGradient(view.cx, y, 0, view.cx, y, view.scale * 0.66);
+  const glow = ctx.createRadialGradient(view.cx, y, 0, view.cx, y, view.scale * 0.72);
 
   glow.addColorStop(0, world.glow);
-  glow.addColorStop(0.38, "rgba(80,120,180,0.10)");
+  glow.addColorStop(0.38, "rgba(80,120,180,0.12)");
   glow.addColorStop(1, "rgba(0,0,0,0)");
 
   ctx.fillStyle = glow;
   ctx.beginPath();
-  ctx.ellipse(view.cx, y, view.scale * 0.58, view.scale * 0.13, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.restore();
-}
-
-function drawSphereBase(ctx, view) {
-  const world = WORLDS[state.worldKey];
-
-  ctx.save();
-
-  const base = ctx.createRadialGradient(
-    view.cx - view.scale * 0.22,
-    view.cy - view.scale * 0.24,
-    view.scale * 0.04,
-    view.cx,
-    view.cy,
-    view.scale * 1.08
-  );
-
-  const lightBase = mixColor(world.base, world.ridge, 0.12);
-  const darkBase = mixColor(world.low, [0, 0, 0], 0.18);
-
-  base.addColorStop(0, colorString(lightBase));
-  base.addColorStop(0.54, colorString(world.base));
-  base.addColorStop(1, colorString(darkBase));
-
-  ctx.fillStyle = base;
-  ctx.beginPath();
-  ctx.arc(view.cx, view.cy, view.scale, 0, Math.PI * 2);
+  ctx.ellipse(view.cx, y, view.scale * 0.64, view.scale * 0.15, 0, 0, Math.PI * 2);
   ctx.fill();
 
   ctx.restore();
 }
 
 function ensureSurfaceBuffer(view) {
-  const desired = Math.max(220, Math.min(RASTER_LIMIT, Math.round(view.scale * 1.58)));
+  const desired = Math.max(260, Math.min(RASTER_LIMIT, Math.round(view.scale * 2.05)));
 
   if (!state.surfaceCanvas) {
     state.surfaceCanvas = document.createElement("canvas");
@@ -738,7 +817,7 @@ function ensureSurfaceBuffer(view) {
   }
 }
 
-function drawSmoothSurface(ctx, view) {
+function drawRotationInvariantPlanetSurface(ctx, view) {
   const world = WORLDS[state.worldKey];
   ensureSurfaceBuffer(view);
 
@@ -746,7 +825,7 @@ function drawSmoothSurface(ctx, view) {
   const image = state.surfaceImage;
   const data = image.data;
 
-  const light = normalize({ x: -0.30, y: 0.56, z: 0.92 });
+  const lightView = normalize({ x: -0.58, y: 0.50, z: 0.76 });
 
   let ptr = 0;
 
@@ -769,30 +848,25 @@ function drawSmoothSurface(ctx, view) {
       const z = Math.sqrt(Math.max(0, 1 - r2));
       const viewNormal = normalize({ x: nx, y: ny, z });
       const worldPoint = inverseSpherePointFromView(viewNormal, view.yaw, view.pitch);
-      const lat = Math.asin(clamp(worldPoint.y, -1, 1));
-      const lon = Math.atan2(worldPoint.z, worldPoint.x);
 
-      const sample = sampleSublevel(lat, lon, world);
-      const diffuse = clamp(dot(viewNormal, light), 0, 1);
-      const rim = Math.pow(clamp(1 - z, 0, 1), 1.85);
+      const material = samplePlanetMaterialFromPoint(worldPoint, world);
+      const bumpWorldNormal = samplePlanetNormalFromPoint(worldPoint, world);
+      const bumpViewNormal = normalize(rotateX(rotateY(bumpWorldNormal, view.yaw), view.pitch));
 
-      const contourShade =
-        sample.cliff * 0.040 +
-        sample.ridge * 0.030 -
-        sample.canyon * 0.045 -
-        sample.trench * 0.050 -
-        sample.cavern * 0.060 -
-        sample.dryOceanFloor * 0.026;
+      const color = shadePlanetPixel({
+        viewNormal,
+        material,
+        bumpViewNormal,
+        world,
+        lightView
+      });
 
-      const lightValue = clamp(0.34 + diffuse * 0.64 + rim * 0.07 + contourShade, 0.11, 1.22);
-      const color = colorForSublevel(sample, world, lightValue, rim);
+      const edgeAlpha = 1 - smoothstep(0.972, 1.0, Math.sqrt(r2));
+      const alpha = Math.round(255 * clamp(edgeAlpha, 0, 1));
 
-      const edge = 1 - smoothstep(0.955, 1.0, Math.sqrt(r2));
-      const alpha = Math.round(255 * clamp(edge, 0, 1));
-
-      data[ptr] = color[0];
-      data[ptr + 1] = color[1];
-      data[ptr + 2] = color[2];
+      data[ptr] = Math.round(color[0]);
+      data[ptr + 1] = Math.round(color[1]);
+      data[ptr + 2] = Math.round(color[2]);
       data[ptr + 3] = alpha;
       ptr += 4;
     }
@@ -813,132 +887,54 @@ function drawSmoothSurface(ctx, view) {
   ctx.restore();
 }
 
-function makeProjectedPolyline(view, latFn, lonStart, lonEnd, steps = 92) {
-  const points = [];
-
-  for (let j = 0; j <= steps; j += 1) {
-    const u = j / steps;
-    const lon = lonStart + (lonEnd - lonStart) * u;
-    const lat = latFn(lon, u);
-    const p = makePoint(lat, lon);
-    const r = rotateX(rotateY(p, view.yaw), view.pitch);
-    if (r.z > 0.04) points.push(project(r, view));
-  }
-
-  return points;
-}
-
-function strokePolyline(ctx, points) {
-  if (points.length < 3) return;
-
-  ctx.beginPath();
-  ctx.moveTo(points[0].x, points[0].y);
-
-  for (let i = 1; i < points.length; i += 1) {
-    ctx.lineTo(points[i].x, points[i].y);
-  }
-
-  ctx.stroke();
-}
-
-function drawCarvingLines(ctx, view) {
-  const world = WORLDS[state.worldKey];
-
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(view.cx, view.cy, view.scale * 1.002, 0, Math.PI * 2);
-  ctx.clip();
-
-  ctx.globalCompositeOperation = "multiply";
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
-
-  const riverLines = [
-    { lat: 0.34, lonA: -2.18, lonB: -0.56, phase: 0.2 },
-    { lat: -0.18, lonA: 0.10, lonB: 1.70, phase: 1.7 },
-    { lat: 0.54, lonA: -0.66, lonB: 0.90, phase: -1.1 },
-    { lat: -0.52, lonA: -1.28, lonB: 0.08, phase: 2.3 }
-  ];
-
-  ctx.strokeStyle = "rgba(8,12,17,0.22)";
-  ctx.lineWidth = Math.max(0.60, DPR * 0.55);
-
-  riverLines.forEach((line, index) => {
-    const points = makeProjectedPolyline(
-      view,
-      (lon, u) => line.lat + Math.sin((u * 4.5) + line.phase) * 0.028 + Math.sin(lon * 2.2 + index) * 0.012,
-      line.lonA,
-      line.lonB,
-      72
-    );
-    strokePolyline(ctx, points);
-  });
-
-  ctx.globalCompositeOperation = "source-over";
-  ctx.strokeStyle = "rgba(235,205,154,0.070)";
-  ctx.lineWidth = Math.max(0.38, DPR * 0.36);
-
-  const cliffLines = [
-    { lat: 0.18, lonA: -1.82, lonB: -0.62, phase: 0.6 },
-    { lat: -0.30, lonA: 0.32, lonB: 1.68, phase: 1.8 },
-    { lat: 0.62, lonA: -0.50, lonB: 0.70, phase: -1.0 }
-  ];
-
-  cliffLines.forEach((line, index) => {
-    const points = makeProjectedPolyline(
-      view,
-      (lon, u) => line.lat + Math.sin(u * 5.2 + line.phase) * 0.020 + Math.sin(lon * 1.5 + index) * 0.010,
-      line.lonA,
-      line.lonB,
-      70
-    );
-    strokePolyline(ctx, points);
-  });
-
-  ctx.globalCompositeOperation = "screen";
-  ctx.strokeStyle = colorWithAlpha(world.fault, 0.040);
-  ctx.lineWidth = Math.max(0.36, DPR * 0.34);
-
-  const faultLines = [
-    { lat: 0.02, lonA: -0.88, lonB: 1.10, phase: 0.9 },
-    { lat: 0.40, lonA: -2.30, lonB: -1.18, phase: 2.0 },
-    { lat: -0.38, lonA: 0.64, lonB: 1.92, phase: -0.8 }
-  ];
-
-  faultLines.forEach((line, index) => {
-    const points = makeProjectedPolyline(
-      view,
-      (lon, u) => line.lat + Math.sin(u * 6.0 + line.phase) * 0.018 + Math.sin(lon * 2.9 + index) * 0.012,
-      line.lonA,
-      line.lonB,
-      76
-    );
-    strokePolyline(ctx, points);
-  });
-
-  ctx.restore();
-}
-
 function drawAtmosphere(ctx, view) {
   const world = WORLDS[state.worldKey];
+  const a = world.atmosphere;
 
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
-  const outer = ctx.createRadialGradient(view.cx, view.cy, view.scale * 0.76, view.cx, view.cy, view.scale * 1.13);
+  const outer = ctx.createRadialGradient(
+    view.cx,
+    view.cy,
+    view.scale * 0.76,
+    view.cx,
+    view.cy,
+    view.scale * 1.20
+  );
+
   outer.addColorStop(0, "rgba(0,0,0,0)");
-  outer.addColorStop(0.72, "rgba(142,190,255,0.10)");
-  outer.addColorStop(1, world.glow);
+  outer.addColorStop(0.66, `rgba(${a[0]},${a[1]},${a[2]},0.075)`);
+  outer.addColorStop(0.92, `rgba(${a[0]},${a[1]},${a[2]},0.25)`);
+  outer.addColorStop(1, `rgba(${a[0]},${a[1]},${a[2]},0.05)`);
 
   ctx.fillStyle = outer;
   ctx.beginPath();
-  ctx.arc(view.cx, view.cy, view.scale * 1.10, 0, Math.PI * 2);
+  ctx.arc(view.cx, view.cy, view.scale * 1.16, 0, Math.PI * 2);
   ctx.fill();
 
-  ctx.strokeStyle = "rgba(210,240,255,0.23)";
-  ctx.lineWidth = Math.max(1, DPR * 1.1);
+  const limb = ctx.createRadialGradient(
+    view.cx - view.scale * 0.16,
+    view.cy - view.scale * 0.18,
+    view.scale * 0.44,
+    view.cx,
+    view.cy,
+    view.scale * 1.04
+  );
+
+  limb.addColorStop(0, "rgba(255,255,255,0)");
+  limb.addColorStop(0.72, "rgba(255,255,255,0)");
+  limb.addColorStop(1, `rgba(${a[0]},${a[1]},${a[2]},0.30)`);
+
+  ctx.fillStyle = limb;
   ctx.beginPath();
-  ctx.arc(view.cx, view.cy, view.scale * 1.006, 0, Math.PI * 2);
+  ctx.arc(view.cx, view.cy, view.scale * 1.012, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = `rgba(${a[0]},${a[1]},${a[2]},0.34)`;
+  ctx.lineWidth = Math.max(1, DPR * 1.15);
+  ctx.beginPath();
+  ctx.arc(view.cx, view.cy, view.scale * 1.008, 0, Math.PI * 2);
   ctx.stroke();
 
   ctx.restore();
@@ -948,13 +944,13 @@ function drawOrbitLines(ctx, view) {
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
-  ctx.strokeStyle = "rgba(244,191,96,0.10)";
-  ctx.lineWidth = Math.max(0.7, DPR * 0.75);
+  ctx.strokeStyle = "rgba(244,191,96,0.060)";
+  ctx.lineWidth = Math.max(0.60, DPR * 0.65);
   ctx.beginPath();
   ctx.ellipse(view.cx, view.cy, view.scale * 1.52, view.scale * 0.35, -0.12, 0, Math.PI * 2);
   ctx.stroke();
 
-  ctx.strokeStyle = "rgba(142,190,255,0.07)";
+  ctx.strokeStyle = "rgba(142,190,255,0.044)";
   ctx.beginPath();
   ctx.ellipse(view.cx, view.cy, view.scale * 1.34, view.scale * 0.53, 0.28, 0, Math.PI * 2);
   ctx.stroke();
@@ -971,11 +967,11 @@ function drawWorldTitle(ctx, width, height) {
 
   ctx.fillStyle = "rgba(244,191,96,0.92)";
   ctx.font = `950 ${Math.max(18 * DPR, width * 0.038)}px Inter, system-ui, sans-serif`;
-  ctx.fillText(world.title, width * 0.5, height * 0.165);
+  ctx.fillText(world.title, width * 0.5, height * 0.155);
 
-  ctx.fillStyle = "rgba(186,197,212,0.72)";
+  ctx.fillStyle = "rgba(186,197,212,0.74)";
   ctx.font = `850 ${Math.max(11 * DPR, width * 0.014)}px Inter, system-ui, sans-serif`;
-  ctx.fillText(`${world.subtitle} · smooth dry carvings`, width * 0.5, height * 0.205);
+  ctx.fillText(`${world.subtitle} · rotation-invariant planet material`, width * 0.5, height * 0.195);
 
   ctx.restore();
 }
@@ -986,25 +982,23 @@ function drawCue(ctx, width, height) {
   ctx.textBaseline = "middle";
   ctx.fillStyle = "rgba(186,197,212,0.60)";
   ctx.font = `800 ${Math.max(11 * DPR, width * 0.013)}px Inter, system-ui, sans-serif`;
-  ctx.fillText("Drag to inspect · Smooth substrate · Open room for private map", width * 0.5, height * 0.90);
+  ctx.fillText("Drag to inspect · No prime meridian · Open private world room", width * 0.5, height * 0.90);
   ctx.restore();
 }
 
 function drawPlanet(ctx, width, height) {
-  const scale = Math.min(width * 0.34, height * 0.37);
+  const scale = Math.min(width * 0.395, height * 0.415);
 
   const view = {
     cx: width * 0.50,
-    cy: height * 0.49,
+    cy: height * 0.505,
     scale,
     yaw: state.yaw,
     pitch: state.pitch
   };
 
   drawGlobeShadow(ctx, view);
-  drawSphereBase(ctx, view);
-  drawSmoothSurface(ctx, view);
-  drawCarvingLines(ctx, view);
+  drawRotationInvariantPlanetSurface(ctx, view);
   drawAtmosphere(ctx, view);
   drawOrbitLines(ctx, view);
   drawWorldTitle(ctx, width, height);
@@ -1012,20 +1006,21 @@ function drawPlanet(ctx, width, height) {
 
   document.documentElement.dataset.globeShowcaseModel = MODEL_NAME;
   document.documentElement.dataset.selectedWorld = state.worldKey;
-  document.documentElement.dataset.publicPortraitBaseline = "smooth-sublevel-carving";
+  document.documentElement.dataset.publicPortraitBaseline = "rotation-invariant-planet-material";
   document.documentElement.dataset.privateEnginesAsleep = "true";
   document.documentElement.dataset.mapExpression = "false";
   document.documentElement.dataset.waterExpression = "false";
   document.documentElement.dataset.landmassExpression = "false";
   document.documentElement.dataset.childTerrainImport = "false";
   document.documentElement.dataset.mountainSystem = "false";
-  document.documentElement.dataset.carvingExpression = "true";
-  document.documentElement.dataset.dryRiverbeds = "true";
-  document.documentElement.dataset.dryOceanFloors = "true";
-  document.documentElement.dataset.cliffs = "true";
-  document.documentElement.dataset.caverns = "true";
+  document.documentElement.dataset.planetShader = "true";
+  document.documentElement.dataset.materialRelief = "true";
+  document.documentElement.dataset.pseudoNormalLighting = "true";
+  document.documentElement.dataset.continuousSurface = "true";
+  document.documentElement.dataset.privilegedLongitude = "false";
+  document.documentElement.dataset.falsePrimeMeridian = "false";
+  document.documentElement.dataset.hemispherePartition = "false";
   document.documentElement.dataset.polygonPatchSurface = "false";
-  document.documentElement.dataset.rasterSurface = "true";
   document.documentElement.dataset.parentCellCount = String(CELL_COUNT);
   document.documentElement.dataset.childFieldsPerParent = String(CHILD_HEX_COUNT);
   document.documentElement.dataset.totalChildFields = String(TOTAL_CHILD_FIELDS);
@@ -1042,7 +1037,7 @@ function render() {
 function updateInspectionMotion() {
   if (!state.dragging) {
     if (!state.interacted && !REDUCED_MOTION) {
-      state.targetYaw += 0.00095;
+      state.targetYaw += 0.00072;
     }
 
     state.targetYaw += state.velocityYaw;
@@ -1279,7 +1274,7 @@ function boot() {
 
   window.DGBGlobeShowcase = {
     model: MODEL_NAME,
-    publicPortraitBaseline: "smooth-sublevel-carving",
+    publicPortraitBaseline: "rotation-invariant-planet-material",
     privateEnginesAsleep: true,
     generatedImage: false,
     graphicBox: false,
@@ -1288,9 +1283,14 @@ function boot() {
     landmassExpression: false,
     childTerrainImport: false,
     mountainSystem: false,
-    carvingExpression: true,
+    planetShader: true,
+    continuousSurface: true,
+    materialRelief: true,
+    pseudoNormalLighting: true,
+    privilegedLongitude: false,
+    falsePrimeMeridian: false,
+    hemispherePartition: false,
     polygonPatchSurface: false,
-    rasterSurface: true,
     worlds: Object.keys(WORLDS),
     parentCellCount: CELL_COUNT,
     childFieldsPerParent: CHILD_HEX_COUNT,
@@ -1302,7 +1302,7 @@ function boot() {
       return {
         model: MODEL_NAME,
         selectedWorld: state.worldKey,
-        publicPortraitBaseline: "smooth-sublevel-carving",
+        publicPortraitBaseline: "rotation-invariant-planet-material",
         privateEnginesAsleep: true,
         generatedImage: false,
         graphicBox: false,
@@ -1311,13 +1311,14 @@ function boot() {
         landmassExpression: false,
         childTerrainImport: false,
         mountainSystem: false,
-        carvingExpression: true,
-        dryRiverbeds: true,
-        dryOceanFloors: true,
-        cliffs: true,
-        caverns: true,
+        planetShader: true,
+        continuousSurface: true,
+        materialRelief: true,
+        pseudoNormalLighting: true,
+        privilegedLongitude: false,
+        falsePrimeMeridian: false,
+        hemispherePartition: false,
         polygonPatchSurface: false,
-        rasterSurface: true,
         parentCellCount: CELL_COUNT,
         childFieldsPerParent: CHILD_HEX_COUNT,
         totalChildFields: TOTAL_CHILD_FIELDS,
@@ -1336,7 +1337,7 @@ if (document.readyState === "loading") {
 
 export default {
   model: MODEL_NAME,
-  publicPortraitBaseline: "smooth-sublevel-carving",
+  publicPortraitBaseline: "rotation-invariant-planet-material",
   privateEnginesAsleep: true,
   generatedImage: false,
   graphicBox: false,
@@ -1345,9 +1346,14 @@ export default {
   landmassExpression: false,
   childTerrainImport: false,
   mountainSystem: false,
-  carvingExpression: true,
+  planetShader: true,
+  continuousSurface: true,
+  materialRelief: true,
+  pseudoNormalLighting: true,
+  privilegedLongitude: false,
+  falsePrimeMeridian: false,
+  hemispherePartition: false,
   polygonPatchSurface: false,
-  rasterSurface: true,
   parentCellCount: CELL_COUNT,
   childFieldsPerParent: CHILD_HEX_COUNT,
   totalChildFields: TOTAL_CHILD_FIELDS,

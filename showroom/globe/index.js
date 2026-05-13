@@ -1,17 +1,17 @@
 // /showroom/globe/index.js
 // TNT FULL-FILE REPLACEMENT
-// SHOWROOM_GLOBE_SUBLEVEL_CARVING_TNT_v1
+// SHOWROOM_GLOBE_SUBLEVEL_RENDER_SMOOTHING_TNT_v1
 // Role: public Globe Showcase selector only.
-// Visual law: clean inspectable sub-level terrain globe with dry geological carvings.
-// Added: depth, elevation pressure, dry ocean floors, dry riverbeds, cliffs, caverns, trenches, canyon cuts, shelf depressions, crustal scars.
+// Visual law: smooth inspectable sub-level globe with dry geological carvings.
+// Repair: removes visible polygon patch/grid fabric by rendering the surface as a continuous raster field.
 // Still forbidden here: water, lakes, blue oceans, beaches, coastlines, landmass maps, mountain system, child imports, private engines.
 
-const MODEL_NAME = "showroom-globe-sublevel-carving-v1";
+const MODEL_NAME = "showroom-globe-sublevel-render-smoothing-v1";
 
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
 const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
 const DPR = Math.min(window.devicePixelRatio || 1, MOBILE ? 1.25 : 1.65);
-const FRAME_MS = MOBILE ? 64 : 48;
+const FRAME_MS = MOBILE ? 82 : 64;
 
 const DEFAULT_YAW = -0.66;
 const DEFAULT_PITCH = -0.18;
@@ -27,14 +27,13 @@ const CHILD_HEX_COLS = 16;
 const CHILD_HEX_COUNT = CHILD_HEX_ROWS * CHILD_HEX_COLS;
 const TOTAL_CHILD_FIELDS = CELL_COUNT * CHILD_HEX_COUNT;
 
-const PORTRAIT_LAT_STEPS = MOBILE ? 70 : 90;
-const PORTRAIT_LON_STEPS = MOBILE ? 140 : 180;
+const RASTER_LIMIT = MOBILE ? 300 : 430;
 
 const SUBLEVEL_MODEL = Object.freeze({
   parentCells: CELL_COUNT,
   childFieldsPerParent: CHILD_HEX_COUNT,
   totalChildFields: TOTAL_CHILD_FIELDS,
-  publicMode: "clean sub-level terrain globe with dry geological carvings",
+  publicMode: "smooth dry sub-level carved globe",
   privateEnginesAsleep: true,
   mapExpression: false,
   waterExpression: false,
@@ -42,6 +41,8 @@ const SUBLEVEL_MODEL = Object.freeze({
   childTerrainImport: false,
   mountainSystem: false,
   carvingExpression: true,
+  polygonPatchSurface: false,
+  rasterSurface: true,
   privateModelPaths: Object.freeze({
     earth: "/showroom/globe/earth/",
     hEarth: "/showroom/globe/h-earth/",
@@ -56,14 +57,14 @@ const WORLDS = Object.freeze({
     subtitle: "Reference Body",
     route: "/showroom/globe/earth/",
     seed: 310,
-    base: [62, 88, 112],
-    low: [24, 38, 58],
-    mid: [88, 106, 120],
+    base: [58, 82, 100],
+    low: [18, 30, 45],
+    mid: [88, 106, 114],
     high: [154, 146, 126],
     ridge: [214, 208, 184],
     exposed: [205, 176, 128],
     fault: [176, 224, 238],
-    cavern: [13, 18, 27],
+    cavern: [10, 14, 22],
     glow: "rgba(142,190,255,0.22)"
   },
   hEarth: {
@@ -72,14 +73,14 @@ const WORLDS = Object.freeze({
     subtitle: "Hybrid Earth",
     route: "/showroom/globe/h-earth/",
     seed: 710,
-    base: [66, 96, 104],
-    low: [22, 44, 58],
-    mid: [82, 120, 112],
+    base: [58, 88, 92],
+    low: [16, 34, 44],
+    mid: [84, 118, 106],
     high: [154, 150, 118],
     ridge: [224, 214, 176],
     exposed: [208, 178, 120],
     fault: [158, 242, 196],
-    cavern: [12, 20, 24],
+    cavern: [9, 18, 22],
     glow: "rgba(143,240,195,0.22)"
   },
   audralia: {
@@ -88,14 +89,14 @@ const WORLDS = Object.freeze({
     subtitle: "Constructed World",
     route: "/showroom/globe/audralia/",
     seed: 910,
-    base: [84, 78, 112],
-    low: [32, 30, 66],
+    base: [78, 72, 106],
+    low: [28, 26, 58],
     mid: [110, 98, 126],
     high: [172, 148, 108],
     ridge: [228, 206, 160],
     exposed: [218, 170, 120],
     fault: [198, 172, 255],
-    cavern: [18, 16, 34],
+    cavern: [14, 12, 30],
     glow: "rgba(190,170,255,0.22)"
   }
 });
@@ -112,6 +113,11 @@ const state = {
   time: 0,
   stars: [],
   worldKey: "hEarth",
+
+  surfaceCanvas: null,
+  surfaceCtx: null,
+  surfaceSize: 0,
+  surfaceImage: null,
 
   yaw: DEFAULT_YAW,
   pitch: DEFAULT_PITCH,
@@ -229,6 +235,10 @@ function rotateX(p, angle) {
     y: p.y * c - p.z * s,
     z: p.y * s + p.z * c
   };
+}
+
+function inverseSpherePointFromView(viewPoint, yaw, pitch) {
+  return rotateY(rotateX(viewPoint, -pitch), -yaw);
 }
 
 function makePoint(lat, lon) {
@@ -364,7 +374,7 @@ function sampleCanyonCuts(lat, lon, world) {
   return clamp(Math.max(canyonA, canyonB, canyonC, 0) * (0.72 + serration * 0.28), 0, 1);
 }
 
-function sampleTrenches(lat, lon, world) {
+function sampleTrenches(lat, lon) {
   const trenchA = ribbonField(lat, lon, -0.02, 2.42, 1.34, 0.040, -0.14, 1.2);
   const trenchB = ribbonField(lat, lon, 0.08, -2.54, 1.38, 0.042, 0.16, -1.4);
   const trenchC = ribbonField(lat, lon, -0.68, 0.34, 0.98, 0.040, 0.02, 2.6);
@@ -411,7 +421,7 @@ function sampleCrustalScars(lat, lon, world) {
   return clamp(Math.max(scarA, scarB, scarC, scarD, 0) * (fractured > -0.25 ? 1 : 0.34), 0, 1);
 }
 
-function sampleShelfDepressions(lat, lon, world) {
+function sampleShelfDepressions(lat, lon) {
   const shelfA = ribbonField(lat, lon, 0.28, -2.22, 1.44, 0.090, 0.16, 1.0);
   const shelfB = ribbonField(lat, lon, -0.36, 1.96, 1.34, 0.092, -0.18, -1.0);
   const shelfC = ribbonField(lat, lon, 0.58, 0.42, 1.00, 0.078, -0.36, 2.0);
@@ -444,11 +454,11 @@ function sampleSublevel(lat, lon, world) {
   const dryOceanFloor = sampleDryOceanBasins(global.y, global.x, world);
   const dryRiverbed = sampleDryRiverbeds(global.y, global.x, world);
   const canyon = sampleCanyonCuts(global.y, global.x, world);
-  const trench = sampleTrenches(global.y, global.x, world);
+  const trench = sampleTrenches(global.y, global.x);
   const cliff = sampleCliffPressure(global.y, global.x, world);
   const cavern = sampleCavernPressure(global.y, global.x, world);
   const scar = sampleCrustalScars(global.y, global.x, world);
-  const shelf = sampleShelfDepressions(global.y, global.x, world);
+  const shelf = sampleShelfDepressions(global.y, global.x);
 
   const polarCompression = smoothstep(1.02, 1.50, Math.abs(lat)) * 0.15;
   const equatorialPlateSpread = (1 - smoothstep(0.18, 1.10, Math.abs(lat))) * 0.065;
@@ -484,6 +494,7 @@ function sampleSublevel(lat, lon, world) {
     scar * 0.24;
 
   return {
+    elevation,
     relief,
     ridge,
     basin,
@@ -568,44 +579,7 @@ function colorForSublevel(sample, world, light, rim) {
   const g = Math.round(clamp((base[1] + texture * 0.76) * shade, 0, 255));
   const b = Math.round(clamp((base[2] + texture * 0.58) * shade, 0, 255));
 
-  return `rgb(${r},${g},${b})`;
-}
-
-function makeSurfacePatch(lat0, lat1, lon0, lon1, view) {
-  const p00 = rotateX(rotateY(makePoint(lat0, lon0), view.yaw), view.pitch);
-  const p01 = rotateX(rotateY(makePoint(lat0, lon1), view.yaw), view.pitch);
-  const p11 = rotateX(rotateY(makePoint(lat1, lon1), view.yaw), view.pitch);
-  const p10 = rotateX(rotateY(makePoint(lat1, lon0), view.yaw), view.pitch);
-
-  const avg = normalize({
-    x: (p00.x + p01.x + p11.x + p10.x) * 0.25,
-    y: (p00.y + p01.y + p11.y + p10.y) * 0.25,
-    z: (p00.z + p01.z + p11.z + p10.z) * 0.25
-  });
-
-  if (avg.z < -0.04) return null;
-
-  return {
-    points: [
-      project(p00, view),
-      project(p01, view),
-      project(p11, view),
-      project(p10, view)
-    ],
-    normal: avg,
-    depth: avg.z,
-    lat: (lat0 + lat1) * 0.5,
-    lon: (lon0 + lon1) * 0.5
-  };
-}
-
-function pathPatch(ctx, points) {
-  ctx.beginPath();
-  ctx.moveTo(points[0].x, points[0].y);
-  ctx.lineTo(points[1].x, points[1].y);
-  ctx.lineTo(points[2].x, points[2].y);
-  ctx.lineTo(points[3].x, points[3].y);
-  ctx.closePath();
+  return [r, g, b];
 }
 
 function drawBackground(ctx, width, height) {
@@ -745,45 +719,101 @@ function drawSphereBase(ctx, view) {
   ctx.restore();
 }
 
-function drawSurface(ctx, view) {
+function ensureSurfaceBuffer(view) {
+  const desired = Math.max(220, Math.min(RASTER_LIMIT, Math.round(view.scale * 1.58)));
+
+  if (!state.surfaceCanvas) {
+    state.surfaceCanvas = document.createElement("canvas");
+    state.surfaceCtx = state.surfaceCanvas.getContext("2d", {
+      alpha: true,
+      willReadFrequently: false
+    });
+  }
+
+  if (state.surfaceSize !== desired) {
+    state.surfaceSize = desired;
+    state.surfaceCanvas.width = desired;
+    state.surfaceCanvas.height = desired;
+    state.surfaceImage = state.surfaceCtx.createImageData(desired, desired);
+  }
+}
+
+function drawSmoothSurface(ctx, view) {
   const world = WORLDS[state.worldKey];
-  const light = normalize({ x: -0.28, y: 0.54, z: 0.92 });
-  const patches = [];
+  ensureSurfaceBuffer(view);
 
-  for (let latIndex = 0; latIndex < PORTRAIT_LAT_STEPS; latIndex += 1) {
-    const lat0 = -Math.PI / 2 + (latIndex / PORTRAIT_LAT_STEPS) * Math.PI;
-    const lat1 = -Math.PI / 2 + ((latIndex + 1) / PORTRAIT_LAT_STEPS) * Math.PI;
+  const size = state.surfaceSize;
+  const image = state.surfaceImage;
+  const data = image.data;
 
-    for (let lonIndex = 0; lonIndex < PORTRAIT_LON_STEPS; lonIndex += 1) {
-      const lon0 = -Math.PI + (lonIndex / PORTRAIT_LON_STEPS) * Math.PI * 2;
-      const lon1 = -Math.PI + ((lonIndex + 1) / PORTRAIT_LON_STEPS) * Math.PI * 2;
-      const patch = makeSurfacePatch(lat0, lat1, lon0, lon1, view);
-      if (patch) patches.push(patch);
+  const light = normalize({ x: -0.30, y: 0.56, z: 0.92 });
+
+  let ptr = 0;
+
+  for (let py = 0; py < size; py += 1) {
+    const ny = 1 - (py / (size - 1)) * 2;
+
+    for (let px = 0; px < size; px += 1) {
+      const nx = (px / (size - 1)) * 2 - 1;
+      const r2 = nx * nx + ny * ny;
+
+      if (r2 > 1) {
+        data[ptr] = 0;
+        data[ptr + 1] = 0;
+        data[ptr + 2] = 0;
+        data[ptr + 3] = 0;
+        ptr += 4;
+        continue;
+      }
+
+      const z = Math.sqrt(Math.max(0, 1 - r2));
+      const viewNormal = normalize({ x: nx, y: ny, z });
+      const worldPoint = inverseSpherePointFromView(viewNormal, view.yaw, view.pitch);
+      const lat = Math.asin(clamp(worldPoint.y, -1, 1));
+      const lon = Math.atan2(worldPoint.z, worldPoint.x);
+
+      const sample = sampleSublevel(lat, lon, world);
+      const diffuse = clamp(dot(viewNormal, light), 0, 1);
+      const rim = Math.pow(clamp(1 - z, 0, 1), 1.85);
+
+      const contourShade =
+        sample.cliff * 0.040 +
+        sample.ridge * 0.030 -
+        sample.canyon * 0.045 -
+        sample.trench * 0.050 -
+        sample.cavern * 0.060 -
+        sample.dryOceanFloor * 0.026;
+
+      const lightValue = clamp(0.34 + diffuse * 0.64 + rim * 0.07 + contourShade, 0.11, 1.22);
+      const color = colorForSublevel(sample, world, lightValue, rim);
+
+      const edge = 1 - smoothstep(0.955, 1.0, Math.sqrt(r2));
+      const alpha = Math.round(255 * clamp(edge, 0, 1));
+
+      data[ptr] = color[0];
+      data[ptr + 1] = color[1];
+      data[ptr + 2] = color[2];
+      data[ptr + 3] = alpha;
+      ptr += 4;
     }
   }
 
-  patches.sort((a, b) => a.depth - b.depth);
+  state.surfaceCtx.putImageData(image, 0, 0);
 
   ctx.save();
-  ctx.beginPath();
-  ctx.arc(view.cx, view.cy, view.scale * 1.002, 0, Math.PI * 2);
-  ctx.clip();
-
-  for (const patch of patches) {
-    const sample = sampleSublevel(patch.lat, patch.lon, world);
-    const diffuse = clamp(dot(patch.normal, light), 0, 1);
-    const rim = Math.pow(clamp(1 - Math.abs(patch.normal.z), 0, 1), 2.0);
-    const lightValue = 0.36 + diffuse * 0.62 + rim * 0.06;
-
-    pathPatch(ctx, patch.points);
-    ctx.fillStyle = colorForSublevel(sample, world, lightValue, rim);
-    ctx.fill();
-  }
-
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(
+    state.surfaceCanvas,
+    view.cx - view.scale,
+    view.cy - view.scale,
+    view.scale * 2,
+    view.scale * 2
+  );
   ctx.restore();
 }
 
-function makeProjectedPolyline(view, latFn, lonStart, lonEnd, steps = 82) {
+function makeProjectedPolyline(view, latFn, lonStart, lonEnd, steps = 92) {
   const points = [];
 
   for (let j = 0; j <= steps; j += 1) {
@@ -819,37 +849,19 @@ function drawCarvingLines(ctx, view) {
   ctx.arc(view.cx, view.cy, view.scale * 1.002, 0, Math.PI * 2);
   ctx.clip();
 
-  ctx.globalCompositeOperation = "screen";
+  ctx.globalCompositeOperation = "multiply";
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
 
-  const contourCount = MOBILE ? 6 : 9;
-
-  for (let i = 0; i < contourCount; i += 1) {
-    const latBase = lerp(-0.82, 0.82, i / Math.max(1, contourCount - 1)) + Math.sin(i * 1.3) * 0.04;
-
-    const points = makeProjectedPolyline(
-      view,
-      (lon) => latBase + Math.sin(lon * 1.8 + i * 0.7) * 0.018,
-      -2.80,
-      2.80,
-      72
-    );
-
-    ctx.strokeStyle = colorWithAlpha(world.fault, 0.040);
-    ctx.lineWidth = Math.max(0.30, DPR * 0.30);
-    strokePolyline(ctx, points);
-  }
-
   const riverLines = [
-    { lat: 0.34, lonA: -2.18, lonB: -0.56, angle: -0.48, phase: 0.2 },
-    { lat: -0.18, lonA: 0.10, lonB: 1.70, angle: 0.36, phase: 1.7 },
-    { lat: 0.54, lonA: -0.66, lonB: 0.90, angle: -0.12, phase: -1.1 },
-    { lat: -0.52, lonA: -1.28, lonB: 0.08, angle: 0.26, phase: 2.3 }
+    { lat: 0.34, lonA: -2.18, lonB: -0.56, phase: 0.2 },
+    { lat: -0.18, lonA: 0.10, lonB: 1.70, phase: 1.7 },
+    { lat: 0.54, lonA: -0.66, lonB: 0.90, phase: -1.1 },
+    { lat: -0.52, lonA: -1.28, lonB: 0.08, phase: 2.3 }
   ];
 
-  ctx.strokeStyle = "rgba(10,14,20,0.30)";
-  ctx.lineWidth = Math.max(0.55, DPR * 0.55);
+  ctx.strokeStyle = "rgba(8,12,17,0.22)";
+  ctx.lineWidth = Math.max(0.60, DPR * 0.55);
 
   riverLines.forEach((line, index) => {
     const points = makeProjectedPolyline(
@@ -857,13 +869,13 @@ function drawCarvingLines(ctx, view) {
       (lon, u) => line.lat + Math.sin((u * 4.5) + line.phase) * 0.028 + Math.sin(lon * 2.2 + index) * 0.012,
       line.lonA,
       line.lonB,
-      64
+      72
     );
     strokePolyline(ctx, points);
   });
 
   ctx.globalCompositeOperation = "source-over";
-  ctx.strokeStyle = "rgba(235,205,154,0.075)";
+  ctx.strokeStyle = "rgba(235,205,154,0.070)";
   ctx.lineWidth = Math.max(0.38, DPR * 0.36);
 
   const cliffLines = [
@@ -878,14 +890,14 @@ function drawCarvingLines(ctx, view) {
       (lon, u) => line.lat + Math.sin(u * 5.2 + line.phase) * 0.020 + Math.sin(lon * 1.5 + index) * 0.010,
       line.lonA,
       line.lonB,
-      60
+      70
     );
     strokePolyline(ctx, points);
   });
 
   ctx.globalCompositeOperation = "screen";
-  ctx.strokeStyle = colorWithAlpha(world.fault, 0.055);
-  ctx.lineWidth = Math.max(0.42, DPR * 0.40);
+  ctx.strokeStyle = colorWithAlpha(world.fault, 0.040);
+  ctx.lineWidth = Math.max(0.36, DPR * 0.34);
 
   const faultLines = [
     { lat: 0.02, lonA: -0.88, lonB: 1.10, phase: 0.9 },
@@ -899,7 +911,7 @@ function drawCarvingLines(ctx, view) {
       (lon, u) => line.lat + Math.sin(u * 6.0 + line.phase) * 0.018 + Math.sin(lon * 2.9 + index) * 0.012,
       line.lonA,
       line.lonB,
-      66
+      76
     );
     strokePolyline(ctx, points);
   });
@@ -963,7 +975,7 @@ function drawWorldTitle(ctx, width, height) {
 
   ctx.fillStyle = "rgba(186,197,212,0.72)";
   ctx.font = `850 ${Math.max(11 * DPR, width * 0.014)}px Inter, system-ui, sans-serif`;
-  ctx.fillText(`${world.subtitle} · dry sub-level carvings`, width * 0.5, height * 0.205);
+  ctx.fillText(`${world.subtitle} · smooth dry carvings`, width * 0.5, height * 0.205);
 
   ctx.restore();
 }
@@ -974,7 +986,7 @@ function drawCue(ctx, width, height) {
   ctx.textBaseline = "middle";
   ctx.fillStyle = "rgba(186,197,212,0.60)";
   ctx.font = `800 ${Math.max(11 * DPR, width * 0.013)}px Inter, system-ui, sans-serif`;
-  ctx.fillText("Drag to inspect · Dry carvings only · Open room for private map", width * 0.5, height * 0.90);
+  ctx.fillText("Drag to inspect · Smooth substrate · Open room for private map", width * 0.5, height * 0.90);
   ctx.restore();
 }
 
@@ -991,7 +1003,7 @@ function drawPlanet(ctx, width, height) {
 
   drawGlobeShadow(ctx, view);
   drawSphereBase(ctx, view);
-  drawSurface(ctx, view);
+  drawSmoothSurface(ctx, view);
   drawCarvingLines(ctx, view);
   drawAtmosphere(ctx, view);
   drawOrbitLines(ctx, view);
@@ -1000,7 +1012,7 @@ function drawPlanet(ctx, width, height) {
 
   document.documentElement.dataset.globeShowcaseModel = MODEL_NAME;
   document.documentElement.dataset.selectedWorld = state.worldKey;
-  document.documentElement.dataset.publicPortraitBaseline = "sublevel-carving";
+  document.documentElement.dataset.publicPortraitBaseline = "smooth-sublevel-carving";
   document.documentElement.dataset.privateEnginesAsleep = "true";
   document.documentElement.dataset.mapExpression = "false";
   document.documentElement.dataset.waterExpression = "false";
@@ -1012,6 +1024,8 @@ function drawPlanet(ctx, width, height) {
   document.documentElement.dataset.dryOceanFloors = "true";
   document.documentElement.dataset.cliffs = "true";
   document.documentElement.dataset.caverns = "true";
+  document.documentElement.dataset.polygonPatchSurface = "false";
+  document.documentElement.dataset.rasterSurface = "true";
   document.documentElement.dataset.parentCellCount = String(CELL_COUNT);
   document.documentElement.dataset.childFieldsPerParent = String(CHILD_HEX_COUNT);
   document.documentElement.dataset.totalChildFields = String(TOTAL_CHILD_FIELDS);
@@ -1242,6 +1256,8 @@ function installResize() {
   window.addEventListener("resize", () => {
     window.clearTimeout(timer);
     timer = window.setTimeout(() => {
+      state.surfaceSize = 0;
+      state.surfaceImage = null;
       sizeCanvas();
       render();
     }, 120);
@@ -1263,7 +1279,7 @@ function boot() {
 
   window.DGBGlobeShowcase = {
     model: MODEL_NAME,
-    publicPortraitBaseline: "sublevel-carving",
+    publicPortraitBaseline: "smooth-sublevel-carving",
     privateEnginesAsleep: true,
     generatedImage: false,
     graphicBox: false,
@@ -1273,6 +1289,8 @@ function boot() {
     childTerrainImport: false,
     mountainSystem: false,
     carvingExpression: true,
+    polygonPatchSurface: false,
+    rasterSurface: true,
     worlds: Object.keys(WORLDS),
     parentCellCount: CELL_COUNT,
     childFieldsPerParent: CHILD_HEX_COUNT,
@@ -1284,7 +1302,7 @@ function boot() {
       return {
         model: MODEL_NAME,
         selectedWorld: state.worldKey,
-        publicPortraitBaseline: "sublevel-carving",
+        publicPortraitBaseline: "smooth-sublevel-carving",
         privateEnginesAsleep: true,
         generatedImage: false,
         graphicBox: false,
@@ -1298,6 +1316,8 @@ function boot() {
         dryOceanFloors: true,
         cliffs: true,
         caverns: true,
+        polygonPatchSurface: false,
+        rasterSurface: true,
         parentCellCount: CELL_COUNT,
         childFieldsPerParent: CHILD_HEX_COUNT,
         totalChildFields: TOTAL_CHILD_FIELDS,
@@ -1316,7 +1336,7 @@ if (document.readyState === "loading") {
 
 export default {
   model: MODEL_NAME,
-  publicPortraitBaseline: "sublevel-carving",
+  publicPortraitBaseline: "smooth-sublevel-carving",
   privateEnginesAsleep: true,
   generatedImage: false,
   graphicBox: false,
@@ -1326,6 +1346,8 @@ export default {
   childTerrainImport: false,
   mountainSystem: false,
   carvingExpression: true,
+  polygonPatchSurface: false,
+  rasterSurface: true,
   parentCellCount: CELL_COUNT,
   childFieldsPerParent: CHILD_HEX_COUNT,
   totalChildFields: TOTAL_CHILD_FIELDS,

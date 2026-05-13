@@ -1,27 +1,26 @@
 // /showroom/globe/index.js
 // TNT FULL-FILE REPLACEMENT
-// SHOWROOM_GLOBE_RUNTIME_GLIDE_CONTROL_CONTROLLER_TNT_v1
+// SHOWROOM_GLOBE_FIBONACCI_RUNTIME_CONTROLLER_TNT_v1
 // Role: public Globe Showcase controller.
-// Material remains delegated to /assets/showroom.globe.cinematic.material.js.
-// Runtime delegated to /assets/showroom.globe.runtime.js.
-// Controls delegated to /assets/showroom.globe.controls.js.
+// Runtime follows Fibonacci pacing.
+// Material renderer uses adaptive Fibonacci quality.
 
 import {
   PLANET_MATERIAL_VERSION,
   createCinematicPlanetMaterialRenderer
-} from "/assets/showroom.globe.cinematic.material.js?v=cinematic-material-asset-v1";
+} from "/assets/showroom.globe.cinematic.material.js?v=fibonacci-runtime-v1";
 
 import {
   GLOBE_RUNTIME_VERSION,
   createGlobeRuntime
-} from "/assets/showroom.globe.runtime.js?v=runtime-glide-control-v1";
+} from "/assets/showroom.globe.runtime.js?v=fibonacci-runtime-v1";
 
 import {
   GLOBE_CONTROLS_VERSION,
   createGlobeControls
 } from "/assets/showroom.globe.controls.js?v=runtime-glide-control-v1";
 
-const MODEL_NAME = "showroom-globe-runtime-glide-control-controller-v1";
+const MODEL_NAME = "showroom-globe-fibonacci-runtime-controller-v1";
 
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
 const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
@@ -123,10 +122,6 @@ const state = {
 
 function $(id) {
   return document.getElementById(id);
-}
-
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
 }
 
 function positiveHash(seed, a = 0, b = 0) {
@@ -303,7 +298,7 @@ function drawWorldTitle(ctx, width, height) {
 
   ctx.fillStyle = "rgba(186,197,212,0.74)";
   ctx.font = `850 ${Math.max(11 * DPR, width * 0.014)}px Inter, system-ui, sans-serif`;
-  ctx.fillText(`${world.subtitle} · runtime glide control`, width * 0.5, height * 0.195);
+  ctx.fillText(`${world.subtitle} · Fibonacci runtime`, width * 0.5, height * 0.195);
 
   ctx.restore();
 }
@@ -317,7 +312,7 @@ function drawCue(ctx, width, height) {
   ctx.fillStyle = "rgba(186,197,212,0.60)";
   ctx.font = `800 ${Math.max(11 * DPR, width * 0.013)}px Inter, system-ui, sans-serif`;
   ctx.fillText(
-    `Drag to inspect · ${runtimeState.glide} glide · ${runtimeState.detail} detail · Open private world room`,
+    `Drag to inspect · ${runtimeState.quality} · ${runtimeState.glide} glide · ${runtimeState.detail} detail`,
     width * 0.5,
     height * 0.90
   );
@@ -333,7 +328,8 @@ function drawPlanet(ctx, width, height, runtimeView) {
     scale,
     yaw: runtimeView.yaw,
     pitch: runtimeView.pitch,
-    quality: runtimeView.quality
+    quality: runtimeView.quality,
+    detail: runtimeView.detail
   };
 
   drawGlobeShadow(ctx, view);
@@ -347,8 +343,11 @@ function drawPlanet(ctx, width, height, runtimeView) {
   document.documentElement.dataset.globeRuntime = GLOBE_RUNTIME_VERSION;
   document.documentElement.dataset.globeControls = GLOBE_CONTROLS_VERSION;
   document.documentElement.dataset.selectedWorld = state.worldKey;
-  document.documentElement.dataset.publicPortraitBaseline = "runtime-glide-controlled-cinematic-material";
+  document.documentElement.dataset.publicPortraitBaseline = "fibonacci-runtime-cinematic-material";
   document.documentElement.dataset.runtimeQuality = runtimeView.quality;
+  document.documentElement.dataset.runtimeDetail = runtimeView.detail;
+  document.documentElement.dataset.runtimeGlide = runtimeView.glide;
+  document.documentElement.dataset.fibonacciPacing = "true";
   document.documentElement.dataset.privateEnginesAsleep = "true";
   document.documentElement.dataset.mapExpression = "false";
   document.documentElement.dataset.waterExpression = "false";
@@ -455,7 +454,7 @@ function installResize() {
     window.clearTimeout(timer);
     timer = window.setTimeout(() => {
       sizeCanvas();
-      render();
+      render({ ...runtime.getState(), quality: "motion" });
       runtime.forceRender();
     }, 120);
   }, { passive: true });
@@ -469,11 +468,11 @@ function installRuntimeControls() {
     runtime,
     onChange() {
       runtime.forceRender();
-      render();
+      render({ ...runtime.getState(), quality: "motion" });
     },
     onReset() {
       runtime.forceRender();
-      render();
+      render({ ...runtime.getState(), quality: "motion" });
     }
   });
 }
@@ -489,7 +488,8 @@ function boot() {
   installVisibility();
   installResize();
   updateControls();
-  render();
+
+  render({ ...runtime.getState(), quality: "motion" });
   startLoop();
 
   window.DGBGlobeShowcase = {
@@ -497,7 +497,8 @@ function boot() {
     planetMaterialRenderer: PLANET_MATERIAL_VERSION,
     globeRuntime: GLOBE_RUNTIME_VERSION,
     globeControls: GLOBE_CONTROLS_VERSION,
-    publicPortraitBaseline: "runtime-glide-controlled-cinematic-material",
+    publicPortraitBaseline: "fibonacci-runtime-cinematic-material",
+    fibonacciPacing: true,
     privateEnginesAsleep: true,
     generatedImage: false,
     graphicBox: false,
@@ -530,7 +531,8 @@ function boot() {
         globeControls: GLOBE_CONTROLS_VERSION,
         selectedWorld: state.worldKey,
         runtime: runtime.getState(),
-        publicPortraitBaseline: "runtime-glide-controlled-cinematic-material",
+        publicPortraitBaseline: "fibonacci-runtime-cinematic-material",
+        fibonacciPacing: true,
         privateEnginesAsleep: true,
         generatedImage: false,
         graphicBox: false,
@@ -566,7 +568,8 @@ export default {
   planetMaterialRenderer: PLANET_MATERIAL_VERSION,
   globeRuntime: GLOBE_RUNTIME_VERSION,
   globeControls: GLOBE_CONTROLS_VERSION,
-  publicPortraitBaseline: "runtime-glide-controlled-cinematic-material",
+  publicPortraitBaseline: "fibonacci-runtime-cinematic-material",
+  fibonacciPacing: true,
   privateEnginesAsleep: true,
   generatedImage: false,
   graphicBox: false,

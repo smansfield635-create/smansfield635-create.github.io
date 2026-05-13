@@ -1,9 +1,9 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="triple-g-live-state-and-gap-board"
+  data-page="triple-g-precision-audit-board"
   data-route="/gauges/"
-  data-contract="TRIPLE_G_LIVE_STATE_AND_GAP_BOARD_TNT_v1"
+  data-contract="TRIPLE_G_PRECISION_AUDIT_BOARD_TNT_v2"
   data-role="read-only-live-site-audit"
   data-generated-image="false"
   data-graphic-box="false"
@@ -16,7 +16,7 @@
   <title>Diamond Gate Bridge · Triple G</title>
   <meta
     name="description"
-    content="Triple G reads the live Diamond Gate Bridge routes, names the current state, identifies gaps, and points to the next lawful move without waking private render engines."
+    content="Triple G reads live Diamond Gate Bridge routes, separates route identity failure from receipt spillover and audit-rule mismatch, and names the next lawful move."
   >
 
   <style>
@@ -34,6 +34,7 @@
       --amber: #f0aa5f;
       --red: #ff8c8c;
       --blue: #8bc8ff;
+      --violet: #c8a7ff;
       --shadow: rgba(0, 0, 0, 0.38);
       color-scheme: dark;
     }
@@ -148,6 +149,11 @@
       border-color: rgba(167, 243, 198, 0.62);
     }
 
+    .button:disabled {
+      opacity: 0.62;
+      cursor: progress;
+    }
+
     .hero {
       position: relative;
       overflow: hidden;
@@ -170,7 +176,7 @@
     }
 
     h1 {
-      max-width: 860px;
+      max-width: 920px;
       margin: 0;
       color: var(--text);
       font-size: clamp(2.2rem, 8vw, 5.4rem);
@@ -179,7 +185,7 @@
     }
 
     .lede {
-      max-width: 850px;
+      max-width: 890px;
       margin: 22px 0 0;
       color: var(--muted);
       font-size: clamp(1.02rem, 2.6vw, 1.34rem);
@@ -195,7 +201,7 @@
 
     .dashboard {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 12px;
       margin-top: 18px;
     }
@@ -298,6 +304,10 @@
       border-color: rgba(240, 170, 95, 0.32);
     }
 
+    .gap[data-severity="review"] {
+      border-color: rgba(200, 167, 255, 0.32);
+    }
+
     .ledger {
       display: grid;
       gap: 10px;
@@ -305,7 +315,7 @@
 
     .route-row {
       display: grid;
-      grid-template-columns: 150px 110px 1fr;
+      grid-template-columns: 150px 112px 152px 1fr;
       gap: 12px;
       align-items: start;
     }
@@ -349,9 +359,21 @@
       border-color: rgba(255, 140, 140, 0.72);
     }
 
+    .badge.review {
+      color: #11071f;
+      background: var(--violet);
+      border-color: rgba(200, 167, 255, 0.72);
+    }
+
     .badge.checking {
       color: rgba(238, 244, 255, 0.78);
       background: rgba(255, 255, 255, 0.045);
+    }
+
+    .class-pill {
+      color: rgba(238, 244, 255, 0.76);
+      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--line-soft);
     }
 
     .route-note {
@@ -388,6 +410,17 @@
       text-align: center;
     }
 
+    @media (max-width: 980px) {
+      .dashboard,
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .route-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 880px) {
       .topbar {
         align-items: flex-start;
@@ -396,15 +429,6 @@
 
       .nav {
         justify-content: flex-start;
-      }
-
-      .dashboard,
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .route-row {
-        grid-template-columns: 1fr;
       }
     }
 
@@ -447,10 +471,10 @@
 
     <main id="main">
       <section class="hero">
-        <p class="eyebrow">Triple G · live state · gap board</p>
-        <h1>The board reads where the site actually is.</h1>
+        <p class="eyebrow">Triple G · precision audit · route truth</p>
+        <h1>The board separates page failure from audit mismatch.</h1>
         <p class="lede">
-          Triple G audits the live public routes, names the current working state, separates proven conditions from held conditions, and identifies the next lawful move without waking private planet engines.
+          Triple G now distinguishes actual route identity failure, public receipt spillover, route proof holds, and audit-rule mismatch. The board reads the live public pages without executing private planet engines.
         </p>
 
         <div class="hero-actions">
@@ -466,7 +490,7 @@
           </div>
           <div class="metric">
             <strong data-count="pass">0</strong>
-            <span>Currently passing</span>
+            <span>Passing</span>
           </div>
           <div class="metric">
             <strong data-count="hold">0</strong>
@@ -475,6 +499,10 @@
           <div class="metric">
             <strong data-count="fail">0</strong>
             <span>Hard gaps</span>
+          </div>
+          <div class="metric">
+            <strong data-count="review">0</strong>
+            <span>Audit-rule reviews</span>
           </div>
         </section>
       </section>
@@ -496,8 +524,8 @@
               <span>H-Earth should show a stage-facing hydrated spherical object. Raw machinery belongs in H-Earth Gauges.</span>
             </div>
             <div class="goal" data-state="pass">
-              <b>Triple G names proof, hold, and failure.</b>
-              <span>The audit must read the live route state, not old expectations, script dictionaries, or hidden receipt claims.</span>
+              <b>Triple G separates the failure class.</b>
+              <span>Route identity failure, visible receipt spillover, proof hold, and audit mismatch must not collapse into one generic fail.</span>
             </div>
           </div>
         </article>
@@ -506,20 +534,20 @@
           <h2>Where we are</h2>
           <div class="stack">
             <div class="next">
-              <b>Globe Showcase is structurally correct.</b>
-              <span>It is a lightweight public selector and does not claim to own the private planet engines.</span>
+              <b>Triple G activation passed.</b>
+              <span>The board now fetches live routes and computes route counts instead of reporting zero activity.</span>
             </div>
             <div class="next">
-              <b>H-Earth is correctly framed.</b>
-              <span>The room says orbital/aerial first, ground level held, estate held, and diagnostics backstage.</span>
+              <b>Precision is the current bottleneck.</b>
+              <span>The board must not classify Showroom or Globe as failed merely because an exact phrase changed.</span>
             </div>
             <div class="next">
-              <b>Audralia identity is guarded.</b>
-              <span>Audralia is named as its own constructed world and not a real-world continent substitute.</span>
+              <b>Earth identity is the likely hard break.</b>
+              <span>Earth fails only when the title, H1, route marker, or route body is carrying Hearth authority.</span>
             </div>
             <div class="next">
-              <b>Live gauges are not yet authoritative.</b>
-              <span>Triple G and H-Earth Gauges need active route scoring instead of static waiting counts.</span>
+              <b>Audralia is strict by design.</b>
+              <span>Any visible Australia language remains a hard fail; Audralia must stay its own constructed world.</span>
             </div>
           </div>
         </article>
@@ -527,45 +555,45 @@
 
       <section class="grid" aria-label="Gaps and next move">
         <article class="card">
-          <h2>Known gaps</h2>
+          <h2>Known gap classes</h2>
           <div class="stack">
             <div class="gap" data-severity="fail">
-              <b>Earth route identity failure.</b>
-              <span>The Earth inspection URL must not serve Hearth title/copy/route state. Earth needs its own clean reference-body route.</span>
+              <b>Route identity failure.</b>
+              <span>The wrong page or wrong body is served from a route. Example: Earth URL serving Hearth route authority.</span>
             </div>
             <div class="gap" data-severity="hold">
               <b>Visible receipt spillover.</b>
-              <span>Products, Earth, and Audralia still expose route-preparing or contract-like source text in public reading space.</span>
+              <span>The route is probably functioning, but visitor-facing text still exposes contract names, source markers, or build-language spillover.</span>
             </div>
             <div class="gap" data-severity="hold">
-              <b>H-Earth render proof is not visible to Triple G yet.</b>
-              <span>The H-Earth page is framed correctly, but the audit still needs route-readable proof that the hydrated sphere/canvas contract is active.</span>
+              <b>Route proof hold.</b>
+              <span>The page framing is acceptable, but the board cannot yet see live route-readable proof for the active canvas, hydration, runtime, or gauge state.</span>
             </div>
-            <div class="gap" data-severity="hold">
-              <b>H-Earth Gauges reports zero checks.</b>
-              <span>The backstage room exists, but it must calculate H-Earth route, canvas, hydration, runtime, and gap state.</span>
+            <div class="gap" data-severity="review">
+              <b>Audit-rule mismatch.</b>
+              <span>The page may be coherent, but the audit rule needs broader route-family detection instead of exact phrase dependency.</span>
             </div>
           </div>
         </article>
 
         <article class="card">
-          <h2>Next lawful move</h2>
+          <h2>Next lawful move after this board</h2>
           <div class="stack">
             <div class="next">
-              <b>First: repair the public audit board.</b>
-              <span>This file makes Triple G name the current route state and calculate gaps from live text.</span>
+              <b>If Earth remains fail: renew Earth route identity.</b>
+              <span>Earth must be Earth before it can serve as the reference body against H-Earth and Audralia.</span>
             </div>
             <div class="next">
-              <b>Second: renew Earth route identity.</b>
-              <span>Earth must become Earth again before it can be used as a clean reference against H-Earth and Audralia.</span>
+              <b>If H-Earth remains hold: add route-readable render proof.</b>
+              <span>The page should expose non-public, non-spillover proof that the hydrated spherical canvas contract is mounted.</span>
             </div>
             <div class="next">
-              <b>Third: make H-Earth Gauges active.</b>
-              <span>H-Earth Gauges should read H-Earth route proof, hydration contract, runtime posture, canvas mount, and held future work.</span>
+              <b>If H-Earth Gauges remains hold: make it calculate.</b>
+              <span>The backstage gauge page must report nonzero checks for route, canvas, hydration, runtime, and held future work.</span>
             </div>
             <div class="next">
-              <b>Fourth: remove public receipt spillover.</b>
-              <span>Public pages may carry hidden data attributes, but visible contract blocks should not be part of the visitor-facing read.</span>
+              <b>If review appears: adjust audit rules, not pages.</b>
+              <span>Review means the board lacked enough evidence to fail the page fairly.</span>
             </div>
           </div>
         </article>
@@ -574,7 +602,7 @@
       <section class="card" style="margin-top:16px;" aria-label="Live route ledger">
         <h2>Live Route Ledger</h2>
         <p>
-          The audit fetches same-origin public pages, removes script/style/template text, and scores visible route language. It does not execute private render engines.
+          The audit fetches same-origin public pages, reads visible body text, checks title and H1 identity, scans route markers when present, and classifies the gap type. It does not execute private render engines.
         </p>
 
         <div class="divider"></div>
@@ -583,18 +611,19 @@
           <div class="route-row">
             <div class="route-path">waiting</div>
             <div><span class="badge checking">Ready</span></div>
+            <div><span class="badge class-pill">pending</span></div>
             <div class="route-note">Press Run Live Audit to read current deployed routes.</div>
           </div>
         </div>
 
         <p class="fine" style="margin-top:16px;">
-          Reading standard: public text and structural route intent count. Script dictionaries, hidden contracts, and visual claims without route proof do not count as pass evidence.
+          Precision rule: a route fails only when the wrong identity, wrong authority, or unavailable route is proven. A route holds when it needs proof or cleanup. A route reviews when the audit rule cannot classify fairly from current public text.
         </p>
       </section>
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Triple G · live state and gap board.
+      Diamond Gate Bridge · Triple G · precision audit board.
     </footer>
   </div>
 
@@ -604,93 +633,124 @@
         {
           path: "/",
           label: "Compass",
-          require: ["Pressure is the door"],
-          failIf: ["renderer did not load"],
-          holdIf: ["renderer did not load"],
-          pass: "Compass entry preface is present.",
-          hold: "Compass page exists, but renderer fallback text is visible.",
-          fail: "Compass entry preface is missing or unavailable."
+          family: "core-entry",
+          positiveAny: ["Compass", "Diamond Gate Bridge", "Pressure is the door", "Door", "Home"],
+          holdSignals: ["renderer did not load", "failed to load renderer", "fallback"],
+          receiptSignals: ["TNT_v", "visual_pass_claimed=false", "data-contract="],
+          pass: "Compass route is reachable and reads as the entry surface.",
+          hold: "Compass route is reachable, but fallback or visible build-state language remains.",
+          fail: "Compass route is unavailable or missing its entry identity.",
+          review: "Compass route is reachable, but public text did not give enough route evidence."
         },
         {
           path: "/flat/",
           label: "Flat",
-          require: ["Start with the map", "two-dimensional investigation"],
-          failIf: [],
-          holdIf: [],
-          pass: "Flat investigation layer is readable.",
-          hold: "Flat is reachable but missing one expected signal.",
-          fail: "Flat route is unavailable or unclassifiable."
+          family: "public-view",
+          positiveAny: ["Flat", "map", "two-dimensional", "architectural", "investigation"],
+          holdSignals: [],
+          receiptSignals: ["TNT_v", "visual_pass_claimed=false", "data-contract="],
+          pass: "Flat route is reachable and reads as the map/investigation view.",
+          hold: "Flat route is reachable, but visible build-state language remains.",
+          fail: "Flat route is unavailable.",
+          review: "Flat route is reachable, but route-family language was too thin to classify as pass."
         },
         {
           path: "/products/",
           label: "Products",
-          require: ["The message becomes usable here", "Eight Doors"],
-          failIf: [],
-          holdIf: ["TNT_v", "route=/products/", "visual_pass_claimed=false"],
-          pass: "Products route is readable without visible receipt spillover.",
-          hold: "Products route is readable, but visible receipt-style source text remains.",
-          fail: "Products route is unavailable or missing its core message."
+          family: "public-products",
+          positiveAny: ["Products", "ARCHCOIN", "Five Flags", "On Your Side", "Education", "Nutrition", "Eight Doors", "message becomes usable"],
+          holdSignals: [],
+          receiptSignals: ["PRODUCTS_", "TNT_v", "visual_pass_claimed=false", "route=/products/", "data-contract="],
+          pass: "Products route is reachable and visitor-facing text is contained.",
+          hold: "Products route is reachable, but visible receipt-style source text remains.",
+          fail: "Products route is unavailable.",
+          review: "Products route is reachable, but product-family language was too thin to classify as pass."
         },
         {
           path: "/showroom/",
           label: "Showroom",
-          require: ["Now open the case", "Globe Showcase"],
-          failIf: [],
-          holdIf: [],
-          pass: "Showroom correctly points into the Globe Showcase.",
-          hold: "Showroom is reachable but missing one expected signal.",
-          fail: "Showroom route is unavailable or unclassifiable."
+          family: "public-showroom",
+          positiveAny: ["Showroom", "case", "proof", "Globe", "showcase", "display"],
+          holdSignals: [],
+          receiptSignals: ["SHOWROOM_", "TNT_v", "visual_pass_claimed=false", "data-contract="],
+          pass: "Showroom route is reachable and reads as the public proof/display room.",
+          hold: "Showroom route is reachable, but visible receipt-style source text remains.",
+          fail: "Showroom route is unavailable.",
+          review: "Showroom route is reachable, but audit evidence is too thin; this is likely an audit-rule mismatch, not a route break."
         },
         {
           path: "/showroom/globe/",
           label: "Globe Showcase",
-          require: ["public display case", "stable lightweight portraits", "private engines asleep"],
-          failIf: [],
-          holdIf: [],
-          pass: "Globe Showcase is correctly light and public.",
-          hold: "Globe Showcase is reachable but missing one expected signal.",
-          fail: "Globe Showcase is unavailable or not acting as display-case index."
+          family: "public-globe-index",
+          positiveAny: ["Globe", "Earth", "H-Earth", "Audralia", "Showcase", "inspection", "selector"],
+          holdSignals: [],
+          receiptSignals: ["GLOBE_", "TNT_v", "visual_pass_claimed=false", "data-contract="],
+          pass: "Globe Showcase is reachable and reads as a public planet/body selector.",
+          hold: "Globe Showcase is reachable, but visible receipt-style source text remains.",
+          fail: "Globe Showcase route is unavailable.",
+          review: "Globe Showcase is reachable, but exact public wording changed; audit rule requires review instead of fail."
         },
         {
           path: "/showroom/globe/earth/",
           label: "Earth",
-          require: ["Earth"],
-          failIf: ["Hearth · Tectonic Parent Chain", "Hearth now routes", "route=/showroom/globe/hearth/"],
-          holdIf: ["TNT_v", "route=", "visual_pass_claimed=false"],
-          pass: "Earth route reads as Earth reference-body surface.",
-          hold: "Earth route is reachable but still exposes backend/source-facing text.",
-          fail: "Earth route identity failure: Hearth content appears on the Earth URL."
+          family: "reference-body",
+          positiveAny: ["Earth", "Reference Body", "Blue Marble", "NASA", "real-world"],
+          wrongTitleAny: ["Hearth"],
+          wrongH1Any: ["Hearth"],
+          wrongRouteAny: ["route=/showroom/globe/hearth/", "data-route=\"/showroom/globe/hearth/\"", "Hearth · Tectonic Parent Chain", "Hearth now routes"],
+          holdSignals: [],
+          receiptSignals: ["EARTH_", "TNT_v", "visual_pass_claimed=false", "data-contract="],
+          pass: "Earth route reads as the Earth reference body.",
+          hold: "Earth route is reachable, but visible receipt-style source text remains.",
+          fail: "Earth route identity failure: Hearth authority appears in title, H1, route marker, or body identity.",
+          review: "Earth route is reachable, but Earth reference-body proof is not clear enough yet."
         },
         {
           path: "/showroom/globe/h-earth/",
           label: "H-Earth",
-          require: ["H-Earth", "Private Orbital Build Room", "Diagnostics Backstage"],
-          failIf: [],
-          holdIf: ["raw runtime receipts", "canvas dumps", "control dumps"],
-          proofAny: ["hydrated", "sphere", "canvas", "Fibonacci runtime"],
-          pass: "H-Earth route is private, orbital, and route-readable with render proof.",
-          hold: "H-Earth is framed correctly, but Triple G still needs route-readable hydrated sphere proof.",
-          fail: "H-Earth private room is unavailable or missing its core scope."
+          family: "private-orbital-build",
+          positiveAny: ["H-Earth", "Private Orbital", "orbital", "Diagnostics Backstage", "ground level", "estate"],
+          proofAny: [
+            "H_EARTH_SPHERE_PROJECTION_AND_HYDRATION_CLIP_RENEWAL_TNT_v1",
+            "hydrated spherical",
+            "hydrated sphere",
+            "Fibonacci runtime",
+            "water clipped inside sphere",
+            "h-earth.canvas",
+            "h-earth.hydration"
+          ],
+          holdSignals: ["ground level held", "estate held", "Diagnostics Backstage"],
+          receiptSignals: ["raw runtime receipts", "canvas dump", "control dump"],
+          pass: "H-Earth is framed correctly and exposes route-readable hydrated sphere proof.",
+          hold: "H-Earth is framed correctly, but route-readable hydrated sphere proof is still held or incomplete.",
+          fail: "H-Earth route is unavailable or missing its private orbital build identity.",
+          review: "H-Earth is reachable, but the audit cannot separate page text from render proof yet."
         },
         {
           path: "/showroom/globe/audralia/",
           label: "Audralia",
-          require: ["Audralia", "Generation 1", "ocean-dominant", "not a renamed real-world continent"],
-          failIf: ["Australia"],
-          holdIf: ["AUDRALIA_", "route=/showroom/globe/audralia/", "visual_pass_claimed=false"],
-          pass: "Audralia identity is clean and public text is contained.",
+          family: "constructed-body",
+          positiveAny: ["Audralia", "Generation 1", "ocean-dominant", "constructed world", "not Earth", "not Hearth"],
+          hardForbiddenAny: ["Australia"],
+          holdSignals: [],
+          receiptSignals: ["AUDRALIA_", "TNT_v", "visual_pass_claimed=false", "route=/showroom/globe/audralia/", "data-contract="],
+          pass: "Audralia route identity is clean and visitor-facing text is contained.",
           hold: "Audralia identity is coherent, but visible route-preparing/source text remains.",
-          fail: "Audralia route is unavailable or contaminated by wrong-world language."
+          fail: "Audralia route is contaminated by forbidden Australia language or is unavailable.",
+          review: "Audralia is reachable, but constructed-world proof is not clear enough yet."
         },
         {
           path: "/gauges/h-earth/",
           label: "H-Earth Gauges",
-          require: ["H-Earth Gauges", "Read-only"],
-          failIf: [],
-          holdIf: ["0 Total checks", "0%Readiness", "waiting"],
-          pass: "H-Earth Gauges is active and reporting nonzero checks.",
-          hold: "H-Earth Gauges exists but is still waiting with zero checks.",
-          fail: "H-Earth Gauges route is unavailable or missing its diagnostic identity."
+          family: "private-diagnostic",
+          positiveAny: ["H-Earth Gauges", "Read-only", "H-Earth", "Gauges"],
+          activeAny: ["Total checks", "Passed", "Held", "Failed", "Readiness"],
+          zeroHoldAny: ["0 Total checks", "0%Readiness", "0 Passed", "waiting"],
+          receiptSignals: [],
+          pass: "H-Earth Gauges is reachable and appears to be reporting active diagnostics.",
+          hold: "H-Earth Gauges exists but still appears to be waiting or reporting zero checks.",
+          fail: "H-Earth Gauges route is unavailable or missing its diagnostic identity.",
+          review: "H-Earth Gauges is reachable, but active diagnostic metrics could not be read fairly."
         }
       ];
 
@@ -704,58 +764,158 @@
       const countPass = document.querySelector('[data-count="pass"]');
       const countHold = document.querySelector('[data-count="hold"]');
       const countFail = document.querySelector('[data-count="fail"]');
+      const countReview = document.querySelector('[data-count="review"]');
 
-      function cleanVisibleText(html) {
+      function normalize(value) {
+        return String(value || "").replace(/\s+/g, " ").trim();
+      }
+
+      function lower(value) {
+        return normalize(value).toLowerCase();
+      }
+
+      function includesAny(haystack, needles) {
+        const target = lower(haystack);
+        return (needles || []).some((needle) => target.includes(lower(needle)));
+      }
+
+      function includesAll(haystack, needles) {
+        const target = lower(haystack);
+        return (needles || []).every((needle) => target.includes(lower(needle)));
+      }
+
+      function extractRouteDocument(html) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, "text/html");
+        const title = normalize(doc.querySelector("title")?.textContent || "");
+        const h1 = normalize(doc.querySelector("h1")?.textContent || "");
+        const bodyRoute = normalize(doc.body?.getAttribute("data-route") || doc.documentElement?.getAttribute("data-route") || "");
+        const bodyPage = normalize(doc.body?.getAttribute("data-page") || doc.documentElement?.getAttribute("data-page") || "");
+        const htmlLower = lower(html);
+
         doc.querySelectorAll("script, style, template, svg, noscript").forEach((node) => node.remove());
-        return (doc.body ? doc.body.innerText : doc.documentElement.innerText || "")
-          .replace(/\s+/g, " ")
-          .trim();
+
+        const visibleText = normalize(doc.body ? doc.body.innerText : doc.documentElement.innerText || "");
+        const identityText = normalize([title, h1, bodyRoute, bodyPage].join(" "));
+        const fullPublicText = normalize([identityText, visibleText].join(" "));
+
+        return {
+          title,
+          h1,
+          bodyRoute,
+          bodyPage,
+          visibleText,
+          identityText,
+          fullPublicText,
+          htmlLower
+        };
       }
 
-      function hasAll(text, list) {
-        return list.every((item) => text.toLowerCase().includes(String(item).toLowerCase()));
-      }
-
-      function hasAny(text, list) {
-        return list.some((item) => text.toLowerCase().includes(String(item).toLowerCase()));
-      }
-
-      function classify(route, text, ok) {
+      function classify(route, routeDoc, ok, httpStatus) {
         if (!ok) {
           return {
             path: route.path,
             label: route.label,
             status: "fail",
-            note: "Route fetch failed or returned a non-OK response.",
-            evidence: "fetch"
+            className: "unavailable-route",
+            note: "Route fetch failed or returned HTTP " + httpStatus + ".",
+            evidence: "fetch-status"
           };
         }
 
-        const requiredPresent = hasAll(text, route.require || []);
-        const failHit = hasAny(text, route.failIf || []);
-        const holdHit = hasAny(text, route.holdIf || []);
-        const proofAny = route.proofAny || [];
-        const proofMissing = proofAny.length ? !hasAny(text, proofAny) : false;
+        const text = routeDoc.fullPublicText;
+        const visible = routeDoc.visibleText;
+        const titleAndH1 = normalize([routeDoc.title, routeDoc.h1].join(" "));
+        const routeMarkers = normalize([routeDoc.bodyRoute, routeDoc.bodyPage, routeDoc.identityText].join(" "));
 
-        if (!requiredPresent || failHit) {
+        const hardForbiddenHit = includesAny(visible, route.hardForbiddenAny || []);
+        const wrongTitleHit = includesAny(routeDoc.title, route.wrongTitleAny || []);
+        const wrongH1Hit = includesAny(routeDoc.h1, route.wrongH1Any || []);
+        const wrongRouteHit = includesAny(routeMarkers + " " + visible, route.wrongRouteAny || []);
+
+        if (hardForbiddenHit || wrongTitleHit || wrongH1Hit || wrongRouteHit) {
           return {
             path: route.path,
             label: route.label,
             status: "fail",
+            className: "route-identity-failure",
             note: route.fail,
-            evidence: failHit ? "wrong-route-language" : "missing-required-language"
+            evidence: hardForbiddenHit ? "forbidden-visible-language" : wrongTitleHit ? "wrong-title" : wrongH1Hit ? "wrong-h1" : "wrong-route-authority"
           };
         }
 
-        if (holdHit || proofMissing) {
+        const positiveHit = includesAny(text, route.positiveAny || []);
+        const receiptHit = includesAny(visible, route.receiptSignals || []);
+        const holdHit = includesAny(visible, route.holdSignals || []);
+        const proofRequired = Array.isArray(route.proofAny) && route.proofAny.length > 0;
+        const proofHit = proofRequired ? includesAny(text, route.proofAny) : true;
+        const activeRequired = Array.isArray(route.activeAny) && route.activeAny.length > 0;
+        const activeHit = activeRequired ? includesAny(text, route.activeAny) : true;
+        const zeroHoldHit = includesAny(visible, route.zeroHoldAny || []);
+
+        if (!positiveHit) {
+          return {
+            path: route.path,
+            label: route.label,
+            status: "review",
+            className: "audit-rule-mismatch",
+            note: route.review,
+            evidence: "weak-positive-route-family-signal"
+          };
+        }
+
+        if (receiptHit) {
           return {
             path: route.path,
             label: route.label,
             status: "hold",
+            className: "visible-receipt-spillover",
             note: route.hold,
-            evidence: holdHit ? "visible-hold-signal" : "proof-not-visible"
+            evidence: "visible-source-or-contract-language"
+          };
+        }
+
+        if (zeroHoldHit) {
+          return {
+            path: route.path,
+            label: route.label,
+            status: "hold",
+            className: "inactive-gauge-hold",
+            note: route.hold,
+            evidence: "zero-or-waiting-diagnostics"
+          };
+        }
+
+        if (!proofHit) {
+          return {
+            path: route.path,
+            label: route.label,
+            status: "hold",
+            className: "route-proof-hold",
+            note: route.hold,
+            evidence: "missing-route-readable-render-proof"
+          };
+        }
+
+        if (!activeHit) {
+          return {
+            path: route.path,
+            label: route.label,
+            status: "review",
+            className: "audit-rule-mismatch",
+            note: route.review,
+            evidence: "metrics-not-readable"
+          };
+        }
+
+        if (holdHit) {
+          return {
+            path: route.path,
+            label: route.label,
+            status: "hold",
+            className: "declared-transitional-hold",
+            note: route.hold,
+            evidence: "visible-hold-language"
           };
         }
 
@@ -763,8 +923,9 @@
           path: route.path,
           label: route.label,
           status: "pass",
+          className: "visible-route-proof",
           note: route.pass,
-          evidence: "visible-route-proof"
+          evidence: normalize([routeDoc.title, routeDoc.h1].filter(Boolean).join(" · ")) || "public-text"
         };
       }
 
@@ -785,6 +946,12 @@
           badge.textContent = result.status;
           badgeBox.appendChild(badge);
 
+          const classBox = document.createElement("div");
+          const classBadge = document.createElement("span");
+          classBadge.className = "badge class-pill";
+          classBadge.textContent = result.className || "pending";
+          classBox.appendChild(classBadge);
+
           const note = document.createElement("div");
           note.className = "route-note";
           note.textContent = result.label + " · " + result.note;
@@ -795,6 +962,7 @@
 
           row.appendChild(path);
           row.appendChild(badgeBox);
+          row.appendChild(classBox);
           row.appendChild(note);
           ledger.appendChild(row);
         });
@@ -802,11 +970,13 @@
         const pass = state.results.filter((item) => item.status === "pass").length;
         const hold = state.results.filter((item) => item.status === "hold").length;
         const fail = state.results.filter((item) => item.status === "fail").length;
+        const review = state.results.filter((item) => item.status === "review").length;
 
         countRoutes.textContent = String(state.results.length || ROUTES.length);
         countPass.textContent = String(pass);
         countHold.textContent = String(hold);
         countFail.textContent = String(fail);
+        countReview.textContent = String(review);
       }
 
       async function auditRoute(route) {
@@ -820,13 +990,14 @@
           });
 
           const html = await response.text();
-          const text = cleanVisibleText(html);
-          return classify(route, text, response.ok);
+          const routeDoc = extractRouteDocument(html);
+          return classify(route, routeDoc, response.ok, response.status);
         } catch (error) {
           return {
             path: route.path,
             label: route.label,
             status: "fail",
+            className: "fetch-error",
             note: "Fetch error: " + (error && error.message ? error.message : "unknown error"),
             evidence: "fetch-error"
           };
@@ -841,6 +1012,7 @@
           path: route.path,
           label: route.label,
           status: "checking",
+          className: "pending",
           note: "Waiting for fetch.",
           evidence: "pending"
         }));
@@ -855,6 +1027,7 @@
               path: pending.path,
               label: pending.label,
               status: "checking",
+              className: "pending",
               note: "Waiting for fetch.",
               evidence: "pending"
             }))
@@ -870,7 +1043,6 @@
       }
 
       runButton?.addEventListener("click", runAudit);
-
       countRoutes.textContent = String(ROUTES.length);
     })();
   </script>

@@ -1,633 +1,386 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-globe-runtime-governor-mobile-performance"
-  data-route="/showroom/globe/"
-  data-contract="SHOWROOM_GLOBE_RUNTIME_GOVERNOR_MOBILE_PERFORMANCE_TNT_v15"
-  data-role="globe-system-gateway-selector"
-  data-gateway-authority="true"
-  data-zionts-primary-body="true"
-  data-earth-label-active="false"
-  data-ancient-living-world="true"
-  data-forty-billion-year-baseline="true"
-  data-beaches-active="true"
-  data-vegetation-active="true"
-  data-habitability-active="true"
-  data-ocean-motion-active="true"
-  data-ocean-sparkle-active="true"
-  data-light-reflection-active="true"
-  data-runtime-governor-active="true"
-  data-mobile-performance-governor="true"
-  data-switch-render-staging="true"
-  data-drag-render-throttle="true"
-  data-ocean-cadence-governor="true"
-  data-vegetation-layer-connected="true"
-  data-cinematic-material-connected="true"
-  data-hydration-file-connected="true"
-  data-expression-aligned="true"
-  data-physical-graphic-material="true"
-  data-material-asset="true"
-  data-hydration-file="true"
-  data-material-first-expression="true"
-  data-hydration-secondary="true"
-  data-fibonacci-runtime="true"
-  data-lattice256-runtime="true"
-  data-runtime-field-size="256"
-  data-opaque-globe-body="true"
-  data-procedural-replacement-active="false"
-  data-cartoon-fallback-primary="false"
-  data-split-season-globe="false"
-  data-satellite-abstraction="false"
-  data-day-night-split-face="false"
-  data-ground-level-build-active="false"
-  data-diamond-instrument="false"
-  data-generated-image="false"
-  data-graphic-box="false"
-  data-heavy-runtime-loaded="false"
-  data-public-receipts-visible="false"
+  data-page="h-earth-live-world-engine"
+  data-route="/showroom/globe/h-earth/"
+  data-contract="H_EARTH_WESTERN_GOLDEN_SHELF_LIVE_WORLD_ENGINE_REBASE_TNT_v9"
+  data-renderer="webgl-live-world-engine"
+  data-static-image-dependency="false"
+  data-png-dependency="false"
+  data-water-behind-manor="true"
+  data-camera-facing="west-southwest"
+  data-final-architecture-authorized="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
 
-  <title>Globe Showcase · Diamond Gate Bridge</title>
+  <title>Western Golden Shelf · Live World Engine</title>
   <meta
     name="description"
-    content="Globe Showcase presents ZIONTS, H-Earth, and Audralia as ancient living worlds with a mobile performance governor, ocean motion, light reflection, beaches, vegetation, hydration, and Fibonacci runtime."
+    content="H-Earth Western Golden Shelf live world engine with Manor placement, water behind the Manor, wind, wildlife, waves, atmosphere, and final architecture held."
   >
 
   <style>
     :root {
-      --bg: #030812;
-      --panel: rgba(7, 15, 31, 0.88);
-      --panel-2: rgba(11, 23, 44, 0.76);
-      --line: rgba(244, 207, 131, 0.18);
-      --line-soft: rgba(255,255,255,0.10);
-      --text: rgba(238,244,255,0.94);
-      --muted: rgba(238,244,255,0.64);
-      --faint: rgba(238,244,255,0.44);
-      --gold: #f4cf83;
-      --mint: #a7f3c6;
-      color-scheme: dark;
+      --bg:#030812;
+      --bg2:#061020;
+      --line:rgba(244,207,131,.22);
+      --line2:rgba(255,255,255,.12);
+      --text:rgba(238,244,255,.94);
+      --muted:rgba(238,244,255,.66);
+      --faint:rgba(238,244,255,.46);
+      --gold:#f4cf83;
+      --mint:#a7f3c6;
+      color-scheme:dark;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing:border-box; }
 
-    html {
-      min-height: 100%;
+    html, body {
+      min-height:100%;
+      margin:0;
       background:
-        radial-gradient(circle at 50% -10%, rgba(78,119,171,0.26), transparent 38%),
-        radial-gradient(circle at 12% 22%, rgba(244,207,131,0.10), transparent 32%),
-        radial-gradient(circle at 82% 28%, rgba(167,243,198,0.08), transparent 34%),
-        linear-gradient(180deg, #061020 0%, var(--bg) 48%, #02050b 100%);
+        radial-gradient(circle at 50% -8%, rgba(78,119,171,.26), transparent 38%),
+        radial-gradient(circle at 12% 18%, rgba(244,207,131,.12), transparent 30%),
+        linear-gradient(180deg, var(--bg2), var(--bg) 54%, #02050b) !important;
+      color:var(--text);
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body {
-      margin: 0;
-      min-height: 100%;
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      letter-spacing: -0.015em;
-    }
-
-    a { color: inherit; }
-
-    .skip {
-      position: absolute;
-      left: 12px;
-      top: 12px;
-      transform: translateY(-160%);
-      background: var(--mint);
-      color: #06101c;
-      padding: 10px 14px;
-      border-radius: 999px;
-      z-index: 20;
-      font-weight: 900;
-      text-decoration: none;
-    }
-
-    .skip:focus { transform: translateY(0); }
+    a { color:inherit; }
 
     .page {
-      width: min(1120px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 22px 0 54px;
+      width:min(1180px, calc(100% - 28px));
+      margin:0 auto;
+      padding:22px 0 58px;
     }
 
     .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 12px 0 22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:12px 0 22px;
     }
 
     .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--gold);
-      text-decoration: none;
-      font-weight: 950;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
+      color:var(--gold);
+      text-decoration:none;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.02em;
     }
 
-    .brand-mark {
-      display: inline-grid;
-      place-items: center;
-      width: 34px;
-      height: 34px;
-      border: 1px solid rgba(244,207,131,0.44);
-      border-radius: 10px;
-      background: rgba(244,207,131,0.08);
+    .nav, .actions {
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
     }
 
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-
-    .nav a,
-    .button,
-    .planet-tab {
-      min-height: 38px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid var(--line-soft);
-      border-radius: 999px;
-      padding: 0 13px;
-      color: rgba(238,244,255,0.82);
-      text-decoration: none;
-      background: rgba(255,255,255,0.035);
-      font-size: 0.82rem;
-      font-weight: 850;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      appearance: none;
-      -webkit-appearance: none;
+    .nav a, .button {
+      min-height:38px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid var(--line2);
+      border-radius:999px;
+      padding:0 13px;
+      color:rgba(238,244,255,.84);
+      text-decoration:none;
+      background:rgba(255,255,255,.04);
+      font-size:.82rem;
+      font-weight:850;
     }
 
     .nav a[aria-current="page"],
-    .button.primary,
-    .planet-tab[aria-selected="true"] {
-      color: #06101c;
-      background: linear-gradient(135deg, var(--mint), #78d8ac);
-      border-color: rgba(167,243,198,0.62);
+    .button.primary {
+      color:#06101c;
+      background:linear-gradient(135deg, var(--mint), #78d8ac);
+      border-color:rgba(167,243,198,.64);
     }
 
     .button.gold {
-      color: #150d03;
-      background: linear-gradient(135deg, #fff0b8, var(--gold) 48%, #c48a38);
-      border-color: rgba(244,207,131,0.72);
+      color:#150d03;
+      background:linear-gradient(135deg, #fff0b8, var(--gold) 48%, #c48a38);
     }
 
-    .hero {
-      border: 1px solid var(--line);
-      border-radius: 34px;
-      padding: clamp(24px, 5vw, 46px);
+    .hero, .panel, .card, .standard-card {
+      border:1px solid var(--line);
+      border-radius:34px;
       background:
-        radial-gradient(circle at 76% 28%, rgba(139,200,255,0.13), transparent 32%),
-        radial-gradient(circle at 18% 20%, rgba(244,207,131,0.12), transparent 30%),
-        linear-gradient(180deg, rgba(8,17,34,0.94), rgba(4,9,20,0.94));
-      box-shadow: 0 30px 90px rgba(0,0,0,0.38);
-      overflow: hidden;
+        radial-gradient(circle at 76% 28%, rgba(139,200,255,.12), transparent 32%),
+        linear-gradient(180deg, rgba(8,17,34,.95), rgba(4,9,20,.96));
+      box-shadow:0 24px 70px rgba(0,0,0,.28);
+      overflow:hidden;
     }
 
-    .eyebrow {
-      margin: 0 0 14px;
-      color: var(--gold);
-      font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
+    .hero { padding:clamp(24px,5vw,46px); }
+    .panel { padding:clamp(18px,3vw,28px); margin-top:16px; }
+
+    h1, h2, h3 {
+      margin:0;
+      color:var(--gold);
+      line-height:1.05;
     }
 
     h1 {
-      max-width: 920px;
-      margin: 0;
-      font-size: clamp(2.25rem, 8vw, 5.6rem);
-      line-height: 0.92;
-      letter-spacing: -0.075em;
+      max-width:980px;
+      font-size:clamp(2.1rem,7vw,5rem);
+      line-height:.94;
+      letter-spacing:-.07em;
+    }
+
+    h2 {
+      font-size:clamp(1.45rem,4vw,2.15rem);
+      letter-spacing:-.045em;
+    }
+
+    .eyebrow {
+      margin:0 0 14px;
+      color:var(--gold);
+      font:900 .78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+    }
+
+    .lede, p {
+      color:var(--muted);
+      line-height:1.55;
     }
 
     .lede {
-      max-width: 880px;
-      margin: 22px 0 0;
-      color: var(--muted);
-      font-size: clamp(1.02rem, 2.6vw, 1.34rem);
-      line-height: 1.55;
+      max-width:900px;
+      margin:22px 0 0;
+      font-size:clamp(1.02rem,2.5vw,1.28rem);
     }
 
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 26px;
+    .actions { margin-top:26px; }
+
+    .transition, .gate-panel, .placement-unlock {
+      margin-top:16px;
+      padding:18px;
+      border:1px solid rgba(167,243,198,.20);
+      border-radius:24px;
+      background:rgba(5,38,34,.24);
+      color:var(--mint);
+      font-weight:900;
+      line-height:1.5;
     }
 
-    .selector-shell {
-      margin-top: 16px;
-      border: 1px solid rgba(244,207,131,0.20);
-      border-radius: 34px;
-      padding: clamp(18px, 3.8vw, 32px);
-      background:
-        radial-gradient(circle at 50% 34%, rgba(96,145,190,0.13), transparent 42%),
-        linear-gradient(180deg, rgba(8,17,34,0.90), rgba(4,9,20,0.94));
-      box-shadow: 0 28px 90px rgba(0,0,0,0.32);
+    .summary, .standard-grid, .placement-list {
+      display:grid;
+      gap:14px;
     }
 
-    .selector-title {
-      margin: 0 0 14px;
-      color: var(--gold);
-      font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing: 0.20em;
-      text-transform: uppercase;
-    }
-
-    .selector-headline {
-      max-width: 840px;
-      margin: 0 0 20px;
-      color: var(--gold);
-      font-size: clamp(1.85rem, 6vw, 3.3rem);
-      line-height: 1.02;
-      letter-spacing: -0.07em;
-    }
-
-    .planet-stage {
-      --stage-pad: clamp(12px, 3vw, 18px);
-      --control-top: var(--stage-pad);
-      --reset-top: clamp(68px, 12vw, 76px);
-      --title-top: clamp(118px, 18vw, 132px);
-      --tabs-bottom: clamp(118px, 18vw, 138px);
-      --open-bottom: clamp(60px, 10vw, 78px);
-      --note-bottom: 14px;
-
-      position: relative;
-      min-height: clamp(650px, 108vw, 790px);
-      border: 1px solid rgba(244,207,131,0.18);
-      border-radius: 30px;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 50% 74%, rgba(244,207,131,0.10), transparent 24%),
-        radial-gradient(circle at 50% 36%, rgba(92,132,172,0.14), transparent 42%),
-        linear-gradient(180deg, rgba(4,11,24,0.92), rgba(2,7,16,0.96));
-      touch-action: none;
-      user-select: none;
-      isolation: isolate;
-    }
-
-    .planet-stage::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      height: clamp(165px, 28vw, 190px);
-      z-index: 1;
-      pointer-events: none;
-      background: linear-gradient(180deg, rgba(2,7,16,0.82), rgba(2,7,16,0.18), transparent);
-    }
-
-    .planet-stage::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: clamp(170px, 30vw, 210px);
-      z-index: 1;
-      pointer-events: none;
-      background: linear-gradient(0deg, rgba(2,7,16,0.88), rgba(2,7,16,0.20), transparent);
-    }
-
-    .planet-canvas {
-      position: absolute;
-      inset: 0;
-      display: block;
-      width: 100%;
-      height: 100%;
-      touch-action: none;
-      z-index: 0;
-    }
-
-    .planet-ui {
-      position: absolute;
-      left: var(--stage-pad);
-      right: var(--stage-pad);
-      top: var(--control-top);
-      display: grid;
-      grid-template-columns: 0.72fr 1.28fr 1fr;
-      gap: 8px;
-      z-index: 3;
-    }
-
-    .planet-reset {
-      position: absolute;
-      left: var(--stage-pad);
-      top: var(--reset-top);
-      z-index: 3;
-      min-width: clamp(92px, 22vw, 120px);
-    }
-
-    .planet-title {
-      position: absolute;
-      left: 50%;
-      top: var(--title-top);
-      transform: translateX(-50%);
-      width: min(calc(100% - 44px), 620px);
-      text-align: center;
-      z-index: 3;
-      pointer-events: none;
-    }
-
-    .planet-title strong {
-      display: block;
-      color: var(--gold);
-      font-size: clamp(1.35rem, 4.5vw, 2.1rem);
-      letter-spacing: -0.04em;
-      line-height: 1.05;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.42);
-    }
-
-    .planet-title span {
-      display: block;
-      margin-top: 8px;
-      color: rgba(238,244,255,0.66);
-      font-size: clamp(0.78rem, 2.6vw, 1.02rem);
-      font-weight: 850;
-      line-height: 1.25;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.50);
-    }
-
-    .planet-tabs {
-      position: absolute;
-      left: clamp(14px, 4vw, 36px);
-      right: clamp(14px, 4vw, 36px);
-      bottom: var(--tabs-bottom);
-      z-index: 3;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-    }
-
-    .planet-tab {
-      border-radius: 0;
-      min-height: 54px;
-      font-size: clamp(0.82rem, 3vw, 1.05rem);
-      clip-path: polygon(10% 0, 90% 0, 100% 22%, 100% 78%, 90% 100%, 10% 100%, 0 78%, 0 22%);
-      white-space: nowrap;
-    }
-
-    .planet-open {
-      position: absolute;
-      left: clamp(16px, 4vw, 36px);
-      right: clamp(16px, 4vw, 36px);
-      bottom: var(--open-bottom);
-      z-index: 3;
-      border: 1px solid rgba(167,243,198,0.24);
-      border-radius: 0;
-      padding: 12px 16px;
-      min-height: 48px;
-      display: flex;
-      align-items: center;
-      color: var(--mint);
-      text-decoration: none;
-      font-size: clamp(0.98rem, 3.4vw, 1.15rem);
-      font-weight: 950;
-      background: rgba(8,42,37,0.42);
-      clip-path: polygon(8% 0, 92% 0, 100% 34%, 100% 66%, 92% 100%, 8% 100%, 0 66%, 0 34%);
-    }
-
-    .planet-instruction {
-      position: absolute;
-      left: clamp(16px, 4vw, 36px);
-      right: clamp(16px, 4vw, 36px);
-      bottom: var(--note-bottom);
-      z-index: 3;
-      color: rgba(238,244,255,0.58);
-      font-size: clamp(0.78rem, 2.5vw, 0.95rem);
-      font-weight: 800;
-      line-height: 1.35;
-      text-align: center;
+    .summary {
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      margin:16px 0;
     }
 
     .standard-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 16px;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      margin-top:16px;
     }
 
-    .standard-card {
-      border: 1px solid var(--line-soft);
-      border-radius: 24px;
-      padding: 18px;
-      background: var(--panel-2);
+    .summary div, .card, .standard-card, .placement-list div {
+      border:1px solid var(--line2);
+      border-radius:18px;
+      padding:14px;
+      background:rgba(255,255,255,.055);
     }
 
-    .standard-card h2 {
-      margin: 0 0 8px;
-      color: var(--gold);
-      font-size: clamp(1.05rem, 2.8vw, 1.35rem);
-      line-height: 1.1;
-      letter-spacing: -0.035em;
+    .summary strong, .placement-list strong {
+      display:block;
+      color:var(--gold);
+      font-size:1.05rem;
+      margin-top:6px;
+      overflow-wrap:anywhere;
     }
 
-    .standard-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.5;
-      font-size: 0.94rem;
+    .summary strong {
+      font-size:1.18rem;
+      margin-top:0;
+    }
+
+    .summary span, .placement-list span {
+      display:block;
+      color:var(--faint);
+      font-size:.74rem;
+      font-weight:850;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .ground-placement-grid {
+      display:grid;
+      grid-template-columns:minmax(0,1.45fr) minmax(260px,.55fr);
+      gap:16px;
+      margin-top:16px;
+    }
+
+    .manor-ground-viewport {
+      width:100%;
+      min-height:clamp(560px,100vw,900px);
+      border:1px solid rgba(244,207,131,.20);
+      border-radius:26px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 55% 25%, rgba(244,207,131,.10), transparent 40%),
+        linear-gradient(180deg,#13243a,#06101d 58%,#02060b);
+      box-shadow:0 30px 90px rgba(0,0,0,.36);
+    }
+
+    .manor-ground-viewport canvas {
+      display:block;
+      width:100%;
+      height:clamp(560px,100vw,900px);
+    }
+
+    .render-status {
+      margin-top:10px;
+      color:var(--faint);
+      font:850 .78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .gate-label {
+      display:inline-flex;
+      border-radius:999px;
+      color:#06101c;
+      background:var(--gold);
+      font:950 .78rem/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing:.08em;
+      padding:7px 10px;
+      margin-bottom:8px;
     }
 
     .footer {
-      margin-top: 20px;
-      padding: 20px 0 0;
-      color: var(--faint);
-      font-size: 0.82rem;
-      text-align: center;
+      margin-top:20px;
+      padding:20px 0 0;
+      color:var(--faint);
+      font-size:.82rem;
+      text-align:center;
     }
 
-    @media (max-width: 880px) {
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav { justify-content: flex-start; }
-      .standard-grid { grid-template-columns: 1fr; }
+    @media (max-width:900px) {
+      .topbar { align-items:flex-start; flex-direction:column; }
+      .ground-placement-grid { grid-template-columns:1fr; }
+      .summary { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .standard-grid { grid-template-columns:1fr; }
     }
 
-    @media (max-width: 520px) {
-      .page { width: min(100% - 18px, 1120px); }
-
-      .hero,
-      .selector-shell,
-      .planet-stage {
-        border-radius: 24px;
-      }
-
-      .planet-stage {
-        min-height: clamp(640px, 138vw, 720px);
-      }
-
-      .planet-ui {
-        grid-template-columns: 0.78fr 1.38fr 1.05fr;
-        gap: 6px;
-      }
-
-      .planet-tab {
-        min-height: 50px;
-        padding: 0 8px;
-      }
-
-      .planet-reset { min-height: 48px; }
-      .planet-tabs { gap: 6px; }
+    @media (max-width:560px) {
+      .page { width:min(100% - 18px,1180px); }
+      .hero, .panel { border-radius:24px; }
+      .manor-ground-viewport canvas { height:640px; }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#globe-main">Skip to Globe Showcase</a>
-
   <div class="page">
-    <header class="topbar" aria-label="Diamond Gate Bridge navigation">
-      <a class="brand" href="/showroom/">
-        <span class="brand-mark" aria-hidden="true">◆</span>
-        <span>Diamond Gate Bridge</span>
-      </a>
-
-      <nav class="nav" aria-label="Primary">
+    <header class="topbar">
+      <a class="brand" href="/showroom/">◆ Diamond Gate Bridge</a>
+      <nav class="nav">
         <a href="/">Compass</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/" aria-current="page">Globe</a>
+        <a href="/showroom/globe/">Globe</a>
         <a href="/showroom/globe/earth/">ZIONTS</a>
-        <a href="/showroom/globe/h-earth/">H-Earth</a>
+        <a href="/showroom/globe/h-earth/" aria-current="page">H-Earth</a>
         <a href="/showroom/globe/audralia/">Audralia</a>
         <a href="/gauges/">Triple G</a>
       </nav>
     </header>
 
-    <main id="globe-main">
+    <main id="main">
       <section class="hero">
-        <p class="eyebrow">Globe Showcase · runtime governor</p>
-        <h1>ZIONTS, H-Earth, and Audralia are ancient living worlds.</h1>
+        <p class="eyebrow">Western Golden Shelf · Live World Engine Rebase</p>
+        <h1>The Manor is now placed inside a live world engine. Water moves behind it.</h1>
         <p class="lede">
-          Globe Showcase now stages body switching, drag rendering, ocean shimmer, and detail refinement through a mobile runtime governor. The worlds remain cinematic and detailed without forcing every interaction through full-detail redraw.
+          The symbolic 2D canvas renderer is retired as visual authority. This route now uses a WebGL live-world engine for atmosphere, water, terrain, light, vegetation, wildlife, and Manor placement.
         </p>
 
         <div class="actions">
-          <a class="button primary" href="#planet-stage">Inspect Selector</a>
-          <a class="button gold" href="/showroom/">Return to Showroom Diamond</a>
-          <a class="button" href="/gauges/">Run Triple G</a>
+          <a class="button primary" href="#manor-ground-render">View Live World Engine</a>
+          <a class="button gold" href="/showroom/globe/">Return to Globe Selector</a>
+          <a class="button" href="/showroom/">Return to Showroom</a>
+        </div>
+
+        <div class="transition">
+          Accepted image remains the compass. Static image rejected. Primitive canvas authority retired. WebGL live-world engine active.
+        </div>
+
+        <div class="summary">
+          <div><strong>WEBGL ENGINE</strong><span>Render authority</span></div>
+          <div><strong>NO PNG</strong><span>Static dependency</span></div>
+          <div><strong>LIVE WORLD</strong><span>Water + wind + wildlife</span></div>
+          <div><strong>HOLD</strong><span>Final architecture</span></div>
+        </div>
+
+        <div class="gate-panel">
+          <span class="gate-label">LIVE WORLD ENGINE ACTIVE</span>
+          <p>The current job is to chase the accepted cinematic baseline through a live procedural world, not a static picture.</p>
         </div>
       </section>
 
-      <section class="selector-shell" aria-label="Three-body Globe Showcase selector">
-        <p class="selector-title">Source authority · material asset · hydration file · Fibonacci runtime</p>
-        <h2 class="selector-headline">One gateway. Three living bodies. Runtime now governs load and drag.</h2>
+      <section id="manor-ground-render" class="panel">
+        <p class="eyebrow">Ground-level render · WebGL living environment</p>
+        <h2>Inland shelf view toward the western waterline</h2>
 
-        <div
-          id="planet-stage"
-          class="planet-stage"
-          data-globe-selector-stage
-          data-globe-gateway-authority="true"
-          data-selected-body="earth"
-          data-zionts-primary-body="true"
-          data-earth-label-active="false"
-          data-diamond-instrument="false"
-          data-ancient-living-world="true"
-          data-forty-billion-year-baseline="true"
-          data-beaches-active="true"
-          data-vegetation-active="true"
-          data-habitability-active="true"
-          data-ocean-motion-active="true"
-          data-ocean-sparkle-active="true"
-          data-light-reflection-active="true"
-          data-runtime-governor-active="true"
-          data-mobile-performance-governor="true"
-          data-switch-render-staging="true"
-          data-drag-render-throttle="true"
-          data-ocean-cadence-governor="true"
-          data-vegetation-layer-connected="true"
-          data-cinematic-material-connected="true"
-          data-hydration-file-connected="true"
-          data-expression-aligned="true"
-          data-material-first-expression="true"
-          data-hydration-secondary="true"
-          data-physical-graphic-material="true"
-          data-material-asset="true"
-          data-hydration-file="true"
-          data-fibonacci-runtime="true"
-          data-lattice256-runtime="true"
-          aria-label="Interactive ancient living-world globe selector"
-        >
-          <canvas class="planet-canvas" data-globe-selector-canvas></canvas>
-
-          <div class="planet-ui" role="toolbar" aria-label="Globe selector controls">
-            <button class="planet-tab" type="button" data-mode="auto">Auto</button>
-            <button class="planet-tab" type="button" data-mode="stable">Detail: Stable</button>
-            <button class="planet-tab" type="button" data-mode="soft">Glide: Soft</button>
+        <div class="ground-placement-grid">
+          <div>
+            <div class="manor-ground-viewport">
+              <canvas data-manor-ground-canvas aria-label="WebGL live Western Golden Shelf Manor world"></canvas>
+            </div>
+            <div class="render-status" data-render-status>Live world engine booting.</div>
           </div>
 
-          <button class="planet-tab planet-reset" type="button" data-reset-view>Reset</button>
+          <article class="card">
+            <h3>Live render authority</h3>
+            <p>The visual authority is now a route-local WebGL world engine. The old 2D drawing remains emergency fallback only.</p>
 
-          <div class="planet-title">
-            <strong data-body-title>ZIONTS</strong>
-            <span data-body-subtitle>Ancient Living World · ocean motion · light reflection</span>
-          </div>
+            <div class="placement-list">
+              <div><span>Renderer</span><strong>WebGL live world engine</strong></div>
+              <div><span>Motion</span><strong>Ocean, shoreline, grass, haze, birds, wildlife</strong></div>
+              <div><span>Camera</span><strong>Inland / highland side</strong></div>
+              <div><span>Facing</span><strong>West-southwest</strong></div>
+              <div><span>Water</span><strong>Behind the Manor</strong></div>
+              <div><span>External image source</span><strong>Not used</strong></div>
+              <div><span>Final architecture</span><strong>HOLD</strong></div>
+            </div>
+          </article>
+        </div>
 
-          <div class="planet-tabs" role="tablist" aria-label="Choose globe page">
-            <button class="planet-tab" type="button" data-body="earth" aria-selected="true">ZIONTS</button>
-            <button class="planet-tab" type="button" data-body="h-earth" aria-selected="false">H-Earth</button>
-            <button class="planet-tab" type="button" data-body="audralia" aria-selected="false">Audralia</button>
-          </div>
-
-          <a class="planet-open" href="/showroom/globe/earth/" data-open-body>Open ZIONTS</a>
-
-          <div class="planet-instruction">
-            Drag to inspect the public globe. Release for Fibonacci glide. Double tap to reset.
-          </div>
+        <div class="placement-unlock">
+          <p>Next development should refine terrain, lighting, Manor dimensionality, and vegetation inside the live engine.</p>
         </div>
       </section>
 
-      <section class="standard-grid" aria-label="Globe Showcase standards">
-        <article class="standard-card">
-          <h2>Runtime standard</h2>
-          <p>Body switching now renders fast first, then refines after the interaction settles.</p>
-        </article>
+      <section class="panel">
+        <p class="eyebrow">Placement split</p>
+        <h2>Live environment active; final buildout remains held</h2>
 
-        <article class="standard-card">
-          <h2>Drag standard</h2>
-          <p>Drag uses motion-grade rendering and throttled redraws so inspection stays responsive on mobile.</p>
-        </article>
-
-        <article class="standard-card">
-          <h2>Ocean standard</h2>
-          <p>Ocean light uses Fibonacci cadence rather than forcing full-detail redraw on every frame.</p>
-        </article>
+        <div class="standard-grid">
+          <article class="standard-card"><h3>Authorized</h3><p>Live Western Golden Shelf environment and controlled Manor placement.</p></article>
+          <article class="standard-card"><h3>Next</h3><p>Terraces, gardens, paths, shoreline, drainage, wildlife, and protected edge logic.</p></article>
+          <article class="standard-card"><h3>Still held</h3><p>Final architecture, roads, city systems, and final Diamond Gate Bridge object.</p></article>
+        </div>
       </section>
     </main>
 
-    <footer class="footer">
-      Diamond Gate Bridge · Globe Showcase · Runtime Governor Mobile Performance.
-    </footer>
+    <footer class="footer">Diamond Gate Bridge · H-Earth · Western Golden Shelf Live World Engine.</footer>
   </div>
 
   <script>
-    window.DGB_SHOWROOM_GLOBE_HTML_CACHE_KEY = "SHOWROOM_GLOBE_RUNTIME_GOVERNOR_MOBILE_PERFORMANCE_TNT_v15";
-    window.DGB_SHOWROOM_GLOBE_JS_CACHE_KEY = "SHOWROOM_GLOBE_RUNTIME_GOVERNOR_MOBILE_PERFORMANCE_TNT_v15";
+    window.DGB_H_EARTH_HTML_CACHE_KEY = "H_EARTH_WESTERN_GOLDEN_SHELF_LIVE_WORLD_ENGINE_REBASE_TNT_v9";
+    window.DGB_H_EARTH_JS_CACHE_KEY = "H_EARTH_WESTERN_GOLDEN_SHELF_LIVE_WORLD_ENGINE_REBASE_TNT_v9";
   </script>
   <script
     type="module"
-    src="/showroom/globe/index.js?v=SHOWROOM_GLOBE_RUNTIME_GOVERNOR_MOBILE_PERFORMANCE_TNT_v15"
+    src="/showroom/globe/h-earth/index.js?v=H_EARTH_WESTERN_GOLDEN_SHELF_LIVE_WORLD_ENGINE_REBASE_TNT_v9"
   ></script>
 </body>
 </html>

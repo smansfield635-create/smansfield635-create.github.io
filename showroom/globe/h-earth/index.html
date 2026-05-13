@@ -1,10 +1,13 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="h-earth-western-golden-shelf-style-recovery"
+  class="dgb-h-earth-skin-locked"
+  data-page="h-earth-runtime-skin-guard-recovery"
   data-route="/showroom/globe/h-earth/"
-  data-contract="H_EARTH_WESTERN_GOLDEN_SHELF_STYLE_RECOVERY_TNT_v1"
+  data-contract="H_EARTH_RUNTIME_SKIN_GUARD_RECOVERY_TNT_v2"
+  data-prior-contract="H_EARTH_WESTERN_GOLDEN_SHELF_ESTATE_AUTHORIZATION_TNT_v1"
   data-target="h-earth"
+  data-runtime-skin-guard="true"
   data-selected-region="western-golden-shelf"
   data-western-golden-shelf-selected="true"
   data-estate-authorization-analysis="true"
@@ -42,7 +45,7 @@
     content="Western Golden Shelf estate-authorization analysis for H-Earth. Terrain, elevation, water, arrival, boundary, and orientation proof before Manor, Estate, or Diamond Gate Bridge placement."
   >
 
-  <style>
+  <style id="dgb-h-earth-critical-skin" data-contract="H_EARTH_RUNTIME_SKIN_GUARD_RECOVERY_TNT_v2">
     :root {
       --bg: #030812;
       --bg2: #061020;
@@ -61,34 +64,31 @@
       color-scheme: dark;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html {
+    html,
+    body {
       min-height: 100%;
       background:
-        radial-gradient(circle at 50% -8%, rgba(78, 119, 171, 0.26), transparent 38%),
-        radial-gradient(circle at 12% 18%, rgba(244, 207, 131, 0.12), transparent 30%),
-        radial-gradient(circle at 84% 30%, rgba(167, 243, 198, 0.09), transparent 34%),
-        linear-gradient(180deg, var(--bg2) 0%, var(--bg) 54%, #02050b 100%);
+        radial-gradient(circle at 50% -8%, rgba(78,119,171,0.26), transparent 38%),
+        radial-gradient(circle at 12% 18%, rgba(244,207,131,0.12), transparent 30%),
+        radial-gradient(circle at 84% 30%, rgba(167,243,198,0.09), transparent 34%),
+        linear-gradient(180deg, var(--bg2) 0%, var(--bg) 54%, #02050b 100%) !important;
+      color: var(--text) !important;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
     }
 
     body {
       margin: 0;
-      min-height: 100%;
       background:
-        linear-gradient(90deg, rgba(244, 207, 131, 0.08) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(244, 207, 131, 0.035) 1px, transparent 1px);
-      background-size: 58px 58px;
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        linear-gradient(90deg, rgba(244,207,131,0.08) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(244,207,131,0.035) 1px, transparent 1px),
+        linear-gradient(180deg, var(--bg2) 0%, var(--bg) 54%, #02050b 100%) !important;
+      background-size: 58px 58px, 58px 58px, auto !important;
       letter-spacing: -0.015em;
     }
 
-    a {
-      color: inherit;
-    }
+    a { color: inherit; }
 
     .skip {
       position: absolute;
@@ -104,9 +104,7 @@
       text-decoration: none;
     }
 
-    .skip:focus {
-      transform: translateY(0);
-    }
+    .skip:focus { transform: translateY(0); }
 
     .page {
       width: min(1180px, calc(100% - 28px));
@@ -138,9 +136,9 @@
       place-items: center;
       width: 34px;
       height: 34px;
-      border: 1px solid rgba(244, 207, 131, 0.46);
+      border: 1px solid rgba(244,207,131,0.46);
       border-radius: 10px;
-      background: rgba(244, 207, 131, 0.08);
+      background: rgba(244,207,131,0.08);
     }
 
     .nav {
@@ -159,9 +157,9 @@
       border: 1px solid var(--line2);
       border-radius: 999px;
       padding: 0 13px;
-      color: rgba(238, 244, 255, 0.84);
+      color: rgba(238,244,255,0.84);
       text-decoration: none;
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255,255,255,0.04);
       font-size: 0.82rem;
       font-weight: 850;
       letter-spacing: 0.02em;
@@ -171,13 +169,13 @@
     .button.primary {
       color: #06101c;
       background: linear-gradient(135deg, var(--mint), #78d8ac);
-      border-color: rgba(167, 243, 198, 0.64);
+      border-color: rgba(167,243,198,0.64);
     }
 
     .button.gold {
       color: #150d03;
       background: linear-gradient(135deg, #fff0b8, var(--gold) 48%, #c48a38);
-      border-color: rgba(244, 207, 131, 0.74);
+      border-color: rgba(244,207,131,0.74);
     }
 
     .hero,
@@ -185,16 +183,15 @@
       border: 1px solid var(--line);
       border-radius: 34px;
       background:
-        radial-gradient(circle at 76% 28%, rgba(139, 200, 255, 0.12), transparent 32%),
-        radial-gradient(circle at 18% 20%, rgba(244, 207, 131, 0.10), transparent 30%),
-        linear-gradient(180deg, rgba(8, 17, 34, 0.95), rgba(4, 9, 20, 0.96));
-      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.34);
+        radial-gradient(circle at 76% 28%, rgba(139,200,255,0.12), transparent 32%),
+        radial-gradient(circle at 18% 20%, rgba(244,207,131,0.10), transparent 30%),
+        linear-gradient(180deg, rgba(8,17,34,0.95), rgba(4,9,20,0.96));
+      box-shadow: 0 30px 90px rgba(0,0,0,0.34);
       overflow: hidden;
     }
 
-    .hero {
-      padding: clamp(24px, 5vw, 46px);
-    }
+    .hero { padding: clamp(24px, 5vw, 46px); }
+    .panel { padding: clamp(18px, 3vw, 28px); }
 
     .eyebrow {
       margin: 0 0 14px;
@@ -276,16 +273,16 @@
     .gate-panel {
       margin-top: 16px;
       padding: 18px;
-      border: 1px solid rgba(167, 243, 198, 0.20);
+      border: 1px solid rgba(167,243,198,0.20);
       border-radius: 24px;
-      background: rgba(5, 38, 34, 0.24);
+      background: rgba(5,38,34,0.24);
       color: var(--mint);
       font-weight: 900;
       line-height: 1.5;
     }
 
     .gate-panel {
-      border-color: rgba(244, 207, 131, 0.26);
+      border-color: rgba(244,207,131,0.26);
       color: var(--text);
     }
 
@@ -313,10 +310,6 @@
       margin-top: 16px;
     }
 
-    .panel {
-      padding: clamp(18px, 3vw, 28px);
-    }
-
     .region-list {
       display: grid;
       gap: 10px;
@@ -332,7 +325,7 @@
       border-radius: 20px;
       padding: 14px;
       color: var(--text);
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255,255,255,0.04);
       text-align: left;
       cursor: pointer;
       appearance: none;
@@ -342,8 +335,8 @@
 
     .region-card.is-selected,
     .region-card.is-primary {
-      border-color: rgba(167, 243, 198, 0.64);
-      background: rgba(167, 243, 198, 0.10);
+      border-color: rgba(167,243,198,0.64);
+      background: rgba(167,243,198,0.10);
     }
 
     .region-topline {
@@ -403,7 +396,7 @@
     .viewport {
       width: 100%;
       min-height: 330px;
-      border: 1px solid rgba(244, 207, 131, 0.20);
+      border: 1px solid rgba(244,207,131,0.20);
       border-radius: 26px;
       overflow: hidden;
       background: #06101d;
@@ -495,12 +488,10 @@
     .hold-box {
       display: grid;
       gap: 7px;
-      border-color: rgba(255, 159, 159, 0.30);
+      border-color: rgba(255,159,159,0.30);
     }
 
-    .hold-box strong {
-      color: var(--danger);
-    }
+    .hold-box strong { color: var(--danger); }
 
     .hold-box span {
       color: var(--muted);
@@ -527,17 +518,9 @@
       background: var(--panel2);
     }
 
-    .proof-card.proof-pass {
-      border-color: rgba(167, 243, 198, 0.38);
-    }
-
-    .proof-card.proof-review {
-      border-color: rgba(244, 207, 131, 0.38);
-    }
-
-    .proof-card.proof-fail {
-      border-color: rgba(255, 159, 159, 0.40);
-    }
+    .proof-card.proof-pass { border-color: rgba(167,243,198,0.38); }
+    .proof-card.proof-review { border-color: rgba(244,207,131,0.38); }
+    .proof-card.proof-fail { border-color: rgba(255,159,159,0.40); }
 
     .proof-head {
       display: flex;
@@ -564,13 +547,8 @@
       font: 950 0.70rem/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
 
-    .proof-review .proof-head span {
-      background: var(--gold);
-    }
-
-    .proof-fail .proof-head span {
-      background: var(--danger);
-    }
+    .proof-review .proof-head span { background: var(--gold); }
+    .proof-fail .proof-head span { background: var(--danger); }
 
     .proof-card p,
     .zone-card p,
@@ -624,52 +602,26 @@
         flex-direction: column;
       }
 
-      .nav {
-        justify-content: flex-start;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .summary {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
+      .nav { justify-content: flex-start; }
+      .grid { grid-template-columns: 1fr; }
+      .summary { grid-template-columns: repeat(2, minmax(0,1fr)); }
       .proof-grid,
       .zone-grid,
       .orientation-grid,
-      .standard-grid {
-        grid-template-columns: 1fr;
-      }
+      .standard-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 560px) {
-      .page {
-        width: min(100% - 18px, 1180px);
-      }
-
-      .hero,
-      .panel {
-        border-radius: 24px;
-      }
-
-      .metric-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .viewport canvas {
-        height: 310px;
-      }
-
-      .selected-heading {
-        flex-direction: column;
-      }
+      .page { width: min(100% - 18px, 1180px); }
+      .hero, .panel { border-radius: 24px; }
+      .metric-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .viewport canvas { height: 310px; }
+      .selected-heading { flex-direction: column; }
     }
   </style>
 </head>
 
-<body>
+<body class="dgb-h-earth-skin-locked">
   <a class="skip" href="#main">Skip to Western Golden Shelf authorization</a>
 
   <div class="page">
@@ -770,17 +722,17 @@
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · H-Earth · Western Golden Shelf Estate-Authorization Analysis.
+      Diamond Gate Bridge · H-Earth · Western Golden Shelf Runtime Skin Guard Recovery.
     </footer>
   </div>
 
   <script>
-    window.DGB_H_EARTH_HTML_CACHE_KEY = "H_EARTH_WESTERN_GOLDEN_SHELF_STYLE_RECOVERY_TNT_v1";
-    window.DGB_H_EARTH_JS_CACHE_KEY = "H_EARTH_WESTERN_GOLDEN_SHELF_ESTATE_AUTHORIZATION_TNT_v1";
+    window.DGB_H_EARTH_HTML_CACHE_KEY = "H_EARTH_RUNTIME_SKIN_GUARD_RECOVERY_TNT_v2";
+    window.DGB_H_EARTH_JS_CACHE_KEY = "H_EARTH_RUNTIME_SKIN_GUARD_RECOVERY_TNT_v2";
   </script>
   <script
     type="module"
-    src="/showroom/globe/h-earth/index.js?v=H_EARTH_WESTERN_GOLDEN_SHELF_ESTATE_AUTHORIZATION_TNT_v1"
+    src="/showroom/globe/h-earth/index.js?v=H_EARTH_RUNTIME_SKIN_GUARD_RECOVERY_TNT_v2"
   ></script>
 </body>
 </html>

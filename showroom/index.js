@@ -1,12 +1,12 @@
 const SHOWROOM_DIAMOND_STATE = Object.freeze({
-  contract: "SHOWROOM_DIAMOND_SOLID_BODY_INSPECTION_CONTROL_TNT_v5",
+  contract: "SHOWROOM_DIAMOND_ROUND_BRILLIANT_SOLID_SHAPE_TNT_v6",
   route: "/showroom/",
   role: "showroom-cover-object",
   diamondLock: "CROWN_CUT_256_LATTICE_FIXED_FORM",
   touchGlide: true,
   inspectionControl: "solid-body-camera-view",
   geometryMutableByTouch: false,
-  visualMode: "crystal-clarity-solid-inspection",
+  visualMode: "round-brilliant-crystal-clarity",
   earthRecord: false,
   generatedImage: false,
   graphicBox: false,
@@ -18,8 +18,8 @@ const PHI = (1 + Math.sqrt(5)) / 2;
 const SEGMENTS = 32;
 
 const state = {
-  yaw: 0.26,
-  pitch: -0.22,
+  yaw: 0.34,
+  pitch: -0.24,
   roll: 0,
   velocityYaw: 0,
   velocityPitch: 0,
@@ -76,14 +76,16 @@ function makeRing(name, rx, y, rz, offset = 0) {
 
   for (let i = 0; i < SEGMENTS; i += 1) {
     const angle = (i / SEGMENTS) * TAU + offset;
-    points.push(makePoint(
-      Math.cos(angle) * rx,
-      y,
-      Math.sin(angle) * rz,
-      name,
-      i,
-      angle
-    ));
+    points.push(
+      makePoint(
+        Math.cos(angle) * rx,
+        y,
+        Math.sin(angle) * rz,
+        name,
+        i,
+        angle
+      )
+    );
   }
 
   return Object.freeze(points);
@@ -98,27 +100,25 @@ function makeFace(type, points, tone) {
 }
 
 function buildImmutableDiamondModel() {
-  const table = makeRing("table", 0.54, -0.72, 0.22, TAU / 64);
-  const crown = makeRing("crown", 0.92, -0.52, 0.36, 0);
-  const girdleTop = makeRing("girdleTop", 1.56, -0.08, 0.62, TAU / 64);
-  const girdleBottom = makeRing("girdleBottom", 1.48, 0.16, 0.58, 0);
-  const pavilion = makeRing("pavilion", 0.62, 0.70, 0.26, TAU / 64);
-  const tableCenter = makePoint(0, -0.80, 0, "tableCenter", -1, 0);
-  const culet = makePoint(0, 1.18, 0, "culet", -2, 0);
+  const table = makeRing("table", 0.40, -0.66, 0.36, TAU / 64);
+  const crown = makeRing("crown", 0.78, -0.48, 0.70, 0);
+  const girdleTop = makeRing("girdleTop", 1.20, -0.08, 1.06, TAU / 64);
+  const girdleBottom = makeRing("girdleBottom", 1.13, 0.14, 1.00, 0);
+  const pavilion = makeRing("pavilion", 0.52, 0.60, 0.46, TAU / 64);
+  const tableCenter = makePoint(0, -0.76, 0, "tableCenter", -1, 0);
+  const culet = makePoint(0, 1.12, 0, "culet", -2, 0);
 
-  const faces = [
-    makeFace("table", table, 1.42)
-  ];
+  const faces = [makeFace("table", table, 1.46)];
 
   for (let i = 0; i < SEGMENTS; i += 1) {
     const n = (i + 1) % SEGMENTS;
 
-    faces.push(makeFace("star", [tableCenter, table[i], table[n]], 1.52));
-    faces.push(makeFace("upper-crown", [table[i], crown[i], crown[n], table[n]], 1.30));
-    faces.push(makeFace("kite-crown", [crown[i], girdleTop[i], girdleTop[n], crown[n]], 1.16));
-    faces.push(makeFace("girdle", [girdleTop[i], girdleBottom[i], girdleBottom[n], girdleTop[n]], 0.94));
-    faces.push(makeFace("upper-pavilion", [girdleBottom[i], pavilion[i], pavilion[n], girdleBottom[n]], 1.06));
-    faces.push(makeFace("lower-pavilion", [pavilion[i], culet, pavilion[n]], 1.22));
+    faces.push(makeFace("star", [tableCenter, table[i], table[n]], 1.58));
+    faces.push(makeFace("upper-crown", [table[i], crown[i], crown[n], table[n]], 1.34));
+    faces.push(makeFace("round-crown", [crown[i], girdleTop[i], girdleTop[n], crown[n]], 1.18));
+    faces.push(makeFace("girdle", [girdleTop[i], girdleBottom[i], girdleBottom[n], girdleTop[n]], 0.96));
+    faces.push(makeFace("upper-pavilion", [girdleBottom[i], pavilion[i], pavilion[n], girdleBottom[n]], 1.08));
+    faces.push(makeFace("lower-pavilion", [pavilion[i], culet, pavilion[n]], 1.24));
   }
 
   return Object.freeze({
@@ -165,12 +165,12 @@ function rotateImmutablePoint(point) {
 }
 
 function projectRotatedPoint(rotated, width, height, scale) {
-  const camera = 4.2;
-  const perspective = camera / (camera - rotated.z * 0.68);
+  const camera = 4.4;
+  const perspective = camera / (camera - rotated.z * 0.72);
 
   return {
     x: width * 0.5 + rotated.x * scale * perspective,
-    y: height * 0.405 + rotated.y * scale * 0.92 * perspective,
+    y: height * 0.405 + rotated.y * scale * 0.94 * perspective,
     z: rotated.z,
     raw: rotated,
     source: rotated.source
@@ -267,30 +267,30 @@ function materialForFace(ctx, face, index) {
   const pulse = 0.5 + 0.5 * Math.sin(index * PHI + state.sparklePhase * 1.72);
 
   const brightness = clamp(
-    (0.38 + key * 0.52 + rim * 0.34 + under * 0.16 + facing * 0.20 + pulse * 0.12) * face.tone,
-    0.32,
-    1.70
+    (0.42 + key * 0.56 + rim * 0.36 + under * 0.18 + facing * 0.24 + pulse * 0.12) * face.tone,
+    0.34,
+    1.78
   );
 
-  const cool = clamp(0.24 + facing * 0.42 + rim * 0.20, 0.20, 0.90);
-  const fire = clamp(0.06 + pulse * 0.20 + rim * 0.10, 0.04, 0.40);
+  const cool = clamp(0.26 + facing * 0.42 + rim * 0.22, 0.22, 0.92);
+  const fire = clamp(0.06 + pulse * 0.20 + rim * 0.10, 0.04, 0.42);
 
-  const r = Math.round(138 + brightness * 88 + fire * 52);
-  const g = Math.round(172 + brightness * 78 + cool * 24);
-  const b = Math.round(214 + brightness * 58 + cool * 52);
+  const r = Math.round(142 + brightness * 88 + fire * 54);
+  const g = Math.round(178 + brightness * 76 + cool * 24);
+  const b = Math.round(220 + brightness * 56 + cool * 52);
 
   const alphaByType = {
-    table: 0.70,
-    star: 0.58,
-    "upper-crown": 0.62,
-    "kite-crown": 0.56,
-    girdle: 0.46,
-    "upper-pavilion": 0.52,
-    "lower-pavilion": 0.58
+    table: 0.72,
+    star: 0.60,
+    "upper-crown": 0.64,
+    "round-crown": 0.58,
+    girdle: 0.48,
+    "upper-pavilion": 0.54,
+    "lower-pavilion": 0.60
   };
 
-  const alpha = clamp((alphaByType[face.type] || 0.52) + brightness * 0.10, 0.42, 0.84);
-  const strokeAlpha = clamp(0.34 + brightness * 0.34, 0.28, 0.78);
+  const alpha = clamp((alphaByType[face.type] || 0.54) + brightness * 0.10, 0.44, 0.86);
+  const strokeAlpha = clamp(0.36 + brightness * 0.36, 0.30, 0.82);
 
   const gradient = ctx.createLinearGradient(
     center.x - 120 * state.dpr,
@@ -299,7 +299,7 @@ function materialForFace(ctx, face, index) {
     center.y + 106 * state.dpr
   );
 
-  gradient.addColorStop(0, `rgba(255, 255, 255, ${clamp(alpha + 0.12, 0, 0.94)})`);
+  gradient.addColorStop(0, `rgba(255, 255, 255, ${clamp(alpha + 0.12, 0, 0.96)})`);
   gradient.addColorStop(0.24, `rgba(${Math.min(255, r + 18)}, ${Math.min(255, g + 16)}, ${Math.min(255, b + 12)}, ${alpha})`);
   gradient.addColorStop(0.52, `rgba(${r}, ${g}, ${b}, ${alpha * 0.90})`);
   gradient.addColorStop(0.78, `rgba(${Math.round(r * 0.56)}, ${Math.round(g * 0.66)}, ${Math.round(b * 0.90)}, ${alpha * 0.76})`);
@@ -404,17 +404,17 @@ function drawLattice(ctx, width, height, scale) {
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
-  drawRing(ctx, DIAMOND_MODEL.table, width, height, scale, 0.64, 1.1 * state.dpr);
-  drawRing(ctx, DIAMOND_MODEL.crown, width, height, scale, 0.50, 1.0 * state.dpr);
-  drawRing(ctx, DIAMOND_MODEL.girdleTop, width, height, scale, 0.62, 1.25 * state.dpr);
-  drawRing(ctx, DIAMOND_MODEL.girdleBottom, width, height, scale, 0.42, 0.95 * state.dpr);
-  drawRing(ctx, DIAMOND_MODEL.pavilion, width, height, scale, 0.38, 0.85 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.table, width, height, scale, 0.66, 1.1 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.crown, width, height, scale, 0.52, 1.0 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.girdleTop, width, height, scale, 0.64, 1.25 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.girdleBottom, width, height, scale, 0.44, 0.95 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.pavilion, width, height, scale, 0.40, 0.85 * state.dpr);
 
   for (let i = 0; i < SEGMENTS; i += 2) {
-    drawLine(ctx, DIAMOND_MODEL.table[i], DIAMOND_MODEL.crown[i], width, height, scale, 0.36, 0.85 * state.dpr);
-    drawLine(ctx, DIAMOND_MODEL.crown[i], DIAMOND_MODEL.girdleTop[i], width, height, scale, 0.36, 0.85 * state.dpr);
-    drawLine(ctx, DIAMOND_MODEL.girdleBottom[i], DIAMOND_MODEL.pavilion[i], width, height, scale, 0.32, 0.75 * state.dpr);
-    drawLine(ctx, DIAMOND_MODEL.pavilion[i], DIAMOND_MODEL.culet, width, height, scale, 0.36, 0.80 * state.dpr);
+    drawLine(ctx, DIAMOND_MODEL.table[i], DIAMOND_MODEL.crown[i], width, height, scale, 0.38, 0.85 * state.dpr);
+    drawLine(ctx, DIAMOND_MODEL.crown[i], DIAMOND_MODEL.girdleTop[i], width, height, scale, 0.38, 0.85 * state.dpr);
+    drawLine(ctx, DIAMOND_MODEL.girdleBottom[i], DIAMOND_MODEL.pavilion[i], width, height, scale, 0.34, 0.75 * state.dpr);
+    drawLine(ctx, DIAMOND_MODEL.pavilion[i], DIAMOND_MODEL.culet, width, height, scale, 0.38, 0.80 * state.dpr);
   }
 
   for (let i = 1; i < SEGMENTS; i += 4) {
@@ -524,7 +524,7 @@ function drawAuraAndShadow(ctx, width, height, scale) {
     scale * 0.16,
     centerX,
     centerY + scale * 0.05,
-    scale * 2.42
+    scale * 2.22
   );
 
   aura.addColorStop(0, "rgba(255, 255, 255, 0.17)");
@@ -543,7 +543,7 @@ function drawAuraAndShadow(ctx, width, height, scale) {
     scale * 0.06,
     centerX,
     culet.y + scale * 0.18,
-    scale * 0.52
+    scale * 0.50
   );
 
   shadow.addColorStop(0, "rgba(244, 207, 131, 0.16)");
@@ -552,14 +552,14 @@ function drawAuraAndShadow(ctx, width, height, scale) {
 
   ctx.fillStyle = shadow;
   ctx.beginPath();
-  ctx.ellipse(centerX, culet.y + scale * 0.18, scale * 0.50, scale * 0.085, 0, 0, TAU);
+  ctx.ellipse(centerX, culet.y + scale * 0.18, scale * 0.46, scale * 0.085, 0, 0, TAU);
   ctx.fill();
 }
 
 function render(canvas, ctx) {
   const width = canvas.width;
   const height = canvas.height;
-  const scale = Math.min(width * 0.32, height * 0.36);
+  const scale = Math.min(width * 0.34, height * 0.37);
 
   ctx.clearRect(0, 0, width, height);
 
@@ -658,8 +658,8 @@ function bindPointer(stage) {
 }
 
 function resetDiamond() {
-  state.yaw = 0.26;
-  state.pitch = -0.22;
+  state.yaw = 0.34;
+  state.pitch = -0.24;
   state.roll = 0;
   state.velocityYaw = 0;
   state.velocityPitch = 0;
@@ -668,18 +668,20 @@ function resetDiamond() {
 }
 
 function markRoute() {
-  document.documentElement.dataset.showroomStatus = "diamond-solid-body-inspection-control";
+  document.documentElement.dataset.showroomStatus = "diamond-round-brilliant-solid-shape";
   document.documentElement.dataset.diamondLock = "CROWN_CUT_256_LATTICE_FIXED_FORM";
   document.documentElement.dataset.touchGlideDiamond = "true";
   document.documentElement.dataset.geometryMutableByTouch = "false";
   document.documentElement.dataset.inspectionControl = "camera-view-rotation";
+  document.documentElement.dataset.diamondShape = "round-brilliant-solid";
   document.documentElement.dataset.earthRecord = "false";
 
-  document.body.dataset.showroomStatus = "diamond-solid-body-inspection-control";
+  document.body.dataset.showroomStatus = "diamond-round-brilliant-solid-shape";
   document.body.dataset.diamondLock = "CROWN_CUT_256_LATTICE_FIXED_FORM";
   document.body.dataset.touchGlideDiamond = "true";
   document.body.dataset.geometryMutableByTouch = "false";
   document.body.dataset.inspectionControl = "camera-view-rotation";
+  document.body.dataset.diamondShape = "round-brilliant-solid";
   document.body.dataset.earthRecord = "false";
 }
 
@@ -723,6 +725,7 @@ function initShowroomDiamond() {
         ready: true,
         fixedForm: true,
         crownCut: true,
+        roundBrilliantShape: true,
         lattice256: true,
         solidCrystal: true,
         geometryMutableByTouch: false,

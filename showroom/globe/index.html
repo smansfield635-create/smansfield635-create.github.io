@@ -3,13 +3,15 @@
   lang="en"
   data-route="/showroom/globe/"
   data-page="showroom-globe"
-  data-version="SHOWROOM_GLOBE_FIBONACCI_RUNTIME_HTML_TNT_v1"
+  data-version="SHOWROOM_GLOBE_HYDRATED_FIBONACCI_RUNTIME_HTML_TNT_v1"
   data-source-authority="html-shell-loads-local-index-js"
-  data-import-version="fibonacci-runtime-v1"
+  data-import-version="hydration-v1"
   data-public-selector="true"
   data-private-engines-asleep="true"
   data-generated-image="false"
   data-graphic-box="false"
+  data-hydration-expression="true"
+  data-water-expression="true"
 >
 <head>
   <meta charset="utf-8">
@@ -21,11 +23,12 @@
   <title>Globe Showcase · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The Globe Showcase is the public selector for Earth, H-Earth, and Audralia. It loads the cinematic dry planet material renderer with Fibonacci runtime glide controls while private map engines stay in their own rooms."
+    content="The Globe Showcase is the public selector for Earth, H-Earth, and Audralia. It loads the cinematic planet material renderer, public hydration authority, and Fibonacci runtime glide controls while private map engines stay in their own rooms."
   >
 
-  <link rel="modulepreload" href="/showroom/globe/index.js?v=fibonacci-runtime-v1">
-  <link rel="modulepreload" href="/assets/showroom.globe.cinematic.material.js?v=fibonacci-runtime-v1">
+  <link rel="modulepreload" href="/showroom/globe/index.js?v=hydration-v1">
+  <link rel="modulepreload" href="/assets/showroom.globe.cinematic.material.js?v=hydration-v1">
+  <link rel="modulepreload" href="/assets/showroom.globe.hydration.js?v=hydration-v1">
   <link rel="modulepreload" href="/assets/showroom.globe.runtime.js?v=fibonacci-runtime-v1">
   <link rel="modulepreload" href="/assets/showroom.globe.controls.js?v=runtime-glide-control-v1">
 
@@ -510,7 +513,7 @@
 
   <script>
     (() => {
-      const cacheKey = "fibonacci-runtime-v1";
+      const cacheKey = "hydration-v1";
       document.documentElement.dataset.cacheKey = cacheKey;
 
       try {
@@ -570,7 +573,7 @@
         <h1 id="page-title">The globe is the object.</h1>
 
         <p class="lead">
-          This page loads the local Globe Showcase controller, the cinematic dry planet material renderer, and a Fibonacci runtime glide controller. Maps, water systems, landmasses, terrain history, and child engines belong inside the private world rooms.
+          This page loads the local Globe Showcase controller, the cinematic planet material renderer, the public hydration authority, and the Fibonacci runtime glide controller. Maps, named landmasses, terrain history, mountains, and child engines belong inside the private world rooms.
         </p>
 
         <div class="actions">
@@ -582,16 +585,16 @@
 
       <section class="panel section" aria-labelledby="showcase-title">
         <div class="showcase-card">
-          <div class="stage-label">Source authority · local index.js · cinematic material asset · Fibonacci runtime</div>
+          <div class="stage-label">Source authority · material asset · hydration file · Fibonacci runtime</div>
 
-          <h2 id="showcase-title">Clean globe, not public map construction.</h2>
+          <h2 id="showcase-title">Clean globe, hydrated object, not public map construction.</h2>
 
-          <div class="globe-wrap" aria-label="Interactive cinematic globe selector">
+          <div class="globe-wrap" aria-label="Interactive hydrated cinematic globe selector">
             <canvas
               id="globeShowcaseCanvas"
               tabindex="0"
               role="img"
-              aria-label="Interactive cinematic globe selector for Earth, H-Earth, and Audralia"
+              aria-label="Interactive hydrated cinematic globe selector for Earth, H-Earth, and Audralia"
             ></canvas>
 
             <div class="world-controls" aria-label="World selector">
@@ -603,32 +606,32 @@
           </div>
 
           <p>
-            Drag to inspect the public globe. The runtime uses Fibonacci frame pacing: faster while dragging, lighter while settling, and quieter while idle.
+            Drag to inspect the public globe. Hydration is generated through its own object-space file, separate from private world geography.
           </p>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="standard-title">
-        <div class="kicker">Runtime standard</div>
-        <h2 id="standard-title">The material stays locked. Motion gets the fast lane.</h2>
+        <div class="kicker">Hydration standard</div>
+        <h2 id="standard-title">The material carries crust. The hydration file carries water.</h2>
 
         <div class="info-grid">
           <div class="info-card">
-            <b>Motion</b>
-            <strong>Drag is prioritized.</strong>
-            <span>Finger movement uses lower render pressure and direct yaw/pitch response first.</span>
+            <b>Hydration</b>
+            <strong>Oceans, seas, lakes, and rivers.</strong>
+            <span>The public hydration file fills low basins and channels without creating named geography.</span>
           </div>
 
           <div class="info-card">
-            <b>Fibonacci</b>
-            <strong>13 → 21 → 34 → 55 → 89 → 144.</strong>
-            <span>The runtime paces movement, settling, stable frames, and idle pressure through the Fibonacci ladder.</span>
+            <b>Runtime</b>
+            <strong>Motion keeps priority.</strong>
+            <span>The Fibonacci runtime keeps drag responsive while hydration refines after motion settles.</span>
           </div>
 
           <div class="info-card">
-            <b>Refinement</b>
-            <strong>Detail returns after motion.</strong>
-            <span>The planet renders cheaply while moving and refines when the globe settles.</span>
+            <b>Boundary</b>
+            <strong>No private world takeover.</strong>
+            <span>This is public object hydration only. Full terrain history stays inside each world room.</span>
           </div>
         </div>
       </section>
@@ -639,6 +642,6 @@
     </footer>
   </div>
 
-  <script type="module" src="/showroom/globe/index.js?v=fibonacci-runtime-v1"></script>
+  <script type="module" src="/showroom/globe/index.js?v=hydration-v1"></script>
 </body>
 </html>

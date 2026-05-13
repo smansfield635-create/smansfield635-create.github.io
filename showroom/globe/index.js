@@ -1,22 +1,20 @@
 // /showroom/globe/index.js
-// Globe Showcase public portrait index.
-// H-Earth global 256×256 surface continuity repair.
-// Parent 256 remains authority.
-// Child 256-per-parent remains the hex substrate.
-// The visible surface now samples one continuous global planetary field,
-// so each parent rectangle acts as a window into the same planet instead of its own local screen.
+// Public Globe Showcase stable baseline.
+// Role: lightweight public selector and portrait display case.
+// H-Earth full model authority is preserved under metadata and should move to private route/assets.
+// This file intentionally does not render child-256 fabric or private construction machinery.
 
-const MODEL_NAME = "globe-showcase-h-earth-global-256-surface-continuity-repair-v1";
+const MODEL_NAME = "globe-showcase-public-portrait-stable-baseline-v1";
 
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
 const MOBILE = window.matchMedia?.("(max-width: 760px)")?.matches === true;
 const DPR = Math.min(window.devicePixelRatio || 1, MOBILE ? 1.25 : 1.65);
-const FRAME_MS = MOBILE ? 58 : 42;
+const FRAME_MS = MOBILE ? 64 : 48;
 
-const DEFAULT_YAW = -0.64;
-const DEFAULT_PITCH = -0.24;
+const DEFAULT_YAW = -0.62;
+const DEFAULT_PITCH = -0.22;
 const MIN_PITCH = -1.05;
-const MAX_PITCH = 0.72;
+const MAX_PITCH = 0.74;
 
 const LAT_BANDS = 16;
 const LON_SECTORS = 16;
@@ -27,141 +25,25 @@ const CHILD_HEX_COLS = 16;
 const CHILD_HEX_COUNT = CHILD_HEX_ROWS * CHILD_HEX_COLS;
 const TOTAL_CHILD_FIELDS = CELL_COUNT * CHILD_HEX_COUNT;
 
-const GLOBAL_CHILD_ROWS = LAT_BANDS * CHILD_HEX_ROWS;
-const GLOBAL_CHILD_COLS = LON_SECTORS * CHILD_HEX_COLS;
+const PORTRAIT_LAT_STEPS = MOBILE ? 44 : 58;
+const PORTRAIT_LON_STEPS = MOBILE ? 88 : 116;
 
-const H_EARTH_CENTER_CROSS = Object.freeze({
-  nodes: Object.freeze([120, 121, 136, 137]),
-  rowRange: Object.freeze([8, 9]),
-  colRange: Object.freeze([8, 9]),
-  role: "central tectonic ignition cross"
+const H_EARTH_PUBLIC_MODEL = Object.freeze({
+  parentCells: CELL_COUNT,
+  childFieldsPerParent: CHILD_HEX_COUNT,
+  totalChildFields: TOTAL_CHILD_FIELDS,
+  publicMode: "stable macro portrait",
+  privateModelPath: "/showroom/globe/h-earth/",
+  assetAuthority: Object.freeze([
+    "/assets/h-earth/h-earth.kernel.js",
+    "/assets/h-earth/h-earth.lattice256.js",
+    "/assets/h-earth/h-earth.landmap.js",
+    "/assets/h-earth/h-earth.tectonics.js",
+    "/assets/h-earth/h-earth.surface.js",
+    "/assets/h-earth/h-earth.canvas.js",
+    "/assets/h-earth/h-earth.controls.js"
+  ])
 });
-
-const H_EARTH_PLANETARY_HISTORY = Object.freeze({
-  origin: "stabilized hybrid magnetic core",
-  cause: "center-cross ignition, polar closure, crustal drift, ocean-basin opening, shelf exposure, erosion capture",
-  surfaceLaw: "parent nodes govern; child hexes sample one global planetary field",
-  renderLaw: "global field first; parent cells are windows, not independent screens"
-});
-
-const H_EARTH_NODAL_ROWS = Object.freeze([
-  { row: 1, name: "North Polar Cap Closure", pressure: "polar closure", crustAge: 0.96, polarPressure: 1.00, uplift: 0.20, waterCapture: 0.04 },
-  { row: 2, name: "North Polar Landmass", pressure: "ancient crown compression", crustAge: 0.93, polarPressure: 0.92, uplift: 0.34, waterCapture: 0.05 },
-  { row: 3, name: "Northern Crown Fracture Belt", pressure: "ice-to-highland transition", crustAge: 0.86, polarPressure: 0.66, uplift: 0.46, waterCapture: 0.12 },
-  { row: 4, name: "Northern Highland Uplift", pressure: "old mountain compression", crustAge: 0.82, polarPressure: 0.36, uplift: 0.70, waterCapture: 0.16 },
-  { row: 5, name: "Northern Shelf and Sea Gate", pressure: "highland stepdown", crustAge: 0.76, polarPressure: 0.22, uplift: 0.52, waterCapture: 0.25 },
-  { row: 6, name: "Upper Continental Drift Belt", pressure: "continental separation", crustAge: 0.68, polarPressure: 0.12, uplift: 0.44, waterCapture: 0.30 },
-  { row: 7, name: "Continental Shoulder Belt", pressure: "basin formation", crustAge: 0.62, polarPressure: 0.06, uplift: 0.38, waterCapture: 0.42 },
-  { row: 8, name: "Northern Equatorial Pressure Belt", pressure: "upper center-cross rift", crustAge: 0.54, polarPressure: 0.02, uplift: 0.32, waterCapture: 0.48 },
-  { row: 9, name: "Southern Equatorial Pressure Belt", pressure: "lower center-cross rift", crustAge: 0.52, polarPressure: 0.02, uplift: 0.30, waterCapture: 0.50 },
-  { row: 10, name: "Lower Continental Drift Belt", pressure: "valley and basin widening", crustAge: 0.58, polarPressure: 0.06, uplift: 0.34, waterCapture: 0.56 },
-  { row: 11, name: "Inland Basin Belt", pressure: "lake capture", crustAge: 0.64, polarPressure: 0.10, uplift: 0.28, waterCapture: 0.72 },
-  { row: 12, name: "Southern Shelf Continent", pressure: "shelf exposure", crustAge: 0.70, polarPressure: 0.16, uplift: 0.22, waterCapture: 0.62 },
-  { row: 13, name: "Southern Sea and Shelf Belt", pressure: "shelf water expansion", crustAge: 0.76, polarPressure: 0.28, uplift: 0.16, waterCapture: 0.54 },
-  { row: 14, name: "Southern Circumpolar Compression Belt", pressure: "circumpolar compression", crustAge: 0.84, polarPressure: 0.48, uplift: 0.30, waterCapture: 0.34 },
-  { row: 15, name: "South Polar Landmass", pressure: "lower crust cooling", crustAge: 0.92, polarPressure: 0.82, uplift: 0.38, waterCapture: 0.16 },
-  { row: 16, name: "South Polar Cap Closure", pressure: "final cooling band", crustAge: 0.98, polarPressure: 1.00, uplift: 0.18, waterCapture: 0.06 }
-]);
-
-const H_EARTH_NODAL_COLUMNS = Object.freeze([
-  { column: 1, name: "West Deep Ocean Wall", pressure: "deep western basin", oceanBasin: 1.00, shelf: 0.04, uplift: 0.02, rift: 0.68 },
-  { column: 2, name: "West Deep Ocean Margin", pressure: "western pull-apart", oceanBasin: 0.92, shelf: 0.10, uplift: 0.05, rift: 0.64 },
-  { column: 3, name: "West Shelf Coast", pressure: "deep-to-shelf transition", oceanBasin: 0.52, shelf: 0.74, uplift: 0.18, rift: 0.42 },
-  { column: 4, name: "West Coastal Shelf", pressure: "coastal exposure", oceanBasin: 0.34, shelf: 0.86, uplift: 0.30, rift: 0.26 },
-  { column: 5, name: "Western Primary Continent Edge", pressure: "western uplift edge", oceanBasin: 0.16, shelf: 0.42, uplift: 0.58, rift: 0.16 },
-  { column: 6, name: "Western Primary Continent Core", pressure: "western continental body", oceanBasin: 0.06, shelf: 0.20, uplift: 0.72, rift: 0.10 },
-  { column: 7, name: "Western Continental Shoulder", pressure: "central approach", oceanBasin: 0.10, shelf: 0.28, uplift: 0.54, rift: 0.28 },
-  { column: 8, name: "Western Central Rift Edge", pressure: "center-cross west edge", oceanBasin: 0.22, shelf: 0.48, uplift: 0.30, rift: 0.82 },
-  { column: 9, name: "Eastern Central Rift Edge", pressure: "center-cross east edge", oceanBasin: 0.24, shelf: 0.52, uplift: 0.32, rift: 0.86 },
-  { column: 10, name: "Eastern Continental Shoulder", pressure: "uplift after rift", oceanBasin: 0.10, shelf: 0.30, uplift: 0.58, rift: 0.28 },
-  { column: 11, name: "Eastern Primary Continent Core", pressure: "eastern continental body", oceanBasin: 0.06, shelf: 0.20, uplift: 0.76, rift: 0.12 },
-  { column: 12, name: "Eastern Primary Continent Edge", pressure: "eastern ridge edge", oceanBasin: 0.12, shelf: 0.36, uplift: 0.64, rift: 0.16 },
-  { column: 13, name: "East Coastal Shelf", pressure: "coastal erosion", oceanBasin: 0.32, shelf: 0.86, uplift: 0.30, rift: 0.24 },
-  { column: 14, name: "East Shelf Sea", pressure: "shelf-to-sea transition", oceanBasin: 0.48, shelf: 0.78, uplift: 0.16, rift: 0.34 },
-  { column: 15, name: "East Deep Ocean Margin", pressure: "eastern pull-apart", oceanBasin: 0.90, shelf: 0.12, uplift: 0.06, rift: 0.62 },
-  { column: 16, name: "East Deep Ocean Wall", pressure: "deep eastern basin", oceanBasin: 1.00, shelf: 0.04, uplift: 0.02, rift: 0.68 }
-]);
-
-const H_EARTH_QUADRANTS = Object.freeze({
-  northwest: { name: "Northwest", story: "ancient western uplift and polar-to-continental transition", collisionBias: 0.62, erosionBias: 0.36, waterBias: 0.28 },
-  northeast: { name: "Northeast", story: "eastern uplift, northern shelf seas, and ridge inheritance", collisionBias: 0.74, erosionBias: 0.32, waterBias: 0.30 },
-  southwest: { name: "Southwest", story: "western ocean opening and southern shelf broadening", collisionBias: 0.34, erosionBias: 0.58, waterBias: 0.66 },
-  southeast: { name: "Southeast", story: "eastern basin, southern shelf, and circumpolar closure", collisionBias: 0.42, erosionBias: 0.62, waterBias: 0.70 }
-});
-
-const H_EARTH_TECTONIC_PLATES = Object.freeze({
-  northCrown: { name: "North Crown Plate", type: "polar crown", crustAge: 0.96, uplift: 0.34, rift: 0.08, collision: 0.72, basin: 0.10, shelf: 0.18, erosion: 0.22, waterCapture: 0.10 },
-  southCrown: { name: "South Crown Plate", type: "polar crown", crustAge: 0.95, uplift: 0.30, rift: 0.10, collision: 0.64, basin: 0.24, shelf: 0.28, erosion: 0.34, waterCapture: 0.20 },
-  westernContinent: { name: "Western Continental Plate", type: "continental", crustAge: 0.72, uplift: 0.68, rift: 0.22, collision: 0.54, basin: 0.22, shelf: 0.34, erosion: 0.36, waterCapture: 0.40 },
-  easternContinent: { name: "Eastern Continental Plate", type: "continental", crustAge: 0.74, uplift: 0.74, rift: 0.20, collision: 0.68, basin: 0.18, shelf: 0.36, erosion: 0.34, waterCapture: 0.34 },
-  northernHighland: { name: "Northern Highland Plate", type: "highland", crustAge: 0.84, uplift: 0.84, rift: 0.16, collision: 0.78, basin: 0.16, shelf: 0.20, erosion: 0.28, waterCapture: 0.24 },
-  southernShelf: { name: "Southern Shelf Plate", type: "shelf continent", crustAge: 0.66, uplift: 0.30, rift: 0.30, collision: 0.28, basin: 0.50, shelf: 0.84, erosion: 0.62, waterCapture: 0.70 },
-  equatorialChain: { name: "Equatorial Chain Plate", type: "rift island chain", crustAge: 0.50, uplift: 0.46, rift: 0.92, collision: 0.38, basin: 0.36, shelf: 0.78, erosion: 0.50, waterCapture: 0.54 },
-  westOcean: { name: "West Deep Ocean Plate", type: "oceanic", crustAge: 0.38, uplift: 0.04, rift: 0.72, collision: 0.08, basin: 0.96, shelf: 0.12, erosion: 0.30, waterCapture: 0.86 },
-  eastOcean: { name: "East Deep Ocean Plate", type: "oceanic", crustAge: 0.38, uplift: 0.04, rift: 0.74, collision: 0.08, basin: 0.98, shelf: 0.12, erosion: 0.30, waterCapture: 0.88 }
-});
-
-const H_EARTH_GEOGRAPHY = Object.freeze({
-  field: Object.freeze({
-    latBands: LAT_BANDS,
-    lonSectors: LON_SECTORS,
-    totalParentCells: CELL_COUNT,
-    childRows: CHILD_HEX_ROWS,
-    childCols: CHILD_HEX_COLS,
-    childFieldsPerParent: CHILD_HEX_COUNT,
-    totalChildFields: TOTAL_CHILD_FIELDS,
-    globalRows: GLOBAL_CHILD_ROWS,
-    globalCols: GLOBAL_CHILD_COLS
-  }),
-  landBodies: Object.freeze([
-    "North Polar Landmass",
-    "South Polar Landmass",
-    "Western Primary Continent",
-    "Eastern Primary Continent",
-    "Northern Highland Continent",
-    "Southern Shelf Continent",
-    "Equatorial Island Chain"
-  ]),
-  oceans: Object.freeze(["West Deep Ocean", "East Deep Ocean", "Southern Circumpolar Ocean"]),
-  seas: Object.freeze([
-    "Northwest Sea",
-    "North Gate Sea",
-    "Northeast Sea",
-    "West Shelf Sea",
-    "East Shelf Sea",
-    "Equatorial Passage Sea",
-    "Southwest Sea",
-    "Southeast Sea"
-  ]),
-  lakes: 16,
-  coastlineSegments: 64,
-  beaches: 32,
-  shelves: 32,
-  mountainRidges: 16,
-  valleyBasins: 16,
-  polarCaps: Object.freeze(["North Polar Cap", "South Polar Cap"])
-});
-
-const H_EARTH_LAKE_SEATS = Object.freeze([
-  [11, 3], [10, 4], [9, 2], [8, 5],
-  [11, 11], [10, 12], [8, 10], [7, 13],
-  [12, 7], [13, 8], [6, 7], [5, 8],
-  [9, 6], [9, 9], [7, 4], [6, 11]
-]);
-
-const H_EARTH_RIDGE_SEATS = Object.freeze([
-  [11, 2], [10, 3], [9, 4], [8, 5],
-  [12, 10], [11, 11], [10, 12], [9, 13],
-  [13, 6], [12, 7], [11, 8], [10, 9],
-  [4, 4], [5, 5], [4, 11], [5, 10]
-]);
-
-const H_EARTH_VALLEY_SEATS = Object.freeze([
-  [8, 2], [7, 3], [6, 4], [9, 5],
-  [8, 11], [7, 12], [6, 13], [9, 10],
-  [11, 6], [10, 7], [9, 8], [8, 9],
-  [5, 6], [5, 9], [6, 6], [6, 9]
-]);
 
 const WORLDS = Object.freeze({
   earth: {
@@ -169,8 +51,12 @@ const WORLDS = Object.freeze({
     title: "Earth",
     subtitle: "Reference Body",
     route: "/showroom/globe/earth/",
-    primary: [34, 126, 172],
-    secondary: [60, 148, 85],
+    ocean: [24, 96, 154],
+    deep: [8, 35, 94],
+    land: [66, 142, 84],
+    highland: [122, 128, 96],
+    coast: [196, 178, 112],
+    ice: [190, 226, 242],
     glow: "rgba(142,190,255,0.22)"
   },
   hEarth: {
@@ -178,8 +64,12 @@ const WORLDS = Object.freeze({
     title: "H-Earth",
     subtitle: "Hybrid Earth",
     route: "/showroom/globe/h-earth/",
-    primary: [62, 142, 92],
-    secondary: [42, 132, 142],
+    ocean: [28, 106, 150],
+    deep: [7, 34, 102],
+    land: [58, 138, 86],
+    highland: [118, 134, 104],
+    coast: [206, 188, 126],
+    ice: [184, 222, 240],
     glow: "rgba(143,240,195,0.24)"
   },
   audralia: {
@@ -187,8 +77,12 @@ const WORLDS = Object.freeze({
     title: "Audralia",
     subtitle: "Constructed World",
     route: "/showroom/globe/audralia/",
-    primary: [170, 135, 82],
-    secondary: [54, 112, 142],
+    ocean: [38, 104, 142],
+    deep: [10, 38, 92],
+    land: [144, 128, 82],
+    highland: [166, 146, 100],
+    coast: [218, 190, 126],
+    ice: [186, 220, 232],
     glow: "rgba(190,170,255,0.22)"
   }
 });
@@ -233,17 +127,25 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function fract(value) {
-  return value - Math.floor(value);
-}
-
 function lerp(a, b, t) {
   return a + (b - a) * t;
+}
+
+function mixColor(a, b, t) {
+  return [
+    Math.round(lerp(a[0], b[0], t)),
+    Math.round(lerp(a[1], b[1], t)),
+    Math.round(lerp(a[2], b[2], t))
+  ];
 }
 
 function smoothstep(edge0, edge1, value) {
   const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
   return t * t * (3 - 2 * t);
+}
+
+function fract(value) {
+  return value - Math.floor(value);
 }
 
 function hash(a, b = 0, c = 0) {
@@ -268,12 +170,12 @@ function valueNoise2D(x, y, seed = 0) {
 
 function fbm2D(x, y, seed = 0) {
   let value = 0;
-  let amplitude = 0.5;
+  let amplitude = 0.52;
   let frequency = 1;
   let total = 0;
 
   for (let octave = 0; octave < 4; octave += 1) {
-    value += valueNoise2D(x * frequency, y * frequency, seed + octave * 17) * amplitude;
+    value += valueNoise2D(x * frequency, y * frequency, seed + octave * 23) * amplitude;
     total += amplitude;
     amplitude *= 0.5;
     frequency *= 2;
@@ -291,42 +193,44 @@ function dot(a, b) {
   return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-function subtract(a, b) {
-  return { x: a.x - b.x, y: a.y - b.y, z: a.z - b.z };
-}
-
-function cross(a, b) {
-  return {
-    x: a.y * b.z - a.z * b.y,
-    y: a.z * b.x - a.x * b.z,
-    z: a.x * b.y - a.y * b.x
-  };
-}
-
 function rotateY(p, angle) {
   const c = Math.cos(angle);
   const s = Math.sin(angle);
-  return { x: p.x * c + p.z * s, y: p.y, z: -p.x * s + p.z * c };
+
+  return {
+    x: p.x * c + p.z * s,
+    y: p.y,
+    z: -p.x * s + p.z * c
+  };
 }
 
 function rotateX(p, angle) {
   const c = Math.cos(angle);
   const s = Math.sin(angle);
-  return { x: p.x, y: p.y * c - p.z * s, z: p.y * s + p.z * c };
+
+  return {
+    x: p.x,
+    y: p.y * c - p.z * s,
+    z: p.y * s + p.z * c
+  };
+}
+
+function makePoint(lat, lon) {
+  const cosLat = Math.cos(lat);
+
+  return {
+    x: cosLat * Math.cos(lon),
+    y: Math.sin(lat),
+    z: cosLat * Math.sin(lon)
+  };
 }
 
 function project(p, view) {
-  return { x: view.cx + p.x * view.scale, y: view.cy - p.y * view.scale, z: p.z };
-}
-
-function mixPoint(a, b, t) {
-  return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t, z: a.z + (b.z - a.z) * t };
-}
-
-function bilinearScreen(points, u, v) {
-  const top = mixPoint(points[0], points[1], u);
-  const bottom = mixPoint(points[3], points[2], u);
-  return mixPoint(top, bottom, v);
+  return {
+    x: view.cx + p.x * view.scale,
+    y: view.cy - p.y * view.scale,
+    z: p.z
+  };
 }
 
 function sizeCanvas() {
@@ -343,39 +247,17 @@ function sizeCanvas() {
   state.height = state.canvas.height;
   state.ctx = state.canvas.getContext("2d", { alpha: false, desynchronized: true });
 
-  createStars(MOBILE ? 58 : 120);
+  createStars(MOBILE ? 56 : 118);
 }
 
 function createStars(count) {
   state.stars = Array.from({ length: count }, (_, index) => ({
     x: hash(index, 1),
     y: hash(index, 2),
-    r: 0.45 + hash(index, 3) * 1.9,
-    a: 0.10 + hash(index, 4) * 0.36,
+    r: 0.45 + hash(index, 3) * 1.85,
+    a: 0.10 + hash(index, 4) * 0.34,
     p: hash(index, 5) * Math.PI * 2
   }));
-}
-
-function makePoint(lat, lon) {
-  const cosLat = Math.cos(lat);
-  return { x: cosLat * Math.cos(lon), y: Math.sin(lat), z: cosLat * Math.sin(lon) };
-}
-
-function terrainNoise(lat, lon, band, sector, worldKey) {
-  const worldShift = worldKey === "earth" ? 0.35 : worldKey === "audralia" ? 1.55 : 0.85;
-  const n1 = Math.sin(lon * 2.1 + worldShift + Math.sin(lat * 3.0) * 1.4);
-  const n2 = Math.cos(lon * 3.7 - lat * 2.2 - worldShift * 0.7);
-  const n3 = Math.sin(lon * 6.0 + band * 0.47 + sector * 0.21 + worldShift);
-  const n4 = Math.cos((lon + lat) * 4.1 + sector * 0.37 - worldShift);
-  return n1 * 0.38 + n2 * 0.28 + n3 * 0.20 + n4 * 0.14;
-}
-
-function seatIndex(seats, band, sector) {
-  for (let index = 0; index < seats.length; index += 1) {
-    const seat = seats[index];
-    if (seat[0] === band && seat[1] === sector) return index;
-  }
-  return -1;
 }
 
 function gaussianDistance(lat, lon, centerLat, centerLon, latWidth, lonWidth) {
@@ -384,810 +266,232 @@ function gaussianDistance(lat, lon, centerLat, centerLon, latWidth, lonWidth) {
   return Math.exp(-(dLat * dLat + dLon * dLon));
 }
 
-function getNodeAddress(row, column) {
-  return ((row - 1) * 16) + column;
+function sampleEarth(lat, lon) {
+  const polar = Math.abs(lat) / (Math.PI / 2);
+  const noise = fbm2D(lon * 1.15 + 8, lat * 1.35 + 4, 11) * 0.12;
+
+  const westernMass =
+    gaussianDistance(lat, lon, 0.35, -1.95, 0.78, 0.72) +
+    gaussianDistance(lat, lon, -0.45, -1.52, 0.56, 0.54) * 0.75;
+
+  const easternMass =
+    gaussianDistance(lat, lon, 0.28, 0.55, 0.72, 0.82) +
+    gaussianDistance(lat, lon, -0.34, 1.05, 0.58, 0.55) * 0.70;
+
+  const southernMass = gaussianDistance(lat, lon, -1.15, 0.0, 0.22, 2.8) * 0.82;
+  const island = gaussianDistance(lat, lon, -0.20, 2.35, 0.30, 0.34) * 0.58;
+
+  const landScore = Math.max(westernMass, easternMass, southernMass, island) + noise;
+  const signed = landScore - 0.42;
+
+  return classifyStableTerrain({ signed, polar, worldKey: "earth", lat, lon });
 }
 
-function getHEarthQuadrant(row, column) {
-  if (row <= 8 && column <= 8) return H_EARTH_QUADRANTS.northwest;
-  if (row <= 8 && column >= 9) return H_EARTH_QUADRANTS.northeast;
-  if (row >= 9 && column <= 8) return H_EARTH_QUADRANTS.southwest;
-  return H_EARTH_QUADRANTS.southeast;
+function sampleHEarth(lat, lon) {
+  const polar = Math.abs(lat) / (Math.PI / 2);
+
+  const westContinent =
+    gaussianDistance(lat, lon, 0.16, -2.02, 0.76, 0.96) +
+    gaussianDistance(lat, lon, -0.22, -1.50, 0.52, 0.64) * 0.60;
+
+  const eastContinent =
+    gaussianDistance(lat, lon, 0.18, 1.50, 0.78, 0.92) +
+    gaussianDistance(lat, lon, -0.10, 2.22, 0.48, 0.62) * 0.54;
+
+  const northernHighland =
+    gaussianDistance(lat, lon, 0.72, -0.20, 0.46, 1.02) +
+    gaussianDistance(lat, lon, 0.56, 0.56, 0.34, 0.58) * 0.48;
+
+  const southernShelf =
+    gaussianDistance(lat, lon, -0.70, 0.15, 0.46, 1.10) +
+    gaussianDistance(lat, lon, -0.52, -0.58, 0.32, 0.58) * 0.42;
+
+  const equatorialChain =
+    gaussianDistance(lat, lon, 0.00, -0.60, 0.22, 0.48) +
+    gaussianDistance(lat, lon, 0.08, 0.12, 0.20, 0.42) +
+    gaussianDistance(lat, lon, -0.08, 0.82, 0.22, 0.44);
+
+  const northCrown = gaussianDistance(lat, lon, 1.34, 0.0, 0.27, 3.2);
+  const southCrown = gaussianDistance(lat, lon, -1.34, 0.0, 0.27, 3.2);
+
+  const globalNoise =
+    fbm2D(lon * 0.85 + 14, lat * 0.95 - 3, 41) * 0.055 +
+    fbm2D(lon * 2.05 - 2, lat * 1.75 + 5, 83) * 0.028;
+
+  const centerRift =
+    gaussianDistance(lat, lon, 0.02, 0.0, 0.36, 0.48) * 0.18;
+
+  const westDeepOcean = smoothstep(-2.35, -3.05, lon) * 0.18;
+  const eastDeepOcean = smoothstep(2.35, 3.05, lon) * 0.18;
+  const southernOcean = smoothstep(-0.88, -1.42, lat) * 0.12;
+
+  const landScore =
+    Math.max(
+      westContinent,
+      eastContinent,
+      northernHighland,
+      southernShelf,
+      equatorialChain * 0.72,
+      northCrown,
+      southCrown
+    ) +
+    globalNoise -
+    centerRift -
+    westDeepOcean -
+    eastDeepOcean -
+    southernOcean;
+
+  const signed = landScore - 0.43;
+
+  return classifyStableTerrain({ signed, polar, worldKey: "hEarth", lat, lon });
 }
 
-function getHEarthPlate(row, column) {
-  if (row <= 2) return H_EARTH_TECTONIC_PLATES.northCrown;
-  if (row >= 15) return H_EARTH_TECTONIC_PLATES.southCrown;
-  if (column <= 2) return H_EARTH_TECTONIC_PLATES.westOcean;
-  if (column >= 15) return H_EARTH_TECTONIC_PLATES.eastOcean;
-  if (row >= 8 && row <= 9 && column >= 6 && column <= 11) return H_EARTH_TECTONIC_PLATES.equatorialChain;
-  if (row >= 11 && row <= 14 && column >= 4 && column <= 13) return H_EARTH_TECTONIC_PLATES.southernShelf;
-  if (row >= 3 && row <= 6 && column >= 5 && column <= 12) return H_EARTH_TECTONIC_PLATES.northernHighland;
-  if (column <= 8) return H_EARTH_TECTONIC_PLATES.westernContinent;
-  return H_EARTH_TECTONIC_PLATES.easternContinent;
+function sampleAudralia(lat, lon) {
+  const polar = Math.abs(lat) / (Math.PI / 2);
+  const noise =
+    fbm2D(lon * 0.95 + 2, lat * 1.1 + 13, 71) * 0.095 +
+    fbm2D(lon * 2.4 - 9, lat * 1.8 + 4, 91) * 0.040;
+
+  const mainArchipelago =
+    gaussianDistance(lat, lon, 0.16, -0.72, 0.58, 0.92) +
+    gaussianDistance(lat, lon, -0.22, 0.34, 0.48, 0.78) * 0.82 +
+    gaussianDistance(lat, lon, 0.42, 1.26, 0.34, 0.50) * 0.54;
+
+  const southernLand = gaussianDistance(lat, lon, -0.78, -0.34, 0.32, 0.92) * 0.66;
+  const islandTrail =
+    gaussianDistance(lat, lon, 0.00, 1.72, 0.18, 0.34) +
+    gaussianDistance(lat, lon, -0.18, 2.18, 0.18, 0.32) * 0.72 +
+    gaussianDistance(lat, lon, 0.24, 2.58, 0.15, 0.26) * 0.54;
+
+  const landScore = Math.max(mainArchipelago, southernLand, islandTrail) + noise - 0.08;
+  const signed = landScore - 0.44;
+
+  return classifyStableTerrain({ signed, polar, worldKey: "audralia", lat, lon });
 }
 
-function getCenterCrossInfluence(row, column) {
-  const d = Math.min(
-    Math.hypot(row - 8, column - 8),
-    Math.hypot(row - 8, column - 9),
-    Math.hypot(row - 9, column - 8),
-    Math.hypot(row - 9, column - 9)
-  );
-  return clamp(1 - d / 7.25, 0, 1);
-}
+function classifyStableTerrain({ signed, polar, worldKey, lat, lon }) {
+  const iceThreshold = worldKey === "audralia" ? 0.92 : 0.875;
+  const iceFade = smoothstep(iceThreshold - 0.045, iceThreshold + 0.035, polar);
+  const isIce = iceFade > 0.36;
 
-function getPolarClosureInfluence(row) {
-  const north = clamp(1 - (row - 1) / 6.5, 0, 1);
-  const south = clamp(1 - (16 - row) / 6.5, 0, 1);
-  return Math.max(north, south);
-}
+  const coastPressure = 1 - clamp(Math.abs(signed) / 0.13, 0, 1);
+  const isLand = signed > 0 || isIce;
+  const isCoast = !isIce && coastPressure > 0.62;
+  const isShelf = !isLand && signed > -0.18;
+  const isSea = !isLand && signed > -0.32;
 
-function getHEarthNodalNarrative(row, column) {
-  const node = getNodeAddress(row, column);
-  const rowStory = H_EARTH_NODAL_ROWS[row - 1];
-  const columnStory = H_EARTH_NODAL_COLUMNS[column - 1];
-  const quadrant = getHEarthQuadrant(row, column);
-  const centerInfluence = getCenterCrossInfluence(row, column);
-  const polarInfluence = getPolarClosureInfluence(row);
-  const plate = getHEarthPlate(row, column);
-
-  const upliftPressure = clamp(rowStory.uplift * 0.34 + columnStory.uplift * 0.26 + plate.uplift * 0.30 + quadrant.collisionBias * 0.10, 0, 1);
-  const riftPressure = clamp(columnStory.rift * 0.30 + plate.rift * 0.34 + centerInfluence * 0.28 + (row === 8 || row === 9 ? 0.08 : 0), 0, 1);
-  const collisionPressure = clamp(plate.collision * 0.36 + quadrant.collisionBias * 0.22 + rowStory.uplift * 0.22 + polarInfluence * 0.20, 0, 1);
-  const shelfPressure = clamp(columnStory.shelf * 0.36 + plate.shelf * 0.34 + quadrant.waterBias * 0.14 + (row >= 12 ? 0.16 : 0), 0, 1);
-  const oceanBasinPressure = clamp(columnStory.oceanBasin * 0.42 + plate.basin * 0.40 + (row >= 13 ? 0.18 : 0), 0, 1);
-  const erosionPressure = clamp(plate.erosion * 0.34 + quadrant.erosionBias * 0.26 + rowStory.waterCapture * 0.22 + shelfPressure * 0.18, 0, 1);
-  const waterCapturePressure = clamp(plate.waterCapture * 0.34 + rowStory.waterCapture * 0.34 + quadrant.waterBias * 0.18 + shelfPressure * 0.14, 0, 1);
-
-  let expectedFeatureClass = "land";
-  if (polarInfluence > 0.86) expectedFeatureClass = "polar";
-  else if (oceanBasinPressure > 0.74 && upliftPressure < 0.34) expectedFeatureClass = "deep-ocean";
-  else if (shelfPressure > 0.66 && oceanBasinPressure > 0.36) expectedFeatureClass = "shelf-sea";
-  else if (centerInfluence > 0.58 && riftPressure > 0.62) expectedFeatureClass = "central-rift-chain";
-  else if (waterCapturePressure > 0.66 && upliftPressure > 0.24) expectedFeatureClass = "basin-lake";
-  else if (collisionPressure > 0.68 && upliftPressure > 0.44) expectedFeatureClass = "ridge-highland";
-  else if (erosionPressure > 0.62 && shelfPressure > 0.48) expectedFeatureClass = "coastal-lowland";
+  const ridgeNoise = fbm2D(lon * 2.2 + 12, lat * 2.4 - 8, 131);
+  const mountain = isLand && !isIce && signed > 0.22 && ridgeNoise > 0.12;
+  const highland = isLand && !isIce && (signed > 0.18 || mountain);
+  const dry = isLand && !isIce && signed > 0.12 && fbm2D(lon * 1.6 - 3, lat * 1.2 + 9, 151) > 0.28;
 
   return {
-    node,
-    row,
-    column,
-    rowStory,
-    columnStory,
-    quadrant,
-    centerInfluence,
-    polarInfluence,
-    plate,
-    crustAge: clamp(rowStory.crustAge * 0.30 + plate.crustAge * 0.44 + (1 - centerInfluence) * 0.12 + polarInfluence * 0.14, 0, 1),
-    upliftPressure,
-    riftPressure,
-    collisionPressure,
-    shelfPressure,
-    oceanBasinPressure,
-    erosionPressure,
-    waterCapturePressure,
-    expectedFeatureClass
-  };
-}
-
-function getHEarthTectonicContext(lat, lon, band, sector) {
-  const row = band + 1;
-  const column = sector + 1;
-  const narrative = getHEarthNodalNarrative(row, column);
-  const localNoise = terrainNoise(lat, lon, band, sector, "hEarth") * 0.030;
-
-  return {
-    ...narrative,
-    localNoise,
-    lat,
-    lon,
-    tectonicLift: clamp(narrative.upliftPressure + narrative.collisionPressure * 0.22 - narrative.oceanBasinPressure * 0.34 + localNoise, -0.4, 1.2),
-    tectonicWater: clamp(narrative.oceanBasinPressure + narrative.waterCapturePressure * 0.22 + narrative.shelfPressure * 0.16 - narrative.upliftPressure * 0.20 - localNoise, -0.3, 1.2),
-    tectonicBoundary: clamp(narrative.riftPressure * 0.36 + narrative.shelfPressure * 0.24 + narrative.erosionPressure * 0.20 + narrative.centerInfluence * 0.20, 0, 1)
-  };
-}
-
-function applyNodalStoryToParentCell(parentCell, narrative) {
-  parentCell.nodalNarrative = narrative;
-  parentCell.tectonicPlate = narrative.plate.name;
-  parentCell.nodeAddress = narrative.node;
-  parentCell.centerInfluence = narrative.centerInfluence;
-  parentCell.crustAge = narrative.crustAge;
-  parentCell.upliftPressure = narrative.upliftPressure;
-  parentCell.riftPressure = narrative.riftPressure;
-  parentCell.collisionPressure = narrative.collisionPressure;
-  parentCell.shelfPressure = narrative.shelfPressure;
-  parentCell.oceanBasinPressure = narrative.oceanBasinPressure;
-  parentCell.erosionPressure = narrative.erosionPressure;
-  parentCell.waterCapturePressure = narrative.waterCapturePressure;
-  parentCell.expectedFeatureClass = narrative.expectedFeatureClass;
-  return parentCell;
-}
-
-function applyNodalStoryToChildHex(childHex, parentNarrative) {
-  childHex.nodalNarrative = parentNarrative;
-  childHex.tectonicPlate = parentNarrative.plate.name;
-  childHex.nodeAddress = parentNarrative.node;
-  childHex.crustAge = parentNarrative.crustAge;
-  childHex.upliftPressure = parentNarrative.upliftPressure;
-  childHex.riftPressure = parentNarrative.riftPressure;
-  childHex.collisionPressure = parentNarrative.collisionPressure;
-  childHex.shelfPressure = parentNarrative.shelfPressure;
-  childHex.oceanBasinPressure = parentNarrative.oceanBasinPressure;
-  childHex.erosionPressure = parentNarrative.erosionPressure;
-  childHex.waterCapturePressure = parentNarrative.waterCapturePressure;
-  return childHex;
-}
-
-function getOceanName(sector, band) {
-  if (band <= 3) return H_EARTH_GEOGRAPHY.oceans[2];
-  return sector < 8 ? H_EARTH_GEOGRAPHY.oceans[0] : H_EARTH_GEOGRAPHY.oceans[1];
-}
-
-function getSeaName(sector, band) {
-  if (band >= 12 && sector < 5) return H_EARTH_GEOGRAPHY.seas[0];
-  if (band >= 12 && sector < 11) return H_EARTH_GEOGRAPHY.seas[1];
-  if (band >= 12) return H_EARTH_GEOGRAPHY.seas[2];
-  if (sector < 4) return H_EARTH_GEOGRAPHY.seas[3];
-  if (sector > 11) return H_EARTH_GEOGRAPHY.seas[4];
-  if (band >= 6 && band <= 10) return H_EARTH_GEOGRAPHY.seas[5];
-  if (sector < 8) return H_EARTH_GEOGRAPHY.seas[6];
-  return H_EARTH_GEOGRAPHY.seas[7];
-}
-
-function computeHEarthGlobalLandMasks(lat, lon) {
-  return [
-    {
-      name: "North Polar Landmass",
-      score: gaussianDistance(lat, lon, 1.33, 0.0, 0.27, 3.2)
-    },
-    {
-      name: "South Polar Landmass",
-      score: gaussianDistance(lat, lon, -1.33, 0.0, 0.27, 3.2)
-    },
-    {
-      name: "Western Primary Continent",
-      score:
-        gaussianDistance(lat, lon, 0.16, -2.02, 0.72, 0.92) +
-        gaussianDistance(lat, lon, -0.24, -1.52, 0.52, 0.62) * 0.62
-    },
-    {
-      name: "Eastern Primary Continent",
-      score:
-        gaussianDistance(lat, lon, 0.18, 1.55, 0.76, 0.88) +
-        gaussianDistance(lat, lon, -0.10, 2.25, 0.46, 0.62) * 0.55
-    },
-    {
-      name: "Northern Highland Continent",
-      score:
-        gaussianDistance(lat, lon, 0.76, -0.25, 0.46, 0.96) +
-        gaussianDistance(lat, lon, 0.58, 0.55, 0.34, 0.58) * 0.52
-    },
-    {
-      name: "Southern Shelf Continent",
-      score:
-        gaussianDistance(lat, lon, -0.72, 0.18, 0.44, 1.05) +
-        gaussianDistance(lat, lon, -0.52, -0.55, 0.32, 0.52) * 0.44
-    },
-    {
-      name: "Equatorial Island Chain",
-      score:
-        gaussianDistance(lat, lon, 0.00, -0.60, 0.23, 0.48) +
-        gaussianDistance(lat, lon, 0.08, 0.12, 0.22, 0.42) +
-        gaussianDistance(lat, lon, -0.08, 0.82, 0.24, 0.45)
-    }
-  ];
-}
-
-function computeHEarthMasks(latMid, lonMid, context) {
-  const global = computeHEarthGlobalLandMasks(latMid, lonMid);
-
-  return global.map((item) => {
-    let plateBias = 0;
-
-    if (item.name === "North Polar Landmass" || item.name === "South Polar Landmass") {
-      plateBias += context.polarInfluence * 0.40;
-    }
-
-    if (item.name === "Western Primary Continent") {
-      plateBias += (context.plate.name === "Western Continental Plate" ? 0.24 : 0) + context.upliftPressure * 0.12 - context.oceanBasinPressure * 0.16;
-    }
-
-    if (item.name === "Eastern Primary Continent") {
-      plateBias += (context.plate.name === "Eastern Continental Plate" ? 0.26 : 0) + context.upliftPressure * 0.13 - context.oceanBasinPressure * 0.14;
-    }
-
-    if (item.name === "Northern Highland Continent") {
-      plateBias += (context.plate.name === "Northern Highland Plate" ? 0.30 : 0) + context.collisionPressure * 0.18;
-    }
-
-    if (item.name === "Southern Shelf Continent") {
-      plateBias += (context.plate.name === "Southern Shelf Plate" ? 0.26 : 0) + context.shelfPressure * 0.18 - context.oceanBasinPressure * 0.08;
-    }
-
-    if (item.name === "Equatorial Island Chain") {
-      plateBias += (context.plate.name === "Equatorial Chain Plate" ? 0.26 : 0) + context.centerInfluence * 0.20 + context.riftPressure * 0.10;
-    }
-
-    return {
-      name: item.name,
-      score: item.score + plateBias
-    };
-  });
-}
-
-function getGlobalChildAddress(parentBand, parentSector, childRow, childCol) {
-  const globalRow = parentBand * CHILD_HEX_ROWS + childRow;
-  const globalCol = parentSector * CHILD_HEX_COLS + childCol;
-
-  return {
-    globalRow,
-    globalCol,
-    globalU: (globalCol + 0.5) / GLOBAL_CHILD_COLS,
-    globalV: (globalRow + 0.5) / GLOBAL_CHILD_ROWS
-  };
-}
-
-function sampleHEarthGlobalSurface(childLat, childLon, globalRow, globalCol, parent, narrative) {
-  const globalU = (globalCol + 0.5) / GLOBAL_CHILD_COLS;
-  const globalV = (globalRow + 0.5) / GLOBAL_CHILD_ROWS;
-  const polar = Math.abs(childLat) / (Math.PI / 2);
-
-  const masks = computeHEarthGlobalLandMasks(childLat, childLon);
-  const winner = masks.reduce((best, item) => item.score > best.score ? item : best, masks[0]);
-
-  const globalLongWave =
-    fbm2D(globalCol * 0.030, globalRow * 0.030, 101) * 0.060 +
-    fbm2D(globalCol * 0.070, globalRow * 0.070, 203) * 0.030;
-
-  const coastlineWave =
-    Math.sin(childLon * 3.15 + Math.sin(childLat * 2.2) * 0.75) * 0.030 +
-    Math.cos(childLon * 4.45 - childLat * 2.15) * 0.020;
-
-  const centralRift =
-    Math.exp(-Math.pow((globalU - 0.50) / 0.070, 2) - Math.pow((globalV - 0.50) / 0.280, 2)) *
-    (0.10 + narrative.centerInfluence * 0.11);
-
-  const westOceanWall = smoothstep(0.22, 0.02, globalU) * 0.24;
-  const eastOceanWall = smoothstep(0.78, 0.98, globalU) * 0.24;
-  const southOceanBias = smoothstep(0.72, 0.98, globalV) * 0.15;
-  const polarCapPressure = smoothstep(1.20, 1.48, Math.abs(childLat));
-
-  const tectonicLand =
-    narrative.upliftPressure * 0.18 +
-    narrative.collisionPressure * 0.10 +
-    polarCapPressure * 0.18 -
-    narrative.oceanBasinPressure * 0.18 -
-    centralRift * 0.35 -
-    westOceanWall -
-    eastOceanWall -
-    southOceanBias;
-
-  const threshold = winner.name === "Equatorial Island Chain" ? 0.50 : 0.42;
-
-  const globalSigned =
-    winner.score +
-    globalLongWave +
-    coastlineWave +
-    tectonicLand -
-    threshold;
-
-  const parentWeight = 0.16;
-  const signed = globalSigned * (1 - parentWeight) + parent.signed * parentWeight;
-
-  return {
-    globalU,
-    globalV,
-    polar,
-    polarCapPressure,
-    winner,
-    globalSigned,
     signed,
-    centralRift,
-    westOceanWall,
-    eastOceanWall,
-    southOceanBias,
-    globalLongWave,
-    coastlineWave
-  };
-}
-
-function classifyHEarthCell(latMid, lonMid, band, sector) {
-  const context = getHEarthTectonicContext(latMid, lonMid, band, sector);
-  const polar = Math.abs(latMid) / (Math.PI / 2);
-  const detail = hash(band, sector, 31);
-  const south = latMid < 0;
-
-  const masks = computeHEarthMasks(latMid, lonMid, context);
-  const winner = masks.reduce((best, item) => item.score > best.score ? item : best, masks[0]);
-
-  const isNorthPole = band >= 14;
-  const isSouthPole = band <= 1;
-  const isPolarLand = isNorthPole || isSouthPole || winner.name === "North Polar Landmass" || winner.name === "South Polar Landmass";
-  const isIslandChain = winner.name === "Equatorial Island Chain";
-
-  const baseThreshold = isIslandChain ? 0.52 : 0.42;
-  const threshold = clamp(
-    baseThreshold +
-    context.oceanBasinPressure * 0.18 -
-    context.upliftPressure * 0.12 -
-    context.collisionPressure * 0.06 +
-    context.shelfPressure * 0.04,
-    0.28,
-    0.72
-  );
-
-  const macroNoise = fbm2D(sector * 0.72, band * 0.72, 44) * 0.025;
-  const tectonicCause =
-    context.upliftPressure * 0.22 +
-    context.collisionPressure * 0.12 -
-    context.oceanBasinPressure * 0.26 -
-    context.riftPressure * 0.08 +
-    context.shelfPressure * 0.06 +
-    context.polarInfluence * 0.18;
-
-  const signed = isPolarLand ? 0.68 : winner.score + macroNoise + tectonicCause - threshold;
-
-  const lakeIndex = seatIndex(H_EARTH_LAKE_SEATS, band, sector);
-  const ridgeIndex = seatIndex(H_EARTH_RIDGE_SEATS, band, sector);
-  const valleyIndex = seatIndex(H_EARTH_VALLEY_SEATS, band, sector);
-
-  const isPolarCap = band === 0 || band === 15;
-  const lakeEligible = lakeIndex >= 0 && context.waterCapturePressure > 0.38;
-  const isLand = isPolarLand || signed > 0 || lakeEligible;
-  const boundaryWidth = 0.12 + context.erosionPressure * 0.04 + context.shelfPressure * 0.03;
-  const isCoast = isLand && !isPolarCap && Math.abs(signed) < boundaryWidth;
-  const isShelf = !isLand && signed > -(0.16 + context.shelfPressure * 0.08);
-  const sea = !isLand && (isShelf || signed > -0.30 || context.shelfPressure > 0.62);
-  const beachSegment = isCoast && context.shelfPressure > 0.42 && context.collisionPressure < 0.76 && ((band * 16 + sector) % 2 === 0);
-
-  const elevation = clamp(
-    signed * 1.15 +
-    context.upliftPressure * 0.32 +
-    context.collisionPressure * 0.20 -
-    context.oceanBasinPressure * 0.28 -
-    context.erosionPressure * 0.08 +
-    (ridgeIndex >= 0 ? 0.28 + context.collisionPressure * 0.20 : 0) -
-    (valleyIndex >= 0 ? 0.18 + context.waterCapturePressure * 0.10 : 0) +
-    (isPolarCap ? 0.10 : 0),
-    -0.90,
-    1.05
-  );
-
-  const terrain = {
-    geographyModel: "h-earth-parent-256-global-field-window",
-    parentBand: band,
-    parentSector: sector,
-    parentAddress: band * 16 + sector,
-    threshold,
-    signed,
-    elevation,
     polar,
-    detail,
-    landBody: isLand ? (isNorthPole ? "North Polar Landmass" : isSouthPole ? "South Polar Landmass" : winner.name) : null,
-    ocean: !isLand && !sea ? getOceanName(sector, band) : null,
-    sea: !isLand && sea ? getSeaName(sector, band) : null,
-    lakeIndex,
-    lake: lakeEligible ? `Major Lake ${String(lakeIndex + 1).padStart(2, "0")}` : null,
-    coastlineSegment: isCoast ? ((band * 16 + sector) % H_EARTH_GEOGRAPHY.coastlineSegments) + 1 : null,
-    beach: beachSegment ? `Beach ${String(((band * 16 + sector) % H_EARTH_GEOGRAPHY.beaches) + 1).padStart(2, "0")}` : null,
-    shelf: isShelf ? `Shelf Zone ${String(((band * 16 + sector) % H_EARTH_GEOGRAPHY.shelves) + 1).padStart(2, "0")}` : null,
-    ridgeIndex,
-    ridge: ridgeIndex >= 0 && context.collisionPressure > 0.34 ? `Ridge ${String(ridgeIndex + 1).padStart(2, "0")}` : null,
-    valleyIndex,
-    valley: valleyIndex >= 0 && context.waterCapturePressure > 0.32 ? `Valley Basin ${String(valleyIndex + 1).padStart(2, "0")}` : null,
-    polarCap: isPolarCap ? (south ? H_EARTH_GEOGRAPHY.polarCaps[1] : H_EARTH_GEOGRAPHY.polarCaps[0]) : null,
-    ice: isPolarCap || (polar > 0.86 && isLand),
-    coast: isCoast,
+    ice: isIce,
+    iceFade,
+    land: isLand,
     water: !isLand,
-    shelfZone: isShelf,
-    seaZone: sea,
-    mountain: ridgeIndex >= 0 || (isLand && elevation > 0.48 && context.collisionPressure > 0.38),
-    highland: isLand && elevation > 0.26,
-    valleyZone: valleyIndex >= 0,
-    lakeZone: lakeEligible,
-    dry: isLand && !isCoast && !isPolarCap && elevation > 0.18 && detail > 0.55 && context.erosionPressure > 0.30,
-    ridgeField: Math.sin(lonMid * 4.4 + band * 0.51) + Math.cos(latMid * 6.2 - sector * 0.31)
-  };
-
-  return applyNodalStoryToParentCell(terrain, context);
-}
-
-function classifyHEarthChildHex(parentCell, row, col, localU, localV) {
-  const childAddress = row * CHILD_HEX_COLS + col;
-  const band = parentCell.band;
-  const sector = parentCell.sector;
-  const parent = parentCell.terrain;
-  const narrative = parent.nodalNarrative;
-  const global = getGlobalChildAddress(band, sector, row, col);
-
-  const lat0 = parentCell.corners[0].lat;
-  const lat1 = parentCell.corners[3].lat;
-  const lon0 = parentCell.corners[0].lon;
-  const lon1 = parentCell.corners[1].lon;
-
-  const childLat = lat0 + (lat1 - lat0) * localV;
-  const childLon = lon0 + (lon1 - lon0) * localU;
-
-  const globalSurface = sampleHEarthGlobalSurface(
-    childLat,
-    childLon,
-    global.globalRow,
-    global.globalCol,
-    parent,
-    narrative
-  );
-
-  const signed = globalSurface.signed;
-
-  const lakeCore =
-    parent.lakeZone &&
-    Math.pow((localU - 0.5) / (0.31 + narrative.waterCapturePressure * 0.08), 2) +
-      Math.pow((localV - 0.5) / (0.22 + narrative.erosionPressure * 0.08), 2) <
-      1.0 + fbm2D(global.globalCol * 0.06, global.globalRow * 0.06, 77) * 0.10;
-
-  const ridgeCurve =
-    Math.sin(global.globalU * Math.PI * 4.4 + parent.ridgeIndex * 0.75 + narrative.collisionPressure * 1.2) * 0.13 +
-    Math.cos(global.globalV * Math.PI * 3.2 + narrative.upliftPressure) * 0.05;
-
-  const ridgeBand =
-    parent.ridgeIndex >= 0 &&
-    narrative.collisionPressure > 0.34 &&
-    Math.abs((localV - 0.5) - ridgeCurve) < 0.060 + narrative.upliftPressure * 0.020;
-
-  const valleyCurve =
-    Math.sin(global.globalV * Math.PI * 4.0 + parent.valleyIndex * 0.66 + narrative.waterCapturePressure * 1.4) * 0.12 +
-    Math.cos(global.globalU * Math.PI * 2.8 + narrative.erosionPressure) * 0.04;
-
-  const valleyBand =
-    parent.valleyIndex >= 0 &&
-    narrative.waterCapturePressure > 0.30 &&
-    Math.abs((localU - 0.5) + valleyCurve) < 0.062 + narrative.erosionPressure * 0.018;
-
-  const polarCapPressure = globalSurface.polarCapPressure;
-  const isPolarCap = polarCapPressure > 0.54;
-  const iceEdge = polarCapPressure > 0.38;
-
-  const childIsLand = isPolarCap || signed > 0 || lakeCore;
-  const childLake = lakeCore && !isPolarCap;
-  const childWater = !childIsLand || childLake;
-  const coastWidth = 0.024 + narrative.erosionPressure * 0.010 + narrative.shelfPressure * 0.010;
-  const childCoast = !isPolarCap && !childLake && Math.abs(signed) < coastWidth;
-  const childBeach = childCoast && signed > -0.012 && signed < 0.026 && narrative.shelfPressure > 0.40 && narrative.collisionPressure < 0.82;
-  const childShelf = !childIsLand && signed > -(0.110 + narrative.shelfPressure * 0.058);
-  const childSea = !childIsLand && (childShelf || parent.seaZone || signed > -0.238 || narrative.shelfPressure > 0.66);
-  const childOcean = !childIsLand && !childSea && !childLake;
-
-  const elevation = clamp(
-    signed * 1.10 +
-    narrative.upliftPressure * 0.18 +
-    narrative.collisionPressure * 0.13 -
-    narrative.oceanBasinPressure * 0.18 -
-    narrative.erosionPressure * 0.06 +
-    (ridgeBand ? 0.26 : 0) -
-    (valleyBand ? 0.16 : 0) +
-    (isPolarCap ? 0.10 : 0),
-    -0.95,
-    1.08
-  );
-
-  const child = {
-    geographyModel: "h-earth-global-256-continuity-child-hex",
-    parentAddress: parent.parentAddress,
-    childAddress,
-    globalRow: global.globalRow,
-    globalCol: global.globalCol,
-    globalU: global.globalU,
-    globalV: global.globalV,
-    row,
-    col,
-    childLat,
-    childLon,
-    signed,
-    elevation,
-    detail: clamp((fbm2D(global.globalCol * 0.12, global.globalRow * 0.12, 97) + 1) / 2, 0, 1),
-    landBody: childIsLand && !childLake ? globalSurface.winner.name : null,
-    ocean: childOcean ? parent.ocean || getOceanName(sector, band) : null,
-    sea: childSea ? parent.sea || getSeaName(sector, band) : null,
-    lake: childLake ? parent.lake : null,
-    coastlineSegment: childCoast ? parent.coastlineSegment || ((parent.parentAddress % H_EARTH_GEOGRAPHY.coastlineSegments) + 1) : null,
-    beach: childBeach ? parent.beach || `Beach ${String((parent.parentAddress % H_EARTH_GEOGRAPHY.beaches) + 1).padStart(2, "0")}` : null,
-    shelf: childShelf ? parent.shelf || `Shelf Zone ${String((parent.parentAddress % H_EARTH_GEOGRAPHY.shelves) + 1).padStart(2, "0")}` : null,
-    ridge: ridgeBand ? parent.ridge : null,
-    valley: valleyBand ? parent.valley : null,
-    polarCap: isPolarCap ? (childLat < 0 ? H_EARTH_GEOGRAPHY.polarCaps[1] : H_EARTH_GEOGRAPHY.polarCaps[0]) : null,
-    ice: isPolarCap || iceEdge,
-    coast: childCoast,
-    water: childWater,
-    shelfZone: childShelf,
-    seaZone: childSea,
-    lakeZone: childLake,
-    beachZone: childBeach,
-    mountain: ridgeBand || (!childWater && elevation > 0.54 && narrative.collisionPressure > 0.36),
-    highland: !childWater && elevation > 0.24,
-    valleyZone: valleyBand,
-    dry: !childWater && !childCoast && !isPolarCap && elevation > 0.18 && parent.detail > 0.55 && narrative.erosionPressure > 0.28,
-    ridgePressure: ridgeBand ? 1 : narrative.collisionPressure * 0.35,
-    valleyPressure: valleyBand ? 1 : narrative.waterCapturePressure * 0.30,
-    coastPressure: childCoast ? 1 : clamp(1 - Math.abs(signed) / 0.18, 0, 1),
-    shelfPressure: childShelf ? clamp((signed + 0.145) / 0.145, 0, 1) : narrative.shelfPressure * 0.16
-  };
-
-  return applyNodalStoryToChildHex(child, narrative);
-}
-
-function makeTerrainPayload({ elevation, polar, latMid, lonMid, band, sector, worldKey }) {
-  const detail = hash(band, sector, worldKey.length);
-  const ridgeField = Math.sin(lonMid * 5.2 + band * 0.48) + Math.cos(latMid * 7.4 - sector * 0.29);
-  const ridge = elevation > 0.30 && ridgeField > 0.42;
-  const valley = elevation > 0.08 && elevation < 0.32 && ridgeField < -0.55;
-  const ice = polar > (worldKey === "audralia" ? 0.88 : 0.80);
-  const coast = Math.abs(elevation) < 0.13;
-  const water = elevation < (worldKey === "audralia" ? 0.03 : -0.05) && !ice;
-  const shelf = water && elevation > -0.22;
-  const mountain = elevation > 0.48 && !ice;
-  const highland = elevation > 0.24 && !ice;
-  const dry = elevation > (worldKey === "audralia" ? 0.10 : 0.35) && !ice && !water;
-
-  return {
-    geographyModel: `${worldKey}-generic-portrait`,
-    elevation,
-    ice,
-    coast,
-    water,
-    shelfZone: shelf,
-    seaZone: shelf,
+    coast: isCoast,
+    shelf: isShelf,
+    sea: isSea,
     mountain,
     highland,
     dry,
-    ridge,
-    valley,
-    lakeZone: false,
-    polar,
-    detail,
-    ridgeField
+    detail: clamp((fbm2D(lon * 3.0, lat * 2.6, 191) + 1) / 2, 0, 1)
   };
 }
 
-function sampleCell(latMid, lonMid, band, sector, worldKey) {
-  if (worldKey === "hEarth") return classifyHEarthCell(latMid, lonMid, band, sector);
-
-  const polar = Math.abs(latMid) / (Math.PI / 2);
-  const noise = terrainNoise(latMid, lonMid, band, sector, worldKey);
-
-  if (worldKey === "audralia") {
-    const islandCore =
-      Math.sin(lonMid * 1.18 - 0.6) * 0.30 +
-      Math.cos(lonMid * 2.25 + latMid * 1.05) * 0.24 +
-      Math.sin(latMid * 1.7 - 0.3) * 0.12;
-    const elevation = noise * 0.76 + islandCore - 0.19 + polar * 0.04;
-
-    return makeTerrainPayload({ elevation, polar, latMid, lonMid, band, sector, worldKey });
-  }
-
-  const continentBias =
-    Math.sin(lonMid * 1.55 + 0.4) * 0.24 +
-    Math.cos(lonMid * 2.8 - latMid * 1.25) * 0.21 +
-    Math.sin(latMid * 2.45) * 0.10;
-
-  const elevation = noise + continentBias - 0.10 + polar * 0.08;
-  return makeTerrainPayload({ elevation, polar, latMid, lonMid, band, sector, worldKey });
+function sampleTerrain(lat, lon, worldKey) {
+  if (worldKey === "earth") return sampleEarth(lat, lon);
+  if (worldKey === "audralia") return sampleAudralia(lat, lon);
+  return sampleHEarth(lat, lon);
 }
 
-function buildMesh(view) {
-  const rings = [];
+function terrainColor(terrain, world, light, rim) {
+  let base;
 
-  for (let latIndex = 0; latIndex <= LAT_BANDS; latIndex += 1) {
-    const v = latIndex / LAT_BANDS;
-    const lat = -Math.PI / 2 + v * Math.PI;
-    rings[latIndex] = [];
-
-    for (let lonIndex = 0; lonIndex <= LON_SECTORS; lonIndex += 1) {
-      const u = lonIndex / LON_SECTORS;
-      const lon = -Math.PI + u * Math.PI * 2;
-
-      const base = makePoint(lat, lon);
-      let rotated = rotateY(base, view.yaw);
-      rotated = rotateX(rotated, view.pitch);
-
-      rings[latIndex][lonIndex] = {
-        local: base,
-        world: rotated,
-        screen: project(rotated, view),
-        lat,
-        lon
-      };
-    }
-  }
-
-  return rings;
-}
-
-function createCells(mesh, worldKey) {
-  const cells = [];
-  const lightAngle = state.time * 0.00042;
-
-  const light = normalize({
-    x: Math.cos(lightAngle) * 0.72,
-    y: 0.54,
-    z: Math.sin(lightAngle) * 0.72 + 0.28
-  });
-
-  const rimLight = normalize({ x: -0.52, y: 0.28, z: 0.86 });
-  const viewDir = normalize({ x: 0, y: 0, z: 1 });
-
-  for (let band = 0; band < LAT_BANDS; band += 1) {
-    for (let sector = 0; sector < LON_SECTORS; sector += 1) {
-      const p00 = mesh[band][sector];
-      const p01 = mesh[band][sector + 1];
-      const p11 = mesh[band + 1][sector + 1];
-      const p10 = mesh[band + 1][sector];
-
-      const avgWorld = normalize({
-        x: (p00.world.x + p01.world.x + p11.world.x + p10.world.x) / 4,
-        y: (p00.world.y + p01.world.y + p11.world.y + p10.world.y) / 4,
-        z: (p00.world.z + p01.world.z + p11.world.z + p10.world.z) / 4
-      });
-
-      if (avgWorld.z < -0.06) continue;
-
-      const latMid = (p00.lat + p10.lat) / 2;
-      const lonMid = (p00.lon + p01.lon) / 2;
-      const terrain = sampleCell(latMid, lonMid, band, sector, worldKey);
-
-      const e1 = subtract(p01.world, p00.world);
-      const e2 = subtract(p10.world, p00.world);
-      const faceNormal = normalize(cross(e1, e2));
-      const normal = dot(faceNormal, avgWorld) < 0
-        ? { x: -faceNormal.x, y: -faceNormal.y, z: -faceNormal.z }
-        : faceNormal;
-
-      const diffuse = clamp(dot(avgWorld, light), 0, 1);
-      const rim = Math.pow(clamp(1 - Math.abs(dot(avgWorld, viewDir)), 0, 1), 2.2);
-      const secondary = clamp(dot(avgWorld, rimLight), 0, 1);
-
-      cells.push({
-        points: [p00.screen, p01.screen, p11.screen, p10.screen],
-        corners: [p00, p01, p11, p10],
-        depth: avgWorld.z,
-        band,
-        sector,
-        terrain,
-        diffuse,
-        rim,
-        secondary,
-        normal,
-        worldKey
-      });
-    }
-  }
-
-  return cells.sort((a, b) => a.depth - b.depth);
-}
-
-function terrainColorComponents(terrain, worldKey, light, rim = 0) {
-  const world = WORLDS[worldKey];
-  let r;
-  let g;
-  let b;
-
-  if (worldKey === "hEarth") {
-    const uplift = terrain.upliftPressure || 0;
-    const basin = terrain.oceanBasinPressure || 0;
-    const shelf = terrain.shelfPressure || 0;
-    const collision = terrain.collisionPressure || 0;
-    const erosion = terrain.erosionPressure || 0;
-
-    if (terrain.ice || terrain.polarCap) {
-      r = 184 + collision * 12;
-      g = 222 + collision * 7;
-      b = 240;
-    } else if (terrain.lakeZone) {
-      r = 30;
-      g = 128 + erosion * 12;
-      b = 154 + shelf * 16;
-    } else if (terrain.water) {
-      if (terrain.shelfZone) {
-        r = 72 + shelf * 14;
-        g = 164 + shelf * 16;
-        b = 174 + shelf * 10;
-      } else if (terrain.seaZone) {
-        r = 24 + shelf * 8;
-        g = 94 + shelf * 12;
-        b = 144 + shelf * 16;
-      } else {
-        r = 8 + basin * 5;
-        g = 36 + basin * 8;
-        b = 102 + basin * 24;
-      }
-    } else if (terrain.beachZone || terrain.beach) {
-      r = 214;
-      g = 194 + shelf * 10;
-      b = 130 - collision * 8;
-    } else if (terrain.coast) {
-      r = 184 + shelf * 8;
-      g = 166 + erosion * 8;
-      b = 112;
-    } else if (terrain.mountain) {
-      r = 136 + collision * 18;
-      g = 130 + uplift * 10;
-      b = 120;
-    } else if (terrain.highland) {
-      r = 72 + uplift * 16;
-      g = 138 + uplift * 16;
-      b = 84;
-    } else if (terrain.valleyZone) {
-      r = 42;
-      g = 128 + erosion * 16;
-      b = 82 + (terrain.waterCapturePressure || 0) * 10;
-    } else if (terrain.dry) {
-      r = 150 + erosion * 10;
-      g = 130;
-      b = 88 - basin * 8;
-    } else {
-      r = 52 + uplift * 10;
-      g = 132 + uplift * 10;
-      b = 86;
-    }
-  } else if (terrain.ice) {
-    r = 170; g = 213; b = 238;
+  if (terrain.ice) {
+    base = mixColor(world.ice, [255, 255, 255], terrain.iceFade * 0.24);
   } else if (terrain.water) {
-    if (terrain.shelfZone) {
-      r = world.secondary[0] + 18;
-      g = world.secondary[1] + 38;
-      b = world.secondary[2] + 30;
+    if (terrain.shelf) {
+      base = mixColor(world.ocean, world.coast, 0.22);
+    } else if (terrain.sea) {
+      base = mixColor(world.deep, world.ocean, 0.62);
     } else {
-      r = Math.max(4, world.secondary[0] * 0.18);
-      g = Math.max(22, world.secondary[1] * 0.32);
-      b = Math.max(72, world.secondary[2] * 0.76);
+      base = world.deep;
     }
   } else if (terrain.coast) {
-    r = 186; g = 168; b = 101;
+    base = mixColor(world.coast, world.land, terrain.signed > 0 ? 0.28 : 0.10);
   } else if (terrain.mountain) {
-    r = 150; g = 136; b = 118;
+    base = mixColor(world.highland, [190, 178, 142], 0.34);
   } else if (terrain.highland) {
-    r = world.primary[0] + 24;
-    g = world.primary[1] + 14;
-    b = world.primary[2] - 2;
-  } else if (terrain.valley) {
-    r = Math.max(24, world.primary[0] - 12);
-    g = world.primary[1] + 20;
-    b = Math.max(44, world.primary[2] - 18);
+    base = mixColor(world.land, world.highland, 0.42);
   } else if (terrain.dry) {
-    r = 156; g = 128; b = 82;
+    base = mixColor(world.land, world.coast, 0.18);
   } else {
-    r = world.primary[0];
-    g = world.primary[1];
-    b = world.primary[2];
+    base = world.land;
   }
 
-  const elevationWarmth = clamp(terrain.elevation, -0.5, 0.65);
-  const detailShift = (terrain.detail - 0.5) * (worldKey === "hEarth" ? 4 : 12);
-  const waterBoost = terrain.water ? 14 : 0;
-  const finalLight = clamp(light + rim * 0.08, 0.16, 1.12);
+  const texture = (terrain.detail - 0.5) * (terrain.water ? 6 : 10);
+  const shade = clamp(light + rim * 0.10, 0.16, 1.16);
 
-  r = Math.round(clamp((r + elevationWarmth * 14 + detailShift) * finalLight, 0, 255));
-  g = Math.round(clamp((g + elevationWarmth * 7 + detailShift * 0.25) * finalLight, 0, 255));
-  b = Math.round(clamp((b + waterBoost - elevationWarmth * 4 - detailShift * 0.12) * finalLight, 0, 255));
+  const r = Math.round(clamp((base[0] + texture) * shade, 0, 255));
+  const g = Math.round(clamp((base[1] + texture * 0.60) * shade, 0, 255));
+  const b = Math.round(clamp((base[2] + (terrain.water ? 8 : -texture * 0.18)) * shade, 0, 255));
 
-  return [r, g, b];
+  return `rgb(${r},${g},${b})`;
 }
 
-function colorForTerrain(terrain, worldKey, light, rim = 0, alpha = 1) {
-  const [r, g, b] = terrainColorComponents(terrain, worldKey, light, rim);
-  return alpha >= 1 ? `rgb(${r},${g},${b})` : `rgba(${r},${g},${b},${alpha})`;
+function makeSurfacePatch(lat0, lat1, lon0, lon1, view) {
+  const p00 = rotateX(rotateY(makePoint(lat0, lon0), view.yaw), view.pitch);
+  const p01 = rotateX(rotateY(makePoint(lat0, lon1), view.yaw), view.pitch);
+  const p11 = rotateX(rotateY(makePoint(lat1, lon1), view.yaw), view.pitch);
+  const p10 = rotateX(rotateY(makePoint(lat1, lon0), view.yaw), view.pitch);
+
+  const avg = normalize({
+    x: (p00.x + p01.x + p11.x + p10.x) * 0.25,
+    y: (p00.y + p01.y + p11.y + p10.y) * 0.25,
+    z: (p00.z + p01.z + p11.z + p10.z) * 0.25
+  });
+
+  if (avg.z < -0.03) return null;
+
+  return {
+    points: [
+      project(p00, view),
+      project(p01, view),
+      project(p11, view),
+      project(p10, view)
+    ],
+    normal: avg,
+    depth: avg.z,
+    lat: (lat0 + lat1) * 0.5,
+    lon: (lon0 + lon1) * 0.5
+  };
 }
 
-function colorForCell(cell) {
-  const light = 0.33 + cell.diffuse * 0.54 + cell.secondary * 0.10 + cell.rim * 0.20;
-  return colorForTerrain(cell.terrain, cell.worldKey, light, cell.rim);
+function pathPatch(ctx, points) {
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  ctx.lineTo(points[1].x, points[1].y);
+  ctx.lineTo(points[2].x, points[2].y);
+  ctx.lineTo(points[3].x, points[3].y);
+  ctx.closePath();
 }
 
 function drawBackground(ctx, width, height) {
   const world = WORLDS[state.worldKey];
 
-  const bg = ctx.createRadialGradient(width * 0.5, height * 0.42, 0, width * 0.5, height * 0.52, Math.max(width, height) * 0.82);
+  const bg = ctx.createRadialGradient(
+    width * 0.5,
+    height * 0.42,
+    0,
+    width * 0.5,
+    height * 0.52,
+    Math.max(width, height) * 0.82
+  );
+
   bg.addColorStop(0, "#13264a");
   bg.addColorStop(0.30, "#091832");
   bg.addColorStop(0.68, "#041021");
@@ -1196,7 +500,15 @@ function drawBackground(ctx, width, height) {
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, width, height);
 
-  const halo = ctx.createRadialGradient(width * 0.5, height * 0.49, 0, width * 0.5, height * 0.49, width * 0.39);
+  const halo = ctx.createRadialGradient(
+    width * 0.5,
+    height * 0.49,
+    0,
+    width * 0.5,
+    height * 0.49,
+    width * 0.39
+  );
+
   halo.addColorStop(0, world.glow);
   halo.addColorStop(0.38, "rgba(142,190,255,0.075)");
   halo.addColorStop(1, "rgba(0,0,0,0)");
@@ -1206,9 +518,18 @@ function drawBackground(ctx, width, height) {
   ctx.ellipse(width * 0.5, height * 0.50, width * 0.34, height * 0.31, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  const vignette = ctx.createRadialGradient(width * 0.5, height * 0.5, width * 0.20, width * 0.5, height * 0.5, width * 0.74);
+  const vignette = ctx.createRadialGradient(
+    width * 0.5,
+    height * 0.5,
+    width * 0.20,
+    width * 0.5,
+    height * 0.5,
+    width * 0.74
+  );
+
   vignette.addColorStop(0, "rgba(0,0,0,0)");
   vignette.addColorStop(1, "rgba(0,0,0,0.48)");
+
   ctx.fillStyle = vignette;
   ctx.fillRect(0, 0, width, height);
 
@@ -1246,281 +567,7 @@ function drawStars(ctx, width, height) {
   ctx.restore();
 }
 
-function pathCell(ctx, points) {
-  ctx.beginPath();
-  ctx.moveTo(points[0].x, points[0].y);
-  ctx.lineTo(points[1].x, points[1].y);
-  ctx.lineTo(points[2].x, points[2].y);
-  ctx.lineTo(points[3].x, points[3].y);
-  ctx.closePath();
-}
-
-function pathHexSample(ctx, parentPoints, centerU, centerV, du, dv) {
-  const grow = 1.40;
-  const hex = [
-    bilinearScreen(parentPoints, centerU - du * 0.42 * grow, centerV),
-    bilinearScreen(parentPoints, centerU - du * 0.20 * grow, centerV - dv * 0.43 * grow),
-    bilinearScreen(parentPoints, centerU + du * 0.20 * grow, centerV - dv * 0.43 * grow),
-    bilinearScreen(parentPoints, centerU + du * 0.42 * grow, centerV),
-    bilinearScreen(parentPoints, centerU + du * 0.20 * grow, centerV + dv * 0.43 * grow),
-    bilinearScreen(parentPoints, centerU - du * 0.20 * grow, centerV + dv * 0.43 * grow)
-  ];
-
-  ctx.beginPath();
-  ctx.moveTo(hex[0].x, hex[0].y);
-
-  for (let i = 1; i < hex.length; i += 1) {
-    ctx.lineTo(hex[i].x, hex[i].y);
-  }
-
-  ctx.closePath();
-}
-
-function drawGenericCellDetail(ctx, cell) {
-  const terrain = cell.terrain;
-  const pts = cell.points;
-  const depthAlpha = clamp(0.25 + cell.depth * 0.65, 0.12, 0.86);
-
-  ctx.save();
-  pathCell(ctx, pts);
-  ctx.clip();
-
-  const midLeft = { x: (pts[0].x + pts[3].x) / 2, y: (pts[0].y + pts[3].y) / 2 };
-  const midRight = { x: (pts[1].x + pts[2].x) / 2, y: (pts[1].y + pts[2].y) / 2 };
-  const topMid = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 };
-  const bottomMid = { x: (pts[2].x + pts[3].x) / 2, y: (pts[2].y + pts[3].y) / 2 };
-
-  if (terrain.coast || terrain.shelfZone) {
-    ctx.strokeStyle = `rgba(226,238,210,${0.15 * depthAlpha})`;
-    ctx.lineWidth = Math.max(0.8, DPR * 0.75);
-    ctx.beginPath();
-    ctx.moveTo(midLeft.x, midLeft.y);
-    ctx.bezierCurveTo(topMid.x, topMid.y, bottomMid.x, bottomMid.y, midRight.x, midRight.y);
-    ctx.stroke();
-  }
-
-  if (terrain.ridge || terrain.mountain) {
-    ctx.strokeStyle = `rgba(236,230,207,${0.20 * depthAlpha})`;
-    ctx.lineWidth = Math.max(0.65, DPR * 0.62);
-    ctx.beginPath();
-    ctx.moveTo(pts[3].x * 0.55 + pts[0].x * 0.45, pts[3].y * 0.55 + pts[0].y * 0.45);
-    ctx.lineTo(pts[1].x * 0.64 + pts[2].x * 0.36, pts[1].y * 0.64 + pts[2].y * 0.36);
-    ctx.stroke();
-  }
-
-  if (terrain.valley || terrain.valleyZone) {
-    ctx.strokeStyle = `rgba(20,70,55,${0.22 * depthAlpha})`;
-    ctx.lineWidth = Math.max(0.7, DPR * 0.66);
-    ctx.beginPath();
-    ctx.moveTo(topMid.x, topMid.y);
-    ctx.bezierCurveTo(pts[0].x, pts[0].y, pts[2].x, pts[2].y, bottomMid.x, bottomMid.y);
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function drawHEarthFeatureLines(ctx, parentCell) {
-  const points = parentCell.points;
-  const terrain = parentCell.terrain;
-  const narrative = terrain.nodalNarrative;
-  const depthAlpha = clamp(0.14 + parentCell.depth * 0.56, 0.04, 0.52);
-
-  ctx.save();
-  pathCell(ctx, points);
-  ctx.clip();
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
-
-  if (terrain.coastlineSegment || terrain.shelfZone || terrain.beach || terrain.lakeZone) {
-    const a = bilinearScreen(points, 0.06, 0.48 + Math.sin(terrain.parentAddress * 0.13) * 0.12);
-    const b = bilinearScreen(points, 0.42, 0.46 + Math.sin(terrain.parentAddress * 0.23) * 0.10);
-    const c = bilinearScreen(points, 0.94, 0.50 + Math.cos(terrain.parentAddress * 0.17) * 0.10);
-
-    ctx.strokeStyle = terrain.beach
-      ? `rgba(255,232,163,${0.09 * depthAlpha})`
-      : `rgba(205,232,210,${0.08 * depthAlpha})`;
-
-    ctx.lineWidth = Math.max(0.36, DPR * 0.36);
-    ctx.beginPath();
-    ctx.moveTo(a.x, a.y);
-    ctx.quadraticCurveTo(b.x, b.y, c.x, c.y);
-    ctx.stroke();
-  }
-
-  if (terrain.ridge || terrain.mountain) {
-    const a = bilinearScreen(points, 0.12, 0.72);
-    const b = bilinearScreen(points, 0.52, 0.30 + narrative.collisionPressure * 0.14);
-    const c = bilinearScreen(points, 0.90, 0.62);
-
-    ctx.strokeStyle = `rgba(236,230,207,${0.085 * depthAlpha})`;
-    ctx.lineWidth = Math.max(0.32, DPR * 0.32);
-    ctx.beginPath();
-    ctx.moveTo(a.x, a.y);
-    ctx.quadraticCurveTo(b.x, b.y, c.x, c.y);
-    ctx.stroke();
-  }
-
-  if (terrain.valley || terrain.valleyZone) {
-    const a = bilinearScreen(points, 0.32, 0.12);
-    const b = bilinearScreen(points, 0.48, 0.50);
-    const c = bilinearScreen(points, 0.64, 0.88);
-
-    ctx.strokeStyle = `rgba(20,70,55,${0.09 * depthAlpha})`;
-    ctx.lineWidth = Math.max(0.32, DPR * 0.32);
-    ctx.beginPath();
-    ctx.moveTo(a.x, a.y);
-    ctx.quadraticCurveTo(b.x, b.y, c.x, c.y);
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function drawHEarthChildHexSurface(ctx, parentCell) {
-  const points = parentCell.points;
-  const du = 1 / CHILD_HEX_COLS;
-  const dv = 1 / CHILD_HEX_ROWS;
-  const baseLight = 0.34 + parentCell.diffuse * 0.54 + parentCell.secondary * 0.10 + parentCell.rim * 0.18;
-
-  ctx.save();
-  pathCell(ctx, points);
-  ctx.fillStyle = colorForTerrain(parentCell.terrain, "hEarth", baseLight, parentCell.rim, 0.20);
-  ctx.fill();
-  ctx.restore();
-
-  ctx.save();
-  pathCell(ctx, points);
-  ctx.clip();
-  ctx.globalCompositeOperation = "source-over";
-
-  if ("filter" in ctx) {
-    ctx.filter = `blur(${Math.max(0.15, DPR * 0.18)}px)`;
-  }
-
-  for (let row = 0; row < CHILD_HEX_ROWS; row += 1) {
-    for (let col = 0; col < CHILD_HEX_COLS; col += 1) {
-      const offset = row % 2 === 0 ? 0 : 0.5;
-      const centerU = clamp((col + 0.5 + offset * 0.28) / CHILD_HEX_COLS, 0.025, 0.975);
-      const centerV = clamp((row + 0.5) / CHILD_HEX_ROWS, 0.025, 0.975);
-      const child = classifyHEarthChildHex(parentCell, row, col, centerU, centerV);
-
-      const localLight =
-        baseLight +
-        child.elevation * 0.032 +
-        child.ridgePressure * 0.026 -
-        (child.water ? 0.014 : 0);
-
-      const alpha =
-        child.coastlineSegment || child.beachZone || child.lakeZone || child.shelfZone
-          ? 0.54
-          : child.ridge || child.valley
-            ? 0.42
-            : 0.34;
-
-      pathHexSample(ctx, points, centerU, centerV, du, dv);
-      ctx.fillStyle = colorForTerrain(child, "hEarth", clamp(localLight, 0.18, 1.10), parentCell.rim, alpha);
-      ctx.fill();
-    }
-  }
-
-  if ("filter" in ctx) {
-    ctx.filter = "none";
-  }
-
-  ctx.restore();
-
-  drawHEarthFeatureLines(ctx, parentCell);
-}
-
-function drawPlanet(ctx, width, height) {
-  const scale = Math.min(width * 0.34, height * 0.37);
-
-  const view = {
-    cx: width * 0.50,
-    cy: height * 0.49,
-    scale,
-    yaw: state.yaw,
-    pitch: state.pitch
-  };
-
-  drawPlanetShadow(ctx, view);
-
-  const mesh = buildMesh(view);
-  const cells = createCells(mesh, state.worldKey);
-
-  ctx.save();
-
-  for (const cell of cells) {
-    if (cell.worldKey === "hEarth") {
-      drawHEarthChildHexSurface(ctx, cell);
-      continue;
-    }
-
-    pathCell(ctx, cell.points);
-    ctx.fillStyle = colorForCell(cell);
-    ctx.fill();
-
-    ctx.strokeStyle = `rgba(230,244,255,${0.040 + cell.rim * 0.12})`;
-    ctx.lineWidth = Math.max(0.35, DPR * 0.38);
-    ctx.stroke();
-
-    drawGenericCellDetail(ctx, cell);
-  }
-
-  ctx.restore();
-
-  drawLatLongDefinition(ctx, view);
-  drawAtmosphere(ctx, view);
-  drawOrbitLines(ctx, view);
-  drawWorldTitle(ctx, width, height);
-  drawCue(ctx, width, height);
-
-  document.documentElement.dataset.globeShowcaseModel = MODEL_NAME;
-  document.documentElement.dataset.selectedWorld = state.worldKey;
-  document.documentElement.dataset.parentCellCount = String(CELL_COUNT);
-  document.documentElement.dataset.childFieldsPerParent = String(CHILD_HEX_COUNT);
-  document.documentElement.dataset.totalChildFields = String(TOTAL_CHILD_FIELDS);
-  document.documentElement.dataset.globalChildRows = String(GLOBAL_CHILD_ROWS);
-  document.documentElement.dataset.globalChildCols = String(GLOBAL_CHILD_COLS);
-  document.documentElement.dataset.privateEnginesAsleep = "true";
-  document.documentElement.dataset.hEarthGlobalContinuity = state.worldKey === "hEarth" ? "active" : "inactive";
-}
-
-function drawLatLongDefinition(ctx, view) {
-  if (state.worldKey !== "hEarth") return;
-
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
-  ctx.strokeStyle = "rgba(210,238,255,0.016)";
-  ctx.lineWidth = Math.max(0.28, DPR * 0.28);
-
-  for (let i = 1; i < 4; i += 1) {
-    const w = view.scale * (0.36 + i * 0.18);
-    const h = view.scale * (0.94 - i * 0.08);
-    ctx.beginPath();
-    ctx.ellipse(view.cx, view.cy, w, h, 0, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-
-  for (let i = -2; i <= 2; i += 1) {
-    ctx.beginPath();
-    ctx.ellipse(
-      view.cx,
-      view.cy + i * view.scale * 0.18,
-      view.scale * Math.sqrt(Math.max(0.18, 1 - Math.abs(i) * 0.16)),
-      view.scale * 0.18,
-      0,
-      0,
-      Math.PI * 2
-    );
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function drawPlanetShadow(ctx, view) {
+function drawGlobeShadow(ctx, view) {
   const world = WORLDS[state.worldKey];
 
   ctx.save();
@@ -1528,6 +575,7 @@ function drawPlanetShadow(ctx, view) {
 
   const y = view.cy + view.scale * 1.05;
   const glow = ctx.createRadialGradient(view.cx, y, 0, view.cx, y, view.scale * 0.66);
+
   glow.addColorStop(0, world.glow);
   glow.addColorStop(0.38, "rgba(80,120,180,0.10)");
   glow.addColorStop(1, "rgba(0,0,0,0)");
@@ -1540,13 +588,150 @@ function drawPlanetShadow(ctx, view) {
   ctx.restore();
 }
 
+function drawSphereBase(ctx, view) {
+  const world = WORLDS[state.worldKey];
+
+  ctx.save();
+
+  const ocean = ctx.createRadialGradient(
+    view.cx - view.scale * 0.22,
+    view.cy - view.scale * 0.24,
+    view.scale * 0.04,
+    view.cx,
+    view.cy,
+    view.scale * 1.08
+  );
+
+  ocean.addColorStop(0, `rgb(${world.ocean[0] + 28},${world.ocean[1] + 28},${world.ocean[2] + 32})`);
+  ocean.addColorStop(0.52, `rgb(${world.ocean[0]},${world.ocean[1]},${world.ocean[2]})`);
+  ocean.addColorStop(1, `rgb(${world.deep[0]},${world.deep[1]},${world.deep[2]})`);
+
+  ctx.fillStyle = ocean;
+  ctx.beginPath();
+  ctx.arc(view.cx, view.cy, view.scale, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function drawSurface(ctx, view) {
+  const world = WORLDS[state.worldKey];
+  const light = normalize({ x: -0.30, y: 0.52, z: 0.90 });
+  const patches = [];
+
+  for (let latIndex = 0; latIndex < PORTRAIT_LAT_STEPS; latIndex += 1) {
+    const lat0 = -Math.PI / 2 + (latIndex / PORTRAIT_LAT_STEPS) * Math.PI;
+    const lat1 = -Math.PI / 2 + ((latIndex + 1) / PORTRAIT_LAT_STEPS) * Math.PI;
+
+    for (let lonIndex = 0; lonIndex < PORTRAIT_LON_STEPS; lonIndex += 1) {
+      const lon0 = -Math.PI + (lonIndex / PORTRAIT_LON_STEPS) * Math.PI * 2;
+      const lon1 = -Math.PI + ((lonIndex + 1) / PORTRAIT_LON_STEPS) * Math.PI * 2;
+      const patch = makeSurfacePatch(lat0, lat1, lon0, lon1, view);
+
+      if (patch) patches.push(patch);
+    }
+  }
+
+  patches.sort((a, b) => a.depth - b.depth);
+
+  ctx.save();
+
+  ctx.beginPath();
+  ctx.arc(view.cx, view.cy, view.scale * 1.002, 0, Math.PI * 2);
+  ctx.clip();
+
+  for (const patch of patches) {
+    const terrain = sampleTerrain(patch.lat, patch.lon, state.worldKey);
+
+    if (terrain.water && !terrain.shelf && !terrain.sea && !terrain.ice) {
+      continue;
+    }
+
+    const diffuse = clamp(dot(patch.normal, light), 0, 1);
+    const rim = Math.pow(clamp(1 - Math.abs(patch.normal.z), 0, 1), 2.0);
+    const lightValue = 0.34 + diffuse * 0.62 + rim * 0.06;
+
+    let alpha = 0.90;
+
+    if (terrain.water) alpha = terrain.shelf ? 0.45 : 0.25;
+    if (terrain.coast) alpha = 0.62;
+    if (terrain.ice) alpha = 0.76;
+
+    pathPatch(ctx, patch.points);
+    ctx.fillStyle = colorForTerrainWithAlpha(terrainColor(terrain, world, lightValue, rim), alpha);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function colorForTerrainWithAlpha(rgb, alpha) {
+  if (alpha >= 0.995) return rgb;
+
+  const parts = rgb.match(/\d+/g);
+  if (!parts || parts.length < 3) return rgb;
+
+  return `rgba(${parts[0]},${parts[1]},${parts[2]},${alpha})`;
+}
+
+function drawSubtleSurfaceLines(ctx, view) {
+  const terrainWorld = state.worldKey;
+
+  if (terrainWorld === "earth") return;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(view.cx, view.cy, view.scale * 1.002, 0, Math.PI * 2);
+  ctx.clip();
+
+  ctx.globalCompositeOperation = "screen";
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+
+  const lineCount = MOBILE ? 6 : 9;
+
+  for (let i = 0; i < lineCount; i += 1) {
+    const t = i / Math.max(1, lineCount - 1);
+    const lat = lerp(-0.72, 0.72, t) + Math.sin(i * 1.7) * 0.08;
+    const points = [];
+
+    for (let j = 0; j <= 50; j += 1) {
+      const u = j / 50;
+      const lon = -2.55 + u * 5.10;
+      const waveLat = lat + Math.sin(lon * 1.65 + i) * 0.035;
+      const p = makePoint(waveLat, lon);
+      const r = rotateX(rotateY(p, view.yaw), view.pitch);
+
+      if (r.z > 0.04) points.push(project(r, view));
+    }
+
+    if (points.length < 3) continue;
+
+    ctx.strokeStyle = terrainWorld === "hEarth"
+      ? "rgba(221,238,212,0.055)"
+      : "rgba(255,232,180,0.050)";
+    ctx.lineWidth = Math.max(0.35, DPR * 0.34);
+
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+
+    for (let j = 1; j < points.length; j += 1) {
+      ctx.lineTo(points[j].x, points[j].y);
+    }
+
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
 function drawAtmosphere(ctx, view) {
   const world = WORLDS[state.worldKey];
 
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
-  const outer = ctx.createRadialGradient(view.cx, view.cy, view.scale * 0.76, view.cx, view.cy, view.scale * 1.12);
+  const outer = ctx.createRadialGradient(view.cx, view.cy, view.scale * 0.76, view.cx, view.cy, view.scale * 1.13);
   outer.addColorStop(0, "rgba(0,0,0,0)");
   outer.addColorStop(0.72, "rgba(142,190,255,0.10)");
   outer.addColorStop(1, world.glow);
@@ -1556,10 +741,10 @@ function drawAtmosphere(ctx, view) {
   ctx.arc(view.cx, view.cy, view.scale * 1.10, 0, Math.PI * 2);
   ctx.fill();
 
-  ctx.strokeStyle = "rgba(210,240,255,0.24)";
+  ctx.strokeStyle = "rgba(210,240,255,0.23)";
   ctx.lineWidth = Math.max(1, DPR * 1.1);
   ctx.beginPath();
-  ctx.arc(view.cx, view.cy, view.scale * 1.005, 0, Math.PI * 2);
+  ctx.arc(view.cx, view.cy, view.scale * 1.006, 0, Math.PI * 2);
   ctx.stroke();
 
   ctx.restore();
@@ -1576,7 +761,7 @@ function drawOrbitLines(ctx, view) {
   ctx.ellipse(view.cx, view.cy, view.scale * 1.52, view.scale * 0.35, -0.12, 0, Math.PI * 2);
   ctx.stroke();
 
-  ctx.strokeStyle = "rgba(142,190,255,0.08)";
+  ctx.strokeStyle = "rgba(142,190,255,0.07)";
   ctx.beginPath();
   ctx.ellipse(view.cx, view.cy, view.scale * 1.34, view.scale * 0.53, 0.28, 0, Math.PI * 2);
   ctx.stroke();
@@ -1597,7 +782,7 @@ function drawWorldTitle(ctx, width, height) {
 
   ctx.fillStyle = "rgba(186,197,212,0.72)";
   ctx.font = `850 ${Math.max(11 * DPR, width * 0.014)}px Inter, system-ui, sans-serif`;
-  ctx.fillText(`${world.subtitle} · global 256×256 continuity field`, width * 0.5, height * 0.205);
+  ctx.fillText(`${world.subtitle} · stable public portrait`, width * 0.5, height * 0.205);
 
   ctx.restore();
 }
@@ -1608,8 +793,37 @@ function drawCue(ctx, width, height) {
   ctx.textBaseline = "middle";
   ctx.fillStyle = "rgba(186,197,212,0.60)";
   ctx.font = `800 ${Math.max(11 * DPR, width * 0.013)}px Inter, system-ui, sans-serif`;
-  ctx.fillText("Drag to inspect · Select a world · Open room for private engine", width * 0.5, height * 0.90);
+  ctx.fillText("Drag to inspect · Select a world · Open room for deeper model", width * 0.5, height * 0.90);
   ctx.restore();
+}
+
+function drawPlanet(ctx, width, height) {
+  const scale = Math.min(width * 0.34, height * 0.37);
+
+  const view = {
+    cx: width * 0.50,
+    cy: height * 0.49,
+    scale,
+    yaw: state.yaw,
+    pitch: state.pitch
+  };
+
+  drawGlobeShadow(ctx, view);
+  drawSphereBase(ctx, view);
+  drawSurface(ctx, view);
+  drawSubtleSurfaceLines(ctx, view);
+  drawAtmosphere(ctx, view);
+  drawOrbitLines(ctx, view);
+  drawWorldTitle(ctx, width, height);
+  drawCue(ctx, width, height);
+
+  document.documentElement.dataset.globeShowcaseModel = MODEL_NAME;
+  document.documentElement.dataset.selectedWorld = state.worldKey;
+  document.documentElement.dataset.publicPortraitBaseline = "stable";
+  document.documentElement.dataset.privateEnginesAsleep = "true";
+  document.documentElement.dataset.parentCellCount = String(CELL_COUNT);
+  document.documentElement.dataset.childFieldsPerParent = String(CHILD_HEX_COUNT);
+  document.documentElement.dataset.totalChildFields = String(TOTAL_CHILD_FIELDS);
 }
 
 function render() {
@@ -1859,44 +1073,27 @@ function boot() {
 
   window.DGBGlobeShowcase = {
     model: MODEL_NAME,
-    cellCount: CELL_COUNT,
-    latBands: LAT_BANDS,
-    lonSectors: LON_SECTORS,
-    childHexRows: CHILD_HEX_ROWS,
-    childHexCols: CHILD_HEX_COLS,
-    childHexCount: CHILD_HEX_COUNT,
-    totalChildFields: TOTAL_CHILD_FIELDS,
-    globalChildRows: GLOBAL_CHILD_ROWS,
-    globalChildCols: GLOBAL_CHILD_COLS,
+    publicPortraitBaseline: true,
     privateEnginesAsleep: true,
-    fixedStructure: true,
-    inspectable: true,
     generatedImage: false,
     graphicBox: false,
-    hEarthPlanetaryHistory: H_EARTH_PLANETARY_HISTORY,
-    hEarthCenterCross: H_EARTH_CENTER_CROSS,
-    hEarthGeography: H_EARTH_GEOGRAPHY,
-    hEarthPlates: H_EARTH_TECTONIC_PLATES,
+    worlds: Object.keys(WORLDS),
+    parentCellCount: CELL_COUNT,
+    childFieldsPerParent: CHILD_HEX_COUNT,
+    totalChildFields: TOTAL_CHILD_FIELDS,
+    hEarthPublicModel: H_EARTH_PUBLIC_MODEL,
     setWorld,
     reset: resetInspection,
     status() {
       return {
         model: MODEL_NAME,
         selectedWorld: state.worldKey,
+        publicPortraitBaseline: true,
+        privateEnginesAsleep: true,
         parentCellCount: CELL_COUNT,
         childFieldsPerParent: CHILD_HEX_COUNT,
         totalChildFields: TOTAL_CHILD_FIELDS,
-        globalChildRows: GLOBAL_CHILD_ROWS,
-        globalChildCols: GLOBAL_CHILD_COLS,
-        latBands: LAT_BANDS,
-        lonSectors: LON_SECTORS,
-        privateEnginesAsleep: true,
-        fixedStructure: true,
-        inspectable: true,
-        hEarthGlobalContinuity: state.worldKey === "hEarth" ? "active" : "inactive",
-        hEarthPlanetaryHistory: H_EARTH_PLANETARY_HISTORY,
-        hEarthCenterCross: H_EARTH_CENTER_CROSS,
-        hEarthCounts: H_EARTH_GEOGRAPHY,
+        hEarthPrivateModelPath: H_EARTH_PUBLIC_MODEL.privateModelPath,
         yaw: state.yaw,
         pitch: state.pitch
       };
@@ -1912,15 +1109,10 @@ if (document.readyState === "loading") {
 
 export default {
   model: MODEL_NAME,
-  cellCount: CELL_COUNT,
-  childHexCount: CHILD_HEX_COUNT,
-  totalChildFields: TOTAL_CHILD_FIELDS,
-  globalChildRows: GLOBAL_CHILD_ROWS,
-  globalChildCols: GLOBAL_CHILD_COLS,
+  publicPortraitBaseline: true,
   privateEnginesAsleep: true,
-  inspectable: true,
-  hEarthPlanetaryHistory: H_EARTH_PLANETARY_HISTORY,
-  hEarthCenterCross: H_EARTH_CENTER_CROSS,
-  hEarthGeography: H_EARTH_GEOGRAPHY,
-  hEarthPlates: H_EARTH_TECTONIC_PLATES
+  parentCellCount: CELL_COUNT,
+  childFieldsPerParent: CHILD_HEX_COUNT,
+  totalChildFields: TOTAL_CHILD_FIELDS,
+  hEarthPublicModel: H_EARTH_PUBLIC_MODEL
 };

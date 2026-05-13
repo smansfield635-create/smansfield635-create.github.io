@@ -1,10 +1,11 @@
 // /assets/showroom.globe.cinematic.material.js
-// TNT NEW FILE
-// SHOWROOM_GLOBE_CINEMATIC_MATERIAL_RENDERER_ASSET_v1
+// TNT FULL-FILE REPLACEMENT
+// SHOWROOM_GLOBE_FIBONACCI_ADAPTIVE_MATERIAL_RENDERER_TNT_v1
 // Owns: continuous dry planet material rendering.
-// Contract: no privileged longitude, no prime meridian, no schoolroom-globe partition.
+// Runtime contract: render cheap during motion, refine after settling.
+// No privileged longitude, no prime meridian, no schoolroom-globe partition.
 
-export const PLANET_MATERIAL_VERSION = "showroom-globe-cinematic-material-renderer-asset-v1";
+export const PLANET_MATERIAL_VERSION = "showroom-globe-fibonacci-adaptive-material-renderer-v1";
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -35,11 +36,9 @@ function valueNoise3D(x, y, z, seed = 0) {
   const xi = Math.floor(x);
   const yi = Math.floor(y);
   const zi = Math.floor(z);
-
   const xf = x - xi;
   const yf = y - yi;
   const zf = z - zi;
-
   const u = fade(xf);
   const v = fade(yf);
   const w = fade(zf);
@@ -53,15 +52,14 @@ function valueNoise3D(x, y, z, seed = 0) {
   const n011 = hash(seed, xi, yi + 1, zi + 1);
   const n111 = hash(seed, xi + 1, yi + 1, zi + 1);
 
-  const x00 = lerp(n000, n100, u);
-  const x10 = lerp(n010, n110, u);
-  const x01 = lerp(n001, n101, u);
-  const x11 = lerp(n011, n111, u);
-
-  return lerp(lerp(x00, x10, v), lerp(x01, x11, v), w) * 2 - 1;
+  return lerp(
+    lerp(lerp(n000, n100, u), lerp(n010, n110, u), v),
+    lerp(lerp(n001, n101, u), lerp(n011, n111, u), v),
+    w
+  ) * 2 - 1;
 }
 
-function fbm3D(x, y, z, seed = 0, octaves = 5) {
+function fbm3D(x, y, z, seed = 0, octaves = 4) {
   let value = 0;
   let amplitude = 0.5;
   let frequency = 1;
@@ -77,7 +75,7 @@ function fbm3D(x, y, z, seed = 0, octaves = 5) {
   return value / total;
 }
 
-function ridge3D(x, y, z, seed = 0, octaves = 4) {
+function ridge3D(x, y, z, seed = 0, octaves = 3) {
   return 1 - Math.abs(fbm3D(x, y, z, seed, octaves));
 }
 
@@ -184,114 +182,51 @@ function bandField(p, feature) {
   return clamp(line * gate * feature.weight, 0, 1);
 }
 
+function makeBand(seed, family, index, widthBase, widthRange, weightBase, weightRange) {
+  return {
+    basis: basisFromNormal(seededVector(seed + family, index)),
+    gate: seededVector(seed + family + 20, index),
+    radius: 0.54 + hash(seed, index, family) * 0.76,
+    gateSoftness: 0.10 + hash(seed, index, family + 1) * 0.22,
+    width: widthBase + hash(seed, index, family + 2) * widthRange,
+    softness: 1.8 + hash(seed, index, family + 3) * 1.2,
+    bendA: 2.6 + hash(seed, index, family + 4) * 5.0,
+    bendB: 3.8 + hash(seed, index, family + 5) * 6.0,
+    bendC: 5.4 + hash(seed, index, family + 6) * 6.0,
+    wobbleA: 0.016 + hash(seed, index, family + 7) * 0.044,
+    wobbleB: 0.008 + hash(seed, index, family + 8) * 0.026,
+    wobbleC: 0.004 + hash(seed, index, family + 9) * 0.016,
+    phase: hash(seed, index, family + 10) * Math.PI * 2,
+    weight: weightBase + hash(seed, index, family + 11) * weightRange
+  };
+}
+
 function createFeatureSet(seed) {
-  const basins = Array.from({ length: 7 }, (_, i) => ({
-    center: seededVector(seed + 100, i),
-    radius: 0.42 + hash(seed, i, 100) * 0.42,
-    softness: 0.14 + hash(seed, i, 101) * 0.22,
-    weight: 0.52 + hash(seed, i, 102) * 0.48
-  }));
-
-  const uplifts = Array.from({ length: 5 }, (_, i) => ({
-    center: seededVector(seed + 150, i),
-    radius: 0.32 + hash(seed, i, 150) * 0.36,
-    softness: 0.11 + hash(seed, i, 151) * 0.18,
-    weight: 0.30 + hash(seed, i, 152) * 0.36
-  }));
-
-  const ridgeBands = Array.from({ length: 7 }, (_, i) => ({
-    basis: basisFromNormal(seededVector(seed + 200, i)),
-    gate: seededVector(seed + 220, i),
-    radius: 0.78 + hash(seed, i, 200) * 0.62,
-    gateSoftness: 0.18 + hash(seed, i, 201) * 0.18,
-    width: 0.045 + hash(seed, i, 202) * 0.036,
-    softness: 2.2 + hash(seed, i, 203) * 1.2,
-    bendA: 2.6 + hash(seed, i, 204) * 2.6,
-    bendB: 3.8 + hash(seed, i, 205) * 3.6,
-    bendC: 5.4 + hash(seed, i, 206) * 4.0,
-    wobbleA: 0.026 + hash(seed, i, 207) * 0.036,
-    wobbleB: 0.012 + hash(seed, i, 208) * 0.026,
-    wobbleC: 0.006 + hash(seed, i, 209) * 0.014,
-    phase: hash(seed, i, 210) * Math.PI * 2,
-    weight: 0.42 + hash(seed, i, 211) * 0.42
-  }));
-
-  const canyonBands = Array.from({ length: 7 }, (_, i) => ({
-    basis: basisFromNormal(seededVector(seed + 300, i)),
-    gate: seededVector(seed + 320, i),
-    radius: 0.64 + hash(seed, i, 300) * 0.70,
-    gateSoftness: 0.14 + hash(seed, i, 301) * 0.18,
-    width: 0.014 + hash(seed, i, 302) * 0.020,
-    softness: 2.1 + hash(seed, i, 303) * 1.0,
-    bendA: 3.4 + hash(seed, i, 304) * 3.2,
-    bendB: 5.2 + hash(seed, i, 305) * 4.2,
-    bendC: 7.4 + hash(seed, i, 306) * 4.6,
-    wobbleA: 0.030 + hash(seed, i, 307) * 0.044,
-    wobbleB: 0.012 + hash(seed, i, 308) * 0.026,
-    wobbleC: 0.008 + hash(seed, i, 309) * 0.016,
-    phase: hash(seed, i, 310) * Math.PI * 2,
-    weight: 0.50 + hash(seed, i, 311) * 0.50
-  }));
-
-  const channelBands = Array.from({ length: 9 }, (_, i) => ({
-    basis: basisFromNormal(seededVector(seed + 400, i)),
-    gate: seededVector(seed + 420, i),
-    radius: 0.44 + hash(seed, i, 400) * 0.64,
-    gateSoftness: 0.10 + hash(seed, i, 401) * 0.18,
-    width: 0.007 + hash(seed, i, 402) * 0.011,
-    softness: 2.2 + hash(seed, i, 403) * 1.3,
-    bendA: 5.6 + hash(seed, i, 404) * 4.4,
-    bendB: 7.2 + hash(seed, i, 405) * 5.6,
-    bendC: 9.4 + hash(seed, i, 406) * 5.2,
-    wobbleA: 0.018 + hash(seed, i, 407) * 0.034,
-    wobbleB: 0.010 + hash(seed, i, 408) * 0.020,
-    wobbleC: 0.006 + hash(seed, i, 409) * 0.012,
-    phase: hash(seed, i, 410) * Math.PI * 2,
-    weight: 0.38 + hash(seed, i, 411) * 0.42
-  }));
-
-  const cliffBands = Array.from({ length: 6 }, (_, i) => ({
-    basis: basisFromNormal(seededVector(seed + 500, i)),
-    gate: seededVector(seed + 520, i),
-    radius: 0.58 + hash(seed, i, 500) * 0.62,
-    gateSoftness: 0.14 + hash(seed, i, 501) * 0.20,
-    width: 0.024 + hash(seed, i, 502) * 0.024,
-    softness: 1.7 + hash(seed, i, 503) * 0.8,
-    bendA: 2.4 + hash(seed, i, 504) * 2.2,
-    bendB: 4.2 + hash(seed, i, 505) * 3.2,
-    bendC: 6.4 + hash(seed, i, 506) * 3.6,
-    wobbleA: 0.018 + hash(seed, i, 507) * 0.030,
-    wobbleB: 0.010 + hash(seed, i, 508) * 0.020,
-    wobbleC: 0.006 + hash(seed, i, 509) * 0.012,
-    phase: hash(seed, i, 510) * Math.PI * 2,
-    weight: 0.40 + hash(seed, i, 511) * 0.42
-  }));
-
-  const scars = Array.from({ length: 8 }, (_, i) => ({
-    basis: basisFromNormal(seededVector(seed + 600, i)),
-    gate: seededVector(seed + 620, i),
-    radius: 0.35 + hash(seed, i, 600) * 0.58,
-    gateSoftness: 0.08 + hash(seed, i, 601) * 0.14,
-    width: 0.004 + hash(seed, i, 602) * 0.006,
-    softness: 1.6 + hash(seed, i, 603) * 0.7,
-    bendA: 8.0 + hash(seed, i, 604) * 5.0,
-    bendB: 10.0 + hash(seed, i, 605) * 5.4,
-    bendC: 12.0 + hash(seed, i, 606) * 6.0,
-    wobbleA: 0.006 + hash(seed, i, 607) * 0.010,
-    wobbleB: 0.004 + hash(seed, i, 608) * 0.008,
-    wobbleC: 0.002 + hash(seed, i, 609) * 0.005,
-    phase: hash(seed, i, 610) * Math.PI * 2,
-    weight: 0.24 + hash(seed, i, 611) * 0.38
-  }));
-
-  const caverns = Array.from({ length: 9 }, (_, i) => ({
-    center: seededVector(seed + 700, i),
-    radius: 0.035 + hash(seed, i, 700) * 0.070,
-    softness: 0.026 + hash(seed, i, 701) * 0.060,
-    weight: 0.38 + hash(seed, i, 702) * 0.48
-  }));
-
-  return { basins, uplifts, ridgeBands, canyonBands, channelBands, cliffBands, scars, caverns };
+  return {
+    basins: Array.from({ length: 7 }, (_, i) => ({
+      center: seededVector(seed + 100, i),
+      radius: 0.42 + hash(seed, i, 100) * 0.42,
+      softness: 0.14 + hash(seed, i, 101) * 0.22,
+      weight: 0.52 + hash(seed, i, 102) * 0.48
+    })),
+    uplifts: Array.from({ length: 5 }, (_, i) => ({
+      center: seededVector(seed + 150, i),
+      radius: 0.32 + hash(seed, i, 150) * 0.36,
+      softness: 0.11 + hash(seed, i, 151) * 0.18,
+      weight: 0.30 + hash(seed, i, 152) * 0.36
+    })),
+    ridges: Array.from({ length: 7 }, (_, i) => makeBand(seed, 200, i, 0.045, 0.036, 0.42, 0.42)),
+    canyons: Array.from({ length: 7 }, (_, i) => makeBand(seed, 300, i, 0.014, 0.020, 0.50, 0.50)),
+    channels: Array.from({ length: 9 }, (_, i) => makeBand(seed, 400, i, 0.007, 0.011, 0.38, 0.42)),
+    cliffs: Array.from({ length: 6 }, (_, i) => makeBand(seed, 500, i, 0.024, 0.024, 0.40, 0.42)),
+    scars: Array.from({ length: 8 }, (_, i) => makeBand(seed, 600, i, 0.004, 0.006, 0.24, 0.38)),
+    caverns: Array.from({ length: 9 }, (_, i) => ({
+      center: seededVector(seed + 700, i),
+      radius: 0.035 + hash(seed, i, 700) * 0.070,
+      softness: 0.026 + hash(seed, i, 701) * 0.060,
+      weight: 0.38 + hash(seed, i, 702) * 0.48
+    }))
+  };
 }
 
 function sampleCaps(p, caps) {
@@ -314,32 +249,78 @@ function sampleBands(p, bands) {
   return clamp(value, 0, 1);
 }
 
-function sampleMaterial(p, world, features) {
+function qualityProfile(view = {}) {
+  const quality = view.quality || "settled";
+  const detail = view.detail || "stable";
+
+  if (quality === "motion") {
+    return {
+      quality,
+      detail,
+      cap: 144,
+      octaves: 2,
+      normal: false,
+      scars: false,
+      caverns: false,
+      micro: false,
+      strength: 0.25
+    };
+  }
+
+  if (quality === "settling") {
+    return {
+      quality,
+      detail,
+      cap: 233,
+      octaves: 3,
+      normal: true,
+      scars: false,
+      caverns: true,
+      micro: false,
+      strength: 0.38
+    };
+  }
+
+  return {
+    quality,
+    detail,
+    cap: detail === "high" ? 610 : 377,
+    octaves: detail === "high" ? 5 : 4,
+    normal: true,
+    scars: true,
+    caverns: true,
+    micro: true,
+    strength: detail === "high" ? 0.58 : 0.48
+  };
+}
+
+function sampleMaterial(p, world, features, profile) {
   const seed = world.seed;
+  const oct = profile.octaves;
 
   const warp = normalize({
-    x: p.x + fbm3D(p.x * 1.18 + 2.0, p.y * 1.18 - 1.0, p.z * 1.18 + 0.5, seed + 1, 3) * 0.075,
-    y: p.y + fbm3D(p.x * 1.16 - 3.0, p.y * 1.16 + 2.0, p.z * 1.16 - 1.0, seed + 2, 3) * 0.075,
-    z: p.z + fbm3D(p.x * 1.20 + 1.0, p.y * 1.20 + 3.0, p.z * 1.20 - 2.0, seed + 3, 3) * 0.075
+    x: p.x + fbm3D(p.x * 1.18 + 2.0, p.y * 1.18 - 1.0, p.z * 1.18 + 0.5, seed + 1, 2) * 0.075,
+    y: p.y + fbm3D(p.x * 1.16 - 3.0, p.y * 1.16 + 2.0, p.z * 1.16 - 1.0, seed + 2, 2) * 0.075,
+    z: p.z + fbm3D(p.x * 1.20 + 1.0, p.y * 1.20 + 3.0, p.z * 1.20 - 2.0, seed + 3, 2) * 0.075
   });
 
-  const macro = fbm3D(warp.x * 1.18, warp.y * 1.18, warp.z * 1.18, seed + 20, 6);
-  const plate = ridge3D(warp.x * 1.90, warp.y * 1.90, warp.z * 1.90, seed + 21, 5);
-  const fold = ridge3D(warp.x * 4.10, warp.y * 3.95, warp.z * 4.20, seed + 22, 5);
-  const grain = fbm3D(warp.x * 15.5, warp.y * 15.0, warp.z * 15.2, seed + 23, 4);
-  const micro = ridge3D(warp.x * 27.0, warp.y * 25.0, warp.z * 26.0, seed + 24, 3);
+  const macro = fbm3D(warp.x * 1.18, warp.y * 1.18, warp.z * 1.18, seed + 20, oct);
+  const plate = ridge3D(warp.x * 1.90, warp.y * 1.90, warp.z * 1.90, seed + 21, Math.max(2, oct - 1));
+  const fold = ridge3D(warp.x * 4.10, warp.y * 3.95, warp.z * 4.20, seed + 22, Math.max(2, oct - 1));
+  const grain = profile.micro ? fbm3D(warp.x * 15.5, warp.y * 15.0, warp.z * 15.2, seed + 23, 3) : 0;
+  const micro = profile.micro ? ridge3D(warp.x * 27.0, warp.y * 25.0, warp.z * 26.0, seed + 24, 2) : 0.5;
 
   const basins = sampleCaps(warp, features.basins);
   const uplifts = sampleCaps(warp, features.uplifts);
-  const ridges = sampleBands(warp, features.ridgeBands);
-  const canyons = sampleBands(warp, features.canyonBands);
-  const channels = sampleBands(warp, features.channelBands);
-  const cliffs = sampleBands(warp, features.cliffBands);
-  const scars = sampleBands(warp, features.scars);
-  const caverns = sampleCaps(warp, features.caverns);
+  const ridges = sampleBands(warp, features.ridges);
+  const canyons = sampleBands(warp, features.canyons);
+  const channels = sampleBands(warp, features.channels);
+  const cliffs = sampleBands(warp, features.cliffs);
+  const scars = profile.scars ? sampleBands(warp, features.scars) : 0;
+  const caverns = profile.caverns ? sampleCaps(warp, features.caverns) : 0;
 
-  const basinFloor = basins * (0.70 + ridge3D(warp.x * 5.2, warp.y * 5.0, warp.z * 5.4, seed + 25, 3) * 0.22);
-  const fractured = Math.max(scars, ridge3D(warp.x * 8.0, warp.y * 7.6, warp.z * 7.8, seed + 26, 3) * 0.16);
+  const basinFloor = basins * (0.70 + ridge3D(warp.x * 5.2, warp.y * 5.0, warp.z * 5.4, seed + 25, 2) * 0.22);
+  const fractured = Math.max(scars, ridge3D(warp.x * 8.0, warp.y * 7.6, warp.z * 7.8, seed + 26, 2) * 0.14);
 
   const height =
     macro * 0.24 +
@@ -392,27 +373,28 @@ function offsetPoint(p, tangent, amount) {
   });
 }
 
-function sampleHeight(p, world, features) {
-  return sampleMaterial(p, world, features).height;
+function sampleHeight(p, world, features, profile) {
+  return sampleMaterial(p, world, features, profile).height;
 }
 
-function sampleNormal(p, world, features) {
-  const eps = 0.0085;
+function sampleNormal(p, world, features, profile) {
+  if (!profile.normal) return p;
+
+  const eps = profile.quality === "settling" ? 0.012 : 0.0085;
   const t = tangentVectors(p);
 
-  const hE = sampleHeight(offsetPoint(p, t.east, eps), world, features);
-  const hW = sampleHeight(offsetPoint(p, t.east, -eps), world, features);
-  const hN = sampleHeight(offsetPoint(p, t.north, eps), world, features);
-  const hS = sampleHeight(offsetPoint(p, t.north, -eps), world, features);
+  const hE = sampleHeight(offsetPoint(p, t.east, eps), world, features, profile);
+  const hW = sampleHeight(offsetPoint(p, t.east, -eps), world, features, profile);
+  const hN = sampleHeight(offsetPoint(p, t.north, eps), world, features, profile);
+  const hS = sampleHeight(offsetPoint(p, t.north, -eps), world, features, profile);
 
   const dE = (hE - hW) / (eps * 2);
   const dN = (hN - hS) / (eps * 2);
-  const strength = 0.56;
 
   return normalize({
-    x: p.x - t.east.x * dE * strength - t.north.x * dN * strength,
-    y: p.y - t.east.y * dE * strength - t.north.y * dN * strength,
-    z: p.z - t.east.z * dE * strength - t.north.z * dN * strength
+    x: p.x - t.east.x * dE * profile.strength - t.north.x * dN * profile.strength,
+    y: p.y - t.east.y * dE * profile.strength - t.north.y * dN * profile.strength,
+    z: p.z - t.east.z * dE * profile.strength - t.north.z * dN * profile.strength
   });
 }
 
@@ -507,14 +489,9 @@ function shadePixel({ viewNormal, bumpViewNormal, material, world, lightView }) 
 export function createCinematicPlanetMaterialRenderer(options = {}) {
   const mobile = options.mobile === true;
   const dpr = Number.isFinite(options.dpr) ? options.dpr : 1;
-  const rasterLimit = mobile ? 420 : 680;
-
   const cache = new Map();
   const surface = document.createElement("canvas");
-  const surfaceCtx = surface.getContext("2d", {
-    alpha: true,
-    willReadFrequently: false
-  });
+  const surfaceCtx = surface.getContext("2d", { alpha: true, willReadFrequently: false });
 
   let size = 0;
   let image = null;
@@ -529,8 +506,12 @@ export function createCinematicPlanetMaterialRenderer(options = {}) {
     return cache.get(key);
   }
 
-  function ensureBuffer(scale) {
-    const desired = Math.max(280, Math.min(rasterLimit, Math.round(scale * 2.25)));
+  function ensureBuffer(scale, view) {
+    const profile = qualityProfile(view);
+    const mobileCap = profile.quality === "motion" ? 144 : profile.quality === "settling" ? 233 : profile.detail === "high" ? 377 : 377;
+    const desktopCap = profile.quality === "motion" ? 233 : profile.quality === "settling" ? 377 : profile.detail === "high" ? 610 : 377;
+    const cap = mobile ? mobileCap : desktopCap;
+    const desired = Math.max(144, Math.min(cap, Math.round(scale * 2.05)));
 
     if (desired !== size) {
       size = desired;
@@ -538,6 +519,8 @@ export function createCinematicPlanetMaterialRenderer(options = {}) {
       surface.height = desired;
       image = surfaceCtx.createImageData(desired, desired);
     }
+
+    return profile;
   }
 
   function drawAtmosphere(ctx, view, world) {
@@ -593,8 +576,7 @@ export function createCinematicPlanetMaterialRenderer(options = {}) {
   }
 
   function drawPlanet(ctx, view, world) {
-    ensureBuffer(view.scale);
-
+    const profile = ensureBuffer(view.scale, view);
     const features = getFeatures(world);
     const data = image.data;
     const lightView = normalize({ x: -0.60, y: 0.52, z: 0.74 });
@@ -620,9 +602,8 @@ export function createCinematicPlanetMaterialRenderer(options = {}) {
         const z = Math.sqrt(Math.max(0, 1 - r2));
         const viewNormal = normalize({ x: nx, y: ny, z });
         const objectPoint = inverseViewPoint(viewNormal, view.yaw, view.pitch);
-
-        const material = sampleMaterial(objectPoint, world, features);
-        const objectBumpNormal = sampleNormal(objectPoint, world, features);
+        const material = sampleMaterial(objectPoint, world, features, profile);
+        const objectBumpNormal = sampleNormal(objectPoint, world, features, profile);
         const viewBumpNormal = viewPointFromObject(objectBumpNormal, view.yaw, view.pitch);
 
         const color = shadePixel({
@@ -648,14 +629,8 @@ export function createCinematicPlanetMaterialRenderer(options = {}) {
 
     ctx.save();
     ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-    ctx.drawImage(
-      surface,
-      view.cx - view.scale,
-      view.cy - view.scale,
-      view.scale * 2,
-      view.scale * 2
-    );
+    ctx.imageSmoothingQuality = profile.quality === "motion" ? "medium" : "high";
+    ctx.drawImage(surface, view.cx - view.scale, view.cy - view.scale, view.scale * 2, view.scale * 2);
     ctx.restore();
 
     drawAtmosphere(ctx, view, world);

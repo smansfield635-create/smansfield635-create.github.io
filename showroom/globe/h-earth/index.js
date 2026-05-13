@@ -1,12 +1,11 @@
 // /showroom/globe/h-earth/index.js
 // TNT FULL-FILE REPLACEMENT
-// H_EARTH_GROUND_LEVEL_SCOUTING_AND_BUILD_CANDIDATE_TNT_v1
-// Owns: H-Earth ground-level scouting route presentation.
-// Does not own: Manor placement, Estate placement, bridge placement, or Globe selector mutation.
+// H_EARTH_WESTERN_GOLDEN_SHELF_ESTATE_AUTHORIZATION_TNT_v1
+// Owns: H-Earth Western Golden Shelf estate-authorization analysis route presentation.
+// Does not own: Manor placement, Estate placement, bridge placement, road placement, city placement, or Globe selector mutation.
 
 import {
   H_EARTH_GROUND_SCOUT_VERSION,
-  H_EARTH_GROUND_SCOUT_CONTRACT,
   createHEarthGroundScout,
   gradeBuildCandidateRegion
 } from "/assets/h-earth/h-earth.ground.scout.js?v=h-earth-ground-scout-v1";
@@ -17,11 +16,18 @@ import {
   BUILD_CANDIDATE_GRADES
 } from "/assets/h-earth/h-earth.terrain.classifier.js?v=h-earth-terrain-classifier-v1";
 
-const CONTRACT = "H_EARTH_GROUND_LEVEL_SCOUTING_AND_BUILD_CANDIDATE_TNT_v1";
+import {
+  H_EARTH_WESTERN_GOLDEN_SHELF_VERSION,
+  H_EARTH_WESTERN_GOLDEN_SHELF_CONTRACT,
+  createWesternGoldenShelfAuthorization
+} from "/assets/h-earth/h-earth.western-golden-shelf.js?v=western-golden-shelf-v1";
+
+const CONTRACT = "H_EARTH_WESTERN_GOLDEN_SHELF_ESTATE_AUTHORIZATION_TNT_v1";
 
 const state = {
   scout: null,
-  selectedRegionId: null,
+  authorization: null,
+  selectedRegionId: "HE-R01",
   canvas: null,
   ctx: null,
   raf: 0,
@@ -51,11 +57,26 @@ function setMarkers() {
   const markers = {
     contract: CONTRACT,
     route: "/showroom/globe/h-earth/",
+    selectedRegion: "western-golden-shelf",
+    westernGoldenShelfSelected: "true",
+    estateAuthorizationAnalysis: "true",
     groundLevelScouting: "true",
     buildCandidateAnalysis: "true",
+
+    terrainStabilityProof: "true",
+    elevationLogicProof: "true",
+    waterRelationshipProof: "true",
+    arrivalDirectionProof: "true",
+    boundaryLogicProof: "true",
+    orientationLogicProof: "true",
+
     manorPlacementAuthorized: "false",
     estatePlacementAuthorized: "false",
     bridgePlacementAuthorized: "false",
+    roadPlacementAuthorized: "false",
+    cityPlacementAuthorized: "false",
+    finalArchitectureAuthorized: "false",
+
     orbitalBaselinePreserved: "true",
     globeSelectorMutated: "false",
     mapFlattening: "false",
@@ -75,6 +96,12 @@ function gradeClass(gradeKey) {
   return "grade-d";
 }
 
+function proofClass(status) {
+  if (status === "PASS") return "proof-pass";
+  if (status === "REVIEW") return "proof-review";
+  return "proof-fail";
+}
+
 function renderRegionCards() {
   const mount = qs("[data-region-list]");
   if (!mount || !state.scout) return;
@@ -82,16 +109,17 @@ function renderRegionCards() {
   mount.innerHTML = state.scout.regions.map((region) => {
     const selected = region.id === state.selectedRegionId;
     const grade = region.buildability.grade.key;
+    const lockedPrimary = region.id === "HE-R01";
 
     return `
       <button
-        class="region-card ${selected ? "is-selected" : ""}"
+        class="region-card ${selected ? "is-selected" : ""} ${lockedPrimary ? "is-primary" : ""}"
         type="button"
         data-region-card="${region.id}"
         aria-pressed="${selected ? "true" : "false"}"
       >
         <span class="region-topline">
-          <span>${region.id}</span>
+          <span>${region.id}${lockedPrimary ? " · SELECTED" : ""}</span>
           <span class="grade-pill ${gradeClass(grade)}">${grade}</span>
         </span>
         <strong>${region.name}</strong>
@@ -116,8 +144,10 @@ function renderSelectedRegion() {
 
   mount.innerHTML = `
     <div class="selected-heading">
-      <p class="eyebrow compact">Selected scouting region</p>
-      <h2>${region.name}</h2>
+      <div>
+        <p class="eyebrow compact">Selected scouting region</p>
+        <h2>${region.name}</h2>
+      </div>
       <span class="grade-pill ${gradeClass(grade.grade)}">${BUILD_CANDIDATE_GRADES[grade.grade]?.label || "D — No-build"}</span>
     </div>
 
@@ -140,7 +170,7 @@ function renderSelectedRegion() {
     </div>
 
     <div class="hold-box">
-      <strong>Authorization status</strong>
+      <strong>Placement hold remains active</strong>
       <span>Manor placement: HOLD</span>
       <span>Estate placement: HOLD</span>
       <span>Diamond Gate Bridge placement: HOLD</span>
@@ -152,21 +182,86 @@ function renderSelectedRegion() {
 
 function renderSummary() {
   const scout = state.scout;
-  if (!scout) return;
+  const authorization = state.authorization;
+  if (!scout || !authorization) return;
 
   const summaryMount = qs("[data-scout-summary]");
   if (summaryMount) {
     summaryMount.innerHTML = `
-      <div><strong>${scout.summary.totalRegions}</strong><span>Regions</span></div>
+      <div><strong>${authorization.proofSummary.passCount}</strong><span>Proof passes</span></div>
+      <div><strong>${formatPercent(authorization.proofSummary.averageScore)}</strong><span>Proof score</span></div>
       <div><strong>${scout.summary.primaryCandidates}</strong><span>A candidates</span></div>
-      <div><strong>${scout.summary.supportCandidates}</strong><span>B candidates</span></div>
-      <div><strong>${scout.summary.noBuildRegions}</strong><span>No-build</span></div>
+      <div><strong>${authorization.authorizationGate}</strong><span>Authorization gate</span></div>
     `;
   }
 
   const bestMount = qs("[data-best-candidate]");
   if (bestMount) {
-    bestMount.textContent = scout.summary.bestCandidateName;
+    bestMount.textContent = authorization.selectedRegion;
+  }
+}
+
+function renderAuthorizationProof() {
+  const authorization = state.authorization;
+  const proofMount = qs("[data-western-proof-list]");
+  const gateMount = qs("[data-authorization-gate]");
+  const boundaryMount = qs("[data-boundary-logic]");
+  const orientationMount = qs("[data-orientation-logic]");
+
+  if (!authorization) return;
+
+  if (proofMount) {
+    proofMount.innerHTML = authorization.proofAreas.map((area) => `
+      <article class="proof-card ${proofClass(area.status)}">
+        <div class="proof-head">
+          <h3>${area.title}</h3>
+          <span>${area.status}</span>
+        </div>
+        <p>${area.summary}</p>
+        <div class="proof-score">
+          <strong>${formatPercent(area.score)}</strong>
+          <span>proof score</span>
+        </div>
+        <ul>
+          ${area.findings.map((finding) => `<li>${finding}</li>`).join("")}
+        </ul>
+      </article>
+    `).join("");
+  }
+
+  if (gateMount) {
+    gateMount.innerHTML = `
+      <span class="gate-label">${authorization.authorizationGate}</span>
+      <p>
+        Western Golden Shelf is ${authorization.authorizedForNextPlanning ? "eligible for the next planning packet" : "not yet eligible for next planning"}.
+        This still does not place the Manor, Estate, or Diamond Gate Bridge.
+      </p>
+    `;
+  }
+
+  if (boundaryMount) {
+    const zones = authorization.site.zones;
+    boundaryMount.innerHTML = Object.values(zones).map((zone) => `
+      <article class="zone-card">
+        <h3>${zone.label}</h3>
+        <p>${zone.description}</p>
+        <small>${zone.role}</small>
+      </article>
+    `).join("");
+  }
+
+  if (orientationMount) {
+    const o = authorization.site.orientation;
+    orientationMount.innerHTML = `
+      <div class="orientation-grid">
+        <div><span>Facing</span><strong>${o.likelyFacingDirection}</strong></div>
+        <div><span>View axis</span><strong>${o.viewAxis}</strong></div>
+        <div><span>Water axis</span><strong>${o.waterAxis}</strong></div>
+        <div><span>Sun/light</span><strong>${o.sunLightAxis}</strong></div>
+        <div><span>Arrival</span><strong>${o.arrivalAxis}</strong></div>
+        <div><span>Bridge direction</span><strong>${o.bridgeDirection}</strong></div>
+      </div>
+    `;
   }
 }
 
@@ -237,8 +332,8 @@ function drawScoutViewport(region) {
   ctx.fill();
 
   const land = ctx.createLinearGradient(0, horizonY, 0, height);
-  land.addColorStop(0, "rgba(126,111,68,0.92)");
-  land.addColorStop(0.52, "rgba(54,75,62,0.94)");
+  land.addColorStop(0, "rgba(148,124,70,0.92)");
+  land.addColorStop(0.52, "rgba(64,84,60,0.94)");
   land.addColorStop(1, "rgba(18,26,24,1)");
   ctx.fillStyle = land;
   ctx.beginPath();
@@ -330,13 +425,15 @@ function initHEarthGroundScout() {
   setMarkers();
 
   state.scout = createHEarthGroundScout();
-  state.selectedRegionId = state.scout.bestCandidate?.id || state.scout.regions[0]?.id || null;
+  state.authorization = createWesternGoldenShelfAuthorization();
+  state.selectedRegionId = "HE-R01";
   state.canvas = qs("[data-ground-scout-canvas]");
   state.ctx = state.canvas?.getContext("2d", { alpha: false }) || null;
 
   renderSummary();
   renderRegionCards();
   renderSelectedRegion();
+  renderAuthorizationProof();
 
   if (!state.raf && state.canvas && state.ctx) {
     state.raf = requestAnimationFrame(tick);
@@ -348,23 +445,47 @@ function initHEarthGroundScout() {
         contract: CONTRACT,
         target: "H-Earth",
         route: "/showroom/globe/h-earth/",
+        selectedRegion: "Western Golden Shelf",
+        selectedRegionKey: "western-golden-shelf",
+        westernGoldenShelfSelected: true,
+        estateAuthorizationAnalysis: true,
+
         groundLevelScouting: true,
         buildCandidateAnalysis: true,
+        terrainStabilityProof: true,
+        elevationLogicProof: true,
+        waterRelationshipProof: true,
+        arrivalDirectionProof: true,
+        boundaryLogicProof: true,
+        orientationLogicProof: true,
+
         manorPlacementAuthorized: false,
         estatePlacementAuthorized: false,
         bridgePlacementAuthorized: false,
+        roadPlacementAuthorized: false,
+        cityPlacementAuthorized: false,
+        finalArchitectureAuthorized: false,
+
+        authorizationGate: state.authorization?.authorizationGate || "HELD",
+        authorizedForNextPlanning: state.authorization?.authorizedForNextPlanning === true,
+
         orbitalBaselinePreserved: true,
         globeSelectorMutated: false,
         mapFlattening: false,
-        transitionPath: "orbital → regional → terrain → build-candidate → estate authorization",
+        transitionPath: "H-Earth orbital baseline → Western Golden Shelf regional candidate → terrain/elevation proof → water relationship proof → arrival/bridge direction proof → estate boundary logic → Manor placement authorization",
+
         scoutVersion: H_EARTH_GROUND_SCOUT_VERSION,
         classifierVersion: H_EARTH_TERRAIN_CLASSIFIER_VERSION,
+        westernGoldenShelfVersion: H_EARTH_WESTERN_GOLDEN_SHELF_VERSION,
+        westernGoldenShelfContract: H_EARTH_WESTERN_GOLDEN_SHELF_CONTRACT,
+
         regionCount: state.scout?.summary.totalRegions || 0,
         primaryCandidates: state.scout?.summary.primaryCandidates || 0,
         supportCandidates: state.scout?.summary.supportCandidates || 0,
         noBuildRegions: state.scout?.summary.noBuildRegions || 0,
         selectedRegionId: state.selectedRegionId,
-        bestCandidate: state.scout?.summary.bestCandidateName || "None proven",
+        bestCandidate: state.authorization?.selectedRegion || "Western Golden Shelf",
+        proofSummary: state.authorization?.proofSummary || null,
         terrainClasses: Object.keys(TERRAIN_CLASSES),
         buildCandidateGrades: Object.keys(BUILD_CANDIDATE_GRADES)
       });

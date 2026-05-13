@@ -2,7 +2,7 @@ import {
   PLANET_MATERIAL_VERSION,
   PLANET_HYDRATION_VERSION,
   createCinematicPlanetMaterialRenderer
-} from "/assets/showroom.globe.cinematic.material.js?v=cinematic-material-v1";
+} from "/assets/showroom.globe.cinematic.material.js?v=cinematic-material-v2";
 
 const FIBONACCI_SEQUENCE = Object.freeze([1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233]);
 const RUNTIME_FIELD_SIZE = 256;
@@ -10,14 +10,17 @@ const TAU = Math.PI * 2;
 const MAX_DPR = 1.5;
 
 const GLOBE_SELECTOR_STATE = Object.freeze({
-  contract: "SHOWROOM_GLOBE_CINEMATIC_MATERIAL_CONNECTION_REBIND_TNT_v11",
-  previousContract: "SHOWROOM_GLOBE_MULTI_NODAL_PHYSICAL_MATERIAL_RESTORATION_TNT_v10",
+  contract: "SHOWROOM_GLOBE_CINEMATIC_CONNECTION_AND_EXPRESSION_ALIGNMENT_TNT_v12",
+  previousContract: "SHOWROOM_GLOBE_CINEMATIC_MATERIAL_CONNECTION_REBIND_TNT_v11",
   route: "/showroom/globe/",
   role: "globe-system-gateway-selector",
   gatewayAuthority: true,
   visualScaleAuthority: true,
   cinematicMaterialConnected: true,
   hydrationFileConnected: true,
+  expressionAligned: true,
+  materialFirstExpression: true,
+  hydrationSecondary: true,
   physicalGraphicMaterial: true,
   materialAsset: true,
   hydrationFile: true,
@@ -51,30 +54,43 @@ const BODY_CONFIG = Object.freeze({
   earth: Object.freeze({
     key: "earth",
     title: "Earth",
-    subtitle: "Reference Body · hydrated Fibonacci runtime",
+    subtitle: "Reference Body · material-led hydrated runtime",
     openText: "Open Earth",
     href: "/showroom/globe/earth/",
     seed: 1207,
     anchor: "EARTH_HYDRATED_OBJECT",
-    stoneLow: Object.freeze([24, 75, 94]),
-    stoneMid: Object.freeze([58, 118, 130]),
-    stoneHigh: Object.freeze([210, 188, 122]),
-    stoneDeep: Object.freeze([7, 25, 39]),
-    sediment: Object.freeze([154, 128, 76]),
-    exposed: Object.freeze([218, 194, 130]),
-    shadow: Object.freeze([4, 12, 21]),
-    ridge: Object.freeze([236, 215, 146]),
-    scar: Object.freeze([18, 45, 52]),
-    atmosphere: Object.freeze([156, 214, 250]),
-    water: Object.freeze([32, 126, 156]),
-    shelf: Object.freeze([75, 166, 178]),
+
+    stoneLow: Object.freeze([34, 74, 78]),
+    stoneMid: Object.freeze([92, 116, 104]),
+    stoneHigh: Object.freeze([218, 192, 128]),
+    stoneDeep: Object.freeze([8, 20, 26]),
+    sediment: Object.freeze([176, 142, 82]),
+    exposed: Object.freeze([232, 206, 142]),
+    shadow: Object.freeze([4, 10, 16]),
+    ridge: Object.freeze([244, 222, 154]),
+    scar: Object.freeze([14, 34, 36]),
+
+    atmosphere: Object.freeze([92, 150, 184]),
+    water: Object.freeze([26, 102, 126]),
+    shelf: Object.freeze([70, 142, 146]),
+
+    waterBias: 0.34,
+    shellStrength: 0.22,
+    wetness: 0.42,
+    oceanDepth: 0.36,
+    goldReflection: 0.36,
+    materialPriority: 0.78,
+    hydrationPriority: 0.22,
+
     hydration: Object.freeze({
       world: "earth",
-      waterBias: 0.62,
-      shellStrength: 0.56,
-      wetness: 0.72,
-      oceanDepth: 0.66,
-      goldReflection: 0.22
+      waterBias: 0.34,
+      shellStrength: 0.22,
+      wetness: 0.42,
+      oceanDepth: 0.36,
+      goldReflection: 0.36,
+      materialPriority: 0.78,
+      hydrationPriority: 0.22
     })
   }),
 
@@ -86,25 +102,38 @@ const BODY_CONFIG = Object.freeze({
     href: "/showroom/globe/h-earth/",
     seed: 2331,
     anchor: "H_EARTH_PHYSICAL_DRY_MATERIAL",
-    stoneLow: Object.freeze([72, 70, 55]),
-    stoneMid: Object.freeze([134, 124, 82]),
-    stoneHigh: Object.freeze([218, 196, 124]),
-    stoneDeep: Object.freeze([12, 18, 17]),
-    sediment: Object.freeze([172, 145, 86]),
-    exposed: Object.freeze([232, 211, 142]),
-    shadow: Object.freeze([5, 12, 10]),
-    ridge: Object.freeze([245, 226, 158]),
-    scar: Object.freeze([12, 32, 25]),
-    atmosphere: Object.freeze([176, 236, 204]),
-    water: Object.freeze([58, 150, 136]),
-    shelf: Object.freeze([94, 182, 150]),
+
+    stoneLow: Object.freeze([78, 72, 50]),
+    stoneMid: Object.freeze([146, 126, 78]),
+    stoneHigh: Object.freeze([226, 200, 124]),
+    stoneDeep: Object.freeze([12, 16, 12]),
+    sediment: Object.freeze([188, 148, 82]),
+    exposed: Object.freeze([242, 218, 150]),
+    shadow: Object.freeze([5, 10, 8]),
+    ridge: Object.freeze([248, 226, 158]),
+    scar: Object.freeze([12, 28, 22]),
+
+    atmosphere: Object.freeze([112, 176, 150]),
+    water: Object.freeze([44, 112, 102]),
+    shelf: Object.freeze([82, 148, 126]),
+
+    waterBias: 0.10,
+    shellStrength: 0.14,
+    wetness: 0.18,
+    oceanDepth: 0.10,
+    goldReflection: 0.42,
+    materialPriority: 0.88,
+    hydrationPriority: 0.12,
+
     hydration: Object.freeze({
       world: "h-earth",
-      waterBias: 0.26,
-      shellStrength: 0.38,
-      wetness: 0.34,
-      oceanDepth: 0.22,
-      goldReflection: 0.30
+      waterBias: 0.10,
+      shellStrength: 0.14,
+      wetness: 0.18,
+      oceanDepth: 0.10,
+      goldReflection: 0.42,
+      materialPriority: 0.88,
+      hydrationPriority: 0.12
     })
   }),
 
@@ -116,25 +145,38 @@ const BODY_CONFIG = Object.freeze({
     href: "/showroom/globe/audralia/",
     seed: 3779,
     anchor: "AUDRALIA_CONSTRUCTED_MATERIAL",
-    stoneLow: Object.freeze([66, 48, 82]),
-    stoneMid: Object.freeze([120, 78, 100]),
-    stoneHigh: Object.freeze([202, 142, 124]),
-    stoneDeep: Object.freeze([13, 10, 34]),
-    sediment: Object.freeze([154, 96, 86]),
-    exposed: Object.freeze([226, 168, 142]),
-    shadow: Object.freeze([9, 7, 24]),
-    ridge: Object.freeze([234, 182, 154]),
-    scar: Object.freeze([38, 18, 54]),
-    atmosphere: Object.freeze([218, 202, 255]),
-    water: Object.freeze([92, 104, 158]),
-    shelf: Object.freeze([118, 118, 168]),
+
+    stoneLow: Object.freeze([74, 48, 80]),
+    stoneMid: Object.freeze([132, 78, 96]),
+    stoneHigh: Object.freeze([210, 142, 118]),
+    stoneDeep: Object.freeze([14, 10, 32]),
+    sediment: Object.freeze([166, 94, 84]),
+    exposed: Object.freeze([234, 168, 140]),
+    shadow: Object.freeze([8, 6, 22]),
+    ridge: Object.freeze([238, 178, 152]),
+    scar: Object.freeze([34, 16, 48]),
+
+    atmosphere: Object.freeze([150, 122, 200]),
+    water: Object.freeze([78, 86, 132]),
+    shelf: Object.freeze([104, 102, 148]),
+
+    waterBias: 0.16,
+    shellStrength: 0.18,
+    wetness: 0.24,
+    oceanDepth: 0.16,
+    goldReflection: 0.20,
+    materialPriority: 0.84,
+    hydrationPriority: 0.16,
+
     hydration: Object.freeze({
       world: "audralia",
-      waterBias: 0.32,
-      shellStrength: 0.46,
-      wetness: 0.42,
-      oceanDepth: 0.34,
-      goldReflection: 0.18
+      waterBias: 0.16,
+      shellStrength: 0.18,
+      wetness: 0.24,
+      oceanDepth: 0.16,
+      goldReflection: 0.20,
+      materialPriority: 0.84,
+      hydrationPriority: 0.16
     })
   })
 });
@@ -259,11 +301,11 @@ function drawStageBackground(ctx, width, height, world) {
     metrics.radius * 0.24,
     metrics.globeCenterX,
     metrics.globeCenterY,
-    metrics.radius * 2.10
+    metrics.radius * 1.88
   );
 
-  halo.addColorStop(0, rgb(world.atmosphere, 0.13));
-  halo.addColorStop(0.42, rgb(world.atmosphere, 0.052));
+  halo.addColorStop(0, rgb(world.atmosphere, 0.080));
+  halo.addColorStop(0.42, rgb(world.atmosphere, 0.034));
   halo.addColorStop(1, "rgba(0,0,0,0)");
   ctx.fillStyle = halo;
   ctx.fillRect(0, 0, width, height);
@@ -299,14 +341,14 @@ function drawGroundGlow(ctx, width, height, world) {
   const cx = metrics.globeCenterX;
   const cy = metrics.globeCenterY;
 
-  const glow = ctx.createRadialGradient(cx, cy + radius * 1.08, radius * 0.02, cx, cy + radius * 1.08, radius * 0.44);
-  glow.addColorStop(0, rgb(world.atmosphere, 0.10));
-  glow.addColorStop(0.46, "rgba(82,109,146,0.08)");
+  const glow = ctx.createRadialGradient(cx, cy + radius * 1.08, radius * 0.02, cx, cy + radius * 1.08, radius * 0.38);
+  glow.addColorStop(0, rgb(world.atmosphere, 0.060));
+  glow.addColorStop(0.46, "rgba(82,109,146,0.045)");
   glow.addColorStop(1, "rgba(0,0,0,0)");
 
   ctx.fillStyle = glow;
   ctx.beginPath();
-  ctx.ellipse(cx, cy + radius * 1.08, radius * 0.42, radius * 0.075, 0, 0, TAU);
+  ctx.ellipse(cx, cy + radius * 1.08, radius * 0.38, radius * 0.065, 0, 0, TAU);
   ctx.fill();
 }
 
@@ -486,11 +528,14 @@ function setMode(mode) {
 
 function markRoute() {
   const markers = {
-    globeGatewayStatus: "cinematic-material-connected",
+    globeGatewayStatus: "cinematic-connection-expression-aligned",
     globeGatewayAuthority: "true",
     visualScaleAuthority: "true",
     cinematicMaterialConnected: "true",
     hydrationFileConnected: "true",
+    expressionAligned: "true",
+    materialFirstExpression: "true",
+    hydrationSecondary: "true",
     physicalGraphicMaterial: "true",
     materialAsset: "true",
     hydrationFile: "true",
@@ -582,8 +627,13 @@ function initGlobeSelector() {
         materialSource: PLANET_MATERIAL_VERSION,
         hydrationVersion: PLANET_HYDRATION_VERSION,
         currentAnchor: BODY_CONFIG[state.body]?.anchor || "UNKNOWN",
+        currentMaterialPriority: BODY_CONFIG[state.body]?.materialPriority,
+        currentHydrationPriority: BODY_CONFIG[state.body]?.hydrationPriority,
         cinematicMaterialConnected: true,
         hydrationFileConnected: true,
+        expressionAligned: true,
+        materialFirstExpression: true,
+        hydrationSecondary: true,
         physicalGraphicMaterial: true,
         materialAsset: true,
         hydrationFile: true,

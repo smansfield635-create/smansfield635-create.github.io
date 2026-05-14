@@ -3,8 +3,8 @@
   lang="en"
   data-page="triple-g"
   data-route="/gauges/"
-  data-contract="TRIPLE_G_H_EARTH_CONDITION_STACK_RENEWAL_TNT_v1"
-  data-previous-contract="TRIPLE_G_LEGACY_PARENT_GLOBE_AUDIT"
+  data-contract="TRIPLE_G_EXIT_RELEASE_FALSE_POSITIVE_REPAIR_TNT_v1"
+  data-previous-contract="TRIPLE_G_H_EARTH_CONDITION_STACK_RENEWAL_TNT_v1"
   data-audit-model="authority-placement-runtime-condition-stack-gaps"
   data-parent-selector-route="/showroom/globe/"
   data-h-earth-child-route="/showroom/globe/h-earth/"
@@ -601,17 +601,19 @@
         <div class="log" data-log>Audit not yet run.</div>
 
         <template id="route-receipt" data-route-receipt>
-TRIPLE_G_H_EARTH_CONDITION_STACK_RENEWAL_TNT_v1
+TRIPLE_G_EXIT_RELEASE_FALSE_POSITIVE_REPAIR_TNT_v1
+previous=TRIPLE_G_H_EARTH_CONDITION_STACK_RENEWAL_TNT_v1
 route=/gauges/
 page=triple_g
 role=goals_gauges_gaps_audit
-purpose=renew_triple_g_against_current_authority_and_condition_stack_goals
+purpose=repair_exit_release_false_positive_caused_by_raw_requestAnimationFrame_string_scan
 parent_route=/showroom/globe/
 h_earth_child_route=/showroom/globe/h-earth/
 primary_law=parent_selector_selects_child_route_renders_triple_g_verifies_split
+repair=parent_rAF_scan_now_checks_actual_call_pattern_requestAnimationFrame_parenthesis_not_receipt_text
 audit_lanes=authority_health,route_placement_health,runtime_health,condition_stack_health,baseline_purity,exit_release,material_readiness,current_gaps
 retired_audit_targets=old_shared_interplanetary_parent_canvas,old_three_planets_on_one_page_platform,old_parent_drag_glide_runtime,old_material_renderer_import_on_parent
-current_expected=authority_pass_route_placement_pass_runtime_pass_condition_stack_pass_baseline_purity_pass_exit_release_source_check_material_readiness_hold
+current_expected=authority_pass_route_placement_pass_runtime_pass_condition_stack_pass_baseline_purity_pass_exit_release_pass_material_readiness_hold
 next_lawful_build=H_EARTH_EARTH_WATER_AIR_MATERIAL_EXPRESSION_RENEWAL_TNT_v1
 generated_image=false
 graphic_box=false
@@ -622,7 +624,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      TRIPLE_G_H_EARTH_CONDITION_STACK_RENEWAL_TNT_v1 · Parent selects · H-Earth renders · Triple G verifies.
+      TRIPLE_G_EXIT_RELEASE_FALSE_POSITIVE_REPAIR_TNT_v1 · Parent selects · H-Earth renders · Triple G verifies.
     </footer>
   </div>
 
@@ -630,7 +632,8 @@ visual_pass_claimed=false
     (function () {
       "use strict";
 
-      var CONTRACT = "TRIPLE_G_H_EARTH_CONDITION_STACK_RENEWAL_TNT_v1";
+      var CONTRACT = "TRIPLE_G_EXIT_RELEASE_FALSE_POSITIVE_REPAIR_TNT_v1";
+      var PREVIOUS_CONTRACT = "TRIPLE_G_H_EARTH_CONDITION_STACK_RENEWAL_TNT_v1";
       var PARENT_ROUTE = "/showroom/globe/";
       var H_EARTH_ROUTE = "/showroom/globe/h-earth/";
       var CHECK = {
@@ -649,6 +652,8 @@ visual_pass_claimed=false
         gauges: [],
         log: []
       };
+
+      var parentScriptCache = "";
 
       function log(message) {
         var line = "[" + new Date().toLocaleTimeString() + "] " + message;
@@ -678,10 +683,6 @@ visual_pass_claimed=false
         return attr(doc, name) === "true";
       }
 
-      function absoluteUrl(path) {
-        return new URL(path, window.location.origin).href;
-      }
-
       function cacheBust(route) {
         var url = new URL(route, window.location.origin);
         url.searchParams.set("gg", String(Date.now()));
@@ -706,6 +707,21 @@ visual_pass_claimed=false
         });
 
         return found ? found.getAttribute("src") : "";
+      }
+
+      function hasActualRequestAnimationFrameCall(source) {
+        return /(?:^|[^\w.$])(?:window\.)?requestAnimationFrame\s*\(/.test(String(source || ""));
+      }
+
+      function hasActualCancelAnimationFrameCall(source) {
+        return /(?:^|[^\w.$])(?:window\.)?cancelAnimationFrame\s*\(/.test(String(source || ""));
+      }
+
+      function sourceContainsFalseRafReceiptOnly(source) {
+        var text = String(source || "");
+        var containsToken = text.includes("requestAnimationFrame");
+        var containsActualCall = hasActualRequestAnimationFrameCall(text);
+        return containsToken && !containsActualCall;
       }
 
       function makeCheck(label, pass, evidence, failStatus) {
@@ -970,29 +986,59 @@ visual_pass_claimed=false
         );
       }
 
+      function fetchParentScriptTextCache() {
+        return parentScriptCache || "";
+      }
+
       function auditRuntimeCleanup() {
         var js = state.childJs || "";
+        var parentSource = fetchParentScriptTextCache();
+
+        var childHasActualRaf = hasActualRequestAnimationFrameCall(js);
+        var childHasActualCancel = hasActualCancelAnimationFrameCall(js);
+        var parentHasActualRaf = hasActualRequestAnimationFrameCall(parentSource);
+        var parentFalseReceiptOnly = sourceContainsFalseRafReceiptOnly(parentSource);
+
         var checks = [
-          makeCheck("Runtime has pagehide cleanup", js.includes("pagehide") && js.includes("stop()"), "pagehide + stop scan"),
-          makeCheck("Runtime has visibilitychange cleanup", js.includes("visibilitychange") && js.includes("document.visibilityState"), "visibilitychange scan"),
-          makeCheck("Runtime stops when route links are clicked", js.includes("querySelectorAll(\"a[href]\")") && js.includes("capture: true"), "link click cleanup scan"),
-          makeCheck("Child runtime owns requestAnimationFrame only on child route", js.includes("requestAnimationFrame") && attr(state.childDoc, "data-route") === H_EARTH_ROUTE, "child route rAF source scan"),
-          makeCheck("Parent route remains rAF-free by source", !fetchParentScriptTextCache().includes("requestAnimationFrame"), "parent script rAF source scan")
+          makeCheck(
+            "Runtime has pagehide cleanup",
+            js.includes("pagehide") && js.includes("stop()"),
+            "pagehide + stop scan"
+          ),
+          makeCheck(
+            "Runtime has visibilitychange cleanup",
+            js.includes("visibilitychange") && js.includes("document.visibilityState"),
+            "visibilitychange scan"
+          ),
+          makeCheck(
+            "Runtime stops when route links are clicked",
+            js.includes("querySelectorAll(\"a[href]\")") && js.includes("capture: true"),
+            "link click cleanup scan"
+          ),
+          makeCheck(
+            "Child runtime owns requestAnimationFrame only on child route",
+            childHasActualRaf && attr(state.childDoc, "data-route") === H_EARTH_ROUTE,
+            "child actual rAF call=" + childHasActualRaf + ", child route=" + attr(state.childDoc, "data-route")
+          ),
+          makeCheck(
+            "Child runtime has cancelAnimationFrame cleanup",
+            childHasActualCancel && js.includes("stop()"),
+            "child actual cancelAnimationFrame call=" + childHasActualCancel + ", stop()=" + js.includes("stop()")
+          ),
+          makeCheck(
+            "Parent route remains actual-rAF-free by source",
+            parentHasActualRaf === false,
+            "actual requestAnimationFrame( call=" + parentHasActualRaf + ", false-receipt-only=" + parentFalseReceiptOnly
+          )
         ];
 
         return makeGauge(
           "exit-release",
           "Runtime Cleanup / Exit Release",
           deriveStatus(checks, true),
-          "Source-level verification that the child runtime stops on pagehide, hidden state, and link navigation.",
+          "Verifies the child runtime stops cleanly and the parent selector is not falsely failed for receipt text that merely says requestAnimationFrame is false.",
           checks
         );
-      }
-
-      var parentScriptCache = "";
-
-      function fetchParentScriptTextCache() {
-        return parentScriptCache || "";
       }
 
       function auditBaselinePurity() {
@@ -1112,6 +1158,7 @@ visual_pass_claimed=false
           status: function () {
             return Object.freeze({
               contract: CONTRACT,
+              previousContract: PREVIOUS_CONTRACT,
               route: "/gauges/",
               parentRoute: PARENT_ROUTE,
               hEarthRoute: H_EARTH_ROUTE,
@@ -1146,7 +1193,7 @@ visual_pass_claimed=false
 
             var parentScript = getScriptSrc(state.parentDoc, "/showroom/globe/index.js");
             if (parentScript) {
-              log("Fetching parent helper script for forbidden runtime scan.");
+              log("Fetching parent helper script for actual-rAF call scan.");
               return fetchText(new URL(parentScript, window.location.origin).pathname).catch(function () {
                 return "";
               });
@@ -1156,6 +1203,7 @@ visual_pass_claimed=false
           .then(function (parentScriptText) {
             parentScriptCache = parentScriptText || "";
 
+            log("Parent rAF scan mode: actual requestAnimationFrame( calls only; receipt text no longer fails.");
             log("Fetching H-Earth child route: " + H_EARTH_ROUTE);
             return fetchText(H_EARTH_ROUTE);
           })
@@ -1221,10 +1269,14 @@ visual_pass_claimed=false
           });
       }
 
-      document.querySelector("[data-run-audit]")?.addEventListener("click", runAudit);
+      if (document.querySelector("[data-run-audit]")) {
+        document.querySelector("[data-run-audit]").addEventListener("click", runAudit);
+      }
 
       document.documentElement.dataset.contract = CONTRACT;
+      document.documentElement.dataset.previousContract = PREVIOUS_CONTRACT;
       document.documentElement.dataset.auditModel = "authority-placement-runtime-condition-stack-gaps";
+      document.documentElement.dataset.exitReleaseFalsePositiveRepair = "true";
 
       runAudit();
     })();

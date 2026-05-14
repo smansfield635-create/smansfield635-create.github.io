@@ -3,12 +3,13 @@
   lang="en"
   data-route="/products/"
   data-page="products"
-  data-version="G1-V8"
-  data-contract="PRODUCTS_TOP_TRAVERSAL_CONSTRAINT_RENEWAL_TNT_v1"
+  data-version="G1-V9"
+  data-contract="PRODUCTS_OPTICAL_SAPPHIRE_ORBIT_AND_CENTER_GEM_RENEWAL_TNT_v1"
+  data-previous-contract="PRODUCTS_TOP_TRAVERSAL_CONSTRAINT_RENEWAL_TNT_v1"
   data-renews="PRODUCTS_CUT_SAPPHIRE_INTERNAL_REFRACTION_REFINEMENT_TNT_v3"
   data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
   data-animation-standard="LOCAL_8_DIAMOND_AXIAL_ORBIT_STANDARD_v1"
-  data-material-renewal="cut-sapphire-gemstone-visible-internal-refraction"
+  data-material-renewal="optical-sapphire-gemstone-orbit-and-center-seal"
   data-top-traversal="compass-door-home-products-showroom-gauges"
   data-status="active"
   data-role="product-wing"
@@ -47,7 +48,6 @@
       --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
       --orbit-duration:48s;
-      --gem-cut:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
     }
 
     *{box-sizing:border-box}
@@ -94,6 +94,19 @@
     }
 
     a{color:inherit;text-decoration:none}
+
+    a:focus-visible{
+      outline:2px solid var(--gold);
+      outline-offset:4px;
+    }
+
+    .svg-defs{
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
+    }
 
     .skip{
       position:absolute;
@@ -421,54 +434,45 @@
       position:absolute;
       left:50%;
       top:50%;
-      z-index:0;
+      z-index:1;
       display:grid;
       place-items:center;
-      width:clamp(8.5rem,22vw,13rem);
-      height:clamp(8.5rem,22vw,13rem);
-      transform:translate(-50%,-50%) rotate(45deg);
-      border:1px solid rgba(243,200,111,.12);
-      border-radius:1.9rem;
-      background:
-        radial-gradient(circle at 35% 28%,rgba(255,255,255,.16),transparent 31%),
-        linear-gradient(135deg,rgba(36,120,255,.30),rgba(4,18,62,.42));
-      box-shadow:
-        0 0 70px rgba(36,120,255,.18),
-        inset 0 0 26px rgba(255,255,255,.04);
-      opacity:.48;
+      width:clamp(10rem,25vw,15rem);
+      height:clamp(7.4rem,18.4vw,11.1rem);
+      transform:translate(-50%,-50%);
       pointer-events:none;
-      animation:productsAnchorPulse 7s ease-in-out infinite;
+      isolation:isolate;
     }
 
-    .products-anchor::after{
-      content:"";
-      position:absolute;
-      inset:14%;
-      border-radius:1.25rem;
-      border:1px solid rgba(255,255,255,.05);
-    }
-
-    .products-anchor span{
-      display:block;
-      transform:rotate(-45deg);
-      color:rgba(255,244,216,.86);
+    .products-anchor-label{
+      position:relative;
+      z-index:3;
+      display:grid;
+      gap:.12rem;
+      place-items:center;
+      width:70%;
+      color:rgba(255,244,216,.90);
       text-align:center;
-      font-size:.78rem;
-      font-weight:950;
-      letter-spacing:.15em;
-      text-transform:uppercase;
-      line-height:1.2;
+      text-shadow:
+        0 2px 14px rgba(0,0,0,.88),
+        0 0 12px rgba(0,44,120,.80);
     }
 
-    @keyframes productsAnchorPulse{
-      0%,100%{
-        transform:translate(-50%,-50%) rotate(45deg) scale(.98);
-        opacity:.42;
-      }
-      50%{
-        transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-        opacity:.56;
-      }
+    .products-anchor-label b{
+      font-size:clamp(.72rem,1.7vw,.96rem);
+      font-weight:950;
+      letter-spacing:.18em;
+      line-height:1.05;
+      text-transform:uppercase;
+    }
+
+    .products-anchor-label span{
+      color:rgba(230,238,255,.66);
+      font-size:clamp(.46rem,1.1vw,.62rem);
+      font-weight:950;
+      letter-spacing:.14em;
+      line-height:1.2;
+      text-transform:uppercase;
     }
 
     .products-orbit{
@@ -495,87 +499,77 @@
       top:50%;
       display:grid;
       place-items:center;
-      overflow:hidden;
-      width:5.45rem;
-      height:5.45rem;
-      margin:-2.725rem 0 0 -2.725rem;
-      border:1px solid rgba(141,216,255,.50);
+      overflow:visible;
+      width:6.55rem;
+      height:4.95rem;
+      margin:-2.475rem 0 0 -3.275rem;
+      border:0;
       border-radius:0;
-      clip-path:var(--gem-cut);
-      background:
-        linear-gradient(35deg,transparent 0 19%,rgba(255,255,255,.34) 20% 22%,transparent 23% 100%),
-        linear-gradient(145deg,rgba(255,255,255,.25),transparent 18%,rgba(4,38,128,.30) 44%,transparent 68%),
-        conic-gradient(from 45deg at 50% 50%,
-          rgba(255,255,255,.30) 0deg,
-          rgba(35,142,255,.30) 36deg,
-          rgba(2,18,76,.56) 72deg,
-          rgba(102,194,255,.27) 108deg,
-          rgba(4,31,116,.64) 144deg,
-          rgba(255,255,255,.20) 180deg,
-          rgba(2,18,76,.68) 216deg,
-          rgba(58,154,255,.30) 252deg,
-          rgba(1,12,54,.72) 288deg,
-          rgba(160,222,255,.27) 324deg,
-          rgba(255,255,255,.30) 360deg),
-        radial-gradient(circle at 32% 20%,rgba(255,255,255,.70),rgba(150,220,255,.18) 22%,transparent 38%),
-        radial-gradient(circle at 76% 80%,rgba(1,9,42,.76),transparent 52%),
-        linear-gradient(145deg,rgba(91,188,255,.99),rgba(17,88,218,.98) 42%,rgba(1,24,92,.99) 100%);
-      box-shadow:
-        0 18px 36px rgba(2,16,64,.42),
-        0 0 32px rgba(36,120,255,.34),
-        inset 0 1px 0 rgba(255,255,255,.32),
-        inset 0 -14px 28px rgba(1,9,42,.34);
+      background:transparent;
+      box-shadow:none;
       transform:
         rotate(var(--angle))
         translateY(var(--radius))
-        rotate(calc(-1 * var(--angle)))
-        rotate(45deg);
+        rotate(calc(-1 * var(--angle)));
       pointer-events:auto;
       backface-visibility:hidden;
       transform-style:preserve-3d;
       isolation:isolate;
+      transition:filter .18s ease,scale .18s ease;
     }
 
-    .product-node::before{
-      content:"";
-      position:absolute;
-      inset:5%;
-      clip-path:polygon(50% 0%,75% 12%,100% 36%,80% 54%,89% 78%,50% 100%,11% 78%,20% 54%,0% 36%,25% 12%);
-      background:
-        linear-gradient(90deg,transparent 0 48%,rgba(255,255,255,.24) 49% 51%,transparent 52% 100%),
-        linear-gradient(0deg,transparent 0 48%,rgba(255,255,255,.16) 49% 51%,transparent 52% 100%),
-        linear-gradient(27deg,transparent 0 32%,rgba(255,255,255,.21) 33% 35%,transparent 36% 100%),
-        linear-gradient(153deg,transparent 0 31%,rgba(255,255,255,.18) 32% 34%,transparent 35% 100%),
-        linear-gradient(118deg,transparent 0 42%,rgba(112,199,255,.18) 43% 45%,transparent 46% 100%),
-        linear-gradient(242deg,transparent 0 58%,rgba(255,232,163,.13) 59% 61%,transparent 62% 100%),
-        radial-gradient(circle at 36% 23%,rgba(255,255,255,.32),transparent 26%),
-        conic-gradient(from 0deg at 50% 50%,
-          rgba(255,255,255,.20),
-          rgba(8,68,180,.12),
-          rgba(255,255,255,.12),
-          rgba(1,16,72,.24),
-          rgba(255,255,255,.17));
-      opacity:.96;
-      pointer-events:none;
-      transform:translateZ(1px);
-      mix-blend-mode:screen;
+    .product-node:hover,
+    .product-node:focus-visible{
+      outline:none;
+      filter:brightness(1.12) saturate(1.08) contrast(1.04);
+      scale:1.045;
     }
 
-    .product-node::after{
-      content:"";
+    .sapphire-gem-svg{
       position:absolute;
       inset:0;
-      clip-path:var(--gem-cut);
-      background:
-        linear-gradient(115deg,transparent 0 33%,rgba(255,255,255,.34) 34% 36%,transparent 37% 100%),
-        linear-gradient(25deg,transparent 0 58%,rgba(255,232,163,.20) 59% 61%,transparent 62% 100%),
-        linear-gradient(82deg,transparent 0 47%,rgba(141,216,255,.22) 48% 49%,transparent 50% 100%),
-        radial-gradient(circle at 70% 24%,rgba(255,255,255,.20),transparent 20%);
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.10),
-        inset 0 -20px 28px rgba(1,9,42,.24);
+      width:100%;
+      height:100%;
+      overflow:visible;
       pointer-events:none;
-      mix-blend-mode:screen;
+      filter:
+        drop-shadow(0 1.1rem 1.35rem rgba(0,0,0,.32))
+        drop-shadow(0 0 1.20rem rgba(36,120,255,.20))
+        drop-shadow(0 0 .58rem rgba(141,216,255,.08));
+    }
+
+    .product-node:hover .sapphire-gem-svg,
+    .product-node:focus-visible .sapphire-gem-svg{
+      filter:
+        drop-shadow(0 1.25rem 1.55rem rgba(0,0,0,.38))
+        drop-shadow(0 0 1.55rem rgba(36,120,255,.30))
+        drop-shadow(0 0 .78rem rgba(243,200,111,.10));
+    }
+
+    .products-anchor .sapphire-gem-svg{
+      filter:
+        drop-shadow(0 1.4rem 1.8rem rgba(0,0,0,.38))
+        drop-shadow(0 0 2.1rem rgba(36,120,255,.24))
+        drop-shadow(0 0 1rem rgba(243,200,111,.08));
+    }
+
+    .sapphire-glint{
+      animation:sapphireGlint 8.4s ease-in-out infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes sapphireGlint{
+      0%,100%{opacity:.08;transform:translateX(-34px)}
+      48%,55%{opacity:.44;transform:translateX(32px)}
+    }
+
+    .sapphire-star{
+      animation:sapphireFacetTurn 28s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes sapphireFacetTurn{
+      to{transform:rotate(360deg)}
     }
 
     .product-label-shell{
@@ -585,63 +579,11 @@
       width:100%;
       height:100%;
       padding:.35rem;
-      transform:rotate(-45deg);
       text-align:center;
       position:relative;
       z-index:3;
       isolation:isolate;
-    }
-
-    .product-label-shell::before{
-      content:"";
-      position:absolute;
-      inset:-34%;
-      z-index:-1;
       pointer-events:none;
-      opacity:.76;
-      background:
-        linear-gradient(31deg,transparent 0 42%,rgba(255,255,255,.24) 43% 44%,transparent 45% 100%),
-        linear-gradient(149deg,transparent 0 52%,rgba(141,216,255,.22) 53% 54%,transparent 55% 100%),
-        linear-gradient(93deg,transparent 0 49%,rgba(255,255,255,.17) 50% 51%,transparent 52% 100%),
-        linear-gradient(0deg,transparent 0 49%,rgba(36,120,255,.20) 50% 51%,transparent 52% 100%);
-      clip-path:var(--gem-cut);
-      mix-blend-mode:screen;
-    }
-
-    .product-label-shell::after{
-      content:"";
-      position:absolute;
-      left:8%;
-      right:8%;
-      top:50%;
-      z-index:-1;
-      height:1px;
-      pointer-events:none;
-      background:linear-gradient(90deg,transparent,rgba(255,255,255,.42),rgba(112,199,255,.22),transparent);
-      box-shadow:
-        0 -1.05rem 0 rgba(255,255,255,.10),
-        0 1.08rem 0 rgba(112,199,255,.12);
-      transform:rotate(-5deg);
-      opacity:.72;
-      mix-blend-mode:screen;
-    }
-
-    .product-node:hover,
-    .product-node:focus{
-      outline:none;
-      border-color:rgba(243,200,111,.74);
-      box-shadow:
-        0 23px 44px rgba(2,16,64,.50),
-        0 0 42px rgba(36,120,255,.42),
-        0 0 18px rgba(243,200,111,.15),
-        inset 0 1px 0 rgba(255,255,255,.35),
-        inset 0 -14px 28px rgba(1,9,42,.34);
-      filter:brightness(1.10) saturate(1.16) contrast(1.05);
-    }
-
-    .product-node:hover .product-label-shell::before,
-    .product-node:focus .product-label-shell::before{
-      opacity:.92;
     }
 
     .product-label-text{
@@ -656,7 +598,7 @@
       text-transform:uppercase;
       text-shadow:
         0 2px 12px rgba(0,0,0,.92),
-        0 0 10px rgba(0,28,90,.78),
+        0 0 10px rgba(0,28,90,.82),
         0 0 2px rgba(255,255,255,.42);
       animation:productsTextUpright var(--orbit-duration) linear infinite;
       position:relative;
@@ -817,9 +759,9 @@
 
       .product-node{
         --radius:-9.95rem;
-        width:4.35rem;
-        height:4.35rem;
-        margin:-2.175rem 0 0 -2.175rem;
+        width:5.1rem;
+        height:3.9rem;
+        margin:-1.95rem 0 0 -2.55rem;
       }
 
       .product-label-text{
@@ -852,12 +794,16 @@
       }
 
       .products-anchor{
-        width:7.8rem;
-        height:7.8rem;
+        width:8.35rem;
+        height:6.25rem;
       }
 
-      .products-anchor span{
-        font-size:.60rem;
+      .products-anchor-label b{
+        font-size:.58rem;
+      }
+
+      .products-anchor-label span{
+        font-size:.40rem;
       }
 
       .products-orbit{
@@ -867,9 +813,9 @@
 
       .product-node{
         --radius:-8.75rem;
-        width:3.75rem;
-        height:3.75rem;
-        margin:-1.875rem 0 0 -1.875rem;
+        width:4.45rem;
+        height:3.4rem;
+        margin:-1.7rem 0 0 -2.225rem;
       }
 
       .product-label-text{
@@ -892,6 +838,142 @@
 </head>
 
 <body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="sapphireBody" x1="14" y1="10" x2="206" y2="150" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".74"/>
+        <stop offset=".10" stop-color="#dff5ff" stop-opacity=".64"/>
+        <stop offset=".26" stop-color="#70c7ff" stop-opacity=".52"/>
+        <stop offset=".48" stop-color="#2478ff" stop-opacity=".54"/>
+        <stop offset=".72" stop-color="#06245f" stop-opacity=".68"/>
+        <stop offset="1" stop-color="#020817" stop-opacity=".92"/>
+      </linearGradient>
+
+      <radialGradient id="sapphireTable" cx="48%" cy="34%" r="68%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".58"/>
+        <stop offset=".22" stop-color="#dff5ff" stop-opacity=".36"/>
+        <stop offset=".48" stop-color="#70c7ff" stop-opacity=".20"/>
+        <stop offset=".72" stop-color="#2478ff" stop-opacity=".12"/>
+        <stop offset="1" stop-color="#020817" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="sapphireDepth" x1="110" y1="38" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".14"/>
+        <stop offset=".32" stop-color="#70c7ff" stop-opacity=".22"/>
+        <stop offset=".62" stop-color="#2478ff" stop-opacity=".18"/>
+        <stop offset="1" stop-color="#020817" stop-opacity=".68"/>
+      </linearGradient>
+
+      <linearGradient id="sapphireGlint" x1="30" y1="130" x2="188" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".44" stop-color="#ffffff" stop-opacity=".80"/>
+        <stop offset=".54" stop-color="#fff0a3" stop-opacity=".18"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="sapphireGemGlow" x="-42%" y="-52%" width="184%" height="204%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.15" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.24 0 0 0 0.05
+            0 0.55 0 0 0.14
+            0 0 1.00 0 0.44
+            0 0 0 0.46 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="productsSapphireGem" viewBox="0 0 220 160">
+        <g filter="url(#sapphireGemGlow)">
+          <path
+            d="M110 6 L146 15 L184 43 L204 75 L184 111 L146 140 L110 154 L74 140 L36 111 L16 75 L36 43 L74 15 Z"
+            fill="url(#sapphireBody)"
+            stroke="rgba(223,245,255,.54)"
+            stroke-width="1.35"
+          />
+          <path d="M110 6 L146 15 L130 42 L110 33 L90 42 L74 15 Z" fill="rgba(255,255,255,.28)"/>
+          <path d="M74 15 L90 42 L63 64 L36 43 Z" fill="rgba(255,255,255,.16)"/>
+          <path d="M146 15 L130 42 L157 64 L184 43 Z" fill="rgba(112,199,255,.19)"/>
+          <path d="M36 43 L63 64 L54 84 L16 75 Z" fill="rgba(255,255,255,.08)"/>
+          <path d="M184 43 L157 64 L166 84 L204 75 Z" fill="rgba(243,200,111,.08)"/>
+          <path
+            d="M90 42 L110 33 L130 42 L157 64 L144 91 L110 107 L76 91 L63 64 Z"
+            fill="url(#sapphireTable)"
+            stroke="rgba(255,255,255,.28)"
+            stroke-width=".85"
+          />
+          <path d="M16 75 L54 84 L74 140 L36 111 Z" fill="rgba(2,8,23,.38)"/>
+          <path d="M204 75 L166 84 L146 140 L184 111 Z" fill="rgba(255,255,255,.08)"/>
+          <path d="M54 84 L76 91 L110 154 L74 140 Z" fill="rgba(2,11,38,.50)"/>
+          <path d="M166 84 L144 91 L110 154 L146 140 Z" fill="rgba(36,120,255,.18)"/>
+          <path d="M76 91 L110 107 L110 154 Z" fill="url(#sapphireDepth)" opacity=".76"/>
+          <path d="M144 91 L110 107 L110 154 Z" fill="rgba(2,8,23,.40)"/>
+          <path d="M110 6 L110 154" stroke="rgba(255,255,255,.30)" stroke-width="1.05"/>
+          <path d="M16 75 L204 75" stroke="rgba(255,255,255,.22)" stroke-width=".95"/>
+          <path d="M36 43 L184 111" stroke="rgba(255,255,255,.14)" stroke-width=".82"/>
+          <path d="M184 43 L36 111" stroke="rgba(255,255,255,.14)" stroke-width=".82"/>
+          <path d="M74 15 L110 107 L146 15" stroke="rgba(255,255,255,.17)" stroke-width=".82" fill="none"/>
+          <path d="M36 111 L110 107 L184 111" stroke="rgba(243,200,111,.10)" stroke-width=".82" fill="none"/>
+          <path d="M63 64 L110 107 L157 64" stroke="rgba(255,255,255,.13)" stroke-width=".82" fill="none"/>
+          <g class="sapphire-star" opacity=".76">
+            <path d="M110 31 L116 76 L110 113 L104 76 Z" fill="rgba(255,255,255,.24)"/>
+            <path d="M63 64 L106 78 L157 64 L114 86 Z" fill="rgba(255,255,255,.14)"/>
+            <path d="M76 91 L106 83 L144 91 L114 101 Z" fill="rgba(255,240,163,.08)"/>
+          </g>
+          <path d="M76 104 C91 93 101 112 119 98" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none" opacity=".52"/>
+          <path d="M132 52 C145 60 151 73 162 81" stroke="rgba(255,255,255,.14)" stroke-width=".9" fill="none" opacity=".48"/>
+          <path d="M84 50 C73 61 70 74 61 81" stroke="rgba(141,216,255,.16)" stroke-width=".9" fill="none" opacity=".50"/>
+          <path class="sapphire-glint" d="M38 121 L176 24 L188 42 L52 133 Z" fill="url(#sapphireGlint)"/>
+        </g>
+      </symbol>
+
+      <symbol id="productsSapphireSeal" viewBox="0 0 220 160">
+        <g filter="url(#sapphireGemGlow)">
+          <path
+            d="M110 5 L140 16 L170 18 L199 48 L191 76 L204 80 L191 84 L199 112 L170 142 L140 144 L110 155 L80 144 L50 142 L21 112 L29 84 L16 80 L29 76 L21 48 L50 18 L80 16 Z"
+            fill="url(#sapphireBody)"
+            stroke="rgba(223,245,255,.60)"
+            stroke-width="1.45"
+          />
+          <path d="M110 5 L140 16 L125 44 L110 34 L95 44 L80 16 Z" fill="rgba(255,255,255,.30)"/>
+          <path d="M50 18 L95 44 L68 67 L21 48 Z" fill="rgba(255,255,255,.15)"/>
+          <path d="M170 18 L125 44 L152 67 L199 48 Z" fill="rgba(112,199,255,.18)"/>
+          <path
+            d="M68 67 L95 44 L110 34 L125 44 L152 67 L143 96 L110 116 L77 96 Z"
+            fill="url(#sapphireTable)"
+            stroke="rgba(255,255,255,.28)"
+            stroke-width=".9"
+          />
+          <path d="M16 80 L68 67 L77 96 L21 112 Z" fill="rgba(2,8,23,.42)"/>
+          <path d="M204 80 L152 67 L143 96 L199 112 Z" fill="rgba(255,255,255,.08)"/>
+          <path d="M21 112 L77 96 L110 155 L50 142 Z" fill="rgba(2,11,38,.52)"/>
+          <path d="M199 112 L143 96 L110 155 L170 142 Z" fill="rgba(36,120,255,.20)"/>
+          <path d="M77 96 L110 116 L110 155 Z" fill="url(#sapphireDepth)" opacity=".78"/>
+          <path d="M143 96 L110 116 L110 155 Z" fill="rgba(2,8,23,.42)"/>
+          <path d="M110 5 L110 155" stroke="rgba(255,255,255,.30)" stroke-width="1.05"/>
+          <path d="M16 80 L204 80" stroke="rgba(255,255,255,.22)" stroke-width=".95"/>
+          <path d="M21 48 L199 112" stroke="rgba(255,255,255,.13)" stroke-width=".82"/>
+          <path d="M199 48 L21 112" stroke="rgba(255,255,255,.13)" stroke-width=".82"/>
+          <path d="M50 142 L110 116 L170 142" stroke="rgba(243,200,111,.10)" stroke-width=".82" fill="none"/>
+          <path d="M68 67 L110 116 L152 67" stroke="rgba(255,255,255,.13)" stroke-width=".82" fill="none"/>
+          <g class="sapphire-star" opacity=".80">
+            <path d="M110 31 L116 78 L110 118 L104 78 Z" fill="rgba(255,255,255,.26)"/>
+            <path d="M68 67 L106 80 L152 67 L114 88 Z" fill="rgba(255,255,255,.14)"/>
+            <path d="M77 96 L106 84 L143 96 L114 108 Z" fill="rgba(255,240,163,.09)"/>
+          </g>
+          <path d="M78 108 C93 97 105 114 121 100" stroke="rgba(255,255,255,.14)" stroke-width=".9" fill="none" opacity=".46"/>
+          <path class="sapphire-glint" d="M38 121 L176 24 L188 42 L52 133 Z" fill="url(#sapphireGlint)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
   <a class="skip" href="#main">Skip to Products</a>
 
   <div class="shell">
@@ -936,58 +1018,72 @@
       </section>
 
       <section class="panel section" aria-labelledby="field-title">
-        <div class="kicker">Eight cut-sapphire axial orbit</div>
-        <h2 id="field-title">Eight cut sapphires sit on one circular path around one usable message.</h2>
+        <div class="kicker">Eight optical sapphire axial orbit</div>
+        <h2 id="field-title">Eight optical sapphires sit on one circular path around one usable message.</h2>
 
-        <div class="products-stage" aria-label="Animated Products eight-cut-sapphire axial orbit">
+        <div class="products-stage" aria-label="Animated Products eight-optical-sapphire axial orbit">
           <div class="products-anchor" aria-hidden="true">
-            <span>Products<br>One Message<br>Eight Doors</span>
+            <svg class="sapphire-gem-svg" viewBox="0 0 220 160" focusable="false">
+              <use href="#productsSapphireSeal"></use>
+            </svg>
+            <span class="products-anchor-label">
+              <b>Products</b>
+              <span>One Message · Eight Doors</span>
+            </span>
           </div>
 
           <div class="products-orbit">
             <a class="product-node" style="--angle:0deg" href="/products/archcoin/" aria-label="ARCHCOIN">
+              <svg class="sapphire-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productsSapphireGem"></use></svg>
               <span class="product-label-shell">
                 <b class="product-label-text">ARCHCOIN<span class="product-label-sub">Value</span></b>
               </span>
             </a>
 
             <a class="product-node" style="--angle:45deg" href="/products/five-flags/" aria-label="Five Flags">
+              <svg class="sapphire-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productsSapphireGem"></use></svg>
               <span class="product-label-shell">
                 <b class="product-label-text">Five<br>Flags<span class="product-label-sub">Game</span></b>
               </span>
             </a>
 
             <a class="product-node" style="--angle:90deg" href="/products/on-your-side-ai/" aria-label="On Your Side AI">
+              <svg class="sapphire-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productsSapphireGem"></use></svg>
               <span class="product-label-shell">
                 <b class="product-label-text">AI<span class="product-label-sub">Support</span></b>
               </span>
             </a>
 
             <a class="product-node" style="--angle:135deg" href="/products/education/" aria-label="Education">
+              <svg class="sapphire-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productsSapphireGem"></use></svg>
               <span class="product-label-shell">
                 <b class="product-label-text">Education<span class="product-label-sub">Learning</span></b>
               </span>
             </a>
 
             <a class="product-node" style="--angle:180deg" href="/products/nutrition/" aria-label="Nutrition">
+              <svg class="sapphire-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productsSapphireGem"></use></svg>
               <span class="product-label-shell">
                 <b class="product-label-text">Nutrition<span class="product-label-sub">Routine</span></b>
               </span>
             </a>
 
             <a class="product-node" style="--angle:225deg" href="/meet-sean-mansfield/" aria-label="Meet Sean">
+              <svg class="sapphire-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productsSapphireGem"></use></svg>
               <span class="product-label-shell">
                 <b class="product-label-text">Meet<br>Sean<span class="product-label-sub">Voice</span></b>
               </span>
             </a>
 
             <a class="product-node" style="--angle:270deg" href="/nine-summits/" aria-label="Nine Summits">
+              <svg class="sapphire-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productsSapphireGem"></use></svg>
               <span class="product-label-shell">
                 <b class="product-label-text">Nine<br>Summits<span class="product-label-sub">Climb</span></b>
               </span>
             </a>
 
             <a class="product-node" style="--angle:315deg" href="/nine-summits-of-love/" aria-label="The Book">
+              <svg class="sapphire-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productsSapphireGem"></use></svg>
               <span class="product-label-shell">
                 <b class="product-label-text">Book<span class="product-label-sub">Love</span></b>
               </span>
@@ -1076,17 +1172,28 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-PRODUCTS_TOP_TRAVERSAL_CONSTRAINT_RENEWAL_TNT_v1
-previous=PRODUCTS_CUT_SAPPHIRE_INTERNAL_REFRACTION_REFINEMENT_TNT_v3
+PRODUCTS_OPTICAL_SAPPHIRE_ORBIT_AND_CENTER_GEM_RENEWAL_TNT_v1
+previous=PRODUCTS_TOP_TRAVERSAL_CONSTRAINT_RENEWAL_TNT_v1
+renews=PRODUCTS_CUT_SAPPHIRE_INTERNAL_REFRACTION_REFINEMENT_TNT_v3
 route=/products/
 page=products
 role=product_wing
 message=the_message_becomes_usable_here
 top_traversal=compass,door,home,products,showroom,gauges
-removed_from_top_traversal=manor,laws,nine_summits,book,universe,frontier,underdog,meet_sean
-preserved=product_hero,product_actions,eight_cut_sapphire_axial_orbit,product_chambers,product_wing_route_map
-route_owns=product_wing,product_doors,product_navigation,product_orbit_expression
-route_does_not_own=laws_chamber,planet_surface,showroom_runtime,gauges_logic
+material=optical_sapphire_gemstone
+center=products_sapphire_center_seal
+visual_system=local_animated_8_point_axial_optical_sapphire_orbit
+design_object=8_point_sapphire_product_field
+diamonds=archcoin,five_flags,on_your_side_ai,education,nutrition,meet_sean,nine_summits,book
+five_products=archcoin,five_flags,on_your_side_ai,education,nutrition
+human_voice=meet_sean
+public_climb=nine_summits
+book_path=nine_summits_of_love
+animation=productsOrbitSpin,productsTextUpright,sapphireFacetTurn,sapphireGlint,anchorPulse
+change=replaced_legacy_css_sapphire_nodes_with_inline_svg_optical_sapphires_and_center_sapphire_seal
+preserved=top_traversal,product_hero,product_actions,eight_axial_orbit,product_chambers,product_wing_route_map,all_product_routes
+route_owns=product_wing,product_doors,product_navigation,product_orbit_expression,products_center_seal
+route_does_not_own=products_runtime_js,laws_chamber,planet_surface,showroom_runtime,gauges_logic
 heavy_runtime_loaded=false
 render_files_touched=false
 instrument_touched=false
@@ -1099,7 +1206,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      PRODUCTS_TOP_TRAVERSAL_CONSTRAINT_RENEWAL_TNT_v1 · Products · One message · Eight cut-sapphire doors.
+      PRODUCTS_OPTICAL_SAPPHIRE_ORBIT_AND_CENTER_GEM_RENEWAL_TNT_v1 · Products · Optical sapphire orbit · Center sapphire seal.
     </footer>
   </div>
 </body>

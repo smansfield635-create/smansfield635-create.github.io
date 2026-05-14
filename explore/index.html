@@ -6,12 +6,12 @@
   data-page="explore-current-standard-route-map"
   data-room="explore"
   data-former-label="manor"
-  data-version="G2-V3"
-  data-contract="EXPLORE_DIGITAL_GEMS_LABEL_AND_VARIATION_REFINEMENT_TNT_v1"
-  data-previous-contract="EXPLORE_DIGITAL_GEMS_FRONTIER_REFINEMENT_TNT_v1"
-  data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
+  data-version="G2-V4"
+  data-contract="EXPLORE_LAWS_ALIGNED_AMETHYST_GEM_RENEWAL_TNT_v1"
+  data-previous-contract="EXPLORE_DIGITAL_GEMS_LABEL_AND_VARIATION_REFINEMENT_TNT_v1"
+  data-alignment-contract="DGB_SITEWIDE_GEM_SYSTEM_AUDIT_AND_PRIMITIVE_BINDING_v1"
   data-animation-standard="LIGHTWEIGHT_CSS_DIAMOND_ROUTE_MAP_STANDARD_v1"
-  data-gem-standard="FRONTIER_DIGITAL_GEMSTONE_LABEL_AND_VARIATION_REFINEMENT_v1"
+  data-gem-standard="LAWS_ALIGNED_AMETHYST_ROUTE_MAP_CRYSTAL_v1"
   data-background-authority="inline-css-only"
   data-motion-authority="css-only"
   data-status="active"
@@ -55,11 +55,8 @@
       --line2:rgba(243,200,111,.24);
       --shadow:0 32px 110px rgba(0,0,0,.50);
       --max:1180px;
-      --gem-cut:polygon(50% 0%,78% 8%,100% 34%,91% 74%,50% 100%,9% 74%,0% 34%,22% 8%);
-      --gem-table:polygon(50% 7%,70% 15%,88% 36%,77% 64%,50% 88%,23% 64%,12% 36%,30% 15%);
-      --label-window:polygon(18% 16%,82% 16%,92% 50%,82% 84%,18% 84%,8% 50%);
-      --inner-orbit-duration:44s;
-      --outer-orbit-duration:68s;
+      --inner-orbit-duration:46s;
+      --outer-orbit-duration:72s;
     }
 
     *{box-sizing:border-box}
@@ -113,6 +110,14 @@
       outline-offset:4px;
     }
 
+    .gem-defs{
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
+    }
+
     .skip{
       position:absolute;
       left:-999px;
@@ -153,58 +158,30 @@
 
     .brand-mark{
       width:4.2rem;
-      height:4.2rem;
+      height:3.1rem;
+      position:relative;
       display:grid;
       place-items:center;
-      border:1px solid rgba(243,200,111,.44);
-      transform:rotate(45deg);
-      clip-path:var(--gem-cut);
-      background:
-        linear-gradient(39deg,transparent 0 19%,rgba(255,255,255,.38) 20% 21%,transparent 22%),
-        linear-gradient(137deg,transparent 0 32%,rgba(255,255,255,.18) 33% 34%,transparent 35%),
-        conic-gradient(from 44deg at 50% 52%,
-          rgba(255,255,255,.42) 0deg,
-          rgba(209,154,255,.26) 32deg,
-          rgba(69,25,137,.76) 70deg,
-          rgba(154,106,255,.34) 104deg,
-          rgba(36,10,83,.88) 144deg,
-          rgba(255,232,163,.20) 177deg,
-          rgba(28,5,68,.90) 216deg,
-          rgba(197,142,255,.30) 255deg,
-          rgba(16,3,48,.92) 294deg,
-          rgba(255,255,255,.32) 324deg,
-          rgba(255,255,255,.42) 360deg),
-        radial-gradient(circle at 30% 18%,rgba(255,255,255,.78),rgba(255,255,255,.20) 18%,transparent 34%),
-        radial-gradient(circle at 72% 80%,rgba(16,3,48,.92),transparent 56%),
-        linear-gradient(145deg,rgba(88,43,164,.98),rgba(10,3,28,.99));
-      box-shadow:
-        0 0 2.5rem rgba(181,140,255,.36),
-        0 1.2rem 2.8rem rgba(0,0,0,.50),
-        inset 0 1px 0 rgba(255,255,255,.24),
-        inset 0 -1rem 1.7rem rgba(8,2,26,.42);
+      filter:
+        drop-shadow(0 1.1rem 1.8rem rgba(0,0,0,.44))
+        drop-shadow(0 0 1.6rem rgba(181,140,255,.28));
     }
 
-    .brand-mark::before{
-      content:"";
+    .brand-mark svg{
       position:absolute;
-      inset:10%;
-      clip-path:var(--gem-table);
-      background:
-        linear-gradient(90deg,transparent 0 49%,rgba(255,255,255,.25) 50%,transparent 51%),
-        linear-gradient(0deg,transparent 0 49%,rgba(255,255,255,.14) 50%,transparent 51%),
-        radial-gradient(circle at 38% 28%,rgba(255,255,255,.28),transparent 28%);
-      mix-blend-mode:screen;
-      opacity:.92;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
     }
 
     .brand-mark span{
-      transform:rotate(-45deg);
+      position:relative;
+      z-index:2;
       font-weight:950;
       letter-spacing:.04em;
       color:rgba(255,244,249,.98);
       text-shadow:0 2px 10px rgba(0,0,0,.84);
-      position:relative;
-      z-index:2;
     }
 
     .brand-copy{
@@ -286,28 +263,21 @@
       top:50%;
       z-index:0;
       width:clamp(9rem,25vw,18rem);
-      height:clamp(9rem,25vw,18rem);
-      border:1px solid rgba(243,200,111,.20);
-      transform:translateY(-50%) rotate(45deg);
-      clip-path:var(--gem-cut);
+      height:clamp(6.5rem,18vw,13rem);
+      transform:translateY(-50%);
       background:
-        conic-gradient(from 42deg at 50% 52%,
-          rgba(255,255,255,.18),
-          rgba(181,140,255,.18),
-          rgba(45,15,88,.38),
-          rgba(243,200,111,.10),
-          rgba(255,255,255,.18)),
-        radial-gradient(circle at 50% 28%,rgba(255,255,255,.14),transparent 42%),
-        radial-gradient(circle at 50% 72%,rgba(181,140,255,.26),transparent 62%),
-        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+        radial-gradient(circle at 34% 20%,rgba(255,255,255,.14),transparent 42%),
+        radial-gradient(circle at 60% 74%,rgba(181,140,255,.24),transparent 62%),
+        conic-gradient(from 40deg at 50% 52%,rgba(255,255,255,.16),rgba(181,140,255,.16),rgba(45,15,88,.34),rgba(243,200,111,.08),rgba(255,255,255,.16));
+      clip-path:polygon(50% 0%,66% 9%,85% 15%,100% 50%,85% 85%,66% 91%,50% 100%,34% 91%,15% 85%,0% 50%,15% 15%,34% 9%);
       animation:backgroundAnchorPulse 8s ease-in-out infinite;
       pointer-events:none;
-      opacity:.58;
+      opacity:.48;
     }
 
     @keyframes backgroundAnchorPulse{
-      0%,100%{opacity:.44;filter:brightness(.95)}
-      50%{opacity:.66;filter:brightness(1.14)}
+      0%,100%{opacity:.38;filter:brightness(.95)}
+      50%{opacity:.56;filter:brightness(1.14)}
     }
 
     .kicker{
@@ -333,7 +303,7 @@
       width:.72rem;
       height:.72rem;
       transform:rotate(45deg);
-      clip-path:var(--gem-cut);
+      border-radius:.14rem;
       background:linear-gradient(135deg,var(--magenta),var(--purple));
       box-shadow:0 0 1.1rem rgba(181,140,255,.56);
     }
@@ -358,14 +328,6 @@
       text-wrap:balance;
       position:relative;
       z-index:2;
-    }
-
-    h3{
-      margin:0;
-      color:rgba(255,244,249,.98);
-      font-size:clamp(1.05rem,3vw,1.34rem);
-      line-height:1.08;
-      letter-spacing:-.035em;
     }
 
     p{
@@ -485,94 +447,71 @@
       border:1px solid rgba(181,140,255,.22);
     }
 
-    .explore-center-anchor{
+    .explore-center-anchor,
+    .diamond-node{
       position:absolute;
-      left:50%;
-      top:50%;
-      z-index:0;
       display:grid;
       place-items:center;
-      width:clamp(8.1rem,20vw,11.5rem);
-      height:clamp(8.1rem,20vw,11.5rem);
-      transform:translate(-50%,-50%) rotate(45deg);
-      border:1px solid rgba(243,200,111,.18);
-      clip-path:var(--gem-cut);
-      background:
-        linear-gradient(39deg,transparent 0 19%,rgba(255,255,255,.24) 20% 21%,transparent 22%),
-        linear-gradient(137deg,transparent 0 32%,rgba(255,255,255,.10) 33% 34%,transparent 35%),
-        conic-gradient(from 44deg at 50% 52%,
-          rgba(255,255,255,.26) 0deg,
-          rgba(208,131,255,.16) 32deg,
-          rgba(54,20,101,.56) 70deg,
-          rgba(181,140,255,.20) 104deg,
-          rgba(52,17,105,.64) 144deg,
-          rgba(255,232,163,.10) 177deg,
-          rgba(24,4,62,.72) 216deg,
-          rgba(208,131,255,.18) 255deg,
-          rgba(16,3,48,.76) 294deg,
-          rgba(255,255,255,.18) 324deg,
-          rgba(255,255,255,.26) 360deg),
-        radial-gradient(circle at 32% 19%,rgba(255,255,255,.40),rgba(255,255,255,.10) 20%,transparent 36%),
-        radial-gradient(circle at 72% 82%,rgba(12,2,38,.86),transparent 56%),
-        linear-gradient(135deg,rgba(181,140,255,.48),rgba(45,15,88,.58));
-      box-shadow:
-        0 0 82px rgba(181,140,255,.24),
-        0 1.5rem 3rem rgba(0,0,0,.30),
-        inset 0 1px 0 rgba(255,255,255,.20),
-        inset 0 -1.2rem 2rem rgba(9,2,31,.42);
-      opacity:.58;
+      text-align:center;
+      color:var(--ink);
+    }
+
+    .explore-center-anchor{
+      left:50%;
+      top:50%;
+      z-index:1;
+      width:clamp(9.3rem,23vw,13.2rem);
+      height:clamp(6.75rem,16.8vw,9.55rem);
+      transform:translate(-50%,-50%);
       pointer-events:none;
+      opacity:.72;
+      filter:
+        drop-shadow(0 1.4rem 2.1rem rgba(0,0,0,.36))
+        drop-shadow(0 0 2.2rem rgba(181,140,255,.20));
       animation:exploreAnchorPulse 7s ease-in-out infinite;
     }
 
-    .explore-center-anchor::before{
-      content:"";
-      position:absolute;
-      inset:10%;
-      clip-path:var(--gem-table);
-      background:
-        linear-gradient(90deg,transparent 0 49%,rgba(255,255,255,.18) 50%,transparent 51%),
-        linear-gradient(0deg,transparent 0 49%,rgba(255,255,255,.10) 50%,transparent 51%),
-        linear-gradient(28deg,transparent 0 34%,rgba(255,255,255,.12) 35%,transparent 36%),
-        linear-gradient(152deg,transparent 0 34%,rgba(255,255,255,.10) 35%,transparent 36%);
-      mix-blend-mode:screen;
-      opacity:.72;
-    }
-
-    .explore-center-anchor::after{
-      content:"";
-      position:absolute;
-      inset:31% 21%;
-      clip-path:var(--label-window);
-      background:
-        linear-gradient(180deg,rgba(9,2,27,.68),rgba(4,0,15,.80));
-      border:1px solid rgba(255,244,249,.14);
-      box-shadow:
-        0 0 18px rgba(0,0,0,.26),
-        inset 0 1px 0 rgba(255,255,255,.10);
-      opacity:.94;
-    }
-
-    .explore-center-anchor span{
-      display:block;
-      transform:rotate(-45deg);
-      color:rgba(255,244,249,.94);
-      text-align:center;
-      font-size:.76rem;
-      font-weight:950;
-      letter-spacing:.15em;
-      text-transform:uppercase;
-      line-height:1.2;
-      text-shadow:
-        0 2px 12px rgba(0,0,0,.92),
-        0 0 8px rgba(255,244,249,.20);
-      position:relative;
-      z-index:2;
-    }
-
     @keyframes exploreAnchorPulse{
-      0%,100%{transform:translate(-50%,-50%) rotate(45deg) scale(.98);opacity:.46}
-      50%{transform:translate(-50%,-50%) rotate(45deg) scale(1.02);opacity:.64}
+      0%,100%{transform:translate(-50%,-50%) scale(.985);opacity:.60}
+      50%{transform:translate(-50%,-50%) scale(1.02);opacity:.80}
+    }
+
+    .gem-svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      pointer-events:none;
+      filter:
+        drop-shadow(0 1.08rem 1.35rem rgba(0,0,0,.30))
+        drop-shadow(0 0 1.05rem rgba(181,140,255,.18))
+        drop-shadow(0 0 .72rem rgba(243,200,111,.08));
+    }
+
+    .gem-glint-sweep{
+      animation:gemSweep 9.5s ease-in-out infinite;
+      animation-delay:calc(var(--gem-delay,0s) * -1);
+      transform-origin:110px 80px;
+    }
+
+    @keyframes gemSweep{
+      0%,100%{opacity:.08;transform:translateX(-36px)}
+      48%,55%{opacity:.34;transform:translateX(28px)}
+    }
+
+    .gem-star{
+      opacity:.70;
+    }
+
+    .explore-center-anchor .gem-star{
+      animation:centerFacetTurn 26s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes centerFacetTurn{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(-360deg)}
     }
 
     .orbit-ring{
@@ -587,14 +526,14 @@
     .orbit-ring.inner{
       width:15.8rem;
       height:15.8rem;
-      z-index:2;
+      z-index:4;
       animation:orbitClockwise var(--inner-orbit-duration) linear infinite;
     }
 
     .orbit-ring.outer{
       width:30.8rem;
       height:30.8rem;
-      z-index:4;
+      z-index:6;
       animation:orbitCounter var(--outer-orbit-duration) linear infinite;
     }
 
@@ -608,210 +547,118 @@
 
     .diamond-node{
       --radius:-14rem;
-      --facet-a:39deg;
-      --facet-b:129deg;
-      --facet-c:214deg;
-      --light-x:30%;
-      --light-y:18%;
-      --light-alpha:.66;
-      --table-opacity:.76;
-      --veil-opacity:.62;
+      --lift:1;
       --gem-hue:0deg;
       --gem-sat:1;
       --gem-bright:1;
-      position:absolute;
+      --gem-delay:0s;
       left:50%;
       top:50%;
-      display:grid;
-      place-items:center;
-      overflow:hidden;
-      width:5.15rem;
-      height:5.15rem;
-      margin:-2.575rem 0 0 -2.575rem;
-      border:1px solid rgba(243,200,111,.24);
-      clip-path:var(--gem-cut);
-      background:
-        linear-gradient(var(--facet-a),transparent 0 18%,rgba(255,255,255,.38) 19% 20%,transparent 21%),
-        linear-gradient(var(--facet-b),transparent 0 29%,rgba(255,255,255,.14) 30% 31%,transparent 32%),
-        linear-gradient(var(--facet-c),transparent 0 48%,rgba(255,232,163,.10) 49% 50%,transparent 51%),
-        conic-gradient(from 44deg at 50% 52%,
-          rgba(255,255,255,.36) 0deg,
-          rgba(209,154,255,.22) 34deg,
-          rgba(76,28,151,.62) 68deg,
-          rgba(160,110,255,.30) 104deg,
-          rgba(41,12,94,.76) 142deg,
-          rgba(255,232,163,.12) 178deg,
-          rgba(27,5,73,.86) 218deg,
-          rgba(195,131,255,.28) 255deg,
-          rgba(17,3,54,.92) 292deg,
-          rgba(255,255,255,.28) 326deg,
-          rgba(255,255,255,.36) 360deg),
-        radial-gradient(circle at var(--light-x) var(--light-y),rgba(255,255,255,var(--light-alpha)),rgba(255,255,255,.16) 20%,transparent 35%),
-        radial-gradient(circle at 70% 82%,rgba(12,2,42,.88),transparent 56%),
-        linear-gradient(145deg,rgba(198,159,255,.98),rgba(132,82,255,.97) 48%,rgba(66,28,178,.99) 100%);
-      box-shadow:
-        0 18px 36px rgba(39,18,116,.40),
-        0 0 30px rgba(181,140,255,.28),
-        0 0 0 1px rgba(255,255,255,.045),
-        inset 0 1px 0 rgba(255,255,255,.32),
-        inset 0 -16px 28px rgba(13,3,54,.40);
+      width:5.6rem;
+      height:4.08rem;
+      margin:-2.04rem 0 0 -2.8rem;
       transform:
         rotate(var(--angle))
         translateY(var(--radius))
         rotate(calc(-1 * var(--angle)))
-        rotate(45deg);
+        scale(var(--lift));
       pointer-events:auto;
-      backface-visibility:hidden;
-      transform-style:preserve-3d;
-      isolation:isolate;
-      filter:hue-rotate(var(--gem-hue)) saturate(var(--gem-sat)) brightness(var(--gem-bright)) contrast(1.04);
-    }
-
-    .diamond-node::before{
-      content:"";
-      position:absolute;
-      inset:5%;
-      clip-path:var(--gem-table);
-      background:
-        linear-gradient(90deg,transparent 0 48%,rgba(255,255,255,.24) 49% 51%,transparent 52%),
-        linear-gradient(0deg,transparent 0 48%,rgba(255,255,255,.12) 49% 51%,transparent 52%),
-        linear-gradient(29deg,transparent 0 32%,rgba(255,255,255,.18) 33% 35%,transparent 36%),
-        linear-gradient(151deg,transparent 0 31%,rgba(255,255,255,.14) 32% 34%,transparent 35%),
-        linear-gradient(116deg,transparent 0 42%,rgba(208,131,255,.17) 43% 45%,transparent 46%),
-        linear-gradient(243deg,transparent 0 58%,rgba(255,232,163,.11) 59% 61%,transparent 62%),
-        radial-gradient(circle at 36% 23%,rgba(255,255,255,.26),transparent 27%),
-        conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,.14),rgba(73,28,150,.12),rgba(255,255,255,.08),rgba(22,5,70,.22),rgba(255,255,255,.14));
-      opacity:var(--table-opacity);
-      pointer-events:none;
-      mix-blend-mode:screen;
-    }
-
-    .diamond-node::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      clip-path:var(--gem-cut);
-      background:
-        radial-gradient(circle at var(--light-x) calc(var(--light-y) - 3%),rgba(255,255,255,.24),transparent 17%),
-        linear-gradient(115deg,transparent 0 33%,rgba(255,255,255,.20) 34% 35%,transparent 36%),
-        linear-gradient(25deg,transparent 0 58%,rgba(255,232,163,.12) 59% 60%,transparent 61%),
-        linear-gradient(82deg,transparent 0 47%,rgba(208,131,255,.14) 48% 49%,transparent 50%),
-        linear-gradient(180deg,rgba(255,255,255,.08),transparent 38%,rgba(3,0,18,.32) 100%);
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.10),
-        inset 0 -18px 28px rgba(8,1,36,.34);
-      pointer-events:none;
-      mix-blend-mode:screen;
-      opacity:var(--veil-opacity);
+      transition:filter .18s ease,transform .18s ease;
+      filter:hue-rotate(var(--gem-hue)) saturate(var(--gem-sat)) brightness(var(--gem-bright));
+      outline:none;
     }
 
     .orbit-ring.inner .diamond-node{
       --radius:-7.45rem;
-      width:5.25rem;
-      height:5.25rem;
-      margin:-2.625rem 0 0 -2.625rem;
-      border-color:rgba(255,232,163,.28);
-      box-shadow:
-        0 20px 40px rgba(39,18,116,.43),
-        0 0 36px rgba(181,140,255,.32),
-        0 0 18px rgba(243,200,111,.09),
-        inset 0 1px 0 rgba(255,255,255,.34),
-        inset 0 -16px 28px rgba(13,3,54,.42);
+      width:5.75rem;
+      height:4.18rem;
+      margin:-2.09rem 0 0 -2.875rem;
     }
 
     .orbit-ring.outer .diamond-node{
       --radius:-15.1rem;
-      width:4.95rem;
-      height:4.95rem;
-      margin:-2.475rem 0 0 -2.475rem;
+      width:5.2rem;
+      height:3.78rem;
+      margin:-1.89rem 0 0 -2.6rem;
     }
 
     .diamond-node:hover,
-    .diamond-node:focus{
-      outline:none;
-      border-color:rgba(243,200,111,.80);
-      filter:hue-rotate(var(--gem-hue)) brightness(1.10) saturate(1.14) contrast(1.06);
-      box-shadow:
-        0 24px 48px rgba(39,18,116,.48),
-        0 0 46px rgba(181,140,255,.40),
-        0 0 20px rgba(243,200,111,.18),
-        inset 0 1px 0 rgba(255,255,255,.36),
-        inset 0 -16px 28px rgba(13,3,54,.42);
+    .diamond-node:focus-visible{
+      --lift:1.065;
+      filter:hue-rotate(var(--gem-hue)) brightness(1.13) saturate(1.16) contrast(1.04);
     }
 
-    .diamond-label-shell{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      width:100%;
-      height:100%;
-      padding:.35rem;
-      transform:rotate(-45deg);
-      text-align:center;
+    .diamond-content{
       position:relative;
       z-index:4;
-    }
-
-    .diamond-label-shell::before{
-      content:"";
-      position:absolute;
-      inset:19% 10%;
-      z-index:-1;
-      clip-path:var(--label-window);
-      background:
-        linear-gradient(180deg,rgba(8,2,28,.80),rgba(4,0,15,.88));
-      border:1px solid rgba(255,244,249,.16);
-      box-shadow:
-        0 0 16px rgba(0,0,0,.34),
-        inset 0 1px 0 rgba(255,255,255,.10),
-        inset 0 -10px 14px rgba(0,0,0,.18);
-      opacity:.94;
-    }
-
-    .diamond-label-shell::after{
-      content:"";
-      position:absolute;
-      left:18%;
-      right:18%;
-      top:50%;
-      z-index:-1;
-      height:1px;
-      background:linear-gradient(90deg,transparent,rgba(255,244,249,.28),transparent);
-      opacity:.45;
-    }
-
-    .diamond-label-text{
-      display:block;
-      max-width:4.15rem;
-      color:rgba(255,244,249,.99);
+      width:64%;
+      display:grid;
+      gap:.10rem;
+      place-items:center;
       text-align:center;
-      font-size:.52rem;
+      pointer-events:none;
+      user-select:none;
+    }
+
+    .diamond-content::before{
+      content:"";
+      position:absolute;
+      z-index:-1;
+      left:50%;
+      top:50%;
+      width:112%;
+      height:72%;
+      transform:translate(-50%,-50%);
+      clip-path:polygon(18% 13%,82% 13%,94% 50%,82% 87%,18% 87%,6% 50%);
+      background:
+        radial-gradient(circle at 38% 20%,rgba(255,255,255,.12),transparent 32%),
+        linear-gradient(180deg,rgba(78,37,132,.42),rgba(18,5,45,.58));
+      border:1px solid rgba(255,244,249,.10);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.10),
+        inset 0 -9px 14px rgba(0,0,0,.18),
+        0 0 15px rgba(0,0,0,.20);
+      opacity:.78;
+    }
+
+    .diamond-content strong{
+      color:rgba(255,244,249,.99);
+      font-size:.53rem;
+      line-height:1.02;
       font-weight:950;
-      letter-spacing:.062em;
-      line-height:1.08;
+      letter-spacing:.055em;
       text-transform:uppercase;
       text-shadow:
-        0 2px 12px rgba(0,0,0,.95),
-        0 0 10px rgba(45,15,88,.88),
-        0 0 2px rgba(255,255,255,.58);
+        0 2px 12px rgba(0,0,0,.94),
+        0 0 9px rgba(45,15,88,.72),
+        0 0 2px rgba(255,255,255,.48);
     }
 
-    .diamond-label-sub{
-      display:block;
-      margin-top:.12rem;
+    .diamond-content span{
       color:rgba(237,226,255,.78);
       font-size:.38rem;
-      font-weight:850;
-      letter-spacing:.05em;
       line-height:1;
+      font-weight:850;
+      letter-spacing:.04em;
       text-transform:uppercase;
+      text-shadow:0 2px 8px rgba(0,0,0,.74);
     }
 
-    .orbit-ring.inner .diamond-label-text{
+    .explore-center-anchor .diamond-content{
+      width:58%;
+    }
+
+    .explore-center-anchor .diamond-content strong{
+      font-size:clamp(.66rem,1.8vw,.88rem);
+      letter-spacing:.14em;
+      line-height:1.15;
+    }
+
+    .orbit-ring.inner .diamond-content{
       animation:keepTextUprightInner var(--inner-orbit-duration) linear infinite;
     }
 
-    .orbit-ring.outer .diamond-label-text{
+    .orbit-ring.outer .diamond-content{
       animation:keepTextUprightOuter var(--outer-orbit-duration) linear infinite;
     }
 
@@ -963,8 +810,8 @@
       }
 
       .explore-center-anchor{
-        width:7.4rem;
-        height:7.4rem;
+        width:7.8rem;
+        height:5.65rem;
       }
 
       .orbit-ring.inner{
@@ -979,28 +826,27 @@
 
       .orbit-ring.inner .diamond-node{
         --radius:-6rem;
-        width:4.35rem;
-        height:4.35rem;
-        margin:-2.175rem 0 0 -2.175rem;
+        width:4.55rem;
+        height:3.31rem;
+        margin:-1.655rem 0 0 -2.275rem;
       }
 
       .orbit-ring.outer .diamond-node{
         --radius:-10.5rem;
-        width:3.75rem;
-        height:3.75rem;
-        margin:-1.875rem 0 0 -1.875rem;
+        width:3.95rem;
+        height:2.87rem;
+        margin:-1.435rem 0 0 -1.975rem;
       }
 
-      .diamond-label-text{
-        max-width:2.85rem;
+      .diamond-content strong{
         font-size:.37rem;
         letter-spacing:.035em;
       }
 
-      .diamond-label-sub{display:none}
+      .diamond-content span{display:none}
 
-      .diamond-label-shell::before{
-        inset:20% 8%;
+      .explore-center-anchor .diamond-content strong{
+        font-size:.54rem;
       }
 
       .map-grid,
@@ -1018,10 +864,8 @@
 
       .explore-center-anchor{
         width:6.8rem;
-        height:6.8rem;
+        height:4.95rem;
       }
-
-      .explore-center-anchor span{font-size:.54rem}
 
       .orbit-ring.inner{
         width:11rem;
@@ -1035,25 +879,24 @@
 
       .orbit-ring.inner .diamond-node{
         --radius:-5.05rem;
-        width:3.85rem;
-        height:3.85rem;
-        margin:-1.925rem 0 0 -1.925rem;
+        width:4rem;
+        height:2.91rem;
+        margin:-1.455rem 0 0 -2rem;
       }
 
       .orbit-ring.outer .diamond-node{
         --radius:-8.95rem;
-        width:3.18rem;
-        height:3.18rem;
-        margin:-1.59rem 0 0 -1.59rem;
+        width:3.3rem;
+        height:2.4rem;
+        margin:-1.2rem 0 0 -1.65rem;
       }
 
-      .diamond-label-text{
-        max-width:2.28rem;
+      .diamond-content strong{
         font-size:.30rem;
       }
 
-      .diamond-label-shell::before{
-        inset:19% 5%;
+      .explore-center-anchor .diamond-content strong{
+        font-size:.48rem;
       }
     }
 
@@ -1066,6 +909,11 @@
         animation-iteration-count:1!important;
         transition-duration:.01ms!important;
       }
+
+      .gem-glint-sweep,
+      .explore-center-anchor .gem-star{
+        animation:none!important;
+      }
     }
   </style>
 </head>
@@ -1073,17 +921,158 @@
 <body
   data-route="/explore/"
   data-room="explore"
-  data-contract="EXPLORE_DIGITAL_GEMS_LABEL_AND_VARIATION_REFINEMENT_TNT_v1"
+  data-contract="EXPLORE_LAWS_ALIGNED_AMETHYST_GEM_RENEWAL_TNT_v1"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claimed="false"
 >
+  <svg class="gem-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="exploreAmethystBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0.74"/>
+        <stop offset="0.12" stop-color="#e5d6ff" stop-opacity="0.66"/>
+        <stop offset="0.28" stop-color="#b58cff" stop-opacity="0.62"/>
+        <stop offset="0.48" stop-color="#7c45f0" stop-opacity="0.76"/>
+        <stop offset="0.66" stop-color="#3f168e" stop-opacity="0.84"/>
+        <stop offset="0.84" stop-color="#18073d" stop-opacity="0.92"/>
+        <stop offset="1" stop-color="#070111" stop-opacity="0.98"/>
+      </linearGradient>
+
+      <linearGradient id="exploreAmethystAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0.82"/>
+        <stop offset="0.34" stop-color="#eadcff" stop-opacity="0.46"/>
+        <stop offset="0.68" stop-color="#f3c86f" stop-opacity="0.14"/>
+        <stop offset="1" stop-color="#8f65ff" stop-opacity="0.08"/>
+      </linearGradient>
+
+      <linearGradient id="exploreAmethystDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0.18"/>
+        <stop offset="0.34" stop-color="#d083ff" stop-opacity="0.20"/>
+        <stop offset="0.62" stop-color="#8f65ff" stop-opacity="0.18"/>
+        <stop offset="1" stop-color="#080119" stop-opacity="0.62"/>
+      </linearGradient>
+
+      <radialGradient id="exploreAmethystTableGlow" cx="50%" cy="38%" r="64%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0.48"/>
+        <stop offset="0.28" stop-color="#eadcff" stop-opacity="0.30"/>
+        <stop offset="0.58" stop-color="#8f65ff" stop-opacity="0.16"/>
+        <stop offset="1" stop-color="#05010d" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="exploreAmethystGlint" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset="0.44" stop-color="#ffffff" stop-opacity="0.72"/>
+        <stop offset="0.52" stop-color="#ffe8a3" stop-opacity="0.18"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="exploreAmethystGlow" x="-40%" y="-48%" width="180%" height="196%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.90 0 0 0 0.18
+            0 0.65 0 0 0.06
+            0 0 1.00 0 0.34
+            0 0 0 0.44 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="exploreAmethystRouteGem" viewBox="0 0 220 160">
+        <g filter="url(#exploreAmethystGlow)">
+          <path
+            d="M110 5 L145 13 L182 38 L210 75 L190 106 L150 137 L110 155 L70 137 L30 106 L10 75 L38 38 L75 13 Z"
+            fill="url(#exploreAmethystBody)"
+            stroke="rgba(255,244,249,0.48)"
+            stroke-width="1.25"
+          />
+          <path d="M110 5 L145 13 L132 37 L110 29 L88 37 L75 13 Z" fill="url(#exploreAmethystAir)" opacity="0.74"/>
+          <path d="M75 13 L88 37 L62 58 L38 38 Z" fill="rgba(255,255,255,0.20)"/>
+          <path d="M145 13 L132 37 L158 58 L182 38 Z" fill="rgba(255,255,255,0.16)"/>
+          <path d="M38 38 L62 58 L55 82 L10 75 Z" fill="rgba(208,131,255,0.16)"/>
+          <path d="M182 38 L158 58 L165 82 L210 75 Z" fill="rgba(243,200,111,0.10)"/>
+          <path
+            d="M88 37 L110 29 L132 37 L158 58 L148 82 L110 101 L72 82 L62 58 Z"
+            fill="url(#exploreAmethystTableGlow)"
+            stroke="rgba(255,244,249,0.22)"
+            stroke-width="0.85"
+          />
+          <path d="M10 75 L55 82 L70 137 L30 106 Z" fill="rgba(27,8,73,0.34)"/>
+          <path d="M210 75 L165 82 L150 137 L190 106 Z" fill="rgba(181,140,255,0.14)"/>
+          <path d="M55 82 L72 82 L110 155 L70 137 Z" fill="rgba(4,0,18,0.44)"/>
+          <path d="M165 82 L148 82 L110 155 L150 137 Z" fill="rgba(141,216,255,0.08)"/>
+          <path d="M72 82 L110 101 L110 155 Z" fill="url(#exploreAmethystDepth)" opacity="0.72"/>
+          <path d="M148 82 L110 101 L110 155 Z" fill="rgba(5,1,24,0.38)"/>
+          <path d="M68 64 L152 64 L167 82 L148 103 L110 116 L72 103 L53 82 Z" fill="rgba(43,13,88,0.32)" stroke="rgba(255,244,249,0.10)" stroke-width="0.75"/>
+          <path d="M110 5 L110 155" stroke="rgba(255,255,255,0.26)" stroke-width="1.0"/>
+          <path d="M10 75 L210 75" stroke="rgba(255,255,255,0.20)" stroke-width="0.95"/>
+          <path d="M38 38 L190 106" stroke="rgba(255,255,255,0.13)" stroke-width="0.85"/>
+          <path d="M182 38 L30 106" stroke="rgba(255,255,255,0.13)" stroke-width="0.85"/>
+          <path d="M75 13 L110 101 L145 13" stroke="rgba(255,255,255,0.15)" stroke-width="0.85" fill="none"/>
+          <path d="M38 38 L110 101 L182 38" stroke="rgba(255,255,255,0.14)" stroke-width="0.85" fill="none"/>
+          <path d="M30 106 L110 101 L190 106" stroke="rgba(243,200,111,0.11)" stroke-width="0.85" fill="none"/>
+          <g class="gem-star">
+            <path d="M110 26 L116 70 L110 106 L104 70 Z" fill="rgba(255,255,255,0.20)"/>
+            <path d="M62 58 L105 72 L158 58 L116 78 Z" fill="rgba(255,255,255,0.13)"/>
+            <path d="M72 82 L105 75 L148 82 L114 91 Z" fill="rgba(208,131,255,0.12)"/>
+            <path d="M110 101 L126 81 L148 82 L129 96 Z" fill="rgba(255,255,255,0.10)"/>
+            <path d="M110 101 L94 81 L72 82 L91 96 Z" fill="rgba(243,200,111,0.08)"/>
+          </g>
+          <path class="gem-glint-sweep" d="M34 117 L176 22 L188 38 L48 130 Z" fill="url(#exploreAmethystGlint)"/>
+        </g>
+      </symbol>
+
+      <symbol id="exploreAmethystMapSeal" viewBox="0 0 220 160">
+        <g filter="url(#exploreAmethystGlow)">
+          <path
+            d="M110 4 L136 14 L166 14 L191 39 L191 62 L210 80 L191 98 L191 121 L166 146 L136 146 L110 156 L84 146 L54 146 L29 121 L29 98 L10 80 L29 62 L29 39 L54 14 L84 14 Z"
+            fill="url(#exploreAmethystBody)"
+            stroke="rgba(255,244,249,0.52)"
+            stroke-width="1.35"
+          />
+          <path d="M110 4 L136 14 L124 40 L110 31 L96 40 L84 14 Z" fill="url(#exploreAmethystAir)" opacity="0.76"/>
+          <path d="M54 14 L96 40 L70 62 L29 39 Z" fill="rgba(255,255,255,0.16)"/>
+          <path d="M166 14 L124 40 L150 62 L191 39 Z" fill="rgba(255,255,255,0.13)"/>
+          <path d="M29 62 L70 62 L62 84 L10 80 Z" fill="rgba(208,131,255,0.12)"/>
+          <path d="M191 62 L150 62 L158 84 L210 80 Z" fill="rgba(243,200,111,0.10)"/>
+          <path d="M70 62 L96 40 L110 31 L124 40 L150 62 L158 84 L136 106 L110 116 L84 106 L62 84 Z" fill="url(#exploreAmethystTableGlow)" stroke="rgba(255,244,249,0.20)" stroke-width="0.85"/>
+          <path d="M58 61 L162 61 L178 82 L146 111 L110 124 L74 111 L42 82 Z" fill="rgba(42,12,86,0.35)" stroke="rgba(255,244,249,0.10)" stroke-width="0.75"/>
+          <path d="M10 80 L62 84 L54 146 L29 121 Z" fill="rgba(5,0,22,0.36)"/>
+          <path d="M210 80 L158 84 L166 146 L191 121 Z" fill="rgba(181,140,255,0.11)"/>
+          <path d="M54 146 L84 106 L110 156 L84 146 Z" fill="rgba(4,0,19,0.46)"/>
+          <path d="M166 146 L136 106 L110 156 L136 146 Z" fill="rgba(255,255,255,0.08)"/>
+          <path d="M84 106 L110 116 L136 106 L110 156 Z" fill="url(#exploreAmethystDepth)" opacity="0.62"/>
+          <path d="M110 4 L110 156" stroke="rgba(255,255,255,0.24)" stroke-width="1.0"/>
+          <path d="M10 80 L210 80" stroke="rgba(255,255,255,0.20)" stroke-width="0.95"/>
+          <path d="M29 39 L191 121" stroke="rgba(255,255,255,0.13)" stroke-width="0.85"/>
+          <path d="M191 39 L29 121" stroke="rgba(255,255,255,0.13)" stroke-width="0.85"/>
+          <g class="gem-star">
+            <path d="M110 30 L116 76 L110 118 L104 76 Z" fill="rgba(255,255,255,0.20)"/>
+            <path d="M62 84 L105 77 L158 84 L114 92 Z" fill="rgba(255,255,255,0.12)"/>
+            <path d="M70 62 L105 74 L150 62 L116 80 Z" fill="rgba(208,131,255,0.12)"/>
+            <path d="M84 106 L110 86 L136 106 L110 116 Z" fill="rgba(243,200,111,0.08)"/>
+          </g>
+          <path class="gem-glint-sweep" d="M35 118 L174 24 L187 42 L49 132 Z" fill="url(#exploreAmethystGlint)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
   <a class="skip" href="/explore/#main">Skip to Explore</a>
 
   <div class="shell">
     <header class="topbar" aria-label="Explore header">
       <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
-        <span class="brand-mark" aria-hidden="true"><span>EX</span></span>
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
+          <span>EX</span>
+        </span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
           <strong>Explore · Estate Route Map</strong>
@@ -1127,66 +1116,73 @@
 
         <div class="explore-stage" aria-label="Explore estate diamond route field">
           <div class="explore-center-anchor" aria-hidden="true">
-            <span>Explore<br>Estate<br>Map</span>
+            <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystMapSeal"></use></svg>
+            <div class="diamond-content">
+              <strong>Explore<br>Estate<br>Map</strong>
+            </div>
           </div>
 
           <div class="orbit-ring inner" aria-label="Primary route ring">
-            <a class="diamond-node" style="--angle:0deg;--facet-a:31deg;--facet-b:121deg;--facet-c:206deg;--light-x:25%;--light-y:18%;--light-alpha:.58;--table-opacity:.66;--veil-opacity:.54;--gem-hue:-4deg;--gem-sat:1.05;--gem-bright:1.02;" href="/home/" aria-label="Home">
-              <span class="diamond-label-shell">
-                <b class="diamond-label-text">Home<span class="diamond-label-sub">Receive</span></b>
-              </span>
+            <a class="diamond-node" style="--angle:0deg;--gem-delay:.2s;--gem-hue:-4deg;--gem-sat:1.05;--gem-bright:1.02;" href="/home/" aria-label="Home">
+              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
+              <span class="diamond-content"><strong>Home</strong><span>Receive</span></span>
             </a>
 
-            <a class="diamond-node" style="--angle:90deg;--facet-a:47deg;--facet-b:145deg;--facet-c:232deg;--light-x:38%;--light-y:17%;--light-alpha:.56;--table-opacity:.64;--veil-opacity:.52;--gem-hue:5deg;--gem-sat:1.03;--gem-bright:1.01;" href="/products/" aria-label="Products">
-              <span class="diamond-label-shell">
-                <b class="diamond-label-text">Products<span class="diamond-label-sub">Use</span></b>
-              </span>
+            <a class="diamond-node" style="--angle:90deg;--gem-delay:.9s;--gem-hue:5deg;--gem-sat:1.03;--gem-bright:1.01;" href="/products/" aria-label="Products">
+              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
+              <span class="diamond-content"><strong>Products</strong><span>Use</span></span>
             </a>
 
-            <a class="diamond-node" style="--angle:180deg;--facet-a:24deg;--facet-b:137deg;--facet-c:219deg;--light-x:29%;--light-y:24%;--light-alpha:.55;--table-opacity:.65;--veil-opacity:.50;--gem-hue:-8deg;--gem-sat:1.02;--gem-bright:1.02;" href="/showroom/" aria-label="Showroom">
-              <span class="diamond-label-shell">
-                <b class="diamond-label-text">Showroom<span class="diamond-label-sub">Inspect</span></b>
-              </span>
+            <a class="diamond-node" style="--angle:180deg;--gem-delay:1.6s;--gem-hue:-8deg;--gem-sat:1.02;--gem-bright:1.02;" href="/showroom/" aria-label="Showroom">
+              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
+              <span class="diamond-content"><strong>Showroom</strong><span>Inspect</span></span>
             </a>
 
-            <a class="diamond-node" style="--angle:270deg;--facet-a:58deg;--facet-b:118deg;--facet-c:249deg;--light-x:43%;--light-y:20%;--light-alpha:.57;--table-opacity:.62;--veil-opacity:.50;--gem-hue:9deg;--gem-sat:1.06;--gem-bright:1;" href="/gauges/" aria-label="Gauges">
-              <span class="diamond-label-shell">
-                <b class="diamond-label-text">Gauges<span class="diamond-label-sub">Measure</span></b>
-              </span>
+            <a class="diamond-node" style="--angle:270deg;--gem-delay:2.3s;--gem-hue:9deg;--gem-sat:1.06;--gem-bright:1;" href="/gauges/" aria-label="Gauges">
+              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
+              <span class="diamond-content"><strong>Gauges</strong><span>Measure</span></span>
             </a>
           </div>
 
           <div class="orbit-ring outer" aria-label="Deeper route ring">
-            <a class="diamond-node" style="--angle:0deg;--facet-a:37deg;--facet-b:126deg;--facet-c:216deg;--light-x:24%;--light-y:16%;--light-alpha:.52;--table-opacity:.60;--veil-opacity:.48;--gem-hue:-10deg;--gem-sat:.99;--gem-bright:.99;" href="/" aria-label="Compass">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Compass</b></span>
+            <a class="diamond-node" style="--angle:0deg;--gem-delay:.4s;--gem-hue:-10deg;--gem-sat:.99;--gem-bright:.99;" href="/" aria-label="Compass">
+              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
+              <span class="diamond-content"><strong>Compass</strong></span>
             </a>
 
-            <a class="diamond-node" style="--angle:45deg;--facet-a:52deg;--facet-b:139deg;--facet-c:223deg;--light-x:40%;--light-y:15%;--light-alpha:.50;--table-opacity:.58;--veil-opacity:.46;--gem-hue:3deg;--gem-sat:1.02;--gem-bright:.99;" href="/door/" aria-label="Door">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Door</b></span>
+            <a class="diamond-node" style="--angle:45deg;--gem-delay:1.1s;--gem-hue:3deg;--gem-sat:1.02;--gem-bright:.99;" href="/door/" aria-label="Door">
+              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
+              <span class="diamond-content"><strong>Door</strong></span>
             </a>
 
-            <a class="diamond-node" style="--angle:90deg;--facet-a:27deg;--facet-b:112deg;--facet-c:235deg;--light-x:34%;--light-y:24%;--light-alpha:.51;--table-opacity:.58;--veil-opacity:.45;--gem-hue:11deg;--gem-sat:.98;--gem-bright:1;" href="/laws/" aria-label="Laws">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Laws</b></span>
+            <a class="diamond-node" style="--angle:90deg;--gem-delay:1.8s;--gem-hue:11deg;--gem-sat:.98;--gem-bright:1;" href="/laws/" aria-label="Laws">
+              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
+              <span class="diamond-content"><strong>Laws</strong></span>
             </a>
 
-            <a class="diamond-node" style="--angle:135deg;--facet-a:62deg;--facet-b:151deg;--facet-c:203deg;--light-x:27%;--light-y:20%;--light-alpha:.49;--table-opacity:.56;--veil-opacity:.45;--gem-hue:-5deg;--gem-sat:1.03;--gem-bright:.99;" href="/nine-summits/" aria-label="Nine Summits">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Nine<br>Summits</b></span>
+            <a class="diamond-node" style="--angle:135deg;--gem-delay:2.5s;--gem-hue:-5deg;--gem-sat:1.03;--gem-bright:.99;" href="/nine-summits/" aria-label="Nine Summits">
+              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
+              <span class="diamond-content"><strong>Nine<br>Summits</strong></span>
             </a>
 
-            <a class="diamond-node" style="--angle:180deg;--facet-a:44deg;--facet-b:117deg;--facet-c:256deg;--light-x:45%;--light-y:18%;--light-alpha:.50;--table-opacity:.57;--veil-opacity:.46;--gem-hue:7deg;--gem-sat:1.01;--gem-bright:.99;" href="/nine-summits-of-love/" aria-label="Book">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Book</b></span>
+            <a class="diamond-node" style="--angle:180deg;--gem-delay:3.2s;--gem-hue:7deg;--gem-sat:1.01;--gem-bright:.99;" href="/nine-summits-of-love/" aria-label="Book">
+              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
+              <span class="diamond-content"><strong>Book</strong></span>
             </a>
 
-            <a class="diamond-node" style="--angle:225deg;--facet-a:33deg;--facet-b:154deg;--facet-c:224deg;--light-x:31%;--light-y:15%;--light-alpha:.52;--table-opacity:.59;--veil-opacity:.47;--gem-hue:-13deg;--gem-sat:1.04;--gem-bright:1;" href="/frontier/" aria-label="Frontier">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Frontier</b></span>
+            <a class="diamond-node" style="--angle:225deg;--gem-delay:3.9s;--gem-hue:-13deg;--gem-sat:1.04;--gem-bright:1;" href="/frontier/" aria-label="Frontier">
+              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
+              <span class="diamond-content"><strong>Frontier</strong></span>
             </a>
 
-            <a class="diamond-node" style="--angle:270deg;--facet-a:57deg;--facet-b:131deg;--facet-c:211deg;--light-x:39%;--light-y:23%;--light-alpha:.49;--table-opacity:.56;--veil-opacity:.44;--gem-hue:14deg;--gem-sat:.98;--gem-bright:.98;" href="/about-this-underdog/" aria-label="Underdog">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Under<br>dog</b></span>
+            <a class="diamond-node" style="--angle:270deg;--gem-delay:4.6s;--gem-hue:14deg;--gem-sat:.98;--gem-bright:.98;" href="/about-this-underdog/" aria-label="Underdog">
+              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
+              <span class="diamond-content"><strong>Under<br>dog</strong></span>
             </a>
 
-            <a class="diamond-node" style="--angle:315deg;--facet-a:22deg;--facet-b:142deg;--facet-c:239deg;--light-x:28%;--light-y:22%;--light-alpha:.51;--table-opacity:.58;--veil-opacity:.46;--gem-hue:-2deg;--gem-sat:1.02;--gem-bright:.99;" href="/meet-sean-mansfield/" aria-label="Meet Sean">
-              <span class="diamond-label-shell"><b class="diamond-label-text">Meet<br>Sean</b></span>
+            <a class="diamond-node" style="--angle:315deg;--gem-delay:5.3s;--gem-hue:-2deg;--gem-sat:1.02;--gem-bright:.99;" href="/meet-sean-mansfield/" aria-label="Meet Sean">
+              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
+              <span class="diamond-content"><strong>Meet<br>Sean</strong></span>
             </a>
           </div>
         </div>
@@ -1308,8 +1304,8 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-EXPLORE_DIGITAL_GEMS_LABEL_AND_VARIATION_REFINEMENT_TNT_v1
-previous=EXPLORE_DIGITAL_GEMS_FRONTIER_REFINEMENT_TNT_v1
+EXPLORE_LAWS_ALIGNED_AMETHYST_GEM_RENEWAL_TNT_v1
+previous=EXPLORE_DIGITAL_GEMS_LABEL_AND_VARIATION_REFINEMENT_TNT_v1
 route=/explore/
 page=explore_current_standard_route_map
 room=explore
@@ -1317,6 +1313,9 @@ former_label=manor
 role=explore_estate_route_map
 public_identity=explore_first_manor_map_second
 message=one_manor_clear_paths
+sitewide_binding=DGB_SITEWIDE_GEM_SYSTEM_AUDIT_AND_PRIMITIVE_BINDING_v1
+reference_page=/laws/
+laws_audit_result=aligned_special_diamond_reference
 primary_law=explore_maps_the_estate_explore_does_not_render_worlds
 top_traversal=compass,door,home,products,showroom,gauges
 internal_map_preserves=laws,nine_summits,book,universe,frontier,underdog,meet_sean,five_flags,globe,h_earth
@@ -1329,19 +1328,22 @@ canvas_runtime=false
 requestAnimationFrame=false
 heavy_runtime_loaded=false
 animation_standard=LIGHTWEIGHT_CSS_DIAMOND_ROUTE_MAP_STANDARD_v1
-gem_standard=FRONTIER_DIGITAL_GEMSTONE_LABEL_AND_VARIATION_REFINEMENT_v1
-gem_refinement=label_window_added,facet_glare_reduced,per_gem_facet_angles_added,per_gem_light_origin_added,per_gem_hue_variation_added,inner_outer_weight_preserved,center_anchor_contrast_improved
-visual_system=purple_current_standard_diamond_route_map_with_readable_varied_frontier_digital_gems
+gem_standard=LAWS_ALIGNED_AMETHYST_ROUTE_MAP_CRYSTAL_v1
+gem_method=inline_svg_symbol_gems_local_until_asset_extraction
+gem_family=amethyst_route_map_crystal
+gem_law=cut_perimeter,outer_bevel,internal_facets,directional_light,lower_body_depth,rim_highlight,inset_label_glass,room_specific_material,keyboard_route_behavior,no_flat_token_regression
+gem_refinement=css_plaque_removed,svg_crystal_symbol_added,amethyst_material_integrated,label_window_translucent_not_black,laws_reference_adapted_to_explore
+visual_system=purple_current_standard_estate_route_map_with_laws_aligned_amethyst_gems
 ring_system=4_plus_8
 inner_ring=home,products,showroom,gauges
 outer_ring=compass,door,laws,nine_summits,book,frontier,underdog,meet_sean
 copy_standard=clear_public_facing_ted_style_without_calling_it_ted
-accessibility=skip_link_absolute,short_top_nav,keyboard_links,prefers_reduced_motion,readable_cards,gem_label_windows
+accessibility=skip_link_absolute,short_top_nav,keyboard_links,prefers_reduced_motion,readable_cards,inset_gem_labels
 mobile_law=cards_remain_primary_orbit_compacts_no_horizontal_overflow
-preserved=explore_route,purple_identity,one_manor_many_rooms_concept,route_map_function,diamond_visual_language,top_traversal,current_copy,route_links,card_grid,css_only_motion
-renewed=gem_label_legibility,gem_individuality,center_anchor_label_contrast,facet_interference_reduction
-retired=identical_gem_glare_pattern,label_competing_with_facets,flat_uniform_route_tokens
-route_owns=explore_map,estate_traversal,diamond_route_field,room_cards,purple_route_identity,route_gem_material
+preserved=explore_route,purple_identity,one_manor_many_rooms_concept,route_map_function,top_traversal,current_copy,route_links,card_grid,css_only_motion
+renewed=explore_gem_primitive,center_map_seal,inner_route_gems,outer_route_gems,brand_gem,label_material_integration
+retired=black_label_plaque,flat_uniform_route_tokens,local_css_button_gem_only
+route_owns=explore_map,estate_traversal,diamond_route_field,room_cards,purple_route_identity,amethyst_route_gem_material
 route_does_not_own=h_earth_condition_stack,globe_parent_selector,planet_surface_rendering,gauges_logic,product_chamber_content,laws_branch_content,child_route_rendering
 generated_image=false
 graphic_box=false
@@ -1351,7 +1353,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      EXPLORE_DIGITAL_GEMS_LABEL_AND_VARIATION_REFINEMENT_TNT_v1 · Explore · Readable varied digital gems · CSS-only route-map motion.
+      EXPLORE_LAWS_ALIGNED_AMETHYST_GEM_RENEWAL_TNT_v1 · Explore · Laws-aligned amethyst route-map gems · CSS-only motion.
     </footer>
   </div>
 </body>

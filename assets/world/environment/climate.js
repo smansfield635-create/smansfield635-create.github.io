@@ -1,18 +1,17 @@
 // /assets/world/environment/climate.js
 // TNT FULL-FILE REPLACEMENT
-// H_EARTH_HEX_VISUAL_DEFINITION_EXPANSION_CLIMATE_TNT_v1
-// Owns: sky, cloud banks, haze, golden-hour light, wind, birds, and atmosphere.
-// Consumes: shared hexfield substrate through frame.hexfield.
+// H_EARTH_VISUAL_EXPRESSION_EXPANSION_THROUGH_LIVE_HEX_v2
+// Owns: sky, cloud banks, haze, golden-hour light, wind, birds, atmosphere.
 
-import { clamp, lerp, rgba, hash01 } from "/assets/world/environment/profile.js";
+import { clamp, rgba, hash01 } from "/assets/world/environment/profile.js";
 
 export const ENVIRONMENT_CLIMATE_VERSION =
-  "h-earth-hex-visual-definition-expansion-climate-v1";
+  "h-earth-visual-expression-expansion-through-live-hex-climate-v2";
 
 const TAU = Math.PI * 2;
 
 export function drawClimateLayer(ctx, profile, cell, frame) {
-  const { width: w, height: h, time: t, hexfield } = frame;
+  const { width: w, height: h } = frame;
   const climate = profile.climate;
   const palette = climate.palette;
 
@@ -66,8 +65,7 @@ export function drawCloudBanks(ctx, profile, cell, frame) {
   const bankCount = Math.round(7 + density * 8);
 
   for (let bank = 0; bank < bankCount; bank += 1) {
-    const baseX =
-      (((hash01(bank, 310, 1, cell.seed) + t * 0.0016 * wind) % 1) + 1) % 1;
+    const baseX = (((hash01(bank, 310, 1, cell.seed) + t * 0.0016 * wind) % 1) + 1) % 1;
     const baseY = 0.045 + hash01(bank, 311, 2, cell.seed) * 0.265;
     const scaleX = 0.09 + hash01(bank, 312, 3, cell.seed) * 0.18;
     const scaleY = 0.010 + hash01(bank, 313, 4, cell.seed) * 0.026;
@@ -80,14 +78,18 @@ export function drawCloudBanks(ctx, profile, cell, frame) {
       const sample = hexfield?.sample(nx, clamp(ly, 0, 1), t);
       const cloudPressure = sample?.cloudNoise ?? hash01(bank, lobe, 8, cell.seed);
 
-      const rx = w * scaleX * (0.15 + cloudPressure * 0.32);
-      const ry = h * scaleY * (0.42 + cloudPressure * 0.95);
-      const alpha = (0.045 + cloudPressure * 0.075) * density;
-
-      ctx.globalAlpha = alpha;
+      ctx.globalAlpha = (0.045 + cloudPressure * 0.075) * density;
       ctx.fillStyle = "rgba(255,255,255,.86)";
       ctx.beginPath();
-      ctx.ellipse(nx * w, ly * h, rx, ry, cloudPressure * 0.18, 0, TAU);
+      ctx.ellipse(
+        nx * w,
+        ly * h,
+        w * scaleX * (0.15 + cloudPressure * 0.32),
+        h * scaleY * (0.42 + cloudPressure * 0.95),
+        cloudPressure * 0.18,
+        0,
+        TAU
+      );
       ctx.fill();
     }
   }

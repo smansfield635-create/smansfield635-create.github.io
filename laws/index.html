@@ -4,8 +4,8 @@
   lang="en"
   data-page="laws-16-point-physical-clear-crystal-diamond-rule-chamber"
   data-route="/laws/"
-  data-contract="LAWS_PHYSICAL_DIGITAL_DIAMOND_CRYSTAL_CLARITY_RENEWAL_TNT_v1"
-  data-previous-contract="LAWS_PHYSICAL_DIGITAL_DIAMOND_OBJECT_RENEWAL_TNT_v1"
+  data-contract="LAWS_PHYSICAL_DIGITAL_DIAMOND_SCIENTIFIC_LAW_BRANCH_LINK_TNT_v1"
+  data-previous-contract="LAWS_PHYSICAL_DIGITAL_DIAMOND_CRYSTAL_CLARITY_RENEWAL_TNT_v1"
   data-script-contract="LAWS_PURPLE_RULE_CHAMBER_PAIR_RUNTIME_TNT_v1"
   data-role="rule-chamber"
   data-message="proof-outranks-confidence"
@@ -15,6 +15,7 @@
   data-law-diamond-class="physical-svg-clear-crystal-rule-cut-diamond"
   data-visual-system="inline-svg-clear-crystal-digital-gem-geometry"
   data-crystal-clarity="active"
+  data-scientific-law-branch="/laws/scientific-law/"
   data-purple-theme="false"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
@@ -28,7 +29,7 @@
   <title>Diamond Gate Bridge · Laws</title>
   <meta
     name="description"
-    content="The Laws chamber keeps Diamond Gate Bridge readable: authority, route, proof, runtime, generation, products, planets, human boundaries, receipts, and return paths."
+    content="The Laws chamber keeps Diamond Gate Bridge readable: authority, route, proof, runtime, generation, products, planets, human boundaries, scientific law, receipts, and return paths."
   >
 
   <style>
@@ -330,7 +331,7 @@
         radial-gradient(circle at 50% 52%, rgba(141,216,255,0.085), transparent 44%),
         radial-gradient(circle at 50% 100%, rgba(242,199,111,0.058), transparent 42%),
         linear-gradient(180deg, rgba(255,255,255,0.064), rgba(255,255,255,0.018)),
-        var(--panel);
+        rgba(7, 10, 18, 0.94);
       box-shadow:
         0 2rem 7rem rgba(0,0,0,0.38),
         inset 0 1px 0 rgba(255,255,255,0.09);
@@ -700,6 +701,14 @@
       text-transform: uppercase;
     }
 
+    .route-link.branch {
+      border-color: rgba(242,199,111,0.42);
+      color: rgba(255,248,234,0.94);
+      background:
+        linear-gradient(135deg, rgba(242,199,111,0.12), rgba(141,216,255,0.06)),
+        rgba(255,255,255,0.045);
+    }
+
     .route-link::after {
       content: " →";
       color: var(--gold);
@@ -771,12 +780,18 @@
       .law-grid {
         grid-template-columns: 1fr;
       }
+
+      .hero-actions {
+        display: grid;
+      }
+
+      .button {
+        width: 100%;
+      }
     }
 
     @media (max-width: 540px) {
       .law-field { min-height: 34.5rem; }
-      .hero-actions { display: grid; }
-      .button { width: 100%; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -796,7 +811,7 @@
     }
   </style>
 
-  <script src="/laws/index.js?v=LAWS_PHYSICAL_DIGITAL_DIAMOND_CRYSTAL_CLARITY_RENEWAL_TNT_v1" defer></script>
+  <script src="/laws/index.js?v=LAWS_PHYSICAL_DIGITAL_DIAMOND_SCIENTIFIC_LAW_BRANCH_LINK_TNT_v1" defer></script>
 </head>
 
 <body>
@@ -866,27 +881,23 @@
             stroke="rgba(255,255,255,0.58)"
             stroke-width="1.35"
           />
-
           <path d="M110 5 L145 13 L132 37 L110 29 L88 37 L75 13 Z" fill="url(#lawCrystalAir)" opacity="0.78"/>
           <path d="M75 13 L88 37 L62 58 L38 38 Z" fill="rgba(255,255,255,0.30)"/>
           <path d="M145 13 L132 37 L158 58 L182 38 Z" fill="rgba(255,255,255,0.22)"/>
           <path d="M38 38 L62 58 L55 82 L10 75 Z" fill="rgba(255,255,255,0.16)"/>
           <path d="M182 38 L158 58 L165 82 L210 75 Z" fill="rgba(242,199,111,0.13)"/>
-
           <path
             d="M88 37 L110 29 L132 37 L158 58 L148 82 L110 101 L72 82 L62 58 Z"
             fill="url(#lawCrystalTableGlow)"
             stroke="rgba(255,255,255,0.34)"
             stroke-width="0.9"
           />
-
           <path d="M10 75 L55 82 L70 137 L30 106 Z" fill="rgba(141,216,255,0.12)"/>
           <path d="M210 75 L165 82 L150 137 L190 106 Z" fill="rgba(255,255,255,0.16)"/>
           <path d="M55 82 L72 82 L110 155 L70 137 Z" fill="rgba(2,8,24,0.30)"/>
           <path d="M165 82 L148 82 L110 155 L150 137 Z" fill="rgba(141,216,255,0.14)"/>
           <path d="M72 82 L110 101 L110 155 Z" fill="url(#lawCrystalBlueDepth)" opacity="0.72"/>
           <path d="M148 82 L110 101 L110 155 Z" fill="rgba(4,10,22,0.32)"/>
-
           <path d="M110 5 L110 155" stroke="rgba(255,255,255,0.38)" stroke-width="1.15"/>
           <path d="M10 75 L210 75" stroke="rgba(255,255,255,0.30)" stroke-width="1.05"/>
           <path d="M38 38 L190 106" stroke="rgba(255,255,255,0.18)" stroke-width="0.9"/>
@@ -894,7 +905,6 @@
           <path d="M75 13 L110 101 L145 13" stroke="rgba(255,255,255,0.20)" stroke-width="0.9" fill="none"/>
           <path d="M38 38 L110 101 L182 38" stroke="rgba(255,255,255,0.18)" stroke-width="0.9" fill="none"/>
           <path d="M30 106 L110 101 L190 106" stroke="rgba(242,199,111,0.14)" stroke-width="0.9" fill="none"/>
-
           <g class="gem-star" opacity="0.84">
             <path d="M110 26 L116 70 L110 106 L104 70 Z" fill="rgba(255,255,255,0.32)"/>
             <path d="M62 58 L105 72 L158 58 L116 78 Z" fill="rgba(255,255,255,0.19)"/>
@@ -902,7 +912,6 @@
             <path d="M110 101 L126 81 L148 82 L129 96 Z" fill="rgba(255,255,255,0.16)"/>
             <path d="M110 101 L94 81 L72 82 L91 96 Z" fill="rgba(242,199,111,0.10)"/>
           </g>
-
           <path class="gem-glint-sweep" d="M34 117 L176 22 L188 38 L48 130 Z" fill="url(#lawCrystalGlint)"/>
         </g>
       </symbol>
@@ -915,7 +924,6 @@
             stroke="rgba(255,255,255,0.62)"
             stroke-width="1.45"
           />
-
           <path d="M110 4 L136 14 L124 40 L110 31 L96 40 L84 14 Z" fill="url(#lawCrystalAir)" opacity="0.82"/>
           <path d="M54 14 L96 40 L70 62 L29 39 Z" fill="rgba(255,255,255,0.24)"/>
           <path d="M166 14 L124 40 L150 62 L191 39 Z" fill="rgba(255,255,255,0.20)"/>
@@ -927,19 +935,16 @@
           <path d="M54 146 L84 106 L110 156 L84 146 Z" fill="rgba(2,8,24,0.38)"/>
           <path d="M166 146 L136 106 L110 156 L136 146 Z" fill="rgba(255,255,255,0.11)"/>
           <path d="M84 106 L110 116 L136 106 L110 156 Z" fill="url(#lawCrystalBlueDepth)" opacity="0.64"/>
-
           <path d="M110 4 L110 156" stroke="rgba(255,255,255,0.36)" stroke-width="1.1"/>
           <path d="M10 80 L210 80" stroke="rgba(255,255,255,0.30)" stroke-width="1.0"/>
           <path d="M29 39 L191 121" stroke="rgba(255,255,255,0.17)" stroke-width="0.9"/>
           <path d="M191 39 L29 121" stroke="rgba(255,255,255,0.17)" stroke-width="0.9"/>
-
           <g class="gem-star" opacity="0.86">
             <path d="M110 30 L116 76 L110 118 L104 76 Z" fill="rgba(255,255,255,0.32)"/>
             <path d="M62 84 L105 77 L158 84 L114 92 Z" fill="rgba(255,255,255,0.18)"/>
             <path d="M70 62 L105 74 L150 62 L116 80 Z" fill="rgba(141,216,255,0.15)"/>
             <path d="M84 106 L110 86 L136 106 L110 116 Z" fill="rgba(242,199,111,0.10)"/>
           </g>
-
           <path class="gem-glint-sweep" d="M35 118 L174 24 L187 42 L49 132 Z" fill="url(#lawCrystalGlint)"/>
         </g>
       </symbol>
@@ -964,6 +969,7 @@
         <a href="/home/">Home</a>
         <a href="/explore/">Manor</a>
         <a href="/laws/" aria-current="page">Laws</a>
+        <a href="/laws/scientific-law/">Scientific Law</a>
         <a href="/nine-summits/">Nine Summits</a>
         <a href="/nine-summits-of-love/">Book</a>
         <a href="/nine-summits/universe/">Universe</a>
@@ -984,7 +990,8 @@
         </p>
 
         <div class="hero-actions" aria-label="Primary Laws actions">
-          <a class="button" href="/door/">Return to Entry</a>
+          <a class="button" href="/laws/scientific-law/">Open Scientific Law</a>
+          <a class="button secondary" href="/door/">Return to Entry</a>
           <a class="button secondary" href="/gauges/">Read Proof</a>
           <a class="button secondary" href="/explore/">Open Manor</a>
         </div>
@@ -993,7 +1000,7 @@
       <section class="law-stage" aria-labelledby="law-title">
         <div class="stage-title">
           <h2 id="law-title">Sixteen laws. One diamond chamber.</h2>
-          <p>The law chamber keeps authority, routes, proof, runtime, generation, products, planets, human boundaries, receipts, and return paths available.</p>
+          <p>The law chamber keeps authority, routes, proof, runtime, generation, products, planets, human boundaries, scientific law, receipts, and return paths available.</p>
         </div>
 
         <div class="law-field" aria-label="16-point clear physical digital diamond law chamber field" data-law-field>
@@ -1101,17 +1108,17 @@
         <div class="law-grid" data-law-grid>
           <details class="law-card" id="authority-law" open>
             <summary><strong>Authority law</strong><span>Root ownership stays explicit before design, runtime, or presentation claims.</span></summary>
-            <p>Every chamber needs a route, parent, construct class, and owner function before it can make a larger claim. Compass orients, Door admits, Home stabilizes, Manor maps, Laws governs, Showroom displays, and Gauges measures.</p>
+            <p>Every chamber needs a route, parent, construct class, and owner function before it can make a larger claim. Compass orients, Door admits, Home stabilizes, Manor maps, Laws governs, Scientific Law tests reality claims, Showroom displays, and Gauges measures.</p>
           </details>
 
           <details class="law-card" id="route-law">
             <summary><strong>Route law</strong><span>Every chamber must know where it lives and where it sends the visitor next.</span></summary>
-            <p>No public chamber should float without a parent route, a return route, and a verification path. Laws lives at /laws/ and remains attached to the Manor route field.</p>
+            <p>No public chamber should float without a parent route, a return route, and a verification path. Laws lives at /laws/. Scientific Law lives under /laws/scientific-law/ as a branch, not a competing parent.</p>
           </details>
 
           <details class="law-card" id="proof-law">
             <summary><strong>Proof law</strong><span>Gauges, receipts, diagnostics, and visible routes outrank unsupported claims.</span></summary>
-            <p>Diagnostics stay visible before ornament. A visual page can look better without proving readiness. The page must keep visual polish, source truth, and generation readiness separate.</p>
+            <p>Diagnostics stay visible before ornament. A visual page can look better without proving readiness. The page must keep visual polish, source truth, scientific testability, and generation readiness separate.</p>
           </details>
 
           <details class="law-card" id="runtime-law">
@@ -1121,17 +1128,17 @@
 
           <details class="law-card" id="generation-law">
             <summary><strong>Generation law</strong><span>Baseline, readiness, and generation labels must not blur into false completion.</span></summary>
-            <p>A baseline is an accepted state, not a claim that all future generations are complete. Marker health, visual quality, and generation readiness remain distinct.</p>
+            <p>A baseline is an accepted state, not a claim that all future generations are complete. Marker health, visual quality, scientific confidence, and generation readiness remain distinct.</p>
           </details>
 
           <details class="law-card" id="product-planet-law">
             <summary><strong>Product and planet separation law</strong><span>Products stay products. Planetary constructs stay planetary constructs.</span></summary>
-            <p>ARCHCOIN, AI, Five Flags, Education, and Nutrition are product chambers under Products. Manor, Laws, Universe, Frontier, and world surfaces remain planetary or estate constructs.</p>
+            <p>ARCHCOIN, AI, Five Flags, Education, and Nutrition are product chambers under Products. Manor, Laws, Scientific Law, Universe, Frontier, and world surfaces remain estate, law, or planetary constructs.</p>
           </details>
 
           <details class="law-card" id="human-boundary-law">
             <summary><strong>Human boundary law</strong><span>Support, explanation, preparation, and proof must not become reckless authority.</span></summary>
-            <p>Medical, legal, financial, safety, and official claims must mark what still needs qualified professional or source verification. Assistance organizes; it does not impersonate authority.</p>
+            <p>Medical, legal, financial, safety, scientific, and official claims must mark what still needs qualified professional or source verification. Assistance organizes; it does not impersonate authority.</p>
           </details>
 
           <details class="law-card" id="interaction-law">
@@ -1151,12 +1158,12 @@
 
           <details class="law-card" id="foreground-law">
             <summary><strong>Foreground law</strong><span>Laws, Entry, Proof, and Return are foreground controls.</span></summary>
-            <p>The foreground core holds the safety loop: Laws governs, Entry admits, Proof measures, and Return re-anchors. Other route objects may remain active behind the core.</p>
+            <p>The foreground core holds the safety loop: Laws governs, Entry admits, Proof measures, and Return re-anchors. Scientific Law branches from Laws and tests reality claims without replacing the governing chamber.</p>
           </details>
 
           <details class="law-card" id="access-law">
             <summary><strong>Access law</strong><span>Law must remain reachable from the public route system.</span></summary>
-            <p>Compass, Door, Home, Manor, Showroom, Products, Frontier, Universe, and Gauges must remain reachable so the law layer does not become isolated.</p>
+            <p>Compass, Door, Home, Manor, Laws, Scientific Law, Showroom, Products, Frontier, Universe, and Gauges must remain reachable so the law layer does not become isolated.</p>
           </details>
 
           <details class="law-card" id="stale-language-law">
@@ -1176,7 +1183,7 @@
 
           <details class="law-card" id="return-law">
             <summary><strong>Return law</strong><span>Every outward route needs a way back.</span></summary>
-            <p>Expansion remains coherent only when return routes stay visible. Return to Compass, Door, Home, Manor, and Gauges must remain available from public chambers.</p>
+            <p>Expansion remains coherent only when return routes stay visible. Scientific Law must return to Laws, and Laws must return to Compass, Door, Home, Manor, and Gauges.</p>
           </details>
         </div>
       </section>
@@ -1189,6 +1196,7 @@
           <a class="route-link" href="/door/">Door</a>
           <a class="route-link" href="/home/">Home</a>
           <a class="route-link" href="/explore/">Manor</a>
+          <a class="route-link branch" href="/laws/scientific-law/">Scientific Law</a>
           <a class="route-link" href="/products/">Products</a>
           <a class="route-link" href="/showroom/">Showroom</a>
           <a class="route-link" href="/frontier/">Frontier</a>
@@ -1197,8 +1205,8 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-LAWS_PHYSICAL_DIGITAL_DIAMOND_CRYSTAL_CLARITY_RENEWAL_TNT_v1
-previous=LAWS_PHYSICAL_DIGITAL_DIAMOND_OBJECT_RENEWAL_TNT_v1
+LAWS_PHYSICAL_DIGITAL_DIAMOND_SCIENTIFIC_LAW_BRANCH_LINK_TNT_v1
+previous=LAWS_PHYSICAL_DIGITAL_DIAMOND_CRYSTAL_CLARITY_RENEWAL_TNT_v1
 script=LAWS_PURPLE_RULE_CHAMBER_PAIR_RUNTIME_TNT_v1
 route=/laws/
 page=laws
@@ -1211,13 +1219,15 @@ products_home_orbit_standard=false
 center=laws_clear_physical_digital_diamond_seal
 design_object=16_point_clear_physical_digital_diamond_law_chamber
 foreground_core=laws,entry,proof,return
+scientific_law_branch=/laws/scientific-law/
+scientific_law_branch_role=reality_testing_branch_under_governing_laws
 available_laws=authority,route,proof,runtime,generation,product_planet_separation,human_boundary,interaction,receipt,visual_claim,foreground,access,stale_language,animation,scope,return
-change=svg_diamond_geometry_crystallized_for_clearer_physical_crystal_read
-active_mutation_scope=html_svg_geometry_and_css_expression
+change=added_scientific_law_branch_link_to_parent_laws_page
+active_mutation_scope=html_route_links_copy_receipt_only
 animation=index_js_law_diamond_motion_variables,index_js_single_open_law_cards,index_js_receipts,svg_crystal_glints
-preserved=law_copy,law_cards,route_links,16_point_chamber,foreground_core,receipt_structure,current_js_logic
-renewed=clearer_svg_crystal_gradients,brighter_facets,transparent_body_planes,crystal_refraction,public_script_cache_key
-route_owns=rule_chamber,law_access,16_point_law_field,law_cards,route_links,receipt
+preserved=law_svg_geometry,law_copy_structure,law_cards,16_point_chamber,foreground_core,receipt_structure,current_js_logic
+renewed=primary_nav_link,hero_action_link,route_map_link,scientific_law_parent_acknowledgment,public_script_cache_key
+route_owns=rule_chamber,law_access,16_point_law_field,law_cards,route_links,receipt,scientific_law_branch_discovery
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
 heavy_runtime_loaded=false
 render_files_touched=false
@@ -1231,7 +1241,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      LAWS_PHYSICAL_DIGITAL_DIAMOND_CRYSTAL_CLARITY_RENEWAL_TNT_v1 · Laws · Clear Physical Digital Diamond Rule Chamber · Proof outranks confidence.
+      LAWS_PHYSICAL_DIGITAL_DIAMOND_SCIENTIFIC_LAW_BRANCH_LINK_TNT_v1 · Laws · Scientific Law branch linked · Proof outranks confidence.
     </footer>
   </div>
 </body>

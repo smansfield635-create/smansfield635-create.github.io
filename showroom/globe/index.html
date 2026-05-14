@@ -1,21 +1,21 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-globe-parent-selector"
+  data-page="showroom-globe-deep-time-future-selector"
   data-route="/showroom/globe/"
-  data-contract="SHOWROOM_GLOBE_PARENT_RESTORE_AND_H_EARTH_CHILD_ROUTE_PLACEMENT_TNT_v1"
-  data-previous-contract="SHOWROOM_GLOBE_PARENT_SELECTOR_LIGHT_ANIMATION_RESTORE_TNT_v1"
-  data-jurisdiction="parent-selector-only"
+  data-contract="SHOWROOM_GLOBE_DEEP_TIME_PUBLIC_VERNACULAR_RENEWAL_TNT_v1"
+  data-previous-contract="SHOWROOM_GLOBE_PARENT_RESTORE_AND_H_EARTH_CHILD_ROUTE_PLACEMENT_TNT_v1"
+  data-jurisdiction="parent-future-selector-only"
   data-parent-selector-only="true"
-  data-selector-animation="css-only-light"
+  data-ground-view="false"
+  data-ground-engine="false"
   data-live-canvas-runtime="false"
   data-material-renderer-import="false"
   data-shared-interplanetary-rendering="false"
-  data-child-routes-own-rendering="true"
-  data-ground-view="false"
-  data-ground-engine="false"
+  data-request-animation-frame="false"
   data-manor-placement="false"
   data-bodies="zionts,h-earth,audralia"
+  data-public-thesis="earth-may-not-have-one-ending"
   data-generated-image="false"
   data-graphic-box="false"
   data-streaming="false"
@@ -24,34 +24,35 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Showroom Globe · Planet Selector</title>
+
+  <title>Showroom Globe · Three Possible Futures</title>
   <meta
     name="description"
-    content="Showroom Globe parent selector for ZIONTS, H-Earth, and Audralia. The parent route selects; each child planet route owns its own rendering."
+    content="Showroom Globe opens three possible futures of Earth: ZIONTS as the Consequence Path, H-Earth as the Survival Path, and Audralia as the Untouched Living Path."
   >
 
   <style>
     :root {
       color-scheme: dark;
-      --bg:#02050b;
+      --bg:#030812;
       --bg2:#071225;
-      --panel:rgba(8,17,34,.94);
-      --panel2:rgba(4,9,20,.96);
       --line:rgba(244,207,131,.22);
       --line2:rgba(255,255,255,.12);
       --text:rgba(238,244,255,.94);
       --muted:rgba(238,244,255,.68);
-      --faint:rgba(238,244,255,.46);
+      --faint:rgba(238,244,255,.48);
       --gold:#f4cf83;
-      --gold2:#fff0a8;
+      --gold2:#fff0a3;
       --mint:#a7f3c6;
       --blue:#8dd8ff;
-      --violet:#beaaff;
-      --shadow:0 24px 70px rgba(0,0,0,.30);
+      --violet:#b58cff;
+      --panel:rgba(8,17,34,.95);
       --max:1180px;
     }
 
-    * { box-sizing:border-box; }
+    * {
+      box-sizing:border-box;
+    }
 
     html,
     body {
@@ -63,47 +64,22 @@
         linear-gradient(180deg, rgba(244,207,131,.025) 1px, transparent 1px),
         radial-gradient(circle at 50% -8%, rgba(78,119,171,.25), transparent 38%),
         radial-gradient(circle at 12% 18%, rgba(244,207,131,.11), transparent 30%),
-        radial-gradient(circle at 88% 28%, rgba(141,216,255,.10), transparent 34%),
+        radial-gradient(circle at 86% 34%, rgba(181,140,255,.12), transparent 34%),
         linear-gradient(180deg, var(--bg2), var(--bg) 54%, #02050b);
       background-size:58px 58px,58px 58px,auto,auto,auto,auto;
       color:var(--text);
       font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x:hidden;
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
-      overflow-x:hidden;
     }
 
-    body::before {
-      content:"";
-      position:fixed;
-      inset:-10%;
-      z-index:0;
-      pointer-events:none;
-      background:
-        conic-gradient(
-          from 45deg at 50% 48%,
-          transparent 0deg,
-          rgba(167,243,198,.035) 46deg,
-          transparent 92deg,
-          rgba(244,207,131,.028) 138deg,
-          transparent 184deg,
-          rgba(141,216,255,.035) 230deg,
-          transparent 276deg,
-          rgba(190,170,255,.028) 322deg,
-          transparent 360deg
-        );
-      opacity:.66;
-      animation:selectorAmbientTurn 62s linear infinite;
+    a {
+      color:inherit;
+      text-decoration:none;
     }
 
-    @keyframes selectorAmbientTurn {
-      to { transform:rotate(360deg); }
-    }
-
-    a { color:inherit; text-decoration:none; }
-
-    a:focus-visible,
-    button:focus-visible {
+    a:focus-visible {
       outline:2px solid var(--gold);
       outline-offset:4px;
     }
@@ -112,7 +88,7 @@
       position:absolute;
       left:-999px;
       top:8px;
-      z-index:80;
+      z-index:50;
       padding:.75rem 1rem;
       border-radius:999px;
       color:#06101c;
@@ -120,14 +96,16 @@
       font-weight:950;
     }
 
-    .skip:focus { left:8px; }
+    .skip:focus {
+      left:8px;
+    }
 
     .page {
       position:relative;
-      z-index:1;
+      z-index:2;
       width:min(var(--max), calc(100% - 28px));
       margin:0 auto;
-      padding:max(22px, env(safe-area-inset-top)) 0 max(58px, env(safe-area-inset-bottom));
+      padding:22px 0 58px;
     }
 
     .topbar {
@@ -136,25 +114,14 @@
       justify-content:space-between;
       gap:16px;
       padding:12px 0 22px;
-      position:relative;
-      z-index:30;
     }
 
     .brand {
-      display:inline-flex;
-      align-items:center;
-      gap:.55rem;
       color:var(--gold);
+      text-decoration:none;
       font-weight:950;
       text-transform:uppercase;
       letter-spacing:.02em;
-      line-height:1.1;
-    }
-
-    .brand::before {
-      content:"◆";
-      color:var(--mint);
-      text-shadow:0 0 1.2rem rgba(167,243,198,.34);
     }
 
     .nav {
@@ -173,10 +140,11 @@
       border-radius:999px;
       padding:0 13px;
       color:rgba(238,244,255,.84);
+      text-decoration:none;
       background:rgba(255,255,255,.04);
       font-size:.82rem;
       font-weight:850;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+      white-space:nowrap;
     }
 
     .nav a[aria-current="page"] {
@@ -187,62 +155,48 @@
 
     .hero,
     .selector-shell,
-    .authority-panel {
+    .meaning-panel {
       border:1px solid var(--line);
-      border-radius:clamp(24px,5vw,34px);
+      border-radius:34px;
       background:
         radial-gradient(circle at 76% 28%, rgba(139,200,255,.12), transparent 32%),
-        linear-gradient(180deg, var(--panel), var(--panel2));
-      box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.07);
+        linear-gradient(180deg, rgba(8,17,34,.95), rgba(4,9,20,.96));
+      box-shadow:0 24px 70px rgba(0,0,0,.28);
       overflow:hidden;
     }
 
     .hero {
       position:relative;
+      padding:clamp(24px,5vw,52px);
       isolation:isolate;
-      min-height:clamp(22rem,42vw,34rem);
-      display:grid;
-      align-content:center;
-      gap:1rem;
-      padding:clamp(24px,5vw,46px);
     }
 
     .hero::before {
       content:"";
       position:absolute;
-      right:clamp(1rem,6vw,5.25rem);
+      right:clamp(14px,7vw,84px);
       top:50%;
       z-index:-1;
-      width:clamp(10rem,26vw,18rem);
-      height:clamp(10rem,26vw,18rem);
-      transform:translateY(-50%) rotate(45deg);
-      border:1px solid rgba(244,207,131,.18);
-      border-radius:2.7rem;
+      width:clamp(170px,32vw,390px);
+      height:clamp(170px,32vw,390px);
+      transform:translateY(-50%);
+      border-radius:50%;
       background:
-        radial-gradient(circle at 50% 42%,rgba(255,240,168,.13),transparent 48%),
-        radial-gradient(circle at 50% 72%,rgba(141,216,255,.14),transparent 62%),
-        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
-      opacity:.54;
+        radial-gradient(circle at 40% 34%, rgba(255,255,255,.16), transparent 28%),
+        radial-gradient(circle at 54% 50%, rgba(244,207,131,.14), transparent 38%),
+        radial-gradient(circle at 50% 50%, rgba(78,119,171,.22), transparent 60%),
+        radial-gradient(circle at 50% 50%, rgba(181,140,255,.10), transparent 74%);
+      box-shadow:
+        0 0 80px rgba(141,216,255,.12),
+        inset 0 0 60px rgba(0,0,0,.20);
+      opacity:.78;
       pointer-events:none;
-      animation:heroGateBreathe 9s ease-in-out infinite;
     }
 
-    @keyframes heroGateBreathe {
-      0%,100% {
-        opacity:.42;
-        transform:translateY(-50%) rotate(45deg) scale(.98);
-      }
-      50% {
-        opacity:.64;
-        transform:translateY(-50%) rotate(45deg) scale(1.025);
-      }
-    }
-
-    .eyebrow,
-    .contract-line {
-      margin:0;
+    .eyebrow {
+      margin:0 0 14px;
       color:var(--gold);
-      font:900 .76rem/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font:900 .78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       letter-spacing:.22em;
       text-transform:uppercase;
     }
@@ -257,428 +211,217 @@
 
     h1 {
       max-width:980px;
-      font-size:clamp(2.7rem,8vw,5.7rem);
-      line-height:.93;
-      letter-spacing:-.075em;
+      font-size:clamp(2.85rem,8.5vw,6.2rem);
+      line-height:.91;
+      letter-spacing:-.078em;
       text-wrap:balance;
     }
 
     h2 {
-      font-size:clamp(1.65rem,4.6vw,2.8rem);
-      letter-spacing:-.055em;
+      font-size:clamp(1.75rem,5vw,3.15rem);
+      letter-spacing:-.052em;
       text-wrap:balance;
     }
 
     h3 {
-      font-size:clamp(1.24rem,3vw,1.74rem);
-      letter-spacing:-.035em;
+      font-size:clamp(1.3rem,3.4vw,2rem);
+      letter-spacing:-.036em;
     }
 
-    .lede {
-      max-width:900px;
-      margin:0;
+    .lede,
+    .support,
+    .section-copy,
+    .world-card p,
+    .meaning-card p {
       color:var(--muted);
-      font-size:clamp(1.02rem,2.5vw,1.28rem);
       line-height:1.55;
     }
 
-    .quote {
-      max-width:860px;
-      margin:0;
-      padding:1rem 1.1rem;
-      border:1px solid rgba(244,207,131,.20);
-      border-radius:1.2rem;
-      color:rgba(255,244,216,.94);
-      background:rgba(244,207,131,.065);
-      font-weight:850;
+    .lede {
+      max-width:930px;
+      margin:22px 0 0;
+      font-size:clamp(1.06rem,2.8vw,1.34rem);
     }
 
-    .hero-actions {
+    .support {
+      max-width:860px;
+      margin:18px 0 0;
+      font-size:clamp(1rem,2.4vw,1.18rem);
+      color:rgba(238,244,255,.76);
+    }
+
+    .actions {
       display:flex;
       flex-wrap:wrap;
-      gap:.62rem;
+      gap:10px;
+      margin-top:24px;
     }
 
-    .button {
-      min-height:2.7rem;
+    .button,
+    .open-button {
+      min-height:46px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(255,255,255,.15);
+      border:1px solid rgba(167,243,198,.24);
       border-radius:999px;
-      padding:.65rem 1rem;
-      background:rgba(255,255,255,.045);
-      color:rgba(241,246,255,.88);
-      font-size:.78rem;
+      padding:0 18px;
+      color:var(--mint);
+      background:linear-gradient(180deg, rgba(0,42,34,.80), rgba(0,25,24,.86));
+      text-decoration:none;
       font-weight:950;
-      letter-spacing:.055em;
+      letter-spacing:.04em;
       text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
     .button:hover,
-    .button:focus-visible {
+    .button:focus-visible,
+    .open-button:hover,
+    .open-button:focus-visible {
       transform:translateY(-2px);
-      border-color:rgba(244,207,131,.62);
+      border-color:rgba(167,243,198,.62);
       outline:none;
     }
 
     .button.gold {
-      border-color:rgba(244,207,131,.9);
       color:#06101c;
-      background:linear-gradient(135deg,var(--gold2),var(--gold));
-      box-shadow:0 .8rem 1.8rem rgba(244,207,131,.14);
+      background:linear-gradient(135deg, var(--gold2), var(--gold));
+      border-color:rgba(244,207,131,.72);
     }
 
     .selector-shell {
       margin-top:18px;
       padding:clamp(18px,3vw,28px);
+    }
+
+    .section-head {
       display:grid;
-      gap:1.2rem;
-      position:relative;
-      isolation:isolate;
+      gap:10px;
+      max-width:950px;
+      margin-bottom:18px;
     }
 
-    .selector-shell::before,
-    .selector-shell::after {
-      content:"";
-      position:absolute;
-      left:50%;
-      top:54%;
-      z-index:0;
-      border:1px solid rgba(244,207,131,.10);
-      border-radius:50%;
-      pointer-events:none;
-      transform:translate(-50%,-50%) rotateX(66deg);
-    }
-
-    .selector-shell::before {
-      width:min(90%,44rem);
-      height:18rem;
-      box-shadow:0 0 3.5rem rgba(141,216,255,.08);
-      animation:selectorOrbitDrift 18s ease-in-out infinite;
-    }
-
-    .selector-shell::after {
-      width:min(62%,30rem);
-      height:10rem;
-      border-color:rgba(167,243,198,.10);
-      animation:selectorOrbitDrift 22s ease-in-out infinite reverse;
-    }
-
-    @keyframes selectorOrbitDrift {
-      0%,100% {
-        opacity:.45;
-        transform:translate(-50%,-50%) rotateX(66deg) rotateZ(-5deg);
-      }
-      50% {
-        opacity:.75;
-        transform:translate(-50%,-50%) rotateX(66deg) rotateZ(8deg);
-      }
-    }
-
-    .selector-head {
-      display:grid;
-      gap:.55rem;
-      text-align:center;
-      position:relative;
-      z-index:2;
-    }
-
-    .selector-head p {
-      width:min(100%,780px);
-      margin:0 auto;
-      color:var(--muted);
-      font-size:clamp(.98rem,2.5vw,1.12rem);
-      line-height:1.52;
-      text-wrap:balance;
-    }
-
-    .planet-grid {
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:clamp(.85rem,2.4vw,1.1rem);
-      margin-top:.25rem;
-      position:relative;
-      z-index:2;
-    }
-
-    .planet-card {
-      position:relative;
-      min-height:clamp(20rem,38vw,27rem);
-      display:grid;
-      align-content:space-between;
-      gap:1.1rem;
-      padding:clamp(1rem,2.7vw,1.35rem);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.6rem;
-      overflow:hidden;
-      background:
-        radial-gradient(circle at 50% 18%, rgba(141,216,255,.16), transparent 34%),
-        radial-gradient(circle at 82% 72%, rgba(244,207,131,.07), transparent 38%),
-        linear-gradient(180deg, rgba(13,27,51,.88), rgba(5,11,23,.96));
-      box-shadow:
-        0 1.3rem 3.2rem rgba(0,0,0,.22),
-        inset 0 1px 0 rgba(255,255,255,.06);
-      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
-      isolation:isolate;
-      animation:planetCardFloat 10s ease-in-out infinite;
-    }
-
-    .planet-card:nth-child(2) { animation-delay:-3.4s; }
-    .planet-card:nth-child(3) { animation-delay:-6.8s; }
-
-    @keyframes planetCardFloat {
-      0%,100% { transform:translateY(0); }
-      50% { transform:translateY(-7px); }
-    }
-
-    .planet-card:hover,
-    .planet-card:focus-visible {
-      transform:translateY(-4px);
-      border-color:rgba(244,207,131,.44);
-      filter:brightness(1.05);
-      outline:none;
-      animation-play-state:paused;
-    }
-
-    .planet-visual {
-      position:absolute;
-      left:50%;
-      top:22%;
-      z-index:1;
-      width:clamp(8rem,16vw,12rem);
-      height:clamp(8rem,16vw,12rem);
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      opacity:.94;
-      pointer-events:none;
-      box-shadow:
-        inset -2.2rem -1.2rem 2.8rem rgba(0,0,0,.34),
-        inset .9rem .7rem 1.7rem rgba(255,255,255,.14),
-        0 0 2.8rem rgba(141,216,255,.16);
-      animation:selectorPlanetBreathe 7.5s ease-in-out infinite;
-    }
-
-    .planet-card:nth-child(2) .planet-visual { animation-delay:-2.5s; }
-    .planet-card:nth-child(3) .planet-visual { animation-delay:-5s; }
-
-    @keyframes selectorPlanetBreathe {
-      0%,100% {
-        transform:translate(-50%,-50%) scale(.98);
-        filter:saturate(.95) brightness(.96);
-      }
-      50% {
-        transform:translate(-50%,-50%) scale(1.035);
-        filter:saturate(1.08) brightness(1.08);
-      }
-    }
-
-    .planet-visual::before,
-    .planet-visual::after {
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:145%;
-      height:42%;
-      border:1px solid rgba(244,207,131,.14);
-      border-radius:50%;
-      transform:translate(-50%,-50%) rotateX(68deg) rotateZ(-12deg);
-      pointer-events:none;
-      opacity:.62;
-      animation:selectorRingSweep 12s ease-in-out infinite;
-    }
-
-    .planet-visual::after {
-      width:118%;
-      height:31%;
-      border-color:rgba(167,243,198,.12);
-      transform:translate(-50%,-50%) rotateX(68deg) rotateZ(18deg);
-      animation-duration:15s;
-      animation-direction:reverse;
-    }
-
-    @keyframes selectorRingSweep {
-      0%,100% {
-        opacity:.34;
-        transform:translate(-50%,-50%) rotateX(68deg) rotateZ(-16deg);
-      }
-      50% {
-        opacity:.74;
-        transform:translate(-50%,-50%) rotateX(68deg) rotateZ(16deg);
-      }
-    }
-
-    .planet-visual i {
-      position:absolute;
-      inset:0;
-      display:block;
-      border-radius:inherit;
-      overflow:hidden;
-      pointer-events:none;
-    }
-
-    .planet-visual i::before {
-      content:"";
-      position:absolute;
-      inset:-20%;
-      background:
-        linear-gradient(115deg, transparent 0 38%, rgba(255,255,255,.24) 42%, transparent 48%),
-        radial-gradient(circle at 36% 24%, rgba(255,255,255,.22), transparent 22%);
-      opacity:.42;
-      animation:selectorSurfaceGlint 8.5s ease-in-out infinite;
-    }
-
-    @keyframes selectorSurfaceGlint {
-      0%,100% {
-        opacity:.10;
-        transform:translateX(-24%) rotate(-8deg);
-      }
-      48%,55% {
-        opacity:.46;
-        transform:translateX(18%) rotate(8deg);
-      }
-    }
-
-    .planet-card[data-world="zionts"] .planet-visual {
-      background:
-        radial-gradient(circle at 34% 26%,rgba(255,255,255,.20),transparent 24%),
-        radial-gradient(circle at 58% 52%,rgba(224,207,151,.58),transparent 20%),
-        radial-gradient(circle at 36% 62%,rgba(74,91,67,.62),transparent 28%),
-        linear-gradient(135deg,#466c84,#1b4d63 42%,#112334);
-    }
-
-    .planet-card[data-world="h-earth"] .planet-visual {
-      background:
-        radial-gradient(circle at 32% 24%,rgba(255,255,255,.20),transparent 24%),
-        radial-gradient(circle at 54% 54%,rgba(229,207,132,.56),transparent 20%),
-        radial-gradient(circle at 36% 64%,rgba(82,88,63,.62),transparent 28%),
-        linear-gradient(135deg,#4c8f88,#255f58 42%,#152a26);
-    }
-
-    .planet-card[data-world="audralia"] .planet-visual {
-      background:
-        radial-gradient(circle at 32% 24%,rgba(255,255,255,.20),transparent 24%),
-        radial-gradient(circle at 55% 52%,rgba(221,164,182,.54),transparent 20%),
-        radial-gradient(circle at 36% 64%,rgba(72,60,86,.64),transparent 28%),
-        linear-gradient(135deg,#73569c,#553165 42%,#1d1830);
-    }
-
-    .planet-card::after {
-      content:"";
-      position:absolute;
-      inset:0;
-      z-index:0;
-      background:
-        linear-gradient(180deg, transparent 0 36%, rgba(2,6,14,.48) 62%, rgba(2,6,14,.88) 100%);
-      pointer-events:none;
-    }
-
-    .planet-meta {
-      position:relative;
-      z-index:2;
-      min-height:13rem;
-      display:grid;
-      align-content:end;
-      gap:.4rem;
-      padding-top:clamp(8rem,16vw,12.5rem);
-    }
-
-    .planet-meta b {
-      color:var(--mint);
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.17em;
-      text-transform:uppercase;
-    }
-
-    .planet-meta p {
+    .section-eyebrow {
       margin:0;
-      color:var(--muted);
-      font-size:.94rem;
-      line-height:1.45;
-    }
-
-    .planet-action {
-      position:relative;
-      z-index:2;
-      min-height:3.2rem;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(167,243,198,.24);
-      clip-path:polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0 50%);
-      padding:.72rem 1.2rem;
-      background:linear-gradient(180deg, rgba(0,42,34,.94), rgba(0,25,24,.96));
-      color:var(--mint);
-      font-weight:950;
-      letter-spacing:.04em;
+      color:var(--gold);
+      font:900 .74rem/1.55 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing:.22em;
       text-transform:uppercase;
-      overflow:hidden;
     }
 
-    .planet-action::after {
-      content:"";
-      position:absolute;
-      inset:0;
-      background:linear-gradient(115deg, transparent 0 40%, rgba(255,255,255,.16) 46%, transparent 52%);
-      transform:translateX(-100%);
-      animation:selectorButtonShimmer 7.8s ease-in-out infinite;
-      pointer-events:none;
+    .section-copy {
+      margin:0;
+      font-size:clamp(1rem,2.4vw,1.18rem);
     }
 
-    @keyframes selectorButtonShimmer {
-      0%,72%,100% { transform:translateX(-100%); opacity:0; }
-      82% { opacity:1; }
-      94% { transform:translateX(100%); opacity:0; }
-    }
-
-    .authority-panel {
-      margin-top:18px;
-      padding:clamp(18px,3vw,28px);
-      display:grid;
-      gap:1rem;
-    }
-
-    .law-grid {
+    .world-grid {
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.8rem;
+      gap:14px;
+      margin-top:18px;
     }
 
-    .law-card {
-      min-height:9rem;
+    .world-card {
+      min-height:100%;
       display:grid;
-      gap:.45rem;
-      align-content:start;
-      padding:1rem;
+      grid-template-rows:auto auto 1fr auto;
+      gap:11px;
       border:1px solid rgba(255,255,255,.12);
-      border-radius:1.15rem;
+      border-radius:26px;
+      padding:clamp(16px,2.6vw,22px);
       background:
-        radial-gradient(circle at 20% 0%,rgba(141,216,255,.10),transparent 60%),
-        rgba(255,255,255,.035);
+        radial-gradient(circle at 22% 0%, rgba(244,207,131,.10), transparent 46%),
+        radial-gradient(circle at 82% 18%, rgba(141,216,255,.08), transparent 42%),
+        linear-gradient(180deg, rgba(15,25,43,.92), rgba(7,14,27,.94));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .law-card b {
-      color:var(--gold);
-      font-size:.68rem;
+    .world-card:hover,
+    .world-card:focus-within {
+      transform:translateY(-3px);
+      border-color:rgba(244,207,131,.34);
+    }
+
+    .world-kicker {
+      margin:0;
+      color:var(--mint);
+      font-size:.76rem;
+      font-weight:950;
       letter-spacing:.14em;
       text-transform:uppercase;
     }
 
-    .law-card span {
+    .world-card h3 {
+      color:rgba(255,248,234,.98);
+    }
+
+    .world-card p {
+      margin:0;
       color:var(--muted);
-      font-size:.92rem;
-      line-height:1.42;
+      font-size:clamp(.95rem,2.3vw,1.05rem);
+      line-height:1.52;
+    }
+
+    .world-card .open-button {
+      width:100%;
+      margin-top:8px;
+      justify-content:center;
+      clip-path:polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0 50%);
+      border-radius:0;
+    }
+
+    .meaning-panel {
+      margin-top:18px;
+      padding:clamp(18px,3vw,28px);
+    }
+
+    .meaning-grid {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+      margin-top:18px;
+    }
+
+    .meaning-card {
+      padding:clamp(15px,2.5vw,20px);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(167,243,198,.07), transparent 42%),
+        rgba(255,255,255,.035);
+    }
+
+    .meaning-card h3 {
+      color:var(--gold);
+      font-size:clamp(1.18rem,3vw,1.62rem);
+      margin-bottom:8px;
+    }
+
+    .meaning-card p {
+      margin:0;
+      font-size:clamp(.95rem,2.4vw,1.06rem);
+    }
+
+    .closing-line {
+      margin:22px 0 0;
+      padding:16px 18px;
+      border:1px solid rgba(244,207,131,.20);
+      border-radius:22px;
+      color:rgba(255,248,234,.94);
+      background:rgba(244,207,131,.06);
+      font-weight:900;
+      font-size:clamp(1rem,2.5vw,1.18rem);
+      line-height:1.4;
+      text-align:center;
     }
 
     .route-receipt,
     [data-route-receipt],
     [data-contract-receipt],
-    [data-debug-receipt],
-    .receipt {
+    [data-debug-receipt] {
       display:none!important;
       visibility:hidden!important;
       overflow:hidden!important;
@@ -702,25 +445,22 @@
       padding:20px 0 0;
       color:var(--faint);
       font-size:.82rem;
-      line-height:1.45;
       text-align:center;
     }
 
-    @media (max-width:980px) {
+    @media (max-width:900px) {
       .topbar {
         align-items:flex-start;
         flex-direction:column;
       }
 
-      .nav { justify-content:flex-start; }
-
-      .planet-grid,
-      .law-grid {
-        grid-template-columns:1fr;
+      .nav {
+        justify-content:flex-start;
       }
 
-      .planet-card {
-        min-height:18rem;
+      .world-grid,
+      .meaning-grid {
+        grid-template-columns:1fr;
       }
     }
 
@@ -731,11 +471,11 @@
 
       .hero,
       .selector-shell,
-      .authority-panel {
+      .meaning-panel {
         border-radius:24px;
       }
 
-      .hero-actions {
+      .actions {
         display:grid;
       }
 
@@ -755,8 +495,6 @@
       }
     }
   </style>
-
-  <script src="/showroom/globe/index.js?v=SHOWROOM_GLOBE_PARENT_RESTORE_AND_H_EARTH_CHILD_ROUTE_PLACEMENT_TNT_v1" defer></script>
 </head>
 
 <body>
@@ -764,9 +502,9 @@
 
   <div class="page">
     <header class="topbar">
-      <a class="brand" href="/showroom/">Diamond Gate Bridge</a>
+      <a class="brand" href="/showroom/">◆ Diamond Gate Bridge</a>
 
-      <nav class="nav" aria-label="Primary traversal">
+      <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/" aria-current="page">Globe</a>
@@ -779,18 +517,18 @@
 
     <main id="main">
       <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Parent selector only</p>
-        <h1 id="page-title">One gateway. Three living bodies. Each world opens on its own page.</h1>
+        <p class="eyebrow">Showroom Globe · Three Possible Futures</p>
+        <h1 id="page-title">Earth may not have one ending.</h1>
 
         <p class="lede">
-          The Showroom Globe parent selects instead of rendering. ZIONTS, H-Earth, and Audralia remain separate destinations so each world can carry its own material, motion, atmosphere, and visual truth.
+          Imagine Earth thirty billion years from now — not as a prediction, but as a question. If the living world keeps being damaged, what remains? If science becomes responsibility, what survives? If the planet had been supported instead of wounded, what might it have become?
         </p>
 
-        <div class="quote">
-          The selector selects. The child planet route renders.
-        </div>
+        <p class="support">
+          This doorway opens three possible futures of Earth. Each path asks a different question about life, responsibility, damage, science, and what it means to support a living world.
+        </p>
 
-        <div class="hero-actions">
+        <div class="actions" aria-label="World actions">
           <a class="button gold" href="/showroom/globe/earth/">Open ZIONTS</a>
           <a class="button" href="/showroom/globe/h-earth/">Open H-Earth</a>
           <a class="button" href="/showroom/globe/audralia/">Open Audralia</a>
@@ -799,88 +537,110 @@
       </section>
 
       <section class="selector-shell" aria-labelledby="selector-title">
-        <div class="selector-head">
-          <p class="contract-line">Satellite selector · no parent render runtime</p>
-          <h2 id="selector-title">Choose the world. Rendering happens after the threshold.</h2>
-          <p>
-            This route carries the gate, the comparison, and the route map. It moves as a selector, but it does not carry a shared canvas, a shared live renderer, or a shared interplanetary runtime.
+        <div class="section-head">
+          <p class="section-eyebrow">One Earth · Three Futures</p>
+          <h2 id="selector-title">Choose the future you want to enter.</h2>
+          <p class="section-copy">
+            These are not three fantasy worlds with different names. They are three possible futures of Earth, told through consequence, survival, and stewardship. Each one asks a different question about the living world that carries us.
           </p>
         </div>
 
-        <div class="planet-grid" aria-label="Planet route selector">
-          <a class="planet-card" data-world="zionts" href="/showroom/globe/earth/" aria-label="Open ZIONTS">
-            <span class="planet-visual" aria-hidden="true"><i></i></span>
-            <span class="planet-meta">
-              <b>Reference living world</b>
-              <h3>ZIONTS</h3>
-              <p>Ancient living reference body. Opens on its own route with its own rendering authority.</p>
-            </span>
-            <span class="planet-action">Open ZIONTS</span>
-          </a>
+        <div class="world-grid" aria-label="Future world routes">
+          <article class="world-card">
+            <p class="world-kicker">The Consequence Path</p>
+            <h3>ZIONTS</h3>
+            <p>
+              What happens if Earth keeps being damaged by the intelligence it made possible? ZIONTS is the Consequence Path: a future where the planet may no longer be habitable, and life may no longer be present. It is not just a world to observe. It is a warning to face.
+            </p>
+            <a class="open-button" href="/showroom/globe/earth/">Open ZIONTS</a>
+          </article>
 
-          <a class="planet-card" data-world="h-earth" href="/showroom/globe/h-earth/" aria-label="Open H-Earth">
-            <span class="planet-visual" aria-hidden="true"><i></i></span>
-            <span class="planet-meta">
-              <b>Hybrid ancient world</b>
-              <h3>H-Earth</h3>
-              <p>Hybrid ancient living world. Opens on its own route with its own ground-level condition path.</p>
-            </span>
-            <span class="planet-action">Open H-Earth</span>
-          </a>
+          <article class="world-card">
+            <p class="world-kicker">The Survival Path</p>
+            <h3>H-Earth</h3>
+            <p>
+              What happens if life survives the danger instead of disappearing into it? H-Earth is the Survival Path: a possible future where science, discipline, and responsibility create a way forward. For now, this path comes closer to the ground, because survival depends on earth, water, and air.
+            </p>
+            <a class="open-button" href="/showroom/globe/h-earth/">Open H-Earth</a>
+          </article>
 
-          <a class="planet-card" data-world="audralia" href="/showroom/globe/audralia/" aria-label="Open Audralia">
-            <span class="planet-visual" aria-hidden="true"><i></i></span>
-            <span class="planet-meta">
-              <b>Constructed living world</b>
-              <h3>Audralia</h3>
-              <p>Ancient constructed living world. Audralia remains its own body and is not Australia.</p>
-            </span>
-            <span class="planet-action">Open Audralia</span>
-          </a>
+          <article class="world-card">
+            <p class="world-kicker">The Untouched Living Path</p>
+            <h3>Audralia</h3>
+            <p>
+              What would Earth look like if the living planet had been supported instead of wounded? Audralia is the Untouched Living Path: a constructed vision of stewardship instead of extraction, support instead of damage, and a world allowed to become what it could have been.
+            </p>
+            <a class="open-button" href="/showroom/globe/audralia/">Open Audralia</a>
+          </article>
         </div>
       </section>
 
-      <section class="authority-panel" aria-labelledby="authority-title">
-        <p class="contract-line">Authority split</p>
-        <h2 id="authority-title">The parent no longer carries the live interplanetary platform.</h2>
-
-        <div class="law-grid">
-          <div class="law-card">
-            <b>Parent owns</b>
-            <span>Gateway copy, route cards, direct links, selector status, lightweight motion, and interplanetary budget language.</span>
-          </div>
-
-          <div class="law-card">
-            <b>Parent does not own</b>
-            <span>Canvas rendering, requestAnimationFrame loops, drag runtime, glide runtime, material imports, or shared planet switching.</span>
-          </div>
-
-          <div class="law-card">
-            <b>Children own</b>
-            <span>ZIONTS, H-Earth, and Audralia each carry their own rendering authority on their own route.</span>
-          </div>
+      <section class="meaning-panel" aria-labelledby="meaning-title">
+        <div class="section-head">
+          <p class="section-eyebrow">Why This Doorway Matters</p>
+          <h2 id="meaning-title">A future should not be entered casually.</h2>
+          <p class="section-copy">
+            This page separates the futures before the visitor steps inside. The warning path, the survival path, and the untouched path each need their own doorway, their own scale, and their own way of being understood.
+          </p>
         </div>
+
+        <div class="meaning-grid" aria-label="Future meanings">
+          <article class="meaning-card">
+            <h3>Warning</h3>
+            <p>
+              ZIONTS asks what remains if damage continues until the living world can no longer carry life.
+            </p>
+          </article>
+
+          <article class="meaning-card">
+            <h3>Survival</h3>
+            <p>
+              H-Earth asks what life could become if science and responsibility make survival possible in spite of imminent danger.
+            </p>
+          </article>
+
+          <article class="meaning-card">
+            <h3>Stewardship</h3>
+            <p>
+              Audralia asks what Earth might have looked like if the living planet had been supported instead of harmed.
+            </p>
+          </article>
+        </div>
+
+        <p class="closing-line">
+          One Earth. Three possible futures. Choose the path, then step inside.
+        </p>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-SHOWROOM_GLOBE_PARENT_RESTORE_AND_H_EARTH_CHILD_ROUTE_PLACEMENT_TNT_v1
-previous=SHOWROOM_GLOBE_PARENT_SELECTOR_LIGHT_ANIMATION_RESTORE_TNT_v1
+SHOWROOM_GLOBE_DEEP_TIME_PUBLIC_VERNACULAR_RENEWAL_TNT_v1
+previous=SHOWROOM_GLOBE_PARENT_RESTORE_AND_H_EARTH_CHILD_ROUTE_PLACEMENT_TNT_v1
 route=/showroom/globe/
-page=showroom_globe_parent_selector
-role=parent_selector_only
-primary_law=selector_selects_child_planet_route_renders
-repair=restores_parent_selector_after_h_earth_condition_stack_was_seen_on_parent_route
-parent_owns=gateway,selector_cards,body_summaries,direct_route_links,lightweight_status_receipt,interplanetary_budget_language,css_only_selector_motion
-parent_does_not_own=canvas_rendering,material_renderer_import,requestAnimationFrame,drag_runtime,glide_runtime,shared_BODIES_profile_switching,live_interplanetary_canvas_inspection,child_planet_visual_truth,h_earth_ground_level_condition_stack
-child_route_earth_owns=zionts_rendering_only
-child_route_h_earth_owns=h_earth_ground_level_earth_water_air_condition_stack
-child_route_audralia_owns=audralia_rendering_only
-live_canvas_runtime=false
-material_renderer_import=false
-request_animation_frame=false
-shared_interplanetary_rendering=false
-css_only_animation=true
-child_routes_own_rendering=true
+page=showroom_globe_deep_time_future_selector
+role=parent_future_selector_only
+public_thesis=earth_may_not_have_one_ending
+public_frame=one_earth_three_possible_futures
+deep_time_frame=roughly_thirty_billion_years_not_as_prediction_but_as_question
+future_paths=zionts_consequence,h_earth_survival,audralia_untouched_living
+traversal=question_consequence_survival_stewardship_invitation
+zionts=consequence_path_warning_lifeless_or_uninhabitable_future_if_damage_continues
+h_earth=survival_path_science_discipline_responsibility_ground_view_earth_water_air
+audralia=untouched_living_path_stewardship_not_extraction_supported_not_harmed
+word_law=imminent_danger
+parent_owns=gateway_copy,route_cards,public_future_selector,comparison,route_clarity,first_decision
+parent_does_not_own=canvas_rendering,requestAnimationFrame,drag_runtime,glide_runtime,material_imports,shared_planet_switching,shared_interplanetary_rendering
+children_own=world_rendering,motion,material,atmosphere,proof_path
+h_earth_ground_view_lawful=true
+visible_copy=public_facing_ted_style_traversal
+internal_engineering_copy_hidden_from_public=true
+no_architecture_mutation=true
+no_js_mutation=true
+no_child_route_mutation=true
+no_parent_runtime_restoration=true
+no_canvas=true
+no_graphic_box=true
+no_image_generation=true
+triple_g_logic_touched=false
 generated_image=false
 graphic_box=false
 streaming=false
@@ -889,7 +649,7 @@ visual_pass_claimed=false
     </main>
 
     <footer class="footer">
-      SHOWROOM_GLOBE_PARENT_RESTORE_AND_H_EARTH_CHILD_ROUTE_PLACEMENT_TNT_v1 · Parent selector restored · H-Earth condition stack belongs to child route.
+      Showroom Globe · Earth may not have one ending.
     </footer>
   </div>
 </body>

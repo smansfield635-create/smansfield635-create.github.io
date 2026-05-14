@@ -3,8 +3,11 @@
   lang="en"
   data-page="showroom-globe-satellite-selector"
   data-route="/showroom/globe/"
-  data-contract="SHOWROOM_GLOBE_SATELLITE_SELECTOR_HARD_RESTORE_TNT_v4"
+  data-contract="SHOWROOM_GLOBE_RUNTIME_INPUT_AND_RAF_CONTAINMENT_RENEWAL_TNT_v1"
+  data-previous-contract="SHOWROOM_GLOBE_SATELLITE_SELECTOR_HARD_RESTORE_TNT_v4"
   data-jurisdiction="satellite-selector-only"
+  data-runtime-containment="active"
+  data-input-scope="canvas-only"
   data-ground-view="false"
   data-ground-engine="false"
   data-manor-placement="false"
@@ -51,10 +54,18 @@
 
     a { color:inherit; }
 
+    a:focus-visible,
+    button:focus-visible {
+      outline:2px solid var(--gold);
+      outline-offset:4px;
+    }
+
     .page {
       width:min(1180px, calc(100% - 28px));
       margin:0 auto;
       padding:22px 0 58px;
+      position:relative;
+      z-index:1;
     }
 
     .topbar {
@@ -63,6 +74,9 @@
       justify-content:space-between;
       gap:16px;
       padding:12px 0 22px;
+      position:relative;
+      z-index:40;
+      isolation:isolate;
     }
 
     .brand {
@@ -71,12 +85,16 @@
       font-weight:950;
       text-transform:uppercase;
       letter-spacing:.02em;
+      position:relative;
+      z-index:42;
     }
 
     .nav {
       display:flex;
       flex-wrap:wrap;
       gap:8px;
+      position:relative;
+      z-index:42;
     }
 
     .nav a {
@@ -92,6 +110,8 @@
       background:rgba(255,255,255,.04);
       font-size:.82rem;
       font-weight:850;
+      position:relative;
+      z-index:43;
     }
 
     .nav a[aria-current="page"] {
@@ -112,7 +132,11 @@
       overflow:hidden;
     }
 
-    .hero { padding:clamp(24px,5vw,46px); }
+    .hero {
+      padding:clamp(24px,5vw,46px);
+      position:relative;
+      z-index:2;
+    }
 
     .eyebrow {
       margin:0 0 14px;
@@ -146,6 +170,9 @@
     .selector-shell {
       margin-top:18px;
       padding:clamp(18px,3vw,28px);
+      position:relative;
+      z-index:2;
+      isolation:isolate;
     }
 
     .contract-line {
@@ -161,6 +188,8 @@
       flex-wrap:wrap;
       gap:10px;
       margin-bottom:18px;
+      position:relative;
+      z-index:8;
     }
 
     .hex-button {
@@ -173,6 +202,8 @@
       font-weight:950;
       letter-spacing:.02em;
       cursor:pointer;
+      position:relative;
+      z-index:9;
     }
 
     .hex-button.active {
@@ -187,6 +218,8 @@
       font-size:clamp(1.85rem,4.8vw,3.15rem);
       letter-spacing:-.045em;
       margin:6px 0 6px;
+      position:relative;
+      z-index:4;
     }
 
     .planet-subtitle {
@@ -195,6 +228,8 @@
       font-weight:900;
       font-size:clamp(.98rem,2.6vw,1.15rem);
       margin:0 0 16px;
+      position:relative;
+      z-index:4;
     }
 
     .globe-stage {
@@ -207,13 +242,23 @@
       background:
         radial-gradient(circle at 50% 32%, rgba(95,142,190,.12), transparent 46%),
         linear-gradient(180deg, #061326, #020711);
+      z-index:1;
+      isolation:isolate;
+      contain:layout paint;
     }
 
     .globe-stage canvas {
       display:block;
       width:100%;
       height:clamp(390px,78vw,660px);
-      touch-action:none;
+      touch-action:pan-y;
+      user-select:none;
+      cursor:grab;
+      contain:strict;
+    }
+
+    .globe-stage canvas:active {
+      cursor:grabbing;
     }
 
     .tabs {
@@ -221,6 +266,8 @@
       grid-template-columns:repeat(3,minmax(0,1fr));
       gap:12px;
       margin:16px 0 12px;
+      position:relative;
+      z-index:8;
     }
 
     .tab {
@@ -233,6 +280,8 @@
       font-weight:950;
       letter-spacing:.02em;
       cursor:pointer;
+      position:relative;
+      z-index:9;
     }
 
     .tab[aria-selected="true"] {
@@ -255,6 +304,8 @@
       text-decoration:none;
       font-weight:950;
       font-size:clamp(1.05rem,3.6vw,1.45rem);
+      position:relative;
+      z-index:10;
     }
 
     .drag-note {
@@ -264,6 +315,8 @@
       font-weight:900;
       font-size:clamp(.92rem,3vw,1.08rem);
       line-height:1.35;
+      position:relative;
+      z-index:5;
     }
 
     .body-card {
@@ -272,6 +325,8 @@
       background:
         radial-gradient(circle at 80% 20%, rgba(167,243,198,.08), transparent 38%),
         linear-gradient(180deg, rgba(11,21,39,.95), rgba(5,10,22,.96));
+      position:relative;
+      z-index:2;
     }
 
     .body-card h2 {
@@ -292,6 +347,8 @@
       color:var(--faint);
       font-size:.82rem;
       text-align:center;
+      position:relative;
+      z-index:2;
     }
 
     @media (max-width:900px) {
@@ -356,7 +413,7 @@
 
         <a class="open-button" data-open-body href="/showroom/globe/earth/">Open ZIONTS</a>
 
-        <p class="drag-note">Drag to inspect the public globe. Release for Fibonacci glide. Double tap to reset.</p>
+        <p class="drag-note">Drag inside the globe to inspect. Release for contained glide. Route links remain outside the runtime.</p>
       </section>
 
       <section class="body-card">
@@ -365,12 +422,12 @@
       </section>
     </main>
 
-    <footer class="footer">Diamond Gate Bridge · Showroom Globe · satellite selector restored.</footer>
+    <footer class="footer">SHOWROOM_GLOBE_RUNTIME_INPUT_AND_RAF_CONTAINMENT_RENEWAL_TNT_v1 · satellite selector contained.</footer>
   </div>
 
   <script>
-    window.DGB_SHOWROOM_GLOBE_RESTORE_KEY = "SHOWROOM_GLOBE_SATELLITE_SELECTOR_HARD_RESTORE_TNT_v4";
+    window.DGB_SHOWROOM_GLOBE_RESTORE_KEY = "SHOWROOM_GLOBE_RUNTIME_INPUT_AND_RAF_CONTAINMENT_RENEWAL_TNT_v1";
   </script>
-  <script type="module" src="/showroom/globe/index.js?v=SHOWROOM_GLOBE_SATELLITE_SELECTOR_HARD_RESTORE_TNT_v4"></script>
+  <script type="module" src="/showroom/globe/index.js?v=SHOWROOM_GLOBE_RUNTIME_INPUT_AND_RAF_CONTAINMENT_RENEWAL_TNT_v1"></script>
 </body>
 </html>

@@ -1,13 +1,12 @@
 // /assets/world/environment/foliage.js
 // TNT FULL-FILE REPLACEMENT
-// H_EARTH_HEX_VISUAL_DEFINITION_EXPANSION_FOLIAGE_TNT_v1
-// Owns: grasses, shrubs, wildflowers, wind response, foreground life.
-// Consumes: shared hexfield substrate through frame.hexfield.
+// H_EARTH_VISUAL_EXPRESSION_EXPANSION_THROUGH_LIVE_HEX_v2
+// Owns: grass, shrubs, wildflowers, wind response, foreground life.
 
 import { hash01, rgba } from "/assets/world/environment/profile.js";
 
 export const ENVIRONMENT_FOLIAGE_VERSION =
-  "h-earth-hex-visual-definition-expansion-foliage-v1";
+  "h-earth-visual-expression-expansion-through-live-hex-foliage-v2";
 
 const TAU = Math.PI * 2;
 
@@ -25,6 +24,9 @@ export function drawFoliageLayer(ctx, profile, cell, frame) {
     const sample = hexfield?.sample(nx, ny, t);
 
     if (!sample || sample.foliagePressure < 0.105) continue;
+
+    const nearManor = nx > 0.34 && nx < 0.66 && ny > 0.54 && ny < 0.70;
+    if (nearManor && hash01(i, 999, 1, cell.seed) < 0.76) continue;
 
     const x = nx * w;
     const y = ny * h;
@@ -154,9 +156,9 @@ function drawForegroundGrassVeil(ctx, profile, cell, frame) {
   const { width: w, height: h, time: t, hexfield } = frame;
 
   ctx.save();
-  ctx.globalAlpha = 0.30;
+  ctx.globalAlpha = 0.28;
 
-  for (let i = 0; i < 80; i += 1) {
+  for (let i = 0; i < 84; i += 1) {
     const nx = hash01(i, 700, 1, cell.seed);
     const ny = 0.78 + hash01(i, 701, 2, cell.seed) * 0.22;
     const sample = hexfield?.sample(nx, ny, t);

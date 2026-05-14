@@ -3,15 +3,19 @@
   lang="en"
   data-route="/products/"
   data-page="products"
-  data-version="G1-V7"
-  data-contract="PRODUCTS_CUT_SAPPHIRE_INTERNAL_REFRACTION_REFINEMENT_TNT_v3"
-  data-renews="PRODUCTS_LOCAL_8_POINT_AXIAL_CUT_SAPPHIRE_ORBIT_TNT_v2"
+  data-version="G1-V8"
+  data-contract="PRODUCTS_CUT_SAPPHIRE_PRODUCT_WING_AUTHORITY_RENEWAL_TNT_v1"
+  data-renews="PRODUCTS_CUT_SAPPHIRE_INTERNAL_REFRACTION_REFINEMENT_TNT_v3"
   data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
   data-animation-standard="LOCAL_8_DIAMOND_AXIAL_ORBIT_STANDARD_v1"
   data-material-renewal="cut-sapphire-gemstone-visible-internal-refraction"
   data-status="active"
   data-role="product-wing"
+  data-orbit-node-count="8"
+  data-one-message-eight-doors="true"
+  data-css-only-orbit="true"
   data-heavy-runtime-loaded="false"
+  data-js-required="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-streaming="false"
@@ -93,6 +97,23 @@
     }
 
     a{color:inherit;text-decoration:none}
+
+    a:focus-visible{
+      outline:2px solid var(--gold);
+      outline-offset:4px;
+    }
+
+    .sr-only{
+      position:absolute;
+      width:1px;
+      height:1px;
+      padding:0;
+      margin:-1px;
+      overflow:hidden;
+      clip:rect(0,0,0,0);
+      white-space:nowrap;
+      border:0;
+    }
 
     .skip{
       position:absolute;
@@ -626,7 +647,7 @@
     }
 
     .product-node:hover,
-    .product-node:focus{
+    .product-node:focus-visible{
       outline:none;
       border-color:rgba(243,200,111,.74);
       box-shadow:
@@ -639,7 +660,7 @@
     }
 
     .product-node:hover .product-label-shell::before,
-    .product-node:focus .product-label-shell::before{
+    .product-node:focus-visible .product-label-shell::before{
       opacity:.92;
     }
 
@@ -863,6 +884,14 @@
         animation-iteration-count:1!important;
         transition-duration:.01ms!important;
       }
+
+      .products-orbit{
+        animation:none!important;
+      }
+
+      .product-label-text{
+        animation:none!important;
+      }
     }
   </style>
 </head>
@@ -922,56 +951,59 @@
       <section class="panel section" aria-labelledby="field-title">
         <div class="kicker">Eight cut-sapphire axial orbit</div>
         <h2 id="field-title">Eight cut sapphires sit on one circular path around one usable message.</h2>
+        <p class="sr-only" id="orbit-proof">
+          This is a CSS-only eight-node cut-sapphire orbit. It does not load a heavy runtime, generated image, graphic box, streaming layer, or visual pass claim.
+        </p>
 
-        <div class="products-stage" aria-label="Animated Products eight-cut-sapphire axial orbit">
+        <div class="products-stage" aria-label="Animated Products eight-cut-sapphire axial orbit" aria-describedby="orbit-proof">
           <div class="products-anchor" aria-hidden="true">
             <span>Products<br>One Message<br>Eight Doors</span>
           </div>
 
-          <div class="products-orbit">
-            <a class="product-node" style="--angle:0deg" href="/products/archcoin/" aria-label="ARCHCOIN">
+          <div class="products-orbit" role="list" aria-label="Eight product wing doors">
+            <a class="product-node" role="listitem" style="--angle:0deg" href="/products/archcoin/" aria-label="ARCHCOIN product chamber" data-product-key="archcoin">
               <span class="product-label-shell">
                 <b class="product-label-text">ARCHCOIN<span class="product-label-sub">Value</span></b>
               </span>
             </a>
 
-            <a class="product-node" style="--angle:45deg" href="/products/five-flags/" aria-label="Five Flags">
+            <a class="product-node" role="listitem" style="--angle:45deg" href="/products/five-flags/" aria-label="Five Flags product chamber" data-product-key="five-flags">
               <span class="product-label-shell">
                 <b class="product-label-text">Five<br>Flags<span class="product-label-sub">Game</span></b>
               </span>
             </a>
 
-            <a class="product-node" style="--angle:90deg" href="/products/on-your-side-ai/" aria-label="On Your Side AAI">
+            <a class="product-node" role="listitem" style="--angle:90deg" href="/products/on-your-side-ai/" aria-label="On Your Side AI product chamber" data-product-key="on-your-side-ai">
               <span class="product-label-shell">
-                <b class="product-label-text">AAI<span class="product-label-sub">Support</span></b>
+                <b class="product-label-text">AI<span class="product-label-sub">Support</span></b>
               </span>
             </a>
 
-            <a class="product-node" style="--angle:135deg" href="/products/education/" aria-label="Education">
+            <a class="product-node" role="listitem" style="--angle:135deg" href="/products/education/" aria-label="Education product chamber" data-product-key="education">
               <span class="product-label-shell">
                 <b class="product-label-text">Education<span class="product-label-sub">Learning</span></b>
               </span>
             </a>
 
-            <a class="product-node" style="--angle:180deg" href="/products/nutrition/" aria-label="Nutrition">
+            <a class="product-node" role="listitem" style="--angle:180deg" href="/products/nutrition/" aria-label="Nutrition product chamber" data-product-key="nutrition">
               <span class="product-label-shell">
                 <b class="product-label-text">Nutrition<span class="product-label-sub">Routine</span></b>
               </span>
             </a>
 
-            <a class="product-node" style="--angle:225deg" href="/meet-sean-mansfield/" aria-label="Meet Sean">
+            <a class="product-node" role="listitem" style="--angle:225deg" href="/meet-sean-mansfield/" aria-label="Meet Sean voice path" data-product-key="meet-sean">
               <span class="product-label-shell">
                 <b class="product-label-text">Meet<br>Sean<span class="product-label-sub">Voice</span></b>
               </span>
             </a>
 
-            <a class="product-node" style="--angle:270deg" href="/nine-summits/" aria-label="Nine Summits">
+            <a class="product-node" role="listitem" style="--angle:270deg" href="/nine-summits/" aria-label="Nine Summits climb path" data-product-key="nine-summits">
               <span class="product-label-shell">
                 <b class="product-label-text">Nine<br>Summits<span class="product-label-sub">Climb</span></b>
               </span>
             </a>
 
-            <a class="product-node" style="--angle:315deg" href="/nine-summits-of-love/" aria-label="The Book">
+            <a class="product-node" role="listitem" style="--angle:315deg" href="/nine-summits-of-love/" aria-label="The Nine Summits of Love book path" data-product-key="book">
               <span class="product-label-shell">
                 <b class="product-label-text">Book<span class="product-label-sub">Love</span></b>
               </span>
@@ -1000,7 +1032,7 @@
           </a>
 
           <a class="product-card" href="/products/on-your-side-ai/">
-            <b>On Your Side AAI</b>
+            <b>On Your Side AI</b>
             <strong>Assistance-first support.</strong>
             <span>Forms, letters, choices, plain-language support, and practical next steps.</span>
             <span class="open-chamber">Open chamber</span>

@@ -4,8 +4,8 @@
   lang="en"
   data-page="laws-16-point-special-diamond-rule-chamber"
   data-route="/laws/"
-  data-contract="LAWS_SPECIAL_DIAMOND_RULE_CHAMBER_RENEWAL_TNT_v1"
-  data-previous-contract="LAWS_PURPLE_RULE_CHAMBER_PAIR_RENEWAL_TNT_v1"
+  data-contract="LAWS_SPECIAL_DIAMOND_CSS_CUT_GEOMETRY_RENEWAL_TNT_v1"
+  data-previous-contract="LAWS_SPECIAL_DIAMOND_RULE_CHAMBER_RENEWAL_TNT_v1"
   data-script-contract="LAWS_PURPLE_RULE_CHAMBER_PAIR_RUNTIME_TNT_v1"
   data-role="rule-chamber"
   data-message="proof-outranks-confidence"
@@ -13,6 +13,7 @@
   data-foreground-core="laws-entry-proof-return"
   data-material="special-diamond"
   data-law-diamond-class="special-rule-cut-diamond"
+  data-css-mutation-scope="special-diamond-cut-geometry"
   data-purple-theme="false"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
@@ -50,9 +51,74 @@
       --deep: #030611;
       --violet-shadow: #160a2f;
       --stage: min(100%, 1180px);
-      --law-cut: polygon(50% 0%, 68% 7%, 90% 25%, 100% 48%, 82% 78%, 50% 100%, 18% 78%, 0% 48%, 10% 25%, 32% 7%);
-      --law-inner-cut: polygon(50% 4%, 64% 14%, 84% 30%, 91% 49%, 76% 73%, 50% 93%, 24% 73%, 9% 49%, 16% 30%, 36% 14%);
-      --law-seal-cut: polygon(50% 0%, 62% 9%, 78% 9%, 91% 22%, 91% 38%, 100% 50%, 91% 62%, 91% 78%, 78% 91%, 62% 91%, 50% 100%, 38% 91%, 22% 91%, 9% 78%, 9% 62%, 0% 50%, 9% 38%, 9% 22%, 22% 9%, 38% 9%);
+
+      --law-cut:
+        polygon(
+          50% 0%,
+          65% 4%,
+          82% 16%,
+          96% 39%,
+          91% 58%,
+          76% 78%,
+          50% 100%,
+          24% 78%,
+          9% 58%,
+          4% 39%,
+          18% 16%,
+          35% 4%
+        );
+
+      --law-inner-cut:
+        polygon(
+          50% 6%,
+          62% 13%,
+          76% 25%,
+          86% 43%,
+          79% 59%,
+          66% 74%,
+          50% 90%,
+          34% 74%,
+          21% 59%,
+          14% 43%,
+          24% 25%,
+          38% 13%
+        );
+
+      --law-table-cut:
+        polygon(
+          50% 15%,
+          64% 24%,
+          74% 40%,
+          70% 56%,
+          50% 72%,
+          30% 56%,
+          26% 40%,
+          36% 24%
+        );
+
+      --law-seal-cut:
+        polygon(
+          50% 0%,
+          63% 7%,
+          80% 10%,
+          94% 25%,
+          93% 41%,
+          100% 50%,
+          93% 59%,
+          94% 75%,
+          80% 90%,
+          63% 93%,
+          50% 100%,
+          37% 93%,
+          20% 90%,
+          6% 75%,
+          7% 59%,
+          0% 50%,
+          7% 41%,
+          6% 25%,
+          20% 10%,
+          37% 7%
+        );
     }
 
     * { box-sizing: border-box; }
@@ -395,9 +461,9 @@
     }
 
     .law-field {
-      --node-background: clamp(3.2rem, 6.8vw, 4.9rem);
-      --node-foreground: clamp(4.35rem, 9.2vw, 6.75rem);
-      --center-size: clamp(5rem, 10.4vw, 7.65rem);
+      --node-background: clamp(3.25rem, 7vw, 5rem);
+      --node-foreground: clamp(4.55rem, 9.8vw, 7.15rem);
+      --center-size: clamp(5.1rem, 10.8vw, 8rem);
       position: relative;
       width: min(100%, 900px);
       min-height: clamp(34rem, 68vw, 44rem);
@@ -471,7 +537,7 @@
     .center-diamond {
       left: 50%;
       top: 50%;
-      width: var(--center-size);
+      width: calc(var(--center-size) * 1.18);
       height: var(--center-size);
       transform: translate(-50%, -50%);
       z-index: 12;
@@ -486,7 +552,7 @@
       --node-size: var(--node-background);
       left: calc(var(--x) * 1%);
       top: calc(var(--y) * 1%);
-      width: var(--node-size);
+      width: calc(var(--node-size) * 1.22);
       height: var(--node-size);
       transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(var(--lift));
       outline: none;
@@ -496,15 +562,15 @@
 
     .law-diamond.behind {
       z-index: 7;
-      opacity: 0.74;
-      filter: saturate(0.80) brightness(0.92);
+      opacity: 0.76;
+      filter: saturate(0.84) brightness(0.94);
     }
 
     .law-diamond.forefront {
       --node-size: var(--node-foreground);
       z-index: 18;
       opacity: 1;
-      filter: saturate(1.06) brightness(1.08);
+      filter: saturate(1.08) brightness(1.10);
     }
 
     .law-diamond:hover,
@@ -518,65 +584,75 @@
       position: absolute;
       inset: 0;
       clip-path: var(--law-cut);
-      border: 1px solid rgba(255,255,255,0.42);
+      border: 1px solid rgba(255,255,255,0.46);
       background:
-        linear-gradient(35deg, transparent 0 18%, rgba(255,255,255,0.46) 19% 21%, transparent 22% 100%),
-        linear-gradient(145deg, rgba(255,255,255,0.26), transparent 20%, rgba(141,216,255,0.10) 42%, transparent 70%),
-        conic-gradient(from 45deg at 50% 50%,
-          rgba(255,255,255,0.38) 0deg,
-          rgba(141,216,255,0.17) 36deg,
-          rgba(2,8,24,0.62) 72deg,
-          rgba(255,255,255,0.24) 108deg,
-          rgba(8,18,42,0.74) 144deg,
-          rgba(242,199,111,0.20) 180deg,
-          rgba(2,8,24,0.78) 216deg,
-          rgba(141,216,255,0.18) 252deg,
-          rgba(1,4,14,0.82) 288deg,
-          rgba(255,255,255,0.28) 324deg,
-          rgba(255,255,255,0.38) 360deg),
-        radial-gradient(circle at 32% 20%, rgba(255,255,255,0.74), rgba(230,238,255,0.20) 22%, transparent 40%),
+        linear-gradient(35deg, transparent 0 17%, rgba(255,255,255,0.52) 18% 20%, transparent 21% 100%),
+        linear-gradient(145deg, rgba(255,255,255,0.30), transparent 18%, rgba(141,216,255,0.12) 41%, transparent 71%),
+        conic-gradient(from 90deg at 50% 48%,
+          rgba(255,255,255,0.50) 0deg,
+          rgba(141,216,255,0.18) 28deg,
+          rgba(2,8,24,0.66) 63deg,
+          rgba(255,255,255,0.25) 100deg,
+          rgba(8,18,42,0.76) 132deg,
+          rgba(242,199,111,0.24) 176deg,
+          rgba(2,8,24,0.80) 214deg,
+          rgba(141,216,255,0.18) 254deg,
+          rgba(1,4,14,0.84) 292deg,
+          rgba(255,255,255,0.30) 326deg,
+          rgba(255,255,255,0.50) 360deg),
+        radial-gradient(circle at 50% 47%, rgba(255,255,255,0.22), transparent 20%),
+        radial-gradient(circle at 31% 18%, rgba(255,255,255,0.78), rgba(230,238,255,0.20) 22%, transparent 40%),
         radial-gradient(circle at 78% 82%, rgba(2,6,18,0.86), transparent 56%),
-        linear-gradient(145deg, rgba(248,251,255,0.48), rgba(80,96,120,0.44) 42%, rgba(6,12,28,0.98) 100%);
+        linear-gradient(145deg, rgba(248,251,255,0.54), rgba(80,96,120,0.46) 42%, rgba(6,12,28,0.98) 100%);
       box-shadow:
         0 1.15rem 2.8rem rgba(0,0,0,0.34),
-        0 0 1.6rem rgba(255,255,255,0.10),
-        0 0 1.2rem rgba(141,216,255,0.08),
-        inset 0 0 0 1px rgba(255,255,255,0.16),
+        0 0 1.7rem rgba(255,255,255,0.12),
+        0 0 1.3rem rgba(141,216,255,0.09),
+        inset 0 0 0 1px rgba(255,255,255,0.18),
         inset 0 -1rem 1.7rem rgba(0,0,0,0.24);
       overflow: hidden;
     }
 
     .law-diamond.behind .diamond-shell {
-      border-color: rgba(230,238,255,0.24);
+      border-color: rgba(230,238,255,0.28);
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.14), transparent 28%),
-        radial-gradient(circle at 64% 36%, rgba(230,238,255,0.14), transparent 34%),
-        linear-gradient(145deg, rgba(30,36,50,0.76), rgba(4,8,20,0.72));
+        linear-gradient(135deg, rgba(255,255,255,0.16), transparent 28%),
+        radial-gradient(circle at 64% 36%, rgba(230,238,255,0.15), transparent 34%),
+        conic-gradient(from 90deg at 50% 48%,
+          rgba(255,255,255,0.22),
+          rgba(141,216,255,0.09),
+          rgba(2,8,24,0.70),
+          rgba(255,255,255,0.12),
+          rgba(242,199,111,0.09),
+          rgba(2,8,24,0.72),
+          rgba(255,255,255,0.20)),
+        linear-gradient(145deg, rgba(30,36,50,0.78), rgba(4,8,20,0.74));
       box-shadow:
         0 0.85rem 2.1rem rgba(0,0,0,0.28),
         inset 0 0 0 1px rgba(255,255,255,0.10);
     }
 
     .law-diamond.forefront .diamond-shell {
-      border-color: rgba(255,244,210,0.74);
+      border-color: rgba(255,244,210,0.78);
       background:
-        linear-gradient(35deg, transparent 0 18%, rgba(255,255,255,0.56) 19% 21%, transparent 22% 100%),
-        linear-gradient(145deg, rgba(255,255,255,0.31), transparent 20%, rgba(242,199,111,0.14) 44%, transparent 70%),
-        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.28), transparent 32%),
-        radial-gradient(circle at 30% 72%, rgba(141,216,255,0.20), transparent 38%),
-        conic-gradient(from 45deg at 50% 50%,
-          rgba(255,255,255,0.44),
+        linear-gradient(35deg, transparent 0 17%, rgba(255,255,255,0.62) 18% 20%, transparent 21% 100%),
+        linear-gradient(145deg, rgba(255,255,255,0.34), transparent 18%, rgba(242,199,111,0.16) 44%, transparent 71%),
+        radial-gradient(circle at 50% 47%, rgba(255,255,255,0.26), transparent 20%),
+        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.30), transparent 32%),
+        radial-gradient(circle at 30% 72%, rgba(141,216,255,0.21), transparent 38%),
+        conic-gradient(from 90deg at 50% 48%,
+          rgba(255,255,255,0.54),
           rgba(141,216,255,0.18),
           rgba(2,8,24,0.62),
-          rgba(242,199,111,0.24),
-          rgba(255,255,255,0.44)),
-        linear-gradient(145deg, rgba(255,255,255,0.54), rgba(77,90,112,0.48) 58%, rgba(6,12,28,0.98));
+          rgba(242,199,111,0.26),
+          rgba(255,255,255,0.54)),
+        linear-gradient(145deg, rgba(255,255,255,0.58), rgba(77,90,112,0.50) 58%, rgba(6,12,28,0.98));
       box-shadow:
         0 1.45rem 3.4rem rgba(0,0,0,0.38),
-        0 0 2.35rem rgba(255,255,255,0.15),
-        0 0 1.7rem rgba(242,199,111,0.12),
-        inset 0 0 0 1px rgba(255,255,255,0.18),
-        inset 0 0 1.8rem rgba(255,255,255,0.07);
+        0 0 2.35rem rgba(255,255,255,0.17),
+        0 0 1.7rem rgba(242,199,111,0.14),
+        inset 0 0 0 1px rgba(255,255,255,0.19),
+        inset 0 0 1.8rem rgba(255,255,255,0.08);
     }
 
     .diamond-shell::before,
@@ -584,27 +660,45 @@
       content: "";
       position: absolute;
       pointer-events: none;
-      clip-path: var(--law-inner-cut);
     }
 
     .diamond-shell::before {
-      inset: 8%;
+      inset: 7%;
+      clip-path: var(--law-inner-cut);
       background:
-        linear-gradient(90deg, transparent 0 48%, rgba(255,255,255,0.30) 49% 51%, transparent 52% 100%),
-        linear-gradient(0deg, transparent 0 48%, rgba(255,255,255,0.22) 49% 51%, transparent 52% 100%),
-        linear-gradient(27deg, transparent 0 32%, rgba(255,255,255,0.24) 33% 35%, transparent 36% 100%),
-        linear-gradient(153deg, transparent 0 31%, rgba(255,255,255,0.18) 32% 34%, transparent 35% 100%),
-        linear-gradient(118deg, transparent 0 42%, rgba(141,216,255,0.16) 43% 45%, transparent 46% 100%),
-        linear-gradient(242deg, transparent 0 58%, rgba(242,199,111,0.13) 59% 61%, transparent 62% 100%),
-        radial-gradient(circle at 36% 23%, rgba(255,255,255,0.36), transparent 27%);
-      opacity: 0.92;
+        linear-gradient(90deg, transparent 0 49%, rgba(255,255,255,0.34) 49.5% 50.5%, transparent 51% 100%),
+        linear-gradient(0deg, transparent 0 49%, rgba(255,255,255,0.24) 49.5% 50.5%, transparent 51% 100%),
+        linear-gradient(26deg, transparent 0 36%, rgba(255,255,255,0.25) 37% 39%, transparent 40% 100%),
+        linear-gradient(154deg, transparent 0 36%, rgba(255,255,255,0.21) 37% 39%, transparent 40% 100%),
+        linear-gradient(116deg, transparent 0 44%, rgba(141,216,255,0.18) 45% 47%, transparent 48% 100%),
+        linear-gradient(244deg, transparent 0 53%, rgba(242,199,111,0.15) 54% 56%, transparent 57% 100%),
+        conic-gradient(from 0deg at 50% 48%,
+          transparent 0deg 18deg,
+          rgba(255,255,255,0.21) 19deg 21deg,
+          transparent 22deg 58deg,
+          rgba(141,216,255,0.15) 59deg 61deg,
+          transparent 62deg 118deg,
+          rgba(255,255,255,0.18) 119deg 121deg,
+          transparent 122deg 178deg,
+          rgba(242,199,111,0.12) 179deg 181deg,
+          transparent 182deg 238deg,
+          rgba(255,255,255,0.16) 239deg 241deg,
+          transparent 242deg 298deg,
+          rgba(141,216,255,0.12) 299deg 301deg,
+          transparent 302deg 360deg),
+        radial-gradient(circle at 50% 47%, rgba(255,255,255,0.34), transparent 16%),
+        radial-gradient(circle at 36% 23%, rgba(255,255,255,0.38), transparent 27%);
+      opacity: 0.96;
       mix-blend-mode: screen;
     }
 
     .diamond-shell::after {
       inset: -28%;
-      background: linear-gradient(115deg, transparent 0 42%, rgba(255,255,255,0.38) 46%, transparent 50% 100%);
-      opacity: 0.22;
+      clip-path: var(--law-cut);
+      background:
+        linear-gradient(115deg, transparent 0 41%, rgba(255,255,255,0.42) 46%, transparent 51% 100%),
+        radial-gradient(circle at 62% 44%, rgba(242,199,111,0.10), transparent 28%);
+      opacity: 0.24;
       transform: translateX(-35%) rotate(12deg);
       animation: lawDiamondSweep 8.5s ease-in-out infinite;
       animation-delay: calc(var(--law-delay, 0s) * -1);
@@ -613,7 +707,7 @@
 
     @keyframes lawDiamondSweep {
       0%, 100% { transform: translateX(-40%) rotate(12deg); opacity: 0.12; }
-      48%, 54% { transform: translateX(42%) rotate(12deg); opacity: 0.34; }
+      48%, 54% { transform: translateX(42%) rotate(12deg); opacity: 0.36; }
     }
 
     .diamond-lines {
@@ -624,22 +718,53 @@
       overflow: hidden;
     }
 
-    .diamond-lines::before {
+    .diamond-lines::before,
+    .diamond-lines::after {
       content: "";
       position: absolute;
       inset: 0;
+      pointer-events: none;
+    }
+
+    .diamond-lines::before {
       background:
-        linear-gradient(90deg, transparent 49.5%, rgba(255,255,255,0.25) 50%, transparent 50.5%),
-        linear-gradient(0deg, transparent 49.5%, rgba(255,255,255,0.18) 50%, transparent 50.5%),
-        linear-gradient(45deg, transparent 49.5%, rgba(255,255,255,0.14) 50%, transparent 50.5%),
-        linear-gradient(-45deg, transparent 49.5%, rgba(255,255,255,0.14) 50%, transparent 50.5%);
-      opacity: 0.68;
+        conic-gradient(from 0deg at 50% 48%,
+          transparent 0deg 20deg,
+          rgba(255,255,255,0.32) 21deg 23deg,
+          transparent 24deg 67deg,
+          rgba(255,255,255,0.18) 68deg 70deg,
+          transparent 71deg 111deg,
+          rgba(141,216,255,0.18) 112deg 114deg,
+          transparent 115deg 156deg,
+          rgba(255,255,255,0.22) 157deg 159deg,
+          transparent 160deg 201deg,
+          rgba(242,199,111,0.16) 202deg 204deg,
+          transparent 205deg 246deg,
+          rgba(255,255,255,0.18) 247deg 249deg,
+          transparent 250deg 291deg,
+          rgba(141,216,255,0.14) 292deg 294deg,
+          transparent 295deg 338deg,
+          rgba(255,255,255,0.26) 339deg 341deg,
+          transparent 342deg 360deg),
+        radial-gradient(circle at 50% 48%, transparent 0 16%, rgba(255,255,255,0.16) 17% 18%, transparent 19% 100%);
+      opacity: 0.78;
+      mix-blend-mode: screen;
+    }
+
+    .diamond-lines::after {
+      clip-path: var(--law-table-cut);
+      background:
+        linear-gradient(90deg, transparent 49.3%, rgba(255,255,255,0.38) 50%, transparent 50.7%),
+        linear-gradient(0deg, transparent 49.3%, rgba(255,255,255,0.22) 50%, transparent 50.7%),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.20), transparent 60%);
+      opacity: 0.82;
+      mix-blend-mode: screen;
     }
 
     .diamond-content {
       position: relative;
       z-index: 2;
-      width: 76%;
+      width: 74%;
       display: grid;
       gap: 0.16rem;
       place-items: center;
@@ -679,18 +804,29 @@
 
     .center-diamond .diamond-shell {
       clip-path: var(--law-seal-cut);
-      border-color: rgba(255,255,255,0.54);
+      border-color: rgba(255,255,255,0.58);
       background:
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.24), transparent 44%),
-        radial-gradient(circle at 70% 28%, rgba(242,199,111,0.22), transparent 32%),
-        conic-gradient(from 45deg at 50% 50%, rgba(255,255,255,0.34), rgba(141,216,255,0.13), rgba(2,8,24,0.68), rgba(242,199,111,0.18), rgba(255,255,255,0.34)),
-        linear-gradient(145deg, rgba(255,255,255,0.38), rgba(10,16,31,0.92));
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.26), transparent 42%),
+        radial-gradient(circle at 70% 28%, rgba(242,199,111,0.24), transparent 32%),
+        conic-gradient(from 90deg at 50% 48%,
+          rgba(255,255,255,0.44),
+          rgba(141,216,255,0.14),
+          rgba(2,8,24,0.68),
+          rgba(242,199,111,0.20),
+          rgba(255,255,255,0.44)),
+        linear-gradient(145deg, rgba(255,255,255,0.40), rgba(10,16,31,0.92));
       box-shadow:
         0 1rem 2.5rem rgba(0,0,0,0.30),
-        0 0 2rem rgba(255,255,255,0.13),
-        0 0 1.6rem rgba(242,199,111,0.10),
-        inset 0 0 0 1px rgba(255,255,255,0.16);
+        0 0 2rem rgba(255,255,255,0.15),
+        0 0 1.6rem rgba(242,199,111,0.12),
+        inset 0 0 0 1px rgba(255,255,255,0.17);
       animation: none;
+    }
+
+    .center-diamond .diamond-shell::before {
+      clip-path: var(--law-seal-cut);
+      inset: 9%;
+      opacity: 0.90;
     }
 
     .center-diamond .diamond-lines {
@@ -904,7 +1040,7 @@
     }
   </style>
 
-  <script src="/laws/index.js?v=LAWS_SPECIAL_DIAMOND_RULE_CHAMBER_RENEWAL_TNT_v1" defer></script>
+  <script src="/laws/index.js?v=LAWS_SPECIAL_DIAMOND_CSS_CUT_GEOMETRY_RENEWAL_TNT_v1" defer></script>
 </head>
 
 <body>
@@ -1158,8 +1294,8 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-LAWS_SPECIAL_DIAMOND_RULE_CHAMBER_RENEWAL_TNT_v1
-previous=LAWS_PURPLE_RULE_CHAMBER_PAIR_RENEWAL_TNT_v1
+LAWS_SPECIAL_DIAMOND_CSS_CUT_GEOMETRY_RENEWAL_TNT_v1
+previous=LAWS_SPECIAL_DIAMOND_RULE_CHAMBER_RENEWAL_TNT_v1
 script=LAWS_PURPLE_RULE_CHAMBER_PAIR_RUNTIME_TNT_v1
 route=/laws/
 page=laws
@@ -1173,10 +1309,11 @@ center=laws_special_diamond_seal
 design_object=16_point_special_diamond_law_chamber
 foreground_core=laws,entry,proof,return
 available_laws=authority,route,proof,runtime,generation,product_planet_separation,human_boundary,interaction,receipt,visual_claim,foreground,access,stale_language,animation,scope,return
-change=purple_rule_chamber_superseded_by_special_diamond_rule_chamber
+change=special_diamond_cut_geometry_renewal
+active_mutation_scope=css_expression_only
 animation=index_js_law_diamond_motion_variables,index_js_single_open_law_cards,index_js_receipts,css_special_diamond_glints
-preserved=law_copy,law_cards,route_links,16_point_chamber,foreground_core,receipt_structure
-renewed=special_diamond_material,law_cut_shape,white_silver_gold_glow,brand_mark,public_script_cache_key
+preserved=law_copy,law_cards,route_links,16_point_chamber,foreground_core,receipt_structure,current_js_logic
+renewed=law_cut_shape,broad_faceted_profile,radial_star_facets,girdle_expression,white_silver_gold_refraction,public_script_cache_key
 route_owns=rule_chamber,law_access,16_point_law_field,law_cards,route_links,receipt
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
 heavy_runtime_loaded=false
@@ -1191,7 +1328,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      LAWS_SPECIAL_DIAMOND_RULE_CHAMBER_RENEWAL_TNT_v1 · Laws · Special Diamond Rule Chamber · Proof outranks confidence.
+      LAWS_SPECIAL_DIAMOND_CSS_CUT_GEOMETRY_RENEWAL_TNT_v1 · Laws · Special Diamond Rule Chamber · Proof outranks confidence.
     </footer>
   </div>
 </body>

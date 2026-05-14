@@ -2,18 +2,19 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="laws-16-point-special-diamond-rule-chamber"
+  data-page="laws-16-point-physical-digital-diamond-rule-chamber"
   data-route="/laws/"
-  data-contract="LAWS_SPECIAL_DIAMOND_CSS_CUT_GEOMETRY_RENEWAL_TNT_v1"
-  data-previous-contract="LAWS_SPECIAL_DIAMOND_RULE_CHAMBER_RENEWAL_TNT_v1"
+  data-contract="LAWS_PHYSICAL_DIGITAL_DIAMOND_OBJECT_RENEWAL_TNT_v1"
+  data-previous-contract="LAWS_SPECIAL_DIAMOND_CSS_CUT_GEOMETRY_RENEWAL_TNT_v1"
   data-script-contract="LAWS_PURPLE_RULE_CHAMBER_PAIR_RUNTIME_TNT_v1"
   data-role="rule-chamber"
   data-message="proof-outranks-confidence"
   data-field-system="16-point-law-chamber"
   data-foreground-core="laws-entry-proof-return"
   data-material="special-diamond"
-  data-law-diamond-class="special-rule-cut-diamond"
-  data-css-mutation-scope="special-diamond-cut-geometry"
+  data-law-diamond-class="physical-svg-special-rule-cut-diamond"
+  data-visual-system="inline-svg-digital-gem-geometry"
+  data-css-mutation-scope="replace-css-fake-gems-with-svg-geometry"
   data-purple-theme="false"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
@@ -35,90 +36,13 @@
       color-scheme: dark;
       --bg: #02030a;
       --panel: rgba(7, 10, 18, 0.94);
-      --panel2: rgba(14, 18, 30, 0.78);
       --line: rgba(230, 238, 255, 0.18);
-      --line-strong: rgba(255, 255, 255, 0.34);
-      --line-gold: rgba(242, 199, 111, 0.32);
       --text: #fff8ea;
       --muted: rgba(238, 244, 255, 0.78);
       --faint: rgba(238, 244, 255, 0.50);
       --gold: #f2c76f;
       --gold2: #fff0a3;
-      --diamond: #f8fbff;
-      --silver: #cfd8e6;
-      --ice: #8dd8ff;
-      --shadow-blue: #071329;
-      --deep: #030611;
-      --violet-shadow: #160a2f;
       --stage: min(100%, 1180px);
-
-      --law-cut:
-        polygon(
-          50% 0%,
-          65% 4%,
-          82% 16%,
-          96% 39%,
-          91% 58%,
-          76% 78%,
-          50% 100%,
-          24% 78%,
-          9% 58%,
-          4% 39%,
-          18% 16%,
-          35% 4%
-        );
-
-      --law-inner-cut:
-        polygon(
-          50% 6%,
-          62% 13%,
-          76% 25%,
-          86% 43%,
-          79% 59%,
-          66% 74%,
-          50% 90%,
-          34% 74%,
-          21% 59%,
-          14% 43%,
-          24% 25%,
-          38% 13%
-        );
-
-      --law-table-cut:
-        polygon(
-          50% 15%,
-          64% 24%,
-          74% 40%,
-          70% 56%,
-          50% 72%,
-          30% 56%,
-          26% 40%,
-          36% 24%
-        );
-
-      --law-seal-cut:
-        polygon(
-          50% 0%,
-          63% 7%,
-          80% 10%,
-          94% 25%,
-          93% 41%,
-          100% 50%,
-          93% 59%,
-          94% 75%,
-          80% 90%,
-          63% 93%,
-          50% 100%,
-          37% 93%,
-          20% 90%,
-          6% 75%,
-          7% 59%,
-          0% 50%,
-          7% 41%,
-          6% 25%,
-          20% 10%,
-          37% 7%
-        );
     }
 
     * { box-sizing: border-box; }
@@ -193,6 +117,14 @@
       outline-offset: 4px;
     }
 
+    .svg-defs {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
     .skip-link {
       position: absolute;
       top: -4rem;
@@ -238,8 +170,7 @@
       height: 3.65rem;
       display: grid;
       place-items: center;
-      border: 1px solid rgba(255,255,255,0.36);
-      clip-path: var(--law-seal-cut);
+      clip-path: polygon(50% 0%, 63% 7%, 80% 10%, 94% 25%, 93% 41%, 100% 50%, 93% 59%, 94% 75%, 80% 90%, 63% 93%, 50% 100%, 37% 93%, 20% 90%, 6% 75%, 7% 59%, 0% 50%, 7% 41%, 6% 25%, 20% 10%, 37% 7%);
       background:
         linear-gradient(35deg, transparent 0 20%, rgba(255,255,255,0.40) 21% 23%, transparent 24%),
         radial-gradient(circle at 42% 22%, rgba(255,255,255,0.44), transparent 42%),
@@ -537,7 +468,7 @@
     .center-diamond {
       left: 50%;
       top: 50%;
-      width: calc(var(--center-size) * 1.18);
+      width: calc(var(--center-size) * 1.34);
       height: var(--center-size);
       transform: translate(-50%, -50%);
       z-index: 12;
@@ -552,7 +483,7 @@
       --node-size: var(--node-background);
       left: calc(var(--x) * 1%);
       top: calc(var(--y) * 1%);
-      width: calc(var(--node-size) * 1.22);
+      width: calc(var(--node-size) * 1.34);
       height: var(--node-size);
       transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(var(--lift));
       outline: none;
@@ -580,191 +511,50 @@
       filter: brightness(1.18) saturate(1.08);
     }
 
-    .diamond-shell {
+    .law-gem-svg {
       position: absolute;
       inset: 0;
-      clip-path: var(--law-cut);
-      border: 1px solid rgba(255,255,255,0.46);
-      background:
-        linear-gradient(35deg, transparent 0 17%, rgba(255,255,255,0.52) 18% 20%, transparent 21% 100%),
-        linear-gradient(145deg, rgba(255,255,255,0.30), transparent 18%, rgba(141,216,255,0.12) 41%, transparent 71%),
-        conic-gradient(from 90deg at 50% 48%,
-          rgba(255,255,255,0.50) 0deg,
-          rgba(141,216,255,0.18) 28deg,
-          rgba(2,8,24,0.66) 63deg,
-          rgba(255,255,255,0.25) 100deg,
-          rgba(8,18,42,0.76) 132deg,
-          rgba(242,199,111,0.24) 176deg,
-          rgba(2,8,24,0.80) 214deg,
-          rgba(141,216,255,0.18) 254deg,
-          rgba(1,4,14,0.84) 292deg,
-          rgba(255,255,255,0.30) 326deg,
-          rgba(255,255,255,0.50) 360deg),
-        radial-gradient(circle at 50% 47%, rgba(255,255,255,0.22), transparent 20%),
-        radial-gradient(circle at 31% 18%, rgba(255,255,255,0.78), rgba(230,238,255,0.20) 22%, transparent 40%),
-        radial-gradient(circle at 78% 82%, rgba(2,6,18,0.86), transparent 56%),
-        linear-gradient(145deg, rgba(248,251,255,0.54), rgba(80,96,120,0.46) 42%, rgba(6,12,28,0.98) 100%);
-      box-shadow:
-        0 1.15rem 2.8rem rgba(0,0,0,0.34),
-        0 0 1.7rem rgba(255,255,255,0.12),
-        0 0 1.3rem rgba(141,216,255,0.09),
-        inset 0 0 0 1px rgba(255,255,255,0.18),
-        inset 0 -1rem 1.7rem rgba(0,0,0,0.24);
-      overflow: hidden;
-    }
-
-    .law-diamond.behind .diamond-shell {
-      border-color: rgba(230,238,255,0.28);
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.16), transparent 28%),
-        radial-gradient(circle at 64% 36%, rgba(230,238,255,0.15), transparent 34%),
-        conic-gradient(from 90deg at 50% 48%,
-          rgba(255,255,255,0.22),
-          rgba(141,216,255,0.09),
-          rgba(2,8,24,0.70),
-          rgba(255,255,255,0.12),
-          rgba(242,199,111,0.09),
-          rgba(2,8,24,0.72),
-          rgba(255,255,255,0.20)),
-        linear-gradient(145deg, rgba(30,36,50,0.78), rgba(4,8,20,0.74));
-      box-shadow:
-        0 0.85rem 2.1rem rgba(0,0,0,0.28),
-        inset 0 0 0 1px rgba(255,255,255,0.10);
-    }
-
-    .law-diamond.forefront .diamond-shell {
-      border-color: rgba(255,244,210,0.78);
-      background:
-        linear-gradient(35deg, transparent 0 17%, rgba(255,255,255,0.62) 18% 20%, transparent 21% 100%),
-        linear-gradient(145deg, rgba(255,255,255,0.34), transparent 18%, rgba(242,199,111,0.16) 44%, transparent 71%),
-        radial-gradient(circle at 50% 47%, rgba(255,255,255,0.26), transparent 20%),
-        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.30), transparent 32%),
-        radial-gradient(circle at 30% 72%, rgba(141,216,255,0.21), transparent 38%),
-        conic-gradient(from 90deg at 50% 48%,
-          rgba(255,255,255,0.54),
-          rgba(141,216,255,0.18),
-          rgba(2,8,24,0.62),
-          rgba(242,199,111,0.26),
-          rgba(255,255,255,0.54)),
-        linear-gradient(145deg, rgba(255,255,255,0.58), rgba(77,90,112,0.50) 58%, rgba(6,12,28,0.98));
-      box-shadow:
-        0 1.45rem 3.4rem rgba(0,0,0,0.38),
-        0 0 2.35rem rgba(255,255,255,0.17),
-        0 0 1.7rem rgba(242,199,111,0.14),
-        inset 0 0 0 1px rgba(255,255,255,0.19),
-        inset 0 0 1.8rem rgba(255,255,255,0.08);
-    }
-
-    .diamond-shell::before,
-    .diamond-shell::after {
-      content: "";
-      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
       pointer-events: none;
+      filter:
+        drop-shadow(0 1.15rem 1.45rem rgba(0, 0, 0, 0.32))
+        drop-shadow(0 0 1.1rem rgba(255, 255, 255, 0.08));
     }
 
-    .diamond-shell::before {
-      inset: 7%;
-      clip-path: var(--law-inner-cut);
-      background:
-        linear-gradient(90deg, transparent 0 49%, rgba(255,255,255,0.34) 49.5% 50.5%, transparent 51% 100%),
-        linear-gradient(0deg, transparent 0 49%, rgba(255,255,255,0.24) 49.5% 50.5%, transparent 51% 100%),
-        linear-gradient(26deg, transparent 0 36%, rgba(255,255,255,0.25) 37% 39%, transparent 40% 100%),
-        linear-gradient(154deg, transparent 0 36%, rgba(255,255,255,0.21) 37% 39%, transparent 40% 100%),
-        linear-gradient(116deg, transparent 0 44%, rgba(141,216,255,0.18) 45% 47%, transparent 48% 100%),
-        linear-gradient(244deg, transparent 0 53%, rgba(242,199,111,0.15) 54% 56%, transparent 57% 100%),
-        conic-gradient(from 0deg at 50% 48%,
-          transparent 0deg 18deg,
-          rgba(255,255,255,0.21) 19deg 21deg,
-          transparent 22deg 58deg,
-          rgba(141,216,255,0.15) 59deg 61deg,
-          transparent 62deg 118deg,
-          rgba(255,255,255,0.18) 119deg 121deg,
-          transparent 122deg 178deg,
-          rgba(242,199,111,0.12) 179deg 181deg,
-          transparent 182deg 238deg,
-          rgba(255,255,255,0.16) 239deg 241deg,
-          transparent 242deg 298deg,
-          rgba(141,216,255,0.12) 299deg 301deg,
-          transparent 302deg 360deg),
-        radial-gradient(circle at 50% 47%, rgba(255,255,255,0.34), transparent 16%),
-        radial-gradient(circle at 36% 23%, rgba(255,255,255,0.38), transparent 27%);
-      opacity: 0.96;
-      mix-blend-mode: screen;
+    .law-diamond.forefront .law-gem-svg {
+      filter:
+        drop-shadow(0 1.45rem 1.9rem rgba(0, 0, 0, 0.38))
+        drop-shadow(0 0 1.45rem rgba(255, 255, 255, 0.14))
+        drop-shadow(0 0 1.05rem rgba(242, 199, 111, 0.10));
     }
 
-    .diamond-shell::after {
-      inset: -28%;
-      clip-path: var(--law-cut);
-      background:
-        linear-gradient(115deg, transparent 0 41%, rgba(255,255,255,0.42) 46%, transparent 51% 100%),
-        radial-gradient(circle at 62% 44%, rgba(242,199,111,0.10), transparent 28%);
-      opacity: 0.24;
-      transform: translateX(-35%) rotate(12deg);
-      animation: lawDiamondSweep 8.5s ease-in-out infinite;
+    .gem-glint-sweep {
+      animation: gemSweep 8.5s ease-in-out infinite;
       animation-delay: calc(var(--law-delay, 0s) * -1);
-      mix-blend-mode: screen;
+      transform-origin: 110px 80px;
     }
 
-    @keyframes lawDiamondSweep {
-      0%, 100% { transform: translateX(-40%) rotate(12deg); opacity: 0.12; }
-      48%, 54% { transform: translateX(42%) rotate(12deg); opacity: 0.36; }
+    @keyframes gemSweep {
+      0%, 100% { opacity: 0.10; transform: translateX(-34px) rotate(0deg); }
+      48%, 54% { opacity: 0.36; transform: translateX(30px) rotate(0deg); }
     }
 
-    .diamond-lines {
-      position: absolute;
-      inset: 0;
-      clip-path: var(--law-cut);
-      pointer-events: none;
-      overflow: hidden;
+    .center-diamond .gem-star {
+      animation: lawCenterFacetTurn 22s linear infinite;
+      transform-origin: 110px 80px;
     }
 
-    .diamond-lines::before,
-    .diamond-lines::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-
-    .diamond-lines::before {
-      background:
-        conic-gradient(from 0deg at 50% 48%,
-          transparent 0deg 20deg,
-          rgba(255,255,255,0.32) 21deg 23deg,
-          transparent 24deg 67deg,
-          rgba(255,255,255,0.18) 68deg 70deg,
-          transparent 71deg 111deg,
-          rgba(141,216,255,0.18) 112deg 114deg,
-          transparent 115deg 156deg,
-          rgba(255,255,255,0.22) 157deg 159deg,
-          transparent 160deg 201deg,
-          rgba(242,199,111,0.16) 202deg 204deg,
-          transparent 205deg 246deg,
-          rgba(255,255,255,0.18) 247deg 249deg,
-          transparent 250deg 291deg,
-          rgba(141,216,255,0.14) 292deg 294deg,
-          transparent 295deg 338deg,
-          rgba(255,255,255,0.26) 339deg 341deg,
-          transparent 342deg 360deg),
-        radial-gradient(circle at 50% 48%, transparent 0 16%, rgba(255,255,255,0.16) 17% 18%, transparent 19% 100%);
-      opacity: 0.78;
-      mix-blend-mode: screen;
-    }
-
-    .diamond-lines::after {
-      clip-path: var(--law-table-cut);
-      background:
-        linear-gradient(90deg, transparent 49.3%, rgba(255,255,255,0.38) 50%, transparent 50.7%),
-        linear-gradient(0deg, transparent 49.3%, rgba(255,255,255,0.22) 50%, transparent 50.7%),
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.20), transparent 60%);
-      opacity: 0.82;
-      mix-blend-mode: screen;
+    @keyframes lawCenterFacetTurn {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(-360deg); }
     }
 
     .diamond-content {
       position: relative;
       z-index: 2;
-      width: 74%;
+      width: 68%;
       display: grid;
       gap: 0.16rem;
       place-items: center;
@@ -800,47 +590,6 @@
 
     .law-diamond.forefront .diamond-content span {
       font-size: clamp(0.48rem, 1.18vw, 0.64rem);
-    }
-
-    .center-diamond .diamond-shell {
-      clip-path: var(--law-seal-cut);
-      border-color: rgba(255,255,255,0.58);
-      background:
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.26), transparent 42%),
-        radial-gradient(circle at 70% 28%, rgba(242,199,111,0.24), transparent 32%),
-        conic-gradient(from 90deg at 50% 48%,
-          rgba(255,255,255,0.44),
-          rgba(141,216,255,0.14),
-          rgba(2,8,24,0.68),
-          rgba(242,199,111,0.20),
-          rgba(255,255,255,0.44)),
-        linear-gradient(145deg, rgba(255,255,255,0.40), rgba(10,16,31,0.92));
-      box-shadow:
-        0 1rem 2.5rem rgba(0,0,0,0.30),
-        0 0 2rem rgba(255,255,255,0.15),
-        0 0 1.6rem rgba(242,199,111,0.12),
-        inset 0 0 0 1px rgba(255,255,255,0.17);
-      animation: none;
-    }
-
-    .center-diamond .diamond-shell::before {
-      clip-path: var(--law-seal-cut);
-      inset: 9%;
-      opacity: 0.90;
-    }
-
-    .center-diamond .diamond-lines {
-      clip-path: var(--law-seal-cut);
-    }
-
-    .center-diamond .diamond-lines::before {
-      animation: lawCenterFacetTurn 22s linear infinite;
-      transform-origin: 50% 50%;
-    }
-
-    @keyframes lawCenterFacetTurn {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(-360deg); }
     }
 
     .center-diamond .diamond-content strong {
@@ -1037,13 +786,159 @@
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
       }
+
+      .gem-glint-sweep,
+      .center-diamond .gem-star {
+        animation: none !important;
+      }
     }
   </style>
 
-  <script src="/laws/index.js?v=LAWS_SPECIAL_DIAMOND_CSS_CUT_GEOMETRY_RENEWAL_TNT_v1" defer></script>
+  <script src="/laws/index.js?v=LAWS_PHYSICAL_DIGITAL_DIAMOND_OBJECT_RENEWAL_TNT_v1" defer></script>
 </head>
 
 <body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="lawGemBody" x1="22" y1="14" x2="198" y2="150" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0.88"/>
+        <stop offset="0.18" stop-color="#f5f1dd" stop-opacity="0.76"/>
+        <stop offset="0.40" stop-color="#cdd8e5" stop-opacity="0.60"/>
+        <stop offset="0.62" stop-color="#475b75" stop-opacity="0.48"/>
+        <stop offset="0.82" stop-color="#0d1726" stop-opacity="0.88"/>
+        <stop offset="1" stop-color="#030712" stop-opacity="0.96"/>
+      </linearGradient>
+
+      <linearGradient id="lawGemTopFire" x1="62" y1="8" x2="156" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0.88"/>
+        <stop offset="0.52" stop-color="#fff0a3" stop-opacity="0.32"/>
+        <stop offset="1" stop-color="#8dd8ff" stop-opacity="0.10"/>
+      </linearGradient>
+
+      <linearGradient id="lawGemBlueDepth" x1="108" y1="42" x2="108" y2="154" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0.20"/>
+        <stop offset="0.42" stop-color="#8dd8ff" stop-opacity="0.18"/>
+        <stop offset="1" stop-color="#041124" stop-opacity="0.70"/>
+      </linearGradient>
+
+      <radialGradient id="lawGemTableGlow" cx="50%" cy="40%" r="60%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0.46"/>
+        <stop offset="0.34" stop-color="#dbeafe" stop-opacity="0.18"/>
+        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="lawGemGlint" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset="0.48" stop-color="#ffffff" stop-opacity="0.70"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="lawGemSoftGlow" x="-35%" y="-45%" width="170%" height="190%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.2" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.90 0 0 0 0.10
+            0 0.92 0 0 0.12
+            0 0 1.00 0 0.18
+            0 0 0 0.44 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="lawDigitalDiamond" viewBox="0 0 220 160">
+        <g filter="url(#lawGemSoftGlow)">
+          <path
+            d="M110 5 L145 13 L182 38 L210 75 L190 106 L150 137 L110 155 L70 137 L30 106 L10 75 L38 38 L75 13 Z"
+            fill="url(#lawGemBody)"
+            stroke="rgba(255,255,255,0.42)"
+            stroke-width="1.3"
+          />
+
+          <path d="M110 5 L145 13 L132 37 L110 29 L88 37 L75 13 Z" fill="url(#lawGemTopFire)" opacity="0.68"/>
+          <path d="M75 13 L88 37 L62 58 L38 38 Z" fill="rgba(255,255,255,0.20)"/>
+          <path d="M145 13 L132 37 L158 58 L182 38 Z" fill="rgba(255,255,255,0.14)"/>
+          <path d="M38 38 L62 58 L55 82 L10 75 Z" fill="rgba(255,255,255,0.10)"/>
+          <path d="M182 38 L158 58 L165 82 L210 75 Z" fill="rgba(242,199,111,0.12)"/>
+
+          <path
+            d="M88 37 L110 29 L132 37 L158 58 L148 82 L110 101 L72 82 L62 58 Z"
+            fill="url(#lawGemTableGlow)"
+            stroke="rgba(255,255,255,0.24)"
+            stroke-width="0.9"
+          />
+
+          <path d="M10 75 L55 82 L70 137 L30 106 Z" fill="rgba(141,216,255,0.09)"/>
+          <path d="M210 75 L165 82 L150 137 L190 106 Z" fill="rgba(255,255,255,0.11)"/>
+          <path d="M55 82 L72 82 L110 155 L70 137 Z" fill="rgba(2,8,24,0.42)"/>
+          <path d="M165 82 L148 82 L110 155 L150 137 Z" fill="rgba(141,216,255,0.10)"/>
+          <path d="M72 82 L110 101 L110 155 Z" fill="url(#lawGemBlueDepth)" opacity="0.78"/>
+          <path d="M148 82 L110 101 L110 155 Z" fill="rgba(4,10,22,0.44)"/>
+
+          <path d="M110 5 L110 155" stroke="rgba(255,255,255,0.28)" stroke-width="1.15"/>
+          <path d="M10 75 L210 75" stroke="rgba(255,255,255,0.22)" stroke-width="1.05"/>
+          <path d="M38 38 L190 106" stroke="rgba(255,255,255,0.13)" stroke-width="0.9"/>
+          <path d="M182 38 L30 106" stroke="rgba(255,255,255,0.13)" stroke-width="0.9"/>
+          <path d="M75 13 L110 101 L145 13" stroke="rgba(255,255,255,0.14)" stroke-width="0.9" fill="none"/>
+          <path d="M38 38 L110 101 L182 38" stroke="rgba(255,255,255,0.13)" stroke-width="0.9" fill="none"/>
+          <path d="M30 106 L110 101 L190 106" stroke="rgba(242,199,111,0.10)" stroke-width="0.9" fill="none"/>
+
+          <g class="gem-star" opacity="0.70">
+            <path d="M110 26 L116 70 L110 106 L104 70 Z" fill="rgba(255,255,255,0.24)"/>
+            <path d="M62 58 L105 72 L158 58 L116 78 Z" fill="rgba(255,255,255,0.13)"/>
+            <path d="M72 82 L105 75 L148 82 L114 91 Z" fill="rgba(141,216,255,0.11)"/>
+            <path d="M110 101 L126 81 L148 82 L129 96 Z" fill="rgba(255,255,255,0.10)"/>
+            <path d="M110 101 L94 81 L72 82 L91 96 Z" fill="rgba(242,199,111,0.08)"/>
+          </g>
+
+          <path class="gem-glint-sweep" d="M34 117 L176 22 L188 38 L48 130 Z" fill="url(#lawGemGlint)"/>
+        </g>
+      </symbol>
+
+      <symbol id="lawDigitalDiamondSeal" viewBox="0 0 220 160">
+        <g filter="url(#lawGemSoftGlow)">
+          <path
+            d="M110 4 L136 14 L166 14 L191 39 L191 62 L210 80 L191 98 L191 121 L166 146 L136 146 L110 156 L84 146 L54 146 L29 121 L29 98 L10 80 L29 62 L29 39 L54 14 L84 14 Z"
+            fill="url(#lawGemBody)"
+            stroke="rgba(255,255,255,0.48)"
+            stroke-width="1.4"
+          />
+
+          <path d="M110 4 L136 14 L124 40 L110 31 L96 40 L84 14 Z" fill="url(#lawGemTopFire)" opacity="0.70"/>
+          <path d="M54 14 L96 40 L70 62 L29 39 Z" fill="rgba(255,255,255,0.16)"/>
+          <path d="M166 14 L124 40 L150 62 L191 39 Z" fill="rgba(255,255,255,0.13)"/>
+          <path d="M29 62 L70 62 L62 84 L10 80 Z" fill="rgba(141,216,255,0.09)"/>
+          <path d="M191 62 L150 62 L158 84 L210 80 Z" fill="rgba(242,199,111,0.10)"/>
+          <path d="M70 62 L96 40 L110 31 L124 40 L150 62 L158 84 L136 106 L110 116 L84 106 L62 84 Z" fill="url(#lawGemTableGlow)" stroke="rgba(255,255,255,0.22)" stroke-width="0.9"/>
+          <path d="M10 80 L62 84 L54 146 L29 121 Z" fill="rgba(2,8,24,0.34)"/>
+          <path d="M210 80 L158 84 L166 146 L191 121 Z" fill="rgba(141,216,255,0.08)"/>
+          <path d="M54 146 L84 106 L110 156 L84 146 Z" fill="rgba(2,8,24,0.50)"/>
+          <path d="M166 146 L136 106 L110 156 L136 146 Z" fill="rgba(255,255,255,0.07)"/>
+          <path d="M84 106 L110 116 L136 106 L110 156 Z" fill="url(#lawGemBlueDepth)" opacity="0.72"/>
+
+          <path d="M110 4 L110 156" stroke="rgba(255,255,255,0.26)" stroke-width="1.1"/>
+          <path d="M10 80 L210 80" stroke="rgba(255,255,255,0.22)" stroke-width="1.0"/>
+          <path d="M29 39 L191 121" stroke="rgba(255,255,255,0.12)" stroke-width="0.9"/>
+          <path d="M191 39 L29 121" stroke="rgba(255,255,255,0.12)" stroke-width="0.9"/>
+
+          <g class="gem-star" opacity="0.74">
+            <path d="M110 30 L116 76 L110 118 L104 76 Z" fill="rgba(255,255,255,0.24)"/>
+            <path d="M62 84 L105 77 L158 84 L114 92 Z" fill="rgba(255,255,255,0.12)"/>
+            <path d="M70 62 L105 74 L150 62 L116 80 Z" fill="rgba(141,216,255,0.12)"/>
+            <path d="M84 106 L110 86 L136 106 L110 116 Z" fill="rgba(242,199,111,0.08)"/>
+          </g>
+
+          <path class="gem-glint-sweep" d="M35 118 L174 24 L187 42 L49 132 Z" fill="url(#lawGemGlint)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
   <a class="skip-link" href="#laws-main">Skip to Laws</a>
 
   <div class="shell">
@@ -1074,7 +969,7 @@
 
     <main id="laws-main">
       <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Laws · Special Diamond Rule Chamber</p>
+        <p class="eyebrow">Laws · Physical Digital Diamond Chamber</p>
         <h1 id="page-title">Proof outranks confidence.</h1>
 
         <p class="quote">
@@ -1094,16 +989,17 @@
           <p>The law chamber keeps authority, routes, proof, runtime, generation, products, planets, human boundaries, receipts, and return paths available.</p>
         </div>
 
-        <div class="law-field" aria-label="16-point special diamond law chamber field" data-law-field>
+        <div class="law-field" aria-label="16-point physical digital diamond law chamber field" data-law-field>
           <div class="field-orbit" aria-hidden="true"></div>
           <span class="axis-letter n" aria-hidden="true">N</span>
           <span class="axis-letter e" aria-hidden="true">E</span>
           <span class="axis-letter s" aria-hidden="true">S</span>
           <span class="axis-letter w" aria-hidden="true">W</span>
 
-          <div class="center-diamond" aria-label="Laws special diamond center seal">
-            <div class="diamond-shell" aria-hidden="true"></div>
-            <div class="diamond-lines" aria-hidden="true"></div>
+          <div class="center-diamond" aria-label="Laws physical digital diamond center seal">
+            <svg class="law-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+              <use href="#lawDigitalDiamondSeal"></use>
+            </svg>
             <div class="diamond-content">
               <strong>Laws</strong>
               <span>Seal</span>
@@ -1111,82 +1007,82 @@
           </div>
 
           <a class="law-diamond behind" href="#authority-law" style="--x:14;--y:15;--law-delay:0;" data-loop="a" data-phase="0.00" aria-label="Authority law">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <svg class="law-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#lawDigitalDiamond"></use></svg>
             <div class="diamond-content"><strong>Authority</strong><span>Owner</span></div>
           </a>
 
           <a class="law-diamond behind" href="#route-law" style="--x:38;--y:12;--law-delay:.35;" data-loop="b" data-phase="0.39" aria-label="Route law">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <svg class="law-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#lawDigitalDiamond"></use></svg>
             <div class="diamond-content"><strong>Route</strong><span>Where</span></div>
           </a>
 
           <a class="law-diamond behind" href="#runtime-law" style="--x:62;--y:12;--law-delay:.70;" data-loop="a" data-phase="0.78" aria-label="Runtime law">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <svg class="law-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#lawDigitalDiamond"></use></svg>
             <div class="diamond-content"><strong>Runtime</strong><span>Motion</span></div>
           </a>
 
           <a class="law-diamond behind" href="#generation-law" style="--x:86;--y:15;--law-delay:1.05;" data-loop="b" data-phase="1.17" aria-label="Generation law">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <svg class="law-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#lawDigitalDiamond"></use></svg>
             <div class="diamond-content"><strong>Generation</strong><span>Baseline</span></div>
           </a>
 
           <a class="law-diamond behind" href="#product-planet-law" style="--x:14;--y:38;--law-delay:1.40;" data-loop="b" data-phase="1.57" aria-label="Product and planet separation law">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <svg class="law-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#lawDigitalDiamond"></use></svg>
             <div class="diamond-content"><strong>Product</strong><span>Separate</span></div>
           </a>
 
           <a class="law-diamond forefront" href="#laws-main" style="--x:38;--y:38;--law-delay:1.75;" data-loop="a" data-phase="1.96" aria-label="Laws foreground">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <svg class="law-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#lawDigitalDiamond"></use></svg>
             <div class="diamond-content"><strong>Laws</strong><span>Govern</span></div>
           </a>
 
           <a class="law-diamond forefront" href="/door/" style="--x:62;--y:38;--law-delay:2.10;" data-loop="b" data-phase="2.35" aria-label="Entry foreground">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <svg class="law-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#lawDigitalDiamond"></use></svg>
             <div class="diamond-content"><strong>Entry</strong><span>Door</span></div>
           </a>
 
           <a class="law-diamond behind" href="#human-boundary-law" style="--x:86;--y:38;--law-delay:2.45;" data-loop="a" data-phase="2.74" aria-label="Human boundary law">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <svg class="law-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#lawDigitalDiamond"></use></svg>
             <div class="diamond-content"><strong>Human</strong><span>Boundary</span></div>
           </a>
 
           <a class="law-diamond behind" href="#interaction-law" style="--x:14;--y:62;--law-delay:2.80;" data-loop="a" data-phase="3.14" aria-label="Interaction law">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <svg class="law-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#lawDigitalDiamond"></use></svg>
             <div class="diamond-content"><strong>Touch</strong><span>Clear</span></div>
           </a>
 
           <a class="law-diamond forefront" href="/gauges/" style="--x:38;--y:62;--law-delay:3.15;" data-loop="b" data-phase="3.53" aria-label="Proof foreground">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <svg class="law-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#lawDigitalDiamond"></use></svg>
             <div class="diamond-content"><strong>Proof</strong><span>Gauges</span></div>
           </a>
 
           <a class="law-diamond forefront" href="/" style="--x:62;--y:62;--law-delay:3.50;" data-loop="a" data-phase="3.92" aria-label="Return foreground">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <svg class="law-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#lawDigitalDiamond"></use></svg>
             <div class="diamond-content"><strong>Return</strong><span>Root</span></div>
           </a>
 
           <a class="law-diamond behind" href="#receipt-law" style="--x:86;--y:62;--law-delay:3.85;" data-loop="b" data-phase="4.31" aria-label="Receipt law">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <svg class="law-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#lawDigitalDiamond"></use></svg>
             <div class="diamond-content"><strong>Receipt</strong><span>Record</span></div>
           </a>
 
           <a class="law-diamond behind" href="#visual-claim-law" style="--x:14;--y:85;--law-delay:4.20;" data-loop="b" data-phase="4.71" aria-label="Visual claim law">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <svg class="law-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#lawDigitalDiamond"></use></svg>
             <div class="diamond-content"><strong>Visual</strong><span>No False</span></div>
           </a>
 
           <a class="law-diamond behind" href="#foreground-law" style="--x:38;--y:88;--law-delay:4.55;" data-loop="a" data-phase="5.10" aria-label="Foreground law">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <svg class="law-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#lawDigitalDiamond"></use></svg>
             <div class="diamond-content"><strong>Foreground</strong><span>Core</span></div>
           </a>
 
           <a class="law-diamond behind" href="#access-law" style="--x:62;--y:88;--law-delay:4.90;" data-loop="b" data-phase="5.49" aria-label="Access law">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <svg class="law-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#lawDigitalDiamond"></use></svg>
             <div class="diamond-content"><strong>Access</strong><span>Reachable</span></div>
           </a>
 
           <a class="law-diamond behind" href="#stale-language-law" style="--x:86;--y:85;--law-delay:5.25;" data-loop="a" data-phase="5.88" aria-label="Stale language law">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <svg class="law-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#lawDigitalDiamond"></use></svg>
             <div class="diamond-content"><strong>Stale</strong><span>Remove</span></div>
           </a>
         </div>
@@ -1294,26 +1190,26 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-LAWS_SPECIAL_DIAMOND_CSS_CUT_GEOMETRY_RENEWAL_TNT_v1
-previous=LAWS_SPECIAL_DIAMOND_RULE_CHAMBER_RENEWAL_TNT_v1
+LAWS_PHYSICAL_DIGITAL_DIAMOND_OBJECT_RENEWAL_TNT_v1
+previous=LAWS_SPECIAL_DIAMOND_CSS_CUT_GEOMETRY_RENEWAL_TNT_v1
 script=LAWS_PURPLE_RULE_CHAMBER_PAIR_RUNTIME_TNT_v1
 route=/laws/
 page=laws
 role=rule_chamber
 message=proof_outranks_confidence
 material=special_diamond
-shape=unique_law_cut_diamond
+shape=physical_svg_special_rule_cut_diamond
 ordinary_room_crystal=false
 products_home_orbit_standard=false
-center=laws_special_diamond_seal
-design_object=16_point_special_diamond_law_chamber
+center=laws_physical_digital_diamond_seal
+design_object=16_point_physical_digital_diamond_law_chamber
 foreground_core=laws,entry,proof,return
 available_laws=authority,route,proof,runtime,generation,product_planet_separation,human_boundary,interaction,receipt,visual_claim,foreground,access,stale_language,animation,scope,return
-change=special_diamond_cut_geometry_renewal
-active_mutation_scope=css_expression_only
-animation=index_js_law_diamond_motion_variables,index_js_single_open_law_cards,index_js_receipts,css_special_diamond_glints
+change=css_fake_gems_replaced_with_inline_svg_digital_gem_geometry
+active_mutation_scope=html_svg_geometry_and_css_expression
+animation=index_js_law_diamond_motion_variables,index_js_single_open_law_cards,index_js_receipts,svg_gem_glints
 preserved=law_copy,law_cards,route_links,16_point_chamber,foreground_core,receipt_structure,current_js_logic
-renewed=law_cut_shape,broad_faceted_profile,radial_star_facets,girdle_expression,white_silver_gold_refraction,public_script_cache_key
+renewed=inline_svg_gem_symbol,physical_facet_paths,crown_table_pavilion_geometry,girdle_edges,radial_refraction,public_script_cache_key
 route_owns=rule_chamber,law_access,16_point_law_field,law_cards,route_links,receipt
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
 heavy_runtime_loaded=false
@@ -1328,7 +1224,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      LAWS_SPECIAL_DIAMOND_CSS_CUT_GEOMETRY_RENEWAL_TNT_v1 · Laws · Special Diamond Rule Chamber · Proof outranks confidence.
+      LAWS_PHYSICAL_DIGITAL_DIAMOND_OBJECT_RENEWAL_TNT_v1 · Laws · Physical Digital Diamond Rule Chamber · Proof outranks confidence.
     </footer>
   </div>
 </body>

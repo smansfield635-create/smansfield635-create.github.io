@@ -1,97 +1,81 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="h-earth-survival-path-ground-level"
-  data-route="/showroom/globe/h-earth/"
-  data-contract="H_EARTH_CHILD_ROUTE_EARTH_WATER_AIR_CLASSIC_BOOT_TNT_v1"
+  data-page="zionts-consequence-path"
+  data-route="/showroom/globe/earth/"
+  data-contract="ZIONTS_PUBLIC_CHILD_ROUTE_ALIGNMENT_TNT_v2"
   data-context-contract="PLANETARY_CHILD_PAGES_DEEP_TIME_CONTEXT_ALIGNMENT_TNT_v1"
-  data-previous-contract="H_EARTH_CHILD_ROUTE_EARTH_WATER_AIR_PLACEMENT_TNT_v1"
-  data-jurisdiction="h-earth-child-route-only"
-  data-deep-time-path="survival"
-  data-scene-model="earth-water-air-condition-stack"
-  data-conditions="earth,water,air"
-  data-parent-route="/showroom/globe/"
-  data-child-route-placement="true"
-  data-runtime-boot="classic-defer"
+  data-public-body="ZIONTS"
+  data-deep-time-path="consequence"
+  data-route-history="earth-reference"
+  data-ground-engine="false"
+  data-parent="/showroom/globe/"
   data-generated-image="false"
   data-graphic-box="false"
-  data-streaming="false"
-  data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>H-Earth · The Survival Path</title>
+  <title>ZIONTS · The Consequence Path</title>
   <meta
     name="description"
-    content="H-Earth is the Survival Path: a ground-level future where earth, water, and air show the physical conditions life must still answer to."
+    content="ZIONTS is the Consequence Path: a possible deep-time future where Earth may no longer be habitable if the living world keeps being damaged."
   >
 
   <style>
-    :root{
-      color-scheme:dark;
+    :root {
       --bg:#030812;
       --bg2:#071225;
-      --panel:rgba(8,15,29,.92);
-      --panel2:rgba(10,20,38,.96);
-      --line:rgba(244,207,131,.20);
-      --line2:rgba(255,255,255,.10);
+      --line:rgba(244,207,131,.22);
+      --line2:rgba(255,255,255,.12);
       --text:rgba(238,244,255,.94);
-      --muted:rgba(238,244,255,.70);
+      --muted:rgba(238,244,255,.66);
       --faint:rgba(238,244,255,.46);
       --gold:#f4cf83;
       --mint:#a7f3c6;
-      --blue:#8dd8ff;
-      --max:1180px;
-      --shadow:0 24px 70px rgba(0,0,0,.30);
+      color-scheme:dark;
     }
 
-    *{box-sizing:border-box}
+    * { box-sizing:border-box; }
 
-    html,body{
+    html, body {
       min-height:100%;
       margin:0;
       background:
-        linear-gradient(90deg,rgba(244,207,131,.045) 1px,transparent 1px),
-        linear-gradient(180deg,rgba(244,207,131,.025) 1px,transparent 1px),
-        radial-gradient(circle at 50% -8%,rgba(78,119,171,.25),transparent 38%),
-        radial-gradient(circle at 12% 18%,rgba(244,207,131,.11),transparent 30%),
-        linear-gradient(180deg,var(--bg2),var(--bg) 54%,#02050b);
+        linear-gradient(90deg, rgba(244,207,131,.045) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(244,207,131,.025) 1px, transparent 1px),
+        radial-gradient(circle at 50% -8%, rgba(78,119,171,.25), transparent 38%),
+        radial-gradient(circle at 12% 18%, rgba(244,207,131,.11), transparent 30%),
+        linear-gradient(180deg, var(--bg2), var(--bg) 54%, #02050b);
       background-size:58px 58px,58px 58px,auto,auto,auto;
       color:var(--text);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      overflow-x:hidden;
-      -webkit-font-smoothing:antialiased;
-      text-rendering:geometricPrecision;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    html{scroll-behavior:smooth}
-    a{color:inherit;text-decoration:none}
-    button{font:inherit;color:inherit}
+    a { color:inherit; }
 
-    .skip{
+    .skip {
       position:absolute;
       left:-999px;
-      top:10px;
-      z-index:100;
-      padding:.8rem 1rem;
+      top:8px;
+      z-index:50;
+      padding:.75rem 1rem;
       border-radius:999px;
-      color:#05101b;
+      color:#06101c;
       background:linear-gradient(135deg,#fff0bc,var(--gold));
       font-weight:950;
+      text-decoration:none;
     }
 
-    .skip:focus{left:10px}
+    .skip:focus { left:8px; }
 
-    .page{
-      width:min(var(--max),calc(100% - 28px));
+    .page {
+      width:min(1180px, calc(100% - 28px));
       margin:0 auto;
       padding:22px 0 58px;
-      position:relative;
-      z-index:1;
     }
 
-    .topbar{
+    .topbar {
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -99,68 +83,21 @@
       padding:12px 0 22px;
     }
 
-    .brand{
-      display:grid;
-      grid-template-columns:auto 1fr;
-      gap:.9rem;
-      align-items:center;
-      min-width:260px;
-    }
-
-    .brand-mark{
-      width:4rem;
-      height:4rem;
-      display:grid;
-      place-items:center;
-      transform:rotate(45deg);
-      border:1px solid rgba(244,207,131,.34);
-      background:
-        radial-gradient(circle at 32% 24%,rgba(255,255,255,.26),transparent 30%),
-        radial-gradient(circle at 68% 78%,rgba(141,216,255,.22),transparent 42%),
-        linear-gradient(145deg,rgba(24,54,96,.96),rgba(4,12,24,.98));
-      box-shadow:
-        0 0 24px rgba(141,216,255,.20),
-        inset 0 1px 0 rgba(255,255,255,.14);
-      border-radius:1rem;
-    }
-
-    .brand-mark span{
-      transform:rotate(-45deg);
-      color:rgba(255,244,220,.98);
-      font-weight:950;
-      letter-spacing:.05em;
-      font-size:.86rem;
-    }
-
-    .brand-copy{
-      display:grid;
-      gap:.15rem;
-      line-height:1.05;
-    }
-
-    .brand-copy strong{
-      font-size:clamp(1rem,3vw,1.22rem);
+    .brand {
       color:var(--gold);
+      text-decoration:none;
+      font-weight:950;
       text-transform:uppercase;
-      letter-spacing:.04em;
+      letter-spacing:.02em;
     }
 
-    .brand-copy span{
-      color:var(--muted);
-      font-size:.76rem;
-      font-weight:900;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .nav{
+    .nav, .actions {
       display:flex;
       flex-wrap:wrap;
       gap:8px;
-      justify-content:flex-end;
     }
 
-    .nav a{
+    .nav a, .button {
       min-height:38px;
       display:inline-flex;
       align-items:center;
@@ -169,261 +106,126 @@
       border-radius:999px;
       padding:0 13px;
       color:rgba(238,244,255,.84);
+      text-decoration:none;
       background:rgba(255,255,255,.04);
       font-size:.82rem;
       font-weight:850;
     }
 
-    .nav a[aria-current="page"]{
+    .nav a[aria-current="page"],
+    .button.primary {
       color:#06101c;
-      background:linear-gradient(135deg,var(--mint),#78d8ac);
+      background:linear-gradient(135deg, var(--mint), #78d8ac);
       border-color:rgba(167,243,198,.64);
     }
 
-    .panel{
+    .button.gold {
+      color:#150d03;
+      background:linear-gradient(135deg, #fff0b8, var(--gold) 48%, #c48a38);
+    }
+
+    .hero, .panel, .card {
       border:1px solid var(--line);
-      border-radius:32px;
+      border-radius:34px;
       background:
-        radial-gradient(circle at 76% 28%,rgba(139,200,255,.12),transparent 32%),
-        linear-gradient(180deg,rgba(8,17,34,.95),rgba(4,9,20,.96));
-      box-shadow:var(--shadow);
+        radial-gradient(circle at 76% 28%, rgba(139,200,255,.12), transparent 32%),
+        linear-gradient(180deg, rgba(8,17,34,.95), rgba(4,9,20,.96));
+      box-shadow:0 24px 70px rgba(0,0,0,.28);
       overflow:hidden;
     }
 
-    .hero{
-      padding:clamp(24px,5vw,46px);
-      display:grid;
-      gap:1rem;
-    }
+    .hero { padding:clamp(24px,5vw,46px); }
+    .panel { padding:clamp(18px,3vw,28px); margin-top:16px; }
 
-    .eyebrow{
-      margin:0;
+    .eyebrow {
+      margin:0 0 14px;
       color:var(--gold);
-      font:900 .78rem/1.4 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      font:900 .78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       letter-spacing:.22em;
       text-transform:uppercase;
     }
 
-    h1,h2{
+    h1, h2, h3 {
       margin:0;
       color:var(--gold);
-      line-height:1.02;
-      letter-spacing:-.05em;
-      text-wrap:balance;
+      line-height:1.05;
     }
 
-    h1{
+    h1 {
       max-width:980px;
-      font-size:clamp(2.8rem,8vw,5.4rem);
+      font-size:clamp(2.7rem,8vw,5.7rem);
+      line-height:.93;
+      letter-spacing:-.075em;
     }
 
-    h2{
-      font-size:clamp(1.7rem,4vw,2.45rem);
+    h2 {
+      font-size:clamp(1.55rem,4.5vw,2.4rem);
+      letter-spacing:-.045em;
     }
 
-    p{
-      margin:0;
+    .lede, p {
       color:var(--muted);
       line-height:1.55;
-      font-size:clamp(1rem,2.4vw,1.14rem);
     }
 
-    .quote{
-      width:min(100%,900px);
-      padding:1rem 1.1rem;
-      border:1px solid rgba(244,207,131,.18);
-      border-radius:18px;
-      background:rgba(244,207,131,.06);
-      color:rgba(255,244,220,.90);
-      font-weight:850;
+    .lede {
+      max-width:900px;
+      margin:22px 0 0;
+      font-size:clamp(1.02rem,2.5vw,1.28rem);
     }
 
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.7rem;
-      margin-top:.2rem;
-    }
+    .actions { margin-top:26px; }
 
-    .button{
-      min-height:2.7rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:.68rem 1rem;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.04);
-      color:rgba(238,244,255,.88);
-      font-size:.78rem;
-      font-weight:950;
-      letter-spacing:.06em;
-      text-transform:uppercase;
-      transition:transform .18s ease,border-color .18s ease;
-    }
-
-    .button:hover,
-    .button:focus-visible{
-      transform:translateY(-2px);
-      border-color:rgba(244,207,131,.42);
-      outline:none;
-    }
-
-    .button.gold{
-      color:#06101c;
-      background:linear-gradient(135deg,#fff0bc,var(--gold));
-      border-color:rgba(244,207,131,.70);
-    }
-
-    .section{
-      margin-top:18px;
-      padding:clamp(18px,3vw,28px);
-      display:grid;
-      gap:1rem;
-    }
-
-    .stage-head{
-      display:grid;
-      gap:.35rem;
-      text-align:center;
-    }
-
-    .stage-head p{
-      width:min(100%,820px);
-      margin:0 auto;
-    }
-
-    .control-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      justify-content:center;
-    }
-
-    .control{
-      min-height:46px;
-      border:1px solid rgba(255,255,255,.10);
-      color:rgba(238,244,255,.86);
-      background:linear-gradient(180deg,rgba(15,25,43,.92),rgba(7,14,27,.94));
-      border-radius:999px;
-      padding:0 16px;
+    .notice {
+      margin-top:16px;
+      padding:18px;
+      border:1px solid rgba(244,207,131,.22);
+      border-radius:24px;
+      background:rgba(244,207,131,.07);
+      color:rgba(255,244,220,.92);
       font-weight:900;
-      letter-spacing:.02em;
-      cursor:pointer;
+      line-height:1.5;
     }
 
-    .control.active{
-      color:#06101c;
-      background:linear-gradient(135deg,#b7ffd4,#87e6b5);
-      border-color:rgba(167,243,198,.72);
-    }
-
-    .condition-stage{
-      position:relative;
-      width:100%;
-      min-height:clamp(390px,74vw,620px);
-      border:1px solid rgba(244,207,131,.16);
-      border-radius:28px;
-      overflow:hidden;
-      background:
-        radial-gradient(circle at 50% 28%,rgba(95,142,190,.12),transparent 46%),
-        linear-gradient(180deg,#061326,#020711);
-    }
-
-    .condition-stage canvas{
-      display:block;
-      width:100%;
-      height:clamp(390px,74vw,620px);
-      min-height:390px;
-      touch-action:none;
-      background:#061326;
-    }
-
-    .scene-overlay{
-      position:absolute;
-      left:18px;
-      top:18px;
-      right:18px;
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      pointer-events:none;
-    }
-
-    .badge{
-      padding:.58rem .8rem;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(3,8,20,.48);
-      backdrop-filter:blur(10px);
-      color:rgba(238,244,255,.82);
-      font-size:.74rem;
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      white-space:nowrap;
-    }
-
-    .scene-note{
-      margin-top:8px;
-      text-align:center;
-      color:var(--muted);
-      font-weight:850;
-      font-size:clamp(.92rem,2.8vw,1.04rem);
-    }
-
-    .cards{
+    .route-grid {
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
       gap:14px;
+      margin-top:16px;
     }
 
-    .card{
-      min-height:12rem;
-      display:grid;
-      gap:.5rem;
-      align-content:start;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:20px;
-      background:
-        radial-gradient(circle at 20% 0%,rgba(141,216,255,.08),transparent 60%),
-        rgba(255,255,255,.03);
+    .card {
+      padding:18px;
+      background:rgba(255,255,255,.055);
+      box-shadow:none;
     }
 
-    .card b{
-      color:var(--gold);
-      font-size:.72rem;
-      letter-spacing:.14em;
+    .card span {
+      display:block;
+      color:var(--faint);
+      font-size:.74rem;
+      font-weight:850;
       text-transform:uppercase;
-    }
-
-    .card strong{
-      color:rgba(255,244,220,.98);
-      font-size:1.1rem;
-      line-height:1.1;
-    }
-
-    .route-note{
-      display:grid;
-      gap:.5rem;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:20px;
-      background:rgba(255,255,255,.03);
-    }
-
-    .route-note code{
-      color:var(--gold);
-      font:900 .82rem/1.45 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
       letter-spacing:.08em;
+      margin-bottom:6px;
+    }
+
+    .card strong {
+      display:block;
+      color:var(--gold);
+      overflow-wrap:anywhere;
+      margin-bottom:8px;
+    }
+
+    .card p {
+      margin:0;
+      font-size:.94rem;
     }
 
     .route-receipt,
     [data-route-receipt],
     [data-contract-receipt],
-    [data-debug-receipt],
-    .receipt {
+    [data-debug-receipt] {
       display:none!important;
       visibility:hidden!important;
       overflow:hidden!important;
@@ -442,7 +244,7 @@
       white-space:nowrap!important;
     }
 
-    footer{
+    .footer {
       margin-top:20px;
       padding:20px 0 0;
       color:var(--faint);
@@ -450,181 +252,116 @@
       text-align:center;
     }
 
-    @media (max-width:980px){
-      .topbar{
-        align-items:flex-start;
-        flex-direction:column;
-      }
-
-      .nav{justify-content:flex-start}
-      .cards{grid-template-columns:1fr}
+    @media (max-width:900px) {
+      .topbar { align-items:flex-start; flex-direction:column; }
+      .route-grid { grid-template-columns:1fr; }
     }
 
-    @media (max-width:720px){
-      .page{width:min(100% - 20px,var(--max))}
-      .hero,.section,.panel{border-radius:24px}
-      .actions{display:grid}
-      .button{width:100%}
-      .scene-overlay{
-        position:absolute;
-        left:12px;
-        top:12px;
-        right:12px;
-        flex-direction:column;
-        align-items:flex-start;
-      }
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      *,
-      *::before,
-      *::after{
-        animation-duration:.01ms !important;
-        animation-iteration-count:1 !important;
-        transition-duration:.01ms !important;
-        scroll-behavior:auto !important;
-      }
+    @media (max-width:560px) {
+      .page { width:min(100% - 18px,1180px); }
+      .hero, .panel { border-radius:24px; }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="/showroom/globe/h-earth/#main">Skip to H-Earth Survival Path</a>
+  <a class="skip" href="/showroom/globe/earth/#main">Skip to ZIONTS</a>
 
   <div class="page">
-    <header class="topbar" aria-label="H-Earth Survival Path header">
-      <a class="brand" href="/showroom/globe/h-earth/">
-        <span class="brand-mark" aria-hidden="true"><span>HE</span></span>
-        <span class="brand-copy">
-          <strong>H-Earth</strong>
-          <span>The Survival Path · Earth Water Air</span>
-        </span>
-      </a>
-
-      <nav class="nav" aria-label="Primary navigation">
+    <header class="topbar">
+      <a class="brand" href="/showroom/">◆ Diamond Gate Bridge</a>
+      <nav class="nav">
         <a href="/">Compass</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Globe</a>
-        <a href="/showroom/globe/h-earth/" aria-current="page">H-Earth</a>
-        <a href="/gauges/">Gauges</a>
+        <a href="/showroom/globe/earth/" aria-current="page">ZIONTS</a>
+        <a href="/showroom/globe/h-earth/">H-Earth</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
+        <a href="/gauges/">Triple G</a>
       </nav>
     </header>
 
     <main id="main">
-      <section class="panel hero" aria-labelledby="page-title">
-        <p class="eyebrow">H-Earth · The Survival Path</p>
-        <h1 id="page-title">Survival is not abstract.</h1>
-        <p>
-          H-Earth is the possible future where life survives danger instead of disappearing into it. This path comes closer to the ground because any future where life continues must still answer to earth, water, and air.
+      <section class="hero">
+        <p class="eyebrow">ZIONTS · The Consequence Path</p>
+        <h1>What remains when a living world can no longer carry life?</h1>
+        <p class="lede">
+          ZIONTS is the warning path: a possible deep-time future where Earth has been damaged past habitability. It asks what happens when the living world that carried us is treated like an object for too long.
         </p>
-        <div class="quote">
-          “If science becomes responsibility, survival becomes a physical question: what can still hold life?”
-        </div>
+
         <div class="actions">
-          <a class="button gold" href="/showroom/globe/h-earth/#condition-stage">Open the Survival Scene</a>
-          <a class="button" href="/showroom/globe/">Return to Globe</a>
-          <a class="button" href="/gauges/">Read Gauges</a>
+          <a class="button primary" href="/showroom/globe/">Return to the Globe Doorway</a>
+          <a class="button gold" href="/showroom/globe/h-earth/">Open the Survival Path</a>
+          <a class="button" href="/showroom/globe/audralia/">Open the Stewardship Path</a>
+        </div>
+
+        <div class="notice">
+          ZIONTS is not only a world to observe. It is a consequence to face: damage, loss of habitability, absence of life, and the warning left behind.
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="stage-title">
-        <div class="stage-head">
-          <p class="eyebrow">Ground-Level Survival View</p>
-          <h2 id="stage-title">Earth, water, and air are the conditions survival depends on.</h2>
-          <p>
-            Drag across the scene to shift the horizon and inspect the balance. The view stays close to the ground because this path is about the conditions that still have to carry life.
-          </p>
+      <section class="panel">
+        <p class="eyebrow">Consequence Path</p>
+        <h2>Damage becomes the question this world leaves behind.</h2>
+
+        <div class="route-grid">
+          <article class="card">
+            <span>Future</span>
+            <strong>The warning path</strong>
+            <p>ZIONTS asks what remains if damage continues until the living world can no longer support life.</p>
+          </article>
+
+          <article class="card">
+            <span>Question</span>
+            <strong>What did the planet carry?</strong>
+            <p>This path looks back at Earth as a living system that made intelligence possible, then asks what happens when that intelligence becomes damage.</p>
+          </article>
+
+          <article class="card">
+            <span>Look for</span>
+            <strong>Silence, distance, and consequence</strong>
+            <p>The tone should feel stark and reflective. ZIONTS is the place where the visitor faces what could be lost.</p>
+          </article>
         </div>
+      </section>
 
-        <div class="control-row" aria-label="Scene controls">
-          <button class="control active" type="button" data-control="motion">Motion: on</button>
-          <button class="control" type="button" data-control="detail">Detail: standard</button>
-          <button class="control" type="button" data-control="reset">Reset view</button>
-        </div>
-
-        <div class="condition-stage" id="condition-stage" aria-label="H-Earth earth water air survival scene">
-          <canvas data-scene-canvas aria-label="H-Earth ground-level survival environment"></canvas>
-
-          <div class="scene-overlay" aria-hidden="true">
-            <div class="badge" data-badge-left>Earth · Water · Air</div>
-            <div class="badge" data-badge-right>Survival Path</div>
-          </div>
-        </div>
-
-        <p class="scene-note" data-scene-note>
-          Earth holds the foreground. Water carries the horizon. Air gives the scene light, haze, and breath.
+      <section class="panel">
+        <p class="eyebrow">Return to the Question</p>
+        <h2>Earth may not have one ending.</h2>
+        <p>
+          ZIONTS answers with consequence. H-Earth answers with survival. Audralia answers with stewardship. Return to the Globe doorway to choose another possible future.
         </p>
+
+        <div class="actions">
+          <a class="button primary" href="/showroom/globe/">Return to Globe</a>
+          <a class="button" href="/showroom/globe/h-earth/">H-Earth</a>
+          <a class="button" href="/showroom/globe/audralia/">Audralia</a>
+        </div>
       </section>
 
-      <section class="panel section" aria-labelledby="condition-title">
-        <p class="eyebrow">Survival Conditions</p>
-        <h2 id="condition-title">The future still depends on the physical world.</h2>
-
-        <div class="cards">
-          <article class="card">
-            <b>Earth</b>
-            <strong>The ground that must still hold life.</strong>
-            <p>
-              Earth owns the foreground mass, shoreline edge, slope, and landing surface. Survival begins where life can still stand.
-            </p>
-          </article>
-
-          <article class="card">
-            <b>Water</b>
-            <strong>The moving condition between distance and life.</strong>
-            <p>
-              Water owns the horizon band, shimmer, reflection, and transition. Any survival path must answer to water.
-            </p>
-          </article>
-
-          <article class="card">
-            <b>Air</b>
-            <strong>The breath, light, and atmosphere above the line.</strong>
-            <p>
-              Air owns the upper field, haze, depth, and breathing room. Without air, survival is only a theory.
-            </p>
-          </article>
-        </div>
-
-        <div class="route-note">
-          <b style="color:var(--gold);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;">Path Contract</b>
-          <code>H-Earth · The Survival Path</code>
-          <p>
-            This child route carries one ground-level survival view. It does not try to show every world at once. It examines the conditions life must still depend on.
-          </p>
-        </div>
-
-        <template id="route-receipt" data-route-receipt>
+      <template id="route-receipt" data-route-receipt>
 PLANETARY_CHILD_PAGES_DEEP_TIME_CONTEXT_ALIGNMENT_TNT_v1
-file=/showroom/globe/h-earth/index.html
-route=/showroom/globe/h-earth/
-public_body=H-Earth
-public_path=survival
-preserved_contract=H_EARTH_CHILD_ROUTE_EARTH_WATER_AIR_CLASSIC_BOOT_TNT_v1
-preserved_canvas=true
-preserved_condition_stage=true
-preserved_controls=motion,detail,reset
-preserved_scene_canvas=true
-preserved_scene_note=true
-preserved_runtime_boot=classic_defer
-conditions=earth,water,air
-parent_route=/showroom/globe/
-h_earth_ground_view_lawful=true
+file=/showroom/globe/earth/index.html
+route=/showroom/globe/earth/
+public_body=ZIONTS
+public_path=consequence
+route_history=earth_reference
+visible_copy_renewed=true
+preserved_route=true
+preserved_parent=/showroom/globe/
+ground_engine=false
 generated_image=false
 graphic_box=false
-script_preserved=/showroom/globe/h-earth/index.js?v=H_EARTH_CHILD_ROUTE_EARTH_WATER_AIR_CLASSIC_BOOT_TNT_v1
-        </template>
-      </section>
+script_preserved=/showroom/globe/earth/index.js?v=ZIONTS_PUBLIC_CHILD_ROUTE_ALIGNMENT_TNT_v2
+      </template>
     </main>
 
-    <footer>
-      H-Earth · The Survival Path · Earth, water, and air remain the survival conditions.
-    </footer>
+    <footer class="footer">Diamond Gate Bridge · ZIONTS · The Consequence Path.</footer>
   </div>
 
   <script>
-    window.DGB_H_EARTH_GROUND_LEVEL_KEY = "H_EARTH_CHILD_ROUTE_EARTH_WATER_AIR_CLASSIC_BOOT_TNT_v1";
+    window.DGB_ZIONTS_ROUTE_KEY = "ZIONTS_PUBLIC_CHILD_ROUTE_ALIGNMENT_TNT_v2";
   </script>
-  <script src="/showroom/globe/h-earth/index.js?v=H_EARTH_CHILD_ROUTE_EARTH_WATER_AIR_CLASSIC_BOOT_TNT_v1" defer></script>
+  <script type="module" src="/showroom/globe/earth/index.js?v=ZIONTS_PUBLIC_CHILD_ROUTE_ALIGNMENT_TNT_v2"></script>
 </body>
 </html>

@@ -6,12 +6,12 @@
   data-page="explore-current-standard-route-map"
   data-room="explore"
   data-former-label="manor"
-  data-version="G2-V2"
-  data-contract="EXPLORE_DIGITAL_GEMS_FRONTIER_REFINEMENT_TNT_v1"
-  data-previous-contract="EXPLORE_CURRENT_STANDARD_ROUTE_MAP_RENEWAL_TNT_v1"
+  data-version="G2-V3"
+  data-contract="EXPLORE_DIGITAL_GEMS_LABEL_AND_VARIATION_REFINEMENT_TNT_v1"
+  data-previous-contract="EXPLORE_DIGITAL_GEMS_FRONTIER_REFINEMENT_TNT_v1"
   data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
   data-animation-standard="LIGHTWEIGHT_CSS_DIAMOND_ROUTE_MAP_STANDARD_v1"
-  data-gem-standard="FRONTIER_DIGITAL_GEMSTONE_MATERIAL_REFINEMENT_v1"
+  data-gem-standard="FRONTIER_DIGITAL_GEMSTONE_LABEL_AND_VARIATION_REFINEMENT_v1"
   data-background-authority="inline-css-only"
   data-motion-authority="css-only"
   data-status="active"
@@ -57,6 +57,7 @@
       --max:1180px;
       --gem-cut:polygon(50% 0%,78% 8%,100% 34%,91% 74%,50% 100%,9% 74%,0% 34%,22% 8%);
       --gem-table:polygon(50% 7%,70% 15%,88% 36%,77% 64%,50% 88%,23% 64%,12% 36%,30% 15%);
+      --label-window:polygon(18% 16%,82% 16%,92% 50%,82% 84%,18% 84%,8% 50%);
       --inner-orbit-duration:44s;
       --outer-orbit-duration:68s;
     }
@@ -497,23 +498,23 @@
       border:1px solid rgba(243,200,111,.18);
       clip-path:var(--gem-cut);
       background:
-        linear-gradient(39deg,transparent 0 19%,rgba(255,255,255,.28) 20% 21%,transparent 22%),
-        linear-gradient(137deg,transparent 0 32%,rgba(255,255,255,.14) 33% 34%,transparent 35%),
+        linear-gradient(39deg,transparent 0 19%,rgba(255,255,255,.24) 20% 21%,transparent 22%),
+        linear-gradient(137deg,transparent 0 32%,rgba(255,255,255,.10) 33% 34%,transparent 35%),
         conic-gradient(from 44deg at 50% 52%,
-          rgba(255,255,255,.30) 0deg,
-          rgba(208,131,255,.18) 32deg,
-          rgba(54,20,101,.58) 70deg,
-          rgba(181,140,255,.22) 104deg,
+          rgba(255,255,255,.26) 0deg,
+          rgba(208,131,255,.16) 32deg,
+          rgba(54,20,101,.56) 70deg,
+          rgba(181,140,255,.20) 104deg,
           rgba(52,17,105,.64) 144deg,
-          rgba(255,232,163,.12) 177deg,
+          rgba(255,232,163,.10) 177deg,
           rgba(24,4,62,.72) 216deg,
-          rgba(208,131,255,.20) 255deg,
+          rgba(208,131,255,.18) 255deg,
           rgba(16,3,48,.76) 294deg,
-          rgba(255,255,255,.22) 324deg,
-          rgba(255,255,255,.30) 360deg),
-        radial-gradient(circle at 32% 19%,rgba(255,255,255,.48),rgba(255,255,255,.12) 20%,transparent 36%),
+          rgba(255,255,255,.18) 324deg,
+          rgba(255,255,255,.26) 360deg),
+        radial-gradient(circle at 32% 19%,rgba(255,255,255,.40),rgba(255,255,255,.10) 20%,transparent 36%),
         radial-gradient(circle at 72% 82%,rgba(12,2,38,.86),transparent 56%),
-        linear-gradient(135deg,rgba(181,140,255,.50),rgba(45,15,88,.56));
+        linear-gradient(135deg,rgba(181,140,255,.48),rgba(45,15,88,.58));
       box-shadow:
         0 0 82px rgba(181,140,255,.24),
         0 1.5rem 3rem rgba(0,0,0,.30),
@@ -530,25 +531,41 @@
       inset:10%;
       clip-path:var(--gem-table);
       background:
-        linear-gradient(90deg,transparent 0 49%,rgba(255,255,255,.22) 50%,transparent 51%),
-        linear-gradient(0deg,transparent 0 49%,rgba(255,255,255,.12) 50%,transparent 51%),
-        linear-gradient(28deg,transparent 0 34%,rgba(255,255,255,.16) 35%,transparent 36%),
-        linear-gradient(152deg,transparent 0 34%,rgba(255,255,255,.12) 35%,transparent 36%);
+        linear-gradient(90deg,transparent 0 49%,rgba(255,255,255,.18) 50%,transparent 51%),
+        linear-gradient(0deg,transparent 0 49%,rgba(255,255,255,.10) 50%,transparent 51%),
+        linear-gradient(28deg,transparent 0 34%,rgba(255,255,255,.12) 35%,transparent 36%),
+        linear-gradient(152deg,transparent 0 34%,rgba(255,255,255,.10) 35%,transparent 36%);
       mix-blend-mode:screen;
-      opacity:.88;
+      opacity:.72;
+    }
+
+    .explore-center-anchor::after{
+      content:"";
+      position:absolute;
+      inset:31% 21%;
+      clip-path:var(--label-window);
+      background:
+        linear-gradient(180deg,rgba(9,2,27,.68),rgba(4,0,15,.80));
+      border:1px solid rgba(255,244,249,.14);
+      box-shadow:
+        0 0 18px rgba(0,0,0,.26),
+        inset 0 1px 0 rgba(255,255,255,.10);
+      opacity:.94;
     }
 
     .explore-center-anchor span{
       display:block;
       transform:rotate(-45deg);
-      color:rgba(255,244,249,.90);
+      color:rgba(255,244,249,.94);
       text-align:center;
       font-size:.76rem;
       font-weight:950;
       letter-spacing:.15em;
       text-transform:uppercase;
       line-height:1.2;
-      text-shadow:0 2px 12px rgba(0,0,0,.86);
+      text-shadow:
+        0 2px 12px rgba(0,0,0,.92),
+        0 0 8px rgba(255,244,249,.20);
       position:relative;
       z-index:2;
     }
@@ -591,6 +608,17 @@
 
     .diamond-node{
       --radius:-14rem;
+      --facet-a:39deg;
+      --facet-b:129deg;
+      --facet-c:214deg;
+      --light-x:30%;
+      --light-y:18%;
+      --light-alpha:.66;
+      --table-opacity:.76;
+      --veil-opacity:.62;
+      --gem-hue:0deg;
+      --gem-sat:1;
+      --gem-bright:1;
       position:absolute;
       left:50%;
       top:50%;
@@ -603,22 +631,22 @@
       border:1px solid rgba(243,200,111,.24);
       clip-path:var(--gem-cut);
       background:
-        linear-gradient(39deg,transparent 0 18%,rgba(255,255,255,.44) 19% 20%,transparent 21%),
-        linear-gradient(129deg,transparent 0 29%,rgba(255,255,255,.18) 30% 31%,transparent 32%),
-        linear-gradient(214deg,transparent 0 48%,rgba(255,232,163,.12) 49% 50%,transparent 51%),
+        linear-gradient(var(--facet-a),transparent 0 18%,rgba(255,255,255,.38) 19% 20%,transparent 21%),
+        linear-gradient(var(--facet-b),transparent 0 29%,rgba(255,255,255,.14) 30% 31%,transparent 32%),
+        linear-gradient(var(--facet-c),transparent 0 48%,rgba(255,232,163,.10) 49% 50%,transparent 51%),
         conic-gradient(from 44deg at 50% 52%,
-          rgba(255,255,255,.42) 0deg,
-          rgba(209,154,255,.25) 34deg,
-          rgba(76,28,151,.66) 68deg,
-          rgba(160,110,255,.34) 104deg,
-          rgba(41,12,94,.78) 142deg,
-          rgba(255,232,163,.16) 178deg,
+          rgba(255,255,255,.36) 0deg,
+          rgba(209,154,255,.22) 34deg,
+          rgba(76,28,151,.62) 68deg,
+          rgba(160,110,255,.30) 104deg,
+          rgba(41,12,94,.76) 142deg,
+          rgba(255,232,163,.12) 178deg,
           rgba(27,5,73,.86) 218deg,
-          rgba(195,131,255,.30) 255deg,
+          rgba(195,131,255,.28) 255deg,
           rgba(17,3,54,.92) 292deg,
-          rgba(255,255,255,.34) 326deg,
-          rgba(255,255,255,.42) 360deg),
-        radial-gradient(circle at 30% 18%,rgba(255,255,255,.74),rgba(255,255,255,.18) 20%,transparent 35%),
+          rgba(255,255,255,.28) 326deg,
+          rgba(255,255,255,.36) 360deg),
+        radial-gradient(circle at var(--light-x) var(--light-y),rgba(255,255,255,var(--light-alpha)),rgba(255,255,255,.16) 20%,transparent 35%),
         radial-gradient(circle at 70% 82%,rgba(12,2,42,.88),transparent 56%),
         linear-gradient(145deg,rgba(198,159,255,.98),rgba(132,82,255,.97) 48%,rgba(66,28,178,.99) 100%);
       box-shadow:
@@ -636,6 +664,7 @@
       backface-visibility:hidden;
       transform-style:preserve-3d;
       isolation:isolate;
+      filter:hue-rotate(var(--gem-hue)) saturate(var(--gem-sat)) brightness(var(--gem-bright)) contrast(1.04);
     }
 
     .diamond-node::before{
@@ -644,15 +673,15 @@
       inset:5%;
       clip-path:var(--gem-table);
       background:
-        linear-gradient(90deg,transparent 0 48%,rgba(255,255,255,.30) 49% 51%,transparent 52%),
-        linear-gradient(0deg,transparent 0 48%,rgba(255,255,255,.16) 49% 51%,transparent 52%),
-        linear-gradient(29deg,transparent 0 32%,rgba(255,255,255,.22) 33% 35%,transparent 36%),
-        linear-gradient(151deg,transparent 0 31%,rgba(255,255,255,.18) 32% 34%,transparent 35%),
-        linear-gradient(116deg,transparent 0 42%,rgba(208,131,255,.20) 43% 45%,transparent 46%),
-        linear-gradient(243deg,transparent 0 58%,rgba(255,232,163,.14) 59% 61%,transparent 62%),
-        radial-gradient(circle at 36% 23%,rgba(255,255,255,.34),transparent 27%),
-        conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,.18),rgba(73,28,150,.15),rgba(255,255,255,.10),rgba(22,5,70,.25),rgba(255,255,255,.18));
-      opacity:.94;
+        linear-gradient(90deg,transparent 0 48%,rgba(255,255,255,.24) 49% 51%,transparent 52%),
+        linear-gradient(0deg,transparent 0 48%,rgba(255,255,255,.12) 49% 51%,transparent 52%),
+        linear-gradient(29deg,transparent 0 32%,rgba(255,255,255,.18) 33% 35%,transparent 36%),
+        linear-gradient(151deg,transparent 0 31%,rgba(255,255,255,.14) 32% 34%,transparent 35%),
+        linear-gradient(116deg,transparent 0 42%,rgba(208,131,255,.17) 43% 45%,transparent 46%),
+        linear-gradient(243deg,transparent 0 58%,rgba(255,232,163,.11) 59% 61%,transparent 62%),
+        radial-gradient(circle at 36% 23%,rgba(255,255,255,.26),transparent 27%),
+        conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,.14),rgba(73,28,150,.12),rgba(255,255,255,.08),rgba(22,5,70,.22),rgba(255,255,255,.14));
+      opacity:var(--table-opacity);
       pointer-events:none;
       mix-blend-mode:screen;
     }
@@ -663,16 +692,17 @@
       inset:0;
       clip-path:var(--gem-cut);
       background:
-        radial-gradient(circle at 30% 14%,rgba(255,255,255,.34),transparent 18%),
-        linear-gradient(115deg,transparent 0 33%,rgba(255,255,255,.30) 34% 35%,transparent 36%),
-        linear-gradient(25deg,transparent 0 58%,rgba(255,232,163,.18) 59% 60%,transparent 61%),
-        linear-gradient(82deg,transparent 0 47%,rgba(208,131,255,.18) 48% 49%,transparent 50%),
-        linear-gradient(180deg,rgba(255,255,255,.10),transparent 38%,rgba(3,0,18,.30) 100%);
+        radial-gradient(circle at var(--light-x) calc(var(--light-y) - 3%),rgba(255,255,255,.24),transparent 17%),
+        linear-gradient(115deg,transparent 0 33%,rgba(255,255,255,.20) 34% 35%,transparent 36%),
+        linear-gradient(25deg,transparent 0 58%,rgba(255,232,163,.12) 59% 60%,transparent 61%),
+        linear-gradient(82deg,transparent 0 47%,rgba(208,131,255,.14) 48% 49%,transparent 50%),
+        linear-gradient(180deg,rgba(255,255,255,.08),transparent 38%,rgba(3,0,18,.32) 100%);
       box-shadow:
         inset 0 0 0 1px rgba(255,255,255,.10),
         inset 0 -18px 28px rgba(8,1,36,.34);
       pointer-events:none;
       mix-blend-mode:screen;
+      opacity:var(--veil-opacity);
     }
 
     .orbit-ring.inner .diamond-node{
@@ -694,14 +724,13 @@
       width:4.95rem;
       height:4.95rem;
       margin:-2.475rem 0 0 -2.475rem;
-      filter:saturate(.96) contrast(1.04);
     }
 
     .diamond-node:hover,
     .diamond-node:focus{
       outline:none;
       border-color:rgba(243,200,111,.80);
-      filter:brightness(1.10) saturate(1.14) contrast(1.06);
+      filter:hue-rotate(var(--gem-hue)) brightness(1.10) saturate(1.14) contrast(1.06);
       box-shadow:
         0 24px 48px rgba(39,18,116,.48),
         0 0 46px rgba(181,140,255,.40),
@@ -726,34 +755,52 @@
     .diamond-label-shell::before{
       content:"";
       position:absolute;
-      inset:17%;
+      inset:19% 10%;
       z-index:-1;
-      border-radius:999px;
-      background:radial-gradient(circle,rgba(8,2,28,.50),rgba(8,2,28,.18) 46%,transparent 72%);
-      filter:blur(2px);
+      clip-path:var(--label-window);
+      background:
+        linear-gradient(180deg,rgba(8,2,28,.80),rgba(4,0,15,.88));
+      border:1px solid rgba(255,244,249,.16);
+      box-shadow:
+        0 0 16px rgba(0,0,0,.34),
+        inset 0 1px 0 rgba(255,255,255,.10),
+        inset 0 -10px 14px rgba(0,0,0,.18);
+      opacity:.94;
+    }
+
+    .diamond-label-shell::after{
+      content:"";
+      position:absolute;
+      left:18%;
+      right:18%;
+      top:50%;
+      z-index:-1;
+      height:1px;
+      background:linear-gradient(90deg,transparent,rgba(255,244,249,.28),transparent);
+      opacity:.45;
     }
 
     .diamond-label-text{
       display:block;
-      max-width:4.4rem;
-      color:rgba(255,244,249,.98);
+      max-width:4.15rem;
+      color:rgba(255,244,249,.99);
       text-align:center;
-      font-size:.54rem;
+      font-size:.52rem;
       font-weight:950;
-      letter-spacing:.065em;
+      letter-spacing:.062em;
       line-height:1.08;
       text-transform:uppercase;
       text-shadow:
-        0 2px 12px rgba(0,0,0,.92),
-        0 0 10px rgba(45,15,88,.84),
-        0 0 2px rgba(255,255,255,.48);
+        0 2px 12px rgba(0,0,0,.95),
+        0 0 10px rgba(45,15,88,.88),
+        0 0 2px rgba(255,255,255,.58);
     }
 
     .diamond-label-sub{
       display:block;
       margin-top:.12rem;
-      color:rgba(237,226,255,.76);
-      font-size:.40rem;
+      color:rgba(237,226,255,.78);
+      font-size:.38rem;
       font-weight:850;
       letter-spacing:.05em;
       line-height:1;
@@ -945,12 +992,16 @@
       }
 
       .diamond-label-text{
-        max-width:3rem;
-        font-size:.39rem;
-        letter-spacing:.04em;
+        max-width:2.85rem;
+        font-size:.37rem;
+        letter-spacing:.035em;
       }
 
       .diamond-label-sub{display:none}
+
+      .diamond-label-shell::before{
+        inset:20% 8%;
+      }
 
       .map-grid,
       .room-grid{
@@ -997,8 +1048,12 @@
       }
 
       .diamond-label-text{
-        max-width:2.45rem;
-        font-size:.32rem;
+        max-width:2.28rem;
+        font-size:.30rem;
+      }
+
+      .diamond-label-shell::before{
+        inset:19% 5%;
       }
     }
 
@@ -1018,7 +1073,7 @@
 <body
   data-route="/explore/"
   data-room="explore"
-  data-contract="EXPLORE_DIGITAL_GEMS_FRONTIER_REFINEMENT_TNT_v1"
+  data-contract="EXPLORE_DIGITAL_GEMS_LABEL_AND_VARIATION_REFINEMENT_TNT_v1"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claimed="false"
@@ -1076,25 +1131,25 @@
           </div>
 
           <div class="orbit-ring inner" aria-label="Primary route ring">
-            <a class="diamond-node" style="--angle:0deg" href="/home/" aria-label="Home">
+            <a class="diamond-node" style="--angle:0deg;--facet-a:31deg;--facet-b:121deg;--facet-c:206deg;--light-x:25%;--light-y:18%;--light-alpha:.58;--table-opacity:.66;--veil-opacity:.54;--gem-hue:-4deg;--gem-sat:1.05;--gem-bright:1.02;" href="/home/" aria-label="Home">
               <span class="diamond-label-shell">
                 <b class="diamond-label-text">Home<span class="diamond-label-sub">Receive</span></b>
               </span>
             </a>
 
-            <a class="diamond-node" style="--angle:90deg" href="/products/" aria-label="Products">
+            <a class="diamond-node" style="--angle:90deg;--facet-a:47deg;--facet-b:145deg;--facet-c:232deg;--light-x:38%;--light-y:17%;--light-alpha:.56;--table-opacity:.64;--veil-opacity:.52;--gem-hue:5deg;--gem-sat:1.03;--gem-bright:1.01;" href="/products/" aria-label="Products">
               <span class="diamond-label-shell">
                 <b class="diamond-label-text">Products<span class="diamond-label-sub">Use</span></b>
               </span>
             </a>
 
-            <a class="diamond-node" style="--angle:180deg" href="/showroom/" aria-label="Showroom">
+            <a class="diamond-node" style="--angle:180deg;--facet-a:24deg;--facet-b:137deg;--facet-c:219deg;--light-x:29%;--light-y:24%;--light-alpha:.55;--table-opacity:.65;--veil-opacity:.50;--gem-hue:-8deg;--gem-sat:1.02;--gem-bright:1.02;" href="/showroom/" aria-label="Showroom">
               <span class="diamond-label-shell">
                 <b class="diamond-label-text">Showroom<span class="diamond-label-sub">Inspect</span></b>
               </span>
             </a>
 
-            <a class="diamond-node" style="--angle:270deg" href="/gauges/" aria-label="Gauges">
+            <a class="diamond-node" style="--angle:270deg;--facet-a:58deg;--facet-b:118deg;--facet-c:249deg;--light-x:43%;--light-y:20%;--light-alpha:.57;--table-opacity:.62;--veil-opacity:.50;--gem-hue:9deg;--gem-sat:1.06;--gem-bright:1;" href="/gauges/" aria-label="Gauges">
               <span class="diamond-label-shell">
                 <b class="diamond-label-text">Gauges<span class="diamond-label-sub">Measure</span></b>
               </span>
@@ -1102,35 +1157,35 @@
           </div>
 
           <div class="orbit-ring outer" aria-label="Deeper route ring">
-            <a class="diamond-node" style="--angle:0deg" href="/" aria-label="Compass">
+            <a class="diamond-node" style="--angle:0deg;--facet-a:37deg;--facet-b:126deg;--facet-c:216deg;--light-x:24%;--light-y:16%;--light-alpha:.52;--table-opacity:.60;--veil-opacity:.48;--gem-hue:-10deg;--gem-sat:.99;--gem-bright:.99;" href="/" aria-label="Compass">
               <span class="diamond-label-shell"><b class="diamond-label-text">Compass</b></span>
             </a>
 
-            <a class="diamond-node" style="--angle:45deg" href="/door/" aria-label="Door">
+            <a class="diamond-node" style="--angle:45deg;--facet-a:52deg;--facet-b:139deg;--facet-c:223deg;--light-x:40%;--light-y:15%;--light-alpha:.50;--table-opacity:.58;--veil-opacity:.46;--gem-hue:3deg;--gem-sat:1.02;--gem-bright:.99;" href="/door/" aria-label="Door">
               <span class="diamond-label-shell"><b class="diamond-label-text">Door</b></span>
             </a>
 
-            <a class="diamond-node" style="--angle:90deg" href="/laws/" aria-label="Laws">
+            <a class="diamond-node" style="--angle:90deg;--facet-a:27deg;--facet-b:112deg;--facet-c:235deg;--light-x:34%;--light-y:24%;--light-alpha:.51;--table-opacity:.58;--veil-opacity:.45;--gem-hue:11deg;--gem-sat:.98;--gem-bright:1;" href="/laws/" aria-label="Laws">
               <span class="diamond-label-shell"><b class="diamond-label-text">Laws</b></span>
             </a>
 
-            <a class="diamond-node" style="--angle:135deg" href="/nine-summits/" aria-label="Nine Summits">
+            <a class="diamond-node" style="--angle:135deg;--facet-a:62deg;--facet-b:151deg;--facet-c:203deg;--light-x:27%;--light-y:20%;--light-alpha:.49;--table-opacity:.56;--veil-opacity:.45;--gem-hue:-5deg;--gem-sat:1.03;--gem-bright:.99;" href="/nine-summits/" aria-label="Nine Summits">
               <span class="diamond-label-shell"><b class="diamond-label-text">Nine<br>Summits</b></span>
             </a>
 
-            <a class="diamond-node" style="--angle:180deg" href="/nine-summits-of-love/" aria-label="Book">
+            <a class="diamond-node" style="--angle:180deg;--facet-a:44deg;--facet-b:117deg;--facet-c:256deg;--light-x:45%;--light-y:18%;--light-alpha:.50;--table-opacity:.57;--veil-opacity:.46;--gem-hue:7deg;--gem-sat:1.01;--gem-bright:.99;" href="/nine-summits-of-love/" aria-label="Book">
               <span class="diamond-label-shell"><b class="diamond-label-text">Book</b></span>
             </a>
 
-            <a class="diamond-node" style="--angle:225deg" href="/frontier/" aria-label="Frontier">
+            <a class="diamond-node" style="--angle:225deg;--facet-a:33deg;--facet-b:154deg;--facet-c:224deg;--light-x:31%;--light-y:15%;--light-alpha:.52;--table-opacity:.59;--veil-opacity:.47;--gem-hue:-13deg;--gem-sat:1.04;--gem-bright:1;" href="/frontier/" aria-label="Frontier">
               <span class="diamond-label-shell"><b class="diamond-label-text">Frontier</b></span>
             </a>
 
-            <a class="diamond-node" style="--angle:270deg" href="/about-this-underdog/" aria-label="Underdog">
+            <a class="diamond-node" style="--angle:270deg;--facet-a:57deg;--facet-b:131deg;--facet-c:211deg;--light-x:39%;--light-y:23%;--light-alpha:.49;--table-opacity:.56;--veil-opacity:.44;--gem-hue:14deg;--gem-sat:.98;--gem-bright:.98;" href="/about-this-underdog/" aria-label="Underdog">
               <span class="diamond-label-shell"><b class="diamond-label-text">Under<br>dog</b></span>
             </a>
 
-            <a class="diamond-node" style="--angle:315deg" href="/meet-sean-mansfield/" aria-label="Meet Sean">
+            <a class="diamond-node" style="--angle:315deg;--facet-a:22deg;--facet-b:142deg;--facet-c:239deg;--light-x:28%;--light-y:22%;--light-alpha:.51;--table-opacity:.58;--veil-opacity:.46;--gem-hue:-2deg;--gem-sat:1.02;--gem-bright:.99;" href="/meet-sean-mansfield/" aria-label="Meet Sean">
               <span class="diamond-label-shell"><b class="diamond-label-text">Meet<br>Sean</b></span>
             </a>
           </div>
@@ -1253,8 +1308,8 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-EXPLORE_DIGITAL_GEMS_FRONTIER_REFINEMENT_TNT_v1
-previous=EXPLORE_CURRENT_STANDARD_ROUTE_MAP_RENEWAL_TNT_v1
+EXPLORE_DIGITAL_GEMS_LABEL_AND_VARIATION_REFINEMENT_TNT_v1
+previous=EXPLORE_DIGITAL_GEMS_FRONTIER_REFINEMENT_TNT_v1
 route=/explore/
 page=explore_current_standard_route_map
 room=explore
@@ -1274,18 +1329,18 @@ canvas_runtime=false
 requestAnimationFrame=false
 heavy_runtime_loaded=false
 animation_standard=LIGHTWEIGHT_CSS_DIAMOND_ROUTE_MAP_STANDARD_v1
-gem_standard=FRONTIER_DIGITAL_GEMSTONE_MATERIAL_REFINEMENT_v1
-gem_refinement=clearer_cut_perimeter,heavier_outer_bevel,internal_planes,directional_light,darker_lower_body,sharper_rim_highlights,less_uniform_purple_wash,inner_outer_weight_difference,readable_labels
-visual_system=purple_current_standard_diamond_route_map_with_frontier_digital_gems
+gem_standard=FRONTIER_DIGITAL_GEMSTONE_LABEL_AND_VARIATION_REFINEMENT_v1
+gem_refinement=label_window_added,facet_glare_reduced,per_gem_facet_angles_added,per_gem_light_origin_added,per_gem_hue_variation_added,inner_outer_weight_preserved,center_anchor_contrast_improved
+visual_system=purple_current_standard_diamond_route_map_with_readable_varied_frontier_digital_gems
 ring_system=4_plus_8
 inner_ring=home,products,showroom,gauges
 outer_ring=compass,door,laws,nine_summits,book,frontier,underdog,meet_sean
 copy_standard=clear_public_facing_ted_style_without_calling_it_ted
-accessibility=skip_link_absolute,short_top_nav,keyboard_links,prefers_reduced_motion,readable_cards
+accessibility=skip_link_absolute,short_top_nav,keyboard_links,prefers_reduced_motion,readable_cards,gem_label_windows
 mobile_law=cards_remain_primary_orbit_compacts_no_horizontal_overflow
-preserved=explore_route,purple_identity,one_manor_many_rooms_concept,route_map_function,diamond_visual_language,top_traversal,current_copy,route_links,card_grid
-renewed=gem_material_system,center_gem,inner_gems,outer_gems,brand_gem,inner_ring_spacing,frontier_interface_material
-retired=legacy_css_button_gems,flat_uniform_purple_tokens,manufactured_demo_gem_surface
+preserved=explore_route,purple_identity,one_manor_many_rooms_concept,route_map_function,diamond_visual_language,top_traversal,current_copy,route_links,card_grid,css_only_motion
+renewed=gem_label_legibility,gem_individuality,center_anchor_label_contrast,facet_interference_reduction
+retired=identical_gem_glare_pattern,label_competing_with_facets,flat_uniform_route_tokens
 route_owns=explore_map,estate_traversal,diamond_route_field,room_cards,purple_route_identity,route_gem_material
 route_does_not_own=h_earth_condition_stack,globe_parent_selector,planet_surface_rendering,gauges_logic,product_chamber_content,laws_branch_content,child_route_rendering
 generated_image=false
@@ -1296,7 +1351,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      EXPLORE_DIGITAL_GEMS_FRONTIER_REFINEMENT_TNT_v1 · Explore · Frontier digital gems · CSS-only route-map motion.
+      EXPLORE_DIGITAL_GEMS_LABEL_AND_VARIATION_REFINEMENT_TNT_v1 · Explore · Readable varied digital gems · CSS-only route-map motion.
     </footer>
   </div>
 </body>

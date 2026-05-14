@@ -1,13 +1,12 @@
 // /assets/world/environment/water.js
 // TNT FULL-FILE REPLACEMENT
-// H_EARTH_HEX_VISUAL_DEFINITION_EXPANSION_WATER_TNT_v1
+// H_EARTH_VISUAL_EXPRESSION_EXPANSION_THROUGH_LIVE_HEX_v2
 // Owns: ocean depth, waves, foam, shimmer, tide, reflection.
-// Consumes: shared hexfield substrate through frame.hexfield.
 
 import { clamp, lerp, rgba, hash01 } from "/assets/world/environment/profile.js";
 
 export const ENVIRONMENT_WATER_VERSION =
-  "h-earth-hex-visual-definition-expansion-water-v1";
+  "h-earth-visual-expression-expansion-through-live-hex-water-v2";
 
 export const SHIMMER_PROTOCOL = Object.freeze({
   waves: "layered movement across distance",
@@ -43,13 +42,13 @@ export function drawWaterLayer(ctx, profile, cell, frame) {
   for (let i = 0; i <= 160; i += 1) {
     const nx = i / 160;
     const sample = hexfield?.sample(nx, camera.horizon, t);
-    const x = nx * w;
     const y =
       top +
       Math.sin(i * 0.31 + t * 0.36) * h * 0.0025 * water.waveStrength +
       Math.sin(i * 1.43 + t * 0.15) * h * 0.0016 * water.waveStrength +
       (sample?.wave || 0) * h * 0.0014;
-    ctx.lineTo(x, y);
+
+    ctx.lineTo(nx * w, y);
   }
 
   ctx.lineTo(w, bottom + tideOffset);
@@ -70,7 +69,7 @@ function drawOceanDepthTexture(ctx, profile, cell, frame) {
 
   ctx.save();
 
-  for (let i = 0; i < 160; i += 1) {
+  for (let i = 0; i < 170; i += 1) {
     const nx = hash01(i, 510, 1, cell.seed);
     const ny = lerp(top + 0.03, bottom - 0.02, hash01(i, 511, 2, cell.seed));
     const sample = hexfield?.sample(nx, ny, t);
@@ -118,7 +117,6 @@ function drawWaveBands(ctx, profile, cell, frame, top, bottom) {
 
   for (let j = 0; j < 60; j += 1) {
     const ny = lerp(profile.camera.horizon + 0.022, profile.camera.shoreline - 0.020, j / 60);
-    const y = h * ny;
     const depthFade = 1 - j / 72;
 
     ctx.globalAlpha = Math.max(0.020, 0.16 * depthFade);
@@ -128,14 +126,13 @@ function drawWaveBands(ctx, profile, cell, frame, top, bottom) {
     for (let i = 0; i <= 130; i += 1) {
       const nx = i / 130;
       const sample = hexfield?.sample(nx, ny, t);
-      const x = nx * w;
       const wave =
         Math.sin(i * 0.80 + j * 0.54 + t * 0.80) * h * 0.00145 * strength +
         Math.sin(i * 1.65 + t * 0.30) * h * 0.0010 * strength +
         (sample?.wave || 0) * h * 0.0011;
 
-      if (i === 0) ctx.moveTo(x, y + wave);
-      else ctx.lineTo(x, y + wave);
+      if (i === 0) ctx.moveTo(nx * w, ny * h + wave);
+      else ctx.lineTo(nx * w, ny * h + wave);
     }
 
     ctx.stroke();
@@ -144,7 +141,7 @@ function drawWaveBands(ctx, profile, cell, frame, top, bottom) {
   ctx.restore();
 }
 
-function drawShimmer(ctx, profile, cell, frame, top, bottom) {
+function drawShimmer(ctx, profile, cell, frame) {
   const { width: w, height: h, time: t, hexfield } = frame;
   const shimmer = profile.water.shimmer;
   const sunX = profile.climate.sunX;
@@ -160,6 +157,7 @@ function drawShimmer(ctx, profile, cell, frame, top, bottom) {
       profile.camera.shoreline - 0.018,
       hash01(i, 41, 2, cell.seed)
     );
+
     const sample = hexfield?.sample(nx, ny, t);
     const pulse = sample?.shimmer ?? Math.max(0, Math.sin(t * 1.28 + i * 0.61));
     const lane = clamp(1 - Math.abs(nx - sunX) / 0.42, 0, 1);
@@ -200,7 +198,6 @@ export function drawFoamAndTideEdge(ctx, profile, cell, frame) {
     for (let i = 0; i <= 150; i += 1) {
       const nx = i / 150;
       const sample = hexfield?.sample(nx, line, t);
-      const x = nx * w;
       const y =
         h * line +
         tide +
@@ -209,8 +206,8 @@ export function drawFoamAndTideEdge(ctx, profile, cell, frame) {
         (sample?.tide || 0) * h * 0.0015 +
         pass * h * 0.0024;
 
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+      if (i === 0) ctx.moveTo(nx * w, y);
+      else ctx.lineTo(nx * w, y);
     }
 
     ctx.stroke();

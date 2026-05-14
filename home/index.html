@@ -3,18 +3,15 @@
   lang="en"
   data-route="/home/"
   data-page="home"
-  data-version="G1-V4"
-  data-contract="HOME_RECEIVER_CRYSTAL_ANIMATION_RENEWAL_TNT_v1"
-  data-js-contract="HOME_RECEIVER_ORBIT_BOOT_AUTHORITY_TNT_v1"
-  data-renews="HOME_LOCAL_4_POINT_RECEIVER_ORBIT_AUTHORITY_RENEWAL_TNT_v1"
+  data-version="G1-V3"
+  data-contract="HOME_TOP_TRAVERSAL_RECEIVER_CRYSTAL_STANDARD_TNT_v1"
+  data-renews="HOME_LOCAL_4_POINT_RECEIVER_ORBIT_TNT_v2"
   data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
-  data-animation-standard="LOCAL_4_CUT_CRYSTAL_RECEIVER_ORBIT_STANDARD_v1"
-  data-material-renewal="home-receiver-cut-crystal-visible-internal-refraction-axial-depth"
+  data-animation-standard="LOCAL_4_RECEIVER_CRYSTAL_ORBIT_STANDARD_v1"
+  data-material-renewal="physical-digital-amethyst-receiver-crystal"
+  data-top-traversal="compass-door-home-manor-showroom-gauges"
   data-status="active"
   data-role="estate-receiver"
-  data-primary-node-count="4"
-  data-home-js-required="true"
-  data-css-only-orbit="true"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -40,20 +37,15 @@
       --faint:rgba(230,238,255,.48);
       --gold:#f3c86f;
       --gold2:#ffe8a3;
-      --crystal:#8f65ff;
-      --crystal2:#beaaff;
-      --crystal3:#4020a8;
-      --crystal4:#16093f;
-      --aqua:#8dd8ff;
-      --panel:rgba(9,15,31,.86);
+      --amethyst:#a884ff;
+      --amethyst2:#d8c8ff;
+      --amethyst3:#5e35d6;
+      --amethyst4:#1c0b46;
+      --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
-      --orbit-duration:48s;
-      --orbit-focus-duration:82s;
-      --gem-cut:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
-      --gem-inner-cut:polygon(50% 2%,72% 13%,94% 36%,78% 55%,86% 76%,50% 97%,14% 76%,22% 55%,6% 36%,28% 13%);
-      --facet-cut:polygon(50% 0%,68% 18%,100% 35%,72% 48%,90% 75%,50% 100%,10% 75%,28% 48%,0% 35%,32% 18%);
+      --orbit-duration:42s;
     }
 
     *{box-sizing:border-box}
@@ -78,7 +70,7 @@
         radial-gradient(circle at 50% -8%,rgba(243,200,111,.22),transparent 28rem),
         radial-gradient(circle at 10% 18%,rgba(143,101,255,.22),transparent 28rem),
         radial-gradient(circle at 92% 30%,rgba(141,216,255,.14),transparent 28rem),
-        radial-gradient(circle at 50% 78%,rgba(143,101,255,.14),transparent 34rem),
+        radial-gradient(circle at 50% 78%,rgba(143,101,255,.13),transparent 34rem),
         linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
@@ -104,6 +96,14 @@
     a:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
+    }
+
+    .svg-defs{
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
     }
 
     .skip{
@@ -149,28 +149,24 @@
       height:4.2rem;
       display:grid;
       place-items:center;
-      border:1px solid rgba(243,200,111,.44);
-      border-radius:0;
-      clip-path:var(--gem-cut);
-      transform:rotate(45deg);
+      clip-path:polygon(50% 0%,72% 10%,96% 34%,88% 70%,50% 100%,12% 70%,4% 34%,28% 10%);
       background:
-        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.24) 21% 23%,transparent 24%),
-        radial-gradient(circle at 48% 22%,rgba(255,255,255,.26),transparent 42%),
-        radial-gradient(circle at 64% 76%,rgba(143,101,255,.46),transparent 58%),
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.18),rgba(143,101,255,.28),rgba(24,9,74,.58),rgba(243,200,111,.16),rgba(255,255,255,.18)),
-        linear-gradient(145deg,rgba(43,32,82,.95),rgba(5,8,20,.98));
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.36) 21% 23%,transparent 24%),
+        radial-gradient(circle at 42% 22%,rgba(255,255,255,.34),transparent 42%),
+        radial-gradient(circle at 66% 76%,rgba(168,132,255,.48),transparent 58%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.24),rgba(168,132,255,.34),rgba(27,12,70,.76),rgba(216,200,255,.20),rgba(255,255,255,.24)),
+        linear-gradient(145deg,rgba(62,38,139,.98),rgba(5,8,20,.98));
       box-shadow:
         0 0 2rem rgba(143,101,255,.30),
         0 1.2rem 2.8rem rgba(0,0,0,.46),
-        inset 0 1px 0 rgba(255,255,255,.16);
+        inset 0 1px 0 rgba(255,255,255,.20);
     }
 
     .brand-mark span{
-      transform:rotate(-45deg);
       font-weight:950;
-      letter-spacing:.04em;
+      letter-spacing:.05em;
       color:rgba(255,244,216,.98);
-      text-shadow:0 2px 12px rgba(0,0,0,.82);
+      text-shadow:0 2px 12px rgba(0,0,0,.88);
     }
 
     .brand-copy{
@@ -227,7 +223,7 @@
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
         radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
-        radial-gradient(circle at 86% 18%,rgba(143,101,255,.14),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(143,101,255,.15),transparent 28rem),
         linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
         var(--panel);
       box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
@@ -253,7 +249,7 @@
       z-index:0;
       width:clamp(9rem,25vw,18rem);
       height:clamp(9rem,25vw,18rem);
-      border:1px solid rgba(243,200,111,.20);
+      border:1px solid rgba(243,200,111,.18);
       border-radius:2.9rem;
       transform:translateY(-50%) rotate(45deg);
       background:
@@ -316,6 +312,8 @@
       line-height:.98;
       letter-spacing:-.07em;
       text-wrap:balance;
+      position:relative;
+      z-index:2;
     }
 
     p{
@@ -387,7 +385,7 @@
 
     .home-stage{
       position:relative;
-      min-height:clamp(32rem,64vw,48rem);
+      min-height:clamp(31rem,62vw,46rem);
       display:grid;
       place-items:center;
       overflow:hidden;
@@ -395,11 +393,9 @@
       border:1px solid rgba(184,205,255,.13);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        radial-gradient(circle at 50% 42%,rgba(143,101,255,.20),transparent 19rem),
-        radial-gradient(circle at 50% 60%,rgba(243,200,111,.055),transparent 26rem),
+        radial-gradient(circle at 50% 44%,rgba(143,101,255,.16),transparent 20rem),
         linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.92));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-      perspective:920px;
     }
 
     .home-stage::before,
@@ -414,264 +410,112 @@
     }
 
     .home-stage::before{
-      width:min(80%,31rem);
-      height:min(80%,31rem);
-      border:1px solid rgba(243,200,111,.09);
-      box-shadow:
-        0 0 3rem rgba(143,101,255,.14),
-        inset 0 0 5rem rgba(143,101,255,.04);
+      width:min(80%,30rem);
+      height:min(80%,30rem);
+      border:1px solid rgba(243,200,111,.08);
+      box-shadow:0 0 3rem rgba(143,101,255,.12);
     }
 
     .home-stage::after{
-      width:min(52%,20rem);
-      height:min(52%,20rem);
-      border:1px solid rgba(143,101,255,.18);
-      box-shadow:inset 0 0 2rem rgba(190,170,255,.045);
-    }
-
-    .home-orbit-field{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:min(72%,31rem);
-      height:min(72%,31rem);
-      z-index:1;
-      border-radius:50%;
-      transform:translate(-50%,-50%) rotateX(62deg);
-      pointer-events:none;
-      border:1px solid rgba(243,200,111,.105);
-      box-shadow:
-        0 0 46px rgba(143,101,255,.12),
-        inset 0 0 30px rgba(190,170,255,.040);
-    }
-
-    .home-orbit-field::before,
-    .home-orbit-field::after{
-      content:"";
-      position:absolute;
-      inset:12%;
-      border-radius:50%;
-      border:1px solid rgba(190,170,255,.12);
-    }
-
-    .home-orbit-field::after{
-      inset:33%;
-      border-color:rgba(243,200,111,.075);
+      width:min(52%,19rem);
+      height:min(52%,19rem);
+      border:1px solid rgba(143,101,255,.15);
     }
 
     .home-anchor{
       position:absolute;
       left:50%;
       top:50%;
-      z-index:2;
+      z-index:0;
       display:grid;
       place-items:center;
-      width:clamp(8.2rem,21vw,12rem);
-      height:clamp(8.2rem,21vw,12rem);
-      clip-path:var(--gem-cut);
-      transform:translate(-50%,-50%) rotate(45deg);
-      border:1px solid rgba(243,200,111,.14);
-      background:
-        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.20) 21% 23%,transparent 24%),
-        radial-gradient(circle at 35% 28%,rgba(255,255,255,.16),transparent 31%),
-        radial-gradient(circle at 70% 78%,rgba(143,101,255,.25),transparent 48%),
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.16),rgba(143,101,255,.26),rgba(24,9,74,.58),rgba(243,200,111,.13),rgba(255,255,255,.16)),
-        linear-gradient(135deg,rgba(143,101,255,.38),rgba(27,17,75,.46));
-      box-shadow:
-        0 0 72px rgba(143,101,255,.22),
-        inset 0 0 26px rgba(255,255,255,.045);
-      opacity:.56;
+      width:clamp(8rem,21vw,12rem);
+      height:clamp(8rem,21vw,12rem);
+      transform:translate(-50%,-50%);
       pointer-events:none;
-      animation:homeAnchorPulse 7s ease-in-out infinite;
-    }
-
-    .home-anchor::before{
-      content:"";
-      position:absolute;
-      inset:10%;
-      clip-path:var(--gem-inner-cut);
-      background:
-        linear-gradient(90deg,transparent 0 48%,rgba(255,255,255,.20) 49% 51%,transparent 52% 100%),
-        linear-gradient(0deg,transparent 0 48%,rgba(255,255,255,.13) 49% 51%,transparent 52% 100%),
-        linear-gradient(27deg,transparent 0 32%,rgba(255,255,255,.18) 33% 35%,transparent 36% 100%),
-        linear-gradient(153deg,transparent 0 31%,rgba(255,255,255,.16) 32% 34%,transparent 35% 100%);
-      opacity:.82;
-      mix-blend-mode:screen;
-    }
-
-    .home-anchor span{
-      display:block;
-      position:relative;
-      z-index:2;
-      transform:rotate(-45deg);
-      color:rgba(255,244,216,.90);
-      text-align:center;
-      font-size:.78rem;
-      font-weight:950;
-      letter-spacing:.15em;
-      text-transform:uppercase;
-      line-height:1.2;
-      text-shadow:0 2px 14px rgba(0,0,0,.82);
-    }
-
-    @keyframes homeAnchorPulse{
-      0%,100%{
-        transform:translate(-50%,-50%) rotate(45deg) scale(.98);
-        opacity:.44;
-      }
-      50%{
-        transform:translate(-50%,-50%) rotate(45deg) scale(1.025);
-        opacity:.62;
-      }
     }
 
     .home-orbit{
       position:absolute;
       left:50%;
       top:50%;
-      width:23.4rem;
-      height:23.4rem;
-      z-index:4;
+      width:22.5rem;
+      height:22.5rem;
+      z-index:3;
       border-radius:999px;
       pointer-events:none;
-      transform:translate(-50%,-50%) rotateX(0deg);
-      animation:homeOrbitAxialTurn var(--orbit-duration) linear infinite;
-      transform-style:preserve-3d;
-      will-change:transform;
+      transform:translate(-50%,-50%);
+      animation:homeOrbitSpin var(--orbit-duration) linear infinite;
     }
 
-    .home-stage:hover .home-orbit,
-    .home-stage:focus-within .home-orbit{
-      animation-duration:var(--orbit-focus-duration);
-    }
-
-    @keyframes homeOrbitAxialTurn{
-      0%{
-        transform:translate(-50%,-50%) rotate(0deg) rotateX(0deg);
-      }
-      50%{
-        transform:translate(-50%,-50%) rotate(180deg) rotateX(2.5deg);
-      }
-      100%{
-        transform:translate(-50%,-50%) rotate(360deg) rotateX(0deg);
-      }
+    @keyframes homeOrbitSpin{
+      to{transform:translate(-50%,-50%) rotate(360deg)}
     }
 
     .home-node{
-      --radius:-11.15rem;
+      --radius:-10.85rem;
       position:absolute;
       left:50%;
       top:50%;
       display:grid;
       place-items:center;
-      overflow:hidden;
-      width:5.75rem;
-      height:5.75rem;
-      margin:-2.875rem 0 0 -2.875rem;
-      border:1px solid rgba(190,170,255,.58);
-      border-radius:0;
-      clip-path:var(--gem-cut);
-      color:rgba(255,244,216,.98);
-      background:
-        linear-gradient(35deg,transparent 0 18%,rgba(255,255,255,.44) 19% 21%,transparent 22% 100%),
-        linear-gradient(145deg,rgba(255,255,255,.26),transparent 18%,rgba(61,30,155,.34) 44%,transparent 68%),
-        conic-gradient(from 45deg at 50% 50%,
-          rgba(255,255,255,.34) 0deg,
-          rgba(190,170,255,.34) 36deg,
-          rgba(37,13,111,.64) 72deg,
-          rgba(141,216,255,.25) 108deg,
-          rgba(64,32,168,.70) 144deg,
-          rgba(255,255,255,.21) 180deg,
-          rgba(25,8,82,.76) 216deg,
-          rgba(143,101,255,.36) 252deg,
-          rgba(14,5,55,.80) 288deg,
-          rgba(255,232,163,.20) 324deg,
-          rgba(255,255,255,.34) 360deg),
-        radial-gradient(circle at 31% 18%,rgba(255,255,255,.74),rgba(190,170,255,.24) 21%,transparent 39%),
-        radial-gradient(circle at 78% 82%,rgba(10,4,45,.82),transparent 54%),
-        linear-gradient(145deg,rgba(190,170,255,.99),rgba(126,82,242,.98) 43%,rgba(52,26,154,.99) 100%);
-      box-shadow:
-        0 20px 40px rgba(39,18,116,.46),
-        0 0 36px rgba(143,101,255,.36),
-        inset 0 1px 0 rgba(255,255,255,.34),
-        inset 0 -16px 30px rgba(21,8,66,.38);
+      overflow:visible;
+      width:6.35rem;
+      height:4.75rem;
+      margin:-2.375rem 0 0 -3.175rem;
       transform:
         rotate(var(--angle))
         translateY(var(--radius))
-        rotate(calc(-1 * var(--angle)))
-        rotate(45deg)
-        rotateX(10deg)
-        rotateY(-7deg);
+        rotate(calc(-1 * var(--angle)));
       pointer-events:auto;
       backface-visibility:hidden;
       transform-style:preserve-3d;
       isolation:isolate;
-      transition:
-        filter .18s ease,
-        box-shadow .18s ease,
-        border-color .18s ease,
-        scale .18s ease,
-        translate .18s ease;
-    }
-
-    .home-node::before{
-      content:"";
-      position:absolute;
-      inset:4.5%;
-      z-index:1;
-      clip-path:var(--gem-inner-cut);
-      background:
-        linear-gradient(90deg,transparent 0 48%,rgba(255,255,255,.28) 49% 51%,transparent 52% 100%),
-        linear-gradient(0deg,transparent 0 48%,rgba(255,255,255,.18) 49% 51%,transparent 52% 100%),
-        linear-gradient(27deg,transparent 0 32%,rgba(255,255,255,.24) 33% 35%,transparent 36% 100%),
-        linear-gradient(153deg,transparent 0 31%,rgba(255,255,255,.20) 32% 34%,transparent 35% 100%),
-        linear-gradient(118deg,transparent 0 42%,rgba(190,170,255,.24) 43% 45%,transparent 46% 100%),
-        linear-gradient(242deg,transparent 0 58%,rgba(255,232,163,.15) 59% 61%,transparent 62% 100%),
-        radial-gradient(circle at 36% 23%,rgba(255,255,255,.40),transparent 27%),
-        conic-gradient(from 0deg at 50% 50%,
-          rgba(255,255,255,.24),
-          rgba(143,101,255,.16),
-          rgba(255,255,255,.14),
-          rgba(33,12,99,.30),
-          rgba(255,255,255,.20));
-      opacity:.98;
-      pointer-events:none;
-      transform:translateZ(1px);
-      mix-blend-mode:screen;
-    }
-
-    .home-node::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      z-index:2;
-      clip-path:var(--gem-cut);
-      background:
-        linear-gradient(115deg,transparent 0 32%,rgba(255,255,255,.40) 33% 35%,transparent 36% 100%),
-        linear-gradient(25deg,transparent 0 57%,rgba(255,232,163,.23) 58% 60%,transparent 61% 100%),
-        linear-gradient(82deg,transparent 0 46%,rgba(190,170,255,.28) 47% 49%,transparent 50% 100%),
-        radial-gradient(circle at 70% 24%,rgba(255,255,255,.24),transparent 20%),
-        radial-gradient(circle at 28% 82%,rgba(12,5,52,.22),transparent 34%);
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.12),
-        inset 0 -22px 30px rgba(21,8,66,.28);
-      pointer-events:none;
-      mix-blend-mode:screen;
+      transition:filter .18s ease,scale .18s ease;
     }
 
     .home-node:hover,
     .home-node:focus-visible{
       outline:none;
-      border-color:rgba(243,200,111,.82);
-      filter:brightness(1.13) saturate(1.16) contrast(1.07);
+      filter:brightness(1.12) saturate(1.10);
       scale:1.045;
-      translate:0 -2px;
-      box-shadow:
-        0 24px 48px rgba(39,18,116,.54),
-        0 0 48px rgba(143,101,255,.44),
-        0 0 20px rgba(243,200,111,.20),
-        inset 0 1px 0 rgba(255,255,255,.38),
-        inset 0 -16px 30px rgba(21,8,66,.38);
+    }
+
+    .receiver-gem-svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      pointer-events:none;
+      filter:
+        drop-shadow(0 1.15rem 1.45rem rgba(0,0,0,.28))
+        drop-shadow(0 0 1.15rem rgba(168,132,255,.18));
+    }
+
+    .home-anchor .receiver-gem-svg{
+      filter:
+        drop-shadow(0 1.35rem 1.6rem rgba(0,0,0,.32))
+        drop-shadow(0 0 1.8rem rgba(168,132,255,.24));
+    }
+
+    .receiver-glint{
+      animation:receiverGlint 8s ease-in-out infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes receiverGlint{
+      0%,100%{opacity:.10;transform:translateX(-28px)}
+      50%{opacity:.42;transform:translateX(28px)}
+    }
+
+    .receiver-star{
+      animation:receiverFacetTurn 24s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes receiverFacetTurn{
+      to{transform:rotate(360deg)}
     }
 
     .home-label-shell{
@@ -681,81 +525,33 @@
       width:100%;
       height:100%;
       padding:.35rem;
-      transform:rotate(-45deg);
       text-align:center;
       position:relative;
-      z-index:5;
-      isolation:isolate;
-    }
-
-    .home-label-shell::before{
-      content:"";
-      position:absolute;
-      inset:-36%;
-      z-index:-1;
+      z-index:3;
       pointer-events:none;
-      opacity:.82;
-      background:
-        linear-gradient(31deg,transparent 0 42%,rgba(255,255,255,.27) 43% 44%,transparent 45% 100%),
-        linear-gradient(149deg,transparent 0 52%,rgba(190,170,255,.25) 53% 54%,transparent 55% 100%),
-        linear-gradient(93deg,transparent 0 49%,rgba(255,255,255,.19) 50% 51%,transparent 52% 100%),
-        linear-gradient(0deg,transparent 0 49%,rgba(143,101,255,.22) 50% 51%,transparent 52% 100%);
-      clip-path:var(--facet-cut);
-      mix-blend-mode:screen;
-    }
-
-    .home-label-shell::after{
-      content:"";
-      position:absolute;
-      left:8%;
-      right:8%;
-      top:50%;
-      z-index:-1;
-      height:1px;
-      pointer-events:none;
-      background:linear-gradient(90deg,transparent,rgba(255,255,255,.48),rgba(190,170,255,.25),transparent);
-      box-shadow:
-        0 -1.05rem 0 rgba(255,255,255,.11),
-        0 1.08rem 0 rgba(190,170,255,.13);
-      transform:rotate(-5deg);
-      opacity:.76;
-      mix-blend-mode:screen;
-    }
-
-    .home-node:hover .home-label-shell::before,
-    .home-node:focus-visible .home-label-shell::before{
-      opacity:.96;
     }
 
     .home-label-text{
       display:block;
-      max-width:4.45rem;
-      color:rgba(255,244,216,.99);
+      max-width:4.2rem;
+      color:rgba(255,244,216,.98);
       text-align:center;
-      font-size:.55rem;
+      font-size:.56rem;
       font-weight:950;
       letter-spacing:.07em;
       line-height:1.1;
       text-transform:uppercase;
       text-shadow:
-        0 2px 12px rgba(0,0,0,.94),
-        0 0 10px rgba(38,12,112,.82),
-        0 0 2px rgba(255,255,255,.46);
+        0 2px 12px rgba(0,0,0,.92),
+        0 0 10px rgba(58,30,130,.84),
+        0 0 2px rgba(255,255,255,.42);
       animation:homeTextUpright var(--orbit-duration) linear infinite;
-      position:relative;
-      z-index:2;
-      will-change:transform;
-    }
-
-    .home-stage:hover .home-label-text,
-    .home-stage:focus-within .home-label-text{
-      animation-duration:var(--orbit-focus-duration);
     }
 
     .home-label-sub{
       display:block;
       margin-top:.12rem;
-      color:rgba(230,238,255,.76);
+      color:rgba(230,238,255,.74);
       font-size:.40rem;
       font-weight:850;
       letter-spacing:.05em;
@@ -798,6 +594,12 @@
       color:rgba(255,244,216,.98);
       font-size:1.05rem;
       line-height:1.1;
+    }
+
+    .route-card span{
+      color:var(--muted);
+      font-size:.82rem;
+      line-height:1.32;
     }
 
     .route-receipt,
@@ -853,24 +655,19 @@
       }
 
       .home-stage{
-        min-height:32rem;
-      }
-
-      .home-orbit-field{
-        width:20.4rem;
-        height:20.4rem;
+        min-height:31rem;
       }
 
       .home-orbit{
-        width:19rem;
-        height:19rem;
+        width:18.5rem;
+        height:18.5rem;
       }
 
       .home-node{
-        --radius:-8.85rem;
-        width:4.45rem;
-        height:4.45rem;
-        margin:-2.225rem 0 0 -2.225rem;
+        --radius:-8.65rem;
+        width:5.1rem;
+        height:3.85rem;
+        margin:-1.925rem 0 0 -2.55rem;
       }
 
       .home-label-text{
@@ -898,33 +695,24 @@
 
     @media (max-width:460px){
       .home-stage{
-        min-height:30rem;
+        min-height:29rem;
       }
 
       .home-anchor{
-        width:7.8rem;
-        height:7.8rem;
-      }
-
-      .home-anchor span{
-        font-size:.60rem;
-      }
-
-      .home-orbit-field{
-        width:17.5rem;
-        height:17.5rem;
+        width:8.1rem;
+        height:6.05rem;
       }
 
       .home-orbit{
-        width:16.8rem;
-        height:16.8rem;
+        width:16.6rem;
+        height:16.6rem;
       }
 
       .home-node{
-        --radius:-7.85rem;
-        width:3.9rem;
-        height:3.9rem;
-        margin:-1.95rem 0 0 -1.95rem;
+        --radius:-7.75rem;
+        width:4.45rem;
+        height:3.35rem;
+        margin:-1.675rem 0 0 -2.225rem;
       }
 
       .home-label-text{
@@ -942,16 +730,114 @@
         animation-iteration-count:1!important;
         transition-duration:.01ms!important;
       }
-
-      .home-orbit,
-      .home-label-text{
-        animation:none!important;
-      }
     }
   </style>
 </head>
 
 <body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="receiverCrystalBody" x1="16" y1="12" x2="204" y2="148" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".86"/>
+        <stop offset=".14" stop-color="#f5edff" stop-opacity=".78"/>
+        <stop offset=".32" stop-color="#d8c8ff" stop-opacity=".64"/>
+        <stop offset=".52" stop-color="#a884ff" stop-opacity=".52"/>
+        <stop offset=".74" stop-color="#5e35d6" stop-opacity=".44"/>
+        <stop offset="1" stop-color="#080618" stop-opacity=".84"/>
+      </linearGradient>
+
+      <radialGradient id="receiverCrystalTable" cx="50%" cy="38%" r="66%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".60"/>
+        <stop offset=".28" stop-color="#f5edff" stop-opacity=".36"/>
+        <stop offset=".58" stop-color="#a884ff" stop-opacity=".16"/>
+        <stop offset="1" stop-color="#050716" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="receiverCrystalGlint" x1="32" y1="130" x2="188" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".46" stop-color="#ffffff" stop-opacity=".78"/>
+        <stop offset=".54" stop-color="#fff0a3" stop-opacity=".22"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="receiverCrystalGlow" x="-40%" y="-48%" width="180%" height="196%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.2" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.78 0 0 0 0.18
+            0 0.62 0 0 0.12
+            0 0 1.00 0 0.32
+            0 0 0 0.48 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="receiverAmethystCrystal" viewBox="0 0 220 160">
+        <g filter="url(#receiverCrystalGlow)">
+          <path
+            d="M110 6 L150 18 L196 56 L178 116 L110 154 L42 116 L24 56 L70 18 Z"
+            fill="url(#receiverCrystalBody)"
+            stroke="rgba(245,237,255,.58)"
+            stroke-width="1.35"
+          />
+          <path d="M110 6 L150 18 L132 47 L110 34 L88 47 L70 18 Z" fill="rgba(255,255,255,.28)"/>
+          <path d="M70 18 L88 47 L62 72 L24 56 Z" fill="rgba(255,255,255,.18)"/>
+          <path d="M150 18 L132 47 L158 72 L196 56 Z" fill="rgba(216,200,255,.20)"/>
+          <path d="M88 47 L110 34 L132 47 L158 72 L144 96 L110 112 L76 96 L62 72 Z" fill="url(#receiverCrystalTable)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
+          <path d="M24 56 L62 72 L76 96 L42 116 Z" fill="rgba(94,53,214,.20)"/>
+          <path d="M196 56 L158 72 L144 96 L178 116 Z" fill="rgba(255,255,255,.12)"/>
+          <path d="M42 116 L76 96 L110 154 Z" fill="rgba(13,10,36,.42)"/>
+          <path d="M178 116 L144 96 L110 154 Z" fill="rgba(168,132,255,.16)"/>
+          <path d="M110 6 L110 154" stroke="rgba(255,255,255,.32)" stroke-width="1.05"/>
+          <path d="M24 56 L196 56" stroke="rgba(255,255,255,.20)" stroke-width=".9"/>
+          <path d="M42 116 L178 116" stroke="rgba(255,255,255,.18)" stroke-width=".9"/>
+          <path d="M70 18 L110 112 L150 18" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M24 56 L110 112 L196 56" stroke="rgba(255,255,255,.14)" stroke-width=".9" fill="none"/>
+          <g class="receiver-star" opacity=".82">
+            <path d="M110 32 L116 77 L110 116 L104 77 Z" fill="rgba(255,255,255,.28)"/>
+            <path d="M62 72 L106 78 L158 72 L114 88 Z" fill="rgba(255,255,255,.17)"/>
+            <path d="M76 96 L106 82 L144 96 L114 106 Z" fill="rgba(255,240,163,.10)"/>
+          </g>
+          <path class="receiver-glint" d="M38 120 L176 24 L188 42 L52 132 Z" fill="url(#receiverCrystalGlint)"/>
+        </g>
+      </symbol>
+
+      <symbol id="receiverAmethystSeal" viewBox="0 0 220 160">
+        <g filter="url(#receiverCrystalGlow)">
+          <path
+            d="M110 5 L142 16 L174 20 L202 55 L190 92 L162 130 L110 154 L58 130 L30 92 L18 55 L46 20 L78 16 Z"
+            fill="url(#receiverCrystalBody)"
+            stroke="rgba(245,237,255,.62)"
+            stroke-width="1.45"
+          />
+          <path d="M110 5 L142 16 L126 44 L110 34 L94 44 L78 16 Z" fill="rgba(255,255,255,.28)"/>
+          <path d="M46 20 L94 44 L68 72 L18 55 Z" fill="rgba(255,255,255,.16)"/>
+          <path d="M174 20 L126 44 L152 72 L202 55 Z" fill="rgba(216,200,255,.18)"/>
+          <path d="M68 72 L94 44 L110 34 L126 44 L152 72 L142 98 L110 116 L78 98 Z" fill="url(#receiverCrystalTable)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
+          <path d="M18 55 L68 72 L78 98 L30 92 Z" fill="rgba(94,53,214,.18)"/>
+          <path d="M202 55 L152 72 L142 98 L190 92 Z" fill="rgba(255,255,255,.12)"/>
+          <path d="M30 92 L78 98 L110 154 L58 130 Z" fill="rgba(13,10,36,.42)"/>
+          <path d="M190 92 L142 98 L110 154 L162 130 Z" fill="rgba(168,132,255,.16)"/>
+          <path d="M110 5 L110 154" stroke="rgba(255,255,255,.32)" stroke-width="1.05"/>
+          <path d="M18 55 L202 55" stroke="rgba(255,255,255,.20)" stroke-width=".9"/>
+          <path d="M30 92 L190 92" stroke="rgba(255,255,255,.18)" stroke-width=".9"/>
+          <g class="receiver-star" opacity=".82">
+            <path d="M110 32 L116 78 L110 118 L104 78 Z" fill="rgba(255,255,255,.28)"/>
+            <path d="M68 72 L106 78 L152 72 L114 88 Z" fill="rgba(255,255,255,.17)"/>
+            <path d="M78 98 L106 82 L142 98 L114 108 Z" fill="rgba(255,240,163,.10)"/>
+          </g>
+          <path class="receiver-glint" d="M38 120 L176 24 L188 42 L52 132 Z" fill="url(#receiverCrystalGlint)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
   <a class="skip" href="#main">Skip to Home</a>
 
   <div class="shell">
@@ -964,20 +850,12 @@
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
+      <nav class="nav" aria-label="Primary traversal">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/" aria-current="page">Home</a>
         <a href="/explore/">Manor</a>
-        <a href="/laws/">Laws</a>
-        <a href="/nine-summits/">Nine Summits</a>
-        <a href="/nine-summits-of-love/">Book</a>
-        <a href="/nine-summits/universe/">Universe</a>
-        <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/frontier/">Frontier</a>
-        <a href="/about-this-underdog/">Underdog</a>
-        <a href="/meet-sean-mansfield/">Meet Sean</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
@@ -1000,40 +878,47 @@
       </section>
 
       <section class="panel section" aria-labelledby="receiver-title">
-        <div class="kicker">Four-point cut-crystal receiver orbit</div>
+        <div class="kicker">Four-point receiver orbit</div>
         <h2 id="receiver-title">Home stabilizes the estate.</h2>
 
         <p>
           Home receives the visitor after the Door, keeps the route clean, and sends each person to the correct room.
         </p>
 
-        <div class="home-stage" aria-label="Animated Home four-point cut-crystal receiver orbit" data-home-stage>
-          <div class="home-orbit-field" aria-hidden="true"></div>
-
+        <div class="home-stage" aria-label="Animated Home four-point physical digital amethyst receiver orbit">
           <div class="home-anchor" aria-hidden="true">
-            <span>Home<br>Receiver</span>
+            <svg class="receiver-gem-svg" viewBox="0 0 220 160" focusable="false">
+              <use href="#receiverAmethystSeal"></use>
+            </svg>
+            <span class="home-label-shell">
+              <b class="home-label-text">Home<span class="home-label-sub">Receiver</span></b>
+            </span>
           </div>
 
-          <div class="home-orbit" role="list" aria-label="Four primary Home receiver routes" data-home-orbit>
-            <a class="home-node" role="listitem" style="--angle:0deg" href="/explore/" aria-label="Manor Rooms" data-home-node data-home-direction="north" data-home-route="/explore/">
+          <div class="home-orbit">
+            <a class="home-node" style="--angle:0deg" href="/explore/" aria-label="Manor Rooms">
+              <svg class="receiver-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#receiverAmethystCrystal"></use></svg>
               <span class="home-label-shell">
                 <b class="home-label-text">Manor<span class="home-label-sub">Rooms</span></b>
               </span>
             </a>
 
-            <a class="home-node" role="listitem" style="--angle:90deg" href="/nine-summits-of-love/" aria-label="Book Climb" data-home-node data-home-direction="east" data-home-route="/nine-summits-of-love/">
+            <a class="home-node" style="--angle:90deg" href="/nine-summits-of-love/" aria-label="Book Climb">
+              <svg class="receiver-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#receiverAmethystCrystal"></use></svg>
               <span class="home-label-shell">
                 <b class="home-label-text">Book<span class="home-label-sub">Climb</span></b>
               </span>
             </a>
 
-            <a class="home-node" role="listitem" style="--angle:180deg" href="/showroom/" aria-label="Showroom Atrium" data-home-node data-home-direction="south" data-home-route="/showroom/">
+            <a class="home-node" style="--angle:180deg" href="/showroom/" aria-label="Showroom Atrium">
+              <svg class="receiver-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#receiverAmethystCrystal"></use></svg>
               <span class="home-label-shell">
                 <b class="home-label-text">Showroom<span class="home-label-sub">Atrium</span></b>
               </span>
             </a>
 
-            <a class="home-node" role="listitem" style="--angle:270deg" href="/gauges/" aria-label="Gauges Proof" data-home-node data-home-direction="west" data-home-route="/gauges/">
+            <a class="home-node" style="--angle:270deg" href="/gauges/" aria-label="Gauges Proof">
+              <svg class="receiver-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#receiverAmethystCrystal"></use></svg>
               <span class="home-label-shell">
                 <b class="home-label-text">Gauges<span class="home-label-sub">Proof</span></b>
               </span>
@@ -1047,36 +932,39 @@
         <h2 id="routes-title">The receiver keeps the estate connected.</h2>
 
         <div class="route-grid">
-          <a class="route-card" href="/"><strong>Compass</strong></a>
-          <a class="route-card" href="/door/"><strong>Door</strong></a>
-          <a class="route-card" href="/nine-summits/"><strong>Nine Summits</strong></a>
-          <a class="route-card" href="/nine-summits/universe/"><strong>Universe</strong></a>
-          <a class="route-card" href="/products/"><strong>Products</strong></a>
-          <a class="route-card" href="/frontier/"><strong>Frontier</strong></a>
+          <a class="route-card" href="/"><strong>Compass</strong><span>Return to orientation.</span></a>
+          <a class="route-card" href="/door/"><strong>Door</strong><span>Return to entry.</span></a>
+          <a class="route-card" href="/explore/"><strong>Manor</strong><span>Choose a room.</span></a>
+          <a class="route-card" href="/laws/"><strong>Laws</strong><span>Read governing rules.</span></a>
+          <a class="route-card" href="/products/"><strong>Products</strong><span>Open usable doors.</span></a>
+          <a class="route-card" href="/showroom/"><strong>Showroom</strong><span>Inspect built assets.</span></a>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-HOME_RECEIVER_CRYSTAL_ANIMATION_RENEWAL_TNT_v1
+HOME_TOP_TRAVERSAL_RECEIVER_CRYSTAL_STANDARD_TNT_v1
+previous=HOME_LOCAL_4_POINT_RECEIVER_ORBIT_TNT_v2
 route=/home/
 page=home
 role=estate_receiver
 message=home_keeps_the_journey_coherent
+material=physical_digital_amethyst_receiver_crystal
+top_traversal=compass,door,home,manor,showroom,gauges
+removed_from_top_traversal=laws,nine_summits,book,universe,products,frontier,underdog,meet_sean
 alignment_sequence=TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2
-local_geometry=true
-animation_standard=LOCAL_4_CUT_CRYSTAL_RECEIVER_ORBIT_STANDARD_v1
-center=home_receiver_background_anchor_only
-visual_system=local_home_receiver_4_point_cut_crystal_axial_orbit
+visual_system=local_home_receiver_4_point_physical_digital_crystal_orbit
+center=home_receiver_crystal_seal
 north=manor:/explore/
 east=book:/nine-summits-of-love/
 south=showroom:/showroom/
 west=gauges:/gauges/
-secondary_routes=compass,door,nine_summits,universe,products,frontier
-animation=homeOrbitAxialTurn,homeTextUpright,homeAnchorPulse,anchorPulse
-z_index_law=ambient_background,home_orbit_field,home_anchor_background,local_orbit_field,local_route_crystals,route_labels
+secondary_routes=compass,door,manor,laws,products,showroom
+animation=homeOrbitSpin,homeTextUpright,receiverFacetTurn,receiverGlint,anchorPulse
+z_index_law=ambient_background,home_anchor_background,local_orbit_field,local_route_crystals,route_labels
 non_overlap_law=no_clickable_crystal_hidden_by_center_no_crystal_escape_to_cards
 mobile_law=compact_4_point_field_no_hidden_nodes
 preserved=home_receiver_gate,manor_book_showroom_gauges_routes,estate_receiver_role
+renewed=top_traversal_constraint,physical_digital_receiver_crystals,route_receipt
 route_owns=estate_receiving,stabilization,four_primary_receiving_directions,room_routes,256_scope_expression
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
 home_loads_planet_scripts=false
@@ -1092,13 +980,8 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      HOME_RECEIVER_CRYSTAL_ANIMATION_RENEWAL_TNT_v1 · Home · Estate Receiver · Four-point cut-crystal local orbit · JS paired.
+      HOME_TOP_TRAVERSAL_RECEIVER_CRYSTAL_STANDARD_TNT_v1 · Home · Estate Receiver · Top traversal constrained.
     </footer>
   </div>
-
-  <script>
-    window.DGB_HOME_KEY = "HOME_RECEIVER_ORBIT_BOOT_AUTHORITY_TNT_v1";
-  </script>
-  <script type="module" src="/home/index.js?v=HOME_RECEIVER_ORBIT_BOOT_AUTHORITY_TNT_v1"></script>
 </body>
 </html>

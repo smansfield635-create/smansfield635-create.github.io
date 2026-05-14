@@ -3,19 +3,16 @@
   lang="en"
   data-route="/products/"
   data-page="products"
-  data-version="G1-V9"
-  data-contract="PRODUCTS_CUT_SAPPHIRE_AXIAL_CRYSTAL_ANIMATION_RENEWAL_TNT_v1"
-  data-renews="PRODUCTS_CUT_SAPPHIRE_PRODUCT_WING_AUTHORITY_RENEWAL_TNT_v1"
+  data-version="G1-V8"
+  data-contract="PRODUCTS_TOP_TRAVERSAL_CONSTRAINT_RENEWAL_TNT_v1"
+  data-renews="PRODUCTS_CUT_SAPPHIRE_INTERNAL_REFRACTION_REFINEMENT_TNT_v3"
   data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
-  data-animation-standard="LOCAL_8_CUT_SAPPHIRE_AXIAL_CRYSTAL_ORBIT_STANDARD_v1"
-  data-material-renewal="cut-sapphire-visible-internal-refraction-axial-depth"
+  data-animation-standard="LOCAL_8_DIAMOND_AXIAL_ORBIT_STANDARD_v1"
+  data-material-renewal="cut-sapphire-gemstone-visible-internal-refraction"
+  data-top-traversal="compass-door-home-products-showroom-gauges"
   data-status="active"
   data-role="product-wing"
-  data-orbit-node-count="8"
-  data-one-message-eight-doors="true"
-  data-css-only-orbit="true"
   data-heavy-runtime-loaded="false"
-  data-js-required="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-streaming="false"
@@ -28,7 +25,7 @@
   <title>Products · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Products is the product wing of Diamond Gate Bridge: one message, eight clear doors, one axial cut-sapphire crystal orbit."
+    content="Products is the product wing of Diamond Gate Bridge: one message, eight clear doors, one axial cut-sapphire orbit."
   >
 
   <style>
@@ -49,11 +46,8 @@
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
-      --orbit-duration:54s;
-      --orbit-focus-duration:86s;
+      --orbit-duration:48s;
       --gem-cut:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
-      --gem-inner-cut:polygon(50% 2%,72% 13%,94% 36%,78% 55%,86% 76%,50% 97%,14% 76%,22% 55%,6% 36%,28% 13%);
-      --facet-cut:polygon(50% 0%,68% 18%,100% 35%,72% 48%,90% 75%,50% 100%,10% 75%,28% 48%,0% 35%,32% 18%);
     }
 
     *{box-sizing:border-box}
@@ -100,23 +94,6 @@
     }
 
     a{color:inherit;text-decoration:none}
-
-    a:focus-visible{
-      outline:2px solid var(--gold);
-      outline-offset:4px;
-    }
-
-    .sr-only{
-      position:absolute;
-      width:1px;
-      height:1px;
-      padding:0;
-      margin:-1px;
-      overflow:hidden;
-      clip:rect(0,0,0,0);
-      white-space:nowrap;
-      border:0;
-    }
 
     .skip{
       position:absolute;
@@ -403,7 +380,7 @@
 
     .products-stage{
       position:relative;
-      min-height:clamp(36rem,72vw,54rem);
+      min-height:clamp(35rem,70vw,52rem);
       display:grid;
       place-items:center;
       overflow:hidden;
@@ -411,11 +388,9 @@
       border:1px solid rgba(184,205,255,.13);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        radial-gradient(circle at 50% 42%,rgba(36,120,255,.21),transparent 19rem),
-        radial-gradient(circle at 50% 58%,rgba(243,200,111,.055),transparent 27rem),
+        radial-gradient(circle at 50% 44%,rgba(36,120,255,.17),transparent 20rem),
         linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.92));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-      perspective:980px;
     }
 
     .products-stage::before,
@@ -430,41 +405,37 @@
     }
 
     .products-stage::before{
-      width:min(82%,35rem);
-      height:min(82%,35rem);
-      border:1px solid rgba(243,200,111,.09);
-      box-shadow:
-        0 0 3rem rgba(36,120,255,.12),
-        inset 0 0 5rem rgba(36,120,255,.035);
+      width:min(82%,34rem);
+      height:min(82%,34rem);
+      border:1px solid rgba(243,200,111,.08);
+      box-shadow:0 0 3rem rgba(36,120,255,.12);
     }
 
     .products-stage::after{
       width:min(52%,22rem);
       height:min(52%,22rem);
-      border:1px solid rgba(36,120,255,.18);
-      box-shadow:inset 0 0 2rem rgba(141,216,255,.045);
+      border:1px solid rgba(36,120,255,.17);
     }
 
     .products-anchor{
       position:absolute;
       left:50%;
       top:50%;
-      z-index:1;
+      z-index:0;
       display:grid;
       place-items:center;
-      width:clamp(8.6rem,22vw,13rem);
-      height:clamp(8.6rem,22vw,13rem);
+      width:clamp(8.5rem,22vw,13rem);
+      height:clamp(8.5rem,22vw,13rem);
       transform:translate(-50%,-50%) rotate(45deg);
-      border:1px solid rgba(243,200,111,.14);
+      border:1px solid rgba(243,200,111,.12);
       border-radius:1.9rem;
       background:
         radial-gradient(circle at 35% 28%,rgba(255,255,255,.16),transparent 31%),
-        radial-gradient(circle at 70% 78%,rgba(36,120,255,.22),transparent 48%),
-        linear-gradient(135deg,rgba(36,120,255,.32),rgba(4,18,62,.44));
+        linear-gradient(135deg,rgba(36,120,255,.30),rgba(4,18,62,.42));
       box-shadow:
-        0 0 70px rgba(36,120,255,.20),
+        0 0 70px rgba(36,120,255,.18),
         inset 0 0 26px rgba(255,255,255,.04);
-      opacity:.52;
+      opacity:.48;
       pointer-events:none;
       animation:productsAnchorPulse 7s ease-in-out infinite;
     }
@@ -474,21 +445,19 @@
       position:absolute;
       inset:14%;
       border-radius:1.25rem;
-      border:1px solid rgba(255,255,255,.06);
-      box-shadow:inset 0 0 1.5rem rgba(141,216,255,.045);
+      border:1px solid rgba(255,255,255,.05);
     }
 
     .products-anchor span{
       display:block;
       transform:rotate(-45deg);
-      color:rgba(255,244,216,.88);
+      color:rgba(255,244,216,.86);
       text-align:center;
       font-size:.78rem;
       font-weight:950;
       letter-spacing:.15em;
       text-transform:uppercase;
       line-height:1.2;
-      text-shadow:0 2px 14px rgba(0,0,0,.78);
     }
 
     @keyframes productsAnchorPulse{
@@ -497,151 +466,96 @@
         opacity:.42;
       }
       50%{
-        transform:translate(-50%,-50%) rotate(45deg) scale(1.025);
-        opacity:.60;
+        transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+        opacity:.56;
       }
-    }
-
-    .products-orbit-field{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:min(78%,35rem);
-      height:min(78%,35rem);
-      z-index:2;
-      border-radius:50%;
-      transform:translate(-50%,-50%) rotateX(62deg);
-      pointer-events:none;
-      border:1px solid rgba(243,200,111,.105);
-      box-shadow:
-        0 0 46px rgba(36,120,255,.10),
-        inset 0 0 30px rgba(141,216,255,.035);
-    }
-
-    .products-orbit-field::before,
-    .products-orbit-field::after{
-      content:"";
-      position:absolute;
-      inset:11%;
-      border-radius:50%;
-      border:1px solid rgba(141,216,255,.11);
-    }
-
-    .products-orbit-field::after{
-      inset:30%;
-      border-color:rgba(243,200,111,.075);
     }
 
     .products-orbit{
       position:absolute;
       left:50%;
       top:50%;
-      width:27.4rem;
-      height:27.4rem;
-      z-index:4;
+      width:26.5rem;
+      height:26.5rem;
+      z-index:3;
       border-radius:999px;
       pointer-events:none;
-      transform:translate(-50%,-50%) rotateX(0deg);
-      animation:productsOrbitAxialTurn var(--orbit-duration) linear infinite;
-      transform-style:preserve-3d;
-      will-change:transform;
+      transform:translate(-50%,-50%);
+      animation:productsOrbitSpin var(--orbit-duration) linear infinite;
     }
 
-    .products-stage:hover .products-orbit,
-    .products-stage:focus-within .products-orbit{
-      animation-duration:var(--orbit-focus-duration);
-    }
-
-    @keyframes productsOrbitAxialTurn{
-      0%{
-        transform:translate(-50%,-50%) rotate(0deg) rotateX(0deg);
-      }
-      50%{
-        transform:translate(-50%,-50%) rotate(180deg) rotateX(2.5deg);
-      }
-      100%{
-        transform:translate(-50%,-50%) rotate(360deg) rotateX(0deg);
-      }
+    @keyframes productsOrbitSpin{
+      to{transform:translate(-50%,-50%) rotate(360deg)}
     }
 
     .product-node{
-      --radius:-13.1rem;
+      --radius:-12.75rem;
       position:absolute;
       left:50%;
       top:50%;
       display:grid;
       place-items:center;
       overflow:hidden;
-      width:5.75rem;
-      height:5.75rem;
-      margin:-2.875rem 0 0 -2.875rem;
-      border:1px solid rgba(141,216,255,.58);
+      width:5.45rem;
+      height:5.45rem;
+      margin:-2.725rem 0 0 -2.725rem;
+      border:1px solid rgba(141,216,255,.50);
       border-radius:0;
       clip-path:var(--gem-cut);
-      color:rgba(255,244,216,.98);
       background:
-        linear-gradient(35deg,transparent 0 18%,rgba(255,255,255,.48) 19% 21%,transparent 22% 100%),
-        linear-gradient(145deg,rgba(255,255,255,.28),transparent 18%,rgba(4,38,128,.34) 44%,transparent 68%),
+        linear-gradient(35deg,transparent 0 19%,rgba(255,255,255,.34) 20% 22%,transparent 23% 100%),
+        linear-gradient(145deg,rgba(255,255,255,.25),transparent 18%,rgba(4,38,128,.30) 44%,transparent 68%),
         conic-gradient(from 45deg at 50% 50%,
-          rgba(255,255,255,.36) 0deg,
-          rgba(38,150,255,.36) 36deg,
-          rgba(2,18,76,.64) 72deg,
-          rgba(120,212,255,.31) 108deg,
-          rgba(4,31,116,.70) 144deg,
-          rgba(255,255,255,.23) 180deg,
-          rgba(2,18,76,.74) 216deg,
-          rgba(58,154,255,.34) 252deg,
-          rgba(1,12,54,.78) 288deg,
-          rgba(173,230,255,.31) 324deg,
-          rgba(255,255,255,.36) 360deg),
-        radial-gradient(circle at 31% 18%,rgba(255,255,255,.78),rgba(150,220,255,.22) 21%,transparent 39%),
-        radial-gradient(circle at 78% 82%,rgba(1,9,42,.82),transparent 54%),
-        linear-gradient(145deg,rgba(96,192,255,.99),rgba(16,84,222,.98) 43%,rgba(1,24,92,.99) 100%);
+          rgba(255,255,255,.30) 0deg,
+          rgba(35,142,255,.30) 36deg,
+          rgba(2,18,76,.56) 72deg,
+          rgba(102,194,255,.27) 108deg,
+          rgba(4,31,116,.64) 144deg,
+          rgba(255,255,255,.20) 180deg,
+          rgba(2,18,76,.68) 216deg,
+          rgba(58,154,255,.30) 252deg,
+          rgba(1,12,54,.72) 288deg,
+          rgba(160,222,255,.27) 324deg,
+          rgba(255,255,255,.30) 360deg),
+        radial-gradient(circle at 32% 20%,rgba(255,255,255,.70),rgba(150,220,255,.18) 22%,transparent 38%),
+        radial-gradient(circle at 76% 80%,rgba(1,9,42,.76),transparent 52%),
+        linear-gradient(145deg,rgba(91,188,255,.99),rgba(17,88,218,.98) 42%,rgba(1,24,92,.99) 100%);
       box-shadow:
-        0 20px 40px rgba(2,16,64,.46),
-        0 0 36px rgba(36,120,255,.36),
-        inset 0 1px 0 rgba(255,255,255,.34),
-        inset 0 -16px 30px rgba(1,9,42,.38);
+        0 18px 36px rgba(2,16,64,.42),
+        0 0 32px rgba(36,120,255,.34),
+        inset 0 1px 0 rgba(255,255,255,.32),
+        inset 0 -14px 28px rgba(1,9,42,.34);
       transform:
         rotate(var(--angle))
         translateY(var(--radius))
         rotate(calc(-1 * var(--angle)))
-        rotate(45deg)
-        rotateX(10deg)
-        rotateY(-7deg);
+        rotate(45deg);
       pointer-events:auto;
       backface-visibility:hidden;
       transform-style:preserve-3d;
       isolation:isolate;
-      transition:
-        filter .18s ease,
-        box-shadow .18s ease,
-        border-color .18s ease,
-        scale .18s ease,
-        translate .18s ease;
     }
 
     .product-node::before{
       content:"";
       position:absolute;
-      inset:4.5%;
-      z-index:1;
-      clip-path:var(--gem-inner-cut);
+      inset:5%;
+      clip-path:polygon(50% 0%,75% 12%,100% 36%,80% 54%,89% 78%,50% 100%,11% 78%,20% 54%,0% 36%,25% 12%);
       background:
-        linear-gradient(90deg,transparent 0 48%,rgba(255,255,255,.28) 49% 51%,transparent 52% 100%),
-        linear-gradient(0deg,transparent 0 48%,rgba(255,255,255,.18) 49% 51%,transparent 52% 100%),
-        linear-gradient(27deg,transparent 0 32%,rgba(255,255,255,.24) 33% 35%,transparent 36% 100%),
-        linear-gradient(153deg,transparent 0 31%,rgba(255,255,255,.20) 32% 34%,transparent 35% 100%),
-        linear-gradient(118deg,transparent 0 42%,rgba(112,199,255,.22) 43% 45%,transparent 46% 100%),
-        linear-gradient(242deg,transparent 0 58%,rgba(255,232,163,.15) 59% 61%,transparent 62% 100%),
-        radial-gradient(circle at 36% 23%,rgba(255,255,255,.40),transparent 27%),
+        linear-gradient(90deg,transparent 0 48%,rgba(255,255,255,.24) 49% 51%,transparent 52% 100%),
+        linear-gradient(0deg,transparent 0 48%,rgba(255,255,255,.16) 49% 51%,transparent 52% 100%),
+        linear-gradient(27deg,transparent 0 32%,rgba(255,255,255,.21) 33% 35%,transparent 36% 100%),
+        linear-gradient(153deg,transparent 0 31%,rgba(255,255,255,.18) 32% 34%,transparent 35% 100%),
+        linear-gradient(118deg,transparent 0 42%,rgba(112,199,255,.18) 43% 45%,transparent 46% 100%),
+        linear-gradient(242deg,transparent 0 58%,rgba(255,232,163,.13) 59% 61%,transparent 62% 100%),
+        radial-gradient(circle at 36% 23%,rgba(255,255,255,.32),transparent 26%),
         conic-gradient(from 0deg at 50% 50%,
-          rgba(255,255,255,.24),
-          rgba(8,68,180,.15),
-          rgba(255,255,255,.14),
-          rgba(1,16,72,.28),
-          rgba(255,255,255,.20));
-      opacity:.98;
+          rgba(255,255,255,.20),
+          rgba(8,68,180,.12),
+          rgba(255,255,255,.12),
+          rgba(1,16,72,.24),
+          rgba(255,255,255,.17));
+      opacity:.96;
       pointer-events:none;
       transform:translateZ(1px);
       mix-blend-mode:screen;
@@ -651,34 +565,17 @@
       content:"";
       position:absolute;
       inset:0;
-      z-index:2;
       clip-path:var(--gem-cut);
       background:
-        linear-gradient(115deg,transparent 0 32%,rgba(255,255,255,.40) 33% 35%,transparent 36% 100%),
-        linear-gradient(25deg,transparent 0 57%,rgba(255,232,163,.23) 58% 60%,transparent 61% 100%),
-        linear-gradient(82deg,transparent 0 46%,rgba(141,216,255,.26) 47% 49%,transparent 50% 100%),
-        radial-gradient(circle at 70% 24%,rgba(255,255,255,.24),transparent 20%),
-        radial-gradient(circle at 28% 82%,rgba(3,12,52,.22),transparent 34%);
+        linear-gradient(115deg,transparent 0 33%,rgba(255,255,255,.34) 34% 36%,transparent 37% 100%),
+        linear-gradient(25deg,transparent 0 58%,rgba(255,232,163,.20) 59% 61%,transparent 62% 100%),
+        linear-gradient(82deg,transparent 0 47%,rgba(141,216,255,.22) 48% 49%,transparent 50% 100%),
+        radial-gradient(circle at 70% 24%,rgba(255,255,255,.20),transparent 20%);
       box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.12),
-        inset 0 -22px 30px rgba(1,9,42,.28);
+        inset 0 0 0 1px rgba(255,255,255,.10),
+        inset 0 -20px 28px rgba(1,9,42,.24);
       pointer-events:none;
       mix-blend-mode:screen;
-    }
-
-    .product-node:hover,
-    .product-node:focus-visible{
-      outline:none;
-      border-color:rgba(243,200,111,.82);
-      filter:brightness(1.13) saturate(1.18) contrast(1.07);
-      scale:1.045;
-      translate:0 -2px;
-      box-shadow:
-        0 24px 48px rgba(2,16,64,.54),
-        0 0 48px rgba(36,120,255,.44),
-        0 0 20px rgba(243,200,111,.20),
-        inset 0 1px 0 rgba(255,255,255,.38),
-        inset 0 -16px 30px rgba(1,9,42,.38);
     }
 
     .product-label-shell{
@@ -691,23 +588,23 @@
       transform:rotate(-45deg);
       text-align:center;
       position:relative;
-      z-index:5;
+      z-index:3;
       isolation:isolate;
     }
 
     .product-label-shell::before{
       content:"";
       position:absolute;
-      inset:-36%;
+      inset:-34%;
       z-index:-1;
       pointer-events:none;
-      opacity:.82;
+      opacity:.76;
       background:
-        linear-gradient(31deg,transparent 0 42%,rgba(255,255,255,.27) 43% 44%,transparent 45% 100%),
-        linear-gradient(149deg,transparent 0 52%,rgba(141,216,255,.25) 53% 54%,transparent 55% 100%),
-        linear-gradient(93deg,transparent 0 49%,rgba(255,255,255,.19) 50% 51%,transparent 52% 100%),
-        linear-gradient(0deg,transparent 0 49%,rgba(36,120,255,.22) 50% 51%,transparent 52% 100%);
-      clip-path:var(--facet-cut);
+        linear-gradient(31deg,transparent 0 42%,rgba(255,255,255,.24) 43% 44%,transparent 45% 100%),
+        linear-gradient(149deg,transparent 0 52%,rgba(141,216,255,.22) 53% 54%,transparent 55% 100%),
+        linear-gradient(93deg,transparent 0 49%,rgba(255,255,255,.17) 50% 51%,transparent 52% 100%),
+        linear-gradient(0deg,transparent 0 49%,rgba(36,120,255,.20) 50% 51%,transparent 52% 100%);
+      clip-path:var(--gem-cut);
       mix-blend-mode:screen;
     }
 
@@ -720,24 +617,37 @@
       z-index:-1;
       height:1px;
       pointer-events:none;
-      background:linear-gradient(90deg,transparent,rgba(255,255,255,.48),rgba(112,199,255,.25),transparent);
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.42),rgba(112,199,255,.22),transparent);
       box-shadow:
-        0 -1.05rem 0 rgba(255,255,255,.11),
-        0 1.08rem 0 rgba(112,199,255,.13);
+        0 -1.05rem 0 rgba(255,255,255,.10),
+        0 1.08rem 0 rgba(112,199,255,.12);
       transform:rotate(-5deg);
-      opacity:.76;
+      opacity:.72;
       mix-blend-mode:screen;
     }
 
+    .product-node:hover,
+    .product-node:focus{
+      outline:none;
+      border-color:rgba(243,200,111,.74);
+      box-shadow:
+        0 23px 44px rgba(2,16,64,.50),
+        0 0 42px rgba(36,120,255,.42),
+        0 0 18px rgba(243,200,111,.15),
+        inset 0 1px 0 rgba(255,255,255,.35),
+        inset 0 -14px 28px rgba(1,9,42,.34);
+      filter:brightness(1.10) saturate(1.16) contrast(1.05);
+    }
+
     .product-node:hover .product-label-shell::before,
-    .product-node:focus-visible .product-label-shell::before{
-      opacity:.96;
+    .product-node:focus .product-label-shell::before{
+      opacity:.92;
     }
 
     .product-label-text{
       display:block;
-      max-width:4.5rem;
-      color:rgba(255,244,216,.99);
+      max-width:4.4rem;
+      color:rgba(255,244,216,.98);
       text-align:center;
       font-size:.54rem;
       font-weight:950;
@@ -745,18 +655,12 @@
       line-height:1.1;
       text-transform:uppercase;
       text-shadow:
-        0 2px 12px rgba(0,0,0,.94),
-        0 0 10px rgba(0,28,90,.82),
-        0 0 2px rgba(255,255,255,.46);
+        0 2px 12px rgba(0,0,0,.92),
+        0 0 10px rgba(0,28,90,.78),
+        0 0 2px rgba(255,255,255,.42);
       animation:productsTextUpright var(--orbit-duration) linear infinite;
       position:relative;
       z-index:2;
-      will-change:transform;
-    }
-
-    .products-stage:hover .product-label-text,
-    .products-stage:focus-within .product-label-text{
-      animation-duration:var(--orbit-focus-duration);
     }
 
     .product-label-sub{
@@ -849,6 +753,29 @@
       text-transform:uppercase;
     }
 
+    .route-receipt,
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt],
+    .receipt{
+      display:none!important;
+      visibility:hidden!important;
+      overflow:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      inset:auto!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
+    }
+
     footer{
       padding:1.35rem 0 .5rem;
       color:var(--faint);
@@ -880,12 +807,7 @@
       }
 
       .products-stage{
-        min-height:34rem;
-      }
-
-      .products-orbit-field{
-        width:22.5rem;
-        height:22.5rem;
+        min-height:33rem;
       }
 
       .products-orbit{
@@ -895,9 +817,9 @@
 
       .product-node{
         --radius:-9.95rem;
-        width:4.45rem;
-        height:4.45rem;
-        margin:-2.225rem 0 0 -2.225rem;
+        width:4.35rem;
+        height:4.35rem;
+        margin:-2.175rem 0 0 -2.175rem;
       }
 
       .product-label-text{
@@ -938,11 +860,6 @@
         font-size:.60rem;
       }
 
-      .products-orbit-field{
-        width:19.5rem;
-        height:19.5rem;
-      }
-
       .products-orbit{
         width:18.8rem;
         height:18.8rem;
@@ -950,9 +867,9 @@
 
       .product-node{
         --radius:-8.75rem;
-        width:3.85rem;
-        height:3.85rem;
-        margin:-1.925rem 0 0 -1.925rem;
+        width:3.75rem;
+        height:3.75rem;
+        margin:-1.875rem 0 0 -1.875rem;
       }
 
       .product-label-text{
@@ -969,11 +886,6 @@
         animation-duration:.01ms!important;
         animation-iteration-count:1!important;
         transition-duration:.01ms!important;
-      }
-
-      .products-orbit,
-      .product-label-text{
-        animation:none!important;
       }
     }
   </style>
@@ -992,20 +904,12 @@
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
+      <nav class="nav" aria-label="Primary traversal">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/explore/">Manor</a>
-        <a href="/laws/">Laws</a>
-        <a href="/nine-summits/">Nine Summits</a>
-        <a href="/nine-summits-of-love/">Book</a>
-        <a href="/nine-summits/universe/">Universe</a>
         <a href="/products/" aria-current="page">Products</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/frontier/">Frontier</a>
-        <a href="/about-this-underdog/">Underdog</a>
-        <a href="/meet-sean-mansfield/">Meet Sean</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
@@ -1032,63 +936,58 @@
       </section>
 
       <section class="panel section" aria-labelledby="field-title">
-        <div class="kicker">Eight cut-sapphire axial crystal orbit</div>
+        <div class="kicker">Eight cut-sapphire axial orbit</div>
         <h2 id="field-title">Eight cut sapphires sit on one circular path around one usable message.</h2>
-        <p class="sr-only" id="orbit-proof">
-          This is a CSS-only eight-node cut-sapphire axial crystal orbit. It does not load a heavy runtime, generated image, graphic box, streaming layer, or visual pass claim.
-        </p>
 
-        <div class="products-stage" aria-label="Animated Products eight-cut-sapphire axial crystal orbit" aria-describedby="orbit-proof">
-          <div class="products-orbit-field" aria-hidden="true"></div>
-
+        <div class="products-stage" aria-label="Animated Products eight-cut-sapphire axial orbit">
           <div class="products-anchor" aria-hidden="true">
             <span>Products<br>One Message<br>Eight Doors</span>
           </div>
 
-          <div class="products-orbit" role="list" aria-label="Eight product wing doors">
-            <a class="product-node" role="listitem" style="--angle:0deg" href="/products/archcoin/" aria-label="ARCHCOIN product chamber" data-product-key="archcoin">
+          <div class="products-orbit">
+            <a class="product-node" style="--angle:0deg" href="/products/archcoin/" aria-label="ARCHCOIN">
               <span class="product-label-shell">
                 <b class="product-label-text">ARCHCOIN<span class="product-label-sub">Value</span></b>
               </span>
             </a>
 
-            <a class="product-node" role="listitem" style="--angle:45deg" href="/products/five-flags/" aria-label="Five Flags product chamber" data-product-key="five-flags">
+            <a class="product-node" style="--angle:45deg" href="/products/five-flags/" aria-label="Five Flags">
               <span class="product-label-shell">
                 <b class="product-label-text">Five<br>Flags<span class="product-label-sub">Game</span></b>
               </span>
             </a>
 
-            <a class="product-node" role="listitem" style="--angle:90deg" href="/products/on-your-side-ai/" aria-label="On Your Side AI product chamber" data-product-key="on-your-side-ai">
+            <a class="product-node" style="--angle:90deg" href="/products/on-your-side-ai/" aria-label="On Your Side AI">
               <span class="product-label-shell">
                 <b class="product-label-text">AI<span class="product-label-sub">Support</span></b>
               </span>
             </a>
 
-            <a class="product-node" role="listitem" style="--angle:135deg" href="/products/education/" aria-label="Education product chamber" data-product-key="education">
+            <a class="product-node" style="--angle:135deg" href="/products/education/" aria-label="Education">
               <span class="product-label-shell">
                 <b class="product-label-text">Education<span class="product-label-sub">Learning</span></b>
               </span>
             </a>
 
-            <a class="product-node" role="listitem" style="--angle:180deg" href="/products/nutrition/" aria-label="Nutrition product chamber" data-product-key="nutrition">
+            <a class="product-node" style="--angle:180deg" href="/products/nutrition/" aria-label="Nutrition">
               <span class="product-label-shell">
                 <b class="product-label-text">Nutrition<span class="product-label-sub">Routine</span></b>
               </span>
             </a>
 
-            <a class="product-node" role="listitem" style="--angle:225deg" href="/meet-sean-mansfield/" aria-label="Meet Sean voice path" data-product-key="meet-sean">
+            <a class="product-node" style="--angle:225deg" href="/meet-sean-mansfield/" aria-label="Meet Sean">
               <span class="product-label-shell">
                 <b class="product-label-text">Meet<br>Sean<span class="product-label-sub">Voice</span></b>
               </span>
             </a>
 
-            <a class="product-node" role="listitem" style="--angle:270deg" href="/nine-summits/" aria-label="Nine Summits climb path" data-product-key="nine-summits">
+            <a class="product-node" style="--angle:270deg" href="/nine-summits/" aria-label="Nine Summits">
               <span class="product-label-shell">
                 <b class="product-label-text">Nine<br>Summits<span class="product-label-sub">Climb</span></b>
               </span>
             </a>
 
-            <a class="product-node" role="listitem" style="--angle:315deg" href="/nine-summits-of-love/" aria-label="The Nine Summits of Love book path" data-product-key="book">
+            <a class="product-node" style="--angle:315deg" href="/nine-summits-of-love/" aria-label="The Book">
               <span class="product-label-shell">
                 <b class="product-label-text">Book<span class="product-label-sub">Love</span></b>
               </span>
@@ -1175,10 +1074,32 @@
           <a class="route-card" href="/nine-summits-of-love/"><strong>Book</strong></a>
         </div>
       </section>
+
+      <template id="route-receipt" data-route-receipt>
+PRODUCTS_TOP_TRAVERSAL_CONSTRAINT_RENEWAL_TNT_v1
+previous=PRODUCTS_CUT_SAPPHIRE_INTERNAL_REFRACTION_REFINEMENT_TNT_v3
+route=/products/
+page=products
+role=product_wing
+message=the_message_becomes_usable_here
+top_traversal=compass,door,home,products,showroom,gauges
+removed_from_top_traversal=manor,laws,nine_summits,book,universe,frontier,underdog,meet_sean
+preserved=product_hero,product_actions,eight_cut_sapphire_axial_orbit,product_chambers,product_wing_route_map
+route_owns=product_wing,product_doors,product_navigation,product_orbit_expression
+route_does_not_own=laws_chamber,planet_surface,showroom_runtime,gauges_logic
+heavy_runtime_loaded=false
+render_files_touched=false
+instrument_touched=false
+gauges_logic_touched=false
+generated_image=false
+graphic_box=false
+streaming=false
+visual_pass_claimed=false
+      </template>
     </main>
 
     <footer>
-      Products · One message · Eight cut-sapphire crystal doors.
+      PRODUCTS_TOP_TRAVERSAL_CONSTRAINT_RENEWAL_TNT_v1 · Products · One message · Eight cut-sapphire doors.
     </footer>
   </div>
 </body>

@@ -1,261 +1,166 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="h-earth-public-ground-engine"
+  data-page="h-earth-sky-water-ground-minimal-visibility"
   data-route="/showroom/globe/h-earth/"
-  data-contract="H_EARTH_PUBLIC_PRESENTATION_AND_VISUAL_EXPRESSION_ROUTE_SHELL_RENEWAL_v1"
+  data-contract="H_EARTH_SKY_WATER_GROUND_MINIMAL_VISIBILITY_TNT_v1"
   data-parent-baseline="/showroom/globe/"
   data-parent-mutation="false"
-  data-ground-level="true"
-  data-reusable-environment-engine="true"
-  data-hex-substrate="live"
-  data-static-image-source="false"
-  data-water-behind-manor="true"
-  data-public-presentation="active"
+  data-scene-mode="sky-water-ground-only"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>H-Earth · Western Golden Shelf</title>
+  <title>H-Earth · Sky Water Ground</title>
   <meta
     name="description"
-    content="H-Earth Western Golden Shelf ground-level route using the reusable planetary environment engine with live 256×256 hex substrate."
+    content="H-Earth minimal ground-level proof showing only sky, water, and ground."
   >
 
   <style>
     :root {
       --bg:#030812;
-      --bg2:#071225;
-      --line:rgba(244,207,131,.22);
-      --line2:rgba(255,255,255,.12);
-      --text:rgba(238,244,255,.94);
-      --muted:rgba(238,244,255,.66);
-      --faint:rgba(238,244,255,.46);
+      --panel:#071225;
       --gold:#f4cf83;
       --mint:#a7f3c6;
+      --text:rgba(238,244,255,.94);
+      --muted:rgba(238,244,255,.66);
+      --line:rgba(244,207,131,.20);
       color-scheme:dark;
     }
 
     * { box-sizing:border-box; }
 
     html, body {
-      min-height:100%;
       margin:0;
-      background:
-        linear-gradient(90deg, rgba(244,207,131,.045) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(244,207,131,.025) 1px, transparent 1px),
-        radial-gradient(circle at 50% -8%, rgba(78,119,171,.25), transparent 38%),
-        radial-gradient(circle at 12% 18%, rgba(244,207,131,.11), transparent 30%),
-        linear-gradient(180deg, var(--bg2), var(--bg) 54%, #02050b);
-      background-size:58px 58px,58px 58px,auto,auto,auto;
+      min-height:100%;
+      background:linear-gradient(180deg,#071225,#030812 60%,#01040a);
       color:var(--text);
-      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
 
     a { color:inherit; }
 
     .page {
-      width:min(1180px, calc(100% - 28px));
+      width:min(1120px,calc(100% - 28px));
       margin:0 auto;
-      padding:22px 0 58px;
+      padding:22px 0 56px;
     }
 
     .topbar {
       display:flex;
-      align-items:center;
       justify-content:space-between;
-      gap:16px;
-      padding:12px 0 22px;
+      align-items:center;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:22px;
     }
 
     .brand {
       color:var(--gold);
       text-decoration:none;
       font-weight:950;
-      text-transform:uppercase;
-      letter-spacing:.02em;
     }
 
-    .nav, .actions {
+    .nav {
       display:flex;
       flex-wrap:wrap;
       gap:8px;
     }
 
-    .nav a, .button {
-      min-height:38px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid var(--line2);
-      border-radius:999px;
-      padding:0 13px;
-      color:rgba(238,244,255,.84);
+    .nav a {
       text-decoration:none;
-      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      padding:9px 12px;
+      color:rgba(238,244,255,.82);
       font-size:.82rem;
       font-weight:850;
+      background:rgba(255,255,255,.04);
     }
 
-    .nav a[aria-current="page"],
-    .button.primary {
+    .nav a[aria-current="page"] {
       color:#06101c;
-      background:linear-gradient(135deg, var(--mint), #78d8ac);
-      border-color:rgba(167,243,198,.64);
+      background:linear-gradient(135deg,var(--mint),#78d8ac);
     }
 
-    .button.gold {
-      color:#150d03;
-      background:linear-gradient(135deg, #fff0b8, var(--gold) 48%, #c48a38);
-    }
-
-    .hero, .panel, .card {
+    .hero,
+    .stage-panel {
       border:1px solid var(--line);
-      border-radius:34px;
-      background:
-        radial-gradient(circle at 76% 28%, rgba(139,200,255,.12), transparent 32%),
-        linear-gradient(180deg, rgba(8,17,34,.95), rgba(4,9,20,.96));
-      box-shadow:0 24px 70px rgba(0,0,0,.28);
+      border-radius:28px;
+      background:linear-gradient(180deg,rgba(8,17,34,.96),rgba(4,9,20,.98));
+      box-shadow:0 24px 70px rgba(0,0,0,.30);
       overflow:hidden;
     }
 
-    .hero { padding:clamp(24px,5vw,46px); }
-    .panel { padding:clamp(18px,3vw,28px); margin-top:16px; }
+    .hero {
+      padding:clamp(22px,5vw,42px);
+      margin-bottom:16px;
+    }
 
     .eyebrow {
-      margin:0 0 14px;
+      margin:0 0 12px;
       color:var(--gold);
-      font:900 .78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing:.22em;
+      font:900 .78rem/1.4 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.18em;
       text-transform:uppercase;
     }
 
-    h1, h2, h3 {
-      margin:0;
-      color:var(--gold);
-      line-height:1.05;
-    }
-
     h1 {
-      max-width:980px;
-      font-size:clamp(2.35rem,7vw,5.2rem);
-      line-height:.93;
-      letter-spacing:-.075em;
+      margin:0;
+      max-width:900px;
+      color:var(--gold);
+      font-size:clamp(2.1rem,7vw,4.8rem);
+      line-height:.96;
+      letter-spacing:-.065em;
     }
 
-    h2 {
-      font-size:clamp(1.55rem,4.5vw,2.4rem);
-      letter-spacing:-.045em;
-    }
-
-    .lede, p {
+    p {
+      max-width:820px;
       color:var(--muted);
       line-height:1.55;
     }
 
-    .lede {
-      max-width:900px;
-      margin:22px 0 0;
-      font-size:clamp(1.02rem,2.5vw,1.28rem);
-    }
-
-    .actions { margin-top:26px; }
-
-    .lock-line {
+    .lock {
       margin-top:16px;
-      padding:18px;
-      border:1px solid rgba(167,243,198,.20);
-      border-radius:24px;
-      background:rgba(5,38,34,.24);
+      padding:14px 16px;
+      border:1px solid rgba(167,243,198,.22);
+      border-radius:20px;
       color:var(--mint);
+      background:rgba(5,38,34,.24);
       font-weight:900;
-      line-height:1.5;
     }
 
-    .ground-grid {
-      display:grid;
-      grid-template-columns:minmax(0,1.45fr) minmax(260px,.55fr);
-      gap:16px;
-      margin-top:16px;
+    .stage-panel {
+      padding:clamp(14px,3vw,24px);
     }
 
-    .ground-stage {
+    .stage {
       width:100%;
       min-height:clamp(560px,96vw,880px);
-      border:1px solid rgba(244,207,131,.18);
-      border-radius:28px;
+      border:1px solid rgba(244,207,131,.16);
+      border-radius:24px;
       overflow:hidden;
-      background:
-        radial-gradient(circle at 50% 22%, rgba(244,207,131,.12), transparent 38%),
-        linear-gradient(180deg, #13243a, #06101d 58%, #02060b);
-      box-shadow:0 30px 90px rgba(0,0,0,.36);
+      background:#06101d;
     }
 
-    .ground-stage canvas {
+    canvas {
       display:block;
       width:100%;
       height:clamp(560px,96vw,880px);
-      touch-action:none;
     }
 
-    .card {
-      padding:18px;
-      background:rgba(255,255,255,.055);
-      box-shadow:none;
-    }
-
-    .status-list {
-      display:grid;
-      gap:12px;
-      margin-top:16px;
-    }
-
-    .status-list div {
-      border:1px solid var(--line2);
-      border-radius:18px;
-      padding:14px;
-      background:rgba(255,255,255,.045);
-    }
-
-    .status-list span {
-      display:block;
-      color:var(--faint);
-      font-size:.74rem;
-      font-weight:850;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-    }
-
-    .status-list strong {
-      display:block;
-      color:var(--gold);
-      margin-top:6px;
-      overflow-wrap:anywhere;
-    }
-
-    .render-status {
-      margin-top:10px;
-      color:var(--faint);
-      font:850 .78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    .status {
+      margin-top:12px;
+      color:rgba(238,244,255,.56);
+      font:850 .82rem/1.45 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
     }
 
     .footer {
       margin-top:20px;
-      padding:20px 0 0;
-      color:var(--faint);
-      font-size:.82rem;
       text-align:center;
-    }
-
-    @media (max-width:900px) {
-      .topbar { align-items:flex-start; flex-direction:column; }
-      .ground-grid { grid-template-columns:1fr; }
-    }
-
-    @media (max-width:560px) {
-      .page { width:min(100% - 18px,1180px); }
-      .hero, .panel { border-radius:24px; }
-      .ground-stage canvas { height:640px; }
+      color:rgba(238,244,255,.46);
+      font-size:.82rem;
     }
   </style>
 </head>
@@ -275,63 +180,35 @@
       </nav>
     </header>
 
-    <main id="main">
+    <main>
       <section class="hero">
-        <p class="eyebrow">H-Earth · Western Golden Shelf</p>
-        <h1>Live hex substrate: ground definition begins here.</h1>
-        <p class="lede">
-          This child route uses reusable planetary environment modules on top of a live 256×256 hex-addressable substrate. The locked Globe parent remains untouched.
+        <p class="eyebrow">H-Earth · Minimal Visibility Proof</p>
+        <h1>Sky, water, and ground only.</h1>
+        <p>
+          This route is intentionally reduced to the simplest visible baseline. No Manor, foliage, rocks, path, mountains, clouds, birds, flowers, or extra scene detail should render here.
         </p>
-
-        <div class="actions">
-          <a class="button primary" href="#ground-world">View Ground World</a>
-          <a class="button gold" href="/showroom/globe/">Return to Locked Globe Parent</a>
-          <a class="button" href="/showroom/">Return to Showroom</a>
-        </div>
-
-        <div class="lock-line">
-          Hex substrate active: water, terrain, foliage, structure suitability, climate, and shimmer sample one shared field.
+        <div class="lock">
+          Active constraint: top sky, middle water, bottom ground. Nothing beyond that.
         </div>
       </section>
 
-      <section id="ground-world" class="panel">
-        <p class="eyebrow">Child route · reusable live hex environment</p>
-        <h2>Inland shelf view toward the western waterline</h2>
-
-        <div class="ground-grid">
-          <div>
-            <div class="ground-stage">
-              <canvas data-h-earth-ground-canvas aria-label="H-Earth Western Golden Shelf reusable hex ground environment"></canvas>
-            </div>
-            <div class="render-status" data-render-status>Live ground engine booting.</div>
-          </div>
-
-          <article class="card">
-            <h3>Ground authority</h3>
-            <p>
-              The scene is built from reusable planetary behavior modules sampling one shared 256×256 hex substrate.
-            </p>
-
-            <div class="status-list">
-              <div><span>Route</span><strong>/showroom/globe/h-earth/</strong></div>
-              <div><span>Parent lock</span><strong>/showroom/globe/ preserved</strong></div>
-              <div><span>Substrate</span><strong>256×256 hex field</strong></div>
-              <div><span>Water</span><strong>Waves · Foam · Shimmer · Tide · Reflection</strong></div>
-              <div><span>Terrain</span><strong>Path · Rocks · Shelf · Islets</strong></div>
-              <div><span>Foliage</span><strong>Grass · Shrubs · Flowers · Wind</strong></div>
-              <div><span>Climate</span><strong>Sky · Clouds · Haze · Golden Hour</strong></div>
-            </div>
-          </article>
+      <section class="stage-panel" id="ground-world">
+        <p class="eyebrow">Scene baseline</p>
+        <div class="stage">
+          <canvas data-h-earth-ground-canvas aria-label="H-Earth minimal sky water ground proof"></canvas>
         </div>
+        <div class="status" data-render-status>Minimal renderer booting.</div>
       </section>
     </main>
 
-    <footer class="footer">Diamond Gate Bridge · H-Earth · live hex planetary ground engine.</footer>
+    <footer class="footer">
+      Diamond Gate Bridge · H-Earth · sky water ground minimal visibility.
+    </footer>
   </div>
 
   <script>
-    window.DGB_H_EARTH_GROUND_KEY = "H_EARTH_PUBLIC_PRESENTATION_AND_VISUAL_EXPRESSION_ROUTE_SHELL_RENEWAL_v1";
+    window.DGB_H_EARTH_GROUND_KEY = "H_EARTH_SKY_WATER_GROUND_MINIMAL_VISIBILITY_TNT_v1";
   </script>
-  <script type="module" src="/showroom/globe/h-earth/index.js?v=H_EARTH_PUBLIC_PRESENTATION_AND_VISUAL_EXPRESSION_RENEWAL_v1"></script>
+  <script type="module" src="/showroom/globe/h-earth/index.js?v=H_EARTH_SKY_WATER_GROUND_MINIMAL_VISIBILITY_TNT_v1"></script>
 </body>
 </html>

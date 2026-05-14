@@ -3,10 +3,11 @@
   lang="en"
   data-page="showroom-globe-parent-selector"
   data-route="/showroom/globe/"
-  data-contract="SHOWROOM_GLOBE_PARENT_SELECTOR_ONLY_DEMOTION_TNT_v1"
-  data-previous-contract="SHOWROOM_GLOBE_EXIT_NAVIGATION_RELEASE_RENEWAL_TNT_v1"
+  data-contract="SHOWROOM_GLOBE_PARENT_SELECTOR_LIGHT_ANIMATION_RESTORE_TNT_v1"
+  data-previous-contract="SHOWROOM_GLOBE_PARENT_SELECTOR_ONLY_DEMOTION_TNT_v1"
   data-jurisdiction="parent-selector-only"
   data-parent-selector-only="true"
+  data-selector-animation="css-only-light"
   data-live-canvas-runtime="false"
   data-material-renderer-import="false"
   data-shared-interplanetary-rendering="false"
@@ -70,6 +71,33 @@
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
       overflow-x:hidden;
+    }
+
+    body::before {
+      content:"";
+      position:fixed;
+      inset:-10%;
+      z-index:0;
+      pointer-events:none;
+      background:
+        conic-gradient(
+          from 45deg at 50% 48%,
+          transparent 0deg,
+          rgba(167,243,198,.035) 46deg,
+          transparent 92deg,
+          rgba(244,207,131,.028) 138deg,
+          transparent 184deg,
+          rgba(141,216,255,.035) 230deg,
+          transparent 276deg,
+          rgba(190,170,255,.028) 322deg,
+          transparent 360deg
+        );
+      opacity:.66;
+      animation:selectorAmbientTurn 62s linear infinite;
+    }
+
+    @keyframes selectorAmbientTurn {
+      to { transform:rotate(360deg); }
     }
 
     a { color:inherit; text-decoration:none; }
@@ -196,6 +224,18 @@
         linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
       opacity:.54;
       pointer-events:none;
+      animation:heroGateBreathe 9s ease-in-out infinite;
+    }
+
+    @keyframes heroGateBreathe {
+      0%,100% {
+        opacity:.42;
+        transform:translateY(-50%) rotate(45deg) scale(.98);
+      }
+      50% {
+        opacity:.64;
+        transform:translateY(-50%) rotate(45deg) scale(1.025);
+      }
     }
 
     .eyebrow,
@@ -296,12 +336,54 @@
       padding:clamp(18px,3vw,28px);
       display:grid;
       gap:1.2rem;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .selector-shell::before,
+    .selector-shell::after {
+      content:"";
+      position:absolute;
+      left:50%;
+      top:54%;
+      z-index:0;
+      border:1px solid rgba(244,207,131,.10);
+      border-radius:50%;
+      pointer-events:none;
+      transform:translate(-50%,-50%) rotateX(66deg);
+    }
+
+    .selector-shell::before {
+      width:min(90%,44rem);
+      height:18rem;
+      box-shadow:0 0 3.5rem rgba(141,216,255,.08);
+      animation:selectorOrbitDrift 18s ease-in-out infinite;
+    }
+
+    .selector-shell::after {
+      width:min(62%,30rem);
+      height:10rem;
+      border-color:rgba(167,243,198,.10);
+      animation:selectorOrbitDrift 22s ease-in-out infinite reverse;
+    }
+
+    @keyframes selectorOrbitDrift {
+      0%,100% {
+        opacity:.45;
+        transform:translate(-50%,-50%) rotateX(66deg) rotateZ(-5deg);
+      }
+      50% {
+        opacity:.75;
+        transform:translate(-50%,-50%) rotateX(66deg) rotateZ(8deg);
+      }
     }
 
     .selector-head {
       display:grid;
       gap:.55rem;
       text-align:center;
+      position:relative;
+      z-index:2;
     }
 
     .selector-head p {
@@ -318,6 +400,8 @@
       grid-template-columns:repeat(3,minmax(0,1fr));
       gap:clamp(.85rem,2.4vw,1.1rem);
       margin-top:.25rem;
+      position:relative;
+      z-index:2;
     }
 
     .planet-card {
@@ -339,6 +423,20 @@
         inset 0 1px 0 rgba(255,255,255,.06);
       transition:transform .18s ease,border-color .18s ease,filter .18s ease;
       isolation:isolate;
+      animation:planetCardFloat 10s ease-in-out infinite;
+    }
+
+    .planet-card:nth-child(2) {
+      animation-delay:-3.4s;
+    }
+
+    .planet-card:nth-child(3) {
+      animation-delay:-6.8s;
+    }
+
+    @keyframes planetCardFloat {
+      0%,100% { transform:translateY(0); }
+      50% { transform:translateY(-7px); }
     }
 
     .planet-card:hover,
@@ -347,26 +445,114 @@
       border-color:rgba(244,207,131,.44);
       filter:brightness(1.05);
       outline:none;
+      animation-play-state:paused;
     }
 
-    .planet-card::before {
-      content:"";
+    .planet-visual {
       position:absolute;
       left:50%;
-      top:24%;
+      top:22%;
+      z-index:1;
       width:clamp(8rem,16vw,12rem);
       height:clamp(8rem,16vw,12rem);
       transform:translate(-50%,-50%);
       border-radius:50%;
-      opacity:.92;
+      opacity:.94;
       pointer-events:none;
       box-shadow:
         inset -2.2rem -1.2rem 2.8rem rgba(0,0,0,.34),
         inset .9rem .7rem 1.7rem rgba(255,255,255,.14),
         0 0 2.8rem rgba(141,216,255,.16);
+      animation:selectorPlanetBreathe 7.5s ease-in-out infinite;
     }
 
-    .planet-card[data-world="zionts"]::before {
+    .planet-card:nth-child(2) .planet-visual {
+      animation-delay:-2.5s;
+    }
+
+    .planet-card:nth-child(3) .planet-visual {
+      animation-delay:-5s;
+    }
+
+    @keyframes selectorPlanetBreathe {
+      0%,100% {
+        transform:translate(-50%,-50%) scale(.98);
+        filter:saturate(.95) brightness(.96);
+      }
+      50% {
+        transform:translate(-50%,-50%) scale(1.035);
+        filter:saturate(1.08) brightness(1.08);
+      }
+    }
+
+    .planet-visual::before,
+    .planet-visual::after {
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:145%;
+      height:42%;
+      border:1px solid rgba(244,207,131,.14);
+      border-radius:50%;
+      transform:translate(-50%,-50%) rotateX(68deg) rotateZ(-12deg);
+      pointer-events:none;
+      opacity:.62;
+      animation:selectorRingSweep 12s ease-in-out infinite;
+    }
+
+    .planet-visual::after {
+      width:118%;
+      height:31%;
+      border-color:rgba(167,243,198,.12);
+      transform:translate(-50%,-50%) rotateX(68deg) rotateZ(18deg);
+      animation-duration:15s;
+      animation-direction:reverse;
+    }
+
+    @keyframes selectorRingSweep {
+      0%,100% {
+        opacity:.34;
+        transform:translate(-50%,-50%) rotateX(68deg) rotateZ(-16deg);
+      }
+      50% {
+        opacity:.74;
+        transform:translate(-50%,-50%) rotateX(68deg) rotateZ(16deg);
+      }
+    }
+
+    .planet-visual i {
+      position:absolute;
+      inset:0;
+      display:block;
+      border-radius:inherit;
+      overflow:hidden;
+      pointer-events:none;
+    }
+
+    .planet-visual i::before {
+      content:"";
+      position:absolute;
+      inset:-20%;
+      background:
+        linear-gradient(115deg, transparent 0 38%, rgba(255,255,255,.24) 42%, transparent 48%),
+        radial-gradient(circle at 36% 24%, rgba(255,255,255,.22), transparent 22%);
+      opacity:.42;
+      animation:selectorSurfaceGlint 8.5s ease-in-out infinite;
+    }
+
+    @keyframes selectorSurfaceGlint {
+      0%,100% {
+        opacity:.10;
+        transform:translateX(-24%) rotate(-8deg);
+      }
+      48%,55% {
+        opacity:.46;
+        transform:translateX(18%) rotate(8deg);
+      }
+    }
+
+    .planet-card[data-world="zionts"] .planet-visual {
       background:
         radial-gradient(circle at 34% 26%,rgba(255,255,255,.20),transparent 24%),
         radial-gradient(circle at 58% 52%,rgba(224,207,151,.58),transparent 20%),
@@ -374,7 +560,7 @@
         linear-gradient(135deg,#466c84,#1b4d63 42%,#112334);
     }
 
-    .planet-card[data-world="h-earth"]::before {
+    .planet-card[data-world="h-earth"] .planet-visual {
       background:
         radial-gradient(circle at 32% 24%,rgba(255,255,255,.20),transparent 24%),
         radial-gradient(circle at 54% 54%,rgba(229,207,132,.56),transparent 20%),
@@ -382,7 +568,7 @@
         linear-gradient(135deg,#4c8f88,#255f58 42%,#152a26);
     }
 
-    .planet-card[data-world="audralia"]::before {
+    .planet-card[data-world="audralia"] .planet-visual {
       background:
         radial-gradient(circle at 32% 24%,rgba(255,255,255,.20),transparent 24%),
         radial-gradient(circle at 55% 52%,rgba(221,164,182,.54),transparent 20%),
@@ -394,7 +580,7 @@
       content:"";
       position:absolute;
       inset:0;
-      z-index:-1;
+      z-index:0;
       background:
         linear-gradient(180deg, transparent 0 36%, rgba(2,6,14,.48) 62%, rgba(2,6,14,.88) 100%);
       pointer-events:none;
@@ -440,6 +626,23 @@
       font-weight:950;
       letter-spacing:.04em;
       text-transform:uppercase;
+      overflow:hidden;
+    }
+
+    .planet-action::after {
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(115deg, transparent 0 40%, rgba(255,255,255,.16) 46%, transparent 52%);
+      transform:translateX(-100%);
+      animation:selectorButtonShimmer 7.8s ease-in-out infinite;
+      pointer-events:none;
+    }
+
+    @keyframes selectorButtonShimmer {
+      0%,72%,100% { transform:translateX(-100%); opacity:0; }
+      82% { opacity:1; }
+      94% { transform:translateX(100%); opacity:0; }
     }
 
     .authority-panel {
@@ -565,7 +768,7 @@
     }
   </style>
 
-  <script src="/showroom/globe/index.js?v=SHOWROOM_GLOBE_PARENT_SELECTOR_ONLY_DEMOTION_TNT_v1" defer></script>
+  <script src="/showroom/globe/index.js?v=SHOWROOM_GLOBE_PARENT_SELECTOR_LIGHT_ANIMATION_RESTORE_TNT_v1" defer></script>
 </head>
 
 <body>
@@ -612,12 +815,13 @@
           <p class="contract-line">Satellite selector · no parent render runtime</p>
           <h2 id="selector-title">Choose the world. Rendering happens after the threshold.</h2>
           <p>
-            This route carries the gate, the comparison, and the route map. It does not carry a shared canvas, a shared live renderer, or a shared interplanetary runtime.
+            This route carries the gate, the comparison, and the route map. It moves as a selector, but it does not carry a shared canvas, a shared live renderer, or a shared interplanetary runtime.
           </p>
         </div>
 
         <div class="planet-grid" aria-label="Planet route selector">
           <a class="planet-card" data-world="zionts" href="/showroom/globe/earth/" aria-label="Open ZIONTS">
+            <span class="planet-visual" aria-hidden="true"><i></i></span>
             <span class="planet-meta">
               <b>Reference living world</b>
               <h3>ZIONTS</h3>
@@ -627,6 +831,7 @@
           </a>
 
           <a class="planet-card" data-world="h-earth" href="/showroom/globe/h-earth/" aria-label="Open H-Earth">
+            <span class="planet-visual" aria-hidden="true"><i></i></span>
             <span class="planet-meta">
               <b>Hybrid ancient world</b>
               <h3>H-Earth</h3>
@@ -636,6 +841,7 @@
           </a>
 
           <a class="planet-card" data-world="audralia" href="/showroom/globe/audralia/" aria-label="Open Audralia">
+            <span class="planet-visual" aria-hidden="true"><i></i></span>
             <span class="planet-meta">
               <b>Constructed living world</b>
               <h3>Audralia</h3>
@@ -653,7 +859,7 @@
         <div class="law-grid">
           <div class="law-card">
             <b>Parent owns</b>
-            <span>Gateway copy, route cards, direct links, selector status, and lightweight interplanetary budget language.</span>
+            <span>Gateway copy, route cards, direct links, selector status, lightweight motion, and interplanetary budget language.</span>
           </div>
 
           <div class="law-card">
@@ -669,16 +875,17 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-SHOWROOM_GLOBE_PARENT_SELECTOR_ONLY_DEMOTION_TNT_v1
-previous=SHOWROOM_GLOBE_EXIT_NAVIGATION_RELEASE_RENEWAL_TNT_v1
+SHOWROOM_GLOBE_PARENT_SELECTOR_LIGHT_ANIMATION_RESTORE_TNT_v1
+previous=SHOWROOM_GLOBE_PARENT_SELECTOR_ONLY_DEMOTION_TNT_v1
 route=/showroom/globe/
 page=showroom_globe_parent_selector
 role=parent_selector_only
 primary_law=selector_selects_child_planet_route_renders
-change=demoted_parent_from_shared_live_interplanetary_renderer_to_selector_only_gateway
-removed=canvas_stage,runtime_controls,drag_glide_language,live_body_tabs,parent_material_renderer_language,parent_canvas_inspection
-preserved=top_traversal,zionts_route,h_earth_route,audralia_route,showroom_return,gauges_route,public_explanation
-parent_owns=gateway,selector_cards,body_summaries,direct_route_links,lightweight_status_receipt,interplanetary_budget_language
+change=restored_light_css_only_selector_motion_without_restoring_parent_render_runtime
+animation=css_only_selector_card_float,planet_breathe,selector_orbit_drift,button_shimmer,ambient_turn
+removed_still_removed=canvas_stage,runtime_controls,drag_glide_language,live_body_tabs,parent_material_renderer_language,parent_canvas_inspection
+preserved=top_traversal,zionts_route,h_earth_route,audralia_route,showroom_return,gauges_route,public_explanation,parent_selector_only_demotion
+parent_owns=gateway,selector_cards,body_summaries,direct_route_links,lightweight_status_receipt,interplanetary_budget_language,css_only_selector_motion
 parent_does_not_own=canvas_rendering,material_renderer_import,requestAnimationFrame,drag_runtime,glide_runtime,shared_BODIES_profile_switching,live_interplanetary_canvas_inspection,child_planet_visual_truth
 child_route_earth_owns=zionts_rendering_only
 child_route_h_earth_owns=h_earth_rendering_only
@@ -687,6 +894,7 @@ live_canvas_runtime=false
 material_renderer_import=false
 request_animation_frame=false
 shared_interplanetary_rendering=false
+css_only_animation=true
 child_routes_own_rendering=true
 ground_view=false
 ground_engine=false
@@ -699,7 +907,7 @@ visual_pass_claimed=false
     </main>
 
     <footer class="footer">
-      SHOWROOM_GLOBE_PARENT_SELECTOR_ONLY_DEMOTION_TNT_v1 · Parent selector only · Child routes render.
+      SHOWROOM_GLOBE_PARENT_SELECTOR_LIGHT_ANIMATION_RESTORE_TNT_v1 · Parent selector moves · Child routes render.
     </footer>
   </div>
 </body>

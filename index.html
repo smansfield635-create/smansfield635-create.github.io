@@ -2,9 +2,9 @@
 <html
   lang="en"
   data-route="/"
-  data-page="compass"
-  data-contract="COMPASS_OPTICAL_PREFACE_GEM_REFINEMENT_TNT_v1"
-  data-previous-contract="COMPASS_INDEX_CUT_GEM_PREFACE_GATE_AUTHORITY_RENEWAL_TNT_v1"
+  data-page="compass-public-first-gate"
+  data-contract="COMPASS_PUBLIC_FIRST_GATE_AND_OPEN_WORLD_TRAJECTORY_RENEWAL_TNT_v1"
+  data-previous-contract="COMPASS_OPTICAL_PREFACE_GEM_REFINEMENT_TNT_v1"
   data-js-contract="COMPASS_CUT_GEM_PREFACE_GATE_AUTHORITY_RENEWAL_TNT_v1"
   data-model="cut-gem-preface-gate-axis"
   data-default-lens="round"
@@ -12,6 +12,8 @@
   data-flat-route="/flat/"
   data-round-route="/products/"
   data-universe-route="/showroom/"
+  data-first-choice="investigate-use-witness"
+  data-future-trajectory="open-world-coherence-challenge-system"
   data-generated-image="false"
   data-graphic-box="false"
   data-public-copy-clean="true"
@@ -27,7 +29,7 @@
   <title>Compass · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Compass: choose Flat for investigation, Round for product movement, or Universe for the Showroom display world."
+    content="Compass is the first gate of Diamond Gate Bridge: investigate the map, use the product wing, or witness the showroom as the estate grows toward an open-world coherence challenge experience."
   >
 
   <style>
@@ -862,6 +864,37 @@
       text-transform:uppercase;
     }
 
+    .future-card {
+      margin-top:1rem;
+      padding:1rem;
+      border:1px solid rgba(143,240,195,.20);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(143,240,195,.08),transparent 60%),
+        rgba(143,240,195,.045);
+      display:grid;
+      gap:.65rem;
+    }
+
+    .future-card b {
+      color:var(--green);
+      font-size:.68rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .future-card strong {
+      color:rgba(255,244,216,.98);
+      font-size:1.15rem;
+      line-height:1.1;
+    }
+
+    .future-card span {
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.42;
+    }
+
     .route-receipt,
     [data-route-receipt],
     [data-contract-receipt],
@@ -1121,7 +1154,7 @@
         <span class="brand-mark"><span>DG</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
-          <strong>Compass · Preface Gate</strong>
+          <strong>Compass · First Gate</strong>
         </span>
       </a>
 
@@ -1138,19 +1171,19 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Three doors · one Compass</div>
-        <h1 id="page-title">Pressure is the door.</h1>
+        <div class="kicker">Investigate · Use · Witness</div>
+        <h1 id="page-title">Pressure shows you where to begin.</h1>
 
         <p class="lead">
-          The first choice is not about decoration. It is about how you want to enter the estate: investigate the map, move through the product wing, or open the display world.
+          Every visitor enters with a different kind of pressure. Some need to understand the map. Some need something useful to open. Some need to see what the system can become.
         </p>
 
         <div class="quote">
-          Choose the lens first. Flat opens investigation. Round opens movement. Universe opens the Showroom.
+          Compass does not ask you to understand the whole estate at once. It gives you the first honest choice: investigate, use, or witness.
         </div>
 
         <div class="actions">
-          <a class="button gold" id="primaryRoute" href="/products/">Open Round</a>
+          <a class="button gold" id="primaryRoute" href="/products/">Open Products</a>
           <a class="button" href="/flat/">Investigate Flat</a>
           <a class="button" href="/showroom/">Open Showroom</a>
           <a class="button green" href="/gauges/">Run Triple G</a>
@@ -1158,10 +1191,13 @@
       </section>
 
       <section class="panel section" aria-labelledby="compass-title">
-        <div class="kicker">Optical cut-gem preface gate</div>
-        <h2 id="compass-title">Three physical digital gems choose three different kinds of entry.</h2>
+        <div class="kicker">Optical cut-gem first gate</div>
+        <h2 id="compass-title">Choose the lens before you move deeper.</h2>
+        <p>
+          Flat keeps the field measurable. Products turns the message into usable doors. Showroom lets the visitor see the work take shape. Over time, these paths can become more than pages: they can become the first movements inside a coherent open-world system.
+        </p>
 
-        <div class="compass-stage" aria-label="Compass optical cut-gem preface selector">
+        <div class="compass-stage" aria-label="Compass optical cut-gem first gate selector">
           <div class="scene-field" aria-hidden="true">
             <div class="scene-board" data-scene="flat"></div>
             <div class="scene-board" data-scene="round"></div>
@@ -1170,95 +1206,110 @@
 
           <div class="active-title" aria-live="polite">
             <span class="small" id="activeLensKicker">Default Lens</span>
-            <strong id="activeLensTitle">World Is Round</strong>
-            <span id="activeLensSubtitle">Movement, products, and revolving page logic.</span>
+            <strong id="activeLensTitle">Use the message.</strong>
+            <span id="activeLensSubtitle">Products is the practical path: the message becomes usable doors.</span>
           </div>
 
           <div class="gem-rail" aria-label="Compass lens controls">
-            <button class="compass-gem" type="button" data-lens="flat" aria-pressed="false" aria-label="World Is Flat lens">
+            <button class="compass-gem" type="button" data-lens="flat" aria-pressed="false" aria-label="Investigate Flat lens">
               <svg class="optical-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
                 <use href="#compassOpticalGem"></use>
               </svg>
               <span class="gem-label">
                 <b>Flat</b>
-                <span>Map</span>
+                <span>Investigate</span>
               </span>
             </button>
 
-            <button class="compass-gem" type="button" data-lens="round" aria-pressed="true" aria-label="World Is Round lens">
+            <button class="compass-gem" type="button" data-lens="round" aria-pressed="true" aria-label="Products lens">
               <svg class="optical-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
                 <use href="#compassOpticalGem"></use>
               </svg>
               <span class="gem-label">
-                <b>Round</b>
-                <span>Products</span>
+                <b>Products</b>
+                <span>Use</span>
               </span>
             </button>
 
-            <button class="compass-gem" type="button" data-lens="universe" aria-pressed="false" aria-label="World Is a Universe lens">
+            <button class="compass-gem" type="button" data-lens="universe" aria-pressed="false" aria-label="Showroom lens">
               <svg class="optical-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
                 <use href="#compassOpticalGem"></use>
               </svg>
               <span class="gem-label">
-                <b>Universe</b>
-                <span>Showroom</span>
+                <b>Showroom</b>
+                <span>Witness</span>
               </span>
             </button>
           </div>
 
           <div class="scene-copy">
             <strong id="sceneRule">Single tap changes the lens · double tap opens the route</strong>
-            <span id="sceneText">Round is the movement path: the message turns into usable product doors.</span>
+            <span id="sceneText">Products is the practical path: the message turns into usable doors, tools, games, support, and action.</span>
           </div>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="paths-title">
         <div class="kicker">Compass paths</div>
-        <h2 id="paths-title">The three entries stay distinct.</h2>
+        <h2 id="paths-title">The first choice stays clear.</h2>
 
         <div class="path-grid">
           <a class="path-card" href="/flat/">
             <b>Flat</b>
             <strong>Investigate the map.</strong>
-            <span>Flat keeps the field direct, measured, and two-dimensional. Use it when the visitor needs orientation before motion.</span>
+            <span>Flat is the measured path. Use it when the visitor needs orientation, structure, and a direct view of the field before motion begins.</span>
             <span class="open-path">Open Flat</span>
           </a>
 
           <a class="path-card" href="/products/">
-            <b>Round</b>
-            <strong>Move through the product wing.</strong>
-            <span>Round opens the revolving page logic: one message, clear doors, and usable product movement.</span>
+            <b>Products</b>
+            <strong>Use the message.</strong>
+            <span>Products is the practical path. Use it when the visitor needs the message turned into doors, tools, games, support, or action.</span>
             <span class="open-path">Open Products</span>
           </a>
 
           <a class="path-card" href="/showroom/">
-            <b>Universe</b>
-            <strong>Open the display world.</strong>
-            <span>Universe moves into the Showroom, where the object can hold the room before the deeper globe layer opens.</span>
+            <b>Showroom</b>
+            <strong>Witness the display world.</strong>
+            <span>Showroom is the visual path. Use it when the visitor needs to see the estate expressed before entering deeper layers like the Globe.</span>
             <span class="open-path">Open Showroom</span>
           </a>
+        </div>
+
+        <div class="future-card">
+          <b>Future Direction</b>
+          <strong>Beyond an interactive website.</strong>
+          <span>
+            This is still the first gate. But the long-term direction is larger: an open-world experience where movement, challenge, and discovery are guided by coherence — not random quests, but diagnostic paths that reveal how a person thinks, chooses, and moves under pressure.
+          </span>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-COMPASS_OPTICAL_PREFACE_GEM_REFINEMENT_TNT_v1
-previous=COMPASS_INDEX_CUT_GEM_PREFACE_GATE_AUTHORITY_RENEWAL_TNT_v1
+COMPASS_PUBLIC_FIRST_GATE_AND_OPEN_WORLD_TRAJECTORY_RENEWAL_TNT_v1
+previous=COMPASS_OPTICAL_PREFACE_GEM_REFINEMENT_TNT_v1
+js_contract=COMPASS_CUT_GEM_PREFACE_GATE_AUTHORITY_RENEWAL_TNT_v1
 route=/
-page=compass
-role=preface_gate
-message=pressure_is_the_door
+page=compass_public_first_gate
+role=first_gate
+message=pressure_shows_you_where_to_begin
 route_model_preserved=true
 single_tap_changes_lens=true
 double_tap_opens_route=true
 default_lens=round
+public_choice=investigate,use,witness
 lenses=flat,round,universe
 routes=flat:/flat/,round:/products/,universe:/showroom/
-change=replaced_manufactured_css_gems_with_optically_layered_inline_svg_gems
-material_standard=physical_digital_cut_gem_with_crown_table_girdle_pavilion_culet_internal_refraction_and_occlusion
-preserved=hero_copy,path_cards,route_model,index_js_contract,lens_controls,keyboard_traversal,top_navigation
-route_owns=compass_preface_gate,lens_selection,three_entry_model
-route_does_not_own=products_runtime,door_threshold,home_receiver,laws_chamber,gauges_logic,showroom_runtime
+flat_public_role=investigate_the_map
+round_public_role=use_the_message_products
+universe_public_role=witness_the_display_world_showroom
+future_trajectory=open_world_experience
+future_system=coherence_based_challenges,coherence_diagnostic_scope,pressure_based_movement
+current_claim=first_gate_interactive_website_estate
+not_current_claim=completed_open_world_game
+preserved=optical_svg_gems,index_js_contract,lens_controls,keyboard_traversal,top_navigation,route_model
+route_owns=compass_first_gate,lens_selection,three_entry_model,public_future_trajectory_disclosure
+route_does_not_own=products_runtime,door_threshold,home_receiver,laws_chamber,gauges_logic,showroom_runtime,completed_game_claim
 generated_image=false
 graphic_box=false
 visual_pass_claimed=false
@@ -1266,12 +1317,12 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      COMPASS_OPTICAL_PREFACE_GEM_REFINEMENT_TNT_v1 · Compass · Flat investigation · Round products · Universe showroom.
+      COMPASS_PUBLIC_FIRST_GATE_AND_OPEN_WORLD_TRAJECTORY_RENEWAL_TNT_v1 · Investigate · Use · Witness.
     </footer>
   </div>
 
   <script>
-    window.DGB_COMPASS_KEY = "COMPASS_OPTICAL_PREFACE_GEM_REFINEMENT_TNT_v1";
+    window.DGB_COMPASS_KEY = "COMPASS_PUBLIC_FIRST_GATE_AND_OPEN_WORLD_TRAJECTORY_RENEWAL_TNT_v1";
   </script>
   <script type="module" src="/index.js?v=COMPASS_CUT_GEM_PREFACE_GATE_AUTHORITY_RENEWAL_TNT_v1"></script>
 </body>

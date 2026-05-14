@@ -1,11 +1,12 @@
 // /showroom/globe/h-earth/index.js
 // TNT FULL-FILE REPLACEMENT
-// H_EARTH_PUBLIC_PRESENTATION_AND_VISUAL_EXPRESSION_RENEWAL_v1
-// Scope: public presentation renewal + compact audit receipt.
-// No parent Globe edits. No visual expansion inside conductor. No new art logic.
+// H_EARTH_SCENE_CORE_MECHANICS_REDUCTION_CACHE_SYNC_v1
+// Purpose: synchronize conductor generation so /assets/world/environment/scene.js
+// is loaded with H_EARTH_SCENE_CORE_MECHANICS_REDUCTION_TNT_v1.
+// Parent Globe untouched. Visual modules untouched. Scene reduction proof only.
 
-const CONTRACT = "H_EARTH_PUBLIC_PRESENTATION_AND_VISUAL_EXPRESSION_RENEWAL_v1";
-const GENERATION = "H_EARTH_PUBLIC_PRESENTATION_AND_VISUAL_EXPRESSION_RENEWAL_v1";
+const CONTRACT = "H_EARTH_SCENE_CORE_MECHANICS_REDUCTION_CACHE_SYNC_v1";
+const GENERATION = "H_EARTH_SCENE_CORE_MECHANICS_REDUCTION_TNT_v1";
 const ROUTE = "/showroom/globe/h-earth/";
 const PARENT_BASELINE = "/showroom/globe/";
 
@@ -54,7 +55,7 @@ const MODULES = Object.freeze([
   },
   {
     key: "scene",
-    label: "Scene Compositor",
+    label: "Scene Core Mechanics",
     path: "/assets/world/environment/scene.js",
     requiredExports: ["createGroundEnvironmentScene"]
   },
@@ -68,21 +69,27 @@ const MODULES = Object.freeze([
 
 const state = {
   canvas: null,
-  ctx: null,
-  receiptRoot: null,
   statusNode: null,
-  fallbackRaf: 0,
-  startedAt: performance.now(),
-  mode: "booting",
+  receiptRoot: null,
   moduleResults: new Map(),
   importedModules: new Map(),
+  mode: "booting",
+  firstFailure: null,
   scene: null,
-  receipt: null,
-  firstFailure: null
+  receipt: null
 };
 
 function withGeneration(path) {
   return `${path}?v=${encodeURIComponent(GENERATION)}`;
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 function setStatus(text) {
@@ -91,7 +98,7 @@ function setStatus(text) {
 
 function markDocument(extra = {}) {
   const markers = {
-    page: "h-earth-public-ground-engine",
+    page: "h-earth-scene-core-mechanics-reduction",
     route: ROUTE,
     contract: CONTRACT,
     generation: GENERATION,
@@ -101,7 +108,8 @@ function markDocument(extra = {}) {
     reusableEnvironmentEngine: state.mode === "enhanced" ? "active" : "diagnostic",
     hexSubstrate: state.mode === "enhanced" ? "live" : "not-yet-live",
     shimmerProtocol: state.mode === "enhanced" ? "active" : "pending",
-    fallbackDemoted: "true",
+    sceneCoreReduction: "true",
+    sceneOwnsOnly: "sky-water-ground",
     publicPresentation: "active",
     mode: state.mode,
     ...extra
@@ -114,7 +122,8 @@ function markDocument(extra = {}) {
 }
 
 function createReceiptRoot() {
-  const existing = document.querySelector("[data-module-ledger], [data-ground-audit-receipt]");
+  const existing = document.querySelector("[data-ground-audit-receipt], [data-module-ledger]");
+
   if (existing) {
     existing.dataset.groundAuditReceipt = "true";
     delete existing.dataset.moduleLedger;
@@ -138,32 +147,20 @@ function createReceiptRoot() {
     document.querySelector("#ground-world") ||
     document.body;
 
-  if (anchor && anchor.parentNode) {
-    anchor.parentNode.insertBefore(root, anchor.nextSibling);
-  } else {
-    document.body.appendChild(root);
-  }
+  if (anchor?.parentNode) anchor.parentNode.insertBefore(root, anchor.nextSibling);
+  else document.body.appendChild(root);
 
   state.receiptRoot = root;
   return root;
 }
 
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
 function getLedgerCounts() {
   const results = [...state.moduleResults.values()];
+
   return {
     total: MODULES.length,
     passed: results.filter((item) => item.status === "pass").length,
-    failed: results.filter((item) => item.status === "fail").length,
-    pending: MODULES.length - results.length
+    failed: results.filter((item) => item.status === "fail").length
   };
 }
 
@@ -175,10 +172,10 @@ function renderReceipt() {
 
   const statusColor = enhanced ? "#a7f3c6" : failed ? "#ffb4a8" : "#f4cf83";
   const summaryText = enhanced
-    ? "Ground engine active · Hex substrate live · Shimmer Protocol active"
+    ? "Ground engine active · Scene reduced to sky, water, and ground mechanics · Hex substrate live"
     : failed
       ? `Ground engine held · First blocked module: ${state.firstFailure?.path || "unknown"}`
-      : "Ground engine proving module chain";
+      : "Ground engine proving scene-core reduction chain";
 
   const detailRows = MODULES.map((mod) => {
     const result = state.moduleResults.get(mod.key) || {
@@ -219,10 +216,11 @@ function renderReceipt() {
       <div style="color:${statusColor};text-transform:uppercase;">${escapeHtml(state.mode)}</div>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px;">
+    <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:10px;">
       <div><span style="color:rgba(238,244,255,.48);">Modules</span><br><strong>${counts.passed}/${counts.total}</strong></div>
       <div><span style="color:rgba(238,244,255,.48);">Hex</span><br><strong>${enhanced ? "LIVE" : "HELD"}</strong></div>
-      <div><span style="color:rgba(238,244,255,.48);">Water</span><br><strong>${enhanced ? "SHIMMER" : "PENDING"}</strong></div>
+      <div><span style="color:rgba(238,244,255,.48);">Scene</span><br><strong>${enhanced ? "CORE" : "PENDING"}</strong></div>
+      <div><span style="color:rgba(238,244,255,.48);">Owns</span><br><strong>SKY/WATER/GROUND</strong></div>
       <div><span style="color:rgba(238,244,255,.48);">Parent</span><br><strong>LOCKED</strong></div>
     </div>
 
@@ -262,7 +260,6 @@ async function proveModule(mod) {
     importOk: false,
     exportOk: false,
     contentType: "",
-    requiredExports: [...mod.requiredExports],
     missingExports: [],
     message: "pending"
   };
@@ -306,7 +303,7 @@ async function proveModule(mod) {
 }
 
 async function runModuleProof() {
-  setStatus("Proving live ground engine.");
+  setStatus("Proving scene-core mechanics reduction.");
   markDocument({ moduleProof: "running" });
 
   for (const mod of MODULES) {
@@ -323,102 +320,12 @@ async function runModuleProof() {
     }
   }
 
-  setStatus("Module proof passed. Attaching live ground engine.");
+  setStatus("Module proof passed. Attaching reduced scene core.");
   markDocument({ moduleProof: "passed" });
   return true;
 }
 
-function resizeCanvas() {
-  const box = state.canvas.getBoundingClientRect();
-  const dpr = Math.min(window.devicePixelRatio || 1, 1.2);
-  const width = Math.max(720, Math.floor((box.width || 900) * dpr));
-  const height = Math.max(880, Math.floor((box.height || 1000) * dpr));
-
-  if (state.canvas.width !== width || state.canvas.height !== height) {
-    state.canvas.width = width;
-    state.canvas.height = height;
-  }
-
-  return { width, height };
-}
-
-function drawDiagnosticFallback(time = performance.now()) {
-  if (!state.ctx || !state.canvas || state.mode === "enhanced") return;
-
-  const { width: w, height: h } = resizeCanvas();
-  const t = (time - state.startedAt) / 1000;
-  const ctx = state.ctx;
-
-  ctx.clearRect(0, 0, w, h);
-
-  const bg = ctx.createLinearGradient(0, 0, 0, h);
-  bg.addColorStop(0, "rgb(29,47,62)");
-  bg.addColorStop(0.42, "rgb(52,72,72)");
-  bg.addColorStop(0.58, "rgb(43,66,64)");
-  bg.addColorStop(1, "rgb(20,31,28)");
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, w, h);
-
-  ctx.fillStyle = "rgba(32,92,118,.48)";
-  ctx.fillRect(0, h * 0.38, w, h * 0.17);
-
-  ctx.fillStyle = "rgba(74,96,58,.50)";
-  ctx.fillRect(0, h * 0.55, w, h * 0.45);
-
-  ctx.strokeStyle = "rgba(255,238,187,.18)";
-  ctx.lineWidth = Math.max(1, w * 0.001);
-  for (let i = 0; i < 18; i += 1) {
-    const y = h * (0.40 + i * 0.007);
-    ctx.beginPath();
-    ctx.moveTo(0, y + Math.sin(t + i) * 2);
-    ctx.lineTo(w, y + Math.cos(t + i) * 2);
-    ctx.stroke();
-  }
-
-  ctx.fillStyle = "rgba(0,0,0,.46)";
-  ctx.fillRect(w * 0.08, h * 0.08, w * 0.84, h * 0.145);
-
-  ctx.fillStyle = "rgba(255,236,185,.96)";
-  ctx.font = `900 ${Math.max(16, w * 0.028)}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
-  ctx.textAlign = "center";
-  ctx.fillText("DIAGNOSTIC FALLBACK — NOT BASELINE", w * 0.50, h * 0.145);
-
-  ctx.fillStyle = "rgba(238,244,255,.74)";
-  ctx.font = `800 ${Math.max(12, w * 0.017)}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
-  ctx.fillText("Module proof is controlling. Public expression is held.", w * 0.50, h * 0.185);
-
-  state.receipt = Object.freeze({
-    contract: CONTRACT,
-    generation: GENERATION,
-    route: ROUTE,
-    parentBaseline: PARENT_BASELINE,
-    parentMutation: false,
-    mode: state.mode,
-    rendered: true,
-    fallbackDemoted: true,
-    publicPresentation: true,
-    firstFailure: state.firstFailure,
-    modules: Object.fromEntries(state.moduleResults)
-  });
-
-  state.fallbackRaf = requestAnimationFrame(drawDiagnosticFallback);
-}
-
-function startDiagnosticFallback() {
-  state.mode = "diagnostic-fallback";
-  setStatus("Ground proof running.");
-  markDocument({
-    rendered: "true",
-    mode: state.mode,
-    fallbackDemoted: "true",
-    publicPresentation: "active"
-  });
-
-  cancelAnimationFrame(state.fallbackRaf);
-  state.fallbackRaf = requestAnimationFrame(drawDiagnosticFallback);
-}
-
-async function attachEnhancedScene() {
+async function attachScene() {
   const sceneModule = state.importedModules.get("scene");
   const profileModule = state.importedModules.get("hEarthProfile");
 
@@ -430,19 +337,18 @@ async function attachEnhancedScene() {
     minHeight: 1180
   });
 
-  cancelAnimationFrame(state.fallbackRaf);
-
   state.scene = scene.start();
   state.mode = "enhanced";
 
-  setStatus("Reusable ground environment engine active. Hex substrate live. Shimmer Protocol active.");
+  setStatus("Reusable ground environment engine active. Scene reduced to sky, water, and ground mechanics. Hex substrate live.");
   markDocument({
     rendered: "true",
     mode: state.mode,
     moduleProof: "passed",
     hexSubstrate: "live",
     shimmerProtocol: "active",
-    sceneEngine: "active",
+    sceneCoreReduction: "active",
+    sceneOwnsOnly: "sky-water-ground",
     publicPresentation: "active"
   });
 
@@ -454,8 +360,9 @@ async function attachEnhancedScene() {
     parentMutation: false,
     mode: state.mode,
     rendered: true,
-    fallbackDemoted: true,
-    publicPresentation: true,
+    sceneCoreReduction: true,
+    sceneOwnsOnly: ["sky", "water", "ground", "composition", "receipt"],
+    delegatedToOtherFiles: ["structure", "foliage", "terrain-detail", "wildlife", "advanced-climate", "advanced-water"],
     moduleProof: Object.fromEntries(state.moduleResults),
     scene: state.scene.status()
   });
@@ -479,36 +386,24 @@ async function init() {
     return;
   }
 
-  state.ctx = state.canvas.getContext("2d", { alpha: false });
-
-  if (!state.ctx) {
-    state.mode = "failed";
-    setStatus("Ground canvas 2D context unavailable.");
-    markDocument({ rendered: "false", error: "canvas-2d-context-unavailable" });
-    renderReceipt();
-    return;
-  }
-
-  startDiagnosticFallback();
-
   const proofPassed = await runModuleProof();
 
-  if (proofPassed) {
-    try {
-      await attachEnhancedScene();
-    } catch (error) {
-      state.mode = "diagnostic-fallback";
-      const message = error?.message || "enhanced scene attach failed";
-      setStatus(`Ground proof passed. Scene attach held: ${message}`);
-      markDocument({
-        rendered: "true",
-        mode: state.mode,
-        moduleProof: "passed",
-        sceneEngine: "attach-held",
-        attachError: message
-      });
-      renderReceipt();
-    }
+  if (!proofPassed) return;
+
+  try {
+    await attachScene();
+  } catch (error) {
+    state.mode = "diagnostic-fallback";
+    const message = error?.message || "scene attach failed";
+    setStatus(`Ground proof passed. Scene attach held: ${message}`);
+    markDocument({
+      rendered: "false",
+      mode: state.mode,
+      moduleProof: "passed",
+      sceneEngine: "attach-held",
+      attachError: message
+    });
+    renderReceipt();
   }
 
   window.DGBHEarthGround = Object.freeze({
@@ -520,8 +415,9 @@ async function init() {
         parentBaseline: PARENT_BASELINE,
         parentMutation: false,
         mode: state.mode,
-        fallbackDemoted: true,
         publicPresentation: true,
+        sceneCoreReduction: state.mode === "enhanced",
+        sceneOwnsOnly: ["sky", "water", "ground"],
         hexSubstrate: state.mode === "enhanced" ? "live" : "not-yet-live",
         shimmerProtocol: state.mode === "enhanced",
         firstFailure: state.firstFailure,

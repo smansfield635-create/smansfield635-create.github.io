@@ -3,7 +3,8 @@
   lang="en"
   data-route="/"
   data-page="compass"
-  data-contract="COMPASS_INDEX_CUT_GEM_PREFACE_GATE_AUTHORITY_RENEWAL_TNT_v1"
+  data-contract="COMPASS_OPTICAL_PREFACE_GEM_REFINEMENT_TNT_v1"
+  data-previous-contract="COMPASS_INDEX_CUT_GEM_PREFACE_GATE_AUTHORITY_RENEWAL_TNT_v1"
   data-js-contract="COMPASS_CUT_GEM_PREFACE_GATE_AUTHORITY_RENEWAL_TNT_v1"
   data-model="cut-gem-preface-gate-axis"
   data-default-lens="round"
@@ -17,6 +18,7 @@
   data-route-model-preserved="true"
   data-single-tap-changes-lens="true"
   data-double-tap-opens-route="true"
+  data-optical-gem-standard="active"
 >
 <head>
   <meta charset="utf-8">
@@ -107,6 +109,14 @@
     [tabindex]:focus-visible {
       outline:2px solid var(--gold);
       outline-offset:4px;
+    }
+
+    .svg-defs {
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
     }
 
     .skip {
@@ -607,41 +617,26 @@
     }
 
     .compass-gem {
+      --gem-body:rgba(43,118,222,.70);
+      --gem-deep:rgba(1,12,48,.84);
+      --gem-mid:rgba(21,86,185,.60);
+      --gem-light:rgba(232,246,255,.78);
+      --gem-warm:rgba(255,232,163,.22);
+      --gem-shadow:rgba(1,7,28,.64);
+      --gem-inclusion:rgba(255,255,255,.20);
       position:absolute;
       display:grid;
       place-items:center;
-      width:clamp(6.4rem,18vw,9.2rem);
-      height:clamp(6.4rem,18vw,9.2rem);
-      border:1px solid rgba(141,216,255,.50);
+      width:clamp(7.15rem,19vw,10.1rem);
+      height:clamp(5.25rem,14vw,7.45rem);
+      border:0;
       border-radius:0;
-      clip-path:var(--gem-cut);
       pointer-events:auto;
       color:rgba(255,244,216,.96);
-      background:
-        linear-gradient(35deg,transparent 0 19%,rgba(255,255,255,.34) 20% 22%,transparent 23% 100%),
-        linear-gradient(145deg,rgba(255,255,255,.25),transparent 18%,rgba(4,38,128,.30) 44%,transparent 68%),
-        conic-gradient(from 45deg at 50% 50%,
-          rgba(255,255,255,.30) 0deg,
-          rgba(35,142,255,.30) 36deg,
-          rgba(2,18,76,.56) 72deg,
-          rgba(102,194,255,.27) 108deg,
-          rgba(4,31,116,.64) 144deg,
-          rgba(255,255,255,.20) 180deg,
-          rgba(2,18,76,.68) 216deg,
-          rgba(58,154,255,.30) 252deg,
-          rgba(1,12,54,.72) 288deg,
-          rgba(160,222,255,.27) 324deg,
-          rgba(255,255,255,.30) 360deg),
-        radial-gradient(circle at 32% 20%,rgba(255,255,255,.70),rgba(150,220,255,.18) 22%,transparent 38%),
-        radial-gradient(circle at 76% 80%,rgba(1,9,42,.76),transparent 52%),
-        linear-gradient(145deg,rgba(91,188,255,.99),rgba(17,88,218,.98) 42%,rgba(1,24,92,.99) 100%);
-      box-shadow:
-        0 18px 36px rgba(2,16,64,.42),
-        0 0 32px rgba(36,120,255,.34),
-        inset 0 1px 0 rgba(255,255,255,.32),
-        inset 0 -14px 28px rgba(1,9,42,.34);
-      transform:translate(-50%,-50%) rotate(45deg) rotateX(8deg) rotateY(-10deg);
-      transition:filter .18s ease,box-shadow .18s ease,scale .18s ease,border-color .18s ease;
+      background:transparent;
+      box-shadow:none;
+      transform:translate(-50%,-50%) rotateX(8deg) rotateY(-10deg);
+      transition:filter .18s ease,scale .18s ease;
       animation:compassGemAxisTurn 7.5s ease-in-out infinite;
       isolation:isolate;
     }
@@ -649,65 +644,104 @@
     .compass-gem[data-lens="flat"] {
       left:28%;
       top:23%;
+      --gem-body:rgba(74,152,213,.62);
+      --gem-mid:rgba(30,102,162,.58);
+      --gem-deep:rgba(5,28,64,.82);
+      --gem-light:rgba(237,250,255,.78);
+      --gem-warm:rgba(255,232,163,.14);
       animation-delay:-1.1s;
     }
 
     .compass-gem[data-lens="round"] {
       left:50%;
       top:15%;
+      --gem-body:rgba(36,120,255,.70);
+      --gem-mid:rgba(15,75,190,.64);
+      --gem-deep:rgba(1,14,62,.86);
+      --gem-light:rgba(238,248,255,.82);
+      --gem-warm:rgba(255,232,163,.20);
       animation-delay:-3.6s;
     }
 
     .compass-gem[data-lens="universe"] {
       left:72%;
       top:23%;
+      --gem-body:rgba(119,104,255,.60);
+      --gem-mid:rgba(54,73,177,.58);
+      --gem-deep:rgba(13,14,68,.86);
+      --gem-light:rgba(242,239,255,.78);
+      --gem-warm:rgba(255,232,163,.16);
       animation-delay:-5.2s;
     }
 
     @keyframes compassGemAxisTurn {
       0%,100% {
-        transform:translate(-50%,-50%) rotate(45deg) rotateX(8deg) rotateY(-10deg) translateY(0);
+        transform:translate(-50%,-50%) rotateX(8deg) rotateY(-10deg) translateY(0);
       }
 
       50% {
-        transform:translate(-50%,-50%) rotate(53deg) rotateX(12deg) rotateY(12deg) translateY(-6px);
+        transform:translate(-50%,-50%) rotateX(12deg) rotateY(12deg) translateY(-6px);
       }
     }
 
-    .compass-gem::before {
-      content:"";
-      position:absolute;
-      inset:5%;
-      clip-path:polygon(50% 0%,75% 12%,100% 36%,80% 54%,89% 78%,50% 100%,11% 78%,20% 54%,0% 36%,25% 12%);
-      background:
-        linear-gradient(90deg,transparent 0 48%,rgba(255,255,255,.24) 49% 51%,transparent 52% 100%),
-        linear-gradient(0deg,transparent 0 48%,rgba(255,255,255,.16) 49% 51%,transparent 52% 100%),
-        linear-gradient(27deg,transparent 0 32%,rgba(255,255,255,.21) 33% 35%,transparent 36% 100%),
-        linear-gradient(153deg,transparent 0 31%,rgba(255,255,255,.18) 32% 34%,transparent 35% 100%),
-        linear-gradient(118deg,transparent 0 42%,rgba(112,199,255,.18) 43% 45%,transparent 46% 100%),
-        linear-gradient(242deg,transparent 0 58%,rgba(255,232,163,.13) 59% 61%,transparent 62% 100%),
-        radial-gradient(circle at 36% 23%,rgba(255,255,255,.32),transparent 26%),
-        conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,.20),rgba(8,68,180,.12),rgba(255,255,255,.12),rgba(1,16,72,.24),rgba(255,255,255,.17));
-      opacity:.96;
-      pointer-events:none;
-      mix-blend-mode:screen;
-    }
-
-    .compass-gem::after {
-      content:"";
+    .optical-gem-svg {
       position:absolute;
       inset:0;
-      clip-path:var(--gem-cut);
-      background:
-        linear-gradient(115deg,transparent 0 33%,rgba(255,255,255,.34) 34% 36%,transparent 37% 100%),
-        linear-gradient(25deg,transparent 0 58%,rgba(255,232,163,.20) 59% 61%,transparent 62% 100%),
-        linear-gradient(82deg,transparent 0 47%,rgba(141,216,255,.22) 48% 49%,transparent 50% 100%),
-        radial-gradient(circle at 70% 24%,rgba(255,255,255,.20),transparent 20%);
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.10),
-        inset 0 -20px 28px rgba(1,9,42,.24);
+      width:100%;
+      height:100%;
+      overflow:visible;
       pointer-events:none;
-      mix-blend-mode:screen;
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.34))
+        drop-shadow(0 0 1.05rem rgba(36,120,255,.18));
+    }
+
+    .compass-gem[data-lens="universe"] .optical-gem-svg {
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.34))
+        drop-shadow(0 0 1.05rem rgba(119,104,255,.17));
+    }
+
+    .compass-gem:hover,
+    .compass-gem:focus-visible,
+    .compass-gem[aria-pressed="true"] {
+      filter:brightness(1.10) saturate(1.08) contrast(1.04);
+      scale:1.035;
+    }
+
+    .compass-gem:hover .optical-gem-svg,
+    .compass-gem:focus-visible .optical-gem-svg,
+    .compass-gem[aria-pressed="true"] .optical-gem-svg {
+      filter:
+        drop-shadow(0 1.25rem 1.55rem rgba(0,0,0,.40))
+        drop-shadow(0 0 1.35rem rgba(36,120,255,.26))
+        drop-shadow(0 0 .75rem rgba(243,200,111,.12));
+    }
+
+    .optical-gem-outline { fill:var(--gem-body); stroke:rgba(232,246,255,.52); stroke-width:1.35; }
+    .optical-gem-crown-a { fill:rgba(255,255,255,.34); }
+    .optical-gem-crown-b { fill:var(--gem-light); fill-opacity:.26; }
+    .optical-gem-crown-c { fill:var(--gem-warm); fill-opacity:.56; }
+    .optical-gem-table { fill:rgba(255,255,255,.15); stroke:rgba(255,255,255,.26); stroke-width:.8; }
+    .optical-gem-left { fill:rgba(255,255,255,.13); }
+    .optical-gem-right { fill:var(--gem-mid); fill-opacity:.34; }
+    .optical-gem-lower-a { fill:var(--gem-deep); fill-opacity:.66; }
+    .optical-gem-lower-b { fill:var(--gem-mid); fill-opacity:.40; }
+    .optical-gem-culet { fill:var(--gem-shadow); fill-opacity:.78; }
+    .optical-gem-ridge { stroke:rgba(255,255,255,.23); stroke-width:.85; fill:none; }
+    .optical-gem-warm-ridge { stroke:rgba(255,232,163,.16); stroke-width:.8; fill:none; }
+    .optical-gem-inclusion { stroke:var(--gem-inclusion); stroke-width:.95; fill:none; opacity:.56; }
+    .optical-gem-shadow { fill:rgba(0,0,0,.18); }
+    .optical-gem-glint { fill:url(#compassGemGlint); animation:compassOpticalGlint 8.5s ease-in-out infinite; transform-origin:110px 80px; }
+    .optical-gem-star { opacity:.70; animation:compassOpticalFacetTurn 28s linear infinite; transform-origin:110px 80px; }
+
+    @keyframes compassOpticalGlint {
+      0%,100% { opacity:.08; transform:translateX(-32px); }
+      48%,55% { opacity:.46; transform:translateX(34px); }
+    }
+
+    @keyframes compassOpticalFacetTurn {
+      to { transform:rotate(360deg); }
     }
 
     .gem-label {
@@ -716,9 +750,9 @@
       display:grid;
       place-items:center;
       gap:.12rem;
-      transform:rotate(-45deg);
       text-align:center;
       padding:.4rem;
+      pointer-events:none;
       text-shadow:
         0 2px 12px rgba(0,0,0,.92),
         0 0 10px rgba(0,28,90,.78),
@@ -739,20 +773,6 @@
       font-weight:950;
       letter-spacing:.10em;
       text-transform:uppercase;
-    }
-
-    .compass-gem:hover,
-    .compass-gem:focus-visible,
-    .compass-gem[aria-pressed="true"] {
-      border-color:rgba(243,200,111,.74);
-      filter:brightness(1.10) saturate(1.16) contrast(1.05);
-      box-shadow:
-        0 23px 44px rgba(2,16,64,.50),
-        0 0 42px rgba(36,120,255,.42),
-        0 0 18px rgba(243,200,111,.15),
-        inset 0 1px 0 rgba(255,255,255,.35),
-        inset 0 -14px 28px rgba(1,9,42,.34);
-      scale:1.035;
     }
 
     .scene-copy {
@@ -842,6 +862,29 @@
       text-transform:uppercase;
     }
 
+    .route-receipt,
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt],
+    .receipt{
+      display:none!important;
+      visibility:hidden!important;
+      overflow:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      inset:auto!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
+    }
+
     footer {
       padding:1.35rem 0 .5rem;
       color:var(--faint);
@@ -893,8 +936,8 @@
       }
 
       .compass-gem {
-        width:4.95rem;
-        height:4.95rem;
+        width:5.45rem;
+        height:4rem;
       }
 
       .compass-gem[data-lens="flat"] {
@@ -949,8 +992,8 @@
       }
 
       .compass-gem {
-        width:4.15rem;
-        height:4.15rem;
+        width:4.75rem;
+        height:3.5rem;
       }
 
       .compass-gem[data-lens="flat"] {
@@ -999,6 +1042,77 @@
 </head>
 
 <body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="compassGemGlint" x1="30" y1="130" x2="190" y2="22" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".43" stop-color="#ffffff" stop-opacity=".78"/>
+        <stop offset=".51" stop-color="#fff0a3" stop-opacity=".20"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="compassOpticalGemGlow" x="-42%" y="-52%" width="184%" height="204%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.2" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.58 0 0 0 0.10
+            0 0.70 0 0 0.18
+            0 0 1.00 0 0.34
+            0 0 0 0.38 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="compassOpticalGem" viewBox="0 0 220 160">
+        <g filter="url(#compassOpticalGemGlow)">
+          <path
+            class="optical-gem-outline"
+            d="M110 6 L146 15 L184 43 L204 75 L184 111 L146 140 L110 154 L74 140 L36 111 L16 75 L36 43 L74 15 Z"
+          />
+          <path class="optical-gem-crown-a" d="M110 6 L146 15 L130 42 L110 33 L90 42 L74 15 Z"/>
+          <path class="optical-gem-crown-b" d="M74 15 L90 42 L63 64 L36 43 Z"/>
+          <path class="optical-gem-crown-c" d="M146 15 L130 42 L157 64 L184 43 Z"/>
+          <path class="optical-gem-left" d="M36 43 L63 64 L54 84 L16 75 Z"/>
+          <path class="optical-gem-right" d="M184 43 L157 64 L166 84 L204 75 Z"/>
+          <path
+            class="optical-gem-table"
+            d="M90 42 L110 33 L130 42 L157 64 L144 91 L110 107 L76 91 L63 64 Z"
+          />
+          <path class="optical-gem-lower-a" d="M16 75 L54 84 L74 140 L36 111 Z"/>
+          <path class="optical-gem-lower-b" d="M204 75 L166 84 L146 140 L184 111 Z"/>
+          <path class="optical-gem-culet" d="M54 84 L76 91 L110 154 L74 140 Z"/>
+          <path class="optical-gem-lower-a" d="M166 84 L144 91 L110 154 L146 140 Z"/>
+          <path class="optical-gem-shadow" d="M76 91 L110 107 L144 91 L110 154 Z"/>
+
+          <path class="optical-gem-ridge" d="M110 6 L110 154"/>
+          <path class="optical-gem-ridge" d="M16 75 L204 75"/>
+          <path class="optical-gem-ridge" d="M36 43 L184 111"/>
+          <path class="optical-gem-ridge" d="M184 43 L36 111"/>
+          <path class="optical-gem-ridge" d="M74 15 L110 107 L146 15"/>
+          <path class="optical-gem-warm-ridge" d="M36 111 L110 107 L184 111"/>
+          <path class="optical-gem-warm-ridge" d="M63 64 L110 107 L157 64"/>
+
+          <g class="optical-gem-star">
+            <path d="M110 31 L116 76 L110 113 L104 76 Z" fill="rgba(255,255,255,.26)"/>
+            <path d="M63 64 L106 78 L157 64 L114 86 Z" fill="rgba(255,255,255,.15)"/>
+            <path d="M76 91 L106 83 L144 91 L114 101 Z" fill="rgba(255,240,163,.09)"/>
+          </g>
+
+          <path class="optical-gem-inclusion" d="M76 104 C91 93 101 112 119 98"/>
+          <path class="optical-gem-inclusion" d="M132 52 C145 60 151 73 162 81"/>
+          <path class="optical-gem-inclusion" d="M84 50 C73 61 70 74 61 81"/>
+          <path class="optical-gem-glint" d="M38 121 L176 24 L188 42 L52 133 Z"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
   <a class="skip" href="#main">Skip to Compass</a>
 
   <div class="shell">
@@ -1044,10 +1158,10 @@
       </section>
 
       <section class="panel section" aria-labelledby="compass-title">
-        <div class="kicker">Cut-gem preface gate</div>
-        <h2 id="compass-title">Three cut gemstones choose three different kinds of entry.</h2>
+        <div class="kicker">Optical cut-gem preface gate</div>
+        <h2 id="compass-title">Three physical digital gems choose three different kinds of entry.</h2>
 
-        <div class="compass-stage" aria-label="Compass cut-gem preface selector">
+        <div class="compass-stage" aria-label="Compass optical cut-gem preface selector">
           <div class="scene-field" aria-hidden="true">
             <div class="scene-board" data-scene="flat"></div>
             <div class="scene-board" data-scene="round"></div>
@@ -1062,6 +1176,9 @@
 
           <div class="gem-rail" aria-label="Compass lens controls">
             <button class="compass-gem" type="button" data-lens="flat" aria-pressed="false" aria-label="World Is Flat lens">
+              <svg class="optical-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                <use href="#compassOpticalGem"></use>
+              </svg>
               <span class="gem-label">
                 <b>Flat</b>
                 <span>Map</span>
@@ -1069,6 +1186,9 @@
             </button>
 
             <button class="compass-gem" type="button" data-lens="round" aria-pressed="true" aria-label="World Is Round lens">
+              <svg class="optical-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                <use href="#compassOpticalGem"></use>
+              </svg>
               <span class="gem-label">
                 <b>Round</b>
                 <span>Products</span>
@@ -1076,6 +1196,9 @@
             </button>
 
             <button class="compass-gem" type="button" data-lens="universe" aria-pressed="false" aria-label="World Is a Universe lens">
+              <svg class="optical-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                <use href="#compassOpticalGem"></use>
+              </svg>
               <span class="gem-label">
                 <b>Universe</b>
                 <span>Showroom</span>
@@ -1117,15 +1240,38 @@
           </a>
         </div>
       </section>
+
+      <template id="route-receipt" data-route-receipt>
+COMPASS_OPTICAL_PREFACE_GEM_REFINEMENT_TNT_v1
+previous=COMPASS_INDEX_CUT_GEM_PREFACE_GATE_AUTHORITY_RENEWAL_TNT_v1
+route=/
+page=compass
+role=preface_gate
+message=pressure_is_the_door
+route_model_preserved=true
+single_tap_changes_lens=true
+double_tap_opens_route=true
+default_lens=round
+lenses=flat,round,universe
+routes=flat:/flat/,round:/products/,universe:/showroom/
+change=replaced_manufactured_css_gems_with_optically_layered_inline_svg_gems
+material_standard=physical_digital_cut_gem_with_crown_table_girdle_pavilion_culet_internal_refraction_and_occlusion
+preserved=hero_copy,path_cards,route_model,index_js_contract,lens_controls,keyboard_traversal,top_navigation
+route_owns=compass_preface_gate,lens_selection,three_entry_model
+route_does_not_own=products_runtime,door_threshold,home_receiver,laws_chamber,gauges_logic,showroom_runtime
+generated_image=false
+graphic_box=false
+visual_pass_claimed=false
+      </template>
     </main>
 
     <footer>
-      Compass · Flat investigation · Round products · Universe showroom.
+      COMPASS_OPTICAL_PREFACE_GEM_REFINEMENT_TNT_v1 · Compass · Flat investigation · Round products · Universe showroom.
     </footer>
   </div>
 
   <script>
-    window.DGB_COMPASS_KEY = "COMPASS_INDEX_CUT_GEM_PREFACE_GATE_AUTHORITY_RENEWAL_TNT_v1";
+    window.DGB_COMPASS_KEY = "COMPASS_OPTICAL_PREFACE_GEM_REFINEMENT_TNT_v1";
   </script>
   <script type="module" src="/index.js?v=COMPASS_CUT_GEM_PREFACE_GATE_AUTHORITY_RENEWAL_TNT_v1"></script>
 </body>

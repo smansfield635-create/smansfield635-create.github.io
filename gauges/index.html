@@ -1,1245 +1,1233 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="triple-g-showroom-globe-cinematic-baseline-recovery-audit"
+  data-page="triple-g"
   data-route="/gauges/"
-  data-contract="SHOWROOM_GLOBE_CINEMATIC_BASELINE_RECOVERY_AUDIT_v1"
-  data-role="cinematic-baseline-recovery-audit"
-  data-live-audit="true"
-  data-private-engine-execution="false"
+  data-contract="TRIPLE_G_H_EARTH_CONDITION_STACK_RENEWAL_TNT_v1"
+  data-previous-contract="TRIPLE_G_LEGACY_PARENT_GLOBE_AUDIT"
+  data-audit-model="authority-placement-runtime-condition-stack-gaps"
+  data-parent-selector-route="/showroom/globe/"
+  data-h-earth-child-route="/showroom/globe/h-earth/"
   data-generated-image="false"
   data-graphic-box="false"
+  data-streaming="false"
+  data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-
-  <title>Triple G · Cinematic Globe Recovery</title>
+  <title>Triple G · H-Earth Condition Stack Audit</title>
   <meta
     name="description"
-    content="Triple G audits the Showroom Globe cinematic baseline, source recovery, asset availability, runtime material source, opacity posture, and flicker risk."
+    content="Triple G audit for current Showroom Globe and H-Earth goals: parent selector authority, child route placement, runtime boot, condition stack visibility, baseline purity, material readiness, and current gaps."
   >
 
   <style>
-    :root {
-      --bg: #030812;
-      --line: rgba(244, 207, 131, 0.18);
-      --line-soft: rgba(255,255,255,0.10);
-      --text: rgba(238,244,255,0.94);
-      --muted: rgba(238,244,255,0.64);
-      --faint: rgba(238,244,255,0.44);
-      --gold: #f4cf83;
-      --mint: #a7f3c6;
-      --red: #ff8b8b;
-      --amber: #f4cf83;
-      --blue: #8bc8ff;
-      color-scheme: dark;
+    :root{
+      color-scheme:dark;
+      --bg:#02050b;
+      --bg2:#071225;
+      --panel:rgba(8,17,34,.94);
+      --panel2:rgba(4,9,20,.96);
+      --line:rgba(244,207,131,.22);
+      --line2:rgba(255,255,255,.12);
+      --text:rgba(238,244,255,.94);
+      --muted:rgba(238,244,255,.70);
+      --faint:rgba(238,244,255,.48);
+      --gold:#f4cf83;
+      --gold2:#fff0a8;
+      --mint:#a7f3c6;
+      --green:#87e6b5;
+      --blue:#8dd8ff;
+      --red:#ff8f8f;
+      --amber:#f4cf83;
+      --hold:#c8b6ff;
+      --shadow:0 24px 70px rgba(0,0,0,.30);
+      --max:1180px;
     }
 
-    * { box-sizing: border-box; }
+    *{box-sizing:border-box}
 
-    html {
-      min-height: 100%;
+    html,
+    body{
+      min-width:320px;
+      min-height:100%;
+      margin:0;
       background:
-        radial-gradient(circle at 50% -10%, rgba(78,119,171,0.26), transparent 38%),
-        radial-gradient(circle at 12% 22%, rgba(244,207,131,0.10), transparent 32%),
-        radial-gradient(circle at 82% 28%, rgba(167,243,198,0.08), transparent 34%),
-        linear-gradient(180deg, #061020 0%, var(--bg) 48%, #02050b 100%);
+        linear-gradient(90deg,rgba(244,207,131,.045) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(244,207,131,.025) 1px,transparent 1px),
+        radial-gradient(circle at 50% -8%,rgba(78,119,171,.25),transparent 38%),
+        radial-gradient(circle at 12% 18%,rgba(244,207,131,.11),transparent 30%),
+        radial-gradient(circle at 88% 28%,rgba(141,216,255,.10),transparent 34%),
+        linear-gradient(180deg,var(--bg2),var(--bg) 54%,#02050b);
+      background-size:58px 58px,58px 58px,auto,auto,auto,auto;
+      color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
     }
 
-    body {
-      margin: 0;
-      min-height: 100%;
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      letter-spacing: -0.015em;
+    a{color:inherit;text-decoration:none}
+    button{font:inherit;color:inherit}
+
+    .skip{
+      position:absolute;
+      left:-999px;
+      top:10px;
+      z-index:100;
+      padding:.8rem 1rem;
+      border-radius:999px;
+      color:#06101c;
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      font-weight:950;
     }
 
-    a { color: inherit; }
+    .skip:focus{left:10px}
 
-    .skip {
-      position: absolute;
-      left: 12px;
-      top: 12px;
-      transform: translateY(-160%);
-      background: var(--mint);
-      color: #06101c;
-      padding: 10px 14px;
-      border-radius: 999px;
-      z-index: 20;
-      font-weight: 900;
-      text-decoration: none;
+    .page{
+      position:relative;
+      z-index:1;
+      width:min(var(--max),calc(100% - 28px));
+      margin:0 auto;
+      padding:max(22px,env(safe-area-inset-top)) 0 max(58px,env(safe-area-inset-bottom));
     }
 
-    .skip:focus { transform: translateY(0); }
-
-    .page {
-      width: min(1180px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 22px 0 54px;
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:12px 0 22px;
     }
 
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 12px 0 22px;
+    .brand{
+      display:inline-flex;
+      align-items:center;
+      gap:.6rem;
+      color:var(--gold);
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+      line-height:1.1;
     }
 
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--gold);
-      text-decoration: none;
-      font-weight: 950;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
+    .brand::before{
+      content:"◆";
+      color:var(--mint);
+      text-shadow:0 0 1.2rem rgba(167,243,198,.34);
     }
 
-    .brand-mark {
-      display: inline-grid;
-      place-items: center;
-      width: 34px;
-      height: 34px;
-      border: 1px solid rgba(244,207,131,0.44);
-      border-radius: 10px;
-      background: rgba(244,207,131,0.08);
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:8px;
     }
 
-    .nav,
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+    .nav a{
+      min-height:38px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid var(--line2);
+      border-radius:999px;
+      padding:0 13px;
+      color:rgba(238,244,255,.84);
+      background:rgba(255,255,255,.04);
+      font-size:.82rem;
+      font-weight:850;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
     }
 
-    .nav { justify-content: flex-end; }
-
-    .nav a,
-    .button {
-      min-height: 38px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid var(--line-soft);
-      border-radius: 999px;
-      padding: 0 13px;
-      color: rgba(238,244,255,0.82);
-      text-decoration: none;
-      background: rgba(255,255,255,0.035);
-      font-size: 0.82rem;
-      font-weight: 850;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      appearance: none;
-      -webkit-appearance: none;
+    .nav a[aria-current="page"]{
+      color:#06101c;
+      background:linear-gradient(135deg,var(--mint),#78d8ac);
+      border-color:rgba(167,243,198,.64);
     }
 
-    .nav a[aria-current="page"],
-    .button.primary {
-      color: #06101c;
-      background: linear-gradient(135deg, var(--mint), #78d8ac);
-      border-color: rgba(167,243,198,0.62);
-    }
-
-    .button.gold {
-      color: #150d03;
-      background: linear-gradient(135deg, #fff0b8, var(--gold) 48%, #c48a38);
-      border-color: rgba(244,207,131,0.72);
-    }
-
-    .hero,
-    .panel {
-      border: 1px solid var(--line);
-      border-radius: 34px;
+    .panel{
+      border:1px solid var(--line);
+      border-radius:clamp(24px,5vw,34px);
       background:
-        radial-gradient(circle at 76% 28%, rgba(139,200,255,0.13), transparent 32%),
-        radial-gradient(circle at 18% 20%, rgba(244,207,131,0.12), transparent 30%),
-        linear-gradient(180deg, rgba(8,17,34,0.94), rgba(4,9,20,0.94));
-      box-shadow: 0 30px 90px rgba(0,0,0,0.38);
-      overflow: hidden;
+        radial-gradient(circle at 76% 28%,rgba(139,200,255,.12),transparent 32%),
+        linear-gradient(180deg,var(--panel),var(--panel2));
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.07);
+      overflow:hidden;
     }
 
-    .hero { padding: clamp(24px, 5vw, 46px); }
-
-    .panel {
-      margin-top: 16px;
-      padding: clamp(18px, 3.8vw, 32px);
+    .hero{
+      display:grid;
+      gap:1rem;
+      padding:clamp(24px,5vw,46px);
     }
 
-    .eyebrow,
-    .panel-title {
-      margin: 0 0 14px;
-      color: var(--gold);
-      font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
+    .eyebrow{
+      margin:0;
+      color:var(--gold);
+      font:900 .76rem/1.45 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.22em;
+      text-transform:uppercase;
     }
 
-    h1 {
-      max-width: 980px;
-      margin: 0;
-      font-size: clamp(2.25rem, 8vw, 5.4rem);
-      line-height: 0.92;
-      letter-spacing: -0.075em;
+    h1,
+    h2,
+    h3{
+      margin:0;
+      color:var(--gold);
+      line-height:1.04;
+      text-wrap:balance;
     }
 
-    .lede {
-      max-width: 940px;
-      margin: 22px 0 0;
-      color: var(--muted);
-      font-size: clamp(1.02rem, 2.6vw, 1.34rem);
-      line-height: 1.55;
+    h1{
+      max-width:980px;
+      font-size:clamp(2.7rem,8vw,5.5rem);
+      line-height:.93;
+      letter-spacing:-.075em;
     }
 
-    .actions { margin-top: 26px; }
-
-    .score-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 18px;
+    h2{
+      font-size:clamp(1.65rem,4.6vw,2.7rem);
+      letter-spacing:-.055em;
     }
 
-    .score {
-      border: 1px solid var(--line-soft);
-      border-radius: 22px;
-      padding: 16px;
-      background: rgba(11,23,44,0.58);
+    h3{
+      font-size:clamp(1.18rem,3vw,1.58rem);
+      letter-spacing:-.03em;
     }
 
-    .score strong {
-      display: block;
-      font-size: clamp(1.85rem, 5vw, 3rem);
-      line-height: 0.95;
-      color: var(--gold);
-      letter-spacing: -0.06em;
+    p{
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(1rem,2.5vw,1.16rem);
+      line-height:1.55;
     }
 
-    .score span {
-      display: block;
-      margin-top: 8px;
-      color: var(--muted);
-      font-weight: 800;
-      line-height: 1.25;
-      font-size: 0.84rem;
+    .quote{
+      width:min(100%,920px);
+      padding:1rem 1.1rem;
+      border:1px solid rgba(244,207,131,.18);
+      border-radius:18px;
+      background:rgba(244,207,131,.06);
+      color:rgba(255,244,220,.92);
+      font-weight:850;
     }
 
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-top: 16px;
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.7rem;
+      margin-top:.2rem;
     }
 
-    .mini-card {
-      border: 1px solid var(--line-soft);
-      border-radius: 24px;
-      padding: 18px;
-      background: rgba(11,23,44,0.58);
+    .button{
+      min-height:2.7rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:.68rem 1rem;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.04);
+      color:rgba(238,244,255,.88);
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      cursor:pointer;
+      transition:transform .18s ease,border-color .18s ease;
     }
 
-    .mini-card h2 {
-      margin: 0 0 10px;
-      color: var(--gold);
-      font-size: clamp(1.08rem, 2.8vw, 1.45rem);
-      line-height: 1.1;
-      letter-spacing: -0.035em;
+    .button:hover,
+    .button:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(244,207,131,.42);
+      outline:none;
     }
 
-    .mini-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.5;
+    .button.gold{
+      color:#06101c;
+      background:linear-gradient(135deg,#fff0bc,var(--gold));
+      border-color:rgba(244,207,131,.70);
     }
 
-    .ledger {
-      display: grid;
-      gap: 10px;
-      margin-top: 14px;
+    .section{
+      margin-top:18px;
+      padding:clamp(18px,3vw,28px);
+      display:grid;
+      gap:1rem;
     }
 
-    .row {
-      display: grid;
-      grid-template-columns: 146px 92px 1fr;
-      gap: 10px;
-      align-items: start;
-      border: 1px solid var(--line-soft);
-      border-radius: 18px;
-      padding: 12px;
-      background: rgba(2,7,16,0.38);
+    .summary-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
     }
 
-    .route {
-      color: rgba(238,244,255,0.86);
-      font: 850 0.82rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      word-break: break-word;
+    .summary-card,
+    .gauge-card,
+    .gap-card{
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:20px;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(141,216,255,.08),transparent 60%),
+        rgba(255,255,255,.035);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
     }
 
-    .status {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 30px;
-      border-radius: 999px;
-      padding: 0 10px;
-      font: 900 0.72rem/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+    .summary-card{
+      min-height:8.5rem;
+      display:grid;
+      gap:.4rem;
+      align-content:start;
+      padding:1rem;
     }
 
-    .pass { color: #07140d; background: var(--mint); }
-    .fail { color: #210707; background: var(--red); }
-    .hold { color: #1c1303; background: var(--amber); }
-    .review { color: #06101c; background: var(--blue); }
-    .pending { color: rgba(238,244,255,0.62); background: rgba(255,255,255,0.08); }
-
-    .detail {
-      color: var(--muted);
-      line-height: 1.45;
-      font-size: 0.92rem;
+    .summary-card b,
+    .gauge-card b,
+    .gap-card b{
+      color:var(--gold);
+      font-size:.70rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
     }
 
-    .detail strong { color: rgba(238,244,255,0.90); }
-
-    .evidence {
-      margin-top: 6px;
-      color: var(--faint);
-      font: 760 0.72rem/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      word-break: break-word;
+    .summary-card strong{
+      font-size:1.45rem;
+      line-height:1;
+      color:rgba(255,244,220,.98);
     }
 
-    .gap-list {
-      display: grid;
-      gap: 10px;
-      margin-top: 12px;
+    .summary-card span,
+    .gauge-card span,
+    .gap-card span{
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.45;
     }
 
-    .gap {
-      border-left: 3px solid var(--gold);
-      border-radius: 14px;
-      padding: 12px 14px;
-      background: rgba(244,207,131,0.06);
-      color: var(--muted);
-      line-height: 1.45;
+    .status{
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:2rem;
+      padding:.35rem .7rem;
+      border-radius:999px;
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
     }
 
-    .gap strong { color: rgba(238,244,255,0.92); }
-
-    .small {
-      color: var(--faint);
-      font-size: 0.82rem;
-      line-height: 1.45;
+    .status.pass{
+      color:#06101c;
+      background:linear-gradient(135deg,#b7ffd4,#87e6b5);
+      border-color:rgba(167,243,198,.62);
     }
 
-    .footer {
-      margin-top: 20px;
-      padding: 20px 0 0;
-      color: var(--faint);
-      font-size: 0.82rem;
-      text-align: center;
+    .status.fail{
+      color:#210606;
+      background:linear-gradient(135deg,#ffd0d0,#ff8f8f);
+      border-color:rgba(255,143,143,.62);
     }
 
-    iframe.audit-frame {
-      position: fixed;
-      width: 390px;
-      height: 740px;
-      left: -10000px;
-      top: 0;
-      border: 0;
-      visibility: hidden;
-      pointer-events: none;
+    .status.hold{
+      color:#080618;
+      background:linear-gradient(135deg,#e0d3ff,#c8b6ff);
+      border-color:rgba(200,182,255,.62);
     }
 
-    @media (max-width: 920px) {
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
+    .status.test{
+      color:#150f03;
+      background:linear-gradient(135deg,#fff0bc,#f4cf83);
+      border-color:rgba(244,207,131,.62);
+    }
+
+    .gauge-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .gauge-card{
+      min-height:15rem;
+      display:grid;
+      gap:.7rem;
+      align-content:start;
+      padding:1rem;
+    }
+
+    .check-list{
+      display:grid;
+      gap:.36rem;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+
+    .check-list li{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:.5rem;
+      align-items:start;
+      color:var(--muted);
+      font-size:.88rem;
+      line-height:1.35;
+    }
+
+    .dot{
+      width:.62rem;
+      height:.62rem;
+      margin-top:.32rem;
+      border-radius:50%;
+      background:var(--faint);
+      box-shadow:0 0 .8rem rgba(255,255,255,.08);
+    }
+
+    .dot.pass{background:var(--green);box-shadow:0 0 1rem rgba(135,230,181,.34)}
+    .dot.fail{background:var(--red);box-shadow:0 0 1rem rgba(255,143,143,.34)}
+    .dot.hold{background:var(--hold);box-shadow:0 0 1rem rgba(200,182,255,.34)}
+    .dot.test{background:var(--amber);box-shadow:0 0 1rem rgba(244,207,131,.34)}
+
+    .evidence{
+      display:block;
+      margin-top:.1rem;
+      color:var(--faint);
+      font:800 .76rem/1.45 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      overflow-wrap:anywhere;
+    }
+
+    .gap-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .gap-card{
+      display:grid;
+      gap:.5rem;
+      align-content:start;
+      padding:1rem;
+    }
+
+    .log{
+      min-height:9rem;
+      max-height:18rem;
+      overflow:auto;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      background:rgba(0,0,0,.20);
+      color:rgba(238,244,255,.72);
+      font:800 .78rem/1.5 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      white-space:pre-wrap;
+    }
+
+    .receipt,
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt]{
+      display:none!important;
+      visibility:hidden!important;
+      overflow:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      inset:auto!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
+    }
+
+    .probe-frame{
+      position:fixed;
+      left:-200vw;
+      top:0;
+      width:430px;
+      height:900px;
+      border:0;
+      opacity:.01;
+      pointer-events:none;
+      z-index:-1;
+    }
+
+    footer{
+      margin-top:20px;
+      padding:20px 0 0;
+      color:var(--faint);
+      font-size:.82rem;
+      text-align:center;
+    }
+
+    @media (max-width:1050px){
+      .summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .gauge-grid{grid-template-columns:1fr}
+    }
+
+    @media (max-width:780px){
+      .topbar{
+        align-items:flex-start;
+        flex-direction:column;
       }
 
-      .nav { justify-content: flex-start; }
-
-      .score-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .grid-2,
-      .row {
-        grid-template-columns: 1fr;
-      }
+      .nav{justify-content:flex-start}
+      .gap-grid{grid-template-columns:1fr}
     }
 
-    @media (max-width: 520px) {
-      .page { width: min(100% - 18px, 1180px); }
-
-      .hero,
-      .panel {
-        border-radius: 24px;
-      }
-
-      .score-grid {
-        grid-template-columns: 1fr 1fr;
-      }
+    @media (max-width:560px){
+      .page{width:min(100% - 18px,var(--max))}
+      .hero,.section,.panel{border-radius:24px}
+      .summary-grid{grid-template-columns:1fr}
+      .actions{display:grid}
+      .button{width:100%}
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#main">Skip to Triple G</a>
+  <a class="skip" href="/gauges/#main">Skip to Triple G</a>
 
   <div class="page">
-    <header class="topbar" aria-label="Diamond Gate Bridge navigation">
-      <a class="brand" href="/gauges/" aria-current="page">
-        <span class="brand-mark" aria-hidden="true">G</span>
-        <span>Diamond Gate Bridge · Triple G</span>
-      </a>
+    <header class="topbar">
+      <a class="brand" href="/">Diamond Gate Bridge · Triple G</a>
 
-      <nav class="nav" aria-label="Primary">
+      <nav class="nav" aria-label="Primary traversal">
         <a href="/">Compass</a>
-        <a href="/flat/">Flat</a>
-        <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Globe</a>
+        <a href="/showroom/globe/h-earth/">H-Earth</a>
         <a href="/gauges/" aria-current="page">Triple G</a>
       </nav>
     </header>
 
     <main id="main">
-      <section class="hero">
-        <p class="eyebrow">Triple G · Cinematic Baseline Recovery Audit</p>
-        <h1>Recover the cinematic globe before any ground-level build.</h1>
-        <p class="lede">
-          This audit searches the live routes, deployed source, public asset paths, runtime status, image material candidates, opacity posture, and flicker risk. The screenshot baseline is controlling: solid cinematic globe first, ground-level work held.
+      <section class="panel hero" aria-labelledby="page-title">
+        <p class="eyebrow">Goals · Gauges · Gaps</p>
+        <h1 id="page-title">Triple G now audits the split.</h1>
+
+        <p>
+          The current standard is simple: the parent selector selects, the H-Earth child route renders, and Triple G verifies whether authority, route placement, runtime boot, condition visibility, purity, and material readiness match the current goal.
         </p>
 
+        <div class="quote">
+          Functional baseline can pass while visual material readiness remains on hold. That is not failure. That is an honest gap.
+        </div>
+
         <div class="actions">
-          <button class="button primary" type="button" data-run-audit>Run Recovery Audit</button>
-          <a class="button gold" href="/showroom/globe/">Open Globe</a>
-          <a class="button" href="/showroom/">Open Showroom</a>
-        </div>
-
-        <div class="score-grid" aria-label="Audit score summary">
-          <div class="score"><strong data-count="total">0</strong><span>Checks run</span></div>
-          <div class="score"><strong data-count="pass">0</strong><span>Passing</span></div>
-          <div class="score"><strong data-count="hold">0</strong><span>Held</span></div>
-          <div class="score"><strong data-count="fail">0</strong><span>Failing</span></div>
-          <div class="score"><strong data-count="review">0</strong><span>Review</span></div>
+          <button class="button gold" type="button" data-run-audit>Run Triple G</button>
+          <a class="button" href="/showroom/globe/">Open Globe Parent</a>
+          <a class="button" href="/showroom/globe/h-earth/">Open H-Earth Child</a>
         </div>
       </section>
 
-      <section class="panel">
-        <p class="panel-title">Recovery standard</p>
+      <section class="panel section" aria-labelledby="summary-title">
+        <p class="eyebrow">Current Summary</p>
+        <h2 id="summary-title">Functional baseline first. Material expression next.</h2>
 
-        <div class="grid-2">
-          <article class="mini-card">
-            <h2>What must return</h2>
-            <p>
-              Opaque cinematic globe material, dark terrain depth, hydrated atmosphere, stable spherical body, body-specific H-Earth and Audralia identity, and no cartoon fallback as the primary read.
-            </p>
+        <div class="summary-grid">
+          <article class="summary-card">
+            <b>Overall</b>
+            <strong data-summary-overall>Pending</strong>
+            <span data-summary-overall-copy>Run the audit to confirm current state.</span>
           </article>
 
-          <article class="mini-card">
-            <h2>What must stop</h2>
-            <p>
-              Flicker, transparent body stacking, generated cartoon land blobs, strip-sampling shimmer, and runtime-generated material standing in for the prior cinematic source.
-            </p>
+          <article class="summary-card">
+            <b>Pass</b>
+            <strong data-summary-pass>0</strong>
+            <span>Completed authority/runtime checks.</span>
+          </article>
+
+          <article class="summary-card">
+            <b>Hold</b>
+            <strong data-summary-hold>0</strong>
+            <span>Known gaps that should not be misread as broken architecture.</span>
+          </article>
+
+          <article class="summary-card">
+            <b>Fail</b>
+            <strong data-summary-fail>0</strong>
+            <span>Items requiring correction before visual refinement.</span>
           </article>
         </div>
       </section>
 
-      <section class="panel">
-        <p class="panel-title">Route + Source Ledger</p>
-        <div class="small">
-          Reads live public routes and deployed source files. A route pass is not enough; this audit is looking for the prior cinematic material source or the code contract that created it.
-        </div>
-        <div class="ledger" data-source-ledger>
-          <div class="row">
-            <div class="route">waiting</div>
-            <div><span class="status pending">pending</span></div>
-            <div class="detail">Run the audit.</div>
-          </div>
+      <section class="panel section" aria-labelledby="gauges-title">
+        <p class="eyebrow">Renewed Gauges</p>
+        <h2 id="gauges-title">Seven audit lanes now match the current route architecture.</h2>
+
+        <div class="gauge-grid" data-gauge-grid></div>
+      </section>
+
+      <section class="panel section" aria-labelledby="gaps-title">
+        <p class="eyebrow">Current Gaps</p>
+        <h2 id="gaps-title">Do not rebuild what is already working.</h2>
+
+        <div class="gap-grid">
+          <article class="gap-card">
+            <b>Current confirmed wins</b>
+            <span>Parent/child split. Parent selector demotion. H-Earth child placement. Classic canvas boot. Visible earth/water/air stack.</span>
+          </article>
+
+          <article class="gap-card">
+            <b>Primary remaining gap</b>
+            <span>Material expression is still primitive. Air, water, and earth need better physical readability without adding unauthorized objects.</span>
+          </article>
+
+          <article class="gap-card">
+            <b>Next lawful build</b>
+            <span>H_EARTH_EARTH_WATER_AIR_MATERIAL_EXPRESSION_RENEWAL_TNT_v1 targeting /showroom/globe/h-earth/index.js only.</span>
+          </article>
+
+          <article class="gap-card">
+            <b>Do not touch</b>
+            <span>Do not reconnect planets. Do not put the H-Earth scene back on the parent. Do not use graphic blocks or image generation.</span>
+          </article>
         </div>
       </section>
 
-      <section class="panel">
-        <p class="panel-title">Asset Recovery Ledger</p>
-        <div class="small">
-          Checks likely public cinematic material asset paths for Earth, H-Earth, and Audralia.
-        </div>
-        <div class="ledger" data-asset-ledger>
-          <div class="row">
-            <div class="route">waiting</div>
-            <div><span class="status pending">pending</span></div>
-            <div class="detail">Run the audit.</div>
-          </div>
-        </div>
-      </section>
+      <section class="panel section" aria-labelledby="log-title">
+        <p class="eyebrow">Audit Log</p>
+        <h2 id="log-title">Live diagnostic output.</h2>
+        <div class="log" data-log>Audit not yet run.</div>
 
-      <section class="panel">
-        <p class="panel-title">Runtime + Flicker Ledger</p>
-        <div class="small">
-          Loads the Globe route in a hidden same-origin frame, reads runtime status, samples stable and active canvas frames, and reports whether the active material source is real image material or fallback-generated material.
-        </div>
-        <div class="ledger" data-runtime-ledger>
-          <div class="row">
-            <div class="route">waiting</div>
-            <div><span class="status pending">pending</span></div>
-            <div class="detail">Run the audit.</div>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel">
-        <p class="panel-title">Recovery Board</p>
-        <div class="gap-list" data-gap-board>
-          <div class="gap"><strong>Waiting.</strong> Run Recovery Audit to classify the current recovery path.</div>
-        </div>
+        <template id="route-receipt" data-route-receipt>
+TRIPLE_G_H_EARTH_CONDITION_STACK_RENEWAL_TNT_v1
+route=/gauges/
+page=triple_g
+role=goals_gauges_gaps_audit
+purpose=renew_triple_g_against_current_authority_and_condition_stack_goals
+parent_route=/showroom/globe/
+h_earth_child_route=/showroom/globe/h-earth/
+primary_law=parent_selector_selects_child_route_renders_triple_g_verifies_split
+audit_lanes=authority_health,route_placement_health,runtime_health,condition_stack_health,baseline_purity,exit_release,material_readiness,current_gaps
+retired_audit_targets=old_shared_interplanetary_parent_canvas,old_three_planets_on_one_page_platform,old_parent_drag_glide_runtime,old_material_renderer_import_on_parent
+current_expected=authority_pass_route_placement_pass_runtime_pass_condition_stack_pass_baseline_purity_pass_exit_release_source_check_material_readiness_hold
+next_lawful_build=H_EARTH_EARTH_WATER_AIR_MATERIAL_EXPRESSION_RENEWAL_TNT_v1
+generated_image=false
+graphic_box=false
+streaming=false
+visual_pass_claimed=false
+        </template>
       </section>
     </main>
 
-    <footer class="footer">
-      Diamond Gate Bridge · Triple G · Cinematic Baseline Recovery Audit.
+    <footer>
+      TRIPLE_G_H_EARTH_CONDITION_STACK_RENEWAL_TNT_v1 · Parent selects · H-Earth renders · Triple G verifies.
     </footer>
   </div>
 
   <script>
-    const AUDIT_CONTRACT = "SHOWROOM_GLOBE_CINEMATIC_BASELINE_RECOVERY_AUDIT_v1";
+    (function () {
+      "use strict";
 
-    const ROUTE_CHECKS = [
-      {
-        group: "source",
-        path: "/showroom/",
-        label: "Showroom Route",
-        expectVisible: ["Diamond", "Showroom"],
-        rejectVisible: ["Earth is the real-world reference body"]
-      },
-      {
-        group: "source",
-        path: "/showroom/globe/",
-        label: "Globe Route",
-        expectVisible: ["Globe Showcase", "gateway"],
-        rejectVisible: ["Earth is the real-world reference body"]
-      },
-      {
-        group: "source",
-        path: "/showroom/globe/h-earth/",
-        label: "H-Earth Route",
-        expectVisible: ["H-Earth"],
-        rejectVisible: ["Earth is the real-world reference body"]
-      },
-      {
-        group: "source",
-        path: "/showroom/globe/audralia/",
-        label: "Audralia Route",
-        expectVisible: ["Audralia"],
-        rejectVisible: [/Austral(?:ia|ian)/i]
-      }
-    ];
-
-    const SOURCE_FILES = [
-      "/showroom/globe/index.html",
-      "/showroom/globe/index.js",
-      "/showroom/index.html",
-      "/showroom/index.js",
-      "/showroom/globe/h-earth/index.html",
-      "/showroom/globe/h-earth/index.js",
-      "/showroom/globe/audralia/index.html",
-      "/showroom/globe/audralia/index.js",
-      "/assets/showroom.globe.instrument.js",
-      "/assets/showroom/globe.instrument.js",
-      "/assets/globe/globe.material.js",
-      "/assets/globe/globe.runtime.js",
-      "/assets/h-earth/h-earth.canvas.js",
-      "/assets/h-earth/h-earth.surface.js",
-      "/assets/h-earth/h-earth.material.js",
-      "/assets/hearth/hearth.canvas.js",
-      "/assets/hearth/hearth.surface.js",
-      "/assets/audralia/audralia.canvas.js",
-      "/assets/audralia/audralia.surface.js",
-      "/assets/audralia/audralia.hex.surface.js"
-    ];
-
-    const SOURCE_MARKERS = [
-      "hydrated Fibonacci runtime",
-      "Hydration Standard",
-      "HYDRATION STANDARD",
-      "material asset",
-      "MATERIAL ASSET",
-      "SOURCE AUTHORITY",
-      "object-space file",
-      "water active",
-      "soft glide",
-      "cinematic",
-      "CINEMATIC",
-      "atmospheric shell",
-      "hydration file",
-      "fallback-cinematic-material",
-      "drawCinematicFallbackMaterial",
-      "proceduralBlobPrimary"
-    ];
-
-    const ASSET_CANDIDATES = {
-      earth: [
-        "/assets/showroom/globe/earth-cinematic.webp",
-        "/assets/showroom/globe/earth-cinematic.jpg",
-        "/assets/showroom/globe/earth-cinematic.png",
-        "/assets/showroom/globe/earth-material.webp",
-        "/assets/showroom/globe/earth-material.jpg",
-        "/assets/showroom/globe/earth.webp",
-        "/assets/showroom/globe/earth.jpg",
-        "/assets/showroom/globe/earth.png",
-        "/assets/earth/earth-cinematic.webp",
-        "/assets/earth/earth-cinematic.jpg",
-        "/assets/earth/earth-blue-marble.webp",
-        "/assets/earth/earth-blue-marble.jpg",
-        "/assets/earth/earth_material.webp",
-        "/assets/earth/earth_material.jpg",
-        "/assets/earth/earth.webp",
-        "/assets/earth/earth.jpg",
-        "/assets/earth/earth.png"
-      ],
-      "h-earth": [
-        "/assets/showroom/globe/h-earth-cinematic.webp",
-        "/assets/showroom/globe/h-earth-cinematic.jpg",
-        "/assets/showroom/globe/h-earth-cinematic.png",
-        "/assets/showroom/globe/h-earth-material.webp",
-        "/assets/showroom/globe/h-earth-material.jpg",
-        "/assets/showroom/globe/h-earth.webp",
-        "/assets/showroom/globe/h-earth.jpg",
-        "/assets/showroom/globe/h-earth.png",
-        "/assets/h-earth/h-earth-cinematic.webp",
-        "/assets/h-earth/h-earth-cinematic.jpg",
-        "/assets/h-earth/h-earth.material.webp",
-        "/assets/h-earth/h-earth.material.jpg",
-        "/assets/h-earth/h-earth.webp",
-        "/assets/h-earth/h-earth.jpg",
-        "/assets/h-earth/h-earth.png",
-        "/assets/hearth/hearth-cinematic.webp",
-        "/assets/hearth/hearth-cinematic.jpg",
-        "/assets/hearth/hearth.material.webp",
-        "/assets/hearth/hearth.jpg",
-        "/assets/hearth/hearth.png"
-      ],
-      audralia: [
-        "/assets/showroom/globe/audralia-cinematic.webp",
-        "/assets/showroom/globe/audralia-cinematic.jpg",
-        "/assets/showroom/globe/audralia-cinematic.png",
-        "/assets/showroom/globe/audralia-material.webp",
-        "/assets/showroom/globe/audralia-material.jpg",
-        "/assets/showroom/globe/audralia.webp",
-        "/assets/showroom/globe/audralia.jpg",
-        "/assets/showroom/globe/audralia.png",
-        "/assets/audralia/audralia-cinematic.webp",
-        "/assets/audralia/audralia-cinematic.jpg",
-        "/assets/audralia/audralia.material.webp",
-        "/assets/audralia/audralia.material.jpg",
-        "/assets/audralia/audralia.webp",
-        "/assets/audralia/audralia.jpg",
-        "/assets/audralia/audralia.png"
-      ]
-    };
-
-    const results = [];
-
-    function stamp() {
-      return String(Date.now()) + "-" + Math.random().toString(16).slice(2);
-    }
-
-    function cacheBustUrl(path) {
-      const joiner = path.includes("?") ? "&" : "?";
-      return `${path}${joiner}cinematic_recovery_audit=${stamp()}`;
-    }
-
-    async function fetchText(path) {
-      const response = await fetch(cacheBustUrl(path), {
-        cache: "no-store",
-        headers: {
-          "Cache-Control": "no-cache",
-          "Pragma": "no-cache"
-        }
-      });
-
-      return {
-        ok: response.ok,
-        status: response.status,
-        url: response.url,
-        text: await response.text()
+      var CONTRACT = "TRIPLE_G_H_EARTH_CONDITION_STACK_RENEWAL_TNT_v1";
+      var PARENT_ROUTE = "/showroom/globe/";
+      var H_EARTH_ROUTE = "/showroom/globe/h-earth/";
+      var CHECK = {
+        PASS: "PASS",
+        FAIL: "FAIL",
+        HOLD: "HOLD",
+        TEST: "NEEDS TEST"
       };
-    }
 
-    function addResult(group, path, label, status, message, evidence, meta = {}) {
-      results.push({ group, path, label, status, message, evidence, meta });
-    }
+      var state = {
+        parentDoc: null,
+        childDoc: null,
+        childJs: "",
+        liveStatus: null,
+        pixelAudit: null,
+        gauges: [],
+        log: []
+      };
 
-    function parseHtml(text) {
-      return new DOMParser().parseFromString(text, "text/html");
-    }
-
-    function visibleText(doc) {
-      const clone = doc.body ? doc.body.cloneNode(true) : document.createElement("body");
-      clone.querySelectorAll("script, style, template, noscript, svg, canvas").forEach((node) => node.remove());
-      return (clone.textContent || "").replace(/\s+/g, " ").trim();
-    }
-
-    function titleText(doc) {
-      return (doc.querySelector("title")?.textContent || "").trim();
-    }
-
-    function h1Text(doc) {
-      return (doc.querySelector("h1")?.textContent || "").trim();
-    }
-
-    function hasNeedle(haystack, needle) {
-      if (needle instanceof RegExp) return needle.test(haystack);
-      return haystack.toLowerCase().includes(String(needle).toLowerCase());
-    }
-
-    function evidenceSnippet(text, needles) {
-      for (const needle of needles) {
-        if (needle instanceof RegExp) {
-          const match = text.match(needle);
-          if (match) return match[0];
-          continue;
-        }
-
-        const lower = text.toLowerCase();
-        const query = String(needle).toLowerCase();
-        const index = lower.indexOf(query);
-
-        if (index >= 0) {
-          return text.slice(Math.max(0, index - 64), Math.min(text.length, index + query.length + 100));
-        }
+      function log(message) {
+        var line = "[" + new Date().toLocaleTimeString() + "] " + message;
+        state.log.push(line);
+        var node = document.querySelector("[data-log]");
+        if (node) node.textContent = state.log.join("\n");
       }
 
-      return text.slice(0, 180);
-    }
-
-    function classifyRoute(route, fetched) {
-      if (!fetched.ok) {
-        addResult("source", route.path, route.label, "fail", "Route is unreachable.", `HTTP ${fetched.status}`);
-        return;
+      function setText(selector, value) {
+        var node = document.querySelector(selector);
+        if (node) node.textContent = value;
       }
 
-      const doc = parseHtml(fetched.text);
-      const text = [titleText(doc), h1Text(doc), visibleText(doc)].join(" ");
-
-      const rejected = route.rejectVisible.find((needle) => hasNeedle(text, needle));
-      if (rejected) {
-        addResult("source", route.path, route.label, "fail", "Route is carrying forbidden visible language.", evidenceSnippet(text, [rejected]));
-        return;
+      function qs(doc, selector) {
+        return doc ? doc.querySelector(selector) : null;
       }
 
-      const found = route.expectVisible.filter((needle) => hasNeedle(text, needle));
-      if (found.length === route.expectVisible.length) {
-        addResult("source", route.path, route.label, "pass", "Visible route identity is aligned.", evidenceSnippet(text, route.expectVisible));
-        return;
+      function qsa(doc, selector) {
+        return doc ? Array.from(doc.querySelectorAll(selector)) : [];
       }
 
-      addResult("source", route.path, route.label, "hold", "Route is reachable but missing expected visible markers.", `found: ${found.join(", ") || "none"}`);
-    }
-
-    async function auditSourceFile(path) {
-      try {
-        const fetched = await fetchText(path);
-
-        if (!fetched.ok) {
-          addResult("source", path, "Source File", "review", "Source file was not found at this path.", `HTTP ${fetched.status}`);
-          return;
-        }
-
-        const text = fetched.text || "";
-        const markers = SOURCE_MARKERS.filter((marker) => hasNeedle(text, marker));
-        const imageRefs = findAssetRefs(text);
-
-        if (markers.length || imageRefs.length) {
-          const hasFallbackPrimary = hasNeedle(text, "fallback-cinematic-material") || hasNeedle(text, "drawCinematicFallbackMaterial") || hasNeedle(text, "proceduralBlobPrimary");
-          const status = hasNeedle(text, "hydrated Fibonacci runtime") || hasNeedle(text, "Hydration Standard") || imageRefs.length ? "pass" : "hold";
-
-          addResult(
-            "source",
-            path,
-            "Cinematic Source Search",
-            hasFallbackPrimary && !imageRefs.length ? "hold" : status,
-            hasFallbackPrimary && !imageRefs.length
-              ? "Source contains fallback/restoration code but no proven recovered cinematic asset reference."
-              : "Source contains cinematic or material recovery markers.",
-            `markers: ${markers.join(", ") || "none"} · asset refs: ${imageRefs.slice(0, 4).join(", ") || "none"}`,
-            { markers, imageRefs }
-          );
-
-          return;
-        }
-
-        addResult("source", path, "Cinematic Source Search", "review", "Source reachable, but no cinematic baseline markers found.", "no recovery markers");
-      } catch (error) {
-        addResult("source", path, "Source File", "hold", "Source fetch could not complete.", error.message || String(error));
-      }
-    }
-
-    function findAssetRefs(text) {
-      const refs = new Set();
-      const regex = /\/assets\/[^"'`\s)]+?\.(?:webp|png|jpg|jpeg|avif)/gi;
-      let match = regex.exec(text);
-
-      while (match) {
-        refs.add(match[0]);
-        match = regex.exec(text);
+      function attr(doc, name) {
+        return doc && doc.documentElement ? doc.documentElement.getAttribute(name) : null;
       }
 
-      return Array.from(refs);
-    }
-
-    function loadImage(path) {
-      return new Promise((resolve) => {
-        const image = new Image();
-        const started = performance.now();
-
-        image.onload = () => {
-          resolve({
-            ok: true,
-            path,
-            width: image.naturalWidth || image.width || 0,
-            height: image.naturalHeight || image.height || 0,
-            ms: Math.round(performance.now() - started)
-          });
-        };
-
-        image.onerror = () => {
-          resolve({
-            ok: false,
-            path,
-            width: 0,
-            height: 0,
-            ms: Math.round(performance.now() - started)
-          });
-        };
-
-        image.decoding = "async";
-        image.loading = "eager";
-        image.src = cacheBustUrl(path);
-      });
-    }
-
-    async function auditAssets() {
-      for (const [body, paths] of Object.entries(ASSET_CANDIDATES)) {
-        let found = null;
-        let checked = 0;
-
-        for (const path of paths) {
-          checked += 1;
-          const probe = await loadImage(path);
-
-          if (probe.ok) {
-            found = probe;
-            break;
-          }
-        }
-
-        if (found) {
-          const strongSize = found.width >= 900 && found.height >= 450;
-          addResult(
-            "asset",
-            found.path,
-            `${body} Cinematic Asset`,
-            strongSize ? "pass" : "hold",
-            strongSize
-              ? "Recovered a usable cinematic image/material candidate."
-              : "Recovered an image candidate, but the resolution may be too small for cinematic material.",
-            `${found.width}×${found.height} · checked ${checked} paths`,
-            { body, found: true, width: found.width, height: found.height }
-          );
-        } else {
-          addResult(
-            "asset",
-            body,
-            `${body} Cinematic Asset`,
-            "fail",
-            "No public cinematic image/material candidate was found in the searched paths.",
-            `checked ${checked} paths`,
-            { body, found: false }
-          );
-        }
-
-        renderAll();
+      function boolAttr(doc, name) {
+        return attr(doc, name) === "true";
       }
-    }
 
-    async function probeRuntime() {
-      const iframe = document.createElement("iframe");
-      iframe.className = "audit-frame";
-      iframe.src = cacheBustUrl("/showroom/globe/");
-      iframe.setAttribute("aria-hidden", "true");
-      document.body.appendChild(iframe);
+      function absoluteUrl(path) {
+        return new URL(path, window.location.origin).href;
+      }
 
-      try {
-        await new Promise((resolve, reject) => {
-          const timer = window.setTimeout(() => reject(new Error("iframe timeout")), 10000);
-          iframe.addEventListener("load", () => {
-            window.clearTimeout(timer);
-            resolve();
-          }, { once: true });
+      function cacheBust(route) {
+        var url = new URL(route, window.location.origin);
+        url.searchParams.set("gg", String(Date.now()));
+        return url.href;
+      }
+
+      function parseHtml(text) {
+        return new DOMParser().parseFromString(text, "text/html");
+      }
+
+      function fetchText(route) {
+        return fetch(cacheBust(route), { cache: "no-store", credentials: "same-origin" }).then(function (res) {
+          if (!res.ok) throw new Error(route + " returned " + res.status);
+          return res.text();
+        });
+      }
+
+      function getScriptSrc(doc, contains) {
+        var scripts = qsa(doc, "script[src]");
+        var found = scripts.find(function (script) {
+          return String(script.getAttribute("src") || "").includes(contains);
         });
 
-        await delay(900);
-
-        const doc = iframe.contentDocument;
-        const win = iframe.contentWindow;
-
-        if (!doc || !win) {
-          addResult("runtime", "iframe:/showroom/globe/", "Runtime Probe", "hold", "Frame loaded but could not be inspected.", "contentDocument unavailable");
-          return;
-        }
-
-        const status = typeof win.DGBGlobeSelector?.status === "function" ? win.DGBGlobeSelector.status() : null;
-
-        if (!status) {
-          addResult("runtime", "window.DGBGlobeSelector", "Runtime Status", "fail", "Globe runtime status object is missing.", "status unavailable");
-        } else {
-          const source = String(status.materialSource || "");
-          const fallback = source.includes("fallback") || source === "" || source === "undefined";
-
-          addResult(
-            "runtime",
-            "window.DGBGlobeSelector.status()",
-            "Runtime Material Source",
-            fallback ? "fail" : "pass",
-            fallback
-              ? "Active runtime is not proving recovered cinematic image material. It is using fallback/generated material or no material source."
-              : "Active runtime is proving image-backed cinematic material.",
-            `materialSource: ${source || "none"} · opaqueGlobeBody: ${String(status.opaqueGlobeBody)} · cinematicMaterialRestored: ${String(status.cinematicMaterialRestored)}`,
-            { materialSource: source, fallback }
-          );
-        }
-
-        const canvas = doc.querySelector("[data-globe-selector-canvas]");
-        const stage = doc.querySelector("[data-globe-selector-stage]");
-
-        if (!canvas || !stage) {
-          addResult("runtime", "iframe:/showroom/globe/", "Canvas Probe", "fail", "Expected stage/canvas selectors are missing.", "missing data-globe-selector-canvas or stage");
-          return;
-        }
-
-        const stableButton = doc.querySelector("[data-mode='stable']");
-        const autoButton = doc.querySelector("[data-mode='auto']");
-        const hEarthButton = doc.querySelector("[data-body='h-earth']");
-        const audraliaButton = doc.querySelector("[data-body='audralia']");
-
-        if (stableButton) stableButton.click();
-        await delay(600);
-        const stableA = sampleCanvas(canvas);
-        await delay(800);
-        const stableB = sampleCanvas(canvas);
-        classifyFrameDelta("Stable Frame Delta", stableA, stableB, 0.035, 0.075);
-
-        if (autoButton) autoButton.click();
-        await delay(600);
-        const autoA = sampleCanvas(canvas);
-        await delay(800);
-        const autoB = sampleCanvas(canvas);
-        classifyFrameDelta("Auto Frame Delta", autoA, autoB, 0.070, 0.130);
-
-        if (hEarthButton) {
-          hEarthButton.click();
-          await delay(700);
-          const hEarth = sampleCanvas(canvas);
-          classifyOpacity("H-Earth Opacity Proxy", hEarth);
-        }
-
-        if (audraliaButton) {
-          audraliaButton.click();
-          await delay(700);
-          const audralia = sampleCanvas(canvas);
-          classifyOpacity("Audralia Opacity Proxy", audralia);
-        }
-      } catch (error) {
-        addResult("runtime", "iframe:/showroom/globe/", "Runtime Probe", "hold", "Runtime probe could not complete.", error.message || String(error));
-      } finally {
-        iframe.remove();
-      }
-    }
-
-    function classifyFrameDelta(label, first, second, passMax, failMin) {
-      if (!first.ok || !second.ok) {
-        addResult("runtime", label, label, "hold", "Frame sampling failed.", first.error || second.error || "unknown");
-        return;
+        return found ? found.getAttribute("src") : "";
       }
 
-      const delta = frameDelta(first.samples, second.samples);
-      const nonblank = Math.max(first.nonblankRatio, second.nonblankRatio);
-
-      if (delta >= failMin) {
-        addResult("runtime", label, label, "fail", "Frame delta is high enough to match visible flicker risk.", `delta: ${delta.toFixed(4)} · nonblank: ${nonblank.toFixed(4)}`);
-        return;
+      function makeCheck(label, pass, evidence, failStatus) {
+        return {
+          label: label,
+          status: pass ? CHECK.PASS : (failStatus || CHECK.FAIL),
+          evidence: evidence || ""
+        };
       }
 
-      if (delta > passMax) {
-        addResult("runtime", label, label, "hold", "Frame delta is controlled but still elevated.", `delta: ${delta.toFixed(4)} · nonblank: ${nonblank.toFixed(4)}`);
-        return;
+      function makeGauge(id, title, status, summary, checks) {
+        return {
+          id: id,
+          title: title,
+          status: status,
+          summary: summary,
+          checks: checks || []
+        };
       }
 
-      addResult("runtime", label, label, "pass", "Frame delta is controlled.", `delta: ${delta.toFixed(4)} · nonblank: ${nonblank.toFixed(4)}`);
-    }
+      function deriveStatus(checks, holdAllowed) {
+        var hasFail = checks.some(function (check) { return check.status === CHECK.FAIL; });
+        var hasHold = checks.some(function (check) { return check.status === CHECK.HOLD || check.status === CHECK.TEST; });
 
-    function classifyOpacity(label, sample) {
-      if (!sample.ok) {
-        addResult("runtime", label, label, "hold", "Opacity proxy could not sample canvas.", sample.error || "unknown");
-        return;
+        if (hasFail) return CHECK.FAIL;
+        if (hasHold && holdAllowed) return CHECK.HOLD;
+        if (hasHold) return CHECK.TEST;
+        return CHECK.PASS;
       }
 
-      if (sample.solidCoreRatio < 0.18) {
-        addResult("runtime", label, label, "fail", "Globe body reads too transparent or too empty in the sampled core.", `solidCoreRatio: ${sample.solidCoreRatio.toFixed(4)} · nonblank: ${sample.nonblankRatio.toFixed(4)}`);
-        return;
+      function statusClass(status) {
+        if (status === CHECK.PASS) return "pass";
+        if (status === CHECK.FAIL) return "fail";
+        if (status === CHECK.HOLD) return "hold";
+        return "test";
       }
 
-      if (sample.solidCoreRatio < 0.32) {
-        addResult("runtime", label, label, "hold", "Globe has material, but body density is still weaker than the cinematic baseline.", `solidCoreRatio: ${sample.solidCoreRatio.toFixed(4)} · nonblank: ${sample.nonblankRatio.toFixed(4)}`);
-        return;
+      function auditParentAuthority() {
+        var doc = state.parentDoc;
+        var links = qsa(doc, "a[href]").map(function (a) { return a.getAttribute("href"); });
+        var scriptText = qsa(doc, "script[src]").map(function (s) { return s.getAttribute("src") || ""; }).join("\n");
+
+        var checks = [
+          makeCheck("Parent route declares selector-only authority", boolAttr(doc, "data-parent-selector-only"), "data-parent-selector-only=" + attr(doc, "data-parent-selector-only")),
+          makeCheck("Parent live canvas runtime is false", attr(doc, "data-live-canvas-runtime") === "false", "data-live-canvas-runtime=" + attr(doc, "data-live-canvas-runtime")),
+          makeCheck("Parent material renderer import is false", attr(doc, "data-material-renderer-import") === "false", "data-material-renderer-import=" + attr(doc, "data-material-renderer-import")),
+          makeCheck("Parent shared interplanetary rendering is false", attr(doc, "data-shared-interplanetary-rendering") === "false", "data-shared-interplanetary-rendering=" + attr(doc, "data-shared-interplanetary-rendering")),
+          makeCheck("Parent contains no canvas", qsa(doc, "canvas").length === 0, "canvas count=" + qsa(doc, "canvas").length),
+          makeCheck("Parent contains no H-Earth condition stage", !qs(doc, ".condition-stage") && !qs(doc, "[data-scene-canvas]"), "condition-stage=" + Boolean(qs(doc, ".condition-stage")) + ", data-scene-canvas=" + Boolean(qs(doc, "[data-scene-canvas]"))),
+          makeCheck("Parent links to all child routes", links.includes("/showroom/globe/earth/") && links.includes("/showroom/globe/h-earth/") && links.includes("/showroom/globe/audralia/"), "child links present=" + [links.includes("/showroom/globe/earth/"), links.includes("/showroom/globe/h-earth/"), links.includes("/showroom/globe/audralia/")].join(",")),
+          makeCheck("Parent does not import cinematic material renderer", !scriptText.includes("showroom.globe.cinematic.material"), "script scan complete")
+        ];
+
+        return makeGauge(
+          "authority-health",
+          "Parent Selector Authority",
+          deriveStatus(checks),
+          "Verifies /showroom/globe/ selects only and does not render planets or the H-Earth ground scene.",
+          checks
+        );
       }
 
-      addResult("runtime", label, label, "pass", "Globe body density is acceptable by opacity proxy.", `solidCoreRatio: ${sample.solidCoreRatio.toFixed(4)} · nonblank: ${sample.nonblankRatio.toFixed(4)}`);
-    }
+      function auditChildPlacement() {
+        var doc = state.childDoc;
+        var links = qsa(doc, "a[href]").map(function (a) { return a.getAttribute("href"); });
 
-    function sampleCanvas(canvas) {
-      try {
-        const ctx = canvas.getContext("2d", { willReadFrequently: true });
-        if (!ctx) return { ok: false, error: "2d context unavailable" };
+        var checks = [
+          makeCheck("Child route declares /showroom/globe/h-earth/", attr(doc, "data-route") === H_EARTH_ROUTE, "data-route=" + attr(doc, "data-route")),
+          makeCheck("Child route placement is true", boolAttr(doc, "data-child-route-placement"), "data-child-route-placement=" + attr(doc, "data-child-route-placement")),
+          makeCheck("Scene model is earth-water-air condition stack", attr(doc, "data-scene-model") === "earth-water-air-condition-stack", "data-scene-model=" + attr(doc, "data-scene-model")),
+          makeCheck("Parent route is identified correctly", attr(doc, "data-parent-route") === PARENT_ROUTE, "data-parent-route=" + attr(doc, "data-parent-route")),
+          makeCheck("Skip link is hardened to child route", links.includes("/showroom/globe/h-earth/#main"), "has /showroom/globe/h-earth/#main=" + links.includes("/showroom/globe/h-earth/#main")),
+          makeCheck("Scene anchor is hardened to child route", links.includes("/showroom/globe/h-earth/#condition-stage"), "has /showroom/globe/h-earth/#condition-stage=" + links.includes("/showroom/globe/h-earth/#condition-stage")),
+          makeCheck("Child contains condition stage", Boolean(qs(doc, ".condition-stage")) && Boolean(qs(doc, "[data-scene-canvas]")), "condition-stage=" + Boolean(qs(doc, ".condition-stage")) + ", canvas=" + Boolean(qs(doc, "[data-scene-canvas]")))
+        ];
 
-        const width = canvas.width;
-        const height = canvas.height;
-        if (!width || !height) return { ok: false, error: "canvas has zero size" };
+        return makeGauge(
+          "route-placement-health",
+          "H-Earth Child Route Placement",
+          deriveStatus(checks),
+          "Verifies the Earth · Water · Air scene lives on /showroom/globe/h-earth/ and not on the parent selector.",
+          checks
+        );
+      }
 
-        const stepX = Math.max(8, Math.floor(width / 54));
-        const stepY = Math.max(8, Math.floor(height / 54));
-        const samples = [];
-        let nonblank = 0;
-        let solidCore = 0;
-        let coreTotal = 0;
-        let total = 0;
+      function probeChildLiveRoute() {
+        return new Promise(function (resolve) {
+          var frame = document.createElement("iframe");
+          var done = false;
+          var timeout;
 
-        const cx = width * 0.5;
-        const cy = height * 0.46;
-        const coreRadius = Math.min(width, height) * 0.22;
+          frame.className = "probe-frame";
+          frame.setAttribute("aria-hidden", "true");
+          frame.src = cacheBust(H_EARTH_ROUTE) + "#condition-stage";
 
-        for (let y = 0; y < height; y += stepY) {
-          for (let x = 0; x < width; x += stepX) {
-            const data = ctx.getImageData(x, y, 1, 1).data;
-            const luminance = data[0] * 0.2126 + data[1] * 0.7152 + data[2] * 0.0722;
-            const value = data[0] + data[1] + data[2] + data[3];
+          function finish(result) {
+            if (done) return;
+            done = true;
+            clearTimeout(timeout);
+            try { frame.remove(); } catch (error) {}
+            resolve(result);
+          }
 
-            samples.push(value);
+          frame.addEventListener("load", function () {
+            var start = performance.now();
 
-            if (data[3] > 8 && data[0] + data[1] + data[2] > 24) nonblank += 1;
+            function poll() {
+              try {
+                var win = frame.contentWindow;
+                var doc = frame.contentDocument;
+                var api = win && win.DGBHEarthGroundLevel;
+                var status = api && typeof api.status === "function" ? api.status() : null;
+                var canvas = doc ? doc.querySelector("[data-scene-canvas]") : null;
+                var pixelAudit = canvas ? sampleCanvas(canvas) : null;
 
-            const dx = x - cx;
-            const dy = y - cy;
+                if (status && status.renderedOnce && pixelAudit && pixelAudit.paintPresent) {
+                  finish({
+                    ok: true,
+                    status: status,
+                    pixelAudit: pixelAudit
+                  });
+                  return;
+                }
 
-            if (Math.sqrt(dx * dx + dy * dy) <= coreRadius) {
-              coreTotal += 1;
-              if (data[3] > 220 && luminance > 34) solidCore += 1;
+                if (performance.now() - start > 5200) {
+                  finish({
+                    ok: Boolean(status && status.renderedOnce),
+                    status: status,
+                    pixelAudit: pixelAudit,
+                    timeout: true
+                  });
+                  return;
+                }
+
+                setTimeout(poll, 160);
+              } catch (error) {
+                finish({
+                  ok: false,
+                  error: error.message
+                });
+              }
             }
 
-            total += 1;
-          }
-        }
+            poll();
+          });
 
-        return {
-          ok: true,
-          samples,
-          nonblankRatio: nonblank / Math.max(1, total),
-          solidCoreRatio: solidCore / Math.max(1, coreTotal)
-        };
-      } catch (error) {
-        return { ok: false, error: error.message || String(error) };
-      }
-    }
+          timeout = setTimeout(function () {
+            finish({
+              ok: false,
+              timeout: true,
+              error: "iframe probe timeout"
+            });
+          }, 7000);
 
-    function frameDelta(a, b) {
-      const length = Math.min(a.length, b.length);
-      if (!length) return 1;
-
-      let sum = 0;
-
-      for (let i = 0; i < length; i += 1) {
-        sum += Math.abs(a[i] - b[i]) / 1020;
+          document.body.appendChild(frame);
+        });
       }
 
-      return sum / length;
-    }
-
-    function delay(ms) {
-      return new Promise((resolve) => window.setTimeout(resolve, ms));
-    }
-
-    function statusClass(status) {
-      if (status === "pass") return "pass";
-      if (status === "fail") return "fail";
-      if (status === "hold") return "hold";
-      if (status === "review") return "review";
-      return "pending";
-    }
-
-    function renderLedger(selector, group) {
-      const container = document.querySelector(selector);
-      const subset = results.filter((result) => result.group === group);
-
-      if (!container) return;
-
-      if (!subset.length) {
-        container.innerHTML = `
-          <div class="row">
-            <div class="route">none</div>
-            <div><span class="status pending">pending</span></div>
-            <div class="detail">No checks completed.</div>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = subset.map((result) => `
-        <div class="row">
-          <div class="route">${escapeHtml(result.path)}</div>
-          <div><span class="status ${statusClass(result.status)}">${escapeHtml(result.status)}</span></div>
-          <div class="detail">
-            <strong>${escapeHtml(result.label)}</strong> · ${escapeHtml(result.message)}
-            <div class="evidence">evidence: ${escapeHtml(result.evidence || "none")}</div>
-          </div>
-        </div>
-      `).join("");
-    }
-
-    function renderCounts() {
-      const counts = {
-        total: results.length,
-        pass: results.filter((r) => r.status === "pass").length,
-        hold: results.filter((r) => r.status === "hold").length,
-        fail: results.filter((r) => r.status === "fail").length,
-        review: results.filter((r) => r.status === "review").length
-      };
-
-      Object.entries(counts).forEach(([key, value]) => {
-        const node = document.querySelector(`[data-count="${key}"]`);
-        if (node) node.textContent = String(value);
-      });
-    }
-
-    function renderGapBoard() {
-      const board = document.querySelector("[data-gap-board]");
-      if (!board) return;
-
-      const foundAssets = results.filter((r) => r.group === "asset" && r.status === "pass");
-      const missingAssets = results.filter((r) => r.group === "asset" && r.status === "fail");
-      const sourceHits = results.filter((r) => r.group === "source" && r.label === "Cinematic Source Search" && (r.status === "pass" || r.status === "hold"));
-      const runtimeMaterial = results.find((r) => r.label === "Runtime Material Source");
-      const flicker = results.find((r) => r.label === "Auto Frame Delta" && r.status !== "pass");
-      const opacity = results.find((r) => /Opacity Proxy/.test(r.label) && r.status !== "pass");
-
-      const gaps = [];
-
-      if (foundAssets.length >= 2) {
-        gaps.push(["Recovery source available", "At least two body-level cinematic assets were found. Next code should bind those assets as primary globe skins and delete/demote generated fallback from the visible path."]);
-      }
-
-      if (foundAssets.length > 0 && foundAssets.length < 2) {
-        gaps.push(["Partial asset recovery", "Some cinematic material exists, but not enough to restore the three-body selector consistently. Restore the found asset first and rebuild missing bodies from the screenshot baseline."]);
-      }
-
-      if (!foundAssets.length) {
-        gaps.push(["No public image source found", "No searched public cinematic asset path resolved. Next code must rebuild the screenshot look directly, but it must not reuse the cartoon/blob renderer as primary."]);
-      }
-
-      if (sourceHits.length) {
-        gaps.push(["Prior contract evidence found", "Source search found prior cinematic/hydration/material language. Use these markers to recover the old render contract before inventing a new look."]);
-      }
-
-      if (runtimeMaterial && runtimeMaterial.status === "fail") {
-        gaps.push(["Runtime still using fallback", "The active Globe runtime is not proving image-backed cinematic material. This is the controlling reason the page can still look cartoonish or unstable."]);
-      }
-
-      if (flicker) {
-        gaps.push(["Active flicker risk", "Auto-mode frame delta is not clean. The active path must use one cached material surface per body and rotate presentation only."]);
-      }
-
-      if (opacity) {
-        gaps.push(["Opacity weakness", "The sampled body density is weaker than the cinematic baseline. The next render must draw an opaque sphere first, then apply atmosphere outside the body."]);
-      }
-
-      if (missingAssets.length) {
-        const missing = missingAssets.map((r) => r.meta?.body || r.path).join(", ");
-        gaps.push(["Missing body materials", `No public cinematic asset found for: ${missing}. These bodies must either recover their old file path or be rebuilt from the screenshot baseline.`]);
-      }
-
-      board.innerHTML = gaps.map(([title, message]) => `
-        <div class="gap"><strong>${escapeHtml(title)}.</strong> ${escapeHtml(message)}</div>
-      `).join("");
-    }
-
-    function renderAll() {
-      renderLedger("[data-source-ledger]", "source");
-      renderLedger("[data-asset-ledger]", "asset");
-      renderLedger("[data-runtime-ledger]", "runtime");
-      renderCounts();
-      renderGapBoard();
-    }
-
-    function escapeHtml(value) {
-      return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    async function runAudit() {
-      results.length = 0;
-      addResult("source", "audit", "Recovery Audit", "hold", "Cinematic baseline recovery audit is running.", AUDIT_CONTRACT);
-      renderAll();
-
-      results.length = 0;
-
-      for (const route of ROUTE_CHECKS) {
+      function sampleCanvas(canvas) {
         try {
-          classifyRoute(route, await fetchText(route.path));
+          var ctx = canvas.getContext("2d", { willReadFrequently: true });
+          if (!ctx || !canvas.width || !canvas.height) {
+            return { paintPresent: false, reason: "no canvas context or dimensions" };
+          }
+
+          var w = canvas.width;
+          var h = canvas.height;
+
+          function sampleRegion(yRatio) {
+            var y = Math.max(1, Math.min(h - 2, Math.floor(h * yRatio)));
+            var xs = [0.18, 0.38, 0.58, 0.78].map(function (xRatio) {
+              return Math.max(1, Math.min(w - 2, Math.floor(w * xRatio)));
+            });
+
+            var values = xs.map(function (x) {
+              var d = ctx.getImageData(x, y, 1, 1).data;
+              return [d[0], d[1], d[2], d[3]];
+            });
+
+            var avg = values.reduce(function (acc, v) {
+              acc[0] += v[0];
+              acc[1] += v[1];
+              acc[2] += v[2];
+              acc[3] += v[3];
+              return acc;
+            }, [0, 0, 0, 0]).map(function (n) {
+              return n / values.length;
+            });
+
+            return avg;
+          }
+
+          function diff(a, b) {
+            return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) + Math.abs(a[2] - b[2]);
+          }
+
+          var top = sampleRegion(0.24);
+          var mid = sampleRegion(0.58);
+          var bottom = sampleRegion(0.84);
+          var topMid = diff(top, mid);
+          var midBottom = diff(mid, bottom);
+          var topBottom = diff(top, bottom);
+          var alphaPresent = top[3] > 0 && mid[3] > 0 && bottom[3] > 0;
+
+          return {
+            paintPresent: alphaPresent && topMid > 18 && midBottom > 18 && topBottom > 30,
+            width: w,
+            height: h,
+            top: top.map(Math.round),
+            mid: mid.map(Math.round),
+            bottom: bottom.map(Math.round),
+            topMidDiff: Math.round(topMid),
+            midBottomDiff: Math.round(midBottom),
+            topBottomDiff: Math.round(topBottom)
+          };
         } catch (error) {
-          addResult("source", route.path, route.label, "hold", "Route fetch could not complete.", error.message || String(error));
+          return {
+            paintPresent: false,
+            error: error.message
+          };
         }
-
-        renderAll();
       }
 
-      for (const path of SOURCE_FILES) {
-        await auditSourceFile(path);
-        renderAll();
+      function auditRuntimeHealth() {
+        var live = state.liveStatus || {};
+        var status = live.status || {};
+        var checks = [
+          makeCheck("Live status API exists", Boolean(status && status.contract), status && status.contract ? status.contract : "missing"),
+          makeCheck("Runtime boot is classic-defer", status.runtimeBoot === "classic-defer", "runtimeBoot=" + status.runtimeBoot),
+          makeCheck("Canvas found on child route", status.canvasFound === true, "canvasFound=" + status.canvasFound),
+          makeCheck("2D context found", status.contextFound === true, "contextFound=" + status.contextFound),
+          makeCheck("Rendered once is true", status.renderedOnce === true, "renderedOnce=" + status.renderedOnce),
+          makeCheck("Child placement remains true", status.childRoutePlacement === true, "childRoutePlacement=" + status.childRoutePlacement),
+          makeCheck("Parent does not own this scene", status.parentSelectorOwnsThisScene === false, "parentSelectorOwnsThisScene=" + status.parentSelectorOwnsThisScene)
+        ];
+
+        return makeGauge(
+          "runtime-health",
+          "Classic Boot / Canvas Paint",
+          deriveStatus(checks),
+          "Verifies the H-Earth child canvas boots and reports a rendered Earth · Water · Air scene.",
+          checks
+        );
       }
 
-      await auditAssets();
-      renderAll();
+      function auditConditionStackVisibility() {
+        var pixel = state.pixelAudit || {};
+        var checks = [
+          makeCheck("Canvas paint is present", pixel.paintPresent === true, pixel.reason || pixel.error || "paintPresent=" + pixel.paintPresent),
+          makeCheck("Top, middle, and bottom regions differ", pixel.topMidDiff > 18 && pixel.midBottomDiff > 18 && pixel.topBottomDiff > 30, "diffs top/mid=" + pixel.topMidDiff + ", mid/bottom=" + pixel.midBottomDiff + ", top/bottom=" + pixel.topBottomDiff),
+          makeCheck("Top region exists as air sample", Array.isArray(pixel.top), "top=" + JSON.stringify(pixel.top)),
+          makeCheck("Middle region exists as water sample", Array.isArray(pixel.mid), "mid=" + JSON.stringify(pixel.mid)),
+          makeCheck("Bottom region exists as earth sample", Array.isArray(pixel.bottom), "bottom=" + JSON.stringify(pixel.bottom))
+        ];
 
-      await probeRuntime();
-      renderAll();
-    }
+        return makeGauge(
+          "condition-stack-health",
+          "Condition Stack Visibility",
+          deriveStatus(checks),
+          "Verifies Earth, Water, and Air are visible in one H-Earth scene rather than only named in copy.",
+          checks
+        );
+      }
 
-    function init() {
-      document.documentElement.dataset.auditContract = AUDIT_CONTRACT;
-      document.body.dataset.auditContract = AUDIT_CONTRACT;
+      function auditRuntimeCleanup() {
+        var js = state.childJs || "";
+        var checks = [
+          makeCheck("Runtime has pagehide cleanup", js.includes("pagehide") && js.includes("stop()"), "pagehide + stop scan"),
+          makeCheck("Runtime has visibilitychange cleanup", js.includes("visibilitychange") && js.includes("document.visibilityState"), "visibilitychange scan"),
+          makeCheck("Runtime stops when route links are clicked", js.includes("querySelectorAll(\"a[href]\")") && js.includes("capture: true"), "link click cleanup scan"),
+          makeCheck("Child runtime owns requestAnimationFrame only on child route", js.includes("requestAnimationFrame") && attr(state.childDoc, "data-route") === H_EARTH_ROUTE, "child route rAF source scan"),
+          makeCheck("Parent route remains rAF-free by source", !fetchParentScriptTextCache().includes("requestAnimationFrame"), "parent script rAF source scan")
+        ];
 
-      const button = document.querySelector("[data-run-audit]");
-      if (button) button.addEventListener("click", runAudit);
+        return makeGauge(
+          "exit-release",
+          "Runtime Cleanup / Exit Release",
+          deriveStatus(checks, true),
+          "Source-level verification that the child runtime stops on pagehide, hidden state, and link navigation.",
+          checks
+        );
+      }
+
+      var parentScriptCache = "";
+
+      function fetchParentScriptTextCache() {
+        return parentScriptCache || "";
+      }
+
+      function auditBaselinePurity() {
+        var doc = state.childDoc;
+        var js = state.childJs || "";
+        var checks = [
+          makeCheck("No generated image flag", attr(doc, "data-generated-image") === "false", "data-generated-image=" + attr(doc, "data-generated-image")),
+          makeCheck("No graphic box flag", attr(doc, "data-graphic-box") === "false", "data-graphic-box=" + attr(doc, "data-graphic-box")),
+          makeCheck("No image/video media elements in scene route", qsa(doc, "img,picture,video").length === 0, "media count=" + qsa(doc, "img,picture,video").length),
+          makeCheck("No external asset imports in child runtime", !js.includes("import(") && !js.includes("import "), "runtime import scan"),
+          makeCheck("No cross-planet body switcher in child runtime", !js.includes("BODIES") && !js.includes("audralia") && !js.includes("zionts"), "cross-planet token scan"),
+          makeCheck("Scene model remains earth/water/air", attr(doc, "data-scene-model") === "earth-water-air-condition-stack", "scene-model=" + attr(doc, "data-scene-model"))
+        ];
+
+        return makeGauge(
+          "baseline-purity",
+          "Baseline Purity",
+          deriveStatus(checks),
+          "Verifies the H-Earth child scene contains only the authorized condition stack and no forbidden visual additions.",
+          checks
+        );
+      }
+
+      function auditMaterialReadiness() {
+        var doc = state.childDoc;
+        var contract = attr(doc, "data-contract") || "";
+        var js = state.childJs || "";
+        var hasMaterialContract = contract.includes("MATERIAL_EXPRESSION");
+        var hasMaterialSignals =
+          js.includes("material") &&
+          js.includes("grain") &&
+          js.includes("reflection") &&
+          js.includes("haze") &&
+          js.includes("shore");
+
+        var checks = [
+          makeCheck("Material-expression contract not yet active", hasMaterialContract, "contract=" + contract, CHECK.HOLD),
+          makeCheck("Air has future atmospheric-depth requirement", hasMaterialSignals, "haze/material signal scan", CHECK.HOLD),
+          makeCheck("Water has future surface/reflection requirement", hasMaterialSignals, "reflection/material signal scan", CHECK.HOLD),
+          makeCheck("Earth has future grain/shoreline-blend requirement", hasMaterialSignals, "grain/shore signal scan", CHECK.HOLD)
+        ];
+
+        return makeGauge(
+          "material-readiness",
+          "Material Expression Readiness",
+          CHECK.HOLD,
+          "The scene is functional but still materially primitive. This is the current gap, not an architecture failure.",
+          checks
+        );
+      }
+
+      function renderGauge(gauge) {
+        var checks = gauge.checks.map(function (check) {
+          var c = statusClass(check.status);
+          return (
+            "<li>" +
+              "<span class=\"dot " + c + "\"></span>" +
+              "<span>" +
+                escapeHtml(check.label) +
+                "<span class=\"evidence\">" + escapeHtml(check.evidence || check.status) + "</span>" +
+              "</span>" +
+            "</li>"
+          );
+        }).join("");
+
+        return (
+          "<article class=\"gauge-card\" data-gauge=\"" + escapeHtml(gauge.id) + "\">" +
+            "<span class=\"status " + statusClass(gauge.status) + "\">" + escapeHtml(gauge.status) + "</span>" +
+            "<h3>" + escapeHtml(gauge.title) + "</h3>" +
+            "<span>" + escapeHtml(gauge.summary) + "</span>" +
+            "<ul class=\"check-list\">" + checks + "</ul>" +
+          "</article>"
+        );
+      }
+
+      function escapeHtml(value) {
+        return String(value == null ? "" : value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function updateSummary(gauges) {
+        var pass = gauges.filter(function (g) { return g.status === CHECK.PASS; }).length;
+        var fail = gauges.filter(function (g) { return g.status === CHECK.FAIL; }).length;
+        var hold = gauges.filter(function (g) { return g.status === CHECK.HOLD || g.status === CHECK.TEST; }).length;
+        var overall = fail > 0 ? "Repair Required" : "Baseline Pass";
+        var copy = fail > 0
+          ? "One or more authority/runtime checks failed. Correct before visual refinement."
+          : "Functional baseline passes. Material readiness remains the current honest hold.";
+
+        setText("[data-summary-overall]", overall);
+        setText("[data-summary-overall-copy]", copy);
+        setText("[data-summary-pass]", String(pass));
+        setText("[data-summary-hold]", String(hold));
+        setText("[data-summary-fail]", String(fail));
+
+        document.documentElement.dataset.overall = fail > 0 ? "repair-required" : "functional-baseline-pass-material-hold";
+        document.documentElement.dataset.passCount = String(pass);
+        document.documentElement.dataset.holdCount = String(hold);
+        document.documentElement.dataset.failCount = String(fail);
+      }
+
+      function renderGauges(gauges) {
+        var node = document.querySelector("[data-gauge-grid]");
+        if (node) node.innerHTML = gauges.map(renderGauge).join("");
+        updateSummary(gauges);
+      }
+
+      function publishReceipt(gauges) {
+        var fail = gauges.filter(function (g) { return g.status === CHECK.FAIL; }).length;
+        var hold = gauges.filter(function (g) { return g.status === CHECK.HOLD || g.status === CHECK.TEST; }).length;
+
+        window.DGBTripleG = Object.freeze({
+          status: function () {
+            return Object.freeze({
+              contract: CONTRACT,
+              route: "/gauges/",
+              parentRoute: PARENT_ROUTE,
+              hEarthRoute: H_EARTH_ROUTE,
+              overall: fail > 0 ? "REPAIR_REQUIRED" : "FUNCTIONAL_BASELINE_PASS",
+              materialReadiness: "HOLD",
+              holdCount: hold,
+              failCount: fail,
+              gauges: gauges,
+              log: state.log.slice()
+            });
+          }
+        });
+
+        window.DGBTripleGReceipt = window.DGBTripleG.status();
+      }
+
+      function runAudit() {
+        state.log = [];
+        state.gauges = [];
+        state.parentDoc = null;
+        state.childDoc = null;
+        state.childJs = "";
+        state.liveStatus = null;
+        state.pixelAudit = null;
+
+        log("Starting " + CONTRACT + ".");
+        log("Fetching parent selector route: " + PARENT_ROUTE);
+
+        return fetchText(PARENT_ROUTE)
+          .then(function (parentHtml) {
+            state.parentDoc = parseHtml(parentHtml);
+
+            var parentScript = getScriptSrc(state.parentDoc, "/showroom/globe/index.js");
+            if (parentScript) {
+              log("Fetching parent helper script for forbidden runtime scan.");
+              return fetchText(new URL(parentScript, window.location.origin).pathname).catch(function () {
+                return "";
+              });
+            }
+            return "";
+          })
+          .then(function (parentScriptText) {
+            parentScriptCache = parentScriptText || "";
+
+            log("Fetching H-Earth child route: " + H_EARTH_ROUTE);
+            return fetchText(H_EARTH_ROUTE);
+          })
+          .then(function (childHtml) {
+            state.childDoc = parseHtml(childHtml);
+
+            var childScript = getScriptSrc(state.childDoc, "/showroom/globe/h-earth/index.js");
+            if (childScript) {
+              log("Fetching H-Earth child runtime script.");
+              return fetchText(new URL(childScript, window.location.origin).pathname).catch(function (error) {
+                log("Child runtime fetch warning: " + error.message);
+                return "";
+              });
+            }
+
+            log("Child runtime script not found in source.");
+            return "";
+          })
+          .then(function (childJs) {
+            state.childJs = childJs || "";
+
+            log("Probing live child route in offscreen iframe.");
+            return probeChildLiveRoute();
+          })
+          .then(function (live) {
+            state.liveStatus = live || {};
+            state.pixelAudit = live && live.pixelAudit ? live.pixelAudit : null;
+
+            log("Building renewed gauge report.");
+
+            var gauges = [
+              auditParentAuthority(),
+              auditChildPlacement(),
+              auditRuntimeHealth(),
+              auditConditionStackVisibility(),
+              auditRuntimeCleanup(),
+              auditBaselinePurity(),
+              auditMaterialReadiness()
+            ];
+
+            state.gauges = gauges;
+            renderGauges(gauges);
+            publishReceipt(gauges);
+
+            log("Audit complete. Overall: " + (gauges.some(function (g) { return g.status === CHECK.FAIL; }) ? "REPAIR_REQUIRED" : "FUNCTIONAL_BASELINE_PASS · MATERIAL_READINESS_HOLD") + ".");
+          })
+          .catch(function (error) {
+            log("AUDIT ERROR: " + error.message);
+
+            var gauges = [
+              makeGauge(
+                "audit-error",
+                "Triple G Audit Error",
+                CHECK.FAIL,
+                "The audit could not complete. Check route availability and deployed file paths.",
+                [makeCheck("Audit completed without fetch/runtime error", false, error.message)]
+              )
+            ];
+
+            state.gauges = gauges;
+            renderGauges(gauges);
+            publishReceipt(gauges);
+          });
+      }
+
+      document.querySelector("[data-run-audit]")?.addEventListener("click", runAudit);
+
+      document.documentElement.dataset.contract = CONTRACT;
+      document.documentElement.dataset.auditModel = "authority-placement-runtime-condition-stack-gaps";
 
       runAudit();
-    }
-
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", init, { once: true });
-    } else {
-      init();
-    }
+    })();
   </script>
 </body>
 </html>

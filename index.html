@@ -3,15 +3,20 @@
   lang="en"
   data-route="/"
   data-page="compass"
-  data-contract="COMPASS_INDEX_CUT_GEM_PREFACE_AXIS_RENEWAL_TNT_v2"
+  data-contract="COMPASS_INDEX_CUT_GEM_PREFACE_GATE_AUTHORITY_RENEWAL_TNT_v1"
+  data-js-contract="COMPASS_CUT_GEM_PREFACE_GATE_AUTHORITY_RENEWAL_TNT_v1"
   data-model="cut-gem-preface-gate-axis"
   data-default-lens="round"
+  data-compass-lens="round"
   data-flat-route="/flat/"
   data-round-route="/products/"
   data-universe-route="/showroom/"
   data-generated-image="false"
   data-graphic-box="false"
   data-public-copy-clean="true"
+  data-route-model-preserved="true"
+  data-single-tap-changes-lens="true"
+  data-double-tap-opens-route="true"
 >
 <head>
   <meta charset="utf-8">
@@ -1056,21 +1061,21 @@
           </div>
 
           <div class="gem-rail" aria-label="Compass lens controls">
-            <button class="compass-gem" type="button" data-lens="flat" aria-pressed="false">
+            <button class="compass-gem" type="button" data-lens="flat" aria-pressed="false" aria-label="World Is Flat lens">
               <span class="gem-label">
                 <b>Flat</b>
                 <span>Map</span>
               </span>
             </button>
 
-            <button class="compass-gem" type="button" data-lens="round" aria-pressed="true">
+            <button class="compass-gem" type="button" data-lens="round" aria-pressed="true" aria-label="World Is Round lens">
               <span class="gem-label">
                 <b>Round</b>
                 <span>Products</span>
               </span>
             </button>
 
-            <button class="compass-gem" type="button" data-lens="universe" aria-pressed="false">
+            <button class="compass-gem" type="button" data-lens="universe" aria-pressed="false" aria-label="World Is a Universe lens">
               <span class="gem-label">
                 <b>Universe</b>
                 <span>Showroom</span>
@@ -1119,6 +1124,9 @@
     </footer>
   </div>
 
-  <script type="module" src="/index.js?v=compass-cut-gem-preface-axis-v2"></script>
+  <script>
+    window.DGB_COMPASS_KEY = "COMPASS_INDEX_CUT_GEM_PREFACE_GATE_AUTHORITY_RENEWAL_TNT_v1";
+  </script>
+  <script type="module" src="/index.js?v=COMPASS_CUT_GEM_PREFACE_GATE_AUTHORITY_RENEWAL_TNT_v1"></script>
 </body>
 </html>

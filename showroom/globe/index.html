@@ -1,44 +1,60 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-globe-satellite-selector"
+  data-page="showroom-globe-parent-selector"
   data-route="/showroom/globe/"
-  data-contract="SHOWROOM_GLOBE_RUNTIME_INPUT_AND_RAF_CONTAINMENT_RENEWAL_TNT_v1"
-  data-previous-contract="SHOWROOM_GLOBE_SATELLITE_SELECTOR_HARD_RESTORE_TNT_v4"
-  data-jurisdiction="satellite-selector-only"
-  data-runtime-containment="active"
-  data-input-scope="canvas-only"
+  data-contract="SHOWROOM_GLOBE_PARENT_SELECTOR_ONLY_DEMOTION_TNT_v1"
+  data-previous-contract="SHOWROOM_GLOBE_EXIT_NAVIGATION_RELEASE_RENEWAL_TNT_v1"
+  data-jurisdiction="parent-selector-only"
+  data-parent-selector-only="true"
+  data-live-canvas-runtime="false"
+  data-material-renderer-import="false"
+  data-shared-interplanetary-rendering="false"
+  data-child-routes-own-rendering="true"
   data-ground-view="false"
   data-ground-engine="false"
   data-manor-placement="false"
   data-bodies="zionts,h-earth,audralia"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-streaming="false"
+  data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Showroom Globe · Satellite Selector</title>
+  <title>Showroom Globe · Planet Selector</title>
   <meta
     name="description"
-    content="Showroom Globe satellite selector for ZIONTS, H-Earth, and Audralia. No ground-level engine on this parent route."
+    content="Showroom Globe parent selector for ZIONTS, H-Earth, and Audralia. The parent route selects; each child planet route owns its own rendering."
   >
 
   <style>
     :root {
-      --bg:#030812;
+      color-scheme: dark;
+      --bg:#02050b;
       --bg2:#071225;
+      --panel:rgba(8,17,34,.94);
+      --panel2:rgba(4,9,20,.96);
       --line:rgba(244,207,131,.22);
       --line2:rgba(255,255,255,.12);
       --text:rgba(238,244,255,.94);
-      --muted:rgba(238,244,255,.66);
+      --muted:rgba(238,244,255,.68);
       --faint:rgba(238,244,255,.46);
       --gold:#f4cf83;
+      --gold2:#fff0a8;
       --mint:#a7f3c6;
-      color-scheme:dark;
+      --blue:#8dd8ff;
+      --violet:#beaaff;
+      --shadow:0 24px 70px rgba(0,0,0,.30);
+      --max:1180px;
     }
 
     * { box-sizing:border-box; }
 
-    html, body {
+    html,
+    body {
+      min-width:320px;
       min-height:100%;
       margin:0;
       background:
@@ -46,13 +62,17 @@
         linear-gradient(180deg, rgba(244,207,131,.025) 1px, transparent 1px),
         radial-gradient(circle at 50% -8%, rgba(78,119,171,.25), transparent 38%),
         radial-gradient(circle at 12% 18%, rgba(244,207,131,.11), transparent 30%),
+        radial-gradient(circle at 88% 28%, rgba(141,216,255,.10), transparent 34%),
         linear-gradient(180deg, var(--bg2), var(--bg) 54%, #02050b);
-      background-size:58px 58px,58px 58px,auto,auto,auto;
+      background-size:58px 58px,58px 58px,auto,auto,auto,auto;
       color:var(--text);
       font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
+      overflow-x:hidden;
     }
 
-    a { color:inherit; }
+    a { color:inherit; text-decoration:none; }
 
     a:focus-visible,
     button:focus-visible {
@@ -60,12 +80,26 @@
       outline-offset:4px;
     }
 
+    .skip {
+      position:absolute;
+      left:-999px;
+      top:8px;
+      z-index:80;
+      padding:.75rem 1rem;
+      border-radius:999px;
+      color:#06101c;
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      font-weight:950;
+    }
+
+    .skip:focus { left:8px; }
+
     .page {
-      width:min(1180px, calc(100% - 28px));
-      margin:0 auto;
-      padding:22px 0 58px;
       position:relative;
       z-index:1;
+      width:min(var(--max), calc(100% - 28px));
+      margin:0 auto;
+      padding:max(22px, env(safe-area-inset-top)) 0 max(58px, env(safe-area-inset-bottom));
     }
 
     .topbar {
@@ -75,26 +109,31 @@
       gap:16px;
       padding:12px 0 22px;
       position:relative;
-      z-index:40;
-      isolation:isolate;
+      z-index:30;
     }
 
     .brand {
+      display:inline-flex;
+      align-items:center;
+      gap:.55rem;
       color:var(--gold);
-      text-decoration:none;
       font-weight:950;
       text-transform:uppercase;
       letter-spacing:.02em;
-      position:relative;
-      z-index:42;
+      line-height:1.1;
+    }
+
+    .brand::before {
+      content:"◆";
+      color:var(--mint);
+      text-shadow:0 0 1.2rem rgba(167,243,198,.34);
     }
 
     .nav {
       display:flex;
       flex-wrap:wrap;
+      justify-content:flex-end;
       gap:8px;
-      position:relative;
-      z-index:42;
     }
 
     .nav a {
@@ -106,12 +145,10 @@
       border-radius:999px;
       padding:0 13px;
       color:rgba(238,244,255,.84);
-      text-decoration:none;
       background:rgba(255,255,255,.04);
       font-size:.82rem;
       font-weight:850;
-      position:relative;
-      z-index:43;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
     }
 
     .nav a[aria-current="page"] {
@@ -122,31 +159,57 @@
 
     .hero,
     .selector-shell,
-    .body-card {
+    .authority-panel {
       border:1px solid var(--line);
-      border-radius:34px;
+      border-radius:clamp(24px,5vw,34px);
       background:
         radial-gradient(circle at 76% 28%, rgba(139,200,255,.12), transparent 32%),
-        linear-gradient(180deg, rgba(8,17,34,.95), rgba(4,9,20,.96));
-      box-shadow:0 24px 70px rgba(0,0,0,.28);
+        linear-gradient(180deg, var(--panel), var(--panel2));
+      box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.07);
       overflow:hidden;
     }
 
     .hero {
-      padding:clamp(24px,5vw,46px);
       position:relative;
-      z-index:2;
+      isolation:isolate;
+      min-height:clamp(22rem,42vw,34rem);
+      display:grid;
+      align-content:center;
+      gap:1rem;
+      padding:clamp(24px,5vw,46px);
     }
 
-    .eyebrow {
-      margin:0 0 14px;
+    .hero::before {
+      content:"";
+      position:absolute;
+      right:clamp(1rem,6vw,5.25rem);
+      top:50%;
+      z-index:-1;
+      width:clamp(10rem,26vw,18rem);
+      height:clamp(10rem,26vw,18rem);
+      transform:translateY(-50%) rotate(45deg);
+      border:1px solid rgba(244,207,131,.18);
+      border-radius:2.7rem;
+      background:
+        radial-gradient(circle at 50% 42%,rgba(255,240,168,.13),transparent 48%),
+        radial-gradient(circle at 50% 72%,rgba(141,216,255,.14),transparent 62%),
+        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      opacity:.54;
+      pointer-events:none;
+    }
+
+    .eyebrow,
+    .contract-line {
+      margin:0;
       color:var(--gold);
-      font:900 .78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font:900 .76rem/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       letter-spacing:.22em;
       text-transform:uppercase;
     }
 
-    h1, h2 {
+    h1,
+    h2,
+    h3 {
       margin:0;
       color:var(--gold);
       line-height:1.05;
@@ -157,188 +220,288 @@
       font-size:clamp(2.7rem,8vw,5.7rem);
       line-height:.93;
       letter-spacing:-.075em;
+      text-wrap:balance;
+    }
+
+    h2 {
+      font-size:clamp(1.65rem,4.6vw,2.8rem);
+      letter-spacing:-.055em;
+      text-wrap:balance;
+    }
+
+    h3 {
+      font-size:clamp(1.24rem,3vw,1.74rem);
+      letter-spacing:-.035em;
     }
 
     .lede {
       max-width:900px;
-      margin:22px 0 0;
+      margin:0;
       color:var(--muted);
       font-size:clamp(1.02rem,2.5vw,1.28rem);
       line-height:1.55;
     }
 
+    .quote {
+      max-width:860px;
+      margin:0;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(244,207,131,.20);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.94);
+      background:rgba(244,207,131,.065);
+      font-weight:850;
+    }
+
+    .hero-actions {
+      display:flex;
+      flex-wrap:wrap;
+      gap:.62rem;
+    }
+
+    .button {
+      min-height:2.7rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      padding:.65rem 1rem;
+      background:rgba(255,255,255,.045);
+      color:rgba(241,246,255,.88);
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform:translateY(-2px);
+      border-color:rgba(244,207,131,.62);
+      outline:none;
+    }
+
+    .button.gold {
+      border-color:rgba(244,207,131,.9);
+      color:#06101c;
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 .8rem 1.8rem rgba(244,207,131,.14);
+    }
+
     .selector-shell {
       margin-top:18px;
       padding:clamp(18px,3vw,28px);
-      position:relative;
-      z-index:2;
-      isolation:isolate;
+      display:grid;
+      gap:1.2rem;
     }
 
-    .contract-line {
-      color:var(--gold);
-      font:900 .74rem/1.55 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing:.22em;
-      text-transform:uppercase;
-      margin:0 0 18px;
-    }
-
-    .control-row {
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-bottom:18px;
-      position:relative;
-      z-index:8;
-    }
-
-    .hex-button {
-      min-height:56px;
-      min-width:132px;
-      border:1px solid rgba(255,255,255,.10);
-      color:rgba(238,244,255,.86);
-      background:linear-gradient(180deg, rgba(15,25,43,.92), rgba(7,14,27,.94));
-      clip-path:polygon(12% 0, 88% 0, 100% 50%, 88% 100%, 12% 100%, 0 50%);
-      font-weight:950;
-      letter-spacing:.02em;
-      cursor:pointer;
-      position:relative;
-      z-index:9;
-    }
-
-    .hex-button.active {
-      color:#06101c;
-      background:linear-gradient(135deg, #b7ffd4, #87e6b5);
-      border-color:rgba(167,243,198,.72);
-    }
-
-    .planet-title {
+    .selector-head {
+      display:grid;
+      gap:.55rem;
       text-align:center;
-      color:var(--gold);
-      font-size:clamp(1.85rem,4.8vw,3.15rem);
-      letter-spacing:-.045em;
-      margin:6px 0 6px;
-      position:relative;
-      z-index:4;
     }
 
-    .planet-subtitle {
-      text-align:center;
+    .selector-head p {
+      width:min(100%,780px);
+      margin:0 auto;
       color:var(--muted);
-      font-weight:900;
-      font-size:clamp(.98rem,2.6vw,1.15rem);
-      margin:0 0 16px;
-      position:relative;
-      z-index:4;
+      font-size:clamp(.98rem,2.5vw,1.12rem);
+      line-height:1.52;
+      text-wrap:balance;
     }
 
-    .globe-stage {
-      position:relative;
-      width:100%;
-      min-height:clamp(390px,78vw,660px);
-      border:1px solid rgba(244,207,131,.16);
-      border-radius:28px;
-      overflow:hidden;
-      background:
-        radial-gradient(circle at 50% 32%, rgba(95,142,190,.12), transparent 46%),
-        linear-gradient(180deg, #061326, #020711);
-      z-index:1;
-      isolation:isolate;
-      contain:layout paint;
-    }
-
-    .globe-stage canvas {
-      display:block;
-      width:100%;
-      height:clamp(390px,78vw,660px);
-      touch-action:pan-y;
-      user-select:none;
-      cursor:grab;
-      contain:strict;
-    }
-
-    .globe-stage canvas:active {
-      cursor:grabbing;
-    }
-
-    .tabs {
+    .planet-grid {
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-      margin:16px 0 12px;
+      gap:clamp(.85rem,2.4vw,1.1rem);
+      margin-top:.25rem;
+    }
+
+    .planet-card {
       position:relative;
-      z-index:8;
-    }
-
-    .tab {
-      min-height:58px;
-      border:1px solid var(--line2);
-      clip-path:polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%);
-      background:linear-gradient(180deg, rgba(15,25,43,.92), rgba(7,14,27,.94));
-      color:rgba(238,244,255,.78);
-      font-size:clamp(.92rem,2.8vw,1.12rem);
-      font-weight:950;
-      letter-spacing:.02em;
-      cursor:pointer;
-      position:relative;
-      z-index:9;
-    }
-
-    .tab[aria-selected="true"] {
-      color:#06101c;
-      background:linear-gradient(135deg, #b7ffd4, #87e6b5);
-      border-color:rgba(167,243,198,.72);
-    }
-
-    .open-button {
-      min-height:64px;
-      width:100%;
-      border:1px solid rgba(167,243,198,.22);
-      clip-path:polygon(7% 0, 93% 0, 100% 50%, 93% 100%, 7% 100%, 0 50%);
-      display:flex;
-      align-items:center;
-      justify-content:flex-start;
-      padding:0 34px;
-      background:linear-gradient(180deg, rgba(0,42,34,.94), rgba(0,25,24,.96));
-      color:var(--mint);
-      text-decoration:none;
-      font-weight:950;
-      font-size:clamp(1.05rem,3.6vw,1.45rem);
-      position:relative;
-      z-index:10;
-    }
-
-    .drag-note {
-      margin:16px 0 0;
-      text-align:center;
-      color:var(--muted);
-      font-weight:900;
-      font-size:clamp(.92rem,3vw,1.08rem);
-      line-height:1.35;
-      position:relative;
-      z-index:5;
-    }
-
-    .body-card {
-      margin-top:18px;
-      padding:clamp(18px,3vw,28px);
+      min-height:clamp(20rem,38vw,27rem);
+      display:grid;
+      align-content:space-between;
+      gap:1.1rem;
+      padding:clamp(1rem,2.7vw,1.35rem);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.6rem;
+      overflow:hidden;
       background:
-        radial-gradient(circle at 80% 20%, rgba(167,243,198,.08), transparent 38%),
-        linear-gradient(180deg, rgba(11,21,39,.95), rgba(5,10,22,.96));
+        radial-gradient(circle at 50% 18%, rgba(141,216,255,.16), transparent 34%),
+        radial-gradient(circle at 82% 72%, rgba(244,207,131,.07), transparent 38%),
+        linear-gradient(180deg, rgba(13,27,51,.88), rgba(5,11,23,.96));
+      box-shadow:
+        0 1.3rem 3.2rem rgba(0,0,0,.22),
+        inset 0 1px 0 rgba(255,255,255,.06);
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
+      isolation:isolate;
+    }
+
+    .planet-card:hover,
+    .planet-card:focus-visible {
+      transform:translateY(-4px);
+      border-color:rgba(244,207,131,.44);
+      filter:brightness(1.05);
+      outline:none;
+    }
+
+    .planet-card::before {
+      content:"";
+      position:absolute;
+      left:50%;
+      top:24%;
+      width:clamp(8rem,16vw,12rem);
+      height:clamp(8rem,16vw,12rem);
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      opacity:.92;
+      pointer-events:none;
+      box-shadow:
+        inset -2.2rem -1.2rem 2.8rem rgba(0,0,0,.34),
+        inset .9rem .7rem 1.7rem rgba(255,255,255,.14),
+        0 0 2.8rem rgba(141,216,255,.16);
+    }
+
+    .planet-card[data-world="zionts"]::before {
+      background:
+        radial-gradient(circle at 34% 26%,rgba(255,255,255,.20),transparent 24%),
+        radial-gradient(circle at 58% 52%,rgba(224,207,151,.58),transparent 20%),
+        radial-gradient(circle at 36% 62%,rgba(74,91,67,.62),transparent 28%),
+        linear-gradient(135deg,#466c84,#1b4d63 42%,#112334);
+    }
+
+    .planet-card[data-world="h-earth"]::before {
+      background:
+        radial-gradient(circle at 32% 24%,rgba(255,255,255,.20),transparent 24%),
+        radial-gradient(circle at 54% 54%,rgba(229,207,132,.56),transparent 20%),
+        radial-gradient(circle at 36% 64%,rgba(82,88,63,.62),transparent 28%),
+        linear-gradient(135deg,#4c8f88,#255f58 42%,#152a26);
+    }
+
+    .planet-card[data-world="audralia"]::before {
+      background:
+        radial-gradient(circle at 32% 24%,rgba(255,255,255,.20),transparent 24%),
+        radial-gradient(circle at 55% 52%,rgba(221,164,182,.54),transparent 20%),
+        radial-gradient(circle at 36% 64%,rgba(72,60,86,.64),transparent 28%),
+        linear-gradient(135deg,#73569c,#553165 42%,#1d1830);
+    }
+
+    .planet-card::after {
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:-1;
+      background:
+        linear-gradient(180deg, transparent 0 36%, rgba(2,6,14,.48) 62%, rgba(2,6,14,.88) 100%);
+      pointer-events:none;
+    }
+
+    .planet-meta {
       position:relative;
       z-index:2;
+      min-height:13rem;
+      display:grid;
+      align-content:end;
+      gap:.4rem;
+      padding-top:clamp(8rem,16vw,12.5rem);
     }
 
-    .body-card h2 {
-      font-size:clamp(1.6rem,4vw,2.3rem);
-      margin-bottom:14px;
+    .planet-meta b {
+      color:var(--mint);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.17em;
+      text-transform:uppercase;
     }
 
-    .body-card p {
+    .planet-meta p {
       margin:0;
       color:var(--muted);
-      font-size:clamp(1rem,2.8vw,1.24rem);
-      line-height:1.55;
+      font-size:.94rem;
+      line-height:1.45;
+    }
+
+    .planet-action {
+      position:relative;
+      z-index:2;
+      min-height:3.2rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(167,243,198,.24);
+      clip-path:polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0 50%);
+      padding:.72rem 1.2rem;
+      background:linear-gradient(180deg, rgba(0,42,34,.94), rgba(0,25,24,.96));
+      color:var(--mint);
+      font-weight:950;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+
+    .authority-panel {
+      margin-top:18px;
+      padding:clamp(18px,3vw,28px);
+      display:grid;
+      gap:1rem;
+    }
+
+    .law-grid {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.8rem;
+    }
+
+    .law-card {
+      min-height:9rem;
+      display:grid;
+      gap:.45rem;
+      align-content:start;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.15rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(141,216,255,.10),transparent 60%),
+        rgba(255,255,255,.035);
+    }
+
+    .law-card b {
+      color:var(--gold);
+      font-size:.68rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .law-card span {
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.42;
+    }
+
+    .route-receipt,
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt],
+    .receipt {
+      display:none!important;
+      visibility:hidden!important;
+      overflow:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      inset:auto!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
     }
 
     .footer {
@@ -346,29 +509,73 @@
       padding:20px 0 0;
       color:var(--faint);
       font-size:.82rem;
+      line-height:1.45;
       text-align:center;
-      position:relative;
-      z-index:2;
     }
 
-    @media (max-width:900px) {
-      .topbar { align-items:flex-start; flex-direction:column; }
+    @media (max-width:980px) {
+      .topbar {
+        align-items:flex-start;
+        flex-direction:column;
+      }
+
+      .nav {
+        justify-content:flex-start;
+      }
+
+      .planet-grid,
+      .law-grid {
+        grid-template-columns:1fr;
+      }
+
+      .planet-card {
+        min-height:18rem;
+      }
     }
 
     @media (max-width:560px) {
-      .page { width:min(100% - 18px,1180px); }
-      .hero, .selector-shell, .body-card { border-radius:24px; }
-      .tabs { gap:8px; }
-      .hex-button { min-width:124px; }
+      .page {
+        width:min(100% - 18px,var(--max));
+      }
+
+      .hero,
+      .selector-shell,
+      .authority-panel {
+        border-radius:24px;
+      }
+
+      .hero-actions {
+        display:grid;
+      }
+
+      .button {
+        width:100%;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+      }
     }
   </style>
+
+  <script src="/showroom/globe/index.js?v=SHOWROOM_GLOBE_PARENT_SELECTOR_ONLY_DEMOTION_TNT_v1" defer></script>
 </head>
 
 <body>
+  <a class="skip" href="#main">Skip to Globe selector</a>
+
   <div class="page">
     <header class="topbar">
-      <a class="brand" href="/showroom/">◆ Diamond Gate Bridge</a>
-      <nav class="nav">
+      <a class="brand" href="/showroom/">Diamond Gate Bridge</a>
+
+      <nav class="nav" aria-label="Primary traversal">
         <a href="/">Compass</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/" aria-current="page">Globe</a>
@@ -380,54 +587,120 @@
     </header>
 
     <main id="main">
-      <section class="hero">
-        <p class="eyebrow">Fibonacci Runtime</p>
-        <h1>One gateway. Three living bodies. Oceans now carry light.</h1>
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">Parent selector only</p>
+        <h1 id="page-title">One gateway. Three living bodies. Each world opens on its own page.</h1>
+
         <p class="lede">
-          Satellite selector restored. This parent page contains no ground-view engine, no Manor placement, and no Western Golden Shelf layer.
+          The Showroom Globe parent now selects instead of rendering. ZIONTS, H-Earth, and Audralia remain separate destinations so each world can carry its own material, motion, atmosphere, and visual truth.
         </p>
-      </section>
 
-      <section class="selector-shell" aria-label="Showroom Globe satellite selector">
-        <p class="contract-line">Satellite selector · no ground-level engine</p>
-
-        <div class="control-row" aria-label="Runtime controls">
-          <button class="hex-button active" type="button" data-control="auto">Auto</button>
-          <button class="hex-button" type="button" data-control="detail">Detail: stable</button>
-          <button class="hex-button" type="button" data-control="glide">Glide: soft</button>
-          <button class="hex-button" type="button" data-control="reset">Reset</button>
+        <div class="quote">
+          The selector selects. The child planet route renders.
         </div>
 
-        <h2 class="planet-title" data-body-title>ZIONTS</h2>
-        <p class="planet-subtitle" data-body-subtitle>Ancient Living World · material-led hydrated runtime</p>
-
-        <div class="globe-stage">
-          <canvas data-globe-canvas aria-label="Restored satellite globe selector"></canvas>
+        <div class="hero-actions">
+          <a class="button gold" href="/showroom/globe/earth/">Open ZIONTS</a>
+          <a class="button" href="/showroom/globe/h-earth/">Open H-Earth</a>
+          <a class="button" href="/showroom/globe/audralia/">Open Audralia</a>
+          <a class="button" href="/gauges/">Read Triple G</a>
         </div>
-
-        <div class="tabs" role="tablist" aria-label="Planetary body selector">
-          <button class="tab" type="button" data-body="zionts" aria-selected="true">ZIONTS</button>
-          <button class="tab" type="button" data-body="h-earth" aria-selected="false">H-Earth</button>
-          <button class="tab" type="button" data-body="audralia" aria-selected="false">Audralia</button>
-        </div>
-
-        <a class="open-button" data-open-body href="/showroom/globe/earth/">Open ZIONTS</a>
-
-        <p class="drag-note">Drag inside the globe to inspect. Release for contained glide. Route links remain outside the runtime.</p>
       </section>
 
-      <section class="body-card">
-        <h2 data-body-card-title>ZIONTS</h2>
-        <p data-body-card-copy>Ancient living reference body. Satellite planetary selector view only.</p>
+      <section class="selector-shell" aria-labelledby="selector-title">
+        <div class="selector-head">
+          <p class="contract-line">Satellite selector · no parent render runtime</p>
+          <h2 id="selector-title">Choose the world. Rendering happens after the threshold.</h2>
+          <p>
+            This route carries the gate, the comparison, and the route map. It does not carry a shared canvas, a shared live renderer, or a shared interplanetary runtime.
+          </p>
+        </div>
+
+        <div class="planet-grid" aria-label="Planet route selector">
+          <a class="planet-card" data-world="zionts" href="/showroom/globe/earth/" aria-label="Open ZIONTS">
+            <span class="planet-meta">
+              <b>Reference living world</b>
+              <h3>ZIONTS</h3>
+              <p>Ancient living reference body. Opens on its own route with its own rendering authority.</p>
+            </span>
+            <span class="planet-action">Open ZIONTS</span>
+          </a>
+
+          <a class="planet-card" data-world="h-earth" href="/showroom/globe/h-earth/" aria-label="Open H-Earth">
+            <span class="planet-meta">
+              <b>Hybrid ancient world</b>
+              <h3>H-Earth</h3>
+              <p>Hybrid ancient living world. Opens on its own route with its own ground and surface path.</p>
+            </span>
+            <span class="planet-action">Open H-Earth</span>
+          </a>
+
+          <a class="planet-card" data-world="audralia" href="/showroom/globe/audralia/" aria-label="Open Audralia">
+            <span class="planet-meta">
+              <b>Constructed living world</b>
+              <h3>Audralia</h3>
+              <p>Ancient constructed living world. Audralia remains its own body and is not Australia.</p>
+            </span>
+            <span class="planet-action">Open Audralia</span>
+          </a>
+        </div>
       </section>
+
+      <section class="authority-panel" aria-labelledby="authority-title">
+        <p class="contract-line">Authority split</p>
+        <h2 id="authority-title">The parent no longer carries the live interplanetary platform.</h2>
+
+        <div class="law-grid">
+          <div class="law-card">
+            <b>Parent owns</b>
+            <span>Gateway copy, route cards, direct links, selector status, and lightweight interplanetary budget language.</span>
+          </div>
+
+          <div class="law-card">
+            <b>Parent does not own</b>
+            <span>Canvas rendering, requestAnimationFrame loops, drag runtime, glide runtime, material imports, or shared planet switching.</span>
+          </div>
+
+          <div class="law-card">
+            <b>Children own</b>
+            <span>ZIONTS, H-Earth, and Audralia each carry their own rendering authority on their own route.</span>
+          </div>
+        </div>
+      </section>
+
+      <template id="route-receipt" data-route-receipt>
+SHOWROOM_GLOBE_PARENT_SELECTOR_ONLY_DEMOTION_TNT_v1
+previous=SHOWROOM_GLOBE_EXIT_NAVIGATION_RELEASE_RENEWAL_TNT_v1
+route=/showroom/globe/
+page=showroom_globe_parent_selector
+role=parent_selector_only
+primary_law=selector_selects_child_planet_route_renders
+change=demoted_parent_from_shared_live_interplanetary_renderer_to_selector_only_gateway
+removed=canvas_stage,runtime_controls,drag_glide_language,live_body_tabs,parent_material_renderer_language,parent_canvas_inspection
+preserved=top_traversal,zionts_route,h_earth_route,audralia_route,showroom_return,gauges_route,public_explanation
+parent_owns=gateway,selector_cards,body_summaries,direct_route_links,lightweight_status_receipt,interplanetary_budget_language
+parent_does_not_own=canvas_rendering,material_renderer_import,requestAnimationFrame,drag_runtime,glide_runtime,shared_BODIES_profile_switching,live_interplanetary_canvas_inspection,child_planet_visual_truth
+child_route_earth_owns=zionts_rendering_only
+child_route_h_earth_owns=h_earth_rendering_only
+child_route_audralia_owns=audralia_rendering_only
+live_canvas_runtime=false
+material_renderer_import=false
+request_animation_frame=false
+shared_interplanetary_rendering=false
+child_routes_own_rendering=true
+ground_view=false
+ground_engine=false
+manor_placement=false
+generated_image=false
+graphic_box=false
+streaming=false
+visual_pass_claimed=false
+      </template>
     </main>
 
-    <footer class="footer">SHOWROOM_GLOBE_RUNTIME_INPUT_AND_RAF_CONTAINMENT_RENEWAL_TNT_v1 · satellite selector contained.</footer>
+    <footer class="footer">
+      SHOWROOM_GLOBE_PARENT_SELECTOR_ONLY_DEMOTION_TNT_v1 · Parent selector only · Child routes render.
+    </footer>
   </div>
-
-  <script>
-    window.DGB_SHOWROOM_GLOBE_RESTORE_KEY = "SHOWROOM_GLOBE_RUNTIME_INPUT_AND_RAF_CONTAINMENT_RENEWAL_TNT_v1";
-  </script>
-  <script type="module" src="/showroom/globe/index.js?v=SHOWROOM_GLOBE_RUNTIME_INPUT_AND_RAF_CONTAINMENT_RENEWAL_TNT_v1"></script>
 </body>
 </html>

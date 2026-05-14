@@ -2,16 +2,18 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="laws-16-point-rule-chamber"
+  data-page="laws-16-point-special-diamond-rule-chamber"
   data-route="/laws/"
-  data-contract="LAWS_PURPLE_RULE_CHAMBER_PAIR_RENEWAL_TNT_v1"
-  data-previous-contract="LAWS_16_POINT_RULE_CHAMBER_ANIMATED_DIAMONDS_TNT_v2"
+  data-contract="LAWS_SPECIAL_DIAMOND_RULE_CHAMBER_RENEWAL_TNT_v1"
+  data-previous-contract="LAWS_PURPLE_RULE_CHAMBER_PAIR_RENEWAL_TNT_v1"
   data-script-contract="LAWS_PURPLE_RULE_CHAMBER_PAIR_RUNTIME_TNT_v1"
   data-role="rule-chamber"
   data-message="proof-outranks-confidence"
   data-field-system="16-point-law-chamber"
   data-foreground-core="laws-entry-proof-return"
-  data-purple-theme="active"
+  data-material="special-diamond"
+  data-law-diamond-class="special-rule-cut-diamond"
+  data-purple-theme="false"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -30,23 +32,27 @@
   <style>
     :root {
       color-scheme: dark;
-      --bg: #04010d;
-      --panel: rgba(18, 8, 38, 0.91);
-      --panel2: rgba(32, 13, 63, 0.74);
-      --line: rgba(191, 154, 255, 0.22);
-      --line-gold: rgba(242, 199, 111, 0.26);
-      --text: #fff4f9;
-      --muted: rgba(238, 229, 255, 0.78);
-      --faint: rgba(238, 229, 255, 0.50);
+      --bg: #02030a;
+      --panel: rgba(7, 10, 18, 0.94);
+      --panel2: rgba(14, 18, 30, 0.78);
+      --line: rgba(230, 238, 255, 0.18);
+      --line-strong: rgba(255, 255, 255, 0.34);
+      --line-gold: rgba(242, 199, 111, 0.32);
+      --text: #fff8ea;
+      --muted: rgba(238, 244, 255, 0.78);
+      --faint: rgba(238, 244, 255, 0.50);
       --gold: #f2c76f;
       --gold2: #fff0a3;
-      --violet: #b58cff;
-      --purple: #8f65ff;
-      --purple2: #5e35d6;
-      --plum: #2d0f58;
-      --magenta: #d083ff;
-      --blue: #8dd8ff;
+      --diamond: #f8fbff;
+      --silver: #cfd8e6;
+      --ice: #8dd8ff;
+      --shadow-blue: #071329;
+      --deep: #030611;
+      --violet-shadow: #160a2f;
       --stage: min(100%, 1180px);
+      --law-cut: polygon(50% 0%, 68% 7%, 90% 25%, 100% 48%, 82% 78%, 50% 100%, 18% 78%, 0% 48%, 10% 25%, 32% 7%);
+      --law-inner-cut: polygon(50% 4%, 64% 14%, 84% 30%, 91% 49%, 76% 73%, 50% 93%, 24% 73%, 9% 49%, 16% 30%, 36% 14%);
+      --law-seal-cut: polygon(50% 0%, 62% 9%, 78% 9%, 91% 22%, 91% 38%, 100% 50%, 91% 62%, 91% 78%, 78% 91%, 62% 91%, 50% 100%, 38% 91%, 22% 91%, 9% 78%, 9% 62%, 0% 50%, 9% 38%, 9% 22%, 22% 9%, 38% 9%);
     }
 
     * { box-sizing: border-box; }
@@ -66,11 +72,11 @@
     body {
       min-height: 100svh;
       background:
-        radial-gradient(circle at 50% -8%, rgba(208, 131, 255, 0.24), transparent 31rem),
-        radial-gradient(circle at 10% 18%, rgba(143, 101, 255, 0.30), transparent 30rem),
-        radial-gradient(circle at 90% 30%, rgba(93, 49, 211, 0.24), transparent 32rem),
-        radial-gradient(circle at 50% 82%, rgba(242, 199, 111, 0.10), transparent 36rem),
-        linear-gradient(180deg, #110421, #070214 72%, #020106);
+        radial-gradient(circle at 50% -10%, rgba(255, 255, 255, 0.16), transparent 28rem),
+        radial-gradient(circle at 13% 18%, rgba(141, 216, 255, 0.13), transparent 28rem),
+        radial-gradient(circle at 88% 30%, rgba(242, 199, 111, 0.11), transparent 32rem),
+        radial-gradient(circle at 50% 84%, rgba(22, 10, 47, 0.42), transparent 36rem),
+        linear-gradient(180deg, #080b13, #030611 68%, #010208);
       -webkit-font-smoothing: antialiased;
       text-rendering: geometricPrecision;
     }
@@ -82,12 +88,12 @@
       z-index: 0;
       pointer-events: none;
       background-image:
-        radial-gradient(circle, rgba(255,255,255,0.20) 0 1px, transparent 1.4px),
-        linear-gradient(rgba(181,140,255,0.055) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(181,140,255,0.055) 1px, transparent 1px);
+        radial-gradient(circle, rgba(255,255,255,0.22) 0 1px, transparent 1.4px),
+        linear-gradient(rgba(230,238,255,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(230,238,255,0.045) 1px, transparent 1px);
       background-size: 210px 250px, 54px 54px, 54px 54px;
-      opacity: 0.30;
-      mask-image: linear-gradient(180deg, rgba(0,0,0,0.94), rgba(0,0,0,0.58) 66%, rgba(0,0,0,0.22));
+      opacity: 0.24;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.94), rgba(0,0,0,0.58) 66%, rgba(0,0,0,0.20));
     }
 
     body::after {
@@ -99,21 +105,27 @@
       background:
         conic-gradient(from 45deg at 50% 50%,
           transparent 0deg,
-          rgba(181,140,255,0.045) 48deg,
-          transparent 96deg,
-          rgba(242,199,111,0.035) 144deg,
-          transparent 192deg,
-          rgba(141,216,255,0.030) 240deg,
-          transparent 288deg,
-          rgba(208,131,255,0.045) 336deg,
+          rgba(255,255,255,0.050) 40deg,
+          transparent 82deg,
+          rgba(242,199,111,0.040) 128deg,
+          transparent 180deg,
+          rgba(141,216,255,0.036) 236deg,
+          transparent 290deg,
+          rgba(255,255,255,0.044) 336deg,
           transparent 360deg);
-      opacity: 0.50;
-      animation: lawFieldTurn 54s linear infinite;
+      opacity: 0.42;
+      animation: lawFieldTurn 66s linear infinite;
     }
 
     @keyframes lawFieldTurn { to { transform: rotate(360deg); } }
 
     a { color: inherit; text-decoration: none; }
+
+    a:focus-visible,
+    summary:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
+    }
 
     .skip-link {
       position: absolute;
@@ -160,24 +172,26 @@
       height: 3.65rem;
       display: grid;
       place-items: center;
-      border: 1px solid rgba(242,199,111,0.42);
-      border-radius: 1rem;
-      transform: rotate(45deg);
+      border: 1px solid rgba(255,255,255,0.36);
+      clip-path: var(--law-seal-cut);
       background:
-        radial-gradient(circle at 42% 22%, rgba(255,255,255,0.28), transparent 42%),
-        radial-gradient(circle at 70% 76%, rgba(208,131,255,0.42), transparent 58%),
-        linear-gradient(145deg, rgba(72,35,145,0.96), rgba(10,3,28,0.98));
+        linear-gradient(35deg, transparent 0 20%, rgba(255,255,255,0.40) 21% 23%, transparent 24%),
+        radial-gradient(circle at 42% 22%, rgba(255,255,255,0.44), transparent 42%),
+        radial-gradient(circle at 70% 76%, rgba(242,199,111,0.22), transparent 58%),
+        conic-gradient(from 45deg at 50% 50%, rgba(255,255,255,0.34), rgba(141,216,255,0.16), rgba(2,8,24,0.64), rgba(242,199,111,0.18), rgba(255,255,255,0.34)),
+        linear-gradient(145deg, rgba(230,238,255,0.20), rgba(3,6,17,0.98));
       box-shadow:
-        0 0 2.2rem rgba(181,140,255,0.32),
+        0 0 2.2rem rgba(255,255,255,0.16),
+        0 0 1.4rem rgba(141,216,255,0.12),
         0 1rem 2.4rem rgba(0,0,0,0.46),
-        inset 0 1px 0 rgba(255,255,255,0.18);
+        inset 0 1px 0 rgba(255,255,255,0.22);
     }
 
     .brand-mark span {
-      transform: rotate(-45deg);
-      color: rgba(255,244,249,0.98);
-      font-size: 0.86rem;
+      color: rgba(255,248,234,0.98);
+      font-size: 0.80rem;
       letter-spacing: 0.08em;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.82);
     }
 
     .brand-copy {
@@ -211,10 +225,10 @@
       align-items: center;
       justify-content: center;
       padding: 0.45rem 0.72rem;
-      border: 1px solid rgba(210,178,255,0.18);
+      border: 1px solid rgba(230,238,255,0.16);
       border-radius: 999px;
       color: var(--muted);
-      background: rgba(181,140,255,0.055);
+      background: rgba(255,255,255,0.040);
       font-size: 0.74rem;
       font-weight: 850;
       white-space: nowrap;
@@ -237,10 +251,10 @@
       width: fit-content;
       margin: 0 auto;
       padding: 0.55rem 0.9rem;
-      border: 1px solid rgba(210,178,255,0.20);
+      border: 1px solid rgba(230,238,255,0.20);
       border-radius: 999px;
-      color: rgba(238,229,255,0.90);
-      background: rgba(181,140,255,0.08);
+      color: rgba(238,244,255,0.90);
+      background: rgba(255,255,255,0.050);
       font-size: clamp(0.72rem, 2.5vw, 0.84rem);
       font-weight: 950;
       letter-spacing: 0.18em;
@@ -259,7 +273,7 @@
     .quote {
       width: min(100%, 780px);
       margin: 0 auto;
-      color: rgba(255,244,249,0.96);
+      color: rgba(255,248,234,0.96);
       font-size: clamp(1.02rem, 3.4vw, 1.22rem);
       line-height: 1.52;
       text-wrap: balance;
@@ -293,9 +307,9 @@
     .button::after { content: " →"; }
 
     .button.secondary {
-      border-color: rgba(210,178,255,0.22);
+      border-color: rgba(230,238,255,0.20);
       color: var(--text);
-      background: rgba(181,140,255,0.075);
+      background: rgba(255,255,255,0.055);
       box-shadow: none;
     }
 
@@ -312,11 +326,12 @@
     .route-panel {
       width: min(100%, 1060px);
       margin: clamp(0.85rem, 2.5vw, 1.25rem) auto 0;
-      border: 1px solid rgba(191,154,255,0.24);
+      border: 1px solid rgba(230,238,255,0.18);
       border-radius: clamp(1.25rem, 5vw, 2rem);
       background:
-        radial-gradient(circle at 50% 0%, rgba(208,131,255,0.14), transparent 35%),
-        radial-gradient(circle at 50% 52%, rgba(143,101,255,0.16), transparent 44%),
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.10), transparent 35%),
+        radial-gradient(circle at 50% 52%, rgba(141,216,255,0.075), transparent 44%),
+        radial-gradient(circle at 50% 100%, rgba(242,199,111,0.052), transparent 42%),
         linear-gradient(180deg, rgba(255,255,255,0.060), rgba(255,255,255,0.018)),
         var(--panel);
       box-shadow:
@@ -339,7 +354,7 @@
       bottom: 4%;
       width: 1px;
       transform: translateX(-50%);
-      background: linear-gradient(180deg, transparent, rgba(242,199,111,0.35), rgba(181,140,255,0.26), transparent);
+      background: linear-gradient(180deg, transparent, rgba(255,255,255,0.36), rgba(242,199,111,0.28), transparent);
       opacity: 0.74;
       z-index: -1;
     }
@@ -351,7 +366,7 @@
       right: 6%;
       top: 50%;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(242,199,111,0.28), rgba(181,140,255,0.24), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.30), rgba(242,199,111,0.22), transparent);
       opacity: 0.70;
       z-index: -1;
     }
@@ -380,9 +395,9 @@
     }
 
     .law-field {
-      --node-background: clamp(3.15rem, 6.8vw, 4.9rem);
-      --node-foreground: clamp(4.3rem, 9.2vw, 6.7rem);
-      --center-size: clamp(4.85rem, 10.2vw, 7.45rem);
+      --node-background: clamp(3.2rem, 6.8vw, 4.9rem);
+      --node-foreground: clamp(4.35rem, 9.2vw, 6.75rem);
+      --center-size: clamp(5rem, 10.4vw, 7.65rem);
       position: relative;
       width: min(100%, 900px);
       min-height: clamp(34rem, 68vw, 44rem);
@@ -394,7 +409,7 @@
     .field-orbit::before,
     .field-orbit::after {
       position: absolute;
-      border: 1px solid rgba(210,178,255,0.13);
+      border: 1px solid rgba(230,238,255,0.12);
       border-radius: 50%;
       pointer-events: none;
     }
@@ -406,7 +421,9 @@
       height: 58%;
       transform: rotate(-14deg);
       opacity: 0.86;
-      box-shadow: 0 0 3rem rgba(181,140,255,0.10);
+      box-shadow:
+        0 0 3rem rgba(255,255,255,0.07),
+        inset 0 0 3rem rgba(141,216,255,0.026);
     }
 
     .field-orbit::before {
@@ -425,11 +442,13 @@
 
     .axis-letter {
       position: absolute;
-      color: rgba(255,244,249,0.90);
+      color: rgba(255,248,234,0.92);
       font-size: clamp(0.92rem, 2.7vw, 1.25rem);
       font-weight: 950;
       line-height: 1;
-      text-shadow: 0 0 1rem rgba(181,140,255,0.30);
+      text-shadow:
+        0 0 1rem rgba(255,255,255,0.22),
+        0 0 0.8rem rgba(242,199,111,0.16);
       pointer-events: none;
       user-select: none;
       z-index: 3;
@@ -472,82 +491,90 @@
       transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(var(--lift));
       outline: none;
       transition: filter 160ms ease, transform 160ms ease, opacity 160ms ease;
-      will-change: transform, margin;
-      animation: lawDiamondDrift 9.5s ease-in-out infinite;
-      animation-delay: calc(var(--law-delay, 0s) * -1);
+      will-change: transform;
     }
 
     .law-diamond.behind {
       z-index: 7;
-      opacity: 0.70;
-      filter: saturate(0.90) brightness(0.96);
+      opacity: 0.74;
+      filter: saturate(0.80) brightness(0.92);
     }
 
     .law-diamond.forefront {
       --node-size: var(--node-foreground);
       z-index: 18;
       opacity: 1;
-      filter: saturate(1.18) brightness(1.08);
-      animation-duration: 8.5s;
+      filter: saturate(1.06) brightness(1.08);
     }
 
     .law-diamond:hover,
     .law-diamond:focus-visible {
       --lift: 1.065;
       opacity: 1;
-      filter: brightness(1.16) saturate(1.14);
-    }
-
-    @keyframes lawDiamondDrift {
-      0%, 100% { margin-left: 0; margin-top: 0; }
-      25% { margin-left: 10px; margin-top: -6px; }
-      50% { margin-left: 0; margin-top: 8px; }
-      75% { margin-left: -10px; margin-top: -4px; }
+      filter: brightness(1.18) saturate(1.08);
     }
 
     .diamond-shell {
       position: absolute;
       inset: 0;
-      transform: rotate(45deg);
-      transform-origin: 50% 50%;
-      border: 2px solid rgba(242,199,111,0.72);
-      border-radius: 0.95rem;
+      clip-path: var(--law-cut);
+      border: 1px solid rgba(255,255,255,0.42);
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.20), transparent 24%),
-        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.22), transparent 32%),
-        radial-gradient(circle at 30% 72%, rgba(181,140,255,0.30), transparent 38%),
-        linear-gradient(145deg, rgba(91,56,174,0.78), rgba(52,23,107,0.68) 58%, rgba(242,199,111,0.16));
+        linear-gradient(35deg, transparent 0 18%, rgba(255,255,255,0.46) 19% 21%, transparent 22% 100%),
+        linear-gradient(145deg, rgba(255,255,255,0.26), transparent 20%, rgba(141,216,255,0.10) 42%, transparent 70%),
+        conic-gradient(from 45deg at 50% 50%,
+          rgba(255,255,255,0.38) 0deg,
+          rgba(141,216,255,0.17) 36deg,
+          rgba(2,8,24,0.62) 72deg,
+          rgba(255,255,255,0.24) 108deg,
+          rgba(8,18,42,0.74) 144deg,
+          rgba(242,199,111,0.20) 180deg,
+          rgba(2,8,24,0.78) 216deg,
+          rgba(141,216,255,0.18) 252deg,
+          rgba(1,4,14,0.82) 288deg,
+          rgba(255,255,255,0.28) 324deg,
+          rgba(255,255,255,0.38) 360deg),
+        radial-gradient(circle at 32% 20%, rgba(255,255,255,0.74), rgba(230,238,255,0.20) 22%, transparent 40%),
+        radial-gradient(circle at 78% 82%, rgba(2,6,18,0.86), transparent 56%),
+        linear-gradient(145deg, rgba(248,251,255,0.48), rgba(80,96,120,0.44) 42%, rgba(6,12,28,0.98) 100%);
       box-shadow:
-        0 1.1rem 2.8rem rgba(0,0,0,0.32),
-        0 0 1.6rem rgba(181,140,255,0.16),
-        inset 0 0 0 1px rgba(255,255,255,0.15),
-        inset 0 0 1.6rem rgba(255,255,255,0.06);
+        0 1.15rem 2.8rem rgba(0,0,0,0.34),
+        0 0 1.6rem rgba(255,255,255,0.10),
+        0 0 1.2rem rgba(141,216,255,0.08),
+        inset 0 0 0 1px rgba(255,255,255,0.16),
+        inset 0 -1rem 1.7rem rgba(0,0,0,0.24);
       overflow: hidden;
-      animation: lawDiamondFacetTurn 14s linear infinite;
-      animation-delay: calc(var(--law-delay, 0s) * -1);
     }
 
     .law-diamond.behind .diamond-shell {
-      border-color: rgba(210,178,255,0.28);
+      border-color: rgba(230,238,255,0.24);
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.11), transparent 28%),
-        radial-gradient(circle at 64% 36%, rgba(181,140,255,0.18), transparent 34%),
-        linear-gradient(145deg, rgba(43,26,89,0.76), rgba(36,19,75,0.60));
+        linear-gradient(135deg, rgba(255,255,255,0.14), transparent 28%),
+        radial-gradient(circle at 64% 36%, rgba(230,238,255,0.14), transparent 34%),
+        linear-gradient(145deg, rgba(30,36,50,0.76), rgba(4,8,20,0.72));
       box-shadow:
-        0 0.85rem 2.1rem rgba(0,0,0,0.25),
+        0 0.85rem 2.1rem rgba(0,0,0,0.28),
         inset 0 0 0 1px rgba(255,255,255,0.10);
     }
 
     .law-diamond.forefront .diamond-shell {
-      border-color: rgba(255,224,141,0.95);
+      border-color: rgba(255,244,210,0.74);
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.24), transparent 24%),
-        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.32), transparent 32%),
-        radial-gradient(circle at 30% 72%, rgba(208,131,255,0.34), transparent 38%),
-        linear-gradient(145deg, rgba(109,66,199,0.88), rgba(76,36,156,0.78) 58%, rgba(242,199,111,0.24));
+        linear-gradient(35deg, transparent 0 18%, rgba(255,255,255,0.56) 19% 21%, transparent 22% 100%),
+        linear-gradient(145deg, rgba(255,255,255,0.31), transparent 20%, rgba(242,199,111,0.14) 44%, transparent 70%),
+        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.28), transparent 32%),
+        radial-gradient(circle at 30% 72%, rgba(141,216,255,0.20), transparent 38%),
+        conic-gradient(from 45deg at 50% 50%,
+          rgba(255,255,255,0.44),
+          rgba(141,216,255,0.18),
+          rgba(2,8,24,0.62),
+          rgba(242,199,111,0.24),
+          rgba(255,255,255,0.44)),
+        linear-gradient(145deg, rgba(255,255,255,0.54), rgba(77,90,112,0.48) 58%, rgba(6,12,28,0.98));
       box-shadow:
         0 1.45rem 3.4rem rgba(0,0,0,0.38),
-        0 0 2.35rem rgba(181,140,255,0.22),
+        0 0 2.35rem rgba(255,255,255,0.15),
+        0 0 1.7rem rgba(242,199,111,0.12),
         inset 0 0 0 1px rgba(255,255,255,0.18),
         inset 0 0 1.8rem rgba(255,255,255,0.07);
     }
@@ -556,32 +583,45 @@
     .diamond-shell::after {
       content: "";
       position: absolute;
-      inset: 15%;
-      border: 1px solid rgba(255,244,249,0.26);
-      border-radius: 0.55rem;
       pointer-events: none;
+      clip-path: var(--law-inner-cut);
+    }
+
+    .diamond-shell::before {
+      inset: 8%;
+      background:
+        linear-gradient(90deg, transparent 0 48%, rgba(255,255,255,0.30) 49% 51%, transparent 52% 100%),
+        linear-gradient(0deg, transparent 0 48%, rgba(255,255,255,0.22) 49% 51%, transparent 52% 100%),
+        linear-gradient(27deg, transparent 0 32%, rgba(255,255,255,0.24) 33% 35%, transparent 36% 100%),
+        linear-gradient(153deg, transparent 0 31%, rgba(255,255,255,0.18) 32% 34%, transparent 35% 100%),
+        linear-gradient(118deg, transparent 0 42%, rgba(141,216,255,0.16) 43% 45%, transparent 46% 100%),
+        linear-gradient(242deg, transparent 0 58%, rgba(242,199,111,0.13) 59% 61%, transparent 62% 100%),
+        radial-gradient(circle at 36% 23%, rgba(255,255,255,0.36), transparent 27%);
+      opacity: 0.92;
+      mix-blend-mode: screen;
     }
 
     .diamond-shell::after {
-      inset: 29%;
-      opacity: 0.48;
+      inset: -28%;
+      background: linear-gradient(115deg, transparent 0 42%, rgba(255,255,255,0.38) 46%, transparent 50% 100%);
+      opacity: 0.22;
+      transform: translateX(-35%) rotate(12deg);
+      animation: lawDiamondSweep 8.5s ease-in-out infinite;
+      animation-delay: calc(var(--law-delay, 0s) * -1);
+      mix-blend-mode: screen;
+    }
+
+    @keyframes lawDiamondSweep {
+      0%, 100% { transform: translateX(-40%) rotate(12deg); opacity: 0.12; }
+      48%, 54% { transform: translateX(42%) rotate(12deg); opacity: 0.34; }
     }
 
     .diamond-lines {
       position: absolute;
       inset: 0;
-      transform: rotate(45deg);
-      transform-origin: 50% 50%;
+      clip-path: var(--law-cut);
       pointer-events: none;
       overflow: hidden;
-      border-radius: 0.95rem;
-      animation: lawDiamondFacetTurn 14s linear infinite;
-      animation-delay: calc(var(--law-delay, 0s) * -1);
-    }
-
-    @keyframes lawDiamondFacetTurn {
-      from { transform: rotate(45deg); }
-      to { transform: rotate(405deg); }
     }
 
     .diamond-lines::before {
@@ -589,11 +629,11 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(90deg, transparent 49.5%, rgba(255,244,249,0.30) 50%, transparent 50.5%),
-        linear-gradient(0deg, transparent 49.5%, rgba(255,244,249,0.22) 50%, transparent 50.5%),
-        linear-gradient(45deg, transparent 49.5%, rgba(255,244,249,0.16) 50%, transparent 50.5%),
-        linear-gradient(-45deg, transparent 49.5%, rgba(255,244,249,0.16) 50%, transparent 50.5%);
-      opacity: 0.76;
+        linear-gradient(90deg, transparent 49.5%, rgba(255,255,255,0.25) 50%, transparent 50.5%),
+        linear-gradient(0deg, transparent 49.5%, rgba(255,255,255,0.18) 50%, transparent 50.5%),
+        linear-gradient(45deg, transparent 49.5%, rgba(255,255,255,0.14) 50%, transparent 50.5%),
+        linear-gradient(-45deg, transparent 49.5%, rgba(255,255,255,0.14) 50%, transparent 50.5%);
+      opacity: 0.68;
     }
 
     .diamond-content {
@@ -609,17 +649,19 @@
     }
 
     .diamond-content strong {
-      color: rgba(255,244,249,0.98);
+      color: rgba(255,248,234,0.98);
       font-size: clamp(0.47rem, 1.16vw, 0.68rem);
       line-height: 0.98;
       font-weight: 950;
       letter-spacing: 0.07em;
       text-transform: uppercase;
-      text-shadow: 0 2px 0 rgba(0,0,0,0.20);
+      text-shadow:
+        0 2px 0 rgba(0,0,0,0.22),
+        0 0 12px rgba(0,0,0,0.56);
     }
 
     .diamond-content span {
-      color: rgba(238,229,255,0.76);
+      color: rgba(238,244,255,0.76);
       font-size: clamp(0.38rem, 0.98vw, 0.52rem);
       line-height: 1.08;
       font-weight: 850;
@@ -636,25 +678,33 @@
     }
 
     .center-diamond .diamond-shell {
-      border-color: rgba(255,244,249,0.62);
+      clip-path: var(--law-seal-cut);
+      border-color: rgba(255,255,255,0.54);
       background:
-        radial-gradient(circle at 50% 50%, rgba(255,244,249,0.20), transparent 44%),
-        radial-gradient(circle at 70% 28%, rgba(242,199,111,0.18), transparent 32%),
-        linear-gradient(145deg, rgba(75,42,147,0.86), rgba(29,13,61,0.88));
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.24), transparent 44%),
+        radial-gradient(circle at 70% 28%, rgba(242,199,111,0.22), transparent 32%),
+        conic-gradient(from 45deg at 50% 50%, rgba(255,255,255,0.34), rgba(141,216,255,0.13), rgba(2,8,24,0.68), rgba(242,199,111,0.18), rgba(255,255,255,0.34)),
+        linear-gradient(145deg, rgba(255,255,255,0.38), rgba(10,16,31,0.92));
       box-shadow:
         0 1rem 2.5rem rgba(0,0,0,0.30),
-        0 0 2rem rgba(181,140,255,0.16),
-        inset 0 0 0 1px rgba(255,255,255,0.13);
+        0 0 2rem rgba(255,255,255,0.13),
+        0 0 1.6rem rgba(242,199,111,0.10),
+        inset 0 0 0 1px rgba(255,255,255,0.16);
       animation: none;
     }
 
     .center-diamond .diamond-lines {
-      animation: lawCenterFacetTurn 18s linear infinite;
+      clip-path: var(--law-seal-cut);
+    }
+
+    .center-diamond .diamond-lines::before {
+      animation: lawCenterFacetTurn 22s linear infinite;
+      transform-origin: 50% 50%;
     }
 
     @keyframes lawCenterFacetTurn {
-      from { transform: rotate(45deg); }
-      to { transform: rotate(-315deg); }
+      from { transform: rotate(0deg); }
+      to { transform: rotate(-360deg); }
     }
 
     .center-diamond .diamond-content strong {
@@ -686,11 +736,11 @@
     }
 
     details.law-card {
-      border: 1px solid rgba(210,178,255,0.16);
+      border: 1px solid rgba(230,238,255,0.14);
       border-radius: 1rem;
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.065), transparent 34%),
-        rgba(181,140,255,0.045);
+        linear-gradient(135deg, rgba(255,255,255,0.060), transparent 34%),
+        rgba(255,255,255,0.034);
       overflow: hidden;
     }
 
@@ -705,7 +755,7 @@
     .law-card summary::-webkit-details-marker { display: none; }
 
     .law-card summary strong {
-      color: rgba(255,244,249,0.96);
+      color: rgba(255,248,234,0.96);
       font-size: 0.9rem;
       font-weight: 950;
       letter-spacing: 0.08em;
@@ -753,10 +803,10 @@
       align-items: center;
       justify-content: center;
       padding: 0.48rem 0.72rem;
-      border: 1px solid rgba(210,178,255,0.16);
+      border: 1px solid rgba(230,238,255,0.14);
       border-radius: 999px;
       color: var(--muted);
-      background: rgba(181,140,255,0.055);
+      background: rgba(255,255,255,0.042);
       font-size: 0.74rem;
       font-weight: 900;
       letter-spacing: 0.06em;
@@ -854,7 +904,7 @@
     }
   </style>
 
-  <script src="/laws/index.js" defer></script>
+  <script src="/laws/index.js?v=LAWS_SPECIAL_DIAMOND_RULE_CHAMBER_RENEWAL_TNT_v1" defer></script>
 </head>
 
 <body>
@@ -888,7 +938,7 @@
 
     <main id="laws-main">
       <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Laws · Purple Rule Chamber</p>
+        <p class="eyebrow">Laws · Special Diamond Rule Chamber</p>
         <h1 id="page-title">Proof outranks confidence.</h1>
 
         <p class="quote">
@@ -904,23 +954,23 @@
 
       <section class="law-stage" aria-labelledby="law-title">
         <div class="stage-title">
-          <h2 id="law-title">Sixteen laws. One chamber.</h2>
+          <h2 id="law-title">Sixteen laws. One diamond chamber.</h2>
           <p>The law chamber keeps authority, routes, proof, runtime, generation, products, planets, human boundaries, receipts, and return paths available.</p>
         </div>
 
-        <div class="law-field" aria-label="16-point law chamber field" data-law-field>
+        <div class="law-field" aria-label="16-point special diamond law chamber field" data-law-field>
           <div class="field-orbit" aria-hidden="true"></div>
           <span class="axis-letter n" aria-hidden="true">N</span>
           <span class="axis-letter e" aria-hidden="true">E</span>
           <span class="axis-letter s" aria-hidden="true">S</span>
           <span class="axis-letter w" aria-hidden="true">W</span>
 
-          <div class="center-diamond" aria-label="Laws chamber center marker">
+          <div class="center-diamond" aria-label="Laws special diamond center seal">
             <div class="diamond-shell" aria-hidden="true"></div>
             <div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content">
               <strong>Laws</strong>
-              <span>Chamber</span>
+              <span>Seal</span>
             </div>
           </div>
 
@@ -1037,7 +1087,7 @@
 
           <details class="law-card" id="product-planet-law">
             <summary><strong>Product and planet separation law</strong><span>Products stay products. Planetary constructs stay planetary constructs.</span></summary>
-            <p>ARCHCOIN, AAI, Five Flags, Education, and Nutrition are product chambers under Products. Manor, Laws, Universe, Frontier, and world surfaces remain planetary or estate constructs.</p>
+            <p>ARCHCOIN, AI, Five Flags, Education, and Nutrition are product chambers under Products. Manor, Laws, Universe, Frontier, and world surfaces remain planetary or estate constructs.</p>
           </details>
 
           <details class="law-card" id="human-boundary-law">
@@ -1108,21 +1158,25 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-LAWS_PURPLE_RULE_CHAMBER_PAIR_RENEWAL_TNT_v1
-previous=LAWS_16_POINT_RULE_CHAMBER_ANIMATED_DIAMONDS_TNT_v2
+LAWS_SPECIAL_DIAMOND_RULE_CHAMBER_RENEWAL_TNT_v1
+previous=LAWS_PURPLE_RULE_CHAMBER_PAIR_RENEWAL_TNT_v1
 script=LAWS_PURPLE_RULE_CHAMBER_PAIR_RUNTIME_TNT_v1
 route=/laws/
 page=laws
 role=rule_chamber
 message=proof_outranks_confidence
-center=laws_chamber_decorative
-design_object=16_point_law_chamber
+material=special_diamond
+shape=unique_law_cut_diamond
+ordinary_room_crystal=false
+products_home_orbit_standard=false
+center=laws_special_diamond_seal
+design_object=16_point_special_diamond_law_chamber
 foreground_core=laws,entry,proof,return
 available_laws=authority,route,proof,runtime,generation,product_planet_separation,human_boundary,interaction,receipt,visual_claim,foreground,access,stale_language,animation,scope,return
-change=purple_rule_chamber_surface_renewal_and_js_pair_preparation
-animation=external_law_field_motion,index_js_single_open_law_cards,index_js_receipts
+change=purple_rule_chamber_superseded_by_special_diamond_rule_chamber
+animation=index_js_law_diamond_motion_variables,index_js_single_open_law_cards,index_js_receipts,css_special_diamond_glints
 preserved=law_copy,law_cards,route_links,16_point_chamber,foreground_core,receipt_structure
-renewed=purple_theme,brand_spacing,public_receipt_leak_removed,script_pair_split
+renewed=special_diamond_material,law_cut_shape,white_silver_gold_glow,brand_mark,public_script_cache_key
 route_owns=rule_chamber,law_access,16_point_law_field,law_cards,route_links,receipt
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
 heavy_runtime_loaded=false
@@ -1137,7 +1191,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      LAWS_PURPLE_RULE_CHAMBER_PAIR_RENEWAL_TNT_v1 · Laws · Purple Rule Chamber · Proof outranks confidence.
+      LAWS_SPECIAL_DIAMOND_RULE_CHAMBER_RENEWAL_TNT_v1 · Laws · Special Diamond Rule Chamber · Proof outranks confidence.
     </footer>
   </div>
 </body>

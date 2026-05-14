@@ -1,15 +1,16 @@
 // /showroom/globe/index.js
 // TNT FULL-FILE REPLACEMENT
-// SHOWROOM_GLOBE_PARENT_SELECTOR_ONLY_DEMOTION_TNT_v1
+// SHOWROOM_GLOBE_PARENT_SELECTOR_LIGHT_ANIMATION_RESTORE_TNT_v1
 // Parent /showroom/globe/ only.
 // Lightweight selector/status helper.
+// CSS-only selector motion is allowed.
 // No canvas runtime. No material renderer import. No requestAnimationFrame. No drag/glide.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "SHOWROOM_GLOBE_PARENT_SELECTOR_ONLY_DEMOTION_TNT_v1";
-  const PREVIOUS_CONTRACT = "SHOWROOM_GLOBE_EXIT_NAVIGATION_RELEASE_RENEWAL_TNT_v1";
+  const CONTRACT = "SHOWROOM_GLOBE_PARENT_SELECTOR_LIGHT_ANIMATION_RESTORE_TNT_v1";
+  const PREVIOUS_CONTRACT = "SHOWROOM_GLOBE_PARENT_SELECTOR_ONLY_DEMOTION_TNT_v1";
 
   const ROUTES = Object.freeze({
     zionts: Object.freeze({
@@ -44,6 +45,8 @@
     role: "parent-selector-only",
     primaryLaw: "selector_selects_child_planet_route_renders",
     parentSelectorOnly: true,
+    selectorAnimation: "css-only-light",
+    cssOnlyAnimation: true,
     liveCanvasRuntime: false,
     materialRendererImport: false,
     requestAnimationFrame: false,
@@ -81,6 +84,8 @@
     document.documentElement.dataset.contract = CONTRACT;
     document.documentElement.dataset.previousContract = PREVIOUS_CONTRACT;
     document.documentElement.dataset.parentSelectorOnly = "true";
+    document.documentElement.dataset.selectorAnimation = "css-only-light";
+    document.documentElement.dataset.cssOnlyAnimation = "true";
     document.documentElement.dataset.liveCanvasRuntime = "false";
     document.documentElement.dataset.materialRendererImport = "false";
     document.documentElement.dataset.requestAnimationFrame = "false";
@@ -96,6 +101,8 @@
     if (document.body) {
       document.body.dataset.contract = CONTRACT;
       document.body.dataset.parentSelectorOnly = "true";
+      document.body.dataset.selectorAnimation = "css-only-light";
+      document.body.dataset.cssOnlyAnimation = "true";
       document.body.dataset.liveCanvasRuntime = "false";
       document.body.dataset.materialRendererImport = "false";
       document.body.dataset.childRoutesOwnRendering = "true";
@@ -134,6 +141,8 @@
       if (key) {
         card.dataset.selectorRoute = key;
         card.dataset.childRouteOwnsRendering = "true";
+        card.dataset.parentSelectorOnly = "true";
+        card.dataset.cssOnlyAnimation = "true";
       }
     });
 
@@ -161,30 +170,41 @@
     };
   }
 
+  function auditForbiddenRuntime() {
+    return Object.freeze({
+      canvasFound: Boolean(document.querySelector("canvas")),
+      materialScriptFound: Array.from(document.scripts).some((script) =>
+        String(script.src || "").includes("showroom.globe.cinematic.material")
+      ),
+      moduleRuntimeFound: Array.from(document.scripts).some((script) =>
+        String(script.src || "").includes("SHOWROOM_GLOBE_EXIT_NAVIGATION_RELEASE_RENEWAL")
+      ),
+      parentHasCanvasRuntime: false,
+      parentImportsMaterialRenderer: false,
+      parentRunsRequestAnimationFrame: false,
+      parentHandlesDragGlide: false,
+      parentSwitchesLiveBodies: false,
+      cssOnlySelectorMotion: true,
+      childRoutesOwnRendering: true
+    });
+  }
+
   function boot() {
     const cards = markCardsReady();
     const receipts = hideVisibleReceipts();
+    const audit = auditForbiddenRuntime();
 
     protectRouteNavigation();
 
     publishStatus({
       booted: true,
       selectorHelperOnly: true,
+      lightAnimationRestored: true,
+      animationAuthority: "css-only-selector-motion",
       cards,
       receipts,
       forbiddenRuntimePresent: false,
-      canvasFound: Boolean(document.querySelector("canvas")),
-      materialScriptFound: Array.from(document.scripts).some((script) =>
-        String(script.src || "").includes("showroom.globe.cinematic.material")
-      ),
-      audit: Object.freeze({
-        parentHasCanvasRuntime: false,
-        parentImportsMaterialRenderer: false,
-        parentRunsRequestAnimationFrame: false,
-        parentHandlesDragGlide: false,
-        parentSwitchesLiveBodies: false,
-        childRoutesOwnRendering: true
-      })
+      audit
     });
   }
 

@@ -3,12 +3,16 @@
   lang="en"
   data-route="/home/"
   data-page="home"
-  data-version="G1-V2"
-  data-contract="HOME_LOCAL_4_POINT_RECEIVER_ORBIT_TNT_v2"
+  data-version="G1-V3"
+  data-contract="HOME_LOCAL_4_POINT_RECEIVER_ORBIT_AUTHORITY_RENEWAL_TNT_v1"
+  data-js-contract="HOME_RECEIVER_ORBIT_BOOT_AUTHORITY_TNT_v1"
+  data-renews="HOME_LOCAL_4_POINT_RECEIVER_ORBIT_TNT_v2"
   data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
   data-animation-standard="LOCAL_4_DIAMOND_RECEIVER_ORBIT_STANDARD_v1"
   data-status="active"
   data-role="estate-receiver"
+  data-primary-node-count="4"
+  data-home-js-required="true"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -85,6 +89,11 @@
     }
 
     a{color:inherit;text-decoration:none}
+
+    a:focus-visible{
+      outline:2px solid var(--gold);
+      outline-offset:4px;
+    }
 
     .skip{
       position:absolute;
@@ -526,7 +535,7 @@
     }
 
     .home-node:hover,
-    .home-node:focus{
+    .home-node:focus-visible{
       outline:none;
       border-color:rgba(243,200,111,.72);
       box-shadow:
@@ -742,6 +751,11 @@
         animation-iteration-count:1!important;
         transition-duration:.01ms!important;
       }
+
+      .home-orbit,
+      .home-label-text{
+        animation:none!important;
+      }
     }
   </style>
 </head>
@@ -802,31 +816,31 @@
           Home receives the visitor after the Door, keeps the route clean, and sends each person to the correct room.
         </p>
 
-        <div class="home-stage" aria-label="Animated Home four-point receiver orbit">
+        <div class="home-stage" aria-label="Animated Home four-point receiver orbit" data-home-stage>
           <div class="home-anchor" aria-hidden="true">
             <span>Home<br>Receiver</span>
           </div>
 
-          <div class="home-orbit">
-            <a class="home-node" style="--angle:0deg" href="/explore/" aria-label="Manor Rooms">
+          <div class="home-orbit" role="list" aria-label="Four primary Home receiver routes" data-home-orbit>
+            <a class="home-node" role="listitem" style="--angle:0deg" href="/explore/" aria-label="Manor Rooms" data-home-node data-home-direction="north" data-home-route="/explore/">
               <span class="home-label-shell">
                 <b class="home-label-text">Manor<span class="home-label-sub">Rooms</span></b>
               </span>
             </a>
 
-            <a class="home-node" style="--angle:90deg" href="/nine-summits-of-love/" aria-label="Book Climb">
+            <a class="home-node" role="listitem" style="--angle:90deg" href="/nine-summits-of-love/" aria-label="Book Climb" data-home-node data-home-direction="east" data-home-route="/nine-summits-of-love/">
               <span class="home-label-shell">
                 <b class="home-label-text">Book<span class="home-label-sub">Climb</span></b>
               </span>
             </a>
 
-            <a class="home-node" style="--angle:180deg" href="/showroom/" aria-label="Showroom Atrium">
+            <a class="home-node" role="listitem" style="--angle:180deg" href="/showroom/" aria-label="Showroom Atrium" data-home-node data-home-direction="south" data-home-route="/showroom/">
               <span class="home-label-shell">
                 <b class="home-label-text">Showroom<span class="home-label-sub">Atrium</span></b>
               </span>
             </a>
 
-            <a class="home-node" style="--angle:270deg" href="/gauges/" aria-label="Gauges Proof">
+            <a class="home-node" role="listitem" style="--angle:270deg" href="/gauges/" aria-label="Gauges Proof" data-home-node data-home-direction="west" data-home-route="/gauges/">
               <span class="home-label-shell">
                 <b class="home-label-text">Gauges<span class="home-label-sub">Proof</span></b>
               </span>
@@ -850,13 +864,12 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-HOME_LOCAL_4_POINT_RECEIVER_ORBIT_TNT_v2
+HOME_LOCAL_4_POINT_RECEIVER_ORBIT_AUTHORITY_RENEWAL_TNT_v1
 route=/home/
 page=home
 role=estate_receiver
 message=home_keeps_the_journey_coherent
 alignment_sequence=TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2
-shared_css_dependency=removed_for_home_orbit_geometry
 local_geometry=true
 animation_standard=LOCAL_4_DIAMOND_RECEIVER_ORBIT_STANDARD_v1
 center=home_receiver_background_anchor_only
@@ -870,7 +883,6 @@ animation=homeOrbitSpin,homeTextUpright,homeAnchorPulse,anchorPulse
 z_index_law=ambient_background,home_anchor_background,local_orbit_field,local_route_diamonds,route_labels
 non_overlap_law=no_clickable_diamond_hidden_by_center_no_diamond_escape_to_cards
 mobile_law=compact_4_point_field_no_hidden_nodes
-fix=visible_receipt_contained_and_home_orbit_localized
 preserved=home_receiver_gate,manor_book_showroom_gauges_routes,estate_receiver_role
 route_owns=estate_receiving,stabilization,four_primary_receiving_directions,room_routes,256_scope_expression
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
@@ -887,8 +899,13 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      HOME_LOCAL_4_POINT_RECEIVER_ORBIT_TNT_v2 · Home · Estate Receiver · Four-point local orbit · Receipt contained.
+      HOME_LOCAL_4_POINT_RECEIVER_ORBIT_AUTHORITY_RENEWAL_TNT_v1 · Home · Estate Receiver · Four-point local orbit · JS paired.
     </footer>
   </div>
+
+  <script>
+    window.DGB_HOME_KEY = "HOME_RECEIVER_ORBIT_BOOT_AUTHORITY_TNT_v1";
+  </script>
+  <script type="module" src="/home/index.js?v=HOME_RECEIVER_ORBIT_BOOT_AUTHORITY_TNT_v1"></script>
 </body>
 </html>

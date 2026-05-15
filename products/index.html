@@ -3,16 +3,17 @@
   lang="en"
   data-route="/products/"
   data-page="products"
-  data-contract="PRODUCTS_ORGANIC_GEM_ORBIT_RUNTIME_MOUNT_SEPARATION_TNT_v6"
-  data-previous-contract="PRODUCTS_ORGANIC_DIGITAL_GEM_RECEPTION_TNT_v5"
+  data-contract="PRODUCTS_SVG_ORGANIC_DIGITAL_GEM_ORBIT_TNT_v7"
+  data-previous-contract="PRODUCTS_ORGANIC_GEM_ORBIT_RUNTIME_MOUNT_SEPARATION_TNT_v6"
   data-role="product-wing"
-  data-public-frame="organic-digital-gem-product-orbit-runtime-separated"
+  data-public-frame="svg-organic-digital-gem-product-orbit"
   data-runtime-public-message="false"
   data-static-page-usable-without-js="true"
   data-eight-doors-visible-without-runtime="true"
   data-runtime-enhancement-only="true"
   data-visible-orbit-is-runtime-mount="false"
   data-runtime-mount-separation="true"
+  data-svg-gem-system="active"
   data-generated-image="false"
   data-graphic-box="false"
   data-streaming="false"
@@ -44,6 +45,9 @@
       --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
       --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+      --field-turn-duration:44s;
+      --gem-float-duration:7.2s;
+      --gem-breathe-duration:8.8s;
     }
 
     * { box-sizing:border-box; }
@@ -96,6 +100,14 @@
     [tabindex]:focus-visible {
       outline:2px solid var(--gold);
       outline-offset:4px;
+    }
+
+    .svg-defs {
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
     }
 
     .skip {
@@ -460,16 +472,6 @@
 
     .orbit-center,
     .orbit-node {
-      --gem-cut:polygon(50% 0%,72% 8%,91% 23%,100% 46%,87% 77%,60% 98%,30% 91%,6% 69%,0% 36%,22% 10%);
-      --inner-cut:polygon(48% 8%,69% 16%,84% 36%,76% 65%,58% 88%,35% 78%,14% 59%,17% 33%,31% 13%);
-      --light-x:43%;
-      --light-y:20%;
-      --gold-reflect:.18;
-      --silver-reflect:.28;
-      --blue-depth:.70;
-      --shadow-depth:.92;
-      --tilt-a:-2deg;
-      --tilt-b:2deg;
       position:absolute;
       display:grid;
       place-items:center;
@@ -477,31 +479,23 @@
       color:var(--ink);
       z-index:4;
       transition:transform .18s ease,filter .18s ease;
-      animation:gemNodeFloat 8.6s ease-in-out infinite;
+      animation:gemNodeFloat var(--gem-float-duration) ease-in-out infinite;
       animation-delay:var(--delay,0s);
     }
 
     .orbit-center {
-      --gem-cut:polygon(49% 0%,71% 7%,92% 22%,100% 44%,89% 75%,63% 98%,32% 92%,7% 72%,0% 38%,19% 11%);
-      --inner-cut:polygon(50% 7%,70% 16%,83% 34%,79% 64%,57% 88%,31% 79%,13% 58%,19% 33%,34% 12%);
-      --light-x:39%;
-      --light-y:18%;
-      --gold-reflect:.24;
-      --silver-reflect:.34;
-      --blue-depth:.68;
-      --shadow-depth:.94;
       left:50%;
       top:50%;
-      width:clamp(10rem,21vw,14.6rem);
-      height:clamp(10rem,21vw,14.6rem);
+      width:clamp(10rem,22vw,15rem);
+      height:clamp(7.35rem,16vw,10.9rem);
       transform:translate(-50%,-50%);
       z-index:6;
       pointer-events:none;
     }
 
     .orbit-node {
-      width:clamp(6.65rem,13.8vw,9.6rem);
-      height:clamp(6.65rem,13.8vw,9.6rem);
+      width:clamp(7rem,15vw,9.8rem);
+      height:clamp(5.15rem,11vw,7.2rem);
       left:var(--x);
       top:var(--y);
       transform:translate(-50%,-50%);
@@ -514,243 +508,94 @@
       outline:none;
     }
 
-    .gem-arch {
-      --gem-cut:polygon(47% 0%,70% 6%,94% 24%,100% 49%,82% 78%,56% 100%,27% 87%,4% 70%,0% 35%,24% 9%);
-      --inner-cut:polygon(45% 8%,69% 15%,88% 37%,75% 66%,55% 90%,28% 75%,13% 57%,18% 31%,34% 13%);
-      --light-x:40%;
-      --light-y:19%;
-      --gold-reflect:.30;
-      --silver-reflect:.30;
-      --blue-depth:.62;
-      --tilt-a:-2.4deg;
-      --tilt-b:1.7deg;
-    }
-
-    .gem-flags {
-      --gem-cut:polygon(52% 1%,75% 10%,96% 31%,93% 61%,73% 91%,39% 98%,12% 78%,0% 43%,13% 16%,35% 4%);
-      --inner-cut:polygon(53% 8%,73% 19%,84% 42%,72% 70%,43% 86%,20% 69%,15% 42%,27% 19%);
-      --light-x:56%;
-      --light-y:18%;
-      --gold-reflect:.17;
-      --silver-reflect:.36;
-      --blue-depth:.72;
-      --tilt-a:1.6deg;
-      --tilt-b:-2.5deg;
-    }
-
-    .gem-aai {
-      --gem-cut:polygon(44% 0%,68% 9%,93% 24%,100% 58%,81% 85%,48% 98%,22% 88%,4% 63%,0% 30%,24% 8%);
-      --inner-cut:polygon(43% 9%,65% 17%,85% 34%,78% 68%,48% 86%,24% 73%,13% 52%,18% 29%,33% 14%);
-      --light-x:38%;
-      --light-y:22%;
-      --gold-reflect:.12;
-      --silver-reflect:.38;
-      --blue-depth:.78;
-      --tilt-a:-1.7deg;
-      --tilt-b:2.8deg;
-    }
-
-    .gem-education {
-      --gem-cut:polygon(55% 0%,78% 12%,99% 37%,88% 72%,62% 96%,31% 91%,8% 76%,0% 41%,18% 13%,40% 4%);
-      --inner-cut:polygon(55% 9%,74% 21%,82% 44%,72% 68%,58% 86%,35% 76%,15% 60%,17% 36%,35% 16%);
-      --light-x:61%;
-      --light-y:22%;
-      --gold-reflect:.20;
-      --silver-reflect:.30;
-      --blue-depth:.69;
-      --tilt-a:2deg;
-      --tilt-b:-1.8deg;
-    }
-
-    .gem-nutrition {
-      --gem-cut:polygon(48% 0%,73% 8%,95% 29%,97% 56%,78% 88%,44% 100%,17% 81%,0% 51%,10% 18%,32% 5%);
-      --inner-cut:polygon(47% 8%,69% 17%,86% 37%,75% 63%,48% 89%,25% 70%,13% 50%,22% 25%,36% 12%);
-      --light-x:41%;
-      --light-y:18%;
-      --gold-reflect:.15;
-      --silver-reflect:.32;
-      --blue-depth:.75;
-      --tilt-a:-2.2deg;
-      --tilt-b:2.1deg;
-    }
-
-    .gem-sean {
-      --gem-cut:polygon(51% 0%,69% 6%,91% 19%,100% 50%,84% 79%,58% 98%,29% 91%,6% 73%,0% 39%,20% 11%);
-      --inner-cut:polygon(50% 8%,68% 14%,85% 31%,77% 66%,55% 89%,31% 77%,13% 59%,18% 34%,32% 13%);
-      --light-x:55%;
-      --light-y:19%;
-      --gold-reflect:.22;
-      --silver-reflect:.26;
-      --blue-depth:.66;
-      --tilt-a:1.3deg;
-      --tilt-b:-2.4deg;
-    }
-
-    .gem-summits {
-      --gem-cut:polygon(46% 0%,76% 11%,100% 42%,91% 69%,66% 95%,34% 100%,10% 79%,0% 45%,14% 18%,31% 5%);
-      --inner-cut:polygon(46% 9%,72% 19%,84% 43%,76% 64%,62% 86%,35% 82%,15% 60%,19% 34%,31% 15%);
-      --light-x:36%;
-      --light-y:21%;
-      --gold-reflect:.14;
-      --silver-reflect:.34;
-      --blue-depth:.80;
-      --tilt-a:-1.4deg;
-      --tilt-b:2.6deg;
-    }
-
-    .gem-book {
-      --gem-cut:polygon(54% 0%,79% 13%,96% 36%,92% 66%,72% 92%,39% 99%,12% 82%,0% 52%,9% 22%,33% 4%);
-      --inner-cut:polygon(55% 9%,74% 22%,82% 43%,69% 69%,41% 86%,21% 70%,13% 51%,25% 22%,38% 13%);
-      --light-x:60%;
-      --light-y:20%;
-      --gold-reflect:.28;
-      --silver-reflect:.25;
-      --blue-depth:.64;
-      --tilt-a:2.5deg;
-      --tilt-b:-1.6deg;
-    }
-
     @keyframes gemNodeFloat {
       0%,100% { margin-top:0; }
       50% { margin-top:-.42rem; }
     }
 
-    .sapphire-shell {
+    .product-gem-core {
       position:absolute;
       inset:0;
-      clip-path:var(--gem-cut);
-      background:
-        radial-gradient(circle at var(--light-x) var(--light-y),rgba(255,255,255,.62),transparent 12%),
-        radial-gradient(circle at calc(var(--light-x) + 16%) calc(var(--light-y) + 8%),rgba(255,255,255,var(--silver-reflect)),transparent 26%),
-        radial-gradient(circle at 24% 78%,rgba(0,0,0,.42),transparent 30%),
-        conic-gradient(from 24deg at 47% 54%,
-          rgba(255,255,255,.16) 0deg,
-          rgba(141,216,255,.30) 34deg,
-          rgba(8,29,76,var(--blue-depth)) 80deg,
-          rgba(20,78,160,.66) 126deg,
-          rgba(3,9,28,var(--shadow-depth)) 181deg,
-          rgba(243,200,111,var(--gold-reflect)) 228deg,
-          rgba(9,29,70,.84) 286deg,
-          rgba(255,255,255,.18) 360deg),
-        linear-gradient(145deg,rgba(45,118,235,.52),rgba(4,8,21,.98) 62%,rgba(8,25,64,.88));
-      border:1px solid rgba(170,218,255,.34);
-      box-shadow:
-        0 1.05rem 2.25rem rgba(0,0,0,.34),
-        0 0 1.35rem rgba(36,120,255,.22),
-        0 0 1.55rem rgba(243,200,111,.08),
-        inset 0 1px 0 rgba(255,255,255,.16),
-        inset 0 -1rem 1.8rem rgba(0,0,0,.30);
-      overflow:hidden;
-      animation:gemGravityTurn 9s ease-in-out infinite;
-      animation-delay:var(--delay,0s);
-      transform-origin:center;
-    }
-
-    .sapphire-shell::before {
-      content:"";
-      position:absolute;
-      inset:5%;
-      clip-path:var(--inner-cut);
-      background:
-        linear-gradient(91deg,transparent 47%,rgba(255,255,255,.25) 49%,transparent 52%),
-        linear-gradient(7deg,transparent 49%,rgba(141,216,255,.18) 50%,transparent 52%),
-        linear-gradient(41deg,transparent 48%,rgba(243,200,111,.16) 50%,transparent 52%),
-        linear-gradient(-37deg,transparent 47%,rgba(255,255,255,.15) 49%,transparent 52%),
-        linear-gradient(127deg,transparent 42%,rgba(255,255,255,.10) 43% 45%,transparent 46%),
-        radial-gradient(circle at 49% 42%,rgba(255,255,255,.08),transparent 54%);
-      border:1px solid rgba(255,255,255,.09);
-      opacity:.88;
+      display:grid;
+      place-items:center;
       pointer-events:none;
-    }
-
-    .sapphire-shell::after {
-      content:"";
-      position:absolute;
-      inset:-18% -42%;
-      background:
-        radial-gradient(circle at 21% 64%,rgba(255,232,163,.13),transparent 12%),
-        radial-gradient(circle at 74% 48%,rgba(141,216,255,.13),transparent 14%),
-        linear-gradient(112deg,
-          transparent 0 38%,
-          rgba(255,255,255,.36) 45%,
-          rgba(255,232,163,.13) 50%,
-          transparent 58% 100%);
-      opacity:0;
-      transform:translateX(-44%) rotate(0deg);
-      animation:gemLightSweep 6.4s ease-in-out infinite;
+      animation:productGemBreathe var(--gem-breathe-duration) ease-in-out infinite;
       animation-delay:var(--delay,0s);
-      pointer-events:none;
+      transform-origin:50% 50%;
     }
 
-    .mineral-inclusion {
+    @keyframes productGemBreathe {
+      0%,100% { transform:translateY(0) rotate(var(--tilt-a,-1.6deg)) scale(1); filter:brightness(1); }
+      50% { transform:translateY(-.22rem) rotate(var(--tilt-b,2deg)) scale(1.025); filter:brightness(1.12); }
+    }
+
+    .product-gem-svg {
       position:absolute;
       inset:0;
-      z-index:2;
-      clip-path:var(--gem-cut);
+      width:100%;
+      height:100%;
+      overflow:visible;
       pointer-events:none;
-      opacity:.54;
-      background:
-        radial-gradient(circle at var(--inc-a-x, 29%) var(--inc-a-y, 61%),rgba(255,232,163,.10),transparent 6%),
-        radial-gradient(circle at var(--inc-b-x, 67%) var(--inc-b-y, 42%),rgba(255,255,255,.09),transparent 5%),
-        linear-gradient(var(--vein-a, 24deg),transparent 0 44%,rgba(255,255,255,.09) 45%,transparent 47% 100%),
-        linear-gradient(var(--vein-b, 147deg),transparent 0 56%,rgba(141,216,255,.08) 57%,transparent 59% 100%);
-      mix-blend-mode:screen;
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
+        drop-shadow(0 0 1.15rem rgba(36,120,255,.18))
+        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
     }
 
-    .orbit-center .sapphire-shell {
-      box-shadow:
-        0 1.5rem 3rem rgba(0,0,0,.42),
-        0 0 2.2rem rgba(243,200,111,.15),
-        0 0 3rem rgba(36,120,255,.20),
-        inset 0 1px 0 rgba(255,255,255,.16),
-        inset 0 -1rem 2rem rgba(0,0,0,.30);
+    .orbit-center .product-gem-svg {
+      filter:
+        drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
+        drop-shadow(0 0 1.65rem rgba(36,120,255,.23))
+        drop-shadow(0 0 .85rem rgba(243,200,111,.16));
     }
 
-    @keyframes gemGravityTurn {
-      0%,100% {
-        transform:rotate(var(--tilt-a)) scale(1);
-        filter:brightness(.98) saturate(1);
-      }
-      50% {
-        transform:rotate(var(--tilt-b)) scale(1.018);
-        filter:brightness(1.13) saturate(1.06);
-      }
+    .gem-arch .product-gem-svg { filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(36,120,255,.20)) drop-shadow(0 0 .7rem rgba(243,200,111,.16)) saturate(1.08) hue-rotate(-8deg); }
+    .gem-flags .product-gem-svg { filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(141,216,255,.19)) drop-shadow(0 0 .55rem rgba(243,200,111,.10)) saturate(1.02) hue-rotate(8deg); }
+    .gem-aai .product-gem-svg { filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(202,225,255,.16)) drop-shadow(0 0 .55rem rgba(243,200,111,.08)) saturate(.88) hue-rotate(16deg); }
+    .gem-education .product-gem-svg { filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(174,146,255,.18)) drop-shadow(0 0 .55rem rgba(243,200,111,.10)) saturate(1.06) hue-rotate(34deg); }
+    .gem-nutrition .product-gem-svg { filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(143,240,195,.18)) drop-shadow(0 0 .55rem rgba(243,200,111,.12)) saturate(1.12) hue-rotate(92deg); }
+    .gem-sean .product-gem-svg { filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(141,216,255,.18)) drop-shadow(0 0 .55rem rgba(243,200,111,.10)) saturate(.98) hue-rotate(-18deg); }
+    .gem-summits .product-gem-svg { filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(190,170,255,.20)) drop-shadow(0 0 .65rem rgba(243,200,111,.14)) saturate(1.08) hue-rotate(48deg); }
+    .gem-book .product-gem-svg { filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(243,200,111,.18)) drop-shadow(0 0 .55rem rgba(141,216,255,.10)) saturate(.94) hue-rotate(-34deg); }
+
+    .product-glint {
+      animation:productGlint 8.5s ease-in-out infinite;
+      transform-origin:110px 80px;
     }
 
-    @keyframes gemLightSweep {
-      0%,27%,100% {
-        opacity:0;
-        transform:translateX(-48%) rotate(0deg);
-      }
-      44%,51% {
-        opacity:.50;
-        transform:translateX(48%) rotate(0deg);
-      }
-      64% {
-        opacity:0;
-        transform:translateX(72%) rotate(0deg);
-      }
+    .product-star {
+      animation:productFacetTurn 30s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes productGlint {
+      0%,100% { opacity:.07; transform:translateX(-36px); }
+      48%,55% { opacity:.56; transform:translateX(34px); }
+    }
+
+    @keyframes productFacetTurn {
+      to { transform:rotate(360deg); }
     }
 
     .orbit-label {
       position:relative;
       z-index:3;
-      width:82%;
+      width:76%;
       display:grid;
       place-items:center;
       gap:.14rem;
       text-align:center;
       pointer-events:none;
       text-shadow:
-        0 2px 12px rgba(0,0,0,.94),
-        0 0 10px rgba(0,28,90,.78),
+        0 2px 12px rgba(0,0,0,.95),
+        0 0 10px rgba(0,28,90,.80),
         0 0 2px rgba(255,255,255,.42);
     }
 
     .orbit-label b {
       display:block;
       color:rgba(255,244,216,.98);
-      font-size:clamp(.52rem,1.42vw,.76rem);
+      font-size:clamp(.54rem,1.46vw,.78rem);
       font-weight:950;
       letter-spacing:.07em;
       line-height:1.02;
@@ -898,8 +743,8 @@
       }
 
       .orbit-node {
-        width:clamp(6.2rem,15.5vw,8.7rem);
-        height:clamp(6.2rem,15.5vw,8.7rem);
+        width:clamp(6.4rem,16vw,8.9rem);
+        height:clamp(4.7rem,11.5vw,6.55rem);
       }
     }
 
@@ -954,17 +799,17 @@
 
       .orbit-center {
         grid-column:1 / -1;
-        width:8.9rem;
-        height:8.9rem;
+        width:9rem;
+        height:6.6rem;
         order:-2;
       }
 
       .orbit-node {
         width:6.35rem;
-        height:6.35rem;
+        height:4.7rem;
       }
 
-      .orbit-label b { font-size:.41rem; }
+      .orbit-label b { font-size:.42rem; }
       .orbit-label span { font-size:.31rem; }
 
       .orbit-center .orbit-label b { font-size:.64rem; }
@@ -983,7 +828,7 @@
 
       .orbit-node {
         width:5.95rem;
-        height:5.95rem;
+        height:4.38rem;
       }
 
       .orbit-label b { font-size:.37rem; }
@@ -991,7 +836,7 @@
 
       .orbit-center {
         width:8.25rem;
-        height:8.25rem;
+        height:6.05rem;
       }
     }
 
@@ -1004,11 +849,212 @@
         animation-iteration-count:1!important;
         transition-duration:.01ms!important;
       }
+
+      .product-gem-core,
+      .product-glint,
+      .product-star,
+      .orbit-stage::before,
+      .orbit-stage::after,
+      .orbit-center,
+      .orbit-node {
+        animation:none!important;
+      }
     }
   </style>
 </head>
 
 <body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="productGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#fff8dc" stop-opacity=".92"/>
+        <stop offset=".13" stop-color="#dff5ff" stop-opacity=".70"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".56"/>
+        <stop offset=".48" stop-color="#2478ff" stop-opacity=".40"/>
+        <stop offset=".66" stop-color="#f3c86f" stop-opacity=".24"/>
+        <stop offset="1" stop-color="#020816" stop-opacity=".94"/>
+      </linearGradient>
+
+      <linearGradient id="productGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".90"/>
+        <stop offset=".34" stop-color="#eaf7ff" stop-opacity=".46"/>
+        <stop offset=".68" stop-color="#fff0a3" stop-opacity=".18"/>
+        <stop offset="1" stop-color="#8dd8ff" stop-opacity=".10"/>
+      </linearGradient>
+
+      <linearGradient id="productGemDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".20"/>
+        <stop offset=".62" stop-color="#f3c86f" stop-opacity=".13"/>
+        <stop offset="1" stop-color="#020716" stop-opacity=".66"/>
+      </linearGradient>
+
+      <radialGradient id="productGemTableGlow" cx="50%" cy="38%" r="64%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".56"/>
+        <stop offset=".28" stop-color="#8dd8ff" stop-opacity=".28"/>
+        <stop offset=".58" stop-color="#ffe8a3" stop-opacity=".12"/>
+        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="productGemGlint" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#ffffff" stop-opacity=".84"/>
+        <stop offset=".52" stop-color="#fff0a3" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="productGemGlow" x="-42%" y="-50%" width="184%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.42 0 0 0 0.08
+            0 .58 0 0 0.14
+            0 0 1.00 0 0.28
+            0 0 0 0.52 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="productOrganicGemA" viewBox="0 0 220 160">
+        <g filter="url(#productGemGlow)">
+          <path d="M108 4 L146 12 L184 39 L209 76 L188 108 L147 139 L111 155 L69 136 L27 105 L12 73 L39 37 L77 14 Z" fill="url(#productGemBody)" stroke="rgba(235,248,255,.58)" stroke-width="1.35"/>
+          <path d="M108 4 L146 12 L130 38 L109 30 L87 39 L77 14 Z" fill="url(#productGemAir)" opacity=".84"/>
+          <path d="M77 14 L87 39 L61 58 L39 37 Z" fill="rgba(255,255,255,.23)"/>
+          <path d="M146 12 L130 38 L159 60 L184 39 Z" fill="rgba(255,255,255,.15)"/>
+          <path d="M39 37 L61 58 L53 83 L12 73 Z" fill="rgba(141,216,255,.12)"/>
+          <path d="M184 39 L159 60 L166 81 L209 76 Z" fill="rgba(243,200,111,.12)"/>
+          <path d="M87 39 L109 30 L130 38 L159 60 L148 83 L110 101 L72 83 L61 58 Z" fill="url(#productGemTableGlow)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
+          <path d="M12 73 L53 83 L69 136 L27 105 Z" fill="rgba(141,216,255,.14)"/>
+          <path d="M209 76 L166 81 L147 139 L188 108 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M53 83 L72 83 L111 155 L69 136 Z" fill="rgba(2,8,24,.40)"/>
+          <path d="M166 81 L148 83 L111 155 L147 139 Z" fill="rgba(243,200,111,.10)"/>
+          <path d="M72 83 L110 101 L111 155 Z" fill="url(#productGemDepth)" opacity=".76"/>
+          <path d="M148 83 L110 101 L111 155 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M108 4 L111 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
+          <path d="M12 73 L209 76" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
+          <path d="M39 37 L188 108" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M184 39 L27 105" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M77 14 L110 101 L146 12" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
+          <path d="M39 37 L110 101 L184 39" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M27 105 L110 101 L188 108" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
+          <g class="product-star" opacity=".82">
+            <path d="M109 27 L116 70 L110 106 L103 70 Z" fill="rgba(255,255,255,.27)"/>
+            <path d="M61 58 L105 72 L159 60 L116 79 Z" fill="rgba(255,255,255,.16)"/>
+            <path d="M72 83 L105 75 L148 83 L114 92 Z" fill="rgba(141,216,255,.13)"/>
+            <path d="M110 101 L126 81 L148 83 L129 96 Z" fill="rgba(255,255,255,.13)"/>
+            <path d="M110 101 L94 81 L72 83 L91 96 Z" fill="rgba(243,200,111,.08)"/>
+          </g>
+          <path class="product-glint" d="M33 118 L176 22 L188 38 L48 130 Z" fill="url(#productGemGlint)"/>
+        </g>
+      </symbol>
+
+      <symbol id="productOrganicGemB" viewBox="0 0 220 160">
+        <g filter="url(#productGemGlow)">
+          <path d="M114 5 L151 17 L188 44 L203 78 L178 114 L137 142 L101 153 L62 132 L24 99 L15 64 L48 31 L84 11 Z" fill="url(#productGemBody)" stroke="rgba(235,248,255,.56)" stroke-width="1.35"/>
+          <path d="M114 5 L151 17 L132 42 L112 31 L91 37 L84 11 Z" fill="url(#productGemAir)" opacity=".82"/>
+          <path d="M84 11 L91 37 L67 61 L48 31 Z" fill="rgba(255,255,255,.22)"/>
+          <path d="M151 17 L132 42 L158 65 L188 44 Z" fill="rgba(255,255,255,.16)"/>
+          <path d="M48 31 L67 61 L56 84 L15 64 Z" fill="rgba(141,216,255,.12)"/>
+          <path d="M188 44 L158 65 L162 88 L203 78 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M91 37 L112 31 L132 42 L158 65 L144 89 L105 101 L70 84 L67 61 Z" fill="url(#productGemTableGlow)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
+          <path d="M15 64 L56 84 L62 132 L24 99 Z" fill="rgba(141,216,255,.14)"/>
+          <path d="M203 78 L162 88 L137 142 L178 114 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M56 84 L70 84 L101 153 L62 132 Z" fill="rgba(2,8,24,.42)"/>
+          <path d="M162 88 L144 89 L101 153 L137 142 Z" fill="rgba(243,200,111,.10)"/>
+          <path d="M70 84 L105 101 L101 153 Z" fill="url(#productGemDepth)" opacity=".76"/>
+          <path d="M144 89 L105 101 L101 153 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M114 5 L101 153" stroke="rgba(255,255,255,.32)" stroke-width="1.1"/>
+          <path d="M15 64 L203 78" stroke="rgba(255,255,255,.26)" stroke-width="1.05"/>
+          <path d="M48 31 L178 114" stroke="rgba(255,255,255,.15)" stroke-width=".9"/>
+          <path d="M188 44 L24 99" stroke="rgba(255,255,255,.15)" stroke-width=".9"/>
+          <path d="M84 11 L105 101 L151 17" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
+          <path d="M48 31 L105 101 L188 44" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M24 99 L105 101 L178 114" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
+          <g class="product-star" opacity=".80">
+            <path d="M112 30 L116 73 L106 106 L102 72 Z" fill="rgba(255,255,255,.26)"/>
+            <path d="M67 61 L104 74 L158 65 L116 81 Z" fill="rgba(255,255,255,.15)"/>
+            <path d="M70 84 L104 77 L144 89 L112 93 Z" fill="rgba(141,216,255,.13)"/>
+            <path d="M105 101 L126 83 L144 89 L126 98 Z" fill="rgba(255,255,255,.13)"/>
+            <path d="M105 101 L94 82 L70 84 L88 97 Z" fill="rgba(243,200,111,.08)"/>
+          </g>
+          <path class="product-glint" d="M42 122 L179 30 L190 47 L54 133 Z" fill="url(#productGemGlint)"/>
+        </g>
+      </symbol>
+
+      <symbol id="productOrganicGemC" viewBox="0 0 220 160">
+        <g filter="url(#productGemGlow)">
+          <path d="M103 4 L139 11 L177 34 L210 70 L196 104 L156 136 L118 154 L74 143 L33 112 L9 79 L31 42 L68 15 Z" fill="url(#productGemBody)" stroke="rgba(235,248,255,.56)" stroke-width="1.35"/>
+          <path d="M103 4 L139 11 L128 36 L106 29 L86 42 L68 15 Z" fill="url(#productGemAir)" opacity=".82"/>
+          <path d="M68 15 L86 42 L59 60 L31 42 Z" fill="rgba(255,255,255,.22)"/>
+          <path d="M139 11 L128 36 L155 57 L177 34 Z" fill="rgba(255,255,255,.16)"/>
+          <path d="M31 42 L59 60 L54 84 L9 79 Z" fill="rgba(141,216,255,.12)"/>
+          <path d="M177 34 L155 57 L166 79 L210 70 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M86 42 L106 29 L128 36 L155 57 L150 82 L115 104 L75 88 L59 60 Z" fill="url(#productGemTableGlow)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
+          <path d="M9 79 L54 84 L74 143 L33 112 Z" fill="rgba(141,216,255,.14)"/>
+          <path d="M210 70 L166 79 L156 136 L196 104 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M54 84 L75 88 L118 154 L74 143 Z" fill="rgba(2,8,24,.42)"/>
+          <path d="M166 79 L150 82 L118 154 L156 136 Z" fill="rgba(243,200,111,.10)"/>
+          <path d="M75 88 L115 104 L118 154 Z" fill="url(#productGemDepth)" opacity=".76"/>
+          <path d="M150 82 L115 104 L118 154 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M103 4 L118 154" stroke="rgba(255,255,255,.32)" stroke-width="1.1"/>
+          <path d="M9 79 L210 70" stroke="rgba(255,255,255,.26)" stroke-width="1.05"/>
+          <path d="M31 42 L196 104" stroke="rgba(255,255,255,.15)" stroke-width=".9"/>
+          <path d="M177 34 L33 112" stroke="rgba(255,255,255,.15)" stroke-width=".9"/>
+          <path d="M68 15 L115 104 L139 11" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
+          <path d="M31 42 L115 104 L177 34" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M33 112 L115 104 L196 104" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
+          <g class="product-star" opacity=".80">
+            <path d="M106 29 L119 72 L115 108 L103 72 Z" fill="rgba(255,255,255,.26)"/>
+            <path d="M59 60 L105 75 L155 57 L119 82 Z" fill="rgba(255,255,255,.15)"/>
+            <path d="M75 88 L108 80 L150 82 L121 94 Z" fill="rgba(141,216,255,.13)"/>
+            <path d="M115 104 L128 82 L150 82 L132 98 Z" fill="rgba(255,255,255,.13)"/>
+            <path d="M115 104 L95 85 L75 88 L92 100 Z" fill="rgba(243,200,111,.08)"/>
+          </g>
+          <path class="product-glint" d="M29 116 L168 19 L184 35 L45 131 Z" fill="url(#productGemGlint)"/>
+        </g>
+      </symbol>
+
+      <symbol id="productOrganicGemD" viewBox="0 0 220 160">
+        <g filter="url(#productGemGlow)">
+          <path d="M112 6 L153 15 L186 37 L205 73 L185 111 L142 143 L105 154 L66 139 L28 109 L12 77 L36 36 L82 12 Z" fill="url(#productGemBody)" stroke="rgba(235,248,255,.56)" stroke-width="1.35"/>
+          <path d="M112 6 L153 15 L132 39 L111 30 L90 37 L82 12 Z" fill="url(#productGemAir)" opacity=".82"/>
+          <path d="M82 12 L90 37 L63 59 L36 36 Z" fill="rgba(255,255,255,.22)"/>
+          <path d="M153 15 L132 39 L160 58 L186 37 Z" fill="rgba(255,255,255,.16)"/>
+          <path d="M36 36 L63 59 L55 83 L12 77 Z" fill="rgba(141,216,255,.12)"/>
+          <path d="M186 37 L160 58 L165 84 L205 73 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M90 37 L111 30 L132 39 L160 58 L145 86 L108 102 L71 83 L63 59 Z" fill="url(#productGemTableGlow)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
+          <path d="M12 77 L55 83 L66 139 L28 109 Z" fill="rgba(141,216,255,.14)"/>
+          <path d="M205 73 L165 84 L142 143 L185 111 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M55 83 L71 83 L105 154 L66 139 Z" fill="rgba(2,8,24,.42)"/>
+          <path d="M165 84 L145 86 L105 154 L142 143 Z" fill="rgba(243,200,111,.10)"/>
+          <path d="M71 83 L108 102 L105 154 Z" fill="url(#productGemDepth)" opacity=".76"/>
+          <path d="M145 86 L108 102 L105 154 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M112 6 L105 154" stroke="rgba(255,255,255,.32)" stroke-width="1.1"/>
+          <path d="M12 77 L205 73" stroke="rgba(255,255,255,.26)" stroke-width="1.05"/>
+          <path d="M36 36 L185 111" stroke="rgba(255,255,255,.15)" stroke-width=".9"/>
+          <path d="M186 37 L28 109" stroke="rgba(255,255,255,.15)" stroke-width=".9"/>
+          <path d="M82 12 L108 102 L153 15" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
+          <path d="M36 36 L108 102 L186 37" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M28 109 L108 102 L185 111" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
+          <g class="product-star" opacity=".80">
+            <path d="M111 30 L117 72 L108 107 L102 72 Z" fill="rgba(255,255,255,.26)"/>
+            <path d="M63 59 L105 74 L160 58 L116 82 Z" fill="rgba(255,255,255,.15)"/>
+            <path d="M71 83 L105 77 L145 86 L113 94 Z" fill="rgba(141,216,255,.13)"/>
+            <path d="M108 102 L126 83 L145 86 L126 99 Z" fill="rgba(255,255,255,.13)"/>
+            <path d="M108 102 L94 83 L71 83 L89 98 Z" fill="rgba(243,200,111,.08)"/>
+          </g>
+          <path class="product-glint" d="M36 120 L180 24 L192 40 L50 132 Z" fill="url(#productGemGlint)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
   <a class="skip" href="#main">Skip to Products</a>
 
   <div class="shell">
@@ -1070,57 +1116,52 @@
           data-visible-orbit-is-runtime-mount="false"
           aria-label="Product orbit: one message and eight doors"
         >
-          <div class="orbit-center" aria-hidden="true" style="--inc-a-x:24%;--inc-a-y:66%;--inc-b-x:69%;--inc-b-y:33%;--vein-a:19deg;--vein-b:139deg;">
-            <span class="sapphire-shell"></span>
-            <span class="mineral-inclusion"></span>
+          <div class="orbit-center" aria-hidden="true" style="--delay:-.1s;--tilt-a:-1.4deg;--tilt-b:1.8deg;">
+            <span class="product-gem-core">
+              <svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                <use href="#productOrganicGemA"></use>
+              </svg>
+            </span>
             <span class="orbit-label"><b>Products</b><span>One Message · Eight Doors</span></span>
           </div>
 
-          <a class="orbit-node gem-arch" style="--x:50%;--y:13%;--delay:-.2s;--inc-a-x:31%;--inc-a-y:67%;--inc-b-x:72%;--inc-b-y:37%;--vein-a:31deg;--vein-b:151deg;" href="/products/archcoin/" aria-label="Open ARCHCOIN">
-            <span class="sapphire-shell" aria-hidden="true"></span>
-            <span class="mineral-inclusion" aria-hidden="true"></span>
+          <a class="orbit-node gem-arch" style="--x:50%;--y:13%;--delay:-.2s;--tilt-a:-2.2deg;--tilt-b:1.4deg;" href="/products/archcoin/" aria-label="Open ARCHCOIN">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemB"></use></svg></span>
             <span class="orbit-label"><b>ARCHCOIN</b><span>Trace</span></span>
           </a>
 
-          <a class="orbit-node gem-flags" style="--x:73%;--y:23%;--delay:-.7s;--inc-a-x:22%;--inc-a-y:55%;--inc-b-x:65%;--inc-b-y:29%;--vein-a:62deg;--vein-b:124deg;" href="/products/five-flags/" aria-label="Open Five Flags">
-            <span class="sapphire-shell" aria-hidden="true"></span>
-            <span class="mineral-inclusion" aria-hidden="true"></span>
+          <a class="orbit-node gem-flags" style="--x:73%;--y:23%;--delay:-.7s;--tilt-a:1.5deg;--tilt-b:-2.3deg;" href="/products/five-flags/" aria-label="Open Five Flags">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemC"></use></svg></span>
             <span class="orbit-label"><b>Five Flags</b><span>Signals</span></span>
           </a>
 
-          <a class="orbit-node gem-aai" style="--x:86%;--y:50%;--delay:-1.2s;--inc-a-x:37%;--inc-a-y:71%;--inc-b-x:74%;--inc-b-y:46%;--vein-a:18deg;--vein-b:164deg;" href="/products/on-your-side-ai/" aria-label="Open On Your Side AI">
-            <span class="sapphire-shell" aria-hidden="true"></span>
-            <span class="mineral-inclusion" aria-hidden="true"></span>
+          <a class="orbit-node gem-aai" style="--x:86%;--y:50%;--delay:-1.2s;--tilt-a:-1.6deg;--tilt-b:2.6deg;" href="/products/on-your-side-ai/" aria-label="Open On Your Side AI">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemD"></use></svg></span>
             <span class="orbit-label"><b>AAI</b><span>Support</span></span>
           </a>
 
-          <a class="orbit-node gem-education" style="--x:73%;--y:77%;--delay:-1.7s;--inc-a-x:28%;--inc-a-y:62%;--inc-b-x:57%;--inc-b-y:31%;--vein-a:44deg;--vein-b:132deg;" href="/products/education/" aria-label="Open Education">
-            <span class="sapphire-shell" aria-hidden="true"></span>
-            <span class="mineral-inclusion" aria-hidden="true"></span>
+          <a class="orbit-node gem-education" style="--x:73%;--y:77%;--delay:-1.7s;--tilt-a:1.9deg;--tilt-b:-1.6deg;" href="/products/education/" aria-label="Open Education">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemA"></use></svg></span>
             <span class="orbit-label"><b>Education</b><span>Learning</span></span>
           </a>
 
-          <a class="orbit-node gem-nutrition" style="--x:50%;--y:87%;--delay:-2.2s;--inc-a-x:35%;--inc-a-y:74%;--inc-b-x:76%;--inc-b-y:39%;--vein-a:27deg;--vein-b:144deg;" href="/products/nutrition/" aria-label="Open Nutrition">
-            <span class="sapphire-shell" aria-hidden="true"></span>
-            <span class="mineral-inclusion" aria-hidden="true"></span>
+          <a class="orbit-node gem-nutrition" style="--x:50%;--y:87%;--delay:-2.2s;--tilt-a:-2deg;--tilt-b:2deg;" href="/products/nutrition/" aria-label="Open Nutrition">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemB"></use></svg></span>
             <span class="orbit-label"><b>Nutrition</b><span>Baseline</span></span>
           </a>
 
-          <a class="orbit-node gem-sean" style="--x:27%;--y:77%;--delay:-2.7s;--inc-a-x:25%;--inc-a-y:57%;--inc-b-x:63%;--inc-b-y:44%;--vein-a:57deg;--vein-b:118deg;" href="/meet-sean-mansfield/" aria-label="Open Meet Sean">
-            <span class="sapphire-shell" aria-hidden="true"></span>
-            <span class="mineral-inclusion" aria-hidden="true"></span>
+          <a class="orbit-node gem-sean" style="--x:27%;--y:77%;--delay:-2.7s;--tilt-a:1.2deg;--tilt-b:-2.2deg;" href="/meet-sean-mansfield/" aria-label="Open Meet Sean">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemC"></use></svg></span>
             <span class="orbit-label"><b>Meet Sean</b><span>Voice</span></span>
           </a>
 
-          <a class="orbit-node gem-summits" style="--x:14%;--y:50%;--delay:-3.2s;--inc-a-x:38%;--inc-a-y:69%;--inc-b-x:70%;--inc-b-y:31%;--vein-a:35deg;--vein-b:157deg;" href="/nine-summits/" aria-label="Open Nine Summits">
-            <span class="sapphire-shell" aria-hidden="true"></span>
-            <span class="mineral-inclusion" aria-hidden="true"></span>
+          <a class="orbit-node gem-summits" style="--x:14%;--y:50%;--delay:-3.2s;--tilt-a:-1.3deg;--tilt-b:2.4deg;" href="/nine-summits/" aria-label="Open Nine Summits">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemD"></use></svg></span>
             <span class="orbit-label"><b>Nine Summits</b><span>Climb</span></span>
           </a>
 
-          <a class="orbit-node gem-book" style="--x:27%;--y:23%;--delay:-3.7s;--inc-a-x:21%;--inc-a-y:64%;--inc-b-x:67%;--inc-b-y:36%;--vein-a:23deg;--vein-b:137deg;" href="/nine-summits-of-love/" aria-label="Open the Book">
-            <span class="sapphire-shell" aria-hidden="true"></span>
-            <span class="mineral-inclusion" aria-hidden="true"></span>
+          <a class="orbit-node gem-book" style="--x:27%;--y:23%;--delay:-3.7s;--tilt-a:2.3deg;--tilt-b:-1.5deg;" href="/nine-summits-of-love/" aria-label="Open the Book">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemA"></use></svg></span>
             <span class="orbit-label"><b>Book</b><span>Long Form</span></span>
           </a>
         </div>
@@ -1264,23 +1305,25 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-PRODUCTS_ORGANIC_GEM_ORBIT_RUNTIME_MOUNT_SEPARATION_TNT_v6
-previous=PRODUCTS_ORGANIC_DIGITAL_GEM_RECEPTION_TNT_v5
+PRODUCTS_SVG_ORGANIC_DIGITAL_GEM_ORBIT_TNT_v7
+previous=PRODUCTS_ORGANIC_GEM_ORBIT_RUNTIME_MOUNT_SEPARATION_TNT_v6
 route=/products/
 page=products
 role=product_wing
-public_frame=organic_digital_gem_product_orbit_runtime_separated
+public_frame=svg_organic_digital_gem_product_orbit
 runtime_mount_separation=true
 visible_orbit_is_runtime_mount=false
-visible_orbit_owns=organic_digital_gem_product_orbit
+visible_orbit_owns=svg_organic_digital_gem_product_orbit
 hidden_runtime_mount=/products/#productsRuntimeMount
 runtime_may_not_overwrite_visible_orbit=true
 public_cta=Explore_the_Eight_Doors
 core_message=The_message_becomes_usable_here.
 promise=Always_on_your_side_Never_in_control.
-digital_gem_standard=large_readable_non_repeating_organic_asymmetric_faceted_sapphire_objects
-organic_rule=Large_readable_gems_remain_but_each_gem_receives_organic_mineral_variation_through_asymmetric_silhouettes_uneven_off_axis_facet_fields_varied_light_positions_blue_black_silver_gold_mineral_depth_small_inclusions_and_stable_upright_labels.
-animation=gem_node_float,gem_gravity_turn,gem_light_sweep,orbit_turn,orbit_turn_reverse
+visual_engine_change=css_polygon_shell_removed_svg_gem_symbol_installed
+svg_gem_standard=nutrition_style_inline_svg_gem_body_with_crown_table_pavilion_depth_ridges_glint_and_rotating_internal_star
+organic_rule=Large_readable_gems_remain_but_the_body_uses_svg_facet_geometry_instead_of_repeated_css_shells.
+label_rule=labels_remain_upright_and_independent_from_gem_body_motion
+animation=gem_node_float,product_gem_breathe,product_glint,product_facet_turn,orbit_turn,orbit_turn_reverse
 runtime_rule=Runtime_is_allowed_to_serve_or_enhance_the_product_orbit_but_is_not_allowed_to_be_the_public_product_message.
 static_page_usable_without_js=true
 eight_doors_visible_without_runtime=true
@@ -1294,7 +1337,7 @@ visible_cache_keys=false
 visible_script_failure_text=false
 products_index_js_role=quiet_bridge_hidden_status_only
 products_runtime_js_role=enhancement_only_hidden_mount_only
-route_owns=products_public_page,organic_digital_gem_product_orbit,eight_doors,chamber_cards,public_copy,hidden_receipt
+route_owns=products_public_page,svg_organic_digital_gem_product_orbit,eight_doors,chamber_cards,public_copy,hidden_receipt
 route_does_not_own=runtime_as_public_message,gauges_logic,showroom_runtime,product_child_pages,heavy_runtime
 generated_image=false
 graphic_box=false
@@ -1304,12 +1347,12 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      PRODUCTS_ORGANIC_GEM_ORBIT_RUNTIME_MOUNT_SEPARATION_TNT_v6 · Products · Organic Digital Gem Orbit · Runtime Mount Separated.
+      PRODUCTS_SVG_ORGANIC_DIGITAL_GEM_ORBIT_TNT_v7 · Products · SVG Organic Digital Gem Orbit · Eight Doors.
     </footer>
   </div>
 
   <script>
-    window.DGB_PRODUCTS_PUBLIC_ORBIT_KEY = "PRODUCTS_ORGANIC_GEM_ORBIT_RUNTIME_MOUNT_SEPARATION_TNT_v6";
+    window.DGB_PRODUCTS_PUBLIC_ORBIT_KEY = "PRODUCTS_SVG_ORGANIC_DIGITAL_GEM_ORBIT_TNT_v7";
   </script>
   <script type="module" src="/products/index.js?v=PRODUCTS_PUBLIC_ORBIT_RUNTIME_DEMOTION_BRIDGE_TNT_v2"></script>
 </body>

@@ -2,92 +2,110 @@
 <html
   lang="en"
   data-route="/products/education/"
-  data-page="education"
-  data-version="G1-V1"
-  data-contract="EDUCATION_PRODUCT_CHAMBER_PUBLIC_LEARNING_TNT_v1"
-  data-status="active"
-  data-parent="/products/"
-  data-baseline="AUDRALIA_MANOR_CURRENT"
-  data-role="product-chamber"
-  data-product="education"
+  data-page="education-product-grandchild-practical-learning"
+  data-contract="EDUCATION_PRODUCT_GRANDCHILD_PRACTICAL_LEARNING_RENEWAL_TNT_v2"
+  data-previous-contract="EDUCATION_PRODUCT_CHAMBER_PUBLIC_LEARNING_TNT_v1"
+  data-parent-route="/products/"
+  data-grandparent-route="/"
+  data-role="product-grandchild"
+  data-product-chamber="education"
   data-product-type="practical-learning"
-  data-heavy-runtime-loaded="false"
+  data-core-principle="a-word-is-not-learned-until-it-can-be-used"
+  data-core-message="words-become-usable-when-they-can-move"
+  data-learning-loop="word-meaning-sentence-context-use"
+  data-learning-set="word-meaning-sentence-context-use"
+  data-animation-method="css-only"
+  data-orbit-animation="active"
+  data-label-gravity-lock="true"
+  data-js-required="false"
   data-generated-image="false"
   data-graphic-box="false"
+  data-heavy-runtime-loaded="false"
   data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
   <title>Education · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Education is a practical learning chamber for 1001-word traversal, usable fluency, plain meaning, sentence-building, context, and use."
+    content="Education is a practical learning chamber for turning words into working understanding: word, meaning, sentence, context, and use."
   >
 
   <style>
-    :root{
-      color-scheme:dark;
+    :root {
+      color-scheme: dark;
       --bg:#02040b;
       --ink:#fff4d8;
       --muted:rgba(230,238,255,.78);
-      --faint:rgba(230,238,255,.42);
+      --faint:rgba(230,238,255,.52);
       --gold:#f3c86f;
       --gold2:#ffe8a3;
-      --green:#8ff0c6;
       --blue:#8dd8ff;
-      --red:#ff8b8b;
+      --green:#8ff0c3;
+      --violet:#beaaff;
       --purple:#8f65ff;
-      --panel:rgba(9,15,31,.84);
+      --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
-      --shadow:0 32px 110px rgba(0,0,0,.46);
+      --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
+      --field-turn-duration:48s;
+      --orbit-duration:32s;
+      --gem-float-duration:6.6s;
+      --center-pulse-duration:7.2s;
+      --gem-cut:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
     }
 
-    *{box-sizing:border-box}
+    * { box-sizing:border-box; }
 
-    html{
+    html {
+      min-width:320px;
       min-height:100%;
       background:var(--bg);
       scroll-behavior:smooth;
+      overflow-x:hidden;
     }
 
-    body{
+    body {
       margin:0;
+      min-width:320px;
       min-height:100vh;
       color:var(--ink);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       line-height:1.5;
-      background:
-        radial-gradient(circle at 50% -8%,rgba(243,200,111,.22),transparent 28rem),
-        radial-gradient(circle at 10% 18%,rgba(143,101,255,.20),transparent 28rem),
-        radial-gradient(circle at 92% 30%,rgba(141,216,255,.14),transparent 28rem),
-        radial-gradient(circle at 50% 78%,rgba(143,101,255,.12),transparent 34rem),
-        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
       overflow-x:hidden;
+      background:
+        radial-gradient(circle at 50% -8%,rgba(243,200,111,.20),transparent 28rem),
+        radial-gradient(circle at 12% 18%,rgba(143,101,255,.20),transparent 28rem),
+        radial-gradient(circle at 88% 30%,rgba(141,216,255,.16),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(190,170,255,.12),transparent 34rem),
+        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
     }
 
-    body::before{
+    body::before {
       content:"";
       position:fixed;
       inset:0;
+      z-index:0;
       pointer-events:none;
       background-image:
         radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
         linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
+        linear-gradient(90deg,rgba(190,170,255,.045) 1px,transparent 1px);
       background-size:220px 260px,54px 54px,54px 54px;
-      opacity:.24;
+      opacity:.22;
       mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
 
-    body::after{
+    body::after {
       content:"";
       position:fixed;
       inset:-20%;
+      z-index:0;
       pointer-events:none;
       background:
         conic-gradient(from 90deg at 50% 50%,
@@ -99,13 +117,33 @@
           rgba(141,216,255,.07) 292deg,
           transparent 360deg);
       filter:blur(42px);
-      opacity:.58;
-      animation:auroraDrift 28s linear infinite;
+      opacity:.48;
+      animation:educationAuroraDrift 32s linear infinite;
     }
 
-    a{color:inherit;text-decoration:none}
+    @keyframes educationAuroraDrift {
+      from { transform:rotate(0deg) scale(1); }
+      to { transform:rotate(360deg) scale(1); }
+    }
 
-    .skip{
+    a { color:inherit; text-decoration:none; }
+
+    a:focus-visible,
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline:2px solid var(--gold);
+      outline-offset:4px;
+    }
+
+    .svg-defs {
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
+    }
+
+    .skip {
       position:absolute;
       left:-999px;
       top:8px;
@@ -117,9 +155,9 @@
       font-weight:950;
     }
 
-    .skip:focus{left:8px}
+    .skip:focus { left:8px; }
 
-    .shell{
+    .shell {
       position:relative;
       z-index:2;
       width:min(var(--max),calc(100% - 28px));
@@ -127,7 +165,7 @@
       padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
     }
 
-    .topbar{
+    .topbar {
       display:grid;
       grid-template-columns:auto 1fr;
       align-items:center;
@@ -135,7 +173,7 @@
       padding:12px 0 18px;
     }
 
-    .brand{
+    .brand {
       display:grid;
       grid-template-columns:auto 1fr;
       align-items:center;
@@ -143,43 +181,45 @@
       min-width:260px;
     }
 
-    .brand-mark{
+    .brand-mark {
       width:4.2rem;
       height:4.2rem;
       display:grid;
       place-items:center;
-      border:1px solid rgba(243,200,111,.44);
-      border-radius:1.15rem;
+      border:1px solid rgba(190,170,255,.48);
       transform:rotate(45deg);
+      clip-path:var(--gem-cut);
       background:
-        radial-gradient(circle at 48% 22%,rgba(255,255,255,.24),transparent 42%),
-        radial-gradient(circle at 64% 76%,rgba(143,101,255,.42),transparent 58%),
-        linear-gradient(145deg,rgba(43,32,82,.95),rgba(5,8,20,.98));
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.28) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(143,101,255,.30),rgba(36,120,255,.20),rgba(243,200,111,.18),rgba(255,255,255,.28)),
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.32),transparent 42%),
+        linear-gradient(145deg,rgba(62,42,116,.95),rgba(5,8,20,.98));
       box-shadow:
         0 0 2rem rgba(143,101,255,.28),
         0 1.2rem 2.8rem rgba(0,0,0,.46),
         inset 0 1px 0 rgba(255,255,255,.16);
     }
 
-    .brand-mark span{
+    .brand-mark span {
       transform:rotate(-45deg);
       font-weight:950;
       letter-spacing:.04em;
       color:rgba(255,244,216,.98);
+      text-shadow:0 2px 10px rgba(0,0,0,.85);
     }
 
-    .brand-copy{
+    .brand-copy {
       display:grid;
       gap:.18rem;
     }
 
-    .brand-copy strong{
+    .brand-copy strong {
       font-size:clamp(1.08rem,3vw,1.7rem);
       line-height:1;
       letter-spacing:-.045em;
     }
 
-    .brand-copy span{
+    .brand-copy span {
       color:var(--muted);
       font-size:.74rem;
       font-weight:950;
@@ -187,14 +227,14 @@
       text-transform:uppercase;
     }
 
-    .nav{
+    .nav {
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
       gap:.48rem;
     }
 
-    .nav a{
+    .nav a {
       min-height:2.25rem;
       display:inline-flex;
       align-items:center;
@@ -211,13 +251,13 @@
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .nav a[aria-current="page"]{
+    .nav a[aria-current="page"] {
       border-color:rgba(243,200,111,.88);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
-    .panel{
+    .panel {
       border:1px solid var(--line);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
@@ -229,9 +269,9 @@
       overflow:hidden;
     }
 
-    .hero{
+    .hero {
       position:relative;
-      min-height:clamp(25rem,48vw,36rem);
+      min-height:clamp(23rem,42vw,34rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -240,27 +280,32 @@
       isolation:isolate;
     }
 
-    .hero::before{
+    .hero::before {
       content:"";
       position:absolute;
       right:clamp(1rem,6vw,5.5rem);
       top:50%;
       z-index:0;
-      width:clamp(10rem,27vw,20rem);
-      height:clamp(10rem,27vw,20rem);
-      border:1px solid rgba(243,200,111,.20);
+      width:clamp(9rem,25vw,18rem);
+      height:clamp(9rem,25vw,18rem);
+      border:1px solid rgba(190,170,255,.22);
       border-radius:2.9rem;
       transform:translateY(-50%) rotate(45deg);
       background:
         radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
-        radial-gradient(circle at 50% 72%,rgba(143,101,255,.16),transparent 62%),
+        radial-gradient(circle at 50% 72%,rgba(143,101,255,.18),transparent 62%),
         linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
-      animation:heroDiamond 8s ease-in-out infinite;
+      animation:anchorPulse 8s ease-in-out infinite;
       pointer-events:none;
-      opacity:.52;
+      opacity:.54;
     }
 
-    .kicker{
+    @keyframes anchorPulse {
+      0%,100% { opacity:.42; filter:brightness(.95); }
+      50% { opacity:.60; filter:brightness(1.1); }
+    }
+
+    .kicker {
       width:fit-content;
       display:inline-flex;
       align-items:center;
@@ -278,31 +323,31 @@
       z-index:2;
     }
 
-    .kicker::before{
+    .kicker::before {
       content:"";
       width:.72rem;
       height:.72rem;
       border-radius:.18rem;
       transform:rotate(45deg);
-      background:linear-gradient(135deg,var(--gold2),var(--gold));
-      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
+      background:linear-gradient(135deg,var(--violet),var(--gold));
+      box-shadow:0 0 1.1rem rgba(190,170,255,.46);
     }
 
-    h1{
+    h1 {
       margin:0;
-      max-width:950px;
-      font-size:clamp(3.1rem,10vw,7.1rem);
-      line-height:.84;
-      letter-spacing:-.105em;
+      max-width:1000px;
+      font-size:clamp(3rem,9vw,6.8rem);
+      line-height:.86;
+      letter-spacing:-.102em;
       text-wrap:balance;
       position:relative;
       z-index:2;
     }
 
-    h2{
+    h2 {
       margin:0;
       color:var(--gold);
-      font-size:clamp(1.45rem,4.7vw,2.85rem);
+      font-size:clamp(1.45rem,4.7vw,2.65rem);
       line-height:.98;
       letter-spacing:-.07em;
       text-wrap:balance;
@@ -310,29 +355,42 @@
       z-index:2;
     }
 
-    h3{
-      margin:0;
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.05rem,3vw,1.34rem);
-      line-height:1.08;
-      letter-spacing:-.035em;
-    }
-
-    p{
+    p {
       margin:0;
       color:var(--muted);
       font-size:clamp(.98rem,2.7vw,1.16rem);
       line-height:1.55;
     }
 
-    .lead{
-      max-width:900px;
+    .lead {
+      max-width:910px;
       position:relative;
       z-index:2;
     }
 
-    .quote{
-      max-width:880px;
+    .subline {
+      max-width:920px;
+      color:rgba(255,244,216,.90);
+      font-size:clamp(1.08rem,2.8vw,1.34rem);
+      font-weight:850;
+      position:relative;
+      z-index:2;
+    }
+
+    .principle {
+      max-width:980px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(190,170,255,.28);
+      border-radius:1.2rem;
+      color:rgba(236,229,255,.96);
+      background:rgba(143,101,255,.12);
+      font-weight:900;
+      position:relative;
+      z-index:2;
+    }
+
+    .quote {
+      max-width:980px;
       padding:1rem 1.1rem;
       border:1px solid rgba(243,200,111,.22);
       border-radius:1.2rem;
@@ -343,7 +401,7 @@
       z-index:2;
     }
 
-    .actions{
+    .actions {
       display:flex;
       flex-wrap:wrap;
       gap:.62rem;
@@ -352,7 +410,7 @@
       z-index:2;
     }
 
-    .button{
+    .button {
       min-height:2.65rem;
       display:inline-flex;
       align-items:center;
@@ -371,270 +429,325 @@
     }
 
     .button:hover,
-    .button:focus-visible{
+    .button:focus-visible {
       transform:translateY(-2px);
       border-color:rgba(243,200,111,.62);
       outline:none;
     }
 
-    .button.gold,
-    .button.primary{
+    .button.gold {
       border-color:rgba(243,200,111,.9);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
       box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
     }
 
-    .section{
+    .button.violet {
+      border-color:rgba(190,170,255,.46);
+      color:var(--violet);
+      background:rgba(143,101,255,.08);
+    }
+
+    .section {
       margin-top:1.15rem;
       padding:clamp(1rem,3vw,1.45rem);
       display:grid;
       gap:1.05rem;
     }
 
-    .learning-field{
+    .education-stage {
       position:relative;
-      min-height:clamp(36rem,64vw,52rem);
-      overflow:hidden;
-      border:1px solid rgba(243,200,111,.18);
-      border-radius:clamp(1.25rem,5vw,2.2rem);
-      background:
-        radial-gradient(circle at 50% 48%,rgba(243,200,111,.075),transparent 22%),
-        radial-gradient(circle at 50% 48%,rgba(143,101,255,.16),transparent 54%),
-        radial-gradient(circle at 50% 48%,rgba(141,216,255,.08),transparent 72%),
-        rgba(255,255,255,.018);
-      padding:clamp(1.15rem,3vw,2rem);
+      min-height:clamp(32rem,62vw,45rem);
       display:grid;
       place-items:center;
+      overflow:hidden;
       isolation:isolate;
-    }
-
-    .learning-field::before{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      z-index:0;
-      width:clamp(21rem,56vw,42rem);
-      height:clamp(21rem,56vw,42rem);
-      border:1px solid rgba(215,194,255,.16);
-      border-radius:4rem;
-      transform:translate(-50%,-50%) rotate(45deg);
-      box-shadow:
-        0 0 0 clamp(4rem,9vw,7rem) rgba(143,101,255,.035),
-        0 0 0 clamp(8rem,18vw,13rem) rgba(243,200,111,.024),
-        inset 0 0 3rem rgba(143,101,255,.06);
-      animation:fieldTurn 46s linear infinite;
-      pointer-events:none;
-    }
-
-    .learning-field::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:7%;
-      bottom:7%;
-      z-index:0;
-      width:1px;
-      transform:translateX(-50%);
-      background:linear-gradient(180deg,transparent,rgba(243,200,111,.32),rgba(141,216,255,.18),transparent);
-      opacity:.72;
-      pointer-events:none;
-    }
-
-    .axis-line{
-      position:absolute;
-      left:7%;
-      right:7%;
-      top:50%;
-      z-index:0;
-      height:1px;
-      background:linear-gradient(90deg,transparent,rgba(141,216,255,.22),rgba(243,200,111,.22),transparent);
-      opacity:.58;
-      pointer-events:none;
-    }
-
-    .learning-anchor{
-      position:absolute;
-      left:50%;
-      top:50%;
-      z-index:1;
-      width:clamp(13rem,30vw,22rem);
-      height:clamp(13rem,30vw,22rem);
-      border:1px solid rgba(243,200,111,.20);
-      border-radius:4rem;
+      border:1px solid rgba(184,205,255,.13);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        radial-gradient(circle at 48% 20%,rgba(255,255,255,.08),transparent 42%),
-        radial-gradient(circle at 54% 68%,rgba(143,101,255,.22),transparent 58%),
-        linear-gradient(145deg,rgba(33,29,58,.50),rgba(5,9,20,.55));
-      box-shadow:
-        0 1.7rem 4.2rem rgba(0,0,0,.20),
-        0 0 3.6rem rgba(143,101,255,.18),
-        inset 0 1px 0 rgba(255,255,255,.08);
-      transform:translate(-50%,-50%) rotate(45deg);
-      opacity:.30;
-      pointer-events:none;
-      animation:anchorPulse 8s ease-in-out infinite;
+        radial-gradient(circle at 50% 42%,rgba(143,101,255,.15),transparent 20rem),
+        radial-gradient(circle at 50% 52%,rgba(36,120,255,.10),transparent 25rem),
+        linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.92));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .learning-anchor-label{
+    .education-stage::before,
+    .education-stage::after {
+      content:"";
       position:absolute;
       left:50%;
       top:50%;
-      z-index:2;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+    }
+
+    .education-stage::before {
+      width:min(80%,34rem);
+      height:min(80%,34rem);
+      border:1px solid rgba(190,170,255,.13);
+      background:
+        conic-gradient(
+          from 0deg,
+          transparent 0deg,
+          rgba(190,170,255,.13) 28deg,
+          transparent 58deg,
+          rgba(141,216,255,.10) 108deg,
+          transparent 154deg,
+          rgba(243,200,111,.11) 214deg,
+          transparent 270deg,
+          rgba(143,101,255,.12) 320deg,
+          transparent 360deg
+        );
+      box-shadow:0 0 3rem rgba(143,101,255,.12);
+      opacity:.84;
+      animation:educationFieldTurn var(--field-turn-duration) linear infinite;
+    }
+
+    .education-stage::after {
+      width:min(52%,22rem);
+      height:min(52%,22rem);
+      border:1px solid rgba(36,120,255,.15);
+      box-shadow:
+        inset 0 0 3rem rgba(36,120,255,.035),
+        0 0 2.4rem rgba(190,170,255,.08);
+      animation:educationInnerFieldBreathe 8s ease-in-out infinite;
+    }
+
+    @keyframes educationFieldTurn {
+      to { transform:translate(-50%,-50%) rotate(360deg); }
+    }
+
+    @keyframes educationInnerFieldBreathe {
+      0%,100% { opacity:.54; filter:brightness(.94); }
+      50% { opacity:.86; filter:brightness(1.12); }
+    }
+
+    .center-gem {
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:5;
+      width:clamp(10.5rem,24vw,15rem);
+      height:clamp(7.7rem,17vw,10.9rem);
       transform:translate(-50%,-50%);
       display:grid;
-      gap:.2rem;
+      place-items:center;
       text-align:center;
       pointer-events:none;
-      opacity:.78;
     }
 
-    .learning-anchor-label strong{
-      color:rgba(255,244,216,.94);
-      font-size:clamp(1rem,3vw,1.65rem);
-      line-height:1;
-      font-weight:950;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-      text-shadow:0 .25rem 1.4rem rgba(0,0,0,.6);
+    .education-orbit {
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:4;
+      width:min(80%,34rem);
+      height:min(80%,34rem);
+      border-radius:999px;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+      animation:educationOrbitTurn var(--orbit-duration) linear infinite;
+      transform-origin:50% 50%;
+      will-change:transform;
     }
 
-    .learning-anchor-label span{
-      color:rgba(230,238,255,.72);
-      font-size:.78rem;
-      letter-spacing:.04em;
+    @keyframes educationOrbitTurn {
+      from { transform:translate(-50%,-50%) rotate(0deg); }
+      to { transform:translate(-50%,-50%) rotate(360deg); }
     }
 
-    .learning-grid{
-      position:relative;
-      z-index:5;
-      width:min(100%,880px);
-      min-height:clamp(30rem,52vw,42rem);
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      grid-template-rows:repeat(3,minmax(0,1fr));
-      gap:clamp(.8rem,2vw,1.1rem);
-      align-items:center;
-      justify-items:center;
-      padding:clamp(.5rem,2vw,1rem);
-    }
-
-    .learning-node{
-      width:100%;
-      min-height:clamp(8rem,14vw,11.6rem);
+    .center-gem-core,
+    .education-gem-core,
+    .education-upright {
+      position:absolute;
+      inset:0;
       display:grid;
       place-items:center;
       text-align:center;
-      animation:nodeFloat 7s ease-in-out infinite;
-      animation-delay:var(--delay,0s);
+      transform-origin:50% 50%;
     }
 
-    .learning-node.word{grid-column:2;grid-row:1}
-    .learning-node.meaning{grid-column:1;grid-row:2}
-    .learning-node.sentence{grid-column:2;grid-row:2}
-    .learning-node.context{grid-column:3;grid-row:2}
-    .learning-node.use{grid-column:2;grid-row:3}
+    .center-gem-core {
+      animation:centerPulse var(--center-pulse-duration) ease-in-out infinite;
+    }
 
-    .learning-card{
+    @keyframes centerPulse {
+      0%,100% { transform:scale(1); filter:brightness(1); }
+      50% { transform:scale(1.035); filter:brightness(1.13); }
+    }
+
+    .education-point {
+      --angle:0deg;
+      --radius:-15rem;
+      --education-delay:0s;
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:clamp(7.4rem,16vw,9.4rem);
+      height:clamp(5.4rem,12vw,6.95rem);
+      margin-left:calc(clamp(7.4rem,16vw,9.4rem) / -2);
+      margin-top:calc(clamp(5.4rem,12vw,6.95rem) / -2);
       display:grid;
       place-items:center;
-      gap:.55rem;
-      width:100%;
+      text-align:center;
+      pointer-events:auto;
+      background:transparent;
+      border:0;
+      transform:
+        rotate(var(--angle))
+        translateY(var(--radius))
+        rotate(calc(-1 * var(--angle)));
+      transition:filter .18s ease,scale .18s ease;
+    }
+
+    .education-point .education-upright {
+      animation:educationLabelGravityLock var(--orbit-duration) linear infinite reverse;
+      will-change:transform;
+    }
+
+    @keyframes educationLabelGravityLock {
+      from { transform:rotate(0deg); }
+      to { transform:rotate(360deg); }
+    }
+
+    .education-point .education-gem-core {
+      animation:educationGemFloat var(--gem-float-duration) ease-in-out infinite;
+      animation-delay:var(--education-delay);
+    }
+
+    @keyframes educationGemFloat {
+      0%,100% { transform:translateY(0) scale(1); filter:brightness(1); }
+      50% { transform:translateY(-8px) scale(1.025); filter:brightness(1.12); }
+    }
+
+    .education-point:hover,
+    .education-point:focus-visible {
+      filter:brightness(1.12) saturate(1.08);
+      scale:1.045;
       outline:none;
     }
 
-    .diamond{
-      width:clamp(4.35rem,8vw,6.55rem);
-      height:clamp(4.35rem,8vw,6.55rem);
-      border:1px solid rgba(243,200,111,.64);
-      border-radius:1.25rem;
-      transform:rotate(45deg);
-      background:
-        radial-gradient(circle at 48% 20%,rgba(255,255,255,.20),transparent 42%),
-        radial-gradient(circle at 52% 70%,rgba(243,200,111,.14),transparent 58%),
-        linear-gradient(145deg,rgba(143,101,255,.62),rgba(6,10,22,.98));
-      box-shadow:
-        0 1rem 2rem rgba(0,0,0,.38),
-        0 0 2rem rgba(143,101,255,.34),
-        0 0 1.2rem rgba(243,200,111,.16),
-        inset 0 1px 0 rgba(255,255,255,.16);
-      position:relative;
-      transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease;
+    .education-point:hover .education-gem-core,
+    .education-point:focus-visible .education-gem-core {
+      animation-play-state:paused;
+      transform:translateY(-10px) scale(1.045);
+      filter:brightness(1.18);
     }
 
-    .diamond::before,
-    .diamond::after{
-      content:"";
+    .education-gem-svg {
       position:absolute;
-      inset:18%;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:.82rem;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      pointer-events:none;
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
+        drop-shadow(0 0 1.15rem rgba(143,101,255,.22))
+        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
     }
 
-    .diamond::after{
-      inset:34%;
-      border-color:rgba(243,200,111,.16);
+    .center-gem .education-gem-svg {
+      filter:
+        drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
+        drop-shadow(0 0 1.65rem rgba(143,101,255,.28))
+        drop-shadow(0 0 .85rem rgba(141,216,255,.12));
     }
 
-    .learning-card:hover .diamond,
-    .learning-card:focus-visible .diamond{
-      transform:rotate(45deg) scale(1.1);
-      border-color:rgba(243,200,111,.95);
-      background:
-        radial-gradient(circle at 48% 20%,rgba(255,255,255,.24),transparent 42%),
-        radial-gradient(circle at 52% 70%,rgba(243,200,111,.22),transparent 58%),
-        linear-gradient(145deg,rgba(166,117,255,.72),rgba(6,10,22,.98));
-      box-shadow:
-        0 1.15rem 2.4rem rgba(0,0,0,.45),
-        0 0 2.6rem rgba(143,101,255,.46),
-        0 0 1.4rem rgba(243,200,111,.22);
+    .gem-label {
+      position:relative;
+      z-index:3;
+      width:72%;
+      display:grid;
+      gap:.12rem;
+      place-items:center;
+      text-align:center;
+      pointer-events:none;
+      text-shadow:
+        0 2px 12px rgba(0,0,0,.94),
+        0 0 10px rgba(30,0,80,.82),
+        0 0 2px rgba(255,255,255,.42);
     }
 
-    .node-title{
+    .gem-label b {
+      display:block;
       color:rgba(255,244,216,.98);
-      font-size:clamp(.76rem,1.75vw,1.02rem);
+      font-size:clamp(.58rem,1.5vw,.82rem);
       font-weight:950;
-      line-height:1.05;
-      letter-spacing:.1em;
+      letter-spacing:.075em;
+      line-height:1.02;
       text-transform:uppercase;
-      text-shadow:0 .2rem .9rem rgba(0,0,0,.72);
     }
 
-    .node-sub{
-      max-width:13rem;
-      color:rgba(230,238,255,.80);
-      font-size:clamp(.62rem,1.45vw,.76rem);
-      line-height:1.25;
-      text-shadow:0 .2rem .9rem rgba(0,0,0,.72);
+    .gem-label span {
+      color:rgba(230,238,255,.78);
+      font-size:clamp(.42rem,1vw,.55rem);
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
 
-    .concept-grid,
-    .guard-grid,
-    .use-grid,
-    .route-grid{
+    .center-gem .gem-label b {
+      color:var(--gold);
+      font-size:clamp(.72rem,1.65vw,.95rem);
+      letter-spacing:.16em;
+    }
+
+    .center-gem .gem-label strong {
+      display:block;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1rem,2.2vw,1.38rem);
+      line-height:1.05;
+      letter-spacing:-.035em;
+      text-transform:none;
+    }
+
+    .education-glint {
+      animation:educationGlint 8.5s ease-in-out infinite;
+      transform-origin:110px 80px;
+    }
+
+    .education-star {
+      animation:educationFacetTurn 28s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes educationGlint {
+      0%,100% { opacity:.08; transform:translateX(-34px); }
+      48%,55% { opacity:.56; transform:translateX(34px); }
+    }
+
+    @keyframes educationFacetTurn {
+      to { transform:rotate(360deg); }
+    }
+
+    .card-grid {
       display:grid;
-      gap:.75rem;
-    }
-
-    .concept-grid,
-    .guard-grid{
       grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.85rem;
+    }
+
+    .loop-grid {
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:.85rem;
     }
 
     .use-grid,
-    .route-grid{
+    .guardrail-grid,
+    .route-card-grid {
+      display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.85rem;
     }
 
-    .info-card,
-    .guard-card,
-    .use-card,
-    .route-card{
-      min-height:11.5rem;
+    .card,
+    .loop-card,
+    .route-card {
       display:grid;
-      gap:.55rem;
-      align-content:start;
+      gap:.6rem;
+      min-height:100%;
       padding:1rem;
       border:1px solid rgba(255,255,255,.12);
       border-radius:1.2rem;
@@ -644,283 +757,337 @@
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
+    .card:hover,
+    .card:focus-within,
     .route-card:hover,
-    .route-card:focus-visible{
+    .route-card:focus-visible {
       transform:translateY(-3px);
       border-color:rgba(243,200,111,.46);
       outline:none;
     }
 
-    .guard-card{
-      border-color:rgba(255,139,139,.22);
-      background:
-        radial-gradient(circle at 20% 0%,rgba(255,139,139,.06),transparent 60%),
-        rgba(255,255,255,.032);
-    }
-
-    .info-card b,
-    .guard-card b,
-    .use-card b,
-    .route-card b{
+    .card b,
+    .loop-card b,
+    .route-card b {
       color:var(--gold);
       font-size:.68rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .guard-card b{
-      color:var(--red);
-    }
-
-    .info-card strong,
-    .guard-card strong,
-    .use-card strong,
-    .route-card strong{
+    .card strong,
+    .loop-card strong,
+    .route-card strong {
       color:rgba(255,244,216,.98);
-      font-size:1.05rem;
+      font-size:1.15rem;
       line-height:1.1;
     }
 
-    .info-card span,
-    .guard-card span,
-    .use-card span,
-    .route-card span{
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.4;
-    }
-
-    .learning-loop{
-      display:grid;
-      gap:.65rem;
-      counter-reset:step;
-    }
-
-    .learning-step{
-      counter-increment:step;
-      display:grid;
-      grid-template-columns:auto 1fr;
-      gap:.8rem;
-      align-items:start;
-      padding:.9rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1rem;
-      background:rgba(255,255,255,.032);
-    }
-
-    .learning-step::before{
-      content:counter(step);
-      width:2.35rem;
-      height:2.35rem;
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(243,200,111,.32);
-      border-radius:.72rem;
-      color:var(--gold);
-      font-weight:950;
-      transform:rotate(45deg);
-      background:rgba(243,200,111,.055);
-    }
-
-    .learning-step div{
-      display:grid;
-      gap:.2rem;
-    }
-
-    .learning-step strong{
-      color:rgba(255,244,216,.98);
-    }
-
-    .learning-step span{
+    .card span,
+    .loop-card span,
+    .route-card span {
       color:var(--muted);
       font-size:.94rem;
-      line-height:1.4;
+      line-height:1.42;
     }
 
-    .final-band{
-      margin-top:1.15rem;
-      padding:clamp(1rem,3vw,1.35rem);
-      display:grid;
-      gap:.9rem;
-      border:1px solid rgba(243,200,111,.28);
-      border-radius:clamp(1.25rem,5vw,2rem);
+    .guardrail-card {
+      border-color:rgba(190,170,255,.18);
       background:
-        radial-gradient(circle at 16% 0%,rgba(243,200,111,.10),transparent 36%),
-        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.024));
-      box-shadow:0 1.5rem 4rem rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.08);
+        radial-gradient(circle at 20% 0%,rgba(190,170,255,.08),transparent 60%),
+        rgba(143,101,255,.035);
     }
 
-    .final-band strong{
+    .guardrail-card b {
+      color:var(--violet);
+    }
+
+    .final-direction {
+      padding:1.1rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(243,200,111,.10),transparent 60%),
+        rgba(243,200,111,.045);
+      display:grid;
+      gap:.65rem;
+    }
+
+    .final-direction strong {
       color:rgba(255,244,216,.98);
-      font-size:clamp(1.2rem,3vw,1.6rem);
+      font-size:clamp(1.2rem,3.6vw,2rem);
       line-height:1.05;
       letter-spacing:-.04em;
     }
 
-    .receipt{
-      margin-top:1.15rem;
-      color:var(--faint);
-    }
-
-    .receipt summary{
-      cursor:pointer;
-      padding:1rem;
-      border:1px solid rgba(184,205,255,.14);
-      border-radius:1.2rem;
-      color:rgba(255,244,216,.96);
-      font-size:.72rem;
+    .open-path {
+      margin-top:auto;
+      color:rgba(230,238,255,.88);
+      font-size:.76rem;
       font-weight:950;
-      letter-spacing:.09em;
+      letter-spacing:.12em;
       text-transform:uppercase;
-      background:rgba(255,255,255,.035);
     }
 
-    .receipt pre{
-      margin:0;
-      padding:1rem;
-      white-space:pre-wrap;
-      overflow-wrap:anywhere;
-      font:700 .68rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    .route-receipt,
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt],
+    .receipt {
+      display:none!important;
+      visibility:hidden!important;
+      overflow:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      inset:auto!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
     }
 
-    footer{
+    footer {
       padding:1.35rem 0 .5rem;
       color:var(--faint);
       text-align:center;
       font-size:.76rem;
     }
 
-    @keyframes auroraDrift{
-      from{transform:rotate(0deg) scale(1)}
-      to{transform:rotate(360deg) scale(1)}
-    }
-
-    @keyframes heroDiamond{
-      0%,100%{opacity:.36;transform:translateY(-50%) rotate(45deg) scale(1)}
-      50%{opacity:.62;transform:translateY(-50%) rotate(45deg) scale(1.045)}
-    }
-
-    @keyframes fieldTurn{
-      from{transform:translate(-50%,-50%) rotate(45deg)}
-      to{transform:translate(-50%,-50%) rotate(405deg)}
-    }
-
-    @keyframes anchorPulse{
-      0%,100%{opacity:.28;transform:translate(-50%,-50%) rotate(45deg) scale(1)}
-      50%{opacity:.40;transform:translate(-50%,-50%) rotate(45deg) scale(1.035)}
-    }
-
-    @keyframes nodeFloat{
-      0%,100%{transform:translateY(0)}
-      50%{transform:translateY(-.55rem)}
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      body::after,
-      .hero::before,
-      .learning-field::before,
-      .learning-anchor,
-      .learning-node{
-        animation:none!important;
-      }
-    }
-
-    @media (max-width:1080px){
-      .concept-grid,
-      .guard-grid{
-        grid-template-columns:1fr;
-      }
-
+    @media (max-width:1080px) {
+      .loop-grid,
       .use-grid,
-      .route-grid{
+      .guardrail-grid,
+      .route-card-grid {
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
+
+      .card-grid {
+        grid-template-columns:1fr;
+      }
     }
 
-    @media (max-width:980px){
-      .topbar{
+    @media (max-width:980px) {
+      .topbar {
         grid-template-columns:1fr;
         align-items:start;
       }
 
-      .nav{justify-content:flex-start}
+      .nav {
+        justify-content:flex-start;
+      }
     }
 
-    @media (max-width:720px){
-      .shell{width:min(100% - 22px,var(--max))}
+    @media (max-width:720px) {
+      .shell { width:min(100% - 22px,var(--max)); }
 
-      h1{font-size:clamp(3rem,17vw,5rem)}
+      h1 { font-size:clamp(3rem,17vw,5rem); }
 
-      .hero{
-        min-height:31rem;
+      .hero {
+        min-height:28rem;
         padding:1rem;
       }
 
-      .learning-field{
-        min-height:auto;
-        padding:1rem .65rem;
+      .actions { display:grid; }
+      .button { width:100%; }
+
+      .education-stage { min-height:29rem; }
+
+      .education-orbit {
+        width:20rem;
+        height:20rem;
       }
 
-      .learning-grid{
-        min-height:auto;
-        grid-template-columns:1fr;
-        grid-template-rows:none;
-        gap:.9rem;
+      .education-point {
+        --radius:-9.25rem;
+        width:5.2rem;
+        height:3.82rem;
+        margin-left:-2.6rem;
+        margin-top:-1.91rem;
       }
 
-      .learning-node,
-      .learning-node.word,
-      .learning-node.meaning,
-      .learning-node.sentence,
-      .learning-node.context,
-      .learning-node.use{
-        grid-column:auto;
-        grid-row:auto;
-        min-height:8.6rem;
+      .gem-label b { font-size:.38rem; }
+      .gem-label span { display:none; }
+
+      .center-gem {
+        width:7.4rem;
+        height:5.4rem;
       }
 
-      .learning-anchor{
-        width:13rem;
-        height:13rem;
-        opacity:.18;
-      }
+      .center-gem .gem-label b { font-size:.50rem; }
+      .center-gem .gem-label strong { font-size:.82rem; }
 
-      .learning-anchor-label{
-        opacity:.26;
-      }
-
-      .diamond{
-        width:3.75rem;
-        height:3.75rem;
-        border-radius:.95rem;
-      }
-
-      .node-title{font-size:.68rem}
-      .node-sub{font-size:.56rem}
-
+      .loop-grid,
       .use-grid,
-      .route-grid{
+      .guardrail-grid,
+      .route-card-grid {
         grid-template-columns:1fr;
       }
+    }
 
-      .actions{
-        display:grid;
+    @media (max-width:460px) {
+      .education-stage { min-height:27rem; }
+
+      .education-orbit {
+        width:17.3rem;
+        height:17.3rem;
       }
 
-      .button{
-        width:100%;
+      .education-point {
+        --radius:-8rem;
+        width:4.7rem;
+        height:3.45rem;
+        margin-left:-2.35rem;
+        margin-top:-1.725rem;
+      }
+
+      .gem-label b { font-size:.33rem; }
+
+      .center-gem {
+        width:6.75rem;
+        height:4.9rem;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+      }
+
+      body::after,
+      .education-stage::before,
+      .education-stage::after,
+      .education-orbit,
+      .education-point .education-upright,
+      .center-gem-core,
+      .education-point .education-gem-core,
+      .education-glint,
+      .education-star {
+        animation:none!important;
       }
     }
   </style>
 </head>
 
 <body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="educationGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".94"/>
+        <stop offset=".16" stop-color="#d7c2ff" stop-opacity=".78"/>
+        <stop offset=".32" stop-color="#8f65ff" stop-opacity=".62"/>
+        <stop offset=".50" stop-color="#2478ff" stop-opacity=".44"/>
+        <stop offset=".70" stop-color="#f3c86f" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#020816" stop-opacity=".92"/>
+      </linearGradient>
+
+      <linearGradient id="educationGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".90"/>
+        <stop offset=".34" stop-color="#eee7ff" stop-opacity=".46"/>
+        <stop offset=".68" stop-color="#8dd8ff" stop-opacity=".18"/>
+        <stop offset="1" stop-color="#ffe8a3" stop-opacity=".10"/>
+      </linearGradient>
+
+      <linearGradient id="educationGemDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
+        <stop offset=".30" stop-color="#beaaff" stop-opacity=".22"/>
+        <stop offset=".62" stop-color="#2478ff" stop-opacity=".14"/>
+        <stop offset="1" stop-color="#020716" stop-opacity=".62"/>
+      </linearGradient>
+
+      <radialGradient id="educationGemTableGlow" cx="50%" cy="38%" r="64%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".58"/>
+        <stop offset=".28" stop-color="#d7c2ff" stop-opacity=".32"/>
+        <stop offset=".58" stop-color="#8dd8ff" stop-opacity=".12"/>
+        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="educationGemGlint" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#ffffff" stop-opacity=".86"/>
+        <stop offset=".52" stop-color="#fff0a3" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="educationGemGlow" x="-42%" y="-50%" width="184%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.58 0 0 0 0.12
+            0 .46 0 0 0.08
+            0 0 1.00 0 0.32
+            0 0 0 0.52 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="educationDigitalGem" viewBox="0 0 220 160">
+        <g filter="url(#educationGemGlow)">
+          <path
+            d="M110 5 L145 13 L182 38 L210 75 L190 106 L150 137 L110 155 L70 137 L30 106 L10 75 L38 38 L75 13 Z"
+            fill="url(#educationGemBody)"
+            stroke="rgba(238,232,255,.62)"
+            stroke-width="1.35"
+          />
+          <path d="M110 5 L145 13 L132 37 L110 29 L88 37 L75 13 Z" fill="url(#educationGemAir)" opacity=".84"/>
+          <path d="M75 13 L88 37 L62 58 L38 38 Z" fill="rgba(255,255,255,.25)"/>
+          <path d="M145 13 L132 37 L158 58 L182 38 Z" fill="rgba(255,255,255,.17)"/>
+          <path d="M38 38 L62 58 L55 82 L10 75 Z" fill="rgba(190,170,255,.13)"/>
+          <path d="M182 38 L158 58 L165 82 L210 75 Z" fill="rgba(243,200,111,.12)"/>
+          <path
+            d="M88 37 L110 29 L132 37 L158 58 L148 82 L110 101 L72 82 L62 58 Z"
+            fill="url(#educationGemTableGlow)"
+            stroke="rgba(255,255,255,.30)"
+            stroke-width=".9"
+          />
+          <path d="M10 75 L55 82 L70 137 L30 106 Z" fill="rgba(143,101,255,.16)"/>
+          <path d="M210 75 L165 82 L150 137 L190 106 Z" fill="rgba(36,120,255,.12)"/>
+          <path d="M55 82 L72 82 L110 155 L70 137 Z" fill="rgba(2,8,24,.38)"/>
+          <path d="M165 82 L148 82 L110 155 L150 137 Z" fill="rgba(243,200,111,.10)"/>
+          <path d="M72 82 L110 101 L110 155 Z" fill="url(#educationGemDepth)" opacity=".76"/>
+          <path d="M148 82 L110 101 L110 155 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M110 5 L110 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
+          <path d="M10 75 L210 75" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
+          <path d="M38 38 L190 106" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M182 38 L30 106" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M75 13 L110 101 L145 13" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
+          <path d="M38 38 L110 101 L182 38" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M30 106 L110 101 L190 106" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
+          <g class="education-star" opacity=".82">
+            <path d="M110 26 L116 70 L110 106 L104 70 Z" fill="rgba(255,255,255,.28)"/>
+            <path d="M62 58 L105 72 L158 58 L116 78 Z" fill="rgba(255,255,255,.17)"/>
+            <path d="M72 82 L105 75 L148 82 L114 91 Z" fill="rgba(190,170,255,.14)"/>
+            <path d="M110 101 L126 81 L148 82 L129 96 Z" fill="rgba(255,255,255,.14)"/>
+            <path d="M110 101 L94 81 L72 82 L91 96 Z" fill="rgba(243,200,111,.08)"/>
+          </g>
+          <path class="education-glint" d="M34 117 L176 22 L188 38 L48 130 Z" fill="url(#educationGemGlint)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
   <a class="skip" href="#education-main">Skip to Education</a>
 
   <div class="shell">
     <header class="topbar" aria-label="Education header">
       <a class="brand" href="/">
-        <span class="brand-mark"><span>ED</span></span>
+        <span class="brand-mark" aria-hidden="true"><span>ED</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
           <strong>Education</strong>
@@ -931,12 +1098,13 @@
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/explore/">Manor</a>
+        <a href="/explore/">Explore</a>
         <a href="/nine-summits/">Nine Summits</a>
         <a href="/products/">Products</a>
         <a href="/products/five-flags/">Five Flags</a>
-        <a href="/products/on-your-side-ai/">On Your Side AI</a>
+        <a href="/products/on-your-side-ai/">On Your Side AAI</a>
         <a href="/products/education/" aria-current="page">Education</a>
+        <a href="/products/nutrition/">Nutrition</a>
         <a href="/showroom/">Showroom</a>
         <a href="/gauges/">Gauges</a>
       </nav>
@@ -946,11 +1114,16 @@
       <section class="panel hero" aria-labelledby="page-title">
         <div class="kicker">Education · Product Chamber</div>
         <h1 id="page-title">Words become usable when they can move.</h1>
-        <h2>Word. Meaning. Sentence. Context. Use.</h2>
+
+        <p class="subline">Word. Meaning. Sentence. Context. Use.</p>
 
         <p class="lead">
-          Education is the practical learning chamber for turning words into working understanding. It uses 1001-word traversal to help learners build usable fluency one clear step at a time.
+          Education is a practical learning chamber for turning words into working understanding. It uses 1001-word traversal to help learners build usable fluency one clear step at a time.
         </p>
+
+        <div class="principle">
+          A word is not learned until it can be used.
+        </div>
 
         <div class="quote">
           A learner does not need every word at once. A learner needs a path where the next word becomes usable.
@@ -958,87 +1131,96 @@
 
         <div class="actions">
           <a class="button gold" href="#learning-loop">Learning Loop</a>
-          <a class="button" href="#guardrails">Guardrails</a>
+          <a class="button violet" href="#guardrails">Guardrails</a>
           <a class="button" href="/products/">Back to Products</a>
           <a class="button" href="/gauges/">Read Gauges</a>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="field-title">
+      <section class="panel section" aria-labelledby="learning-title">
         <div class="kicker">Five learning points</div>
-        <h2 id="field-title">The chamber turns vocabulary into action.</h2>
+        <h2 id="learning-title">The chamber turns vocabulary into action.</h2>
 
-        <div class="learning-field" aria-label="Animated Education learning field">
-          <div class="axis-line" aria-hidden="true"></div>
-
-          <div class="learning-anchor" aria-hidden="true"></div>
-          <div class="learning-anchor-label" aria-hidden="true">
-            <strong>Education</strong>
-            <span>Learning Field</span>
+        <div class="education-stage" aria-label="Word meaning sentence context use learning field">
+          <div class="center-gem" aria-hidden="true">
+            <span class="center-gem-core">
+              <svg class="education-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                <use href="#educationDigitalGem"></use>
+              </svg>
+              <span class="gem-label">
+                <b>Education</b>
+                <strong>Learning Field</strong>
+              </span>
+            </span>
           </div>
 
-          <div class="learning-grid">
-            <div class="learning-node word" style="--delay:.05s">
-              <div class="learning-card">
-                <span class="diamond" aria-hidden="true"></span>
-                <span class="node-title">Word</span>
-                <span class="node-sub">Learn the word</span>
-              </div>
-            </div>
+          <div class="education-orbit" aria-label="Animated education orbit">
+            <a class="education-point" style="--angle:0deg;--education-delay:-.2s" href="#learning-loop">
+              <span class="education-upright">
+                <span class="education-gem-core">
+                  <svg class="education-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#educationDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Word</b><span>Receive it</span></span>
+                </span>
+              </span>
+            </a>
 
-            <div class="learning-node meaning" style="--delay:.18s">
-              <div class="learning-card">
-                <span class="diamond" aria-hidden="true"></span>
-                <span class="node-title">Meaning</span>
-                <span class="node-sub">Plain understanding</span>
-              </div>
-            </div>
+            <a class="education-point" style="--angle:72deg;--education-delay:-1.4s" href="#learning-loop">
+              <span class="education-upright">
+                <span class="education-gem-core">
+                  <svg class="education-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#educationDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Meaning</b><span>Plain sense</span></span>
+                </span>
+              </span>
+            </a>
 
-            <div class="learning-node sentence" style="--delay:.31s">
-              <div class="learning-card">
-                <span class="diamond" aria-hidden="true"></span>
-                <span class="node-title">Sentence</span>
-                <span class="node-sub">Build the phrase</span>
-              </div>
-            </div>
+            <a class="education-point" style="--angle:144deg;--education-delay:-2.6s" href="#learning-loop">
+              <span class="education-upright">
+                <span class="education-gem-core">
+                  <svg class="education-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#educationDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Sentence</b><span>Build it</span></span>
+                </span>
+              </span>
+            </a>
 
-            <div class="learning-node context" style="--delay:.44s">
-              <div class="learning-card">
-                <span class="diamond" aria-hidden="true"></span>
-                <span class="node-title">Context</span>
-                <span class="node-sub">Place it in life</span>
-              </div>
-            </div>
+            <a class="education-point" style="--angle:216deg;--education-delay:-3.8s" href="#learning-loop">
+              <span class="education-upright">
+                <span class="education-gem-core">
+                  <svg class="education-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#educationDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Context</b><span>Place it</span></span>
+                </span>
+              </span>
+            </a>
 
-            <div class="learning-node use" style="--delay:.57s">
-              <div class="learning-card">
-                <span class="diamond" aria-hidden="true"></span>
-                <span class="node-title">Use</span>
-                <span class="node-sub">Speak, write, act</span>
-              </div>
-            </div>
+            <a class="education-point" style="--angle:288deg;--education-delay:-5s" href="#learning-loop">
+              <span class="education-upright">
+                <span class="education-gem-core">
+                  <svg class="education-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#educationDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Use</b><span>Make it work</span></span>
+                </span>
+              </span>
+            </a>
           </div>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="concept-title">
         <div class="kicker">1001-word traversal</div>
-        <h2 id="concept-title">A word is not learned until it can be used.</h2>
+        <h2 id="concept-title">A word becomes stable when it has somewhere to go.</h2>
 
-        <div class="concept-grid">
-          <article class="info-card">
+        <div class="card-grid">
+          <article class="card">
             <b>Traversal</b>
             <strong>Move through words in order.</strong>
             <span>1001-word traversal gives the learner a manageable path instead of a wall of vocabulary.</span>
           </article>
 
-          <article class="info-card">
+          <article class="card">
             <b>Fluency</b>
             <strong>Use matters more than memorization.</strong>
             <span>The goal is not collecting definitions. The goal is using words in speech, writing, choices, and action.</span>
           </article>
 
-          <article class="info-card">
+          <article class="card">
             <b>Return</b>
             <strong>Repetition makes the word stable.</strong>
             <span>The learner returns to words through sentence, context, and use until they stop feeling foreign.</span>
@@ -1046,45 +1228,40 @@
         </div>
       </section>
 
-      <section id="learning-loop" class="panel section" aria-labelledby="loop-title">
+      <section class="panel section" id="learning-loop" aria-labelledby="loop-title">
         <div class="kicker">Learning loop</div>
         <h2 id="loop-title">Word → Meaning → Sentence → Context → Use.</h2>
 
-        <div class="learning-loop">
-          <div class="learning-step">
-            <div>
-              <strong>Receive the word.</strong>
-              <span>The learner meets one word clearly instead of being buried under too many inputs.</span>
-            </div>
-          </div>
+        <div class="loop-grid">
+          <article class="loop-card">
+            <b>01</b>
+            <strong>Receive the word.</strong>
+            <span>The learner meets one word clearly instead of being buried under too many inputs.</span>
+          </article>
 
-          <div class="learning-step">
-            <div>
-              <strong>Understand the plain meaning.</strong>
-              <span>The word is explained in simple language first, then strengthened with nuance later.</span>
-            </div>
-          </div>
+          <article class="loop-card">
+            <b>02</b>
+            <strong>Understand the plain meaning.</strong>
+            <span>The word is explained in simple language first, then strengthened with nuance later.</span>
+          </article>
 
-          <div class="learning-step">
-            <div>
-              <strong>Build a sentence.</strong>
-              <span>The learner sees how the word behaves when it is placed inside a real sentence.</span>
-            </div>
-          </div>
+          <article class="loop-card">
+            <b>03</b>
+            <strong>Build a sentence.</strong>
+            <span>The learner sees how the word behaves when it is placed inside a real sentence.</span>
+          </article>
 
-          <div class="learning-step">
-            <div>
-              <strong>Place it in context.</strong>
-              <span>The word is tied to a situation, choice, conversation, work moment, or life setting.</span>
-            </div>
-          </div>
+          <article class="loop-card">
+            <b>04</b>
+            <strong>Place it in context.</strong>
+            <span>The word is tied to a situation, choice, conversation, work moment, or life setting.</span>
+          </article>
 
-          <div class="learning-step">
-            <div>
-              <strong>Use it and return.</strong>
-              <span>The learner speaks it, writes it, chooses with it, or acts on it, then returns until it becomes usable.</span>
-            </div>
-          </div>
+          <article class="loop-card">
+            <b>05</b>
+            <strong>Use it and return.</strong>
+            <span>The learner speaks it, writes it, chooses with it, or acts on it, then returns until it becomes usable.</span>
+          </article>
         </div>
       </section>
 
@@ -1093,25 +1270,25 @@
         <h2 id="who-title">Learning becomes useful when it has somewhere to land.</h2>
 
         <div class="use-grid">
-          <article class="use-card">
+          <article class="card">
             <b>English learners</b>
             <strong>Build usable fluency.</strong>
             <span>Move from isolated words into sentences, meaning, context, and real use.</span>
           </article>
 
-          <article class="use-card">
+          <article class="card">
             <b>Students</b>
             <strong>Make study less abstract.</strong>
             <span>Turn vocabulary and concepts into working understanding instead of temporary memorization.</span>
           </article>
 
-          <article class="use-card">
+          <article class="card">
             <b>Workers</b>
             <strong>Use words in real situations.</strong>
             <span>Practice language for forms, instructions, customer moments, meetings, and written communication.</span>
           </article>
 
-          <article class="use-card">
+          <article class="card">
             <b>Families</b>
             <strong>Learn together without shame.</strong>
             <span>Words can become shared tools instead of a private pressure point.</span>
@@ -1119,27 +1296,33 @@
         </div>
       </section>
 
-      <section id="guardrails" class="panel section" aria-labelledby="guard-title">
+      <section class="panel section" id="guardrails" aria-labelledby="guardrails-title">
         <div class="kicker">Guardrails</div>
-        <h2 id="guard-title">Learning support is not replacement.</h2>
+        <h2 id="guardrails-title">Learning support is not replacement.</h2>
 
-        <div class="guard-grid">
-          <article class="guard-card">
+        <div class="guardrail-grid">
+          <article class="card guardrail-card">
             <b>Not school replacement</b>
             <strong>It does not replace formal education.</strong>
             <span>It supports practice and understanding, but does not replace schools, programs, grades, or credentials.</span>
           </article>
 
-          <article class="guard-card">
+          <article class="card guardrail-card">
             <b>Not teacher replacement</b>
             <strong>It does not replace teachers or tutors.</strong>
-            <span>It helps learners prepare, repeat, and practice, while human instruction remains valuable.</span>
+            <span>It helps learners prepare, repeat, and practice while human instruction remains valuable.</span>
           </article>
 
-          <article class="guard-card">
+          <article class="card guardrail-card">
             <b>Not certification</b>
             <strong>It does not grant formal proof.</strong>
             <span>It can support readiness, but certification and official assessment remain separate.</span>
+          </article>
+
+          <article class="card guardrail-card">
+            <b>Not instant fluency</b>
+            <strong>Practice still matters.</strong>
+            <span>The chamber creates a path. The learner still builds fluency through return, repetition, and use.</span>
           </article>
         </div>
       </section>
@@ -1148,58 +1331,67 @@
         <div class="kicker">Product chamber routes</div>
         <h2 id="routes-title">Education stays attached to the product wing.</h2>
 
-        <div class="route-grid">
+        <div class="route-card-grid">
           <a class="route-card" href="/products/">
             <b>Products</b>
             <strong>Return to the wing.</strong>
             <span>Education sits inside the larger product chamber system.</span>
+            <span class="open-path">Open Products</span>
           </a>
 
           <a class="route-card" href="/products/on-your-side-ai/">
-            <b>On Your Side AI</b>
+            <b>On Your Side AAI</b>
             <strong>Open support.</strong>
             <span>The support chamber helps people sort forms, letters, choices, and next steps.</span>
+            <span class="open-path">Open AAI</span>
           </a>
 
           <a class="route-card" href="/products/five-flags/">
             <b>Five Flags</b>
             <strong>Open the game chamber.</strong>
             <span>The signal-game chamber helps the room practice inference and feedback.</span>
+            <span class="open-path">Open Five Flags</span>
           </a>
 
           <a class="route-card" href="/gauges/">
             <b>Gauges</b>
             <strong>Measure the route.</strong>
             <span>Gauges checks served source truth and contract alignment.</span>
+            <span class="open-path">Read Gauges</span>
           </a>
         </div>
       </section>
 
-      <section class="final-band" aria-labelledby="final-title">
-        <div class="kicker">Final direction</div>
-        <strong id="final-title">Education turns words into working understanding.</strong>
-        <p>
-          A word becomes useful when the learner can understand it, place it, use it, and return to it without fear. That is the chamber: word, meaning, sentence, context, use.
-        </p>
+      <section class="panel section" aria-labelledby="final-title">
+        <div class="final-direction">
+          <strong id="final-title">Education turns words into working understanding.</strong>
+          <p>
+            A word becomes useful when the learner can understand it, place it, use it, and return to it without fear. That is the chamber: word, meaning, sentence, context, use.
+          </p>
 
-        <div class="actions">
-          <a class="button gold" href="/products/">Back to Products</a>
-          <a class="button" href="/products/on-your-side-ai/">Open On Your Side AI</a>
-          <a class="button" href="/products/five-flags/">Open Five Flags</a>
-          <a class="button" href="/showroom/">Open Showroom</a>
-          <a class="button" href="/gauges/">Read Gauges</a>
+          <div class="actions">
+            <a class="button gold" href="/products/">Back to Products</a>
+            <a class="button violet" href="/products/on-your-side-ai/">Open On Your Side AAI</a>
+            <a class="button" href="/products/five-flags/">Open Five Flags</a>
+            <a class="button" href="/showroom/">Open Showroom</a>
+            <a class="button" href="/gauges/">Read Gauges</a>
+          </div>
         </div>
       </section>
 
-      <details class="receipt" open>
-        <summary>Route receipt</summary>
-        <pre>EDUCATION_PRODUCT_CHAMBER_PUBLIC_LEARNING_TNT_v1
+      <template id="route-receipt" data-route-receipt>
+EDUCATION_PRODUCT_GRANDCHILD_PRACTICAL_LEARNING_RENEWAL_TNT_v2
+previous=EDUCATION_PRODUCT_CHAMBER_PUBLIC_LEARNING_TNT_v1
 route=/products/education/
 page=education
-role=product_chamber
+role=product_grandchild
 parent=/products/
+grandparent=/
 product_type=practical_learning
+public_label=Education
 canonical_one_line=Education helps users turn words into working understanding.
+core_principle=A word is not learned until it can be used.
+core_message=Words become usable when they can move.
 core_mechanic=word_meaning_sentence_context_use
 learning_frame=1001_word_traversal_learning
 learning_points=word,meaning,sentence,context,use
@@ -1211,17 +1403,26 @@ not_school_replacement=true
 not_teacher_replacement=true
 not_tutor_replacement=true
 not_certification=true
+not_instant_fluency=true
+visible_label_corrections=Explore_not_Manor,On_Your_Side_AAI_not_On_Your_Side_AI
+removed_legacy_baseline=AUDRALIA_MANOR_CURRENT
 parent_products=/products/
 five_flags=/products/five-flags/
-on_your_side_ai=/products/on-your-side-ai/
+on_your_side_aai=/products/on-your-side-ai/
+nutrition=/products/nutrition/
 showroom=/showroom/
 gauges=/gauges/
 compass=/
-visual_system=animated_five_point_learning_field
-animation=floating_learning_diamonds,background_anchor_pulse,slow_field_turn,hover_lift
+explore=/explore/
+visual_system=code_rendered_five_learning_digital_gem_orbit
+animation_method=css_only
+js_required=false
+animated=education_orbit_turn,education_label_gravity_lock,education_field_turn,education_inner_field_breathe,education_gem_float,center_pulse,education_glint,education_facet_turn
+label_gravity_lock=true
 mobile_law=stacked_learning_points_no_clipping_no_hidden_nodes
-route_owns=education_public_learning_chamber,learning_loop,1001_word_traversal_explanation,guardrails,use_cases,product_chamber_receipt
-route_does_not_own=products_root,other_product_chambers,showroom,gauges_logic,runtime,render_files,instrument_state
+receipt_visibility=hidden_template_only
+route_owns=education_public_learning_chamber,learning_loop,1001_word_traversal_explanation,guardrails,use_cases,product_chamber_receipt,education_visual_field,css_only_education_orbit
+route_does_not_own=products_root,other_product_chambers,showroom,gauges_logic,runtime,render_files,instrument_state,javascript_animation_runtime,formal_instruction,certification
 heavy_runtime_loaded=false
 render_files_touched=false
 instrument_touched=false
@@ -1229,12 +1430,12 @@ gauges_logic_touched=false
 generated_image=false
 graphic_box=false
 streaming=false
-visual_pass_claimed=false</pre>
-      </details>
+visual_pass_claimed=false
+      </template>
     </main>
 
     <footer>
-      EDUCATION_PRODUCT_CHAMBER_PUBLIC_LEARNING_TNT_v1 · Education · Product Chamber · Practical Learning.
+      EDUCATION_PRODUCT_GRANDCHILD_PRACTICAL_LEARNING_RENEWAL_TNT_v2 · Education · Product Grandchild · Practical Learning.
     </footer>
   </div>
 </body>

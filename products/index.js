@@ -1,29 +1,34 @@
 // /products/index.js
 // TNT FULL-FILE REPLACEMENT
-// PRODUCTS_RUNTIME_BRIDGE_OPEN_FOCUS_AUTHORITY_RENEWAL_TNT_v1
+// PRODUCTS_PUBLIC_ORBIT_RUNTIME_DEMOTION_BRIDGE_TNT_v2
 // Purpose:
-// - Bridge /products/ shell to /products/products_runtime.js when a runtime mount exists.
-// - Preserve open-focus behavior for the molecular product runtime window.
-// - Render safe boot receipts without unsafe innerHTML.
-// - Keep cache authority deterministic through a stable runtime version key.
+// - Quietly bridge /products/ to /products/products_runtime.js when the public product orbit exists.
+// - Keep the public page usable without JavaScript.
+// - Keep runtime enhancement optional.
+// - Preserve hidden dataset receipts for builder/Gauges inspection.
+// - Never render visible runtime diagnostics, boot receipts, cache keys, script errors, or products_runtime.js failure text to visitors.
 // - No generated image. No graphic box. No streaming. No visual pass claim.
 
 const PRODUCTS_BRIDGE_CONTRACT =
-  "PRODUCTS_RUNTIME_BRIDGE_OPEN_FOCUS_AUTHORITY_RENEWAL_TNT_v1";
+  "PRODUCTS_PUBLIC_ORBIT_RUNTIME_DEMOTION_BRIDGE_TNT_v2";
+
+const PRODUCTS_PAGE_CONTRACT =
+  "PRODUCTS_PUBLIC_ORBIT_RUNTIME_DEMOTION_RENEWAL_TNT_v2";
 
 const PRODUCTS_RUNTIME_SRC = "/products/products_runtime.js";
 const PRODUCTS_RUNTIME_FLAG = "productsRuntimeBridgeLoaded";
 const PRODUCTS_RUNTIME_RECEIPT = "productsRuntimeMounted";
-const PRODUCTS_RUNTIME_VERSION = "four-lobed-molecular-flower-open-focus-v1";
+const PRODUCTS_RUNTIME_VERSION = "public-orbit-enhancement-v2";
 
 const PRODUCTS_RUNTIME_SCRIPT_SELECTOR = 'script[data-products-runtime-script="true"]';
 const PRODUCTS_RUNTIME_ROOT_SELECTOR = "[data-products-runtime-root]";
-const PRODUCTS_RUNTIME_MOUNT_SELECTOR = "#productsRuntimeMount, [data-products-runtime-mount]";
-const OPEN_MOLECULE_SELECTOR = "[data-open-molecule]";
+const PRODUCTS_RUNTIME_MOUNT_SELECTOR = "[data-products-runtime-mount]";
+const OPEN_PRODUCT_ORBIT_SELECTOR =
+  "[data-open-product-orbit], [data-open-molecule], a[href='#product-orbit'], a[href='#productsRuntimeMount']";
 
 const CHECK_AFTER_LOAD_MS = 900;
 const TIMEOUT_MS = 3000;
-const FOCUS_DELAY_MS = 350;
+const FOCUS_DELAY_MS = 300;
 
 const state = {
   booted: false,
@@ -35,14 +40,15 @@ const state = {
 };
 
 function getMount() {
-  return (
-    document.getElementById("productsRuntimeMount") ||
-    document.querySelector("[data-products-runtime-mount]")
-  );
+  return document.querySelector(PRODUCTS_RUNTIME_MOUNT_SELECTOR);
 }
 
-function getFocusTarget() {
-  return getMount();
+function getPublicOrbit() {
+  return document.getElementById("product-orbit") || getMount();
+}
+
+function getRuntimeRoot() {
+  return document.querySelector(PRODUCTS_RUNTIME_ROOT_SELECTOR);
 }
 
 function getRuntimeSrc() {
@@ -50,20 +56,26 @@ function getRuntimeSrc() {
 }
 
 function runtimeAlreadyMounted() {
-  return Boolean(
-    document.querySelector(PRODUCTS_RUNTIME_ROOT_SELECTOR) ||
-    window[PRODUCTS_RUNTIME_RECEIPT] === true
-  );
+  return Boolean(getRuntimeRoot() || window[PRODUCTS_RUNTIME_RECEIPT] === true);
 }
 
 function markDocument(extra = {}) {
   const markers = {
+    productsPageContract: PRODUCTS_PAGE_CONTRACT,
     productsBridgeContract: PRODUCTS_BRIDGE_CONTRACT,
     productsRuntimeSrc: PRODUCTS_RUNTIME_SRC,
     productsRuntimeVersion: PRODUCTS_RUNTIME_VERSION,
     productsRuntimeRequested: String(state.requested),
     productsRuntimeStatus: state.lastStatus,
     productsRuntimeMounted: String(runtimeAlreadyMounted()),
+    productsRuntimePublicMessage: "false",
+    visibleRuntimeDiagnostics: "false",
+    visibleBootReceipts: "false",
+    visibleCacheKeys: "false",
+    visibleScriptFailureText: "false",
+    runtimeEnhancementOnly: "true",
+    staticPageUsableWithoutJs: "true",
+    eightDoorsVisibleWithoutRuntime: "true",
     generatedImage: "false",
     graphicBox: "false",
     streaming: "false",
@@ -88,12 +100,17 @@ function setRuntimeStatus(status, detail = "") {
     mount.dataset.runtimeDetail = detail;
     mount.dataset.runtimeBridgeContract = PRODUCTS_BRIDGE_CONTRACT;
     mount.dataset.runtimeVersion = PRODUCTS_RUNTIME_VERSION;
+    mount.dataset.runtimeEnhancementOnly = "true";
+    mount.dataset.runtimePublicMessage = "false";
+    mount.dataset.visibleRuntimeDiagnostics = "false";
   }
 
   markDocument({
     productsRuntimeStatus: status,
     productsRuntimeDetail: detail
   });
+
+  writeHiddenReceipt(status, detail);
 }
 
 function ensureFocusable(target) {
@@ -104,8 +121,8 @@ function ensureFocusable(target) {
   }
 }
 
-function focusMoleculeWindow() {
-  const target = getFocusTarget();
+function focusProductOrbit() {
+  const target = getPublicOrbit();
   if (!target) return;
 
   ensureFocusable(target);
@@ -133,150 +150,82 @@ function safeReplaceHash(hash) {
   }
 }
 
-function bindOpenMolecule() {
-  document.querySelectorAll(OPEN_MOLECULE_SELECTOR).forEach((link) => {
-    if (link.dataset.productsRuntimeOpenBound === "true") return;
+function bindOpenProductOrbit() {
+  document.querySelectorAll(OPEN_PRODUCT_ORBIT_SELECTOR).forEach((link) => {
+    if (link.dataset.productsPublicOrbitOpenBound === "true") return;
 
-    link.dataset.productsRuntimeOpenBound = "true";
+    link.dataset.productsPublicOrbitOpenBound = "true";
 
     link.addEventListener("click", (event) => {
-      event.preventDefault();
-      safeReplaceHash("#productsRuntimeMount");
-      focusMoleculeWindow();
+      const href = link.getAttribute("href") || "";
+
+      if (
+        href === "#product-orbit" ||
+        href === "#productsRuntimeMount" ||
+        link.hasAttribute("data-open-product-orbit") ||
+        link.hasAttribute("data-open-molecule")
+      ) {
+        event.preventDefault();
+        safeReplaceHash("#product-orbit");
+        focusProductOrbit();
+      }
     });
   });
 }
 
-function ensureBridgeStyles() {
-  if (document.getElementById("productsRuntimeBridgeStyles")) return;
+function ensureHiddenReceiptNode() {
+  let receipt = document.getElementById("productsRuntimeHiddenReceipt");
 
-  const style = document.createElement("style");
-  style.id = "productsRuntimeBridgeStyles";
-  style.textContent = `
-    .runtime-fallback {
-      display: grid;
-      gap: 1rem;
-      padding: clamp(1rem, 3vw, 1.4rem);
-      border: 1px solid rgba(243, 200, 111, .24);
-      border-radius: 1.25rem;
-      background:
-        radial-gradient(circle at 20% 0%, rgba(36,120,255,.10), transparent 60%),
-        rgba(255,255,255,.04);
-      color: rgba(255,244,216,.94);
-    }
+  if (receipt) return receipt;
 
-    .runtime-fallback h2 {
-      margin: 0;
-      color: #f3c86f;
-      font-size: clamp(1.35rem, 4vw, 2rem);
-      line-height: 1;
-      letter-spacing: -.04em;
-    }
+  receipt = document.createElement("template");
+  receipt.id = "productsRuntimeHiddenReceipt";
+  receipt.dataset.productsRuntimeHiddenReceipt = "true";
+  receipt.dataset.contract = PRODUCTS_BRIDGE_CONTRACT;
+  receipt.dataset.visible = "false";
 
-    .runtime-fallback p {
-      margin: 0;
-      color: rgba(230,238,255,.78);
-      line-height: 1.5;
-    }
-
-    .runtime-receipt {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: .7rem;
-    }
-
-    .runtime-receipt .stat {
-      display: grid;
-      gap: .35rem;
-      min-width: 0;
-      padding: .85rem;
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: .95rem;
-      background: rgba(255,255,255,.035);
-    }
-
-    .runtime-receipt .stat-label {
-      color: rgba(230,238,255,.56);
-      font-size: .68rem;
-      font-weight: 950;
-      letter-spacing: .10em;
-      text-transform: uppercase;
-    }
-
-    .runtime-receipt .stat-value {
-      color: rgba(255,244,216,.94);
-      font-size: .82rem;
-      font-weight: 850;
-      overflow-wrap: anywhere;
-    }
-
-    @media (max-width: 760px) {
-      .runtime-receipt {
-        grid-template-columns: 1fr;
-      }
-    }
-  `;
-
-  document.head.appendChild(style);
+  document.body.appendChild(receipt);
+  return receipt;
 }
 
-function createStat(label, value) {
-  const stat = document.createElement("div");
-  stat.className = "stat";
+function writeHiddenReceipt(status, detail = "") {
+  if (!document.body) return;
 
-  const labelNode = document.createElement("span");
-  labelNode.className = "stat-label";
-  labelNode.textContent = label;
+  const receipt = ensureHiddenReceiptNode();
+  const payload = [
+    PRODUCTS_BRIDGE_CONTRACT,
+    `page_contract=${PRODUCTS_PAGE_CONTRACT}`,
+    "route=/products/",
+    "role=quiet_runtime_bridge",
+    "runtime_public_message=false",
+    "visible_runtime_diagnostics=false",
+    "visible_boot_receipts=false",
+    "visible_cache_keys=false",
+    "visible_script_failure_text=false",
+    "runtime_enhancement_only=true",
+    `runtime_src=${PRODUCTS_RUNTIME_SRC}`,
+    `runtime_version=${PRODUCTS_RUNTIME_VERSION}`,
+    `status=${status}`,
+    `detail=${String(detail).replace(/\s+/g, "_")}`,
+    `mounted=${runtimeAlreadyMounted() ? "true" : "false"}`,
+    "generated_image=false",
+    "graphic_box=false",
+    "streaming=false",
+    "visual_pass_claimed=false"
+  ].join("\n");
 
-  const valueNode = document.createElement("span");
-  valueNode.className = "stat-value";
-  valueNode.textContent = value;
-
-  stat.append(labelNode, valueNode);
-  return stat;
-}
-
-function renderBootReceipt(status, message) {
-  const mount = getMount();
-  if (!mount) return;
-
-  ensureBridgeStyles();
-  ensureFocusable(mount);
-
-  const fallback = document.createElement("div");
-  fallback.className = "runtime-fallback";
-  fallback.dataset.productsRuntimeBridgeReceipt = "true";
-  fallback.dataset.status = status;
-  fallback.dataset.contract = PRODUCTS_BRIDGE_CONTRACT;
-
-  const title = document.createElement("h2");
-  title.textContent = `Products runtime ${status}`;
-
-  const copy = document.createElement("p");
-  copy.textContent = message;
-
-  const receipt = document.createElement("div");
-  receipt.className = "runtime-receipt";
-
-  receipt.append(
-    createStat("Expected file", PRODUCTS_RUNTIME_SRC),
-    createStat("Bridge file", "/products/index.js"),
-    createStat("Runtime version", PRODUCTS_RUNTIME_VERSION),
-    createStat("Bridge contract", PRODUCTS_BRIDGE_CONTRACT),
-    createStat("Runtime mounted", runtimeAlreadyMounted() ? "true" : "false"),
-    createStat("Graphic box", "false")
-  );
-
-  fallback.append(title, copy, receipt);
-  mount.replaceChildren(fallback);
+  receipt.textContent = payload;
 }
 
 function markMounted(detail = "runtime root detected") {
   window[PRODUCTS_RUNTIME_RECEIPT] = true;
   setRuntimeStatus("mounted", detail);
 
-  if (window.location.hash === "#productsRuntimeMount") {
-    focusMoleculeWindow();
+  if (
+    window.location.hash === "#product-orbit" ||
+    window.location.hash === "#productsRuntimeMount"
+  ) {
+    focusProductOrbit();
   }
 }
 
@@ -287,11 +236,9 @@ function checkMountedAfterLoad() {
       return;
     }
 
-    setRuntimeStatus("loaded-but-not-mounted", "script loaded but no runtime root appeared");
-
-    renderBootReceipt(
-      "loaded but did not mount",
-      "The runtime script loaded, but it did not inject the four-lobed molecular flower. Check /products/products_runtime.js for a JavaScript error before mount."
+    setRuntimeStatus(
+      "loaded-but-not-mounted",
+      "script loaded but no runtime root appeared"
     );
   }, CHECK_AFTER_LOAD_MS);
 }
@@ -314,6 +261,8 @@ function appendRuntimeScript() {
   script.dataset.productsRuntimeScript = "true";
   script.dataset.productsRuntimeVersion = PRODUCTS_RUNTIME_VERSION;
   script.dataset.productsRuntimeBridgeContract = PRODUCTS_BRIDGE_CONTRACT;
+  script.dataset.runtimeEnhancementOnly = "true";
+  script.dataset.runtimePublicMessage = "false";
 
   script.onload = () => {
     setRuntimeStatus("script-loaded", "runtime script loaded");
@@ -323,13 +272,7 @@ function appendRuntimeScript() {
   script.onerror = () => {
     window[PRODUCTS_RUNTIME_FLAG] = false;
     state.requested = false;
-
     setRuntimeStatus("failed", "script failed to load");
-
-    renderBootReceipt(
-      "failed",
-      "The products shell loaded, but /products/products_runtime.js failed to load. Confirm the file exists at /products/products_runtime.js and is deployed beside /products/index.js."
-    );
   };
 
   document.body.appendChild(script);
@@ -347,14 +290,10 @@ function startTimeoutWatch() {
 
     if (
       mount.dataset.runtimeStatus === "loading" ||
-      mount.dataset.runtimeStatus === "script-loaded"
+      mount.dataset.runtimeStatus === "script-loaded" ||
+      mount.dataset.runtimeStatus === "script-present"
     ) {
       setRuntimeStatus("timeout", "runtime did not respond before timeout");
-
-      renderBootReceipt(
-        "timed out",
-        "The bridge requested /products/products_runtime.js, but no runtime root appeared. This usually means the runtime file is missing, cached incorrectly, or throwing before mount."
-      );
     }
   }, TIMEOUT_MS);
 }
@@ -362,8 +301,8 @@ function startTimeoutWatch() {
 function loadProductsRuntime() {
   const mount = getMount();
 
-  markDocument({ boot: "started" });
-  bindOpenMolecule();
+  markDocument({ productsBridgeBoot: "started" });
+  bindOpenProductOrbit();
 
   if (!mount) {
     setRuntimeStatus("not-mounted", "runtime mount target missing");
@@ -383,14 +322,6 @@ function loadProductsRuntime() {
 
   if (window[PRODUCTS_RUNTIME_FLAG]) {
     setRuntimeStatus("waiting", "runtime already requested");
-
-    if (!runtimeAlreadyMounted()) {
-      renderBootReceipt(
-        "waiting",
-        "The bridge already requested the runtime. Waiting for /products/products_runtime.js to mount the four-lobed molecular flower."
-      );
-    }
-
     return;
   }
 
@@ -399,11 +330,6 @@ function loadProductsRuntime() {
   state.requestStartedAt = performance.now();
 
   setRuntimeStatus("loading", "requesting runtime script");
-
-  renderBootReceipt(
-    "loading",
-    "Loading /products/products_runtime.js. If the molecule does not appear, this receipt will identify the failure."
-  );
 
   removeStaleRuntimeScript();
 
@@ -420,8 +346,10 @@ function loadProductsRuntime() {
 }
 
 function isRuntimeSource(source) {
-  return String(source || "").includes("/products/products_runtime.js") ||
-    String(source || "").includes("products_runtime.js");
+  return (
+    String(source || "").includes("/products/products_runtime.js") ||
+    String(source || "").includes("products_runtime.js")
+  );
 }
 
 window.addEventListener("error", (event) => {
@@ -434,30 +362,24 @@ window.addEventListener("error", (event) => {
   state.requested = false;
 
   setRuntimeStatus("runtime-error", message);
-
-  renderBootReceipt(
-    "error",
-    `The runtime file loaded, but threw an error before mounting: ${message}.`
-  );
 });
 
 window.addEventListener("unhandledrejection", (event) => {
   if (!window[PRODUCTS_RUNTIME_FLAG] || runtimeAlreadyMounted()) return;
 
-  const reason = event.reason?.message || String(event.reason || "unhandled promise rejection");
+  const reason =
+    event.reason?.message || String(event.reason || "unhandled promise rejection");
 
   state.lastError = reason;
   setRuntimeStatus("runtime-promise-error", reason);
-
-  renderBootReceipt(
-    "promise error",
-    "The runtime hit an unhandled promise rejection before mounting. Check /products/products_runtime.js."
-  );
 });
 
 window.addEventListener("hashchange", () => {
-  if (window.location.hash === "#productsRuntimeMount") {
-    focusMoleculeWindow();
+  if (
+    window.location.hash === "#product-orbit" ||
+    window.location.hash === "#productsRuntimeMount"
+  ) {
+    focusProductOrbit();
   }
 });
 
@@ -465,20 +387,32 @@ function boot() {
   if (state.booted) return;
 
   state.booted = true;
+
+  markDocument({
+    boot: "started",
+    productsPublicOrbitBridge: "quiet",
+    productsRuntimePublicMessage: "false"
+  });
+
   loadProductsRuntime();
 
   window.DGBProductsRuntimeBridge = Object.freeze({
     contract: PRODUCTS_BRIDGE_CONTRACT,
+    pageContract: PRODUCTS_PAGE_CONTRACT,
     runtimeSrc: PRODUCTS_RUNTIME_SRC,
     runtimeVersion: PRODUCTS_RUNTIME_VERSION,
+    runtimePublicMessage: false,
+    visibleRuntimeDiagnostics: false,
+    runtimeEnhancementOnly: true,
 
-    focusMoleculeWindow,
+    focusProductOrbit,
 
     loadProductsRuntime,
 
     status() {
       return Object.freeze({
         contract: PRODUCTS_BRIDGE_CONTRACT,
+        pageContract: PRODUCTS_PAGE_CONTRACT,
         runtimeSrc: PRODUCTS_RUNTIME_SRC,
         runtimeVersion: PRODUCTS_RUNTIME_VERSION,
         booted: state.booted,
@@ -488,6 +422,15 @@ function boot() {
         detail: state.lastDetail,
         error: state.lastError,
         mountPresent: Boolean(getMount()),
+        publicOrbitPresent: Boolean(getPublicOrbit()),
+        runtimePublicMessage: false,
+        visibleRuntimeDiagnostics: false,
+        visibleBootReceipts: false,
+        visibleCacheKeys: false,
+        visibleScriptFailureText: false,
+        runtimeEnhancementOnly: true,
+        staticPageUsableWithoutJs: true,
+        eightDoorsVisibleWithoutRuntime: true,
         generatedImage: false,
         graphicBox: false,
         streaming: false,

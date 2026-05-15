@@ -2,112 +2,124 @@
 <html
   lang="en"
   data-route="/products/on-your-side-ai/"
-  data-page="on-your-side-ai"
-  data-version="G1-V1"
-  data-contract="ON_YOUR_SIDE_AAI_PRODUCT_CHAMBER_PUBLIC_SUPPORT_TNT_v1"
-  data-status="active"
-  data-parent="/products/"
-  data-baseline="AUDRALIA_MANOR_CURRENT"
-  data-role="product-chamber"
-  data-product="on-your-side-aai"
+  data-page="on-your-side-aai-product-grandchild-support"
+  data-contract="ON_YOUR_SIDE_AAI_PRODUCT_GRANDCHILD_SUPPORT_RENEWAL_TNT_v2"
+  data-previous-contract="ON_YOUR_SIDE_AAI_PRODUCT_CHAMBER_PUBLIC_SUPPORT_TNT_v1"
+  data-parent-route="/products/"
+  data-grandparent-route="/"
+  data-role="product-grandchild"
+  data-product-chamber="on-your-side-aai"
   data-product-type="assistance-first-support"
-  data-heavy-runtime-loaded="false"
+  data-core-principle="always-on-your-side-never-in-control"
+  data-core-message="support-before-the-problem-gets-too-heavy"
+  data-support-loop="read-explain-sort-draft-next-step"
+  data-support-set="read-explain-sort-draft-next-step"
+  data-animation-method="css-only"
+  data-orbit-animation="active"
+  data-label-gravity-lock="true"
+  data-js-required="false"
   data-generated-image="false"
   data-graphic-box="false"
+  data-heavy-runtime-loaded="false"
   data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>On Your Side AI · Diamond Gate Bridge</title>
+
+  <title>On Your Side AAI · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="On Your Side AI is an assistance-first support chamber for forms, letters, choices, next steps, plain-language explanations, and practical preparation."
+    content="On Your Side AAI is assistance-first support for forms, letters, choices, next steps, and plain-language help. Always on your side. Never in control."
   >
 
   <style>
-    :root{
-      color-scheme:dark;
+    :root {
+      color-scheme: dark;
       --bg:#02040b;
       --ink:#fff4d8;
       --muted:rgba(230,238,255,.78);
-      --soft:rgba(230,238,255,.58);
-      --faint:rgba(230,238,255,.42);
+      --faint:rgba(230,238,255,.52);
       --gold:#f3c86f;
       --gold2:#ffe8a3;
-      --green:#8ff0c6;
       --blue:#8dd8ff;
-      --red:#ff8b8b;
-      --purple:#8f65ff;
-      --panel:rgba(9,15,31,.84);
+      --green:#8ff0c3;
+      --mint:#a7f3c6;
+      --violet:#beaaff;
+      --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
-      --line2:rgba(243,200,111,.34);
-      --shadow:0 32px 110px rgba(0,0,0,.46);
+      --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
+      --field-turn-duration:48s;
+      --orbit-duration:32s;
+      --gem-float-duration:6.6s;
+      --center-pulse-duration:7.2s;
+      --gem-cut:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+      --facet:polygon(0 18px,18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px));
     }
 
-    *{box-sizing:border-box}
+    * { box-sizing:border-box; }
 
-    html{
+    html {
+      min-width:320px;
       min-height:100%;
       background:var(--bg);
       scroll-behavior:smooth;
+      overflow-x:hidden;
     }
 
-    body{
+    body {
       margin:0;
+      min-width:320px;
       min-height:100vh;
       color:var(--ink);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       line-height:1.5;
-      background:
-        radial-gradient(circle at 50% -8%,rgba(243,200,111,.22),transparent 28rem),
-        radial-gradient(circle at 10% 18%,rgba(143,101,255,.20),transparent 28rem),
-        radial-gradient(circle at 92% 30%,rgba(141,216,255,.14),transparent 28rem),
-        radial-gradient(circle at 50% 78%,rgba(143,101,255,.12),transparent 34rem),
-        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
       overflow-x:hidden;
+      background:
+        radial-gradient(circle at 50% -8%,rgba(143,240,195,.20),transparent 28rem),
+        radial-gradient(circle at 12% 18%,rgba(36,120,255,.16),transparent 28rem),
+        radial-gradient(circle at 88% 30%,rgba(243,200,111,.14),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(190,170,255,.10),transparent 34rem),
+        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
     }
 
-    body::before{
+    body::before {
       content:"";
       position:fixed;
       inset:0;
+      z-index:0;
       pointer-events:none;
       background-image:
         radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
-        linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
+        linear-gradient(rgba(143,240,195,.04) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.04) 1px,transparent 1px);
       background-size:220px 260px,54px 54px,54px 54px;
-      opacity:.24;
+      opacity:.22;
       mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
 
-    body::after{
-      content:"";
-      position:fixed;
-      inset:-20%;
-      pointer-events:none;
-      background:
-        conic-gradient(from 90deg at 50% 50%,
-          transparent 0deg,
-          rgba(143,101,255,.08) 52deg,
-          transparent 108deg,
-          rgba(243,200,111,.06) 172deg,
-          transparent 224deg,
-          rgba(141,216,255,.07) 292deg,
-          transparent 360deg);
-      filter:blur(42px);
-      opacity:.58;
-      animation:auroraDrift 28s linear infinite;
+    a { color:inherit; text-decoration:none; }
+
+    a:focus-visible,
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline:2px solid var(--gold);
+      outline-offset:4px;
     }
 
-    a{color:inherit;text-decoration:none}
+    .svg-defs {
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
+    }
 
-    .skip{
+    .skip {
       position:absolute;
       left:-999px;
       top:8px;
@@ -119,9 +131,9 @@
       font-weight:950;
     }
 
-    .skip:focus{left:8px}
+    .skip:focus { left:8px; }
 
-    .shell{
+    .shell {
       position:relative;
       z-index:2;
       width:min(var(--max),calc(100% - 28px));
@@ -129,7 +141,7 @@
       padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
     }
 
-    .topbar{
+    .topbar {
       display:grid;
       grid-template-columns:auto 1fr;
       align-items:center;
@@ -137,7 +149,7 @@
       padding:12px 0 18px;
     }
 
-    .brand{
+    .brand {
       display:grid;
       grid-template-columns:auto 1fr;
       align-items:center;
@@ -145,43 +157,45 @@
       min-width:260px;
     }
 
-    .brand-mark{
+    .brand-mark {
       width:4.2rem;
       height:4.2rem;
       display:grid;
       place-items:center;
-      border:1px solid rgba(243,200,111,.44);
-      border-radius:1.15rem;
+      border:1px solid rgba(143,240,195,.46);
       transform:rotate(45deg);
+      clip-path:var(--gem-cut);
       background:
-        radial-gradient(circle at 48% 22%,rgba(255,255,255,.24),transparent 42%),
-        radial-gradient(circle at 64% 76%,rgba(143,101,255,.42),transparent 58%),
-        linear-gradient(145deg,rgba(43,32,82,.95),rgba(5,8,20,.98));
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.28) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(143,240,195,.26),rgba(36,120,255,.22),rgba(243,200,111,.18),rgba(255,255,255,.28)),
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.32),transparent 42%),
+        linear-gradient(145deg,rgba(20,95,76,.95),rgba(5,8,20,.98));
       box-shadow:
-        0 0 2rem rgba(143,101,255,.28),
+        0 0 2rem rgba(143,240,195,.24),
         0 1.2rem 2.8rem rgba(0,0,0,.46),
         inset 0 1px 0 rgba(255,255,255,.16);
     }
 
-    .brand-mark span{
+    .brand-mark span {
       transform:rotate(-45deg);
       font-weight:950;
       letter-spacing:.04em;
       color:rgba(255,244,216,.98);
+      text-shadow:0 2px 10px rgba(0,0,0,.85);
     }
 
-    .brand-copy{
+    .brand-copy {
       display:grid;
       gap:.18rem;
     }
 
-    .brand-copy strong{
+    .brand-copy strong {
       font-size:clamp(1.08rem,3vw,1.7rem);
       line-height:1;
       letter-spacing:-.045em;
     }
 
-    .brand-copy span{
+    .brand-copy span {
       color:var(--muted);
       font-size:.74rem;
       font-weight:950;
@@ -189,14 +203,14 @@
       text-transform:uppercase;
     }
 
-    .nav{
+    .nav {
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
       gap:.48rem;
     }
 
-    .nav a{
+    .nav a {
       min-height:2.25rem;
       display:inline-flex;
       align-items:center;
@@ -213,27 +227,27 @@
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .nav a[aria-current="page"]{
-      border-color:rgba(243,200,111,.88);
-      color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    .nav a[aria-current="page"] {
+      border-color:rgba(143,240,195,.82);
+      color:#06101c;
+      background:linear-gradient(135deg,#b7ffd4,#87e6b5);
     }
 
-    .panel{
+    .panel {
       border:1px solid var(--line);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
-        radial-gradient(circle at 86% 18%,rgba(143,101,255,.14),transparent 28rem),
+        radial-gradient(circle at 14% 0%,rgba(143,240,195,.10),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(36,120,255,.12),transparent 28rem),
         linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
         var(--panel);
       box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
       overflow:hidden;
     }
 
-    .hero{
+    .hero {
       position:relative;
-      min-height:clamp(25rem,48vw,36rem);
+      min-height:clamp(23rem,42vw,34rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -242,27 +256,32 @@
       isolation:isolate;
     }
 
-    .hero::before{
+    .hero::before {
       content:"";
       position:absolute;
       right:clamp(1rem,6vw,5.5rem);
       top:50%;
       z-index:0;
-      width:clamp(10rem,27vw,20rem);
-      height:clamp(10rem,27vw,20rem);
-      border:1px solid rgba(243,200,111,.20);
+      width:clamp(9rem,25vw,18rem);
+      height:clamp(9rem,25vw,18rem);
+      border:1px solid rgba(143,240,195,.18);
       border-radius:2.9rem;
       transform:translateY(-50%) rotate(45deg);
       background:
-        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
-        radial-gradient(circle at 50% 72%,rgba(143,101,255,.16),transparent 62%),
+        radial-gradient(circle at 50% 42%,rgba(143,240,195,.14),transparent 48%),
+        radial-gradient(circle at 50% 72%,rgba(36,120,255,.14),transparent 62%),
         linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
-      animation:heroDiamond 8s ease-in-out infinite;
+      animation:anchorPulse 8s ease-in-out infinite;
       pointer-events:none;
-      opacity:.52;
+      opacity:.54;
     }
 
-    .kicker{
+    @keyframes anchorPulse {
+      0%,100% { opacity:.42; filter:brightness(.95); }
+      50% { opacity:.60; filter:brightness(1.1); }
+    }
+
+    .kicker {
       width:fit-content;
       display:inline-flex;
       align-items:center;
@@ -280,31 +299,31 @@
       z-index:2;
     }
 
-    .kicker::before{
+    .kicker::before {
       content:"";
       width:.72rem;
       height:.72rem;
       border-radius:.18rem;
       transform:rotate(45deg);
-      background:linear-gradient(135deg,var(--gold2),var(--gold));
-      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
+      background:linear-gradient(135deg,var(--mint),var(--green));
+      box-shadow:0 0 1.1rem rgba(143,240,195,.46);
     }
 
-    h1{
+    h1 {
       margin:0;
-      max-width:960px;
-      font-size:clamp(3.1rem,10vw,7.1rem);
-      line-height:.84;
-      letter-spacing:-.105em;
+      max-width:1000px;
+      font-size:clamp(3rem,9vw,6.8rem);
+      line-height:.86;
+      letter-spacing:-.102em;
       text-wrap:balance;
       position:relative;
       z-index:2;
     }
 
-    h2{
+    h2 {
       margin:0;
       color:var(--gold);
-      font-size:clamp(1.45rem,4.7vw,2.85rem);
+      font-size:clamp(1.45rem,4.7vw,2.65rem);
       line-height:.98;
       letter-spacing:-.07em;
       text-wrap:balance;
@@ -312,29 +331,42 @@
       z-index:2;
     }
 
-    h3{
-      margin:0;
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.05rem,3vw,1.34rem);
-      line-height:1.08;
-      letter-spacing:-.035em;
-    }
-
-    p{
+    p {
       margin:0;
       color:var(--muted);
       font-size:clamp(.98rem,2.7vw,1.16rem);
       line-height:1.55;
     }
 
-    .lead{
-      max-width:900px;
+    .lead {
+      max-width:910px;
       position:relative;
       z-index:2;
     }
 
-    .quote{
-      max-width:880px;
+    .subline {
+      max-width:920px;
+      color:rgba(255,244,216,.90);
+      font-size:clamp(1.08rem,2.8vw,1.34rem);
+      font-weight:850;
+      position:relative;
+      z-index:2;
+    }
+
+    .principle {
+      max-width:980px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(143,240,195,.26);
+      border-radius:1.2rem;
+      color:rgba(200,255,228,.96);
+      background:rgba(28,80,58,.16);
+      font-weight:900;
+      position:relative;
+      z-index:2;
+    }
+
+    .guardrail {
+      max-width:980px;
       padding:1rem 1.1rem;
       border:1px solid rgba(243,200,111,.22);
       border-radius:1.2rem;
@@ -345,7 +377,7 @@
       z-index:2;
     }
 
-    .actions{
+    .actions {
       display:flex;
       flex-wrap:wrap;
       gap:.62rem;
@@ -354,7 +386,7 @@
       z-index:2;
     }
 
-    .button{
+    .button {
       min-height:2.65rem;
       display:inline-flex;
       align-items:center;
@@ -373,562 +405,666 @@
     }
 
     .button:hover,
-    .button:focus-visible{
+    .button:focus-visible {
       transform:translateY(-2px);
-      border-color:rgba(243,200,111,.62);
+      border-color:rgba(143,240,195,.62);
       outline:none;
     }
 
-    .button.gold,
-    .button.primary{
+    .button.gold {
       border-color:rgba(243,200,111,.9);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
       box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
     }
 
-    .section{
+    .button.green {
+      border-color:rgba(143,240,195,.42);
+      color:var(--green);
+      background:rgba(143,240,195,.07);
+    }
+
+    .section {
       margin-top:1.15rem;
       padding:clamp(1rem,3vw,1.45rem);
       display:grid;
       gap:1.05rem;
     }
 
-    .support-field{
+    .support-stage {
       position:relative;
-      min-height:clamp(36rem,64vw,52rem);
-      overflow:hidden;
-      border:1px solid rgba(243,200,111,.18);
-      border-radius:clamp(1.25rem,5vw,2.2rem);
-      background:
-        radial-gradient(circle at 50% 48%,rgba(243,200,111,.075),transparent 22%),
-        radial-gradient(circle at 50% 48%,rgba(143,101,255,.16),transparent 54%),
-        radial-gradient(circle at 50% 48%,rgba(141,216,255,.08),transparent 72%),
-        rgba(255,255,255,.018);
-      padding:clamp(1.15rem,3vw,2rem);
+      min-height:clamp(32rem,62vw,45rem);
       display:grid;
       place-items:center;
+      overflow:hidden;
       isolation:isolate;
-    }
-
-    .support-field::before{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      z-index:0;
-      width:clamp(21rem,56vw,42rem);
-      height:clamp(21rem,56vw,42rem);
-      border:1px solid rgba(215,194,255,.16);
-      border-radius:4rem;
-      transform:translate(-50%,-50%) rotate(45deg);
-      box-shadow:
-        0 0 0 clamp(4rem,9vw,7rem) rgba(143,101,255,.035),
-        0 0 0 clamp(8rem,18vw,13rem) rgba(243,200,111,.024),
-        inset 0 0 3rem rgba(143,101,255,.06);
-      animation:fieldTurn 46s linear infinite;
-      pointer-events:none;
-    }
-
-    .support-field::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:7%;
-      bottom:7%;
-      z-index:0;
-      width:1px;
-      transform:translateX(-50%);
-      background:linear-gradient(180deg,transparent,rgba(243,200,111,.32),rgba(141,216,255,.18),transparent);
-      opacity:.72;
-      pointer-events:none;
-    }
-
-    .axis-line{
-      position:absolute;
-      left:7%;
-      right:7%;
-      top:50%;
-      z-index:0;
-      height:1px;
-      background:linear-gradient(90deg,transparent,rgba(141,216,255,.22),rgba(243,200,111,.22),transparent);
-      opacity:.58;
-      pointer-events:none;
-    }
-
-    .support-anchor{
-      position:absolute;
-      left:50%;
-      top:50%;
-      z-index:1;
-      width:clamp(13rem,30vw,22rem);
-      height:clamp(13rem,30vw,22rem);
-      border:1px solid rgba(243,200,111,.20);
-      border-radius:4rem;
+      border:1px solid rgba(184,205,255,.13);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        radial-gradient(circle at 48% 20%,rgba(255,255,255,.08),transparent 42%),
-        radial-gradient(circle at 54% 68%,rgba(143,101,255,.22),transparent 58%),
-        linear-gradient(145deg,rgba(33,29,58,.50),rgba(5,9,20,.55));
-      box-shadow:
-        0 1.7rem 4.2rem rgba(0,0,0,.20),
-        0 0 3.6rem rgba(143,101,255,.18),
-        inset 0 1px 0 rgba(255,255,255,.08);
-      transform:translate(-50%,-50%) rotate(45deg);
-      opacity:.30;
-      pointer-events:none;
-      animation:anchorPulse 8s ease-in-out infinite;
+        radial-gradient(circle at 50% 42%,rgba(143,240,195,.13),transparent 20rem),
+        radial-gradient(circle at 50% 52%,rgba(36,120,255,.12),transparent 25rem),
+        linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.92));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .support-anchor-label{
+    .support-stage::before,
+    .support-stage::after {
+      content:"";
       position:absolute;
       left:50%;
       top:50%;
-      z-index:2;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+    }
+
+    .support-stage::before {
+      width:min(80%,34rem);
+      height:min(80%,34rem);
+      border:1px solid rgba(143,240,195,.10);
+      background:
+        conic-gradient(
+          from 0deg,
+          transparent 0deg,
+          rgba(143,240,195,.12) 28deg,
+          transparent 58deg,
+          rgba(141,216,255,.10) 108deg,
+          transparent 154deg,
+          rgba(243,200,111,.10) 214deg,
+          transparent 270deg,
+          rgba(190,170,255,.08) 320deg,
+          transparent 360deg
+        );
+      box-shadow:0 0 3rem rgba(143,240,195,.10);
+      opacity:.82;
+      animation:supportFieldTurn var(--field-turn-duration) linear infinite;
+    }
+
+    .support-stage::after {
+      width:min(52%,22rem);
+      height:min(52%,22rem);
+      border:1px solid rgba(36,120,255,.15);
+      box-shadow:
+        inset 0 0 3rem rgba(36,120,255,.035),
+        0 0 2.4rem rgba(36,120,255,.08);
+      animation:supportInnerFieldBreathe 8s ease-in-out infinite;
+    }
+
+    @keyframes supportFieldTurn {
+      to { transform:translate(-50%,-50%) rotate(360deg); }
+    }
+
+    @keyframes supportInnerFieldBreathe {
+      0%,100% { opacity:.54; filter:brightness(.94); }
+      50% { opacity:.86; filter:brightness(1.12); }
+    }
+
+    .center-gem {
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:5;
+      width:clamp(10.5rem,24vw,15rem);
+      height:clamp(7.7rem,17vw,10.9rem);
       transform:translate(-50%,-50%);
       display:grid;
-      gap:.2rem;
+      place-items:center;
       text-align:center;
       pointer-events:none;
-      opacity:.78;
     }
 
-    .support-anchor-label strong{
-      color:rgba(255,244,216,.94);
-      font-size:clamp(1rem,3vw,1.65rem);
-      line-height:1;
-      font-weight:950;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-      text-shadow:0 .25rem 1.4rem rgba(0,0,0,.6);
+    .support-orbit {
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:4;
+      width:min(80%,34rem);
+      height:min(80%,34rem);
+      border-radius:999px;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+      animation:supportOrbitTurn var(--orbit-duration) linear infinite;
+      transform-origin:50% 50%;
+      will-change:transform;
     }
 
-    .support-anchor-label span{
-      color:rgba(230,238,255,.72);
-      font-size:.78rem;
-      letter-spacing:.04em;
+    @keyframes supportOrbitTurn {
+      from { transform:translate(-50%,-50%) rotate(0deg); }
+      to { transform:translate(-50%,-50%) rotate(360deg); }
     }
 
-    .support-grid{
-      position:relative;
-      z-index:5;
-      width:min(100%,880px);
-      min-height:clamp(30rem,52vw,42rem);
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      grid-template-rows:repeat(3,minmax(0,1fr));
-      gap:clamp(.8rem,2vw,1.1rem);
-      align-items:center;
-      justify-items:center;
-      padding:clamp(.5rem,2vw,1rem);
-    }
-
-    .support-node{
-      width:100%;
-      min-height:clamp(8rem,14vw,11.6rem);
+    .center-gem-core,
+    .support-gem-core,
+    .support-upright {
+      position:absolute;
+      inset:0;
       display:grid;
       place-items:center;
       text-align:center;
-      animation:nodeFloat 7s ease-in-out infinite;
-      animation-delay:var(--delay,0s);
+      transform-origin:50% 50%;
     }
 
-    .support-node.read{grid-column:2;grid-row:1}
-    .support-node.explain{grid-column:1;grid-row:2}
-    .support-node.sort{grid-column:2;grid-row:2}
-    .support-node.draft{grid-column:3;grid-row:2}
-    .support-node.next{grid-column:2;grid-row:3}
+    .center-gem-core {
+      animation:centerPulse var(--center-pulse-duration) ease-in-out infinite;
+    }
 
-    .support-card{
+    @keyframes centerPulse {
+      0%,100% { transform:scale(1); filter:brightness(1); }
+      50% { transform:scale(1.035); filter:brightness(1.13); }
+    }
+
+    .support-point {
+      --angle:0deg;
+      --radius:-15rem;
+      --support-delay:0s;
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:clamp(7.4rem,16vw,9.4rem);
+      height:clamp(5.4rem,12vw,6.95rem);
+      margin-left:calc(clamp(7.4rem,16vw,9.4rem) / -2);
+      margin-top:calc(clamp(5.4rem,12vw,6.95rem) / -2);
       display:grid;
       place-items:center;
-      gap:.55rem;
-      width:100%;
+      text-align:center;
+      pointer-events:auto;
+      background:transparent;
+      border:0;
+      transform:
+        rotate(var(--angle))
+        translateY(var(--radius))
+        rotate(calc(-1 * var(--angle)));
+      transition:filter .18s ease,scale .18s ease;
+    }
+
+    .support-point .support-upright {
+      animation:supportLabelGravityLock var(--orbit-duration) linear infinite reverse;
+      will-change:transform;
+    }
+
+    @keyframes supportLabelGravityLock {
+      from { transform:rotate(0deg); }
+      to { transform:rotate(360deg); }
+    }
+
+    .support-point .support-gem-core {
+      animation:supportGemFloat var(--gem-float-duration) ease-in-out infinite;
+      animation-delay:var(--support-delay);
+    }
+
+    @keyframes supportGemFloat {
+      0%,100% { transform:translateY(0) scale(1); filter:brightness(1); }
+      50% { transform:translateY(-8px) scale(1.025); filter:brightness(1.12); }
+    }
+
+    .support-point:hover,
+    .support-point:focus-visible {
+      filter:brightness(1.12) saturate(1.08);
+      scale:1.045;
       outline:none;
     }
 
-    .diamond{
-      width:clamp(4.35rem,8vw,6.55rem);
-      height:clamp(4.35rem,8vw,6.55rem);
-      border:1px solid rgba(243,200,111,.64);
-      border-radius:1.25rem;
-      transform:rotate(45deg);
-      background:
-        radial-gradient(circle at 48% 20%,rgba(255,255,255,.20),transparent 42%),
-        radial-gradient(circle at 52% 70%,rgba(243,200,111,.14),transparent 58%),
-        linear-gradient(145deg,rgba(143,101,255,.62),rgba(6,10,22,.98));
-      box-shadow:
-        0 1rem 2rem rgba(0,0,0,.38),
-        0 0 2rem rgba(143,101,255,.34),
-        0 0 1.2rem rgba(243,200,111,.16),
-        inset 0 1px 0 rgba(255,255,255,.16);
-      position:relative;
-      transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease;
+    .support-point:hover .support-gem-core,
+    .support-point:focus-visible .support-gem-core {
+      animation-play-state:paused;
+      transform:translateY(-10px) scale(1.045);
+      filter:brightness(1.18);
     }
 
-    .diamond::before,
-    .diamond::after{
-      content:"";
+    .support-gem-svg {
       position:absolute;
-      inset:18%;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:.82rem;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      pointer-events:none;
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
+        drop-shadow(0 0 1.15rem rgba(143,240,195,.18))
+        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
     }
 
-    .diamond::after{
-      inset:34%;
-      border-color:rgba(243,200,111,.16);
+    .center-gem .support-gem-svg {
+      filter:
+        drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
+        drop-shadow(0 0 1.65rem rgba(143,240,195,.24))
+        drop-shadow(0 0 .85rem rgba(36,120,255,.10));
     }
 
-    .support-card:hover .diamond,
-    .support-card:focus-visible .diamond{
-      transform:rotate(45deg) scale(1.1);
-      border-color:rgba(243,200,111,.95);
-      background:
-        radial-gradient(circle at 48% 20%,rgba(255,255,255,.24),transparent 42%),
-        radial-gradient(circle at 52% 70%,rgba(243,200,111,.22),transparent 58%),
-        linear-gradient(145deg,rgba(166,117,255,.72),rgba(6,10,22,.98));
-      box-shadow:
-        0 1.15rem 2.4rem rgba(0,0,0,.45),
-        0 0 2.6rem rgba(143,101,255,.46),
-        0 0 1.4rem rgba(243,200,111,.22);
+    .gem-label {
+      position:relative;
+      z-index:3;
+      width:72%;
+      display:grid;
+      gap:.12rem;
+      place-items:center;
+      text-align:center;
+      pointer-events:none;
+      text-shadow:
+        0 2px 12px rgba(0,0,0,.94),
+        0 0 10px rgba(0,60,45,.82),
+        0 0 2px rgba(255,255,255,.42);
     }
 
-    .node-title{
+    .gem-label b {
+      display:block;
       color:rgba(255,244,216,.98);
-      font-size:clamp(.76rem,1.75vw,1.02rem);
+      font-size:clamp(.58rem,1.5vw,.82rem);
       font-weight:950;
-      line-height:1.05;
-      letter-spacing:.1em;
+      letter-spacing:.075em;
+      line-height:1.02;
       text-transform:uppercase;
-      text-shadow:0 .2rem .9rem rgba(0,0,0,.72);
     }
 
-    .node-sub{
-      max-width:13rem;
-      color:rgba(230,238,255,.80);
-      font-size:clamp(.62rem,1.45vw,.76rem);
-      line-height:1.25;
-      text-shadow:0 .2rem .9rem rgba(0,0,0,.72);
+    .gem-label span {
+      color:rgba(230,238,255,.78);
+      font-size:clamp(.42rem,1vw,.55rem);
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
 
-    .help-grid,
-    .guard-grid,
-    .use-grid,
-    .route-grid{
+    .center-gem .gem-label b {
+      color:var(--green);
+      font-size:clamp(.72rem,1.65vw,.95rem);
+      letter-spacing:.16em;
+    }
+
+    .center-gem .gem-label strong {
+      display:block;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1rem,2.2vw,1.38rem);
+      line-height:1.05;
+      letter-spacing:-.035em;
+      text-transform:none;
+    }
+
+    .support-glint {
+      animation:supportGlint 8.5s ease-in-out infinite;
+      transform-origin:110px 80px;
+    }
+
+    .support-star {
+      animation:supportFacetTurn 28s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes supportGlint {
+      0%,100% { opacity:.08; transform:translateX(-34px); }
+      48%,55% { opacity:.56; transform:translateX(34px); }
+    }
+
+    @keyframes supportFacetTurn {
+      to { transform:rotate(360deg); }
+    }
+
+    .card-grid {
       display:grid;
-      gap:.75rem;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.85rem;
     }
 
-    .help-grid{
-      grid-template-columns:repeat(3,minmax(0,1fr));
-    }
-
-    .guard-grid{
-      grid-template-columns:repeat(3,minmax(0,1fr));
+    .loop-grid {
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:.85rem;
     }
 
     .use-grid,
-    .route-grid{
+    .guardrail-grid,
+    .route-card-grid {
+      display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.85rem;
     }
 
-    .info-card,
-    .guard-card,
-    .use-card,
-    .route-card{
-      min-height:11.5rem;
+    .card,
+    .loop-card,
+    .route-card {
       display:grid;
-      gap:.55rem;
-      align-content:start;
+      gap:.6rem;
+      min-height:100%;
       padding:1rem;
       border:1px solid rgba(255,255,255,.12);
       border-radius:1.2rem;
       background:
-        radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
+        radial-gradient(circle at 20% 0%,rgba(143,240,195,.08),transparent 60%),
         rgba(255,255,255,.035);
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
+    .card:hover,
+    .card:focus-within,
     .route-card:hover,
-    .route-card:focus-visible{
+    .route-card:focus-visible {
       transform:translateY(-3px);
-      border-color:rgba(243,200,111,.46);
+      border-color:rgba(143,240,195,.46);
       outline:none;
     }
 
-    .guard-card{
-      border-color:rgba(255,139,139,.22);
-      background:
-        radial-gradient(circle at 20% 0%,rgba(255,139,139,.06),transparent 60%),
-        rgba(255,255,255,.032);
-    }
-
-    .info-card b,
-    .guard-card b,
-    .use-card b,
-    .route-card b{
-      color:var(--gold);
+    .card b,
+    .loop-card b,
+    .route-card b {
+      color:var(--green);
       font-size:.68rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .guard-card b{
-      color:var(--red);
-    }
-
-    .info-card strong,
-    .guard-card strong,
-    .use-card strong,
-    .route-card strong{
+    .card strong,
+    .loop-card strong,
+    .route-card strong {
       color:rgba(255,244,216,.98);
-      font-size:1.05rem;
+      font-size:1.15rem;
       line-height:1.1;
     }
 
-    .info-card span,
-    .guard-card span,
-    .use-card span,
-    .route-card span{
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.4;
-    }
-
-    .support-loop{
-      display:grid;
-      gap:.65rem;
-      counter-reset:step;
-    }
-
-    .support-step{
-      counter-increment:step;
-      display:grid;
-      grid-template-columns:auto 1fr;
-      gap:.8rem;
-      align-items:start;
-      padding:.9rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1rem;
-      background:rgba(255,255,255,.032);
-    }
-
-    .support-step::before{
-      content:counter(step);
-      width:2.35rem;
-      height:2.35rem;
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(243,200,111,.32);
-      border-radius:.72rem;
-      color:var(--gold);
-      font-weight:950;
-      transform:rotate(45deg);
-      background:rgba(243,200,111,.055);
-    }
-
-    .support-step div{
-      display:grid;
-      gap:.2rem;
-    }
-
-    .support-step strong{
-      color:rgba(255,244,216,.98);
-    }
-
-    .support-step span{
+    .card span,
+    .loop-card span,
+    .route-card span {
       color:var(--muted);
       font-size:.94rem;
-      line-height:1.4;
+      line-height:1.42;
     }
 
-    .final-band{
-      margin-top:1.15rem;
-      padding:clamp(1rem,3vw,1.35rem);
-      display:grid;
-      gap:.9rem;
-      border:1px solid rgba(243,200,111,.28);
-      border-radius:clamp(1.25rem,5vw,2rem);
+    .guardrail-card {
+      border-color:rgba(243,200,111,.18);
       background:
-        radial-gradient(circle at 16% 0%,rgba(243,200,111,.10),transparent 36%),
-        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.024));
-      box-shadow:0 1.5rem 4rem rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.08);
+        radial-gradient(circle at 20% 0%,rgba(243,200,111,.08),transparent 60%),
+        rgba(243,200,111,.035);
     }
 
-    .final-band strong{
+    .guardrail-card b {
+      color:var(--gold);
+    }
+
+    .final-direction {
+      padding:1.1rem;
+      border:1px solid rgba(143,240,195,.22);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(143,240,195,.10),transparent 60%),
+        rgba(143,240,195,.045);
+      display:grid;
+      gap:.65rem;
+    }
+
+    .final-direction strong {
       color:rgba(255,244,216,.98);
-      font-size:clamp(1.2rem,3vw,1.6rem);
+      font-size:clamp(1.2rem,3.6vw,2rem);
       line-height:1.05;
       letter-spacing:-.04em;
     }
 
-    .receipt{
-      margin-top:1.15rem;
-      color:var(--faint);
-    }
-
-    .receipt summary{
-      cursor:pointer;
-      padding:1rem;
-      border:1px solid rgba(184,205,255,.14);
-      border-radius:1.2rem;
-      color:rgba(255,244,216,.96);
-      font-size:.72rem;
+    .open-path {
+      margin-top:auto;
+      color:rgba(230,238,255,.88);
+      font-size:.76rem;
       font-weight:950;
-      letter-spacing:.09em;
+      letter-spacing:.12em;
       text-transform:uppercase;
-      background:rgba(255,255,255,.035);
     }
 
-    .receipt pre{
-      margin:0;
-      padding:1rem;
-      white-space:pre-wrap;
-      overflow-wrap:anywhere;
-      font:700 .68rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    .route-receipt,
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt],
+    .receipt {
+      display:none!important;
+      visibility:hidden!important;
+      overflow:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      inset:auto!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
     }
 
-    footer{
+    footer {
       padding:1.35rem 0 .5rem;
       color:var(--faint);
       text-align:center;
       font-size:.76rem;
     }
 
-    @keyframes auroraDrift{
-      from{transform:rotate(0deg) scale(1)}
-      to{transform:rotate(360deg) scale(1)}
-    }
-
-    @keyframes heroDiamond{
-      0%,100%{opacity:.36;transform:translateY(-50%) rotate(45deg) scale(1)}
-      50%{opacity:.62;transform:translateY(-50%) rotate(45deg) scale(1.045)}
-    }
-
-    @keyframes fieldTurn{
-      from{transform:translate(-50%,-50%) rotate(45deg)}
-      to{transform:translate(-50%,-50%) rotate(405deg)}
-    }
-
-    @keyframes anchorPulse{
-      0%,100%{opacity:.28;transform:translate(-50%,-50%) rotate(45deg) scale(1)}
-      50%{opacity:.40;transform:translate(-50%,-50%) rotate(45deg) scale(1.035)}
-    }
-
-    @keyframes nodeFloat{
-      0%,100%{transform:translateY(0)}
-      50%{transform:translateY(-.55rem)}
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      body::after,
-      .hero::before,
-      .support-field::before,
-      .support-anchor,
-      .support-node{
-        animation:none!important;
-      }
-    }
-
-    @media (max-width:1080px){
-      .help-grid,
-      .guard-grid{
-        grid-template-columns:1fr;
-      }
-
+    @media (max-width:1080px) {
+      .loop-grid,
       .use-grid,
-      .route-grid{
+      .guardrail-grid,
+      .route-card-grid {
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
+
+      .card-grid {
+        grid-template-columns:1fr;
+      }
     }
 
-    @media (max-width:980px){
-      .topbar{
+    @media (max-width:980px) {
+      .topbar {
         grid-template-columns:1fr;
         align-items:start;
       }
 
-      .nav{justify-content:flex-start}
+      .nav {
+        justify-content:flex-start;
+      }
     }
 
-    @media (max-width:720px){
-      .shell{width:min(100% - 22px,var(--max))}
+    @media (max-width:720px) {
+      .shell { width:min(100% - 22px,var(--max)); }
+      h1 { font-size:clamp(3rem,17vw,5rem); }
 
-      h1{font-size:clamp(3rem,17vw,5rem)}
-
-      .hero{
-        min-height:31rem;
+      .hero {
+        min-height:28rem;
         padding:1rem;
       }
 
-      .support-field{
-        min-height:auto;
-        padding:1rem .65rem;
+      .actions { display:grid; }
+      .button { width:100%; }
+
+      .support-stage { min-height:29rem; }
+
+      .support-orbit {
+        width:20rem;
+        height:20rem;
       }
 
-      .support-grid{
-        min-height:auto;
-        grid-template-columns:1fr;
-        grid-template-rows:none;
-        gap:.9rem;
+      .support-point {
+        --radius:-9.25rem;
+        width:5.2rem;
+        height:3.82rem;
+        margin-left:-2.6rem;
+        margin-top:-1.91rem;
       }
 
-      .support-node,
-      .support-node.read,
-      .support-node.explain,
-      .support-node.sort,
-      .support-node.draft,
-      .support-node.next{
-        grid-column:auto;
-        grid-row:auto;
-        min-height:8.6rem;
+      .gem-label b { font-size:.38rem; }
+      .gem-label span { display:none; }
+
+      .center-gem {
+        width:7.4rem;
+        height:5.4rem;
       }
 
-      .support-anchor{
-        width:13rem;
-        height:13rem;
-        opacity:.18;
-      }
+      .center-gem .gem-label b { font-size:.50rem; }
+      .center-gem .gem-label strong { font-size:.82rem; }
 
-      .support-anchor-label{
-        opacity:.26;
-      }
-
-      .diamond{
-        width:3.75rem;
-        height:3.75rem;
-        border-radius:.95rem;
-      }
-
-      .node-title{font-size:.68rem}
-      .node-sub{font-size:.56rem}
-
+      .loop-grid,
       .use-grid,
-      .route-grid{
+      .guardrail-grid,
+      .route-card-grid {
         grid-template-columns:1fr;
       }
+    }
 
-      .actions{
-        display:grid;
+    @media (max-width:460px) {
+      .support-stage { min-height:27rem; }
+
+      .support-orbit {
+        width:17.3rem;
+        height:17.3rem;
       }
 
-      .button{
-        width:100%;
+      .support-point {
+        --radius:-8rem;
+        width:4.7rem;
+        height:3.45rem;
+        margin-left:-2.35rem;
+        margin-top:-1.725rem;
+      }
+
+      .gem-label b { font-size:.33rem; }
+
+      .center-gem {
+        width:6.75rem;
+        height:4.9rem;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+      }
+
+      .support-stage::before,
+      .support-stage::after,
+      .support-orbit,
+      .support-point .support-upright,
+      .center-gem-core,
+      .support-point .support-gem-core,
+      .support-glint,
+      .support-star {
+        animation:none!important;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#on-your-side-main">Skip to On Your Side AI</a>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="supportGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#f7fffb" stop-opacity=".94"/>
+        <stop offset=".16" stop-color="#a7f3c6" stop-opacity=".78"/>
+        <stop offset=".32" stop-color="#4fd6a3" stop-opacity=".62"/>
+        <stop offset=".50" stop-color="#2478ff" stop-opacity=".44"/>
+        <stop offset=".70" stop-color="#f3c86f" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#020816" stop-opacity=".92"/>
+      </linearGradient>
+
+      <linearGradient id="supportGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".90"/>
+        <stop offset=".34" stop-color="#dfffee" stop-opacity=".46"/>
+        <stop offset=".68" stop-color="#8dd8ff" stop-opacity=".18"/>
+        <stop offset="1" stop-color="#ffe8a3" stop-opacity=".10"/>
+      </linearGradient>
+
+      <linearGradient id="supportGemDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
+        <stop offset=".30" stop-color="#8ff0c3" stop-opacity=".22"/>
+        <stop offset=".62" stop-color="#2478ff" stop-opacity=".14"/>
+        <stop offset="1" stop-color="#020716" stop-opacity=".62"/>
+      </linearGradient>
+
+      <radialGradient id="supportGemTableGlow" cx="50%" cy="38%" r="64%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".58"/>
+        <stop offset=".28" stop-color="#a7f3c6" stop-opacity=".32"/>
+        <stop offset=".58" stop-color="#8dd8ff" stop-opacity=".12"/>
+        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="supportGemGlint" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#ffffff" stop-opacity=".86"/>
+        <stop offset=".52" stop-color="#fff0a3" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="supportGemGlow" x="-42%" y="-50%" width="184%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.36 0 0 0 0.08
+            0 .90 0 0 0.24
+            0 0 .70 0 0.20
+            0 0 0 0.52 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="supportDigitalGem" viewBox="0 0 220 160">
+        <g filter="url(#supportGemGlow)">
+          <path
+            d="M110 5 L145 13 L182 38 L210 75 L190 106 L150 137 L110 155 L70 137 L30 106 L10 75 L38 38 L75 13 Z"
+            fill="url(#supportGemBody)"
+            stroke="rgba(235,255,245,.60)"
+            stroke-width="1.35"
+          />
+          <path d="M110 5 L145 13 L132 37 L110 29 L88 37 L75 13 Z" fill="url(#supportGemAir)" opacity=".84"/>
+          <path d="M75 13 L88 37 L62 58 L38 38 Z" fill="rgba(255,255,255,.25)"/>
+          <path d="M145 13 L132 37 L158 58 L182 38 Z" fill="rgba(255,255,255,.17)"/>
+          <path d="M38 38 L62 58 L55 82 L10 75 Z" fill="rgba(143,240,195,.13)"/>
+          <path d="M182 38 L158 58 L165 82 L210 75 Z" fill="rgba(243,200,111,.12)"/>
+          <path
+            d="M88 37 L110 29 L132 37 L158 58 L148 82 L110 101 L72 82 L62 58 Z"
+            fill="url(#supportGemTableGlow)"
+            stroke="rgba(255,255,255,.30)"
+            stroke-width=".9"
+          />
+          <path d="M10 75 L55 82 L70 137 L30 106 Z" fill="rgba(143,240,195,.16)"/>
+          <path d="M210 75 L165 82 L150 137 L190 106 Z" fill="rgba(36,120,255,.12)"/>
+          <path d="M55 82 L72 82 L110 155 L70 137 Z" fill="rgba(2,8,24,.38)"/>
+          <path d="M165 82 L148 82 L110 155 L150 137 Z" fill="rgba(243,200,111,.10)"/>
+          <path d="M72 82 L110 101 L110 155 Z" fill="url(#supportGemDepth)" opacity=".76"/>
+          <path d="M148 82 L110 101 L110 155 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M110 5 L110 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
+          <path d="M10 75 L210 75" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
+          <path d="M38 38 L190 106" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M182 38 L30 106" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M75 13 L110 101 L145 13" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
+          <path d="M38 38 L110 101 L182 38" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M30 106 L110 101 L190 106" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
+          <g class="support-star" opacity=".82">
+            <path d="M110 26 L116 70 L110 106 L104 70 Z" fill="rgba(255,255,255,.28)"/>
+            <path d="M62 58 L105 72 L158 58 L116 78 Z" fill="rgba(255,255,255,.17)"/>
+            <path d="M72 82 L105 75 L148 82 L114 91 Z" fill="rgba(143,240,195,.14)"/>
+            <path d="M110 101 L126 81 L148 82 L129 96 Z" fill="rgba(255,255,255,.14)"/>
+            <path d="M110 101 L94 81 L72 82 L91 96 Z" fill="rgba(243,200,111,.08)"/>
+          </g>
+          <path class="support-glint" d="M34 117 L176 22 L188 38 L48 130 Z" fill="url(#supportGemGlint)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
+  <a class="skip" href="#on-your-side-main">Skip to On Your Side AAI</a>
 
   <div class="shell">
-    <header class="topbar" aria-label="On Your Side AI header">
+    <header class="topbar" aria-label="On Your Side AAI header">
       <a class="brand" href="/">
-        <span class="brand-mark"><span>AI</span></span>
+        <span class="brand-mark" aria-hidden="true"><span>AAI</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
-          <strong>On Your Side AI</strong>
+          <strong>On Your Side AAI</strong>
         </span>
       </a>
 
@@ -936,11 +1072,13 @@
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/explore/">Manor</a>
+        <a href="/explore/">Explore</a>
         <a href="/nine-summits/">Nine Summits</a>
         <a href="/products/">Products</a>
         <a href="/products/five-flags/">Five Flags</a>
-        <a href="/products/on-your-side-ai/" aria-current="page">On Your Side AI</a>
+        <a href="/products/on-your-side-ai/" aria-current="page">On Your Side AAI</a>
+        <a href="/products/education/">Education</a>
+        <a href="/products/nutrition/">Nutrition</a>
         <a href="/showroom/">Showroom</a>
         <a href="/gauges/">Gauges</a>
       </nav>
@@ -950,19 +1088,24 @@
       <section class="panel hero" aria-labelledby="page-title">
         <div class="kicker">On Your Side AAI · Product Chamber</div>
         <h1 id="page-title">Support before the problem gets too heavy.</h1>
-        <h2>Read it. Explain it. Sort it. Draft it. Choose the next step.</h2>
+
+        <p class="subline">Read it. Explain it. Sort it. Draft it. Choose the next step.</p>
 
         <p class="lead">
-          On Your Side AI is assistance-first AI for forms, letters, choices, next steps, and plain-language support. It helps people organize the problem before the problem organizes them.
+          On Your Side AAI is assistance-first support for forms, letters, choices, next steps, and plain-language help. It helps people organize the problem before the problem organizes them.
         </p>
 
-        <div class="quote">
-          It does not replace licensed authority. It helps the user prepare, understand, ask better questions, and move with less panic.
+        <div class="principle">
+          Always on your side. Never in control.
+        </div>
+
+        <div class="guardrail">
+          It does not replace licensed authority. It is not a lawyer, doctor, accountant, financial advisor, emergency service, or final decision-maker. It helps the user prepare, understand, ask better questions, and move with less panic.
         </div>
 
         <div class="actions">
           <a class="button gold" href="#support-loop">How Support Works</a>
-          <a class="button" href="#guardrails">Guardrails</a>
+          <a class="button green" href="#guardrails">Guardrails</a>
           <a class="button" href="/products/">Back to Products</a>
           <a class="button" href="/gauges/">Read Gauges</a>
         </div>
@@ -972,55 +1115,64 @@
         <div class="kicker">Five support points</div>
         <h2 id="support-title">The chamber turns confusion into a next step.</h2>
 
-        <div class="support-field" aria-label="Animated On Your Side AI support field">
-          <div class="axis-line" aria-hidden="true"></div>
-
-          <div class="support-anchor" aria-hidden="true"></div>
-          <div class="support-anchor-label" aria-hidden="true">
-            <strong>On Your Side</strong>
-            <span>Support Field</span>
+        <div class="support-stage" aria-label="Read explain sort draft next step support field">
+          <div class="center-gem" aria-hidden="true">
+            <span class="center-gem-core">
+              <svg class="support-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                <use href="#supportDigitalGem"></use>
+              </svg>
+              <span class="gem-label">
+                <b>On Your Side</b>
+                <strong>Support Field</strong>
+              </span>
+            </span>
           </div>
 
-          <div class="support-grid">
-            <div class="support-node read" style="--delay:.05s">
-              <div class="support-card">
-                <span class="diamond" aria-hidden="true"></span>
-                <span class="node-title">Read</span>
-                <span class="node-sub">Bring the problem in</span>
-              </div>
-            </div>
+          <div class="support-orbit" aria-label="Animated support orbit">
+            <a class="support-point" style="--angle:0deg;--support-delay:-.2s" href="#support-loop">
+              <span class="support-upright">
+                <span class="support-gem-core">
+                  <svg class="support-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#supportDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Read</b><span>Bring it in</span></span>
+                </span>
+              </span>
+            </a>
 
-            <div class="support-node explain" style="--delay:.18s">
-              <div class="support-card">
-                <span class="diamond" aria-hidden="true"></span>
-                <span class="node-title">Explain</span>
-                <span class="node-sub">Plain meaning</span>
-              </div>
-            </div>
+            <a class="support-point" style="--angle:72deg;--support-delay:-1.4s" href="#support-loop">
+              <span class="support-upright">
+                <span class="support-gem-core">
+                  <svg class="support-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#supportDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Explain</b><span>Plain meaning</span></span>
+                </span>
+              </span>
+            </a>
 
-            <div class="support-node sort" style="--delay:.31s">
-              <div class="support-card">
-                <span class="diamond" aria-hidden="true"></span>
-                <span class="node-title">Sort</span>
-                <span class="node-sub">Options and risks</span>
-              </div>
-            </div>
+            <a class="support-point" style="--angle:144deg;--support-delay:-2.6s" href="#support-loop">
+              <span class="support-upright">
+                <span class="support-gem-core">
+                  <svg class="support-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#supportDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Sort</b><span>Options and risks</span></span>
+                </span>
+              </span>
+            </a>
 
-            <div class="support-node draft" style="--delay:.44s">
-              <div class="support-card">
-                <span class="diamond" aria-hidden="true"></span>
-                <span class="node-title">Draft</span>
-                <span class="node-sub">Letters and plans</span>
-              </div>
-            </div>
+            <a class="support-point" style="--angle:216deg;--support-delay:-3.8s" href="#support-loop">
+              <span class="support-upright">
+                <span class="support-gem-core">
+                  <svg class="support-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#supportDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Draft</b><span>Letters and plans</span></span>
+                </span>
+              </span>
+            </a>
 
-            <div class="support-node next" style="--delay:.57s">
-              <div class="support-card">
-                <span class="diamond" aria-hidden="true"></span>
-                <span class="node-title">Next Step</span>
-                <span class="node-sub">What to do next</span>
-              </div>
-            </div>
+            <a class="support-point" style="--angle:288deg;--support-delay:-5s" href="#support-loop">
+              <span class="support-upright">
+                <span class="support-gem-core">
+                  <svg class="support-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#supportDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Next Step</b><span>Move clearly</span></span>
+                </span>
+              </span>
+            </a>
           </div>
         </div>
       </section>
@@ -1029,20 +1181,20 @@
         <div class="kicker">What it helps with</div>
         <h2 id="helps-title">Practical support for real-life pressure.</h2>
 
-        <div class="help-grid">
-          <article class="info-card">
+        <div class="card-grid">
+          <article class="card">
             <b>Forms</b>
             <strong>Understand what the document is asking.</strong>
             <span>Break confusing forms into plain language, missing items, deadlines, and questions to ask.</span>
           </article>
 
-          <article class="info-card">
+          <article class="card">
             <b>Letters</b>
             <strong>Turn stress into a clean response.</strong>
             <span>Read letters, explain what they likely mean, and help draft a calm response or follow-up.</span>
           </article>
 
-          <article class="info-card">
+          <article class="card">
             <b>Choices</b>
             <strong>Sort the options before acting.</strong>
             <span>Compare choices, risks, tradeoffs, next steps, and what information is still missing.</span>
@@ -1050,69 +1202,70 @@
         </div>
       </section>
 
-      <section id="support-loop" class="panel section" aria-labelledby="loop-title">
+      <section class="panel section" id="support-loop" aria-labelledby="loop-title">
         <div class="kicker">Support loop</div>
         <h2 id="loop-title">Read → Explain → Sort → Draft → Next Step.</h2>
 
-        <div class="support-loop">
-          <div class="support-step">
-            <div>
-              <strong>Bring the issue in.</strong>
-              <span>The user brings a form, letter, decision, deadline, question, or situation.</span>
-            </div>
-          </div>
+        <div class="loop-grid">
+          <article class="loop-card">
+            <b>01</b>
+            <strong>Bring the issue in.</strong>
+            <span>The user brings a form, letter, decision, deadline, question, or situation.</span>
+          </article>
 
-          <div class="support-step">
-            <div>
-              <strong>Explain the plain meaning.</strong>
-              <span>The system translates the pressure into understandable language without pretending to be the final authority.</span>
-            </div>
-          </div>
+          <article class="loop-card">
+            <b>02</b>
+            <strong>Explain the plain meaning.</strong>
+            <span>The system translates pressure into understandable language without pretending to be the final authority.</span>
+          </article>
 
-          <div class="support-step">
-            <div>
-              <strong>Sort options and risks.</strong>
-              <span>The user sees possible paths, missing information, questions to ask, and likely tradeoffs.</span>
-            </div>
-          </div>
+          <article class="loop-card">
+            <b>03</b>
+            <strong>Sort options and risks.</strong>
+            <span>The user sees possible paths, missing information, questions to ask, and likely tradeoffs.</span>
+          </article>
 
-          <div class="support-step">
-            <div>
-              <strong>Draft the response or plan.</strong>
-              <span>The chamber can help prepare letters, checklists, scripts, questions, or next-step plans.</span>
-            </div>
-          </div>
+          <article class="loop-card">
+            <b>04</b>
+            <strong>Draft the response or plan.</strong>
+            <span>The chamber helps prepare letters, checklists, scripts, questions, or next-step plans.</span>
+          </article>
 
-          <div class="support-step">
-            <div>
-              <strong>Choose the next step.</strong>
-              <span>The user stays in control. The tool supports preparation, clarity, and movement.</span>
-            </div>
-          </div>
+          <article class="loop-card">
+            <b>05</b>
+            <strong>Choose the next step.</strong>
+            <span>The user stays in control. The tool supports preparation, clarity, and movement.</span>
+          </article>
         </div>
       </section>
 
-      <section id="guardrails" class="panel section" aria-labelledby="guard-title">
+      <section class="panel section" id="guardrails" aria-labelledby="guardrails-title">
         <div class="kicker">Guardrails</div>
-        <h2 id="guard-title">Support is not replacement.</h2>
+        <h2 id="guardrails-title">Support is not replacement.</h2>
 
-        <div class="guard-grid">
-          <article class="guard-card">
+        <div class="guardrail-grid">
+          <article class="card guardrail-card">
             <b>Not legal authority</b>
             <strong>It does not replace a lawyer.</strong>
             <span>It can help organize facts, read language, draft questions, and prepare for professional help.</span>
           </article>
 
-          <article class="guard-card">
+          <article class="card guardrail-card">
             <b>Not medical authority</b>
             <strong>It does not replace a doctor or emergency care.</strong>
             <span>For medical emergencies or urgent safety issues, contact emergency services or a qualified professional.</span>
           </article>
 
-          <article class="guard-card">
+          <article class="card guardrail-card">
             <b>Not financial authority</b>
             <strong>It does not replace an accountant or financial advisor.</strong>
             <span>It can help clarify documents, prepare questions, and organize options before expert review.</span>
+          </article>
+
+          <article class="card guardrail-card">
+            <b>Not decision control</b>
+            <strong>It does not take authority away from the user.</strong>
+            <span>It supports preparation, questions, drafts, and options. The user remains the decision-maker.</span>
           </article>
         </div>
       </section>
@@ -1122,25 +1275,25 @@
         <h2 id="use-title">Where the chamber belongs.</h2>
 
         <div class="use-grid">
-          <article class="use-card">
+          <article class="card">
             <b>Household</b>
             <strong>Letters, forms, bills, and choices.</strong>
             <span>Plain-language support for everyday problems that become heavier when ignored.</span>
           </article>
 
-          <article class="use-card">
+          <article class="card">
             <b>Work</b>
             <strong>Messages, requests, and next steps.</strong>
             <span>Prepare cleaner communication before replying under pressure.</span>
           </article>
 
-          <article class="use-card">
+          <article class="card">
             <b>Agency</b>
             <strong>Questions before the call.</strong>
             <span>Organize what to ask, what to bring, and what still needs proof.</span>
           </article>
 
-          <article class="use-card">
+          <article class="card">
             <b>Life pressure</b>
             <strong>Stop spinning. Start sorting.</strong>
             <span>When the issue feels too big, the first useful move is making it readable.</span>
@@ -1150,62 +1303,70 @@
 
       <section class="panel section" aria-labelledby="routes-title">
         <div class="kicker">Product chamber routes</div>
-        <h2 id="routes-title">On Your Side AI stays attached to the product wing.</h2>
+        <h2 id="routes-title">On Your Side AAI stays attached to the product wing.</h2>
 
-        <div class="route-grid">
+        <div class="route-card-grid">
           <a class="route-card" href="/products/">
             <b>Products</b>
             <strong>Return to the wing.</strong>
-            <span>On Your Side AI sits inside the larger product chamber system.</span>
+            <span>On Your Side AAI sits inside the larger product chamber system.</span>
+            <span class="open-path">Open Products</span>
           </a>
 
           <a class="route-card" href="/products/five-flags/">
             <b>Five Flags</b>
             <strong>Open the game chamber.</strong>
             <span>Five Flags is the product wing’s signal-game chamber.</span>
+            <span class="open-path">Open Five Flags</span>
           </a>
 
           <a class="route-card" href="/showroom/">
             <b>Showroom</b>
             <strong>Inspect the build.</strong>
             <span>Public expression and demonstration surfaces stay separate from support rules.</span>
+            <span class="open-path">Open Showroom</span>
           </a>
 
           <a class="route-card" href="/gauges/">
             <b>Gauges</b>
             <strong>Measure the route.</strong>
             <span>Gauges checks served source truth and contract alignment.</span>
+            <span class="open-path">Read Gauges</span>
           </a>
         </div>
       </section>
 
-      <section class="final-band" aria-labelledby="final-title">
-        <div class="kicker">Final direction</div>
-        <strong id="final-title">On Your Side AI helps the user get organized before acting.</strong>
-        <p>
-          The user brings the pressure in. The chamber helps read it, explain it, sort it, draft around it, and choose the next step. Support first. Authority boundaries preserved.
-        </p>
+      <section class="panel section" aria-labelledby="final-title">
+        <div class="final-direction">
+          <strong id="final-title">On Your Side AAI helps the user get organized before acting.</strong>
+          <p>
+            The user brings the pressure in. The chamber helps read it, explain it, sort it, draft around it, and choose the next step. Support first. Authority boundaries preserved.
+          </p>
 
-        <div class="actions">
-          <a class="button gold" href="/products/">Back to Products</a>
-          <a class="button" href="/products/five-flags/">Open Five Flags</a>
-          <a class="button" href="/showroom/">Open Showroom</a>
-          <a class="button" href="/gauges/">Read Gauges</a>
+          <div class="actions">
+            <a class="button gold" href="/products/">Back to Products</a>
+            <a class="button green" href="/products/five-flags/">Open Five Flags</a>
+            <a class="button" href="/showroom/">Open Showroom</a>
+            <a class="button" href="/gauges/">Read Gauges</a>
+          </div>
         </div>
       </section>
 
-      <details class="receipt" open>
-        <summary>Route receipt</summary>
-        <pre>ON_YOUR_SIDE_AAI_PRODUCT_CHAMBER_PUBLIC_SUPPORT_TNT_v1
+      <template id="route-receipt" data-route-receipt>
+ON_YOUR_SIDE_AAI_PRODUCT_GRANDCHILD_SUPPORT_RENEWAL_TNT_v2
+previous=ON_YOUR_SIDE_AAI_PRODUCT_CHAMBER_PUBLIC_SUPPORT_TNT_v1
 route=/products/on-your-side-ai/
-page=on_your_side_ai
-role=product_chamber
+page=on_your_side_aai
+role=product_grandchild
 parent=/products/
+grandparent=/
 product_type=assistance_first_support
-public_label=On_Your_Side_AI
+public_label=On_Your_Side_AAI
 structural_label=On_Your_Side_AAI
 aai_meaning=assistance_first_ai
 canonical_one_line=On Your Side AAI helps people read the problem, understand the options, draft the response, and choose the next step.
+core_principle=Always on your side. Never in control.
+core_message=Support before the problem gets too heavy.
 core_mechanic=read_explain_sort_draft_next_step
 support_points=read,explain,sort,draft,next_step
 helps_with=forms,letters,choices,next_steps,plain_language_support
@@ -1215,16 +1376,23 @@ not_legal_authority=true
 not_medical_authority=true
 not_financial_authority=true
 not_emergency_service=true
+not_final_decision_maker=true
+visible_label_corrections=Explore_not_Manor,On_Your_Side_AAI_not_On_Your_Side_AI
 parent_products=/products/
 five_flags=/products/five-flags/
 showroom=/showroom/
 gauges=/gauges/
 compass=/
-visual_system=animated_five_point_support_field
-animation=floating_support_diamonds,background_anchor_pulse,slow_field_turn,hover_lift
+explore=/explore/
+visual_system=code_rendered_five_support_digital_gem_orbit
+animation_method=css_only
+js_required=false
+animated=support_orbit_turn,support_label_gravity_lock,support_field_turn,support_inner_field_breathe,support_gem_float,center_pulse,support_glint,support_facet_turn
+label_gravity_lock=true
 mobile_law=stacked_support_points_no_clipping_no_hidden_nodes
-route_owns=on_your_side_aai_public_support_chamber,support_loop,guardrails,use_cases,product_chamber_receipt
-route_does_not_own=products_root,other_product_chambers,showroom,gauges_logic,runtime,render_files,instrument_state
+receipt_visibility=hidden_template_only
+route_owns=on_your_side_aai_public_support_chamber,support_loop,guardrails,use_cases,product_chamber_receipt,support_visual_field,css_only_support_orbit
+route_does_not_own=products_root,other_product_chambers,showroom,gauges_logic,runtime,render_files,instrument_state,javascript_animation_runtime,licensed_authority
 heavy_runtime_loaded=false
 render_files_touched=false
 instrument_touched=false
@@ -1232,12 +1400,12 @@ gauges_logic_touched=false
 generated_image=false
 graphic_box=false
 streaming=false
-visual_pass_claimed=false</pre>
-      </details>
+visual_pass_claimed=false
+      </template>
     </main>
 
     <footer>
-      ON_YOUR_SIDE_AAI_PRODUCT_CHAMBER_PUBLIC_SUPPORT_TNT_v1 · On Your Side AI · Product Chamber · Assistance-First Support.
+      ON_YOUR_SIDE_AAI_PRODUCT_GRANDCHILD_SUPPORT_RENEWAL_TNT_v2 · On Your Side AAI · Product Grandchild · Assistance-First Support.
     </footer>
   </div>
 </body>

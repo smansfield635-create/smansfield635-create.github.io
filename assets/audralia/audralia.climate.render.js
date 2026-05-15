@@ -1,984 +1,801 @@
 // /assets/audralia/audralia.climate.render.js
-// AUDRALIA_CLIMATE_INVARIANT_HYDRATION_CONDUIT_TNT_v1
-// Active renewal: AUDRALIA_CLIMATE_4K_ENVIRONMENTAL_CONDUIT_TNT_v2
-//
-// Runtime-safe climate authority only.
-// Climate conduces hydration.
-// Climate does not render.
-// Climate does not own land, water, terrain, oceans, ecology, route, canvas, GraphicBox, or image generation.
+// AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v1
+// Full-file replacement.
+// Climate/environment authority layer.
+// Defines climate zones from landmap, 256 lattice signals, Nine Summits provinces, elevation, latitude, coastline, basin/ridge, and stewardship influence.
+// Does not own footprint.
+// Does not own canvas.
+// Does not use generated image.
+// Does not use GraphicBox.
+// Does not claim visual pass.
 
-const RECEIPT = "AUDRALIA_CLIMATE_4K_ENVIRONMENTAL_CONDUIT_TNT_v2";
-const COMPATIBILITY_RECEIPT = "AUDRALIA_CLIMATE_INVARIANT_HYDRATION_CONDUIT_TNT_v1";
+(() => {
+  "use strict";
 
-const PLANETARY_OBJECT = "Audralia";
-const GENERATION = "G2_4K_CLIMATE_ENVIRONMENTAL_CONDUIT";
-const FILE = "/assets/audralia/audralia.climate.render.js";
+  const CONTRACT = "AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v1";
+  const RECEIPT = "AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_CLIMATE_RENDER_HELD_OR_LEGACY";
+  const VERSION = "2026-05-15.audralia-climate-and-environment-detail-v1";
 
-const CLIMATE_LAW = Object.freeze({
-  activeInvariant: true,
-  visibleClimate: false,
-  climateConducesHydration: true,
-  climateDoesNotRender: true,
+  const CLIMATE_ZONES = Object.freeze([
+    "equatorial_rainforest",
+    "equatorial_wetland",
+    "tropical_coast",
+    "savanna",
+    "dry_basin",
+    "temperate_forest",
+    "temperate_grassland",
+    "highland_forest",
+    "alpine_stone",
+    "snow_mountain",
+    "polar_ice",
+    "restoration_green_belt",
+    "stewardship_coast",
+    "protected_valley",
+    "mineral_desert",
+    "opal_beach",
+    "black_diamond_beach",
+    "white_sand_beach",
+    "deep_ocean",
+    "coastal_shelf"
+  ]);
 
-  physicalGenealogy: "tectonics->topology->terrain",
-  environmentalConduit: "climate->hydration",
-  runtimeCompositionExpected: "topology+terrain+hydration+climate_conditions->runtime->route",
+  const SUMMIT_CLIMATE = Object.freeze({
+    Gratitude: {
+      moisture: 0.22,
+      warmth: 0.08,
+      fertility: 0.36,
+      dryness: -0.14,
+      forest: 0.20,
+      wetland: 0.18,
+      mountain: -0.04,
+      beachWhite: 0.10,
+      beachBlack: 0.02,
+      restoration: 0.12,
+      role: "fertile_lowlands"
+    },
+    Balance: {
+      moisture: 0.10,
+      warmth: 0.00,
+      fertility: 0.18,
+      dryness: -0.02,
+      forest: 0.14,
+      wetland: 0.05,
+      mountain: 0.04,
+      beachWhite: 0.08,
+      beachBlack: 0.06,
+      restoration: 0.16,
+      role: "moderate_mixed_climate"
+    },
+    Stability: {
+      moisture: -0.08,
+      warmth: -0.02,
+      fertility: 0.04,
+      dryness: 0.18,
+      forest: -0.04,
+      wetland: -0.08,
+      mountain: 0.18,
+      beachWhite: 0.03,
+      beachBlack: 0.16,
+      restoration: 0.08,
+      role: "old_craton_and_plateau"
+    },
+    Peace: {
+      moisture: 0.28,
+      warmth: 0.02,
+      fertility: 0.22,
+      dryness: -0.20,
+      forest: 0.16,
+      wetland: 0.34,
+      mountain: -0.08,
+      beachWhite: 0.12,
+      beachBlack: 0.03,
+      restoration: 0.18,
+      role: "wetlands_and_protected_bays"
+    },
+    Joy: {
+      moisture: 0.14,
+      warmth: 0.18,
+      fertility: 0.20,
+      dryness: -0.06,
+      forest: 0.12,
+      wetland: 0.10,
+      mountain: -0.02,
+      beachWhite: 0.34,
+      beachBlack: 0.05,
+      restoration: 0.12,
+      role: "bright_coasts_and_islands"
+    },
+    Dignity: {
+      moisture: -0.04,
+      warmth: -0.10,
+      fertility: -0.02,
+      dryness: 0.12,
+      forest: -0.08,
+      wetland: -0.10,
+      mountain: 0.40,
+      beachWhite: 0.02,
+      beachBlack: 0.34,
+      restoration: 0.05,
+      role: "mountain_mineral_pressure"
+    },
+    "Free Will": {
+      moisture: 0.02,
+      warmth: 0.05,
+      fertility: 0.04,
+      dryness: 0.05,
+      forest: 0.02,
+      wetland: 0.03,
+      mountain: 0.08,
+      beachWhite: 0.14,
+      beachBlack: 0.12,
+      restoration: 0.06,
+      role: "broken_edges_and_straits"
+    },
+    Love: {
+      moisture: 0.18,
+      warmth: 0.12,
+      fertility: 0.32,
+      dryness: -0.12,
+      forest: 0.24,
+      wetland: 0.14,
+      mountain: 0.00,
+      beachWhite: 0.16,
+      beachBlack: 0.04,
+      restoration: 0.22,
+      role: "sheltered_valleys"
+    },
+    Stewardship: {
+      moisture: 0.16,
+      warmth: 0.04,
+      fertility: 0.28,
+      dryness: -0.10,
+      forest: 0.26,
+      wetland: 0.12,
+      mountain: 0.04,
+      beachWhite: 0.12,
+      beachBlack: 0.08,
+      restoration: 0.40,
+      role: "restoration_green_infrastructure"
+    }
+  });
 
-  ownsClimateConstraints: true,
-  ownsTemperatureBands: true,
-  ownsPressureBands: true,
-  ownsWindCorridors: true,
-  ownsRainfallTendency: true,
-  ownsEvaporationTendency: true,
-  ownsSnowPermission: true,
-  ownsGlacierPermission: true,
-  ownsOceanCycleInfluence: true,
-  ownsElevationClimateRelationship: true,
-  ownsRegionalClimateGates: true,
-  ownsBreathableCleanAtmosphereAssumption: true,
-  ownsAtmosphericOpticsPermission: true,
-  ownsSeasonalBias: true,
-  ownsMicroclimateSampling: true,
+  const PALETTES = Object.freeze({
+    equatorial_rainforest: {
+      base: [38, 106, 58],
+      mid: [61, 139, 72],
+      high: [99, 166, 88],
+      shadow: [23, 72, 49],
+      material: "deep_lush_green"
+    },
+    equatorial_wetland: {
+      base: [45, 105, 74],
+      mid: [67, 139, 98],
+      high: [103, 162, 120],
+      shadow: [22, 63, 59],
+      material: "wetland_green_blue"
+    },
+    tropical_coast: {
+      base: [62, 134, 72],
+      mid: [91, 161, 89],
+      high: [128, 185, 111],
+      shadow: [31, 84, 65],
+      material: "warm_coastal_green"
+    },
+    savanna: {
+      base: [128, 143, 72],
+      mid: [162, 164, 83],
+      high: [190, 177, 98],
+      shadow: [80, 100, 58],
+      material: "yellow_green_savanna"
+    },
+    dry_basin: {
+      base: [143, 118, 72],
+      mid: [171, 139, 82],
+      high: [201, 166, 101],
+      shadow: [82, 72, 55],
+      material: "ochre_dry_basin"
+    },
+    temperate_forest: {
+      base: [60, 120, 70],
+      mid: [84, 145, 84],
+      high: [124, 171, 103],
+      shadow: [30, 78, 55],
+      material: "temperate_green"
+    },
+    temperate_grassland: {
+      base: [100, 132, 72],
+      mid: [134, 156, 82],
+      high: [174, 182, 105],
+      shadow: [61, 84, 55],
+      material: "soft_grassland"
+    },
+    highland_forest: {
+      base: [66, 104, 72],
+      mid: [92, 126, 87],
+      high: [130, 153, 109],
+      shadow: [42, 64, 58],
+      material: "cool_highland_green"
+    },
+    alpine_stone: {
+      base: [104, 108, 96],
+      mid: [133, 133, 114],
+      high: [165, 160, 132],
+      shadow: [64, 70, 70],
+      material: "stone_highland"
+    },
+    snow_mountain: {
+      base: [174, 190, 184],
+      mid: [205, 216, 208],
+      high: [235, 240, 230],
+      shadow: [108, 126, 132],
+      material: "snow_and_old_stone"
+    },
+    polar_ice: {
+      base: [168, 205, 212],
+      mid: [201, 229, 228],
+      high: [235, 244, 240],
+      shadow: [89, 128, 150],
+      material: "polar_ice"
+    },
+    restoration_green_belt: {
+      base: [46, 128, 76],
+      mid: [78, 166, 98],
+      high: [135, 204, 128],
+      shadow: [26, 74, 59],
+      material: "restoration_green"
+    },
+    stewardship_coast: {
+      base: [62, 141, 103],
+      mid: [93, 176, 125],
+      high: [151, 211, 154],
+      shadow: [30, 82, 76],
+      material: "protected_coastal_green"
+    },
+    protected_valley: {
+      base: [72, 139, 76],
+      mid: [108, 167, 93],
+      high: [155, 197, 117],
+      shadow: [40, 87, 58],
+      material: "sheltered_valley_green"
+    },
+    mineral_desert: {
+      base: [150, 110, 72],
+      mid: [185, 141, 88],
+      high: [220, 177, 112],
+      shadow: [86, 65, 55],
+      material: "mineral_ochre"
+    },
+    opal_beach: {
+      base: [196, 184, 138],
+      mid: [218, 207, 158],
+      high: [238, 230, 185],
+      shadow: [128, 130, 105],
+      material: "opal_soft_beach"
+    },
+    black_diamond_beach: {
+      base: [62, 64, 70],
+      mid: [98, 98, 96],
+      high: [158, 154, 134],
+      shadow: [20, 26, 34],
+      material: "black_diamond_sand"
+    },
+    white_sand_beach: {
+      base: [202, 196, 156],
+      mid: [226, 220, 178],
+      high: [246, 240, 204],
+      shadow: [140, 144, 121],
+      material: "white_sand"
+    },
+    deep_ocean: {
+      base: [3, 18, 44],
+      mid: [5, 48, 88],
+      high: [8, 68, 115],
+      shadow: [1, 8, 25],
+      material: "deep_ocean"
+    },
+    coastal_shelf: {
+      base: [17, 92, 121],
+      mid: [32, 130, 150],
+      high: [65, 164, 164],
+      shadow: [5, 48, 83],
+      material: "coastal_shelf"
+    }
+  });
 
-  ownsTectonics: false,
-  ownsTopology: false,
-  ownsTerrain: false,
-  ownsHydration: false,
-  ownsWaterPlacement: false,
-  ownsOceans: false,
-  ownsRouteRendering: false,
-  ownsRuntimeRendering: false,
-  ownsCloudRendering: false,
-  ownsWeatherAnimation: false,
-  ownsEcology: false,
-  ownsFoliage: false,
-  ownsTrees: false,
-  ownsVegetation: false,
-  ownsAnimals: false,
-  ownsMarineLife: false,
-  ownsConstructCivilization: false,
-  ownsFinalRender: false,
-
-  toxicAtmosphere: false,
-  industrialPollution: false,
-  emissionsPoisoning: false,
-  cleanBreathableAtmosphere: true,
-  oceanDrivenClimate: true,
-  elevationStructuredClimate: true,
-  healthyEarlyWorldEcologyContext: true,
-
-  graphicBox: false,
-  imageGeneration: false,
-  visualPassClaimed: false
-});
-
-const DEFAULTS = Object.freeze({
-  fieldWidth: 256,
-  fieldHeight: 128,
-  minFieldWidth: 48,
-  minFieldHeight: 24,
-  maxFieldWidth: 512,
-  maxFieldHeight: 256,
-
-  cleanAtmosphereIndex: 0.965,
-  oxygenEnvelopeIndex: 0.94,
-  oceanCycleStrength: 0.90,
-  pressureCirculationStrength: 0.86,
-  rainfallStrength: 0.80,
-  evaporationStrength: 0.73,
-  snowlineSensitivity: 0.76,
-  glacierPermissionStrength: 0.72,
-  elevationClimateStrength: 0.88,
-  seasonalMotionStrength: 0.64,
-  breathableEnvelopeStrength: 0.965,
-  microclimateStrength: 0.38,
-  windShearStrength: 0.44,
-  atmosphericOpticsStrength: 0.48,
-  thermalInertiaStrength: 0.58
-});
-
-const REGION_BANDS = Object.freeze([
-  { id: 1, key: "oceanic_basin_climate", min: -1.00, max: -0.55 },
-  { id: 2, key: "shallow_sea_climate", min: -0.55, max: -0.12 },
-  { id: 3, key: "coastal_climate", min: -0.12, max: 0.08 },
-  { id: 4, key: "lowland_climate", min: 0.08, max: 0.24 },
-  { id: 5, key: "basin_plain_climate", min: 0.24, max: 0.38 },
-  { id: 6, key: "upland_climate", min: 0.38, max: 0.52 },
-  { id: 7, key: "highland_climate", min: 0.52, max: 0.68 },
-  { id: 8, key: "alpine_climate", min: 0.68, max: 0.84 },
-  { id: 9, key: "polar_glacial_climate", min: 0.84, max: 1.00 }
-]);
-
-function clamp(value, min, max) {
-  const number = Number(value);
-  if (!Number.isFinite(number)) return min;
-  return Math.max(min, Math.min(max, number));
-}
-
-function clamp01(value) {
-  return clamp(value, 0, 1);
-}
-
-function mix(a, b, t) {
-  return a + (b - a) * clamp01(t);
-}
-
-function fract(value) {
-  return value - Math.floor(value);
-}
-
-function wrap01(value) {
-  return ((Number(value) % 1) + 1) % 1;
-}
-
-function normalizeLongitudeDegrees(value) {
-  let lon = Number(value);
-  if (!Number.isFinite(lon)) lon = 0;
-
-  while (lon > 180) lon -= 360;
-  while (lon < -180) lon += 360;
-
-  return lon;
-}
-
-function normalizeDimension(value, fallback, min, max) {
-  return clamp(Math.floor(Number(value) || fallback), min, max);
-}
-
-function hash2(x, y, seed) {
-  return fract(Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123);
-}
-
-function valueNoise(x, y, seed) {
-  const ix = Math.floor(x);
-  const iy = Math.floor(y);
-  const fx = fract(x);
-  const fy = fract(y);
-
-  const a = hash2(ix, iy, seed);
-  const b = hash2(ix + 1, iy, seed);
-  const c = hash2(ix, iy + 1, seed);
-  const d = hash2(ix + 1, iy + 1, seed);
-
-  const ux = fx * fx * (3 - 2 * fx);
-  const uy = fy * fy * (3 - 2 * fy);
-
-  return mix(mix(a, b, ux), mix(c, d, ux), uy);
-}
-
-function fbm(x, y, seed, octaves = 4) {
-  let total = 0;
-  let amplitude = 0.5;
-  let frequency = 1;
-  let normalizer = 0;
-
-  for (let i = 0; i < octaves; i += 1) {
-    total += valueNoise(x * frequency, y * frequency, seed + i * 31.17) * amplitude;
-    normalizer += amplitude;
-    amplitude *= 0.5;
-    frequency *= 2;
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
   }
 
-  return total / Math.max(0.00001, normalizer);
-}
+  function lerp(a, b, t) {
+    return a + (b - a) * clamp(t, 0, 1);
+  }
 
-function smoothstep(edge0, edge1, value) {
-  const t = clamp((value - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
-  return t * t * (3 - 2 * t);
-}
+  function smoothstep(edge0, edge1, x) {
+    const t = clamp((x - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
+    return t * t * (3 - 2 * t);
+  }
 
-function normalizePoint(a, b, context = {}) {
-  if (typeof a === "object" && a !== null) {
-    const input = a;
-    const uValue = input.u ?? input.x ?? input.textureU ?? context.u ?? 0.5;
-    const vValue = input.v ?? input.y ?? input.textureV ?? context.v ?? 0.5;
-    const u = wrap01(uValue);
-    const v = clamp(Number(vValue), 0, 1);
+  function mixColor(a, b, t) {
+    const k = clamp(t, 0, 1);
+    return [
+      Math.round(lerp(a[0], b[0], k)),
+      Math.round(lerp(a[1], b[1], k)),
+      Math.round(lerp(a[2], b[2], k))
+    ];
+  }
 
-    let latDeg = Number(input.latDeg ?? input.latitudeDegrees ?? input.latDegrees);
-    let lonDeg = Number(input.lonDeg ?? input.longitudeDegrees ?? input.lngDeg ?? input.lonDegrees);
+  function shade(color, amount) {
+    return [
+      clamp(Math.round(color[0] + amount), 0, 255),
+      clamp(Math.round(color[1] + amount), 0, 255),
+      clamp(Math.round(color[2] + amount), 0, 255)
+    ];
+  }
 
-    let lat = Number(input.lat ?? input.latitude ?? input.phi);
-    let lon = Number(input.lon ?? input.lng ?? input.longitude ?? input.theta);
+  function wrap01(value) {
+    return ((value % 1) + 1) % 1;
+  }
 
-    if (Number.isFinite(latDeg)) lat = latDeg * Math.PI / 180;
-    if (Number.isFinite(lonDeg)) lon = lonDeg * Math.PI / 180;
+  function hash(x, y, seed) {
+    let h = Math.imul(x ^ 0x9e3779b9, 0x85ebca6b);
+    h ^= Math.imul(y ^ seed ^ 0xc2b2ae35, 0x27d4eb2f);
+    h ^= h >>> 15;
+    h = Math.imul(h, 0x85ebca6b);
+    h ^= h >>> 13;
+    h = Math.imul(h, 0xc2b2ae35);
+    h ^= h >>> 16;
+    return (h >>> 0) / 4294967295;
+  }
 
-    if (!Number.isFinite(lat)) lat = (0.5 - v) * Math.PI;
-    if (!Number.isFinite(lon)) lon = (u - 0.5) * Math.PI * 2;
+  function noise(u, v, scale, seed) {
+    const s = Math.max(1, Math.floor(scale));
+    const x = wrap01(u) * s;
+    const y = clamp(v, 0, 1) * s;
 
-    if (Math.abs(lat) > Math.PI / 2 + 0.01) lat = lat * Math.PI / 180;
-    if (Math.abs(lon) > Math.PI * 2 + 0.01) lon = lon * Math.PI / 180;
+    const x0 = Math.floor(x);
+    const y0 = Math.floor(y);
+    const x1 = x0 + 1;
+    const y1 = y0 + 1;
 
-    latDeg = lat * 180 / Math.PI;
-    lonDeg = normalizeLongitudeDegrees(lon * 180 / Math.PI);
+    const xf = x - x0;
+    const yf = y - y0;
+    const sx = xf * xf * (3 - 2 * xf);
+    const sy = yf * yf * (3 - 2 * yf);
+
+    const a = hash(((x0 % s) + s) % s, y0, seed);
+    const b = hash(((x1 % s) + s) % s, y0, seed);
+    const c = hash(((x0 % s) + s) % s, y1, seed);
+    const d = hash(((x1 % s) + s) % s, y1, seed);
+
+    return (a + (b - a) * sx) * (1 - sy) + (c + (d - c) * sx) * sy;
+  }
+
+  function fbm(u, v, seed, octaves = 5) {
+    let total = 0;
+    let norm = 0;
+    let amp = 0.58;
+    let scale = 3.5;
+
+    for (let i = 0; i < octaves; i += 1) {
+      total += noise(u, v, scale, seed + i * 131) * amp;
+      norm += amp;
+      amp *= 0.52;
+      scale *= 2;
+    }
+
+    return total / Math.max(0.000001, norm);
+  }
+
+  function numeric(value, fallback = 0) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  function summitProfile(name) {
+    return SUMMIT_CLIMATE[String(name || "Balance")] || SUMMIT_CLIMATE.Balance;
+  }
+
+  function latitudeHeat(latitude) {
+    const absLat = Math.abs(numeric(latitude, 0));
+    return clamp(1 - absLat / 90, 0, 1);
+  }
+
+  function polarPressure(latitude) {
+    return smoothstep(55, 84, Math.abs(numeric(latitude, 0)));
+  }
+
+  function coastInfluence(map) {
+    const beachEdge = numeric(map.beachEdge, 0);
+    const coastline = numeric(map.coastline, 0);
+    const shelf = numeric(map.shelf, 0);
+    return clamp(Math.max(beachEdge, coastline * 0.9, shelf * 0.7), 0, 1);
+  }
+
+  function elevationPressure(map) {
+    const terrainClass = String(map.terrainClass || "");
+    const elevationScore = numeric(map.elevationScore, 0);
+
+    if (terrainClass === "mountain") return Math.max(0.80, elevationScore);
+    if (terrainClass === "highland") return Math.max(0.66, elevationScore);
+    if (terrainClass === "plateau") return Math.max(0.52, elevationScore);
+    if (terrainClass === "polar-ice") return 0.92;
+    if (terrainClass === "beach" || terrainClass === "shelf" || terrainClass === "ocean") return 0;
+
+    return clamp(elevationScore, 0, 1);
+  }
+
+  function climateSeed(map) {
+    const cell256 = numeric(map.cell256, 1);
+    const cell64 = numeric(map.cell64, 1);
+    const cell16 = numeric(map.cell16, 1);
+    return Math.floor(cell256 * 131 + cell64 * 17 + cell16 * 7);
+  }
+
+  function beachClimate(map, moisture, heat, dryness, province) {
+    const u = numeric(map.u, 0);
+    const v = numeric(map.v, 0);
+    const seed = climateSeed(map);
+    const opal = fbm(u * 2.1 + 0.17, v * 1.8 - 0.11, 771000 + seed, 4) + province.beachWhite;
+    const black = fbm(u * 2.6 - 0.21, v * 2.2 + 0.08, 772000 + seed, 4) + province.beachBlack + elevationPressure(map) * 0.12;
+    const white = heat * 0.22 + moisture * 0.10 + province.beachWhite;
+
+    if (black > 0.80 && black > opal + 0.08) return "black_diamond_beach";
+    if (opal > 0.78) return "opal_beach";
+    if (white > 0.46 && dryness < 0.66) return "white_sand_beach";
+
+    return "opal_beach";
+  }
+
+  function classifyClimate(map) {
+    const terrainClass = String(map.terrainClass || "ocean");
+    const topology = String(map.topology || "");
+    const u = numeric(map.u, 0);
+    const v = numeric(map.v, 0);
+    const latitude = numeric(map.latitude, 0);
+    const seed = climateSeed(map);
+    const province = summitProfile(map.summitProvince || map.primarySummit);
+
+    if (map.isOcean || terrainClass === "ocean") return "deep_ocean";
+    if (map.isShelf || terrainClass === "shelf") return "coastal_shelf";
+    if (map.isPolarIce || terrainClass === "polar-ice") return "polar_ice";
+
+    const heatBase = latitudeHeat(latitude);
+    const polar = polarPressure(latitude);
+    const coast = coastInfluence(map);
+    const elevation = elevationPressure(map);
+    const ridge = clamp(numeric(map.nodalRidge, 0.4), 0, 1);
+    const basin = clamp(numeric(map.nodalBasin, 0.4), 0, 1);
+    const greenBelt = clamp(numeric(map.nodalGreenBelt, 0.4), 0, 1);
+    const tech = clamp(numeric(map.nodalTechnology, 0.4), 0, 1);
+
+    const moistureNoise = fbm(u * 1.35 + 0.13, v * 1.05 - 0.07, 781000 + seed, 5);
+    const rainShadow = ridge * elevation * 0.28;
+    const seaMoisture = coast * 0.30;
+    const basinMoisture = basin * 0.18;
+
+    const moisture = clamp(
+      moistureNoise * 0.52 +
+      heatBase * 0.14 +
+      seaMoisture +
+      basinMoisture +
+      province.moisture -
+      rainShadow -
+      polar * 0.18,
+      0,
+      1
+    );
+
+    const drynessNoise = fbm(u * 1.8 - 0.31, v * 1.6 + 0.22, 782000 + seed, 4);
+    const dryness = clamp(
+      drynessNoise * 0.36 +
+      (1 - moisture) * 0.42 +
+      elevation * 0.12 +
+      province.dryness -
+      coast * 0.08,
+      0,
+      1
+    );
+
+    const heat = clamp(
+      heatBase +
+      province.warmth -
+      elevation * 0.32 -
+      polar * 0.44 +
+      coast * 0.04,
+      0,
+      1
+    );
+
+    const restoration = clamp(
+      province.restoration +
+      greenBelt * 0.28 +
+      tech * 0.18 +
+      moisture * 0.08,
+      0,
+      1
+    );
+
+    if (map.isBeach || terrainClass === "beach") {
+      return beachClimate(map, moisture, heat, dryness, province);
+    }
+
+    if (terrainClass === "mountain" || elevation >= 0.80) {
+      if (heat < 0.42 || polar > 0.34) return "snow_mountain";
+      return "alpine_stone";
+    }
+
+    if (terrainClass === "highland") {
+      if (heat < 0.46 || elevation > 0.72) return "alpine_stone";
+      if (moisture > 0.52) return "highland_forest";
+      return "temperate_grassland";
+    }
+
+    if (topology.includes("wetland") || terrainClass === "wetland" || moisture > 0.78 && basin > 0.42) {
+      if (Math.abs(latitude) < 18) return "equatorial_wetland";
+      return "equatorial_wetland";
+    }
+
+    if (restoration > 0.62 && moisture > 0.42 && dryness < 0.62) return "restoration_green_belt";
+    if (coast > 0.58 && moisture > 0.48 && restoration > 0.38) return "stewardship_coast";
+    if (topology.includes("valley") || province.role === "sheltered_valleys") return "protected_valley";
+
+    if (Math.abs(latitude) < 18) {
+      if (moisture > 0.62) return "equatorial_rainforest";
+      if (dryness > 0.62) return "savanna";
+      return "tropical_coast";
+    }
+
+    if (Math.abs(latitude) < 33) {
+      if (dryness > 0.72) return "mineral_desert";
+      if (dryness > 0.56) return "savanna";
+      if (moisture > 0.58) return "temperate_forest";
+      return "temperate_grassland";
+    }
+
+    if (Math.abs(latitude) < 55) {
+      if (dryness > 0.68) return "dry_basin";
+      if (moisture > 0.50) return "temperate_forest";
+      return "temperate_grassland";
+    }
+
+    if (polar > 0.55) return "polar_ice";
+    if (moisture > 0.48) return "highland_forest";
+    return "alpine_stone";
+  }
+
+  function deriveEnvironment(map, climateZone) {
+    if (climateZone === "deep_ocean") return "ocean_basin";
+    if (climateZone === "coastal_shelf") return "shelf_water";
+    if (climateZone === "equatorial_rainforest") return "rainforest";
+    if (climateZone === "equatorial_wetland") return "wetland";
+    if (climateZone === "tropical_coast") return "coastal_green_belt";
+    if (climateZone === "savanna") return "savanna";
+    if (climateZone === "dry_basin") return "dry_basin";
+    if (climateZone === "temperate_forest") return "temperate_forest";
+    if (climateZone === "temperate_grassland") return "grassland";
+    if (climateZone === "highland_forest") return "highland_forest";
+    if (climateZone === "alpine_stone") return "alpine";
+    if (climateZone === "snow_mountain") return "snow_mountain";
+    if (climateZone === "polar_ice") return "polar";
+    if (climateZone === "restoration_green_belt") return "restoration_belt";
+    if (climateZone === "stewardship_coast") return "stewardship_coast";
+    if (climateZone === "protected_valley") return "protected_valley";
+    if (climateZone === "mineral_desert") return "mineral_desert";
+    if (climateZone === "opal_beach") return "opal_beach";
+    if (climateZone === "black_diamond_beach") return "black_diamond_beach";
+    if (climateZone === "white_sand_beach") return "white_sand_beach";
+
+    return String(map.terrainClass || "unknown_environment");
+  }
+
+  function climateMetrics(map, climateZone) {
+    const province = summitProfile(map.summitProvince || map.primarySummit);
+    const u = numeric(map.u, 0);
+    const v = numeric(map.v, 0);
+    const seed = climateSeed(map);
+    const latitude = numeric(map.latitude, 0);
+    const heatBase = latitudeHeat(latitude);
+    const elevation = elevationPressure(map);
+    const coast = coastInfluence(map);
+    const ridge = clamp(numeric(map.nodalRidge, 0.4), 0, 1);
+    const basin = clamp(numeric(map.nodalBasin, 0.4), 0, 1);
+    const greenBelt = clamp(numeric(map.nodalGreenBelt, 0.4), 0, 1);
+    const tech = clamp(numeric(map.nodalTechnology, 0.4), 0, 1);
+
+    const moistureNoise = fbm(u * 1.35 + 0.13, v * 1.05 - 0.07, 781000 + seed, 5);
+    const drynessNoise = fbm(u * 1.8 - 0.31, v * 1.6 + 0.22, 782000 + seed, 4);
+    const mineralNoise = fbm(u * 2.4 - 0.28, v * 2.0 + 0.18, 783000 + seed, 4);
+
+    const moisture = clamp(
+      moistureNoise * 0.52 +
+      heatBase * 0.14 +
+      coast * 0.30 +
+      basin * 0.18 +
+      province.moisture -
+      ridge * elevation * 0.28 -
+      polarPressure(latitude) * 0.18,
+      0,
+      1
+    );
+
+    const dryness = clamp(
+      drynessNoise * 0.36 +
+      (1 - moisture) * 0.42 +
+      elevation * 0.12 +
+      province.dryness -
+      coast * 0.08,
+      0,
+      1
+    );
+
+    const heat = clamp(
+      heatBase +
+      province.warmth -
+      elevation * 0.32 -
+      polarPressure(latitude) * 0.44 +
+      coast * 0.04,
+      0,
+      1
+    );
+
+    const fertility = clamp(
+      province.fertility +
+      moisture * 0.28 +
+      greenBelt * 0.20 +
+      coast * 0.08 -
+      dryness * 0.16,
+      0,
+      1
+    );
+
+    const restoration = clamp(
+      province.restoration +
+      greenBelt * 0.28 +
+      tech * 0.18 +
+      moisture * 0.08,
+      0,
+      1
+    );
+
+    const mineral = clamp(
+      mineralNoise * 0.42 +
+      province.mountain * 0.22 +
+      ridge * 0.18 +
+      elevation * 0.22,
+      0,
+      1
+    );
 
     return Object.freeze({
-      u,
-      v,
-      lat,
-      lon,
-      latDeg,
-      lonDeg,
-      lonUnit: lonDeg / 180,
-      latUnit: latDeg / 90,
-      absLat: Math.abs(latDeg) / 90
+      heat,
+      moisture,
+      dryness,
+      fertility,
+      restoration,
+      mineral,
+      elevation,
+      coast,
+      ridge,
+      basin,
+      greenBelt,
+      technology: tech,
+      climateZone
     });
   }
 
-  const u = wrap01(a);
-  const v = clamp(Number(b), 0, 1);
-  const lat = (0.5 - v) * Math.PI;
-  const lon = (u - 0.5) * Math.PI * 2;
-  const latDeg = lat * 180 / Math.PI;
-  const lonDeg = normalizeLongitudeDegrees(lon * 180 / Math.PI);
-
-  return Object.freeze({
-    u,
-    v,
-    lat,
-    lon,
-    latDeg,
-    lonDeg,
-    lonUnit: lonDeg / 180,
-    latUnit: latDeg / 90,
-    absLat: Math.abs(latDeg) / 90
-  });
-}
-
-function readNumber(source, keys, fallback = 0) {
-  if (!source || typeof source !== "object") return fallback;
-
-  for (const key of keys) {
-    const value = Number(source[key]);
-    if (Number.isFinite(value)) return value;
-  }
-
-  return fallback;
-}
-
-function inferSource(context, keys) {
-  if (!context || typeof context !== "object") return null;
-
-  for (const key of keys) {
-    if (context[key] && typeof context[key] === "object") return context[key];
-  }
-
-  return null;
-}
-
-function inferElevation(context) {
-  const terrain = inferSource(context, ["terrain", "terrainSample", "terrainState"]);
-  const topology = inferSource(context, ["topology", "topologySample", "topologyState"]);
-  const runtime = inferSource(context, ["runtime", "runtimeSample", "runtimeState", "surface"]);
-
-  const runtimeElevation = readNumber(runtime, ["elevation", "maxElevation", "terrainRelief", "terrainReliefIndex"], null);
-  if (Number.isFinite(runtimeElevation)) return clamp(runtimeElevation, -1, 1);
-
-  const terrainElevation = readNumber(terrain, ["normalizedElevation", "elevation", "elevationIndex", "terrainRelief", "terrainReliefIndex"], null);
-  if (Number.isFinite(terrainElevation)) return clamp(terrainElevation, -1, 1);
-
-  const topologyRise = readNumber(topology, ["terrainRisePermission", "landPotential", "seaLevelDistance", "coastBand"], null);
-  if (Number.isFinite(topologyRise)) return clamp(topologyRise, -1, 1);
-
-  const oceanDepth = readNumber(runtime || topology, ["depth", "oceanDepthIndex", "bathymetryBlueprintIndex", "basinDepthIndex"], null);
-  if (Number.isFinite(oceanDepth)) return -clamp(oceanDepth, 0, 1);
-
-  return 0;
-}
-
-function inferLandWater(context) {
-  const topology = inferSource(context, ["topology", "topologySample", "topologyState"]);
-  const terrain = inferSource(context, ["terrain", "terrainSample", "terrainState"]);
-  const runtime = inferSource(context, ["runtime", "runtimeSample", "runtimeState", "surface"]);
-
-  const isLand = Boolean(
-    runtime?.land ||
-      runtime?.exposedTerrainLand ||
-      runtime?.visibleLand ||
-      topology?.land ||
-      topology?.isAboveWaterLandFootprint ||
-      topology?.isLandFootprint ||
-      topology?.topologyLandFootprint ||
-      terrain?.isLand
-  );
-
-  const isIce = Boolean(
-    runtime?.ice ||
-      runtime?.glacier ||
-      topology?.ice ||
-      topology?.isPolarIceFootprint ||
-      topology?.isSouthPolarIceFootprint ||
-      topology?.isNorthPolarIceFootprint ||
-      terrain?.isIce ||
-      terrain?.glacier
-  );
-
-  const isShelf = Boolean(runtime?.shelf || topology?.shelf || topology?.topologyClass === "coastal-shelf");
-  const isOcean = Boolean(runtime?.ocean || runtime?.water || topology?.oceanVoid || topology?.topologyClass === "ocean-void");
-  const isWater = !isLand && !isIce ? true : Boolean(runtime?.liquidWater || isOcean || isShelf);
-
-  const isCoastline = Boolean(
-    runtime?.coastal ||
-      runtime?.beach ||
-      runtime?.shelf ||
-      topology?.seaLevelBoundary ||
-      topology?.isCoastline ||
-      topology?.isBeach ||
-      topology?.isShelf ||
-      Number(topology?.shorelinePressure) > 0.32 ||
-      Number(topology?.coastBand) > 0.22
-  );
-
-  return Object.freeze({
-    isLand,
-    isWater,
-    isIce,
-    isShelf,
-    isOcean,
-    isCoastline
-  });
-}
-
-function getRegionBand(elevation, point) {
-  if (point.absLat > 0.84) return REGION_BANDS[8];
-
-  const normalized = clamp((elevation + 1) / 2, 0, 1);
-
-  for (const band of REGION_BANDS) {
-    if (normalized >= band.min && normalized <= band.max) return band;
-  }
-
-  return REGION_BANDS[4];
-}
-
-function getTemperatureBand(temperatureIndex) {
-  if (temperatureIndex <= 0.16) return "polar_cold";
-  if (temperatureIndex <= 0.30) return "alpine_cool";
-  if (temperatureIndex <= 0.46) return "temperate_cool";
-  if (temperatureIndex <= 0.64) return "temperate_warm";
-  if (temperatureIndex <= 0.80) return "subtropical_warm";
-  return "equatorial_hot";
-}
-
-function getPressureBand(pressureIndex) {
-  if (pressureIndex <= 0.22) return "low_pressure";
-  if (pressureIndex <= 0.44) return "soft_low_pressure";
-  if (pressureIndex <= 0.62) return "stable_pressure";
-  if (pressureIndex <= 0.80) return "strong_pressure";
-  return "high_pressure";
-}
-
-function getRainfallBand(rainfallIndex) {
-  if (rainfallIndex <= 0.16) return "arid";
-  if (rainfallIndex <= 0.34) return "dry";
-  if (rainfallIndex <= 0.54) return "seasonal";
-  if (rainfallIndex <= 0.74) return "wet";
-  return "heavy_rainfall";
-}
-
-function getWindBand(windIndex) {
-  if (windIndex <= 0.20) return "still_air";
-  if (windIndex <= 0.44) return "soft_wind";
-  if (windIndex <= 0.68) return "steady_wind";
-  if (windIndex <= 0.84) return "strong_wind";
-  return "storm_permission";
-}
-
-function getOpticsBand(opticsIndex) {
-  if (opticsIndex <= 0.20) return "clear_thin_light";
-  if (opticsIndex <= 0.44) return "soft_blue_scatter";
-  if (opticsIndex <= 0.68) return "opal_atmospheric_scatter";
-  if (opticsIndex <= 0.84) return "mist_laden_light";
-  return "heavy_atmospheric_depth";
-}
-
-function resolveContext(a, b, context) {
-  if (typeof a === "object" && a !== null && !context) return a.context || a.climateContext || {};
-  return context || {};
-}
-
-export function sampleClimate(uInput, vInput, context = {}) {
-  const resolvedContext = resolveContext(uInput, vInput, context);
-  const point = normalizePoint(uInput, vInput, resolvedContext);
-  const options = Object.freeze({ ...DEFAULTS, ...(resolvedContext.climateContext || resolvedContext.options || {}) });
-
-  const landWater = inferLandWater(resolvedContext);
-  const elevation = inferElevation(resolvedContext);
-
-  const circulation = fbm(point.lonUnit * 3.2 + 2.1, point.latUnit * 3.2 - 1.4, 6101, 5);
-  const moistureNoise = fbm(point.lonUnit * 6.4 - 2.8, point.latUnit * 6.4 + 3.7, 6113, 5);
-  const pressureNoise = fbm(point.lonUnit * 8.8 + 4.5, point.latUnit * 8.8 - 5.6, 6127, 4);
-  const seasonalNoise = fbm(point.lonUnit * 2.0 - 1.5, point.latUnit * 2.0 + 7.9, 6139, 4);
-  const microclimateNoise = fbm(point.lonUnit * 21.0 + 9.2, point.latUnit * 17.0 - 4.1, 6151, 3);
-  const opticalNoise = fbm(point.lonUnit * 5.1 - 8.2, point.latUnit * 4.8 + 1.1, 6163, 4);
-  const windShearNoise = fbm(point.lonUnit * 11.0 + 3.4, point.latUnit * 9.0 - 6.8, 6173, 4);
-
-  const equatorialHeat = clamp(1 - point.absLat * 1.08, 0, 1);
-  const polarCold = clamp((point.absLat - 0.62) / 0.38, 0, 1);
-  const elevationCooling = elevation > 0 ? clamp(elevation * options.elevationClimateStrength, 0, 1) : 0;
-  const oceanModeration = landWater.isWater ? 0.28 : landWater.isCoastline ? 0.20 : 0.045;
-  const shelfMoisture = landWater.isShelf ? 0.18 : 0;
-  const thermalInertia = clamp(
-    oceanModeration * options.thermalInertiaStrength +
-      landWater.isOcean * 0.14 +
-      landWater.isCoastline * 0.09,
-    0,
-    1
-  );
-
-  const temperatureIndex = clamp(
-    equatorialHeat * 0.64 +
-      circulation * 0.10 +
-      oceanModeration +
-      thermalInertia * 0.08 -
-      polarCold * 0.36 -
-      elevationCooling * 0.25,
-    0,
-    1
-  );
-
-  const pressureIndex = clamp(
-    0.43 +
-      pressureNoise * 0.27 +
-      polarCold * 0.12 +
-      elevationCooling * 0.14 -
-      equatorialHeat * 0.08 +
-      windShearNoise * 0.04,
-    0,
-    1
-  );
-
-  const windCorridorIndex = clamp(
-    options.pressureCirculationStrength * 0.32 +
-      Math.abs(pressureIndex - 0.50) * 0.84 +
-      circulation * 0.22 +
-      seasonalNoise * 0.12 +
-      windShearNoise * options.windShearStrength * 0.18,
-    0,
-    1
-  );
-
-  const oceanCycleInfluence = clamp(
-    (landWater.isWater ? 0.72 : 0.0) +
-      (landWater.isCoastline ? 0.46 : 0.0) +
-      shelfMoisture +
-      moistureNoise * 0.18,
-    0,
-    1
-  );
-
-  const rainfallTendency = clamp(
-    options.rainfallStrength * 0.22 +
-      oceanCycleInfluence * 0.36 +
-      windCorridorIndex * 0.18 +
-      moistureNoise * 0.20 +
-      microclimateNoise * options.microclimateStrength * 0.08 -
-      elevationCooling * 0.055,
-    0,
-    1
-  );
-
-  const evaporationTendency = clamp(
-    options.evaporationStrength * 0.22 +
-      temperatureIndex * 0.43 +
-      windCorridorIndex * 0.17 +
-      (landWater.isWater ? 0.18 : landWater.isCoastline ? 0.08 : 0.04),
-    0,
-    1
-  );
-
-  const snowPermission = clamp(
-    polarCold * 0.60 +
-      elevationCooling * 0.34 +
-      (temperatureIndex < 0.30 ? 0.22 : 0) +
-      rainfallTendency * 0.10,
-    0,
-    1
-  );
-
-  const glacierPermission = clamp(
-    options.glacierPermissionStrength * 0.20 +
-      snowPermission * 0.56 +
-      polarCold * 0.26 +
-      elevationCooling * 0.18,
-    0,
-    1
-  );
-
-  const stormPermission = clamp(
-    windCorridorIndex * 0.46 +
-      pressureIndex * 0.20 +
-      rainfallTendency * 0.22 +
-      oceanCycleInfluence * 0.14 +
-      windShearNoise * 0.06,
-    0,
-    1
-  );
-
-  const breathableEnvelopeIndex = clamp(
-    options.breathableEnvelopeStrength * 0.70 +
-      options.cleanAtmosphereIndex * 0.24 +
-      options.oxygenEnvelopeIndex * 0.05 -
-      stormPermission * 0.018,
-    0,
-    1
-  );
-
-  const atmosphericOpticsIndex = clamp(
-    options.atmosphericOpticsStrength * 0.20 +
-      opticalNoise * 0.28 +
-      rainfallTendency * 0.18 +
-      oceanCycleInfluence * 0.16 +
-      breathableEnvelopeIndex * 0.12 +
-      polarCold * 0.06,
-    0,
-    1
-  );
-
-  const hydrationConductionIndex = clamp(
-    rainfallTendency * 0.28 +
-      oceanCycleInfluence * 0.24 +
-      snowPermission * 0.14 +
-      glacierPermission * 0.16 +
-      evaporationTendency * 0.10 +
-      breathableEnvelopeIndex * 0.08,
-    0,
-    1
-  );
-
-  const snowlineIndex = clamp(
-    snowPermission * 0.58 +
-      elevationCooling * 0.23 +
-      polarCold * 0.19,
-    0,
-    1
-  );
-
-  const glacierMeltPermission = clamp(
-    glacierPermission * 0.30 +
-      temperatureIndex * 0.22 +
-      rainfallTendency * 0.16 -
-      polarCold * 0.12,
-    0,
-    1
-  );
-
-  const pressureLiftIndex = clamp(
-    elevationCooling * 0.32 +
-      windCorridorIndex * 0.26 +
-      pressureIndex * 0.20 +
-      rainfallTendency * 0.12,
-    0,
-    1
-  );
-
-  const coastalFogPermission = clamp(
-    landWater.isCoastline || landWater.isShelf
-      ? oceanCycleInfluence * 0.38 + pressureIndex * 0.20 + temperatureIndex * 0.12 + opticalNoise * 0.18
-      : 0,
-    0,
-    1
-  );
-
-  const regionBand = getRegionBand(elevation, point);
-
-  return Object.freeze({
-    receipt: RECEIPT,
-    compatibilityReceipt: COMPATIBILITY_RECEIPT,
-    activeContract: RECEIPT,
-    planetaryObject: PLANETARY_OBJECT,
-    generation: GENERATION,
-    file: FILE,
-
-    u: point.u,
-    v: point.v,
-    lon: point.lonUnit,
-    lat: point.latUnit,
-    lonDeg: point.lonDeg,
-    latDeg: point.latDeg,
-    absLat: point.absLat,
-
-    climateLaw: CLIMATE_LAW,
-    climateActive: true,
-    climateInvariant: true,
-    climateVisible: false,
-    climateConducesHydration: true,
-    climateDoesNotRender: true,
-
-    physicalGenealogy: CLIMATE_LAW.physicalGenealogy,
-    environmentalConduit: CLIMATE_LAW.environmentalConduit,
-    runtimeCompositionExpected: CLIMATE_LAW.runtimeCompositionExpected,
-
-    terrainElevationInput: elevation,
-    isLand: landWater.isLand,
-    isWater: landWater.isWater,
-    isIce: landWater.isIce,
-    isShelf: landWater.isShelf,
-    isOcean: landWater.isOcean,
-    isCoastline: landWater.isCoastline,
-
-    regionBandId: regionBand.id,
-    regionBandKey: regionBand.key,
-    elevationClimateStructured: true,
-
-    temperatureIndex,
-    temperatureBand: getTemperatureBand(temperatureIndex),
-
-    pressureIndex,
-    pressureBand: getPressureBand(pressureIndex),
-
-    windCorridorIndex,
-    windBand: getWindBand(windCorridorIndex),
-
-    windShearIndex: clamp(windShearNoise * options.windShearStrength, 0, 1),
-
-    rainfallTendency,
-    rainfallBand: getRainfallBand(rainfallTendency),
-
-    evaporationTendency,
-    snowPermission,
-    snowlineIndex,
-    glacierPermission,
-    glacierMeltPermission,
-    oceanCycleInfluence,
-    stormPermission,
-    pressureLiftIndex,
-    coastalFogPermission,
-    seasonalMotionIndex: clamp(seasonalNoise * options.seasonalMotionStrength, 0, 1),
-    atmosphericOpticsIndex,
-    atmosphericOpticsBand: getOpticsBand(atmosphericOpticsIndex),
-    breathableEnvelopeIndex,
-    cleanAtmosphereIndex: clamp(options.cleanAtmosphereIndex, 0, 1),
-    oxygenEnvelopeIndex: clamp(options.oxygenEnvelopeIndex, 0, 1),
-    thermalInertiaIndex: thermalInertia,
-    microclimateIndex: clamp(microclimateNoise * options.microclimateStrength, 0, 1),
-
-    hydrationConductionIndex,
-    hydrationConditioningActive: true,
-    hydrationMayUseRainfall: true,
-    hydrationMayUseEvaporation: true,
-    hydrationMayUseSnowline: true,
-    hydrationMayUseGlacierPermission: true,
-    hydrationMayUseGlacierMeltPermission: true,
-    hydrationMayUseOceanCycle: true,
-    hydrationMayUsePressureBands: true,
-    hydrationMayUseWindCorridors: true,
-    hydrationMayUseCoastalFog: true,
-
-    suggestedHydrationBias: Object.freeze({
-      oceanCycleInfluence,
-      rainfallTendency,
-      evaporationTendency,
-      snowPermission,
-      snowlineIndex,
-      glacierPermission,
-      glacierMeltPermission,
-      pressureIndex,
-      pressureLiftIndex,
-      windCorridorIndex,
-      coastalFogPermission,
-      hydrationConductionIndex
-    }),
-
-    suggestedRuntimeClimate: Object.freeze({
-      atmosphericOpticsIndex,
-      breathableEnvelopeIndex,
-      cleanAtmosphereIndex: clamp(options.cleanAtmosphereIndex, 0, 1),
-      oxygenEnvelopeIndex: clamp(options.oxygenEnvelopeIndex, 0, 1),
-      thermalInertiaIndex: thermalInertia,
-      stormPermission,
-      windShearIndex: clamp(windShearNoise * options.windShearStrength, 0, 1)
-    }),
-
-    ownsClimateConstraints: true,
-    ownsHydration: false,
-    ownsWaterPlacement: false,
-    ownsTectonics: false,
-    ownsTopology: false,
-    ownsTerrain: false,
-    ownsRouteRendering: false,
-    ownsRuntimeRendering: false,
-    ownsCloudRendering: false,
-    ownsWeatherAnimation: false,
-    ownsEcology: false,
-    ownsFoliage: false,
-    ownsTrees: false,
-    ownsVegetation: false,
-    ownsAnimals: false,
-    ownsMarineLife: false,
-    ownsConstructCivilization: false,
-
-    toxicAtmosphere: false,
-    industrialPollution: false,
-    emissionsPoisoning: false,
-    cleanBreathableAtmosphere: true,
-
-    graphicBox: false,
-    imageGeneration: false,
-    visualPassClaimed: false
-  });
-}
-
-export function sampleAudraliaClimate(input, context = {}) {
-  return sampleClimate(input, undefined, context);
-}
-
-export function sampleClimateByLatLon(latDeg, lonDeg, context = {}) {
-  return sampleClimate({
-    latDeg,
-    lonDeg,
-    u: wrap01((normalizeLongitudeDegrees(lonDeg) / 360) + 0.5),
-    v: clamp(0.5 - (Number(latDeg) || 0) / 180, 0, 1)
-  }, undefined, context);
-}
-
-export function buildClimateField(width = DEFAULTS.fieldWidth, height = DEFAULTS.fieldHeight, context = {}) {
-  const w = normalizeDimension(width, DEFAULTS.fieldWidth, DEFAULTS.minFieldWidth, DEFAULTS.maxFieldWidth);
-  const h = normalizeDimension(height, DEFAULTS.fieldHeight, DEFAULTS.minFieldHeight, DEFAULTS.maxFieldHeight);
-
-  const samples = new Array(w * h);
-
-  let coldSamples = 0;
-  let temperateSamples = 0;
-  let hotSamples = 0;
-  let rainfallSamples = 0;
-  let snowSamples = 0;
-  let glacierSamples = 0;
-  let oceanCycleSamples = 0;
-  let hydrationConduitSamples = 0;
-  let stormPermissionSamples = 0;
-  let opticsSamples = 0;
-  let coastalFogSamples = 0;
-  let cleanBreathableSamples = 0;
-
-  let maxRainfall = 0;
-  let maxEvaporation = 0;
-  let maxSnow = 0;
-  let maxGlacier = 0;
-  let maxHydrationConduction = 0;
-  let maxOptics = 0;
-  let maxWind = 0;
-  let maxPressure = 0;
-  let maxCoastalFog = 0;
-
-  for (let y = 0; y < h; y += 1) {
-    const v = h === 1 ? 0.5 : y / (h - 1);
-
-    for (let x = 0; x < w; x += 1) {
-      const u = w === 1 ? 0.5 : x / (w - 1);
-      const sample = sampleClimate(u, v, context);
-
-      samples[y * w + x] = sample;
-
-      if (sample.temperatureIndex <= 0.30) coldSamples += 1;
-      else if (sample.temperatureIndex >= 0.70) hotSamples += 1;
-      else temperateSamples += 1;
-
-      if (sample.rainfallTendency > 0.44) rainfallSamples += 1;
-      if (sample.snowPermission > 0.44) snowSamples += 1;
-      if (sample.glacierPermission > 0.44) glacierSamples += 1;
-      if (sample.oceanCycleInfluence > 0.44) oceanCycleSamples += 1;
-      if (sample.hydrationConductionIndex > 0.44) hydrationConduitSamples += 1;
-      if (sample.stormPermission > 0.62) stormPermissionSamples += 1;
-      if (sample.atmosphericOpticsIndex > 0.44) opticsSamples += 1;
-      if (sample.coastalFogPermission > 0.34) coastalFogSamples += 1;
-      if (sample.cleanBreathableAtmosphere && sample.breathableEnvelopeIndex > 0.84) cleanBreathableSamples += 1;
-
-      maxRainfall = Math.max(maxRainfall, sample.rainfallTendency);
-      maxEvaporation = Math.max(maxEvaporation, sample.evaporationTendency);
-      maxSnow = Math.max(maxSnow, sample.snowPermission);
-      maxGlacier = Math.max(maxGlacier, sample.glacierPermission);
-      maxHydrationConduction = Math.max(maxHydrationConduction, sample.hydrationConductionIndex);
-      maxOptics = Math.max(maxOptics, sample.atmosphericOpticsIndex);
-      maxWind = Math.max(maxWind, sample.windCorridorIndex);
-      maxPressure = Math.max(maxPressure, sample.pressureIndex);
-      maxCoastalFog = Math.max(maxCoastalFog, sample.coastalFogPermission);
+  function colorForClimate(map, climateZone, metrics) {
+    const palette = PALETTES[climateZone] || PALETTES.temperate_forest;
+    const u = numeric(map.u, 0);
+    const v = numeric(map.v, 0);
+    const seed = climateSeed(map);
+    const detail = fbm(u * 5.6 + 0.09, v * 4.8 - 0.15, 791000 + seed, 4);
+    const grain = (detail - 0.5) * 12;
+
+    let color = mixColor(palette.base, palette.mid, smoothstep(0.22, 0.78, detail));
+
+    if (metrics.moisture > 0.62) color = mixColor(color, palette.high, (metrics.moisture - 0.62) * 0.35);
+    if (metrics.dryness > 0.58) color = mixColor(color, palette.shadow, (metrics.dryness - 0.58) * 0.28);
+    if (metrics.elevation > 0.58) color = mixColor(color, palette.shadow, (metrics.elevation - 0.58) * 0.18);
+    if (metrics.restoration > 0.62 && !climateZone.includes("beach") && climateZone !== "deep_ocean" && climateZone !== "coastal_shelf") {
+      color = mixColor(color, PALETTES.restoration_green_belt.mid, (metrics.restoration - 0.62) * 0.20);
     }
+
+    return shade(color, grain);
   }
 
-  const total = samples.length || 1;
+  function sampleClimate(mapInput) {
+    const map = mapInput || {};
+    const climateZone = classifyClimate(map);
+    const metrics = climateMetrics(map, climateZone);
+    const environmentClass = deriveEnvironment(map, climateZone);
+    const palette = PALETTES[climateZone] || PALETTES.temperate_forest;
+    const color = colorForClimate(map, climateZone, metrics);
+    const province = summitProfile(map.summitProvince || map.primarySummit);
 
-  return Object.freeze({
-    receipt: RECEIPT,
-    compatibilityReceipt: COMPATIBILITY_RECEIPT,
-    activeContract: RECEIPT,
-    planetaryObject: PLANETARY_OBJECT,
-    generation: GENERATION,
-    file: FILE,
-    width: w,
-    height: h,
-    samples,
+    return Object.freeze({
+      allowed: true,
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      climateZone,
+      environmentClass,
+      material: palette.material,
+      color,
+      baseColor: palette.base,
+      midColor: palette.mid,
+      highColor: palette.high,
+      shadowColor: palette.shadow,
+      metrics,
+      summitProvince: String(map.summitProvince || map.primarySummit || "Balance"),
+      summitClimateRole: province.role,
+      nineSummitsClimateBinding: true,
+      lattice256ClimateInfluence: true,
+      earthLegacyClimate: true,
+      thirtyBillionYearFutureClimate: true,
+      highTechnologyHiddenInsideNature: true,
+      stewardshipInfluence: metrics.restoration,
+      visualPassClaimed: false,
+      generatedImage: false,
+      graphicBox: false
+    });
+  }
 
-    stats: Object.freeze({
-      totalSamples: samples.length,
-
-      coldSamples,
-      temperateSamples,
-      hotSamples,
-      rainfallSamples,
-      snowSamples,
-      glacierSamples,
-      oceanCycleSamples,
-      hydrationConduitSamples,
-      stormPermissionSamples,
-      opticsSamples,
-      coastalFogSamples,
-      cleanBreathableSamples,
-
-      coldRatio: coldSamples / total,
-      temperateRatio: temperateSamples / total,
-      hotRatio: hotSamples / total,
-      rainfallRatio: rainfallSamples / total,
-      snowRatio: snowSamples / total,
-      glacierRatio: glacierSamples / total,
-      oceanCycleRatio: oceanCycleSamples / total,
-      hydrationConduitRatio: hydrationConduitSamples / total,
-      stormPermissionRatio: stormPermissionSamples / total,
-      opticsRatio: opticsSamples / total,
-      coastalFogRatio: coastalFogSamples / total,
-      cleanBreathableRatio: cleanBreathableSamples / total,
-
-      maxRainfall,
-      maxEvaporation,
-      maxSnow,
-      maxGlacier,
-      maxHydrationConduction,
-      maxOptics,
-      maxWind,
-      maxPressure,
-      maxCoastalFog,
-
-      climateActive: true,
-      climateInvariant: true,
-      climateConducesHydration: true,
-      climateVisible: false,
-      climateDoesNotRender: true,
-
-      cleanBreathableAtmosphere: true,
-      oceanDrivenClimate: true,
-      elevationStructuredClimate: true,
-      atmosphericOpticsActive: true,
-      microclimateSamplingActive: true,
-
-      ecologyEnabled: false,
-      foliageEnabled: false,
-      treesEnabled: false,
-      vegetationEnabled: false,
-      animalsEnabled: false,
-      marineLifeEnabled: false,
-      constructCivilizationEnabled: false,
-
+  function getStatus() {
+    return Object.freeze({
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      version: VERSION,
+      authority: "audralia-climate-environment-authority",
+      ownsClimate: true,
+      ownsFootprint: false,
+      canvasOwnsClimate: false,
+      climateZones: CLIMATE_ZONES,
+      primaryTarget: "/assets/audralia/audralia.climate.render.js",
+      secondaryTarget: "/assets/audralia/audralia.groundcover.js",
+      tertiaryTarget: "/assets/audralia/audralia.land.surface.js",
+      dependsOn: [
+        "/assets/audralia/audralia.landmap.js",
+        "/assets/audralia/audralia.lattice256.js"
+      ],
+      generatedImage: false,
       graphicBox: false,
-      imageGeneration: false,
       visualPassClaimed: false
-    })
-  });
-}
-
-export function getClimateSampleFromField(field, uInput, vInput, context = {}) {
-  if (!field || !field.samples || !field.width || !field.height) {
-    return sampleClimate(uInput, vInput, context);
+    });
   }
 
-  const point = normalizePoint(uInput, vInput, context);
-  const x = clamp(Math.round(point.u * (field.width - 1)), 0, field.width - 1);
-  const y = clamp(Math.round(point.v * (field.height - 1)), 0, field.height - 1);
-
-  return field.samples[y * field.width + x] || sampleClimate(point.u, point.v, context);
-}
-
-export function getClimateStatus() {
-  return Object.freeze({
-    ok: true,
+  window.AUDRALIA_CLIMATE_RENDER = Object.freeze({
+    contract: CONTRACT,
     receipt: RECEIPT,
-    compatibilityReceipt: COMPATIBILITY_RECEIPT,
-    activeContract: RECEIPT,
-    status: "active",
-    id: "audralia-climate-4k-environmental-conduit",
-    planetaryObject: PLANETARY_OBJECT,
-    generation: GENERATION,
-    file: FILE,
-
-    climateLaw: CLIMATE_LAW,
-
-    exports: Object.freeze([
-      "sampleClimate",
-      "sampleAudraliaClimate",
-      "sampleClimateByLatLon",
-      "buildClimateField",
-      "getClimateSampleFromField",
-      "getClimateStatus"
-    ]),
-
-    activeInvariant: true,
-    visibleClimate: false,
-    climateConducesHydration: true,
-    climateDoesNotRender: true,
-
-    physicalGenealogy: CLIMATE_LAW.physicalGenealogy,
-    environmentalConduit: CLIMATE_LAW.environmentalConduit,
-    runtimeCompositionExpected: CLIMATE_LAW.runtimeCompositionExpected,
-
-    ownsClimateConstraints: true,
-    ownsTemperatureBands: true,
-    ownsPressureBands: true,
-    ownsWindCorridors: true,
-    ownsRainfallTendency: true,
-    ownsEvaporationTendency: true,
-    ownsSnowPermission: true,
-    ownsGlacierPermission: true,
-    ownsOceanCycleInfluence: true,
-    ownsElevationClimateRelationship: true,
-    ownsRegionalClimateGates: true,
-    ownsBreathableCleanAtmosphereAssumption: true,
-    ownsAtmosphericOpticsPermission: true,
-    ownsSeasonalBias: true,
-    ownsMicroclimateSampling: true,
-
-    ownsHydration: false,
-    ownsWaterPlacement: false,
-    ownsRouteRendering: false,
-    ownsRuntimeRendering: false,
-    ownsCloudRendering: false,
-    ownsWeatherAnimation: false,
-    ownsEcology: false,
-    ownsFoliage: false,
-    ownsTrees: false,
-    ownsVegetation: false,
-    ownsAnimals: false,
-    ownsMarineLife: false,
-    ownsConstructCivilization: false,
-
-    toxicAtmosphere: false,
-    industrialPollution: false,
-    emissionsPoisoning: false,
-    cleanBreathableAtmosphere: true,
-    oceanDrivenClimate: true,
-    elevationStructuredClimate: true,
-    healthyEarlyWorldEcologyContext: true,
-
-    graphicBox: false,
-    imageGeneration: false,
-    visualPassClaimed: false
+    previousContract: PREVIOUS_CONTRACT,
+    version: VERSION,
+    climateZones: CLIMATE_ZONES,
+    sampleClimate,
+    sample: sampleClimate,
+    classifyClimate,
+    deriveEnvironment,
+    climateMetrics,
+    colorForClimate,
+    getStatus
   });
-}
 
-const api = Object.freeze({
-  receipt: RECEIPT,
-  compatibilityReceipt: COMPATIBILITY_RECEIPT,
-  sampleClimate,
-  sampleAudraliaClimate,
-  sampleClimateByLatLon,
-  buildClimateField,
-  getClimateSampleFromField,
-  getClimateStatus
-});
+  window.AUDRALIA_CLIMATE = window.AUDRALIA_CLIMATE_RENDER;
+  window.AUDRALIA_CLIMATE_RECEIPT = getStatus();
 
-if (typeof window !== "undefined") {
-  window.DGBAudraliaClimate = api;
-  window.AudraliaClimate = api;
-  window.audraliaClimate = api;
-}
-
-export default api;
+  document.documentElement.dataset.audraliaClimateLoaded = "true";
+  document.documentElement.dataset.audraliaClimateContract = CONTRACT;
+  document.documentElement.dataset.audraliaClimateReceipt = RECEIPT;
+  document.documentElement.dataset.audraliaClimateOwnsClimate = "true";
+  document.documentElement.dataset.audraliaClimateOwnsFootprint = "false";
+  document.documentElement.dataset.audraliaCanvasOwnsClimate = "false";
+  document.documentElement.dataset.audraliaClimateZones = CLIMATE_ZONES.join(",");
+  document.documentElement.dataset.audraliaClimateEnvironmentDetail = "true";
+  document.documentElement.dataset.audraliaNineSummitsClimateBinding = "true";
+  document.documentElement.dataset.audraliaLattice256ClimateInfluence = "true";
+  document.documentElement.dataset.audraliaEarthLegacyClimate = "true";
+  document.documentElement.dataset.audraliaThirtyBillionYearFutureClimate = "true";
+  document.documentElement.dataset.audraliaHighTechnologyHiddenInsideNature = "true";
+  document.documentElement.dataset.generatedImage = "false";
+  document.documentElement.dataset.graphicBox = "false";
+  document.documentElement.dataset.visualPassClaimed = "false";
+})();

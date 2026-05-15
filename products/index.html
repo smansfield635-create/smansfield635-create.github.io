@@ -3,8 +3,8 @@
   lang="en"
   data-route="/products/"
   data-page="products-public-usable-message-wing"
-  data-contract="PRODUCTS_SAPPHIRE_DIGITAL_GEM_RESTORATION_TNT_v1"
-  data-previous-contract="PRODUCTS_PUBLIC_USABLE_MESSAGE_AND_AAI_PRINCIPLE_RENEWAL_TNT_v1"
+  data-contract="PRODUCTS_SAPPHIRE_DIGITAL_GEM_STAGE_CLEARANCE_TNT_v2"
+  data-previous-contract="PRODUCTS_SAPPHIRE_DIGITAL_GEM_RESTORATION_TNT_v1"
   data-js-contract="PRODUCTS_RUNTIME_BRIDGE_OPEN_FOCUS_AUTHORITY_RENEWAL_TNT_v1"
   data-runtime-src="/products/products_runtime.js"
   data-runtime-version="four-lobed-molecular-flower-open-focus-v1"
@@ -16,6 +16,7 @@
   data-aai-principle="always-on-your-side-never-in-control"
   data-digital-gem-restored="true"
   data-gem-material="sapphire"
+  data-stage-clearance="summary-moved-below-visual-field"
   data-generated-image="false"
   data-graphic-box="false"
   data-heavy-runtime-loaded="false"
@@ -414,7 +415,7 @@
 
     .product-stage {
       position:relative;
-      min-height:clamp(38rem,72vw,55rem);
+      min-height:clamp(33rem,64vw,48rem);
       display:grid;
       place-items:center;
       overflow:hidden;
@@ -422,9 +423,10 @@
       border:1px solid rgba(184,205,255,.13);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        radial-gradient(circle at 50% 44%,rgba(36,120,255,.15),transparent 20rem),
+        radial-gradient(circle at 50% 42%,rgba(36,120,255,.15),transparent 20rem),
         linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.92));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      margin-bottom:1rem;
     }
 
     .product-stage::before,
@@ -432,29 +434,29 @@
       content:"";
       position:absolute;
       left:50%;
-      top:50%;
+      top:47%;
       border-radius:50%;
       transform:translate(-50%,-50%);
       pointer-events:none;
     }
 
     .product-stage::before {
-      width:min(82%,36rem);
-      height:min(82%,36rem);
+      width:min(80%,34rem);
+      height:min(80%,34rem);
       border:1px solid rgba(243,200,111,.08);
       box-shadow:0 0 3rem rgba(36,120,255,.12);
     }
 
     .product-stage::after {
-      width:min(54%,23rem);
-      height:min(54%,23rem);
+      width:min(52%,22rem);
+      height:min(52%,22rem);
       border:1px solid rgba(36,120,255,.17);
     }
 
     .center-gem {
       position:absolute;
       left:50%;
-      top:50%;
+      top:47%;
       z-index:3;
       width:clamp(10.5rem,24vw,15rem);
       height:clamp(7.7rem,17vw,10.9rem);
@@ -468,10 +470,10 @@
     .orbit-ring {
       position:absolute;
       left:50%;
-      top:50%;
+      top:47%;
       z-index:4;
-      width:min(82%,35rem);
-      height:min(82%,35rem);
+      width:min(80%,34rem);
+      height:min(80%,34rem);
       transform:translate(-50%,-50%);
       border-radius:999px;
       pointer-events:none;
@@ -484,7 +486,7 @@
 
     .orbit-door {
       --angle:0deg;
-      --radius:-16rem;
+      --radius:-15.5rem;
       position:absolute;
       left:50%;
       top:50%;
@@ -600,21 +602,20 @@
     }
 
     .stage-copy {
-      position:absolute;
-      left:50%;
-      bottom:clamp(1.2rem,4vw,2.4rem);
-      z-index:5;
-      width:min(88%,44rem);
-      transform:translateX(-50%);
-      padding:1rem 1.1rem;
+      position:relative;
+      z-index:2;
+      width:100%;
+      padding:1.05rem 1.15rem;
       border:1px solid rgba(243,200,111,.18);
-      background:rgba(3,8,20,.72);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(36,120,255,.10),transparent 60%),
+        rgba(3,8,20,.72);
       color:rgba(255,244,216,.88);
       clip-path:var(--facet);
       display:grid;
       gap:.45rem;
       text-align:center;
-      pointer-events:none;
+      margin-top:0;
     }
 
     .stage-copy strong {
@@ -852,42 +853,48 @@
       }
 
       .product-stage {
-        min-height:34rem;
+        min-height:28rem;
+      }
+
+      .product-stage::before,
+      .product-stage::after,
+      .center-gem,
+      .orbit-ring {
+        top:45%;
       }
 
       .orbit-ring {
-        width:21rem;
-        height:21rem;
+        width:20rem;
+        height:20rem;
       }
 
       .orbit-door {
-        --radius:-9.9rem;
-        width:5.3rem;
-        height:3.9rem;
-        margin-left:-2.65rem;
-        margin-top:-1.95rem;
+        --radius:-9.25rem;
+        width:5.05rem;
+        height:3.72rem;
+        margin-left:-2.525rem;
+        margin-top:-1.86rem;
       }
 
       .gem-label b {
-        font-size:.42rem;
+        font-size:.39rem;
       }
 
       .center-gem {
-        width:7.9rem;
-        height:5.8rem;
+        width:7.4rem;
+        height:5.4rem;
       }
 
       .center-gem .gem-label b {
-        font-size:.52rem;
+        font-size:.50rem;
       }
 
       .center-gem .gem-label strong {
-        font-size:.88rem;
+        font-size:.82rem;
       }
 
       .stage-copy {
-        bottom:1.05rem;
-        width:92%;
+        padding:.95rem .85rem;
       }
 
       .stage-copy span {
@@ -901,29 +908,29 @@
 
     @media (max-width:460px) {
       .product-stage {
-        min-height:32rem;
+        min-height:26.5rem;
       }
 
       .orbit-ring {
-        width:18rem;
-        height:18rem;
+        width:17.3rem;
+        height:17.3rem;
       }
 
       .orbit-door {
-        --radius:-8.45rem;
-        width:4.8rem;
-        height:3.52rem;
-        margin-left:-2.4rem;
-        margin-top:-1.76rem;
+        --radius:-8.02rem;
+        width:4.55rem;
+        height:3.34rem;
+        margin-left:-2.275rem;
+        margin-top:-1.67rem;
       }
 
       .gem-label b {
-        font-size:.36rem;
+        font-size:.34rem;
       }
 
       .center-gem {
-        width:7.1rem;
-        height:5.15rem;
+        width:6.75rem;
+        height:4.9rem;
       }
     }
 
@@ -949,7 +956,7 @@
 <body
   data-route="/products/"
   data-page="products-public-usable-message-wing"
-  data-contract="PRODUCTS_SAPPHIRE_DIGITAL_GEM_RESTORATION_TNT_v1"
+  data-contract="PRODUCTS_SAPPHIRE_DIGITAL_GEM_STAGE_CLEARANCE_TNT_v2"
   data-js-contract="PRODUCTS_RUNTIME_BRIDGE_OPEN_FOCUS_AUTHORITY_RENEWAL_TNT_v1"
   data-generated-image="false"
   data-graphic-box="false"
@@ -1161,11 +1168,11 @@
               <span class="gem-label"><b>Book</b></span>
             </a>
           </div>
+        </div>
 
-          <div class="stage-copy">
-            <strong>One usable message · eight doors</strong>
-            <span>Five product chambers carry practical use. Three connected paths keep the human voice, public climb, and written structure attached.</span>
-          </div>
+        <div class="stage-copy">
+          <strong>One usable message · eight doors</strong>
+          <span>Five product chambers carry practical use. Three connected paths keep the human voice, public climb, and written structure attached.</span>
         </div>
       </section>
 
@@ -1286,8 +1293,8 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-PRODUCTS_SAPPHIRE_DIGITAL_GEM_RESTORATION_TNT_v1
-previous=PRODUCTS_PUBLIC_USABLE_MESSAGE_AND_AAI_PRINCIPLE_RENEWAL_TNT_v1
+PRODUCTS_SAPPHIRE_DIGITAL_GEM_STAGE_CLEARANCE_TNT_v2
+previous=PRODUCTS_SAPPHIRE_DIGITAL_GEM_RESTORATION_TNT_v1
 js_contract=PRODUCTS_RUNTIME_BRIDGE_OPEN_FOCUS_AUTHORITY_RENEWAL_TNT_v1
 runtime_src=/products/products_runtime.js
 runtime_version=four-lobed-molecular-flower-open-focus-v1
@@ -1297,8 +1304,9 @@ role=product_wing
 message=the_message_becomes_usable_here
 model=five_product_chambers_three_connected_paths_one_usable_message
 gem_restoration=inline_svg_sapphire_digital_gem
-gem_reference_family=door_purple_digital_gem,laws_clear_crystal_diamond
 gem_material=sapphire
+stage_clearance=summary_panel_moved_below_product_stage
+visual_adjustment=orbit_and_center_shifted_slightly_up_inside_visual_field
 product_chambers=archcoin,five_flags,on_your_side_aai,education,nutrition
 connected_paths=meet_sean,nine_summits,book
 aai_principle=always_on_your_side_never_in_control
@@ -1307,7 +1315,7 @@ runtime_mount_id=productsRuntimeMount
 runtime_mount_attribute=data-products-runtime-mount
 open_molecule_hook_preserved=true
 open_molecule_attribute=data-open-molecule
-route_owns=product_wing,usable_message,product_chambers,connected_paths,runtime_mount_shell,sapphire_digital_gem_visual_layer
+route_owns=product_wing,usable_message,product_chambers,connected_paths,runtime_mount_shell,sapphire_digital_gem_visual_layer,stage_clearance
 route_does_not_own=products_runtime_js,products_runtime_renderer,gauges_logic,showroom_runtime,compass_runtime
 generated_image=false
 graphic_box=false
@@ -1317,12 +1325,12 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      PRODUCTS_SAPPHIRE_DIGITAL_GEM_RESTORATION_TNT_v1 · Products · Sapphire digital gems restored · Runtime bridge preserved.
+      PRODUCTS_SAPPHIRE_DIGITAL_GEM_STAGE_CLEARANCE_TNT_v2 · Products · Sapphire visual field cleared · Runtime bridge preserved.
     </footer>
   </div>
 
   <script>
-    window.DGB_PRODUCTS_PAGE_KEY = "PRODUCTS_SAPPHIRE_DIGITAL_GEM_RESTORATION_TNT_v1";
+    window.DGB_PRODUCTS_PAGE_KEY = "PRODUCTS_SAPPHIRE_DIGITAL_GEM_STAGE_CLEARANCE_TNT_v2";
   </script>
   <script type="module" src="/products/index.js?v=PRODUCTS_RUNTIME_BRIDGE_OPEN_FOCUS_AUTHORITY_RENEWAL_TNT_v1"></script>
 </body>

@@ -1,10 +1,11 @@
 // /assets/audralia/audralia.land.surface.js
-// AUDRALIA_BIOME_RELIEF_SURFACE_DEFINITION_SHARPENING_TNT_v2
+// AUDRALIA_ELEVATION_CONSUMPTION_VISIBLE_RELIEF_SURFACE_TNT_v3
 // Full-file replacement.
 // Land Surface authority only.
 // Purpose:
-// - Sharpens existing biome and relief definition.
-// - Uses high-order computable planetary math: φ-scaled fields, 256-cell influence, relief gradients, erosion grain, summit-tonal modulation.
+// - Consumes audralia.elevation.js aggressively.
+// - Turns elevation, ridge, mountain, cliff, valley, basin, plateau, coastalRise, snowline, slope, relief, and shadowPressure into visible terrain depth.
+// - Preserves existing biome/climate color scheme.
 // - Does not own footprint.
 // - Does not create land.
 // - Does not erase beaches.
@@ -16,38 +17,42 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_BIOME_RELIEF_SURFACE_DEFINITION_SHARPENING_TNT_v2";
-  const RECEIPT = "AUDRALIA_BIOME_RELIEF_SURFACE_DEFINITION_SHARPENING_RECEIPT_v2";
-  const PREVIOUS_CONTRACT = "AUDRALIA_BIOME_RELIEF_SURFACE_DETAIL_TNT_v1";
-  const VERSION = "2026-05-15.audralia-biome-relief-surface-definition-sharpening-v2";
+  const CONTRACT = "AUDRALIA_ELEVATION_CONSUMPTION_VISIBLE_RELIEF_SURFACE_TNT_v3";
+  const RECEIPT = "AUDRALIA_ELEVATION_CONSUMPTION_VISIBLE_RELIEF_SURFACE_RECEIPT_v3";
+  const PREVIOUS_CONTRACT = "AUDRALIA_BIOME_RELIEF_SURFACE_DEFINITION_SHARPENING_TNT_v2";
+  const VERSION = "2026-05-15.audralia-elevation-consumption-visible-relief-surface-v3";
   const PHI = 1.618033988749895;
   const INV_PHI = 1 / PHI;
 
   const COLORS = Object.freeze({
-    rainforestDeep: [34, 88, 50],
-    rainforestCanopy: [58, 134, 66],
-    wetland: [64, 119, 86],
+    rainforestDeep: [28, 78, 46],
+    rainforestCanopy: [54, 128, 65],
+    wetland: [58, 112, 84],
     marsh: [96, 142, 90],
-    savanna: [144, 153, 78],
-    dryGrass: [171, 150, 80],
-    desert: [188, 139, 78],
-    dryBasin: [139, 108, 78],
-    scrub: [111, 132, 77],
-    temperateForest: [68, 117, 70],
-    highland: [96, 124, 82],
-    mountain: [112, 111, 94],
-    ridge: [138, 132, 104],
-    alpine: [154, 166, 142],
+    savanna: [145, 154, 78],
+    dryGrass: [174, 151, 78],
+    desert: [190, 139, 76],
+    dryBasin: [136, 104, 76],
+    scrub: [108, 130, 76],
+    temperateForest: [64, 112, 68],
+    highland: [95, 123, 82],
+    mountain: [111, 110, 94],
+    ridge: [142, 136, 108],
+    cliffDark: [52, 57, 54],
+    valleyDark: [55, 75, 60],
+    basinDark: [98, 85, 65],
+    plateauLight: [158, 151, 112],
+    alpine: [156, 168, 144],
     snow: [222, 232, 224],
-    coastalGreen: [88, 141, 84],
+    coastalGreen: [86, 138, 82],
     coastalGold: [176, 158, 100],
-    beachRise: [182, 169, 112],
+    beachRise: [184, 170, 112],
     summitGold: [184, 151, 78],
     summitViolet: [106, 100, 150],
     summitBlue: [76, 126, 155],
-    shadow: [31, 45, 43],
+    shadow: [28, 41, 40],
     stone: [104, 106, 94],
-    light: [219, 213, 172]
+    light: [221, 216, 174]
   });
 
   const SUMMIT_TONES = Object.freeze({
@@ -60,7 +65,10 @@
     "self-control": [102, 125, 142],
     patience: [140, 132, 91],
     purity: [170, 184, 160],
-    stability: [93, 122, 91]
+    stability: [93, 122, 91],
+    balance: [116, 136, 96],
+    dignity: [138, 128, 92],
+    peace: [91, 137, 124]
   });
 
   function clamp(value, min, max) {
@@ -87,8 +95,7 @@
 
   function sharpen(value, strength = 1.35) {
     const x = clamp(value, 0, 1);
-    const centered = (x - 0.5) * strength + 0.5;
-    return clamp(centered, 0, 1);
+    return clamp((x - 0.5) * strength + 0.5, 0, 1);
   }
 
   function mix(a, b, t) {
@@ -110,6 +117,15 @@
 
   function wrap01(value) {
     return ((value % 1) + 1) % 1;
+  }
+
+  function text(value) {
+    return String(value || "").trim().toLowerCase();
+  }
+
+  function includesAny(value, terms) {
+    const source = text(value);
+    return terms.some((term) => source.includes(term));
   }
 
   function hash(x, y, seed) {
@@ -162,21 +178,39 @@
     return total / Math.max(0.000001, norm);
   }
 
-  function text(value) {
-    return String(value || "").trim().toLowerCase();
-  }
+  function ridgeNoise(u, v, seed, octaves = 4) {
+    let total = 0;
+    let norm = 0;
+    let amp = 0.58;
+    let scale = 4.0;
 
-  function includesAny(value, terms) {
-    const source = text(value);
-    return terms.some((term) => source.includes(term));
+    for (let i = 0; i < octaves; i += 1) {
+      const n = noise(u, v, scale, seed + i * 197);
+      const ridge = 1 - Math.abs(n * 2 - 1);
+      total += ridge * amp;
+      norm += amp;
+      amp *= 0.5;
+      scale *= PHI;
+    }
+
+    return total / Math.max(0.000001, norm);
   }
 
   function isOceanLike(map) {
-    return Boolean(map?.isOcean || map?.terrainClass === "ocean" || map?.terrainClass === "shelf" || map?.isShelf);
+    return Boolean(
+      map?.isOcean ||
+      map?.terrainClass === "ocean" ||
+      map?.terrainClass === "shelf" ||
+      map?.isShelf
+    );
   }
 
   function isBeachLike(map) {
-    return Boolean(map?.isBeach || map?.terrainClass === "beach" || includesAny(map?.topology, ["beach", "shore", "coastline"]));
+    return Boolean(
+      map?.isBeach ||
+      map?.terrainClass === "beach" ||
+      includesAny(map?.topology, ["beach", "shore", "coastline"])
+    );
   }
 
   function isLandAllowed(map) {
@@ -194,6 +228,42 @@
       }
     } catch {
       document.documentElement.dataset.audraliaLandSurfaceClimateReadFailed = "true";
+    }
+
+    return null;
+  }
+
+  function readElevation(map) {
+    try {
+      if (window.AUDRALIA_ELEVATION?.sampleElevation) {
+        const elevation = window.AUDRALIA_ELEVATION.sampleElevation(map);
+        if (elevation && typeof elevation === "object") return elevation;
+      }
+
+      if (window.AUDRALIA_ELEVATION?.sample) {
+        const elevation = window.AUDRALIA_ELEVATION.sample(map);
+        if (elevation && typeof elevation === "object") return elevation;
+      }
+    } catch {
+      document.documentElement.dataset.audraliaLandSurfaceElevationReadFailed = "true";
+    }
+
+    return fallbackElevation(map);
+  }
+
+  function readTopology(map) {
+    try {
+      if (window.AUDRALIA_TOPOLOGY?.sampleTopology) {
+        const topology = window.AUDRALIA_TOPOLOGY.sampleTopology(map);
+        if (topology && typeof topology === "object") return topology;
+      }
+
+      if (window.AUDRALIA_TOPOLOGY?.sample) {
+        const topology = window.AUDRALIA_TOPOLOGY.sample(map);
+        if (topology && typeof topology === "object") return topology;
+      }
+    } catch {
+      document.documentElement.dataset.audraliaLandSurfaceTopologyReadFailed = "true";
     }
 
     return null;
@@ -217,40 +287,43 @@
     return null;
   }
 
-  function readElevation(map) {
-    try {
-      if (window.AUDRALIA_ELEVATION?.sampleElevation) {
-        const elevation = window.AUDRALIA_ELEVATION.sampleElevation(map);
-        if (elevation && typeof elevation === "object") return elevation;
-      }
+  function fallbackElevation(map) {
+    const u = Number(map?.u || 0);
+    const v = Number(map?.v || 0);
+    const terrain = [map?.terrainClass, map?.topology, map?.elevation].map(text).join(" ");
+    const base = fbm(u * PHI + 0.17, v * INV_PHI - 0.11, 900100, 5);
+    const ridge = ridgeNoise(u * 2.2 - 0.18, v * 1.8 + 0.21, 900900, 4);
+    const basin = 1 - ridgeNoise(u * 1.5 + 0.33, v * 1.3 - 0.19, 901700, 4);
 
-      if (window.AUDRALIA_ELEVATION?.sample) {
-        const elevation = window.AUDRALIA_ELEVATION.sample(map);
-        if (elevation && typeof elevation === "object") return elevation;
-      }
-    } catch {
-      document.documentElement.dataset.audraliaLandSurfaceElevationReadFailed = "true";
-    }
+    let elevation01 = base * 0.36 + ridge * 0.30 - basin * 0.10 + 0.18;
 
-    return null;
-  }
+    if (includesAny(terrain, ["mountain", "ridge", "highland", "plateau"])) elevation01 += 0.18;
+    if (includesAny(terrain, ["basin", "valley", "plain"])) elevation01 -= 0.12;
+    if (includesAny(terrain, ["coast", "shore", "landrise"])) elevation01 += 0.08;
 
-  function readTopology(map) {
-    try {
-      if (window.AUDRALIA_TOPOLOGY?.sampleTopology) {
-        const topology = window.AUDRALIA_TOPOLOGY.sampleTopology(map);
-        if (topology && typeof topology === "object") return topology;
-      }
+    elevation01 = clamp(elevation01, 0, 1);
 
-      if (window.AUDRALIA_TOPOLOGY?.sample) {
-        const topology = window.AUDRALIA_TOPOLOGY.sample(map);
-        if (topology && typeof topology === "object") return topology;
-      }
-    } catch {
-      document.documentElement.dataset.audraliaLandSurfaceTopologyReadFailed = "true";
-    }
-
-    return null;
+    return Object.freeze({
+      allowed: true,
+      contract: "fallback-elevation-from-land-surface",
+      elevation01,
+      height: elevation01,
+      altitude: elevation01,
+      relief: clamp(ridge * 0.52 + elevation01 * 0.26, 0, 1),
+      slope: clamp(ridge * 0.46, 0, 1),
+      basin: clamp(basin, 0, 1),
+      ridge: clamp(ridge, 0, 1),
+      mountain: clamp(smoothstep(0.56, 0.84, elevation01) * 0.5 + ridge * 0.4, 0, 1),
+      cliff: clamp(ridgeNoise(u * 8.4, v * 6.8, 902500, 3) * ridge, 0, 1),
+      plateau: clamp(smoothstep(0.42, 0.68, elevation01) * (1 - ridge * 0.36), 0, 1),
+      valley: clamp(basin * ridgeNoise(u * 5.2, v * 4.6, 903300, 3), 0, 1),
+      coastalRise: includesAny(terrain, ["coast", "shore", "landrise"]) ? 0.6 : 0.18,
+      snowline: 0,
+      shadowPressure: clamp(ridge * 0.28 + elevation01 * 0.20, 0, 1),
+      class: elevation01 > 0.68 ? "mountain" : elevation01 > 0.50 ? "highland" : basin > 0.68 ? "basin" : "plain",
+      zone: elevation01 > 0.58 ? "raised-terrain" : "lowland",
+      form: "fallback-computable-relief"
+    });
   }
 
   function getClimateSignals(map, climate) {
@@ -324,48 +397,83 @@
     });
   }
 
-  function getReliefSignals(map, elevation, topology) {
-    const topoText = [
+  function getElevationSignals(map, elevation) {
+    const terrainText = [
       map.terrainClass,
       map.topology,
       map.elevation,
       elevation?.class,
       elevation?.zone,
-      elevation?.relief,
-      topology?.class,
-      topology?.zone,
-      topology?.form
+      elevation?.form
     ].map(text).join(" ");
 
-    let relief = normalize01(elevation?.relief ?? elevation?.height ?? elevation?.altitude ?? elevation?.elevation ?? map.relief ?? map.altitude, 0.42);
-    let slope = normalize01(elevation?.slope ?? topology?.slope ?? map.slope, 0.36);
-    let basin = normalize01(elevation?.basin ?? topology?.basin ?? map.basin, 0.22);
+    let elevation01 = normalize01(elevation?.elevation01 ?? elevation?.height ?? elevation?.altitude, 0.45);
+    let relief = normalize01(elevation?.relief, 0.42);
+    let slope = normalize01(elevation?.slope, 0.36);
+    let basin = normalize01(elevation?.basin, 0.22);
+    let ridge = normalize01(elevation?.ridge, 0.34);
+    let mountain = normalize01(elevation?.mountain, 0.18);
+    let cliff = normalize01(elevation?.cliff, 0.12);
+    let plateau = normalize01(elevation?.plateau, 0.20);
+    let valley = normalize01(elevation?.valley, 0.18);
+    let coastalRise = normalize01(elevation?.coastalRise, 0.18);
+    let snowline = normalize01(elevation?.snowline, 0.06);
+    let shadowPressure = normalize01(elevation?.shadowPressure, 0.22);
 
-    if (includesAny(topoText, ["mountain", "range", "ridge", "peak", "alpine"])) {
-      relief = Math.max(relief, 0.80);
-      slope = Math.max(slope, 0.70);
+    if (includesAny(terrainText, ["mountain", "ridge", "peak", "range", "alpine"])) {
+      elevation01 = Math.max(elevation01, 0.66);
+      relief = Math.max(relief, 0.66);
+      ridge = Math.max(ridge, 0.62);
+      mountain = Math.max(mountain, 0.66);
+      slope = Math.max(slope, 0.58);
     }
 
-    if (includesAny(topoText, ["highland", "shoulder", "upland", "plateau"])) {
-      relief = Math.max(relief, 0.62);
-      slope = Math.max(slope, 0.48);
+    if (includesAny(terrainText, ["cliff", "scarp", "escarpment"])) {
+      cliff = Math.max(cliff, 0.72);
+      slope = Math.max(slope, 0.68);
+      shadowPressure = Math.max(shadowPressure, 0.64);
     }
 
-    if (includesAny(topoText, ["basin", "valley", "lowland", "plain"])) {
-      relief = Math.min(relief, 0.40);
-      basin = Math.max(basin, 0.66);
+    if (includesAny(terrainText, ["plateau", "tableland"])) {
+      plateau = Math.max(plateau, 0.68);
+      elevation01 = Math.max(elevation01, 0.50);
+      relief = Math.max(relief, 0.42);
     }
 
-    if (includesAny(topoText, ["coastal", "coast", "shore", "landrise"])) {
-      relief = clamp(relief, 0.34, 0.68);
-      slope = Math.max(slope, 0.36);
+    if (includesAny(terrainText, ["basin", "lowland", "depression"])) {
+      basin = Math.max(basin, 0.70);
+      elevation01 = Math.min(elevation01, 0.42);
+      shadowPressure = Math.max(shadowPressure, 0.36);
+    }
+
+    if (includesAny(terrainText, ["valley", "channel", "drainage"])) {
+      valley = Math.max(valley, 0.66);
+      basin = Math.max(basin, 0.50);
+      shadowPressure = Math.max(shadowPressure, 0.44);
+    }
+
+    if (includesAny(terrainText, ["coast", "shore", "landrise"])) {
+      coastalRise = Math.max(coastalRise, 0.54);
+      slope = Math.max(slope, 0.34);
     }
 
     return Object.freeze({
-      relief: sharpen(clamp(relief, 0, 1), 1.20),
-      slope: sharpen(clamp(slope, 0, 1), 1.16),
-      basin: sharpen(clamp(basin, 0, 1), 1.16),
-      topologyText: topoText
+      elevation01: sharpen(clamp(elevation01, 0, 1), 1.08),
+      relief: sharpen(clamp(relief, 0, 1), 1.22),
+      slope: sharpen(clamp(slope, 0, 1), 1.22),
+      basin: sharpen(clamp(basin, 0, 1), 1.18),
+      ridge: sharpen(clamp(ridge, 0, 1), 1.20),
+      mountain: sharpen(clamp(mountain, 0, 1), 1.24),
+      cliff: sharpen(clamp(cliff, 0, 1), 1.28),
+      plateau: sharpen(clamp(plateau, 0, 1), 1.16),
+      valley: sharpen(clamp(valley, 0, 1), 1.20),
+      coastalRise: sharpen(clamp(coastalRise, 0, 1), 1.18),
+      snowline: sharpen(clamp(snowline, 0, 1), 1.14),
+      shadowPressure: sharpen(clamp(shadowPressure, 0, 1), 1.24),
+      terrainText,
+      className: text(elevation?.class || ""),
+      zone: text(elevation?.zone || ""),
+      form: text(elevation?.form || "")
     });
   }
 
@@ -429,26 +537,33 @@
     if (key.includes("patience")) return SUMMIT_TONES.patience;
     if (key.includes("purity")) return SUMMIT_TONES.purity;
     if (key.includes("stability")) return SUMMIT_TONES.stability;
+    if (key.includes("balance")) return SUMMIT_TONES.balance;
+    if (key.includes("dignity")) return SUMMIT_TONES.dignity;
+    if (key.includes("peace")) return SUMMIT_TONES.peace;
 
     return SUMMIT_TONES.gratitude;
   }
 
-  function classifyBiome(map, climateSignals, reliefSignals, groundSignals) {
+  function classifyBiome(map, climateSignals, elevationSignals, groundSignals) {
     const climateText = climateSignals.climateText;
-    const topologyText = reliefSignals.topologyText;
+    const terrainText = elevationSignals.terrainText;
 
-    if (includesAny(climateText + " " + topologyText, ["snow", "ice", "polar"])) return "snow-alpine";
-    if (includesAny(climateText + " " + topologyText, ["alpine", "peak", "ridge", "mountain"])) return "alpine-highland";
+    if (elevationSignals.snowline > 0.70 && elevationSignals.elevation01 > 0.58) return "snow-alpine";
+    if (elevationSignals.mountain > 0.70 || elevationSignals.ridge > 0.74) return "alpine-highland";
+    if (elevationSignals.cliff > 0.76) return "cliff-ridge";
+    if (elevationSignals.plateau > 0.72) return "plateau";
+    if (elevationSignals.basin > 0.72 || elevationSignals.valley > 0.72) return "basin-valley";
+
+    if (includesAny(climateText + " " + terrainText, ["snow", "ice", "polar"])) return "snow-alpine";
+    if (includesAny(climateText + " " + terrainText, ["alpine", "peak", "ridge", "mountain"])) return "alpine-highland";
     if (includesAny(climateText, ["rainforest", "jungle", "monsoon"])) return "rainforest";
     if (includesAny(climateText, ["wetland", "marsh", "swamp", "delta"])) return "wetland";
     if (includesAny(climateText, ["desert", "arid"])) return "dry-basin";
     if (includesAny(climateText, ["savanna", "grass", "steppe"])) return "savanna";
     if (includesAny(climateText, ["temperate", "forest"])) return "temperate-forest";
 
-    if (reliefSignals.relief > 0.80 && climateSignals.polarCold > 0.35) return "snow-alpine";
-    if (reliefSignals.relief > 0.74) return "alpine-highland";
     if (climateSignals.moisture > 0.76 && climateSignals.heat > 0.56 && groundSignals.canopy > 0.56) return "rainforest";
-    if (climateSignals.moisture > 0.70 && reliefSignals.basin > 0.42) return "wetland";
+    if (climateSignals.moisture > 0.70 && elevationSignals.basin > 0.42) return "wetland";
     if (climateSignals.aridity > 0.70 && climateSignals.moisture < 0.34) return "dry-basin";
     if (climateSignals.aridity > 0.48 && groundSignals.canopy < 0.38) return "savanna";
     if (climateSignals.moisture > 0.48 && groundSignals.vegetation > 0.54) return "temperate-forest";
@@ -457,99 +572,160 @@
     return "mixed-highland";
   }
 
-  function baseBiomeColor(biome, climateSignals, reliefSignals) {
+  function baseBiomeColor(biome, climateSignals, elevationSignals) {
     switch (biome) {
       case "rainforest":
         return mix(COLORS.rainforestDeep, COLORS.rainforestCanopy, climateSignals.moisture * 0.78);
+
       case "wetland":
         return mix(COLORS.wetland, COLORS.marsh, climateSignals.moisture * 0.72);
+
       case "savanna":
         return mix(COLORS.savanna, COLORS.dryGrass, climateSignals.aridity * 0.75);
+
       case "dry-basin":
         return mix(COLORS.dryBasin, COLORS.desert, climateSignals.aridity * 0.88);
+
       case "temperate-forest":
         return mix(COLORS.temperateForest, COLORS.coastalGreen, climateSignals.moisture * 0.52);
+
       case "alpine-highland":
-        return mix(COLORS.highland, COLORS.mountain, reliefSignals.relief * 0.78);
+        return mix(COLORS.highland, COLORS.mountain, elevationSignals.mountain * 0.52 + elevationSignals.relief * 0.28);
+
+      case "cliff-ridge":
+        return mix(COLORS.mountain, COLORS.ridge, elevationSignals.cliff * 0.48 + elevationSignals.ridge * 0.22);
+
+      case "plateau":
+        return mix(COLORS.highland, COLORS.plateauLight, elevationSignals.plateau * 0.42);
+
+      case "basin-valley":
+        return mix(COLORS.dryBasin, COLORS.valleyDark, elevationSignals.valley * 0.28 + elevationSignals.basin * 0.24);
+
       case "snow-alpine":
-        return mix(COLORS.alpine, COLORS.snow, climateSignals.polarCold * 0.76 + reliefSignals.relief * 0.30);
+        return mix(COLORS.alpine, COLORS.snow, elevationSignals.snowline * 0.64 + climateSignals.polarCold * 0.28);
+
       case "coastal-rise":
-        return mix(COLORS.coastalGreen, COLORS.beachRise, 0.42);
+        return mix(COLORS.coastalGreen, COLORS.beachRise, elevationSignals.coastalRise * 0.48);
+
       case "mixed-highland":
       default:
-        return mix(COLORS.fallbackLand, COLORS.highland, reliefSignals.relief * 0.52);
+        return mix(COLORS.fallbackLand, COLORS.highland, elevationSignals.relief * 0.48);
     }
   }
 
-  function applyAncientReliefTexture(color, map, biome, climateSignals, reliefSignals, groundSignals) {
+  function applyVisibleElevationRelief(color, map, biome, climateSignals, elevationSignals, groundSignals) {
     const u = Number(map.u || 0);
     const v = Number(map.v || 0);
     const cell = Number(map.cell256 || 1);
+    const cellPhase = ((cell % 16) / 16) * PHI;
 
-    const nodalPhase = ((cell % 16) / 16) * INV_PHI;
-    const continentalGrain = fbm(u * 3.2 + nodalPhase, v * 2.9 - 0.18, 880100, 5);
-    const erosion = fbm(u * 7.7 - 0.31, v * 6.4 + nodalPhase, 880900, 4);
-    const vein = fbm(u * 15.5 + 0.44, v * 13.0 - 0.16, 881700, 3);
-    const summitField = fbm(u * PHI + 0.07, v * INV_PHI + 0.29, 882500, 4);
-    const fracture = fbm(u * 28.0 + nodalPhase, v * 21.0 - nodalPhase, 883300, 2);
+    const continentalGrain = fbm(u * 3.2 + cellPhase, v * 2.9 - 0.18, 880100, 5);
+    const erosion = fbm(u * 8.4 - 0.31, v * 6.9 + cellPhase, 880900, 4);
+    const ridgeLine = ridgeNoise(u * 18.0 + 0.44, v * 14.5 - 0.16, 881700, 3);
+    const cliffLine = ridgeNoise(u * 34.0 - cellPhase, v * 27.0 + cellPhase * INV_PHI, 882100, 2);
+    const valleyLine = ridgeNoise(u * 10.2 + 0.29, v * 8.2 - 0.36, 882700, 3);
+    const summitField = fbm(u * PHI + 0.07, v * INV_PHI + 0.29, 883300, 4);
 
     let out = color;
 
-    const reliefShadow = (reliefSignals.relief - 0.5) * 26 + (reliefSignals.slope - 0.5) * 12;
-    const basinShadow = reliefSignals.basin * -18;
-    const erosionAmount = (erosion - 0.5) * (biome === "dry-basin" ? 28 : 16);
-    const grainAmount = (continentalGrain - 0.5) * 18;
-    const fractureAmount = smoothstep(0.70, 0.94, fracture) * reliefSignals.slope * 18;
+    const mountainHighlight =
+      elevationSignals.mountain * 20 +
+      elevationSignals.ridge * ridgeLine * 20 +
+      elevationSignals.snowline * 14;
 
-    out = shade(out, reliefShadow + basinShadow + erosionAmount + grainAmount - fractureAmount);
+    const cliffShadow =
+      elevationSignals.cliff * smoothstep(0.46, 0.92, cliffLine) * 34 +
+      elevationSignals.shadowPressure * 18;
 
-    if (reliefSignals.relief > 0.58) {
-      out = mix(out, COLORS.stone, smoothstep(0.56, 0.92, reliefSignals.relief) * 0.30);
-      out = mix(out, COLORS.ridge, smoothstep(0.62, 0.96, vein) * reliefSignals.slope * 0.24);
+    const basinShadow =
+      elevationSignals.basin * 22 +
+      elevationSignals.valley * smoothstep(0.52, 0.94, valleyLine) * 24;
+
+    const plateauLift =
+      elevationSignals.plateau * 10 +
+      smoothstep(0.44, 0.74, elevationSignals.elevation01) * 6;
+
+    const coastalDepth =
+      elevationSignals.coastalRise * 12;
+
+    const grainAmount =
+      (continentalGrain - 0.5) * 15 +
+      (erosion - 0.5) * 14 +
+      elevationSignals.relief * 7;
+
+    out = shade(out, grainAmount + mountainHighlight * 0.34 + plateauLift + coastalDepth * 0.42);
+    out = shade(out, -cliffShadow * 0.58 - basinShadow * 0.44);
+
+    if (elevationSignals.mountain > 0.46 || elevationSignals.ridge > 0.58) {
+      out = mix(out, COLORS.stone, clamp(elevationSignals.mountain * 0.26 + elevationSignals.ridge * ridgeLine * 0.24, 0, 0.42));
+      out = mix(out, COLORS.ridge, clamp(elevationSignals.ridge * smoothstep(0.58, 0.96, ridgeLine) * 0.34, 0, 0.34));
+      out = shade(out, smoothstep(0.70, 0.96, ridgeLine) * elevationSignals.slope * 16);
+    }
+
+    if (elevationSignals.cliff > 0.42) {
+      out = mix(out, COLORS.cliffDark, clamp(elevationSignals.cliff * smoothstep(0.50, 0.94, cliffLine) * 0.44, 0, 0.50));
+      out = shade(out, -elevationSignals.cliff * 11);
+    }
+
+    if (elevationSignals.valley > 0.42) {
+      out = mix(out, COLORS.valleyDark, clamp(elevationSignals.valley * smoothstep(0.48, 0.90, valleyLine) * 0.38, 0, 0.42));
+    }
+
+    if (elevationSignals.basin > 0.46) {
+      out = mix(out, COLORS.basinDark, clamp(elevationSignals.basin * 0.30, 0, 0.38));
+      if (biome === "dry-basin" || climateSignals.aridity > 0.58) {
+        out = mix(out, COLORS.desert, clamp(elevationSignals.basin * climateSignals.aridity * 0.34, 0, 0.38));
+      }
+    }
+
+    if (elevationSignals.plateau > 0.48) {
+      out = mix(out, COLORS.plateauLight, clamp(elevationSignals.plateau * 0.18, 0, 0.24));
+      out = shade(out, -elevationSignals.slope * elevationSignals.plateau * 9);
+    }
+
+    if (elevationSignals.coastalRise > 0.40) {
+      out = mix(out, COLORS.coastalGold, clamp(elevationSignals.coastalRise * 0.18, 0, 0.26));
+      out = shade(out, elevationSignals.coastalRise * 5 - elevationSignals.cliff * 7);
+    }
+
+    if (elevationSignals.snowline > 0.58 && elevationSignals.mountain > 0.36) {
+      out = mix(out, COLORS.snow, clamp((elevationSignals.snowline - 0.42) * elevationSignals.mountain * 0.62, 0, 0.42));
     }
 
     if (biome === "rainforest") {
-      out = mix(out, COLORS.rainforestDeep, groundSignals.canopy * 0.26);
-      out = shade(out, smoothstep(0.56, 0.95, summitField) * 7);
+      out = mix(out, COLORS.rainforestDeep, groundSignals.canopy * 0.20);
+      out = shade(out, -elevationSignals.shadowPressure * 8);
     }
 
     if (biome === "wetland") {
-      out = mix(out, COLORS.marsh, climateSignals.moisture * 0.22);
-      out = mix(out, COLORS.shadow, smoothstep(0.68, 0.94, continentalGrain) * 0.12);
-    }
-
-    if (biome === "dry-basin") {
-      out = mix(out, COLORS.desert, climateSignals.aridity * 0.30);
-      out = mix(out, COLORS.stone, smoothstep(0.62, 0.95, erosion) * 0.22);
+      out = mix(out, COLORS.marsh, climateSignals.moisture * 0.18);
+      out = mix(out, COLORS.shadow, elevationSignals.basin * 0.10);
     }
 
     if (biome === "savanna") {
-      out = mix(out, COLORS.scrub, groundSignals.scrub * 0.18);
-      out = mix(out, COLORS.dryGrass, climateSignals.aridity * 0.22);
-    }
-
-    if (biome === "snow-alpine") {
-      out = mix(out, COLORS.snow, smoothstep(0.58, 0.94, reliefSignals.relief + climateSignals.polarCold * 0.5) * 0.38);
+      out = mix(out, COLORS.scrub, groundSignals.scrub * 0.16);
+      out = mix(out, COLORS.dryGrass, climateSignals.aridity * 0.18);
     }
 
     const summit = summitTone(map);
-    const summitBlend = 0.065 + smoothstep(0.62, 0.96, summitField) * 0.085;
+    const summitBlend = 0.05 + smoothstep(0.62, 0.96, summitField) * 0.075;
     out = mix(out, summit, summitBlend);
 
     return out;
   }
 
-  function applyCoastalGradient(color, map) {
+  function applyCoastalGradient(color, map, elevationSignals) {
     const beachEdge = normalize01(map.beachEdge, 0);
     const shelf = normalize01(map.shelf, 0.2);
     const coastalText = [map.topology, map.terrainClass, map.elevation].map(text).join(" ");
     const coastalHint = includesAny(coastalText, ["coast", "shore", "landrise", "beach"]) ? 0.38 : 0;
 
-    const coastal = clamp(beachEdge * 0.50 + shelf * 0.18 + coastalHint, 0, 0.58);
+    const coastal = clamp(beachEdge * 0.50 + shelf * 0.18 + coastalHint + elevationSignals.coastalRise * 0.22, 0, 0.68);
     if (coastal <= 0.02) return color;
 
-    let out = mix(color, COLORS.coastalGreen, coastal * 0.48);
-    out = mix(out, COLORS.beachRise, coastal * 0.32);
+    let out = mix(color, COLORS.coastalGreen, coastal * 0.42);
+    out = mix(out, COLORS.beachRise, coastal * 0.28);
+    out = shade(out, elevationSignals.coastalRise * 6 - elevationSignals.cliff * 5);
     return out;
   }
 
@@ -573,19 +749,19 @@
     const groundcover = readGroundcover(map);
 
     const climateSignals = getClimateSignals(map, climate);
-    const reliefSignals = getReliefSignals(map, elevation, topology);
+    const elevationSignals = getElevationSignals(map, elevation);
     const groundSignals = getGroundcoverSignals(map, groundcover);
-    const biome = classifyBiome(map, climateSignals, reliefSignals, groundSignals);
+    const biome = classifyBiome(map, climateSignals, elevationSignals, groundSignals);
 
-    let color = baseBiomeColor(biome, climateSignals, reliefSignals);
-    color = applyAncientReliefTexture(color, map, biome, climateSignals, reliefSignals, groundSignals);
-    color = applyCoastalGradient(color, map);
+    let color = baseBiomeColor(biome, climateSignals, elevationSignals);
+    color = applyVisibleElevationRelief(color, map, biome, climateSignals, elevationSignals, groundSignals);
+    color = applyCoastalGradient(color, map, elevationSignals);
 
     return Object.freeze({
       allowed: true,
       color,
       biome,
-      material: "biome_relief_surface_definition_sharpening",
+      material: "elevation_consumption_visible_relief_surface",
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
@@ -595,13 +771,14 @@
       owns: "visible_land_material_synthesis",
       ownsFootprint: false,
       ownsClimate: false,
+      ownsElevation: false,
       ownsCanvas: false,
       readsClimate: Boolean(climate),
       readsElevation: Boolean(elevation),
       readsTopology: Boolean(topology),
       readsGroundcover: Boolean(groundcover),
       climateSignals,
-      reliefSignals,
+      elevationSignals,
       groundSignals,
       canvasMayPaint: true,
       generatedImage: false,
@@ -621,22 +798,25 @@
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       authority: "audralia-land-surface-visible-material-synthesis",
-      role: "biome_relief_surface_definition_sharpening",
+      role: "elevation_consumption_visible_relief_surface",
       mathBinding: "high_order_computable_planetary_math",
       ownsFootprint: false,
       ownsClimate: false,
+      ownsElevation: false,
       ownsCanvas: false,
       ownsRuntime: false,
       ownsGauges: false,
+      consumesElevation: true,
       authorizedVisualExpansions: [
-        "sharpened_biome_boundaries",
-        "stronger_relief_grain",
-        "mountain_shadow_regions",
-        "wetland_saturation_zones",
-        "savanna_desert_transition",
-        "dry_basin_erosion",
-        "coastal_landrise_gradients",
-        "summit_tonal_modulation",
+        "ridge_shadows",
+        "mountain_highlights",
+        "cliff_dark_edges",
+        "valley_depressions",
+        "basin_lowlands",
+        "plateau_shoulders",
+        "coastal_rise_depth",
+        "snowline_highlights",
+        "shadow_pressure",
         "phi_scaled_surface_fields",
         "256_cell_nodal_phase"
       ],
@@ -670,15 +850,21 @@
   document.documentElement.dataset.audraliaLandSurfaceContract = CONTRACT;
   document.documentElement.dataset.audraliaLandSurfaceReceipt = RECEIPT;
   document.documentElement.dataset.audraliaLandSurfacePreviousContract = PREVIOUS_CONTRACT;
-  document.documentElement.dataset.audraliaLandSurfaceRole = "biome_relief_surface_definition_sharpening";
+  document.documentElement.dataset.audraliaLandSurfaceRole = "elevation_consumption_visible_relief_surface";
   document.documentElement.dataset.audraliaLandSurfaceMathBinding = "high_order_computable_planetary_math";
+  document.documentElement.dataset.audraliaLandSurfaceConsumesElevation = "true";
   document.documentElement.dataset.audraliaLandSurfaceOwnsFootprint = "false";
   document.documentElement.dataset.audraliaLandSurfaceOwnsClimate = "false";
+  document.documentElement.dataset.audraliaLandSurfaceOwnsElevation = "false";
   document.documentElement.dataset.audraliaLandSurfaceOwnsCanvas = "false";
-  document.documentElement.dataset.audraliaLandSurfaceBiomeRelief = "true";
-  document.documentElement.dataset.audraliaLandSurfaceDefinitionSharpening = "true";
-  document.documentElement.dataset.audraliaLandSurfaceAncientTexture = "true";
-  document.documentElement.dataset.audraliaLandSurfaceSummitTone = "true";
+  document.documentElement.dataset.audraliaLandSurfaceRidgeShadows = "true";
+  document.documentElement.dataset.audraliaLandSurfaceMountainHighlights = "true";
+  document.documentElement.dataset.audraliaLandSurfaceCliffEdges = "true";
+  document.documentElement.dataset.audraliaLandSurfaceValleyDepressions = "true";
+  document.documentElement.dataset.audraliaLandSurfaceBasinLowlands = "true";
+  document.documentElement.dataset.audraliaLandSurfacePlateauShoulders = "true";
+  document.documentElement.dataset.audraliaLandSurfaceCoastalRiseDepth = "true";
+  document.documentElement.dataset.audraliaLandSurfaceSnowlineHighlights = "true";
   document.documentElement.dataset.generatedImage = "false";
   document.documentElement.dataset.graphicBox = "false";
   document.documentElement.dataset.visualPassClaimed = "false";

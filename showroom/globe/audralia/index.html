@@ -3,16 +3,17 @@
   lang="en"
   data-route="/showroom/globe/audralia/"
   data-page="audralia-living-canvas"
-  data-contract="AUDRALIA_ROUTE_SHELL_VISIBLE_NOTICE_CHAIN_TNT_v1"
-  data-previous-contract="AUDRALIA_LIVING_CANVAS_PUBLIC_CONTEXT_RENEWAL_TNT_v1"
+  data-contract="AUDRALIA_ROUTE_SHELL_V3_LOADER_BUMP_TNT_v3"
+  data-previous-contract="AUDRALIA_ROUTE_SHELL_CANONICAL_LOADER_BUMP_TNT_v2"
   data-role="showroom-globe-child-route"
   data-world="Audralia"
   data-canonical-spelling="A_U_D_R_A_L_I_A"
   data-parent-route="/showroom/globe/"
+  data-route-loader="/showroom/globe/audralia/index.js"
+  data-route-loader-contract="AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3"
   data-canvas-contract="AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3"
   data-landmap-contract="AUDRALIA_30_BILLION_YEAR_EARTH_LEGACY_ORGANIC_LANDFORM_TNT_v1"
-  data-climate-contract="AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v1"
-  data-route-loader="/showroom/globe/audralia/index.js"
+  data-climate-contract="AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2"
   data-generated-image="false"
   data-graphic-box="false"
   data-heavy-runtime-loaded="false"
@@ -37,7 +38,6 @@
       --muted:rgba(230,238,255,.78);
       --faint:rgba(230,238,255,.52);
       --gold:#f3c86f;
-      --gold2:#ffe8a3;
       --green:#9ef0bf;
       --blue:#8dd8ff;
       --panel:rgba(9,15,31,.88);
@@ -384,6 +384,21 @@
       gap:1.05rem;
     }
 
+    .route-loader-notice {
+      display:block;
+      width:fit-content;
+      max-width:100%;
+      padding:.72rem .9rem;
+      border:1px solid rgba(243,200,111,.44);
+      border-radius:999px;
+      color:rgba(255,232,168,.98);
+      background:rgba(40,26,4,.74);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+
     .status-card {
       border:1px solid var(--green-line);
       border-radius:1.35rem;
@@ -394,6 +409,7 @@
         rgba(2,20,22,.72);
       font-weight:850;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      overflow-wrap:anywhere;
     }
 
     .stage {
@@ -422,19 +438,10 @@
       pointer-events:none;
     }
 
-    .route-loader-notice {
-      display:block;
-      width:fit-content;
-      max-width:100%;
-      padding:.72rem .9rem;
-      border:1px solid rgba(158,240,191,.30);
-      border-radius:999px;
-      color:rgba(206,255,228,.94);
-      background:rgba(2,20,22,.72);
-      font-size:.74rem;
-      font-weight:950;
-      letter-spacing:.06em;
-      text-transform:uppercase;
+    [data-audralia-canvas-mount="true"] {
+      position:absolute;
+      inset:0;
+      z-index:2;
     }
 
     .cards {
@@ -510,9 +517,7 @@
         align-items:start;
       }
 
-      .nav {
-        justify-content:flex-start;
-      }
+      .nav { justify-content:flex-start; }
     }
 
     @media (max-width:720px) {
@@ -544,7 +549,7 @@
 </head>
 
 <body>
-  <a class="skip" href="#audralia-main">Skip to Audralia</a>
+  <a class="skip" href="/showroom/globe/audralia/#audralia-main">Skip to Audralia</a>
 
   <div class="shell">
     <header class="topbar" aria-label="Audralia header">
@@ -586,7 +591,7 @@
         </div>
 
         <div class="actions">
-          <a class="button gold" href="#audralia-stage">Inspect Audralia</a>
+          <a class="button gold" href="/showroom/globe/audralia/#audralia-stage">Inspect Audralia</a>
           <a class="button" href="/showroom/globe/">Return to Globe</a>
           <a class="button" href="/gauges/">Read Gauges</a>
         </div>
@@ -602,11 +607,11 @@
           data-audralia-route-loader-notice="true"
           aria-live="polite"
         >
-          Audralia route loader awaiting mount…
+          Route shell v3 live · waiting for climate-v2 status alignment loader.
         </div>
 
         <div class="status-card" id="audraliaRouteStatus" data-audralia-route-status="true">
-          Waiting for lattice, landmap, climate, surface, and canvas authority checks.
+          If this message remains, /showroom/globe/audralia/index.js did not load with AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3.
         </div>
 
         <div
@@ -616,7 +621,7 @@
           aria-label="Audralia living canvas stage"
         >
           <div class="stage-fallback" data-stage-fallback="true">
-            Audralia canvas mount awaiting canonical route loader.
+            Audralia canvas mount awaiting canonical loader v3.
           </div>
           <div
             id="audraliaCanvasMount"
@@ -652,21 +657,24 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_ROUTE_SHELL_VISIBLE_NOTICE_CHAIN_TNT_v1
-previous=AUDRALIA_LIVING_CANVAS_PUBLIC_CONTEXT_RENEWAL_TNT_v1
+AUDRALIA_ROUTE_SHELL_V3_LOADER_BUMP_TNT_v3
+previous=AUDRALIA_ROUTE_SHELL_CANONICAL_LOADER_BUMP_TNT_v2
 route=/showroom/globe/audralia/
 page=audralia
 role=showroom_globe_child_route
 world=Audralia
 canonical_spelling=A_U_D_R_A_L_I_A
-parent_route=/showroom/globe/
 route_loader=/showroom/globe/audralia/index.js
+route_loader_contract=AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3
 canvas_mount=#audraliaCanvasMount
 canvas_contract=AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3
 landmap_contract=AUDRALIA_30_BILLION_YEAR_EARTH_LEGACY_ORGANIC_LANDFORM_TNT_v1
-climate_contract=AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v1
-route_expectation=visible_update_notice_must_appear_if_new_canvas_mounts
-route_owns=route_shell,public_copy,canvas_mount,route_loader_notice,chain_status_panel
+climate_contract=AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2
+route_expectation=canonical_loader_v3_retires_false_climate_stale_status
+retired_false_status=Climate Detail loaded stale AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2
+expected_status=Audralia route mounted canonical chain active
+expected_chain=Lattice 256 active,Organic Landmap active,Climate Detail active,Beach Authority active,Groundcover active,Land Surface active,Visible Notice Canvas active
+route_owns=route_shell,public_copy,canvas_mount,route_loader_notice,chain_status_panel,cache_key_bump
 route_does_not_own=land_footprint,climate_authority,surface_truth,canvas_authority,runtime_motion,gauges_logic
 receipt_visibility=hidden_template_only
 generated_image=false
@@ -677,10 +685,14 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      AUDRALIA_ROUTE_SHELL_VISIBLE_NOTICE_CHAIN_TNT_v1 · Audralia · The Living Canvas.
+      AUDRALIA_ROUTE_SHELL_V3_LOADER_BUMP_TNT_v3 · Audralia · The Living Canvas.
     </footer>
   </div>
 
-  <script src="/showroom/globe/audralia/index.js?v=AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v1" defer></script>
+  <script
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3"
+    data-audralia-loader-script="AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3"
+    defer
+  ></script>
 </body>
 </html>

@@ -2,93 +2,108 @@
 <html
   lang="en"
   data-route="/nine-summits/"
-  data-page="nine-summits"
-  data-version="G1-V6"
-  data-contract="NINE_SUMMITS_CLEAN_RECEIPT_RETIREMENT_TOKEN_TNT_v6"
-  data-previous-contract="NINE_SUMMITS_COMPASS_CENTERED_ROTATING_DIAMOND_GATE_TNT_v5"
-  data-status="active"
-  data-parent="/"
-  data-baseline="AUDRALIA_MANOR_CURRENT"
+  data-page="nine-summits-public-gate"
+  data-contract="NINE_SUMMITS_PUBLIC_GATE_LANE_ALIGNMENT_RENEWAL_TNT_v7"
+  data-previous-contract="NINE_SUMMITS_CLEAN_RECEIPT_RETIREMENT_TOKEN_TNT_v6"
   data-role="public-system-gate"
-  data-heavy-runtime-loaded="false"
+  data-core-message="the-climb-becomes-a-world"
+  data-primary-lanes="book-universe-audralia-voice"
+  data-book-lane="/nine-summits-of-love/"
+  data-universe-lane="/nine-summits/universe/"
+  data-audralia-lane="/showroom/globe/audralia/"
+  data-voice-lane="about-this-underdog-meet-sean-mansfield"
+  data-animation-method="css-only"
+  data-orbit-animation="active"
+  data-label-gravity-lock="true"
+  data-js-required="false"
   data-generated-image="false"
   data-graphic-box="false"
+  data-heavy-runtime-loaded="false"
   data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
   <title>Nine Summits · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Nine Summits is the public system gate for the Book, Universe, Audralia, and Voice lanes inside Diamond Gate Bridge."
+    content="Nine Summits is the public system gate where the book, universe, Audralia, and voice lanes stay connected without competing."
   >
 
   <style>
-    :root{
-      color-scheme:dark;
+    :root {
+      color-scheme: dark;
       --bg:#02040b;
       --ink:#fff4d8;
       --muted:rgba(230,238,255,.78);
-      --soft:rgba(230,238,255,.58);
-      --faint:rgba(230,238,255,.42);
+      --faint:rgba(230,238,255,.52);
       --gold:#f3c86f;
       --gold2:#ffe8a3;
-      --green:#8ff0c6;
       --blue:#8dd8ff;
+      --green:#8ff0c3;
+      --violet:#beaaff;
       --purple:#8f65ff;
-      --panel:rgba(9,15,31,.84);
+      --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
-      --line2:rgba(243,200,111,.34);
-      --shadow:0 32px 110px rgba(0,0,0,.46);
+      --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
-      --orbit-time:30s;
+      --field-turn-duration:52s;
+      --orbit-duration:36s;
+      --gem-float-duration:7s;
+      --center-pulse-duration:7.4s;
+      --gem-cut:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
     }
 
-    *{box-sizing:border-box}
+    * { box-sizing:border-box; }
 
-    html{
+    html {
+      min-width:320px;
       min-height:100%;
       background:var(--bg);
       scroll-behavior:smooth;
+      overflow-x:hidden;
     }
 
-    body{
+    body {
       margin:0;
+      min-width:320px;
       min-height:100vh;
       color:var(--ink);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       line-height:1.5;
+      overflow-x:hidden;
       background:
         radial-gradient(circle at 50% -8%,rgba(243,200,111,.22),transparent 28rem),
-        radial-gradient(circle at 10% 18%,rgba(143,101,255,.20),transparent 28rem),
-        radial-gradient(circle at 92% 30%,rgba(141,216,255,.14),transparent 28rem),
-        radial-gradient(circle at 50% 78%,rgba(143,101,255,.12),transparent 34rem),
+        radial-gradient(circle at 12% 18%,rgba(143,101,255,.20),transparent 28rem),
+        radial-gradient(circle at 88% 30%,rgba(141,216,255,.16),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(143,240,195,.10),transparent 34rem),
         linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
-      overflow-x:hidden;
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
     }
 
-    body::before{
+    body::before {
       content:"";
       position:fixed;
       inset:0;
+      z-index:0;
       pointer-events:none;
       background-image:
         radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
         linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
+        linear-gradient(90deg,rgba(190,170,255,.045) 1px,transparent 1px);
       background-size:220px 260px,54px 54px,54px 54px;
-      opacity:.24;
+      opacity:.22;
       mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
 
-    body::after{
+    body::after {
       content:"";
       position:fixed;
       inset:-20%;
+      z-index:0;
       pointer-events:none;
       background:
         conic-gradient(from 90deg at 50% 50%,
@@ -100,13 +115,33 @@
           rgba(141,216,255,.07) 292deg,
           transparent 360deg);
       filter:blur(42px);
-      opacity:.58;
-      animation:auroraDrift 26s linear infinite;
+      opacity:.48;
+      animation:nineSummitsAuroraDrift 34s linear infinite;
     }
 
-    a{color:inherit;text-decoration:none}
+    @keyframes nineSummitsAuroraDrift {
+      from { transform:rotate(0deg) scale(1); }
+      to { transform:rotate(360deg) scale(1); }
+    }
 
-    .skip{
+    a { color:inherit; text-decoration:none; }
+
+    a:focus-visible,
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline:2px solid var(--gold);
+      outline-offset:4px;
+    }
+
+    .svg-defs {
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
+    }
+
+    .skip {
       position:absolute;
       left:-999px;
       top:8px;
@@ -118,9 +153,9 @@
       font-weight:950;
     }
 
-    .skip:focus{left:8px}
+    .skip:focus { left:8px; }
 
-    .shell{
+    .shell {
       position:relative;
       z-index:2;
       width:min(var(--max),calc(100% - 28px));
@@ -128,7 +163,7 @@
       padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
     }
 
-    .topbar{
+    .topbar {
       display:grid;
       grid-template-columns:auto 1fr;
       align-items:center;
@@ -136,7 +171,7 @@
       padding:12px 0 18px;
     }
 
-    .brand{
+    .brand {
       display:grid;
       grid-template-columns:auto 1fr;
       align-items:center;
@@ -144,43 +179,45 @@
       min-width:260px;
     }
 
-    .brand-mark{
+    .brand-mark {
       width:4.2rem;
       height:4.2rem;
       display:grid;
       place-items:center;
-      border:1px solid rgba(243,200,111,.44);
-      border-radius:1.15rem;
+      border:1px solid rgba(243,200,111,.48);
       transform:rotate(45deg);
+      clip-path:var(--gem-cut);
       background:
-        radial-gradient(circle at 48% 22%,rgba(255,255,255,.24),transparent 42%),
-        radial-gradient(circle at 64% 76%,rgba(143,101,255,.42),transparent 58%),
-        linear-gradient(145deg,rgba(43,32,82,.95),rgba(5,8,20,.98));
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.28) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(243,200,111,.26),rgba(143,101,255,.28),rgba(36,120,255,.18),rgba(143,240,195,.16),rgba(255,255,255,.28)),
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.32),transparent 42%),
+        linear-gradient(145deg,rgba(70,45,116,.95),rgba(5,8,20,.98));
       box-shadow:
-        0 0 2rem rgba(143,101,255,.28),
+        0 0 2rem rgba(243,200,111,.24),
         0 1.2rem 2.8rem rgba(0,0,0,.46),
         inset 0 1px 0 rgba(255,255,255,.16);
     }
 
-    .brand-mark span{
+    .brand-mark span {
       transform:rotate(-45deg);
       font-weight:950;
       letter-spacing:.04em;
       color:rgba(255,244,216,.98);
+      text-shadow:0 2px 10px rgba(0,0,0,.85);
     }
 
-    .brand-copy{
+    .brand-copy {
       display:grid;
       gap:.18rem;
     }
 
-    .brand-copy strong{
+    .brand-copy strong {
       font-size:clamp(1.08rem,3vw,1.7rem);
       line-height:1;
       letter-spacing:-.045em;
     }
 
-    .brand-copy span{
+    .brand-copy span {
       color:var(--muted);
       font-size:.74rem;
       font-weight:950;
@@ -188,14 +225,14 @@
       text-transform:uppercase;
     }
 
-    .nav{
+    .nav {
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
       gap:.48rem;
     }
 
-    .nav a{
+    .nav a {
       min-height:2.25rem;
       display:inline-flex;
       align-items:center;
@@ -212,13 +249,13 @@
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .nav a[aria-current="page"]{
+    .nav a[aria-current="page"] {
       border-color:rgba(243,200,111,.88);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
-    .panel{
+    .panel {
       border:1px solid var(--line);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
@@ -230,36 +267,43 @@
       overflow:hidden;
     }
 
-    .hero{
+    .hero {
       position:relative;
-      min-height:clamp(25rem,48vw,37rem);
+      min-height:clamp(23rem,42vw,34rem);
       display:grid;
       align-content:center;
       gap:1rem;
       padding:clamp(1.45rem,5vw,3.4rem);
       margin-top:.6rem;
+      isolation:isolate;
     }
 
-    .hero::before{
+    .hero::before {
       content:"";
       position:absolute;
       right:clamp(1rem,6vw,5.5rem);
       top:50%;
-      width:clamp(10rem,27vw,20rem);
-      height:clamp(10rem,27vw,20rem);
+      z-index:0;
+      width:clamp(9rem,25vw,18rem);
+      height:clamp(9rem,25vw,18rem);
       border:1px solid rgba(243,200,111,.20);
       border-radius:2.9rem;
       transform:translateY(-50%) rotate(45deg);
       background:
         radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
-        radial-gradient(circle at 50% 72%,rgba(143,101,255,.16),transparent 62%),
+        radial-gradient(circle at 50% 72%,rgba(143,101,255,.18),transparent 62%),
         linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
-      animation:heroDiamond 8s ease-in-out infinite;
+      animation:anchorPulse 8s ease-in-out infinite;
       pointer-events:none;
-      opacity:.52;
+      opacity:.54;
     }
 
-    .kicker{
+    @keyframes anchorPulse {
+      0%,100% { opacity:.42; filter:brightness(.95); }
+      50% { opacity:.60; filter:brightness(1.1); }
+    }
+
+    .kicker {
       width:fit-content;
       display:inline-flex;
       align-items:center;
@@ -277,7 +321,7 @@
       z-index:2;
     }
 
-    .kicker::before{
+    .kicker::before {
       content:"";
       width:.72rem;
       height:.72rem;
@@ -287,21 +331,21 @@
       box-shadow:0 0 1.1rem rgba(243,200,111,.46);
     }
 
-    h1{
+    h1 {
       margin:0;
-      max-width:920px;
-      font-size:clamp(3.1rem,10vw,7.1rem);
-      line-height:.84;
-      letter-spacing:-.105em;
+      max-width:1000px;
+      font-size:clamp(3rem,9vw,6.8rem);
+      line-height:.86;
+      letter-spacing:-.102em;
       text-wrap:balance;
       position:relative;
       z-index:2;
     }
 
-    h2{
+    h2 {
       margin:0;
       color:var(--gold);
-      font-size:clamp(1.45rem,4.7vw,2.85rem);
+      font-size:clamp(1.45rem,4.7vw,2.65rem);
       line-height:.98;
       letter-spacing:-.07em;
       text-wrap:balance;
@@ -309,40 +353,53 @@
       z-index:2;
     }
 
-    h3{
-      margin:0;
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.05rem,3vw,1.34rem);
-      line-height:1.08;
-      letter-spacing:-.035em;
-    }
-
-    p{
+    p {
       margin:0;
       color:var(--muted);
       font-size:clamp(.98rem,2.7vw,1.16rem);
       line-height:1.55;
     }
 
-    .lead{
-      max-width:880px;
+    .lead {
+      max-width:930px;
       position:relative;
       z-index:2;
     }
 
-    .quote{
-      max-width:820px;
-      padding:1rem 1.1rem;
-      border:1px solid rgba(243,200,111,.22);
-      border-radius:1.2rem;
-      color:rgba(255,244,216,.92);
-      background:rgba(243,200,111,.065);
+    .subline {
+      max-width:920px;
+      color:rgba(255,244,216,.90);
+      font-size:clamp(1.08rem,2.8vw,1.34rem);
       font-weight:850;
       position:relative;
       z-index:2;
     }
 
-    .actions{
+    .principle {
+      max-width:980px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,200,111,.24);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.96);
+      background:rgba(243,200,111,.070);
+      font-weight:900;
+      position:relative;
+      z-index:2;
+    }
+
+    .quote {
+      max-width:980px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(190,170,255,.22);
+      border-radius:1.2rem;
+      color:rgba(236,229,255,.92);
+      background:rgba(143,101,255,.090);
+      font-weight:850;
+      position:relative;
+      z-index:2;
+    }
+
+    .actions {
       display:flex;
       flex-wrap:wrap;
       gap:.62rem;
@@ -351,7 +408,7 @@
       z-index:2;
     }
 
-    .button{
+    .button {
       min-height:2.65rem;
       display:inline-flex;
       align-items:center;
@@ -370,330 +427,330 @@
     }
 
     .button:hover,
-    .button:focus-visible{
+    .button:focus-visible {
       transform:translateY(-2px);
       border-color:rgba(243,200,111,.62);
       outline:none;
     }
 
-    .button.gold,
-    .button.primary{
+    .button.gold {
       border-color:rgba(243,200,111,.9);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
       box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
     }
 
-    .section{
+    .button.violet {
+      border-color:rgba(190,170,255,.46);
+      color:var(--violet);
+      background:rgba(143,101,255,.08);
+    }
+
+    .button.green {
+      border-color:rgba(143,240,195,.42);
+      color:var(--green);
+      background:rgba(143,240,195,.07);
+    }
+
+    .section {
       margin-top:1.15rem;
       padding:clamp(1rem,3vw,1.45rem);
       display:grid;
       gap:1.05rem;
     }
 
-    .gate-field{
+    .gate-stage {
       position:relative;
-      min-height:clamp(38rem,70vw,56rem);
-      overflow:hidden;
-      border:1px solid rgba(243,200,111,.18);
-      border-radius:clamp(1.25rem,5vw,2.2rem);
-      background:
-        radial-gradient(circle at 50% 48%,rgba(243,200,111,.075),transparent 22%),
-        radial-gradient(circle at 50% 48%,rgba(143,101,255,.16),transparent 54%),
-        radial-gradient(circle at 50% 48%,rgba(141,216,255,.08),transparent 72%),
-        rgba(255,255,255,.018);
-      perspective:1100px;
-      padding:clamp(1.15rem,3vw,2rem);
+      min-height:clamp(32rem,62vw,45rem);
       display:grid;
       place-items:center;
+      overflow:hidden;
       isolation:isolate;
-    }
-
-    .gate-field::before{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      z-index:0;
-      width:clamp(22rem,56vw,42rem);
-      height:clamp(22rem,56vw,42rem);
-      border:1px solid rgba(215,194,255,.16);
-      border-radius:4rem;
-      transform:translate(-50%,-50%) rotate(45deg);
-      box-shadow:
-        0 0 0 clamp(4rem,9vw,7rem) rgba(143,101,255,.035),
-        0 0 0 clamp(8rem,18vw,13rem) rgba(243,200,111,.024),
-        inset 0 0 3rem rgba(143,101,255,.06);
-      animation:gateTurn 42s linear infinite;
-      pointer-events:none;
-    }
-
-    .gate-field::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:7%;
-      bottom:7%;
-      z-index:0;
-      width:1px;
-      transform:translateX(-50%);
-      background:linear-gradient(180deg,transparent,rgba(243,200,111,.32),rgba(141,216,255,.18),transparent);
-      opacity:.72;
-      pointer-events:none;
-    }
-
-    .axis-line{
-      position:absolute;
-      left:7%;
-      right:7%;
-      top:50%;
-      z-index:0;
-      height:1px;
-      background:linear-gradient(90deg,transparent,rgba(141,216,255,.22),rgba(243,200,111,.22),transparent);
-      opacity:.58;
-      pointer-events:none;
-    }
-
-    .cardinal{
-      position:absolute;
-      z-index:4;
-      color:rgba(255,244,216,.72);
-      font-size:clamp(1.15rem,3.8vw,2rem);
-      font-weight:950;
-      letter-spacing:.06em;
-      text-shadow:0 .25rem 1rem rgba(0,0,0,.55);
-      pointer-events:none;
-      user-select:none;
-    }
-
-    .cardinal.n{left:50%;top:3.2%;transform:translateX(-50%)}
-    .cardinal.e{right:4%;top:50%;transform:translateY(-50%)}
-    .cardinal.s{left:50%;bottom:3.2%;transform:translateX(-50%)}
-    .cardinal.w{left:4%;top:50%;transform:translateY(-50%)}
-
-    .gate-anchor{
-      position:absolute;
-      left:50%;
-      top:50%;
-      z-index:1;
-      width:clamp(15rem,34vw,25rem);
-      height:clamp(15rem,34vw,25rem);
-      border:1px solid rgba(243,200,111,.20);
-      border-radius:4rem;
+      border:1px solid rgba(184,205,255,.13);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        radial-gradient(circle at 48% 20%,rgba(255,255,255,.08),transparent 42%),
-        radial-gradient(circle at 54% 68%,rgba(143,101,255,.22),transparent 58%),
-        linear-gradient(145deg,rgba(33,29,58,.50),rgba(5,9,20,.55));
-      box-shadow:
-        0 1.7rem 4.2rem rgba(0,0,0,.20),
-        0 0 3.6rem rgba(143,101,255,.18),
-        inset 0 1px 0 rgba(255,255,255,.08);
-      transform:translate(-50%,-50%) rotate(45deg);
-      opacity:.30;
-      pointer-events:none;
-      animation:anchorPulse 8s ease-in-out infinite;
+        radial-gradient(circle at 50% 42%,rgba(243,200,111,.13),transparent 20rem),
+        radial-gradient(circle at 50% 52%,rgba(143,101,255,.14),transparent 25rem),
+        radial-gradient(circle at 50% 70%,rgba(141,216,255,.08),transparent 30rem),
+        linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.92));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .gate-anchor::before,
-    .gate-anchor::after{
+    .gate-stage::before,
+    .gate-stage::after {
       content:"";
-      position:absolute;
-      inset:14%;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:2.5rem;
-    }
-
-    .gate-anchor::after{
-      inset:31%;
-      border-color:rgba(243,200,111,.12);
-    }
-
-    .gate-anchor-label{
       position:absolute;
       left:50%;
       top:50%;
-      z-index:2;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+    }
+
+    .gate-stage::before {
+      width:min(80%,34rem);
+      height:min(80%,34rem);
+      border:1px solid rgba(243,200,111,.11);
+      background:
+        conic-gradient(
+          from 0deg,
+          transparent 0deg,
+          rgba(243,200,111,.13) 32deg,
+          transparent 68deg,
+          rgba(141,216,255,.10) 122deg,
+          transparent 174deg,
+          rgba(143,240,195,.10) 220deg,
+          transparent 272deg,
+          rgba(190,170,255,.12) 322deg,
+          transparent 360deg
+        );
+      box-shadow:0 0 3rem rgba(143,101,255,.12);
+      opacity:.84;
+      animation:gateFieldTurn var(--field-turn-duration) linear infinite;
+    }
+
+    .gate-stage::after {
+      width:min(52%,22rem);
+      height:min(52%,22rem);
+      border:1px solid rgba(36,120,255,.15);
+      box-shadow:
+        inset 0 0 3rem rgba(36,120,255,.035),
+        0 0 2.4rem rgba(190,170,255,.08);
+      animation:gateInnerFieldBreathe 8s ease-in-out infinite;
+    }
+
+    @keyframes gateFieldTurn {
+      to { transform:translate(-50%,-50%) rotate(360deg); }
+    }
+
+    @keyframes gateInnerFieldBreathe {
+      0%,100% { opacity:.54; filter:brightness(.94); }
+      50% { opacity:.86; filter:brightness(1.12); }
+    }
+
+    .center-gem {
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:5;
+      width:clamp(10.5rem,24vw,15rem);
+      height:clamp(7.7rem,17vw,10.9rem);
       transform:translate(-50%,-50%);
       display:grid;
-      gap:.2rem;
+      place-items:center;
       text-align:center;
       pointer-events:none;
-      opacity:.44;
     }
 
-    .gate-anchor-label strong{
-      color:rgba(255,244,216,.84);
-      font-size:clamp(1rem,3vw,1.65rem);
-      line-height:1;
-      font-weight:950;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-      text-shadow:0 .25rem 1.4rem rgba(0,0,0,.6);
-    }
-
-    .gate-anchor-label span{
-      color:rgba(230,238,255,.66);
-      font-size:.78rem;
-      letter-spacing:.04em;
-    }
-
-    .orbit-stage{
-      --orbit-radius:clamp(8.8rem,24vw,15rem);
+    .lane-orbit {
       position:absolute;
       left:50%;
       top:50%;
-      z-index:6;
-      width:min(78vw,42rem);
-      max-width:calc(100% - 5.5rem);
-      aspect-ratio:1/1;
+      z-index:4;
+      width:min(80%,34rem);
+      height:min(80%,34rem);
+      border-radius:999px;
       transform:translate(-50%,-50%);
-      display:grid;
-      place-items:center;
       pointer-events:none;
+      animation:laneOrbitTurn var(--orbit-duration) linear infinite;
+      transform-origin:50% 50%;
+      will-change:transform;
     }
 
-    .orbit-ring{
+    @keyframes laneOrbitTurn {
+      from { transform:translate(-50%,-50%) rotate(0deg); }
+      to { transform:translate(-50%,-50%) rotate(360deg); }
+    }
+
+    .center-gem-core,
+    .lane-gem-core,
+    .lane-upright {
       position:absolute;
       inset:0;
-      border:1px solid rgba(243,200,111,.18);
-      border-radius:50%;
-      animation:clockwiseOrbit var(--orbit-time) linear infinite;
-      pointer-events:none;
+      display:grid;
+      place-items:center;
+      text-align:center;
       transform-origin:50% 50%;
     }
 
-    .orbit-ring::before,
-    .orbit-ring::after{
-      content:"";
-      position:absolute;
-      inset:10%;
-      border:1px solid rgba(141,216,255,.10);
-      border-radius:50%;
-      transform:rotate(28deg) scaleX(1.08);
+    .center-gem-core {
+      animation:centerPulse var(--center-pulse-duration) ease-in-out infinite;
     }
 
-    .orbit-ring::after{
-      inset:22%;
-      border-color:rgba(255,255,255,.08);
-      transform:rotate(-38deg) scaleY(.82);
+    @keyframes centerPulse {
+      0%,100% { transform:scale(1); filter:brightness(1); }
+      50% { transform:scale(1.035); filter:brightness(1.13); }
     }
 
-    .orbit-node{
+    .lane-point {
       --angle:0deg;
+      --radius:-15rem;
+      --lane-delay:0s;
       position:absolute;
       left:50%;
       top:50%;
-      width:clamp(7.2rem,15vw,10.5rem);
-      min-height:clamp(7.2rem,15vw,10.5rem);
+      width:clamp(8rem,17vw,10.2rem);
+      height:clamp(5.8rem,12.6vw,7.55rem);
+      margin-left:calc(clamp(8rem,17vw,10.2rem) / -2);
+      margin-top:calc(clamp(5.8rem,12.6vw,7.55rem) / -2);
       display:grid;
       place-items:center;
       text-align:center;
       pointer-events:auto;
+      background:transparent;
+      border:0;
       transform:
-        translate(-50%,-50%)
         rotate(var(--angle))
-        translateY(calc(-1 * var(--orbit-radius)));
-      transform-origin:50% 50%;
+        translateY(var(--radius))
+        rotate(calc(-1 * var(--angle)));
+      transition:filter .18s ease,scale .18s ease;
     }
 
-    .orbit-node.book{--angle:0deg}
-    .orbit-node.universe{--angle:90deg}
-    .orbit-node.audralia{--angle:180deg}
-    .orbit-node.voice{--angle:270deg}
-
-    .node-counter{
-      display:grid;
-      place-items:center;
-      gap:.62rem;
-      width:100%;
-      animation:counterOrbit var(--orbit-time) linear infinite;
+    .lane-point .lane-upright {
+      animation:laneLabelGravityLock var(--orbit-duration) linear infinite reverse;
+      will-change:transform;
     }
 
-    .orbit-node a{
-      display:grid;
-      place-items:center;
-      gap:.62rem;
-      width:100%;
+    @keyframes laneLabelGravityLock {
+      from { transform:rotate(0deg); }
+      to { transform:rotate(360deg); }
+    }
+
+    .lane-point .lane-gem-core {
+      animation:laneGemFloat var(--gem-float-duration) ease-in-out infinite;
+      animation-delay:var(--lane-delay);
+    }
+
+    @keyframes laneGemFloat {
+      0%,100% { transform:translateY(0) scale(1); filter:brightness(1); }
+      50% { transform:translateY(-8px) scale(1.025); filter:brightness(1.12); }
+    }
+
+    .lane-point:hover,
+    .lane-point:focus-visible {
+      filter:brightness(1.12) saturate(1.08);
+      scale:1.045;
       outline:none;
     }
 
-    .diamond{
-      width:clamp(4.4rem,8.5vw,6.6rem);
-      height:clamp(4.4rem,8.5vw,6.6rem);
-      border:1px solid rgba(243,200,111,.64);
-      border-radius:1.25rem;
-      transform:rotate(45deg);
-      background:
-        radial-gradient(circle at 48% 20%,rgba(255,255,255,.20),transparent 42%),
-        radial-gradient(circle at 52% 70%,rgba(243,200,111,.14),transparent 58%),
-        linear-gradient(145deg,rgba(143,101,255,.62),rgba(6,10,22,.98));
-      box-shadow:
-        0 1rem 2rem rgba(0,0,0,.38),
-        0 0 2rem rgba(143,101,255,.34),
-        0 0 1.2rem rgba(243,200,111,.16),
-        inset 0 1px 0 rgba(255,255,255,.16);
-      position:relative;
-      transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease;
+    .lane-point:hover .lane-gem-core,
+    .lane-point:focus-visible .lane-gem-core {
+      animation-play-state:paused;
+      transform:translateY(-10px) scale(1.045);
+      filter:brightness(1.18);
     }
 
-    .diamond::before,
-    .diamond::after{
-      content:"";
+    .gate-gem-svg {
       position:absolute;
-      inset:18%;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:.82rem;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      pointer-events:none;
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
+        drop-shadow(0 0 1.15rem rgba(143,101,255,.20))
+        drop-shadow(0 0 .55rem rgba(243,200,111,.12));
     }
 
-    .diamond::after{
-      inset:34%;
-      border-color:rgba(243,200,111,.16);
+    .center-gem .gate-gem-svg {
+      filter:
+        drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
+        drop-shadow(0 0 1.65rem rgba(243,200,111,.24))
+        drop-shadow(0 0 .85rem rgba(141,216,255,.12));
     }
 
-    .orbit-node:hover .diamond,
-    .orbit-node:focus-within .diamond{
-      transform:rotate(45deg) scale(1.1);
-      border-color:rgba(243,200,111,.95);
-      background:
-        radial-gradient(circle at 48% 20%,rgba(255,255,255,.24),transparent 42%),
-        radial-gradient(circle at 52% 70%,rgba(243,200,111,.22),transparent 58%),
-        linear-gradient(145deg,rgba(166,117,255,.72),rgba(6,10,22,.98));
-      box-shadow:
-        0 1.15rem 2.4rem rgba(0,0,0,.45),
-        0 0 2.6rem rgba(143,101,255,.46),
-        0 0 1.4rem rgba(243,200,111,.22);
+    .gem-label {
+      position:relative;
+      z-index:3;
+      width:72%;
+      display:grid;
+      gap:.12rem;
+      place-items:center;
+      text-align:center;
+      pointer-events:none;
+      text-shadow:
+        0 2px 12px rgba(0,0,0,.94),
+        0 0 10px rgba(30,0,80,.82),
+        0 0 2px rgba(255,255,255,.42);
     }
 
-    .node-title{
+    .gem-label b {
+      display:block;
       color:rgba(255,244,216,.98);
-      font-size:clamp(.78rem,1.8vw,1.05rem);
+      font-size:clamp(.56rem,1.45vw,.80rem);
       font-weight:950;
-      line-height:1.05;
-      letter-spacing:.1em;
+      letter-spacing:.075em;
+      line-height:1.02;
       text-transform:uppercase;
-      text-shadow:0 .2rem .9rem rgba(0,0,0,.72);
     }
 
-    .node-sub{
-      color:rgba(230,238,255,.80);
-      font-size:clamp(.62rem,1.45vw,.76rem);
-      line-height:1.25;
-      text-shadow:0 .2rem .9rem rgba(0,0,0,.72);
+    .gem-label span {
+      color:rgba(230,238,255,.78);
+      font-size:clamp(.40rem,.95vw,.54rem);
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
 
-    .legend-grid,
-    .route-grid{
+    .center-gem .gem-label b {
+      color:var(--gold);
+      font-size:clamp(.72rem,1.65vw,.95rem);
+      letter-spacing:.16em;
+    }
+
+    .center-gem .gem-label strong {
+      display:block;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1rem,2.2vw,1.38rem);
+      line-height:1.05;
+      letter-spacing:-.035em;
+      text-transform:none;
+    }
+
+    .gate-glint {
+      animation:gateGlint 8.5s ease-in-out infinite;
+      transform-origin:110px 80px;
+    }
+
+    .gate-star {
+      animation:gateFacetTurn 28s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes gateGlint {
+      0%,100% { opacity:.08; transform:translateX(-34px); }
+      48%,55% { opacity:.56; transform:translateX(34px); }
+    }
+
+    @keyframes gateFacetTurn {
+      to { transform:rotate(360deg); }
+    }
+
+    .lane-grid,
+    .voice-grid,
+    .route-card-grid {
       display:grid;
+      gap:.85rem;
+    }
+
+    .lane-grid {
       grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.75rem;
     }
 
-    .legend-card,
-    .route-card{
-      min-height:11rem;
+    .voice-grid {
+      grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .route-card-grid {
+      grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+
+    .card,
+    .route-card {
       display:grid;
-      gap:.55rem;
-      align-content:start;
+      gap:.6rem;
+      min-height:100%;
       padding:1rem;
       border:1px solid rgba(255,255,255,.12);
       border-radius:1.2rem;
@@ -703,257 +760,327 @@
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .legend-card:hover,
-    .legend-card:focus-visible,
+    .card:hover,
+    .card:focus-within,
     .route-card:hover,
-    .route-card:focus-visible{
+    .route-card:focus-visible {
       transform:translateY(-3px);
       border-color:rgba(243,200,111,.46);
       outline:none;
     }
 
-    .legend-card b,
-    .route-card b{
+    .card b,
+    .route-card b {
       color:var(--gold);
       font-size:.68rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .legend-card strong,
-    .route-card strong{
+    .card strong,
+    .route-card strong {
       color:rgba(255,244,216,.98);
-      font-size:1.05rem;
+      font-size:1.15rem;
       line-height:1.1;
     }
 
-    .legend-card span,
-    .route-card span{
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.4;
-    }
-
-    .voice-split{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.8rem;
-    }
-
-    .voice-card{
-      min-height:12rem;
-      display:grid;
-      gap:.65rem;
-      align-content:start;
-      padding:1rem;
-      border:1px solid rgba(243,200,111,.22);
-      border-radius:1.25rem;
-      background:
-        radial-gradient(circle at 18% 0%,rgba(243,200,111,.08),transparent 34%),
-        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.026));
-    }
-
-    .voice-card b{
-      color:var(--gold);
-      font-size:.68rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .voice-card strong{
-      color:rgba(255,244,216,.98);
-      font-size:1.16rem;
-      line-height:1.12;
-    }
-
-    .voice-card span{
+    .card span,
+    .route-card span {
       color:var(--muted);
       font-size:.94rem;
       line-height:1.42;
     }
 
-    .final-band{
-      margin-top:1.15rem;
-      padding:clamp(1rem,3vw,1.35rem);
-      display:grid;
-      gap:.9rem;
-      border:1px solid rgba(243,200,111,.28);
-      border-radius:clamp(1.25rem,5vw,2rem);
+    .voice-card {
+      border-color:rgba(190,170,255,.18);
       background:
-        radial-gradient(circle at 16% 0%,rgba(243,200,111,.10),transparent 36%),
-        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.024));
-      box-shadow:0 1.5rem 4rem rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.08);
+        radial-gradient(circle at 20% 0%,rgba(190,170,255,.10),transparent 60%),
+        rgba(143,101,255,.040);
     }
 
-    .final-band strong{
+    .voice-card b {
+      color:var(--violet);
+    }
+
+    .final-direction {
+      padding:1.1rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(243,200,111,.10),transparent 60%),
+        rgba(243,200,111,.045);
+      display:grid;
+      gap:.65rem;
+    }
+
+    .final-direction strong {
       color:rgba(255,244,216,.98);
-      font-size:clamp(1.2rem,3vw,1.6rem);
+      font-size:clamp(1.2rem,3.6vw,2rem);
       line-height:1.05;
       letter-spacing:-.04em;
     }
 
-    .receipt{
-      margin-top:1.15rem;
-      color:var(--faint);
-    }
-
-    .receipt summary{
-      cursor:pointer;
-      padding:1rem;
-      border:1px solid rgba(184,205,255,.14);
-      border-radius:1.2rem;
-      color:rgba(255,244,216,.96);
-      font-size:.72rem;
+    .open-path {
+      margin-top:auto;
+      color:rgba(230,238,255,.88);
+      font-size:.76rem;
       font-weight:950;
-      letter-spacing:.09em;
+      letter-spacing:.12em;
       text-transform:uppercase;
-      background:rgba(255,255,255,.035);
     }
 
-    .receipt pre{
-      margin:0;
-      padding:1rem;
-      white-space:pre-wrap;
-      overflow-wrap:anywhere;
-      font:700 .68rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    .route-receipt,
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt],
+    .receipt {
+      display:none!important;
+      visibility:hidden!important;
+      overflow:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      inset:auto!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
     }
 
-    footer{
+    footer {
       padding:1.35rem 0 .5rem;
       color:var(--faint);
       text-align:center;
       font-size:.76rem;
     }
 
-    @keyframes auroraDrift{
-      from{transform:rotate(0deg) scale(1)}
-      to{transform:rotate(360deg) scale(1)}
-    }
-
-    @keyframes heroDiamond{
-      0%,100%{opacity:.36;transform:translateY(-50%) rotate(45deg) scale(1)}
-      50%{opacity:.62;transform:translateY(-50%) rotate(45deg) scale(1.045)}
-    }
-
-    @keyframes gateTurn{
-      from{transform:translate(-50%,-50%) rotate(45deg)}
-      to{transform:translate(-50%,-50%) rotate(405deg)}
-    }
-
-    @keyframes anchorPulse{
-      0%,100%{opacity:.26;transform:translate(-50%,-50%) rotate(45deg) scale(1)}
-      50%{opacity:.38;transform:translate(-50%,-50%) rotate(45deg) scale(1.035)}
-    }
-
-    @keyframes clockwiseOrbit{
-      from{transform:rotate(0deg)}
-      to{transform:rotate(360deg)}
-    }
-
-    @keyframes counterOrbit{
-      from{transform:rotate(calc(-1 * var(--angle)))}
-      to{transform:rotate(calc(-360deg - var(--angle)))}
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      body::after,
-      .hero::before,
-      .gate-field::before,
-      .gate-anchor,
-      .orbit-ring,
-      .node-counter{
-        animation:none!important;
-      }
-    }
-
-    @media (max-width:980px){
-      .topbar{
-        grid-template-columns:1fr;
-        align-items:start;
-      }
-
-      .nav{justify-content:flex-start}
-
-      .legend-grid,
-      .route-grid{
+    @media (max-width:1080px) {
+      .lane-grid,
+      .route-card-grid {
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
     }
 
-    @media (max-width:720px){
-      :root{--orbit-time:34s}
+    @media (max-width:980px) {
+      .topbar {
+        grid-template-columns:1fr;
+        align-items:start;
+      }
 
-      .shell{width:min(100% - 22px,var(--max))}
+      .nav {
+        justify-content:flex-start;
+      }
+    }
 
-      h1{font-size:clamp(3rem,17vw,5rem)}
+    @media (max-width:720px) {
+      .shell { width:min(100% - 22px,var(--max)); }
 
-      .hero{
-        min-height:31rem;
+      h1 { font-size:clamp(3rem,17vw,5rem); }
+
+      .hero {
+        min-height:28rem;
         padding:1rem;
       }
 
-      .gate-field{
-        min-height:35rem;
-        padding:1rem .65rem;
+      .actions { display:grid; }
+      .button { width:100%; }
+
+      .gate-stage { min-height:29rem; }
+
+      .lane-orbit {
+        width:20rem;
+        height:20rem;
       }
 
-      .orbit-stage{
-        --orbit-radius:9.2rem;
-        width:min(calc(100vw - 5rem),28rem);
-        max-width:calc(100% - 3.5rem);
+      .lane-point {
+        --radius:-9.35rem;
+        width:5.6rem;
+        height:4.12rem;
+        margin-left:-2.8rem;
+        margin-top:-2.06rem;
       }
 
-      .orbit-node{
-        width:7.2rem;
-        min-height:7.2rem;
+      .gem-label b { font-size:.36rem; }
+      .gem-label span { display:none; }
+
+      .center-gem {
+        width:7.4rem;
+        height:5.4rem;
       }
 
-      .diamond{
-        width:3.65rem;
-        height:3.65rem;
-        border-radius:.92rem;
-      }
+      .center-gem .gem-label b { font-size:.50rem; }
+      .center-gem .gem-label strong { font-size:.82rem; }
 
-      .node-title{font-size:.64rem}
-      .node-sub{font-size:.54rem}
-
-      .gate-anchor{
-        width:13rem;
-        height:13rem;
-        opacity:.20;
-      }
-
-      .gate-anchor-label{
-        opacity:.30;
-      }
-
-      .cardinal.e{right:.55rem}
-      .cardinal.w{left:.55rem}
-
-      .legend-grid,
-      .route-grid,
-      .voice-split{
+      .lane-grid,
+      .voice-grid,
+      .route-card-grid {
         grid-template-columns:1fr;
       }
+    }
 
-      .actions{
-        display:grid;
+    @media (max-width:460px) {
+      .gate-stage { min-height:27rem; }
+
+      .lane-orbit {
+        width:17.3rem;
+        height:17.3rem;
       }
 
-      .button{
-        width:100%;
+      .lane-point {
+        --radius:-8rem;
+        width:5rem;
+        height:3.7rem;
+        margin-left:-2.5rem;
+        margin-top:-1.85rem;
+      }
+
+      .gem-label b { font-size:.31rem; }
+
+      .center-gem {
+        width:6.75rem;
+        height:4.9rem;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+      }
+
+      body::after,
+      .gate-stage::before,
+      .gate-stage::after,
+      .lane-orbit,
+      .lane-point .lane-upright,
+      .center-gem-core,
+      .lane-point .lane-gem-core,
+      .gate-glint,
+      .gate-star {
+        animation:none!important;
       }
     }
   </style>
 </head>
 
 <body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="gateGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".94"/>
+        <stop offset=".16" stop-color="#ffe8a3" stop-opacity=".78"/>
+        <stop offset=".32" stop-color="#beaaff" stop-opacity=".62"/>
+        <stop offset=".50" stop-color="#2478ff" stop-opacity=".44"/>
+        <stop offset=".70" stop-color="#8ff0c3" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#020816" stop-opacity=".92"/>
+      </linearGradient>
+
+      <linearGradient id="gateGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".90"/>
+        <stop offset=".34" stop-color="#fff4c6" stop-opacity=".46"/>
+        <stop offset=".68" stop-color="#d7c2ff" stop-opacity=".20"/>
+        <stop offset="1" stop-color="#8dd8ff" stop-opacity=".10"/>
+      </linearGradient>
+
+      <linearGradient id="gateGemDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
+        <stop offset=".30" stop-color="#f3c86f" stop-opacity=".22"/>
+        <stop offset=".62" stop-color="#8f65ff" stop-opacity=".16"/>
+        <stop offset="1" stop-color="#020716" stop-opacity=".62"/>
+      </linearGradient>
+
+      <radialGradient id="gateGemTableGlow" cx="50%" cy="38%" r="64%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".58"/>
+        <stop offset=".28" stop-color="#ffe8a3" stop-opacity=".30"/>
+        <stop offset=".58" stop-color="#beaaff" stop-opacity=".14"/>
+        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="gateGemGlint" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#ffffff" stop-opacity=".86"/>
+        <stop offset=".52" stop-color="#fff0a3" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="gateGemGlow" x="-42%" y="-50%" width="184%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.95 0 0 0 0.20
+            0 .74 0 0 0.16
+            0 0 .96 0 0.30
+            0 0 0 0.52 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="gateDigitalGem" viewBox="0 0 220 160">
+        <g filter="url(#gateGemGlow)">
+          <path
+            d="M110 5 L145 13 L182 38 L210 75 L190 106 L150 137 L110 155 L70 137 L30 106 L10 75 L38 38 L75 13 Z"
+            fill="url(#gateGemBody)"
+            stroke="rgba(255,244,216,.62)"
+            stroke-width="1.35"
+          />
+          <path d="M110 5 L145 13 L132 37 L110 29 L88 37 L75 13 Z" fill="url(#gateGemAir)" opacity=".84"/>
+          <path d="M75 13 L88 37 L62 58 L38 38 Z" fill="rgba(255,255,255,.25)"/>
+          <path d="M145 13 L132 37 L158 58 L182 38 Z" fill="rgba(255,255,255,.17)"/>
+          <path d="M38 38 L62 58 L55 82 L10 75 Z" fill="rgba(243,200,111,.13)"/>
+          <path d="M182 38 L158 58 L165 82 L210 75 Z" fill="rgba(190,170,255,.13)"/>
+          <path
+            d="M88 37 L110 29 L132 37 L158 58 L148 82 L110 101 L72 82 L62 58 Z"
+            fill="url(#gateGemTableGlow)"
+            stroke="rgba(255,255,255,.30)"
+            stroke-width=".9"
+          />
+          <path d="M10 75 L55 82 L70 137 L30 106 Z" fill="rgba(143,101,255,.16)"/>
+          <path d="M210 75 L165 82 L150 137 L190 106 Z" fill="rgba(36,120,255,.12)"/>
+          <path d="M55 82 L72 82 L110 155 L70 137 Z" fill="rgba(2,8,24,.38)"/>
+          <path d="M165 82 L148 82 L110 155 L150 137 Z" fill="rgba(143,240,195,.10)"/>
+          <path d="M72 82 L110 101 L110 155 Z" fill="url(#gateGemDepth)" opacity=".76"/>
+          <path d="M148 82 L110 101 L110 155 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M110 5 L110 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
+          <path d="M10 75 L210 75" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
+          <path d="M38 38 L190 106" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M182 38 L30 106" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M75 13 L110 101 L145 13" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
+          <path d="M38 38 L110 101 L182 38" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M30 106 L110 101 L190 106" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
+          <g class="gate-star" opacity=".82">
+            <path d="M110 26 L116 70 L110 106 L104 70 Z" fill="rgba(255,255,255,.28)"/>
+            <path d="M62 58 L105 72 L158 58 L116 78 Z" fill="rgba(255,255,255,.17)"/>
+            <path d="M72 82 L105 75 L148 82 L114 91 Z" fill="rgba(243,200,111,.14)"/>
+            <path d="M110 101 L126 81 L148 82 L129 96 Z" fill="rgba(255,255,255,.14)"/>
+            <path d="M110 101 L94 81 L72 82 L91 96 Z" fill="rgba(190,170,255,.08)"/>
+          </g>
+          <path class="gate-glint" d="M34 117 L176 22 L188 38 L48 130 Z" fill="url(#gateGemGlint)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
   <a class="skip" href="#nine-summits-main">Skip to Nine Summits</a>
 
   <div class="shell">
     <header class="topbar" aria-label="Nine Summits header">
       <a class="brand" href="/">
-        <span class="brand-mark"><span>NS</span></span>
+        <span class="brand-mark" aria-hidden="true"><span>NS</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
           <strong>Nine Summits</strong>
@@ -964,7 +1091,7 @@
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/explore/">Manor</a>
+        <a href="/explore/">Explore</a>
         <a href="/nine-summits/" aria-current="page">Nine Summits</a>
         <a href="/nine-summits-of-love/">Book</a>
         <a href="/nine-summits/universe/">Universe</a>
@@ -981,133 +1108,138 @@
       <section class="panel hero" aria-labelledby="page-title">
         <div class="kicker">Nine Summits · Public System Gate</div>
         <h1 id="page-title">The climb becomes a world.</h1>
-        <h2>Book. Universe. Audralia. Voice.</h2>
+
+        <p class="subline">Book. Universe. Audralia. Voice.</p>
 
         <p class="lead">
-          The Nine Summits hub keeps the public system clean. The book gives the climb. The Universe gives the climb terrain. Audralia gives the home-world reference. The Voice lane brings the human signal into the room.
+          Nine Summits keeps the public system clean. The book carries the human climb. The Universe gives that climb a world. Audralia shows the untouched living path as a living canvas. The Voice lane keeps the universal underdog message and Sean Mansfield’s personal profile connected but separate.
         </p>
 
-        <div class="quote">
+        <div class="principle">
           Four doors. One public gate. No lane has to compete with the others.
+        </div>
+
+        <div class="quote">
+          See the climb. Enter the world. Watch possibility develop. Then hear the voice behind the signal.
         </div>
 
         <div class="actions">
           <a class="button gold" href="/nine-summits-of-love/">Open the Book</a>
-          <a class="button" href="/nine-summits/universe/">Enter the Universe</a>
-          <a class="button" href="/showroom/globe/">Inspect Audralia</a>
+          <a class="button violet" href="/nine-summits/universe/">Enter the Universe</a>
+          <a class="button green" href="/showroom/globe/audralia/">Inspect Audralia</a>
           <a class="button" href="/meet-sean-mansfield/">Meet Sean</a>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="field-title">
+      <section class="panel section" aria-labelledby="gate-title">
         <div class="kicker">Four primary doors</div>
-        <h2 id="field-title">The four doors rotate from the compass center.</h2>
+        <h2 id="gate-title">The four lanes orbit one public gate.</h2>
 
-        <div class="gate-field" aria-label="Nine Summits compass-centered rotating four-door public gate">
-          <div class="axis-line" aria-hidden="true"></div>
-          <div class="cardinal n" aria-hidden="true">N</div>
-          <div class="cardinal e" aria-hidden="true">E</div>
-          <div class="cardinal s" aria-hidden="true">S</div>
-          <div class="cardinal w" aria-hidden="true">W</div>
-
-          <div class="gate-anchor" aria-hidden="true"></div>
-          <div class="gate-anchor-label" aria-hidden="true">
-            <strong>Nine Summits</strong>
-            <span>Public Gate</span>
+        <div class="gate-stage" aria-label="Book Universe Audralia Voice public gate">
+          <div class="center-gem" aria-hidden="true">
+            <span class="center-gem-core">
+              <svg class="gate-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                <use href="#gateDigitalGem"></use>
+              </svg>
+              <span class="gem-label">
+                <b>Nine Summits</b>
+                <strong>Public Gate</strong>
+              </span>
+            </span>
           </div>
 
-          <div class="orbit-stage" aria-label="Clockwise rotating diamond of primary route doors">
-            <div class="orbit-ring">
-              <div class="orbit-node book">
-                <div class="node-counter">
-                  <a href="/nine-summits-of-love/" aria-label="Open the Book Lane">
-                    <span class="diamond" aria-hidden="true"></span>
-                    <span class="node-title">Book Lane</span>
-                    <span class="node-sub">Human Climb</span>
-                  </a>
-                </div>
-              </div>
+          <div class="lane-orbit" aria-label="Animated Nine Summits lane orbit">
+            <a class="lane-point" style="--angle:0deg;--lane-delay:-.2s" href="/nine-summits-of-love/">
+              <span class="lane-upright">
+                <span class="lane-gem-core">
+                  <svg class="gate-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#gateDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Book</b><span>Human climb</span></span>
+                </span>
+              </span>
+            </a>
 
-              <div class="orbit-node universe">
-                <div class="node-counter">
-                  <a href="/nine-summits/universe/" aria-label="Open the Universe Lane">
-                    <span class="diamond" aria-hidden="true"></span>
-                    <span class="node-title">Universe Lane</span>
-                    <span class="node-sub">World Setting</span>
-                  </a>
-                </div>
-              </div>
+            <a class="lane-point" style="--angle:90deg;--lane-delay:-1.8s" href="/nine-summits/universe/">
+              <span class="lane-upright">
+                <span class="lane-gem-core">
+                  <svg class="gate-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#gateDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Universe</b><span>World setting</span></span>
+                </span>
+              </span>
+            </a>
 
-              <div class="orbit-node audralia">
-                <div class="node-counter">
-                  <a href="/showroom/globe/" aria-label="Inspect Audralia">
-                    <span class="diamond" aria-hidden="true"></span>
-                    <span class="node-title">Audralia</span>
-                    <span class="node-sub">Home World</span>
-                  </a>
-                </div>
-              </div>
+            <a class="lane-point" style="--angle:180deg;--lane-delay:-3.4s" href="/showroom/globe/audralia/">
+              <span class="lane-upright">
+                <span class="lane-gem-core">
+                  <svg class="gate-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#gateDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Audralia</b><span>Living canvas</span></span>
+                </span>
+              </span>
+            </a>
 
-              <div class="orbit-node voice">
-                <div class="node-counter">
-                  <a href="#voice-lane" aria-label="Open Voice Lane">
-                    <span class="diamond" aria-hidden="true"></span>
-                    <span class="node-title">Voice Lane</span>
-                    <span class="node-sub">Underdog · Sean</span>
-                  </a>
-                </div>
-              </div>
-            </div>
+            <a class="lane-point" style="--angle:270deg;--lane-delay:-5s" href="#voice-lane">
+              <span class="lane-upright">
+                <span class="lane-gem-core">
+                  <svg class="gate-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#gateDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Voice</b><span>Underdog · Sean</span></span>
+                </span>
+              </span>
+            </a>
           </div>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="legend-title">
         <div class="kicker">Legend</div>
-        <h2 id="legend-title">Each primary door has a distinct job.</h2>
+        <h2 id="legend-title">Each primary door has one job.</h2>
 
-        <div class="legend-grid">
-          <a class="legend-card" href="/nine-summits-of-love/">
+        <div class="lane-grid">
+          <a class="card" href="/nine-summits-of-love/">
             <b>Book Lane</b>
             <strong>The human climb.</strong>
             <span>Character, structure, balance, stability, peace, joy, dignity, free will, and love.</span>
+            <span class="open-path">Open Book</span>
           </a>
 
-          <a class="legend-card" href="/nine-summits/universe/">
+          <a class="card" href="/nine-summits/universe/">
             <b>Universe Lane</b>
             <strong>The world around the climb.</strong>
             <span>Terrain, gates, coherence, events, stories, public experiences, and future media.</span>
+            <span class="open-path">Enter Universe</span>
           </a>
 
-          <a class="legend-card" href="/showroom/globe/">
+          <a class="card" href="/showroom/globe/audralia/">
             <b>Audralia</b>
-            <strong>The home-world reference.</strong>
-            <span>The inspection surface for the current public universe baseline.</span>
+            <strong>The untouched living path.</strong>
+            <span>A living canvas where visitors can watch possibility develop before their eyes.</span>
+            <span class="open-path">Inspect Audralia</span>
           </a>
 
-          <a class="legend-card" href="#voice-lane">
+          <a class="card" href="#voice-lane">
             <b>Voice Lane</b>
             <strong>The human signal.</strong>
             <span>The universal underdog message and Sean Mansfield’s personal profile stay connected but separate.</span>
+            <span class="open-path">Open Voice Lane</span>
           </a>
         </div>
       </section>
 
-      <section id="voice-lane" class="panel section" aria-labelledby="voice-title">
+      <section class="panel section" id="voice-lane" aria-labelledby="voice-title">
         <div class="kicker">Voice lane split</div>
         <h2 id="voice-title">Universal message and personal profile stay separate.</h2>
 
-        <div class="voice-split">
-          <a class="voice-card" href="/about-this-underdog/">
+        <div class="voice-grid">
+          <a class="card voice-card" href="/about-this-underdog/">
             <b>Universal voice</b>
             <strong>About This Underdog</strong>
-            <span>The underdog concept for everybody: pressure, survival, accountability, language, and redirection.</span>
+            <span>The underdog concept for everybody: pressure, survival, accountability, language, redirection, and the climb back into range.</span>
+            <span class="open-path">Open Underdog</span>
           </a>
 
-          <a class="voice-card" href="/meet-sean-mansfield/">
+          <a class="card voice-card" href="/meet-sean-mansfield/">
             <b>Personal profile</b>
             <strong>Meet Sean Mansfield</strong>
-            <span>The person behind the voice, story, comedy, public speaking, and seminar path.</span>
+            <span>The person behind the voice, story, comedy, public speaking, seminar path, and public-facing explanation.</span>
+            <span class="open-path">Meet Sean</span>
           </a>
         </div>
       </section>
@@ -1116,112 +1248,122 @@
         <div class="kicker">System routes</div>
         <h2 id="routes-title">The climb remains attached to the estate.</h2>
 
-        <div class="route-grid">
+        <div class="route-card-grid">
           <a class="route-card" href="/">
             <b>Compass</b>
             <strong>Return to the root.</strong>
             <span>The estate control surface keeps orientation clean.</span>
+            <span class="open-path">Open Compass</span>
           </a>
 
           <a class="route-card" href="/explore/">
-            <b>Manor</b>
+            <b>Explore</b>
             <strong>Return through the map.</strong>
-            <span>The Manor keeps discovery and traversal attached to the house.</span>
+            <span>Explore keeps discovery and traversal attached to the larger estate.</span>
+            <span class="open-path">Open Explore</span>
           </a>
 
           <a class="route-card" href="/products/">
             <b>Products</b>
             <strong>Move into usable chambers.</strong>
             <span>The message becomes tools, games, supports, and product lanes.</span>
+            <span class="open-path">Open Products</span>
           </a>
 
           <a class="route-card" href="/showroom/">
             <b>Showroom</b>
             <strong>Inspect public expression.</strong>
             <span>The visible build can be checked without collapsing into explanation.</span>
+            <span class="open-path">Open Showroom</span>
           </a>
 
           <a class="route-card" href="/frontier/">
             <b>Frontier</b>
             <strong>Carry expansion.</strong>
             <span>Expansion stays connected to the parent map.</span>
+            <span class="open-path">Open Frontier</span>
           </a>
 
           <a class="route-card" href="/gauges/">
             <b>Gauges</b>
             <strong>Measure route truth.</strong>
             <span>Gauges confirm what the served page actually contains.</span>
+            <span class="open-path">Read Gauges</span>
           </a>
 
           <a class="route-card" href="/door/">
             <b>Door</b>
             <strong>Cross the threshold.</strong>
             <span>The visitor enters the estate without every room doing the same job.</span>
+            <span class="open-path">Open Door</span>
           </a>
 
           <a class="route-card" href="/home/">
             <b>Home</b>
             <strong>Stabilize the journey.</strong>
             <span>Home receives the visitor and keeps movement coherent.</span>
+            <span class="open-path">Open Home</span>
           </a>
         </div>
       </section>
 
-      <section class="final-band" aria-labelledby="final-title">
-        <div class="kicker">Final direction</div>
-        <strong id="final-title">The hub keeps the lanes from competing.</strong>
-        <p>
-          The book stays human-first. The Universe becomes the world around it. Audralia gives the public home-world reference. The Voice lane lets the message speak through both the universal underdog concept and Sean Mansfield’s personal profile.
-        </p>
+      <section class="panel section" aria-labelledby="final-title">
+        <div class="final-direction">
+          <strong id="final-title">The hub keeps the lanes from competing.</strong>
+          <p>
+            The book stays human-first. The Universe becomes the world around it. Audralia shows the untouched living path as a living canvas. The Voice lane lets the message speak through both the universal underdog concept and Sean Mansfield’s personal profile.
+          </p>
 
-        <div class="actions">
-          <a class="button gold" href="/nine-summits-of-love/">Open the Book</a>
-          <a class="button" href="/nine-summits/universe/">Enter the Universe</a>
-          <a class="button" href="/about-this-underdog/">About This Underdog</a>
-          <a class="button" href="/meet-sean-mansfield/">Meet Sean</a>
-          <a class="button" href="/gauges/">Read Gauges</a>
+          <div class="actions">
+            <a class="button gold" href="/nine-summits-of-love/">Open the Book</a>
+            <a class="button violet" href="/nine-summits/universe/">Enter the Universe</a>
+            <a class="button green" href="/about-this-underdog/">About This Underdog</a>
+            <a class="button" href="/meet-sean-mansfield/">Meet Sean</a>
+            <a class="button" href="/gauges/">Read Gauges</a>
+          </div>
         </div>
       </section>
 
-      <details class="receipt" open>
-        <summary>Route receipt</summary>
-        <pre>NINE_SUMMITS_CLEAN_RECEIPT_RETIREMENT_TOKEN_TNT_v6
+      <template id="route-receipt" data-route-receipt>
+NINE_SUMMITS_PUBLIC_GATE_LANE_ALIGNMENT_RENEWAL_TNT_v7
+previous=NINE_SUMMITS_CLEAN_RECEIPT_RETIREMENT_TOKEN_TNT_v6
 route=/nine-summits/
 page=nine_summits
 role=public_system_gate
-previous_visual_contract=NINE_SUMMITS_COMPASS_CENTERED_ROTATING_DIAMOND_GATE_TNT_v5
-message=the_climb_becomes_a_world
-visual_system=compass_centered_rotating_four_door_diamond_gate
-center=nine_summits_background_anchor_only
-compass_center=true
-background_anchor=true
-primary_doors=book,universe,audralia,voice
+message=The climb becomes a world.
+visual_system=code_rendered_four_lane_digital_gem_public_gate
+primary_lanes=book,universe,audralia,voice
 book_lane=/nine-summits-of-love/
 book_role=human_climb
 universe_lane=/nine-summits/universe/
 universe_role=world_around_the_climb
-audralia=/showroom/globe/
-audralia_role=home_world_reference
+audralia_lane=/showroom/globe/audralia/
+audralia_role=untouched_living_path_living_canvas
 voice_lane=about_this_underdog,meet_sean_mansfield
 about_this_underdog=/about-this-underdog/
 about_this_underdog_role=universal_underdog_message
 meet_sean_mansfield=/meet-sean-mansfield/
 meet_sean_mansfield_role=personal_profile_behind_the_voice
+public_copy=book_carries_human_climb_universe_gives_that_climb_a_world_audralia_shows_untouched_living_path_as_living_canvas_voice_keeps_universal_and_personal_connected_but_separate
 formation=book_north,universe_east,audralia_south,voice_west
-motion=clockwise_orbit_centered_on_compass
+motion=css_only_clockwise_four_lane_orbit
 label_motion=counter_rotation_for_readability
 orbit_center=gate_field_center
 orbit_radius=contained_inside_panel
-system_routes=compass,door,home,manor,products,showroom,frontier,gauges
-z_index_law=background_field,axis_lines,nine_summits_anchor_background,rotating_route_diamonds,route_labels,hover_focus
+system_routes=compass,door,home,explore,products,showroom,frontier,gauges
+visible_label_corrections=Explore_not_Manor,Audralia_direct_child_route
+audralia_legacy_home_world_reference_retired=true
+receipt_visibility=hidden_template_only
+z_index_law=background_field,axis_field,nine_summits_anchor_background,rotating_lane_gems,lane_labels,hover_focus
 non_overlap_law=no_clickable_diamond_hidden_by_center
-animation=compass_centered_clockwise_rotating_diamond_gate,background_anchor_pulse,slow_orbit_field,aurora_background
-mobile_law=compact_centered_rotating_diamond_no_hidden_nodes_no_right_crop
-upgraded=receipt_cleanliness,current_contract_token,retirement_marker_renaming
-preserved=compass_centering,contained_orbit_radius,diamond_formation,clockwise_motion,background_center_anchor,current_routes,mobile_spacing
-retirement_marker_cleanup=prior_voice_merge_marker_removed,prior_linear_layout_removed,off_center_orbit_removed,right_side_cropping_removed,stale_voice_route_removed
-route_owns=public_gate,four_primary_doors,compass_centered_rotating_diamond_gate,route_links,voice_lane_split
-route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic,personal_profile_page,universal_underdog_page
+animation_method=css_only
+js_required=false
+animated=lane_orbit_turn,lane_label_gravity_lock,gate_field_turn,gate_inner_field_breathe,lane_gem_float,center_pulse,gate_glint,gate_facet_turn,aurora_background
+mobile_law=compact_centered_rotating_gate_no_hidden_nodes_no_right_crop
+preserved=public_system_gate,four_primary_lanes,voice_lane_split,system_routes,book_universe_voice_relationship
+renewed=audralia_public_meaning,visible_route_labels,hidden_receipt,digital_gem_gate_standard,current_public_language
+route_owns=public_gate,four_primary_lanes,code_rendered_lane_gem_gate,route_links,voice_lane_split,hidden_receipt
+route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic,personal_profile_page,universal_underdog_page,products_root,showroom_runtime
 heavy_runtime_loaded=false
 render_files_touched=false
 instrument_touched=false
@@ -1229,12 +1371,12 @@ gauges_logic_touched=false
 generated_image=false
 graphic_box=false
 streaming=false
-visual_pass_claimed=false</pre>
-      </details>
+visual_pass_claimed=false
+      </template>
     </main>
 
     <footer>
-      NINE_SUMMITS_CLEAN_RECEIPT_RETIREMENT_TOKEN_TNT_v6 · Nine Summits · Clean Receipt Retirement Token Pass.
+      NINE_SUMMITS_PUBLIC_GATE_LANE_ALIGNMENT_RENEWAL_TNT_v7 · Nine Summits · Public System Gate · Lane Alignment.
     </footer>
   </div>
 </body>

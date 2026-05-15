@@ -3,14 +3,16 @@
   lang="en"
   data-route="/products/"
   data-page="products"
-  data-contract="PRODUCTS_ORGANIC_DIGITAL_GEM_RECEPTION_TNT_v5"
-  data-previous-contract="PRODUCTS_LARGE_NATURAL_DIGITAL_GEM_RECEPTION_TNT_v4"
+  data-contract="PRODUCTS_ORGANIC_GEM_ORBIT_RUNTIME_MOUNT_SEPARATION_TNT_v6"
+  data-previous-contract="PRODUCTS_ORGANIC_DIGITAL_GEM_RECEPTION_TNT_v5"
   data-role="product-wing"
-  data-public-frame="organic-digital-gem-product-orbit"
+  data-public-frame="organic-digital-gem-product-orbit-runtime-separated"
   data-runtime-public-message="false"
   data-static-page-usable-without-js="true"
   data-eight-doors-visible-without-runtime="true"
   data-runtime-enhancement-only="true"
+  data-visible-orbit-is-runtime-mount="false"
+  data-runtime-mount-separation="true"
   data-generated-image="false"
   data-graphic-box="false"
   data-streaming="false"
@@ -839,8 +841,24 @@
       min-height:0;
     }
 
-    .runtime-enhancement-anchor:empty {
-      display:none;
+    .runtime-enhancement-anchor:empty,
+    .runtime-enhancement-anchor[hidden],
+    [data-products-runtime-hidden-mount="true"] {
+      display:none!important;
+      visibility:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      overflow:hidden!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      inset:auto!important;
+      clip-path:inset(50%)!important;
     }
 
     .route-receipt,
@@ -1047,8 +1065,9 @@
         <div
           class="orbit-stage"
           id="product-orbit"
-          data-products-runtime-mount
           data-products-public-orbit="true"
+          data-products-runtime-mount-separated="true"
+          data-visible-orbit-is-runtime-mount="false"
           aria-label="Product orbit: one message and eight doors"
         >
           <div class="orbit-center" aria-hidden="true" style="--inc-a-x:24%;--inc-a-y:66%;--inc-b-x:69%;--inc-b-y:33%;--vein-a:19deg;--vein-b:139deg;">
@@ -1106,7 +1125,16 @@
           </a>
         </div>
 
-        <div class="runtime-enhancement-anchor" data-products-runtime-root aria-hidden="true"></div>
+        <div
+          id="productsRuntimeMount"
+          class="runtime-enhancement-anchor"
+          data-products-runtime-mount
+          data-products-runtime-hidden-mount="true"
+          data-runtime-public-message="false"
+          data-visible-runtime-diagnostics="false"
+          hidden
+          aria-hidden="true"
+        ></div>
       </section>
 
       <section class="panel section" aria-labelledby="chambers-title">
@@ -1236,12 +1264,17 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-PRODUCTS_ORGANIC_DIGITAL_GEM_RECEPTION_TNT_v5
-previous=PRODUCTS_LARGE_NATURAL_DIGITAL_GEM_RECEPTION_TNT_v4
+PRODUCTS_ORGANIC_GEM_ORBIT_RUNTIME_MOUNT_SEPARATION_TNT_v6
+previous=PRODUCTS_ORGANIC_DIGITAL_GEM_RECEPTION_TNT_v5
 route=/products/
 page=products
 role=product_wing
-public_frame=organic_digital_gem_product_orbit
+public_frame=organic_digital_gem_product_orbit_runtime_separated
+runtime_mount_separation=true
+visible_orbit_is_runtime_mount=false
+visible_orbit_owns=organic_digital_gem_product_orbit
+hidden_runtime_mount=/products/#productsRuntimeMount
+runtime_may_not_overwrite_visible_orbit=true
 public_cta=Explore_the_Eight_Doors
 core_message=The_message_becomes_usable_here.
 promise=Always_on_your_side_Never_in_control.
@@ -1260,7 +1293,7 @@ visible_boot_receipts=false
 visible_cache_keys=false
 visible_script_failure_text=false
 products_index_js_role=quiet_bridge_hidden_status_only
-products_runtime_js_role=enhancement_only
+products_runtime_js_role=enhancement_only_hidden_mount_only
 route_owns=products_public_page,organic_digital_gem_product_orbit,eight_doors,chamber_cards,public_copy,hidden_receipt
 route_does_not_own=runtime_as_public_message,gauges_logic,showroom_runtime,product_child_pages,heavy_runtime
 generated_image=false
@@ -1271,12 +1304,12 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      PRODUCTS_ORGANIC_DIGITAL_GEM_RECEPTION_TNT_v5 · Products · Organic Digital Gem Orbit · Eight Doors.
+      PRODUCTS_ORGANIC_GEM_ORBIT_RUNTIME_MOUNT_SEPARATION_TNT_v6 · Products · Organic Digital Gem Orbit · Runtime Mount Separated.
     </footer>
   </div>
 
   <script>
-    window.DGB_PRODUCTS_PUBLIC_ORBIT_KEY = "PRODUCTS_ORGANIC_DIGITAL_GEM_RECEPTION_TNT_v5";
+    window.DGB_PRODUCTS_PUBLIC_ORBIT_KEY = "PRODUCTS_ORGANIC_GEM_ORBIT_RUNTIME_MOUNT_SEPARATION_TNT_v6";
   </script>
   <script type="module" src="/products/index.js?v=PRODUCTS_PUBLIC_ORBIT_RUNTIME_DEMOTION_BRIDGE_TNT_v2"></script>
 </body>

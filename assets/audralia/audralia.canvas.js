@@ -1,22 +1,23 @@
 // /assets/audralia/audralia.canvas.js
-// AUDRALIA_G1_MASK_AND_SURFACE_CANVAS_CONSUMER_TNT_v1
+// AUDRALIA_LIVING_CANVAS_PLANET_EXPRESSION_CANVAS_TNT_v2
 // Full-file replacement.
 // Canvas consumer only.
-// Loads lattice256, Layer One Landmap, and Layer Two Lush Land Surface.
-// Renders ocean mask first and lush land surface second.
+// Adds living-canvas expression at render time.
+// Preserves lattice256, Layer One Landmap, and Layer Two Lush Land Surface authority.
 // Canvas does not own footprint.
+// Canvas does not author hydrology.
 // No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G1_MASK_AND_SURFACE_CANVAS_CONSUMER_TNT_v1";
-  const RECEIPT = "AUDRALIA_G1_MASK_AND_SURFACE_CANVAS_CONSUMER_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G1_256_LATTICE_ATLAS_CANVAS_CONSUMER_TNT_v16";
+  const CONTRACT = "AUDRALIA_LIVING_CANVAS_PLANET_EXPRESSION_CANVAS_TNT_v2";
+  const RECEIPT = "AUDRALIA_LIVING_CANVAS_PLANET_EXPRESSION_CANVAS_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G1_MASK_AND_SURFACE_CANVAS_CONSUMER_TNT_v1";
   const LANDMAP_CONTRACT = "AUDRALIA_G1_LAYER_ONE_LANDMAP_RENEWAL_TNT_v1";
   const LAND_SURFACE_CONTRACT = "AUDRALIA_G1_LAYER_TWO_LUSH_LAND_SURFACE_TNT_v1";
   const LATTICE_CONTRACT = "AUDRALIA_G1_256_LATTICE_ATLAS_AUTHORITY_TNT_v1";
-  const VERSION = "2026-05-10.audralia-g1-mask-and-surface-canvas-consumer-v1";
+  const VERSION = "2026-05-15.audralia-living-canvas-planet-expression-v2";
   const TAU = Math.PI * 2;
 
   const COLORS = Object.freeze({
@@ -28,10 +29,15 @@
     beach: [202, 186, 128],
     wetBeach: [156, 157, 116],
     fallbackLand: [90, 127, 76],
+    livingGreen: [103, 150, 82],
+    livingGold: [174, 143, 74],
+    heartWarm: [186, 162, 96],
     ice: [190, 220, 225],
     snow: [218, 232, 226],
     atmosphere: [86, 157, 194],
-    cloud: [230, 238, 238]
+    atmosphereBright: [142, 202, 226],
+    cloud: [230, 238, 238],
+    cloudSoft: [206, 225, 226]
   });
 
   function clamp(value, min, max) {
@@ -130,7 +136,7 @@
       }
 
       const script = document.createElement("script");
-      script.src = `${src}?v=audralia-mask-surface-${Date.now()}`;
+      script.src = `${src}?v=audralia-living-canvas-${Date.now()}`;
       script.defer = true;
       script.dataset.loaderFlag = flag;
       script.onload = () => resolve(true);
@@ -172,6 +178,7 @@
       topology: "ocean",
       elevation: "sea",
       shelf: 0.2,
+      beachEdge: 0,
       isOcean: true,
       isLand: false,
       isShelf: false,
@@ -233,6 +240,118 @@
     return shade(COLORS.fallbackLand, grain - 3);
   }
 
+  function isWaterLike(map) {
+    return Boolean(
+      map?.isOcean ||
+      map?.isShelf ||
+      map?.terrainClass === "ocean" ||
+      map?.terrainClass === "shelf"
+    );
+  }
+
+  function isBeachLike(map) {
+    return Boolean(map?.isBeach || map?.terrainClass === "beach");
+  }
+
+  function isLandLike(map) {
+    return Boolean(
+      map?.isLand ||
+      (
+        !isWaterLike(map) &&
+        !isBeachLike(map) &&
+        map?.terrainClass !== "ocean" &&
+        map?.terrainClass !== "shelf"
+      )
+    );
+  }
+
+  function liveWaterExpression(color, map, u, v, now, lightAmount, z) {
+    const t = now * 0.001;
+    const phase = t * 0.055;
+    const shelf = clamp(map.shelf || 0.28, 0, 1);
+    const edge = clamp(map.beachEdge || 0, 0, 1);
+    const shimmerField = fbm(u + phase * 0.38, v + Math.sin(t * 0.18) * 0.018, 812000, 4);
+    const crossWave = Math.sin((u * TAU * 18) + (v * 9.5) + t * 1.35) * 0.5 + 0.5;
+    const fineWave = Math.sin((u * TAU * 47) - (v * 21) + t * 2.1) * 0.5 + 0.5;
+    const specular = smoothstep(0.68, 0.96, shimmerField * 0.58 + crossWave * 0.28 + fineWave * 0.14) * lightAmount * smoothstep(0.08, 0.7, z);
+    const shelfGlow = smoothstep(0.38, 0.9, shelf) * 0.14 + smoothstep(0.18, 0.82, edge) * 0.12;
+    const waterPulse = (Math.sin(t * 0.74 + shimmerField * TAU) + 1) * 0.5;
+
+    let out = color;
+    out = shade(out, (shimmerField - 0.5) * 7 + specular * 18);
+    out = mix(out, COLORS.shallow, shelfGlow * (0.45 + waterPulse * 0.22));
+    out = mix(out, COLORS.cloudSoft, specular * 0.16);
+
+    return out;
+  }
+
+  function liveLandExpression(color, map, u, v, now, lightAmount, z) {
+    const t = now * 0.001;
+    const className = String(map.terrainClass || "");
+    const altitudeBias =
+      className.includes("mount") || className.includes("high") ? 0.22 :
+      className.includes("basin") || className.includes("valley") ? -0.08 :
+      className.includes("polar") || className.includes("ice") ? 0.12 :
+      0.04;
+
+    const growthNoise = fbm(u * 1.1 + t * 0.009, v * 1.05 - t * 0.006, 823000, 4);
+    const terrainPressure = fbm(u * 2.4 - 0.22, v * 2.1 + 0.17, 823500, 4);
+    const developmentPulse = (Math.sin(t * 0.34 + growthNoise * TAU) + 1) * 0.5;
+    const heartWarmth = smoothstep(0.34, 0.86, growthNoise) * (0.04 + developmentPulse * 0.065);
+    const structureShadow = (terrainPressure - 0.5) * 13 + altitudeBias * 14;
+
+    let out = shade(color, structureShadow);
+
+    if (className === "polar-ice") {
+      out = mix(out, COLORS.snow, 0.08 + developmentPulse * 0.04);
+      out = shade(out, lightAmount * 6);
+      return out;
+    }
+
+    out = mix(out, COLORS.livingGreen, heartWarmth * smoothstep(0.08, 0.9, z));
+    out = mix(out, COLORS.livingGold, heartWarmth * 0.52);
+    out = shade(out, lightAmount * 4);
+
+    return out;
+  }
+
+  function liveAtmosphereExpression(color, u, v, now, lightAmount, z, rr) {
+    const t = now * 0.001;
+    const breath = (Math.sin(t * 0.62) + 1) * 0.5;
+    const limb = 1 - smoothstep(0.02, 0.42, z);
+    const cloudField = fbm(u + t * 0.004, v - t * 0.003, 834000, 4);
+    const highCloud = smoothstep(0.66, 0.88, cloudField) * lightAmount;
+    const airStrength = clamp(limb * (0.22 + breath * 0.11), 0, 0.42);
+    const cloudStrength = clamp(highCloud * (0.08 + limb * 0.10), 0, 0.24);
+    const edgeProtection = smoothstep(0.74, 0.99, rr) * (0.05 + breath * 0.055);
+
+    let out = color;
+    out = mix(out, COLORS.atmosphereBright, airStrength);
+    out = mix(out, COLORS.cloud, cloudStrength);
+    out = mix(out, COLORS.heartWarm, edgeProtection * lightAmount);
+
+    return out;
+  }
+
+  function drawAtmosphereHalo(ctx, width, height, cx, cy, radius, now) {
+    const t = now * 0.001;
+    const breath = (Math.sin(t * 0.62) + 1) * 0.5;
+    const halo = ctx.createRadialGradient(cx, cy, radius * 0.92, cx, cy, radius * 1.12);
+
+    halo.addColorStop(0, `rgba(142,202,226,${0.00})`);
+    halo.addColorStop(0.38, `rgba(142,202,226,${0.028 + breath * 0.020})`);
+    halo.addColorStop(0.72, `rgba(142,202,226,${0.070 + breath * 0.045})`);
+    halo.addColorStop(1, "rgba(142,202,226,0)");
+
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.14, 0, TAU);
+    ctx.fill();
+    ctx.restore();
+  }
+
   function buildTexture(width, height) {
     const temp = document.createElement("canvas");
     temp.width = width;
@@ -292,6 +411,14 @@
     canvas.dataset.audraliaLayerTwoLushLandSurface = "true";
     canvas.dataset.audraliaCanvasOwnsFootprint = "false";
     canvas.dataset.audraliaCoordinateInspection = "true";
+    canvas.dataset.livingCanvasExpression = "true";
+    canvas.dataset.atmosphereBreath = "true";
+    canvas.dataset.waterShimmerExpression = "true";
+    canvas.dataset.landDevelopmentExpression = "true";
+    canvas.dataset.futureFormingMotion = "true";
+    canvas.dataset.eyesMindHeartTriad = "true";
+    canvas.dataset.textureRebuildPerFrame = "false";
+    canvas.dataset.canvasStillConsumerOnly = "true";
     canvas.dataset.generatedImage = "false";
     canvas.dataset.graphicBox = "false";
     canvas.dataset.visualPassClaimed = "false";
@@ -311,22 +438,26 @@
 
     const readout = document.createElement("div");
     readout.dataset.audraliaCoordinateReadout = "true";
+    readout.dataset.audraliaReadoutPosture = "quiet_until_pointer";
     readout.style.position = "absolute";
     readout.style.left = "10px";
     readout.style.bottom = "10px";
     readout.style.padding = "7px 9px";
     readout.style.borderRadius = "12px";
-    readout.style.background = "rgba(3,9,20,.68)";
-    readout.style.color = "rgba(238,246,255,.88)";
+    readout.style.background = "rgba(3,9,20,.58)";
+    readout.style.color = "rgba(238,246,255,.82)";
     readout.style.font = "600 11px/1.35 system-ui, sans-serif";
     readout.style.whiteSpace = "pre-line";
     readout.style.pointerEvents = "none";
-    readout.textContent = "Audralia ocean mask renewal loading…";
+    readout.style.opacity = "0.38";
+    readout.style.transition = "opacity 220ms ease, background 220ms ease";
+    readout.textContent = "Audralia living canvas loading…";
     mount.appendChild(readout);
 
     const ctx = canvas.getContext("2d", { alpha: true });
 
     let texture = null;
+    let readoutQuietTimer = null;
 
     const state = {
       disposed: false,
@@ -347,6 +478,18 @@
       const dpr = Math.min(1.35, window.devicePixelRatio || 1);
       canvas.width = Math.floor(size * dpr);
       canvas.height = Math.floor(size * dpr);
+    }
+
+    function wakeReadout() {
+      readout.style.opacity = "0.92";
+      readout.style.background = "rgba(3,9,20,.72)";
+      window.clearTimeout(readoutQuietTimer);
+      readoutQuietTimer = window.setTimeout(() => {
+        if (!state.dragging) {
+          readout.style.opacity = "0.42";
+          readout.style.background = "rgba(3,9,20,.58)";
+        }
+      }, 2200);
     }
 
     function pointerToMap(event) {
@@ -387,9 +530,11 @@
       return sampleMap(u, v);
     }
 
-    function updateReadout(map) {
+    function updateReadout(map, interactive = false) {
+      if (interactive) wakeReadout();
+
       if (!map) {
-        readout.textContent = "Pointer outside globe";
+        readout.textContent = "Pointer outside Audralia";
         return;
       }
 
@@ -414,12 +559,12 @@
       state.dragging = true;
       state.lastX = event.clientX || event.touches?.[0]?.clientX || 0;
       state.lastY = event.clientY || event.touches?.[0]?.clientY || 0;
-      updateReadout(pointerToMap(event));
+      updateReadout(pointerToMap(event), true);
       canvas.setPointerCapture?.(event.pointerId);
     }
 
     function pointerMove(event) {
-      updateReadout(pointerToMap(event));
+      updateReadout(pointerToMap(event), true);
 
       if (!state.dragging) return;
 
@@ -506,14 +651,23 @@
           const u = longitude / TAU + 0.5;
           const v = 0.5 - latitude / Math.PI;
 
+          const map = sampleMap(u, v);
           let color = textureSample(texture, u, v);
 
           const lightAmount = clamp(wx * light[0] + sy * light[1] + z * light[2], 0, 1);
+
+          if (isWaterLike(map) || isBeachLike(map)) {
+            color = liveWaterExpression(color, map, u, v, now, lightAmount, z);
+          } else if (isLandLike(map)) {
+            color = liveLandExpression(color, map, u, v, now, lightAmount, z);
+          }
+
           const limb = smoothstep(0.0, 0.16, z);
           const shadeAmount = -36 + lightAmount * 58;
 
           color = shade(color, shadeAmount);
           color = mix(COLORS.atmosphere, color, limb);
+          color = liveAtmosphereExpression(color, u, v, now, lightAmount, z, rr);
 
           data[index] = color[0];
           data[index + 1] = color[1];
@@ -524,6 +678,7 @@
 
       ctx.clearRect(0, 0, width, height);
       ctx.putImageData(image, 0, 0);
+      drawAtmosphereHalo(ctx, width, height, cx, cy, radius, now);
 
       if (typeof options.onStatus === "function") {
         options.onStatus("rendering", {
@@ -535,7 +690,16 @@
           landmapLoaded: Boolean(window.AUDRALIA_LANDMAP?.sampleLandmap),
           landSurfaceLoaded: Boolean(window.AUDRALIA_LAND_SURFACE?.sampleSurface),
           oceanMaskFirst: true,
-          canvasOwnsFootprint: false
+          canvasOwnsFootprint: false,
+          hydrologyAuthored: false,
+          livingCanvasExpression: true,
+          atmosphereBreath: true,
+          waterShimmerExpression: true,
+          landDevelopmentExpression: true,
+          futureFormingMotion: true,
+          eyesMindHeartTriad: true,
+          textureRebuildPerFrame: false,
+          canvasStillConsumerOnly: true
         });
       }
 
@@ -553,7 +717,7 @@
     ensureAuthorities().then(() => {
       texture = buildTexture(1024, 512);
       state.ready = true;
-      updateReadout(sampleMap(0.5, 0.5));
+      updateReadout(sampleMap(0.5, 0.5), false);
 
       document.documentElement.dataset.audraliaCanvasLoaded = "true";
       document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
@@ -566,6 +730,15 @@
       document.documentElement.dataset.audraliaLayerTwoLushLandSurface = "true";
       document.documentElement.dataset.audraliaCanvasOwnsFootprint = "false";
       document.documentElement.dataset.audraliaCoordinateInspection = "true";
+      document.documentElement.dataset.livingCanvasExpression = "true";
+      document.documentElement.dataset.atmosphereBreath = "true";
+      document.documentElement.dataset.waterShimmerExpression = "true";
+      document.documentElement.dataset.landDevelopmentExpression = "true";
+      document.documentElement.dataset.futureFormingMotion = "true";
+      document.documentElement.dataset.eyesMindHeartTriad = "true";
+      document.documentElement.dataset.textureRebuildPerFrame = "false";
+      document.documentElement.dataset.canvasStillConsumerOnly = "true";
+      document.documentElement.dataset.hydrologyAuthored = "false";
       document.documentElement.dataset.generatedImage = "false";
       document.documentElement.dataset.graphicBox = "false";
       document.documentElement.dataset.visualPassClaimed = "false";
@@ -575,6 +748,7 @@
 
     function dispose() {
       state.disposed = true;
+      window.clearTimeout(readoutQuietTimer);
       window.removeEventListener("resize", resize);
       canvas.removeEventListener("pointerdown", pointerDown);
       canvas.removeEventListener("pointermove", pointerMove);
@@ -598,7 +772,7 @@
       landmapContract: LANDMAP_CONTRACT,
       landSurfaceContract: LAND_SURFACE_CONTRACT,
       version: VERSION,
-      authority: "audralia-g1-mask-and-surface-canvas-consumer",
+      authority: "audralia-living-canvas-planet-expression-consumer",
       oceanMaskFirst: true,
       layerOneLandmap: true,
       layerTwoLushLandSurface: true,
@@ -608,6 +782,14 @@
       canvasOwnsFootprint: false,
       coordinateInspection: true,
       hydrologyAuthored: false,
+      livingCanvasExpression: true,
+      atmosphereBreath: true,
+      waterShimmerExpression: true,
+      landDevelopmentExpression: true,
+      futureFormingMotion: true,
+      eyesMindHeartTriad: true,
+      textureRebuildPerFrame: false,
+      canvasStillConsumerOnly: true,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
@@ -637,6 +819,15 @@
   document.documentElement.dataset.audraliaLayerTwoLushLandSurface = "true";
   document.documentElement.dataset.audraliaCanvasOwnsFootprint = "false";
   document.documentElement.dataset.audraliaCoordinateInspection = "true";
+  document.documentElement.dataset.hydrologyAuthored = "false";
+  document.documentElement.dataset.livingCanvasExpression = "true";
+  document.documentElement.dataset.atmosphereBreath = "true";
+  document.documentElement.dataset.waterShimmerExpression = "true";
+  document.documentElement.dataset.landDevelopmentExpression = "true";
+  document.documentElement.dataset.futureFormingMotion = "true";
+  document.documentElement.dataset.eyesMindHeartTriad = "true";
+  document.documentElement.dataset.textureRebuildPerFrame = "false";
+  document.documentElement.dataset.canvasStillConsumerOnly = "true";
   document.documentElement.dataset.generatedImage = "false";
   document.documentElement.dataset.graphicBox = "false";
   document.documentElement.dataset.visualPassClaimed = "false";

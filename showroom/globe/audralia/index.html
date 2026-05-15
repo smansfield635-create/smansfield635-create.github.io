@@ -1,301 +1,484 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="audralia-living-canvas-untouched-path"
   data-route="/showroom/globe/audralia/"
-  data-contract="GLOBE_VISUAL_SCALE_AUTHORITY_CONSOLIDATION_TNT_v1"
-  data-context-contract="AUDRALIA_LIVING_CANVAS_PUBLIC_CONTEXT_RENEWAL_TNT_v1"
-  data-role="living-canvas-untouched-living-path"
-  data-body="audralia"
-  data-world-type="constructed-world"
-  data-deep-time-path="untouched-living"
-  data-public-expression="living-canvas"
-  data-generation="1"
-  data-visual-scale-authority="/showroom/globe/"
+  data-page="audralia-living-canvas"
+  data-contract="AUDRALIA_ROUTE_SHELL_VISIBLE_NOTICE_CHAIN_TNT_v1"
+  data-previous-contract="AUDRALIA_LIVING_CANVAS_PUBLIC_CONTEXT_RENEWAL_TNT_v1"
+  data-role="showroom-globe-child-route"
+  data-world="Audralia"
+  data-canonical-spelling="A_U_D_R_A_L_I_A"
+  data-parent-route="/showroom/globe/"
+  data-canvas-contract="AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3"
+  data-landmap-contract="AUDRALIA_30_BILLION_YEAR_EARTH_LEGACY_ORGANIC_LANDFORM_TNT_v1"
+  data-climate-contract="AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v1"
+  data-route-loader="/showroom/globe/audralia/index.js"
   data-generated-image="false"
   data-graphic-box="false"
   data-heavy-runtime-loaded="false"
-  data-public-receipts-visible="false"
+  data-streaming="false"
+  data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Audralia · The Living Canvas</title>
+
+  <title>Audralia · The Living Canvas · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Audralia is the living canvas of the Untouched Living Path: a constructed vision where visitors can watch a possible future world develop before their eyes."
+    content="Audralia is the living canvas route for the Diamond Gate Bridge Globe question: a possible future that can be seen, understood, and considered before it is lost."
   >
 
   <style>
     :root {
-      --bg: #030814;
-      --panel: rgba(7, 16, 32, 0.86);
-      --panel-2: rgba(12, 26, 48, 0.72);
-      --line: rgba(244, 207, 131, 0.18);
-      --line-soft: rgba(255, 255, 255, 0.10);
-      --text: rgba(238, 244, 255, 0.94);
-      --muted: rgba(238, 244, 255, 0.64);
-      --faint: rgba(238, 244, 255, 0.46);
-      --gold: #f4cf83;
-      --mint: #a7f3c6;
-      --violet: #c8a7ff;
       color-scheme: dark;
+      --bg:#02040b;
+      --ink:#fff4d8;
+      --muted:rgba(230,238,255,.78);
+      --faint:rgba(230,238,255,.52);
+      --gold:#f3c86f;
+      --gold2:#ffe8a3;
+      --green:#9ef0bf;
+      --blue:#8dd8ff;
+      --panel:rgba(9,15,31,.88);
+      --line:rgba(184,205,255,.18);
+      --green-line:rgba(158,240,191,.26);
+      --shadow:0 32px 110px rgba(0,0,0,.48);
+      --max:1180px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing:border-box; }
 
     html {
-      min-height: 100%;
-      background:
-        radial-gradient(circle at 50% -10%, rgba(125, 96, 190, 0.25), transparent 36%),
-        radial-gradient(circle at 18% 20%, rgba(244, 207, 131, 0.09), transparent 32%),
-        linear-gradient(180deg, #061124 0%, var(--bg) 54%, #02050b 100%);
+      min-width:320px;
+      min-height:100%;
+      background:var(--bg);
+      scroll-behavior:smooth;
+      overflow-x:hidden;
     }
 
     body {
-      margin: 0;
-      min-height: 100%;
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      letter-spacing: -0.015em;
+      margin:0;
+      min-width:320px;
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.5;
+      overflow-x:hidden;
+      background:
+        radial-gradient(circle at 50% -8%,rgba(158,240,191,.16),transparent 28rem),
+        radial-gradient(circle at 12% 18%,rgba(36,120,255,.15),transparent 28rem),
+        radial-gradient(circle at 88% 30%,rgba(243,200,111,.10),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(141,216,255,.10),transparent 34rem),
+        linear-gradient(180deg,#07101a 0%,#030713 58%,#010207 100%);
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
     }
 
-    a {
-      color: inherit;
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background-image:
+        radial-gradient(circle,rgba(255,255,255,.16) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(143,240,195,.035) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.032) 1px,transparent 1px);
+      background-size:220px 260px,54px 54px,54px 54px;
+      opacity:.20;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
+    }
+
+    a { color:inherit; text-decoration:none; }
+
+    a:focus-visible,
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline:2px solid var(--gold);
+      outline-offset:4px;
     }
 
     .skip {
-      position: absolute;
-      left: 12px;
-      top: 12px;
-      transform: translateY(-160%);
-      background: var(--mint);
-      color: #06101c;
-      padding: 10px 14px;
-      border-radius: 999px;
-      z-index: 20;
-      font-weight: 900;
-      text-decoration: none;
+      position:absolute;
+      left:-999px;
+      top:8px;
+      z-index:50;
+      padding:.75rem 1rem;
+      border-radius:999px;
+      color:#05070d;
+      background:var(--gold);
+      font-weight:950;
     }
 
-    .skip:focus {
-      transform: translateY(0);
-    }
+    .skip:focus { left:8px; }
 
-    .page {
-      width: min(1060px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 22px 0 54px;
+    .shell {
+      position:relative;
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
+      margin:0 auto;
+      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
     }
 
     .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 12px 0 22px;
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:18px;
+      padding:12px 0 18px;
     }
 
     .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--gold);
-      text-decoration: none;
-      font-weight: 950;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:.9rem;
+      min-width:260px;
     }
 
-    .mark {
-      display: inline-grid;
-      place-items: center;
-      width: 34px;
-      height: 34px;
-      border: 1px solid rgba(244, 207, 131, 0.44);
-      border-radius: 10px;
-      background: rgba(244, 207, 131, 0.08);
+    .brand-mark {
+      width:4.2rem;
+      height:4.2rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(158,240,191,.42);
+      border-radius:1.15rem;
+      transform:rotate(45deg);
+      background:
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.28) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.22),rgba(158,240,191,.23),rgba(36,120,255,.18),rgba(243,200,111,.13),rgba(255,255,255,.22)),
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.30),transparent 42%),
+        linear-gradient(145deg,rgba(26,83,61,.95),rgba(5,8,20,.98));
+      box-shadow:
+        0 0 2rem rgba(158,240,191,.18),
+        0 1.2rem 2.8rem rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.16);
+    }
+
+    .brand-mark span {
+      transform:rotate(-45deg);
+      font-weight:950;
+      letter-spacing:.04em;
+      color:rgba(255,244,216,.98);
+      text-shadow:0 2px 10px rgba(0,0,0,.85);
+    }
+
+    .brand-copy {
+      display:grid;
+      gap:.18rem;
+    }
+
+    .brand-copy strong {
+      font-size:clamp(1.08rem,3vw,1.7rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+
+    .brand-copy span {
+      color:var(--muted);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
     }
 
     .nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 8px;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:.48rem;
     }
 
-    .nav a,
-    .button {
-      min-height: 38px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid var(--line-soft);
-      border-radius: 999px;
-      padding: 0 13px;
-      color: rgba(238, 244, 255, 0.82);
-      text-decoration: none;
-      background: rgba(255, 255, 255, 0.035);
-      font-size: 0.82rem;
-      font-weight: 850;
-      letter-spacing: 0.02em;
+    .nav a {
+      min-height:2.25rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
+      padding:.5rem .74rem;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .nav a[aria-current="page"],
-    .button.primary {
-      color: #06101c;
-      background: linear-gradient(135deg, var(--mint), #78d8ac);
-      border-color: rgba(167, 243, 198, 0.62);
+    .nav a[aria-current="page"] {
+      border-color:rgba(158,240,191,.82);
+      color:#06101c;
+      background:linear-gradient(135deg,#c8ffd8,#8eeab2);
+    }
+
+    .panel {
+      border:1px solid var(--line);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      background:
+        radial-gradient(circle at 14% 0%,rgba(158,240,191,.08),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(36,120,255,.10),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+        var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
     }
 
     .hero {
-      border: 1px solid var(--line);
-      border-radius: 34px;
-      padding: clamp(24px, 5vw, 46px);
-      background:
-        radial-gradient(circle at 76% 28%, rgba(200, 167, 255, 0.14), transparent 32%),
-        radial-gradient(circle at 22% 18%, rgba(167, 243, 198, 0.08), transparent 30%),
-        linear-gradient(180deg, rgba(9, 18, 36, 0.94), rgba(5, 10, 21, 0.92));
-      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.36);
+      position:relative;
+      min-height:clamp(22rem,42vw,33rem);
+      display:grid;
+      align-content:center;
+      gap:1rem;
+      padding:clamp(1.45rem,5vw,3.4rem);
+      margin-top:.6rem;
+      isolation:isolate;
     }
 
-    .eyebrow {
-      margin: 0 0 14px;
-      color: var(--gold);
-      font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
+    .hero::before {
+      content:"";
+      position:absolute;
+      right:clamp(1rem,6vw,5.5rem);
+      top:50%;
+      z-index:0;
+      width:clamp(9rem,25vw,18rem);
+      height:clamp(9rem,25vw,18rem);
+      border:1px solid rgba(158,240,191,.16);
+      border-radius:999px;
+      transform:translateY(-50%);
+      background:
+        radial-gradient(circle at 44% 36%,rgba(158,240,191,.14),transparent 38%),
+        radial-gradient(circle at 56% 66%,rgba(36,120,255,.16),transparent 62%),
+        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      animation:anchorPulse 8s ease-in-out infinite;
+      pointer-events:none;
+      opacity:.52;
+    }
+
+    @keyframes anchorPulse {
+      0%,100% { opacity:.38; filter:brightness(.95); }
+      50% { opacity:.62; filter:brightness(1.1); }
+    }
+
+    .kicker {
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.58rem;
+      padding:.58rem .95rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(230,238,255,.86);
+      background:rgba(255,255,255,.04);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      position:relative;
+      z-index:2;
+    }
+
+    .kicker::before {
+      content:"";
+      width:.72rem;
+      height:.72rem;
+      border-radius:.18rem;
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,#c8ffd8,var(--green));
+      box-shadow:0 0 1.1rem rgba(158,240,191,.44);
     }
 
     h1 {
-      max-width: 920px;
-      margin: 0;
-      font-size: clamp(2.2rem, 8vw, 5.2rem);
-      line-height: 0.92;
-      letter-spacing: -0.075em;
+      margin:0;
+      max-width:1000px;
+      font-size:clamp(3rem,9vw,6.8rem);
+      line-height:.86;
+      letter-spacing:-.102em;
+      text-wrap:balance;
+      position:relative;
+      z-index:2;
     }
 
-    .lede {
-      max-width: 850px;
-      margin: 22px 0 0;
-      color: var(--muted);
-      font-size: clamp(1.02rem, 2.6vw, 1.34rem);
-      line-height: 1.55;
+    h2 {
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.45rem,4.7vw,2.65rem);
+      line-height:.98;
+      letter-spacing:-.07em;
+      text-wrap:balance;
+      position:relative;
+      z-index:2;
     }
 
-    .quote {
-      margin-top: 18px;
-      max-width: 850px;
-      border: 1px solid rgba(167, 243, 198, 0.20);
-      border-radius: 24px;
-      padding: 18px;
-      background: rgba(8, 42, 37, 0.34);
-      color: rgba(167, 243, 198, 0.96);
-      font-size: clamp(1rem, 2.6vw, 1.22rem);
-      font-weight: 900;
-      line-height: 1.5;
+    p {
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(.98rem,2.7vw,1.16rem);
+      line-height:1.55;
+    }
+
+    .lead {
+      max-width:930px;
+      position:relative;
+      z-index:2;
+    }
+
+    .principle {
+      max-width:980px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(158,240,191,.26);
+      border-radius:1.2rem;
+      color:rgba(206,255,228,.96);
+      background:rgba(28,80,58,.16);
+      font-weight:900;
+      position:relative;
+      z-index:2;
     }
 
     .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 26px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:.62rem;
+      margin-top:.2rem;
+      position:relative;
+      z-index:2;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 16px;
+    .button {
+      min-height:2.65rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      padding:.65rem 1rem;
+      background:rgba(255,255,255,.045);
+      color:rgba(241,246,255,.88);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform:translateY(-2px);
+      border-color:rgba(158,240,191,.62);
+      outline:none;
+    }
+
+    .button.gold {
+      border-color:rgba(243,200,111,.9);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+    }
+
+    .section {
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
+      display:grid;
+      gap:1.05rem;
+    }
+
+    .status-card {
+      border:1px solid var(--green-line);
+      border-radius:1.35rem;
+      padding:1rem 1.1rem;
+      color:rgba(206,255,228,.94);
+      background:
+        radial-gradient(circle at 12% 0%,rgba(158,240,191,.10),transparent 60%),
+        rgba(2,20,22,.72);
+      font-weight:850;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .stage {
+      position:relative;
+      min-height:clamp(24rem,68vw,46rem);
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      overflow:hidden;
+      isolation:isolate;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(36,120,255,.14),transparent 44%),
+        radial-gradient(circle at 50% 50%,rgba(158,240,191,.08),transparent 60%),
+        linear-gradient(180deg,rgba(1,5,16,.78),rgba(2,6,16,.96));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 1.2rem 4rem rgba(0,0,0,.30);
+    }
+
+    .stage-fallback {
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      padding:1rem;
+      color:rgba(230,238,255,.70);
+      text-align:center;
+      font-weight:850;
+      pointer-events:none;
+    }
+
+    .route-loader-notice {
+      display:block;
+      width:fit-content;
+      max-width:100%;
+      padding:.72rem .9rem;
+      border:1px solid rgba(158,240,191,.30);
+      border-radius:999px;
+      color:rgba(206,255,228,.94);
+      background:rgba(2,20,22,.72);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+
+    .cards {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.85rem;
     }
 
     .card {
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      padding: clamp(18px, 3vw, 26px);
-      background: var(--panel);
-      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.22);
-    }
-
-    .card h2 {
-      margin: 0 0 14px;
-      color: var(--gold);
-      font-size: clamp(1.15rem, 3vw, 1.65rem);
-      line-height: 1.08;
-      letter-spacing: -0.045em;
-    }
-
-    .card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .stack {
-      display: grid;
-      gap: 12px;
-    }
-
-    .item {
-      border: 1px solid var(--line-soft);
-      border-radius: 20px;
-      padding: 14px;
-      background: var(--panel-2);
-    }
-
-    .item b {
-      display: block;
-      margin-bottom: 6px;
-      color: rgba(238, 244, 255, 0.94);
-      font-size: 0.96rem;
-    }
-
-    .item span {
-      display: block;
-      color: var(--muted);
-      line-height: 1.45;
-      font-size: 0.92rem;
-    }
-
-    .scale-card {
-      border-color: rgba(200, 167, 255, 0.25);
+      display:grid;
+      gap:.6rem;
+      min-height:100%;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.2rem;
       background:
-        radial-gradient(circle at 16% 18%, rgba(200, 167, 255, 0.12), transparent 34%),
-        linear-gradient(180deg, rgba(32, 22, 52, 0.50), rgba(8, 18, 32, 0.74));
+        radial-gradient(circle at 20% 0%,rgba(158,240,191,.08),transparent 60%),
+        rgba(255,255,255,.035);
     }
 
-    .scale-route {
-      margin-top: 14px;
-      display: inline-flex;
-      width: fit-content;
-      border: 1px solid rgba(200, 167, 255, 0.28);
-      border-radius: 999px;
-      padding: 9px 13px;
-      color: var(--violet);
-      background: rgba(32, 22, 52, 0.42);
-      font: 850 0.78rem/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+    .card b {
+      color:var(--green);
+      font-size:.68rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
-    .status {
-      margin-top: 16px;
-      border: 1px solid rgba(167, 243, 198, 0.22);
-      border-radius: 24px;
-      padding: 18px;
-      background: rgba(8, 42, 37, 0.42);
-      color: rgba(167, 243, 198, 0.94);
-      font-weight: 850;
-      line-height: 1.45;
+    .card strong {
+      color:rgba(255,244,216,.98);
+      font-size:1.15rem;
+      line-height:1.1;
+    }
+
+    .card span {
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.42;
     }
 
     .route-receipt,
     [data-route-receipt],
     [data-contract-receipt],
-    [data-debug-receipt] {
+    [data-debug-receipt],
+    .receipt {
       display:none!important;
       visibility:hidden!important;
       overflow:hidden!important;
@@ -314,37 +497,47 @@
       white-space:nowrap!important;
     }
 
-    .footer {
-      margin-top: 20px;
-      padding: 20px 0 0;
-      color: var(--faint);
-      font-size: 0.82rem;
-      text-align: center;
+    footer {
+      padding:1.35rem 0 .5rem;
+      color:var(--faint);
+      text-align:center;
+      font-size:.76rem;
     }
 
-    @media (max-width: 880px) {
+    @media (max-width:980px) {
       .topbar {
-        align-items: flex-start;
-        flex-direction: column;
+        grid-template-columns:1fr;
+        align-items:start;
       }
 
       .nav {
-        justify-content: flex-start;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
+        justify-content:flex-start;
       }
     }
 
-    @media (max-width: 520px) {
-      .page {
-        width: min(100% - 18px, 1060px);
+    @media (max-width:720px) {
+      .shell { width:min(100% - 22px,var(--max)); }
+      h1 { font-size:clamp(3rem,17vw,5rem); }
+
+      .hero {
+        min-height:27rem;
+        padding:1rem;
       }
 
-      .hero,
-      .card {
-        border-radius: 22px;
+      .actions { display:grid; }
+      .button { width:100%; }
+      .cards { grid-template-columns:1fr; }
+      .stage { min-height:23rem; }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
       }
     }
   </style>
@@ -353,104 +546,141 @@
 <body>
   <a class="skip" href="#audralia-main">Skip to Audralia</a>
 
-  <div class="page">
-    <header class="topbar" aria-label="Diamond Gate Bridge navigation">
+  <div class="shell">
+    <header class="topbar" aria-label="Audralia header">
       <a class="brand" href="/">
-        <span class="mark" aria-hidden="true">A</span>
-        <span>Diamond Gate Bridge</span>
+        <span class="brand-mark" aria-hidden="true"><span>AU</span></span>
+        <span class="brand-copy">
+          <span>Diamond Gate Bridge</span>
+          <strong>Audralia</strong>
+        </span>
       </a>
 
-      <nav class="nav" aria-label="Primary">
+      <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/explore/">Manor</a>
+        <a href="/nine-summits/">Nine Summits</a>
+        <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Globe</a>
-        <a href="/showroom/globe/earth/">ZIONTS</a>
-        <a href="/showroom/globe/h-earth/">H-Earth</a>
         <a href="/showroom/globe/audralia/" aria-current="page">Audralia</a>
-        <a href="/gauges/">Triple G</a>
+        <a href="/showroom/globe/earth/">Earth</a>
+        <a href="/showroom/globe/h-earth/">H-Earth</a>
+        <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
     <main id="audralia-main">
-      <section class="hero">
-        <p class="eyebrow">Audralia · The Living Canvas</p>
-        <h1>Watch a possible future develop before your eyes.</h1>
-        <p class="lede">
-          Audralia is the stewardship path becoming visible. It is the living canvas of a world supported instead of wounded — a future that does not stand still, because the future itself is still being shaped.
+      <section class="panel hero" aria-labelledby="page-title">
+        <div class="kicker">Audralia · The Living Canvas</div>
+        <h1 id="page-title">A possible future should be visible before it is lost.</h1>
+
+        <p class="lead">
+          Audralia is the constructed living-world route. It uses the 256 nodal lattice, Nine Summits province fields, Earth-legacy landforms, climate detail, and a consumer-only canvas to show a future world without turning the canvas into the authority.
         </p>
 
-        <div class="quote">
-          See with your eyes, use your mind to understand the possibility, and use your heart to consider the future.
+        <div class="principle">
+          Audralia answers the Globe question as a living canvas: a possible future that can be seen, understood, and considered before it is lost.
         </div>
 
         <div class="actions">
-          <a class="button primary" href="/showroom/globe/">Return to the Globe Doorway</a>
-          <a class="button" href="/showroom/globe/earth/">Open ZIONTS</a>
-          <a class="button" href="/showroom/globe/h-earth/">Open H-Earth</a>
-          <a class="button" href="/gauges/">Run Triple G</a>
+          <a class="button gold" href="#audralia-stage">Inspect Audralia</a>
+          <a class="button" href="/showroom/globe/">Return to Globe</a>
+          <a class="button" href="/gauges/">Read Gauges</a>
         </div>
       </section>
 
-      <section class="grid" aria-label="Audralia living canvas path">
-        <article class="card scale-card">
-          <h2>A future in motion</h2>
-          <p>
-            Audralia is not presented as a finished artifact. It is a living canvas: a world whose development can be watched, considered, and understood as it changes. The visitor is not only looking at a world. The visitor is watching a possible future take shape.
-          </p>
-          <span class="scale-route">Living Canvas</span>
-        </article>
+      <section class="panel section" aria-labelledby="chain-title">
+        <div class="kicker">Route chain status</div>
+        <h2 id="chain-title">The route shell now verifies the newer Audralia chain.</h2>
 
-        <article class="card">
-          <h2>What to look for here</h2>
-          <div class="stack">
-            <div class="item">
-              <b>A world becoming visible.</b>
-              <span>Audralia lets the visitor watch a future develop instead of only reading about what it means.</span>
-            </div>
-            <div class="item">
-              <b>Possibility through the mind.</b>
-              <span>This path asks the visitor to understand the idea behind the image: a living planet supported instead of wounded.</span>
-            </div>
-            <div class="item">
-              <b>Consideration through the heart.</b>
-              <span>The page should not only impress. It should make the future feel worth protecting, questioning, and carrying forward.</span>
-            </div>
-            <div class="item">
-              <b>A changing linear future.</b>
-              <span>As Audralia develops, the viewer is invited to consider whether the future itself is still being shaped by what we choose now.</span>
-            </div>
-          </div>
+        <div
+          id="audraliaRouteLoaderNotice"
+          class="route-loader-notice"
+          data-audralia-route-loader-notice="true"
+          aria-live="polite"
+        >
+          Audralia route loader awaiting mount…
+        </div>
 
-          <div class="status">
-            Audralia answers the Globe question as a living canvas: a possible future that can be seen, understood, and considered before it is lost.
+        <div class="status-card" id="audraliaRouteStatus" data-audralia-route-status="true">
+          Waiting for lattice, landmap, climate, surface, and canvas authority checks.
+        </div>
+
+        <div
+          id="audralia-stage"
+          class="stage"
+          data-audralia-stage="true"
+          aria-label="Audralia living canvas stage"
+        >
+          <div class="stage-fallback" data-stage-fallback="true">
+            Audralia canvas mount awaiting canonical route loader.
           </div>
-        </article>
+          <div
+            id="audraliaCanvasMount"
+            data-audralia-canvas-mount="true"
+            aria-label="Audralia canvas mount"
+          ></div>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="standards-title">
+        <div class="kicker">Current standards</div>
+        <h2 id="standards-title">Canvas consumes. Landmap and climate author the world.</h2>
+
+        <div class="cards">
+          <article class="card">
+            <b>Footprint</b>
+            <strong>Landmap owns land and sea.</strong>
+            <span>The route expects the 30-billion-year Earth-legacy organic landform contract to provide continent, shelf, beach, and nodal geometry truth.</span>
+          </article>
+
+          <article class="card">
+            <b>Climate</b>
+            <strong>Climate owns environment detail.</strong>
+            <span>The route expects rainforest, wetland, savanna, dry basin, forest, alpine, snow, beach, and restoration-zone detail from the climate layer.</span>
+          </article>
+
+          <article class="card">
+            <b>Canvas</b>
+            <strong>Canvas stays consumer-only.</strong>
+            <span>The canvas may display the living world, atmosphere, shimmer, and inspection readout. It may not invent footprint, climate, or surface truth.</span>
+          </article>
+        </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_LIVING_CANVAS_PUBLIC_CONTEXT_RENEWAL_TNT_v1
-file=/showroom/globe/audralia/index.html
+AUDRALIA_ROUTE_SHELL_VISIBLE_NOTICE_CHAIN_TNT_v1
+previous=AUDRALIA_LIVING_CANVAS_PUBLIC_CONTEXT_RENEWAL_TNT_v1
 route=/showroom/globe/audralia/
-public_body=Audralia
-public_path=untouched_living
-public_expression=living_canvas
-visitor_traversal=eyes_mind_heart
-core_line=see_reality_as_it_could_be_with_your_eyes_use_your_mind_to_understand_the_possibility_and_use_your_heart_to_consider_the_future
-preserved_contract=GLOBE_VISUAL_SCALE_AUTHORITY_CONSOLIDATION_TNT_v1
-preserved_route=true
-preserved_script=/showroom/globe/audralia/index.js
+page=audralia
+role=showroom_globe_child_route
+world=Audralia
+canonical_spelling=A_U_D_R_A_L_I_A
+parent_route=/showroom/globe/
+route_loader=/showroom/globe/audralia/index.js
+canvas_mount=#audraliaCanvasMount
+canvas_contract=AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3
+landmap_contract=AUDRALIA_30_BILLION_YEAR_EARTH_LEGACY_ORGANIC_LANDFORM_TNT_v1
+climate_contract=AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v1
+route_expectation=visible_update_notice_must_appear_if_new_canvas_mounts
+route_owns=route_shell,public_copy,canvas_mount,route_loader_notice,chain_status_panel
+route_does_not_own=land_footprint,climate_authority,surface_truth,canvas_authority,runtime_motion,gauges_logic
+receipt_visibility=hidden_template_only
 generated_image=false
 graphic_box=false
-heavy_runtime_loaded=false
-visible_copy_renewed=true
-        </template>
+streaming=false
+visual_pass_claimed=false
+      </template>
     </main>
 
-    <footer class="footer">
-      Diamond Gate Bridge · Audralia · The Living Canvas.
+    <footer>
+      AUDRALIA_ROUTE_SHELL_VISIBLE_NOTICE_CHAIN_TNT_v1 · Audralia · The Living Canvas.
     </footer>
   </div>
 
-  <script type="module" src="/showroom/globe/audralia/index.js"></script>
+  <script src="/showroom/globe/audralia/index.js?v=AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v1" defer></script>
 </body>
 </html>

@@ -3,10 +3,10 @@
   lang="en"
   data-route="/products/"
   data-page="products"
-  data-contract="PRODUCTS_DIGITAL_GEM_ORBIT_ANIMATION_RENEWAL_TNT_v3"
-  data-previous-contract="PRODUCTS_PUBLIC_ORBIT_RUNTIME_DEMOTION_RENEWAL_TNT_v2"
+  data-contract="PRODUCTS_LARGE_NATURAL_DIGITAL_GEM_RECEPTION_TNT_v4"
+  data-previous-contract="PRODUCTS_DIGITAL_GEM_ORBIT_ANIMATION_RENEWAL_TNT_v3"
   data-role="product-wing"
-  data-public-frame="animated-digital-gem-product-orbit"
+  data-public-frame="large-natural-digital-gem-product-orbit"
   data-runtime-public-message="false"
   data-static-page-usable-without-js="true"
   data-eight-doors-visible-without-runtime="true"
@@ -39,13 +39,13 @@
       --sapphire:#2478ff;
       --sapphire2:#8dd8ff;
       --green:#8ff0c3;
-      --violet:#beaaff;
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
-      --gem-cut:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
-      --facet-cut:polygon(50% 3%,74% 12%,94% 36%,84% 72%,50% 96%,16% 72%,6% 36%,26% 12%);
+      --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+      --natural-gem:polygon(49% 0%,69% 7%,88% 20%,100% 43%,88% 76%,61% 98%,31% 91%,6% 70%,0% 36%,21% 10%);
+      --natural-gem-inner:polygon(50% 6%,68% 15%,84% 34%,78% 66%,56% 90%,32% 78%,13% 60%,16% 33%,31% 13%);
     }
 
     * { box-sizing:border-box; }
@@ -145,7 +145,7 @@
       place-items:center;
       border:1px solid rgba(243,200,111,.44);
       transform:rotate(45deg);
-      clip-path:var(--gem-cut);
+      clip-path:var(--brand-gem);
       background:
         linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
         conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(36,120,255,.20),rgba(1,15,60,.58),rgba(243,200,111,.18),rgba(255,255,255,.28)),
@@ -414,9 +414,10 @@
       border:1px solid rgba(184,205,255,.13);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        radial-gradient(circle at 50% 44%,rgba(36,120,255,.15),transparent 20rem),
-        radial-gradient(circle at 50% 70%,rgba(243,200,111,.08),transparent 28rem),
-        linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.92));
+        radial-gradient(circle at 50% 40%,rgba(141,216,255,.10),transparent 18rem),
+        radial-gradient(circle at 50% 62%,rgba(36,120,255,.13),transparent 24rem),
+        radial-gradient(circle at 50% 77%,rgba(243,200,111,.065),transparent 28rem),
+        linear-gradient(180deg,rgba(1,5,16,.70),rgba(2,6,16,.94));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
@@ -475,16 +476,16 @@
     .orbit-center {
       left:50%;
       top:50%;
-      width:clamp(9.6rem,20vw,14rem);
-      height:clamp(9.6rem,20vw,14rem);
+      width:clamp(10rem,21vw,14.6rem);
+      height:clamp(10rem,21vw,14.6rem);
       transform:translate(-50%,-50%);
       z-index:6;
       pointer-events:none;
     }
 
     .orbit-node {
-      width:clamp(6.35rem,13vw,9.1rem);
-      height:clamp(6.35rem,13vw,9.1rem);
+      width:clamp(6.65rem,13.8vw,9.6rem);
+      height:clamp(6.65rem,13.8vw,9.6rem);
       left:var(--x);
       top:var(--y);
       transform:translate(-50%,-50%);
@@ -492,36 +493,40 @@
 
     .orbit-node:hover,
     .orbit-node:focus-visible {
-      transform:translate(-50%,-50%) scale(1.06);
-      filter:brightness(1.12) saturate(1.1);
+      transform:translate(-50%,-50%) scale(1.055);
+      filter:brightness(1.13) saturate(1.08);
       outline:none;
     }
 
     @keyframes gemNodeFloat {
       0%,100% { margin-top:0; }
-      50% { margin-top:-.45rem; }
+      50% { margin-top:-.42rem; }
     }
 
     .sapphire-shell {
       position:absolute;
       inset:0;
-      clip-path:var(--gem-cut);
+      clip-path:var(--natural-gem);
       background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.44),transparent 18%),
-        conic-gradient(from 18deg at 50% 52%,
-          rgba(255,255,255,.20),
-          rgba(141,216,255,.22),
-          rgba(5,20,56,.80),
-          rgba(36,120,255,.54),
-          rgba(243,200,111,.15),
-          rgba(255,255,255,.22)),
-        linear-gradient(145deg,rgba(36,120,255,.58),rgba(5,8,20,.98) 62%,rgba(10,32,78,.86));
-      border:1px solid rgba(141,216,255,.38);
+        radial-gradient(circle at 44% 18%,rgba(255,255,255,.60),transparent 13%),
+        radial-gradient(circle at 58% 22%,rgba(255,255,255,.18),transparent 25%),
+        conic-gradient(from 21deg at 48% 54%,
+          rgba(255,255,255,.20) 0deg,
+          rgba(141,216,255,.34) 34deg,
+          rgba(8,29,76,.78) 82deg,
+          rgba(17,67,152,.68) 128deg,
+          rgba(3,9,28,.90) 183deg,
+          rgba(206,171,86,.22) 226deg,
+          rgba(12,31,74,.82) 286deg,
+          rgba(255,255,255,.20) 360deg),
+        linear-gradient(145deg,rgba(51,130,255,.58),rgba(5,8,20,.98) 62%,rgba(10,32,78,.86));
+      border:1px solid rgba(170,218,255,.38);
       box-shadow:
         0 1.05rem 2.25rem rgba(0,0,0,.34),
-        0 0 1.6rem rgba(36,120,255,.24),
-        0 0 1.8rem rgba(243,200,111,.10),
-        inset 0 1px 0 rgba(255,255,255,.16);
+        0 0 1.4rem rgba(36,120,255,.24),
+        0 0 1.6rem rgba(243,200,111,.09),
+        inset 0 1px 0 rgba(255,255,255,.16),
+        inset 0 -1rem 1.8rem rgba(0,0,0,.28);
       overflow:hidden;
       animation:gemGravityTurn 9s ease-in-out infinite;
       animation-delay:var(--delay,0s);
@@ -531,15 +536,16 @@
     .sapphire-shell::before {
       content:"";
       position:absolute;
-      inset:7%;
-      clip-path:var(--facet-cut);
+      inset:5%;
+      clip-path:var(--natural-gem-inner);
       background:
-        linear-gradient(90deg,transparent 49.3%,rgba(255,255,255,.30) 50%,transparent 50.7%),
-        linear-gradient(0deg,transparent 49.3%,rgba(141,216,255,.22) 50%,transparent 50.7%),
-        linear-gradient(45deg,transparent 49.3%,rgba(243,200,111,.20) 50%,transparent 50.7%),
-        linear-gradient(-45deg,transparent 49.3%,rgba(255,255,255,.18) 50%,transparent 50.7%),
-        radial-gradient(circle at 50% 50%,rgba(255,255,255,.10),transparent 54%);
-      border:1px solid rgba(255,255,255,.12);
+        linear-gradient(90deg,transparent 49.3%,rgba(255,255,255,.34) 50%,transparent 50.7%),
+        linear-gradient(0deg,transparent 49.3%,rgba(141,216,255,.24) 50%,transparent 50.7%),
+        linear-gradient(38deg,transparent 48.8%,rgba(243,200,111,.22) 50%,transparent 51.2%),
+        linear-gradient(-42deg,transparent 48.9%,rgba(255,255,255,.20) 50%,transparent 51.1%),
+        linear-gradient(128deg,transparent 42%,rgba(255,255,255,.13) 43% 45%,transparent 46%),
+        radial-gradient(circle at 49% 42%,rgba(255,255,255,.10),transparent 54%);
+      border:1px solid rgba(255,255,255,.11);
       opacity:.92;
       pointer-events:none;
     }
@@ -551,10 +557,10 @@
       background:
         linear-gradient(112deg,
           transparent 0 38%,
-          rgba(255,255,255,.44) 45%,
+          rgba(255,255,255,.45) 45%,
           rgba(255,232,163,.18) 50%,
           transparent 58% 100%);
-      opacity:.0;
+      opacity:0;
       transform:translateX(-44%) rotate(0deg);
       animation:gemLightSweep 5.8s ease-in-out infinite;
       animation-delay:var(--delay,0s);
@@ -562,23 +568,27 @@
     }
 
     .orbit-center .sapphire-shell {
-      border-color:rgba(243,200,111,.62);
+      border-color:rgba(243,200,111,.48);
       background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.50),transparent 18%),
-        conic-gradient(from 18deg at 50% 52%,
-          rgba(255,255,255,.24),
-          rgba(141,216,255,.26),
-          rgba(6,19,48,.86),
-          rgba(36,120,255,.56),
-          rgba(243,200,111,.24),
-          rgba(255,255,255,.24)),
-        radial-gradient(circle at 50% 72%,rgba(36,120,255,.26),transparent 64%),
-        linear-gradient(145deg,rgba(18,42,90,.96),rgba(5,8,20,.98));
+        radial-gradient(circle at 44% 18%,rgba(255,255,255,.62),transparent 13%),
+        radial-gradient(circle at 56% 28%,rgba(255,232,163,.20),transparent 25%),
+        conic-gradient(from 21deg at 48% 54%,
+          rgba(255,255,255,.22) 0deg,
+          rgba(141,216,255,.32) 34deg,
+          rgba(8,29,76,.80) 82deg,
+          rgba(36,120,255,.65) 128deg,
+          rgba(3,9,28,.92) 183deg,
+          rgba(243,200,111,.24) 226deg,
+          rgba(12,31,74,.82) 286deg,
+          rgba(255,255,255,.22) 360deg),
+        radial-gradient(circle at 50% 72%,rgba(36,120,255,.24),transparent 64%),
+        linear-gradient(145deg,rgba(22,54,112,.96),rgba(5,8,20,.98));
       box-shadow:
         0 1.5rem 3rem rgba(0,0,0,.42),
-        0 0 2.4rem rgba(243,200,111,.18),
-        0 0 3.2rem rgba(36,120,255,.20),
-        inset 0 1px 0 rgba(255,255,255,.16);
+        0 0 2.2rem rgba(243,200,111,.15),
+        0 0 3rem rgba(36,120,255,.20),
+        inset 0 1px 0 rgba(255,255,255,.16),
+        inset 0 -1rem 2rem rgba(0,0,0,.30);
     }
 
     @keyframes gemGravityTurn {
@@ -587,8 +597,8 @@
         filter:brightness(.98) saturate(1);
       }
       50% {
-        transform:rotate(2.5deg) scale(1.025);
-        filter:brightness(1.15) saturate(1.08);
+        transform:rotate(2.5deg) scale(1.018);
+        filter:brightness(1.14) saturate(1.07);
       }
     }
 
@@ -598,7 +608,7 @@
         transform:translateX(-48%) rotate(0deg);
       }
       44%,50% {
-        opacity:.62;
+        opacity:.58;
         transform:translateX(48%) rotate(0deg);
       }
       62% {
@@ -757,8 +767,8 @@
       }
 
       .orbit-node {
-        width:clamp(5.9rem,15vw,8.2rem);
-        height:clamp(5.9rem,15vw,8.2rem);
+        width:clamp(6.2rem,15.5vw,8.7rem);
+        height:clamp(6.2rem,15.5vw,8.7rem);
       }
     }
 
@@ -813,14 +823,14 @@
 
       .orbit-center {
         grid-column:1 / -1;
-        width:8.8rem;
-        height:8.8rem;
+        width:8.9rem;
+        height:8.9rem;
         order:-2;
       }
 
       .orbit-node {
-        width:6.25rem;
-        height:6.25rem;
+        width:6.35rem;
+        height:6.35rem;
       }
 
       .orbit-label b { font-size:.41rem; }
@@ -841,16 +851,16 @@
       }
 
       .orbit-node {
-        width:5.8rem;
-        height:5.8rem;
+        width:5.95rem;
+        height:5.95rem;
       }
 
       .orbit-label b { font-size:.37rem; }
       .orbit-label span { font-size:.28rem; }
 
       .orbit-center {
-        width:8.2rem;
-        height:8.2rem;
+        width:8.25rem;
+        height:8.25rem;
       }
     }
 
@@ -919,7 +929,7 @@
 
       <section class="panel section" aria-labelledby="orbit-title">
         <div class="kicker">Product Orbit</div>
-        <h2 id="orbit-title">Eight digital sapphires sit on one path around one usable message.</h2>
+        <h2 id="orbit-title">Eight natural digital gems keep the usable paths readable.</h2>
 
         <div
           class="orbit-stage"
@@ -1104,16 +1114,17 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-PRODUCTS_DIGITAL_GEM_ORBIT_ANIMATION_RENEWAL_TNT_v3
-previous=PRODUCTS_PUBLIC_ORBIT_RUNTIME_DEMOTION_RENEWAL_TNT_v2
+PRODUCTS_LARGE_NATURAL_DIGITAL_GEM_RECEPTION_TNT_v4
+previous=PRODUCTS_DIGITAL_GEM_ORBIT_ANIMATION_RENEWAL_TNT_v3
 route=/products/
 page=products
 role=product_wing
-public_frame=animated_digital_gem_product_orbit
+public_frame=large_natural_digital_gem_product_orbit
 public_cta=Explore_the_Eight_Doors
 core_message=The_message_becomes_usable_here.
 promise=Always_on_your_side_Never_in_control.
-digital_gem_standard=faceted_sapphire_shells_with_gravity_motion_text_upright
+digital_gem_standard=large_legible_natural_asymmetric_faceted_sapphire_objects
+visual_reception_rule=Legibility_governs_size_Natural_digital_gem_material_governs_form_Motion_enhances_reception_without_disturbing_words.
 animation=gem_node_float,gem_gravity_turn,gem_light_sweep,orbit_turn,orbit_turn_reverse
 runtime_rule=Runtime_is_allowed_to_serve_or_enhance_the_product_orbit_but_is_not_allowed_to_be_the_public_product_message.
 static_page_usable_without_js=true
@@ -1128,7 +1139,7 @@ visible_cache_keys=false
 visible_script_failure_text=false
 products_index_js_role=quiet_bridge_hidden_status_only
 products_runtime_js_role=enhancement_only
-route_owns=products_public_page,animated_digital_gem_product_orbit,eight_doors,chamber_cards,public_copy,hidden_receipt
+route_owns=products_public_page,large_natural_digital_gem_product_orbit,eight_doors,chamber_cards,public_copy,hidden_receipt
 route_does_not_own=runtime_as_public_message,gauges_logic,showroom_runtime,product_child_pages,heavy_runtime
 generated_image=false
 graphic_box=false
@@ -1138,12 +1149,12 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      PRODUCTS_DIGITAL_GEM_ORBIT_ANIMATION_RENEWAL_TNT_v3 · Products · Animated Digital Gem Orbit · Eight Doors.
+      PRODUCTS_LARGE_NATURAL_DIGITAL_GEM_RECEPTION_TNT_v4 · Products · Large Natural Digital Gem Orbit · Eight Doors.
     </footer>
   </div>
 
   <script>
-    window.DGB_PRODUCTS_PUBLIC_ORBIT_KEY = "PRODUCTS_DIGITAL_GEM_ORBIT_ANIMATION_RENEWAL_TNT_v3";
+    window.DGB_PRODUCTS_PUBLIC_ORBIT_KEY = "PRODUCTS_LARGE_NATURAL_DIGITAL_GEM_RECEPTION_TNT_v4";
   </script>
   <script type="module" src="/products/index.js?v=PRODUCTS_PUBLIC_ORBIT_RUNTIME_DEMOTION_BRIDGE_TNT_v2"></script>
 </body>

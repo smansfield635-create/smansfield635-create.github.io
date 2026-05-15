@@ -3,8 +3,8 @@
   lang="en"
   data-route="/products/"
   data-page="products-public-usable-message-wing"
-  data-contract="PRODUCTS_SAPPHIRE_DIGITAL_GEM_STAGE_CLEARANCE_TNT_v2"
-  data-previous-contract="PRODUCTS_SAPPHIRE_DIGITAL_GEM_RESTORATION_TNT_v1"
+  data-contract="PRODUCTS_SAPPHIRE_GEM_GRAVITY_LABEL_LOCK_TNT_v3"
+  data-previous-contract="PRODUCTS_SAPPHIRE_DIGITAL_GEM_STAGE_CLEARANCE_TNT_v2"
   data-js-contract="PRODUCTS_RUNTIME_BRIDGE_OPEN_FOCUS_AUTHORITY_RENEWAL_TNT_v1"
   data-runtime-src="/products/products_runtime.js"
   data-runtime-version="four-lobed-molecular-flower-open-focus-v1"
@@ -17,6 +17,7 @@
   data-digital-gem-restored="true"
   data-gem-material="sapphire"
   data-stage-clearance="summary-moved-below-visual-field"
+  data-label-gravity-lock="true"
   data-generated-image="false"
   data-graphic-box="false"
   data-heavy-runtime-loaded="false"
@@ -50,6 +51,7 @@
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
+      --orbit-duration:64s;
       --gem-cut:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
       --facet:polygon(0 18px,18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px));
     }
@@ -477,7 +479,7 @@
       transform:translate(-50%,-50%);
       border-radius:999px;
       pointer-events:none;
-      animation:productOrbitTurn 64s linear infinite;
+      animation:productOrbitTurn var(--orbit-duration) linear infinite;
     }
 
     @keyframes productOrbitTurn {
@@ -555,6 +557,15 @@
         0 2px 12px rgba(0,0,0,.94),
         0 0 10px rgba(0,28,90,.82),
         0 0 2px rgba(255,255,255,.42);
+    }
+
+    .orbit-door .gem-label {
+      transform-origin:50% 50%;
+      animation:productLabelGravityLock var(--orbit-duration) linear infinite reverse;
+    }
+
+    @keyframes productLabelGravityLock {
+      to { transform:rotate(360deg); }
     }
 
     .gem-label b {
@@ -945,6 +956,7 @@
       }
 
       .orbit-ring,
+      .orbit-door .gem-label,
       .sapphire-glint,
       .sapphire-star {
         animation:none!important;
@@ -956,7 +968,7 @@
 <body
   data-route="/products/"
   data-page="products-public-usable-message-wing"
-  data-contract="PRODUCTS_SAPPHIRE_DIGITAL_GEM_STAGE_CLEARANCE_TNT_v2"
+  data-contract="PRODUCTS_SAPPHIRE_GEM_GRAVITY_LABEL_LOCK_TNT_v3"
   data-js-contract="PRODUCTS_RUNTIME_BRIDGE_OPEN_FOCUS_AUTHORITY_RENEWAL_TNT_v1"
   data-generated-image="false"
   data-graphic-box="false"
@@ -1293,8 +1305,8 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-PRODUCTS_SAPPHIRE_DIGITAL_GEM_STAGE_CLEARANCE_TNT_v2
-previous=PRODUCTS_SAPPHIRE_DIGITAL_GEM_RESTORATION_TNT_v1
+PRODUCTS_SAPPHIRE_GEM_GRAVITY_LABEL_LOCK_TNT_v3
+previous=PRODUCTS_SAPPHIRE_DIGITAL_GEM_STAGE_CLEARANCE_TNT_v2
 js_contract=PRODUCTS_RUNTIME_BRIDGE_OPEN_FOCUS_AUTHORITY_RENEWAL_TNT_v1
 runtime_src=/products/products_runtime.js
 runtime_version=four-lobed-molecular-flower-open-focus-v1
@@ -1306,7 +1318,8 @@ model=five_product_chambers_three_connected_paths_one_usable_message
 gem_restoration=inline_svg_sapphire_digital_gem
 gem_material=sapphire
 stage_clearance=summary_panel_moved_below_product_stage
-visual_adjustment=orbit_and_center_shifted_slightly_up_inside_visual_field
+label_gravity_lock=orbit_door_labels_counter_rotate_against_orbit
+visual_adjustment=gem_bodies_continue_orbiting_labels_remain_upright
 product_chambers=archcoin,five_flags,on_your_side_aai,education,nutrition
 connected_paths=meet_sean,nine_summits,book
 aai_principle=always_on_your_side_never_in_control
@@ -1315,7 +1328,7 @@ runtime_mount_id=productsRuntimeMount
 runtime_mount_attribute=data-products-runtime-mount
 open_molecule_hook_preserved=true
 open_molecule_attribute=data-open-molecule
-route_owns=product_wing,usable_message,product_chambers,connected_paths,runtime_mount_shell,sapphire_digital_gem_visual_layer,stage_clearance
+route_owns=product_wing,usable_message,product_chambers,connected_paths,runtime_mount_shell,sapphire_digital_gem_visual_layer,stage_clearance,label_gravity_lock
 route_does_not_own=products_runtime_js,products_runtime_renderer,gauges_logic,showroom_runtime,compass_runtime
 generated_image=false
 graphic_box=false
@@ -1325,12 +1338,12 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      PRODUCTS_SAPPHIRE_DIGITAL_GEM_STAGE_CLEARANCE_TNT_v2 · Products · Sapphire visual field cleared · Runtime bridge preserved.
+      PRODUCTS_SAPPHIRE_GEM_GRAVITY_LABEL_LOCK_TNT_v3 · Products · Sapphire visual field cleared · Labels stay upright.
     </footer>
   </div>
 
   <script>
-    window.DGB_PRODUCTS_PAGE_KEY = "PRODUCTS_SAPPHIRE_DIGITAL_GEM_STAGE_CLEARANCE_TNT_v2";
+    window.DGB_PRODUCTS_PAGE_KEY = "PRODUCTS_SAPPHIRE_GEM_GRAVITY_LABEL_LOCK_TNT_v3";
   </script>
   <script type="module" src="/products/index.js?v=PRODUCTS_RUNTIME_BRIDGE_OPEN_FOCUS_AUTHORITY_RENEWAL_TNT_v1"></script>
 </body>

@@ -1,28 +1,47 @@
 // /assets/audralia/audralia.canvas.js
-// AUDRALIA_FAIL_VISIBLE_CANVAS_RENDER_RENEWAL_TNT_v4
+// AUDRALIA_CANVAS_FULL_VISIBILITY_LOWERED_GLOBE_TNT_v5
 // Full-file replacement.
 // Canvas consumer only.
-// Keeps route-loader compatibility by exposing window.AUDRALIA_CANVAS.contract as AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3.
-// Exposes the actual render renewal through renderContract = AUDRALIA_FAIL_VISIBLE_CANVAS_RENDER_RENEWAL_TNT_v4.
-// Separates mounted status from visible pixel proof.
-// Paints immediate visible fallback planet before authority loading.
-// Forces canvas sizing from mount, stage, or parent rectangle.
-// Replaces fallback with advanced texture render after authorities load.
-// Does not own footprint.
-// Does not own climate.
-// Does not touch runtime.
-// Does not touch Gauges.
+// Route-loader compatible: window.AUDRALIA_CANVAS.contract remains AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3.
+// Render contract: AUDRALIA_CANVAS_FULL_VISIBILITY_LOWERED_GLOBE_TNT_v5.
+// Purpose:
+// - Lowers the globe inside the stage box for full visibility.
+// - Separates visible pixel proof from mounted status.
+// - Preserves immediate fallback paint.
+// - Preserves animation.
+// - Uses computable high-order planetary math: spherical projection, φ-scaled motion, axis tilt, light-vector shading, limb falloff.
+// - Does not own land footprint.
+// - Does not own climate.
+// - Does not touch runtime.
+// - Does not touch Gauges.
 // No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
   const COMPATIBLE_CONTRACT = "AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3";
-  const CONTRACT = "AUDRALIA_FAIL_VISIBLE_CANVAS_RENDER_RENEWAL_TNT_v4";
-  const RECEIPT = "AUDRALIA_FAIL_VISIBLE_CANVAS_RENDER_RENEWAL_RECEIPT_v4";
-  const PREVIOUS_CONTRACT = "AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3";
-  const VERSION = "2026-05-15.audralia-fail-visible-canvas-render-renewal-v4";
+  const CONTRACT = "AUDRALIA_CANVAS_FULL_VISIBILITY_LOWERED_GLOBE_TNT_v5";
+  const RECEIPT = "AUDRALIA_CANVAS_FULL_VISIBILITY_LOWERED_GLOBE_RECEIPT_v5";
+  const PREVIOUS_CONTRACT = "AUDRALIA_FAIL_VISIBLE_CANVAS_RENDER_RENEWAL_TNT_v4";
+  const VERSION = "2026-05-15.audralia-canvas-full-visibility-lowered-globe-v5";
+
   const TAU = Math.PI * 2;
+  const PHI = 1.618033988749895;
+  const INV_PHI = 1 / PHI;
+
+  const GEOMETRY = Object.freeze({
+    centerX: 0.5,
+    centerY: 0.565,
+    radius: 0.405,
+    pointerRadius: 0.405,
+    atmosphereRadius: 1.115,
+    fallbackRadius: 0.392,
+    maxTextureWidth: 768,
+    maxTextureHeight: 384,
+    maxCanvasSize: 720,
+    minCanvasSize: 300,
+    maxDpr: 1.25
+  });
 
   const EXPECTED = Object.freeze({
     lattice: "AUDRALIA_G1_256_LATTICE_ATLAS_AUTHORITY_TNT_v1",
@@ -126,7 +145,7 @@
       total += noise(u, v, scale, seed + i * 131) * amp;
       norm += amp;
       amp *= 0.52;
-      scale *= 2;
+      scale *= PHI;
     }
 
     return total / Math.max(0.000001, norm);
@@ -185,11 +204,12 @@
   function fallbackMap(u, v) {
     const latitude = 90 - v * 180;
     const longitude = u * 360 - 180;
-    const equator = 1 - Math.abs(latitude) / 90;
-    const landSignal =
-      fbm(u * 0.9 + 0.18, v * 0.82 - 0.11, 930001, 5) * 0.54 +
-      fbm(u * 2.1 - 0.21, v * 1.8 + 0.14, 930777, 4) * 0.24 +
-      equator * 0.18;
+    const absLat = Math.abs(latitude);
+    const equator = 1 - absLat / 90;
+
+    const nodal = fbm(u * PHI + 0.18, v * INV_PHI - 0.11, 930001, 5);
+    const ridge = fbm(u * 2.618 - 0.21, v * 1.618 + 0.14, 930777, 4);
+    const landSignal = nodal * 0.54 + ridge * 0.24 + equator * 0.18;
 
     const isLand = landSignal > 0.49;
     const shelf = smoothstep(0.42, 0.55, landSignal);
@@ -204,7 +224,7 @@
       cell64: Math.max(1, Math.min(64, Math.floor(v * 8) * 8 + Math.floor(u * 8) + 1)),
       cell16: Math.max(1, Math.min(16, Math.floor(v * 4) * 4 + Math.floor(u * 4) + 1)),
       quadrant: latitude >= 0 ? (longitude >= 0 ? "NE" : "NW") : (longitude >= 0 ? "SE" : "SW"),
-      band: Math.abs(latitude) < 23 ? "equatorial" : Math.abs(latitude) < 50 ? "temperate" : "polar",
+      band: absLat < 23 ? "equatorial" : absLat < 50 ? "temperate" : "polar",
       primarySummit: "Gratitude",
       internalSummit: "Stability",
       summitProvince: "Gratitude",
@@ -217,7 +237,7 @@
       isLand,
       isShelf: !isLand && !isBeach && landSignal > 0.42,
       isBeach,
-      isPolarIce: Math.abs(latitude) > 74
+      isPolarIce: absLat > 74
     });
   }
 
@@ -231,19 +251,6 @@
     }
 
     return fallbackMap(u, v);
-  }
-
-  function oceanColor(map) {
-    const u = map.u;
-    const v = map.v;
-    const oceanTexture = fbm(u * 1.2 + 0.19, v * 0.9 - 0.14, 710000, 5);
-    const depth = fbm(u * 0.82 - 0.22, v * 0.72 + 0.11, 710700, 5);
-    const grain = (fbm(u * 2.8 + 0.05, v * 2.2 - 0.12, 711000, 4) - 0.5) * 5;
-
-    let color = mix(COLORS.deepOcean, COLORS.ocean, smoothstep(0.16, 0.82, oceanTexture * 0.54 + (map.shelf || 0.2) * 0.18));
-    color = mix(color, COLORS.openOcean, smoothstep(0.42, 0.86, 1 - depth) * 0.18);
-
-    return shade(color, grain - 4);
   }
 
   function climateColor(map) {
@@ -268,6 +275,19 @@
       document.documentElement.dataset.audraliaLandSurfaceSampleFailed = "true";
       return null;
     }
+  }
+
+  function oceanColor(map) {
+    const u = map.u;
+    const v = map.v;
+    const oceanTexture = fbm(u * 1.2 + 0.19, v * 0.9 - 0.14, 710000, 5);
+    const depth = fbm(u * 0.82 - 0.22, v * 0.72 + 0.11, 710700, 5);
+    const grain = (fbm(u * 2.8 + 0.05, v * 2.2 - 0.12, 711000, 4) - 0.5) * 5;
+
+    let color = mix(COLORS.deepOcean, COLORS.ocean, smoothstep(0.16, 0.82, oceanTexture * 0.54 + (map.shelf || 0.2) * 0.18));
+    color = mix(color, COLORS.openOcean, smoothstep(0.42, 0.86, 1 - depth) * 0.18);
+
+    return shade(color, grain - 4);
   }
 
   function surfaceColor(map) {
@@ -336,7 +356,6 @@
     }
 
     ctx.putImageData(image, 0, 0);
-
     return Object.freeze({ data, width, height });
   }
 
@@ -393,9 +412,23 @@
     if (usable) return usable;
 
     return {
-      width: Math.max(320, Math.min(window.innerWidth || 420, 700)),
-      height: Math.max(320, Math.min(window.innerWidth || 420, 700))
+      width: Math.max(320, Math.min(window.innerWidth || 420, GEOMETRY.maxCanvasSize)),
+      height: Math.max(320, Math.min(window.innerWidth || 420, GEOMETRY.maxCanvasSize))
     };
+  }
+
+  function geometry(canvas) {
+    const width = canvas.width;
+    const height = canvas.height;
+    const base = Math.min(width, height);
+    const radius = base * GEOMETRY.radius;
+    return Object.freeze({
+      width,
+      height,
+      cx: width * GEOMETRY.centerX,
+      cy: height * GEOMETRY.centerY,
+      radius
+    });
   }
 
   function makeNotice() {
@@ -416,7 +449,7 @@
     notice.style.boxShadow = "0 14px 40px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.08)";
     notice.style.backdropFilter = "blur(8px)";
     notice.style.pointerEvents = "none";
-    notice.textContent = "Audralia v4 visible-pixel test loading…";
+    notice.textContent = "Audralia v5 full-visibility render loading…";
     return notice;
   }
 
@@ -426,7 +459,7 @@
     const climate = state.authorityStatus.climateLoaded ? "climate v2 active" : "climate pending";
     const surface = state.authorityStatus.landSurfaceLoaded ? "surface active" : "surface fallback";
 
-    notice.textContent = `Audralia v4 update active · ${visible} · ${landmap} · ${climate} · ${surface}`;
+    notice.textContent = `Audralia v5 update active · ${visible} · lowered globe · ${landmap} · ${climate} · ${surface}`;
     notice.title = [
       CONTRACT,
       `compatible=${COMPATIBLE_CONTRACT}`,
@@ -434,6 +467,8 @@
       `visiblePixelsPainted=${state.visiblePixelsPainted}`,
       `fallbackPainted=${state.fallbackPainted}`,
       `advancedTextureReady=${state.advancedTextureReady}`,
+      `centerY=${GEOMETRY.centerY}`,
+      `radius=${GEOMETRY.radius}`,
       `landmap=${state.authorityStatus.landmapContract || "unknown"}`,
       `climate=${state.authorityStatus.climateContract || "unknown"}`,
       `surface=${state.authorityStatus.landSurfaceContract || "unknown"}`
@@ -444,17 +479,11 @@
     notice.dataset.visiblePixelsPainted = String(state.visiblePixelsPainted);
     notice.dataset.fallbackPainted = String(state.fallbackPainted);
     notice.dataset.advancedTextureReady = String(state.advancedTextureReady);
-    notice.dataset.landmapLoaded = String(state.authorityStatus.landmapLoaded);
-    notice.dataset.climateLoaded = String(state.authorityStatus.climateLoaded);
-    notice.dataset.landSurfaceLoaded = String(state.authorityStatus.landSurfaceLoaded);
   }
 
   function drawVisibleFallbackPlanet(ctx, canvas, now = performance.now()) {
-    const width = canvas.width;
-    const height = canvas.height;
-    const cx = width * 0.5;
-    const cy = height * 0.5;
-    const radius = Math.min(width, height) * 0.39;
+    const g = geometry(canvas);
+    const { width, height, cx, cy, radius } = g;
 
     if (!width || !height || !radius) return false;
 
@@ -489,7 +518,7 @@
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     const t = now * 0.001;
-    const drift = Math.sin(t * 0.25) * radius * 0.05;
+    const drift = Math.sin(t * INV_PHI) * radius * 0.045;
 
     ctx.fillStyle = "rgba(111,158,88,.94)";
     ctx.beginPath();
@@ -513,7 +542,7 @@
     ctx.stroke();
 
     const gloss = ctx.createLinearGradient(cx - radius, cy - radius, cx + radius, cy + radius);
-    gloss.addColorStop(0, "rgba(255,255,255,.26)");
+    gloss.addColorStop(0, "rgba(255,255,255,.24)");
     gloss.addColorStop(0.38, "rgba(255,255,255,.04)");
     gloss.addColorStop(0.72, "rgba(0,0,0,.14)");
     gloss.addColorStop(1, "rgba(0,0,0,.44)");
@@ -531,19 +560,30 @@
     return true;
   }
 
+  function isWaterLike(map) {
+    return Boolean(map?.isOcean || map?.isShelf || map?.terrainClass === "ocean" || map?.terrainClass === "shelf");
+  }
+
+  function isBeachLike(map) {
+    return Boolean(map?.isBeach || map?.terrainClass === "beach");
+  }
+
+  function isLandLike(map) {
+    return !isWaterLike(map) && !isBeachLike(map);
+  }
+
   function liveWaterExpression(color, map, u, v, now, lightAmount, z) {
     const t = now * 0.001;
     const shelf = clamp(map.shelf || 0.28, 0, 1);
     const edge = clamp(map.beachEdge || 0, 0, 1);
-    const shimmer = fbm(u + t * 0.021, v + Math.sin(t * 0.18) * 0.018, 812000, 4);
-    const wave = Math.sin((u * TAU * 18) + (v * 9.5) + t * 1.35) * 0.5 + 0.5;
+    const shimmer = fbm(u + t * 0.021, v + Math.sin(t * INV_PHI) * 0.018, 812000, 4);
+    const wave = Math.sin((u * TAU * 18) + (v * 9.5) + t * PHI) * 0.5 + 0.5;
     const specular = smoothstep(0.68, 0.96, shimmer * 0.62 + wave * 0.30) * lightAmount * smoothstep(0.08, 0.7, z);
     const shelfGlow = smoothstep(0.38, 0.9, shelf) * 0.14 + smoothstep(0.18, 0.82, edge) * 0.12;
 
     let out = shade(color, (shimmer - 0.5) * 7 + specular * 18);
     out = mix(out, COLORS.shallow, shelfGlow * 0.52);
     out = mix(out, COLORS.cloud, specular * 0.13);
-
     return out;
   }
 
@@ -566,13 +606,12 @@
     out = mix(out, COLORS.livingGreen, warmth * smoothstep(0.08, 0.9, z));
     out = mix(out, COLORS.livingGold, warmth * 0.36);
     out = shade(out, lightAmount * 4);
-
     return out;
   }
 
   function liveAtmosphereExpression(color, u, v, now, lightAmount, z, rr) {
     const t = now * 0.001;
-    const breath = (Math.sin(t * 0.62) + 1) * 0.5;
+    const breath = (Math.sin(t * INV_PHI) + 1) * 0.5;
     const limb = 1 - smoothstep(0.02, 0.42, z);
     const cloudField = fbm(u + t * 0.004, v - t * 0.003, 834000, 4);
     const highCloud = smoothstep(0.66, 0.88, cloudField) * lightAmount;
@@ -583,14 +622,12 @@
     let out = mix(color, COLORS.atmosphereBright, air);
     out = mix(out, COLORS.cloud, cloud);
     out = mix(out, COLORS.livingGold, edge * lightAmount * 0.75);
-
     return out;
   }
 
-  function drawAtmosphereHalo(ctx, width, height, cx, cy, radius, now) {
-    const t = now * 0.001;
-    const breath = (Math.sin(t * 0.62) + 1) * 0.5;
-    const halo = ctx.createRadialGradient(cx, cy, radius * 0.92, cx, cy, radius * 1.12);
+  function drawAtmosphereHalo(ctx, g, now) {
+    const breath = (Math.sin(now * 0.001 * INV_PHI) + 1) * 0.5;
+    const halo = ctx.createRadialGradient(g.cx, g.cy, g.radius * 0.92, g.cx, g.cy, g.radius * GEOMETRY.atmosphereRadius);
 
     halo.addColorStop(0, "rgba(142,202,226,0)");
     halo.addColorStop(0.40, `rgba(142,202,226,${0.028 + breath * 0.020})`);
@@ -601,26 +638,9 @@
     ctx.globalCompositeOperation = "screen";
     ctx.fillStyle = halo;
     ctx.beginPath();
-    ctx.arc(cx, cy, radius * 1.14, 0, TAU);
+    ctx.arc(g.cx, g.cy, g.radius * GEOMETRY.atmosphereRadius, 0, TAU);
     ctx.fill();
     ctx.restore();
-  }
-
-  function isWaterLike(map) {
-    return Boolean(
-      map?.isOcean ||
-      map?.isShelf ||
-      map?.terrainClass === "ocean" ||
-      map?.terrainClass === "shelf"
-    );
-  }
-
-  function isBeachLike(map) {
-    return Boolean(map?.isBeach || map?.terrainClass === "beach");
-  }
-
-  function isLandLike(map) {
-    return !isWaterLike(map) && !isBeachLike(map);
   }
 
   function mount(mountNode, options = {}) {
@@ -633,7 +653,7 @@
     mount.style.position = mount.style.position || "relative";
     mount.style.overflow = "hidden";
     mount.style.touchAction = "none";
-    mount.style.minHeight = mount.style.minHeight || "280px";
+    mount.style.minHeight = mount.style.minHeight || "300px";
     mount.style.zIndex = mount.style.zIndex || "2";
 
     const canvas = document.createElement("canvas");
@@ -649,7 +669,8 @@
     canvas.dataset.audraliaCanvasOwnsClimate = "false";
     canvas.dataset.visibleUpdateNotice = "true";
     canvas.dataset.visiblePixelsPainted = "false";
-    canvas.dataset.fallbackPaintFirst = "true";
+    canvas.dataset.loweredGlobe = "true";
+    canvas.dataset.fullVisibilityFraming = "true";
     canvas.dataset.textureRebuildPerFrame = "false";
     canvas.dataset.generatedImage = "false";
     canvas.dataset.graphicBox = "false";
@@ -661,8 +682,8 @@
     canvas.style.display = "block";
     canvas.style.width = "100%";
     canvas.style.height = "100%";
-    canvas.style.minWidth = "280px";
-    canvas.style.minHeight = "280px";
+    canvas.style.minWidth = `${GEOMETRY.minCanvasSize}px`;
+    canvas.style.minHeight = `${GEOMETRY.minCanvasSize}px`;
     canvas.style.touchAction = "none";
     canvas.style.userSelect = "none";
     canvas.style.background = "transparent";
@@ -688,7 +709,7 @@
     readout.style.pointerEvents = "none";
     readout.style.opacity = "0.42";
     readout.style.transition = "opacity 220ms ease, background 220ms ease";
-    readout.textContent = "Audralia fail-visible canvas loading…";
+    readout.textContent = "Audralia full-visibility canvas loading…";
     mount.appendChild(readout);
 
     const ctx = canvas.getContext("2d", {
@@ -741,6 +762,10 @@
       document.documentElement.dataset.audraliaCanvasFrames = String(state.frames);
       document.documentElement.dataset.audraliaCanvasRenderError = state.renderError;
       document.documentElement.dataset.audraliaVisibleUpdateNotice = "true";
+      document.documentElement.dataset.audraliaLoweredGlobe = "true";
+      document.documentElement.dataset.audraliaFullVisibilityFraming = "true";
+      document.documentElement.dataset.audraliaGlobeCenterY = String(GEOMETRY.centerY);
+      document.documentElement.dataset.audraliaGlobeRadius = String(GEOMETRY.radius);
       document.documentElement.dataset.audraliaLattice256Loaded = String(state.authorityStatus.latticeLoaded);
       document.documentElement.dataset.audraliaLandmapLoaded = String(state.authorityStatus.landmapLoaded);
       document.documentElement.dataset.audraliaClimateLoaded = String(state.authorityStatus.climateLoaded);
@@ -768,6 +793,8 @@
           fallbackPainted: state.fallbackPainted,
           advancedTextureReady: state.advancedTextureReady,
           renderError: state.renderError,
+          loweredGlobe: true,
+          fullVisibilityFraming: true,
           ...state.authorityStatus,
           canvasOwnsFootprint: false,
           canvasOwnsClimate: false,
@@ -786,11 +813,14 @@
       }
 
       const rect = getBestRect(mount);
-      const size = Math.max(280, Math.min(700, Math.floor(Math.min(rect.width || 420, rect.height || rect.width || 420))));
-      const dpr = Math.min(1.25, window.devicePixelRatio || 1);
+      const size = Math.max(
+        GEOMETRY.minCanvasSize,
+        Math.min(GEOMETRY.maxCanvasSize, Math.floor(Math.min(rect.width || 420, rect.height || rect.width || 420)))
+      );
+      const dpr = Math.min(GEOMETRY.maxDpr, window.devicePixelRatio || 1);
 
-      const nextWidth = Math.max(280, Math.floor(size * dpr));
-      const nextHeight = Math.max(280, Math.floor(size * dpr));
+      const nextWidth = Math.max(GEOMETRY.minCanvasSize, Math.floor(size * dpr));
+      const nextHeight = Math.max(GEOMETRY.minCanvasSize, Math.floor(size * dpr));
 
       if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
         canvas.width = nextWidth;
@@ -804,9 +834,7 @@
 
     function scheduleResize() {
       window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(() => {
-        resize();
-      }, 80);
+      resizeTimer = window.setTimeout(resize, 80);
     }
 
     function wakeReadout() {
@@ -825,9 +853,8 @@
       const rect = canvas.getBoundingClientRect();
       const x = ((event.clientX || 0) - rect.left) / Math.max(1, rect.width);
       const y = ((event.clientY || 0) - rect.top) / Math.max(1, rect.height);
-
-      const px = (x - 0.5) / 0.44;
-      const py = (y - 0.5) / 0.44;
+      const px = (x - GEOMETRY.centerX) / GEOMETRY.pointerRadius;
+      const py = (y - GEOMETRY.centerY) / GEOMETRY.pointerRadius;
       const rr = px * px + py * py;
 
       if (rr > 1) return null;
@@ -915,7 +942,6 @@
 
     function render(now) {
       if (state.disposed) return;
-
       if (!ctx) return;
 
       if (!state.ready || !texture) {
@@ -934,12 +960,8 @@
         state.lastRender = now;
         state.frames += 1;
 
-        const width = canvas.width;
-        const height = canvas.height;
-        const cx = width * 0.5;
-        const cy = height * 0.5;
-        const radius = Math.min(width, height) * 0.44;
-        const image = ctx.createImageData(width, height);
+        const g = geometry(canvas);
+        const image = ctx.createImageData(g.width, g.height);
         const data = image.data;
 
         const cosSpin = Math.cos(state.spin);
@@ -948,13 +970,13 @@
         const sinTilt = Math.sin(state.tilt);
         const light = [-0.45, -0.28, 0.84];
 
-        for (let y = 0; y < height; y += 1) {
-          const py = (y - cy) / radius;
+        for (let y = 0; y < g.height; y += 1) {
+          const py = (y - g.cy) / g.radius;
 
-          for (let x = 0; x < width; x += 1) {
-            const px = (x - cx) / radius;
+          for (let x = 0; x < g.width; x += 1) {
+            const px = (x - g.cx) / g.radius;
             const rr = px * px + py * py;
-            const index = (y * width + x) * 4;
+            const index = (y * g.width + x) * 4;
 
             if (rr > 1) {
               data[index] = 0;
@@ -985,7 +1007,6 @@
 
             const map = sampleMap(u, v);
             let color = textureSample(texture, u, v);
-
             const lightAmount = clamp(wx * light[0] + sy * light[1] + z * light[2], 0, 1);
 
             if (isWaterLike(map) || isBeachLike(map)) {
@@ -1008,9 +1029,9 @@
           }
         }
 
-        ctx.clearRect(0, 0, width, height);
+        ctx.clearRect(0, 0, g.width, g.height);
         ctx.putImageData(image, 0, 0);
-        drawAtmosphereHalo(ctx, width, height, cx, cy, radius, now);
+        drawAtmosphereHalo(ctx, g, now);
 
         state.visiblePixelsPainted = true;
         state.renderError = "";
@@ -1039,7 +1060,7 @@
         state.authorityStatus = authorityStatus;
 
         try {
-          texture = buildTexture(768, 384);
+          texture = buildTexture(GEOMETRY.maxTextureWidth, GEOMETRY.maxTextureHeight);
           state.advancedTextureReady = true;
         } catch (error) {
           state.renderError = error instanceof Error ? error.message : String(error);
@@ -1097,13 +1118,17 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "audralia-fail-visible-canvas-render-consumer",
+      authority: "audralia-full-visibility-lowered-globe-canvas-consumer",
+      mathBinding: "high_order_computable_planetary_math",
+      geometry: GEOMETRY,
       expected: EXPECTED,
       canvasOwnsFootprint: false,
       canvasOwnsClimate: false,
       coordinateInspection: true,
       visibleUpdateNotice: true,
       visiblePixelsPaintedStatusSeparated: true,
+      loweredGlobe: true,
+      fullVisibilityFraming: true,
       immediateFallbackPaint: true,
       stageRectSizing: true,
       fallbackPlanetIfTextureFails: true,
@@ -1136,6 +1161,10 @@
   document.documentElement.dataset.audraliaCanvasExposesMount = "true";
   document.documentElement.dataset.audraliaVisibleUpdateNotice = "true";
   document.documentElement.dataset.audraliaVisiblePixelsPaintedStatusSeparated = "true";
+  document.documentElement.dataset.audraliaLoweredGlobe = "true";
+  document.documentElement.dataset.audraliaFullVisibilityFraming = "true";
+  document.documentElement.dataset.audraliaGlobeCenterY = String(GEOMETRY.centerY);
+  document.documentElement.dataset.audraliaGlobeRadius = String(GEOMETRY.radius);
   document.documentElement.dataset.audraliaImmediateFallbackPaint = "true";
   document.documentElement.dataset.audraliaStageRectSizing = "true";
   document.documentElement.dataset.audraliaFallbackPlanetIfTextureFails = "true";

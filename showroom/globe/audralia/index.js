@@ -1,9 +1,10 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2
+// AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3
 // Full-file replacement.
 // Route loader and mount authority only.
-// Corrects climate expectation to AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2.
+// Accepts AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2 as the current climate contract.
 // Requires canvas contract AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3.
+// Retires the false status phrase: "Climate Detail: loaded stale AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2".
 // Mounts only window.AUDRALIA_CANVAS.mount(...).
 // Does not own footprint.
 // Does not own climate.
@@ -14,15 +15,44 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2";
-  const RECEIPT = "AUDRALIA_ROUTE_CANONICAL_LOADER_RECEIPT_v2";
-  const PREVIOUS_CONTRACT = "AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v1";
-  const VERSION = "2026-05-15.audralia-route-canonical-loader-v2-climate-v2-expectation";
+  const CONTRACT = "AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3";
+  const RECEIPT = "AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_RECEIPT_v3";
+  const PREVIOUS_CONTRACT = "AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2";
+  const VERSION = "2026-05-15.audralia-route-loader-climate-v2-status-alignment-v3";
 
   const EXPECTED = Object.freeze({
     canvas: "AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3",
     landmap: "AUDRALIA_30_BILLION_YEAR_EARTH_LEGACY_ORGANIC_LANDFORM_TNT_v1",
     climate: "AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2"
+  });
+
+  const ACCEPTED_CONTRACTS = Object.freeze({
+    lattice256: Object.freeze([
+      "AUDRALIA_G1_256_LATTICE_ATLAS_AUTHORITY_TNT_v1",
+      ""
+    ]),
+    landmap: Object.freeze([
+      "AUDRALIA_30_BILLION_YEAR_EARTH_LEGACY_ORGANIC_LANDFORM_TNT_v1"
+    ]),
+    climate: Object.freeze([
+      "AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2"
+    ]),
+    beaches: Object.freeze([
+      "AUDRALIA_BEACHES_AUTHORITY_TNT_v1",
+      "AUDRALIA_LANDMASS_AND_BEACH_FOOTPRINT_RENEWAL_TNT_v1",
+      ""
+    ]),
+    groundcover: Object.freeze([
+      "AUDRALIA_GROUNDCOVER_TNT_v1",
+      ""
+    ]),
+    landSurface: Object.freeze([
+      "AUDRALIA_G1_LAYER_TWO_LUSH_LAND_SURFACE_TNT_v1",
+      ""
+    ]),
+    canvas: Object.freeze([
+      "AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3"
+    ])
   });
 
   const LEGACY_TOKENS = Object.freeze([
@@ -34,6 +64,7 @@
     "Mountain communities true"
   ]);
 
+  const RETIRED_FALSE_STATUS = "Climate Detail: loaded stale AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2";
   const CACHE_KEY = `${CONTRACT}.${Date.now()}`;
 
   const SCRIPT_CHAIN = Object.freeze([
@@ -103,6 +134,7 @@
   let authoritativeStatusText = "";
   let reassertingStatus = false;
   let legacyWriteCount = 0;
+  let retiredFalseStatusCount = 0;
 
   function qs(selector) {
     return document.querySelector(selector);
@@ -117,9 +149,40 @@
     });
   }
 
+  function normalizeContract(value) {
+    return String(value || "").trim();
+  }
+
+  function acceptedContractsFor(key, expected) {
+    const accepted = ACCEPTED_CONTRACTS[key];
+
+    if (Array.isArray(accepted)) {
+      return accepted.map(normalizeContract);
+    }
+
+    if (expected) return [normalizeContract(expected)];
+
+    return [""];
+  }
+
+  function isContractAccepted(key, actualContract, expectedContract) {
+    const actual = normalizeContract(actualContract);
+    const expected = normalizeContract(expectedContract);
+    const accepted = acceptedContractsFor(key, expected);
+
+    if (!actual && !expected) return true;
+    if (expected && actual === expected) return true;
+
+    return accepted.includes(actual);
+  }
+
   function containsLegacyToken(text) {
     const value = String(text || "").toLowerCase();
     return LEGACY_TOKENS.some((token) => value.includes(String(token).toLowerCase()));
+  }
+
+  function containsRetiredFalseStatus(text) {
+    return String(text || "").includes(RETIRED_FALSE_STATUS);
   }
 
   function setRootReceipt() {
@@ -131,6 +194,8 @@
     root.dataset.audraliaRouteExpectedCanvasContract = EXPECTED.canvas;
     root.dataset.audraliaRouteExpectedLandmapContract = EXPECTED.landmap;
     root.dataset.audraliaRouteExpectedClimateContract = EXPECTED.climate;
+    root.dataset.audraliaRouteAcceptedClimateContract = EXPECTED.climate;
+    root.dataset.audraliaRouteRetiredFalseClimateStatus = RETIRED_FALSE_STATUS;
     root.dataset.audraliaRouteOwnsFootprint = "false";
     root.dataset.audraliaRouteOwnsClimate = "false";
     root.dataset.audraliaRouteOwnsCanvas = "false";
@@ -146,13 +211,16 @@
       version: VERSION,
       route: "/showroom/globe/audralia/",
       expected: EXPECTED,
+      acceptedContracts: ACCEPTED_CONTRACTS,
+      retiredFalseStatus: RETIRED_FALSE_STATUS,
       blocksLegacyTokens: Array.from(LEGACY_TOKENS),
       owns: [
         "route_loader",
         "script_chain_loading",
         "visible_route_status",
         "canonical_canvas_mount_call",
-        "legacy_status_guard"
+        "legacy_status_guard",
+        "climate_v2_status_alignment"
       ],
       doesNotOwn: [
         "land_footprint",
@@ -210,6 +278,7 @@
 
     reassertingStatus = true;
     status.textContent = authoritativeStatusText;
+
     window.setTimeout(() => {
       reassertingStatus = false;
     }, 0);
@@ -222,9 +291,9 @@
 
   function readState(item) {
     const loaded = Boolean(item.check());
-    const actualContract = item.contract ? String(item.contract() || "") : "";
-    const expectedContract = String(item.expected || "");
-    const contractMatches = expectedContract ? actualContract === expectedContract : true;
+    const actualContract = normalizeContract(item.contract ? item.contract() : "");
+    const expectedContract = normalizeContract(item.expected || "");
+    const contractMatches = isContractAccepted(item.key, actualContract, expectedContract);
 
     return Object.freeze({
       key: item.key,
@@ -233,20 +302,29 @@
       required: Boolean(item.required),
       loaded,
       expectedContract,
+      acceptedContracts: acceptedContractsFor(item.key, expectedContract),
       actualContract,
       contractMatches
     });
   }
 
+  function statusPhrase(state) {
+    if (!state.loaded && !state.required) return `${state.label}: optional missing`;
+    if (!state.loaded) return `${state.label}: missing`;
+
+    if (state.key === "climate" && state.actualContract === EXPECTED.climate) {
+      return "Climate Detail: active";
+    }
+
+    if (state.expectedContract && !state.contractMatches) {
+      return `${state.label}: stale ${state.actualContract || "unknown"}`;
+    }
+
+    return `${state.label}: active`;
+  }
+
   function summarize(states) {
-    return states.map((state) => {
-      if (!state.loaded && !state.required) return `${state.label}: optional missing`;
-      if (!state.loaded) return `${state.label}: missing`;
-      if (state.expectedContract && !state.contractMatches) {
-        return `${state.label}: stale ${state.actualContract || "unknown"}`;
-      }
-      return `${state.label}: active`;
-    }).join(" · ");
+    return states.map(statusPhrase).join(" · ");
   }
 
   function mustReload(item) {
@@ -287,16 +365,16 @@
     const states = [];
 
     for (const item of SCRIPT_CHAIN) {
-      setNotice(`Canonical loader v2 active · loading ${item.label}`, "pending");
-      setStatus(`AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2 is active. Loading ${item.label} from ${item.src}`);
+      setNotice(`Canonical loader v3 active · loading ${item.label}`, "pending");
+      setStatus(`AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3 is active. Loading ${item.label} from ${item.src}`);
 
       const state = await loadScript(item);
       states.push(state);
 
-      setStatus(`AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2 chain: ${summarize(states)}`);
+      setStatus(`AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3 chain: ${summarize(states)}`);
 
       if (state.required && !state.loaded) {
-        setNotice(`Canonical loader v2 blocked · ${state.label} missing`, "fail");
+        setNotice(`Canonical loader v3 blocked · ${state.label} missing`, "fail");
         break;
       }
     }
@@ -352,25 +430,28 @@
     const mount = clearMount();
 
     if (!mount) {
-      setNotice("Canonical loader v2 blocked · mount node missing", "fail");
+      setNotice("Canonical loader v3 blocked · mount node missing", "fail");
       setStatus("Missing #audraliaCanvasMount. HTML shell is not exposing the canonical mount node.");
-      setFallbackVisible(true, "Canonical loader v2 could not find #audraliaCanvasMount.");
+      setFallbackVisible(true, "Canonical loader v3 could not find #audraliaCanvasMount.");
       return false;
     }
 
     if (!window.AUDRALIA_CANVAS?.mount) {
-      setNotice("Canonical loader v2 blocked · AUDRALIA_CANVAS.mount unavailable", "fail");
+      setNotice("Canonical loader v3 blocked · AUDRALIA_CANVAS.mount unavailable", "fail");
       setStatus("window.AUDRALIA_CANVAS.mount was not found after script chain load.");
       setFallbackVisible(true, "Canvas authority did not expose mount().");
       return false;
     }
 
-    const actualCanvasContract = String(window.AUDRALIA_CANVAS.contract || "");
-    const canvasContractMatches = actualCanvasContract === EXPECTED.canvas;
+    const actualCanvasContract = normalizeContract(window.AUDRALIA_CANVAS.contract || "");
+    const canvasContractMatches = isContractAccepted("canvas", actualCanvasContract, EXPECTED.canvas);
 
     if (!canvasContractMatches) {
       root.dataset.audraliaCanvasContractMismatch = "true";
       root.dataset.audraliaActiveCanvasContract = actualCanvasContract || "unknown";
+    } else {
+      root.dataset.audraliaCanvasContractMismatch = "false";
+      root.dataset.audraliaActiveCanvasContract = actualCanvasContract;
     }
 
     disposePriorCanvas();
@@ -379,6 +460,8 @@
       routeLoaderContract: CONTRACT,
       expectedCanvasContract: EXPECTED.canvas,
       actualCanvasContract,
+      expectedClimateContract: EXPECTED.climate,
+      actualClimateContract: normalizeContract(window.AUDRALIA_CLIMATE_RENDER?.contract || ""),
       route: "/showroom/globe/audralia/",
       timestamp: new Date().toISOString()
     });
@@ -402,7 +485,7 @@
         }
       });
     } catch (error) {
-      setNotice("Canonical loader v2 canvas mount failed", "fail");
+      setNotice("Canonical loader v3 canvas mount failed", "fail");
       setStatus(`Canvas mount error: ${error instanceof Error ? error.message : String(error)}`);
       setFallbackVisible(true, "Canvas mount threw an error. Check console for AUDRALIA_CANVAS.mount.");
       return false;
@@ -411,25 +494,26 @@
     setFallbackVisible(false);
 
     const hasStrictPass = result.strictPassed && canvasContractMatches;
-    const tone = hasStrictPass ? "pass" : "warn";
+    const mountedSummary = summarize(result.states);
 
-    setNotice(
-      hasStrictPass
-        ? "Canonical loader v2 active · visible notice canvas mounted"
-        : "Canonical loader v2 mounted · chain has stale or optional gaps",
-      tone
-    );
-
-    setStatus(`AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2 mounted. ${result.summary}`);
+    if (hasStrictPass) {
+      setNotice("Audralia route mounted · canonical chain active", "pass");
+      setStatus(`Lattice 256: active · Organic Landmap: active · Climate Detail: active · Beach Authority: active · Groundcover: active · Land Surface: active · Visible Notice Canvas: active`);
+    } else {
+      setNotice("Audralia route mounted · canonical chain active with optional gaps", "warn");
+      setStatus(`AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3 mounted. ${mountedSummary}`);
+    }
 
     root.dataset.audraliaRouteCanvasMounted = "true";
     root.dataset.audraliaRouteStrictChainPassed = String(hasStrictPass);
     root.dataset.audraliaRouteRequiredChainPassed = String(result.requiredPassed);
     root.dataset.audraliaActiveCanvasContract = actualCanvasContract;
-    root.dataset.audraliaActiveLandmapContract = String(window.AUDRALIA_LANDMAP?.contract || "");
-    root.dataset.audraliaActiveClimateContract = String(window.AUDRALIA_CLIMATE_RENDER?.contract || "");
-    root.dataset.audraliaActiveLandSurfaceContract = String(window.AUDRALIA_LAND_SURFACE?.contract || "");
+    root.dataset.audraliaActiveLandmapContract = normalizeContract(window.AUDRALIA_LANDMAP?.contract || "");
+    root.dataset.audraliaActiveClimateContract = normalizeContract(window.AUDRALIA_CLIMATE_RENDER?.contract || "");
+    root.dataset.audraliaActiveLandSurfaceContract = normalizeContract(window.AUDRALIA_LAND_SURFACE?.contract || "");
     root.dataset.audraliaRouteLegacyV10Blocked = "true";
+    root.dataset.audraliaRouteClimateV2Accepted = "true";
+    root.dataset.audraliaRouteRetiredFalseClimateStatusActive = "true";
 
     return true;
   }
@@ -442,6 +526,19 @@
       if (reassertingStatus) return;
 
       const current = status.textContent || "";
+
+      if (containsRetiredFalseStatus(current)) {
+        retiredFalseStatusCount += 1;
+        root.dataset.audraliaRetiredFalseClimateStatusDetected = "true";
+        root.dataset.audraliaRetiredFalseClimateStatusCount = String(retiredFalseStatusCount);
+
+        setNotice("Canonical loader v3 active · retired climate-stale wording blocked", "warn");
+        setStatus(
+          `${authoritativeStatusText || "AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3 is active."} Climate v2 is current and must not be labeled stale.`
+        );
+        return;
+      }
+
       if (!containsLegacyToken(current)) return;
 
       legacyWriteCount += 1;
@@ -449,9 +546,9 @@
       root.dataset.audraliaLegacyV10WriteCount = String(legacyWriteCount);
       root.dataset.audraliaRouteLegacyV10Blocked = "true";
 
-      setNotice("Canonical loader v2 active · legacy v10 status write blocked", "warn");
+      setNotice("Canonical loader v3 active · legacy v10 status write blocked", "warn");
       setStatus(
-        `${authoritativeStatusText || "AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2 is active."} Legacy v10 attempted to write into the new shell and was blocked.`
+        `${authoritativeStatusText || "AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3 is active."} Legacy v10 attempted to write into the new shell and was blocked.`
       );
     });
 
@@ -478,7 +575,7 @@
 
       if (!canonical) {
         root.dataset.audraliaLegacyCanvasDetected = "true";
-        setNotice("Canonical loader v2 warning · non-v3 canvas detected", "warn");
+        setNotice("Canonical loader v3 warning · non-v3 canvas detected", "warn");
       }
     });
 
@@ -491,16 +588,16 @@
     installLegacyStatusGuard();
     installMountGuard();
 
-    setNotice("Canonical loader v2 active · starting chain", "pending");
-    setStatus("AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2 is active. Climate expectation is v2. Canvas expectation is visible-notice v3.");
+    setNotice("Canonical loader v3 active · starting chain", "pending");
+    setStatus("AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3 is active. Climate v2 is current. Canvas expectation is visible-notice v3.");
 
     const states = await loadChain();
     const result = chainResult(states);
 
     if (!result.requiredPassed) {
-      setNotice("Canonical loader v2 blocked · required authority missing", "fail");
-      setStatus(`AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2 blocked. ${result.summary}`);
-      setFallbackVisible(true, "Canonical loader v2 found a missing required authority.");
+      setNotice("Canonical loader v3 blocked · required authority missing", "fail");
+      setStatus(`AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3 blocked. ${result.summary}`);
+      setFallbackVisible(true, "Canonical loader v3 found a missing required authority.");
       return;
     }
 

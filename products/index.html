@@ -3,8 +3,8 @@
   lang="en"
   data-route="/products/"
   data-page="products-public-usable-message-wing"
-  data-contract="PRODUCTS_PUBLIC_USABLE_MESSAGE_AND_AAI_PRINCIPLE_RENEWAL_TNT_v1"
-  data-previous-contract="PRODUCTS_OPTICAL_SAPPHIRE_ORBIT_AND_CENTER_GEM_RENEWAL_TNT_v1"
+  data-contract="PRODUCTS_SAPPHIRE_DIGITAL_GEM_RESTORATION_TNT_v1"
+  data-previous-contract="PRODUCTS_PUBLIC_USABLE_MESSAGE_AND_AAI_PRINCIPLE_RENEWAL_TNT_v1"
   data-js-contract="PRODUCTS_RUNTIME_BRIDGE_OPEN_FOCUS_AUTHORITY_RENEWAL_TNT_v1"
   data-runtime-src="/products/products_runtime.js"
   data-runtime-version="four-lobed-molecular-flower-open-focus-v1"
@@ -14,6 +14,8 @@
   data-connected-path-count="3"
   data-total-doors="8"
   data-aai-principle="always-on-your-side-never-in-control"
+  data-digital-gem-restored="true"
+  data-gem-material="sapphire"
   data-generated-image="false"
   data-graphic-box="false"
   data-heavy-runtime-loaded="false"
@@ -44,9 +46,7 @@
       --violet:#beaaff;
       --sapphire:#2478ff;
       --panel:rgba(9,15,31,.86);
-      --panel2:rgba(13,25,48,.76);
       --line:rgba(184,205,255,.18);
-      --line-gold:rgba(243,200,111,.34);
       --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
       --gem-cut:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
@@ -103,6 +103,14 @@
     [tabindex]:focus-visible {
       outline:2px solid var(--gold);
       outline-offset:4px;
+    }
+
+    .svg-defs {
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
     }
 
     .skip {
@@ -447,41 +455,14 @@
       position:absolute;
       left:50%;
       top:50%;
-      z-index:2;
-      width:clamp(9rem,22vw,13.5rem);
-      min-height:clamp(7rem,16vw,9.6rem);
+      z-index:3;
+      width:clamp(10.5rem,24vw,15rem);
+      height:clamp(7.7rem,17vw,10.9rem);
       transform:translate(-50%,-50%);
       display:grid;
       place-items:center;
       text-align:center;
-      padding:1rem;
-      clip-path:var(--gem-cut);
-      border:1px solid rgba(243,200,111,.22);
-      background:
-        radial-gradient(circle at 38% 22%,rgba(255,255,255,.18),transparent 32%),
-        radial-gradient(circle at 68% 78%,rgba(141,216,255,.16),transparent 46%),
-        linear-gradient(145deg,rgba(23,58,116,.92),rgba(4,12,24,.96));
-      box-shadow:
-        0 1.4rem 2.4rem rgba(0,0,0,.42),
-        0 0 2.4rem rgba(36,120,255,.20),
-        inset 0 1px 0 rgba(255,255,255,.14);
       pointer-events:none;
-    }
-
-    .center-gem b {
-      display:block;
-      color:var(--gold);
-      font-size:.68rem;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      margin-bottom:.35rem;
-    }
-
-    .center-gem strong {
-      display:block;
-      color:rgba(255,248,234,.98);
-      font-size:clamp(.95rem,2.2vw,1.25rem);
-      line-height:1.05;
     }
 
     .orbit-ring {
@@ -507,49 +488,115 @@
       position:absolute;
       left:50%;
       top:50%;
-      width:clamp(6rem,15vw,8.5rem);
-      height:clamp(4.5rem,11vw,6.25rem);
-      margin-left:calc(clamp(6rem,15vw,8.5rem) / -2);
-      margin-top:calc(clamp(4.5rem,11vw,6.25rem) / -2);
+      width:clamp(7.2rem,16vw,9.2rem);
+      height:clamp(5.25rem,12vw,6.8rem);
+      margin-left:calc(clamp(7.2rem,16vw,9.2rem) / -2);
+      margin-top:calc(clamp(5.25rem,12vw,6.8rem) / -2);
       display:grid;
       place-items:center;
       text-align:center;
-      clip-path:var(--gem-cut);
-      border:1px solid rgba(243,200,111,.18);
-      background:
-        linear-gradient(32deg,transparent 0 23%,rgba(255,255,255,.22) 24% 26%,transparent 27%),
-        radial-gradient(circle at 36% 22%,rgba(255,255,255,.30),transparent 34%),
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.24),rgba(141,216,255,.18),rgba(1,18,74,.72),rgba(243,200,111,.10),rgba(255,255,255,.24)),
-        linear-gradient(145deg,rgba(36,120,255,.80),rgba(5,18,54,.96));
-      box-shadow:
-        0 1rem 2rem rgba(0,0,0,.38),
-        0 0 1.35rem rgba(36,120,255,.16),
-        inset 0 1px 0 rgba(255,255,255,.17),
-        inset 0 -1rem 1.6rem rgba(0,0,0,.22);
       pointer-events:auto;
+      background:transparent;
+      border:0;
       transform:
         rotate(var(--angle))
         translateY(var(--radius))
         rotate(calc(-1 * var(--angle)));
-      transition:filter .18s ease,scale .18s ease,border-color .18s ease;
+      transition:filter .18s ease,scale .18s ease;
     }
 
     .orbit-door:hover,
     .orbit-door:focus-visible {
       filter:brightness(1.12) saturate(1.08);
-      scale:1.04;
-      border-color:rgba(243,200,111,.54);
+      scale:1.045;
       outline:none;
     }
 
-    .orbit-door b {
+    .sapphire-gem-svg {
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      pointer-events:none;
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
+        drop-shadow(0 0 1.15rem rgba(36,120,255,.24))
+        drop-shadow(0 0 .55rem rgba(141,216,255,.12));
+    }
+
+    .center-gem .sapphire-gem-svg {
+      filter:
+        drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
+        drop-shadow(0 0 1.65rem rgba(36,120,255,.30))
+        drop-shadow(0 0 .85rem rgba(243,200,111,.12));
+    }
+
+    .orbit-door:hover .sapphire-gem-svg,
+    .orbit-door:focus-visible .sapphire-gem-svg {
+      filter:
+        drop-shadow(0 1.35rem 1.6rem rgba(0,0,0,.42))
+        drop-shadow(0 0 1.45rem rgba(36,120,255,.32))
+        drop-shadow(0 0 .75rem rgba(243,200,111,.14));
+    }
+
+    .gem-label {
+      position:relative;
+      z-index:3;
+      width:72%;
+      display:grid;
+      gap:.12rem;
+      place-items:center;
+      text-align:center;
+      pointer-events:none;
+      text-shadow:
+        0 2px 12px rgba(0,0,0,.94),
+        0 0 10px rgba(0,28,90,.82),
+        0 0 2px rgba(255,255,255,.42);
+    }
+
+    .gem-label b {
       display:block;
       color:rgba(255,244,216,.98);
-      font-size:clamp(.58rem,1.7vw,.82rem);
-      line-height:1;
-      letter-spacing:.06em;
+      font-size:clamp(.56rem,1.42vw,.78rem);
+      font-weight:950;
+      letter-spacing:.075em;
+      line-height:1.02;
       text-transform:uppercase;
-      text-shadow:0 2px 12px rgba(0,0,0,.88);
+    }
+
+    .center-gem .gem-label b {
+      color:var(--gold);
+      font-size:clamp(.7rem,1.6vw,.92rem);
+      letter-spacing:.16em;
+    }
+
+    .center-gem .gem-label strong {
+      display:block;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1rem,2.2vw,1.38rem);
+      line-height:1.05;
+      letter-spacing:-.035em;
+      text-transform:none;
+    }
+
+    .sapphire-glint {
+      animation:sapphireGlint 8.5s ease-in-out infinite;
+      transform-origin:110px 80px;
+    }
+
+    .sapphire-star {
+      animation:sapphireFacetTurn 26s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes sapphireGlint {
+      0%,100% { opacity:.08; transform:translateX(-34px); }
+      48%,55% { opacity:.48; transform:translateX(34px); }
+    }
+
+    @keyframes sapphireFacetTurn {
+      to { transform:rotate(360deg); }
     }
 
     .stage-copy {
@@ -815,23 +862,27 @@
 
       .orbit-door {
         --radius:-9.9rem;
-        width:4.75rem;
-        height:3.5rem;
-        margin-left:-2.375rem;
-        margin-top:-1.75rem;
+        width:5.3rem;
+        height:3.9rem;
+        margin-left:-2.65rem;
+        margin-top:-1.95rem;
       }
 
-      .orbit-door b {
-        font-size:.43rem;
+      .gem-label b {
+        font-size:.42rem;
       }
 
       .center-gem {
-        width:7.6rem;
-        min-height:5.8rem;
+        width:7.9rem;
+        height:5.8rem;
       }
 
-      .center-gem strong {
-        font-size:.9rem;
+      .center-gem .gem-label b {
+        font-size:.52rem;
+      }
+
+      .center-gem .gem-label strong {
+        font-size:.88rem;
       }
 
       .stage-copy {
@@ -860,19 +911,19 @@
 
       .orbit-door {
         --radius:-8.45rem;
-        width:4.05rem;
-        height:3rem;
-        margin-left:-2.025rem;
-        margin-top:-1.5rem;
+        width:4.8rem;
+        height:3.52rem;
+        margin-left:-2.4rem;
+        margin-top:-1.76rem;
       }
 
-      .orbit-door b {
+      .gem-label b {
         font-size:.36rem;
       }
 
       .center-gem {
-        width:6.8rem;
-        min-height:5rem;
+        width:7.1rem;
+        height:5.15rem;
       }
     }
 
@@ -886,7 +937,9 @@
         transition-duration:.01ms!important;
       }
 
-      .orbit-ring {
+      .orbit-ring,
+      .sapphire-glint,
+      .sapphire-star {
         animation:none!important;
       }
     }
@@ -896,13 +949,115 @@
 <body
   data-route="/products/"
   data-page="products-public-usable-message-wing"
-  data-contract="PRODUCTS_PUBLIC_USABLE_MESSAGE_AND_AAI_PRINCIPLE_RENEWAL_TNT_v1"
+  data-contract="PRODUCTS_SAPPHIRE_DIGITAL_GEM_RESTORATION_TNT_v1"
   data-js-contract="PRODUCTS_RUNTIME_BRIDGE_OPEN_FOCUS_AUTHORITY_RENEWAL_TNT_v1"
   data-generated-image="false"
   data-graphic-box="false"
   data-streaming="false"
   data-visual-pass-claimed="false"
 >
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="sapphireCrystalBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#f7fbff" stop-opacity=".92"/>
+        <stop offset=".14" stop-color="#b9dcff" stop-opacity=".76"/>
+        <stop offset=".32" stop-color="#4f9dff" stop-opacity=".68"/>
+        <stop offset=".52" stop-color="#1856d8" stop-opacity=".58"/>
+        <stop offset=".74" stop-color="#06246e" stop-opacity=".72"/>
+        <stop offset="1" stop-color="#020816" stop-opacity=".92"/>
+      </linearGradient>
+
+      <linearGradient id="sapphireAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".88"/>
+        <stop offset=".34" stop-color="#d8ecff" stop-opacity=".42"/>
+        <stop offset=".68" stop-color="#ffe8a3" stop-opacity=".18"/>
+        <stop offset="1" stop-color="#8dd8ff" stop-opacity=".08"/>
+      </linearGradient>
+
+      <linearGradient id="sapphireDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
+        <stop offset=".30" stop-color="#71b7ff" stop-opacity=".20"/>
+        <stop offset=".62" stop-color="#1645c9" stop-opacity=".18"/>
+        <stop offset="1" stop-color="#020716" stop-opacity=".62"/>
+      </linearGradient>
+
+      <radialGradient id="sapphireTableGlow" cx="50%" cy="38%" r="64%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".58"/>
+        <stop offset=".28" stop-color="#dcefff" stop-opacity=".30"/>
+        <stop offset=".58" stop-color="#8dd8ff" stop-opacity=".14"/>
+        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="sapphireGlint" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#ffffff" stop-opacity=".86"/>
+        <stop offset=".52" stop-color="#fff0a3" stop-opacity=".28"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="sapphireCrystalGlow" x="-42%" y="-50%" width="184%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.38 0 0 0 0.08
+            0 0.62 0 0 0.16
+            0 0 1.00 0 0.34
+            0 0 0 0.52 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="sapphireDigitalGem" viewBox="0 0 220 160">
+        <g filter="url(#sapphireCrystalGlow)">
+          <path
+            d="M110 5 L145 13 L182 38 L210 75 L190 106 L150 137 L110 155 L70 137 L30 106 L10 75 L38 38 L75 13 Z"
+            fill="url(#sapphireCrystalBody)"
+            stroke="rgba(235,248,255,.58)"
+            stroke-width="1.35"
+          />
+          <path d="M110 5 L145 13 L132 37 L110 29 L88 37 L75 13 Z" fill="url(#sapphireAir)" opacity=".82"/>
+          <path d="M75 13 L88 37 L62 58 L38 38 Z" fill="rgba(255,255,255,.26)"/>
+          <path d="M145 13 L132 37 L158 58 L182 38 Z" fill="rgba(255,255,255,.18)"/>
+          <path d="M38 38 L62 58 L55 82 L10 75 Z" fill="rgba(141,216,255,.14)"/>
+          <path d="M182 38 L158 58 L165 82 L210 75 Z" fill="rgba(255,232,163,.12)"/>
+          <path
+            d="M88 37 L110 29 L132 37 L158 58 L148 82 L110 101 L72 82 L62 58 Z"
+            fill="url(#sapphireTableGlow)"
+            stroke="rgba(255,255,255,.30)"
+            stroke-width=".9"
+          />
+          <path d="M10 75 L55 82 L70 137 L30 106 Z" fill="rgba(35,117,255,.16)"/>
+          <path d="M210 75 L165 82 L150 137 L190 106 Z" fill="rgba(255,255,255,.13)"/>
+          <path d="M55 82 L72 82 L110 155 L70 137 Z" fill="rgba(2,8,24,.38)"/>
+          <path d="M165 82 L148 82 L110 155 L150 137 Z" fill="rgba(141,216,255,.12)"/>
+          <path d="M72 82 L110 101 L110 155 Z" fill="url(#sapphireDepth)" opacity=".76"/>
+          <path d="M148 82 L110 101 L110 155 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M110 5 L110 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
+          <path d="M10 75 L210 75" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
+          <path d="M38 38 L190 106" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M182 38 L30 106" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M75 13 L110 101 L145 13" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
+          <path d="M38 38 L110 101 L182 38" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M30 106 L110 101 L190 106" stroke="rgba(243,200,111,.12)" stroke-width=".9" fill="none"/>
+          <g class="sapphire-star" opacity=".82">
+            <path d="M110 26 L116 70 L110 106 L104 70 Z" fill="rgba(255,255,255,.28)"/>
+            <path d="M62 58 L105 72 L158 58 L116 78 Z" fill="rgba(255,255,255,.17)"/>
+            <path d="M72 82 L105 75 L148 82 L114 91 Z" fill="rgba(141,216,255,.15)"/>
+            <path d="M110 101 L126 81 L148 82 L129 96 Z" fill="rgba(255,255,255,.14)"/>
+            <path d="M110 101 L94 81 L72 82 L91 96 Z" fill="rgba(243,200,111,.08)"/>
+          </g>
+          <path class="sapphire-glint" d="M34 117 L176 22 L188 38 L48 130 Z" fill="url(#sapphireGlint)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
   <a class="skip" href="#main">Skip to Products</a>
 
   <div class="shell">
@@ -954,21 +1109,57 @@
           The product wing keeps the usable paths close together. ARCHCOIN, Five Flags, On Your Side AAI, Education, and Nutrition are product chambers. Meet Sean, Nine Summits, and the Book keep the human voice, public climb, and long-form path attached.
         </p>
 
-        <div class="product-stage" aria-label="Eight product wing doors around one usable message">
+        <div class="product-stage" aria-label="Eight sapphire digital gems around one usable message">
           <div class="center-gem" aria-hidden="true">
-            <b>Products</b>
-            <strong>One Message<br>Eight Doors</strong>
+            <svg class="sapphire-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+              <use href="#sapphireDigitalGem"></use>
+            </svg>
+            <span class="gem-label">
+              <b>Products</b>
+              <strong>One Message<br>Eight Doors</strong>
+            </span>
           </div>
 
-          <div class="orbit-ring" aria-label="Products orbit">
-            <a class="orbit-door" style="--angle:0deg" href="/products/archcoin/"><b>ARCHCOIN</b></a>
-            <a class="orbit-door" style="--angle:45deg" href="/products/five-flags/"><b>Five<br>Flags</b></a>
-            <a class="orbit-door" style="--angle:90deg" href="/products/on-your-side-ai/"><b>On Your<br>Side</b></a>
-            <a class="orbit-door" style="--angle:135deg" href="/products/education/"><b>Education</b></a>
-            <a class="orbit-door" style="--angle:180deg" href="/products/nutrition/"><b>Nutrition</b></a>
-            <a class="orbit-door" style="--angle:225deg" href="/meet-sean-mansfield/"><b>Meet<br>Sean</b></a>
-            <a class="orbit-door" style="--angle:270deg" href="/nine-summits/"><b>Nine<br>Summits</b></a>
-            <a class="orbit-door" style="--angle:315deg" href="/nine-summits-of-love/"><b>Book</b></a>
+          <div class="orbit-ring" aria-label="Products sapphire orbit">
+            <a class="orbit-door" style="--angle:0deg" href="/products/archcoin/">
+              <svg class="sapphire-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#sapphireDigitalGem"></use></svg>
+              <span class="gem-label"><b>ARCHCOIN</b></span>
+            </a>
+
+            <a class="orbit-door" style="--angle:45deg" href="/products/five-flags/">
+              <svg class="sapphire-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#sapphireDigitalGem"></use></svg>
+              <span class="gem-label"><b>Five<br>Flags</b></span>
+            </a>
+
+            <a class="orbit-door" style="--angle:90deg" href="/products/on-your-side-ai/">
+              <svg class="sapphire-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#sapphireDigitalGem"></use></svg>
+              <span class="gem-label"><b>On Your<br>Side</b></span>
+            </a>
+
+            <a class="orbit-door" style="--angle:135deg" href="/products/education/">
+              <svg class="sapphire-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#sapphireDigitalGem"></use></svg>
+              <span class="gem-label"><b>Education</b></span>
+            </a>
+
+            <a class="orbit-door" style="--angle:180deg" href="/products/nutrition/">
+              <svg class="sapphire-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#sapphireDigitalGem"></use></svg>
+              <span class="gem-label"><b>Nutrition</b></span>
+            </a>
+
+            <a class="orbit-door" style="--angle:225deg" href="/meet-sean-mansfield/">
+              <svg class="sapphire-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#sapphireDigitalGem"></use></svg>
+              <span class="gem-label"><b>Meet<br>Sean</b></span>
+            </a>
+
+            <a class="orbit-door" style="--angle:270deg" href="/nine-summits/">
+              <svg class="sapphire-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#sapphireDigitalGem"></use></svg>
+              <span class="gem-label"><b>Nine<br>Summits</b></span>
+            </a>
+
+            <a class="orbit-door" style="--angle:315deg" href="/nine-summits-of-love/">
+              <svg class="sapphire-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#sapphireDigitalGem"></use></svg>
+              <span class="gem-label"><b>Book</b></span>
+            </a>
           </div>
 
           <div class="stage-copy">
@@ -1095,8 +1286,8 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-PRODUCTS_PUBLIC_USABLE_MESSAGE_AND_AAI_PRINCIPLE_RENEWAL_TNT_v1
-previous=PRODUCTS_OPTICAL_SAPPHIRE_ORBIT_AND_CENTER_GEM_RENEWAL_TNT_v1
+PRODUCTS_SAPPHIRE_DIGITAL_GEM_RESTORATION_TNT_v1
+previous=PRODUCTS_PUBLIC_USABLE_MESSAGE_AND_AAI_PRINCIPLE_RENEWAL_TNT_v1
 js_contract=PRODUCTS_RUNTIME_BRIDGE_OPEN_FOCUS_AUTHORITY_RENEWAL_TNT_v1
 runtime_src=/products/products_runtime.js
 runtime_version=four-lobed-molecular-flower-open-focus-v1
@@ -1105,6 +1296,9 @@ page=products_public_usable_message_wing
 role=product_wing
 message=the_message_becomes_usable_here
 model=five_product_chambers_three_connected_paths_one_usable_message
+gem_restoration=inline_svg_sapphire_digital_gem
+gem_reference_family=door_purple_digital_gem,laws_clear_crystal_diamond
+gem_material=sapphire
 product_chambers=archcoin,five_flags,on_your_side_aai,education,nutrition
 connected_paths=meet_sean,nine_summits,book
 aai_principle=always_on_your_side_never_in_control
@@ -1113,8 +1307,7 @@ runtime_mount_id=productsRuntimeMount
 runtime_mount_attribute=data-products-runtime-mount
 open_molecule_hook_preserved=true
 open_molecule_attribute=data-open-molecule
-route_label_cleanup=explore_not_manor,five_flags_spaced,meet_sean_spaced,nine_summits_spaced,on_your_side_aai
-route_owns=product_wing,usable_message,product_chambers,connected_paths,runtime_mount_shell
+route_owns=product_wing,usable_message,product_chambers,connected_paths,runtime_mount_shell,sapphire_digital_gem_visual_layer
 route_does_not_own=products_runtime_js,products_runtime_renderer,gauges_logic,showroom_runtime,compass_runtime
 generated_image=false
 graphic_box=false
@@ -1124,12 +1317,12 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      PRODUCTS_PUBLIC_USABLE_MESSAGE_AND_AAI_PRINCIPLE_RENEWAL_TNT_v1 · Products · Five product chambers · Three connected paths · One usable message.
+      PRODUCTS_SAPPHIRE_DIGITAL_GEM_RESTORATION_TNT_v1 · Products · Sapphire digital gems restored · Runtime bridge preserved.
     </footer>
   </div>
 
   <script>
-    window.DGB_PRODUCTS_PAGE_KEY = "PRODUCTS_PUBLIC_USABLE_MESSAGE_AND_AAI_PRINCIPLE_RENEWAL_TNT_v1";
+    window.DGB_PRODUCTS_PAGE_KEY = "PRODUCTS_SAPPHIRE_DIGITAL_GEM_RESTORATION_TNT_v1";
   </script>
   <script type="module" src="/products/index.js?v=PRODUCTS_RUNTIME_BRIDGE_OPEN_FOCUS_AUTHORITY_RENEWAL_TNT_v1"></script>
 </body>

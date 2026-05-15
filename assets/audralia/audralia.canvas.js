@@ -1,22 +1,27 @@
 // /assets/audralia/audralia.canvas.js
-// AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3
+// AUDRALIA_FAIL_VISIBLE_CANVAS_RENDER_RENEWAL_TNT_v4
 // Full-file replacement.
 // Canvas consumer only.
-// Exposes window.AUDRALIA_CANVAS.contract = AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3.
-// Keeps living-canvas render behavior and adds visible update notice.
-// Consumes lattice, landmap, climate, and land surface when available.
+// Keeps route-loader compatibility by exposing window.AUDRALIA_CANVAS.contract as AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3.
+// Exposes the actual render renewal through renderContract = AUDRALIA_FAIL_VISIBLE_CANVAS_RENDER_RENEWAL_TNT_v4.
+// Separates mounted status from visible pixel proof.
+// Paints immediate visible fallback planet before authority loading.
+// Forces canvas sizing from mount, stage, or parent rectangle.
+// Replaces fallback with advanced texture render after authorities load.
 // Does not own footprint.
 // Does not own climate.
+// Does not touch runtime.
 // Does not touch Gauges.
 // No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3";
-  const RECEIPT = "AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_RECEIPT_v3";
-  const PREVIOUS_CONTRACT = "AUDRALIA_LIVING_CANVAS_PLANET_EXPRESSION_CANVAS_TNT_v2";
-  const VERSION = "2026-05-15.audralia-visible-update-notice-canvas-v3";
+  const COMPATIBLE_CONTRACT = "AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3";
+  const CONTRACT = "AUDRALIA_FAIL_VISIBLE_CANVAS_RENDER_RENEWAL_TNT_v4";
+  const RECEIPT = "AUDRALIA_FAIL_VISIBLE_CANVAS_RENDER_RENEWAL_RECEIPT_v4";
+  const PREVIOUS_CONTRACT = "AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3";
+  const VERSION = "2026-05-15.audralia-fail-visible-canvas-render-renewal-v4";
   const TAU = Math.PI * 2;
 
   const EXPECTED = Object.freeze({
@@ -34,7 +39,7 @@
     beach: [202, 186, 128],
     wetBeach: [156, 157, 116],
     fallbackLand: [92, 132, 76],
-    livingGreen: [100, 154, 86],
+    livingGreen: [96, 152, 86],
     livingGold: [174, 143, 74],
     ice: [190, 220, 225],
     snow: [218, 232, 226],
@@ -178,34 +183,53 @@
   }
 
   function fallbackMap(u, v) {
+    const latitude = 90 - v * 180;
+    const longitude = u * 360 - 180;
+    const equator = 1 - Math.abs(latitude) / 90;
+    const landSignal =
+      fbm(u * 0.9 + 0.18, v * 0.82 - 0.11, 930001, 5) * 0.54 +
+      fbm(u * 2.1 - 0.21, v * 1.8 + 0.14, 930777, 4) * 0.24 +
+      equator * 0.18;
+
+    const isLand = landSignal > 0.49;
+    const shelf = smoothstep(0.42, 0.55, landSignal);
+    const isBeach = landSignal > 0.47 && landSignal <= 0.52;
+
     return Object.freeze({
       u,
       v,
-      longitude: u * 360 - 180,
-      latitude: 90 - v * 180,
-      cell256: 1,
-      cell64: 1,
-      cell16: 1,
-      quadrant: "NE",
-      band: "temperate",
+      longitude,
+      latitude,
+      cell256: Math.max(1, Math.min(256, Math.floor(v * 16) * 16 + Math.floor(u * 16) + 1)),
+      cell64: Math.max(1, Math.min(64, Math.floor(v * 8) * 8 + Math.floor(u * 8) + 1)),
+      cell16: Math.max(1, Math.min(16, Math.floor(v * 4) * 4 + Math.floor(u * 4) + 1)),
+      quadrant: latitude >= 0 ? (longitude >= 0 ? "NE" : "NW") : (longitude >= 0 ? "SE" : "SW"),
+      band: Math.abs(latitude) < 23 ? "equatorial" : Math.abs(latitude) < 50 ? "temperate" : "polar",
       primarySummit: "Gratitude",
-      internalSummit: "Gratitude",
+      internalSummit: "Stability",
       summitProvince: "Gratitude",
-      terrainClass: "ocean",
-      topology: "ocean",
-      elevation: "sea",
-      shelf: 0.2,
-      beachEdge: 0,
-      isOcean: true,
-      isLand: false,
-      isShelf: false,
-      isBeach: false,
-      isPolarIce: false
+      terrainClass: isLand ? "highland" : isBeach ? "beach" : landSignal > 0.42 ? "shelf" : "ocean",
+      topology: isLand ? "highland-shoulder" : isBeach ? "coastal-beach" : "ocean",
+      elevation: isLand ? "highland" : "sea",
+      shelf,
+      beachEdge: isBeach ? 1 : smoothstep(0.42, 0.52, landSignal),
+      isOcean: !isLand && !isBeach && landSignal <= 0.42,
+      isLand,
+      isShelf: !isLand && !isBeach && landSignal > 0.42,
+      isBeach,
+      isPolarIce: Math.abs(latitude) > 74
     });
   }
 
   function sampleMap(u, v) {
-    if (window.AUDRALIA_LANDMAP?.sampleLandmap) return window.AUDRALIA_LANDMAP.sampleLandmap(u, v);
+    try {
+      if (window.AUDRALIA_LANDMAP?.sampleLandmap) {
+        return window.AUDRALIA_LANDMAP.sampleLandmap(u, v);
+      }
+    } catch {
+      document.documentElement.dataset.audraliaLandmapSampleFailed = "true";
+    }
+
     return fallbackMap(u, v);
   }
 
@@ -223,21 +247,27 @@
   }
 
   function climateColor(map) {
-    if (!window.AUDRALIA_CLIMATE_RENDER?.sampleClimate) return null;
-
-    const climate = window.AUDRALIA_CLIMATE_RENDER.sampleClimate(map);
-    if (!climate?.allowed || !Array.isArray(climate.color)) return null;
-
-    return climate.color;
+    try {
+      if (!window.AUDRALIA_CLIMATE_RENDER?.sampleClimate) return null;
+      const climate = window.AUDRALIA_CLIMATE_RENDER.sampleClimate(map);
+      if (!climate?.allowed || !Array.isArray(climate.color)) return null;
+      return climate.color;
+    } catch {
+      document.documentElement.dataset.audraliaClimateSampleFailed = "true";
+      return null;
+    }
   }
 
   function landSurfaceColor(map) {
-    if (!window.AUDRALIA_LAND_SURFACE?.sampleSurface) return null;
-
-    const surface = window.AUDRALIA_LAND_SURFACE.sampleSurface(map);
-    if (!surface?.allowed || !Array.isArray(surface.color)) return null;
-
-    return surface.color;
+    try {
+      if (!window.AUDRALIA_LAND_SURFACE?.sampleSurface) return null;
+      const surface = window.AUDRALIA_LAND_SURFACE.sampleSurface(map);
+      if (!surface?.allowed || !Array.isArray(surface.color)) return null;
+      return surface.color;
+    } catch {
+      document.documentElement.dataset.audraliaLandSurfaceSampleFailed = "true";
+      return null;
+    }
   }
 
   function surfaceColor(map) {
@@ -264,7 +294,7 @@
       return shade(beach, grain * 0.45 + 2);
     }
 
-    if (map.terrainClass === "polar-ice") {
+    if (map.isPolarIce || map.terrainClass === "polar-ice") {
       const p = fbm(u * 3.0, v * 2.4, 720000, 4);
       return shade(mix(COLORS.ice, COLORS.snow, smoothstep(0.42, 0.92, p)), grain * 0.22 + 5);
     }
@@ -278,29 +308,14 @@
     return shade(COLORS.fallbackLand, grain - 3);
   }
 
-  function isWaterLike(map) {
-    return Boolean(
-      map?.isOcean ||
-      map?.isShelf ||
-      map?.terrainClass === "ocean" ||
-      map?.terrainClass === "shelf"
-    );
-  }
-
-  function isBeachLike(map) {
-    return Boolean(map?.isBeach || map?.terrainClass === "beach");
-  }
-
-  function isLandLike(map) {
-    return !isWaterLike(map) && !isBeachLike(map);
-  }
-
   function buildTexture(width, height) {
     const temp = document.createElement("canvas");
     temp.width = width;
     temp.height = height;
 
     const ctx = temp.getContext("2d", { alpha: false });
+    if (!ctx) throw new Error("Texture context unavailable");
+
     const image = ctx.createImageData(width, height);
     const data = image.data;
 
@@ -325,6 +340,37 @@
     return Object.freeze({ data, width, height });
   }
 
+  function buildFallbackTexture(width, height) {
+    const temp = document.createElement("canvas");
+    temp.width = width;
+    temp.height = height;
+
+    const ctx = temp.getContext("2d", { alpha: false });
+    if (!ctx) throw new Error("Fallback texture context unavailable");
+
+    const image = ctx.createImageData(width, height);
+    const data = image.data;
+
+    for (let y = 0; y < height; y += 1) {
+      const v = y / Math.max(1, height - 1);
+
+      for (let x = 0; x < width; x += 1) {
+        const u = x / width;
+        const map = fallbackMap(u, v);
+        const color = surfaceColor(map);
+        const index = (y * width + x) * 4;
+
+        data[index] = color[0];
+        data[index + 1] = color[1];
+        data[index + 2] = color[2];
+        data[index + 3] = 255;
+      }
+    }
+
+    ctx.putImageData(image, 0, 0);
+    return Object.freeze({ data, width, height, fallback: true });
+  }
+
   function textureSample(texture, u, v) {
     const x = Math.floor(wrap01(u) * texture.width) % texture.width;
     const y = clamp(Math.floor(clamp(v, 0, 1) * (texture.height - 1)), 0, texture.height - 1);
@@ -332,12 +378,164 @@
     return [texture.data[index], texture.data[index + 1], texture.data[index + 2]];
   }
 
+  function getBestRect(mount) {
+    const stage = mount.closest("[data-audralia-stage='true'], .stage, #audralia-stage");
+    const parent = mount.parentElement;
+
+    const rects = [
+      mount.getBoundingClientRect(),
+      stage ? stage.getBoundingClientRect() : null,
+      parent ? parent.getBoundingClientRect() : null
+    ].filter(Boolean);
+
+    const usable = rects.find((rect) => rect.width >= 80 && rect.height >= 80);
+
+    if (usable) return usable;
+
+    return {
+      width: Math.max(320, Math.min(window.innerWidth || 420, 700)),
+      height: Math.max(320, Math.min(window.innerWidth || 420, 700))
+    };
+  }
+
+  function makeNotice() {
+    const notice = document.createElement("div");
+    notice.dataset.audraliaVersionNotice = "true";
+    notice.style.position = "absolute";
+    notice.style.right = "10px";
+    notice.style.top = "10px";
+    notice.style.zIndex = "30";
+    notice.style.maxWidth = "min(88%, 460px)";
+    notice.style.padding = "9px 11px";
+    notice.style.border = "1px solid rgba(143,240,195,.36)";
+    notice.style.borderRadius = "14px";
+    notice.style.background = "linear-gradient(180deg, rgba(4,18,24,.86), rgba(3,10,18,.78))";
+    notice.style.color = "rgba(214,255,232,.94)";
+    notice.style.font = "800 11px/1.35 system-ui, sans-serif";
+    notice.style.letterSpacing = ".02em";
+    notice.style.boxShadow = "0 14px 40px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.08)";
+    notice.style.backdropFilter = "blur(8px)";
+    notice.style.pointerEvents = "none";
+    notice.textContent = "Audralia v4 visible-pixel test loading…";
+    return notice;
+  }
+
+  function updateNotice(notice, state) {
+    const visible = state.visiblePixelsPainted ? "visible pixels painted" : "visible pixels pending";
+    const landmap = state.authorityStatus.landmapLoaded ? "landmap active" : "fallback landmap";
+    const climate = state.authorityStatus.climateLoaded ? "climate v2 active" : "climate pending";
+    const surface = state.authorityStatus.landSurfaceLoaded ? "surface active" : "surface fallback";
+
+    notice.textContent = `Audralia v4 update active · ${visible} · ${landmap} · ${climate} · ${surface}`;
+    notice.title = [
+      CONTRACT,
+      `compatible=${COMPATIBLE_CONTRACT}`,
+      `previous=${PREVIOUS_CONTRACT}`,
+      `visiblePixelsPainted=${state.visiblePixelsPainted}`,
+      `fallbackPainted=${state.fallbackPainted}`,
+      `advancedTextureReady=${state.advancedTextureReady}`,
+      `landmap=${state.authorityStatus.landmapContract || "unknown"}`,
+      `climate=${state.authorityStatus.climateContract || "unknown"}`,
+      `surface=${state.authorityStatus.landSurfaceContract || "unknown"}`
+    ].join("\n");
+
+    notice.dataset.audraliaCanvasContract = COMPATIBLE_CONTRACT;
+    notice.dataset.audraliaCanvasRenderContract = CONTRACT;
+    notice.dataset.visiblePixelsPainted = String(state.visiblePixelsPainted);
+    notice.dataset.fallbackPainted = String(state.fallbackPainted);
+    notice.dataset.advancedTextureReady = String(state.advancedTextureReady);
+    notice.dataset.landmapLoaded = String(state.authorityStatus.landmapLoaded);
+    notice.dataset.climateLoaded = String(state.authorityStatus.climateLoaded);
+    notice.dataset.landSurfaceLoaded = String(state.authorityStatus.landSurfaceLoaded);
+  }
+
+  function drawVisibleFallbackPlanet(ctx, canvas, now = performance.now()) {
+    const width = canvas.width;
+    const height = canvas.height;
+    const cx = width * 0.5;
+    const cy = height * 0.5;
+    const radius = Math.min(width, height) * 0.39;
+
+    if (!width || !height || !radius) return false;
+
+    ctx.clearRect(0, 0, width, height);
+
+    const back = ctx.createRadialGradient(cx, cy, radius * 0.1, cx, cy, radius * 1.35);
+    back.addColorStop(0, "rgba(28,76,95,.22)");
+    back.addColorStop(0.55, "rgba(8,18,38,.18)");
+    back.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = back;
+    ctx.fillRect(0, 0, width, height);
+
+    const halo = ctx.createRadialGradient(cx, cy, radius * 0.78, cx, cy, radius * 1.18);
+    halo.addColorStop(0, "rgba(142,202,226,0)");
+    halo.addColorStop(0.62, "rgba(142,202,226,.13)");
+    halo.addColorStop(1, "rgba(142,202,226,0)");
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.2, 0, TAU);
+    ctx.fill();
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, TAU);
+    ctx.clip();
+
+    const ocean = ctx.createRadialGradient(cx - radius * 0.25, cy - radius * 0.28, radius * 0.1, cx, cy, radius);
+    ocean.addColorStop(0, "rgb(26,112,142)");
+    ocean.addColorStop(0.38, "rgb(7,68,112)");
+    ocean.addColorStop(1, "rgb(3,18,44)");
+    ctx.fillStyle = ocean;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    const t = now * 0.001;
+    const drift = Math.sin(t * 0.25) * radius * 0.05;
+
+    ctx.fillStyle = "rgba(111,158,88,.94)";
+    ctx.beginPath();
+    ctx.ellipse(cx - radius * 0.23 + drift, cy - radius * 0.06, radius * 0.42, radius * 0.64, -0.34, 0, TAU);
+    ctx.fill();
+
+    ctx.fillStyle = "rgba(132,174,98,.95)";
+    ctx.beginPath();
+    ctx.ellipse(cx + radius * 0.30 + drift, cy - radius * 0.02, radius * 0.34, radius * 0.52, 0.22, 0, TAU);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.ellipse(cx - radius * 0.23 + drift, cy - radius * 0.06, radius * 0.46, radius * 0.68, -0.34, 0, TAU);
+    ctx.strokeStyle = "rgba(202,186,128,.62)";
+    ctx.lineWidth = Math.max(2, radius * 0.025);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.ellipse(cx + radius * 0.30 + drift, cy - radius * 0.02, radius * 0.38, radius * 0.56, 0.22, 0, TAU);
+    ctx.strokeStyle = "rgba(202,186,128,.52)";
+    ctx.stroke();
+
+    const gloss = ctx.createLinearGradient(cx - radius, cy - radius, cx + radius, cy + radius);
+    gloss.addColorStop(0, "rgba(255,255,255,.26)");
+    gloss.addColorStop(0.38, "rgba(255,255,255,.04)");
+    gloss.addColorStop(0.72, "rgba(0,0,0,.14)");
+    gloss.addColorStop(1, "rgba(0,0,0,.44)");
+    ctx.fillStyle = gloss;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    ctx.restore();
+
+    ctx.strokeStyle = "rgba(142,202,226,.22)";
+    ctx.lineWidth = Math.max(1, radius * 0.012);
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, TAU);
+    ctx.stroke();
+
+    return true;
+  }
+
   function liveWaterExpression(color, map, u, v, now, lightAmount, z) {
     const t = now * 0.001;
-    const phase = t * 0.055;
     const shelf = clamp(map.shelf || 0.28, 0, 1);
     const edge = clamp(map.beachEdge || 0, 0, 1);
-    const shimmer = fbm(u + phase * 0.38, v + Math.sin(t * 0.18) * 0.018, 812000, 4);
+    const shimmer = fbm(u + t * 0.021, v + Math.sin(t * 0.18) * 0.018, 812000, 4);
     const wave = Math.sin((u * TAU * 18) + (v * 9.5) + t * 1.35) * 0.5 + 0.5;
     const specular = smoothstep(0.68, 0.96, shimmer * 0.62 + wave * 0.30) * lightAmount * smoothstep(0.08, 0.7, z);
     const shelfGlow = smoothstep(0.38, 0.9, shelf) * 0.14 + smoothstep(0.18, 0.82, edge) * 0.12;
@@ -358,7 +556,7 @@
       className.includes("polar") || className.includes("ice") ? 0.12 :
       0.04;
 
-    const growth = fbm(u * 1.1 + t * 0.009, v * 1.05 - t * 0.006, 823000, 4);
+    const growth = fbm(u * 1.1 + t * 0.004, v * 1.05 - t * 0.003, 823000, 4);
     const pressure = fbm(u * 2.4 - 0.22, v * 2.1 + 0.17, 823500, 4);
     const pulse = (Math.sin(t * 0.34 + growth * TAU) + 1) * 0.5;
     const warmth = smoothstep(0.34, 0.86, growth) * (0.04 + pulse * 0.065);
@@ -408,46 +606,21 @@
     ctx.restore();
   }
 
-  function makeNotice() {
-    const notice = document.createElement("div");
-    notice.dataset.audraliaVersionNotice = "true";
-    notice.style.position = "absolute";
-    notice.style.right = "10px";
-    notice.style.top = "10px";
-    notice.style.zIndex = "9";
-    notice.style.maxWidth = "min(88%, 420px)";
-    notice.style.padding = "9px 11px";
-    notice.style.border = "1px solid rgba(143,240,195,.36)";
-    notice.style.borderRadius = "14px";
-    notice.style.background = "linear-gradient(180deg, rgba(4,18,24,.84), rgba(3,10,18,.74))";
-    notice.style.color = "rgba(214,255,232,.94)";
-    notice.style.font = "800 11px/1.35 system-ui, sans-serif";
-    notice.style.letterSpacing = ".02em";
-    notice.style.boxShadow = "0 14px 40px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.08)";
-    notice.style.backdropFilter = "blur(8px)";
-    notice.style.pointerEvents = "none";
-    notice.textContent = "Audralia v3 update check loading…";
-    return notice;
+  function isWaterLike(map) {
+    return Boolean(
+      map?.isOcean ||
+      map?.isShelf ||
+      map?.terrainClass === "ocean" ||
+      map?.terrainClass === "shelf"
+    );
   }
 
-  function updateNotice(notice, status) {
-    const landmap = status.landmapLoaded ? "landmap active" : "landmap missing";
-    const climate = status.climateLoaded ? "climate v2 active" : "climate pending";
-    const surface = status.landSurfaceLoaded ? "surface active" : "surface fallback";
+  function isBeachLike(map) {
+    return Boolean(map?.isBeach || map?.terrainClass === "beach");
+  }
 
-    notice.textContent = `Audralia v3 update active · ${landmap} · ${climate} · ${surface}`;
-    notice.title = [
-      CONTRACT,
-      `previous=${PREVIOUS_CONTRACT}`,
-      `landmap=${status.landmapContract || "unknown"}`,
-      `climate=${status.climateContract || "unknown"}`,
-      `surface=${status.landSurfaceContract || "unknown"}`
-    ].join("\n");
-
-    notice.dataset.audraliaCanvasContract = CONTRACT;
-    notice.dataset.landmapLoaded = String(status.landmapLoaded);
-    notice.dataset.climateLoaded = String(status.climateLoaded);
-    notice.dataset.landSurfaceLoaded = String(status.landSurfaceLoaded);
+  function isLandLike(map) {
+    return !isWaterLike(map) && !isBeachLike(map);
   }
 
   function mount(mountNode, options = {}) {
@@ -457,9 +630,16 @@
     mount.querySelectorAll("[data-audralia-coordinate-readout='true']").forEach((node) => node.remove());
     mount.querySelectorAll("[data-audralia-version-notice='true']").forEach((node) => node.remove());
 
+    mount.style.position = mount.style.position || "relative";
+    mount.style.overflow = "hidden";
+    mount.style.touchAction = "none";
+    mount.style.minHeight = mount.style.minHeight || "280px";
+    mount.style.zIndex = mount.style.zIndex || "2";
+
     const canvas = document.createElement("canvas");
     canvas.dataset.audraliaParentChainCanvas = "true";
-    canvas.dataset.audraliaCanvasContract = CONTRACT;
+    canvas.dataset.audraliaCanvasContract = COMPATIBLE_CONTRACT;
+    canvas.dataset.audraliaCanvasRenderContract = CONTRACT;
     canvas.dataset.audraliaCanvasReceipt = RECEIPT;
     canvas.dataset.audraliaPreviousCanvasContract = PREVIOUS_CONTRACT;
     canvas.dataset.audraliaLatticeContract = EXPECTED.lattice;
@@ -468,6 +648,8 @@
     canvas.dataset.audraliaCanvasOwnsFootprint = "false";
     canvas.dataset.audraliaCanvasOwnsClimate = "false";
     canvas.dataset.visibleUpdateNotice = "true";
+    canvas.dataset.visiblePixelsPainted = "false";
+    canvas.dataset.fallbackPaintFirst = "true";
     canvas.dataset.textureRebuildPerFrame = "false";
     canvas.dataset.generatedImage = "false";
     canvas.dataset.graphicBox = "false";
@@ -475,15 +657,16 @@
 
     canvas.style.position = "absolute";
     canvas.style.inset = "0";
+    canvas.style.zIndex = "4";
     canvas.style.display = "block";
     canvas.style.width = "100%";
     canvas.style.height = "100%";
+    canvas.style.minWidth = "280px";
+    canvas.style.minHeight = "280px";
     canvas.style.touchAction = "none";
     canvas.style.userSelect = "none";
+    canvas.style.background = "transparent";
 
-    mount.style.position = mount.style.position || "relative";
-    mount.style.overflow = "hidden";
-    mount.style.touchAction = "none";
     mount.appendChild(canvas);
 
     const notice = makeNotice();
@@ -495,6 +678,7 @@
     readout.style.position = "absolute";
     readout.style.left = "10px";
     readout.style.bottom = "10px";
+    readout.style.zIndex = "32";
     readout.style.padding = "7px 9px";
     readout.style.borderRadius = "12px";
     readout.style.background = "rgba(3,9,20,.58)";
@@ -504,13 +688,13 @@
     readout.style.pointerEvents = "none";
     readout.style.opacity = "0.42";
     readout.style.transition = "opacity 220ms ease, background 220ms ease";
-    readout.textContent = "Audralia visible-notice canvas loading…";
+    readout.textContent = "Audralia fail-visible canvas loading…";
     mount.appendChild(readout);
 
-    const ctx = canvas.getContext("2d", { alpha: true });
-
-    let texture = null;
-    let readoutQuietTimer = null;
+    const ctx = canvas.getContext("2d", {
+      alpha: true,
+      willReadFrequently: false
+    });
 
     const state = {
       disposed: false,
@@ -523,20 +707,106 @@
       frames: 0,
       lastRender: 0,
       ready: false,
+      mounted: true,
+      visiblePixelsPainted: false,
+      fallbackPainted: false,
+      advancedTextureReady: false,
+      renderError: "",
       authorityStatus: {
         latticeLoaded: false,
         landmapLoaded: false,
         climateLoaded: false,
-        landSurfaceLoaded: false
+        landSurfaceLoaded: false,
+        latticeContract: "",
+        landmapContract: "",
+        climateContract: "",
+        landSurfaceContract: ""
       }
     };
 
+    let texture = null;
+    let readoutQuietTimer = null;
+    let resizeTimer = null;
+
+    function emitStatus(phase) {
+      document.documentElement.dataset.audraliaCanvasLoaded = "true";
+      document.documentElement.dataset.audraliaCanvasContract = COMPATIBLE_CONTRACT;
+      document.documentElement.dataset.audraliaCanvasRenderContract = CONTRACT;
+      document.documentElement.dataset.audraliaCanvasReceipt = RECEIPT;
+      document.documentElement.dataset.audraliaCanvasPreviousContract = PREVIOUS_CONTRACT;
+      document.documentElement.dataset.audraliaCanvasMounted = String(state.mounted);
+      document.documentElement.dataset.audraliaVisiblePixelsPainted = String(state.visiblePixelsPainted);
+      document.documentElement.dataset.audraliaFallbackPainted = String(state.fallbackPainted);
+      document.documentElement.dataset.audraliaAdvancedTextureReady = String(state.advancedTextureReady);
+      document.documentElement.dataset.audraliaCanvasFrames = String(state.frames);
+      document.documentElement.dataset.audraliaCanvasRenderError = state.renderError;
+      document.documentElement.dataset.audraliaVisibleUpdateNotice = "true";
+      document.documentElement.dataset.audraliaLattice256Loaded = String(state.authorityStatus.latticeLoaded);
+      document.documentElement.dataset.audraliaLandmapLoaded = String(state.authorityStatus.landmapLoaded);
+      document.documentElement.dataset.audraliaClimateLoaded = String(state.authorityStatus.climateLoaded);
+      document.documentElement.dataset.audraliaLandSurfaceLoaded = String(state.authorityStatus.landSurfaceLoaded);
+      document.documentElement.dataset.audraliaCanvasOwnsFootprint = "false";
+      document.documentElement.dataset.audraliaCanvasOwnsClimate = "false";
+      document.documentElement.dataset.textureRebuildPerFrame = "false";
+      document.documentElement.dataset.generatedImage = "false";
+      document.documentElement.dataset.graphicBox = "false";
+      document.documentElement.dataset.visualPassClaimed = "false";
+
+      canvas.dataset.visiblePixelsPainted = String(state.visiblePixelsPainted);
+      canvas.dataset.fallbackPainted = String(state.fallbackPainted);
+      canvas.dataset.advancedTextureReady = String(state.advancedTextureReady);
+
+      updateNotice(notice, state);
+
+      if (typeof options.onStatus === "function") {
+        options.onStatus(phase, {
+          mounted: state.mounted,
+          canvasFound: true,
+          controlsBound: true,
+          frames: state.frames,
+          visiblePixelsPainted: state.visiblePixelsPainted,
+          fallbackPainted: state.fallbackPainted,
+          advancedTextureReady: state.advancedTextureReady,
+          renderError: state.renderError,
+          ...state.authorityStatus,
+          canvasOwnsFootprint: false,
+          canvasOwnsClimate: false,
+          visibleUpdateNotice: true,
+          textureRebuildPerFrame: false,
+          canvasStillConsumerOnly: true
+        });
+      }
+    }
+
     function resize() {
-      const rect = mount.getBoundingClientRect();
+      if (!ctx) {
+        state.renderError = "Canvas context unavailable";
+        emitStatus("context-unavailable");
+        return;
+      }
+
+      const rect = getBestRect(mount);
       const size = Math.max(280, Math.min(700, Math.floor(Math.min(rect.width || 420, rect.height || rect.width || 420))));
-      const dpr = Math.min(1.35, window.devicePixelRatio || 1);
-      canvas.width = Math.floor(size * dpr);
-      canvas.height = Math.floor(size * dpr);
+      const dpr = Math.min(1.25, window.devicePixelRatio || 1);
+
+      const nextWidth = Math.max(280, Math.floor(size * dpr));
+      const nextHeight = Math.max(280, Math.floor(size * dpr));
+
+      if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
+        canvas.width = nextWidth;
+        canvas.height = nextHeight;
+      }
+
+      state.visiblePixelsPainted = drawVisibleFallbackPlanet(ctx, canvas);
+      state.fallbackPainted = state.visiblePixelsPainted;
+      emitStatus("visible-fallback-painted");
+    }
+
+    function scheduleResize() {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        resize();
+      }, 80);
     }
 
     function wakeReadout() {
@@ -646,112 +916,111 @@
     function render(now) {
       if (state.disposed) return;
 
+      if (!ctx) return;
+
       if (!state.ready || !texture) {
         requestAnimationFrame(render);
         return;
       }
 
-      if (!state.dragging) state.spin += state.velocity;
+      try {
+        if (!state.dragging) state.spin += state.velocity;
 
-      if (now - state.lastRender < 30) {
-        requestAnimationFrame(render);
-        return;
-      }
-
-      state.lastRender = now;
-      state.frames += 1;
-
-      const width = canvas.width;
-      const height = canvas.height;
-      const cx = width * 0.5;
-      const cy = height * 0.5;
-      const radius = Math.min(width, height) * 0.44;
-      const image = ctx.createImageData(width, height);
-      const data = image.data;
-
-      const cosSpin = Math.cos(state.spin);
-      const sinSpin = Math.sin(state.spin);
-      const cosTilt = Math.cos(state.tilt);
-      const sinTilt = Math.sin(state.tilt);
-      const light = [-0.45, -0.28, 0.84];
-
-      for (let y = 0; y < height; y += 1) {
-        const py = (y - cy) / radius;
-
-        for (let x = 0; x < width; x += 1) {
-          const px = (x - cx) / radius;
-          const rr = px * px + py * py;
-          const index = (y * width + x) * 4;
-
-          if (rr > 1) {
-            data[index] = 0;
-            data[index + 1] = 0;
-            data[index + 2] = 0;
-            data[index + 3] = 0;
-            continue;
-          }
-
-          const z = Math.sqrt(1 - rr);
-          let sx = px;
-          let sy = py;
-          let sz = z;
-
-          const ty = sy * cosTilt - sz * sinTilt;
-          const tz = sy * sinTilt + sz * cosTilt;
-
-          sy = ty;
-          sz = tz;
-
-          const wx = sx * cosSpin - sz * sinSpin;
-          const wz = sx * sinSpin + sz * cosSpin;
-
-          const longitude = Math.atan2(wz, wx);
-          const latitude = Math.asin(clamp(sy, -1, 1));
-          const u = longitude / TAU + 0.5;
-          const v = 0.5 - latitude / Math.PI;
-
-          const map = sampleMap(u, v);
-          let color = textureSample(texture, u, v);
-
-          const lightAmount = clamp(wx * light[0] + sy * light[1] + z * light[2], 0, 1);
-
-          if (isWaterLike(map) || isBeachLike(map)) {
-            color = liveWaterExpression(color, map, u, v, now, lightAmount, z);
-          } else if (isLandLike(map)) {
-            color = liveLandExpression(color, map, u, v, now, lightAmount, z);
-          }
-
-          const limb = smoothstep(0.0, 0.16, z);
-          const shadeAmount = -36 + lightAmount * 58;
-
-          color = shade(color, shadeAmount);
-          color = mix(COLORS.atmosphere, color, limb);
-          color = liveAtmosphereExpression(color, u, v, now, lightAmount, z, rr);
-
-          data[index] = color[0];
-          data[index + 1] = color[1];
-          data[index + 2] = color[2];
-          data[index + 3] = Math.round(255 * smoothstep(0.0, 0.025, 1 - rr));
+        if (now - state.lastRender < 30) {
+          requestAnimationFrame(render);
+          return;
         }
-      }
 
-      ctx.clearRect(0, 0, width, height);
-      ctx.putImageData(image, 0, 0);
-      drawAtmosphereHalo(ctx, width, height, cx, cy, radius, now);
+        state.lastRender = now;
+        state.frames += 1;
 
-      if (typeof options.onStatus === "function") {
-        options.onStatus("rendering", {
-          mounted: true,
-          canvasFound: true,
-          controlsBound: true,
-          frames: state.frames,
-          ...state.authorityStatus,
-          canvasOwnsFootprint: false,
-          canvasOwnsClimate: false,
-          visibleUpdateNotice: true,
-          textureRebuildPerFrame: false,
-          canvasStillConsumerOnly: true
-        });
+        const width = canvas.width;
+        const height = canvas.height;
+        const cx = width * 0.5;
+        const cy = height * 0.5;
+        const radius = Math.min(width, height) * 0.44;
+        const image = ctx.createImageData(width, height);
+        const data = image.data;
+
+        const cosSpin = Math.cos(state.spin);
+        const sinSpin = Math.sin(state.spin);
+        const cosTilt = Math.cos(state.tilt);
+        const sinTilt = Math.sin(state.tilt);
+        const light = [-0.45, -0.28, 0.84];
+
+        for (let y = 0; y < height; y += 1) {
+          const py = (y - cy) / radius;
+
+          for (let x = 0; x < width; x += 1) {
+            const px = (x - cx) / radius;
+            const rr = px * px + py * py;
+            const index = (y * width + x) * 4;
+
+            if (rr > 1) {
+              data[index] = 0;
+              data[index + 1] = 0;
+              data[index + 2] = 0;
+              data[index + 3] = 0;
+              continue;
+            }
+
+            const z = Math.sqrt(1 - rr);
+            let sx = px;
+            let sy = py;
+            let sz = z;
+
+            const ty = sy * cosTilt - sz * sinTilt;
+            const tz = sy * sinTilt + sz * cosTilt;
+
+            sy = ty;
+            sz = tz;
+
+            const wx = sx * cosSpin - sz * sinSpin;
+            const wz = sx * sinSpin + sz * cosSpin;
+
+            const longitude = Math.atan2(wz, wx);
+            const latitude = Math.asin(clamp(sy, -1, 1));
+            const u = longitude / TAU + 0.5;
+            const v = 0.5 - latitude / Math.PI;
+
+            const map = sampleMap(u, v);
+            let color = textureSample(texture, u, v);
+
+            const lightAmount = clamp(wx * light[0] + sy * light[1] + z * light[2], 0, 1);
+
+            if (isWaterLike(map) || isBeachLike(map)) {
+              color = liveWaterExpression(color, map, u, v, now, lightAmount, z);
+            } else if (isLandLike(map)) {
+              color = liveLandExpression(color, map, u, v, now, lightAmount, z);
+            }
+
+            const limb = smoothstep(0.0, 0.16, z);
+            const shadeAmount = -36 + lightAmount * 58;
+
+            color = shade(color, shadeAmount);
+            color = mix(COLORS.atmosphere, color, limb);
+            color = liveAtmosphereExpression(color, u, v, now, lightAmount, z, rr);
+
+            data[index] = color[0];
+            data[index + 1] = color[1];
+            data[index + 2] = color[2];
+            data[index + 3] = Math.round(255 * smoothstep(0.0, 0.025, 1 - rr));
+          }
+        }
+
+        ctx.clearRect(0, 0, width, height);
+        ctx.putImageData(image, 0, 0);
+        drawAtmosphereHalo(ctx, width, height, cx, cy, radius, now);
+
+        state.visiblePixelsPainted = true;
+        state.renderError = "";
+        emitStatus("rendering");
+      } catch (error) {
+        state.renderError = error instanceof Error ? error.message : String(error);
+        state.ready = false;
+        state.visiblePixelsPainted = drawVisibleFallbackPlanet(ctx, canvas, now);
+        state.fallbackPainted = state.visiblePixelsPainted;
+        emitStatus("render-fallback-after-error");
       }
 
       requestAnimationFrame(render);
@@ -759,43 +1028,54 @@
 
     resize();
 
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", scheduleResize);
     canvas.addEventListener("pointerdown", pointerDown);
     canvas.addEventListener("pointermove", pointerMove);
     canvas.addEventListener("pointerup", pointerUp);
     canvas.addEventListener("pointercancel", pointerUp);
 
-    ensureAuthorities().then((authorityStatus) => {
-      state.authorityStatus = authorityStatus;
-      updateNotice(notice, authorityStatus);
+    ensureAuthorities()
+      .then((authorityStatus) => {
+        state.authorityStatus = authorityStatus;
 
-      texture = buildTexture(1024, 512);
-      state.ready = true;
-      updateReadout(sampleMap(0.5, 0.5), false);
+        try {
+          texture = buildTexture(768, 384);
+          state.advancedTextureReady = true;
+        } catch (error) {
+          state.renderError = error instanceof Error ? error.message : String(error);
+          texture = buildFallbackTexture(512, 256);
+          state.advancedTextureReady = false;
+          state.fallbackPainted = true;
+        }
 
-      document.documentElement.dataset.audraliaCanvasLoaded = "true";
-      document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
-      document.documentElement.dataset.audraliaCanvasReceipt = RECEIPT;
-      document.documentElement.dataset.audraliaCanvasPreviousContract = PREVIOUS_CONTRACT;
-      document.documentElement.dataset.audraliaVisibleUpdateNotice = "true";
-      document.documentElement.dataset.audraliaLattice256Loaded = String(authorityStatus.latticeLoaded);
-      document.documentElement.dataset.audraliaLandmapLoaded = String(authorityStatus.landmapLoaded);
-      document.documentElement.dataset.audraliaClimateLoaded = String(authorityStatus.climateLoaded);
-      document.documentElement.dataset.audraliaLandSurfaceLoaded = String(authorityStatus.landSurfaceLoaded);
-      document.documentElement.dataset.audraliaCanvasOwnsFootprint = "false";
-      document.documentElement.dataset.audraliaCanvasOwnsClimate = "false";
-      document.documentElement.dataset.textureRebuildPerFrame = "false";
-      document.documentElement.dataset.generatedImage = "false";
-      document.documentElement.dataset.graphicBox = "false";
-      document.documentElement.dataset.visualPassClaimed = "false";
+        state.ready = true;
+        updateReadout(sampleMap(0.5, 0.5), false);
+        emitStatus("texture-ready");
+        requestAnimationFrame(render);
+      })
+      .catch((error) => {
+        state.renderError = error instanceof Error ? error.message : String(error);
 
-      requestAnimationFrame(render);
-    });
+        try {
+          texture = buildFallbackTexture(512, 256);
+          state.ready = true;
+          state.advancedTextureReady = false;
+          state.fallbackPainted = true;
+          state.visiblePixelsPainted = drawVisibleFallbackPlanet(ctx, canvas);
+          updateReadout(fallbackMap(0.5, 0.5), false);
+          emitStatus("authority-load-fallback");
+          requestAnimationFrame(render);
+        } catch (fallbackError) {
+          state.renderError = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
+          emitStatus("authority-load-fallback-failed");
+        }
+      });
 
     function dispose() {
       state.disposed = true;
       window.clearTimeout(readoutQuietTimer);
-      window.removeEventListener("resize", resize);
+      window.clearTimeout(resizeTimer);
+      window.removeEventListener("resize", scheduleResize);
       canvas.removeEventListener("pointerdown", pointerDown);
       canvas.removeEventListener("pointermove", pointerMove);
       canvas.removeEventListener("pointerup", pointerUp);
@@ -812,16 +1092,21 @@
 
   function getStatus() {
     return Object.freeze({
-      contract: CONTRACT,
+      contract: COMPATIBLE_CONTRACT,
+      renderContract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "audralia-visible-update-notice-canvas-consumer",
+      authority: "audralia-fail-visible-canvas-render-consumer",
       expected: EXPECTED,
       canvasOwnsFootprint: false,
       canvasOwnsClimate: false,
       coordinateInspection: true,
       visibleUpdateNotice: true,
+      visiblePixelsPaintedStatusSeparated: true,
+      immediateFallbackPaint: true,
+      stageRectSizing: true,
+      fallbackPlanetIfTextureFails: true,
       textureRebuildPerFrame: false,
       canvasStillConsumerOnly: true,
       generatedImage: false,
@@ -831,7 +1116,8 @@
   }
 
   window.AUDRALIA_CANVAS = Object.freeze({
-    contract: CONTRACT,
+    contract: COMPATIBLE_CONTRACT,
+    renderContract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
@@ -843,11 +1129,16 @@
   window.AUDRALIA_CANVAS_RECEIPT = getStatus();
 
   document.documentElement.dataset.audraliaCanvasLoaded = "true";
-  document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
+  document.documentElement.dataset.audraliaCanvasContract = COMPATIBLE_CONTRACT;
+  document.documentElement.dataset.audraliaCanvasRenderContract = CONTRACT;
   document.documentElement.dataset.audraliaCanvasReceipt = RECEIPT;
   document.documentElement.dataset.audraliaCanvasPreviousContract = PREVIOUS_CONTRACT;
   document.documentElement.dataset.audraliaCanvasExposesMount = "true";
   document.documentElement.dataset.audraliaVisibleUpdateNotice = "true";
+  document.documentElement.dataset.audraliaVisiblePixelsPaintedStatusSeparated = "true";
+  document.documentElement.dataset.audraliaImmediateFallbackPaint = "true";
+  document.documentElement.dataset.audraliaStageRectSizing = "true";
+  document.documentElement.dataset.audraliaFallbackPlanetIfTextureFails = "true";
   document.documentElement.dataset.audraliaCanvasOwnsFootprint = "false";
   document.documentElement.dataset.audraliaCanvasOwnsClimate = "false";
   document.documentElement.dataset.textureRebuildPerFrame = "false";

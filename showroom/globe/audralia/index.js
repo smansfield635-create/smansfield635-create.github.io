@@ -1,10 +1,10 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v1
+// AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2
 // Full-file replacement.
 // Route loader and mount authority only.
-// Loads the current Audralia lattice, landmap, climate, surface, and canvas chain.
+// Corrects climate expectation to AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2.
+// Requires canvas contract AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3.
 // Mounts only window.AUDRALIA_CANVAS.mount(...).
-// Adds visible route-level status so stale canvas failures can be diagnosed.
 // Does not own footprint.
 // Does not own climate.
 // Does not own canvas internals.
@@ -14,79 +14,112 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v1";
-  const RECEIPT = "AUDRALIA_ROUTE_CANONICAL_LOADER_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_ROUTE_PUBLIC_CONTEXT_LEGACY_LOADER";
-  const VERSION = "2026-05-15.audralia-route-canonical-loader-v1";
+  const CONTRACT = "AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2";
+  const RECEIPT = "AUDRALIA_ROUTE_CANONICAL_LOADER_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v1";
+  const VERSION = "2026-05-15.audralia-route-canonical-loader-v2-climate-v2-expectation";
 
   const EXPECTED = Object.freeze({
     canvas: "AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3",
     landmap: "AUDRALIA_30_BILLION_YEAR_EARTH_LEGACY_ORGANIC_LANDFORM_TNT_v1",
-    climate: "AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v1",
-    surface: "AUDRALIA_G1_LAYER_TWO_LUSH_LAND_SURFACE_TNT_v1"
+    climate: "AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2"
   });
 
-  const CACHE_KEY = "AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v1";
+  const LEGACY_TOKENS = Object.freeze([
+    "AUDRALIA_GRATITUDE_PLAINS_DESERTS_MARSHES_ROUTE_TNT_v10",
+    "AUDRALIA_GRATITUDE_PLAINS_DESERTS_MARSHES_ROUTE_RECEIPT_v10",
+    "gratitude plains/deserts/marshes route",
+    "Primary Summit Gratitude",
+    "Parent order backstory",
+    "Mountain communities true"
+  ]);
+
+  const CACHE_KEY = `${CONTRACT}.${Date.now()}`;
 
   const SCRIPT_CHAIN = Object.freeze([
     {
       key: "lattice256",
       label: "Lattice 256",
       src: "/assets/audralia/audralia.lattice256.js",
-      globalCheck: () => Boolean(window.AUDRALIA_LATTICE256?.coordinatesFromUV)
+      required: true,
+      check: () => Boolean(window.AUDRALIA_LATTICE256?.coordinatesFromUV),
+      contract: () => String(window.AUDRALIA_LATTICE256?.contract || "")
     },
     {
       key: "landmap",
       label: "Organic Landmap",
       src: "/assets/audralia/audralia.landmap.js",
-      globalCheck: () => Boolean(window.AUDRALIA_LANDMAP?.sampleLandmap),
-      expectedContract: EXPECTED.landmap,
-      contractRead: () => window.AUDRALIA_LANDMAP?.contract
+      required: true,
+      expected: EXPECTED.landmap,
+      check: () => Boolean(window.AUDRALIA_LANDMAP?.sampleLandmap),
+      contract: () => String(window.AUDRALIA_LANDMAP?.contract || "")
     },
     {
       key: "climate",
       label: "Climate Detail",
       src: "/assets/audralia/audralia.climate.render.js",
-      globalCheck: () => Boolean(window.AUDRALIA_CLIMATE_RENDER?.sampleClimate),
-      expectedContract: EXPECTED.climate,
-      contractRead: () => window.AUDRALIA_CLIMATE_RENDER?.contract
+      required: true,
+      expected: EXPECTED.climate,
+      check: () => Boolean(window.AUDRALIA_CLIMATE_RENDER?.sampleClimate),
+      contract: () => String(window.AUDRALIA_CLIMATE_RENDER?.contract || "")
     },
     {
       key: "beaches",
       label: "Beach Authority",
       src: "/assets/audralia/audralia.beaches.js",
-      optional: true,
-      globalCheck: () => Boolean(window.AUDRALIA_BEACHES)
+      required: false,
+      check: () => Boolean(window.AUDRALIA_BEACHES),
+      contract: () => String(window.AUDRALIA_BEACHES?.contract || "")
     },
     {
       key: "groundcover",
       label: "Groundcover",
       src: "/assets/audralia/audralia.groundcover.js",
-      optional: true,
-      globalCheck: () => Boolean(window.AUDRALIA_GROUNDCOVER)
+      required: false,
+      check: () => Boolean(window.AUDRALIA_GROUNDCOVER),
+      contract: () => String(window.AUDRALIA_GROUNDCOVER?.contract || "")
     },
     {
       key: "landSurface",
       label: "Land Surface",
       src: "/assets/audralia/audralia.land.surface.js",
-      globalCheck: () => Boolean(window.AUDRALIA_LAND_SURFACE?.sampleSurface),
-      expectedContract: EXPECTED.surface,
-      contractRead: () => window.AUDRALIA_LAND_SURFACE?.contract
+      required: false,
+      check: () => Boolean(window.AUDRALIA_LAND_SURFACE?.sampleSurface),
+      contract: () => String(window.AUDRALIA_LAND_SURFACE?.contract || "")
     },
     {
       key: "canvas",
       label: "Visible Notice Canvas",
       src: "/assets/audralia/audralia.canvas.js",
-      globalCheck: () => Boolean(window.AUDRALIA_CANVAS?.mount),
-      expectedContract: EXPECTED.canvas,
-      contractRead: () => window.AUDRALIA_CANVAS?.contract
+      required: true,
+      expected: EXPECTED.canvas,
+      check: () => Boolean(window.AUDRALIA_CANVAS?.mount),
+      contract: () => String(window.AUDRALIA_CANVAS?.contract || "")
     }
   ]);
 
   const root = document.documentElement;
 
-  function $(selector) {
+  let authoritativeStatusText = "";
+  let reassertingStatus = false;
+  let legacyWriteCount = 0;
+
+  function qs(selector) {
     return document.querySelector(selector);
+  }
+
+  function nodes() {
+    return Object.freeze({
+      notice: qs("#audraliaRouteLoaderNotice"),
+      status: qs("#audraliaRouteStatus"),
+      mount: qs("#audraliaCanvasMount"),
+      fallback: qs("[data-stage-fallback='true']")
+    });
+  }
+
+  function containsLegacyToken(text) {
+    const value = String(text || "").toLowerCase();
+    return LEGACY_TOKENS.some((token) => value.includes(String(token).toLowerCase()));
   }
 
   function setRootReceipt() {
@@ -94,12 +127,14 @@
     root.dataset.audraliaRouteLoaderContract = CONTRACT;
     root.dataset.audraliaRouteLoaderReceipt = RECEIPT;
     root.dataset.audraliaRouteLoaderPreviousContract = PREVIOUS_CONTRACT;
+    root.dataset.audraliaRouteLoaderVersion = VERSION;
     root.dataset.audraliaRouteExpectedCanvasContract = EXPECTED.canvas;
     root.dataset.audraliaRouteExpectedLandmapContract = EXPECTED.landmap;
     root.dataset.audraliaRouteExpectedClimateContract = EXPECTED.climate;
     root.dataset.audraliaRouteOwnsFootprint = "false";
     root.dataset.audraliaRouteOwnsClimate = "false";
     root.dataset.audraliaRouteOwnsCanvas = "false";
+    root.dataset.audraliaRouteLegacyV10Blocked = "pending";
     root.dataset.generatedImage = "false";
     root.dataset.graphicBox = "false";
     root.dataset.visualPassClaimed = "false";
@@ -111,11 +146,13 @@
       version: VERSION,
       route: "/showroom/globe/audralia/",
       expected: EXPECTED,
+      blocksLegacyTokens: Array.from(LEGACY_TOKENS),
       owns: [
         "route_loader",
         "script_chain_loading",
         "visible_route_status",
-        "canonical_canvas_mount_call"
+        "canonical_canvas_mount_call",
+        "legacy_status_guard"
       ],
       doesNotOwn: [
         "land_footprint",
@@ -134,97 +171,114 @@
     });
   }
 
-  function statusNodes() {
-    return Object.freeze({
-      notice: $("#audraliaRouteLoaderNotice"),
-      status: $("#audraliaRouteStatus"),
-      mount: $("#audraliaCanvasMount"),
-      fallback: $("[data-stage-fallback='true']")
-    });
-  }
+  function applyNoticeTone(node, tone) {
+    if (!node) return;
 
-  function setNotice(text, tone = "pending") {
-    const { notice } = statusNodes();
-    if (!notice) return;
-
-    notice.textContent = text;
-    notice.dataset.statusTone = tone;
+    node.dataset.statusTone = tone;
 
     if (tone === "pass") {
-      notice.style.borderColor = "rgba(158,240,191,.58)";
-      notice.style.color = "rgba(206,255,228,.98)";
-      notice.style.background = "rgba(2,30,24,.78)";
+      node.style.borderColor = "rgba(158,240,191,.58)";
+      node.style.color = "rgba(206,255,228,.98)";
+      node.style.background = "rgba(2,30,24,.78)";
     } else if (tone === "warn") {
-      notice.style.borderColor = "rgba(243,200,111,.54)";
-      notice.style.color = "rgba(255,232,168,.98)";
-      notice.style.background = "rgba(40,26,4,.74)";
+      node.style.borderColor = "rgba(243,200,111,.54)";
+      node.style.color = "rgba(255,232,168,.98)";
+      node.style.background = "rgba(40,26,4,.74)";
     } else if (tone === "fail") {
-      notice.style.borderColor = "rgba(255,139,139,.54)";
-      notice.style.color = "rgba(255,210,210,.98)";
-      notice.style.background = "rgba(44,8,12,.76)";
+      node.style.borderColor = "rgba(255,139,139,.54)";
+      node.style.color = "rgba(255,210,210,.98)";
+      node.style.background = "rgba(44,8,12,.76)";
+    } else {
+      node.style.borderColor = "rgba(243,200,111,.44)";
+      node.style.color = "rgba(255,232,168,.98)";
+      node.style.background = "rgba(40,26,4,.74)";
     }
   }
 
+  function setNotice(text, tone = "pending") {
+    const { notice } = nodes();
+    if (!notice) return;
+
+    notice.textContent = String(text || "");
+    applyNoticeTone(notice, tone);
+  }
+
   function setStatus(text) {
-    const { status } = statusNodes();
+    authoritativeStatusText = String(text || "");
+    const { status } = nodes();
     if (!status) return;
-    status.textContent = text;
+
+    reassertingStatus = true;
+    status.textContent = authoritativeStatusText;
+    window.setTimeout(() => {
+      reassertingStatus = false;
+    }, 0);
   }
 
   function appendCache(src) {
     const joiner = src.includes("?") ? "&" : "?";
-    return `${src}${joiner}v=${encodeURIComponent(CACHE_KEY)}.${Date.now()}`;
+    return `${src}${joiner}v=${encodeURIComponent(CACHE_KEY)}`;
   }
 
-  function readScriptState(item) {
-    const loaded = Boolean(item.globalCheck());
-    const actualContract = typeof item.contractRead === "function" ? String(item.contractRead() || "") : "";
-    const expectedContract = String(item.expectedContract || "");
+  function readState(item) {
+    const loaded = Boolean(item.check());
+    const actualContract = item.contract ? String(item.contract() || "") : "";
+    const expectedContract = String(item.expected || "");
     const contractMatches = expectedContract ? actualContract === expectedContract : true;
 
     return Object.freeze({
       key: item.key,
       label: item.label,
+      src: item.src,
+      required: Boolean(item.required),
       loaded,
-      optional: Boolean(item.optional),
       expectedContract,
       actualContract,
       contractMatches
     });
   }
 
-  function summarizeStates(states) {
+  function summarize(states) {
     return states.map((state) => {
-      if (!state.loaded && state.optional) return `${state.label}: optional missing`;
+      if (!state.loaded && !state.required) return `${state.label}: optional missing`;
       if (!state.loaded) return `${state.label}: missing`;
       if (state.expectedContract && !state.contractMatches) {
-        return `${state.label}: loaded stale ${state.actualContract || "unknown"}`;
+        return `${state.label}: stale ${state.actualContract || "unknown"}`;
       }
       return `${state.label}: active`;
     }).join(" · ");
   }
 
+  function mustReload(item) {
+    const state = readState(item);
+    if (!state.loaded) return true;
+    if (state.expectedContract && !state.contractMatches) return true;
+    return false;
+  }
+
+  function removePriorRouteScript(item) {
+    document
+      .querySelectorAll(`script[data-audralia-route-script="${item.key}"]`)
+      .forEach((script) => script.remove());
+  }
+
   function loadScript(item) {
     return new Promise((resolve) => {
-      if (item.globalCheck()) {
-        resolve(readScriptState(item));
+      if (!mustReload(item)) {
+        resolve(readState(item));
         return;
       }
 
-      const existing = document.querySelector(`script[data-audralia-route-script="${item.key}"]`);
-      if (existing) {
-        existing.addEventListener("load", () => resolve(readScriptState(item)), { once: true });
-        existing.addEventListener("error", () => resolve(readScriptState(item)), { once: true });
-        return;
-      }
+      removePriorRouteScript(item);
 
       const script = document.createElement("script");
       script.src = appendCache(item.src);
       script.defer = true;
       script.dataset.audraliaRouteScript = item.key;
       script.dataset.audraliaRouteLoader = CONTRACT;
-      script.onload = () => resolve(readScriptState(item));
-      script.onerror = () => resolve(readScriptState(item));
+      script.dataset.audraliaRouteLoaderVersion = VERSION;
+      script.onload = () => resolve(readState(item));
+      script.onerror = () => resolve(readState(item));
       document.head.appendChild(script);
     });
   }
@@ -233,23 +287,17 @@
     const states = [];
 
     for (const item of SCRIPT_CHAIN) {
-      setNotice(`Loading Audralia chain · ${item.label}`, "pending");
-      setStatus(`Loading ${item.label} from ${item.src}`);
+      setNotice(`Canonical loader v2 active · loading ${item.label}`, "pending");
+      setStatus(`AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2 is active. Loading ${item.label} from ${item.src}`);
 
       const state = await loadScript(item);
       states.push(state);
 
-      if (!state.loaded && !state.optional) {
-        setNotice(`Audralia chain blocked · ${item.label} missing`, "fail");
-        setStatus(summarizeStates(states));
-        break;
-      }
+      setStatus(`AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2 chain: ${summarize(states)}`);
 
-      if (state.loaded && state.expectedContract && !state.contractMatches) {
-        setNotice(`Audralia chain warning · ${item.label} stale`, "warn");
-        setStatus(summarizeStates(states));
-      } else {
-        setStatus(summarizeStates(states));
+      if (state.required && !state.loaded) {
+        setNotice(`Canonical loader v2 blocked · ${state.label} missing`, "fail");
+        break;
       }
     }
 
@@ -257,63 +305,80 @@
   }
 
   function chainResult(states) {
-    const required = states.filter((state) => !state.optional);
+    const required = states.filter((state) => state.required);
     const missingRequired = required.filter((state) => !state.loaded);
     const staleRequired = required.filter((state) => state.expectedContract && !state.contractMatches);
 
     return Object.freeze({
+      states,
       missingRequired,
       staleRequired,
       requiredPassed: missingRequired.length === 0,
       strictPassed: missingRequired.length === 0 && staleRequired.length === 0,
-      states
+      summary: summarize(states)
     });
   }
 
-  function disposeOldCanvasIfPresent() {
+  function disposePriorCanvas() {
     if (typeof window.__AUDRALIA_CANVAS_DISPOSE__ === "function") {
       try {
         window.__AUDRALIA_CANVAS_DISPOSE__();
       } catch {
-        // Keep route alive if old dispose fails.
+        root.dataset.audraliaPriorCanvasDisposeFailed = "true";
       }
     }
   }
 
   function clearMount() {
-    const { mount } = statusNodes();
+    const { mount } = nodes();
     if (!mount) return null;
 
-    mount.querySelectorAll("canvas,[data-audralia-coordinate-readout],[data-audralia-version-notice]").forEach((node) => node.remove());
+    mount
+      .querySelectorAll("canvas,[data-audralia-coordinate-readout],[data-audralia-version-notice]")
+      .forEach((node) => node.remove());
+
     return mount;
   }
 
-  function markFallback(hidden) {
-    const { fallback } = statusNodes();
+  function setFallbackVisible(visible, text = "") {
+    const { fallback } = nodes();
     if (!fallback) return;
-    fallback.style.display = hidden ? "none" : "grid";
+
+    fallback.style.display = visible ? "grid" : "none";
+    if (text) fallback.textContent = text;
   }
 
   function mountCanvas(result) {
     const mount = clearMount();
 
     if (!mount) {
-      setNotice("Audralia chain blocked · mount missing", "fail");
-      setStatus("Missing #audraliaCanvasMount. Route shell must expose the canonical mount node.");
+      setNotice("Canonical loader v2 blocked · mount node missing", "fail");
+      setStatus("Missing #audraliaCanvasMount. HTML shell is not exposing the canonical mount node.");
+      setFallbackVisible(true, "Canonical loader v2 could not find #audraliaCanvasMount.");
       return false;
     }
 
     if (!window.AUDRALIA_CANVAS?.mount) {
-      setNotice("Audralia chain blocked · canvas mount unavailable", "fail");
-      setStatus("window.AUDRALIA_CANVAS.mount was not found after script load.");
+      setNotice("Canonical loader v2 blocked · AUDRALIA_CANVAS.mount unavailable", "fail");
+      setStatus("window.AUDRALIA_CANVAS.mount was not found after script chain load.");
+      setFallbackVisible(true, "Canvas authority did not expose mount().");
       return false;
     }
 
-    disposeOldCanvasIfPresent();
+    const actualCanvasContract = String(window.AUDRALIA_CANVAS.contract || "");
+    const canvasContractMatches = actualCanvasContract === EXPECTED.canvas;
+
+    if (!canvasContractMatches) {
+      root.dataset.audraliaCanvasContractMismatch = "true";
+      root.dataset.audraliaActiveCanvasContract = actualCanvasContract || "unknown";
+    }
+
+    disposePriorCanvas();
 
     window.__AUDRALIA_CANONICAL_MOUNT_LOCK__ = Object.freeze({
-      contract: CONTRACT,
-      canvasContract: String(window.AUDRALIA_CANVAS.contract || ""),
+      routeLoaderContract: CONTRACT,
+      expectedCanvasContract: EXPECTED.canvas,
+      actualCanvasContract,
       route: "/showroom/globe/audralia/",
       timestamp: new Date().toISOString()
     });
@@ -332,69 +397,110 @@
           root.dataset.audraliaRouteCanvasVisibleNotice = String(Boolean(payload.visibleUpdateNotice));
 
           if (payload.mounted) {
-            markFallback(true);
+            setFallbackVisible(false);
           }
         }
       });
     } catch (error) {
-      setNotice("Audralia canvas mount failed", "fail");
+      setNotice("Canonical loader v2 canvas mount failed", "fail");
       setStatus(`Canvas mount error: ${error instanceof Error ? error.message : String(error)}`);
+      setFallbackVisible(true, "Canvas mount threw an error. Check console for AUDRALIA_CANVAS.mount.");
       return false;
     }
 
-    markFallback(true);
+    setFallbackVisible(false);
 
-    const tone = result.strictPassed ? "pass" : "warn";
-    const message = result.strictPassed
-      ? "Audralia route updated · visible notice canvas mounted"
-      : "Audralia route mounted · chain has stale or optional gaps";
+    const hasStrictPass = result.strictPassed && canvasContractMatches;
+    const tone = hasStrictPass ? "pass" : "warn";
 
-    setNotice(message, tone);
-    setStatus(summarizeStates(result.states));
+    setNotice(
+      hasStrictPass
+        ? "Canonical loader v2 active · visible notice canvas mounted"
+        : "Canonical loader v2 mounted · chain has stale or optional gaps",
+      tone
+    );
+
+    setStatus(`AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2 mounted. ${result.summary}`);
 
     root.dataset.audraliaRouteCanvasMounted = "true";
-    root.dataset.audraliaRouteStrictChainPassed = String(result.strictPassed);
+    root.dataset.audraliaRouteStrictChainPassed = String(hasStrictPass);
     root.dataset.audraliaRouteRequiredChainPassed = String(result.requiredPassed);
-    root.dataset.audraliaActiveCanvasContract = String(window.AUDRALIA_CANVAS.contract || "");
+    root.dataset.audraliaActiveCanvasContract = actualCanvasContract;
     root.dataset.audraliaActiveLandmapContract = String(window.AUDRALIA_LANDMAP?.contract || "");
     root.dataset.audraliaActiveClimateContract = String(window.AUDRALIA_CLIMATE_RENDER?.contract || "");
     root.dataset.audraliaActiveLandSurfaceContract = String(window.AUDRALIA_LAND_SURFACE?.contract || "");
+    root.dataset.audraliaRouteLegacyV10Blocked = "true";
 
     return true;
   }
 
-  function installMutationWatch() {
-    const { mount } = statusNodes();
+  function installLegacyStatusGuard() {
+    const { status } = nodes();
+    if (!status || !window.MutationObserver) return;
+
+    const observer = new MutationObserver(() => {
+      if (reassertingStatus) return;
+
+      const current = status.textContent || "";
+      if (!containsLegacyToken(current)) return;
+
+      legacyWriteCount += 1;
+      root.dataset.audraliaLegacyV10Detected = "true";
+      root.dataset.audraliaLegacyV10WriteCount = String(legacyWriteCount);
+      root.dataset.audraliaRouteLegacyV10Blocked = "true";
+
+      setNotice("Canonical loader v2 active · legacy v10 status write blocked", "warn");
+      setStatus(
+        `${authoritativeStatusText || "AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2 is active."} Legacy v10 attempted to write into the new shell and was blocked.`
+      );
+    });
+
+    observer.observe(status, {
+      childList: true,
+      characterData: true,
+      subtree: true
+    });
+
+    window.addEventListener("pagehide", () => observer.disconnect(), { once: true });
+  }
+
+  function installMountGuard() {
+    const { mount } = nodes();
     if (!mount || !window.MutationObserver) return;
 
     const observer = new MutationObserver(() => {
       const canvases = Array.from(mount.querySelectorAll("canvas"));
-      const activeCanvas = canvases.find((node) => node.dataset.audraliaCanvasContract === EXPECTED.canvas);
+      if (!canvases.length) return;
 
-      if (canvases.length > 0 && !activeCanvas) {
-        setNotice("Audralia route warning · legacy canvas detected", "warn");
+      const canonical = canvases.find((canvas) => {
+        return canvas.dataset.audraliaCanvasContract === EXPECTED.canvas;
+      });
+
+      if (!canonical) {
         root.dataset.audraliaLegacyCanvasDetected = "true";
+        setNotice("Canonical loader v2 warning · non-v3 canvas detected", "warn");
       }
     });
 
     observer.observe(mount, { childList: true, subtree: true });
-
     window.addEventListener("pagehide", () => observer.disconnect(), { once: true });
   }
 
   async function init() {
     setRootReceipt();
-    installMutationWatch();
+    installLegacyStatusGuard();
+    installMountGuard();
 
-    setNotice("Audralia route loader active", "pending");
-    setStatus("Beginning canonical Audralia chain load.");
+    setNotice("Canonical loader v2 active · starting chain", "pending");
+    setStatus("AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2 is active. Climate expectation is v2. Canvas expectation is visible-notice v3.");
 
     const states = await loadChain();
     const result = chainResult(states);
 
     if (!result.requiredPassed) {
-      setNotice("Audralia route blocked · required authority missing", "fail");
-      setStatus(summarizeStates(result.states));
+      setNotice("Canonical loader v2 blocked · required authority missing", "fail");
+      setStatus(`AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2 blocked. ${result.summary}`);
+      setFallbackVisible(true, "Canonical loader v2 found a missing required authority.");
       return;
     }
 

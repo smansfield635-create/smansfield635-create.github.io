@@ -1,38 +1,71 @@
 // /assets/audralia/audralia.elevation.js
-// AUDRALIA_G1_TERRAIN_ELEVATION_AUTHORITY_TNT_v1
-// New file.
-// Parent elevation authority only.
+// AUDRALIA_256_LATTICE_ELEVATION_DEPTH_FIELD_TNT_v1
+// Full-file replacement.
+// Elevation authority only.
 // Purpose:
-// - Add visible terrain depth to Audralia without changing identity.
-// - Owns old ridge relief, highlands, lowlands, basins, valleys, coastal cliffs,
-//   shelf escarpments, seafloor ridges, terrain shadow, and terrain highlight.
-// - Consumes AUDRALIA_BACKSTORY, AUDRALIA_TECTONICS, and AUDRALIA_TOPOLOGY when available.
-// - Does not own route, canvas, controls, runtime, vegetation, or final color.
-// No trees. No bushes. No forest canopy. No generated image. No GraphicBox. No visual-pass claim.
+// - Gives Audralia computable elevation depth: mountains, ridges, cliffs, valleys, basins, plateaus, coastal rise, snowline, and shadow pressure.
+// - Uses 256 lattice anchoring, φ-scaled fields, summit uplift, coastal falloff, basin depression, ridge probability, and latitude pressure.
+// - Does not own footprint.
+// - Does not own climate.
+// - Does not own surface color.
+// - Does not render canvas.
+// - Does not touch runtime.
+// - Does not touch Gauges.
+// No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G1_TERRAIN_ELEVATION_AUTHORITY_TNT_v1";
-  const RECEIPT = "AUDRALIA_G1_TERRAIN_ELEVATION_AUTHORITY_RECEIPT_v1";
-  const VERSION = "2026-05-10.audralia-g1-terrain-elevation-authority-v1";
-  const TAU = Math.PI * 2;
+  const CONTRACT = "AUDRALIA_256_LATTICE_ELEVATION_DEPTH_FIELD_TNT_v1";
+  const RECEIPT = "AUDRALIA_256_LATTICE_ELEVATION_DEPTH_FIELD_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G1_ELEVATION_HELD_OR_UNDEFINED";
+  const VERSION = "2026-05-15.audralia-256-lattice-elevation-depth-field-v1";
+
+  const PHI = 1.618033988749895;
+  const INV_PHI = 1 / PHI;
+
+  const SUMMIT_UPLIFT = Object.freeze({
+    gratitude: 0.38,
+    generosity: 0.24,
+    dependability: 0.32,
+    accountability: 0.44,
+    forgiveness: 0.18,
+    humility: 0.22,
+    "self-control": 0.40,
+    patience: 0.28,
+    purity: 0.46,
+    stability: 0.36
+  });
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
   }
 
-  function lerp(a, b, t) {
-    return a + (b - a) * clamp(t, 0, 1);
+  function normalize01(value, fallback = 0.5) {
+    const number = Number(value);
+    if (!Number.isFinite(number)) return fallback;
+    if (number >= 0 && number <= 1) return number;
+    if (number >= -1 && number <= 1) return (number + 1) * 0.5;
+    if (number >= 0 && number <= 100) return number / 100;
+    return clamp(number, 0, 1);
   }
 
-  function smoothstep(edge0, edge1, x) {
-    const t = clamp((x - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
+  function smoothstep(edge0, edge1, value) {
+    const t = clamp((value - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
     return t * t * (3 - 2 * t);
   }
 
   function wrap01(value) {
     return ((value % 1) + 1) % 1;
+  }
+
+  function text(value) {
+    return String(value || "").trim().toLowerCase();
+  }
+
+  function includesAny(value, terms) {
+    const source = text(value);
+    return terms.some((term) => source.includes(term));
   }
 
   function hash(x, y, seed) {
@@ -47,7 +80,7 @@
   }
 
   function noise(u, v, scale, seed) {
-    const s = Math.max(1, Math.floor(scale));
+    const s = Math.max(2, Math.floor(scale));
     const x = wrap01(u) * s;
     const y = clamp(v, 0, 1) * s;
 
@@ -61,11 +94,12 @@
     const sx = xf * xf * (3 - 2 * xf);
     const sy = yf * yf * (3 - 2 * yf);
 
-    return lerp(
-      lerp(hash(((x0 % s) + s) % s, y0, seed), hash(((x1 % s) + s) % s, y0, seed), sx),
-      lerp(hash(((x0 % s) + s) % s, y1, seed), hash(((x1 % s) + s) % s, y1, seed), sx),
-      sy
-    );
+    const a = hash(((x0 % s) + s) % s, y0, seed);
+    const b = hash(((x1 % s) + s) % s, y0, seed);
+    const c = hash(((x0 % s) + s) % s, y1, seed);
+    const d = hash(((x1 % s) + s) % s, y1, seed);
+
+    return (a + (b - a) * sx) * (1 - sy) + (c + (d - c) * sx) * sy;
   }
 
   function fbm(u, v, seed, octaves = 5) {
@@ -78,247 +112,527 @@
       total += noise(u, v, scale, seed + i * 131) * amp;
       norm += amp;
       amp *= 0.52;
-      scale *= 2;
+      scale *= PHI;
     }
 
     return total / Math.max(0.000001, norm);
   }
 
-  function ridged(u, v, seed, octaves = 5) {
+  function ridgeNoise(u, v, seed, octaves = 5) {
     let total = 0;
     let norm = 0;
-    let amp = 0.62;
-    let scale = 6.5;
+    let amp = 0.58;
+    let scale = 4.0;
 
     for (let i = 0; i < octaves; i += 1) {
-      const n = noise(u, v, scale, seed + i * 97);
-      total += (1 - Math.abs(n * 2 - 1)) * amp;
+      const n = noise(u, v, scale, seed + i * 197);
+      const ridge = 1 - Math.abs(n * 2 - 1);
+      total += ridge * amp;
       norm += amp;
-      amp *= 0.52;
-      scale *= 2;
+      amp *= 0.5;
+      scale *= PHI;
     }
 
     return total / Math.max(0.000001, norm);
   }
 
-  function sampleBackstory(u, v, longitude, latitude) {
-    if (window.AUDRALIA_BACKSTORY && typeof window.AUDRALIA_BACKSTORY.sampleIdentity === "function") {
-      return window.AUDRALIA_BACKSTORY.sampleIdentity(u, v, { longitude, latitude });
-    }
+  function getCell256(map) {
+    const existing = Number(map?.cell256);
+    if (Number.isFinite(existing) && existing >= 1 && existing <= 256) return Math.floor(existing);
 
-    return {
-      oceanBias: 0.7,
-      weatheredAge: 1,
-      cleanClimate: 1,
-      homeWorldSignal: 0.8
-    };
+    const u = clamp(Number(map?.u || 0), 0, 1);
+    const v = clamp(Number(map?.v || 0), 0, 1);
+    return Math.max(1, Math.min(256, Math.floor(v * 16) * 16 + Math.floor(u * 16) + 1));
   }
 
-  function sampleTectonics(u, v, longitude, latitude) {
-    if (window.AUDRALIA_TECTONICS && typeof window.AUDRALIA_TECTONICS.sampleTectonics === "function") {
-      return window.AUDRALIA_TECTONICS.sampleTectonics(u, v, { longitude, latitude });
-    }
-
-    const ridge = ridged(u * 1.5, v * 1.2, 211000, 5);
-    const basin = 1 - fbm(u * 1.8, v * 1.4, 213000, 5);
-
-    return {
-      exposedLandPressure: clamp(ridge * 0.42 + fbm(u, v, 210000, 5) * 0.22 - basin * 0.12, 0, 1),
-      shelfPressure: clamp(ridged(u * 2.2, v * 1.7, 212000, 5), 0, 1),
-      basinPressure: clamp(basin, 0, 1),
-      oldRidgePressure: ridge,
-      islandPressure: clamp(ridged(u * 2.6, v * 2.0, 214000, 4), 0, 1),
-      weatheredEdgePressure: clamp(fbm(u * 2.4, v * 2.0, 215000, 4), 0, 1),
-      oceanPressure: 0.72
-    };
+  function getCellXY(cell256) {
+    const index = clamp(Math.floor(cell256) - 1, 0, 255);
+    return Object.freeze({
+      x: index % 16,
+      y: Math.floor(index / 16)
+    });
   }
 
-  function sampleTopology(u, v, longitude, latitude) {
-    if (window.AUDRALIA_TOPOLOGY && typeof window.AUDRALIA_TOPOLOGY.sampleTopology === "function") {
-      return window.AUDRALIA_TOPOLOGY.sampleTopology(u, v, { longitude, latitude });
-    }
+  function summitKey(map) {
+    const key = text(map?.internalSummit || map?.primarySummit || map?.summitProvince || "gratitude");
+    const normalized = key.replace(/\s+/g, "-");
 
-    const tectonics = sampleTectonics(u, v, longitude, latitude);
+    if (SUMMIT_UPLIFT[key] !== undefined) return key;
+    if (SUMMIT_UPLIFT[normalized] !== undefined) return normalized;
 
-    return {
-      landEligibility: tectonics.exposedLandPressure,
-      islandEligibility: tectonics.islandPressure,
-      shelf: tectonics.shelfPressure,
-      basin: tectonics.basinPressure,
-      belowSeaDepth: tectonics.oceanPressure,
-      aboveSeaPressure: tectonics.exposedLandPressure,
-      subterraneanDepth: 0.45
-    };
+    if (key.includes("gratitude")) return "gratitude";
+    if (key.includes("generosity")) return "generosity";
+    if (key.includes("depend")) return "dependability";
+    if (key.includes("account")) return "accountability";
+    if (key.includes("forgive")) return "forgiveness";
+    if (key.includes("humility")) return "humility";
+    if (key.includes("control")) return "self-control";
+    if (key.includes("patience")) return "patience";
+    if (key.includes("purity")) return "purity";
+    if (key.includes("stability")) return "stability";
+
+    return "gratitude";
   }
 
-  function sampleElevation(u, v, context = {}) {
-    const longitude = Number.isFinite(context.longitude) ? context.longitude : (u - 0.5) * TAU;
-    const latitude = Number.isFinite(context.latitude) ? context.latitude : (0.5 - v) * Math.PI;
-    const isLand = context.isLand === true;
-    const landSignal = clamp(context.landSignal || 0, 0, 1);
-    const shelfSignal = clamp(context.shelf || 0, 0, 1);
-
-    const backstory = sampleBackstory(u, v, longitude, latitude);
-    const tectonics = sampleTectonics(u, v, longitude, latitude);
-    const topology = sampleTopology(u, v, longitude, latitude);
-
-    const latitudeAbs = Math.abs(latitude) / (Math.PI / 2);
-
-    const oldRange = ridged(u * 1.75 + 0.08, v * 1.32 - 0.04, 510000, 6);
-    const crossRange = ridged(u * 2.65 - 0.18, v * 2.05 + 0.13, 511000, 5);
-    const foldedHighland = fbm(u * 1.35 + 0.11, v * 1.15 - 0.09, 512000, 6);
-    const lowlandNoise = 1 - fbm(u * 1.95 - 0.15, v * 1.48 + 0.12, 513000, 5);
-    const valleyCut = ridged(u * 3.25 + 0.22, v * 2.72 - 0.17, 514000, 4);
-    const seaFloorRidge = ridged(u * 2.05 - 0.12, v * 1.72 + 0.08, 515000, 5);
-
-    const ridge = clamp(
-      oldRange * 0.48 +
-        crossRange * 0.22 +
-        tectonics.oldRidgePressure * 0.26 +
-        tectonics.exposedLandPressure * 0.08,
-      0,
-      1
+  function isOceanLike(map) {
+    return Boolean(
+      map?.isOcean ||
+      map?.terrainClass === "ocean" ||
+      map?.terrainClass === "shelf" ||
+      map?.isShelf
     );
+  }
 
-    const highland = clamp(
-      foldedHighland * 0.38 +
-        ridge * 0.3 +
-        topology.aboveSeaPressure * 0.22 +
-        tectonics.weatheredEdgePressure * 0.1,
-      0,
-      1
+  function isBeachLike(map) {
+    return Boolean(
+      map?.isBeach ||
+      map?.terrainClass === "beach" ||
+      includesAny(map?.topology, ["beach", "shore", "coastline"])
     );
+  }
 
-    const basin = clamp(
-      topology.basin * 0.34 +
-        tectonics.basinPressure * 0.3 +
-        lowlandNoise * 0.28 -
-        ridge * 0.08,
-      0,
-      1
-    );
+  function landAllowed(map) {
+    if (!map || typeof map !== "object") return false;
+    if (isOceanLike(map)) return false;
+    return Boolean(map.isLand || map.terrainClass || map.topology || map.elevation);
+  }
 
-    const valley = clamp(
-      valleyCut * 0.34 +
-        basin * 0.28 +
-        tectonics.weatheredEdgePressure * 0.18 -
-        ridge * 0.08,
-      0,
-      1
-    );
+  function coastalPressure(map) {
+    const shelf = normalize01(map?.shelf, 0.18);
+    const beachEdge = normalize01(map?.beachEdge, 0);
+    const topo = [map?.terrainClass, map?.topology, map?.elevation].map(text).join(" ");
+    const coastalText = includesAny(topo, ["coast", "shore", "beach", "landrise"]) ? 0.34 : 0;
 
-    const shelfEscarpment = clamp(
-      shelfSignal * 0.38 +
-        topology.shelf * 0.34 +
-        tectonics.shelfPressure * 0.22 +
-        tectonics.weatheredEdgePressure * 0.08,
-      0,
-      1
-    );
+    return clamp(beachEdge * 0.58 + shelf * 0.22 + coastalText, 0, 1);
+  }
 
-    const coastalCliff = clamp(
-      shelfEscarpment * 0.28 +
-        tectonics.weatheredEdgePressure * 0.28 +
-        crossRange * 0.16 +
-        smoothstep(0.44, 0.62, landSignal) * 0.2,
-      0,
-      1
-    );
-
-    const elevation = isLand
-      ? clamp(
-          highland * 0.34 +
-            ridge * 0.34 +
-            tectonics.exposedLandPressure * 0.16 +
-            foldedHighland * 0.12 -
-            basin * 0.16 -
-            valley * 0.1,
-          0,
-          1
-        )
-      : clamp(
-          seaFloorRidge * 0.22 +
-            topology.shelf * 0.2 -
-            topology.belowSeaDepth * 0.3 -
-            topology.basin * 0.16,
-          0,
-          1
-        );
-
-    const reliefShadow = clamp(
-      basin * 0.28 +
-        valley * 0.24 +
-        coastalCliff * 0.2 +
-        topology.belowSeaDepth * 0.12 -
-        highland * 0.08,
-      0,
-      1
-    );
-
-    const reliefHighlight = clamp(
-      ridge * 0.3 +
-        highland * 0.24 +
-        coastalCliff * 0.18 +
-        seaFloorRidge * 0.08 -
-        basin * 0.1,
-      0,
-      1
-    );
+  function latitudePressure(map) {
+    const latitude = Number(map?.latitude || 0);
+    const absLat = Math.abs(latitude);
 
     return Object.freeze({
+      latitude,
+      absLat,
+      equatorial: 1 - smoothstep(8, 42, absLat),
+      temperate: smoothstep(14, 38, absLat) * (1 - smoothstep(48, 72, absLat)),
+      polar: smoothstep(54, 82, absLat),
+      snowline: smoothstep(45, 76, absLat)
+    });
+  }
+
+  function landformBias(map) {
+    const source = [map?.terrainClass, map?.topology, map?.elevation].map(text).join(" ");
+
+    let uplift = 0;
+    let basin = 0;
+    let ridge = 0;
+    let cliff = 0;
+    let plateau = 0;
+    let valley = 0;
+
+    if (includesAny(source, ["mountain", "range", "ridge", "peak", "alpine"])) {
+      uplift += 0.34;
+      ridge += 0.32;
+      cliff += 0.18;
+    }
+
+    if (includesAny(source, ["highland", "shoulder", "upland"])) {
+      uplift += 0.22;
+      plateau += 0.18;
+      ridge += 0.10;
+    }
+
+    if (includesAny(source, ["plateau", "tableland"])) {
+      uplift += 0.16;
+      plateau += 0.36;
+    }
+
+    if (includesAny(source, ["basin", "lowland", "depression"])) {
+      basin += 0.42;
+      valley += 0.12;
+    }
+
+    if (includesAny(source, ["valley", "drainage", "river"])) {
+      valley += 0.34;
+      basin += 0.16;
+    }
+
+    if (includesAny(source, ["cliff", "escarpment", "scarp"])) {
+      cliff += 0.42;
+      ridge += 0.14;
+    }
+
+    if (includesAny(source, ["coast", "shore", "landrise"])) {
+      cliff += 0.10;
+      uplift += 0.08;
+    }
+
+    return Object.freeze({
+      uplift: clamp(uplift, 0, 1),
+      basin: clamp(basin, 0, 1),
+      ridge: clamp(ridge, 0, 1),
+      cliff: clamp(cliff, 0, 1),
+      plateau: clamp(plateau, 0, 1),
+      valley: clamp(valley, 0, 1)
+    });
+  }
+
+  function computeFields(map) {
+    const u = wrap01(Number(map?.u || 0));
+    const v = clamp(Number(map?.v || 0), 0, 1);
+    const cell256 = getCell256(map);
+    const cell = getCellXY(cell256);
+    const lat = latitudePressure(map);
+    const coast = coastalPressure(map);
+    const bias = landformBias(map);
+    const summit = summitKey(map);
+
+    const cellPhaseX = (cell.x / 15) * PHI;
+    const cellPhaseY = (cell.y / 15) * INV_PHI;
+    const summitUplift = SUMMIT_UPLIFT[summit] ?? 0.30;
+
+    const broadUplift = fbm(u * 0.72 + cellPhaseX, v * 0.66 - cellPhaseY, 610100, 5);
+    const ancientPlate = fbm(u * 1.18 - cellPhaseY, v * 1.03 + cellPhaseX, 610900, 5);
+    const mountainBelt = ridgeNoise(u * 1.72 + cellPhaseX, v * 1.42 - cellPhaseY, 611700, 5);
+    const fineRidge = ridgeNoise(u * 4.8 - cellPhaseY, v * 3.9 + cellPhaseX, 612500, 4);
+    const basinField = 1 - ridgeNoise(u * 1.36 + 0.31, v * 1.18 - 0.27, 613300, 4);
+    const drainage = ridgeNoise(u * 7.6 + 0.17, v * 6.1 - 0.39, 614100, 3);
+    const fracture = ridgeNoise(u * 13.4 - cellPhaseX, v * 10.8 + cellPhaseY, 614900, 3);
+    const erosion = fbm(u * 18.0 + cellPhaseY, v * 15.5 - cellPhaseX, 615700, 3);
+
+    const summitBand =
+      summit === "purity" || summit === "accountability" || summit === "self-control"
+        ? 0.16
+        : summit === "gratitude" || summit === "stability" || summit === "dependability"
+          ? 0.10
+          : 0.06;
+
+    let elevation01 =
+      broadUplift * 0.26 +
+      ancientPlate * 0.20 +
+      mountainBelt * 0.24 +
+      fineRidge * 0.10 +
+      summitUplift * 0.16 +
+      bias.uplift * 0.24 +
+      summitBand;
+
+    elevation01 -= basinField * (0.12 + bias.basin * 0.26);
+    elevation01 -= drainage * bias.valley * 0.16;
+    elevation01 += coast * 0.08;
+
+    if (isBeachLike(map)) {
+      elevation01 = Math.min(elevation01, 0.18 + coast * 0.10);
+    }
+
+    elevation01 = clamp(elevation01, 0, 1);
+
+    const ridge = clamp(mountainBelt * 0.48 + fineRidge * 0.34 + bias.ridge * 0.34 + fracture * 0.10, 0, 1);
+    const basin = clamp(basinField * 0.54 + bias.basin * 0.42 + (1 - elevation01) * 0.22, 0, 1);
+    const valley = clamp(drainage * 0.44 + basin * 0.22 + bias.valley * 0.42, 0, 1);
+    const plateau = clamp(ancientPlate * 0.30 + bias.plateau * 0.46 + smoothstep(0.44, 0.70, elevation01) * 0.24, 0, 1);
+    const mountain = clamp(smoothstep(0.58, 0.84, elevation01) * 0.52 + ridge * 0.42 + bias.ridge * 0.18, 0, 1);
+    const cliff = clamp(fracture * 0.34 + smoothstep(0.56, 0.88, ridge) * 0.28 + bias.cliff * 0.42 + coast * 0.12, 0, 1);
+
+    const localRelief = clamp(
+      Math.abs(mountainBelt - basinField) * 0.36 +
+      fineRidge * 0.28 +
+      fracture * 0.18 +
+      mountain * 0.22,
+      0,
+      1
+    );
+
+    const slope = clamp(
+      fineRidge * 0.30 +
+      fracture * 0.24 +
+      ridge * 0.20 +
+      cliff * 0.24 +
+      mountain * 0.18 -
+      plateau * 0.08,
+      0,
+      1
+    );
+
+    const relief = clamp(localRelief * 0.54 + elevation01 * 0.28 + mountain * 0.28 + cliff * 0.18, 0, 1);
+    const coastalRise = clamp(coast * smoothstep(0.18, 0.56, elevation01) + cliff * coast * 0.24, 0, 1);
+    const shadowPressure = clamp(slope * 0.32 + cliff * 0.34 + mountain * 0.26 + valley * 0.16, 0, 1);
+    const snowline = clamp(lat.snowline * 0.46 + mountain * 0.42 + smoothstep(0.68, 0.92, elevation01) * 0.28, 0, 1);
+
+    return Object.freeze({
+      u,
+      v,
+      cell256,
+      cellX: cell.x,
+      cellY: cell.y,
+      latitude: lat.latitude,
+      absLatitude: lat.absLat,
+      summit,
+      coast,
+      broadUplift,
+      ancientPlate,
+      mountainBelt,
+      fineRidge,
+      basinField,
+      drainage,
+      fracture,
+      erosion,
+      elevation01: clamp(elevation01, 0, 1),
+      height: clamp(elevation01, 0, 1),
+      altitude: clamp(elevation01, 0, 1),
+      relief,
+      slope,
+      basin,
+      ridge,
+      mountain,
+      cliff,
+      plateau,
+      valley,
+      coastalRise,
+      snowline,
+      shadowPressure
+    });
+  }
+
+  function classify(fields, map) {
+    if (isOceanLike(map)) {
+      return Object.freeze({
+        className: "sea",
+        zone: "sea-level",
+        form: "ocean-floor-held"
+      });
+    }
+
+    if (isBeachLike(map)) {
+      return Object.freeze({
+        className: "beach-rise",
+        zone: "coastal",
+        form: "beach-to-land-rise"
+      });
+    }
+
+    if (fields.snowline > 0.72 && fields.elevation01 > 0.62) {
+      return Object.freeze({
+        className: "snow-alpine",
+        zone: "alpine",
+        form: "snowline-mountain"
+      });
+    }
+
+    if (fields.mountain > 0.72 && fields.ridge > 0.62) {
+      return Object.freeze({
+        className: "mountain",
+        zone: "mountain-belt",
+        form: "ancient-mountain-range"
+      });
+    }
+
+    if (fields.cliff > 0.70 && fields.coastalRise > 0.42) {
+      return Object.freeze({
+        className: "cliff",
+        zone: "coastal-escarpment",
+        form: "coastal-cliff-rise"
+      });
+    }
+
+    if (fields.cliff > 0.72) {
+      return Object.freeze({
+        className: "cliff",
+        zone: "interior-escarpment",
+        form: "fracture-cliff"
+      });
+    }
+
+    if (fields.plateau > 0.68 && fields.elevation01 > 0.48) {
+      return Object.freeze({
+        className: "plateau",
+        zone: "raised-tableland",
+        form: "ancient-plateau"
+      });
+    }
+
+    if (fields.valley > 0.68 && fields.basin > 0.50) {
+      return Object.freeze({
+        className: "valley",
+        zone: "drainage-basin",
+        form: "valley-channel"
+      });
+    }
+
+    if (fields.basin > 0.72) {
+      return Object.freeze({
+        className: "basin",
+        zone: "low-interior",
+        form: "ancient-basin"
+      });
+    }
+
+    if (fields.coastalRise > 0.54) {
+      return Object.freeze({
+        className: "coastal-rise",
+        zone: "coastal-landrise",
+        form: "raised-terrain-behind-beach"
+      });
+    }
+
+    if (fields.elevation01 > 0.58 || fields.relief > 0.58) {
+      return Object.freeze({
+        className: "highland",
+        zone: "highland",
+        form: "highland-shoulder"
+      });
+    }
+
+    return Object.freeze({
+      className: "plain",
+      zone: "rolling-lowland",
+      form: "weathered-plain"
+    });
+  }
+
+  function sampleElevation(map) {
+    const allowed = landAllowed(map);
+    const fields = computeFields(map || {});
+    const classification = classify(fields, map || {});
+
+    if (!allowed) {
+      return Object.freeze({
+        allowed: false,
+        reason: isOceanLike(map) ? "elevation_authority_holds_ocean_at_sea_level" : "elevation_authority_holds_non_land",
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        previousContract: PREVIOUS_CONTRACT,
+        version: VERSION,
+        elevation01: 0,
+        height: 0,
+        altitude: 0,
+        relief: 0,
+        slope: 0,
+        basin: 0,
+        ridge: 0,
+        mountain: 0,
+        cliff: 0,
+        plateau: 0,
+        valley: 0,
+        coastalRise: 0,
+        snowline: 0,
+        shadowPressure: 0,
+        class: classification.className,
+        zone: classification.zone,
+        form: classification.form,
+        ownsFootprint: false,
+        ownsClimate: false,
+        ownsSurfaceColor: false,
+        ownsCanvas: false,
+        generatedImage: false,
+        graphicBox: false,
+        visualPassClaimed: false
+      });
+    }
+
+    return Object.freeze({
+      allowed: true,
       contract: CONTRACT,
       receipt: RECEIPT,
-      elevation,
-      ridge,
-      highland,
-      basin,
-      valley,
-      coastalCliff,
-      shelfEscarpment,
-      seaFloorRidge,
-      reliefShadow,
-      reliefHighlight,
-      latitudeCold: latitudeAbs,
-      weatheredAge: backstory.weatheredAge,
-      terrainDepth: clamp(elevation * 0.52 + ridge * 0.2 + highland * 0.14 + coastalCliff * 0.14, 0, 1),
-      oceanDepthRelief: clamp(topology.belowSeaDepth * 0.38 + seaFloorRidge * 0.16 + basin * 0.12, 0, 1),
-      ownsRoute: false,
+      previousContract: PREVIOUS_CONTRACT,
+      version: VERSION,
+      authority: "audralia-256-lattice-elevation-depth-field",
+      mathBinding: "high_order_computable_planetary_math",
+      cell256: fields.cell256,
+      cellX: fields.cellX,
+      cellY: fields.cellY,
+      summit: fields.summit,
+      elevation01: fields.elevation01,
+      height: fields.height,
+      altitude: fields.altitude,
+      relief: fields.relief,
+      slope: fields.slope,
+      basin: fields.basin,
+      ridge: fields.ridge,
+      mountain: fields.mountain,
+      cliff: fields.cliff,
+      plateau: fields.plateau,
+      valley: fields.valley,
+      coastalRise: fields.coastalRise,
+      snowline: fields.snowline,
+      shadowPressure: fields.shadowPressure,
+      class: classification.className,
+      zone: classification.zone,
+      form: classification.form,
+      broadUplift: fields.broadUplift,
+      ancientPlate: fields.ancientPlate,
+      mountainBelt: fields.mountainBelt,
+      fineRidge: fields.fineRidge,
+      basinField: fields.basinField,
+      drainage: fields.drainage,
+      fracture: fields.fracture,
+      erosion: fields.erosion,
+      ownsFootprint: false,
+      ownsClimate: false,
+      ownsSurfaceColor: false,
       ownsCanvas: false,
-      ownsRuntime: false,
-      ownsControls: false,
-      ownsVegetation: false,
-      noTrees: true,
-      noBushes: true,
-      noForestCanopy: true,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
     });
   }
 
+  function sample(map) {
+    return sampleElevation(map);
+  }
+
   function getStatus() {
     return Object.freeze({
       contract: CONTRACT,
       receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "audralia-elevation-parent",
-      consumesBackstory: Boolean(window.AUDRALIA_BACKSTORY),
-      consumesTectonics: Boolean(window.AUDRALIA_TECTONICS),
-      consumesTopology: Boolean(window.AUDRALIA_TOPOLOGY),
-      g1ElevationActive: true,
-      terrainDepthActive: true,
-      ridgeReliefActive: true,
-      basinValleyReliefActive: true,
-      coastalCliffReliefActive: true,
-      seaFloorReliefActive: true,
-      vegetationTopologyHeld: true,
-      noTrees: true,
-      noBushes: true,
-      noForestCanopy: true,
-      ownsRoute: false,
+      authority: "audralia-elevation-depth-field",
+      role: "computable_vertical_depth_authority",
+      mathBinding: "high_order_computable_planetary_math",
+      exposes: [
+        "sampleElevation",
+        "sample",
+        "getStatus"
+      ],
+      fields: [
+        "elevation01",
+        "height",
+        "altitude",
+        "relief",
+        "slope",
+        "basin",
+        "ridge",
+        "mountain",
+        "cliff",
+        "plateau",
+        "valley",
+        "coastalRise",
+        "snowline",
+        "shadowPressure",
+        "class",
+        "zone",
+        "form"
+      ],
+      uses: [
+        "spherical_uv_sampling",
+        "256_cell_lattice_anchor",
+        "16_by_16_cell_coordinates",
+        "phi_scaled_fields",
+        "summit_uplift",
+        "ridge_noise",
+        "basin_depression",
+        "coastal_falloff",
+        "latitude_snowline",
+        "fracture_and_cliff_pressure",
+        "erosion_grain",
+        "valley_drainage"
+      ],
+      ownsFootprint: false,
+      ownsClimate: false,
+      ownsSurfaceColor: false,
       ownsCanvas: false,
       ownsRuntime: false,
-      ownsControls: false,
+      ownsGauges: false,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
@@ -328,8 +642,10 @@
   window.AUDRALIA_ELEVATION = Object.freeze({
     contract: CONTRACT,
     receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
     sampleElevation,
+    sample,
     getStatus
   });
 
@@ -338,11 +654,21 @@
   document.documentElement.dataset.audraliaElevationLoaded = "true";
   document.documentElement.dataset.audraliaElevationContract = CONTRACT;
   document.documentElement.dataset.audraliaElevationReceipt = RECEIPT;
-  document.documentElement.dataset.audraliaG1ElevationActive = "true";
-  document.documentElement.dataset.audraliaTerrainDepthActive = "true";
-  document.documentElement.dataset.audraliaNoTrees = "true";
-  document.documentElement.dataset.audraliaNoBushes = "true";
-  document.documentElement.dataset.audraliaNoForestCanopy = "true";
+  document.documentElement.dataset.audraliaElevationPreviousContract = PREVIOUS_CONTRACT;
+  document.documentElement.dataset.audraliaElevationRole = "computable_vertical_depth_authority";
+  document.documentElement.dataset.audraliaElevationMathBinding = "high_order_computable_planetary_math";
+  document.documentElement.dataset.audraliaElevationLattice256 = "true";
+  document.documentElement.dataset.audraliaElevationMountains = "true";
+  document.documentElement.dataset.audraliaElevationCliffs = "true";
+  document.documentElement.dataset.audraliaElevationBasins = "true";
+  document.documentElement.dataset.audraliaElevationPlateaus = "true";
+  document.documentElement.dataset.audraliaElevationValleys = "true";
+  document.documentElement.dataset.audraliaElevationCoastalRise = "true";
+  document.documentElement.dataset.audraliaElevationSnowline = "true";
+  document.documentElement.dataset.audraliaElevationOwnsFootprint = "false";
+  document.documentElement.dataset.audraliaElevationOwnsClimate = "false";
+  document.documentElement.dataset.audraliaElevationOwnsSurfaceColor = "false";
+  document.documentElement.dataset.audraliaElevationOwnsCanvas = "false";
   document.documentElement.dataset.generatedImage = "false";
   document.documentElement.dataset.graphicBox = "false";
   document.documentElement.dataset.visualPassClaimed = "false";

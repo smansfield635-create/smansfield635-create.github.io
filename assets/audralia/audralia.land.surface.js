@@ -1,10 +1,10 @@
 // /assets/audralia/audralia.land.surface.js
-// AUDRALIA_BIOME_RELIEF_SURFACE_DETAIL_TNT_v1
+// AUDRALIA_BIOME_RELIEF_SURFACE_DEFINITION_SHARPENING_TNT_v2
 // Full-file replacement.
 // Land Surface authority only.
 // Purpose:
-// - Synthesizes visible land material detail from existing upstream authorities.
-// - Adds biome, relief, climate, summit, and ancient-weathered surface variation.
+// - Sharpens existing biome and relief definition.
+// - Uses high-order computable planetary math: φ-scaled fields, 256-cell influence, relief gradients, erosion grain, summit-tonal modulation.
 // - Does not own footprint.
 // - Does not create land.
 // - Does not erase beaches.
@@ -16,35 +16,37 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_BIOME_RELIEF_SURFACE_DETAIL_TNT_v1";
-  const RECEIPT = "AUDRALIA_BIOME_RELIEF_SURFACE_DETAIL_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G1_LAYER_TWO_LUSH_LAND_SURFACE_TNT_v1";
-  const VERSION = "2026-05-15.audralia-biome-relief-surface-detail-v1";
+  const CONTRACT = "AUDRALIA_BIOME_RELIEF_SURFACE_DEFINITION_SHARPENING_TNT_v2";
+  const RECEIPT = "AUDRALIA_BIOME_RELIEF_SURFACE_DEFINITION_SHARPENING_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "AUDRALIA_BIOME_RELIEF_SURFACE_DETAIL_TNT_v1";
+  const VERSION = "2026-05-15.audralia-biome-relief-surface-definition-sharpening-v2";
+  const PHI = 1.618033988749895;
+  const INV_PHI = 1 / PHI;
 
   const COLORS = Object.freeze({
-    rainforestDeep: [42, 101, 55],
-    rainforestCanopy: [62, 132, 69],
-    wetland: [74, 126, 84],
-    marsh: [95, 139, 86],
-    savanna: [142, 151, 82],
-    dryGrass: [165, 149, 84],
-    desert: [178, 139, 83],
-    dryBasin: [142, 116, 82],
+    rainforestDeep: [34, 88, 50],
+    rainforestCanopy: [58, 134, 66],
+    wetland: [64, 119, 86],
+    marsh: [96, 142, 90],
+    savanna: [144, 153, 78],
+    dryGrass: [171, 150, 80],
+    desert: [188, 139, 78],
+    dryBasin: [139, 108, 78],
     scrub: [111, 132, 77],
-    temperateForest: [72, 121, 70],
-    highland: [98, 125, 82],
-    mountain: [114, 113, 94],
-    ridge: [132, 127, 102],
-    alpine: [155, 166, 142],
-    snow: [218, 230, 222],
-    coastalGreen: [93, 141, 83],
-    coastalGold: [171, 154, 102],
-    beachRise: [177, 165, 113],
-    summitGold: [183, 151, 81],
-    summitViolet: [108, 102, 150],
-    summitBlue: [78, 128, 155],
-    shadow: [34, 48, 44],
-    stone: [103, 105, 93],
+    temperateForest: [68, 117, 70],
+    highland: [96, 124, 82],
+    mountain: [112, 111, 94],
+    ridge: [138, 132, 104],
+    alpine: [154, 166, 142],
+    snow: [222, 232, 224],
+    coastalGreen: [88, 141, 84],
+    coastalGold: [176, 158, 100],
+    beachRise: [182, 169, 112],
+    summitGold: [184, 151, 78],
+    summitViolet: [106, 100, 150],
+    summitBlue: [76, 126, 155],
+    shadow: [31, 45, 43],
+    stone: [104, 106, 94],
     light: [219, 213, 172]
   });
 
@@ -83,6 +85,12 @@
     return t * t * (3 - 2 * t);
   }
 
+  function sharpen(value, strength = 1.35) {
+    const x = clamp(value, 0, 1);
+    const centered = (x - 0.5) * strength + 0.5;
+    return clamp(centered, 0, 1);
+  }
+
   function mix(a, b, t) {
     const k = clamp(t, 0, 1);
     return [
@@ -97,14 +105,6 @@
       clamp(Math.round(color[0] + amount), 0, 255),
       clamp(Math.round(color[1] + amount), 0, 255),
       clamp(Math.round(color[2] + amount), 0, 255)
-    ];
-  }
-
-  function multiply(color, factor) {
-    return [
-      clamp(Math.round(color[0] * factor), 0, 255),
-      clamp(Math.round(color[1] * factor), 0, 255),
-      clamp(Math.round(color[2] * factor), 0, 255)
     ];
   }
 
@@ -156,7 +156,7 @@
       total += noise(u, v, scale, seed + i * 131) * amp;
       norm += amp;
       amp *= 0.52;
-      scale *= 2;
+      scale *= PHI;
     }
 
     return total / Math.max(0.000001, norm);
@@ -172,20 +172,11 @@
   }
 
   function isOceanLike(map) {
-    return Boolean(
-      map?.isOcean ||
-      map?.terrainClass === "ocean" ||
-      map?.terrainClass === "shelf" ||
-      map?.isShelf
-    );
+    return Boolean(map?.isOcean || map?.terrainClass === "ocean" || map?.terrainClass === "shelf" || map?.isShelf);
   }
 
   function isBeachLike(map) {
-    return Boolean(
-      map?.isBeach ||
-      map?.terrainClass === "beach" ||
-      includesAny(map?.topology, ["beach", "shore", "coastline"])
-    );
+    return Boolean(map?.isBeach || map?.terrainClass === "beach" || includesAny(map?.topology, ["beach", "shore", "coastline"]));
   }
 
   function isLandAllowed(map) {
@@ -270,9 +261,8 @@
 
     const equatorWarmth = 1 - smoothstep(4, 78, absLat);
     const polarCold = smoothstep(50, 82, absLat);
-    const continentalNoise = fbm(u * 0.72 + 0.12, v * 0.74 - 0.18, 540100, 5);
-    const wetNoise = fbm(u * 1.14 - 0.25, v * 1.02 + 0.19, 540900, 5);
-    const dryNoise = fbm(u * 1.52 + 0.33, v * 1.36 - 0.21, 541700, 4);
+    const wetNoise = fbm(u * PHI - 0.25, v * INV_PHI + 0.19, 540900, 5);
+    const dryNoise = fbm(u * 2.618 + 0.33, v * PHI - 0.21, 541700, 4);
 
     const climateText = [
       climate?.biome,
@@ -287,63 +277,47 @@
     ].map(text).join(" ");
 
     let moisture = climate
-      ? normalize01(
-          climate.moisture ??
-          climate.humidity ??
-          climate.wetness ??
-          climate.rainfall ??
-          climate.precipitation,
-          0.48
-        )
+      ? normalize01(climate.moisture ?? climate.humidity ?? climate.wetness ?? climate.rainfall ?? climate.precipitation, 0.48)
       : 0.42 + wetNoise * 0.36 + equatorWarmth * 0.16;
 
     let heat = climate
-      ? normalize01(
-          climate.heat ??
-          climate.temperature ??
-          climate.warmth,
-          0.55
-        )
-      : 0.28 + equatorWarmth * 0.55 - polarCold * 0.22 + continentalNoise * 0.14;
+      ? normalize01(climate.heat ?? climate.temperature ?? climate.warmth, 0.55)
+      : 0.28 + equatorWarmth * 0.55 - polarCold * 0.22 + wetNoise * 0.10;
 
     let aridity = climate
-      ? normalize01(
-          climate.aridity ??
-          climate.dryness,
-          1 - moisture
-        )
+      ? normalize01(climate.aridity ?? climate.dryness, 1 - moisture)
       : clamp(0.20 + dryNoise * 0.48 + smoothstep(18, 42, absLat) * 0.16 - moisture * 0.30, 0, 1);
 
     if (includesAny(climateText, ["rainforest", "jungle", "humid", "monsoon"])) {
-      moisture = Math.max(moisture, 0.78);
+      moisture = Math.max(moisture, 0.82);
       heat = Math.max(heat, 0.66);
-      aridity = Math.min(aridity, 0.22);
+      aridity = Math.min(aridity, 0.18);
     }
 
     if (includesAny(climateText, ["wetland", "marsh", "swamp", "delta", "fen"])) {
-      moisture = Math.max(moisture, 0.72);
-      aridity = Math.min(aridity, 0.28);
+      moisture = Math.max(moisture, 0.76);
+      aridity = Math.min(aridity, 0.24);
     }
 
     if (includesAny(climateText, ["desert", "arid", "dry", "basin"])) {
-      moisture = Math.min(moisture, 0.32);
-      aridity = Math.max(aridity, 0.72);
+      moisture = Math.min(moisture, 0.28);
+      aridity = Math.max(aridity, 0.76);
     }
 
     if (includesAny(climateText, ["savanna", "grass", "steppe", "prairie"])) {
-      moisture = clamp(moisture, 0.34, 0.62);
-      aridity = clamp(aridity, 0.34, 0.68);
+      moisture = clamp(moisture, 0.32, 0.60);
+      aridity = clamp(aridity, 0.38, 0.72);
     }
 
     if (includesAny(climateText, ["alpine", "snow", "ice", "polar", "tundra"])) {
-      heat = Math.min(heat, 0.32);
-      moisture = Math.max(moisture, 0.44);
+      heat = Math.min(heat, 0.28);
+      moisture = Math.max(moisture, 0.46);
     }
 
     return Object.freeze({
-      moisture: clamp(moisture, 0, 1),
+      moisture: sharpen(clamp(moisture, 0, 1), 1.18),
       heat: clamp(heat, 0, 1),
-      aridity: clamp(aridity, 0, 1),
+      aridity: sharpen(clamp(aridity, 0, 1), 1.22),
       polarCold,
       equatorWarmth,
       climateText
@@ -363,54 +337,34 @@
       topology?.form
     ].map(text).join(" ");
 
-    let relief = normalize01(
-      elevation?.relief ??
-      elevation?.height ??
-      elevation?.altitude ??
-      elevation?.elevation ??
-      map.relief ??
-      map.altitude,
-      0.42
-    );
-
-    let slope = normalize01(
-      elevation?.slope ??
-      topology?.slope ??
-      map.slope,
-      0.36
-    );
-
-    let basin = normalize01(
-      elevation?.basin ??
-      topology?.basin ??
-      map.basin,
-      0.22
-    );
+    let relief = normalize01(elevation?.relief ?? elevation?.height ?? elevation?.altitude ?? elevation?.elevation ?? map.relief ?? map.altitude, 0.42);
+    let slope = normalize01(elevation?.slope ?? topology?.slope ?? map.slope, 0.36);
+    let basin = normalize01(elevation?.basin ?? topology?.basin ?? map.basin, 0.22);
 
     if (includesAny(topoText, ["mountain", "range", "ridge", "peak", "alpine"])) {
-      relief = Math.max(relief, 0.76);
-      slope = Math.max(slope, 0.66);
+      relief = Math.max(relief, 0.80);
+      slope = Math.max(slope, 0.70);
     }
 
     if (includesAny(topoText, ["highland", "shoulder", "upland", "plateau"])) {
-      relief = Math.max(relief, 0.58);
-      slope = Math.max(slope, 0.44);
+      relief = Math.max(relief, 0.62);
+      slope = Math.max(slope, 0.48);
     }
 
     if (includesAny(topoText, ["basin", "valley", "lowland", "plain"])) {
-      relief = Math.min(relief, 0.42);
-      basin = Math.max(basin, 0.62);
+      relief = Math.min(relief, 0.40);
+      basin = Math.max(basin, 0.66);
     }
 
     if (includesAny(topoText, ["coastal", "coast", "shore", "landrise"])) {
       relief = clamp(relief, 0.34, 0.68);
-      slope = Math.max(slope, 0.34);
+      slope = Math.max(slope, 0.36);
     }
 
     return Object.freeze({
-      relief: clamp(relief, 0, 1),
-      slope: clamp(slope, 0, 1),
-      basin: clamp(basin, 0, 1),
+      relief: sharpen(clamp(relief, 0, 1), 1.20),
+      slope: sharpen(clamp(slope, 0, 1), 1.16),
+      basin: sharpen(clamp(basin, 0, 1), 1.16),
       topologyText: topoText
     });
   }
@@ -426,46 +380,28 @@
       map.vegetation
     ].map(text).join(" ");
 
-    let vegetation = normalize01(
-      groundcover?.vegetation ??
-      groundcover?.density ??
-      groundcover?.coverDensity ??
-      map.vegetationDensity,
-      0.52
-    );
-
-    let canopy = normalize01(
-      groundcover?.canopy ??
-      groundcover?.forestCanopy ??
-      map.canopy,
-      0.38
-    );
-
-    let scrub = normalize01(
-      groundcover?.scrub ??
-      groundcover?.brush ??
-      groundcover?.bushes,
-      0.34
-    );
+    let vegetation = normalize01(groundcover?.vegetation ?? groundcover?.density ?? groundcover?.coverDensity ?? map.vegetationDensity, 0.52);
+    let canopy = normalize01(groundcover?.canopy ?? groundcover?.forestCanopy ?? map.canopy, 0.38);
+    let scrub = normalize01(groundcover?.scrub ?? groundcover?.brush ?? groundcover?.bushes, 0.34);
 
     if (includesAny(coverText, ["rainforest", "forest", "canopy", "trees"])) {
-      vegetation = Math.max(vegetation, 0.76);
-      canopy = Math.max(canopy, 0.72);
+      vegetation = Math.max(vegetation, 0.80);
+      canopy = Math.max(canopy, 0.76);
     }
 
     if (includesAny(coverText, ["grass", "savanna", "steppe", "prairie"])) {
-      vegetation = clamp(Math.max(vegetation, 0.48), 0, 0.74);
-      canopy = Math.min(canopy, 0.36);
+      vegetation = clamp(Math.max(vegetation, 0.50), 0, 0.72);
+      canopy = Math.min(canopy, 0.32);
     }
 
     if (includesAny(coverText, ["scrub", "bush", "brush", "shrub"])) {
-      scrub = Math.max(scrub, 0.62);
+      scrub = Math.max(scrub, 0.66);
       vegetation = Math.max(vegetation, 0.42);
     }
 
     if (includesAny(coverText, ["desert", "bare", "rock"])) {
-      vegetation = Math.min(vegetation, 0.28);
-      canopy = Math.min(canopy, 0.18);
+      vegetation = Math.min(vegetation, 0.24);
+      canopy = Math.min(canopy, 0.15);
     }
 
     return Object.freeze({
@@ -478,9 +414,9 @@
 
   function summitTone(map) {
     const key = text(map.internalSummit || map.primarySummit || map.summitProvince || "gratitude");
-    if (SUMMIT_TONES[key]) return SUMMIT_TONES[key];
-
     const normalized = key.replace(/\s+/g, "-");
+
+    if (SUMMIT_TONES[key]) return SUMMIT_TONES[key];
     if (SUMMIT_TONES[normalized]) return SUMMIT_TONES[normalized];
 
     if (key.includes("gratitude")) return SUMMIT_TONES.gratitude;
@@ -509,14 +445,13 @@
     if (includesAny(climateText, ["savanna", "grass", "steppe"])) return "savanna";
     if (includesAny(climateText, ["temperate", "forest"])) return "temperate-forest";
 
-    if (reliefSignals.relief > 0.78 && climateSignals.polarCold > 0.38) return "snow-alpine";
-    if (reliefSignals.relief > 0.72) return "alpine-highland";
-    if (climateSignals.moisture > 0.76 && climateSignals.heat > 0.56 && groundSignals.canopy > 0.58) return "rainforest";
+    if (reliefSignals.relief > 0.80 && climateSignals.polarCold > 0.35) return "snow-alpine";
+    if (reliefSignals.relief > 0.74) return "alpine-highland";
+    if (climateSignals.moisture > 0.76 && climateSignals.heat > 0.56 && groundSignals.canopy > 0.56) return "rainforest";
     if (climateSignals.moisture > 0.70 && reliefSignals.basin > 0.42) return "wetland";
-    if (climateSignals.aridity > 0.68 && climateSignals.moisture < 0.36) return "dry-basin";
+    if (climateSignals.aridity > 0.70 && climateSignals.moisture < 0.34) return "dry-basin";
     if (climateSignals.aridity > 0.48 && groundSignals.canopy < 0.38) return "savanna";
     if (climateSignals.moisture > 0.48 && groundSignals.vegetation > 0.54) return "temperate-forest";
-
     if (includesAny(map.topology, ["coast", "landrise", "shore"])) return "coastal-rise";
 
     return "mixed-highland";
@@ -525,84 +460,80 @@
   function baseBiomeColor(biome, climateSignals, reliefSignals) {
     switch (biome) {
       case "rainforest":
-        return mix(COLORS.rainforestDeep, COLORS.rainforestCanopy, climateSignals.moisture * 0.72);
-
+        return mix(COLORS.rainforestDeep, COLORS.rainforestCanopy, climateSignals.moisture * 0.78);
       case "wetland":
-        return mix(COLORS.wetland, COLORS.marsh, climateSignals.moisture * 0.66);
-
+        return mix(COLORS.wetland, COLORS.marsh, climateSignals.moisture * 0.72);
       case "savanna":
-        return mix(COLORS.savanna, COLORS.dryGrass, climateSignals.aridity * 0.68);
-
+        return mix(COLORS.savanna, COLORS.dryGrass, climateSignals.aridity * 0.75);
       case "dry-basin":
-        return mix(COLORS.dryBasin, COLORS.desert, climateSignals.aridity * 0.82);
-
+        return mix(COLORS.dryBasin, COLORS.desert, climateSignals.aridity * 0.88);
       case "temperate-forest":
-        return mix(COLORS.temperateForest, COLORS.coastalGreen, climateSignals.moisture * 0.46);
-
+        return mix(COLORS.temperateForest, COLORS.coastalGreen, climateSignals.moisture * 0.52);
       case "alpine-highland":
-        return mix(COLORS.highland, COLORS.mountain, reliefSignals.relief * 0.72);
-
+        return mix(COLORS.highland, COLORS.mountain, reliefSignals.relief * 0.78);
       case "snow-alpine":
-        return mix(COLORS.alpine, COLORS.snow, climateSignals.polarCold * 0.72 + reliefSignals.relief * 0.28);
-
+        return mix(COLORS.alpine, COLORS.snow, climateSignals.polarCold * 0.76 + reliefSignals.relief * 0.30);
       case "coastal-rise":
-        return mix(COLORS.coastalGreen, COLORS.beachRise, 0.38);
-
+        return mix(COLORS.coastalGreen, COLORS.beachRise, 0.42);
       case "mixed-highland":
       default:
-        return mix(COLORS.fallbackLand, COLORS.highland, reliefSignals.relief * 0.48);
+        return mix(COLORS.fallbackLand, COLORS.highland, reliefSignals.relief * 0.52);
     }
   }
 
   function applyAncientReliefTexture(color, map, biome, climateSignals, reliefSignals, groundSignals) {
     const u = Number(map.u || 0);
     const v = Number(map.v || 0);
+    const cell = Number(map.cell256 || 1);
 
-    const continentalGrain = fbm(u * 3.2 + 0.12, v * 2.9 - 0.18, 880100, 5);
-    const erosion = fbm(u * 7.7 - 0.31, v * 6.4 + 0.22, 880900, 4);
+    const nodalPhase = ((cell % 16) / 16) * INV_PHI;
+    const continentalGrain = fbm(u * 3.2 + nodalPhase, v * 2.9 - 0.18, 880100, 5);
+    const erosion = fbm(u * 7.7 - 0.31, v * 6.4 + nodalPhase, 880900, 4);
     const vein = fbm(u * 15.5 + 0.44, v * 13.0 - 0.16, 881700, 3);
-    const summitField = fbm(u * 1.35 + 0.07, v * 1.2 + 0.29, 882500, 4);
+    const summitField = fbm(u * PHI + 0.07, v * INV_PHI + 0.29, 882500, 4);
+    const fracture = fbm(u * 28.0 + nodalPhase, v * 21.0 - nodalPhase, 883300, 2);
 
     let out = color;
 
-    const reliefShadow = (reliefSignals.relief - 0.5) * 22 + (reliefSignals.slope - 0.5) * 10;
-    const basinShadow = reliefSignals.basin * -16;
-    const erosionAmount = (erosion - 0.5) * (biome === "dry-basin" ? 22 : 13);
-    const grainAmount = (continentalGrain - 0.5) * 15;
+    const reliefShadow = (reliefSignals.relief - 0.5) * 26 + (reliefSignals.slope - 0.5) * 12;
+    const basinShadow = reliefSignals.basin * -18;
+    const erosionAmount = (erosion - 0.5) * (biome === "dry-basin" ? 28 : 16);
+    const grainAmount = (continentalGrain - 0.5) * 18;
+    const fractureAmount = smoothstep(0.70, 0.94, fracture) * reliefSignals.slope * 18;
 
-    out = shade(out, reliefShadow + basinShadow + erosionAmount + grainAmount);
+    out = shade(out, reliefShadow + basinShadow + erosionAmount + grainAmount - fractureAmount);
 
     if (reliefSignals.relief > 0.58) {
-      out = mix(out, COLORS.stone, smoothstep(0.56, 0.92, reliefSignals.relief) * 0.26);
-      out = mix(out, COLORS.ridge, smoothstep(0.62, 0.96, vein) * reliefSignals.slope * 0.18);
+      out = mix(out, COLORS.stone, smoothstep(0.56, 0.92, reliefSignals.relief) * 0.30);
+      out = mix(out, COLORS.ridge, smoothstep(0.62, 0.96, vein) * reliefSignals.slope * 0.24);
     }
 
     if (biome === "rainforest") {
-      out = mix(out, COLORS.rainforestDeep, groundSignals.canopy * 0.22);
-      out = shade(out, smoothstep(0.56, 0.95, summitField) * 6);
+      out = mix(out, COLORS.rainforestDeep, groundSignals.canopy * 0.26);
+      out = shade(out, smoothstep(0.56, 0.95, summitField) * 7);
     }
 
     if (biome === "wetland") {
-      out = mix(out, COLORS.marsh, climateSignals.moisture * 0.18);
-      out = mix(out, COLORS.shadow, smoothstep(0.68, 0.94, continentalGrain) * 0.10);
+      out = mix(out, COLORS.marsh, climateSignals.moisture * 0.22);
+      out = mix(out, COLORS.shadow, smoothstep(0.68, 0.94, continentalGrain) * 0.12);
     }
 
     if (biome === "dry-basin") {
-      out = mix(out, COLORS.desert, climateSignals.aridity * 0.24);
-      out = mix(out, COLORS.stone, smoothstep(0.62, 0.95, erosion) * 0.18);
+      out = mix(out, COLORS.desert, climateSignals.aridity * 0.30);
+      out = mix(out, COLORS.stone, smoothstep(0.62, 0.95, erosion) * 0.22);
     }
 
     if (biome === "savanna") {
-      out = mix(out, COLORS.scrub, groundSignals.scrub * 0.14);
-      out = mix(out, COLORS.dryGrass, climateSignals.aridity * 0.18);
+      out = mix(out, COLORS.scrub, groundSignals.scrub * 0.18);
+      out = mix(out, COLORS.dryGrass, climateSignals.aridity * 0.22);
     }
 
     if (biome === "snow-alpine") {
-      out = mix(out, COLORS.snow, smoothstep(0.58, 0.94, reliefSignals.relief + climateSignals.polarCold * 0.5) * 0.34);
+      out = mix(out, COLORS.snow, smoothstep(0.58, 0.94, reliefSignals.relief + climateSignals.polarCold * 0.5) * 0.38);
     }
 
     const summit = summitTone(map);
-    const summitBlend = 0.055 + smoothstep(0.62, 0.96, summitField) * 0.075;
+    const summitBlend = 0.065 + smoothstep(0.62, 0.96, summitField) * 0.085;
     out = mix(out, summit, summitBlend);
 
     return out;
@@ -612,13 +543,13 @@
     const beachEdge = normalize01(map.beachEdge, 0);
     const shelf = normalize01(map.shelf, 0.2);
     const coastalText = [map.topology, map.terrainClass, map.elevation].map(text).join(" ");
-    const coastalHint = includesAny(coastalText, ["coast", "shore", "landrise", "beach"]) ? 0.35 : 0;
+    const coastalHint = includesAny(coastalText, ["coast", "shore", "landrise", "beach"]) ? 0.38 : 0;
 
-    const coastal = clamp(beachEdge * 0.46 + shelf * 0.16 + coastalHint, 0, 0.55);
+    const coastal = clamp(beachEdge * 0.50 + shelf * 0.18 + coastalHint, 0, 0.58);
     if (coastal <= 0.02) return color;
 
-    let out = mix(color, COLORS.coastalGreen, coastal * 0.45);
-    out = mix(out, COLORS.beachRise, coastal * 0.28);
+    let out = mix(color, COLORS.coastalGreen, coastal * 0.48);
+    out = mix(out, COLORS.beachRise, coastal * 0.32);
     return out;
   }
 
@@ -654,12 +585,13 @@
       allowed: true,
       color,
       biome,
-      material: "biome_relief_surface_detail",
+      material: "biome_relief_surface_definition_sharpening",
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       source: "land_surface_synthesis_only",
+      mathBinding: "high_order_computable_planetary_math",
       owns: "visible_land_material_synthesis",
       ownsFootprint: false,
       ownsClimate: false,
@@ -689,27 +621,24 @@
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       authority: "audralia-land-surface-visible-material-synthesis",
-      role: "biome_relief_surface_detail",
+      role: "biome_relief_surface_definition_sharpening",
+      mathBinding: "high_order_computable_planetary_math",
       ownsFootprint: false,
       ownsClimate: false,
       ownsCanvas: false,
       ownsRuntime: false,
       ownsGauges: false,
       authorizedVisualExpansions: [
-        "rainforest_belts",
-        "wetlands_and_marsh_regions",
-        "savanna_transition_zones",
-        "dry_interior_basins",
-        "desert_shelves",
-        "temperate_forests",
-        "highland_shoulders",
+        "sharpened_biome_boundaries",
+        "stronger_relief_grain",
         "mountain_shadow_regions",
-        "alpine_and_snow_pressure",
-        "coastal_vegetation_gradients",
-        "beach_to_land_rise_transitions",
-        "subtle_erosion_grain",
-        "summit_region_tonal_signatures",
-        "ancient_continental_aging_texture"
+        "wetland_saturation_zones",
+        "savanna_desert_transition",
+        "dry_basin_erosion",
+        "coastal_landrise_gradients",
+        "summit_tonal_modulation",
+        "phi_scaled_surface_fields",
+        "256_cell_nodal_phase"
       ],
       readsOptionalAuthorities: {
         climate: Boolean(window.AUDRALIA_CLIMATE_RENDER?.sampleClimate),
@@ -741,11 +670,13 @@
   document.documentElement.dataset.audraliaLandSurfaceContract = CONTRACT;
   document.documentElement.dataset.audraliaLandSurfaceReceipt = RECEIPT;
   document.documentElement.dataset.audraliaLandSurfacePreviousContract = PREVIOUS_CONTRACT;
-  document.documentElement.dataset.audraliaLandSurfaceRole = "biome_relief_surface_detail";
+  document.documentElement.dataset.audraliaLandSurfaceRole = "biome_relief_surface_definition_sharpening";
+  document.documentElement.dataset.audraliaLandSurfaceMathBinding = "high_order_computable_planetary_math";
   document.documentElement.dataset.audraliaLandSurfaceOwnsFootprint = "false";
   document.documentElement.dataset.audraliaLandSurfaceOwnsClimate = "false";
   document.documentElement.dataset.audraliaLandSurfaceOwnsCanvas = "false";
   document.documentElement.dataset.audraliaLandSurfaceBiomeRelief = "true";
+  document.documentElement.dataset.audraliaLandSurfaceDefinitionSharpening = "true";
   document.documentElement.dataset.audraliaLandSurfaceAncientTexture = "true";
   document.documentElement.dataset.audraliaLandSurfaceSummitTone = "true";
   document.documentElement.dataset.generatedImage = "false";

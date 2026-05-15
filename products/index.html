@@ -3,10 +3,10 @@
   lang="en"
   data-route="/products/"
   data-page="products"
-  data-contract="PRODUCTS_LARGE_NATURAL_DIGITAL_GEM_RECEPTION_TNT_v4"
-  data-previous-contract="PRODUCTS_DIGITAL_GEM_ORBIT_ANIMATION_RENEWAL_TNT_v3"
+  data-contract="PRODUCTS_ORGANIC_DIGITAL_GEM_RECEPTION_TNT_v5"
+  data-previous-contract="PRODUCTS_LARGE_NATURAL_DIGITAL_GEM_RECEPTION_TNT_v4"
   data-role="product-wing"
-  data-public-frame="large-natural-digital-gem-product-orbit"
+  data-public-frame="organic-digital-gem-product-orbit"
   data-runtime-public-message="false"
   data-static-page-usable-without-js="true"
   data-eight-doors-visible-without-runtime="true"
@@ -36,16 +36,12 @@
       --gold:#f3c86f;
       --gold2:#ffe8a3;
       --blue:#8dd8ff;
-      --sapphire:#2478ff;
-      --sapphire2:#8dd8ff;
       --green:#8ff0c3;
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
       --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
-      --natural-gem:polygon(49% 0%,69% 7%,88% 20%,100% 43%,88% 76%,61% 98%,31% 91%,6% 70%,0% 36%,21% 10%);
-      --natural-gem-inner:polygon(50% 6%,68% 15%,84% 34%,78% 66%,56% 90%,32% 78%,13% 60%,16% 33%,31% 13%);
     }
 
     * { box-sizing:border-box; }
@@ -462,6 +458,16 @@
 
     .orbit-center,
     .orbit-node {
+      --gem-cut:polygon(50% 0%,72% 8%,91% 23%,100% 46%,87% 77%,60% 98%,30% 91%,6% 69%,0% 36%,22% 10%);
+      --inner-cut:polygon(48% 8%,69% 16%,84% 36%,76% 65%,58% 88%,35% 78%,14% 59%,17% 33%,31% 13%);
+      --light-x:43%;
+      --light-y:20%;
+      --gold-reflect:.18;
+      --silver-reflect:.28;
+      --blue-depth:.70;
+      --shadow-depth:.92;
+      --tilt-a:-2deg;
+      --tilt-b:2deg;
       position:absolute;
       display:grid;
       place-items:center;
@@ -474,6 +480,14 @@
     }
 
     .orbit-center {
+      --gem-cut:polygon(49% 0%,71% 7%,92% 22%,100% 44%,89% 75%,63% 98%,32% 92%,7% 72%,0% 38%,19% 11%);
+      --inner-cut:polygon(50% 7%,70% 16%,83% 34%,79% 64%,57% 88%,31% 79%,13% 58%,19% 33%,34% 12%);
+      --light-x:39%;
+      --light-y:18%;
+      --gold-reflect:.24;
+      --silver-reflect:.34;
+      --blue-depth:.68;
+      --shadow-depth:.94;
       left:50%;
       top:50%;
       width:clamp(10rem,21vw,14.6rem);
@@ -498,6 +512,102 @@
       outline:none;
     }
 
+    .gem-arch {
+      --gem-cut:polygon(47% 0%,70% 6%,94% 24%,100% 49%,82% 78%,56% 100%,27% 87%,4% 70%,0% 35%,24% 9%);
+      --inner-cut:polygon(45% 8%,69% 15%,88% 37%,75% 66%,55% 90%,28% 75%,13% 57%,18% 31%,34% 13%);
+      --light-x:40%;
+      --light-y:19%;
+      --gold-reflect:.30;
+      --silver-reflect:.30;
+      --blue-depth:.62;
+      --tilt-a:-2.4deg;
+      --tilt-b:1.7deg;
+    }
+
+    .gem-flags {
+      --gem-cut:polygon(52% 1%,75% 10%,96% 31%,93% 61%,73% 91%,39% 98%,12% 78%,0% 43%,13% 16%,35% 4%);
+      --inner-cut:polygon(53% 8%,73% 19%,84% 42%,72% 70%,43% 86%,20% 69%,15% 42%,27% 19%);
+      --light-x:56%;
+      --light-y:18%;
+      --gold-reflect:.17;
+      --silver-reflect:.36;
+      --blue-depth:.72;
+      --tilt-a:1.6deg;
+      --tilt-b:-2.5deg;
+    }
+
+    .gem-aai {
+      --gem-cut:polygon(44% 0%,68% 9%,93% 24%,100% 58%,81% 85%,48% 98%,22% 88%,4% 63%,0% 30%,24% 8%);
+      --inner-cut:polygon(43% 9%,65% 17%,85% 34%,78% 68%,48% 86%,24% 73%,13% 52%,18% 29%,33% 14%);
+      --light-x:38%;
+      --light-y:22%;
+      --gold-reflect:.12;
+      --silver-reflect:.38;
+      --blue-depth:.78;
+      --tilt-a:-1.7deg;
+      --tilt-b:2.8deg;
+    }
+
+    .gem-education {
+      --gem-cut:polygon(55% 0%,78% 12%,99% 37%,88% 72%,62% 96%,31% 91%,8% 76%,0% 41%,18% 13%,40% 4%);
+      --inner-cut:polygon(55% 9%,74% 21%,82% 44%,72% 68%,58% 86%,35% 76%,15% 60%,17% 36%,35% 16%);
+      --light-x:61%;
+      --light-y:22%;
+      --gold-reflect:.20;
+      --silver-reflect:.30;
+      --blue-depth:.69;
+      --tilt-a:2deg;
+      --tilt-b:-1.8deg;
+    }
+
+    .gem-nutrition {
+      --gem-cut:polygon(48% 0%,73% 8%,95% 29%,97% 56%,78% 88%,44% 100%,17% 81%,0% 51%,10% 18%,32% 5%);
+      --inner-cut:polygon(47% 8%,69% 17%,86% 37%,75% 63%,48% 89%,25% 70%,13% 50%,22% 25%,36% 12%);
+      --light-x:41%;
+      --light-y:18%;
+      --gold-reflect:.15;
+      --silver-reflect:.32;
+      --blue-depth:.75;
+      --tilt-a:-2.2deg;
+      --tilt-b:2.1deg;
+    }
+
+    .gem-sean {
+      --gem-cut:polygon(51% 0%,69% 6%,91% 19%,100% 50%,84% 79%,58% 98%,29% 91%,6% 73%,0% 39%,20% 11%);
+      --inner-cut:polygon(50% 8%,68% 14%,85% 31%,77% 66%,55% 89%,31% 77%,13% 59%,18% 34%,32% 13%);
+      --light-x:55%;
+      --light-y:19%;
+      --gold-reflect:.22;
+      --silver-reflect:.26;
+      --blue-depth:.66;
+      --tilt-a:1.3deg;
+      --tilt-b:-2.4deg;
+    }
+
+    .gem-summits {
+      --gem-cut:polygon(46% 0%,76% 11%,100% 42%,91% 69%,66% 95%,34% 100%,10% 79%,0% 45%,14% 18%,31% 5%);
+      --inner-cut:polygon(46% 9%,72% 19%,84% 43%,76% 64%,62% 86%,35% 82%,15% 60%,19% 34%,31% 15%);
+      --light-x:36%;
+      --light-y:21%;
+      --gold-reflect:.14;
+      --silver-reflect:.34;
+      --blue-depth:.80;
+      --tilt-a:-1.4deg;
+      --tilt-b:2.6deg;
+    }
+
+    .gem-book {
+      --gem-cut:polygon(54% 0%,79% 13%,96% 36%,92% 66%,72% 92%,39% 99%,12% 82%,0% 52%,9% 22%,33% 4%);
+      --inner-cut:polygon(55% 9%,74% 22%,82% 43%,69% 69%,41% 86%,21% 70%,13% 51%,25% 22%,38% 13%);
+      --light-x:60%;
+      --light-y:20%;
+      --gold-reflect:.28;
+      --silver-reflect:.25;
+      --blue-depth:.64;
+      --tilt-a:2.5deg;
+      --tilt-b:-1.6deg;
+    }
+
     @keyframes gemNodeFloat {
       0%,100% { margin-top:0; }
       50% { margin-top:-.42rem; }
@@ -506,27 +616,28 @@
     .sapphire-shell {
       position:absolute;
       inset:0;
-      clip-path:var(--natural-gem);
+      clip-path:var(--gem-cut);
       background:
-        radial-gradient(circle at 44% 18%,rgba(255,255,255,.60),transparent 13%),
-        radial-gradient(circle at 58% 22%,rgba(255,255,255,.18),transparent 25%),
-        conic-gradient(from 21deg at 48% 54%,
-          rgba(255,255,255,.20) 0deg,
-          rgba(141,216,255,.34) 34deg,
-          rgba(8,29,76,.78) 82deg,
-          rgba(17,67,152,.68) 128deg,
-          rgba(3,9,28,.90) 183deg,
-          rgba(206,171,86,.22) 226deg,
-          rgba(12,31,74,.82) 286deg,
-          rgba(255,255,255,.20) 360deg),
-        linear-gradient(145deg,rgba(51,130,255,.58),rgba(5,8,20,.98) 62%,rgba(10,32,78,.86));
-      border:1px solid rgba(170,218,255,.38);
+        radial-gradient(circle at var(--light-x) var(--light-y),rgba(255,255,255,.62),transparent 12%),
+        radial-gradient(circle at calc(var(--light-x) + 16%) calc(var(--light-y) + 8%),rgba(255,255,255,var(--silver-reflect)),transparent 26%),
+        radial-gradient(circle at 24% 78%,rgba(0,0,0,.42),transparent 30%),
+        conic-gradient(from 24deg at 47% 54%,
+          rgba(255,255,255,.16) 0deg,
+          rgba(141,216,255,.30) 34deg,
+          rgba(8,29,76,var(--blue-depth)) 80deg,
+          rgba(20,78,160,.66) 126deg,
+          rgba(3,9,28,var(--shadow-depth)) 181deg,
+          rgba(243,200,111,var(--gold-reflect)) 228deg,
+          rgba(9,29,70,.84) 286deg,
+          rgba(255,255,255,.18) 360deg),
+        linear-gradient(145deg,rgba(45,118,235,.52),rgba(4,8,21,.98) 62%,rgba(8,25,64,.88));
+      border:1px solid rgba(170,218,255,.34);
       box-shadow:
         0 1.05rem 2.25rem rgba(0,0,0,.34),
-        0 0 1.4rem rgba(36,120,255,.24),
-        0 0 1.6rem rgba(243,200,111,.09),
+        0 0 1.35rem rgba(36,120,255,.22),
+        0 0 1.55rem rgba(243,200,111,.08),
         inset 0 1px 0 rgba(255,255,255,.16),
-        inset 0 -1rem 1.8rem rgba(0,0,0,.28);
+        inset 0 -1rem 1.8rem rgba(0,0,0,.30);
       overflow:hidden;
       animation:gemGravityTurn 9s ease-in-out infinite;
       animation-delay:var(--delay,0s);
@@ -537,16 +648,16 @@
       content:"";
       position:absolute;
       inset:5%;
-      clip-path:var(--natural-gem-inner);
+      clip-path:var(--inner-cut);
       background:
-        linear-gradient(90deg,transparent 49.3%,rgba(255,255,255,.34) 50%,transparent 50.7%),
-        linear-gradient(0deg,transparent 49.3%,rgba(141,216,255,.24) 50%,transparent 50.7%),
-        linear-gradient(38deg,transparent 48.8%,rgba(243,200,111,.22) 50%,transparent 51.2%),
-        linear-gradient(-42deg,transparent 48.9%,rgba(255,255,255,.20) 50%,transparent 51.1%),
-        linear-gradient(128deg,transparent 42%,rgba(255,255,255,.13) 43% 45%,transparent 46%),
-        radial-gradient(circle at 49% 42%,rgba(255,255,255,.10),transparent 54%);
-      border:1px solid rgba(255,255,255,.11);
-      opacity:.92;
+        linear-gradient(91deg,transparent 47%,rgba(255,255,255,.25) 49%,transparent 52%),
+        linear-gradient(7deg,transparent 49%,rgba(141,216,255,.18) 50%,transparent 52%),
+        linear-gradient(41deg,transparent 48%,rgba(243,200,111,.16) 50%,transparent 52%),
+        linear-gradient(-37deg,transparent 47%,rgba(255,255,255,.15) 49%,transparent 52%),
+        linear-gradient(127deg,transparent 42%,rgba(255,255,255,.10) 43% 45%,transparent 46%),
+        radial-gradient(circle at 49% 42%,rgba(255,255,255,.08),transparent 54%);
+      border:1px solid rgba(255,255,255,.09);
+      opacity:.88;
       pointer-events:none;
     }
 
@@ -555,34 +666,36 @@
       position:absolute;
       inset:-18% -42%;
       background:
+        radial-gradient(circle at 21% 64%,rgba(255,232,163,.13),transparent 12%),
+        radial-gradient(circle at 74% 48%,rgba(141,216,255,.13),transparent 14%),
         linear-gradient(112deg,
           transparent 0 38%,
-          rgba(255,255,255,.45) 45%,
-          rgba(255,232,163,.18) 50%,
+          rgba(255,255,255,.36) 45%,
+          rgba(255,232,163,.13) 50%,
           transparent 58% 100%);
       opacity:0;
       transform:translateX(-44%) rotate(0deg);
-      animation:gemLightSweep 5.8s ease-in-out infinite;
+      animation:gemLightSweep 6.4s ease-in-out infinite;
       animation-delay:var(--delay,0s);
       pointer-events:none;
     }
 
-    .orbit-center .sapphire-shell {
-      border-color:rgba(243,200,111,.48);
+    .mineral-inclusion {
+      position:absolute;
+      inset:0;
+      z-index:2;
+      clip-path:var(--gem-cut);
+      pointer-events:none;
+      opacity:.54;
       background:
-        radial-gradient(circle at 44% 18%,rgba(255,255,255,.62),transparent 13%),
-        radial-gradient(circle at 56% 28%,rgba(255,232,163,.20),transparent 25%),
-        conic-gradient(from 21deg at 48% 54%,
-          rgba(255,255,255,.22) 0deg,
-          rgba(141,216,255,.32) 34deg,
-          rgba(8,29,76,.80) 82deg,
-          rgba(36,120,255,.65) 128deg,
-          rgba(3,9,28,.92) 183deg,
-          rgba(243,200,111,.24) 226deg,
-          rgba(12,31,74,.82) 286deg,
-          rgba(255,255,255,.22) 360deg),
-        radial-gradient(circle at 50% 72%,rgba(36,120,255,.24),transparent 64%),
-        linear-gradient(145deg,rgba(22,54,112,.96),rgba(5,8,20,.98));
+        radial-gradient(circle at var(--inc-a-x, 29%) var(--inc-a-y, 61%),rgba(255,232,163,.10),transparent 6%),
+        radial-gradient(circle at var(--inc-b-x, 67%) var(--inc-b-y, 42%),rgba(255,255,255,.09),transparent 5%),
+        linear-gradient(var(--vein-a, 24deg),transparent 0 44%,rgba(255,255,255,.09) 45%,transparent 47% 100%),
+        linear-gradient(var(--vein-b, 147deg),transparent 0 56%,rgba(141,216,255,.08) 57%,transparent 59% 100%);
+      mix-blend-mode:screen;
+    }
+
+    .orbit-center .sapphire-shell {
       box-shadow:
         0 1.5rem 3rem rgba(0,0,0,.42),
         0 0 2.2rem rgba(243,200,111,.15),
@@ -593,25 +706,25 @@
 
     @keyframes gemGravityTurn {
       0%,100% {
-        transform:rotate(-2deg) scale(1);
+        transform:rotate(var(--tilt-a)) scale(1);
         filter:brightness(.98) saturate(1);
       }
       50% {
-        transform:rotate(2.5deg) scale(1.018);
-        filter:brightness(1.14) saturate(1.07);
+        transform:rotate(var(--tilt-b)) scale(1.018);
+        filter:brightness(1.13) saturate(1.06);
       }
     }
 
     @keyframes gemLightSweep {
-      0%,26%,100% {
+      0%,27%,100% {
         opacity:0;
         transform:translateX(-48%) rotate(0deg);
       }
-      44%,50% {
-        opacity:.58;
+      44%,51% {
+        opacity:.50;
         transform:translateX(48%) rotate(0deg);
       }
-      62% {
+      64% {
         opacity:0;
         transform:translateX(72%) rotate(0deg);
       }
@@ -929,7 +1042,7 @@
 
       <section class="panel section" aria-labelledby="orbit-title">
         <div class="kicker">Product Orbit</div>
-        <h2 id="orbit-title">Eight natural digital gems keep the usable paths readable.</h2>
+        <h2 id="orbit-title">Eight organic digital gems keep the usable paths readable.</h2>
 
         <div
           class="orbit-stage"
@@ -938,48 +1051,57 @@
           data-products-public-orbit="true"
           aria-label="Product orbit: one message and eight doors"
         >
-          <div class="orbit-center" aria-hidden="true">
+          <div class="orbit-center" aria-hidden="true" style="--inc-a-x:24%;--inc-a-y:66%;--inc-b-x:69%;--inc-b-y:33%;--vein-a:19deg;--vein-b:139deg;">
             <span class="sapphire-shell"></span>
+            <span class="mineral-inclusion"></span>
             <span class="orbit-label"><b>Products</b><span>One Message · Eight Doors</span></span>
           </div>
 
-          <a class="orbit-node" style="--x:50%;--y:13%;--delay:-.2s" href="/products/archcoin/" aria-label="Open ARCHCOIN">
+          <a class="orbit-node gem-arch" style="--x:50%;--y:13%;--delay:-.2s;--inc-a-x:31%;--inc-a-y:67%;--inc-b-x:72%;--inc-b-y:37%;--vein-a:31deg;--vein-b:151deg;" href="/products/archcoin/" aria-label="Open ARCHCOIN">
             <span class="sapphire-shell" aria-hidden="true"></span>
+            <span class="mineral-inclusion" aria-hidden="true"></span>
             <span class="orbit-label"><b>ARCHCOIN</b><span>Trace</span></span>
           </a>
 
-          <a class="orbit-node" style="--x:73%;--y:23%;--delay:-.7s" href="/products/five-flags/" aria-label="Open Five Flags">
+          <a class="orbit-node gem-flags" style="--x:73%;--y:23%;--delay:-.7s;--inc-a-x:22%;--inc-a-y:55%;--inc-b-x:65%;--inc-b-y:29%;--vein-a:62deg;--vein-b:124deg;" href="/products/five-flags/" aria-label="Open Five Flags">
             <span class="sapphire-shell" aria-hidden="true"></span>
+            <span class="mineral-inclusion" aria-hidden="true"></span>
             <span class="orbit-label"><b>Five Flags</b><span>Signals</span></span>
           </a>
 
-          <a class="orbit-node" style="--x:86%;--y:50%;--delay:-1.2s" href="/products/on-your-side-ai/" aria-label="Open On Your Side AI">
+          <a class="orbit-node gem-aai" style="--x:86%;--y:50%;--delay:-1.2s;--inc-a-x:37%;--inc-a-y:71%;--inc-b-x:74%;--inc-b-y:46%;--vein-a:18deg;--vein-b:164deg;" href="/products/on-your-side-ai/" aria-label="Open On Your Side AI">
             <span class="sapphire-shell" aria-hidden="true"></span>
+            <span class="mineral-inclusion" aria-hidden="true"></span>
             <span class="orbit-label"><b>AAI</b><span>Support</span></span>
           </a>
 
-          <a class="orbit-node" style="--x:73%;--y:77%;--delay:-1.7s" href="/products/education/" aria-label="Open Education">
+          <a class="orbit-node gem-education" style="--x:73%;--y:77%;--delay:-1.7s;--inc-a-x:28%;--inc-a-y:62%;--inc-b-x:57%;--inc-b-y:31%;--vein-a:44deg;--vein-b:132deg;" href="/products/education/" aria-label="Open Education">
             <span class="sapphire-shell" aria-hidden="true"></span>
+            <span class="mineral-inclusion" aria-hidden="true"></span>
             <span class="orbit-label"><b>Education</b><span>Learning</span></span>
           </a>
 
-          <a class="orbit-node" style="--x:50%;--y:87%;--delay:-2.2s" href="/products/nutrition/" aria-label="Open Nutrition">
+          <a class="orbit-node gem-nutrition" style="--x:50%;--y:87%;--delay:-2.2s;--inc-a-x:35%;--inc-a-y:74%;--inc-b-x:76%;--inc-b-y:39%;--vein-a:27deg;--vein-b:144deg;" href="/products/nutrition/" aria-label="Open Nutrition">
             <span class="sapphire-shell" aria-hidden="true"></span>
+            <span class="mineral-inclusion" aria-hidden="true"></span>
             <span class="orbit-label"><b>Nutrition</b><span>Baseline</span></span>
           </a>
 
-          <a class="orbit-node" style="--x:27%;--y:77%;--delay:-2.7s" href="/meet-sean-mansfield/" aria-label="Open Meet Sean">
+          <a class="orbit-node gem-sean" style="--x:27%;--y:77%;--delay:-2.7s;--inc-a-x:25%;--inc-a-y:57%;--inc-b-x:63%;--inc-b-y:44%;--vein-a:57deg;--vein-b:118deg;" href="/meet-sean-mansfield/" aria-label="Open Meet Sean">
             <span class="sapphire-shell" aria-hidden="true"></span>
+            <span class="mineral-inclusion" aria-hidden="true"></span>
             <span class="orbit-label"><b>Meet Sean</b><span>Voice</span></span>
           </a>
 
-          <a class="orbit-node" style="--x:14%;--y:50%;--delay:-3.2s" href="/nine-summits/" aria-label="Open Nine Summits">
+          <a class="orbit-node gem-summits" style="--x:14%;--y:50%;--delay:-3.2s;--inc-a-x:38%;--inc-a-y:69%;--inc-b-x:70%;--inc-b-y:31%;--vein-a:35deg;--vein-b:157deg;" href="/nine-summits/" aria-label="Open Nine Summits">
             <span class="sapphire-shell" aria-hidden="true"></span>
+            <span class="mineral-inclusion" aria-hidden="true"></span>
             <span class="orbit-label"><b>Nine Summits</b><span>Climb</span></span>
           </a>
 
-          <a class="orbit-node" style="--x:27%;--y:23%;--delay:-3.7s" href="/nine-summits-of-love/" aria-label="Open the Book">
+          <a class="orbit-node gem-book" style="--x:27%;--y:23%;--delay:-3.7s;--inc-a-x:21%;--inc-a-y:64%;--inc-b-x:67%;--inc-b-y:36%;--vein-a:23deg;--vein-b:137deg;" href="/nine-summits-of-love/" aria-label="Open the Book">
             <span class="sapphire-shell" aria-hidden="true"></span>
+            <span class="mineral-inclusion" aria-hidden="true"></span>
             <span class="orbit-label"><b>Book</b><span>Long Form</span></span>
           </a>
         </div>
@@ -1114,17 +1236,17 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-PRODUCTS_LARGE_NATURAL_DIGITAL_GEM_RECEPTION_TNT_v4
-previous=PRODUCTS_DIGITAL_GEM_ORBIT_ANIMATION_RENEWAL_TNT_v3
+PRODUCTS_ORGANIC_DIGITAL_GEM_RECEPTION_TNT_v5
+previous=PRODUCTS_LARGE_NATURAL_DIGITAL_GEM_RECEPTION_TNT_v4
 route=/products/
 page=products
 role=product_wing
-public_frame=large_natural_digital_gem_product_orbit
+public_frame=organic_digital_gem_product_orbit
 public_cta=Explore_the_Eight_Doors
 core_message=The_message_becomes_usable_here.
 promise=Always_on_your_side_Never_in_control.
-digital_gem_standard=large_legible_natural_asymmetric_faceted_sapphire_objects
-visual_reception_rule=Legibility_governs_size_Natural_digital_gem_material_governs_form_Motion_enhances_reception_without_disturbing_words.
+digital_gem_standard=large_readable_non_repeating_organic_asymmetric_faceted_sapphire_objects
+organic_rule=Large_readable_gems_remain_but_each_gem_receives_organic_mineral_variation_through_asymmetric_silhouettes_uneven_off_axis_facet_fields_varied_light_positions_blue_black_silver_gold_mineral_depth_small_inclusions_and_stable_upright_labels.
 animation=gem_node_float,gem_gravity_turn,gem_light_sweep,orbit_turn,orbit_turn_reverse
 runtime_rule=Runtime_is_allowed_to_serve_or_enhance_the_product_orbit_but_is_not_allowed_to_be_the_public_product_message.
 static_page_usable_without_js=true
@@ -1139,7 +1261,7 @@ visible_cache_keys=false
 visible_script_failure_text=false
 products_index_js_role=quiet_bridge_hidden_status_only
 products_runtime_js_role=enhancement_only
-route_owns=products_public_page,large_natural_digital_gem_product_orbit,eight_doors,chamber_cards,public_copy,hidden_receipt
+route_owns=products_public_page,organic_digital_gem_product_orbit,eight_doors,chamber_cards,public_copy,hidden_receipt
 route_does_not_own=runtime_as_public_message,gauges_logic,showroom_runtime,product_child_pages,heavy_runtime
 generated_image=false
 graphic_box=false
@@ -1149,12 +1271,12 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      PRODUCTS_LARGE_NATURAL_DIGITAL_GEM_RECEPTION_TNT_v4 · Products · Large Natural Digital Gem Orbit · Eight Doors.
+      PRODUCTS_ORGANIC_DIGITAL_GEM_RECEPTION_TNT_v5 · Products · Organic Digital Gem Orbit · Eight Doors.
     </footer>
   </div>
 
   <script>
-    window.DGB_PRODUCTS_PUBLIC_ORBIT_KEY = "PRODUCTS_LARGE_NATURAL_DIGITAL_GEM_RECEPTION_TNT_v4";
+    window.DGB_PRODUCTS_PUBLIC_ORBIT_KEY = "PRODUCTS_ORGANIC_DIGITAL_GEM_RECEPTION_TNT_v5";
   </script>
   <script type="module" src="/products/index.js?v=PRODUCTS_PUBLIC_ORBIT_RUNTIME_DEMOTION_BRIDGE_TNT_v2"></script>
 </body>

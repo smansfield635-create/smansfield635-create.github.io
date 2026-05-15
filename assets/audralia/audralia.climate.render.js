@@ -1,306 +1,45 @@
-// /assets/audralia/audralia.climate.render.js
-// AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v1
+// /assets/audralia/audralia.canvas.js
+// AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3
 // Full-file replacement.
-// Climate/environment authority layer.
-// Defines climate zones from landmap, 256 lattice signals, Nine Summits provinces, elevation, latitude, coastline, basin/ridge, and stewardship influence.
-// Does not own footprint.
-// Does not own canvas.
-// Does not use generated image.
-// Does not use GraphicBox.
-// Does not claim visual pass.
+// Canvas consumer only.
+// Adds a visible page notice proving the newer Audralia authority chain is loaded.
+// Loads lattice256, landmap, climate render, and land surface when available.
+// Canvas does not own footprint.
+// Canvas does not author hydrology.
+// Canvas does not own climate.
+// No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v1";
-  const RECEIPT = "AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_CLIMATE_RENDER_HELD_OR_LEGACY";
-  const VERSION = "2026-05-15.audralia-climate-and-environment-detail-v1";
+  const CONTRACT = "AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3";
+  const RECEIPT = "AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_RECEIPT_v3";
+  const PREVIOUS_CONTRACT = "AUDRALIA_LIVING_CANVAS_PLANET_EXPRESSION_CANVAS_TNT_v2";
+  const LANDMAP_CONTRACT = "AUDRALIA_30_BILLION_YEAR_EARTH_LEGACY_ORGANIC_LANDFORM_TNT_v1";
+  const CLIMATE_CONTRACT = "AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v1";
+  const LAND_SURFACE_CONTRACT = "AUDRALIA_G1_LAYER_TWO_LUSH_LAND_SURFACE_TNT_v1";
+  const LATTICE_CONTRACT = "AUDRALIA_G1_256_LATTICE_ATLAS_AUTHORITY_TNT_v1";
+  const VERSION = "2026-05-15.audralia-visible-update-notice-canvas-v3";
+  const TAU = Math.PI * 2;
 
-  const CLIMATE_ZONES = Object.freeze([
-    "equatorial_rainforest",
-    "equatorial_wetland",
-    "tropical_coast",
-    "savanna",
-    "dry_basin",
-    "temperate_forest",
-    "temperate_grassland",
-    "highland_forest",
-    "alpine_stone",
-    "snow_mountain",
-    "polar_ice",
-    "restoration_green_belt",
-    "stewardship_coast",
-    "protected_valley",
-    "mineral_desert",
-    "opal_beach",
-    "black_diamond_beach",
-    "white_sand_beach",
-    "deep_ocean",
-    "coastal_shelf"
-  ]);
-
-  const SUMMIT_CLIMATE = Object.freeze({
-    Gratitude: {
-      moisture: 0.22,
-      warmth: 0.08,
-      fertility: 0.36,
-      dryness: -0.14,
-      forest: 0.20,
-      wetland: 0.18,
-      mountain: -0.04,
-      beachWhite: 0.10,
-      beachBlack: 0.02,
-      restoration: 0.12,
-      role: "fertile_lowlands"
-    },
-    Balance: {
-      moisture: 0.10,
-      warmth: 0.00,
-      fertility: 0.18,
-      dryness: -0.02,
-      forest: 0.14,
-      wetland: 0.05,
-      mountain: 0.04,
-      beachWhite: 0.08,
-      beachBlack: 0.06,
-      restoration: 0.16,
-      role: "moderate_mixed_climate"
-    },
-    Stability: {
-      moisture: -0.08,
-      warmth: -0.02,
-      fertility: 0.04,
-      dryness: 0.18,
-      forest: -0.04,
-      wetland: -0.08,
-      mountain: 0.18,
-      beachWhite: 0.03,
-      beachBlack: 0.16,
-      restoration: 0.08,
-      role: "old_craton_and_plateau"
-    },
-    Peace: {
-      moisture: 0.28,
-      warmth: 0.02,
-      fertility: 0.22,
-      dryness: -0.20,
-      forest: 0.16,
-      wetland: 0.34,
-      mountain: -0.08,
-      beachWhite: 0.12,
-      beachBlack: 0.03,
-      restoration: 0.18,
-      role: "wetlands_and_protected_bays"
-    },
-    Joy: {
-      moisture: 0.14,
-      warmth: 0.18,
-      fertility: 0.20,
-      dryness: -0.06,
-      forest: 0.12,
-      wetland: 0.10,
-      mountain: -0.02,
-      beachWhite: 0.34,
-      beachBlack: 0.05,
-      restoration: 0.12,
-      role: "bright_coasts_and_islands"
-    },
-    Dignity: {
-      moisture: -0.04,
-      warmth: -0.10,
-      fertility: -0.02,
-      dryness: 0.12,
-      forest: -0.08,
-      wetland: -0.10,
-      mountain: 0.40,
-      beachWhite: 0.02,
-      beachBlack: 0.34,
-      restoration: 0.05,
-      role: "mountain_mineral_pressure"
-    },
-    "Free Will": {
-      moisture: 0.02,
-      warmth: 0.05,
-      fertility: 0.04,
-      dryness: 0.05,
-      forest: 0.02,
-      wetland: 0.03,
-      mountain: 0.08,
-      beachWhite: 0.14,
-      beachBlack: 0.12,
-      restoration: 0.06,
-      role: "broken_edges_and_straits"
-    },
-    Love: {
-      moisture: 0.18,
-      warmth: 0.12,
-      fertility: 0.32,
-      dryness: -0.12,
-      forest: 0.24,
-      wetland: 0.14,
-      mountain: 0.00,
-      beachWhite: 0.16,
-      beachBlack: 0.04,
-      restoration: 0.22,
-      role: "sheltered_valleys"
-    },
-    Stewardship: {
-      moisture: 0.16,
-      warmth: 0.04,
-      fertility: 0.28,
-      dryness: -0.10,
-      forest: 0.26,
-      wetland: 0.12,
-      mountain: 0.04,
-      beachWhite: 0.12,
-      beachBlack: 0.08,
-      restoration: 0.40,
-      role: "restoration_green_infrastructure"
-    }
-  });
-
-  const PALETTES = Object.freeze({
-    equatorial_rainforest: {
-      base: [38, 106, 58],
-      mid: [61, 139, 72],
-      high: [99, 166, 88],
-      shadow: [23, 72, 49],
-      material: "deep_lush_green"
-    },
-    equatorial_wetland: {
-      base: [45, 105, 74],
-      mid: [67, 139, 98],
-      high: [103, 162, 120],
-      shadow: [22, 63, 59],
-      material: "wetland_green_blue"
-    },
-    tropical_coast: {
-      base: [62, 134, 72],
-      mid: [91, 161, 89],
-      high: [128, 185, 111],
-      shadow: [31, 84, 65],
-      material: "warm_coastal_green"
-    },
-    savanna: {
-      base: [128, 143, 72],
-      mid: [162, 164, 83],
-      high: [190, 177, 98],
-      shadow: [80, 100, 58],
-      material: "yellow_green_savanna"
-    },
-    dry_basin: {
-      base: [143, 118, 72],
-      mid: [171, 139, 82],
-      high: [201, 166, 101],
-      shadow: [82, 72, 55],
-      material: "ochre_dry_basin"
-    },
-    temperate_forest: {
-      base: [60, 120, 70],
-      mid: [84, 145, 84],
-      high: [124, 171, 103],
-      shadow: [30, 78, 55],
-      material: "temperate_green"
-    },
-    temperate_grassland: {
-      base: [100, 132, 72],
-      mid: [134, 156, 82],
-      high: [174, 182, 105],
-      shadow: [61, 84, 55],
-      material: "soft_grassland"
-    },
-    highland_forest: {
-      base: [66, 104, 72],
-      mid: [92, 126, 87],
-      high: [130, 153, 109],
-      shadow: [42, 64, 58],
-      material: "cool_highland_green"
-    },
-    alpine_stone: {
-      base: [104, 108, 96],
-      mid: [133, 133, 114],
-      high: [165, 160, 132],
-      shadow: [64, 70, 70],
-      material: "stone_highland"
-    },
-    snow_mountain: {
-      base: [174, 190, 184],
-      mid: [205, 216, 208],
-      high: [235, 240, 230],
-      shadow: [108, 126, 132],
-      material: "snow_and_old_stone"
-    },
-    polar_ice: {
-      base: [168, 205, 212],
-      mid: [201, 229, 228],
-      high: [235, 244, 240],
-      shadow: [89, 128, 150],
-      material: "polar_ice"
-    },
-    restoration_green_belt: {
-      base: [46, 128, 76],
-      mid: [78, 166, 98],
-      high: [135, 204, 128],
-      shadow: [26, 74, 59],
-      material: "restoration_green"
-    },
-    stewardship_coast: {
-      base: [62, 141, 103],
-      mid: [93, 176, 125],
-      high: [151, 211, 154],
-      shadow: [30, 82, 76],
-      material: "protected_coastal_green"
-    },
-    protected_valley: {
-      base: [72, 139, 76],
-      mid: [108, 167, 93],
-      high: [155, 197, 117],
-      shadow: [40, 87, 58],
-      material: "sheltered_valley_green"
-    },
-    mineral_desert: {
-      base: [150, 110, 72],
-      mid: [185, 141, 88],
-      high: [220, 177, 112],
-      shadow: [86, 65, 55],
-      material: "mineral_ochre"
-    },
-    opal_beach: {
-      base: [196, 184, 138],
-      mid: [218, 207, 158],
-      high: [238, 230, 185],
-      shadow: [128, 130, 105],
-      material: "opal_soft_beach"
-    },
-    black_diamond_beach: {
-      base: [62, 64, 70],
-      mid: [98, 98, 96],
-      high: [158, 154, 134],
-      shadow: [20, 26, 34],
-      material: "black_diamond_sand"
-    },
-    white_sand_beach: {
-      base: [202, 196, 156],
-      mid: [226, 220, 178],
-      high: [246, 240, 204],
-      shadow: [140, 144, 121],
-      material: "white_sand"
-    },
-    deep_ocean: {
-      base: [3, 18, 44],
-      mid: [5, 48, 88],
-      high: [8, 68, 115],
-      shadow: [1, 8, 25],
-      material: "deep_ocean"
-    },
-    coastal_shelf: {
-      base: [17, 92, 121],
-      mid: [32, 130, 150],
-      high: [65, 164, 164],
-      shadow: [5, 48, 83],
-      material: "coastal_shelf"
-    }
+  const COLORS = Object.freeze({
+    deepOcean: [3, 18, 44],
+    ocean: [5, 56, 98],
+    openOcean: [6, 66, 108],
+    shelf: [20, 106, 132],
+    shallow: [48, 143, 146],
+    beach: [202, 186, 128],
+    wetBeach: [156, 157, 116],
+    fallbackLand: [90, 127, 76],
+    livingGreen: [103, 150, 82],
+    livingGold: [174, 143, 74],
+    heartWarm: [186, 162, 96],
+    ice: [190, 220, 225],
+    snow: [218, 232, 226],
+    atmosphere: [86, 157, 194],
+    atmosphereBright: [142, 202, 226],
+    cloud: [230, 238, 238],
+    cloudSoft: [206, 225, 226]
   });
 
   function clamp(value, min, max) {
@@ -316,7 +55,7 @@
     return t * t * (3 - 2 * t);
   }
 
-  function mixColor(a, b, t) {
+  function mix(a, b, t) {
     const k = clamp(t, 0, 1);
     return [
       Math.round(lerp(a[0], b[0], k)),
@@ -387,357 +126,694 @@
     return total / Math.max(0.000001, norm);
   }
 
-  function numeric(value, fallback = 0) {
-    const n = Number(value);
-    return Number.isFinite(n) ? n : fallback;
-  }
+  function loadScriptOnce(src, flag) {
+    if (document.documentElement.dataset[flag] === "true") return Promise.resolve(true);
 
-  function summitProfile(name) {
-    return SUMMIT_CLIMATE[String(name || "Balance")] || SUMMIT_CLIMATE.Balance;
-  }
+    return new Promise((resolve) => {
+      const existing = document.querySelector(`script[data-loader-flag="${flag}"]`);
+      if (existing) {
+        existing.addEventListener("load", () => resolve(true), { once: true });
+        existing.addEventListener("error", () => resolve(false), { once: true });
+        return;
+      }
 
-  function latitudeHeat(latitude) {
-    const absLat = Math.abs(numeric(latitude, 0));
-    return clamp(1 - absLat / 90, 0, 1);
-  }
-
-  function polarPressure(latitude) {
-    return smoothstep(55, 84, Math.abs(numeric(latitude, 0)));
-  }
-
-  function coastInfluence(map) {
-    const beachEdge = numeric(map.beachEdge, 0);
-    const coastline = numeric(map.coastline, 0);
-    const shelf = numeric(map.shelf, 0);
-    return clamp(Math.max(beachEdge, coastline * 0.9, shelf * 0.7), 0, 1);
-  }
-
-  function elevationPressure(map) {
-    const terrainClass = String(map.terrainClass || "");
-    const elevationScore = numeric(map.elevationScore, 0);
-
-    if (terrainClass === "mountain") return Math.max(0.80, elevationScore);
-    if (terrainClass === "highland") return Math.max(0.66, elevationScore);
-    if (terrainClass === "plateau") return Math.max(0.52, elevationScore);
-    if (terrainClass === "polar-ice") return 0.92;
-    if (terrainClass === "beach" || terrainClass === "shelf" || terrainClass === "ocean") return 0;
-
-    return clamp(elevationScore, 0, 1);
-  }
-
-  function climateSeed(map) {
-    const cell256 = numeric(map.cell256, 1);
-    const cell64 = numeric(map.cell64, 1);
-    const cell16 = numeric(map.cell16, 1);
-    return Math.floor(cell256 * 131 + cell64 * 17 + cell16 * 7);
-  }
-
-  function beachClimate(map, moisture, heat, dryness, province) {
-    const u = numeric(map.u, 0);
-    const v = numeric(map.v, 0);
-    const seed = climateSeed(map);
-    const opal = fbm(u * 2.1 + 0.17, v * 1.8 - 0.11, 771000 + seed, 4) + province.beachWhite;
-    const black = fbm(u * 2.6 - 0.21, v * 2.2 + 0.08, 772000 + seed, 4) + province.beachBlack + elevationPressure(map) * 0.12;
-    const white = heat * 0.22 + moisture * 0.10 + province.beachWhite;
-
-    if (black > 0.80 && black > opal + 0.08) return "black_diamond_beach";
-    if (opal > 0.78) return "opal_beach";
-    if (white > 0.46 && dryness < 0.66) return "white_sand_beach";
-
-    return "opal_beach";
-  }
-
-  function classifyClimate(map) {
-    const terrainClass = String(map.terrainClass || "ocean");
-    const topology = String(map.topology || "");
-    const u = numeric(map.u, 0);
-    const v = numeric(map.v, 0);
-    const latitude = numeric(map.latitude, 0);
-    const seed = climateSeed(map);
-    const province = summitProfile(map.summitProvince || map.primarySummit);
-
-    if (map.isOcean || terrainClass === "ocean") return "deep_ocean";
-    if (map.isShelf || terrainClass === "shelf") return "coastal_shelf";
-    if (map.isPolarIce || terrainClass === "polar-ice") return "polar_ice";
-
-    const heatBase = latitudeHeat(latitude);
-    const polar = polarPressure(latitude);
-    const coast = coastInfluence(map);
-    const elevation = elevationPressure(map);
-    const ridge = clamp(numeric(map.nodalRidge, 0.4), 0, 1);
-    const basin = clamp(numeric(map.nodalBasin, 0.4), 0, 1);
-    const greenBelt = clamp(numeric(map.nodalGreenBelt, 0.4), 0, 1);
-    const tech = clamp(numeric(map.nodalTechnology, 0.4), 0, 1);
-
-    const moistureNoise = fbm(u * 1.35 + 0.13, v * 1.05 - 0.07, 781000 + seed, 5);
-    const rainShadow = ridge * elevation * 0.28;
-    const seaMoisture = coast * 0.30;
-    const basinMoisture = basin * 0.18;
-
-    const moisture = clamp(
-      moistureNoise * 0.52 +
-      heatBase * 0.14 +
-      seaMoisture +
-      basinMoisture +
-      province.moisture -
-      rainShadow -
-      polar * 0.18,
-      0,
-      1
-    );
-
-    const drynessNoise = fbm(u * 1.8 - 0.31, v * 1.6 + 0.22, 782000 + seed, 4);
-    const dryness = clamp(
-      drynessNoise * 0.36 +
-      (1 - moisture) * 0.42 +
-      elevation * 0.12 +
-      province.dryness -
-      coast * 0.08,
-      0,
-      1
-    );
-
-    const heat = clamp(
-      heatBase +
-      province.warmth -
-      elevation * 0.32 -
-      polar * 0.44 +
-      coast * 0.04,
-      0,
-      1
-    );
-
-    const restoration = clamp(
-      province.restoration +
-      greenBelt * 0.28 +
-      tech * 0.18 +
-      moisture * 0.08,
-      0,
-      1
-    );
-
-    if (map.isBeach || terrainClass === "beach") {
-      return beachClimate(map, moisture, heat, dryness, province);
-    }
-
-    if (terrainClass === "mountain" || elevation >= 0.80) {
-      if (heat < 0.42 || polar > 0.34) return "snow_mountain";
-      return "alpine_stone";
-    }
-
-    if (terrainClass === "highland") {
-      if (heat < 0.46 || elevation > 0.72) return "alpine_stone";
-      if (moisture > 0.52) return "highland_forest";
-      return "temperate_grassland";
-    }
-
-    if (topology.includes("wetland") || terrainClass === "wetland" || moisture > 0.78 && basin > 0.42) {
-      if (Math.abs(latitude) < 18) return "equatorial_wetland";
-      return "equatorial_wetland";
-    }
-
-    if (restoration > 0.62 && moisture > 0.42 && dryness < 0.62) return "restoration_green_belt";
-    if (coast > 0.58 && moisture > 0.48 && restoration > 0.38) return "stewardship_coast";
-    if (topology.includes("valley") || province.role === "sheltered_valleys") return "protected_valley";
-
-    if (Math.abs(latitude) < 18) {
-      if (moisture > 0.62) return "equatorial_rainforest";
-      if (dryness > 0.62) return "savanna";
-      return "tropical_coast";
-    }
-
-    if (Math.abs(latitude) < 33) {
-      if (dryness > 0.72) return "mineral_desert";
-      if (dryness > 0.56) return "savanna";
-      if (moisture > 0.58) return "temperate_forest";
-      return "temperate_grassland";
-    }
-
-    if (Math.abs(latitude) < 55) {
-      if (dryness > 0.68) return "dry_basin";
-      if (moisture > 0.50) return "temperate_forest";
-      return "temperate_grassland";
-    }
-
-    if (polar > 0.55) return "polar_ice";
-    if (moisture > 0.48) return "highland_forest";
-    return "alpine_stone";
-  }
-
-  function deriveEnvironment(map, climateZone) {
-    if (climateZone === "deep_ocean") return "ocean_basin";
-    if (climateZone === "coastal_shelf") return "shelf_water";
-    if (climateZone === "equatorial_rainforest") return "rainforest";
-    if (climateZone === "equatorial_wetland") return "wetland";
-    if (climateZone === "tropical_coast") return "coastal_green_belt";
-    if (climateZone === "savanna") return "savanna";
-    if (climateZone === "dry_basin") return "dry_basin";
-    if (climateZone === "temperate_forest") return "temperate_forest";
-    if (climateZone === "temperate_grassland") return "grassland";
-    if (climateZone === "highland_forest") return "highland_forest";
-    if (climateZone === "alpine_stone") return "alpine";
-    if (climateZone === "snow_mountain") return "snow_mountain";
-    if (climateZone === "polar_ice") return "polar";
-    if (climateZone === "restoration_green_belt") return "restoration_belt";
-    if (climateZone === "stewardship_coast") return "stewardship_coast";
-    if (climateZone === "protected_valley") return "protected_valley";
-    if (climateZone === "mineral_desert") return "mineral_desert";
-    if (climateZone === "opal_beach") return "opal_beach";
-    if (climateZone === "black_diamond_beach") return "black_diamond_beach";
-    if (climateZone === "white_sand_beach") return "white_sand_beach";
-
-    return String(map.terrainClass || "unknown_environment");
-  }
-
-  function climateMetrics(map, climateZone) {
-    const province = summitProfile(map.summitProvince || map.primarySummit);
-    const u = numeric(map.u, 0);
-    const v = numeric(map.v, 0);
-    const seed = climateSeed(map);
-    const latitude = numeric(map.latitude, 0);
-    const heatBase = latitudeHeat(latitude);
-    const elevation = elevationPressure(map);
-    const coast = coastInfluence(map);
-    const ridge = clamp(numeric(map.nodalRidge, 0.4), 0, 1);
-    const basin = clamp(numeric(map.nodalBasin, 0.4), 0, 1);
-    const greenBelt = clamp(numeric(map.nodalGreenBelt, 0.4), 0, 1);
-    const tech = clamp(numeric(map.nodalTechnology, 0.4), 0, 1);
-
-    const moistureNoise = fbm(u * 1.35 + 0.13, v * 1.05 - 0.07, 781000 + seed, 5);
-    const drynessNoise = fbm(u * 1.8 - 0.31, v * 1.6 + 0.22, 782000 + seed, 4);
-    const mineralNoise = fbm(u * 2.4 - 0.28, v * 2.0 + 0.18, 783000 + seed, 4);
-
-    const moisture = clamp(
-      moistureNoise * 0.52 +
-      heatBase * 0.14 +
-      coast * 0.30 +
-      basin * 0.18 +
-      province.moisture -
-      ridge * elevation * 0.28 -
-      polarPressure(latitude) * 0.18,
-      0,
-      1
-    );
-
-    const dryness = clamp(
-      drynessNoise * 0.36 +
-      (1 - moisture) * 0.42 +
-      elevation * 0.12 +
-      province.dryness -
-      coast * 0.08,
-      0,
-      1
-    );
-
-    const heat = clamp(
-      heatBase +
-      province.warmth -
-      elevation * 0.32 -
-      polarPressure(latitude) * 0.44 +
-      coast * 0.04,
-      0,
-      1
-    );
-
-    const fertility = clamp(
-      province.fertility +
-      moisture * 0.28 +
-      greenBelt * 0.20 +
-      coast * 0.08 -
-      dryness * 0.16,
-      0,
-      1
-    );
-
-    const restoration = clamp(
-      province.restoration +
-      greenBelt * 0.28 +
-      tech * 0.18 +
-      moisture * 0.08,
-      0,
-      1
-    );
-
-    const mineral = clamp(
-      mineralNoise * 0.42 +
-      province.mountain * 0.22 +
-      ridge * 0.18 +
-      elevation * 0.22,
-      0,
-      1
-    );
-
-    return Object.freeze({
-      heat,
-      moisture,
-      dryness,
-      fertility,
-      restoration,
-      mineral,
-      elevation,
-      coast,
-      ridge,
-      basin,
-      greenBelt,
-      technology: tech,
-      climateZone
+      const script = document.createElement("script");
+      script.src = `${src}?v=audralia-visible-notice-${Date.now()}`;
+      script.defer = true;
+      script.dataset.loaderFlag = flag;
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.head.appendChild(script);
     });
   }
 
-  function colorForClimate(map, climateZone, metrics) {
-    const palette = PALETTES[climateZone] || PALETTES.temperate_forest;
-    const u = numeric(map.u, 0);
-    const v = numeric(map.v, 0);
-    const seed = climateSeed(map);
-    const detail = fbm(u * 5.6 + 0.09, v * 4.8 - 0.15, 791000 + seed, 4);
-    const grain = (detail - 0.5) * 12;
-
-    let color = mixColor(palette.base, palette.mid, smoothstep(0.22, 0.78, detail));
-
-    if (metrics.moisture > 0.62) color = mixColor(color, palette.high, (metrics.moisture - 0.62) * 0.35);
-    if (metrics.dryness > 0.58) color = mixColor(color, palette.shadow, (metrics.dryness - 0.58) * 0.28);
-    if (metrics.elevation > 0.58) color = mixColor(color, palette.shadow, (metrics.elevation - 0.58) * 0.18);
-    if (metrics.restoration > 0.62 && !climateZone.includes("beach") && climateZone !== "deep_ocean" && climateZone !== "coastal_shelf") {
-      color = mixColor(color, PALETTES.restoration_green_belt.mid, (metrics.restoration - 0.62) * 0.20);
+  async function ensureAuthorities() {
+    if (!window.AUDRALIA_LATTICE256?.coordinatesFromUV) {
+      await loadScriptOnce("/assets/audralia/audralia.lattice256.js", "audraliaLattice256Loaded");
     }
 
-    return shade(color, grain);
-  }
+    if (!window.AUDRALIA_LANDMAP?.sampleLandmap) {
+      await loadScriptOnce("/assets/audralia/audralia.landmap.js", "audraliaLandmapLoaded");
+    }
 
-  function sampleClimate(mapInput) {
-    const map = mapInput || {};
-    const climateZone = classifyClimate(map);
-    const metrics = climateMetrics(map, climateZone);
-    const environmentClass = deriveEnvironment(map, climateZone);
-    const palette = PALETTES[climateZone] || PALETTES.temperate_forest;
-    const color = colorForClimate(map, climateZone, metrics);
-    const province = summitProfile(map.summitProvince || map.primarySummit);
+    if (!window.AUDRALIA_CLIMATE_RENDER?.sampleClimate) {
+      await loadScriptOnce("/assets/audralia/audralia.climate.render.js", "audraliaClimateLoaded");
+    }
+
+    if (!window.AUDRALIA_LAND_SURFACE?.sampleSurface) {
+      await loadScriptOnce("/assets/audralia/audralia.land.surface.js", "audraliaLandSurfaceLoaded");
+    }
 
     return Object.freeze({
-      allowed: true,
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      climateZone,
-      environmentClass,
-      material: palette.material,
-      color,
-      baseColor: palette.base,
-      midColor: palette.mid,
-      highColor: palette.high,
-      shadowColor: palette.shadow,
-      metrics,
-      summitProvince: String(map.summitProvince || map.primarySummit || "Balance"),
-      summitClimateRole: province.role,
-      nineSummitsClimateBinding: true,
-      lattice256ClimateInfluence: true,
-      earthLegacyClimate: true,
-      thirtyBillionYearFutureClimate: true,
-      highTechnologyHiddenInsideNature: true,
-      stewardshipInfluence: metrics.restoration,
-      visualPassClaimed: false,
-      generatedImage: false,
-      graphicBox: false
+      latticeLoaded: Boolean(window.AUDRALIA_LATTICE256?.coordinatesFromUV),
+      landmapLoaded: Boolean(window.AUDRALIA_LANDMAP?.sampleLandmap),
+      climateLoaded: Boolean(window.AUDRALIA_CLIMATE_RENDER?.sampleClimate),
+      landSurfaceLoaded: Boolean(window.AUDRALIA_LAND_SURFACE?.sampleSurface)
     });
+  }
+
+  function fallbackMap(u, v) {
+    return Object.freeze({
+      u,
+      v,
+      longitude: u * 360 - 180,
+      latitude: 90 - v * 180,
+      cell256: 1,
+      cell64: 1,
+      cell16: 1,
+      quadrant: "NE",
+      band: "temperate",
+      primarySummit: "Gratitude",
+      internalSummit: "Gratitude",
+      summitProvince: "Gratitude",
+      terrainClass: "ocean",
+      topology: "ocean",
+      elevation: "sea",
+      shelf: 0.2,
+      beachEdge: 0,
+      isOcean: true,
+      isLand: false,
+      isShelf: false,
+      isBeach: false,
+      isPolarIce: false,
+      hydrologyHeld: false
+    });
+  }
+
+  function sampleMap(u, v) {
+    if (window.AUDRALIA_LANDMAP?.sampleLandmap) return window.AUDRALIA_LANDMAP.sampleLandmap(u, v);
+    return fallbackMap(u, v);
+  }
+
+  function oceanColor(map) {
+    const u = map.u;
+    const v = map.v;
+    const oceanTexture = fbm(u * 1.2 + 0.19, v * 0.9 - 0.14, 710000, 5);
+    const depth = fbm(u * 0.82 - 0.22, v * 0.72 + 0.11, 710700, 5);
+    const grain = (fbm(u * 2.8 + 0.05, v * 2.2 - 0.12, 711000, 4) - 0.5) * 5;
+
+    let color = mix(COLORS.deepOcean, COLORS.ocean, smoothstep(0.16, 0.82, oceanTexture * 0.54 + (map.shelf || 0.2) * 0.18));
+    color = mix(color, COLORS.openOcean, smoothstep(0.42, 0.86, 1 - depth) * 0.18);
+
+    return shade(color, grain - 4);
+  }
+
+  function climateColor(map) {
+    if (!window.AUDRALIA_CLIMATE_RENDER?.sampleClimate) return null;
+
+    const climate = window.AUDRALIA_CLIMATE_RENDER.sampleClimate(map);
+    if (!climate?.allowed || !Array.isArray(climate.color)) return null;
+
+    return climate.color;
+  }
+
+  function surfaceColor(map) {
+    const u = map.u;
+    const v = map.v;
+    const grain = (fbm(u * 2.4 + 0.15, v * 2.0 - 0.11, 460000, 4) - 0.5) * 7;
+
+    if (map.isOcean || map.terrainClass === "ocean") {
+      return oceanColor(map);
+    }
+
+    if (map.isShelf || map.terrainClass === "shelf") {
+      let shelf = mix(COLORS.ocean, COLORS.shelf, smoothstep(0.38, 0.9, map.shelf || 0.5));
+      shelf = mix(shelf, COLORS.shallow, smoothstep(0.48, 0.9, map.beachEdge || 0) * 0.16);
+      return shade(shelf, grain * 0.3 + 1);
+    }
+
+    if (map.isBeach || map.terrainClass === "beach") {
+      const climate = climateColor(map);
+      if (climate) return shade(climate, grain * 0.28 + 1);
+
+      let beach = mix(COLORS.beach, COLORS.wetBeach, smoothstep(0.42, 0.88, map.shelf || 0.4));
+      beach = mix(beach, COLORS.shallow, smoothstep(0.54, 0.92, map.beachEdge || 0) * 0.08);
+      return shade(beach, grain * 0.45 + 2);
+    }
+
+    if (map.terrainClass === "polar-ice") {
+      const p = fbm(u * 3.0, v * 2.4, 720000, 4);
+      return shade(mix(COLORS.ice, COLORS.snow, smoothstep(0.42, 0.92, p)), grain * 0.22 + 5);
+    }
+
+    if (window.AUDRALIA_LAND_SURFACE?.sampleSurface) {
+      const surface = window.AUDRALIA_LAND_SURFACE.sampleSurface(map);
+      if (surface?.allowed && Array.isArray(surface.color)) return surface.color;
+    }
+
+    const climate = climateColor(map);
+    if (climate) return shade(climate, grain * 0.22);
+
+    return shade(COLORS.fallbackLand, grain - 3);
+  }
+
+  function isWaterLike(map) {
+    return Boolean(
+      map?.isOcean ||
+      map?.isShelf ||
+      map?.terrainClass === "ocean" ||
+      map?.terrainClass === "shelf"
+    );
+  }
+
+  function isBeachLike(map) {
+    return Boolean(map?.isBeach || map?.terrainClass === "beach");
+  }
+
+  function isLandLike(map) {
+    return Boolean(
+      map?.isLand ||
+      (
+        !isWaterLike(map) &&
+        !isBeachLike(map) &&
+        map?.terrainClass !== "ocean" &&
+        map?.terrainClass !== "shelf"
+      )
+    );
+  }
+
+  function liveWaterExpression(color, map, u, v, now, lightAmount, z) {
+    const t = now * 0.001;
+    const phase = t * 0.055;
+    const shelf = clamp(map.shelf || 0.28, 0, 1);
+    const edge = clamp(map.beachEdge || 0, 0, 1);
+    const shimmerField = fbm(u + phase * 0.38, v + Math.sin(t * 0.18) * 0.018, 812000, 4);
+    const crossWave = Math.sin((u * TAU * 18) + (v * 9.5) + t * 1.35) * 0.5 + 0.5;
+    const fineWave = Math.sin((u * TAU * 47) - (v * 21) + t * 2.1) * 0.5 + 0.5;
+    const specular = smoothstep(0.68, 0.96, shimmerField * 0.58 + crossWave * 0.28 + fineWave * 0.14) * lightAmount * smoothstep(0.08, 0.7, z);
+    const shelfGlow = smoothstep(0.38, 0.9, shelf) * 0.14 + smoothstep(0.18, 0.82, edge) * 0.12;
+    const waterPulse = (Math.sin(t * 0.74 + shimmerField * TAU) + 1) * 0.5;
+
+    let out = color;
+    out = shade(out, (shimmerField - 0.5) * 7 + specular * 18);
+    out = mix(out, COLORS.shallow, shelfGlow * (0.45 + waterPulse * 0.22));
+    out = mix(out, COLORS.cloudSoft, specular * 0.16);
+
+    return out;
+  }
+
+  function liveLandExpression(color, map, u, v, now, lightAmount, z) {
+    const t = now * 0.001;
+    const className = String(map.terrainClass || "");
+    const altitudeBias =
+      className.includes("mount") || className.includes("high") ? 0.22 :
+      className.includes("basin") || className.includes("valley") ? -0.08 :
+      className.includes("polar") || className.includes("ice") ? 0.12 :
+      0.04;
+
+    const growthNoise = fbm(u * 1.1 + t * 0.009, v * 1.05 - t * 0.006, 823000, 4);
+    const terrainPressure = fbm(u * 2.4 - 0.22, v * 2.1 + 0.17, 823500, 4);
+    const developmentPulse = (Math.sin(t * 0.34 + growthNoise * TAU) + 1) * 0.5;
+    const heartWarmth = smoothstep(0.34, 0.86, growthNoise) * (0.04 + developmentPulse * 0.065);
+    const structureShadow = (terrainPressure - 0.5) * 13 + altitudeBias * 14;
+
+    let out = shade(color, structureShadow);
+    out = mix(out, COLORS.livingGreen, heartWarmth * smoothstep(0.08, 0.9, z));
+    out = mix(out, COLORS.livingGold, heartWarmth * 0.42);
+    out = shade(out, lightAmount * 4);
+
+    return out;
+  }
+
+  function liveAtmosphereExpression(color, u, v, now, lightAmount, z, rr) {
+    const t = now * 0.001;
+    const breath = (Math.sin(t * 0.62) + 1) * 0.5;
+    const limb = 1 - smoothstep(0.02, 0.42, z);
+    const cloudField = fbm(u + t * 0.004, v - t * 0.003, 834000, 4);
+    const highCloud = smoothstep(0.66, 0.88, cloudField) * lightAmount;
+    const airStrength = clamp(limb * (0.22 + breath * 0.11), 0, 0.42);
+    const cloudStrength = clamp(highCloud * (0.08 + limb * 0.10), 0, 0.24);
+    const edgeProtection = smoothstep(0.74, 0.99, rr) * (0.05 + breath * 0.055);
+
+    let out = color;
+    out = mix(out, COLORS.atmosphereBright, airStrength);
+    out = mix(out, COLORS.cloud, cloudStrength);
+    out = mix(out, COLORS.heartWarm, edgeProtection * lightAmount);
+
+    return out;
+  }
+
+  function drawAtmosphereHalo(ctx, width, height, cx, cy, radius, now) {
+    const t = now * 0.001;
+    const breath = (Math.sin(t * 0.62) + 1) * 0.5;
+    const halo = ctx.createRadialGradient(cx, cy, radius * 0.92, cx, cy, radius * 1.12);
+
+    halo.addColorStop(0, "rgba(142,202,226,0)");
+    halo.addColorStop(0.38, `rgba(142,202,226,${0.028 + breath * 0.020})`);
+    halo.addColorStop(0.72, `rgba(142,202,226,${0.070 + breath * 0.045})`);
+    halo.addColorStop(1, "rgba(142,202,226,0)");
+
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.14, 0, TAU);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function buildTexture(width, height) {
+    const temp = document.createElement("canvas");
+    temp.width = width;
+    temp.height = height;
+
+    const ctx = temp.getContext("2d", { alpha: false });
+    const image = ctx.createImageData(width, height);
+    const data = image.data;
+
+    for (let y = 0; y < height; y += 1) {
+      const v = y / Math.max(1, height - 1);
+
+      for (let x = 0; x < width; x += 1) {
+        const u = x / width;
+        const map = sampleMap(u, v);
+        const color = surfaceColor(map);
+        const index = (y * width + x) * 4;
+
+        data[index] = color[0];
+        data[index + 1] = color[1];
+        data[index + 2] = color[2];
+        data[index + 3] = 255;
+      }
+    }
+
+    ctx.putImageData(image, 0, 0);
+
+    return Object.freeze({
+      data,
+      width,
+      height
+    });
+  }
+
+  function textureSample(texture, u, v) {
+    const x = Math.floor(wrap01(u) * texture.width) % texture.width;
+    const y = clamp(Math.floor(clamp(v, 0, 1) * (texture.height - 1)), 0, texture.height - 1);
+    const index = (y * texture.width + x) * 4;
+    return [texture.data[index], texture.data[index + 1], texture.data[index + 2]];
+  }
+
+  function makeNotice() {
+    const notice = document.createElement("div");
+    notice.dataset.audraliaVersionNotice = "true";
+    notice.style.position = "absolute";
+    notice.style.right = "10px";
+    notice.style.top = "10px";
+    notice.style.zIndex = "9";
+    notice.style.maxWidth = "min(88%, 390px)";
+    notice.style.padding = "9px 11px";
+    notice.style.border = "1px solid rgba(143,240,195,.36)";
+    notice.style.borderRadius = "14px";
+    notice.style.background = "linear-gradient(180deg, rgba(4,18,24,.82), rgba(3,10,18,.72))";
+    notice.style.color = "rgba(214,255,232,.94)";
+    notice.style.font = "800 11px/1.35 system-ui, sans-serif";
+    notice.style.letterSpacing = ".02em";
+    notice.style.boxShadow = "0 14px 40px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.08)";
+    notice.style.backdropFilter = "blur(8px)";
+    notice.style.pointerEvents = "none";
+    notice.textContent = "Audralia update check loading…";
+    return notice;
+  }
+
+  function updateNotice(notice, status) {
+    const landmap = status.landmapLoaded ? "landmap active" : "landmap missing";
+    const climate = status.climateLoaded ? "climate active" : "climate pending";
+    const surface = status.landSurfaceLoaded ? "surface active" : "surface fallback";
+
+    notice.textContent = `Audralia v3 update active · ${landmap} · ${climate} · ${surface}`;
+    notice.title = [
+      CONTRACT,
+      `landmap=${LANDMAP_CONTRACT}`,
+      `climate=${CLIMATE_CONTRACT}`,
+      "If color detail still looks unchanged, the next target is land.surface consumption."
+    ].join("\n");
+
+    notice.dataset.landmapLoaded = String(status.landmapLoaded);
+    notice.dataset.climateLoaded = String(status.climateLoaded);
+    notice.dataset.landSurfaceLoaded = String(status.landSurfaceLoaded);
+    notice.dataset.audraliaCanvasContract = CONTRACT;
+  }
+
+  function mount(mountNode, options = {}) {
+    const mount = mountNode && mountNode.nodeType === 1 ? mountNode : document.body;
+
+    mount.querySelectorAll("canvas[data-audralia-parent-chain-canvas='true']").forEach((node) => node.remove());
+    mount.querySelectorAll("[data-audralia-coordinate-readout='true']").forEach((node) => node.remove());
+    mount.querySelectorAll("[data-audralia-version-notice='true']").forEach((node) => node.remove());
+
+    const canvas = document.createElement("canvas");
+    canvas.dataset.audraliaParentChainCanvas = "true";
+    canvas.dataset.audraliaCanvasContract = CONTRACT;
+    canvas.dataset.audraliaCanvasReceipt = RECEIPT;
+    canvas.dataset.audraliaLatticeContract = LATTICE_CONTRACT;
+    canvas.dataset.audraliaLandmapContract = LANDMAP_CONTRACT;
+    canvas.dataset.audraliaClimateContract = CLIMATE_CONTRACT;
+    canvas.dataset.audraliaLandSurfaceContract = LAND_SURFACE_CONTRACT;
+    canvas.dataset.audraliaCanvasOwnsFootprint = "false";
+    canvas.dataset.audraliaCanvasOwnsClimate = "false";
+    canvas.dataset.audraliaCoordinateInspection = "true";
+    canvas.dataset.visibleUpdateNotice = "true";
+    canvas.dataset.textureRebuildPerFrame = "false";
+    canvas.dataset.canvasStillConsumerOnly = "true";
+    canvas.dataset.generatedImage = "false";
+    canvas.dataset.graphicBox = "false";
+    canvas.dataset.visualPassClaimed = "false";
+
+    canvas.style.position = "absolute";
+    canvas.style.inset = "0";
+    canvas.style.display = "block";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.touchAction = "none";
+    canvas.style.userSelect = "none";
+
+    mount.style.position = mount.style.position || "relative";
+    mount.style.overflow = "hidden";
+    mount.style.touchAction = "none";
+    mount.appendChild(canvas);
+
+    const notice = makeNotice();
+    mount.appendChild(notice);
+
+    const readout = document.createElement("div");
+    readout.dataset.audraliaCoordinateReadout = "true";
+    readout.dataset.audraliaReadoutPosture = "quiet_until_pointer";
+    readout.style.position = "absolute";
+    readout.style.left = "10px";
+    readout.style.bottom = "10px";
+    readout.style.padding = "7px 9px";
+    readout.style.borderRadius = "12px";
+    readout.style.background = "rgba(3,9,20,.58)";
+    readout.style.color = "rgba(238,246,255,.82)";
+    readout.style.font = "600 11px/1.35 system-ui, sans-serif";
+    readout.style.whiteSpace = "pre-line";
+    readout.style.pointerEvents = "none";
+    readout.style.opacity = "0.42";
+    readout.style.transition = "opacity 220ms ease, background 220ms ease";
+    readout.textContent = "Audralia visible update notice loading…";
+    mount.appendChild(readout);
+
+    const ctx = canvas.getContext("2d", { alpha: true });
+
+    let texture = null;
+    let readoutQuietTimer = null;
+
+    const state = {
+      disposed: false,
+      dragging: false,
+      lastX: 0,
+      lastY: 0,
+      spin: -0.4,
+      tilt: -0.08,
+      velocity: 0.0024,
+      frames: 0,
+      lastRender: 0,
+      ready: false,
+      authorityStatus: {
+        latticeLoaded: false,
+        landmapLoaded: false,
+        climateLoaded: false,
+        landSurfaceLoaded: false
+      }
+    };
+
+    function resize() {
+      const rect = mount.getBoundingClientRect();
+      const size = Math.max(280, Math.min(620, Math.floor(Math.min(rect.width || 420, rect.height || rect.width || 420))));
+      const dpr = Math.min(1.35, window.devicePixelRatio || 1);
+      canvas.width = Math.floor(size * dpr);
+      canvas.height = Math.floor(size * dpr);
+    }
+
+    function wakeReadout() {
+      readout.style.opacity = "0.92";
+      readout.style.background = "rgba(3,9,20,.72)";
+      window.clearTimeout(readoutQuietTimer);
+      readoutQuietTimer = window.setTimeout(() => {
+        if (!state.dragging) {
+          readout.style.opacity = "0.42";
+          readout.style.background = "rgba(3,9,20,.58)";
+        }
+      }, 2200);
+    }
+
+    function pointerToMap(event) {
+      const rect = canvas.getBoundingClientRect();
+      const x = ((event.clientX || 0) - rect.left) / Math.max(1, rect.width);
+      const y = ((event.clientY || 0) - rect.top) / Math.max(1, rect.height);
+
+      const px = (x - 0.5) / 0.44;
+      const py = (y - 0.5) / 0.44;
+      const rr = px * px + py * py;
+
+      if (rr > 1) return null;
+
+      const z = Math.sqrt(1 - rr);
+      const cosSpin = Math.cos(state.spin);
+      const sinSpin = Math.sin(state.spin);
+      const cosTilt = Math.cos(state.tilt);
+      const sinTilt = Math.sin(state.tilt);
+
+      let sx = px;
+      let sy = py;
+      let sz = z;
+
+      const ty = sy * cosTilt - sz * sinTilt;
+      const tz = sy * sinTilt + sz * cosTilt;
+
+      sy = ty;
+      sz = tz;
+
+      const wx = sx * cosSpin - sz * sinSpin;
+      const wz = sx * sinSpin + sz * cosSpin;
+
+      const longitude = Math.atan2(wz, wx);
+      const latitude = Math.asin(clamp(sy, -1, 1));
+      const u = longitude / TAU + 0.5;
+      const v = 0.5 - latitude / Math.PI;
+
+      return sampleMap(u, v);
+    }
+
+    function updateReadout(map, interactive = false) {
+      if (interactive) wakeReadout();
+
+      if (!map) {
+        readout.textContent = "Pointer outside Audralia";
+        return;
+      }
+
+      readout.textContent = [
+        `lat ${map.latitude.toFixed(2)} · lon ${map.longitude.toFixed(2)}`,
+        `cell ${map.cell256}/256 · cell64 ${map.cell64} · cell16 ${map.cell16}`,
+        `${map.quadrant} · ${map.band}`,
+        `${map.terrainClass} · ${map.topology} · ${map.elevation}`,
+        `${map.primarySummit} → ${map.internalSummit}`
+      ].join("\n");
+
+      document.documentElement.dataset.audraliaLastLatitude = String(map.latitude.toFixed(4));
+      document.documentElement.dataset.audraliaLastLongitude = String(map.longitude.toFixed(4));
+      document.documentElement.dataset.audraliaLastCell256 = String(map.cell256);
+      document.documentElement.dataset.audraliaLastTerrainClass = map.terrainClass;
+      document.documentElement.dataset.audraliaLastTopology = map.topology;
+      document.documentElement.dataset.audraliaLastElevation = map.elevation;
+      document.documentElement.dataset.audraliaLastInternalSummit = map.internalSummit;
+    }
+
+    function pointerDown(event) {
+      state.dragging = true;
+      state.lastX = event.clientX || event.touches?.[0]?.clientX || 0;
+      state.lastY = event.clientY || event.touches?.[0]?.clientY || 0;
+      updateReadout(pointerToMap(event), true);
+      canvas.setPointerCapture?.(event.pointerId);
+    }
+
+    function pointerMove(event) {
+      updateReadout(pointerToMap(event), true);
+
+      if (!state.dragging) return;
+
+      const x = event.clientX || event.touches?.[0]?.clientX || 0;
+      const y = event.clientY || event.touches?.[0]?.clientY || 0;
+      const dx = x - state.lastX;
+      const dy = y - state.lastY;
+
+      state.spin += dx * 0.008;
+      state.tilt = clamp(state.tilt + dy * 0.006, -1.15, 1.15);
+      state.lastX = x;
+      state.lastY = y;
+    }
+
+    function pointerUp(event) {
+      state.dragging = false;
+      canvas.releasePointerCapture?.(event.pointerId);
+    }
+
+    function render(now) {
+      if (state.disposed) return;
+
+      if (!state.ready || !texture) {
+        requestAnimationFrame(render);
+        return;
+      }
+
+      if (!state.dragging) state.spin += state.velocity;
+
+      if (now - state.lastRender < 30) {
+        requestAnimationFrame(render);
+        return;
+      }
+
+      state.lastRender = now;
+      state.frames += 1;
+
+      const width = canvas.width;
+      const height = canvas.height;
+      const cx = width * 0.5;
+      const cy = height * 0.5;
+      const radius = Math.min(width, height) * 0.44;
+      const image = ctx.createImageData(width, height);
+      const data = image.data;
+
+      const cosSpin = Math.cos(state.spin);
+      const sinSpin = Math.sin(state.spin);
+      const cosTilt = Math.cos(state.tilt);
+      const sinTilt = Math.sin(state.tilt);
+      const light = [-0.45, -0.28, 0.84];
+
+      for (let y = 0; y < height; y += 1) {
+        const py = (y - cy) / radius;
+
+        for (let x = 0; x < width; x += 1) {
+          const px = (x - cx) / radius;
+          const rr = px * px + py * py;
+          const index = (y * width + x) * 4;
+
+          if (rr > 1) {
+            data[index] = 0;
+            data[index + 1] = 0;
+            data[index + 2] = 0;
+            data[index + 3] = 0;
+            continue;
+          }
+
+          const z = Math.sqrt(1 - rr);
+          let sx = px;
+          let sy = py;
+          let sz = z;
+
+          const ty = sy * cosTilt - sz * sinTilt;
+          const tz = sy * sinTilt + sz * cosTilt;
+
+          sy = ty;
+          sz = tz;
+
+          const wx = sx * cosSpin - sz * sinSpin;
+          const wz = sx * sinSpin + sz * cosSpin;
+
+          const longitude = Math.atan2(wz, wx);
+          const latitude = Math.asin(clamp(sy, -1, 1));
+          const u = longitude / TAU + 0.5;
+          const v = 0.5 - latitude / Math.PI;
+
+          const map = sampleMap(u, v);
+          let color = textureSample(texture, u, v);
+
+          const lightAmount = clamp(wx * light[0] + sy * light[1] + z * light[2], 0, 1);
+
+          if (isWaterLike(map) || isBeachLike(map)) {
+            color = liveWaterExpression(color, map, u, v, now, lightAmount, z);
+          } else if (isLandLike(map)) {
+            color = liveLandExpression(color, map, u, v, now, lightAmount, z);
+          }
+
+          const limb = smoothstep(0.0, 0.16, z);
+          const shadeAmount = -36 + lightAmount * 58;
+
+          color = shade(color, shadeAmount);
+          color = mix(COLORS.atmosphere, color, limb);
+          color = liveAtmosphereExpression(color, u, v, now, lightAmount, z, rr);
+
+          data[index] = color[0];
+          data[index + 1] = color[1];
+          data[index + 2] = color[2];
+          data[index + 3] = Math.round(255 * smoothstep(0.0, 0.025, 1 - rr));
+        }
+      }
+
+      ctx.clearRect(0, 0, width, height);
+      ctx.putImageData(image, 0, 0);
+      drawAtmosphereHalo(ctx, width, height, cx, cy, radius, now);
+
+      if (typeof options.onStatus === "function") {
+        options.onStatus("rendering", {
+          mounted: true,
+          canvasFound: true,
+          controlsBound: true,
+          frames: state.frames,
+          ...state.authorityStatus,
+          canvasOwnsFootprint: false,
+          canvasOwnsClimate: false,
+          visibleUpdateNotice: true,
+          textureRebuildPerFrame: false,
+          canvasStillConsumerOnly: true
+        });
+      }
+
+      requestAnimationFrame(render);
+    }
+
+    resize();
+
+    window.addEventListener("resize", resize);
+    canvas.addEventListener("pointerdown", pointerDown);
+    canvas.addEventListener("pointermove", pointerMove);
+    canvas.addEventListener("pointerup", pointerUp);
+    canvas.addEventListener("pointercancel", pointerUp);
+
+    ensureAuthorities().then((authorityStatus) => {
+      state.authorityStatus = authorityStatus;
+      updateNotice(notice, authorityStatus);
+
+      texture = buildTexture(1024, 512);
+      state.ready = true;
+      updateReadout(sampleMap(0.5, 0.5), false);
+
+      document.documentElement.dataset.audraliaCanvasLoaded = "true";
+      document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
+      document.documentElement.dataset.audraliaCanvasReceipt = RECEIPT;
+      document.documentElement.dataset.audraliaCanvasPreviousContract = PREVIOUS_CONTRACT;
+      document.documentElement.dataset.audraliaVisibleUpdateNotice = "true";
+      document.documentElement.dataset.audraliaLattice256Loaded = String(authorityStatus.latticeLoaded);
+      document.documentElement.dataset.audraliaLandmapLoaded = String(authorityStatus.landmapLoaded);
+      document.documentElement.dataset.audraliaClimateLoaded = String(authorityStatus.climateLoaded);
+      document.documentElement.dataset.audraliaLandSurfaceLoaded = String(authorityStatus.landSurfaceLoaded);
+      document.documentElement.dataset.audraliaCanvasOwnsFootprint = "false";
+      document.documentElement.dataset.audraliaCanvasOwnsClimate = "false";
+      document.documentElement.dataset.textureRebuildPerFrame = "false";
+      document.documentElement.dataset.generatedImage = "false";
+      document.documentElement.dataset.graphicBox = "false";
+      document.documentElement.dataset.visualPassClaimed = "false";
+
+      requestAnimationFrame(render);
+    });
+
+    function dispose() {
+      state.disposed = true;
+      window.clearTimeout(readoutQuietTimer);
+      window.removeEventListener("resize", resize);
+      canvas.removeEventListener("pointerdown", pointerDown);
+      canvas.removeEventListener("pointermove", pointerMove);
+      canvas.removeEventListener("pointerup", pointerUp);
+      canvas.removeEventListener("pointercancel", pointerUp);
+      canvas.remove();
+      readout.remove();
+      notice.remove();
+    }
+
+    window.__AUDRALIA_CANVAS_DISPOSE__ = dispose;
+
+    return { canvas, controlsBound: true, dispose, getStatus };
   }
 
   function getStatus() {
@@ -745,56 +821,49 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
+      latticeContract: LATTICE_CONTRACT,
+      landmapContract: LANDMAP_CONTRACT,
+      climateContract: CLIMATE_CONTRACT,
+      landSurfaceContract: LAND_SURFACE_CONTRACT,
       version: VERSION,
-      authority: "audralia-climate-environment-authority",
-      ownsClimate: true,
-      ownsFootprint: false,
+      authority: "audralia-visible-update-notice-canvas-consumer",
+      canvasOwnsFootprint: false,
       canvasOwnsClimate: false,
-      climateZones: CLIMATE_ZONES,
-      primaryTarget: "/assets/audralia/audralia.climate.render.js",
-      secondaryTarget: "/assets/audralia/audralia.groundcover.js",
-      tertiaryTarget: "/assets/audralia/audralia.land.surface.js",
-      dependsOn: [
-        "/assets/audralia/audralia.landmap.js",
-        "/assets/audralia/audralia.lattice256.js"
-      ],
+      coordinateInspection: true,
+      visibleUpdateNotice: true,
+      textureRebuildPerFrame: false,
+      canvasStillConsumerOnly: true,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
     });
   }
 
-  window.AUDRALIA_CLIMATE_RENDER = Object.freeze({
+  window.AUDRALIA_CANVAS = Object.freeze({
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
+    latticeContract: LATTICE_CONTRACT,
+    landmapContract: LANDMAP_CONTRACT,
+    climateContract: CLIMATE_CONTRACT,
+    landSurfaceContract: LAND_SURFACE_CONTRACT,
     version: VERSION,
-    climateZones: CLIMATE_ZONES,
-    sampleClimate,
-    sample: sampleClimate,
-    classifyClimate,
-    deriveEnvironment,
-    climateMetrics,
-    colorForClimate,
+    mount,
     getStatus
   });
 
-  window.AUDRALIA_CLIMATE = window.AUDRALIA_CLIMATE_RENDER;
-  window.AUDRALIA_CLIMATE_RECEIPT = getStatus();
+  window.AUDRALIA_CANVAS_RECEIPT = getStatus();
 
-  document.documentElement.dataset.audraliaClimateLoaded = "true";
-  document.documentElement.dataset.audraliaClimateContract = CONTRACT;
-  document.documentElement.dataset.audraliaClimateReceipt = RECEIPT;
-  document.documentElement.dataset.audraliaClimateOwnsClimate = "true";
-  document.documentElement.dataset.audraliaClimateOwnsFootprint = "false";
+  document.documentElement.dataset.audraliaCanvasLoaded = "true";
+  document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
+  document.documentElement.dataset.audraliaCanvasReceipt = RECEIPT;
+  document.documentElement.dataset.audraliaCanvasPreviousContract = PREVIOUS_CONTRACT;
+  document.documentElement.dataset.audraliaCanvasExposesMount = "true";
+  document.documentElement.dataset.audraliaVisibleUpdateNotice = "true";
+  document.documentElement.dataset.audraliaCanvasOwnsFootprint = "false";
   document.documentElement.dataset.audraliaCanvasOwnsClimate = "false";
-  document.documentElement.dataset.audraliaClimateZones = CLIMATE_ZONES.join(",");
-  document.documentElement.dataset.audraliaClimateEnvironmentDetail = "true";
-  document.documentElement.dataset.audraliaNineSummitsClimateBinding = "true";
-  document.documentElement.dataset.audraliaLattice256ClimateInfluence = "true";
-  document.documentElement.dataset.audraliaEarthLegacyClimate = "true";
-  document.documentElement.dataset.audraliaThirtyBillionYearFutureClimate = "true";
-  document.documentElement.dataset.audraliaHighTechnologyHiddenInsideNature = "true";
+  document.documentElement.dataset.textureRebuildPerFrame = "false";
+  document.documentElement.dataset.canvasStillConsumerOnly = "true";
   document.documentElement.dataset.generatedImage = "false";
   document.documentElement.dataset.graphicBox = "false";
   document.documentElement.dataset.visualPassClaimed = "false";

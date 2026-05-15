@@ -3,7 +3,8 @@
   lang="en"
   data-route="/products/archcoin/"
   data-page="archcoin-product-grandchild-value-traceability"
-  data-contract="ARCHCOIN_PRODUCT_GRANDCHILD_VALUE_TRACEABILITY_RENEWAL_TNT_v2"
+  data-contract="ARCHCOIN_PRODUCT_GRANDCHILD_VALUE_FIELD_ANIMATION_TNT_v3"
+  data-previous-contract="ARCHCOIN_PRODUCT_GRANDCHILD_VALUE_TRACEABILITY_RENEWAL_TNT_v2"
   data-parent-route="/products/"
   data-grandparent-route="/"
   data-role="product-grandchild"
@@ -11,6 +12,8 @@
   data-product-type="value-traceability-architecture"
   data-core-message="value-should-be-traceable-before-it-is-amplified"
   data-value-loop="contribution-trace-record-allocate-trust"
+  data-animation-method="css-only"
+  data-js-required="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-heavy-runtime-loaded="false"
@@ -44,6 +47,9 @@
       --line-gold:rgba(243,200,111,.32);
       --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
+      --field-turn-duration:46s;
+      --gem-float-duration:6.8s;
+      --center-pulse-duration:7.4s;
       --gem-cut:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
       --facet:polygon(0 18px,18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px));
     }
@@ -447,13 +453,48 @@
       width:min(80%,34rem);
       height:min(80%,34rem);
       border:1px solid rgba(243,200,111,.10);
+      background:
+        conic-gradient(
+          from 0deg,
+          transparent 0deg,
+          rgba(243,200,111,.12) 28deg,
+          transparent 58deg,
+          rgba(141,216,255,.08) 108deg,
+          transparent 154deg,
+          rgba(243,200,111,.10) 214deg,
+          transparent 270deg,
+          rgba(141,216,255,.07) 320deg,
+          transparent 360deg
+        );
       box-shadow:0 0 3rem rgba(243,200,111,.10);
+      opacity:.82;
+      animation:valueFieldTurn var(--field-turn-duration) linear infinite;
     }
 
     .value-stage::after {
       width:min(52%,22rem);
       height:min(52%,22rem);
       border:1px solid rgba(36,120,255,.15);
+      box-shadow:
+        inset 0 0 3rem rgba(36,120,255,.035),
+        0 0 2.4rem rgba(36,120,255,.08);
+      animation:valueInnerFieldBreathe 8s ease-in-out infinite;
+    }
+
+    @keyframes valueFieldTurn {
+      to { transform:translate(-50%,-50%) rotate(360deg); }
+    }
+
+    @keyframes valueInnerFieldBreathe {
+      0%,100% {
+        opacity:.54;
+        filter:brightness(.94);
+      }
+
+      50% {
+        opacity:.86;
+        filter:brightness(1.12);
+      }
     }
 
     .center-gem {
@@ -470,9 +511,36 @@
       pointer-events:none;
     }
 
+    .center-gem-core,
+    .value-gem-core {
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      transform-origin:50% 50%;
+    }
+
+    .center-gem-core {
+      animation:centerPulse var(--center-pulse-duration) ease-in-out infinite;
+    }
+
+    @keyframes centerPulse {
+      0%,100% {
+        transform:scale(1);
+        filter:brightness(1);
+      }
+
+      50% {
+        transform:scale(1.035);
+        filter:brightness(1.13);
+      }
+    }
+
     .value-point {
       --angle:0deg;
       --radius:-15rem;
+      --value-delay:0s;
       position:absolute;
       left:50%;
       top:50%;
@@ -494,11 +562,35 @@
       transition:filter .18s ease,scale .18s ease;
     }
 
+    .value-point .value-gem-core {
+      animation:valueGemFloat var(--gem-float-duration) ease-in-out infinite;
+      animation-delay:var(--value-delay);
+    }
+
+    @keyframes valueGemFloat {
+      0%,100% {
+        transform:translateY(0) scale(1);
+        filter:brightness(1);
+      }
+
+      50% {
+        transform:translateY(-8px) scale(1.025);
+        filter:brightness(1.12);
+      }
+    }
+
     .value-point:hover,
     .value-point:focus-visible {
       filter:brightness(1.12) saturate(1.08);
       scale:1.045;
       outline:none;
+    }
+
+    .value-point:hover .value-gem-core,
+    .value-point:focus-visible .value-gem-core {
+      animation-play-state:paused;
+      transform:translateY(-10px) scale(1.045);
+      filter:brightness(1.18);
     }
 
     .arch-gem-svg {
@@ -581,7 +673,7 @@
 
     @keyframes archGlint {
       0%,100% { opacity:.08; transform:translateX(-34px); }
-      48%,55% { opacity:.48; transform:translateX(34px); }
+      48%,55% { opacity:.56; transform:translateX(34px); }
     }
 
     @keyframes archFacetTurn {
@@ -845,6 +937,10 @@
         transition-duration:.01ms!important;
       }
 
+      .value-stage::before,
+      .value-stage::after,
+      .center-gem-core,
+      .value-point .value-gem-core,
       .arch-glint,
       .arch-star {
         animation:none!important;
@@ -1014,38 +1110,50 @@
 
         <div class="value-stage" aria-label="Contribution trace record allocate trust value field">
           <div class="center-gem" aria-hidden="true">
-            <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
-              <use href="#archDigitalGem"></use>
-            </svg>
-            <span class="gem-label">
-              <b>ARCHCOIN</b>
-              <strong>Value Field</strong>
+            <span class="center-gem-core">
+              <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                <use href="#archDigitalGem"></use>
+              </svg>
+              <span class="gem-label">
+                <b>ARCHCOIN</b>
+                <strong>Value Field</strong>
+              </span>
             </span>
           </div>
 
-          <a class="value-point" style="--angle:0deg" href="#value-loop">
-            <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-            <span class="gem-label"><b>Contribute</b><span>Value enters</span></span>
+          <a class="value-point" style="--angle:0deg;--value-delay:-.2s" href="#value-loop">
+            <span class="value-gem-core">
+              <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+              <span class="gem-label"><b>Contribute</b><span>Value enters</span></span>
+            </span>
           </a>
 
-          <a class="value-point" style="--angle:72deg" href="#value-loop">
-            <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-            <span class="gem-label"><b>Trace</b><span>Source and purpose</span></span>
+          <a class="value-point" style="--angle:72deg;--value-delay:-1.4s" href="#value-loop">
+            <span class="value-gem-core">
+              <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+              <span class="gem-label"><b>Trace</b><span>Source and purpose</span></span>
+            </span>
           </a>
 
-          <a class="value-point" style="--angle:144deg" href="#value-loop">
-            <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-            <span class="gem-label"><b>Record</b><span>Event and ledger</span></span>
+          <a class="value-point" style="--angle:144deg;--value-delay:-2.6s" href="#value-loop">
+            <span class="value-gem-core">
+              <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+              <span class="gem-label"><b>Record</b><span>Event and ledger</span></span>
+            </span>
           </a>
 
-          <a class="value-point" style="--angle:216deg" href="#value-loop">
-            <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-            <span class="gem-label"><b>Allocate</b><span>Defined rules</span></span>
+          <a class="value-point" style="--angle:216deg;--value-delay:-3.8s" href="#value-loop">
+            <span class="value-gem-core">
+              <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+              <span class="gem-label"><b>Allocate</b><span>Defined rules</span></span>
+            </span>
           </a>
 
-          <a class="value-point" style="--angle:288deg" href="#value-loop">
-            <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-            <span class="gem-label"><b>Trust</b><span>Checkable movement</span></span>
+          <a class="value-point" style="--angle:288deg;--value-delay:-5s" href="#value-loop">
+            <span class="value-gem-core">
+              <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+              <span class="gem-label"><b>Trust</b><span>Checkable movement</span></span>
+            </span>
           </a>
         </div>
       </section>
@@ -1227,8 +1335,8 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-ARCHCOIN_PRODUCT_GRANDCHILD_VALUE_TRACEABILITY_RENEWAL_TNT_v2
-previous=ARCHCOIN_PRODUCT_CHAMBER_PUBLIC_VALUE_TRACEABILITY_TNT_v1
+ARCHCOIN_PRODUCT_GRANDCHILD_VALUE_FIELD_ANIMATION_TNT_v3
+previous=ARCHCOIN_PRODUCT_GRANDCHILD_VALUE_TRACEABILITY_RENEWAL_TNT_v2
 route=/products/archcoin/
 page=archcoin
 role=product_grandchild
@@ -1242,6 +1350,9 @@ core_message=Value should be traceable before it is amplified.
 core_mechanic=contribution_trace_record_allocate_trust
 value_points=contribute,trace,record,allocate,trust
 value_loop=make_contribution,trace_source_and_purpose,record_event,allocate_with_discipline,build_trust_through_checkability
+animation_method=css_only
+js_required=false
+animated=value_field_turn,value_inner_field_breathe,value_gem_float,center_pulse,arch_glint,arch_facet_turn
 public_goal=disciplined_value_design_before_amplification
 helps_with=contribution_systems,project_accounting,trust_surfaces,future_exchange_architecture,ledger_style_receipts,allocation_rules
 visible_label_corrections=Explore_not_Manor,On_Your_Side_AAI_not_On_Your_Side_AI
@@ -1272,11 +1383,11 @@ gauges=/gauges/
 compass=/
 explore=/explore/
 visual_system=code_rendered_value_traceability_digital_gem_field
-animation=floating_value_gem_glints,background_anchor_pulse,facet_turn,hover_lift
+animation=floating_value_gem_glints,background_anchor_pulse,field_turn,center_pulse,facet_turn,hover_lift
 mobile_law=stacked_value_points_no_clipping_no_hidden_nodes
 receipt_visibility=hidden_template_only
-route_owns=archcoin_public_value_traceability_chamber,value_loop,traceability_explanation,financial_guardrails,use_cases,product_chamber_receipt,archcoin_visual_field
-route_does_not_own=products_root,other_product_chambers,showroom,gauges_logic,runtime,render_files,instrument_state,live_financial_launch
+route_owns=archcoin_public_value_traceability_chamber,value_loop,traceability_explanation,financial_guardrails,use_cases,product_chamber_receipt,archcoin_visual_field,css_only_animation
+route_does_not_own=products_root,other_product_chambers,showroom,gauges_logic,runtime,render_files,instrument_state,live_financial_launch,javascript_animation_runtime
 heavy_runtime_loaded=false
 render_files_touched=false
 instrument_touched=false
@@ -1289,7 +1400,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      ARCHCOIN_PRODUCT_GRANDCHILD_VALUE_TRACEABILITY_RENEWAL_TNT_v2 · ARCHCOIN · Product Grandchild · Value Traceability Architecture.
+      ARCHCOIN_PRODUCT_GRANDCHILD_VALUE_FIELD_ANIMATION_TNT_v3 · ARCHCOIN · Product Grandchild · CSS-only value field animation.
     </footer>
   </div>
 </body>

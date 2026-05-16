@@ -1,22 +1,21 @@
 // /showroom/index.js
 // TNT FULL-FILE REPLACEMENT
-// SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_TNT_v4
-// Paired HTML cache key: SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_BIND_TNT_v5
+// SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_TNT_v5
+// Paired HTML cache key may remain: SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_TNT_v4
 // Scope: active /showroom/ Diamond renderer only.
 // Purpose:
-// - Replace failed 2D canvas polygon imitation.
-// - Use real WebGL: perspective camera, depth buffer, real rotating 3D mesh, real lattice mesh.
-// - Crystal Form and Lattice Structure are real 3D groups, not flat drawings.
-// - Touch/drag manipulates the camera/object view.
+// - Preserve the successful WebGL true 3D diamond.
+// - Raise the object above the lower instruction box.
+// - Reduce bottom collision without returning to flat canvas behavior.
+// - Crystal Form and Lattice Structure remain real 3D WebGL groups.
 // - 16 radial compass metric preserved.
-// - 256 lattice represented through structured address logic without visual clutter.
 // - No generated image. No graphic box. No legacy Globe / Planet One / Demo Universe inheritance.
 
 const SHOWROOM_DIAMOND_STATE = Object.freeze({
-  contract: "SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_TNT_v4",
+  contract: "SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_TNT_v5",
   pairedHtmlContract: "SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_BIND_TNT_v5",
   route: "/showroom/",
-  role: "showroom-dual-lens-webgl-true-3d-cover-object",
+  role: "showroom-dual-lens-webgl-true-3d-cover-object-raised-stage",
   diamondLock: "CROWN_CUT_256_LATTICE_FIXED_FORM",
   renderer: "native-webgl",
   fallbackRenderer: "none",
@@ -30,6 +29,7 @@ const SHOWROOM_DIAMOND_STATE = Object.freeze({
   latticeStates: 256,
   crystalFormSilhouette: "true-3d-crown-cut-diamond-body",
   latticeFormSilhouette: "true-3d-structural-compass-lattice",
+  stageCorrection: "raised-above-instruction-box",
   flatBadgeBlocked: true,
   generatedImage: false,
   graphicBox: false,
@@ -45,12 +45,12 @@ const LATTICE_STATES = 256;
 const LENS_COPY = Object.freeze({
   crystal: {
     title: "Crystal Form",
-    route: "Crystal Form → WebGL true 3D Crown Cut Diamond · table · crown · girdle · pavilion",
+    route: "Crystal Form → WebGL true 3D Crown Cut Diamond · raised inspection view",
     copy: "This view shows the finished Crown Cut Diamond as a true 3D crystal body: table, crown, faceted girdle, pavilion, culet, light, and touch inspection. This is the public object. It proves the site can render interactive 3D content with a fixed form instead of a flat graphic."
   },
   lattice: {
     title: "Lattice Structure",
-    route: "Lattice Structure → WebGL 16-point compass geometry · 256 lattice logic",
+    route: "Lattice Structure → WebGL 16-point compass geometry · raised lattice view",
     copy: "This view reveals the structural logic beneath the Diamond. The 16-point compass metric organizes the visible geometry, while the 256 lattice represents the deeper address system behind the form. This is not a separate object. It is the same Diamond viewed through its underlying structure."
   }
 });
@@ -290,47 +290,13 @@ function buildDiamondGeometry() {
     const compassCut = i % 2 === 0 ? 1 : 0.93;
     const cardinalBoost = i % 4 === 0 ? 1.04 : 1;
 
-    table.push(makePoint(
-      Math.cos(angle) * 0.34 * compassCut,
-      0.48,
-      Math.sin(angle) * 0.34 * compassCut
-    ));
-
-    crownInner.push(makePoint(
-      Math.cos(angle) * 0.52 * compassCut,
-      0.34,
-      Math.sin(angle) * 0.52 * compassCut
-    ));
-
-    crownOuter.push(makePoint(
-      Math.cos(angle) * 0.78 * compassCut * cardinalBoost,
-      0.12,
-      Math.sin(angle) * 0.78 * compassCut * cardinalBoost
-    ));
-
-    girdleTop.push(makePoint(
-      Math.cos(angle) * 1.08 * compassCut * cardinalBoost,
-      -0.03,
-      Math.sin(angle) * 1.08 * compassCut * cardinalBoost
-    ));
-
-    girdleBottom.push(makePoint(
-      Math.cos(angle) * 1.02 * compassCut * cardinalBoost,
-      -0.18,
-      Math.sin(angle) * 1.02 * compassCut * cardinalBoost
-    ));
-
-    pavilion.push(makePoint(
-      Math.cos(angle) * 0.50 * compassCut,
-      -0.58,
-      Math.sin(angle) * 0.50 * compassCut
-    ));
-
-    culetRing.push(makePoint(
-      Math.cos(angle) * 0.12 * compassCut,
-      -0.82,
-      Math.sin(angle) * 0.12 * compassCut
-    ));
+    table.push(makePoint(Math.cos(angle) * 0.34 * compassCut, 0.48, Math.sin(angle) * 0.34 * compassCut));
+    crownInner.push(makePoint(Math.cos(angle) * 0.52 * compassCut, 0.34, Math.sin(angle) * 0.52 * compassCut));
+    crownOuter.push(makePoint(Math.cos(angle) * 0.78 * compassCut * cardinalBoost, 0.12, Math.sin(angle) * 0.78 * compassCut * cardinalBoost));
+    girdleTop.push(makePoint(Math.cos(angle) * 1.08 * compassCut * cardinalBoost, -0.03, Math.sin(angle) * 1.08 * compassCut * cardinalBoost));
+    girdleBottom.push(makePoint(Math.cos(angle) * 1.02 * compassCut * cardinalBoost, -0.18, Math.sin(angle) * 1.02 * compassCut * cardinalBoost));
+    pavilion.push(makePoint(Math.cos(angle) * 0.50 * compassCut, -0.58, Math.sin(angle) * 0.50 * compassCut));
+    culetRing.push(makePoint(Math.cos(angle) * 0.12 * compassCut, -0.82, Math.sin(angle) * 0.12 * compassCut));
   }
 
   const tableCenter = makePoint(0, 0.54, 0);
@@ -733,7 +699,7 @@ function makeMatrices(width, height) {
   rotateZ(model, model, Math.sin(state.sparkle * 0.16) * 0.025);
 
   identity(view);
-  translate(view, view, [0, 0, -4.05]);
+  translate(view, view, [0, 0.62, -4.42]);
 
   multiply(modelView, view, model);
 
@@ -942,7 +908,7 @@ function bindLensControls() {
 
 function markRoute() {
   const markers = {
-    showroomStatus: "dual-lens-webgl-true-3d-diamond-launchpad",
+    showroomStatus: "dual-lens-webgl-true-3d-diamond-raised-stage",
     showroomContract: SHOWROOM_DIAMOND_STATE.contract,
     showroomPairedHtmlContract: SHOWROOM_DIAMOND_STATE.pairedHtmlContract,
     diamondLock: "CROWN_CUT_256_LATTICE_FIXED_FORM",
@@ -958,7 +924,8 @@ function markRoute() {
     crystalFormSilhouette: "true-3d-crown-cut-diamond-body",
     latticeFormSilhouette: "true-3d-structural-compass-lattice",
     crystalAndLatticeAreVisuallyDistinct: "true",
-    diamondPublicRead: "webgl-true-3d-not-flat",
+    diamondPublicRead: "webgl-true-3d-raised-above-instruction-box",
+    stageCorrection: "raised-above-instruction-box",
     webglDepthBuffer: "true",
     perspectiveCamera: "true",
     realMesh: "true",
@@ -1079,6 +1046,7 @@ function initShowroomDiamond() {
         perspectiveCamera: true,
         realMesh: true,
         realObjectRotation: true,
+        stageCorrection: "raised-above-instruction-box",
         lattice256: true,
         latticeStates: LATTICE_STATES,
         visibleRadialMetric: RADIAL_POINTS,
@@ -1087,7 +1055,7 @@ function initShowroomDiamond() {
         crystalFormSilhouette: "true-3d-crown-cut-diamond-body",
         latticeFormSilhouette: "true-3d-structural-compass-lattice",
         crystalAndLatticeAreVisuallyDistinct: true,
-        correctedPhysicalRead: "not-flat-paper-not-2d-canvas-drawing",
+        correctedPhysicalRead: "raised-webgl-true-3d-not-flat-paper",
         flatBadgeBlocked: true,
         tableClear: true,
         visibleCrown: true,

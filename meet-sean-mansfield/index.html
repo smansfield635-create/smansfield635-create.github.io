@@ -3,14 +3,18 @@
   lang="en"
   data-route="/meet-sean-mansfield/"
   data-page="meet-sean-mansfield"
-  data-version="G1-V3"
-  data-contract="MEET_SEAN_MANSFIELD_CONDENSED_RUSSIAN_DOLL_PROFILE_TNT_v3"
+  data-version="G2-V1"
+  data-contract="MEET_SEAN_MANSFIELD_GEM_PROFILE_RENEWAL_TNT_v1"
+  data-previous-contract="MEET_SEAN_MANSFIELD_CONDENSED_RUSSIAN_DOLL_PROFILE_TNT_v3"
   data-status="active"
   data-parent="/"
   data-baseline="AUDRALIA_MANOR_CURRENT"
   data-role="personal-profile-surface"
   data-universal-underdog-route="/about-this-underdog/"
   data-photo-path="/about-this-underdog/sean-mansfield.jpg"
+  data-gem-profile-language="active"
+  data-russian-doll-profile-preserved="true"
+  data-photo-preserved="true"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -20,6 +24,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
   <title>Meet Sean Mansfield · Diamond Gate Bridge</title>
   <meta
     name="description"
@@ -37,41 +42,50 @@
       --gold:#f3c86f;
       --gold2:#ffe8a3;
       --blue:#8dd8ff;
+      --green:#8ff0c3;
       --purple:#8f65ff;
-      --panel:rgba(9,15,31,.82);
+      --purple2:#cbb8ff;
+      --panel:rgba(9,15,31,.86);
       --line:rgba(184,205,255,.18);
       --line2:rgba(243,200,111,.34);
       --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
+      --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
     }
 
     *{box-sizing:border-box}
 
     html{
+      min-width:320px;
       min-height:100%;
       background:var(--bg);
       scroll-behavior:smooth;
+      overflow-x:hidden;
     }
 
     body{
       margin:0;
+      min-width:320px;
       min-height:100vh;
       color:var(--ink);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       line-height:1.5;
+      overflow-x:hidden;
       background:
         radial-gradient(circle at 50% -8%,rgba(243,200,111,.22),transparent 28rem),
         radial-gradient(circle at 10% 18%,rgba(143,101,255,.22),transparent 28rem),
         radial-gradient(circle at 92% 30%,rgba(141,216,255,.14),transparent 28rem),
         radial-gradient(circle at 50% 78%,rgba(143,101,255,.12),transparent 34rem),
         linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
-      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
     }
 
     body::before{
       content:"";
       position:fixed;
       inset:0;
+      z-index:0;
       pointer-events:none;
       background-image:
         radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
@@ -86,6 +100,7 @@
       content:"";
       position:fixed;
       inset:-20%;
+      z-index:0;
       pointer-events:none;
       background:
         conic-gradient(from 90deg at 50% 50%,
@@ -97,11 +112,26 @@
           rgba(141,216,255,.07) 292deg,
           transparent 360deg);
       filter:blur(42px);
-      opacity:.60;
+      opacity:.58;
       animation:auroraDrift 26s linear infinite;
     }
 
     a{color:inherit;text-decoration:none}
+
+    a:focus-visible,
+    button:focus-visible,
+    summary:focus-visible{
+      outline:2px solid var(--gold);
+      outline-offset:4px;
+    }
+
+    .svg-defs{
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
+    }
 
     .skip{
       position:absolute;
@@ -147,11 +177,12 @@
       display:grid;
       place-items:center;
       border:1px solid rgba(243,200,111,.44);
-      border-radius:1.15rem;
       transform:rotate(45deg);
+      clip-path:var(--brand-gem);
       background:
-        radial-gradient(circle at 48% 22%,rgba(255,255,255,.24),transparent 42%),
-        radial-gradient(circle at 64% 76%,rgba(143,101,255,.42),transparent 58%),
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(143,101,255,.34),rgba(20,10,62,.72),rgba(243,200,111,.18),rgba(255,255,255,.28)),
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.30),transparent 42%),
         linear-gradient(145deg,rgba(43,32,82,.95),rgba(5,8,20,.98));
       box-shadow:
         0 0 2rem rgba(143,101,255,.28),
@@ -164,6 +195,7 @@
       font-weight:950;
       letter-spacing:.04em;
       color:rgba(255,244,216,.98);
+      text-shadow:0 2px 10px rgba(0,0,0,.85);
     }
 
     .brand-copy{
@@ -207,6 +239,14 @@
       letter-spacing:.055em;
       text-transform:uppercase;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.46);
+      outline:none;
     }
 
     .nav a[aria-current="page"]{
@@ -230,11 +270,12 @@
     .hero{
       position:relative;
       display:grid;
-      grid-template-columns:minmax(0,1.15fr) minmax(280px,.62fr);
+      grid-template-columns:minmax(0,1.1fr) minmax(280px,.64fr);
       gap:clamp(1rem,3vw,1.6rem);
       align-items:stretch;
-      padding:clamp(1.25rem,4vw,2rem);
+      padding:clamp(1.1rem,4vw,2rem);
       margin-top:.6rem;
+      isolation:isolate;
     }
 
     .hero::before{
@@ -242,6 +283,7 @@
       position:absolute;
       right:clamp(1rem,6vw,5.5rem);
       top:50%;
+      z-index:0;
       width:clamp(10rem,27vw,20rem);
       height:clamp(10rem,27vw,20rem);
       border:1px solid rgba(243,200,111,.20);
@@ -262,7 +304,7 @@
       display:grid;
       gap:1rem;
       align-content:center;
-      min-height:clamp(24rem,44vw,34rem);
+      min-height:clamp(25rem,44vw,34rem);
       padding:clamp(.35rem,2vw,1.2rem);
     }
 
@@ -340,6 +382,8 @@
       flex-wrap:wrap;
       gap:.62rem;
       margin-top:.2rem;
+      position:relative;
+      z-index:3;
     }
 
     .button{
@@ -374,6 +418,12 @@
       box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
     }
 
+    .button.green{
+      border-color:rgba(143,240,195,.42);
+      color:var(--green);
+      background:rgba(143,240,195,.07);
+    }
+
     .profile-card{
       position:relative;
       z-index:2;
@@ -386,8 +436,26 @@
         radial-gradient(circle at 50% 0%,rgba(243,200,111,.14),transparent 38%),
         radial-gradient(circle at 20% 80%,rgba(143,101,255,.12),transparent 44%),
         rgba(255,255,255,.035);
-      box-shadow:0 1.5rem 4rem rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.08);
+      box-shadow:0 1.5rem 4rem rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.08);
       align-content:start;
+      overflow:hidden;
+    }
+
+    .profile-card::after{
+      content:"";
+      position:absolute;
+      right:1rem;
+      top:1rem;
+      width:4.6rem;
+      height:3.35rem;
+      clip-path:var(--brand-gem);
+      opacity:.46;
+      background:
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.24),rgba(143,101,255,.38),rgba(20,10,62,.70),rgba(243,200,111,.16),rgba(255,255,255,.22)),
+        radial-gradient(circle at 50% 26%,rgba(255,255,255,.30),transparent 44%);
+      filter:drop-shadow(0 .8rem 1rem rgba(0,0,0,.28)) drop-shadow(0 0 .8rem rgba(143,101,255,.18));
+      pointer-events:none;
     }
 
     .portrait{
@@ -402,6 +470,7 @@
         radial-gradient(circle at 50% 24%,rgba(141,216,255,.22),transparent 32%),
         radial-gradient(circle at 50% 76%,rgba(143,101,255,.16),transparent 44%),
         linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
     }
 
     .portrait::before{
@@ -412,7 +481,18 @@
       border-radius:2rem;
       transform:rotate(45deg);
       pointer-events:none;
-      z-index:1;
+      z-index:3;
+    }
+
+    .portrait::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:4;
+      pointer-events:none;
+      background:
+        linear-gradient(180deg,transparent 42%,rgba(2,4,11,.68) 100%),
+        radial-gradient(circle at 32% 10%,rgba(255,255,255,.14),transparent 28%);
     }
 
     .portrait img{
@@ -445,11 +525,17 @@
       display:grid;
       gap:.65rem;
       padding:.1rem .2rem;
+      position:relative;
+      z-index:2;
     }
 
     .meta-row{
       display:grid;
       gap:.12rem;
+      padding:.78rem .85rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:1rem;
+      background:rgba(255,255,255,.032);
     }
 
     .meta-row b{
@@ -473,16 +559,32 @@
       gap:1.05rem;
     }
 
-    .split-grid{
+    .gem-grid,
+    .split-grid,
+    .path-grid{
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.9rem;
+      gap:.85rem;
     }
 
-    .split-card{
-      min-height:11rem;
+    .split-grid{
+      grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .gem-grid{
+      grid-template-columns:repeat(3,minmax(0,1fr));
+    }
+
+    .path-grid{
+      grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+
+    .gem-card,
+    .split-card,
+    .path-card{
+      position:relative;
+      min-height:12rem;
       display:grid;
-      gap:.7rem;
+      gap:.65rem;
       align-content:start;
       padding:1rem;
       border:1px solid rgba(255,255,255,.12);
@@ -490,36 +592,84 @@
       background:
         radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
         rgba(255,255,255,.035);
-      position:relative;
       overflow:hidden;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .split-card::before{
+    .path-card{
+      min-height:10rem;
+    }
+
+    .gem-card::after,
+    .split-card::after,
+    .path-card::after{
       content:"";
-      width:1.85rem;
-      height:1.85rem;
-      border:1px solid rgba(243,200,111,.26);
-      border-radius:.56rem;
-      transform:rotate(45deg);
-      margin:.2rem 0 .25rem .28rem;
+      position:absolute;
+      right:.86rem;
+      top:.86rem;
+      width:4rem;
+      height:2.95rem;
+      clip-path:var(--brand-gem);
+      opacity:.46;
       background:
-        radial-gradient(circle at 50% 20%,rgba(255,255,255,.14),transparent 50%),
-        linear-gradient(145deg,rgba(143,101,255,.18),rgba(243,200,111,.05));
-      box-shadow:0 0 1rem rgba(143,101,255,.12);
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.24),rgba(143,101,255,.38),rgba(20,10,62,.70),rgba(243,200,111,.16),rgba(255,255,255,.22)),
+        radial-gradient(circle at 50% 26%,rgba(255,255,255,.30),transparent 44%);
+      filter:drop-shadow(0 .8rem 1rem rgba(0,0,0,.28)) drop-shadow(0 0 .8rem rgba(143,101,255,.18));
+      pointer-events:none;
     }
 
-    .split-card strong{
-      color:rgba(255,244,216,.98);
-      font-size:.9rem;
+    .gem-card:hover,
+    .gem-card:focus-visible,
+    .split-card:hover,
+    .split-card:focus-visible,
+    .path-card:hover,
+    .path-card:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(243,200,111,.46);
+      outline:none;
+    }
+
+    .card-kicker{
+      color:var(--gold);
+      font-size:.68rem;
       font-weight:950;
-      letter-spacing:.08em;
+      letter-spacing:.12em;
       text-transform:uppercase;
+      position:relative;
+      z-index:2;
     }
 
-    .split-card span{
+    .gem-card strong,
+    .split-card strong,
+    .path-card strong{
+      color:rgba(255,244,216,.98);
+      font-size:1.12rem;
+      line-height:1.08;
+      letter-spacing:-.035em;
+      position:relative;
+      z-index:2;
+    }
+
+    .gem-card span,
+    .split-card span,
+    .path-card span{
       color:var(--muted);
-      font-size:.96rem;
-      line-height:1.45;
+      font-size:.94rem;
+      line-height:1.42;
+      position:relative;
+      z-index:2;
+    }
+
+    .open-path{
+      margin-top:auto;
+      color:rgba(230,238,255,.88);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      position:relative;
+      z-index:2;
     }
 
     .doll{
@@ -527,7 +677,7 @@
       gap:.75rem;
     }
 
-    details{
+    details.layer{
       border:1px solid rgba(255,255,255,.13);
       border-radius:1.35rem;
       background:
@@ -535,14 +685,14 @@
       overflow:hidden;
     }
 
-    details[open]{
+    details.layer[open]{
       border-color:rgba(243,200,111,.30);
       background:
         radial-gradient(circle at 18% 0%,rgba(243,200,111,.08),transparent 34%),
         linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.028));
     }
 
-    summary{
+    details.layer summary{
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -554,9 +704,9 @@
       font-weight:950;
     }
 
-    summary::-webkit-details-marker{display:none}
+    details.layer summary::-webkit-details-marker{display:none}
 
-    summary::after{
+    details.layer summary::after{
       content:"+";
       flex:0 0 auto;
       width:2rem;
@@ -572,7 +722,7 @@
       line-height:1;
     }
 
-    details[open] summary::after{
+    details.layer[open] summary::after{
       content:"–";
       border-color:rgba(141,216,255,.28);
       color:var(--blue);
@@ -610,6 +760,7 @@
     }
 
     .short-card{
+      position:relative;
       min-height:9rem;
       display:grid;
       gap:.45rem;
@@ -617,7 +768,24 @@
       padding:.9rem;
       border:1px solid rgba(255,255,255,.10);
       border-radius:1rem;
-      background:rgba(255,255,255,.026);
+      background:
+        radial-gradient(circle at 100% 0%,rgba(243,200,111,.06),transparent 54%),
+        rgba(255,255,255,.026);
+      overflow:hidden;
+    }
+
+    .short-card::after{
+      content:"";
+      position:absolute;
+      right:.65rem;
+      bottom:.65rem;
+      width:2.5rem;
+      height:1.85rem;
+      clip-path:var(--brand-gem);
+      opacity:.28;
+      background:
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.20),rgba(143,101,255,.34),rgba(20,10,62,.70),rgba(243,200,111,.13),rgba(255,255,255,.18));
+      pointer-events:none;
     }
 
     .short-card b{
@@ -625,12 +793,16 @@
       font-size:.66rem;
       letter-spacing:.12em;
       text-transform:uppercase;
+      position:relative;
+      z-index:2;
     }
 
     .short-card span{
       color:var(--muted);
       font-size:.9rem;
       line-height:1.4;
+      position:relative;
+      z-index:2;
     }
 
     .quote-list{
@@ -661,7 +833,7 @@
       background:
         radial-gradient(circle at 16% 0%,rgba(243,200,111,.10),transparent 36%),
         linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.024));
-      box-shadow:0 1.5rem 4rem rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.08);
+      box-shadow:0 1.5rem 4rem rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.08);
     }
 
     .final-band strong{
@@ -671,30 +843,27 @@
       letter-spacing:-.04em;
     }
 
+    .route-receipt,
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt],
     .receipt{
-      margin-top:1.15rem;
-      color:var(--faint);
-    }
-
-    .receipt summary{
-      cursor:pointer;
-      padding:1rem;
-      border:1px solid rgba(184,205,255,.14);
-      border-radius:1.2rem;
-      color:rgba(255,244,216,.96);
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.09em;
-      text-transform:uppercase;
-      background:rgba(255,255,255,.035);
-    }
-
-    .receipt pre{
-      margin:0;
-      padding:1rem;
-      white-space:pre-wrap;
-      overflow-wrap:anywhere;
-      font:700 .68rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      display:none!important;
+      visibility:hidden!important;
+      overflow:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      inset:auto!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
     }
 
     footer{
@@ -715,9 +884,25 @@
     }
 
     @media (prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+      }
+
       body::after,
       .hero::before{
         animation:none!important;
+      }
+    }
+
+    @media (max-width:1080px){
+      .gem-grid,
+      .path-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
       }
     }
 
@@ -756,8 +941,21 @@
         min-height:21rem;
       }
 
-      summary{
+      details.layer summary{
         align-items:flex-start;
+      }
+
+      .gem-grid,
+      .path-grid{
+        grid-template-columns:1fr;
+      }
+
+      .actions{
+        display:grid;
+      }
+
+      .button{
+        width:100%;
       }
     }
   </style>
@@ -780,11 +978,9 @@
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/explore/">Manor</a>
-        <a href="/laws/">Laws</a>
-        <a href="/nine-summits/">Nine Summits</a>
-        <a href="/about-this-underdog/">Underdog</a>
         <a href="/products/">Products</a>
+        <a href="/laws/">Laws</a>
+        <a href="/showroom/globe/">Interactive Narrative</a>
         <a href="/showroom/">Showroom</a>
         <a href="/gauges/">Gauges</a>
         <a href="/meet-sean-mansfield/" aria-current="page">Meet Sean</a>
@@ -800,6 +996,7 @@
           <p>
             Sean Mansfield turns lived pressure into language people can use: comedy, story, seminars, public speaking, and the human voice behind Diamond Gate Bridge.
           </p>
+
           <div class="quote">
             The shift was not pretending adversity disappeared. The shift was seeing the pattern, owning his part, and changing direction before it was too late.
           </div>
@@ -808,7 +1005,7 @@
             <a class="button gold" href="/about-this-underdog/">About This Underdog</a>
             <a class="button" href="/nine-summits-of-love/">Open the Book</a>
             <a class="button" href="/nine-summits/">Open Nine Summits</a>
-            <a class="button" href="/gauges/">Read Proof</a>
+            <a class="button green" href="/gauges/">Read Proof</a>
           </div>
         </div>
 
@@ -833,24 +1030,58 @@
               <b>Core message</b>
               <span>Pressure can become language. Language can become a map.</span>
             </div>
+
+            <div class="meta-row">
+              <b>Route role</b>
+              <span>Personal profile surface into the larger work.</span>
+            </div>
           </div>
         </aside>
       </section>
 
       <section class="panel section" aria-labelledby="split-title">
-        <div class="kicker">Page split</div>
-        <h2 id="split-title">Two pages. Two jobs.</h2>
+        <div class="kicker">Two pages · two jobs</div>
+        <h2 id="split-title">The personal lane stays separate from the universal underdog lane.</h2>
 
         <div class="split-grid">
           <a class="split-card" href="/about-this-underdog/">
+            <span class="card-kicker">Universal lane</span>
             <strong>About This Underdog</strong>
-            <span>The universal underdog page. It applies to everybody: pressure, survival, voice, accountability, and return.</span>
+            <span>Pressure, survival, voice, accountability, and return. This page applies to everybody.</span>
+            <span class="open-path">Open Underdog</span>
           </a>
 
           <a class="split-card" href="/meet-sean-mansfield/">
+            <span class="card-kicker">Personal lane</span>
             <strong>Meet Sean Mansfield</strong>
-            <span>The personal profile page. It introduces the person behind the voice without forcing the whole system to explain itself at once.</span>
+            <span>The person behind the voice, without forcing the whole system to explain itself at once.</span>
+            <span class="open-path">Stay Here</span>
           </a>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="signal-title">
+        <div class="kicker">Profile signals</div>
+        <h2 id="signal-title">The page now carries the same gem language as the rest of the estate.</h2>
+
+        <div class="gem-grid">
+          <article class="gem-card">
+            <span class="card-kicker">Comedy</span>
+            <strong>Laugh first. Land truth second.</strong>
+            <span>Comedy lowers the wall so the room can hear the pressure without shutting down.</span>
+          </article>
+
+          <article class="gem-card">
+            <span class="card-kicker">Story</span>
+            <strong>Pressure needs a face before it becomes usable.</strong>
+            <span>Story turns abstract struggle into something people can recognize, carry, and discuss.</span>
+          </article>
+
+          <article class="gem-card">
+            <span class="card-kicker">Seminar</span>
+            <strong>The message becomes a working room.</strong>
+            <span>Speaking and seminars turn pressure into language, choice, action, and return.</span>
+          </article>
         </div>
       </section>
 
@@ -859,7 +1090,7 @@
         <h2 id="doll-title">Open only the layer needed.</h2>
 
         <div class="doll">
-          <details open>
+          <details class="layer" open>
             <summary>
               <span class="summary-text">
                 <b>Layer 1</b>
@@ -891,7 +1122,7 @@
             </div>
           </details>
 
-          <details>
+          <details class="layer">
             <summary>
               <span class="summary-text">
                 <b>Layer 2</b>
@@ -906,7 +1137,7 @@
             </div>
           </details>
 
-          <details>
+          <details class="layer">
             <summary>
               <span class="summary-text">
                 <b>Layer 3</b>
@@ -934,7 +1165,7 @@
             </div>
           </details>
 
-          <details>
+          <details class="layer">
             <summary>
               <span class="summary-text">
                 <b>Layer 4</b>
@@ -952,7 +1183,7 @@
             </div>
           </details>
 
-          <details>
+          <details class="layer">
             <summary>
               <span class="summary-text">
                 <b>Layer 5</b>
@@ -962,7 +1193,7 @@
 
             <div class="doll-body">
               <p>
-                This profile is the personal doorway. The larger work continues through The Nine Summits of Love, Nine Summits, Products, Showroom, and Gauges.
+                This profile is the personal doorway. The larger work continues through The Nine Summits of Love, Nine Summits, Products, Showroom, Interactive Narrative, and Gauges.
               </p>
 
               <div class="actions">
@@ -973,6 +1204,41 @@
               </div>
             </div>
           </details>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="paths-title">
+        <div class="kicker">Enter the work</div>
+        <h2 id="paths-title">The profile opens into the larger system.</h2>
+
+        <div class="path-grid">
+          <a class="path-card" href="/nine-summits-of-love/">
+            <span class="card-kicker">Book</span>
+            <strong>The long-form path.</strong>
+            <span>The Nine Summits of Love carries the deeper written climb.</span>
+            <span class="open-path">Open Book</span>
+          </a>
+
+          <a class="path-card" href="/products/">
+            <span class="card-kicker">Community</span>
+            <strong>The practical path.</strong>
+            <span>Products are the tools, games, offerings, and systems built to serve the community.</span>
+            <span class="open-path">View Products</span>
+          </a>
+
+          <a class="path-card" href="/showroom/">
+            <span class="card-kicker">Showroom</span>
+            <strong>The proof-object path.</strong>
+            <span>Inspect the visible software expression and public build objects.</span>
+            <span class="open-path">Open Showroom</span>
+          </a>
+
+          <a class="path-card" href="/showroom/globe/">
+            <span class="card-kicker">Interactive Narrative</span>
+            <strong>The story/world path.</strong>
+            <span>Enter the narrative, characters, worlds, consequence, survival, and possibility lane.</span>
+            <span class="open-path">Enter Narrative</span>
+          </a>
         </div>
       </section>
 
@@ -991,15 +1257,16 @@
         </div>
       </section>
 
-      <details class="receipt" open>
-        <summary>Route receipt</summary>
-        <pre>MEET_SEAN_MANSFIELD_CONDENSED_RUSSIAN_DOLL_PROFILE_TNT_v3
+      <template id="route-receipt" data-route-receipt>
+MEET_SEAN_MANSFIELD_GEM_PROFILE_RENEWAL_TNT_v1
+previous=MEET_SEAN_MANSFIELD_CONDENSED_RUSSIAN_DOLL_PROFILE_TNT_v3
 route=/meet-sean-mansfield/
 page=meet_sean_mansfield
 role=personal_profile_surface
-standard=condensed_russian_doll_profile
+standard=gem_profile_renewal
 photo_path=/about-this-underdog/sean-mansfield.jpg
 photo_expected=true
+photo_preserved=true
 personal_profile=true
 universal_underdog_page=/about-this-underdog/
 split_law=about_this_underdog_universal,meet_sean_mansfield_personal
@@ -1007,10 +1274,12 @@ visible_first_layer=hero,photo_card,turning_point_statement,page_split
 russian_doll_layers=turning_point,voice,stage_and_seminar,lines_that_carry,enter_the_work
 turning_point=adversity_to_accountability_to_redirection
 content_law=shorter,cleaner,personal,less_abstract,no_hardship_inventory
+visual_renewal=gem_language_active
+cards=gem_profile_signals,page_split,russian_doll,path_cards,final_band
+nav_updated=interactive_narrative,showroom
 preserved=photo_path,personal_profile,underdog_split,nine_summits_links,book_path,showroom,gauges
-removed=long_visible_essay,abstract_repetition,overextended_stage_copy,profile_bloat
-current_language=Meet Sean Mansfield,About This Underdog,Diamond Gate Bridge,Nine Summits,Nine Summits of Love,Audralia Manor Current
-route_owns=personal_profile_surface,condensed_profile_copy,russian_doll_disclosures,photo_card
+removed=visible_route_receipt,legacy_text_heaviness,plain_black_card_feel
+route_owns=personal_profile_surface,condensed_profile_copy,russian_doll_disclosures,photo_card,gem_cards,path_cards
 route_does_not_own=universal_underdog_concept,body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
 visual_pass_claimed=false
 heavy_runtime_loaded=false
@@ -1019,12 +1288,12 @@ instrument_touched=false
 gauges_logic_touched=false
 generated_image=false
 graphic_box=false
-streaming=false</pre>
-      </details>
+streaming=false
+      </template>
     </main>
 
     <footer>
-      MEET_SEAN_MANSFIELD_CONDENSED_RUSSIAN_DOLL_PROFILE_TNT_v3 · Personal Profile · Condensed Russian-Doll Surface.
+      MEET_SEAN_MANSFIELD_GEM_PROFILE_RENEWAL_TNT_v1 · Personal Profile · Gem Profile Surface · Photo Preserved.
     </footer>
   </div>
 </body>

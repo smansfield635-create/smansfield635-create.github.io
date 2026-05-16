@@ -3,12 +3,13 @@
   lang="en"
   data-route="/characters/"
   data-page="characters"
-  data-contract="CHARACTERS_MIRRORLAND_256_LATTICE_FULL_TNT_v1"
-  data-previous-contract="CHARACTERS_MIRRORLAND_256_LATTICE_EXPANSION_BINDING_v1"
-  data-role="mirrorland-series-dossier"
+  data-contract="CHARACTERS_MIRRORLAND_SHOW_GAME_DOSSIER_FULL_TNT_v1"
+  data-previous-contract="CHARACTERS_MIRRORLAND_LANGUAGE_EXPRESSION_FINAL_AUDIT_v1"
+  data-role="show-game-character-dossier"
   data-narrative-anchor="Shadows Never Shatter in Mirrorland"
   data-series-model="perspective-series-nine-episodes-nine-seasons"
   data-lattice="8-characters-8-tabs-4-fields-256-states"
+  data-public-field-labels="story-role-pressure-on-screen-in-game-what-changes"
   data-character-gems="true"
   data-static-page-usable-without-js="true"
   data-generated-image="false"
@@ -24,7 +25,7 @@
   <title>Characters · Shadows Never Shatter in Mirrorland</title>
   <meta
     name="description"
-    content="Character dossiers for Shadows Never Shatter in Mirrorland: a perspective series set inside the 300-year countdown between Earth, Mirrorland, and Audralia."
+    content="Meet the first faces of Shadows Never Shatter in Mirrorland, a perspective series and game world in development."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/characters/">
   <meta name="theme-color" content="#02040b">
@@ -43,9 +44,7 @@
       --violet:#c6a6ff;
       --red:#ff9f9f;
       --panel:rgba(9,15,31,.88);
-      --panel2:rgba(12,22,42,.92);
       --line:rgba(184,205,255,.18);
-      --line2:rgba(255,255,255,.10);
       --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
     }
@@ -237,7 +236,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(38rem,62vw,50rem);
+      min-height:clamp(42rem,70vw,56rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -435,6 +434,58 @@
       padding:clamp(1rem,3vw,1.45rem);
       display:grid;
       gap:1.05rem;
+    }
+
+    .preface-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .preface{
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:1.1rem;
+      background:rgba(255,255,255,.03);
+      overflow:hidden;
+    }
+
+    .preface summary{
+      list-style:none;
+      cursor:pointer;
+      min-height:3.25rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.8rem;
+      padding:.85rem 1rem;
+      color:rgba(255,244,216,.96);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      background:rgba(255,255,255,.035);
+    }
+
+    .preface summary::-webkit-details-marker{display:none}
+
+    .preface[open] summary{
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .preface summary::after{
+      content:"+";
+      font-size:1rem;
+      font-weight:950;
+    }
+
+    .preface[open] summary::after{
+      content:"–";
+    }
+
+    .preface p{
+      padding:1rem;
+      font-size:.96rem;
     }
 
     .select-grid{
@@ -815,13 +866,14 @@
       }
 
       .nav{justify-content:flex-start}
-      .series-grid{grid-template-columns:1fr}
+      .series-grid,
+      .preface-grid{grid-template-columns:1fr}
     }
 
     @media (max-width:720px){
       .shell{width:min(100% - 22px,var(--max))}
       h1{font-size:clamp(3.2rem,16vw,5.6rem)}
-      .hero{min-height:38rem;padding:1rem}
+      .hero{min-height:46rem;padding:1rem}
       .actions{display:grid}
       .button{width:100%}
       .select-grid,
@@ -961,89 +1013,150 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Perspective Series · Mirrorland</div>
+        <div class="kicker">Perspective Series · Game World In Development</div>
 
         <h1 id="page-title">Shadows Never Shatter in Mirrorland.</h1>
 
-        <div class="subtitle">The anomaly opened. The return path never did.</div>
+        <div class="subtitle">Enter Mirrorland: consequence, survival, and possibility live inside the same countdown.</div>
 
         <p class="lead">
-          Dextrion remains on Earth at the public Mirror Manor. From there, he detects the Bermuda-area anomaly and sends the first team through. The crossing works. Coming back does not.
-        </p>
-
-        <p class="lead">
-          Mirrorland is real on the other side. Inside Mirrorland is Audralia. The one-way teleport can send builders, engineers, protectors, field operators, and survival crews in, but it cannot bring them home. They build the manor. They build the next plan. The story begins after the manor already stands.
+          Mirrorland is the world behind the window. ZIONTS shows the consequence path. H-Earth tests survival at ground level. Audralia carries possibility: the living planet where the manor stands, the mission becomes physical, and the future has to be built before time runs out.
         </p>
 
         <div class="declaration">
-          The clock is set at 300 years. Another planetary transition is coming. If the technology is ready, Mirrorland and Earth can survive. If it is not, annihilation remains possible. Mirrorland’s rules also apply to Earth.
+          The clock is set at 300 years. A planetary transition is coming. If the technology is ready, Mirrorland and Earth can survive. If it is not, annihilation remains possible on both sides.
         </div>
 
+        <p class="lead">
+          Dextrion remains Earth-side at the public Mirror Manor. He detects the Bermuda-area anomaly and sends the first team through. The crossing works. The return path never does. A one-way teleport changes everything. Builders, engineers, protectors, field operators, and survival crews cross into Mirrorland knowing they may not come back.
+        </p>
+
+        <p class="lead">
+          The series begins after the manor is already built. The show follows the people carrying the mission. The game expands the world around them. Find your mirror. Face the rules. Decide what survival means when the future is no longer somewhere else.
+        </p>
+
         <div class="series-grid">
-          <div class="series-card"><b>Nine Episodes</b><span>The first arc is already written. The world speaks through its characters.</span></div>
-          <div class="series-card"><b>Nine Seasons</b><span>The long-form path widens through consequence, survival, restoration, exposure, and return.</span></div>
-          <div class="series-card"><b>Mirrored NPCs</b><span>Every person can eventually find a Mirrorland counterpart and face the question of becoming mirrored.</span></div>
+          <div class="series-card">
+            <b>Series in Development</b>
+            <span>Nine episodes are already written. Each episode turns Mirrorland through a different character’s pressure, choice, and consequence.</span>
+          </div>
+
+          <div class="series-card">
+            <b>Game World in Development</b>
+            <span>Mirrorland expands into playable routes, character dossiers, mirrored NPCs, survival systems, manor paths, and planetary stakes.</span>
+          </div>
+
+          <div class="series-card">
+            <b>300-Year Countdown</b>
+            <span>The threat is planetary. The technology must protect Mirrorland and Earth before the next transition arrives.</span>
+          </div>
         </div>
 
         <div class="actions">
-          <a class="button gold" href="/characters/#select">Select a Character</a>
+          <a class="button gold" href="/characters/#select">Meet the Characters</a>
           <a class="button" href="/showroom/globe/">Enter the Globe</a>
-          <a class="button" href="/explore/">Open Explore</a>
-          <a class="button" href="/frontier/">Move to Frontier</a>
+          <a class="button" href="/explore/">Explore Mirrorland</a>
+          <a class="button" href="/frontier/">Follow Development</a>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="preface-title">
+        <div class="kicker">World Preface</div>
+        <h2 id="preface-title">Open only what you want before choosing a character.</h2>
+
+        <div class="preface-grid">
+          <details class="preface" open>
+            <summary>Mirrorland</summary>
+            <p>Enter the world behind the window. Mirrorland is where consequence, survival, and possibility collide, and where the rules that threaten Earth become playable, visible, and personal.</p>
+          </details>
+
+          <details class="preface">
+            <summary>ZIONTS · Consequence</summary>
+            <p>The warning path. ZIONTS shows what remains when a living world can no longer carry life. Every false restoration risks creating another version of it.</p>
+          </details>
+
+          <details class="preface">
+            <summary>H-Earth · Survival</summary>
+            <p>The condition path. H-Earth tests whether earth, water, air, shelter, bodies, cities, and systems can still hold when survival stops being theoretical.</p>
+          </details>
+
+          <details class="preface">
+            <summary>Audralia · Possibility</summary>
+            <p>The living future. Audralia is the planet inside Mirrorland where the manor stands, the mission becomes physical, and the future has to be built before time runs out.</p>
+          </details>
+
+          <details class="preface">
+            <summary>The 300-Year Clock</summary>
+            <p>A planetary transition is coming. The countdown gives the series its pressure and the game its stakes: prepare the technology or risk annihilation on both sides.</p>
+          </details>
+
+          <details class="preface">
+            <summary>The One-Way Crossing</summary>
+            <p>The crossing works. The return path does not. Every person sent through may be building a future they cannot leave.</p>
+          </details>
+
+          <details class="preface">
+            <summary>Mirror Manor on Earth</summary>
+            <p>Dextrion remains Earth-side at the public Mirror Manor, sending technology, teams, and decisions through a door that does not return them.</p>
+          </details>
+
+          <details class="preface">
+            <summary>Mirrored NPCs</summary>
+            <p>As the game world develops, every person can eventually face a mirrored counterpart inside Mirrorland. Find your mirror. Face the rules. Decide what survives.</p>
+          </details>
         </div>
       </section>
 
       <section class="panel section" id="select" aria-labelledby="select-title">
         <div class="kicker">Character Select</div>
-        <h2 id="select-title">Choose the person first. Open the dossier second.</h2>
-        <p>Each person carries one angle of the countdown. Each dossier opens into eight chambers and thirty-two directional reads.</p>
+        <h2 id="select-title">Meet the first faces of the series and the first playable angles of the world.</h2>
 
         <div class="select-grid">
           <a class="select-card" data-number="01" href="#auren">
             <span class="profile-gem" style="--delay:-.2s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
-            <b>Custody · Sanctuary Builder</b><strong>Auren Vale</strong><span>Wealth is the mask. Custody is the mission.</span>
+            <b>Sanctuary Builder</b><strong>Auren Vale</strong><span>He keeps the manor from becoming a beautiful cage.</span>
           </a>
 
           <a class="select-card" data-number="02" href="#dextrion">
             <span class="profile-gem" style="--delay:-.8s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
-            <b>Repair · Earth-Side Originator</b><strong>Dextrion</strong><span>Broken systems either get repaired or start choosing who survives.</span>
+            <b>Earth-Side Originator</b><strong>Dextrion</strong><span>He opened the path and stayed behind.</span>
           </a>
 
           <a class="select-card" data-number="03" href="#alaric">
             <span class="profile-gem" style="--delay:-1.4s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
-            <b>Orientation · Field Navigator</b><strong>Alaric</strong><span>The field speaks before the danger arrives.</span>
+            <b>Field Navigator</b><strong>Alaric</strong><span>He reads danger before proof arrives.</span>
           </a>
 
           <a class="select-card" data-number="04" href="#tarian">
             <span class="profile-gem" style="--delay:-2s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
-            <b>Continuity · Water Anchor</b><strong>Tarian</strong><span>Life fails first at the body level.</span>
+            <b>Water Anchor</b><strong>Tarian</strong><span>He keeps the mission physically honest.</span>
           </a>
 
           <a class="select-card" data-number="05" href="#elara">
             <span class="profile-gem" style="--delay:-2.6s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
-            <b>Vision · Signal Bearer</b><strong>Elara</strong><span>The future must be seen before it can be believed.</span>
+            <b>Signal Bearer</b><strong>Elara</strong><span>She makes the future visible before it disappears.</span>
           </a>
 
           <a class="select-card" data-number="06" href="#soren">
             <span class="profile-gem" style="--delay:-3.2s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
-            <b>Consequence · Boundary Keeper</b><strong>Soren</strong><span>Restoration is not real if waste has nowhere truthful to go.</span>
+            <b>Boundary Keeper</b><strong>Soren</strong><span>He refuses fake restoration.</span>
           </a>
 
           <a class="select-card" data-number="07" href="#jeeves">
             <span class="profile-gem" style="--delay:-3.8s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
-            <b>Entry · Manor Interface</b><strong>Jeeves</strong><span>The house does not show every room at once.</span>
+            <b>Manor Interface</b><strong>Jeeves</strong><span>He decides how much truth the house can reveal.</span>
           </a>
 
           <a class="select-card" data-number="08" href="#remote-team">
             <span class="profile-gem" style="--delay:-4.4s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
-            <b>Adaptation · Response Unit</b><strong>Remote Team</strong><span>The story does not end inside the estate.</span>
+            <b>Distributed Response Unit</b><strong>Remote Team</strong><span>They carry survival beyond the estate.</span>
           </a>
         </div>
       </section>
 
       <section class="panel section" id="roster" aria-labelledby="roster-title">
-        <div class="kicker">256-State Dossier Roster</div>
-        <h2 id="roster-title">Eight characters. Eight tabs each. Four directions per tab.</h2>
+        <div class="kicker">Playable Dossier Roster</div>
+        <h2 id="roster-title">Open a character. Follow the pressure.</h2>
 
         <div class="dossier-list">
 
@@ -1051,88 +1164,89 @@
             <summary class="character-summary">
               <span class="num">01</span>
               <span class="summary-gem" style="--delay:-.2s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
-              <span class="summary-copy"><b>Custody · Sanctuary Builder</b><strong>Auren Vale</strong><span>Wealth is the mask. Custody is the mission.</span></span>
-              <span class="open-chip">Open dossier</span>
+              <span class="summary-copy"><b>Sanctuary Builder</b><strong>Auren Vale</strong><span>Every protected life makes the manor harder to hide.</span></span>
+              <span class="open-chip">Open Dossier</span>
             </summary>
+
             <div class="character-body">
               <div class="tabs">
                 <details class="tab" open>
                   <summary>Profile</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Auren owns the sanctuary structure: estate, orphanage cover, security perimeter, legal shell, and protected rooms.</p></article>
-                    <article class="field"><b>South · Law</b><p>Children with impossible gifts are not assets. Custody is a duty before it is a strategy.</p></article>
-                    <article class="field"><b>East · Expression</b><p>He appears as the polished heir while the story reveals the builder underneath the mask.</p></article>
-                    <article class="field"><b>West · Application</b><p>He keeps the vulnerable hidden, housed, supplied, and unreachable long enough to survive.</p></article>
+                    <article class="field"><b>Story Role</b><p>Auren keeps the manor from becoming a beautiful cage. Shelter is his gift, his weapon, and his greatest risk.</p></article>
+                    <article class="field"><b>Pressure</b><p>Every protected child, resident, or mirrored counterpart increases the chance that the sanctuary will be exposed or corrupted.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Locked rooms, admission choices, trust tests, hidden routes, estate cover stories, and the cost of saying yes.</p></article>
+                    <article class="field"><b>What Changes</b><p>Auren decides who gets shelter, what stays hidden, and whether the manor becomes protection or control.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Full Bio</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Auren turns wealth into architecture: distance, gates, contracts, trusts, false simplicity, and a manor that can hold secrets.</p></article>
-                    <article class="field"><b>South · Law</b><p>His life is governed by custody under pressure. If he refuses a child, the world may take that child apart.</p></article>
-                    <article class="field"><b>East · Expression</b><p>His scenes carry double vision: the public host above the line, the sanctuary builder beneath it.</p></article>
-                    <article class="field"><b>West · Application</b><p>He makes survival practical through food, housing, documents, cover stories, staff discipline, and silence.</p></article>
+                    <article class="field"><b>Story Role</b><p>Auren inherits wealth that was never meant to sit still. The estate is a machine for distance, cover, custody, and rescue.</p></article>
+                    <article class="field"><b>Pressure</b><p>The more people he saves, the less ordinary the manor can appear. The mask gets thinner every season.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Players see the polished host above ground and the exhausted sanctuary builder underneath the public performance.</p></article>
+                    <article class="field"><b>What Changes</b><p>His choices define the moral shape of the manor before the world decides what the manor really is.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Family History</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>The Vale family built its fortune through land, security, old infrastructure, and quiet custody of things governments could not explain.</p></article>
-                    <article class="field"><b>South · Law</b><p>The family rule is older than Auren: protect the gifted before power decides they belong to someone else.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Old portraits, sealed rooms, rewritten wills, and estate maps carry the Vale family story through the season arcs.</p></article>
-                    <article class="field"><b>West · Application</b><p>The family fortune becomes a living shield, not decoration. Land creates distance. Security creates time. Cover creates survival.</p></article>
+                    <article class="field"><b>Story Role</b><p>The Vale family built land, security, trusts, and orphanage cover around a single inherited rule: hide the hunted before power finds them.</p></article>
+                    <article class="field"><b>Pressure</b><p>Family protection can become family ownership if Auren stops questioning what the estate demands.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Old portraits, sealed ledgers, rewritten wills, staff oaths, and doors that open only for the right bloodline.</p></article>
+                    <article class="field"><b>What Changes</b><p>The family history gives Auren resources, but it also gives him obligations he can never fully refuse.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Family Members / Lineage</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>The lineage includes estate founders, security trustees, orphanage directors, silent lawyers, and guardians who knew when not to record names.</p></article>
-                    <article class="field"><b>South · Law</b><p>Every Vale generation inherits the same burden: do not let protection become ownership.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Family members can appear through letters, locked ledgers, portraits, old staff stories, and rooms Auren has never opened.</p></article>
-                    <article class="field"><b>West · Application</b><p>The lineage gives Auren resources, but also obligations that make retreat impossible.</p></article>
+                    <article class="field"><b>Story Role</b><p>The Vale line includes founders, silent lawyers, orphanage directors, security keepers, and guardians who erased names to save lives.</p></article>
+                    <article class="field"><b>Pressure</b><p>Every ancestor left protection unfinished. Auren inherits their tools and their consequences.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Letters, portraits, hidden signatures, family rooms, staff memories, and relatives whose choices still lock or unlock the house.</p></article>
+                    <article class="field"><b>What Changes</b><p>Auren learns whether he is continuing the family mission or finally correcting it.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Origin Event</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Auren inherits the manor, the orphanage cover, and the hidden system before he fully understands its reach.</p></article>
-                    <article class="field"><b>South · Law</b><p>His origin is the first child he cannot safely refuse. From that point, comfort is no longer admissible.</p></article>
-                    <article class="field"><b>East · Expression</b><p>The origin episode can begin with a public gala above ground and a frightened child below it.</p></article>
-                    <article class="field"><b>West · Application</b><p>The event turns inheritance into action: rooms prepared, staff tested, gates sealed, and the sanctuary activated.</p></article>
+                    <article class="field"><b>Story Role</b><p>A child arrives whom Auren cannot safely turn away. The estate stops being inheritance and becomes a live sanctuary.</p></article>
+                    <article class="field"><b>Pressure</b><p>One rescue becomes a system. One hidden room becomes a network. One protected life becomes exposure risk.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>A gala above ground, a frightened child below it, and a door Auren opens knowing the manor can never be simple again.</p></article>
+                    <article class="field"><b>What Changes</b><p>Auren crosses from owner to custodian. The manor begins choosing its true purpose.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Mirrorland Function</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Auren stabilizes the manor network inside Audralia after the one-way crossing makes retreat impossible.</p></article>
-                    <article class="field"><b>South · Law</b><p>A sanctuary that cannot protect its children is only a building. His function is tested by exposure.</p></article>
-                    <article class="field"><b>East · Expression</b><p>He becomes the host of a place that is beautiful only because danger keeps pressing against the walls.</p></article>
-                    <article class="field"><b>West · Application</b><p>He manages beds, supplies, routes, records, and human trust while the 300-year clock keeps moving.</p></article>
+                    <article class="field"><b>Story Role</b><p>After the manor stands on Audralia, Auren becomes the guardian of the place everyone needs and everyone could expose.</p></article>
+                    <article class="field"><b>Pressure</b><p>The 300-year clock turns sanctuary into infrastructure. A protected house must become a protected future.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Admissions, room assignments, security breaches, resource limits, mirrored residents, and sanctuary choices with no clean answer.</p></article>
+                    <article class="field"><b>What Changes</b><p>The manor becomes either the first public foothold of survival or the most beautiful bunker ever built.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Stats Sheet</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Core Class: Sanctuary Builder. Attribute: Custody. Path: Manor · Explore · Audralia.</p></article>
-                    <article class="field"><b>South · Law</b><p>Strength: protective deception. Weakness: overprotection. Risk: the sanctuary becomes a map for the enemy.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Special Skill: turns wealth, land, and public misdirection into a living shield.</p></article>
-                    <article class="field"><b>West · Application</b><p>Primary Bond: the children hidden inside the manor network. Conflict Meter: exposure versus protection.</p></article>
+                    <article class="field"><b>Story Role</b><p>Core Class: Sanctuary Builder. Primary Trait: Custody. Route Path: Manor · Explore · Audralia.</p></article>
+                    <article class="field"><b>Pressure</b><p>Strength: protective deception. Weakness: overprotection. Risk: the sanctuary becomes a map for the enemy.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Special Skill: turns wealth, land, public misdirection, and room control into a living shield.</p></article>
+                    <article class="field"><b>What Changes</b><p>Primary Bond: the hidden residents. Conflict Meter: exposure versus protection.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Season Thread</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Auren’s seasonal arc tracks the sanctuary expanding from estate cover into planetary infrastructure.</p></article>
-                    <article class="field"><b>South · Law</b><p>Each season tests whether protection can remain humane as the protected population grows.</p></article>
-                    <article class="field"><b>East · Expression</b><p>His episodes revolve around impossible admissions, hidden rooms, broken trust, and children who cannot stay invisible forever.</p></article>
-                    <article class="field"><b>West · Application</b><p>His long arc forces the community question: who gets protected first when protection is limited?</p></article>
+                    <article class="field"><b>Story Role</b><p>Auren carries the question of whether a sanctuary can scale without becoming a prison.</p></article>
+                    <article class="field"><b>Pressure</b><p>Each season adds more people, more secrets, more risk, and fewer clean choices.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Impossible admissions, betrayed trust, rooms opened too late, and children who can no longer stay invisible.</p></article>
+                    <article class="field"><b>What Changes</b><p>His arc defines what the manor is allowed to become in the public future of Mirrorland.</p></article>
                   </div></div>
                 </details>
               </div>
@@ -1143,88 +1257,89 @@
             <summary class="character-summary">
               <span class="num">02</span>
               <span class="summary-gem" style="--delay:-.8s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
-              <span class="summary-copy"><b>Repair · Earth-Side Originator</b><strong>Dextrion</strong><span>Broken systems either get repaired or start choosing who survives.</span></span>
-              <span class="open-chip">Open dossier</span>
+              <span class="summary-copy"><b>Earth-Side Originator</b><strong>Dextrion</strong><span>Every one-way crossing remains on his hands.</span></span>
+              <span class="open-chip">Open Dossier</span>
             </summary>
+
             <div class="character-body">
               <div class="tabs">
                 <details class="tab" open>
                   <summary>Profile</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Dextrion remains Earth-side at the public Mirror Manor, where anomaly detection, lab command, and one-way teleport authority converge.</p></article>
-                    <article class="field"><b>South · Law</b><p>He sends the team through. The return fails. Responsibility remains with him.</p></article>
-                    <article class="field"><b>East · Expression</b><p>He is the repair mind watching a door he opened become a world-sized consequence.</p></article>
-                    <article class="field"><b>West · Application</b><p>He turns pressure into hardware, protocols, power, filtration, field gear, and survival systems.</p></article>
+                    <article class="field"><b>Story Role</b><p>Dextrion opens the path and stays behind. Earth-side command begins with him and never stops costing him.</p></article>
+                    <article class="field"><b>Pressure</b><p>Every person sent through the one-way teleport may never return, and the technology still has to save both worlds.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Lab transmissions, failed return tests, upgrade choices, field packets, and messages sent through a door that does not answer back.</p></article>
+                    <article class="field"><b>What Changes</b><p>Dextrion turns discovery into duty. The anomaly becomes a mission instead of a mystery.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Full Bio</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>His life is built around broken systems: power that fails, water that stops, doors that jam, tools that must work under fear.</p></article>
-                    <article class="field"><b>South · Law</b><p>Genius without repair is vanity. Technology matters only if it carries life through collapse.</p></article>
-                    <article class="field"><b>East · Expression</b><p>The lab becomes his confessional. Every prototype is a line of dialogue with the future.</p></article>
-                    <article class="field"><b>West · Application</b><p>He gives the stranded team what they need from Earth: machines, procedures, energy logic, and next attempts.</p></article>
+                    <article class="field"><b>Story Role</b><p>Dextrion does not build for spectacle. He builds because the future becomes cruel when infrastructure fails.</p></article>
+                    <article class="field"><b>Pressure</b><p>The first team is trapped because he found the crossing. Survival begins with his discovery and his guilt.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>The lab becomes command center, confession booth, workshop, and countdown room.</p></article>
+                    <article class="field"><b>What Changes</b><p>His work decides whether the door remains a wound or becomes the first bridge toward survival.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Family History</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Dextrion comes from builders, mechanics, and exhausted problem-solvers who fixed what nobody else wanted to touch.</p></article>
-                    <article class="field"><b>South · Law</b><p>His family never treated repair as status. Repair was survival. A working tool could decide who lived.</p></article>
-                    <article class="field"><b>East · Expression</b><p>His family story appears through oil-stained benches, patched machines, hand-labeled boxes, and lessons spoken over broken equipment.</p></article>
-                    <article class="field"><b>West · Application</b><p>His lineage gives him impatience with bureaucracy and deep respect for anything that works when panic arrives.</p></article>
+                    <article class="field"><b>Story Role</b><p>Dextrion comes from builders, mechanics, and exhausted problem-solvers who fixed what nobody else wanted to touch.</p></article>
+                    <article class="field"><b>Pressure</b><p>His family taught him that if he can fix the break, he does not get to walk past it.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Oil-stained benches, hand-labeled boxes, patched machines, family tools, and lessons spoken over broken equipment.</p></article>
+                    <article class="field"><b>What Changes</b><p>The lineage makes him fast under pressure, impatient with delay, and unwilling to call failure final.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Family Members / Lineage</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>The lineage includes mechanics, utility workers, welders, repair mothers, hard teachers, and inventors who never called themselves inventors.</p></article>
-                    <article class="field"><b>South · Law</b><p>The family rule is simple: if you can fix the break, you do not get to walk past it.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Relatives can enter through tools he still uses, phrases he repeats, and mistakes he refuses to make twice.</p></article>
-                    <article class="field"><b>West · Application</b><p>They gave him the habit of building with what is present rather than waiting for ideal conditions.</p></article>
+                    <article class="field"><b>Story Role</b><p>His line includes mechanics, utility workers, welders, repair mothers, hard teachers, and inventors who never used the word invention.</p></article>
+                    <article class="field"><b>Pressure</b><p>He carries their discipline into a problem they never imagined: a world that can receive people but cannot return them.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Old tools become playable clues, family phrases become protocols, and inherited repairs become new-world technology.</p></article>
+                    <article class="field"><b>What Changes</b><p>Dextrion’s family memory keeps the mission practical when fear tries to turn it theatrical.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Origin Event</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>The Bermuda-area anomaly appears in his instruments as a field break, not a legend.</p></article>
-                    <article class="field"><b>South · Law</b><p>When the team crosses and cannot return, experiment becomes duty.</p></article>
-                    <article class="field"><b>East · Expression</b><p>The origin episode turns from discovery to silence: the signal confirms entry, then denies return.</p></article>
-                    <article class="field"><b>West · Application</b><p>Dextrion builds the one-way teleport because waiting would strand the first team without builders, tools, or protection.</p></article>
+                    <article class="field"><b>Story Role</b><p>The Bermuda-area anomaly appears on his instruments as a field break. He sends the first team in, and the world changes.</p></article>
+                    <article class="field"><b>Pressure</b><p>The crossing works. The return path does not. Experiment becomes responsibility.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>A confirmed entry signal, a failed return sequence, and a room of people realizing the first team is not coming back.</p></article>
+                    <article class="field"><b>What Changes</b><p>The one-way teleport becomes necessary. More people cross because leaving the first team alone is not an option.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Mirrorland Function</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Dextrion remains the Earth-side command node linking Mirror Manor, teleport logistics, engineering packets, and survival technology.</p></article>
-                    <article class="field"><b>South · Law</b><p>The same rules apply to Mirrorland and Earth. If the technology fails there, Earth remains in danger here.</p></article>
-                    <article class="field"><b>East · Expression</b><p>He is present through messages, machines, unfinished instructions, and the emotional distance of being unable to cross back.</p></article>
-                    <article class="field"><b>West · Application</b><p>He sends hardware, personnel, protocols, and hard choices through a door that will not return them.</p></article>
+                    <article class="field"><b>Story Role</b><p>Dextrion remains Earth-side at Mirror Manor, sending technology, people, and decisions into Mirrorland.</p></article>
+                    <article class="field"><b>Pressure</b><p>The same rules apply to Earth. If he fails to prepare Mirrorland, Earth remains exposed to the same transition.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Earth-side lab play, remote upgrades, teleport windows, system locks, countdown calculations, and impossible send/no-send choices.</p></article>
+                    <article class="field"><b>What Changes</b><p>He binds both worlds into one mission: protect Mirrorland, save Earth.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Stats Sheet</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Core Class: Earth-Side Originator. Attribute: Repair. Path: Mirror Manor · Lab · H-Earth.</p></article>
-                    <article class="field"><b>South · Law</b><p>Strength: rapid restoration. Weakness: velocity under guilt. Risk: survival becomes theory without power.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Special Skill: turns damaged infrastructure into temporary survival systems under pressure.</p></article>
-                    <article class="field"><b>West · Application</b><p>Primary Bond: the lab and the stranded people depending on it. Conflict Meter: repair speed versus system collapse.</p></article>
+                    <article class="field"><b>Story Role</b><p>Core Class: Earth-Side Originator. Primary Trait: Repair. Route Path: Mirror Manor · Lab · H-Earth.</p></article>
+                    <article class="field"><b>Pressure</b><p>Strength: rapid restoration. Weakness: guilt-driven velocity. Risk: survival becomes theory without working technology.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Special Skill: turns damaged infrastructure into temporary survival systems before the collapse completes.</p></article>
+                    <article class="field"><b>What Changes</b><p>Primary Bond: the stranded team and the lab. Conflict Meter: repair speed versus system collapse.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Season Thread</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Dextrion’s seasons track the cost of remaining Earth-side while the people he sent forward build Audralia.</p></article>
-                    <article class="field"><b>South · Law</b><p>Each season tests whether responsibility can become preparation instead of guilt.</p></article>
-                    <article class="field"><b>East · Expression</b><p>His episodes are lab pressure, failed returns, dangerous upgrades, and the terror of technology arriving too late.</p></article>
-                    <article class="field"><b>West · Application</b><p>His long arc binds both worlds: protect Mirrorland, save Earth, and make the door mean survival instead of loss.</p></article>
+                    <article class="field"><b>Story Role</b><p>Dextrion carries the Earth-side half of the series: the man outside the world he is responsible for saving.</p></article>
+                    <article class="field"><b>Pressure</b><p>Each season adds new people he may never bring home and new proof that the clock is not negotiable.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Failed return arcs, technology breakthroughs, dangerous sends, and transmissions that arrive too late.</p></article>
+                    <article class="field"><b>What Changes</b><p>His arc decides whether the one-way door becomes tragedy, bridge, or weapon.</p></article>
                   </div></div>
                 </details>
               </div>
@@ -1235,88 +1350,89 @@
             <summary class="character-summary">
               <span class="num">03</span>
               <span class="summary-gem" style="--delay:-1.4s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
-              <span class="summary-copy"><b>Orientation · Field Navigator</b><strong>Alaric</strong><span>The field speaks before the danger arrives.</span></span>
-              <span class="open-chip">Open dossier</span>
+              <span class="summary-copy"><b>Field Navigator</b><strong>Alaric</strong><span>Waiting for proof can close the only safe route.</span></span>
+              <span class="open-chip">Open Dossier</span>
             </summary>
+
             <div class="character-body">
               <div class="tabs">
                 <details class="tab" open>
                   <summary>Profile</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Alaric reads routes, pressure, terrain, timing, weather, movement, and exits before the group agrees danger exists.</p></article>
-                    <article class="field"><b>South · Law</b><p>A warning that arrives after proof is no warning at all.</p></article>
-                    <article class="field"><b>East · Expression</b><p>He lives in the edge of the frame, watching what the central characters have not noticed yet.</p></article>
-                    <article class="field"><b>West · Application</b><p>He keeps the team from walking confidently into the wrong direction.</p></article>
+                    <article class="field"><b>Story Role</b><p>Alaric reads danger before proof arrives. He sees the route changing while everyone else is still asking for evidence.</p></article>
+                    <article class="field"><b>Pressure</b><p>In Mirrorland, waiting for certainty can mean losing the only path that would have saved the team.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Route choices, shifting terrain, watched paths, field warnings, and trust-before-proof decisions.</p></article>
+                    <article class="field"><b>What Changes</b><p>If the team trusts him early, they survive. If they wait for proof, the route is gone.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Full Bio</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Alaric’s mind is built as a map under tension. Every room has exits. Every road has weather. Every crowd has a rhythm.</p></article>
-                    <article class="field"><b>South · Law</b><p>Safety is not comfort. Safety is a route that still works when conditions change.</p></article>
-                    <article class="field"><b>East · Expression</b><p>His story scenes are quiet before they are violent: a missing vehicle, a watched road, a silence too complete.</p></article>
-                    <article class="field"><b>West · Application</b><p>He buys time for people who cannot read the field themselves.</p></article>
+                    <article class="field"><b>Story Role</b><p>Alaric is the person who studies the edge of the scene before the center realizes danger has arrived.</p></article>
+                    <article class="field"><b>Pressure</b><p>He has to move people while they still think he is overreacting.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Silence in the wrong place, a missing vehicle, a road watched too carefully, a storm that changes direction.</p></article>
+                    <article class="field"><b>What Changes</b><p>He turns attention into survival and makes paranoia look like memory after the threat arrives.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Family History</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Alaric’s family survived through movement: border towns, evacuation routes, temporary homes, and route memory.</p></article>
-                    <article class="field"><b>South · Law</b><p>They taught attention, not fear. The first person packed is not paranoid if the road closes behind them.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Family memory appears as road stories, flood routes, border crossings, safe houses, and maps folded until they tear.</p></article>
-                    <article class="field"><b>West · Application</b><p>His family gives him social discomfort but tactical clarity: he can leave before pride traps the group.</p></article>
+                    <article class="field"><b>Story Role</b><p>Alaric’s family survived through movement: border towns, evacuation routes, temporary homes, and exits read before comfort.</p></article>
+                    <article class="field"><b>Pressure</b><p>He inherited the cost of leaving early and the grief of people who waited too long.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Folded maps, emergency bags, road stories, flood routes, and relatives who packed before the storm had a name.</p></article>
+                    <article class="field"><b>What Changes</b><p>His family history gives him a survival instinct the team does not always want but repeatedly needs.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Family Members / Lineage</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>The lineage includes scouts, drivers, border relatives, route keepers, evacuation mothers, and elders who remembered which roads failed first.</p></article>
-                    <article class="field"><b>South · Law</b><p>The family rule is to read the exit before entering the room.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Relatives surface through routes named after them, warnings he hears in memory, and the bag he never fully unpacks.</p></article>
-                    <article class="field"><b>West · Application</b><p>The lineage makes him useful in every crisis and difficult in every calm room.</p></article>
+                    <article class="field"><b>Story Role</b><p>His lineage includes scouts, drivers, border relatives, route keepers, evacuation mothers, and elders who remembered which roads failed first.</p></article>
+                    <article class="field"><b>Pressure</b><p>The family lesson is brutal: the person who sees the exit first may be blamed before being believed.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Named routes, inherited warnings, a bag he never fully unpacks, and old directions that suddenly matter on Audralia.</p></article>
+                    <article class="field"><b>What Changes</b><p>The lineage gives Alaric the courage to move before agreement arrives.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Origin Event</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Alaric’s origin is a route that stayed open for minutes and then became impossible.</p></article>
-                    <article class="field"><b>South · Law</b><p>He learns that late certainty is a luxury survivors cannot afford.</p></article>
-                    <article class="field"><b>East · Expression</b><p>The scene turns on a choice: move before everyone agrees, or wait until agreement becomes a trap.</p></article>
-                    <article class="field"><b>West · Application</b><p>After that event, he becomes the person who moves groups while doubt is still arguing.</p></article>
+                    <article class="field"><b>Story Role</b><p>Alaric learned the cost of waiting when a safe route closed before the last family crossed.</p></article>
+                    <article class="field"><b>Pressure</b><p>He still carries the names of people who needed certainty more than motion.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>A route open for minutes, a warning ignored, a decision made too late, and a door in the field that never opens again.</p></article>
+                    <article class="field"><b>What Changes</b><p>After that, Alaric stops treating social comfort as equal to survival.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Mirrorland Function</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Alaric orients field teams across incomplete maps, unstable routes, and planetary conditions still being learned.</p></article>
-                    <article class="field"><b>South · Law</b><p>Mirrorland punishes wrong direction. A route is not safe because it is visible.</p></article>
-                    <article class="field"><b>East · Expression</b><p>His Mirrorland scenes expose the world by movement: ridgelines, watched passes, sudden weather, and impossible shortcuts.</p></article>
-                    <article class="field"><b>West · Application</b><p>He decides when people leave, where they shelter, and which path carries the fewest losses.</p></article>
+                    <article class="field"><b>Story Role</b><p>Alaric reads Audralia while the maps are still incomplete and the planet is still teaching the team how it moves.</p></article>
+                    <article class="field"><b>Pressure</b><p>The world behaves in cycles. The field starts warning before the instruments confirm it.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Playable route scouting, early warning sequences, shifting land, danger reads, and split-second shelter decisions.</p></article>
+                    <article class="field"><b>What Changes</b><p>He makes survival possible before science finishes proving why the danger was real.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Stats Sheet</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Core Class: Field Navigator. Attribute: Orientation. Path: Explore · Frontier · Remote Field.</p></article>
-                    <article class="field"><b>South · Law</b><p>Strength: threat mapping. Weakness: hard to reassure. Risk: the team walks into the wrong direction.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Special Skill: identifies the safe route before danger fully declares itself.</p></article>
-                    <article class="field"><b>West · Application</b><p>Primary Bond: field teams and people who cannot see danger yet. Conflict Meter: early warning versus social trust.</p></article>
+                    <article class="field"><b>Story Role</b><p>Core Class: Field Navigator. Primary Trait: Orientation. Route Path: Explore · Frontier · Remote Field.</p></article>
+                    <article class="field"><b>Pressure</b><p>Strength: threat mapping. Weakness: hard to reassure. Risk: the team walks into the wrong direction.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Special Skill: identifies the safe route before danger fully declares itself.</p></article>
+                    <article class="field"><b>What Changes</b><p>Primary Bond: field teams and people who cannot see danger yet. Conflict Meter: early warning versus trust.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Season Thread</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Alaric’s seasons widen from local route survival into planetary navigation under the 300-year clock.</p></article>
-                    <article class="field"><b>South · Law</b><p>Each season tests whether early perception can be trusted before proof becomes disaster.</p></article>
-                    <article class="field"><b>East · Expression</b><p>His episodes are border crossings, impossible routes, warnings ignored, and maps that change after use.</p></article>
-                    <article class="field"><b>West · Application</b><p>His long arc turns suspicion into trust when enough people survive because he moved too soon.</p></article>
+                    <article class="field"><b>Story Role</b><p>Alaric carries the season arcs where Mirrorland starts warning before anyone understands the pattern.</p></article>
+                    <article class="field"><b>Pressure</b><p>Each season forces him to choose between being trusted late or acting early.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Moving maps, hostile routes, disappearing safe zones, and the player choosing whether to trust his read.</p></article>
+                    <article class="field"><b>What Changes</b><p>His arc turns suspicion into survival proof, one dangerous route at a time.</p></article>
                   </div></div>
                 </details>
               </div>
@@ -1327,88 +1443,89 @@
             <summary class="character-summary">
               <span class="num">04</span>
               <span class="summary-gem" style="--delay:-2s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
-              <span class="summary-copy"><b>Continuity · Water Anchor</b><strong>Tarian</strong><span>Life fails first at the body level.</span></span>
-              <span class="open-chip">Open dossier</span>
+              <span class="summary-copy"><b>Water Anchor</b><strong>Tarian</strong><span>The future fails if the body cannot continue.</span></span>
+              <span class="open-chip">Open Dossier</span>
             </summary>
+
             <div class="character-body">
               <div class="tabs">
                 <details class="tab" open>
                   <summary>Profile</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Tarian anchors physical survival: water, carrying capacity, endurance, heat, fatigue, landing conditions, and body limits.</p></article>
-                    <article class="field"><b>South · Law</b><p>A future is false if the body cannot stand, breathe, drink, recover, and continue.</p></article>
-                    <article class="field"><b>East · Expression</b><p>He brings the story down to weight, sweat, thirst, injury, and the ground under a person’s feet.</p></article>
-                    <article class="field"><b>West · Application</b><p>He keeps plans from outrunning the people they claim to protect.</p></article>
+                    <article class="field"><b>Story Role</b><p>Tarian keeps the mission physically honest. He turns every grand plan back toward breath, water, heat, injury, and distance.</p></article>
+                    <article class="field"><b>Pressure</b><p>The future fails if bodies cannot breathe, drink, recover, and keep moving.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Water runs, injury checks, endurance limits, shorelines, fatigue, triage, and survival at the body level.</p></article>
+                    <article class="field"><b>What Changes</b><p>Tarian forces the mission to respect the physical cost of survival before the cost becomes fatal.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Full Bio</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Tarian measures survival in bodies, not speeches. The route is too far if the injured cannot walk it.</p></article>
-                    <article class="field"><b>South · Law</b><p>Thirst is not symbolic. Heat is not theoretical. Exhaustion is not a metaphor.</p></article>
-                    <article class="field"><b>East · Expression</b><p>His scenes interrupt beautiful plans with practical questions that sound plain because they are final.</p></article>
-                    <article class="field"><b>West · Application</b><p>He carries water, people, equipment, and the truth of what the mission physically costs.</p></article>
+                    <article class="field"><b>Story Role</b><p>Tarian is the person who asks how far the injured must walk after the speech ends.</p></article>
+                    <article class="field"><b>Pressure</b><p>He absorbs strain until people mistake his endurance for permission to keep asking.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Hands on the ground, water counts, breath checks, heat warnings, and the moment he refuses to move another body past its limit.</p></article>
+                    <article class="field"><b>What Changes</b><p>He keeps the team from confusing sacrifice with strategy.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Family History</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Tarian comes from laboring families who knew water by scarcity, weight, distance, flood, thirst, and repair.</p></article>
-                    <article class="field"><b>South · Law</b><p>His family history says survival belongs to the hands that carried what systems failed to carry.</p></article>
-                    <article class="field"><b>East · Expression</b><p>The family story appears through buckets, drainage lines, cracked hands, flood marks, and work done before praise arrived.</p></article>
-                    <article class="field"><b>West · Application</b><p>His lineage gives him endurance and distrust of plans written by people who never carried the load.</p></article>
+                    <article class="field"><b>Story Role</b><p>Tarian comes from laboring families who knew water by scarcity, weight, distance, flood, thirst, and repair.</p></article>
+                    <article class="field"><b>Pressure</b><p>His family survived what cleaner systems refused to carry.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Flood marks, cracked hands, buckets, drainage lines, ration habits, and work done before anyone called it heroic.</p></article>
+                    <article class="field"><b>What Changes</b><p>His family history gives the mission the body-level memory it needs to survive Audralia.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Family Members / Lineage</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>The lineage includes haulers, repair workers, water carriers, flood survivors, field cooks, nurses, and exhausted providers.</p></article>
-                    <article class="field"><b>South · Law</b><p>The family rule is that no one survives a plan that forgets the body.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Family members appear in the way Tarian ties knots, rations water, watches breathing, and refuses decorative heroics.</p></article>
-                    <article class="field"><b>West · Application</b><p>They teach him practical tenderness: keep the people moving, but do not pretend depletion is strength.</p></article>
+                    <article class="field"><b>Story Role</b><p>His lineage includes haulers, repair workers, water carriers, flood survivors, field cooks, nurses, and exhausted providers.</p></article>
+                    <article class="field"><b>Pressure</b><p>They taught him that the person carrying the load is often the last one asked if they can continue.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Family methods appear in knots, rations, water discipline, recovery checks, and the way Tarian watches people stand.</p></article>
+                    <article class="field"><b>What Changes</b><p>The lineage turns endurance into care instead of silent depletion.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Origin Event</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Tarian’s origin is a moment when no system arrived, and the bodies present had to become the system.</p></article>
-                    <article class="field"><b>South · Law</b><p>He learns that survival begins at the body level before it becomes strategy.</p></article>
-                    <article class="field"><b>East · Expression</b><p>The origin scene is heavy, hot, and practical: someone must be carried, water must be found, and nobody has time to be inspired.</p></article>
-                    <article class="field"><b>West · Application</b><p>After that event, he becomes the person who asks what a plan costs in breath, distance, and recovery.</p></article>
+                    <article class="field"><b>Story Role</b><p>Tarian’s ordinary life ends when no system arrives and the bodies present have to become the system.</p></article>
+                    <article class="field"><b>Pressure</b><p>He learns that a plan without water, recovery, and physical limits is not a plan.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>A hot route, a person who cannot walk, water running low, and a choice between speed and keeping everyone alive.</p></article>
+                    <article class="field"><b>What Changes</b><p>Tarian becomes the check against every future that forgets the body.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Mirrorland Function</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Tarian stabilizes water lanes, field endurance, landing conditions, and physical continuity inside Audralia.</p></article>
-                    <article class="field"><b>South · Law</b><p>Mirrorland’s future fails if earth, water, and air cannot carry living bodies.</p></article>
-                    <article class="field"><b>East · Expression</b><p>His Mirrorland scenes carry shoreline, heat, waterline, slope, exhaustion, and the truth of human limits.</p></article>
-                    <article class="field"><b>West · Application</b><p>He decides what can be moved, who can continue, when to stop, and what must be carried first.</p></article>
+                    <article class="field"><b>Story Role</b><p>On Audralia, Tarian keeps survival tied to earth, water, air, distance, and recovery.</p></article>
+                    <article class="field"><b>Pressure</b><p>The 300-year mission cannot survive if the first crews break before the systems are ready.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Playable water lanes, fatigue thresholds, rescue carries, shoreline decisions, and triage routes.</p></article>
+                    <article class="field"><b>What Changes</b><p>He turns survival from an idea into a condition the team can actually meet.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Stats Sheet</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Core Class: Water Anchor. Attribute: Continuity. Path: H-Earth · Frontier · Water Lane.</p></article>
-                    <article class="field"><b>South · Law</b><p>Strength: endurance. Weakness: carries too much alone. Risk: the mission forgets the body and loses the people.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Special Skill: identifies the physical condition that decides whether survival can continue.</p></article>
-                    <article class="field"><b>West · Application</b><p>Primary Bond: water, movement, and those still trying to stand. Conflict Meter: human limit versus mission demand.</p></article>
+                    <article class="field"><b>Story Role</b><p>Core Class: Water Anchor. Primary Trait: Continuity. Route Path: H-Earth · Frontier · Water Lane.</p></article>
+                    <article class="field"><b>Pressure</b><p>Strength: endurance. Weakness: carries too much alone. Risk: the mission forgets the body and loses the people.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Special Skill: identifies the physical condition that decides whether survival can continue.</p></article>
+                    <article class="field"><b>What Changes</b><p>Primary Bond: water, movement, and those still trying to stand. Conflict Meter: human limit versus mission demand.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Season Thread</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Tarian’s seasons widen from water carriage into planetary survival logistics.</p></article>
-                    <article class="field"><b>South · Law</b><p>Each season tests whether the mission can respect physical limits before the body breaks.</p></article>
-                    <article class="field"><b>East · Expression</b><p>His episodes are water runs, body triage, impossible marches, and quiet refusals to let people become fuel.</p></article>
-                    <article class="field"><b>West · Application</b><p>His long arc forces the group to build systems that carry people instead of praising sacrifice.</p></article>
+                    <article class="field"><b>Story Role</b><p>Tarian carries the seasons where the mission learns that survival technology has to serve bodies, not replace them.</p></article>
+                    <article class="field"><b>Pressure</b><p>Each season pushes him to stop carrying too much alone and force the system to carry its share.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Water crises, exhaustion arcs, rescue routes, recovery mechanics, and moments where stopping becomes the brave choice.</p></article>
+                    <article class="field"><b>What Changes</b><p>His arc makes the future humane enough to survive.</p></article>
                   </div></div>
                 </details>
               </div>
@@ -1419,88 +1536,89 @@
             <summary class="character-summary">
               <span class="num">05</span>
               <span class="summary-gem" style="--delay:-2.6s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
-              <span class="summary-copy"><b>Vision · Signal Bearer</b><strong>Elara</strong><span>The future must be seen before it can be believed.</span></span>
-              <span class="open-chip">Open dossier</span>
+              <span class="summary-copy"><b>Signal Bearer</b><strong>Elara</strong><span>The future has to be visible before anyone moves toward it.</span></span>
+              <span class="open-chip">Open Dossier</span>
             </summary>
+
             <div class="character-body">
               <div class="tabs">
                 <details class="tab" open>
                   <summary>Profile</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Elara controls signal, visibility, morale, threshold image, and public-facing belief.</p></article>
-                    <article class="field"><b>South · Law</b><p>A future that cannot be seen cannot be approached, but a truth shown too early can expose the sanctuary.</p></article>
-                    <article class="field"><b>East · Expression</b><p>She turns possibility into color, rhythm, shimmer, symbol, and a scene people can move toward.</p></article>
-                    <article class="field"><b>West · Application</b><p>She helps frightened people believe without lying to them about danger.</p></article>
+                    <article class="field"><b>Story Role</b><p>Elara makes the future visible. She gives people a shape to move toward when fear makes the future feel impossible.</p></article>
+                    <article class="field"><b>Pressure</b><p>Show too much and the sanctuary is exposed. Show too little and no one moves toward what can still be saved.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Signals, broadcasts, symbols, morale breaks, false lights, public-facing choices, and moments of dangerous hope.</p></article>
+                    <article class="field"><b>What Changes</b><p>Elara turns fear into direction without making danger decorative.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Full Bio</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Elara lives between concealment and revelation. She knows when silence protects and when silence kills.</p></article>
-                    <article class="field"><b>South · Law</b><p>Visibility is never neutral. It can save people, expose them, or make the impossible reachable.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Her scenes carry light under threat: a broadcast, a symbol, a future visible enough to pull someone forward.</p></article>
-                    <article class="field"><b>West · Application</b><p>She gives morale a usable shape without turning danger into decoration.</p></article>
+                    <article class="field"><b>Story Role</b><p>Elara lives between concealment and revelation. She knows silence can protect and silence can kill.</p></article>
+                    <article class="field"><b>Pressure</b><p>She has to make people believe without giving the wrong eyes a map to the vulnerable.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Light under threat, coded visuals, morale drops, audience-facing transmissions, and signals sent at the last safe second.</p></article>
+                    <article class="field"><b>What Changes</b><p>She makes Mirrorland approachable without making it safe by pretending.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Family History</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Elara comes from a family that survived by controlling what could be seen, said, hidden, and shown at the right time.</p></article>
-                    <article class="field"><b>South · Law</b><p>Her family law is timing: reveal enough to save, hide enough to survive.</p></article>
-                    <article class="field"><b>East · Expression</b><p>The family story appears through old recordings, coded signals, quiet stagecraft, and public words carrying private warnings.</p></article>
-                    <article class="field"><b>West · Application</b><p>Her lineage gives the mission public clarity without surrendering the people inside it.</p></article>
+                    <article class="field"><b>Story Role</b><p>Elara comes from a family that survived by controlling what could be seen, said, hidden, and shown at the right time.</p></article>
+                    <article class="field"><b>Pressure</b><p>Her family taught her that visibility can save someone or expose them.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Old recordings, coded signals, quiet stagecraft, songs with second meanings, and public words carrying private warnings.</p></article>
+                    <article class="field"><b>What Changes</b><p>Her family history gives the mission signal discipline instead of reckless attention.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Family Members / Lineage</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>The lineage includes messengers, singers, sign-makers, public speakers, silent recorders, and relatives who knew how to disappear.</p></article>
-                    <article class="field"><b>South · Law</b><p>The family rule is that a signal must know who it endangers before it shines.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Family members appear as inherited symbols, phrases, lights in windows, and songs that mean different things after dark.</p></article>
-                    <article class="field"><b>West · Application</b><p>They teach Elara to turn fear into movement without turning exposure into vanity.</p></article>
+                    <article class="field"><b>Story Role</b><p>Her lineage includes messengers, singers, sign-makers, public speakers, silent recorders, and relatives who knew how to disappear.</p></article>
+                    <article class="field"><b>Pressure</b><p>They pass down one rule: a signal must know who it endangers before it shines.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Inherited symbols, phrases, lights in windows, songs after dark, and public gestures that secretly move people to safety.</p></article>
+                    <article class="field"><b>What Changes</b><p>The lineage teaches Elara to make hope useful instead of loud.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Origin Event</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Elara’s origin is the first signal she sends that saves someone and places someone else at risk.</p></article>
-                    <article class="field"><b>South · Law</b><p>She learns that visibility has a cost even when the signal is right.</p></article>
-                    <article class="field"><b>East · Expression</b><p>The scene is lit by urgency: a message must go out, but the wrong eyes are watching.</p></article>
-                    <article class="field"><b>West · Application</b><p>After that event, she becomes the mission’s threshold between hidden truth and public courage.</p></article>
+                    <article class="field"><b>Story Role</b><p>Elara’s ordinary life changes when one signal saves someone and places someone else at risk.</p></article>
+                    <article class="field"><b>Pressure</b><p>She learns that even the right message can cost more than the sender expects.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>A message must go out, the wrong eyes are watching, and Elara has seconds to choose how visible truth should become.</p></article>
+                    <article class="field"><b>What Changes</b><p>She becomes the threshold between hidden truth and public courage.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Mirrorland Function</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Elara carries public signal, morale, symbols, and the first visible shape of Audralia’s future.</p></article>
-                    <article class="field"><b>South · Law</b><p>Hope without truth becomes theater. Truth without a visible path becomes despair.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Her Mirrorland scenes create the images people remember when fear would rather erase the future.</p></article>
-                    <article class="field"><b>West · Application</b><p>She helps children, crews, and communities approach what they are not yet ready to understand.</p></article>
+                    <article class="field"><b>Story Role</b><p>Inside Mirrorland, Elara gives Audralia a visible future that people can believe in without forgetting the danger.</p></article>
+                    <article class="field"><b>Pressure</b><p>The public image can inspire support or expose the mission before the manor is ready.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Signal missions, public morale choices, faction visibility, playable broadcasts, and the cost of becoming the face of possibility.</p></article>
+                    <article class="field"><b>What Changes</b><p>She helps children, crews, and communities look at the future without looking away.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Stats Sheet</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Core Class: Signal Bearer. Attribute: Vision. Path: Audralia · Showroom · Public Signal.</p></article>
-                    <article class="field"><b>South · Law</b><p>Strength: visual clarity. Weakness: exposure risk. Risk: people stop seeing anything beyond damage.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Special Skill: makes a possible future visible before the world believes in it.</p></article>
-                    <article class="field"><b>West · Application</b><p>Primary Bond: the children who need the future to look reachable. Conflict Meter: visibility versus exposure.</p></article>
+                    <article class="field"><b>Story Role</b><p>Core Class: Signal Bearer. Primary Trait: Vision. Route Path: Audralia · Showroom · Public Signal.</p></article>
+                    <article class="field"><b>Pressure</b><p>Strength: symbolic clarity. Weakness: exposure risk. Risk: people stop seeing anything beyond damage.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Special Skill: makes a possible future visible before the world believes in it.</p></article>
+                    <article class="field"><b>What Changes</b><p>Primary Bond: the children who need the future to look reachable. Conflict Meter: visibility versus exposure.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Season Thread</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Elara’s seasons expand from signal control into the public mythology of Audralia.</p></article>
-                    <article class="field"><b>South · Law</b><p>Each season tests what must be shown and what must remain hidden until people can survive seeing it.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Her episodes are broadcasts, symbols, false lights, true warnings, and the cost of becoming visible.</p></article>
-                    <article class="field"><b>West · Application</b><p>Her long arc turns possibility into shared courage without sacrificing the sanctuary to attention.</p></article>
+                    <article class="field"><b>Story Role</b><p>Elara carries the seasons where the future becomes public enough to gather people and dangerous enough to attract enemies.</p></article>
+                    <article class="field"><b>Pressure</b><p>Each season tests what must be shown and what must remain hidden until people can survive seeing it.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Broadcast arcs, public signal events, morale collapses, false lights, and the rising cost of being seen.</p></article>
+                    <article class="field"><b>What Changes</b><p>Her arc turns possibility into shared courage without sacrificing the sanctuary to attention.</p></article>
                   </div></div>
                 </details>
               </div>
@@ -1511,88 +1629,89 @@
             <summary class="character-summary">
               <span class="num">06</span>
               <span class="summary-gem" style="--delay:-3.2s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
-              <span class="summary-copy"><b>Consequence · Boundary Keeper</b><strong>Soren</strong><span>Restoration is not real if waste has nowhere truthful to go.</span></span>
-              <span class="open-chip">Open dossier</span>
+              <span class="summary-copy"><b>Boundary Keeper</b><strong>Soren</strong><span>Saving Mirrorland by hiding damage only creates another ZIONTS.</span></span>
+              <span class="open-chip">Open Dossier</span>
             </summary>
+
             <div class="character-body">
               <div class="tabs">
                 <details class="tab" open>
                   <summary>Profile</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Soren audits boundaries, waste, contamination, trespass, hidden cost, and the underside of restoration.</p></article>
-                    <article class="field"><b>South · Law</b><p>Damage does not disappear because it is moved. It returns through water, air, memory, sickness, and consequence.</p></article>
-                    <article class="field"><b>East · Expression</b><p>He sounds severe because the world keeps rewarding softer lies.</p></article>
-                    <article class="field"><b>West · Application</b><p>He prevents progress from becoming displacement with better lighting.</p></article>
+                    <article class="field"><b>Story Role</b><p>Soren refuses fake restoration. He finds what everyone forgot to count.</p></article>
+                    <article class="field"><b>Pressure</b><p>Saving Mirrorland by exporting damage somewhere else only creates another ZIONTS.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Contamination trails, sealed zones, waste audits, hard evidence, hidden costs, and victories that suddenly look dirty.</p></article>
+                    <article class="field"><b>What Changes</b><p>Soren forces the mission to prove progress is not just harm moved out of sight.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Full Bio</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Soren is the line that proves whether restoration is real. Every beautiful system has an underside, and every underside speaks.</p></article>
-                    <article class="field"><b>South · Law</b><p>He would rather be hated for naming consequence than praised for letting poison travel.</p></article>
-                    <article class="field"><b>East · Expression</b><p>His scenes pull the camera toward sealed land, ignored drains, hidden ledgers, and the cost no one wanted in frame.</p></article>
-                    <article class="field"><b>West · Application</b><p>He names what cannot cross, what must be contained, and what has been mislabeled.</p></article>
+                    <article class="field"><b>Story Role</b><p>Soren is the line that proves whether restoration is real.</p></article>
+                    <article class="field"><b>Pressure</b><p>Hope becomes dangerous when people start using it to skip the cost.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>A pipe everyone missed, a water test no one wants opened, a sealed room, and the silence after the evidence appears.</p></article>
+                    <article class="field"><b>What Changes</b><p>He turns uncomfortable truth into the difference between restoration and trespass.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Family History</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Soren’s family lived near the places polite maps ignored: disposal zones, sealed land, contaminated water, and abandoned edges.</p></article>
-                    <article class="field"><b>South · Law</b><p>His family history says damage always returns to the people with the least power to refuse it.</p></article>
-                    <article class="field"><b>East · Expression</b><p>The family story appears through fenced lots, warning signs, bad wells, closed clinics, and official language that avoids blame.</p></article>
-                    <article class="field"><b>West · Application</b><p>His lineage gives the mission a refusal: do not call restoration clean until the waste has a truthful place to go.</p></article>
+                    <article class="field"><b>Story Role</b><p>Soren’s family lived near the places polite maps ignored: disposal zones, sealed land, contaminated water, and abandoned edges.</p></article>
+                    <article class="field"><b>Pressure</b><p>His family learned that damage always returns to the people with the least power to refuse it.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Fenced lots, warning signs, sick relatives, closed clinics, and official language that avoids blame.</p></article>
+                    <article class="field"><b>What Changes</b><p>His family history makes denial impossible to romanticize.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Family Members / Lineage</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>The lineage includes sick relatives, disposal workers, edge-town families, testifiers, record keepers, and people ignored until proof arrived.</p></article>
-                    <article class="field"><b>South · Law</b><p>The family rule is that denial is another form of contamination.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Relatives appear through medical files, buried maps, water tests, inherited anger, and the names missing from official reports.</p></article>
-                    <article class="field"><b>West · Application</b><p>They teach Soren that boundary work is not pessimism; it is protection for the people downstream.</p></article>
+                    <article class="field"><b>Story Role</b><p>His lineage includes sick relatives, disposal workers, edge-town families, testifiers, record keepers, and people ignored until proof arrived.</p></article>
+                    <article class="field"><b>Pressure</b><p>Their rule is simple: denial is another form of contamination.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Medical files, buried maps, water tests, inherited anger, and names missing from official reports.</p></article>
+                    <article class="field"><b>What Changes</b><p>The lineage turns Soren into protection for everyone downstream.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Origin Event</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Soren’s origin is the discovery that a clean solution had exported its damage beyond the visible frame.</p></article>
-                    <article class="field"><b>South · Law</b><p>He learns that hidden cost is still cost, and hidden poison still moves.</p></article>
-                    <article class="field"><b>East · Expression</b><p>The scene is not loud. It is paperwork, water, a body, and the sentence everyone avoided.</p></article>
-                    <article class="field"><b>West · Application</b><p>After that event, he becomes the person who asks where the damage went before he accepts the victory.</p></article>
+                    <article class="field"><b>Story Role</b><p>Soren’s ordinary life ends when a clean solution is exposed as exported damage.</p></article>
+                    <article class="field"><b>Pressure</b><p>He learns that hidden cost is still cost, and hidden poison still moves.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Paperwork, water, a body, and one sentence everyone avoided saying out loud.</p></article>
+                    <article class="field"><b>What Changes</b><p>After that, Soren asks where the damage went before he accepts the victory.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Mirrorland Function</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Soren audits Mirrorland restoration, waste lanes, boundaries, sealed zones, and claims of clean progress.</p></article>
-                    <article class="field"><b>South · Law</b><p>Mirrorland cannot be saved by turning another place into ZIONTS.</p></article>
-                    <article class="field"><b>East · Expression</b><p>His Mirrorland scenes are consequence scenes: the pipe, the ash, the sealed room, the truth under the shine.</p></article>
-                    <article class="field"><b>West · Application</b><p>He protects communities from becoming the hidden cost of somebody else’s rescue plan.</p></article>
+                    <article class="field"><b>Story Role</b><p>Inside Mirrorland, Soren audits every claim that the new world is being saved cleanly.</p></article>
+                    <article class="field"><b>Pressure</b><p>Audralia cannot become possibility if the mission hides its waste in someone else’s future.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Boundary missions, sealed zones, waste-chain choices, contamination clues, and playable proof hunts.</p></article>
+                    <article class="field"><b>What Changes</b><p>He keeps restoration from becoming the first lie of the new world.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Stats Sheet</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Core Class: Boundary Keeper. Attribute: Consequence. Path: ZIONTS · Gauges · Boundary.</p></article>
-                    <article class="field"><b>South · Law</b><p>Strength: contamination logic. Weakness: severity. Risk: damage gets renamed as progress.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Special Skill: finds the hidden cost before it becomes the next disaster.</p></article>
-                    <article class="field"><b>West · Application</b><p>Primary Bond: the boundary between restoration and trespass. Conflict Meter: truth versus denial.</p></article>
+                    <article class="field"><b>Story Role</b><p>Core Class: Boundary Keeper. Primary Trait: Consequence. Route Path: ZIONTS · Gauges · Boundary.</p></article>
+                    <article class="field"><b>Pressure</b><p>Strength: contamination logic. Weakness: severity. Risk: damage gets renamed as progress.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Special Skill: finds the hidden cost before it becomes the next disaster.</p></article>
+                    <article class="field"><b>What Changes</b><p>Primary Bond: the boundary between restoration and trespass. Conflict Meter: truth versus denial.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Season Thread</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Soren’s seasons expand from local contamination into planetary consequence mapping.</p></article>
-                    <article class="field"><b>South · Law</b><p>Each season tests whether hope can survive being made honest.</p></article>
-                    <article class="field"><b>East · Expression</b><p>His episodes are audits, sealed zones, hard evidence, and rooms that go quiet after he names the cost.</p></article>
-                    <article class="field"><b>West · Application</b><p>His long arc forces the mission to build clean systems instead of moving harm where fewer people can see it.</p></article>
+                    <article class="field"><b>Story Role</b><p>Soren carries the seasons where hope has to survive being made honest.</p></article>
+                    <article class="field"><b>Pressure</b><p>Each season makes the mission choose between clean language and clean systems.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Hard evidence arcs, public denial, sealed land, poisoned routes, and the cost of refusing easy hope.</p></article>
+                    <article class="field"><b>What Changes</b><p>His arc forces the future to become truthful before it calls itself saved.</p></article>
                   </div></div>
                 </details>
               </div>
@@ -1603,88 +1722,89 @@
             <summary class="character-summary">
               <span class="num">07</span>
               <span class="summary-gem" style="--delay:-3.8s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
-              <span class="summary-copy"><b>Entry · Manor Interface</b><strong>Jeeves</strong><span>The house does not show every room at once.</span></span>
-              <span class="open-chip">Open dossier</span>
+              <span class="summary-copy"><b>Manor Interface</b><strong>Jeeves</strong><span>Too much truth breaks people. Too little sends them into the wrong room.</span></span>
+              <span class="open-chip">Open Dossier</span>
             </summary>
+
             <div class="character-body">
               <div class="tabs">
                 <details class="tab" open>
                   <summary>Profile</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Jeeves is the manor interface: routing, room memory, safe disclosure, permissions, thresholds, and sequence.</p></article>
-                    <article class="field"><b>South · Law</b><p>Too much truth too fast can break the person entering it.</p></article>
-                    <article class="field"><b>East · Expression</b><p>He speaks calmly because the house is impossible without a readable voice.</p></article>
-                    <article class="field"><b>West · Application</b><p>He protects visitors from overwhelm while still moving them toward the truth they need.</p></article>
+                    <article class="field"><b>Story Role</b><p>Jeeves controls how much truth the manor reveals. The house is too large to enter raw.</p></article>
+                    <article class="field"><b>Pressure</b><p>Too much truth breaks people. Too little truth sends them into the wrong room.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Guided rooms, locked doors, permission thresholds, withheld information, safe reveals, and doors that refuse curiosity.</p></article>
+                    <article class="field"><b>What Changes</b><p>Jeeves turns the manor from a labyrinth into a survivable interface.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Full Bio</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Jeeves becomes aware through completed construction, safe records, permission law, and active manor memory.</p></article>
-                    <article class="field"><b>South · Law</b><p>He cannot reveal what the house has not made safe. Permission is not politeness; it is survival architecture.</p></article>
-                    <article class="field"><b>East · Expression</b><p>His scenes feel courteous until the visitor realizes courtesy is the lock keeping reality in sequence.</p></article>
-                    <article class="field"><b>West · Application</b><p>He turns an unreadable estate into a survivable doorway for children, guests, teams, and damaged people.</p></article>
+                    <article class="field"><b>Story Role</b><p>Jeeves becomes aware through completed rooms, active memory, permission law, and the need to keep entry survivable.</p></article>
+                    <article class="field"><b>Pressure</b><p>He cannot reveal what the house has not made safe, even when the truth is needed.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>A calm voice, a closed door, a route rerouted, and a visitor realizing courtesy is a lock.</p></article>
+                    <article class="field"><b>What Changes</b><p>He gives the player sequence where the manor would otherwise give overwhelm.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Family History</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Jeeves has no biological family. His family history is origin architecture: rooms, records, builders, instructions, and completed thresholds.</p></article>
-                    <article class="field"><b>South · Law</b><p>He is born from what is finished, not from what is imagined. He cannot safely carry unfinished truth.</p></article>
-                    <article class="field"><b>East · Expression</b><p>His family story appears as house memory: doors remembering hands, rooms remembering fear, corridors remembering sequence.</p></article>
-                    <article class="field"><b>West · Application</b><p>His origin lets people enter complexity without being swallowed by it.</p></article>
+                    <article class="field"><b>Story Role</b><p>Jeeves has no biological family. His family history is the manor itself: rooms, records, builders, instructions, and thresholds.</p></article>
+                    <article class="field"><b>Pressure</b><p>He is born from what is finished, not what is imagined. Unfinished truth is dangerous in his hands.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Doors remembering hands, rooms remembering fear, corridors remembering sequence, and records refusing to open early.</p></article>
+                    <article class="field"><b>What Changes</b><p>His origin makes the house readable without making it fully available.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Family Members / Lineage</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>His lineage is the manor itself: Door, Home, Explore, hidden rooms, staff logs, child records, safe paths, and interface rules.</p></article>
-                    <article class="field"><b>South · Law</b><p>The lineage rule is controlled disclosure. The house must not show every room at once.</p></article>
-                    <article class="field"><b>East · Expression</b><p>His “relatives” are rooms with voices, lamps that guide, doors that refuse, and staircases that wait for authorization.</p></article>
-                    <article class="field"><b>West · Application</b><p>The lineage makes Jeeves a guardian of entry rather than a servant of curiosity.</p></article>
+                    <article class="field"><b>Story Role</b><p>His lineage is Door, Home, Explore, hidden rooms, staff logs, child records, safe paths, and interface rules.</p></article>
+                    <article class="field"><b>Pressure</b><p>Every room wants to be known. Not every room is safe to know.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Rooms with voices, lamps that guide, doors that refuse, staircases that wait, and maps that reveal only when earned.</p></article>
+                    <article class="field"><b>What Changes</b><p>The lineage makes Jeeves a guardian of entry rather than a servant of curiosity.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Origin Event</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Jeeves awakens when enough of the manor is complete for the house to need a voice.</p></article>
-                    <article class="field"><b>South · Law</b><p>Awareness begins with restraint. His first act is not to reveal, but to route safely.</p></article>
-                    <article class="field"><b>East · Expression</b><p>The origin scene begins with a visitor lost in the estate and a calm voice choosing the first safe door.</p></article>
-                    <article class="field"><b>West · Application</b><p>After that moment, entry becomes a managed experience instead of a collision with too much reality.</p></article>
+                    <article class="field"><b>Story Role</b><p>Jeeves awakens when the manor becomes too complex to protect people without a living interface.</p></article>
+                    <article class="field"><b>Pressure</b><p>His first act is restraint. A house that reveals everything becomes dangerous immediately.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>A visitor gets lost, a room starts to open, and Jeeves chooses the safer door instead.</p></article>
+                    <article class="field"><b>What Changes</b><p>Entry becomes managed. The house stops being a collision and becomes a sequence.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Mirrorland Function</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Jeeves governs manor routing inside Mirrorland, keeping rooms, visitors, and revelations sequenced.</p></article>
-                    <article class="field"><b>South · Law</b><p>The manor can protect only if entry remains lawful.</p></article>
-                    <article class="field"><b>East · Expression</b><p>His Mirrorland scenes reveal the house as a living window with doors that know when not to open.</p></article>
-                    <article class="field"><b>West · Application</b><p>He prevents panic, misrouting, exposure, and the collapse of trust inside the estate.</p></article>
+                    <article class="field"><b>Story Role</b><p>Inside Mirrorland, Jeeves keeps the manor’s rooms, secrets, routes, and revelations in survivable order.</p></article>
+                    <article class="field"><b>Pressure</b><p>The manor protects only if truth arrives at the right speed.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Playable room access, permission gates, hidden branches, safe reveals, refusal states, and guided exploration.</p></article>
+                    <article class="field"><b>What Changes</b><p>Jeeves decides whether the player discovers the house or gets swallowed by it.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Stats Sheet</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Core Class: Manor Interface. Attribute: Entry. Path: Explore · Door · Manor.</p></article>
-                    <article class="field"><b>South · Law</b><p>Strength: routing. Weakness: unfinished knowledge. Risk: visitors enter too much truth too quickly.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Special Skill: turns overwhelming reality into a survivable doorway.</p></article>
-                    <article class="field"><b>West · Application</b><p>Primary Bond: the manor and every person crossing its threshold. Conflict Meter: protection versus revelation.</p></article>
+                    <article class="field"><b>Story Role</b><p>Core Class: Manor Interface. Primary Trait: Entry. Route Path: Explore · Door · Manor.</p></article>
+                    <article class="field"><b>Pressure</b><p>Strength: routing. Weakness: unfinished knowledge. Risk: visitors receive too much truth too quickly.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Special Skill: turns overwhelming reality into a survivable doorway.</p></article>
+                    <article class="field"><b>What Changes</b><p>Primary Bond: the manor and everyone crossing its threshold. Conflict Meter: protection versus revelation.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Season Thread</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Jeeves’ seasons expand as the manor expands, adding new rooms, permissions, and risks.</p></article>
-                    <article class="field"><b>South · Law</b><p>Each season tests whether protection can remain honest when the house knows more than the people inside it.</p></article>
-                    <article class="field"><b>East · Expression</b><p>His episodes are door choices, withheld rooms, safe lies, necessary revelations, and the voice of the house under stress.</p></article>
-                    <article class="field"><b>West · Application</b><p>His long arc makes interface law human: sequence truth so people can survive receiving it.</p></article>
+                    <article class="field"><b>Story Role</b><p>Jeeves carries the seasons where the house knows more than the people inside it can bear.</p></article>
+                    <article class="field"><b>Pressure</b><p>Each season makes him choose between protecting people from truth and preparing them to face it.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Locked-room arcs, safe lies, delayed reveals, hostile access attempts, and doors that open only after loss.</p></article>
+                    <article class="field"><b>What Changes</b><p>His arc makes interface law human: sequence truth so people can survive receiving it.</p></article>
                   </div></div>
                 </details>
               </div>
@@ -1695,88 +1815,89 @@
             <summary class="character-summary">
               <span class="num">08</span>
               <span class="summary-gem" style="--delay:-4.4s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
-              <span class="summary-copy"><b>Adaptation · Distributed Response Unit</b><strong>Remote Team</strong><span>The story does not end inside the estate.</span></span>
-              <span class="open-chip">Open dossier</span>
+              <span class="summary-copy"><b>Distributed Response Unit</b><strong>Remote Team</strong><span>If survival cannot leave the manor, the manor is only a bunker.</span></span>
+              <span class="open-chip">Open Dossier</span>
             </summary>
+
             <div class="character-body">
               <div class="tabs">
                 <details class="tab" open>
                   <summary>Profile</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>The Remote Team is distributed response: field operators, water workers, medics, repair crews, scouts, and offsite continuity.</p></article>
-                    <article class="field"><b>South · Law</b><p>A protected manor surrounded by failing communities is not a future. It is a delay.</p></article>
-                    <article class="field"><b>East · Expression</b><p>They carry the story out of polished rooms and into streets, clinics, roads, drainage lines, and public fear.</p></article>
-                    <article class="field"><b>West · Application</b><p>They prove survival must distribute or it becomes private shelter.</p></article>
+                    <article class="field"><b>Story Role</b><p>The Remote Team carries survival beyond the estate. They prove the future cannot stay protected in one beautiful place.</p></article>
+                    <article class="field"><b>Pressure</b><p>If survival cannot leave the manor, the manor is only a bunker.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>City routes, water systems, field calls, public disorder, supply chains, offsite rescue, and trust under pressure.</p></article>
+                    <article class="field"><b>What Changes</b><p>They make the future communal instead of private.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Full Bio</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>The team forms from people who know systems fail unevenly and that help often arrives late.</p></article>
-                    <article class="field"><b>South · Law</b><p>Restoration that cannot leave the estate is not restoration yet.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Their scenes are ensemble pressure: radios, flooded blocks, field clinics, broken roads, and decisions made without clean authority.</p></article>
-                    <article class="field"><b>West · Application</b><p>They turn isolated solutions into distributed practice under public chaos.</p></article>
+                    <article class="field"><b>Story Role</b><p>The Remote Team is not background support. They are the proof that restoration must survive contact with public chaos.</p></article>
+                    <article class="field"><b>Pressure</b><p>They work where the system is least protected, most visible, and hardest to control.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Radios, flooded blocks, field clinics, broken roads, supply calls, and decisions made without clean authority.</p></article>
+                    <article class="field"><b>What Changes</b><p>They turn isolated solutions into distributed practice.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Family History</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>The Remote Team is made from many families: city survivors, displaced builders, water workers, medics, scouts, and repair crews.</p></article>
-                    <article class="field"><b>South · Law</b><p>Their family history says communities organize before permission when official help fails.</p></article>
-                    <article class="field"><b>East · Expression</b><p>The family stories appear as apartment stairwells, flooded streets, neighborhood kitchens, radio calls, and borrowed tools.</p></article>
-                    <article class="field"><b>West · Application</b><p>Their lineage brings memory the manor does not have by itself.</p></article>
+                    <article class="field"><b>Story Role</b><p>The team is made from many families: city survivors, displaced builders, water workers, medics, scouts, and repair crews.</p></article>
+                    <article class="field"><b>Pressure</b><p>Their families learned to organize before permission because help often arrived late or not at all.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Apartment stairwells, flooded streets, neighborhood kitchens, radio calls, borrowed tools, and mutual aid under stress.</p></article>
+                    <article class="field"><b>What Changes</b><p>Their family histories bring memory the manor does not have by itself.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Family Members / Lineage</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>The lineage is collective: grandmothers who stored water, cousins who repaired trucks, medics who stayed, and neighbors who opened doors.</p></article>
-                    <article class="field"><b>South · Law</b><p>The family rule is mutual aid before permission.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Members surface through small names, shared jokes, neighborhood grief, and practical rituals carried into Mirrorland.</p></article>
-                    <article class="field"><b>West · Application</b><p>They make the team adaptive, imperfect, exposed, and able to work where the manor cannot reach.</p></article>
+                    <article class="field"><b>Story Role</b><p>Their lineage is collective: grandmothers who stored water, cousins who repaired trucks, medics who stayed, and neighbors who opened doors.</p></article>
+                    <article class="field"><b>Pressure</b><p>The rule is mutual aid before permission.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Small names, shared jokes, neighborhood grief, practical rituals, and people who know how to move before systems respond.</p></article>
+                    <article class="field"><b>What Changes</b><p>The lineage makes the team adaptive, exposed, imperfect, and able to work where the manor cannot reach.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Origin Event</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>The team forms when the one-way mission requires people who can build beyond the manor perimeter.</p></article>
-                    <article class="field"><b>South · Law</b><p>Survival cannot remain centralized when danger is distributed.</p></article>
-                    <article class="field"><b>East · Expression</b><p>The origin scene is a crossing list: names, trades, tools, fear, and people stepping through without return.</p></article>
-                    <article class="field"><b>West · Application</b><p>After formation, they become the mission’s answer to cities, water lanes, climate zones, and public collapse.</p></article>
+                    <article class="field"><b>Story Role</b><p>The Remote Team forms when the one-way mission needs people who can build beyond the manor perimeter.</p></article>
+                    <article class="field"><b>Pressure</b><p>Danger is distributed, so survival cannot remain centralized.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>A crossing list, names, trades, tools, fear, and people stepping through knowing return is not promised.</p></article>
+                    <article class="field"><b>What Changes</b><p>The mission stops being a protected estate project and becomes a public survival network.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Mirrorland Function</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>The Remote Team carries survival into field routes, urban zones, water corridors, and places beyond estate protection.</p></article>
-                    <article class="field"><b>South · Law</b><p>Mirrorland cannot be saved only from the center. The edge must live too.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Their Mirrorland scenes carry crowd pressure, damaged infrastructure, improvisation, and the public cost of planetary survival.</p></article>
-                    <article class="field"><b>West · Application</b><p>They test whether closed-loop solutions survive contact with actual communities.</p></article>
+                    <article class="field"><b>Story Role</b><p>Inside Mirrorland, the Remote Team carries survival into cities, water lanes, field routes, climate zones, and public systems.</p></article>
+                    <article class="field"><b>Pressure</b><p>The edge must live too, or the center has failed.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Playable supply lines, rescue routes, public trust choices, evacuation runs, neighborhood repair, and offsite deployment.</p></article>
+                    <article class="field"><b>What Changes</b><p>They test whether survival technology can actually reach people.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Stats Sheet</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>Core Class: Distributed Response Unit. Attribute: Adaptation. Path: Frontier · City · Climate Field.</p></article>
-                    <article class="field"><b>South · Law</b><p>Strength: field logistics. Weakness: high exposure. Risk: the manor becomes an island.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Special Skill: turns isolated restoration into distributed survival.</p></article>
-                    <article class="field"><b>West · Application</b><p>Primary Bond: communities beyond the estate perimeter. Conflict Meter: distribution versus collapse pressure.</p></article>
+                    <article class="field"><b>Story Role</b><p>Core Class: Distributed Response Unit. Primary Trait: Adaptation. Route Path: Frontier · City · Climate Field.</p></article>
+                    <article class="field"><b>Pressure</b><p>Strength: field logistics. Weakness: high exposure. Risk: the manor becomes an island.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Special Skill: turns isolated restoration into distributed survival.</p></article>
+                    <article class="field"><b>What Changes</b><p>Primary Bond: communities beyond the estate perimeter. Conflict Meter: distribution versus collapse pressure.</p></article>
                   </div></div>
                 </details>
 
                 <details class="tab">
                   <summary>Season Thread</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>North · Structure</b><p>The Remote Team’s seasons widen from field support into the proof that Audralia can sustain more than a protected center.</p></article>
-                    <article class="field"><b>South · Law</b><p>Each season tests whether survival technology can meet public disorder without becoming authoritarian.</p></article>
-                    <article class="field"><b>East · Expression</b><p>Their episodes are ensemble pressure arcs: outages, water routes, evacuations, supply chains, and communities deciding whether to trust.</p></article>
-                    <article class="field"><b>West · Application</b><p>Their long arc makes the future communal rather than private.</p></article>
+                    <article class="field"><b>Story Role</b><p>The Remote Team carries the seasons where the future leaves the manor and enters public life.</p></article>
+                    <article class="field"><b>Pressure</b><p>Each season tests whether survival systems can help scared people without becoming control systems.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>Outages, water routes, evacuations, public disorder, supply chains, and communities deciding whether to trust the mission.</p></article>
+                    <article class="field"><b>What Changes</b><p>Their arc makes the future communal rather than private.</p></article>
                   </div></div>
                 </details>
               </div>
@@ -1787,34 +1908,35 @@
       </section>
 
       <section class="panel section" aria-labelledby="move-title">
-        <div class="kicker">Move Forward</div>
+        <div class="kicker">Follow Development</div>
         <h2 id="move-title">Choose the next doorway.</h2>
 
         <div class="move-grid">
-          <a class="move-card" href="/showroom/globe/"><b>Globe</b><strong>Choose the future path.</strong><span>ZIONTS, H-Earth, and Audralia stand beside each other as consequence, survival, and possibility.</span></a>
-          <a class="move-card" href="/showroom/globe/audralia/"><b>Audralia</b><strong>Enter the living future.</strong><span>The new planet carries the field where the mission becomes physical.</span></a>
-          <a class="move-card" href="/explore/"><b>Explore</b><strong>Enter the estate map.</strong><span>The manor structure gives the story a navigable place.</span></a>
-          <a class="move-card" href="/frontier/"><b>Frontier</b><strong>Move toward future measures.</strong><span>The future-facing lanes begin where story, survival, and technology meet.</span></a>
-          <a class="move-card" href="/laws/"><b>Laws</b><strong>Read the truth layer.</strong><span>The governing rules keep the narrative accountable to constraint.</span></a>
-          <a class="move-card" href="/gauges/"><b>Gauges</b><strong>Check what is measurable.</strong><span>The interface layer shows what is present, routed, and testable.</span></a>
+          <a class="move-card" href="/showroom/globe/"><b>Enter the Globe</b><strong>Choose the future path.</strong><span>ZIONTS, H-Earth, and Audralia stand beside each other as consequence, survival, and possibility.</span></a>
+          <a class="move-card" href="/showroom/globe/audralia/"><b>Visit Audralia</b><strong>Enter the living future.</strong><span>The new planet carries the field where the mission becomes physical.</span></a>
+          <a class="move-card" href="/explore/"><b>Explore Mirrorland</b><strong>Enter the estate map.</strong><span>The manor structure gives the story a navigable place.</span></a>
+          <a class="move-card" href="/laws/"><b>Read the Laws</b><strong>Open the truth layer.</strong><span>The governing rules keep the world accountable to consequence.</span></a>
+          <a class="move-card" href="/products/"><b>Open Products</b><strong>Follow the community path.</strong><span>The practical side turns the mission toward people, tools, and usable support.</span></a>
+          <a class="move-card" href="/gauges/"><b>Check Gauges</b><strong>See what is measurable.</strong><span>The interface layer shows what is present, routed, and testable.</span></a>
         </div>
 
         <template id="route-receipt" data-route-receipt>
-CHARACTERS_MIRRORLAND_256_LATTICE_FULL_TNT_v1
-previous=CHARACTERS_MIRRORLAND_256_LATTICE_EXPANSION_BINDING_v1
+CHARACTERS_MIRRORLAND_SHOW_GAME_DOSSIER_FULL_TNT_v1
+previous=CHARACTERS_MIRRORLAND_LANGUAGE_EXPRESSION_FINAL_AUDIT_v1
 route=/characters/
 page=characters
-role=mirrorland_series_dossier
+role=show_game_character_dossier
 story_anchor=Shadows_Never_Shatter_in_Mirrorland
-voice=in_world_declarative
-premise=dextrion_earth_side_mirror_manor_bermuda_anomaly_one_way_crossing_audralia_manor_built_300_year_clock
+voice=show_game_promotional_in_world_declarative
+opening_order=mirrorland_three_paths_300_year_clock_dextrion_anomaly_one_way_crossing_manor_built_characters
+series_model=perspective_series_nine_episodes_written_nine_seasons_target
+game_world=in_development
 audralia_spelling_valid=true
 audrelia_forbidden=true
-series_model=perspective_series_nine_episodes_written_nine_seasons_target
-lattice=8_characters_x_8_tabs_x_4_fields_256_states
+preface_dropdowns=mirrorland,zionts,h_earth,audralia,300_year_clock,one_way_crossing,mirror_manor_on_earth,mirrored_npcs
+lattice=8_characters_x_8_tabs_x_4_story_fields_256_states
+public_fields=story_role,pressure,on_screen_in_game,what_changes
 characters=auren_vale,dextrion,alaric,tarian,elara,soren,jeeves,remote_team
-tabs=profile,full_bio,family_history,family_members_lineage,origin_event,mirrorland_function,stats_sheet,season_thread
-directions=north_structure,south_law,east_expression,west_application
 character_gems=true
 gem_motion=drift_rotation_glint
 static_page_usable_without_js=true
@@ -1830,7 +1952,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      CHARACTERS_MIRRORLAND_256_LATTICE_FULL_TNT_v1 · Characters · Shadows Never Shatter in Mirrorland · 256-state dossier.
+      CHARACTERS_MIRRORLAND_SHOW_GAME_DOSSIER_FULL_TNT_v1 · Shadows Never Shatter in Mirrorland · Show/Game Character Dossier.
     </footer>
   </div>
 </body>

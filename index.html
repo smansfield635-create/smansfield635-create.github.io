@@ -3,14 +3,17 @@
   lang="en"
   data-route="/"
   data-page="compass"
-  data-version="G2-V2"
-  data-contract="COMPASS_TOP_NAV_INTERACTIVE_NARRATIVE_SHOWROOM_RENEWAL_TNT_v1"
-  data-previous-contract="COMPASS_PRIMARY_NAV_GLOBE_OPTION_BASELINE"
+  data-version="G2-V3"
+  data-contract="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
+  data-previous-contract="COMPASS_TOP_NAV_INTERACTIVE_NARRATIVE_SHOWROOM_RENEWAL_TNT_v1"
   data-role="root-compass"
-  data-top-nav-renewal="interactive-narrative-and-showroom"
-  data-globe-visible-nav-removed="true"
+  data-root-is-compass="true"
+  data-proof-path="/laws/"
+  data-gauges-role="measurement-audit-route-status"
   data-interactive-narrative-visible-nav="true"
   data-showroom-visible-nav="true"
+  data-static-page-usable-without-js="true"
+  data-runtime-public-message="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-streaming="false"
@@ -23,7 +26,7 @@
   <title>Compass · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge begins at the Compass: one bridge, three ways in. Choose proof, people, or story."
+    content="Diamond Gate Bridge begins at the Compass: choose laws, person, interactive narrative, showroom, community, or gauges."
   >
 
   <style>
@@ -308,9 +311,9 @@
     h1{
       margin:0;
       max-width:980px;
-      font-size:clamp(4.4rem,15vw,9rem);
+      font-size:clamp(4rem,13vw,8.1rem);
       line-height:.82;
-      letter-spacing:-.115em;
+      letter-spacing:-.112em;
       text-wrap:balance;
       position:relative;
       z-index:2;
@@ -716,7 +719,7 @@
     }
 
     @media (max-width:1080px){
-      .path-grid{grid-template-columns:1fr}
+      .path-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media (max-width:980px){
@@ -731,7 +734,7 @@
     @media (max-width:760px){
       .shell{width:min(100% - 22px,var(--max))}
 
-      h1{font-size:clamp(4.4rem,19vw,6.4rem)}
+      h1{font-size:clamp(3.5rem,18vw,6rem)}
 
       .hero{
         min-height:31rem;
@@ -790,6 +793,10 @@
 
       .compass-center .gem-label b{font-size:.70rem}
       .compass-center .gem-label span{font-size:.48rem}
+
+      .path-grid{
+        grid-template-columns:1fr;
+      }
     }
 
     @media (max-width:420px){
@@ -953,12 +960,12 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Compass · First Orientation</div>
+        <div class="kicker">Compass · Root Orientation</div>
 
-        <h1 id="page-title">One bridge. Three ways in.</h1>
+        <h1 id="page-title">One bridge. Choose your direction.</h1>
 
         <p class="lead">
-          Choose proof, people, or story.
+          Start with the laws, meet the person behind the voice, enter the interactive narrative, inspect the showroom, open the community path, or check the gauges.
         </p>
 
         <div class="quote">
@@ -966,22 +973,24 @@
         </div>
 
         <div class="actions">
-          <a class="button gold" href="/gauges/">Start with Proof</a>
+          <a class="button gold" href="/laws/">Start with Laws</a>
           <a class="button" href="/meet-sean-mansfield/">Meet Sean</a>
           <a class="button" href="/showroom/globe/">Enter Interactive Narrative</a>
           <a class="button green" href="/showroom/">Open Showroom</a>
+          <a class="button" href="/gauges/">Check Gauges</a>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="field-title">
-        <div class="kicker">Gem field · Route signal</div>
-        <h2 id="field-title">The Compass opens the paths. The paths carry the build forward.</h2>
+        <div class="kicker">Compass field · Active public paths</div>
+        <h2 id="field-title">The Compass opens the public routes without collapsing them into one job.</h2>
 
         <div
           class="compass-stage"
           aria-label="Compass route gem field"
           data-compass-route-gem-field="true"
-          data-globe-visible-nav-removed="true"
+          data-proof-path="/laws/"
+          data-gauges-role="measurement-audit-route-status"
           data-interactive-narrative-visible-nav="true"
           data-showroom-visible-nav="true"
         >
@@ -996,7 +1005,7 @@
 
           <a class="compass-node" style="--x:50%;--y:14%;--delay:-.2s;--tilt-a:-2.2deg;--tilt-b:1.4deg;" href="/laws/" aria-label="Open Laws">
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Scientific</b><span>Laws</span></span>
+            <span class="gem-label"><b>Proof</b><span>Laws</span></span>
           </a>
 
           <a class="compass-node" style="--x:79%;--y:50%;--delay:-.8s;--tilt-a:1.5deg;--tilt-b:-2.3deg;" href="/showroom/globe/" aria-label="Open Interactive Narrative">
@@ -1022,51 +1031,77 @@
       </section>
 
       <section class="panel section" aria-labelledby="paths-title">
-        <div class="kicker">Primary paths</div>
-        <h2 id="paths-title">Three public entries keep the bridge readable.</h2>
+        <div class="kicker">Public paths</div>
+        <h2 id="paths-title">The public paths stay separate so each visitor can enter through the route that already makes sense.</h2>
 
         <div class="path-grid">
-          <a class="path-card" href="/gauges/">
-            <b>Proof</b>
-            <strong>Inspect what is present, measurable, routed, and live.</strong>
-            <span>Gauges show the public build as evidence. Start here when you need to verify the structure before entering the story.</span>
-            <span class="open-path">Read Gauges</span>
+          <a class="path-card" href="/laws/">
+            <b>Proof · Laws</b>
+            <strong>Start with the truth layer.</strong>
+            <span>Laws carries proof, scientific backing, principles, constraints, consequence, and survival standards.</span>
+            <span class="open-path">Open Laws</span>
           </a>
 
           <a class="path-card" href="/meet-sean-mansfield/">
-            <b>People</b>
-            <strong>Meet the voice behind the bridge.</strong>
-            <span>The human-facing path keeps the project grounded in purpose, explanation, and public accountability.</span>
+            <b>Person · Voice</b>
+            <strong>Meet the person behind the bridge.</strong>
+            <span>The personal lane keeps the work grounded in human voice, accountability, public speaking, story, and seminars.</span>
             <span class="open-path">Meet Sean</span>
           </a>
 
           <a class="path-card" href="/showroom/globe/">
-            <b>Story</b>
-            <strong>Enter the interactive narrative path.</strong>
-            <span>Mirrorland, characters, worlds, consequence, survival, and possibility open through the Interactive Narrative route.</span>
-            <span class="open-path">Open Interactive Narrative</span>
+            <b>Interactive Narrative</b>
+            <strong>Enter the story and world path.</strong>
+            <span>Mirrorland, characters, worlds, consequence, survival, and possibility open through the interactive narrative route.</span>
+            <span class="open-path">Enter Narrative</span>
+          </a>
+
+          <a class="path-card" href="/showroom/">
+            <b>Showroom</b>
+            <strong>Inspect the visible software objects.</strong>
+            <span>The Showroom carries the public object display path, including the Diamond proof object and software expression layer.</span>
+            <span class="open-path">Open Showroom</span>
+          </a>
+
+          <a class="path-card" href="/products/">
+            <b>Community · Products</b>
+            <strong>Open the practical path.</strong>
+            <span>Community revolves around the products because the products are the tools, games, offerings, and systems built to serve the community.</span>
+            <span class="open-path">View Products</span>
+          </a>
+
+          <a class="path-card" href="/gauges/">
+            <b>Measurement · Gauges</b>
+            <strong>Check what is routed, present, measurable, and live.</strong>
+            <span>Gauges verifies route status, audit signals, and live public-page presence. It is the measurement layer, not the primary proof path.</span>
+            <span class="open-path">Check Gauges</span>
           </a>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-COMPASS_TOP_NAV_INTERACTIVE_NARRATIVE_SHOWROOM_RENEWAL_TNT_v1
+COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
+previous=COMPASS_TOP_NAV_INTERACTIVE_NARRATIVE_SHOWROOM_RENEWAL_TNT_v1
 route=/
 page=compass
 html=/index.html
 role=root_compass
-top_nav_renewal=true
-removed_visible_nav=Globe
-added_visible_nav=Interactive_Narrative,Showroom
+context_alignment=true
+removed_language=three_ways_in,choose_proof_people_or_story,three_public_entries
+headline=One_bridge_Choose_your_direction
+proof_path=/laws/
+proof_path_label=Laws
+proof_truth_scientific_backing=Laws
+gauges_role=measurement_audit_route_status_verification
+gauges_not_primary_proof_path=true
 interactive_narrative_route=/showroom/globe/
 showroom_route=/showroom/
-preserved_visible_nav=Compass,Door,Home,Products,Laws,Gauges
-primary_paths=Proof,People,Story
-proof_route=/gauges/
-people_route=/meet-sean-mansfield/
-story_route=/showroom/globe/
+products_role=community_path
+products_route=/products/
+person_route=/meet-sean-mansfield/
+preserved_visible_nav=Compass,Door,Home,Products,Laws,Interactive_Narrative,Showroom,Gauges
+public_paths=Laws,Meet_Sean,Interactive_Narrative,Showroom,Products,Gauges
 gem_field_updated=true
-globe_label_replaced_in_compass_field=true
 route_owns=compass_root,top_navigation,primary_entry_language,compass_gem_field,root_path_cards
 route_does_not_own=door_page,showroom_page,products_page,laws_page,gauges_logic,sitewide_rebuild,heavy_runtime
 generated_image=false
@@ -1077,7 +1112,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      COMPASS_TOP_NAV_INTERACTIVE_NARRATIVE_SHOWROOM_RENEWAL_TNT_v1 · Compass · Interactive Narrative and Showroom nav active.
+      COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2 · Compass · Proof path is Laws · Gauges is measurement.
     </footer>
   </div>
 </body>

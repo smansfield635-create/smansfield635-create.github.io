@@ -3,7 +3,7 @@
   lang="en"
   data-route="/"
   data-page="compass"
-  data-contract="ROOT_COMPASS_STRICT_ORGANIC_GEM_THRESHOLD_TNT_v3"
+  data-contract="ROOT_COMPASS_STRICT_ORGANIC_GEM_ROTATION_TNT_v4"
   data-role="root-compass"
   data-root-is-compass="true"
   data-static-page-usable-without-js="true"
@@ -38,7 +38,9 @@
       --max: 1180px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html {
       min-width: 320px;
@@ -81,7 +83,10 @@
       mask-image: linear-gradient(180deg, rgba(0,0,0,.92), rgba(0,0,0,.50) 66%, rgba(0,0,0,.22));
     }
 
-    a { color: inherit; text-decoration: none; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
     a:focus-visible,
     button:focus-visible {
@@ -109,7 +114,9 @@
       font-weight: 950;
     }
 
-    .skip:focus { left: 8px; }
+    .skip:focus {
+      left: 8px;
+    }
 
     .shell {
       position: relative;
@@ -344,13 +351,23 @@
     }
 
     @keyframes orbitTurn {
-      from { transform: translate(-50%, -50%) rotate(-12deg); }
-      to { transform: translate(-50%, -50%) rotate(348deg); }
+      from {
+        transform: translate(-50%, -50%) rotate(-12deg);
+      }
+
+      to {
+        transform: translate(-50%, -50%) rotate(348deg);
+      }
     }
 
     @keyframes orbitTurnReverse {
-      from { transform: translate(-50%, -50%) rotate(24deg); }
-      to { transform: translate(-50%, -50%) rotate(-336deg); }
+      from {
+        transform: translate(-50%, -50%) rotate(24deg);
+      }
+
+      to {
+        transform: translate(-50%, -50%) rotate(-336deg);
+      }
     }
 
     .choice-center,
@@ -393,8 +410,13 @@
     }
 
     @keyframes gemNodeFloat {
-      0%, 100% { margin-top: 0; }
-      50% { margin-top: -.42rem; }
+      0%, 100% {
+        margin-top: 0;
+      }
+
+      50% {
+        margin-top: -.42rem;
+      }
     }
 
     .gem-core {
@@ -409,8 +431,15 @@
     }
 
     @keyframes gemBreathe {
-      0%, 100% { transform: translateY(0) rotate(var(--tilt-a, -1.6deg)) scale(1); filter: brightness(1); }
-      50% { transform: translateY(-.22rem) rotate(var(--tilt-b, 2deg)) scale(1.025); filter: brightness(1.12); }
+      0%, 100% {
+        transform: translateY(0) rotate(var(--tilt-a, -1.6deg)) scale(1);
+        filter: brightness(1);
+      }
+
+      50% {
+        transform: translateY(-.22rem) rotate(var(--tilt-b, 2deg)) scale(1.025);
+        filter: brightness(1.12);
+      }
     }
 
     .gem-svg {
@@ -420,6 +449,8 @@
       height: 100%;
       overflow: visible;
       pointer-events: none;
+      transform-origin: 50% 50%;
+      animation: gemBodyTurn 26s linear infinite;
       filter:
         drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
         drop-shadow(0 0 1.15rem rgba(36,120,255,.18))
@@ -427,6 +458,7 @@
     }
 
     .choice-center .gem-svg {
+      animation-duration: 32s;
       filter:
         drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
         drop-shadow(0 0 1.65rem rgba(36,120,255,.23))
@@ -434,6 +466,7 @@
     }
 
     .science .gem-svg {
+      animation-duration: 24s;
       filter:
         drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
         drop-shadow(0 0 1.15rem rgba(141,216,255,.24))
@@ -443,6 +476,8 @@
     }
 
     .community .gem-svg {
+      animation-duration: 28s;
+      animation-direction: reverse;
       filter:
         drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
         drop-shadow(0 0 1.15rem rgba(143,240,195,.22))
@@ -452,12 +487,23 @@
     }
 
     .story .gem-svg {
+      animation-duration: 22s;
       filter:
         drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
         drop-shadow(0 0 1.15rem rgba(198,166,255,.24))
         drop-shadow(0 0 .65rem rgba(243,200,111,.12))
         saturate(1.08)
         hue-rotate(48deg);
+    }
+
+    @keyframes gemBodyTurn {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     .gem-label {
@@ -509,17 +555,26 @@
     }
 
     .star {
-      animation: facetTurn 30s linear infinite;
+      animation: facetTurn 18s linear infinite;
       transform-origin: 110px 80px;
     }
 
     @keyframes glintMove {
-      0%, 100% { opacity: .07; transform: translateX(-36px); }
-      48%, 55% { opacity: .56; transform: translateX(34px); }
+      0%, 100% {
+        opacity: .07;
+        transform: translateX(-36px);
+      }
+
+      48%, 55% {
+        opacity: .56;
+        transform: translateX(34px);
+      }
     }
 
     @keyframes facetTurn {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     .micro-links {
@@ -569,9 +624,13 @@
     }
 
     @media (max-width: 760px) {
-      .shell { width: min(100% - 22px, var(--max)); }
+      .shell {
+        width: min(100% - 22px, var(--max));
+      }
 
-      h1 { font-size: clamp(3.7rem, 18vw, 6rem); }
+      h1 {
+        font-size: clamp(3.7rem, 18vw, 6rem);
+      }
 
       .hero {
         min-height: auto;
@@ -592,15 +651,36 @@
         height: 5.2rem;
       }
 
-      .choice-node.science { --x: 50%; --y: 18%; }
-      .choice-node.community { --x: 23%; --y: 74%; }
-      .choice-node.story { --x: 77%; --y: 74%; }
+      .choice-node.science {
+        --x: 50%;
+        --y: 18%;
+      }
 
-      .gem-label b { font-size: .43rem; }
-      .gem-label span { font-size: .31rem; }
+      .choice-node.community {
+        --x: 23%;
+        --y: 74%;
+      }
 
-      .choice-center .gem-label b { font-size: .65rem; }
-      .choice-center .gem-label span { font-size: .46rem; }
+      .choice-node.story {
+        --x: 77%;
+        --y: 74%;
+      }
+
+      .gem-label b {
+        font-size: .43rem;
+      }
+
+      .gem-label span {
+        font-size: .31rem;
+      }
+
+      .choice-center .gem-label b {
+        font-size: .65rem;
+      }
+
+      .choice-center .gem-label span {
+        font-size: .46rem;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -613,6 +693,7 @@
         transition-duration: .01ms !important;
       }
 
+      .gem-svg,
       .gem-core,
       .glint,
       .star,
@@ -798,7 +879,7 @@
 
         <script type="application/json" id="rootCompassReceipt" class="hidden-receipt">
           {
-            "contract": "ROOT_COMPASS_STRICT_ORGANIC_GEM_THRESHOLD_TNT_v3",
+            "contract": "ROOT_COMPASS_STRICT_ORGANIC_GEM_ROTATION_TNT_v4",
             "file": "/index.html",
             "role": "ROOT_COMPASS_ORIENTATION_CURIOSITY_THRESHOLD",
             "root_is_compass": true,
@@ -809,6 +890,8 @@
               "Fun Narrative / Game / Series": "/showroom/globe/"
             },
             "visible_explanation_level": "minimal",
+            "gem_body_rotates": true,
+            "label_rotates": false,
             "static_page_usable_without_js": true,
             "paired_controller": "/index.js"
           }
@@ -818,7 +901,7 @@
           <p>Compass works without JavaScript. Use the gems or links to choose a direction.</p>
         </noscript>
 
-        <script src="/index.js?v=ROOT_COMPASS_STRICT_ORGANIC_GEM_THRESHOLD_TNT_v3" defer></script>
+        <script src="/index.js?v=ROOT_COMPASS_STRICT_ORGANIC_GEM_ROTATION_TNT_v4" defer></script>
       </section>
     </main>
 

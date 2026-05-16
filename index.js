@@ -1,17 +1,17 @@
 // /index.js
-// ROOT_COMPASS_STRICT_ORGANIC_GEM_ROTATION_CONTROLLER_TNT_v4
+// ROOT_COMPASS_STRICT_ORGANIC_GEM_ORBITAL_ROTATION_CONTROLLER_TNT_v5
 // Full-file replacement.
 // Authority: minimal Compass gem-entry enhancement only.
-// Gem body rotation is CSS-owned in /index.html.
+// Gem body rotation and orbital rotation are CSS-owned in /index.html.
 // Labels remain upright and readable.
 
 (() => {
   "use strict";
 
   const META = Object.freeze({
-    name: "root_compass_strict_organic_gem_rotation_controller",
-    version: "G4",
-    contract: "ROOT_COMPASS_STRICT_ORGANIC_GEM_ROTATION_TNT_v4",
+    name: "root_compass_strict_organic_gem_orbital_rotation_controller",
+    version: "G5",
+    contract: "ROOT_COMPASS_STRICT_ORGANIC_GEM_ORBITAL_ROTATION_TNT_v5",
     file: "/index.js",
     role: "ROOT_COMPASS_ORIENTATION_CURIOSITY_THRESHOLD_ENHANCEMENT",
     mutatesCanonicalState: false,
@@ -19,6 +19,12 @@
       scientificBacking: "/laws/",
       community: "/products/",
       funNarrativeGameSeries: "/showroom/globe/"
+    }),
+    motion: Object.freeze({
+      gemBodyRotates: true,
+      gemsOrbitCenter: true,
+      labelRotates: false,
+      cssOwned: true
     }),
     doesNotOwn: Object.freeze([
       "AUDRALIA_LOADER",
@@ -65,7 +71,7 @@
     return (
       !!html &&
       html.getAttribute("data-page") === "compass" &&
-      html.getAttribute("data-contract") === "ROOT_COMPASS_STRICT_ORGANIC_GEM_ROTATION_TNT_v4"
+      html.getAttribute("data-contract") === "ROOT_COMPASS_STRICT_ORGANIC_GEM_ORBITAL_ROTATION_TNT_v5"
     );
   }
 
@@ -105,6 +111,7 @@
           rootIsCompass: true,
           visibleExplanationLevel: "minimal",
           gemBodyRotates: true,
+          gemsOrbitCenter: true,
           labelRotates: false,
           primaryEntries: META.primaryEntryMap,
           audraliaLoaderActive: false,

@@ -3,14 +3,16 @@
   lang="en"
   data-route="/characters/"
   data-page="characters"
-  data-contract="SHADOWS_NEVER_SHATTER_TRANSITION_TO_DEXTRION_NONREDUNDANT_TNT_v1"
-  data-previous-contract="SHADOWS_NEVER_SHATTER_TRANSITION_TO_DEXTRION_NONREDUNDANT_BINDING_v1"
+  data-contract="SHADOWS_NEVER_SHATTER_MIRROR_MANOR_PLACEMENT_AND_FRONTIER_PRESENTATION_TNT_v1"
+  data-previous-contract="SHADOWS_NEVER_SHATTER_TRANSITION_TO_DEXTRION_NONREDUNDANT_TNT_v1"
   data-role="show-game-character-dossier"
   data-narrative-anchor="Shadows Never Shatter in Mirrorland"
   data-series-model="perspective-series-nine-episodes-nine-seasons"
   data-lattice="8-characters-8-tabs-4-fields-256-states"
   data-public-field-labels="story-role-pressure-on-screen-in-game-what-changes"
   data-character-gems="true"
+  data-mirror-manor-location="mirrorland-audralia"
+  data-earth-side-location="earth-anomaly-detection"
   data-static-page-usable-without-js="true"
   data-generated-image="false"
   data-graphic-box="false"
@@ -42,6 +44,7 @@
       --blue:#8dd8ff;
       --green:#9ef0bf;
       --violet:#c6a6ff;
+      --rose:#ff9fc8;
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.48);
@@ -67,10 +70,10 @@
       line-height:1.5;
       overflow-x:hidden;
       background:
-        radial-gradient(circle at 50% -8%,rgba(243,200,111,.18),transparent 28rem),
-        radial-gradient(circle at 14% 18%,rgba(36,120,255,.18),transparent 28rem),
-        radial-gradient(circle at 86% 26%,rgba(198,166,255,.13),transparent 28rem),
-        radial-gradient(circle at 50% 80%,rgba(143,240,195,.09),transparent 34rem),
+        radial-gradient(circle at 50% -8%,rgba(243,200,111,.22),transparent 28rem),
+        radial-gradient(circle at 13% 16%,rgba(36,120,255,.20),transparent 28rem),
+        radial-gradient(circle at 88% 24%,rgba(198,166,255,.18),transparent 28rem),
+        radial-gradient(circle at 48% 78%,rgba(143,240,195,.10),transparent 34rem),
         linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
@@ -83,11 +86,11 @@
       z-index:0;
       pointer-events:none;
       background-image:
-        radial-gradient(circle,rgba(255,255,255,.16) 0 1px,transparent 1.5px),
-        linear-gradient(rgba(141,216,255,.04) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(141,216,255,.04) 1px,transparent 1px);
+        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
       background-size:220px 260px,54px 54px,54px 54px;
-      opacity:.20;
+      opacity:.22;
       mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.50) 66%,rgba(0,0,0,.22));
     }
 
@@ -235,7 +238,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(50rem,80vw,66rem);
+      min-height:clamp(55rem,84vw,70rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -264,9 +267,32 @@
       opacity:.52;
     }
 
+    .hero::after{
+      content:"";
+      position:absolute;
+      left:-8%;
+      top:15%;
+      z-index:0;
+      width:116%;
+      height:38%;
+      pointer-events:none;
+      background:
+        radial-gradient(ellipse at 15% 40%,rgba(141,216,255,.13),transparent 34%),
+        radial-gradient(ellipse at 58% 48%,rgba(198,166,255,.14),transparent 38%),
+        radial-gradient(ellipse at 82% 42%,rgba(158,240,191,.10),transparent 34%);
+      filter:blur(2px);
+      opacity:.70;
+      animation:frontierGlow 11s ease-in-out infinite;
+    }
+
     @keyframes anchorPulse{
       0%,100%{opacity:.38;filter:brightness(.95)}
       50%{opacity:.62;filter:brightness(1.1)}
+    }
+
+    @keyframes frontierGlow{
+      0%,100%{transform:translate3d(0,0,0) scale(1);opacity:.52}
+      50%{transform:translate3d(1.4rem,-.6rem,0) scale(1.03);opacity:.82}
     }
 
     .kicker{
@@ -350,7 +376,9 @@
       border:1px solid rgba(243,200,111,.24);
       border-radius:1.2rem;
       color:rgba(255,244,216,.95);
-      background:rgba(243,200,111,.065);
+      background:
+        radial-gradient(circle at 12% 0%,rgba(243,200,111,.10),transparent 48%),
+        rgba(243,200,111,.065);
       font-weight:900;
       position:relative;
       z-index:2;
@@ -359,18 +387,89 @@
     .question-run{
       max-width:980px;
       display:grid;
-      gap:.48rem;
-      padding:1rem 1.1rem;
-      border:1px solid rgba(198,166,255,.22);
+      gap:.55rem;
+      padding:1.08rem 1.1rem;
+      border:1px solid rgba(243,200,111,.30);
       border-radius:1.2rem;
-      background:rgba(198,166,255,.060);
+      background:
+        linear-gradient(135deg,rgba(243,200,111,.10),rgba(198,166,255,.075),rgba(141,216,255,.07)),
+        rgba(8,12,28,.74);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.035) inset,
+        0 1.1rem 3.2rem rgba(0,0,0,.28),
+        0 0 2.4rem rgba(198,166,255,.10);
+      position:relative;
+      z-index:2;
+      overflow:hidden;
+      isolation:isolate;
+    }
+
+    .question-run::before{
+      content:"";
+      position:absolute;
+      inset:-60% -30%;
+      z-index:-1;
+      background:
+        conic-gradient(from 0deg,transparent,rgba(243,200,111,.20),transparent,rgba(141,216,255,.18),transparent,rgba(198,166,255,.18),transparent);
+      opacity:.55;
+      animation:questionAura 18s linear infinite;
+    }
+
+    .question-run::after{
+      content:"";
+      position:absolute;
+      left:-20%;
+      top:-40%;
+      width:38%;
+      height:180%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+      transform:rotate(18deg);
+      opacity:.30;
+      animation:questionSweep 8.5s ease-in-out infinite;
+      pointer-events:none;
+    }
+
+    @keyframes questionAura{
+      to{transform:rotate(360deg)}
+    }
+
+    @keyframes questionSweep{
+      0%,18%{transform:translateX(-20%) rotate(18deg);opacity:0}
+      42%{opacity:.34}
+      70%,100%{transform:translateX(360%) rotate(18deg);opacity:0}
+    }
+
+    .question-run p{
+      color:rgba(255,244,216,.94);
+      font-weight:950;
+      line-height:1.45;
+      letter-spacing:-.018em;
+      text-shadow:0 0 18px rgba(243,200,111,.06);
+    }
+
+    .question-run p:nth-child(2){color:rgba(206,230,255,.94)}
+    .question-run p:nth-child(3){color:rgba(225,214,255,.94)}
+    .question-run p:nth-child(4){color:rgba(207,255,229,.94)}
+
+    .story-handoff{
+      max-width:980px;
+      display:grid;
+      gap:.65rem;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(141,216,255,.18);
+      border-radius:1.2rem;
+      background:rgba(5,14,28,.44);
       position:relative;
       z-index:2;
     }
 
-    .question-run p{
-      color:rgba(255,244,216,.92);
-      font-weight:850;
+    .story-handoff p{
+      color:rgba(230,238,255,.78);
+    }
+
+    .story-handoff strong{
+      color:rgba(255,244,216,.95);
+      font-weight:950;
     }
 
     .series-grid{
@@ -386,7 +485,9 @@
       padding:.9rem;
       border:1px solid rgba(255,255,255,.11);
       border-radius:1rem;
-      background:rgba(255,255,255,.035);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(141,216,255,.08),transparent 58%),
+        rgba(255,255,255,.035);
       display:grid;
       gap:.35rem;
     }
@@ -878,7 +979,8 @@
     @media (max-width:720px){
       .shell{width:min(100% - 22px,var(--max))}
       h1{font-size:clamp(3.2rem,16vw,5.6rem)}
-      .hero{min-height:58rem;padding:1rem}
+      .hero{min-height:auto;padding:1rem}
+      .question-run{padding:1rem}
       .actions{display:grid}
       .button{width:100%}
       .select-grid,
@@ -1022,6 +1124,13 @@
 
         <div class="subtitle">A mirror can shatter. A shadow cannot.</div>
 
+        <div class="question-run" aria-label="Story transition into Dextrion">
+          <p>What if that future shadow was reachable?</p>
+          <p>What if humanity could cross into it before it became final?</p>
+          <p>What if the other side was a real world: no inherited inhabitants, no exhausted infrastructure, no old ownership, no historical deficit already crushing the foundation?</p>
+          <p>What if every advancement proven on Audralia could be mirrored back to Earth?</p>
+        </div>
+
         <p class="lead">
           Everything humanity has ever done casts a shadow into the future. Every invention. Every wound. Every city. Every lie. Every law. Every breakthrough. Every unfinished promise.
         </p>
@@ -1035,7 +1144,7 @@
         </div>
 
         <p class="lead">
-          ZIONTS is the warning path: the future where a living planet can no longer carry life. H-Earth is the condition path: earth, water, air, shelter, bodies, cities, and systems under pressure. Audralia is the living planet inside Mirrorland: the clean-slate preparation field where the manor stands, the mission becomes physical, and technology can advance without Earth’s historical deficit already crushing the foundation.
+          ZIONTS is the warning path: the future where a living planet can no longer carry life. H-Earth is the condition path: earth, water, air, shelter, bodies, cities, and systems under pressure. Audralia is the living planet inside Mirrorland: the clean-slate preparation field where the Mirror Manor stands, the mission becomes physical, and technology can advance without Earth’s historical deficit already crushing the foundation.
         </p>
 
         <div class="declaration">
@@ -1046,24 +1155,12 @@
           Earth’s rules apply in Mirrorland. Physics applies. Consequence applies. Responsibility applies. If Mirrorland changes direction, Earth changes.
         </p>
 
-        <div class="question-run" aria-label="Story transition into Dextrion">
-          <p>What if that future shadow was reachable?</p>
-          <p>What if humanity could cross into it before it became final?</p>
-          <p>What if the other side was a real world: no inherited inhabitants, no exhausted infrastructure, no old ownership, no historical deficit already crushing the foundation?</p>
-          <p>What if every advancement proven on Audralia could be mirrored back to Earth?</p>
+        <div class="story-handoff">
+          <p><strong>That is the question Dextrion cannot leave alone.</strong></p>
+          <p>From Earth, he detects the Bermuda-area anomaly. The first team crosses. The return path never opens. A one-way teleport changes the mission from discovery into consequence.</p>
+          <p>Builders, engineers, protectors, field operators, and survival crews cross into Mirrorland knowing they may not come back.</p>
+          <p>On Audralia, the Mirror Manor is built. By the time the series begins, the manor already stands. The crossing has already happened. The clock is already running.</p>
         </div>
-
-        <p class="lead">
-          That is the question Dextrion cannot leave alone.
-        </p>
-
-        <p class="lead">
-          From the public Mirror Manor on Earth, he detects the Bermuda-area anomaly. The first team crosses. The return path never opens. A one-way teleport changes the mission from discovery into consequence.
-        </p>
-
-        <p class="lead">
-          Builders, engineers, protectors, field operators, and survival crews cross into Mirrorland knowing they may not come back. By the time the series begins, the manor already stands. The crossing has already happened. The clock is already running.
-        </p>
 
         <div class="series-grid">
           <div class="series-card">
@@ -1121,7 +1218,7 @@
 
           <details class="preface">
             <summary>Audralia · Possibility</summary>
-            <p>The preparation field: the living planet inside Mirrorland where the manor stands, technology can advance, and what works there can be mirrored back to Earth.</p>
+            <p>The preparation field: the living planet inside Mirrorland where the Mirror Manor stands, technology can advance, and what works there can be mirrored back to Earth.</p>
           </details>
 
           <details class="preface">
@@ -1267,7 +1364,7 @@
                 <details class="tab">
                   <summary>Stats Sheet</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>Story Role</b><p>Core Class: Sanctuary Builder. Primary Trait: Custody. Route Path: Manor · Explore · Audralia.</p></article>
+                    <article class="field"><b>Story Role</b><p>Core Class: Sanctuary Builder. Primary Trait: Custody. Route Path: Mirror Manor · Explore · Audralia.</p></article>
                     <article class="field"><b>Pressure</b><p>Strength: protective deception. Weakness: overprotection. Risk: the sanctuary becomes a map for the enemy.</p></article>
                     <article class="field"><b>On Screen / In Game</b><p>Special Skill: turns wealth, land, public misdirection, and room control into a living shield.</p></article>
                     <article class="field"><b>What Changes</b><p>Primary Bond: the hidden residents. Conflict Meter: exposure versus protection.</p></article>
@@ -1312,7 +1409,7 @@
                   <div class="tab-content"><div class="quad">
                     <article class="field"><b>Story Role</b><p>Dextrion does not build for spectacle. He builds because the future becomes cruel when infrastructure fails.</p></article>
                     <article class="field"><b>Pressure</b><p>The first team is trapped because he found the crossing. Survival begins with his discovery and his guilt.</p></article>
-                    <article class="field"><b>On Screen / In Game</b><p>The lab becomes command center, confession booth, workshop, and countdown room.</p></article>
+                    <article class="field"><b>On Screen / In Game</b><p>The Earth-side lab becomes command center, confession booth, workshop, and countdown room.</p></article>
                     <article class="field"><b>What Changes</b><p>His work decides whether the door remains a wound or becomes the first bridge toward survival.</p></article>
                   </div></div>
                 </details>
@@ -1350,7 +1447,7 @@
                 <details class="tab">
                   <summary>Mirrorland Function</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>Story Role</b><p>Dextrion remains Earth-side at Mirror Manor, sending technology, people, and decisions into Mirrorland.</p></article>
+                    <article class="field"><b>Story Role</b><p>Dextrion remains Earth-side, sending technology, people, and decisions into Mirrorland.</p></article>
                     <article class="field"><b>Pressure</b><p>The same transition pressures Earth. If he fails to prepare Mirrorland, Earth remains exposed.</p></article>
                     <article class="field"><b>On Screen / In Game</b><p>Earth-side lab play, remote upgrades, teleport windows, system locks, countdown calculations, and impossible send/no-send choices.</p></article>
                     <article class="field"><b>What Changes</b><p>He binds both worlds into one mission: change Mirrorland’s direction so Earth can change with it.</p></article>
@@ -1360,7 +1457,7 @@
                 <details class="tab">
                   <summary>Stats Sheet</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>Story Role</b><p>Core Class: Earth-Side Originator. Primary Trait: Repair. Route Path: Mirror Manor · Lab · H-Earth.</p></article>
+                    <article class="field"><b>Story Role</b><p>Core Class: Earth-Side Originator. Primary Trait: Repair. Route Path: Earth Lab · Anomaly · H-Earth.</p></article>
                     <article class="field"><b>Pressure</b><p>Strength: rapid restoration. Weakness: guilt-driven velocity. Risk: survival becomes theory without working technology.</p></article>
                     <article class="field"><b>On Screen / In Game</b><p>Special Skill: turns damaged infrastructure into temporary survival systems before the collapse completes.</p></article>
                     <article class="field"><b>What Changes</b><p>Primary Bond: the stranded team and the lab. Conflict Meter: repair speed versus system collapse.</p></article>
@@ -1765,7 +1862,7 @@
                 <details class="tab" open>
                   <summary>Profile</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>Story Role</b><p>Jeeves controls how much truth the manor reveals. The house is too large to enter raw.</p></article>
+                    <article class="field"><b>Story Role</b><p>Jeeves controls how much truth the Mirror Manor reveals. The house is too large to enter raw.</p></article>
                     <article class="field"><b>Pressure</b><p>Too much truth breaks people. Too little truth sends them into the wrong room.</p></article>
                     <article class="field"><b>On Screen / In Game</b><p>Guided rooms, locked doors, permission thresholds, withheld information, safe reveals, and doors that refuse curiosity.</p></article>
                     <article class="field"><b>What Changes</b><p>Jeeves turns the manor from a labyrinth into a survivable interface.</p></article>
@@ -1825,7 +1922,7 @@
                 <details class="tab">
                   <summary>Stats Sheet</summary>
                   <div class="tab-content"><div class="quad">
-                    <article class="field"><b>Story Role</b><p>Core Class: Manor Interface. Primary Trait: Entry. Route Path: Explore · Door · Manor.</p></article>
+                    <article class="field"><b>Story Role</b><p>Core Class: Manor Interface. Primary Trait: Entry. Route Path: Mirror Manor · Door · Explore.</p></article>
                     <article class="field"><b>Pressure</b><p>Strength: routing. Weakness: unfinished knowledge. Risk: visitors receive too much truth too quickly.</p></article>
                     <article class="field"><b>On Screen / In Game</b><p>Special Skill: turns overwhelming reality into a survivable doorway.</p></article>
                     <article class="field"><b>What Changes</b><p>Primary Bond: the manor and everyone crossing its threshold. Conflict Meter: protection versus revelation.</p></article>
@@ -1948,15 +2045,15 @@
         <div class="move-grid">
           <a class="move-card" href="/showroom/globe/"><b>Enter the Globe</b><strong>Choose the future path.</strong><span>ZIONTS, H-Earth, and Audralia stand beside each other as consequence, survival, and possibility.</span></a>
           <a class="move-card" href="/showroom/globe/audralia/"><b>Visit Audralia</b><strong>Enter the living future.</strong><span>The new planet carries the field where the mission becomes physical.</span></a>
-          <a class="move-card" href="/explore/"><b>Explore Mirrorland</b><strong>Enter the estate map.</strong><span>The manor structure gives the story a navigable place.</span></a>
+          <a class="move-card" href="/explore/"><b>Explore Mirrorland</b><strong>Enter the estate map.</strong><span>The Mirror Manor structure gives the story a navigable place.</span></a>
           <a class="move-card" href="/laws/"><b>Read the Laws</b><strong>Open the truth layer.</strong><span>The governing rules keep the world accountable to consequence.</span></a>
           <a class="move-card" href="/products/"><b>Open Products</b><strong>Follow the community path.</strong><span>The practical side turns the mission toward people, tools, and usable support.</span></a>
           <a class="move-card" href="/gauges/"><b>Check Gauges</b><strong>See what is measurable.</strong><span>The interface layer shows what is present, routed, and testable.</span></a>
         </div>
 
         <template id="route-receipt" data-route-receipt>
-SHADOWS_NEVER_SHATTER_TRANSITION_TO_DEXTRION_NONREDUNDANT_TNT_v1
-previous=SHADOWS_NEVER_SHATTER_TRANSITION_TO_DEXTRION_NONREDUNDANT_BINDING_v1
+SHADOWS_NEVER_SHATTER_MIRROR_MANOR_PLACEMENT_AND_FRONTIER_PRESENTATION_TNT_v1
+previous=SHADOWS_NEVER_SHATTER_TRANSITION_TO_DEXTRION_NONREDUNDANT_TNT_v1
 route=/characters/
 page=characters
 role=show_game_character_dossier
@@ -1964,9 +2061,13 @@ story_anchor=Shadows_Never_Shatter_in_Mirrorland
 title_mechanism=a_mirror_can_shatter_a_shadow_cannot
 shadow_law=shadows_do_not_shatter_anywhere
 voice=show_game_promotional_in_world_declarative
-opening_order=title_mechanism_future_shadow_possible_futures_mirrorland_three_paths_300_year_clock_preparation_variable_earth_rules_apply_in_mirrorland_mirrorland_changes_earth_changes_question_transition_dextrion_anomaly_one_way_crossing_manor_built_characters
-transition_law=question_driven_nonredundant_handoff_from_possible_futures_to_dextrion
+opening_order=title_question_transition_future_shadow_possible_futures_mirrorland_three_paths_300_year_clock_preparation_variable_earth_rules_apply_in_mirrorland_mirrorland_changes_earth_changes_dextrion_anomaly_one_way_crossing_mirror_manor_built_characters
+transition_law=question_box_moved_to_top_nonredundant_handoff_from_possible_futures_to_dextrion
 transition_questions=future_shadow_reachable,cross_before_final,clean_slate_world,no_inherited_inhabitants,no_historical_deficit,audralia_advancement_mirrored_to_earth
+mirror_manor_location=mirrorland_audralia_only
+earth_side_location=earth_anomaly_detection
+dextrion_location=earth_side
+forbidden_phrase=public_mirror_manor_on_earth
 series_model=perspective_series_nine_episodes_written_nine_seasons_target
 game_world=in_development
 audralia_spelling_valid=true
@@ -1976,6 +2077,7 @@ causal_law=if_mirrorland_changes_direction_earth_changes
 rule_law=earth_rules_apply_in_mirrorland
 time_law=300_year_clock_preset_time_will_happen_preparation_is_variable
 preface_dropdowns=the_title,mirrorland,zionts,h_earth,audralia,300_year_clock,one_way_crossing,mirrored_futures
+presentation=frontier_evolution_glow_question_box_aura_soft_sweep_hero_aurora_gem_motion
 lattice=8_characters_x_8_tabs_x_4_story_fields_256_states
 public_fields=story_role,pressure,on_screen_in_game,what_changes
 characters=auren_vale,dextrion,alaric,tarian,elara,soren,jeeves,remote_team
@@ -1994,7 +2096,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      SHADOWS_NEVER_SHATTER_TRANSITION_TO_DEXTRION_NONREDUNDANT_TNT_v1 · Shadows Never Shatter in Mirrorland · Show/Game Character Dossier.
+      SHADOWS_NEVER_SHATTER_MIRROR_MANOR_PLACEMENT_AND_FRONTIER_PRESENTATION_TNT_v1 · Shadows Never Shatter in Mirrorland · Show/Game Character Dossier.
     </footer>
   </div>
 </body>

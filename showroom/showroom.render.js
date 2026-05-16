@@ -1,252 +1,759 @@
-(function attachShowroomRender(global, document) {
-  "use strict";
+<!doctype html>
+<html
+  lang="en"
+  data-page="showroom-crown-cut-lattice-launchpad"
+  data-route="/showroom/"
+  data-contract="SHOWROOM_CROWN_CUT_LATTICE_LAUNCHPAD_TNT_v1"
+  data-previous-contract="SHOWROOM_HTML_CACHE_BUST_DIAMOND_SCRIPT_BIND_TNT_v7"
+  data-role="showroom-cover-object-and-launchpad"
+  data-diamond-lock="CROWN_CUT_256_LATTICE_FIXED_FORM"
+  data-touch-glide-diamond="true"
+  data-js-cache-key="SHOWROOM_CROWN_CUT_LATTICE_DIAMOND_RENDER_TNT_v1"
+  data-launchpad="characters-products-laws-globe-gauges"
+  data-laws-cta="Jump to the Laws page and lock in."
+  data-earth-record="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-public-receipts-visible="false"
+>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  const VERSION = "SHOWROOM_RENDER_VISUAL_DASHBOARD_TNT_v1";
-  const GENERATION = "GENERATION_4";
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
 
-  const BODY_NAMES = ["Sun", "Mercury", "Venus", "Earth", "Moon", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"];
+  <title>Showroom · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="The Showroom proves the Crown Cut 256 Lattice Diamond and opens the launchpad into Characters, Products, Laws, Globe, and Gauges."
+  >
 
-  function el(tag, className, text) {
-    const node = document.createElement(tag);
-    if (className) node.className = className;
-    if (typeof text === "string") node.textContent = text;
-    return node;
-  }
+  <style>
+    :root {
+      --bg: #030812;
+      --panel: rgba(7, 15, 31, 0.88);
+      --panel-2: rgba(11, 23, 44, 0.76);
+      --line: rgba(244, 207, 131, 0.18);
+      --line-soft: rgba(255,255,255,0.10);
+      --text: rgba(238,244,255,0.94);
+      --muted: rgba(238,244,255,0.64);
+      --faint: rgba(238,244,255,0.44);
+      --gold: #f4cf83;
+      --gold-2: #ffe8a6;
+      --mint: #a7f3c6;
+      --blue: #8dd8ff;
+      --violet: #c6a6ff;
+      color-scheme: dark;
+    }
 
-  function clear(node) {
-    while (node.firstChild) node.removeChild(node.firstChild);
-  }
+    * { box-sizing: border-box; }
 
-  function setData(node, map) {
-    Object.keys(map).forEach(function setKey(key) {
-      node.dataset[key] = String(map[key]);
-    });
-  }
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+      background:
+        radial-gradient(circle at 50% -10%, rgba(78,119,171,0.26), transparent 38%),
+        radial-gradient(circle at 12% 22%, rgba(244,207,131,0.10), transparent 32%),
+        radial-gradient(circle at 88% 30%, rgba(198,166,255,0.10), transparent 34%),
+        linear-gradient(180deg, #061020 0%, var(--bg) 48%, #02050b 100%);
+    }
 
-  function card(label, value, tone) {
-    const node = el("article", "showroom-gauge-card " + (tone || "pass"));
-    node.append(el("span", "showroom-gauge-label", label), el("strong", "showroom-gauge-value", value));
-    return node;
-  }
+    body {
+      margin: 0;
+      min-height: 100%;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: -0.015em;
+      overflow-x: hidden;
+    }
 
-  function hiddenReceipt(name, value) {
-    const item = el("li");
-    item.innerHTML = "<strong>" + name + "</strong><span>" + String(value) + "</span>";
-    return item;
-  }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.18) 0 1px, transparent 1.4px),
+        linear-gradient(rgba(141,216,255,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(141,216,255,0.035) 1px, transparent 1px);
+      background-size: 230px 250px, 56px 56px, 56px 56px;
+      opacity: 0.18;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.92), rgba(0,0,0,0.46) 66%, rgba(0,0,0,0.16));
+    }
 
-  function createRuntime(contract) {
-    if (global.ShowroomRuntime && typeof global.ShowroomRuntime.createRuntime === "function") {
-      try {
-        return global.ShowroomRuntime.createRuntime(contract);
-      } catch (error) {
-        return null;
+    a { color: inherit; }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
+    }
+
+    .skip {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      transform: translateY(-160%);
+      background: var(--mint);
+      color: #06101c;
+      padding: 10px 14px;
+      border-radius: 999px;
+      z-index: 20;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .skip:focus { transform: translateY(0); }
+
+    .page {
+      position: relative;
+      z-index: 2;
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 54px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 0 22px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 950;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(244,207,131,0.44);
+      border-radius: 10px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.18), transparent 36%),
+        rgba(244,207,131,0.08);
+      box-shadow: 0 0 22px rgba(244,207,131,0.14);
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .nav a,
+    .button {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      padding: 0 13px;
+      color: rgba(238,244,255,0.82);
+      text-decoration: none;
+      background: rgba(255,255,255,0.035);
+      font-size: 0.82rem;
+      font-weight: 850;
+      letter-spacing: 0.02em;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .nav a:hover,
+    .button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(244,207,131,0.42);
+      text-decoration: none;
+    }
+
+    .nav a[aria-current="page"],
+    .button.primary {
+      color: #06101c;
+      background: linear-gradient(135deg, var(--mint), #78d8ac);
+      border-color: rgba(167,243,198,0.62);
+    }
+
+    .button.gold {
+      color: #150d03;
+      background: linear-gradient(135deg, #fff0b8, var(--gold) 48%, #c48a38);
+      border-color: rgba(244,207,131,0.72);
+    }
+
+    .button.violet {
+      color: #070911;
+      background: linear-gradient(135deg, #f1eaff, var(--violet));
+      border-color: rgba(198,166,255,0.72);
+    }
+
+    .hero {
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      padding: clamp(24px, 5vw, 46px);
+      background:
+        radial-gradient(circle at 76% 28%, rgba(139,200,255,0.13), transparent 32%),
+        radial-gradient(circle at 18% 20%, rgba(244,207,131,0.12), transparent 30%),
+        radial-gradient(circle at 56% 94%, rgba(198,166,255,0.08), transparent 34%),
+        linear-gradient(180deg, rgba(8,17,34,0.94), rgba(4,9,20,0.94));
+      box-shadow: 0 30px 90px rgba(0,0,0,0.38);
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -8rem;
+      top: -8rem;
+      width: 24rem;
+      height: 24rem;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(244,207,131,0.16), transparent 68%);
+      animation: heroGlow 9s ease-in-out infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes heroGlow {
+      0%, 100% { opacity: 0.42; transform: scale(1); }
+      50% { opacity: 0.78; transform: scale(1.08); }
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 920px;
+      margin: 0;
+      font-size: clamp(2.25rem, 8vw, 5.6rem);
+      line-height: 0.92;
+      letter-spacing: -0.075em;
+    }
+
+    .lede {
+      max-width: 880px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 2.6vw, 1.34rem);
+      line-height: 1.55;
+    }
+
+    .claim-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .claim {
+      min-height: 92px;
+      display: grid;
+      align-content: center;
+      gap: 6px;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 18px;
+      padding: 14px;
+      background:
+        radial-gradient(circle at 16% 0%, rgba(244,207,131,0.10), transparent 56%),
+        rgba(255,255,255,0.034);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .claim b {
+      color: var(--gold);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .claim span {
+      color: rgba(238,244,255,0.74);
+      font-size: 0.92rem;
+      line-height: 1.34;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .diamond-shell,
+    .launchpad-shell {
+      margin-top: 16px;
+      border: 1px solid rgba(244,207,131,0.20);
+      border-radius: 34px;
+      padding: clamp(18px, 3.8vw, 32px);
+      background:
+        radial-gradient(circle at 50% 34%, rgba(96,145,190,0.13), transparent 42%),
+        linear-gradient(180deg, rgba(8,17,34,0.90), rgba(4,9,20,0.94));
+      box-shadow: 0 28px 90px rgba(0,0,0,0.32);
+      overflow: hidden;
+    }
+
+    .diamond-title,
+    .launchpad-title {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+    }
+
+    .diamond-stage {
+      position: relative;
+      min-height: clamp(520px, 82vw, 760px);
+      border: 1px solid rgba(244,207,131,0.18);
+      border-radius: 30px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 74%, rgba(244,207,131,0.10), transparent 24%),
+        radial-gradient(circle at 50% 36%, rgba(92,132,172,0.14), transparent 42%),
+        linear-gradient(180deg, rgba(4,11,24,0.92), rgba(2,7,16,0.96));
+      touch-action: none;
+      user-select: none;
+    }
+
+    .diamond-canvas {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    .diamond-instruction {
+      position: absolute;
+      left: clamp(16px, 4vw, 36px);
+      right: clamp(16px, 4vw, 36px);
+      bottom: clamp(16px, 4vw, 34px);
+      border-top: 1px solid rgba(255,255,255,0.12);
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      padding: 14px 10px;
+      color: rgba(238,244,255,0.80);
+      font-weight: 850;
+      line-height: 1.35;
+      font-size: clamp(0.98rem, 3.8vw, 1.32rem);
+      background: rgba(3,8,18,0.34);
+      backdrop-filter: blur(6px);
+    }
+
+    .diamond-route {
+      position: absolute;
+      left: 50%;
+      bottom: clamp(92px, 18vw, 128px);
+      transform: translateX(-50%);
+      width: min(calc(100% - 44px), 640px);
+      text-align: center;
+      color: rgba(238,244,255,0.68);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      line-height: 1.25;
+    }
+
+    .object-card {
+      margin-top: 16px;
+      border-left: 1px solid rgba(244,207,131,0.22);
+      border-right: 1px solid rgba(244,207,131,0.12);
+      padding: 22px 18px;
+      background: rgba(7,15,31,0.62);
+    }
+
+    .object-card .label {
+      margin: 0 0 14px;
+      color: var(--mint);
+      font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+    }
+
+    .object-card h2,
+    .launchpad-shell h2 {
+      margin: 0;
+      color: rgba(238,244,255,0.94);
+      font-size: clamp(1.55rem, 5vw, 2.5rem);
+      line-height: 1.02;
+      letter-spacing: -0.06em;
+    }
+
+    .object-card p,
+    .launchpad-shell p {
+      max-width: 820px;
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.8vw, 1.22rem);
+      line-height: 1.55;
+    }
+
+    .launch-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .launch-card {
+      min-height: 220px;
+      display: grid;
+      align-content: end;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 22px;
+      padding: 16px;
+      color: inherit;
+      text-decoration: none;
+      background:
+        radial-gradient(circle at 50% 14%, rgba(255,255,255,0.08), transparent 36%),
+        radial-gradient(circle at 16% 0%, rgba(244,207,131,0.10), transparent 58%),
+        rgba(255,255,255,0.035);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.055);
+      transition: transform 0.18s ease, border-color 0.18s ease, filter 0.18s ease;
+    }
+
+    .launch-card:hover,
+    .launch-card:focus-visible {
+      transform: translateY(-4px);
+      border-color: rgba(244,207,131,0.52);
+      filter: brightness(1.1);
+      text-decoration: none;
+    }
+
+    .launch-gem {
+      position: absolute;
+      left: 50%;
+      top: 22px;
+      width: 74px;
+      height: 74px;
+      transform: translateX(-50%) rotate(45deg);
+      border: 1px solid rgba(244,207,131,0.42);
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.28), transparent 30%),
+        conic-gradient(from 40deg, rgba(255,255,255,0.26), rgba(141,216,255,0.14), rgba(198,166,255,0.18), rgba(244,207,131,0.18), rgba(255,255,255,0.26)),
+        radial-gradient(circle at 40% 32%, rgba(255,255,255,0.26), transparent 52%),
+        rgba(7,15,31,0.82);
+      box-shadow:
+        0 0 22px rgba(141,216,255,0.12),
+        0 1rem 1.6rem rgba(0,0,0,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.16);
+      animation: launchGemFloat 7.8s ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+
+    .launch-gem::before,
+    .launch-gem::after {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border: 1px solid rgba(255,255,255,0.18);
+      transform: rotate(45deg);
+      border-radius: 8px;
+    }
+
+    .launch-gem::after {
+      inset: 27px;
+      border-color: rgba(244,207,131,0.22);
+    }
+
+    @keyframes launchGemFloat {
+      0%, 100% { margin-top: 0; filter: brightness(1); }
+      50% { margin-top: -7px; filter: brightness(1.15); }
+    }
+
+    .launch-card b {
+      color: var(--gold);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 2;
+    }
+
+    .launch-card strong {
+      color: rgba(238,244,255,0.96);
+      font-size: 1.08rem;
+      line-height: 1.06;
+      letter-spacing: -0.035em;
+      position: relative;
+      z-index: 2;
+    }
+
+    .launch-card span {
+      color: rgba(238,244,255,0.66);
+      font-size: 0.9rem;
+      line-height: 1.34;
+      position: relative;
+      z-index: 2;
+    }
+
+    .cache-proof,
+    .hidden-receipt {
+      display: none !important;
+      visibility: hidden !important;
+    }
+
+    .footer {
+      margin-top: 20px;
+      padding: 20px 0 0;
+      color: var(--faint);
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    @media (max-width: 1060px) {
+      .launch-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .launch-card:last-child {
+        grid-column: 1 / -1;
       }
     }
-    return null;
-  }
 
-  function writeRuntime(runtime, type, payload) {
-    if (runtime && typeof runtime.writeReceipt === "function") {
-      runtime.writeReceipt(type, payload || {});
-    }
-  }
+    @media (max-width: 880px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
 
-  function buildHiddenReceipts(contract, instrument) {
-    const panel = el("section", "showroom-hidden-receipts");
-    panel.hidden = true;
-    panel.setAttribute("aria-hidden", "true");
+      .nav { justify-content: flex-start; }
 
-    const list = el("ul");
-    [
-      ["SHOWROOM_CHAMBER", contract.chamber],
-      ["GENERATION", GENERATION],
-      ["DEMO_UNIVERSE_SCOPE", contract.mode === "standalone" ? "our-universe" : "inspection-route-only"],
-      ["VISUAL_EXPRESSION", contract.mode === "standalone" ? "solar-system-field" : "inspection-route-only"],
-      ["ORBIT_FIELD", contract.mode === "standalone" ? "visible" : "inspection-route-only"],
-      ["GENERATION_4_CLOSEOUT", contract.mode === "standalone" ? "complete" : "parent-shell-only"],
-      ["GEN4_CLOSEOUT", contract.mode === "standalone" ? "complete" : "parent-shell-only"],
-      ["FINAL_CLOSEOUT", contract.mode === "standalone" ? "true" : "not-parent-route"],
-      ["GEN_4_FINAL_PASS", contract.mode === "standalone" ? "demo-universe-our-universe-visual-field" : "parent-shell-pass"],
-      ["VISIBLE_CODE_GLOBE", contract.mode === "standalone" ? "true" : "false"],
-      ["PARENT_GLOBE_REQUIRED", "false"],
-      ["ROUTE", contract.route],
-      ["ACTIVE_REALM", contract.realm],
-      ["ACTIVE_ROUTE_ROLE", contract.routeRole],
-      ["SUN", contract.mode === "standalone" ? "included" : "routed"],
-      ["MOON", contract.mode === "standalone" ? "included" : "routed"],
-      ["PLANETS", "Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune"],
-      ["EARTH_ROLE", "primary inspection anchor"],
-      ["PHASE_BIND", contract.mode === "standalone" ? "complete" : "inspection-route-only"],
-      ["PHASE_SEQUENCE", "HOME → BOUNDARY → MOTION → REALM → RECEIPT → NEXT"],
-      ["NEXT_ALLOWED_GENERATION", "POST_GEN4_REFINEMENT_ONLY"],
-      ["RENDER_TNT", VERSION],
-      ["INSTRUMENT_VERSION", instrument && instrument.version ? instrument.version : "not-mounted"]
-    ].forEach(function add(pair) {
-      list.append(hiddenReceipt(pair[0], pair[1]));
-    });
-
-    panel.append(list);
-    return panel;
-  }
-
-  function getContract(mode) {
-    if (mode === "standalone") {
-      return {
-        mode: "standalone",
-        route: "/showroom/globe/",
-        realm: "demo-universe-our-universe-realm",
-        routeRole: "standalone-demo-universe-inspection-surface",
-        chamber: "STANDALONE_DEMO_UNIVERSE_OUR_UNIVERSE"
-      };
+      .claim-strip {
+        grid-template-columns: 1fr;
+      }
     }
 
-    return {
-      mode: "parent",
-      route: "/showroom/",
-      realm: "showroom-parent-proof-realm",
-      routeRole: "showroom-proof-surface",
-      chamber: "ROOM_05_OF_16_H5_SHOWROOM"
-    };
-  }
+    @media (max-width: 620px) {
+      .page { width: min(100% - 18px, 1120px); }
 
-  function renderParent(root, contract, runtime) {
-    const panel = el("section", "showroom-parent-dashboard");
-    panel.append(
-      el("h2", "", "Showroom"),
-      el("p", "", "Parent proof realm. Demo Universe remains inspection-only.")
-    );
+      .hero,
+      .diamond-shell,
+      .launchpad-shell,
+      .diamond-stage {
+        border-radius: 24px;
+      }
 
-    const gauges = el("div", "showroom-gauge-grid");
-    gauges.append(
-      card("Gen 4", "PASS"),
-      card("Parent", "Shell"),
-      card("Globe", "Inspection only"),
-      card("Demo Universe", "Routed")
-    );
+      .launch-grid {
+        grid-template-columns: 1fr;
+      }
 
-    panel.append(gauges);
-    root.append(panel, buildHiddenReceipts(contract, null));
+      .launch-card:last-child {
+        grid-column: auto;
+      }
 
-    writeRuntime(runtime, "showroom_parent_dashboard_rendered", {
-      generation: GENERATION,
-      route: contract.route,
-      parentGlobeRequired: false
-    });
-
-    return null;
-  }
-
-  function renderStandalone(root, contract, runtime) {
-    const dashboard = el("section", "showroom-dashboard");
-
-    const visual = el("article", "showroom-visual-card");
-    const mount = el("div", "showroom-globe-mount showroom-code-globe-mount");
-    mount.id = "demoUniverseVisualMount";
-
-    setData(mount, {
-      generation: GENERATION,
-      visibleCodeGlobe: "true",
-      phaseBind: "complete",
-      demoUniverseScope: "our-universe",
-      visualExpression: "solar-system-field",
-      orbitField: "visible",
-      gen4Closeout: "complete",
-      finalCloseout: "true"
-    });
-
-    visual.append(mount);
-
-    const gauges = el("aside", "showroom-dashboard-gauges");
-    gauges.append(
-      el("h2", "", "Status"),
-      card("Gen 4", "PASS"),
-      card("Scope", "Our Universe"),
-      card("Sun", "Included"),
-      card("Moon", "Included"),
-      card("Planets", "8/8"),
-      card("Earth", "Anchor"),
-      card("Orbit Field", "Visible"),
-      card("Receipts", "Hidden")
-    );
-
-    dashboard.append(visual, gauges);
-    root.append(dashboard);
-
-    let instrument = null;
-
-    if (global.ShowroomGlobeInstrument && typeof global.ShowroomGlobeInstrument.createGlobe === "function") {
-      instrument = global.ShowroomGlobeInstrument.createGlobe({
-        mount: mount,
-        runtime: runtime,
-        contract: contract
-      });
-    } else {
-      mount.append(card("Instrument", "HOLD", "hold"));
+      .diamond-stage {
+        min-height: 560px;
+      }
     }
 
-    root.append(buildHiddenReceipts(contract, instrument));
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
 
-    writeRuntime(runtime, "demo_universe_visual_dashboard_rendered", {
-      generation: GENERATION,
-      route: contract.route,
-      scope: "our-universe",
-      visualExpression: "solar-system-field",
-      orbitField: "visible",
-      bodies: BODY_NAMES,
-      gen4Closeout: "complete",
-      finalCloseout: true
-    });
+<body>
+  <a class="skip" href="#showroom-main">Skip to Showroom</a>
 
-    return instrument;
-  }
+  <div class="page">
+    <header class="topbar" aria-label="Diamond Gate Bridge navigation">
+      <a class="brand" href="/showroom/" aria-current="page">
+        <span class="brand-mark" aria-hidden="true">◆</span>
+        <span>Diamond Gate Bridge</span>
+      </a>
 
-  function renderShowroomProofSurface(options) {
-    const opts = options || {};
-    const root = opts.root || document.querySelector("[data-showroom-render-root]");
-    const mode = opts.mode === "standalone" ? "standalone" : "parent";
+      <nav class="nav" aria-label="Primary">
+        <a href="/">Compass</a>
+        <a href="/showroom/" aria-current="page">Showroom</a>
+        <a href="/characters/">Characters</a>
+        <a href="/products/">Products</a>
+        <a href="/laws/">Laws</a>
+        <a href="/showroom/globe/">Globe</a>
+        <a href="/gauges/">Triple G</a>
+      </nav>
+    </header>
 
-    if (!root) throw new Error("Showroom render root not found.");
+    <main id="showroom-main">
+      <section class="hero">
+        <p class="eyebrow">Showroom · diamond lattice proof surface</p>
+        <h1>The Diamond holds the room.</h1>
+        <p class="lede">
+          The Showroom begins with the fixed Crown Cut 256 Lattice Diamond. Touch inspection moves the camera around a solid crystal form. The Diamond does not mutate. It proves the interactive build standard before the page opens the launchpad.
+        </p>
 
-    const contract = getContract(mode);
-    const runtime = createRuntime(contract);
+        <div class="claim-strip" aria-label="Showroom claims">
+          <div class="claim">
+            <b>Proof Object</b>
+            <span>The Diamond demonstrates interactive 3D content directly inside the site.</span>
+          </div>
 
-    clear(root);
+          <div class="claim">
+            <b>Fixed Form</b>
+            <span>Touch rotates the inspection view. It does not reshape the crystal.</span>
+          </div>
 
-    setData(root, {
-      showroomRenderComplete: "false",
-      showroomRenderVersion: VERSION,
-      showroomGeneration: GENERATION,
-      showroomMode: mode,
-      showroomRoute: contract.route,
-      showroomRealm: contract.realm,
-      parentGlobeRequired: "false",
-      demoUniverseScope: mode === "standalone" ? "our-universe" : "inspection-route-only",
-      visualExpression: mode === "standalone" ? "solar-system-field" : "inspection-route-only",
-      orbitField: mode === "standalone" ? "visible" : "inspection-route-only"
-    });
+          <div class="claim">
+            <b>Launchpad</b>
+            <span>The room opens the story, the community line, and the laws behind the clock.</span>
+          </div>
+        </div>
 
-    const instrument = mode === "standalone"
-      ? renderStandalone(root, contract, runtime)
-      : renderParent(root, contract, runtime);
+        <div class="actions">
+          <a class="button primary" href="#diamond-stage">Touch the Diamond</a>
+          <a class="button violet" href="/characters/">Meet the Characters</a>
+          <a class="button gold" href="/laws/">Jump to the Laws page and lock in</a>
+          <a class="button" href="/products/">Review Products</a>
+          <a class="button" href="/showroom/globe/">Enter Globe Showcase</a>
+          <a class="button" href="/gauges/">Run Triple G</a>
+        </div>
+      </section>
 
-    root.dataset.showroomRenderComplete = "true";
-    root.dataset.showroomInstrumentVersion = instrument && instrument.version ? instrument.version : "not-mounted";
+      <section class="diamond-shell" aria-label="Locked Crown Cut 256 Lattice Diamond">
+        <p class="diamond-title">Crown cut · 256 lattice · fixed crystal form</p>
 
-    return {
-      version: VERSION,
-      generation: GENERATION,
-      mode: mode,
-      contract: contract,
-      runtime: runtime,
-      instrument: instrument,
-      globe: instrument
-    };
-  }
+        <div
+          id="diamond-stage"
+          class="diamond-stage"
+          data-showroom-diamond-stage
+          data-diamond-lock="CROWN_CUT_256_LATTICE_FIXED_FORM"
+          data-touch-glide="true"
+          data-inspection-control="camera-view-rotation"
+          data-geometry-mutable-by-touch="false"
+          aria-label="Touchable Crown Cut 256 Lattice Diamond"
+        >
+          <canvas class="diamond-canvas" data-showroom-diamond-canvas></canvas>
+          <div class="diamond-route">Cover Diamond → Characters · Products · Laws · Globe · Triple G</div>
+          <div class="diamond-instruction">
+            Drag inside the box to inspect the fixed crystal. Release for momentum. Double tap to reset.
+          </div>
+        </div>
 
-  global.ShowroomRender = Object.freeze({
-    VERSION: VERSION,
-    GENERATION: GENERATION,
-    renderShowroomProofSurface: renderShowroomProofSurface
-  });
-})(window, document);
+        <article class="object-card">
+          <p class="label">Object truth</p>
+          <h2>The Diamond proves the build.</h2>
+          <p>
+            This is a fixed Crown Cut 256 Lattice Diamond. The visible crystal is cleaner, more disciplined, and built to read as a diamond body: table, crown, girdle, pavilion, culet, lattice, light, and touch inspection.
+          </p>
+          <p class="cache-proof">
+            HTML cache key: SHOWROOM_CROWN_CUT_LATTICE_LAUNCHPAD_TNT_v1
+          </p>
+        </article>
+      </section>
+
+      <section class="launchpad-shell" aria-label="Showroom launchpad">
+        <p class="launchpad-title">Launchpad · story · community · laws</p>
+        <h2>The Diamond proves the build. The launchpad opens the system.</h2>
+        <p>
+          Choose the path that fits what you came to see. Enter the story behind the game, follow the community-based line, or view the tick-tock behind the clock.
+        </p>
+
+        <div class="launch-grid">
+          <a class="launch-card" href="/characters/">
+            <span class="launch-gem" style="--delay:-0.2s" aria-hidden="true"></span>
+            <b>Story / Game</b>
+            <strong>Meet the Characters</strong>
+            <span>Enter Shadows Never Shatter in Mirrorland, meet the character roster, and begin the story behind the game.</span>
+          </a>
+
+          <a class="launch-card" href="/products/">
+            <span class="launch-gem" style="--delay:-0.8s" aria-hidden="true"></span>
+            <b>Community Line</b>
+            <strong>Open Products</strong>
+            <span>Follow the people-facing side: tools, games, offerings, systems, and public-use structures.</span>
+          </a>
+
+          <a class="launch-card" href="/laws/">
+            <span class="launch-gem" style="--delay:-1.4s" aria-hidden="true"></span>
+            <b>Science / Truth</b>
+            <strong>Jump to the Laws page and lock in.</strong>
+            <span>View the tick-tock behind the clock: governing logic, timing pressure, and consequence law.</span>
+          </a>
+
+          <a class="launch-card" href="/showroom/globe/">
+            <span class="launch-gem" style="--delay:-2s" aria-hidden="true"></span>
+            <b>World Path</b>
+            <strong>Enter Globe Showcase</strong>
+            <span>Choose consequence, survival, or possibility through ZIONTS, H-Earth, and Audralia.</span>
+          </a>
+
+          <a class="launch-card" href="/gauges/">
+            <span class="launch-gem" style="--delay:-2.6s" aria-hidden="true"></span>
+            <b>Proof Layer</b>
+            <strong>Run Triple G</strong>
+            <span>Inspect what is present, measurable, routed, and live across the public build.</span>
+          </a>
+        </div>
+
+        <template id="showroom-route-receipt" class="hidden-receipt">
+SHOWROOM_CROWN_CUT_LATTICE_LAUNCHPAD_TNT_v1
+route=/showroom/
+html=/showroom/index.html
+js=/showroom/index.js
+role=showroom_cover_object_and_launchpad
+diamond_lock=CROWN_CUT_256_LATTICE_FIXED_FORM
+touch_glide=true
+geometry_mutable_by_touch=false
+proof_object=crown_cut_256_lattice_diamond
+launchpad=characters,products,laws,globe,gauges
+characters_role=story_game_doorway
+products_role=community_practical_doorway
+laws_role=science_truth_doorway
+laws_cta=Jump_to_the_Laws_page_and_lock_in
+laws_support_line=view_the_tick_tock_behind_the_clock
+globe_role=world_path_doorway
+gauges_role=proof_layer_doorway
+legacy_runtime_held=true
+legacy_css_held=true
+legacy_render_held=true
+generated_image=false
+graphic_box=false
+earth_record=false
+        </template>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Diamond Gate Bridge · Showroom · Crown Cut 256 Lattice Diamond · Launchpad.
+    </footer>
+  </div>
+
+  <script>
+    window.DGB_SHOWROOM_HTML_CACHE_KEY = "SHOWROOM_CROWN_CUT_LATTICE_LAUNCHPAD_TNT_v1";
+    window.DGB_SHOWROOM_JS_CACHE_KEY = "SHOWROOM_CROWN_CUT_LATTICE_DIAMOND_RENDER_TNT_v1";
+  </script>
+  <script
+    type="module"
+    src="/showroom/index.js?v=SHOWROOM_CROWN_CUT_LATTICE_DIAMOND_RENDER_TNT_v1"
+  ></script>
+</body>
+</html>

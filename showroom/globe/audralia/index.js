@@ -1,14 +1,17 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_EXISTING_GLOBE_BOX_CONTAINMENT_LOADER_TNT_v7
-// Renewal-only containment repair.
-// Purpose: restore the existing Audralia globe and force it inside #audralia-stage.
-// This file does not paint a substitute planet, landscape, sky, water, or fallback world.
+// AUDRALIA_REFRESH_SAFE_BOXED_GLOBE_LOADER_TNT_v9
+// Renewal only.
+// Purpose: preserve the existing Audralia globe, keep it boxed, and prevent refresh refusal.
+// No procedural substitute. No fake globe. No physical redesign.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_EXISTING_GLOBE_BOX_CONTAINMENT_LOADER_TNT_v7";
+  const CONTRACT = "AUDRALIA_REFRESH_SAFE_BOXED_GLOBE_LOADER_TNT_v9";
   const ROUTE = "/showroom/globe/audralia/";
+
+  if (window.__DGB_AUDRALIA_LOADER_ACTIVE__ === CONTRACT) return;
+  window.__DGB_AUDRALIA_LOADER_ACTIVE__ = CONTRACT;
 
   const ASSET_SCRIPTS = Object.freeze([
     "/assets/audralia/audralia.kernel.js",
@@ -59,10 +62,11 @@
     booted: false,
     mounted: false,
     mountedBy: "",
+    adoptedCount: 0,
+    containmentRuns: 0,
     scriptsLoaded: [],
     scriptsFailed: [],
-    adoptedCount: 0,
-    containmentRuns: 0
+    stopped: false
   };
 
   const $ = (selector, root = document) => {
@@ -85,23 +89,23 @@
     return document.documentElement.getAttribute("data-route") === ROUTE;
   }
 
-  function stage() {
+  function getStage() {
     return $("#audralia-stage") || $("[data-audralia-stage='true']");
   }
 
-  function mount() {
+  function getMount() {
     return $("#audraliaCanvasMount") || $("[data-audralia-canvas-mount='true']");
   }
 
-  function notice() {
+  function getNotice() {
     return $("#audraliaRouteLoaderNotice") || $("[data-audralia-route-loader-notice='true']");
   }
 
-  function status() {
+  function getStatus() {
     return $("#audraliaRouteStatus") || $("[data-audralia-route-status='true']");
   }
 
-  function fallback() {
+  function getFallback() {
     return $("[data-stage-fallback='true']");
   }
 
@@ -115,10 +119,10 @@
   }
 
   function injectContainmentStyle() {
-    if ($("#audraliaBoxContainmentStyle")) return;
+    if ($("#audraliaRefreshSafeContainmentStyle")) return;
 
     const style = document.createElement("style");
-    style.id = "audraliaBoxContainmentStyle";
+    style.id = "audraliaRefreshSafeContainmentStyle";
     style.textContent = `
       #audralia-stage,
       [data-audralia-stage="true"] {
@@ -190,65 +194,64 @@
     document.head.appendChild(style);
   }
 
-  function forceStageBox(s, m) {
-    if (s) {
-      s.style.position = "relative";
-      s.style.overflow = "hidden";
-      s.style.contain = "layout paint size";
-      s.style.isolation = "isolate";
+  function forceBox(stage, mount) {
+    if (stage) {
+      stage.style.position = "relative";
+      stage.style.overflow = "hidden";
+      stage.style.contain = "layout paint size";
+      stage.style.isolation = "isolate";
     }
 
-    if (m) {
-      m.style.position = "absolute";
-      m.style.inset = "0";
-      m.style.width = "100%";
-      m.style.height = "100%";
-      m.style.maxWidth = "100%";
-      m.style.maxHeight = "100%";
-      m.style.overflow = "hidden";
-      m.style.contain = "layout paint size";
-      m.style.transform = "none";
-      m.style.transformOrigin = "center center";
-      m.style.zIndex = "2";
-      m.style.borderRadius = "inherit";
+    if (mount) {
+      mount.style.position = "absolute";
+      mount.style.inset = "0";
+      mount.style.width = "100%";
+      mount.style.height = "100%";
+      mount.style.maxWidth = "100%";
+      mount.style.maxHeight = "100%";
+      mount.style.overflow = "hidden";
+      mount.style.contain = "layout paint size";
+      mount.style.transform = "none";
+      mount.style.transformOrigin = "center center";
+      mount.style.zIndex = "2";
+      mount.style.borderRadius = "inherit";
     }
   }
 
-  function forceContainedVisual(node) {
+  function forceVisual(node) {
     if (!node || node.nodeType !== 1) return;
 
-    node.setAttribute("data-audralia-box-contained", "true");
-
     const tag = String(node.tagName || "").toLowerCase();
-    const isPrimaryVisual = tag === "canvas" || tag === "svg" || tag === "video";
+    const isVisual = tag === "canvas" || tag === "svg" || tag === "video";
 
+    node.setAttribute("data-audralia-box-contained", "true");
     node.style.maxWidth = "100%";
     node.style.maxHeight = "100%";
     node.style.overflow = "hidden";
     node.style.boxSizing = "border-box";
 
-    if (isPrimaryVisual) {
-      node.style.position = "absolute";
-      node.style.left = "50%";
-      node.style.top = "50%";
-      node.style.width = "100%";
-      node.style.height = "100%";
-      node.style.minWidth = "0";
-      node.style.minHeight = "0";
-      node.style.margin = "0";
-      node.style.display = "block";
-      node.style.objectFit = "contain";
-      node.style.transformOrigin = "center center";
-      node.style.transform = window.matchMedia("(max-width: 720px)").matches
-        ? "translate(-50%, -50%) scale(.86)"
-        : "translate(-50%, -50%) scale(.92)";
-      node.style.touchAction = "none";
-    }
+    if (!isVisual) return;
+
+    node.style.position = "absolute";
+    node.style.left = "50%";
+    node.style.top = "50%";
+    node.style.width = "100%";
+    node.style.height = "100%";
+    node.style.minWidth = "0";
+    node.style.minHeight = "0";
+    node.style.margin = "0";
+    node.style.display = "block";
+    node.style.objectFit = "contain";
+    node.style.transformOrigin = "center center";
+    node.style.transform = window.matchMedia("(max-width: 720px)").matches
+      ? "translate(-50%, -50%) scale(.86)"
+      : "translate(-50%, -50%) scale(.92)";
+    node.style.touchAction = "none";
   }
 
-  function looksAudraliaRelated(node, s) {
+  function looksAudraliaRelated(node, stage) {
     if (!node || node.nodeType !== 1) return false;
-    if (s && s.contains(node)) return false;
+    if (stage && stage.contains(node)) return false;
 
     const tag = String(node.tagName || "").toLowerCase();
     const id = String(node.id || "").toLowerCase();
@@ -258,23 +261,32 @@
     if (id.includes("audralia") || className.includes("audralia") || data.includes("audralia")) return true;
 
     if (tag === "canvas") {
-      const parentIsBody = node.parentElement === document.body;
       const rect = node.getBoundingClientRect();
+      const bodyChild = node.parentElement === document.body;
       const large = rect.width > 240 || rect.height > 240;
-      return parentIsBody || large;
+      return bodyChild || large;
     }
 
     return false;
   }
 
+  function hasMountedVisual() {
+    const mount = getMount();
+    if (!mount) return false;
+
+    return !!mount.querySelector(
+      "canvas,svg,video,[data-audralia-visible-canvas],[data-audralia-mounted='true'],[data-audralia-globe='true'],[data-audralia-satellite='true']"
+    );
+  }
+
   function adoptVisuals() {
-    const s = stage();
-    const m = mount();
-    if (!s || !m) return false;
+    const stage = getStage();
+    const mount = getMount();
+    if (!stage || !mount || state.stopped) return false;
+
+    forceBox(stage, mount);
 
     let adopted = false;
-
-    forceStageBox(s, m);
 
     const candidates = $$([
       "canvas",
@@ -288,47 +300,43 @@
     ].join(","));
 
     for (const node of candidates) {
-      if (!node || node === s || node === m) continue;
+      if (!node || node === stage || node === mount) continue;
 
-      if (m.contains(node)) {
-        forceContainedVisual(node);
+      if (mount.contains(node)) {
+        forceVisual(node);
         continue;
       }
 
-      if (!looksAudraliaRelated(node, s)) continue;
+      if (!looksAudraliaRelated(node, stage)) continue;
 
       try {
-        m.appendChild(node);
-        forceContainedVisual(node);
-        adopted = true;
+        mount.appendChild(node);
+        forceVisual(node);
         state.adoptedCount += 1;
+        adopted = true;
       } catch {
-        // Leave the existing asset alone if the browser refuses the move.
+        // Do not block refresh if an asset refuses adoption.
       }
     }
 
-    Array.from(m.children).forEach(forceContainedVisual);
+    Array.from(mount.children).forEach(forceVisual);
 
     if (hasMountedVisual()) {
-      s.setAttribute("data-loader-state", "mounted");
-      s.setAttribute("data-loader-contract", CONTRACT);
-      setText(notice(), "Existing globe boxed");
-      setText(status(), "Audralia globe contained");
-      const fb = fallback();
+      stage.setAttribute("data-loader-state", "mounted");
+      stage.setAttribute("data-loader-contract", CONTRACT);
+      setText(getNotice(), "Existing globe boxed");
+      setText(getStatus(), "Audralia globe contained");
+
+      const fb = getFallback();
       if (fb) {
         fb.style.opacity = "0";
         fb.style.visibility = "hidden";
       }
+
       state.mounted = true;
     }
 
     return adopted;
-  }
-
-  function hasMountedVisual() {
-    const m = mount();
-    if (!m) return false;
-    return !!m.querySelector("canvas,svg,video,[data-audralia-visible-canvas],[data-audralia-mounted='true'],[data-audralia-globe='true'],[data-audralia-satellite='true']");
   }
 
   function callableFromObject(name, value) {
@@ -350,24 +358,25 @@
       const callable = callableFromObject(name, window[name]);
       if (callable) return callable;
     }
+
     return null;
   }
 
-  function context() {
-    const s = stage();
-    const m = mount();
+  function buildContext() {
+    const stage = getStage();
+    const mount = getMount();
 
-    const ctx = {
+    const context = {
       route: ROUTE,
       page: "audralia-satellite-globe-access",
       world: "Audralia",
       contract: CONTRACT,
       canvasContract: "AUDRALIA_EXISTING_GLOBE_BOXED_ASSET_CONSUMER_TNT_v7",
-      mode: "satellite-globe-contained",
+      mode: "refresh-safe-satellite-globe-contained",
       requestedView: "satellite-orbital-existing-globe-contained",
-      stage: s,
-      mount: m,
-      canvasMount: m,
+      stage,
+      mount,
+      canvasMount: mount,
       document,
       window,
       consumerOnly: true,
@@ -379,15 +388,15 @@
       mayGenerateFallbackTerrain: false
     };
 
-    window.DGB_AUDRALIA_ROUTE_CONTEXT = ctx;
-    window.DGB_AUDRALIA_STAGE = s;
-    window.DGB_AUDRALIA_CANVAS_MOUNT = m;
+    window.DGB_AUDRALIA_ROUTE_CONTEXT = context;
+    window.DGB_AUDRALIA_STAGE = stage;
+    window.DGB_AUDRALIA_CANVAS_MOUNT = mount;
     window.DGB_AUDRALIA_REQUESTED_VIEW = "satellite-orbital-existing-globe-contained";
     window.DGB_AUDRALIA_RESTORE_EXISTING_GLOBE = true;
     window.DGB_AUDRALIA_BOX_CONTAINMENT = true;
     window.DGB_AUDRALIA_NO_PROCEDURAL_FALLBACK = true;
 
-    return ctx;
+    return context;
   }
 
   async function callExistingAPI() {
@@ -395,7 +404,7 @@
     if (!callable) return false;
 
     try {
-      const result = await callable.fn(context());
+      const result = await callable.fn(buildContext());
       adoptVisuals();
 
       if (result === false) return false;
@@ -408,7 +417,7 @@
   }
 
   function dispatchMountEvents() {
-    const detail = { context: context(), contract: CONTRACT };
+    const detail = { context: buildContext(), contract: CONTRACT };
 
     for (const name of [
       "DGB:AUDRALIA:RESTORE_EXISTING_GLOBE",
@@ -423,7 +432,7 @@
         window.dispatchEvent(new CustomEvent(name, { detail }));
         document.dispatchEvent(new CustomEvent(name, { detail }));
       } catch {
-        // Event dispatch is opportunistic.
+        // Event dispatch is optional.
       }
     }
   }
@@ -457,11 +466,13 @@
     });
   }
 
-  async function loadAssets() {
-    setText(notice(), "Loading existing globe assets");
-    setText(status(), "Containing satellite globe");
+  async function loadAssetsOnce() {
+    setText(getNotice(), "Loading existing globe assets");
+    setText(getStatus(), "Containing satellite globe");
 
     for (const path of ASSET_SCRIPTS) {
+      if (state.stopped) return false;
+
       await loadClassic(path);
       dispatchMountEvents();
       await callExistingAPI();
@@ -476,20 +487,34 @@
     return false;
   }
 
-  function startContainmentLoop() {
+  function startShortContainmentWindow() {
+    const started = performance.now();
+    const limitMs = 2500;
+
     const run = () => {
+      if (state.stopped) return;
+
       state.containmentRuns += 1;
       adoptVisuals();
 
-      if (state.containmentRuns < 360) {
+      const elapsed = performance.now() - started;
+
+      if (!state.mounted && elapsed < limitMs) {
         window.requestAnimationFrame(run);
       }
     };
 
     run();
 
-    const observer = new MutationObserver(() => adoptVisuals());
+    const observer = new MutationObserver(() => {
+      if (!state.stopped) adoptVisuals();
+    });
+
     observer.observe(document.body, { childList: true, subtree: true });
+
+    window.setTimeout(() => {
+      observer.disconnect();
+    }, limitMs + 500);
 
     window.addEventListener("resize", adoptVisuals, { passive: true });
   }
@@ -507,7 +532,8 @@
           scriptsLoaded: state.scriptsLoaded.slice(),
           scriptsFailed: state.scriptsFailed.slice(),
           noProceduralSubstitute: true,
-          boxedContainment: true
+          boxedContainment: true,
+          refreshSafe: true
         };
       }
     };
@@ -517,35 +543,37 @@
     if (!routeIsValid()) return;
 
     state.booted = true;
+    state.stopped = false;
 
     injectContainmentStyle();
 
-    const s = stage();
-    const m = mount();
+    const stage = getStage();
+    const mount = getMount();
 
-    if (!s || !m) {
-      setText(notice(), "Audralia mount missing");
-      setText(status(), "Canvas mount unavailable");
+    if (!stage || !mount) {
+      setText(getNotice(), "Audralia mount missing");
+      setText(getStatus(), "Canvas mount unavailable");
       expose();
       return;
     }
 
-    forceStageBox(s, m);
-    startContainmentLoop();
+    forceBox(stage, mount);
+    startShortContainmentWindow();
     expose();
 
-    s.setAttribute("data-loader-state", "connecting");
-    s.setAttribute("data-loader-contract", CONTRACT);
+    stage.setAttribute("data-loader-state", "connecting");
+    stage.setAttribute("data-loader-contract", CONTRACT);
 
-    const loaded = await loadAssets();
+    const loaded = await loadAssetsOnce();
 
     adoptVisuals();
 
     if (!loaded && !hasMountedVisual()) {
-      s.setAttribute("data-loader-state", "fallback");
-      setText(notice(), "Existing globe not mounted");
-      setText(status(), "No substitute painted");
-      const fb = fallback();
+      stage.setAttribute("data-loader-state", "fallback");
+      setText(getNotice(), "Existing globe not mounted");
+      setText(getStatus(), "No substitute painted");
+
+      const fb = getFallback();
       if (fb) {
         fb.textContent = "The existing Audralia globe did not mount. No procedural substitute was painted.";
       }
@@ -553,6 +581,18 @@
 
     expose();
   }
+
+  window.addEventListener("pagehide", () => {
+    state.stopped = true;
+  });
+
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) {
+      state.stopped = false;
+      adoptVisuals();
+      expose();
+    }
+  });
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot, { once: true });

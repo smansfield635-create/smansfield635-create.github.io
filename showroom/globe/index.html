@@ -3,7 +3,7 @@
   lang="en"
   data-route="/showroom/globe/"
   data-page="showroom-globe"
-  data-contract="SHOWROOM_GLOBE_CHARACTER_LINK_TNT_v4"
+  data-contract="SHOWROOM_GLOBE_POST_NARRATIVE_CHARACTER_GEM_TNT_v4"
   data-previous-contract="SHOWROOM_GLOBE_POST_NARRATIVE_WINDOW_TNT_v3"
   data-role="post-narrative-world-doorway"
   data-static-page-usable-without-js="true"
@@ -13,16 +13,16 @@
   data-visual-pass-claimed="false"
 >
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
   <title>Shadows Never Shatter in Mirrorland · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Shadows Never Shatter in Mirrorland: a window into consequence, possibility, and survival."
-  />
-  <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/" />
-  <meta name="theme-color" content="#02040b" />
+    content="Shadows Never Shatter in Mirrorland: a window into consequence, possibility, survival, and the characters inside Mirrorland."
+  >
+  <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/">
+  <meta name="theme-color" content="#02040b">
 
   <style>
     :root {
@@ -43,9 +43,7 @@
       --max: 1180px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       min-width: 320px;
@@ -88,10 +86,7 @@
       mask-image: linear-gradient(180deg, rgba(0,0,0,.92), rgba(0,0,0,.50) 66%, rgba(0,0,0,.22));
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
     a:focus-visible,
     button:focus-visible {
@@ -119,9 +114,7 @@
       font-weight: 950;
     }
 
-    .skip:focus {
-      left: 8px;
-    }
+    .skip:focus { left: 8px; }
 
     .shell {
       position: relative;
@@ -406,31 +399,41 @@
     }
 
     .orbit-slot.consequence-slot {
-      --start-angle: -90deg;
-      --end-angle: 270deg;
-      --counter-start: 90deg;
-      --counter-end: -270deg;
-      --orbit-radius: clamp(8.6rem, 23vw, 15.6rem);
+      --start-angle: -18deg;
+      --end-angle: 342deg;
+      --counter-start: 18deg;
+      --counter-end: -342deg;
+      --orbit-radius: clamp(8.9rem, 24vw, 15.8rem);
       --orbit-duration: 58s;
     }
 
     .orbit-slot.possibility-slot {
-      --start-angle: 145deg;
-      --end-angle: 505deg;
-      --counter-start: -145deg;
-      --counter-end: -505deg;
-      --orbit-radius: clamp(8.6rem, 23vw, 15.6rem);
+      --start-angle: 76deg;
+      --end-angle: 436deg;
+      --counter-start: -76deg;
+      --counter-end: -436deg;
+      --orbit-radius: clamp(8.9rem, 24vw, 15.8rem);
       --orbit-duration: 62s;
       animation-direction: reverse;
     }
 
     .orbit-slot.survival-slot {
-      --start-angle: 35deg;
-      --end-angle: 395deg;
-      --counter-start: -35deg;
-      --counter-end: -395deg;
-      --orbit-radius: clamp(8.6rem, 23vw, 15.6rem);
+      --start-angle: 180deg;
+      --end-angle: 540deg;
+      --counter-start: -180deg;
+      --counter-end: -540deg;
+      --orbit-radius: clamp(8.9rem, 24vw, 15.8rem);
       --orbit-duration: 52s;
+    }
+
+    .orbit-slot.characters-slot {
+      --start-angle: 252deg;
+      --end-angle: 612deg;
+      --counter-start: -252deg;
+      --counter-end: -612deg;
+      --orbit-radius: clamp(8.9rem, 24vw, 15.8rem);
+      --orbit-duration: 66s;
+      animation-direction: reverse;
     }
 
     @keyframes orbitalTurn {
@@ -552,6 +555,17 @@
         drop-shadow(0 0 .65rem rgba(255,255,255,.10))
         saturate(1.08)
         hue-rotate(8deg);
+    }
+
+    .characters .gem-svg {
+      animation-duration: 25s;
+      animation-direction: reverse;
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
+        drop-shadow(0 0 1.15rem rgba(198,166,255,.25))
+        drop-shadow(0 0 .65rem rgba(243,200,111,.12))
+        saturate(1.08)
+        hue-rotate(38deg);
     }
 
     @keyframes gemBodyTurn {
@@ -693,7 +707,7 @@
       }
 
       .world-stage {
-        min-height: 31rem;
+        min-height: 34rem;
       }
 
       .world-center {
@@ -703,21 +717,22 @@
 
       .orbit-slot.consequence-slot,
       .orbit-slot.possibility-slot,
-      .orbit-slot.survival-slot {
-        --orbit-radius: clamp(7.2rem, 30vw, 9.4rem);
+      .orbit-slot.survival-slot,
+      .orbit-slot.characters-slot {
+        --orbit-radius: clamp(7.4rem, 31vw, 9.8rem);
       }
 
       .world-node {
-        width: 7.05rem;
-        height: 5.2rem;
+        width: 6.8rem;
+        height: 5rem;
       }
 
       .gem-label b {
-        font-size: .43rem;
+        font-size: .40rem;
       }
 
       .gem-label span {
-        font-size: .31rem;
+        font-size: .29rem;
       }
 
       .world-center .gem-label b {
@@ -866,6 +881,7 @@
         <a href="/showroom/globe/earth/">ZIONTS</a>
         <a href="/showroom/globe/h-earth/">H-Earth</a>
         <a href="/showroom/globe/audralia/">Audralia</a>
+        <a href="/characters/">Characters</a>
         <a href="/gauges/">Triple G</a>
       </nav>
     </header>
@@ -876,7 +892,7 @@
 
         <h1 id="page-title">Shadows Never Shatter in Mirrorland.</h1>
 
-        <div class="subtitle">A window into consequence, possibility, and survival.</div>
+        <div class="subtitle">A window into consequence, possibility, survival, and the people inside the world.</div>
 
         <p class="lead">Choose the future you want to face first.</p>
 
@@ -924,6 +940,17 @@
               <span class="gem-label"><b>H-Earth</b><span>Survival</span></span>
             </a>
           </div>
+
+          <div class="orbit-slot characters-slot">
+            <a class="world-node characters" href="/characters/" aria-label="Meet the Characters" style="--delay:-3s;--tilt-a:2.1deg;--tilt-b:-1.7deg;">
+              <span class="gem-core">
+                <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                  <use href="#organicGemA"></use>
+                </svg>
+              </span>
+              <span class="gem-label"><b>Characters</b><span>Roster</span></span>
+            </a>
+          </div>
         </div>
 
         <div class="micro-links" aria-label="Small support links">
@@ -935,25 +962,26 @@
 
         <script type="application/json" id="showroomGlobeReceipt" class="hidden-receipt">
           {
-            "contract": "SHOWROOM_GLOBE_CHARACTER_LINK_TNT_v4",
-            "previous_contract": "SHOWROOM_GLOBE_POST_NARRATIVE_WINDOW_TNT_v3",
+            "contract": "SHOWROOM_GLOBE_POST_NARRATIVE_CHARACTER_GEM_TNT_v4",
+            "previous": "SHOWROOM_GLOBE_POST_NARRATIVE_WINDOW_TNT_v3",
             "file": "/showroom/globe/index.html",
             "role": "POST_NARRATIVE_WORLD_DOORWAY",
             "headline": "Shadows Never Shatter in Mirrorland.",
-            "subtitle": "A window into consequence, possibility, and survival.",
+            "subtitle": "A window into consequence, possibility, survival, and the people inside the world.",
             "current_forward_expression": true,
             "legacy_pre_narrative_import": false,
             "primary_paths": {
               "ZIONTS": "/showroom/globe/earth/",
               "Audralia": "/showroom/globe/audralia/",
-              "H-Earth": "/showroom/globe/h-earth/"
+              "H-Earth": "/showroom/globe/h-earth/",
+              "Characters": "/characters/"
             },
-            "character_path": "/characters/",
-            "character_link_added": true,
-            "physical_redesign": false,
-            "full_game_claimed": false,
+            "fourth_gem_added": "Meet the Characters",
             "runtime_required": false,
-            "static_page_usable_without_js": true
+            "static_page_usable_without_js": true,
+            "generated_image": false,
+            "graphic_box": false,
+            "visual_pass_claimed": false
           }
         </script>
 

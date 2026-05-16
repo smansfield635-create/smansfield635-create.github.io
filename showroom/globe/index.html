@@ -3,7 +3,8 @@
   lang="en"
   data-route="/showroom/globe/"
   data-page="showroom-globe"
-  data-contract="SHOWROOM_GLOBE_POST_NARRATIVE_WINDOW_TNT_v3"
+  data-contract="SHOWROOM_GLOBE_CHARACTER_LINK_TNT_v4"
+  data-previous-contract="SHOWROOM_GLOBE_POST_NARRATIVE_WINDOW_TNT_v3"
   data-role="post-narrative-world-doorway"
   data-static-page-usable-without-js="true"
   data-runtime-public-message="false"
@@ -928,12 +929,14 @@
         <div class="micro-links" aria-label="Small support links">
           <a href="/">Compass</a>
           <a href="/showroom/">Showroom</a>
+          <a href="/characters/">Meet the Characters</a>
           <a href="/gauges/">Triple G</a>
         </div>
 
         <script type="application/json" id="showroomGlobeReceipt" class="hidden-receipt">
           {
-            "contract": "SHOWROOM_GLOBE_POST_NARRATIVE_WINDOW_TNT_v3",
+            "contract": "SHOWROOM_GLOBE_CHARACTER_LINK_TNT_v4",
+            "previous_contract": "SHOWROOM_GLOBE_POST_NARRATIVE_WINDOW_TNT_v3",
             "file": "/showroom/globe/index.html",
             "role": "POST_NARRATIVE_WORLD_DOORWAY",
             "headline": "Shadows Never Shatter in Mirrorland.",
@@ -945,6 +948,9 @@
               "Audralia": "/showroom/globe/audralia/",
               "H-Earth": "/showroom/globe/h-earth/"
             },
+            "character_path": "/characters/",
+            "character_link_added": true,
+            "physical_redesign": false,
             "full_game_claimed": false,
             "runtime_required": false,
             "static_page_usable_without_js": true

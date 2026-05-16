@@ -1,14 +1,17 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-crown-cut-lattice-launchpad"
+  data-page="showroom-dual-lens-diamond"
   data-route="/showroom/"
-  data-contract="SHOWROOM_CROWN_CUT_LATTICE_LAUNCHPAD_TNT_v1"
-  data-previous-contract="SHOWROOM_HTML_CACHE_BUST_DIAMOND_SCRIPT_BIND_TNT_v7"
-  data-role="showroom-cover-object-and-launchpad"
+  data-contract="SHOWROOM_DUAL_LENS_DIAMOND_EDUCATIONAL_LAUNCHPAD_TNT_v1"
+  data-previous-contract="SHOWROOM_CROWN_CUT_LATTICE_LAUNCHPAD_TNT_v1"
+  data-role="showroom-dual-lens-proof-surface-and-launchpad"
   data-diamond-lock="CROWN_CUT_256_LATTICE_FIXED_FORM"
+  data-visible-radial-metric="16"
+  data-default-lens="crystal-form"
+  data-secondary-lens="lattice-structure"
   data-touch-glide-diamond="true"
-  data-js-cache-key="SHOWROOM_CROWN_CUT_LATTICE_DIAMOND_RENDER_TNT_v1"
+  data-js-cache-key="SHOWROOM_DUAL_LENS_DIAMOND_RENDER_TNT_v1"
   data-launchpad="characters-products-laws-globe-gauges"
   data-laws-cta="Jump to the Laws page and lock in."
   data-earth-record="false"
@@ -27,14 +30,13 @@
   <title>Showroom · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The Showroom proves the Crown Cut 256 Lattice Diamond and opens the launchpad into Characters, Products, Laws, Globe, and Gauges."
+    content="The Showroom proves the interactive Crown Cut 256 Lattice Diamond through Crystal Form and Lattice Structure, then opens the launchpad into Characters, Products, Laws, Globe, and Gauges."
   >
 
   <style>
     :root {
       --bg: #030812;
       --panel: rgba(7, 15, 31, 0.88);
-      --panel-2: rgba(11, 23, 44, 0.76);
       --line: rgba(244, 207, 131, 0.18);
       --line-soft: rgba(255,255,255,0.10);
       --text: rgba(238,244,255,0.94);
@@ -233,12 +235,18 @@
       50% { opacity: 0.78; transform: scale(1.08); }
     }
 
-    .eyebrow {
+    .eyebrow,
+    .diamond-title,
+    .launchpad-title {
       margin: 0 0 14px;
       color: var(--gold);
       font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing: 0.22em;
+      letter-spacing: 0.20em;
       text-transform: uppercase;
+    }
+
+    .eyebrow {
+      letter-spacing: 0.22em;
     }
 
     h1 {
@@ -311,13 +319,72 @@
       overflow: hidden;
     }
 
-    .diamond-title,
-    .launchpad-title {
-      margin: 0 0 14px;
-      color: var(--gold);
-      font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing: 0.20em;
+    .diamond-toolbar {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: stretch;
+      margin: 0 0 16px;
+    }
+
+    .lens-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.035);
+      width: fit-content;
+      align-self: start;
+    }
+
+    .lens-toggle button {
+      min-height: 38px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 0 14px;
+      color: rgba(238,244,255,0.76);
+      background: transparent;
+      font: inherit;
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .lens-toggle button[aria-pressed="true"] {
+      color: #06101c;
+      background: linear-gradient(135deg, #fff0b8, var(--gold));
+      border-color: rgba(244,207,131,0.72);
+    }
+
+    .lens-copy {
+      min-height: 104px;
+      border: 1px solid rgba(244,207,131,0.18);
+      border-radius: 22px;
+      padding: 16px;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(244,207,131,0.10), transparent 56%),
+        rgba(3,8,18,0.46);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.055);
+    }
+
+    .lens-copy b {
+      display: block;
+      color: var(--gold);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .lens-copy p {
+      margin: 0;
+      color: rgba(238,244,255,0.74);
+      font-size: 0.98rem;
+      line-height: 1.48;
     }
 
     .diamond-stage {
@@ -364,7 +431,7 @@
       left: 50%;
       bottom: clamp(92px, 18vw, 128px);
       transform: translateX(-50%);
-      width: min(calc(100% - 44px), 640px);
+      width: min(calc(100% - 44px), 680px);
       text-align: center;
       color: rgba(238,244,255,0.68);
       font-weight: 900;
@@ -399,7 +466,7 @@
 
     .object-card p,
     .launchpad-shell p {
-      max-width: 820px;
+      max-width: 840px;
       margin: 16px 0 0;
       color: var(--muted);
       font-size: clamp(1rem, 2.8vw, 1.22rem);
@@ -541,8 +608,16 @@
 
       .nav { justify-content: flex-start; }
 
-      .claim-strip {
+      .claim-strip,
+      .diamond-toolbar {
         grid-template-columns: 1fr;
+      }
+
+      .lens-toggle {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        border-radius: 22px;
       }
     }
 
@@ -605,10 +680,10 @@
 
     <main id="showroom-main">
       <section class="hero">
-        <p class="eyebrow">Showroom · diamond lattice proof surface</p>
+        <p class="eyebrow">Showroom · dual-lens diamond proof surface</p>
         <h1>The Diamond holds the room.</h1>
         <p class="lede">
-          The Showroom begins with the fixed Crown Cut 256 Lattice Diamond. Touch inspection moves the camera around a solid crystal form. The Diamond does not mutate. It proves the interactive build standard before the page opens the launchpad.
+          The Showroom begins with the fixed Crown Cut 256 Lattice Diamond. The page proves interactive 3D software expression, teaches the structure through two inspection lenses, then opens the launchpad into the story, the laws, and the community line.
         </p>
 
         <div class="claim-strip" aria-label="Showroom claims">
@@ -618,13 +693,13 @@
           </div>
 
           <div class="claim">
-            <b>Fixed Form</b>
-            <span>Touch rotates the inspection view. It does not reshape the crystal.</span>
+            <b>Dual Lens</b>
+            <span>Crystal Form shows the object. Lattice Structure reveals the order beneath it.</span>
           </div>
 
           <div class="claim">
             <b>Launchpad</b>
-            <span>The room opens the story, the community line, and the laws behind the clock.</span>
+            <span>The room opens Characters, Laws, Products, Globe, and Triple G.</span>
           </div>
         </div>
 
@@ -632,49 +707,74 @@
           <a class="button primary" href="#diamond-stage">Touch the Diamond</a>
           <a class="button violet" href="/characters/">Meet the Characters</a>
           <a class="button gold" href="/laws/">Jump to the Laws page and lock in</a>
-          <a class="button" href="/products/">Review Products</a>
+          <a class="button" href="/products/">Enter the Community Path</a>
           <a class="button" href="/showroom/globe/">Enter Globe Showcase</a>
           <a class="button" href="/gauges/">Run Triple G</a>
         </div>
       </section>
 
       <section class="diamond-shell" aria-label="Locked Crown Cut 256 Lattice Diamond">
-        <p class="diamond-title">Crown cut · 256 lattice · fixed crystal form</p>
+        <p class="diamond-title">Crown cut · 16 radial compass metric · 256 lattice</p>
+
+        <div class="diamond-toolbar" aria-label="Diamond inspection lenses">
+          <div class="lens-toggle" role="group" aria-label="Choose Diamond lens">
+            <button
+              type="button"
+              data-diamond-lens="crystal"
+              aria-pressed="true"
+            >Crystal Form</button>
+            <button
+              type="button"
+              data-diamond-lens="lattice"
+              aria-pressed="false"
+            >Lattice Structure</button>
+          </div>
+
+          <article class="lens-copy" aria-live="polite">
+            <b data-diamond-lens-title>Crystal Form</b>
+            <p data-diamond-lens-copy>
+              This view shows the finished Crown Cut Diamond as a crystal body: crown, table, faceted girdle, pavilion, culet, light, and touch inspection. This is the public object. It proves the site can render interactive 3D content with a fixed form instead of a flat graphic.
+            </p>
+          </article>
+        </div>
 
         <div
           id="diamond-stage"
           class="diamond-stage"
           data-showroom-diamond-stage
           data-diamond-lock="CROWN_CUT_256_LATTICE_FIXED_FORM"
+          data-visible-radial-metric="16"
           data-touch-glide="true"
           data-inspection-control="camera-view-rotation"
           data-geometry-mutable-by-touch="false"
           aria-label="Touchable Crown Cut 256 Lattice Diamond"
         >
           <canvas class="diamond-canvas" data-showroom-diamond-canvas></canvas>
-          <div class="diamond-route">Cover Diamond → Characters · Products · Laws · Globe · Triple G</div>
+          <div class="diamond-route" data-diamond-route-label>
+            Crystal Form → fixed Crown Cut Diamond · 16 compass points
+          </div>
           <div class="diamond-instruction">
-            Drag inside the box to inspect the fixed crystal. Release for momentum. Double tap to reset.
+            Drag inside the box to inspect the fixed Diamond. Release for momentum. Double tap to reset. Use the lens toggle to switch between finished crystal and lattice structure.
           </div>
         </div>
 
         <article class="object-card">
           <p class="label">Object truth</p>
-          <h2>The Diamond proves the build.</h2>
+          <h2>The Diamond proves the build. The dual lens teaches the structure.</h2>
           <p>
-            This is a fixed Crown Cut 256 Lattice Diamond. The visible crystal is cleaner, more disciplined, and built to read as a diamond body: table, crown, girdle, pavilion, culet, lattice, light, and touch inspection.
+            Crystal Form presents the Diamond as a finished object. Lattice Structure reveals the 16-point compass geometry and the 256-state address system behind the same object. The lens changes. The Diamond does not.
           </p>
           <p class="cache-proof">
-            HTML cache key: SHOWROOM_CROWN_CUT_LATTICE_LAUNCHPAD_TNT_v1
+            HTML cache key: SHOWROOM_DUAL_LENS_DIAMOND_EDUCATIONAL_LAUNCHPAD_TNT_v1
           </p>
         </article>
       </section>
 
       <section class="launchpad-shell" aria-label="Showroom launchpad">
-        <p class="launchpad-title">Launchpad · story · community · laws</p>
-        <h2>The Diamond proves the build. The launchpad opens the system.</h2>
+        <p class="launchpad-title">Launchpad · story · laws · community</p>
+        <h2>The launchpad opens the system.</h2>
         <p>
-          Choose the path that fits what you came to see. Enter the story behind the game, follow the community-based line, or view the tick-tock behind the clock.
+          Choose the path that fits what you came to see. Enter the story behind the game, view the tick-tock behind the clock, or move into the community path built around the products that serve the community.
         </p>
 
         <div class="launch-grid">
@@ -685,18 +785,18 @@
             <span>Enter Shadows Never Shatter in Mirrorland, meet the character roster, and begin the story behind the game.</span>
           </a>
 
-          <a class="launch-card" href="/products/">
-            <span class="launch-gem" style="--delay:-0.8s" aria-hidden="true"></span>
-            <b>Community Line</b>
-            <strong>Open Products</strong>
-            <span>Follow the people-facing side: tools, games, offerings, systems, and public-use structures.</span>
-          </a>
-
           <a class="launch-card" href="/laws/">
-            <span class="launch-gem" style="--delay:-1.4s" aria-hidden="true"></span>
+            <span class="launch-gem" style="--delay:-0.8s" aria-hidden="true"></span>
             <b>Science / Truth</b>
             <strong>Jump to the Laws page and lock in.</strong>
             <span>View the tick-tock behind the clock: governing logic, timing pressure, and consequence law.</span>
+          </a>
+
+          <a class="launch-card" href="/products/">
+            <span class="launch-gem" style="--delay:-1.4s" aria-hidden="true"></span>
+            <b>Community Line</b>
+            <strong>Open Products</strong>
+            <span>Products are the tools, games, offerings, and practical systems built to serve the community.</span>
           </a>
 
           <a class="launch-card" href="/showroom/globe/">
@@ -715,21 +815,28 @@
         </div>
 
         <template id="showroom-route-receipt" class="hidden-receipt">
-SHOWROOM_CROWN_CUT_LATTICE_LAUNCHPAD_TNT_v1
+SHOWROOM_DUAL_LENS_DIAMOND_EDUCATIONAL_LAUNCHPAD_TNT_v1
 route=/showroom/
 html=/showroom/index.html
 js=/showroom/index.js
-role=showroom_cover_object_and_launchpad
+role=dual_lens_showroom_proof_surface_and_launchpad
 diamond_lock=CROWN_CUT_256_LATTICE_FIXED_FORM
+visible_radial_metric=16
+lattice_states=256
+default_lens=crystal_form
+secondary_lens=lattice_structure
+lens_rule=toggle_changes_inspection_lens_not_object_identity
 touch_glide=true
 geometry_mutable_by_touch=false
 proof_object=crown_cut_256_lattice_diamond
-launchpad=characters,products,laws,globe,gauges
+crystal_form=public_finished_object
+lattice_structure=16_point_compass_geometry_and_256_lattice_logic
+launchpad=characters,laws,products,globe,gauges
 characters_role=story_game_doorway
-products_role=community_practical_doorway
 laws_role=science_truth_doorway
 laws_cta=Jump_to_the_Laws_page_and_lock_in
 laws_support_line=view_the_tick_tock_behind_the_clock
+products_role=community_path_products_serve_the_community
 globe_role=world_path_doorway
 gauges_role=proof_layer_doorway
 legacy_runtime_held=true
@@ -743,17 +850,17 @@ earth_record=false
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Showroom · Crown Cut 256 Lattice Diamond · Launchpad.
+      Diamond Gate Bridge · Showroom · Dual-Lens Crown Cut 256 Lattice Diamond · Launchpad.
     </footer>
   </div>
 
   <script>
-    window.DGB_SHOWROOM_HTML_CACHE_KEY = "SHOWROOM_CROWN_CUT_LATTICE_LAUNCHPAD_TNT_v1";
-    window.DGB_SHOWROOM_JS_CACHE_KEY = "SHOWROOM_CROWN_CUT_LATTICE_DIAMOND_RENDER_TNT_v1";
+    window.DGB_SHOWROOM_HTML_CACHE_KEY = "SHOWROOM_DUAL_LENS_DIAMOND_EDUCATIONAL_LAUNCHPAD_TNT_v1";
+    window.DGB_SHOWROOM_JS_CACHE_KEY = "SHOWROOM_DUAL_LENS_DIAMOND_RENDER_TNT_v1";
   </script>
   <script
     type="module"
-    src="/showroom/index.js?v=SHOWROOM_CROWN_CUT_LATTICE_DIAMOND_RENDER_TNT_v1"
+    src="/showroom/index.js?v=SHOWROOM_DUAL_LENS_DIAMOND_RENDER_TNT_v1"
   ></script>
 </body>
 </html>

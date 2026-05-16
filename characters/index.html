@@ -3,8 +3,8 @@
   lang="en"
   data-route="/characters/"
   data-page="characters"
-  data-contract="CHARACTERS_MIRRORLAND_SHOW_GAME_DOSSIER_FULL_TNT_v1"
-  data-previous-contract="CHARACTERS_MIRRORLAND_LANGUAGE_EXPRESSION_FINAL_AUDIT_v1"
+  data-contract="SHADOWS_NEVER_SHATTER_MIRRORLAND_THEMATIC_FINAL_TNT_v1"
+  data-previous-contract="SHADOWS_NEVER_SHATTER_MIRRORLAND_THEMATIC_FINAL_BINDING_v1"
   data-role="show-game-character-dossier"
   data-narrative-anchor="Shadows Never Shatter in Mirrorland"
   data-series-model="perspective-series-nine-episodes-nine-seasons"
@@ -25,7 +25,7 @@
   <title>Characters · Shadows Never Shatter in Mirrorland</title>
   <meta
     name="description"
-    content="Meet the first faces of Shadows Never Shatter in Mirrorland, a perspective series and game world in development."
+    content="Meet the first faces of Shadows Never Shatter in Mirrorland, a perspective series and game world in development where possible futures become visible before they become final."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/characters/">
   <meta name="theme-color" content="#02040b">
@@ -42,7 +42,6 @@
       --blue:#8dd8ff;
       --green:#9ef0bf;
       --violet:#c6a6ff;
-      --red:#ff9f9f;
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.48);
@@ -236,7 +235,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(42rem,70vw,56rem);
+      min-height:clamp(48rem,78vw,64rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -340,7 +339,7 @@
     }
 
     .lead{
-      max-width:940px;
+      max-width:980px;
       position:relative;
       z-index:2;
     }
@@ -479,9 +478,7 @@
       font-weight:950;
     }
 
-    .preface[open] summary::after{
-      content:"–";
-    }
+    .preface[open] summary::after{content:"–"}
 
     .preface p{
       padding:1rem;
@@ -551,9 +548,7 @@
       animation:gemTurn 28s linear infinite;
     }
 
-    @keyframes gemTurn{
-      to{transform:rotate(360deg)}
-    }
+    @keyframes gemTurn{to{transform:rotate(360deg)}}
 
     .select-card:hover,
     .select-card:focus-visible{
@@ -712,10 +707,7 @@
       padding:0 1rem 1rem;
     }
 
-    .tabs{
-      display:grid;
-      gap:.75rem;
-    }
+    .tabs{display:grid;gap:.75rem}
 
     .tab{
       border:1px solid rgba(255,255,255,.10);
@@ -860,11 +852,7 @@
     }
 
     @media (max-width:980px){
-      .topbar{
-        grid-template-columns:1fr;
-        align-items:start;
-      }
-
+      .topbar{grid-template-columns:1fr;align-items:start}
       .nav{justify-content:flex-start}
       .series-grid,
       .preface-grid{grid-template-columns:1fr}
@@ -873,16 +861,14 @@
     @media (max-width:720px){
       .shell{width:min(100% - 22px,var(--max))}
       h1{font-size:clamp(3.2rem,16vw,5.6rem)}
-      .hero{min-height:46rem;padding:1rem}
+      .hero{min-height:56rem;padding:1rem}
       .actions{display:grid}
       .button{width:100%}
       .select-grid,
       .move-grid,
       .quad{grid-template-columns:1fr}
 
-      summary.character-summary{
-        grid-template-columns:auto 1fr;
-      }
+      summary.character-summary{grid-template-columns:auto 1fr}
 
       .summary-gem{
         grid-column:1 / -1;
@@ -1017,22 +1003,42 @@
 
         <h1 id="page-title">Shadows Never Shatter in Mirrorland.</h1>
 
-        <div class="subtitle">Enter Mirrorland: consequence, survival, and possibility live inside the same countdown.</div>
+        <div class="subtitle">A mirror can shatter. A shadow cannot.</div>
 
         <p class="lead">
-          Mirrorland is the world behind the window. ZIONTS shows the consequence path. H-Earth tests survival at ground level. Audralia carries possibility: the living planet where the manor stands, the mission becomes physical, and the future has to be built before time runs out.
+          Everything humanity has ever done casts a shadow into the future. Every invention. Every wound. Every city. Every lie. Every law. Every breakthrough. Every unfinished promise.
+        </p>
+
+        <p class="lead">
+          Mirrorland is where that shadow becomes visible — not as one fixed destiny, but as possible futures.
         </p>
 
         <div class="declaration">
-          The clock is set at 300 years. A planetary transition is coming. If the technology is ready, Mirrorland and Earth can survive. If it is not, annihilation remains possible on both sides.
+          ZIONTS is consequence. H-Earth is survival. Audralia is possibility.
         </div>
 
         <p class="lead">
-          Dextrion remains Earth-side at the public Mirror Manor. He detects the Bermuda-area anomaly and sends the first team through. The crossing works. The return path never does. A one-way teleport changes everything. Builders, engineers, protectors, field operators, and survival crews cross into Mirrorland knowing they may not come back.
+          ZIONTS is the warning path: the future where a living planet can no longer carry life. H-Earth is the condition path: earth, water, air, shelter, bodies, cities, and systems under pressure. Audralia is the living planet inside Mirrorland: the clean-slate preparation field where the manor stands, the mission becomes physical, and technology can advance without Earth’s historical deficit already crushing the foundation.
+        </p>
+
+        <div class="declaration">
+          The clock is set at 300 years. Time will happen. The transition is coming. Preparation is the variable.
+        </div>
+
+        <p class="lead">
+          Earth’s rules apply in Mirrorland. Physics applies. Consequence applies. Responsibility applies. If Mirrorland changes direction, Earth changes.
         </p>
 
         <p class="lead">
-          The series begins after the manor is already built. The show follows the people carrying the mission. The game expands the world around them. Find your mirror. Face the rules. Decide what survival means when the future is no longer somewhere else.
+          Every advancement proven there can be mirrored back here. Every system built there becomes a chance to prepare Earth before the transition arrives.
+        </p>
+
+        <p class="lead">
+          Then Dextrion detects the Bermuda-area anomaly from the public Mirror Manor on Earth. The first team crosses. The return path never opens. A one-way teleport changes everything.
+        </p>
+
+        <p class="lead">
+          Builders, engineers, protectors, field operators, and survival crews cross into Mirrorland knowing they may not come back. The series begins after the manor already stands. The show follows the people carrying the mission. The game expands the world around them.
         </p>
 
         <div class="series-grid">
@@ -1066,43 +1072,43 @@
 
         <div class="preface-grid">
           <details class="preface" open>
+            <summary>The Title</summary>
+            <p>A mirror can shatter. A shadow cannot. Mirrorland makes the audience think about reflection and breakage, but the shadow reveals the real question: what future are we already casting?</p>
+          </details>
+
+          <details class="preface">
             <summary>Mirrorland</summary>
-            <p>Enter the world behind the window. Mirrorland is where consequence, survival, and possibility collide, and where the rules that threaten Earth become playable, visible, and personal.</p>
+            <p>Mirrorland is the field where possible futures become visible before they become final. It is not an escape from Earth. Earth’s rules apply there.</p>
           </details>
 
           <details class="preface">
             <summary>ZIONTS · Consequence</summary>
-            <p>The warning path. ZIONTS shows what remains when a living world can no longer carry life. Every false restoration risks creating another version of it.</p>
+            <p>The warning path: what remains when a living world can no longer carry life.</p>
           </details>
 
           <details class="preface">
             <summary>H-Earth · Survival</summary>
-            <p>The condition path. H-Earth tests whether earth, water, air, shelter, bodies, cities, and systems can still hold when survival stops being theoretical.</p>
+            <p>The condition path: earth, water, air, shelter, bodies, cities, and systems under pressure.</p>
           </details>
 
           <details class="preface">
             <summary>Audralia · Possibility</summary>
-            <p>The living future. Audralia is the planet inside Mirrorland where the manor stands, the mission becomes physical, and the future has to be built before time runs out.</p>
+            <p>The preparation field: the living planet inside Mirrorland where the manor stands, technology can advance, and what works there can be mirrored back to Earth.</p>
           </details>
 
           <details class="preface">
             <summary>The 300-Year Clock</summary>
-            <p>A planetary transition is coming. The countdown gives the series its pressure and the game its stakes: prepare the technology or risk annihilation on both sides.</p>
+            <p>Time will happen. The transition is coming. Preparation is the variable.</p>
           </details>
 
           <details class="preface">
             <summary>The One-Way Crossing</summary>
-            <p>The crossing works. The return path does not. Every person sent through may be building a future they cannot leave.</p>
+            <p>Dextrion detects the Bermuda-area anomaly from Earth. The first team crosses. The return path fails. The mission becomes physical.</p>
           </details>
 
           <details class="preface">
-            <summary>Mirror Manor on Earth</summary>
-            <p>Dextrion remains Earth-side at the public Mirror Manor, sending technology, teams, and decisions through a door that does not return them.</p>
-          </details>
-
-          <details class="preface">
-            <summary>Mirrored NPCs</summary>
-            <p>As the game world develops, every person can eventually face a mirrored counterpart inside Mirrorland. Find your mirror. Face the rules. Decide what survives.</p>
+            <summary>Mirrored Futures</summary>
+            <p>As the game world develops, mirrored NPC counterparts make the future personal. Find your mirror. Face the rules. Decide what survival means.</p>
           </details>
         </div>
       </section>
@@ -1317,9 +1323,9 @@
                   <summary>Mirrorland Function</summary>
                   <div class="tab-content"><div class="quad">
                     <article class="field"><b>Story Role</b><p>Dextrion remains Earth-side at Mirror Manor, sending technology, people, and decisions into Mirrorland.</p></article>
-                    <article class="field"><b>Pressure</b><p>The same rules apply to Earth. If he fails to prepare Mirrorland, Earth remains exposed to the same transition.</p></article>
+                    <article class="field"><b>Pressure</b><p>The same transition pressures Earth. If he fails to prepare Mirrorland, Earth remains exposed.</p></article>
                     <article class="field"><b>On Screen / In Game</b><p>Earth-side lab play, remote upgrades, teleport windows, system locks, countdown calculations, and impossible send/no-send choices.</p></article>
-                    <article class="field"><b>What Changes</b><p>He binds both worlds into one mission: protect Mirrorland, save Earth.</p></article>
+                    <article class="field"><b>What Changes</b><p>He binds both worlds into one mission: change Mirrorland’s direction so Earth can change with it.</p></article>
                   </div></div>
                 </details>
 
@@ -1921,19 +1927,24 @@
         </div>
 
         <template id="route-receipt" data-route-receipt>
-CHARACTERS_MIRRORLAND_SHOW_GAME_DOSSIER_FULL_TNT_v1
-previous=CHARACTERS_MIRRORLAND_LANGUAGE_EXPRESSION_FINAL_AUDIT_v1
+SHADOWS_NEVER_SHATTER_MIRRORLAND_THEMATIC_FINAL_TNT_v1
+previous=SHADOWS_NEVER_SHATTER_MIRRORLAND_THEMATIC_FINAL_BINDING_v1
 route=/characters/
 page=characters
 role=show_game_character_dossier
 story_anchor=Shadows_Never_Shatter_in_Mirrorland
+title_mechanism=a_mirror_can_shatter_a_shadow_cannot
+shadow_law=shadows_do_not_shatter_anywhere
 voice=show_game_promotional_in_world_declarative
-opening_order=mirrorland_three_paths_300_year_clock_dextrion_anomaly_one_way_crossing_manor_built_characters
+opening_order=title_mechanism_future_shadow_possible_futures_mirrorland_three_paths_300_year_clock_preparation_variable_earth_rules_apply_in_mirrorland_mirrorland_changes_earth_changes_dextrion_anomaly_one_way_crossing_manor_built_characters
 series_model=perspective_series_nine_episodes_written_nine_seasons_target
 game_world=in_development
 audralia_spelling_valid=true
 audrelia_forbidden=true
-preface_dropdowns=mirrorland,zionts,h_earth,audralia,300_year_clock,one_way_crossing,mirror_manor_on_earth,mirrored_npcs
+causal_law=if_mirrorland_changes_direction_earth_changes
+rule_law=earth_rules_apply_in_mirrorland
+time_law=300_year_clock_preset_time_will_happen_preparation_is_variable
+preface_dropdowns=the_title,mirrorland,zionts,h_earth,audralia,300_year_clock,one_way_crossing,mirrored_futures
 lattice=8_characters_x_8_tabs_x_4_story_fields_256_states
 public_fields=story_role,pressure,on_screen_in_game,what_changes
 characters=auren_vale,dextrion,alaric,tarian,elara,soren,jeeves,remote_team
@@ -1952,7 +1963,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      CHARACTERS_MIRRORLAND_SHOW_GAME_DOSSIER_FULL_TNT_v1 · Shadows Never Shatter in Mirrorland · Show/Game Character Dossier.
+      SHADOWS_NEVER_SHATTER_MIRRORLAND_THEMATIC_FINAL_TNT_v1 · Shadows Never Shatter in Mirrorland · Show/Game Character Dossier.
     </footer>
   </div>
 </body>

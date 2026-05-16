@@ -3,8 +3,8 @@
   lang="en"
   data-route="/showroom/globe/audralia/"
   data-page="audralia-satellite-globe-access"
-  data-contract="AUDRALIA_EXISTING_GLOBE_BOX_CONTAINMENT_SURFACE_TNT_v7"
-  data-previous-contract="AUDRALIA_RESTORE_EXISTING_SATELLITE_GLOBE_SURFACE_TNT_v6"
+  data-contract="AUDRALIA_EXISTING_GLOBE_HTML_MARRIAGE_TNT_v8"
+  data-previous-contract="AUDRALIA_EXISTING_GLOBE_BOX_CONTAINMENT_SURFACE_TNT_v7"
   data-role="showroom-globe-child-route"
   data-world="Audralia"
   data-canonical-spelling="A_U_D_R_A_L_I_A"
@@ -13,6 +13,7 @@
   data-view-model="satellite-orbital-existing-globe-access-contained"
   data-route-loader="/showroom/globe/audralia/index.js"
   data-route-loader-contract="AUDRALIA_EXISTING_GLOBE_BOX_CONTAINMENT_LOADER_TNT_v7"
+  data-html-marriage-contract="AUDRALIA_EXISTING_GLOBE_HTML_MARRIAGE_TNT_v8"
   data-canvas-contract="AUDRALIA_EXISTING_GLOBE_BOXED_ASSET_CONSUMER_TNT_v7"
   data-generated-image="false"
   data-graphic-box="false"
@@ -659,6 +660,8 @@
           class="stage"
           id="audralia-stage"
           data-audralia-stage="true"
+          data-audralia-box-stage="true"
+          data-audralia-globe-stage="true"
           data-loader-state="pending"
           aria-label="Audralia boxed satellite globe stage"
         >
@@ -669,6 +672,11 @@
           <div
             id="audraliaCanvasMount"
             data-audralia-canvas-mount="true"
+            data-audralia-globe-mount="true"
+            data-audralia-satellite-mount="true"
+            data-audralia-contained-mount="true"
+            data-audralia-box-target="true"
+            data-audralia-adoption-target="true"
             aria-label="Audralia boxed satellite globe canvas mount"
           ></div>
         </div>
@@ -712,8 +720,8 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_EXISTING_GLOBE_BOX_CONTAINMENT_SURFACE_TNT_v7
-previous=AUDRALIA_RESTORE_EXISTING_SATELLITE_GLOBE_SURFACE_TNT_v6
+AUDRALIA_EXISTING_GLOBE_HTML_MARRIAGE_TNT_v8
+previous=AUDRALIA_EXISTING_GLOBE_BOX_CONTAINMENT_SURFACE_TNT_v7
 route=/showroom/globe/audralia/
 page=audralia
 role=showroom_globe_child_route
@@ -724,12 +732,16 @@ canonical_spelling=A_U_D_R_A_L_I_A
 parent_route=/showroom/globe/
 route_loader=/showroom/globe/audralia/index.js
 route_loader_contract=AUDRALIA_EXISTING_GLOBE_BOX_CONTAINMENT_LOADER_TNT_v7
+html_marriage_contract=AUDRALIA_EXISTING_GLOBE_HTML_MARRIAGE_TNT_v8
+script_cache_key=AUDRALIA_EXISTING_GLOBE_HTML_MARRIAGE_TNT_v8
 canvas_mount=#audraliaCanvasMount
 canvas_contract=AUDRALIA_EXISTING_GLOBE_BOXED_ASSET_CONSUMER_TNT_v7
-restore_goal=restore_the_existing_Audralia_globe_built_in_assets_inside_stage_box
+restore_goal=marry_current_loader_to_containment_html_without_physical_redesign
+physical_redesign=false
 containment=true
 stage_overflow_hidden=true
 asset_adoption=true
+mount_aliases=canvas_mount,globe_mount,satellite_mount,contained_mount,box_target,adoption_target
 satellite_access=true
 existing_globe_required=true
 asset_chain_required=true
@@ -738,7 +750,7 @@ generated_image=false
 graphic_box=false
 streaming=false
 visual_pass_claimed=false
-route_owns=route_shell,public_copy,canvas_mount,public_status,cache_key_bump,containment_box
+route_owns=route_shell,public_copy,canvas_mount,public_status,cache_key_bump,containment_box,legacy_mount_aliases
 route_does_not_own=land_footprint,climate_authority,surface_truth,gauges_logic,planet_generation,procedural_landscape
 receipt_visibility=hidden_template_only
       </template>
@@ -751,10 +763,15 @@ receipt_visibility=hidden_template_only
 
   <script>
     window.DGB_AUDRALIA_ROUTE_KEY = "AUDRALIA_EXISTING_GLOBE_BOX_CONTAINMENT_LOADER_TNT_v7";
+    window.DGB_AUDRALIA_HTML_MARRIAGE_KEY = "AUDRALIA_EXISTING_GLOBE_HTML_MARRIAGE_TNT_v8";
+    window.DGB_AUDRALIA_BOX_CONTAINMENT = true;
+    window.DGB_AUDRALIA_RESTORE_EXISTING_GLOBE = true;
+    window.DGB_AUDRALIA_NO_PROCEDURAL_FALLBACK = true;
   </script>
   <script
-    src="/showroom/globe/audralia/index.js?v=AUDRALIA_EXISTING_GLOBE_BOX_CONTAINMENT_LOADER_TNT_v7"
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_EXISTING_GLOBE_HTML_MARRIAGE_TNT_v8"
     data-audralia-loader-script="AUDRALIA_EXISTING_GLOBE_BOX_CONTAINMENT_LOADER_TNT_v7"
+    data-audralia-html-marriage="AUDRALIA_EXISTING_GLOBE_HTML_MARRIAGE_TNT_v8"
     defer
   ></script>
 </body>

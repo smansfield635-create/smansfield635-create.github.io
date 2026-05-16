@@ -2,18 +2,18 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/"
-  data-page="audralia-satellite-access"
-  data-contract="AUDRALIA_SATELLITE_ASSET_ACCESS_SURFACE_TNT_v5"
-  data-previous-contract="AUDRALIA_POST_NARRATIVE_LIVING_WORLD_SURFACE_TNT_v4"
+  data-page="audralia-satellite-globe-access"
+  data-contract="AUDRALIA_RESTORE_EXISTING_SATELLITE_GLOBE_SURFACE_TNT_v6"
+  data-previous-contract="AUDRALIA_SATELLITE_ASSET_ACCESS_SURFACE_TNT_v5"
   data-role="showroom-globe-child-route"
   data-world="Audralia"
   data-canonical-spelling="A_U_D_R_A_L_I_A"
   data-parent-route="/showroom/globe/"
   data-public-path="possibility"
-  data-view-model="satellite-orbital-asset-access"
+  data-view-model="satellite-orbital-existing-globe-access"
   data-route-loader="/showroom/globe/audralia/index.js"
-  data-route-loader-contract="AUDRALIA_SATELLITE_ASSET_ACCESS_LOADER_TNT_v5"
-  data-canvas-contract="AUDRALIA_CANVAS_ASSET_CONSUMER_SATELLITE_VIEW_TNT_v5"
+  data-route-loader-contract="AUDRALIA_RESTORE_EXISTING_SATELLITE_GLOBE_LOADER_TNT_v6"
+  data-canvas-contract="AUDRALIA_EXISTING_GLOBE_ASSET_CONSUMER_TNT_v6"
   data-generated-image="false"
   data-graphic-box="false"
   data-procedural-world-fallback="false"
@@ -25,10 +25,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Audralia · The Possibility Path · Diamond Gate Bridge</title>
+  <title>Audralia · Satellite Globe Access · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Audralia is the possibility path inside the Showroom Globe: a satellite access view into the developed Audralia planet assets."
+    content="Audralia is the possibility path inside the Showroom Globe: satellite access into the existing Audralia globe asset chain."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/audralia/">
   <meta name="theme-color" content="#02040b">
@@ -45,7 +45,6 @@
       --blue:#8dd8ff;
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
-      --green-line:rgba(158,240,191,.26);
       --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
     }
@@ -237,31 +236,6 @@
       padding:clamp(1.45rem,5vw,3.4rem);
       margin-top:.6rem;
       isolation:isolate;
-    }
-
-    .hero::before {
-      content:"";
-      position:absolute;
-      right:clamp(1rem,6vw,5.5rem);
-      top:50%;
-      z-index:0;
-      width:clamp(9rem,25vw,18rem);
-      height:clamp(9rem,25vw,18rem);
-      border:1px solid rgba(158,240,191,.16);
-      border-radius:999px;
-      transform:translateY(-50%);
-      background:
-        radial-gradient(circle at 44% 36%,rgba(158,240,191,.14),transparent 38%),
-        radial-gradient(circle at 56% 66%,rgba(36,120,255,.16),transparent 62%),
-        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
-      animation:anchorPulse 8s ease-in-out infinite;
-      pointer-events:none;
-      opacity:.52;
-    }
-
-    @keyframes anchorPulse {
-      0%,100% { opacity:.38; filter:brightness(.95); }
-      50% { opacity:.62; filter:brightness(1.1); }
     }
 
     .kicker {
@@ -568,23 +542,14 @@
     }
 
     @media (max-width:980px) {
-      .topbar {
-        grid-template-columns:1fr;
-        align-items:start;
-      }
-
+      .topbar { grid-template-columns:1fr; align-items:start; }
       .nav { justify-content:flex-start; }
     }
 
     @media (max-width:720px) {
       .shell { width:min(100% - 22px,var(--max)); }
       h1 { font-size:clamp(3rem,17vw,5rem); }
-
-      .hero {
-        min-height:27rem;
-        padding:1rem;
-      }
-
+      .hero { min-height:27rem; padding:1rem; }
       .actions { display:grid; }
       .button { width:100%; }
       .cards { grid-template-columns:1fr; }
@@ -634,14 +599,14 @@
 
         <h1 id="page-title">Possibility is not fantasy.</h1>
 
-        <div class="subtitle">Satellite access to a living-world construct.</div>
+        <div class="subtitle">Satellite access to the existing Audralia globe.</div>
 
         <p class="lead">
           A future worth reaching should be visible before it is lost.
         </p>
 
         <div class="principle">
-          Audralia is accessed from orbit. This page does not invent the planet; it opens the viewer into the developed Audralia asset chain.
+          This route restores the developed Audralia globe path. It does not paint a replacement landscape.
         </div>
 
         <div class="actions">
@@ -653,24 +618,24 @@
       </section>
 
       <section class="panel section" aria-labelledby="stage-title">
-        <div class="kicker">Satellite access</div>
-        <h2 id="stage-title">The canvas consumes the developed planet assets.</h2>
+        <div class="kicker">Satellite globe access</div>
+        <h2 id="stage-title">The canvas mounts the existing globe asset chain.</h2>
 
-        <div class="stage" id="audralia-stage" data-audralia-stage="true" data-loader-state="pending" aria-label="Audralia satellite access stage">
+        <div class="stage" id="audralia-stage" data-audralia-stage="true" data-loader-state="pending" aria-label="Audralia satellite globe stage">
           <div class="stage-fallback" data-stage-fallback="true">
-            Connecting to Audralia satellite asset view. No procedural substitute will be painted.
+            Connecting to the existing Audralia globe. No procedural substitute will be painted.
           </div>
 
           <div
             id="audraliaCanvasMount"
             data-audralia-canvas-mount="true"
-            aria-label="Audralia satellite canvas mount"
+            aria-label="Audralia satellite globe canvas mount"
           ></div>
         </div>
 
         <div class="public-status" aria-live="polite">
-          <span id="audraliaRouteLoaderNotice" data-audralia-route-loader-notice="true">Satellite bridge preparing</span>
-          <span id="audraliaRouteStatus" data-audralia-route-status="true">Asset chain pending</span>
+          <span id="audraliaRouteLoaderNotice" data-audralia-route-loader-notice="true">Globe bridge preparing</span>
+          <span id="audraliaRouteStatus" data-audralia-route-status="true">Existing asset chain pending</span>
         </div>
       </section>
 
@@ -680,21 +645,21 @@
 
         <div class="cards">
           <article class="card">
-            <b>Planet assets</b>
-            <strong>The world is already developed downstream.</strong>
-            <span>The route must access Audralia through the existing planet asset chain rather than generating a replacement scene.</span>
+            <b>Existing globe</b>
+            <strong>The developed Audralia planet is the source.</strong>
+            <span>The route must attach to the existing globe assets rather than generating a new land, water, or sky scene.</span>
           </article>
 
           <article class="card">
             <b>Satellite view</b>
             <strong>The visitor enters from orbit.</strong>
-            <span>The public read should feel like remote planetary inspection: surface, atmosphere, land, water, and motion from above.</span>
+            <span>The public read should feel like remote planetary inspection of the already-built world.</span>
           </article>
 
           <article class="card">
             <b>Canvas</b>
             <strong>The page displays the world.</strong>
-            <span>The canvas is a public window. It may consume assets, mount controls, and display motion; it may not author the planet.</span>
+            <span>The canvas may consume the asset chain and mount controls; it may not author the planet.</span>
           </article>
         </div>
 
@@ -707,23 +672,23 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_SATELLITE_ASSET_ACCESS_SURFACE_TNT_v5
-previous=AUDRALIA_POST_NARRATIVE_LIVING_WORLD_SURFACE_TNT_v4
+AUDRALIA_RESTORE_EXISTING_SATELLITE_GLOBE_SURFACE_TNT_v6
+previous=AUDRALIA_SATELLITE_ASSET_ACCESS_SURFACE_TNT_v5
 route=/showroom/globe/audralia/
 page=audralia
 role=showroom_globe_child_route
 public_path=possibility
-view_model=satellite_orbital_asset_access
+view_model=satellite_orbital_existing_globe_access
 world=Audralia
 canonical_spelling=A_U_D_R_A_L_I_A
 parent_route=/showroom/globe/
 route_loader=/showroom/globe/audralia/index.js
-route_loader_contract=AUDRALIA_SATELLITE_ASSET_ACCESS_LOADER_TNT_v5
+route_loader_contract=AUDRALIA_RESTORE_EXISTING_SATELLITE_GLOBE_LOADER_TNT_v6
 canvas_mount=#audraliaCanvasMount
-canvas_contract=AUDRALIA_CANVAS_ASSET_CONSUMER_SATELLITE_VIEW_TNT_v5
-post_narrative_surface=true
-legacy_pre_narrative_import=false
+canvas_contract=AUDRALIA_EXISTING_GLOBE_ASSET_CONSUMER_TNT_v6
+restore_goal=restore_the_existing_Audralia_globe_built_in_assets
 satellite_access=true
+existing_globe_required=true
 asset_chain_required=true
 procedural_world_fallback=false
 generated_image=false
@@ -731,22 +696,22 @@ graphic_box=false
 streaming=false
 visual_pass_claimed=false
 route_owns=route_shell,public_copy,canvas_mount,public_status,cache_key_bump
-route_does_not_own=land_footprint,climate_authority,surface_truth,gauges_logic,planet_generation
+route_does_not_own=land_footprint,climate_authority,surface_truth,gauges_logic,planet_generation,procedural_landscape
 receipt_visibility=hidden_template_only
       </template>
     </main>
 
     <footer>
-      Audralia · The Possibility Path · Satellite asset access.
+      Audralia · The Possibility Path · Existing satellite globe access.
     </footer>
   </div>
 
   <script>
-    window.DGB_AUDRALIA_ROUTE_KEY = "AUDRALIA_SATELLITE_ASSET_ACCESS_LOADER_TNT_v5";
+    window.DGB_AUDRALIA_ROUTE_KEY = "AUDRALIA_RESTORE_EXISTING_SATELLITE_GLOBE_LOADER_TNT_v6";
   </script>
   <script
-    src="/showroom/globe/audralia/index.js?v=AUDRALIA_SATELLITE_ASSET_ACCESS_LOADER_TNT_v5"
-    data-audralia-loader-script="AUDRALIA_SATELLITE_ASSET_ACCESS_LOADER_TNT_v5"
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_RESTORE_EXISTING_SATELLITE_GLOBE_LOADER_TNT_v6"
+    data-audralia-loader-script="AUDRALIA_RESTORE_EXISTING_SATELLITE_GLOBE_LOADER_TNT_v6"
     defer
   ></script>
 </body>

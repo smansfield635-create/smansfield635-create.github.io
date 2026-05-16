@@ -1,23 +1,24 @@
 // /door/index.js
 // TNT FULL-FILE REPLACEMENT
-// DOOR_TRUE_3D_THRESHOLD_CRYSTAL_ORBIT_HTML_JS_TNT_v1
+// DOOR_TRUE_3D_SOLID_OPAQUE_ROUTE_GEM_MATERIAL_HTML_JS_TNT_v2
 // Scope: Door threshold crystal mini-engine only.
-// Purpose:
-// - Keep accepted center Door anchor in DOM/SVG.
-// - Render eight outer route gems as true 3D WebGL mesh crystals.
-// - Preserve one shared orbital direction.
-// - Keep labels readable through projected HTML overlays.
+// Role:
+// - Preserve center Door gem as DOM/SVG gravity anchor.
+// - Render eight outer route gems as solid opaque true 3D WebGL mesh crystals.
+// - Keep one shared orbit direction.
+// - Keep labels stabilized and front-facing.
+// - Reduce translucent ghosting when route crystals cross.
 // - No generated image. No GraphicBox. No heavy runtime.
 
-const DOOR_TRUE_3D_THRESHOLD_STATE = Object.freeze({
-  contract: "DOOR_TRUE_3D_THRESHOLD_CRYSTAL_ORBIT_HTML_JS_TNT_v1",
+const DOOR_SOLID_GEM_STATE = Object.freeze({
+  contract: "DOOR_TRUE_3D_SOLID_OPAQUE_ROUTE_GEM_MATERIAL_HTML_JS_TNT_v2",
   route: "/door/",
   role: "entry-threshold",
-  renderer: "native-webgl-mini-engine",
-  centerAnchorPreserved: true,
-  outerCrystals: "true-3d-webgl-mesh",
+  centerGem: "center-of-gravity",
+  outerGems: "solid-opaque-true-3d-webgl-mesh",
+  labelMethod: "stabilized-front-facing-html-overlay",
   sharedOrbitDirection: true,
-  labelMethod: "projected-html-overlay",
+  material: "solid-opaque-crystal-body",
   generatedImage: false,
   graphicBox: false,
   heavyRuntimeLoaded: false
@@ -27,27 +28,44 @@ const TAU = Math.PI * 2;
 const SEGMENTS = 16;
 
 const ROUTES = Object.freeze([
-  { title: "North", sub: "Interface", href: "/gauges/", tint: [0.78, 0.66, 1.00] },
-  { title: "Compass", sub: "Root", href: "/", tint: [0.86, 0.82, 1.00] },
-  { title: "East", sub: "Story", href: "/showroom/globe/", tint: [0.72, 0.88, 1.00] },
-  { title: "Characters", sub: "Roster", href: "/characters/", tint: [0.92, 0.76, 1.00] },
-  { title: "South", sub: "Laws", href: "/laws/", tint: [1.00, 0.78, 0.92] },
-  { title: "Home", sub: "Return", href: "/home/", tint: [0.82, 0.94, 1.00] },
-  { title: "West", sub: "Community", href: "/products/", tint: [0.82, 0.72, 1.00] },
-  { title: "Frontier", sub: "Future", href: "/frontier/", tint: [0.96, 0.86, 1.00] }
+  { title: "North", sub: "Interface", href: "/gauges/", tint: [0.64, 0.48, 1.00] },
+  { title: "Compass", sub: "Root", href: "/", tint: [0.74, 0.64, 1.00] },
+  { title: "East", sub: "Story", href: "/showroom/globe/", tint: [0.48, 0.78, 1.00] },
+  { title: "Characters", sub: "Roster", href: "/characters/", tint: [0.86, 0.48, 1.00] },
+  { title: "South", sub: "Laws", href: "/laws/", tint: [1.00, 0.58, 0.86] },
+  { title: "Home", sub: "Return", href: "/home/", tint: [0.60, 0.82, 1.00] },
+  { title: "West", sub: "Community", href: "/products/", tint: [0.58, 0.42, 1.00] },
+  { title: "Frontier", sub: "Future", href: "/frontier/", tint: [0.84, 0.66, 1.00] }
 ]);
 
-const state = {
+const engineState = {
   raf: 0,
-  dpr: 1,
-  reducedMotion: false,
   ready: false,
-  lastWidth: 0,
-  lastHeight: 0
+  reducedMotion: false,
+  dpr: 1,
+  vertexCount: 0,
+  lastStatus: "booting"
 };
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
+}
+
+function normalize3(v) {
+  const length = Math.hypot(v[0], v[1], v[2]) || 1;
+  return [v[0] / length, v[1] / length, v[2] / length];
+}
+
+function subtract3(a, b) {
+  return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+}
+
+function cross3(a, b) {
+  return [
+    a[1] * b[2] - a[2] * b[1],
+    a[2] * b[0] - a[0] * b[2],
+    a[0] * b[1] - a[1] * b[0]
+  ];
 }
 
 function createShader(gl, type, source) {
@@ -56,9 +74,9 @@ function createShader(gl, type, source) {
   gl.compileShader(shader);
 
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    const log = gl.getShaderInfoLog(shader) || "Unknown shader compile failure.";
+    const message = gl.getShaderInfoLog(shader) || "shader compile failed";
     gl.deleteShader(shader);
-    throw new Error(log);
+    throw new Error(message);
   }
 
   return shader;
@@ -77,48 +95,27 @@ function createProgram(gl, vertexSource, fragmentSource) {
   gl.deleteShader(fragment);
 
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    const log = gl.getProgramInfoLog(program) || "Unknown program link failure.";
+    const message = gl.getProgramInfoLog(program) || "program link failed";
     gl.deleteProgram(program);
-    throw new Error(log);
+    throw new Error(message);
   }
 
   return program;
 }
 
-function subtract3(a, b) {
-  return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
-}
-
-function cross3(a, b) {
-  return [
-    a[1] * b[2] - a[2] * b[1],
-    a[2] * b[0] - a[0] * b[2],
-    a[0] * b[1] - a[1] * b[0]
-  ];
-}
-
-function dot3(a, b) {
-  return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-}
-
-function normalize3(v) {
-  const length = Math.hypot(v[0], v[1], v[2]) || 1;
-  return [v[0] / length, v[1] / length, v[2] / length];
-}
-
 function ring(rx, y, rz, offset = 0) {
-  const points = [];
+  const out = [];
 
   for (let i = 0; i < SEGMENTS; i += 1) {
     const angle = (i / SEGMENTS) * TAU + offset;
-    points.push([
+    out.push([
       Math.cos(angle) * rx,
       y,
       Math.sin(angle) * rz
     ]);
   }
 
-  return points;
+  return out;
 }
 
 function buildCrystalGeometry() {
@@ -139,13 +136,13 @@ function buildCrystalGeometry() {
     pushTriangle(a, c, d);
   }
 
-  const table = ring(0.42, 0.45, 0.24, TAU / 32);
-  const crown = ring(0.72, 0.22, 0.42, 0);
-  const girdleTop = ring(1.05, 0.02, 0.62, TAU / 32);
+  const table = ring(0.42, 0.48, 0.26, TAU / 32);
+  const crown = ring(0.72, 0.24, 0.44, 0);
+  const girdleTop = ring(1.05, 0.03, 0.62, TAU / 32);
   const girdleBottom = ring(0.98, -0.16, 0.57, 0);
-  const pavilion = ring(0.56, -0.56, 0.34, TAU / 32);
-  const tableCenter = [0, 0.52, 0];
-  const culet = [0, -0.98, 0];
+  const pavilion = ring(0.56, -0.58, 0.34, TAU / 32);
+  const tableCenter = [0, 0.56, 0];
+  const culet = [0, -1.02, 0];
 
   for (let i = 0; i < SEGMENTS; i += 1) {
     const n = (i + 1) % SEGMENTS;
@@ -167,174 +164,84 @@ function buildCrystalGeometry() {
   }
 
   return {
-    positions: new Float32Array(positions),
-    normals: new Float32Array(normals),
+    positions,
+    normals,
     vertexCount: positions.length / 3
   };
 }
 
-function mat4Identity() {
+function rotatePoint(point, yaw, pitch, roll) {
+  const cy = Math.cos(yaw);
+  const sy = Math.sin(yaw);
+  const cp = Math.cos(pitch);
+  const sp = Math.sin(pitch);
+  const cr = Math.cos(roll);
+  const sr = Math.sin(roll);
+
+  const x = point[0];
+  const y = point[1];
+  const z = point[2];
+
+  const x1 = x * cy + z * sy;
+  const z1 = -x * sy + z * cy;
+  const y1 = y;
+
+  const y2 = y1 * cp - z1 * sp;
+  const z2 = y1 * sp + z1 * cp;
+  const x2 = x1;
+
   return [
-    1, 0, 0, 0,
-    0, 1, 0, 0,
-    0, 0, 1, 0,
-    0, 0, 0, 1
+    x2 * cr - y2 * sr,
+    x2 * sr + y2 * cr,
+    z2
   ];
 }
 
-function mat4Multiply(a, b) {
-  const out = new Array(16);
+function transformGeometry(base, position, scale, yaw, pitch, roll) {
+  const vertexCount = base.vertexCount;
+  const worldPositions = new Float32Array(vertexCount * 3);
+  const worldNormals = new Float32Array(vertexCount * 3);
 
-  const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
-  const a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
-  const a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
-  const a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+  for (let i = 0; i < vertexCount; i += 1) {
+    const pIndex = i * 3;
 
-  let b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
-  out[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-  out[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-  out[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-  out[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+    const local = [
+      base.positions[pIndex],
+      base.positions[pIndex + 1],
+      base.positions[pIndex + 2]
+    ];
 
-  b0 = b[4]; b1 = b[5]; b2 = b[6]; b3 = b[7];
-  out[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-  out[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-  out[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-  out[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+    const normal = [
+      base.normals[pIndex],
+      base.normals[pIndex + 1],
+      base.normals[pIndex + 2]
+    ];
 
-  b0 = b[8]; b1 = b[9]; b2 = b[10]; b3 = b[11];
-  out[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-  out[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-  out[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-  out[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+    const rotated = rotatePoint(local, yaw, pitch, roll);
+    const rotatedNormal = normalize3(rotatePoint(normal, yaw, pitch, roll));
 
-  b0 = b[12]; b1 = b[13]; b2 = b[14]; b3 = b[15];
-  out[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-  out[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-  out[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-  out[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+    worldPositions[pIndex] = rotated[0] * scale + position[0];
+    worldPositions[pIndex + 1] = rotated[1] * scale + position[1];
+    worldPositions[pIndex + 2] = rotated[2] * scale + position[2];
 
-  return out;
+    worldNormals[pIndex] = rotatedNormal[0];
+    worldNormals[pIndex + 1] = rotatedNormal[1];
+    worldNormals[pIndex + 2] = rotatedNormal[2];
+  }
+
+  return { worldPositions, worldNormals };
 }
 
-function mat4Translation(x, y, z) {
-  return [
-    1, 0, 0, 0,
-    0, 1, 0, 0,
-    0, 0, 1, 0,
-    x, y, z, 1
-  ];
-}
-
-function mat4Scale(x, y, z) {
-  return [
-    x, 0, 0, 0,
-    0, y, 0, 0,
-    0, 0, z, 0,
-    0, 0, 0, 1
-  ];
-}
-
-function mat4RotateX(rad) {
-  const c = Math.cos(rad);
-  const s = Math.sin(rad);
-
-  return [
-    1, 0, 0, 0,
-    0, c, s, 0,
-    0, -s, c, 0,
-    0, 0, 0, 1
-  ];
-}
-
-function mat4RotateY(rad) {
-  const c = Math.cos(rad);
-  const s = Math.sin(rad);
-
-  return [
-    c, 0, -s, 0,
-    0, 1, 0, 0,
-    s, 0, c, 0,
-    0, 0, 0, 1
-  ];
-}
-
-function mat4RotateZ(rad) {
-  const c = Math.cos(rad);
-  const s = Math.sin(rad);
-
-  return [
-    c, s, 0, 0,
-    -s, c, 0, 0,
-    0, 0, 1, 0,
-    0, 0, 0, 1
-  ];
-}
-
-function mat4Perspective(fovY, aspect, near, far) {
-  const f = 1 / Math.tan(fovY / 2);
-  const nf = 1 / (near - far);
-
-  return [
-    f / aspect, 0, 0, 0,
-    0, f, 0, 0,
-    0, 0, (far + near) * nf, -1,
-    0, 0, (2 * far * near) * nf, 0
-  ];
-}
-
-function mat4LookAt(eye, center, up) {
-  const zAxis = normalize3(subtract3(eye, center));
-  const xAxis = normalize3(cross3(up, zAxis));
-  const yAxis = cross3(zAxis, xAxis);
-
-  return [
-    xAxis[0], yAxis[0], zAxis[0], 0,
-    xAxis[1], yAxis[1], zAxis[1], 0,
-    xAxis[2], yAxis[2], zAxis[2], 0,
-    -dot3(xAxis, eye), -dot3(yAxis, eye), -dot3(zAxis, eye), 1
-  ];
-}
-
-function multiplyVec4(m, v) {
-  return [
-    m[0] * v[0] + m[4] * v[1] + m[8] * v[2] + m[12] * v[3],
-    m[1] * v[0] + m[5] * v[1] + m[9] * v[2] + m[13] * v[3],
-    m[2] * v[0] + m[6] * v[1] + m[10] * v[2] + m[14] * v[3],
-    m[3] * v[0] + m[7] * v[1] + m[11] * v[2] + m[15] * v[3]
-  ];
-}
-
-function projectWorldPoint(matrix, point, width, height) {
-  const clip = multiplyVec4(matrix, [point[0], point[1], point[2], 1]);
-  const w = clip[3] || 1;
-  const ndcX = clip[0] / w;
-  const ndcY = clip[1] / w;
+function projectPoint(point, width, height, aspect, sceneScale, cameraDistance) {
+  const perspective = cameraDistance / (cameraDistance - point[2]);
+  const clipX = (point[0] * sceneScale * perspective) / aspect;
+  const clipY = point[1] * sceneScale * perspective;
 
   return {
-    x: (ndcX * 0.5 + 0.5) * width,
-    y: (-ndcY * 0.5 + 0.5) * height,
-    visible: w > 0
+    x: (clipX * 0.5 + 0.5) * width,
+    y: (-clipY * 0.5 + 0.5) * height,
+    perspective
   };
-}
-
-function makeModelMatrix(position, yaw, pitch, roll, scale) {
-  const translate = mat4Translation(position[0], position[1], position[2]);
-  const rotateY = mat4RotateY(yaw);
-  const rotateX = mat4RotateX(pitch);
-  const rotateZ = mat4RotateZ(roll);
-  const size = mat4Scale(scale, scale, scale);
-
-  return mat4Multiply(
-    translate,
-    mat4Multiply(
-      rotateY,
-      mat4Multiply(
-        rotateX,
-        mat4Multiply(rotateZ, size)
-      )
-    )
-  );
 }
 
 function resizeCanvas(canvas, gl) {
@@ -349,78 +256,109 @@ function resizeCanvas(canvas, gl) {
     gl.viewport(0, 0, width, height);
   }
 
-  state.dpr = dpr;
-  state.lastWidth = rect.width;
-  state.lastHeight = rect.height;
+  engineState.dpr = dpr;
 
-  return { width, height, cssWidth: rect.width, cssHeight: rect.height };
+  return {
+    pixelWidth: width,
+    pixelHeight: height,
+    cssWidth: Math.max(320, rect.width),
+    cssHeight: Math.max(320, rect.height),
+    aspect: width / Math.max(1, height)
+  };
 }
 
-function setLabelPosition(label, point, depth, orbitZ) {
-  const front = clamp((depth + orbitZ) / (orbitZ * 2), 0, 1);
-  const scale = 0.86 + front * 0.18;
-  const opacity = 0.58 + front * 0.42;
-
-  label.style.left = `${point.x}px`;
-  label.style.top = `${point.y}px`;
-  label.style.opacity = String(opacity);
-  label.style.zIndex = String(Math.round(20 + front * 40));
-  label.style.transform = `translate(-50%, -50%) scale(${scale})`;
-}
-
-function bindRouteLabelHrefs(labels) {
-  labels.forEach((label, index) => {
-    const route = ROUTES[index];
-    if (!route) return;
-
-    label.href = route.href;
-    label.setAttribute("aria-label", `${route.title} ${route.sub}`);
-  });
+function setBootDataset(status) {
+  engineState.lastStatus = status;
+  document.documentElement.dataset.doorWebglStatus = status;
+  document.documentElement.dataset.doorCenterGravity = "true";
+  document.documentElement.dataset.doorOuterGems = "solid-opaque-true-3d-webgl-mesh";
+  document.documentElement.dataset.doorLabelsStabilized = "true";
+  document.documentElement.dataset.doorGemMaterial = "solid-opaque-crystal-body";
 }
 
 function markFailed(error) {
-  document.documentElement.dataset.doorWebglStatus = "failed";
-  document.documentElement.dataset.doorWebglError = error && error.message ? error.message.slice(0, 96) : "unknown";
+  setBootDataset("failed");
+  document.documentElement.dataset.doorWebglError = error && error.message ? error.message.slice(0, 120) : "unknown";
 }
 
-function initDoorTrue3DThreshold() {
+function placeFallbackLabels(labels) {
+  labels.forEach((label, index) => {
+    const angle = (index / Math.max(1, labels.length)) * TAU - Math.PI / 2;
+    const x = 50 + Math.cos(angle) * 32;
+    const y = 50 + Math.sin(angle) * 32;
+
+    label.style.left = `${x}%`;
+    label.style.top = `${y}%`;
+    label.style.opacity = "0.88";
+    label.style.zIndex = String(30 + index);
+    label.style.transform = "translate(-50%, -50%) scale(0.92)";
+  });
+}
+
+function positionLabel(label, projected, z, orbitZ) {
+  const front = clamp((z + orbitZ) / (orbitZ * 2), 0, 1);
+  const scale = 0.86 + front * 0.18;
+  const opacity = 0.58 + front * 0.42;
+
+  label.style.left = `${projected.x}px`;
+  label.style.top = `${projected.y}px`;
+  label.style.opacity = String(opacity);
+  label.style.zIndex = String(Math.round(30 + front * 40));
+  label.style.transform = `translate(-50%, -50%) scale(${scale})`;
+}
+
+function initDoorSolidGemOrbit() {
   const stage = document.querySelector("[data-door-true-3d-stage]");
   const canvas = document.querySelector("[data-door-webgl-canvas]");
   const labels = Array.from(document.querySelectorAll("[data-door-route-label]"));
 
   if (!stage || !canvas || labels.length < ROUTES.length) return null;
 
-  bindRouteLabelHrefs(labels);
+  setBootDataset("booting");
+  placeFallbackLabels(labels);
+
+  labels.forEach((label, index) => {
+    const route = ROUTES[index];
+    if (!route) return;
+    label.href = route.href;
+    label.setAttribute("aria-label", `${route.title} ${route.sub}`);
+  });
 
   const gl = canvas.getContext("webgl", {
     alpha: true,
     antialias: true,
     depth: true,
     stencil: false,
-    preserveDrawingBuffer: false,
-    premultipliedAlpha: true
+    premultipliedAlpha: false,
+    preserveDrawingBuffer: false
   });
 
   if (!gl) {
-    markFailed(new Error("WebGL unavailable."));
+    markFailed(new Error("WebGL unavailable"));
     return null;
   }
 
   const vertexSource = `
-    attribute vec3 aPosition;
+    attribute vec3 aWorld;
     attribute vec3 aNormal;
 
-    uniform mat4 uModel;
-    uniform mat4 uMVP;
+    uniform float uAspect;
+    uniform float uSceneScale;
+    uniform float uCameraDistance;
 
-    varying vec3 vNormal;
     varying vec3 vWorld;
+    varying vec3 vNormal;
 
     void main() {
-      vec4 world = uModel * vec4(aPosition, 1.0);
-      vWorld = world.xyz;
-      vNormal = normalize((uModel * vec4(aNormal, 0.0)).xyz);
-      gl_Position = uMVP * vec4(aPosition, 1.0);
+      float perspective = uCameraDistance / (uCameraDistance - aWorld.z);
+      float clipX = (aWorld.x * uSceneScale * perspective) / uAspect;
+      float clipY = aWorld.y * uSceneScale * perspective;
+      float clipZ = (aWorld.z + 4.0) / 8.0;
+
+      vWorld = aWorld;
+      vNormal = normalize(aNormal);
+
+      gl_Position = vec4(clipX, clipY, clipZ, 1.0);
     }
   `;
 
@@ -428,46 +366,48 @@ function initDoorTrue3DThreshold() {
     precision mediump float;
 
     uniform vec3 uTint;
-    uniform float uAlpha;
     uniform float uTime;
 
-    varying vec3 vNormal;
     varying vec3 vWorld;
+    varying vec3 vNormal;
 
     void main() {
       vec3 n = normalize(vNormal);
-      if (!gl_FrontFacing) {
-        n = -n;
-      }
 
-      vec3 lightA = normalize(vec3(-0.48, 0.82, 0.72));
-      vec3 lightB = normalize(vec3(0.54, 0.42, 0.90));
-      vec3 camera = vec3(0.0, 0.0, 7.0);
+      vec3 lightA = normalize(vec3(-0.46, 0.86, 0.72));
+      vec3 lightB = normalize(vec3(0.62, 0.38, 0.92));
+      vec3 camera = vec3(0.0, 0.0, 5.8);
       vec3 viewDir = normalize(camera - vWorld);
 
       float diffuseA = max(dot(n, lightA), 0.0);
       float diffuseB = max(dot(n, lightB), 0.0);
-      float rim = pow(1.0 - max(dot(n, viewDir), 0.0), 2.0);
-      float specA = pow(max(dot(reflect(-lightA, n), viewDir), 0.0), 28.0);
-      float specB = pow(max(dot(reflect(-lightB, n), viewDir), 0.0), 42.0);
+      float face = max(dot(n, viewDir), 0.0);
+      float rim = pow(1.0 - face, 2.2);
+      float specA = pow(max(dot(reflect(-lightA, n), viewDir), 0.0), 34.0);
+      float specB = pow(max(dot(reflect(-lightB, n), viewDir), 0.0), 52.0);
+      float fire = pow(max(sin(uTime * 1.45 + vWorld.x * 2.6 + vWorld.y * 4.0 + vWorld.z * 1.8), 0.0), 22.0) * 0.12;
 
-      float phase = sin(uTime * 1.45 + vWorld.x * 2.3 + vWorld.y * 4.2 + vWorld.z * 1.6);
-      float fire = pow(max(phase, 0.0), 18.0) * 0.24;
+      float occlusion = clamp(0.56 + diffuseA * 0.34 + diffuseB * 0.20 + face * 0.18, 0.42, 1.16);
+      float edgeDepth = clamp(rim * 0.55 + (1.0 - diffuseA) * 0.16, 0.0, 0.56);
 
-      vec3 deep = vec3(0.05, 0.04, 0.16);
-      vec3 ice = vec3(0.88, 0.93, 1.0);
-      vec3 gold = vec3(1.0, 0.84, 0.42);
+      vec3 deepViolet = vec3(0.055, 0.035, 0.18);
+      vec3 bodyViolet = mix(vec3(0.11, 0.07, 0.30), uTint, 0.54);
+      vec3 ice = vec3(0.86, 0.92, 1.0);
+      vec3 gold = vec3(1.0, 0.82, 0.42);
 
-      vec3 color =
-        deep * 0.28 +
-        uTint * (0.36 + diffuseA * 0.54 + diffuseB * 0.30) +
-        ice * (specA * 0.62 + rim * 0.28) +
-        gold * (specB * 0.42 + fire);
+      vec3 body =
+        deepViolet * 0.34 +
+        bodyViolet * (0.72 + diffuseA * 0.42 + diffuseB * 0.22);
 
-      float shade = clamp(0.72 + diffuseA * 0.36 + diffuseB * 0.22 + rim * 0.18, 0.0, 1.28);
-      color *= shade;
+      vec3 highlight =
+        ice * (specA * 0.58 + rim * 0.16) +
+        gold * (specB * 0.30 + fire);
 
-      gl_FragColor = vec4(color, uAlpha);
+      vec3 color = body * occlusion + highlight;
+      color = mix(color, deepViolet, edgeDepth * 0.32);
+      color = clamp(color, 0.0, 1.0);
+
+      gl_FragColor = vec4(color, 1.0);
     }
   `;
 
@@ -481,126 +421,140 @@ function initDoorTrue3DThreshold() {
   }
 
   const locations = {
-    aPosition: gl.getAttribLocation(program, "aPosition"),
+    aWorld: gl.getAttribLocation(program, "aWorld"),
     aNormal: gl.getAttribLocation(program, "aNormal"),
-    uModel: gl.getUniformLocation(program, "uModel"),
-    uMVP: gl.getUniformLocation(program, "uMVP"),
+    uAspect: gl.getUniformLocation(program, "uAspect"),
+    uSceneScale: gl.getUniformLocation(program, "uSceneScale"),
+    uCameraDistance: gl.getUniformLocation(program, "uCameraDistance"),
     uTint: gl.getUniformLocation(program, "uTint"),
-    uAlpha: gl.getUniformLocation(program, "uAlpha"),
     uTime: gl.getUniformLocation(program, "uTime")
   };
 
-  const geometry = buildCrystalGeometry();
+  const baseGeometry = buildCrystalGeometry();
+  engineState.vertexCount = baseGeometry.vertexCount;
 
   const positionBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, geometry.positions, gl.STATIC_DRAW);
-
   const normalBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, geometry.normals, gl.STATIC_DRAW);
 
-  gl.useProgram(program);
   gl.enable(gl.DEPTH_TEST);
   gl.depthFunc(gl.LEQUAL);
-  gl.enable(gl.BLEND);
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  gl.depthMask(true);
+  gl.disable(gl.BLEND);
   gl.disable(gl.CULL_FACE);
 
-  state.reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  engineState.reducedMotion = Boolean(
+    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
 
-  function drawFrame(time) {
-    const motionTime = state.reducedMotion ? 0 : time / 1000;
+  function draw(time) {
+    const t = engineState.reducedMotion ? 0 : time / 1000;
     const size = resizeCanvas(canvas, gl);
-    const aspect = canvas.width / Math.max(1, canvas.height);
     const mobile = size.cssWidth < 620;
+    const narrow = size.cssWidth < 460;
 
-    const cameraDistance = mobile ? 7.9 : 7.3;
-    const projection = mat4Perspective((mobile ? 42 : 39) * Math.PI / 180, aspect, 0.1, 100);
-    const view = mat4LookAt([0, 0.15, cameraDistance], [0, -0.03, 0], [0, 1, 0]);
-    const vp = mat4Multiply(projection, view);
+    const sceneScale = narrow ? 0.36 : mobile ? 0.33 : 0.30;
+    const cameraDistance = 5.9;
+    const orbitX = narrow ? 1.72 : mobile ? 1.92 : 2.78;
+    const orbitY = narrow ? 1.42 : mobile ? 1.48 : 1.62;
+    const orbitZ = narrow ? 0.70 : mobile ? 0.78 : 0.92;
+    const gemScale = narrow ? 0.47 : mobile ? 0.51 : 0.58;
 
-    const orbitX = mobile ? 2.28 : 3.18;
-    const orbitZ = mobile ? 1.02 : 1.28;
-    const orbitY = mobile ? 0.72 : 0.84;
-    const baseScale = mobile ? 0.50 : 0.58;
-    const orbitSpin = motionTime * (TAU / 48);
+    const spin = t * (TAU / 54);
 
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.useProgram(program);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    gl.enableVertexAttribArray(locations.aPosition);
-    gl.vertexAttribPointer(locations.aPosition, 3, gl.FLOAT, false, 0, 0);
+    gl.uniform1f(locations.uAspect, size.aspect);
+    gl.uniform1f(locations.uSceneScale, sceneScale);
+    gl.uniform1f(locations.uCameraDistance, cameraDistance);
+    gl.uniform1f(locations.uTime, t);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-    gl.enableVertexAttribArray(locations.aNormal);
-    gl.vertexAttribPointer(locations.aNormal, 3, gl.FLOAT, false, 0, 0);
+    const drawOrder = ROUTES.map((route, index) => {
+      const angle = (index / ROUTES.length) * TAU + spin - Math.PI / 2;
+      const x = Math.cos(angle) * orbitX;
+      const y = Math.sin(angle) * orbitY;
+      const z = Math.sin(angle) * orbitZ;
+      return { route, index, angle, position: [x, y, z], z };
+    }).sort((a, b) => a.z - b.z);
 
-    gl.uniform1f(locations.uTime, motionTime);
+    drawOrder.forEach((item) => {
+      const wobble = engineState.reducedMotion ? 0 : Math.sin(t * 0.88 + item.index * 0.9) * 0.045;
+      const localSpin = engineState.reducedMotion ? 0 : t * 0.62 + item.index * 0.72;
 
-    ROUTES.forEach((route, index) => {
-      const base = (index / ROUTES.length) * TAU;
-      const angle = base + orbitSpin;
-      const wobble = state.reducedMotion ? 0 : Math.sin(motionTime * 1.12 + index * 0.9) * 0.045;
+      const yaw = -item.angle + Math.PI / 2 + localSpin * 0.34;
+      const pitch = -0.10 + Math.sin(t * 0.72 + item.index) * 0.07 + wobble;
+      const roll = Math.sin(t * 0.96 + item.index * 1.7) * 0.08;
 
-      const x = Math.sin(angle) * orbitX;
-      const z = Math.cos(angle) * orbitZ;
-      const y = Math.sin(angle * 2) * 0.08 - 0.04;
-      const depthLift = (z / orbitZ) * orbitY * 0.30;
+      const transformed = transformGeometry(
+        baseGeometry,
+        item.position,
+        gemScale * (1 + (item.z / orbitZ) * 0.04),
+        yaw,
+        pitch,
+        roll
+      );
 
-      const scale = baseScale * (1 + (z / orbitZ) * 0.045);
-      const position = [x, y + depthLift, z];
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, transformed.worldPositions, gl.DYNAMIC_DRAW);
+      gl.enableVertexAttribArray(locations.aWorld);
+      gl.vertexAttribPointer(locations.aWorld, 3, gl.FLOAT, false, 0, 0);
 
-      const yaw = -angle + Math.PI / 2 + wobble;
-      const pitch = -0.16 + Math.sin(motionTime * 0.72 + index) * 0.055;
-      const roll = Math.sin(motionTime * 1.04 + index * 1.7) * 0.045;
+      gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, transformed.worldNormals, gl.DYNAMIC_DRAW);
+      gl.enableVertexAttribArray(locations.aNormal);
+      gl.vertexAttribPointer(locations.aNormal, 3, gl.FLOAT, false, 0, 0);
 
-      const model = makeModelMatrix(position, yaw, pitch, roll, scale);
-      const mvp = mat4Multiply(vp, model);
+      gl.uniform3fv(locations.uTint, new Float32Array(item.route.tint));
 
-      gl.uniformMatrix4fv(locations.uModel, false, new Float32Array(model));
-      gl.uniformMatrix4fv(locations.uMVP, false, new Float32Array(mvp));
-      gl.uniform3fv(locations.uTint, new Float32Array(route.tint));
-      gl.uniform1f(locations.uAlpha, 0.94);
-
-      gl.drawArrays(gl.TRIANGLES, 0, geometry.vertexCount);
-
-      const labelPoint = projectWorldPoint(vp, position, size.cssWidth, size.cssHeight);
-      const label = labels[index];
-
-      if (label) {
-        setLabelPosition(label, labelPoint, z, orbitZ);
-      }
+      gl.drawArrays(gl.TRIANGLES, 0, baseGeometry.vertexCount);
     });
 
-    state.ready = true;
-    document.documentElement.dataset.doorWebglStatus = "active";
-    document.documentElement.dataset.doorOuterCrystals = "true-3d-webgl-mesh";
-    document.documentElement.dataset.doorCenterAnchorPreserved = "true";
-    document.documentElement.dataset.doorSharedOrbitDirection = "true";
+    ROUTES.forEach((route, index) => {
+      const angle = (index / ROUTES.length) * TAU + spin - Math.PI / 2;
+      const x = Math.cos(angle) * orbitX;
+      const y = Math.sin(angle) * orbitY;
+      const z = Math.sin(angle) * orbitZ;
 
-    state.raf = requestAnimationFrame(drawFrame);
+      const projected = projectPoint(
+        [x, y, z],
+        size.cssWidth,
+        size.cssHeight,
+        size.aspect,
+        sceneScale,
+        cameraDistance
+      );
+
+      const label = labels[index];
+      if (label) positionLabel(label, projected, z, orbitZ);
+    });
+
+    engineState.ready = true;
+    setBootDataset("active");
+
+    engineState.raf = requestAnimationFrame(draw);
   }
 
-  state.raf = requestAnimationFrame(drawFrame);
+  engineState.raf = requestAnimationFrame(draw);
 
   const api = Object.freeze({
-    ...DOOR_TRUE_3D_THRESHOLD_STATE,
+    ...DOOR_SOLID_GEM_STATE,
     status() {
       return Object.freeze({
-        ...DOOR_TRUE_3D_THRESHOLD_STATE,
-        ready: state.ready,
-        webgl: true,
-        centerAnchorPreserved: true,
-        outerCrystalsTrue3D: true,
-        edgeOnDisappearanceBlocked: true,
-        sharedOrbitDirection: true,
-        labelMethod: "projected-html-overlay",
+        ...DOOR_SOLID_GEM_STATE,
+        ready: engineState.ready,
+        webglStatus: engineState.lastStatus,
+        centerGem: "center-of-gravity",
+        outerGemsTrue3D: true,
+        outerGemsOpaque: true,
+        outerGemAlpha: 1,
+        blendDisabledForGemBodies: true,
+        depthTesting: true,
+        labelsStabilized: true,
+        labelsRotateWithGem: false,
         routeCount: ROUTES.length,
-        vertexCount: geometry.vertexCount,
-        reducedMotion: state.reducedMotion,
+        vertexCount: engineState.vertexCount,
+        reducedMotion: engineState.reducedMotion,
         generatedImage: false,
         graphicBox: false,
         heavyRuntimeLoaded: false
@@ -608,15 +562,12 @@ function initDoorTrue3DThreshold() {
     }
   });
 
-  window.DGBDoorTrue3DThreshold = api;
+  window.DGBDoorSolidGemOrbit = api;
   return api;
 }
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initDoorTrue3DThreshold, { once: true });
+  document.addEventListener("DOMContentLoaded", initDoorSolidGemOrbit, { once: true });
 } else {
-  initDoorTrue3DThreshold();
+  initDoorSolidGemOrbit();
 }
-
-export { DOOR_TRUE_3D_THRESHOLD_STATE, initDoorTrue3DThreshold };
-export default DOOR_TRUE_3D_THRESHOLD_STATE;

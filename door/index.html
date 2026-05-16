@@ -3,14 +3,16 @@
   lang="en"
   data-route="/door/"
   data-page="door"
-  data-version="G2-V4"
-  data-contract="DOOR_TRUE_3D_GRAVITY_CENTER_ORBIT_AND_STABILIZED_LABEL_HTML_JS_TNT_v1"
-  data-previous-contract="DOOR_TRUE_3D_THRESHOLD_CRYSTAL_ORBIT_HTML_JS_TNT_v1"
+  data-version="G2-V5"
+  data-contract="DOOR_TRUE_3D_SOLID_OPAQUE_ROUTE_GEM_MATERIAL_HTML_JS_TNT_v2"
+  data-previous-contract="DOOR_TRUE_3D_GRAVITY_CENTER_ORBIT_AND_STABILIZED_LABEL_HTML_JS_TNT_v1"
   data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
   data-animation-standard="TRUE_3D_GRAVITY_CENTER_ORBIT_STABILIZED_LABEL_STANDARD_v1"
+  data-material-standard="SOLID_OPAQUE_TRUE_3D_ROUTE_CRYSTAL_STANDARD_v2"
   data-top-traversal="compass-door-home-products-laws-gauges"
   data-center-gem-role="center-of-gravity"
   data-outer-gems-role="orbiting-true-3d-route-crystals"
+  data-outer-gems-material="solid-opaque-crystal-body"
   data-stabilized-labels="true"
   data-labels-rotate-with-gem="false"
   data-generated-image="false"
@@ -534,23 +536,25 @@
       position:absolute;
       left:var(--fallback-x,50%);
       top:var(--fallback-y,50%);
-      width:7.4rem;
-      min-height:3.35rem;
+      width:7.1rem;
+      min-height:3.05rem;
       display:grid;
       place-items:center;
-      padding:.42rem .5rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:1rem;
+      padding:.38rem .48rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:.95rem;
       color:rgba(255,244,216,.98);
-      background:rgba(5,8,22,.20);
-      backdrop-filter:blur(2px);
+      background:rgba(4,7,18,.30);
+      backdrop-filter:blur(1.4px);
       text-align:center;
       pointer-events:auto;
       text-shadow:
         0 2px 12px rgba(0,0,0,.92),
         0 0 10px rgba(58,30,130,.84),
         0 0 2px rgba(255,255,255,.42);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.055),
+        0 .55rem 1rem rgba(0,0,0,.18);
       transform:translate(-50%,-50%);
       will-change:transform,left,top,opacity;
       transition:filter .16s ease,border-color .16s ease,background .16s ease,opacity .16s ease;
@@ -560,13 +564,13 @@
     .door-route-label:focus-visible{
       outline:none;
       border-color:rgba(243,200,111,.52);
-      background:rgba(14,17,36,.46);
+      background:rgba(9,11,28,.42);
       filter:brightness(1.12);
     }
 
     .door-route-label b{
       display:block;
-      font-size:.68rem;
+      font-size:.64rem;
       font-weight:950;
       letter-spacing:.08em;
       line-height:1.06;
@@ -577,7 +581,7 @@
       display:block;
       margin-top:.14rem;
       color:rgba(230,238,255,.76);
-      font-size:.47rem;
+      font-size:.44rem;
       font-weight:850;
       letter-spacing:.06em;
       line-height:1;
@@ -763,18 +767,18 @@
       }
 
       .door-route-label{
-        width:5.7rem;
-        min-height:2.75rem;
-        border-radius:.86rem;
+        width:5.55rem;
+        min-height:2.55rem;
+        border-radius:.82rem;
       }
 
       .door-route-label b{
-        font-size:.50rem;
+        font-size:.48rem;
         letter-spacing:.052em;
       }
 
       .door-route-label span{
-        font-size:.34rem;
+        font-size:.32rem;
       }
 
       .lens-grid,
@@ -810,18 +814,18 @@
       }
 
       .door-route-label{
-        width:4.8rem;
-        min-height:2.35rem;
-        padding:.3rem .35rem;
+        width:4.7rem;
+        min-height:2.22rem;
+        padding:.27rem .32rem;
       }
 
       .door-route-label b{
-        font-size:.40rem;
-        letter-spacing:.042em;
+        font-size:.38rem;
+        letter-spacing:.04em;
       }
 
       .door-route-label span{
-        font-size:.27rem;
+        font-size:.26rem;
       }
     }
 
@@ -971,17 +975,17 @@
       </section>
 
       <section class="panel section" aria-labelledby="field-title">
-        <div class="kicker">Gravity-center threshold orbit</div>
-        <h2 id="field-title">The Door gem is the center of gravity. Eight true 3D route crystals orbit at a safe distance while their labels stay readable.</h2>
+        <div class="kicker">Solid crystal gravity orbit</div>
+        <h2 id="field-title">The Door gem is the center of gravity. Eight solid route crystals orbit at a safe distance while their labels stay readable.</h2>
 
         <div
           class="door-stage"
           data-door-true-3d-stage
           data-door-center-anchor-preserved="true"
           data-door-center-gravity="true"
-          data-door-outer-gems="true-3d-webgl-mesh"
+          data-door-outer-gems="solid-opaque-true-3d-webgl-mesh"
           data-stabilized-labels="true"
-          aria-label="Door true 3D gravity-center threshold crystal orbit"
+          aria-label="Door solid true 3D gravity-center threshold crystal orbit"
         >
           <canvas
             class="door-webgl-canvas"
@@ -1080,17 +1084,22 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-DOOR_TRUE_3D_GRAVITY_CENTER_ORBIT_AND_STABILIZED_LABEL_HTML_JS_TNT_v1
-previous=DOOR_TRUE_3D_THRESHOLD_CRYSTAL_ORBIT_HTML_JS_TNT_v1
+DOOR_TRUE_3D_SOLID_OPAQUE_ROUTE_GEM_MATERIAL_HTML_JS_TNT_v2
+previous=DOOR_TRUE_3D_GRAVITY_CENTER_ORBIT_AND_STABILIZED_LABEL_HTML_JS_TNT_v1
 route=/door/
 page=door
 html=/door/index.html
 js=/door/index.js
 center_gem=center_of_gravity
 center_anchor_size_changed=false
-outer_gems=true_3d_webgl_mesh
-outer_gems_orbit_safe_distance=true
-outer_gems_local_axis_rotation=true
+outer_gems=solid_opaque_true_3d_webgl_mesh
+outer_gem_alpha=1.0
+outer_gem_translucent_ghost_material=false
+subtle_internal_refraction_only=true
+depth_testing=true
+blend_disabled_for_route_gem_bodies=true
+facet_contrast=stronger
+body_occlusion=stronger
 labels_stabilized=true
 labels_rotate_with_gem=false
 labels_follow_projected_gem_position=true
@@ -1100,8 +1109,7 @@ flat_svg_orbit_crystals=false
 css_only_3d_plane_tricks=false
 edge_on_disappearance_blocked=true
 fallback_label_positions_nonstacking=true
-lower_cards_gem_language_started=true
-route_owns=door_page,gravity_center_anchor,webgl_outer_route_gems,stabilized_labels,four_lens_cards,eight_door_cards
+route_owns=door_page,solid_opaque_webgl_outer_route_gems,gravity_center_anchor,stabilized_labels
 route_does_not_own=showroom,products,laws,gauges,sitewide_rebuild,heavy_runtime
 generated_image=false
 graphic_box=false
@@ -1112,14 +1120,14 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      DOOR_TRUE_3D_GRAVITY_CENTER_ORBIT_AND_STABILIZED_LABEL_HTML_JS_TNT_v1 · Door · Center gravity anchor · True 3D route crystals · Stabilized labels.
+      DOOR_TRUE_3D_SOLID_OPAQUE_ROUTE_GEM_MATERIAL_HTML_JS_TNT_v2 · Door · Solid opaque route crystals · Center gravity anchor preserved.
     </footer>
   </div>
 
   <script>
-    window.DGB_DOOR_HTML_CACHE_KEY = "DOOR_TRUE_3D_GRAVITY_CENTER_ORBIT_AND_STABILIZED_LABEL_HTML_JS_TNT_v1";
-    window.DGB_DOOR_JS_CACHE_KEY = "DOOR_TRUE_3D_GRAVITY_CENTER_ORBIT_AND_STABILIZED_LABEL_HTML_JS_TNT_v1";
+    window.DGB_DOOR_HTML_CACHE_KEY = "DOOR_TRUE_3D_SOLID_OPAQUE_ROUTE_GEM_MATERIAL_HTML_JS_TNT_v2";
+    window.DGB_DOOR_JS_CACHE_KEY = "DOOR_TRUE_3D_SOLID_OPAQUE_ROUTE_GEM_MATERIAL_HTML_JS_TNT_v2";
   </script>
-  <script type="module" src="/door/index.js?v=DOOR_TRUE_3D_GRAVITY_CENTER_ORBIT_AND_STABILIZED_LABEL_HTML_JS_TNT_v1"></script>
+  <script type="module" src="/door/index.js?v=DOOR_TRUE_3D_SOLID_OPAQUE_ROUTE_GEM_MATERIAL_HTML_JS_TNT_v2"></script>
 </body>
 </html>

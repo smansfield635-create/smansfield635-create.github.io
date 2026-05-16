@@ -3,8 +3,8 @@
   lang="en"
   data-route="/showroom/globe/audralia/"
   data-page="audralia-satellite-globe-access"
-  data-contract="AUDRALIA_REFRESH_EXIT_HTML_MARRIAGE_TNT_v10"
-  data-previous-contract="AUDRALIA_REFRESH_SAFE_HTML_MARRIAGE_TNT_v9"
+  data-contract="AUDRALIA_TOUCH_SCOPE_HTML_MARRIAGE_TNT_v11"
+  data-previous-contract="AUDRALIA_REFRESH_EXIT_HTML_MARRIAGE_TNT_v10"
   data-role="showroom-globe-child-route"
   data-world="Audralia"
   data-canonical-spelling="A_U_D_R_A_L_I_A"
@@ -12,9 +12,9 @@
   data-public-path="possibility"
   data-view-model="satellite-orbital-existing-globe-access-contained"
   data-route-loader="/showroom/globe/audralia/index.js"
-  data-route-loader-contract="AUDRALIA_REFRESH_EXIT_BOXED_GLOBE_LOADER_TNT_v10"
-  data-html-marriage-contract="AUDRALIA_REFRESH_EXIT_HTML_MARRIAGE_TNT_v10"
-  data-canvas-contract="AUDRALIA_EXISTING_GLOBE_BOXED_ASSET_CONSUMER_TNT_v10"
+  data-route-loader-contract="AUDRALIA_TOUCH_SCOPE_BOXED_GLOBE_LOADER_TNT_v11"
+  data-html-marriage-contract="AUDRALIA_TOUCH_SCOPE_HTML_MARRIAGE_TNT_v11"
+  data-canvas-contract="AUDRALIA_EXISTING_GLOBE_BOXED_ASSET_CONSUMER_TNT_v11"
   data-generated-image="false"
   data-graphic-box="false"
   data-procedural-world-fallback="false"
@@ -60,6 +60,7 @@
       background:var(--bg);
       scroll-behavior:smooth;
       overflow-x:hidden;
+      touch-action:pan-y;
     }
 
     body {
@@ -70,6 +71,7 @@
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       line-height:1.5;
       overflow-x:hidden;
+      touch-action:pan-y;
       background:
         radial-gradient(circle at 50% -8%,rgba(158,240,191,.16),transparent 28rem),
         radial-gradient(circle at 12% 18%,rgba(36,120,255,.15),transparent 28rem),
@@ -386,6 +388,8 @@
       overflow:hidden!important;
       contain:layout paint size;
       isolation:isolate;
+      touch-action:none;
+      overscroll-behavior:contain;
       background:
         radial-gradient(circle at 50% 50%,rgba(36,120,255,.14),transparent 44%),
         radial-gradient(circle at 50% 50%,rgba(158,240,191,.08),transparent 60%),
@@ -419,6 +423,8 @@
       transform:none!important;
       transform-origin:center center!important;
       border-radius:inherit;
+      touch-action:none;
+      overscroll-behavior:contain;
     }
 
     [data-audralia-canvas-mount="true"] > *,
@@ -439,6 +445,7 @@
       object-fit:contain!important;
       transform-origin:center center!important;
       box-sizing:border-box!important;
+      touch-action:none!important;
     }
 
     body > canvas[data-audralia-visible-canvas],
@@ -446,6 +453,7 @@
     body > canvas[data-audralia-satellite],
     body > [data-audralia-mounted="true"] {
       display:none!important;
+      pointer-events:none!important;
     }
 
     .stage[data-loader-state="mounted"] .stage-fallback {
@@ -568,6 +576,27 @@
       white-space:nowrap!important;
     }
 
+    [data-audralia-update-bar],
+    [data-audralia-visible-update],
+    [data-audralia-route-status-bar],
+    [data-audralia-loader-notice-bar],
+    .audralia-update-bar,
+    .audralia-visible-update,
+    .audralia-route-status-bar {
+      display:none!important;
+      visibility:hidden!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      overflow:hidden!important;
+      position:absolute!important;
+      inset:auto!important;
+      clip-path:inset(50%)!important;
+    }
+
     footer {
       padding:1.35rem 0 .5rem;
       color:var(--faint);
@@ -679,12 +708,13 @@
             data-audralia-contained-mount="true"
             data-audralia-box-target="true"
             data-audralia-adoption-target="true"
+            data-audralia-touch-scope="box-only"
             aria-label="Audralia boxed satellite globe canvas mount"
           ></div>
         </div>
 
         <div class="public-status" aria-live="polite">
-          <span id="audraliaRouteLoaderNotice" data-audralia-route-loader-notice="true">Refresh-exit bridge preparing</span>
+          <span id="audraliaRouteLoaderNotice" data-audralia-route-loader-notice="true">Touch-scoped globe bridge preparing</span>
           <span id="audraliaRouteStatus" data-audralia-route-status="true">Existing asset chain pending</span>
         </div>
       </section>
@@ -701,15 +731,15 @@
           </article>
 
           <article class="card">
-            <b>Containment</b>
-            <strong>The globe remains inside the inspection box.</strong>
-            <span>The stage clips, contains, and adopts the mounted asset so it cannot spill across the page.</span>
+            <b>Touch scope</b>
+            <strong>Drag belongs only inside the box.</strong>
+            <span>Finger motion controls the globe only while the touch begins inside the inspection stage. Everywhere else, the page scrolls normally.</span>
           </article>
 
           <article class="card">
-            <b>Refresh exit</b>
-            <strong>The loader must release the page lifecycle.</strong>
-            <span>The page uses a renewed cache key and an exit-safe loader so refresh can complete normally.</span>
+            <b>Clean surface</b>
+            <strong>The public page should not show the update bar.</strong>
+            <span>Asset status remains available under the hood, but the visitor does not need the visible technical banner.</span>
           </article>
         </div>
 
@@ -722,8 +752,8 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_REFRESH_EXIT_HTML_MARRIAGE_TNT_v10
-previous=AUDRALIA_REFRESH_SAFE_HTML_MARRIAGE_TNT_v9
+AUDRALIA_TOUCH_SCOPE_HTML_MARRIAGE_TNT_v11
+previous=AUDRALIA_REFRESH_EXIT_HTML_MARRIAGE_TNT_v10
 route=/showroom/globe/audralia/
 page=audralia
 role=showroom_globe_child_route
@@ -733,19 +763,21 @@ world=Audralia
 canonical_spelling=A_U_D_R_A_L_I_A
 parent_route=/showroom/globe/
 route_loader=/showroom/globe/audralia/index.js
-route_loader_contract=AUDRALIA_REFRESH_EXIT_BOXED_GLOBE_LOADER_TNT_v10
-html_marriage_contract=AUDRALIA_REFRESH_EXIT_HTML_MARRIAGE_TNT_v10
-script_cache_key=AUDRALIA_REFRESH_EXIT_BOXED_GLOBE_LOADER_TNT_v10
+route_loader_contract=AUDRALIA_TOUCH_SCOPE_BOXED_GLOBE_LOADER_TNT_v11
+html_marriage_contract=AUDRALIA_TOUCH_SCOPE_HTML_MARRIAGE_TNT_v11
+script_cache_key=AUDRALIA_TOUCH_SCOPE_BOXED_GLOBE_LOADER_TNT_v11
 canvas_mount=#audraliaCanvasMount
-canvas_contract=AUDRALIA_EXISTING_GLOBE_BOXED_ASSET_CONSUMER_TNT_v10
-restore_goal=marry_refresh_exit_loader_to_current_containment_html_without_physical_redesign
+canvas_contract=AUDRALIA_EXISTING_GLOBE_BOXED_ASSET_CONSUMER_TNT_v11
+restore_goal=preserve_existing_globe_boxed_view_while_scoping_touch_to_stage_only
 physical_redesign=false
 containment=true
 stage_overflow_hidden=true
 asset_adoption=true
 refresh_exit_safe=true
+touch_scope=box_only
+page_scroll_outside_box=true
+hide_update_bar=true
 bounded_loader_window=true
-no_mutation_observer_loop=true
 no_request_animation_frame_loop=true
 pagehide_lifecycle_release=true
 pageshow_bfcache_reentry=true
@@ -758,7 +790,7 @@ generated_image=false
 graphic_box=false
 streaming=false
 visual_pass_claimed=false
-route_owns=route_shell,public_copy,canvas_mount,public_status,cache_key_bump,containment_box,legacy_mount_aliases
+route_owns=route_shell,public_copy,canvas_mount,public_status,cache_key_bump,containment_box,legacy_mount_aliases,touch_scope_css,update_bar_suppression
 route_does_not_own=land_footprint,climate_authority,surface_truth,gauges_logic,planet_generation,procedural_landscape
 receipt_visibility=hidden_template_only
       </template>
@@ -770,18 +802,20 @@ receipt_visibility=hidden_template_only
   </div>
 
   <script>
-    window.DGB_AUDRALIA_ROUTE_KEY = "AUDRALIA_REFRESH_EXIT_BOXED_GLOBE_LOADER_TNT_v10";
-    window.DGB_AUDRALIA_HTML_MARRIAGE_KEY = "AUDRALIA_REFRESH_EXIT_HTML_MARRIAGE_TNT_v10";
+    window.DGB_AUDRALIA_ROUTE_KEY = "AUDRALIA_TOUCH_SCOPE_BOXED_GLOBE_LOADER_TNT_v11";
+    window.DGB_AUDRALIA_HTML_MARRIAGE_KEY = "AUDRALIA_TOUCH_SCOPE_HTML_MARRIAGE_TNT_v11";
     window.DGB_AUDRALIA_BOX_CONTAINMENT = true;
     window.DGB_AUDRALIA_RESTORE_EXISTING_GLOBE = true;
     window.DGB_AUDRALIA_NO_PROCEDURAL_FALLBACK = true;
     window.DGB_AUDRALIA_REFRESH_SAFE = true;
     window.DGB_AUDRALIA_REFRESH_EXIT_SAFE = true;
+    window.DGB_AUDRALIA_TOUCH_SCOPE = "box-only";
+    window.DGB_AUDRALIA_HIDE_UPDATE_BAR = true;
   </script>
   <script
-    src="/showroom/globe/audralia/index.js?v=AUDRALIA_REFRESH_EXIT_BOXED_GLOBE_LOADER_TNT_v10"
-    data-audralia-loader-script="AUDRALIA_REFRESH_EXIT_BOXED_GLOBE_LOADER_TNT_v10"
-    data-audralia-html-marriage="AUDRALIA_REFRESH_EXIT_HTML_MARRIAGE_TNT_v10"
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_TOUCH_SCOPE_BOXED_GLOBE_LOADER_TNT_v11"
+    data-audralia-loader-script="AUDRALIA_TOUCH_SCOPE_BOXED_GLOBE_LOADER_TNT_v11"
+    data-audralia-html-marriage="AUDRALIA_TOUCH_SCOPE_HTML_MARRIAGE_TNT_v11"
     defer
   ></script>
 </body>

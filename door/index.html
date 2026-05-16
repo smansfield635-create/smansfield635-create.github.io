@@ -3,26 +3,20 @@
   lang="en"
   data-route="/door/"
   data-page="door"
-  data-version="G2-V3"
-  data-contract="DOOR_TRUE_3D_THRESHOLD_CRYSTAL_ORBIT_HTML_JS_TNT_v1"
-  data-previous-contract="DOOR_OUTER_THRESHOLD_CRYSTAL_SCALE_AND_SHARED_ORBIT_HTML_ONLY_TNT_v1"
+  data-version="G2-V4"
+  data-contract="DOOR_TRUE_3D_GRAVITY_CENTER_ORBIT_AND_STABILIZED_LABEL_HTML_JS_TNT_v1"
+  data-previous-contract="DOOR_TRUE_3D_THRESHOLD_CRYSTAL_ORBIT_HTML_JS_TNT_v1"
   data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
-  data-animation-standard="TRUE_3D_WEBGL_SHARED_DIRECTIONAL_GEM_ORBIT_STANDARD_v1"
+  data-animation-standard="TRUE_3D_GRAVITY_CENTER_ORBIT_STABILIZED_LABEL_STANDARD_v1"
   data-top-traversal="compass-door-home-products-laws-gauges"
-  data-material-renewal="physical-digital-violet-threshold-crystal"
-  data-threshold-crystal="active"
-  data-center-door-anchor-preserved="true"
-  data-outer-threshold-crystals-webgl="true"
-  data-outer-threshold-crystals-true-3d="true"
-  data-shared-orbit-direction="true"
-  data-labels-remain-readable="true"
-  data-four-lens-compass="north-interface-south-laws-east-story-west-community"
-  data-status="active"
-  data-role="entry-threshold"
-  data-heavy-runtime-loaded="false"
+  data-center-gem-role="center-of-gravity"
+  data-outer-gems-role="orbiting-true-3d-route-crystals"
+  data-stabilized-labels="true"
+  data-labels-rotate-with-gem="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-streaming="false"
+  data-heavy-runtime-loaded="false"
   data-visual-pass-claimed="false"
 >
 <head>
@@ -46,6 +40,8 @@
       --gold2:#ffe8a3;
       --violet:#8f65ff;
       --violet2:#cbb8ff;
+      --blue:#8dd8ff;
+      --green:#8ff0c3;
       --panel:rgba(9,15,31,.86);
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.46);
@@ -530,14 +526,14 @@
     .door-label-overlay{
       position:absolute;
       inset:0;
-      z-index:6;
+      z-index:7;
       pointer-events:none;
     }
 
     .door-route-label{
       position:absolute;
-      left:50%;
-      top:50%;
+      left:var(--fallback-x,50%);
+      top:var(--fallback-y,50%);
       width:7.4rem;
       min-height:3.35rem;
       display:grid;
@@ -546,7 +542,7 @@
       border:1px solid rgba(255,255,255,.10);
       border-radius:1rem;
       color:rgba(255,244,216,.98);
-      background:rgba(5,8,22,.14);
+      background:rgba(5,8,22,.20);
       backdrop-filter:blur(2px);
       text-align:center;
       pointer-events:auto;
@@ -557,14 +553,14 @@
       box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
       transform:translate(-50%,-50%);
       will-change:transform,left,top,opacity;
-      transition:filter .16s ease,border-color .16s ease,background .16s ease;
+      transition:filter .16s ease,border-color .16s ease,background .16s ease,opacity .16s ease;
     }
 
     .door-route-label:hover,
     .door-route-label:focus-visible{
       outline:none;
       border-color:rgba(243,200,111,.52);
-      background:rgba(14,17,36,.40);
+      background:rgba(14,17,36,.46);
       filter:brightness(1.12);
     }
 
@@ -587,6 +583,15 @@
       line-height:1;
       text-transform:uppercase;
     }
+
+    .door-route-label[data-route-index="0"]{--fallback-x:50%;--fallback-y:18%}
+    .door-route-label[data-route-index="1"]{--fallback-x:74%;--fallback-y:26%}
+    .door-route-label[data-route-index="2"]{--fallback-x:82%;--fallback-y:50%}
+    .door-route-label[data-route-index="3"]{--fallback-x:72%;--fallback-y:74%}
+    .door-route-label[data-route-index="4"]{--fallback-x:50%;--fallback-y:82%}
+    .door-route-label[data-route-index="5"]{--fallback-x:28%;--fallback-y:74%}
+    .door-route-label[data-route-index="6"]{--fallback-x:18%;--fallback-y:50%}
+    .door-route-label[data-route-index="7"]{--fallback-x:26%;--fallback-y:26%}
 
     .door-webgl-fallback{
       position:absolute;
@@ -618,6 +623,7 @@
 
     .info-card,
     .room-card{
+      position:relative;
       min-height:10rem;
       display:grid;
       gap:.55rem;
@@ -628,13 +634,33 @@
       background:
         radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
         rgba(255,255,255,.035);
+      overflow:hidden;
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .info-card::after,
+    .room-card::after{
+      content:"";
+      position:absolute;
+      right:.8rem;
+      top:.8rem;
+      width:3.6rem;
+      height:2.7rem;
+      clip-path:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+      opacity:.42;
+      background:
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.24),rgba(143,101,255,.38),rgba(20,10,62,.70),rgba(243,200,111,.16),rgba(255,255,255,.22)),
+        radial-gradient(circle at 50% 26%,rgba(255,255,255,.30),transparent 44%);
+      filter:drop-shadow(0 .8rem 1rem rgba(0,0,0,.28)) drop-shadow(0 0 .8rem rgba(143,101,255,.18));
+      pointer-events:none;
     }
 
     .room-card{
       min-height:6.6rem;
       place-items:center;
       text-align:center;
+      align-content:center;
     }
 
     .info-card:hover,
@@ -652,6 +678,8 @@
       font-size:.68rem;
       letter-spacing:.12em;
       text-transform:uppercase;
+      position:relative;
+      z-index:2;
     }
 
     .info-card strong,
@@ -659,6 +687,8 @@
       color:rgba(255,244,216,.98);
       font-size:1.05rem;
       line-height:1.1;
+      position:relative;
+      z-index:2;
     }
 
     .info-card span,
@@ -666,6 +696,8 @@
       color:var(--muted);
       font-size:.92rem;
       line-height:1.4;
+      position:relative;
+      z-index:2;
     }
 
     .route-receipt,
@@ -761,7 +793,7 @@
 
     @media (max-width:460px){
       .door-stage{
-        min-height:33.5rem;
+        min-height:34rem;
       }
 
       .door-anchor{
@@ -939,16 +971,17 @@
       </section>
 
       <section class="panel section" aria-labelledby="field-title">
-        <div class="kicker">True 3D threshold orbit</div>
-        <h2 id="field-title">Eight real WebGL threshold crystals move in one shared direction around the Door anchor.</h2>
+        <div class="kicker">Gravity-center threshold orbit</div>
+        <h2 id="field-title">The Door gem is the center of gravity. Eight true 3D route crystals orbit at a safe distance while their labels stay readable.</h2>
 
         <div
           class="door-stage"
           data-door-true-3d-stage
           data-door-center-anchor-preserved="true"
+          data-door-center-gravity="true"
           data-door-outer-gems="true-3d-webgl-mesh"
-          data-shared-directional-orbit="true"
-          aria-label="Door true 3D WebGL threshold crystal orbit"
+          data-stabilized-labels="true"
+          aria-label="Door true 3D gravity-center threshold crystal orbit"
         >
           <canvas
             class="door-webgl-canvas"
@@ -994,7 +1027,7 @@
           </nav>
 
           <div class="door-webgl-fallback">
-            Door threshold route links remain available below if WebGL is unavailable.
+            Door route links remain available if WebGL is unavailable.
           </div>
         </div>
       </section>
@@ -1025,7 +1058,7 @@
           <a class="info-card" href="/products/">
             <b>West · Community</b>
             <strong>Everything lines up in practical use.</strong>
-            <span>Products, support, education, nutrition, AI, utility, and the path where the narrative helps people.</span>
+            <span>Products, support, education, nutrition, AAI, utility, and the path where the narrative helps people.</span>
           </a>
         </div>
       </section>
@@ -1047,66 +1080,46 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-DOOR_TRUE_3D_THRESHOLD_CRYSTAL_ORBIT_HTML_JS_TNT_v1
-previous=DOOR_OUTER_THRESHOLD_CRYSTAL_SCALE_AND_SHARED_ORBIT_HTML_ONLY_TNT_v1
+DOOR_TRUE_3D_GRAVITY_CENTER_ORBIT_AND_STABILIZED_LABEL_HTML_JS_TNT_v1
+previous=DOOR_TRUE_3D_THRESHOLD_CRYSTAL_ORBIT_HTML_JS_TNT_v1
 route=/door/
 page=door
-role=entry_threshold
 html=/door/index.html
 js=/door/index.js
-message=one_narrative_four_ways_through
-top_traversal=compass,door,home,products,laws,gauges
-alignment_sequence=TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2
-animation_standard=TRUE_3D_WEBGL_SHARED_DIRECTIONAL_GEM_ORBIT_STANDARD_v1
-center=door_threshold_crystal_seal_preserved
+center_gem=center_of_gravity
 center_anchor_size_changed=false
-outer_threshold_crystals=webgl_true_3d_mesh
-outer_crystal_volume=true
-front_crown_faces=true
-back_depth_faces=true
-side_facets=true
-table_plane=true
-pavilion_taper=true
-visible_thickness=true
-facet_shading=true
-specular_highlight=true
-edge_on_disappearance_blocked=true
+outer_gems=true_3d_webgl_mesh
+outer_gems_orbit_safe_distance=true
+outer_gems_local_axis_rotation=true
+labels_stabilized=true
+labels_rotate_with_gem=false
+labels_follow_projected_gem_position=true
+label_method=html_overlay_front_facing_projected_from_webgl_coordinates
+shared_orbit_direction=true
 flat_svg_orbit_crystals=false
 css_only_3d_plane_tricks=false
-shared_orbit_direction=true
-orbit_method=webgl_perspective_camera_elliptical_depth_path
-label_method=html_overlay_projected_from_webgl_coordinates
-label_law=labels_remain_upright_readable_clickable
-routes=north_interface,compass,east_story,characters,south_laws,home,west_community,frontier
-route_map=/gauges/,/,/showroom/globe/,/characters/,/laws/,/home/,/products/,/frontier/
-local_variation_allowed=small_wobble,breathing,glint,facet_shimmer
-scattered_independent_drift=false
-four_lens_compass=true
-north=interface_engineering_everything_as_we_know_it
-south=laws_truth_layer_scientific_backing
-east=fun_narrative_game_series_mirrorland_expression
-west=community_products_practical_application
-preserved=top_traversal,entry_threshold,receipt_containment,eight_routes,center_door_anchor,physical_digital_threshold_language
-renewed=outer_crystals_true_3d_webgl_mesh,shared_directional_flow,projected_readable_labels
-route_owns=entry_threshold,8_webgl_threshold_crystals,route_selection_surface,top_traversal,four_lens_threshold
-route_does_not_own=products_page,laws_page,showroom_globe_page,characters_page,frontier_page,body_rendering,planet_surface,instrument_state,gauges_logic,full_site_nav_rebuild
-heavy_runtime_loaded=false
+edge_on_disappearance_blocked=true
+fallback_label_positions_nonstacking=true
+lower_cards_gem_language_started=true
+route_owns=door_page,gravity_center_anchor,webgl_outer_route_gems,stabilized_labels,four_lens_cards,eight_door_cards
+route_does_not_own=showroom,products,laws,gauges,sitewide_rebuild,heavy_runtime
 generated_image=false
 graphic_box=false
 streaming=false
+heavy_runtime_loaded=false
 visual_pass_claimed=false
       </template>
     </main>
 
     <footer>
-      DOOR_TRUE_3D_THRESHOLD_CRYSTAL_ORBIT_HTML_JS_TNT_v1 · Door · True 3D WebGL outer crystals · Center anchor preserved.
+      DOOR_TRUE_3D_GRAVITY_CENTER_ORBIT_AND_STABILIZED_LABEL_HTML_JS_TNT_v1 · Door · Center gravity anchor · True 3D route crystals · Stabilized labels.
     </footer>
   </div>
 
   <script>
-    window.DGB_DOOR_HTML_CACHE_KEY = "DOOR_TRUE_3D_THRESHOLD_CRYSTAL_ORBIT_HTML_JS_TNT_v1";
-    window.DGB_DOOR_JS_CACHE_KEY = "DOOR_TRUE_3D_THRESHOLD_CRYSTAL_ORBIT_HTML_JS_TNT_v1";
+    window.DGB_DOOR_HTML_CACHE_KEY = "DOOR_TRUE_3D_GRAVITY_CENTER_ORBIT_AND_STABILIZED_LABEL_HTML_JS_TNT_v1";
+    window.DGB_DOOR_JS_CACHE_KEY = "DOOR_TRUE_3D_GRAVITY_CENTER_ORBIT_AND_STABILIZED_LABEL_HTML_JS_TNT_v1";
   </script>
-  <script type="module" src="/door/index.js?v=DOOR_TRUE_3D_THRESHOLD_CRYSTAL_ORBIT_HTML_JS_TNT_v1"></script>
+  <script type="module" src="/door/index.js?v=DOOR_TRUE_3D_GRAVITY_CENTER_ORBIT_AND_STABILIZED_LABEL_HTML_JS_TNT_v1"></script>
 </body>
 </html>

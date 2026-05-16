@@ -1,26 +1,32 @@
 // /showroom/index.js
 // TNT FULL-FILE REPLACEMENT
-// SHOWROOM_CROWN_CUT_LATTICE_DIAMOND_RENDER_TNT_v1
+// SHOWROOM_DUAL_LENS_DIAMOND_RENDER_TNT_v1
+// Paired HTML: SHOWROOM_DUAL_LENS_DIAMOND_EDUCATIONAL_LAUNCHPAD_TNT_v1
 // Scope: active /showroom/ Diamond renderer only.
-// Paired HTML: SHOWROOM_CROWN_CUT_LATTICE_LAUNCHPAD_TNT_v1
 // Purpose:
-// - Preserve fixed Crown Cut 256 Lattice Diamond authority.
-// - Correct physical form language away from top/toy silhouette.
-// - Reduce visible face density from legacy over-meshed model.
-// - Keep touch-glide camera inspection, momentum, and double-tap reset.
+// - Default Crystal Form: finished Crown Cut Diamond using 16 radial compass points.
+// - Secondary Lattice Structure: reveal 16-point compass geometry and 256 lattice logic.
+// - Toggle changes inspection lens, not object identity.
+// - Correct prior defects: no round girdle rim, no absent crown, no top/toy silhouette, no over-meshed public crystal.
+// - Keep fixed-form touch-glide inspection, momentum, and double-tap reset.
 // - Do not inherit legacy Globe, Planet One, solar-system, or Demo Universe render systems.
 // - No generated image. No graphic box. No Earth/globe/planet language.
 
 const SHOWROOM_DIAMOND_STATE = Object.freeze({
-  contract: "SHOWROOM_CROWN_CUT_LATTICE_DIAMOND_RENDER_TNT_v1",
-  pairedHtmlContract: "SHOWROOM_CROWN_CUT_LATTICE_LAUNCHPAD_TNT_v1",
+  contract: "SHOWROOM_DUAL_LENS_DIAMOND_RENDER_TNT_v1",
+  pairedHtmlContract: "SHOWROOM_DUAL_LENS_DIAMOND_EDUCATIONAL_LAUNCHPAD_TNT_v1",
   route: "/showroom/",
-  role: "showroom-cover-object",
+  role: "showroom-dual-lens-cover-object",
   diamondLock: "CROWN_CUT_256_LATTICE_FIXED_FORM",
   touchGlide: true,
   inspectionControl: "solid-body-camera-view",
   geometryMutableByTouch: false,
-  visualMode: "crown-cut-256-lattice-fixed-crystal-form",
+  defaultLens: "crystal",
+  secondaryLens: "lattice",
+  lensRule: "toggle-changes-inspection-lens-not-object-identity",
+  visibleRadialMetric: 16,
+  latticeStates: 256,
+  visualMode: "dual-lens-crown-cut-diamond-and-lattice-structure",
   publicFormCorrection: "diamond-crystal-not-top-object",
   generatedImage: false,
   graphicBox: false,
@@ -31,12 +37,26 @@ const SHOWROOM_DIAMOND_STATE = Object.freeze({
 
 const TAU = Math.PI * 2;
 const PHI = (1 + Math.sqrt(5)) / 2;
-const SEGMENTS = 32;
+const RADIAL_POINTS = 16;
 const LATTICE_STATES = 256;
 
+const LENS_COPY = Object.freeze({
+  crystal: {
+    title: "Crystal Form",
+    route: "Crystal Form → fixed Crown Cut Diamond · 16 compass points",
+    copy: "This view shows the finished Crown Cut Diamond as a crystal body: crown, table, faceted girdle, pavilion, culet, light, and touch inspection. This is the public object. It proves the site can render interactive 3D content with a fixed form instead of a flat graphic."
+  },
+  lattice: {
+    title: "Lattice Structure",
+    route: "Lattice Structure → 16-point compass geometry · 256 lattice logic",
+    copy: "This view reveals the structural logic beneath the Diamond. The 16-point compass metric organizes the visible geometry, while the 256 lattice represents the deeper address system behind the form. This is not a separate object. It is the same Diamond viewed through its underlying structure."
+  }
+});
+
 const state = {
-  yaw: 0.34,
-  pitch: -0.22,
+  lens: "crystal",
+  yaw: 0.32,
+  pitch: -0.18,
   roll: 0,
   velocityYaw: 0,
   velocityPitch: 0,
@@ -101,16 +121,21 @@ function makePoint(x, y, z, ring, index, angle) {
   return Object.freeze({ x, y, z, ring, index, angle });
 }
 
-function makeRing(name, rx, y, rz, offset = 0) {
+function compassRadius(index, base) {
+  return base * (index % 2 === 0 ? 1 : 0.965);
+}
+
+function makeCompassRing(name, rx, y, rz, offset = 0) {
   const points = [];
 
-  for (let i = 0; i < SEGMENTS; i += 1) {
-    const angle = (i / SEGMENTS) * TAU + offset;
+  for (let i = 0; i < RADIAL_POINTS; i += 1) {
+    const angle = (i / RADIAL_POINTS) * TAU + offset;
+    const modifier = compassRadius(i, 1);
     points.push(
       makePoint(
-        Math.cos(angle) * rx,
+        Math.cos(angle) * rx * modifier,
         y,
-        Math.sin(angle) * rz,
+        Math.sin(angle) * rz * modifier,
         name,
         i,
         angle
@@ -131,46 +156,46 @@ function makeFace(type, points, tone, fireBias = 0) {
 }
 
 function buildImmutableDiamondModel() {
-  const table = makeRing("table", 0.46, -0.66, 0.40, TAU / 64);
-  const crown = makeRing("crown", 0.72, -0.49, 0.63, 0);
-  const upperGirdle = makeRing("upperGirdle", 1.02, -0.14, 0.90, TAU / 64);
-  const lowerGirdle = makeRing("lowerGirdle", 1.00, 0.02, 0.88, 0);
-  const pavilionShoulder = makeRing("pavilionShoulder", 0.76, 0.31, 0.67, TAU / 64);
-  const pavilionLower = makeRing("pavilionLower", 0.38, 0.62, 0.34, 0);
-  const culetRing = makeRing("culetRing", 0.11, 0.86, 0.095, TAU / 64);
+  const table = makeCompassRing("table", 0.34, -0.70, 0.27, TAU / 32);
+  const crown = makeCompassRing("crown", 0.62, -0.49, 0.50, 0);
+  const girdleTop = makeCompassRing("girdleTop", 0.94, -0.16, 0.74, TAU / 32);
+  const girdleBottom = makeCompassRing("girdleBottom", 0.90, 0.00, 0.71, 0);
+  const pavilionShoulder = makeCompassRing("pavilionShoulder", 0.66, 0.31, 0.52, TAU / 32);
+  const pavilionStep = makeCompassRing("pavilionStep", 0.36, 0.56, 0.28, 0);
+  const culetPlane = makeCompassRing("culetPlane", 0.16, 0.72, 0.12, TAU / 32);
 
-  const tableCenter = makePoint(0, -0.69, 0, "tableCenter", -1, 0);
-  const culetCenter = makePoint(0, 0.90, 0, "culetCenter", -2, 0);
+  const tableCenter = makePoint(0, -0.735, 0, "tableCenter", -1, 0);
+  const culetCenter = makePoint(0, 0.735, 0, "culetCenter", -2, 0);
 
   const faces = [
-    makeFace("table", table, 1.72, 0.22),
-    makeFace("culet-cap", culetRing, 1.18, 0.26)
+    makeFace("table", table, 1.72, 0.18),
+    makeFace("culet-plane", culetPlane, 0.92, 0.22)
   ];
 
-  for (let i = 0; i < SEGMENTS; i += 1) {
-    const n = (i + 1) % SEGMENTS;
+  for (let i = 0; i < RADIAL_POINTS; i += 1) {
+    const n = (i + 1) % RADIAL_POINTS;
     const fireBias = seededUnit(i, 31) * 0.42;
 
-    faces.push(makeFace("table-star", [tableCenter, table[i], table[n]], 1.62, fireBias + 0.05));
-    faces.push(makeFace("crown-main", [table[i], crown[i], crown[n], table[n]], 1.42, fireBias + 0.14));
-    faces.push(makeFace("crown-bezel", [crown[i], upperGirdle[i], upperGirdle[n], crown[n]], 1.18, fireBias + 0.12));
-    faces.push(makeFace("girdle-belt", [upperGirdle[i], lowerGirdle[i], lowerGirdle[n], upperGirdle[n]], 0.84, fireBias));
-    faces.push(makeFace("pavilion-main", [lowerGirdle[i], pavilionShoulder[i], pavilionShoulder[n], lowerGirdle[n]], 1.08, fireBias + 0.18));
-    faces.push(makeFace("pavilion-lower", [pavilionShoulder[i], pavilionLower[i], pavilionLower[n], pavilionShoulder[n]], 1.20, fireBias + 0.25));
-    faces.push(makeFace("culet-termination", [pavilionLower[i], culetRing[i], culetRing[n], pavilionLower[n]], 1.34, fireBias + 0.32));
+    faces.push(makeFace("table-star", [tableCenter, table[i], table[n]], 1.58, fireBias + 0.04));
+    faces.push(makeFace("crown-main", [table[i], crown[i], crown[n], table[n]], 1.38, fireBias + 0.12));
+    faces.push(makeFace("crown-slope", [crown[i], girdleTop[i], girdleTop[n], crown[n]], 1.08, fireBias + 0.10));
+    faces.push(makeFace("girdle-belt", [girdleTop[i], girdleBottom[i], girdleBottom[n], girdleTop[n]], 0.70, fireBias));
+    faces.push(makeFace("pavilion-main", [girdleBottom[i], pavilionShoulder[i], pavilionShoulder[n], girdleBottom[n]], 0.98, fireBias + 0.16));
+    faces.push(makeFace("pavilion-step", [pavilionShoulder[i], pavilionStep[i], pavilionStep[n], pavilionShoulder[n]], 1.08, fireBias + 0.22));
+    faces.push(makeFace("culet-termination", [pavilionStep[i], culetPlane[i], culetPlane[n], pavilionStep[n]], 1.12, fireBias + 0.26));
   }
 
   return Object.freeze({
     table,
     crown,
-    upperGirdle,
-    lowerGirdle,
+    girdleTop,
+    girdleBottom,
     pavilionShoulder,
-    pavilionLower,
-    culetRing,
+    pavilionStep,
+    culetPlane,
     tableCenter,
     culetCenter,
-    rings: Object.freeze([table, crown, upperGirdle, lowerGirdle, pavilionShoulder, pavilionLower, culetRing]),
+    rings: Object.freeze([table, crown, girdleTop, girdleBottom, pavilionShoulder, pavilionStep, culetPlane]),
     faces: Object.freeze(faces)
   });
 }
@@ -207,12 +232,12 @@ function rotateImmutablePoint(point) {
 }
 
 function projectRotatedPoint(rotated, width, height, scale) {
-  const camera = 4.85;
-  const perspective = camera / (camera - rotated.z * 0.70);
+  const camera = 4.95;
+  const perspective = camera / (camera - rotated.z * 0.68);
 
   return {
     x: width * 0.5 + rotated.x * scale * perspective,
-    y: height * 0.415 + rotated.y * scale * 0.99 * perspective,
+    y: height * 0.415 + rotated.y * scale * 1.03 * perspective,
     z: rotated.z,
     raw: rotated,
     source: rotated.source
@@ -293,19 +318,19 @@ function drawPolygon(ctx, points) {
 
 function diamondTypeAlpha(type) {
   return {
-    table: 0.78,
-    "table-star": 0.62,
-    "crown-main": 0.64,
-    "crown-bezel": 0.59,
+    table: 0.82,
+    "table-star": 0.58,
+    "crown-main": 0.66,
+    "crown-slope": 0.60,
     "girdle-belt": 0.48,
     "pavilion-main": 0.58,
-    "pavilion-lower": 0.61,
-    "culet-termination": 0.56,
-    "culet-cap": 0.48
+    "pavilion-step": 0.60,
+    "culet-termination": 0.52,
+    "culet-plane": 0.46
   }[type] || 0.56;
 }
 
-function materialForFace(ctx, face, index) {
+function materialForFace(ctx, face, index, lens) {
   const center = faceCenter(face.projected);
   const normal = faceNormal(face.rotated);
 
@@ -321,7 +346,7 @@ function materialForFace(ctx, face, index) {
   const facing = clamp((normal.z + 1) / 2, 0, 1);
   const edge = clamp(1 - facing, 0, 1);
 
-  const facetPulse = 0.5 + 0.5 * Math.sin(index * PHI + face.fireBias * 7 + state.sparklePhase * 1.74);
+  const facetPulse = 0.5 + 0.5 * Math.sin(index * PHI + face.fireBias * 7 + state.sparklePhase * 1.68);
   const alternating = index % 2 === 0 ? 1 : -1;
 
   const brilliance = clamp(
@@ -329,45 +354,45 @@ function materialForFace(ctx, face, index) {
     Math.pow(sharp, 4.35) * 1.08 +
     rim * 0.66 +
     under * 0.20 +
-    facetPulse * 0.16,
+    facetPulse * 0.14,
     0,
     1.72
   );
 
   const pavilionPenalty =
-    face.type.includes("pavilion") || face.type.includes("culet") ? 0.14 : 0;
+    face.type.includes("pavilion") || face.type.includes("culet") ? 0.13 : 0;
 
   const shadow = clamp(
-    edge * 0.45 +
-    (1 - key) * 0.26 +
-    (alternating < 0 ? 0.10 : 0) +
+    edge * 0.42 +
+    (1 - key) * 0.24 +
+    (alternating < 0 ? 0.08 : 0) +
     pavilionPenalty,
     0,
-    0.88
+    0.86
   );
 
   const fire = clamp(
-    face.fireBias * 0.32 +
-    rim * 0.16 +
-    Math.pow(sharp, 3.2) * 0.24 +
-    facetPulse * 0.14,
+    face.fireBias * 0.30 +
+    rim * 0.14 +
+    Math.pow(sharp, 3.2) * 0.22 +
+    facetPulse * 0.12,
     0.02,
-    0.62
+    0.58
   );
 
   const typeBoost = {
     table: 1.20,
-    "table-star": 1.10,
-    "crown-main": 1.02,
-    "crown-bezel": 0.94,
-    "girdle-belt": 0.68,
+    "table-star": 1.08,
+    "crown-main": 1.04,
+    "crown-slope": 0.96,
+    "girdle-belt": 0.66,
     "pavilion-main": 0.86,
-    "pavilion-lower": 0.92,
-    "culet-termination": 0.86,
-    "culet-cap": 0.74
+    "pavilion-step": 0.92,
+    "culet-termination": 0.82,
+    "culet-plane": 0.70
   }[face.type] || 0.88;
 
-  const brightness = clamp((brilliance * typeBoost + face.tone * 0.16) - shadow * 0.46, 0.06, 1.78);
+  const brightness = clamp((brilliance * typeBoost + face.tone * 0.16) - shadow * 0.44, 0.06, 1.76);
 
   const deepBlue = [10, 22, 46];
   const blueGlass = [74, 130, 202];
@@ -376,10 +401,10 @@ function materialForFace(ctx, face, index) {
   const goldFire = [255, 220, 142];
   const violetFire = [214, 198, 255];
 
-  const darkMix = clamp(shadow * 0.78, 0, 0.92);
+  const darkMix = clamp(shadow * 0.76, 0, 0.90);
   const iceMix = clamp(brightness * 0.60 + facing * 0.16, 0, 1);
-  const fireMix = clamp(fire * 0.36, 0, 0.40);
-  const violetMix = clamp(rim * 0.12 + face.fireBias * 0.08, 0, 0.22);
+  const fireMix = clamp(fire * 0.34, 0, 0.38);
+  const violetMix = lens === "lattice" ? clamp(0.20 + rim * 0.15, 0, 0.34) : clamp(rim * 0.10 + face.fireBias * 0.06, 0, 0.18);
 
   const baseA = [
     lerp(deepBlue[0], blueGlass[0], iceMix),
@@ -388,15 +413,15 @@ function materialForFace(ctx, face, index) {
   ];
 
   const baseB = [
-    lerp(baseA[0], ice[0], clamp(brightness * 0.48, 0, 1)),
-    lerp(baseA[1], ice[1], clamp(brightness * 0.48, 0, 1)),
-    lerp(baseA[2], ice[2], clamp(brightness * 0.48, 0, 1))
+    lerp(baseA[0], ice[0], clamp(brightness * 0.46, 0, 1)),
+    lerp(baseA[1], ice[1], clamp(brightness * 0.46, 0, 1)),
+    lerp(baseA[2], ice[2], clamp(brightness * 0.46, 0, 1))
   ];
 
   const baseC = [
-    lerp(baseB[0], white[0], clamp(Math.pow(sharp, 5.1) + brightness * 0.10, 0, 0.62)),
-    lerp(baseB[1], white[1], clamp(Math.pow(sharp, 5.1) + brightness * 0.10, 0, 0.62)),
-    lerp(baseB[2], white[2], clamp(Math.pow(sharp, 5.1) + brightness * 0.10, 0, 0.62))
+    lerp(baseB[0], white[0], clamp(Math.pow(sharp, 5.1) + brightness * 0.10, 0, 0.60)),
+    lerp(baseB[1], white[1], clamp(Math.pow(sharp, 5.1) + brightness * 0.10, 0, 0.60)),
+    lerp(baseB[2], white[2], clamp(Math.pow(sharp, 5.1) + brightness * 0.10, 0, 0.60))
   ];
 
   let color = [
@@ -411,12 +436,13 @@ function materialForFace(ctx, face, index) {
     lerp(color[2], violetFire[2], violetMix)
   ];
 
-  color[0] = lerp(color[0], deepBlue[0], darkMix * 0.40);
-  color[1] = lerp(color[1], deepBlue[1], darkMix * 0.36);
-  color[2] = lerp(color[2], deepBlue[2], darkMix * 0.30);
+  color[0] = lerp(color[0], deepBlue[0], darkMix * 0.38);
+  color[1] = lerp(color[1], deepBlue[1], darkMix * 0.34);
+  color[2] = lerp(color[2], deepBlue[2], darkMix * 0.28);
 
-  const alpha = clamp(diamondTypeAlpha(face.type) + brightness * 0.09 - shadow * 0.07, 0.36, 0.86);
-  const strokeAlpha = clamp(0.20 + brightness * 0.42 + rim * 0.18, 0.18, 0.78);
+  const lensAlphaFactor = lens === "lattice" ? 0.36 : 1;
+  const alpha = clamp((diamondTypeAlpha(face.type) + brightness * 0.08 - shadow * 0.06) * lensAlphaFactor, 0.16, lens === "lattice" ? 0.38 : 0.86);
+  const strokeAlpha = clamp(0.18 + brightness * 0.34 + rim * 0.12, 0.12, lens === "lattice" ? 0.38 : 0.64);
 
   const gradient = ctx.createLinearGradient(
     center.x - 140 * state.dpr,
@@ -425,20 +451,19 @@ function materialForFace(ctx, face, index) {
     center.y + 120 * state.dpr
   );
 
-  gradient.addColorStop(0, `rgba(255,255,255,${clamp(alpha * 0.74 + sharp * 0.30, 0, 0.88)})`);
-  gradient.addColorStop(0.22, rgba([
-    lerp(color[0], 255, 0.22),
-    lerp(color[1], 255, 0.25),
-    lerp(color[2], 255, 0.30)
+  gradient.addColorStop(0, `rgba(255,255,255,${clamp(alpha * 0.70 + sharp * 0.22, 0, 0.82)})`);
+  gradient.addColorStop(0.24, rgba([
+    lerp(color[0], 255, 0.20),
+    lerp(color[1], 255, 0.23),
+    lerp(color[2], 255, 0.28)
   ], alpha));
-  gradient.addColorStop(0.48, rgba(color, alpha * 0.92));
-  gradient.addColorStop(0.70, rgba([
-    lerp(color[0], 20, shadow * 0.40),
-    lerp(color[1], 34, shadow * 0.40),
-    lerp(color[2], 64, shadow * 0.40)
-  ], alpha * 0.76));
-  gradient.addColorStop(0.90, `rgba(255,255,255,${alpha * clamp(sharp + rim * 0.35, 0.08, 0.36)})`);
-  gradient.addColorStop(1, rgba([8, 18, 38], alpha * 0.38));
+  gradient.addColorStop(0.50, rgba(color, alpha * 0.90));
+  gradient.addColorStop(0.74, rgba([
+    lerp(color[0], 20, shadow * 0.38),
+    lerp(color[1], 34, shadow * 0.38),
+    lerp(color[2], 64, shadow * 0.38)
+  ], alpha * 0.72));
+  gradient.addColorStop(1, rgba([8, 18, 38], alpha * 0.36));
 
   return {
     fill: gradient,
@@ -449,10 +474,10 @@ function materialForFace(ctx, face, index) {
   };
 }
 
-function drawBackground(ctx, width, height) {
+function drawBackground(ctx, width, height, lens) {
   const bg = ctx.createLinearGradient(0, 0, 0, height);
-  bg.addColorStop(0, "rgba(1, 5, 14, 1)");
-  bg.addColorStop(0.50, "rgba(5, 15, 32, 0.99)");
+  bg.addColorStop(0, lens === "lattice" ? "rgba(2, 5, 15, 1)" : "rgba(1, 5, 14, 1)");
+  bg.addColorStop(0.50, lens === "lattice" ? "rgba(7, 12, 34, 0.99)" : "rgba(5, 15, 32, 0.99)");
   bg.addColorStop(1, "rgba(1, 4, 10, 1)");
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, width, height);
@@ -466,9 +491,9 @@ function drawBackground(ctx, width, height) {
     width * 0.60
   );
 
-  halo.addColorStop(0, "rgba(244, 250, 255, 0.23)");
-  halo.addColorStop(0.28, "rgba(118, 168, 225, 0.14)");
-  halo.addColorStop(0.54, "rgba(244, 207, 131, 0.055)");
+  halo.addColorStop(0, lens === "lattice" ? "rgba(198, 166, 255, 0.20)" : "rgba(244, 250, 255, 0.22)");
+  halo.addColorStop(0.28, "rgba(118, 168, 225, 0.13)");
+  halo.addColorStop(0.54, "rgba(244, 207, 131, 0.052)");
   halo.addColorStop(1, "rgba(0, 0, 0, 0)");
 
   ctx.fillStyle = halo;
@@ -492,14 +517,14 @@ function drawBackground(ctx, width, height) {
 function drawStars(ctx, width, height) {
   ctx.save();
 
-  for (let i = 0; i < 62; i += 1) {
+  for (let i = 0; i < 58; i += 1) {
     const x = seededUnit(i, 1) * width;
     const y = seededUnit(i, 2) * height;
-    const alpha = 0.07 + seededUnit(i, 3) * 0.18;
-    const size = i % 17 === 0 ? 5.6 : i % 7 === 0 ? 2.8 : 1.1;
+    const alpha = 0.06 + seededUnit(i, 3) * 0.16;
+    const size = i % 17 === 0 ? 5.4 : i % 7 === 0 ? 2.6 : 1.0;
 
     ctx.strokeStyle = `rgba(235, 244, 255, ${alpha})`;
-    ctx.lineWidth = Math.max(1, width * 0.00075);
+    ctx.lineWidth = Math.max(1, width * 0.00072);
     ctx.beginPath();
     ctx.moveTo(x - size, y);
     ctx.lineTo(x + size, y);
@@ -511,16 +536,17 @@ function drawStars(ctx, width, height) {
   ctx.restore();
 }
 
-function drawFaces(ctx, projectedFaces, width) {
+function drawFaces(ctx, projectedFaces, width, lens) {
   projectedFaces
     .slice()
     .sort((a, b) => a.avgZ - b.avgZ)
+    .filter((face) => lens === "lattice" || faceNormal(face.rotated).z > -0.58)
     .forEach((face, index) => {
-      const material = materialForFace(ctx, face, index);
+      const material = materialForFace(ctx, face, index, lens);
       drawPolygon(ctx, face.projected);
       ctx.fillStyle = material.fill;
       ctx.strokeStyle = material.stroke;
-      ctx.lineWidth = Math.max(0.72, width * 0.00088);
+      ctx.lineWidth = Math.max(0.66, width * (lens === "lattice" ? 0.00050 : 0.00076));
       ctx.fill();
       ctx.stroke();
     });
@@ -530,7 +556,7 @@ function drawRing(ctx, ring, width, height, scale, alpha, lineWidth = 1) {
   const projected = ring.map((point) => projectedPoint(point, width, height, scale));
 
   ctx.strokeStyle = `rgba(244, 250, 255, ${alpha})`;
-  ctx.lineWidth = Math.max(lineWidth, width * 0.00084);
+  ctx.lineWidth = Math.max(lineWidth, width * 0.00076);
   ctx.beginPath();
 
   projected.forEach((point, index) => {
@@ -542,69 +568,131 @@ function drawRing(ctx, ring, width, height, scale, alpha, lineWidth = 1) {
   ctx.stroke();
 }
 
-function drawLine(ctx, a, b, width, height, scale, alpha, lineWidth = 1) {
+function drawLine(ctx, a, b, width, height, scale, alpha, lineWidth = 1, color = "244, 250, 255") {
   const pa = projectedPoint(a, width, height, scale);
   const pb = projectedPoint(b, width, height, scale);
 
-  ctx.strokeStyle = `rgba(244, 250, 255, ${alpha})`;
-  ctx.lineWidth = Math.max(lineWidth, width * 0.00078);
+  ctx.strokeStyle = `rgba(${color}, ${alpha})`;
+  ctx.lineWidth = Math.max(lineWidth, width * 0.00072);
   ctx.beginPath();
   ctx.moveTo(pa.x, pa.y);
   ctx.lineTo(pb.x, pb.y);
   ctx.stroke();
 }
 
-function drawLattice(ctx, width, height, scale) {
+function drawMajorCrystalEdges(ctx, width, height, scale) {
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
-  drawRing(ctx, DIAMOND_MODEL.table, width, height, scale, 0.76, 1.10 * state.dpr);
-  drawRing(ctx, DIAMOND_MODEL.crown, width, height, scale, 0.44, 0.82 * state.dpr);
-  drawRing(ctx, DIAMOND_MODEL.upperGirdle, width, height, scale, 0.78, 1.34 * state.dpr);
-  drawRing(ctx, DIAMOND_MODEL.lowerGirdle, width, height, scale, 0.48, 0.90 * state.dpr);
-  drawRing(ctx, DIAMOND_MODEL.pavilionShoulder, width, height, scale, 0.32, 0.70 * state.dpr);
-  drawRing(ctx, DIAMOND_MODEL.pavilionLower, width, height, scale, 0.36, 0.74 * state.dpr);
-  drawRing(ctx, DIAMOND_MODEL.culetRing, width, height, scale, 0.50, 0.70 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.table, width, height, scale, 0.70, 1.08 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.crown, width, height, scale, 0.36, 0.78 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.girdleTop, width, height, scale, 0.88, 1.45 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.girdleBottom, width, height, scale, 0.48, 0.90 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.pavilionShoulder, width, height, scale, 0.28, 0.64 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.pavilionStep, width, height, scale, 0.32, 0.68 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.culetPlane, width, height, scale, 0.44, 0.68 * state.dpr);
 
-  for (let i = 0; i < SEGMENTS; i += 4) {
-    drawLine(ctx, DIAMOND_MODEL.table[i], DIAMOND_MODEL.crown[i], width, height, scale, 0.28, 0.66 * state.dpr);
-    drawLine(ctx, DIAMOND_MODEL.crown[i], DIAMOND_MODEL.upperGirdle[i], width, height, scale, 0.32, 0.72 * state.dpr);
-    drawLine(ctx, DIAMOND_MODEL.lowerGirdle[i], DIAMOND_MODEL.pavilionShoulder[i], width, height, scale, 0.28, 0.64 * state.dpr);
-    drawLine(ctx, DIAMOND_MODEL.pavilionShoulder[i], DIAMOND_MODEL.pavilionLower[i], width, height, scale, 0.24, 0.58 * state.dpr);
-    drawLine(ctx, DIAMOND_MODEL.pavilionLower[i], DIAMOND_MODEL.culetRing[i], width, height, scale, 0.32, 0.62 * state.dpr);
-  }
-
-  for (let i = 2; i < SEGMENTS; i += 8) {
-    drawLine(ctx, DIAMOND_MODEL.crown[i], DIAMOND_MODEL.upperGirdle[(i + 3) % SEGMENTS], width, height, scale, 0.14, 0.50 * state.dpr);
-    drawLine(ctx, DIAMOND_MODEL.lowerGirdle[i], DIAMOND_MODEL.pavilionShoulder[(i + 5) % SEGMENTS], width, height, scale, 0.15, 0.50 * state.dpr);
+  for (let i = 0; i < RADIAL_POINTS; i += 2) {
+    drawLine(ctx, DIAMOND_MODEL.table[i], DIAMOND_MODEL.crown[i], width, height, scale, 0.22, 0.60 * state.dpr);
+    drawLine(ctx, DIAMOND_MODEL.crown[i], DIAMOND_MODEL.girdleTop[i], width, height, scale, 0.26, 0.66 * state.dpr);
+    drawLine(ctx, DIAMOND_MODEL.girdleBottom[i], DIAMOND_MODEL.pavilionShoulder[i], width, height, scale, 0.22, 0.60 * state.dpr);
+    drawLine(ctx, DIAMOND_MODEL.pavilionShoulder[i], DIAMOND_MODEL.pavilionStep[i], width, height, scale, 0.18, 0.54 * state.dpr);
+    drawLine(ctx, DIAMOND_MODEL.pavilionStep[i], DIAMOND_MODEL.culetPlane[i], width, height, scale, 0.22, 0.58 * state.dpr);
   }
 
   ctx.restore();
 }
 
-function drawInternalFire(ctx, width, height, scale) {
+function drawLatticeStructure(ctx, width, height, scale) {
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  const lineBlue = "141, 216, 255";
+  const lineGold = "244, 207, 131";
+  const lineViolet = "198, 166, 255";
+
+  drawRing(ctx, DIAMOND_MODEL.table, width, height, scale, 0.72, 1.12 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.crown, width, height, scale, 0.54, 0.86 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.girdleTop, width, height, scale, 0.84, 1.38 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.girdleBottom, width, height, scale, 0.56, 0.94 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.pavilionShoulder, width, height, scale, 0.42, 0.76 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.pavilionStep, width, height, scale, 0.44, 0.76 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.culetPlane, width, height, scale, 0.58, 0.76 * state.dpr);
+
+  for (let i = 0; i < RADIAL_POINTS; i += 1) {
+    const major = i % 4 === 0;
+    const alpha = major ? 0.54 : 0.28;
+    const widthMod = major ? 0.88 : 0.56;
+    const color = major ? lineGold : lineBlue;
+
+    drawLine(ctx, DIAMOND_MODEL.table[i], DIAMOND_MODEL.crown[i], width, height, scale, alpha, widthMod * state.dpr, color);
+    drawLine(ctx, DIAMOND_MODEL.crown[i], DIAMOND_MODEL.girdleTop[i], width, height, scale, alpha, widthMod * state.dpr, color);
+    drawLine(ctx, DIAMOND_MODEL.girdleBottom[i], DIAMOND_MODEL.pavilionShoulder[i], width, height, scale, alpha, widthMod * state.dpr, color);
+    drawLine(ctx, DIAMOND_MODEL.pavilionShoulder[i], DIAMOND_MODEL.pavilionStep[i], width, height, scale, alpha, widthMod * state.dpr, color);
+    drawLine(ctx, DIAMOND_MODEL.pavilionStep[i], DIAMOND_MODEL.culetPlane[i], width, height, scale, alpha, widthMod * state.dpr, color);
+  }
+
+  for (let i = 0; i < RADIAL_POINTS; i += 2) {
+    drawLine(ctx, DIAMOND_MODEL.table[i], DIAMOND_MODEL.girdleTop[(i + 2) % RADIAL_POINTS], width, height, scale, 0.20, 0.50 * state.dpr, lineViolet);
+    drawLine(ctx, DIAMOND_MODEL.girdleBottom[i], DIAMOND_MODEL.pavilionStep[(i + 2) % RADIAL_POINTS], width, height, scale, 0.20, 0.50 * state.dpr, lineViolet);
+  }
+
+  drawCompassNodes(ctx, width, height, scale);
+
+  ctx.restore();
+}
+
+function drawCompassNodes(ctx, width, height, scale) {
+  const rings = [
+    DIAMOND_MODEL.table,
+    DIAMOND_MODEL.crown,
+    DIAMOND_MODEL.girdleTop,
+    DIAMOND_MODEL.girdleBottom,
+    DIAMOND_MODEL.pavilionShoulder,
+    DIAMOND_MODEL.pavilionStep,
+    DIAMOND_MODEL.culetPlane
+  ];
+
+  rings.forEach((ring, ringIndex) => {
+    ring.forEach((point, pointIndex) => {
+      const projected = projectedPoint(point, width, height, scale);
+      const major = pointIndex % 4 === 0;
+      const pulse = 0.75 + 0.25 * Math.sin(state.sparklePhase * 1.4 + ringIndex + pointIndex * 0.3);
+      const radius = (major ? 3.3 : 2.0) * state.dpr;
+      const color = major ? [244, 207, 131] : [141, 216, 255];
+
+      ctx.fillStyle = rgba(color, (major ? 0.78 : 0.44) * pulse);
+      ctx.beginPath();
+      ctx.arc(projected.x, projected.y, radius, 0, TAU);
+      ctx.fill();
+    });
+  });
+}
+
+function drawInternalFire(ctx, width, height, scale, lens) {
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
   const firePairs = [
-    [DIAMOND_MODEL.upperGirdle[2], DIAMOND_MODEL.pavilionShoulder[21], [105, 190, 255], 0.26, 2.3],
-    [DIAMOND_MODEL.upperGirdle[10], DIAMOND_MODEL.table[5], [255, 230, 160], 0.20, 1.8],
-    [DIAMOND_MODEL.upperGirdle[23], DIAMOND_MODEL.pavilionLower[7], [135, 210, 255], 0.24, 2.0],
-    [DIAMOND_MODEL.crown[4], DIAMOND_MODEL.lowerGirdle[17], [255, 255, 255], 0.20, 1.6],
-    [DIAMOND_MODEL.crown[27], DIAMOND_MODEL.pavilionShoulder[12], [255, 192, 122], 0.18, 1.6],
-    [DIAMOND_MODEL.table[17], DIAMOND_MODEL.culetRing[29], [190, 225, 255], 0.18, 1.5]
+    [DIAMOND_MODEL.girdleTop[1], DIAMOND_MODEL.pavilionShoulder[10], [105, 190, 255], 0.24, 2.1],
+    [DIAMOND_MODEL.girdleTop[5], DIAMOND_MODEL.table[2], [255, 230, 160], 0.18, 1.7],
+    [DIAMOND_MODEL.girdleTop[11], DIAMOND_MODEL.pavilionStep[3], [135, 210, 255], 0.22, 1.8],
+    [DIAMOND_MODEL.crown[2], DIAMOND_MODEL.girdleBottom[8], [255, 255, 255], 0.18, 1.5],
+    [DIAMOND_MODEL.crown[13], DIAMOND_MODEL.pavilionShoulder[6], [255, 192, 122], 0.16, 1.5]
   ];
 
   firePairs.forEach(([a, b, color, baseAlpha, thickness], index) => {
     const pa = projectedPoint(a, width, height, scale);
     const pb = projectedPoint(b, width, height, scale);
-    const pulse = 0.70 + 0.30 * Math.sin(state.sparklePhase * 1.35 + index * 1.7);
+    const pulse = 0.70 + 0.30 * Math.sin(state.sparklePhase * 1.30 + index * 1.7);
     const gradient = ctx.createLinearGradient(pa.x, pa.y, pb.x, pb.y);
 
+    const lensFactor = lens === "lattice" ? 0.72 : 1;
+
     gradient.addColorStop(0, "rgba(255,255,255,0)");
-    gradient.addColorStop(0.38, rgba(color, baseAlpha * 0.56 * pulse));
-    gradient.addColorStop(0.52, rgba(color, baseAlpha));
-    gradient.addColorStop(0.68, rgba(color, baseAlpha * 0.46 * pulse));
+    gradient.addColorStop(0.38, rgba(color, baseAlpha * 0.54 * pulse * lensFactor));
+    gradient.addColorStop(0.52, rgba(color, baseAlpha * lensFactor));
+    gradient.addColorStop(0.68, rgba(color, baseAlpha * 0.44 * pulse * lensFactor));
     gradient.addColorStop(1, "rgba(255,255,255,0)");
 
     ctx.strokeStyle = gradient;
@@ -618,16 +706,18 @@ function drawInternalFire(ctx, width, height, scale) {
   ctx.restore();
 }
 
-function drawPrismShards(ctx, projectedFaces) {
+function drawPrismShards(ctx, projectedFaces, lens) {
+  if (lens === "lattice") return;
+
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
   projectedFaces
-    .filter((face, index) => index % 9 === 0 || face.type === "table-star")
-    .slice(0, 28)
+    .filter((face, index) => index % 7 === 0 || face.type === "table-star")
+    .slice(0, 20)
     .forEach((face, index) => {
-      const pulse = 0.5 + 0.5 * Math.sin(state.sparklePhase * 1.5 + index * PHI);
-      const alpha = 0.018 + pulse * 0.044;
+      const pulse = 0.5 + 0.5 * Math.sin(state.sparklePhase * 1.45 + index * PHI);
+      const alpha = 0.016 + pulse * 0.036;
 
       const hue =
         index % 5 === 0 ? [255, 220, 142] :
@@ -651,18 +741,18 @@ function drawStarGlint(ctx, x, y, radius, alpha = 1) {
   const outer = radius * state.dpr;
   const inner = outer * 0.32;
 
-  const glow = ctx.createRadialGradient(x, y, 0, x, y, outer * 2.45);
-  glow.addColorStop(0, `rgba(255, 255, 255, ${0.72 * alpha})`);
-  glow.addColorStop(0.20, `rgba(160, 215, 255, ${0.28 * alpha})`);
-  glow.addColorStop(0.54, `rgba(244, 207, 131, ${0.09 * alpha})`);
+  const glow = ctx.createRadialGradient(x, y, 0, x, y, outer * 2.35);
+  glow.addColorStop(0, `rgba(255, 255, 255, ${0.70 * alpha})`);
+  glow.addColorStop(0.20, `rgba(160, 215, 255, ${0.26 * alpha})`);
+  glow.addColorStop(0.54, `rgba(244, 207, 131, ${0.08 * alpha})`);
   glow.addColorStop(1, "rgba(255, 255, 255, 0)");
 
   ctx.fillStyle = glow;
   ctx.beginPath();
-  ctx.arc(x, y, outer * 2.45, 0, TAU);
+  ctx.arc(x, y, outer * 2.35, 0, TAU);
   ctx.fill();
 
-  ctx.strokeStyle = `rgba(255, 255, 255, ${0.90 * alpha})`;
+  ctx.strokeStyle = `rgba(255, 255, 255, ${0.86 * alpha})`;
   ctx.lineWidth = Math.max(1, outer * 0.052);
 
   ctx.beginPath();
@@ -672,7 +762,7 @@ function drawStarGlint(ctx, x, y, radius, alpha = 1) {
   ctx.lineTo(x, y + outer);
   ctx.stroke();
 
-  ctx.strokeStyle = `rgba(190, 225, 255, ${0.54 * alpha})`;
+  ctx.strokeStyle = `rgba(190, 225, 255, ${0.50 * alpha})`;
   ctx.beginPath();
   ctx.moveTo(x - inner, y - inner);
   ctx.lineTo(x + inner, y + inner);
@@ -683,34 +773,34 @@ function drawStarGlint(ctx, x, y, radius, alpha = 1) {
   ctx.restore();
 }
 
-function drawSparkles(ctx, width, height, scale) {
+function drawSparkles(ctx, width, height, scale, lens) {
   const candidates = [
     ...DIAMOND_MODEL.table,
     ...DIAMOND_MODEL.crown,
-    ...DIAMOND_MODEL.upperGirdle,
-    ...DIAMOND_MODEL.lowerGirdle,
+    ...DIAMOND_MODEL.girdleTop,
+    ...DIAMOND_MODEL.girdleBottom,
     ...DIAMOND_MODEL.pavilionShoulder,
-    ...DIAMOND_MODEL.pavilionLower,
-    ...DIAMOND_MODEL.culetRing
+    ...DIAMOND_MODEL.pavilionStep,
+    ...DIAMOND_MODEL.culetPlane
   ].map((point, index) => {
     const projected = projectedPoint(point, width, height, scale);
-    const pulse = 0.5 + 0.5 * Math.sin(index * PHI + state.sparklePhase * 2.0);
-    const front = clamp((projected.z + 1.10) / 2.2, 0, 1);
-    const score = pulse * 0.50 + front * 0.42 + seededUnit(index, 90) * 0.14;
+    const pulse = 0.5 + 0.5 * Math.sin(index * PHI + state.sparklePhase * 1.95);
+    const front = clamp((projected.z + 1.05) / 2.1, 0, 1);
+    const score = pulse * 0.48 + front * 0.40 + seededUnit(index, 90) * 0.12;
     return { projected, score, index };
   });
 
   candidates
     .sort((a, b) => b.score - a.score)
-    .slice(0, 7)
+    .slice(0, lens === "lattice" ? 4 : 6)
     .forEach((item, rank) => {
-      const radius = rank < 2 ? 12 : rank < 5 ? 8 : 5.5;
-      const alpha = clamp(item.score * (rank < 3 ? 0.88 : 0.60), 0.18, 0.90);
+      const radius = rank < 2 ? 11 : rank < 5 ? 7 : 5;
+      const alpha = clamp(item.score * (rank < 3 ? 0.78 : 0.52), 0.14, 0.78);
       drawStarGlint(ctx, item.projected.x, item.projected.y, radius, alpha);
     });
 }
 
-function drawAuraAndShadow(ctx, width, height, scale) {
+function drawAuraAndShadow(ctx, width, height, scale, lens) {
   const centerX = width * 0.5;
   const centerY = height * 0.415;
 
@@ -723,7 +813,7 @@ function drawAuraAndShadow(ctx, width, height, scale) {
     scale * 2.12
   );
 
-  aura.addColorStop(0, "rgba(255, 255, 255, 0.18)");
+  aura.addColorStop(0, lens === "lattice" ? "rgba(198, 166, 255, 0.16)" : "rgba(255, 255, 255, 0.18)");
   aura.addColorStop(0.22, "rgba(147, 188, 235, 0.12)");
   aura.addColorStop(0.52, "rgba(244, 207, 131, 0.052)");
   aura.addColorStop(1, "rgba(0, 0, 0, 0)");
@@ -735,51 +825,51 @@ function drawAuraAndShadow(ctx, width, height, scale) {
 
   const shadow = ctx.createRadialGradient(
     centerX,
-    culet.y + scale * 0.17,
-    scale * 0.06,
+    culet.y + scale * 0.16,
+    scale * 0.05,
     centerX,
-    culet.y + scale * 0.17,
-    scale * 0.48
+    culet.y + scale * 0.16,
+    scale * 0.40
   );
 
-  shadow.addColorStop(0, "rgba(244, 207, 131, 0.14)");
-  shadow.addColorStop(0.38, "rgba(82, 109, 146, 0.13)");
+  shadow.addColorStop(0, "rgba(244, 207, 131, 0.11)");
+  shadow.addColorStop(0.38, "rgba(82, 109, 146, 0.10)");
   shadow.addColorStop(1, "rgba(0, 0, 0, 0)");
 
   ctx.fillStyle = shadow;
   ctx.beginPath();
-  ctx.ellipse(centerX, culet.y + scale * 0.17, scale * 0.42, scale * 0.070, 0, 0, TAU);
+  ctx.ellipse(centerX, culet.y + scale * 0.16, scale * 0.34, scale * 0.056, 0, 0, TAU);
   ctx.fill();
 }
 
-function drawSilhouetteEdge(ctx, width, height, scale) {
+function drawSilhouetteEdge(ctx, width, height, scale, lens) {
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
-  drawRing(ctx, DIAMOND_MODEL.table, width, height, scale, 0.66, 1.10 * state.dpr);
-  drawRing(ctx, DIAMOND_MODEL.upperGirdle, width, height, scale, 0.86, 1.42 * state.dpr);
-  drawRing(ctx, DIAMOND_MODEL.lowerGirdle, width, height, scale, 0.52, 0.98 * state.dpr);
-  drawRing(ctx, DIAMOND_MODEL.culetRing, width, height, scale, 0.42, 0.74 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.table, width, height, scale, lens === "lattice" ? 0.62 : 0.70, 1.08 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.girdleTop, width, height, scale, lens === "lattice" ? 0.76 : 0.88, 1.44 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.girdleBottom, width, height, scale, lens === "lattice" ? 0.48 : 0.52, 0.94 * state.dpr);
+  drawRing(ctx, DIAMOND_MODEL.culetPlane, width, height, scale, lens === "lattice" ? 0.50 : 0.42, 0.72 * state.dpr);
 
-  const leftGirdle = projectedPoint(DIAMOND_MODEL.upperGirdle[16], width, height, scale);
-  const rightGirdle = projectedPoint(DIAMOND_MODEL.upperGirdle[0], width, height, scale);
+  const leftGirdle = projectedPoint(DIAMOND_MODEL.girdleTop[4], width, height, scale);
+  const rightGirdle = projectedPoint(DIAMOND_MODEL.girdleTop[12], width, height, scale);
   const culet = projectedPoint(DIAMOND_MODEL.culetCenter, width, height, scale);
   const tableCenter = projectedPoint(DIAMOND_MODEL.tableCenter, width, height, scale);
 
   const vertical = ctx.createLinearGradient(tableCenter.x, tableCenter.y, culet.x, culet.y);
-  vertical.addColorStop(0, "rgba(255,255,255,.18)");
-  vertical.addColorStop(0.50, "rgba(120,190,255,.10)");
-  vertical.addColorStop(1, "rgba(255,224,152,.14)");
+  vertical.addColorStop(0, "rgba(255,255,255,.16)");
+  vertical.addColorStop(0.50, "rgba(120,190,255,.09)");
+  vertical.addColorStop(1, "rgba(255,224,152,.12)");
 
   ctx.strokeStyle = vertical;
-  ctx.lineWidth = Math.max(1, width * 0.0009);
+  ctx.lineWidth = Math.max(1, width * 0.00084);
   ctx.beginPath();
   ctx.moveTo(tableCenter.x, tableCenter.y);
   ctx.lineTo(culet.x, culet.y);
   ctx.stroke();
 
   ctx.strokeStyle = "rgba(255,255,255,0.18)";
-  ctx.lineWidth = Math.max(1, width * 0.0008);
+  ctx.lineWidth = Math.max(1, width * 0.00078);
   ctx.beginPath();
   ctx.moveTo(leftGirdle.x, leftGirdle.y);
   ctx.lineTo(culet.x, culet.y);
@@ -789,25 +879,44 @@ function drawSilhouetteEdge(ctx, width, height, scale) {
   ctx.restore();
 }
 
+function drawLatticeLabel(ctx, width, height) {
+  if (state.lens !== "lattice") return;
+
+  ctx.save();
+  ctx.font = `${Math.max(12, width * 0.018)}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
+  ctx.textAlign = "center";
+  ctx.fillStyle = "rgba(244, 207, 131, 0.72)";
+  ctx.fillText("16 RADIAL COMPASS METRIC · 256 LATTICE ADDRESS FIELD", width * 0.5, height * 0.145);
+  ctx.restore();
+}
+
 function render(canvas, ctx) {
   const width = canvas.width;
   const height = canvas.height;
-  const scale = Math.min(width * 0.355, height * 0.405);
+  const scale = Math.min(width * 0.390, height * 0.430);
+  const lens = state.lens;
 
   ctx.clearRect(0, 0, width, height);
 
-  drawBackground(ctx, width, height);
+  drawBackground(ctx, width, height, lens);
   drawStars(ctx, width, height);
-  drawAuraAndShadow(ctx, width, height, scale);
+  drawAuraAndShadow(ctx, width, height, scale, lens);
 
   const faces = DIAMOND_MODEL.faces.map((face) => projectedFace(face, width, height, scale));
 
-  drawFaces(ctx, faces, width);
-  drawPrismShards(ctx, faces);
-  drawInternalFire(ctx, width, height, scale);
-  drawLattice(ctx, width, height, scale);
-  drawSilhouetteEdge(ctx, width, height, scale);
-  drawSparkles(ctx, width, height, scale);
+  drawFaces(ctx, faces, width, lens);
+  drawPrismShards(ctx, faces, lens);
+  drawInternalFire(ctx, width, height, scale, lens);
+
+  if (lens === "lattice") {
+    drawLatticeStructure(ctx, width, height, scale);
+  } else {
+    drawMajorCrystalEdges(ctx, width, height, scale);
+  }
+
+  drawSilhouetteEdge(ctx, width, height, scale, lens);
+  drawSparkles(ctx, width, height, scale, lens);
+  drawLatticeLabel(ctx, width, height);
 }
 
 function step(time, canvas, ctx) {
@@ -832,13 +941,13 @@ function step(time, canvas, ctx) {
     if (Math.abs(state.velocityRoll) < 0.00004) state.velocityRoll = 0;
 
     if (state.velocityYaw === 0 && state.velocityPitch === 0) {
-      state.yaw += Math.sin(state.sparklePhase * 0.34) * dt * 0.016;
-      state.roll += Math.sin(state.sparklePhase * 0.20) * dt * 0.0032;
+      state.yaw += Math.sin(state.sparklePhase * 0.32) * dt * 0.014;
+      state.roll += Math.sin(state.sparklePhase * 0.18) * dt * 0.0028;
     }
   }
 
-  state.pitch = clamp(state.pitch, -1.06, 1.06);
-  state.roll = clamp(state.roll, -0.34, 0.34);
+  state.pitch = clamp(state.pitch, -0.96, 0.96);
+  state.roll = clamp(state.roll, -0.26, 0.26);
 
   render(canvas, ctx);
   state.raf = requestAnimationFrame((next) => step(next, canvas, ctx));
@@ -872,13 +981,13 @@ function bindPointer(stage) {
     state.pointerX = event.clientX;
     state.pointerY = event.clientY;
 
-    state.yaw += dx * 0.0062;
-    state.pitch = clamp(state.pitch - dy * 0.0040, -1.06, 1.06);
-    state.roll = clamp(state.roll + dx * 0.00062, -0.34, 0.34);
+    state.yaw += dx * 0.0058;
+    state.pitch = clamp(state.pitch - dy * 0.0036, -0.96, 0.96);
+    state.roll = clamp(state.roll + dx * 0.00042, -0.26, 0.26);
 
-    state.velocityYaw = dx * 0.00204;
-    state.velocityPitch = -dy * 0.00122;
-    state.velocityRoll = dx * 0.00012;
+    state.velocityYaw = dx * 0.00188;
+    state.velocityPitch = -dy * 0.00108;
+    state.velocityRoll = dx * 0.00008;
   }, { passive: true });
 
   const release = (event) => {
@@ -893,8 +1002,8 @@ function bindPointer(stage) {
 }
 
 function resetDiamond() {
-  state.yaw = 0.34;
-  state.pitch = -0.22;
+  state.yaw = 0.32;
+  state.pitch = -0.18;
   state.roll = 0;
   state.velocityYaw = 0;
   state.velocityPitch = 0;
@@ -902,24 +1011,62 @@ function resetDiamond() {
   state.sparklePhase = 0;
 }
 
+function setLens(nextLens) {
+  const lens = nextLens === "lattice" ? "lattice" : "crystal";
+  state.lens = lens;
+
+  document.documentElement.dataset.showroomDiamondLens = lens;
+  if (document.body) document.body.dataset.showroomDiamondLens = lens;
+
+  document.querySelectorAll("[data-diamond-lens]").forEach((button) => {
+    button.setAttribute("aria-pressed", button.dataset.diamondLens === lens ? "true" : "false");
+  });
+
+  const title = document.querySelector("[data-diamond-lens-title]");
+  const copy = document.querySelector("[data-diamond-lens-copy]");
+  const route = document.querySelector("[data-diamond-route-label]");
+
+  if (title) title.textContent = LENS_COPY[lens].title;
+  if (copy) copy.textContent = LENS_COPY[lens].copy;
+  if (route) route.textContent = LENS_COPY[lens].route;
+}
+
+function bindLensControls() {
+  document.querySelectorAll("[data-diamond-lens]").forEach((button) => {
+    button.addEventListener("click", () => {
+      setLens(button.dataset.diamondLens);
+    });
+  });
+
+  setLens(state.lens);
+}
+
 function markRoute() {
   const markers = {
-    showroomStatus: "crown-cut-lattice-launchpad",
+    showroomStatus: "dual-lens-diamond-educational-launchpad",
     showroomContract: SHOWROOM_DIAMOND_STATE.contract,
     showroomPairedHtmlContract: SHOWROOM_DIAMOND_STATE.pairedHtmlContract,
     diamondLock: "CROWN_CUT_256_LATTICE_FIXED_FORM",
+    visibleRadialMetric: String(RADIAL_POINTS),
+    latticeStates: String(LATTICE_STATES),
+    defaultLens: "crystal-form",
+    secondaryLens: "lattice-structure",
+    lensRule: "toggle-changes-inspection-lens-not-object-identity",
     touchGlideDiamond: "true",
     geometryMutableByTouch: "false",
     inspectionControl: "camera-view-rotation",
-    diamondShape: "crown-cut-fixed-crystal-form",
-    diamondMaterial: "clean-lattice-diamond-visual",
+    diamondShape: "sixteen-radial-crown-cut-fixed-crystal-form",
+    diamondMaterial: "dual-lens-lattice-diamond-visual",
     diamondPublicRead: "diamond-not-top",
-    latticeStates: String(LATTICE_STATES),
-    diamondSegments: String(SEGMENTS),
+    diamondSegments: String(RADIAL_POINTS),
     diamondFaceCount: String(DIAMOND_MODEL.faces.length),
-    legacyFaceDensityReduced: "true",
-    launchpadRoutes: "characters,products,laws,globe,gauges",
+    roundGirdleRemoved: "true",
+    visibleCrown: "true",
+    topLikeSilhouetteBlocked: "true",
+    overMeshedPublicCrystalBlocked: "true",
+    launchpadRoutes: "characters,laws,products,globe,gauges",
     lawsCta: "Jump to the Laws page and lock in.",
+    productsCommunityPath: "products-serve-community",
     earthRecord: "false",
     generatedImage: "false",
     graphicBox: "false",
@@ -947,6 +1094,7 @@ function protectIdentity() {
 function initShowroomDiamond() {
   markRoute();
   protectIdentity();
+  bindLensControls();
 
   const stage = document.querySelector("[data-showroom-diamond-stage]");
   const canvas = document.querySelector("[data-showroom-diamond-canvas]");
@@ -968,6 +1116,7 @@ function initShowroomDiamond() {
 
   window.DGBShowroomDiamond = Object.freeze({
     ...SHOWROOM_DIAMOND_STATE,
+    setLens,
     status() {
       return Object.freeze({
         ...SHOWROOM_DIAMOND_STATE,
@@ -977,24 +1126,29 @@ function initShowroomDiamond() {
         crownCut: true,
         lattice256: true,
         latticeStates: LATTICE_STATES,
-        segmentCount: SEGMENTS,
+        visibleRadialMetric: RADIAL_POINTS,
+        activeLens: state.lens,
+        lensCopy: LENS_COPY[state.lens],
+        segmentCount: RADIAL_POINTS,
         faceCount: DIAMOND_MODEL.faces.length,
         ringCount: DIAMOND_MODEL.rings.length,
-        visibleFaceDensityReduced: true,
         correctedPhysicalRead: "diamond-crystal-not-top-object",
+        roundGirdleRemoved: true,
         tableClear: true,
-        disciplinedCrown: true,
-        structuralGirdle: true,
-        pavilionTaper: true,
-        culetTermination: true,
+        visibleCrown: true,
+        facetedGirdle: true,
+        steppedPavilion: true,
+        culetPlane: true,
+        overMeshedPublicCrystalBlocked: true,
         solidCrystal: true,
         geometryMutableByTouch: false,
         inspectionControl: "camera-view-rotation",
         sparkle: true,
         internalFire: true,
         refractionPaths: true,
-        launchpadRoutes: ["characters", "products", "laws", "globe", "gauges"],
+        launchpadRoutes: ["characters", "laws", "products", "globe", "gauges"],
         lawsCta: "Jump to the Laws page and lock in.",
+        productsCommunityPath: true,
         momentum: true,
         doubleTapReset: true,
         yaw: state.yaw,

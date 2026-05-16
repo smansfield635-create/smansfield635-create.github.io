@@ -3,9 +3,9 @@
   lang="en"
   data-page="showroom-dual-lens-diamond"
   data-route="/showroom/"
-  data-contract="SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_BIND_TNT_v6"
-  data-previous-contract="SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_BIND_TNT_v5"
-  data-role="showroom-dual-lens-webgl-true-3d-proof-surface-and-launchpad-raised-stage"
+  data-contract="SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_GEM_BOTTOM_BIND_TNT_v7"
+  data-previous-contract="SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_BIND_TNT_v6"
+  data-role="showroom-dual-lens-webgl-true-3d-proof-surface-launchpad-and-gem-footer"
   data-diamond-lock="CROWN_CUT_256_LATTICE_FIXED_FORM"
   data-renderer="native-webgl"
   data-visible-radial-metric="16"
@@ -15,6 +15,8 @@
   data-touch-glide-diamond="true"
   data-js-cache-key="SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_TNT_v5"
   data-launchpad="characters-products-laws-globe-gauges"
+  data-bottom-gem-field="true"
+  data-css-gem-animation="true"
   data-laws-cta="Jump to the Laws page and lock in."
   data-crystal-form-silhouette="true-3d-crown-cut-diamond-body"
   data-lattice-form-silhouette="true-3d-structural-compass-lattice"
@@ -247,7 +249,8 @@
 
     .eyebrow,
     .diamond-title,
-    .launchpad-title {
+    .launchpad-title,
+    .gem-field-title {
       margin: 0 0 14px;
       color: var(--gold);
       font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -588,6 +591,178 @@
       z-index: 2;
     }
 
+    .bottom-gem-field {
+      position: relative;
+      margin-top: 26px;
+      min-height: 230px;
+      overflow: hidden;
+      border: 1px solid rgba(244,207,131,0.18);
+      border-radius: 28px;
+      padding: clamp(18px, 4vw, 28px);
+      background:
+        radial-gradient(circle at 50% 42%, rgba(141,216,255,0.14), transparent 34%),
+        radial-gradient(circle at 16% 18%, rgba(244,207,131,0.12), transparent 28%),
+        radial-gradient(circle at 84% 74%, rgba(198,166,255,0.12), transparent 30%),
+        linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.018));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.07),
+        0 24px 70px rgba(0,0,0,0.30);
+      isolation: isolate;
+    }
+
+    .bottom-gem-field::before {
+      content: "";
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      top: 52%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(244,207,131,0.34), rgba(141,216,255,0.24), rgba(244,207,131,0.34), transparent);
+      box-shadow: 0 0 26px rgba(244,207,131,0.18);
+      animation: gemLinePulse 5.6s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    .bottom-gem-field::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle, rgba(255,255,255,0.30) 0 1px, transparent 1.3px),
+        radial-gradient(circle, rgba(244,207,131,0.24) 0 1px, transparent 1.4px);
+      background-size: 86px 86px, 132px 132px;
+      background-position: 9px 18px, 44px 70px;
+      opacity: 0.22;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes gemLinePulse {
+      0%, 100% { opacity: 0.38; transform: scaleX(0.94); }
+      50% { opacity: 0.86; transform: scaleX(1); }
+    }
+
+    .bottom-gem-copy {
+      width: min(620px, 100%);
+      position: relative;
+      z-index: 2;
+    }
+
+    .bottom-gem-copy h3 {
+      margin: 0;
+      max-width: 640px;
+      color: rgba(238,244,255,0.96);
+      font-size: clamp(1.45rem, 4vw, 2.35rem);
+      line-height: 1.02;
+      letter-spacing: -0.055em;
+    }
+
+    .bottom-gem-copy p {
+      max-width: 650px;
+      margin: 12px 0 0;
+      color: rgba(238,244,255,0.66);
+      font-size: clamp(0.96rem, 2.4vw, 1.12rem);
+      line-height: 1.5;
+    }
+
+    .gem-rail {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .rail-gem {
+      position: absolute;
+      width: var(--size, 54px);
+      height: var(--size, 54px);
+      left: var(--x, 50%);
+      top: var(--y, 50%);
+      transform: translate(-50%, -50%) rotate(45deg);
+      border: 1px solid rgba(244,207,131,0.36);
+      border-radius: 16px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.32), transparent 32%),
+        conic-gradient(from 45deg, rgba(255,255,255,0.24), rgba(141,216,255,0.16), rgba(198,166,255,0.18), rgba(244,207,131,0.20), rgba(255,255,255,0.24)),
+        radial-gradient(circle at 36% 32%, rgba(255,255,255,0.26), transparent 52%),
+        rgba(8,18,36,0.76);
+      box-shadow:
+        0 0 20px rgba(141,216,255,0.12),
+        0 0 38px rgba(244,207,131,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.18);
+      opacity: var(--alpha, 0.72);
+      animation:
+        railGemFloat var(--speed, 8s) ease-in-out infinite,
+        railGemGlow calc(var(--speed, 8s) * 0.72) ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+
+    .rail-gem::before {
+      content: "";
+      position: absolute;
+      inset: 17%;
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 10px;
+    }
+
+    .rail-gem::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -18%;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.78);
+      box-shadow:
+        0 0 14px rgba(255,255,255,0.62),
+        0 0 24px rgba(244,207,131,0.36);
+      transform: translateX(-50%);
+    }
+
+    @keyframes railGemFloat {
+      0%, 100% { margin-top: 0; margin-left: 0; }
+      25% { margin-top: -10px; margin-left: 7px; }
+      50% { margin-top: -4px; margin-left: -6px; }
+      75% { margin-top: 8px; margin-left: 4px; }
+    }
+
+    @keyframes railGemGlow {
+      0%, 100% { filter: brightness(0.94); opacity: var(--alpha, 0.72); }
+      50% { filter: brightness(1.18); opacity: min(0.94, calc(var(--alpha, 0.72) + 0.16)); }
+    }
+
+    .gem-spark {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      left: var(--x, 50%);
+      top: var(--y, 50%);
+      border-radius: 50%;
+      background: rgba(255,255,255,0.82);
+      box-shadow:
+        0 0 8px rgba(255,255,255,0.72),
+        0 0 16px rgba(244,207,131,0.42);
+      opacity: 0.46;
+      animation: gemSpark 4.8s ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+
+    @keyframes gemSpark {
+      0%, 100% { transform: scale(0.65); opacity: 0.20; }
+      45% { transform: scale(1.35); opacity: 0.86; }
+      62% { transform: scale(0.9); opacity: 0.38; }
+    }
+
+    .gem-field-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+      position: relative;
+      z-index: 3;
+    }
+
     .cache-proof,
     .hidden-receipt {
       display: none !important;
@@ -631,6 +806,14 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
         border-radius: 22px;
       }
+
+      .bottom-gem-field {
+        min-height: 300px;
+      }
+
+      .rail-gem {
+        opacity: calc(var(--alpha, 0.72) * 0.78);
+      }
     }
 
     @media (max-width: 620px) {
@@ -639,7 +822,8 @@
       .hero,
       .diamond-shell,
       .launchpad-shell,
-      .diamond-stage {
+      .diamond-stage,
+      .bottom-gem-field {
         border-radius: 24px;
       }
 
@@ -653,6 +837,15 @@
 
       .diamond-stage {
         min-height: 600px;
+      }
+
+      .bottom-gem-copy {
+        max-width: 92%;
+      }
+
+      .rail-gem:nth-child(4),
+      .rail-gem:nth-child(6) {
+        display: none;
       }
     }
 
@@ -787,7 +980,7 @@
             Crystal Form presents the Diamond as a real WebGL mesh with perspective, depth buffer, object rotation, crown, girdle, pavilion, and culet. The stage is raised above the instruction box so the object remains inspectable. Lattice Structure reveals the 16-point compass geometry and the 256-state address system behind the same object. The lens changes. The Diamond does not.
           </p>
           <p class="cache-proof">
-            HTML cache key: SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_BIND_TNT_v6
+            HTML cache key: SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_GEM_BOTTOM_BIND_TNT_v7
           </p>
         </article>
       </section>
@@ -836,13 +1029,46 @@
           </a>
         </div>
 
+        <div class="bottom-gem-field" aria-label="Animated gem navigation field">
+          <div class="bottom-gem-copy">
+            <p class="gem-field-title">Gem field · route signal</p>
+            <h3>The proof object opens the paths. The paths carry the build forward.</h3>
+            <p>
+              The bottom field keeps the Showroom alive after the launch cards: story, laws, community, worlds, and proof remain connected around the Diamond.
+            </p>
+            <div class="gem-field-cta">
+              <a class="button violet" href="/characters/">Story</a>
+              <a class="button gold" href="/laws/">Laws</a>
+              <a class="button" href="/products/">Community</a>
+              <a class="button" href="/showroom/globe/">Worlds</a>
+              <a class="button" href="/gauges/">Proof</a>
+            </div>
+          </div>
+
+          <div class="gem-rail" aria-hidden="true">
+            <span class="rail-gem" style="--x:74%;--y:22%;--size:72px;--speed:8.4s;--delay:-0.4s;--alpha:0.76"></span>
+            <span class="rail-gem" style="--x:88%;--y:48%;--size:50px;--speed:7.6s;--delay:-1.2s;--alpha:0.56"></span>
+            <span class="rail-gem" style="--x:70%;--y:72%;--size:42px;--speed:6.9s;--delay:-2.1s;--alpha:0.52"></span>
+            <span class="rail-gem" style="--x:52%;--y:66%;--size:34px;--speed:9.2s;--delay:-3.4s;--alpha:0.44"></span>
+            <span class="rail-gem" style="--x:92%;--y:78%;--size:30px;--speed:8.8s;--delay:-4.1s;--alpha:0.38"></span>
+            <span class="rail-gem" style="--x:58%;--y:30%;--size:28px;--speed:7.2s;--delay:-5.1s;--alpha:0.42"></span>
+
+            <span class="gem-spark" style="--x:64%;--y:18%;--delay:-0.8s"></span>
+            <span class="gem-spark" style="--x:82%;--y:28%;--delay:-1.6s"></span>
+            <span class="gem-spark" style="--x:96%;--y:40%;--delay:-2.4s"></span>
+            <span class="gem-spark" style="--x:76%;--y:62%;--delay:-3.2s"></span>
+            <span class="gem-spark" style="--x:59%;--y:84%;--delay:-4.0s"></span>
+            <span class="gem-spark" style="--x:90%;--y:88%;--delay:-4.8s"></span>
+          </div>
+        </div>
+
         <template id="showroom-route-receipt" class="hidden-receipt">
-SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_BIND_TNT_v6
+SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_GEM_BOTTOM_BIND_TNT_v7
 route=/showroom/
 html=/showroom/index.html
 js=/showroom/index.js
 js_cache_key=SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_TNT_v5
-role=dual_lens_webgl_true_3d_showroom_proof_surface_and_launchpad_raised_stage
+role=dual_lens_webgl_true_3d_showroom_proof_surface_launchpad_and_bottom_gem_field
 diamond_lock=CROWN_CUT_256_LATTICE_FIXED_FORM
 renderer=native_webgl
 webgl_depth_buffer=true
@@ -850,6 +1076,8 @@ perspective_camera=true
 real_mesh=true
 real_object_rotation=true
 stage_correction=raised_above_instruction_box
+bottom_gem_field=true
+css_gem_animation=true
 visible_radial_metric=16
 lattice_states=256
 default_lens=crystal_form
@@ -881,12 +1109,12 @@ earth_record=false
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Showroom · Raised WebGL True 3D Crown Cut 256 Lattice Diamond · Launchpad.
+      Diamond Gate Bridge · Showroom · Raised WebGL True 3D Crown Cut 256 Lattice Diamond · Launchpad · Gem Field.
     </footer>
   </div>
 
   <script>
-    window.DGB_SHOWROOM_HTML_CACHE_KEY = "SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_BIND_TNT_v6";
+    window.DGB_SHOWROOM_HTML_CACHE_KEY = "SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_GEM_BOTTOM_BIND_TNT_v7";
     window.DGB_SHOWROOM_JS_CACHE_KEY = "SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_TNT_v5";
   </script>
   <script

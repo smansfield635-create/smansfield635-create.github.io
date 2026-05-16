@@ -3,13 +3,16 @@
   lang="en"
   data-route="/characters/"
   data-page="characters"
-  data-contract="CHARACTERS_MIRRORLAND_SELECT_DOSSIER_RENEWAL_TNT_v2"
-  data-previous-contract="CHARACTERS_EXPANDABLE_DOSSIER_TNT_v1"
+  data-contract="CHARACTERS_MIRRORLAND_SERIES_GEM_DOSSIER_RENEWAL_TNT_v3"
+  data-previous-contract="CHARACTERS_MIRRORLAND_SELECT_DOSSIER_RENEWAL_TNT_v2"
   data-role="mirrorland-character-roster"
   data-static-page-usable-without-js="true"
   data-expandable-dossiers="true"
   data-expandable-stats="true"
   data-character-select="true"
+  data-character-gems="true"
+  data-narrative-anchor="Shadows Never Shatter in Mirrorland"
+  data-series-model="perspective-series-nine-episodes-nine-seasons-target"
   data-generated-image="false"
   data-graphic-box="false"
   data-streaming="false"
@@ -22,7 +25,7 @@
   <title>Characters · Shadows Never Shatter in Mirrorland</title>
   <meta
     name="description"
-    content="Meet the characters of Shadows Never Shatter in Mirrorland. Select each character independently, then open their bio and stats."
+    content="Meet the characters of Shadows Never Shatter in Mirrorland, a perspective-series narrative anchoring the Mirrorland story world."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/characters/">
   <meta name="theme-color" content="#02040b">
@@ -39,11 +42,8 @@
       --blue:#8dd8ff;
       --green:#9ef0bf;
       --violet:#c6a6ff;
-      --red:#ff9f9f;
       --panel:rgba(9,15,31,.88);
-      --panel2:rgba(12,22,42,.92);
       --line:rgba(184,205,255,.18);
-      --gold-line:rgba(243,200,111,.24);
       --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
     }
@@ -112,6 +112,14 @@
     }
 
     .skip:focus{left:8px}
+
+    .svg-defs{
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
+    }
 
     .shell{
       position:relative;
@@ -227,7 +235,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(30rem,54vw,42rem);
+      min-height:clamp(34rem,58vw,46rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -251,8 +259,14 @@
         radial-gradient(circle at 48% 34%,rgba(255,255,255,.10),transparent 42%),
         radial-gradient(circle at 50% 72%,rgba(198,166,255,.18),transparent 62%),
         linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      animation:anchorPulse 8s ease-in-out infinite;
       pointer-events:none;
       opacity:.52;
+    }
+
+    @keyframes anchorPulse{
+      0%,100%{opacity:.38;filter:brightness(.95)}
+      50%{opacity:.62;filter:brightness(1.1)}
     }
 
     .kicker{
@@ -313,9 +327,9 @@
     }
 
     .subtitle{
-      max-width:880px;
+      max-width:920px;
       color:var(--gold);
-      font-size:clamp(1.22rem,4vw,2.35rem);
+      font-size:clamp(1.18rem,4vw,2.25rem);
       line-height:1.02;
       letter-spacing:-.055em;
       font-weight:950;
@@ -331,7 +345,7 @@
     }
 
     .declaration{
-      max-width:920px;
+      max-width:940px;
       padding:1rem 1.1rem;
       border:1px solid rgba(243,200,111,.24);
       border-radius:1.2rem;
@@ -340,6 +354,37 @@
       font-weight:900;
       position:relative;
       z-index:2;
+    }
+
+    .series-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.75rem;
+      max-width:960px;
+      position:relative;
+      z-index:2;
+    }
+
+    .series-card{
+      padding:.9rem;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:1rem;
+      background:rgba(255,255,255,.035);
+      display:grid;
+      gap:.35rem;
+    }
+
+    .series-card b{
+      color:var(--gold);
+      font-size:.66rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .series-card span{
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.35;
     }
 
     .actions{
@@ -397,7 +442,7 @@
     }
 
     .select-card{
-      min-height:13rem;
+      min-height:14.5rem;
       display:grid;
       align-content:end;
       gap:.55rem;
@@ -423,23 +468,38 @@
       font-size:.8rem;
       font-weight:950;
       letter-spacing:.14em;
+      z-index:3;
     }
 
-    .select-card::after{
-      content:"";
+    .profile-gem{
       position:absolute;
-      width:5.2rem;
-      height:5.2rem;
-      top:1rem;
-      right:1rem;
-      border-radius:1.2rem;
-      transform:rotate(45deg);
-      background:
-        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.22) 21% 23%,transparent 24%),
-        conic-gradient(from 45deg,rgba(255,255,255,.20),rgba(198,166,255,.18),rgba(36,120,255,.14),rgba(243,200,111,.10),rgba(255,255,255,.20)),
-        linear-gradient(145deg,rgba(30,45,80,.78),rgba(5,8,20,.92));
-      opacity:.74;
-      box-shadow:0 0 1.5rem rgba(198,166,255,.14);
+      right:.75rem;
+      top:.7rem;
+      width:6.4rem;
+      height:4.8rem;
+      opacity:.86;
+      pointer-events:none;
+      z-index:1;
+      animation:gemDrift 7.4s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+      filter:
+        drop-shadow(0 1rem 1.2rem rgba(0,0,0,.34))
+        drop-shadow(0 0 1rem rgba(198,166,255,.16));
+    }
+
+    @keyframes gemDrift{
+      0%,100%{transform:translateY(0) rotate(-1.6deg);filter:brightness(1)}
+      50%{transform:translateY(-.28rem) rotate(2deg);filter:brightness(1.12)}
+    }
+
+    .profile-gem svg{
+      width:100%;
+      height:100%;
+      animation:gemTurn 28s linear infinite;
+    }
+
+    @keyframes gemTurn{
+      to{transform:rotate(360deg)}
     }
 
     .select-card:hover,
@@ -504,10 +564,12 @@
       list-style:none;
       cursor:pointer;
       padding:1rem;
+      min-height:8rem;
       display:grid;
-      grid-template-columns:auto 1fr auto;
+      grid-template-columns:auto auto 1fr auto;
       align-items:center;
       gap:1rem;
+      position:relative;
     }
 
     summary.character-summary::-webkit-details-marker{display:none}
@@ -524,6 +586,23 @@
       font-weight:950;
       letter-spacing:.08em;
       background:rgba(243,200,111,.055);
+    }
+
+    .summary-gem{
+      position:relative;
+      width:5.8rem;
+      height:4.2rem;
+      filter:
+        drop-shadow(0 .75rem 1rem rgba(0,0,0,.30))
+        drop-shadow(0 0 .8rem rgba(198,166,255,.14));
+      animation:gemDrift 7.4s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+    }
+
+    .summary-gem svg{
+      width:100%;
+      height:100%;
+      animation:gemTurn 30s linear infinite;
     }
 
     .summary-copy{
@@ -586,18 +665,14 @@
       gap:.75rem;
     }
 
-    .profile-card,
-    .bio-panel,
-    .stats-panel{
+    .profile-card{
       border:1px solid rgba(255,255,255,.10);
       border-radius:1.05rem;
       padding:1rem;
       background:rgba(3,8,20,.32);
     }
 
-    .profile-card b,
-    .bio-panel b,
-    .stats-panel b{
+    .profile-card b{
       display:block;
       margin-bottom:.35rem;
       color:var(--gold);
@@ -606,9 +681,7 @@
       text-transform:uppercase;
     }
 
-    .profile-card p,
-    .bio-panel p,
-    .stats-panel p{
+    .profile-card p{
       font-size:.96rem;
     }
 
@@ -757,7 +830,8 @@
 
       .nav{justify-content:flex-start}
       .profile-grid,
-      .stats-grid{
+      .stats-grid,
+      .series-grid{
         grid-template-columns:1fr;
       }
     }
@@ -765,7 +839,7 @@
     @media (max-width:720px){
       .shell{width:min(100% - 22px,var(--max))}
       h1{font-size:clamp(3.2rem,16vw,5.6rem)}
-      .hero{min-height:31rem;padding:1rem}
+      .hero{min-height:34rem;padding:1rem}
       .actions{display:grid}
       .button{width:100%}
       .select-grid,
@@ -775,15 +849,107 @@
         grid-template-columns:auto 1fr;
       }
 
+      .summary-gem{
+        grid-column:1 / -1;
+        width:6.8rem;
+        height:5rem;
+        justify-self:end;
+        margin-top:-.5rem;
+      }
+
       .open-chip{
         grid-column:1 / -1;
         width:100%;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
       }
     }
   </style>
 </head>
 
 <body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="charGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#fff8dc" stop-opacity=".92"/>
+        <stop offset=".13" stop-color="#dff5ff" stop-opacity=".70"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".56"/>
+        <stop offset=".48" stop-color="#2478ff" stop-opacity=".40"/>
+        <stop offset=".66" stop-color="#f3c86f" stop-opacity=".24"/>
+        <stop offset="1" stop-color="#020816" stop-opacity=".94"/>
+      </linearGradient>
+
+      <radialGradient id="charGemTableGlow" cx="50%" cy="38%" r="64%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".56"/>
+        <stop offset=".28" stop-color="#c6a6ff" stop-opacity=".28"/>
+        <stop offset=".58" stop-color="#ffe8a3" stop-opacity=".12"/>
+        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="charGemGlint" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#ffffff" stop-opacity=".84"/>
+        <stop offset=".52" stop-color="#fff0a3" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="charGemGlow" x="-42%" y="-50%" width="184%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.52 0 0 0 0.12
+            0 .46 0 0 0.10
+            0 0 1.00 0 0.30
+            0 0 0 0.52 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="characterGem" viewBox="0 0 220 160">
+        <g filter="url(#charGemGlow)">
+          <path d="M108 4 L146 12 L184 39 L209 76 L188 108 L147 139 L111 155 L69 136 L27 105 L12 73 L39 37 L77 14 Z" fill="url(#charGemBody)" stroke="rgba(235,248,255,.58)" stroke-width="1.35"/>
+          <path d="M108 4 L146 12 L130 38 L109 30 L87 39 L77 14 Z" fill="rgba(255,255,255,.34)" opacity=".84"/>
+          <path d="M77 14 L87 39 L61 58 L39 37 Z" fill="rgba(255,255,255,.23)"/>
+          <path d="M146 12 L130 38 L159 60 L184 39 Z" fill="rgba(198,166,255,.18)"/>
+          <path d="M39 37 L61 58 L53 83 L12 73 Z" fill="rgba(141,216,255,.12)"/>
+          <path d="M184 39 L159 60 L166 81 L209 76 Z" fill="rgba(243,200,111,.12)"/>
+          <path d="M87 39 L109 30 L130 38 L159 60 L148 83 L110 101 L72 83 L61 58 Z" fill="url(#charGemTableGlow)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
+          <path d="M12 73 L53 83 L69 136 L27 105 Z" fill="rgba(141,216,255,.14)"/>
+          <path d="M209 76 L166 81 L147 139 L188 108 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M53 83 L72 83 L111 155 L69 136 Z" fill="rgba(2,8,24,.40)"/>
+          <path d="M166 81 L148 83 L111 155 L147 139 Z" fill="rgba(198,166,255,.13)"/>
+          <path d="M72 83 L110 101 L111 155 Z" fill="rgba(141,216,255,.16)"/>
+          <path d="M148 83 L110 101 L111 155 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M108 4 L111 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
+          <path d="M12 73 L209 76" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
+          <path d="M39 37 L188 108" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M184 39 L27 105" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <g opacity=".82">
+            <path d="M109 27 L116 70 L110 106 L103 70 Z" fill="rgba(255,255,255,.27)"/>
+            <path d="M61 58 L105 72 L159 60 L116 79 Z" fill="rgba(255,255,255,.16)"/>
+            <path d="M72 83 L105 75 L148 83 L114 92 Z" fill="rgba(198,166,255,.13)"/>
+          </g>
+          <path d="M33 118 L176 22 L188 38 L48 130 Z" fill="url(#charGemGlint)" opacity=".40"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
   <a class="skip" href="/characters/#main">Skip to Characters</a>
 
   <div class="shell">
@@ -810,18 +976,24 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Shadows Never Shatter · Mirrorland</div>
+        <div class="kicker">Perspective Series · Mirrorland</div>
 
-        <h1 id="page-title">The world is broken somewhere.</h1>
+        <h1 id="page-title">Shadows Never Shatter in Mirrorland.</h1>
 
-        <div class="subtitle">Mirrorland is the window. These are the people moving inside it.</div>
+        <div class="subtitle">A perspective tale where consequence, survival, and possibility are seen through the people forced to live inside them.</div>
 
         <p class="lead">
-          Shadows Never Shatter in Mirrorland begins with a simple pressure: consequence, survival, and possibility now stand in the same room. ZIONTS shows what can be lost. H-Earth tests what can still hold life. Audralia carries the living future worth reaching.
+          Shadows Never Shatter in Mirrorland is not the website explaining itself. It is a narrative tale inside Mirrorland, and it anchors the wider structure directly and indirectly. The story is built as a perspective series: nine episodes are already written, and the larger design aims toward nine seasons.
         </p>
 
         <div class="declaration">
-          The characters are not symbols waiting to be explained. They are inhabitants, operators, protectors, builders, witnesses, and pressure points inside the world.
+          Each season can turn the world through a different lens. Each episode can move the same pressure through a different person. The characters are the access points: they carry the families, wounds, skills, limits, and decisions that make Mirrorland readable.
+        </div>
+
+        <div class="series-grid">
+          <div class="series-card"><b>Nine Episodes</b><span>The first written arc already gives the tale a working narrative spine.</span></div>
+          <div class="series-card"><b>Nine Seasons</b><span>The long-form structure leaves room for perspective, consequence, recovery, and expansion.</span></div>
+          <div class="series-card"><b>Perspective Series</b><span>The world is not explained from above. It is revealed through the people inside it.</span></div>
         </div>
 
         <div class="actions">
@@ -838,14 +1010,45 @@
         <p>Each character stands independently. Select a card to jump to that character, then open the profile, full bio, and stats when ready.</p>
 
         <div class="select-grid">
-          <a class="select-card" data-number="01" href="#auren"><b>Sanctuary Builder</b><strong>Auren Vale</strong><span>Wealth is the mask. Custody is the mission.</span></a>
-          <a class="select-card" data-number="02" href="#dextrion"><b>Restoration Engineer</b><strong>Dextrion</strong><span>Broken systems either get repaired or start choosing who survives.</span></a>
-          <a class="select-card" data-number="03" href="#alaric"><b>Field Navigator</b><strong>Alaric</strong><span>The field speaks before the danger arrives.</span></a>
-          <a class="select-card" data-number="04" href="#tarian"><b>Water Anchor</b><strong>Tarian</strong><span>Life fails first at the body level.</span></a>
-          <a class="select-card" data-number="05" href="#elara"><b>Signal Bearer</b><strong>Elara</strong><span>The future must be seen before it can be believed.</span></a>
-          <a class="select-card" data-number="06" href="#soren"><b>Boundary Keeper</b><strong>Soren</strong><span>Restoration is not real if waste has nowhere truthful to go.</span></a>
-          <a class="select-card" data-number="07" href="#jeeves"><b>Manor Interface</b><strong>Jeeves</strong><span>The house does not show every room at once.</span></a>
-          <a class="select-card" data-number="08" href="#remote-team"><b>Distributed Response Unit</b><strong>Remote Team</strong><span>The story does not end inside the estate.</span></a>
+          <a class="select-card" data-number="01" href="#auren">
+            <span class="profile-gem" style="--delay:-.2s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
+            <b>Sanctuary Builder</b><strong>Auren Vale</strong><span>Wealth is the mask. Custody is the mission.</span>
+          </a>
+
+          <a class="select-card" data-number="02" href="#dextrion">
+            <span class="profile-gem" style="--delay:-.8s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
+            <b>Restoration Engineer</b><strong>Dextrion</strong><span>Broken systems either get repaired or start choosing who survives.</span>
+          </a>
+
+          <a class="select-card" data-number="03" href="#alaric">
+            <span class="profile-gem" style="--delay:-1.4s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
+            <b>Field Navigator</b><strong>Alaric</strong><span>The field speaks before the danger arrives.</span>
+          </a>
+
+          <a class="select-card" data-number="04" href="#tarian">
+            <span class="profile-gem" style="--delay:-2s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
+            <b>Water Anchor</b><strong>Tarian</strong><span>Life fails first at the body level.</span>
+          </a>
+
+          <a class="select-card" data-number="05" href="#elara">
+            <span class="profile-gem" style="--delay:-2.6s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
+            <b>Signal Bearer</b><strong>Elara</strong><span>The future must be seen before it can be believed.</span>
+          </a>
+
+          <a class="select-card" data-number="06" href="#soren">
+            <span class="profile-gem" style="--delay:-3.2s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
+            <b>Boundary Keeper</b><strong>Soren</strong><span>Restoration is not real if waste has nowhere truthful to go.</span>
+          </a>
+
+          <a class="select-card" data-number="07" href="#jeeves">
+            <span class="profile-gem" style="--delay:-3.8s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
+            <b>Manor Interface</b><strong>Jeeves</strong><span>The house does not show every room at once.</span>
+          </a>
+
+          <a class="select-card" data-number="08" href="#remote-team">
+            <span class="profile-gem" style="--delay:-4.4s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
+            <b>Distributed Response Unit</b><strong>Remote Team</strong><span>The story does not end inside the estate.</span>
+          </a>
         </div>
       </section>
 
@@ -858,6 +1061,7 @@
           <details class="character" id="auren">
             <summary class="character-summary">
               <span class="num">01</span>
+              <span class="summary-gem" style="--delay:-.2s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
               <span class="summary-copy">
                 <b>Sanctuary Builder</b>
                 <strong>Auren Vale</strong>
@@ -906,6 +1110,7 @@
           <details class="character" id="dextrion">
             <summary class="character-summary">
               <span class="num">02</span>
+              <span class="summary-gem" style="--delay:-.8s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
               <span class="summary-copy">
                 <b>Restoration Engineer</b>
                 <strong>Dextrion</strong>
@@ -954,6 +1159,7 @@
           <details class="character" id="alaric">
             <summary class="character-summary">
               <span class="num">03</span>
+              <span class="summary-gem" style="--delay:-1.4s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
               <span class="summary-copy">
                 <b>Field Navigator</b>
                 <strong>Alaric</strong>
@@ -1002,6 +1208,7 @@
           <details class="character" id="tarian">
             <summary class="character-summary">
               <span class="num">04</span>
+              <span class="summary-gem" style="--delay:-2s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
               <span class="summary-copy">
                 <b>Water Anchor</b>
                 <strong>Tarian</strong>
@@ -1050,6 +1257,7 @@
           <details class="character" id="elara">
             <summary class="character-summary">
               <span class="num">05</span>
+              <span class="summary-gem" style="--delay:-2.6s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
               <span class="summary-copy">
                 <b>Signal Bearer</b>
                 <strong>Elara</strong>
@@ -1098,6 +1306,7 @@
           <details class="character" id="soren">
             <summary class="character-summary">
               <span class="num">06</span>
+              <span class="summary-gem" style="--delay:-3.2s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
               <span class="summary-copy">
                 <b>Boundary Keeper</b>
                 <strong>Soren</strong>
@@ -1146,6 +1355,7 @@
           <details class="character" id="jeeves">
             <summary class="character-summary">
               <span class="num">07</span>
+              <span class="summary-gem" style="--delay:-3.8s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
               <span class="summary-copy">
                 <b>Manor Interface</b>
                 <strong>Jeeves</strong>
@@ -1194,6 +1404,7 @@
           <details class="character" id="remote-team">
             <summary class="character-summary">
               <span class="num">08</span>
+              <span class="summary-gem" style="--delay:-4.4s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
               <span class="summary-copy">
                 <b>Distributed Response Unit</b>
                 <strong>Remote Team</strong>
@@ -1273,15 +1484,19 @@
         </div>
 
         <template id="route-receipt" data-route-receipt>
-CHARACTERS_MIRRORLAND_SELECT_DOSSIER_RENEWAL_TNT_v2
-previous=CHARACTERS_EXPANDABLE_DOSSIER_TNT_v1
+CHARACTERS_MIRRORLAND_SERIES_GEM_DOSSIER_RENEWAL_TNT_v3
+previous=CHARACTERS_MIRRORLAND_SELECT_DOSSIER_RENEWAL_TNT_v2
 route=/characters/
 page=characters
 role=mirrorland_character_roster
-headline=The_world_is_broken_somewhere
 story_anchor=Shadows_Never_Shatter_in_Mirrorland
-intro=Mirrorland_is_the_window_characters_are_people_inside_it
-structure=brief_narrative_intro_character_select_independent_expandable_dossiers_nested_bio_stats
+narrative_type=perspective_series
+written_arc=nine_episodes_written
+season_target=nine_seasons
+correction=story_is_not_website_explaining_itself_story_is_tale_inside_mirrorland
+structure=series_intro_character_select_independent_expandable_dossiers_nested_bio_stats
+character_gems=true
+gem_motion=drift_and_rotation
 character_select=true
 characters_independent=true
 expandable_dossiers=true
@@ -1299,7 +1514,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      Characters · Shadows Never Shatter in Mirrorland · Selectable Expandable Dossier.
+      Characters · Shadows Never Shatter in Mirrorland · Perspective Series Dossier.
     </footer>
   </div>
 </body>

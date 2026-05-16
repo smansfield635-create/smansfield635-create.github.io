@@ -1,17 +1,19 @@
 <!doctype html>
 <html
   lang="en"
-  data-route="/home/"
-  data-page="home"
-  data-version="G1-V3"
-  data-contract="HOME_TOP_TRAVERSAL_RECEIVER_CRYSTAL_STANDARD_TNT_v1"
-  data-renews="HOME_LOCAL_4_POINT_RECEIVER_ORBIT_TNT_v2"
+  data-route="/door/"
+  data-page="door"
+  data-version="G2-V1"
+  data-contract="DOOR_FOUR_LENS_THRESHOLD_RENEWAL_TNT_v2"
+  data-previous-contract="DOOR_PHYSICAL_DIGITAL_THRESHOLD_CRYSTAL_RENEWAL_TNT_v1"
   data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
-  data-animation-standard="LOCAL_4_RECEIVER_CRYSTAL_ORBIT_STANDARD_v1"
-  data-material-renewal="physical-digital-amethyst-receiver-crystal"
-  data-top-traversal="compass-door-home-manor-showroom-gauges"
+  data-animation-standard="LOCAL_8_DIAMOND_AXIAL_ORBIT_STANDARD_v2"
+  data-top-traversal="compass-door-home-products-laws-gauges"
+  data-material-renewal="physical-digital-violet-threshold-crystal"
+  data-threshold-crystal="active"
+  data-four-lens-compass="north-interface-south-laws-east-story-west-community"
   data-status="active"
-  data-role="estate-receiver"
+  data-role="entry-threshold"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -22,10 +24,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Home · Diamond Gate Bridge</title>
+  <title>Door · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Home is the estate receiver for Diamond Gate Bridge. It stabilizes the visitor after the Door and routes them to the correct room."
+    content="The Door is the entry threshold for Diamond Gate Bridge: one narrative with four lenses — Interface, Laws, Story, and Community."
   >
 
   <style>
@@ -37,15 +39,13 @@
       --faint:rgba(230,238,255,.48);
       --gold:#f3c86f;
       --gold2:#ffe8a3;
-      --amethyst:#a884ff;
-      --amethyst2:#d8c8ff;
-      --amethyst3:#5e35d6;
-      --amethyst4:#1c0b46;
-      --panel:rgba(9,15,31,.88);
+      --violet:#8f65ff;
+      --violet2:#cbb8ff;
+      --panel:rgba(9,15,31,.86);
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
-      --orbit-duration:42s;
+      --orbit-duration:46s;
     }
 
     *{box-sizing:border-box}
@@ -68,9 +68,9 @@
       overflow-x:hidden;
       background:
         radial-gradient(circle at 50% -8%,rgba(243,200,111,.22),transparent 28rem),
-        radial-gradient(circle at 10% 18%,rgba(143,101,255,.22),transparent 28rem),
+        radial-gradient(circle at 10% 18%,rgba(143,101,255,.20),transparent 28rem),
         radial-gradient(circle at 92% 30%,rgba(141,216,255,.14),transparent 28rem),
-        radial-gradient(circle at 50% 78%,rgba(143,101,255,.13),transparent 34rem),
+        radial-gradient(circle at 50% 78%,rgba(143,101,255,.12),transparent 34rem),
         linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
@@ -149,24 +149,24 @@
       height:4.2rem;
       display:grid;
       place-items:center;
-      clip-path:polygon(50% 0%,72% 10%,96% 34%,88% 70%,50% 100%,12% 70%,4% 34%,28% 10%);
+      border:1px solid rgba(243,200,111,.44);
+      border-radius:1.15rem;
+      transform:rotate(45deg);
       background:
-        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.36) 21% 23%,transparent 24%),
-        radial-gradient(circle at 42% 22%,rgba(255,255,255,.34),transparent 42%),
-        radial-gradient(circle at 66% 76%,rgba(168,132,255,.48),transparent 58%),
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.24),rgba(168,132,255,.34),rgba(27,12,70,.76),rgba(216,200,255,.20),rgba(255,255,255,.24)),
-        linear-gradient(145deg,rgba(62,38,139,.98),rgba(5,8,20,.98));
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.24),transparent 42%),
+        radial-gradient(circle at 64% 76%,rgba(143,101,255,.42),transparent 58%),
+        linear-gradient(145deg,rgba(43,32,82,.95),rgba(5,8,20,.98));
       box-shadow:
-        0 0 2rem rgba(143,101,255,.30),
+        0 0 2rem rgba(143,101,255,.28),
         0 1.2rem 2.8rem rgba(0,0,0,.46),
-        inset 0 1px 0 rgba(255,255,255,.20);
+        inset 0 1px 0 rgba(255,255,255,.16);
     }
 
     .brand-mark span{
+      transform:rotate(-45deg);
       font-weight:950;
-      letter-spacing:.05em;
+      letter-spacing:.04em;
       color:rgba(255,244,216,.98);
-      text-shadow:0 2px 12px rgba(0,0,0,.88);
     }
 
     .brand-copy{
@@ -223,7 +223,7 @@
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
         radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
-        radial-gradient(circle at 86% 18%,rgba(143,101,255,.15),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(143,101,255,.14),transparent 28rem),
         linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
         var(--panel);
       box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
@@ -232,7 +232,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(22rem,40vw,32rem);
+      min-height:clamp(24rem,42vw,34rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -249,12 +249,12 @@
       z-index:0;
       width:clamp(9rem,25vw,18rem);
       height:clamp(9rem,25vw,18rem);
-      border:1px solid rgba(243,200,111,.18);
+      border:1px solid rgba(243,200,111,.20);
       border-radius:2.9rem;
       transform:translateY(-50%) rotate(45deg);
       background:
         radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
-        radial-gradient(circle at 50% 72%,rgba(143,101,255,.18),transparent 62%),
+        radial-gradient(circle at 50% 72%,rgba(143,101,255,.16),transparent 62%),
         linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
       animation:anchorPulse 8s ease-in-out infinite;
       pointer-events:none;
@@ -296,7 +296,7 @@
 
     h1{
       margin:0;
-      max-width:950px;
+      max-width:980px;
       font-size:clamp(3.1rem,10vw,7rem);
       line-height:.84;
       letter-spacing:-.105em;
@@ -321,6 +321,12 @@
       color:var(--muted);
       font-size:clamp(.98rem,2.7vw,1.16rem);
       line-height:1.55;
+    }
+
+    .lead{
+      max-width:900px;
+      position:relative;
+      z-index:2;
     }
 
     .quote{
@@ -383,9 +389,9 @@
       gap:1.05rem;
     }
 
-    .home-stage{
+    .door-stage{
       position:relative;
-      min-height:clamp(31rem,62vw,46rem);
+      min-height:clamp(35rem,70vw,52rem);
       display:grid;
       place-items:center;
       overflow:hidden;
@@ -398,8 +404,8 @@
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .home-stage::before,
-    .home-stage::after{
+    .door-stage::before,
+    .door-stage::after{
       content:"";
       position:absolute;
       left:50%;
@@ -409,60 +415,92 @@
       pointer-events:none;
     }
 
-    .home-stage::before{
-      width:min(80%,30rem);
-      height:min(80%,30rem);
+    .door-stage::before{
+      width:min(82%,34rem);
+      height:min(82%,34rem);
       border:1px solid rgba(243,200,111,.08);
       box-shadow:0 0 3rem rgba(143,101,255,.12);
     }
 
-    .home-stage::after{
-      width:min(52%,19rem);
-      height:min(52%,19rem);
+    .door-stage::after{
+      width:min(52%,22rem);
+      height:min(52%,22rem);
       border:1px solid rgba(143,101,255,.15);
     }
 
-    .home-anchor{
+    .door-anchor{
       position:absolute;
       left:50%;
       top:50%;
-      z-index:0;
+      z-index:1;
       display:grid;
       place-items:center;
-      width:clamp(8rem,21vw,12rem);
-      height:clamp(8rem,21vw,12rem);
+      width:clamp(9.6rem,24vw,14.5rem);
+      height:clamp(7rem,18vw,10.8rem);
       transform:translate(-50%,-50%);
       pointer-events:none;
+      isolation:isolate;
     }
 
-    .home-orbit{
+    .door-anchor-label{
+      position:relative;
+      z-index:3;
+      display:grid;
+      gap:.12rem;
+      place-items:center;
+      width:68%;
+      color:rgba(255,244,216,.90);
+      text-align:center;
+      text-shadow:
+        0 2px 14px rgba(0,0,0,.88),
+        0 0 12px rgba(85,42,190,.80);
+    }
+
+    .door-anchor-label b{
+      font-size:clamp(.72rem,1.7vw,.96rem);
+      font-weight:950;
+      letter-spacing:.18em;
+      line-height:1.05;
+      text-transform:uppercase;
+    }
+
+    .door-anchor-label span{
+      color:rgba(230,238,255,.64);
+      font-size:clamp(.46rem,1.1vw,.62rem);
+      font-weight:950;
+      letter-spacing:.14em;
+      line-height:1.2;
+      text-transform:uppercase;
+    }
+
+    .door-orbit{
       position:absolute;
       left:50%;
       top:50%;
-      width:22.5rem;
-      height:22.5rem;
+      width:26.5rem;
+      height:26.5rem;
       z-index:3;
       border-radius:999px;
       pointer-events:none;
       transform:translate(-50%,-50%);
-      animation:homeOrbitSpin var(--orbit-duration) linear infinite;
+      animation:doorOrbitSpin var(--orbit-duration) linear infinite;
     }
 
-    @keyframes homeOrbitSpin{
+    @keyframes doorOrbitSpin{
       to{transform:translate(-50%,-50%) rotate(360deg)}
     }
 
-    .home-node{
-      --radius:-10.85rem;
+    .door-node{
+      --radius:-12.75rem;
       position:absolute;
       left:50%;
       top:50%;
       display:grid;
       place-items:center;
       overflow:visible;
-      width:6.35rem;
-      height:4.75rem;
-      margin:-2.375rem 0 0 -3.175rem;
+      width:6.55rem;
+      height:4.95rem;
+      margin:-2.475rem 0 0 -3.275rem;
       transform:
         rotate(var(--angle))
         translateY(var(--radius))
@@ -474,14 +512,14 @@
       transition:filter .18s ease,scale .18s ease;
     }
 
-    .home-node:hover,
-    .home-node:focus-visible{
+    .door-node:hover,
+    .door-node:focus-visible{
       outline:none;
-      filter:brightness(1.12) saturate(1.10);
+      filter:brightness(1.14) saturate(1.10);
       scale:1.045;
     }
 
-    .receiver-gem-svg{
+    .threshold-gem-svg{
       position:absolute;
       inset:0;
       width:100%;
@@ -489,36 +527,46 @@
       overflow:visible;
       pointer-events:none;
       filter:
-        drop-shadow(0 1.15rem 1.45rem rgba(0,0,0,.28))
-        drop-shadow(0 0 1.15rem rgba(168,132,255,.18));
+        drop-shadow(0 1.1rem 1.35rem rgba(0,0,0,.30))
+        drop-shadow(0 0 1.35rem rgba(143,101,255,.20))
+        drop-shadow(0 0 .75rem rgba(255,255,255,.08));
     }
 
-    .home-anchor .receiver-gem-svg{
+    .door-node:hover .threshold-gem-svg,
+    .door-node:focus-visible .threshold-gem-svg{
       filter:
-        drop-shadow(0 1.35rem 1.6rem rgba(0,0,0,.32))
-        drop-shadow(0 0 1.8rem rgba(168,132,255,.24));
+        drop-shadow(0 1.25rem 1.55rem rgba(0,0,0,.36))
+        drop-shadow(0 0 1.65rem rgba(143,101,255,.28))
+        drop-shadow(0 0 1rem rgba(243,200,111,.12));
     }
 
-    .receiver-glint{
-      animation:receiverGlint 8s ease-in-out infinite;
+    .door-anchor .threshold-gem-svg{
+      filter:
+        drop-shadow(0 1.4rem 1.8rem rgba(0,0,0,.38))
+        drop-shadow(0 0 2.2rem rgba(143,101,255,.22))
+        drop-shadow(0 0 1.1rem rgba(243,200,111,.08));
+    }
+
+    .threshold-glint{
+      animation:thresholdGlint 8.4s ease-in-out infinite;
       transform-origin:110px 80px;
     }
 
-    @keyframes receiverGlint{
-      0%,100%{opacity:.10;transform:translateX(-28px)}
-      50%{opacity:.42;transform:translateX(28px)}
+    @keyframes thresholdGlint{
+      0%,100%{opacity:.10;transform:translateX(-34px)}
+      48%,55%{opacity:.46;transform:translateX(32px)}
     }
 
-    .receiver-star{
-      animation:receiverFacetTurn 24s linear infinite;
+    .threshold-star{
+      animation:thresholdFacetTurn 26s linear infinite;
       transform-origin:110px 80px;
     }
 
-    @keyframes receiverFacetTurn{
+    @keyframes thresholdFacetTurn{
       to{transform:rotate(360deg)}
     }
 
-    .home-label-shell{
+    .door-label-shell{
       display:flex;
       align-items:center;
       justify-content:center;
@@ -531,27 +579,27 @@
       pointer-events:none;
     }
 
-    .home-label-text{
+    .door-label-text{
       display:block;
-      max-width:4.2rem;
+      max-width:4.4rem;
       color:rgba(255,244,216,.98);
       text-align:center;
-      font-size:.56rem;
+      font-size:.54rem;
       font-weight:950;
       letter-spacing:.07em;
       line-height:1.1;
       text-transform:uppercase;
       text-shadow:
-        0 2px 12px rgba(0,0,0,.92),
+        0 2px 12px rgba(0,0,0,.90),
         0 0 10px rgba(58,30,130,.84),
         0 0 2px rgba(255,255,255,.42);
-      animation:homeTextUpright var(--orbit-duration) linear infinite;
+      animation:doorTextUpright var(--orbit-duration) linear infinite;
     }
 
-    .home-label-sub{
+    .door-label-sub{
       display:block;
       margin-top:.12rem;
-      color:rgba(230,238,255,.74);
+      color:rgba(230,238,255,.72);
       font-size:.40rem;
       font-weight:850;
       letter-spacing:.05em;
@@ -559,21 +607,23 @@
       text-transform:uppercase;
     }
 
-    @keyframes homeTextUpright{
+    @keyframes doorTextUpright{
       to{transform:rotate(-360deg)}
     }
 
-    .route-grid{
+    .lens-grid,
+    .room-grid{
       display:grid;
-      grid-template-columns:repeat(6,minmax(0,1fr));
       gap:.75rem;
+      grid-template-columns:repeat(4,minmax(0,1fr));
     }
 
-    .route-card{
-      min-height:6.6rem;
+    .info-card,
+    .room-card{
+      min-height:10rem;
       display:grid;
-      place-items:center;
-      text-align:center;
+      gap:.55rem;
+      align-content:start;
       padding:1rem;
       border:1px solid rgba(255,255,255,.12);
       border-radius:1.2rem;
@@ -583,23 +633,41 @@
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .route-card:hover,
-    .route-card:focus-visible{
+    .room-card{
+      min-height:6.6rem;
+      place-items:center;
+      text-align:center;
+    }
+
+    .info-card:hover,
+    .room-card:hover,
+    .info-card:focus-visible,
+    .room-card:focus-visible{
       transform:translateY(-3px);
       border-color:rgba(243,200,111,.46);
       outline:none;
     }
 
-    .route-card strong{
+    .info-card b,
+    .room-card b{
+      color:var(--gold);
+      font-size:.68rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .info-card strong,
+    .room-card strong{
       color:rgba(255,244,216,.98);
       font-size:1.05rem;
       line-height:1.1;
     }
 
-    .route-card span{
+    .info-card span,
+    .room-card span{
       color:var(--muted);
-      font-size:.82rem;
-      line-height:1.32;
+      font-size:.92rem;
+      line-height:1.4;
     }
 
     .route-receipt,
@@ -633,7 +701,8 @@
     }
 
     @media (max-width:1080px){
-      .route-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .lens-grid,
+      .room-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media (max-width:980px){
@@ -650,37 +719,38 @@
       h1{font-size:clamp(3rem,17vw,5rem)}
 
       .hero{
-        min-height:26rem;
+        min-height:27rem;
         padding:1rem;
       }
 
-      .home-stage{
-        min-height:31rem;
+      .door-stage{
+        min-height:33rem;
       }
 
-      .home-orbit{
-        width:18.5rem;
-        height:18.5rem;
+      .door-orbit{
+        width:21rem;
+        height:21rem;
       }
 
-      .home-node{
-        --radius:-8.65rem;
+      .door-node{
+        --radius:-9.95rem;
         width:5.1rem;
-        height:3.85rem;
-        margin:-1.925rem 0 0 -2.55rem;
+        height:3.9rem;
+        margin:-1.95rem 0 0 -2.55rem;
       }
 
-      .home-label-text{
-        max-width:3.25rem;
-        font-size:.42rem;
+      .door-label-text{
+        max-width:3.2rem;
+        font-size:.40rem;
         letter-spacing:.045em;
       }
 
-      .home-label-sub{
+      .door-label-sub{
         display:none;
       }
 
-      .route-grid{
+      .lens-grid,
+      .room-grid{
         grid-template-columns:1fr;
       }
 
@@ -694,30 +764,38 @@
     }
 
     @media (max-width:460px){
-      .home-stage{
-        min-height:29rem;
+      .door-stage{
+        min-height:31rem;
       }
 
-      .home-anchor{
-        width:8.1rem;
-        height:6.05rem;
+      .door-anchor{
+        width:8.2rem;
+        height:6.2rem;
       }
 
-      .home-orbit{
-        width:16.6rem;
-        height:16.6rem;
+      .door-anchor-label b{
+        font-size:.60rem;
       }
 
-      .home-node{
-        --radius:-7.75rem;
+      .door-anchor-label span{
+        font-size:.42rem;
+      }
+
+      .door-orbit{
+        width:18.8rem;
+        height:18.8rem;
+      }
+
+      .door-node{
+        --radius:-8.75rem;
         width:4.45rem;
-        height:3.35rem;
-        margin:-1.675rem 0 0 -2.225rem;
+        height:3.4rem;
+        margin:-1.7rem 0 0 -2.225rem;
       }
 
-      .home-label-text{
-        max-width:2.9rem;
-        font-size:.36rem;
+      .door-label-text{
+        max-width:2.85rem;
+        font-size:.35rem;
       }
     }
 
@@ -737,39 +815,46 @@
 <body>
   <svg class="svg-defs" aria-hidden="true" focusable="false">
     <defs>
-      <linearGradient id="receiverCrystalBody" x1="16" y1="12" x2="204" y2="148" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity=".86"/>
-        <stop offset=".14" stop-color="#f5edff" stop-opacity=".78"/>
-        <stop offset=".32" stop-color="#d8c8ff" stop-opacity=".64"/>
-        <stop offset=".52" stop-color="#a884ff" stop-opacity=".52"/>
-        <stop offset=".74" stop-color="#5e35d6" stop-opacity=".44"/>
-        <stop offset="1" stop-color="#080618" stop-opacity=".84"/>
+      <linearGradient id="thresholdCrystalBody" x1="14" y1="10" x2="206" y2="150" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".82"/>
+        <stop offset=".12" stop-color="#efe7ff" stop-opacity=".76"/>
+        <stop offset=".30" stop-color="#cbb8ff" stop-opacity=".66"/>
+        <stop offset=".52" stop-color="#8f65ff" stop-opacity=".50"/>
+        <stop offset=".76" stop-color="#3f1aa3" stop-opacity=".48"/>
+        <stop offset="1" stop-color="#050416" stop-opacity=".86"/>
       </linearGradient>
 
-      <radialGradient id="receiverCrystalTable" cx="50%" cy="38%" r="66%">
-        <stop offset="0" stop-color="#ffffff" stop-opacity=".60"/>
-        <stop offset=".28" stop-color="#f5edff" stop-opacity=".36"/>
-        <stop offset=".58" stop-color="#a884ff" stop-opacity=".16"/>
+      <radialGradient id="thresholdCrystalTable" cx="50%" cy="37%" r="66%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".66"/>
+        <stop offset=".28" stop-color="#efe7ff" stop-opacity=".38"/>
+        <stop offset=".58" stop-color="#8f65ff" stop-opacity=".18"/>
         <stop offset="1" stop-color="#050716" stop-opacity="0"/>
       </radialGradient>
 
-      <linearGradient id="receiverCrystalGlint" x1="32" y1="130" x2="188" y2="24" gradientUnits="userSpaceOnUse">
+      <linearGradient id="thresholdCrystalDepth" x1="110" y1="40" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".20"/>
+        <stop offset=".34" stop-color="#cbb8ff" stop-opacity=".24"/>
+        <stop offset=".62" stop-color="#8f65ff" stop-opacity=".18"/>
+        <stop offset="1" stop-color="#050416" stop-opacity=".58"/>
+      </linearGradient>
+
+      <linearGradient id="thresholdCrystalGlint" x1="30" y1="130" x2="188" y2="24" gradientUnits="userSpaceOnUse">
         <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
-        <stop offset=".46" stop-color="#ffffff" stop-opacity=".78"/>
-        <stop offset=".54" stop-color="#fff0a3" stop-opacity=".22"/>
+        <stop offset=".46" stop-color="#ffffff" stop-opacity=".82"/>
+        <stop offset=".54" stop-color="#fff0a3" stop-opacity=".24"/>
         <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
       </linearGradient>
 
-      <filter id="receiverCrystalGlow" x="-40%" y="-48%" width="180%" height="196%">
-        <feGaussianBlur in="SourceAlpha" stdDeviation="2.2" result="blur"/>
+      <filter id="thresholdCrystalGlow" x="-42%" y="-52%" width="184%" height="204%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" result="blur"/>
         <feColorMatrix
           in="blur"
           type="matrix"
           values="
-            0.78 0 0 0 0.18
-            0 0.62 0 0 0.12
-            0 0 1.00 0 0.32
-            0 0 0 0.48 0"
+            0.78 0 0 0 0.22
+            0 0.54 0 0 0.12
+            0 0 1.00 0 0.34
+            0 0 0 0.50 0"
           result="glow"
         />
         <feMerge>
@@ -778,196 +863,273 @@
         </feMerge>
       </filter>
 
-      <symbol id="receiverAmethystCrystal" viewBox="0 0 220 160">
-        <g filter="url(#receiverCrystalGlow)">
+      <symbol id="doorThresholdCrystal" viewBox="0 0 220 160">
+        <g filter="url(#thresholdCrystalGlow)">
           <path
-            d="M110 6 L150 18 L196 56 L178 116 L110 154 L42 116 L24 56 L70 18 Z"
-            fill="url(#receiverCrystalBody)"
-            stroke="rgba(245,237,255,.58)"
+            d="M110 6 L145 15 L184 43 L206 76 L186 112 L148 140 L110 154 L72 140 L34 112 L14 76 L36 43 L75 15 Z"
+            fill="url(#thresholdCrystalBody)"
+            stroke="rgba(239,231,255,.56)"
             stroke-width="1.35"
           />
-          <path d="M110 6 L150 18 L132 47 L110 34 L88 47 L70 18 Z" fill="rgba(255,255,255,.28)"/>
-          <path d="M70 18 L88 47 L62 72 L24 56 Z" fill="rgba(255,255,255,.18)"/>
-          <path d="M150 18 L132 47 L158 72 L196 56 Z" fill="rgba(216,200,255,.20)"/>
-          <path d="M88 47 L110 34 L132 47 L158 72 L144 96 L110 112 L76 96 L62 72 Z" fill="url(#receiverCrystalTable)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
-          <path d="M24 56 L62 72 L76 96 L42 116 Z" fill="rgba(94,53,214,.20)"/>
-          <path d="M196 56 L158 72 L144 96 L178 116 Z" fill="rgba(255,255,255,.12)"/>
-          <path d="M42 116 L76 96 L110 154 Z" fill="rgba(13,10,36,.42)"/>
-          <path d="M178 116 L144 96 L110 154 Z" fill="rgba(168,132,255,.16)"/>
-          <path d="M110 6 L110 154" stroke="rgba(255,255,255,.32)" stroke-width="1.05"/>
-          <path d="M24 56 L196 56" stroke="rgba(255,255,255,.20)" stroke-width=".9"/>
-          <path d="M42 116 L178 116" stroke="rgba(255,255,255,.18)" stroke-width=".9"/>
-          <path d="M70 18 L110 112 L150 18" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
-          <path d="M24 56 L110 112 L196 56" stroke="rgba(255,255,255,.14)" stroke-width=".9" fill="none"/>
-          <g class="receiver-star" opacity=".82">
-            <path d="M110 32 L116 77 L110 116 L104 77 Z" fill="rgba(255,255,255,.28)"/>
-            <path d="M62 72 L106 78 L158 72 L114 88 Z" fill="rgba(255,255,255,.17)"/>
-            <path d="M76 96 L106 82 L144 96 L114 106 Z" fill="rgba(255,240,163,.10)"/>
+          <path d="M110 6 L145 15 L131 43 L110 33 L89 43 L75 15 Z" fill="rgba(255,255,255,.30)"/>
+          <path d="M75 15 L89 43 L62 65 L36 43 Z" fill="rgba(255,255,255,.20)"/>
+          <path d="M145 15 L131 43 L158 65 L184 43 Z" fill="rgba(203,184,255,.22)"/>
+          <path d="M36 43 L62 65 L54 84 L14 76 Z" fill="rgba(255,255,255,.10)"/>
+          <path d="M184 43 L158 65 L166 84 L206 76 Z" fill="rgba(243,200,111,.10)"/>
+          <path
+            d="M89 43 L110 33 L131 43 L158 65 L145 91 L110 107 L75 91 L62 65 Z"
+            fill="url(#thresholdCrystalTable)"
+            stroke="rgba(255,255,255,.30)"
+            stroke-width=".9"
+          />
+          <path d="M14 76 L54 84 L72 140 L34 112 Z" fill="rgba(5,4,22,.34)"/>
+          <path d="M206 76 L166 84 L148 140 L186 112 Z" fill="rgba(255,255,255,.10)"/>
+          <path d="M54 84 L75 91 L110 154 L72 140 Z" fill="rgba(15,8,52,.44)"/>
+          <path d="M166 84 L145 91 L110 154 L148 140 Z" fill="rgba(143,101,255,.18)"/>
+          <path d="M75 91 L110 107 L110 154 Z" fill="url(#thresholdCrystalDepth)" opacity=".72"/>
+          <path d="M145 91 L110 107 L110 154 Z" fill="rgba(7,6,24,.34)"/>
+          <path d="M110 6 L110 154" stroke="rgba(255,255,255,.34)" stroke-width="1.05"/>
+          <path d="M14 76 L206 76" stroke="rgba(255,255,255,.25)" stroke-width=".95"/>
+          <path d="M36 43 L186 112" stroke="rgba(255,255,255,.16)" stroke-width=".85"/>
+          <path d="M184 43 L34 112" stroke="rgba(255,255,255,.16)" stroke-width=".85"/>
+          <path d="M75 15 L110 107 L145 15" stroke="rgba(255,255,255,.18)" stroke-width=".85" fill="none"/>
+          <path d="M36 43 L110 107 L184 43" stroke="rgba(255,255,255,.14)" stroke-width=".85" fill="none"/>
+          <path d="M34 112 L110 107 L186 112" stroke="rgba(243,200,111,.12)" stroke-width=".85" fill="none"/>
+          <g class="threshold-star" opacity=".82">
+            <path d="M110 31 L116 76 L110 112 L104 76 Z" fill="rgba(255,255,255,.28)"/>
+            <path d="M62 65 L106 78 L158 65 L114 86 Z" fill="rgba(255,255,255,.16)"/>
+            <path d="M75 91 L106 83 L145 91 L114 101 Z" fill="rgba(255,240,163,.10)"/>
           </g>
-          <path class="receiver-glint" d="M38 120 L176 24 L188 42 L52 132 Z" fill="url(#receiverCrystalGlint)"/>
+          <path class="threshold-glint" d="M38 121 L176 24 L188 42 L52 133 Z" fill="url(#thresholdCrystalGlint)"/>
         </g>
       </symbol>
 
-      <symbol id="receiverAmethystSeal" viewBox="0 0 220 160">
-        <g filter="url(#receiverCrystalGlow)">
+      <symbol id="doorThresholdSeal" viewBox="0 0 220 160">
+        <g filter="url(#thresholdCrystalGlow)">
           <path
-            d="M110 5 L142 16 L174 20 L202 55 L190 92 L162 130 L110 154 L58 130 L30 92 L18 55 L46 20 L78 16 Z"
-            fill="url(#receiverCrystalBody)"
-            stroke="rgba(245,237,255,.62)"
+            d="M110 5 L140 16 L170 18 L199 48 L191 76 L204 80 L191 84 L199 112 L170 142 L140 144 L110 155 L80 144 L50 142 L21 112 L29 84 L16 80 L29 76 L21 48 L50 18 L80 16 Z"
+            fill="url(#thresholdCrystalBody)"
+            stroke="rgba(239,231,255,.62)"
             stroke-width="1.45"
           />
-          <path d="M110 5 L142 16 L126 44 L110 34 L94 44 L78 16 Z" fill="rgba(255,255,255,.28)"/>
-          <path d="M46 20 L94 44 L68 72 L18 55 Z" fill="rgba(255,255,255,.16)"/>
-          <path d="M174 20 L126 44 L152 72 L202 55 Z" fill="rgba(216,200,255,.18)"/>
-          <path d="M68 72 L94 44 L110 34 L126 44 L152 72 L142 98 L110 116 L78 98 Z" fill="url(#receiverCrystalTable)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
-          <path d="M18 55 L68 72 L78 98 L30 92 Z" fill="rgba(94,53,214,.18)"/>
-          <path d="M202 55 L152 72 L142 98 L190 92 Z" fill="rgba(255,255,255,.12)"/>
-          <path d="M30 92 L78 98 L110 154 L58 130 Z" fill="rgba(13,10,36,.42)"/>
-          <path d="M190 92 L142 98 L110 154 L162 130 Z" fill="rgba(168,132,255,.16)"/>
-          <path d="M110 5 L110 154" stroke="rgba(255,255,255,.32)" stroke-width="1.05"/>
-          <path d="M18 55 L202 55" stroke="rgba(255,255,255,.20)" stroke-width=".9"/>
-          <path d="M30 92 L190 92" stroke="rgba(255,255,255,.18)" stroke-width=".9"/>
-          <g class="receiver-star" opacity=".82">
-            <path d="M110 32 L116 78 L110 118 L104 78 Z" fill="rgba(255,255,255,.28)"/>
-            <path d="M68 72 L106 78 L152 72 L114 88 Z" fill="rgba(255,255,255,.17)"/>
-            <path d="M78 98 L106 82 L142 98 L114 108 Z" fill="rgba(255,240,163,.10)"/>
+          <path d="M110 5 L140 16 L125 44 L110 34 L95 44 L80 16 Z" fill="rgba(255,255,255,.32)"/>
+          <path d="M50 18 L95 44 L68 67 L21 48 Z" fill="rgba(255,255,255,.18)"/>
+          <path d="M170 18 L125 44 L152 67 L199 48 Z" fill="rgba(203,184,255,.20)"/>
+          <path d="M68 67 L95 44 L110 34 L125 44 L152 67 L143 96 L110 116 L77 96 Z" fill="url(#thresholdCrystalTable)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
+          <path d="M16 80 L68 67 L77 96 L21 112 Z" fill="rgba(18,8,56,.38)"/>
+          <path d="M204 80 L152 67 L143 96 L199 112 Z" fill="rgba(255,255,255,.10)"/>
+          <path d="M21 112 L77 96 L110 155 L50 142 Z" fill="rgba(5,4,22,.42)"/>
+          <path d="M199 112 L143 96 L110 155 L170 142 Z" fill="rgba(143,101,255,.18)"/>
+          <path d="M110 5 L110 155" stroke="rgba(255,255,255,.34)" stroke-width="1.05"/>
+          <path d="M16 80 L204 80" stroke="rgba(255,255,255,.25)" stroke-width=".95"/>
+          <path d="M21 48 L199 112" stroke="rgba(255,255,255,.14)" stroke-width=".85"/>
+          <path d="M199 48 L21 112" stroke="rgba(255,255,255,.14)" stroke-width=".85"/>
+          <g class="threshold-star" opacity=".84">
+            <path d="M110 31 L116 78 L110 118 L104 78 Z" fill="rgba(255,255,255,.30)"/>
+            <path d="M68 67 L106 80 L152 67 L114 88 Z" fill="rgba(255,255,255,.17)"/>
+            <path d="M77 96 L106 84 L143 96 L114 108 Z" fill="rgba(255,240,163,.11)"/>
           </g>
-          <path class="receiver-glint" d="M38 120 L176 24 L188 42 L52 132 Z" fill="url(#receiverCrystalGlint)"/>
+          <path class="threshold-glint" d="M38 121 L176 24 L188 42 L52 133 Z" fill="url(#thresholdCrystalGlint)"/>
         </g>
       </symbol>
     </defs>
   </svg>
 
-  <a class="skip" href="#main">Skip to Home</a>
+  <a class="skip" href="#main">Skip to Door</a>
 
   <div class="shell">
-    <header class="topbar" aria-label="Home header">
+    <header class="topbar" aria-label="Door header">
       <a class="brand" href="/">
-        <span class="brand-mark"><span>HM</span></span>
+        <span class="brand-mark"><span>DR</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
-          <strong>Rich Manor and Estate</strong>
+          <strong>Door · Entry Threshold</strong>
         </span>
       </a>
 
       <nav class="nav" aria-label="Primary traversal">
         <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/" aria-current="page">Home</a>
-        <a href="/explore/">Manor</a>
-        <a href="/showroom/">Showroom</a>
+        <a href="/door/" aria-current="page">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/products/">Products</a>
+        <a href="/laws/">Laws</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Home · Estate Receiver</div>
-        <h1 id="page-title">Home keeps the journey coherent.</h1>
+        <div class="kicker">Door · Four-Lens Threshold</div>
+        <h1 id="page-title">One narrative. Four ways through.</h1>
+        <h2>North structures it. South governs it. East expresses it. West applies it.</h2>
+
+        <p class="lead">
+          The Door is the crossing point. Enter through Interface, Laws, Story, or Community. Every path belongs to the same narrative.
+        </p>
 
         <div class="quote">
-          “The Door gets you in. Home helps you know where you are.”
+          “Do not admire the threshold forever. Cross it.”
         </div>
 
         <div class="actions">
-          <a class="button gold" href="/explore/">Choose a Room</a>
-          <a class="button" href="/nine-summits-of-love/">Open the Book</a>
-          <a class="button" href="/showroom/">Inspect Built Assets</a>
+          <a class="button gold" href="/laws/">Open Laws</a>
+          <a class="button" href="/showroom/globe/">Enter Mirrorland</a>
+          <a class="button" href="/products/">Open Community</a>
           <a class="button" href="/gauges/">Read Gauges</a>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="receiver-title">
-        <div class="kicker">Four-point receiver orbit</div>
-        <h2 id="receiver-title">Home stabilizes the estate.</h2>
+      <section class="panel section" aria-labelledby="field-title">
+        <div class="kicker">Eight-crystal axial threshold</div>
+        <h2 id="field-title">Eight threshold crystals hold one circular path around the Door anchor.</h2>
 
-        <p>
-          Home receives the visitor after the Door, keeps the route clean, and sends each person to the correct room.
-        </p>
-
-        <div class="home-stage" aria-label="Animated Home four-point physical digital amethyst receiver orbit">
-          <div class="home-anchor" aria-hidden="true">
-            <svg class="receiver-gem-svg" viewBox="0 0 220 160" focusable="false">
-              <use href="#receiverAmethystSeal"></use>
+        <div class="door-stage" aria-label="Animated Door eight-physical-digital-threshold-crystal axial field">
+          <div class="door-anchor" aria-hidden="true">
+            <svg class="threshold-gem-svg" viewBox="0 0 220 160" focusable="false">
+              <use href="#doorThresholdSeal"></use>
             </svg>
-            <span class="home-label-shell">
-              <b class="home-label-text">Home<span class="home-label-sub">Receiver</span></b>
+            <span class="door-anchor-label">
+              <b>Door</b>
+              <span>Crossing Point</span>
             </span>
           </div>
 
-          <div class="home-orbit">
-            <a class="home-node" style="--angle:0deg" href="/explore/" aria-label="Manor Rooms">
-              <svg class="receiver-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#receiverAmethystCrystal"></use></svg>
-              <span class="home-label-shell">
-                <b class="home-label-text">Manor<span class="home-label-sub">Rooms</span></b>
+          <div class="door-orbit">
+            <a class="door-node" style="--angle:0deg" href="/gauges/" aria-label="North Interface">
+              <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
+              <span class="door-label-shell">
+                <b class="door-label-text">North<span class="door-label-sub">Interface</span></b>
               </span>
             </a>
 
-            <a class="home-node" style="--angle:90deg" href="/nine-summits-of-love/" aria-label="Book Climb">
-              <svg class="receiver-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#receiverAmethystCrystal"></use></svg>
-              <span class="home-label-shell">
-                <b class="home-label-text">Book<span class="home-label-sub">Climb</span></b>
+            <a class="door-node" style="--angle:45deg" href="/" aria-label="Compass">
+              <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
+              <span class="door-label-shell">
+                <b class="door-label-text">Compass<span class="door-label-sub">Root</span></b>
               </span>
             </a>
 
-            <a class="home-node" style="--angle:180deg" href="/showroom/" aria-label="Showroom Atrium">
-              <svg class="receiver-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#receiverAmethystCrystal"></use></svg>
-              <span class="home-label-shell">
-                <b class="home-label-text">Showroom<span class="home-label-sub">Atrium</span></b>
+            <a class="door-node" style="--angle:90deg" href="/showroom/globe/" aria-label="East Story Game Series">
+              <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
+              <span class="door-label-shell">
+                <b class="door-label-text">East<span class="door-label-sub">Story</span></b>
               </span>
             </a>
 
-            <a class="home-node" style="--angle:270deg" href="/gauges/" aria-label="Gauges Proof">
-              <svg class="receiver-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#receiverAmethystCrystal"></use></svg>
-              <span class="home-label-shell">
-                <b class="home-label-text">Gauges<span class="home-label-sub">Proof</span></b>
+            <a class="door-node" style="--angle:135deg" href="/characters/" aria-label="Characters">
+              <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
+              <span class="door-label-shell">
+                <b class="door-label-text">Characters<span class="door-label-sub">Roster</span></b>
+              </span>
+            </a>
+
+            <a class="door-node" style="--angle:180deg" href="/laws/" aria-label="South Laws">
+              <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
+              <span class="door-label-shell">
+                <b class="door-label-text">South<span class="door-label-sub">Laws</span></b>
+              </span>
+            </a>
+
+            <a class="door-node" style="--angle:225deg" href="/home/" aria-label="Home">
+              <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
+              <span class="door-label-shell">
+                <b class="door-label-text">Home<span class="door-label-sub">Return</span></b>
+              </span>
+            </a>
+
+            <a class="door-node" style="--angle:270deg" href="/products/" aria-label="West Community Products">
+              <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
+              <span class="door-label-shell">
+                <b class="door-label-text">West<span class="door-label-sub">Community</span></b>
+              </span>
+            </a>
+
+            <a class="door-node" style="--angle:315deg" href="/frontier/" aria-label="Frontier">
+              <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
+              <span class="door-label-shell">
+                <b class="door-label-text">Frontier<span class="door-label-sub">Future</span></b>
               </span>
             </a>
           </div>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="routes-title">
-        <div class="kicker">Rooms from Home</div>
-        <h2 id="routes-title">The receiver keeps the estate connected.</h2>
+      <section class="panel section" aria-labelledby="lens-title">
+        <div class="kicker">Four lenses</div>
+        <h2 id="lens-title">Every visitor can enter through the lens that already makes sense to them.</h2>
 
-        <div class="route-grid">
-          <a class="route-card" href="/"><strong>Compass</strong><span>Return to orientation.</span></a>
-          <a class="route-card" href="/door/"><strong>Door</strong><span>Return to entry.</span></a>
-          <a class="route-card" href="/explore/"><strong>Manor</strong><span>Choose a room.</span></a>
-          <a class="route-card" href="/laws/"><strong>Laws</strong><span>Read governing rules.</span></a>
-          <a class="route-card" href="/products/"><strong>Products</strong><span>Open usable doors.</span></a>
-          <a class="route-card" href="/showroom/"><strong>Showroom</strong><span>Inspect built assets.</span></a>
+        <div class="lens-grid">
+          <a class="info-card" href="/gauges/">
+            <b>North · Interface</b>
+            <strong>Everything as we know it.</strong>
+            <span>Routes, contracts, gauges, page architecture, runtime boundaries, and engineered structure.</span>
+          </a>
+
+          <a class="info-card" href="/laws/">
+            <b>South · Laws</b>
+            <strong>The truth layer governs and proves it.</strong>
+            <span>Principles, constraints, scientific backing, habitability, consequence, and survival standards.</span>
+          </a>
+
+          <a class="info-card" href="/showroom/globe/">
+            <b>East · Story</b>
+            <strong>The mind can express and imagine.</strong>
+            <span>Mirrorland, characters, the game path, ZIONTS, H-Earth, Audralia, and the series doorway.</span>
+          </a>
+
+          <a class="info-card" href="/products/">
+            <b>West · Community</b>
+            <strong>Everything lines up in practical use.</strong>
+            <span>Products, support, education, nutrition, AI, utility, and the path where the narrative helps people.</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="rooms-title">
+        <div class="kicker">Eight doors beyond the threshold</div>
+        <h2 id="rooms-title">Cross once, then choose the correct doorway.</h2>
+
+        <div class="room-grid">
+          <a class="room-card" href="/gauges/"><strong>North · Interface</strong></a>
+          <a class="room-card" href="/"><strong>Compass</strong></a>
+          <a class="room-card" href="/showroom/globe/"><strong>East · Mirrorland</strong></a>
+          <a class="room-card" href="/characters/"><strong>Characters</strong></a>
+          <a class="room-card" href="/laws/"><strong>South · Laws</strong></a>
+          <a class="room-card" href="/home/"><strong>Home</strong></a>
+          <a class="room-card" href="/products/"><strong>West · Community</strong></a>
+          <a class="room-card" href="/frontier/"><strong>Frontier</strong></a>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-HOME_TOP_TRAVERSAL_RECEIVER_CRYSTAL_STANDARD_TNT_v1
-previous=HOME_LOCAL_4_POINT_RECEIVER_ORBIT_TNT_v2
-route=/home/
-page=home
-role=estate_receiver
-message=home_keeps_the_journey_coherent
-material=physical_digital_amethyst_receiver_crystal
-top_traversal=compass,door,home,manor,showroom,gauges
-removed_from_top_traversal=laws,nine_summits,book,universe,products,frontier,underdog,meet_sean
+DOOR_FOUR_LENS_THRESHOLD_RENEWAL_TNT_v2
+previous=DOOR_PHYSICAL_DIGITAL_THRESHOLD_CRYSTAL_RENEWAL_TNT_v1
+route=/door/
+page=door
+role=entry_threshold
+message=one_narrative_four_ways_through
+top_traversal=compass,door,home,products,laws,gauges
 alignment_sequence=TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2
-visual_system=local_home_receiver_4_point_physical_digital_crystal_orbit
-center=home_receiver_crystal_seal
-north=manor:/explore/
-east=book:/nine-summits-of-love/
-south=showroom:/showroom/
-west=gauges:/gauges/
-secondary_routes=compass,door,manor,laws,products,showroom
-animation=homeOrbitSpin,homeTextUpright,receiverFacetTurn,receiverGlint,anchorPulse
-z_index_law=ambient_background,home_anchor_background,local_orbit_field,local_route_crystals,route_labels
+local_geometry=true
+animation_standard=LOCAL_8_DIAMOND_AXIAL_ORBIT_STANDARD_v2
+material=physical_digital_violet_threshold_crystal
+center=door_threshold_crystal_seal
+visual_system=local_animated_8_point_axial_physical_digital_threshold_crystal_field
+four_lens_compass=true
+north=interface_engineering_everything_as_we_know_it
+south=laws_truth_layer_scientific_backing
+east=fun_narrative_game_series_mirrorland_expression
+west=community_products_practical_application
+diamonds=north_interface,compass,east_story,characters,south_laws,home,west_community,frontier
+primary_routes=gauges,compass,showroom_globe,characters,laws,home,products,frontier
+animation=doorOrbitSpin,doorTextUpright,thresholdFacetTurn,thresholdGlint,anchorPulse
+z_index_law=ambient_background,door_anchor_background,local_orbit_field,local_route_crystals,route_labels
 non_overlap_law=no_clickable_crystal_hidden_by_center_no_crystal_escape_to_cards
-mobile_law=compact_4_point_field_no_hidden_nodes
-preserved=home_receiver_gate,manor_book_showroom_gauges_routes,estate_receiver_role
-renewed=top_traversal_constraint,physical_digital_receiver_crystals,route_receipt
-route_owns=estate_receiving,stabilization,four_primary_receiving_directions,room_routes,256_scope_expression
-route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
-home_loads_planet_scripts=false
+mobile_law=compact_8_point_field_no_hidden_nodes
+renewal=old_product_first_threshold_renewed_into_four_lens_narrative_threshold
+preserved=top_traversal,local_geometry,entry_threshold,receipt_containment,eight_point_orbit,door_animation,physical_digital_threshold_crystals
+route_owns=entry_threshold,8_point_field,animated_threshold_crystal_routes,route_selection_surface,top_traversal,four_lens_threshold
+route_does_not_own=products_page,laws_page,showroom_globe_page,characters_page,frontier_page,body_rendering,planet_surface,instrument_state,gauges_logic,full_site_nav_rebuild
 heavy_runtime_loaded=false
 render_files_touched=false
 instrument_touched=false
@@ -980,7 +1142,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      HOME_TOP_TRAVERSAL_RECEIVER_CRYSTAL_STANDARD_TNT_v1 · Home · Estate Receiver · Top traversal constrained.
+      DOOR_FOUR_LENS_THRESHOLD_RENEWAL_TNT_v2 · Door · Four-lens threshold · Top traversal preserved.
     </footer>
   </div>
 </body>

@@ -1,7 +1,10 @@
 // /door/index.js
 // TNT FULL-FILE REPLACEMENT
-// DOOR_TRUE_3D_SOLID_OPAQUE_ROUTE_GEM_MATERIAL_HTML_JS_TNT_v2
+// DOOR_TRUE_3D_SOLID_OPAQUE_ROUTE_GEM_BROWSER_RENEWAL_HTML_JS_TNT_v3
 // Scope: Door threshold crystal mini-engine only.
+// Browser renewal:
+// - Renew JS contract and module identity after regular-browser stale-load behavior.
+// - Preserve accepted geometry, orbit, labels, solidity, and center-gravity model.
 // Role:
 // - Preserve center Door gem as DOM/SVG gravity anchor.
 // - Render eight outer route gems as solid opaque true 3D WebGL mesh crystals.
@@ -10,8 +13,9 @@
 // - Reduce translucent ghosting when route crystals cross.
 // - No generated image. No GraphicBox. No heavy runtime.
 
-const DOOR_SOLID_GEM_STATE = Object.freeze({
-  contract: "DOOR_TRUE_3D_SOLID_OPAQUE_ROUTE_GEM_MATERIAL_HTML_JS_TNT_v2",
+const DOOR_BROWSER_RENEWAL_GEM_STATE = Object.freeze({
+  contract: "DOOR_TRUE_3D_SOLID_OPAQUE_ROUTE_GEM_BROWSER_RENEWAL_HTML_JS_TNT_v3",
+  previousContract: "DOOR_TRUE_3D_SOLID_OPAQUE_ROUTE_GEM_MATERIAL_HTML_JS_TNT_v2",
   route: "/door/",
   role: "entry-threshold",
   centerGem: "center-of-gravity",
@@ -19,6 +23,7 @@ const DOOR_SOLID_GEM_STATE = Object.freeze({
   labelMethod: "stabilized-front-facing-html-overlay",
   sharedOrbitDirection: true,
   material: "solid-opaque-crystal-body",
+  browserRenewal: true,
   generatedImage: false,
   graphicBox: false,
   heavyRuntimeLoaded: false
@@ -274,6 +279,8 @@ function setBootDataset(status) {
   document.documentElement.dataset.doorOuterGems = "solid-opaque-true-3d-webgl-mesh";
   document.documentElement.dataset.doorLabelsStabilized = "true";
   document.documentElement.dataset.doorGemMaterial = "solid-opaque-crystal-body";
+  document.documentElement.dataset.doorBrowserRenewal = "v3";
+  document.documentElement.dataset.doorActiveContract = DOOR_BROWSER_RENEWAL_GEM_STATE.contract;
 }
 
 function markFailed(error) {
@@ -307,7 +314,7 @@ function positionLabel(label, projected, z, orbitZ) {
   label.style.transform = `translate(-50%, -50%) scale(${scale})`;
 }
 
-function initDoorSolidGemOrbit() {
+function initDoorBrowserRenewalGemOrbit() {
   const stage = document.querySelector("[data-door-true-3d-stage]");
   const canvas = document.querySelector("[data-door-webgl-canvas]");
   const labels = Array.from(document.querySelectorAll("[data-door-route-label]"));
@@ -538,10 +545,10 @@ function initDoorSolidGemOrbit() {
   engineState.raf = requestAnimationFrame(draw);
 
   const api = Object.freeze({
-    ...DOOR_SOLID_GEM_STATE,
+    ...DOOR_BROWSER_RENEWAL_GEM_STATE,
     status() {
       return Object.freeze({
-        ...DOOR_SOLID_GEM_STATE,
+        ...DOOR_BROWSER_RENEWAL_GEM_STATE,
         ready: engineState.ready,
         webglStatus: engineState.lastStatus,
         centerGem: "center-of-gravity",
@@ -555,6 +562,7 @@ function initDoorSolidGemOrbit() {
         routeCount: ROUTES.length,
         vertexCount: engineState.vertexCount,
         reducedMotion: engineState.reducedMotion,
+        browserRenewal: true,
         generatedImage: false,
         graphicBox: false,
         heavyRuntimeLoaded: false
@@ -563,11 +571,12 @@ function initDoorSolidGemOrbit() {
   });
 
   window.DGBDoorSolidGemOrbit = api;
+  window.DGBDoorBrowserRenewalGemOrbit = api;
   return api;
 }
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initDoorSolidGemOrbit, { once: true });
+  document.addEventListener("DOMContentLoaded", initDoorBrowserRenewalGemOrbit, { once: true });
 } else {
-  initDoorSolidGemOrbit();
+  initDoorBrowserRenewalGemOrbit();
 }

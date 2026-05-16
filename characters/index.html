@@ -3,14 +3,14 @@
   lang="en"
   data-route="/characters/"
   data-page="characters"
-  data-contract="SHADOWS_NEVER_SHATTER_MIRROR_MANOR_PLACEMENT_AND_FRONTIER_PRESENTATION_TNT_v1"
-  data-previous-contract="SHADOWS_NEVER_SHATTER_TRANSITION_TO_DEXTRION_NONREDUNDANT_TNT_v1"
+  data-contract="SHADOWS_NEVER_SHATTER_GEM_NAV_STORY_ORGANIZATION_TNT_v1"
+  data-previous-contract="SHADOWS_NEVER_SHATTER_MIRROR_MANOR_PLACEMENT_AND_FRONTIER_PRESENTATION_TNT_v1"
   data-role="show-game-character-dossier"
   data-narrative-anchor="Shadows Never Shatter in Mirrorland"
   data-series-model="perspective-series-nine-episodes-nine-seasons"
   data-lattice="8-characters-8-tabs-4-fields-256-states"
-  data-public-field-labels="story-role-pressure-on-screen-in-game-what-changes"
   data-character-gems="true"
+  data-gem-navigation="story-characters-world-globe-explore-development"
   data-mirror-manor-location="mirrorland-audralia"
   data-earth-side-location="earth-anomaly-detection"
   data-static-page-usable-without-js="true"
@@ -238,9 +238,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(55rem,84vw,70rem);
       display:grid;
-      align-content:center;
       gap:1rem;
       padding:clamp(1.45rem,5vw,3.4rem);
       margin-top:.6rem;
@@ -251,7 +249,7 @@
       content:"";
       position:absolute;
       right:clamp(1rem,6vw,5.5rem);
-      top:50%;
+      top:26%;
       z-index:0;
       width:clamp(10rem,27vw,20rem);
       height:clamp(10rem,27vw,20rem);
@@ -271,10 +269,10 @@
       content:"";
       position:absolute;
       left:-8%;
-      top:15%;
+      top:6%;
       z-index:0;
       width:116%;
-      height:38%;
+      height:40%;
       pointer-events:none;
       background:
         radial-gradient(ellipse at 15% 40%,rgba(141,216,255,.13),transparent 34%),
@@ -370,16 +368,184 @@
       z-index:2;
     }
 
-    .declaration{
-      max-width:980px;
-      padding:1rem 1.1rem;
-      border:1px solid rgba(243,200,111,.24);
-      border-radius:1.2rem;
-      color:rgba(255,244,216,.95);
+    .top-feature-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.78rem;
+      max-width:1040px;
+      position:relative;
+      z-index:2;
+    }
+
+    .top-feature{
+      min-height:8.2rem;
+      display:grid;
+      align-content:center;
+      gap:.44rem;
+      padding:1rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1.15rem;
       background:
-        radial-gradient(circle at 12% 0%,rgba(243,200,111,.10),transparent 48%),
-        rgba(243,200,111,.065);
-      font-weight:900;
+        radial-gradient(circle at 15% 0%,rgba(255,232,163,.12),transparent 54%),
+        radial-gradient(circle at 92% 18%,rgba(198,166,255,.14),transparent 54%),
+        rgba(255,255,255,.04);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.07),
+        0 .85rem 2.5rem rgba(0,0,0,.22);
+      animation:featureFloat 8.8s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .top-feature::after{
+      content:"";
+      position:absolute;
+      inset:auto -20% -34% -20%;
+      height:70%;
+      background:radial-gradient(ellipse at 50% 50%,rgba(141,216,255,.12),transparent 72%);
+      pointer-events:none;
+      animation:featurePulse 7.6s ease-in-out infinite;
+    }
+
+    @keyframes featureFloat{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-.25rem)}
+    }
+
+    @keyframes featurePulse{
+      0%,100%{opacity:.32}
+      50%{opacity:.74}
+    }
+
+    .top-feature b{
+      color:var(--gold);
+      font-size:.68rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      position:relative;
+      z-index:2;
+    }
+
+    .top-feature strong{
+      color:rgba(255,244,216,.98);
+      font-size:1.05rem;
+      line-height:1.06;
+      letter-spacing:-.03em;
+      position:relative;
+      z-index:2;
+    }
+
+    .top-feature span{
+      color:rgba(230,238,255,.78);
+      font-size:.9rem;
+      line-height:1.34;
+      position:relative;
+      z-index:2;
+    }
+
+    .gem-nav{
+      position:relative;
+      z-index:2;
+      max-width:1040px;
+      padding:1rem;
+      border:1px solid rgba(184,205,255,.16);
+      border-radius:1.35rem;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(141,216,255,.10),transparent 60%),
+        rgba(2,8,20,.52);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .gem-nav-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+      margin-bottom:.9rem;
+    }
+
+    .gem-nav-head b{
+      color:var(--gold);
+      font-size:.68rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .gem-nav-head span{
+      color:var(--faint);
+      font-size:.82rem;
+      font-weight:800;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+
+    .gem-nav-grid{
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:.68rem;
+    }
+
+    .gem-link{
+      min-height:8.6rem;
+      display:grid;
+      align-content:end;
+      justify-items:center;
+      gap:.28rem;
+      padding:.85rem .55rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1rem;
+      background:
+        radial-gradient(circle at 50% 8%,rgba(255,255,255,.08),transparent 36%),
+        rgba(255,255,255,.028);
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
+    }
+
+    .gem-link:hover,
+    .gem-link:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(243,200,111,.48);
+      filter:brightness(1.12);
+      outline:none;
+    }
+
+    .nav-gem{
+      position:absolute;
+      top:.52rem;
+      width:5.5rem;
+      height:4rem;
+      opacity:.88;
+      pointer-events:none;
+      filter:
+        drop-shadow(0 .8rem 1rem rgba(0,0,0,.32))
+        drop-shadow(0 0 .8rem rgba(198,166,255,.14));
+      animation:gemDrift 7.4s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+    }
+
+    .nav-gem svg{
+      width:100%;
+      height:100%;
+      animation:gemTurn 30s linear infinite;
+    }
+
+    .gem-link b{
+      color:rgba(255,244,216,.98);
+      font-size:.66rem;
+      letter-spacing:.105em;
+      text-transform:uppercase;
+      position:relative;
+      z-index:2;
+    }
+
+    .gem-link span{
+      color:rgba(230,238,255,.62);
+      font-size:.68rem;
+      font-weight:800;
+      line-height:1.16;
       position:relative;
       z-index:2;
     }
@@ -451,6 +617,20 @@
     .question-run p:nth-child(3){color:rgba(225,214,255,.94)}
     .question-run p:nth-child(4){color:rgba(207,255,229,.94)}
 
+    .declaration{
+      max-width:980px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,200,111,.24);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.95);
+      background:
+        radial-gradient(circle at 12% 0%,rgba(243,200,111,.10),transparent 48%),
+        rgba(243,200,111,.065);
+      font-weight:900;
+      position:relative;
+      z-index:2;
+    }
+
     .story-handoff{
       max-width:980px;
       display:grid;
@@ -470,39 +650,6 @@
     .story-handoff strong{
       color:rgba(255,244,216,.95);
       font-weight:950;
-    }
-
-    .series-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.75rem;
-      max-width:980px;
-      position:relative;
-      z-index:2;
-    }
-
-    .series-card{
-      padding:.9rem;
-      border:1px solid rgba(255,255,255,.11);
-      border-radius:1rem;
-      background:
-        radial-gradient(circle at 20% 0%,rgba(141,216,255,.08),transparent 58%),
-        rgba(255,255,255,.035);
-      display:grid;
-      gap:.35rem;
-    }
-
-    .series-card b{
-      color:var(--gold);
-      font-size:.66rem;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
-
-    .series-card span{
-      color:var(--muted);
-      font-size:.9rem;
-      line-height:1.35;
     }
 
     .actions{
@@ -553,12 +700,14 @@
       gap:1.05rem;
     }
 
+    .story-grid,
     .preface-grid{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
       gap:.75rem;
     }
 
+    .story-card,
     .preface{
       border:1px solid rgba(255,255,255,.11);
       border-radius:1.1rem;
@@ -566,6 +715,7 @@
       overflow:hidden;
     }
 
+    .story-card summary,
     .preface summary{
       list-style:none;
       cursor:pointer;
@@ -583,21 +733,26 @@
       background:rgba(255,255,255,.035);
     }
 
+    .story-card summary::-webkit-details-marker,
     .preface summary::-webkit-details-marker{display:none}
 
+    .story-card[open] summary,
     .preface[open] summary{
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
+    .story-card summary::after,
     .preface summary::after{
       content:"+";
       font-size:1rem;
       font-weight:950;
     }
 
+    .story-card[open] summary::after,
     .preface[open] summary::after{content:"–"}
 
+    .story-card p,
     .preface p{
       padding:1rem;
       font-size:.96rem;
@@ -964,6 +1119,8 @@
     }
 
     @media (max-width:1120px){
+      .top-feature-grid{grid-template-columns:1fr}
+      .gem-nav-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
       .select-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
       .move-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
       .quad{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -972,17 +1129,18 @@
     @media (max-width:980px){
       .topbar{grid-template-columns:1fr;align-items:start}
       .nav{justify-content:flex-start}
-      .series-grid,
+      .story-grid,
       .preface-grid{grid-template-columns:1fr}
     }
 
     @media (max-width:720px){
       .shell{width:min(100% - 22px,var(--max))}
       h1{font-size:clamp(3.2rem,16vw,5.6rem)}
-      .hero{min-height:auto;padding:1rem}
+      .hero{padding:1rem}
       .question-run{padding:1rem}
       .actions{display:grid}
       .button{width:100%}
+      .gem-nav-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
       .select-grid,
       .move-grid,
       .quad{grid-template-columns:1fr}
@@ -1001,6 +1159,10 @@
         grid-column:1 / -1;
         width:100%;
       }
+    }
+
+    @media (max-width:430px){
+      .gem-nav-grid{grid-template-columns:1fr}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1124,12 +1286,89 @@
 
         <div class="subtitle">A mirror can shatter. A shadow cannot.</div>
 
+        <div class="top-feature-grid" aria-label="Series and game highlights">
+          <div class="top-feature" style="--delay:-.2s">
+            <b>Series in Development</b>
+            <strong>Nine episodes are already written.</strong>
+            <span>Each episode turns Mirrorland through a different character’s pressure, choice, and consequence.</span>
+          </div>
+
+          <div class="top-feature" style="--delay:-.9s">
+            <b>Game World in Development</b>
+            <strong>Playable routes grow around the story.</strong>
+            <span>Character dossiers, mirrored NPCs, survival systems, manor paths, and planetary stakes expand together.</span>
+          </div>
+
+          <div class="top-feature" style="--delay:-1.6s">
+            <b>300-Year Countdown</b>
+            <strong>The clock is already running.</strong>
+            <span>The technology must prepare Mirrorland and Earth before the next transition arrives.</span>
+          </div>
+        </div>
+
+        <nav class="gem-nav" aria-label="Page navigation">
+          <div class="gem-nav-head">
+            <b>Navigate the page</b>
+            <span>Story · World · Characters</span>
+          </div>
+
+          <div class="gem-nav-grid">
+            <a class="gem-link" href="#story">
+              <span class="nav-gem" style="--delay:-.2s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
+              <b>Story</b>
+              <span>Narrative and backstory</span>
+            </a>
+
+            <a class="gem-link" href="#select">
+              <span class="nav-gem" style="--delay:-.8s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
+              <b>Characters</b>
+              <span>Choose a profile</span>
+            </a>
+
+            <a class="gem-link" href="#preface">
+              <span class="nav-gem" style="--delay:-1.4s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
+              <b>World</b>
+              <span>Rules and paths</span>
+            </a>
+
+            <a class="gem-link" href="/showroom/globe/">
+              <span class="nav-gem" style="--delay:-2s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
+              <b>Globe</b>
+              <span>Enter the path</span>
+            </a>
+
+            <a class="gem-link" href="/explore/">
+              <span class="nav-gem" style="--delay:-2.6s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
+              <b>Explore</b>
+              <span>Open the estate</span>
+            </a>
+
+            <a class="gem-link" href="/frontier/">
+              <span class="nav-gem" style="--delay:-3.2s"><svg viewBox="0 0 220 160"><use href="#characterGem"></use></svg></span>
+              <b>Frontier</b>
+              <span>Follow development</span>
+            </a>
+          </div>
+        </nav>
+
         <div class="question-run" aria-label="Story transition into Dextrion">
           <p>What if that future shadow was reachable?</p>
           <p>What if humanity could cross into it before it became final?</p>
           <p>What if the other side was a real world: no inherited inhabitants, no exhausted infrastructure, no old ownership, no historical deficit already crushing the foundation?</p>
           <p>What if every advancement proven on Audralia could be mirrored back to Earth?</p>
         </div>
+
+        <div class="actions">
+          <a class="button gold" href="/characters/#story">Start the Story</a>
+          <a class="button" href="/characters/#select">Meet the Characters</a>
+          <a class="button" href="/showroom/globe/">Enter the Globe</a>
+          <a class="button" href="/frontier/">Follow Development</a>
+        </div>
+      </section>
+
+      <section class="panel section" id="story" aria-labelledby="story-title">
+        <div class="kicker">Narrative · Backstory</div>
+        <h2 id="story-title">Mirrorland begins as a future shadow, then becomes a place people can cross into.</h2>
 
         <p class="lead">
           Everything humanity has ever done casts a shadow into the future. Every invention. Every wound. Every city. Every lie. Every law. Every breakthrough. Every unfinished promise.
@@ -1162,36 +1401,30 @@
           <p>On Audralia, the Mirror Manor is built. By the time the series begins, the manor already stands. The crossing has already happened. The clock is already running.</p>
         </div>
 
-        <div class="series-grid">
-          <div class="series-card">
-            <b>Series in Development</b>
-            <span>Nine episodes are already written. Each episode turns Mirrorland through a different character’s pressure, choice, and consequence.</span>
-          </div>
+        <div class="story-grid">
+          <details class="story-card" open>
+            <summary>The Crossing</summary>
+            <p>Dextrion detects the Bermuda-area anomaly from Earth. The first team crosses into Mirrorland. The return path fails. The mission becomes one-way.</p>
+          </details>
 
-          <div class="series-card">
-            <b>Game World in Development</b>
-            <span>Mirrorland expands into playable routes, character dossiers, mirrored NPCs, survival systems, manor paths, and planetary stakes.</span>
-          </div>
+          <details class="story-card">
+            <summary>The Mirror Manor</summary>
+            <p>The Mirror Manor is built in Mirrorland on Audralia. It is not Earth-side. It becomes the first standing anchor for the people who crossed and the world they must prepare.</p>
+          </details>
 
-          <div class="series-card">
-            <b>300-Year Countdown</b>
-            <span>The threat is planetary. The technology must protect Mirrorland and Earth before the next transition arrives.</span>
-          </div>
-        </div>
+          <details class="story-card">
+            <summary>The Clock</summary>
+            <p>The 300-year transition is preset. Time will happen. Preparation is the variable. The story asks whether technology, community, and discipline can change the direction before the outcome hardens.</p>
+          </details>
 
-        <p class="lead">
-          The show follows the people carrying the mission. The game expands the world around them.
-        </p>
-
-        <div class="actions">
-          <a class="button gold" href="/characters/#select">Meet the Characters</a>
-          <a class="button" href="/showroom/globe/">Enter the Globe</a>
-          <a class="button" href="/explore/">Explore Mirrorland</a>
-          <a class="button" href="/frontier/">Follow Development</a>
+          <details class="story-card">
+            <summary>The Game</summary>
+            <p>The game world expands around the series through playable routes, mirrored NPCs, survival mechanics, manor navigation, public systems, and character pressure.</p>
+          </details>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="preface-title">
+      <section class="panel section" id="preface" aria-labelledby="preface-title">
         <div class="kicker">World Preface</div>
         <h2 id="preface-title">Open only what you want before choosing a character.</h2>
 
@@ -2052,17 +2285,19 @@
         </div>
 
         <template id="route-receipt" data-route-receipt>
-SHADOWS_NEVER_SHATTER_MIRROR_MANOR_PLACEMENT_AND_FRONTIER_PRESENTATION_TNT_v1
-previous=SHADOWS_NEVER_SHATTER_TRANSITION_TO_DEXTRION_NONREDUNDANT_TNT_v1
+SHADOWS_NEVER_SHATTER_GEM_NAV_STORY_ORGANIZATION_TNT_v1
+previous=SHADOWS_NEVER_SHATTER_MIRROR_MANOR_PLACEMENT_AND_FRONTIER_PRESENTATION_TNT_v1
 route=/characters/
 page=characters
 role=show_game_character_dossier
 story_anchor=Shadows_Never_Shatter_in_Mirrorland
 title_mechanism=a_mirror_can_shatter_a_shadow_cannot
 shadow_law=shadows_do_not_shatter_anywhere
-voice=show_game_promotional_in_world_declarative
-opening_order=title_question_transition_future_shadow_possible_futures_mirrorland_three_paths_300_year_clock_preparation_variable_earth_rules_apply_in_mirrorland_mirrorland_changes_earth_changes_dextrion_anomaly_one_way_crossing_mirror_manor_built_characters
-transition_law=question_box_moved_to_top_nonredundant_handoff_from_possible_futures_to_dextrion
+organization=top_title_top_feature_grid_gem_navigation_story_section_world_preface_character_select_roster_follow_development
+top_feature_grid=series_in_development,game_world_in_development,300_year_countdown
+gem_navigation=story,characters,world,globe,explore,frontier
+story_section_added=true
+narrative_backstory_jump=true
 transition_questions=future_shadow_reachable,cross_before_final,clean_slate_world,no_inherited_inhabitants,no_historical_deficit,audralia_advancement_mirrored_to_earth
 mirror_manor_location=mirrorland_audralia_only
 earth_side_location=earth_anomaly_detection
@@ -2076,10 +2311,8 @@ canonical_dextrion_spelling=true
 causal_law=if_mirrorland_changes_direction_earth_changes
 rule_law=earth_rules_apply_in_mirrorland
 time_law=300_year_clock_preset_time_will_happen_preparation_is_variable
-preface_dropdowns=the_title,mirrorland,zionts,h_earth,audralia,300_year_clock,one_way_crossing,mirrored_futures
-presentation=frontier_evolution_glow_question_box_aura_soft_sweep_hero_aurora_gem_motion
+presentation=frontier_evolution_glow_feature_cards_gem_navigation_question_box_aura_soft_sweep_hero_aurora_gem_motion
 lattice=8_characters_x_8_tabs_x_4_story_fields_256_states
-public_fields=story_role,pressure,on_screen_in_game,what_changes
 characters=auren_vale,dextrion,alaric,tarian,elara,soren,jeeves,remote_team
 character_gems=true
 gem_motion=drift_rotation_glint
@@ -2096,7 +2329,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      SHADOWS_NEVER_SHATTER_MIRROR_MANOR_PLACEMENT_AND_FRONTIER_PRESENTATION_TNT_v1 · Shadows Never Shatter in Mirrorland · Show/Game Character Dossier.
+      SHADOWS_NEVER_SHATTER_GEM_NAV_STORY_ORGANIZATION_TNT_v1 · Shadows Never Shatter in Mirrorland · Show/Game Character Dossier.
     </footer>
   </div>
 </body>

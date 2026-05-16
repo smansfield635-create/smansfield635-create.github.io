@@ -3,9 +3,9 @@
   lang="en"
   data-page="showroom-dual-lens-diamond"
   data-route="/showroom/"
-  data-contract="SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_BIND_TNT_v5"
-  data-previous-contract="SHOWROOM_DUAL_LENS_DIAMOND_HTML_TRUE_3D_BIND_TNT_v4"
-  data-role="showroom-dual-lens-webgl-true-3d-proof-surface-and-launchpad"
+  data-contract="SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_BIND_TNT_v6"
+  data-previous-contract="SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_BIND_TNT_v5"
+  data-role="showroom-dual-lens-webgl-true-3d-proof-surface-and-launchpad-raised-stage"
   data-diamond-lock="CROWN_CUT_256_LATTICE_FIXED_FORM"
   data-renderer="native-webgl"
   data-visible-radial-metric="16"
@@ -13,7 +13,7 @@
   data-default-lens="crystal-form"
   data-secondary-lens="lattice-structure"
   data-touch-glide-diamond="true"
-  data-js-cache-key="SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_TNT_v4"
+  data-js-cache-key="SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_TNT_v5"
   data-launchpad="characters-products-laws-globe-gauges"
   data-laws-cta="Jump to the Laws page and lock in."
   data-crystal-form-silhouette="true-3d-crown-cut-diamond-body"
@@ -23,6 +23,7 @@
   data-perspective-camera="true"
   data-real-mesh="true"
   data-real-object-rotation="true"
+  data-stage-correction="raised-above-instruction-box"
   data-flat-badge-blocked="true"
   data-earth-record="false"
   data-generated-image="false"
@@ -40,7 +41,7 @@
   <title>Showroom · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The Showroom proves the interactive WebGL Crown Cut 256 Lattice Diamond through Crystal Form and Lattice Structure, then opens the launchpad into Characters, Products, Laws, Globe, and Gauges."
+    content="The Showroom proves the raised interactive WebGL Crown Cut 256 Lattice Diamond through Crystal Form and Lattice Structure, then opens the launchpad into Characters, Products, Laws, Globe, and Gauges."
   >
 
   <style>
@@ -398,13 +399,13 @@
 
     .diamond-stage {
       position: relative;
-      min-height: clamp(520px, 82vw, 760px);
+      min-height: clamp(560px, 86vw, 800px);
       border: 1px solid rgba(244,207,131,0.18);
       border-radius: 30px;
       overflow: hidden;
       background:
-        radial-gradient(circle at 50% 74%, rgba(244,207,131,0.10), transparent 24%),
-        radial-gradient(circle at 50% 36%, rgba(92,132,172,0.14), transparent 42%),
+        radial-gradient(circle at 50% 58%, rgba(244,207,131,0.08), transparent 24%),
+        radial-gradient(circle at 50% 26%, rgba(92,132,172,0.16), transparent 42%),
         linear-gradient(180deg, rgba(4,11,24,0.92), rgba(2,7,16,0.96));
       touch-action: none;
       user-select: none;
@@ -431,14 +432,15 @@
       font-weight: 850;
       line-height: 1.35;
       font-size: clamp(0.98rem, 3.8vw, 1.32rem);
-      background: rgba(3,8,18,0.34);
-      backdrop-filter: blur(6px);
+      background: rgba(3,8,18,0.42);
+      backdrop-filter: blur(8px);
+      z-index: 3;
     }
 
     .diamond-route {
       position: absolute;
       left: 50%;
-      bottom: clamp(92px, 18vw, 128px);
+      bottom: clamp(108px, 20vw, 148px);
       transform: translateX(-50%);
       width: min(calc(100% - 44px), 720px);
       text-align: center;
@@ -446,6 +448,7 @@
       font-weight: 900;
       letter-spacing: 0.02em;
       line-height: 1.25;
+      z-index: 3;
     }
 
     .object-card {
@@ -649,7 +652,7 @@
       }
 
       .diamond-stage {
-        min-height: 560px;
+        min-height: 600px;
       }
     }
 
@@ -689,7 +692,7 @@
 
     <main id="showroom-main">
       <section class="hero">
-        <p class="eyebrow">Showroom · WebGL true 3D diamond proof surface</p>
+        <p class="eyebrow">Showroom · raised WebGL true 3D diamond proof surface</p>
         <h1>The Diamond holds the room.</h1>
         <p class="lede">
           The Showroom begins with the fixed Crown Cut 256 Lattice Diamond. The page proves interactive WebGL 3D software expression, teaches the structure through two inspection lenses, then opens the launchpad into the story, the laws, and the community line.
@@ -703,7 +706,7 @@
 
           <div class="claim">
             <b>Dual Lens</b>
-            <span>Crystal Form shows the WebGL mesh. Lattice Structure reveals the 16-point order beneath it.</span>
+            <span>Crystal Form shows the raised WebGL mesh. Lattice Structure reveals the 16-point order beneath it.</span>
           </div>
 
           <div class="claim">
@@ -722,8 +725,8 @@
         </div>
       </section>
 
-      <section class="diamond-shell" aria-label="Locked WebGL Crown Cut 256 Lattice Diamond">
-        <p class="diamond-title">WebGL · true 3D mesh · 16 radial compass metric · 256 lattice</p>
+      <section class="diamond-shell" aria-label="Locked Raised WebGL Crown Cut 256 Lattice Diamond">
+        <p class="diamond-title">WebGL · true 3D mesh · raised stage · 16 radial compass metric · 256 lattice</p>
 
         <div class="diamond-toolbar" aria-label="Diamond inspection lenses">
           <div class="lens-toggle" role="group" aria-label="Choose Diamond lens">
@@ -761,18 +764,19 @@
           data-perspective-camera="true"
           data-real-mesh="true"
           data-real-object-rotation="true"
+          data-stage-correction="raised-above-instruction-box"
           data-flat-badge-blocked="true"
           data-touch-glide="true"
           data-inspection-control="webgl-perspective-camera-object-rotation"
           data-geometry-mutable-by-touch="false"
-          aria-label="Touchable WebGL Crown Cut 256 Lattice Diamond"
+          aria-label="Touchable Raised WebGL Crown Cut 256 Lattice Diamond"
         >
           <canvas class="diamond-canvas" data-showroom-diamond-canvas></canvas>
           <div class="diamond-route" data-diamond-route-label>
-            Crystal Form → WebGL true 3D Crown Cut Diamond · table · crown · girdle · pavilion
+            Crystal Form → WebGL true 3D Crown Cut Diamond · raised inspection view
           </div>
           <div class="diamond-instruction">
-            Drag inside the box to inspect the fixed WebGL Diamond. Release for momentum. Double tap to reset. Use the lens toggle to switch between the true 3D crystal mesh and the lattice structure.
+            Drag inside the box to inspect the fixed WebGL Diamond. Release for momentum. Double tap to reset. Use the lens toggle to switch between the raised true 3D crystal mesh and the lattice structure.
           </div>
         </div>
 
@@ -780,10 +784,10 @@
           <p class="label">Object truth</p>
           <h2>The Diamond proves the build. The dual lens teaches the structure.</h2>
           <p>
-            Crystal Form presents the Diamond as a real WebGL mesh with perspective, depth buffer, object rotation, crown, girdle, pavilion, and culet. Lattice Structure reveals the 16-point compass geometry and the 256-state address system behind the same object. The lens changes. The Diamond does not.
+            Crystal Form presents the Diamond as a real WebGL mesh with perspective, depth buffer, object rotation, crown, girdle, pavilion, and culet. The stage is raised above the instruction box so the object remains inspectable. Lattice Structure reveals the 16-point compass geometry and the 256-state address system behind the same object. The lens changes. The Diamond does not.
           </p>
           <p class="cache-proof">
-            HTML cache key: SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_BIND_TNT_v5
+            HTML cache key: SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_BIND_TNT_v6
           </p>
         </article>
       </section>
@@ -833,18 +837,19 @@
         </div>
 
         <template id="showroom-route-receipt" class="hidden-receipt">
-SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_BIND_TNT_v5
+SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_BIND_TNT_v6
 route=/showroom/
 html=/showroom/index.html
 js=/showroom/index.js
-js_cache_key=SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_TNT_v4
-role=dual_lens_webgl_true_3d_showroom_proof_surface_and_launchpad
+js_cache_key=SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_TNT_v5
+role=dual_lens_webgl_true_3d_showroom_proof_surface_and_launchpad_raised_stage
 diamond_lock=CROWN_CUT_256_LATTICE_FIXED_FORM
 renderer=native_webgl
 webgl_depth_buffer=true
 perspective_camera=true
 real_mesh=true
 real_object_rotation=true
+stage_correction=raised_above_instruction_box
 visible_radial_metric=16
 lattice_states=256
 default_lens=crystal_form
@@ -853,8 +858,8 @@ lens_rule=toggle_changes_inspection_lens_not_object_identity
 touch_glide=true
 geometry_mutable_by_touch=false
 proof_object=crown_cut_256_lattice_diamond
-crystal_form=true_3d_crown_cut_diamond_body
-lattice_structure=true_3d_16_point_compass_geometry_and_256_lattice_logic
+crystal_form=raised_true_3d_crown_cut_diamond_body
+lattice_structure=raised_true_3d_16_point_compass_geometry_and_256_lattice_logic
 crystal_and_lattice_are_visually_distinct=true
 flat_badge_blocked=true
 launchpad=characters,laws,products,globe,gauges
@@ -876,17 +881,17 @@ earth_record=false
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Showroom · WebGL True 3D Crown Cut 256 Lattice Diamond · Launchpad.
+      Diamond Gate Bridge · Showroom · Raised WebGL True 3D Crown Cut 256 Lattice Diamond · Launchpad.
     </footer>
   </div>
 
   <script>
-    window.DGB_SHOWROOM_HTML_CACHE_KEY = "SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_BIND_TNT_v5";
-    window.DGB_SHOWROOM_JS_CACHE_KEY = "SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_TNT_v4";
+    window.DGB_SHOWROOM_HTML_CACHE_KEY = "SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_BIND_TNT_v6";
+    window.DGB_SHOWROOM_JS_CACHE_KEY = "SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_TNT_v5";
   </script>
   <script
     type="module"
-    src="/showroom/index.js?v=SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_TNT_v4"
+    src="/showroom/index.js?v=SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_TNT_v5"
   ></script>
 </body>
 </html>

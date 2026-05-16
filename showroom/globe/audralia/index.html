@@ -3,17 +3,16 @@
   lang="en"
   data-route="/showroom/globe/audralia/"
   data-page="audralia-living-canvas"
-  data-contract="AUDRALIA_ROUTE_SHELL_V3_LOADER_BUMP_TNT_v3"
-  data-previous-contract="AUDRALIA_ROUTE_SHELL_CANONICAL_LOADER_BUMP_TNT_v2"
+  data-contract="AUDRALIA_POST_NARRATIVE_LIVING_WORLD_SURFACE_TNT_v4"
+  data-previous-contract="AUDRALIA_ROUTE_SHELL_V3_LOADER_BUMP_TNT_v3"
   data-role="showroom-globe-child-route"
   data-world="Audralia"
   data-canonical-spelling="A_U_D_R_A_L_I_A"
   data-parent-route="/showroom/globe/"
+  data-public-path="possibility"
   data-route-loader="/showroom/globe/audralia/index.js"
-  data-route-loader-contract="AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3"
-  data-canvas-contract="AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3"
-  data-landmap-contract="AUDRALIA_30_BILLION_YEAR_EARTH_LEGACY_ORGANIC_LANDFORM_TNT_v1"
-  data-climate-contract="AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2"
+  data-route-loader-contract="AUDRALIA_POST_NARRATIVE_LIVING_WORLD_LOADER_TNT_v4"
+  data-canvas-contract="AUDRALIA_VISIBLE_LIVING_CANVAS_CONSUMER_TNT_v4"
   data-generated-image="false"
   data-graphic-box="false"
   data-heavy-runtime-loaded="false"
@@ -24,11 +23,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Audralia · The Living Canvas · Diamond Gate Bridge</title>
+  <title>Audralia · The Possibility Path · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Audralia is the living canvas route for the Diamond Gate Bridge Globe question: a possible future that can be seen, understood, and considered before it is lost."
+    content="Audralia is the possibility path inside the Showroom Globe: a living-world canvas for what stewardship could become while a future can still be reached."
   >
+  <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/audralia/">
+  <meta name="theme-color" content="#02040b">
 
   <style>
     :root {
@@ -227,7 +228,7 @@
 
     .hero {
       position:relative;
-      min-height:clamp(22rem,42vw,33rem);
+      min-height:clamp(23rem,42vw,34rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -292,7 +293,7 @@
     h1 {
       margin:0;
       max-width:1000px;
-      font-size:clamp(3rem,9vw,6.8rem);
+      font-size:clamp(3.1rem,9vw,6.9rem);
       line-height:.86;
       letter-spacing:-.102em;
       text-wrap:balance;
@@ -306,6 +307,18 @@
       font-size:clamp(1.45rem,4.7vw,2.65rem);
       line-height:.98;
       letter-spacing:-.07em;
+      text-wrap:balance;
+      position:relative;
+      z-index:2;
+    }
+
+    .subtitle {
+      max-width:900px;
+      color:var(--green);
+      font-size:clamp(1.25rem,4vw,2.3rem);
+      line-height:1;
+      letter-spacing:-.05em;
+      font-weight:950;
       text-wrap:balance;
       position:relative;
       z-index:2;
@@ -371,10 +384,10 @@
     }
 
     .button.gold {
-      border-color:rgba(243,200,111,.9);
-      color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
-      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+      border-color:rgba(158,240,191,.9);
+      color:#06101c;
+      background:linear-gradient(135deg,#c8ffd8,#8eeab2);
+      box-shadow:0 .8rem 1.8rem rgba(158,240,191,.13);
     }
 
     .section {
@@ -382,34 +395,6 @@
       padding:clamp(1rem,3vw,1.45rem);
       display:grid;
       gap:1.05rem;
-    }
-
-    .route-loader-notice {
-      display:block;
-      width:fit-content;
-      max-width:100%;
-      padding:.72rem .9rem;
-      border:1px solid rgba(243,200,111,.44);
-      border-radius:999px;
-      color:rgba(255,232,168,.98);
-      background:rgba(40,26,4,.74);
-      font-size:.74rem;
-      font-weight:950;
-      letter-spacing:.06em;
-      text-transform:uppercase;
-    }
-
-    .status-card {
-      border:1px solid var(--green-line);
-      border-radius:1.35rem;
-      padding:1rem 1.1rem;
-      color:rgba(206,255,228,.94);
-      background:
-        radial-gradient(circle at 12% 0%,rgba(158,240,191,.10),transparent 60%),
-        rgba(2,20,22,.72);
-      font-weight:850;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-      overflow-wrap:anywhere;
     }
 
     .stage {
@@ -429,10 +414,11 @@
     .stage-fallback {
       position:absolute;
       inset:0;
+      z-index:1;
       display:grid;
       place-items:center;
       padding:1rem;
-      color:rgba(230,238,255,.70);
+      color:rgba(230,238,255,.72);
       text-align:center;
       font-weight:850;
       pointer-events:none;
@@ -442,6 +428,47 @@
       position:absolute;
       inset:0;
       z-index:2;
+    }
+
+    [data-audralia-canvas-mount="true"] canvas {
+      display:block;
+      width:100%;
+      height:100%;
+      min-height:clamp(24rem,68vw,46rem);
+      touch-action:none;
+    }
+
+    .stage[data-loader-state="mounted"] .stage-fallback {
+      opacity:0;
+      visibility:hidden;
+    }
+
+    .public-status {
+      display:flex;
+      flex-wrap:wrap;
+      gap:.5rem;
+      align-items:center;
+      justify-content:center;
+      color:rgba(206,255,228,.92);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .public-status span {
+      display:inline-flex;
+      min-height:2rem;
+      align-items:center;
+      border:1px solid rgba(158,240,191,.24);
+      border-radius:999px;
+      padding:.38rem .7rem;
+      background:rgba(28,80,58,.13);
+    }
+
+    .public-status [data-audralia-route-loader-notice="true"],
+    .public-status [data-audralia-route-status="true"] {
+      display:inline-flex;
     }
 
     .cards {
@@ -479,6 +506,34 @@
       color:var(--muted);
       font-size:.94rem;
       line-height:1.42;
+    }
+
+    .micro-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.54rem;
+    }
+
+    .micro-links a{
+      min-height:2.35rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
+      padding:.55rem .78rem;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+    }
+
+    .micro-links a.primary{
+      border-color:rgba(158,240,191,.62);
+      color:#06101c;
+      background:linear-gradient(135deg,#c8ffd8,#8eeab2);
     }
 
     .route-receipt,
@@ -553,7 +608,7 @@
 
   <div class="shell">
     <header class="topbar" aria-label="Audralia header">
-      <a class="brand" href="/">
+      <a class="brand" href="/showroom/globe/audralia/">
         <span class="brand-mark" aria-hidden="true"><span>AU</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
@@ -563,119 +618,111 @@
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/explore/">Manor</a>
-        <a href="/nine-summits/">Nine Summits</a>
-        <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Globe</a>
-        <a href="/showroom/globe/audralia/" aria-current="page">Audralia</a>
-        <a href="/showroom/globe/earth/">Earth</a>
+        <a href="/showroom/globe/earth/">ZIONTS</a>
         <a href="/showroom/globe/h-earth/">H-Earth</a>
+        <a href="/showroom/globe/audralia/" aria-current="page">Audralia</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
     <main id="audralia-main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Audralia · The Living Canvas</div>
-        <h1 id="page-title">A possible future should be visible before it is lost.</h1>
+        <div class="kicker">Audralia · The Possibility Path</div>
+
+        <h1 id="page-title">Possibility is not fantasy.</h1>
+
+        <div class="subtitle">Audralia is the living-world path.</div>
 
         <p class="lead">
-          Audralia is the constructed living-world route. It uses the 256 nodal lattice, Nine Summits province fields, Earth-legacy landforms, climate detail, and a consumer-only canvas to show a future world without turning the canvas into the authority.
+          A future worth reaching should be visible before it is lost.
         </p>
 
         <div class="principle">
-          Audralia answers the Globe question as a living canvas: a possible future that can be seen, understood, and considered before it is lost.
+          Audralia asks what stewardship could become when a living world still has a future.
         </div>
 
         <div class="actions">
           <a class="button gold" href="/showroom/globe/audralia/#audralia-stage">Inspect Audralia</a>
           <a class="button" href="/showroom/globe/">Return to Globe</a>
-          <a class="button" href="/gauges/">Read Gauges</a>
+          <a class="button" href="/showroom/globe/earth/">Face Consequence</a>
+          <a class="button" href="/showroom/globe/h-earth/">Open Survival</a>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="chain-title">
-        <div class="kicker">Route chain status</div>
-        <h2 id="chain-title">The route shell now verifies the newer Audralia chain.</h2>
+      <section class="panel section" aria-labelledby="stage-title">
+        <div class="kicker">Living canvas</div>
+        <h2 id="stage-title">The canvas shows possibility. It does not invent the world.</h2>
 
-        <div
-          id="audraliaRouteLoaderNotice"
-          class="route-loader-notice"
-          data-audralia-route-loader-notice="true"
-          aria-live="polite"
-        >
-          Route shell v3 live · waiting for climate-v2 status alignment loader.
-        </div>
-
-        <div class="status-card" id="audraliaRouteStatus" data-audralia-route-status="true">
-          If this message remains, /showroom/globe/audralia/index.js did not load with AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3.
-        </div>
-
-        <div
-          id="audralia-stage"
-          class="stage"
-          data-audralia-stage="true"
-          aria-label="Audralia living canvas stage"
-        >
+        <div class="stage" id="audralia-stage" data-audralia-stage="true" data-loader-state="pending" aria-label="Audralia living canvas stage">
           <div class="stage-fallback" data-stage-fallback="true">
-            Audralia canvas mount awaiting canonical loader v3.
+            Audralia is preparing the living canvas.
           </div>
+
           <div
             id="audraliaCanvasMount"
             data-audralia-canvas-mount="true"
             aria-label="Audralia canvas mount"
           ></div>
         </div>
+
+        <div class="public-status" aria-live="polite">
+          <span id="audraliaRouteLoaderNotice" data-audralia-route-loader-notice="true">Living canvas preparing</span>
+          <span id="audraliaRouteStatus" data-audralia-route-status="true">Possibility path readying</span>
+        </div>
       </section>
 
       <section class="panel section" aria-labelledby="standards-title">
-        <div class="kicker">Current standards</div>
-        <h2 id="standards-title">Canvas consumes. Landmap and climate author the world.</h2>
+        <div class="kicker">Possibility conditions</div>
+        <h2 id="standards-title">A living future still needs lawful structure.</h2>
 
         <div class="cards">
           <article class="card">
             <b>Footprint</b>
-            <strong>Landmap owns land and sea.</strong>
-            <span>The route expects the 30-billion-year Earth-legacy organic landform contract to provide continent, shelf, beach, and nodal geometry truth.</span>
+            <strong>Land and sea must hold together.</strong>
+            <span>Audralia’s visible form depends on coherent land, coast, shelf, water, and terrain relationships.</span>
           </article>
 
           <article class="card">
             <b>Climate</b>
-            <strong>Climate owns environment detail.</strong>
-            <span>The route expects rainforest, wetland, savanna, dry basin, forest, alpine, snow, beach, and restoration-zone detail from the climate layer.</span>
+            <strong>Environment must be breathable.</strong>
+            <span>Possibility depends on atmosphere, temperature, water rhythm, groundcover, and living-zone balance.</span>
           </article>
 
           <article class="card">
             <b>Canvas</b>
-            <strong>Canvas stays consumer-only.</strong>
-            <span>The canvas may display the living world, atmosphere, shimmer, and inspection readout. It may not invent footprint, climate, or surface truth.</span>
+            <strong>The page displays the world.</strong>
+            <span>The canvas is a public window. It shows the living-world path without becoming the authority underneath it.</span>
           </article>
+        </div>
+
+        <div class="micro-links" aria-label="Return path links">
+          <a class="primary" href="/showroom/globe/">Return to Globe</a>
+          <a href="/showroom/globe/earth/">ZIONTS</a>
+          <a href="/showroom/globe/h-earth/">H-Earth</a>
+          <a href="/gauges/">Gauges</a>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_ROUTE_SHELL_V3_LOADER_BUMP_TNT_v3
-previous=AUDRALIA_ROUTE_SHELL_CANONICAL_LOADER_BUMP_TNT_v2
+AUDRALIA_POST_NARRATIVE_LIVING_WORLD_SURFACE_TNT_v4
+previous=AUDRALIA_ROUTE_SHELL_V3_LOADER_BUMP_TNT_v3
 route=/showroom/globe/audralia/
 page=audralia
 role=showroom_globe_child_route
+public_path=possibility
 world=Audralia
 canonical_spelling=A_U_D_R_A_L_I_A
+parent_route=/showroom/globe/
 route_loader=/showroom/globe/audralia/index.js
-route_loader_contract=AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3
+route_loader_contract=AUDRALIA_POST_NARRATIVE_LIVING_WORLD_LOADER_TNT_v4
 canvas_mount=#audraliaCanvasMount
-canvas_contract=AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3
-landmap_contract=AUDRALIA_30_BILLION_YEAR_EARTH_LEGACY_ORGANIC_LANDFORM_TNT_v1
-climate_contract=AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2
-route_expectation=canonical_loader_v3_retires_false_climate_stale_status
-retired_false_status=Climate Detail loaded stale AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2
-expected_status=Audralia route mounted canonical chain active
-expected_chain=Lattice 256 active,Organic Landmap active,Climate Detail active,Beach Authority active,Groundcover active,Land Surface active,Visible Notice Canvas active
-route_owns=route_shell,public_copy,canvas_mount,route_loader_notice,chain_status_panel,cache_key_bump
-route_does_not_own=land_footprint,climate_authority,surface_truth,canvas_authority,runtime_motion,gauges_logic
+canvas_contract=AUDRALIA_VISIBLE_LIVING_CANVAS_CONSUMER_TNT_v4
+post_narrative_surface=true
+legacy_pre_narrative_import=false
+route_owns=route_shell,public_copy,canvas_mount,public_status,cache_key_bump
+route_does_not_own=land_footprint,climate_authority,surface_truth,gauges_logic
 receipt_visibility=hidden_template_only
 generated_image=false
 graphic_box=false
@@ -685,13 +732,16 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      AUDRALIA_ROUTE_SHELL_V3_LOADER_BUMP_TNT_v3 · Audralia · The Living Canvas.
+      Audralia · The Possibility Path · Living-world canvas.
     </footer>
   </div>
 
+  <script>
+    window.DGB_AUDRALIA_ROUTE_KEY = "AUDRALIA_POST_NARRATIVE_LIVING_WORLD_LOADER_TNT_v4";
+  </script>
   <script
-    src="/showroom/globe/audralia/index.js?v=AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3"
-    data-audralia-loader-script="AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3"
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_POST_NARRATIVE_LIVING_WORLD_LOADER_TNT_v4"
+    data-audralia-loader-script="AUDRALIA_POST_NARRATIVE_LIVING_WORLD_LOADER_TNT_v4"
     defer
   ></script>
 </body>

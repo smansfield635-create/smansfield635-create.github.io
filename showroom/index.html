@@ -3,9 +3,9 @@
   lang="en"
   data-page="showroom-dual-lens-diamond"
   data-route="/showroom/"
-  data-contract="SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_GEM_BOTTOM_BIND_TNT_v7"
-  data-previous-contract="SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_BIND_TNT_v6"
-  data-role="showroom-dual-lens-webgl-true-3d-proof-surface-launchpad-and-gem-footer"
+  data-contract="SHOWROOM_BOTTOM_GEM_FIELD_TRUE_CUT_GEM_HTML_ONLY_TNT_v1"
+  data-previous-contract="SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_GEM_BOTTOM_BIND_TNT_v7"
+  data-role="showroom-dual-lens-webgl-true-3d-proof-surface-launchpad-and-true-cut-gem-footer"
   data-diamond-lock="CROWN_CUT_256_LATTICE_FIXED_FORM"
   data-renderer="native-webgl"
   data-visible-radial-metric="16"
@@ -15,7 +15,7 @@
   data-touch-glide-diamond="true"
   data-js-cache-key="SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_TNT_v5"
   data-launchpad="characters-products-laws-globe-gauges"
-  data-bottom-gem-field="true"
+  data-bottom-gem-field="true-cut-route-gems"
   data-css-gem-animation="true"
   data-laws-cta="Jump to the Laws page and lock in."
   data-crystal-form-silhouette="true-3d-crown-cut-diamond-body"
@@ -27,6 +27,8 @@
   data-real-object-rotation="true"
   data-stage-correction="raised-above-instruction-box"
   data-flat-badge-blocked="true"
+  data-coal-gem-read-blocked="true"
+  data-rounded-lump-gem-blocked="true"
   data-earth-record="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -594,16 +596,16 @@
     .bottom-gem-field {
       position: relative;
       margin-top: 26px;
-      min-height: 230px;
+      min-height: 330px;
       overflow: hidden;
-      border: 1px solid rgba(244,207,131,0.18);
+      border: 1px solid rgba(244,207,131,0.20);
       border-radius: 28px;
-      padding: clamp(18px, 4vw, 28px);
+      padding: clamp(18px, 4vw, 30px);
       background:
-        radial-gradient(circle at 50% 42%, rgba(141,216,255,0.14), transparent 34%),
-        radial-gradient(circle at 16% 18%, rgba(244,207,131,0.12), transparent 28%),
-        radial-gradient(circle at 84% 74%, rgba(198,166,255,0.12), transparent 30%),
-        linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.018));
+        radial-gradient(circle at 72% 44%, rgba(141,216,255,0.16), transparent 34%),
+        radial-gradient(circle at 22% 18%, rgba(244,207,131,0.12), transparent 28%),
+        radial-gradient(circle at 84% 78%, rgba(198,166,255,0.13), transparent 30%),
+        linear-gradient(180deg, rgba(255,255,255,0.050), rgba(255,255,255,0.018));
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,0.07),
         0 24px 70px rgba(0,0,0,0.30);
@@ -615,9 +617,9 @@
       position: absolute;
       left: 8%;
       right: 8%;
-      top: 52%;
+      top: 54%;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(244,207,131,0.34), rgba(141,216,255,0.24), rgba(244,207,131,0.34), transparent);
+      background: linear-gradient(90deg, transparent, rgba(244,207,131,0.30), rgba(141,216,255,0.22), rgba(244,207,131,0.30), transparent);
       box-shadow: 0 0 26px rgba(244,207,131,0.18);
       animation: gemLinePulse 5.6s ease-in-out infinite;
       z-index: -1;
@@ -628,24 +630,24 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(circle, rgba(255,255,255,0.30) 0 1px, transparent 1.3px),
-        radial-gradient(circle, rgba(244,207,131,0.24) 0 1px, transparent 1.4px);
+        radial-gradient(circle, rgba(255,255,255,0.28) 0 1px, transparent 1.3px),
+        radial-gradient(circle, rgba(244,207,131,0.20) 0 1px, transparent 1.4px);
       background-size: 86px 86px, 132px 132px;
       background-position: 9px 18px, 44px 70px;
-      opacity: 0.22;
+      opacity: 0.18;
       pointer-events: none;
       z-index: -1;
     }
 
     @keyframes gemLinePulse {
-      0%, 100% { opacity: 0.38; transform: scaleX(0.94); }
-      50% { opacity: 0.86; transform: scaleX(1); }
+      0%, 100% { opacity: 0.34; transform: scaleX(0.94); }
+      50% { opacity: 0.72; transform: scaleX(1); }
     }
 
     .bottom-gem-copy {
-      width: min(620px, 100%);
+      width: min(580px, 55%);
       position: relative;
-      z-index: 2;
+      z-index: 4;
     }
 
     .bottom-gem-copy h3 {
@@ -665,102 +667,235 @@
       line-height: 1.5;
     }
 
-    .gem-rail {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .rail-gem {
-      position: absolute;
-      width: var(--size, 54px);
-      height: var(--size, 54px);
-      left: var(--x, 50%);
-      top: var(--y, 50%);
-      transform: translate(-50%, -50%) rotate(45deg);
-      border: 1px solid rgba(244,207,131,0.36);
-      border-radius: 16px;
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.32), transparent 32%),
-        conic-gradient(from 45deg, rgba(255,255,255,0.24), rgba(141,216,255,0.16), rgba(198,166,255,0.18), rgba(244,207,131,0.20), rgba(255,255,255,0.24)),
-        radial-gradient(circle at 36% 32%, rgba(255,255,255,0.26), transparent 52%),
-        rgba(8,18,36,0.76);
-      box-shadow:
-        0 0 20px rgba(141,216,255,0.12),
-        0 0 38px rgba(244,207,131,0.08),
-        inset 0 1px 0 rgba(255,255,255,0.18);
-      opacity: var(--alpha, 0.72);
-      animation:
-        railGemFloat var(--speed, 8s) ease-in-out infinite,
-        railGemGlow calc(var(--speed, 8s) * 0.72) ease-in-out infinite;
-      animation-delay: var(--delay, 0s);
-    }
-
-    .rail-gem::before {
-      content: "";
-      position: absolute;
-      inset: 17%;
-      border: 1px solid rgba(255,255,255,0.16);
-      border-radius: 10px;
-    }
-
-    .rail-gem::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: -18%;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.78);
-      box-shadow:
-        0 0 14px rgba(255,255,255,0.62),
-        0 0 24px rgba(244,207,131,0.36);
-      transform: translateX(-50%);
-    }
-
-    @keyframes railGemFloat {
-      0%, 100% { margin-top: 0; margin-left: 0; }
-      25% { margin-top: -10px; margin-left: 7px; }
-      50% { margin-top: -4px; margin-left: -6px; }
-      75% { margin-top: 8px; margin-left: 4px; }
-    }
-
-    @keyframes railGemGlow {
-      0%, 100% { filter: brightness(0.94); opacity: var(--alpha, 0.72); }
-      50% { filter: brightness(1.18); opacity: min(0.94, calc(var(--alpha, 0.72) + 0.16)); }
-    }
-
-    .gem-spark {
-      position: absolute;
-      width: 3px;
-      height: 3px;
-      left: var(--x, 50%);
-      top: var(--y, 50%);
-      border-radius: 50%;
-      background: rgba(255,255,255,0.82);
-      box-shadow:
-        0 0 8px rgba(255,255,255,0.72),
-        0 0 16px rgba(244,207,131,0.42);
-      opacity: 0.46;
-      animation: gemSpark 4.8s ease-in-out infinite;
-      animation-delay: var(--delay, 0s);
-    }
-
-    @keyframes gemSpark {
-      0%, 100% { transform: scale(0.65); opacity: 0.20; }
-      45% { transform: scale(1.35); opacity: 0.86; }
-      62% { transform: scale(0.9); opacity: 0.38; }
-    }
-
     .gem-field-cta {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 18px;
       position: relative;
+      z-index: 5;
+    }
+
+    .gem-constellation {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .route-gem {
+      --gem-a: rgba(141,216,255,0.58);
+      --gem-b: rgba(198,166,255,0.42);
+      --gem-c: rgba(244,207,131,0.34);
+      --gem-line: rgba(255,255,255,0.42);
+      position: absolute;
+      left: var(--x, 74%);
+      top: var(--y, 48%);
+      width: var(--w, 112px);
+      height: calc(var(--w, 112px) * 0.72);
+      transform: translate(-50%, -50%);
+      clip-path: polygon(50% 0%, 78% 10%, 100% 42%, 82% 82%, 50% 100%, 18% 82%, 0% 42%, 22% 10%);
+      background:
+        linear-gradient(125deg, rgba(255,255,255,0.42), transparent 18% 100%),
+        linear-gradient(35deg, transparent 0 45%, rgba(255,255,255,0.20) 46% 49%, transparent 50% 100%),
+        linear-gradient(145deg, transparent 0 42%, rgba(255,255,255,0.18) 43% 46%, transparent 47% 100%),
+        conic-gradient(from 215deg at 50% 44%,
+          rgba(255,255,255,0.22),
+          var(--gem-a),
+          rgba(13,27,58,0.84),
+          var(--gem-b),
+          rgba(255,255,255,0.18),
+          var(--gem-c),
+          rgba(17,34,70,0.82),
+          var(--gem-a),
+          rgba(255,255,255,0.22)
+        );
+      box-shadow:
+        0 0 0 1px rgba(244,207,131,0.26),
+        0 0 22px rgba(141,216,255,0.13),
+        0 18px 32px rgba(0,0,0,0.30);
+      opacity: var(--alpha, 0.90);
+      animation:
+        cutGemFloat var(--speed, 8s) ease-in-out infinite,
+        cutGemShimmer calc(var(--speed, 8s) * 0.78) ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+      filter: saturate(1.04);
+    }
+
+    .route-gem::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      clip-path: inherit;
+      background:
+        linear-gradient(90deg, transparent 0 48%, var(--gem-line) 49% 50%, transparent 51% 100%),
+        linear-gradient(28deg, transparent 0 49%, rgba(255,255,255,0.30) 50% 51%, transparent 52% 100%),
+        linear-gradient(148deg, transparent 0 48%, rgba(255,255,255,0.20) 49% 50%, transparent 51% 100%),
+        linear-gradient(210deg, transparent 0 52%, rgba(255,255,255,0.15) 53% 54%, transparent 55% 100%),
+        radial-gradient(ellipse at 50% 38%, rgba(255,255,255,0.16), transparent 34%);
+      opacity: 0.88;
+    }
+
+    .route-gem::after {
+      content: "";
+      position: absolute;
+      left: 27%;
+      top: 13%;
+      width: 44%;
+      height: 34%;
+      clip-path: polygon(50% 0%, 92% 22%, 78% 78%, 50% 100%, 22% 78%, 8% 22%);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.32), rgba(255,255,255,0.08) 46%, transparent 47%),
+        radial-gradient(ellipse at 50% 38%, rgba(255,255,255,0.20), transparent 58%);
+      border: 1px solid rgba(255,255,255,0.16);
+      opacity: 0.88;
+    }
+
+    .route-gem .gem-label {
+      position: absolute;
+      left: 50%;
+      top: 51%;
+      transform: translate(-50%, -50%);
       z-index: 3;
+      display: grid;
+      gap: 1px;
+      text-align: center;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.72);
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    .route-gem .gem-label b {
+      color: rgba(255,255,255,0.92);
+      font-size: clamp(0.52rem, 1.6vw, 0.68rem);
+      line-height: 1;
+    }
+
+    .route-gem .gem-label span {
+      color: rgba(255,255,255,0.68);
+      font-size: clamp(0.43rem, 1.2vw, 0.54rem);
+      line-height: 1;
+    }
+
+    .route-gem .gem-glint {
+      position: absolute;
+      right: 19%;
+      top: 13%;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.88);
+      box-shadow:
+        0 0 8px rgba(255,255,255,0.82),
+        0 0 18px rgba(244,207,131,0.42);
+      z-index: 4;
+      animation: cutGemGlint 4.8s ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+
+    .route-gem.story {
+      --gem-a: rgba(211,174,255,0.68);
+      --gem-b: rgba(255,170,226,0.38);
+      --gem-c: rgba(141,216,255,0.28);
+    }
+
+    .route-gem.laws {
+      --gem-a: rgba(255,234,176,0.72);
+      --gem-b: rgba(141,216,255,0.28);
+      --gem-c: rgba(244,207,131,0.52);
+    }
+
+    .route-gem.community {
+      --gem-a: rgba(167,243,198,0.66);
+      --gem-b: rgba(81,197,150,0.36);
+      --gem-c: rgba(141,216,255,0.24);
+    }
+
+    .route-gem.worlds {
+      --gem-a: rgba(141,216,255,0.70);
+      --gem-b: rgba(98,232,230,0.34);
+      --gem-c: rgba(198,166,255,0.26);
+    }
+
+    .route-gem.proof {
+      --gem-a: rgba(238,248,255,0.68);
+      --gem-b: rgba(141,216,255,0.38);
+      --gem-c: rgba(244,207,131,0.28);
+    }
+
+    .route-gem.compass {
+      --gem-a: rgba(244,207,131,0.58);
+      --gem-b: rgba(141,216,255,0.34);
+      --gem-c: rgba(255,255,255,0.20);
+    }
+
+    .route-gem.small {
+      width: calc(var(--w, 112px) * 0.68);
+      height: calc(var(--w, 112px) * 0.49);
+      opacity: var(--alpha, 0.62);
+    }
+
+    .route-gem.tiny {
+      width: calc(var(--w, 112px) * 0.48);
+      height: calc(var(--w, 112px) * 0.35);
+      opacity: var(--alpha, 0.42);
+    }
+
+    @keyframes cutGemFloat {
+      0%, 100% { margin-top: 0; margin-left: 0; }
+      25% { margin-top: -8px; margin-left: 5px; }
+      50% { margin-top: -3px; margin-left: -6px; }
+      75% { margin-top: 7px; margin-left: 4px; }
+    }
+
+    @keyframes cutGemShimmer {
+      0%, 100% { filter: saturate(1.02) brightness(0.96); }
+      50% { filter: saturate(1.10) brightness(1.16); }
+    }
+
+    @keyframes cutGemGlint {
+      0%, 100% { opacity: 0.20; transform: scale(0.65); }
+      46% { opacity: 0.96; transform: scale(1.35); }
+      62% { opacity: 0.42; transform: scale(0.9); }
+    }
+
+    .gem-link-map {
+      position: absolute;
+      right: clamp(16px, 4vw, 34px);
+      bottom: clamp(16px, 4vw, 28px);
+      z-index: 6;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      max-width: min(520px, 56%);
+    }
+
+    .gem-map-link {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      background: rgba(3,8,18,0.42);
+      color: rgba(238,244,255,0.72);
+      text-decoration: none;
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      backdrop-filter: blur(8px);
+    }
+
+    .gem-map-link:hover,
+    .gem-map-link:focus-visible {
+      color: #06101c;
+      background: linear-gradient(135deg, #fff0b8, var(--gold));
+      border-color: rgba(244,207,131,0.68);
+      text-decoration: none;
     }
 
     .cache-proof,
@@ -808,11 +943,29 @@
       }
 
       .bottom-gem-field {
-        min-height: 300px;
+        min-height: 430px;
       }
 
-      .rail-gem {
-        opacity: calc(var(--alpha, 0.72) * 0.78);
+      .bottom-gem-copy {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .gem-constellation {
+        opacity: 0.72;
+        transform: translateY(70px);
+      }
+
+      .gem-link-map {
+        max-width: calc(100% - 32px);
+        left: clamp(16px, 4vw, 34px);
+        right: clamp(16px, 4vw, 34px);
+        justify-content: flex-start;
+      }
+
+      .route-gem.story,
+      .route-gem.compass {
+        display: none;
       }
     }
 
@@ -839,13 +992,22 @@
         min-height: 600px;
       }
 
-      .bottom-gem-copy {
-        max-width: 92%;
+      .bottom-gem-field {
+        min-height: 500px;
       }
 
-      .rail-gem:nth-child(4),
-      .rail-gem:nth-child(6) {
-        display: none;
+      .route-gem {
+        --w: 92px;
+      }
+
+      .route-gem.proof,
+      .route-gem.small,
+      .route-gem.tiny {
+        opacity: 0.28;
+      }
+
+      .gem-link-map {
+        bottom: 18px;
       }
     }
 
@@ -980,7 +1142,7 @@
             Crystal Form presents the Diamond as a real WebGL mesh with perspective, depth buffer, object rotation, crown, girdle, pavilion, and culet. The stage is raised above the instruction box so the object remains inspectable. Lattice Structure reveals the 16-point compass geometry and the 256-state address system behind the same object. The lens changes. The Diamond does not.
           </p>
           <p class="cache-proof">
-            HTML cache key: SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_GEM_BOTTOM_BIND_TNT_v7
+            HTML cache key: SHOWROOM_BOTTOM_GEM_FIELD_TRUE_CUT_GEM_HTML_ONLY_TNT_v1
           </p>
         </article>
       </section>
@@ -1029,9 +1191,9 @@
           </a>
         </div>
 
-        <div class="bottom-gem-field" aria-label="Animated gem navigation field">
+        <div class="bottom-gem-field" aria-label="Faceted route gem navigation field">
           <div class="bottom-gem-copy">
-            <p class="gem-field-title">Gem field · route signal</p>
+            <p class="gem-field-title">True cut gem field · route signal</p>
             <h3>The proof object opens the paths. The paths carry the build forward.</h3>
             <p>
               The bottom field keeps the Showroom alive after the launch cards: story, laws, community, worlds, and proof remain connected around the Diamond.
@@ -1045,30 +1207,54 @@
             </div>
           </div>
 
-          <div class="gem-rail" aria-hidden="true">
-            <span class="rail-gem" style="--x:74%;--y:22%;--size:72px;--speed:8.4s;--delay:-0.4s;--alpha:0.76"></span>
-            <span class="rail-gem" style="--x:88%;--y:48%;--size:50px;--speed:7.6s;--delay:-1.2s;--alpha:0.56"></span>
-            <span class="rail-gem" style="--x:70%;--y:72%;--size:42px;--speed:6.9s;--delay:-2.1s;--alpha:0.52"></span>
-            <span class="rail-gem" style="--x:52%;--y:66%;--size:34px;--speed:9.2s;--delay:-3.4s;--alpha:0.44"></span>
-            <span class="rail-gem" style="--x:92%;--y:78%;--size:30px;--speed:8.8s;--delay:-4.1s;--alpha:0.38"></span>
-            <span class="rail-gem" style="--x:58%;--y:30%;--size:28px;--speed:7.2s;--delay:-5.1s;--alpha:0.42"></span>
+          <div class="gem-constellation" aria-hidden="true">
+            <span class="route-gem story" style="--x:72%;--y:21%;--w:118px;--speed:8.6s;--delay:-0.2s;--alpha:0.88">
+              <span class="gem-glint"></span>
+              <span class="gem-label"><b>Story</b><span>Characters</span></span>
+            </span>
 
-            <span class="gem-spark" style="--x:64%;--y:18%;--delay:-0.8s"></span>
-            <span class="gem-spark" style="--x:82%;--y:28%;--delay:-1.6s"></span>
-            <span class="gem-spark" style="--x:96%;--y:40%;--delay:-2.4s"></span>
-            <span class="gem-spark" style="--x:76%;--y:62%;--delay:-3.2s"></span>
-            <span class="gem-spark" style="--x:59%;--y:84%;--delay:-4.0s"></span>
-            <span class="gem-spark" style="--x:90%;--y:88%;--delay:-4.8s"></span>
+            <span class="route-gem laws" style="--x:88%;--y:36%;--w:108px;--speed:7.8s;--delay:-1.1s;--alpha:0.84">
+              <span class="gem-glint"></span>
+              <span class="gem-label"><b>Laws</b><span>Clock</span></span>
+            </span>
+
+            <span class="route-gem community" style="--x:76%;--y:62%;--w:114px;--speed:8.2s;--delay:-2.0s;--alpha:0.86">
+              <span class="gem-glint"></span>
+              <span class="gem-label"><b>Community</b><span>Products</span></span>
+            </span>
+
+            <span class="route-gem worlds" style="--x:58%;--y:76%;--w:96px;--speed:9.0s;--delay:-2.8s;--alpha:0.72">
+              <span class="gem-glint"></span>
+              <span class="gem-label"><b>Worlds</b><span>Globe</span></span>
+            </span>
+
+            <span class="route-gem proof small" style="--x:92%;--y:73%;--w:98px;--speed:7.4s;--delay:-3.7s;--alpha:0.66">
+              <span class="gem-glint"></span>
+              <span class="gem-label"><b>Proof</b><span>Triple G</span></span>
+            </span>
+
+            <span class="route-gem compass tiny" style="--x:60%;--y:34%;--w:90px;--speed:8.8s;--delay:-4.5s;--alpha:0.46">
+              <span class="gem-glint"></span>
+              <span class="gem-label"><b>Compass</b><span>Route</span></span>
+            </span>
           </div>
+
+          <nav class="gem-link-map" aria-label="Bottom route shortcuts">
+            <a class="gem-map-link" href="/characters/">Story</a>
+            <a class="gem-map-link" href="/laws/">Laws</a>
+            <a class="gem-map-link" href="/products/">Community</a>
+            <a class="gem-map-link" href="/showroom/globe/">Worlds</a>
+            <a class="gem-map-link" href="/gauges/">Proof</a>
+          </nav>
         </div>
 
         <template id="showroom-route-receipt" class="hidden-receipt">
-SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_GEM_BOTTOM_BIND_TNT_v7
+SHOWROOM_BOTTOM_GEM_FIELD_TRUE_CUT_GEM_HTML_ONLY_TNT_v1
 route=/showroom/
 html=/showroom/index.html
 js=/showroom/index.js
 js_cache_key=SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_TNT_v5
-role=dual_lens_webgl_true_3d_showroom_proof_surface_launchpad_and_bottom_gem_field
+role=dual_lens_webgl_true_3d_showroom_proof_surface_launchpad_and_true_cut_bottom_gem_field
 diamond_lock=CROWN_CUT_256_LATTICE_FIXED_FORM
 renderer=native_webgl
 webgl_depth_buffer=true
@@ -1076,7 +1262,9 @@ perspective_camera=true
 real_mesh=true
 real_object_rotation=true
 stage_correction=raised_above_instruction_box
-bottom_gem_field=true
+bottom_gem_field=true_cut_route_gems
+coal_gem_read_blocked=true
+rounded_lump_gem_blocked=true
 css_gem_animation=true
 visible_radial_metric=16
 lattice_states=256
@@ -1091,6 +1279,7 @@ lattice_structure=raised_true_3d_16_point_compass_geometry_and_256_lattice_logic
 crystal_and_lattice_are_visually_distinct=true
 flat_badge_blocked=true
 launchpad=characters,laws,products,globe,gauges
+true_cut_gems=story,laws,community,worlds,proof
 characters_role=story_game_doorway
 laws_role=science_truth_doorway
 laws_cta=Jump_to_the_Laws_page_and_lock_in
@@ -1109,12 +1298,12 @@ earth_record=false
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Showroom · Raised WebGL True 3D Crown Cut 256 Lattice Diamond · Launchpad · Gem Field.
+      Diamond Gate Bridge · Showroom · Raised WebGL True 3D Crown Cut 256 Lattice Diamond · Launchpad · True Cut Gem Field.
     </footer>
   </div>
 
   <script>
-    window.DGB_SHOWROOM_HTML_CACHE_KEY = "SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_GEM_BOTTOM_BIND_TNT_v7";
+    window.DGB_SHOWROOM_HTML_CACHE_KEY = "SHOWROOM_BOTTOM_GEM_FIELD_TRUE_CUT_GEM_HTML_ONLY_TNT_v1";
     window.DGB_SHOWROOM_JS_CACHE_KEY = "SHOWROOM_DUAL_LENS_DIAMOND_WEBGL_TRUE_3D_RAISED_STAGE_TNT_v5";
   </script>
   <script

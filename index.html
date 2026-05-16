@@ -1,696 +1,858 @@
 <!doctype html>
-<html
-  lang="en"
-  data-route="/showroom/globe/audralia/"
-  data-page="audralia-living-canvas"
-  data-contract="AUDRALIA_ROUTE_SHELL_CANONICAL_LOADER_BUMP_TNT_v2"
-  data-previous-contract="AUDRALIA_ROUTE_SHELL_VISIBLE_NOTICE_CHAIN_TNT_v1"
-  data-role="showroom-globe-child-route"
-  data-world="Audralia"
-  data-canonical-spelling="A_U_D_R_A_L_I_A"
-  data-parent-route="/showroom/globe/"
-  data-route-loader="/showroom/globe/audralia/index.js"
-  data-route-loader-contract="AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2"
-  data-canvas-contract="AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3"
-  data-landmap-contract="AUDRALIA_30_BILLION_YEAR_EARTH_LEGACY_ORGANIC_LANDFORM_TNT_v1"
-  data-climate-contract="AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v1"
-  data-generated-image="false"
-  data-graphic-box="false"
-  data-heavy-runtime-loaded="false"
-  data-streaming="false"
-  data-visual-pass-claimed="false"
->
+<html lang="en" data-page="root-compass" data-contract="ROOT_COMPASS_PAIRED_TNT_v1">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-
-  <title>Audralia · The Living Canvas · Diamond Gate Bridge</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Diamond Gate Bridge · Compass</title>
   <meta
     name="description"
-    content="Audralia is the living canvas route for the Diamond Gate Bridge Globe question: a possible future that can be seen, understood, and considered before it is lost."
-  >
+    content="Diamond Gate Bridge Compass: the whole-site map for Scientific Backing, Community, and Fun Narrative / Game / Series."
+  />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://diamondgatebridge.com/" />
+  <meta name="theme-color" content="#070b12" />
 
   <style>
     :root {
+      --bg: #070b12;
+      --bg2: #0c1320;
+      --panel: rgba(255, 255, 255, 0.055);
+      --panel2: rgba(255, 255, 255, 0.085);
+      --line: rgba(255, 255, 255, 0.16);
+      --line2: rgba(255, 255, 255, 0.28);
+      --text: #f4f7fb;
+      --muted: #aab7cb;
+      --soft: #d8e1ef;
+      --gold: #f2c879;
+      --blue: #8fc7ff;
+      --green: #9de4b0;
+      --violet: #c6a6ff;
+      --danger: #ff9a9a;
+      --shadow: rgba(0, 0, 0, 0.35);
+      --radius-lg: 28px;
+      --radius-md: 20px;
+      --radius-sm: 14px;
+      --max: 1180px;
       color-scheme: dark;
-      --bg:#02040b;
-      --ink:#fff4d8;
-      --muted:rgba(230,238,255,.78);
-      --faint:rgba(230,238,255,.52);
-      --gold:#f3c86f;
-      --green:#9ef0bf;
-      --blue:#8dd8ff;
-      --panel:rgba(9,15,31,.88);
-      --line:rgba(184,205,255,.18);
-      --green-line:rgba(158,240,191,.26);
-      --shadow:0 32px 110px rgba(0,0,0,.48);
-      --max:1180px;
     }
 
-    * { box-sizing:border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html {
-      min-width:320px;
-      min-height:100%;
-      background:var(--bg);
-      scroll-behavior:smooth;
-      overflow-x:hidden;
+      scroll-behavior: smooth;
+      background: var(--bg);
     }
 
     body {
-      margin:0;
-      min-width:320px;
-      min-height:100vh;
-      color:var(--ink);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      line-height:1.5;
-      overflow-x:hidden;
+      margin: 0;
+      min-height: 100vh;
+      font-family:
+        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      color: var(--text);
       background:
-        radial-gradient(circle at 50% -8%,rgba(158,240,191,.16),transparent 28rem),
-        radial-gradient(circle at 12% 18%,rgba(36,120,255,.15),transparent 28rem),
-        radial-gradient(circle at 88% 30%,rgba(243,200,111,.10),transparent 28rem),
-        radial-gradient(circle at 50% 78%,rgba(141,216,255,.10),transparent 34rem),
-        linear-gradient(180deg,#07101a 0%,#030713 58%,#010207 100%);
-      -webkit-font-smoothing:antialiased;
-      text-rendering:geometricPrecision;
+        radial-gradient(circle at 20% 0%, rgba(143, 199, 255, 0.18), transparent 34rem),
+        radial-gradient(circle at 85% 10%, rgba(198, 166, 255, 0.14), transparent 30rem),
+        radial-gradient(circle at 50% 100%, rgba(242, 200, 121, 0.12), transparent 28rem),
+        linear-gradient(180deg, #070b12 0%, #0a101a 48%, #070b12 100%);
+      line-height: 1.6;
     }
 
-    body::before {
-      content:"";
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      background-image:
-        radial-gradient(circle,rgba(255,255,255,.16) 0 1px,transparent 1.5px),
-        linear-gradient(rgba(143,240,195,.035) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(141,216,255,.032) 1px,transparent 1px);
-      background-size:220px 260px,54px 54px,54px 54px;
-      opacity:.20;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    a { color:inherit; text-decoration:none; }
-
-    a:focus-visible,
-    button:focus-visible,
-    [tabindex]:focus-visible {
-      outline:2px solid var(--gold);
-      outline-offset:4px;
+    a:hover,
+    a:focus-visible {
+      color: #ffffff;
     }
 
-    .skip {
-      position:absolute;
-      left:-999px;
-      top:8px;
-      z-index:50;
-      padding:.75rem 1rem;
-      border-radius:999px;
-      color:#05070d;
-      background:var(--gold);
-      font-weight:950;
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: -4rem;
+      z-index: 20;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      background: #ffffff;
+      color: #070b12;
+      font-weight: 800;
     }
 
-    .skip:focus { left:8px; }
+    .skip-link:focus {
+      top: 1rem;
+    }
 
-    .shell {
-      position:relative;
-      z-index:2;
-      width:min(var(--max),calc(100% - 28px));
-      margin:0 auto;
-      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
+    .site-shell {
+      width: min(var(--max), calc(100% - 2rem));
+      margin: 0 auto;
     }
 
     .topbar {
-      display:grid;
-      grid-template-columns:auto 1fr;
-      align-items:center;
-      gap:18px;
-      padding:12px 0 18px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(18px);
+      background: rgba(7, 11, 18, 0.82);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      width: min(var(--max), calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 0.85rem 0;
     }
 
     .brand {
-      display:grid;
-      grid-template-columns:auto 1fr;
-      align-items:center;
-      gap:.9rem;
-      min-width:260px;
+      display: grid;
+      gap: 0.1rem;
+      min-width: 13rem;
     }
 
-    .brand-mark {
-      width:4.2rem;
-      height:4.2rem;
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(158,240,191,.42);
-      border-radius:1.15rem;
-      transform:rotate(45deg);
-      background:
-        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.28) 21% 23%,transparent 24%),
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.22),rgba(158,240,191,.23),rgba(36,120,255,.18),rgba(243,200,111,.13),rgba(255,255,255,.22)),
-        radial-gradient(circle at 48% 22%,rgba(255,255,255,.30),transparent 42%),
-        linear-gradient(145deg,rgba(26,83,61,.95),rgba(5,8,20,.98));
-      box-shadow:
-        0 0 2rem rgba(158,240,191,.18),
-        0 1.2rem 2.8rem rgba(0,0,0,.46),
-        inset 0 1px 0 rgba(255,255,255,.16);
+    .brand strong {
+      font-size: 0.98rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    .brand-mark span {
-      transform:rotate(-45deg);
-      font-weight:950;
-      letter-spacing:.04em;
-      color:rgba(255,244,216,.98);
-      text-shadow:0 2px 10px rgba(0,0,0,.85);
-    }
-
-    .brand-copy {
-      display:grid;
-      gap:.18rem;
-    }
-
-    .brand-copy strong {
-      font-size:clamp(1.08rem,3vw,1.7rem);
-      line-height:1;
-      letter-spacing:-.045em;
-    }
-
-    .brand-copy span {
-      color:var(--muted);
-      font-size:.74rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
+    .brand span {
+      color: var(--muted);
+      font-size: 0.82rem;
     }
 
     .nav {
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:.48rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 0.45rem;
     }
 
     .nav a {
-      min-height:2.25rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:999px;
-      padding:.5rem .74rem;
-      color:rgba(241,246,255,.84);
-      background:rgba(255,255,255,.035);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.055em;
-      text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.35rem;
+      padding: 0.55rem 0.8rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--soft);
+      background: rgba(255, 255, 255, 0.035);
+      font-size: 0.86rem;
     }
 
-    .nav a[aria-current="page"] {
-      border-color:rgba(158,240,191,.82);
-      color:#06101c;
-      background:linear-gradient(135deg,#c8ffd8,#8eeab2);
-    }
-
-    .panel {
-      border:1px solid var(--line);
-      border-radius:clamp(1.35rem,5vw,2.35rem);
-      background:
-        radial-gradient(circle at 14% 0%,rgba(158,240,191,.08),transparent 28rem),
-        radial-gradient(circle at 86% 18%,rgba(36,120,255,.10),transparent 28rem),
-        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
-        var(--panel);
-      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
-      overflow:hidden;
+    .nav a:hover,
+    .nav a:focus-visible {
+      border-color: var(--line2);
+      background: rgba(255, 255, 255, 0.09);
+      outline: none;
     }
 
     .hero {
-      position:relative;
-      min-height:clamp(22rem,42vw,33rem);
-      display:grid;
-      align-content:center;
-      gap:1rem;
-      padding:clamp(1.45rem,5vw,3.4rem);
-      margin-top:.6rem;
-      isolation:isolate;
+      padding: clamp(3.5rem, 9vw, 7rem) 0 2rem;
     }
 
-    .hero::before {
-      content:"";
-      position:absolute;
-      right:clamp(1rem,6vw,5.5rem);
-      top:50%;
-      z-index:0;
-      width:clamp(9rem,25vw,18rem);
-      height:clamp(9rem,25vw,18rem);
-      border:1px solid rgba(158,240,191,.16);
-      border-radius:999px;
-      transform:translateY(-50%);
-      background:
-        radial-gradient(circle at 44% 36%,rgba(158,240,191,.14),transparent 38%),
-        radial-gradient(circle at 56% 66%,rgba(36,120,255,.16),transparent 62%),
-        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
-      animation:anchorPulse 8s ease-in-out infinite;
-      pointer-events:none;
-      opacity:.52;
+    .eyebrow {
+      display: inline-flex;
+      gap: 0.45rem;
+      align-items: center;
+      padding: 0.35rem 0.7rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--gold);
+      background: rgba(242, 200, 121, 0.08);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    @keyframes anchorPulse {
-      0%,100% { opacity:.38; filter:brightness(.95); }
-      50% { opacity:.62; filter:brightness(1.1); }
-    }
-
-    .kicker {
-      width:fit-content;
-      display:inline-flex;
-      align-items:center;
-      gap:.58rem;
-      padding:.58rem .95rem;
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:999px;
-      color:rgba(230,238,255,.86);
-      background:rgba(255,255,255,.04);
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      position:relative;
-      z-index:2;
-    }
-
-    .kicker::before {
-      content:"";
-      width:.72rem;
-      height:.72rem;
-      border-radius:.18rem;
-      transform:rotate(45deg);
-      background:linear-gradient(135deg,#c8ffd8,var(--green));
-      box-shadow:0 0 1.1rem rgba(158,240,191,.44);
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.08;
+      letter-spacing: -0.04em;
     }
 
     h1 {
-      margin:0;
-      max-width:1000px;
-      font-size:clamp(3rem,9vw,6.8rem);
-      line-height:.86;
-      letter-spacing:-.102em;
-      text-wrap:balance;
-      position:relative;
-      z-index:2;
+      max-width: 14ch;
+      margin-top: 1.15rem;
+      font-size: clamp(3.2rem, 10vw, 7.7rem);
     }
 
     h2 {
-      margin:0;
-      color:var(--gold);
-      font-size:clamp(1.45rem,4.7vw,2.65rem);
-      line-height:.98;
-      letter-spacing:-.07em;
-      text-wrap:balance;
-      position:relative;
-      z-index:2;
+      font-size: clamp(2rem, 5vw, 4rem);
+    }
+
+    h3 {
+      font-size: clamp(1.18rem, 2.4vw, 1.55rem);
     }
 
     p {
-      margin:0;
-      color:var(--muted);
-      font-size:clamp(.98rem,2.7vw,1.16rem);
-      line-height:1.55;
+      margin: 0;
     }
 
-    .lead {
-      max-width:930px;
-      position:relative;
-      z-index:2;
+    .hero-copy {
+      max-width: 760px;
+      margin-top: 1.25rem;
+      color: var(--soft);
+      font-size: clamp(1.07rem, 2.2vw, 1.35rem);
     }
 
-    .principle {
-      max-width:980px;
-      padding:1rem 1.1rem;
-      border:1px solid rgba(158,240,191,.26);
-      border-radius:1.2rem;
-      color:rgba(206,255,228,.96);
-      background:rgba(28,80,58,.16);
-      font-weight:900;
-      position:relative;
-      z-index:2;
-    }
-
-    .actions {
-      display:flex;
-      flex-wrap:wrap;
-      gap:.62rem;
-      margin-top:.2rem;
-      position:relative;
-      z-index:2;
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.6rem;
     }
 
     .button {
-      min-height:2.65rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(255,255,255,.15);
-      border-radius:999px;
-      padding:.65rem 1rem;
-      background:rgba(255,255,255,.045);
-      color:rgba(241,246,255,.88);
-      font-size:.76rem;
-      font-weight:950;
-      letter-spacing:.055em;
-      text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 3rem;
+      padding: 0.85rem 1.05rem;
+      border: 1px solid var(--line2);
+      border-radius: 999px;
+      font-weight: 800;
+      color: #07101d;
+      background: #ffffff;
+      box-shadow: 0 16px 40px var(--shadow);
+    }
+
+    .button.secondary {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.08);
     }
 
     .button:hover,
     .button:focus-visible {
-      transform:translateY(-2px);
-      border-color:rgba(158,240,191,.62);
-      outline:none;
-    }
-
-    .button.gold {
-      border-color:rgba(243,200,111,.9);
-      color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
-      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+      transform: translateY(-1px);
+      outline: none;
     }
 
     .section {
-      margin-top:1.15rem;
-      padding:clamp(1rem,3vw,1.45rem);
-      display:grid;
-      gap:1.05rem;
+      padding: 2.3rem 0;
     }
 
-    .route-loader-notice {
-      display:block;
-      width:fit-content;
-      max-width:100%;
-      padding:.72rem .9rem;
-      border:1px solid rgba(243,200,111,.44);
-      border-radius:999px;
-      color:rgba(255,232,168,.98);
-      background:rgba(40,26,4,.74);
-      font-size:.74rem;
-      font-weight:950;
-      letter-spacing:.06em;
-      text-transform:uppercase;
+    .section-head {
+      display: grid;
+      gap: 0.7rem;
+      max-width: 850px;
+      margin-bottom: 1.2rem;
     }
 
-    .status-card {
-      border:1px solid var(--green-line);
-      border-radius:1.35rem;
-      padding:1rem 1.1rem;
-      color:rgba(206,255,228,.94);
-      background:
-        radial-gradient(circle at 12% 0%,rgba(158,240,191,.10),transparent 60%),
-        rgba(2,20,22,.72);
-      font-weight:850;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-      overflow-wrap:anywhere;
+    .section-head p {
+      color: var(--muted);
+      font-size: 1.02rem;
     }
 
-    .stage {
-      position:relative;
-      min-height:clamp(24rem,68vw,46rem);
-      border:1px solid rgba(243,200,111,.22);
-      border-radius:clamp(1.35rem,5vw,2.35rem);
-      overflow:hidden;
-      isolation:isolate;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(36,120,255,.14),transparent 44%),
-        radial-gradient(circle at 50% 50%,rgba(158,240,191,.08),transparent 60%),
-        linear-gradient(180deg,rgba(1,5,16,.78),rgba(2,6,16,.96));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 1.2rem 4rem rgba(0,0,0,.30);
+    .perspective-grid,
+    .route-grid,
+    .status-grid {
+      display: grid;
+      gap: 1rem;
     }
 
-    .stage-fallback {
-      position:absolute;
-      inset:0;
-      display:grid;
-      place-items:center;
-      padding:1rem;
-      color:rgba(230,238,255,.70);
-      text-align:center;
-      font-weight:850;
-      pointer-events:none;
+    .perspective-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    [data-audralia-canvas-mount="true"] {
-      position:absolute;
-      inset:0;
-      z-index:2;
+    .route-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    .cards {
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.85rem;
+    .status-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .card {
-      display:grid;
-      gap:.6rem;
-      min-height:100%;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.2rem;
+      position: relative;
+      display: grid;
+      gap: 0.7rem;
+      min-height: 100%;
+      padding: 1.15rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
       background:
-        radial-gradient(circle at 20% 0%,rgba(158,240,191,.08),transparent 60%),
-        rgba(255,255,255,.035);
+        linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.045)),
+        var(--panel);
+      box-shadow: 0 18px 52px rgba(0, 0, 0, 0.18);
+      overflow: hidden;
     }
 
-    .card b {
-      color:var(--green);
-      font-size:.68rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background: radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.13), transparent 45%);
+      opacity: 0.7;
     }
 
-    .card strong {
-      color:rgba(255,244,216,.98);
-      font-size:1.15rem;
-      line-height:1.1;
+    .card > * {
+      position: relative;
     }
 
-    .card span {
-      color:var(--muted);
-      font-size:.94rem;
-      line-height:1.42;
+    .card small,
+    .route-meta {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    .route-receipt,
-    [data-route-receipt],
-    [data-contract-receipt],
-    [data-debug-receipt],
+    .card p {
+      color: var(--soft);
+    }
+
+    .card a.card-link {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      margin-top: 0.3rem;
+      padding: 0.5rem 0.7rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.06);
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+
+    .card a.card-link:hover,
+    .card a.card-link:focus-visible {
+      border-color: var(--line2);
+      background: rgba(255, 255, 255, 0.12);
+      outline: none;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 1.8rem;
+      padding: 0.35rem 0.55rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.04);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .tag.science {
+      color: var(--blue);
+      border-color: rgba(143, 199, 255, 0.35);
+    }
+
+    .tag.community {
+      color: var(--green);
+      border-color: rgba(157, 228, 176, 0.35);
+    }
+
+    .tag.story {
+      color: var(--violet);
+      border-color: rgba(198, 166, 255, 0.35);
+    }
+
+    .filter-panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.8rem;
+      margin: 1rem 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .filter-panel button {
+      cursor: pointer;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.65rem 0.85rem;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+      font: inherit;
+      font-weight: 800;
+    }
+
+    .filter-panel button[aria-pressed="true"] {
+      color: #07101d;
+      background: #ffffff;
+    }
+
+    .wide-card {
+      grid-column: 1 / -1;
+    }
+
+    .route-card.is-dimmed {
+      opacity: 0.36;
+    }
+
     .receipt {
-      display:none!important;
-      visibility:hidden!important;
-      overflow:hidden!important;
-      width:0!important;
-      height:0!important;
-      max-width:0!important;
-      max-height:0!important;
-      margin:0!important;
-      padding:0!important;
-      border:0!important;
-      opacity:0!important;
-      pointer-events:none!important;
-      position:absolute!important;
-      inset:auto!important;
-      clip-path:inset(50%)!important;
-      white-space:nowrap!important;
+      border: 1px solid rgba(157, 228, 176, 0.28);
+      background: rgba(157, 228, 176, 0.065);
+    }
+
+    .receipt dl {
+      display: grid;
+      grid-template-columns: minmax(9rem, 0.4fr) 1fr;
+      gap: 0.55rem 1rem;
+      margin: 0;
+      color: var(--soft);
+    }
+
+    .receipt dt {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .receipt dd {
+      margin: 0;
+    }
+
+    .planned {
+      color: var(--gold);
     }
 
     footer {
-      padding:1.35rem 0 .5rem;
-      color:var(--faint);
-      text-align:center;
-      font-size:.76rem;
+      padding: 2.5rem 0 4rem;
+      color: var(--muted);
     }
 
-    @media (max-width:980px) {
-      .topbar {
-        grid-template-columns:1fr;
-        align-items:start;
+    footer .site-shell {
+      border-top: 1px solid var(--line);
+      padding-top: 1.25rem;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 900px) {
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
       }
 
-      .nav { justify-content:flex-start; }
-    }
-
-    @media (max-width:720px) {
-      .shell { width:min(100% - 22px,var(--max)); }
-      h1 { font-size:clamp(3rem,17vw,5rem); }
-
-      .hero {
-        min-height:27rem;
-        padding:1rem;
+      .nav {
+        justify-content: flex-start;
       }
 
-      .actions { display:grid; }
-      .button { width:100%; }
-      .cards { grid-template-columns:1fr; }
-      .stage { min-height:23rem; }
-    }
+      .perspective-grid,
+      .route-grid,
+      .status-grid {
+        grid-template-columns: 1fr;
+      }
 
-    @media (prefers-reduced-motion:reduce) {
-      *,
-      *::before,
-      *::after {
-        scroll-behavior:auto!important;
-        animation-duration:.01ms!important;
-        animation-iteration-count:1!important;
-        transition-duration:.01ms!important;
+      .receipt dl {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#audralia-main">Skip to Audralia</a>
+  <a class="skip-link" href="#main">Skip to Compass</a>
 
-  <div class="shell">
-    <header class="topbar" aria-label="Audralia header">
-      <a class="brand" href="/">
-        <span class="brand-mark" aria-hidden="true"><span>AU</span></span>
-        <span class="brand-copy">
-          <span>Diamond Gate Bridge</span>
-          <strong>Audralia</strong>
-        </span>
+  <header class="topbar" aria-label="Primary site header">
+    <div class="topbar-inner">
+      <a class="brand" href="/" aria-label="Diamond Gate Bridge Compass home">
+        <strong>Diamond Gate Bridge</strong>
+        <span>Compass · whole-site correlation</span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/explore/">Manor</a>
         <a href="/nine-summits/">Nine Summits</a>
-        <a href="/products/">Products</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Globe</a>
-        <a href="/showroom/globe/audralia/" aria-current="page">Audralia</a>
-        <a href="/showroom/globe/earth/">Earth</a>
-        <a href="/showroom/globe/h-earth/">H-Earth</a>
+        <a href="/explore/">Explore</a>
+        <a href="/frontier/">Frontier</a>
         <a href="/gauges/">Gauges</a>
       </nav>
-    </header>
+    </div>
+  </header>
 
-    <main id="audralia-main">
-      <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Audralia · The Living Canvas</div>
-        <h1 id="page-title">A possible future should be visible before it is lost.</h1>
+  <main id="main">
+    <section class="hero site-shell" aria-labelledby="page-title">
+      <span class="eyebrow">Compass restored · root correlation</span>
+      <h1 id="page-title">One map for the whole bridge.</h1>
+      <p class="hero-copy">
+        Diamond Gate Bridge can be entered three ways: through Scientific Backing, through
+        Community, or through Fun Narrative / Game / Series. Compass does not replace the
+        routes. It shows where each one belongs.
+      </p>
 
-        <p class="lead">
-          Audralia is the constructed living-world route. It uses the 256 nodal lattice, Nine Summits province fields, Earth-legacy landforms, climate detail, and a consumer-only canvas to show a future world without turning the canvas into the authority.
+      <div class="hero-actions" aria-label="Primary page actions">
+        <a class="button" href="#perspectives">See the three perspectives</a>
+        <a class="button secondary" href="#routes">Map the routes</a>
+      </div>
+    </section>
+
+    <section id="perspectives" class="section site-shell" aria-labelledby="perspectives-title">
+      <div class="section-head">
+        <h2 id="perspectives-title">Three public perspectives.</h2>
+        <p>
+          The same project can be understood as structure, as public value, and as a story-world.
+          The page language stays public. The narrative cadence remains under the hood.
         </p>
+      </div>
 
-        <div class="principle">
-          Audralia answers the Globe question as a living canvas: a possible future that can be seen, understood, and considered before it is lost.
-        </div>
-
-        <div class="actions">
-          <a class="button gold" href="#audralia-stage">Inspect Audralia</a>
-          <a class="button" href="/showroom/globe/">Return to Globe</a>
-          <a class="button" href="/gauges/">Read Gauges</a>
-        </div>
-      </section>
-
-      <section class="panel section" aria-labelledby="chain-title">
-        <div class="kicker">Route chain status</div>
-        <h2 id="chain-title">The route shell now verifies the newer Audralia chain.</h2>
-
-        <div
-          id="audraliaRouteLoaderNotice"
-          class="route-loader-notice"
-          data-audralia-route-loader-notice="true"
-          aria-live="polite"
-        >
-          Route shell v2 live · waiting for canonical loader v2.
-        </div>
-
-        <div class="status-card" id="audraliaRouteStatus" data-audralia-route-status="true">
-          If this message remains, /showroom/globe/audralia/index.js did not load with AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2.
-        </div>
-
-        <div
-          id="audralia-stage"
-          class="stage"
-          data-audralia-stage="true"
-          aria-label="Audralia living canvas stage"
-        >
-          <div class="stage-fallback" data-stage-fallback="true">
-            Audralia canvas mount awaiting canonical loader v2.
+      <div class="perspective-grid" data-compass-perspectives>
+        <article class="card" data-perspective="scientific-backing">
+          <small>Perspective 01</small>
+          <h3>Scientific Backing</h3>
+          <p>
+            Systems logic, route proof, future measures, planetary scale, the 256 nodal field,
+            the 16 compass derivative, Fibonacci reveal cadence, and Triple G measurement.
+          </p>
+          <div class="tag-row" aria-label="Scientific Backing tags">
+            <span class="tag science">Gauges</span>
+            <span class="tag science">Frontier</span>
+            <span class="tag science">Universe</span>
           </div>
-          <div
-            id="audraliaCanvasMount"
-            data-audralia-canvas-mount="true"
-            aria-label="Audralia canvas mount"
-          ></div>
-        </div>
-      </section>
+        </article>
 
-      <section class="panel section" aria-labelledby="standards-title">
-        <div class="kicker">Current standards</div>
-        <h2 id="standards-title">Canvas consumes. Landmap and climate author the world.</h2>
+        <article class="card" data-perspective="community">
+          <small>Perspective 02</small>
+          <h3>Community</h3>
+          <p>
+            Sanctuary, restoration, access, education, safety, stewardship, the estate, the
+            orphanage, and a public benefit that does not depend on a console or special hardware.
+          </p>
+          <div class="tag-row" aria-label="Community tags">
+            <span class="tag community">Explore</span>
+            <span class="tag community">Estate</span>
+            <span class="tag community">Home</span>
+          </div>
+        </article>
 
-        <div class="cards">
-          <article class="card">
-            <b>Footprint</b>
-            <strong>Landmap owns land and sea.</strong>
-            <span>The route expects the 30-billion-year Earth-legacy organic landform contract to provide continent, shelf, beach, and nodal geometry truth.</span>
-          </article>
+        <article class="card" data-perspective="fun-narrative-game-series">
+          <small>Perspective 03</small>
+          <h3>Fun Narrative / Game / Series</h3>
+          <p>
+            The Bermuda Triangle portal, Mirrorland, Audralia, ZIONTS, the heroes as real
+            inhabitants, the future interactive game path, and series-ready world continuity.
+          </p>
+          <div class="tag-row" aria-label="Fun Narrative / Game / Series tags">
+            <span class="tag story">Mirrorland</span>
+            <span class="tag story">Heroes</span>
+            <span class="tag story">Play</span>
+          </div>
+        </article>
+      </div>
+    </section>
 
-          <article class="card">
-            <b>Climate</b>
-            <strong>Climate owns environment detail.</strong>
-            <span>The route expects rainforest, wetland, savanna, dry basin, forest, alpine, snow, beach, and restoration-zone detail from the climate layer.</span>
-          </article>
+    <section id="routes" class="section site-shell" aria-labelledby="routes-title">
+      <div class="section-head">
+        <h2 id="routes-title">Route correlation.</h2>
+        <p>
+          Each route keeps its own authority. Compass only explains the relationship.
+          Use the filters to see how the site separates proof, community, and story.
+        </p>
+      </div>
 
-          <article class="card">
-            <b>Canvas</b>
-            <strong>Canvas stays consumer-only.</strong>
-            <span>The canvas may display the living world, atmosphere, shimmer, and inspection readout. It may not invent footprint, climate, or surface truth.</span>
-          </article>
-        </div>
-      </section>
+      <div class="filter-panel" data-compass-filter aria-label="Filter route cards by perspective">
+        <button type="button" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" data-filter="scientific-backing" aria-pressed="false">Scientific Backing</button>
+        <button type="button" data-filter="community" aria-pressed="false">Community</button>
+        <button type="button" data-filter="fun-narrative-game-series" aria-pressed="false">Fun Narrative / Game / Series</button>
+      </div>
 
-      <template id="route-receipt" data-route-receipt>
-AUDRALIA_ROUTE_SHELL_CANONICAL_LOADER_BUMP_TNT_v2
-previous=AUDRALIA_ROUTE_SHELL_VISIBLE_NOTICE_CHAIN_TNT_v1
-route=/showroom/globe/audralia/
-page=audralia
-role=showroom_globe_child_route
-world=Audralia
-canonical_spelling=A_U_D_R_A_L_I_A
-route_loader=/showroom/globe/audralia/index.js
-route_loader_contract=AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2
-canvas_mount=#audraliaCanvasMount
-canvas_contract=AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3
-landmap_contract=AUDRALIA_30_BILLION_YEAR_EARTH_LEGACY_ORGANIC_LANDFORM_TNT_v1
-climate_contract=AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v1
-route_expectation=canonical_loader_v2_notice_must_replace_shell_waiting_message
-legacy_fault_blocked=AUDRALIA_GRATITUDE_PLAINS_DESERTS_MARSHES_ROUTE_TNT_v10
-route_owns=route_shell,public_copy,canvas_mount,route_loader_notice,chain_status_panel,cache_key_bump
-route_does_not_own=land_footprint,climate_authority,surface_truth,canvas_authority,runtime_motion,gauges_logic
-receipt_visibility=hidden_template_only
-generated_image=false
-graphic_box=false
-streaming=false
-visual_pass_claimed=false
-      </template>
-    </main>
+      <div class="route-grid" data-route-grid>
+        <article class="card route-card" data-perspective="fun-narrative-game-series community scientific-backing">
+          <span class="route-meta">Entry threshold</span>
+          <h3>Door</h3>
+          <p>
+            Door governs first entry. It can let a visitor approach the site through proof,
+            community, or story without collapsing the paths.
+          </p>
+          <div class="tag-row">
+            <span class="tag story">Entry</span>
+            <span class="tag community">Choice</span>
+          </div>
+          <a class="card-link" href="/door/">Enter through Door</a>
+        </article>
 
-    <footer>
-      AUDRALIA_ROUTE_SHELL_CANONICAL_LOADER_BUMP_TNT_v2 · Audralia · The Living Canvas.
-    </footer>
-  </div>
+        <article class="card route-card" data-perspective="community scientific-backing fun-narrative-game-series">
+          <span class="route-meta">Return point</span>
+          <h3>Home</h3>
+          <p>
+            Home is the stabilized landing and return route. It grounds the project after movement
+            through deeper pages.
+          </p>
+          <div class="tag-row">
+            <span class="tag community">Return</span>
+            <span class="tag science">Stability</span>
+          </div>
+          <a class="card-link" href="/home/">Return Home</a>
+        </article>
 
-  <script
-    src="/showroom/globe/audralia/index.js?v=AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2"
-    data-audralia-loader-script="AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2"
-    defer
-  ></script>
+        <article class="card route-card" data-perspective="community fun-narrative-game-series">
+          <span class="route-meta">Human climb</span>
+          <h3>Nine Summits</h3>
+          <p>
+            Nine Summits carries the human climb and macro lane. It remains connected to the larger
+            world without being overwritten by it.
+          </p>
+          <div class="tag-row">
+            <span class="tag community">Climb</span>
+            <span class="tag story">Macro lane</span>
+          </div>
+          <a class="card-link" href="/nine-summits/">Open Nine Summits</a>
+        </article>
+
+        <article class="card route-card" data-perspective="scientific-backing fun-narrative-game-series">
+          <span class="route-meta">World-scale structure</span>
+          <h3>Universe</h3>
+          <p>
+            Universe is the cleanest lane for deeper public structure: the 256 field, the 16 compass,
+            Fibonacci cadence, and world-scale relationship.
+          </p>
+          <div class="tag-row">
+            <span class="tag science">256 / 16</span>
+            <span class="tag science">Fibonacci</span>
+          </div>
+          <a class="card-link" href="/nine-summits/universe/">Open Universe</a>
+        </article>
+
+        <article class="card route-card" data-perspective="fun-narrative-game-series">
+          <span class="route-meta">World lens</span>
+          <h3>Mirrorland</h3>
+          <p>
+            Mirrorland is the narrative lens: the Bermuda Triangle portal, the no-return law, and
+            the website as the safe window into the world beyond.
+          </p>
+          <div class="tag-row">
+            <span class="tag story">Portal</span>
+            <span class="tag story">Window</span>
+          </div>
+          <a class="card-link" href="#mirrorland-lane" aria-label="Mirrorland route is planned; read the lane summary below">View lane summary</a>
+        </article>
+
+        <article class="card route-card" data-perspective="fun-narrative-game-series community">
+          <span class="route-meta">Consequence path</span>
+          <h3>ZIONTS / Earthchild</h3>
+          <p>
+            ZIONTS carries the gloomy consequence question. It should ask where the world is going
+            without over-revealing the answer.
+          </p>
+          <div class="tag-row">
+            <span class="tag story">Consequence</span>
+            <span class="tag story">Series preface</span>
+          </div>
+          <a class="card-link" href="/showroom/globe/earth/">Open ZIONTS</a>
+        </article>
+
+        <article class="card route-card" data-perspective="scientific-backing fun-narrative-game-series">
+          <span class="route-meta">Possibility path</span>
+          <h3>Audralia</h3>
+          <p>
+            Audralia carries possibility: an Earth-class mirror planet, present-day reality under
+            suspended-time pressure, and geology that is not a visible 256-cell grid.
+          </p>
+          <div class="tag-row">
+            <span class="tag science">World logic</span>
+            <span class="tag story">Possibility</span>
+          </div>
+          <a class="card-link" href="/showroom/globe/audralia/">Open Audralia</a>
+        </article>
+
+        <article class="card route-card" data-perspective="community fun-narrative-game-series">
+          <span class="route-meta">Estate orientation</span>
+          <h3>Explore</h3>
+          <p>
+            Explore is the estate map. It orients the visitor through paths, people, sanctuary,
+            lab, field connection, and guided entry.
+          </p>
+          <div class="tag-row">
+            <span class="tag community">Estate</span>
+            <span class="tag community">Orientation</span>
+          </div>
+          <a class="card-link" href="/explore/">Open Explore</a>
+        </article>
+
+        <article class="card route-card" data-perspective="scientific-backing community">
+          <span class="route-meta">Future measures</span>
+          <h3>Frontier</h3>
+          <p>
+            Frontier shows the future-measures field: operating lanes for survival, continuity,
+            infrastructure, water, energy, signal, and direction.
+          </p>
+          <div class="tag-row">
+            <span class="tag science">Measures</span>
+            <span class="tag community">Survival</span>
+          </div>
+          <a class="card-link" href="/frontier/">Open Frontier</a>
+        </article>
+
+        <article class="card route-card" data-perspective="scientific-backing">
+          <span class="route-meta">Proof surface</span>
+          <h3>Gauges / Triple G</h3>
+          <p>
+            Gauges prove what is built, what is held, and what still has gaps. A missing route is a
+            gap; a role contradiction is a failure.
+          </p>
+          <div class="tag-row">
+            <span class="tag science">Proof</span>
+            <span class="tag science">Gaps</span>
+          </div>
+          <a class="card-link" href="/gauges/">Open Gauges</a>
+        </article>
+
+        <article class="card route-card" data-perspective="fun-narrative-game-series community">
+          <span class="route-meta planned">Planned lane</span>
+          <h3>Heroes</h3>
+          <p>
+            The heroes are real inhabitants inside their own reality. Their histories carry the
+            story; nodal geometry stays beneath the public surface.
+          </p>
+          <div class="tag-row">
+            <span class="tag story">Characters</span>
+            <span class="tag community">Stakes</span>
+          </div>
+          <a class="card-link" href="#heroes-lane">View lane summary</a>
+        </article>
+
+        <article class="card route-card" data-perspective="fun-narrative-game-series community">
+          <span class="route-meta planned">Future entry</span>
+          <h3>Play</h3>
+          <p>
+            Play is the future static/client-side-first entry lane: computer, tablet, or phone; no
+            console, no Xbox, and no baseline application server requirement.
+          </p>
+          <div class="tag-row">
+            <span class="tag story">Game</span>
+            <span class="tag community">Access</span>
+          </div>
+          <a class="card-link" href="#play-lane">View access model</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="mirrorland-lane" class="section site-shell" aria-labelledby="mirrorland-title">
+      <div class="status-grid">
+        <article class="card wide-card">
+          <small>World lens</small>
+          <h2 id="mirrorland-title">Mirrorland explains why the routes belong together.</h2>
+          <p>
+            The story begins with the Bermuda Triangle as an ocean portal. Physical entry into
+            Mirrorland means no return. The website is not that portal; it is the safe window.
+            Audralia shows possibility. ZIONTS asks consequence. Frontier names the future
+            measures. Explore orients the estate. Heroes carry the world as lived reality.
+          </p>
+        </article>
+
+        <article id="heroes-lane" class="card">
+          <small>Character reality</small>
+          <h3>Heroes are people first.</h3>
+          <p>
+            Auren, Dextrion, Alaric, Tarian, Elara, Soren, Jeeves, and the remote team are not
+            public symbols. They are written as real inhabitants inside their own reality.
+          </p>
+        </article>
+
+        <article id="play-lane" class="card">
+          <small>Future access</small>
+          <h3>Play remains lightweight at baseline.</h3>
+          <p>
+            The intended access model is browser-first and static/client-side-first. Hosting may
+            deliver files, but baseline play does not require a custom application server.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="receipt" class="section site-shell" aria-labelledby="receipt-title">
+      <article class="card receipt">
+        <small>Root receipt</small>
+        <h2 id="receipt-title">Compass status.</h2>
+        <dl>
+          <dt>Root role</dt>
+          <dd>Compass · whole-site correlation layer</dd>
+
+          <dt>Visible lanes</dt>
+          <dd>Scientific Backing · Community · Fun Narrative / Game / Series</dd>
+
+          <dt>Audralia status</dt>
+          <dd>Linked as possibility path, not root authority</dd>
+
+          <dt>Book boundary</dt>
+          <dd>Book page may be linked, not rewritten by this root pass</dd>
+
+          <dt>Play claim</dt>
+          <dd>Future static/client-side-first access model; live game completion not claimed</dd>
+        </dl>
+        <p id="compass-status" aria-live="polite">
+          Static Compass loaded. JavaScript enhancement is optional.
+        </p>
+      </article>
+
+      <noscript>
+        <article class="card">
+          <small>No script mode</small>
+          <h3>Compass works without JavaScript.</h3>
+          <p>
+            Route links and public orientation remain available. JavaScript only enhances filters,
+            focus states, and status text.
+          </p>
+        </article>
+      </noscript>
+    </section>
+
+    <script type="application/json" id="rootCompassReceipt">
+      {
+        "contract": "ROOT_COMPASS_PAIRED_TNT_v1",
+        "file": "/index.html",
+        "role": "COMPASS_WHOLE_SITE_CORRELATION_LAYER",
+        "root_is_compass": true,
+        "audralia_is_root": false,
+        "three_perspectives": [
+          "Scientific Backing",
+          "Community",
+          "Fun Narrative / Game / Series"
+        ],
+        "book_page_direct_rewrite": false,
+        "play_baseline": "static_client_side_first",
+        "claims_live_game_complete": false,
+        "claims_audralia_loader_stable": false,
+        "paired_controller": "/index.js"
+      }
+    </script>
+
+    <script src="/index.js?v=ROOT_COMPASS_PAIRED_TNT_v1" defer></script>
+  </main>
+
+  <footer>
+    <div class="site-shell">
+      <p>
+        Diamond Gate Bridge · Compass. This root page coordinates the public website map and does
+        not own Audralia rendering, Gauges truth, book content, hero profile truth, or game engine logic.
+      </p>
+    </div>
+  </footer>
 </body>
 </html>

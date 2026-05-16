@@ -3,14 +3,15 @@
   lang="en"
   data-route="/door/"
   data-page="door"
-  data-version="G1-V6"
-  data-contract="DOOR_PHYSICAL_DIGITAL_THRESHOLD_CRYSTAL_RENEWAL_TNT_v1"
-  data-previous-contract="DOOR_TOP_TRAVERSAL_CONSTRAINT_RENEWAL_TNT_v1"
+  data-version="G2-V1"
+  data-contract="DOOR_FOUR_LENS_THRESHOLD_RENEWAL_TNT_v2"
+  data-previous-contract="DOOR_PHYSICAL_DIGITAL_THRESHOLD_CRYSTAL_RENEWAL_TNT_v1"
   data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
-  data-animation-standard="LOCAL_8_DIAMOND_AXIAL_ORBIT_STANDARD_v1"
+  data-animation-standard="LOCAL_8_DIAMOND_AXIAL_ORBIT_STANDARD_v2"
   data-top-traversal="compass-door-home-products-laws-gauges"
   data-material-renewal="physical-digital-violet-threshold-crystal"
   data-threshold-crystal="active"
+  data-four-lens-compass="north-interface-south-laws-east-story-west-community"
   data-status="active"
   data-role="entry-threshold"
   data-heavy-runtime-loaded="false"
@@ -26,7 +27,7 @@
   <title>Door · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The Door is the eight-point threshold field for entering Diamond Gate Bridge through five products, Meet Sean, Nine Summits, and the Book."
+    content="The Door is the entry threshold for Diamond Gate Bridge: one narrative with four lenses — Interface, Laws, Story, and Community."
   >
 
   <style>
@@ -40,7 +41,6 @@
       --gold2:#ffe8a3;
       --violet:#8f65ff;
       --violet2:#cbb8ff;
-      --violet3:#5e35d6;
       --panel:rgba(9,15,31,.86);
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.46);
@@ -232,7 +232,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(22rem,40vw,32rem);
+      min-height:clamp(24rem,42vw,34rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -296,7 +296,7 @@
 
     h1{
       margin:0;
-      max-width:950px;
+      max-width:980px;
       font-size:clamp(3.1rem,10vw,7rem);
       line-height:.84;
       letter-spacing:-.105em;
@@ -611,17 +611,10 @@
       to{transform:rotate(-360deg)}
     }
 
-    .core-grid,
+    .lens-grid,
     .room-grid{
       display:grid;
       gap:.75rem;
-    }
-
-    .core-grid{
-      grid-template-columns:repeat(4,minmax(0,1fr));
-    }
-
-    .room-grid{
       grid-template-columns:repeat(4,minmax(0,1fr));
     }
 
@@ -708,7 +701,7 @@
     }
 
     @media (max-width:1080px){
-      .core-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .lens-grid,
       .room-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
@@ -726,7 +719,7 @@
       h1{font-size:clamp(3rem,17vw,5rem)}
 
       .hero{
-        min-height:26rem;
+        min-height:27rem;
         padding:1rem;
       }
 
@@ -756,7 +749,7 @@
         display:none;
       }
 
-      .core-grid,
+      .lens-grid,
       .room-grid{
         grid-template-columns:1fr;
       }
@@ -966,12 +959,12 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Door · Entry Threshold</div>
-        <h1 id="page-title">One message. Eight doors.</h1>
-        <h2>Five products. Meet Sean. Nine Summits. The Book.</h2>
+        <div class="kicker">Door · Four-Lens Threshold</div>
+        <h1 id="page-title">One narrative. Four ways through.</h1>
+        <h2>North structures it. South governs it. East expresses it. West applies it.</h2>
 
         <p class="lead">
-          The Door opens through eight clear diamonds. Five are product chambers. Three connect the visitor to the human voice, the public climb, and the book path.
+          The Door is the crossing point. Enter through Interface, Laws, Story, or Community. Every path belongs to the same narrative.
         </p>
 
         <div class="quote">
@@ -979,16 +972,16 @@
         </div>
 
         <div class="actions">
-          <a class="button gold" href="/products/archcoin/">Open ARCHCOIN</a>
-          <a class="button" href="/products/five-flags/">Open Five Flags</a>
-          <a class="button" href="/products/on-your-side-ai/">Open On Your Side AI</a>
-          <a class="button" href="/nine-summits/">Open Nine Summits</a>
+          <a class="button gold" href="/laws/">Open Laws</a>
+          <a class="button" href="/showroom/globe/">Enter Mirrorland</a>
+          <a class="button" href="/products/">Open Community</a>
+          <a class="button" href="/gauges/">Read Gauges</a>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="field-title">
         <div class="kicker">Eight-crystal axial threshold</div>
-        <h2 id="field-title">Eight threshold crystals sit on one circular path around the Door anchor.</h2>
+        <h2 id="field-title">Eight threshold crystals hold one circular path around the Door anchor.</h2>
 
         <div class="door-stage" aria-label="Animated Door eight-physical-digital-threshold-crystal axial field">
           <div class="door-anchor" aria-hidden="true">
@@ -997,145 +990,146 @@
             </svg>
             <span class="door-anchor-label">
               <b>Door</b>
-              <span>Threshold Crossing</span>
+              <span>Crossing Point</span>
             </span>
           </div>
 
           <div class="door-orbit">
-            <a class="door-node" style="--angle:0deg" href="/products/archcoin/" aria-label="ARCHCOIN">
+            <a class="door-node" style="--angle:0deg" href="/gauges/" aria-label="North Interface">
               <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
               <span class="door-label-shell">
-                <b class="door-label-text">ARCHCOIN<span class="door-label-sub">Value</span></b>
+                <b class="door-label-text">North<span class="door-label-sub">Interface</span></b>
               </span>
             </a>
 
-            <a class="door-node" style="--angle:45deg" href="/products/five-flags/" aria-label="Five Flags">
+            <a class="door-node" style="--angle:45deg" href="/" aria-label="Compass">
               <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
               <span class="door-label-shell">
-                <b class="door-label-text">Five<br>Flags<span class="door-label-sub">Game</span></b>
+                <b class="door-label-text">Compass<span class="door-label-sub">Root</span></b>
               </span>
             </a>
 
-            <a class="door-node" style="--angle:90deg" href="/products/on-your-side-ai/" aria-label="On Your Side AAI">
+            <a class="door-node" style="--angle:90deg" href="/showroom/globe/" aria-label="East Story Game Series">
               <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
               <span class="door-label-shell">
-                <b class="door-label-text">AAI<span class="door-label-sub">Support</span></b>
+                <b class="door-label-text">East<span class="door-label-sub">Story</span></b>
               </span>
             </a>
 
-            <a class="door-node" style="--angle:135deg" href="/products/education/" aria-label="Education">
+            <a class="door-node" style="--angle:135deg" href="/characters/" aria-label="Characters">
               <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
               <span class="door-label-shell">
-                <b class="door-label-text">Education<span class="door-label-sub">Learning</span></b>
+                <b class="door-label-text">Characters<span class="door-label-sub">Roster</span></b>
               </span>
             </a>
 
-            <a class="door-node" style="--angle:180deg" href="/products/nutrition/" aria-label="Nutrition">
+            <a class="door-node" style="--angle:180deg" href="/laws/" aria-label="South Laws">
               <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
               <span class="door-label-shell">
-                <b class="door-label-text">Nutrition<span class="door-label-sub">Routine</span></b>
+                <b class="door-label-text">South<span class="door-label-sub">Laws</span></b>
               </span>
             </a>
 
-            <a class="door-node" style="--angle:225deg" href="/meet-sean-mansfield/" aria-label="Meet Sean">
+            <a class="door-node" style="--angle:225deg" href="/home/" aria-label="Home">
               <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
               <span class="door-label-shell">
-                <b class="door-label-text">Meet<br>Sean<span class="door-label-sub">Voice</span></b>
+                <b class="door-label-text">Home<span class="door-label-sub">Return</span></b>
               </span>
             </a>
 
-            <a class="door-node" style="--angle:270deg" href="/nine-summits/" aria-label="Nine Summits">
+            <a class="door-node" style="--angle:270deg" href="/products/" aria-label="West Community Products">
               <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
               <span class="door-label-shell">
-                <b class="door-label-text">Nine<br>Summits<span class="door-label-sub">Climb</span></b>
+                <b class="door-label-text">West<span class="door-label-sub">Community</span></b>
               </span>
             </a>
 
-            <a class="door-node" style="--angle:315deg" href="/nine-summits-of-love/" aria-label="The Book">
+            <a class="door-node" style="--angle:315deg" href="/frontier/" aria-label="Frontier">
               <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
               <span class="door-label-shell">
-                <b class="door-label-text">Book<span class="door-label-sub">Love</span></b>
+                <b class="door-label-text">Frontier<span class="door-label-sub">Future</span></b>
               </span>
             </a>
           </div>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="core-title">
-        <div class="kicker">Foreground core</div>
-        <h2 id="core-title">Entry stays coherent when the number of doors stays clear.</h2>
+      <section class="panel section" aria-labelledby="lens-title">
+        <div class="kicker">Four lenses</div>
+        <h2 id="lens-title">Every visitor can enter through the lens that already makes sense to them.</h2>
 
-        <div class="core-grid">
+        <div class="lens-grid">
+          <a class="info-card" href="/gauges/">
+            <b>North · Interface</b>
+            <strong>Everything as we know it.</strong>
+            <span>Routes, contracts, gauges, page architecture, runtime boundaries, and engineered structure.</span>
+          </a>
+
+          <a class="info-card" href="/laws/">
+            <b>South · Laws</b>
+            <strong>The truth layer governs and proves it.</strong>
+            <span>Principles, constraints, scientific backing, habitability, consequence, and survival standards.</span>
+          </a>
+
+          <a class="info-card" href="/showroom/globe/">
+            <b>East · Story</b>
+            <strong>The mind can express and imagine.</strong>
+            <span>Mirrorland, characters, the game path, ZIONTS, H-Earth, Audralia, and the series doorway.</span>
+          </a>
+
           <a class="info-card" href="/products/">
-            <b>Products</b>
-            <strong>Five chambers make the message usable.</strong>
-            <span>ARCHCOIN, Five Flags, AAI, Education, and Nutrition.</span>
-          </a>
-
-          <a class="info-card" href="/meet-sean-mansfield/">
-            <b>Voice</b>
-            <strong>Meet Sean gives the system a human point of contact.</strong>
-            <span>The visitor can understand who is speaking and why.</span>
-          </a>
-
-          <a class="info-card" href="/nine-summits/">
-            <b>Climb</b>
-            <strong>Nine Summits keeps the public path visible.</strong>
-            <span>The climb remains part of the threshold.</span>
-          </a>
-
-          <a class="info-card" href="/nine-summits-of-love/">
-            <b>Book</b>
-            <strong>The Book carries the long-form path.</strong>
-            <span>The threshold routes into the written structure.</span>
+            <b>West · Community</b>
+            <strong>Everything lines up in practical use.</strong>
+            <span>Products, support, education, nutrition, AI, utility, and the path where the narrative helps people.</span>
           </a>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="rooms-title">
         <div class="kicker">Eight doors beyond the threshold</div>
-        <h2 id="rooms-title">Cross once, then choose the correct door.</h2>
+        <h2 id="rooms-title">Cross once, then choose the correct doorway.</h2>
 
         <div class="room-grid">
-          <a class="room-card" href="/products/archcoin/"><strong>ARCHCOIN</strong></a>
-          <a class="room-card" href="/products/five-flags/"><strong>Five Flags</strong></a>
-          <a class="room-card" href="/products/on-your-side-ai/"><strong>On Your Side AAI</strong></a>
-          <a class="room-card" href="/products/education/"><strong>Education</strong></a>
-          <a class="room-card" href="/products/nutrition/"><strong>Nutrition</strong></a>
-          <a class="room-card" href="/meet-sean-mansfield/"><strong>Meet Sean</strong></a>
-          <a class="room-card" href="/nine-summits/"><strong>Nine Summits</strong></a>
-          <a class="room-card" href="/nine-summits-of-love/"><strong>Book</strong></a>
+          <a class="room-card" href="/gauges/"><strong>North · Interface</strong></a>
+          <a class="room-card" href="/"><strong>Compass</strong></a>
+          <a class="room-card" href="/showroom/globe/"><strong>East · Mirrorland</strong></a>
+          <a class="room-card" href="/characters/"><strong>Characters</strong></a>
+          <a class="room-card" href="/laws/"><strong>South · Laws</strong></a>
+          <a class="room-card" href="/home/"><strong>Home</strong></a>
+          <a class="room-card" href="/products/"><strong>West · Community</strong></a>
+          <a class="room-card" href="/frontier/"><strong>Frontier</strong></a>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-DOOR_PHYSICAL_DIGITAL_THRESHOLD_CRYSTAL_RENEWAL_TNT_v1
-previous=DOOR_TOP_TRAVERSAL_CONSTRAINT_RENEWAL_TNT_v1
+DOOR_FOUR_LENS_THRESHOLD_RENEWAL_TNT_v2
+previous=DOOR_PHYSICAL_DIGITAL_THRESHOLD_CRYSTAL_RENEWAL_TNT_v1
 route=/door/
 page=door
 role=entry_threshold
-message=one_message_eight_doors
+message=one_narrative_four_ways_through
 top_traversal=compass,door,home,products,laws,gauges
 alignment_sequence=TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2
 local_geometry=true
-animation_standard=LOCAL_8_DIAMOND_AXIAL_ORBIT_STANDARD_v1
+animation_standard=LOCAL_8_DIAMOND_AXIAL_ORBIT_STANDARD_v2
 material=physical_digital_violet_threshold_crystal
 center=door_threshold_crystal_seal
 visual_system=local_animated_8_point_axial_physical_digital_threshold_crystal_field
-design_object=8_point_threshold_crystal_door_field
-diamonds=archcoin,five_flags,on_your_side_aai,education,nutrition,meet_sean,nine_summits,book
-five_products=archcoin,five_flags,on_your_side_aai,education,nutrition
-human_voice=meet_sean
-public_climb=nine_summits
-book_path=nine_summits_of_love
+four_lens_compass=true
+north=interface_engineering_everything_as_we_know_it
+south=laws_truth_layer_scientific_backing
+east=fun_narrative_game_series_mirrorland_expression
+west=community_products_practical_application
+diamonds=north_interface,compass,east_story,characters,south_laws,home,west_community,frontier
+primary_routes=gauges,compass,showroom_globe,characters,laws,home,products,frontier
 animation=doorOrbitSpin,doorTextUpright,thresholdFacetTurn,thresholdGlint,anchorPulse
 z_index_law=ambient_background,door_anchor_background,local_orbit_field,local_route_crystals,route_labels
 non_overlap_law=no_clickable_crystal_hidden_by_center_no_crystal_escape_to_cards
 mobile_law=compact_8_point_field_no_hidden_nodes
-fix=replaced_legacy_rounded_css_stones_with_inline_svg_physical_digital_threshold_crystals
-preserved=top_traversal,door_copy,door_routes,local_geometry,entry_threshold,receipt_containment,eight_point_orbit,door_animation
-route_owns=entry_threshold,8_point_field,animated_threshold_crystal_routes,route_selection_surface,top_traversal
-route_does_not_own=products_page,body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic,full_site_nav_rebuild
+renewal=old_product_first_threshold_renewed_into_four_lens_narrative_threshold
+preserved=top_traversal,local_geometry,entry_threshold,receipt_containment,eight_point_orbit,door_animation,physical_digital_threshold_crystals
+route_owns=entry_threshold,8_point_field,animated_threshold_crystal_routes,route_selection_surface,top_traversal,four_lens_threshold
+route_does_not_own=products_page,laws_page,showroom_globe_page,characters_page,frontier_page,body_rendering,planet_surface,instrument_state,gauges_logic,full_site_nav_rebuild
 heavy_runtime_loaded=false
 render_files_touched=false
 instrument_touched=false
@@ -1148,7 +1142,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      DOOR_PHYSICAL_DIGITAL_THRESHOLD_CRYSTAL_RENEWAL_TNT_v1 · Door · Physical digital threshold crystals · Top traversal preserved.
+      DOOR_FOUR_LENS_THRESHOLD_RENEWAL_TNT_v2 · Door · Four-lens threshold · Top traversal preserved.
     </footer>
   </div>
 </body>

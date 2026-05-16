@@ -3,8 +3,8 @@
   lang="en"
   data-route="/characters/"
   data-page="characters"
-  data-contract="SHADOWS_NEVER_SHATTER_MIRRORLAND_THEMATIC_FINAL_TNT_v1"
-  data-previous-contract="SHADOWS_NEVER_SHATTER_MIRRORLAND_THEMATIC_FINAL_BINDING_v1"
+  data-contract="SHADOWS_NEVER_SHATTER_TRANSITION_TO_DEXTRION_NONREDUNDANT_TNT_v1"
+  data-previous-contract="SHADOWS_NEVER_SHATTER_TRANSITION_TO_DEXTRION_NONREDUNDANT_BINDING_v1"
   data-role="show-game-character-dossier"
   data-narrative-anchor="Shadows Never Shatter in Mirrorland"
   data-series-model="perspective-series-nine-episodes-nine-seasons"
@@ -235,7 +235,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(48rem,78vw,64rem);
+      min-height:clamp(50rem,80vw,66rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -354,6 +354,23 @@
       font-weight:900;
       position:relative;
       z-index:2;
+    }
+
+    .question-run{
+      max-width:980px;
+      display:grid;
+      gap:.48rem;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(198,166,255,.22);
+      border-radius:1.2rem;
+      background:rgba(198,166,255,.060);
+      position:relative;
+      z-index:2;
+    }
+
+    .question-run p{
+      color:rgba(255,244,216,.92);
+      font-weight:850;
     }
 
     .series-grid{
@@ -861,7 +878,7 @@
     @media (max-width:720px){
       .shell{width:min(100% - 22px,var(--max))}
       h1{font-size:clamp(3.2rem,16vw,5.6rem)}
-      .hero{min-height:56rem;padding:1rem}
+      .hero{min-height:58rem;padding:1rem}
       .actions{display:grid}
       .button{width:100%}
       .select-grid,
@@ -1029,16 +1046,23 @@
           Earth’s rules apply in Mirrorland. Physics applies. Consequence applies. Responsibility applies. If Mirrorland changes direction, Earth changes.
         </p>
 
+        <div class="question-run" aria-label="Story transition into Dextrion">
+          <p>What if that future shadow was reachable?</p>
+          <p>What if humanity could cross into it before it became final?</p>
+          <p>What if the other side was a real world: no inherited inhabitants, no exhausted infrastructure, no old ownership, no historical deficit already crushing the foundation?</p>
+          <p>What if every advancement proven on Audralia could be mirrored back to Earth?</p>
+        </div>
+
         <p class="lead">
-          Every advancement proven there can be mirrored back here. Every system built there becomes a chance to prepare Earth before the transition arrives.
+          That is the question Dextrion cannot leave alone.
         </p>
 
         <p class="lead">
-          Then Dextrion detects the Bermuda-area anomaly from the public Mirror Manor on Earth. The first team crosses. The return path never opens. A one-way teleport changes everything.
+          From the public Mirror Manor on Earth, he detects the Bermuda-area anomaly. The first team crosses. The return path never opens. A one-way teleport changes the mission from discovery into consequence.
         </p>
 
         <p class="lead">
-          Builders, engineers, protectors, field operators, and survival crews cross into Mirrorland knowing they may not come back. The series begins after the manor already stands. The show follows the people carrying the mission. The game expands the world around them.
+          Builders, engineers, protectors, field operators, and survival crews cross into Mirrorland knowing they may not come back. By the time the series begins, the manor already stands. The crossing has already happened. The clock is already running.
         </p>
 
         <div class="series-grid">
@@ -1057,6 +1081,10 @@
             <span>The threat is planetary. The technology must protect Mirrorland and Earth before the next transition arrives.</span>
           </div>
         </div>
+
+        <p class="lead">
+          The show follows the people carrying the mission. The game expands the world around them.
+        </p>
 
         <div class="actions">
           <a class="button gold" href="/characters/#select">Meet the Characters</a>
@@ -1927,8 +1955,8 @@
         </div>
 
         <template id="route-receipt" data-route-receipt>
-SHADOWS_NEVER_SHATTER_MIRRORLAND_THEMATIC_FINAL_TNT_v1
-previous=SHADOWS_NEVER_SHATTER_MIRRORLAND_THEMATIC_FINAL_BINDING_v1
+SHADOWS_NEVER_SHATTER_TRANSITION_TO_DEXTRION_NONREDUNDANT_TNT_v1
+previous=SHADOWS_NEVER_SHATTER_TRANSITION_TO_DEXTRION_NONREDUNDANT_BINDING_v1
 route=/characters/
 page=characters
 role=show_game_character_dossier
@@ -1936,11 +1964,14 @@ story_anchor=Shadows_Never_Shatter_in_Mirrorland
 title_mechanism=a_mirror_can_shatter_a_shadow_cannot
 shadow_law=shadows_do_not_shatter_anywhere
 voice=show_game_promotional_in_world_declarative
-opening_order=title_mechanism_future_shadow_possible_futures_mirrorland_three_paths_300_year_clock_preparation_variable_earth_rules_apply_in_mirrorland_mirrorland_changes_earth_changes_dextrion_anomaly_one_way_crossing_manor_built_characters
+opening_order=title_mechanism_future_shadow_possible_futures_mirrorland_three_paths_300_year_clock_preparation_variable_earth_rules_apply_in_mirrorland_mirrorland_changes_earth_changes_question_transition_dextrion_anomaly_one_way_crossing_manor_built_characters
+transition_law=question_driven_nonredundant_handoff_from_possible_futures_to_dextrion
+transition_questions=future_shadow_reachable,cross_before_final,clean_slate_world,no_inherited_inhabitants,no_historical_deficit,audralia_advancement_mirrored_to_earth
 series_model=perspective_series_nine_episodes_written_nine_seasons_target
 game_world=in_development
 audralia_spelling_valid=true
 audrelia_forbidden=true
+canonical_dextrion_spelling=true
 causal_law=if_mirrorland_changes_direction_earth_changes
 rule_law=earth_rules_apply_in_mirrorland
 time_law=300_year_clock_preset_time_will_happen_preparation_is_variable
@@ -1963,7 +1994,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      SHADOWS_NEVER_SHATTER_MIRRORLAND_THEMATIC_FINAL_TNT_v1 · Shadows Never Shatter in Mirrorland · Show/Game Character Dossier.
+      SHADOWS_NEVER_SHATTER_TRANSITION_TO_DEXTRION_NONREDUNDANT_TNT_v1 · Shadows Never Shatter in Mirrorland · Show/Game Character Dossier.
     </footer>
   </div>
 </body>

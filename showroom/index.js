@@ -1,1049 +1,884 @@
-// /showroom/index.js
-// TNT FULL-FILE REPLACEMENT
-// SHOWROOM_DUAL_LENS_DIAMOND_RENDER_TRUE_3D_TNT_v3
-// Paired HTML: SHOWROOM_DUAL_LENS_DIAMOND_HTML_TRUE_3D_BIND_TNT_v4
-// Scope: active /showroom/ Diamond renderer only.
-// Purpose:
-// - Kill flat badge read.
-// - Crystal Form renders from a real 3D faceted model with depth, perspective, face sorting, crown, table, girdle, pavilion, and culet.
-// - Lattice Structure renders the 16-point compass / 256-lattice structure as a separate educational lens.
-// - Same Diamond identity. Different inspection lens.
-// - No generated image. No graphic box. No legacy Globe / Planet One / Demo Universe inheritance.
-
-const SHOWROOM_DIAMOND_STATE = Object.freeze({
-  contract: "SHOWROOM_DUAL_LENS_DIAMOND_RENDER_TRUE_3D_TNT_v3",
-  pairedHtmlContract: "SHOWROOM_DUAL_LENS_DIAMOND_HTML_TRUE_3D_BIND_TNT_v4",
-  route: "/showroom/",
-  role: "showroom-dual-lens-true-3d-cover-object",
-  diamondLock: "CROWN_CUT_256_LATTICE_FIXED_FORM",
-  touchGlide: true,
-  inspectionControl: "true-3d-camera-view",
-  geometryMutableByTouch: false,
-  defaultLens: "crystal",
-  secondaryLens: "lattice",
-  lensRule: "toggle-changes-inspection-lens-not-object-identity",
-  visibleRadialMetric: 16,
-  latticeStates: 256,
-  crystalFormSilhouette: "true-3d-crown-cut-diamond-body",
-  latticeFormSilhouette: "structural-compass-lattice-field",
-  flatBadgeBlocked: true,
-  generatedImage: false,
-  graphicBox: false,
-  earthRecord: false,
-  legacyGlobeInheritance: false,
-  publicReceiptsVisible: false
-});
-
-const TAU = Math.PI * 2;
-const PHI = (1 + Math.sqrt(5)) / 2;
-const RADIAL_POINTS = 16;
-const LATTICE_STATES = 256;
-
-const LENS_COPY = Object.freeze({
-  crystal: {
-    title: "Crystal Form",
-    route: "Crystal Form → true 3D Crown Cut Diamond · table · crown · pavilion",
-    copy: "This view shows the finished Crown Cut Diamond as a true 3D crystal body: table, crown, faceted girdle, pavilion, culet, light, and touch inspection. This is the public object. It proves the site can render interactive 3D content with a fixed form instead of a flat graphic."
-  },
-  lattice: {
-    title: "Lattice Structure",
-    route: "Lattice Structure → 16-point compass geometry · 256 lattice logic",
-    copy: "This view reveals the structural logic beneath the Diamond. The 16-point compass metric organizes the visible geometry, while the 256 lattice represents the deeper address system behind the form. This is not a separate object. It is the same Diamond viewed through its underlying structure."
-  }
-});
-
-const state = {
-  lens: "crystal",
-  yaw: -0.74,
-  pitch: -0.42,
-  roll: 0.07,
-  velocityYaw: 0,
-  velocityPitch: 0,
-  velocityRoll: 0,
-  sparklePhase: 0,
-  dragging: false,
-  pointerX: 0,
-  pointerY: 0,
-  lastTap: 0,
-  lastTime: 0,
-  raf: 0,
-  dpr: 1,
-  canvasReady: false
-};
-
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
-}
-
-function lerp(a, b, t) {
-  return a + (b - a) * clamp(t, 0, 1);
-}
-
-function seededUnit(index, salt) {
-  return ((Math.sin(index * 12.9898 + salt * 78.233) * 43758.5453) % 1 + 1) % 1;
-}
-
-function rgba(color, alpha) {
-  return `rgba(${Math.round(color[0])}, ${Math.round(color[1])}, ${Math.round(color[2])}, ${alpha})`;
-}
-
-function normalize3(v) {
-  const length = Math.hypot(v.x, v.y, v.z) || 1;
-  return { x: v.x / length, y: v.y / length, z: v.z / length };
-}
-
-function subtract3(a, b) {
-  return { x: a.x - b.x, y: a.y - b.y, z: a.z - b.z };
-}
-
-function cross3(a, b) {
-  return {
-    x: a.y * b.z - a.z * b.y,
-    y: a.z * b.x - a.x * b.z,
-    z: a.x * b.y - a.y * b.x
-  };
-}
-
-function dot3(a, b) {
-  return a.x * b.x + a.y * b.y + a.z * b.z;
-}
-
-function makePoint(x, y, z, ring, index) {
-  return Object.freeze({ x, y, z, ring, index });
-}
-
-function makeFace(type, points, tone, fireBias = 0) {
-  return Object.freeze({
-    type,
-    points: Object.freeze(points.slice()),
-    tone,
-    fireBias
-  });
-}
-
-function makeRing(name, rx, y, rz, offset = 0, compression = 1) {
-  const points = [];
-
-  for (let i = 0; i < RADIAL_POINTS; i += 1) {
-    const angle = (i / RADIAL_POINTS) * TAU + offset;
-    const compassCut = i % 2 === 0 ? 1 : 0.935;
-    const quarterCut = i % 4 === 0 ? 1.035 : 1;
-    points.push(
-      makePoint(
-        Math.cos(angle) * rx * compassCut * quarterCut,
-        y,
-        Math.sin(angle) * rz * compassCut * compression,
-        name,
-        i
-      )
-    );
-  }
-
-  return Object.freeze(points);
-}
-
-function buildTrue3DDiamondModel() {
-  const table = makeRing("table", 0.34, -0.72, 0.30, TAU / 32, 0.95);
-  const crownBreak = makeRing("crownBreak", 0.58, -0.56, 0.50, 0, 0.98);
-  const crownShoulder = makeRing("crownShoulder", 0.82, -0.34, 0.70, TAU / 32, 1);
-  const girdleTop = makeRing("girdleTop", 1.08, -0.10, 0.92, 0, 1);
-  const girdleBottom = makeRing("girdleBottom", 1.02, 0.10, 0.87, TAU / 32, 1);
-  const pavilionBreak = makeRing("pavilionBreak", 0.58, 0.46, 0.48, 0, 0.98);
-  const culetRing = makeRing("culetRing", 0.14, 0.80, 0.10, TAU / 32, 0.92);
-
-  const tableCenter = makePoint(0, -0.76, 0, "tableCenter", -1);
-  const culet = makePoint(0, 0.92, 0, "culet", -2);
-
-  const faces = [
-    makeFace("table", table, 1.62, 0.20),
-    makeFace("culet-plane", culetRing, 0.64, 0.14)
-  ];
-
-  for (let i = 0; i < RADIAL_POINTS; i += 1) {
-    const n = (i + 1) % RADIAL_POINTS;
-    const fire = seededUnit(i, 23) * 0.44;
-
-    faces.push(makeFace("table-star", [tableCenter, table[i], table[n]], 1.48, fire + 0.03));
-    faces.push(makeFace("upper-crown", [table[i], crownBreak[i], crownBreak[n], table[n]], 1.34, fire + 0.10));
-    faces.push(makeFace("crown-main", [crownBreak[i], crownShoulder[i], crownShoulder[n], crownBreak[n]], 1.18, fire + 0.16));
-    faces.push(makeFace("crown-shoulder", [crownShoulder[i], girdleTop[i], girdleTop[n], crownShoulder[n]], 1.02, fire + 0.11));
-    faces.push(makeFace("girdle-wall", [girdleTop[i], girdleBottom[i], girdleBottom[n], girdleTop[n]], 0.70, fire));
-    faces.push(makeFace("upper-pavilion", [girdleBottom[i], pavilionBreak[i], pavilionBreak[n], girdleBottom[n]], 0.92, fire + 0.18));
-    faces.push(makeFace("lower-pavilion", [pavilionBreak[i], culetRing[i], culetRing[n], pavilionBreak[n]], 1.02, fire + 0.26));
-    faces.push(makeFace("culet-ray", [culetRing[i], culet, culetRing[n]], 1.12, fire + 0.32));
-  }
-
-  return Object.freeze({
-    table,
-    crownBreak,
-    crownShoulder,
-    girdleTop,
-    girdleBottom,
-    pavilionBreak,
-    culetRing,
-    tableCenter,
-    culet,
-    rings: Object.freeze([table, crownBreak, crownShoulder, girdleTop, girdleBottom, pavilionBreak, culetRing]),
-    faces: Object.freeze(faces)
-  });
-}
-
-const TRUE_3D_DIAMOND = buildTrue3DDiamondModel();
-
-function resizeCanvas(canvas) {
-  const box = canvas.getBoundingClientRect();
-  const dpr = Math.min(2, window.devicePixelRatio || 1);
-  const width = Math.max(320, Math.floor((box.width || 640) * dpr));
-  const height = Math.max(500, Math.floor((box.height || 720) * dpr));
-
-  if (canvas.width !== width || canvas.height !== height) {
-    canvas.width = width;
-    canvas.height = height;
-  }
-
-  state.dpr = dpr;
-}
-
-function rotatePoint(point) {
-  const cp = Math.cos(state.pitch);
-  const sp = Math.sin(state.pitch);
-  const cy = Math.cos(state.yaw);
-  const sy = Math.sin(state.yaw);
-  const cr = Math.cos(state.roll);
-  const sr = Math.sin(state.roll);
-
-  let x = point.x;
-  let y = point.y;
-  let z = point.z;
-
-  const y1 = y * cp - z * sp;
-  const z1 = y * sp + z * cp;
-
-  const x2 = x * cy + z1 * sy;
-  const z2 = -x * sy + z1 * cy;
-
-  const x3 = x2 * cr - y1 * sr;
-  const y3 = x2 * sr + y1 * cr;
-
-  return { x: x3, y: y3, z: z2, source: point };
-}
-
-function projectRotated(rotated, width, height, scale) {
-  const camera = 3.35;
-  const perspective = camera / (camera - rotated.z * 1.18);
-
-  return {
-    x: width * 0.5 + rotated.x * scale * perspective,
-    y: height * 0.405 + rotated.y * scale * 1.04 * perspective,
-    z: rotated.z,
-    perspective,
-    raw: rotated,
-    source: rotated.source
-  };
-}
-
-function projectPoint(point, width, height, scale) {
-  return projectRotated(rotatePoint(point), width, height, scale);
-}
-
-function projectedFace(face, width, height, scale) {
-  const rotated = face.points.map(rotatePoint);
-  const projected = rotated.map((point) => projectRotated(point, width, height, scale));
-  const avgZ = rotated.reduce((sum, point) => sum + point.z, 0) / Math.max(1, rotated.length);
-
-  return {
-    type: face.type,
-    tone: face.tone,
-    fireBias: face.fireBias,
-    rotated,
-    projected,
-    avgZ
-  };
-}
-
-function faceNormal(rotatedPoints) {
-  if (rotatedPoints.length < 3) return { x: 0, y: 0, z: 1 };
-  const a = rotatedPoints[0];
-  const b = rotatedPoints[1];
-  const c = rotatedPoints[2];
-  return normalize3(cross3(subtract3(b, a), subtract3(c, a)));
-}
-
-function faceCenter(points) {
-  const center = points.reduce(
-    (acc, point) => {
-      acc.x += point.x;
-      acc.y += point.y;
-      acc.z += point.z;
-      return acc;
-    },
-    { x: 0, y: 0, z: 0 }
-  );
-
-  const length = Math.max(1, points.length);
-  center.x /= length;
-  center.y /= length;
-  center.z /= length;
-  return center;
-}
-
-function pathPolygon(ctx, points) {
-  ctx.beginPath();
-  points.forEach((point, index) => {
-    if (index === 0) ctx.moveTo(point.x, point.y);
-    else ctx.lineTo(point.x, point.y);
-  });
-  ctx.closePath();
-}
-
-function drawBackground(ctx, width, height, lens) {
-  const bg = ctx.createLinearGradient(0, 0, 0, height);
-  bg.addColorStop(0, lens === "lattice" ? "rgba(2, 5, 15, 1)" : "rgba(1, 5, 14, 1)");
-  bg.addColorStop(0.48, lens === "lattice" ? "rgba(7, 12, 34, 0.99)" : "rgba(5, 15, 32, 0.99)");
-  bg.addColorStop(1, "rgba(1, 4, 10, 1)");
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, width, height);
-
-  const halo = ctx.createRadialGradient(
-    width * 0.5,
-    height * 0.38,
-    width * 0.04,
-    width * 0.5,
-    height * 0.42,
-    width * 0.62
-  );
-
-  halo.addColorStop(0, lens === "lattice" ? "rgba(198, 166, 255, 0.20)" : "rgba(244, 250, 255, 0.25)");
-  halo.addColorStop(0.30, "rgba(118, 168, 225, 0.15)");
-  halo.addColorStop(0.56, "rgba(244, 207, 131, 0.058)");
-  halo.addColorStop(1, "rgba(0, 0, 0, 0)");
-
-  ctx.fillStyle = halo;
-  ctx.fillRect(0, 0, width, height);
-
-  const velvet = ctx.createRadialGradient(
-    width * 0.5,
-    height * 0.54,
-    width * 0.10,
-    width * 0.5,
-    height * 0.57,
-    width * 0.80
-  );
-  velvet.addColorStop(0, "rgba(30, 45, 70, 0.08)");
-  velvet.addColorStop(0.64, "rgba(0,0,0,0)");
-  velvet.addColorStop(1, "rgba(0,0,0,0.32)");
-  ctx.fillStyle = velvet;
-  ctx.fillRect(0, 0, width, height);
-}
-
-function drawStars(ctx, width, height) {
-  ctx.save();
-
-  for (let i = 0; i < 56; i += 1) {
-    const x = seededUnit(i, 1) * width;
-    const y = seededUnit(i, 2) * height;
-    const alpha = 0.06 + seededUnit(i, 3) * 0.16;
-    const size = i % 17 === 0 ? 5.4 : i % 7 === 0 ? 2.6 : 1.0;
-
-    ctx.strokeStyle = `rgba(235, 244, 255, ${alpha})`;
-    ctx.lineWidth = Math.max(1, width * 0.00072);
-    ctx.beginPath();
-    ctx.moveTo(x - size, y);
-    ctx.lineTo(x + size, y);
-    ctx.moveTo(x, y - size);
-    ctx.lineTo(x, y + size);
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function typeAlpha(type) {
-  return {
-    table: 0.80,
-    "table-star": 0.56,
-    "upper-crown": 0.60,
-    "crown-main": 0.68,
-    "crown-shoulder": 0.62,
-    "girdle-wall": 0.48,
-    "upper-pavilion": 0.58,
-    "lower-pavilion": 0.62,
-    "culet-ray": 0.58,
-    "culet-plane": 0.42
-  }[type] || 0.56;
-}
-
-function materialForFace(ctx, face, index, width) {
-  const normal = faceNormal(face.rotated);
-  const center = faceCenter(face.projected);
-
-  const keyLight = normalize3({ x: -0.58, y: -0.78, z: 1.0 });
-  const rimLight = normalize3({ x: 0.82, y: -0.10, z: 0.62 });
-  const sharpLight = normalize3({ x: 0.22, y: -0.38, z: 1.0 });
-  const underLight = normalize3({ x: -0.16, y: 0.80, z: 0.42 });
-
-  const key = Math.max(0, dot3(normal, keyLight));
-  const rim = Math.max(0, dot3(normal, rimLight));
-  const sharp = Math.max(0, dot3(normal, sharpLight));
-  const under = Math.max(0, dot3(normal, underLight));
-  const facing = clamp((normal.z + 1) / 2, 0, 1);
-  const back = clamp(1 - facing, 0, 1);
-  const pulse = 0.5 + 0.5 * Math.sin(index * PHI + face.fireBias * 7 + state.sparklePhase * 1.55);
-
-  const typeBoost = {
-    table: 1.26,
-    "table-star": 1.08,
-    "upper-crown": 1.02,
-    "crown-main": 0.98,
-    "crown-shoulder": 0.86,
-    "girdle-wall": 0.62,
-    "upper-pavilion": 0.78,
-    "lower-pavilion": 0.86,
-    "culet-ray": 0.94,
-    "culet-plane": 0.56
-  }[face.type] || 0.86;
-
-  const brilliance = clamp(
-    Math.pow(key, 1.34) * 0.82 +
-    Math.pow(sharp, 4.4) * 1.18 +
-    rim * 0.64 +
-    under * 0.14 +
-    pulse * 0.12,
-    0,
-    1.74
-  );
-
-  const shadow = clamp(back * 0.34 + (1 - key) * 0.26 + (face.type.includes("pavilion") ? 0.16 : 0), 0, 0.86);
-  const fire = clamp(face.fireBias * 0.32 + rim * 0.18 + Math.pow(sharp, 3.2) * 0.24 + pulse * 0.12, 0.02, 0.56);
-  const brightness = clamp(brilliance * typeBoost + face.tone * 0.13 - shadow * 0.44, 0.04, 1.72);
-
-  const deepBlue = [8, 18, 40];
-  const blueGlass = [64, 122, 194];
-  const ice = [205, 232, 255];
-  const white = [255, 255, 255];
-  const goldFire = [255, 220, 142];
-  const violetFire = [214, 198, 255];
-
-  const iceMix = clamp(brightness * 0.58 + facing * 0.14, 0, 1);
-  const darkMix = clamp(shadow * 0.74, 0, 0.86);
-  const fireMix = clamp(fire * 0.36, 0, 0.38);
-  const violetMix = clamp(rim * 0.11 + face.fireBias * 0.055, 0, 0.18);
-
-  let color = [
-    lerp(deepBlue[0], ice[0], iceMix),
-    lerp(deepBlue[1], ice[1], iceMix),
-    lerp(deepBlue[2], ice[2], iceMix)
-  ];
-
-  color = [
-    lerp(color[0], blueGlass[0], clamp(shadow * 0.25, 0, 0.30)),
-    lerp(color[1], blueGlass[1], clamp(shadow * 0.25, 0, 0.30)),
-    lerp(color[2], blueGlass[2], clamp(shadow * 0.25, 0, 0.30))
-  ];
-
-  color = [
-    lerp(color[0], white[0], clamp(Math.pow(sharp, 5.0), 0, 0.56)),
-    lerp(color[1], white[1], clamp(Math.pow(sharp, 5.0), 0, 0.56)),
-    lerp(color[2], white[2], clamp(Math.pow(sharp, 5.0), 0, 0.56))
-  ];
-
-  color = [
-    lerp(color[0], goldFire[0], fireMix),
-    lerp(color[1], goldFire[1], fireMix * 0.70),
-    lerp(color[2], goldFire[2], fireMix * 0.32)
-  ];
-
-  color = [
-    lerp(color[0], violetFire[0], violetMix),
-    lerp(color[1], violetFire[1], violetMix),
-    lerp(color[2], violetFire[2], violetMix)
-  ];
-
-  color[0] = lerp(color[0], deepBlue[0], darkMix * 0.36);
-  color[1] = lerp(color[1], deepBlue[1], darkMix * 0.34);
-  color[2] = lerp(color[2], deepBlue[2], darkMix * 0.30);
-
-  const alpha = clamp(typeAlpha(face.type) + brightness * 0.08 - shadow * 0.06, 0.24, 0.86);
-  const strokeAlpha = clamp(0.16 + brightness * 0.38 + rim * 0.14, 0.12, 0.66);
-
-  const gradient = ctx.createLinearGradient(
-    center.x - width * 0.13,
-    center.y - width * 0.10,
-    center.x + width * 0.13,
-    center.y + width * 0.10
-  );
-
-  gradient.addColorStop(0, `rgba(255,255,255,${clamp(alpha * 0.72 + sharp * 0.24, 0, 0.86)})`);
-  gradient.addColorStop(0.26, rgba(color, alpha));
-  gradient.addColorStop(0.55, rgba(color, alpha * 0.86));
-  gradient.addColorStop(0.82, rgba([lerp(color[0], 14, shadow), lerp(color[1], 26, shadow), lerp(color[2], 56, shadow)], alpha * 0.74));
-  gradient.addColorStop(1, rgba([8, 18, 38], alpha * 0.38));
-
-  return {
-    fill: gradient,
-    stroke: `rgba(235,248,255,${strokeAlpha})`,
-    normal,
-    facing,
-    visible: normal.z > -0.92 || face.type === "table" || face.type === "culet-plane"
-  };
-}
-
-function drawTrue3DCrystal(ctx, width, height) {
-  const scale = Math.min(width * 0.39, height * 0.43);
-  const faces = TRUE_3D_DIAMOND.faces.map((face) => projectedFace(face, width, height, scale));
-
-  ctx.save();
-
-  const cx = width * 0.5;
-  const cy = height * 0.405;
-
-  const aura = ctx.createRadialGradient(cx, cy, scale * 0.14, cx, cy + scale * 0.04, scale * 2.02);
-  aura.addColorStop(0, "rgba(255,255,255,0.20)");
-  aura.addColorStop(0.30, "rgba(141,216,255,0.12)");
-  aura.addColorStop(0.66, "rgba(244,207,131,0.05)");
-  aura.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = aura;
-  ctx.fillRect(0, 0, width, height);
-
-  faces
-    .slice()
-    .sort((a, b) => a.avgZ - b.avgZ)
-    .forEach((face, index) => {
-      const material = materialForFace(ctx, face, index, width);
-      if (!material.visible) return;
-
-      pathPolygon(ctx, face.projected);
-      ctx.fillStyle = material.fill;
-      ctx.strokeStyle = material.stroke;
-      ctx.lineWidth = Math.max(0.68, width * 0.00072);
-      ctx.lineJoin = "miter";
-      ctx.fill();
-      ctx.stroke();
-    });
-
-  drawCrystalDepthEdges(ctx, width, height, scale);
-  drawInternalPrismPaths(ctx, width, height, scale);
-  drawSparkles(ctx, width, height, scale);
-
-  const culet = projectPoint(TRUE_3D_DIAMOND.culet, width, height, scale);
-  const shadow = ctx.createRadialGradient(cx, culet.y + scale * 0.15, scale * 0.03, cx, culet.y + scale * 0.15, scale * 0.42);
-  shadow.addColorStop(0, "rgba(244,207,131,0.14)");
-  shadow.addColorStop(0.38, "rgba(92,132,172,0.11)");
-  shadow.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = shadow;
-  ctx.beginPath();
-  ctx.ellipse(cx, culet.y + scale * 0.15, scale * 0.36, scale * 0.058, 0, 0, TAU);
-  ctx.fill();
-
-  ctx.restore();
-}
-
-function drawRing(ctx, ring, width, height, scale, alpha, lineWidth = 1) {
-  const points = ring.map((point) => projectPoint(point, width, height, scale));
-
-  ctx.beginPath();
-  points.forEach((point, index) => {
-    if (index === 0) ctx.moveTo(point.x, point.y);
-    else ctx.lineTo(point.x, point.y);
-  });
-  ctx.closePath();
-
-  ctx.strokeStyle = `rgba(244,250,255,${alpha})`;
-  ctx.lineWidth = Math.max(lineWidth, width * 0.0007);
-  ctx.stroke();
-}
-
-function drawLine(ctx, a, b, width, height, scale, alpha, lineWidth = 1, color = "244,250,255") {
-  const pa = projectPoint(a, width, height, scale);
-  const pb = projectPoint(b, width, height, scale);
-
-  ctx.strokeStyle = `rgba(${color},${alpha})`;
-  ctx.lineWidth = Math.max(lineWidth, width * 0.00062);
-  ctx.beginPath();
-  ctx.moveTo(pa.x, pa.y);
-  ctx.lineTo(pb.x, pb.y);
-  ctx.stroke();
-}
-
-function drawCrystalDepthEdges(ctx, width, height, scale) {
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
-  ctx.lineJoin = "miter";
-
-  drawRing(ctx, TRUE_3D_DIAMOND.table, width, height, scale, 0.74, 1.05 * state.dpr);
-  drawRing(ctx, TRUE_3D_DIAMOND.crownBreak, width, height, scale, 0.34, 0.66 * state.dpr);
-  drawRing(ctx, TRUE_3D_DIAMOND.crownShoulder, width, height, scale, 0.32, 0.66 * state.dpr);
-  drawRing(ctx, TRUE_3D_DIAMOND.girdleTop, width, height, scale, 0.84, 1.26 * state.dpr);
-  drawRing(ctx, TRUE_3D_DIAMOND.girdleBottom, width, height, scale, 0.46, 0.82 * state.dpr);
-  drawRing(ctx, TRUE_3D_DIAMOND.pavilionBreak, width, height, scale, 0.34, 0.66 * state.dpr);
-  drawRing(ctx, TRUE_3D_DIAMOND.culetRing, width, height, scale, 0.42, 0.62 * state.dpr);
-
-  for (let i = 0; i < RADIAL_POINTS; i += 2) {
-    drawLine(ctx, TRUE_3D_DIAMOND.table[i], TRUE_3D_DIAMOND.crownBreak[i], width, height, scale, 0.20, 0.52 * state.dpr);
-    drawLine(ctx, TRUE_3D_DIAMOND.crownBreak[i], TRUE_3D_DIAMOND.crownShoulder[i], width, height, scale, 0.19, 0.52 * state.dpr);
-    drawLine(ctx, TRUE_3D_DIAMOND.crownShoulder[i], TRUE_3D_DIAMOND.girdleTop[i], width, height, scale, 0.22, 0.58 * state.dpr);
-    drawLine(ctx, TRUE_3D_DIAMOND.girdleBottom[i], TRUE_3D_DIAMOND.pavilionBreak[i], width, height, scale, 0.22, 0.58 * state.dpr);
-    drawLine(ctx, TRUE_3D_DIAMOND.pavilionBreak[i], TRUE_3D_DIAMOND.culetRing[i], width, height, scale, 0.20, 0.54 * state.dpr);
-    drawLine(ctx, TRUE_3D_DIAMOND.culetRing[i], TRUE_3D_DIAMOND.culet, width, height, scale, 0.24, 0.56 * state.dpr);
-  }
-
-  const tableCenter = projectPoint(TRUE_3D_DIAMOND.tableCenter, width, height, scale);
-  const culet = projectPoint(TRUE_3D_DIAMOND.culet, width, height, scale);
-  const vertical = ctx.createLinearGradient(tableCenter.x, tableCenter.y, culet.x, culet.y);
-  vertical.addColorStop(0, "rgba(255,255,255,0.24)");
-  vertical.addColorStop(0.50, "rgba(141,216,255,0.12)");
-  vertical.addColorStop(1, "rgba(244,207,131,0.16)");
-
-  ctx.strokeStyle = vertical;
-  ctx.lineWidth = Math.max(0.8, width * 0.00068);
-  ctx.beginPath();
-  ctx.moveTo(tableCenter.x, tableCenter.y);
-  ctx.lineTo(culet.x, culet.y);
-  ctx.stroke();
-
-  ctx.restore();
-}
-
-function drawInternalPrismPaths(ctx, width, height, scale) {
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
-
-  const pairs = [
-    [TRUE_3D_DIAMOND.girdleTop[1], TRUE_3D_DIAMOND.pavilionBreak[9], [141, 216, 255], 0.20],
-    [TRUE_3D_DIAMOND.girdleTop[5], TRUE_3D_DIAMOND.table[2], [255, 220, 142], 0.18],
-    [TRUE_3D_DIAMOND.crownBreak[12], TRUE_3D_DIAMOND.culetRing[4], [198, 166, 255], 0.16],
-    [TRUE_3D_DIAMOND.crownShoulder[3], TRUE_3D_DIAMOND.pavilionBreak[11], [255, 255, 255], 0.14],
-    [TRUE_3D_DIAMOND.table[10], TRUE_3D_DIAMOND.culetRing[14], [120, 205, 255], 0.12]
-  ];
-
-  pairs.forEach(([a, b, color, alpha], index) => {
-    const pa = projectPoint(a, width, height, scale);
-    const pb = projectPoint(b, width, height, scale);
-    const pulse = 0.70 + 0.30 * Math.sin(state.sparklePhase * 1.32 + index * PHI);
-
-    const gradient = ctx.createLinearGradient(pa.x, pa.y, pb.x, pb.y);
-    gradient.addColorStop(0, "rgba(255,255,255,0)");
-    gradient.addColorStop(0.50, rgba(color, alpha * pulse));
-    gradient.addColorStop(1, "rgba(255,255,255,0)");
-
-    ctx.strokeStyle = gradient;
-    ctx.lineWidth = Math.max(1, width * 0.0026);
-    ctx.beginPath();
-    ctx.moveTo(pa.x, pa.y);
-    ctx.lineTo(pb.x, pb.y);
-    ctx.stroke();
-  });
-
-  ctx.restore();
-}
-
-function drawStarGlint(ctx, x, y, radius, alpha = 1) {
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
-
-  const outer = radius * state.dpr;
-  const inner = outer * 0.32;
-
-  const glow = ctx.createRadialGradient(x, y, 0, x, y, outer * 2.35);
-  glow.addColorStop(0, `rgba(255, 255, 255, ${0.70 * alpha})`);
-  glow.addColorStop(0.20, `rgba(160, 215, 255, ${0.26 * alpha})`);
-  glow.addColorStop(0.54, `rgba(244, 207, 131, ${0.08 * alpha})`);
-  glow.addColorStop(1, "rgba(255, 255, 255, 0)");
-
-  ctx.fillStyle = glow;
-  ctx.beginPath();
-  ctx.arc(x, y, outer * 2.35, 0, TAU);
-  ctx.fill();
-
-  ctx.strokeStyle = `rgba(255, 255, 255, ${0.86 * alpha})`;
-  ctx.lineWidth = Math.max(1, outer * 0.052);
-
-  ctx.beginPath();
-  ctx.moveTo(x - outer, y);
-  ctx.lineTo(x + outer, y);
-  ctx.moveTo(x, y - outer);
-  ctx.lineTo(x, y + outer);
-  ctx.stroke();
-
-  ctx.strokeStyle = `rgba(190, 225, 255, ${0.50 * alpha})`;
-  ctx.beginPath();
-  ctx.moveTo(x - inner, y - inner);
-  ctx.lineTo(x + inner, y + inner);
-  ctx.moveTo(x + inner, y - inner);
-  ctx.lineTo(x - inner, y + inner);
-  ctx.stroke();
-
-  ctx.restore();
-}
-
-function drawSparkles(ctx, width, height, scale) {
-  const candidates = [
-    ...TRUE_3D_DIAMOND.table,
-    ...TRUE_3D_DIAMOND.crownBreak,
-    ...TRUE_3D_DIAMOND.crownShoulder,
-    ...TRUE_3D_DIAMOND.girdleTop,
-    ...TRUE_3D_DIAMOND.girdleBottom,
-    ...TRUE_3D_DIAMOND.pavilionBreak,
-    ...TRUE_3D_DIAMOND.culetRing
-  ].map((point, index) => {
-    const projected = projectPoint(point, width, height, scale);
-    const pulse = 0.5 + 0.5 * Math.sin(index * PHI + state.sparklePhase * 1.9);
-    const depth = clamp((projected.z + 1.15) / 2.3, 0, 1);
-    const score = pulse * 0.46 + depth * 0.34 + seededUnit(index, 44) * 0.26;
-    return { projected, score };
-  });
-
-  candidates
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 7)
-    .forEach((item, index) => {
-      drawStarGlint(ctx, item.projected.x, item.projected.y, index < 2 ? 10 : 7, clamp(item.score * 0.66, 0.16, 0.66));
-    });
-}
-
-function drawLatticeStructure(ctx, width, height) {
-  const scale = Math.min(width * 0.37, height * 0.40);
-
-  ctx.save();
-
-  const cx = width * 0.5;
-  const cy = height * 0.405;
-
-  const aura = ctx.createRadialGradient(cx, cy, scale * 0.10, cx, cy, scale * 1.76);
-  aura.addColorStop(0, "rgba(198,166,255,0.18)");
-  aura.addColorStop(0.32, "rgba(141,216,255,0.10)");
-  aura.addColorStop(0.70, "rgba(244,207,131,0.035)");
-  aura.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = aura;
-  ctx.fillRect(0, 0, width, height);
-
-  ctx.globalCompositeOperation = "screen";
-  ctx.lineJoin = "miter";
-
-  const rings = TRUE_3D_DIAMOND.rings;
-
-  rings.forEach((ring, ringIndex) => {
-    const alpha = ringIndex === 3 ? 0.74 : ringIndex === 0 ? 0.62 : 0.36;
-    drawRing(ctx, ring, width, height, scale, alpha, (ringIndex === 3 ? 1.20 : 0.78) * state.dpr);
-  });
-
-  for (let i = 0; i < RADIAL_POINTS; i += 1) {
-    const major = i % 4 === 0;
-    const color = major ? "244,207,131" : "141,216,255";
-    const alpha = major ? 0.62 : 0.30;
-    const lineWidth = major ? 0.78 : 0.46;
-
-    drawLine(ctx, TRUE_3D_DIAMOND.table[i], TRUE_3D_DIAMOND.crownBreak[i], width, height, scale, alpha, lineWidth * state.dpr, color);
-    drawLine(ctx, TRUE_3D_DIAMOND.crownBreak[i], TRUE_3D_DIAMOND.crownShoulder[i], width, height, scale, alpha, lineWidth * state.dpr, color);
-    drawLine(ctx, TRUE_3D_DIAMOND.crownShoulder[i], TRUE_3D_DIAMOND.girdleTop[i], width, height, scale, alpha, lineWidth * state.dpr, color);
-    drawLine(ctx, TRUE_3D_DIAMOND.girdleBottom[i], TRUE_3D_DIAMOND.pavilionBreak[i], width, height, scale, alpha, lineWidth * state.dpr, color);
-    drawLine(ctx, TRUE_3D_DIAMOND.pavilionBreak[i], TRUE_3D_DIAMOND.culetRing[i], width, height, scale, alpha, lineWidth * state.dpr, color);
-    drawLine(ctx, TRUE_3D_DIAMOND.culetRing[i], TRUE_3D_DIAMOND.culet, width, height, scale, alpha, lineWidth * state.dpr, color);
-  }
-
-  for (let i = 0; i < RADIAL_POINTS; i += 2) {
-    drawLine(ctx, TRUE_3D_DIAMOND.table[i], TRUE_3D_DIAMOND.girdleTop[(i + 2) % RADIAL_POINTS], width, height, scale, 0.18, 0.46 * state.dpr, "198,166,255");
-    drawLine(ctx, TRUE_3D_DIAMOND.girdleBottom[i], TRUE_3D_DIAMOND.culetRing[(i + 4) % RADIAL_POINTS], width, height, scale, 0.20, 0.48 * state.dpr, "198,166,255");
-  }
-
-  rings.forEach((ring, ringIndex) => {
-    ring.forEach((point, pointIndex) => {
-      const projected = projectPoint(point, width, height, scale);
-      const major = pointIndex % 4 === 0;
-      const pulse = 0.72 + 0.28 * Math.sin(state.sparklePhase * 1.4 + ringIndex + pointIndex * 0.4);
-      const radius = (major ? 3.5 : 2.0) * state.dpr;
-      const color = major ? [244, 207, 131] : [141, 216, 255];
-
-      ctx.fillStyle = rgba(color, (major ? 0.82 : 0.44) * pulse);
-      ctx.beginPath();
-      ctx.arc(projected.x, projected.y, radius, 0, TAU);
-      ctx.fill();
-    });
-  });
-
-  ctx.font = `${Math.max(12, width * 0.018)}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
-  ctx.textAlign = "center";
-  ctx.fillStyle = "rgba(244, 207, 131, 0.72)";
-  ctx.fillText("16 RADIAL COMPASS METRIC · 256 LATTICE ADDRESS FIELD", width * 0.5, height * 0.145);
-
-  ctx.restore();
-}
-
-function render(canvas, ctx) {
-  const width = canvas.width;
-  const height = canvas.height;
-  const lens = state.lens;
-
-  ctx.clearRect(0, 0, width, height);
-
-  drawBackground(ctx, width, height, lens);
-  drawStars(ctx, width, height);
-
-  if (lens === "lattice") {
-    drawLatticeStructure(ctx, width, height);
-  } else {
-    drawTrue3DCrystal(ctx, width, height);
-  }
-}
-
-function step(time, canvas, ctx) {
-  const dt = state.lastTime ? clamp((time - state.lastTime) / 1000, 0, 0.05) : 0;
-  state.lastTime = time;
-
-  resizeCanvas(canvas);
-  state.sparklePhase += dt;
-
-  if (!state.dragging) {
-    state.yaw += state.velocityYaw;
-    state.pitch += state.velocityPitch;
-    state.roll += state.velocityRoll;
-
-    const damping = Math.pow(0.948, dt * 60);
-    state.velocityYaw *= damping;
-    state.velocityPitch *= damping;
-    state.velocityRoll *= damping;
-
-    if (Math.abs(state.velocityYaw) < 0.00008) state.velocityYaw = 0;
-    if (Math.abs(state.velocityPitch) < 0.00008) state.velocityPitch = 0;
-    if (Math.abs(state.velocityRoll) < 0.00004) state.velocityRoll = 0;
-
-    if (state.velocityYaw === 0 && state.velocityPitch === 0) {
-      state.yaw += Math.sin(state.sparklePhase * 0.30) * dt * 0.012;
-      state.roll += Math.sin(state.sparklePhase * 0.16) * dt * 0.0018;
-    }
-  }
-
-  state.pitch = clamp(state.pitch, -0.92, 0.68);
-  state.roll = clamp(state.roll, -0.26, 0.26);
-
-  render(canvas, ctx);
-  state.raf = requestAnimationFrame((next) => step(next, canvas, ctx));
-}
-
-function bindPointer(stage) {
-  stage.addEventListener("pointerdown", (event) => {
-    const now = performance.now();
-
-    if (now - state.lastTap < 320) {
-      resetDiamond();
+<!doctype html>
+<html
+  lang="en"
+  data-page="showroom-dual-lens-diamond"
+  data-route="/showroom/"
+  data-contract="SHOWROOM_DUAL_LENS_DIAMOND_HTML_TRUE_3D_BIND_TNT_v4"
+  data-previous-contract="SHOWROOM_DUAL_LENS_DIAMOND_HTML_DIMENSIONAL_CRYSTAL_BIND_TNT_v3"
+  data-role="showroom-dual-lens-proof-surface-and-launchpad"
+  data-diamond-lock="CROWN_CUT_256_LATTICE_FIXED_FORM"
+  data-visible-radial-metric="16"
+  data-default-lens="crystal-form"
+  data-secondary-lens="lattice-structure"
+  data-touch-glide-diamond="true"
+  data-js-cache-key="SHOWROOM_DUAL_LENS_DIAMOND_RENDER_TRUE_3D_TNT_v3"
+  data-launchpad="characters-products-laws-globe-gauges"
+  data-laws-cta="Jump to the Laws page and lock in."
+  data-crystal-form-silhouette="true-3d-crown-cut-diamond-body"
+  data-lattice-form-silhouette="structural-compass-lattice-field"
+  data-crystal-and-lattice-visually-distinct="true"
+  data-true-3d-projection="true"
+  data-face-sorting="true"
+  data-perspective-depth="true"
+  data-flat-badge-blocked="true"
+  data-earth-record="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-public-receipts-visible="false"
+>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <title>Showroom · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="The Showroom proves the interactive Crown Cut 256 Lattice Diamond through Crystal Form and Lattice Structure, then opens the launchpad into Characters, Products, Laws, Globe, and Gauges."
+  >
+
+  <style>
+    :root {
+      --bg: #030812;
+      --panel: rgba(7, 15, 31, 0.88);
+      --line: rgba(244, 207, 131, 0.18);
+      --line-soft: rgba(255,255,255,0.10);
+      --text: rgba(238,244,255,0.94);
+      --muted: rgba(238,244,255,0.64);
+      --faint: rgba(238,244,255,0.44);
+      --gold: #f4cf83;
+      --mint: #a7f3c6;
+      --blue: #8dd8ff;
+      --violet: #c6a6ff;
+      color-scheme: dark;
     }
 
-    state.lastTap = now;
-    state.dragging = true;
-    state.pointerX = event.clientX;
-    state.pointerY = event.clientY;
-    state.velocityYaw = 0;
-    state.velocityPitch = 0;
-    state.velocityRoll = 0;
+    * { box-sizing: border-box; }
 
-    stage.setPointerCapture?.(event.pointerId);
-  });
-
-  stage.addEventListener("pointermove", (event) => {
-    if (!state.dragging) return;
-
-    const dx = event.clientX - state.pointerX;
-    const dy = event.clientY - state.pointerY;
-
-    state.pointerX = event.clientX;
-    state.pointerY = event.clientY;
-
-    state.yaw += dx * 0.0048;
-    state.pitch = clamp(state.pitch - dy * 0.0030, -0.92, 0.68);
-    state.roll = clamp(state.roll + dx * 0.00034, -0.26, 0.26);
-
-    state.velocityYaw = dx * 0.00156;
-    state.velocityPitch = -dy * 0.00092;
-    state.velocityRoll = dx * 0.00006;
-  }, { passive: true });
-
-  const release = (event) => {
-    if (!state.dragging) return;
-    state.dragging = false;
-    stage.releasePointerCapture?.(event.pointerId);
-  };
-
-  stage.addEventListener("pointerup", release);
-  stage.addEventListener("pointercancel", release);
-  stage.addEventListener("pointerleave", release);
-}
-
-function resetDiamond() {
-  state.yaw = -0.74;
-  state.pitch = -0.42;
-  state.roll = 0.07;
-  state.velocityYaw = 0;
-  state.velocityPitch = 0;
-  state.velocityRoll = 0;
-  state.sparklePhase = 0;
-}
-
-function setLens(nextLens) {
-  const lens = nextLens === "lattice" ? "lattice" : "crystal";
-  state.lens = lens;
-
-  document.documentElement.dataset.showroomDiamondLens = lens;
-  if (document.body) document.body.dataset.showroomDiamondLens = lens;
-
-  document.querySelectorAll("[data-diamond-lens]").forEach((button) => {
-    button.setAttribute("aria-pressed", button.dataset.diamondLens === lens ? "true" : "false");
-  });
-
-  const title = document.querySelector("[data-diamond-lens-title]");
-  const copy = document.querySelector("[data-diamond-lens-copy]");
-  const route = document.querySelector("[data-diamond-route-label]");
-
-  if (title) title.textContent = LENS_COPY[lens].title;
-  if (copy) copy.textContent = LENS_COPY[lens].copy;
-  if (route) route.textContent = LENS_COPY[lens].route;
-}
-
-function bindLensControls() {
-  document.querySelectorAll("[data-diamond-lens]").forEach((button) => {
-    button.addEventListener("click", () => {
-      setLens(button.dataset.diamondLens);
-    });
-  });
-
-  setLens(state.lens);
-}
-
-function markRoute() {
-  const markers = {
-    showroomStatus: "dual-lens-true-3d-diamond-launchpad",
-    showroomContract: SHOWROOM_DIAMOND_STATE.contract,
-    showroomPairedHtmlContract: SHOWROOM_DIAMOND_STATE.pairedHtmlContract,
-    diamondLock: "CROWN_CUT_256_LATTICE_FIXED_FORM",
-    visibleRadialMetric: String(RADIAL_POINTS),
-    latticeStates: String(LATTICE_STATES),
-    defaultLens: "crystal-form",
-    secondaryLens: "lattice-structure",
-    lensRule: "toggle-changes-inspection-lens-not-object-identity",
-    touchGlideDiamond: "true",
-    geometryMutableByTouch: "false",
-    inspectionControl: "true-3d-camera-view",
-    crystalFormSilhouette: "true-3d-crown-cut-diamond-body",
-    latticeFormSilhouette: "structural-compass-lattice-field",
-    crystalAndLatticeAreVisuallyDistinct: "true",
-    diamondPublicRead: "diamond-not-flat",
-    true3DProjection: "true",
-    faceSorting: "true",
-    perspectiveDepth: "true",
-    roundGirdleRemoved: "true",
-    visibleCrown: "true",
-    dimensionalCrown: "true",
-    flatBadgeBlocked: "true",
-    topLikeSilhouetteBlocked: "true",
-    overMeshedPublicCrystalBlocked: "true",
-    launchpadRoutes: "characters,laws,products,globe,gauges",
-    lawsCta: "Jump to the Laws page and lock in.",
-    productsCommunityPath: "products-serve-community",
-    earthRecord: "false",
-    generatedImage: "false",
-    graphicBox: "false",
-    legacyGlobeInheritance: "false"
-  };
-
-  Object.entries(markers).forEach(([key, value]) => {
-    document.documentElement.dataset[key] = value;
-    if (document.body) document.body.dataset[key] = value;
-  });
-}
-
-function protectIdentity() {
-  const title = document.querySelector("title");
-  if (title && /Earth/i.test(title.textContent || "")) {
-    title.textContent = "Showroom · Diamond Gate Bridge";
-  }
-
-  const h1 = document.querySelector("h1");
-  if (h1 && /Earth is the real-world reference body/i.test(h1.textContent || "")) {
-    h1.textContent = "The Diamond holds the room.";
-  }
-}
-
-function initShowroomDiamond() {
-  markRoute();
-  protectIdentity();
-  bindLensControls();
-
-  const stage = document.querySelector("[data-showroom-diamond-stage]");
-  const canvas = document.querySelector("[data-showroom-diamond-canvas]");
-
-  if (!stage || !canvas) return null;
-
-  const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
-  if (!ctx) return null;
-
-  bindPointer(stage);
-  resizeCanvas(canvas);
-  render(canvas, ctx);
-
-  state.canvasReady = true;
-
-  if (!state.raf) {
-    state.raf = requestAnimationFrame((time) => step(time, canvas, ctx));
-  }
-
-  window.DGBShowroomDiamond = Object.freeze({
-    ...SHOWROOM_DIAMOND_STATE,
-    setLens,
-    status() {
-      return Object.freeze({
-        ...SHOWROOM_DIAMOND_STATE,
-        ready: true,
-        canvasReady: state.canvasReady,
-        fixedForm: true,
-        crownCut: true,
-        true3DProjection: true,
-        faceSorting: true,
-        perspectiveDepth: true,
-        lattice256: true,
-        latticeStates: LATTICE_STATES,
-        visibleRadialMetric: RADIAL_POINTS,
-        activeLens: state.lens,
-        lensCopy: LENS_COPY[state.lens],
-        crystalFormSilhouette: "true-3d-crown-cut-diamond-body",
-        latticeFormSilhouette: "structural-compass-lattice-field",
-        crystalAndLatticeAreVisuallyDistinct: true,
-        correctedPhysicalRead: "diamond-crystal-not-flat-object",
-        roundGirdleRemoved: true,
-        tableClear: true,
-        visibleCrown: true,
-        dimensionalCrown: true,
-        facetedGirdle: true,
-        pavilionTaper: true,
-        culetPlane: true,
-        flatBadgeBlocked: true,
-        topLikeSilhouetteBlocked: true,
-        overMeshedPublicCrystalBlocked: true,
-        solidCrystal: true,
-        geometryMutableByTouch: false,
-        inspectionControl: "true-3d-camera-view",
-        launchpadRoutes: ["characters", "laws", "products", "globe", "gauges"],
-        lawsCta: "Jump to the Laws page and lock in.",
-        productsCommunityPath: true,
-        momentum: true,
-        doubleTapReset: true,
-        yaw: state.yaw,
-        pitch: state.pitch,
-        roll: state.roll,
-        generatedImage: false,
-        graphicBox: false,
-        earthRecord: false,
-        legacyGlobeInheritance: false
-      });
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+      background:
+        radial-gradient(circle at 50% -10%, rgba(78,119,171,0.26), transparent 38%),
+        radial-gradient(circle at 12% 22%, rgba(244,207,131,0.10), transparent 32%),
+        radial-gradient(circle at 88% 30%, rgba(198,166,255,0.10), transparent 34%),
+        linear-gradient(180deg, #061020 0%, var(--bg) 48%, #02050b 100%);
     }
-  });
 
-  return window.DGBShowroomDiamond;
-}
+    body {
+      margin: 0;
+      min-height: 100%;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: -0.015em;
+      overflow-x: hidden;
+    }
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initShowroomDiamond, { once: true });
-} else {
-  initShowroomDiamond();
-}
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.18) 0 1px, transparent 1.4px),
+        linear-gradient(rgba(141,216,255,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(141,216,255,0.035) 1px, transparent 1px);
+      background-size: 230px 250px, 56px 56px, 56px 56px;
+      opacity: 0.18;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.92), rgba(0,0,0,0.46) 66%, rgba(0,0,0,0.16));
+    }
 
-export { SHOWROOM_DIAMOND_STATE, initShowroomDiamond };
-export default SHOWROOM_DIAMOND_STATE;
+    a { color: inherit; }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
+    }
+
+    .skip {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      transform: translateY(-160%);
+      background: var(--mint);
+      color: #06101c;
+      padding: 10px 14px;
+      border-radius: 999px;
+      z-index: 20;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .skip:focus { transform: translateY(0); }
+
+    .page {
+      position: relative;
+      z-index: 2;
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 54px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 0 22px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 950;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(244,207,131,0.44);
+      border-radius: 10px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.18), transparent 36%),
+        rgba(244,207,131,0.08);
+      box-shadow: 0 0 22px rgba(244,207,131,0.14);
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .nav a,
+    .button {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      padding: 0 13px;
+      color: rgba(238,244,255,0.82);
+      text-decoration: none;
+      background: rgba(255,255,255,0.035);
+      font-size: 0.82rem;
+      font-weight: 850;
+      letter-spacing: 0.02em;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .nav a:hover,
+    .button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(244,207,131,0.42);
+      text-decoration: none;
+    }
+
+    .nav a[aria-current="page"],
+    .button.primary {
+      color: #06101c;
+      background: linear-gradient(135deg, var(--mint), #78d8ac);
+      border-color: rgba(167,243,198,0.62);
+    }
+
+    .button.gold {
+      color: #150d03;
+      background: linear-gradient(135deg, #fff0b8, var(--gold) 48%, #c48a38);
+      border-color: rgba(244,207,131,0.72);
+    }
+
+    .button.violet {
+      color: #070911;
+      background: linear-gradient(135deg, #f1eaff, var(--violet));
+      border-color: rgba(198,166,255,0.72);
+    }
+
+    .hero {
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      padding: clamp(24px, 5vw, 46px);
+      background:
+        radial-gradient(circle at 76% 28%, rgba(139,200,255,0.13), transparent 32%),
+        radial-gradient(circle at 18% 20%, rgba(244,207,131,0.12), transparent 30%),
+        radial-gradient(circle at 56% 94%, rgba(198,166,255,0.08), transparent 34%),
+        linear-gradient(180deg, rgba(8,17,34,0.94), rgba(4,9,20,0.94));
+      box-shadow: 0 30px 90px rgba(0,0,0,0.38);
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -8rem;
+      top: -8rem;
+      width: 24rem;
+      height: 24rem;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(244,207,131,0.16), transparent 68%);
+      animation: heroGlow 9s ease-in-out infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes heroGlow {
+      0%, 100% { opacity: 0.42; transform: scale(1); }
+      50% { opacity: 0.78; transform: scale(1.08); }
+    }
+
+    .eyebrow,
+    .diamond-title,
+    .launchpad-title {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      letter-spacing: 0.22em;
+    }
+
+    h1 {
+      max-width: 920px;
+      margin: 0;
+      font-size: clamp(2.25rem, 8vw, 5.6rem);
+      line-height: 0.92;
+      letter-spacing: -0.075em;
+    }
+
+    .lede {
+      max-width: 880px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 2.6vw, 1.34rem);
+      line-height: 1.55;
+    }
+
+    .claim-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .claim {
+      min-height: 92px;
+      display: grid;
+      align-content: center;
+      gap: 6px;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 18px;
+      padding: 14px;
+      background:
+        radial-gradient(circle at 16% 0%, rgba(244,207,131,0.10), transparent 56%),
+        rgba(255,255,255,0.034);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .claim b {
+      color: var(--gold);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .claim span {
+      color: rgba(238,244,255,0.74);
+      font-size: 0.92rem;
+      line-height: 1.34;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .diamond-shell,
+    .launchpad-shell {
+      margin-top: 16px;
+      border: 1px solid rgba(244,207,131,0.20);
+      border-radius: 34px;
+      padding: clamp(18px, 3.8vw, 32px);
+      background:
+        radial-gradient(circle at 50% 34%, rgba(96,145,190,0.13), transparent 42%),
+        linear-gradient(180deg, rgba(8,17,34,0.90), rgba(4,9,20,0.94));
+      box-shadow: 0 28px 90px rgba(0,0,0,0.32);
+      overflow: hidden;
+    }
+
+    .diamond-toolbar {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: stretch;
+      margin: 0 0 16px;
+    }
+
+    .lens-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.035);
+      width: fit-content;
+      align-self: start;
+    }
+
+    .lens-toggle button {
+      min-height: 38px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 0 14px;
+      color: rgba(238,244,255,0.76);
+      background: transparent;
+      font: inherit;
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .lens-toggle button[aria-pressed="true"] {
+      color: #06101c;
+      background: linear-gradient(135deg, #fff0b8, var(--gold));
+      border-color: rgba(244,207,131,0.72);
+    }
+
+    .lens-copy {
+      min-height: 104px;
+      border: 1px solid rgba(244,207,131,0.18);
+      border-radius: 22px;
+      padding: 16px;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(244,207,131,0.10), transparent 56%),
+        rgba(3,8,18,0.46);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.055);
+    }
+
+    .lens-copy b {
+      display: block;
+      color: var(--gold);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .lens-copy p {
+      margin: 0;
+      color: rgba(238,244,255,0.74);
+      font-size: 0.98rem;
+      line-height: 1.48;
+    }
+
+    .diamond-stage {
+      position: relative;
+      min-height: clamp(520px, 82vw, 760px);
+      border: 1px solid rgba(244,207,131,0.18);
+      border-radius: 30px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 74%, rgba(244,207,131,0.10), transparent 24%),
+        radial-gradient(circle at 50% 36%, rgba(92,132,172,0.14), transparent 42%),
+        linear-gradient(180deg, rgba(4,11,24,0.92), rgba(2,7,16,0.96));
+      touch-action: none;
+      user-select: none;
+    }
+
+    .diamond-canvas {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    .diamond-instruction {
+      position: absolute;
+      left: clamp(16px, 4vw, 36px);
+      right: clamp(16px, 4vw, 36px);
+      bottom: clamp(16px, 4vw, 34px);
+      border-top: 1px solid rgba(255,255,255,0.12);
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      padding: 14px 10px;
+      color: rgba(238,244,255,0.80);
+      font-weight: 850;
+      line-height: 1.35;
+      font-size: clamp(0.98rem, 3.8vw, 1.32rem);
+      background: rgba(3,8,18,0.34);
+      backdrop-filter: blur(6px);
+    }
+
+    .diamond-route {
+      position: absolute;
+      left: 50%;
+      bottom: clamp(92px, 18vw, 128px);
+      transform: translateX(-50%);
+      width: min(calc(100% - 44px), 680px);
+      text-align: center;
+      color: rgba(238,244,255,0.68);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      line-height: 1.25;
+    }
+
+    .object-card {
+      margin-top: 16px;
+      border-left: 1px solid rgba(244,207,131,0.22);
+      border-right: 1px solid rgba(244,207,131,0.12);
+      padding: 22px 18px;
+      background: rgba(7,15,31,0.62);
+    }
+
+    .object-card .label {
+      margin: 0 0 14px;
+      color: var(--mint);
+      font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+    }
+
+    .object-card h2,
+    .launchpad-shell h2 {
+      margin: 0;
+      color: rgba(238,244,255,0.94);
+      font-size: clamp(1.55rem, 5vw, 2.5rem);
+      line-height: 1.02;
+      letter-spacing: -0.06em;
+    }
+
+    .object-card p,
+    .launchpad-shell p {
+      max-width: 840px;
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.8vw, 1.22rem);
+      line-height: 1.55;
+    }
+
+    .launch-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .launch-card {
+      min-height: 220px;
+      display: grid;
+      align-content: end;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 22px;
+      padding: 16px;
+      color: inherit;
+      text-decoration: none;
+      background:
+        radial-gradient(circle at 50% 14%, rgba(255,255,255,0.08), transparent 36%),
+        radial-gradient(circle at 16% 0%, rgba(244,207,131,0.10), transparent 58%),
+        rgba(255,255,255,0.035);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.055);
+      transition: transform 0.18s ease, border-color 0.18s ease, filter 0.18s ease;
+    }
+
+    .launch-card:hover,
+    .launch-card:focus-visible {
+      transform: translateY(-4px);
+      border-color: rgba(244,207,131,0.52);
+      filter: brightness(1.1);
+      text-decoration: none;
+    }
+
+    .launch-gem {
+      position: absolute;
+      left: 50%;
+      top: 22px;
+      width: 74px;
+      height: 74px;
+      transform: translateX(-50%) rotate(45deg);
+      border: 1px solid rgba(244,207,131,0.42);
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.28), transparent 30%),
+        conic-gradient(from 40deg, rgba(255,255,255,0.26), rgba(141,216,255,0.14), rgba(198,166,255,0.18), rgba(244,207,131,0.18), rgba(255,255,255,0.26)),
+        radial-gradient(circle at 40% 32%, rgba(255,255,255,0.26), transparent 52%),
+        rgba(7,15,31,0.82);
+      box-shadow:
+        0 0 22px rgba(141,216,255,0.12),
+        0 1rem 1.6rem rgba(0,0,0,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.16);
+      animation: launchGemFloat 7.8s ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+
+    .launch-gem::before,
+    .launch-gem::after {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border: 1px solid rgba(255,255,255,0.18);
+      transform: rotate(45deg);
+      border-radius: 8px;
+    }
+
+    .launch-gem::after {
+      inset: 27px;
+      border-color: rgba(244,207,131,0.22);
+    }
+
+    @keyframes launchGemFloat {
+      0%, 100% { margin-top: 0; filter: brightness(1); }
+      50% { margin-top: -7px; filter: brightness(1.15); }
+    }
+
+    .launch-card b {
+      color: var(--gold);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 2;
+    }
+
+    .launch-card strong {
+      color: rgba(238,244,255,0.96);
+      font-size: 1.08rem;
+      line-height: 1.06;
+      letter-spacing: -0.035em;
+      position: relative;
+      z-index: 2;
+    }
+
+    .launch-card span {
+      color: rgba(238,244,255,0.66);
+      font-size: 0.9rem;
+      line-height: 1.34;
+      position: relative;
+      z-index: 2;
+    }
+
+    .cache-proof,
+    .hidden-receipt {
+      display: none !important;
+      visibility: hidden !important;
+    }
+
+    .footer {
+      margin-top: 20px;
+      padding: 20px 0 0;
+      color: var(--faint);
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    @media (max-width: 1060px) {
+      .launch-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .launch-card:last-child {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 880px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav { justify-content: flex-start; }
+
+      .claim-strip,
+      .diamond-toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .lens-toggle {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        border-radius: 22px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page { width: min(100% - 18px, 1120px); }
+
+      .hero,
+      .diamond-shell,
+      .launchpad-shell,
+      .diamond-stage {
+        border-radius: 24px;
+      }
+
+      .launch-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .launch-card:last-child {
+        grid-column: auto;
+      }
+
+      .diamond-stage {
+        min-height: 560px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip" href="#showroom-main">Skip to Showroom</a>
+
+  <div class="page">
+    <header class="topbar" aria-label="Diamond Gate Bridge navigation">
+      <a class="brand" href="/showroom/" aria-current="page">
+        <span class="brand-mark" aria-hidden="true">◆</span>
+        <span>Diamond Gate Bridge</span>
+      </a>
+
+      <nav class="nav" aria-label="Primary">
+        <a href="/">Compass</a>
+        <a href="/showroom/" aria-current="page">Showroom</a>
+        <a href="/characters/">Characters</a>
+        <a href="/products/">Products</a>
+        <a href="/laws/">Laws</a>
+        <a href="/showroom/globe/">Globe</a>
+        <a href="/gauges/">Triple G</a>
+      </nav>
+    </header>
+
+    <main id="showroom-main">
+      <section class="hero">
+        <p class="eyebrow">Showroom · dual-lens true 3D diamond proof surface</p>
+        <h1>The Diamond holds the room.</h1>
+        <p class="lede">
+          The Showroom begins with the fixed Crown Cut 256 Lattice Diamond. The page proves interactive 3D software expression, teaches the structure through two inspection lenses, then opens the launchpad into the story, the laws, and the community line.
+        </p>
+
+        <div class="claim-strip" aria-label="Showroom claims">
+          <div class="claim">
+            <b>Proof Object</b>
+            <span>The Diamond demonstrates interactive 3D content directly inside the site.</span>
+          </div>
+
+          <div class="claim">
+            <b>Dual Lens</b>
+            <span>Crystal Form shows the true 3D object. Lattice Structure reveals the order beneath it.</span>
+          </div>
+
+          <div class="claim">
+            <b>Launchpad</b>
+            <span>The room opens Characters, Laws, Products, Globe, and Triple G.</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a class="button primary" href="#diamond-stage">Touch the Diamond</a>
+          <a class="button violet" href="/characters/">Meet the Characters</a>
+          <a class="button gold" href="/laws/">Jump to the Laws page and lock in</a>
+          <a class="button" href="/products/">Enter the Community Path</a>
+          <a class="button" href="/showroom/globe/">Enter Globe Showcase</a>
+          <a class="button" href="/gauges/">Run Triple G</a>
+        </div>
+      </section>
+
+      <section class="diamond-shell" aria-label="Locked Crown Cut 256 Lattice Diamond">
+        <p class="diamond-title">Crown cut · true 3D crystal form · 16 radial compass metric · 256 lattice</p>
+
+        <div class="diamond-toolbar" aria-label="Diamond inspection lenses">
+          <div class="lens-toggle" role="group" aria-label="Choose Diamond lens">
+            <button
+              type="button"
+              data-diamond-lens="crystal"
+              aria-pressed="true"
+            >Crystal Form</button>
+            <button
+              type="button"
+              data-diamond-lens="lattice"
+              aria-pressed="false"
+            >Lattice Structure</button>
+          </div>
+
+          <article class="lens-copy" aria-live="polite">
+            <b data-diamond-lens-title>Crystal Form</b>
+            <p data-diamond-lens-copy>
+              This view shows the finished Crown Cut Diamond as a true 3D crystal body: table, crown, faceted girdle, pavilion, culet, light, and touch inspection. This is the public object. It proves the site can render interactive 3D content with a fixed form instead of a flat graphic.
+            </p>
+          </article>
+        </div>
+
+        <div
+          id="diamond-stage"
+          class="diamond-stage"
+          data-showroom-diamond-stage
+          data-diamond-lock="CROWN_CUT_256_LATTICE_FIXED_FORM"
+          data-visible-radial-metric="16"
+          data-crystal-form-silhouette="true-3d-crown-cut-diamond-body"
+          data-lattice-form-silhouette="structural-compass-lattice-field"
+          data-true-3d-projection="true"
+          data-face-sorting="true"
+          data-perspective-depth="true"
+          data-flat-badge-blocked="true"
+          data-touch-glide="true"
+          data-inspection-control="true-3d-camera-view"
+          data-geometry-mutable-by-touch="false"
+          aria-label="Touchable Crown Cut 256 Lattice Diamond"
+        >
+          <canvas class="diamond-canvas" data-showroom-diamond-canvas></canvas>
+          <div class="diamond-route" data-diamond-route-label>
+            Crystal Form → true 3D Crown Cut Diamond · table · crown · pavilion
+          </div>
+          <div class="diamond-instruction">
+            Drag inside the box to inspect the fixed Diamond. Release for momentum. Double tap to reset. Use the lens toggle to switch between the true 3D crystal and the lattice structure.
+          </div>
+        </div>
+
+        <article class="object-card">
+          <p class="label">Object truth</p>
+          <h2>The Diamond proves the build. The dual lens teaches the structure.</h2>
+          <p>
+            Crystal Form presents the Diamond as a true 3D finished object with depth, perspective, face sorting, crown, girdle, pavilion, and culet. Lattice Structure reveals the 16-point compass geometry and the 256-state address system behind the same object. The lens changes. The Diamond does not.
+          </p>
+          <p class="cache-proof">
+            HTML cache key: SHOWROOM_DUAL_LENS_DIAMOND_HTML_TRUE_3D_BIND_TNT_v4
+          </p>
+        </article>
+      </section>
+
+      <section class="launchpad-shell" aria-label="Showroom launchpad">
+        <p class="launchpad-title">Launchpad · story · laws · community</p>
+        <h2>The launchpad opens the system.</h2>
+        <p>
+          Choose the path that fits what you came to see. Enter the story behind the game, view the tick-tock behind the clock, or move into the community path built around the products that serve the community.
+        </p>
+
+        <div class="launch-grid">
+          <a class="launch-card" href="/characters/">
+            <span class="launch-gem" style="--delay:-0.2s" aria-hidden="true"></span>
+            <b>Story / Game</b>
+            <strong>Meet the Characters</strong>
+            <span>Enter Shadows Never Shatter in Mirrorland, meet the character roster, and begin the story behind the game.</span>
+          </a>
+
+          <a class="launch-card" href="/laws/">
+            <span class="launch-gem" style="--delay:-0.8s" aria-hidden="true"></span>
+            <b>Science / Truth</b>
+            <strong>Jump to the Laws page and lock in.</strong>
+            <span>View the tick-tock behind the clock: governing logic, timing pressure, and consequence law.</span>
+          </a>
+
+          <a class="launch-card" href="/products/">
+            <span class="launch-gem" style="--delay:-1.4s" aria-hidden="true"></span>
+            <b>Community Line</b>
+            <strong>Open Products</strong>
+            <span>Products are the tools, games, offerings, and practical systems built to serve the community.</span>
+          </a>
+
+          <a class="launch-card" href="/showroom/globe/">
+            <span class="launch-gem" style="--delay:-2s" aria-hidden="true"></span>
+            <b>World Path</b>
+            <strong>Enter Globe Showcase</strong>
+            <span>Choose consequence, survival, or possibility through ZIONTS, H-Earth, and Audralia.</span>
+          </a>
+
+          <a class="launch-card" href="/gauges/">
+            <span class="launch-gem" style="--delay:-2.6s" aria-hidden="true"></span>
+            <b>Proof Layer</b>
+            <strong>Run Triple G</strong>
+            <span>Inspect what is present, measurable, routed, and live across the public build.</span>
+          </a>
+        </div>
+
+        <template id="showroom-route-receipt" class="hidden-receipt">
+SHOWROOM_DUAL_LENS_DIAMOND_HTML_TRUE_3D_BIND_TNT_v4
+route=/showroom/
+html=/showroom/index.html
+js=/showroom/index.js
+js_cache_key=SHOWROOM_DUAL_LENS_DIAMOND_RENDER_TRUE_3D_TNT_v3
+role=dual_lens_showroom_proof_surface_and_launchpad
+diamond_lock=CROWN_CUT_256_LATTICE_FIXED_FORM
+visible_radial_metric=16
+lattice_states=256
+default_lens=crystal_form
+secondary_lens=lattice_structure
+lens_rule=toggle_changes_inspection_lens_not_object_identity
+touch_glide=true
+geometry_mutable_by_touch=false
+proof_object=crown_cut_256_lattice_diamond
+crystal_form=true_3d_crown_cut_diamond_body
+lattice_structure=16_point_compass_geometry_and_256_lattice_logic
+crystal_and_lattice_are_visually_distinct=true
+true_3d_projection=true
+face_sorting=true
+perspective_depth=true
+flat_badge_blocked=true
+launchpad=characters,laws,products,globe,gauges
+characters_role=story_game_doorway
+laws_role=science_truth_doorway
+laws_cta=Jump_to_the_Laws_page_and_lock_in
+laws_support_line=view_the_tick_tock_behind_the_clock
+products_role=community_path_products_serve_the_community
+globe_role=world_path_doorway
+gauges_role=proof_layer_doorway
+legacy_runtime_held=true
+legacy_css_held=true
+legacy_render_held=true
+generated_image=false
+graphic_box=false
+earth_record=false
+        </template>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Diamond Gate Bridge · Showroom · Dual-Lens True 3D Crown Cut 256 Lattice Diamond · Launchpad.
+    </footer>
+  </div>
+
+  <script>
+    window.DGB_SHOWROOM_HTML_CACHE_KEY = "SHOWROOM_DUAL_LENS_DIAMOND_HTML_TRUE_3D_BIND_TNT_v4";
+    window.DGB_SHOWROOM_JS_CACHE_KEY = "SHOWROOM_DUAL_LENS_DIAMOND_RENDER_TRUE_3D_TNT_v3";
+  </script>
+  <script
+    type="module"
+    src="/showroom/index.js?v=SHOWROOM_DUAL_LENS_DIAMOND_RENDER_TRUE_3D_TNT_v3"
+  ></script>
+</body>
+</html>

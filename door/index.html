@@ -3,18 +3,18 @@
   lang="en"
   data-route="/door/"
   data-page="door"
-  data-version="G2-V2"
-  data-contract="DOOR_OUTER_THRESHOLD_CRYSTAL_SCALE_AND_SHARED_ORBIT_HTML_ONLY_TNT_v1"
-  data-previous-contract="DOOR_FOUR_LENS_THRESHOLD_RENEWAL_TNT_v2"
+  data-version="G2-V3"
+  data-contract="DOOR_TRUE_3D_THRESHOLD_CRYSTAL_ORBIT_HTML_JS_TNT_v1"
+  data-previous-contract="DOOR_OUTER_THRESHOLD_CRYSTAL_SCALE_AND_SHARED_ORBIT_HTML_ONLY_TNT_v1"
   data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
-  data-animation-standard="SITE_WIDE_SHARED_DIRECTIONAL_GEM_ORBIT_STANDARD_v1"
+  data-animation-standard="TRUE_3D_WEBGL_SHARED_DIRECTIONAL_GEM_ORBIT_STANDARD_v1"
   data-top-traversal="compass-door-home-products-laws-gauges"
   data-material-renewal="physical-digital-violet-threshold-crystal"
   data-threshold-crystal="active"
   data-center-door-anchor-preserved="true"
-  data-outer-threshold-crystals-scaled="true"
+  data-outer-threshold-crystals-webgl="true"
+  data-outer-threshold-crystals-true-3d="true"
   data-shared-orbit-direction="true"
-  data-lightweight-3d-orbit="true"
   data-labels-remain-readable="true"
   data-four-lens-compass="north-interface-south-laws-east-story-west-community"
   data-status="active"
@@ -50,8 +50,6 @@
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
-      --orbit-duration:48s;
-      --orbit-tilt:58deg;
     }
 
     *{box-sizing:border-box}
@@ -397,12 +395,11 @@
 
     .door-stage{
       position:relative;
-      min-height:clamp(35rem,70vw,52rem);
+      min-height:clamp(36rem,72vw,54rem);
       display:grid;
       place-items:center;
       overflow:hidden;
       isolation:isolate;
-      perspective:900px;
       border:1px solid rgba(184,205,255,.13);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
@@ -420,6 +417,8 @@
       top:50%;
       border-radius:50%;
       pointer-events:none;
+      transform:translate(-50%,-50%);
+      z-index:1;
     }
 
     .door-stage::before{
@@ -427,14 +426,22 @@
       height:min(58%,24rem);
       border:1px solid rgba(243,200,111,.10);
       box-shadow:0 0 3rem rgba(143,101,255,.12),inset 0 0 2rem rgba(143,101,255,.035);
-      transform:translate(-50%,-50%) rotateX(58deg);
     }
 
     .door-stage::after{
       width:min(56%,23rem);
       height:min(38%,16rem);
       border:1px solid rgba(143,101,255,.16);
-      transform:translate(-50%,-50%) rotateX(58deg);
+    }
+
+    .door-webgl-canvas{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      width:100%;
+      height:100%;
+      display:block;
+      pointer-events:none;
     }
 
     .door-anchor{
@@ -449,6 +456,44 @@
       transform:translate(-50%,-50%);
       pointer-events:none;
       isolation:isolate;
+    }
+
+    .threshold-gem-svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      pointer-events:none;
+      animation:thresholdAnchorBreathe 9.2s ease-in-out infinite;
+      filter:
+        drop-shadow(0 1.4rem 1.8rem rgba(0,0,0,.38))
+        drop-shadow(0 0 2.2rem rgba(143,101,255,.22))
+        drop-shadow(0 0 1.1rem rgba(243,200,111,.08));
+    }
+
+    @keyframes thresholdAnchorBreathe{
+      0%,100%{transform:scale(1)}
+      50%{transform:scale(1.012)}
+    }
+
+    .threshold-glint{
+      animation:thresholdGlint 8.4s ease-in-out infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes thresholdGlint{
+      0%,100%{opacity:.10;transform:translateX(-34px)}
+      48%,55%{opacity:.46;transform:translateX(32px)}
+    }
+
+    .threshold-star{
+      animation:thresholdFacetTurn 26s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes thresholdFacetTurn{
+      to{transform:rotate(360deg)}
     }
 
     .door-anchor-label{
@@ -482,157 +527,86 @@
       text-transform:uppercase;
     }
 
-    .door-orbit{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:30.5rem;
-      height:30.5rem;
-      z-index:5;
-      border-radius:999px;
-      pointer-events:none;
-      transform-style:preserve-3d;
-      animation:doorOrbitSpin3D var(--orbit-duration) linear infinite;
-    }
-
-    @keyframes doorOrbitSpin3D{
-      from{transform:translate(-50%,-50%) rotateX(var(--orbit-tilt)) rotateZ(0deg)}
-      to{transform:translate(-50%,-50%) rotateX(var(--orbit-tilt)) rotateZ(360deg)}
-    }
-
-    .door-node{
-      --radius:-13.1rem;
-      position:absolute;
-      left:50%;
-      top:50%;
-      display:grid;
-      place-items:center;
-      overflow:visible;
-      width:8.55rem;
-      height:6.45rem;
-      margin:-3.225rem 0 0 -4.275rem;
-      transform:
-        rotate(var(--angle))
-        translateY(var(--radius))
-        rotate(calc(-1 * var(--angle)))
-        rotateX(calc(-1 * var(--orbit-tilt)));
-      pointer-events:auto;
-      backface-visibility:hidden;
-      transform-style:preserve-3d;
-      isolation:isolate;
-      transition:filter .18s ease,scale .18s ease;
-    }
-
-    .door-node:hover,
-    .door-node:focus-visible{
-      outline:none;
-      filter:brightness(1.14) saturate(1.10);
-      scale:1.045;
-    }
-
-    .threshold-gem-svg{
+    .door-label-overlay{
       position:absolute;
       inset:0;
-      width:100%;
-      height:100%;
-      overflow:visible;
-      pointer-events:none;
-      animation:thresholdGemBreathe 8.6s ease-in-out infinite;
-      transform-origin:50% 50%;
-      filter:
-        drop-shadow(0 1.1rem 1.35rem rgba(0,0,0,.30))
-        drop-shadow(0 0 1.35rem rgba(143,101,255,.20))
-        drop-shadow(0 0 .75rem rgba(255,255,255,.08));
-    }
-
-    @keyframes thresholdGemBreathe{
-      0%,100%{transform:translateY(0) scale(1)}
-      50%{transform:translateY(-.18rem) scale(1.025)}
-    }
-
-    .door-node:hover .threshold-gem-svg,
-    .door-node:focus-visible .threshold-gem-svg{
-      filter:
-        drop-shadow(0 1.25rem 1.55rem rgba(0,0,0,.36))
-        drop-shadow(0 0 1.65rem rgba(143,101,255,.28))
-        drop-shadow(0 0 1rem rgba(243,200,111,.12));
-    }
-
-    .door-anchor .threshold-gem-svg{
-      animation:thresholdAnchorBreathe 9.2s ease-in-out infinite;
-      filter:
-        drop-shadow(0 1.4rem 1.8rem rgba(0,0,0,.38))
-        drop-shadow(0 0 2.2rem rgba(143,101,255,.22))
-        drop-shadow(0 0 1.1rem rgba(243,200,111,.08));
-    }
-
-    @keyframes thresholdAnchorBreathe{
-      0%,100%{transform:scale(1)}
-      50%{transform:scale(1.012)}
-    }
-
-    .threshold-glint{
-      animation:thresholdGlint 8.4s ease-in-out infinite;
-      transform-origin:110px 80px;
-    }
-
-    @keyframes thresholdGlint{
-      0%,100%{opacity:.10;transform:translateX(-34px)}
-      48%,55%{opacity:.46;transform:translateX(32px)}
-    }
-
-    .threshold-star{
-      animation:thresholdFacetTurn 26s linear infinite;
-      transform-origin:110px 80px;
-    }
-
-    @keyframes thresholdFacetTurn{
-      to{transform:rotate(360deg)}
-    }
-
-    .door-label-shell{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      width:100%;
-      height:100%;
-      padding:.35rem;
-      text-align:center;
-      position:relative;
-      z-index:3;
+      z-index:6;
       pointer-events:none;
     }
 
-    .door-label-text{
-      display:block;
-      max-width:5.85rem;
+    .door-route-label{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:7.4rem;
+      min-height:3.35rem;
+      display:grid;
+      place-items:center;
+      padding:.42rem .5rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:1rem;
       color:rgba(255,244,216,.98);
+      background:rgba(5,8,22,.14);
+      backdrop-filter:blur(2px);
       text-align:center;
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.075em;
-      line-height:1.08;
-      text-transform:uppercase;
+      pointer-events:auto;
       text-shadow:
         0 2px 12px rgba(0,0,0,.92),
         0 0 10px rgba(58,30,130,.84),
         0 0 2px rgba(255,255,255,.42);
-      animation:doorTextUpright var(--orbit-duration) linear infinite;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+      transform:translate(-50%,-50%);
+      will-change:transform,left,top,opacity;
+      transition:filter .16s ease,border-color .16s ease,background .16s ease;
     }
 
-    .door-label-sub{
+    .door-route-label:hover,
+    .door-route-label:focus-visible{
+      outline:none;
+      border-color:rgba(243,200,111,.52);
+      background:rgba(14,17,36,.40);
+      filter:brightness(1.12);
+    }
+
+    .door-route-label b{
       display:block;
-      margin-top:.13rem;
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      line-height:1.06;
+      text-transform:uppercase;
+    }
+
+    .door-route-label span{
+      display:block;
+      margin-top:.14rem;
       color:rgba(230,238,255,.76);
       font-size:.47rem;
       font-weight:850;
-      letter-spacing:.055em;
+      letter-spacing:.06em;
       line-height:1;
       text-transform:uppercase;
     }
 
-    @keyframes doorTextUpright{
-      to{transform:rotate(-360deg)}
+    .door-webgl-fallback{
+      position:absolute;
+      left:50%;
+      bottom:1rem;
+      z-index:8;
+      transform:translateX(-50%);
+      display:none;
+      width:min(92%,42rem);
+      padding:.85rem 1rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1rem;
+      background:rgba(5,8,20,.76);
+      color:rgba(255,244,216,.88);
+      font-size:.86rem;
+      text-align:center;
+    }
+
+    html[data-door-webgl-status="failed"] .door-webgl-fallback{
+      display:block;
     }
 
     .lens-grid,
@@ -749,38 +723,25 @@
 
       .door-stage{
         min-height:35rem;
-        perspective:760px;
       }
 
-      .door-stage::before{
-        width:86%;
-        height:52%;
+      .door-anchor{
+        width:8.9rem;
+        height:6.7rem;
       }
 
-      .door-stage::after{
-        width:56%;
-        height:34%;
+      .door-route-label{
+        width:5.7rem;
+        min-height:2.75rem;
+        border-radius:.86rem;
       }
 
-      .door-orbit{
-        width:23.8rem;
-        height:23.8rem;
-      }
-
-      .door-node{
-        --radius:-10.15rem;
-        width:6.7rem;
-        height:5.05rem;
-        margin:-2.525rem 0 0 -3.35rem;
-      }
-
-      .door-label-text{
-        max-width:4.15rem;
+      .door-route-label b{
         font-size:.50rem;
         letter-spacing:.052em;
       }
 
-      .door-label-sub{
+      .door-route-label span{
         font-size:.34rem;
       }
 
@@ -816,26 +777,18 @@
         font-size:.42rem;
       }
 
-      .door-orbit{
-        width:17.3rem;
-        height:17.3rem;
+      .door-route-label{
+        width:4.8rem;
+        min-height:2.35rem;
+        padding:.3rem .35rem;
       }
 
-      .door-node{
-        --radius:-7.2rem;
-        width:5.55rem;
-        height:4.25rem;
-        margin:-2.125rem 0 0 -2.775rem;
-      }
-
-      .door-label-text{
-        max-width:3.30rem;
+      .door-route-label b{
         font-size:.40rem;
         letter-spacing:.042em;
       }
 
-      .door-label-sub{
-        display:block;
+      .door-route-label span{
         font-size:.27rem;
       }
     }
@@ -850,8 +803,6 @@
         transition-duration:.01ms!important;
       }
 
-      .door-orbit,
-      .door-label-text,
       .threshold-gem-svg,
       .threshold-glint,
       .threshold-star{
@@ -911,47 +862,6 @@
           <feMergeNode in="SourceGraphic"/>
         </feMerge>
       </filter>
-
-      <symbol id="doorThresholdCrystal" viewBox="0 0 220 160">
-        <g filter="url(#thresholdCrystalGlow)">
-          <path
-            d="M110 6 L145 15 L184 43 L206 76 L186 112 L148 140 L110 154 L72 140 L34 112 L14 76 L36 43 L75 15 Z"
-            fill="url(#thresholdCrystalBody)"
-            stroke="rgba(239,231,255,.56)"
-            stroke-width="1.35"
-          />
-          <path d="M110 6 L145 15 L131 43 L110 33 L89 43 L75 15 Z" fill="rgba(255,255,255,.30)"/>
-          <path d="M75 15 L89 43 L62 65 L36 43 Z" fill="rgba(255,255,255,.20)"/>
-          <path d="M145 15 L131 43 L158 65 L184 43 Z" fill="rgba(203,184,255,.22)"/>
-          <path d="M36 43 L62 65 L54 84 L14 76 Z" fill="rgba(255,255,255,.10)"/>
-          <path d="M184 43 L158 65 L166 84 L206 76 Z" fill="rgba(243,200,111,.10)"/>
-          <path
-            d="M89 43 L110 33 L131 43 L158 65 L145 91 L110 107 L75 91 L62 65 Z"
-            fill="url(#thresholdCrystalTable)"
-            stroke="rgba(255,255,255,.30)"
-            stroke-width=".9"
-          />
-          <path d="M14 76 L54 84 L72 140 L34 112 Z" fill="rgba(5,4,22,.34)"/>
-          <path d="M206 76 L166 84 L148 140 L186 112 Z" fill="rgba(255,255,255,.10)"/>
-          <path d="M54 84 L75 91 L110 154 L72 140 Z" fill="rgba(15,8,52,.44)"/>
-          <path d="M166 84 L145 91 L110 154 L148 140 Z" fill="rgba(143,101,255,.18)"/>
-          <path d="M75 91 L110 107 L110 154 Z" fill="url(#thresholdCrystalDepth)" opacity=".72"/>
-          <path d="M145 91 L110 107 L110 154 Z" fill="rgba(7,6,24,.34)"/>
-          <path d="M110 6 L110 154" stroke="rgba(255,255,255,.34)" stroke-width="1.05"/>
-          <path d="M14 76 L206 76" stroke="rgba(255,255,255,.25)" stroke-width=".95"/>
-          <path d="M36 43 L186 112" stroke="rgba(255,255,255,.16)" stroke-width=".85"/>
-          <path d="M184 43 L34 112" stroke="rgba(255,255,255,.16)" stroke-width=".85"/>
-          <path d="M75 15 L110 107 L145 15" stroke="rgba(255,255,255,.18)" stroke-width=".85" fill="none"/>
-          <path d="M36 43 L110 107 L184 43" stroke="rgba(255,255,255,.14)" stroke-width=".85" fill="none"/>
-          <path d="M34 112 L110 107 L186 112" stroke="rgba(243,200,111,.12)" stroke-width=".85" fill="none"/>
-          <g class="threshold-star" opacity=".82">
-            <path d="M110 31 L116 76 L110 112 L104 76 Z" fill="rgba(255,255,255,.28)"/>
-            <path d="M62 65 L106 78 L158 65 L114 86 Z" fill="rgba(255,255,255,.16)"/>
-            <path d="M75 91 L106 83 L145 91 L114 101 Z" fill="rgba(255,240,163,.10)"/>
-          </g>
-          <path class="threshold-glint" d="M38 121 L176 24 L188 42 L52 133 Z" fill="url(#thresholdCrystalGlint)"/>
-        </g>
-      </symbol>
 
       <symbol id="doorThresholdSeal" viewBox="0 0 220 160">
         <g filter="url(#thresholdCrystalGlow)">
@@ -1029,10 +939,23 @@
       </section>
 
       <section class="panel section" aria-labelledby="field-title">
-        <div class="kicker">Eight-crystal axial threshold</div>
-        <h2 id="field-title">Eight larger threshold crystals move in one shared direction around the Door anchor.</h2>
+        <div class="kicker">True 3D threshold orbit</div>
+        <h2 id="field-title">Eight real WebGL threshold crystals move in one shared direction around the Door anchor.</h2>
 
-        <div class="door-stage" aria-label="Animated Door eight-physical-digital-threshold-crystal axial field">
+        <div
+          class="door-stage"
+          data-door-true-3d-stage
+          data-door-center-anchor-preserved="true"
+          data-door-outer-gems="true-3d-webgl-mesh"
+          data-shared-directional-orbit="true"
+          aria-label="Door true 3D WebGL threshold crystal orbit"
+        >
+          <canvas
+            class="door-webgl-canvas"
+            data-door-webgl-canvas
+            aria-hidden="true"
+          ></canvas>
+
           <div class="door-anchor" aria-hidden="true">
             <svg class="threshold-gem-svg" viewBox="0 0 220 160" focusable="false">
               <use href="#doorThresholdSeal"></use>
@@ -1043,62 +966,35 @@
             </span>
           </div>
 
-          <div class="door-orbit">
-            <a class="door-node" style="--angle:0deg" href="/gauges/" aria-label="North Interface">
-              <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
-              <span class="door-label-shell">
-                <b class="door-label-text">North<span class="door-label-sub">Interface</span></b>
-              </span>
+          <nav class="door-label-overlay" aria-label="Door threshold crystal routes">
+            <a class="door-route-label" data-door-route-label data-route-index="0" href="/gauges/">
+              <b>North</b><span>Interface</span>
             </a>
+            <a class="door-route-label" data-door-route-label data-route-index="1" href="/">
+              <b>Compass</b><span>Root</span>
+            </a>
+            <a class="door-route-label" data-door-route-label data-route-index="2" href="/showroom/globe/">
+              <b>East</b><span>Story</span>
+            </a>
+            <a class="door-route-label" data-door-route-label data-route-index="3" href="/characters/">
+              <b>Characters</b><span>Roster</span>
+            </a>
+            <a class="door-route-label" data-door-route-label data-route-index="4" href="/laws/">
+              <b>South</b><span>Laws</span>
+            </a>
+            <a class="door-route-label" data-door-route-label data-route-index="5" href="/home/">
+              <b>Home</b><span>Return</span>
+            </a>
+            <a class="door-route-label" data-door-route-label data-route-index="6" href="/products/">
+              <b>West</b><span>Community</span>
+            </a>
+            <a class="door-route-label" data-door-route-label data-route-index="7" href="/frontier/">
+              <b>Frontier</b><span>Future</span>
+            </a>
+          </nav>
 
-            <a class="door-node" style="--angle:45deg" href="/" aria-label="Compass">
-              <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
-              <span class="door-label-shell">
-                <b class="door-label-text">Compass<span class="door-label-sub">Root</span></b>
-              </span>
-            </a>
-
-            <a class="door-node" style="--angle:90deg" href="/showroom/globe/" aria-label="East Story Game Series">
-              <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
-              <span class="door-label-shell">
-                <b class="door-label-text">East<span class="door-label-sub">Story</span></b>
-              </span>
-            </a>
-
-            <a class="door-node" style="--angle:135deg" href="/characters/" aria-label="Characters">
-              <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
-              <span class="door-label-shell">
-                <b class="door-label-text">Characters<span class="door-label-sub">Roster</span></b>
-              </span>
-            </a>
-
-            <a class="door-node" style="--angle:180deg" href="/laws/" aria-label="South Laws">
-              <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
-              <span class="door-label-shell">
-                <b class="door-label-text">South<span class="door-label-sub">Laws</span></b>
-              </span>
-            </a>
-
-            <a class="door-node" style="--angle:225deg" href="/home/" aria-label="Home">
-              <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
-              <span class="door-label-shell">
-                <b class="door-label-text">Home<span class="door-label-sub">Return</span></b>
-              </span>
-            </a>
-
-            <a class="door-node" style="--angle:270deg" href="/products/" aria-label="West Community Products">
-              <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
-              <span class="door-label-shell">
-                <b class="door-label-text">West<span class="door-label-sub">Community</span></b>
-              </span>
-            </a>
-
-            <a class="door-node" style="--angle:315deg" href="/frontier/" aria-label="Frontier">
-              <svg class="threshold-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#doorThresholdCrystal"></use></svg>
-              <span class="door-label-shell">
-                <b class="door-label-text">Frontier<span class="door-label-sub">Future</span></b>
-              </span>
-            </a>
+          <div class="door-webgl-fallback">
+            Door threshold route links remain available below if WebGL is unavailable.
           </div>
         </div>
       </section>
@@ -1151,47 +1047,50 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-DOOR_OUTER_THRESHOLD_CRYSTAL_SCALE_AND_SHARED_ORBIT_HTML_ONLY_TNT_v1
-previous=DOOR_FOUR_LENS_THRESHOLD_RENEWAL_TNT_v2
+DOOR_TRUE_3D_THRESHOLD_CRYSTAL_ORBIT_HTML_JS_TNT_v1
+previous=DOOR_OUTER_THRESHOLD_CRYSTAL_SCALE_AND_SHARED_ORBIT_HTML_ONLY_TNT_v1
 route=/door/
 page=door
 role=entry_threshold
+html=/door/index.html
+js=/door/index.js
 message=one_narrative_four_ways_through
 top_traversal=compass,door,home,products,laws,gauges
 alignment_sequence=TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2
-local_geometry=true
-animation_standard=SITE_WIDE_SHARED_DIRECTIONAL_GEM_ORBIT_STANDARD_v1
-material=physical_digital_violet_threshold_crystal
+animation_standard=TRUE_3D_WEBGL_SHARED_DIRECTIONAL_GEM_ORBIT_STANDARD_v1
 center=door_threshold_crystal_seal_preserved
 center_anchor_size_changed=false
-outer_threshold_crystals_scaled=true
-outer_crystal_scale_desktop=larger_30_to_40_percent
-outer_crystal_scale_mobile=larger_22_to_32_percent_fit_guarded
+outer_threshold_crystals=webgl_true_3d_mesh
+outer_crystal_volume=true
+front_crown_faces=true
+back_depth_faces=true
+side_facets=true
+table_plane=true
+pavilion_taper=true
+visible_thickness=true
+facet_shading=true
+specular_highlight=true
+edge_on_disappearance_blocked=true
+flat_svg_orbit_crystals=false
+css_only_3d_plane_tricks=false
 shared_orbit_direction=true
-lightweight_3d_orbit=true
-orbit_3d_method=perspective_rotateX_depth_plane_shared_rotateZ
-label_law=labels_remain_upright_and_readable
-local_variation_allowed=gem_breathe_glint_internal_facet_turn
+orbit_method=webgl_perspective_camera_elliptical_depth_path
+label_method=html_overlay_projected_from_webgl_coordinates
+label_law=labels_remain_upright_readable_clickable
+routes=north_interface,compass,east_story,characters,south_laws,home,west_community,frontier
+route_map=/gauges/,/,/showroom/globe/,/characters/,/laws/,/home/,/products/,/frontier/
+local_variation_allowed=small_wobble,breathing,glint,facet_shimmer
 scattered_independent_drift=false
 four_lens_compass=true
 north=interface_engineering_everything_as_we_know_it
 south=laws_truth_layer_scientific_backing
 east=fun_narrative_game_series_mirrorland_expression
 west=community_products_practical_application
-diamonds=north_interface,compass,east_story,characters,south_laws,home,west_community,frontier
-primary_routes=gauges,compass,showroom_globe,characters,laws,home,products,frontier
-animation=doorOrbitSpin3D,doorTextUpright,thresholdGemBreathe,thresholdFacetTurn,thresholdGlint,anchorPulse
-z_index_law=ambient_background,door_anchor,shared_3d_orbit,larger_route_crystals,readable_route_labels
-non_overlap_law=no_clickable_crystal_hidden_by_center_no_crystal_escape_to_cards_no_crystal_clip
-mobile_law=compact_shared_orbit_readable_larger_crystals
-preserved=top_traversal,local_geometry,entry_threshold,receipt_containment,eight_point_orbit,door_animation,physical_digital_threshold_crystals,center_door_anchor
-renewed=outer_threshold_crystal_scale,label_readability,shared_directional_flow,lightweight_3d_orbit_depth
-route_owns=entry_threshold,8_point_field,animated_threshold_crystal_routes,route_selection_surface,top_traversal,four_lens_threshold
+preserved=top_traversal,entry_threshold,receipt_containment,eight_routes,center_door_anchor,physical_digital_threshold_language
+renewed=outer_crystals_true_3d_webgl_mesh,shared_directional_flow,projected_readable_labels
+route_owns=entry_threshold,8_webgl_threshold_crystals,route_selection_surface,top_traversal,four_lens_threshold
 route_does_not_own=products_page,laws_page,showroom_globe_page,characters_page,frontier_page,body_rendering,planet_surface,instrument_state,gauges_logic,full_site_nav_rebuild
 heavy_runtime_loaded=false
-render_files_touched=false
-instrument_touched=false
-gauges_logic_touched=false
 generated_image=false
 graphic_box=false
 streaming=false
@@ -1200,8 +1099,14 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      DOOR_OUTER_THRESHOLD_CRYSTAL_SCALE_AND_SHARED_ORBIT_HTML_ONLY_TNT_v1 · Door · Larger outer crystals · Shared orbit flow · Center anchor preserved.
+      DOOR_TRUE_3D_THRESHOLD_CRYSTAL_ORBIT_HTML_JS_TNT_v1 · Door · True 3D WebGL outer crystals · Center anchor preserved.
     </footer>
   </div>
+
+  <script>
+    window.DGB_DOOR_HTML_CACHE_KEY = "DOOR_TRUE_3D_THRESHOLD_CRYSTAL_ORBIT_HTML_JS_TNT_v1";
+    window.DGB_DOOR_JS_CACHE_KEY = "DOOR_TRUE_3D_THRESHOLD_CRYSTAL_ORBIT_HTML_JS_TNT_v1";
+  </script>
+  <script type="module" src="/door/index.js?v=DOOR_TRUE_3D_THRESHOLD_CRYSTAL_ORBIT_HTML_JS_TNT_v1"></script>
 </body>
 </html>

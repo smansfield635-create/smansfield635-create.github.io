@@ -1,15 +1,17 @@
 // /index.js
-// ROOT_COMPASS_STRICT_ORGANIC_GEM_THRESHOLD_CONTROLLER_TNT_v3
+// ROOT_COMPASS_STRICT_ORGANIC_GEM_ROTATION_CONTROLLER_TNT_v4
 // Full-file replacement.
 // Authority: minimal Compass gem-entry enhancement only.
+// Gem body rotation is CSS-owned in /index.html.
+// Labels remain upright and readable.
 
 (() => {
   "use strict";
 
   const META = Object.freeze({
-    name: "root_compass_strict_organic_gem_threshold_controller",
-    version: "G3",
-    contract: "ROOT_COMPASS_STRICT_ORGANIC_GEM_THRESHOLD_TNT_v3",
+    name: "root_compass_strict_organic_gem_rotation_controller",
+    version: "G4",
+    contract: "ROOT_COMPASS_STRICT_ORGANIC_GEM_ROTATION_TNT_v4",
     file: "/index.js",
     role: "ROOT_COMPASS_ORIENTATION_CURIOSITY_THRESHOLD_ENHANCEMENT",
     mutatesCanonicalState: false,
@@ -63,7 +65,7 @@
     return (
       !!html &&
       html.getAttribute("data-page") === "compass" &&
-      html.getAttribute("data-contract") === "ROOT_COMPASS_STRICT_ORGANIC_GEM_THRESHOLD_TNT_v3"
+      html.getAttribute("data-contract") === "ROOT_COMPASS_STRICT_ORGANIC_GEM_ROTATION_TNT_v4"
     );
   }
 
@@ -102,6 +104,8 @@
           role: META.role,
           rootIsCompass: true,
           visibleExplanationLevel: "minimal",
+          gemBodyRotates: true,
+          labelRotates: false,
           primaryEntries: META.primaryEntryMap,
           audraliaLoaderActive: false,
           planetRendererActive: false,

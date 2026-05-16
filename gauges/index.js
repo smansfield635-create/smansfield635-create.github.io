@@ -1,634 +1,557 @@
 // /gauges/index.js
-const SOURCE_TARGETS = Object.freeze({
-  parentHtml: "/showroom/globe/",
-  parentJs: "/showroom/globe/index.js",
-  earthHtml: "/showroom/globe/earth/",
-  earthJs: "/showroom/globe/earth/index.js",
-  audraliaHtml: "/showroom/globe/audralia/",
-  audraliaJs: "/showroom/globe/audralia/index.js",
-  earthAuthority: "/assets/earth/earth_canvas.js",
-  audraliaAuthority: "/assets/audralia/audralia.planet.render.js"
+// TNT FULL-FILE REPLACEMENT
+// GAUGES_TRUTH_SUMMARY_ROLE_RENEWAL_HTML_JS_TNT_v1
+// Role:
+// - Summarize served truth.
+// - Verify current route/status signals.
+// - Do not act as progress engine.
+// - Do not frame Gauges as the primary proof path.
+// - Laws remains proof/truth/scientific backing.
+// - Gauges remains measurement/audit/route-status verification.
+
+const GAUGES_TRUTH_SUMMARY_CONTRACT = Object.freeze({
+  contract: "GAUGES_TRUTH_SUMMARY_ROLE_RENEWAL_HTML_JS_TNT_v1",
+  previousContract: "TRIPLE_G_EXIT_RELEASE_FALSE_POSITIVE_REPAIR_TNT_v1",
+  route: "/gauges/",
+  proofPath: "/laws/",
+  proofAuthority: "Laws",
+  gaugesRole: "measurement-audit-route-status-summary",
+  progressEngine: false,
+  generatedImage: false,
+  graphicBox: false,
+  streaming: false,
+  visualPassClaimed: false
 });
 
-const RAW_RECEIPT_PATTERNS = Object.freeze([
-  /\bSHOWROOM_GLOBE_[A-Z0-9_]+/g,
-  /\bROUTE_CONTROLLER_EXECUTED=/g,
-  /\bIMPORT_ATTEMPTED=/g,
-  /\bAUTHORITY_IMPORTED=/g,
-  /\bMOUNT_EXISTS=/g,
-  /\bSTATUS_SUMMARY=/g,
-  /\bVISUAL_PASS=HELD/g,
-  /\bGENERATION_CLAIMED=/g,
-  /\bGROUND_ZERO_PARENT_ONLY=/g,
-  /\bBODY_ADOPTION_BLOCKED=/g,
-  /\bNO_CROSS_BODY_FALLBACK=/g,
-  /\bACTIVE_DOWNSTREAM_CHILDREN=/g
-]);
+const ROUTES = Object.freeze({
+  parent: "/showroom/globe/",
+  hEarth: "/showroom/globe/h-earth/",
+  hEarthRuntime: "/showroom/globe/h-earth/index.js",
+  laws: "/laws/",
+  gauges: "/gauges/"
+});
 
-const REQUIRED_PARENT_LINKS = Object.freeze([
-  "/showroom/globe/earth/",
-  "/showroom/globe/audralia/"
-]);
-
-const EARTH_ONLY_PATTERNS = Object.freeze([
-  "earthRenderMount",
-  "/assets/earth/earth_canvas.js",
-  "Earth"
-]);
-
-const AUDRALIA_ONLY_PATTERNS = Object.freeze([
-  "audraliaRenderMount",
-  "/assets/audralia/audralia.planet.render.js",
-  "Audralia"
-]);
-
-const dom = {
-  runButton: document.getElementById("runAuditButton"),
-  timestamp: document.getElementById("auditTimestamp"),
-  total: document.getElementById("totalCount"),
-  pass: document.getElementById("passCount"),
-  fail: document.getElementById("failCount"),
-  held: document.getElementById("heldCount"),
-  score: document.getElementById("boundaryScore"),
-  output: document.getElementById("auditOutput"),
-  parentSource: document.getElementById("parentSourceStatus"),
-  earthSource: document.getElementById("earthSourceStatus"),
-  audraliaSource: document.getElementById("audraliaSourceStatus")
+const state = {
+  logs: [],
+  lanes: [],
+  confirmed: 0,
+  held: 0,
+  review: 0
 };
 
-function cacheBust(url) {
-  const joiner = url.includes("?") ? "&" : "?";
-  return `${url}${joiner}_gauges_boundary_audit=${Date.now()}`;
+function nowStamp() {
+  return new Date().toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit"
+  });
 }
 
-async function readSource(label, url) {
-  try {
-    const response = await fetch(cacheBust(url), {
-      cache: "no-store",
-      credentials: "same-origin"
-    });
-
-    const text = await response.text();
-
-    return {
-      label,
-      url,
-      ok: response.ok,
-      status: response.status,
-      text,
-      bytes: text.length
-    };
-  } catch (error) {
-    return {
-      label,
-      url,
-      ok: false,
-      status: 0,
-      text: "",
-      bytes: 0,
-      error: error instanceof Error ? error.message : String(error)
-    };
-  }
+function log(message) {
+  state.logs.push(`[${nowStamp()}] ${message}`);
+  const node = document.getElementById("auditLog");
+  if (node) node.textContent = state.logs.join("\n");
 }
 
-function includesAll(text, patterns) {
-  return patterns.every(pattern => text.includes(pattern));
+function textIncludes(text, token) {
+  return String(text || "").includes(token);
 }
 
-function includesNone(text, patterns) {
-  return patterns.every(pattern => !text.includes(pattern));
+function countMatches(text, expression) {
+  const matches = String(text || "").match(expression);
+  return matches ? matches.length : 0;
 }
 
-function countRawReceiptMatches(text) {
-  let count = 0;
+function getAttr(text, attrName) {
+  const pattern = new RegExp(`${attrName}\\s*=\\s*["']([^"']+)["']`, "i");
+  const match = String(text || "").match(pattern);
+  return match ? match[1] : null;
+}
 
-  for (const pattern of RAW_RECEIPT_PATTERNS) {
-    const matches = text.match(pattern);
-    if (matches) count += matches.length;
+async function fetchText(path) {
+  const response = await fetch(`${path}?truth-summary=${Date.now()}`, {
+    cache: "no-store",
+    credentials: "same-origin"
+  });
+
+  if (!response.ok) {
+    throw new Error(`${path} returned ${response.status}`);
   }
 
-  return count;
+  return response.text();
 }
 
-function check(section, title, state, detail) {
-  return {
-    section,
-    title,
-    state,
-    detail
-  };
+function makeLane(status, title, subtitle, checks) {
+  return { status, title, subtitle, checks };
 }
 
-function pass(section, title, detail) {
-  return check(section, title, "pass", detail);
+function statusClass(status) {
+  if (status === "Confirmed") return "confirmed";
+  if (status === "Held") return "held";
+  return "review";
 }
 
-function fail(section, title, detail) {
-  return check(section, title, "fail", detail);
-}
-
-function held(section, title, detail) {
-  return check(section, title, "held", detail);
-}
-
-function requireSource(source, section, title) {
-  if (source.ok) return null;
-
-  return fail(
-    section,
-    title,
-    `${source.label} could not be read. Status=${source.status}. URL=${source.url}`
-  );
-}
-
-function evaluateParentBoundary(sources) {
-  const section = "Parent Selector Boundary";
-  const checks = [];
-  const html = sources.parentHtml;
-  const js = sources.parentJs;
-
-  const htmlFailure = requireSource(html, section, "Parent selector route is reachable");
-  checks.push(htmlFailure || pass(section, "Parent selector route is reachable", `${html.url} returned ${html.status}.`));
-
-  const jsFailure = requireSource(js, section, "Parent selector script is reachable");
-  checks.push(jsFailure || pass(section, "Parent selector script is reachable", `${js.url} returned ${js.status}.`));
-
-  if (!html.ok) {
-    checks.push(held(section, "Parent selector carries both child route links", "Held because parent HTML could not be read."));
-    checks.push(held(section, "Parent selector does not mount Earth directly", "Held because parent HTML could not be read."));
-    checks.push(held(section, "Parent selector does not mount Audralia directly", "Held because parent HTML could not be read."));
-    checks.push(held(section, "Parent selector hides raw receipts", "Held because parent HTML could not be read."));
-  } else {
-    checks.push(
-      includesAll(html.text, REQUIRED_PARENT_LINKS)
-        ? pass(section, "Parent selector carries both child route links", "Earth and Audralia child route links are present.")
-        : fail(section, "Parent selector carries both child route links", "Parent route must link to both /showroom/globe/earth/ and /showroom/globe/audralia/.")
-    );
-
-    checks.push(
-      !html.text.includes("earthRenderMount")
-        ? pass(section, "Parent selector does not mount Earth directly", "Parent page does not contain #earthRenderMount.")
-        : fail(section, "Parent selector does not mount Earth directly", "Parent selector still contains #earthRenderMount.")
-    );
-
-    checks.push(
-      !html.text.includes("audraliaRenderMount")
-        ? pass(section, "Parent selector does not mount Audralia directly", "Parent page does not contain #audraliaRenderMount.")
-        : fail(section, "Parent selector does not mount Audralia directly", "Parent selector still contains #audraliaRenderMount.")
-    );
-
-    const rawCount = countRawReceiptMatches(html.text);
-    checks.push(
-      rawCount === 0
-        ? pass(section, "Parent selector hides raw receipts", "No raw runtime receipt patterns are visible in parent HTML source.")
-        : fail(section, "Parent selector hides raw receipts", `${rawCount} raw receipt pattern(s) found in parent HTML.`)
-    );
-  }
-
-  if (!js.ok) {
-    checks.push(held(section, "Parent script avoids render-body imports", "Held because parent JS could not be read."));
-    checks.push(held(section, "Parent script declares selector role", "Held because parent JS could not be read."));
-  } else {
-    const importsRenderBodies =
-      js.text.includes("/assets/earth/earth_canvas.js") ||
-      js.text.includes("/assets/audralia/audralia.planet.render.js") ||
-      js.text.includes("earthRenderMount") ||
-      js.text.includes("audraliaRenderMount");
-
-    checks.push(
-      !importsRenderBodies
-        ? pass(section, "Parent script avoids render-body imports", "Parent JS does not import Earth or Audralia render authorities.")
-        : fail(section, "Parent script avoids render-body imports", "Parent JS still references render authority or render mounts.")
-    );
-
-    checks.push(
-      js.text.includes('role: "selector"') || js.text.includes("role:'selector'") || js.text.includes("globeRoute = \"selector\"")
-        ? pass(section, "Parent script declares selector role", "Selector route state is present.")
-        : fail(section, "Parent script declares selector role", "Parent JS should declare selector-only route state.")
-    );
-  }
-
-  return checks;
-}
-
-function evaluateEarthBoundary(sources) {
-  const section = "Earth Independent Boundary";
-  const checks = [];
-  const html = sources.earthHtml;
-  const js = sources.earthJs;
-  const authority = sources.earthAuthority;
-
-  const htmlFailure = requireSource(html, section, "Earth route is reachable");
-  checks.push(htmlFailure || pass(section, "Earth route is reachable", `${html.url} returned ${html.status}.`));
-
-  const jsFailure = requireSource(js, section, "Earth route script is reachable");
-  checks.push(jsFailure || pass(section, "Earth route script is reachable", `${js.url} returned ${js.status}.`));
-
-  const authorityFailure = requireSource(authority, section, "Earth authority file is reachable");
-  checks.push(authorityFailure || pass(section, "Earth authority file is reachable", `${authority.url} returned ${authority.status}.`));
-
-  if (!html.ok) {
-    checks.push(held(section, "Earth route owns Earth mount", "Held because Earth HTML could not be read."));
-    checks.push(held(section, "Earth route excludes Audralia mount", "Held because Earth HTML could not be read."));
-    checks.push(held(section, "Earth route hides raw receipts", "Held because Earth HTML could not be read."));
-  } else {
-    checks.push(
-      html.text.includes("earthRenderMount")
-        ? pass(section, "Earth route owns Earth mount", "Earth route contains #earthRenderMount.")
-        : fail(section, "Earth route owns Earth mount", "Earth route must contain #earthRenderMount.")
-    );
-
-    checks.push(
-      !html.text.includes("audraliaRenderMount")
-        ? pass(section, "Earth route excludes Audralia mount", "Earth route does not contain #audraliaRenderMount.")
-        : fail(section, "Earth route excludes Audralia mount", "Earth route still contains #audraliaRenderMount.")
-    );
-
-    const rawCount = countRawReceiptMatches(html.text);
-    checks.push(
-      rawCount === 0
-        ? pass(section, "Earth route hides raw receipts", "No raw runtime receipt patterns are visible in Earth HTML source.")
-        : fail(section, "Earth route hides raw receipts", `${rawCount} raw receipt pattern(s) found in Earth HTML.`)
-    );
-  }
-
-  if (!js.ok) {
-    checks.push(held(section, "Earth route imports Earth authority only", "Held because Earth JS could not be read."));
-    checks.push(held(section, "Earth route blocks Audralia adoption", "Held because Earth JS could not be read."));
-    checks.push(held(section, "Earth route declares hidden public receipts", "Held because Earth JS could not be read."));
-  } else {
-    checks.push(
-      js.text.includes("/assets/earth/earth_canvas.js")
-        ? pass(section, "Earth route imports Earth authority", "Earth JS references /assets/earth/earth_canvas.js.")
-        : fail(section, "Earth route imports Earth authority", "Earth JS must reference /assets/earth/earth_canvas.js.")
-    );
-
-    checks.push(
-      !js.text.includes("/assets/audralia/") && !js.text.includes("audraliaRenderMount")
-        ? pass(section, "Earth route blocks Audralia adoption", "Earth JS contains no Audralia authority or Audralia mount reference.")
-        : fail(section, "Earth route blocks Audralia adoption", "Earth JS references Audralia authority or Audralia mount.")
-    );
-
-    checks.push(
-      js.text.includes("publicReceiptRendering: false") || js.text.includes('publicReceipts = "hidden"')
-        ? pass(section, "Earth route declares hidden public receipts", "Earth route state prevents public receipt rendering.")
-        : fail(section, "Earth route declares hidden public receipts", "Earth JS should declare public receipt rendering as false/hidden.")
-    );
-  }
-
-  return checks;
-}
-
-function evaluateAudraliaBoundary(sources) {
-  const section = "Audralia Independent Boundary";
-  const checks = [];
-  const html = sources.audraliaHtml;
-  const js = sources.audraliaJs;
-  const authority = sources.audraliaAuthority;
-
-  const htmlFailure = requireSource(html, section, "Audralia route is reachable");
-  checks.push(htmlFailure || pass(section, "Audralia route is reachable", `${html.url} returned ${html.status}.`));
-
-  const jsFailure = requireSource(js, section, "Audralia route script is reachable");
-  checks.push(jsFailure || pass(section, "Audralia route script is reachable", `${js.url} returned ${js.status}.`));
-
-  const authorityFailure = requireSource(authority, section, "Audralia authority file is reachable");
-  checks.push(authorityFailure || pass(section, "Audralia authority file is reachable", `${authority.url} returned ${authority.status}.`));
-
-  if (!html.ok) {
-    checks.push(held(section, "Audralia route owns Audralia mount", "Held because Audralia HTML could not be read."));
-    checks.push(held(section, "Audralia route excludes Earth mount", "Held because Audralia HTML could not be read."));
-    checks.push(held(section, "Audralia route hides raw receipts", "Held because Audralia HTML could not be read."));
-  } else {
-    checks.push(
-      html.text.includes("audraliaRenderMount")
-        ? pass(section, "Audralia route owns Audralia mount", "Audralia route contains #audraliaRenderMount.")
-        : fail(section, "Audralia route owns Audralia mount", "Audralia route must contain #audraliaRenderMount.")
-    );
-
-    checks.push(
-      !html.text.includes("earthRenderMount")
-        ? pass(section, "Audralia route excludes Earth mount", "Audralia route does not contain #earthRenderMount.")
-        : fail(section, "Audralia route excludes Earth mount", "Audralia route still contains #earthRenderMount.")
-    );
-
-    const rawCount = countRawReceiptMatches(html.text);
-    checks.push(
-      rawCount === 0
-        ? pass(section, "Audralia route hides raw receipts", "No raw runtime receipt patterns are visible in Audralia HTML source.")
-        : fail(section, "Audralia route hides raw receipts", `${rawCount} raw receipt pattern(s) found in Audralia HTML.`)
-    );
-  }
-
-  if (!js.ok) {
-    checks.push(held(section, "Audralia route imports Audralia authority only", "Held because Audralia JS could not be read."));
-    checks.push(held(section, "Audralia route blocks Earth adoption", "Held because Audralia JS could not be read."));
-    checks.push(held(section, "Audralia route declares hidden public receipts", "Held because Audralia JS could not be read."));
-  } else {
-    checks.push(
-      js.text.includes("/assets/audralia/audralia.planet.render.js")
-        ? pass(section, "Audralia route imports Audralia authority", "Audralia JS references /assets/audralia/audralia.planet.render.js.")
-        : fail(section, "Audralia route imports Audralia authority", "Audralia JS must reference /assets/audralia/audralia.planet.render.js.")
-    );
-
-    checks.push(
-      !js.text.includes("/assets/earth/earth_canvas.js") && !js.text.includes("earthRenderMount")
-        ? pass(section, "Audralia route blocks Earth adoption", "Audralia JS contains no Earth authority or Earth mount reference.")
-        : fail(section, "Audralia route blocks Earth adoption", "Audralia JS references Earth authority or Earth mount.")
-    );
-
-    checks.push(
-      js.text.includes("publicReceiptRendering: false") || js.text.includes('publicReceipts = "hidden"')
-        ? pass(section, "Audralia route declares hidden public receipts", "Audralia route state prevents public receipt rendering.")
-        : fail(section, "Audralia route declares hidden public receipts", "Audralia JS should declare public receipt rendering as false/hidden.")
-    );
-  }
-
-  return checks;
-}
-
-function evaluateDependentBoundaries(sources) {
-  const section = "Dependent Boundary Chain";
-  const checks = [];
-
-  const parentReady = sources.parentHtml.ok;
-  const earthReady = sources.earthHtml.ok;
-  const audraliaReady = sources.audraliaHtml.ok;
-
-  if (!parentReady || !earthReady || !audraliaReady) {
-    checks.push(
-      held(
-        section,
-        "Three-route dependency chain can be evaluated",
-        "Held until parent selector, Earth route, and Audralia route are all readable."
-      )
-    );
-  } else {
-    const parentLinksChildren =
-      includesAll(sources.parentHtml.text, REQUIRED_PARENT_LINKS);
-
-    const earthLinksBack =
-      sources.earthHtml.text.includes("/showroom/globe/") &&
-      sources.earthHtml.text.includes("/showroom/globe/audralia/");
-
-    const audraliaLinksBack =
-      sources.audraliaHtml.text.includes("/showroom/globe/") &&
-      sources.audraliaHtml.text.includes("/showroom/globe/earth/");
-
-    checks.push(
-      parentLinksChildren && earthLinksBack && audraliaLinksBack
-        ? pass(section, "Three-route dependency chain is connected", "Parent links to both children; each child can return and cross-inspect.")
-        : fail(section, "Three-route dependency chain is connected", "One or more route links are missing from the selector/child route chain.")
-    );
-  }
-
-  if (!sources.parentJs.ok || !sources.earthJs.ok || !sources.audraliaJs.ok) {
-    checks.push(
-      held(
-        section,
-        "Route scripts preserve separate authority",
-        "Held until parent JS, Earth JS, and Audralia JS are all readable."
-      )
-    );
-  } else {
-    const parentNoImport =
-      !sources.parentJs.text.includes("/assets/earth/earth_canvas.js") &&
-      !sources.parentJs.text.includes("/assets/audralia/audralia.planet.render.js");
-
-    const earthOnly =
-      sources.earthJs.text.includes("/assets/earth/earth_canvas.js") &&
-      !sources.earthJs.text.includes("/assets/audralia/");
-
-    const audraliaOnly =
-      sources.audraliaJs.text.includes("/assets/audralia/audralia.planet.render.js") &&
-      !sources.audraliaJs.text.includes("/assets/earth/earth_canvas.js");
-
-    checks.push(
-      parentNoImport && earthOnly && audraliaOnly
-        ? pass(section, "Route scripts preserve separate authority", "Selector imports no body renderers; Earth and Audralia scripts import only their own body authority.")
-        : fail(section, "Route scripts preserve separate authority", "A route script crosses authority or the selector imports a body renderer.")
-    );
-  }
-
-  const allHtmlReadable = parentReady && earthReady && audraliaReady;
-
-  if (!allHtmlReadable) {
-    checks.push(
-      held(
-        section,
-        "No public receipt dump across the split",
-        "Held until all three route HTML sources are readable."
-      )
-    );
-  } else {
-    const totalRawReceipts =
-      countRawReceiptMatches(sources.parentHtml.text) +
-      countRawReceiptMatches(sources.earthHtml.text) +
-      countRawReceiptMatches(sources.audraliaHtml.text);
-
-    checks.push(
-      totalRawReceipts === 0
-        ? pass(section, "No public receipt dump across the split", "Parent, Earth, and Audralia HTML sources avoid raw runtime receipt dumps.")
-        : fail(section, "No public receipt dump across the split", `${totalRawReceipts} raw receipt pattern(s) found across public route HTML.`)
-    );
-  }
-
-  if (!allHtmlReadable) {
-    checks.push(
-      held(
-        section,
-        "Mount appropriation is independent and dependent",
-        "Held until all three route HTML sources are readable."
-      )
-    );
-  } else {
-    const parentHasNoMount =
-      !sources.parentHtml.text.includes("earthRenderMount") &&
-      !sources.parentHtml.text.includes("audraliaRenderMount");
-
-    const earthHasOnlyEarthMount =
-      sources.earthHtml.text.includes("earthRenderMount") &&
-      !sources.earthHtml.text.includes("audraliaRenderMount");
-
-    const audraliaHasOnlyAudraliaMount =
-      sources.audraliaHtml.text.includes("audraliaRenderMount") &&
-      !sources.audraliaHtml.text.includes("earthRenderMount");
-
-    checks.push(
-      parentHasNoMount && earthHasOnlyEarthMount && audraliaHasOnlyAudraliaMount
-        ? pass(section, "Mount appropriation is independent and dependent", "Parent owns no body mount; each child owns exactly its own body mount.")
-        : fail(section, "Mount appropriation is independent and dependent", "Mount ownership is crossed, duplicated, or still present on the selector.")
-    );
-  }
-
-  if (!sources.earthAuthority.ok || !sources.audraliaAuthority.ok) {
-    checks.push(
-      held(
-        section,
-        "Both body authorities remain reachable",
-        "Held until both body authority files are readable."
-      )
-    );
-  } else {
-    checks.push(
-      pass(
-        section,
-        "Both body authorities remain reachable",
-        "Earth and Audralia authority assets are reachable without this Gauges page mutating them."
-      )
-    );
-  }
-
-  return checks;
-}
-
-function groupChecks(checks) {
-  return checks.reduce((groups, item) => {
-    if (!groups.has(item.section)) groups.set(item.section, []);
-    groups.get(item.section).push(item);
-    return groups;
-  }, new Map());
-}
-
-function renderSummary(checks) {
-  const total = checks.length;
-  const passCount = checks.filter(item => item.state === "pass").length;
-  const failCount = checks.filter(item => item.state === "fail").length;
-  const heldCount = checks.filter(item => item.state === "held").length;
-  const score = total > 0 ? Math.round((passCount / total) * 100) : 0;
-
-  dom.total.textContent = String(total);
-  dom.pass.textContent = String(passCount);
-  dom.fail.textContent = String(failCount);
-  dom.held.textContent = String(heldCount);
-  dom.score.textContent = `${score}%`;
-}
-
-function renderSourceLedger(sources) {
-  dom.parentSource.textContent =
-    `HTML ${sources.parentHtml.status || "ERR"} · JS ${sources.parentJs.status || "ERR"}`;
-
-  dom.earthSource.textContent =
-    `HTML ${sources.earthHtml.status || "ERR"} · JS ${sources.earthJs.status || "ERR"} · Authority ${sources.earthAuthority.status || "ERR"}`;
-
-  dom.audraliaSource.textContent =
-    `HTML ${sources.audraliaHtml.status || "ERR"} · JS ${sources.audraliaJs.status || "ERR"} · Authority ${sources.audraliaAuthority.status || "ERR"}`;
-}
-
-function renderChecks(checks) {
-  const groups = groupChecks(checks);
-  dom.output.innerHTML = "";
-
-  for (const [sectionName, sectionChecks] of groups.entries()) {
-    const section = document.createElement("section");
-    section.className = "audit-section";
-
-    const passCount = sectionChecks.filter(item => item.state === "pass").length;
-    const failCount = sectionChecks.filter(item => item.state === "fail").length;
-    const heldCount = sectionChecks.filter(item => item.state === "held").length;
+function renderLanes() {
+  const stack = document.getElementById("laneStack");
+  if (!stack) return;
+
+  stack.innerHTML = "";
+
+  state.lanes.forEach((lane) => {
+    const article = document.createElement("article");
+    article.className = "lane-card";
 
     const head = document.createElement("div");
-    head.className = "section-head";
-    head.innerHTML = `
-      <span>
-        <h2>${escapeHtml(sectionName)}</h2>
-        <p>${sectionDescription(sectionName)}</p>
-      </span>
-      <span class="section-count">${passCount} pass · ${failCount} fail · ${heldCount} held</span>
-    `;
+    head.className = "lane-head";
 
-    const list = document.createElement("div");
-    list.className = "check-list";
+    const titleWrap = document.createElement("div");
+    titleWrap.className = "lane-title";
 
-    for (const item of sectionChecks) {
-      const checkNode = document.createElement("article");
-      checkNode.className = "check";
-      checkNode.innerHTML = `
-        <span class="badge ${item.state}">${item.state}</span>
-        <span>
-          <p class="check-title">${escapeHtml(item.title)}</p>
-          <p class="check-detail">${escapeHtml(item.detail)}</p>
-        </span>
-      `;
-      list.appendChild(checkNode);
+    const eyebrow = document.createElement("b");
+    eyebrow.textContent = lane.status;
+
+    const title = document.createElement("h3");
+    title.textContent = lane.title;
+
+    titleWrap.append(eyebrow, title);
+
+    const status = document.createElement("span");
+    status.className = `status ${statusClass(lane.status)}`;
+    status.textContent = lane.status;
+
+    head.append(titleWrap, status);
+
+    const subtitle = document.createElement("span");
+    subtitle.textContent = lane.subtitle;
+
+    const list = document.createElement("ul");
+    list.className = "checks";
+
+    lane.checks.forEach((check) => {
+      const li = document.createElement("li");
+      li.textContent = check;
+      list.appendChild(li);
+    });
+
+    article.append(head, subtitle, list);
+    stack.appendChild(article);
+  });
+}
+
+function renderTotals() {
+  state.confirmed = state.lanes.filter((lane) => lane.status === "Confirmed").length;
+  state.held = state.lanes.filter((lane) => lane.status === "Held").length;
+  state.review = state.lanes.filter((lane) => lane.status === "Needs Review").length;
+
+  const confirmedNode = document.getElementById("confirmedCount");
+  const heldNode = document.getElementById("heldCount");
+  const reviewNode = document.getElementById("reviewCount");
+  const overallStatus = document.getElementById("overallStatus");
+  const overallText = document.getElementById("overallText");
+
+  if (confirmedNode) confirmedNode.textContent = String(state.confirmed);
+  if (heldNode) heldNode.textContent = String(state.held);
+  if (reviewNode) reviewNode.textContent = String(state.review);
+
+  if (overallStatus && overallText) {
+    if (state.review > 0) {
+      overallStatus.textContent = "Needs Review";
+      overallText.textContent = "One or more served-state checks need human review. This is a truth summary, not a progress command.";
+    } else if (state.held > 0) {
+      overallStatus.textContent = "Confirmed with Holds";
+      overallText.textContent = "The served state is mostly confirmed, with known holds preserved as holds.";
+    } else {
+      overallStatus.textContent = "Confirmed";
+      overallText.textContent = "The current served-state summary contains no review items.";
     }
-
-    section.appendChild(head);
-    section.appendChild(list);
-    dom.output.appendChild(section);
   }
 }
 
-function sectionDescription(sectionName) {
-  const descriptions = {
-    "Parent Selector Boundary":
-      "Confirms that /showroom/globe/ is a selector only and does not carry body render authority.",
-    "Earth Independent Boundary":
-      "Confirms Earth has its own route, mount, script, and Earth authority without Audralia adoption.",
-    "Audralia Independent Boundary":
-      "Confirms Audralia has its own route, mount, script, and Audralia authority without Earth adoption.",
-    "Dependent Boundary Chain":
-      "Confirms the routes connect correctly while keeping authority split and public receipts contained."
-  };
+function renderTruthSummary() {
+  const wins = document.getElementById("winsText");
+  const hold = document.getElementById("holdText");
+  const review = document.getElementById("reviewText");
 
-  return descriptions[sectionName] || "Boundary section.";
+  if (wins) {
+    wins.textContent = state.confirmed
+      ? `${state.confirmed} summary lane(s) are confirmed from served route signals.`
+      : "No lanes confirmed yet.";
+  }
+
+  if (hold) {
+    hold.textContent = state.held
+      ? `${state.held} lane(s) are held. Holds identify known gaps without treating them as failed architecture.`
+      : "No holds detected in this run.";
+  }
+
+  if (review) {
+    review.textContent = state.review
+      ? `${state.review} lane(s) need review. Review means inspect the served state; it does not automatically authorize a rebuild.`
+      : "No review target detected in this run.";
+  }
 }
 
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-async function runAudit() {
-  dom.runButton.disabled = true;
-  dom.runButton.textContent = "Running Audit";
-  dom.timestamp.textContent = "Reading route boundaries.";
-
-  const entries = await Promise.all(
-    Object.entries(SOURCE_TARGETS).map(async ([key, url]) => {
-      const source = await readSource(key, url);
-      return [key, source];
-    })
-  );
-
-  const sources = Object.fromEntries(entries);
-
-  const checks = [
-    ...evaluateParentBoundary(sources),
-    ...evaluateEarthBoundary(sources),
-    ...evaluateAudraliaBoundary(sources),
-    ...evaluateDependentBoundaries(sources)
+function summarizeParent(parentHtml) {
+  const hasCanvas = /<canvas[\s>]/i.test(parentHtml);
+  const childLinks = [
+    textIncludes(parentHtml, "/showroom/globe/earth/"),
+    textIncludes(parentHtml, "/showroom/globe/h-earth/"),
+    textIncludes(parentHtml, "/showroom/globe/audralia/")
   ];
 
-  renderSourceLedger(sources);
-  renderSummary(checks);
-  renderChecks(checks);
+  const selectorSignals = [
+    textIncludes(parentHtml, "selector"),
+    textIncludes(parentHtml, "Globe"),
+    textIncludes(parentHtml, "Interactive Narrative"),
+    childLinks.every(Boolean)
+  ];
 
-  dom.timestamp.textContent = `Last audit: ${new Date().toLocaleString()}`;
-  dom.runButton.disabled = false;
-  dom.runButton.textContent = "Run Boundary Audit";
+  const importsMaterialRuntime =
+    textIncludes(parentHtml, "h-earth.canvas") ||
+    textIncludes(parentHtml, "h-earth.surface") ||
+    textIncludes(parentHtml, "material.renderer") ||
+    textIncludes(parentHtml, "planet-one");
 
-  window.GaugesBoundaryAudit = {
-    generatedAt: new Date().toISOString(),
-    sources: Object.fromEntries(
-      Object.entries(sources).map(([key, value]) => [
-        key,
-        {
-          label: value.label,
-          url: value.url,
-          ok: value.ok,
-          status: value.status,
-          bytes: value.bytes
-        }
-      ])
-    ),
-    checks
-  };
+  if (childLinks.every(Boolean) && !hasCanvas && !importsMaterialRuntime) {
+    return makeLane(
+      "Confirmed",
+      "Parent Selector Summary",
+      "The parent route appears to act as a selector rather than the H-Earth render owner.",
+      [
+        `Parent child links present=${childLinks.join(",")}`,
+        `Parent canvas count=${countMatches(parentHtml, /<canvas[\s>]/gi)}`,
+        `Material-renderer import signal=${importsMaterialRuntime}`,
+        "Summary: parent selection role is confirmed from served HTML."
+      ]
+    );
+  }
+
+  return makeLane(
+    "Needs Review",
+    "Parent Selector Summary",
+    "The parent selector route needs human review before interpretation.",
+    [
+      `Parent child links present=${childLinks.join(",")}`,
+      `Parent canvas count=${countMatches(parentHtml, /<canvas[\s>]/gi)}`,
+      `Material-renderer import signal=${importsMaterialRuntime}`,
+      "Review: confirm the parent route is not owning child render authority."
+    ]
+  );
 }
 
-dom.runButton.addEventListener("click", runAudit);
-runAudit();
+function summarizeChildPlacement(childHtml) {
+  const dataRoute = getAttr(childHtml, "data-route");
+  const hasConditionStage =
+    textIncludes(childHtml, "condition-stage") ||
+    textIncludes(childHtml, "condition stage") ||
+    textIncludes(childHtml, "earth-water-air-condition-stack");
+
+  const hasCanvas = /<canvas[\s>]/i.test(childHtml);
+  const childPlacement =
+    textIncludes(childHtml, "/showroom/globe/h-earth/") ||
+    dataRoute === "/showroom/globe/h-earth/";
+
+  if (childPlacement && hasConditionStage) {
+    return makeLane(
+      "Confirmed",
+      "H-Earth Child Route Summary",
+      "The H-Earth route still presents as the child route for the Earth · Water · Air condition stack.",
+      [
+        `data-route=${dataRoute || "not declared"}`,
+        `condition-stage signal=${hasConditionStage}`,
+        `canvas element present=${hasCanvas}`,
+        "Summary: H-Earth placement remains child-route oriented."
+      ]
+    );
+  }
+
+  return makeLane(
+    "Needs Review",
+    "H-Earth Child Route Summary",
+    "The child-route placement signals need review.",
+    [
+      `data-route=${dataRoute || "not declared"}`,
+      `condition-stage signal=${hasConditionStage}`,
+      `canvas element present=${hasCanvas}`,
+      "Review: confirm H-Earth still owns the child scene route."
+    ]
+  );
+}
+
+function summarizeClassicBoot(childHtml, runtimeText) {
+  const hasRuntimeScript =
+    textIncludes(childHtml, "index.js") ||
+    textIncludes(childHtml, "classic") ||
+    textIncludes(childHtml, "runtimeBoot");
+
+  const hasCanvasCreation =
+    /createElement\(["']canvas["']\)/i.test(runtimeText) ||
+    /querySelector\([^)]*canvas/i.test(runtimeText) ||
+    /getContext\(["']2d["']\)/i.test(runtimeText);
+
+  const hasDraw =
+    textIncludes(runtimeText, "fillRect") ||
+    textIncludes(runtimeText, "stroke") ||
+    textIncludes(runtimeText, "renderedOnce") ||
+    textIncludes(runtimeText, "draw");
+
+  if (hasRuntimeScript && hasCanvasCreation && hasDraw) {
+    return makeLane(
+      "Confirmed",
+      "Classic Canvas Summary",
+      "The served H-Earth runtime still contains canvas and drawing signals.",
+      [
+        `runtime script signal in HTML=${hasRuntimeScript}`,
+        `canvas/context signal in runtime=${hasCanvasCreation}`,
+        `draw/render signal=${hasDraw}`,
+        "Summary: classic canvas paint capability is present from source signals."
+      ]
+    );
+  }
+
+  return makeLane(
+    "Needs Review",
+    "Classic Canvas Summary",
+    "Canvas paint signals need review from the served runtime.",
+    [
+      `runtime script signal in HTML=${hasRuntimeScript}`,
+      `canvas/context signal in runtime=${hasCanvasCreation}`,
+      `draw/render signal=${hasDraw}`,
+      "Review: confirm the child canvas still boots and paints."
+    ]
+  );
+}
+
+function summarizeConditionStack(childHtml, runtimeText) {
+  const combined = `${childHtml}\n${runtimeText}`;
+  const hasEarth = /earth|ground|soil|terrain/i.test(combined);
+  const hasWater = /water|ocean|sea|blue/i.test(combined);
+  const hasAir = /air|sky|atmosphere|haze/i.test(combined);
+  const hasConditionModel = textIncludes(combined, "earth-water-air-condition-stack");
+
+  if ((hasEarth && hasWater && hasAir) || hasConditionModel) {
+    return makeLane(
+      "Confirmed",
+      "Condition Stack Summary",
+      "Earth, Water, and Air remain represented by the served route/runtime signals.",
+      [
+        `earth signal=${hasEarth}`,
+        `water signal=${hasWater}`,
+        `air signal=${hasAir}`,
+        `condition model signal=${hasConditionModel}`,
+        "Summary: condition-stack visibility remains represented."
+      ]
+    );
+  }
+
+  return makeLane(
+    "Needs Review",
+    "Condition Stack Summary",
+    "The condition stack needs review because one or more material names were not found.",
+    [
+      `earth signal=${hasEarth}`,
+      `water signal=${hasWater}`,
+      `air signal=${hasAir}`,
+      `condition model signal=${hasConditionModel}`,
+      "Review: confirm the visible stack still expresses Earth, Water, and Air."
+    ]
+  );
+}
+
+function summarizeRuntimeCleanup(runtimeText) {
+  const hasPagehide = textIncludes(runtimeText, "pagehide");
+  const hasVisibility = textIncludes(runtimeText, "visibilitychange");
+  const hasCancel = textIncludes(runtimeText, "cancelAnimationFrame");
+  const hasStop = /\bstop\s*\(/i.test(runtimeText) || textIncludes(runtimeText, "cleanup");
+
+  if (hasPagehide && hasVisibility && hasCancel) {
+    return makeLane(
+      "Confirmed",
+      "Runtime Cleanup Summary",
+      "The runtime still contains exit-release and cleanup signals.",
+      [
+        `pagehide cleanup signal=${hasPagehide}`,
+        `visibilitychange cleanup signal=${hasVisibility}`,
+        `cancelAnimationFrame signal=${hasCancel}`,
+        `stop/cleanup signal=${hasStop}`,
+        "Summary: cleanup posture remains present."
+      ]
+    );
+  }
+
+  return makeLane(
+    "Held",
+    "Runtime Cleanup Summary",
+    "Cleanup signals are partially present or unavailable from served source scan.",
+    [
+      `pagehide cleanup signal=${hasPagehide}`,
+      `visibilitychange cleanup signal=${hasVisibility}`,
+      `cancelAnimationFrame signal=${hasCancel}`,
+      `stop/cleanup signal=${hasStop}`,
+      "Hold: review source before treating cleanup posture as broken."
+    ]
+  );
+}
+
+function summarizeBaselinePurity(childHtml, runtimeText) {
+  const combined = `${childHtml}\n${runtimeText}`;
+  const generatedFlag = getAttr(childHtml, "data-generated-image");
+  const graphicFlag = getAttr(childHtml, "data-graphic-box");
+  const mediaCount = countMatches(childHtml, /<(img|video|picture)\b/gi);
+  const crossPlanetSwitcher =
+    textIncludes(runtimeText, "audralia") ||
+    textIncludes(runtimeText, "zionts") ||
+    textIncludes(runtimeText, "planet switcher");
+
+  if (generatedFlag === "false" && graphicFlag === "false" && mediaCount === 0 && !crossPlanetSwitcher) {
+    return makeLane(
+      "Confirmed",
+      "Baseline Purity Summary",
+      "No generated-image, GraphicBox, media, or cross-planet switcher signal is visible in the H-Earth scan.",
+      [
+        `data-generated-image=${generatedFlag}`,
+        `data-graphic-box=${graphicFlag}`,
+        `image/video/picture count=${mediaCount}`,
+        `cross-planet switcher signal=${crossPlanetSwitcher}`,
+        "Summary: baseline purity remains confirmed from served source."
+      ]
+    );
+  }
+
+  return makeLane(
+    "Needs Review",
+    "Baseline Purity Summary",
+    "Baseline purity needs review before interpretation.",
+    [
+      `data-generated-image=${generatedFlag}`,
+      `data-graphic-box=${graphicFlag}`,
+      `image/video/picture count=${mediaCount}`,
+      `cross-planet switcher signal=${crossPlanetSwitcher}`,
+      "Review: confirm no unauthorized objects have entered the child scene."
+    ]
+  );
+}
+
+function summarizeMaterialExpression(childHtml, runtimeText) {
+  const combined = `${childHtml}\n${runtimeText}`;
+  const hasMaterialContract =
+    textIncludes(combined, "MATERIAL_EXPRESSION") ||
+    textIncludes(combined, "material-expression") ||
+    textIncludes(combined, "atmospheric-depth") ||
+    textIncludes(combined, "reflection") ||
+    textIncludes(combined, "shoreline");
+
+  if (hasMaterialContract) {
+    return makeLane(
+      "Confirmed",
+      "Material Expression Summary",
+      "Material-expression signals are present in the served source.",
+      [
+        `material-expression signal=${hasMaterialContract}`,
+        "Summary: material expression appears to be active or staged in source."
+      ]
+    );
+  }
+
+  return makeLane(
+    "Held",
+    "Material Expression Summary",
+    "The scene may be functional while material expression remains primitive or unstaged.",
+    [
+      `material-expression signal=${hasMaterialContract}`,
+      "Hold: air, water, and earth may need future physical readability review.",
+      "Suggested review target: material expression, if the visual goal requires it."
+    ]
+  );
+}
+
+async function runTruthSummary() {
+  state.logs = [];
+  state.lanes = [];
+  log(`Starting ${GAUGES_TRUTH_SUMMARY_CONTRACT.contract}.`);
+  log("Frame: Gauges summarizes truth. Laws carries proof. Gauges is not the progress engine.");
+
+  try {
+    log(`Fetching parent selector route: ${ROUTES.parent}`);
+    const parentHtml = await fetchText(ROUTES.parent);
+
+    log(`Fetching H-Earth child route: ${ROUTES.hEarth}`);
+    const childHtml = await fetchText(ROUTES.hEarth);
+
+    log(`Fetching H-Earth child runtime source: ${ROUTES.hEarthRuntime}`);
+    let runtimeText = "";
+    try {
+      runtimeText = await fetchText(ROUTES.hEarthRuntime);
+    } catch (error) {
+      log(`Runtime source unavailable for source scan: ${error.message}`);
+      runtimeText = "";
+    }
+
+    state.lanes.push(summarizeParent(parentHtml));
+    state.lanes.push(summarizeChildPlacement(childHtml));
+    state.lanes.push(summarizeClassicBoot(childHtml, runtimeText));
+    state.lanes.push(summarizeConditionStack(childHtml, runtimeText));
+    state.lanes.push(summarizeRuntimeCleanup(runtimeText));
+    state.lanes.push(summarizeBaselinePurity(childHtml, runtimeText));
+    state.lanes.push(summarizeMaterialExpression(childHtml, runtimeText));
+
+    renderLanes();
+    renderTotals();
+    renderTruthSummary();
+
+    log("Truth summary complete.");
+    log(`Confirmed=${state.confirmed}; Held=${state.held}; Needs Review=${state.review}.`);
+  } catch (error) {
+    state.lanes = [
+      makeLane(
+        "Needs Review",
+        "Truth Summary Fetch",
+        "One or more served routes could not be fetched.",
+        [
+          error.message || "Unknown fetch error",
+          "Review: verify deployed routes and same-origin fetch availability."
+        ]
+      )
+    ];
+
+    renderLanes();
+    renderTotals();
+    renderTruthSummary();
+    log(`Truth summary stopped for review: ${error.message || error}`);
+  }
+}
+
+function boot() {
+  window.DGBTripleGTruthSummary = Object.freeze({
+    ...GAUGES_TRUTH_SUMMARY_CONTRACT,
+    run: runTruthSummary,
+    status() {
+      return Object.freeze({
+        contract: GAUGES_TRUTH_SUMMARY_CONTRACT.contract,
+        proofAuthority: GAUGES_TRUTH_SUMMARY_CONTRACT.proofAuthority,
+        gaugesRole: GAUGES_TRUTH_SUMMARY_CONTRACT.gaugesRole,
+        progressEngine: false,
+        confirmed: state.confirmed,
+        held: state.held,
+        review: state.review,
+        lanes: state.lanes.map((lane) => ({ status: lane.status, title: lane.title }))
+      });
+    }
+  });
+
+  document.documentElement.dataset.gaugesContract = GAUGES_TRUTH_SUMMARY_CONTRACT.contract;
+  document.documentElement.dataset.gaugesRole = "truth-summary";
+  document.documentElement.dataset.proofPath = "/laws/";
+  document.documentElement.dataset.progressEngine = "false";
+
+  const runButton = document.getElementById("runTripleG");
+  if (runButton) runButton.addEventListener("click", runTruthSummary);
+
+  log("Triple G truth-summary role renewal booted.");
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", boot, { once: true });
+} else {
+  boot();
+}

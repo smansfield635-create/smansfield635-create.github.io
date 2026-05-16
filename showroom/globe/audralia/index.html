@@ -3,8 +3,8 @@
   lang="en"
   data-route="/showroom/globe/audralia/"
   data-page="audralia-satellite-globe-access"
-  data-contract="AUDRALIA_EXISTING_GLOBE_HTML_MARRIAGE_TNT_v8"
-  data-previous-contract="AUDRALIA_EXISTING_GLOBE_BOX_CONTAINMENT_SURFACE_TNT_v7"
+  data-contract="AUDRALIA_REFRESH_SAFE_HTML_MARRIAGE_TNT_v9"
+  data-previous-contract="AUDRALIA_EXISTING_GLOBE_HTML_MARRIAGE_TNT_v8"
   data-role="showroom-globe-child-route"
   data-world="Audralia"
   data-canonical-spelling="A_U_D_R_A_L_I_A"
@@ -12,8 +12,8 @@
   data-public-path="possibility"
   data-view-model="satellite-orbital-existing-globe-access-contained"
   data-route-loader="/showroom/globe/audralia/index.js"
-  data-route-loader-contract="AUDRALIA_EXISTING_GLOBE_BOX_CONTAINMENT_LOADER_TNT_v7"
-  data-html-marriage-contract="AUDRALIA_EXISTING_GLOBE_HTML_MARRIAGE_TNT_v8"
+  data-route-loader-contract="AUDRALIA_REFRESH_SAFE_BOXED_GLOBE_LOADER_TNT_v9"
+  data-html-marriage-contract="AUDRALIA_REFRESH_SAFE_HTML_MARRIAGE_TNT_v9"
   data-canvas-contract="AUDRALIA_EXISTING_GLOBE_BOXED_ASSET_CONSUMER_TNT_v7"
   data-generated-image="false"
   data-graphic-box="false"
@@ -682,7 +682,7 @@
         </div>
 
         <div class="public-status" aria-live="polite">
-          <span id="audraliaRouteLoaderNotice" data-audralia-route-loader-notice="true">Boxed globe bridge preparing</span>
+          <span id="audraliaRouteLoaderNotice" data-audralia-route-loader-notice="true">Refresh-safe globe bridge preparing</span>
           <span id="audraliaRouteStatus" data-audralia-route-status="true">Existing asset chain pending</span>
         </div>
       </section>
@@ -705,9 +705,9 @@
           </article>
 
           <article class="card">
-            <b>Canvas</b>
-            <strong>The page displays the world.</strong>
-            <span>The canvas may consume the asset chain and mount controls; it may not author the planet.</span>
+            <b>Refresh-safe</b>
+            <strong>The loader must not trap the page lifecycle.</strong>
+            <span>The page uses a renewed cache key and a bounded loader window so refresh can complete normally.</span>
           </article>
         </div>
 
@@ -720,8 +720,8 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_EXISTING_GLOBE_HTML_MARRIAGE_TNT_v8
-previous=AUDRALIA_EXISTING_GLOBE_BOX_CONTAINMENT_SURFACE_TNT_v7
+AUDRALIA_REFRESH_SAFE_HTML_MARRIAGE_TNT_v9
+previous=AUDRALIA_EXISTING_GLOBE_HTML_MARRIAGE_TNT_v8
 route=/showroom/globe/audralia/
 page=audralia
 role=showroom_globe_child_route
@@ -731,16 +731,20 @@ world=Audralia
 canonical_spelling=A_U_D_R_A_L_I_A
 parent_route=/showroom/globe/
 route_loader=/showroom/globe/audralia/index.js
-route_loader_contract=AUDRALIA_EXISTING_GLOBE_BOX_CONTAINMENT_LOADER_TNT_v7
-html_marriage_contract=AUDRALIA_EXISTING_GLOBE_HTML_MARRIAGE_TNT_v8
-script_cache_key=AUDRALIA_EXISTING_GLOBE_HTML_MARRIAGE_TNT_v8
+route_loader_contract=AUDRALIA_REFRESH_SAFE_BOXED_GLOBE_LOADER_TNT_v9
+html_marriage_contract=AUDRALIA_REFRESH_SAFE_HTML_MARRIAGE_TNT_v9
+script_cache_key=AUDRALIA_REFRESH_SAFE_BOXED_GLOBE_LOADER_TNT_v9
 canvas_mount=#audraliaCanvasMount
 canvas_contract=AUDRALIA_EXISTING_GLOBE_BOXED_ASSET_CONSUMER_TNT_v7
-restore_goal=marry_current_loader_to_containment_html_without_physical_redesign
+restore_goal=marry_refresh_safe_loader_to_current_containment_html_without_physical_redesign
 physical_redesign=false
 containment=true
 stage_overflow_hidden=true
 asset_adoption=true
+refresh_safe=true
+bounded_loader_window=true
+pagehide_lifecycle_release=true
+pageshow_bfcache_reentry=true
 mount_aliases=canvas_mount,globe_mount,satellite_mount,contained_mount,box_target,adoption_target
 satellite_access=true
 existing_globe_required=true
@@ -762,16 +766,17 @@ receipt_visibility=hidden_template_only
   </div>
 
   <script>
-    window.DGB_AUDRALIA_ROUTE_KEY = "AUDRALIA_EXISTING_GLOBE_BOX_CONTAINMENT_LOADER_TNT_v7";
-    window.DGB_AUDRALIA_HTML_MARRIAGE_KEY = "AUDRALIA_EXISTING_GLOBE_HTML_MARRIAGE_TNT_v8";
+    window.DGB_AUDRALIA_ROUTE_KEY = "AUDRALIA_REFRESH_SAFE_BOXED_GLOBE_LOADER_TNT_v9";
+    window.DGB_AUDRALIA_HTML_MARRIAGE_KEY = "AUDRALIA_REFRESH_SAFE_HTML_MARRIAGE_TNT_v9";
     window.DGB_AUDRALIA_BOX_CONTAINMENT = true;
     window.DGB_AUDRALIA_RESTORE_EXISTING_GLOBE = true;
     window.DGB_AUDRALIA_NO_PROCEDURAL_FALLBACK = true;
+    window.DGB_AUDRALIA_REFRESH_SAFE = true;
   </script>
   <script
-    src="/showroom/globe/audralia/index.js?v=AUDRALIA_EXISTING_GLOBE_HTML_MARRIAGE_TNT_v8"
-    data-audralia-loader-script="AUDRALIA_EXISTING_GLOBE_BOX_CONTAINMENT_LOADER_TNT_v7"
-    data-audralia-html-marriage="AUDRALIA_EXISTING_GLOBE_HTML_MARRIAGE_TNT_v8"
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_REFRESH_SAFE_BOXED_GLOBE_LOADER_TNT_v9"
+    data-audralia-loader-script="AUDRALIA_REFRESH_SAFE_BOXED_GLOBE_LOADER_TNT_v9"
+    data-audralia-html-marriage="AUDRALIA_REFRESH_SAFE_HTML_MARRIAGE_TNT_v9"
     defer
   ></script>
 </body>

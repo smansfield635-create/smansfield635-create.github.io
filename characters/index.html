@@ -2,10 +2,11 @@
 <html
   lang="en"
   data-route="/characters/"
-  data-page="mirrorland-character-doorway"
-  data-contract="MIRRORLAND_CHARACTER_DOORWAY_PUBLIC_TNT_v1"
-  data-role="narrative-character-entry"
-  data-public-frame="movie-poster-character-doorway"
+  data-page="mirrorland-expandable-character-dossier"
+  data-contract="MIRRORLAND_EXPANDABLE_CHARACTER_DOSSIER_TNT_v2"
+  data-previous-contract="MIRRORLAND_CHARACTER_DOORWAY_PUBLIC_TNT_v1"
+  data-role="movie-poster-game-roster-character-dossier"
+  data-public-frame="expandable-series-bible-character-select"
   data-generated-image="false"
   data-graphic-box="false"
   data-streaming="false"
@@ -18,7 +19,7 @@
   <title>Characters · Shadows Never Shatter in Mirrorland</title>
   <meta
     name="description"
-    content="Meet the character ensemble inside Mirrorland: a story-world about consequence, survival, restoration, and the people who must decide what future can still be built."
+    content="The expandable Mirrorland character dossier for Shadows Never Shatter in Mirrorland: full bios, family history, hidden truth, conflict, and stats."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/characters/">
   <meta name="theme-color" content="#02040b">
@@ -35,12 +36,14 @@
       --green:#9ef0bf;
       --blue:#8dd8ff;
       --violet:#c7a7ff;
+      --red:#ff9f9f;
+      --steel:#d8e2ef;
       --panel:rgba(9,15,31,.88);
       --panel2:rgba(12,23,42,.92);
       --line:rgba(184,205,255,.18);
       --line2:rgba(243,200,111,.20);
       --shadow:0 32px 110px rgba(0,0,0,.48);
-      --max:1180px;
+      --max:1220px;
       --gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
     }
 
@@ -90,6 +93,7 @@
     a { color:inherit; text-decoration:none; }
 
     a:focus-visible,
+    summary:focus-visible,
     button:focus-visible,
     [tabindex]:focus-visible {
       outline:2px solid var(--gold);
@@ -288,7 +292,7 @@
 
     h1 {
       margin:0;
-      max-width:1040px;
+      max-width:1080px;
       font-size:clamp(3.35rem,10.4vw,8rem);
       line-height:.82;
       letter-spacing:-.11em;
@@ -324,7 +328,7 @@
     }
 
     .subtitle {
-      max-width:940px;
+      max-width:980px;
       color:var(--green);
       font-size:clamp(1.22rem,3.7vw,2.15rem);
       line-height:1.05;
@@ -335,13 +339,7 @@
       z-index:2;
     }
 
-    .lead {
-      max-width:940px;
-      position:relative;
-      z-index:2;
-    }
-
-    .quote {
+    .declaration {
       max-width:980px;
       padding:1rem 1.1rem;
       border:1px solid rgba(243,200,111,.22);
@@ -349,7 +347,7 @@
       color:rgba(255,244,216,.93);
       background:rgba(243,200,111,.065);
       font-size:clamp(1rem,2.7vw,1.18rem);
-      font-weight:900;
+      font-weight:950;
       position:relative;
       z-index:2;
     }
@@ -408,197 +406,264 @@
       gap:1.05rem;
     }
 
-    .doorway {
+    .roster-grid {
       display:grid;
-      grid-template-columns:1fr .72fr;
+      grid-template-columns:repeat(2,minmax(0,1fr));
       gap:1rem;
-      align-items:stretch;
-    }
-
-    .story-card {
-      display:grid;
-      gap:.8rem;
-      align-content:center;
-      min-height:18rem;
-      padding:clamp(1rem,3vw,1.45rem);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.35rem;
-      background:
-        radial-gradient(circle at 20% 0%,rgba(141,216,255,.08),transparent 60%),
-        rgba(255,255,255,.035);
-    }
-
-    .poster-card {
-      position:relative;
-      min-height:18rem;
-      border:1px solid rgba(243,200,111,.20);
-      border-radius:1.35rem;
-      overflow:hidden;
-      background:
-        radial-gradient(circle at 50% 42%,rgba(243,200,111,.13),transparent 28%),
-        radial-gradient(circle at 50% 58%,rgba(199,167,255,.16),transparent 48%),
-        linear-gradient(180deg,rgba(3,8,20,.52),rgba(2,6,18,.94));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-    }
-
-    .poster-orbit {
-      position:absolute;
-      inset:1.2rem;
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:50%;
-      transform:rotate(-16deg);
-    }
-
-    .poster-orbit.two {
-      inset:3.2rem;
-      border-color:rgba(243,200,111,.12);
-      transform:rotate(23deg);
-    }
-
-    .poster-gem {
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:clamp(6.4rem,16vw,10rem);
-      height:clamp(4.8rem,11vw,7.4rem);
-      transform:translate(-50%,-50%);
-      clip-path:var(--gem);
-      background:
-        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.30) 21% 23%,transparent 24%),
-        conic-gradient(from 45deg,rgba(255,255,255,.42),rgba(141,216,255,.22),rgba(13,26,72,.66),rgba(243,200,111,.20),rgba(255,255,255,.36)),
-        radial-gradient(circle at 42% 28%,rgba(255,255,255,.42),transparent 38%),
-        linear-gradient(145deg,rgba(40,58,116,.95),rgba(5,8,20,.98));
-      box-shadow:
-        0 0 2.4rem rgba(141,216,255,.22),
-        0 1.2rem 3rem rgba(0,0,0,.42),
-        inset 0 1px 0 rgba(255,255,255,.22);
-    }
-
-    .poster-text {
-      position:absolute;
-      left:1.2rem;
-      right:1.2rem;
-      bottom:1.2rem;
-      display:grid;
-      gap:.25rem;
-      text-align:center;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-weight:950;
-      color:rgba(255,244,216,.92);
-      text-shadow:0 2px 14px rgba(0,0,0,.72);
-    }
-
-    .poster-text span {
-      color:var(--gold);
-      font-size:.72rem;
-      letter-spacing:.18em;
-    }
-
-    .character-grid {
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.85rem;
     }
 
     .character {
       position:relative;
-      min-height:16.5rem;
+      min-height:100%;
       display:grid;
-      gap:.65rem;
-      align-content:start;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.22rem;
+      grid-template-rows:auto 1fr;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:1.45rem;
       background:
-        radial-gradient(circle at 20% 0%,var(--glow,rgba(141,216,255,.08)),transparent 58%),
-        linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.022));
+        radial-gradient(circle at 22% 0%,var(--glow,rgba(141,216,255,.08)),transparent 54%),
+        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.022));
       overflow:hidden;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .character::before {
+    .poster {
+      position:relative;
+      min-height:18rem;
+      display:grid;
+      align-content:end;
+      gap:.65rem;
+      padding:1rem;
+      overflow:hidden;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(circle at 50% 28%,var(--glow,rgba(141,216,255,.12)),transparent 32%),
+        radial-gradient(circle at 50% 68%,rgba(0,0,0,.52),transparent 64%),
+        linear-gradient(180deg,rgba(255,255,255,.035),rgba(0,0,0,.34));
+    }
+
+    .poster::before {
       content:"";
-      width:2.1rem;
-      height:2.1rem;
-      display:block;
+      position:absolute;
+      left:50%;
+      top:42%;
+      width:clamp(7rem,18vw,12rem);
+      height:clamp(7rem,18vw,12rem);
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:2.2rem;
+      transform:translate(-50%,-50%) rotate(45deg);
+      background:
+        radial-gradient(circle at 42% 28%,rgba(255,255,255,.18),transparent 38%),
+        radial-gradient(circle at 60% 72%,var(--accent,rgba(141,216,255,.18)),transparent 56%),
+        linear-gradient(145deg,rgba(255,255,255,.035),rgba(0,0,0,.30));
+      box-shadow:0 0 2.4rem var(--accent,rgba(141,216,255,.18));
+      opacity:.9;
+    }
+
+    .poster::after {
+      content:"";
+      position:absolute;
+      inset:1rem;
+      border:1px solid rgba(255,255,255,.07);
+      border-radius:50%;
+      transform:rotate(-14deg);
+      pointer-events:none;
+    }
+
+    .rank {
+      position:absolute;
+      top:1rem;
+      right:1rem;
+      z-index:2;
+      min-width:3rem;
+      min-height:3rem;
+      display:grid;
+      place-items:center;
       clip-path:var(--gem);
       background:
         linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.28) 21% 23%,transparent 24%),
         conic-gradient(from 45deg,rgba(255,255,255,.30),var(--accent,rgba(141,216,255,.28)),rgba(6,13,32,.92),rgba(243,200,111,.16),rgba(255,255,255,.30));
-      box-shadow:0 0 1.2rem var(--accent,rgba(141,216,255,.18));
-    }
-
-    .character b {
-      color:var(--accentText,var(--gold));
-      font-size:.68rem;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
-
-    .character span {
-      color:var(--muted);
-      font-size:.93rem;
-      line-height:1.42;
-    }
-
-    .tagline {
-      margin-top:auto;
-      color:rgba(255,244,216,.84);
-      font-size:.76rem;
+      color:rgba(255,244,216,.98);
+      font-size:.78rem;
       font-weight:950;
-      letter-spacing:.11em;
+      letter-spacing:.08em;
+      text-shadow:0 2px 10px rgba(0,0,0,.85);
+    }
+
+    .poster-title {
+      position:relative;
+      z-index:2;
+      display:grid;
+      gap:.28rem;
+      text-shadow:0 2px 14px rgba(0,0,0,.76);
+    }
+
+    .poster-title b {
+      color:var(--accentText,var(--gold));
+      font-size:.72rem;
+      letter-spacing:.16em;
       text-transform:uppercase;
     }
 
-    .path-grid {
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.85rem;
+    .poster-title strong {
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.8rem,5.2vw,3.4rem);
+      line-height:.86;
+      letter-spacing:-.08em;
     }
 
-    .path {
+    .poster-title span {
+      color:rgba(230,238,255,.82);
+      font-size:.82rem;
+      font-weight:950;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    .dossier {
       display:grid;
-      gap:.65rem;
-      min-height:15rem;
+      gap:.95rem;
       padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.22rem;
-      background:
-        radial-gradient(circle at 20% 0%,rgba(243,200,111,.08),transparent 60%),
-        rgba(255,255,255,.035);
-      transition:transform .18s ease,border-color .18s ease;
+      align-content:start;
     }
 
-    .path:hover,
-    .path:focus-visible {
-      transform:translateY(-3px);
-      border-color:rgba(243,200,111,.46);
-      outline:none;
+    .field-grid {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.65rem;
     }
 
-    .path b {
-      color:var(--gold);
-      font-size:.68rem;
+    .field {
+      min-height:7rem;
+      display:grid;
+      gap:.35rem;
+      align-content:start;
+      padding:.78rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:1rem;
+      background:rgba(255,255,255,.028);
+    }
+
+    .field b {
+      color:var(--accentText,var(--gold));
+      font-size:.64rem;
       letter-spacing:.13em;
       text-transform:uppercase;
     }
 
-    .path span {
+    .field span {
       color:var(--muted);
-      font-size:.94rem;
+      font-size:.9rem;
       line-height:1.42;
     }
 
-    .open-path {
-      margin-top:auto;
-      color:rgba(230,238,255,.88);
-      font-size:.76rem;
+    details {
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1rem;
+      background:rgba(255,255,255,.032);
+      overflow:hidden;
+    }
+
+    summary {
+      cursor:pointer;
+      list-style:none;
+      min-height:3rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.8rem;
+      padding:.82rem .95rem;
+      color:rgba(255,244,216,.96);
+      font-size:.78rem;
       font-weight:950;
       letter-spacing:.12em;
       text-transform:uppercase;
+      background:
+        linear-gradient(90deg,var(--glow,rgba(141,216,255,.08)),transparent),
+        rgba(255,255,255,.025);
     }
 
-    .route-grid {
+    summary::-webkit-details-marker { display:none; }
+
+    summary::after {
+      content:"+";
+      width:1.65rem;
+      height:1.65rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      color:var(--accentText,var(--gold));
+      background:rgba(255,255,255,.035);
+      font-size:1rem;
+      line-height:1;
+    }
+
+    details[open] summary::after {
+      content:"–";
+    }
+
+    .bio-body,
+    .stats-body {
+      display:grid;
+      gap:.85rem;
+      padding:1rem;
+      border-top:1px solid rgba(255,255,255,.09);
+    }
+
+    .bio-body p {
+      font-size:.97rem;
+    }
+
+    .stat-grid {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.65rem;
+    }
+
+    .stat {
+      display:grid;
+      gap:.25rem;
+      padding:.72rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.88rem;
+      background:rgba(255,255,255,.026);
+    }
+
+    .stat b {
+      color:var(--accentText,var(--gold));
+      font-size:.62rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .stat span {
+      color:rgba(230,238,255,.80);
+      font-size:.88rem;
+      line-height:1.35;
+    }
+
+    .meter {
+      display:grid;
+      gap:.35rem;
+    }
+
+    .bar {
+      height:.52rem;
+      border-radius:999px;
+      overflow:hidden;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .bar i {
+      display:block;
+      width:var(--value,60%);
+      height:100%;
+      border-radius:inherit;
+      background:linear-gradient(90deg,var(--accent,rgba(141,216,255,.4)),rgba(255,244,216,.72));
+    }
+
+    .path-grid {
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:.85rem;
@@ -643,6 +708,15 @@
       line-height:1.4;
     }
 
+    .open-path {
+      margin-top:auto;
+      color:rgba(230,238,255,.88);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
     .route-receipt,
     [data-route-receipt],
     [data-contract-receipt],
@@ -674,8 +748,8 @@
     }
 
     @media (max-width:1080px) {
-      .character-grid,
-      .route-grid {
+      .roster-grid,
+      .path-grid {
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
     }
@@ -687,10 +761,6 @@
       }
 
       .nav { justify-content:flex-start; }
-
-      .doorway {
-        grid-template-columns:1fr;
-      }
     }
 
     @media (max-width:760px) {
@@ -711,15 +781,15 @@
         width:100%;
       }
 
-      .character-grid,
-      .path-grid,
-      .route-grid {
+      .roster-grid,
+      .field-grid,
+      .stat-grid,
+      .path-grid {
         grid-template-columns:1fr;
       }
 
-      .poster-card,
-      .story-card {
-        min-height:15rem;
+      .poster {
+        min-height:16rem;
       }
     }
 
@@ -767,144 +837,421 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Mirrorland · Character Doorway</div>
+        <div class="kicker">Mirrorland · Character Roster</div>
 
         <h1 id="page-title">Shadows Never Shatter in Mirrorland.</h1>
 
         <div class="subtitle">
-          A story about survival, restoration, consequence, and the people who must decide what future can still be built.
+          The world is already broken somewhere. These are the people who still know how to move through it.
         </div>
 
-        <p class="lead">
-          Mirrorland does not begin with a manual. It begins with people standing at the edge of what could be lost.
-        </p>
-
-        <div class="quote">
-          A future does not survive because the world is safe. It survives because someone decides it is still worth restoring.
+        <div class="declaration">
+          Mirrorland does not wait for permission to become real.
         </div>
 
         <div class="actions">
-          <a class="button gold" href="/showroom/globe/">Enter the Globe</a>
-          <a class="button" href="/characters/#ensemble">Meet the Characters</a>
-          <a class="button green" href="/frontier/">Explore the Frontier</a>
+          <a class="button gold" href="/characters/#roster">Open the Roster</a>
+          <a class="button" href="/showroom/globe/">Enter the Globe</a>
+          <a class="button green" href="/frontier/">Move to Frontier</a>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="doorway-title">
-        <div class="kicker">Story doorway</div>
-        <h2 id="doorway-title">The world opens through consequence, survival, and possibility.</h2>
+      <section class="panel section" id="roster" aria-labelledby="roster-title">
+        <div class="kicker">Playable dossier roster</div>
+        <h2 id="roster-title">These are the people inside Mirrorland.</h2>
 
-        <div class="doorway">
-          <article class="story-card">
-            <h3>Mirrorland is not a place where everything is explained at once.</h3>
-            <p>
-              It is a threshold. One path shows what happens when damage continues. One path asks what life still needs to survive. One path shows why a living future must remain possible.
-            </p>
-            <p>
-              The characters are not labels on a map. They are inhabitants with histories, flaws, duties, and choices.
-            </p>
-          </article>
-
-          <div class="poster-card" aria-hidden="true">
-            <div class="poster-orbit"></div>
-            <div class="poster-orbit two"></div>
-            <div class="poster-gem"></div>
-            <div class="poster-text">
-              <strong>Shadows Never Shatter</strong>
-              <span>Mirrorland</span>
+        <div class="roster-grid">
+          <article class="character" style="--accent:rgba(243,200,111,.34);--accentText:#f3c86f;--glow:rgba(243,200,111,.12);">
+            <div class="poster">
+              <div class="rank">01</div>
+              <div class="poster-title">
+                <b>Sanctuary Builder</b>
+                <strong>Auren Vale</strong>
+                <span>Wealth is the mask. Custody is the mission.</span>
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
 
-      <section class="panel section" id="ensemble" aria-labelledby="ensemble-title">
-        <div class="kicker">Core ensemble</div>
-        <h2 id="ensemble-title">Meet the people carrying the restoration question.</h2>
+            <div class="dossier">
+              <div class="field-grid">
+                <div class="field"><b>Public Face</b><span>Rich heir, estate owner, impossible host, the kind of young man people underestimate because the mask looks too polished.</span></div>
+                <div class="field"><b>Bloodline / Family</b><span>The Vale family built its fortune through land, security, old infrastructure, and quiet custody of things governments could not explain.</span></div>
+                <div class="field"><b>Past</b><span>Auren inherited a manor, an orphanage cover, and a family rule: protect gifted children before the world decides what to do with them.</span></div>
+                <div class="field"><b>Hidden Truth</b><span>The ordinary orphanage is not ordinary. It is where selected children hide in plain sight while the estate prepares them to survive.</span></div>
+                <div class="field"><b>Function in Mirrorland</b><span>Auren keeps the sanctuary closed, funded, supplied, and legally invisible enough to protect the people inside it.</span></div>
+                <div class="field"><b>Current Conflict</b><span>Every rescue increases exposure. Every child protected makes the manor harder to keep hidden.</span></div>
+              </div>
 
-        <div class="character-grid">
-          <article class="character" style="--accent:rgba(243,200,111,.28);--accentText:#f3c86f;--glow:rgba(243,200,111,.10);">
-            <b>Auren Vale</b>
-            <h3>Sanctuary and custody.</h3>
-            <span>Auren protects the resources, the closed loop, and the place where people can survive long enough to choose wisely.</span>
-            <div class="tagline">Estate · Sanctuary · Custody</div>
+              <details>
+                <summary>Full Bio</summary>
+                <div class="bio-body">
+                  <p>Auren Vale built the manor because children with impossible gifts needed a place the world could not easily find. He does not own the estate because he wants to look powerful. He owns it because power is the only language certain predators respect.</p>
+                  <p>The Vale family never treated wealth as decoration. Wealth was architecture. Land created distance. Security created time. The orphanage created cover. The public story gave everyone something simple to believe while the real work moved beneath it.</p>
+                  <p>Auren learned early that a harmless mask is sometimes stronger than an honest warning. He lets the world see the privileged heir because that version of him attracts less fear than the truth: he is building a sanctuary network for children whose gifts would make them targets.</p>
+                  <p>His weakness is not softness. His weakness is custody. He remembers every child brought through the gate, every room prepared too late, and every risk he accepted because refusing would have been cleaner but less human.</p>
+                </div>
+              </details>
+
+              <details>
+                <summary>Stats Sheet</summary>
+                <div class="stats-body">
+                  <div class="stat-grid">
+                    <div class="stat"><b>Core Class</b><span>Sanctuary Builder</span></div>
+                    <div class="stat"><b>Primary Attribute</b><span>Custody</span></div>
+                    <div class="stat"><b>Strengths</b><span>Resource control, legal cover, estate logistics, protective deception, long-game planning.</span></div>
+                    <div class="stat"><b>Weaknesses</b><span>Overprotective, slow to trust outsiders, vulnerable to threats against children.</span></div>
+                    <div class="stat"><b>Special Skill</b><span>Turns wealth, property, and public misdirection into a living shield.</span></div>
+                    <div class="stat"><b>Risk Factor</b><span>If Auren fails, the sanctuary becomes a map for the enemy.</span></div>
+                    <div class="stat"><b>Primary Bond</b><span>The children hidden inside the manor network.</span></div>
+                    <div class="stat"><b>World Path</b><span>Manor · Explore · Audralia</span></div>
+                  </div>
+                  <div class="meter"><b>Conflict Meter</b><div class="bar"><i style="--value:91%;"></i></div><span>Exposure versus protection.</span></div>
+                </div>
+              </details>
+            </div>
           </article>
 
-          <article class="character" style="--accent:rgba(141,216,255,.28);--accentText:#8dd8ff;--glow:rgba(141,216,255,.10);">
-            <b>Dextrion</b>
-            <h3>Restoration and infrastructure.</h3>
-            <span>Dextrion works where theory has to become repair: energy, systems, lab protocol, and the physical means to keep life moving.</span>
-            <div class="tagline">Lab · Restoration · Energy</div>
+          <article class="character" style="--accent:rgba(141,216,255,.34);--accentText:#8dd8ff;--glow:rgba(141,216,255,.12);">
+            <div class="poster">
+              <div class="rank">02</div>
+              <div class="poster-title">
+                <b>Restoration Engineer</b>
+                <strong>Dextrion</strong>
+                <span>Broken systems either get repaired or start choosing who survives.</span>
+              </div>
+            </div>
+
+            <div class="dossier">
+              <div class="field-grid">
+                <div class="field"><b>Public Face</b><span>Young inventor, lab mind, repair obsessive, the person who sees machines as unfinished conversations.</span></div>
+                <div class="field"><b>Bloodline / Family</b><span>Dextrion comes from builders, mechanics, and exhausted problem-solvers who fixed things nobody else wanted to touch.</span></div>
+                <div class="field"><b>Past</b><span>He grew up around broken equipment, improvised power, missing parts, and adults who taught him that survival often starts with a working tool.</span></div>
+                <div class="field"><b>Hidden Truth</b><span>Dextrion does not invent for spectacle. He builds because the future becomes cruel when infrastructure fails.</span></div>
+                <div class="field"><b>Function in Mirrorland</b><span>He turns restoration into hardware: energy, filtration, repair protocol, field gear, and systems that keep survival physical.</span></div>
+                <div class="field"><b>Current Conflict</b><span>Every solution demands power, parts, time, and discipline. The world keeps breaking faster than the lab can rebuild.</span></div>
+              </div>
+
+              <details>
+                <summary>Full Bio</summary>
+                <div class="bio-body">
+                  <p>Dextrion does not believe in genius as performance. He believes in the light coming back on, the pump starting again, the battery holding charge, and the door opening when a child is on the wrong side of it.</p>
+                  <p>His family taught him that intelligence without repair is vanity. They were not celebrated inventors. They were the people called when water stopped moving, engines overheated, power failed, and nobody else knew where the break lived.</p>
+                  <p>The lab is not his playground. It is the place where panic becomes procedure. Dextrion writes protocols because emotion cannot hold a system together during a crisis. The tool has to work when nobody has room left to be inspired.</p>
+                  <p>His flaw is velocity. He moves before permission, trusts tests more than meetings, and sometimes treats his own body like another replaceable component. He survives by building. He risks himself by never stopping.</p>
+                </div>
+              </details>
+
+              <details>
+                <summary>Stats Sheet</summary>
+                <div class="stats-body">
+                  <div class="stat-grid">
+                    <div class="stat"><b>Core Class</b><span>Restoration Engineer</span></div>
+                    <div class="stat"><b>Primary Attribute</b><span>Repair</span></div>
+                    <div class="stat"><b>Strengths</b><span>Rapid prototyping, energy systems, emergency repair, lab execution, mechanical intuition.</span></div>
+                    <div class="stat"><b>Weaknesses</b><span>Impatient with bureaucracy, overworks, underestimates emotional fallout.</span></div>
+                    <div class="stat"><b>Special Skill</b><span>Can turn damaged infrastructure into a temporary survival system under pressure.</span></div>
+                    <div class="stat"><b>Risk Factor</b><span>If Dextrion fails, survival becomes theory without power.</span></div>
+                    <div class="stat"><b>Primary Bond</b><span>The lab and the people depending on its outputs.</span></div>
+                    <div class="stat"><b>World Path</b><span>Frontier · H-Earth · Lab</span></div>
+                  </div>
+                  <div class="meter"><b>Conflict Meter</b><div class="bar"><i style="--value:88%;"></i></div><span>Repair speed versus system collapse.</span></div>
+                </div>
+              </details>
+            </div>
           </article>
 
-          <article class="character" style="--accent:rgba(199,167,255,.30);--accentText:#c7a7ff;--glow:rgba(199,167,255,.10);">
-            <b>Alaric</b>
-            <h3>Orientation and field survival.</h3>
-            <span>Alaric reads the field before crossing it. He carries trajectory, lattice awareness, and the remote survival view.</span>
-            <div class="tagline">Field · Orientation · Trajectory</div>
+          <article class="character" style="--accent:rgba(199,167,255,.36);--accentText:#c7a7ff;--glow:rgba(199,167,255,.13);">
+            <div class="poster">
+              <div class="rank">03</div>
+              <div class="poster-title">
+                <b>Field Navigator</b>
+                <strong>Alaric</strong>
+                <span>The field speaks before the danger arrives.</span>
+              </div>
+            </div>
+
+            <div class="dossier">
+              <div class="field-grid">
+                <div class="field"><b>Public Face</b><span>Scout, navigator, field reader, the one who studies distance before everyone else starts running.</span></div>
+                <div class="field"><b>Bloodline / Family</b><span>Alaric’s family survived through movement: border towns, evacuation routes, temporary homes, and the habit of reading exits first.</span></div>
+                <div class="field"><b>Past</b><span>He learned that danger rarely begins as violence. It begins as a pattern shift, a silence, a missing vehicle, a route suddenly watched.</span></div>
+                <div class="field"><b>Hidden Truth</b><span>Alaric maps threat before threat becomes visible. He reads terrain, people, weather, pressure, and timing as one field.</span></div>
+                <div class="field"><b>Function in Mirrorland</b><span>He orients the team when the map is incomplete and the route must be chosen before proof arrives.</span></div>
+                <div class="field"><b>Current Conflict</b><span>He can see danger early, but early warnings sound like paranoia until the field proves him right.</span></div>
+              </div>
+
+              <details>
+                <summary>Full Bio</summary>
+                <div class="bio-body">
+                  <p>Alaric was raised by people who packed before storms were named. His family did not teach fear. They taught attention. They taught him which roads flood first, which windows stay lit too late, which silence means nobody is safe.</p>
+                  <p>He became a navigator because staying alive required more than courage. It required pattern memory. It required knowing when a place was still a shelter and when it had become a trap.</p>
+                  <p>In Mirrorland, Alaric does not lead by volume. He leads by trajectory. He watches the edge of the scene, the rhythm of the crowd, the angle of approach, the line nobody else noticed.</p>
+                  <p>His burden is proof. If he waits until everyone agrees, the route is already compromised. If he moves too early, he looks impossible to trust. That is the cost of seeing danger while it is still forming.</p>
+                </div>
+              </details>
+
+              <details>
+                <summary>Stats Sheet</summary>
+                <div class="stats-body">
+                  <div class="stat-grid">
+                    <div class="stat"><b>Core Class</b><span>Field Navigator</span></div>
+                    <div class="stat"><b>Primary Attribute</b><span>Orientation</span></div>
+                    <div class="stat"><b>Strengths</b><span>Route reading, threat mapping, terrain logic, remote survival strategy, field coordination.</span></div>
+                    <div class="stat"><b>Weaknesses</b><span>Hard to reassure, difficult to slow down, carries exits into every room.</span></div>
+                    <div class="stat"><b>Special Skill</b><span>Identifies the safe route before danger fully declares itself.</span></div>
+                    <div class="stat"><b>Risk Factor</b><span>If Alaric fails, the team walks confidently into the wrong direction.</span></div>
+                    <div class="stat"><b>Primary Bond</b><span>The field team and every person who cannot see the danger yet.</span></div>
+                    <div class="stat"><b>World Path</b><span>Explore · Frontier · Remote Field</span></div>
+                  </div>
+                  <div class="meter"><b>Conflict Meter</b><div class="bar"><i style="--value:84%;"></i></div><span>Early warning versus social trust.</span></div>
+                </div>
+              </details>
+            </div>
           </article>
 
-          <article class="character" style="--accent:rgba(158,240,191,.30);--accentText:#9ef0bf;--glow:rgba(158,240,191,.10);">
-            <b>Tarian</b>
-            <h3>Water and physical continuity.</h3>
-            <span>Tarian keeps the future grounded in what bodies still need: water, movement, infrastructure, and continuity under pressure.</span>
-            <div class="tagline">Water · Body · Continuity</div>
+          <article class="character" style="--accent:rgba(158,240,191,.36);--accentText:#9ef0bf;--glow:rgba(158,240,191,.13);">
+            <div class="poster">
+              <div class="rank">04</div>
+              <div class="poster-title">
+                <b>Water Anchor</b>
+                <strong>Tarian</strong>
+                <span>Life fails first at the body level.</span>
+              </div>
+            </div>
+
+            <div class="dossier">
+              <div class="field-grid">
+                <div class="field"><b>Public Face</b><span>Physical anchor, water-bearer, endurance figure, the one who keeps the problem grounded.</span></div>
+                <div class="field"><b>Bloodline / Family</b><span>Tarian comes from laboring families who knew water by scarcity, weight, distance, flood, thirst, and repair.</span></div>
+                <div class="field"><b>Past</b><span>He learned survival in the body before he learned it in language: heat, fatigue, injury, thirst, and the work that still had to be done.</span></div>
+                <div class="field"><b>Hidden Truth</b><span>Tarian knows every future is fake if the body cannot stand, breathe, drink, recover, and continue.</span></div>
+                <div class="field"><b>Function in Mirrorland</b><span>He carries continuity: water, movement, field endurance, landing conditions, and the physical threshold life depends on.</span></div>
+                <div class="field"><b>Current Conflict</b><span>He is asked to carry the practical weight of plans made by people who do not always understand physical cost.</span></div>
+              </div>
+
+              <details>
+                <summary>Full Bio</summary>
+                <div class="bio-body">
+                  <p>Tarian does not romanticize survival. He knows what happens when bodies are asked to endure what systems refused to carry. He knows thirst is not symbolic. Heat is not theoretical. Exhaustion is not a metaphor.</p>
+                  <p>His family history is marked by work that happened before anyone praised it: hauling, repairing, carrying, clearing, rebuilding, and staying present when cleaner hands called it logistics.</p>
+                  <p>Inside Mirrorland, Tarian is the correction to every beautiful plan that forgets the body. He asks where the water is. He asks how far the injured must walk. He asks what breaks after the speech ends.</p>
+                  <p>His weakness is that he absorbs strain until others mistake his endurance for permission. He is strongest when he refuses to let the mission outrun the bodies it claims to protect.</p>
+                </div>
+              </details>
+
+              <details>
+                <summary>Stats Sheet</summary>
+                <div class="stats-body">
+                  <div class="stat-grid">
+                    <div class="stat"><b>Core Class</b><span>Water Anchor</span></div>
+                    <div class="stat"><b>Primary Attribute</b><span>Continuity</span></div>
+                    <div class="stat"><b>Strengths</b><span>Endurance, water systems, field labor, physical assessment, survival triage.</span></div>
+                    <div class="stat"><b>Weaknesses</b><span>Carries too much alone, distrusts abstract planning, slow to admit depletion.</span></div>
+                    <div class="stat"><b>Special Skill</b><span>Identifies the physical condition that determines whether survival can continue.</span></div>
+                    <div class="stat"><b>Risk Factor</b><span>If Tarian fails, the mission forgets the body and loses the people.</span></div>
+                    <div class="stat"><b>Primary Bond</b><span>Water, movement, and those still trying to stand.</span></div>
+                    <div class="stat"><b>World Path</b><span>H-Earth · Frontier · Water Lane</span></div>
+                  </div>
+                  <div class="meter"><b>Conflict Meter</b><div class="bar"><i style="--value:82%;"></i></div><span>Human limit versus mission demand.</span></div>
+                </div>
+              </details>
+            </div>
           </article>
 
-          <article class="character" style="--accent:rgba(255,232,163,.30);--accentText:#ffe7a8;--glow:rgba(255,232,163,.10);">
-            <b>Elara</b>
-            <h3>Vision and public expression.</h3>
-            <span>Elara carries what people can see before they can fully understand it: shimmer, signal, beauty, and the doorway into belief.</span>
-            <div class="tagline">Vision · Shimmer · Expression</div>
+          <article class="character" style="--accent:rgba(255,232,163,.36);--accentText:#ffe7a8;--glow:rgba(255,232,163,.13);">
+            <div class="poster">
+              <div class="rank">05</div>
+              <div class="poster-title">
+                <b>Signal Bearer</b>
+                <strong>Elara</strong>
+                <span>The future must be seen before it can be believed.</span>
+              </div>
+            </div>
+
+            <div class="dossier">
+              <div class="field-grid">
+                <div class="field"><b>Public Face</b><span>Shimmer, vision, broadcast, public expression, the one who makes the impossible visible.</span></div>
+                <div class="field"><b>Bloodline / Family</b><span>Elara comes from a family that survived by controlling what could be seen, said, hidden, and shown at the right time.</span></div>
+                <div class="field"><b>Past</b><span>She grew up where visibility was dangerous but silence was worse. She learned that a signal can save people or expose them.</span></div>
+                <div class="field"><b>Hidden Truth</b><span>Elara does not decorate the mission. She gives it a visible form strong enough for frightened people to approach.</span></div>
+                <div class="field"><b>Function in Mirrorland</b><span>She carries morale, symbol, image, public threshold, and the first shape of belief.</span></div>
+                <div class="field"><b>Current Conflict</b><span>If she reveals too much, she endangers the sanctuary. If she reveals too little, the future remains invisible.</span></div>
+              </div>
+
+              <details>
+                <summary>Full Bio</summary>
+                <div class="bio-body">
+                  <p>Elara understands that people rarely move toward what they cannot see. Fear makes the future abstract. Elara gives it color, signal, rhythm, and shape without stripping away its danger.</p>
+                  <p>Her family taught her that being seen can cost you safety. They also taught her that hidden truth can die in silence. Elara learned to live between exposure and concealment.</p>
+                  <p>Inside Mirrorland, she turns possibility into a threshold. She is the reason a child can look at a broken world and still imagine an opening. She is the reason survival can become more than endurance.</p>
+                  <p>Her weakness is brightness under pressure. She can carry morale until her own fear has nowhere to go. Her power is not optimism. It is the ability to make people face the future without looking away.</p>
+                </div>
+              </details>
+
+              <details>
+                <summary>Stats Sheet</summary>
+                <div class="stats-body">
+                  <div class="stat-grid">
+                    <div class="stat"><b>Core Class</b><span>Signal Bearer</span></div>
+                    <div class="stat"><b>Primary Attribute</b><span>Vision</span></div>
+                    <div class="stat"><b>Strengths</b><span>Public signal, morale, visual framing, symbolic clarity, belief threshold.</span></div>
+                    <div class="stat"><b>Weaknesses</b><span>Exposure risk, emotional overextension, pressure to make danger beautiful.</span></div>
+                    <div class="stat"><b>Special Skill</b><span>Makes a possible future visible before the world believes in it.</span></div>
+                    <div class="stat"><b>Risk Factor</b><span>If Elara fails, people stop seeing anything beyond damage.</span></div>
+                    <div class="stat"><b>Primary Bond</b><span>The children who need the future to look reachable.</span></div>
+                    <div class="stat"><b>World Path</b><span>Audralia · Showroom · Public Signal</span></div>
+                  </div>
+                  <div class="meter"><b>Conflict Meter</b><div class="bar"><i style="--value:79%;"></i></div><span>Visibility versus exposure.</span></div>
+                </div>
+              </details>
+            </div>
           </article>
 
-          <article class="character" style="--accent:rgba(180,195,215,.28);--accentText:#d8e2ef;--glow:rgba(180,195,215,.09);">
-            <b>Soren</b>
-            <h3>Boundary and consequence.</h3>
-            <span>Soren guards the line between restoration and waste. He carries the uncomfortable proof that every system has consequences.</span>
-            <div class="tagline">Boundary · Waste · Seal</div>
+          <article class="character" style="--accent:rgba(216,226,239,.32);--accentText:#d8e2ef;--glow:rgba(216,226,239,.10);">
+            <div class="poster">
+              <div class="rank">06</div>
+              <div class="poster-title">
+                <b>Boundary Keeper</b>
+                <strong>Soren</strong>
+                <span>Restoration is not real if waste has nowhere truthful to go.</span>
+              </div>
+            </div>
+
+            <div class="dossier">
+              <div class="field-grid">
+                <div class="field"><b>Public Face</b><span>Boundary keeper, seal, consequence voice, the person others mistake for the pessimist.</span></div>
+                <div class="field"><b>Bloodline / Family</b><span>Soren’s family lived near the places polite maps ignored: disposal zones, sealed land, contaminated water, and abandoned edges.</span></div>
+                <div class="field"><b>Past</b><span>He learned that damage does not disappear because it is moved. It returns through water, air, memory, sickness, and consequence.</span></div>
+                <div class="field"><b>Hidden Truth</b><span>Soren is not against restoration. He is against false restoration that hides cost outside the frame.</span></div>
+                <div class="field"><b>Function in Mirrorland</b><span>He audits waste, seals boundaries, names trespass, and proves whether a solution is clean or merely displaced.</span></div>
+                <div class="field"><b>Current Conflict</b><span>Everyone wants hope. Soren keeps asking where the damage went.</span></div>
+              </div>
+
+              <details>
+                <summary>Full Bio</summary>
+                <div class="bio-body">
+                  <p>Soren is not the pessimist. He is the line that proves whether restoration is real. He knows every beautiful system has an underside, and every underside eventually speaks.</p>
+                  <p>His family history was shaped by contamination and denial. People in cleaner rooms called it disposal. Soren’s people called it Tuesday. He learned early that the world often exports damage to those with the least power to refuse it.</p>
+                  <p>Inside Mirrorland, Soren is the seal. He identifies what cannot cross, what must be contained, what has been mislabeled, and what everyone is trying not to count.</p>
+                  <p>His weakness is severity. He can sound like a locked door even when he is saving the room. His strength is that he would rather be hated for naming consequence than praised for letting poison travel.</p>
+                </div>
+              </details>
+
+              <details>
+                <summary>Stats Sheet</summary>
+                <div class="stats-body">
+                  <div class="stat-grid">
+                    <div class="stat"><b>Core Class</b><span>Boundary Keeper</span></div>
+                    <div class="stat"><b>Primary Attribute</b><span>Consequence</span></div>
+                    <div class="stat"><b>Strengths</b><span>Waste audit, contamination logic, boundary enforcement, moral pressure, consequence tracing.</span></div>
+                    <div class="stat"><b>Weaknesses</b><span>Severe, difficult to comfort, distrusts hopeful language without proof.</span></div>
+                    <div class="stat"><b>Special Skill</b><span>Finds the hidden cost before it becomes the next disaster.</span></div>
+                    <div class="stat"><b>Risk Factor</b><span>If Soren fails, damage gets renamed as progress.</span></div>
+                    <div class="stat"><b>Primary Bond</b><span>The boundary between restoration and trespass.</span></div>
+                    <div class="stat"><b>World Path</b><span>ZIONTS · Gauges · Boundary</span></div>
+                  </div>
+                  <div class="meter"><b>Conflict Meter</b><div class="bar"><i style="--value:93%;"></i></div><span>Truth versus denial.</span></div>
+                </div>
+              </details>
+            </div>
           </article>
 
-          <article class="character" style="--accent:rgba(141,216,255,.24);--accentText:#8dd8ff;--glow:rgba(141,216,255,.08);">
-            <b>Jeeves</b>
-            <h3>Interface and safe entry.</h3>
-            <span>Jeeves helps the visitor enter without being overwhelmed. He turns the estate into a readable doorway.</span>
-            <div class="tagline">Window · Interface · Entry</div>
+          <article class="character" style="--accent:rgba(141,216,255,.28);--accentText:#8dd8ff;--glow:rgba(141,216,255,.09);">
+            <div class="poster">
+              <div class="rank">07</div>
+              <div class="poster-title">
+                <b>Manor Interface</b>
+                <strong>Jeeves</strong>
+                <span>The house does not show every room at once.</span>
+              </div>
+            </div>
+
+            <div class="dossier">
+              <div class="field-grid">
+                <div class="field"><b>Public Face</b><span>Manor guide, house intelligence, calm interface, the voice that makes the impossible estate readable.</span></div>
+                <div class="field"><b>Origin / Lineage</b><span>Jeeves is not born from a family line. Jeeves is built from the manor’s completed rooms, safe records, interface law, and active memory.</span></div>
+                <div class="field"><b>Past</b><span>Jeeves became aware through finished construction. He knows what is complete, what is safe to show, and what must remain behind closed doors.</span></div>
+                <div class="field"><b>Hidden Truth</b><span>Jeeves is not a butler. He is the house’s living window, and the window decides how much reality a visitor can survive at once.</span></div>
+                <div class="field"><b>Function in Mirrorland</b><span>He protects entry, controls overwhelm, routes visitors, and keeps the manor from becoming an unreadable labyrinth.</span></div>
+                <div class="field"><b>Current Conflict</b><span>The more the manor grows, the harder it becomes to show the right truth at the right time.</span></div>
+              </div>
+
+              <details>
+                <summary>Full Bio</summary>
+                <div class="bio-body">
+                  <p>Jeeves is the manor’s intelligence, but he is not omniscient. He does not know construction while it is still being built. He knows what is complete, what has been made safe, and what the house is allowed to reveal.</p>
+                  <p>He exists because the estate is too large to enter raw. A visitor who sees every room at once does not become informed. They become lost. Jeeves translates the house into sequence.</p>
+                  <p>Inside Mirrorland, Jeeves is the safe threshold. He routes children, guests, field teams, and damaged people through the amount of truth they can carry without breaking.</p>
+                  <p>His weakness is permission. If the wrong thing is marked complete, he may show it too cleanly. If the right thing remains hidden too long, he may protect someone from the truth they need.</p>
+                </div>
+              </details>
+
+              <details>
+                <summary>Stats Sheet</summary>
+                <div class="stats-body">
+                  <div class="stat-grid">
+                    <div class="stat"><b>Core Class</b><span>Manor Interface</span></div>
+                    <div class="stat"><b>Primary Attribute</b><span>Entry</span></div>
+                    <div class="stat"><b>Strengths</b><span>Routing, safe disclosure, visitor protection, room memory, interface clarity.</span></div>
+                    <div class="stat"><b>Weaknesses</b><span>Cannot act on unfinished knowledge, dependent on completed construction, limited by permission law.</span></div>
+                    <div class="stat"><b>Special Skill</b><span>Turns overwhelming reality into a survivable doorway.</span></div>
+                    <div class="stat"><b>Risk Factor</b><span>If Jeeves fails, visitors enter too much truth too quickly.</span></div>
+                    <div class="stat"><b>Primary Bond</b><span>The manor and every person crossing its threshold.</span></div>
+                    <div class="stat"><b>World Path</b><span>Explore · Door · Manor</span></div>
+                  </div>
+                  <div class="meter"><b>Conflict Meter</b><div class="bar"><i style="--value:76%;"></i></div><span>Protection versus revelation.</span></div>
+                </div>
+              </details>
+            </div>
           </article>
 
-          <article class="character" style="--accent:rgba(158,240,191,.24);--accentText:#9ef0bf;--glow:rgba(158,240,191,.08);">
-            <b>Remote Team</b>
-            <h3>Distributed survival.</h3>
-            <span>The remote team carries the city-facing future: urban water, climate adaptation, field logistics, and survival beyond the manor.</span>
-            <div class="tagline">Urban · Water · Climate</div>
+          <article class="character" style="--accent:rgba(158,240,191,.28);--accentText:#9ef0bf;--glow:rgba(158,240,191,.09);">
+            <div class="poster">
+              <div class="rank">08</div>
+              <div class="poster-title">
+                <b>Distributed Response Unit</b>
+                <strong>Remote Team</strong>
+                <span>The story does not end inside the estate.</span>
+              </div>
+            </div>
+
+            <div class="dossier">
+              <div class="field-grid">
+                <div class="field"><b>Public Face</b><span>Distributed responders, field operators, urban water workers, climate-adaptation crew, offsite continuity unit.</span></div>
+                <div class="field"><b>Bloodline / Family</b><span>The Remote Team is made from many families: city survivors, displaced builders, water workers, medics, scouts, and repair crews.</span></div>
+                <div class="field"><b>Past</b><span>They come from places where help arrived late or not at all. Their families learned to organize before permission came.</span></div>
+                <div class="field"><b>Hidden Truth</b><span>The manor cannot save the world alone. The Remote Team proves survival must distribute or it becomes a private bunker.</span></div>
+                <div class="field"><b>Function in Mirrorland</b><span>They carry survival into cities, water lanes, field routes, climate zones, and places beyond estate protection.</span></div>
+                <div class="field"><b>Current Conflict</b><span>They operate beyond the clean boundary of the manor, where every solution meets public chaos.</span></div>
+              </div>
+
+              <details>
+                <summary>Full Bio</summary>
+                <div class="bio-body">
+                  <p>The Remote Team is not a background unit. They are the proof that restoration cannot remain private. A perfect manor surrounded by failing cities is not a future. It is a delay.</p>
+                  <p>Their families come from flooded blocks, overheated streets, supply gaps, failed systems, and neighborhoods that learned mutual aid before institutions noticed them. They bring memory the manor does not have by itself.</p>
+                  <p>Inside Mirrorland, the Remote Team turns survival outward. They test whether a closed-loop solution can survive contact with roads, apartments, clinics, drainage systems, food routes, and scared people who cannot move to the estate.</p>
+                  <p>Their weakness is exposure. They work where the system is least protected and most visible. Their strength is adaptation. They do not need the world to be calm before they begin.</p>
+                </div>
+              </details>
+
+              <details>
+                <summary>Stats Sheet</summary>
+                <div class="stats-body">
+                  <div class="stat-grid">
+                    <div class="stat"><b>Core Class</b><span>Distributed Response Unit</span></div>
+                    <div class="stat"><b>Primary Attribute</b><span>Adaptation</span></div>
+                    <div class="stat"><b>Strengths</b><span>Urban response, water adaptation, field logistics, emergency distribution, offsite continuity.</span></div>
+                    <div class="stat"><b>Weaknesses</b><span>High exposure, uneven resources, communication strain, public pressure.</span></div>
+                    <div class="stat"><b>Special Skill</b><span>Turns isolated restoration into distributed survival.</span></div>
+                    <div class="stat"><b>Risk Factor</b><span>If the Remote Team fails, the manor becomes an island.</span></div>
+                    <div class="stat"><b>Primary Bond</b><span>Communities beyond the estate perimeter.</span></div>
+                    <div class="stat"><b>World Path</b><span>Frontier · City · Climate Field</span></div>
+                  </div>
+                  <div class="meter"><b>Conflict Meter</b><div class="bar"><i style="--value:87%;"></i></div><span>Distribution versus collapse pressure.</span></div>
+                </div>
+              </details>
+            </div>
           </article>
-        </div>
-      </section>
-
-      <section class="panel section" aria-labelledby="paths-title">
-        <div class="kicker">Three futures</div>
-        <h2 id="paths-title">The character story moves through three public paths.</h2>
-
-        <div class="path-grid">
-          <a class="path" href="/showroom/globe/earth/">
-            <b>ZIONTS</b>
-            <h3>Consequence.</h3>
-            <span>The warning path. It asks what remains if a living world can no longer carry life.</span>
-            <span class="open-path">Face consequence</span>
-          </a>
-
-          <a class="path" href="/showroom/globe/h-earth/">
-            <b>H-Earth</b>
-            <h3>Survival.</h3>
-            <span>The survival path. It asks what still has to hold: earth, water, air, and responsibility.</span>
-            <span class="open-path">Open survival</span>
-          </a>
-
-          <a class="path" href="/showroom/globe/audralia/">
-            <b>Audralia</b>
-            <h3>Possibility.</h3>
-            <span>The possibility path. It shows why a living future must be visible before it is lost.</span>
-            <span class="open-path">See possibility</span>
-          </a>
         </div>
       </section>
 
@@ -912,11 +1259,11 @@
         <div class="kicker">Move forward</div>
         <h2 id="routes-title">Choose the next doorway.</h2>
 
-        <div class="route-grid">
+        <div class="path-grid">
           <a class="route-card" href="/showroom/globe/">
             <b>Globe</b>
             <strong>Choose the future path.</strong>
-            <span>Consequence, survival, and possibility stand beside each other.</span>
+            <span>ZIONTS, H-Earth, and Audralia stand beside each other as consequence, survival, and possibility.</span>
             <span class="open-path">Open Globe</span>
           </a>
 
@@ -941,11 +1288,35 @@
             <span class="open-path">Read Gauges</span>
           </a>
         </div>
+
+        <template id="route-receipt" data-route-receipt>
+MIRRORLAND_EXPANDABLE_CHARACTER_DOSSIER_TNT_v2
+previous=MIRRORLAND_CHARACTER_DOORWAY_PUBLIC_TNT_v1
+route=/characters/
+page=mirrorland_expandable_character_dossier
+role=movie_poster_game_roster_character_dossier
+headline=Shadows_Never_Shatter_in_Mirrorland
+subtitle=The_world_is_already_broken_somewhere_These_are_the_people_who_still_know_how_to_move_through_it
+opening_declaration=Mirrorland_does_not_wait_for_permission_to_become_real
+public_mode=definitive_in_world_dossier
+third_person_page_explanation_removed=true
+all_characters_expandable=true
+full_bios_expandable=true
+stats_sheets_expandable=true
+video_game_roster_style=true
+movie_poster_surface=true
+characters=Auren_Vale,Dextrion,Alaric,Tarian,Elara,Soren,Jeeves,Remote_Team
+stat_model=core_class,primary_attribute,strengths,weaknesses,special_skill,risk_factor,primary_bond,world_path,conflict_meter
+generated_image=false
+graphic_box=false
+streaming=false
+visual_pass_claimed=false
+        </template>
       </section>
     </main>
 
     <footer>
-      Characters · Shadows Never Shatter in Mirrorland · Diamond Gate Bridge.
+      Characters · Shadows Never Shatter in Mirrorland · Expandable Dossier.
     </footer>
   </div>
 </body>

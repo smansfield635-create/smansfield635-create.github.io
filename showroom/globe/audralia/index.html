@@ -2,19 +2,21 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/"
-  data-page="audralia-living-canvas"
-  data-contract="AUDRALIA_POST_NARRATIVE_LIVING_WORLD_SURFACE_TNT_v4"
-  data-previous-contract="AUDRALIA_ROUTE_SHELL_V3_LOADER_BUMP_TNT_v3"
+  data-page="audralia-satellite-access"
+  data-contract="AUDRALIA_SATELLITE_ASSET_ACCESS_SURFACE_TNT_v5"
+  data-previous-contract="AUDRALIA_POST_NARRATIVE_LIVING_WORLD_SURFACE_TNT_v4"
   data-role="showroom-globe-child-route"
   data-world="Audralia"
   data-canonical-spelling="A_U_D_R_A_L_I_A"
   data-parent-route="/showroom/globe/"
   data-public-path="possibility"
+  data-view-model="satellite-orbital-asset-access"
   data-route-loader="/showroom/globe/audralia/index.js"
-  data-route-loader-contract="AUDRALIA_POST_NARRATIVE_LIVING_WORLD_LOADER_TNT_v4"
-  data-canvas-contract="AUDRALIA_VISIBLE_LIVING_CANVAS_CONSUMER_TNT_v4"
+  data-route-loader-contract="AUDRALIA_SATELLITE_ASSET_ACCESS_LOADER_TNT_v5"
+  data-canvas-contract="AUDRALIA_CANVAS_ASSET_CONSUMER_SATELLITE_VIEW_TNT_v5"
   data-generated-image="false"
   data-graphic-box="false"
+  data-procedural-world-fallback="false"
   data-heavy-runtime-loaded="false"
   data-streaming="false"
   data-visual-pass-claimed="false"
@@ -26,7 +28,7 @@
   <title>Audralia · The Possibility Path · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Audralia is the possibility path inside the Showroom Globe: a living-world canvas for what stewardship could become while a future can still be reached."
+    content="Audralia is the possibility path inside the Showroom Globe: a satellite access view into the developed Audralia planet assets."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/audralia/">
   <meta name="theme-color" content="#02040b">
@@ -443,6 +445,10 @@
       visibility:hidden;
     }
 
+    .stage[data-loader-state="fallback"] .stage-fallback {
+      color:rgba(255,244,216,.84);
+    }
+
     .public-status {
       display:flex;
       flex-wrap:wrap;
@@ -464,11 +470,6 @@
       border-radius:999px;
       padding:.38rem .7rem;
       background:rgba(28,80,58,.13);
-    }
-
-    .public-status [data-audralia-route-loader-notice="true"],
-    .public-status [data-audralia-route-status="true"] {
-      display:inline-flex;
     }
 
     .cards {
@@ -633,14 +634,14 @@
 
         <h1 id="page-title">Possibility is not fantasy.</h1>
 
-        <div class="subtitle">Audralia is the living-world path.</div>
+        <div class="subtitle">Satellite access to a living-world construct.</div>
 
         <p class="lead">
           A future worth reaching should be visible before it is lost.
         </p>
 
         <div class="principle">
-          Audralia asks what stewardship could become when a living world still has a future.
+          Audralia is accessed from orbit. This page does not invent the planet; it opens the viewer into the developed Audralia asset chain.
         </div>
 
         <div class="actions">
@@ -652,24 +653,24 @@
       </section>
 
       <section class="panel section" aria-labelledby="stage-title">
-        <div class="kicker">Living canvas</div>
-        <h2 id="stage-title">The canvas shows possibility. It does not invent the world.</h2>
+        <div class="kicker">Satellite access</div>
+        <h2 id="stage-title">The canvas consumes the developed planet assets.</h2>
 
-        <div class="stage" id="audralia-stage" data-audralia-stage="true" data-loader-state="pending" aria-label="Audralia living canvas stage">
+        <div class="stage" id="audralia-stage" data-audralia-stage="true" data-loader-state="pending" aria-label="Audralia satellite access stage">
           <div class="stage-fallback" data-stage-fallback="true">
-            Audralia is preparing the living canvas.
+            Connecting to Audralia satellite asset view. No procedural substitute will be painted.
           </div>
 
           <div
             id="audraliaCanvasMount"
             data-audralia-canvas-mount="true"
-            aria-label="Audralia canvas mount"
+            aria-label="Audralia satellite canvas mount"
           ></div>
         </div>
 
         <div class="public-status" aria-live="polite">
-          <span id="audraliaRouteLoaderNotice" data-audralia-route-loader-notice="true">Living canvas preparing</span>
-          <span id="audraliaRouteStatus" data-audralia-route-status="true">Possibility path readying</span>
+          <span id="audraliaRouteLoaderNotice" data-audralia-route-loader-notice="true">Satellite bridge preparing</span>
+          <span id="audraliaRouteStatus" data-audralia-route-status="true">Asset chain pending</span>
         </div>
       </section>
 
@@ -679,21 +680,21 @@
 
         <div class="cards">
           <article class="card">
-            <b>Footprint</b>
-            <strong>Land and sea must hold together.</strong>
-            <span>Audralia’s visible form depends on coherent land, coast, shelf, water, and terrain relationships.</span>
+            <b>Planet assets</b>
+            <strong>The world is already developed downstream.</strong>
+            <span>The route must access Audralia through the existing planet asset chain rather than generating a replacement scene.</span>
           </article>
 
           <article class="card">
-            <b>Climate</b>
-            <strong>Environment must be breathable.</strong>
-            <span>Possibility depends on atmosphere, temperature, water rhythm, groundcover, and living-zone balance.</span>
+            <b>Satellite view</b>
+            <strong>The visitor enters from orbit.</strong>
+            <span>The public read should feel like remote planetary inspection: surface, atmosphere, land, water, and motion from above.</span>
           </article>
 
           <article class="card">
             <b>Canvas</b>
             <strong>The page displays the world.</strong>
-            <span>The canvas is a public window. It shows the living-world path without becoming the authority underneath it.</span>
+            <span>The canvas is a public window. It may consume assets, mount controls, and display motion; it may not author the planet.</span>
           </article>
         </div>
 
@@ -706,42 +707,46 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_POST_NARRATIVE_LIVING_WORLD_SURFACE_TNT_v4
-previous=AUDRALIA_ROUTE_SHELL_V3_LOADER_BUMP_TNT_v3
+AUDRALIA_SATELLITE_ASSET_ACCESS_SURFACE_TNT_v5
+previous=AUDRALIA_POST_NARRATIVE_LIVING_WORLD_SURFACE_TNT_v4
 route=/showroom/globe/audralia/
 page=audralia
 role=showroom_globe_child_route
 public_path=possibility
+view_model=satellite_orbital_asset_access
 world=Audralia
 canonical_spelling=A_U_D_R_A_L_I_A
 parent_route=/showroom/globe/
 route_loader=/showroom/globe/audralia/index.js
-route_loader_contract=AUDRALIA_POST_NARRATIVE_LIVING_WORLD_LOADER_TNT_v4
+route_loader_contract=AUDRALIA_SATELLITE_ASSET_ACCESS_LOADER_TNT_v5
 canvas_mount=#audraliaCanvasMount
-canvas_contract=AUDRALIA_VISIBLE_LIVING_CANVAS_CONSUMER_TNT_v4
+canvas_contract=AUDRALIA_CANVAS_ASSET_CONSUMER_SATELLITE_VIEW_TNT_v5
 post_narrative_surface=true
 legacy_pre_narrative_import=false
-route_owns=route_shell,public_copy,canvas_mount,public_status,cache_key_bump
-route_does_not_own=land_footprint,climate_authority,surface_truth,gauges_logic
-receipt_visibility=hidden_template_only
+satellite_access=true
+asset_chain_required=true
+procedural_world_fallback=false
 generated_image=false
 graphic_box=false
 streaming=false
 visual_pass_claimed=false
+route_owns=route_shell,public_copy,canvas_mount,public_status,cache_key_bump
+route_does_not_own=land_footprint,climate_authority,surface_truth,gauges_logic,planet_generation
+receipt_visibility=hidden_template_only
       </template>
     </main>
 
     <footer>
-      Audralia · The Possibility Path · Living-world canvas.
+      Audralia · The Possibility Path · Satellite asset access.
     </footer>
   </div>
 
   <script>
-    window.DGB_AUDRALIA_ROUTE_KEY = "AUDRALIA_POST_NARRATIVE_LIVING_WORLD_LOADER_TNT_v4";
+    window.DGB_AUDRALIA_ROUTE_KEY = "AUDRALIA_SATELLITE_ASSET_ACCESS_LOADER_TNT_v5";
   </script>
   <script
-    src="/showroom/globe/audralia/index.js?v=AUDRALIA_POST_NARRATIVE_LIVING_WORLD_LOADER_TNT_v4"
-    data-audralia-loader-script="AUDRALIA_POST_NARRATIVE_LIVING_WORLD_LOADER_TNT_v4"
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_SATELLITE_ASSET_ACCESS_LOADER_TNT_v5"
+    data-audralia-loader-script="AUDRALIA_SATELLITE_ASSET_ACCESS_LOADER_TNT_v5"
     defer
   ></script>
 </body>

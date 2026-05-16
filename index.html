@@ -3,7 +3,7 @@
   lang="en"
   data-route="/"
   data-page="compass"
-  data-contract="ROOT_COMPASS_STRICT_ORGANIC_GEM_ROTATION_TNT_v4"
+  data-contract="ROOT_COMPASS_STRICT_ORGANIC_GEM_ORBITAL_ROTATION_TNT_v5"
   data-role="root-compass"
   data-root-is-compass="true"
   data-static-page-usable-without-js="true"
@@ -370,35 +370,93 @@
       }
     }
 
-    .choice-center,
-    .choice-node {
-      position: absolute;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      color: var(--ink);
-      z-index: 4;
-      transition: transform .18s ease, filter .18s ease;
-      animation: gemNodeFloat 7.2s ease-in-out infinite;
-      animation-delay: var(--delay, 0s);
-    }
-
     .choice-center {
+      position: absolute;
       left: 50%;
       top: 50%;
       width: clamp(10.2rem, 23vw, 15.4rem);
       height: clamp(7.5rem, 16.6vw, 11.3rem);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--ink);
       transform: translate(-50%, -50%);
       z-index: 6;
       pointer-events: none;
+      animation: gemNodeFloat 7.2s ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+
+    .orbit-slot {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 0;
+      height: 0;
+      z-index: 5;
+      transform-origin: 0 0;
+      animation: orbitalTurn var(--orbit-duration, 54s) linear infinite;
+      animation-delay: var(--orbit-delay, 0s);
+    }
+
+    .orbit-slot.science-slot {
+      --start-angle: -90deg;
+      --end-angle: 270deg;
+      --counter-start: 90deg;
+      --counter-end: -270deg;
+      --orbit-radius: clamp(8.4rem, 23vw, 15.4rem);
+      --orbit-duration: 58s;
+    }
+
+    .orbit-slot.community-slot {
+      --start-angle: 145deg;
+      --end-angle: 505deg;
+      --counter-start: -145deg;
+      --counter-end: -505deg;
+      --orbit-radius: clamp(8.4rem, 23vw, 15.4rem);
+      --orbit-duration: 62s;
+      animation-direction: reverse;
+    }
+
+    .orbit-slot.story-slot {
+      --start-angle: 35deg;
+      --end-angle: 395deg;
+      --counter-start: -35deg;
+      --counter-end: -395deg;
+      --orbit-radius: clamp(8.4rem, 23vw, 15.4rem);
+      --orbit-duration: 52s;
+    }
+
+    @keyframes orbitalTurn {
+      from {
+        transform:
+          rotate(var(--start-angle))
+          translateX(var(--orbit-radius))
+          rotate(var(--counter-start));
+      }
+
+      to {
+        transform:
+          rotate(var(--end-angle))
+          translateX(var(--orbit-radius))
+          rotate(var(--counter-end));
+      }
     }
 
     .choice-node {
+      position: absolute;
+      left: 0;
+      top: 0;
       width: clamp(8rem, 17vw, 11rem);
       height: clamp(5.9rem, 12.6vw, 8.1rem);
-      left: var(--x);
-      top: var(--y);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--ink);
       transform: translate(-50%, -50%);
+      transition: transform .18s ease, filter .18s ease;
+      animation: gemNodeFloat 7.2s ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
     }
 
     .choice-node:hover,
@@ -646,24 +704,15 @@
         height: 6.7rem;
       }
 
+      .orbit-slot.science-slot,
+      .orbit-slot.community-slot,
+      .orbit-slot.story-slot {
+        --orbit-radius: clamp(7.2rem, 30vw, 9.4rem);
+      }
+
       .choice-node {
         width: 7.05rem;
         height: 5.2rem;
-      }
-
-      .choice-node.science {
-        --x: 50%;
-        --y: 18%;
-      }
-
-      .choice-node.community {
-        --x: 23%;
-        --y: 74%;
-      }
-
-      .choice-node.story {
-        --x: 77%;
-        --y: 74%;
       }
 
       .gem-label b {
@@ -693,6 +742,7 @@
         transition-duration: .01ms !important;
       }
 
+      .orbit-slot,
       .gem-svg,
       .gem-core,
       .glint,
@@ -843,32 +893,38 @@
             <span class="gem-label"><b>Compass</b><span>Choose Direction</span></span>
           </div>
 
-          <a class="choice-node science" style="--x:50%;--y:15%;--delay:-.6s;--tilt-a:-2.2deg;--tilt-b:1.4deg;" href="/laws/" aria-label="Open Scientific Backing">
-            <span class="gem-core">
-              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
-                <use href="#organicGemA"></use>
-              </svg>
-            </span>
-            <span class="gem-label"><b>Scientific</b><span>Laws</span></span>
-          </a>
+          <div class="orbit-slot science-slot">
+            <a class="choice-node science" href="/laws/" aria-label="Open Scientific Backing" style="--delay:-.6s;--tilt-a:-2.2deg;--tilt-b:1.4deg;">
+              <span class="gem-core">
+                <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                  <use href="#organicGemA"></use>
+                </svg>
+              </span>
+              <span class="gem-label"><b>Scientific</b><span>Laws</span></span>
+            </a>
+          </div>
 
-          <a class="choice-node community" style="--x:21%;--y:72%;--delay:-1.4s;--tilt-a:1.5deg;--tilt-b:-2.3deg;" href="/products/" aria-label="Open Community">
-            <span class="gem-core">
-              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
-                <use href="#organicGemA"></use>
-              </svg>
-            </span>
-            <span class="gem-label"><b>Community</b><span>Products</span></span>
-          </a>
+          <div class="orbit-slot community-slot">
+            <a class="choice-node community" href="/products/" aria-label="Open Community" style="--delay:-1.4s;--tilt-a:1.5deg;--tilt-b:-2.3deg;">
+              <span class="gem-core">
+                <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                  <use href="#organicGemA"></use>
+                </svg>
+              </span>
+              <span class="gem-label"><b>Community</b><span>Products</span></span>
+            </a>
+          </div>
 
-          <a class="choice-node story" style="--x:79%;--y:72%;--delay:-2.2s;--tilt-a:-1.6deg;--tilt-b:2.6deg;" href="/showroom/globe/" aria-label="Open Fun Narrative Game Series">
-            <span class="gem-core">
-              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
-                <use href="#organicGemA"></use>
-              </svg>
-            </span>
-            <span class="gem-label"><b>Game</b><span>Globe</span></span>
-          </a>
+          <div class="orbit-slot story-slot">
+            <a class="choice-node story" href="/showroom/globe/" aria-label="Open Fun Narrative Game Series" style="--delay:-2.2s;--tilt-a:-1.6deg;--tilt-b:2.6deg;">
+              <span class="gem-core">
+                <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                  <use href="#organicGemA"></use>
+                </svg>
+              </span>
+              <span class="gem-label"><b>Game</b><span>Globe</span></span>
+            </a>
+          </div>
         </div>
 
         <div class="micro-links" aria-label="Small support links">
@@ -879,7 +935,7 @@
 
         <script type="application/json" id="rootCompassReceipt" class="hidden-receipt">
           {
-            "contract": "ROOT_COMPASS_STRICT_ORGANIC_GEM_ROTATION_TNT_v4",
+            "contract": "ROOT_COMPASS_STRICT_ORGANIC_GEM_ORBITAL_ROTATION_TNT_v5",
             "file": "/index.html",
             "role": "ROOT_COMPASS_ORIENTATION_CURIOSITY_THRESHOLD",
             "root_is_compass": true,
@@ -891,6 +947,7 @@
             },
             "visible_explanation_level": "minimal",
             "gem_body_rotates": true,
+            "gems_orbit_center": true,
             "label_rotates": false,
             "static_page_usable_without_js": true,
             "paired_controller": "/index.js"
@@ -901,7 +958,7 @@
           <p>Compass works without JavaScript. Use the gems or links to choose a direction.</p>
         </noscript>
 
-        <script src="/index.js?v=ROOT_COMPASS_STRICT_ORGANIC_GEM_ROTATION_TNT_v4" defer></script>
+        <script src="/index.js?v=ROOT_COMPASS_STRICT_ORGANIC_GEM_ORBITAL_ROTATION_TNT_v5" defer></script>
       </section>
     </main>
 

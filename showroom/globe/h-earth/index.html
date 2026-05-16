@@ -4,8 +4,9 @@
   data-page="h-earth-survival-path-ground-level"
   data-route="/showroom/globe/h-earth/"
   data-contract="H_EARTH_CHILD_ROUTE_EARTH_WATER_AIR_CLASSIC_BOOT_TNT_v1"
+  data-surface-contract="H_EARTH_SURVIVAL_PATH_POST_NARRATIVE_SURFACE_TNT_v2"
   data-context-contract="PLANETARY_CHILD_PAGES_DEEP_TIME_CONTEXT_ALIGNMENT_TNT_v1"
-  data-previous-contract="H_EARTH_CHILD_ROUTE_EARTH_WATER_AIR_PLACEMENT_TNT_v1"
+  data-previous-surface-contract="H_EARTH_CHILD_ROUTE_EARTH_WATER_AIR_PLACEMENT_TNT_v1"
   data-jurisdiction="h-earth-child-route-only"
   data-deep-time-path="survival"
   data-scene-model="earth-water-air-condition-stack"
@@ -13,6 +14,8 @@
   data-parent-route="/showroom/globe/"
   data-child-route-placement="true"
   data-runtime-boot="classic-defer"
+  data-preserve-runtime="true"
+  data-preserve-condition-stage="true"
   data-generated-image="false"
   data-graphic-box="false"
   data-streaming="false"
@@ -21,11 +24,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
   <title>H-Earth · The Survival Path</title>
   <meta
     name="description"
-    content="H-Earth is the Survival Path: a ground-level future where earth, water, and air show the physical conditions life must still answer to."
+    content="H-Earth is the Survival Path: earth, water, and air remain the physical conditions any future life must answer to."
   >
+  <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/h-earth/">
+  <meta name="theme-color" content="#030812">
 
   <style>
     :root{
@@ -214,11 +220,21 @@
 
     h1{
       max-width:980px;
-      font-size:clamp(2.8rem,8vw,5.4rem);
+      font-size:clamp(2.9rem,8vw,5.6rem);
     }
 
     h2{
       font-size:clamp(1.7rem,4vw,2.45rem);
+    }
+
+    .subtitle{
+      max-width:900px;
+      color:var(--mint);
+      font-size:clamp(1.25rem,4vw,2.3rem);
+      line-height:1;
+      letter-spacing:-.05em;
+      font-weight:950;
+      text-wrap:balance;
     }
 
     p{
@@ -226,6 +242,10 @@
       color:var(--muted);
       line-height:1.55;
       font-size:clamp(1rem,2.4vw,1.14rem);
+    }
+
+    .lead{
+      max-width:880px;
     }
 
     .quote{
@@ -419,6 +439,34 @@
       letter-spacing:.08em;
     }
 
+    .micro-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.54rem;
+    }
+
+    .micro-links a{
+      min-height:2.35rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
+      padding:.55rem .78rem;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+    }
+
+    .micro-links a.primary{
+      border-color:rgba(167,243,198,.62);
+      color:#06101c;
+      background:linear-gradient(135deg,#b7ffd4,#87e6b5);
+    }
+
     .route-receipt,
     [data-route-receipt],
     [data-contract-receipt],
@@ -505,7 +553,9 @@
         <a href="/">Compass</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Globe</a>
+        <a href="/showroom/globe/earth/">ZIONTS</a>
         <a href="/showroom/globe/h-earth/" aria-current="page">H-Earth</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
@@ -513,17 +563,24 @@
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
         <p class="eyebrow">H-Earth · The Survival Path</p>
+
         <h1 id="page-title">Survival is not abstract.</h1>
-        <p>
-          H-Earth is the possible future where life survives danger instead of disappearing into it. This path comes closer to the ground because any future where life continues must still answer to earth, water, and air.
+
+        <div class="subtitle">Earth. Water. Air.</div>
+
+        <p class="lead">
+          Any future where life continues must still answer to the physical world.
         </p>
+
         <div class="quote">
           “If science becomes responsibility, survival becomes a physical question: what can still hold life?”
         </div>
+
         <div class="actions">
           <a class="button gold" href="/showroom/globe/h-earth/#condition-stage">Open the Survival Scene</a>
           <a class="button" href="/showroom/globe/">Return to Globe</a>
-          <a class="button" href="/gauges/">Read Gauges</a>
+          <a class="button" href="/showroom/globe/earth/">Face Consequence</a>
+          <a class="button" href="/showroom/globe/audralia/">Open Possibility</a>
         </div>
       </section>
 
@@ -532,7 +589,7 @@
           <p class="eyebrow">Ground-Level Survival View</p>
           <h2 id="stage-title">Earth, water, and air are the conditions survival depends on.</h2>
           <p>
-            Drag across the scene to shift the horizon and inspect the balance. The view stays close to the ground because this path is about the conditions that still have to carry life.
+            Drag across the scene to inspect the balance. This route stays close to the ground because survival cannot remain theoretical.
           </p>
         </div>
 
@@ -565,7 +622,7 @@
             <b>Earth</b>
             <strong>The ground that must still hold life.</strong>
             <p>
-              Earth owns the foreground mass, shoreline edge, slope, and landing surface. Survival begins where life can still stand.
+              Earth owns the foreground mass, shoreline edge, slope, and landing surface.
             </p>
           </article>
 
@@ -573,7 +630,7 @@
             <b>Water</b>
             <strong>The moving condition between distance and life.</strong>
             <p>
-              Water owns the horizon band, shimmer, reflection, and transition. Any survival path must answer to water.
+              Water owns the horizon band, shimmer, reflection, and transition.
             </p>
           </article>
 
@@ -581,7 +638,7 @@
             <b>Air</b>
             <strong>The breath, light, and atmosphere above the line.</strong>
             <p>
-              Air owns the upper field, haze, depth, and breathing room. Without air, survival is only a theory.
+              Air owns the upper field, haze, depth, and breathing room.
             </p>
           </article>
         </div>
@@ -590,17 +647,26 @@
           <b style="color:var(--gold);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;">Path Contract</b>
           <code>H-Earth · The Survival Path</code>
           <p>
-            This child route carries one ground-level survival view. It does not try to show every world at once. It examines the conditions life must still depend on.
+            This child route carries one ground-level survival view. It preserves the working runtime scene and examines the conditions life must still depend on.
           </p>
         </div>
 
+        <div class="micro-links" aria-label="Return path links">
+          <a class="primary" href="/showroom/globe/">Return to Globe</a>
+          <a href="/showroom/globe/earth/">ZIONTS</a>
+          <a href="/showroom/globe/audralia/">Audralia</a>
+          <a href="/gauges/">Gauges</a>
+        </div>
+
         <template id="route-receipt" data-route-receipt>
-PLANETARY_CHILD_PAGES_DEEP_TIME_CONTEXT_ALIGNMENT_TNT_v1
+H_EARTH_SURVIVAL_PATH_POST_NARRATIVE_SURFACE_TNT_v2
 file=/showroom/globe/h-earth/index.html
 route=/showroom/globe/h-earth/
 public_body=H-Earth
 public_path=survival
-preserved_contract=H_EARTH_CHILD_ROUTE_EARTH_WATER_AIR_CLASSIC_BOOT_TNT_v1
+parent_route=/showroom/globe/
+runtime_contract_preserved=H_EARTH_CHILD_ROUTE_EARTH_WATER_AIR_CLASSIC_BOOT_TNT_v1
+context_contract=PLANETARY_CHILD_PAGES_DEEP_TIME_CONTEXT_ALIGNMENT_TNT_v1
 preserved_canvas=true
 preserved_condition_stage=true
 preserved_controls=motion,detail,reset
@@ -608,7 +674,8 @@ preserved_scene_canvas=true
 preserved_scene_note=true
 preserved_runtime_boot=classic_defer
 conditions=earth,water,air
-parent_route=/showroom/globe/
+post_narrative_surface=true
+legacy_pre_narrative_import=false
 h_earth_ground_view_lawful=true
 generated_image=false
 graphic_box=false
@@ -618,7 +685,7 @@ script_preserved=/showroom/globe/h-earth/index.js?v=H_EARTH_CHILD_ROUTE_EARTH_WA
     </main>
 
     <footer>
-      H-Earth · The Survival Path · Earth, water, and air remain the survival conditions.
+      H-Earth · The Survival Path · Earth. Water. Air.
     </footer>
   </div>
 

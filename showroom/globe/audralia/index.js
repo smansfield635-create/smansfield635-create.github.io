@@ -1,13 +1,13 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_REFRESH_EXIT_BOXED_GLOBE_LOADER_TNT_v10
+// AUDRALIA_TOUCH_SCOPE_BOXED_GLOBE_LOADER_TNT_v11
 // Renewal only.
-// Purpose: preserve the existing Audralia globe, keep it boxed, and release the refresh lifecycle.
+// Purpose: preserve the existing Audralia globe, keep it boxed, remove the top update bar, and scope finger drag to the box only.
 // No procedural substitute. No fake globe. No physical redesign.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_REFRESH_EXIT_BOXED_GLOBE_LOADER_TNT_v10";
+  const CONTRACT = "AUDRALIA_TOUCH_SCOPE_BOXED_GLOBE_LOADER_TNT_v11";
   const ROUTE = "/showroom/globe/audralia/";
 
   if (window.__DGB_AUDRALIA_ACTIVE_LOADER__) {
@@ -70,7 +70,8 @@
     scriptsLoaded: [],
     scriptsFailed: [],
     timers: [],
-    observer: null
+    observer: null,
+    touchInsideBox: false
   };
 
   window.__DGB_AUDRALIA_ACTIVE_LOADER__ = {
@@ -156,17 +157,24 @@
   }
 
   function injectContainmentStyle() {
-    if ($("#audraliaRefreshExitContainmentStyle")) return;
+    if ($("#audraliaTouchScopeContainmentStyle")) return;
 
     const style = document.createElement("style");
-    style.id = "audraliaRefreshExitContainmentStyle";
+    style.id = "audraliaTouchScopeContainmentStyle";
     style.textContent = `
+      html,
+      body {
+        touch-action: pan-y !important;
+      }
+
       #audralia-stage,
       [data-audralia-stage="true"] {
         position: relative !important;
         overflow: hidden !important;
         contain: layout paint size !important;
         isolation: isolate !important;
+        touch-action: none !important;
+        overscroll-behavior: contain !important;
       }
 
       #audraliaCanvasMount,
@@ -183,6 +191,8 @@
         transform-origin: center center !important;
         border-radius: inherit !important;
         z-index: 2 !important;
+        touch-action: none !important;
+        overscroll-behavior: contain !important;
       }
 
       #audraliaCanvasMount > *,
@@ -216,6 +226,35 @@
         touch-action: none !important;
       }
 
+      body > canvas[data-audralia-visible-canvas],
+      body > canvas[data-audralia-globe],
+      body > canvas[data-audralia-satellite],
+      body > [data-audralia-mounted="true"] {
+        display: none !important;
+        pointer-events: none !important;
+      }
+
+      [data-audralia-update-bar],
+      [data-audralia-visible-update],
+      [data-audralia-route-status-bar],
+      [data-audralia-loader-notice-bar],
+      .audralia-update-bar,
+      .audralia-visible-update,
+      .audralia-route-status-bar {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        max-width: 0 !important;
+        max-height: 0 !important;
+        overflow: hidden !important;
+        position: absolute !important;
+        inset: auto !important;
+        clip-path: inset(50%) !important;
+      }
+
       @media (max-width: 720px) {
         #audraliaCanvasMount canvas,
         #audraliaCanvasMount svg,
@@ -237,6 +276,8 @@
       stage.style.overflow = "hidden";
       stage.style.contain = "layout paint size";
       stage.style.isolation = "isolate";
+      stage.style.touchAction = "none";
+      stage.style.overscrollBehavior = "contain";
     }
 
     if (mount) {
@@ -252,6 +293,8 @@
       mount.style.transformOrigin = "center center";
       mount.style.zIndex = "2";
       mount.style.borderRadius = "inherit";
+      mount.style.touchAction = "none";
+      mount.style.overscrollBehavior = "contain";
     }
   }
 
@@ -284,6 +327,55 @@
       ? "translate(-50%, -50%) scale(.86)"
       : "translate(-50%, -50%) scale(.92)";
     node.style.touchAction = "none";
+  }
+
+  function suppressUpdateBars() {
+    const known = $$([
+      "[data-audralia-update-bar]",
+      "[data-audralia-visible-update]",
+      "[data-audralia-route-status-bar]",
+      "[data-audralia-loader-notice-bar]",
+      ".audralia-update-bar",
+      ".audralia-visible-update",
+      ".audralia-route-status-bar"
+    ].join(","));
+
+    for (const node of known) hideNode(node);
+
+    const bodyChildren = Array.from(document.body ? document.body.children : []);
+
+    for (const node of bodyChildren) {
+      if (!node || node.id === "audralia-stage" || node.id === "audraliaCanvasMount") continue;
+
+      const text = String(node.textContent || "").trim().toLowerCase();
+      const rect = node.getBoundingClientRect();
+
+      const looksLikeTopUpdate =
+        text.includes("audralia v") &&
+        text.includes("update active") &&
+        rect.top >= 0 &&
+        rect.top < 120 &&
+        rect.height <= 120;
+
+      if (looksLikeTopUpdate) hideNode(node);
+    }
+  }
+
+  function hideNode(node) {
+    if (!node || node.nodeType !== 1) return;
+
+    node.setAttribute("data-audralia-hidden-update-bar", "true");
+    node.style.display = "none";
+    node.style.visibility = "hidden";
+    node.style.opacity = "0";
+    node.style.pointerEvents = "none";
+    node.style.width = "0";
+    node.style.height = "0";
+    node.style.maxWidth = "0";
+    node.style.maxHeight = "0";
+    node.style.overflow = "hidden";
+    node.style.position = "absolute";
+    node.style.inset = "auto";
   }
 
   function looksAudraliaRelated(node, stage) {
@@ -326,6 +418,7 @@
     if (!stage || !mount) return false;
 
     forceBox(stage, mount);
+    suppressUpdateBars();
 
     let adopted = false;
 
@@ -421,8 +514,8 @@
       page: "audralia-satellite-globe-access",
       world: "Audralia",
       contract: CONTRACT,
-      canvasContract: "AUDRALIA_EXISTING_GLOBE_BOXED_ASSET_CONSUMER_TNT_v10",
-      mode: "refresh-exit-satellite-globe-contained",
+      canvasContract: "AUDRALIA_EXISTING_GLOBE_BOXED_ASSET_CONSUMER_TNT_v11",
+      mode: "touch-scoped-satellite-globe-contained",
       requestedView: "satellite-orbital-existing-globe-contained",
       stage,
       mount,
@@ -433,6 +526,8 @@
       assetAccessOnly: true,
       existingGlobeRequired: true,
       containmentRequired: true,
+      touchScope: "box-only",
+      hideUpdateBar: true,
       mayAuthorPlanet: false,
       mayPaintProceduralLandscape: false,
       mayGenerateFallbackTerrain: false
@@ -446,6 +541,8 @@
     window.DGB_AUDRALIA_BOX_CONTAINMENT = true;
     window.DGB_AUDRALIA_NO_PROCEDURAL_FALLBACK = true;
     window.DGB_AUDRALIA_REFRESH_EXIT_SAFE = true;
+    window.DGB_AUDRALIA_TOUCH_SCOPE = "box-only";
+    window.DGB_AUDRALIA_HIDE_UPDATE_BAR = true;
 
     return context;
   }
@@ -475,9 +572,13 @@
       "DGB:AUDRALIA:RESTORE_EXISTING_GLOBE",
       "DGB:AUDRALIA:BOX_EXISTING_GLOBE",
       "DGB:AUDRALIA:SATELLITE_GLOBE_REQUEST",
+      "DGB:AUDRALIA:TOUCH_SCOPE_BOX_ONLY",
+      "DGB:AUDRALIA:HIDE_UPDATE_BAR",
       "audralia:restore-existing-globe",
       "audralia:box-existing-globe",
       "audralia:satellite-globe-request",
+      "audralia:touch-scope-box-only",
+      "audralia:hide-update-bar",
       "audralia:mount"
     ]) {
       try {
@@ -549,12 +650,47 @@
     return false;
   }
 
+  function bindTouchScope() {
+    const stage = getStage();
+    if (!stage || stage.dataset.audraliaTouchScopeBound === "true") return;
+
+    stage.dataset.audraliaTouchScopeBound = "true";
+
+    stage.addEventListener("pointerdown", () => {
+      state.touchInsideBox = true;
+    }, { passive:true });
+
+    stage.addEventListener("pointerup", () => {
+      state.touchInsideBox = false;
+    }, { passive:true });
+
+    stage.addEventListener("pointercancel", () => {
+      state.touchInsideBox = false;
+    }, { passive:true });
+
+    document.addEventListener("pointerdown", (event) => {
+      state.touchInsideBox = !!stage.contains(event.target);
+    }, { passive:true });
+
+    document.addEventListener("pointerup", () => {
+      state.touchInsideBox = false;
+    }, { passive:true });
+
+    document.addEventListener("touchmove", (event) => {
+      if (!state.touchInsideBox) return;
+      if (!stage.contains(event.target)) return;
+      event.preventDefault();
+    }, { passive:false });
+  }
+
   function startBoundedObservation() {
     const started = performance.now();
     const maxMs = 3200;
 
     state.observer = new MutationObserver(() => {
       if (state.stopped) return;
+
+      suppressUpdateBars();
       adoptVisuals();
 
       if (state.mounted || performance.now() - started > maxMs) {
@@ -566,9 +702,12 @@
       state.observer.observe(document.body, { childList:true, subtree:true });
     } catch {}
 
+    later(suppressUpdateBars, 40);
     later(adoptVisuals, 80);
+    later(suppressUpdateBars, 180);
     later(adoptVisuals, 220);
     later(adoptVisuals, 520);
+    later(suppressUpdateBars, 800);
     later(adoptVisuals, 1100);
     later(adoptVisuals, 2100);
     later(stopObservationOnly, maxMs + 250);
@@ -587,7 +726,9 @@
           scriptsFailed: state.scriptsFailed.slice(),
           noProceduralSubstitute: true,
           boxedContainment: true,
-          refreshExitSafe: true
+          refreshExitSafe: true,
+          touchScope: "box-only",
+          hideUpdateBar: true
         };
       }
     };
@@ -600,6 +741,7 @@
     state.booted = true;
 
     injectContainmentStyle();
+    suppressUpdateBars();
 
     const stage = getStage();
     const mount = getMount();
@@ -612,6 +754,7 @@
     }
 
     forceBox(stage, mount);
+    bindTouchScope();
     startBoundedObservation();
     expose();
 
@@ -620,6 +763,7 @@
 
     const loaded = await loadAssetsBounded();
 
+    suppressUpdateBars();
     adoptVisuals();
 
     if (!loaded && !hasMountedVisual()) {
@@ -634,6 +778,7 @@
     }
 
     stopObservationOnly();
+    suppressUpdateBars();
     expose();
   }
 
@@ -644,6 +789,7 @@
   window.addEventListener("pageshow", (event) => {
     if (event.persisted) {
       state.stopped = false;
+      suppressUpdateBars();
       adoptVisuals();
       expose();
     }

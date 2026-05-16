@@ -1,612 +1,698 @@
-// /showroom/globe/audralia/index.js
-// AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3
-// Full-file replacement.
-// Route loader and mount authority only.
-// Accepts AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2 as the current climate contract.
-// Requires canvas contract AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3.
-// Retires the false status phrase: "Climate Detail: loaded stale AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2".
-// Mounts only window.AUDRALIA_CANVAS.mount(...).
-// Does not own footprint.
-// Does not own climate.
-// Does not own canvas internals.
-// Does not touch Gauges.
-// No generated image. No GraphicBox. No visual-pass claim.
+<!doctype html>
+<html
+  lang="en"
+  data-route="/showroom/globe/audralia/"
+  data-page="audralia-living-canvas"
+  data-contract="AUDRALIA_ROUTE_SHELL_V3_LOADER_BUMP_TNT_v3"
+  data-previous-contract="AUDRALIA_ROUTE_SHELL_CANONICAL_LOADER_BUMP_TNT_v2"
+  data-role="showroom-globe-child-route"
+  data-world="Audralia"
+  data-canonical-spelling="A_U_D_R_A_L_I_A"
+  data-parent-route="/showroom/globe/"
+  data-route-loader="/showroom/globe/audralia/index.js"
+  data-route-loader-contract="AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3"
+  data-canvas-contract="AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3"
+  data-landmap-contract="AUDRALIA_30_BILLION_YEAR_EARTH_LEGACY_ORGANIC_LANDFORM_TNT_v1"
+  data-climate-contract="AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-heavy-runtime-loaded="false"
+  data-streaming="false"
+  data-visual-pass-claimed="false"
+>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-(() => {
-  "use strict";
+  <title>Audralia · The Living Canvas · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Audralia is the living canvas route for the Diamond Gate Bridge Globe question: a possible future that can be seen, understood, and considered before it is lost."
+  >
 
-  const CONTRACT = "AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3";
-  const RECEIPT = "AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_RECEIPT_v3";
-  const PREVIOUS_CONTRACT = "AUDRALIA_ROUTE_CANONICAL_LOADER_TNT_v2";
-  const VERSION = "2026-05-15.audralia-route-loader-climate-v2-status-alignment-v3";
-
-  const EXPECTED = Object.freeze({
-    canvas: "AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3",
-    landmap: "AUDRALIA_30_BILLION_YEAR_EARTH_LEGACY_ORGANIC_LANDFORM_TNT_v1",
-    climate: "AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2"
-  });
-
-  const ACCEPTED_CONTRACTS = Object.freeze({
-    lattice256: Object.freeze([
-      "AUDRALIA_G1_256_LATTICE_ATLAS_AUTHORITY_TNT_v1",
-      ""
-    ]),
-    landmap: Object.freeze([
-      "AUDRALIA_30_BILLION_YEAR_EARTH_LEGACY_ORGANIC_LANDFORM_TNT_v1"
-    ]),
-    climate: Object.freeze([
-      "AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2"
-    ]),
-    beaches: Object.freeze([
-      "AUDRALIA_BEACHES_AUTHORITY_TNT_v1",
-      "AUDRALIA_LANDMASS_AND_BEACH_FOOTPRINT_RENEWAL_TNT_v1",
-      ""
-    ]),
-    groundcover: Object.freeze([
-      "AUDRALIA_GROUNDCOVER_TNT_v1",
-      ""
-    ]),
-    landSurface: Object.freeze([
-      "AUDRALIA_G1_LAYER_TWO_LUSH_LAND_SURFACE_TNT_v1",
-      ""
-    ]),
-    canvas: Object.freeze([
-      "AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3"
-    ])
-  });
-
-  const LEGACY_TOKENS = Object.freeze([
-    "AUDRALIA_GRATITUDE_PLAINS_DESERTS_MARSHES_ROUTE_TNT_v10",
-    "AUDRALIA_GRATITUDE_PLAINS_DESERTS_MARSHES_ROUTE_RECEIPT_v10",
-    "gratitude plains/deserts/marshes route",
-    "Primary Summit Gratitude",
-    "Parent order backstory",
-    "Mountain communities true"
-  ]);
-
-  const RETIRED_FALSE_STATUS = "Climate Detail: loaded stale AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2";
-  const CACHE_KEY = `${CONTRACT}.${Date.now()}`;
-
-  const SCRIPT_CHAIN = Object.freeze([
-    {
-      key: "lattice256",
-      label: "Lattice 256",
-      src: "/assets/audralia/audralia.lattice256.js",
-      required: true,
-      check: () => Boolean(window.AUDRALIA_LATTICE256?.coordinatesFromUV),
-      contract: () => String(window.AUDRALIA_LATTICE256?.contract || "")
-    },
-    {
-      key: "landmap",
-      label: "Organic Landmap",
-      src: "/assets/audralia/audralia.landmap.js",
-      required: true,
-      expected: EXPECTED.landmap,
-      check: () => Boolean(window.AUDRALIA_LANDMAP?.sampleLandmap),
-      contract: () => String(window.AUDRALIA_LANDMAP?.contract || "")
-    },
-    {
-      key: "climate",
-      label: "Climate Detail",
-      src: "/assets/audralia/audralia.climate.render.js",
-      required: true,
-      expected: EXPECTED.climate,
-      check: () => Boolean(window.AUDRALIA_CLIMATE_RENDER?.sampleClimate),
-      contract: () => String(window.AUDRALIA_CLIMATE_RENDER?.contract || "")
-    },
-    {
-      key: "beaches",
-      label: "Beach Authority",
-      src: "/assets/audralia/audralia.beaches.js",
-      required: false,
-      check: () => Boolean(window.AUDRALIA_BEACHES),
-      contract: () => String(window.AUDRALIA_BEACHES?.contract || "")
-    },
-    {
-      key: "groundcover",
-      label: "Groundcover",
-      src: "/assets/audralia/audralia.groundcover.js",
-      required: false,
-      check: () => Boolean(window.AUDRALIA_GROUNDCOVER),
-      contract: () => String(window.AUDRALIA_GROUNDCOVER?.contract || "")
-    },
-    {
-      key: "landSurface",
-      label: "Land Surface",
-      src: "/assets/audralia/audralia.land.surface.js",
-      required: false,
-      check: () => Boolean(window.AUDRALIA_LAND_SURFACE?.sampleSurface),
-      contract: () => String(window.AUDRALIA_LAND_SURFACE?.contract || "")
-    },
-    {
-      key: "canvas",
-      label: "Visible Notice Canvas",
-      src: "/assets/audralia/audralia.canvas.js",
-      required: true,
-      expected: EXPECTED.canvas,
-      check: () => Boolean(window.AUDRALIA_CANVAS?.mount),
-      contract: () => String(window.AUDRALIA_CANVAS?.contract || "")
-    }
-  ]);
-
-  const root = document.documentElement;
-
-  let authoritativeStatusText = "";
-  let reassertingStatus = false;
-  let legacyWriteCount = 0;
-  let retiredFalseStatusCount = 0;
-
-  function qs(selector) {
-    return document.querySelector(selector);
-  }
-
-  function nodes() {
-    return Object.freeze({
-      notice: qs("#audraliaRouteLoaderNotice"),
-      status: qs("#audraliaRouteStatus"),
-      mount: qs("#audraliaCanvasMount"),
-      fallback: qs("[data-stage-fallback='true']")
-    });
-  }
-
-  function normalizeContract(value) {
-    return String(value || "").trim();
-  }
-
-  function acceptedContractsFor(key, expected) {
-    const accepted = ACCEPTED_CONTRACTS[key];
-
-    if (Array.isArray(accepted)) {
-      return accepted.map(normalizeContract);
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg:#02040b;
+      --ink:#fff4d8;
+      --muted:rgba(230,238,255,.78);
+      --faint:rgba(230,238,255,.52);
+      --gold:#f3c86f;
+      --green:#9ef0bf;
+      --blue:#8dd8ff;
+      --panel:rgba(9,15,31,.88);
+      --line:rgba(184,205,255,.18);
+      --green-line:rgba(158,240,191,.26);
+      --shadow:0 32px 110px rgba(0,0,0,.48);
+      --max:1180px;
     }
 
-    if (expected) return [normalizeContract(expected)];
+    * { box-sizing:border-box; }
 
-    return [""];
-  }
-
-  function isContractAccepted(key, actualContract, expectedContract) {
-    const actual = normalizeContract(actualContract);
-    const expected = normalizeContract(expectedContract);
-    const accepted = acceptedContractsFor(key, expected);
-
-    if (!actual && !expected) return true;
-    if (expected && actual === expected) return true;
-
-    return accepted.includes(actual);
-  }
-
-  function containsLegacyToken(text) {
-    const value = String(text || "").toLowerCase();
-    return LEGACY_TOKENS.some((token) => value.includes(String(token).toLowerCase()));
-  }
-
-  function containsRetiredFalseStatus(text) {
-    return String(text || "").includes(RETIRED_FALSE_STATUS);
-  }
-
-  function setRootReceipt() {
-    root.dataset.audraliaRouteLoaderLoaded = "true";
-    root.dataset.audraliaRouteLoaderContract = CONTRACT;
-    root.dataset.audraliaRouteLoaderReceipt = RECEIPT;
-    root.dataset.audraliaRouteLoaderPreviousContract = PREVIOUS_CONTRACT;
-    root.dataset.audraliaRouteLoaderVersion = VERSION;
-    root.dataset.audraliaRouteExpectedCanvasContract = EXPECTED.canvas;
-    root.dataset.audraliaRouteExpectedLandmapContract = EXPECTED.landmap;
-    root.dataset.audraliaRouteExpectedClimateContract = EXPECTED.climate;
-    root.dataset.audraliaRouteAcceptedClimateContract = EXPECTED.climate;
-    root.dataset.audraliaRouteRetiredFalseClimateStatus = RETIRED_FALSE_STATUS;
-    root.dataset.audraliaRouteOwnsFootprint = "false";
-    root.dataset.audraliaRouteOwnsClimate = "false";
-    root.dataset.audraliaRouteOwnsCanvas = "false";
-    root.dataset.audraliaRouteLegacyV10Blocked = "pending";
-    root.dataset.generatedImage = "false";
-    root.dataset.graphicBox = "false";
-    root.dataset.visualPassClaimed = "false";
-
-    window.DGB_AUDRALIA_ROUTE_LOADER_RECEIPT = Object.freeze({
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      version: VERSION,
-      route: "/showroom/globe/audralia/",
-      expected: EXPECTED,
-      acceptedContracts: ACCEPTED_CONTRACTS,
-      retiredFalseStatus: RETIRED_FALSE_STATUS,
-      blocksLegacyTokens: Array.from(LEGACY_TOKENS),
-      owns: [
-        "route_loader",
-        "script_chain_loading",
-        "visible_route_status",
-        "canonical_canvas_mount_call",
-        "legacy_status_guard",
-        "climate_v2_status_alignment"
-      ],
-      doesNotOwn: [
-        "land_footprint",
-        "climate_authority",
-        "surface_truth",
-        "canvas_internals",
-        "runtime_motion",
-        "gauges_logic",
-        "image_generation",
-        "GraphicBox"
-      ],
-      generatedImage: false,
-      graphicBox: false,
-      visualPassClaimed: false,
-      timestamp: new Date().toISOString()
-    });
-  }
-
-  function applyNoticeTone(node, tone) {
-    if (!node) return;
-
-    node.dataset.statusTone = tone;
-
-    if (tone === "pass") {
-      node.style.borderColor = "rgba(158,240,191,.58)";
-      node.style.color = "rgba(206,255,228,.98)";
-      node.style.background = "rgba(2,30,24,.78)";
-    } else if (tone === "warn") {
-      node.style.borderColor = "rgba(243,200,111,.54)";
-      node.style.color = "rgba(255,232,168,.98)";
-      node.style.background = "rgba(40,26,4,.74)";
-    } else if (tone === "fail") {
-      node.style.borderColor = "rgba(255,139,139,.54)";
-      node.style.color = "rgba(255,210,210,.98)";
-      node.style.background = "rgba(44,8,12,.76)";
-    } else {
-      node.style.borderColor = "rgba(243,200,111,.44)";
-      node.style.color = "rgba(255,232,168,.98)";
-      node.style.background = "rgba(40,26,4,.74)";
-    }
-  }
-
-  function setNotice(text, tone = "pending") {
-    const { notice } = nodes();
-    if (!notice) return;
-
-    notice.textContent = String(text || "");
-    applyNoticeTone(notice, tone);
-  }
-
-  function setStatus(text) {
-    authoritativeStatusText = String(text || "");
-    const { status } = nodes();
-    if (!status) return;
-
-    reassertingStatus = true;
-    status.textContent = authoritativeStatusText;
-
-    window.setTimeout(() => {
-      reassertingStatus = false;
-    }, 0);
-  }
-
-  function appendCache(src) {
-    const joiner = src.includes("?") ? "&" : "?";
-    return `${src}${joiner}v=${encodeURIComponent(CACHE_KEY)}`;
-  }
-
-  function readState(item) {
-    const loaded = Boolean(item.check());
-    const actualContract = normalizeContract(item.contract ? item.contract() : "");
-    const expectedContract = normalizeContract(item.expected || "");
-    const contractMatches = isContractAccepted(item.key, actualContract, expectedContract);
-
-    return Object.freeze({
-      key: item.key,
-      label: item.label,
-      src: item.src,
-      required: Boolean(item.required),
-      loaded,
-      expectedContract,
-      acceptedContracts: acceptedContractsFor(item.key, expectedContract),
-      actualContract,
-      contractMatches
-    });
-  }
-
-  function statusPhrase(state) {
-    if (!state.loaded && !state.required) return `${state.label}: optional missing`;
-    if (!state.loaded) return `${state.label}: missing`;
-
-    if (state.key === "climate" && state.actualContract === EXPECTED.climate) {
-      return "Climate Detail: active";
+    html {
+      min-width:320px;
+      min-height:100%;
+      background:var(--bg);
+      scroll-behavior:smooth;
+      overflow-x:hidden;
     }
 
-    if (state.expectedContract && !state.contractMatches) {
-      return `${state.label}: stale ${state.actualContract || "unknown"}`;
+    body {
+      margin:0;
+      min-width:320px;
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.5;
+      overflow-x:hidden;
+      background:
+        radial-gradient(circle at 50% -8%,rgba(158,240,191,.16),transparent 28rem),
+        radial-gradient(circle at 12% 18%,rgba(36,120,255,.15),transparent 28rem),
+        radial-gradient(circle at 88% 30%,rgba(243,200,111,.10),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(141,216,255,.10),transparent 34rem),
+        linear-gradient(180deg,#07101a 0%,#030713 58%,#010207 100%);
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
     }
 
-    return `${state.label}: active`;
-  }
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background-image:
+        radial-gradient(circle,rgba(255,255,255,.16) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(143,240,195,.035) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.032) 1px,transparent 1px);
+      background-size:220px 260px,54px 54px,54px 54px;
+      opacity:.20;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
+    }
 
-  function summarize(states) {
-    return states.map(statusPhrase).join(" · ");
-  }
+    a { color:inherit; text-decoration:none; }
 
-  function mustReload(item) {
-    const state = readState(item);
-    if (!state.loaded) return true;
-    if (state.expectedContract && !state.contractMatches) return true;
-    return false;
-  }
+    a:focus-visible,
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline:2px solid var(--gold);
+      outline-offset:4px;
+    }
 
-  function removePriorRouteScript(item) {
-    document
-      .querySelectorAll(`script[data-audralia-route-script="${item.key}"]`)
-      .forEach((script) => script.remove());
-  }
+    .skip {
+      position:absolute;
+      left:-999px;
+      top:8px;
+      z-index:50;
+      padding:.75rem 1rem;
+      border-radius:999px;
+      color:#05070d;
+      background:var(--gold);
+      font-weight:950;
+    }
 
-  function loadScript(item) {
-    return new Promise((resolve) => {
-      if (!mustReload(item)) {
-        resolve(readState(item));
-        return;
+    .skip:focus { left:8px; }
+
+    .shell {
+      position:relative;
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
+      margin:0 auto;
+      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
+    }
+
+    .topbar {
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:18px;
+      padding:12px 0 18px;
+    }
+
+    .brand {
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:.9rem;
+      min-width:260px;
+    }
+
+    .brand-mark {
+      width:4.2rem;
+      height:4.2rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(158,240,191,.42);
+      border-radius:1.15rem;
+      transform:rotate(45deg);
+      background:
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.28) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.22),rgba(158,240,191,.23),rgba(36,120,255,.18),rgba(243,200,111,.13),rgba(255,255,255,.22)),
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.30),transparent 42%),
+        linear-gradient(145deg,rgba(26,83,61,.95),rgba(5,8,20,.98));
+      box-shadow:
+        0 0 2rem rgba(158,240,191,.18),
+        0 1.2rem 2.8rem rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.16);
+    }
+
+    .brand-mark span {
+      transform:rotate(-45deg);
+      font-weight:950;
+      letter-spacing:.04em;
+      color:rgba(255,244,216,.98);
+      text-shadow:0 2px 10px rgba(0,0,0,.85);
+    }
+
+    .brand-copy {
+      display:grid;
+      gap:.18rem;
+    }
+
+    .brand-copy strong {
+      font-size:clamp(1.08rem,3vw,1.7rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+
+    .brand-copy span {
+      color:var(--muted);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .nav {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:.48rem;
+    }
+
+    .nav a {
+      min-height:2.25rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
+      padding:.5rem .74rem;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .nav a[aria-current="page"] {
+      border-color:rgba(158,240,191,.82);
+      color:#06101c;
+      background:linear-gradient(135deg,#c8ffd8,#8eeab2);
+    }
+
+    .panel {
+      border:1px solid var(--line);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      background:
+        radial-gradient(circle at 14% 0%,rgba(158,240,191,.08),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(36,120,255,.10),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+        var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+
+    .hero {
+      position:relative;
+      min-height:clamp(22rem,42vw,33rem);
+      display:grid;
+      align-content:center;
+      gap:1rem;
+      padding:clamp(1.45rem,5vw,3.4rem);
+      margin-top:.6rem;
+      isolation:isolate;
+    }
+
+    .hero::before {
+      content:"";
+      position:absolute;
+      right:clamp(1rem,6vw,5.5rem);
+      top:50%;
+      z-index:0;
+      width:clamp(9rem,25vw,18rem);
+      height:clamp(9rem,25vw,18rem);
+      border:1px solid rgba(158,240,191,.16);
+      border-radius:999px;
+      transform:translateY(-50%);
+      background:
+        radial-gradient(circle at 44% 36%,rgba(158,240,191,.14),transparent 38%),
+        radial-gradient(circle at 56% 66%,rgba(36,120,255,.16),transparent 62%),
+        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      animation:anchorPulse 8s ease-in-out infinite;
+      pointer-events:none;
+      opacity:.52;
+    }
+
+    @keyframes anchorPulse {
+      0%,100% { opacity:.38; filter:brightness(.95); }
+      50% { opacity:.62; filter:brightness(1.1); }
+    }
+
+    .kicker {
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.58rem;
+      padding:.58rem .95rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(230,238,255,.86);
+      background:rgba(255,255,255,.04);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      position:relative;
+      z-index:2;
+    }
+
+    .kicker::before {
+      content:"";
+      width:.72rem;
+      height:.72rem;
+      border-radius:.18rem;
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,#c8ffd8,var(--green));
+      box-shadow:0 0 1.1rem rgba(158,240,191,.44);
+    }
+
+    h1 {
+      margin:0;
+      max-width:1000px;
+      font-size:clamp(3rem,9vw,6.8rem);
+      line-height:.86;
+      letter-spacing:-.102em;
+      text-wrap:balance;
+      position:relative;
+      z-index:2;
+    }
+
+    h2 {
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.45rem,4.7vw,2.65rem);
+      line-height:.98;
+      letter-spacing:-.07em;
+      text-wrap:balance;
+      position:relative;
+      z-index:2;
+    }
+
+    p {
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(.98rem,2.7vw,1.16rem);
+      line-height:1.55;
+    }
+
+    .lead {
+      max-width:930px;
+      position:relative;
+      z-index:2;
+    }
+
+    .principle {
+      max-width:980px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(158,240,191,.26);
+      border-radius:1.2rem;
+      color:rgba(206,255,228,.96);
+      background:rgba(28,80,58,.16);
+      font-weight:900;
+      position:relative;
+      z-index:2;
+    }
+
+    .actions {
+      display:flex;
+      flex-wrap:wrap;
+      gap:.62rem;
+      margin-top:.2rem;
+      position:relative;
+      z-index:2;
+    }
+
+    .button {
+      min-height:2.65rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      padding:.65rem 1rem;
+      background:rgba(255,255,255,.045);
+      color:rgba(241,246,255,.88);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform:translateY(-2px);
+      border-color:rgba(158,240,191,.62);
+      outline:none;
+    }
+
+    .button.gold {
+      border-color:rgba(243,200,111,.9);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+    }
+
+    .section {
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
+      display:grid;
+      gap:1.05rem;
+    }
+
+    .route-loader-notice {
+      display:block;
+      width:fit-content;
+      max-width:100%;
+      padding:.72rem .9rem;
+      border:1px solid rgba(243,200,111,.44);
+      border-radius:999px;
+      color:rgba(255,232,168,.98);
+      background:rgba(40,26,4,.74);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+
+    .status-card {
+      border:1px solid var(--green-line);
+      border-radius:1.35rem;
+      padding:1rem 1.1rem;
+      color:rgba(206,255,228,.94);
+      background:
+        radial-gradient(circle at 12% 0%,rgba(158,240,191,.10),transparent 60%),
+        rgba(2,20,22,.72);
+      font-weight:850;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      overflow-wrap:anywhere;
+    }
+
+    .stage {
+      position:relative;
+      min-height:clamp(24rem,68vw,46rem);
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      overflow:hidden;
+      isolation:isolate;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(36,120,255,.14),transparent 44%),
+        radial-gradient(circle at 50% 50%,rgba(158,240,191,.08),transparent 60%),
+        linear-gradient(180deg,rgba(1,5,16,.78),rgba(2,6,16,.96));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 1.2rem 4rem rgba(0,0,0,.30);
+    }
+
+    .stage-fallback {
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      padding:1rem;
+      color:rgba(230,238,255,.70);
+      text-align:center;
+      font-weight:850;
+      pointer-events:none;
+    }
+
+    [data-audralia-canvas-mount="true"] {
+      position:absolute;
+      inset:0;
+      z-index:2;
+    }
+
+    .cards {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.85rem;
+    }
+
+    .card {
+      display:grid;
+      gap:.6rem;
+      min-height:100%;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(158,240,191,.08),transparent 60%),
+        rgba(255,255,255,.035);
+    }
+
+    .card b {
+      color:var(--green);
+      font-size:.68rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .card strong {
+      color:rgba(255,244,216,.98);
+      font-size:1.15rem;
+      line-height:1.1;
+    }
+
+    .card span {
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.42;
+    }
+
+    .route-receipt,
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt],
+    .receipt {
+      display:none!important;
+      visibility:hidden!important;
+      overflow:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      inset:auto!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
+    }
+
+    footer {
+      padding:1.35rem 0 .5rem;
+      color:var(--faint);
+      text-align:center;
+      font-size:.76rem;
+    }
+
+    @media (max-width:980px) {
+      .topbar {
+        grid-template-columns:1fr;
+        align-items:start;
       }
 
-      removePriorRouteScript(item);
-
-      const script = document.createElement("script");
-      script.src = appendCache(item.src);
-      script.defer = true;
-      script.dataset.audraliaRouteScript = item.key;
-      script.dataset.audraliaRouteLoader = CONTRACT;
-      script.dataset.audraliaRouteLoaderVersion = VERSION;
-      script.onload = () => resolve(readState(item));
-      script.onerror = () => resolve(readState(item));
-      document.head.appendChild(script);
-    });
-  }
-
-  async function loadChain() {
-    const states = [];
-
-    for (const item of SCRIPT_CHAIN) {
-      setNotice(`Canonical loader v3 active · loading ${item.label}`, "pending");
-      setStatus(`AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3 is active. Loading ${item.label} from ${item.src}`);
-
-      const state = await loadScript(item);
-      states.push(state);
-
-      setStatus(`AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3 chain: ${summarize(states)}`);
-
-      if (state.required && !state.loaded) {
-        setNotice(`Canonical loader v3 blocked · ${state.label} missing`, "fail");
-        break;
-      }
+      .nav { justify-content:flex-start; }
     }
 
-    return states;
-  }
+    @media (max-width:720px) {
+      .shell { width:min(100% - 22px,var(--max)); }
+      h1 { font-size:clamp(3rem,17vw,5rem); }
 
-  function chainResult(states) {
-    const required = states.filter((state) => state.required);
-    const missingRequired = required.filter((state) => !state.loaded);
-    const staleRequired = required.filter((state) => state.expectedContract && !state.contractMatches);
-
-    return Object.freeze({
-      states,
-      missingRequired,
-      staleRequired,
-      requiredPassed: missingRequired.length === 0,
-      strictPassed: missingRequired.length === 0 && staleRequired.length === 0,
-      summary: summarize(states)
-    });
-  }
-
-  function disposePriorCanvas() {
-    if (typeof window.__AUDRALIA_CANVAS_DISPOSE__ === "function") {
-      try {
-        window.__AUDRALIA_CANVAS_DISPOSE__();
-      } catch {
-        root.dataset.audraliaPriorCanvasDisposeFailed = "true";
-      }
-    }
-  }
-
-  function clearMount() {
-    const { mount } = nodes();
-    if (!mount) return null;
-
-    mount
-      .querySelectorAll("canvas,[data-audralia-coordinate-readout],[data-audralia-version-notice]")
-      .forEach((node) => node.remove());
-
-    return mount;
-  }
-
-  function setFallbackVisible(visible, text = "") {
-    const { fallback } = nodes();
-    if (!fallback) return;
-
-    fallback.style.display = visible ? "grid" : "none";
-    if (text) fallback.textContent = text;
-  }
-
-  function mountCanvas(result) {
-    const mount = clearMount();
-
-    if (!mount) {
-      setNotice("Canonical loader v3 blocked · mount node missing", "fail");
-      setStatus("Missing #audraliaCanvasMount. HTML shell is not exposing the canonical mount node.");
-      setFallbackVisible(true, "Canonical loader v3 could not find #audraliaCanvasMount.");
-      return false;
-    }
-
-    if (!window.AUDRALIA_CANVAS?.mount) {
-      setNotice("Canonical loader v3 blocked · AUDRALIA_CANVAS.mount unavailable", "fail");
-      setStatus("window.AUDRALIA_CANVAS.mount was not found after script chain load.");
-      setFallbackVisible(true, "Canvas authority did not expose mount().");
-      return false;
-    }
-
-    const actualCanvasContract = normalizeContract(window.AUDRALIA_CANVAS.contract || "");
-    const canvasContractMatches = isContractAccepted("canvas", actualCanvasContract, EXPECTED.canvas);
-
-    if (!canvasContractMatches) {
-      root.dataset.audraliaCanvasContractMismatch = "true";
-      root.dataset.audraliaActiveCanvasContract = actualCanvasContract || "unknown";
-    } else {
-      root.dataset.audraliaCanvasContractMismatch = "false";
-      root.dataset.audraliaActiveCanvasContract = actualCanvasContract;
-    }
-
-    disposePriorCanvas();
-
-    window.__AUDRALIA_CANONICAL_MOUNT_LOCK__ = Object.freeze({
-      routeLoaderContract: CONTRACT,
-      expectedCanvasContract: EXPECTED.canvas,
-      actualCanvasContract,
-      expectedClimateContract: EXPECTED.climate,
-      actualClimateContract: normalizeContract(window.AUDRALIA_CLIMATE_RENDER?.contract || ""),
-      route: "/showroom/globe/audralia/",
-      timestamp: new Date().toISOString()
-    });
-
-    try {
-      window.AUDRALIA_CANVAS.mount(mount, {
-        route: "/showroom/globe/audralia/",
-        routeLoaderContract: CONTRACT,
-        expectedCanvasContract: EXPECTED.canvas,
-        expectedLandmapContract: EXPECTED.landmap,
-        expectedClimateContract: EXPECTED.climate,
-        onStatus: (phase, payload = {}) => {
-          root.dataset.audraliaRouteCanvasPhase = String(phase);
-          root.dataset.audraliaRouteCanvasFrames = String(payload.frames || 0);
-          root.dataset.audraliaRouteCanvasMounted = String(Boolean(payload.mounted));
-          root.dataset.audraliaRouteCanvasVisibleNotice = String(Boolean(payload.visibleUpdateNotice));
-
-          if (payload.mounted) {
-            setFallbackVisible(false);
-          }
-        }
-      });
-    } catch (error) {
-      setNotice("Canonical loader v3 canvas mount failed", "fail");
-      setStatus(`Canvas mount error: ${error instanceof Error ? error.message : String(error)}`);
-      setFallbackVisible(true, "Canvas mount threw an error. Check console for AUDRALIA_CANVAS.mount.");
-      return false;
-    }
-
-    setFallbackVisible(false);
-
-    const hasStrictPass = result.strictPassed && canvasContractMatches;
-    const mountedSummary = summarize(result.states);
-
-    if (hasStrictPass) {
-      setNotice("Audralia route mounted · canonical chain active", "pass");
-      setStatus(`Lattice 256: active · Organic Landmap: active · Climate Detail: active · Beach Authority: active · Groundcover: active · Land Surface: active · Visible Notice Canvas: active`);
-    } else {
-      setNotice("Audralia route mounted · canonical chain active with optional gaps", "warn");
-      setStatus(`AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3 mounted. ${mountedSummary}`);
-    }
-
-    root.dataset.audraliaRouteCanvasMounted = "true";
-    root.dataset.audraliaRouteStrictChainPassed = String(hasStrictPass);
-    root.dataset.audraliaRouteRequiredChainPassed = String(result.requiredPassed);
-    root.dataset.audraliaActiveCanvasContract = actualCanvasContract;
-    root.dataset.audraliaActiveLandmapContract = normalizeContract(window.AUDRALIA_LANDMAP?.contract || "");
-    root.dataset.audraliaActiveClimateContract = normalizeContract(window.AUDRALIA_CLIMATE_RENDER?.contract || "");
-    root.dataset.audraliaActiveLandSurfaceContract = normalizeContract(window.AUDRALIA_LAND_SURFACE?.contract || "");
-    root.dataset.audraliaRouteLegacyV10Blocked = "true";
-    root.dataset.audraliaRouteClimateV2Accepted = "true";
-    root.dataset.audraliaRouteRetiredFalseClimateStatusActive = "true";
-
-    return true;
-  }
-
-  function installLegacyStatusGuard() {
-    const { status } = nodes();
-    if (!status || !window.MutationObserver) return;
-
-    const observer = new MutationObserver(() => {
-      if (reassertingStatus) return;
-
-      const current = status.textContent || "";
-
-      if (containsRetiredFalseStatus(current)) {
-        retiredFalseStatusCount += 1;
-        root.dataset.audraliaRetiredFalseClimateStatusDetected = "true";
-        root.dataset.audraliaRetiredFalseClimateStatusCount = String(retiredFalseStatusCount);
-
-        setNotice("Canonical loader v3 active · retired climate-stale wording blocked", "warn");
-        setStatus(
-          `${authoritativeStatusText || "AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3 is active."} Climate v2 is current and must not be labeled stale.`
-        );
-        return;
+      .hero {
+        min-height:27rem;
+        padding:1rem;
       }
 
-      if (!containsLegacyToken(current)) return;
-
-      legacyWriteCount += 1;
-      root.dataset.audraliaLegacyV10Detected = "true";
-      root.dataset.audraliaLegacyV10WriteCount = String(legacyWriteCount);
-      root.dataset.audraliaRouteLegacyV10Blocked = "true";
-
-      setNotice("Canonical loader v3 active · legacy v10 status write blocked", "warn");
-      setStatus(
-        `${authoritativeStatusText || "AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3 is active."} Legacy v10 attempted to write into the new shell and was blocked.`
-      );
-    });
-
-    observer.observe(status, {
-      childList: true,
-      characterData: true,
-      subtree: true
-    });
-
-    window.addEventListener("pagehide", () => observer.disconnect(), { once: true });
-  }
-
-  function installMountGuard() {
-    const { mount } = nodes();
-    if (!mount || !window.MutationObserver) return;
-
-    const observer = new MutationObserver(() => {
-      const canvases = Array.from(mount.querySelectorAll("canvas"));
-      if (!canvases.length) return;
-
-      const canonical = canvases.find((canvas) => {
-        return canvas.dataset.audraliaCanvasContract === EXPECTED.canvas;
-      });
-
-      if (!canonical) {
-        root.dataset.audraliaLegacyCanvasDetected = "true";
-        setNotice("Canonical loader v3 warning · non-v3 canvas detected", "warn");
-      }
-    });
-
-    observer.observe(mount, { childList: true, subtree: true });
-    window.addEventListener("pagehide", () => observer.disconnect(), { once: true });
-  }
-
-  async function init() {
-    setRootReceipt();
-    installLegacyStatusGuard();
-    installMountGuard();
-
-    setNotice("Canonical loader v3 active · starting chain", "pending");
-    setStatus("AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3 is active. Climate v2 is current. Canvas expectation is visible-notice v3.");
-
-    const states = await loadChain();
-    const result = chainResult(states);
-
-    if (!result.requiredPassed) {
-      setNotice("Canonical loader v3 blocked · required authority missing", "fail");
-      setStatus(`AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3 blocked. ${result.summary}`);
-      setFallbackVisible(true, "Canonical loader v3 found a missing required authority.");
-      return;
+      .actions { display:grid; }
+      .button { width:100%; }
+      .cards { grid-template-columns:1fr; }
+      .stage { min-height:23rem; }
     }
 
-    mountCanvas(result);
-  }
+    @media (prefers-reduced-motion:reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+      }
+    }
+  </style>
+</head>
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init, { once: true });
-  } else {
-    init();
-  }
-})();
+<body>
+  <a class="skip" href="/showroom/globe/audralia/#audralia-main">Skip to Audralia</a>
+
+  <div class="shell">
+    <header class="topbar" aria-label="Audralia header">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true"><span>AU</span></span>
+        <span class="brand-copy">
+          <span>Diamond Gate Bridge</span>
+          <strong>Audralia</strong>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/explore/">Manor</a>
+        <a href="/nine-summits/">Nine Summits</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/">Globe</a>
+        <a href="/showroom/globe/audralia/" aria-current="page">Audralia</a>
+        <a href="/showroom/globe/earth/">Earth</a>
+        <a href="/showroom/globe/h-earth/">H-Earth</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
+
+    <main id="audralia-main">
+      <section class="panel hero" aria-labelledby="page-title">
+        <div class="kicker">Audralia · The Living Canvas</div>
+        <h1 id="page-title">A possible future should be visible before it is lost.</h1>
+
+        <p class="lead">
+          Audralia is the constructed living-world route. It uses the 256 nodal lattice, Nine Summits province fields, Earth-legacy landforms, climate detail, and a consumer-only canvas to show a future world without turning the canvas into the authority.
+        </p>
+
+        <div class="principle">
+          Audralia answers the Globe question as a living canvas: a possible future that can be seen, understood, and considered before it is lost.
+        </div>
+
+        <div class="actions">
+          <a class="button gold" href="/showroom/globe/audralia/#audralia-stage">Inspect Audralia</a>
+          <a class="button" href="/showroom/globe/">Return to Globe</a>
+          <a class="button" href="/gauges/">Read Gauges</a>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="chain-title">
+        <div class="kicker">Route chain status</div>
+        <h2 id="chain-title">The route shell now verifies the newer Audralia chain.</h2>
+
+        <div
+          id="audraliaRouteLoaderNotice"
+          class="route-loader-notice"
+          data-audralia-route-loader-notice="true"
+          aria-live="polite"
+        >
+          Route shell v3 live · waiting for climate-v2 status alignment loader.
+        </div>
+
+        <div class="status-card" id="audraliaRouteStatus" data-audralia-route-status="true">
+          If this message remains, /showroom/globe/audralia/index.js did not load with AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3.
+        </div>
+
+        <div
+          id="audralia-stage"
+          class="stage"
+          data-audralia-stage="true"
+          aria-label="Audralia living canvas stage"
+        >
+          <div class="stage-fallback" data-stage-fallback="true">
+            Audralia canvas mount awaiting canonical loader v3.
+          </div>
+          <div
+            id="audraliaCanvasMount"
+            data-audralia-canvas-mount="true"
+            aria-label="Audralia canvas mount"
+          ></div>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="standards-title">
+        <div class="kicker">Current standards</div>
+        <h2 id="standards-title">Canvas consumes. Landmap and climate author the world.</h2>
+
+        <div class="cards">
+          <article class="card">
+            <b>Footprint</b>
+            <strong>Landmap owns land and sea.</strong>
+            <span>The route expects the 30-billion-year Earth-legacy organic landform contract to provide continent, shelf, beach, and nodal geometry truth.</span>
+          </article>
+
+          <article class="card">
+            <b>Climate</b>
+            <strong>Climate owns environment detail.</strong>
+            <span>The route expects rainforest, wetland, savanna, dry basin, forest, alpine, snow, beach, and restoration-zone detail from the climate layer.</span>
+          </article>
+
+          <article class="card">
+            <b>Canvas</b>
+            <strong>Canvas stays consumer-only.</strong>
+            <span>The canvas may display the living world, atmosphere, shimmer, and inspection readout. It may not invent footprint, climate, or surface truth.</span>
+          </article>
+        </div>
+      </section>
+
+      <template id="route-receipt" data-route-receipt>
+AUDRALIA_ROUTE_SHELL_V3_LOADER_BUMP_TNT_v3
+previous=AUDRALIA_ROUTE_SHELL_CANONICAL_LOADER_BUMP_TNT_v2
+route=/showroom/globe/audralia/
+page=audralia
+role=showroom_globe_child_route
+world=Audralia
+canonical_spelling=A_U_D_R_A_L_I_A
+route_loader=/showroom/globe/audralia/index.js
+route_loader_contract=AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3
+canvas_mount=#audraliaCanvasMount
+canvas_contract=AUDRALIA_VISIBLE_UPDATE_NOTICE_CANVAS_TNT_v3
+landmap_contract=AUDRALIA_30_BILLION_YEAR_EARTH_LEGACY_ORGANIC_LANDFORM_TNT_v1
+climate_contract=AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2
+route_expectation=canonical_loader_v3_retires_false_climate_stale_status
+retired_false_status=Climate Detail loaded stale AUDRALIA_CLIMATE_AND_ENVIRONMENT_DETAIL_TNT_v2
+expected_status=Audralia route mounted canonical chain active
+expected_chain=Lattice 256 active,Organic Landmap active,Climate Detail active,Beach Authority active,Groundcover active,Land Surface active,Visible Notice Canvas active
+route_owns=route_shell,public_copy,canvas_mount,route_loader_notice,chain_status_panel,cache_key_bump
+route_does_not_own=land_footprint,climate_authority,surface_truth,canvas_authority,runtime_motion,gauges_logic
+receipt_visibility=hidden_template_only
+generated_image=false
+graphic_box=false
+streaming=false
+visual_pass_claimed=false
+      </template>
+    </main>
+
+    <footer>
+      AUDRALIA_ROUTE_SHELL_V3_LOADER_BUMP_TNT_v3 · Audralia · The Living Canvas.
+    </footer>
+  </div>
+
+  <script
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3"
+    data-audralia-loader-script="AUDRALIA_ROUTE_CANONICAL_LOADER_CLIMATE_V2_STATUS_ALIGNMENT_TNT_v3"
+    defer
+  ></script>
+</body>
+</html>

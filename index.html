@@ -1,39 +1,49 @@
 <!doctype html>
-<html lang="en" data-page="root-compass" data-contract="ROOT_COMPASS_PAIRED_TNT_v1">
+<html
+  lang="en"
+  data-route="/"
+  data-page="compass"
+  data-contract="ROOT_COMPASS_GEM_PROFILE_TNT_v1"
+  data-role="root-compass"
+  data-root-is-compass="true"
+  data-audralia-is-root="false"
+  data-static-page-usable-without-js="true"
+  data-runtime-public-message="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+>
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+
   <title>Diamond Gate Bridge · Compass</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Compass: the whole-site map for Scientific Backing, Community, and Fun Narrative / Game / Series."
+    content="Diamond Gate Bridge Compass: a simple entry profile for Scientific Backing, Community, and Fun Narrative / Game / Series."
   />
-  <meta name="robots" content="index,follow" />
   <link rel="canonical" href="https://diamondgatebridge.com/" />
-  <meta name="theme-color" content="#070b12" />
+  <meta name="theme-color" content="#050812" />
 
   <style>
     :root {
-      --bg: #070b12;
-      --bg2: #0c1320;
-      --panel: rgba(255, 255, 255, 0.055);
-      --panel2: rgba(255, 255, 255, 0.085);
-      --line: rgba(255, 255, 255, 0.16);
-      --line2: rgba(255, 255, 255, 0.28);
-      --text: #f4f7fb;
-      --muted: #aab7cb;
-      --soft: #d8e1ef;
-      --gold: #f2c879;
-      --blue: #8fc7ff;
-      --green: #9de4b0;
-      --violet: #c6a6ff;
-      --danger: #ff9a9a;
-      --shadow: rgba(0, 0, 0, 0.35);
-      --radius-lg: 28px;
-      --radius-md: 20px;
-      --radius-sm: 14px;
-      --max: 1180px;
       color-scheme: dark;
+      --bg: #050812;
+      --bg2: #0a1020;
+      --ink: #fff5df;
+      --muted: rgba(232, 239, 255, 0.76);
+      --faint: rgba(232, 239, 255, 0.52);
+      --gold: #f4c96f;
+      --gold2: #ffe9a8;
+      --blue: #8dd8ff;
+      --green: #8ff0c3;
+      --violet: #c8a6ff;
+      --panel: rgba(10, 16, 32, 0.82);
+      --panel2: rgba(255, 255, 255, 0.055);
+      --line: rgba(190, 210, 255, 0.17);
+      --line2: rgba(244, 201, 111, 0.38);
+      --shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
+      --max: 1120px;
+      --gem: polygon(50% 0%, 78% 9%, 100% 35%, 90% 75%, 50% 100%, 10% 75%, 0% 35%, 22% 9%);
     }
 
     * {
@@ -41,23 +51,43 @@
     }
 
     html {
+      min-width: 320px;
+      min-height: 100%;
       scroll-behavior: smooth;
       background: var(--bg);
+      overflow-x: hidden;
     }
 
     body {
       margin: 0;
+      min-width: 320px;
       min-height: 100vh;
-      font-family:
-        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
-      color: var(--text);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at 20% 0%, rgba(143, 199, 255, 0.18), transparent 34rem),
-        radial-gradient(circle at 85% 10%, rgba(198, 166, 255, 0.14), transparent 30rem),
-        radial-gradient(circle at 50% 100%, rgba(242, 200, 121, 0.12), transparent 28rem),
-        linear-gradient(180deg, #070b12 0%, #0a101a 48%, #070b12 100%);
-      line-height: 1.6;
+        radial-gradient(circle at 50% -10%, rgba(244, 201, 111, 0.20), transparent 28rem),
+        radial-gradient(circle at 12% 12%, rgba(141, 216, 255, 0.16), transparent 26rem),
+        radial-gradient(circle at 88% 18%, rgba(200, 166, 255, 0.13), transparent 28rem),
+        radial-gradient(circle at 50% 90%, rgba(143, 240, 195, 0.10), transparent 34rem),
+        linear-gradient(180deg, #08101f 0%, #050812 58%, #02040b 100%);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255, 255, 255, 0.16) 0 1px, transparent 1.4px),
+        linear-gradient(rgba(141, 216, 255, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(141, 216, 255, 0.045) 1px, transparent 1px);
+      background-size: 220px 260px, 58px 58px, 58px 58px;
+      opacity: 0.20;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0.45) 70%, rgba(0, 0, 0, 0.18));
     }
 
     a {
@@ -65,199 +95,425 @@
       text-decoration: none;
     }
 
-    a:hover,
-    a:focus-visible {
-      color: #ffffff;
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
     }
 
-    .skip-link {
+    .skip {
       position: absolute;
-      left: 1rem;
-      top: -4rem;
-      z-index: 20;
+      left: -999px;
+      top: 8px;
+      z-index: 50;
       padding: 0.75rem 1rem;
       border-radius: 999px;
-      background: #ffffff;
-      color: #070b12;
-      font-weight: 800;
+      color: #050812;
+      background: var(--gold);
+      font-weight: 950;
     }
 
-    .skip-link:focus {
-      top: 1rem;
+    .skip:focus {
+      left: 8px;
     }
 
-    .site-shell {
-      width: min(var(--max), calc(100% - 2rem));
+    .shell {
+      position: relative;
+      z-index: 2;
+      width: min(var(--max), calc(100% - 28px));
       margin: 0 auto;
+      padding: max(22px, env(safe-area-inset-top)) 0 max(46px, env(safe-area-inset-bottom));
     }
 
     .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      backdrop-filter: blur(18px);
-      background: rgba(7, 11, 18, 0.82);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .topbar-inner {
-      display: flex;
+      display: grid;
+      grid-template-columns: auto 1fr;
       align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      width: min(var(--max), calc(100% - 2rem));
-      margin: 0 auto;
-      padding: 0.85rem 0;
+      gap: 18px;
+      padding: 12px 0 18px;
     }
 
     .brand {
       display: grid;
-      gap: 0.1rem;
-      min-width: 13rem;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 0.88rem;
+      min-width: 260px;
     }
 
-    .brand strong {
-      font-size: 0.98rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .brand-mark,
+    .mini-gem {
+      clip-path: var(--gem);
+      background:
+        linear-gradient(35deg, transparent 0 20%, rgba(255, 255, 255, 0.26) 21% 23%, transparent 24%),
+        conic-gradient(from 45deg at 50% 50%, rgba(255, 255, 255, 0.26), rgba(141, 216, 255, 0.22), rgba(3, 12, 36, 0.70), rgba(244, 201, 111, 0.20), rgba(255, 255, 255, 0.26)),
+        radial-gradient(circle at 48% 22%, rgba(255, 255, 255, 0.32), transparent 42%),
+        linear-gradient(145deg, rgba(9, 44, 112, 0.96), rgba(5, 8, 20, 0.98));
+      box-shadow:
+        0 0 2rem rgba(141, 216, 255, 0.18),
+        0 1.2rem 2.8rem rgba(0, 0, 0, 0.42),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16);
     }
 
-    .brand span {
+    .brand-mark {
+      width: 4rem;
+      height: 4rem;
+      display: grid;
+      place-items: center;
+      transform: rotate(45deg);
+      border: 1px solid rgba(244, 201, 111, 0.42);
+    }
+
+    .brand-mark span {
+      transform: rotate(-45deg);
+      font-weight: 950;
+      color: rgba(255, 245, 223, 0.98);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+    }
+
+    .brand-copy {
+      display: grid;
+      gap: 0.18rem;
+    }
+
+    .brand-copy strong {
+      font-size: clamp(1.08rem, 3vw, 1.55rem);
+      line-height: 1;
+      letter-spacing: -0.045em;
+    }
+
+    .brand-copy span {
       color: var(--muted);
-      font-size: 0.82rem;
+      font-size: 0.73rem;
+      font-weight: 950;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
 
     .nav {
       display: flex;
       flex-wrap: wrap;
       justify-content: flex-end;
-      gap: 0.45rem;
+      gap: 0.48rem;
     }
 
     .nav a {
+      min-height: 2.25rem;
       display: inline-flex;
       align-items: center;
-      min-height: 2.35rem;
-      padding: 0.55rem 0.8rem;
-      border: 1px solid var(--line);
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.13);
       border-radius: 999px;
-      color: var(--soft);
+      padding: 0.5rem 0.74rem;
+      color: rgba(241, 246, 255, 0.84);
       background: rgba(255, 255, 255, 0.035);
-      font-size: 0.86rem;
+      font-size: 0.68rem;
+      font-weight: 950;
+      letter-spacing: 0.055em;
+      text-transform: uppercase;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
     }
 
-    .nav a:hover,
-    .nav a:focus-visible {
-      border-color: var(--line2);
-      background: rgba(255, 255, 255, 0.09);
-      outline: none;
+    .nav a[aria-current="page"] {
+      border-color: rgba(244, 201, 111, 0.88);
+      color: #060811;
+      background: linear-gradient(135deg, #fff2a8, #f4c96f);
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: clamp(1.25rem, 5vw, 2.25rem);
+      background:
+        radial-gradient(circle at 14% 0%, rgba(141, 216, 255, 0.10), transparent 28rem),
+        radial-gradient(circle at 86% 18%, rgba(36, 120, 255, 0.12), transparent 28rem),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.022)),
+        var(--panel);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      overflow: hidden;
     }
 
     .hero {
-      padding: clamp(3.5rem, 9vw, 7rem) 0 2rem;
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(15rem, 26rem);
+      gap: clamp(1.4rem, 5vw, 3.5rem);
+      align-items: center;
+      min-height: clamp(31rem, 56vw, 42rem);
+      padding: clamp(1.3rem, 5vw, 3.4rem);
+      margin-top: 0.6rem;
+      isolation: isolate;
     }
 
-    .eyebrow {
+    .hero-copy {
+      display: grid;
+      gap: 1rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .kicker {
+      width: fit-content;
       display: inline-flex;
-      gap: 0.45rem;
       align-items: center;
-      padding: 0.35rem 0.7rem;
-      border: 1px solid var(--line);
+      gap: 0.58rem;
+      padding: 0.58rem 0.95rem;
+      border: 1px solid rgba(255, 255, 255, 0.14);
       border-radius: 999px;
-      color: var(--gold);
-      background: rgba(242, 200, 121, 0.08);
-      font-size: 0.8rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
+      color: rgba(232, 239, 255, 0.88);
+      background: rgba(255, 255, 255, 0.04);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
+    }
+
+    .kicker::before {
+      content: "";
+      width: 0.72rem;
+      height: 0.72rem;
+      border-radius: 0.18rem;
+      transform: rotate(45deg);
+      background: linear-gradient(135deg, var(--gold2), var(--gold));
+      box-shadow: 0 0 1.1rem rgba(244, 201, 111, 0.46);
     }
 
     h1,
     h2,
     h3 {
       margin: 0;
-      line-height: 1.08;
-      letter-spacing: -0.04em;
+      line-height: 1;
+      letter-spacing: -0.065em;
     }
 
     h1 {
-      max-width: 14ch;
-      margin-top: 1.15rem;
-      font-size: clamp(3.2rem, 10vw, 7.7rem);
+      max-width: 11ch;
+      font-size: clamp(3.2rem, 11vw, 7rem);
+      line-height: 0.86;
+      letter-spacing: -0.105em;
+      text-wrap: balance;
     }
 
     h2 {
-      font-size: clamp(2rem, 5vw, 4rem);
+      color: var(--gold);
+      font-size: clamp(1.55rem, 4.8vw, 2.75rem);
+      text-wrap: balance;
     }
 
     h3 {
-      font-size: clamp(1.18rem, 2.4vw, 1.55rem);
+      font-size: clamp(1.1rem, 2.8vw, 1.42rem);
     }
 
     p {
       margin: 0;
+      color: var(--muted);
+      font-size: clamp(0.98rem, 2.5vw, 1.15rem);
+      line-height: 1.55;
     }
 
-    .hero-copy {
-      max-width: 760px;
-      margin-top: 1.25rem;
-      color: var(--soft);
-      font-size: clamp(1.07rem, 2.2vw, 1.35rem);
+    .lead {
+      max-width: 680px;
     }
 
-    .hero-actions {
+    .promise {
+      width: fit-content;
+      max-width: 680px;
+      padding: 0.92rem 1rem;
+      border: 1px solid rgba(143, 240, 195, 0.24);
+      border-radius: 1.1rem;
+      color: rgba(167, 243, 198, 0.96);
+      background: rgba(143, 240, 195, 0.065);
+      font-size: clamp(1rem, 2.6vw, 1.16rem);
+      font-weight: 950;
+    }
+
+    .actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 1.6rem;
+      gap: 0.62rem;
     }
 
     .button {
+      min-height: 2.65rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 3rem;
-      padding: 0.85rem 1.05rem;
-      border: 1px solid var(--line2);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 999px;
-      font-weight: 800;
-      color: #07101d;
-      background: #ffffff;
-      box-shadow: 0 16px 40px var(--shadow);
-    }
-
-    .button.secondary {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.08);
+      padding: 0.65rem 1rem;
+      background: rgba(255, 255, 255, 0.045);
+      color: rgba(241, 246, 255, 0.88);
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.055em;
+      text-transform: uppercase;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
     }
 
     .button:hover,
     .button:focus-visible {
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      border-color: rgba(244, 201, 111, 0.62);
       outline: none;
     }
 
+    .button.gold {
+      border-color: rgba(244, 201, 111, 0.9);
+      color: #060811;
+      background: linear-gradient(135deg, #fff2a8, #f4c96f);
+      box-shadow: 0 0.8rem 1.8rem rgba(244, 201, 111, 0.13);
+    }
+
+    .compass-gem-field {
+      position: relative;
+      min-height: clamp(18rem, 42vw, 29rem);
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+    }
+
+    .compass-gem-field::before,
+    .compass-gem-field::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .compass-gem-field::before {
+      width: min(92%, 24rem);
+      height: min(58%, 14rem);
+      border: 1px solid rgba(244, 201, 111, 0.16);
+      animation: orbitTurn 42s linear infinite;
+    }
+
+    .compass-gem-field::after {
+      width: min(70%, 18rem);
+      height: min(42%, 10rem);
+      border: 1px solid rgba(141, 216, 255, 0.16);
+      animation: orbitTurnReverse 38s linear infinite;
+    }
+
+    @keyframes orbitTurn {
+      from { transform: translate(-50%, -50%) rotate(-12deg); }
+      to { transform: translate(-50%, -50%) rotate(348deg); }
+    }
+
+    @keyframes orbitTurnReverse {
+      from { transform: translate(-50%, -50%) rotate(22deg); }
+      to { transform: translate(-50%, -50%) rotate(-338deg); }
+    }
+
+    .center-gem {
+      position: relative;
+      z-index: 4;
+      width: clamp(9rem, 22vw, 14rem);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      clip-path: var(--gem);
+      border: 1px solid rgba(244, 201, 111, 0.45);
+      background:
+        linear-gradient(35deg, transparent 0 20%, rgba(255, 255, 255, 0.24) 21% 23%, transparent 24%),
+        conic-gradient(from 40deg, rgba(255, 255, 255, 0.30), rgba(141, 216, 255, 0.20), rgba(9, 44, 112, 0.78), rgba(244, 201, 111, 0.18), rgba(255, 255, 255, 0.30)),
+        radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.40), transparent 42%),
+        linear-gradient(145deg, rgba(9, 44, 112, 0.98), rgba(5, 8, 20, 0.98));
+      box-shadow:
+        0 0 3rem rgba(141, 216, 255, 0.22),
+        0 1.4rem 3rem rgba(0, 0, 0, 0.48),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16);
+      animation: gemBreathe 8.5s ease-in-out infinite;
+    }
+
+    .center-gem::before {
+      content: "";
+      position: absolute;
+      inset: 16%;
+      clip-path: var(--gem);
+      border: 1px solid rgba(255, 255, 255, 0.17);
+      background:
+        linear-gradient(90deg, transparent 0 42%, rgba(255, 255, 255, 0.22) 46% 50%, transparent 54%),
+        radial-gradient(circle at 50% 24%, rgba(255, 255, 255, 0.18), transparent 48%);
+      opacity: 0.9;
+      animation: glint 7.8s ease-in-out infinite;
+    }
+
+    .center-gem span {
+      position: relative;
+      z-index: 2;
+      max-width: 8rem;
+      text-align: center;
+      color: var(--gold2);
+      font-size: clamp(0.72rem, 2vw, 1rem);
+      font-weight: 950;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+    }
+
+    @keyframes gemBreathe {
+      0%, 100% { transform: translateY(0) rotate(-1.2deg) scale(1); filter: brightness(1); }
+      50% { transform: translateY(-0.28rem) rotate(1.6deg) scale(1.025); filter: brightness(1.12); }
+    }
+
+    @keyframes glint {
+      0%, 100% { opacity: 0.12; transform: translateX(-18%); }
+      50% { opacity: 0.58; transform: translateX(18%); }
+    }
+
+    .mini-gem {
+      position: absolute;
+      width: clamp(3.7rem, 9vw, 5.4rem);
+      aspect-ratio: 1;
+      z-index: 5;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      animation: floatGem 6.8s ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+
+    .mini-gem b {
+      max-width: 4rem;
+      text-align: center;
+      font-size: clamp(0.42rem, 1.2vw, 0.58rem);
+      line-height: 1.05;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95);
+    }
+
+    .mini-gem.science { left: 50%; top: 8%; transform: translate(-50%, -50%); }
+    .mini-gem.community { left: 13%; top: 68%; transform: translate(-50%, -50%); }
+    .mini-gem.story { right: 13%; top: 68%; transform: translate(50%, -50%); }
+
+    @keyframes floatGem {
+      0%, 100% { margin-top: 0; filter: brightness(1); }
+      50% { margin-top: -0.45rem; filter: brightness(1.12); }
+    }
+
     .section {
-      padding: 2.3rem 0;
+      display: grid;
+      gap: 1rem;
+      margin-top: 1.1rem;
+      padding: clamp(1rem, 3vw, 1.45rem);
     }
 
     .section-head {
       display: grid;
-      gap: 0.7rem;
-      max-width: 850px;
-      margin-bottom: 1.2rem;
-    }
-
-    .section-head p {
-      color: var(--muted);
-      font-size: 1.02rem;
+      gap: 0.5rem;
+      max-width: 820px;
     }
 
     .perspective-grid,
-    .route-grid,
-    .status-grid {
+    .route-grid {
       display: grid;
-      gap: 1rem;
+      gap: 0.85rem;
     }
 
     .perspective-grid {
@@ -265,594 +521,395 @@
     }
 
     .route-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .status-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
     .card {
-      position: relative;
       display: grid;
-      gap: 0.7rem;
+      gap: 0.58rem;
       min-height: 100%;
-      padding: 1.15rem;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-md);
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 1.18rem;
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.045)),
-        var(--panel);
-      box-shadow: 0 18px 52px rgba(0, 0, 0, 0.18);
-      overflow: hidden;
+        radial-gradient(circle at 20% 0%, rgba(36, 120, 255, 0.10), transparent 60%),
+        rgba(255, 255, 255, 0.035);
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
     }
 
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      pointer-events: none;
-      background: radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.13), transparent 45%);
-      opacity: 0.7;
+    .card:hover,
+    .card:focus-within {
+      transform: translateY(-3px);
+      border-color: rgba(244, 201, 111, 0.44);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(36, 120, 255, 0.14), transparent 60%),
+        rgba(255, 255, 255, 0.052);
     }
 
-    .card > * {
-      position: relative;
-    }
-
-    .card small,
-    .route-meta {
-      color: var(--muted);
-      font-size: 0.82rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
+    .card small {
+      color: var(--gold);
+      font-size: 0.68rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
     }
 
-    .card p {
-      color: var(--soft);
+    .card strong {
+      color: rgba(255, 245, 223, 0.98);
+      font-size: 1.08rem;
+      line-height: 1.1;
     }
 
-    .card a.card-link {
-      display: inline-flex;
-      align-items: center;
+    .card p,
+    .card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+      line-height: 1.42;
+    }
+
+    .card a {
       width: fit-content;
-      margin-top: 0.3rem;
-      padding: 0.5rem 0.7rem;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.06);
-      font-weight: 800;
-      font-size: 0.9rem;
-    }
-
-    .card a.card-link:hover,
-    .card a.card-link:focus-visible {
-      border-color: var(--line2);
-      background: rgba(255, 255, 255, 0.12);
-      outline: none;
+      margin-top: auto;
+      color: rgba(232, 239, 255, 0.90);
+      font-size: 0.74rem;
+      font-weight: 950;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
     }
 
     .tag-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.45rem;
+      gap: 0.38rem;
+      margin-top: 0.12rem;
     }
 
     .tag {
       display: inline-flex;
       align-items: center;
-      min-height: 1.8rem;
-      padding: 0.35rem 0.55rem;
-      border: 1px solid var(--line);
+      min-height: 1.55rem;
+      padding: 0.28rem 0.48rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 999px;
-      color: var(--muted);
-      background: rgba(255, 255, 255, 0.04);
-      font-size: 0.78rem;
-      font-weight: 800;
+      color: var(--faint);
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
 
-    .tag.science {
-      color: var(--blue);
-      border-color: rgba(143, 199, 255, 0.35);
-    }
+    .tag.science { color: var(--blue); border-color: rgba(141, 216, 255, 0.32); }
+    .tag.community { color: var(--green); border-color: rgba(143, 240, 195, 0.32); }
+    .tag.story { color: var(--violet); border-color: rgba(200, 166, 255, 0.32); }
 
-    .tag.community {
-      color: var(--green);
-      border-color: rgba(157, 228, 176, 0.35);
-    }
-
-    .tag.story {
-      color: var(--violet);
-      border-color: rgba(198, 166, 255, 0.35);
-    }
-
-    .filter-panel {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      padding: 0.8rem;
-      margin: 1rem 0;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-md);
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .filter-panel button {
-      cursor: pointer;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 0.65rem 0.85rem;
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.05);
-      font: inherit;
-      font-weight: 800;
-    }
-
-    .filter-panel button[aria-pressed="true"] {
-      color: #07101d;
-      background: #ffffff;
-    }
-
-    .wide-card {
-      grid-column: 1 / -1;
-    }
-
-    .route-card.is-dimmed {
-      opacity: 0.36;
-    }
-
-    .receipt {
-      border: 1px solid rgba(157, 228, 176, 0.28);
-      background: rgba(157, 228, 176, 0.065);
-    }
-
-    .receipt dl {
+    .simple-entry {
       display: grid;
-      grid-template-columns: minmax(9rem, 0.4fr) 1fr;
-      gap: 0.55rem 1rem;
-      margin: 0;
-      color: var(--soft);
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      align-items: center;
+      padding: 1rem;
+      border: 1px solid rgba(143, 240, 195, 0.22);
+      border-radius: 1.25rem;
+      background: rgba(143, 240, 195, 0.055);
     }
 
-    .receipt dt {
-      color: var(--muted);
-      font-weight: 800;
-    }
-
-    .receipt dd {
-      margin: 0;
-    }
-
-    .planned {
-      color: var(--gold);
+    .hidden-receipt {
+      display: none !important;
+      visibility: hidden !important;
     }
 
     footer {
-      padding: 2.5rem 0 4rem;
-      color: var(--muted);
+      padding: 1.35rem 0 0.5rem;
+      color: var(--faint);
+      text-align: center;
+      font-size: 0.76rem;
     }
 
-    footer .site-shell {
-      border-top: 1px solid var(--line);
-      padding-top: 1.25rem;
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    @media (max-width: 900px) {
-      .topbar-inner {
-        align-items: flex-start;
-        flex-direction: column;
+    @media (max-width: 960px) {
+      .topbar {
+        grid-template-columns: 1fr;
+        align-items: start;
       }
 
       .nav {
         justify-content: flex-start;
       }
 
-      .perspective-grid,
-      .route-grid,
-      .status-grid {
+      .hero {
         grid-template-columns: 1fr;
       }
 
-      .receipt dl {
+      .compass-gem-field {
+        min-height: 21rem;
+        order: -1;
+      }
+
+      .perspective-grid,
+      .route-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        width: min(100% - 22px, var(--max));
+      }
+
+      .hero {
+        padding: 1rem;
+      }
+
+      h1 {
+        font-size: clamp(3rem, 18vw, 5rem);
+      }
+
+      .actions,
+      .simple-entry {
+        display: grid;
         grid-template-columns: 1fr;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .perspective-grid,
+      .route-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-gem.science { top: 10%; }
+      .mini-gem.community { left: 15%; top: 72%; }
+      .mini-gem.story { right: 15%; top: 72%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="#main">Skip to Compass</a>
+  <a class="skip" href="#main">Skip to Compass</a>
 
-  <header class="topbar" aria-label="Primary site header">
-    <div class="topbar-inner">
-      <a class="brand" href="/" aria-label="Diamond Gate Bridge Compass home">
-        <strong>Diamond Gate Bridge</strong>
-        <span>Compass · whole-site correlation</span>
+  <div class="shell">
+    <header class="topbar" aria-label="Compass header">
+      <a class="brand" href="/" aria-label="Diamond Gate Bridge Compass">
+        <span class="brand-mark" aria-hidden="true"><span>DGB</span></span>
+        <span class="brand-copy">
+          <span>Diamond Gate Bridge</span>
+          <strong>Compass</strong>
+        </span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
+        <a href="/" aria-current="page">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
         <a href="/nine-summits/">Nine Summits</a>
         <a href="/explore/">Explore</a>
         <a href="/frontier/">Frontier</a>
+        <a href="/products/">Products</a>
         <a href="/gauges/">Gauges</a>
       </nav>
-    </div>
-  </header>
+    </header>
 
-  <main id="main">
-    <section class="hero site-shell" aria-labelledby="page-title">
-      <span class="eyebrow">Compass restored · root correlation</span>
-      <h1 id="page-title">One map for the whole bridge.</h1>
-      <p class="hero-copy">
-        Diamond Gate Bridge can be entered three ways: through Scientific Backing, through
-        Community, or through Fun Narrative / Game / Series. Compass does not replace the
-        routes. It shows where each one belongs.
-      </p>
-
-      <div class="hero-actions" aria-label="Primary page actions">
-        <a class="button" href="#perspectives">See the three perspectives</a>
-        <a class="button secondary" href="#routes">Map the routes</a>
-      </div>
-    </section>
-
-    <section id="perspectives" class="section site-shell" aria-labelledby="perspectives-title">
-      <div class="section-head">
-        <h2 id="perspectives-title">Three public perspectives.</h2>
-        <p>
-          The same project can be understood as structure, as public value, and as a story-world.
-          The page language stays public. The narrative cadence remains under the hood.
-        </p>
-      </div>
-
-      <div class="perspective-grid" data-compass-perspectives>
-        <article class="card" data-perspective="scientific-backing">
-          <small>Perspective 01</small>
-          <h3>Scientific Backing</h3>
-          <p>
-            Systems logic, route proof, future measures, planetary scale, the 256 nodal field,
-            the 16 compass derivative, Fibonacci reveal cadence, and Triple G measurement.
+    <main id="main">
+      <section class="panel hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <div class="kicker">Root Compass</div>
+          <h1 id="page-title">Choose how you enter.</h1>
+          <p class="lead">
+            Diamond Gate Bridge is a structured world, a public mission, and a story you can move toward.
+            Compass keeps the first view simple: three perspectives, a few doors, and enough mystery to keep walking.
           </p>
-          <div class="tag-row" aria-label="Scientific Backing tags">
-            <span class="tag science">Gauges</span>
-            <span class="tag science">Frontier</span>
-            <span class="tag science">Universe</span>
+          <div class="promise">
+            Scientific Backing. Community. Fun Narrative / Game / Series.
           </div>
-        </article>
-
-        <article class="card" data-perspective="community">
-          <small>Perspective 02</small>
-          <h3>Community</h3>
-          <p>
-            Sanctuary, restoration, access, education, safety, stewardship, the estate, the
-            orphanage, and a public benefit that does not depend on a console or special hardware.
-          </p>
-          <div class="tag-row" aria-label="Community tags">
-            <span class="tag community">Explore</span>
-            <span class="tag community">Estate</span>
-            <span class="tag community">Home</span>
+          <div class="actions">
+            <a class="button gold" href="/door/">Start at Door</a>
+            <a class="button" href="/home/">Go Home</a>
+            <a class="button" href="#perspectives">See the three paths</a>
           </div>
-        </article>
+        </div>
 
-        <article class="card" data-perspective="fun-narrative-game-series">
-          <small>Perspective 03</small>
-          <h3>Fun Narrative / Game / Series</h3>
+        <div class="compass-gem-field" aria-label="Compass gem profile">
+          <div class="mini-gem science" aria-hidden="true" style="--delay:-0.6s;"><b>Scientific Backing</b></div>
+          <div class="mini-gem community" aria-hidden="true" style="--delay:-1.4s;"><b>Community</b></div>
+          <div class="mini-gem story" aria-hidden="true" style="--delay:-2.2s;"><b>Game / Series</b></div>
+          <div class="center-gem" aria-hidden="true"><span>Compass</span></div>
+        </div>
+      </section>
+
+      <section id="perspectives" class="panel section" aria-labelledby="perspectives-title">
+        <div class="section-head">
+          <div class="kicker">Three ways in</div>
+          <h2 id="perspectives-title">Pick the lens that makes the most sense first.</h2>
           <p>
-            The Bermuda Triangle portal, Mirrorland, Audralia, ZIONTS, the heroes as real
-            inhabitants, the future interactive game path, and series-ready world continuity.
+            The full world lives on other pages. Compass only introduces the shape.
           </p>
-          <div class="tag-row" aria-label="Fun Narrative / Game / Series tags">
-            <span class="tag story">Mirrorland</span>
-            <span class="tag story">Heroes</span>
-            <span class="tag story">Play</span>
+        </div>
+
+        <div class="perspective-grid">
+          <article class="card">
+            <small>Perspective 01</small>
+            <strong>Scientific Backing</strong>
+            <p>Proof, systems, route logic, future measures, gauges, scale, and structure.</p>
+            <div class="tag-row">
+              <span class="tag science">Gauges</span>
+              <span class="tag science">Universe</span>
+              <span class="tag science">Frontier</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <small>Perspective 02</small>
+            <strong>Community</strong>
+            <p>Sanctuary, restoration, access, stewardship, education, safety, and shared value.</p>
+            <div class="tag-row">
+              <span class="tag community">Explore</span>
+              <span class="tag community">Home</span>
+              <span class="tag community">Products</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <small>Perspective 03</small>
+            <strong>Fun Narrative / Game / Series</strong>
+            <p>A story-world, a future game path, living characters, and a possible series concept.</p>
+            <div class="tag-row">
+              <span class="tag story">Mirrorland</span>
+              <span class="tag story">ZIONTS</span>
+              <span class="tag story">Audralia</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="options-title">
+        <div class="section-head">
+          <div class="kicker">Simple options</div>
+          <h2 id="options-title">Where to go next.</h2>
+          <p>
+            Compass does not explain everything. It only gives the first clean set of doors.
+          </p>
+        </div>
+
+        <div class="route-grid" data-compass-routes>
+          <a class="card" href="/door/">
+            <small>Entry</small>
+            <strong>Door</strong>
+            <span>Begin at the threshold.</span>
+          </a>
+
+          <a class="card" href="/home/">
+            <small>Return</small>
+            <strong>Home</strong>
+            <span>Land somewhere stable.</span>
+          </a>
+
+          <a class="card" href="/nine-summits/">
+            <small>Human climb</small>
+            <strong>Nine Summits</strong>
+            <span>Follow the larger ascent.</span>
+          </a>
+
+          <a class="card" href="/nine-summits/universe/">
+            <small>World scale</small>
+            <strong>Universe</strong>
+            <span>Open the larger structure.</span>
+          </a>
+
+          <a class="card" href="/showroom/globe/earth/">
+            <small>Consequence</small>
+            <strong>ZIONTS</strong>
+            <span>Enter the darker question.</span>
+          </a>
+
+          <a class="card" href="/showroom/globe/audralia/">
+            <small>Possibility</small>
+            <strong>Audralia</strong>
+            <span>See the living-world path.</span>
+          </a>
+
+          <a class="card" href="/explore/">
+            <small>Estate map</small>
+            <strong>Explore</strong>
+            <span>Find the paths inside the manor.</span>
+          </a>
+
+          <a class="card" href="/frontier/">
+            <small>Future measures</small>
+            <strong>Frontier</strong>
+            <span>Look at what survival would require.</span>
+          </a>
+
+          <a class="card" href="/products/">
+            <small>Usable doors</small>
+            <strong>Products</strong>
+            <span>Turn the message into practical paths.</span>
+          </a>
+
+          <a class="card" href="/gauges/">
+            <small>Proof</small>
+            <strong>Gauges</strong>
+            <span>Check what the site can prove.</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="profile-title">
+        <div class="simple-entry">
+          <div>
+            <div class="kicker">Profile</div>
+            <h2 id="profile-title">A bridge between proof, people, and story.</h2>
+            <p>
+              Scientific Backing gives the structure. Community gives the reason. Fun Narrative / Game / Series gives the doorway people remember.
+            </p>
           </div>
-        </article>
-      </div>
-    </section>
+          <a class="button gold" href="/door/">Enter</a>
+        </div>
+      </section>
 
-    <section id="routes" class="section site-shell" aria-labelledby="routes-title">
-      <div class="section-head">
-        <h2 id="routes-title">Route correlation.</h2>
-        <p>
-          Each route keeps its own authority. Compass only explains the relationship.
-          Use the filters to see how the site separates proof, community, and story.
-        </p>
-      </div>
-
-      <div class="filter-panel" data-compass-filter aria-label="Filter route cards by perspective">
-        <button type="button" data-filter="all" aria-pressed="true">All</button>
-        <button type="button" data-filter="scientific-backing" aria-pressed="false">Scientific Backing</button>
-        <button type="button" data-filter="community" aria-pressed="false">Community</button>
-        <button type="button" data-filter="fun-narrative-game-series" aria-pressed="false">Fun Narrative / Game / Series</button>
-      </div>
-
-      <div class="route-grid" data-route-grid>
-        <article class="card route-card" data-perspective="fun-narrative-game-series community scientific-backing">
-          <span class="route-meta">Entry threshold</span>
-          <h3>Door</h3>
-          <p>
-            Door governs first entry. It can let a visitor approach the site through proof,
-            community, or story without collapsing the paths.
-          </p>
-          <div class="tag-row">
-            <span class="tag story">Entry</span>
-            <span class="tag community">Choice</span>
-          </div>
-          <a class="card-link" href="/door/">Enter through Door</a>
-        </article>
-
-        <article class="card route-card" data-perspective="community scientific-backing fun-narrative-game-series">
-          <span class="route-meta">Return point</span>
-          <h3>Home</h3>
-          <p>
-            Home is the stabilized landing and return route. It grounds the project after movement
-            through deeper pages.
-          </p>
-          <div class="tag-row">
-            <span class="tag community">Return</span>
-            <span class="tag science">Stability</span>
-          </div>
-          <a class="card-link" href="/home/">Return Home</a>
-        </article>
-
-        <article class="card route-card" data-perspective="community fun-narrative-game-series">
-          <span class="route-meta">Human climb</span>
-          <h3>Nine Summits</h3>
-          <p>
-            Nine Summits carries the human climb and macro lane. It remains connected to the larger
-            world without being overwritten by it.
-          </p>
-          <div class="tag-row">
-            <span class="tag community">Climb</span>
-            <span class="tag story">Macro lane</span>
-          </div>
-          <a class="card-link" href="/nine-summits/">Open Nine Summits</a>
-        </article>
-
-        <article class="card route-card" data-perspective="scientific-backing fun-narrative-game-series">
-          <span class="route-meta">World-scale structure</span>
-          <h3>Universe</h3>
-          <p>
-            Universe is the cleanest lane for deeper public structure: the 256 field, the 16 compass,
-            Fibonacci cadence, and world-scale relationship.
-          </p>
-          <div class="tag-row">
-            <span class="tag science">256 / 16</span>
-            <span class="tag science">Fibonacci</span>
-          </div>
-          <a class="card-link" href="/nine-summits/universe/">Open Universe</a>
-        </article>
-
-        <article class="card route-card" data-perspective="fun-narrative-game-series">
-          <span class="route-meta">World lens</span>
-          <h3>Mirrorland</h3>
-          <p>
-            Mirrorland is the narrative lens: the Bermuda Triangle portal, the no-return law, and
-            the website as the safe window into the world beyond.
-          </p>
-          <div class="tag-row">
-            <span class="tag story">Portal</span>
-            <span class="tag story">Window</span>
-          </div>
-          <a class="card-link" href="#mirrorland-lane" aria-label="Mirrorland route is planned; read the lane summary below">View lane summary</a>
-        </article>
-
-        <article class="card route-card" data-perspective="fun-narrative-game-series community">
-          <span class="route-meta">Consequence path</span>
-          <h3>ZIONTS / Earthchild</h3>
-          <p>
-            ZIONTS carries the gloomy consequence question. It should ask where the world is going
-            without over-revealing the answer.
-          </p>
-          <div class="tag-row">
-            <span class="tag story">Consequence</span>
-            <span class="tag story">Series preface</span>
-          </div>
-          <a class="card-link" href="/showroom/globe/earth/">Open ZIONTS</a>
-        </article>
-
-        <article class="card route-card" data-perspective="scientific-backing fun-narrative-game-series">
-          <span class="route-meta">Possibility path</span>
-          <h3>Audralia</h3>
-          <p>
-            Audralia carries possibility: an Earth-class mirror planet, present-day reality under
-            suspended-time pressure, and geology that is not a visible 256-cell grid.
-          </p>
-          <div class="tag-row">
-            <span class="tag science">World logic</span>
-            <span class="tag story">Possibility</span>
-          </div>
-          <a class="card-link" href="/showroom/globe/audralia/">Open Audralia</a>
-        </article>
-
-        <article class="card route-card" data-perspective="community fun-narrative-game-series">
-          <span class="route-meta">Estate orientation</span>
-          <h3>Explore</h3>
-          <p>
-            Explore is the estate map. It orients the visitor through paths, people, sanctuary,
-            lab, field connection, and guided entry.
-          </p>
-          <div class="tag-row">
-            <span class="tag community">Estate</span>
-            <span class="tag community">Orientation</span>
-          </div>
-          <a class="card-link" href="/explore/">Open Explore</a>
-        </article>
-
-        <article class="card route-card" data-perspective="scientific-backing community">
-          <span class="route-meta">Future measures</span>
-          <h3>Frontier</h3>
-          <p>
-            Frontier shows the future-measures field: operating lanes for survival, continuity,
-            infrastructure, water, energy, signal, and direction.
-          </p>
-          <div class="tag-row">
-            <span class="tag science">Measures</span>
-            <span class="tag community">Survival</span>
-          </div>
-          <a class="card-link" href="/frontier/">Open Frontier</a>
-        </article>
-
-        <article class="card route-card" data-perspective="scientific-backing">
-          <span class="route-meta">Proof surface</span>
-          <h3>Gauges / Triple G</h3>
-          <p>
-            Gauges prove what is built, what is held, and what still has gaps. A missing route is a
-            gap; a role contradiction is a failure.
-          </p>
-          <div class="tag-row">
-            <span class="tag science">Proof</span>
-            <span class="tag science">Gaps</span>
-          </div>
-          <a class="card-link" href="/gauges/">Open Gauges</a>
-        </article>
-
-        <article class="card route-card" data-perspective="fun-narrative-game-series community">
-          <span class="route-meta planned">Planned lane</span>
-          <h3>Heroes</h3>
-          <p>
-            The heroes are real inhabitants inside their own reality. Their histories carry the
-            story; nodal geometry stays beneath the public surface.
-          </p>
-          <div class="tag-row">
-            <span class="tag story">Characters</span>
-            <span class="tag community">Stakes</span>
-          </div>
-          <a class="card-link" href="#heroes-lane">View lane summary</a>
-        </article>
-
-        <article class="card route-card" data-perspective="fun-narrative-game-series community">
-          <span class="route-meta planned">Future entry</span>
-          <h3>Play</h3>
-          <p>
-            Play is the future static/client-side-first entry lane: computer, tablet, or phone; no
-            console, no Xbox, and no baseline application server requirement.
-          </p>
-          <div class="tag-row">
-            <span class="tag story">Game</span>
-            <span class="tag community">Access</span>
-          </div>
-          <a class="card-link" href="#play-lane">View access model</a>
-        </article>
-      </div>
-    </section>
-
-    <section id="mirrorland-lane" class="section site-shell" aria-labelledby="mirrorland-title">
-      <div class="status-grid">
-        <article class="card wide-card">
-          <small>World lens</small>
-          <h2 id="mirrorland-title">Mirrorland explains why the routes belong together.</h2>
-          <p>
-            The story begins with the Bermuda Triangle as an ocean portal. Physical entry into
-            Mirrorland means no return. The website is not that portal; it is the safe window.
-            Audralia shows possibility. ZIONTS asks consequence. Frontier names the future
-            measures. Explore orients the estate. Heroes carry the world as lived reality.
-          </p>
-        </article>
-
-        <article id="heroes-lane" class="card">
-          <small>Character reality</small>
-          <h3>Heroes are people first.</h3>
-          <p>
-            Auren, Dextrion, Alaric, Tarian, Elara, Soren, Jeeves, and the remote team are not
-            public symbols. They are written as real inhabitants inside their own reality.
-          </p>
-        </article>
-
-        <article id="play-lane" class="card">
-          <small>Future access</small>
-          <h3>Play remains lightweight at baseline.</h3>
-          <p>
-            The intended access model is browser-first and static/client-side-first. Hosting may
-            deliver files, but baseline play does not require a custom application server.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section id="receipt" class="section site-shell" aria-labelledby="receipt-title">
-      <article class="card receipt">
-        <small>Root receipt</small>
-        <h2 id="receipt-title">Compass status.</h2>
-        <dl>
-          <dt>Root role</dt>
-          <dd>Compass · whole-site correlation layer</dd>
-
-          <dt>Visible lanes</dt>
-          <dd>Scientific Backing · Community · Fun Narrative / Game / Series</dd>
-
-          <dt>Audralia status</dt>
-          <dd>Linked as possibility path, not root authority</dd>
-
-          <dt>Book boundary</dt>
-          <dd>Book page may be linked, not rewritten by this root pass</dd>
-
-          <dt>Play claim</dt>
-          <dd>Future static/client-side-first access model; live game completion not claimed</dd>
-        </dl>
-        <p id="compass-status" aria-live="polite">
-          Static Compass loaded. JavaScript enhancement is optional.
-        </p>
-      </article>
+      <script type="application/json" id="rootCompassReceipt" class="hidden-receipt">
+        {
+          "contract": "ROOT_COMPASS_GEM_PROFILE_TNT_v1",
+          "file": "/index.html",
+          "role": "ROOT_COMPASS_PROFILE",
+          "root_is_compass": true,
+          "audralia_is_root": false,
+          "three_public_labels": [
+            "Scientific Backing",
+            "Community",
+            "Fun Narrative / Game / Series"
+          ],
+          "scope": "central_profile_and_simple_options",
+          "not_full_lore_page": true,
+          "static_page_usable_without_js": true,
+          "paired_controller": "/index.js"
+        }
+      </script>
 
       <noscript>
-        <article class="card">
-          <small>No script mode</small>
-          <h3>Compass works without JavaScript.</h3>
-          <p>
-            Route links and public orientation remain available. JavaScript only enhances filters,
-            focus states, and status text.
-          </p>
-        </article>
+        <section class="panel section" aria-label="No script notice">
+          <strong>Compass works without JavaScript.</strong>
+          <p>The links and entry options are static. JavaScript only adds light interaction.</p>
+        </section>
       </noscript>
-    </section>
 
-    <script type="application/json" id="rootCompassReceipt">
-      {
-        "contract": "ROOT_COMPASS_PAIRED_TNT_v1",
-        "file": "/index.html",
-        "role": "COMPASS_WHOLE_SITE_CORRELATION_LAYER",
-        "root_is_compass": true,
-        "audralia_is_root": false,
-        "three_perspectives": [
-          "Scientific Backing",
-          "Community",
-          "Fun Narrative / Game / Series"
-        ],
-        "book_page_direct_rewrite": false,
-        "play_baseline": "static_client_side_first",
-        "claims_live_game_complete": false,
-        "claims_audralia_loader_stable": false,
-        "paired_controller": "/index.js"
-      }
-    </script>
+      <script src="/index.js?v=ROOT_COMPASS_GEM_PROFILE_TNT_v1" defer></script>
+    </main>
 
-    <script src="/index.js?v=ROOT_COMPASS_PAIRED_TNT_v1" defer></script>
-  </main>
-
-  <footer>
-    <div class="site-shell">
-      <p>
-        Diamond Gate Bridge · Compass. This root page coordinates the public website map and does
-        not own Audralia rendering, Gauges truth, book content, hero profile truth, or game engine logic.
-      </p>
-    </div>
-  </footer>
+    <footer>
+      ROOT_COMPASS_GEM_PROFILE_TNT_v1 · Compass · central profile and simple entry.
+    </footer>
+  </div>
 </body>
 </html>

@@ -3,8 +3,8 @@
   lang="en"
   data-route="/showroom/globe/"
   data-page="showroom-globe"
-  data-contract="SHOWROOM_GLOBE_MIRRORLAND_WINDOW_TNT_v1"
-  data-role="fun-narrative-game-series-doorway"
+  data-contract="SHOWROOM_GLOBE_POST_NARRATIVE_WINDOW_TNT_v3"
+  data-role="post-narrative-world-doorway"
   data-static-page-usable-without-js="true"
   data-runtime-public-message="false"
   data-generated-image="false"
@@ -15,10 +15,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 
-  <title>Showroom Globe · Diamond Gate Bridge</title>
+  <title>Shadows Never Shatter in Mirrorland · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Showroom Globe is the story-world doorway for Diamond Gate Bridge: one window, three futures — consequence, possibility, and survival."
+    content="Shadows Never Shatter in Mirrorland: a window into consequence, possibility, and survival."
   />
   <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/" />
   <meta name="theme-color" content="#02040b" />
@@ -236,7 +236,7 @@
 
     .hero {
       position: relative;
-      min-height: clamp(44rem, 84vw, 56rem);
+      min-height: clamp(46rem, 86vw, 58rem);
       display: grid;
       gap: 1.05rem;
       padding: clamp(1.3rem, 5vw, 3.4rem);
@@ -274,10 +274,22 @@
 
     h1 {
       margin: 0;
-      max-width: 820px;
-      font-size: clamp(4rem, 16vw, 9.4rem);
+      max-width: 1050px;
+      font-size: clamp(3.5rem, 14vw, 8.8rem);
       line-height: .82;
       letter-spacing: -.115em;
+      text-wrap: balance;
+      position: relative;
+      z-index: 2;
+    }
+
+    .subtitle {
+      max-width: 900px;
+      color: var(--gold);
+      font-size: clamp(1.25rem, 4.4vw, 2.65rem);
+      line-height: .98;
+      letter-spacing: -.06em;
+      font-weight: 950;
       text-wrap: balance;
       position: relative;
       z-index: 2;
@@ -667,7 +679,11 @@
       }
 
       h1 {
-        font-size: clamp(3.7rem, 18vw, 6rem);
+        font-size: clamp(3.45rem, 16vw, 5.7rem);
+      }
+
+      .subtitle {
+        font-size: clamp(1.32rem, 6vw, 2.25rem);
       }
 
       .hero {
@@ -855,11 +871,13 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Fun Narrative · Game · Series</div>
+        <div class="kicker">Feature concept · current world doorway</div>
 
-        <h1 id="page-title">One window. Three futures.</h1>
+        <h1 id="page-title">Shadows Never Shatter in Mirrorland.</h1>
 
-        <p class="lead">Consequence. Possibility. Survival.</p>
+        <div class="subtitle">A window into consequence, possibility, and survival.</div>
+
+        <p class="lead">Choose the future you want to face first.</p>
 
         <div class="quote">The website is not the portal. It is the window.</div>
 
@@ -874,7 +892,7 @@
           </div>
 
           <div class="orbit-slot consequence-slot">
-            <a class="world-node consequence" href="/showroom/globe/earth/" aria-label="Open ZIONTS Earthchild consequence path" style="--delay:-.6s;--tilt-a:-2.2deg;--tilt-b:1.4deg;">
+            <a class="world-node consequence" href="/showroom/globe/earth/" aria-label="Open ZIONTS consequence path" style="--delay:-.6s;--tilt-a:-2.2deg;--tilt-b:1.4deg;">
               <span class="gem-core">
                 <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
                   <use href="#organicGemA"></use>
@@ -907,8 +925,6 @@
           </div>
         </div>
 
-        <p class="lead">Shadows Never Shatter in Mirrorland.</p>
-
         <div class="micro-links" aria-label="Small support links">
           <a href="/">Compass</a>
           <a href="/showroom/">Showroom</a>
@@ -917,17 +933,18 @@
 
         <script type="application/json" id="showroomGlobeReceipt" class="hidden-receipt">
           {
-            "contract": "SHOWROOM_GLOBE_MIRRORLAND_WINDOW_TNT_v1",
+            "contract": "SHOWROOM_GLOBE_POST_NARRATIVE_WINDOW_TNT_v3",
             "file": "/showroom/globe/index.html",
-            "role": "FUN_NARRATIVE_GAME_SERIES_DOORWAY",
-            "headline": "One window. Three futures.",
-            "core_line": "The website is not the portal. It is the window.",
+            "role": "POST_NARRATIVE_WORLD_DOORWAY",
+            "headline": "Shadows Never Shatter in Mirrorland.",
+            "subtitle": "A window into consequence, possibility, and survival.",
+            "current_forward_expression": true,
+            "legacy_pre_narrative_import": false,
             "primary_paths": {
-              "ZIONTS / Earthchild": "/showroom/globe/earth/",
+              "ZIONTS": "/showroom/globe/earth/",
               "Audralia": "/showroom/globe/audralia/",
               "H-Earth": "/showroom/globe/h-earth/"
             },
-            "zionts_mirrorland_marriage": "doorway_level",
             "full_game_claimed": false,
             "runtime_required": false,
             "static_page_usable_without_js": true
@@ -940,7 +957,7 @@
       </section>
     </main>
 
-    <footer>Diamond Gate Bridge · Showroom Globe · One window. Three futures.</footer>
+    <footer>Diamond Gate Bridge · Showroom Globe · Shadows Never Shatter in Mirrorland.</footer>
   </div>
 </body>
 </html>

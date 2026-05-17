@@ -3,13 +3,13 @@
   lang="en"
   data-route="/explore/frontier/energy/"
   data-page="frontier-energy"
-  data-contract="FRONTIER_ENERGY_SYMMETRICAL_DEFINED_GEM_ORBIT_RETURN_PATH_SINGLE_FILE_TNT_v9"
-  data-previous-contract="FRONTIER_ENERGY_ROTATIONAL_GEM_ANCHOR_CATALOG_SINGLE_FILE_TNT_v8"
-  data-layout-model="symmetrical-defined-gem-orbit-anchor-catalog"
+  data-contract="FRONTIER_ENERGY_CRYSTAL_GEM_ORBIT_ROTATION_RETURN_PATH_SINGLE_FILE_TNT_v10"
+  data-previous-contract="FRONTIER_ENERGY_SYMMETRICAL_DEFINED_GEM_ORBIT_RETURN_PATH_SINGLE_FILE_TNT_v9"
+  data-layout-model="crystal-gem-orbit-with-counter-rotating-labels"
   data-ordering-law="narrative-construct-first-backdoor-science-second"
   data-audralia-role="frontier-science-simulation-world"
   data-click-model="orbit-gems-anchor-to-section-return-to-orbit"
-  data-animation-method="CSS-only"
+  data-animation-method="CSS-only-orbital-rotation"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -19,10 +19,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Energy · Symmetrical Gem Orbit · Diamond Gate Bridge</title>
+  <title>Energy · Crystal Gem Orbit · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Frontier Energy Readiness as a symmetrical rotational gem anchor catalog. Each gem jumps to a readable layer, and each layer returns to orbit."
+    content="Frontier Energy Readiness as a crystal gem orbit with CSS-only orbital rotation, clickable gems, readable labels, and return-to-orbit paths."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/explore/frontier/energy/">
   <meta name="theme-color" content="#02040b">
@@ -46,7 +46,9 @@
       --line:rgba(184,205,255,.18);
       --shadow:0 30px 100px rgba(0,0,0,.44);
       --max:1220px;
-      --gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+      --gem:polygon(50% 0%,66% 10%,82% 12%,100% 38%,88% 78%,50% 100%,12% 78%,0% 38%,18% 12%,34% 10%);
+      --gemTop:polygon(50% 0%,66% 10%,82% 12%,100% 38%,68% 30%,50% 40%,32% 30%,0% 38%,18% 12%,34% 10%);
+      --gemBottom:polygon(0% 38%,32% 30%,50% 40%,68% 30%,100% 38%,88% 78%,50% 100%,12% 78%);
     }
 
     *{box-sizing:border-box}
@@ -119,11 +121,21 @@
     }
 
     @keyframes gemBreathe{
-      0%,100%{filter:brightness(.98);transform:translateY(0)}
-      50%{filter:brightness(1.10);transform:translateY(-2px)}
+      0%,100%{filter:brightness(1.05) contrast(1.12) saturate(1.08)}
+      50%{filter:brightness(1.24) contrast(1.18) saturate(1.2)}
     }
 
-    @keyframes orbitGlow{
+    @keyframes orbitSpin{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
+    }
+
+    @keyframes counterSpin{
+      from{transform:translate(-50%,-50%) rotate(0deg)}
+      to{transform:translate(-50%,-50%) rotate(-360deg)}
+    }
+
+    @keyframes ringSpin{
       from{transform:translate(-50%,-50%) rotate(0deg)}
       to{transform:translate(-50%,-50%) rotate(360deg)}
     }
@@ -190,10 +202,10 @@
       transform:rotate(45deg);
       clip-path:var(--gem);
       background:
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.25),rgba(243,200,111,.24),rgba(36,120,255,.22),rgba(143,101,255,.18),rgba(255,255,255,.25)),
-        radial-gradient(circle at 48% 22%,rgba(255,255,255,.30),transparent 42%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.35),rgba(243,200,111,.30),rgba(36,120,255,.22),rgba(143,101,255,.22),rgba(255,255,255,.35)),
+        radial-gradient(circle at 38% 18%,rgba(255,255,255,.45),transparent 28%),
         linear-gradient(145deg,rgba(92,54,13,.95),rgba(5,8,20,.98));
-      box-shadow:0 0 2rem rgba(243,200,111,.22),0 1.1rem 2.6rem rgba(0,0,0,.44),inset 0 1px 0 rgba(255,255,255,.16);
+      box-shadow:0 0 2rem rgba(243,200,111,.25),0 1.1rem 2.6rem rgba(0,0,0,.44),inset 0 1px 0 rgba(255,255,255,.22);
       animation:gemBreathe 6s ease-in-out infinite;
     }
 
@@ -443,7 +455,7 @@
       width:min(54%,33rem);
       height:min(44%,22rem);
       border:1px solid rgba(141,216,255,.14);
-      animation:orbitGlow 46s linear infinite;
+      animation:ringSpin 46s linear infinite;
     }
 
     .orbit-signal{
@@ -464,6 +476,15 @@
       animation:signalSweep 8.5s ease-in-out infinite;
     }
 
+    .orbit-track{
+      position:absolute;
+      inset:0;
+      transform-origin:50% 50%;
+      animation:orbitSpin 72s linear infinite;
+      will-change:transform;
+      z-index:4;
+    }
+
     .center-gem,
     .orbit-gem{
       position:absolute;
@@ -474,7 +495,6 @@
       padding:0;
       color:inherit;
       isolation:isolate;
-      transition:transform .2s ease,filter .2s ease;
     }
 
     .center-gem{
@@ -483,40 +503,56 @@
       width:clamp(9.2rem,18vw,14.8rem);
       height:clamp(6.2rem,12vw,9.5rem);
       transform:translate(-50%,-50%);
-      z-index:4;
+      z-index:6;
+      transition:filter .2s ease;
     }
 
     .orbit-gem{
       width:clamp(5.7rem,9.2vw,8.25rem);
       height:clamp(4.45rem,7.4vw,6.45rem);
       transform:translate(-50%,-50%);
-      z-index:3;
+      z-index:5;
     }
 
-    .center-gem:hover,
-    .orbit-gem:hover{
-      filter:brightness(1.16);
+    .gem-face{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:100%;
+      height:100%;
+      transform:translate(-50%,-50%);
+      transition:filter .2s ease,scale .2s ease;
+      animation:counterSpin 72s linear infinite;
+      will-change:transform;
     }
 
-    .orbit-gem:hover{transform:translate(-50%,-50%) scale(1.06)}
-    .center-gem:hover{transform:translate(-50%,-50%) scale(1.04)}
+    .center-gem .gem-face{
+      animation:none;
+      transform:translate(-50%,-50%);
+    }
+
+    .center-gem:hover .gem-face,
+    .orbit-gem:hover .gem-face{
+      filter:brightness(1.2) saturate(1.18);
+      scale:1.07;
+    }
 
     .gem-shape{
       position:absolute;
       inset:0;
       clip-path:var(--gem);
-      border:1px solid rgba(255,255,255,.22);
+      border:1px solid rgba(255,255,255,.30);
       background:
-        linear-gradient(135deg,rgba(255,255,255,.34),transparent 18%),
-        linear-gradient(45deg,transparent 0 34%,rgba(255,255,255,.12) 35% 36%,transparent 37% 100%),
-        linear-gradient(135deg,transparent 0 49%,rgba(255,255,255,.12) 50% 51%,transparent 52% 100%),
-        linear-gradient(180deg,rgba(255,255,255,.11),transparent 46%),
-        conic-gradient(from 45deg,rgba(255,255,255,.18),rgba(243,200,111,.30),rgba(36,120,255,.18),rgba(143,101,255,.22),rgba(255,255,255,.18)),
+        linear-gradient(135deg,rgba(255,255,255,.48),transparent 18%),
+        linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.28) 24% 25%,transparent 26% 100%),
+        linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.18) 40% 41%,transparent 42% 100%),
+        linear-gradient(28deg,transparent 0 56%,rgba(0,0,0,.24) 57% 58%,transparent 59% 100%),
+        conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(243,200,111,.35),rgba(36,120,255,.23),rgba(143,101,255,.28),rgba(255,255,255,.22)),
         linear-gradient(145deg,rgba(9,15,31,.96),rgba(2,5,15,.98));
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.24),
-        inset 0 -1px 0 rgba(0,0,0,.32),
-        0 0 1.9rem rgba(243,200,111,.13),
+        inset 0 1px 0 rgba(255,255,255,.35),
+        inset 0 -1px 0 rgba(0,0,0,.42),
+        0 0 2.1rem rgba(243,200,111,.16),
         0 1rem 1.8rem rgba(0,0,0,.30);
       animation:gemBreathe 7s ease-in-out infinite;
     }
@@ -524,12 +560,12 @@
     .gem-shape::before{
       content:"";
       position:absolute;
-      inset:15% 10%;
-      clip-path:polygon(50% 0%,92% 32%,74% 100%,26% 100%,8% 32%);
+      inset:0;
+      clip-path:var(--gemTop);
       background:
-        linear-gradient(135deg,rgba(255,255,255,.16),transparent 45%),
-        linear-gradient(45deg,transparent 0 49%,rgba(255,255,255,.12) 50% 51%,transparent 52% 100%);
-      opacity:.62;
+        linear-gradient(135deg,rgba(255,255,255,.34),transparent 45%),
+        linear-gradient(90deg,transparent 0 27%,rgba(255,255,255,.18) 28% 29%,transparent 30% 68%,rgba(0,0,0,.20) 69% 70%,transparent 71%);
+      opacity:.78;
       pointer-events:none;
     }
 
@@ -537,36 +573,57 @@
       content:"";
       position:absolute;
       inset:0;
-      clip-path:polygon(50% 0%,78% 9%,100% 35%,50% 48%,0% 35%,22% 9%);
-      background:linear-gradient(180deg,rgba(255,255,255,.16),transparent);
-      opacity:.72;
+      clip-path:var(--gemBottom);
+      background:
+        radial-gradient(circle at 34% 28%,rgba(255,255,255,.26),transparent 25%),
+        linear-gradient(135deg,rgba(255,255,255,.10),transparent 35%,rgba(0,0,0,.30) 100%);
+      opacity:.82;
+      pointer-events:none;
+    }
+
+    .gem-core{
+      position:absolute;
+      inset:19% 16%;
+      clip-path:polygon(50% 0%,83% 28%,70% 100%,30% 100%,17% 28%);
+      background:
+        linear-gradient(135deg,rgba(255,255,255,.18),transparent 42%),
+        linear-gradient(48deg,transparent 0 49%,rgba(255,255,255,.16) 50% 51%,transparent 52%),
+        radial-gradient(circle at 50% 26%,rgba(255,255,255,.18),transparent 45%);
+      opacity:.9;
       pointer-events:none;
     }
 
     .center-gem .gem-shape{
-      border-color:rgba(243,200,111,.34);
+      border-color:rgba(243,200,111,.42);
       background:
-        linear-gradient(135deg,rgba(255,255,255,.38),transparent 18%),
-        linear-gradient(45deg,transparent 0 34%,rgba(255,255,255,.14) 35% 36%,transparent 37% 100%),
-        linear-gradient(135deg,transparent 0 49%,rgba(255,255,255,.14) 50% 51%,transparent 52% 100%),
-        conic-gradient(from 45deg,rgba(255,255,255,.18),rgba(243,200,111,.37),rgba(141,216,255,.24),rgba(143,101,255,.26),rgba(255,255,255,.18)),
-        radial-gradient(circle at 45% 36%,rgba(255,232,163,.24),transparent 48%),
+        linear-gradient(135deg,rgba(255,255,255,.52),transparent 18%),
+        linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.30) 24% 25%,transparent 26% 100%),
+        linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.20) 40% 41%,transparent 42% 100%),
+        conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(243,200,111,.44),rgba(141,216,255,.28),rgba(143,101,255,.30),rgba(255,255,255,.22)),
+        radial-gradient(circle at 45% 36%,rgba(255,232,163,.28),transparent 48%),
         linear-gradient(145deg,rgba(9,15,31,.95),rgba(2,5,15,.98));
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.26),
-        inset 0 -1px 0 rgba(0,0,0,.30),
-        0 0 2.4rem rgba(243,200,111,.22),
+        inset 0 1px 0 rgba(255,255,255,.38),
+        inset 0 -1px 0 rgba(0,0,0,.38),
+        0 0 2.8rem rgba(243,200,111,.26),
         0 1.2rem 2.4rem rgba(0,0,0,.36);
     }
 
     .gem-copy{
-      position:relative;
-      z-index:2;
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:3;
       display:grid;
       gap:.12rem;
-      padding:.55rem;
-      text-shadow:0 2px 10px rgba(0,0,0,.90);
-      transform:translateZ(0);
+      min-width:74%;
+      padding:.34rem .42rem;
+      transform:translate(-50%,-50%);
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:.68rem;
+      background:rgba(1,4,12,.38);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+      text-shadow:0 2px 10px rgba(0,0,0,.94);
     }
 
     .gem-copy strong{
@@ -584,6 +641,13 @@
       font-weight:950;
       letter-spacing:.10em;
       text-transform:uppercase;
+    }
+
+    .center-gem .gem-copy{
+      min-width:75%;
+      padding:.46rem .58rem;
+      border-color:rgba(243,200,111,.24);
+      background:rgba(1,4,12,.44);
     }
 
     .center-gem .gem-copy strong{
@@ -609,11 +673,11 @@
     .p11{left:15.4%;top:28%}
     .p12{left:30%;top:15%}
 
-    .violet .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.34),transparent 18%),linear-gradient(45deg,transparent 0 34%,rgba(255,255,255,.12) 35% 36%,transparent 37% 100%),linear-gradient(135deg,transparent 0 49%,rgba(255,255,255,.12) 50% 51%,transparent 52% 100%),conic-gradient(from 45deg,rgba(255,255,255,.18),rgba(143,101,255,.36),rgba(243,200,111,.16),rgba(141,216,255,.15),rgba(143,101,255,.28)),linear-gradient(145deg,rgba(12,10,36,.95),rgba(2,5,15,.98))}
-    .gold .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.34),transparent 18%),linear-gradient(45deg,transparent 0 34%,rgba(255,255,255,.12) 35% 36%,transparent 37% 100%),linear-gradient(135deg,transparent 0 49%,rgba(255,255,255,.12) 50% 51%,transparent 52% 100%),conic-gradient(from 45deg,rgba(255,255,255,.18),rgba(243,200,111,.38),rgba(255,232,163,.18),rgba(36,120,255,.13),rgba(243,200,111,.26)),linear-gradient(145deg,rgba(38,24,9,.95),rgba(2,5,15,.98))}
-    .green .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.34),transparent 18%),linear-gradient(45deg,transparent 0 34%,rgba(255,255,255,.12) 35% 36%,transparent 37% 100%),linear-gradient(135deg,transparent 0 49%,rgba(255,255,255,.12) 50% 51%,transparent 52% 100%),conic-gradient(from 45deg,rgba(255,255,255,.18),rgba(143,240,195,.34),rgba(243,200,111,.14),rgba(36,120,255,.15),rgba(143,240,195,.26)),linear-gradient(145deg,rgba(7,31,25,.95),rgba(2,5,15,.98))}
-    .blue .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.34),transparent 18%),linear-gradient(45deg,transparent 0 34%,rgba(255,255,255,.12) 35% 36%,transparent 37% 100%),linear-gradient(135deg,transparent 0 49%,rgba(255,255,255,.12) 50% 51%,transparent 52% 100%),conic-gradient(from 45deg,rgba(255,255,255,.18),rgba(141,216,255,.34),rgba(243,200,111,.14),rgba(143,101,255,.15),rgba(141,216,255,.26)),linear-gradient(145deg,rgba(7,19,38,.95),rgba(2,5,15,.98))}
-    .red .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.34),transparent 18%),linear-gradient(45deg,transparent 0 34%,rgba(255,255,255,.12) 35% 36%,transparent 37% 100%),linear-gradient(135deg,transparent 0 49%,rgba(255,255,255,.12) 50% 51%,transparent 52% 100%),conic-gradient(from 45deg,rgba(255,255,255,.18),rgba(255,157,145,.34),rgba(243,200,111,.15),rgba(36,120,255,.11),rgba(255,157,145,.26)),linear-gradient(145deg,rgba(39,12,12,.95),rgba(2,5,15,.98))}
+    .violet .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.48),transparent 18%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.28) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.18) 40% 41%,transparent 42% 100%),conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(143,101,255,.42),rgba(243,200,111,.18),rgba(141,216,255,.18),rgba(143,101,255,.32)),linear-gradient(145deg,rgba(12,10,36,.95),rgba(2,5,15,.98))}
+    .gold .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.48),transparent 18%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.28) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.18) 40% 41%,transparent 42% 100%),conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(243,200,111,.45),rgba(255,232,163,.22),rgba(36,120,255,.16),rgba(243,200,111,.30)),linear-gradient(145deg,rgba(38,24,9,.95),rgba(2,5,15,.98))}
+    .green .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.48),transparent 18%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.28) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.18) 40% 41%,transparent 42% 100%),conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(143,240,195,.42),rgba(243,200,111,.17),rgba(36,120,255,.18),rgba(143,240,195,.30)),linear-gradient(145deg,rgba(7,31,25,.95),rgba(2,5,15,.98))}
+    .blue .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.48),transparent 18%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.28) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.18) 40% 41%,transparent 42% 100%),conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(141,216,255,.42),rgba(243,200,111,.17),rgba(143,101,255,.18),rgba(141,216,255,.30)),linear-gradient(145deg,rgba(7,19,38,.95),rgba(2,5,15,.98))}
+    .red .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.48),transparent 18%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.28) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.18) 40% 41%,transparent 42% 100%),conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(255,157,145,.42),rgba(243,200,111,.17),rgba(36,120,255,.13),rgba(255,157,145,.30)),linear-gradient(145deg,rgba(39,12,12,.95),rgba(2,5,15,.98))}
 
     .section{
       margin-top:.9rem;
@@ -893,7 +957,9 @@
       .brand-mark,
       .gem-shape,
       .orbit-stage::after,
-      .orbit-signal::before{
+      .orbit-signal::before,
+      .orbit-track,
+      .gem-face{
         animation:none!important;
       }
     }
@@ -909,7 +975,7 @@
         <span class="brand-mark" aria-hidden="true"><span>EN</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge · Frontier</span>
-          <strong>Energy · Defined Orbit</strong>
+          <strong>Energy · Crystal Orbit</strong>
         </span>
       </a>
 
@@ -927,14 +993,14 @@
 
     <main id="start">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Symmetrical Gem Anchor Catalog</div>
+        <div class="kicker">Crystal Gem Orbit</div>
 
         <h1 id="page-title">Click a gem. Read the layer. Return to orbit.</h1>
 
-        <h2>Audralia stays first. Every Energy path stays visible in a defined twelve-point orbit.</h2>
+        <h2>The gems now rotate on the orbit while the labels stay readable.</h2>
 
         <p class="lead">
-          Frontier Energy Readiness is arranged as a central Energy anchor, twelve symmetrical orbit gems, compact reading layers, and return paths under every section.
+          Frontier Energy Readiness is arranged as a central Energy crystal, twelve rotating orbit gems, compact reading layers, and return paths under every section.
         </p>
 
         <div class="principle">
@@ -961,114 +1027,155 @@
 
       <section class="panel orbit-board" id="energy-orbit" aria-labelledby="orbit-title">
         <div class="kicker">Energy Orbit</div>
-        <h2 id="orbit-title">Twelve frontier gems orbit one Energy anchor.</h2>
+        <h2 id="orbit-title">Twelve crystal gems orbit one Energy anchor.</h2>
 
-        <div class="orbit-stage" aria-label="Symmetrical rotational Energy gem catalog">
+        <div class="orbit-stage" aria-label="Rotating crystal Energy gem catalog">
           <div class="orbit-signal" aria-hidden="true"></div>
 
           <a class="center-gem" href="#final-lock" aria-label="Energy Frontier Readiness final lock">
-            <span class="gem-shape" aria-hidden="true"></span>
-            <span class="gem-copy">
-              <strong>Energy</strong>
-              <span>Frontier Readiness</span>
+            <span class="gem-face">
+              <span class="gem-shape" aria-hidden="true"></span>
+              <span class="gem-core" aria-hidden="true"></span>
+              <span class="gem-copy">
+                <strong>Energy</strong>
+                <span>Frontier Readiness</span>
+              </span>
             </span>
           </a>
 
-          <a class="orbit-gem violet p1" href="#audralia-simulation">
-            <span class="gem-shape" aria-hidden="true"></span>
-            <span class="gem-copy">
-              <strong>Audralia</strong>
-              <span>Simulation</span>
-            </span>
-          </a>
+          <div class="orbit-track">
+            <a class="orbit-gem violet p1" href="#audralia-simulation">
+              <span class="gem-face">
+                <span class="gem-shape" aria-hidden="true"></span>
+                <span class="gem-core" aria-hidden="true"></span>
+                <span class="gem-copy">
+                  <strong>Audralia</strong>
+                  <span>Simulation</span>
+                </span>
+              </span>
+            </a>
 
-          <a class="orbit-gem gold p2" href="#products">
-            <span class="gem-shape" aria-hidden="true"></span>
-            <span class="gem-copy">
-              <strong>Products</strong>
-              <span>Act Now</span>
-            </span>
-          </a>
+            <a class="orbit-gem gold p2" href="#products">
+              <span class="gem-face">
+                <span class="gem-shape" aria-hidden="true"></span>
+                <span class="gem-core" aria-hidden="true"></span>
+                <span class="gem-copy">
+                  <strong>Products</strong>
+                  <span>Act Now</span>
+                </span>
+              </span>
+            </a>
 
-          <a class="orbit-gem green p3" href="#community">
-            <span class="gem-shape" aria-hidden="true"></span>
-            <span class="gem-copy">
-              <strong>Community</strong>
-              <span>Trust</span>
-            </span>
-          </a>
+            <a class="orbit-gem green p3" href="#community">
+              <span class="gem-face">
+                <span class="gem-shape" aria-hidden="true"></span>
+                <span class="gem-core" aria-hidden="true"></span>
+                <span class="gem-copy">
+                  <strong>Community</strong>
+                  <span>Trust</span>
+                </span>
+              </span>
+            </a>
 
-          <a class="orbit-gem blue p4" href="#science">
-            <span class="gem-shape" aria-hidden="true"></span>
-            <span class="gem-copy">
-              <strong>Science</strong>
-              <span>Boundary</span>
-            </span>
-          </a>
+            <a class="orbit-gem blue p4" href="#science">
+              <span class="gem-face">
+                <span class="gem-shape" aria-hidden="true"></span>
+                <span class="gem-core" aria-hidden="true"></span>
+                <span class="gem-copy">
+                  <strong>Science</strong>
+                  <span>Boundary</span>
+                </span>
+              </span>
+            </a>
 
-          <a class="orbit-gem gold p5" href="#commercial-now">
-            <span class="gem-shape" aria-hidden="true"></span>
-            <span class="gem-copy">
-              <strong>Commercial</strong>
-              <span>Now</span>
-            </span>
-          </a>
+            <a class="orbit-gem gold p5" href="#commercial-now">
+              <span class="gem-face">
+                <span class="gem-shape" aria-hidden="true"></span>
+                <span class="gem-core" aria-hidden="true"></span>
+                <span class="gem-copy">
+                  <strong>Commercial</strong>
+                  <span>Now</span>
+                </span>
+              </span>
+            </a>
 
-          <a class="orbit-gem gold p6" href="#bridge-infrastructure">
-            <span class="gem-shape" aria-hidden="true"></span>
-            <span class="gem-copy">
-              <strong>Bridge</strong>
-              <span>Infrastructure</span>
-            </span>
-          </a>
+            <a class="orbit-gem gold p6" href="#bridge-infrastructure">
+              <span class="gem-face">
+                <span class="gem-shape" aria-hidden="true"></span>
+                <span class="gem-core" aria-hidden="true"></span>
+                <span class="gem-copy">
+                  <strong>Bridge</strong>
+                  <span>Infrastructure</span>
+                </span>
+              </span>
+            </a>
 
-          <a class="orbit-gem violet p7" href="#frontier-readiness">
-            <span class="gem-shape" aria-hidden="true"></span>
-            <span class="gem-copy">
-              <strong>Frontier</strong>
-              <span>Readiness</span>
-            </span>
-          </a>
+            <a class="orbit-gem violet p7" href="#frontier-readiness">
+              <span class="gem-face">
+                <span class="gem-shape" aria-hidden="true"></span>
+                <span class="gem-core" aria-hidden="true"></span>
+                <span class="gem-copy">
+                  <strong>Frontier</strong>
+                  <span>Readiness</span>
+                </span>
+              </span>
+            </a>
 
-          <a class="orbit-gem green p8" href="#storage-fields">
-            <span class="gem-shape" aria-hidden="true"></span>
-            <span class="gem-copy">
-              <strong>Storage</strong>
-              <span>Fields</span>
-            </span>
-          </a>
+            <a class="orbit-gem green p8" href="#storage-fields">
+              <span class="gem-face">
+                <span class="gem-shape" aria-hidden="true"></span>
+                <span class="gem-core" aria-hidden="true"></span>
+                <span class="gem-copy">
+                  <strong>Storage</strong>
+                  <span>Fields</span>
+                </span>
+              </span>
+            </a>
 
-          <a class="orbit-gem gold p9" href="#readiness-index">
-            <span class="gem-shape" aria-hidden="true"></span>
-            <span class="gem-copy">
-              <strong>Readiness</strong>
-              <span>Index</span>
-            </span>
-          </a>
+            <a class="orbit-gem gold p9" href="#readiness-index">
+              <span class="gem-face">
+                <span class="gem-shape" aria-hidden="true"></span>
+                <span class="gem-core" aria-hidden="true"></span>
+                <span class="gem-copy">
+                  <strong>Readiness</strong>
+                  <span>Index</span>
+                </span>
+              </span>
+            </a>
 
-          <a class="orbit-gem green p10" href="#advanced-buffer">
-            <span class="gem-shape" aria-hidden="true"></span>
-            <span class="gem-copy">
-              <strong>Advanced</strong>
-              <span>Buffer</span>
-            </span>
-          </a>
+            <a class="orbit-gem green p10" href="#advanced-buffer">
+              <span class="gem-face">
+                <span class="gem-shape" aria-hidden="true"></span>
+                <span class="gem-core" aria-hidden="true"></span>
+                <span class="gem-copy">
+                  <strong>Advanced</strong>
+                  <span>Buffer</span>
+                </span>
+              </span>
+            </a>
 
-          <a class="orbit-gem blue p11" href="#future-offtake">
-            <span class="gem-shape" aria-hidden="true"></span>
-            <span class="gem-copy">
-              <strong>Future</strong>
-              <span>Offtake</span>
-            </span>
-          </a>
+            <a class="orbit-gem blue p11" href="#future-offtake">
+              <span class="gem-face">
+                <span class="gem-shape" aria-hidden="true"></span>
+                <span class="gem-core" aria-hidden="true"></span>
+                <span class="gem-copy">
+                  <strong>Future</strong>
+                  <span>Offtake</span>
+                </span>
+              </span>
+            </a>
 
-          <a class="orbit-gem red p12" href="#kill-conditions">
-            <span class="gem-shape" aria-hidden="true"></span>
-            <span class="gem-copy">
-              <strong>Kill</strong>
-              <span>Conditions</span>
-            </span>
-          </a>
+            <a class="orbit-gem red p12" href="#kill-conditions">
+              <span class="gem-face">
+                <span class="gem-shape" aria-hidden="true"></span>
+                <span class="gem-core" aria-hidden="true"></span>
+                <span class="gem-copy">
+                  <strong>Kill</strong>
+                  <span>Conditions</span>
+                </span>
+              </span>
+            </a>
+          </div>
         </div>
       </section>
 
@@ -1349,7 +1456,7 @@
       </section>
 
       <section class="final-band" id="final-lock" aria-label="Energy final lock">
-        <strong>Energy is the central anchor. Audralia gives the simulation world. Every section returns to orbit.</strong>
+        <strong>Energy is the central crystal. Audralia gives the simulation world. Every section returns to orbit.</strong>
 
         <p>
           Frontier Energy Readiness remains the deliverable. Fusion is not a sales product today. Readiness is the category that can be built, assessed, explained, sold, and inherited by Audralia without breaking the science.
@@ -1368,21 +1475,22 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_ENERGY_SYMMETRICAL_DEFINED_GEM_ORBIT_RETURN_PATH_SINGLE_FILE_TNT_v9
+FRONTIER_ENERGY_CRYSTAL_GEM_ORBIT_ROTATION_RETURN_PATH_SINGLE_FILE_TNT_v10
 route=/explore/frontier/energy/
 page=frontier_energy
-previous=FRONTIER_ENERGY_ROTATIONAL_GEM_ANCHOR_CATALOG_SINGLE_FILE_TNT_v8
-layout_model=symmetrical_defined_gem_orbit_anchor_catalog
+previous=FRONTIER_ENERGY_SYMMETRICAL_DEFINED_GEM_ORBIT_RETURN_PATH_SINGLE_FILE_TNT_v9
+layout_model=crystal_gem_orbit_with_counter_rotating_labels
 ordering_law=narrative_construct_first_backdoor_science_second
 click_model=orbit_gems_anchor_to_section_return_to_orbit
 central_gem=Energy_Frontier_Readiness
 orbit_gems=Audralia_Simulation,Products,Community,Science,Commercial_Now,Bridge_Infrastructure,Frontier_Readiness,Storage_Fields,Readiness_Index,Advanced_Buffer,Future_Offtake,Kill_Conditions
 symmetry=12_point_defined_ellipse
-definition=faceted_gems_enhanced_edges_shadow_label_contrast
+definition=crystal_cut_facets_top_crown_lower_pavilion_inner_core_highlighted_edges
+rotation=CSS_orbit_track_rotates_labels_counter_rotate
 return_path=return_to_orbit_under_every_reading_section
 dropdown_layers=true
 animation_scope=CSS_only_creative_subtle
-animation_features=faceted_gems,central_anchor,elliptical_orbit,hover_lift,soft_signal_sweep,stable_readable_labels
+animation_features=crystal_faceted_gems,central_anchor,elliptical_orbit_rotation,counter_rotating_readable_labels,hover_lift,soft_signal_sweep
 science_lock=fusion_real_commercial_power_not_procurement_ready
 math_lock=Q_target_Q_plasma_Q_plant_separated
 possibility_lock=solar_is_hedge_storage_is_bridge_fusion_is_frontier_readiness
@@ -1398,7 +1506,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      FRONTIER_ENERGY_SYMMETRICAL_DEFINED_GEM_ORBIT_RETURN_PATH_SINGLE_FILE_TNT_v9 · Defined Orbit · Return to Orbit · Narrative First · Do Not Sell Fusion · Sell Readiness.
+      FRONTIER_ENERGY_CRYSTAL_GEM_ORBIT_ROTATION_RETURN_PATH_SINGLE_FILE_TNT_v10 · Crystal Gems · Rotating Orbit · Return to Orbit · Narrative First · Do Not Sell Fusion · Sell Readiness.
     </footer>
   </div>
 </body>

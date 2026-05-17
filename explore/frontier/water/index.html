@@ -3,12 +3,15 @@
   lang="en"
   data-route="/explore/frontier/water/"
   data-page="frontier-water"
-  data-contract="FRONTIER_WATER_INDEPENDENT_LATTICE_MEMORY_NAV_ENGINE_TNT_v3"
-  data-previous-contract="AUDRALIA_CLOSED_WATER_TED_NAV_ENGINE_TNT_v2"
+  data-contract="FRONTIER_WATER_ROTATIONAL_GEM_ORBIT_NAV_TNT_v4"
+  data-previous-contract="FRONTIER_WATER_INDEPENDENT_LATTICE_MEMORY_NAV_ENGINE_TNT_v3"
   data-active-focus="closed-water-system-technology"
   data-delivery-style="TED-Talk-educational-compression"
-  data-engine-style="on-page-navigation-engine-with-disclosure-layers"
-  data-navigation-engine="anchor-nav,section-jumps,dropdown-disclosures,compact-cards"
+  data-engine-style="rotational-gem-orbit-navigation-with-disclosure-layers"
+  data-navigation-engine="rotational-gem-orbit,anchor-nav,section-jumps,dropdown-disclosures,compact-cards"
+  data-orbit-nav="rotational-gem-field"
+  data-water-orbit="active"
+  data-return-to-orbit="active"
   data-public-layer="short-talk-sequence"
   data-engineering-layer="collapsed-appendix"
   data-frontier-water-lattice="independent"
@@ -30,7 +33,7 @@
   <title>Water · Closed System · Frontier · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Frontier Water teaches closed-loop water science through an independent water lattice: capture, purification, balance, storage, reuse, recovery, memory, 256-state cycle logic, and Audralia narrative inheritance."
+    content="Frontier Water teaches closed-loop water science through a rotational gem orbit navigation field, independent water lattice, memory logic, 256-state cycle structure, and Audralia narrative inheritance."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/explore/frontier/water/">
   <meta name="theme-color" content="#02040b">
@@ -478,6 +481,245 @@
       background:rgba(143,101,255,.075);
     }
 
+    .orbit-panel{
+      margin:1.15rem 0;
+      padding:clamp(1rem,3.2vw,1.6rem);
+      position:relative;
+      overflow:hidden;
+      isolation:isolate;
+    }
+
+    .orbit-panel::before{
+      content:"";
+      position:absolute;
+      inset:-30%;
+      z-index:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.16),transparent 18rem),
+        conic-gradient(from 0deg at 50% 50%,rgba(116,240,255,.10),transparent 70deg,rgba(143,240,195,.10),transparent 150deg,rgba(243,200,111,.08),transparent 235deg,rgba(143,101,255,.10),transparent 360deg);
+      filter:blur(16px);
+      opacity:.7;
+    }
+
+    .orbit-header{
+      position:relative;
+      z-index:2;
+      display:grid;
+      gap:.55rem;
+      margin-bottom:1rem;
+    }
+
+    .orbit-field{
+      position:relative;
+      z-index:2;
+      width:min(100%,54rem);
+      min-height:clamp(23rem,50vw,36rem);
+      margin:0 auto;
+      display:grid;
+      place-items:center;
+    }
+
+    .orbit-ring{
+      position:absolute;
+      inset:clamp(1.1rem,4vw,3rem);
+      border:1px solid rgba(141,216,255,.22);
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.045),transparent 42%),
+        radial-gradient(circle at 50% 50%,transparent 57%,rgba(141,216,255,.07) 58%,transparent 61%),
+        radial-gradient(circle at 50% 50%,transparent 75%,rgba(143,240,195,.055) 76%,transparent 79%);
+      box-shadow:
+        inset 0 0 2.2rem rgba(141,216,255,.06),
+        0 0 2.8rem rgba(141,216,255,.06);
+      animation:orbitRingBreathe 8s ease-in-out infinite;
+    }
+
+    .orbit-ring::before,
+    .orbit-ring::after{
+      content:"";
+      position:absolute;
+      inset:12%;
+      border:1px dashed rgba(255,255,255,.10);
+      border-radius:50%;
+    }
+
+    .orbit-ring::after{
+      inset:28%;
+      border-color:rgba(143,240,195,.10);
+    }
+
+    @keyframes orbitRingBreathe{
+      0%,100%{transform:scale(.985);opacity:.72}
+      50%{transform:scale(1.015);opacity:.94}
+    }
+
+    .center-gem{
+      position:relative;
+      z-index:5;
+      width:clamp(8.3rem,20vw,13.2rem);
+      min-height:clamp(8.3rem,20vw,13.2rem);
+      display:grid;
+      place-items:center;
+      text-align:center;
+      gap:.28rem;
+      clip-path:var(--gem);
+      border:1px solid rgba(141,216,255,.58);
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.34),transparent 25%),
+        radial-gradient(circle at 42% 55%,rgba(116,240,255,.26),transparent 56%),
+        conic-gradient(from 45deg,rgba(141,216,255,.44),rgba(36,120,255,.34),rgba(143,240,195,.24),rgba(141,216,255,.44)),
+        linear-gradient(145deg,rgba(7,32,54,.98),rgba(3,8,20,.98));
+      box-shadow:
+        0 0 2.4rem rgba(141,216,255,.24),
+        0 1.5rem 3.5rem rgba(0,0,0,.45),
+        inset 0 1px 0 rgba(255,255,255,.20);
+    }
+
+    .center-gem strong{
+      display:block;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.35rem,3.2vw,2.15rem);
+      line-height:1;
+      letter-spacing:-.06em;
+    }
+
+    .center-gem span{
+      max-width:9rem;
+      color:rgba(230,248,255,.76);
+      font-size:.62rem;
+      font-weight:950;
+      letter-spacing:.10em;
+      line-height:1.24;
+      text-transform:uppercase;
+    }
+
+    .orbit-gems{
+      position:absolute;
+      inset:0;
+      z-index:6;
+      list-style:none;
+      padding:0;
+      margin:0;
+      animation:orbitRotate 44s linear infinite;
+    }
+
+    @keyframes orbitRotate{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
+    }
+
+    .orbit-gems li{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:clamp(5.7rem,13vw,8.1rem);
+      min-height:clamp(4.85rem,11vw,6.85rem);
+      margin:calc(clamp(4.85rem,11vw,6.85rem) / -2) 0 0 calc(clamp(5.7rem,13vw,8.1rem) / -2);
+      color:inherit;
+    }
+
+    .orbit-gems li:nth-child(1){transform:rotate(0deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
+    .orbit-gems li:nth-child(2){transform:rotate(36deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
+    .orbit-gems li:nth-child(3){transform:rotate(72deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
+    .orbit-gems li:nth-child(4){transform:rotate(108deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
+    .orbit-gems li:nth-child(5){transform:rotate(144deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
+    .orbit-gems li:nth-child(6){transform:rotate(180deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
+    .orbit-gems li:nth-child(7){transform:rotate(216deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
+    .orbit-gems li:nth-child(8){transform:rotate(252deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
+    .orbit-gems li:nth-child(9){transform:rotate(288deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
+    .orbit-gems li:nth-child(10){transform:rotate(324deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
+
+    .orbit-gem{
+      width:100%;
+      min-height:100%;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      gap:.18rem;
+      padding:.62rem;
+      clip-path:var(--gem);
+      border:1px solid rgba(141,216,255,.34);
+      background:
+        radial-gradient(circle at 50% 16%,rgba(255,255,255,.30),transparent 24%),
+        radial-gradient(circle at 50% 58%,rgba(116,240,255,.16),transparent 55%),
+        linear-gradient(145deg,rgba(10,45,70,.96),rgba(3,8,20,.96));
+      box-shadow:
+        0 .85rem 1.85rem rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.16);
+      transform:rotate(var(--counter-rotate,0deg));
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
+    }
+
+    .orbit-gems li:nth-child(1) .orbit-gem{--counter-rotate:0deg}
+    .orbit-gems li:nth-child(2) .orbit-gem{--counter-rotate:-36deg}
+    .orbit-gems li:nth-child(3) .orbit-gem{--counter-rotate:-72deg}
+    .orbit-gems li:nth-child(4) .orbit-gem{--counter-rotate:-108deg}
+    .orbit-gems li:nth-child(5) .orbit-gem{--counter-rotate:-144deg}
+    .orbit-gems li:nth-child(6) .orbit-gem{--counter-rotate:-180deg}
+    .orbit-gems li:nth-child(7) .orbit-gem{--counter-rotate:-216deg}
+    .orbit-gems li:nth-child(8) .orbit-gem{--counter-rotate:-252deg}
+    .orbit-gems li:nth-child(9) .orbit-gem{--counter-rotate:-288deg}
+    .orbit-gems li:nth-child(10) .orbit-gem{--counter-rotate:-324deg}
+
+    .orbit-gem b{
+      color:var(--blue2);
+      font-size:.58rem;
+      line-height:1;
+      letter-spacing:.11em;
+      text-transform:uppercase;
+    }
+
+    .orbit-gem span{
+      color:rgba(255,244,216,.94);
+      font-size:clamp(.68rem,1.5vw,.82rem);
+      font-weight:950;
+      line-height:1.05;
+      letter-spacing:-.025em;
+    }
+
+    .orbit-gem:hover,
+    .orbit-gem:focus-visible{
+      border-color:rgba(143,240,195,.66);
+      filter:brightness(1.12);
+      outline:none;
+      transform:rotate(var(--counter-rotate,0deg)) translateY(-4px) scale(1.035);
+    }
+
+    .orbit-gem.gold{
+      border-color:rgba(243,200,111,.34);
+      background:
+        radial-gradient(circle at 50% 16%,rgba(255,255,255,.34),transparent 24%),
+        radial-gradient(circle at 50% 58%,rgba(243,200,111,.17),transparent 55%),
+        linear-gradient(145deg,rgba(70,48,10,.96),rgba(3,8,20,.96));
+    }
+
+    .orbit-gem.green{
+      border-color:rgba(143,240,195,.34);
+      background:
+        radial-gradient(circle at 50% 16%,rgba(255,255,255,.30),transparent 24%),
+        radial-gradient(circle at 50% 58%,rgba(143,240,195,.17),transparent 55%),
+        linear-gradient(145deg,rgba(10,62,45,.96),rgba(3,8,20,.96));
+    }
+
+    .orbit-gem.violet{
+      border-color:rgba(143,101,255,.34);
+      background:
+        radial-gradient(circle at 50% 16%,rgba(255,255,255,.30),transparent 24%),
+        radial-gradient(circle at 50% 58%,rgba(143,101,255,.20),transparent 55%),
+        linear-gradient(145deg,rgba(34,20,78,.96),rgba(3,8,20,.96));
+    }
+
+    .orbit-help{
+      position:relative;
+      z-index:2;
+      max-width:52rem;
+      margin:.8rem auto 0;
+      color:var(--soft);
+      text-align:center;
+      font-size:.92rem;
+    }
+
     .page-nav{
       position:sticky;
       top:.5rem;
@@ -529,6 +771,31 @@
       padding:clamp(1rem,3vw,1.45rem);
       display:grid;
       gap:1.05rem;
+      scroll-margin-top:7.5rem;
+    }
+
+    .section-return{
+      width:fit-content;
+      min-height:2.18rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(141,216,255,.38);
+      border-radius:999px;
+      padding:.44rem .72rem;
+      color:#06101c;
+      background:linear-gradient(135deg,#dff7ff,#8dd8ff);
+      font-size:.66rem;
+      font-weight:950;
+      letter-spacing:.065em;
+      text-transform:uppercase;
+      box-shadow:0 .65rem 1.4rem rgba(141,216,255,.12);
+    }
+
+    .section-return:hover,
+    .section-return:focus-visible{
+      transform:translateY(-2px);
+      outline:none;
     }
 
     .grid{
@@ -941,6 +1208,52 @@
       .split{grid-template-columns:1fr}
       .page-nav{position:relative;top:auto}
       html{scroll-padding-top:1rem}
+      .section{scroll-margin-top:1rem}
+
+      .orbit-field{
+        min-height:auto;
+        display:grid;
+        gap:1rem;
+      }
+
+      .orbit-ring{
+        display:none;
+      }
+
+      .center-gem{
+        margin:0 auto;
+      }
+
+      .orbit-gems{
+        position:relative;
+        inset:auto;
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:.7rem;
+        animation:none;
+      }
+
+      .orbit-gems li{
+        position:relative;
+        left:auto;
+        top:auto;
+        width:auto;
+        min-height:5.4rem;
+        margin:0;
+        transform:none!important;
+      }
+
+      .orbit-gem,
+      .orbit-gems li:nth-child(n) .orbit-gem{
+        clip-path:none;
+        border-radius:1rem;
+        transform:none;
+      }
+
+      .orbit-gem:hover,
+      .orbit-gem:focus-visible{
+        transform:translateY(-2px);
+      }
     }
 
     @media (max-width:720px){
@@ -951,7 +1264,8 @@
       .button{width:100%}
       .idea-strip,
       .micro-grid,
-      .doctrine-short{grid-template-columns:1fr}
+      .doctrine-short,
+      .orbit-gems{grid-template-columns:1fr}
       summary{align-items:flex-start}
     }
 
@@ -963,6 +1277,10 @@
         animation-duration:.01ms!important;
         animation-iteration-count:1!important;
         transition-duration:.01ms!important;
+      }
+
+      .orbit-gems{
+        animation:none!important;
       }
     }
   </style>
@@ -1010,16 +1328,103 @@
         </div>
 
         <div class="actions">
-          <a class="button blue" href="#loop">Open the Loop</a>
+          <a class="button blue" href="#water-orbit">Open Orbit</a>
           <a class="button green" href="#lattice">Water Lattice</a>
           <a class="button violet" href="#memory">Water Memory</a>
           <a class="button gold" href="#engineering">Engineering Notes</a>
         </div>
       </section>
 
-      <nav class="page-nav" aria-label="Water page navigation engine">
+      <section class="panel orbit-panel" id="water-orbit" aria-labelledby="water-orbit-title">
+        <div class="orbit-header">
+          <div class="kicker">Rotational Gem Orbit</div>
+          <h2 id="water-orbit-title">Choose a water path.</h2>
+          <p>
+            Use the orbit to jump into a section. Each section gives you a Return to Orbit control so the page can be explored without linear scrolling.
+          </p>
+        </div>
+
+        <div class="orbit-field" aria-label="Frontier Water rotational gem navigation">
+          <div class="orbit-ring" aria-hidden="true"></div>
+
+          <div class="center-gem" aria-hidden="true">
+            <strong>Water</strong>
+            <span>Closed loop · memory · survival</span>
+          </div>
+
+          <ul class="orbit-gems">
+            <li>
+              <a class="orbit-gem blue" href="#loop">
+                <b>Loop</b>
+                <span>Closed Loop</span>
+              </a>
+            </li>
+            <li>
+              <a class="orbit-gem green" href="#lattice">
+                <b>Lattice</b>
+                <span>Water Lattice</span>
+              </a>
+            </li>
+            <li>
+              <a class="orbit-gem violet" href="#memory">
+                <b>Memory</b>
+                <span>Water Memory</span>
+              </a>
+            </li>
+            <li>
+              <a class="orbit-gem" href="#science">
+                <b>Science</b>
+                <span>Science Stack</span>
+              </a>
+            </li>
+            <li>
+              <a class="orbit-gem gold" href="#audralia">
+                <b>World</b>
+                <span>Audralia Inheritance</span>
+              </a>
+            </li>
+            <li>
+              <a class="orbit-gem" href="#pressures">
+                <b>Pressure</b>
+                <span>System Pressures</span>
+              </a>
+            </li>
+            <li>
+              <a class="orbit-gem green" href="#modules">
+                <b>Modules</b>
+                <span>Technology Modules</span>
+              </a>
+            </li>
+            <li>
+              <a class="orbit-gem" href="#doctrine">
+                <b>Doctrine</b>
+                <span>Crew Doctrine</span>
+              </a>
+            </li>
+            <li>
+              <a class="orbit-gem gold" href="#engineering">
+                <b>Notes</b>
+                <span>Engineering Notes</span>
+              </a>
+            </li>
+            <li>
+              <a class="orbit-gem violet" href="#kill">
+                <b>Stop</b>
+                <span>Kill Conditions</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <p class="orbit-help">
+          Center: Water. Outer gems: the readable sections. Pick a gem, read the section, then return to orbit.
+        </p>
+      </section>
+
+      <nav class="page-nav" aria-label="Water page fallback navigation">
         <div class="page-nav-inner">
-          <a class="primary" href="#start">Start</a>
+          <a class="primary" href="#water-orbit">Orbit</a>
+          <a href="#start">Start</a>
           <a href="#loop">Closed Loop</a>
           <a href="#lattice">Water Lattice</a>
           <a href="#memory">Memory</a>
@@ -1055,6 +1460,7 @@
       <section class="panel section" id="loop" aria-labelledby="loop-title">
         <div class="kicker">Closed loop navigator</div>
         <h2 id="loop-title">The loop is the technology.</h2>
+        <a class="section-return" href="#water-orbit">Return to Orbit</a>
 
         <div class="loop-grid">
           <details open>
@@ -1125,6 +1531,7 @@
       <section class="panel section" id="lattice" aria-labelledby="lattice-title">
         <div class="kicker">Independent water lattice</div>
         <h2 id="lattice-title">Water gets its own math.</h2>
+        <a class="section-return" href="#water-orbit">Return to Orbit</a>
 
         <p>
           Frontier Water should not borrow terrain math, climate math, or surface math. It needs its own independent water lattice, then communicates with other systems through zipper law.
@@ -1192,6 +1599,7 @@
       <section class="panel section" id="memory" aria-labelledby="memory-title">
         <div class="kicker">Water memory</div>
         <h2 id="memory-title">Water remembers the system it passed through.</h2>
+        <a class="section-return" href="#water-orbit">Return to Orbit</a>
 
         <div class="grid three">
           <article class="card">
@@ -1239,6 +1647,7 @@
       <section class="panel section" id="audralia" aria-labelledby="audralia-title">
         <div class="kicker">Audralia inheritance</div>
         <h2 id="audralia-title">Audralia demonstrates what Frontier Water teaches.</h2>
+        <a class="section-return" href="#water-orbit">Return to Orbit</a>
 
         <p>
           This page is the Frontier Water lane. Audralia is the narrative inheritance layer: the place where closed-water logic becomes crew doctrine, settlement infrastructure, hydrology, emergency reserve, and story pressure.
@@ -1291,6 +1700,7 @@
       <section class="panel section" id="science" aria-labelledby="science-title">
         <div class="kicker">Frontier science stack</div>
         <h2 id="science-title">A closed water system is not one device.</h2>
+        <a class="section-return" href="#water-orbit">Return to Orbit</a>
 
         <div class="science-grid">
           <details>
@@ -1386,6 +1796,7 @@
       <section class="panel section" id="pressures" aria-labelledby="pressure-title">
         <div class="kicker">System pressures</div>
         <h2 id="pressure-title">Closed systems fail when water escapes the loop.</h2>
+        <a class="section-return" href="#water-orbit">Return to Orbit</a>
 
         <p>
           In an open system, mistakes can be diluted or flushed away. In a closed system, mistakes come back.
@@ -1422,6 +1833,7 @@
       <section class="panel section" id="modules" aria-labelledby="modules-title">
         <div class="kicker">Technology modules</div>
         <h2 id="modules-title">The system is modular, but the loop is one responsibility.</h2>
+        <a class="section-return" href="#water-orbit">Return to Orbit</a>
 
         <div class="module-grid">
           <details>
@@ -1545,6 +1957,7 @@
       <section class="panel section" id="doctrine" aria-labelledby="doctrine-title">
         <div class="kicker">Crew doctrine</div>
         <h2 id="doctrine-title">The crew does not waste water.</h2>
+        <a class="section-return" href="#water-orbit">Return to Orbit</a>
 
         <div class="doctrine-short">
           <div class="doctrine-card"><b>Measure</b><span>Measure before use.</span></div>
@@ -1581,6 +1994,7 @@
       <section class="panel section" id="engineering" aria-labelledby="engineering-title">
         <div class="kicker">Engineering notes</div>
         <h2 id="engineering-title">Technical language for deeper readers.</h2>
+        <a class="section-return" href="#water-orbit">Return to Orbit</a>
 
         <details open>
           <summary>
@@ -1646,6 +2060,7 @@
       <section class="panel section" id="kill" aria-labelledby="kill-title">
         <div class="kicker">Kill conditions</div>
         <h2 id="kill-title">The system stops if the loop cannot be trusted.</h2>
+        <a class="section-return" href="#water-orbit">Return to Orbit</a>
 
         <details>
           <summary>
@@ -1691,25 +2106,31 @@
         </div>
 
         <div class="actions">
-          <a class="button blue" href="#loop">Open Loop</a>
+          <a class="button blue" href="#water-orbit">Return to Orbit</a>
           <a class="button green" href="/showroom/globe/audralia/">Open Audralia</a>
           <a class="button gold" href="/frontier/">Return to Frontier</a>
           <a class="button" href="/gauges/">Check Gauges</a>
         </div>
 
         <div class="note">
-          Household water protection remains supporting context only. This route’s active focus is closed water system technology for frontier science, Audralia inheritance, independent water-lattice logic, and interplanetary research.
+          Household water protection remains supporting context only. This route’s active focus is closed water system technology for frontier science, Audralia inheritance, independent water-lattice logic, rotational gem orbit navigation, and interplanetary research.
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_WATER_INDEPENDENT_LATTICE_MEMORY_NAV_ENGINE_TNT_v3
+FRONTIER_WATER_ROTATIONAL_GEM_ORBIT_NAV_TNT_v4
 route=/explore/frontier/water/
 page=frontier_water
-previous=AUDRALIA_CLOSED_WATER_TED_NAV_ENGINE_TNT_v2
+previous=FRONTIER_WATER_INDEPENDENT_LATTICE_MEMORY_NAV_ENGINE_TNT_v3
 active_focus=closed_water_system_technology
 delivery_style=TED_Talk_educational_compression
-navigation_engine=anchor_nav,section_jumps,dropdown_disclosures,compact_cards
+navigation_engine=rotational_gem_orbit,anchor_nav,section_jumps,dropdown_disclosures,compact_cards
+rotational_gem_orbit_nav=active
+water_orbit_id=water-orbit
+return_to_orbit_controls=active
+orbit_sections=loop,lattice,memory,science,audralia,pressures,modules,doctrine,engineering,kill
+center_gem=Water
+outer_gems=Closed Loop,Water Lattice,Water Memory,Science Stack,Audralia Inheritance,System Pressures,Modules,Crew Doctrine,Engineering Notes,Kill Conditions
 public_layer=short_talk_sequence
 engineering_layer=collapsed_appendix
 audralia_layer=narrative_inheritance_visible
@@ -1724,8 +2145,10 @@ water_nodes=source,capture,screen,purify,balance,store,use,recover,reclaim,retur
 science_stack=hydrology,chemistry,filtration,membranes,biology,mineral_balance,atmospheric_cycling,wastewater_recovery,thermal_control,storage_engineering,sensors,emergency_reserves
 modules=intake,sediment,biological_control,chemical_reduction,membrane,ion_mineral_balance,wastewater_recovery,condensation_recovery,atmospheric_return,storage,sensor_audit,emergency_reserve
 audralia_inheritance=crew_doctrine,settlement_infrastructure,planetary_hydrology,emergency_reserves,narrative_pressure
-compression_model=public_talk_layer,navigation_engine_layer,disclosure_layer,engineering_appendix_layer,hidden_receipt_layer
+compression_model=public_talk_layer,rotational_orbit_layer,navigation_engine_layer,disclosure_layer,engineering_appendix_layer,hidden_receipt_layer
 heavy_runtime=false
+canvas=false
+webgl=false
 generated_image=false
 graphic_box=false
 visual_pass_claimed=false
@@ -1733,7 +2156,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      FRONTIER_WATER_INDEPENDENT_LATTICE_MEMORY_NAV_ENGINE_TNT_v3 · Water · Independent Lattice · Closed-System Frontier Science.
+      FRONTIER_WATER_ROTATIONAL_GEM_ORBIT_NAV_TNT_v4 · Water · Rotational Gem Orbit · Closed-System Frontier Science.
     </footer>
   </div>
 </body>

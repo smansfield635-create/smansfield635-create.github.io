@@ -2,20 +2,25 @@
 <html
   lang="en"
   data-route="/frontier/"
-  data-page="frontier-expansion-edge"
-  data-contract="FRONTIER_EXPANSION_EDGE_STARFIELD_CONSTELLATION_RENEWAL_TNT_v4"
-  data-previous-contract="FRONTIER_EXPANSION_EDGE_STARFIELD_PUBLIC_RENEWAL_TNT_v3"
+  data-page="frontier"
+  data-contract="FRONTIER_FIGURE_EIGHT_ORBITAL_STARFIELD_HTML_JS_TNT_v5"
+  data-previous-contract="FRONTIER_EXPANSION_EDGE_STARFIELD_CONSTELLATION_RENEWAL_TNT_v4"
   data-role="expansion-edge"
-  data-message="one-edge-eleven-lanes"
-  data-core-principle="the-unknown-still-needs-a-parent-map"
-  data-parent-route="/explore/"
-  data-lane-base="/explore/frontier/"
-  data-visual-system="organized-future-starfield-constellation"
-  data-animation-method="css-only"
-  data-js-required="false"
+  data-frontier-role="expansion-edge"
+  data-figure-eight-orbit="true"
+  data-center-anchor="Frontier_Future_Edge"
+  data-labels-front-facing="true"
+  data-shared-directional-flow="true"
+  data-star-wobble-allowed="true"
+  data-laws-role="proof-truth-scientific-backing-boundary"
+  data-gauges-role="measurement-audit-route-status-summary"
+  data-interactive-narrative-route="/showroom/globe/"
+  data-universe-route="/nine-summits/universe/"
+  data-showroom-role="visible-software-object-display"
+  data-products-role="community-practical-path"
+  data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
-  data-heavy-runtime-loaded="false"
   data-streaming="false"
   data-visual-pass-claimed="false"
 >
@@ -26,32 +31,36 @@
   <title>Frontier · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Frontier is the expansion edge of Diamond Gate Bridge: one edge, eleven lanes, and a parent map that keeps future paths coherent."
+    content="Frontier is the expansion edge of Diamond Gate Bridge: eleven future lanes held by a coherent figure-eight starfield, with Laws as proof and Gauges as route summary."
   >
+  <link rel="canonical" href="https://diamondgatebridge.com/frontier/">
+  <meta name="theme-color" content="#02040b">
 
   <style>
-    :root {
-      color-scheme: dark;
+    :root{
+      color-scheme:dark;
       --bg:#02040b;
       --ink:#fff4d8;
       --muted:rgba(230,238,255,.78);
-      --faint:rgba(230,238,255,.52);
+      --faint:rgba(230,238,255,.48);
       --gold:#f3c86f;
       --gold2:#ffe8a3;
       --blue:#8dd8ff;
       --green:#8ff0c3;
-      --violet:#beaaff;
-      --purple:#8f65ff;
-      --panel:rgba(9,15,31,.88);
+      --violet:#8f65ff;
+      --violet2:#cbb8ff;
+      --panel:rgba(9,15,31,.86);
       --line:rgba(184,205,255,.18);
-      --shadow:0 32px 110px rgba(0,0,0,.48);
+      --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
-      --star-cut:polygon(50% 0%,61% 34%,98% 34%,68% 55%,79% 91%,50% 70%,21% 91%,32% 55%,2% 34%,39% 34%);
+      --star:polygon(50% 0%,61% 35%,98% 35%,68% 56%,79% 91%,50% 70%,21% 91%,32% 56%,2% 35%,39% 35%);
+      --gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+      --orbit-time:48s;
     }
 
-    * { box-sizing:border-box; }
+    *{box-sizing:border-box}
 
-    html {
+    html{
       min-width:320px;
       min-height:100%;
       background:var(--bg);
@@ -59,7 +68,7 @@
       overflow-x:hidden;
     }
 
-    body {
+    body{
       margin:0;
       min-width:320px;
       min-height:100vh;
@@ -68,16 +77,16 @@
       line-height:1.5;
       overflow-x:hidden;
       background:
-        radial-gradient(circle at 50% -8%,rgba(243,200,111,.18),transparent 28rem),
-        radial-gradient(circle at 12% 18%,rgba(36,120,255,.18),transparent 28rem),
-        radial-gradient(circle at 88% 30%,rgba(143,101,255,.16),transparent 28rem),
-        radial-gradient(circle at 50% 84%,rgba(143,240,195,.10),transparent 34rem),
-        linear-gradient(180deg,#08101c 0%,#030713 58%,#010207 100%);
+        radial-gradient(circle at 50% -8%,rgba(243,200,111,.20),transparent 28rem),
+        radial-gradient(circle at 12% 18%,rgba(36,120,255,.22),transparent 30rem),
+        radial-gradient(circle at 88% 30%,rgba(141,216,255,.14),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(143,101,255,.14),transparent 34rem),
+        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
     }
 
-    body::before {
+    body::before{
       content:"";
       position:fixed;
       inset:0;
@@ -86,46 +95,21 @@
       background-image:
         radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
         linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(190,170,255,.045) 1px,transparent 1px);
+        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
       background-size:220px 260px,54px 54px,54px 54px;
-      opacity:.22;
+      opacity:.24;
       mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
 
-    body::after {
-      content:"";
-      position:fixed;
-      inset:-20%;
-      z-index:0;
-      pointer-events:none;
-      background:
-        conic-gradient(from 90deg at 50% 50%,
-          transparent 0deg,
-          rgba(36,120,255,.08) 52deg,
-          transparent 108deg,
-          rgba(243,200,111,.06) 172deg,
-          transparent 224deg,
-          rgba(143,101,255,.07) 292deg,
-          transparent 360deg);
-      filter:blur(42px);
-      opacity:.46;
-      animation:frontierAurora 38s linear infinite;
-    }
-
-    @keyframes frontierAurora {
-      from { transform:rotate(0deg) scale(1); }
-      to { transform:rotate(360deg) scale(1); }
-    }
-
-    a { color:inherit; text-decoration:none; }
+    a{color:inherit;text-decoration:none}
 
     a:focus-visible,
-    [tabindex]:focus-visible {
+    button:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
     }
 
-    .skip {
+    .skip{
       position:absolute;
       left:-999px;
       top:8px;
@@ -137,9 +121,9 @@
       font-weight:950;
     }
 
-    .skip:focus { left:8px; }
+    .skip:focus{left:8px}
 
-    .shell {
+    .shell{
       position:relative;
       z-index:2;
       width:min(var(--max),calc(100% - 28px));
@@ -147,7 +131,7 @@
       padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
     }
 
-    .topbar {
+    .topbar{
       display:grid;
       grid-template-columns:auto 1fr;
       align-items:center;
@@ -155,7 +139,7 @@
       padding:12px 0 18px;
     }
 
-    .brand {
+    .brand{
       display:grid;
       grid-template-columns:auto 1fr;
       align-items:center;
@@ -163,25 +147,26 @@
       min-width:260px;
     }
 
-    .brand-mark {
+    .brand-mark{
       width:4.2rem;
       height:4.2rem;
       display:grid;
       place-items:center;
       border:1px solid rgba(243,200,111,.44);
       transform:rotate(45deg);
-      clip-path:var(--star-cut);
+      clip-path:var(--gem);
       background:
-        radial-gradient(circle at 50% 36%,rgba(255,255,255,.38),transparent 32%),
-        radial-gradient(circle at 50% 70%,rgba(36,120,255,.24),transparent 62%),
-        linear-gradient(145deg,rgba(14,42,94,.96),rgba(5,8,20,.98));
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(36,120,255,.24),rgba(1,15,60,.62),rgba(143,101,255,.22),rgba(255,255,255,.28)),
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.30),transparent 42%),
+        linear-gradient(145deg,rgba(9,44,112,.95),rgba(5,8,20,.98));
       box-shadow:
-        0 0 2rem rgba(36,120,255,.24),
+        0 0 2rem rgba(36,120,255,.28),
         0 1.2rem 2.8rem rgba(0,0,0,.46),
         inset 0 1px 0 rgba(255,255,255,.16);
     }
 
-    .brand-mark span {
+    .brand-mark span{
       transform:rotate(-45deg);
       font-weight:950;
       letter-spacing:.04em;
@@ -189,18 +174,18 @@
       text-shadow:0 2px 10px rgba(0,0,0,.85);
     }
 
-    .brand-copy {
+    .brand-copy{
       display:grid;
       gap:.18rem;
     }
 
-    .brand-copy strong {
+    .brand-copy strong{
       font-size:clamp(1.08rem,3vw,1.7rem);
       line-height:1;
       letter-spacing:-.045em;
     }
 
-    .brand-copy span {
+    .brand-copy span{
       color:var(--muted);
       font-size:.74rem;
       font-weight:950;
@@ -208,14 +193,14 @@
       text-transform:uppercase;
     }
 
-    .nav {
+    .nav{
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
       gap:.48rem;
     }
 
-    .nav a {
+    .nav a{
       min-height:2.25rem;
       display:inline-flex;
       align-items:center;
@@ -230,29 +215,37 @@
       letter-spacing:.055em;
       text-transform:uppercase;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      transition:transform .18s ease,border-color .18s ease;
     }
 
-    .nav a[aria-current="page"] {
+    .nav a:hover,
+    .nav a:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.48);
+      outline:none;
+    }
+
+    .nav a[aria-current="page"]{
       border-color:rgba(243,200,111,.88);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
-    .panel {
+    .panel{
       border:1px solid var(--line);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
         radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
-        radial-gradient(circle at 86% 18%,rgba(143,101,255,.13),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(143,101,255,.14),transparent 28rem),
         linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
         var(--panel);
       box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
       overflow:hidden;
     }
 
-    .hero {
+    .hero{
       position:relative;
-      min-height:clamp(23rem,42vw,34rem);
+      min-height:clamp(24rem,42vw,34rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -261,7 +254,32 @@
       isolation:isolate;
     }
 
-    .kicker {
+    .hero::before{
+      content:"";
+      position:absolute;
+      right:clamp(1rem,6vw,5.5rem);
+      top:50%;
+      z-index:0;
+      width:clamp(9rem,25vw,18rem);
+      height:clamp(9rem,25vw,18rem);
+      border:1px solid rgba(243,200,111,.20);
+      border-radius:2.9rem;
+      transform:translateY(-50%) rotate(45deg);
+      background:
+        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
+        radial-gradient(circle at 50% 72%,rgba(36,120,255,.18),transparent 62%),
+        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      animation:anchorPulse 8s ease-in-out infinite;
+      pointer-events:none;
+      opacity:.52;
+    }
+
+    @keyframes anchorPulse{
+      0%,100%{opacity:.42;filter:brightness(.95)}
+      50%{opacity:.58;filter:brightness(1.1)}
+    }
+
+    .kicker{
       width:fit-content;
       display:inline-flex;
       align-items:center;
@@ -279,27 +297,28 @@
       z-index:2;
     }
 
-    .kicker::before {
+    .kicker::before{
       content:"";
       width:.72rem;
       height:.72rem;
-      clip-path:var(--star-cut);
-      background:linear-gradient(135deg,var(--blue),var(--gold));
-      box-shadow:0 0 1.1rem rgba(141,216,255,.42);
+      border-radius:.18rem;
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
     }
 
-    h1 {
+    h1{
       margin:0;
-      max-width:1000px;
-      font-size:clamp(3rem,9vw,6.8rem);
-      line-height:.86;
-      letter-spacing:-.102em;
+      max-width:980px;
+      font-size:clamp(3.1rem,10vw,7rem);
+      line-height:.84;
+      letter-spacing:-.105em;
       text-wrap:balance;
       position:relative;
       z-index:2;
     }
 
-    h2 {
+    h2{
       margin:0;
       color:var(--gold);
       font-size:clamp(1.45rem,4.7vw,2.65rem);
@@ -310,53 +329,32 @@
       z-index:2;
     }
 
-    p {
+    p{
       margin:0;
       color:var(--muted);
       font-size:clamp(.98rem,2.7vw,1.16rem);
       line-height:1.55;
     }
 
-    .lead {
-      max-width:930px;
+    .lead{
+      max-width:940px;
       position:relative;
       z-index:2;
     }
 
-    .subline {
-      max-width:920px;
-      color:rgba(255,244,216,.90);
-      font-size:clamp(1.08rem,2.8vw,1.34rem);
+    .principle{
+      max-width:980px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.92);
+      background:rgba(243,200,111,.065);
       font-weight:850;
       position:relative;
       z-index:2;
     }
 
-    .principle {
-      max-width:980px;
-      padding:1rem 1.1rem;
-      border:1px solid rgba(243,200,111,.24);
-      border-radius:1.2rem;
-      color:rgba(255,244,216,.96);
-      background:rgba(243,200,111,.070);
-      font-weight:900;
-      position:relative;
-      z-index:2;
-    }
-
-    .quote {
-      max-width:980px;
-      padding:1rem 1.1rem;
-      border:1px solid rgba(141,216,255,.20);
-      border-radius:1.2rem;
-      color:rgba(230,238,255,.90);
-      background:rgba(36,120,255,.070);
-      font-weight:850;
-      position:relative;
-      z-index:2;
-    }
-
-    .actions {
+    .actions{
       display:flex;
       flex-wrap:wrap;
       gap:.62rem;
@@ -365,7 +363,7 @@
       z-index:2;
     }
 
-    .button {
+    .button{
       min-height:2.65rem;
       display:inline-flex;
       align-items:center;
@@ -384,347 +382,460 @@
     }
 
     .button:hover,
-    .button:focus-visible {
+    .button:focus-visible{
       transform:translateY(-2px);
       border-color:rgba(243,200,111,.62);
       outline:none;
     }
 
-    .button.gold {
+    .button.gold{
       border-color:rgba(243,200,111,.9);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
     }
 
-    .button.blue {
-      border-color:rgba(141,216,255,.42);
-      color:var(--blue);
-      background:rgba(36,120,255,.08);
+    .button.violet{
+      border-color:rgba(143,101,255,.44);
+      color:var(--violet2);
+      background:rgba(143,101,255,.075);
     }
 
-    .button.green {
-      border-color:rgba(143,240,195,.42);
-      color:var(--green);
-      background:rgba(143,240,195,.07);
-    }
-
-    .section {
+    .section{
       margin-top:1.15rem;
       padding:clamp(1rem,3vw,1.45rem);
       display:grid;
       gap:1.05rem;
     }
 
-    .frontier-stage {
+    .frontier-orbit-stage{
+      --x-left:clamp(-18.5rem,-31vw,-9.2rem);
+      --x-right:clamp(9.2rem,31vw,18.5rem);
+      --x-mid-left:clamp(-11.2rem,-19vw,-5.7rem);
+      --x-mid-right:clamp(5.7rem,19vw,11.2rem);
+      --y-up:clamp(-9.4rem,-18vw,-5.7rem);
+      --y-down:clamp(5.7rem,18vw,9.4rem);
+      --y-bridge-up:clamp(-7.6rem,-15vw,-4.95rem);
+      --y-bridge-down:clamp(4.95rem,15vw,7.6rem);
       position:relative;
-      min-height:clamp(42rem,72vw,54rem);
+      min-height:clamp(34rem,92vw,50rem);
+      display:grid;
+      place-items:center;
       overflow:hidden;
       isolation:isolate;
       border:1px solid rgba(184,205,255,.13);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        radial-gradient(circle at 50% 42%,rgba(36,120,255,.15),transparent 20rem),
-        radial-gradient(circle at 50% 54%,rgba(143,101,255,.12),transparent 25rem),
-        radial-gradient(circle at 50% 76%,rgba(243,200,111,.08),transparent 30rem),
-        linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.92));
+        radial-gradient(circle at 50% 43%,rgba(141,216,255,.13),transparent 18rem),
+        radial-gradient(circle at 50% 62%,rgba(36,120,255,.13),transparent 24rem),
+        radial-gradient(circle at 50% 78%,rgba(243,200,111,.075),transparent 28rem),
+        linear-gradient(180deg,rgba(1,5,16,.70),rgba(2,6,16,.94));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-      display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
-      grid-template-rows:repeat(6,minmax(5.8rem,1fr));
-      gap:clamp(.35rem,1.3vw,.95rem);
-      align-items:center;
-      justify-items:center;
-      padding:clamp(1rem,3vw,2rem);
     }
 
-    .frontier-stage::before {
-      content:"";
-      position:absolute;
-      inset:6% 8%;
-      border:1px solid rgba(141,216,255,.12);
-      border-radius:48% 52% 46% 54%;
-      background:
-        linear-gradient(115deg,transparent 0 20%,rgba(141,216,255,.065) 21%,transparent 24% 100%),
-        linear-gradient(120deg,transparent 0 34%,rgba(243,200,111,.05) 35%,transparent 38% 100%);
-      box-shadow:
-        0 0 3rem rgba(36,120,255,.10),
-        inset 0 0 3rem rgba(143,101,255,.045);
-      animation:futureVector 34s linear infinite;
-      pointer-events:none;
-    }
-
-    .frontier-stage::after {
-      content:"";
-      position:absolute;
-      left:8%;
-      right:8%;
-      top:50%;
-      height:1px;
-      background:linear-gradient(90deg,transparent,rgba(141,216,255,.18),rgba(243,200,111,.22),transparent);
-      opacity:.72;
-      pointer-events:none;
-    }
-
-    @keyframes futureVector {
-      from { transform:rotate(-9deg) scale(1); }
-      to { transform:rotate(351deg) scale(1); }
-    }
-
-    .star-node {
-      position:relative;
-      width:var(--size,6rem);
-      height:var(--size,6rem);
-      display:grid;
-      place-items:center;
-      text-align:center;
-      color:var(--ink);
-      transition:transform .18s ease,filter .18s ease;
-      z-index:4;
-    }
-
-    .star-node:hover,
-    .star-node:focus-visible {
-      transform:scale(1.09);
-      filter:brightness(1.16) saturate(1.12);
-      outline:none;
-    }
-
-    .star-node::before {
-      content:"";
-      position:absolute;
-      right:58%;
-      top:50%;
-      width:clamp(2rem,5vw,5rem);
-      height:1px;
-      transform:translateY(-50%) rotate(-18deg);
-      background:linear-gradient(90deg,transparent,rgba(141,216,255,.36),rgba(243,200,111,.12),transparent);
-      opacity:.26;
-      pointer-events:none;
-    }
-
-    .star-shell {
-      position:absolute;
-      inset:0;
-      clip-path:var(--star-cut);
-      background:
-        radial-gradient(circle at 50% 34%,rgba(255,255,255,.82),transparent 18%),
-        radial-gradient(circle at 50% 50%,rgba(243,200,111,.42),transparent 34%),
-        radial-gradient(circle at 50% 64%,rgba(141,216,255,.30),transparent 62%),
-        linear-gradient(145deg,rgba(10,38,92,.84),rgba(5,8,20,.98) 62%,rgba(143,101,255,.20));
-      box-shadow:
-        0 0 1.3rem rgba(141,216,255,.30),
-        0 0 2.2rem rgba(243,200,111,.16),
-        0 1rem 2.2rem rgba(0,0,0,.34),
-        inset 0 1px 0 rgba(255,255,255,.20);
-      animation:starPulse 5.8s ease-in-out infinite;
-      animation-delay:var(--delay,0s);
-    }
-
-    .star-shell::before,
-    .star-shell::after {
+    .frontier-orbit-stage::before,
+    .frontier-orbit-stage::after{
       content:"";
       position:absolute;
       left:50%;
       top:50%;
-      transform:translate(-50%,-50%);
-      background:rgba(255,244,216,.62);
+      width:min(45%,22rem);
+      height:min(52%,25rem);
+      border:1px solid rgba(243,200,111,.11);
+      border-radius:50%;
       pointer-events:none;
-    }
-
-    .star-shell::before {
-      width:138%;
-      height:1px;
-      opacity:.36;
-    }
-
-    .star-shell::after {
-      width:1px;
-      height:138%;
-      opacity:.26;
-    }
-
-    .center-star {
-      --size:clamp(8.6rem,15vw,11.8rem);
-      z-index:8;
-      pointer-events:none;
-      grid-column:3;
-      grid-row:3 / span 2;
-    }
-
-    .center-star .star-shell {
-      background:
-        radial-gradient(circle at 50% 34%,rgba(255,255,255,.90),transparent 17%),
-        radial-gradient(circle at 50% 48%,rgba(243,200,111,.52),transparent 35%),
-        radial-gradient(circle at 50% 70%,rgba(36,120,255,.36),transparent 64%),
-        linear-gradient(145deg,rgba(18,42,90,.96),rgba(5,8,20,.98));
       box-shadow:
-        0 0 2.2rem rgba(243,200,111,.28),
-        0 0 3.4rem rgba(141,216,255,.24),
-        0 1.5rem 3rem rgba(0,0,0,.42),
-        inset 0 1px 0 rgba(255,255,255,.20);
+        0 0 3rem rgba(36,120,255,.10),
+        inset 0 0 30px rgba(141,216,255,.04);
     }
 
-    .control-star {
-      --size:clamp(5.7rem,10vw,7.8rem);
-      z-index:7;
+    .frontier-orbit-stage::before{
+      transform:translate(-88%,-50%) rotate(-8deg);
     }
 
-    .lane-star {
-      --size:clamp(4.55rem,8vw,6.2rem);
-      z-index:6;
+    .frontier-orbit-stage::after{
+      transform:translate(-12%,-50%) rotate(8deg);
     }
 
-    .node-compass { grid-column:3; grid-row:1; }
-    .node-explore { grid-column:1; grid-row:3; }
-    .node-laws { grid-column:5; grid-row:3; }
-    .node-gauges { grid-column:3; grid-row:6; }
-
-    .node-closed-loop { grid-column:2; grid-row:2; }
-    .node-vision { grid-column:3; grid-row:2; }
-    .node-energy { grid-column:4; grid-row:2; }
-
-    .node-trajectory { grid-column:1; grid-row:4; }
-    .node-urban { grid-column:2; grid-row:3; }
-    .node-infrastructure { grid-column:4; grid-row:3; }
-    .node-lattice { grid-column:5; grid-row:4; }
-
-    .node-shimmer { grid-column:2; grid-row:5; }
-    .node-waste { grid-column:3; grid-row:5; }
-    .node-water { grid-column:4; grid-row:5; }
-    .node-manual { grid-column:3; grid-row:4; }
-
-    @keyframes starPulse {
-      0%,100% { filter:brightness(.96); transform:scale(1); }
-      50% { filter:brightness(1.18); transform:scale(1.045); }
+    .frontier-guide-line{
+      position:absolute;
+      inset:8%;
+      z-index:1;
+      pointer-events:none;
+      opacity:.52;
+      background:
+        linear-gradient(135deg,transparent 48%,rgba(141,216,255,.12) 49%,transparent 51%),
+        linear-gradient(45deg,transparent 48%,rgba(243,200,111,.10) 49%,transparent 51%);
+      mask-image:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,.82),transparent 67%);
     }
 
-    .star-label {
+    .frontier-anchor{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:8;
+      width:clamp(8.8rem,24vw,13.5rem);
+      height:clamp(8.8rem,24vw,13.5rem);
+      display:grid;
+      place-items:center;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+      isolation:isolate;
+    }
+
+    .frontier-orbit{
+      position:absolute;
+      inset:0;
+      z-index:5;
+      pointer-events:none;
+    }
+
+    .frontier-node{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:clamp(5.3rem,14vw,7.6rem);
+      height:clamp(5.3rem,14vw,7.6rem);
+      display:grid;
+      place-items:center;
+      pointer-events:auto;
+      transform:translate(var(--x-left),0);
+      animation:frontierFigureEightOrbit var(--orbit-time) linear infinite;
+      animation-delay:var(--orbit-delay,0s);
+      isolation:isolate;
+      will-change:transform;
+    }
+
+    .frontier-node:hover,
+    .frontier-node:focus-visible{
+      outline:none;
+      filter:brightness(1.14) saturate(1.08);
+    }
+
+    .frontier-node:nth-child(1){--orbit-delay:0s}
+    .frontier-node:nth-child(2){--orbit-delay:-6s}
+    .frontier-node:nth-child(3){--orbit-delay:-12s}
+    .frontier-node:nth-child(4){--orbit-delay:-18s}
+    .frontier-node:nth-child(5){--orbit-delay:-24s}
+    .frontier-node:nth-child(6){--orbit-delay:-30s}
+    .frontier-node:nth-child(7){--orbit-delay:-36s}
+    .frontier-node:nth-child(8){--orbit-delay:-42s}
+
+    @keyframes frontierFigureEightOrbit{
+      0%,100%{
+        transform:translate(var(--x-left),0) scale(.94);
+      }
+
+      12.5%{
+        transform:translate(var(--x-mid-left),var(--y-up)) scale(.84);
+      }
+
+      25%{
+        transform:translate(0,var(--y-bridge-up)) scale(.90);
+      }
+
+      37.5%{
+        transform:translate(var(--x-mid-right),var(--y-up)) scale(.84);
+      }
+
+      50%{
+        transform:translate(var(--x-right),0) scale(.94);
+      }
+
+      62.5%{
+        transform:translate(var(--x-mid-right),var(--y-down)) scale(1.04);
+      }
+
+      75%{
+        transform:translate(0,var(--y-bridge-down)) scale(.98);
+      }
+
+      87.5%{
+        transform:translate(var(--x-mid-left),var(--y-down)) scale(1.04);
+      }
+    }
+
+    .frontier-star-body,
+    .frontier-anchor-body{
+      position:absolute;
+      inset:0;
+      clip-path:var(--star);
+      opacity:.98;
+      background:
+        radial-gradient(circle at 50% 14%,rgba(255,255,255,.92),transparent 18%),
+        radial-gradient(circle at 50% 44%,rgba(141,216,255,.38),transparent 42%),
+        conic-gradient(from 36deg at 50% 50%,
+          rgba(255,255,255,.88),
+          rgba(87,132,255,.78),
+          rgba(10,20,60,.96),
+          rgba(143,101,255,.76),
+          rgba(243,200,111,.28),
+          rgba(255,255,255,.76)),
+        linear-gradient(180deg,rgba(208,230,255,.92),rgba(21,32,82,.98));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.38),
+        inset 0 -1.1rem 1.4rem rgba(0,0,0,.34),
+        0 1.1rem 1.35rem rgba(0,0,0,.48),
+        0 0 1rem rgba(141,216,255,.18);
+      filter:
+        drop-shadow(0 1rem 1.25rem rgba(0,0,0,.48))
+        drop-shadow(0 0 1rem rgba(141,216,255,.18));
+      animation:
+        frontierStarSpin 16s linear infinite,
+        frontierStarBreathe 5.8s ease-in-out infinite;
+      transform-origin:50% 50%;
+    }
+
+    .frontier-anchor-body{
+      opacity:1;
+      background:
+        radial-gradient(circle at 50% 13%,rgba(255,255,255,.95),transparent 18%),
+        radial-gradient(circle at 50% 46%,rgba(243,200,111,.28),transparent 42%),
+        conic-gradient(from 36deg at 50% 50%,
+          rgba(255,255,255,.90),
+          rgba(141,216,255,.76),
+          rgba(16,28,78,.98),
+          rgba(143,101,255,.82),
+          rgba(243,200,111,.36),
+          rgba(255,255,255,.82)),
+        linear-gradient(180deg,rgba(226,238,255,.96),rgba(20,22,72,.98));
+      animation:
+        frontierStarSpin 26s linear infinite,
+        frontierAnchorPulse 7.8s ease-in-out infinite;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.42),
+        inset 0 -1.3rem 1.6rem rgba(0,0,0,.34),
+        0 1.4rem 2rem rgba(0,0,0,.52),
+        0 0 2rem rgba(141,216,255,.22),
+        0 0 2.6rem rgba(243,200,111,.10);
+    }
+
+    .frontier-star-body::before,
+    .frontier-anchor-body::before{
+      content:"";
+      position:absolute;
+      inset:18% 10% 34%;
+      clip-path:polygon(50% 0%,100% 38%,74% 100%,26% 100%,0% 38%);
+      background:
+        linear-gradient(135deg,rgba(255,255,255,.40),rgba(141,216,255,.12) 45%,rgba(5,9,25,.10));
+      opacity:.78;
+      pointer-events:none;
+    }
+
+    .frontier-star-body::after,
+    .frontier-anchor-body::after{
+      content:"";
+      position:absolute;
+      left:16%;
+      top:47%;
+      width:70%;
+      height:12%;
+      transform:rotate(-22deg);
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.68),rgba(255,232,163,.20),transparent);
+      opacity:.42;
+      pointer-events:none;
+      animation:frontierStarGlint 8s ease-in-out infinite;
+    }
+
+    @keyframes frontierStarSpin{
+      to{transform:rotate(360deg)}
+    }
+
+    @keyframes frontierStarBreathe{
+      0%,100%{filter:brightness(1) saturate(1)}
+      50%{filter:brightness(1.12) saturate(1.08)}
+    }
+
+    @keyframes frontierAnchorPulse{
+      0%,100%{filter:brightness(1) saturate(1)}
+      50%{filter:brightness(1.13) saturate(1.10)}
+    }
+
+    @keyframes frontierStarGlint{
+      0%,100%{opacity:.18;transform:translateX(-12%) rotate(-22deg)}
+      50%{opacity:.55;transform:translateX(12%) rotate(-22deg)}
+    }
+
+    .frontier-label{
       position:relative;
-      z-index:3;
+      z-index:4;
       width:86%;
+      min-height:2.65rem;
       display:grid;
       place-items:center;
       gap:.1rem;
+      padding:.36rem .44rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:.78rem;
       text-align:center;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,255,255,.18),transparent 62%),
+        rgba(4,6,18,.48);
+      box-shadow:
+        0 .55rem 1rem rgba(0,0,0,.30),
+        inset 0 1px 0 rgba(255,255,255,.10);
       pointer-events:none;
-      text-shadow:
-        0 2px 12px rgba(0,0,0,.96),
-        0 0 10px rgba(0,28,90,.80),
-        0 0 2px rgba(255,255,255,.48);
+      transform:translateZ(1px);
+      backdrop-filter:blur(5px);
     }
 
-    .star-label b {
+    .frontier-label b{
       display:block;
       color:rgba(255,244,216,.98);
-      font-size:clamp(.46rem,1.15vw,.70rem);
+      font-size:clamp(.46rem,1.15vw,.62rem);
       font-weight:950;
-      letter-spacing:.07em;
+      letter-spacing:.08em;
       line-height:1.02;
       text-transform:uppercase;
+      text-shadow:
+        0 2px 12px rgba(0,0,0,.95),
+        0 0 10px rgba(0,28,90,.80),
+        0 0 2px rgba(255,255,255,.42);
     }
 
-    .star-label span {
+    .frontier-label span{
       color:rgba(230,238,255,.78);
-      font-size:clamp(.34rem,.78vw,.48rem);
+      font-size:clamp(.32rem,.82vw,.42rem);
       font-weight:900;
       letter-spacing:.08em;
+      line-height:1;
       text-transform:uppercase;
     }
 
-    .center-star .star-label b {
+    .frontier-anchor .frontier-label{
+      width:76%;
+      min-height:3.2rem;
+    }
+
+    .frontier-anchor .frontier-label b{
       color:var(--gold);
-      font-size:clamp(.72rem,1.8vw,1rem);
+      font-size:clamp(.72rem,1.7vw,1rem);
       letter-spacing:.14em;
     }
 
-    .center-star .star-label span {
-      font-size:clamp(.56rem,1.1vw,.74rem);
+    .frontier-anchor .frontier-label span{
+      font-size:clamp(.46rem,1vw,.62rem);
     }
 
     .lane-grid,
-    .route-card-grid {
+    .return-grid{
       display:grid;
       gap:.85rem;
       grid-template-columns:repeat(4,minmax(0,1fr));
     }
 
-    .card,
-    .route-card {
+    .lane-card,
+    .return-card{
+      position:relative;
+      min-height:12rem;
       display:grid;
       gap:.6rem;
-      min-height:100%;
+      align-content:start;
       padding:1rem;
       border:1px solid rgba(255,255,255,.12);
-      border-radius:1.2rem;
+      border-radius:1.25rem;
       background:
         radial-gradient(circle at 20% 0%,rgba(36,120,255,.10),transparent 60%),
         rgba(255,255,255,.035);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      overflow:hidden;
+      transition:transform .18s ease,border-color .18s ease;
     }
 
-    .card:hover,
-    .card:focus-within,
-    .route-card:hover,
-    .route-card:focus-visible {
+    .return-card{
+      min-height:10rem;
+    }
+
+    .lane-card::after,
+    .return-card::after{
+      content:"";
+      position:absolute;
+      right:.8rem;
+      top:.75rem;
+      width:3.6rem;
+      height:3.6rem;
+      clip-path:var(--star);
+      opacity:.32;
+      background:
+        radial-gradient(circle at 50% 14%,rgba(255,255,255,.70),transparent 18%),
+        conic-gradient(from 36deg at 50% 50%,rgba(255,255,255,.50),rgba(87,132,255,.42),rgba(8,16,48,.74),rgba(243,200,111,.16),rgba(255,255,255,.40));
+      filter:drop-shadow(0 .7rem .9rem rgba(0,0,0,.32));
+      pointer-events:none;
+    }
+
+    .lane-card:hover,
+    .lane-card:focus-visible,
+    .return-card:hover,
+    .return-card:focus-visible{
       transform:translateY(-3px);
       border-color:rgba(243,200,111,.46);
       outline:none;
     }
 
-    .card b,
-    .route-card b {
+    .lane-card b,
+    .return-card b{
       color:var(--gold);
       font-size:.68rem;
       letter-spacing:.12em;
       text-transform:uppercase;
+      position:relative;
+      z-index:2;
     }
 
-    .card strong,
-    .route-card strong {
+    .lane-card strong,
+    .return-card strong{
       color:rgba(255,244,216,.98);
-      font-size:1.15rem;
+      font-size:1.08rem;
       line-height:1.1;
+      position:relative;
+      z-index:2;
     }
 
-    .card span,
-    .route-card span {
+    .lane-card span,
+    .return-card span{
       color:var(--muted);
       font-size:.94rem;
       line-height:1.42;
+      position:relative;
+      z-index:2;
     }
 
-    .final-direction {
-      padding:1.1rem;
-      border:1px solid rgba(243,200,111,.22);
-      border-radius:1.2rem;
-      background:
-        radial-gradient(circle at 20% 0%,rgba(243,200,111,.10),transparent 60%),
-        rgba(243,200,111,.045);
-      display:grid;
-      gap:.65rem;
-    }
-
-    .final-direction strong {
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.2rem,3.6vw,2rem);
-      line-height:1.05;
-      letter-spacing:-.04em;
-    }
-
-    .open-path {
+    .open-path{
       margin-top:auto;
       color:rgba(230,238,255,.88);
-      font-size:.76rem;
+      font-size:.74rem;
       font-weight:950;
       letter-spacing:.12em;
       text-transform:uppercase;
+      position:relative;
+      z-index:2;
+    }
+
+    .final-band{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.35rem);
+      display:grid;
+      gap:.9rem;
+      border:1px solid rgba(243,200,111,.28);
+      border-radius:clamp(1.25rem,5vw,2rem);
+      background:
+        radial-gradient(circle at 16% 0%,rgba(243,200,111,.10),transparent 36%),
+        radial-gradient(circle at 86% 26%,rgba(36,120,255,.12),transparent 34%),
+        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.024));
+      box-shadow:0 1.5rem 4rem rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .final-band strong{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.2rem,3vw,1.55rem);
+      line-height:1.05;
+      letter-spacing:-.04em;
     }
 
     .route-receipt,
     [data-route-receipt],
     [data-contract-receipt],
     [data-debug-receipt],
-    .receipt {
+    .receipt{
       display:none!important;
       visibility:hidden!important;
       overflow:hidden!important;
@@ -743,151 +854,135 @@
       white-space:nowrap!important;
     }
 
-    footer {
+    footer{
       padding:1.35rem 0 .5rem;
       color:var(--faint);
       text-align:center;
       font-size:.76rem;
     }
 
-    @media (max-width:1080px) {
-      .lane-grid,
-      .route-card-grid {
-        grid-template-columns:repeat(2,minmax(0,1fr));
+    @supports not (animation-timeline:auto){
+      .frontier-node{
+        animation:frontierFigureEightOrbit var(--orbit-time) linear infinite;
       }
-
-      .frontier-stage {
-        min-height:clamp(40rem,92vw,52rem);
-        grid-template-columns:repeat(4,minmax(0,1fr));
-        grid-template-rows:repeat(7,minmax(5.4rem,1fr));
-      }
-
-      .node-compass { grid-column:2 / span 2; grid-row:1; }
-      .node-explore { grid-column:1; grid-row:3; }
-      .node-laws { grid-column:4; grid-row:3; }
-      .node-gauges { grid-column:2 / span 2; grid-row:7; }
-
-      .center-star { grid-column:2 / span 2; grid-row:4; }
-
-      .node-closed-loop { grid-column:1; grid-row:2; }
-      .node-vision { grid-column:2; grid-row:2; }
-      .node-energy { grid-column:3; grid-row:2; }
-      .node-infrastructure { grid-column:4; grid-row:2; }
-
-      .node-urban { grid-column:1; grid-row:4; }
-      .node-trajectory { grid-column:1; grid-row:5; }
-      .node-lattice { grid-column:4; grid-row:5; }
-
-      .node-shimmer { grid-column:1; grid-row:6; }
-      .node-waste { grid-column:2; grid-row:6; }
-      .node-water { grid-column:3; grid-row:6; }
-      .node-manual { grid-column:4; grid-row:6; }
     }
 
-    @media (max-width:980px) {
-      .topbar {
+    @media (max-width:1080px){
+      .lane-grid,
+      .return-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media (max-width:980px){
+      .topbar{
         grid-template-columns:1fr;
         align-items:start;
       }
 
-      .nav { justify-content:flex-start; }
+      .nav{justify-content:flex-start}
     }
 
-    @media (max-width:760px) {
-      .shell { width:min(100% - 22px,var(--max)); }
+    @media (max-width:720px){
+      .shell{width:min(100% - 22px,var(--max))}
+      h1{font-size:clamp(3rem,17vw,5rem)}
 
-      h1 { font-size:clamp(3rem,17vw,5rem); }
-
-      .hero {
-        min-height:28rem;
+      .hero{
+        min-height:27rem;
         padding:1rem;
       }
 
-      .actions { display:grid; }
-      .button { width:100%; }
-
-      .frontier-stage {
-        min-height:auto;
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        grid-auto-rows:minmax(6rem,auto);
-        grid-template-rows:none;
-        gap:.85rem;
-        padding:1rem;
+      .actions{
+        display:grid;
       }
 
-      .star-node {
-        width:6.8rem;
-        height:6.8rem;
+      .button{
+        width:100%;
       }
 
-      .star-node:hover,
-      .star-node:focus-visible {
-        transform:scale(1.06);
+      .frontier-orbit-stage{
+        min-height:35rem;
       }
 
-      .star-node::before {
-        width:3.2rem;
-        opacity:.18;
+      .frontier-label{
+        width:90%;
+        min-height:2.35rem;
+        padding:.28rem .32rem;
       }
 
-      .center-star {
-        grid-column:1 / -1;
-        grid-row:auto;
-        width:9rem;
-        height:9rem;
-        order:-3;
+      .frontier-label b{
+        font-size:.38rem;
       }
 
-      .control-star {
-        width:7rem;
-        height:7rem;
-        order:-2;
+      .frontier-label span{
+        font-size:.28rem;
       }
 
-      .lane-star {
-        width:6.3rem;
-        height:6.3rem;
+      .frontier-anchor .frontier-label b{
+        font-size:.64rem;
       }
 
-      .node-compass,
-      .node-explore,
-      .node-laws,
-      .node-gauges,
-      .node-closed-loop,
-      .node-vision,
-      .node-energy,
-      .node-infrastructure,
-      .node-urban,
-      .node-trajectory,
-      .node-lattice,
-      .node-shimmer,
-      .node-waste,
-      .node-water,
-      .node-manual {
-        grid-column:auto;
-        grid-row:auto;
+      .frontier-anchor .frontier-label span{
+        font-size:.42rem;
       }
-
-      .star-label b { font-size:.42rem; }
-      .star-label span { font-size:.33rem; }
-
-      .center-star .star-label b { font-size:.64rem; }
-      .center-star .star-label span { font-size:.48rem; }
 
       .lane-grid,
-      .route-card-grid {
+      .return-grid{
         grid-template-columns:1fr;
       }
     }
 
-    @media (prefers-reduced-motion:reduce) {
+    @media (max-width:430px){
+      .frontier-orbit-stage{
+        min-height:33rem;
+      }
+
+      .frontier-node{
+        width:4.95rem;
+        height:4.95rem;
+      }
+
+      .frontier-label{
+        min-height:2.15rem;
+      }
+
+      .frontier-label span{
+        display:none;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
       *,
       *::before,
-      *::after {
+      *::after{
         scroll-behavior:auto!important;
         animation-duration:.01ms!important;
         animation-iteration-count:1!important;
         transition-duration:.01ms!important;
+      }
+
+      .frontier-node{
+        animation:none!important;
+      }
+
+      .frontier-orbit{
+        position:relative;
+        inset:auto;
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:.8rem;
+        width:100%;
+        max-width:36rem;
+        padding:1rem;
+        pointer-events:auto;
+      }
+
+      .frontier-node{
+        position:relative;
+        left:auto;
+        top:auto;
+        transform:none!important;
+        margin:auto;
       }
     }
   </style>
@@ -912,7 +1007,8 @@
         <a href="/home/">Home</a>
         <a href="/explore/">Explore</a>
         <a href="/laws/">Laws</a>
-        <a href="/nine-summits/">Nine Summits</a>
+        <a href="/showroom/globe/">Interactive Narrative</a>
+        <a href="/nine-summits/universe/">Universe</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/frontier/" aria-current="page">Frontier</a>
@@ -923,198 +1019,291 @@
     <main id="frontier-main">
       <section class="panel hero" aria-labelledby="page-title">
         <div class="kicker">Frontier · Expansion Edge</div>
+
         <h1 id="page-title">One edge. Eleven lanes.</h1>
 
-        <p class="subline">The unknown still needs a parent map.</p>
+        <h2>The unknown still needs a parent map.</h2>
 
         <p class="lead">
-          Frontier carries the edge of what can be built next without letting the unknown detach from the map. Eleven lanes aim forward like stars, but the return routes stay visible.
+          Frontier keeps future territory open without letting it detach from Laws, Universe, Interactive Narrative, Products, Showroom, and route summary.
         </p>
 
         <div class="principle">
-          Expansion remains coherent when every future path still knows how to return.
-        </div>
-
-        <div class="quote">
           Frontier does not pretend unfinished territory is complete. It keeps the future open, named, and attached to the estate.
         </div>
 
         <div class="actions">
-          <a class="button gold" href="/explore/">Return to Explore</a>
-          <a class="button blue" href="/laws/">Read Boundary</a>
-          <a class="button green" href="/gauges/">Read Proof</a>
+          <a class="button gold" href="/laws/">Open Laws</a>
+          <a class="button" href="/gauges/">Check Gauges</a>
+          <a class="button violet" href="/showroom/globe/">Enter Interactive Narrative</a>
+          <a class="button" href="/nine-summits/universe/">Open Universe</a>
+          <a class="button" href="/explore/">Return to Explore</a>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="field-title">
-        <div class="kicker">Eleven Frontier lanes</div>
-        <h2 id="field-title">The expansion edge becomes an organized future starfield.</h2>
+      <section class="panel section" aria-labelledby="orbit-title">
+        <div class="kicker">Figure-eight starfield</div>
+        <h2 id="orbit-title">The expansion edge moves through a figure-eight starfield.</h2>
 
-        <div class="frontier-stage" aria-label="Frontier organized future starfield expansion map">
-          <a class="star-node control-star node-compass" style="--delay:-.2s" href="/" aria-label="Open Compass">
-            <span class="star-shell" aria-hidden="true"></span>
-            <span class="star-label"><b>Compass</b><span>Root</span></span>
+        <div class="frontier-orbit-stage" aria-label="Frontier figure-eight orbital starfield">
+          <div class="frontier-guide-line" aria-hidden="true"></div>
+
+          <a class="frontier-anchor" href="/frontier/" aria-label="Frontier future edge">
+            <span class="frontier-anchor-body" aria-hidden="true"></span>
+            <span class="frontier-label">
+              <b>Frontier</b>
+              <span>Future Edge</span>
+            </span>
           </a>
 
-          <a class="star-node control-star node-explore" style="--delay:-.6s" href="/explore/" aria-label="Open Explore">
-            <span class="star-shell" aria-hidden="true"></span>
-            <span class="star-label"><b>Explore</b><span>Map</span></span>
-          </a>
+          <div class="frontier-orbit" aria-label="Primary Frontier figure-eight route orbit">
+            <a class="frontier-node" href="/" aria-label="Compass root">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Compass</b><span>Root</span></span>
+            </a>
 
-          <a class="star-node control-star node-laws" style="--delay:-1s" href="/laws/" aria-label="Open Laws">
-            <span class="star-shell" aria-hidden="true"></span>
-            <span class="star-label"><b>Laws</b><span>Boundary</span></span>
-          </a>
+            <a class="frontier-node" href="/explore/" aria-label="Explore map">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Explore</b><span>Map</span></span>
+            </a>
 
-          <a class="star-node control-star node-gauges" style="--delay:-1.4s" href="/gauges/" aria-label="Open Gauges">
-            <span class="star-shell" aria-hidden="true"></span>
-            <span class="star-label"><b>Gauges</b><span>Proof</span></span>
-          </a>
+            <a class="frontier-node" href="/laws/" aria-label="Laws proof">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Laws</b><span>Proof</span></span>
+            </a>
 
-          <div class="star-node center-star" style="--delay:-1.8s" aria-hidden="true">
-            <span class="star-shell"></span>
-            <span class="star-label"><b>Frontier</b><span>Future Edge</span></span>
+            <a class="frontier-node" href="/showroom/globe/" aria-label="Interactive Narrative">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Interactive</b><span>Narrative</span></span>
+            </a>
+
+            <a class="frontier-node" href="/nine-summits/universe/" aria-label="Universe world">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Universe</b><span>World</span></span>
+            </a>
+
+            <a class="frontier-node" href="/showroom/" aria-label="Showroom object display">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Showroom</b><span>Object</span></span>
+            </a>
+
+            <a class="frontier-node" href="/products/" aria-label="Products use">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Products</b><span>Use</span></span>
+            </a>
+
+            <a class="frontier-node" href="/gauges/" aria-label="Gauges summary">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Gauges</b><span>Summary</span></span>
+            </a>
           </div>
-
-          <a class="star-node lane-star node-closed-loop" style="--delay:-.25s" href="/explore/frontier/closed-loop/" aria-label="Closed Loop lane">
-            <span class="star-shell" aria-hidden="true"></span>
-            <span class="star-label"><b>Closed Loop</b><span>Feedback</span></span>
-          </a>
-
-          <a class="star-node lane-star node-energy" style="--delay:-.7s" href="/explore/frontier/energy/" aria-label="Energy lane">
-            <span class="star-shell" aria-hidden="true"></span>
-            <span class="star-label"><b>Energy</b><span>Power</span></span>
-          </a>
-
-          <a class="star-node lane-star node-infrastructure" style="--delay:-1.15s" href="/explore/frontier/infrastructure/" aria-label="Infrastructure lane">
-            <span class="star-shell" aria-hidden="true"></span>
-            <span class="star-label"><b>Infrastructure</b><span>Support</span></span>
-          </a>
-
-          <a class="star-node lane-star node-lattice" style="--delay:-1.6s" href="/explore/frontier/lattice/" aria-label="Lattice lane">
-            <span class="star-shell" aria-hidden="true"></span>
-            <span class="star-label"><b>Lattice</b><span>Grid</span></span>
-          </a>
-
-          <a class="star-node lane-star node-manual" style="--delay:-2.05s" href="/explore/frontier/manual/" aria-label="Manual lane">
-            <span class="star-shell" aria-hidden="true"></span>
-            <span class="star-label"><b>Manual</b><span>Guide</span></span>
-          </a>
-
-          <a class="star-node lane-star node-shimmer" style="--delay:-2.5s" href="/explore/frontier/shimmer/" aria-label="Shimmer lane">
-            <span class="star-shell" aria-hidden="true"></span>
-            <span class="star-label"><b>Shimmer</b><span>Signal</span></span>
-          </a>
-
-          <a class="star-node lane-star node-trajectory" style="--delay:-2.95s" href="/explore/frontier/trajectory/" aria-label="Trajectory lane">
-            <span class="star-shell" aria-hidden="true"></span>
-            <span class="star-label"><b>Trajectory</b><span>Motion</span></span>
-          </a>
-
-          <a class="star-node lane-star node-urban" style="--delay:-3.4s" href="/explore/frontier/urban/" aria-label="Urban lane">
-            <span class="star-shell" aria-hidden="true"></span>
-            <span class="star-label"><b>Urban</b><span>City</span></span>
-          </a>
-
-          <a class="star-node lane-star node-vision" style="--delay:-3.85s" href="/explore/frontier/vision/" aria-label="Vision lane">
-            <span class="star-shell" aria-hidden="true"></span>
-            <span class="star-label"><b>Vision</b><span>Future</span></span>
-          </a>
-
-          <a class="star-node lane-star node-waste" style="--delay:-4.3s" href="/explore/frontier/waste/" aria-label="Waste lane">
-            <span class="star-shell" aria-hidden="true"></span>
-            <span class="star-label"><b>Waste</b><span>Reuse</span></span>
-          </a>
-
-          <a class="star-node lane-star node-water" style="--delay:-4.75s" href="/explore/frontier/water/" aria-label="Water lane">
-            <span class="star-shell" aria-hidden="true"></span>
-            <span class="star-label"><b>Water</b><span>Flow</span></span>
-          </a>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="lanes-title">
         <div class="kicker">Lane map</div>
-        <h2 id="lanes-title">Each star names a future path without detaching it from the parent map.</h2>
+        <h2 id="lanes-title">Each future lane stays named without overcrowding the orbit.</h2>
 
         <div class="lane-grid">
-          <a class="card" href="/explore/frontier/closed-loop/"><b>Closed Loop</b><strong>Feedback</strong><span>Return signals, correction paths, and loops that make future systems accountable.</span><span class="open-path">Open lane</span></a>
-          <a class="card" href="/explore/frontier/energy/"><b>Energy</b><strong>Power</strong><span>Power, force, supply, motion, and the energy required to keep expansion alive.</span><span class="open-path">Open lane</span></a>
-          <a class="card" href="/explore/frontier/infrastructure/"><b>Infrastructure</b><strong>Support</strong><span>Roads, frameworks, utilities, supports, and systems that let the edge function.</span><span class="open-path">Open lane</span></a>
-          <a class="card" href="/explore/frontier/lattice/"><b>Lattice</b><strong>Grid</strong><span>Pattern, structure, placement, relationship, and measurable expansion logic.</span><span class="open-path">Open lane</span></a>
-          <a class="card" href="/explore/frontier/manual/"><b>Manual</b><strong>Guide</strong><span>Instructions, methods, field notes, operating language, and how-to structure.</span><span class="open-path">Open lane</span></a>
-          <a class="card" href="/explore/frontier/shimmer/"><b>Shimmer</b><strong>Signal</strong><span>Light, indication, attention, surface change, and the visible clue that something is moving.</span><span class="open-path">Open lane</span></a>
-          <a class="card" href="/explore/frontier/trajectory/"><b>Trajectory</b><strong>Motion</strong><span>Direction, path, launch, arc, impact, and movement across future distance.</span><span class="open-path">Open lane</span></a>
-          <a class="card" href="/explore/frontier/urban/"><b>Urban</b><strong>City</strong><span>Civic density, public systems, movement corridors, and built-world pressure.</span><span class="open-path">Open lane</span></a>
-          <a class="card" href="/explore/frontier/vision/"><b>Vision</b><strong>Future</strong><span>Near future, distant future, public imagination, and the horizon beyond the current map.</span><span class="open-path">Open lane</span></a>
-          <a class="card" href="/explore/frontier/waste/"><b>Waste</b><strong>Reuse</strong><span>Material return, discarded value, repair paths, reuse, and cleaner system design.</span><span class="open-path">Open lane</span></a>
-          <a class="card" href="/explore/frontier/water/"><b>Water</b><strong>Flow</strong><span>Water movement, support, storage, shimmer, routing, and life-carrying infrastructure.</span><span class="open-path">Open lane</span></a>
+          <a class="lane-card" href="/explore/frontier/closed-loop/">
+            <b>Closed Loop</b>
+            <strong>Feedback</strong>
+            <span>Return signals, correction paths, and loops that make future systems accountable.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/energy/">
+            <b>Energy</b>
+            <strong>Power</strong>
+            <span>Power, force, supply, motion, and the energy required to keep expansion alive.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/infrastructure/">
+            <b>Infrastructure</b>
+            <strong>Support</strong>
+            <span>Roads, frameworks, utilities, supports, and systems that let the edge function.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/lattice/">
+            <b>Lattice</b>
+            <strong>Grid</strong>
+            <span>Pattern, structure, placement, relationship, and measurable expansion logic.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/manual/">
+            <b>Manual</b>
+            <strong>Guide</strong>
+            <span>Instructions, methods, field notes, operating language, and how-to structure.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/shimmer/">
+            <b>Shimmer</b>
+            <strong>Signal</strong>
+            <span>Light, indication, attention, surface change, and the visible clue that something is moving.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/trajectory/">
+            <b>Trajectory</b>
+            <strong>Motion</strong>
+            <span>Direction, path, launch, arc, impact, and movement across future distance.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/urban/">
+            <b>Urban</b>
+            <strong>City</strong>
+            <span>Civic density, public systems, movement corridors, and built-world pressure.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/vision/">
+            <b>Vision</b>
+            <strong>Future</strong>
+            <span>Near future, distant future, public imagination, and the horizon beyond the current map.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/waste/">
+            <b>Waste</b>
+            <strong>Reuse</strong>
+            <span>Material return, discarded value, repair paths, reuse, and cleaner system design.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/water/">
+            <b>Water</b>
+            <strong>Flow</strong>
+            <span>Water movement, support, storage, shimmer, routing, and life-carrying infrastructure.</span>
+            <span class="open-path">Open lane</span>
+          </a>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="routes-title">
+      <section class="panel section" aria-labelledby="return-title">
         <div class="kicker">Keep the edge attached</div>
-        <h2 id="routes-title">Expansion remains coherent when return routes stay visible.</h2>
+        <h2 id="return-title">Expansion remains coherent when return routes stay visible.</h2>
 
-        <div class="route-card-grid">
-          <a class="route-card" href="/"><b>Compass</b><strong>Return to the root.</strong><span>The estate control surface keeps orientation clean.</span><span class="open-path">Open Compass</span></a>
-          <a class="route-card" href="/door/"><b>Door</b><strong>Cross the threshold.</strong><span>The visitor enters the estate without every room doing the same job.</span><span class="open-path">Open Door</span></a>
-          <a class="route-card" href="/home/"><b>Home</b><strong>Stabilize the journey.</strong><span>Home receives the visitor and keeps movement coherent.</span><span class="open-path">Open Home</span></a>
-          <a class="route-card" href="/explore/"><b>Explore</b><strong>Return through the map.</strong><span>Explore keeps discovery and traversal attached to the larger estate.</span><span class="open-path">Open Explore</span></a>
-          <a class="route-card" href="/laws/"><b>Laws</b><strong>Keep the boundary.</strong><span>Boundary keeps the future from expanding without discipline.</span><span class="open-path">Open Laws</span></a>
-          <a class="route-card" href="/showroom/"><b>Showroom</b><strong>Inspect public expression.</strong><span>The visible build can be checked without collapsing into explanation.</span><span class="open-path">Open Showroom</span></a>
-          <a class="route-card" href="/products/"><b>Products</b><strong>Move into usable chambers.</strong><span>The message becomes tools, games, supports, and product lanes.</span><span class="open-path">Open Products</span></a>
-          <a class="route-card" href="/gauges/"><b>Gauges</b><strong>Measure route truth.</strong><span>Gauges confirm what the served page actually contains.</span><span class="open-path">Read Gauges</span></a>
+        <div class="return-grid">
+          <a class="return-card" href="/">
+            <b>Compass</b>
+            <strong>Return to the root.</strong>
+            <span>The estate control surface keeps orientation clean.</span>
+            <span class="open-path">Open Compass</span>
+          </a>
+
+          <a class="return-card" href="/door/">
+            <b>Door</b>
+            <strong>Cross the threshold.</strong>
+            <span>The visitor enters the estate without every room doing the same job.</span>
+            <span class="open-path">Open Door</span>
+          </a>
+
+          <a class="return-card" href="/home/">
+            <b>Home</b>
+            <strong>Stabilize the journey.</strong>
+            <span>Home receives the visitor and keeps movement coherent.</span>
+            <span class="open-path">Open Home</span>
+          </a>
+
+          <a class="return-card" href="/explore/">
+            <b>Explore</b>
+            <strong>Return through the map.</strong>
+            <span>Explore keeps discovery and traversal attached to the larger estate.</span>
+            <span class="open-path">Open Explore</span>
+          </a>
+
+          <a class="return-card" href="/laws/">
+            <b>Laws</b>
+            <strong>Proof, truth, and boundary.</strong>
+            <span>Laws keeps the future from expanding without discipline, consequence, or scientific backing.</span>
+            <span class="open-path">Open Laws</span>
+          </a>
+
+          <a class="return-card" href="/showroom/globe/">
+            <b>Interactive Narrative</b>
+            <strong>Enter the world path.</strong>
+            <span>Story, worlds, consequence, survival, and possibility remain attached to the map.</span>
+            <span class="open-path">Enter Narrative</span>
+          </a>
+
+          <a class="return-card" href="/nine-summits/universe/">
+            <b>Universe</b>
+            <strong>Open the world around the climb.</strong>
+            <span>The Universe keeps the climb attached to its larger world setting.</span>
+            <span class="open-path">Open Universe</span>
+          </a>
+
+          <a class="return-card" href="/showroom/">
+            <b>Showroom</b>
+            <strong>Inspect visible objects.</strong>
+            <span>Showroom carries visible software-object display without becoming the proof path.</span>
+            <span class="open-path">Open Showroom</span>
+          </a>
+
+          <a class="return-card" href="/products/">
+            <b>Products</b>
+            <strong>Move into usable chambers.</strong>
+            <span>The message becomes tools, games, supports, and product lanes.</span>
+            <span class="open-path">Open Products</span>
+          </a>
+
+          <a class="return-card" href="/gauges/">
+            <b>Gauges</b>
+            <strong>Summarize route truth.</strong>
+            <span>Gauges summarize what the served page contains, holds, or needs reviewed.</span>
+            <span class="open-path">Check Gauges</span>
+          </a>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="final-title">
-        <div class="final-direction">
-          <strong id="final-title">Frontier keeps the future open without losing the map.</strong>
-          <p>
-            The unknown can expand, but it cannot float away. Eleven stars carry the edge forward while Compass, Explore, Laws, and Gauges keep the route grounded.
-          </p>
+      <section class="final-band" aria-label="Frontier final statement">
+        <strong>Frontier keeps the future open without losing the map.</strong>
+        <p>
+          Eleven future lanes carry the edge forward while Compass, Laws, Interactive Narrative, Universe, Products, Showroom, and Gauges keep the route grounded.
+        </p>
 
-          <div class="actions">
-            <a class="button gold" href="/explore/">Return to Explore</a>
-            <a class="button blue" href="/laws/">Read Boundary</a>
-            <a class="button green" href="/gauges/">Read Proof</a>
-          </div>
+        <div class="actions">
+          <a class="button gold" href="/laws/">Open Laws</a>
+          <a class="button violet" href="/showroom/globe/">Enter Interactive Narrative</a>
+          <a class="button" href="/nine-summits/universe/">Open Universe</a>
+          <a class="button" href="/gauges/">Check Gauges</a>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_EXPANSION_EDGE_STARFIELD_CONSTELLATION_RENEWAL_TNT_v4
-previous=FRONTIER_EXPANSION_EDGE_STARFIELD_PUBLIC_RENEWAL_TNT_v3
+FRONTIER_FIGURE_EIGHT_ORBITAL_STARFIELD_HTML_JS_TNT_v5
+previous=FRONTIER_EXPANSION_EDGE_STARFIELD_CONSTELLATION_RENEWAL_TNT_v4
 route=/frontier/
 page=frontier
-role=expansion_edge
-message=One edge. Eleven lanes.
-core_principle=The unknown still needs a parent map.
-public_copy=Frontier carries the edge of what can be built next without letting the unknown detach from the map.
-center=frontier_future_edge
-design_object=organized_future_starfield_constellation
-public_visual_language=the_expansion_edge_becomes_an_organized_future_starfield
-control_stars=compass,explore,laws,gauges
-foreground_core=compass,explore,laws,gauges,frontier
-lanes=closed_loop,energy,infrastructure,lattice,manual,shimmer,trajectory,urban,vision,waste,water
-layout=constellation_grid_not_vertical_stack
-lane_base=/explore/frontier/
-parent_route=/explore/
-boundary_route=/laws/
-proof_route=/gauges/
-return_route=/explore/
-visible_label_corrections=Explore_not_Manor,Return_to_Explore_not_Return_to_Manor,stars_not_gems,organized_constellation_not_overlapping_stack
-receipt_visibility=hidden_template_only
-visual_system=css_only_organized_future_starfield_expansion_edge
-animation_method=css_only
-js_required=false
-route_owns=frontier_root,expansion_edge,11_lane_links,future_starfield_constellation,control_stars,return_routes,hidden_receipt
-route_does_not_own=frontier_lane_pages,body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic,products_root,showroom_runtime
+frontier_role=expansion_edge
+figure_eight_orbit=true
+center_anchor=Frontier_Future_Edge
+primary_orbit_routes=Compass,Explore,Laws,Interactive_Narrative,Universe,Showroom,Products,Gauges
+future_lanes=Closed_Loop,Energy,Infrastructure,Lattice,Manual,Shimmer,Trajectory,Urban,Vision,Waste,Water
+labels_front_facing=true
+shared_directional_flow=true
+star_wobble_allowed=true
+solid_opaque_star_body=true
+laws_role=proof_truth_scientific_backing_boundary
+gauges_role=measurement_audit_route_status_summary
+gauges_not_proof_path=true
+gauges_not_progress_engine=true
+interactive_narrative_route=/showroom/globe/
+universe_route=/nine-summits/universe/
+showroom_role=visible_software_object_display
+products_role=community_practical_path
+visual_correction=static_stacked_starfield_renewed_as_figure_eight_orbital_starfield
+mobile_law=primary_orbit_contained_future_lanes_preserved_below
+removed_language=Gauges_as_Proof,Read_Proof_to_Gauges,static_vertical_primary_star_stack,missing_Universe,missing_Interactive_Narrative
+preserved=Frontier_identity,expansion_edge,eleven_future_lanes,return_route_clarity,star_visual_language,no_generated_image,no_GraphicBox
+route_owns=frontier_public_copy,figure_eight_starfield_css,primary_orbit_routes,future_lane_cards,return_route_cards,hidden_receipt
+route_does_not_own=laws_page,gauges_logic,products_page,universe_page,interactive_narrative_route,showroom_page,generated_assets,graphic_tools
 heavy_runtime_loaded=false
-render_files_touched=false
-instrument_touched=false
-gauges_logic_touched=false
 generated_image=false
 graphic_box=false
 streaming=false
@@ -1123,7 +1312,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      FRONTIER_EXPANSION_EDGE_STARFIELD_CONSTELLATION_RENEWAL_TNT_v4 · Frontier · Expansion Edge · Organized Future Starfield.
+      FRONTIER_FIGURE_EIGHT_ORBITAL_STARFIELD_HTML_JS_TNT_v5 · Frontier · Figure-Eight Starfield · Laws proof · Gauges summary.
     </footer>
   </div>
 </body>

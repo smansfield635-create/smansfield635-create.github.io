@@ -3,17 +3,20 @@
   lang="en"
   data-route="/explore/frontier/energy/"
   data-page="frontier-energy"
-  data-contract="FRONTIER_ENERGY_DUAL_LENS_SINGLE_FILE_TNT_v3"
-  data-previous-contract="FRONTIER_ENERGY_CLEAS_TED_NAV_ENGINE_TNT_v2"
+  data-contract="FRONTIER_ENERGY_READINESS_DUAL_LENS_DREAM_LAYER_SINGLE_FILE_TNT_v4"
+  data-previous-contract="FRONTIER_ENERGY_DUAL_LENS_SINGLE_FILE_TNT_v3"
+  data-source-packet="FRONTIER_FUSION_SOLAR_PLASMA_DEVELOPMENT_v1"
   data-source-psalm="PSALM_PACKET_ENERGY_RND_SOLAR_PLASMA_FUSION_v1.0"
-  data-audralia-inheritance="AUDRALIA_CREW_ENERGY_DISCOVERY_INHERITANCE_CANON_v1"
   data-file-strategy="single-full-file-replacement"
-  data-lens-model="engineering-lens-and-platform-lens-inside-one-file"
-  data-engineering-lens="plain-standards-facing-language"
-  data-platform-lens="TED-talk-public-explanation-under-the-hood"
-  data-cleas="Closed-Loop Energy Architecture Standard"
-  data-farmland-storage="Agricultural Energy Storage Field"
-  data-farmland-role="midstream-storage-only"
+  data-active-focus="Frontier-Energy-Readiness"
+  data-science-lock="fusion-real-commercial-power-not-procurement-ready"
+  data-math-lock="Q-target-Q-plasma-Q-plant-separated"
+  data-possibility-lock="prepare-load-storage-timing-infrastructure-for-future-advanced-energy"
+  data-development-lanes="Commercial-Now,Bridge-Infrastructure,Frontier-Energy-Readiness"
+  data-development-objects="Frontier-Energy-Readiness-Index,Advanced-Energy-Buffer-Model,Future-Offtake-Readiness-Map"
+  data-farmland-storage="bridge-infrastructure-midstream-storage-only"
+  data-dream-layer="Mirrorland-Audralia-imaginative-inheritance-without-public-overclaim"
+  data-final-lock="do-not-sell-fusion-sell-readiness"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -24,10 +27,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Energy · Dual Lens · Frontier · Diamond Gate Bridge</title>
+  <title>Energy · Frontier Readiness · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Frontier Energy explains CLEAS through one file with two lenses: Engineering Lens and Platform Lens. It covers clean energy placement, storage fields, safeguards, Audralia inheritance, and closed-loop energy standards without deployment overclaim."
+    content="Frontier Energy Readiness helps high-load businesses control today's energy risk while preparing for tomorrow's advanced power infrastructure. Fusion is real but not commercially procurement-ready; the page separates science, math, possibility, bridge infrastructure, readiness objects, and Audralia narrative inheritance."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/explore/frontier/energy/">
   <meta name="theme-color" content="#02040b">
@@ -464,12 +467,9 @@
     .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
     .grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
 
-    .lens-pair{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.85rem;
-    }
-
+    .card,
+    .lane,
+    .object,
     .lens{
       position:relative;
       display:grid;
@@ -481,58 +481,9 @@
       overflow:hidden;
     }
 
-    .lens.engineering{
-      border-color:rgba(141,216,255,.24);
-      background:
-        radial-gradient(circle at 18% 0%,rgba(141,216,255,.10),transparent 56%),
-        rgba(255,255,255,.035);
-    }
-
-    .lens.platform{
-      border-color:rgba(243,200,111,.24);
-      background:
-        radial-gradient(circle at 18% 0%,rgba(243,200,111,.10),transparent 56%),
-        rgba(255,255,255,.035);
-    }
-
-    .lens b{
-      font-size:.68rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .lens.engineering b{color:var(--blue)}
-    .lens.platform b{color:var(--gold2)}
-
-    .lens strong{
-      color:rgba(255,244,216,.98);
-      font-size:1.08rem;
-      line-height:1.12;
-    }
-
-    .lens span,
-    .lens p{
-      color:var(--muted);
-      font-size:.96rem;
-      line-height:1.44;
-    }
-
-    .card{
-      position:relative;
-      min-height:100%;
-      display:grid;
-      gap:.6rem;
-      align-content:start;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.25rem;
-      background:
-        radial-gradient(circle at 20% 0%,rgba(243,200,111,.10),transparent 60%),
-        rgba(255,255,255,.035);
-      overflow:hidden;
-    }
-
-    .card::after{
+    .card::after,
+    .lane::after,
+    .object::after{
       content:"";
       position:absolute;
       right:.8rem;
@@ -540,14 +491,15 @@
       width:3.4rem;
       height:3.4rem;
       clip-path:var(--bolt);
-      opacity:.18;
-      background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.65),transparent 20%),
-        linear-gradient(180deg,rgba(243,200,111,.62),rgba(50,28,8,.88));
+      opacity:.16;
+      background:linear-gradient(180deg,rgba(243,200,111,.62),rgba(50,28,8,.88));
       pointer-events:none;
     }
 
-    .card b{
+    .card b,
+    .lane b,
+    .object b,
+    .lens b{
       color:var(--gold2);
       font-size:.68rem;
       letter-spacing:.12em;
@@ -556,22 +508,61 @@
       z-index:2;
     }
 
-    .card strong{
+    .card strong,
+    .lane strong,
+    .object strong,
+    .lens strong{
       color:rgba(255,244,216,.98);
       font-size:1.08rem;
-      line-height:1.1;
+      line-height:1.12;
       position:relative;
       z-index:2;
     }
 
     .card span,
-    .card p{
+    .lane span,
+    .object span,
+    .lens span,
+    .card p,
+    .lane p,
+    .object p,
+    .lens p{
       color:var(--muted);
-      font-size:.94rem;
+      font-size:.95rem;
       line-height:1.42;
       position:relative;
       z-index:2;
     }
+
+    .science{border-color:rgba(141,216,255,.24);background:radial-gradient(circle at 18% 0%,rgba(141,216,255,.10),transparent 56%),rgba(255,255,255,.035)}
+    .math{border-color:rgba(243,200,111,.26);background:radial-gradient(circle at 18% 0%,rgba(243,200,111,.10),transparent 56%),rgba(255,255,255,.035)}
+    .possibility{border-color:rgba(143,240,195,.22);background:radial-gradient(circle at 18% 0%,rgba(143,240,195,.09),transparent 56%),rgba(255,255,255,.035)}
+    .dream{border-color:rgba(143,101,255,.28);background:radial-gradient(circle at 18% 0%,rgba(143,101,255,.12),transparent 56%),rgba(255,255,255,.035)}
+
+    .lens-pair{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.85rem;
+    }
+
+    .lens.engineering{
+      border-color:rgba(141,216,255,.24);
+      background:radial-gradient(circle at 18% 0%,rgba(141,216,255,.10),transparent 56%),rgba(255,255,255,.035);
+    }
+
+    .lens.platform{
+      border-color:rgba(243,200,111,.24);
+      background:radial-gradient(circle at 18% 0%,rgba(243,200,111,.10),transparent 56%),rgba(255,255,255,.035);
+    }
+
+    .lens.dream{
+      border-color:rgba(143,101,255,.28);
+      background:radial-gradient(circle at 18% 0%,rgba(143,101,255,.12),transparent 56%),rgba(255,255,255,.035);
+    }
+
+    .lens.engineering b{color:var(--blue)}
+    .lens.platform b{color:var(--gold2)}
+    .lens.dream b{color:var(--violet2)}
 
     details{
       border:1px solid rgba(255,255,255,.13);
@@ -669,6 +660,7 @@
     .tag.gold{border-color:rgba(243,200,111,.28);background:rgba(243,200,111,.06)}
     .tag.blue{border-color:rgba(141,216,255,.28);background:rgba(141,216,255,.06)}
     .tag.green{border-color:rgba(143,240,195,.26);background:rgba(143,240,195,.055)}
+    .tag.violet{border-color:rgba(143,101,255,.30);background:rgba(143,101,255,.075)}
     .tag.red{border-color:rgba(255,157,145,.26);background:rgba(255,157,145,.055)}
 
     ul{margin:0;padding-left:1.1rem;color:var(--muted)}
@@ -774,7 +766,7 @@
         <span class="brand-mark" aria-hidden="true"><span>EN</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge · Frontier</span>
-          <strong>Energy · Dual Lens</strong>
+          <strong>Energy · Readiness</strong>
         </span>
       </a>
 
@@ -792,295 +784,314 @@
 
     <main id="start">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Energy · One File · Two Lenses · One Standard</div>
+        <div class="kicker">Frontier Energy Readiness</div>
 
-        <h1 id="page-title">Energy must be placed before it can serve.</h1>
+        <h1 id="page-title">Do not sell fusion. Build readiness.</h1>
 
-        <h2>Clean energy is not only generated. It must be stored, protected, measured, and released through systems people can trust.</h2>
+        <h2>Fusion is real, but commercial fusion electricity is not procurement-ready.</h2>
 
         <p class="lead">
-          The Energy lane teaches how CLEAS turns energy from a headline into infrastructure: solar support, storage fields, upstream risk control, downstream safety, loop closure, and narrative inheritance for Audralia.
+          The opportunity now is to help high-load businesses control today’s energy risk, prepare storage, strengthen infrastructure, and build optionality for future advanced power markets.
         </p>
 
         <div class="principle">
-          One file. Two lenses. One standard.
+          Do not sell fusion. Sell readiness for the energy world that fusion may eventually create.
         </div>
 
         <div class="actions">
-          <a class="button gold" href="#lenses">Open Two Lenses</a>
-          <a class="button blue" href="#storage-fields">Storage Fields</a>
-          <a class="button green" href="#audralia">Audralia Inheritance</a>
-          <a class="button violet" href="#engineering">Engineering Notes</a>
+          <a class="button gold" href="#lanes">Commercial Now</a>
+          <a class="button blue" href="#lanes">Bridge Infrastructure</a>
+          <a class="button green" href="#objects">Readiness Index</a>
+          <a class="button violet" href="#dream">Dream Layer</a>
         </div>
       </section>
 
       <nav class="page-nav" aria-label="Energy page navigation engine">
         <div class="page-nav-inner">
           <a class="primary" href="#start">Start</a>
-          <a href="#lenses">Two Lenses</a>
-          <a href="#loop">Energy Loop</a>
-          <a href="#cleas">CLEAS</a>
-          <a href="#storage-fields">Storage Fields</a>
-          <a href="#safety">Safety</a>
+          <a href="#split">Science</a>
+          <a href="#math">Math</a>
+          <a href="#lanes">Three Lanes</a>
+          <a href="#objects">Readiness Index</a>
+          <a href="#objects">Buffer Model</a>
+          <a href="#objects">Offtake Map</a>
+          <a href="#lenses">Dual Lens</a>
+          <a href="#dream">Dream Layer</a>
           <a href="#audralia">Audralia</a>
-          <a href="#engineering">Engineering Notes</a>
           <a href="#kill">Kill Conditions</a>
         </div>
       </nav>
 
+      <section class="panel section" id="split" aria-labelledby="split-title">
+        <div class="kicker">Science · Math · Possibility</div>
+        <h2 id="split-title">Separate what is real from what is ready.</h2>
+
+        <div class="grid three">
+          <article class="card science">
+            <b>Science</b>
+            <strong>Fusion is real.</strong>
+            <span>Controlled fusion requires plasma. Plasma must be heated, confined, stabilized, and sustained. Commercial plant-level electricity is not procurement-ready.</span>
+          </article>
+
+          <article class="card math">
+            <b>Math</b>
+            <strong>Gain types are not the same.</strong>
+            <span>Q_target, Q_plasma, and Q_plant must be separated. Target gain alone does not prove commercial electricity.</span>
+          </article>
+
+          <article class="card possibility">
+            <b>Possibility</b>
+            <strong>Businesses can prepare now.</strong>
+            <span>The path is not solar becomes fusion. The path is preparing load, storage, timing, contracts, site control, and infrastructure.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" id="math" aria-labelledby="math-title">
+        <div class="kicker">Math lock</div>
+        <h2 id="math-title">Plant-level net electricity decides commercial viability.</h2>
+
+        <div class="grid three">
+          <article class="card">
+            <b>Q_target</b>
+            <strong>Target gain.</strong>
+            <span>Fusion energy from target divided by energy delivered to target.</span>
+          </article>
+
+          <article class="card">
+            <b>Q_plasma</b>
+            <strong>Plasma gain.</strong>
+            <span>Fusion thermal power divided by external plasma heating power.</span>
+          </article>
+
+          <article class="card">
+            <b>Q_plant</b>
+            <strong>Plant gain.</strong>
+            <span>Net electric output divided by total facility energy input.</span>
+          </article>
+        </div>
+
+        <div class="note">
+          Commercial viability requires sustainable Q_plant greater than 1 after plasma heating, driver energy, confinement, cooling, pumping, fuel cycle, control systems, maintenance, conversion losses, and reset costs.
+        </div>
+      </section>
+
+      <section class="panel section" id="lanes" aria-labelledby="lanes-title">
+        <div class="kicker">Three development lanes</div>
+        <h2 id="lanes-title">Readiness becomes the category.</h2>
+
+        <div class="grid three">
+          <article class="lane">
+            <b>Lane 1 · Commercial Now</b>
+            <strong>Revenue through energy risk control.</strong>
+            <p>Usage aggregation, bill auditing, future-dated agreements, price protection, battery storage, and solar as hedge where ownership allows.</p>
+            <div class="chip-wall">
+              <span class="tag gold">CFO</span>
+              <span class="tag gold">COO</span>
+              <span class="tag gold">Treasury</span>
+              <span class="tag green">Sellable Now</span>
+            </div>
+          </article>
+
+          <article class="lane">
+            <b>Lane 2 · Bridge Infrastructure</b>
+            <strong>Prepare for volatility and future adoption.</strong>
+            <p>Battery storage feasibility, peak shaving, backup power, site ownership review, interconnection review, solar hedge review, load-shape analysis, and Agricultural Energy Storage Fields where appropriate.</p>
+            <div class="chip-wall">
+              <span class="tag blue">Data Centers</span>
+              <span class="tag blue">Cold Storage</span>
+              <span class="tag blue">Industrial</span>
+              <span class="tag green">Advisory</span>
+            </div>
+          </article>
+
+          <article class="lane">
+            <b>Lane 3 · Frontier Energy Readiness</b>
+            <strong>Create the advanced-energy lane early.</strong>
+            <p>Fusion-readiness assessment, advanced power offtake readiness, pulsed-power buffer planning, long-duration storage review, future clean baseload strategy, and frontier technology watch brief.</p>
+            <div class="chip-wall">
+              <span class="tag violet">High MW</span>
+              <span class="tag violet">Infrastructure</span>
+              <span class="tag violet">Investors</span>
+              <span class="tag green">Paid Readiness</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" id="objects" aria-labelledby="objects-title">
+        <div class="kicker">Development objects</div>
+        <h2 id="objects-title">The page now has usable readiness products.</h2>
+
+        <div class="grid three">
+          <article class="object">
+            <b>Object 1</b>
+            <strong>Frontier Energy Readiness Index.</strong>
+            <p>Measures whether a business is structurally prepared for future advanced-energy adoption.</p>
+            <div class="chip-wall">
+              <span class="tag">Not Ready</span>
+              <span class="tag">Partially Ready</span>
+              <span class="tag green">Infrastructure-Ready</span>
+              <span class="tag violet">Frontier-Ready</span>
+            </div>
+          </article>
+
+          <article class="object">
+            <b>Object 2</b>
+            <strong>Advanced Energy Buffer Model.</strong>
+            <p>Evaluates storage and buffering needs for future high-intensity or pulsed-load systems.</p>
+            <div class="chip-wall">
+              <span class="tag">Battery-Only</span>
+              <span class="tag">Battery + Solar Hedge</span>
+              <span class="tag">Generator Bridge</span>
+              <span class="tag violet">Pulsed-Power Candidate</span>
+            </div>
+          </article>
+
+          <article class="object">
+            <b>Object 3</b>
+            <strong>Future Offtake Readiness Map.</strong>
+            <p>Evaluates whether a company could eventually contract for advanced clean baseload power.</p>
+            <div class="chip-wall">
+              <span class="tag">Short-Term Procurement</span>
+              <span class="tag">Forward Agreement</span>
+              <span class="tag green">Clean Baseload</span>
+              <span class="tag violet">Frontier Offtake</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <section class="panel section" id="lenses" aria-labelledby="lenses-title">
-        <div class="kicker">Two-lens introduction</div>
-        <h2 id="lenses-title">One standard. Two lenses.</h2>
+        <div class="kicker">Dual lens</div>
+        <h2 id="lenses-title">Engineering stays plain. Platform stays public. CLEAS governs both.</h2>
 
         <div class="lens-pair">
           <article class="lens engineering">
             <b>Engineering Lens</b>
-            <strong>Plain, standards-facing language.</strong>
+            <strong>Structured assessment and advisory category.</strong>
             <p>
-              Energy deployment remains admissible only when the loop, placement, storage carrier, failure envelope, monitoring, containment, and endpoint eligibility are defined and measured.
+              Frontier Energy Readiness evaluates load, storage, contract timing, infrastructure, interconnection, site control, offtake optionality, failure envelope, endpoint eligibility, and future advanced-energy adoption.
             </p>
           </article>
 
           <article class="lens platform">
             <b>Platform Lens</b>
-            <strong>Public TED-style explanation.</strong>
+            <strong>Prepare before the headline arrives.</strong>
             <p>
-              The future of clean energy is not only the source. It is the system that stores it safely, places it wisely, measures it honestly, and releases it when communities need it.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel section" id="loop" aria-labelledby="loop-title">
-        <div class="kicker">Energy loop</div>
-        <h2 id="loop-title">Energy is not finished when it is created.</h2>
-
-        <div class="lens-pair">
-          <article class="lens engineering">
-            <b>Engineering Lens</b>
-            <strong>Storage → Release → Operate → Recover → Storage.</strong>
-            <p>
-              The loop remains viable only when useful output is measured against total input, losses, reset cost, degradation, and return-to-storage conditions.
-            </p>
-          </article>
-
-          <article class="lens platform">
-            <b>Platform Lens</b>
-            <strong>Energy must come back to order.</strong>
-            <p>
-              Power is not useful because it flashes once. It becomes useful when the system can do work, recover value, and return to stability instead of burning itself out.
-            </p>
-          </article>
-        </div>
-
-        <div class="chip-wall">
-          <span class="tag gold">Storage</span>
-          <span class="tag gold">Release</span>
-          <span class="tag gold">Operate</span>
-          <span class="tag green">Recover</span>
-          <span class="tag green">Return</span>
-        </div>
-      </section>
-
-      <section class="panel section" id="cleas" aria-labelledby="cleas-title">
-        <div class="kicker">CLEAS</div>
-        <h2 id="cleas-title">CLEAS decides where energy belongs.</h2>
-
-        <div class="lens-pair">
-          <article class="lens engineering">
-            <b>Engineering Lens</b>
-            <strong>Closed-Loop Energy Architecture Standard.</strong>
-            <p>
-              CLEAS governs loop closure, placement, storage carrier eligibility, failure-envelope classification, endpoint eligibility, safety boundary, licensing path, and deployment admissibility.
-            </p>
-          </article>
-
-          <article class="lens platform">
-            <b>Platform Lens</b>
-            <strong>The rulebook that keeps powerful energy from becoming reckless energy.</strong>
-            <p>
-              The dangerous part stays where it can be governed. The useful part travels safely to where people live and work.
+              The companies that win the next energy era will not be the ones who waited for the breakthrough headline. They will be the ones that prepared their load, contracts, storage, and infrastructure before the market arrived.
             </p>
           </article>
         </div>
       </section>
 
       <section class="panel section" id="storage-fields" aria-labelledby="storage-title">
-        <div class="kicker">Agricultural Energy Storage Fields</div>
-        <h2 id="storage-title">Farmland can become clean-energy reserve ground.</h2>
+        <div class="kicker">Bridge infrastructure</div>
+        <h2 id="storage-title">Agricultural Energy Storage Fields belong to Lane 2.</h2>
 
         <div class="lens-pair">
           <article class="lens engineering">
             <b>Engineering Lens</b>
-            <strong>Agricultural land can host midstream battery storage when engineered.</strong>
+            <strong>Midstream storage and grid-support infrastructure only.</strong>
             <p>
-              Agricultural land and rural infrastructure can host distributed battery storage where siting, permitting, fire protection, grid interconnection, maintenance, containment, drainage, monitoring, and emergency response are designed into the system.
+              Agricultural Energy Storage Fields are distributed battery storage and grid-support sites where siting, permitting, fire protection, interconnection, maintenance, containment, drainage, monitoring, and emergency response are designed into the system.
             </p>
           </article>
 
           <article class="lens platform">
             <b>Platform Lens</b>
-            <strong>A field can hold future power.</strong>
+            <strong>Rural land can become clean-energy reserve ground.</strong>
             <p>
-              A field does not have to stop being useful when the crop line ends. With the right safeguards, parts of rural land can hold stored clean energy the way a reservoir holds water: not as chaos, but as reserve.
+              Not reactor farms. Not plasma fields. Not fusion sites. Storage fields help stabilize the grid and protect communities when energy demand spikes.
             </p>
           </article>
         </div>
 
-        <div class="chip-wall">
-          <span class="tag gold">Agricultural Energy Storage Field</span>
-          <span class="tag blue">Farmland Battery Center</span>
-          <span class="tag blue">Rural Storage Field</span>
-          <span class="tag green">Clean Energy Reserve Field</span>
-          <span class="tag green">Stored-Potential Farm</span>
-        </div>
-
         <div class="note">
-          Farmland storage is midstream storage only. It does not mean fusion farms, plasma farms, reactor farms, residential high-energy endpoints, or high-energy operating regimes placed on farms.
+          Forbidden frame: fusion farms, plasma farms, reactor farms, unlimited power fields, residential high-energy endpoints, and risk-free storage fields.
         </div>
       </section>
 
-      <section class="panel section" id="safety" aria-labelledby="safety-title">
-        <div class="kicker">Clean and safe energy</div>
-        <h2 id="safety-title">Clean is not enough. Safe must be calculated.</h2>
+      <section class="panel section" id="dream" aria-labelledby="dream-title">
+        <div class="kicker">Dream layer</div>
+        <h2 id="dream-title">Mirrorland and Audralia may dream, but the public claims stay bounded.</h2>
 
         <div class="lens-pair">
           <article class="lens engineering">
-            <b>Engineering Lens</b>
-            <strong>Safety depends on system controls.</strong>
+            <b>Boundary Lens</b>
+            <strong>The dream layer cannot override science.</strong>
             <p>
-              Safety depends on battery chemistry, spacing, containment, thermal controls, monitoring, isolation, maintenance, grid controls, weather exposure, security, inspection, and emergency response.
+              No commercial fusion today, no solar directly turning into fusion, no plasma batteries as validated products, no unlimited power, no risk-free energy, no fusion or plasma endpoints, and no Audralia-as-proof claim.
             </p>
           </article>
 
-          <article class="lens platform">
-            <b>Platform Lens</b>
-            <strong>The public should trust safeguards, not slogans.</strong>
+          <article class="lens dream">
+            <b>Dream Lens</b>
+            <strong>Audralia can imagine what readiness is reaching toward.</strong>
             <p>
-              Clean energy is only truly useful when the system around it is disciplined. The public should not be asked to trust a slogan. They should be able to trust the safeguards.
+              Energy deserts become storage fields. Rural land becomes clean-energy reserve ground. Storage vaults become civilization anchors. Fusion remains a horizon that disciplines the present.
             </p>
           </article>
         </div>
 
-        <div class="note">
-          Approved safety language: clean energy becomes safer when risk is calculated, placed, contained, monitored, and governed. Forbidden: completely safe, risk-free, impossible to fail, no fire risk, no environmental concern, guaranteed clean forever, no permitting needed, or no engineering risk.
-        </div>
-      </section>
-
-      <section class="panel section" aria-labelledby="stack-title">
-        <div class="kicker">Architecture stack</div>
-        <h2 id="stack-title">Risk moves upstream. Use moves downstream.</h2>
-
-        <div class="grid three">
-          <article class="card">
-            <b>Upstream</b>
-            <strong>High-energy regimes.</strong>
-            <span>Fusion systems, plasma discharge hubs, extreme thermal systems, and hardened industrial infrastructure remain upstream where risk can be governed.</span>
-          </article>
-
-          <article class="card">
-            <b>Midstream</b>
-            <strong>Storage and buffering.</strong>
-            <span>Agricultural Energy Storage Fields, storage hubs, conversion hubs, grid interfaces, and microgrid buffers sit midstream.</span>
-          </article>
-
-          <article class="card">
-            <b>Downstream</b>
-            <strong>Passive stored potential.</strong>
-            <span>Vehicles, buildings, tools, equipment, farms, homes, and communities receive controlled stored potential, not high-energy operating regimes.</span>
-          </article>
+        <div class="principle">
+          Scientifically bounded in public claims. Imaginatively expansive in Mirrorland and Audralia inheritance.
         </div>
       </section>
 
       <section class="panel section" id="audralia" aria-labelledby="audralia-title">
         <div class="kicker">Audralia inheritance</div>
-        <h2 id="audralia-title">Audralia inherits energy as storage law, not magic.</h2>
+        <h2 id="audralia-title">Audralia inherits the three-lane model.</h2>
 
-        <div class="lens-pair">
-          <article class="lens engineering">
-            <b>Engineering Lens</b>
-            <strong>Audralia uses separated energy architecture.</strong>
-            <p>
-              Audralia uses energy storage fields, upstream generation zones, midstream conversion hubs, monitored storage reserves, and downstream stored-potential endpoints.
-            </p>
+        <div class="grid three">
+          <article class="card">
+            <b>Commercial Now</b>
+            <strong>Crew controls present energy risk.</strong>
+            <span>The first task is discipline: measure use, control load, protect reserves, and stabilize the current system.</span>
           </article>
 
-          <article class="lens platform">
-            <b>Platform Lens</b>
-            <strong>Power is land, storage, distance, safeguards, and discipline.</strong>
-            <p>
-              On Audralia, power is not a miracle. It is land, storage, discipline, distance, safeguards, and the crew choosing not to collapse danger into daily life.
-            </p>
+          <article class="card">
+            <b>Bridge Infrastructure</b>
+            <strong>Settlement builds storage and buffers.</strong>
+            <span>Storage, interconnection, site control, and backup capacity become the bridge before advanced generation becomes reliable.</span>
           </article>
-        </div>
 
-        <div class="chip-wall">
-          <span class="tag gold">Crew Doctrine</span>
-          <span class="tag gold">Storage Vaults</span>
-          <span class="tag blue">Solar Support Fields</span>
-          <span class="tag blue">Plasma Chambers Upstream</span>
-          <span class="tag green">Fusion Horizon</span>
-          <span class="tag green">Risk Separation</span>
+          <article class="card dream">
+            <b>Frontier Readiness</b>
+            <strong>The crew prepares for the horizon.</strong>
+            <span>Fusion is not a magic solution. It is a horizon that forces the crew to master storage, load discipline, infrastructure, and timing before the breakthrough arrives.</span>
+          </article>
         </div>
       </section>
 
-      <section class="panel section" id="engineering" aria-labelledby="engineering-title">
-        <div class="kicker">Engineering notes</div>
-        <h2 id="engineering-title">Technical language for deeper readers.</h2>
+      <section class="panel section" id="risk" aria-labelledby="risk-title">
+        <div class="kicker">Risk control</div>
+        <h2 id="risk-title">Credibility is part of the energy system.</h2>
 
-        <details>
-          <summary>
-            <span class="summary-text">
-              <b>Engineering Appendix</b>
-              <span>Open siting, safeguard, and storage requirements.</span>
-            </span>
-          </summary>
+        <div class="grid three">
+          <article class="card">
+            <b>Risk</b>
+            <strong>Overclaiming fusion destroys trust.</strong>
+            <span>Control: always distinguish laboratory fusion gain from commercial electricity.</span>
+          </article>
 
-          <div class="detail-body">
-            <div class="grid two">
-              <article class="card">
-                <b>Battery chemistry</b>
-                <strong>Storage media must be selected by risk and use case.</strong>
-                <span>Chemistry affects thermal behavior, maintenance, density, cycle life, fire protection, and environmental controls.</span>
-              </article>
+          <article class="card">
+            <b>Risk</b>
+            <strong>“Plasma battery” sounds unverified.</strong>
+            <span>Control: use advanced energy buffer or pulsed-power readiness unless a validated device is specified.</span>
+          </article>
 
-              <article class="card">
-                <b>Thermal runaway prevention</b>
-                <strong>Heat must be monitored and contained.</strong>
-                <span>Spacing, sensors, cooling, isolation, suppression, and emergency response reduce propagation risk.</span>
-              </article>
-
-              <article class="card">
-                <b>Soil and drainage protection</b>
-                <strong>Storage fields must protect the land.</strong>
-                <span>Site design should address runoff, containment, grading, drainage, spill planning, and environmental review.</span>
-              </article>
-
-              <article class="card">
-                <b>Grid interconnection</b>
-                <strong>Stored power must connect lawfully.</strong>
-                <span>Interconnection, microgrid controls, switching, islanding, monitoring, and dispatch logic define usable infrastructure.</span>
-              </article>
-
-              <article class="card">
-                <b>Inspection schedule</b>
-                <strong>Stored potential requires custody.</strong>
-                <span>Inspection, maintenance, replacement, performance testing, and end-of-life recycling keep the field accountable.</span>
-              </article>
-
-              <article class="card">
-                <b>Community siting</b>
-                <strong>Land use needs public discipline.</strong>
-                <span>Permitting, insurance, setbacks, access control, security, community notice, and emergency planning belong in the design.</span>
-              </article>
-            </div>
-          </div>
-        </details>
+          <article class="card">
+            <b>Risk</b>
+            <strong>Solar fusion language creates confusion.</strong>
+            <span>Control: solar is a hedge. Storage is a bridge. Fusion is frontier readiness.</span>
+          </article>
+        </div>
       </section>
 
       <section class="panel section" id="kill" aria-labelledby="kill-title">
         <div class="kicker">Kill conditions</div>
-        <h2 id="kill-title">The contract stops if the claim outruns the standard.</h2>
+        <h2 id="kill-title">The contract stops if the claim outruns the evidence.</h2>
 
         <details>
           <summary>
@@ -1092,73 +1103,77 @@
 
           <div class="detail-body">
             <ul>
-              <li>Stop if farmland storage is described as fusion farming.</li>
-              <li>Stop if farmland storage is described as plasma farming.</li>
-              <li>Stop if farmland storage is described as reactor farming.</li>
-              <li>Stop if battery storage is described as risk-free.</li>
-              <li>Stop if safety is claimed without safeguards.</li>
-              <li>Stop if fusion is claimed as commercially deployed now.</li>
-              <li>Stop if plasma is treated as stored fuel.</li>
-              <li>Stop if consumer high-energy endpoints are implied.</li>
-              <li>Stop if CLEAS is treated as a reactor or power seller.</li>
-              <li>Stop if Audralia narrative is treated as proof of real-world deployment.</li>
-              <li>Stop if the page turns energy science into magic.</li>
+              <li>Stop if the page claims solar becomes fusion.</li>
+              <li>Stop if the page claims we create fusion power.</li>
+              <li>Stop if the page claims plasma battery solution.</li>
+              <li>Stop if the page claims commercial fusion ready now.</li>
+              <li>Stop if the page claims unlimited power.</li>
+              <li>Stop if the page claims fusion procurement today.</li>
+              <li>Stop if the page treats plasma as storage.</li>
+              <li>Stop if the page places fusion in vehicles or homes.</li>
+              <li>Stop if the page creates farmland fusion farms.</li>
+              <li>Stop if the page claims risk-free battery fields.</li>
+              <li>Stop if the page guarantees timelines.</li>
+              <li>Stop if the page treats Audralia as proof of commercial deployment.</li>
+              <li>Stop if the dream layer overrides the science boundary.</li>
             </ul>
           </div>
         </details>
       </section>
 
       <section class="final-band" aria-label="Energy final statement">
-        <strong>Engineering stays plain. Platform stays public. CLEAS governs both.</strong>
+        <strong>Frontier Energy Readiness is the deliverable.</strong>
 
         <div class="lens-pair">
           <article class="lens engineering">
-            <b>Final Engineering Sentence</b>
-            <strong>Admissibility requires definition and measurement.</strong>
+            <b>Final Engineering Lock</b>
+            <strong>Commercial viability requires plant-level proof.</strong>
             <p>
-              Energy deployment remains admissible only when the loop, placement, storage carrier, failure envelope, monitoring, containment, and endpoint eligibility are defined and measured.
+              Fusion is real, but commercial power requires sustainable Q_plant greater than 1 after total facility inputs, losses, reset costs, maintenance, conversion, and reliability burdens.
             </p>
           </article>
 
           <article class="lens platform">
-            <b>Final Platform Sentence</b>
-            <strong>The future is the system, not only the source.</strong>
+            <b>Final Platform Lock</b>
+            <strong>Readiness is what can be sold now.</strong>
             <p>
-              The future of clean energy is not only the source. It is the system that stores it safely, places it wisely, measures it honestly, and releases it when communities need it.
+              We do not sell fusion as a product. We help high-load businesses prepare for the energy world that fusion may eventually create.
             </p>
           </article>
         </div>
 
         <div class="actions">
-          <a class="button gold" href="#storage-fields">Storage Fields</a>
-          <a class="button green" href="/showroom/globe/audralia/">Open Audralia</a>
-          <a class="button violet" href="/frontier/">Return to Frontier</a>
-          <a class="button" href="/gauges/">Check Gauges</a>
+          <a class="button gold" href="#lanes">Three Lanes</a>
+          <a class="button green" href="#objects">Development Objects</a>
+          <a class="button violet" href="/showroom/globe/audralia/">Open Audralia</a>
+          <a class="button" href="/frontier/">Return to Frontier</a>
         </div>
 
         <div class="note">
-          This route teaches Energy R&D and CLEAS as bounded frontier science. It does not claim direct solar-to-commercial-fusion, net-positive commercial fusion now, grid-scale deployment now, plasma as fuel, residential fusion endpoints, vehicle fusion endpoints, consumer high-energy endpoints, risk-free battery storage, or guaranteed timelines.
+          This route teaches Frontier Energy Readiness as bounded frontier science and business architecture. It does not claim commercial fusion today, direct solar-to-fusion, plasma battery products, unlimited energy, fusion procurement now, risk-free storage, or Audralia as real-world deployment proof.
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_ENERGY_DUAL_LENS_SINGLE_FILE_TNT_v3
+FRONTIER_ENERGY_READINESS_DUAL_LENS_DREAM_LAYER_SINGLE_FILE_TNT_v4
 route=/explore/frontier/energy/
 page=frontier_energy
-previous=FRONTIER_ENERGY_CLEAS_TED_NAV_ENGINE_TNT_v2
+previous=FRONTIER_ENERGY_DUAL_LENS_SINGLE_FILE_TNT_v3
+source_packet=FRONTIER_FUSION_SOLAR_PLASMA_DEVELOPMENT_v1
 source_psalm=PSALM_PACKET_ENERGY_RND_SOLAR_PLASMA_FUSION_v1.0
-audralia_inheritance=AUDRALIA_CREW_ENERGY_DISCOVERY_INHERITANCE_CANON_v1
 file_strategy=single_full_file_replacement
-lens_model=Engineering_Lens_and_Platform_Lens_inside_one_file
-engineering_lens=plain_standards_facing_language
-platform_lens=TED_Talk_public_explanation_under_the_hood
-cleas=Closed_Loop_Energy_Architecture_Standard
-farmland_storage=Agricultural_Energy_Storage_Field
-platform_terms=Farmland_Battery_Center,Rural_Storage_Field,Clean_Energy_Reserve_Field,Agricultural_Power_Reserve,Stored_Potential_Farm
-farmland_role=midstream_storage_only
-safety_language=calculated,placed,contained,monitored,governed
-architecture_stack=upstream_high_energy_regimes,midstream_storage_and_buffering,downstream_passive_stored_potential
-forbidden_claims=fusion_farm,plasma_farm,reactor_farm,risk_free_storage,absolute_safety,consumer_high_energy_endpoint,commercial_fusion_now,Audralia_as_real_world_deployment_proof
+active_focus=Frontier_Energy_Readiness
+science_lock=fusion_real_commercial_power_not_procurement_ready
+math_lock=Q_target_Q_plasma_Q_plant_separated
+possibility_lock=prepare_load_storage_timing_infrastructure_for_future_advanced_energy
+development_lanes=Commercial_Now,Bridge_Infrastructure,Frontier_Energy_Readiness
+development_objects=Frontier_Energy_Readiness_Index,Advanced_Energy_Buffer_Model,Future_Offtake_Readiness_Map
+farmland_storage=bridge_infrastructure_midstream_storage_only
+dream_layer=Mirrorland_Audralia_imaginative_inheritance_without_public_overclaim
+audralia_inheritance=Commercial_Now_controls_present_energy_risk,Bridge_Infrastructure_builds_storage_buffers_interconnection_site_control,Frontier_Readiness_prepares_for_advanced_generation_before_reliable
+risk_controls=distinguish_laboratory_gain_from_commercial_electricity,use_advanced_energy_buffer_or_pulsed_power_readiness,solar_is_hedge_storage_is_bridge_fusion_is_frontier_readiness
+final_lock=do_not_sell_fusion_sell_readiness
+forbidden_claims=solar_becomes_fusion,we_create_fusion_power,plasma_battery_solution,commercial_fusion_ready_now,unlimited_power,fusion_procurement_today,plasma_as_storage,fusion_in_vehicles,fusion_in_homes,farmland_fusion_farms,risk_free_battery_fields,guaranteed_timelines,Audralia_as_commercial_deployment_proof,dream_layer_overrides_science_boundary
 heavy_runtime=false
 generated_image=false
 graphic_box=false
@@ -1167,7 +1182,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      FRONTIER_ENERGY_DUAL_LENS_SINGLE_FILE_TNT_v3 · Energy · One File · Two Lenses · One Standard.
+      FRONTIER_ENERGY_READINESS_DUAL_LENS_DREAM_LAYER_SINGLE_FILE_TNT_v4 · Frontier Energy Readiness · Do Not Sell Fusion · Sell Readiness.
     </footer>
   </div>
 </body>

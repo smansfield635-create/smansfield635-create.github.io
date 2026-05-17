@@ -1,665 +1,1476 @@
-<!-- /explore/frontier/water/index.html -->
 <!doctype html>
 <html
   lang="en"
   data-route="/explore/frontier/water/"
   data-page="frontier-water"
-  data-version="G1-OPTIMAL"
-  data-contract="WATER_G1_OPTIMAL_CONCRETE_FLOW_TNT_v1"
-  data-status="active"
-  data-parent="/explore/frontier/"
-  data-baseline="AUDRALIA_MANOR_CURRENT"
-  data-expression="concrete-water-flow-with-russian-doll-underlay"
+  data-contract="FRONTIER_WATER_TEXAS_HOMEWATER_EDUCATION_RENEWAL_TNT_v1"
+  data-source-psalm="PSALM_PACKET_TEXAS_WATER_HAZARD_HOMEWATER_FULL_v1.0"
+  data-ack-status="TRANSITORY_ACK_PACK_SUPERSEDED"
+  data-role="frontier-water-education-homewater"
+  data-primary-source-role="EWG-Tap-Water-Database-Texas"
+  data-secondary-source-role="HomeWater-product-and-whole-home-filtration-claims"
+  data-public-lane="education-measurement-reduction-household-protection"
+  data-homewater-lane="whole-home-filtration-softening-scale-reduction-appliance-support-plumbing-support"
+  data-source-separation="true"
+  data-reduce-not-eliminate="true"
+  data-acute-chronic-split="true"
+  data-six-families="disinfection-byproducts,heavy-metals-metalloids,agricultural-contaminants,industrial-chemicals-VOCs,PFAS-forever-chemicals,radiological-contaminants"
+  data-filter-matching="carbon,catalytic-carbon,KDF,sediment-filtration,softening,salt-free-conditioning,reverse-osmosis,ion-exchange,specialized-treatment"
+  data-forbidden-claims="total-removal,medical-prevention,cancer-prevention,all-Texas-homes-safe,every-home-has-every-chemical,unsourced-99-cents-per-day,universal-treatment-certainty"
   data-heavy-runtime-loaded="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Frontier · Water G1 Optimal</title>
-  <meta name="description" content="Water G1 Optimal shows source, route, storage, use, pressure, recovery, and proof.">
+
+  <title>Water · Frontier · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Water inside Diamond Gate Bridge: Texas water-quality education, EWG contaminant-family framing, HomeWater whole-home filtration and softening positioning, treatment matching, and household protection without scientific overclaim."
+  >
+  <link rel="canonical" href="https://diamondgatebridge.com/explore/frontier/water/">
+  <meta name="theme-color" content="#02040b">
 
   <style>
-    :root {
-      --bg:#02050d;
-      --panel:rgba(9,17,32,.91);
-      --line:rgba(139,200,255,.24);
-      --gold:#f2c76f;
-      --blue:#8bc8ff;
-      --green:#9df0c4;
-      --text:#f8f1dd;
-      --muted:rgba(226,235,255,.76);
-      --faint:rgba(226,235,255,.52);
-      --max:1120px;
+    :root{
+      color-scheme:dark;
+      --bg:#02040b;
+      --ink:#fff4d8;
+      --muted:rgba(230,238,255,.78);
+      --soft:rgba(230,238,255,.60);
+      --faint:rgba(230,238,255,.46);
+      --gold:#f3c86f;
+      --gold2:#ffe8a3;
+      --blue:#8dd8ff;
+      --blue2:#bcecff;
+      --green:#8ff0c3;
+      --aqua:#74f0ff;
+      --violet:#8f65ff;
+      --red:#ff9d91;
+      --panel:rgba(9,15,31,.86);
+      --line:rgba(184,205,255,.18);
+      --line2:rgba(141,216,255,.30);
+      --shadow:0 32px 110px rgba(0,0,0,.46);
+      --max:1180px;
+      --drop:polygon(50% 0%,72% 28%,88% 55%,82% 78%,64% 94%,50% 100%,36% 94%,18% 78%,12% 55%,28% 28%);
+      --gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
     }
 
-    * { box-sizing:border-box; }
+    *{box-sizing:border-box}
 
-    html, body {
-      margin:0;
+    html{
+      min-width:320px;
       min-height:100%;
-      color:var(--text);
-      background:
-        radial-gradient(circle at 50% 0%, rgba(139,200,255,.18), transparent 28rem),
-        radial-gradient(circle at 58% 42%, rgba(157,240,196,.11), transparent 34rem),
-        linear-gradient(180deg,#050914,#02050d 78%,#010207);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:var(--bg);
+      scroll-behavior:smooth;
       overflow-x:hidden;
     }
 
-    body::before {
+    body{
+      margin:0;
+      min-width:320px;
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.5;
+      overflow-x:hidden;
+      background:
+        radial-gradient(circle at 50% -8%,rgba(116,240,255,.18),transparent 28rem),
+        radial-gradient(circle at 12% 18%,rgba(36,120,255,.22),transparent 30rem),
+        radial-gradient(circle at 88% 28%,rgba(143,240,195,.14),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(141,216,255,.13),transparent 34rem),
+        linear-gradient(180deg,#06121f 0%,#030713 58%,#010207 100%);
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
+    }
+
+    body::before{
       content:"";
       position:fixed;
       inset:0;
+      z-index:0;
       pointer-events:none;
       background-image:
-        radial-gradient(circle, rgba(139,200,255,.16) 0 1px, transparent 1.4px),
-        linear-gradient(135deg, rgba(139,200,255,.08), transparent 42%),
-        linear-gradient(300deg, rgba(157,240,196,.055), transparent 48%);
-      background-size:210px 250px,520px 520px,640px 640px;
-      opacity:.34;
+        radial-gradient(circle,rgba(255,255,255,.15) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
+      background-size:220px 260px,54px 54px,54px 54px;
+      opacity:.22;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
 
-    a { color:inherit; text-decoration:none; }
-    button { font:inherit; color:inherit; }
+    a{color:inherit;text-decoration:none}
 
-    .skip {
+    a:focus-visible,
+    button:focus-visible{
+      outline:2px solid var(--gold);
+      outline-offset:4px;
+    }
+
+    .skip{
       position:absolute;
-      top:-4rem;
-      left:1rem;
-      z-index:10;
+      left:-999px;
+      top:8px;
+      z-index:50;
       padding:.75rem 1rem;
       border-radius:999px;
-      background:var(--gold);
       color:#05070d;
-      font-weight:900;
+      background:var(--gold);
+      font-weight:950;
     }
 
-    .skip:focus { top:1rem; }
+    .skip:focus{left:8px}
 
-    .shell {
+    .shell{
       position:relative;
-      z-index:1;
-      width:min(100%,var(--max));
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
       margin:0 auto;
-      padding:max(1rem,env(safe-area-inset-top)) clamp(.85rem,3vw,2rem) max(1.5rem,env(safe-area-inset-bottom));
+      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
     }
 
-    .card {
-      margin:clamp(.85rem,2.4vw,1.25rem) auto 0;
-      border:1px solid var(--line);
-      border-radius:clamp(1.25rem,5vw,2rem);
-      background:
-        radial-gradient(circle at 15% 0%, rgba(139,200,255,.14), transparent 26rem),
-        radial-gradient(circle at 85% 20%, rgba(157,240,196,.10), transparent 24rem),
-        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.018)),
-        var(--panel);
-      box-shadow:0 2rem 7rem rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.08);
-      overflow:hidden;
-    }
-
-    .top, .section {
-      padding:clamp(1rem,3vw,1.35rem);
+    .topbar{
       display:grid;
-      gap:1rem;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:18px;
+      padding:12px 0 18px;
     }
 
-    .brand {
+    .brand{
       display:grid;
       grid-template-columns:auto 1fr;
       align-items:center;
       gap:.9rem;
+      min-width:260px;
     }
 
-    .mark {
-      width:4.25rem;
-      height:4.25rem;
+    .brand-mark{
+      width:4.2rem;
+      height:4.2rem;
       display:grid;
       place-items:center;
-      border:1px solid rgba(139,200,255,.42);
-      border-radius:1.2rem;
-      background:radial-gradient(circle, rgba(139,200,255,.26), transparent 55%), rgba(255,255,255,.035);
-      font-size:1.45rem;
+      border:1px solid rgba(141,216,255,.44);
+      transform:rotate(45deg);
+      clip-path:var(--gem);
+      background:
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.28) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.25),rgba(116,240,255,.24),rgba(36,120,255,.22),rgba(143,240,195,.18),rgba(255,255,255,.25)),
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.30),transparent 42%),
+        linear-gradient(145deg,rgba(12,72,100,.95),rgba(5,8,20,.98));
+      box-shadow:
+        0 0 2rem rgba(141,216,255,.22),
+        0 1.2rem 2.8rem rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.16);
+    }
+
+    .brand-mark span{
+      transform:rotate(-45deg);
       font-weight:950;
       letter-spacing:.04em;
+      color:rgba(255,244,216,.98);
+      text-shadow:0 2px 10px rgba(0,0,0,.85);
     }
 
-    .brand span span {
-      display:block;
-      color:rgba(226,235,255,.84);
-      font-size:clamp(.7rem,2vw,.88rem);
-      font-weight:950;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-    }
-
-    .brand strong {
-      display:block;
-      font-size:clamp(1.25rem,4.5vw,2.15rem);
-      line-height:1;
-      letter-spacing:-.055em;
-    }
-
-    .nav, .control-row {
-      display:flex;
-      flex-wrap:wrap;
-      gap:.55rem;
-    }
-
-    .nav a, .button, .tab {
-      min-height:2.4rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(255,255,255,.16);
-      border-radius:999px;
-      background:rgba(255,255,255,.035);
-      padding:.55rem .82rem;
-      color:rgba(242,246,255,.88);
-      font-size:.74rem;
-      font-weight:950;
-      letter-spacing:.055em;
-      text-transform:uppercase;
-      cursor:pointer;
-    }
-
-    .nav a[aria-current="page"],
-    .button.primary,
-    .tab[aria-pressed="true"] {
-      border-color:rgba(242,199,111,.9);
-      color:#060811;
-      background:linear-gradient(135deg,#fff0a3,#f2c76f);
-    }
-
-    .hero {
-      padding:clamp(1.5rem,5vw,3rem);
-      min-height:clamp(20rem,42vw,31rem);
+    .brand-copy{
       display:grid;
-      gap:1rem;
-      align-content:center;
+      gap:.18rem;
     }
 
-    .kicker {
-      width:fit-content;
-      display:inline-flex;
-      align-items:center;
-      gap:.55rem;
-      padding:.58rem .95rem;
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:999px;
-      color:rgba(226,235,255,.86);
-      background:rgba(255,255,255,.035);
-      font-size:.72rem;
+    .brand-copy strong{
+      font-size:clamp(1.08rem,3vw,1.7rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+
+    .brand-copy span{
+      color:var(--muted);
+      font-size:.74rem;
       font-weight:950;
       letter-spacing:.14em;
       text-transform:uppercase;
     }
 
-    .kicker::before {
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:.48rem;
+    }
+
+    .nav a{
+      min-height:2.25rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
+      padding:.5rem .74rem;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      transition:transform .18s ease,border-color .18s ease;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(141,216,255,.52);
+      outline:none;
+    }
+
+    .nav a[aria-current="page"]{
+      border-color:rgba(141,216,255,.88);
+      color:#06101c;
+      background:linear-gradient(135deg,#dff7ff,#8dd8ff);
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      background:
+        radial-gradient(circle at 14% 0%,rgba(141,216,255,.11),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(116,240,255,.10),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+        var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+
+    .hero{
+      position:relative;
+      min-height:clamp(28rem,50vw,38rem);
+      display:grid;
+      align-content:center;
+      gap:1rem;
+      padding:clamp(1.45rem,5vw,3.4rem);
+      margin-top:.6rem;
+      isolation:isolate;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      right:clamp(1rem,6vw,5.5rem);
+      top:50%;
+      z-index:0;
+      width:clamp(10rem,27vw,20rem);
+      height:clamp(10rem,27vw,20rem);
+      border:1px solid rgba(141,216,255,.20);
+      border-radius:50%;
+      transform:translateY(-50%);
+      background:
+        radial-gradient(circle at 50% 32%,rgba(216,250,255,.16),transparent 34%),
+        radial-gradient(circle at 50% 68%,rgba(36,120,255,.18),transparent 58%),
+        conic-gradient(from 90deg,rgba(143,240,195,.10),rgba(141,216,255,.13),rgba(36,120,255,.10),rgba(143,240,195,.10));
+      animation:waterPulse 9s ease-in-out infinite;
+      pointer-events:none;
+      opacity:.58;
+    }
+
+    @keyframes waterPulse{
+      0%,100%{opacity:.40;filter:brightness(.95);transform:translateY(-50%) scale(.98)}
+      50%{opacity:.64;filter:brightness(1.13);transform:translateY(-50%) scale(1.035)}
+    }
+
+    .kicker{
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.58rem;
+      padding:.58rem .95rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(230,238,255,.86);
+      background:rgba(255,255,255,.04);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      position:relative;
+      z-index:2;
+    }
+
+    .kicker::before{
       content:"";
       width:.72rem;
       height:.72rem;
       border-radius:.18rem;
-      background:var(--blue);
       transform:rotate(45deg);
-      box-shadow:0 0 1rem rgba(139,200,255,.45);
+      background:linear-gradient(135deg,var(--blue2),var(--blue));
+      box-shadow:0 0 1.1rem rgba(141,216,255,.46);
     }
 
-    h1 {
-      width:min(100%,820px);
+    h1{
       margin:0;
-      font-size:clamp(3.8rem,13vw,7.8rem);
+      max-width:1060px;
+      font-size:clamp(3.05rem,9.6vw,7.2rem);
       line-height:.84;
       letter-spacing:-.105em;
+      text-wrap:balance;
+      position:relative;
+      z-index:2;
     }
 
-    h2 {
+    h2{
       margin:0;
-      color:var(--gold);
-      font-size:clamp(1.65rem,5.8vw,3.3rem);
+      color:var(--blue2);
+      font-size:clamp(1.45rem,4.7vw,2.65rem);
       line-height:.98;
       letter-spacing:-.07em;
+      text-wrap:balance;
+      position:relative;
+      z-index:2;
     }
 
-    h3 {
+    h3{
       margin:0;
-      font-size:clamp(1.15rem,3.6vw,1.75rem);
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.08rem,3vw,1.36rem);
       line-height:1.08;
       letter-spacing:-.035em;
     }
 
-    p {
+    p{
       margin:0;
       color:var(--muted);
-      font-size:clamp(.98rem,2.8vw,1.18rem);
+      font-size:clamp(.98rem,2.7vw,1.16rem);
       line-height:1.55;
     }
 
-    .flow-grid {
-      display:grid;
-      grid-template-columns:repeat(7,1fr);
-      gap:.7rem;
+    .lead{
+      max-width:980px;
+      position:relative;
+      z-index:2;
     }
 
-    .flow-card {
-      min-height:8.2rem;
+    .principle{
+      max-width:1010px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(141,216,255,.24);
+      border-radius:1.2rem;
+      color:rgba(235,251,255,.94);
+      background:rgba(141,216,255,.070);
+      font-weight:900;
+      position:relative;
+      z-index:2;
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.62rem;
+      margin-top:.2rem;
+      position:relative;
+      z-index:2;
+    }
+
+    .button{
+      min-height:2.65rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      padding:.65rem 1rem;
+      background:rgba(255,255,255,.045);
+      color:rgba(241,246,255,.88);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .button:hover,
+    .button:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(141,216,255,.62);
+      outline:none;
+    }
+
+    .button.blue{
+      border-color:rgba(141,216,255,.9);
+      color:#06101c;
+      background:linear-gradient(135deg,#dff7ff,#8dd8ff);
+      box-shadow:0 .8rem 1.8rem rgba(141,216,255,.13);
+    }
+
+    .button.green{
+      border-color:rgba(143,240,195,.44);
+      color:#d9ffe9;
+      background:rgba(143,240,195,.075);
+    }
+
+    .button.gold{
+      border-color:rgba(243,200,111,.44);
+      color:rgba(255,244,216,.92);
+      background:rgba(243,200,111,.075);
+    }
+
+    .section{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
       display:grid;
+      gap:1.05rem;
+    }
+
+    .grid{
+      display:grid;
+      gap:.85rem;
+    }
+
+    .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+    .card{
+      position:relative;
+      min-height:100%;
+      display:grid;
+      gap:.6rem;
       align-content:start;
-      gap:.45rem;
       padding:1rem;
       border:1px solid rgba(255,255,255,.12);
-      border-radius:1.15rem;
+      border-radius:1.25rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(141,216,255,.10),transparent 60%),
+        rgba(255,255,255,.035);
+      overflow:hidden;
+      transition:transform .18s ease,border-color .18s ease;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      right:.8rem;
+      top:.75rem;
+      width:3.4rem;
+      height:3.4rem;
+      clip-path:var(--drop);
+      opacity:.22;
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.65),transparent 20%),
+        linear-gradient(180deg,rgba(141,216,255,.62),rgba(14,35,74,.88));
+      filter:drop-shadow(0 .7rem .9rem rgba(0,0,0,.32));
+      pointer-events:none;
+    }
+
+    .card:hover,
+    .card:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(141,216,255,.44);
+      outline:none;
+    }
+
+    .card b{
+      color:var(--blue2);
+      font-size:.68rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      position:relative;
+      z-index:2;
+    }
+
+    .card strong{
+      color:rgba(255,244,216,.98);
+      font-size:1.08rem;
+      line-height:1.1;
+      position:relative;
+      z-index:2;
+    }
+
+    .card span,
+    .card p{
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.42;
+      position:relative;
+      z-index:2;
+    }
+
+    .card.good{
+      border-color:rgba(143,240,195,.20);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(143,240,195,.09),transparent 60%),
+        rgba(255,255,255,.035);
+    }
+
+    .card.warn{
+      border-color:rgba(255,157,145,.22);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(255,157,145,.08),transparent 60%),
+        rgba(255,255,255,.035);
+    }
+
+    .card.gold{
+      border-color:rgba(243,200,111,.22);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(243,200,111,.09),transparent 60%),
+        rgba(255,255,255,.035);
+    }
+
+    .tagline{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.5rem;
+    }
+
+    .tag{
+      min-height:2rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      padding:.38rem .68rem;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+    }
+
+    .split-list{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.85rem;
+    }
+
+    .list-card{
+      display:grid;
+      gap:.65rem;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.25rem;
       background:rgba(255,255,255,.035);
     }
 
-    .flow-card strong {
-      color:rgba(255,241,205,.98);
-      font-size:.78rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
+    .list-card h3{
+      color:var(--blue2);
+      font-size:1.05rem;
     }
 
-    .flow-card span {
+    ul{
+      margin:0;
+      padding-left:1.1rem;
       color:var(--muted);
-      font-size:.86rem;
+    }
+
+    li{
+      margin:.38rem 0;
+      color:var(--muted);
+      font-size:.94rem;
       line-height:1.38;
     }
 
-    .flow-card.active {
-      border-color:rgba(139,200,255,.9);
-      background:rgba(139,200,255,.08);
-      box-shadow:0 0 1.6rem rgba(139,200,255,.10);
-    }
-
-    .dashboard {
+    .family-card{
       display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:.85rem;
-    }
-
-    .metric {
-      padding:1rem;
-      border:1px solid rgba(139,200,255,.18);
-      border-radius:1.25rem;
-      background:rgba(255,255,255,.03);
-      display:grid;
-      gap:.45rem;
-    }
-
-    .metric small {
-      color:var(--gold);
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .metric strong {
-      color:rgba(255,241,205,.98);
-      font-size:clamp(1.15rem,3vw,1.55rem);
-      line-height:1.05;
-    }
-
-    .metric p { font-size:.95rem; }
-
-    details {
-      border:1px solid rgba(139,200,255,.18);
-      border-radius:1.25rem;
-      background:rgba(255,255,255,.03);
-      overflow:hidden;
-    }
-
-    summary {
-      cursor:pointer;
-      list-style:none;
-      display:grid;
-      grid-template-columns:auto 1fr auto;
-      align-items:center;
       gap:.75rem;
       padding:1rem;
-      font-weight:950;
-      letter-spacing:.07em;
-      text-transform:uppercase;
-      color:rgba(255,241,205,.96);
-    }
-
-    summary::-webkit-details-marker { display:none; }
-
-    summary::before {
-      content:"";
-      width:.8rem;
-      height:.8rem;
-      border-radius:.18rem;
-      transform:rotate(45deg);
-      background:var(--blue);
-      box-shadow:0 0 1rem rgba(139,200,255,.35);
-    }
-
-    summary::after {
-      content:"+";
-      color:var(--gold);
-      font-size:1.25rem;
-      line-height:1;
-    }
-
-    details[open] > summary::after { content:"−"; }
-
-    .detail-body {
-      display:grid;
-      gap:.85rem;
-      padding:0 1rem 1rem;
-    }
-
-    .nested {
-      margin-left:clamp(.35rem,2vw,1rem);
-      border-color:rgba(242,199,111,.18);
-      background:rgba(2,5,13,.34);
-    }
-
-    .readout {
-      padding:1rem;
-      border:1px solid rgba(242,199,111,.22);
+      border:1px solid rgba(255,255,255,.12);
       border-radius:1.25rem;
-      background:rgba(255,255,255,.03);
-      display:grid;
-      gap:.55rem;
+      background:
+        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 55%),
+        rgba(255,255,255,.035);
     }
 
-    .readout small {
+    .family-card header{
+      display:grid;
+      gap:.18rem;
+    }
+
+    .family-card header b{
       color:var(--gold);
-      font-weight:950;
+      font-size:.68rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .family-card header strong{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.08rem,3vw,1.35rem);
+      line-height:1.05;
+      letter-spacing:-.035em;
+    }
+
+    .family-detail{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.65rem;
+    }
+
+    .detail{
+      display:grid;
+      gap:.3rem;
+      padding:.78rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:1rem;
+      background:rgba(255,255,255,.026);
+    }
+
+    .detail b{
+      color:var(--blue2);
+      font-size:.62rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .receipt { color:var(--faint); }
-
-    .receipt summary { font-size:.72rem; }
-
-    .receipt pre {
-      margin:0;
-      padding:0 1rem 1rem;
-      white-space:pre-wrap;
-      overflow-wrap:anywhere;
-      font:700 .68rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    .detail span{
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.38;
     }
 
-    footer {
+    .impact-map{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.85rem;
+    }
+
+    .impact-card{
+      display:grid;
+      gap:.6rem;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.25rem;
+      background:rgba(255,255,255,.035);
+    }
+
+    .impact-card.acute{
+      border-color:rgba(255,157,145,.22);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(255,157,145,.08),transparent 60%),
+        rgba(255,255,255,.035);
+    }
+
+    .impact-card.chronic{
+      border-color:rgba(141,216,255,.22);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(141,216,255,.10),transparent 60%),
+        rgba(255,255,255,.035);
+    }
+
+    .impact-card h3{
+      color:var(--gold);
+    }
+
+    .tech-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .tech-card{
+      display:grid;
+      gap:.45rem;
+      min-height:10rem;
+      padding:.9rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.1rem;
+      background:rgba(255,255,255,.035);
+    }
+
+    .tech-card b{
+      color:var(--blue2);
+      font-size:.64rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .tech-card span{
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.36;
+    }
+
+    .episode-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.65rem;
+      counter-reset:episode;
+    }
+
+    .episode{
+      counter-increment:episode;
+      display:grid;
+      gap:.28rem;
+      padding:.85rem;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:1rem;
+      background:rgba(255,255,255,.032);
+    }
+
+    .episode b{
+      color:var(--gold);
+      font-size:.62rem;
+      letter-spacing:.11em;
+      text-transform:uppercase;
+    }
+
+    .episode b::after{
+      content:" " counter(episode);
+    }
+
+    .episode span{
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.34;
+    }
+
+    .decision-list{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.55rem;
+      margin:0;
+      padding:0;
+      list-style:none;
+      counter-reset:decision;
+    }
+
+    .decision-list li{
+      counter-increment:decision;
+      margin:0;
+      padding:.86rem;
+      border:1px solid rgba(141,216,255,.16);
+      border-radius:1rem;
+      background:rgba(141,216,255,.045);
+      color:rgba(235,251,255,.88);
+      font-weight:850;
+    }
+
+    .decision-list li::before{
+      content:counter(decision) ". ";
+      color:var(--blue2);
+      font-weight:950;
+    }
+
+    .forbidden-list{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.55rem;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+
+    .forbidden-list li{
+      margin:0;
+      padding:.82rem;
+      border:1px solid rgba(255,157,145,.16);
+      border-radius:1rem;
+      background:rgba(255,157,145,.045);
+      color:rgba(255,230,226,.86);
+      font-weight:850;
+    }
+
+    .final-band{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.35rem);
+      display:grid;
+      gap:.9rem;
+      border:1px solid rgba(141,216,255,.28);
+      border-radius:clamp(1.25rem,5vw,2rem);
+      background:
+        radial-gradient(circle at 16% 0%,rgba(141,216,255,.12),transparent 36%),
+        radial-gradient(circle at 86% 26%,rgba(143,240,195,.10),transparent 34%),
+        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.024));
+      box-shadow:0 1.5rem 4rem rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .final-band strong{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.2rem,3vw,1.55rem);
+      line-height:1.05;
+      letter-spacing:-.04em;
+    }
+
+    .disclaimer{
+      padding:.9rem 1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.15rem;
+      background:rgba(255,255,255,.035);
+      color:var(--soft);
+      font-size:.88rem;
+      line-height:1.45;
+    }
+
+    .route-receipt,
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt],
+    .receipt{
+      display:none!important;
+      visibility:hidden!important;
+      overflow:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      inset:auto!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
+    }
+
+    footer{
       padding:1.35rem 0 .5rem;
       color:var(--faint);
       text-align:center;
       font-size:.76rem;
     }
 
-    @media (max-width:980px) {
-      .flow-grid { grid-template-columns:repeat(2,1fr); }
-      .dashboard { grid-template-columns:1fr; }
+    @media (max-width:1080px){
+      .grid.four,
+      .tech-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .episode-grid,
+      .decision-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .family-detail{grid-template-columns:1fr}
+    }
+
+    @media (max-width:980px){
+      .topbar{grid-template-columns:1fr;align-items:start}
+      .nav{justify-content:flex-start}
+      .grid.three,
+      .grid.two,
+      .split-list,
+      .impact-map,
+      .forbidden-list{grid-template-columns:1fr}
+    }
+
+    @media (max-width:720px){
+      .shell{width:min(100% - 22px,var(--max))}
+      h1{font-size:clamp(2.9rem,16vw,5rem)}
+      .hero{min-height:31rem;padding:1rem}
+      .actions{display:grid}
+      .button{width:100%}
+      .grid.four,
+      .tech-grid,
+      .episode-grid,
+      .decision-list{grid-template-columns:1fr}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+      }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#main">Skip to Water</a>
+  <a class="skip" href="#water-main">Skip to Water</a>
 
   <div class="shell">
-    <header class="card top">
-      <a class="brand state-link" href="/explore/frontier/water/">
-        <span class="mark">WT</span>
-        <span>
+    <header class="topbar" aria-label="Water header">
+      <a class="brand" href="/frontier/">
+        <span class="brand-mark" aria-hidden="true"><span>WA</span></span>
+        <span class="brand-copy">
           <span>Diamond Gate Bridge · Frontier</span>
-          <strong>Water · G1 Optimal</strong>
+          <strong>Water · Texas / HomeWater</strong>
         </span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
-        <a class="state-link" href="/door/">Door</a>
-        <a class="state-link" href="/home/">Home</a>
-        <a class="state-link" href="/explore/">Manor</a>
-        <a class="state-link" href="/frontier/" aria-current="page">Frontier</a>
-        <a class="state-link" href="/laws/">Laws</a>
-        <a class="state-link" href="/products/">Products</a>
-        <a class="state-link" href="/gauges/">Gauges</a>
+        <a href="/">Compass</a>
+        <a href="/explore/">Explore</a>
+        <a href="/frontier/">Frontier</a>
+        <a href="/explore/frontier/water/" aria-current="page">Water</a>
+        <a href="/explore/frontier/energy/">Energy</a>
+        <a href="/laws/">Laws</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <main id="main">
-      <section class="card hero">
-        <div class="kicker">Water Flow · Official Hierarchy</div>
-        <h1>Water</h1>
-        <h2>Flow has to stay clean, routed, and recoverable.</h2>
-        <p>
-          Water shows where supply comes from, where it moves, how it is stored, where it gets used,
-          where pressure builds, and how clean recovery keeps scarcity from becoming the default.
+    <main id="water-main">
+      <section class="panel hero" aria-labelledby="page-title">
+        <div class="kicker">Water · Education and Whole-Home Protection</div>
+
+        <h1 id="page-title">Texas water may be legal — but is it optimized for your home?</h1>
+
+        <h2>Measurement first. Education second. Treatment by chemistry.</h2>
+
+        <p class="lead">
+          EWG-based water education identifies contaminant families that may exceed stricter health-based guidelines. HomeWater-aligned whole-home filtration and softening language belongs in the reduction and household-protection lane, not the medical-guarantee lane.
         </p>
-        <div class="control-row">
-          <a class="button primary state-link" href="/gauges/">Read Gauges</a>
-          <a class="button state-link" href="/laws/">Check Laws</a>
-          <a class="button state-link" href="/explore/frontier/">Return to Frontier Hub</a>
+
+        <div class="principle">
+          Texas water may pass the law and still carry long-term exposure concerns. The answer is measurement, education, reduction, and household protection.
+        </div>
+
+        <div class="actions">
+          <a class="button blue" href="#families">Read the Six Families</a>
+          <a class="button" href="#matching">Match the Filter</a>
+          <a class="button green" href="#homewater">Understand HomeWater</a>
+          <a class="button gold" href="/frontier/">Return to Frontier</a>
         </div>
       </section>
 
-      <section class="card section" aria-labelledby="flow-title">
-        <div class="kicker">Water Flow</div>
-        <h2 id="flow-title">The useful question is not “is there water?” It is “can the flow survive use?”</h2>
+      <section class="panel section" aria-labelledby="source-title">
+        <div class="kicker">Source law</div>
+        <h2 id="source-title">Two sources. Two jobs.</h2>
 
-        <div class="flow-grid" aria-label="Water flow cycle">
-          <article class="flow-card">
-            <strong>Source</strong>
-            <span>Where does supply begin?</span>
+        <div class="grid two">
+          <article class="card">
+            <b>EWG role</b>
+            <strong>Contaminant education and health-guideline framing.</strong>
+            <span>EWG anchors the Texas contaminant-family discussion, utility-report awareness, and the distinction between legal compliance and stricter health-guideline framing.</span>
           </article>
-          <article class="flow-card">
-            <strong>Route</strong>
-            <span>How does water reach the use point?</span>
+
+          <article class="card good">
+            <b>HomeWater role</b>
+            <strong>Product-positioning and household-support claims.</strong>
+            <span>HomeWater anchors only HomeWater-aligned claims about whole-home filtration, reduction language, softening, scale, taste, odor, appliance support, and plumbing support.</span>
           </article>
-          <article class="flow-card">
-            <strong>Storage</strong>
-            <span>What protects future access?</span>
-          </article>
-          <article class="flow-card active">
-            <strong>Use</strong>
-            <span>Where does flow become support?</span>
-          </article>
-          <article class="flow-card">
-            <strong>Pressure</strong>
-            <span>Where does scarcity or overload appear?</span>
-          </article>
-          <article class="flow-card">
-            <strong>Recovery</strong>
-            <span>What can return clean enough to matter?</span>
-          </article>
-          <article class="flow-card">
-            <strong>Proof</strong>
-            <span>What can Gauges confirm?</span>
-          </article>
+        </div>
+
+        <div class="disclaimer">
+          Source separation rule: do not use HomeWater to prove EWG contaminant risk, and do not use EWG to prove a specific HomeWater system result. The page preserves education, reduction, and treatment matching without claiming total removal or medical prevention.
         </div>
       </section>
 
-      <section class="card section" aria-labelledby="dashboard-title">
-        <div class="kicker">Water Dashboard</div>
-        <h2 id="dashboard-title">Use active. Recovery next.</h2>
+      <section class="panel section" aria-labelledby="legal-title">
+        <div class="kicker">Legal versus health-guideline water</div>
+        <h2 id="legal-title">Legal does not always mean optimized.</h2>
 
-        <div class="dashboard">
-          <article class="metric">
-            <small>Current position</small>
-            <strong>Use is active.</strong>
-            <p>The page is asking whether available flow is turning into support, pressure, waste, or recoverable value.</p>
+        <div class="grid four">
+          <article class="card">
+            <b>Legal water</b>
+            <strong>Compliance can still be true.</strong>
+            <span>A utility may meet applicable federal legal standards while still showing contaminant levels that are higher than stricter health-guideline benchmarks.</span>
           </article>
-          <article class="metric">
-            <small>Next move</small>
-            <strong>Recovery comes next.</strong>
-            <p>Once use is visible, the system must decide what can return clean enough to keep the loop alive.</p>
+
+          <article class="card">
+            <b>Health-guideline water</b>
+            <strong>Stricter benchmarks can reveal concern.</strong>
+            <span>Health-guideline framing asks whether repeated exposure is optimized for long-term household health, not only whether the legal line is met.</span>
           </article>
-          <article class="metric">
-            <small>Practical read</small>
-            <strong>Scarcity usually starts as broken flow.</strong>
-            <p>Water must be sourced, routed, stored, used, recovered, and measured before the system can trust the supply.</p>
+
+          <article class="card">
+            <b>Household-use water</b>
+            <strong>Exposure is not only drinking.</strong>
+            <span>Water reaches cooking, showers, laundry, fixtures, pipes, appliances, and skin contact.</span>
           </article>
-          <article class="metric">
-            <small>Boundary</small>
-            <strong>Water does not replace proof.</strong>
-            <p>Water names flow. Laws bound the claim. Gauges measure whether the route is actually aligned.</p>
+
+          <article class="card">
+            <b>Long-term exposure</b>
+            <strong>Repeated exposure can matter.</strong>
+            <span>Detection does not mean instant danger for every person. Many water concerns are cumulative, dose-dependent, and tied to repeated exposure.</span>
           </article>
         </div>
       </section>
 
-      <section class="card section" aria-labelledby="controls-title">
-        <div class="kicker">Room Controls</div>
-        <h2 id="controls-title">Switch mode without losing the flow.</h2>
+      <section class="panel section" id="families" aria-labelledby="families-title">
+        <div class="kicker">Six contaminant families</div>
+        <h2 id="families-title">Do not call it generic dirty water.</h2>
 
-        <div class="control-row" role="group" aria-label="Mode controls">
-          <button class="tab" type="button" data-mode="source" aria-pressed="true">Source</button>
-          <button class="tab" type="button" data-mode="route" aria-pressed="false">Route</button>
-          <button class="tab" type="button" data-mode="recovery" aria-pressed="false">Recovery</button>
-          <button class="tab" type="button" data-mode="engineering" aria-pressed="false">Engineering</button>
+        <div class="grid three">
+          <article class="card">
+            <b>Family 1</b>
+            <strong>Disinfection byproducts</strong>
+            <span>Byproducts formed when disinfectants react with organic matter in source water.</span>
+          </article>
+
+          <article class="card">
+            <b>Family 2</b>
+            <strong>Heavy metals and metalloids</strong>
+            <span>Metals from geology, corrosion, old plumbing, industrial history, or distribution systems.</span>
+          </article>
+
+          <article class="card">
+            <b>Family 3</b>
+            <strong>Agricultural contaminants</strong>
+            <span>Nitrate, nitrite, herbicides, pesticides, fertilizer-related compounds, and runoff-linked contaminants.</span>
+          </article>
+
+          <article class="card">
+            <b>Family 4</b>
+            <strong>Industrial chemicals and VOCs</strong>
+            <span>Solvents, petroleum-linked contaminants, manufacturing residues, and volatile organic chemicals.</span>
+          </article>
+
+          <article class="card">
+            <b>Family 5</b>
+            <strong>PFAS / forever chemicals</strong>
+            <span>Persistent compounds linked to industrial, firefighting, coating, landfill, and wastewater pathways.</span>
+          </article>
+
+          <article class="card">
+            <b>Family 6</b>
+            <strong>Radiological contaminants</strong>
+            <span>Radium, uranium, gross alpha, beta particles, and related naturally occurring or context-specific contaminants.</span>
+          </article>
         </div>
+      </section>
 
-        <article class="readout" aria-live="polite">
-          <small id="mode-kicker">Source mode</small>
-          <h3 id="mode-title">Where does supply begin?</h3>
-          <p id="mode-copy">Before flow can be protected, the system has to name the source and whether the source is usable.</p>
+      <section class="panel section" aria-labelledby="breakdown-title">
+        <div class="kicker">Family breakdown</div>
+        <h2 id="breakdown-title">Each family needs its own origin, concern, exposure logic, and treatment lane.</h2>
+
+        <article class="family-card">
+          <header>
+            <b>Family 1</b>
+            <strong>Disinfection byproducts</strong>
+          </header>
+
+          <div class="family-detail">
+            <div class="detail">
+              <b>Includes</b>
+              <span>Trihalomethanes, TTHMs, chloroform, brominated byproducts, haloacetic acids, HAA5, HAA9, and bromate.</span>
+            </div>
+
+            <div class="detail">
+              <b>Human concern</b>
+              <span>Mostly long-term exposure, cancer-risk discussions, and possible reproductive or pregnancy-related concerns depending on compound, dose, and duration.</span>
+            </div>
+
+            <div class="detail">
+              <b>Treatment lane</b>
+              <span>Carbon and catalytic carbon are the relevant reduction lane for chlorine, chloramines, VOCs, and many organic byproducts depending on system design and maintenance.</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="family-card">
+          <header>
+            <b>Family 2</b>
+            <strong>Heavy metals and metalloids</strong>
+          </header>
+
+          <div class="family-detail">
+            <div class="detail">
+              <b>Includes</b>
+              <span>Lead, arsenic, chromium-6, mercury, barium, aluminum, manganese, copper, and related metals depending on the water system.</span>
+            </div>
+
+            <div class="detail">
+              <b>Human concern</b>
+              <span>Lead is neurological and developmental. Arsenic and chromium-6 are cancer-risk contaminants. Mercury is a nervous-system concern. Many effects are chronic rather than instant at ordinary tap-water exposure levels.</span>
+            </div>
+
+            <div class="detail">
+              <b>Treatment lane</b>
+              <span>Heavy-metal reduction must stay contaminant-specific. Arsenic, uranium, nitrate, radium, chromium-6, and dissolved ions may require reverse osmosis, ion exchange, or specialized treatment depending on testing.</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="family-card">
+          <header>
+            <b>Family 3</b>
+            <strong>Agricultural contaminants</strong>
+          </header>
+
+          <div class="family-detail">
+            <div class="detail">
+              <b>Includes</b>
+              <span>Nitrate, nitrite, atrazine, glyphosate, herbicides, pesticides, and fertilizer-related compounds.</span>
+            </div>
+
+            <div class="detail">
+              <b>Human concern</b>
+              <span>Nitrate is the high-alert infant case because it can interfere with oxygen transport. Atrazine and some agricultural chemicals raise endocrine and reproductive concern discussions.</span>
+            </div>
+
+            <div class="detail">
+              <b>Treatment lane</b>
+              <span>Carbon may reduce some pesticides and herbicides. Nitrate is different and often requires reverse osmosis or ion exchange.</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="family-card">
+          <header>
+            <b>Family 4</b>
+            <strong>Industrial chemicals and VOCs</strong>
+          </header>
+
+          <div class="family-detail">
+            <div class="detail">
+              <b>Includes</b>
+              <span>Benzene, toluene, industrial solvents, 1,2,3-trichloropropane, 1,4-dioxane, chlorinated solvents, and related VOCs.</span>
+            </div>
+
+            <div class="detail">
+              <b>Human concern</b>
+              <span>Some VOCs can produce acute symptoms at high exposure. Benzene is a long-term cancer-risk chemical. VOC exposure can include inhalation through shower vapor.</span>
+            </div>
+
+            <div class="detail">
+              <b>Treatment lane</b>
+              <span>Activated carbon and whole-home filtration may be positioned for VOC reduction where supported by system design, water chemistry, and maintenance.</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="family-card">
+          <header>
+            <b>Family 5</b>
+            <strong>PFAS / forever chemicals</strong>
+          </header>
+
+          <div class="family-detail">
+            <div class="detail">
+              <b>Includes</b>
+              <span>PFOS, PFOA, PFHxS, PFNA, GenX-related compounds, and broader PFAS family members where detected.</span>
+            </div>
+
+            <div class="detail">
+              <b>Human concern</b>
+              <span>PFAS are persistent and may accumulate. Long-term concerns can include immune effects, developmental concerns, cholesterol changes, liver effects, and cancer-risk discussions depending on compound.</span>
+            </div>
+
+            <div class="detail">
+              <b>Treatment lane</b>
+              <span>Use reduce-language only. Do not claim elimination unless exact system certification and contaminant-specific test support are supplied.</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="family-card">
+          <header>
+            <b>Family 6</b>
+            <strong>Radiological contaminants</strong>
+          </header>
+
+          <div class="family-detail">
+            <div class="detail">
+              <b>Includes</b>
+              <span>Radium-226, radium-228, uranium, gross alpha, beta particles, and related radiological contaminants where present.</span>
+            </div>
+
+            <div class="detail">
+              <b>Human concern</b>
+              <span>Chronic exposure is the main concern. Radium and uranium may contribute to cancer-risk discussions; uranium also has chemical kidney-toxicity concern.</span>
+            </div>
+
+            <div class="detail">
+              <b>Treatment lane</b>
+              <span>Do not claim standard whole-home carbon solves radiological contaminants. Testing determines whether reverse osmosis, ion exchange, or specialized treatment is required.</span>
+            </div>
+          </div>
         </article>
       </section>
 
-      <section class="card section" aria-labelledby="under-title">
-        <div class="kicker">Under the Hood</div>
-        <h2 id="under-title">Russian doll stays as structure, not public fog.</h2>
+      <section class="panel section" aria-labelledby="impact-title">
+        <div class="kicker">Human body impact map</div>
+        <h2 id="impact-title">Instant harm and long-term harm are different.</h2>
 
-        <details>
-          <summary>Open hierarchy</summary>
-          <div class="detail-body">
-            <p>Compass orients. Door admits. Home stabilizes. Manor maps. Frontier expands. Water flows. Laws bound. Gauges measure.</p>
+        <div class="impact-map">
+          <article class="impact-card acute">
+            <h3>Acute impact class</h3>
+            <ul>
+              <li>Nitrate in infants: oxygen-transport interference.</li>
+              <li>High-level VOC exposure: headache, dizziness, nausea, or irritation.</li>
+              <li>Severe chemical contamination events: do-not-use scenarios.</li>
+              <li>High metal exposure: gastrointestinal or neurological symptoms depending on chemical and dose.</li>
+            </ul>
+          </article>
 
-            <details class="nested">
-              <summary>Open cycle position</summary>
-              <div class="detail-body">
-                <p>Source complete. Route complete. Storage complete. Use active. Recovery next. Protection pending. Repeat pending.</p>
+          <article class="impact-card chronic">
+            <h3>Chronic impact class</h3>
+            <ul>
+              <li>Cancer-risk contaminants: arsenic, chromium-6, benzene, DBPs, radium, uranium.</li>
+              <li>Neurological contaminants: lead, mercury, manganese at concerning levels.</li>
+              <li>Endocrine-disrupting contaminants: atrazine and some agricultural or industrial chemicals.</li>
+              <li>Immune-effect contaminants: PFAS family.</li>
+              <li>Kidney/liver stress contaminants: uranium, some VOCs, and some metals.</li>
+              <li>Reproductive/developmental concern contaminants: nitrate, DBPs, atrazine, PFAS, and lead.</li>
+            </ul>
+          </article>
+        </div>
 
-                <details class="nested">
-                  <summary>Open ownership boundary</summary>
-                  <div class="detail-body">
-                    <p>Water owns supply, routing, storage, use points, pressure detection, recovery, and flow continuity.</p>
-                    <p>Water does not own energy conversion, waste accounting, product identity, law authority, Gauges scoring, route mutation, or generation pass claims.</p>
-                  </div>
-                </details>
-              </div>
-            </details>
-          </div>
-        </details>
+        <div class="principle">
+          Instant harm is usually dose-event driven. Long-term harm is usually repeated-exposure driven.
+        </div>
       </section>
 
-      <section class="card section" aria-labelledby="routes-title">
-        <div class="kicker">Frontier Routes</div>
-        <h2 id="routes-title">Move to another Frontier lane.</h2>
+      <section class="panel section" id="homewater" aria-labelledby="homewater-title">
+        <div class="kicker">HomeWater positioning</div>
+        <h2 id="homewater-title">Reduction, not magical elimination.</h2>
 
-        <nav class="nav" aria-label="Frontier lane routes">
-          <a class="state-link" href="/explore/frontier/">Frontier Hub</a>
-          <a class="state-link" href="/explore/frontier/closed-loop/">Closed Loop</a>
-          <a class="state-link" href="/explore/frontier/waste/">Waste</a>
-          <a class="state-link" href="/explore/frontier/energy/">Energy</a>
-          <a class="state-link" href="/explore/frontier/infrastructure/">Infrastructure</a>
-          <a class="state-link" href="/explore/frontier/urban/">Urban</a>
-          <a class="state-link" href="/explore/frontier/lattice/">Lattice</a>
-          <a class="state-link" href="/explore/frontier/vision/">Vision</a>
-        </nav>
+        <p>
+          HomeWater-aligned language may position whole-home filtration systems as designed to reduce common whole-home contaminants such as chlorine, chloramines, heavy metals, VOCs, PFOS/PFAS, sediment, particulates, taste, and odor, while softener or conditioning products may be positioned around softness, scale effects, detergent performance, plumbing support, and appliance support where source-supported.
+        </p>
+
+        <div class="grid three">
+          <article class="card good">
+            <b>Approved lane</b>
+            <strong>Designed to reduce.</strong>
+            <span>Use bounded wording: reduce, designed to reduce, help reduce, positioned to support, or may help depending on system type and water chemistry.</span>
+          </article>
+
+          <article class="card">
+            <b>Required limit</b>
+            <strong>Performance depends on the system.</strong>
+            <span>Results depend on system selection, installation, maintenance, filter life, local water chemistry, and contaminant type.</span>
+          </article>
+
+          <article class="card warn">
+            <b>Forbidden lane</b>
+            <strong>No medical or total-removal claims.</strong>
+            <span>Do not claim total elimination, disease prevention, cancer prevention, universal safety, or one-filter-solves-all treatment.</span>
+          </article>
+        </div>
       </section>
 
-      <details class="card receipt" open>
-        <summary>Status label</summary>
-        <pre>WATER_G1_OPTIMAL_CONCRETE_FLOW_TNT_v1
-STATUS=ACTIVE
-VISIBLE_TITLE=Water · G1 Optimal
-PUBLIC_PROOF_MARKER=Concrete Water Flow · G1 Optimal active
-PAGE=/explore/frontier/water/index.html
-ROUTE=/explore/frontier/water/
-PARENT=/explore/frontier/
-BASELINE=AUDRALIA_MANOR_CURRENT
-EXPRESSION=Concrete_Water_Flow_With_Russian_Doll_Underlay
-VISIBLE_FLOW=Source,Route,Storage,Use,Pressure,Recovery,Proof
-CYCLE_POSITION=Source_complete,Route_complete,Storage_complete,Use_active,Recovery_next,Protection_pending,Repeat_pending
-HIERARCHY=Compass→Door→Home→Manor→Frontier→Water→Laws→Gauges
-ROLE=frontier_water_flow_lane
-OWNS=supply,routing,storage,use_points,pressure_detection,recovery,flow_continuity
-DOES_NOT_OWN=energy_conversion,waste_accounting,product_identity,law_authority,gauges_scoring,route_mutation,generation_pass_claim
-COUPLED_SYSTEMS=closed_loop,energy,infrastructure,waste,urban
-PRIOR_LANGUAGE_HANDLING=prior_generation_framing_archival_only
-HEAVY_RUNTIME_LOADED=false
-RENDER_FILES_TOUCHED=false
-GAUGES_LOGIC_TOUCHED=false
-VISUAL_PASS_CLAIMED=false</pre>
-      </details>
+      <section class="panel section" id="matching" aria-labelledby="matching-title">
+        <div class="kicker">Filter technology matching</div>
+        <h2 id="matching-title">Choose treatment by chemistry, not fear.</h2>
+
+        <div class="tech-grid">
+          <article class="tech-card">
+            <b>Activated / catalytic carbon</b>
+            <span>Best messaging fit for chlorine, chloramines, taste, odor, VOCs, many organic chemicals, some DBPs, and some PFAS reduction depending on system design and maintenance.</span>
+          </article>
+
+          <article class="tech-card">
+            <b>KDF / catalytic blends</b>
+            <span>May be discussed in product-specific contexts for particulates, heavy metals, chlorine, VOCs, PFOS/PFAS, and related reduction claims where supported.</span>
+          </article>
+
+          <article class="tech-card">
+            <b>Sediment filtration</b>
+            <span>Targets dirt, rust, particulates, turbidity, and pre-filter protection.</span>
+          </article>
+
+          <article class="tech-card">
+            <b>Water softener</b>
+            <span>Targets hardness minerals and soft-water benefits. It is not a universal contaminant-removal claim.</span>
+          </article>
+
+          <article class="tech-card">
+            <b>Salt-free conditioning</b>
+            <span>Use scale-reduction or conditioning language. Do not claim true softening unless the product specifically reduces hardness minerals.</span>
+          </article>
+
+          <article class="tech-card">
+            <b>Reverse osmosis</b>
+            <span>May be needed for dissolved contaminants such as nitrate, arsenic, uranium, chromium-6, and some PFAS depending on testing and system selection.</span>
+          </article>
+
+          <article class="tech-card">
+            <b>Ion exchange</b>
+            <span>May be needed for nitrate, radium, uranium, arsenic, chromium-6, and other dissolved contaminants depending on water chemistry.</span>
+          </article>
+
+          <article class="tech-card">
+            <b>Specialized treatment</b>
+            <span>Some contaminant families require targeted media, professional testing, and contaminant-specific design.</span>
+          </article>
+        </div>
+
+        <div class="disclaimer">
+          Core distinction: filtered water and softer water are not the same claim. Softening targets hardness and scale. Filtration targets contaminants depending on media and chemistry.
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="video-title">
+        <div class="kicker">Educational video series</div>
+        <h2 id="video-title">Texas Tap Water: Legal, Clean, or Just Treated?</h2>
+
+        <div class="episode-grid">
+          <article class="episode">
+            <b>Episode</b>
+            <span>Legal does not necessarily equal optimized.</span>
+          </article>
+
+          <article class="episode">
+            <b>Episode</b>
+            <span>EWG health guidelines versus EPA legal limits.</span>
+          </article>
+
+          <article class="episode">
+            <b>Episode</b>
+            <span>Disinfection byproducts: chemicals created while killing germs.</span>
+          </article>
+
+          <article class="episode">
+            <b>Episode</b>
+            <span>Heavy metals: invisible contaminants with long memory.</span>
+          </article>
+
+          <article class="episode">
+            <b>Episode</b>
+            <span>Nitrates and infant health.</span>
+          </article>
+
+          <article class="episode">
+            <b>Episode</b>
+            <span>PFAS: forever chemicals in the water cycle.</span>
+          </article>
+
+          <article class="episode">
+            <b>Episode</b>
+            <span>VOCs and industrial contamination.</span>
+          </article>
+
+          <article class="episode">
+            <b>Episode</b>
+            <span>Radiological contaminants in groundwater.</span>
+          </article>
+
+          <article class="episode">
+            <b>Episode</b>
+            <span>Why taste and smell are not enough.</span>
+          </article>
+
+          <article class="episode">
+            <b>Episode</b>
+            <span>How whole-home filtration works.</span>
+          </article>
+
+          <article class="episode">
+            <b>Episode</b>
+            <span>Filtration versus softening.</span>
+          </article>
+
+          <article class="episode">
+            <b>Episode</b>
+            <span>How to read your EWG water report.</span>
+          </article>
+        </div>
+
+        <div class="principle">
+          Series close: test your water, check your utility report, compare legal limits to health guidelines, and choose treatment based on the contaminant family — not fear.
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="home-title">
+        <div class="kicker">Home environment</div>
+        <h2 id="home-title">Water moves through the whole home.</h2>
+
+        <p>
+          A home does not only drink water. It showers in water, cooks with water, washes clothes with water, runs appliances with water, and pushes water through every pipe. That is why whole-home treatment is framed as household-environment protection, not just drinking-water improvement.
+        </p>
+
+        <div class="grid three">
+          <article class="card">
+            <b>Taste and odor</b>
+            <strong>Everyday usability.</strong>
+            <span>Reduction of chlorine, chloramines, sediment, and some organics may improve taste and odor depending on water chemistry and system design.</span>
+          </article>
+
+          <article class="card">
+            <b>Shower and vapor</b>
+            <strong>Exposure is not only drinking.</strong>
+            <span>Some contaminants can matter through shower vapor or skin-contact pathways, depending on contaminant type and concentration.</span>
+          </article>
+
+          <article class="card">
+            <b>Pipes and appliances</b>
+            <strong>Scale and sediment affect the home.</strong>
+            <span>Softening, conditioning, and filtration may support appliance performance, plumbing condition, detergent effectiveness, and sediment control where source-supported.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="cta-title">
+        <div class="kicker">Water decision CTA</div>
+        <h2 id="cta-title">Check the report before choosing the solution.</h2>
+
+        <ol class="decision-list">
+          <li>Check your Texas water report.</li>
+          <li>Identify your contaminant family.</li>
+          <li>Separate hardness from contamination.</li>
+          <li>Match treatment to chemistry.</li>
+          <li>Maintain the system.</li>
+          <li>Retest when needed.</li>
+        </ol>
+      </section>
+
+      <section class="panel section" aria-labelledby="forbidden-title">
+        <div class="kicker">Forbidden claim lock</div>
+        <h2 id="forbidden-title">The page stops if the claim outruns the evidence.</h2>
+
+        <ul class="forbidden-list">
+          <li>Do not claim HomeWater removes all hazardous chemicals.</li>
+          <li>Do not claim HomeWater prevents disease or cancer.</li>
+          <li>Do not claim HomeWater guarantees safe water for every Texas home.</li>
+          <li>Do not claim every Texas home has every listed chemical.</li>
+          <li>Do not claim standard whole-home carbon solves every contaminant.</li>
+          <li>Do not claim softened water and filtered water are identical.</li>
+          <li>Do not use a verified $0.99/day claim unless an exact current offer source is supplied.</li>
+          <li>Do not claim PFAS elimination without exact system and contaminant-specific certification support.</li>
+        </ul>
+      </section>
+
+      <section class="final-band" aria-label="Water final statement">
+        <strong>Water quality is a measurement message, not a fear message.</strong>
+        <p>
+          Texas water may pass the law and still carry long-term exposure concerns. EWG identifies the contaminant families. HomeWater offers a whole-home filtration and softening pathway for many common contaminant, taste, odor, sediment, scale, plumbing, and appliance concerns. The lawful public message is education, reduction, and household protection.
+        </p>
+
+        <div class="tagline">
+          <span class="tag">Measure first</span>
+          <span class="tag">Identify family</span>
+          <span class="tag">Reduce, not eliminate</span>
+          <span class="tag">Filter by chemistry</span>
+          <span class="tag">Protect the home</span>
+        </div>
+
+        <div class="actions">
+          <a class="button blue" href="#families">Read Families</a>
+          <a class="button green" href="#homewater">Understand HomeWater</a>
+          <a class="button gold" href="/frontier/">Return to Frontier</a>
+          <a class="button" href="/gauges/">Check Gauges</a>
+        </div>
+
+        <div class="disclaimer">
+          Educational information only, not medical advice. Filtration performance depends on system selection, installation, maintenance, filter life, contaminant type, and local water chemistry. Use water testing and utility reports to match treatment to actual conditions.
+        </div>
+      </section>
+
+      <template id="route-receipt" data-route-receipt>
+FRONTIER_WATER_TEXAS_HOMEWATER_EDUCATION_RENEWAL_TNT_v1
+route=/explore/frontier/water/
+page=frontier_water
+source_psalm=PSALM_PACKET_TEXAS_WATER_HAZARD_HOMEWATER_FULL_v1.0
+ack_status=TRANSITORY_ACK_PACK_SUPERSEDED
+primary_source_role=EWG_Tap_Water_Database_Texas
+secondary_source_role=HomeWater_product_and_whole_home_filtration_claims
+public_lane=education,measurement,reduction,household_protection
+six_families=disinfection_byproducts,heavy_metals_metalloids,agricultural_contaminants,industrial_chemicals_VOCs,PFAS_forever_chemicals,radiological_contaminants
+acute_chronic_split=true
+homewater_lane=whole_home_filtration,softening,scale_reduction,appliance_support,plumbing_support
+filter_matching=carbon,catalytic_carbon,KDF,sediment_filtration,softening,salt_free_conditioning,reverse_osmosis,ion_exchange,specialized_treatment
+source_separation=true
+reduce_not_eliminate=true
+filtration_softening_distinction=true
+treatment_depends_on=testing,system_selection,installation,maintenance,filter_life,local_water_chemistry,contaminant_type
+nitrate_arsenic_uranium_radium_chromium6_dissolved_ions_not_collapsed_into_standard_carbon=true
+decision_cta=check_report,identify_contaminant_family,separate_hardness_from_contamination,match_treatment_to_chemistry,maintain_system,retest_when_needed
+forbidden_claims=total_removal,medical_prevention,cancer_prevention,all_Texas_homes_safe,every_home_has_every_chemical,unsourced_99_cents_per_day,universal_treatment_certainty,standard_carbon_solves_everything,softening_equals_filtration
+generated_image=false
+graphic_box=false
+visual_pass_claimed=false
+      </template>
     </main>
 
     <footer>
-      Diamond Gate Bridge · Frontier · Water · G1 Optimal · Concrete Water Flow.
+      FRONTIER_WATER_TEXAS_HOMEWATER_EDUCATION_RENEWAL_TNT_v1 · Water · Texas Education · HomeWater Reduction Lane.
     </footer>
   </div>
-
-  <script>
-    (() => {
-      "use strict";
-
-      const modes = {
-        source: [
-          "Source mode",
-          "Where does supply begin?",
-          "Before flow can be protected, the system has to name the source and whether the source is usable."
-        ],
-        route: [
-          "Route mode",
-          "How does water reach the use point?",
-          "Routing decides whether water remains accessible, protected, and useful before pressure appears."
-        ],
-        recovery: [
-          "Recovery mode",
-          "What can return clean enough to matter?",
-          "Recovery keeps flow from becoming one-way depletion."
-        ],
-        engineering: [
-          "Engineering mode",
-          "Implementation stays bounded.",
-          "Engineering names route ownership, flow boundary, receipt integrity, and no-mutation proof."
-        ]
-      };
-
-      const tabs = Array.from(document.querySelectorAll(".tab"));
-      const kicker = document.getElementById("mode-kicker");
-      const title = document.getElementById("mode-title");
-      const copy = document.getElementById("mode-copy");
-
-      function setMode(mode) {
-        const data = modes[mode] || modes.source;
-
-        tabs.forEach((tab) => {
-          tab.setAttribute("aria-pressed", tab.dataset.mode === mode ? "true" : "false");
-        });
-
-        kicker.textContent = data[0];
-        title.textContent = data[1];
-        copy.textContent = data[2];
-      }
-
-      function syncLinks() {
-        const params = new URLSearchParams(window.location.search);
-        params.set("gd_lang", params.get("gd_lang") || "en");
-        params.set("gd_style", params.get("gd_style") || "informal");
-        params.set("gd_time", params.get("gd_time") || "now");
-        params.set("gd_depth", params.get("gd_depth") || "explore");
-        params.set("lane", params.get("lane") || "platform");
-
-        document.querySelectorAll(".state-link").forEach((link) => {
-          const url = new URL(link.getAttribute("href"), window.location.origin);
-          params.forEach((value, key) => url.searchParams.set(key, value));
-          link.href = url.pathname + "?" + url.searchParams.toString();
-        });
-      }
-
-      tabs.forEach((tab) => {
-        tab.addEventListener("click", () => setMode(tab.dataset.mode || "source"));
-      });
-
-      setMode("source");
-      syncLinks();
-    })();
-  </script>
 </body>
 </html>

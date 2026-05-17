@@ -3,52 +3,54 @@
   lang="en"
   data-route="/explore/frontier/energy/"
   data-page="frontier-energy"
-  data-contract="FRONTIER_ENERGY_PER_PATHWAY_DUAL_LENS_COMPASS_GEM_RENEWAL_TNT_v17"
-  data-source-binding="FRONTIER_ENERGY_PER_PATHWAY_DUAL_LENS_COMPASS_GEM_PREGAME_TO_POSTGAME_BINDING_v17"
-  data-visual-authority="compass-style-gem-standard"
-  data-content-authority="frontier-energy-readiness-packet"
-  data-public-subject="fusion-readiness-storage-solar-hedge-plasma-boundary-advanced-buffer-future-offtake-safeguards-claim-discipline"
-  data-lens-scope="every-clicked-pathway"
-  data-platform-lens="public-ted-style-meaning-audralia-inheritance-bounded-learning"
-  data-engineering-lens="operating-language-inputs-outputs-constraints-safety-exclusions-kill-conditions"
+  data-version="G2-V18"
+  data-contract="FRONTIER_ENERGY_COMPASS_GEM_BASELINE_DUAL_LENS_RENEWAL_TNT_v18"
+  data-previous-contract="FRONTIER_ENERGY_PER_PATHWAY_DUAL_LENS_COMPASS_GEM_RENEWAL_TNT_v17"
+  data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
+  data-source-symbol-authority="compassOrganicGem"
+  data-role="frontier-energy"
+  data-audralia-first="true"
+  data-per-pathway-dual-lens="true"
+  data-platform-lens="true"
+  data-engineering-lens="true"
   data-incorrect-model="discarded"
+  data-static-page-usable-without-js="true"
   data-heavy-runtime-loaded="false"
+  data-runtime-public-message="false"
   data-generated-image="false"
   data-graphic-box="false"
+  data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Energy · Fusion Readiness · Diamond Gate Bridge</title>
+  <title>Energy · Frontier Readiness · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Energy explores fusion readiness through Audralia’s simulation world with per-pathway Platform and Engineering lenses for storage, solar hedge, plasma boundaries, advanced buffers, future offtake, safeguards, and claim discipline."
+    content="Diamond Gate Bridge Energy begins with Audralia as a simulation world and opens frontier energy pathways through Platform and Engineering lenses."
   >
-  <link rel="canonical" href="https://diamondgatebridge.com/explore/frontier/energy/">
-  <meta name="theme-color" content="#02040b">
 
   <style>
     :root{
       color-scheme:dark;
       --bg:#02040b;
       --ink:#fff4d8;
-      --muted:rgba(230,238,255,.76);
-      --soft:rgba(230,238,255,.58);
-      --faint:rgba(230,238,255,.42);
+      --muted:rgba(230,238,255,.78);
+      --faint:rgba(230,238,255,.50);
       --gold:#f3c86f;
       --gold2:#ffe8a3;
-      --ice:#bdeeff;
-      --ice2:#7bd7ff;
+      --blue:#8dd8ff;
       --green:#8ff0c3;
-      --violet:#9d7cff;
-      --violet2:#d8caff;
-      --red:#ff9d91;
+      --violet:#8f65ff;
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
-      --shadow:0 30px 100px rgba(0,0,0,.44);
-      --max:1220px;
+      --shadow:0 32px 110px rgba(0,0,0,.48);
+      --max:1180px;
+      --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+      --orbit-duration:52s;
+      --gem-breathe-duration:8.8s;
     }
 
     *{box-sizing:border-box}
@@ -59,7 +61,7 @@
       background:var(--bg);
       scroll-behavior:smooth;
       overflow-x:hidden;
-      scroll-padding-top:6.5rem;
+      scroll-padding-top:1rem;
     }
 
     body{
@@ -71,11 +73,11 @@
       line-height:1.5;
       overflow-x:hidden;
       background:
-        radial-gradient(circle at 50% -12%,rgba(243,200,111,.22),transparent 28rem),
-        radial-gradient(circle at 12% 16%,rgba(123,215,255,.20),transparent 30rem),
-        radial-gradient(circle at 88% 26%,rgba(157,124,255,.18),transparent 28rem),
-        radial-gradient(circle at 50% 86%,rgba(143,240,195,.10),transparent 34rem),
-        linear-gradient(180deg,#090b16 0%,#030713 58%,#010207 100%);
+        radial-gradient(circle at 50% -8%,rgba(243,200,111,.20),transparent 28rem),
+        radial-gradient(circle at 12% 18%,rgba(36,120,255,.20),transparent 28rem),
+        radial-gradient(circle at 88% 30%,rgba(141,216,255,.14),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(190,170,255,.12),transparent 34rem),
+        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
     }
@@ -87,68 +89,30 @@
       z-index:0;
       pointer-events:none;
       background-image:
-        radial-gradient(circle,rgba(255,255,255,.15) 0 1px,transparent 1.5px),
-        linear-gradient(rgba(243,200,111,.035) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(123,215,255,.035) 1px,transparent 1px);
+        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
       background-size:220px 260px,54px 54px,54px 54px;
       opacity:.22;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.94),rgba(0,0,0,.55) 66%,rgba(0,0,0,.25));
-    }
-
-    body::after{
-      content:"";
-      position:fixed;
-      inset:-18%;
-      z-index:0;
-      pointer-events:none;
-      background:
-        conic-gradient(from 90deg at 50% 50%,
-          transparent 0deg,
-          rgba(243,200,111,.08) 54deg,
-          transparent 112deg,
-          rgba(157,124,255,.08) 176deg,
-          transparent 226deg,
-          rgba(123,215,255,.07) 292deg,
-          transparent 360deg);
-      filter:blur(48px);
-      opacity:.54;
-      animation:fieldDrift 38s linear infinite;
-    }
-
-    @keyframes fieldDrift{
-      from{transform:rotate(0deg) scale(1)}
-      to{transform:rotate(360deg) scale(1)}
-    }
-
-    @keyframes crystalBreathe{
-      0%,100%{filter:brightness(1.06) contrast(1.08) saturate(1.06)}
-      50%{filter:brightness(1.20) contrast(1.14) saturate(1.14)}
-    }
-
-    @keyframes orbitSpin{
-      from{transform:translate(-50%,-50%) rotate(0deg)}
-      to{transform:translate(-50%,-50%) rotate(360deg)}
-    }
-
-    @keyframes counterSpin{
-      from{transform:translate(-50%,-50%) rotate(0deg)}
-      to{transform:translate(-50%,-50%) rotate(-360deg)}
-    }
-
-    @keyframes signalSweep{
-      0%{transform:translateX(-130%);opacity:0}
-      18%{opacity:.68}
-      52%{opacity:.38}
-      100%{transform:translateX(130%);opacity:0}
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
 
     a{color:inherit;text-decoration:none}
 
     a:focus-visible,
+    button:focus-visible,
     label:focus-visible,
-    summary:focus-visible{
+    [tabindex]:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
+    }
+
+    .svg-defs{
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
     }
 
     .skip{
@@ -165,19 +129,12 @@
 
     .skip:focus{left:8px}
 
-    .svg-defs{
-      width:0;
-      height:0;
-      position:absolute;
-      overflow:hidden;
-    }
-
     .shell{
       position:relative;
       z-index:2;
-      width:min(var(--max),calc(100% - 26px));
+      width:min(var(--max),calc(100% - 28px));
       margin:0 auto;
-      padding:max(18px,env(safe-area-inset-top)) 0 max(42px,env(safe-area-inset-bottom));
+      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
     }
 
     .topbar{
@@ -185,33 +142,34 @@
       grid-template-columns:auto 1fr;
       align-items:center;
       gap:18px;
-      padding:10px 0 14px;
+      padding:12px 0 18px;
     }
 
     .brand{
       display:grid;
       grid-template-columns:auto 1fr;
       align-items:center;
-      gap:.82rem;
-      min-width:250px;
+      gap:.9rem;
+      min-width:260px;
     }
 
     .brand-mark{
-      width:3.85rem;
-      height:3.85rem;
+      width:4.2rem;
+      height:4.2rem;
       display:grid;
       place-items:center;
+      border:1px solid rgba(243,200,111,.44);
       transform:rotate(45deg);
-      border-radius:1.1rem;
-      border:1px solid rgba(243,200,111,.36);
+      clip-path:var(--brand-gem);
       background:
-        linear-gradient(135deg,rgba(255,255,255,.72),rgba(255,255,255,0) 23%),
-        radial-gradient(circle at 34% 18%,rgba(255,255,255,.68),transparent 28%),
-        conic-gradient(from 38deg,rgba(255,255,255,.40),rgba(243,200,111,.30),rgba(123,215,255,.58),rgba(218,241,255,.54),rgba(243,200,111,.30),rgba(255,255,255,.40)),
-        linear-gradient(145deg,rgba(32,58,82,.96),rgba(4,8,20,.98));
-      clip-path:path("M 31 2 C 43 3,55 8,64 19 C 75 31,76 45,68 58 C 60 72,47 82,32 85 C 17 82,5 70,2 53 C 1 39,9 18,20 8 C 23 5,27 3,31 2 Z");
-      box-shadow:0 0 2.4rem rgba(123,215,255,.30),0 0 1.5rem rgba(243,200,111,.18),0 1.1rem 2.6rem rgba(0,0,0,.44),inset 0 1px 0 rgba(255,255,255,.42);
-      animation:crystalBreathe 6s ease-in-out infinite;
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(36,120,255,.20),rgba(1,15,60,.58),rgba(243,200,111,.18),rgba(255,255,255,.28)),
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.30),transparent 42%),
+        linear-gradient(145deg,rgba(9,44,112,.95),rgba(5,8,20,.98));
+      box-shadow:
+        0 0 2rem rgba(36,120,255,.28),
+        0 1.2rem 2.8rem rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.16);
     }
 
     .brand-mark span{
@@ -222,17 +180,20 @@
       text-shadow:0 2px 10px rgba(0,0,0,.85);
     }
 
-    .brand-copy{display:grid;gap:.16rem}
+    .brand-copy{
+      display:grid;
+      gap:.18rem;
+    }
 
     .brand-copy strong{
-      font-size:clamp(1.02rem,2.7vw,1.56rem);
+      font-size:clamp(1.08rem,3vw,1.7rem);
       line-height:1;
       letter-spacing:-.045em;
     }
 
     .brand-copy span{
       color:var(--muted);
-      font-size:.7rem;
+      font-size:.74rem;
       font-weight:950;
       letter-spacing:.14em;
       text-transform:uppercase;
@@ -242,23 +203,20 @@
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
-      gap:.42rem;
+      gap:.48rem;
     }
 
-    .nav a,
-    .mini-nav a,
-    .button,
-    .return-orbit{
-      min-height:2.16rem;
+    .nav a{
+      min-height:2.25rem;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       border:1px solid rgba(255,255,255,.13);
       border-radius:999px;
-      padding:.48rem .7rem;
+      padding:.5rem .74rem;
       color:rgba(241,246,255,.84);
       background:rgba(255,255,255,.035);
-      font-size:.64rem;
+      font-size:.68rem;
       font-weight:950;
       letter-spacing:.055em;
       text-transform:uppercase;
@@ -267,32 +225,24 @@
     }
 
     .nav a:hover,
-    .mini-nav a:hover,
-    .button:hover,
-    .return-orbit:hover{
+    .nav a:focus-visible{
       transform:translateY(-2px);
-      border-color:rgba(243,200,111,.52);
+      border-color:rgba(243,200,111,.46);
+      outline:none;
     }
 
-    .nav a[aria-current="page"],
-    .mini-nav a.primary,
-    .button.gold,
-    .return-orbit{
+    .nav a[aria-current="page"]{
       border-color:rgba(243,200,111,.88);
-      color:#06101c;
+      color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
-    .button.blue{border-color:rgba(123,215,255,.44);color:#dff7ff;background:rgba(123,215,255,.075)}
-    .button.green{border-color:rgba(143,240,195,.44);color:#d9ffe9;background:rgba(143,240,195,.075)}
-    .button.violet{border-color:rgba(157,124,255,.44);color:var(--violet2);background:rgba(157,124,255,.075)}
-
     .panel{
       border:1px solid var(--line);
-      border-radius:clamp(1.25rem,4vw,2.1rem);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        radial-gradient(circle at 14% 0%,rgba(243,200,111,.11),transparent 28rem),
-        radial-gradient(circle at 86% 18%,rgba(157,124,255,.12),transparent 28rem),
+        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(36,120,255,.14),transparent 28rem),
         linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
         var(--panel);
       box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
@@ -301,26 +251,51 @@
 
     .hero{
       position:relative;
-      min-height:clamp(18rem,30vw,24rem);
+      min-height:clamp(27rem,52vw,39rem);
       display:grid;
       align-content:center;
-      gap:.82rem;
-      padding:clamp(1.05rem,4vw,2.5rem);
-      margin-top:.45rem;
+      gap:1rem;
+      padding:clamp(1.45rem,5vw,3.4rem);
+      margin-top:.6rem;
       isolation:isolate;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      right:clamp(1rem,6vw,5.5rem);
+      top:50%;
+      z-index:0;
+      width:clamp(10rem,28vw,20rem);
+      height:clamp(10rem,28vw,20rem);
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:2.9rem;
+      transform:translateY(-50%) rotate(45deg);
+      background:
+        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
+        radial-gradient(circle at 50% 72%,rgba(36,120,255,.18),transparent 62%),
+        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      animation:heroAnchorPulse 8s ease-in-out infinite;
+      pointer-events:none;
+      opacity:.52;
+    }
+
+    @keyframes heroAnchorPulse{
+      0%,100%{opacity:.42;filter:brightness(.95)}
+      50%{opacity:.58;filter:brightness(1.1)}
     }
 
     .kicker{
       width:fit-content;
       display:inline-flex;
       align-items:center;
-      gap:.54rem;
-      padding:.52rem .86rem;
+      gap:.58rem;
+      padding:.58rem .95rem;
       border:1px solid rgba(255,255,255,.14);
       border-radius:999px;
       color:rgba(230,238,255,.86);
       background:rgba(255,255,255,.04);
-      font-size:.68rem;
+      font-size:.72rem;
       font-weight:950;
       letter-spacing:.14em;
       text-transform:uppercase;
@@ -330,20 +305,20 @@
 
     .kicker::before{
       content:"";
-      width:.66rem;
-      height:.66rem;
-      border-radius:.16rem;
+      width:.72rem;
+      height:.72rem;
+      border-radius:.18rem;
       transform:rotate(45deg);
       background:linear-gradient(135deg,var(--gold2),var(--gold));
-      box-shadow:0 0 1rem rgba(243,200,111,.46);
+      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
     }
 
     h1{
       margin:0;
       max-width:1020px;
-      font-size:clamp(2.55rem,7.7vw,5.85rem);
-      line-height:.86;
-      letter-spacing:-.105em;
+      font-size:clamp(3.7rem,11vw,7.2rem);
+      line-height:.84;
+      letter-spacing:-.112em;
       text-wrap:balance;
       position:relative;
       z-index:2;
@@ -351,38 +326,45 @@
 
     h2{
       margin:0;
-      color:var(--gold2);
-      font-size:clamp(1.25rem,3.8vw,2.25rem);
-      line-height:1;
-      letter-spacing:-.065em;
+      color:var(--gold);
+      font-size:clamp(1.45rem,4.7vw,2.75rem);
+      line-height:.98;
+      letter-spacing:-.07em;
       text-wrap:balance;
+      position:relative;
+      z-index:2;
     }
 
     h3{
       margin:0;
       color:rgba(255,244,216,.98);
-      font-size:clamp(1.15rem,2.8vw,1.65rem);
+      font-size:clamp(1.25rem,3.1vw,1.85rem);
       line-height:1;
-      letter-spacing:-.045em;
+      letter-spacing:-.052em;
     }
 
     p{
       margin:0;
       color:var(--muted);
-      font-size:clamp(.94rem,2.4vw,1.08rem);
-      line-height:1.48;
+      font-size:clamp(.98rem,2.7vw,1.16rem);
+      line-height:1.55;
     }
 
-    .lead{max-width:940px;position:relative;z-index:2}
+    .lead{
+      max-width:940px;
+      position:relative;
+      z-index:2;
+    }
 
-    .principle{
-      max-width:980px;
-      padding:.82rem .95rem;
-      border:1px solid rgba(243,200,111,.24);
-      border-radius:1.05rem;
-      color:rgba(255,244,216,.94);
-      background:rgba(243,200,111,.070);
-      font-weight:900;
+    .quote{
+      max-width:930px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.92);
+      background:rgba(243,200,111,.065);
+      font-size:clamp(1rem,2.7vw,1.18rem);
+      font-weight:850;
       position:relative;
       z-index:2;
     }
@@ -390,281 +372,275 @@
     .actions{
       display:flex;
       flex-wrap:wrap;
-      gap:.56rem;
-      margin-top:.08rem;
+      gap:.62rem;
+      margin-top:.2rem;
       position:relative;
       z-index:2;
     }
 
-    .mini-nav{
-      position:sticky;
-      top:.45rem;
-      z-index:20;
-      margin:.8rem 0 .9rem;
-      border:1px solid rgba(243,200,111,.18);
-      border-radius:1.18rem;
-      background:
-        radial-gradient(circle at 10% 0%,rgba(243,200,111,.10),transparent 20rem),
-        rgba(4,8,19,.86);
-      box-shadow:0 1rem 2.4rem rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.06);
-      backdrop-filter:blur(16px);
-      overflow:hidden;
-    }
-
-    .mini-nav-inner{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.36rem;
-      padding:.62rem;
+    .button{
+      min-height:2.65rem;
+      display:inline-flex;
       align-items:center;
       justify-content:center;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      padding:.65rem 1rem;
+      background:rgba(255,255,255,.045);
+      color:rgba(241,246,255,.88);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .orbit-board{
-      position:relative;
-      display:block;
-      margin:.9rem 0;
-      padding:clamp(.8rem,2vw,1.2rem);
-      isolation:isolate;
+    .button:hover,
+    .button:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.62);
+      outline:none;
     }
 
-    .orbit-stage{
+    .button.gold{
+      border-color:rgba(243,200,111,.9);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+    }
+
+    .button.green{
+      border-color:rgba(143,240,195,.42);
+      color:var(--green);
+      background:rgba(143,240,195,.07);
+    }
+
+    .section{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
+      display:grid;
+      gap:1.05rem;
+    }
+
+    .compass-stage{
       position:relative;
-      width:100%;
-      height:clamp(35rem,62vw,44rem);
-      margin-top:.85rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:clamp(1.3rem,4vw,2.2rem);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(243,200,111,.09),transparent 11rem),
-        radial-gradient(circle at 50% 50%,rgba(123,215,255,.12),transparent 20rem),
-        radial-gradient(circle at 50% 54%,rgba(157,124,255,.10),transparent 26rem),
-        linear-gradient(180deg,rgba(3,8,21,.88),rgba(2,5,15,.96));
+      min-height:clamp(42rem,78vw,58rem);
+      display:grid;
+      place-items:center;
       overflow:hidden;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 1.4rem 4rem rgba(0,0,0,.26);
+      isolation:isolate;
+      border:1px solid rgba(184,205,255,.13);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      background:
+        radial-gradient(circle at 50% 40%,rgba(141,216,255,.10),transparent 18rem),
+        radial-gradient(circle at 50% 62%,rgba(36,120,255,.13),transparent 24rem),
+        radial-gradient(circle at 50% 77%,rgba(243,200,111,.065),transparent 28rem),
+        linear-gradient(180deg,rgba(1,5,16,.70),rgba(2,6,16,.94));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .orbit-stage::before,
-    .orbit-stage::after{
+    .compass-stage::before,
+    .compass-stage::after{
       content:"";
       position:absolute;
       left:50%;
       top:50%;
       border-radius:50%;
-      pointer-events:none;
       transform:translate(-50%,-50%);
+      pointer-events:none;
     }
 
-    .orbit-stage::before{
-      width:min(70%,42rem);
-      height:min(62%,30rem);
-      border:1px solid rgba(243,200,111,.17);
+    .compass-stage::before{
+      width:min(84%,44rem);
+      height:min(62%,28rem);
+      border:1px solid rgba(243,200,111,.13);
       box-shadow:
-        0 0 4rem rgba(243,200,111,.035),
-        inset 0 0 2rem rgba(243,200,111,.025);
+        0 0 3rem rgba(36,120,255,.12),
+        inset 0 0 30px rgba(141,216,255,.045);
+      animation:orbitTurn 42s linear infinite;
     }
 
-    .orbit-stage::after{
-      width:min(50%,30rem);
-      height:min(42%,20rem);
-      border:1px solid rgba(123,215,255,.14);
+    .compass-stage::after{
+      width:min(62%,30rem);
+      height:min(42%,19rem);
+      border:1px solid rgba(141,216,255,.13);
+      box-shadow:0 0 3rem rgba(141,216,255,.08);
+      animation:orbitTurnReverse 38s linear infinite;
     }
 
-    .orbit-signal{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      overflow:hidden;
+    @keyframes orbitTurn{
+      from{transform:translate(-50%,-50%) rotate(-12deg)}
+      to{transform:translate(-50%,-50%) rotate(348deg)}
     }
 
-    .orbit-signal::before{
-      content:"";
-      position:absolute;
-      left:0;
-      right:0;
-      top:50%;
-      height:1px;
-      background:linear-gradient(90deg,transparent,rgba(243,200,111,.56),rgba(157,124,255,.40),transparent);
-      animation:signalSweep 8.5s ease-in-out infinite;
+    @keyframes orbitTurnReverse{
+      from{transform:translate(-50%,-50%) rotate(24deg)}
+      to{transform:translate(-50%,-50%) rotate(-336deg)}
     }
 
-    .orbit-track{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:min(70%,42rem);
-      height:min(62%,30rem);
-      transform:translate(-50%,-50%);
-      transform-origin:50% 50%;
-      animation:orbitSpin 88s linear infinite;
-      will-change:transform;
-      z-index:4;
-    }
-
-    .center-node,
-    .pathway-node{
+    .compass-center,
+    .compass-node{
       position:absolute;
       display:grid;
       place-items:center;
       text-align:center;
-      border:0;
-      padding:0;
-      color:inherit;
-      isolation:isolate;
+      color:var(--ink);
+      z-index:4;
+      transition:transform .18s ease,filter .18s ease;
+      animation:gemFloat 7.2s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
     }
 
-    .center-node{
+    .compass-center{
       left:50%;
       top:50%;
-      width:clamp(10rem,19vw,15.7rem);
-      height:clamp(7rem,12.8vw,10.2rem);
+      width:clamp(11rem,24vw,16rem);
+      height:clamp(8rem,17vw,11.6rem);
       transform:translate(-50%,-50%);
-      z-index:7;
+      z-index:6;
+      pointer-events:none;
     }
 
-    .pathway-node{
-      width:clamp(5.1rem,8.1vw,7.55rem);
-      height:clamp(4.05rem,6.6vw,5.95rem);
+    .compass-node{
+      width:clamp(7.15rem,14.2vw,10.4rem);
+      height:clamp(5.25rem,10.4vw,7.65rem);
+      left:var(--x);
+      top:var(--y);
       transform:translate(-50%,-50%);
-      z-index:5;
     }
 
-    .node-inner{
+    .compass-node:hover,
+    .compass-node:focus-visible{
+      transform:translate(-50%,-50%) scale(1.055);
+      filter:brightness(1.13) saturate(1.08);
+      outline:none;
+    }
+
+    @keyframes gemFloat{
+      0%,100%{margin-top:0}
+      50%{margin-top:-.42rem}
+    }
+
+    .gem-core{
       position:absolute;
-      left:50%;
-      top:50%;
-      width:100%;
-      height:100%;
-      transform:translate(-50%,-50%);
-      animation:counterSpin 88s linear infinite;
-      transition:filter .2s ease,scale .2s ease;
-    }
-
-    .center-node .node-inner{
-      animation:none;
-      transform:translate(-50%,-50%);
-    }
-
-    .pathway-node:hover .node-inner,
-    .center-node:hover .node-inner{
-      filter:brightness(1.17) saturate(1.14);
-      scale:1.055;
-    }
-
-    .crystal-svg{
-      width:100%;
-      height:100%;
-      display:block;
-      overflow:visible;
-      filter:drop-shadow(0 0 1.15rem rgba(123,215,255,.32)) drop-shadow(0 .8rem 1.1rem rgba(0,0,0,.30));
-      animation:crystalBreathe 7s ease-in-out infinite;
-    }
-
-    .center-node .crystal-svg{
-      filter:drop-shadow(0 0 1.8rem rgba(243,200,111,.28)) drop-shadow(0 0 1.6rem rgba(123,215,255,.34)) drop-shadow(0 1rem 1.3rem rgba(0,0,0,.34));
-    }
-
-    .node-label{
-      position:absolute;
-      left:50%;
-      top:52%;
-      z-index:5;
-      transform:translate(-50%,-50%);
+      inset:0;
       display:grid;
-      gap:.1rem;
-      min-width:67%;
-      padding:.27rem .32rem;
-      border:1px solid rgba(255,255,255,.16);
-      border-radius:.78rem;
-      background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.045));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 .35rem .8rem rgba(0,0,0,.16);
-      backdrop-filter:blur(5px);
-      text-shadow:0 2px 9px rgba(0,0,0,.9);
+      place-items:center;
+      pointer-events:none;
+      animation:gemBreathe var(--gem-breathe-duration) ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+      transform-origin:50% 50%;
     }
 
-    .node-label strong{
+    @keyframes gemBreathe{
+      0%,100%{transform:translateY(0) rotate(var(--tilt-a,-1.6deg)) scale(1);filter:brightness(1)}
+      50%{transform:translateY(-.22rem) rotate(var(--tilt-b,2deg)) scale(1.025);filter:brightness(1.12)}
+    }
+
+    .gem-svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      pointer-events:none;
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
+        drop-shadow(0 0 1.15rem rgba(36,120,255,.18))
+        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
+    }
+
+    .compass-center .gem-svg{
+      filter:
+        drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
+        drop-shadow(0 0 1.65rem rgba(36,120,255,.23))
+        drop-shadow(0 0 .85rem rgba(243,200,111,.16));
+    }
+
+    .gem-glint{
+      animation:gemGlint 8.5s ease-in-out infinite;
+      transform-origin:110px 80px;
+    }
+
+    .gem-star{
+      animation:gemFacetTurn 30s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes gemGlint{
+      0%,100%{opacity:.07;transform:translateX(-36px)}
+      48%,55%{opacity:.56;transform:translateX(34px)}
+    }
+
+    @keyframes gemFacetTurn{
+      to{transform:rotate(360deg)}
+    }
+
+    .gem-label{
+      position:relative;
+      z-index:3;
+      width:76%;
+      display:grid;
+      place-items:center;
+      gap:.14rem;
+      text-align:center;
+      pointer-events:none;
+      text-shadow:
+        0 2px 12px rgba(0,0,0,.95),
+        0 0 10px rgba(0,28,90,.80),
+        0 0 2px rgba(255,255,255,.42);
+    }
+
+    .gem-label b{
+      display:block;
       color:rgba(255,244,216,.98);
-      font-size:clamp(.52rem,1vw,.75rem);
-      line-height:1;
-      letter-spacing:.10em;
+      font-size:clamp(.54rem,1.24vw,.78rem);
+      font-weight:950;
+      letter-spacing:.08em;
+      line-height:1.02;
       text-transform:uppercase;
     }
 
-    .node-label span{
-      color:rgba(230,238,255,.92);
-      font-size:clamp(.38rem,.74vw,.53rem);
-      line-height:1;
-      font-weight:950;
+    .gem-label span{
+      color:rgba(230,238,255,.78);
+      font-size:clamp(.36rem,.9vw,.52rem);
+      font-weight:900;
       letter-spacing:.08em;
       text-transform:uppercase;
     }
 
-    .center-node .node-label{
-      min-width:74%;
-      padding:.48rem .6rem;
-      top:52%;
-      border-color:rgba(243,200,111,.26);
-      background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.05));
+    .compass-center .gem-label b{
+      color:var(--gold);
+      font-size:clamp(.86rem,2.12vw,1.16rem);
+      letter-spacing:.14em;
     }
 
-    .center-node .node-label strong{
-      color:var(--gold2);
-      font-size:clamp(.88rem,1.9vw,1.4rem);
-      letter-spacing:.16em;
+    .compass-center .gem-label span{
+      font-size:clamp(.60rem,1.3vw,.78rem);
     }
-
-    .center-node .node-label span{
-      font-size:clamp(.52rem,1.02vw,.72rem);
-    }
-
-    .p1{left:50%;top:0%}
-    .p2{left:75%;top:7%}
-    .p3{left:93%;top:25%}
-    .p4{left:100%;top:50%}
-    .p5{left:93%;top:75%}
-    .p6{left:75%;top:93%}
-    .p7{left:50%;top:100%}
-    .p8{left:25%;top:93%}
-    .p9{left:7%;top:75%}
-    .p10{left:0%;top:50%}
-    .p11{left:7%;top:25%}
-    .p12{left:25%;top:7%}
-
-    .section{
-      margin-top:.9rem;
-      padding:clamp(.95rem,2.6vw,1.3rem);
-      display:grid;
-      gap:.9rem;
-    }
-
-    .section-head{
-      display:grid;
-      gap:.45rem;
-    }
-
-    .section-head p{max-width:970px}
 
     .pathway-module{
       display:grid;
-      gap:.8rem;
-      padding:.95rem;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:1.2rem;
+      gap:.9rem;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.35rem;
       background:
-        radial-gradient(circle at 12% 0%,rgba(243,200,111,.08),transparent 28rem),
-        rgba(255,255,255,.032);
+        radial-gradient(circle at 18% 0%,rgba(36,120,255,.10),transparent 28rem),
+        radial-gradient(circle at 88% 10%,rgba(243,200,111,.065),transparent 24rem),
+        rgba(255,255,255,.035);
+      overflow:hidden;
     }
 
-    .anchor-line{
-      color:rgba(255,244,216,.94);
-      font-weight:850;
-      font-size:clamp(.96rem,2.4vw,1.08rem);
+    .pathway-module > p{
+      max-width:980px;
     }
 
     .lens-shell{
       position:relative;
       display:grid;
-      gap:.75rem;
+      gap:.8rem;
     }
 
     .lens-radio{
@@ -676,132 +652,151 @@
     .lens-tabs{
       display:flex;
       flex-wrap:wrap;
-      gap:.42rem;
+      gap:.45rem;
     }
 
     .lens-tab{
       cursor:pointer;
-      min-height:2.2rem;
+      min-height:2.35rem;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      padding:.5rem .75rem;
       border:1px solid rgba(255,255,255,.14);
       border-radius:999px;
-      color:rgba(241,246,255,.82);
-      background:rgba(255,255,255,.035);
-      font-size:.64rem;
+      padding:.56rem .84rem;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.04);
+      font-size:.68rem;
       font-weight:950;
       letter-spacing:.07em;
       text-transform:uppercase;
       user-select:none;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .lens-tab:hover{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.46);
     }
 
     .platform-radio:checked ~ .lens-tabs .platform-tab,
     .engineering-radio:checked ~ .lens-tabs .engineering-tab{
-      border-color:rgba(243,200,111,.72);
-      color:#06101c;
+      border-color:rgba(243,200,111,.86);
+      color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
     .lens-body{
       border:1px solid rgba(255,255,255,.12);
-      border-radius:1rem;
-      background:linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.022));
+      border-radius:1.15rem;
+      background:
+        radial-gradient(circle at 10% 0%,rgba(141,216,255,.08),transparent 24rem),
+        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.022));
       overflow:hidden;
     }
 
     .lens-copy{
       display:none;
-      padding:.95rem;
+      padding:1rem;
     }
 
     .platform-radio:checked ~ .lens-body .platform-copy,
     .engineering-radio:checked ~ .lens-body .engineering-copy{
       display:grid;
-      gap:.72rem;
+      gap:.78rem;
     }
 
     .lens-copy b{
-      color:var(--gold2);
-      font-size:.64rem;
+      color:var(--gold);
+      font-size:.7rem;
       letter-spacing:.13em;
       text-transform:uppercase;
     }
 
-    .lens-copy p{
-      font-size:.94rem;
-      line-height:1.46;
-    }
-
     .lens-list{
       display:grid;
-      gap:.52rem;
+      gap:.55rem;
       margin:0;
       padding:0;
       list-style:none;
     }
 
     .lens-list li{
-      padding:.6rem .68rem;
+      padding:.68rem .76rem;
       border:1px solid rgba(255,255,255,.10);
-      border-radius:.85rem;
+      border-radius:.9rem;
       background:rgba(255,255,255,.030);
       color:var(--muted);
-      font-size:.9rem;
-      line-height:1.38;
+      font-size:.92rem;
+      line-height:1.4;
     }
 
     .boundary{
-      padding:.72rem .82rem;
+      padding:.8rem .9rem;
       border:1px solid rgba(255,157,145,.18);
-      border-radius:.9rem;
+      border-radius:1rem;
       color:rgba(255,229,225,.88);
       background:rgba(255,157,145,.055);
-      font-size:.86rem;
-      line-height:1.38;
-      font-weight:800;
+      font-size:.9rem;
+      line-height:1.42;
+      font-weight:850;
     }
 
     .section-return{
       display:flex;
       justify-content:flex-end;
-      margin-top:.15rem;
+      margin-top:.1rem;
+    }
+
+    .return-orbit{
+      min-height:2.5rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(243,200,111,.86);
+      border-radius:999px;
+      padding:.6rem .95rem;
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.07em;
+      text-transform:uppercase;
+      transition:transform .18s ease;
+    }
+
+    .return-orbit:hover,
+    .return-orbit:focus-visible{
+      transform:translateY(-2px);
+      outline:none;
     }
 
     .final-band{
-      margin-top:.9rem;
-      padding:clamp(.95rem,2.6vw,1.35rem);
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
       display:grid;
-      gap:.75rem;
+      gap:.85rem;
       border:1px solid rgba(243,200,111,.28);
-      border-radius:1.4rem;
+      border-radius:1.55rem;
       background:
-        radial-gradient(circle at 16% 0%,rgba(243,200,111,.12),transparent 36%),
-        radial-gradient(circle at 86% 26%,rgba(157,124,255,.10),transparent 34%),
-        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.024));
+        radial-gradient(circle at 18% 0%,rgba(243,200,111,.12),transparent 32rem),
+        radial-gradient(circle at 88% 20%,rgba(36,120,255,.11),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
       box-shadow:0 1.3rem 3.4rem rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.08);
     }
 
     .final-band strong{
       color:rgba(255,244,216,.98);
-      font-size:clamp(1.1rem,2.7vw,1.42rem);
+      font-size:clamp(1.16rem,3vw,1.58rem);
       line-height:1.05;
-      letter-spacing:-.04em;
-    }
-
-    .note{
-      padding:.76rem .86rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1rem;
-      background:rgba(255,255,255,.035);
-      color:var(--soft);
-      font-size:.84rem;
-      line-height:1.4;
+      letter-spacing:-.045em;
     }
 
     .route-receipt,
-    [data-route-receipt]{
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt],
+    .receipt{
       display:none!important;
       visibility:hidden!important;
       overflow:hidden!important;
@@ -821,47 +816,115 @@
     }
 
     footer{
-      padding:1.2rem 0 .45rem;
+      padding:1.35rem 0 .5rem;
       color:var(--faint);
       text-align:center;
-      font-size:.72rem;
-    }
-
-    @media (max-width:1100px){
-      .pathway-node{
-        width:clamp(4.8rem,7.9vw,7rem);
-        height:clamp(3.85rem,6.3vw,5.5rem);
-      }
+      font-size:.76rem;
     }
 
     @media (max-width:980px){
-      .topbar{grid-template-columns:1fr;align-items:start}
+      .topbar{
+        grid-template-columns:1fr;
+        align-items:start;
+      }
+
       .nav{justify-content:flex-start}
-      .mini-nav{position:relative;top:auto}
-      html{scroll-padding-top:1rem}
-      .orbit-stage{height:clamp(34rem,82vw,39rem)}
-      .orbit-track{width:72%;height:60%}
     }
 
-    @media (max-width:720px){
+    @media (max-width:760px){
       .shell{width:min(100% - 22px,var(--max))}
-      h1{font-size:clamp(2.55rem,14vw,4.6rem)}
-      .hero{min-height:27rem;padding:1rem}
-      .actions{display:grid}
-      .button{width:100%}
-      .orbit-board{padding:.7rem}
-      .orbit-stage{height:35rem;border-radius:1.45rem}
-      .orbit-track{width:70%;height:58%}
-      .center-node{width:8.25rem;height:5.8rem}
-      .pathway-node{width:4.18rem;height:3.32rem}
-      .node-label{padding:.18rem .2rem;min-width:70%;border-radius:.54rem}
-      .node-label strong{font-size:.36rem;letter-spacing:.048em}
-      .node-label span{font-size:.265rem;letter-spacing:.038em}
-      .center-node .node-label strong{font-size:.70rem}
-      .center-node .node-label span{font-size:.43rem}
-      .lens-tabs{display:grid;grid-template-columns:1fr 1fr}
-      .section-return{justify-content:stretch}
-      .return-orbit{width:100%}
+
+      h1{font-size:clamp(3.2rem,16vw,5.6rem)}
+
+      .hero{
+        min-height:31rem;
+        padding:1rem;
+      }
+
+      .actions{
+        display:grid;
+      }
+
+      .button{
+        width:100%;
+      }
+
+      .compass-stage{
+        min-height:auto;
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:1rem .85rem;
+        padding:1.2rem 1rem;
+        place-items:center;
+      }
+
+      .compass-stage::before,
+      .compass-stage::after{
+        display:none;
+      }
+
+      .compass-center,
+      .compass-node{
+        position:relative;
+        left:auto!important;
+        top:auto!important;
+        transform:none;
+      }
+
+      .compass-node:hover,
+      .compass-node:focus-visible{
+        transform:scale(1.05);
+      }
+
+      .compass-center{
+        grid-column:1 / -1;
+        width:9.8rem;
+        height:7.1rem;
+        order:-2;
+      }
+
+      .compass-node{
+        width:7.45rem;
+        height:5.45rem;
+      }
+
+      .gem-label b{font-size:.48rem}
+      .gem-label span{font-size:.34rem}
+
+      .compass-center .gem-label b{font-size:.70rem}
+      .compass-center .gem-label span{font-size:.48rem}
+
+      .lens-tabs{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+      }
+
+      .section-return{
+        justify-content:stretch;
+      }
+
+      .return-orbit{
+        width:100%;
+      }
+    }
+
+    @media (max-width:420px){
+      .compass-stage{
+        gap:.9rem .62rem;
+      }
+
+      .compass-node{
+        width:6.85rem;
+        height:5rem;
+      }
+
+      .gem-label b{font-size:.41rem}
+      .gem-label span{font-size:.30rem}
+
+      .compass-center{
+        width:8.95rem;
+        height:6.5rem;
+      }
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -874,12 +937,13 @@
         transition-duration:.01ms!important;
       }
 
-      body::after,
-      .brand-mark,
-      .crystal-svg,
-      .orbit-signal::before,
-      .orbit-track,
-      .node-inner{
+      .gem-core,
+      .gem-glint,
+      .gem-star,
+      .compass-stage::before,
+      .compass-stage::after,
+      .compass-center,
+      .compass-node{
         animation:none!important;
       }
     }
@@ -889,235 +953,238 @@
 <body>
   <svg class="svg-defs" aria-hidden="true" focusable="false">
     <defs>
-      <linearGradient id="compassCrystalBody" x1="18" y1="14" x2="194" y2="160" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity=".92"/>
-        <stop offset=".18" stop-color="#ffe9aa" stop-opacity=".76"/>
-        <stop offset=".46" stop-color="#9fe8ff" stop-opacity=".98"/>
-        <stop offset=".72" stop-color="#dff7ff" stop-opacity=".80"/>
-        <stop offset="1" stop-color="#142848" stop-opacity=".98"/>
+      <linearGradient id="compassGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#fff8dc" stop-opacity=".92"/>
+        <stop offset=".13" stop-color="#dff5ff" stop-opacity=".70"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".56"/>
+        <stop offset=".48" stop-color="#2478ff" stop-opacity=".40"/>
+        <stop offset=".66" stop-color="#f3c86f" stop-opacity=".24"/>
+        <stop offset="1" stop-color="#020816" stop-opacity=".94"/>
       </linearGradient>
 
-      <linearGradient id="compassCrystalTop" x1="42" y1="6" x2="166" y2="88" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity=".96"/>
-        <stop offset=".42" stop-color="#fff3bd" stop-opacity=".70"/>
-        <stop offset="1" stop-color="#8ee2ff" stop-opacity=".38"/>
+      <linearGradient id="compassGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".90"/>
+        <stop offset=".34" stop-color="#eaf7ff" stop-opacity=".46"/>
+        <stop offset=".68" stop-color="#fff0a3" stop-opacity=".18"/>
+        <stop offset="1" stop-color="#8dd8ff" stop-opacity=".10"/>
       </linearGradient>
 
-      <linearGradient id="compassCrystalLeft" x1="18" y1="48" x2="105" y2="154" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity=".36"/>
-        <stop offset=".45" stop-color="#89ddff" stop-opacity=".42"/>
-        <stop offset="1" stop-color="#06101c" stop-opacity=".46"/>
+      <linearGradient id="compassGemDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".20"/>
+        <stop offset=".62" stop-color="#f3c86f" stop-opacity=".13"/>
+        <stop offset="1" stop-color="#020716" stop-opacity=".66"/>
       </linearGradient>
 
-      <linearGradient id="compassCrystalRight" x1="194" y1="43" x2="106" y2="160" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#fff1a9" stop-opacity=".54"/>
-        <stop offset=".48" stop-color="#9fe8ff" stop-opacity=".28"/>
-        <stop offset="1" stop-color="#06101c" stop-opacity=".40"/>
-      </linearGradient>
-
-      <radialGradient id="compassCrystalGlow" cx="42%" cy="18%" r="62%">
-        <stop offset="0" stop-color="#ffffff" stop-opacity=".88"/>
-        <stop offset=".24" stop-color="#ffffff" stop-opacity=".24"/>
-        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      <radialGradient id="compassGemTableGlow" cx="50%" cy="38%" r="64%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".56"/>
+        <stop offset=".28" stop-color="#8dd8ff" stop-opacity=".28"/>
+        <stop offset=".58" stop-color="#ffe8a3" stop-opacity=".12"/>
+        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
       </radialGradient>
 
-      <symbol id="compassCrystal" viewBox="0 0 220 170">
-        <path
-          d="M111 5 C132 9 154 18 174 39 C196 63 198 91 184 116 C169 143 137 158 112 165 C82 159 52 143 33 119 C17 99 16 69 31 42 C50 20 80 8 111 5 Z"
-          fill="url(#compassCrystalBody)"
-          stroke="rgba(255,255,255,.58)"
-          stroke-width="2"
-          vector-effect="non-scaling-stroke"
+      <linearGradient id="compassGemGlint" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#ffffff" stop-opacity=".84"/>
+        <stop offset=".52" stop-color="#fff0a3" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="compassGemGlow" x="-42%" y="-50%" width="184%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.42 0 0 0 0.08
+            0 .58 0 0 0.14
+            0 0 1.00 0 0.28
+            0 0 0 0.52 0"
+          result="glow"
         />
-        <path
-          d="M111 5 C132 9 154 18 174 39 C151 48 129 58 111 70 C91 57 65 48 31 42 C50 20 80 8 111 5 Z"
-          fill="url(#compassCrystalTop)"
-          opacity=".94"
-        />
-        <path
-          d="M31 42 C65 48 91 57 111 70 L112 165 C82 159 52 143 33 119 C17 99 16 69 31 42 Z"
-          fill="url(#compassCrystalLeft)"
-          opacity=".86"
-        />
-        <path
-          d="M174 39 C151 48 129 58 111 70 L112 165 C137 158 169 143 184 116 C198 91 196 63 174 39 Z"
-          fill="url(#compassCrystalRight)"
-          opacity=".84"
-        />
-        <path
-          d="M31 42 C65 48 91 57 111 70 C129 58 151 48 174 39"
-          fill="none"
-          stroke="rgba(255,255,255,.45)"
-          stroke-width="1.4"
-          vector-effect="non-scaling-stroke"
-        />
-        <path
-          d="M111 70 L112 165"
-          fill="none"
-          stroke="rgba(255,255,255,.22)"
-          stroke-width="1.2"
-          vector-effect="non-scaling-stroke"
-        />
-        <path
-          d="M68 21 L111 70 L153 22"
-          fill="none"
-          stroke="rgba(255,255,255,.22)"
-          stroke-width="1.2"
-          vector-effect="non-scaling-stroke"
-        />
-        <path
-          d="M51 125 C72 134 92 145 112 165 C132 144 154 134 176 119"
-          fill="none"
-          stroke="rgba(255,244,216,.16)"
-          stroke-width="1.15"
-          vector-effect="non-scaling-stroke"
-        />
-        <path
-          d="M111 5 C132 9 154 18 174 39 C196 63 198 91 184 116 C169 143 137 158 112 165 C82 159 52 143 33 119 C17 99 16 69 31 42 C50 20 80 8 111 5 Z"
-          fill="url(#compassCrystalGlow)"
-          opacity=".72"
-        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="compassOrganicGem" viewBox="0 0 220 160">
+        <g filter="url(#compassGemGlow)">
+          <path d="M108 4 L146 12 L184 39 L209 76 L188 108 L147 139 L111 155 L69 136 L27 105 L12 73 L39 37 L77 14 Z" fill="url(#compassGemBody)" stroke="rgba(235,248,255,.58)" stroke-width="1.35"/>
+          <path d="M108 4 L146 12 L130 38 L109 30 L87 39 L77 14 Z" fill="url(#compassGemAir)" opacity=".84"/>
+          <path d="M77 14 L87 39 L61 58 L39 37 Z" fill="rgba(255,255,255,.23)"/>
+          <path d="M146 12 L130 38 L159 60 L184 39 Z" fill="rgba(255,255,255,.15)"/>
+          <path d="M39 37 L61 58 L53 83 L12 73 Z" fill="rgba(141,216,255,.12)"/>
+          <path d="M184 39 L159 60 L166 81 L209 76 Z" fill="rgba(243,200,111,.12)"/>
+          <path d="M87 39 L109 30 L130 38 L159 60 L148 83 L110 101 L72 83 L61 58 Z" fill="url(#compassGemTableGlow)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
+          <path d="M12 73 L53 83 L69 136 L27 105 Z" fill="rgba(141,216,255,.14)"/>
+          <path d="M209 76 L166 81 L147 139 L188 108 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M53 83 L72 83 L111 155 L69 136 Z" fill="rgba(2,8,24,.40)"/>
+          <path d="M166 81 L148 83 L111 155 L147 139 Z" fill="rgba(243,200,111,.10)"/>
+          <path d="M72 83 L110 101 L111 155 Z" fill="url(#compassGemDepth)" opacity=".76"/>
+          <path d="M148 83 L110 101 L111 155 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M108 4 L111 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
+          <path d="M12 73 L209 76" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
+          <path d="M39 37 L188 108" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M184 39 L27 105" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M77 14 L110 101 L146 12" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
+          <path d="M39 37 L110 101 L184 39" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M27 105 L110 101 L188 108" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
+          <g class="gem-star" opacity=".82">
+            <path d="M109 27 L116 70 L110 106 L103 70 Z" fill="rgba(255,255,255,.27)"/>
+            <path d="M61 58 L105 72 L159 60 L116 79 Z" fill="rgba(255,255,255,.16)"/>
+            <path d="M72 83 L105 75 L148 83 L114 92 Z" fill="rgba(141,216,255,.13)"/>
+            <path d="M110 101 L126 81 L148 83 L129 96 Z" fill="rgba(255,255,255,.13)"/>
+            <path d="M110 101 L94 81 L72 83 L91 96 Z" fill="rgba(243,200,111,.08)"/>
+          </g>
+          <path class="gem-glint" d="M33 118 L176 22 L188 38 L48 130 Z" fill="url(#compassGemGlint)"/>
+        </g>
       </symbol>
     </defs>
   </svg>
 
-  <a class="skip" href="#energy-orbit">Skip to Energy Orbit</a>
+  <a class="skip" href="#main">Skip to Energy</a>
 
   <div class="shell">
     <header class="topbar" aria-label="Energy header">
-      <a class="brand" href="/frontier/">
+      <a class="brand" href="/explore/frontier/energy/">
         <span class="brand-mark" aria-hidden="true"><span>EN</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge · Frontier</span>
-          <strong>Energy · Fusion Readiness</strong>
+          <strong>Energy</strong>
         </span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
-        <a href="/explore/">Explore</a>
-        <a href="/frontier/">Frontier</a>
-        <a href="/explore/frontier/energy/" aria-current="page">Energy</a>
-        <a href="/explore/frontier/water/">Water</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/products/">Products</a>
         <a href="/laws/">Laws</a>
-        <a href="/showroom/globe/audralia/">Audralia</a>
+        <a href="/showroom/globe/">Interactive Narrative</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/explore/frontier/energy/" aria-current="page">Energy</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <main id="start">
+    <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Audralia Simulation First</div>
+        <div class="kicker">Audralia · Frontier Energy Simulation</div>
 
         <h1 id="page-title">Fusion is the horizon. Readiness is the deliverable.</h1>
 
-        <h2>Choose a pathway. Then choose Platform or Engineering language inside that pathway.</h2>
-
         <p class="lead">
-          Energy begins inside Audralia’s simulation world, then opens into fusion readiness, storage infrastructure, solar hedge planning, plasma boundaries, advanced buffers, future offtake, safeguards, and claim discipline.
+          Audralia gives frontier energy a simulation world first. Then each pathway opens a focused reader lane with Platform language for public understanding and Engineering language for direct operating constraints.
         </p>
 
-        <div class="principle">
-          This page does not sell fusion power. It teaches how readiness can be built before the energy world fusion may eventually create.
+        <div class="quote">
+          Do not sell fusion. Build readiness for the energy world fusion may eventually create.
         </div>
 
         <div class="actions">
-          <a class="button gold" href="#energy-orbit">Open Energy Orbit</a>
-          <a class="button violet" href="#audralia-simulation">Open Audralia Simulation</a>
-          <a class="button blue" href="#science-boundary">Open Science Boundary</a>
+          <a class="button gold" href="#energy-orbit">Choose a Pathway</a>
+          <a class="button" href="#audralia-simulation">Start with Audralia</a>
+          <a class="button green" href="#science-boundary">Open Science Boundary</a>
         </div>
       </section>
 
-      <nav class="mini-nav" aria-label="Energy quick navigation">
-        <div class="mini-nav-inner">
-          <a class="primary" href="#energy-orbit">Energy Orbit</a>
-          <a href="#audralia-simulation">Audralia</a>
-          <a href="#fusion-readiness">Fusion</a>
-          <a href="#storage-bridge">Storage</a>
-          <a href="#science-boundary">Science</a>
-          <a href="#kill-conditions">Kill Conditions</a>
-        </div>
-      </nav>
+      <section class="panel section" aria-labelledby="field-title" id="energy-orbit">
+        <div class="kicker">Energy field · Active frontier pathways</div>
+        <h2 id="field-title">Choose the pathway first. Choose the language lens inside the pathway.</h2>
 
-      <section class="panel orbit-board" id="energy-orbit" aria-labelledby="orbit-title">
-        <div class="kicker">Energy Pathway Map</div>
-        <h2 id="orbit-title">Twelve frontier energy pathways orbit one readiness anchor.</h2>
-        <p class="lead">
-          Each pathway opens its own Platform Lens and Engineering Lens. The reader chooses the subject first, then chooses the language layer.
-        </p>
-
-        <div class="orbit-stage" aria-label="Rotating frontier energy pathway map">
-          <div class="orbit-signal" aria-hidden="true"></div>
-
-          <a class="center-node" href="#final-lock" aria-label="Energy readiness final lock">
-            <span class="node-inner">
-              <svg class="crystal-svg" viewBox="0 0 220 170" aria-hidden="true" focusable="false">
-                <use href="#compassCrystal"></use>
+        <div
+          class="compass-stage"
+          aria-label="Energy pathway field"
+          data-energy-pathway-field="true"
+          data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
+          data-source-symbol-authority="compassOrganicGem"
+          data-per-pathway-dual-lens="true"
+        >
+          <div class="compass-center" aria-hidden="true" style="--delay:-.1s;--tilt-a:-1.4deg;--tilt-b:1.8deg;">
+            <span class="gem-core">
+              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                <use href="#compassOrganicGem"></use>
               </svg>
-              <span class="node-label">
-                <strong>Energy</strong>
-                <span>Readiness Anchor</span>
-              </span>
             </span>
+            <span class="gem-label"><b>Energy</b><span>Readiness</span></span>
+          </div>
+
+          <a class="compass-node" style="--x:50%;--y:11%;--delay:-.2s;--tilt-a:-2.2deg;--tilt-b:1.4deg;" href="#audralia-simulation" aria-label="Open Audralia Simulation">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Audralia</b><span>Simulation</span></span>
           </a>
 
-          <div class="orbit-track">
-            <a class="pathway-node p1" href="#audralia-simulation">
-              <span class="node-inner"><svg class="crystal-svg" viewBox="0 0 220 170" aria-hidden="true"><use href="#compassCrystal"></use></svg><span class="node-label"><strong>Audralia</strong><span>Simulation</span></span></span>
-            </a>
-            <a class="pathway-node p2" href="#fusion-readiness">
-              <span class="node-inner"><svg class="crystal-svg" viewBox="0 0 220 170" aria-hidden="true"><use href="#compassCrystal"></use></svg><span class="node-label"><strong>Fusion</strong><span>Readiness</span></span></span>
-            </a>
-            <a class="pathway-node p3" href="#storage-bridge">
-              <span class="node-inner"><svg class="crystal-svg" viewBox="0 0 220 170" aria-hidden="true"><use href="#compassCrystal"></use></svg><span class="node-label"><strong>Storage</strong><span>Bridge</span></span></span>
-            </a>
-            <a class="pathway-node p4" href="#solar-hedge">
-              <span class="node-inner"><svg class="crystal-svg" viewBox="0 0 220 170" aria-hidden="true"><use href="#compassCrystal"></use></svg><span class="node-label"><strong>Solar</strong><span>Hedge</span></span></span>
-            </a>
-            <a class="pathway-node p5" href="#plasma-boundary">
-              <span class="node-inner"><svg class="crystal-svg" viewBox="0 0 220 170" aria-hidden="true"><use href="#compassCrystal"></use></svg><span class="node-label"><strong>Plasma</strong><span>Boundary</span></span></span>
-            </a>
-            <a class="pathway-node p6" href="#q-boundary">
-              <span class="node-inner"><svg class="crystal-svg" viewBox="0 0 220 170" aria-hidden="true"><use href="#compassCrystal"></use></svg><span class="node-label"><strong>Q</strong><span>Boundary</span></span></span>
-            </a>
-            <a class="pathway-node p7" href="#commercial-now">
-              <span class="node-inner"><svg class="crystal-svg" viewBox="0 0 220 170" aria-hidden="true"><use href="#compassCrystal"></use></svg><span class="node-label"><strong>Commercial</strong><span>Now</span></span></span>
-            </a>
-            <a class="pathway-node p8" href="#bridge-infrastructure">
-              <span class="node-inner"><svg class="crystal-svg" viewBox="0 0 220 170" aria-hidden="true"><use href="#compassCrystal"></use></svg><span class="node-label"><strong>Bridge</strong><span>Infrastructure</span></span></span>
-            </a>
-            <a class="pathway-node p9" href="#storage-fields">
-              <span class="node-inner"><svg class="crystal-svg" viewBox="0 0 220 170" aria-hidden="true"><use href="#compassCrystal"></use></svg><span class="node-label"><strong>Storage</strong><span>Fields</span></span></span>
-            </a>
-            <a class="pathway-node p10" href="#advanced-buffer">
-              <span class="node-inner"><svg class="crystal-svg" viewBox="0 0 220 170" aria-hidden="true"><use href="#compassCrystal"></use></svg><span class="node-label"><strong>Advanced</strong><span>Buffer</span></span></span>
-            </a>
-            <a class="pathway-node p11" href="#future-offtake">
-              <span class="node-inner"><svg class="crystal-svg" viewBox="0 0 220 170" aria-hidden="true"><use href="#compassCrystal"></use></svg><span class="node-label"><strong>Future</strong><span>Offtake</span></span></span>
-            </a>
-            <a class="pathway-node p12" href="#kill-conditions">
-              <span class="node-inner"><svg class="crystal-svg" viewBox="0 0 220 170" aria-hidden="true"><use href="#compassCrystal"></use></svg><span class="node-label"><strong>Kill</strong><span>Conditions</span></span></span>
-            </a>
-          </div>
+          <a class="compass-node" style="--x:73%;--y:17%;--delay:-.8s;--tilt-a:1.5deg;--tilt-b:-2.3deg;" href="#fusion-readiness" aria-label="Open Fusion Readiness">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Fusion</b><span>Readiness</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:87%;--y:34%;--delay:-1.4s;--tilt-a:-1.6deg;--tilt-b:2.6deg;" href="#storage-bridge" aria-label="Open Storage Bridge">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Storage</b><span>Bridge</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:87%;--y:62%;--delay:-2.0s;--tilt-a:1.9deg;--tilt-b:-1.6deg;" href="#solar-hedge" aria-label="Open Solar Hedge">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Solar</b><span>Hedge</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:73%;--y:80%;--delay:-2.6s;--tilt-a:-2deg;--tilt-b:2deg;" href="#plasma-boundary" aria-label="Open Plasma Boundary">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Plasma</b><span>Boundary</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:50%;--y:88%;--delay:-3.0s;--tilt-a:1.4deg;--tilt-b:-2.4deg;" href="#q-boundary" aria-label="Open Q Boundary">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Q</b><span>Boundary</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:27%;--y:80%;--delay:-3.4s;--tilt-a:-1.9deg;--tilt-b:1.8deg;" href="#commercial-now" aria-label="Open Commercial Now">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Commercial</b><span>Now</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:13%;--y:62%;--delay:-3.8s;--tilt-a:1.7deg;--tilt-b:-1.5deg;" href="#bridge-infrastructure" aria-label="Open Bridge Infrastructure">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Bridge</b><span>Infrastructure</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:13%;--y:34%;--delay:-4.2s;--tilt-a:-2.1deg;--tilt-b:1.5deg;" href="#storage-fields" aria-label="Open Storage Fields">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Storage</b><span>Fields</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:27%;--y:17%;--delay:-4.6s;--tilt-a:1.6deg;--tilt-b:-2.2deg;" href="#advanced-buffer" aria-label="Open Advanced Buffer">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Advanced</b><span>Buffer</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:34%;--y:6%;--delay:-5.0s;--tilt-a:-1.6deg;--tilt-b:2.1deg;" href="#future-offtake" aria-label="Open Future Offtake">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Future</b><span>Offtake</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:66%;--y:6%;--delay:-5.4s;--tilt-a:2.0deg;--tilt-b:-1.8deg;" href="#kill-conditions" aria-label="Open Kill Conditions">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Kill</b><span>Conditions</span></span>
+          </a>
         </div>
       </section>
 
       <section class="panel section" id="audralia-simulation" aria-labelledby="audralia-title">
-        <div class="section-head">
-          <div class="kicker">Pathway One</div>
-          <h2 id="audralia-title">Audralia Simulation</h2>
-          <p>Audralia is the living simulation world where frontier energy choices can be explored before they are claimed.</p>
-        </div>
+        <div class="kicker">Pathway One</div>
+        <h2 id="audralia-title">Audralia Simulation</h2>
 
         <article class="pathway-module">
-          <h3>Audralia makes the energy future visible.</h3>
-          <p class="anchor-line">The world gives fusion readiness a story-space where storage, load discipline, safeguards, grid pressure, and future offtake can be modeled as bounded possibilities.</p>
+          <h3>Audralia gives frontier energy a world before it gives it a claim.</h3>
+          <p>Audralia lets visitors explore energy choices, storage pressure, settlement needs, safety boundaries, and long-range power horizons without treating the simulation as proof.</p>
 
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="audralia-platform" name="audralia-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="audralia-engineering" name="audralia-lens" type="radio">
 
-            <div class="lens-tabs" aria-label="Audralia lens selection">
+            <div class="lens-tabs">
               <label class="lens-tab platform-tab" for="audralia-platform">Platform Lens</label>
               <label class="lens-tab engineering-tab" for="audralia-engineering">Engineering Lens</label>
             </div>
@@ -1125,21 +1192,21 @@
             <div class="lens-body">
               <div class="lens-copy platform-copy">
                 <b>Platform Lens</b>
-                <p>Audralia lets visitors dream responsibly. It turns advanced energy from an abstract promise into a world problem: Where does power come from? Where is it stored? What happens when a settlement depends on it? The story teaches that a clean energy future requires readiness before celebration.</p>
+                <p>Audralia is where the energy future becomes visible. It allows the visitor to feel the pressure of power, storage, infrastructure, and consequence inside a living world before any real-world claim is made.</p>
                 <ul class="lens-list">
-                  <li>Audralia inherits the dream without pretending the dream is already deployed.</li>
-                  <li>The visitor learns why energy systems must be placed, governed, buffered, and measured.</li>
-                  <li>The narrative keeps the science visible by showing consequences inside a world.</li>
+                  <li>The story teaches why energy systems need placement, boundaries, and reserves.</li>
+                  <li>The visitor sees frontier science as a civilization problem, not a sales promise.</li>
+                  <li>Audralia can dream, but the public claim remains bounded.</li>
                 </ul>
               </div>
 
               <div class="lens-copy engineering-copy">
                 <b>Engineering Lens</b>
-                <p>Operating object: bounded simulation environment for energy-system literacy. Inputs: load pressure, storage requirement, site placement, safety envelope, offtake horizon, and claim boundary. Outputs: public understanding, scenario classification, readiness categories, and constraints.</p>
+                <p>Operating object: bounded simulation environment for energy-system literacy. Inputs include load pressure, storage requirement, site placement, safety envelope, offtake horizon, and claim boundary. Outputs include scenario understanding, readiness classification, and public education.</p>
                 <ul class="lens-list">
-                  <li>Constraint: Audralia may model possibilities but cannot validate real-world deployment.</li>
-                  <li>Safety envelope: no simulation output may be presented as commercial proof.</li>
-                  <li>Kill condition: stop if story is used as evidence for fusion readiness.</li>
+                  <li>Constraint: simulation output is not deployment proof.</li>
+                  <li>Safety envelope: no scenario may be framed as validated commercial readiness.</li>
+                  <li>Stop condition: story cannot outrank measured evidence.</li>
                 </ul>
               </div>
             </div>
@@ -1151,15 +1218,12 @@
       </section>
 
       <section class="panel section" id="fusion-readiness" aria-labelledby="fusion-title">
-        <div class="section-head">
-          <div class="kicker">Pathway Two</div>
-          <h2 id="fusion-title">Fusion Readiness</h2>
-          <p>Fusion is not a present-tense product. Fusion readiness is the category that can be built now.</p>
-        </div>
+        <div class="kicker">Pathway Two</div>
+        <h2 id="fusion-title">Fusion Readiness</h2>
 
         <article class="pathway-module">
-          <h3>Fusion is the horizon. Readiness is the deliverable.</h3>
-          <p class="anchor-line">The present work is preparing load, storage, site control, contract timing, infrastructure, and future offtake optionality.</p>
+          <h3>Fusion is not the product. Readiness is the category.</h3>
+          <p>The present work is preparing load, storage, contracts, sites, infrastructure, and future offtake conditions before advanced clean power becomes commercially available.</p>
 
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="fusion-platform" name="fusion-lens" type="radio" checked>
@@ -1173,21 +1237,21 @@
             <div class="lens-body">
               <div class="lens-copy platform-copy">
                 <b>Platform Lens</b>
-                <p>Fusion matters because it changes the scale of what energy could become. But the honest public message is not “fusion is here.” The honest message is that the companies, communities, and worlds that prepare early will understand the future sooner.</p>
+                <p>Fusion matters because it changes the size of the possible future. But the honest message is not that fusion is ready to buy. The honest message is that readiness can start before the market arrives.</p>
                 <ul class="lens-list">
-                  <li>Fusion is not tomorrow’s sales product; it is the horizon line.</li>
-                  <li>Readiness can begin through better energy governance today.</li>
-                  <li>Audralia lets that future be learned through story before it is claimed in the real world.</li>
+                  <li>Fusion is the horizon line, not the current sales object.</li>
+                  <li>Businesses and communities can prepare their energy posture now.</li>
+                  <li>Audralia shows what future readiness feels like inside a world under pressure.</li>
                 </ul>
               </div>
 
               <div class="lens-copy engineering-copy">
                 <b>Engineering Lens</b>
-                <p>Operating object: fusion-readiness assessment. Inputs: annual load, peak demand, load profile, interconnection strength, site control, contract horizon, storage feasibility, and offtake suitability. Outputs: not ready, partially ready, infrastructure-ready, or frontier-ready.</p>
+                <p>Operating object: fusion-readiness assessment. Inputs include annual load, peak demand, load shape, interconnection strength, site control, contract horizon, storage feasibility, and future offtake suitability.</p>
                 <ul class="lens-list">
-                  <li>Constraint: fusion-generated electricity is not procurement-ready today.</li>
-                  <li>Exclusion: no claim of commercial plant-level net electricity.</li>
-                  <li>Kill condition: stop if the page sells fusion power instead of readiness.</li>
+                  <li>Output: not ready, partially ready, infrastructure-ready, or frontier-ready.</li>
+                  <li>Constraint: commercial plant-level fusion electricity is not procurement-ready.</li>
+                  <li>Stop condition: do not present fusion as a current commodity offer.</li>
                 </ul>
               </div>
             </div>
@@ -1199,15 +1263,12 @@
       </section>
 
       <section class="panel section" id="storage-bridge" aria-labelledby="storage-title">
-        <div class="section-head">
-          <div class="kicker">Pathway Three</div>
-          <h2 id="storage-title">Storage Bridge</h2>
-          <p>Storage is the bridge between present energy volatility and future advanced-energy infrastructure.</p>
-        </div>
+        <div class="kicker">Pathway Three</div>
+        <h2 id="storage-title">Storage Bridge</h2>
 
         <article class="pathway-module">
-          <h3>No stored potential, no practical endpoint use.</h3>
-          <p class="anchor-line">Vehicles, buildings, sites, and communities need stored potential and controlled release; high-energy regimes stay upstream.</p>
+          <h3>Storage turns generation into usable time.</h3>
+          <p>Storage is the bridge between present energy volatility and future advanced-energy adoption.</p>
 
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="storage-platform" name="storage-lens" type="radio" checked>
@@ -1221,21 +1282,21 @@
             <div class="lens-body">
               <div class="lens-copy platform-copy">
                 <b>Platform Lens</b>
-                <p>The energy future becomes believable when it becomes usable. Storage is what turns generation into daily life. In Audralia, stored potential becomes the difference between a settlement that hopes for power and a settlement that can survive pressure.</p>
+                <p>Storage is what makes power practical when the moment of generation does not match the moment of need. In Audralia, a settlement without storage is always at the mercy of timing.</p>
                 <ul class="lens-list">
-                  <li>Storage makes clean power useful when the moment of use does not match the moment of generation.</li>
-                  <li>Storage teaches that safe endpoints do not need extreme operating regimes nearby.</li>
-                  <li>The story shows why buffers matter before crisis arrives.</li>
+                  <li>Storage explains why clean power still needs reserves.</li>
+                  <li>Stored potential keeps extreme energy systems away from daily endpoints.</li>
+                  <li>The visitor learns why resilience is built before crisis.</li>
                 </ul>
               </div>
 
               <div class="lens-copy engineering-copy">
                 <b>Engineering Lens</b>
-                <p>Operating object: storage and controlled-release layer. Inputs: generation source, charge profile, critical load, duration requirement, safety factor, conversion losses, and discharge controls. Outputs: endpoint power, backup capacity, peak shaving, continuity, and resilience.</p>
+                <p>Operating object: storage and controlled-release layer. Inputs include generation source, charge profile, critical load, duration requirement, safety factor, conversion losses, and discharge controls.</p>
                 <ul class="lens-list">
-                  <li>Constraint: storage does not create energy; it preserves and releases stored potential.</li>
-                  <li>Safety envelope: high-energy generation stays upstream; endpoints receive stored energy.</li>
-                  <li>Kill condition: stop if plasma or fusion is treated as consumer endpoint storage.</li>
+                  <li>Outputs: endpoint power, backup capacity, peak shaving, continuity, and resilience value.</li>
+                  <li>Constraint: storage preserves and releases energy; it does not create energy.</li>
+                  <li>Stop condition: do not frame plasma or fusion as consumer endpoint storage.</li>
                 </ul>
               </div>
             </div>
@@ -1247,15 +1308,12 @@
       </section>
 
       <section class="panel section" id="solar-hedge" aria-labelledby="solar-title">
-        <div class="section-head">
-          <div class="kicker">Pathway Four</div>
-          <h2 id="solar-title">Solar Hedge</h2>
-          <p>Solar supports the pathway. Solar does not become fusion.</p>
-        </div>
+        <div class="kicker">Pathway Four</div>
+        <h2 id="solar-title">Solar Hedge</h2>
 
         <article class="pathway-module">
-          <h3>Solar is a hedge and support layer.</h3>
-          <p class="anchor-line">Solar can support auxiliary power, battery charging, lower-emission operations, and bridge infrastructure; it does not solve fusion confinement or plant gain.</p>
+          <h3>Solar supports the pathway. It does not become fusion.</h3>
+          <p>Solar can help reduce exposure, support storage, and improve bridge infrastructure where ownership, economics, and site conditions allow.</p>
 
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="solar-platform" name="solar-lens" type="radio" checked>
@@ -1269,21 +1327,21 @@
             <div class="lens-body">
               <div class="lens-copy platform-copy">
                 <b>Platform Lens</b>
-                <p>Solar belongs in the story because it is accessible, visible, and useful now. It helps people understand the bridge between today’s clean-energy tools and tomorrow’s advanced power. The message stays honest: solar helps the pathway; it is not the fusion answer by itself.</p>
+                <p>Solar is useful because it is visible and available now. It gives the public a bridge between the clean-energy tools we can use today and the advanced-power systems we may prepare for tomorrow.</p>
                 <ul class="lens-list">
-                  <li>Solar can reduce exposure where site ownership and economics allow.</li>
-                  <li>Solar can charge storage and stabilize parts of the energy picture.</li>
-                  <li>Audralia can show solar as one piece in a larger energy ecosystem.</li>
+                  <li>Solar can help charge storage and reduce some volatility.</li>
+                  <li>Solar belongs in the transition stack.</li>
+                  <li>Solar does not solve the fusion problem by itself.</li>
                 </ul>
               </div>
 
               <div class="lens-copy engineering-copy">
                 <b>Engineering Lens</b>
-                <p>Operating object: distributed generation hedge. Inputs: solar irradiance, site control, roof or land availability, interconnection, load shape, storage capacity, demand charges, and contract economics. Outputs: partial offset, storage input, hedge value, and resilience contribution.</p>
+                <p>Operating object: distributed generation hedge. Inputs include site control, irradiance, interconnection, load shape, storage capacity, demand charges, and contract economics.</p>
                 <ul class="lens-list">
-                  <li>Constraint: solar does not solve plasma confinement, fuel-cycle closure, or thermal extraction.</li>
-                  <li>Exclusion: no “solar into fusion” public claim.</li>
-                  <li>Kill condition: stop if solar is described as directly creating commercial fusion power.</li>
+                  <li>Outputs: partial offset, storage input, hedge value, and resilience contribution.</li>
+                  <li>Constraint: solar does not solve plasma confinement, fuel-cycle closure, or plant gain.</li>
+                  <li>Stop condition: no solar-to-fusion claim.</li>
                 </ul>
               </div>
             </div>
@@ -1295,15 +1353,12 @@
       </section>
 
       <section class="panel section" id="plasma-boundary" aria-labelledby="plasma-title">
-        <div class="section-head">
-          <div class="kicker">Pathway Five</div>
-          <h2 id="plasma-title">Plasma Boundary</h2>
-          <p>Plasma is an operating state, not stored fuel.</p>
-        </div>
+        <div class="kicker">Pathway Five</div>
+        <h2 id="plasma-title">Plasma Boundary</h2>
 
         <article class="pathway-module">
-          <h3>Plasma belongs in controlled operating regimes.</h3>
-          <p class="anchor-line">Plasma may be used in fusion research and industrial processes; it must not be framed as passive storage, a consumer endpoint, or a battery replacement.</p>
+          <h3>Plasma is an operating state, not stored fuel.</h3>
+          <p>Plasma belongs in controlled high-energy regimes, not in passive storage language or consumer endpoint claims.</p>
 
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="plasma-platform" name="plasma-lens" type="radio" checked>
@@ -1317,41 +1372,38 @@
             <div class="lens-body">
               <div class="lens-copy platform-copy">
                 <b>Platform Lens</b>
-                <p>Plasma sounds like science fiction, but the page must make it practical and bounded. It is not a magic fuel. It is a demanding operating state that belongs in controlled environments. Audralia can teach that power becomes safer when dangerous regimes are kept away from daily endpoints.</p>
+                <p>Plasma sounds like science fiction, but the honest public lesson is simpler: some energy states are powerful because they are difficult to contain. That means the future needs boundaries before it needs slogans.</p>
                 <ul class="lens-list">
-                  <li>Plasma helps explain why advanced energy requires containment.</li>
-                  <li>The public learns the difference between operating state and storage.</li>
-                  <li>The story keeps high-energy risk upstream.</li>
+                  <li>Plasma helps explain why advanced energy needs containment.</li>
+                  <li>The visitor learns the difference between operating state and storage.</li>
+                  <li>Audralia keeps high-energy risk upstream from daily life.</li>
                 </ul>
               </div>
 
               <div class="lens-copy engineering-copy">
                 <b>Engineering Lens</b>
-                <p>Operating object: high-energy plasma regime. Inputs: stored or supplied energy, confinement or discharge control, thermal management, diagnostics, safety isolation, and reset capacity. Outputs: heat, process effect, research data, or controlled high-energy interaction.</p>
+                <p>Operating object: high-energy plasma regime. Inputs include supplied energy, confinement or discharge control, diagnostics, thermal management, safety isolation, and reset capacity.</p>
                 <ul class="lens-list">
+                  <li>Outputs: heat, process effect, research data, or controlled high-energy interaction.</li>
                   <li>Constraint: plasma is not passive stored potential.</li>
-                  <li>Safety envelope: plasma operation belongs in hardened infrastructure or controlled research/industrial settings.</li>
-                  <li>Kill condition: stop if “plasma battery” is used as an unverified product claim.</li>
+                  <li>Stop condition: no unverified plasma-battery product claim.</li>
                 </ul>
               </div>
             </div>
           </div>
 
-          <div class="boundary">Boundary: use “advanced energy buffer” or “pulsed-power readiness” unless a validated device is specified.</div>
+          <div class="boundary">Boundary: use advanced energy buffer or pulsed-power readiness unless a validated device is specified.</div>
           <div class="section-return"><a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a></div>
         </article>
       </section>
 
       <section class="panel section" id="q-boundary" aria-labelledby="q-title">
-        <div class="section-head">
-          <div class="kicker">Pathway Six</div>
-          <h2 id="q-title">Q Boundary</h2>
-          <p>Target gain, plasma gain, and plant gain are not the same claim.</p>
-        </div>
+        <div class="kicker">Pathway Six</div>
+        <h2 id="q-title">Q Boundary</h2>
 
         <article class="pathway-module">
-          <h3>The math must separate proof levels.</h3>
-          <p class="anchor-line">Commercial viability requires plant-level net electricity after total facility input, conversion losses, reset costs, maintenance, and reliability burdens.</p>
+          <h3>Not every gain claim means electricity is ready.</h3>
+          <p>Target gain, plasma gain, and plant gain must remain separate.</p>
 
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="q-platform" name="q-lens" type="radio" checked>
@@ -1365,41 +1417,38 @@
             <div class="lens-body">
               <div class="lens-copy platform-copy">
                 <b>Platform Lens</b>
-                <p>Not every breakthrough means a power plant is ready. The Q Boundary protects the public from confusing a successful experiment with a finished energy market. It teaches that the future needs both inspiration and accounting.</p>
+                <p>The Q Boundary protects the public from confusing a breakthrough with a finished power plant. A successful experiment can be meaningful without becoming commercially deployable electricity.</p>
                 <ul class="lens-list">
-                  <li>A lab result may be meaningful without being commercially deployable.</li>
-                  <li>The public can learn why full-system gain matters.</li>
-                  <li>Audralia can dramatize the gap between spark, system, and civilization-scale utility.</li>
+                  <li>The future needs inspiration and accounting.</li>
+                  <li>The visitor learns why full-system gain matters.</li>
+                  <li>Audralia can show the difference between spark, system, and civilization-scale utility.</li>
                 </ul>
               </div>
 
               <div class="lens-copy engineering-copy">
                 <b>Engineering Lens</b>
-                <p>Operating object: gain-class separation. Q_target = fusion energy from target / energy delivered to target. Q_plasma = fusion thermal power / external plasma heating power. Q_plant = net electric output / total facility energy input.</p>
+                <p>Operating object: gain-class separation. Q_target measures target output over target input. Q_plasma measures fusion thermal power over external plasma heating power. Q_plant measures net electric output over total facility input.</p>
                 <ul class="lens-list">
-                  <li>Constraint: Q_target success does not equal Q_plant commercial viability.</li>
-                  <li>Required condition: Q_plant must be sustainably greater than 1 after all facility burdens.</li>
-                  <li>Kill condition: stop if laboratory gain is represented as commercial electricity.</li>
+                  <li>Constraint: target gain does not equal plant gain.</li>
+                  <li>Commercial condition: Q_plant must exceed total facility burdens sustainably.</li>
+                  <li>Stop condition: do not represent laboratory gain as commercial electricity.</li>
                 </ul>
               </div>
             </div>
           </div>
 
-          <div class="boundary">Boundary: the page may teach gain types; it may not collapse them into a commercial fusion claim.</div>
+          <div class="boundary">Boundary: gain types may be taught; they may not be collapsed into a commercial fusion claim.</div>
           <div class="section-return"><a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a></div>
         </article>
       </section>
 
       <section class="panel section" id="commercial-now" aria-labelledby="commercial-title">
-        <div class="section-head">
-          <div class="kicker">Pathway Seven</div>
-          <h2 id="commercial-title">Commercial Now</h2>
-          <p>Commercial work starts with energy governance, not fusion sales.</p>
-        </div>
+        <div class="kicker">Pathway Seven</div>
+        <h2 id="commercial-title">Commercial Now</h2>
 
         <article class="pathway-module">
-          <h3>Revenue begins with real energy risk control.</h3>
-          <p class="anchor-line">Procurement, usage aggregation, bill auditing, future-dated agreements, price protection, storage review, and solar hedge planning are actionable now.</p>
+          <h3>Commercial work starts with energy governance.</h3>
+          <p>Revenue can begin through real risk control: procurement, usage aggregation, bill auditing, future-dated agreements, price protection, storage review, and solar hedge planning.</p>
 
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="commercial-platform" name="commercial-lens" type="radio" checked>
@@ -1413,21 +1462,21 @@
             <div class="lens-body">
               <div class="lens-copy platform-copy">
                 <b>Platform Lens</b>
-                <p>The future energy story becomes useful when it helps people make better decisions today. Before fusion becomes a market, businesses still need protection from volatility, waste, poor timing, and weak energy governance.</p>
+                <p>The future becomes useful when it improves decisions today. Before fusion becomes a market, businesses still need protection from volatility, waste, poor timing, and weak energy governance.</p>
                 <ul class="lens-list">
                   <li>The practical buyer needs stability before frontier technology.</li>
-                  <li>Commercial Now connects the future thesis to present value.</li>
-                  <li>The story-world teaches the future while the business lane controls today’s risk.</li>
+                  <li>This pathway connects the future thesis to present value.</li>
+                  <li>The public can learn future readiness without being sold future power.</li>
                 </ul>
               </div>
 
               <div class="lens-copy engineering-copy">
                 <b>Engineering Lens</b>
-                <p>Operating object: energy governance service lane. Inputs: utility bills, interval data, contract dates, demand profile, site list, market exposure, procurement options, and storage eligibility. Outputs: audit findings, risk controls, timing recommendations, and procurement posture.</p>
+                <p>Operating object: energy governance service lane. Inputs include utility bills, interval data, contract dates, demand profile, site list, procurement options, market exposure, and storage eligibility.</p>
                 <ul class="lens-list">
-                  <li>Buyer: CFO, COO, treasury, energy procurement, and high-load operators.</li>
+                  <li>Outputs: audit findings, risk controls, timing recommendations, and procurement posture.</li>
                   <li>Constraint: present sellable work is governance and readiness, not fusion procurement.</li>
-                  <li>Kill condition: stop if future fusion is used as a current commodity offer.</li>
+                  <li>Stop condition: no future-fusion commodity offer.</li>
                 </ul>
               </div>
             </div>
@@ -1439,15 +1488,12 @@
       </section>
 
       <section class="panel section" id="bridge-infrastructure" aria-labelledby="bridge-title">
-        <div class="section-head">
-          <div class="kicker">Pathway Eight</div>
-          <h2 id="bridge-title">Bridge Infrastructure</h2>
-          <p>Bridge infrastructure prepares the site before the future market arrives.</p>
-        </div>
+        <div class="kicker">Pathway Eight</div>
+        <h2 id="bridge-title">Bridge Infrastructure</h2>
 
         <article class="pathway-module">
-          <h3>Infrastructure determines whether readiness is real.</h3>
-          <p class="anchor-line">Battery storage, backup power, peak shaving, interconnection review, site control, load-shape analysis, and agricultural storage fields prepare high-load sites for future clean-power markets.</p>
+          <h3>The future needs places, wires, storage, contracts, and safeguards.</h3>
+          <p>Bridge infrastructure prepares sites before future clean-power markets become practical.</p>
 
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="bridge-platform" name="bridge-lens" type="radio" checked>
@@ -1461,21 +1507,21 @@
             <div class="lens-body">
               <div class="lens-copy platform-copy">
                 <b>Platform Lens</b>
-                <p>Bridge infrastructure is the middle ground between today’s tools and tomorrow’s power sources. It tells the public that the future is not only about invention; it is about the places, wires, storage, contracts, and safeguards that let invention become usable.</p>
+                <p>Bridge infrastructure is the middle ground between today’s tools and tomorrow’s power sources. It teaches that invention alone is not enough; the world must be ready to receive it.</p>
                 <ul class="lens-list">
                   <li>Audralia can show infrastructure as civilization’s skeleton.</li>
-                  <li>The visitor learns why site preparation matters before the advanced market exists.</li>
-                  <li>The page turns future energy from dream language into readiness architecture.</li>
+                  <li>The visitor learns why site preparation matters before the market exists.</li>
+                  <li>Future energy becomes readiness architecture instead of vague possibility.</li>
                 </ul>
               </div>
 
               <div class="lens-copy engineering-copy">
                 <b>Engineering Lens</b>
-                <p>Operating object: site and grid readiness layer. Inputs: interconnection capacity, site ownership, load profile, battery feasibility, backup duration, demand charge exposure, permitting limits, and physical placement. Outputs: bridge-readiness classification and upgrade plan.</p>
+                <p>Operating object: site and grid readiness layer. Inputs include interconnection capacity, site ownership, load profile, battery feasibility, backup duration, demand charge exposure, permitting limits, and physical placement.</p>
                 <ul class="lens-list">
+                  <li>Outputs: bridge-readiness classification and upgrade plan.</li>
                   <li>Constraint: readiness depends on physical, contractual, and regulatory conditions.</li>
-                  <li>Safety envelope: placement, containment, access, and emergency response must be defined.</li>
-                  <li>Kill condition: stop if infrastructure readiness is treated as technology deployment proof.</li>
+                  <li>Stop condition: readiness cannot be presented as deployment proof.</li>
                 </ul>
               </div>
             </div>
@@ -1487,15 +1533,12 @@
       </section>
 
       <section class="panel section" id="storage-fields" aria-labelledby="fields-title">
-        <div class="section-head">
-          <div class="kicker">Pathway Nine</div>
-          <h2 id="fields-title">Storage Fields</h2>
-          <p>Agricultural Energy Storage Fields belong in the bridge layer, not in fusion-farm language.</p>
-        </div>
+        <div class="kicker">Pathway Nine</div>
+        <h2 id="fields-title">Storage Fields</h2>
 
         <article class="pathway-module">
-          <h3>Rural storage can become reserve ground.</h3>
-          <p class="anchor-line">Farmland and rural sites may support battery storage and grid-support infrastructure when safeguards, permitting, spacing, containment, drainage, monitoring, and emergency response are calculated.</p>
+          <h3>Rural land may become reserve ground when safeguards are calculated.</h3>
+          <p>Farmland and rural sites may support battery storage and grid-support infrastructure when placement, spacing, containment, drainage, monitoring, maintenance, and emergency response are defined.</p>
 
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="fields-platform" name="fields-lens" type="radio" checked>
@@ -1509,21 +1552,21 @@
             <div class="lens-body">
               <div class="lens-copy platform-copy">
                 <b>Platform Lens</b>
-                <p>Storage fields give rural land a possible new role in resilience. They are not reactors and not fantasy farms. They are carefully placed reserve systems that can help communities hold energy, buffer pressure, and support the grid when the safeguards are designed correctly.</p>
+                <p>Storage fields can give rural land a resilience role. They are not reactor farms or fantasy power fields. They are reserve systems that must earn public trust through clear safeguards.</p>
                 <ul class="lens-list">
-                  <li>The public lesson is trust: clean energy must still be placed responsibly.</li>
-                  <li>Audralia can show rural storage as part of settlement survival.</li>
-                  <li>The page explains safety without pretending risk disappears.</li>
+                  <li>The public lesson is that clean energy still needs responsible placement.</li>
+                  <li>Audralia can show reserve ground as part of settlement survival.</li>
+                  <li>Risk is addressed by design, not erased by language.</li>
                 </ul>
               </div>
 
               <div class="lens-copy engineering-copy">
                 <b>Engineering Lens</b>
-                <p>Operating object: midstream battery or storage reserve site. Inputs: site control, battery chemistry, thermal profile, spacing, containment, drainage, fire planning, monitoring, security, interconnection, and maintenance schedule. Outputs: reserve capacity, backup support, peak relief, and resilience value.</p>
+                <p>Operating object: midstream battery or storage reserve site. Inputs include site control, battery chemistry, thermal profile, spacing, containment, drainage, fire planning, monitoring, security, interconnection, and maintenance schedule.</p>
                 <ul class="lens-list">
+                  <li>Outputs: reserve capacity, backup support, peak relief, and resilience value.</li>
                   <li>Constraint: storage fields are not fusion farms, plasma farms, or reactor farms.</li>
-                  <li>Safety envelope: spacing, containment, emergency access, and monitoring must be engineered.</li>
-                  <li>Kill condition: stop if the page claims risk-free or completely safe storage.</li>
+                  <li>Stop condition: no risk-free or completely safe storage claim.</li>
                 </ul>
               </div>
             </div>
@@ -1535,15 +1578,12 @@
       </section>
 
       <section class="panel section" id="advanced-buffer" aria-labelledby="buffer-title">
-        <div class="section-head">
-          <div class="kicker">Pathway Ten</div>
-          <h2 id="buffer-title">Advanced Buffer</h2>
-          <p>Advanced energy buffering turns volatility into a planning object.</p>
-        </div>
+        <div class="kicker">Pathway Ten</div>
+        <h2 id="buffer-title">Advanced Buffer</h2>
 
         <article class="pathway-module">
-          <h3>Buffers make future loads manageable.</h3>
-          <p class="anchor-line">The Advanced Energy Buffer Model evaluates critical load, outage tolerance, demand charges, interconnection limits, backup duration, and future pulsed-load readiness.</p>
+          <h3>Buffers turn volatility into a planning object.</h3>
+          <p>An advanced buffer evaluates critical load, outage tolerance, demand exposure, interconnection limits, backup duration, and future pulsed-load readiness.</p>
 
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="buffer-platform" name="buffer-lens" type="radio" checked>
@@ -1557,21 +1597,21 @@
             <div class="lens-body">
               <div class="lens-copy platform-copy">
                 <b>Platform Lens</b>
-                <p>An advanced buffer is the calm between energy supply and energy demand. It helps visitors understand why the future does not only need better generation; it needs better timing, reserve capacity, and controlled release.</p>
+                <p>An advanced buffer is the calm between energy supply and energy demand. It teaches that the future does not only need better generation; it needs better timing and reserve capacity.</p>
                 <ul class="lens-list">
                   <li>Buffers convert risk into a manageable planning layer.</li>
-                  <li>Audralia can show what happens when a settlement lacks buffer capacity.</li>
-                  <li>The public learns why energy resilience requires more than a single power source.</li>
+                  <li>Audralia can show what happens when a settlement lacks reserve capacity.</li>
+                  <li>Resilience requires more than a single power source.</li>
                 </ul>
               </div>
 
               <div class="lens-copy engineering-copy">
                 <b>Engineering Lens</b>
-                <p>Operating object: advanced energy buffer model. Inputs: critical load, peak pulse exposure, backup duration, outage tolerance, demand charge exposure, interconnection limits, storage chemistry, and safety factor. Outputs: battery-only, battery plus solar hedge, generator bridge, long-duration storage candidate, or future pulsed-power candidate.</p>
+                <p>Operating object: advanced energy buffer model. Inputs include critical load, peak pulse exposure, backup duration, outage tolerance, demand charge exposure, interconnection limits, storage chemistry, and safety factor.</p>
                 <ul class="lens-list">
+                  <li>Outputs: battery-only, battery plus solar hedge, generator bridge, long-duration storage candidate, or future pulsed-power candidate.</li>
                   <li>Constraint: buffer model is an assessment layer, not a validated plasma-battery product.</li>
-                  <li>Safety envelope: buffer size must include duration, peak load, degradation, and failure response.</li>
-                  <li>Kill condition: stop if unverified device claims replace assessment language.</li>
+                  <li>Stop condition: no unverified device claim.</li>
                 </ul>
               </div>
             </div>
@@ -1583,15 +1623,12 @@
       </section>
 
       <section class="panel section" id="future-offtake" aria-labelledby="offtake-title">
-        <div class="section-head">
-          <div class="kicker">Pathway Eleven</div>
-          <h2 id="offtake-title">Future Offtake</h2>
-          <p>Future clean-power markets will favor prepared sites.</p>
-        </div>
+        <div class="kicker">Pathway Eleven</div>
+        <h2 id="offtake-title">Future Offtake</h2>
 
         <article class="pathway-module">
           <h3>Future offtake is optionality, not procurement today.</h3>
-          <p class="anchor-line">The Future Offtake Readiness Map evaluates whether a company may eventually contract for advanced clean baseload power or frontier energy infrastructure.</p>
+          <p>The Future Offtake Readiness Map evaluates whether a company may eventually contract for advanced clean baseload power or frontier infrastructure.</p>
 
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="offtake-platform" name="offtake-lens" type="radio" checked>
@@ -1605,21 +1642,21 @@
             <div class="lens-body">
               <div class="lens-copy platform-copy">
                 <b>Platform Lens</b>
-                <p>Future offtake asks a simple question: when advanced power becomes real, who will be ready to buy it responsibly? The story teaches that timing, trust, credit, site stability, and governance matter before the market arrives.</p>
+                <p>Future offtake asks who will be ready when advanced power becomes real. The story teaches that timing, trust, credit, site stability, and governance matter before a market arrives.</p>
                 <ul class="lens-list">
-                  <li>Future offtake makes readiness strategic, not speculative.</li>
+                  <li>Planning for a future market is not the same as claiming it exists now.</li>
                   <li>Audralia can show how long-term power agreements shape settlement futures.</li>
-                  <li>The public learns the difference between planning for a market and claiming the market already exists.</li>
+                  <li>Readiness becomes strategic without becoming speculative hype.</li>
                 </ul>
               </div>
 
               <div class="lens-copy engineering-copy">
                 <b>Engineering Lens</b>
-                <p>Operating object: future offtake readiness map. Inputs: load consistency, creditworthiness, contract horizon, market jurisdiction, site stability, risk appetite, governance maturity, and clean baseload suitability. Outputs: short-term procurement only, forward agreement candidate, clean baseload candidate, or frontier offtake candidate.</p>
+                <p>Operating object: future offtake readiness map. Inputs include load consistency, creditworthiness, contract horizon, market jurisdiction, site stability, risk appetite, governance maturity, and clean baseload suitability.</p>
                 <ul class="lens-list">
+                  <li>Outputs: short-term procurement only, forward agreement candidate, clean baseload candidate, or frontier offtake candidate.</li>
                   <li>Constraint: no current fusion procurement claim.</li>
-                  <li>Safety envelope: contract language must distinguish future optionality from available commodity.</li>
-                  <li>Kill condition: stop if future offtake is represented as current fusion supply.</li>
+                  <li>Stop condition: do not represent future offtake as current fusion supply.</li>
                 </ul>
               </div>
             </div>
@@ -1631,15 +1668,12 @@
       </section>
 
       <section class="panel section" id="science-boundary" aria-labelledby="science-title">
-        <div class="section-head">
-          <div class="kicker">Science Boundary</div>
-          <h2 id="science-title">What is true, what is not ready, and what must not be claimed?</h2>
-          <p>Science preserves the proof boundary beneath the story-world and pathway map.</p>
-        </div>
+        <div class="kicker">Science Boundary</div>
+        <h2 id="science-title">Possibility must remain separate from proof.</h2>
 
         <article class="pathway-module">
-          <h3>Frontier energy stays credible by separating possibility from proof.</h3>
-          <p class="anchor-line">Fusion is real; commercial plant-level electricity is not procurement-ready; readiness is the lawful present category.</p>
+          <h3>Frontier energy stays credible by preserving the boundary.</h3>
+          <p>Fusion is real. Commercial plant-level electricity is not procurement-ready. Readiness is the lawful present category.</p>
 
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="science-platform" name="science-lens" type="radio" checked>
@@ -1653,21 +1687,21 @@
             <div class="lens-body">
               <div class="lens-copy platform-copy">
                 <b>Platform Lens</b>
-                <p>The story can dream because the science sets the boundary. Frontier energy becomes trustworthy when it explains both the possibility and the restraint. The public should leave inspired, not misled.</p>
+                <p>The story can dream because the science sets the boundary. The public should leave inspired, not misled.</p>
                 <ul class="lens-list">
                   <li>Fusion is a horizon worth preparing for.</li>
-                  <li>Storage and solar are bridge tools that exist in the present.</li>
-                  <li>Audralia makes the frontier easier to understand without replacing evidence.</li>
+                  <li>Solar and storage are bridge tools available in the present.</li>
+                  <li>Audralia makes the frontier understandable without replacing evidence.</li>
                 </ul>
               </div>
 
               <div class="lens-copy engineering-copy">
                 <b>Engineering Lens</b>
-                <p>Operating object: claim discipline layer. Inputs: scientific status, gain class, energy balance, commercial readiness, deployment boundary, and safety posture. Outputs: admissible statement, forbidden claim list, and kill conditions.</p>
+                <p>Operating object: claim discipline layer. Inputs include scientific status, gain class, energy balance, commercial readiness, deployment boundary, and safety posture.</p>
                 <ul class="lens-list">
                   <li>Allowed: fusion-readiness, storage strategy, solar hedge, advanced buffer, future offtake.</li>
                   <li>Excluded: solar-to-fusion, commercial fusion now, plasma battery product, unlimited power.</li>
-                  <li>Kill condition: stop if the page exceeds measured evidence.</li>
+                  <li>Stop condition: page copy must not exceed measured evidence.</li>
                 </ul>
               </div>
             </div>
@@ -1679,15 +1713,12 @@
       </section>
 
       <section class="panel section" id="kill-conditions" aria-labelledby="kill-title">
-        <div class="section-head">
-          <div class="kicker">Pathway Twelve</div>
-          <h2 id="kill-title">Kill Conditions</h2>
-          <p>The contract stops if the claim outruns the evidence.</p>
-        </div>
+        <div class="kicker">Pathway Twelve</div>
+        <h2 id="kill-title">Kill Conditions</h2>
 
         <article class="pathway-module">
-          <h3>Claim discipline keeps the frontier credible.</h3>
-          <p class="anchor-line">The page must stop any sentence that turns simulation, future readiness, or bridge infrastructure into proof of commercial fusion deployment.</p>
+          <h3>The claim stops if it outruns the evidence.</h3>
+          <p>The page must stop any sentence that turns simulation, future readiness, storage, solar, or bridge infrastructure into proof of commercial fusion deployment.</p>
 
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="kill-platform" name="kill-lens" type="radio" checked>
@@ -1701,7 +1732,7 @@
             <div class="lens-body">
               <div class="lens-copy platform-copy">
                 <b>Platform Lens</b>
-                <p>A credible frontier does not need exaggeration. The dream is stronger when the boundary is clean. Kill Conditions protect the reader, the story, and the science from collapsing possibility into overclaim.</p>
+                <p>A credible frontier does not need exaggeration. The dream becomes stronger when the boundary is clean.</p>
                 <ul class="lens-list">
                   <li>Do not sell fusion.</li>
                   <li>Do not turn Audralia into proof.</li>
@@ -1712,7 +1743,7 @@
 
               <div class="lens-copy engineering-copy">
                 <b>Engineering Lens</b>
-                <p>Operating object: stop-rule list. Inputs: page copy, product claims, route labels, simulation descriptions, energy pathway language, and public CTA language. Outputs: continue, revise before publication, or stop.</p>
+                <p>Operating object: stop-rule list. Inputs include page copy, product claims, route labels, simulation descriptions, pathway language, and public CTA language.</p>
                 <ul class="lens-list">
                   <li>Stop if the page claims solar becomes fusion.</li>
                   <li>Stop if the page claims commercial fusion is ready now.</li>
@@ -1732,55 +1763,54 @@
 
       <section class="final-band" id="final-lock" aria-label="Energy final lock">
         <strong>Fusion is the horizon. Readiness is the deliverable. Audralia is the simulation world.</strong>
-
         <p>
-          Energy is a frontier science pathway inside the story-world. It teaches fusion readiness through per-pathway Platform and Engineering lenses without claiming commercial fusion is ready today.
+          Energy is a frontier science pathway inside the story-world. It teaches readiness through per-pathway Platform and Engineering lenses without claiming commercial fusion is ready today.
         </p>
-
         <div class="actions">
           <a class="button gold" href="#energy-orbit">Return to Energy Orbit</a>
-          <a class="button violet" href="#audralia-simulation">Open Audralia Simulation</a>
-          <a class="button blue" href="/showroom/globe/audralia/">Open Audralia Globe</a>
+          <a class="button" href="/showroom/globe/audralia/">Open Audralia</a>
+          <a class="button green" href="/explore/frontier/water/">Open Water</a>
           <a class="button" href="/frontier/">Return to Frontier</a>
-        </div>
-
-        <div class="note">
-          Final lock: do not sell fusion. Sell readiness for the energy world fusion may eventually create.
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_ENERGY_PER_PATHWAY_DUAL_LENS_COMPASS_GEM_RENEWAL_TNT_v17
+FRONTIER_ENERGY_COMPASS_GEM_BASELINE_DUAL_LENS_RENEWAL_TNT_v18
+previous=FRONTIER_ENERGY_PER_PATHWAY_DUAL_LENS_COMPASS_GEM_RENEWAL_TNT_v17
 route=/explore/frontier/energy/
-binding=FRONTIER_ENERGY_PER_PATHWAY_DUAL_LENS_COMPASS_GEM_PREGAME_TO_POSTGAME_BINDING_v17
-file_strategy=full_file_replacement_only
-incorrect_model=discarded
-visual_authority=compass_style_gem_standard
-visual_model=svg_symbol_based_bright_faceted_organic_crystal_pathway_objects
-content_authority=frontier_energy_readiness_packet
-primary_renewal=per_pathway_dual_lens_system
-lens_scope=every_clicked_pathway
-platform_lens=public_ted_style_meaning_audralia_inheritance_plain_bounded_learning_value
-engineering_lens=direct_operating_language_inputs_outputs_constraints_safety_exclusions_kill_conditions
-audralia_role=simulation_world_first
-public_subject=fusion_readiness_storage_solar_hedge_plasma_boundary_advanced_buffer_future_offtake_safeguards_claim_discipline
-forbidden_layout=top_only_toggle,side_by_side_engineering_platform,duplicated_scroll,legacy_hybrid_visual_model
-return_path=return_to_energy_orbit_under_every_pathway
+page=frontier_energy
+html=/explore/frontier/energy/index.html
+source_visual_authority=COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
+source_symbol_authority=compassOrganicGem
+visual_authority_carried_forward=true
+incorrect_fabricated_energy_visual_model=discarded
+legacy_hybrid_model=discarded
+forced_polygon_model=discarded
+black_badge_model=discarded
+audralia_first=true
+public_subject=fusion_readiness_storage_solar_hedge_plasma_boundary_q_boundary_commercial_now_bridge_infrastructure_storage_fields_advanced_buffer_future_offtake_kill_conditions
+per_pathway_dual_lens=true
+platform_lens_per_pathway=true
+engineering_lens_per_pathway=true
+top_only_lens_toggle=false
+side_by_side_platform_engineering=false
+return_to_energy_orbit_under_every_pathway=true
 solar_lock=solar_supports_pathway_does_not_become_fusion
 plasma_lock=plasma_is_operating_state_not_storage
-storage_lock=stored_potential_downstream_high_energy_regime_upstream
-farmland_storage=bridge_infrastructure_midstream_storage_only
-math_lock=Q_target_Q_plasma_Q_plant_separated
+storage_fields_lock=bridge_infrastructure_only_not_fusion_farms
+q_boundary=Q_target_Q_plasma_Q_plant_separated
 final_lock=do_not_sell_fusion_sell_readiness
+static_page_usable_without_js=true
 heavy_runtime=false
 generated_image=false
 graphic_box=false
+streaming=false
 visual_pass_claimed=false
       </template>
     </main>
 
     <footer>
-      FRONTIER_ENERGY_PER_PATHWAY_DUAL_LENS_COMPASS_GEM_RENEWAL_TNT_v17 · Fusion Readiness · Per-Pathway Platform / Engineering Lenses · Return to Energy Orbit.
+      FRONTIER_ENERGY_COMPASS_GEM_BASELINE_DUAL_LENS_RENEWAL_TNT_v18 · Energy · Audralia first · Per-pathway Platform and Engineering lenses.
     </footer>
   </div>
 </body>

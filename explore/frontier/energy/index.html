@@ -1,666 +1,1172 @@
-<!-- /explore/frontier/energy/index.html -->
 <!doctype html>
 <html
   lang="en"
   data-route="/explore/frontier/energy/"
   data-page="frontier-energy"
-  data-version="G1-V10A"
-  data-contract="ENERGY_G1_V10A_CONCRETE_POWER_FLOW_TNT_v1"
-  data-status="active"
-  data-parent="/explore/frontier/"
-  data-baseline="AUDRALIA_MANOR_CURRENT"
-  data-expression="concrete-power-flow-with-russian-doll-underlay"
+  data-contract="FRONTIER_ENERGY_CLEAS_RND_STANDARD_RENEWAL_TNT_v1"
+  data-source-psalm="PSALM_PACKET_ENERGY_RND_SOLAR_PLASMA_FUSION_v1.0"
+  data-audralia-inheritance="AUDRALIA_CREW_ENERGY_DISCOVERY_INHERITANCE_CANON_v1"
+  data-role="frontier-energy-rnd-standard"
+  data-public-lane="education-standards-data-validation-safety-licensing"
+  data-narrative-lane="audralia-inheritance-crew-mission-worldbuilding-logic-future-possibility"
+  data-solar-role="supportive-transitory-input"
+  data-plasma-role="high-energy-operating-regime"
+  data-fusion-role="long-horizon-upstream-application"
+  data-storage-role="endpoint-requirement"
+  data-cleas="Closed-Loop Energy Architecture Standard"
+  data-forbidden-claims="direct-solar-to-commercial-fusion,net-positive-fusion-now,grid-scale-fusion-now,plasma-as-fuel,vehicle-fusion-endpoint,residential-plasma-endpoint,guaranteed-timeline"
   data-heavy-runtime-loaded="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Frontier · Energy G1 V10A</title>
-  <meta name="description" content="Energy G1 V10A shows where power comes from, where it goes, what it moves, what gets wasted, and what must be regulated.">
+
+  <title>Energy · Frontier · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Energy inside Diamond Gate Bridge: CLEAS, solar support, plasma operating regimes, long-horizon fusion research, storage, loop closure, and Audralia narrative inheritance without deployment overclaim."
+  >
+  <link rel="canonical" href="https://diamondgatebridge.com/explore/frontier/energy/">
+  <meta name="theme-color" content="#02040b">
 
   <style>
-    :root {
-      --bg:#02050d;
-      --panel:rgba(9,17,32,.91);
-      --line:rgba(139,200,255,.24);
-      --gold:#f2c76f;
-      --blue:#8bc8ff;
-      --green:#9df0c4;
-      --text:#f8f1dd;
-      --muted:rgba(226,235,255,.76);
-      --faint:rgba(226,235,255,.52);
-      --max:1120px;
+    :root{
+      color-scheme:dark;
+      --bg:#02040b;
+      --ink:#fff4d8;
+      --muted:rgba(230,238,255,.78);
+      --soft:rgba(230,238,255,.60);
+      --faint:rgba(230,238,255,.46);
+      --gold:#f3c86f;
+      --gold2:#ffe8a3;
+      --blue:#8dd8ff;
+      --green:#8ff0c3;
+      --violet:#8f65ff;
+      --violet2:#cbb8ff;
+      --red:#ff9d91;
+      --panel:rgba(9,15,31,.86);
+      --line:rgba(184,205,255,.18);
+      --line2:rgba(243,200,111,.30);
+      --shadow:0 32px 110px rgba(0,0,0,.46);
+      --max:1180px;
+      --gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
     }
 
-    * { box-sizing:border-box; }
+    *{box-sizing:border-box}
 
-    html, body {
-      margin:0;
+    html{
+      min-width:320px;
       min-height:100%;
-      color:var(--text);
-      background:
-        radial-gradient(circle at 50% 0%, rgba(242,199,111,.17), transparent 27rem),
-        radial-gradient(circle at 58% 40%, rgba(139,200,255,.12), transparent 35rem),
-        linear-gradient(180deg,#050914,#02050d 78%,#010207);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:var(--bg);
+      scroll-behavior:smooth;
       overflow-x:hidden;
     }
 
-    body::before {
+    body{
+      margin:0;
+      min-width:320px;
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.5;
+      overflow-x:hidden;
+      background:
+        radial-gradient(circle at 50% -8%,rgba(243,200,111,.22),transparent 28rem),
+        radial-gradient(circle at 12% 18%,rgba(36,120,255,.20),transparent 30rem),
+        radial-gradient(circle at 88% 28%,rgba(143,101,255,.16),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(143,240,195,.10),transparent 34rem),
+        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
+    }
+
+    body::before{
       content:"";
       position:fixed;
       inset:0;
+      z-index:0;
       pointer-events:none;
       background-image:
-        radial-gradient(circle, rgba(242,199,111,.15) 0 1px, transparent 1.4px),
-        linear-gradient(135deg, rgba(242,199,111,.07), transparent 42%),
-        linear-gradient(300deg, rgba(139,200,255,.06), transparent 48%);
-      background-size:210px 250px,520px 520px,640px 640px;
-      opacity:.32;
+        radial-gradient(circle,rgba(255,255,255,.17) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(141,216,255,.04) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.04) 1px,transparent 1px);
+      background-size:220px 260px,54px 54px,54px 54px;
+      opacity:.22;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
 
-    a { color:inherit; text-decoration:none; }
-    button { font:inherit; color:inherit; }
+    a{color:inherit;text-decoration:none}
 
-    .skip {
+    a:focus-visible,
+    button:focus-visible{
+      outline:2px solid var(--gold);
+      outline-offset:4px;
+    }
+
+    .skip{
       position:absolute;
-      top:-4rem;
-      left:1rem;
-      z-index:10;
+      left:-999px;
+      top:8px;
+      z-index:50;
       padding:.75rem 1rem;
       border-radius:999px;
-      background:var(--gold);
       color:#05070d;
-      font-weight:900;
+      background:var(--gold);
+      font-weight:950;
     }
 
-    .skip:focus { top:1rem; }
+    .skip:focus{left:8px}
 
-    .shell {
+    .shell{
       position:relative;
-      z-index:1;
-      width:min(100%,var(--max));
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
       margin:0 auto;
-      padding:max(1rem,env(safe-area-inset-top)) clamp(.85rem,3vw,2rem) max(1.5rem,env(safe-area-inset-bottom));
+      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
     }
 
-    .card {
-      margin:clamp(.85rem,2.4vw,1.25rem) auto 0;
-      border:1px solid var(--line);
-      border-radius:clamp(1.25rem,5vw,2rem);
-      background:
-        radial-gradient(circle at 15% 0%, rgba(139,200,255,.13), transparent 26rem),
-        radial-gradient(circle at 85% 20%, rgba(242,199,111,.12), transparent 24rem),
-        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.018)),
-        var(--panel);
-      box-shadow:0 2rem 7rem rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.08);
-      overflow:hidden;
-    }
-
-    .top, .section {
-      padding:clamp(1rem,3vw,1.35rem);
+    .topbar{
       display:grid;
-      gap:1rem;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:18px;
+      padding:12px 0 18px;
     }
 
-    .brand {
+    .brand{
       display:grid;
       grid-template-columns:auto 1fr;
       align-items:center;
       gap:.9rem;
+      min-width:260px;
     }
 
-    .mark {
-      width:4.25rem;
-      height:4.25rem;
+    .brand-mark{
+      width:4.2rem;
+      height:4.2rem;
       display:grid;
       place-items:center;
-      border:1px solid rgba(242,199,111,.42);
-      border-radius:1.2rem;
-      background:radial-gradient(circle, rgba(242,199,111,.25), transparent 55%), rgba(255,255,255,.035);
-      font-size:1.45rem;
+      border:1px solid rgba(243,200,111,.44);
+      transform:rotate(45deg);
+      clip-path:var(--gem);
+      background:
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.28) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.26),rgba(243,200,111,.22),rgba(36,120,255,.20),rgba(143,101,255,.24),rgba(255,255,255,.26)),
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.30),transparent 42%),
+        linear-gradient(145deg,rgba(74,45,18,.95),rgba(5,8,20,.98));
+      box-shadow:
+        0 0 2rem rgba(243,200,111,.18),
+        0 1.2rem 2.8rem rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.16);
+    }
+
+    .brand-mark span{
+      transform:rotate(-45deg);
       font-weight:950;
       letter-spacing:.04em;
+      color:rgba(255,244,216,.98);
+      text-shadow:0 2px 10px rgba(0,0,0,.85);
     }
 
-    .brand span span {
-      display:block;
-      color:rgba(226,235,255,.84);
-      font-size:clamp(.7rem,2vw,.88rem);
-      font-weight:950;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-    }
-
-    .brand strong {
-      display:block;
-      font-size:clamp(1.25rem,4.5vw,2.15rem);
-      line-height:1;
-      letter-spacing:-.055em;
-    }
-
-    .nav, .control-row {
-      display:flex;
-      flex-wrap:wrap;
-      gap:.55rem;
-    }
-
-    .nav a, .button, .tab {
-      min-height:2.4rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(255,255,255,.16);
-      border-radius:999px;
-      background:rgba(255,255,255,.035);
-      padding:.55rem .82rem;
-      color:rgba(242,246,255,.88);
-      font-size:.74rem;
-      font-weight:950;
-      letter-spacing:.055em;
-      text-transform:uppercase;
-      cursor:pointer;
-    }
-
-    .nav a[aria-current="page"],
-    .button.primary,
-    .tab[aria-pressed="true"] {
-      border-color:rgba(242,199,111,.9);
-      color:#060811;
-      background:linear-gradient(135deg,#fff0a3,#f2c76f);
-    }
-
-    .hero {
-      padding:clamp(1.5rem,5vw,3rem);
-      min-height:clamp(20rem,42vw,31rem);
+    .brand-copy{
       display:grid;
-      gap:1rem;
-      align-content:center;
+      gap:.18rem;
     }
 
-    .kicker {
-      width:fit-content;
-      display:inline-flex;
-      align-items:center;
-      gap:.55rem;
-      padding:.58rem .95rem;
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:999px;
-      color:rgba(226,235,255,.86);
-      background:rgba(255,255,255,.035);
-      font-size:.72rem;
+    .brand-copy strong{
+      font-size:clamp(1.08rem,3vw,1.7rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+
+    .brand-copy span{
+      color:var(--muted);
+      font-size:.74rem;
       font-weight:950;
       letter-spacing:.14em;
       text-transform:uppercase;
     }
 
-    .kicker::before {
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:.48rem;
+    }
+
+    .nav a{
+      min-height:2.25rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
+      padding:.5rem .74rem;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      transition:transform .18s ease,border-color .18s ease;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.48);
+      outline:none;
+    }
+
+    .nav a[aria-current="page"]{
+      border-color:rgba(243,200,111,.88);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      background:
+        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(143,101,255,.14),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+        var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+
+    .hero{
+      position:relative;
+      min-height:clamp(28rem,50vw,38rem);
+      display:grid;
+      align-content:center;
+      gap:1rem;
+      padding:clamp(1.45rem,5vw,3.4rem);
+      margin-top:.6rem;
+      isolation:isolate;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      right:clamp(1rem,6vw,5.5rem);
+      top:50%;
+      z-index:0;
+      width:clamp(10rem,27vw,20rem);
+      height:clamp(10rem,27vw,20rem);
+      border:1px solid rgba(243,200,111,.20);
+      border-radius:50%;
+      transform:translateY(-50%);
+      background:
+        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
+        radial-gradient(circle at 50% 72%,rgba(36,120,255,.18),transparent 62%),
+        conic-gradient(from 90deg,rgba(143,240,195,.10),rgba(143,101,255,.10),rgba(243,200,111,.08),rgba(143,240,195,.10));
+      animation:energyPulse 9s ease-in-out infinite;
+      pointer-events:none;
+      opacity:.58;
+    }
+
+    @keyframes energyPulse{
+      0%,100%{opacity:.40;filter:brightness(.95);transform:translateY(-50%) scale(.98)}
+      50%{opacity:.62;filter:brightness(1.12);transform:translateY(-50%) scale(1.035)}
+    }
+
+    .kicker{
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.58rem;
+      padding:.58rem .95rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(230,238,255,.86);
+      background:rgba(255,255,255,.04);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      position:relative;
+      z-index:2;
+    }
+
+    .kicker::before{
       content:"";
       width:.72rem;
       height:.72rem;
       border-radius:.18rem;
-      background:var(--gold);
       transform:rotate(45deg);
-      box-shadow:0 0 1rem rgba(242,199,111,.45);
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
     }
 
-    h1 {
-      width:min(100%,820px);
+    h1{
       margin:0;
-      font-size:clamp(3.8rem,13vw,7.8rem);
+      max-width:980px;
+      font-size:clamp(3.2rem,10.5vw,7.4rem);
       line-height:.84;
       letter-spacing:-.105em;
+      text-wrap:balance;
+      position:relative;
+      z-index:2;
     }
 
-    h2 {
+    h2{
       margin:0;
       color:var(--gold);
-      font-size:clamp(1.65rem,5.8vw,3.3rem);
+      font-size:clamp(1.45rem,4.7vw,2.65rem);
       line-height:.98;
       letter-spacing:-.07em;
+      text-wrap:balance;
+      position:relative;
+      z-index:2;
     }
 
-    h3 {
+    h3{
       margin:0;
-      font-size:clamp(1.15rem,3.6vw,1.75rem);
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.08rem,3vw,1.36rem);
       line-height:1.08;
       letter-spacing:-.035em;
     }
 
-    p {
+    p{
       margin:0;
       color:var(--muted);
-      font-size:clamp(.98rem,2.8vw,1.18rem);
+      font-size:clamp(.98rem,2.7vw,1.16rem);
       line-height:1.55;
     }
 
-    .flow-grid {
-      display:grid;
-      grid-template-columns:repeat(7,1fr);
-      gap:.7rem;
+    .lead{
+      max-width:960px;
+      position:relative;
+      z-index:2;
     }
 
-    .flow-card {
-      min-height:8.2rem;
+    .principle{
+      max-width:1000px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,200,111,.24);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.94);
+      background:rgba(243,200,111,.070);
+      font-weight:900;
+      position:relative;
+      z-index:2;
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.62rem;
+      margin-top:.2rem;
+      position:relative;
+      z-index:2;
+    }
+
+    .button{
+      min-height:2.65rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      padding:.65rem 1rem;
+      background:rgba(255,255,255,.045);
+      color:rgba(241,246,255,.88);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .button:hover,
+    .button:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.62);
+      outline:none;
+    }
+
+    .button.gold{
+      border-color:rgba(243,200,111,.9);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+    }
+
+    .button.green{
+      border-color:rgba(143,240,195,.44);
+      color:#d9ffe9;
+      background:rgba(143,240,195,.075);
+    }
+
+    .button.violet{
+      border-color:rgba(143,101,255,.44);
+      color:var(--violet2);
+      background:rgba(143,101,255,.075);
+    }
+
+    .section{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
       display:grid;
+      gap:1.05rem;
+    }
+
+    .grid{
+      display:grid;
+      gap:.85rem;
+    }
+
+    .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+    .card{
+      position:relative;
+      min-height:100%;
+      display:grid;
+      gap:.6rem;
       align-content:start;
-      gap:.45rem;
       padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.25rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(36,120,255,.10),transparent 60%),
+        rgba(255,255,255,.035);
+      overflow:hidden;
+      transition:transform .18s ease,border-color .18s ease;
+    }
+
+    .card:hover,
+    .card:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(243,200,111,.44);
+      outline:none;
+    }
+
+    .card b{
+      color:var(--gold);
+      font-size:.68rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      position:relative;
+      z-index:2;
+    }
+
+    .card strong{
+      color:rgba(255,244,216,.98);
+      font-size:1.08rem;
+      line-height:1.1;
+      position:relative;
+      z-index:2;
+    }
+
+    .card span,
+    .card p{
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.42;
+      position:relative;
+      z-index:2;
+    }
+
+    .card.good{
+      border-color:rgba(143,240,195,.20);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(143,240,195,.09),transparent 60%),
+        rgba(255,255,255,.035);
+    }
+
+    .card.warn{
+      border-color:rgba(255,157,145,.22);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(255,157,145,.08),transparent 60%),
+        rgba(255,255,255,.035);
+    }
+
+    .card.violet{
+      border-color:rgba(143,101,255,.20);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
+        rgba(255,255,255,.035);
+    }
+
+    .tagline{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.5rem;
+    }
+
+    .tag{
+      min-height:2rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      padding:.38rem .68rem;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+    }
+
+    .flow{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:.6rem;
+      align-items:stretch;
+    }
+
+    .flow-step{
+      position:relative;
+      min-height:8rem;
+      display:grid;
+      gap:.45rem;
+      align-content:center;
+      padding:.9rem;
       border:1px solid rgba(255,255,255,.12);
       border-radius:1.15rem;
       background:rgba(255,255,255,.035);
+      text-align:center;
     }
 
-    .flow-card strong {
-      color:rgba(255,241,205,.98);
-      font-size:.78rem;
+    .flow-step:not(:last-child)::after{
+      content:"→";
+      position:absolute;
+      right:-.55rem;
+      top:50%;
+      transform:translateY(-50%);
+      color:var(--gold);
       font-weight:950;
-      letter-spacing:.08em;
+      z-index:3;
+    }
+
+    .flow-step b{
+      color:var(--gold);
+      font-size:.66rem;
+      letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .flow-card span {
+    .flow-step span{
       color:var(--muted);
-      font-size:.86rem;
+      font-size:.88rem;
+      line-height:1.32;
+    }
+
+    .stack{
+      display:grid;
+      gap:.75rem;
+    }
+
+    .stack-row{
+      display:grid;
+      grid-template-columns:minmax(8rem,.45fr) minmax(0,1fr);
+      gap:.8rem;
+      align-items:stretch;
+      padding:.9rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.2rem;
+      background:rgba(255,255,255,.03);
+    }
+
+    .stack-row b{
+      color:var(--gold);
+      font-size:.72rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .stack-row span{
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.42;
+    }
+
+    .split-list{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.85rem;
+    }
+
+    .list-card{
+      display:grid;
+      gap:.65rem;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.25rem;
+      background:rgba(255,255,255,.035);
+    }
+
+    .list-card h3{
+      color:var(--gold);
+      font-size:1.05rem;
+    }
+
+    ul{
+      margin:0;
+      padding-left:1.1rem;
+      color:var(--muted);
+    }
+
+    li{
+      margin:.38rem 0;
+      color:var(--muted);
+      font-size:.94rem;
       line-height:1.38;
     }
 
-    .flow-card.active {
-      border-color:rgba(242,199,111,.9);
-      background:rgba(242,199,111,.08);
-      box-shadow:0 0 1.6rem rgba(242,199,111,.08);
-    }
-
-    .dashboard {
+    .kill-list{
       display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:.85rem;
-    }
-
-    .metric {
-      padding:1rem;
-      border:1px solid rgba(139,200,255,.18);
-      border-radius:1.25rem;
-      background:rgba(255,255,255,.03);
-      display:grid;
-      gap:.45rem;
-    }
-
-    .metric small {
-      color:var(--gold);
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .metric strong {
-      color:rgba(255,241,205,.98);
-      font-size:clamp(1.15rem,3vw,1.55rem);
-      line-height:1.05;
-    }
-
-    .metric p {
-      font-size:.95rem;
-    }
-
-    details {
-      border:1px solid rgba(139,200,255,.18);
-      border-radius:1.25rem;
-      background:rgba(255,255,255,.03);
-      overflow:hidden;
-    }
-
-    summary {
-      cursor:pointer;
-      list-style:none;
-      display:grid;
-      grid-template-columns:auto 1fr auto;
-      align-items:center;
-      gap:.75rem;
-      padding:1rem;
-      font-weight:950;
-      letter-spacing:.07em;
-      text-transform:uppercase;
-      color:rgba(255,241,205,.96);
-    }
-
-    summary::-webkit-details-marker { display:none; }
-
-    summary::before {
-      content:"";
-      width:.8rem;
-      height:.8rem;
-      border-radius:.18rem;
-      transform:rotate(45deg);
-      background:var(--gold);
-      box-shadow:0 0 1rem rgba(242,199,111,.35);
-    }
-
-    summary::after {
-      content:"+";
-      color:var(--gold);
-      font-size:1.25rem;
-      line-height:1;
-    }
-
-    details[open] > summary::after { content:"−"; }
-
-    .detail-body {
-      display:grid;
-      gap:.85rem;
-      padding:0 1rem 1rem;
-    }
-
-    .nested {
-      margin-left:clamp(.35rem,2vw,1rem);
-      border-color:rgba(242,199,111,.18);
-      background:rgba(2,5,13,.34);
-    }
-
-    .readout {
-      padding:1rem;
-      border:1px solid rgba(242,199,111,.22);
-      border-radius:1.25rem;
-      background:rgba(255,255,255,.03);
-      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
       gap:.55rem;
-    }
-
-    .readout small {
-      color:var(--gold);
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .receipt { color:var(--faint); }
-
-    .receipt summary { font-size:.72rem; }
-
-    .receipt pre {
       margin:0;
-      padding:0 1rem 1rem;
-      white-space:pre-wrap;
-      overflow-wrap:anywhere;
-      font:700 .68rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      padding:0;
+      list-style:none;
     }
 
-    footer {
+    .kill-list li{
+      margin:0;
+      padding:.82rem;
+      border:1px solid rgba(255,157,145,.16);
+      border-radius:1rem;
+      background:rgba(255,157,145,.045);
+      color:rgba(255,230,226,.86);
+      font-weight:850;
+    }
+
+    .final-band{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.35rem);
+      display:grid;
+      gap:.9rem;
+      border:1px solid rgba(243,200,111,.28);
+      border-radius:clamp(1.25rem,5vw,2rem);
+      background:
+        radial-gradient(circle at 16% 0%,rgba(243,200,111,.10),transparent 36%),
+        radial-gradient(circle at 86% 26%,rgba(143,101,255,.12),transparent 34%),
+        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.024));
+      box-shadow:0 1.5rem 4rem rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .final-band strong{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.2rem,3vw,1.55rem);
+      line-height:1.05;
+      letter-spacing:-.04em;
+    }
+
+    .route-receipt,
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt],
+    .receipt{
+      display:none!important;
+      visibility:hidden!important;
+      overflow:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      inset:auto!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
+    }
+
+    footer{
       padding:1.35rem 0 .5rem;
       color:var(--faint);
       text-align:center;
       font-size:.76rem;
     }
 
-    @media (max-width:980px) {
-      .flow-grid { grid-template-columns:repeat(2,1fr); }
-      .dashboard { grid-template-columns:1fr; }
+    @media (max-width:1080px){
+      .grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .flow{grid-template-columns:1fr}
+      .flow-step:not(:last-child)::after{display:none}
+    }
+
+    @media (max-width:980px){
+      .topbar{grid-template-columns:1fr;align-items:start}
+      .nav{justify-content:flex-start}
+      .grid.three,
+      .grid.two,
+      .split-list,
+      .kill-list{grid-template-columns:1fr}
+      .stack-row{grid-template-columns:1fr}
+    }
+
+    @media (max-width:720px){
+      .shell{width:min(100% - 22px,var(--max))}
+      h1{font-size:clamp(3rem,17vw,5rem)}
+      .hero{min-height:30rem;padding:1rem}
+      .actions{display:grid}
+      .button{width:100%}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+      }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#main">Skip to Energy</a>
+  <a class="skip" href="#energy-main">Skip to Energy</a>
 
   <div class="shell">
-    <header class="card top">
-      <a class="brand state-link" href="/explore/frontier/energy/">
-        <span class="mark">EN</span>
-        <span>
+    <header class="topbar" aria-label="Energy header">
+      <a class="brand" href="/frontier/">
+        <span class="brand-mark" aria-hidden="true"><span>EN</span></span>
+        <span class="brand-copy">
           <span>Diamond Gate Bridge · Frontier</span>
-          <strong>Energy · G1 V10A</strong>
+          <strong>Energy · CLEAS</strong>
         </span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
-        <a class="state-link" href="/door/">Door</a>
-        <a class="state-link" href="/home/">Home</a>
-        <a class="state-link" href="/explore/">Manor</a>
-        <a class="state-link" href="/frontier/" aria-current="page">Frontier</a>
-        <a class="state-link" href="/laws/">Laws</a>
-        <a class="state-link" href="/products/">Products</a>
-        <a class="state-link" href="/gauges/">Gauges</a>
+        <a href="/">Compass</a>
+        <a href="/explore/">Explore</a>
+        <a href="/frontier/">Frontier</a>
+        <a href="/explore/frontier/energy/" aria-current="page">Energy</a>
+        <a href="/laws/">Laws</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <main id="main">
-      <section class="card hero">
-        <div class="kicker">Power Flow · Official Hierarchy</div>
-        <h1>Energy</h1>
-        <h2>Power has to go somewhere.</h2>
-        <p>
-          Energy shows where power comes from, where it is being sent, what it can move,
-          what gets wasted, and what must be regulated before the system scales.
+    <main id="energy-main">
+      <section class="panel hero" aria-labelledby="page-title">
+        <div class="kicker">Energy · R&D Standard</div>
+
+        <h1 id="page-title">Energy must close the loop.</h1>
+
+        <h2>Solar supports the path. Plasma is the regime. Fusion remains upstream. Storage makes endpoints possible.</h2>
+
+        <p class="lead">
+          The Energy lane teaches a governed architecture for high-energy possibility. It does not claim finished commercial fusion, consumer plasma endpoints, or direct solar-to-fusion deployment.
         </p>
-        <div class="control-row">
-          <a class="button primary state-link" href="/gauges/">Read Gauges</a>
-          <a class="button state-link" href="/laws/">Check Laws</a>
-          <a class="button state-link" href="/explore/frontier/">Return to Frontier Hub</a>
+
+        <div class="principle">
+          We are teaching the architecture of possibility, not pretending the endpoint is already deployed.
+        </div>
+
+        <div class="actions">
+          <a class="button gold" href="#cleas">Open CLEAS</a>
+          <a class="button" href="#boundary">Read Boundary</a>
+          <a class="button green" href="#audralia">Audralia Inheritance</a>
+          <a class="button violet" href="/frontier/">Return to Frontier</a>
         </div>
       </section>
 
-      <section class="card section" aria-labelledby="flow-title">
-        <div class="kicker">Power Flow</div>
-        <h2 id="flow-title">The useful question is not “how much power?” It is “what does the power do?”</h2>
+      <section class="panel section" aria-labelledby="core-title">
+        <div class="kicker">Core position</div>
+        <h2 id="core-title">The discovery is architectural before it is commercial.</h2>
 
-        <div class="flow-grid" aria-label="Energy power flow cycle">
-          <article class="flow-card">
-            <strong>Source</strong>
-            <span>What power is available?</span>
+        <div class="grid three">
+          <article class="card good">
+            <b>Solar support</b>
+            <strong>Supportive input, not the finished fusion pathway.</strong>
+            <span>Solar may support auxiliary power, storage charging, R&D environments, and low-emission experimentation.</span>
           </article>
-          <article class="flow-card">
-            <strong>Direction</strong>
-            <span>Where is the power being sent?</span>
-          </article>
-          <article class="flow-card">
-            <strong>Storage</strong>
-            <span>What must be conserved?</span>
-          </article>
-          <article class="flow-card active">
-            <strong>Conversion</strong>
-            <span>What does the power actually move?</span>
-          </article>
-          <article class="flow-card">
-            <strong>Waste</strong>
-            <span>Where is power leaking?</span>
-          </article>
-          <article class="flow-card">
-            <strong>Regulation</strong>
-            <span>What keeps force from becoming damage?</span>
-          </article>
-          <article class="flow-card">
-            <strong>Proof</strong>
-            <span>What can Gauges confirm?</span>
-          </article>
-        </div>
-      </section>
 
-      <section class="card section" aria-labelledby="dashboard-title">
-        <div class="kicker">Energy Dashboard</div>
-        <h2 id="dashboard-title">Convert active. Regulate next.</h2>
+          <article class="card">
+            <b>Plasma regime</b>
+            <strong>Operating state, not fuel or passive storage.</strong>
+            <span>Plasma is a high-energy operating regime used under controlled discharge, heat, chemistry, or materials conditions.</span>
+          </article>
 
-        <div class="dashboard">
-          <article class="metric">
-            <small>Current position</small>
-            <strong>Conversion is active.</strong>
-            <p>The page is asking whether available power is turning into lawful motion, usable output, or wasted force.</p>
+          <article class="card violet">
+            <b>Fusion horizon</b>
+            <strong>Long-horizon upstream application.</strong>
+            <span>Fusion remains a research and future infrastructure candidate until loop closure, safety, and measured output justify claims.</span>
           </article>
-          <article class="metric">
-            <small>Next move</small>
-            <strong>Regulation comes next.</strong>
-            <p>If power is moving, the system must decide what contains it, directs it, and prevents damage.</p>
+
+          <article class="card">
+            <b>Storage requirement</b>
+            <strong>Endpoints need passive stored potential.</strong>
+            <span>Vehicles, equipment, buildings, and consumer-adjacent endpoints must use stored potential, not high-energy operating regimes.</span>
           </article>
-          <article class="metric">
-            <small>Practical read</small>
-            <strong>Power without direction becomes noise.</strong>
-            <p>Energy should not be treated as intensity alone. It needs path, conservation, conversion, and proof.</p>
+
+          <article class="card good">
+            <b>Loop closure</b>
+            <strong>Viability depends on retained value.</strong>
+            <span>Energy systems must define storage, release, operation, recovery, reset, and return before deployment claims are admissible.</span>
           </article>
-          <article class="metric">
-            <small>Boundary</small>
-            <strong>Energy does not replace proof.</strong>
-            <p>Energy names power flow. Laws bound the claim. Gauges measure whether the route is actually aligned.</p>
+
+          <article class="card">
+            <b>Separation law</b>
+            <strong>Risk moves upstream. Use moves downstream.</strong>
+            <span>High-energy regimes belong in hardened infrastructure. Downstream use must stay simpler, safer, and auditable.</span>
           </article>
         </div>
       </section>
 
-      <section class="card section" aria-labelledby="controls-title">
-        <div class="kicker">Room Controls</div>
-        <h2 id="controls-title">Switch mode without losing the power flow.</h2>
+      <section class="panel section" id="cleas" aria-labelledby="cleas-title">
+        <div class="kicker">CLEAS</div>
+        <h2 id="cleas-title">Closed-Loop Energy Architecture Standard.</h2>
 
-        <div class="control-row" role="group" aria-label="Mode controls">
-          <button class="tab" type="button" data-mode="source" aria-pressed="true">Source</button>
-          <button class="tab" type="button" data-mode="conversion" aria-pressed="false">Conversion</button>
-          <button class="tab" type="button" data-mode="regulation" aria-pressed="false">Regulation</button>
-          <button class="tab" type="button" data-mode="engineering" aria-pressed="false">Engineering</button>
-        </div>
+        <p>
+          CLEAS is the implementation grammar for placement, measurement, failure-envelope classification, endpoint eligibility, safety boundary, and licensing path.
+        </p>
 
-        <article class="readout" aria-live="polite">
-          <small id="mode-kicker">Source mode</small>
-          <h3 id="mode-title">What power is available?</h3>
-          <p id="mode-copy">Before power can be directed, the system has to name what power exists and whether it is usable.</p>
-        </article>
-      </section>
-
-      <section class="card section" aria-labelledby="under-title">
-        <div class="kicker">Under the Hood</div>
-        <h2 id="under-title">Russian doll stays as structure, not public fog.</h2>
-
-        <details>
-          <summary>Open hierarchy</summary>
-          <div class="detail-body">
-            <p>Compass orients. Door admits. Home stabilizes. Manor maps. Frontier expands. Energy powers. Laws bound. Gauges measure.</p>
-
-            <details class="nested">
-              <summary>Open cycle position</summary>
-              <div class="detail-body">
-                <p>Charge complete. Direct complete. Conserve complete. Convert active. Regulate next. Explain pending. Repeat pending.</p>
-
-                <details class="nested">
-                  <summary>Open ownership boundary</summary>
-                  <div class="detail-body">
-                    <p>Energy owns charge, directed power, conservation, conversion, operating capacity, force readiness, and usable motion potential.</p>
-                    <p>Energy does not own trajectory, infrastructure support, relation mapping, law authority, Gauges scoring, product identity, route mutation, or generation pass claims.</p>
-                  </div>
-                </details>
-              </div>
-            </details>
+        <div class="split-list">
+          <div class="list-card">
+            <h3>CLEAS governs</h3>
+            <ul>
+              <li>Loop closure validation.</li>
+              <li>Failure-envelope classification.</li>
+              <li>Upstream, midstream, and downstream placement.</li>
+              <li>Endpoint eligibility.</li>
+              <li>Safety and governance requirements.</li>
+              <li>Licensing path.</li>
+            </ul>
           </div>
-        </details>
+
+          <div class="list-card">
+            <h3>CLEAS is not</h3>
+            <ul>
+              <li>A reactor.</li>
+              <li>A plasma device.</li>
+              <li>A consumer product.</li>
+              <li>A public regulator.</li>
+              <li>A power seller.</li>
+              <li>A deployment claim.</li>
+            </ul>
+          </div>
+        </div>
       </section>
 
-      <section class="card section" aria-labelledby="routes-title">
-        <div class="kicker">Frontier Routes</div>
-        <h2 id="routes-title">Move to another Frontier lane.</h2>
+      <section class="panel section" aria-labelledby="psalm-title">
+        <div class="kicker">PSALM gates</div>
+        <h2 id="psalm-title">Five gates keep Energy lawful.</h2>
 
-        <nav class="nav" aria-label="Frontier lane routes">
-          <a class="state-link" href="/explore/frontier/">Frontier Hub</a>
-          <a class="state-link" href="/explore/frontier/closed-loop/">Closed Loop</a>
-          <a class="state-link" href="/explore/frontier/infrastructure/">Infrastructure</a>
-          <a class="state-link" href="/explore/frontier/lattice/">Lattice</a>
-          <a class="state-link" href="/explore/frontier/manual/">Manual</a>
-          <a class="state-link" href="/explore/frontier/trajectory/">Trajectory</a>
-          <a class="state-link" href="/explore/frontier/water/">Water</a>
-          <a class="state-link" href="/explore/frontier/waste/">Waste</a>
-        </nav>
+        <div class="flow" aria-label="PSALM Energy gates">
+          <div class="flow-step">
+            <b>P · Placement</b>
+            <span>High-energy regimes upstream. Passive stored potential downstream.</span>
+          </div>
+
+          <div class="flow-step">
+            <b>S · Storage</b>
+            <span>No stored potential, no practical endpoint use.</span>
+          </div>
+
+          <div class="flow-step">
+            <b>A · Admissibility</b>
+            <span>Coordination, constraint, commitment, and scaling must hold.</span>
+          </div>
+
+          <div class="flow-step">
+            <b>L · Loop</b>
+            <span>Storage → Release → Operate → Recover → Storage.</span>
+          </div>
+
+          <div class="flow-step">
+            <b>M · Mobility</b>
+            <span>Fusion may charge the system. Fusion does not belong inside the vehicle.</span>
+          </div>
+        </div>
       </section>
 
-      <details class="card receipt" open>
-        <summary>Status label</summary>
-        <pre>ENERGY_G1_V10A_CONCRETE_POWER_FLOW_TNT_v1
-STATUS=ACTIVE
-VISIBLE_TITLE=Energy · G1 V10A
-PUBLIC_PROOF_MARKER=Concrete Power Flow · V10A active
-PAGE=/explore/frontier/energy/index.html
-ROUTE=/explore/frontier/energy/
-PARENT=/explore/frontier/
-BASELINE=AUDRALIA_MANOR_CURRENT
-EXPRESSION=Concrete_Power_Flow_With_Russian_Doll_Underlay
-VISIBLE_FLOW=Source,Direction,Storage,Conversion,Waste,Regulation,Proof
-CYCLE_POSITION=Charge_complete,Direct_complete,Conserve_complete,Convert_active,Regulate_next,Explain_pending,Repeat_pending
-HIERARCHY=Compass→Door→Home→Manor→Frontier→Energy→Laws→Gauges
-ROLE=frontier_power_flow_lane
-OWNS=charge,directed_power,conservation,conversion,operating_capacity,force_readiness,usable_motion_potential
-DOES_NOT_OWN=trajectory,infrastructure_support,relation_mapping,law_authority,gauges_scoring,product_identity,route_mutation,generation_pass_claim
-PRIOR_LANGUAGE_HANDLING=prior_flat_world_or_generation_framing_archival_only
-HEAVY_RUNTIME_LOADED=false
-RENDER_FILES_TOUCHED=false
-GAUGES_LOGIC_TOUCHED=false
-VISUAL_PASS_CLAIMED=false</pre>
-      </details>
+      <section class="panel section" id="boundary" aria-labelledby="boundary-title">
+        <div class="kicker">Scientific boundary</div>
+        <h2 id="boundary-title">What can be taught. What cannot be claimed.</h2>
+
+        <div class="split-list">
+          <div class="list-card">
+            <h3>Admissible teaching</h3>
+            <ul>
+              <li>Formal R&D architecture around high-energy operating regimes.</li>
+              <li>Solar as auxiliary or transitory support.</li>
+              <li>Plasma as operating state.</li>
+              <li>Storage and loop modeling.</li>
+              <li>Industrial plasma diagnostics.</li>
+              <li>Fusion as long-horizon research application.</li>
+              <li>Standards before hardware ownership.</li>
+            </ul>
+          </div>
+
+          <div class="list-card">
+            <h3>Not admissible to claim</h3>
+            <ul>
+              <li>Net-positive commercial fusion now.</li>
+              <li>Grid-scale fusion deployment now.</li>
+              <li>Plasma as stored fuel.</li>
+              <li>Solar alone solving fusion confinement.</li>
+              <li>Vehicle plasma or fusion endpoints.</li>
+              <li>Residential plasma or fusion endpoints.</li>
+              <li>Guaranteed commercial timelines.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="stack-title">
+        <div class="kicker">Architecture stack</div>
+        <h2 id="stack-title">Risk moves upstream. Use moves downstream.</h2>
+
+        <div class="stack">
+          <div class="stack-row">
+            <b>Upstream</b>
+            <span>Fusion systems, plasma discharge hubs, extreme thermal systems, and hardened industrial infrastructure.</span>
+          </div>
+
+          <div class="stack-row">
+            <b>Midstream</b>
+            <span>Storage, buffering, conversion hubs, grid interfaces, microgrid interfaces, and controlled distribution layers.</span>
+          </div>
+
+          <div class="stack-row">
+            <b>Downstream</b>
+            <span>Vehicles, buildings, equipment, and consumer-adjacent endpoints using passive stored potential only.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="data-title">
+        <div class="kicker">Data program</div>
+        <h2 id="data-title">Measurement comes before claims.</h2>
+
+        <div class="grid two">
+          <article class="card">
+            <b>Plasma regime baseline</b>
+            <strong>Five regime classes define the early evidence field.</strong>
+            <span>Industrial plasma torches, waste-to-energy plasma systems, semiconductor plasma processes, fusion research devices, and pulsed/aerospace/defense plasma systems.</span>
+          </article>
+
+          <article class="card">
+            <b>Required variables</b>
+            <strong>Every regime needs comparable measurement.</strong>
+            <span>E_in, E_out, E_reset, degradation rate, and stable operating window define the baseline measurement posture.</span>
+          </article>
+        </div>
+
+        <div class="grid four">
+          <article class="card good">
+            <b>LL-1</b>
+            <strong>Closed and Stable</strong>
+            <span>The loop closes and remains stable under repeated load.</span>
+          </article>
+
+          <article class="card">
+            <b>LL-2</b>
+            <strong>Closed but Degrading</strong>
+            <span>The loop closes but loses quality, material, or reliability over time.</span>
+          </article>
+
+          <article class="card">
+            <b>LL-3</b>
+            <strong>Marginal / Uncertain</strong>
+            <span>The loop may close under narrow conditions but cannot yet support a strong claim.</span>
+          </article>
+
+          <article class="card warn">
+            <b>LL-4</b>
+            <strong>Open Loop</strong>
+            <span>The system consumes more than it retains or cannot define recovery and reset.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="commercial-title">
+        <div class="kicker">Commercial path</div>
+        <h2 id="commercial-title">Standards first. Licensing before deployment.</h2>
+
+        <div class="grid three">
+          <article class="card">
+            <b>1 · Standard</b>
+            <strong>Define the grammar.</strong>
+            <span>Formalize CLEAS as a standards, compliance, and measurement architecture.</span>
+          </article>
+
+          <article class="card">
+            <b>2 · Data</b>
+            <strong>Collect regime baselines.</strong>
+            <span>Measure existing plasma regimes before making broader claims.</span>
+          </article>
+
+          <article class="card">
+            <b>3 · Validation</b>
+            <strong>Find the anchor partner.</strong>
+            <span>Use a real-world partner and case study before commercial scaling.</span>
+          </article>
+
+          <article class="card">
+            <b>4 · CLEAS 1.0</b>
+            <strong>Formalize the standard.</strong>
+            <span>Convert measured findings into an auditable licensing object.</span>
+          </article>
+
+          <article class="card">
+            <b>5 · Licensing</b>
+            <strong>Scale through incumbents.</strong>
+            <span>Use licensing, standards, and partner integration rather than direct consumer deployment.</span>
+          </article>
+
+          <article class="card">
+            <b>6 · Boundary</b>
+            <strong>Exclude high-energy endpoints.</strong>
+            <span>Keep residential, vehicle, and consumer plasma/fusion endpoints outside the deployment lane.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" id="audralia" aria-labelledby="audralia-title">
+        <div class="kicker">Audralia inheritance</div>
+        <h2 id="audralia-title">The public lane teaches. Audralia inherits.</h2>
+
+        <p>
+          Audralia receives the Energy discoveries as crew doctrine, infrastructure logic, worldbuilding pressure, and future possibility. The narrative may dramatize pursuit, constraint, failure, correction, and development without falsifying the public scientific boundary.
+        </p>
+
+        <div class="grid four">
+          <article class="card violet">
+            <b>Solar fields</b>
+            <strong>Support infrastructure.</strong>
+            <span>Solar supports the early system and the visible learning path.</span>
+          </article>
+
+          <article class="card violet">
+            <b>Plasma chambers</b>
+            <strong>Upstream industrial zones.</strong>
+            <span>Plasma belongs where its failure envelope can be contained.</span>
+          </article>
+
+          <article class="card violet">
+            <b>Fusion research</b>
+            <strong>Long-horizon pressure.</strong>
+            <span>Fusion becomes mission pressure, not instant solved technology.</span>
+          </article>
+
+          <article class="card violet">
+            <b>Storage vaults</b>
+            <strong>Mobility infrastructure.</strong>
+            <span>Stored potential carries use downstream without moving the danger into endpoints.</span>
+          </article>
+
+          <article class="card violet">
+            <b>Loop closure</b>
+            <strong>Story constraint.</strong>
+            <span>Open loops create cost, tension, failure, and repair.</span>
+          </article>
+
+          <article class="card violet">
+            <b>Separation law</b>
+            <strong>City-design logic.</strong>
+            <span>Risk placement shapes the built world and the crew’s operating doctrine.</span>
+          </article>
+
+          <article class="card violet">
+            <b>CLEAS doctrine</b>
+            <strong>Crew standard.</strong>
+            <span>The crew uses CLEAS as the language of lawful energy development.</span>
+          </article>
+
+          <article class="card violet">
+            <b>Data baselines</b>
+            <strong>Mission evidence.</strong>
+            <span>Measurement, not hype, becomes the proof discipline inside the story world.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="kill-title">
+        <div class="kicker">Kill conditions</div>
+        <h2 id="kill-title">The contract stops if the claim outruns the evidence.</h2>
+
+        <ul class="kill-list">
+          <li>Stop if plasma is treated as storage.</li>
+          <li>Stop if fusion moves to the endpoint.</li>
+          <li>Stop if the loop cannot be defined.</li>
+          <li>Stop if reset cost exceeds useful output.</li>
+          <li>Stop if degradation exceeds tolerance.</li>
+          <li>Stop if the failure envelope reaches human proximity.</li>
+          <li>Stop if measurement cannot be audited.</li>
+          <li>Stop if deployment depends on consumer exposure.</li>
+          <li>Stop if legal posture shifts into residential high-energy use.</li>
+          <li>Stop if commercial claims exceed measured evidence.</li>
+        </ul>
+      </section>
+
+      <section class="final-band" aria-label="Energy final statement">
+        <strong>Discovery is not deployment. Possibility still needs law.</strong>
+        <p>
+          Energy is taught publicly as a bounded R&D, standards, data, and licensing architecture. Audralia inherits it narratively as crew material, infrastructure logic, worldbuilding technology, and future possibility.
+        </p>
+
+        <div class="tagline">
+          <span class="tag">Solar supports</span>
+          <span class="tag">Plasma operates</span>
+          <span class="tag">Fusion waits upstream</span>
+          <span class="tag">Storage enables endpoints</span>
+          <span class="tag">CLEAS governs</span>
+        </div>
+
+        <div class="actions">
+          <a class="button gold" href="/laws/">Open Laws</a>
+          <a class="button green" href="/showroom/globe/audralia/">Open Audralia</a>
+          <a class="button violet" href="/frontier/">Return to Frontier</a>
+          <a class="button" href="/gauges/">Check Gauges</a>
+        </div>
+      </section>
+
+      <template id="route-receipt" data-route-receipt>
+FRONTIER_ENERGY_CLEAS_RND_STANDARD_RENEWAL_TNT_v1
+route=/explore/frontier/energy/
+page=frontier_energy
+source_psalm=PSALM_PACKET_ENERGY_RND_SOLAR_PLASMA_FUSION_v1.0
+audralia_inheritance=AUDRALIA_CREW_ENERGY_DISCOVERY_INHERITANCE_CANON_v1
+public_lane=education,standards,data,validation,safety,licensing
+narrative_lane=Audralia_inheritance,crew_mission,worldbuilding_logic,future_possibility
+solar_role=supportive_transitory_input
+plasma_role=high_energy_operating_regime
+fusion_role=long_horizon_upstream_application
+storage_role=endpoint_requirement
+cleas=Closed_Loop_Energy_Architecture_Standard
+cleas_is=standardization_layer,licensing_object,compliance_architecture,safety_framework,measurement_grammar,partner_validation_structure
+cleas_is_not=reactor,plasma_device,consumer_product,public_regulator,power_seller,deployment_claim
+psalm_gates=Placement,Storage,Admissibility,Loop,Mobility
+architecture_stack=upstream_high_energy_regimes,midstream_storage_conversion,downstream_passive_stored_potential
+data_program=industrial_plasma_torches,waste_to_energy_plasma_systems,semiconductor_plasma_processes,fusion_research_devices,pulsed_aerospace_defense_plasma_systems
+loop_classes=LL1_closed_stable,LL2_closed_degrading,LL3_marginal_uncertain,LL4_open_loop
+commercial_path=define_standard,collect_data,validate_regimes,identify_anchor_partner,build_case_study,formalize_CLEAS_1_0,license_standard,integrate_with_incumbents,avoid_consumer_high_energy_deployment
+audralia_material_plan=solar_fields,plasma_chambers,fusion_research,storage_vaults,loop_closure,separation_law,CLEAS_doctrine,data_baselines
+forbidden_claims=direct_solar_to_commercial_fusion,net_positive_fusion_now,grid_scale_fusion_now,plasma_as_fuel,plasma_as_storage,vehicle_fusion_endpoint,residential_plasma_endpoint,consumer_high_energy_endpoint,guaranteed_timeline
+canonical_public_sentence=We_are_teaching_the_architecture_of_possibility_not_pretending_the_endpoint_is_already_deployed
+generated_image=false
+graphic_box=false
+visual_pass_claimed=false
+      </template>
     </main>
 
     <footer>
-      Diamond Gate Bridge · Frontier · Energy · G1 V10A · Concrete Power Flow.
+      FRONTIER_ENERGY_CLEAS_RND_STANDARD_RENEWAL_TNT_v1 · Energy · CLEAS · Public Teaching and Audralia Inheritance.
     </footer>
   </div>
-
-  <script>
-    (() => {
-      "use strict";
-
-      const modes = {
-        source: [
-          "Source mode",
-          "What power is available?",
-          "Before power can be directed, the system has to name what power exists and whether it is usable."
-        ],
-        conversion: [
-          "Conversion mode",
-          "What does the power actually move?",
-          "Conversion is the active state. Power is only useful when it becomes lawful motion, usable output, or measurable capacity."
-        ],
-        regulation: [
-          "Regulation mode",
-          "What keeps force from becoming damage?",
-          "Regulation protects the system from waste, drift, overheating, and uncontrolled force."
-        ],
-        engineering: [
-          "Engineering mode",
-          "Implementation stays bounded.",
-          "Engineering names route ownership, power boundary, receipt integrity, and no-mutation proof."
-        ]
-      };
-
-      const tabs = Array.from(document.querySelectorAll(".tab"));
-      const kicker = document.getElementById("mode-kicker");
-      const title = document.getElementById("mode-title");
-      const copy = document.getElementById("mode-copy");
-
-      function setMode(mode) {
-        const data = modes[mode] || modes.source;
-
-        tabs.forEach((tab) => {
-          tab.setAttribute("aria-pressed", tab.dataset.mode === mode ? "true" : "false");
-        });
-
-        kicker.textContent = data[0];
-        title.textContent = data[1];
-        copy.textContent = data[2];
-      }
-
-      function syncLinks() {
-        const params = new URLSearchParams(window.location.search);
-        params.set("gd_lang", params.get("gd_lang") || "en");
-        params.set("gd_style", params.get("gd_style") || "informal");
-        params.set("gd_time", params.get("gd_time") || "now");
-        params.set("gd_depth", params.get("gd_depth") || "explore");
-        params.set("lane", params.get("lane") || "platform");
-
-        document.querySelectorAll(".state-link").forEach((link) => {
-          const url = new URL(link.getAttribute("href"), window.location.origin);
-          params.forEach((value, key) => url.searchParams.set(key, value));
-          link.href = url.pathname + "?" + url.searchParams.toString();
-        });
-      }
-
-      tabs.forEach((tab) => {
-        tab.addEventListener("click", () => setMode(tab.dataset.mode || "source"));
-      });
-
-      setMode("source");
-      syncLinks();
-    })();
-  </script>
 </body>
 </html>

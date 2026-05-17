@@ -3,10 +3,10 @@
   lang="en"
   data-route="/explore/frontier/energy/"
   data-page="frontier-energy"
-  data-contract="FRONTIER_ENERGY_SITE_STANDARD_GEM_ORBIT_RESTORE_TNT_v14"
-  data-previous-contract="FRONTIER_ENERGY_SITE_STANDARD_GEM_ORBIT_VISUAL_REPAIR_TNT_v13"
+  data-contract="FRONTIER_ENERGY_UNIFORM_SITE_GEM_STANDARD_RESTORE_TNT_v15"
+  data-previous-contract="FRONTIER_ENERGY_SITE_STANDARD_GEM_ORBIT_RESTORE_TNT_v14"
   data-public-subject="frontier-science-fusion-power-readiness"
-  data-visual-system="site-standard-bright-faceted-route-gem-orbit"
+  data-visual-system="uniform-site-standard-bright-faceted-route-gems"
   data-language-rule="visual-objects-are-interface-not-public-subject"
   data-ordering-law="story-first-learning-second-play-third-technology-underneath"
   data-frontier-rule="narrative-construct-first-backdoor-science-second"
@@ -50,11 +50,11 @@
       --shadow:0 30px 100px rgba(0,0,0,.44);
       --max:1220px;
 
-      --routeGem:polygon(50% 0%,68% 7%,86% 20%,100% 48%,88% 80%,50% 100%,12% 80%,0% 48%,14% 20%,32% 7%);
-      --routeGemTop:polygon(50% 0%,68% 7%,86% 20%,68% 36%,50% 43%,32% 36%,14% 20%,32% 7%);
-      --routeGemLeft:polygon(14% 20%,32% 36%,50% 43%,50% 100%,12% 80%,0% 48%);
-      --routeGemRight:polygon(86% 20%,68% 36%,50% 43%,50% 100%,88% 80%,100% 48%);
-      --routeGemBottom:polygon(0% 48%,12% 80%,50% 100%,88% 80%,100% 48%,68% 36%,50% 43%,32% 36%);
+      --siteGem:polygon(50% 0%,68% 7%,86% 20%,100% 48%,88% 80%,50% 100%,12% 80%,0% 48%,14% 20%,32% 7%);
+      --siteGemTop:polygon(50% 0%,68% 7%,86% 20%,68% 36%,50% 43%,32% 36%,14% 20%,32% 7%);
+      --siteGemLeft:polygon(14% 20%,32% 36%,50% 43%,50% 100%,12% 80%,0% 48%);
+      --siteGemRight:polygon(86% 20%,68% 36%,50% 43%,50% 100%,88% 80%,100% 48%);
+      --siteGemBottom:polygon(0% 48%,12% 80%,50% 100%,88% 80%,100% 48%,68% 36%,50% 43%,32% 36%);
     }
 
     *{box-sizing:border-box}
@@ -126,14 +126,14 @@
       to{transform:rotate(360deg) scale(1)}
     }
 
-    @keyframes routeGemBreathe{
-      0%,100%{filter:brightness(1.11) contrast(1.18) saturate(1.22)}
-      50%{filter:brightness(1.34) contrast(1.25) saturate(1.38)}
+    @keyframes siteGemBreathe{
+      0%,100%{filter:brightness(1.08) contrast(1.14) saturate(1.08)}
+      50%{filter:brightness(1.24) contrast(1.2) saturate(1.18)}
     }
 
-    @keyframes orbitSpin{
-      from{transform:rotate(0deg)}
-      to{transform:rotate(360deg)}
+    @keyframes orbitSpinContained{
+      from{transform:translate(-50%,-50%) rotate(0deg)}
+      to{transform:translate(-50%,-50%) rotate(360deg)}
     }
 
     @keyframes counterSpin{
@@ -206,14 +206,14 @@
       place-items:center;
       border:1px solid rgba(243,200,111,.48);
       transform:rotate(45deg);
-      clip-path:var(--routeGem);
+      clip-path:var(--siteGem);
       background:
-        linear-gradient(135deg,rgba(255,255,255,.68),transparent 18%),
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.42),rgba(243,200,111,.38),rgba(36,120,255,.30),rgba(157,124,255,.36),rgba(255,255,255,.42)),
-        radial-gradient(circle at 34% 18%,rgba(255,255,255,.62),transparent 28%),
-        linear-gradient(145deg,rgba(92,54,13,.95),rgba(5,8,20,.98));
-      box-shadow:0 0 2.2rem rgba(243,200,111,.30),0 1.1rem 2.6rem rgba(0,0,0,.44),inset 0 1px 0 rgba(255,255,255,.32);
-      animation:routeGemBreathe 6s ease-in-out infinite;
+        linear-gradient(135deg,rgba(255,255,255,.72),transparent 18%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.45),rgba(243,200,111,.30),rgba(141,216,255,.52),rgba(173,220,255,.40),rgba(255,255,255,.45)),
+        radial-gradient(circle at 34% 18%,rgba(255,255,255,.70),transparent 28%),
+        linear-gradient(145deg,rgba(30,48,72,.95),rgba(5,8,20,.98));
+      box-shadow:0 0 2.4rem rgba(141,216,255,.30),0 0 1.5rem rgba(243,200,111,.18),0 1.1rem 2.6rem rgba(0,0,0,.44),inset 0 1px 0 rgba(255,255,255,.42);
+      animation:siteGemBreathe 6s ease-in-out infinite;
     }
 
     .brand-mark span{
@@ -450,8 +450,8 @@
     }
 
     .orbit-stage::before{
-      width:min(62%,36rem);
-      height:min(56%,26rem);
+      width:min(66%,38rem);
+      height:min(58%,27rem);
       border:1px solid rgba(243,200,111,.17);
       box-shadow:
         0 0 4rem rgba(243,200,111,.035),
@@ -459,8 +459,8 @@
     }
 
     .orbit-stage::after{
-      width:min(45%,26rem);
-      height:min(38%,18rem);
+      width:min(48%,28rem);
+      height:min(40%,19rem);
       border:1px solid rgba(141,216,255,.14);
       animation:ringSpin 46s linear infinite;
     }
@@ -485,9 +485,13 @@
 
     .orbit-track{
       position:absolute;
-      inset:0;
+      left:50%;
+      top:50%;
+      width:min(66%,38rem);
+      height:min(58%,27rem);
+      transform:translate(-50%,-50%);
       transform-origin:50% 50%;
-      animation:orbitSpin 80s linear infinite;
+      animation:orbitSpinContained 80s linear infinite;
       will-change:transform;
       z-index:4;
     }
@@ -507,16 +511,16 @@
     .center-node{
       left:50%;
       top:50%;
-      width:clamp(9.35rem,18vw,14.8rem);
-      height:clamp(6.35rem,12vw,9.5rem);
+      width:clamp(9.6rem,18vw,15rem);
+      height:clamp(6.5rem,12vw,9.7rem);
       transform:translate(-50%,-50%);
       z-index:6;
       transition:filter .2s ease;
     }
 
     .orbit-node{
-      width:clamp(4.75rem,7.7vw,7.15rem);
-      height:clamp(3.8rem,6.25vw,5.65rem);
+      width:clamp(4.9rem,7.8vw,7.15rem);
+      height:clamp(3.9rem,6.35vw,5.65rem);
       transform:translate(-50%,-50%);
       z-index:5;
     }
@@ -540,40 +544,45 @@
 
     .center-node:hover .node-face,
     .orbit-node:hover .node-face{
-      filter:brightness(1.24) saturate(1.26);
-      scale:1.08;
+      filter:brightness(1.18) saturate(1.16);
+      scale:1.06;
     }
 
     .node-shape{
       position:absolute;
       inset:0;
-      clip-path:var(--routeGem);
-      border:1px solid rgba(255,255,255,.40);
+      clip-path:var(--siteGem);
+      border:1px solid rgba(255,255,255,.42);
       background:
-        linear-gradient(135deg,rgba(255,255,255,.65),transparent 17%),
-        linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.40) 24% 25%,transparent 26% 100%),
-        linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.24) 40% 41%,transparent 42% 100%),
-        linear-gradient(28deg,transparent 0 56%,rgba(0,0,0,.22) 57% 58%,transparent 59% 100%),
-        conic-gradient(from 42deg,rgba(255,255,255,.36),rgba(243,200,111,.48),rgba(36,120,255,.36),rgba(157,124,255,.46),rgba(255,255,255,.36)),
-        linear-gradient(145deg,rgba(14,18,46,.96),rgba(3,5,18,.98));
+        linear-gradient(135deg,rgba(255,255,255,.82),transparent 18%),
+        linear-gradient(60deg,transparent 0 30%,rgba(255,255,255,.30) 31% 32%,transparent 33% 100%),
+        linear-gradient(120deg,transparent 0 43%,rgba(255,255,255,.24) 44% 45%,transparent 46% 100%),
+        conic-gradient(from 42deg,
+          rgba(255,255,255,.52),
+          rgba(243,200,111,.34),
+          rgba(141,216,255,.72),
+          rgba(216,240,255,.60),
+          rgba(243,200,111,.28),
+          rgba(255,255,255,.52)),
+        linear-gradient(145deg,rgba(41,67,92,.96),rgba(4,8,19,.98));
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.52),
-        inset 0 -1px 0 rgba(0,0,0,.38),
-        0 0 2.25rem rgba(157,124,255,.28),
-        0 0 1.25rem rgba(243,200,111,.18),
+        inset 0 1px 0 rgba(255,255,255,.62),
+        inset 0 -1px 0 rgba(0,0,0,.30),
+        0 0 2.35rem rgba(141,216,255,.34),
+        0 0 1.35rem rgba(243,200,111,.18),
         0 1rem 1.8rem rgba(0,0,0,.30);
-      animation:routeGemBreathe 7s ease-in-out infinite;
+      animation:siteGemBreathe 7s ease-in-out infinite;
     }
 
     .node-shape::before{
       content:"";
       position:absolute;
       inset:0;
-      clip-path:var(--routeGemTop);
+      clip-path:var(--siteGemTop);
       background:
-        linear-gradient(135deg,rgba(255,255,255,.54),transparent 45%),
-        linear-gradient(90deg,transparent 0 27%,rgba(255,255,255,.26) 28% 29%,transparent 30% 68%,rgba(0,0,0,.16) 69% 70%,transparent 71%);
-      opacity:.90;
+        radial-gradient(circle at 42% 12%,rgba(255,255,255,.78),transparent 27%),
+        linear-gradient(135deg,rgba(255,255,255,.62),transparent 48%);
+      opacity:.92;
       pointer-events:none;
     }
 
@@ -581,10 +590,10 @@
       content:"";
       position:absolute;
       inset:0;
-      clip-path:var(--routeGemBottom);
+      clip-path:var(--siteGemBottom);
       background:
-        radial-gradient(circle at 34% 28%,rgba(255,255,255,.35),transparent 25%),
-        linear-gradient(135deg,rgba(255,255,255,.18),transparent 35%,rgba(0,0,0,.26) 100%);
+        radial-gradient(circle at 32% 35%,rgba(255,255,255,.28),transparent 28%),
+        linear-gradient(145deg,rgba(141,216,255,.30),transparent 43%,rgba(0,0,0,.20) 100%);
       opacity:.92;
       pointer-events:none;
     }
@@ -594,18 +603,18 @@
       position:absolute;
       inset:0;
       pointer-events:none;
-      opacity:.65;
+      opacity:.72;
       z-index:2;
     }
 
     .node-left-facet{
-      clip-path:var(--routeGemLeft);
-      background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(36,120,255,.18),transparent 70%);
+      clip-path:var(--siteGemLeft);
+      background:linear-gradient(135deg,rgba(255,255,255,.20),rgba(141,216,255,.34),transparent 70%);
     }
 
     .node-right-facet{
-      clip-path:var(--routeGemRight);
-      background:linear-gradient(225deg,rgba(255,255,255,.16),rgba(157,124,255,.20),transparent 70%);
+      clip-path:var(--siteGemRight);
+      background:linear-gradient(225deg,rgba(255,255,255,.22),rgba(243,200,111,.22),transparent 70%);
     }
 
     .node-core{
@@ -613,28 +622,33 @@
       inset:19% 16%;
       clip-path:polygon(50% 0%,83% 28%,70% 100%,30% 100%,17% 28%);
       background:
-        linear-gradient(135deg,rgba(255,255,255,.26),transparent 42%),
-        linear-gradient(48deg,transparent 0 49%,rgba(255,255,255,.22) 50% 51%,transparent 52%),
-        radial-gradient(circle at 50% 26%,rgba(255,255,255,.24),transparent 45%);
+        linear-gradient(135deg,rgba(255,255,255,.30),transparent 42%),
+        linear-gradient(48deg,transparent 0 49%,rgba(255,255,255,.24) 50% 51%,transparent 52%),
+        radial-gradient(circle at 50% 26%,rgba(255,255,255,.28),transparent 45%);
       opacity:.96;
       pointer-events:none;
       z-index:2;
     }
 
     .center-node .node-shape{
-      border-color:rgba(243,200,111,.56);
+      border-color:rgba(243,200,111,.60);
       background:
-        linear-gradient(135deg,rgba(255,255,255,.70),transparent 17%),
-        linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.42) 24% 25%,transparent 26% 100%),
-        linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.28) 40% 41%,transparent 42% 100%),
-        conic-gradient(from 42deg,rgba(255,255,255,.36),rgba(243,200,111,.62),rgba(141,216,255,.40),rgba(157,124,255,.50),rgba(255,255,255,.36)),
-        radial-gradient(circle at 45% 36%,rgba(255,232,163,.36),transparent 48%),
-        linear-gradient(145deg,rgba(16,19,50,.95),rgba(2,5,15,.98));
+        linear-gradient(135deg,rgba(255,255,255,.86),transparent 18%),
+        linear-gradient(60deg,transparent 0 30%,rgba(255,255,255,.34) 31% 32%,transparent 33% 100%),
+        conic-gradient(from 42deg,
+          rgba(255,255,255,.54),
+          rgba(243,200,111,.48),
+          rgba(141,216,255,.72),
+          rgba(216,240,255,.62),
+          rgba(243,200,111,.36),
+          rgba(255,255,255,.54)),
+        radial-gradient(circle at 45% 36%,rgba(255,232,163,.32),transparent 48%),
+        linear-gradient(145deg,rgba(41,67,92,.96),rgba(2,5,15,.98));
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.56),
-        inset 0 -1px 0 rgba(0,0,0,.34),
-        0 0 3.1rem rgba(243,200,111,.34),
-        0 0 2rem rgba(157,124,255,.26),
+        inset 0 1px 0 rgba(255,255,255,.68),
+        inset 0 -1px 0 rgba(0,0,0,.30),
+        0 0 3rem rgba(141,216,255,.36),
+        0 0 2rem rgba(243,200,111,.26),
         0 1.2rem 2.4rem rgba(0,0,0,.36);
     }
 
@@ -645,13 +659,13 @@
       z-index:4;
       display:grid;
       gap:.12rem;
-      min-width:70%;
+      min-width:68%;
       padding:.30rem .36rem;
       transform:translate(-50%,-50%);
-      border:1px solid rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.16);
       border-radius:.72rem;
-      background:linear-gradient(180deg,rgba(10,12,28,.76),rgba(2,4,12,.70));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 .5rem 1.2rem rgba(0,0,0,.24);
+      background:linear-gradient(180deg,rgba(7,11,24,.62),rgba(2,4,12,.58));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 .5rem 1.2rem rgba(0,0,0,.20);
       text-shadow:0 2px 10px rgba(0,0,0,.96);
     }
 
@@ -664,7 +678,7 @@
     }
 
     .node-copy span{
-      color:rgba(230,238,255,.88);
+      color:rgba(230,238,255,.90);
       font-size:clamp(.38rem,.74vw,.53rem);
       line-height:1;
       font-weight:950;
@@ -676,7 +690,7 @@
       min-width:75%;
       padding:.46rem .58rem;
       border-color:rgba(243,200,111,.28);
-      background:linear-gradient(180deg,rgba(16,15,31,.78),rgba(2,4,12,.74));
+      background:linear-gradient(180deg,rgba(7,11,24,.66),rgba(2,4,12,.60));
     }
 
     .center-node .node-copy strong{
@@ -689,24 +703,18 @@
       font-size:clamp(.52rem,1.02vw,.72rem);
     }
 
-    .p1{left:50%;top:15%}
-    .p2{left:66%;top:19%}
-    .p3{left:77%;top:31%}
-    .p4{left:81%;top:50%}
-    .p5{left:77%;top:69%}
-    .p6{left:66%;top:81%}
-    .p7{left:50%;top:85%}
-    .p8{left:34%;top:81%}
-    .p9{left:23%;top:69%}
-    .p10{left:19%;top:50%}
-    .p11{left:23%;top:31%}
-    .p12{left:34%;top:19%}
-
-    .violet .node-shape{background:linear-gradient(135deg,rgba(255,255,255,.65),transparent 17%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.40) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.24) 40% 41%,transparent 42% 100%),conic-gradient(from 42deg,rgba(255,255,255,.36),rgba(157,124,255,.70),rgba(243,200,111,.26),rgba(141,216,255,.28),rgba(157,124,255,.52)),linear-gradient(145deg,rgba(18,13,48,.95),rgba(2,5,15,.98))}
-    .gold .node-shape{background:linear-gradient(135deg,rgba(255,255,255,.65),transparent 17%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.40) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.24) 40% 41%,transparent 42% 100%),conic-gradient(from 42deg,rgba(255,255,255,.36),rgba(243,200,111,.70),rgba(255,232,163,.30),rgba(36,120,255,.22),rgba(243,200,111,.50)),linear-gradient(145deg,rgba(45,28,8,.95),rgba(2,5,15,.98))}
-    .green .node-shape{background:linear-gradient(135deg,rgba(255,255,255,.65),transparent 17%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.40) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.24) 40% 41%,transparent 42% 100%),conic-gradient(from 42deg,rgba(255,255,255,.36),rgba(143,240,195,.66),rgba(243,200,111,.24),rgba(36,120,255,.26),rgba(143,240,195,.50)),linear-gradient(145deg,rgba(7,38,28,.95),rgba(2,5,15,.98))}
-    .blue .node-shape{background:linear-gradient(135deg,rgba(255,255,255,.65),transparent 17%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.40) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.24) 40% 41%,transparent 42% 100%),conic-gradient(from 42deg,rgba(255,255,255,.36),rgba(141,216,255,.68),rgba(243,200,111,.24),rgba(157,124,255,.28),rgba(141,216,255,.50)),linear-gradient(145deg,rgba(7,22,45,.95),rgba(2,5,15,.98))}
-    .red .node-shape{background:linear-gradient(135deg,rgba(255,255,255,.65),transparent 17%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.40) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.24) 40% 41%,transparent 42% 100%),conic-gradient(from 42deg,rgba(255,255,255,.36),rgba(255,157,145,.66),rgba(243,200,111,.24),rgba(157,124,255,.22),rgba(255,157,145,.48)),linear-gradient(145deg,rgba(44,14,14,.95),rgba(2,5,15,.98))}
+    .p1{left:50%;top:0%}
+    .p2{left:75%;top:7%}
+    .p3{left:93%;top:25%}
+    .p4{left:100%;top:50%}
+    .p5{left:93%;top:75%}
+    .p6{left:75%;top:93%}
+    .p7{left:50%;top:100%}
+    .p8{left:25%;top:93%}
+    .p9{left:7%;top:75%}
+    .p10{left:0%;top:50%}
+    .p11{left:7%;top:25%}
+    .p12{left:25%;top:7%}
 
     .section{
       margin-top:.9rem;
@@ -923,8 +931,8 @@
 
     @media (max-width:1100px){
       .orbit-node{
-        width:clamp(4.6rem,8vw,6.8rem);
-        height:clamp(3.65rem,6.4vw,5.4rem);
+        width:clamp(4.55rem,7.6vw,6.8rem);
+        height:clamp(3.65rem,6.15vw,5.4rem);
       }
 
       .layer-grid{grid-template-columns:1fr}
@@ -946,26 +954,14 @@
       .button{width:100%}
       .orbit-board{padding:.7rem}
       .orbit-stage{height:34rem;border-radius:1.45rem}
-      .center-node{width:7.45rem;height:5.2rem}
-      .orbit-node{width:4.38rem;height:3.48rem}
-      .node-copy{padding:.21rem .22rem;min-width:74%;border-radius:.54rem}
-      .node-copy strong{font-size:.39rem;letter-spacing:.055em}
-      .node-copy span{font-size:.29rem;letter-spacing:.045em}
+      .orbit-track{width:68%;height:56%}
+      .center-node{width:7.85rem;height:5.45rem}
+      .orbit-node{width:4.18rem;height:3.32rem}
+      .node-copy{padding:.20rem .22rem;min-width:72%;border-radius:.54rem}
+      .node-copy strong{font-size:.37rem;letter-spacing:.052em}
+      .node-copy span{font-size:.27rem;letter-spacing:.04em}
       .center-node .node-copy strong{font-size:.70rem}
       .center-node .node-copy span{font-size:.43rem}
-
-      .p1{left:50%;top:16%}
-      .p2{left:64.8%;top:20%}
-      .p3{left:75.4%;top:32%}
-      .p4{left:79.2%;top:50%}
-      .p5{left:75.4%;top:68%}
-      .p6{left:64.8%;top:80%}
-      .p7{left:50%;top:84%}
-      .p8{left:35.2%;top:80%}
-      .p9{left:24.6%;top:68%}
-      .p10{left:20.8%;top:50%}
-      .p11{left:24.6%;top:32%}
-      .p12{left:35.2%;top:20%}
 
       .section-return{justify-content:stretch}
       .return-orbit{width:100%}
@@ -1077,51 +1073,51 @@
           </a>
 
           <div class="orbit-track">
-            <a class="orbit-node violet p1" href="#audralia-simulation">
+            <a class="orbit-node p1" href="#audralia-simulation">
               <span class="node-face"><span class="node-shape"></span><span class="node-left-facet"></span><span class="node-right-facet"></span><span class="node-core"></span><span class="node-copy"><strong>Audralia</strong><span>Simulation</span></span></span>
             </a>
 
-            <a class="orbit-node blue p2" href="#fusion-readiness">
+            <a class="orbit-node p2" href="#fusion-readiness">
               <span class="node-face"><span class="node-shape"></span><span class="node-left-facet"></span><span class="node-right-facet"></span><span class="node-core"></span><span class="node-copy"><strong>Fusion</strong><span>Readiness</span></span></span>
             </a>
 
-            <a class="orbit-node green p3" href="#storage-bridge">
+            <a class="orbit-node p3" href="#storage-bridge">
               <span class="node-face"><span class="node-shape"></span><span class="node-left-facet"></span><span class="node-right-facet"></span><span class="node-core"></span><span class="node-copy"><strong>Storage</strong><span>Bridge</span></span></span>
             </a>
 
-            <a class="orbit-node gold p4" href="#solar-hedge">
+            <a class="orbit-node p4" href="#solar-hedge">
               <span class="node-face"><span class="node-shape"></span><span class="node-left-facet"></span><span class="node-right-facet"></span><span class="node-core"></span><span class="node-copy"><strong>Solar</strong><span>Hedge</span></span></span>
             </a>
 
-            <a class="orbit-node blue p5" href="#plasma-boundary">
+            <a class="orbit-node p5" href="#plasma-boundary">
               <span class="node-face"><span class="node-shape"></span><span class="node-left-facet"></span><span class="node-right-facet"></span><span class="node-core"></span><span class="node-copy"><strong>Plasma</strong><span>Boundary</span></span></span>
             </a>
 
-            <a class="orbit-node blue p6" href="#q-boundary">
+            <a class="orbit-node p6" href="#q-boundary">
               <span class="node-face"><span class="node-shape"></span><span class="node-left-facet"></span><span class="node-right-facet"></span><span class="node-core"></span><span class="node-copy"><strong>Q</strong><span>Boundary</span></span></span>
             </a>
 
-            <a class="orbit-node gold p7" href="#commercial-now">
+            <a class="orbit-node p7" href="#commercial-now">
               <span class="node-face"><span class="node-shape"></span><span class="node-left-facet"></span><span class="node-right-facet"></span><span class="node-core"></span><span class="node-copy"><strong>Commercial</strong><span>Now</span></span></span>
             </a>
 
-            <a class="orbit-node gold p8" href="#bridge-infrastructure">
+            <a class="orbit-node p8" href="#bridge-infrastructure">
               <span class="node-face"><span class="node-shape"></span><span class="node-left-facet"></span><span class="node-right-facet"></span><span class="node-core"></span><span class="node-copy"><strong>Bridge</strong><span>Infrastructure</span></span></span>
             </a>
 
-            <a class="orbit-node green p9" href="#storage-fields">
+            <a class="orbit-node p9" href="#storage-fields">
               <span class="node-face"><span class="node-shape"></span><span class="node-left-facet"></span><span class="node-right-facet"></span><span class="node-core"></span><span class="node-copy"><strong>Storage</strong><span>Fields</span></span></span>
             </a>
 
-            <a class="orbit-node green p10" href="#advanced-buffer">
+            <a class="orbit-node p10" href="#advanced-buffer">
               <span class="node-face"><span class="node-shape"></span><span class="node-left-facet"></span><span class="node-right-facet"></span><span class="node-core"></span><span class="node-copy"><strong>Advanced</strong><span>Buffer</span></span></span>
             </a>
 
-            <a class="orbit-node violet p11" href="#future-offtake">
+            <a class="orbit-node p11" href="#future-offtake">
               <span class="node-face"><span class="node-shape"></span><span class="node-left-facet"></span><span class="node-right-facet"></span><span class="node-core"></span><span class="node-copy"><strong>Future</strong><span>Offtake</span></span></span>
             </a>
 
-            <a class="orbit-node red p12" href="#kill-conditions">
+            <a class="orbit-node p12" href="#kill-conditions">
               <span class="node-face"><span class="node-shape"></span><span class="node-left-facet"></span><span class="node-right-facet"></span><span class="node-core"></span><span class="node-copy"><strong>Kill</strong><span>Conditions</span></span></span>
             </a>
           </div>
@@ -1627,20 +1623,20 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_ENERGY_SITE_STANDARD_GEM_ORBIT_RESTORE_TNT_v14
+FRONTIER_ENERGY_UNIFORM_SITE_GEM_STANDARD_RESTORE_TNT_v15
 route=/explore/frontier/energy/
 page=frontier_energy
-previous=FRONTIER_ENERGY_SITE_STANDARD_GEM_ORBIT_VISUAL_REPAIR_TNT_v13
+previous=FRONTIER_ENERGY_SITE_STANDARD_GEM_ORBIT_RESTORE_TNT_v14
 public_subject=frontier_science_fusion_power_readiness
-visual_system=site_standard_bright_faceted_route_gem_orbit
+visual_system=uniform_site_standard_bright_faceted_route_gems
 language_rule=visual_objects_are_interface_not_public_subject
 story_rule=story_first_learning_second_play_third_technology_underneath
 frontier_rule=narrative_construct_first_backdoor_science_second
 click_model=energy_pathways_anchor_to_section_return_to_energy_orbit
 central_anchor=Energy_Readiness_Anchor
 orbit_pathways=Audralia_Simulation,Fusion_Readiness,Storage_Bridge,Solar_Hedge,Plasma_Boundary,Q_Boundary,Commercial_Now,Bridge_Infrastructure,Storage_Fields,Advanced_Buffer,Future_Offtake,Kill_Conditions
-visual_repair=restored_site_standard_bright_faceted_route_gems_no_dull_legacy_stones_contained_mobile_orbit
-orbit_fit=all_nodes_remain_inside_orbit_stage_at_mobile_widths
+visual_repair=uniform_compass_standard_bright_icy_blue_gold_faceted_route_gems_no_dull_legacy_colored_stones
+orbit_fit=contained_track_prevents_edge_clipping_at_mobile_widths
 return_path=return_to_energy_orbit_under_every_reading_section
 audralia_role=frontier_energy_simulation_world
 science_lock=fusion_real_commercial_power_not_procurement_ready
@@ -1652,7 +1648,7 @@ solar_lock=solar_supports_pathway_does_not_become_fusion
 farmland_storage=bridge_infrastructure_midstream_storage_only
 final_lock=do_not_sell_fusion_sell_readiness
 animation_scope=CSS_only_creative_subtle
-animation_features=site_standard_bright_faceted_route_gems,central_anchor,contained_elliptical_orbit_rotation,counter_rotating_readable_labels,hover_lift,soft_signal_sweep
+animation_features=uniform_site_standard_bright_faceted_route_gems,central_anchor,contained_elliptical_orbit_rotation,counter_rotating_readable_labels,hover_lift,soft_signal_sweep
 forbidden_public_language=click_a_gem,read_the_gem_layer,gem_catalog,gem_interface,gem_route,gem_layer,crystal_gem_orbit,twelve_crystal_gems,the_gems_now_rotate
 forbidden_claims=narrative_overrides_science,Audralia_as_deployment_proof,solar_becomes_fusion,we_create_fusion_power,commercial_fusion_ready_now,plasma_battery_solution,unlimited_power,fusion_procurement_today,plasma_as_storage,fusion_in_vehicles_or_homes,farmland_fusion_farms,risk_free_battery_fields,guaranteed_timelines
 heavy_runtime=false
@@ -1663,7 +1659,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      FRONTIER_ENERGY_SITE_STANDARD_GEM_ORBIT_RESTORE_TNT_v14 · Fusion Readiness · Frontier Science · Energy Pathways · Return to Energy Orbit.
+      FRONTIER_ENERGY_UNIFORM_SITE_GEM_STANDARD_RESTORE_TNT_v15 · Fusion Readiness · Frontier Science · Energy Pathways · Return to Energy Orbit.
     </footer>
   </div>
 </body>

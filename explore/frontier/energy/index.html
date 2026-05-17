@@ -3,9 +3,9 @@
   lang="en"
   data-route="/explore/frontier/energy/"
   data-page="frontier-energy"
-  data-version="G2-V18"
-  data-contract="FRONTIER_ENERGY_COMPASS_GEM_BASELINE_DUAL_LENS_RENEWAL_TNT_v18"
-  data-previous-contract="FRONTIER_ENERGY_PER_PATHWAY_DUAL_LENS_COMPASS_GEM_RENEWAL_TNT_v17"
+  data-version="G2-V19"
+  data-contract="FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19"
+  data-previous-contract="FRONTIER_ENERGY_COMPASS_GEM_BASELINE_DUAL_LENS_RENEWAL_TNT_v18"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
   data-source-symbol-authority="compassOrganicGem"
   data-role="frontier-energy"
@@ -13,6 +13,7 @@
   data-per-pathway-dual-lens="true"
   data-platform-lens="true"
   data-engineering-lens="true"
+  data-gem-print-legibility-increased="true"
   data-incorrect-model="discarded"
   data-static-page-usable-without-js="true"
   data-heavy-runtime-loaded="false"
@@ -580,44 +581,51 @@
     .gem-label{
       position:relative;
       z-index:3;
-      width:76%;
+      width:86%;
       display:grid;
       place-items:center;
-      gap:.14rem;
+      gap:.18rem;
       text-align:center;
       pointer-events:none;
       text-shadow:
-        0 2px 12px rgba(0,0,0,.95),
-        0 0 10px rgba(0,28,90,.80),
-        0 0 2px rgba(255,255,255,.42);
+        0 3px 14px rgba(0,0,0,.98),
+        0 0 12px rgba(0,28,90,.88),
+        0 0 3px rgba(255,255,255,.58);
     }
 
     .gem-label b{
       display:block;
-      color:rgba(255,244,216,.98);
-      font-size:clamp(.54rem,1.24vw,.78rem);
+      color:rgba(255,244,216,.99);
+      font-size:clamp(.70rem,1.62vw,1rem);
       font-weight:950;
-      letter-spacing:.08em;
+      letter-spacing:.065em;
       line-height:1.02;
       text-transform:uppercase;
     }
 
     .gem-label span{
-      color:rgba(230,238,255,.78);
-      font-size:clamp(.36rem,.9vw,.52rem);
-      font-weight:900;
-      letter-spacing:.08em;
+      color:rgba(230,238,255,.88);
+      font-size:clamp(.48rem,1.06vw,.66rem);
+      font-weight:950;
+      letter-spacing:.065em;
+      line-height:1.02;
       text-transform:uppercase;
+    }
+
+    .compass-center .gem-label{
+      width:84%;
+      gap:.2rem;
     }
 
     .compass-center .gem-label b{
       color:var(--gold);
-      font-size:clamp(.86rem,2.12vw,1.16rem);
-      letter-spacing:.14em;
+      font-size:clamp(1.02rem,2.35vw,1.42rem);
+      letter-spacing:.13em;
     }
 
     .compass-center .gem-label span{
-      font-size:clamp(.60rem,1.3vw,.78rem);
+      font-size:clamp(.72rem,1.48vw,.94rem);
+      letter-spacing:.085em;
     }
 
     .pathway-module{
@@ -888,11 +896,28 @@
         height:5.45rem;
       }
 
-      .gem-label b{font-size:.48rem}
-      .gem-label span{font-size:.34rem}
+      .gem-label{
+        width:88%;
+        gap:.14rem;
+      }
 
-      .compass-center .gem-label b{font-size:.70rem}
-      .compass-center .gem-label span{font-size:.48rem}
+      .gem-label b{
+        font-size:.62rem;
+        letter-spacing:.046em;
+      }
+
+      .gem-label span{
+        font-size:.44rem;
+        letter-spacing:.044em;
+      }
+
+      .compass-center .gem-label b{
+        font-size:.88rem;
+      }
+
+      .compass-center .gem-label span{
+        font-size:.60rem;
+      }
 
       .lens-tabs{
         display:grid;
@@ -918,12 +943,31 @@
         height:5rem;
       }
 
-      .gem-label b{font-size:.41rem}
-      .gem-label span{font-size:.30rem}
+      .gem-label{
+        width:90%;
+      }
+
+      .gem-label b{
+        font-size:.54rem;
+        letter-spacing:.036em;
+      }
+
+      .gem-label span{
+        font-size:.38rem;
+        letter-spacing:.034em;
+      }
 
       .compass-center{
         width:8.95rem;
         height:6.5rem;
+      }
+
+      .compass-center .gem-label b{
+        font-size:.78rem;
+      }
+
+      .compass-center .gem-label span{
+        font-size:.52rem;
       }
     }
 
@@ -1775,14 +1819,19 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_ENERGY_COMPASS_GEM_BASELINE_DUAL_LENS_RENEWAL_TNT_v18
-previous=FRONTIER_ENERGY_PER_PATHWAY_DUAL_LENS_COMPASS_GEM_RENEWAL_TNT_v17
+FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19
+previous=FRONTIER_ENERGY_COMPASS_GEM_BASELINE_DUAL_LENS_RENEWAL_TNT_v18
 route=/explore/frontier/energy/
 page=frontier_energy
 html=/explore/frontier/energy/index.html
 source_visual_authority=COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
 source_symbol_authority=compassOrganicGem
-visual_authority_carried_forward=true
+visual_authority_preserved=true
+design_preserved=true
+gem_print_legibility_increased=true
+gem_label_width_increased=true
+gem_label_font_size_increased=true
+mobile_gem_print_size_increased=true
 incorrect_fabricated_energy_visual_model=discarded
 legacy_hybrid_model=discarded
 forced_polygon_model=discarded
@@ -1810,7 +1859,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      FRONTIER_ENERGY_COMPASS_GEM_BASELINE_DUAL_LENS_RENEWAL_TNT_v18 · Energy · Audralia first · Per-pathway Platform and Engineering lenses.
+      FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19 · Energy · Compass gem design preserved · Print legibility increased.
     </footer>
   </div>
 </body>

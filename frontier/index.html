@@ -3,8 +3,8 @@
   lang="en"
   data-route="/frontier/"
   data-page="frontier"
-  data-contract="FRONTIER_LANE_STAR_LEGIBILITY_SIZE_RENEWAL_TNT_v10"
-  data-previous-contract="FRONTIER_LANE_ITEMS_VISIBLE_FIGURE_EIGHT_TNT_v9"
+  data-contract="FRONTIER_PRIMARY_BASE_ROW_LEGIBILITY_RENEWAL_TNT_v11"
+  data-previous-contract="FRONTIER_LANE_STAR_LEGIBILITY_SIZE_RENEWAL_TNT_v10"
   data-role="expansion-edge"
   data-frontier-role="expansion-edge"
   data-renewal="true"
@@ -14,13 +14,10 @@
   data-figure-eight-field="frontier-lane-items-only"
   data-all-frontier-lane-stars-visible="true"
   data-lane-stars-larger="true"
-  data-labels-larger="true"
-  data-route-position-animation="false"
-  data-star-local-motion-only="true"
+  data-bottom-row-even="true"
+  data-bottom-row-primary="true"
   data-dual-gravity-centers="true"
   data-center-crossing="Shimmer"
-  data-laws-role="proof-truth-scientific-backing-boundary"
-  data-gauges-role="measurement-audit-route-status-summary"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claimed="false"
@@ -32,7 +29,7 @@
   <title>Frontier · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Frontier is the expansion edge of Diamond Gate Bridge: eleven future lanes held inside one larger, legible, visible dual-gravity figure-eight field."
+    content="Frontier is the expansion edge of Diamond Gate Bridge: eleven future lanes held inside one larger, legible, fully visible dual-gravity figure-eight field."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/frontier/">
   <meta name="theme-color" content="#02040b">
@@ -395,7 +392,6 @@
 
     .button.violet{
       border-color:rgba(143,101,255,.44);
-      color:var(--violet2);
       background:rgba(143,101,255,.075);
     }
 
@@ -408,9 +404,9 @@
 
     .frontier-orbit-stage{
       position:relative;
-      min-height:clamp(36rem,98vw,52rem);
+      min-height:clamp(37rem,100vw,54rem);
       display:grid;
-      grid-template-rows:auto minmax(22rem,1fr);
+      grid-template-rows:auto minmax(23rem,1fr);
       gap:.7rem;
       overflow:hidden;
       isolation:isolate;
@@ -477,7 +473,7 @@
     .frontier-figure-eight-zone{
       position:relative;
       z-index:4;
-      min-height:clamp(22rem,62vw,34rem);
+      min-height:clamp(24rem,66vw,37rem);
       overflow:hidden;
       border:1px solid rgba(255,255,255,.075);
       border-radius:clamp(1.2rem,4vw,2rem);
@@ -493,7 +489,7 @@
       position:absolute;
       top:50%;
       width:43%;
-      height:70%;
+      height:72%;
       border:1px solid rgba(243,200,111,.14);
       border-radius:50%;
       pointer-events:none;
@@ -552,12 +548,17 @@
     .frontier-node{
       position:absolute;
       z-index:5;
-      width:clamp(5.25rem,12.8vw,7.45rem);
-      height:clamp(5.25rem,12.8vw,7.45rem);
+      width:clamp(6rem,14.5vw,8.4rem);
+      height:clamp(6rem,14.5vw,8.4rem);
       display:grid;
       place-items:center;
       transform:translate(-50%,-50%);
       isolation:isolate;
+    }
+
+    .frontier-node.primary-row{
+      width:clamp(6.5rem,15.5vw,9rem);
+      height:clamp(6.5rem,15.5vw,9rem);
     }
 
     .frontier-node:hover,
@@ -566,19 +567,18 @@
       filter:brightness(1.14) saturate(1.08);
     }
 
-    .frontier-node.closed-loop{left:28%;top:13%}
-    .frontier-node.infrastructure{left:11%;top:38%}
-    .frontier-node.manual{left:24%;top:62%}
-    .frontier-node.waste{left:18%;top:86%}
-    .frontier-node.water{left:39%;top:84%}
+    .frontier-node.closed-loop{left:27.5%;top:13%}
+    .frontier-node.energy{left:72.5%;top:13%}
+    .frontier-node.infrastructure{left:15%;top:37%}
+    .frontier-node.lattice{left:85%;top:37%}
+    .frontier-node.manual{left:23%;top:58.5%}
+    .frontier-node.trajectory{left:77%;top:58.5%}
+    .frontier-node.shimmer{left:50%;top:47.5%}
 
-    .frontier-node.energy{left:72%;top:13%}
-    .frontier-node.lattice{left:89%;top:38%}
-    .frontier-node.trajectory{left:76%;top:62%}
-    .frontier-node.urban{left:82%;top:86%}
-    .frontier-node.vision{left:61%;top:84%}
-
-    .frontier-node.shimmer{left:50%;top:50%}
+    .frontier-node.waste{left:18%;top:83.5%}
+    .frontier-node.water{left:39.33%;top:83.5%}
+    .frontier-node.vision{left:60.66%;top:83.5%}
+    .frontier-node.urban{left:82%;top:83.5%}
 
     .frontier-star-body,
     .frontier-anchor-body{
@@ -611,6 +611,17 @@
       transform-origin:50% 50%;
     }
 
+    .frontier-node.primary-row .frontier-star-body{
+      animation:
+        frontierStarSpin 20s linear infinite,
+        frontierStarBreathe 5.6s ease-in-out infinite;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.42),
+        inset 0 -1.2rem 1.5rem rgba(0,0,0,.36),
+        0 1.2rem 1.45rem rgba(0,0,0,.50),
+        0 0 1.1rem rgba(141,216,255,.19);
+    }
+
     .frontier-anchor-body{
       opacity:1;
       animation:
@@ -622,13 +633,13 @@
       position:relative;
       z-index:6;
       width:92%;
-      min-height:2.7rem;
+      min-height:2.95rem;
       display:grid;
       place-items:center;
       gap:.10rem;
-      padding:.32rem .36rem;
+      padding:.35rem .4rem;
       border:1px solid rgba(255,255,255,.14);
-      border-radius:.82rem;
+      border-radius:.9rem;
       text-align:center;
       background:
         radial-gradient(circle at 50% 0%,rgba(255,255,255,.20),transparent 62%),
@@ -643,7 +654,7 @@
     .frontier-label b{
       display:block;
       color:rgba(255,244,216,.99);
-      font-size:clamp(.46rem,1.12vw,.66rem);
+      font-size:clamp(.5rem,1.2vw,.72rem);
       font-weight:950;
       letter-spacing:.065em;
       line-height:1.02;
@@ -655,11 +666,24 @@
 
     .frontier-label span{
       color:rgba(230,238,255,.82);
-      font-size:clamp(.32rem,.78vw,.44rem);
+      font-size:clamp(.34rem,.82vw,.48rem);
       font-weight:900;
       letter-spacing:.07em;
       line-height:1;
       text-transform:uppercase;
+    }
+
+    .frontier-node.primary-row .frontier-label{
+      min-height:3.12rem;
+      width:93%;
+    }
+
+    .frontier-node.primary-row .frontier-label b{
+      font-size:clamp(.54rem,1.28vw,.78rem);
+    }
+
+    .frontier-node.primary-row .frontier-label span{
+      font-size:clamp(.36rem,.86vw,.5rem);
     }
 
     .frontier-anchor .frontier-label{
@@ -862,7 +886,7 @@
       .button{width:100%}
 
       .frontier-orbit-stage{
-        min-height:36rem;
+        min-height:37rem;
         padding:.65rem;
       }
 
@@ -873,40 +897,54 @@
       }
 
       .frontier-figure-eight-zone{
-        min-height:23rem;
+        min-height:24rem;
       }
 
       .frontier-node{
-        width:4.55rem;
-        height:4.55rem;
+        width:4.85rem;
+        height:4.85rem;
       }
 
-      .frontier-node.closed-loop{left:28%;top:13%}
-      .frontier-node.infrastructure{left:14%;top:38%}
-      .frontier-node.manual{left:24%;top:62%}
-      .frontier-node.waste{left:20%;top:86%}
-      .frontier-node.water{left:40%;top:84%}
+      .frontier-node.primary-row{
+        width:5.2rem;
+        height:5.2rem;
+      }
 
-      .frontier-node.energy{left:72%;top:13%}
-      .frontier-node.lattice{left:86%;top:38%}
-      .frontier-node.trajectory{left:76%;top:62%}
-      .frontier-node.urban{left:80%;top:86%}
-      .frontier-node.vision{left:60%;top:84%}
+      .frontier-node.closed-loop{left:27.5%;top:13%}
+      .frontier-node.energy{left:72.5%;top:13%}
+      .frontier-node.infrastructure{left:15.5%;top:37%}
+      .frontier-node.lattice{left:84.5%;top:37%}
+      .frontier-node.manual{left:23.5%;top:58.5%}
+      .frontier-node.trajectory{left:76.5%;top:58.5%}
+      .frontier-node.shimmer{left:50%;top:47.5%}
 
-      .frontier-node.shimmer{left:50%;top:50%}
+      .frontier-node.waste{left:18%;top:83.5%}
+      .frontier-node.water{left:39.33%;top:83.5%}
+      .frontier-node.vision{left:60.66%;top:83.5%}
+      .frontier-node.urban{left:82%;top:83.5%}
 
       .frontier-label{
         width:94%;
-        min-height:2.16rem;
+        min-height:2.24rem;
         padding:.24rem .24rem;
       }
 
       .frontier-label b{
-        font-size:.36rem;
+        font-size:.39rem;
         letter-spacing:.045em;
       }
 
-      .frontier-label span{display:none}
+      .frontier-label span{
+        display:none;
+      }
+
+      .frontier-node.primary-row .frontier-label{
+        min-height:2.34rem;
+      }
+
+      .frontier-node.primary-row .frontier-label b{
+        font-size:.41rem;
+      }
 
       .frontier-anchor{
         width:6.6rem;
@@ -925,25 +963,37 @@
 
     @media (max-width:430px){
       .frontier-figure-eight-zone{
-        min-height:22.5rem;
+        min-height:23.2rem;
       }
 
       .frontier-node{
-        width:4.12rem;
-        height:4.12rem;
+        width:4.55rem;
+        height:4.55rem;
       }
 
-      .frontier-node.infrastructure{left:15%;top:39%}
-      .frontier-node.lattice{left:85%;top:39%}
-      .frontier-node.waste{left:21%;top:86%}
-      .frontier-node.urban{left:79%;top:86%}
+      .frontier-node.primary-row{
+        width:4.9rem;
+        height:4.9rem;
+      }
+
+      .frontier-node.infrastructure{left:16%;top:37%}
+      .frontier-node.lattice{left:84%;top:37%}
+
+      .frontier-node.waste{left:18%;top:83.5%}
+      .frontier-node.water{left:39.33%;top:83.5%}
+      .frontier-node.vision{left:60.66%;top:83.5%}
+      .frontier-node.urban{left:82%;top:83.5%}
 
       .frontier-label{
-        min-height:2rem;
+        min-height:2.08rem;
       }
 
       .frontier-label b{
-        font-size:.32rem;
+        font-size:.34rem;
+      }
+
+      .frontier-node.primary-row .frontier-label b{
+        font-size:.36rem;
       }
 
       .frontier-anchor{
@@ -1030,7 +1080,7 @@
 
       <section class="panel section" aria-labelledby="orbit-title">
         <div class="kicker">Frontier lane figure-eight</div>
-        <h2 id="orbit-title">The Frontier lanes are larger, clearer, and locked inside the figure-eight.</h2>
+        <h2 id="orbit-title">The Frontier lanes are larger, clearer, and the base row now reads as the four primary anchors.</h2>
 
         <div class="frontier-orbit-stage" aria-label="Frontier support routes above and larger Frontier lane items inside the visible figure-eight field">
           <div class="frontier-top-stack">
@@ -1065,29 +1115,14 @@
               <span class="frontier-label"><b>Closed Loop</b><span>Feedback</span></span>
             </a>
 
-            <a class="frontier-node infrastructure" href="/explore/frontier/infrastructure/" aria-label="Infrastructure support">
-              <span class="frontier-star-body" aria-hidden="true"></span>
-              <span class="frontier-label"><b>Infrastructure</b><span>Support</span></span>
-            </a>
-
-            <a class="frontier-node manual" href="/explore/frontier/manual/" aria-label="Manual guide">
-              <span class="frontier-star-body" aria-hidden="true"></span>
-              <span class="frontier-label"><b>Manual</b><span>Guide</span></span>
-            </a>
-
-            <a class="frontier-node waste" href="/explore/frontier/waste/" aria-label="Waste reuse">
-              <span class="frontier-star-body" aria-hidden="true"></span>
-              <span class="frontier-label"><b>Waste</b><span>Reuse</span></span>
-            </a>
-
-            <a class="frontier-node water" href="/explore/frontier/water/" aria-label="Water flow">
-              <span class="frontier-star-body" aria-hidden="true"></span>
-              <span class="frontier-label"><b>Water</b><span>Flow</span></span>
-            </a>
-
             <a class="frontier-node energy" href="/explore/frontier/energy/" aria-label="Energy power">
               <span class="frontier-star-body" aria-hidden="true"></span>
               <span class="frontier-label"><b>Energy</b><span>Power</span></span>
+            </a>
+
+            <a class="frontier-node infrastructure" href="/explore/frontier/infrastructure/" aria-label="Infrastructure support">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Infrastructure</b><span>Support</span></span>
             </a>
 
             <a class="frontier-node lattice" href="/explore/frontier/lattice/" aria-label="Lattice grid">
@@ -1095,24 +1130,39 @@
               <span class="frontier-label"><b>Lattice</b><span>Grid</span></span>
             </a>
 
+            <a class="frontier-node manual" href="/explore/frontier/manual/" aria-label="Manual guide">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Manual</b><span>Guide</span></span>
+            </a>
+
             <a class="frontier-node trajectory" href="/explore/frontier/trajectory/" aria-label="Trajectory motion">
               <span class="frontier-star-body" aria-hidden="true"></span>
               <span class="frontier-label"><b>Trajectory</b><span>Motion</span></span>
             </a>
 
-            <a class="frontier-node urban" href="/explore/frontier/urban/" aria-label="Urban city">
+            <a class="frontier-node shimmer" href="/explore/frontier/shimmer/" aria-label="Shimmer signal">
               <span class="frontier-star-body" aria-hidden="true"></span>
-              <span class="frontier-label"><b>Urban</b><span>City</span></span>
+              <span class="frontier-label"><b>Shimmer</b><span>Signal</span></span>
             </a>
 
-            <a class="frontier-node vision" href="/explore/frontier/vision/" aria-label="Vision future">
+            <a class="frontier-node primary-row waste" href="/explore/frontier/waste/" aria-label="Waste reuse">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Waste</b><span>Reuse</span></span>
+            </a>
+
+            <a class="frontier-node primary-row water" href="/explore/frontier/water/" aria-label="Water flow">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Water</b><span>Flow</span></span>
+            </a>
+
+            <a class="frontier-node primary-row vision" href="/explore/frontier/vision/" aria-label="Vision future">
               <span class="frontier-star-body" aria-hidden="true"></span>
               <span class="frontier-label"><b>Vision</b><span>Future</span></span>
             </a>
 
-            <a class="frontier-node shimmer" href="/explore/frontier/shimmer/" aria-label="Shimmer signal">
+            <a class="frontier-node primary-row urban" href="/explore/frontier/urban/" aria-label="Urban city">
               <span class="frontier-star-body" aria-hidden="true"></span>
-              <span class="frontier-label"><b>Shimmer</b><span>Signal</span></span>
+              <span class="frontier-label"><b>Urban</b><span>City</span></span>
             </a>
           </div>
         </div>
@@ -1268,7 +1318,7 @@
       <section class="final-band" aria-label="Frontier final statement">
         <strong>Frontier keeps the future open without losing the map.</strong>
         <p>
-          Eleven Frontier lanes now occupy the larger, more readable figure-eight field while Compass, Explore, Laws, Interactive Narrative, Universe, Products, Showroom, and Gauges remain compact support routes above.
+          Eleven Frontier lanes now occupy the larger, more readable figure-eight field, and the bottom row resolves into four evenly spaced primary anchors: Waste, Water, Vision, and Urban.
         </p>
 
         <div class="actions">
@@ -1280,27 +1330,25 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_LANE_STAR_LEGIBILITY_SIZE_RENEWAL_TNT_v10
-previous=FRONTIER_LANE_ITEMS_VISIBLE_FIGURE_EIGHT_TNT_v9
+FRONTIER_PRIMARY_BASE_ROW_LEGIBILITY_RENEWAL_TNT_v11
+previous=FRONTIER_LANE_STAR_LEGIBILITY_SIZE_RENEWAL_TNT_v10
 route=/frontier/
 page=frontier
 renewal=true
 not_rewrite=true
-frontier_role=expansion_edge
 frontier_anchor_position=top
 support_routes_position=top
 figure_eight_field=frontier_lane_items_only
 all_frontier_lane_stars_visible=true
 lane_stars_larger=true
-labels_larger=true
-route_position_animation=false
-star_local_motion_only=true
+bottom_row_even=true
+bottom_row_primary=true
+primary_base_row=Waste,Water,Vision,Urban
 dual_gravity_centers=true
 center_crossing=Shimmer
 frontier_lane_items=Closed_Loop,Energy,Infrastructure,Lattice,Manual,Shimmer,Trajectory,Urban,Vision,Waste,Water
 support_routes=Compass,Explore,Laws,Interactive_Narrative,Universe,Showroom,Products,Gauges
-visual_correction=larger_frontier_lane_stars_and_more_legible_labels
-mobile_law=larger_but_not_clipped
+visual_correction=larger_stars_larger_primary_bottom_row_even_spacing
 generated_image=false
 graphic_box=false
 visual_pass_claimed=false
@@ -1308,7 +1356,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      FRONTIER_LANE_STAR_LEGIBILITY_SIZE_RENEWAL_TNT_v10 · Frontier · Larger Lane Stars · Legible Figure-Eight.
+      FRONTIER_PRIMARY_BASE_ROW_LEGIBILITY_RENEWAL_TNT_v11 · Frontier · Larger Stars · Even Primary Base Row.
     </footer>
   </div>
 </body>

@@ -1,237 +1,749 @@
-<!DOCTYPE html>
-<html lang="en">
+<!-- TARGET FILE: /laws/categories/reality/index.html -->
+<!doctype html>
+<html
+  lang="en"
+  data-route="/laws/categories/reality/"
+  data-page="law-category-reality"
+  data-version="G1-V1"
+  data-contract="REALITY_LAW_CATEGORY_ROUTE_RENEWAL_TNT_v1"
+  data-source-binding="REALITY_LAW_CATEGORY_ROUTE_RENEWAL_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-branch="laws"
+  data-category="reality"
+  data-role="tested-constraint-law-category"
+  data-legacy-placeholder-discarded="true"
+  data-legacy-tech-allowed="false"
+  data-modern-static-html-css="true"
+  data-javascript-dependency="false"
+  data-heavy-runtime-loaded="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-frontier-orbit-model="false"
+  data-visual-pass-claimed="false"
+>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Law Categories | Diamond Gate Bridge</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+  <title>Reality · Law Category · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Law Categories under the Diamond Gate Bridge laws chamber."
-  />
+    content="Reality is the law category for tested constraint: what still holds after evidence, contradiction, consequence, coherence, falsifiability, and audit are applied."
+  >
+
   <style>
     :root{
       color-scheme:dark;
-      --bg0:#041124;
-      --bg1:#07203d;
-      --bg2:#0b2f58;
-      --ink:rgba(255,255,255,.97);
-      --mut:rgba(255,255,255,.84);
-      --soft:rgba(255,255,255,.66);
-      --gold:rgba(244,226,176,.96);
-      --line:rgba(255,255,255,.12);
-      --lineStrong:rgba(244,226,176,.26);
-      --panel:rgba(8,14,24,.78);
-      --panelStrong:rgba(8,14,24,.90);
-      --shadow:0 24px 76px rgba(0,0,0,.48);
-      --safe-top:env(safe-area-inset-top,0px);
-      --safe-right:env(safe-area-inset-right,0px);
-      --safe-bottom:env(safe-area-inset-bottom,0px);
-      --safe-left:env(safe-area-inset-left,0px);
+      --bg:#02050d;
+      --bg2:#061125;
+      --panel:rgba(8,15,31,.82);
+      --panel2:rgba(10,20,42,.72);
+      --ink:#fff4d8;
+      --muted:rgba(232,240,255,.78);
+      --soft:rgba(232,240,255,.58);
+      --gold:#f3c86f;
+      --gold2:#ffe8a3;
+      --blue:#8dd8ff;
+      --line:rgba(214,229,255,.16);
+      --line2:rgba(243,200,111,.30);
+      --shadow:0 30px 100px rgba(0,0,0,.48);
+      --max:1160px;
     }
+
     *{box-sizing:border-box}
-    html,body{
-      margin:0;
+
+    html{
+      min-width:320px;
       min-height:100%;
-      background:linear-gradient(180deg,var(--bg2) 0%,var(--bg1) 48%,var(--bg0) 100%);
-      color:var(--ink);
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      scroll-behavior:smooth;
+      overflow-x:hidden;
+      background:var(--bg);
     }
-    body{overflow-x:hidden}
-    a{color:inherit;text-decoration:none}
-    .page{
-      position:relative;
+
+    body{
+      margin:0;
+      min-width:320px;
       min-height:100vh;
-      overflow:hidden;
-      isolation:isolate;
+      overflow-x:hidden;
+      color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.5;
+      background:
+        radial-gradient(circle at 50% -10%,rgba(243,200,111,.20),transparent 30rem),
+        radial-gradient(circle at 12% 20%,rgba(141,216,255,.14),transparent 27rem),
+        radial-gradient(circle at 88% 24%,rgba(36,120,255,.16),transparent 30rem),
+        linear-gradient(180deg,#071226 0%,#030816 54%,#01030a 100%);
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
     }
-    .env{
-      position:absolute;
+
+    body::before{
+      content:"";
+      position:fixed;
       inset:0;
       pointer-events:none;
-      overflow:hidden;
-      background:
-        radial-gradient(circle at 12% 22%, rgba(120,0,22,.20), transparent 34%),
-        radial-gradient(circle at 82% 24%, rgba(90,40,120,.16), transparent 38%),
-        radial-gradient(circle at 60% 26%, rgba(18,58,140,.14), transparent 34%),
-        radial-gradient(circle at 50% 30%, rgba(244,226,176,.06), transparent 24%);
-      filter:blur(5px);
-      opacity:.46;
+      background-image:
+        linear-gradient(rgba(141,216,255,.035) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.035) 1px,transparent 1px),
+        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px);
+      background-size:58px 58px,58px 58px,240px 280px;
+      opacity:.22;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.95),rgba(0,0,0,.45) 72%,rgba(0,0,0,.20));
     }
-    .wrap{
+
+    a{color:inherit;text-decoration:none}
+
+    a:focus-visible{
+      outline:2px solid var(--gold);
+      outline-offset:4px;
+    }
+
+    .skip{
+      position:absolute;
+      left:-999px;
+      top:10px;
+      z-index:20;
+      padding:.75rem 1rem;
+      border-radius:999px;
+      color:#05070d;
+      background:var(--gold);
+      font-weight:950;
+    }
+
+    .skip:focus{left:10px}
+
+    .shell{
       position:relative;
       z-index:1;
-      width:min(1080px,calc(100vw - 32px));
+      width:min(var(--max),calc(100% - 28px));
       margin:0 auto;
-      padding:
-        calc(24px + var(--safe-top))
-        calc(16px + var(--safe-right))
-        calc(40px + var(--safe-bottom))
-        calc(16px + var(--safe-left));
+      padding:max(22px,env(safe-area-inset-top)) 0 max(44px,env(safe-area-inset-bottom));
     }
-    .topbar,.hero,.section{
-      border:1px solid var(--line);
-      border-radius:28px;
-      background:linear-gradient(180deg,var(--panel) 0%,var(--panelStrong) 100%);
-      box-shadow:var(--shadow);
-      position:relative;
-      overflow:hidden;
-    }
+
     .topbar{
-      display:flex;
-      justify-content:space-between;
+      display:grid;
+      grid-template-columns:auto 1fr;
       align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-      padding:14px 18px;
-      margin-bottom:18px;
+      gap:1rem;
+      margin-bottom:1rem;
+      padding:.85rem;
+      border:1px solid var(--line);
+      border-radius:1.35rem;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025)),
+        rgba(6,12,25,.78);
+      box-shadow:0 1.2rem 3.5rem rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.07);
     }
+
     .brand{
-      display:flex;
+      display:grid;
+      grid-template-columns:auto 1fr;
       align-items:center;
-      gap:12px;
+      gap:.85rem;
+      min-width:250px;
     }
-    .brandMark{
-      width:42px;
-      height:42px;
-      border-radius:14px;
+
+    .brand-mark{
+      width:3.6rem;
+      height:3.6rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(243,200,111,.46);
+      border-radius:1rem;
       transform:rotate(45deg);
-      border:1px solid rgba(244,226,176,.24);
-      background:linear-gradient(180deg,rgba(18,36,78,.96),rgba(10,22,48,.88));
-      flex:0 0 auto;
+      background:
+        linear-gradient(135deg,rgba(255,232,163,.26),rgba(141,216,255,.10) 38%,rgba(3,10,28,.96)),
+        radial-gradient(circle at 35% 25%,rgba(255,255,255,.28),transparent 42%);
+      box-shadow:0 0 1.6rem rgba(243,200,111,.14),inset 0 1px 0 rgba(255,255,255,.16);
     }
-    .brandTitle{
-      margin:0 0 3px;
-      font-size:.96rem;
-      font-weight:800;
-      letter-spacing:.08em;
+
+    .brand-mark span{
+      transform:rotate(-45deg);
+      color:var(--gold);
+      font-weight:950;
+      letter-spacing:.05em;
+      text-shadow:0 2px 10px rgba(0,0,0,.70);
+    }
+
+    .brand-copy{
+      display:grid;
+      gap:.16rem;
+    }
+
+    .brand-copy span{
+      color:var(--soft);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.13em;
       text-transform:uppercase;
     }
-    .brandSubtitle{
-      margin:0;
-      color:var(--soft);
-      font-size:.82rem;
+
+    .brand-copy strong{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1rem,2.6vw,1.48rem);
+      line-height:1;
+      letter-spacing:-.035em;
     }
+
     .nav{
       display:flex;
-      gap:10px;
       flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:.48rem;
     }
+
     .nav a{
-      min-height:42px;
-      padding:0 16px;
-      border-radius:999px;
-      border:1px solid var(--lineStrong);
-      background:linear-gradient(145deg, rgba(10,12,20,.54), rgba(4,6,10,.70));
-      color:#fff3cf;
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.05em;
-      text-transform:uppercase;
+      min-height:2.35rem;
       display:inline-flex;
       align-items:center;
       justify-content:center;
+      padding:.55rem .8rem;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.04);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
-    .hero,.section{padding:28px 24px 24px;margin-bottom:18px}
-    .eyebrow{
-      margin:0 0 12px;
-      color:var(--gold);
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.18em;
+
+    .nav a:hover,
+    .nav a:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.56);
+      outline:none;
+    }
+
+    .nav a[aria-current="page"]{
+      border-color:rgba(243,200,111,.88);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:clamp(1.35rem,4vw,2.1rem);
+      background:
+        radial-gradient(circle at 16% 0%,rgba(141,216,255,.10),transparent 28rem),
+        radial-gradient(circle at 90% 12%,rgba(243,200,111,.10),transparent 30rem),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+        var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+
+    .hero{
+      position:relative;
+      min-height:clamp(28rem,52vw,39rem);
+      display:grid;
+      align-content:center;
+      gap:1rem;
+      padding:clamp(1.25rem,5vw,3.25rem);
+      isolation:isolate;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      right:clamp(1.2rem,7vw,5.5rem);
+      top:50%;
+      z-index:-1;
+      width:clamp(12rem,28vw,21rem);
+      height:clamp(12rem,28vw,21rem);
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:50%;
+      transform:translateY(-50%);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,232,163,.13),transparent 38%),
+        conic-gradient(from 0deg,rgba(243,200,111,.10),rgba(141,216,255,.10),rgba(255,255,255,.04),rgba(243,200,111,.10));
+      box-shadow:inset 0 0 3rem rgba(141,216,255,.06),0 0 4rem rgba(0,0,0,.18);
+      opacity:.65;
+    }
+
+    .kicker{
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.55rem;
+      padding:.55rem .9rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(230,238,255,.86);
+      background:rgba(255,255,255,.04);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.14em;
       text-transform:uppercase;
     }
-    h1,h2{font-family:Georgia,"Times New Roman",serif}
+
+    .kicker::before{
+      content:"";
+      width:.7rem;
+      height:.7rem;
+      border-radius:.18rem;
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 0 1rem rgba(243,200,111,.45);
+    }
+
     h1{
-      margin:0 0 12px;
-      font-size:clamp(42px,7vw,72px);
-      line-height:.94;
+      margin:0;
+      max-width:960px;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(3.3rem,9vw,7.1rem);
+      line-height:.86;
+      letter-spacing:-.07em;
+      text-wrap:balance;
     }
+
     h2{
-      margin:0 0 12px;
-      font-size:clamp(24px,4vw,36px);
-      line-height:1.02;
+      margin:0;
+      color:var(--gold);
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(1.6rem,4vw,2.65rem);
+      line-height:1;
+      letter-spacing:-.055em;
+      text-wrap:balance;
     }
+
+    h3{
+      margin:0;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.05rem,2.6vw,1.35rem);
+      line-height:1.08;
+      letter-spacing:-.03em;
+    }
+
     p{
       margin:0;
-      color:var(--mut);
-      line-height:1.65;
-      font-size:16px;
-      max-width:760px;
+      max-width:880px;
+      color:var(--muted);
+      font-size:clamp(.98rem,2.6vw,1.12rem);
+      line-height:1.62;
     }
+
+    .lead{
+      max-width:920px;
+      color:rgba(232,240,255,.84);
+      font-size:clamp(1.04rem,2.8vw,1.25rem);
+    }
+
+    .truth-card{
+      max-width:940px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,200,111,.24);
+      border-radius:1.15rem;
+      color:rgba(255,244,216,.94);
+      background:
+        radial-gradient(circle at 12% 0%,rgba(243,200,111,.12),transparent 22rem),
+        rgba(243,200,111,.055);
+      font-weight:850;
+      font-size:clamp(1rem,2.6vw,1.16rem);
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.62rem;
+      margin-top:.2rem;
+    }
+
+    .button{
+      min-height:2.65rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:.66rem 1rem;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      color:rgba(241,246,255,.88);
+      background:rgba(255,255,255,.045);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .button:hover,
+    .button:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.60);
+      outline:none;
+    }
+
+    .button.gold{
+      border-color:rgba(243,200,111,.88);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .section{
+      display:grid;
+      gap:1rem;
+      margin-top:1rem;
+      padding:clamp(1.1rem,3.2vw,1.6rem);
+    }
+
+    .definition{
+      display:grid;
+      gap:.85rem;
+      max-width:940px;
+    }
+
     .grid{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:14px;
-      margin-top:16px;
+      gap:.9rem;
+      margin-top:.2rem;
     }
+
+    .grid.two{
+      grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
     .card{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:22px;
-      background:linear-gradient(180deg, rgba(10,16,30,.76) 0%, rgba(8,14,26,.90) 100%);
-      padding:18px;
+      display:grid;
+      gap:.7rem;
+      min-height:100%;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 18% 0%,rgba(141,216,255,.08),transparent 22rem),
+        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.024));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
-    .card h3{
-      margin:0 0 8px;
-      font-size:16px;
-      font-weight:900;
-      color:#fff3cf;
+
+    .card b{
+      color:var(--gold);
+      font-size:.70rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
     }
+
     .card p{
-      font-size:14px;
-      line-height:1.58;
+      font-size:.95rem;
+      line-height:1.52;
     }
-    @media (max-width:860px){
-      .grid{grid-template-columns:1fr}
-      .topbar{align-items:flex-start}
+
+    .law-card{
+      position:relative;
+      overflow:hidden;
+    }
+
+    .law-card::before{
+      content:"";
+      position:absolute;
+      right:.9rem;
+      top:.9rem;
+      width:2rem;
+      height:2rem;
+      border:1px solid rgba(243,200,111,.25);
+      border-radius:.55rem;
+      transform:rotate(45deg);
+      background:rgba(243,200,111,.06);
+    }
+
+    .application-list{
+      display:grid;
+      gap:.65rem;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+
+    .application-list li{
+      padding:.75rem .85rem;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:.95rem;
+      color:var(--muted);
+      background:rgba(255,255,255,.035);
+      font-size:.96rem;
+      line-height:1.45;
+    }
+
+    .boundary{
+      padding:1rem;
+      border:1px solid rgba(243,200,111,.26);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 10% 0%,rgba(243,200,111,.11),transparent 22rem),
+        rgba(243,200,111,.045);
+    }
+
+    .boundary strong{
+      display:block;
+      margin-bottom:.5rem;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.05rem,2.8vw,1.35rem);
+      line-height:1.1;
+    }
+
+    .receipt,
+    [data-route-receipt]{
+      display:none!important;
+      visibility:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      overflow:hidden!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
+    }
+
+    footer{
+      padding:1.25rem 0 .35rem;
+      color:var(--soft);
+      text-align:center;
+      font-size:.76rem;
+    }
+
+    @media (max-width:900px){
+      .topbar{grid-template-columns:1fr}
+      .nav{justify-content:flex-start}
+      .grid,
+      .grid.two{grid-template-columns:1fr}
+    }
+
+    @media (max-width:640px){
+      .shell{width:min(var(--max),calc(100% - 20px))}
+      .topbar{padding:.72rem;border-radius:1.05rem}
+      .hero{min-height:32rem;padding:1rem}
+      .hero::after{opacity:.38;right:-4rem}
+      h1{font-size:clamp(3rem,16vw,5.15rem)}
+      .actions{display:grid}
+      .button{width:100%}
+      .section{padding:1rem}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        scroll-behavior:auto!important;
+        transition-duration:.01ms!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+      }
     }
   </style>
 </head>
+
 <body>
-  <div class="page">
-    <div class="env" aria-hidden="true"></div>
+  <a class="skip" href="#main">Skip to Reality</a>
 
-    <main class="wrap">
-      <header class="topbar">
-        <div class="brand">
-          <div class="brandMark" aria-hidden="true"></div>
-          <div>
-            <p class="brandTitle">Diamond Gate Bridge</p>
-            <p class="brandSubtitle">Laws / Categories</p>
-          </div>
-        </div>
-        <nav class="nav" aria-label="Page navigation">
-          <a href="/laws/">Back to Laws</a>
-          <a href="/index.html">Compass</a>
-        </nav>
-      </header>
+  <div class="shell">
+    <header class="topbar" aria-label="Reality law category header">
+      <a class="brand" href="/laws/categories/reality/">
+        <span class="brand-mark" aria-hidden="true"><span>R</span></span>
+        <span class="brand-copy">
+          <span>Diamond Gate Bridge · Laws</span>
+          <strong>Reality Category</strong>
+        </span>
+      </a>
 
-      <section class="hero">
-        <p class="eyebrow">Law categories</p>
-        <h1>Categories</h1>
-        <p>
-          This chamber establishes the categories surface under the laws branch. It exists as a live endpoint now and can be expanded later without breaking routing.
+      <nav class="nav" aria-label="Page navigation">
+        <a href="/laws/">Back to Laws</a>
+        <a href="/laws/categories/" aria-current="page">Law Categories</a>
+        <a href="/">Compass</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="panel hero" aria-labelledby="page-title">
+        <div class="kicker">Laws / Categories / Reality</div>
+
+        <h1 id="page-title">Reality is what still holds after the claim is tested.</h1>
+
+        <p class="lead">
+          This category exists for claims that must survive evidence, constraint, consequence, contradiction, coherence, falsifiability, and audit.
         </p>
+
+        <div class="truth-card">
+          Reality is not a mood, slogan, label, or performance. Reality is what survives contact with evidence, consequence, and coherence.
+        </div>
+
+        <div class="actions">
+          <a class="button gold" href="#definition">Define Reality</a>
+          <a class="button" href="#tests">How Reality Is Tested</a>
+          <a class="button" href="#audit">Boundary / Audit</a>
+        </div>
       </section>
 
-      <section class="section">
-        <p class="eyebrow">Opening structure</p>
-        <h2>Grouped, bounded, expandable.</h2>
+      <section class="panel section" id="definition" aria-labelledby="definition-title">
+        <div class="kicker">Definition</div>
+        <div class="definition">
+          <h2 id="definition-title">Reality is the constraint surface.</h2>
+          <p>
+            Reality is the category where Diamond Gate Bridge separates appearance from what can actually hold. It does not begin with preference. It begins with the test: does the claim remain coherent when evidence, consequence, pressure, and contradiction are applied?
+          </p>
+          <p>
+            This page does not claim that every reality question is already solved. It defines the test surface: what holds, what fails, what remains unknown, and what must be audited.
+          </p>
+        </div>
+      </section>
+
+      <section class="panel section" id="tests" aria-labelledby="tests-title">
+        <div class="kicker">Three public reads</div>
+        <h2 id="tests-title">What Reality is, what it is not, and how it is tested.</h2>
+
         <div class="grid">
           <article class="card">
-            <h3>Classification</h3>
-            <p>Categories organize law into stable groups instead of leaving everything as one undifferentiated mass.</p>
+            <b>What Reality Is</b>
+            <h3>Surviving structure.</h3>
+            <p>
+              Reality is the surviving structure after a claim meets evidence, limits, consequence, and time.
+            </p>
           </article>
+
           <article class="card">
-            <h3>Readability</h3>
-            <p>This layer makes the branch understandable on first entry before deeper doctrine is introduced.</p>
+            <b>What Reality Is Not</b>
+            <h3>Not performance.</h3>
+            <p>
+              Reality is not a label, trend, emotional demand, group performance, wish, fear, or repeated statement.
+            </p>
           </article>
+
           <article class="card">
-            <h3>Expansion readiness</h3>
-            <p>The surface is intentionally simple now so it can be expanded later without breaking endpoint truth.</p>
+            <b>How Reality Is Tested</b>
+            <h3>Pressure plus audit.</h3>
+            <p>
+              Reality is tested by contradiction, evidence, repeatability, consequence, falsifiability, coherence, and audit.
+            </p>
           </article>
         </div>
       </section>
+
+      <section class="panel section" id="law-cards" aria-labelledby="law-cards-title">
+        <div class="kicker">Reality law cards</div>
+        <h2 id="law-cards-title">A Reality claim must survive more than assertion.</h2>
+
+        <div class="grid two">
+          <article class="card law-card">
+            <b>Evidence</b>
+            <h3>A claim needs a path to evidence.</h3>
+            <p>
+              A reality claim must have some path to evidence. Without evidence, the claim remains assertion, not established reality.
+            </p>
+          </article>
+
+          <article class="card law-card">
+            <b>Constraint</b>
+            <h3>Reality includes limits.</h3>
+            <p>
+              If a claim ignores physical, logical, moral, relational, economic, or operational constraint, it is not ready to stand.
+            </p>
+          </article>
+
+          <article class="card law-card">
+            <b>Consequence</b>
+            <h3>Reality produces consequence.</h3>
+            <p>
+              If an idea only works when consequence is hidden, delayed, or denied, the claim must be held under review.
+            </p>
+          </article>
+
+          <article class="card law-card">
+            <b>Coherence</b>
+            <h3>Reality must remain coherent across layers.</h3>
+            <p>
+              A claim that works in one sentence but collapses when applied across the system is unstable.
+            </p>
+          </article>
+
+          <article class="card law-card">
+            <b>Falsifiability</b>
+            <h3>A claim must be able to fail a test.</h3>
+            <p>
+              A claim that cannot fail any test cannot honestly be called proven. Reality requires a possible failure condition.
+            </p>
+          </article>
+
+          <article class="card law-card">
+            <b>Audit</b>
+            <h3>Reality must survive challenge.</h3>
+            <p>
+              If a claim only survives when no one is allowed to inspect it, the claim is not stable.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" id="application" aria-labelledby="application-title">
+        <div class="kicker">Application</div>
+        <h2 id="application-title">How this category is used.</h2>
+
+        <p>
+          The Reality category is used whenever a claim needs to be separated from appearance. It applies to science, law, relationships, systems, infrastructure, frontier claims, public promises, private assumptions, and personal accountability.
+        </p>
+
+        <ul class="application-list" aria-label="Reality application questions">
+          <li>Does the claim match the evidence?</li>
+          <li>Does the claim survive contradiction?</li>
+          <li>Does the claim hold under consequence?</li>
+          <li>Does the claim remain coherent across the system?</li>
+          <li>Does the claim admit uncertainty?</li>
+          <li>Does the claim have a lawful audit path?</li>
+        </ul>
+      </section>
+
+      <section class="panel section" id="audit" aria-labelledby="audit-title">
+        <div class="kicker">Boundary / Audit</div>
+        <h2 id="audit-title">Reality is not certainty theater.</h2>
+
+        <div class="boundary">
+          <strong>Reality separates established reality from open question, unknown condition, false claim, unstable claim, and audit-ready claim.</strong>
+          <p>
+            A strong Reality page does not pretend every answer is already known. What holds may proceed. What fails must be revised. What remains unknown must be named.
+          </p>
+        </div>
+
+        <div class="actions">
+          <a class="button gold" href="/laws/">Back to Laws</a>
+          <a class="button" href="/laws/categories/">Law Categories</a>
+          <a class="button" href="/">Compass</a>
+        </div>
+      </section>
+
+      <template id="route-receipt" data-route-receipt>
+REALITY_LAW_CATEGORY_ROUTE_RENEWAL_TNT_v1
+binding=REALITY_LAW_CATEGORY_ROUTE_RENEWAL_PREGAME_TO_POSTGAME_BINDING_v1
+route=/laws/categories/reality/
+target=/laws/categories/reality/index.html
+branch=Laws
+category=Reality
+legacy_placeholder_discarded=true
+legacy_tech_allowed=false
+modern_static_html_css=true
+javascript_dependency=false
+heavy_runtime=false
+generated_image=false
+graphic_box=false
+frontier_orbit_model=false
+public_thesis=Reality_is_what_still_holds_after_the_claim_is_tested
+definition=Reality_is_the_constraint_surface
+required_content=hero_definition_what_reality_is_what_reality_is_not_how_reality_is_tested_application_boundary_audit
+required_cards=Evidence,Constraint,Consequence,Coherence,Falsifiability,Audit
+forbidden_collapse=Reality_as_preference_majority_agreement_emotional_intensity_visual_appearance_only_certainty_without_evidence_claim_without_audit_slogan_authority_assertion_untestable_belief_placeholder_category
+final_boundary=What_holds_may_proceed_What_fails_must_be_revised_What_remains_unknown_must_be_named
+visual_pass_claimed=false
+      </template>
     </main>
+
+    <footer>
+      REALITY_LAW_CATEGORY_ROUTE_RENEWAL_TNT_v1 · Laws / Categories / Reality · Tested constraint.
+    </footer>
   </div>
 </body>
 </html>
